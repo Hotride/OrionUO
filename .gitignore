@@ -16,6 +16,7 @@
 *.bat
 *.exe
 *.dll
+!ConfigurationEditor.exe
 Bodyconv1.def
 Makefile*
 /ipch
