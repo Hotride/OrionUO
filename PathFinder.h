@@ -44,6 +44,8 @@ private:
 	void GetNewXY(BYTE &direction, int &x, int &y);
 	bool CreateItemsList(int &x, int &y);
 
+	char m_OnLongStair;
+
 public:
 	TPathFinder();
 	virtual ~TPathFinder();

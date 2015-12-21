@@ -4349,51 +4349,46 @@ void TUltimaOnline::CharacterSelection(int pos)
 //---------------------------------------------------------------------------
 void TUltimaOnline::LoginComplete()
 {
-	if (ConnectionScreen->Completed)
-		return;
-
-	ConnectionScreen->Completed = true;
-
-	char buf[256] = {0};
-	sprintf(buf, "Ultima Online - %s (%s)", g_Player->GetName().c_str(), ServerList.GetServerName().c_str());
-
-	SetWindowTextA(g_hWnd, buf);
-	
-	//UO->SkillsReq(serial);
-	TPacketClientVersion packet(g_ClientVersionText);
-	packet.Send();
-	packet.Free();
-	
-	SkillsReq(g_PlayerSerial);
-	StatusReq(g_PlayerSerial);
-	PaperdollReq(g_PlayerSerial);
-
-	/*TPacketOpenChat openChatPacket(L"");
-	openChatPacket.Send();
-
-	TPacketRazorAnswer razorPacket;
-	razorPacket.Send();*/
-
-	TPacketLanguage langPacket(g_Language.c_str());
-	langPacket.Send();
-	langPacket.Free();
-
-	//TPacketClientType clientTypePacket(g_ClientFlag);
-	//clientTypePacket.Send();
-	
-	//TPacketClientViewRange vrPacket(g_UpdateRange);
-	//vrPacket.Send();
-
-	InitScreen(GS_GAME);
-
-	LoadLocalConfig();
-
-	if (ConfigManager.ShowIncomingNames)
+	TPRINT("TUltimaOnline::LoginComplete\n");
+	if (!ConnectionScreen->Completed)
 	{
-		//AllNames();
+		TPRINT("TUltimaOnline::LoginComplete...Start\n");
+		ConnectionScreen->Completed = true;
 
-		//TPacketClickRequest namePacket(g_PlayerSerial);
-		//namePacket.Send();
+		char buf[256] = {0};
+		sprintf(buf, "Ultima Online - %s (%s)", g_Player->GetName().c_str(), ServerList.GetServerName().c_str());
+
+		SetWindowTextA(g_hWnd, buf);
+	
+		//UO->SkillsReq(serial);
+		TPacketClientVersion packet(g_ClientVersionText);
+		packet.Send();
+		packet.Free();
+	
+		SkillsReq(g_PlayerSerial);
+		StatusReq(g_PlayerSerial);
+		PaperdollReq(g_PlayerSerial);
+
+		/*TPacketOpenChat openChatPacket(L"");
+		openChatPacket.Send();
+
+		TPacketRazorAnswer razorPacket;
+		razorPacket.Send();*/
+
+		TPacketLanguage langPacket(g_Language.c_str());
+		langPacket.Send();
+		langPacket.Free();
+
+		//TPacketClientType clientTypePacket(g_ClientFlag);
+		//clientTypePacket.Send();
+	
+		//TPacketClientViewRange vrPacket(g_UpdateRange);
+		//vrPacket.Send();
+
+		InitScreen(GS_GAME);
+
+		LoadLocalConfig();
+		TPRINT("TUltimaOnline::LoginComplete...End\n");
 	}
 }
 //---------------------------------------------------------------------------

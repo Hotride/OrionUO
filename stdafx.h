@@ -61,7 +61,7 @@ using std::wstring;
 
 #define UO_DEBUG_INFO 1
 
-#define UO_FW_SHARD 1
+#define UO_FW_SHARD 0
 
 extern int g_LandObjectsCount;
 extern int g_StaticsObjectsCount;
@@ -257,8 +257,8 @@ const bool g_LayerUnsafe[30] =
 	false
 };
 //---------------------------------------------------------------------------
-const int g_MaxBlockZ = 10;
-const int g_MaxClimbZ = 10;
+const int g_MaxBlockZ = 15;
+const int g_MaxClimbZ = 9;
 const int g_MaxFallZ = 19;
 const int g_MaxClimbMapZ = 19;
 const int g_CharacterHeight = 16;

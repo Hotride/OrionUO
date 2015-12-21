@@ -35,7 +35,7 @@ TPathObject::~TPathObject()
 //---------------------------------TPathFinder-------------------------------
 //---------------------------------------------------------------------------
 TPathFinder::TPathFinder()
-: TBaseQueue()
+: TBaseQueue(), m_OnLongStair(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -119,7 +119,7 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 
 				char surface = (char)(obj->IsSurface() && !obj->IsImpassable());
 
-				if (obj->IsBridge() && obj->IsPrefixA() && height >= 10)
+				if (obj->IsBridge() && obj->IsPrefixA() && height >= 10) //long stair
 					surface += 0x20;
 
 				Add(new TPathObject(obj->Z, height, surface));
@@ -144,6 +144,15 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 	z = g_Player->Z;
 	
 	char newZ = z;
+	char onStair = 0;
+
+	bool wantUpZ = false;
+
+	if (m_OnLongStair >= 0x10)
+	{
+		m_OnLongStair -= 0x10;
+		wantUpZ = true;
+	}
 
 	if (m_Items != NULL)
 	{
@@ -193,23 +202,65 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 					if (found && abs(z - newZ) <= abs(z - top)) // <
 						break;
 					
-					if (isLongStair && top > newZ + g_MaxClimbZ)
-						newZ = po->Z + (height / 2);
-					else
-						newZ = top;
-					
-					found = true;
+					bool passed = true;
 
-					if (height > 1)
-						break;
+					char testZ = top;
+					
+					if (isLongStair && top > newZ + g_MaxClimbZ)
+						testZ = po->Z + (height / 2);
+					
+					if (m_OnLongStair && found)
+					{
+						if (wantUpZ)
+						{
+							if (testZ <= z)
+								passed = false;
+						}
+						else
+						{
+							if (testZ > z)
+								passed = false;
+						}
+					}
+
+					if (passed)
+					{
+						newZ = testZ;
+					
+						onStair = (char)isLongStair;
+						found = true;
+
+						if (height > 1)
+							break;
+					}
 				}
 				else if ((isLand && top <= newZ + g_MaxClimbMapZ && top >= newZ - g_MaxFallZ) || (top < newZ))
 				{
 					if (found && abs(z - newZ) < abs(z - top))
 						break;
+					
+					bool passed = true;
 
-					newZ = top;
-					found = true;
+					if (m_OnLongStair && found)
+					{
+						if (wantUpZ)
+						{
+							if (top <= z)
+								passed = false;
+						}
+						else
+						{
+							if (top > z)
+								passed = false;
+						}
+					}
+
+					if (passed)
+					{
+						onStair = (char)isLongStair;
+						newZ = top;
+						found = true;
+					}
 				}
 			}
 		}
@@ -238,7 +289,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 			if (surface >= 0x20)
 			{
 				surface -= 0x20;
-				isLongStair = true;
+				isLongStair = (abs((abs(curZ) - abs(newZ))) <= g_MaxClimbZ);
 			}
 
 			trace_printf("nowC=%i z=%i newZ=%i curZ=%i top=%i isLongStair=%i\n", c, z, newZ, curZ, top, isLongStair);
@@ -246,7 +297,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 			if (top <= newZ)
 				continue;
 			
-			if (surface < 0x10 && !isLongStair)
+			if (/*surface < 0x10 &&*/ !isLongStair)
 			//if (!surface)
 			{
 				if (top > newZ && top < (newZ + g_MaxBlockZ))
@@ -288,6 +339,11 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 			return false;
 		}
 	}
+
+	m_OnLongStair = onStair;
+
+	if (z < newZ)
+		m_OnLongStair += 0x10;
 
 	z = newZ;
 
@@ -351,10 +407,12 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 	int newY = y;
 	char newZ = z;
 	BYTE newDirection = direction;
+	char oldStartState = m_OnLongStair;
 
 	GetNewXY(direction, newX, newY);
 
 	bool passed = CalculateNewZ(newX, newY, newZ);
+	char startState = m_OnLongStair;
 
 	if ((char)direction % 2) //diagonal
 	{
@@ -371,6 +429,7 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 				BYTE testDir = (direction + dirOffset[i]) % 8;
 				GetNewXY(testDir, testX, testY);
 
+				m_OnLongStair = oldStartState;
 				passed = CalculateNewZ(testX, testY, testZ);
 			}
 		}
@@ -385,8 +444,10 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 
 				newDirection = (direction + dirOffset[i]) % 8;
 				GetNewXY(newDirection, newX, newY);
-
+				
+				m_OnLongStair = oldStartState;
 				passed = CalculateNewZ(newX, newY, newZ);
+				startState = m_OnLongStair;
 			}
 		}
 	}
@@ -397,7 +458,10 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 		y = newY;
 		z = newZ;
 		direction = newDirection;
+		m_OnLongStair = startState;
 	}
+	else
+		m_OnLongStair = oldStartState;
 
 	return passed;
 }
