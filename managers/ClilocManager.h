@@ -22,7 +22,7 @@
 //---------------------------------------------------------------------------
 typedef std::map<DWORD, string> CLILOC_MAP;
 //---------------------------------------------------------------------------
-class TCliloc : public TBaseQueueItem
+class TCliloc : public ICliloc, public TBaseQueueItem
 {
 private:
 	CLILOC_MAP m_ClilocSystem;
@@ -46,7 +46,7 @@ public:
 	wstring GetW(DWORD id, string result = "");
 };
 //---------------------------------------------------------------------------
-class TClilocManager : public TBaseQueue
+class TClilocManager : public IClilocManager, public TBaseQueue
 {
 private:
 public:

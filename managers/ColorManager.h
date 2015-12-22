@@ -20,7 +20,7 @@
 #ifndef ColorManagerH
 #define ColorManagerH
 //---------------------------------------------------------------------------
-class TColorManager
+class TColorManager : public IColorManager
 {
 private:
 	PHUES_GROUP m_HuesRange;

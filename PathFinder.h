@@ -35,11 +35,10 @@ public:
 	SETGET(BYTE, Surface)
 };
 //---------------------------------------------------------------------------
-class TPathFinder : public TBaseQueue
+class TPathFinder : public IPathFinder, public TBaseQueue
 {
 private:
 	bool CalculateNewZ(int &x, int &y, char &z);
-	bool CanWalk(BYTE &direction, int &x, int &y, char &z);
 
 	void GetNewXY(BYTE &direction, int &x, int &y);
 	bool CreateItemsList(int &x, int &y);
@@ -49,6 +48,8 @@ private:
 public:
 	TPathFinder();
 	virtual ~TPathFinder();
+
+	bool CanWalk(BYTE &direction, int &x, int &y, char &z);
 
 	bool Walk(bool run, BYTE direction);
 };

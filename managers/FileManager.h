@@ -20,7 +20,7 @@
 #ifndef FileManagerH
 #define FileManagerH
 //---------------------------------------------------------------------------
-class TMappedHeader
+class TMappedHeader : public IMappedHeader
 {
 private:
 public:
@@ -45,7 +45,7 @@ public:
 	string ReadString(int size);
 };
 //---------------------------------------------------------------------------
-class TFileManager
+class TFileManager : public IFileManager
 {
 private:
 	bool m_UseVerdata;
@@ -94,6 +94,8 @@ public:
 
 	bool LoadFileToMemory(TMappedHeader &object, const char *fName);
 	void UnloadFileFromMemory(TMappedHeader &object);
+
+	IMappedHeader* GetMappedFile(int index);
 };
 //---------------------------------------------------------------------------
 const int MAX_FILE_BUFFER_SIZE = 0x1000;
@@ -132,7 +134,7 @@ public:
 
 	void WriteBuffer();
 };
-
+//---------------------------------------------------------------------------
 extern TFileManager FileManager;
 //---------------------------------------------------------------------------
 #endif

@@ -46,6 +46,15 @@ TGump::~TGump()
 	}
 }
 //---------------------------------------------------------------------------
+void TGump::GetBaseProperties(DWORD &serial, WORD &graphic, WORD &color, WORD &x, WORD &y)
+{
+	serial = Serial;
+	graphic = Graphic;
+	color = Color;
+	x = X;
+	y = Y;
+}
+//---------------------------------------------------------------------------
 bool TGump::CanBeMoved()
 {
 	bool result = true;

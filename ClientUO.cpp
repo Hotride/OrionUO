@@ -22,6 +22,7 @@
 TUltimaOnline *UO = NULL;
 CRITICAL_SECTION g_CRT_LoaderMaps;
 bool g_CanCloseAppMapLoader = false;
+PLUGIN_CLIENT_INTERFACE PluginClientInterface = { 0 };
 //---------------------------------------------------------------------------
 bool TestCloseMapLoader()
 {
@@ -2601,6 +2602,14 @@ void TUltimaOnline::CreateGlobalMaps()
 //---------------------------------------------------------------------------
 void TUltimaOnline::LoadPluginConfig()
 {
+	PluginClientInterface._GL = &g_GL;
+	PluginClientInterface._UO = UO;
+	PluginClientInterface._GumpManager = GumpManager;
+	PluginClientInterface._FileManager = &FileManager;
+	PluginClientInterface._ClilocManager = ClilocManager;
+	PluginClientInterface._ColorManager = ColorManager;
+	PluginClientInterface._PathFinder = PathFinder;
+
 	TMappedHeader file;
 	memset(&file, 0, sizeof(file));
 

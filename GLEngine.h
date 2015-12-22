@@ -41,8 +41,6 @@ public:
 
 	void Uninstall() {wglMakeCurrent(NULL, NULL); wglDeleteContext(m_RC);}
 
-	void Use() {wglMakeCurrent(m_DC, m_RC);}
-
 	void UpdateRect();
 	
 	void BindTexture(GLuint &Texture, int Width, int Height, PDWORD pixels);

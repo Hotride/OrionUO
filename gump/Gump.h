@@ -20,7 +20,7 @@
 #ifndef GumpH
 #define GumpH
 //---------------------------------------------------------------------------
-class TGump : public TRenderObject
+class TGump : public IGump, public TRenderObject
 {
 private:
 	GUMP_TYPE m_GumpType;
@@ -54,6 +54,8 @@ public:
 	SETGET(bool, FrameRedraw)
 	SETGET(bool, Blocked)
 	SETGET(bool, LockMoving)
+
+	virtual void GetBaseProperties(DWORD &serial, WORD &graphic, WORD &color, WORD &x, WORD &y);
 
 	virtual void ChangeHeight() {}
 

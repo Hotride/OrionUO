@@ -818,11 +818,12 @@ class TPlugin;
 //---------------------------------------------------------------------------
 typedef struct PLUGIN_INTERFACE
 {
-	//PPLUGIN_CLIENT_INTERFACE Client;
+	//struct PLUGIN_CLIENT_INTERFACE *Client;
 
 	HWND hWnd;
 	CLIENT_VERSION ClientVersion;
 	bool InverseBuylist;
+	//bool UseVerdata;
 	
 	PACKET_PROC *Recv;
 	PACKET_PROC *Send;

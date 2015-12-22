@@ -20,7 +20,7 @@
 #ifndef GumpManagerH
 #define GumpManagerH
 //--------------------------------------------------------------------------
-class TGumpManager : public TBaseQueue
+class TGumpManager : public IGumpManager, public TBaseQueue
 {
 private:
 	int GetNonpartyStatusbarsCount();

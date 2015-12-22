@@ -23,7 +23,7 @@
 #pragma once
 #include "resource.h"
 //---------------------------------------------------------------------------
-class TUltimaOnline
+class TUltimaOnline : public IUltimaOnline
 {
 private:
 	DWORD m_CRC_Table[256];
