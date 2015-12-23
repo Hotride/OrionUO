@@ -35,7 +35,8 @@ TPathObject::~TPathObject()
 //---------------------------------TPathFinder-------------------------------
 //---------------------------------------------------------------------------
 TPathFinder::TPathFinder()
-: TBaseQueue()
+: TBaseQueue(), m_OnLongStair(false), m_AutoWalking(false), m_Path(NULL),
+m_PathSize(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -134,6 +135,47 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 	}
 
 	return true;
+}
+//---------------------------------------------------------------------------
+void TPathFinder::CheckLongStairUnderfoot(int &x, int &y, char &z)
+{
+	m_OnLongStair = false;
+
+	if (CreateItemsList(x, y))
+	{
+		if (m_Items != NULL)
+		{
+			TPathObject *po = (TPathObject*)m_Items;
+
+			while (po != NULL && po->m_Next != NULL)
+				po = (TPathObject*)po->m_Next;
+
+			for (; po != NULL; po = (TPathObject*)po->m_Prev)
+			{
+				char surface = po->Surface;
+				int isLongStair = 1;
+
+				if (surface >= 0x20)
+				{
+					surface -= 0x20;
+					isLongStair++;
+				}
+
+				if (surface > 1)
+					surface -= 0x10;
+
+				if (surface)
+				{
+					char top = po->Z + (char)(po->Height / isLongStair);
+
+					if (top == z)
+						m_OnLongStair = (isLongStair > 1);
+				}
+			}
+
+			Clear();
+		}
+	}
 }
 //---------------------------------------------------------------------------
 bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
@@ -354,6 +396,8 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 	char newZ = z;
 	BYTE newDirection = direction;
 
+	CheckLongStairUnderfoot(x, y, z);
+
 	GetNewXY(direction, newX, newY);
 
 	bool passed = CalculateNewZ(newX, newY, newZ);
@@ -528,5 +572,36 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	g_Player->GetAnimationGroup();
 
 	return true;
+}
+//---------------------------------------------------------------------------
+POINT *TPathFinder::CalculatePath(int &size, int x, int y, int z)
+{
+	size = 0;
+
+	return NULL;
+}
+//---------------------------------------------------------------------------
+bool TPathFinder::WalkTo(int x, int y, int z)
+{
+	StopAutoWalk();
+
+	m_Path = CalculatePath(m_PathSize, x, y, z);
+
+	if (m_Path != NULL)
+		delete m_Path;
+
+	return (m_PathSize != 0);
+}
+//---------------------------------------------------------------------------
+void TPathFinder::StopAutoWalk()
+{
+	m_AutoWalking = false;
+	m_PathSize = 0;
+
+	if (m_Path != NULL)
+	{
+		delete m_Path;
+		m_Path = NULL;
+	}
 }
 //---------------------------------------------------------------------------

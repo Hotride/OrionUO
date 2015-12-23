@@ -43,6 +43,12 @@ private:
 	void GetNewXY(BYTE &direction, int &x, int &y);
 	bool CreateItemsList(int &x, int &y);
 
+	bool m_OnLongStair;
+	void CheckLongStairUnderfoot(int &x, int &y, char &z);
+
+	bool m_AutoWalking;
+	POINT *m_Path;
+	int m_PathSize;
 public:
 	TPathFinder();
 	virtual ~TPathFinder();
@@ -50,6 +56,11 @@ public:
 	bool CanWalk(BYTE &direction, int &x, int &y, char &z);
 
 	bool Walk(bool run, BYTE direction);
+
+	POINT *CalculatePath(int &size, int x, int y, int z);
+	bool WalkTo(int x, int y, int z);
+
+	void StopAutoWalk();
 };
 //---------------------------------------------------------------------------
 extern TPathFinder *PathFinder;

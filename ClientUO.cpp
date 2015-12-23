@@ -2471,6 +2471,9 @@ DWORD TUltimaOnline::GetFileHashCode(DWORD address, DWORD size)
 //---------------------------------------------------------------------------
 void TUltimaOnline::CreateGlobalMaps()
 {
+	g_CanCloseAppMapLoader = true;
+	return;
+
 	TMappedHeader file;
 	memset(&file, 0, sizeof(file));
 
@@ -2812,29 +2815,8 @@ void TUltimaOnline::Process()
 
 	g_ShowGumpLocker = ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
 	
-	if (g_GameState == GS_GAME_BLOCKED)
+	if (g_GameState >= GS_GAME) // || g_GameState == GS_GAME_BLOCKED)
 	{
-		g_SelectedObject = NULL;
-		g_SelectedTextObject = NULL;
-		MacroPointer = NULL;
-
-		if (g_LastRenderTime < ticks)
-		{
-			g_RemoveRangeXY.x = g_Player->X;
-			g_RemoveRangeXY.y = g_Player->Y;
-
-			ProcessStaticAnimList();
-			RemoveRangedObjects();
-
-			World->ProcessAnimation();
-		}
-
-		GameScreen->Render(true);
-	}
-	else if (g_GameState == GS_GAME)
-	{
-		SendWalkStack();
-
 		g_SelectedObject = NULL;
 		g_SelectedTextObject = NULL;
 
@@ -2849,96 +2831,105 @@ void TUltimaOnline::Process()
 			World->ProcessAnimation();
 		}
 
-		MacroManager->Execute();
+		bool CanRenderSelect = false;
 
-		if (g_ClickObjectReq && g_ClickObject.Timer < ticks)
+		if (g_GameState == GS_GAME)
 		{
-			if (g_ClickObject.Type == COT_GAME_OBJECT)
-				NameReq(g_ClickObject.Serial);
-			else if (g_ClickObject.Type == COT_GUMP)
+			SendWalkStack();
+
+			MacroManager->Execute();
+
+			if (g_ClickObjectReq && g_ClickObject.Timer < ticks)
 			{
-				if (g_ClickObject.GumpType == GT_SPELLBOOK)
+				if (g_ClickObject.Type == COT_GAME_OBJECT)
+					NameReq(g_ClickObject.Serial);
+				else if (g_ClickObject.Type == COT_GUMP)
 				{
-					TGumpSpellbook *gump = (TGumpSpellbook*)GumpManager->GetGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
-
-					if (gump != NULL)
+					if (g_ClickObject.GumpType == GT_SPELLBOOK)
 					{
-						gump->Page = g_ClickObject.GumpButtonID;
-						gump->UpdateFrame();
+						TGumpSpellbook *gump = (TGumpSpellbook*)GumpManager->GetGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
+
+						if (gump != NULL)
+						{
+							gump->Page = g_ClickObject.GumpButtonID;
+							gump->UpdateFrame();
+						}
+					}
+					else if (g_ClickObject.GumpType == GT_BOOK)
+					{
+						TGumpBook *gump = (TGumpBook*)GumpManager->GetGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
+
+						if (gump != NULL)
+						{
+							gump->Page = g_ClickObject.GumpButtonID;
+							gump->UpdateFrame();
+						}
+					}
+					else if (g_ClickObject.GumpType == GT_PAPERDOLL)
+					{
+						TGumpPaperdoll *gump = (TGumpPaperdoll*)GumpManager->GetGump(g_ClickObject.Serial, 0, g_ClickObject.GumpType);
+
+						if (gump != NULL)
+						{
+							TTextData *td = new TTextData();
+							td->SetUnicode(false);
+							td->SetFont(3);
+							td->SetSerial(0);
+							td->SetColor(0x03B5);
+							td->SetTimer(GetTickCount());
+							td->SetType(TT_CLIENT);
+							td->DrawX = g_MouseX - gump->X;
+							td->DrawY = g_MouseY - gump->Y;
+
+							string text = "Party Manifest";
+							if (g_ClickObject.GumpButtonID)
+								text = "Character Profile";
+
+							td->SetText(text);
+
+							int width = FontManager->GetWidthA(3, text.c_str(), text.length());
+
+							FontManager->SavePixels = true;
+
+							if (width > TEXT_MESSAGE_MAX_WIDTH)
+								td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);
+							else
+								td->GenerateTexture(0, 0, TS_CENTER);
+
+							FontManager->SavePixels = false;
+
+							gump->m_TextContainer->Add(td);
+
+							TTextRenderer *tr = gump->GetTextRenderer();
+
+							if (tr != NULL)
+								tr->Add(td);
+
+							UO->AddJournalMessage(td, "");
+						}
 					}
 				}
-				else if (g_ClickObject.GumpType == GT_BOOK)
-				{
-					TGumpBook *gump = (TGumpBook*)GumpManager->GetGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
 
-					if (gump != NULL)
-					{
-						gump->Page = g_ClickObject.GumpButtonID;
-						gump->UpdateFrame();
-					}
-				}
-				else if (g_ClickObject.GumpType == GT_PAPERDOLL)
-				{
-					TGumpPaperdoll *gump = (TGumpPaperdoll*)GumpManager->GetGump(g_ClickObject.Serial, 0, g_ClickObject.GumpType);
-
-					if (gump != NULL)
-					{
-						TTextData *td = new TTextData();
-						td->SetUnicode(false);
-						td->SetFont(3);
-						td->SetSerial(0);
-						td->SetColor(0x03B5);
-						td->SetTimer(GetTickCount());
-						td->SetType(TT_CLIENT);
-						td->DrawX = g_MouseX - gump->X;
-						td->DrawY = g_MouseY - gump->Y;
-
-						string text = "Party Manifest";
-						if (g_ClickObject.GumpButtonID)
-							text = "Character Profile";
-
-						td->SetText(text);
-			
-						int width = FontManager->GetWidthA(3, text.c_str(), text.length());
-			
-						FontManager->SavePixels = true;
-
-						if (width > TEXT_MESSAGE_MAX_WIDTH)
-							td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);
-						else
-							td->GenerateTexture(0, 0, TS_CENTER);
-
-						FontManager->SavePixels = false;
-
-						gump->m_TextContainer->Add(td);
-
-						TTextRenderer *tr = gump->GetTextRenderer();
-
-						if (tr != NULL)
-							tr->Add(td);
-
-						UO->AddJournalMessage(td, "");
-					}
-				}
+				g_ClickObjectReq = false;
 			}
 
-			g_ClickObjectReq = false;
-		}
+			CanRenderSelect = true;
 
-		bool CanRenderSelect = true;
-
-		if (g_LastObjectType == SOT_GAME_GUMP_SCOPE)
-		{
-			if (g_LeftMouseDown && !g_LastGumpLeftMouseDown && !g_LastGumpRightMouseDown)
+			if (g_LastObjectType == SOT_GAME_GUMP_SCOPE)
 			{
-				if (g_LastObjectLeftMouseDown == 1 || g_LastObjectLeftMouseDown == 2)
-					CanRenderSelect = false;
+				if (g_LeftMouseDown && !g_LastGumpLeftMouseDown && !g_LastGumpRightMouseDown)
+				{
+					if (g_LastObjectLeftMouseDown == 1 || g_LastObjectLeftMouseDown == 2)
+						CanRenderSelect = false;
+				}
 			}
 		}
+
+		GameScreen->CalculateGameWindow();
 
 		if (CanRenderSelect)
 			GameScreen->Render(false);
-		
+
 		GameScreen->Render(true);
 	}
 	else

@@ -1193,7 +1193,7 @@ PACKET_HANDLER(UpdateItem)
 
 		obj->Layer = dir;
 
-		obj->RenderQueueIndex = 7;
+		obj->RenderQueueIndex = 6;
 	}
 
 	obj->X = X;
@@ -1316,7 +1316,7 @@ PACKET_HANDLER(UpdateItemSA)
 
 		obj->Layer = dir;
 
-		obj->RenderQueueIndex = 7;
+		obj->RenderQueueIndex = 6;
 	}
 
 	obj->X = x;
@@ -1492,7 +1492,7 @@ PACKET_HANDLER(UpdateObject)
 				obj->IncRenderQueueIndex();
 			}
 			else
-				obj->RenderQueueIndex = 7;
+				obj->RenderQueueIndex = 6;
 
 			UO->ExecuteStaticArt(item->Graphic);
 		}
