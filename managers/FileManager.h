@@ -20,7 +20,7 @@
 #ifndef FileManagerH
 #define FileManagerH
 //---------------------------------------------------------------------------
-class TMappedHeader : public IMappedHeader
+class TMappedHeader //: public IMappedHeader
 {
 private:
 public:

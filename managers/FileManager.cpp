@@ -362,7 +362,7 @@ IMappedHeader *TFileManager::GetMappedFile(int index)
 {
 	IMappedHeader *result = 0;
 
-	switch (index)
+	/*switch (index)
 	{
 		//index files
 		case 1:
@@ -476,7 +476,7 @@ IMappedHeader *TFileManager::GetMappedFile(int index)
 	}
 
 	if (result == NULL && index >= 53 && index < 73)
-		result = &UnifontMul[index - 53];
+		result = &UnifontMul[index - 53];*/
 
 	return result;
 }

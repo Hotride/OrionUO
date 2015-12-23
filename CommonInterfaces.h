@@ -104,7 +104,7 @@ interface IGumpManager
 //----------------------------------------------------------------------------
 interface IMappedHeader
 {
-	virtual inline void Move(int offset) = 0;
+	//virtual void Move(int offset) = 0;
 
 	virtual BYTE ReadByte() = 0;
 	virtual WORD ReadWord() = 0;
