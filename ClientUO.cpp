@@ -3332,9 +3332,21 @@ void TUltimaOnline::DrawResizepicGump(WORD id, int x, int y, int width, int heig
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, TVector *normals)
 {
-	WORD tid = m_LandData[id / 32].Tiles[id % 32].TexID;
+	LAND_TILES &tile = m_LandData[id / 32].Tiles[id % 32];
+	WORD tid = tile.TexID;
+
 	if (!tid)
+	{
+		if (::IsWet(tile.Flags))
+		{
+			glDisable(GL_LIGHTING);
+			glColor3f(1.0f, 1.0f, 1.0f);
+
+			DrawLandArt(id, color, x, y, -5);
+		}
+
 		return;
+	}
 
 	TTextureObject *th = ExecuteTexture(tid);
 	if (th == NULL)

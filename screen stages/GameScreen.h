@@ -79,14 +79,6 @@ private:
 	int m_LightCount;
 	TFrameBuffer m_LightBuffer;
 
-	char m_StartDrawZ;
-	int m_ListWidth;
-	int m_ListHeight;
-	RENDER_LIST_DATA m_List[200][200];
-	RENDER_LIST_DATA m_CheckList[200][200];
-
-	void CreateRenderList();
-
 	void RemoveLight(WORD x, WORD y, char z);
 
 	int GetMaxDrawZ(bool &noDrawRoof, int &maxGroundZ);

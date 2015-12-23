@@ -22,11 +22,8 @@
 TGameScreen *GameScreen = NULL;
 //---------------------------------------------------------------------------
 TGameScreen::TGameScreen()
-: TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false),
-m_ListWidth(0), m_ListHeight(0), m_StartDrawZ(0)
+: TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false)
 {
-	memset(m_List, 0, sizeof(m_List));
-	memset(m_CheckList, 0, sizeof(m_CheckList));
 }
 //---------------------------------------------------------------------------
 TGameScreen::~TGameScreen()
@@ -226,8 +223,6 @@ void TGameScreen::CalculateGameWindow()
 	m_RenderBounds.MaxPixelsX = m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX + drawOffset;
 	m_RenderBounds.MinPixelsY = m_RenderBounds.GameWindowPosY - drawOffset - playerZOffset;
 	m_RenderBounds.MaxPixelsY = m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY + 200 + playerZOffset;
-
-	CreateRenderList();
 }
 //---------------------------------------------------------------------------
 void TGameScreen::CheckMouseEvents(bool &charSelected)
@@ -314,100 +309,6 @@ void TGameScreen::AddLight(LIGHT_DATA &light)
 //---------------------------------------------------------------------------
 void TGameScreen::RemoveLight(WORD x, WORD y, char z)
 {
-}
-//---------------------------------------------------------------------------
-void TGameScreen::CreateRenderList()
-{
-	m_ListWidth = 0;
-	m_ListHeight = 0;
-	m_StartDrawZ = 125;
-
-	//memset(m_List, 0, sizeof(m_List));
-	//memset(m_CheckList, 0, sizeof(m_CheckList));
-
-	if (g_DeathScreenTimer <= GetTickCount())
-	{
-		int playerX = g_Player->X;
-		int playerY = g_Player->Y;
-
-		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
-		{
-			int entryLocX = m_ListWidth;
-
-			m_ListWidth += 8;
-
-			if (m_ListWidth >= 200)
-			{
-				m_ListWidth -= 8;
-
-				break;
-			}
-
-			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
-			{
-				int entryLocY = m_ListHeight;
-
-				if (bx == m_RenderBounds.MinBlockX)
-				{
-					m_ListHeight += 8;
-
-					if (m_ListHeight >= 200)
-					{
-						m_ListHeight -= 8;
-
-						break;
-					}
-				}
-
-				int blockIndex = (bx * 512) + by;
-				TMapBlock *mb = MapManager->GetBlock(blockIndex);
-				if (mb == NULL)
-				{
-					mb = MapManager->AddBlock(blockIndex);
-					mb->X = bx;
-					mb->Y = by;
-					MapManager->LoadBlock(mb);
-				}
-
-				IFOR(x, 0, 8)
-				{
-					WORD mX = bx * 8 + x;
-
-					int gx = mX - playerX;
-
-					IFOR(y, 0, 8)
-					{
-						WORD mY = by * 8 + y;
-
-						if (mX < m_RenderBounds.RealMinRangeX || mX > m_RenderBounds.RealMaxRangeX ||
-							mY < m_RenderBounds.RealMinRangeY || mY > m_RenderBounds.RealMaxRangeY)
-						{
-							m_List[entryLocX + x][entryLocY + y].obj = NULL;
-						}
-						else
-						{
-							int gy = mY - playerY;
-
-							RENDER_LIST_DATA &rld = m_List[entryLocX + x][entryLocY + y];
-
-							rld.obj = mb->GetRender(x, y);
-
-							if (rld.obj != NULL && rld.obj->Z < m_StartDrawZ)
-								m_StartDrawZ = rld.obj->Z;
-
-							rld.DrawX = m_RenderBounds.GameWindowCenterX + (gx - gy) * 22;
-							rld.DrawY = m_RenderBounds.GameWindowCenterY + (gx + gy) * 22;
-
-							RENDER_LIST_DATA &rldc = m_CheckList[entryLocX + x][entryLocY + y];
-							rldc.obj = rld.obj;
-							rldc.DrawX = rld.DrawX;
-							rldc.DrawY = rld.DrawY;
-						}
-					}
-				}
-			}
-		}
-	}
 }
 //---------------------------------------------------------------------------
 int TGameScreen::Render(bool mode)
@@ -561,6 +462,8 @@ int TGameScreen::Render(bool mode)
 				break;
 		}
 	}
+	
+	int deltaZ = playerZ * 4;
 
 	if (mode)
 	{
@@ -636,6 +539,7 @@ int TGameScreen::Render(bool mode)
 		g_GL.Disable(GL_LIGHTING);
 		
 		float drawColor = 1.0f;
+			glColor3f(drawColor, drawColor, drawColor);
 
 		if (!g_UseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
 		{
@@ -647,422 +551,7 @@ int TGameScreen::Render(bool mode)
 			glColor3f(drawColor, drawColor, drawColor);
 		}
 
-		int deltaZ = playerZ * 4;
-		char nextDrawZ = m_StartDrawZ;
-		char oldDrawZ = m_StartDrawZ;
-
-		while (true)
-		{
-			IFOR(i, 0, m_ListWidth)
-			{
-				IFOR(j, 0, m_ListHeight)
-				{
-					int drawX = m_List[i][j].DrawX;
-					int drawY = m_List[i][j].DrawY;
-					bool canDraw = true;
-
-					if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
-						canDraw = false;
-					else
-					{
-						int testDeltaZ = drawY - deltaZ;
-
-						if (testDeltaZ < m_RenderBounds.MinPixelsY || testDeltaZ > m_RenderBounds.MaxPixelsY)
-							canDraw = false;
-					}
-
-					TRenderWorldObject *obj = m_List[i][j].obj;
-
-					while (true)
-					{
-						if (canDraw && obj != NULL && !obj->IsInternal())
-						{
-							WORD objGraphic = obj->Graphic;
-							WORD objColor = obj->Color;
-							char objZ = obj->Z;
-
-							/*g_OutOfRangeColor = 0;
-							POINT testPos = {mX, mY};
-
-							if (GetDistance(g_Player, testPos) > g_UpdateRange)
-							g_OutOfRangeColor = 0x0386;*/
-
-							switch (obj->RenderType)
-							{
-								case ROT_LAND_OBJECT:
-								{
-									if (objZ > MaxGroundZ)
-										break;
-
-									if (obj == g_SelectedObject)
-										objColor = g_SelectLandColor;
-
-#if UO_DEBUG_INFO!=0
-									g_RenderedObjectsCountInGameWindow++;
-#endif
-
-									if (obj->Color == 1)
-										UO->DrawLandArt(objGraphic, objColor, drawX, drawY, objZ);
-									else
-									{
-										GLfloat tCl = 1.0f;
-										glColor3f(tCl, tCl, tCl);
-
-										glEnable(GL_LIGHTING);
-
-										UO->DrawLandTexture(objGraphic, objColor, drawX, drawY, ((TLandObject*)obj)->Rect, ((TLandObject*)obj)->m_Normals);
-
-										glDisable(GL_LIGHTING);
-
-										glColor3f(drawColor, drawColor, drawColor);
-									}
-
-									break;
-								}
-								case ROT_STATIC_OBJECT:
-								{
-									if (noDrawRoof && obj->IsRoof())
-										break;
-
-#if UO_DEBUG_INFO!=0
-									g_RenderedObjectsCountInGameWindow++;
-#endif
-
-									objGraphic -= 0x4000;
-
-									if (obj == g_SelectedObject)
-										objColor = g_SelectStaticColor;
-
-									if (obj->IsFoliage() && playerX - 2 < obj->X && playerY - 2 < obj->Y)
-									{
-										if (!g_GrayedPixels)
-										{
-											POINT fp = { 0, 0 };
-											UO->GetArtDimension(objGraphic, fp);
-
-											IMAGE_BOUNDS fib = { drawX - fp.x / 2, drawY - fp.y - (objZ * 4), fp.x, fp.y };
-
-											//g_GL.DrawPolygone(0x7F7F7F7F, fib.X, fib.Y, fib.Width, fib.Height);
-
-											if (fib.InRect(g_PlayerRect))
-											{
-												glEnable(GL_BLEND);
-												glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-
-												UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, objZ);
-
-												glDisable(GL_BLEND);
-											}
-											else
-												UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, objZ);
-										}
-									}
-									else
-										UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, objZ);
-
-									if (obj->IsLightSource() && !obj->IsWall())
-									{
-										STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
-
-										LIGHT_DATA light = { tile.Quality, 0, obj->X, obj->Y, objZ, drawX, drawY - (objZ * 4) };
-
-										if (ConfigManager.ColoredLighting)
-											light.Color = UO->GetLightColor(objGraphic);
-
-										AddLight(light);
-									}
-
-									break;
-								}
-								case ROT_GAME_OBJECT:
-								{
-									TGameObject *go = (TGameObject*)obj;
-
-									if (go->Container != 0xFFFFFFFF || objGraphic >= 0x4000)
-										break;
-									else if (!go->NPC)
-									{
-										if (go->Hidden())
-											objColor = 0x038A;
-
-#if UO_DEBUG_INFO!=0
-										g_RenderedObjectsCountInGameWindow++;
-#endif
-
-										if (go->IsCorpse()) //Трупик
-											AnimationManager->DrawCorpse((TGameItem*)go, drawX, drawY, objZ);
-										else
-										{
-											bool DoubleDraw = false;
-											bool sel_mode = false;
-
-											if (g_LastObjectType == SOT_GAME_OBJECT && !go->Locked() && g_LastSelectedObject == go->Serial)
-											{
-												objColor = 0x0035;
-												sel_mode = true;
-											}
-
-											int goCount = go->Count;
-
-											if (goCount > 1)
-											{
-												if (objGraphic == 0x0EED)
-												{
-													if (goCount > 5)
-														objGraphic = 0x0EEF;
-													else
-														objGraphic = 0x0EEE;
-												}
-												else if (obj->IsStackable())
-													DoubleDraw = true;
-											}
-
-											if (DoubleDraw)
-											{
-												drawX -= 2;
-												UO->DrawStaticArt(objGraphic, objColor, drawX, drawY - 5, objZ, sel_mode);
-												UO->DrawStaticArt(objGraphic, objColor, drawX + 5, drawY, objZ, sel_mode);
-											}
-											else
-												UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, objZ, sel_mode);
-
-											if (obj->IsLightSource())
-											{
-												STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
-
-												LIGHT_DATA light = { tile.Quality, tile.Hue, obj->X, obj->Y, objZ, drawX, drawY - (objZ * 4) };
-
-												if (ConfigManager.ColoredLighting)
-													light.Color = UO->GetLightColor(objGraphic);
-
-												AddLight(light);
-											}
-										}
-									}
-									else //if (go->NPC)
-									{
-										TGameCharacter *goc = (TGameCharacter*)go;
-										if (goc->TimeToRandomFidget < ticks)
-											goc->SetRandomFidgetAnimation();
-
-#if UO_DEBUG_INFO!=0
-										g_RenderedObjectsCountInGameWindow++;
-#endif
-
-										DWORD lastSBsel = g_StatusbarUnderMouse;
-
-										if (!go->IsPlayer() && g_Player->Warmode && g_LastSelectedObject == go->Serial)
-											g_StatusbarUnderMouse = go->Serial;
-
-										AnimationManager->DrawCharacter(goc, drawX, drawY, objZ); //Draw character
-
-										g_StatusbarUnderMouse = lastSBsel;
-
-										/*if (goc->IsPlayer())
-										{
-											//g_GL.DrawPolygone(0x7F7F7F7F, g_PlayerRect.X, g_PlayerRect.Y, g_PlayerRect.Width, g_PlayerRect.Height);
-										}*/
-									}
-
-									go->DrawEffects(drawX, drawY, ticks);
-
-									break;
-								}
-								case ROT_MULTI_OBJECT:
-								{
-									if (noDrawRoof && obj->IsRoof())
-										break;
-
-#if UO_DEBUG_INFO!=0
-									g_RenderedObjectsCountInGameWindow++;
-#endif
-
-									TMultiObject *multi = (TMultiObject*)obj;
-
-									if (multi == g_SelectedObject)
-										objColor = g_SelectMultiColor;
-
-									if (multi->MultiFlags == 2) //Мульти на таргете
-									{
-										glEnable(GL_BLEND);
-										glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-
-										UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, objZ);
-
-										glDisable(GL_BLEND);
-									}
-									else
-									{
-										UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, objZ);
-
-										if (obj->IsLightSource())
-										{
-											STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
-
-											LIGHT_DATA light = { tile.Quality, tile.Hue, obj->X, obj->Y, objZ, drawX, drawY - (objZ * 4) };
-
-											if (ConfigManager.ColoredLighting)
-												light.Color = UO->GetLightColor(objGraphic);
-
-											AddLight(light);
-										}
-									}
-
-									break;
-								}
-								case ROT_EFFECT:
-								{
-									TGameEffect *effect = (TGameEffect*)obj;
-
-#if UO_DEBUG_INFO!=0
-									g_RenderedObjectsCountInGameWindow++;
-#endif
-
-									objGraphic = 0;
-
-									if (effect->EffectType == EF_STAY_AT_POS && effect->Duration < ticks)
-										EffectManager->RemoveEffect(effect);
-									else if (effect->EffectType == EF_DRAG)
-									{
-										if (effect->Duration < ticks)
-											EffectManager->RemoveEffect(effect);
-										else
-										{
-											TGameEffectDrag *ed = (TGameEffectDrag*)effect;
-
-											int deX = drawX - ed->OffsetX;
-											int deY = drawY - ed->OffsetY;
-
-											UO->DrawStaticArt(effect->Graphic, effect->Color, deX, deY, objZ);
-
-											ed->AddOffsetX(10);
-											ed->AddOffsetY(10);
-										}
-									}
-									else if (effect->LastChangeFrameTime < ticks)
-									{
-										effect->LastChangeFrameTime = ticks + effect->Speed;
-
-										objGraphic = effect->CalculateCurrentGraphic();
-									}
-									else
-										objGraphic = effect->GetCurrentGraphic();
-
-									if (objGraphic)
-									{
-										int deX = drawX;
-										int deY = drawY;
-										int deZ = 0;
-
-										if (effect->EffectType == EF_MOVING)
-										{
-											/*TGameObject *go = World->FindWorldObject(effect->DestSerial);
-											if (go != NULL)
-											{
-												go = go->GetTopObject();
-
-												if (go != NULL)
-												{
-													effect->DestX = go->X;
-													effect->DestY = go->Y;
-													effect->DestZ = go->Z;
-												}
-											}*/
-
-											TGameEffectMoving *moving = (TGameEffectMoving*)effect;
-
-											deX += moving->OffsetX;
-											deY += moving->OffsetY;
-											deZ += moving->OffsetZ;
-
-											/*POINT p = {0, 0};
-											UO->GetArtDimension(eGraphic, p);
-
-											int posXMin = DrawPixelsX + (effect->X - effect->Y) * 22 - (p.x / 2) + moving->AnimX;
-											int posYMin = DrawPixelsY + (effect->X + effect->Y) * 22 - eZ * 4 - p.y + 44 + moving->AnimY - moving->AnimZ - 40;
-											int posXMax = posXMin + p.x;
-											int posYMax = posYMin + p.y;
-
-											int eMX = posXMin + (posXMax - posXMin) / 2;
-											int eMY = posYMin + (posYMax - posYMin) / 2;
-
-											double cosA = moving->CosA;
-											double sinA = moving->SinA;
-
-											int TmpX = posXMin - eMX;
-											int TmpY = posYMin - eMY;
-											int X1 = eMX + (int)floor(TmpX * cosA - TmpY * sinA);
-											int Y1 = eMY + (int)floor(TmpX * sinA + TmpY * cosA);
-
-											TmpX = posXMax - eMX;
-											TmpY = posYMin - eMY;
-											int X2 = eMX + (int)floor(TmpX * cosA - TmpY * sinA);
-											int Y2 = eMY + (int)floor(TmpX * sinA + TmpY * cosA);
-
-											TmpX = posXMax - eMX;
-											TmpY = posYMax - eMY;
-											int X3 = eMX + (int)floor(TmpX * cosA - TmpY * sinA);
-											int Y3 = eMY + (int)floor(TmpX * sinA + TmpY * cosA);
-
-											TmpX = posXMin - eMX;
-											TmpY = posYMax - eMY;
-											int X4 = eMX + (int)floor(TmpX * cosA - TmpY * sinA);
-											int Y4 = eMY + (int)floor(TmpX * sinA + TmpY * cosA);
-
-											glBegin( GL_QUADS );
-											glTexCoord2f( 0, 0 );
-											glVertex2f( X1, Y1 );
-											glTexCoord2f( 0, p.y / 2 );
-											glVertex2f( X2, Y2 );
-											glTexCoord2f( p.x / 2, p.y / 2 );
-											glVertex2f( X3, Y3 );
-											glTexCoord2f( p.x / 2, 0 );
-											glVertex2f( X4, Y4 );
-											glEnd;*/
-										}
-
-										effect->ApplyRenderMode();
-
-										UO->DrawStaticArt(objGraphic, effect->Color, deX, deY, objZ + deZ);
-
-										glDisable(GL_BLEND);
-									}
-
-									break;
-								}
-								default:
-									break;
-							}
-						}
-
-						if (obj != NULL)
-						{
-							obj = obj->m_NextXY;
-							m_List[i][j].obj = obj;
-
-							char objZ = obj->Z;
-
-							if (objZ > m_StartDrawZ)
-							{
-								if (objZ < nextDrawZ)
-									nextDrawZ = objZ;
-							}
-						}
-						else
-							break;
-					}
-				}
-			}
-
-			if (nextDrawZ == m_StartDrawZ)
-				break;
-
-			m_StartDrawZ = nextDrawZ;
-		}
-
-		m_StartDrawZ = oldDrawZ;
-
-		/*IFOR(drawMode, 0, drawModeCount)
+		IFOR(drawMode, 0, drawModeCount)
 		{
 			for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 			{
@@ -1111,9 +600,7 @@ int TGameScreen::Render(bool mode)
 
 							char TileZ1 = mol->Z;
 
-							int DeltaMapZ = playerZ * 4;
-
-							if (DrawPixelsY - DeltaMapZ < m_RenderBounds.MinPixelsY || DrawPixelsY - DeltaMapZ > m_RenderBounds.MaxPixelsY)
+							if (DrawPixelsY - deltaZ < m_RenderBounds.MinPixelsY || DrawPixelsY - deltaZ > m_RenderBounds.MaxPixelsY)
 								continue;
 
 							/*g_OutOfRangeColor = 0;
@@ -1122,7 +609,7 @@ int TGameScreen::Render(bool mode)
 							if (GetDistance(g_Player, testPos) > g_UpdateRange)
 								g_OutOfRangeColor = 0x0386;*/
 
-							/*char checkZ = mol->DrawZ;
+							char checkZ = mol->DrawZ;
 						
 							while (ro != NULL)
 							{
@@ -1326,7 +813,7 @@ g_RenderedObjectsCountInGameWindow++;
 											{
 												//g_GL.DrawPolygone(0x7F7F7F7F, g_PlayerRect.X, g_PlayerRect.Y, g_PlayerRect.Width, g_PlayerRect.Height);
 											}*/
-										/*}
+										}
 
 										go->DrawEffects(DrawPixelsX, DrawPixelsY, ticks);
 
@@ -1440,7 +927,7 @@ g_RenderedObjectsCountInGameWindow++;
 													}
 												}*/
 
-												/*TGameEffectMoving *moving = (TGameEffectMoving*)effect;
+												TGameEffectMoving *moving = (TGameEffectMoving*)effect;
 												
 												deX += moving->OffsetX;
 												deY += moving->OffsetY;
@@ -1490,7 +977,7 @@ g_RenderedObjectsCountInGameWindow++;
 													glTexCoord2f( p.x / 2, 0 );
 													glVertex2f( X4, Y4 );
 												glEnd;*/
-											/*}
+											}
 
 											effect->ApplyRenderMode();
 
@@ -1511,7 +998,7 @@ g_RenderedObjectsCountInGameWindow++;
 					}
 				}
 			}
-		}*/
+		}
 
 		if (drawModeCount)
 		{
@@ -1901,9 +1388,7 @@ g_RenderedObjectsCountInGameWindow++;
 						
 								char TileZ1 = mol->Z;
 
-								int DeltaMapZ = playerZ * 4; //TileZ1 * 4;
-
-								if (DrawPixelsY - DeltaMapZ < m_RenderBounds.MinPixelsY || DrawPixelsY - DeltaMapZ > m_RenderBounds.MaxPixelsY)
+								if (DrawPixelsY - deltaZ < m_RenderBounds.MinPixelsY || DrawPixelsY - deltaZ > m_RenderBounds.MaxPixelsY)
 									continue;
 						
 								char checkZ = mol->DrawZ;
