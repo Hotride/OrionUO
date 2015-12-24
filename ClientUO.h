@@ -71,7 +71,6 @@ private:
 	void LoadClientConfig();
 	void LoadAutoLoginNames();
 
-	DWORD GetFileHashCode(DWORD address, DWORD size);
 	WORD CalculateLightColor(WORD id);
 
 	void SendWalkStack();
@@ -87,6 +86,8 @@ public:
 
 	void LoadLocalConfig();
 	void SaveLocalConfig();
+	
+	DWORD GetFileHashCode(DWORD address, DWORD size);
 
 	bool AutoLoginNameExists(string name);
 	

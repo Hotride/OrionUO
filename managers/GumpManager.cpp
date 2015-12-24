@@ -566,6 +566,9 @@ void TGumpManager::AddGump(TGump *obj)
 						}
 					}
 
+					if (gumpType == GT_WORLD_MAP && !((TGumpWorldMap*)gump)->Called)
+						((TGumpWorldMap*)gump)->Called = ((TGumpWorldMap*)obj)->Called;
+
 					obj->m_Next = NULL;
 					delete obj;
 

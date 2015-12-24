@@ -4658,7 +4658,7 @@ void TUltimaOnline::GoToWebLink(string url)
 void TUltimaOnline::RemoveRangedObjects()
 {
 	int objectsRange = g_UpdateRange + 1;
-	int multiRange = g_UpdateRange + 1;
+	int multiRange = g_UpdateRange + 12;
 
 	if (World != NULL)
 	{
@@ -4822,6 +4822,7 @@ void TUltimaOnline::OpenWorldMap()
 	int x = g_GameWindowPosX + (g_GameWindowSizeX / 2) - 200;
 	int y = g_GameWindowPosY + (g_GameWindowSizeY / 2) - 150;
 	TGumpWorldMap *gump = new TGumpWorldMap(g_PlayerSerial, x, y);
+	gump->Called = true;
 	GumpManager->AddGump(gump);
 }
 //---------------------------------------------------------------------------

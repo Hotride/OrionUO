@@ -49,11 +49,13 @@ private:
 	int m_OffsetX;
 	int m_OffsetY;
 	BYTE m_OpenedList;
+	bool m_Called;
 
 	void FixOffsets(int &offsetX, int &offsetY, int &width, int &height);
 	void GetScaledDimensions(int &width, int &height, int &playerX, int &playerY);
 	void GetCurrentCenter(int &x, int &y, int &mouseX, int &mouseY);
 	void ScaleOffsets(int newScale, int mouseX, int mouseY);
+	void LoadMap(int map);
 public:
 	TGumpWorldMap(DWORD serial, short x, short y);
 	virtual ~TGumpWorldMap();
@@ -68,6 +70,7 @@ public:
 	SETGET(bool, LinkWithPlayer)
 	SETGET(int, OffsetX)
 	SETGET(int, OffsetY)
+	SETGET(bool, Called)
 
 	void ChangeHeight();
 

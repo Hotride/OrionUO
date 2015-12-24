@@ -28,7 +28,7 @@ const int m_Scales[7] = {1, 1, 1, 2, 4, 6, 10};
 TGumpWorldMap::TGumpWorldMap(DWORD serial, short x, short y)
 : TGump(GT_WORLD_MAP, serial, x, y), m_Width(400), m_Height(300), m_Scale(2),
 m_Map(0), m_OffsetX(0), m_OffsetY(0), m_OpenedList(0), m_MapMoving(false),
-m_Resizing(false), m_LinkWithPlayer(true)
+m_Resizing(false), m_LinkWithPlayer(true), m_Called(false)
 {
 }
 //---------------------------------------------------------------------------
@@ -218,6 +218,126 @@ void TGumpWorldMap::FixOffsets(int &offsetX, int &offsetY, int &width, int &heig
 		offsetY = 0;
 }
 //---------------------------------------------------------------------------
+void TGumpWorldMap::LoadMap(int map)
+{
+	if (!g_MapTexture[map])
+	{
+		TMappedHeader file;
+		memset(&file, 0, sizeof(file));
+
+		FileManager.LoadFileToMemory(file, FilePath("MapsInfo.cuo").c_str());
+
+		const int mapsInfoFileSize = sizeof(DWORD) * 2 * 6;
+		BYTE mapsInfoData[mapsInfoFileSize] = {0};
+
+		bool foundInTable = false;
+
+		DWORD mapHash = 0;
+		DWORD staticsHash = 0;
+
+		DWORD hashSizeContent = (g_MapSizeX[map] << 16) | g_MapSizeY[map];
+
+		DWORD mulMapHash = UO->GetFileHashCode((DWORD)FileManager.MapMul[map].Address, FileManager.MapMul[map].Size);
+		mulMapHash ^= hashSizeContent;
+		DWORD mulStaticsHash = UO->GetFileHashCode((DWORD)FileManager.StaticIdx[map].Address, FileManager.StaticIdx[map].Size);
+		mulStaticsHash ^= UO->GetFileHashCode((DWORD)FileManager.StaticMul[map].Address, FileManager.StaticMul[map].Size);
+		mulStaticsHash ^= hashSizeContent;
+
+		char pathBuf[50] = {0};
+		sprintf(pathBuf, "mapImage%i.cuo", map);
+
+		PDWORD data = NULL;
+
+		if (file.Size != 0)
+		{
+			memcpy(&mapsInfoData[0], (PBYTE)file.Address, mapsInfoFileSize);
+			mapHash = file.ReadDWord();
+			staticsHash = file.ReadDWord();
+
+			if ((mapHash && mapHash == mulMapHash) && (staticsHash && staticsHash == mulStaticsHash))
+			{
+				TMappedHeader mapFile;
+				memset(&mapFile, 0, sizeof(mapFile));
+
+				FileManager.LoadFileToMemory(mapFile, FilePath(pathBuf).c_str());
+
+				if (mapFile.Size)
+				{
+					data = (PDWORD)mapFile.Address;
+					g_GL.BindTexture(g_MapTexture[map], g_MapSizeX[map], g_MapSizeY[map], data);
+
+					FileManager.UnloadFileFromMemory(mapFile);
+
+					foundInTable = true;
+				}
+			}
+		}
+
+		FileManager.UnloadFileFromMemory(file);
+		
+		if (!foundInTable && FileManager.MapMul[map].Size != 0 && FileManager.StaticIdx[map].Size != 0 && FileManager.StaticMul[map].Size != 0)
+		{
+			data = (PDWORD)(mapsInfoData + ((sizeof(DWORD) * 2) * (map + 1)));
+
+			*data++ = mulMapHash;
+			*data = mulStaticsHash;
+
+			DWORD dataSize = g_MapSizeX[map] * g_MapSizeY[map];
+			data = new DWORD[dataSize];
+			dataSize *= 4;
+
+			IFOR(bx, 0, g_MapBlockX[map])
+			{
+				IFOR(by, 0, g_MapBlockY[map])
+				{
+					MAP_BLOCK mb = {0};
+					MapManager->GetWorldMapBlock(map, bx, by, mb);
+				
+					int mapX = bx * 8;
+					int mapY = by * 8;
+
+					IFOR(x, 0, 8)
+					{
+						IFOR(y, 0, 8)
+						{
+							int px = mapX + x;
+							int py = mapY + y;
+							
+							WORD color = mb.Cells[(y * 8) + x].TileID;
+							DWORD pcl = ColorManager->GetRadarColor(color);
+							pcl = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+							int block = py * g_MapSizeX[map] + px;
+							data[block] = pcl;
+							data[block + 1] = pcl;
+						}
+					}
+				}
+			}
+
+			g_GL.BindTexture(g_MapTexture[map], g_MapSizeX[map], g_MapSizeY[map], data);
+
+			FILE *mapDataFile = fopen(FilePath(pathBuf).c_str(), "wb");
+
+			if (mapDataFile != NULL)
+			{
+				PBYTE pData = (PBYTE)data;
+				fwrite(&pData[0], dataSize, 1, mapDataFile);
+				fclose(mapDataFile);
+			}
+
+			delete data;
+
+			FILE *mapsInfoFile = fopen(FilePath("MapsInfo.cuo").c_str(), "wb");
+
+			if (mapsInfoFile != NULL)
+			{
+				fwrite(&mapsInfoData[0], mapsInfoFileSize, 1, mapsInfoFile);
+				fclose(mapsInfoFile);
+			}
+		}
+	}
+}
+//---------------------------------------------------------------------------
 void TGumpWorldMap::PrepareTextures()
 {
 	UO->ExecuteResizepic(0x0A3C);
@@ -238,6 +358,9 @@ void TGumpWorldMap::GenerateFrame(int posX, int posY)
 //----------------------------------------------------------------------------
 int TGumpWorldMap::Draw(bool &mode)
 {
+	if (!m_Called)
+		return 0;
+
 	DWORD index = (DWORD)this;
 
 	//Для быстрого доступа
@@ -295,6 +418,8 @@ int TGumpWorldMap::Draw(bool &mode)
 		map = g_CurrentMap;
 	else
 		map--;
+
+	LoadMap(map);
 
 	if (m_MapMoving && (!m_LinkWithPlayer || g_CurrentMap != map)) //Если активировано изменение положения карты
 	{
@@ -561,6 +686,9 @@ void TGumpWorldMap::OnLeftMouseUp()
 						mapTest = g_CurrentMap;
 					else
 						mapTest--;
+
+					if (g_MapTexture[mapTest] == 0)
+						LoadMap(mapTest);
 
 					if (g_MapTexture[mapTest] != 0)
 					{
