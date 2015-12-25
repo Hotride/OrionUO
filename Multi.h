@@ -30,8 +30,10 @@ public:
 	TMultiObject(WORD graphic, short x, short y, char z, DWORD flags);
 	virtual ~TMultiObject();
 
-	SETGET(DWORD, MultiFlags)
-	SETGET(DWORD, ObjectFlags)
+	SETGET(DWORD, MultiFlags);
+	SETGET(DWORD, ObjectFlags);
+
+	virtual int Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks);
 
 	bool IsBackground() {return (m_ObjectFlags & 0x00000001);}
 	bool IsWeapon() {return (m_ObjectFlags & 0x00000002);}
@@ -83,12 +85,12 @@ public:
 	TMulti(short x, short y);
 	virtual ~TMulti();
 	
-	SETGET(short, X)
-	SETGET(short, Y)
-	SETGET(short, MinX)
-	SETGET(short, MinY)
-	SETGET(short, MaxX)
-	SETGET(short, MaxY)
+	SETGET(short, X);
+	SETGET(short, Y);
+	SETGET(short, MinX);
+	SETGET(short, MinY);
+	SETGET(short, MaxX);
+	SETGET(short, MaxY);
 };
 //---------------------------------------------------------------------------
 #endif

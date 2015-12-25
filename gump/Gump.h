@@ -22,7 +22,8 @@
 //---------------------------------------------------------------------------
 class TGump : public IGump, public TRenderObject
 {
-private:
+//private:
+protected:
 	GUMP_TYPE m_GumpType;
 	DWORD m_ID;
 

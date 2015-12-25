@@ -27,11 +27,11 @@ TMultiObject::TMultiObject(WORD graphic, short x, short y, char z, DWORD multifl
 	m_ObjectFlags = UO->GetStaticFlags(graphic - 0x4000);
 
 	if (IsBackground())
-		RenderQueueIndex = 3 - (int)IsSurface();
+		m_RenderQueueIndex = 3 - (int)IsSurface();
 	else if (IsSurface())
-		RenderQueueIndex = 4;
+		m_RenderQueueIndex = 4;
 	else
-		RenderQueueIndex = 6;
+		m_RenderQueueIndex = 6;
 
 #if UO_DEBUG_INFO!=0
 	g_MultiObjectsCount++;
@@ -43,6 +43,60 @@ TMultiObject::~TMultiObject()
 #if UO_DEBUG_INFO!=0
 	g_MultiObjectsCount--;
 #endif //UO_DEBUG_INFO!=0
+}
+//---------------------------------------------------------------------------
+int TMultiObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+{
+	WORD objGraphic = m_Graphic - 0x4000;
+
+	if (mode)
+	{
+#if UO_DEBUG_INFO!=0
+		g_RenderedObjectsCountInGameWindow++;
+#endif
+
+		WORD objColor = m_Color;
+
+		if (this == g_SelectedObject)
+			objColor = g_SelectMultiColor;
+
+		if (m_MultiFlags == 2) //Мульти на таргете
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+
+			UO->DrawStaticArt(objGraphic, objColor, data.DrawX, data.DrawY, m_Z);
+
+			glDisable(GL_BLEND);
+		}
+		else
+		{
+			UO->DrawStaticArt(objGraphic, objColor, data.DrawX, data.DrawY, m_Z);
+
+			if (IsLightSource())
+			{
+				STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
+
+				LIGHT_DATA light = { tile.Quality, tile.Hue, X, Y, m_Z, data.DrawX, data.DrawY - (m_Z * 4) };
+
+				if (ConfigManager.ColoredLighting)
+					light.Color = UO->GetLightColor(objGraphic);
+
+				GameScreen->AddLight(light);
+			}
+		}
+	}
+	else
+	{
+		if (UO->StaticPixelsInXY(objGraphic, data.DrawX, data.DrawY, m_Z))
+		{
+			g_LastObjectType = SOT_STATIC_OBJECT;
+			g_LastSelectedObject = 3;
+			g_SelectedObject = this;
+		}
+	}
+
+	return 0;
 }
 //----------------------------------------------------------------------------
 //-----------------------------------TMulti-----------------------------------

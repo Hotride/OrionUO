@@ -352,15 +352,6 @@ enum TEXT_ALIGN_TYPE
 	TS_RIGHT
 };
 //---------------------------------------------------------------------------
-//Эффекты шрифта
-#define UOFONT_SOLID			0x01 //Жирный
-#define UOFONT_ITALIC			0x02 //Наклонный
-#define UOFONT_INDENTION		0x04 //Отступ текста (кроме 1 строки) для журнала
-#define UOFONT_BLACK_BORDER		0x08 //Черная обводка
-#define UOFONT_UNDERLINE		0x10 //Подчеркнутый
-#define UOFONT_FIXED			0x20 //Фиксированной длины
-#define UOFONT_CROPPED			0x40 //Фиксированной длины с многоточием
-//---------------------------------------------------------------------------
 //Типы промптов
 enum PROMPT_TYPE
 {
@@ -805,15 +796,6 @@ typedef void __cdecl VOID_PROC();
 bool __cdecl PluginRecvFunction(PBYTE buf, int size);
 bool __cdecl PluginSendFunction(PBYTE buf, int size);
 //---------------------------------------------------------------------------
-#define PLUGIN_FLAGS_PARSE_RECV		0x01
-#define PLUGIN_FLAGS_PARSE_SEND		0x02
-#define PLUGIN_FLAGS_RECV		0x04
-#define PLUGIN_FLAGS_SEND		0x08
-#define PLUGIN_FLAGS_WINDOW_PROC	0x10
-#define PLUGIN_FLAGS_CLIENT_ACCESS	0x20
-#define PLUGIN_FLAGS_GAME_WORLD_DRAW	0x40
-#define PLUGIN_FLAGS_SCENE_DRAW		0x80
-//---------------------------------------------------------------------------
 class TPlugin;
 //---------------------------------------------------------------------------
 typedef struct PLUGIN_INTERFACE
@@ -837,49 +819,6 @@ typedef struct PLUGIN_INTERFACE
 	VOID_PROC *OnWorldDraw;
 	VOID_PROC *OnSceneDraw;
 } *PPLUGIN_INTERFACE;
-//---------------------------------------------------------------------------
-//Connection Errors
-#define CE_NO_ERROR					0
-#define CE_INIT						-1
-#define CE_CREATE					-2
-#define CE_NOT_CONNECTED			-3
-#define CE_CONNECTED				-4
-#define CE_NO_SOCKET				-5
-#define CE_HOST						-6
-#define CE_CONNECT_ERROR			-7
-#define CE_RECV_ERROR				-8
-#define CE_RECV_SIZE_ERROR			-9
-
-#define DCLICK_DELAY				350
-#define SCROLL_LISTING_DELAY		150
-#define CHANGE_SHOP_COUNT_DELAY		50
-#define CHANGE_MACRO_DELAY			100
-#define CHANGE_MACRO_LIST_DELAY		500
-
-//Задержка между отправкой последнего пакета и Ping (0x73) пакетом, 55 секунд
-#define SEND_TIMEOUT_DELAY			55000
-
-#define GUMP_MENU_PIXEL_STEP		5
-
-#define GUMP_SCROLLING_PIXEL_STEP	10
-
-#define CLEAR_TEXTURES_DELAY		30000
-
-#define RANDOM_FIDGET_ANIMATION_DELAY		(30000 + (rand() % 5000))
-
-#define WEATHER_TIMER				(6 * 60 * 1000)
-
-#define WAIT_FOR_TARGET_DELAY		2000
-
-#define MODKEY_ALT					0x0100
-#define MODKEY_CTRL					0x0200
-#define MODKEY_SHIFT				0x0400
-
-#define WM_UO_GENERATE_WORLD_MAP_TEXTURE	WM_USER + 1
-
-const int GAME_FIGURE_GUMP_OFFSET = 11369;
-
-const int TEXT_MESSAGE_MAX_WIDTH = 190;
 //---------------------------------------------------------------------------
 #endif
 //---------------------------------------------------------------------------

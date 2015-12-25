@@ -21,10 +21,19 @@
 #define RenderObjectH
 //---------------------------------------------------------------------------
 class TLandObject;
+class TRenderWorldObject;
+//---------------------------------------------------------------------------
+struct RENDER_LIST_DATA
+{
+	TRenderWorldObject *obj;
+	short DrawX;
+	short DrawY;
+};
 //---------------------------------------------------------------------------
 class TRenderObject : public TBaseQueueItem
 {
-private:
+//private:
+protected:
 	DWORD m_Serial;
 	WORD m_Graphic;
 	WORD m_Color;
@@ -47,7 +56,8 @@ public:
 //---------------------------------------------------------------------------
 class TRenderWorldObject : public TRenderObject
 {
-private:
+//private:
+protected:
 	char m_Z;
 	BYTE m_RenderQueueIndex;
 	RENDER_OBJECT_TYPE m_RenderType;
@@ -71,12 +81,11 @@ public:
 	TRenderWorldObject *m_NextXY;
 	TRenderWorldObject *m_PrevXY;
 
-	//TRenderWorldObject *m_NextDraw;
-	//TRenderWorldObject *m_PrevDraw;
-
 	TLandObject *GetLand();
 
 	//bool InRenderList() {return (m_NextDraw != NULL || m_PrevDraw != NULL);}
+
+	virtual int Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks) { return 0; }
 
 	void RemoveRender();
 

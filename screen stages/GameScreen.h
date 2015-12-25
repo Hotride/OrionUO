@@ -20,7 +20,7 @@
 #ifndef GameScreenH
 #define GameScreenH
 //---------------------------------------------------------------------------
-const int RENDER_LIST_STACK_SIZE = 1000;
+const int RENDER_LIST_STACK_SIZE = 40000;
 const int MAX_LIGHT_SOURCES = 100;
 //---------------------------------------------------------------------------
 struct RENDER_VARIABLES_FOR_GAME_WINDOW
@@ -61,13 +61,6 @@ struct LIGHT_DATA
 	int DrawY;
 };
 //---------------------------------------------------------------------------
-struct RENDER_LIST_DATA
-{
-	TRenderWorldObject *obj;
-	short DrawX;
-	short DrawY;
-};
-//---------------------------------------------------------------------------
 class TGameScreen : public TBaseScreen
 {
 private:
@@ -79,10 +72,14 @@ private:
 	int m_LightCount;
 	TFrameBuffer m_LightBuffer;
 
+	RENDER_LIST_DATA m_List[RENDER_LIST_STACK_SIZE];
+	int m_ListSize;
+
 	void RemoveLight(WORD x, WORD y, char z);
 
 	int GetMaxDrawZ(bool &noDrawRoof, int &maxGroundZ);
 	void CheckMouseEvents(bool &charSelected);
+	void CreaterRenderList();
 public:
 	TGameScreen();
 	virtual ~TGameScreen();

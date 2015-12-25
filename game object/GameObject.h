@@ -22,7 +22,8 @@
 //--------------------------------------------------------------------------
 class TGameObject : public TRenderWorldObject
 {
-private:
+//private:
+protected:
 	DWORD m_Container; //Серийник контейнера, содержащего объект (0xFFFFFFFF - объект лежит в мире)
 	BYTE m_MapIndex; //Карта объекта
 	WORD m_Count; //Количество

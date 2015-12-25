@@ -294,54 +294,43 @@ void TFileManager::Unload()
 //---------------------------------------------------------------------------
 bool TFileManager::LoadFileToMemory(TMappedHeader &object, const char *fName)
 {
-	FILE *fl = fopen(fName, "rb");
+	bool result = false;
 
-	if (fl == NULL)
+	if (PathFileExistsA(fName))
 	{
-		g_LastLoadFileError = fName;
+		UnloadFileFromMemory(object);
 
-		return false;
+		object.File = CreateFileA(fName, GENERIC_READ, 1, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		if (object.File != INVALID_HANDLE_VALUE)
+		{
+			object.Size = GetFileSize(object.File, NULL);
+
+			object.Map = CreateFileMapping(object.File, NULL, 2, 0, NULL, NULL);
+
+			if (object.Map != NULL)
+			{
+				object.Address = MapViewOfFile(object.Map, FILE_MAP_READ, 0, 0, object.Size);
+
+				result = (object.Address != NULL);
+
+				if (!result)
+				{
+					CloseHandle(object.Map);
+					CloseHandle(object.File);
+				}
+				else
+					object.Ptr = (PBYTE)object.Address;
+			}
+			else
+				CloseHandle(object.File);
+		}
 	}
 
-	fclose(fl);
-
-	UnloadFileFromMemory(object);
-
-	object.File = CreateFileA(fName, GENERIC_READ, 1, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	if (object.File == INVALID_HANDLE_VALUE)
-	{
+	if (!result)
 		g_LastLoadFileError = fName;
 
-		return false;
-	}
-
-	object.Size = GetFileSize(object.File, NULL);
-
-	object.Map = CreateFileMapping(object.File, NULL, 2, 0, NULL, NULL);
-
-	if (object.Map == NULL)
-	{
-		CloseHandle(object.File);
-		g_LastLoadFileError = fName;
-
-		return false;
-	}
-
-	object.Address = MapViewOfFile(object.Map, FILE_MAP_READ, 0, 0, object.Size);
-
-	if (object.Address == NULL)
-	{
-		CloseHandle(object.Map);
-		CloseHandle(object.File);
-		g_LastLoadFileError = fName;
-
-		return false;
-	}
-
-	object.Ptr = (PBYTE)object.Address;
-
-	return true;
+	return result;
 }
 //---------------------------------------------------------------------------
 void TFileManager::UnloadFileFromMemory(TMappedHeader &object)
@@ -356,129 +345,6 @@ void TFileManager::UnloadFileFromMemory(TMappedHeader &object)
 		CloseHandle(object.File);
 
 	memset(&object, 0, sizeof(object));
-}
-//---------------------------------------------------------------------------
-IMappedHeader *TFileManager::GetMappedFile(int index)
-{
-	IMappedHeader *result = 0;
-
-	/*switch (index)
-	{
-		//index files
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-			result = &AnimIdx[index - 1];
-			break;
-		case 7:
-			result = &ArtIdx;
-			break;
-		case 8:
-			result = &GumpIdx;
-			break;
-		case 9:
-			result = &LightIdx;
-			break;
-		case 10:
-			result = &MultiIdx;
-			break;
-		case 11:
-			result = &SkillsIdx;
-			break;
-		case 12:
-			result = &SoundIdx;
-			break;
-		case 13:
-		case 14:
-		case 15:
-		case 16:
-		case 17:
-		case 18:
-			result = &StaticIdx[index - 13];
-			break;
-		case 19:
-			result = &TextureIdx;
-			break;
-
-		//data files
-		case 20:
-		case 21:
-		case 22:
-		case 23:
-		case 24:
-		case 25:
-			result = &AnimMul[index - 20];
-			break;
-		case 26:
-			result = &AnimdataMul;
-			break;
-		case 27:
-			result = &ArtMul;
-			break;
-		case 28:
-			result = &HuesMul;
-			break;
-		case 29:
-			result = &FontsMul;
-			break;
-		case 30:
-			result = &GumpMul;
-			break;
-		case 31:
-			result = &LightMul;
-			break;
-		case 32:
-		case 33:
-		case 34:
-		case 35:
-		case 36:
-		case 37:
-			result = &MapMul[index - 32];
-			break;
-		case 38:
-			result = &MultiMul;
-			break;
-		case 39:
-			result = &PaletteMul;
-			break;
-		case 40:
-			result = &RadarcolMul;
-			break;
-		case 41:
-			result = &SkillsMul;
-			break;
-		case 42:
-			result = &SoundMul;
-			break;
-		case 43:
-		case 44:
-		case 45:
-		case 46:
-		case 47:
-		case 48:
-			result = &StaticMul[index - 43];
-			break;
-		case 49:
-			result = &TextureMul;
-			break;
-		case 50:
-			result = &TiledataMul;
-			break;
-		case 51:
-			result = &VerdataMul;
-			break;
-		case 52:
-			result = &MultiMap;
-			break;
-	}
-
-	if (result == NULL && index >= 53 && index < 73)
-		result = &UnifontMul[index - 53];*/
-
-	return result;
 }
 //---------------------------------------------------------------------------
 //--------------------------------TFileWriter-------------------------------

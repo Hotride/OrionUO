@@ -22,7 +22,8 @@
 //--------------------------------------------------------------------------
 class TGameEffect : public TRenderWorldObject
 {
-private:
+//private:
+protected:
 	EFFECT_TYPE m_EffectType;
 	DWORD m_DestSerial;
 	WORD m_DestX;
@@ -55,7 +56,9 @@ public:
 	SETGET(int, AnimIndex);
 	SETGET(int, Increment);
 	SETGET(DWORD, LastChangeFrameTime);
-	
+
+	virtual int Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks);
+
 	WORD GetCurrentGraphic();
 	WORD CalculateCurrentGraphic();
 	void ApplyRenderMode();

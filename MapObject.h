@@ -38,9 +38,9 @@ public:
 	void Merge(TVector &v);
 	void Normalize();
 	
-	SETGET(double, X)
-	SETGET(double, Y)
-	SETGET(double, Z)
+	SETGET(double, X);
+	SETGET(double, Y);
+	SETGET(double, Z);
 };
 //---------------------------------------------------------------------------
 class TMapObject : public TRenderWorldObject
@@ -63,9 +63,11 @@ public:
 
 	TVector m_Normals[4];
 
-	SETGET(RECT, Rect)
-	SETGET(char, DrawZ)
-	SETGET(char, MinZ)
+	SETGET(RECT, Rect);
+	SETGET(char, DrawZ);
+	SETGET(char, MinZ);
+
+	virtual int Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks);
 
 	bool IsLandObject() {return true;}
 
@@ -81,7 +83,9 @@ public:
 	TStaticObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TStaticObject() {}
 
-	SETGET(DWORD, ObjectFlags)
+	SETGET(DWORD, ObjectFlags);
+
+	virtual int Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks);
 
 	bool IsBackground() {return (m_ObjectFlags & 0x00000001);}
 	bool IsWeapon() {return (m_ObjectFlags & 0x00000002);}

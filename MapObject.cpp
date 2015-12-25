@@ -85,9 +85,9 @@ TMapObject::TMapObject(RENDER_OBJECT_TYPE type, DWORD serial, WORD graphic, WORD
 TMapObject::~TMapObject()
 {
 #if UO_DEBUG_INFO!=0
-	if (RenderType == ROT_LAND_OBJECT)
+	if (m_RenderType == ROT_LAND_OBJECT)
 		g_LandObjectsCount--;
-	else if (RenderType == ROT_STATIC_OBJECT)
+	else if (m_RenderType == ROT_STATIC_OBJECT)
 		g_StaticsObjectsCount--;
 #endif //UO_DEBUG_INFO!=0
 }
@@ -103,20 +103,149 @@ TLandObject::TLandObject(DWORD serial, WORD graphic, WORD color, short x, short 
 #endif //UO_DEBUG_INFO!=0
 }
 //---------------------------------------------------------------------------
+int TLandObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+{
+	if (mode)
+	{
+		WORD objColor = 0;
+
+		if (this == g_SelectedObject)
+			objColor = g_SelectLandColor;
+
+#if UO_DEBUG_INFO!=0
+		g_RenderedObjectsCountInGameWindow++;
+#endif
+
+		if (m_Color == 1)
+			UO->DrawLandArt(m_Graphic, objColor, data.DrawX, data.DrawY, m_Z);
+		else
+		{
+			GLfloat tCl = 1.0f;
+			glColor3f(tCl, tCl, tCl);
+
+			glEnable(GL_LIGHTING);
+
+			UO->DrawLandTexture(m_Graphic, objColor, data.DrawX, data.DrawY, m_Rect, m_Normals);
+
+			glDisable(GL_LIGHTING);
+
+			glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
+		}
+	}
+	else
+	{
+		if (UO->LandPixelsInXY(m_Graphic, data.DrawX, data.DrawY, m_Z))
+		{
+			g_LastObjectType = SOT_LAND_OBJECT;
+			g_LastSelectedObject = 2;
+			g_SelectedObject = this;
+		}
+	}
+
+	return 0;
+}
+//---------------------------------------------------------------------------
 TStaticObject::TStaticObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z)
 : TMapObject(ROT_STATIC_OBJECT, serial, graphic, color, x, y, z)
 {
 	m_ObjectFlags = UO->GetStaticFlags(graphic - 0x4000);
 
 	if (IsBackground())
-		RenderQueueIndex = 3 - (int)IsSurface();
+		m_RenderQueueIndex = 3 - (int)IsSurface();
 	else if (IsSurface())
-		RenderQueueIndex = 4;
+		m_RenderQueueIndex = 4;
 	else
-		RenderQueueIndex = 6;
+		m_RenderQueueIndex = 6;
 
 #if UO_DEBUG_INFO!=0
 	g_StaticsObjectsCount++;
 #endif //UO_DEBUG_INFO!=0
+}
+//---------------------------------------------------------------------------
+int TStaticObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+{
+	WORD objGraphic = m_Graphic - 0x4000;
+
+	if (mode)
+	{
+#if UO_DEBUG_INFO!=0
+		g_RenderedObjectsCountInGameWindow++;
+#endif
+
+		WORD objColor = m_Color;
+
+		if (this == g_SelectedObject)
+			objColor = g_SelectStaticColor;
+
+		if (IsFoliage()) // && playerX - 2 < x && playerY - 2 < y)
+		{
+			if (!g_GrayedPixels)
+			{
+				POINT fp = { 0, 0 };
+				UO->GetArtDimension(m_Graphic, fp);
+
+				IMAGE_BOUNDS fib = { data.DrawX - fp.x / 2, data.DrawY - fp.y - (m_Z * 4), fp.x, fp.y };
+
+				//g_GL.DrawPolygone(0x7F7F7F7F, fib.X, fib.Y, fib.Width, fib.Height);
+
+				if (fib.InRect(g_PlayerRect))
+				{
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+
+					UO->DrawStaticArtAnimated(objGraphic, objColor, data.DrawX, data.DrawY, m_Z);
+
+					glDisable(GL_BLEND);
+				}
+				else
+					UO->DrawStaticArtAnimated(objGraphic, objColor, data.DrawX, data.DrawY, m_Z);
+			}
+		}
+		else
+			UO->DrawStaticArtAnimated(objGraphic, objColor, data.DrawX, data.DrawY, m_Z);
+
+		if (IsLightSource() && !IsWall())
+		{
+			STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
+
+			LIGHT_DATA light = { tile.Quality, 0, X, Y, m_Z, data.DrawX, data.DrawY - (m_Z * 4) };
+
+			if (ConfigManager.ColoredLighting)
+				light.Color = UO->GetLightColor(objGraphic);
+
+			GameScreen->AddLight(light);
+		}
+	}
+	else
+	{
+		if (IsFoliage()) // && playerX - 2 < mX && playerY - 2 < mY)
+		{
+			if (!g_GrayedPixels)
+			{
+				POINT fp = { 0, 0 };
+				UO->GetArtDimension(m_Graphic, fp);
+
+				IMAGE_BOUNDS fib = { data.DrawX - fp.x / 2, data.DrawY - fp.y - (m_Z * 4), fp.x, fp.y };
+
+				if (!fib.InRect(g_PlayerRect))
+				{
+					if (UO->StaticPixelsInXYAnimated(objGraphic, data.DrawX, data.DrawY, m_Z))
+					{
+						g_LastObjectType = SOT_STATIC_OBJECT;
+						g_LastSelectedObject = 3;
+						g_SelectedObject = this;
+					}
+				}
+			}
+		}
+		else if (UO->StaticPixelsInXYAnimated(objGraphic, data.DrawX, data.DrawY, m_Z))
+		{
+			g_LastObjectType = SOT_STATIC_OBJECT;
+			g_LastSelectedObject = 3;
+			g_SelectedObject = this;
+		}
+	}
+
+	return 0;
 }
 //---------------------------------------------------------------------------

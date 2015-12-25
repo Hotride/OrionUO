@@ -45,6 +45,8 @@ public:
 	//Вставка данных из объекта в руке (на курсоре)
 	void Paste(TObjectOnCursor *obj);
 
+	virtual int Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks);
+
 	SETGET(BYTE, Layer)
 	SETGET(WORD, AnimID)
 	SETGET(WORD, ImageID)

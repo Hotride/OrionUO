@@ -38,6 +38,7 @@
 #include <winsock.h>
 #include <deque>
 #include <Shellapi.h>
+#include <Shlwapi.h>
 #include "zlib.h"
 #include <Mmsystem.h>
 #include "SDL2-2.0.3\include\SDL.h"
@@ -49,6 +50,7 @@
 #pragma comment(lib, "wsock32.lib")
 #pragma comment(lib, "zdll.lib")
 #pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "Shlwapi.lib")
 #pragma comment(lib, "SDL2-2.0.3\\lib\\x86\\SDL2.lib")
 #pragma comment(lib, "SDL2-2.0.3\\lib\\x86\\SDL2_mixer.lib")
 
@@ -58,11 +60,9 @@
 #include <string>
 using std::string;
 using std::wstring;
-
-#define UO_DEBUG_INFO 1
-
+//---------------------------------------------------------------------------
 #define UO_FW_SHARD 0
-
+//---------------------------------------------------------------------------
 extern int g_LandObjectsCount;
 extern int g_StaticsObjectsCount;
 extern int g_GameObjectsCount;
@@ -82,6 +82,10 @@ extern bool g_MovingFromMouse;
 extern bool g_AutoMoving;
 //---------------------------------------------------------------------------
 #include "EnumList.h"
+#include "DefinitionMacro.h"
+//---------------------------------------------------------------------------
+const int GAME_FIGURE_GUMP_OFFSET = 11369;
+const int TEXT_MESSAGE_MAX_WIDTH = 190;
 //---------------------------------------------------------------------------
 extern HINSTANCE g_Hinstance;
 extern HWND g_hWnd;
@@ -154,6 +158,7 @@ extern float g_AnimCharactersDelayValue;
 extern bool g_ShowGumpLocker;
 extern DWORD g_PartyHelperTarget;
 extern DWORD g_PartyHelperTimer;
+extern float g_DrawColor;
 //---------------------------------------------------------------------------
 extern int g_MouseX;
 extern int g_MouseY;
@@ -223,39 +228,7 @@ const int g_CharacterAnimationDelayTable[2][2] =
 	}
 };
 //---------------------------------------------------------------------------
-const bool g_LayerUnsafe[30] =
-{
-	false,   //0
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	true,
-	false,
-	true,
-	true,
-	true,
-	false,
-	false,
-	true,
-	true,
-	true,
-	true,
-	false, //0x15
-	true,
-	true,
-	true,
-	false,
-	false,
-	false,
-	false,
-	false
-};
+extern const bool g_LayerUnsafe[30];
 //---------------------------------------------------------------------------
 const int g_MaxBlockZ = 15;
 const int g_MaxClimbZ = 9;
@@ -337,37 +310,6 @@ inline int RandomIntMinMax(int n, int m)
 int CalculateSphereOffset(int max, int current, int maxValue, float divizor = 100.0f);
 int CalculatePercents(int max, int current, int maxValue);
 //---------------------------------------------------------------------------
-//incremented ordinary for
-#define IFOR(var, value, target) for (int var = value; var < target; var ++)
-//decremented ordinary for
-#define DFOR(var, value, target) for (int var = value; var >= target; var --)
-//TBaseQueue for [extended]
-#define QFOR(var, src, type) for (type var = (type)src->Begin(); var != NULL; var = (type)src->Next())
-//TBaseQueue for
-#define BQFOR(var, src) QFOR(var, src, TBaseQueueItem*)
-//---------------------------------------------------------------------------
-//Set/Get ordinary class property
-#define SETGET(type, name) \
-void Set##name( type val) {m_##name = val;} \
-type Get##name() const {return m_##name;} \
-__declspec(property(get = Get##name, put = Set##name)) type name;
-//---------------------------------------------------------------------------
-//Set/Get ordinary class property
-#define SETGETEX(type, name) \
-void Set##name( type val) {m_##name = val;} \
-type Get##name() const {return m_##name;} \
-void Inc##name() {m_##name++;} \
-void Dec##name() {m_##name--;} \
-void Add##name( type val) {m_##name += val;} \
-__declspec(property(get = Get##name, put = Set##name)) type name;
-//---------------------------------------------------------------------------
-//Get ordinary class property customized
-#define GET_PARTY(type, name) \
-type Get##name(); \
-__declspec(property(get = Get##name)) type name;
-//---------------------------------------------------------------------------
-#define CMP_RANGE(name, id1, id2) (name >= id1 && name <= id2)
-//---------------------------------------------------------------------------
 inline DWORD unpack32(PBYTE buf)
 {
 	return (buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3];
@@ -392,40 +334,6 @@ inline void pack16(PBYTE buf, WORD x)
 	buf[1] = x & 0xff;
 }
 //---------------------------------------------------------------------------
-//Включить/выключить логгер.
-//Логгер будет работать в любом случае, но если эта опция выключена
-//то он не будет писать в лог дампы пакетов и всякую отладочкую информацию
-//Если значение равно 2 - будет писать отладочную инфу, но без дампов пакетов
-//Без пакетов от нее толку мало...
-#define UOLOGGER 1
-
-#if UOLOGGER != 0
-	#define EPRINT error_printf
-	#define WPRINT warning_printf
-	#define TPRINT trace_printf
-	#define T_TPRINT trace_printf
-	#if UOLOGGER == 2
-		#define TDUMP ;/##/
-	#else //UOLOGGER != 2
-		#define TDUMP trace_dump
-	#endif //UOLOGGER == 2
-#else //UOLOGGER == 0
-	#define EPRINT ;/##/
-	#define WPRINT ;/##/
-	#define TPRINT ;/##/
-	#define TDUMP ;/##/
-#endif //UOLOGGER!=0
-
-// GCC_NORETURN means the function never returns
-// GCC_PRINTF means the function has printf-style arguments
-#ifdef __GNUC__
-#   define GCC_NORETURN __attribute__((noreturn))
-#   define GCC_PRINTF(n,m) __attribute__((format (printf, n, m)))
-#else
-#   define GCC_NORETURN
-#   define GCC_PRINTF(n,m)
-#endif
-
 void error_printf(const char * format, ...) GCC_PRINTF(1,2);
 void warning_printf(const char * format, ...) GCC_PRINTF(1,2);
 void trace_printf(const char * format, ...) GCC_PRINTF(1,2);

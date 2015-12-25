@@ -25,21 +25,84 @@ m_DestSerial(0), m_DestX(0), m_DestY(0), m_DestZ(0), m_Speed(0), m_Duration(0),
 m_FixedDirection(false), m_Explode(false), m_RenderMode(0), m_AnimIndex(0),
 m_Increment(0), m_LastChangeFrameTime(0)
 {
-	RenderQueueIndex = 8;
+	m_RenderQueueIndex = 8;
 }
 //---------------------------------------------------------------------------
 TGameEffect::~TGameEffect()
 {
 }
 //---------------------------------------------------------------------------
+int TGameEffect::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+{
+	if (mode)
+	{
+#if UO_DEBUG_INFO!=0
+		g_RenderedObjectsCountInGameWindow++;
+#endif
+
+		WORD objGraphic = 0;
+
+		if (m_EffectType == EF_STAY_AT_POS && m_Duration < ticks)
+			EffectManager->RemoveEffect(this);
+		else if (m_EffectType == EF_DRAG)
+		{
+			if (m_Duration < ticks)
+				EffectManager->RemoveEffect(this);
+			else
+			{
+				TGameEffectDrag *ed = (TGameEffectDrag*)this;
+
+				int deX = data.DrawX - ed->OffsetX;
+				int deY = data.DrawY - ed->OffsetY;
+
+				UO->DrawStaticArt(m_Graphic, m_Color, deX, deY, m_Z);
+
+				ed->AddOffsetX(10);
+				ed->AddOffsetY(10);
+			}
+		}
+		else if (LastChangeFrameTime < ticks)
+		{
+			LastChangeFrameTime = ticks + m_Speed;
+
+			objGraphic = CalculateCurrentGraphic();
+		}
+		else
+			objGraphic = GetCurrentGraphic();
+
+		if (objGraphic)
+		{
+			int deX = data.DrawX;
+			int deY = data.DrawY;
+			int deZ = 0;
+
+			if (m_EffectType == EF_MOVING)
+			{
+				TGameEffectMoving *moving = (TGameEffectMoving*)this;
+
+				deX += moving->OffsetX;
+				deY += moving->OffsetY;
+				deZ += moving->OffsetZ;
+			}
+
+			ApplyRenderMode();
+
+			UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z + deZ);
+
+			glDisable(GL_BLEND);
+		}
+	}
+
+	return 0;
+}
+//---------------------------------------------------------------------------
 WORD TGameEffect::CalculateCurrentGraphic()
 {
 	DWORD addressAnimData = (DWORD)FileManager.AnimdataMul.Address;
-	WORD graphic = Graphic;
 
 	if (addressAnimData)
 	{
-		DWORD addr = (graphic * 68) + 4 * ((graphic / 8) + 1);
+		DWORD addr = (m_Graphic * 68) + 4 * ((m_Graphic / 8) + 1);
 		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + addr);
 			
 		if (m_AnimIndex < (int)pad->FrameCount - 1)
@@ -54,14 +117,14 @@ WORD TGameEffect::CalculateCurrentGraphic()
 		}
 	}
 
-	//trace_printf("Generate effectID for 0x%04X (add %i)\n", graphic, m_Increment);
+	//trace_printf("Generate effectID for 0x%04X (add %i)\n", m_Graphic, m_Increment);
 
-	return graphic + m_Increment;
+	return m_Graphic + m_Increment;
 }
 //---------------------------------------------------------------------------
 WORD TGameEffect::GetCurrentGraphic()
 {
-	return Graphic + m_Increment;
+	return m_Graphic + m_Increment;
 }
 //---------------------------------------------------------------------------
 void TGameEffect::ApplyRenderMode()
@@ -135,15 +198,15 @@ void TGameEffectMoving::Init()
 				
 		if (obj != NULL)
 		{
-			DestX = obj->X;
-			DestY = obj->Y;
-			DestZ = obj->Z;
+			m_DestX = obj->X;
+			m_DestY = obj->Y;
+			m_DestZ = obj->Z;
 		}
 	}
 
-	m_DiffX = DestX - X;
-	m_DiffY = DestY - Y;
-	m_DiffZ = DestZ - Z;
+	m_DiffX = m_DestX - X;
+	m_DiffY = m_DestY - Y;
+	m_DiffZ = m_DestZ - Z;
 
 	int posX = (m_DiffX - m_DiffY) * 44;
 	int posY = (m_DiffX + m_DiffY) * 44 + m_DiffZ * 4;
@@ -182,7 +245,7 @@ void TGameEffectMoving::Update()
 	{
 		if (Explode)
 		{
-			TGameObject *obj = World->FindWorldObject(Serial);
+			TGameObject *obj = World->FindWorldObject(m_Serial);
 
 			if (obj != NULL && obj->GetTopObject() != NULL)
 				EffectManager->CreateExplodeEffect(this);
@@ -192,9 +255,9 @@ void TGameEffectMoving::Update()
 	}
 	else
 	{
-		int oldX = X;
-		int oldY = Y;
-		int oldZ = Z;
+		int oldX = m_X;
+		int oldY = m_Y;
+		int oldZ = m_Z;
 
 		int newX = oldX + (int)(m_DiffX * m_Step / m_Distance);
 		int newY = oldY + (int)(m_DiffY * m_Step / m_Distance);
@@ -208,9 +271,9 @@ void TGameEffectMoving::Update()
 
 		if (oldX != newX || oldY != newY || oldZ != newZ)
 		{
-			X = newX;
-			Y = newY;
-			Z = newZ;
+			m_X = newX;
+			m_Y = newY;
+			m_Z = newZ;
 
 			Init();
 

@@ -106,6 +106,7 @@ bool g_ShowGumpLocker = false;
 POINT g_RemoveRangeXY = {0, 0};
 DWORD g_PartyHelperTarget = 0;
 DWORD g_PartyHelperTimer = 0;
+float g_DrawColor = 1.0f;
 
 int g_MouseX = 0;
 int g_MouseY = 0;
@@ -255,6 +256,40 @@ int CalculatePercents(int max, int current, int maxValue)
 
 	return max;
 }
+//--------------------------------------------------------------------------
+const bool g_LayerUnsafe[30] =
+{
+	false,   //0
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	false,
+	true,
+	true,
+	true,
+	false,
+	false,
+	true,
+	true,
+	true,
+	true,
+	false, //0x15
+	true,
+	true,
+	true,
+	false,
+	false,
+	false,
+	false,
+	false
+};
 //--------------------------------------------------------------------------
 const char *g_CityNames[9] =
 {

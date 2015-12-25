@@ -22,7 +22,8 @@
 //--------------------------------------------------------------------------
 class TGameCharacter: public TGameObject
 {
-private:
+//private:
+protected:
 	short m_Hits; //Текущее значение ХП
 	short m_MaxHits; //Максимальное значение ХП
 	short m_Mana; //Текущее значение маны
@@ -88,6 +89,8 @@ public:
 	SETGETEX(char, OffsetY);
 	SETGETEX(char, OffsetZ);
 	SETGET(DWORD, LastStepTime);
+
+	virtual int Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks);
 
 	void UpdateSex(); //Обновить информацию о поле персонажа
 

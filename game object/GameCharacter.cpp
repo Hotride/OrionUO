@@ -40,7 +40,7 @@ TGameCharacter::~TGameCharacter()
 	m_PaperdollTextTexture.Clear();
 
 	//Если стянут статусбар - обновим его
-	TGump *gump = GumpManager->GetGump(Serial, 0, GT_STATUSBAR);
+	TGump *gump = GumpManager->GetGump(m_Serial, 0, GT_STATUSBAR);
 	if (gump != NULL)
 		gump->UpdateFrame();
 }
@@ -54,21 +54,64 @@ void TGameCharacter::SetPaperdollText(string val)
 		FontManager->GenerateA(1, m_PaperdollTextTexture, val.c_str(), 0x0386, 185);
 }
 //---------------------------------------------------------------------------
+int TGameCharacter::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+{
+	if (mode)
+	{
+		if (m_TimeToRandomFidget < ticks)
+			SetRandomFidgetAnimation();
+
+#if UO_DEBUG_INFO!=0
+		g_RenderedObjectsCountInGameWindow++;
+#endif
+
+		DWORD lastSBsel = g_StatusbarUnderMouse;
+
+		if (!IsPlayer() && g_Player->Warmode && g_LastSelectedObject == m_Serial)
+			g_StatusbarUnderMouse = Serial;
+
+		AnimationManager->DrawCharacter(this, data.DrawX, data.DrawY, m_Z); //Draw character
+
+		g_StatusbarUnderMouse = lastSBsel;
+
+		/*if (goc->IsPlayer())
+		{
+		//g_GL.DrawPolygone(0x7F7F7F7F, g_PlayerRect.X, g_PlayerRect.Y, g_PlayerRect.Width, g_PlayerRect.Height);
+		}*/
+
+		int drawX = data.DrawX;
+		int drawY = data.DrawY;
+
+		DrawEffects(drawX, drawY, ticks);
+	}
+	else
+	{
+		if (AnimationManager->CharacterPixelsInXY(this, data.DrawX, data.DrawY, m_Z))
+		{
+			g_LastObjectType = SOT_GAME_OBJECT;
+			g_LastSelectedObject = m_Serial;
+			g_SelectedObject = this;
+		}
+	}
+
+	return 0;
+}
+//---------------------------------------------------------------------------
 void TGameCharacter::UpdateSex()
 {
 	//Обновления пола в зависимости от индекса картинки персонажа
-	switch (Graphic)
+	switch (m_Graphic)
 	{
 		case 0x0190:
 		case 0x0192:
 		{
-			Sex = false;
+			m_Sex = false;
 			break;
 		}
 		case 0x0191:
 		case 0x0193:
 		{
-			Sex = true;
+			m_Sex = true;
 			break;
 		}
 		default:
@@ -158,7 +201,7 @@ bool TGameCharacter::IsTeleportAction(WORD &x, WORD &y, BYTE &dir)
 void TGameCharacter::SetAnimation(BYTE id, BYTE interval, BYTE frameCount, BYTE repeatCount, bool repeat, bool frameDirection)
 {
 	m_AnimationGroup = id;
-	AnimIndex = 0;
+	m_AnimIndex = 0;
 	m_AnimationInterval = interval;
 	m_AnimationFrameCount = frameCount;
 	m_AnimationRepeatMode = repeatCount;
@@ -166,13 +209,13 @@ void TGameCharacter::SetAnimation(BYTE id, BYTE interval, BYTE frameCount, BYTE 
 	m_AnimationDirection = frameDirection;
 	m_AnimationFromServer = false;
 
-	LastAnimationChangeTime = GetTickCount();
+	m_LastAnimationChangeTime = GetTickCount();
 	m_TimeToRandomFidget = GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY;
 }
 //---------------------------------------------------------------------------
 void TGameCharacter::SetRandomFidgetAnimation()
 {
-	AnimIndex = 0;
+	m_AnimIndex = 0;
 	m_AnimationFrameCount = 0;
 	m_AnimationInterval = 1;
 	m_AnimationRepeatMode = 1;
@@ -338,7 +381,7 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 		groupIndex = AnimationManager->GetGroupIndex(GetMountAnimation());
 
 	bool isWalking = Walking();
-	bool isRun = (Direction & 0x80);
+	bool isRun = (m_Direction & 0x80);
 
 	if (!m_WalkStack.Empty())
 	{
@@ -423,7 +466,7 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 //---------------------------------------------------------------------------
 WORD TGameCharacter::GetMountAnimation()
 {
-	WORD graphic = Graphic;
+	WORD graphic = m_Graphic;
 
 	switch (graphic)
 	{
@@ -443,7 +486,7 @@ WORD TGameCharacter::GetMountAnimation()
 //---------------------------------------------------------------------------
 void TGameCharacter::UpdateAnimationInfo(BYTE &dir, bool canChange)
 {
-	dir = Direction;
+	dir = m_Direction;
 	if (dir & 0x80)
 		dir ^= 0x80;
 
@@ -498,10 +541,10 @@ void TGameCharacter::UpdateAnimationInfo(BYTE &dir, bool canChange)
 
 			if (removeStep)
 			{
-				X = wd->X;
-				Y = wd->Y;
-				Z = wd->Z;
-				Direction = wd->Direction;
+				m_X = wd->X;
+				m_Y = wd->Y;
+				m_Z = wd->Z;
+				m_Direction = wd->Direction;
 
 				m_AfterStepDelay = maxDelay / 3;
 

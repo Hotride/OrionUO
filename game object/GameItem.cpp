@@ -27,7 +27,7 @@ m_Opened(false), m_Dragged(false), m_ObjectFlags(0), ShopItem(NULL)
 //---------------------------------------------------------------------------
 TGameItem::~TGameItem()
 {
-	if (Graphic >= 0x4000 && m_Items != NULL)
+	if (m_Graphic >= 0x4000 && m_Items != NULL)
 	{
 		TMulti *multi = (TMulti*)m_Items;
 		m_Items = NULL;
@@ -40,15 +40,13 @@ TGameItem::~TGameItem()
 		ShopItem = NULL;
 	}
 	
-	DWORD serial = Serial;
-
 	if (m_Opened)
 	{
-		GumpManager->CloseGump(serial, 0, GT_CONTAINER);
-		GumpManager->CloseGump(serial, 0, GT_SPELLBOOK);
-		GumpManager->CloseGump(serial, 0, GT_MAP);
+		GumpManager->CloseGump(m_Serial, 0, GT_CONTAINER);
+		GumpManager->CloseGump(m_Serial, 0, GT_SPELLBOOK);
+		GumpManager->CloseGump(m_Serial, 0, GT_MAP);
 
-		TGump *gump = GumpManager->GetGump(serial, 0, GT_BULLETIN_BOARD);
+		TGump *gump = GumpManager->GetGump(m_Serial, 0, GT_BULLETIN_BOARD);
 		if (gump != NULL)
 			GumpManager->RemoveGump(gump);
 
@@ -57,7 +55,7 @@ TGameItem::~TGameItem()
 
 	if (m_Dragged)
 	{
-		GumpManager->CloseGump(serial, 0, GT_DRAG);
+		GumpManager->CloseGump(m_Serial, 0, GT_DRAG);
 
 		m_Dragged = false;
 	}
@@ -72,32 +70,158 @@ void TGameItem::Paste(TObjectOnCursor *obj)
 	m_Next = NULL;
 	m_Prev = NULL;
 	
-	Serial = obj->GetSerial();
-	Graphic = obj->GetGraphic();
-	Color = obj->GetColor();
-	X = obj->GetX();
-	Y = obj->GetY();
-	Z = obj->GetZ();
-	Count = obj->GetCount();
-	Layer = obj->GetLayer();
-	Flags = obj->GetFlags();
-	NPC = obj->GetNPC();
-	ImageID = obj->GetImageID();
-	Container = obj->GetContainer();
-	UsedLayer = obj->GetUsedLayer();
-	Opened = false;
-	ObjectFlags = obj->GetObjectFlags();
-	AnimID = obj->GetAnimID();
-	MapIndex = obj->GetMapIndex();
-	Dragged = false;
-	Clicked = false;
+	m_Serial = obj->GetSerial();
+	m_Graphic = obj->GetGraphic();
+	m_Color = obj->GetColor();
+	m_X = obj->GetX();
+	m_Y = obj->GetY();
+	m_Z = obj->GetZ();
+	m_Count = obj->GetCount();
+	m_Layer = obj->GetLayer();
+	m_Flags = obj->GetFlags();
+	m_NPC = obj->GetNPC();
+	m_ImageID = obj->GetImageID();
+	m_Container = obj->GetContainer();
+	m_UsedLayer = obj->GetUsedLayer();
+	m_Opened = false;
+	m_ObjectFlags = obj->GetObjectFlags();
+	m_AnimID = obj->GetAnimID();
+	m_MapIndex = obj->GetMapIndex();
+	m_Dragged = false;
+	m_Clicked = false;
 
 	SetName(obj->GetName());
 }
 //---------------------------------------------------------------------------
+int TGameItem::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+{
+	if (mode)
+	{
+#if UO_DEBUG_INFO!=0
+		g_RenderedObjectsCountInGameWindow++;
+#endif
+
+		WORD objGraphic = m_Graphic;
+		WORD objColor = m_Color;
+
+		if (Hidden())
+			objColor = 0x038A;
+
+		if (IsCorpse()) //Трупик
+			AnimationManager->DrawCorpse(this, data.DrawX, data.DrawY, m_Z);
+		else
+		{
+			bool doubleDraw = false;
+			bool selMode = false;
+
+			if (g_LastObjectType == SOT_GAME_OBJECT && !Locked() && g_LastSelectedObject == m_Serial)
+			{
+				objColor = 0x0035;
+				selMode = true;
+			}
+
+			if (m_Count > 1)
+			{
+				if (objGraphic == 0x0EED)
+				{
+					if (m_Count > 5)
+						objGraphic = 0x0EEF;
+					else
+						objGraphic = 0x0EEE;
+				}
+				else if (IsStackable())
+					doubleDraw = true;
+			}
+
+			if (doubleDraw)
+			{
+				int drawX = data.DrawX - 2;
+				UO->DrawStaticArt(objGraphic, objColor, drawX, data.DrawY - 5, m_Z, selMode);
+				UO->DrawStaticArt(objGraphic, objColor, drawX + 5, data.DrawY, m_Z, selMode);
+			}
+			else
+				UO->DrawStaticArtAnimated(objGraphic, objColor, data.DrawX, data.DrawY, m_Z, selMode);
+
+			if (IsLightSource())
+			{
+				STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
+
+				LIGHT_DATA light = { tile.Quality, tile.Hue, X, Y, m_Z, data.DrawX, data.DrawY - (m_Z * 4) };
+
+				if (ConfigManager.ColoredLighting)
+					light.Color = UO->GetLightColor(objGraphic);
+
+				GameScreen->AddLight(light);
+			}
+		}
+
+		int drawX = data.DrawX;
+		int drawY = data.DrawY;
+
+		DrawEffects(drawX, drawY, ticks);
+	}
+	else
+	{
+		if (IsCorpse()) //Трупик
+		{
+			if (AnimationManager->CorpsePixelsInXY(this, data.DrawX, data.DrawY, m_Z))
+			{
+				g_LastObjectType = SOT_GAME_OBJECT;
+				g_LastSelectedObject = m_Serial;
+				g_SelectedObject = this;
+			}
+		}
+		else
+		{
+			WORD goGraphic = m_Graphic;
+
+			bool doubleDraw = false;
+
+			if (m_Count > 1)
+			{
+				if (goGraphic == 0x0EED)
+				{
+					if (m_Count > 5)
+						goGraphic = 0x0EEF;
+					else
+						goGraphic = 0x0EEE;
+				}
+				else if (IsStackable())
+					doubleDraw = true;
+			}
+
+			if (doubleDraw)
+			{
+				int drawX = data.DrawX - 2;
+
+				if (UO->StaticPixelsInXY(goGraphic, data.DrawX, data.DrawY - 5, m_Z))
+				{
+					g_LastObjectType = SOT_GAME_OBJECT;
+					g_LastSelectedObject = m_Serial;
+					g_SelectedObject = this;
+				}
+				else if (UO->StaticPixelsInXY(goGraphic, data.DrawX + 5, data.DrawY, m_Z))
+				{
+					g_LastObjectType = SOT_GAME_OBJECT;
+					g_LastSelectedObject = m_Serial;
+					g_SelectedObject = this;
+				}
+			}
+			else if (UO->StaticPixelsInXYAnimated(goGraphic, data.DrawX, data.DrawY, m_Z))
+			{
+				g_LastObjectType = SOT_GAME_OBJECT;
+				g_LastSelectedObject = m_Serial;
+				g_SelectedObject = this;
+			}
+		}
+	}
+
+	return 0;
+}
+//---------------------------------------------------------------------------
 WORD TGameItem::GetMountAnimation()
 {
-	WORD graphic = Graphic;
+	WORD graphic = m_Graphic;
 
 	if (m_Layer == OL_MOUNT)
 	{
@@ -322,14 +446,14 @@ WORD TGameItem::GetMountAnimation()
 		}
 	}
 	else if (graphic == 0x2006) //Corpse
-		graphic = (WORD)Count;
+		graphic = (WORD)m_Count;
 
 	return graphic;
 }
 //---------------------------------------------------------------------------
 void TGameItem::LoadMulti()
 {
-	TIndexMulti *index = UO->GetMultiPointer(Graphic - 0x4000);
+	TIndexMulti *index = UO->GetMultiPointer(m_Graphic - 0x4000);
 	
 	if (index != NULL && index->Address != NULL)
 	{

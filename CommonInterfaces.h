@@ -102,28 +102,6 @@ interface IGumpManager
 	virtual void RemoveGump(TGump *obj) = 0;
 };
 //----------------------------------------------------------------------------
-interface IMappedHeader
-{
-	//virtual void Move(int offset) = 0;
-
-	virtual BYTE ReadByte() = 0;
-	virtual WORD ReadWord() = 0;
-	virtual DWORD ReadDWord() = 0;
-	virtual char ReadChar() = 0;
-	virtual short ReadShort() = 0;
-	virtual int ReadInt() = 0;
-	virtual string ReadString(int size) = 0;
-};
-//----------------------------------------------------------------------------
-interface IFileManager
-{
-	virtual bool GetUseVerdata() const = 0;
-
-	virtual bool LoadFileToMemory(TMappedHeader &object, const char *fName) = 0;
-	virtual void UnloadFileFromMemory(TMappedHeader &object) = 0;
-	virtual IMappedHeader* GetMappedFile(int index) = 0;
-};
-//----------------------------------------------------------------------------
 interface ICliloc
 {
 	virtual string GetLanguage() const = 0;
@@ -162,7 +140,6 @@ typedef struct PLUGIN_CLIENT_INTERFACE
 	IGLEngine *_GL;
 	IUltimaOnline *_UO;
 	IGumpManager *_GumpManager;
-	IFileManager *_FileManager;
 	IClilocManager *_ClilocManager;
 	IColorManager *_ColorManager;
 	IPathFinder *_PathFinder;

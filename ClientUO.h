@@ -82,7 +82,6 @@ public:
 	
 	void LoadStartupConfig();
 	void LoadPluginConfig();
-	void CreateGlobalMaps();
 
 	void LoadLocalConfig();
 	void SaveLocalConfig();

@@ -20,28 +20,7 @@
 #include "ClientUO.h"
 
 TUltimaOnline *UO = NULL;
-CRITICAL_SECTION g_CRT_LoaderMaps;
-bool g_CanCloseAppMapLoader = false;
 PLUGIN_CLIENT_INTERFACE PluginClientInterface = { 0 };
-//---------------------------------------------------------------------------
-bool TestCloseMapLoader()
-{
-	EnterCriticalSection(&g_CRT_LoaderMaps);
-
-	bool result = g_CanCloseAppMapLoader;
-
-	LeaveCriticalSection(&g_CRT_LoaderMaps);
-
-	return result;
-}
-//---------------------------------------------------------------------------
-unsigned __stdcall CreateWorldMaps(void *arg)
-{
-	UO->CreateGlobalMaps();
-	_endthreadex(0);
-
-    return 0;
-};
 //---------------------------------------------------------------------------
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -115,12 +94,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		{
 			if (UO != NULL)
 			{
-				if (!TestCloseMapLoader())
-				{
-					MessageBox(g_hWnd, L"You must wait, while the map loader will make off the work.", L"Error of closing of application", MB_OK);
-					return 0;
-				}
-
 				if (PluginManager != NULL)
 					PluginManager->WindowProc(hWnd, message, wParam, lParam);
 
@@ -376,13 +349,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 			break;
 		}
-		case WM_UO_GENERATE_WORLD_MAP_TEXTURE:
-		{
-			PDWORD data = (PDWORD)lParam;
-			g_GL.BindTexture(g_MapTexture[wParam], g_MapSizeX[wParam], g_MapSizeY[wParam], data);
-
-			break;
-		}
 		default:
 			break;
 	}
@@ -483,16 +449,11 @@ BOOL InitInstance(int nCmdShow)
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPTSTR  lpCmdLine, _In_ int nCmdShow)
 {
 	g_Hinstance = hInstance;
-	InitializeCriticalSection(&g_CRT_LoaderMaps);
 
 	MyRegisterClass();
 
 	if (!InitInstance(nCmdShow))
-	{
-		DeleteCriticalSection(&g_CRT_LoaderMaps);
-
 		return FALSE;
-	}
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENTUO));
 
@@ -1018,10 +979,6 @@ bool TUltimaOnline::Install()
 
 	g_GL.BindTexture(g_TextureUnlockedGump, 10, 14, pdwult);
 	g_TextureGumpState[0] = g_TextureUnlockedGump;
-
-	//CreateGlobalMaps();
-	UINT lsc_tid = 0;
-	HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, CreateWorldMaps, NULL, 0, &lsc_tid);
 
 	InitScreen(GS_MAIN);
 
@@ -2469,146 +2426,11 @@ DWORD TUltimaOnline::GetFileHashCode(DWORD address, DWORD size)
 	return (crc & 0xFFFFFFFF);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::CreateGlobalMaps()
-{
-	g_CanCloseAppMapLoader = true;
-	return;
-
-	TMappedHeader file;
-	memset(&file, 0, sizeof(file));
-
-	FileManager.LoadFileToMemory(file, FilePath("MapsInfo.cuo").c_str());
-
-	const int mapsInfoFileSize = sizeof(DWORD) * 2 * 6;
-	BYTE mapsInfoData[mapsInfoFileSize] = {0};
-	PBYTE pmapsInfoData = mapsInfoData;
-
-	IFOR(m, 0, 6)
-	{
-		bool foundInTable = false;
-
-		DWORD mapHash = 0;
-		DWORD staticsHash = 0;
-
-		DWORD hashSizeContent = (g_MapSizeX[m] << 16) | g_MapSizeY[m];
-
-		DWORD mulMapHash = GetFileHashCode((DWORD)FileManager.MapMul[m].Address, FileManager.MapMul[m].Size);
-		mulMapHash ^= hashSizeContent;
-		DWORD mulStaticsHash = GetFileHashCode((DWORD)FileManager.StaticIdx[m].Address, FileManager.StaticIdx[m].Size);
-		mulStaticsHash ^= GetFileHashCode((DWORD)FileManager.StaticMul[m].Address, FileManager.StaticMul[m].Size);
-		mulStaticsHash ^= hashSizeContent;
-
-		char pathBuf[50] = {0};
-		sprintf(pathBuf, "mapImage%i.cuo", m);
-
-		PDWORD data = NULL;
-
-		if (file.Size != 0)
-		{
-			mapHash = file.ReadDWord();
-			staticsHash = file.ReadDWord();
-
-			if ((mapHash && mapHash == mulMapHash) && (staticsHash && staticsHash == mulStaticsHash))
-			{
-				TMappedHeader map;
-				memset(&map, 0, sizeof(map));
-
-				FileManager.LoadFileToMemory(map, FilePath(pathBuf).c_str());
-
-				if (map.Size)
-				{
-					data = (PDWORD)map.Address;
-					SendMessage(g_hWnd, WM_UO_GENERATE_WORLD_MAP_TEXTURE, m, (LPARAM)data);
-					//g_GL.BindTexture(g_MapTexture[m], g_MapSizeX[m], g_MapSizeY[m], data);
-
-					FileManager.UnloadFileFromMemory(map);
-
-					foundInTable = true;
-				}
-			}
-		}
-
-		data = (PDWORD)pmapsInfoData;
-		pmapsInfoData += 8;
-
-		*data++ = mulMapHash;
-		*data = mulStaticsHash;
-		data = NULL;
-		
-		if (!foundInTable && FileManager.MapMul[m].Size != 0 && FileManager.StaticIdx[m].Size != 0 && FileManager.StaticMul[m].Size != 0)
-		{
-			DWORD dataSize = g_MapSizeX[m] * g_MapSizeY[m];
-			data = new DWORD[dataSize];
-			dataSize *= 4;
-			//memset(&data[0], 0, dataSize);
-
-			IFOR(bx, 0, g_MapBlockX[m])
-			{
-				IFOR(by, 0, g_MapBlockY[m])
-				{
-					MAP_BLOCK mb = {0};
-					MapManager->GetWorldMapBlock(m, bx, by, mb);
-				
-					int mapX = bx * 8;
-					int mapY = by * 8;
-
-					IFOR(x, 0, 8)
-					{
-						IFOR(y, 0, 8)
-						{
-							int px = mapX + x;
-							int py = mapY + y;
-							
-							WORD color = mb.Cells[(y * 8) + x].TileID;
-							DWORD pcl = ColorManager->GetRadarColor(color);
-							pcl = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-							int block = py * g_MapSizeX[m] + px;
-							data[block] = pcl;
-							data[block + 1] = pcl;
-						}
-					}
-				}
-			}
-
-			SendMessage(g_hWnd, WM_UO_GENERATE_WORLD_MAP_TEXTURE, m, (LPARAM)data);
-			//g_GL.BindTexture(g_MapTexture[m], g_MapSizeX[m], g_MapSizeY[m], data);
-
-			FILE *mapDataFile = fopen(FilePath(pathBuf).c_str(), "wb");
-
-			if (mapDataFile != NULL)
-			{
-				PBYTE pData = (PBYTE)data;
-				fwrite(&pData[0], dataSize, 1, mapDataFile);
-				fclose(mapDataFile);
-			}
-
-			delete data;
-		}
-	}
-
-	FileManager.UnloadFileFromMemory(file);
-
-	FILE *mapsInfoFile = fopen(FilePath("MapsInfo.cuo").c_str(), "wb");
-
-	if (mapsInfoFile != NULL)
-	{
-		fwrite(&mapsInfoData[0], mapsInfoFileSize, 1, mapsInfoFile);
-		fclose(mapsInfoFile);
-	}
-
-	EnterCriticalSection(&g_CRT_LoaderMaps);
-
-	g_CanCloseAppMapLoader = true;
-
-	LeaveCriticalSection(&g_CRT_LoaderMaps);
-}
-//---------------------------------------------------------------------------
 void TUltimaOnline::LoadPluginConfig()
 {
 	PluginClientInterface._GL = &g_GL;
 	PluginClientInterface._UO = UO;
 	PluginClientInterface._GumpManager = GumpManager;
-	PluginClientInterface._FileManager = &FileManager;
 	PluginClientInterface._ClilocManager = ClilocManager;
 	PluginClientInterface._ColorManager = ColorManager;
 	PluginClientInterface._PathFinder = PathFinder;
