@@ -107,6 +107,9 @@ POINT g_RemoveRangeXY = {0, 0};
 DWORD g_PartyHelperTarget = 0;
 DWORD g_PartyHelperTimer = 0;
 float g_DrawColor = 1.0f;
+bool g_NoDrawRoof = false;
+char g_MaxGroundZ = 0;
+char g_SelecterCharName[30] = {0};
 
 int g_MouseX = 0;
 int g_MouseY = 0;

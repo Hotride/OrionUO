@@ -302,6 +302,11 @@ TPacketSelectCharacter::TPacketSelectCharacter(DWORD index, string name)
 	Ptr = m_Buf;
 	memset(&m_Buf[0], 0, sizeof(m_Buf));
 	
+	int copyLen = name.length();
+	if (copyLen > 30)
+		copyLen = 30;
+	memcpy(&g_SelecterCharName[0], name.c_str(), copyLen);
+
 	WriteByte(0x5D);
 	WriteDWord(0xEDEDEDED);
 	WriteString(name.c_str(), 30);

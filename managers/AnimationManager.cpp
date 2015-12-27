@@ -201,11 +201,14 @@ m_AnimDataIndexCount(0), m_Grayed(false)
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
 	memset(m_SizeIdx, 0, sizeof(m_SizeIdx));
 	memset(m_DataIndex, 0, sizeof(m_DataIndex));
+
+	m_FrameBuffer.Init(FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
 }
 //----------------------------------------------------------------------------
 TAnimationManager::~TAnimationManager()
 {
 	ClearUnusedTextures(GetTickCount() + 100000);
+	m_FrameBuffer.Free();
 }
 //----------------------------------------------------------------------------
 void TAnimationManager::Load(PDWORD verdata)
@@ -947,6 +950,44 @@ bool TAnimationManager::TestPixels(TGameObject *obj, int x, int y, bool &mirror,
 	return false;
 }
 //----------------------------------------------------------------------------
+TTextureAnimationFrame *TAnimationManager::GetFrame(TGameObject *obj, BYTE &frameIndex, WORD id)
+{
+	TTextureAnimationFrame *frame = NULL;
+	if (obj != NULL)
+	{
+		if (!id)
+			id = obj->GetMountAnimation();
+
+		if (id < 0x0800)
+		{
+			TTextureAnimation *anim = m_DataIndex[id].Group;
+
+			if (anim != NULL)
+			{
+				TTextureAnimationGroup *group = anim->GetGroup(m_AnimGroup);
+				TTextureAnimationDirection *direction = group->GetDirection(m_Direction);
+
+				if (direction->Address != 0)
+				{
+					int fc = direction->FrameCount;
+
+					if (fc > 0 && frameIndex >= fc)
+					{
+						if (obj->IsCorpse())
+							frameIndex = fc - 1;
+						else
+							frameIndex = 0;
+					}
+
+					frame = direction->GetFrame(frameIndex);
+				}
+			}
+		}
+	}
+
+	return frame;
+}
+//----------------------------------------------------------------------------
 void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, WORD id)
 {
 	if (obj == NULL)
@@ -1106,6 +1147,8 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 
 	Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
 
+	Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
+
 	if (obj->IsHuman()) //Draw layred objects
 	{
 		if (!obj->Dead())
@@ -1143,7 +1186,35 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 				Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
 		}
 	}
+	
+	/*TTextureAnimationFrame *frame = GetFrame(obj, animIndex);
+	if (frame != NULL && m_FrameBuffer.Use())
+	{
+		int fbWidth = frame->Width;
+		int fbHeight = frame->Height;
+		//m_FrameBuffer.Free();
+		
+		//if (m_FrameBuffer.Init(fbWidth, fbHeight) && m_FrameBuffer.Use())
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+		
+		Draw(obj, fbWidth / 2, fbHeight, mirror, animIndex);
+
+		m_FrameBuffer.Release();
+
+		GameScreen->RestoreGameWindowPort();
+		
+		glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+						
+		m_FrameBuffer.DrawShadow((float)drawX + FRAME_BUFFER_WIDTH, (float)drawY - fbHeight, fbWidth, fbHeight, mirror);
+
+		glDisable(GL_BLEND);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	}*/
+	
 	if (needHPLine)
 	{
 		int per = obj->MaxHits;

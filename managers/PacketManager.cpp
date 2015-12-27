@@ -681,6 +681,7 @@ PACKET_HANDLER(ServerList)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(RelayServer)
 {
+	memset(&g_SelecterCharName[0], 0, sizeof(g_SelecterCharName));
 	in_addr addr;
 	PDWORD paddr = (PDWORD)Ptr;
 	Move(4);
@@ -834,8 +835,7 @@ PACKET_HANDLER(LoginComplete)
 {
 	g_PacketLoginComplete = true;
 
-	if (g_Player->GetName().length())
-		UO->LoginComplete();
+	UO->LoginComplete();
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(SetTime)
@@ -879,6 +879,9 @@ PACKET_HANDLER(EnterWorld)
 	}
 
 	Move(4);
+
+	if (strlen(g_SelecterCharName))
+		g_Player->SetName(g_SelecterCharName);
 
 	g_Player->Graphic = ReadWord();
 	g_Player->UpdateSex();
@@ -1090,8 +1093,7 @@ PACKET_HANDLER(CharacterStatus)
 			g_Player->MaxStam = ReadShort();
 			g_Player->Mana = ReadShort();
 			g_Player->MaxMana = ReadShort();
-			g_Player->Gold = ReadShort();
-			Move(2);
+			g_Player->Gold = ReadDWord();
 			g_Player->Armor = ReadShort();
 			g_Player->Weight = ReadShort(); //+64
 

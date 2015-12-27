@@ -32,7 +32,7 @@ TGameEffect::~TGameEffect()
 {
 }
 //---------------------------------------------------------------------------
-int TGameEffect::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 {
 	if (mode)
 	{
@@ -52,8 +52,8 @@ int TGameEffect::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
 			{
 				TGameEffectDrag *ed = (TGameEffectDrag*)this;
 
-				int deX = data.DrawX - ed->OffsetX;
-				int deY = data.DrawY - ed->OffsetY;
+				int deX = drawX - ed->OffsetX;
+				int deY = drawY - ed->OffsetY;
 
 				UO->DrawStaticArt(m_Graphic, m_Color, deX, deY, m_Z);
 
@@ -72,8 +72,8 @@ int TGameEffect::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
 
 		if (objGraphic)
 		{
-			int deX = data.DrawX;
-			int deY = data.DrawY;
+			int deX = drawX;
+			int deY = drawY;
 			int deZ = 0;
 
 			if (m_EffectType == EF_MOVING)

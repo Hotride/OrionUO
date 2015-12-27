@@ -41,7 +41,9 @@ public:
 	
 	bool Ready(int &width, int &height);
 	bool Use();
-	void Draw(float X, float Y);
+	
+	void Draw(float x, float y);
+	void DrawShadow(float x, float y, float width, float height, bool mirror);
 };
 //---------------------------------------------------------------------------
 #endif

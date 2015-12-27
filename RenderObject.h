@@ -85,7 +85,7 @@ public:
 
 	//bool InRenderList() {return (m_NextDraw != NULL || m_PrevDraw != NULL);}
 
-	virtual int Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks) { return 0; }
+	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks) { return 0; }
 
 	void RemoveRender();
 

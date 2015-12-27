@@ -31,6 +31,10 @@ private:
 	int m_AnimGroup;
 	BYTE m_Direction;
 	bool m_Grayed;
+	
+	static const int FRAME_BUFFER_WIDTH = 300;
+	static const int FRAME_BUFFER_HEIGHT = 300;
+	TFrameBuffer m_FrameBuffer;
 
 	static const int m_LayerCount = 19;
 	static int m_UsedLayers[8][m_LayerCount];
@@ -62,6 +66,8 @@ public:
 
 	void InitBodyconv(PDWORD verdata, string fName);
 	void Load(PDWORD verdata);
+
+	TTextureAnimationFrame *GetFrame(TGameObject *obj, BYTE &frameIndex, WORD id = 0x0000);
 
 	void ClearUnusedTextures(DWORD ticks);
 

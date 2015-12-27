@@ -72,19 +72,17 @@ private:
 	int m_LightCount;
 	TFrameBuffer m_LightBuffer;
 
-	RENDER_LIST_DATA m_List[RENDER_LIST_STACK_SIZE];
-	int m_ListSize;
-
 	void RemoveLight(WORD x, WORD y, char z);
 
-	int GetMaxDrawZ(bool &noDrawRoof, int &maxGroundZ);
+	int GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ);
 	void CheckMouseEvents(bool &charSelected);
-	void CreaterRenderList();
 public:
 	TGameScreen();
 	virtual ~TGameScreen();
 
 	void CalculateGameWindow();
+
+	void RestoreGameWindowPort() {g_GL.ViewPort(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY, m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowSizeY);}
 
 	void Init();
 

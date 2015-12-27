@@ -93,125 +93,127 @@ void TGameItem::Paste(TObjectOnCursor *obj)
 	SetName(obj->GetName());
 }
 //---------------------------------------------------------------------------
-int TGameItem::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+int TGameItem::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 {
-	if (mode)
+	if (m_Container == 0xFFFFFFFF && m_Graphic < 0x4000)
 	{
+		if (mode)
+		{
+
 #if UO_DEBUG_INFO!=0
-		g_RenderedObjectsCountInGameWindow++;
+g_RenderedObjectsCountInGameWindow++;
 #endif
 
-		WORD objGraphic = m_Graphic;
-		WORD objColor = m_Color;
+			WORD objGraphic = m_Graphic;
 
-		if (Hidden())
-			objColor = 0x038A;
+			WORD objColor = m_Color;
 
-		if (IsCorpse()) //Трупик
-			AnimationManager->DrawCorpse(this, data.DrawX, data.DrawY, m_Z);
+			if (Hidden())
+				objColor = 0x038A;
+
+			if (IsCorpse()) //Трупик
+				AnimationManager->DrawCorpse(this, drawX, drawY, m_Z);
+			else
+			{
+				bool doubleDraw = false;
+				bool selMode = false;
+
+				if (g_LastObjectType == SOT_GAME_OBJECT && !Locked() && g_LastSelectedObject == m_Serial)
+				{
+					objColor = 0x0035;
+					selMode = true;
+				}
+
+				if (m_Count > 1)
+				{
+					if (objGraphic == 0x0EED)
+					{
+						if (m_Count > 5)
+							objGraphic = 0x0EEF;
+						else
+							objGraphic = 0x0EEE;
+					}
+					else if (IsStackable())
+						doubleDraw = true;
+				}
+
+				if (doubleDraw)
+				{
+					drawX -= 2;
+					UO->DrawStaticArt(objGraphic, objColor, drawX, drawY - 5, m_Z, selMode);
+					UO->DrawStaticArt(objGraphic, objColor, drawX + 5, drawY, m_Z, selMode);
+				}
+				else
+					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z, selMode);
+
+				if (IsLightSource())
+				{
+					STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
+
+					LIGHT_DATA light = { tile.Quality, tile.Hue, X, Y, m_Z, drawX, drawY - (m_Z * 4) };
+
+					if (ConfigManager.ColoredLighting)
+						light.Color = UO->GetLightColor(objGraphic);
+
+					GameScreen->AddLight(light);
+				}
+			}
+
+			DrawEffects(drawX, drawY, ticks);
+		}
 		else
 		{
-			bool doubleDraw = false;
-			bool selMode = false;
-
-			if (g_LastObjectType == SOT_GAME_OBJECT && !Locked() && g_LastSelectedObject == m_Serial)
+			if (IsCorpse()) //Трупик
 			{
-				objColor = 0x0035;
-				selMode = true;
-			}
-
-			if (m_Count > 1)
-			{
-				if (objGraphic == 0x0EED)
+				if (AnimationManager->CorpsePixelsInXY(this, drawX, drawY, m_Z))
 				{
-					if (m_Count > 5)
-						objGraphic = 0x0EEF;
-					else
-						objGraphic = 0x0EEE;
+					g_LastObjectType = SOT_GAME_OBJECT;
+					g_LastSelectedObject = m_Serial;
+					g_SelectedObject = this;
 				}
-				else if (IsStackable())
-					doubleDraw = true;
-			}
-
-			if (doubleDraw)
-			{
-				int drawX = data.DrawX - 2;
-				UO->DrawStaticArt(objGraphic, objColor, drawX, data.DrawY - 5, m_Z, selMode);
-				UO->DrawStaticArt(objGraphic, objColor, drawX + 5, data.DrawY, m_Z, selMode);
 			}
 			else
-				UO->DrawStaticArtAnimated(objGraphic, objColor, data.DrawX, data.DrawY, m_Z, selMode);
-
-			if (IsLightSource())
 			{
-				STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
+				WORD goGraphic = m_Graphic;
 
-				LIGHT_DATA light = { tile.Quality, tile.Hue, X, Y, m_Z, data.DrawX, data.DrawY - (m_Z * 4) };
+				bool doubleDraw = false;
 
-				if (ConfigManager.ColoredLighting)
-					light.Color = UO->GetLightColor(objGraphic);
-
-				GameScreen->AddLight(light);
-			}
-		}
-
-		int drawX = data.DrawX;
-		int drawY = data.DrawY;
-
-		DrawEffects(drawX, drawY, ticks);
-	}
-	else
-	{
-		if (IsCorpse()) //Трупик
-		{
-			if (AnimationManager->CorpsePixelsInXY(this, data.DrawX, data.DrawY, m_Z))
-			{
-				g_LastObjectType = SOT_GAME_OBJECT;
-				g_LastSelectedObject = m_Serial;
-				g_SelectedObject = this;
-			}
-		}
-		else
-		{
-			WORD goGraphic = m_Graphic;
-
-			bool doubleDraw = false;
-
-			if (m_Count > 1)
-			{
-				if (goGraphic == 0x0EED)
+				if (m_Count > 1)
 				{
-					if (m_Count > 5)
-						goGraphic = 0x0EEF;
-					else
-						goGraphic = 0x0EEE;
+					if (goGraphic == 0x0EED)
+					{
+						if (m_Count > 5)
+							goGraphic = 0x0EEF;
+						else
+							goGraphic = 0x0EEE;
+					}
+					else if (IsStackable())
+						doubleDraw = true;
 				}
-				else if (IsStackable())
-					doubleDraw = true;
-			}
 
-			if (doubleDraw)
-			{
-				int drawX = data.DrawX - 2;
+				if (doubleDraw)
+				{
+					drawX -= 2;
 
-				if (UO->StaticPixelsInXY(goGraphic, data.DrawX, data.DrawY - 5, m_Z))
+					if (UO->StaticPixelsInXY(goGraphic, drawX, drawY - 5, m_Z))
+					{
+						g_LastObjectType = SOT_GAME_OBJECT;
+						g_LastSelectedObject = m_Serial;
+						g_SelectedObject = this;
+					}
+					else if (UO->StaticPixelsInXY(goGraphic, drawX + 5, drawY, m_Z))
+					{
+						g_LastObjectType = SOT_GAME_OBJECT;
+						g_LastSelectedObject = m_Serial;
+						g_SelectedObject = this;
+					}
+				}
+				else if (UO->StaticPixelsInXYAnimated(goGraphic, drawX, drawY, m_Z))
 				{
 					g_LastObjectType = SOT_GAME_OBJECT;
 					g_LastSelectedObject = m_Serial;
 					g_SelectedObject = this;
 				}
-				else if (UO->StaticPixelsInXY(goGraphic, data.DrawX + 5, data.DrawY, m_Z))
-				{
-					g_LastObjectType = SOT_GAME_OBJECT;
-					g_LastSelectedObject = m_Serial;
-					g_SelectedObject = this;
-				}
-			}
-			else if (UO->StaticPixelsInXYAnimated(goGraphic, data.DrawX, data.DrawY, m_Z))
-			{
-				g_LastObjectType = SOT_GAME_OBJECT;
-				g_LastSelectedObject = m_Serial;
-				g_SelectedObject = this;
 			}
 		}
 	}

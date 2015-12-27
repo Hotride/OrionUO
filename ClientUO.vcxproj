@@ -88,6 +88,7 @@
     <ClInclude Include="ClientUO.h" />
     <ClInclude Include="CommonInterfaces.h" />
     <ClInclude Include="Container.h" />
+    <ClInclude Include="DefinitionMacro.h" />
     <ClInclude Include="EntryText.h" />
     <ClInclude Include="EnumList.h" />
     <ClInclude Include="ExceptionFilter.h" />

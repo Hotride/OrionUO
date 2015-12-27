@@ -4183,10 +4183,8 @@ void TUltimaOnline::CharacterSelection(int pos)
 //---------------------------------------------------------------------------
 void TUltimaOnline::LoginComplete()
 {
-	TPRINT("TUltimaOnline::LoginComplete\n");
 	if (!ConnectionScreen->Completed)
 	{
-		TPRINT("TUltimaOnline::LoginComplete...Start\n");
 		ConnectionScreen->Completed = true;
 
 		char buf[256] = {0};
@@ -4222,7 +4220,6 @@ void TUltimaOnline::LoginComplete()
 		InitScreen(GS_GAME);
 
 		LoadLocalConfig();
-		TPRINT("TUltimaOnline::LoginComplete...End\n");
 	}
 }
 //---------------------------------------------------------------------------

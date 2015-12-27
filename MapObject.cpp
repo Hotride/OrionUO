@@ -103,42 +103,45 @@ TLandObject::TLandObject(DWORD serial, WORD graphic, WORD color, short x, short 
 #endif //UO_DEBUG_INFO!=0
 }
 //---------------------------------------------------------------------------
-int TLandObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+int TLandObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 {
-	if (mode)
+	if (m_Z <= g_MaxGroundZ)
 	{
-		WORD objColor = 0;
+		if (mode)
+		{
+			WORD objColor = 0;
 
-		if (this == g_SelectedObject)
-			objColor = g_SelectLandColor;
+			if (this == g_SelectedObject)
+				objColor = g_SelectLandColor;
 
 #if UO_DEBUG_INFO!=0
-		g_RenderedObjectsCountInGameWindow++;
+g_RenderedObjectsCountInGameWindow++;
 #endif
 
-		if (m_Color == 1)
-			UO->DrawLandArt(m_Graphic, objColor, data.DrawX, data.DrawY, m_Z);
+			if (m_Color == 1)
+				UO->DrawLandArt(m_Graphic, objColor, drawX, drawY, m_Z);
+			else
+			{
+				GLfloat tCl = 1.0f;
+				glColor3f(tCl, tCl, tCl);
+
+				glEnable(GL_LIGHTING);
+
+				UO->DrawLandTexture(m_Graphic, objColor, drawX, drawY, m_Rect, m_Normals);
+
+				glDisable(GL_LIGHTING);
+
+				glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
+			}
+		}
 		else
 		{
-			GLfloat tCl = 1.0f;
-			glColor3f(tCl, tCl, tCl);
-
-			glEnable(GL_LIGHTING);
-
-			UO->DrawLandTexture(m_Graphic, objColor, data.DrawX, data.DrawY, m_Rect, m_Normals);
-
-			glDisable(GL_LIGHTING);
-
-			glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
-		}
-	}
-	else
-	{
-		if (UO->LandPixelsInXY(m_Graphic, data.DrawX, data.DrawY, m_Z))
-		{
-			g_LastObjectType = SOT_LAND_OBJECT;
-			g_LastSelectedObject = 2;
-			g_SelectedObject = this;
+			if (UO->LandPixelsInXY(m_Graphic, drawX, drawY, m_Z))
+			{
+				g_LastObjectType = SOT_LAND_OBJECT;
+				g_LastSelectedObject = 2;
+				g_SelectedObject = this;
+			}
 		}
 	}
 
@@ -162,8 +165,11 @@ TStaticObject::TStaticObject(DWORD serial, WORD graphic, WORD color, short x, sh
 #endif //UO_DEBUG_INFO!=0
 }
 //---------------------------------------------------------------------------
-int TStaticObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 {
+	if (g_NoDrawRoof && IsRoof())
+		return 0;
+
 	WORD objGraphic = m_Graphic - 0x4000;
 
 	if (mode)
@@ -184,7 +190,7 @@ int TStaticObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
 				POINT fp = { 0, 0 };
 				UO->GetArtDimension(m_Graphic, fp);
 
-				IMAGE_BOUNDS fib = { data.DrawX - fp.x / 2, data.DrawY - fp.y - (m_Z * 4), fp.x, fp.y };
+				IMAGE_BOUNDS fib = { drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y };
 
 				//g_GL.DrawPolygone(0x7F7F7F7F, fib.X, fib.Y, fib.Width, fib.Height);
 
@@ -193,22 +199,22 @@ int TStaticObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 
-					UO->DrawStaticArtAnimated(objGraphic, objColor, data.DrawX, data.DrawY, m_Z);
+					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
 
 					glDisable(GL_BLEND);
 				}
 				else
-					UO->DrawStaticArtAnimated(objGraphic, objColor, data.DrawX, data.DrawY, m_Z);
+					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
 			}
 		}
 		else
-			UO->DrawStaticArtAnimated(objGraphic, objColor, data.DrawX, data.DrawY, m_Z);
+			UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
 
 		if (IsLightSource() && !IsWall())
 		{
 			STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
 
-			LIGHT_DATA light = { tile.Quality, 0, X, Y, m_Z, data.DrawX, data.DrawY - (m_Z * 4) };
+			LIGHT_DATA light = { tile.Quality, 0, X, Y, m_Z, drawX, drawY - (m_Z * 4) };
 
 			if (ConfigManager.ColoredLighting)
 				light.Color = UO->GetLightColor(objGraphic);
@@ -225,11 +231,11 @@ int TStaticObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
 				POINT fp = { 0, 0 };
 				UO->GetArtDimension(m_Graphic, fp);
 
-				IMAGE_BOUNDS fib = { data.DrawX - fp.x / 2, data.DrawY - fp.y - (m_Z * 4), fp.x, fp.y };
+				IMAGE_BOUNDS fib = { drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y };
 
 				if (!fib.InRect(g_PlayerRect))
 				{
-					if (UO->StaticPixelsInXYAnimated(objGraphic, data.DrawX, data.DrawY, m_Z))
+					if (UO->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z))
 					{
 						g_LastObjectType = SOT_STATIC_OBJECT;
 						g_LastSelectedObject = 3;
@@ -238,7 +244,7 @@ int TStaticObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
 				}
 			}
 		}
-		else if (UO->StaticPixelsInXYAnimated(objGraphic, data.DrawX, data.DrawY, m_Z))
+		else if (UO->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z))
 		{
 			g_LastObjectType = SOT_STATIC_OBJECT;
 			g_LastSelectedObject = 3;

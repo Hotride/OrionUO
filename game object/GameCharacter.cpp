@@ -45,6 +45,19 @@ TGameCharacter::~TGameCharacter()
 		gump->UpdateFrame();
 }
 //---------------------------------------------------------------------------
+void TGameCharacter::SetName(string val)
+{
+	m_Name = val;
+
+	if (g_GameState >= GS_GAME)
+	{
+		char buf[256] = {0};
+		sprintf(buf, "Ultima Online - %s (%s)", val.c_str(), ServerList.GetServerName().c_str());
+
+		SetWindowTextA(g_hWnd, buf);
+	}
+}
+//---------------------------------------------------------------------------
 void TGameCharacter::SetPaperdollText(string val)
 {
 	m_PaperdollTextTexture.Clear(); //Очищаем текстуру
@@ -54,7 +67,7 @@ void TGameCharacter::SetPaperdollText(string val)
 		FontManager->GenerateA(1, m_PaperdollTextTexture, val.c_str(), 0x0386, 185);
 }
 //---------------------------------------------------------------------------
-int TGameCharacter::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+int TGameCharacter::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 {
 	if (mode)
 	{
@@ -70,7 +83,7 @@ int TGameCharacter::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
 		if (!IsPlayer() && g_Player->Warmode && g_LastSelectedObject == m_Serial)
 			g_StatusbarUnderMouse = Serial;
 
-		AnimationManager->DrawCharacter(this, data.DrawX, data.DrawY, m_Z); //Draw character
+		AnimationManager->DrawCharacter(this, drawX, drawY, m_Z); //Draw character
 
 		g_StatusbarUnderMouse = lastSBsel;
 
@@ -79,14 +92,11 @@ int TGameCharacter::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
 		//g_GL.DrawPolygone(0x7F7F7F7F, g_PlayerRect.X, g_PlayerRect.Y, g_PlayerRect.Width, g_PlayerRect.Height);
 		}*/
 
-		int drawX = data.DrawX;
-		int drawY = data.DrawY;
-
 		DrawEffects(drawX, drawY, ticks);
 	}
 	else
 	{
-		if (AnimationManager->CharacterPixelsInXY(this, data.DrawX, data.DrawY, m_Z))
+		if (AnimationManager->CharacterPixelsInXY(this, drawX, drawY, m_Z))
 		{
 			g_LastObjectType = SOT_GAME_OBJECT;
 			g_LastSelectedObject = m_Serial;

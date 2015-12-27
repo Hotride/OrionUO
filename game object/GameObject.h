@@ -46,7 +46,7 @@ public:
 	SETGET(BYTE, MapIndex)
 	SETGET(WORD, Count)
 	SETGET(BYTE, Flags)
-	SETGET(string, Name)
+	virtual SETGET(string, Name)
 	SETGET(bool, NPC)
 	SETGET(bool, Clicked)
 	SETGETEX(char, AnimIndex)

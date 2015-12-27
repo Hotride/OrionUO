@@ -67,7 +67,7 @@ public:
 	SETGET(char, DrawZ);
 	SETGET(char, MinZ);
 
-	virtual int Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks);
+	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
 
 	bool IsLandObject() {return true;}
 
@@ -85,7 +85,7 @@ public:
 
 	SETGET(DWORD, ObjectFlags);
 
-	virtual int Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks);
+	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
 
 	bool IsBackground() {return (m_ObjectFlags & 0x00000001);}
 	bool IsWeapon() {return (m_ObjectFlags & 0x00000002);}

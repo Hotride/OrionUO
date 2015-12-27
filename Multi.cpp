@@ -45,8 +45,11 @@ TMultiObject::~TMultiObject()
 #endif //UO_DEBUG_INFO!=0
 }
 //---------------------------------------------------------------------------
-int TMultiObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
+int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 {
+	if (g_NoDrawRoof && IsRoof())
+		return 0;
+
 	WORD objGraphic = m_Graphic - 0x4000;
 
 	if (mode)
@@ -65,19 +68,19 @@ int TMultiObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 
-			UO->DrawStaticArt(objGraphic, objColor, data.DrawX, data.DrawY, m_Z);
+			UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
 
 			glDisable(GL_BLEND);
 		}
 		else
 		{
-			UO->DrawStaticArt(objGraphic, objColor, data.DrawX, data.DrawY, m_Z);
+			UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
 
 			if (IsLightSource())
 			{
 				STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
 
-				LIGHT_DATA light = { tile.Quality, tile.Hue, X, Y, m_Z, data.DrawX, data.DrawY - (m_Z * 4) };
+				LIGHT_DATA light = { tile.Quality, tile.Hue, X, Y, m_Z, drawX, drawY - (m_Z * 4) };
 
 				if (ConfigManager.ColoredLighting)
 					light.Color = UO->GetLightColor(objGraphic);
@@ -88,7 +91,7 @@ int TMultiObject::Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks)
 	}
 	else
 	{
-		if (UO->StaticPixelsInXY(objGraphic, data.DrawX, data.DrawY, m_Z))
+		if (UO->StaticPixelsInXY(objGraphic, drawX, drawY, m_Z))
 		{
 			g_LastObjectType = SOT_STATIC_OBJECT;
 			g_LastSelectedObject = 3;

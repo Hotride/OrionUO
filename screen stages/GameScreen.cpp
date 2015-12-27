@@ -22,14 +22,13 @@
 TGameScreen *GameScreen = NULL;
 //---------------------------------------------------------------------------
 TGameScreen::TGameScreen()
-: TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false),
-m_ListSize(0)
+: TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false)
 {
-	memset(&m_List[0], 0, sizeof(m_List));
 }
 //---------------------------------------------------------------------------
 TGameScreen::~TGameScreen()
 {
+	m_LightBuffer.Free();
 }
 //---------------------------------------------------------------------------
 void TGameScreen::Init()
@@ -61,7 +60,7 @@ void TGameScreen::InitTooltip()
 
 }
 //---------------------------------------------------------------------------
-int TGameScreen::GetMaxDrawZ(bool &noDrawRoof, int &maxGroundZ)
+int TGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 {
 	int playerX = g_Player->X;
 	int playerY = g_Player->Y;
@@ -225,8 +224,6 @@ void TGameScreen::CalculateGameWindow()
 	m_RenderBounds.MaxPixelsX = m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX + drawOffset;
 	m_RenderBounds.MinPixelsY = m_RenderBounds.GameWindowPosY - drawOffset - playerZOffset;
 	m_RenderBounds.MaxPixelsY = m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY + 200 + playerZOffset;
-
-	CreaterRenderList();
 }
 //---------------------------------------------------------------------------
 void TGameScreen::CheckMouseEvents(bool &charSelected)
@@ -313,181 +310,6 @@ void TGameScreen::AddLight(LIGHT_DATA &light)
 //---------------------------------------------------------------------------
 void TGameScreen::RemoveLight(WORD x, WORD y, char z)
 {
-}
-//---------------------------------------------------------------------------
-void TGameScreen::CreaterRenderList()
-{
-	int playerX = g_Player->X;
-	int playerY = g_Player->Y;
-	int playerZ = g_Player->Z;
-	int deltaZ = playerZ * 4;
-
-	int gameWindowPosX = m_RenderBounds.GameWindowPosX;
-	int gameWindowPosY = m_RenderBounds.GameWindowPosY;
-
-	int drawModeCount = 2;
-
-	DWORD ticks = GetTickCount();
-
-	if (g_DeathScreenTimer > ticks)
-		drawModeCount = 0;
-	else
-		g_DeathScreenTimer = 0;
-
-	bool noDrawRoof = false;
-	int MaxGroundZ = 125;
-
-	int maxDrawZ = GetMaxDrawZ(noDrawRoof, MaxGroundZ);
-	m_ListSize = 0;
-
-	IFOR(drawMode, 0, drawModeCount)
-	{
-		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
-		{
-			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
-			{
-				int blockIndex = (bx * 512) + by;
-				TMapBlock *mb = MapManager->GetBlock(blockIndex);
-				if (mb == NULL)
-				{
-					mb = MapManager->AddBlock(blockIndex);
-					mb->X = bx;
-					mb->Y = by;
-					MapManager->LoadBlock(mb);
-				}
-
-				IFOR(x, 0, 8)
-				{
-					WORD mX = bx * 8 + x;
-
-					if (mX < m_RenderBounds.RealMinRangeX || mX > m_RenderBounds.RealMaxRangeX)
-						continue;
-
-					int gx = mX - playerX;
-
-					IFOR(y, 0, 8)
-					{
-						WORD mY = by * 8 + y;
-
-						if (mY < m_RenderBounds.RealMinRangeY || mY > m_RenderBounds.RealMaxRangeY)
-							continue;
-
-						int gy = mY - playerY;
-
-						TRenderWorldObject *ro = mb->GetRender(x, y);
-
-						if (ro == NULL)
-							continue;
-
-						int drawPixelsX = m_RenderBounds.GameWindowCenterX + (gx - gy) * 22;
-						int drawPixelsY = m_RenderBounds.GameWindowCenterY + (gx + gy) * 22;
-
-						if (drawPixelsX < m_RenderBounds.MinPixelsX || drawPixelsX > m_RenderBounds.MaxPixelsX)
-							continue;
-
-						TLandObject *mol = ro->GetLand();
-
-						if (drawPixelsY - deltaZ < m_RenderBounds.MinPixelsY || drawPixelsY - deltaZ > m_RenderBounds.MaxPixelsY)
-							continue;
-
-						char checkZ = mol->DrawZ;
-
-						while (ro != NULL)
-						{
-							TRenderWorldObject *nextRo = ro->m_NextXY;
-
-							bool drawCondition = true;
-
-							if (!drawMode) //Отрисовка ландшафта, воды и перекрытых ландшафтом предметов
-								drawCondition = (ro->Z < checkZ || ro->RenderType == ROT_LAND_OBJECT);
-							else //Отрисовка надземной части мира
-								drawCondition = (ro->Z >= checkZ && ro->RenderType != ROT_LAND_OBJECT);
-
-							if (ro->IsInternal())
-								drawCondition = false;
-
-							if ((ro->RenderType != ROT_LAND_OBJECT && ro->Z >= maxDrawZ) || !drawCondition)
-							{
-								ro = nextRo;
-								continue;
-							}
-
-							bool canDraw = false;
-
-							switch (ro->RenderType)
-							{
-								case ROT_LAND_OBJECT:
-								{
-									if (ro->Z > MaxGroundZ)
-										break;
-
-									canDraw = true;
-
-									break;
-								}
-								case ROT_STATIC_OBJECT:
-								case ROT_MULTI_OBJECT:
-								{
-									if (noDrawRoof && ro->IsRoof())
-										break;
-
-									canDraw = true;
-
-									break;
-								}
-								case ROT_GAME_OBJECT:
-								{
-									if (((TGameObject*)ro)->Container != 0xFFFFFFFF || ro->Graphic >= 0x4000)
-										break;
-
-									canDraw = true;
-
-									break;
-								}
-								case ROT_EFFECT:
-								{
-									TGameEffect *effect = (TGameEffect*)ro;
-
-									WORD eGraphic = 0;
-
-									if (effect->EffectType == EF_STAY_AT_POS && effect->Duration < ticks)
-										EffectManager->RemoveEffect(effect);
-									else if (effect->EffectType == EF_DRAG)
-									{
-										if (effect->Duration < ticks)
-											EffectManager->RemoveEffect(effect);
-										else
-											canDraw = true;
-									}
-									else
-										canDraw = true;
-
-									break;
-								}
-								default:
-									break;
-							}
-
-							if (canDraw)
-							{
-								RENDER_LIST_DATA &data = m_List[m_ListSize];
-								data.obj = ro;
-								data.DrawX = drawPixelsX;
-								data.DrawY = drawPixelsY;
-
-								m_ListSize++;
-
-								if (m_ListSize >= RENDER_LIST_STACK_SIZE)
-									return;
-							}
-
-							ro = nextRo;
-						}
-					}
-				}
-			}
-		}
-	}
 }
 //---------------------------------------------------------------------------
 int TGameScreen::Render(bool mode)
@@ -705,11 +527,7 @@ int TGameScreen::Render(bool mode)
 		TargetGump.Color = 0;
 		AttackTargetGump.Color = 0;
 
-		//bool noDrawRoof = false;
-		//int MaxGroundZ = 125;
 		m_LightCount = 0;
-
-		//int maxDrawZ = GetMaxDrawZ(noDrawRoof, MaxGroundZ);
 
 		g_GL.BeginDraw();
 		
@@ -729,308 +547,11 @@ int TGameScreen::Render(bool mode)
 
 		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 
-		IFOR(i, 0, m_ListSize)
-		{
-			/*g_OutOfRangeColor = 0;
-			POINT testPos = {mX, mY};
-
-			if (GetDistance(g_Player, testPos) > g_UpdateRange)
-			g_OutOfRangeColor = 0x0386;*/
-
-			m_List[i].obj->Draw(mode, m_List[i], ticks);
-
-			/*TRenderWorldObject *obj = m_List[i].obj;
-			int drawX = m_List[i].DrawX;
-			int drawY = m_List[i].DrawY;
-
-			WORD objGraphic = obj->Graphic;
-			WORD objColor = obj->Color;
-			char objZ = obj->Z;
-
-			switch (obj->RenderType)
-			{
-				case ROT_LAND_OBJECT:
-				{
-					objColor = 0;
-
-					if (obj == g_SelectedObject)
-						objColor = g_SelectLandColor;
-
-#if UO_DEBUG_INFO!=0
-					g_RenderedObjectsCountInGameWindow++;
-#endif
-
-					if (obj->Color == 1)
-						UO->DrawLandArt(objGraphic, objColor, drawX, drawY, objZ);
-					else
-					{
-						GLfloat tCl = 1.0f;
-						glColor3f(tCl, tCl, tCl);
-
-						glEnable(GL_LIGHTING);
-
-						UO->DrawLandTexture(objGraphic, objColor, drawX, drawY, ((TLandObject*)obj)->Rect, ((TLandObject*)obj)->m_Normals);
-
-						glDisable(GL_LIGHTING);
-
-						glColor3f(drawColor, drawColor, drawColor);
-					}
-
-					break;
-				}
-				case ROT_STATIC_OBJECT:
-				{
-#if UO_DEBUG_INFO!=0
-					g_RenderedObjectsCountInGameWindow++;
-#endif
-
-					objGraphic -= 0x4000;
-
-					if (obj == g_SelectedObject)
-						objColor = g_SelectStaticColor;
-
-					if (obj->IsFoliage() && playerX - 2 < obj->X && playerY - 2 < obj->Y)
-					{
-						if (!g_GrayedPixels)
-						{
-							POINT fp = { 0, 0 };
-							UO->GetArtDimension(obj->Graphic, fp);
-
-							IMAGE_BOUNDS fib = { drawX - fp.x / 2, drawY - fp.y - (objZ * 4), fp.x, fp.y };
-
-							//g_GL.DrawPolygone(0x7F7F7F7F, fib.X, fib.Y, fib.Width, fib.Height);
-
-							if (fib.InRect(g_PlayerRect))
-							{
-								glEnable(GL_BLEND);
-								glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-
-								UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, objZ);
-
-								glDisable(GL_BLEND);
-							}
-							else
-								UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, objZ);
-						}
-					}
-					else
-						UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, objZ);
-
-					if (obj->IsLightSource() && !obj->IsWall())
-					{
-						STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
-
-						LIGHT_DATA light = { tile.Quality, 0, obj->X, obj->Y, objZ, drawX, drawY - (objZ * 4) };
-
-						if (ConfigManager.ColoredLighting)
-							light.Color = UO->GetLightColor(objGraphic);
-
-						AddLight(light);
-					}
-
-					break;
-				}
-				case ROT_GAME_OBJECT:
-				{
-					TGameObject *go = (TGameObject*)obj;
-
-					if (!go->NPC)
-					{
-						if (go->Hidden())
-							objColor = 0x038A;
-
-#if UO_DEBUG_INFO!=0
-						g_RenderedObjectsCountInGameWindow++;
-#endif
-
-						if (go->IsCorpse()) //Трупик
-							AnimationManager->DrawCorpse((TGameItem*)obj, drawX, drawY, objZ);
-						else
-						{
-							bool doubleDraw = false;
-							bool selMode = false;
-
-							if (g_LastObjectType == SOT_GAME_OBJECT && !go->Locked() && g_LastSelectedObject == go->Serial)
-							{
-								objColor = 0x0035;
-								selMode = true;
-							}
-
-							int objCount = go->Count;
-
-							if (objCount > 1)
-							{
-								if (objGraphic == 0x0EED)
-								{
-									if (objCount > 5)
-										objGraphic = 0x0EEF;
-									else
-										objGraphic = 0x0EEE;
-								}
-								else if (((TGameItem*)go)->IsStackable())
-									doubleDraw = true;
-							}
-
-							if (doubleDraw)
-							{
-								drawX -= 2;
-								UO->DrawStaticArt(objGraphic, objColor, drawX, drawY - 5, objZ, selMode);
-								UO->DrawStaticArt(objGraphic, objColor, drawX + 5, drawY, objZ, selMode);
-							}
-							else
-								UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, objZ, selMode);
-
-							if (obj->IsLightSource())
-							{
-								STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
-
-								LIGHT_DATA light = { tile.Quality, tile.Hue, obj->X, obj->Y, objZ, drawX, drawY - (objZ * 4) };
-
-								if (ConfigManager.ColoredLighting)
-									light.Color = UO->GetLightColor(objGraphic);
-
-								AddLight(light);
-							}
-						}
-					}
-					else //if (go->NPC)
-					{
-						TGameCharacter *goc = (TGameCharacter*)go;
-						if (goc->TimeToRandomFidget < ticks)
-							goc->SetRandomFidgetAnimation();
-
-#if UO_DEBUG_INFO!=0
-						g_RenderedObjectsCountInGameWindow++;
-#endif
-
-						DWORD lastSBsel = g_StatusbarUnderMouse;
-
-						if (!go->IsPlayer() && g_Player->Warmode && g_LastSelectedObject == go->Serial)
-							g_StatusbarUnderMouse = go->Serial;
-
-						AnimationManager->DrawCharacter(goc, drawX, drawY, objZ); //Draw character
-
-						g_StatusbarUnderMouse = lastSBsel;
-
-						/*if (goc->IsPlayer())
-						{
-						//g_GL.DrawPolygone(0x7F7F7F7F, g_PlayerRect.X, g_PlayerRect.Y, g_PlayerRect.Width, g_PlayerRect.Height);
-						}*/
-					/*}
-
-					go->DrawEffects(drawX, drawY, ticks);
-
-					break;
-				}
-				case ROT_MULTI_OBJECT:
-				{
-#if UO_DEBUG_INFO!=0
-					g_RenderedObjectsCountInGameWindow++;
-#endif
-
-					TMultiObject *multi = (TMultiObject*)obj;
-
-					objGraphic -= 0x4000;
-
-					if (multi == g_SelectedObject)
-						objColor = g_SelectMultiColor;
-
-					if (multi->MultiFlags == 2) //Мульти на таргете
-					{
-						glEnable(GL_BLEND);
-						glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-
-						UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, objZ);
-
-						glDisable(GL_BLEND);
-					}
-					else
-					{
-						UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, objZ);
-
-						if (obj->IsLightSource())
-						{
-							STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
-
-							LIGHT_DATA light = { tile.Quality, tile.Hue, obj->X, obj->Y, objZ, drawX, drawY - (objZ * 4) };
-
-							if (ConfigManager.ColoredLighting)
-								light.Color = UO->GetLightColor(objGraphic);
-
-							AddLight(light);
-						}
-					}
-
-					break;
-				}
-				case ROT_EFFECT:
-				{
-					TGameEffect *effect = (TGameEffect*)obj;
-
-#if UO_DEBUG_INFO!=0
-					g_RenderedObjectsCountInGameWindow++;
-#endif
-
-					objGraphic = 0;
-
-					if (effect->EffectType == EF_STAY_AT_POS && effect->Duration < ticks)
-						EffectManager->RemoveEffect(effect);
-					else if (effect->EffectType == EF_DRAG)
-					{
-						if (effect->Duration < ticks)
-							EffectManager->RemoveEffect(effect);
-						else
-						{
-							TGameEffectDrag *ed = (TGameEffectDrag*)effect;
-
-							int deX = drawX - ed->OffsetX;
-							int deY = drawY - ed->OffsetY;
-
-							UO->DrawStaticArt(effect->Graphic, objColor, deX, deY, objZ);
-
-							ed->AddOffsetX(10);
-							ed->AddOffsetY(10);
-						}
-					}
-					else if (effect->LastChangeFrameTime < ticks)
-					{
-						effect->LastChangeFrameTime = ticks + effect->Speed;
-
-						objGraphic = effect->CalculateCurrentGraphic();
-					}
-					else
-						objGraphic = effect->GetCurrentGraphic();
-
-					if (objGraphic)
-					{
-						int deX = drawX;
-						int deY = drawY;
-						int deZ = 0;
-
-						if (effect->EffectType == EF_MOVING)
-						{
-							TGameEffectMoving *moving = (TGameEffectMoving*)effect;
-
-							deX += moving->OffsetX;
-							deY += moving->OffsetY;
-							deZ += moving->OffsetZ;
-						}
-
-						effect->ApplyRenderMode();
-
-						UO->DrawStaticArt(objGraphic, objColor, deX, deY, objZ + deZ);
-
-						glDisable(GL_BLEND);
-					}
-
-					break;
-				}
-				default:
-					break;
-			}*/
-		}
-
-		/*IFOR(drawMode, 0, drawModeCount)
+		g_NoDrawRoof = false;
+		g_MaxGroundZ = 125;
+		int maxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
+
+		IFOR(drawMode, 0, drawModeCount)
 		{
 			for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 			{
@@ -1077,8 +598,6 @@ int TGameScreen::Render(bool mode)
 
 							TLandObject *mol = ro->GetLand();
 
-							char TileZ1 = mol->Z;
-
 							if (DrawPixelsY - deltaZ < m_RenderBounds.MinPixelsY || DrawPixelsY - deltaZ > m_RenderBounds.MaxPixelsY)
 								continue;
 
@@ -1088,7 +607,7 @@ int TGameScreen::Render(bool mode)
 							if (GetDistance(g_Player, testPos) > g_UpdateRange)
 								g_OutOfRangeColor = 0x0386;*/
 
-							/*char checkZ = mol->DrawZ;
+							char checkZ = mol->DrawZ;
 						
 							while (ro != NULL)
 							{
@@ -1110,308 +629,7 @@ int TGameScreen::Render(bool mode)
 									continue;
 								}
 
-								switch (ro->RenderType)
-								{
-									case ROT_LAND_OBJECT:
-									{
-										if (TileZ1 > MaxGroundZ)
-											break;
-
-										WORD color = 0;
-										if (ro == g_SelectedObject)
-											color = g_SelectLandColor;
-
-#if UO_DEBUG_INFO!=0
-g_RenderedObjectsCountInGameWindow++;
-#endif
-
-										if (ro->Color == 1)
-											UO->DrawLandArt(ro->Graphic, color, DrawPixelsX, DrawPixelsY, TileZ1);
-										else
-										{
-											GLfloat tCl = 1.0f;
-											glColor3f(tCl, tCl, tCl);
-											
-											glEnable(GL_LIGHTING);
-
-											UO->DrawLandTexture(ro->Graphic, color, DrawPixelsX, DrawPixelsY, ((TLandObject*)ro)->Rect, ((TLandObject*)ro)->m_Normals);
-											
-											glDisable(GL_LIGHTING);
-
-											glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
-										}
-
-										break;
-									}
-									case ROT_STATIC_OBJECT:
-									{
-										if (noDrawRoof && ro->IsRoof())
-											break;
-
-#if UO_DEBUG_INFO!=0
-g_RenderedObjectsCountInGameWindow++;
-#endif
-
-										WORD sG = ro->Graphic - 0x4000;
-									
-										WORD color = ro->Color;
-										if (ro == g_SelectedObject)
-											color = g_SelectStaticColor;
-									
-										if (ro->IsFoliage() && playerX - 2 < mX && playerY - 2 < mY)
-										{
-											if (!g_GrayedPixels)
-											{
-												POINT fp = {0, 0};
-												UO->GetArtDimension(ro->Graphic, fp);
-
-												IMAGE_BOUNDS fib = {DrawPixelsX - fp.x / 2, DrawPixelsY - fp.y - (ro->Z * 4), fp.x, fp.y};
-
-												//g_GL.DrawPolygone(0x7F7F7F7F, fib.X, fib.Y, fib.Width, fib.Height);
-
-												if (fib.InRect(g_PlayerRect))
-												{
-													glEnable(GL_BLEND);
-													glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-										
-													UO->DrawStaticArtAnimated(sG, color, DrawPixelsX, DrawPixelsY, ro->Z);
-
-													glDisable(GL_BLEND);
-												}
-												else
-													UO->DrawStaticArtAnimated(sG, color, DrawPixelsX, DrawPixelsY, ro->Z);
-											}
-										}
-										else
-											UO->DrawStaticArtAnimated(sG, color, DrawPixelsX, DrawPixelsY, ro->Z);
-
-										if (ro->IsLightSource() && !ro->IsWall())
-										{
-											STATIC_TILES &tile = UO->m_StaticData[sG / 32].Tiles[sG % 32];
-
-											LIGHT_DATA light = {tile.Quality, 0, mX, mY, ro->Z, DrawPixelsX, DrawPixelsY - (ro->Z * 4)};
-
-											if (ConfigManager.ColoredLighting)
-												light.Color = UO->GetLightColor(sG);
-
-											AddLight(light);
-										}
-
-										break;
-									}
-									case ROT_GAME_OBJECT:
-									{
-										TGameObject *go = (TGameObject*)ro;
-									
-										WORD goGraphic = go->Graphic;
-										char goZ = go->Z;
-
-										if (go->Container != 0xFFFFFFFF || goGraphic >= 0x4000)
-											break;
-										else if (!go->NPC)
-										{
-											WORD goColor = go->Color;
-
-											if (go->Hidden())
-												goColor = 0x038A;
-
-#if UO_DEBUG_INFO!=0
-g_RenderedObjectsCountInGameWindow++;
-#endif
-
-											if (go->IsCorpse()) //Трупик
-												AnimationManager->DrawCorpse((TGameItem*)go, DrawPixelsX, DrawPixelsY, goZ);
-											else
-											{
-												bool DoubleDraw = false;
-												bool sel_mode = false;
-
-												if (g_LastObjectType == SOT_GAME_OBJECT && !go->Locked() && g_LastSelectedObject == go->Serial)
-												{
-													goColor = 0x0035;
-													sel_mode = true;
-												}
-
-												int goCount = go->Count;
-
-												if (goCount > 1)
-												{
-													if (goGraphic == 0x0EED)
-													{
-														if (goCount > 5)
-															goGraphic = 0x0EEF;
-														else
-															goGraphic = 0x0EEE;
-													}
-													else if (((TGameItem*)go)->IsStackable())
-														DoubleDraw = true;
-												}
-
-												if (DoubleDraw)
-												{
-													DrawPixelsX -= 2;
-													UO->DrawStaticArt(goGraphic, goColor, DrawPixelsX, DrawPixelsY - 5, goZ, sel_mode);
-													UO->DrawStaticArt(goGraphic, goColor, DrawPixelsX + 5, DrawPixelsY, goZ, sel_mode);
-												}
-												else
-													UO->DrawStaticArtAnimated(goGraphic, goColor, DrawPixelsX, DrawPixelsY, goZ, sel_mode);
-
-												if (ro->IsLightSource())
-												{
-													STATIC_TILES &tile = UO->m_StaticData[goGraphic / 32].Tiles[goGraphic % 32];
-
-													LIGHT_DATA light = {tile.Quality, tile.Hue, mX, mY, ro->Z, DrawPixelsX, DrawPixelsY - (ro->Z * 4)};
-
-													if (ConfigManager.ColoredLighting)
-														light.Color = UO->GetLightColor(goGraphic);
-
-													AddLight(light);
-												}
-											}
-										}
-										else //if (go->NPC)
-										{
-											TGameCharacter *goc = (TGameCharacter*)go;
-											if (goc->TimeToRandomFidget < ticks)
-												goc->SetRandomFidgetAnimation();
-
-#if UO_DEBUG_INFO!=0
-g_RenderedObjectsCountInGameWindow++;
-#endif
-
-											DWORD lastSBsel = g_StatusbarUnderMouse;
-
-											if (!go->IsPlayer() && g_Player->Warmode && g_LastSelectedObject == go->Serial)
-												g_StatusbarUnderMouse = go->Serial;
-
-											AnimationManager->DrawCharacter(goc, DrawPixelsX, DrawPixelsY, goZ); //Draw character
-
-											g_StatusbarUnderMouse = lastSBsel;
-
-											/*if (goc->IsPlayer())
-											{
-												//g_GL.DrawPolygone(0x7F7F7F7F, g_PlayerRect.X, g_PlayerRect.Y, g_PlayerRect.Width, g_PlayerRect.Height);
-											}*/
-										/*}
-
-										go->DrawEffects(DrawPixelsX, DrawPixelsY, ticks);
-
-										break;
-									}
-									case ROT_MULTI_OBJECT:
-									{
-										if (noDrawRoof && ro->IsRoof())
-											break;
-
-#if UO_DEBUG_INFO!=0
-g_RenderedObjectsCountInGameWindow++;
-#endif
-
-										TMultiObject *multi = (TMultiObject*)ro;
-									
-										char sZ = multi->Z;
-								
-										WORD sG = multi->Graphic - 0x4000;
-									
-										WORD color = multi->Color;
-										if (multi == g_SelectedObject)
-											color = g_SelectMultiColor;
-
-										if (multi->MultiFlags == 2) //Мульти на таргете
-										{
-											glEnable(GL_BLEND);
-											glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-
-											UO->DrawStaticArt(sG, color, DrawPixelsX, DrawPixelsY, sZ);
-
-											glDisable(GL_BLEND);
-										}
-										else
-										{
-											UO->DrawStaticArt(sG, color, DrawPixelsX, DrawPixelsY, sZ);
-											
-											if (ro->IsLightSource())
-											{
-												STATIC_TILES &tile = UO->m_StaticData[sG / 32].Tiles[sG % 32];
-
-												LIGHT_DATA light = {tile.Quality, tile.Hue, mX, mY, ro->Z, DrawPixelsX, DrawPixelsY - (ro->Z * 4)};
-
-												if (ConfigManager.ColoredLighting)
-													light.Color = UO->GetLightColor(sG);
-
-												AddLight(light);
-											}
-										}
-									
-										break;
-									}
-									case ROT_EFFECT:
-									{
-										TGameEffect *effect = (TGameEffect*)ro;
-
-#if UO_DEBUG_INFO!=0
-g_RenderedObjectsCountInGameWindow++;
-#endif
-
-										char eZ = effect->Z;
-								
-										WORD eGraphic = 0;
-
-										if (effect->EffectType == EF_STAY_AT_POS && effect->Duration < ticks)
-											EffectManager->RemoveEffect(effect);
-										else if (effect->EffectType == EF_DRAG)
-										{
-											if (effect->Duration < ticks)
-												EffectManager->RemoveEffect(effect);
-											else
-											{
-												TGameEffectDrag *ed = (TGameEffectDrag*)effect;
-												
-												int deX = DrawPixelsX - ed->OffsetX;
-												int deY = DrawPixelsY - ed->OffsetY;
-
-												UO->DrawStaticArt(effect->Graphic, effect->Color, deX, deY, eZ);
-
-												ed->AddOffsetX(10);
-												ed->AddOffsetY(10);
-											}
-										}
-										else if (effect->LastChangeFrameTime < ticks)
-										{
-											effect->LastChangeFrameTime = ticks + effect->Speed;
-
-											eGraphic = effect->CalculateCurrentGraphic();
-										}
-										else
-											eGraphic = effect->GetCurrentGraphic();
-
-										if (eGraphic)
-										{
-											int deX = DrawPixelsX;
-											int deY = DrawPixelsY;
-											int deZ = 0;
-
-											if (effect->EffectType == EF_MOVING)
-											{
-												TGameEffectMoving *moving = (TGameEffectMoving*)effect;
-												
-												deX += moving->OffsetX;
-												deY += moving->OffsetY;
-												deZ += moving->OffsetZ;
-											}
-
-											effect->ApplyRenderMode();
-
-											UO->DrawStaticArt(eGraphic, effect->Color, deX, deY, eZ + deZ);
-
-											glDisable(GL_BLEND);
-										}
-
-										break;
-									}
-									default:
-										break;
-								}
+								ro->Draw(mode, DrawPixelsX, DrawPixelsY, ticks);
 
 								ro = nextRo;
 							}
@@ -1419,7 +637,7 @@ g_RenderedObjectsCountInGameWindow++;
 					}
 				}
 			}
-		}*/
+		}
 
 		if (drawModeCount)
 		{
@@ -1458,12 +676,16 @@ g_RenderedObjectsCountInGameWindow++;
 						{
 							LIGHT_DATA &light = m_Light[i];
 
-							UO->DrawLight(light.ID, light.Color, light.DrawX, light.DrawY);
+							UO->DrawLight(light.ID, light.Color, light.DrawX - gameWindowPosX, light.DrawY - gameWindowPosY);
 						}
 
 						m_LightBuffer.Release();
 
 						g_GL.RestorePort();
+						
+						glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+						g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
 
 						glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 						
@@ -1473,10 +695,6 @@ g_RenderedObjectsCountInGameWindow++;
 					}
 				}
 			}
-
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-			g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
 
 			g_OutOfRangeColor = 0;
 
@@ -1755,12 +973,9 @@ g_RenderedObjectsCountInGameWindow++;
 			if (g_MouseX < gameWindowPosX || g_MouseY < gameWindowPosY || g_MouseX > (gameWindowPosX + gameWindowSizeX) || g_MouseY > (gameWindowPosY + gameWindowSizeY))
 				return g_LastSelectedObject;
 
-			IFOR(i, 0, m_ListSize)
-				m_List[i].obj->Draw(mode, m_List[i], ticks);
-
-			/*bool noDrawRoof = false;
-			int MaxGroundZ = 0xFF;
-			int maxDrawZ = GetMaxDrawZ(noDrawRoof, MaxGroundZ);
+			g_NoDrawRoof = false;
+			g_MaxGroundZ = 125;
+			int maxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
 
 			IFOR(drawMode, 0, drawModeCount)
 			{
@@ -1805,8 +1020,6 @@ g_RenderedObjectsCountInGameWindow++;
 
 								TLandObject *mol = ro->GetLand();
 						
-								char TileZ1 = mol->Z;
-
 								if (DrawPixelsY - deltaZ < m_RenderBounds.MinPixelsY || DrawPixelsY - deltaZ > m_RenderBounds.MaxPixelsY)
 									continue;
 						
@@ -1827,155 +1040,13 @@ g_RenderedObjectsCountInGameWindow++;
 									if (ro->IsInternal())
 										continue;
 
-									switch (ro->RenderType)
-									{
-										case ROT_LAND_OBJECT:
-										{
-											if (TileZ1 > MaxGroundZ)
-												break;
-
-											if (UO->LandPixelsInXY(ro->Graphic, DrawPixelsX, DrawPixelsY, TileZ1))
-											{
-												g_LastObjectType = SOT_LAND_OBJECT;
-												g_LastSelectedObject = 2;
-												g_SelectedObject = ro;
-											}
-
-											break;
-										}
-										case ROT_STATIC_OBJECT:
-										{
-											if (noDrawRoof && ro->IsRoof())
-												break;
-
-											if (ro->IsFoliage() && playerX - 2 < mX && playerY - 2 < mY)
-											{
-												if (!g_GrayedPixels)
-												{
-													POINT fp = {0, 0};
-													UO->GetArtDimension(ro->Graphic, fp);
-
-													IMAGE_BOUNDS fib = {DrawPixelsX - fp.x / 2, DrawPixelsY - fp.y - (ro->Z * 4), fp.x, fp.y};
-
-													if (!fib.InRect(g_PlayerRect))
-													{
-														if (UO->StaticPixelsInXYAnimated(ro->Graphic - 0x4000, DrawPixelsX, DrawPixelsY, ro->Z))
-														{
-															g_LastObjectType = SOT_STATIC_OBJECT;
-															g_LastSelectedObject = 3;
-															g_SelectedObject = ro;
-														}
-													}
-												}
-											}
-											else if (UO->StaticPixelsInXYAnimated(ro->Graphic - 0x4000, DrawPixelsX, DrawPixelsY, ro->Z))
-											{
-												g_LastObjectType = SOT_STATIC_OBJECT;
-												g_LastSelectedObject = 3;
-												g_SelectedObject = ro;
-											}
-
-											break;
-										}
-										case ROT_GAME_OBJECT:
-										{
-											TGameObject *go = (TGameObject*)ro;
-									
-											WORD goGraphic = go->Graphic;
-											char goZ = go->Z;
-
-											if (go->Container != 0xFFFFFFFF || goGraphic >= 0x4000)
-												break;
-											else if (!go->NPC)
-											{
-												bool DoubleDraw = false;
-
-												int goCount = go->Count;
-
-												if (goCount > 1)
-												{
-													if (goGraphic == 0x0EED)
-													{
-														if (goCount > 5)
-															goGraphic = 0x0EEF;
-														else
-															goGraphic = 0x0EEE;
-													}
-													else if (((TGameItem*)go)->IsStackable())
-														DoubleDraw = true;
-												}
-
-												if (go->IsCorpse()) //Трупик
-												{
-													if (AnimationManager->CorpsePixelsInXY((TGameItem*)go, DrawPixelsX, DrawPixelsY, goZ))
-													{
-														g_LastObjectType = SOT_GAME_OBJECT;
-														g_LastSelectedObject = go->Serial;
-														g_SelectedObject = go;
-													}
-												}
-												else
-												{
-													if (DoubleDraw)
-													{
-														DrawPixelsX -= 2;
-
-														if (UO->StaticPixelsInXY(goGraphic, DrawPixelsX, DrawPixelsY - 5, goZ))
-														{
-															g_LastObjectType = SOT_GAME_OBJECT;
-															g_LastSelectedObject = go->Serial;
-															g_SelectedObject = go;
-														}
-														else if (UO->StaticPixelsInXY(goGraphic, DrawPixelsX + 5, DrawPixelsY, goZ))
-														{
-															g_LastObjectType = SOT_GAME_OBJECT;
-															g_LastSelectedObject = go->Serial;
-															g_SelectedObject = go;
-														}
-													}
-													else if (UO->StaticPixelsInXYAnimated(goGraphic, DrawPixelsX, DrawPixelsY, goZ))
-													{
-														g_LastObjectType = SOT_GAME_OBJECT;
-														g_LastSelectedObject = go->Serial;
-														g_SelectedObject = go;
-													}
-												}
-											}
-											else //if (go->NPC)
-											{
-												if (AnimationManager->CharacterPixelsInXY((TGameCharacter*)go, DrawPixelsX, DrawPixelsY, goZ))
-												{
-													g_LastObjectType = SOT_GAME_OBJECT;
-													g_LastSelectedObject = go->Serial;
-													g_SelectedObject = go;
-												}
-											}
-
-											break;
-										}
-										case ROT_MULTI_OBJECT:
-										{
-											if (noDrawRoof && ro->IsRoof())
-												break;
-
-											if (UO->StaticPixelsInXY(ro->Graphic - 0x4000, DrawPixelsX, DrawPixelsY, ro->Z))
-											{
-												g_LastObjectType = SOT_STATIC_OBJECT;
-												g_LastSelectedObject = 3;
-												g_SelectedObject = ro;
-											}
-
-											break;
-										}
-										default:
-											break;
-									}
+									ro->Draw(mode, DrawPixelsX, DrawPixelsY, ticks);
 								}
 							}
 						}
 					}
 				}
-			}*/
+			}
 
 			if (drawModeCount)
 			{

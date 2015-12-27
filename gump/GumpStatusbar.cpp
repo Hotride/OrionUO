@@ -321,7 +321,7 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 			sprintf(text, "%d", g_Player->Int);
 			FontManager->DrawA(1, text, 0x0386, posX + 86, posY + 85);
 				
-			sprintf(text, "%s", (g_Player->Sex ? "M" : "F"));
+			sprintf(text, "%s", (g_Player->Sex ? "F" : "M"));
 			FontManager->DrawA(1, text, 0x0386, posX + 86, posY + 97);
 				
 			sprintf(text, "%d", g_Player->Armor);

@@ -57,7 +57,7 @@ public:
 	SETGET(int, Increment);
 	SETGET(DWORD, LastChangeFrameTime);
 
-	virtual int Draw(bool &mode, RENDER_LIST_DATA &data, DWORD &ticks);
+	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
 
 	WORD GetCurrentGraphic();
 	WORD CalculateCurrentGraphic();
