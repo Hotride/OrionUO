@@ -2893,7 +2893,7 @@ PACKET_HANDLER(OpenGump)
 			sscanf((char*)e, "%d %d %d %d", &x, &y, &w, &h);
 
 			go = new TGumpChecktrans(x, y, w, h);
-			//gump->SetTransparent(true);
+			gump->Transparent = true;
 		}
 		else if (!memcmp(lowc, "buttontileart", 13))
 		{

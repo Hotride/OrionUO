@@ -110,6 +110,7 @@ float g_DrawColor = 1.0f;
 bool g_NoDrawRoof = false;
 char g_MaxGroundZ = 0;
 char g_SelecterCharName[30] = {0};
+GLuint g_CheckerTransTexture = 0;
 
 int g_MouseX = 0;
 int g_MouseY = 0;

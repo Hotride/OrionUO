@@ -24,6 +24,7 @@ class TGumpGeneric : public TGump
 {
 private:
 	int m_Page;
+	bool m_Transparent;
 	
 	DWORD m_LastScrollChangeTime;
 
@@ -33,12 +34,15 @@ private:
 	static const int ID_GG_SCROLLBAR_BACKGROUND = 40000;
 
 	void ListingList(TGumpHTMLGump *htmlGump, bool direction, int divizor = 1);
+	void ApplyTransparent(TGumpObject *obj, int page, int &x, int &y);
 public:
 	TGumpGeneric(DWORD serial, short x, short y, DWORD id);
 	virtual ~TGumpGeneric();
 	
 	static const int ID_GG_HTML_TEXT = 50000;
 	
+	SETGET(bool, Transparent)
+
 	bool EntryPointerHere();
 	
 	void PrepareTextures();

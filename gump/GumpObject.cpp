@@ -52,7 +52,7 @@ TGumpResizepic::TGumpResizepic(WORD graphic, short x, short y, short width, shor
 TGumpChecktrans::TGumpChecktrans(short x, short y, short width, short height)
 : TGumpObject(GOT_CHECKTRANS, 0, 0, x, y), m_Width(width), m_Height(height)
 {
-	/*PDWORD pixels = new DWORD[width * height];
+	PDWORD pixels = new DWORD[width * height];
 
 	IFOR(i, 0, width)
 	{
@@ -60,7 +60,7 @@ TGumpChecktrans::TGumpChecktrans(short x, short y, short width, short height)
 		{
 			DWORD val = 0;
 
-			if ((i % 2) && (j % 2))
+			if (((i + x) % 2) && ((j + y) % 2))
 				val = 0xFFFFFFFF;
 
 			pixels[j * width + i] = val;
@@ -69,7 +69,7 @@ TGumpChecktrans::TGumpChecktrans(short x, short y, short width, short height)
 
 	g_GL.BindTexture(Texture, width, height, pixels);
 
-	delete pixels;*/
+	delete pixels;
 }
 //---------------------------------------------------------------------------
 TGumpChecktrans::~TGumpChecktrans()

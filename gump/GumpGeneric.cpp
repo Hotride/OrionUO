@@ -20,13 +20,68 @@
 #include "stdafx.h"
 //---------------------------------------------------------------------------
 TGumpGeneric::TGumpGeneric(DWORD serial, short x, short y, DWORD id)
-: TGump(GT_GENERIC, serial, x, y), m_Page(1), m_LastScrollChangeTime(0)
+: TGump(GT_GENERIC, serial, x, y), m_Page(1), m_LastScrollChangeTime(0),
+m_Transparent(false)
 {
 	ID = id;
 }
 //---------------------------------------------------------------------------
 TGumpGeneric::~TGumpGeneric()
 {
+}
+//---------------------------------------------------------------------------
+void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page, int &x, int &y)
+{
+	if (!m_Transparent || g_CheckerTransTexture == NULL)
+		return;
+
+	glClear(GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_STENCIL_TEST);
+
+	while (obj != NULL)
+	{
+		if (obj->Type == GOT_PAGE)
+		{
+			page = ((TGumpPage*)obj)->Page;
+
+			if (page >= 2 && page > m_Page)
+				break;
+		}
+		else if (page == m_Page || !page)
+		{
+			switch (obj->Type)
+			{
+				case GOT_CHECKTRANS:
+				{
+					TGumpChecktrans *gct = (TGumpChecktrans*)obj;
+					glColorMask(false, false, false, false);
+
+					glStencilFunc(GL_ALWAYS, 1, 1);
+					glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+					g_GL.Draw(g_CheckerTransTexture, (GLfloat)(x + gct->X), (GLfloat)(y + gct->Y), 2, 2, (GLfloat)gct->Width, (GLfloat)gct->Height);
+
+					glColorMask(true, true, true, true);
+
+					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+					glStencilFunc(GL_NOTEQUAL, 1, 1);
+
+					break;
+				}
+				case GOT_PAGE:
+				{
+					page = ((TGumpPage*)obj)->Page;
+					break;
+				}
+				default:
+					break;
+			}
+		}
+
+		obj = (TGumpObject*)obj->m_Next;
+	}
+
+	glDisable(GL_STENCIL_TEST);
 }
 //---------------------------------------------------------------------------
 void TGumpGeneric::AddText(int index, wstring text)
@@ -276,7 +331,7 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 		int objectIndex = 1;
 		bool haveHTML = false;
 
-		glEnable(GL_STENCIL_TEST);
+		ApplyTransparent(item, m_Page, posX, posY);
 
 		while (item != NULL)
 		{
@@ -293,7 +348,14 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 				{
 					case GOT_RESIZEPIC:
 					{
+						if (m_Transparent)
+							glEnable(GL_STENCIL_TEST);
+
 						UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
+						
+						if (m_Transparent)
+							glDisable(GL_STENCIL_TEST);
+						
 						break;
 					}
 					case GOT_BUTTON:
@@ -392,21 +454,7 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					}
 					case GOT_CHECKTRANS:
 					{
-						/*TGumpChecktrans *gct = (TGumpChecktrans*)item;
-						glColorMask(false, false, false, false);
-
-						glStencilFunc(GL_ALWAYS, 1, 1);
-						glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-						g_GL.Draw(gct->Texture, (GLfloat)(posX + item->X), (GLfloat)(posY + item->Y), (GLfloat)gct->Width, (GLfloat)gct->Height);
-
-						glColorMask(true, true, true, true);
-
-						glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-						glStencilFunc(GL_NOTEQUAL, 1, 1);
-						
-						g_GL.Draw(gct->Texture, (GLfloat)(posX + item->X), (GLfloat)(posY + item->Y), (GLfloat)gct->Width, (GLfloat)gct->Height);*/
-
+						ApplyTransparent(item, m_Page, posX, posY);
 						break;
 					}
 					case GOT_PAGE:
@@ -432,8 +480,6 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 			item = (TGumpObject*)item->m_Next;
 			objectIndex++;
 		}
-
-		glDisable(GL_STENCIL_TEST);
 
 		if (haveHTML)
 		{
@@ -491,8 +537,14 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 								
 								if (htmlGump->HaveBackground)
 								{
+									if (m_Transparent)
+										glEnable(GL_STENCIL_TEST);
+
 									UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
 									curHeight += 7;
+
+									if (m_Transparent)
+										glDisable(GL_STENCIL_TEST);
 								}
 								else
 								{
@@ -552,6 +604,11 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 
 							g_GL.RestorePort();
 						
+							break;
+						}
+						case GOT_CHECKTRANS:
+						{
+							ApplyTransparent(item, m_Page, posX, posY);
 							break;
 						}
 						case GOT_PAGE:

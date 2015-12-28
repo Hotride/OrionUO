@@ -162,6 +162,7 @@ extern float g_DrawColor;
 extern bool g_NoDrawRoof;
 extern char g_MaxGroundZ;
 extern char g_SelecterCharName[30];
+extern GLuint g_CheckerTransTexture;
 //---------------------------------------------------------------------------
 extern int g_MouseX;
 extern int g_MouseY;

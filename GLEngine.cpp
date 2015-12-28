@@ -40,6 +40,8 @@ bool TGLEngine::GLSetupPixelFormat()
 		0,
 		0,0,
 	};
+
+	pfd.cStencilBits = 1;
 	
 	int pixelformat = ChoosePixelFormat(m_DC, &pfd);
 

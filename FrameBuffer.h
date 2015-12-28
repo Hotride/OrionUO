@@ -38,7 +38,8 @@ public:
 	bool Init(int width, int height);
 	void Free();
 	void Release();
-	
+
+	bool Ready() const { return m_Ready; }
 	bool Ready(int &width, int &height);
 	bool Use();
 	

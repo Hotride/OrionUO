@@ -24,6 +24,7 @@ TGameScreen *GameScreen = NULL;
 TGameScreen::TGameScreen()
 : TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false)
 {
+	m_LightBuffer.Init(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 }
 //---------------------------------------------------------------------------
 TGameScreen::~TGameScreen()
@@ -645,54 +646,39 @@ int TGameScreen::Render(bool mode)
 
 			if (g_UseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
 			{
-				bool lightReady = m_LightBuffer.Ready(gameWindowSizeX, gameWindowSizeY);
-
-				if (!lightReady)
+				if (m_LightBuffer.Ready() && m_LightBuffer.Use())
 				{
-					m_LightBuffer.Free();
-					
-					lightReady = m_LightBuffer.Init(gameWindowSizeX, gameWindowSizeY);
+					float newLightColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f); // + 0.2f;
 
-					if (!lightReady)
-						m_LightBuffer.Free();
-				}
-				
-				float newLightColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f); // + 0.2f;
+					if (!ConfigManager.DarkNights)
+						newLightColor += 0.2f;
 
-				if (!ConfigManager.DarkNights)
-					newLightColor += 0.2f;
+					glClearColor(newLightColor, newLightColor, newLightColor, 1.0f);
+					glClear(GL_COLOR_BUFFER_BIT);
 
-				if (lightReady)
-				{
-					if (m_LightBuffer.Use())
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_ONE, GL_ONE);
+
+					IFOR(i, 0, m_LightCount)
 					{
-						glClearColor(newLightColor, newLightColor, newLightColor, 1.0f);
-						glClear(GL_COLOR_BUFFER_BIT);
+						LIGHT_DATA &light = m_Light[i];
 
-						glEnable(GL_BLEND);
-						glBlendFunc(GL_ONE, GL_ONE);
-
-						IFOR(i, 0, m_LightCount)
-						{
-							LIGHT_DATA &light = m_Light[i];
-
-							UO->DrawLight(light.ID, light.Color, light.DrawX - gameWindowPosX, light.DrawY - gameWindowPosY);
-						}
-
-						m_LightBuffer.Release();
-
-						g_GL.RestorePort();
-						
-						glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-						g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
-
-						glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-						
-						m_LightBuffer.Draw((float)gameWindowPosX, (float)gameWindowPosY);
-				
-						glDisable(GL_BLEND);
+						UO->DrawLight(light.ID, light.Color, light.DrawX - gameWindowPosX, light.DrawY - gameWindowPosY);
 					}
+
+					m_LightBuffer.Release();
+
+					g_GL.RestorePort();
+
+					glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+					g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
+
+					glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+
+					m_LightBuffer.Draw((float)gameWindowPosX, (float)gameWindowPosY);
+
+					glDisable(GL_BLEND);
 				}
 			}
 
