@@ -100,7 +100,8 @@ void TTooltip::Draw(int cursorWidth, int cursorHeight)
 		glEnable(GL_BLEND);
 		//glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_COLOR);
 		//glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
-		glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_DST_COLOR);
+		//glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_DST_COLOR);
+		glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
 
 		g_GL.DrawPolygone(0, (float)x, (float)y, Texture.Width + 8.0f, Texture.Height + 8.0f);
 		
