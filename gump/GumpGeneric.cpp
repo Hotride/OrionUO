@@ -62,7 +62,7 @@ void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page, int &x, int &y)
 					g_GL.Draw(g_CheckerTransTexture, (GLfloat)(x + gct->X), (GLfloat)(y + gct->Y), 2, 2, (GLfloat)gct->Width, (GLfloat)gct->Height);
 
 					glColorMask(true, true, true, true);
-
+					
 					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 					glStencilFunc(GL_NOTEQUAL, 1, 1);
 
@@ -350,18 +350,18 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					{
 						if (m_Transparent)
 						{
-							glEnable(GL_STENCIL_TEST);
-
-							UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
-
-							glDisable(GL_STENCIL_TEST);
-
 							glEnable(GL_BLEND);
 							glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
 
 							UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
 
 							glDisable(GL_BLEND);
+
+							glEnable(GL_STENCIL_TEST);
+
+							UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
+
+							glDisable(GL_STENCIL_TEST);
 						}
 						else
 							UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
@@ -549,12 +549,6 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 								{
 									if (m_Transparent)
 									{
-										glEnable(GL_STENCIL_TEST);
-
-										UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
-
-										glDisable(GL_STENCIL_TEST);
-
 										glEnable(GL_BLEND);
 										glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
 
@@ -562,6 +556,12 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 										curHeight += 7;
 
 										glDisable(GL_BLEND);
+
+										glEnable(GL_STENCIL_TEST);
+
+										UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
+
+										glDisable(GL_STENCIL_TEST);
 									}
 									else
 									{
