@@ -17,6 +17,7 @@
 *.exe
 *.dll
 !ConfigurationEditor.exe
+ClientUO.vcxproj
 Bodyconv1.def
 Makefile*
 /ipch
