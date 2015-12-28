@@ -17,9 +17,8 @@
 *.exe
 *.dll
 !ConfigurationEditor.exe
-ClientUO.vcxproj
-Bodyconv1.def
-Makefile*
+/Bodyconv1.def
+/Makefile*
 /ipch
 /Release
 /Debug
@@ -27,3 +26,4 @@ Makefile*
 /glew
 /music
 /SDL2-2.0.3
+/ClientUO.vcxproj
