@@ -980,7 +980,8 @@ bool TUltimaOnline::Install()
 	g_GL.BindTexture(g_TextureUnlockedGump, 10, 14, pdwult);
 	g_TextureGumpState[0] = g_TextureUnlockedGump;
 
-	DWORD ctBuf[4] = { 0, 0xFFFFFFFF, 0xFFFFFFFF, 0 };
+	DWORD ctBuf[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+	//DWORD ctBuf[4] = { 0, 0xFFFFFFFF, 0xFFFFFFFF, 0 };
 	g_GL.BindTexture(g_CheckerTransTexture, 2, 2, ctBuf);
 
 	InitScreen(GS_MAIN);

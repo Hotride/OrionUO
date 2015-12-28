@@ -349,13 +349,23 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					case GOT_RESIZEPIC:
 					{
 						if (m_Transparent)
+						{
 							glEnable(GL_STENCIL_TEST);
 
-						UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
-						
-						if (m_Transparent)
+							UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
+
 							glDisable(GL_STENCIL_TEST);
-						
+
+							glEnable(GL_BLEND);
+							glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
+
+							UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
+
+							glDisable(GL_BLEND);
+						}
+						else
+							UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
+
 						break;
 					}
 					case GOT_BUTTON:
@@ -538,13 +548,26 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 								if (htmlGump->HaveBackground)
 								{
 									if (m_Transparent)
+									{
 										glEnable(GL_STENCIL_TEST);
 
-									UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
-									curHeight += 7;
+										UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
 
-									if (m_Transparent)
 										glDisable(GL_STENCIL_TEST);
+
+										glEnable(GL_BLEND);
+										glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
+
+										UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
+										curHeight += 7;
+
+										glDisable(GL_BLEND);
+									}
+									else
+									{
+										UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
+										curHeight += 7;
+									}
 								}
 								else
 								{
