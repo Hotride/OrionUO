@@ -20,6 +20,41 @@
 #include "stdafx.h"
 
 TBaseScreen *CurrentScreen = NULL;
+
+//---------------------------------------------------------------------------
+int TBaseScreen::DrawSmoothMonitor()
+{
+	if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNRISE)
+	{
+		g_SmoothMonitorColor += g_SmoothMonitorStep;
+
+		if (g_SmoothMonitorColor >= 1.0f)
+		{
+			g_SmoothMonitorColor = 1.0f;
+			g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+		}
+	}
+	else if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNSET)
+	{
+		g_SmoothMonitorColor -= g_SmoothMonitorStep;
+
+		if (g_SmoothMonitorColor <= 0.0f)
+		{
+			g_SmoothMonitorColor = 1.0f;
+			g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+			glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
+
+			ProcessSmoothAction();
+			return 1;
+		}
+	}
+	else
+		g_SmoothMonitorColor = 1.0f;
+
+	glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
+
+	return 0;
+}
 //---------------------------------------------------------------------------
 void TBaseScreen::CreateSmoothAction(BYTE action)
 {

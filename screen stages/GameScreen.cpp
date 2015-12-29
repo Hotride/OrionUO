@@ -40,6 +40,16 @@ void TGameScreen::Init()
 	m_GameWindowMoving = false;
 	m_GameWindowResizing = false;
 
+	if (g_UseSmoothMonitor)
+	{
+		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
+		g_SmoothMonitorColor = 0.0f;
+		g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
+		m_SmoothScreenAction = 0;
+	}
+	else
+		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+
 	Tooltip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
@@ -531,12 +541,15 @@ int TGameScreen::Render(bool mode)
 		m_LightCount = 0;
 
 		g_GL.BeginDraw();
-		
+
+		if (DrawSmoothMonitor())
+			return 0;
+
 		g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
 		
 		g_GL.Disable(GL_LIGHTING);
 		
-		g_DrawColor = 1.0f;
+		g_DrawColor = g_SmoothMonitorColor;
 
 		if (!g_UseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
 		{

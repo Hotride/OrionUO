@@ -185,34 +185,8 @@ int TMainScreen::Render(bool mode)
 
 		g_GL.BeginDraw();
 
-		if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNRISE)
-		{
-			g_SmoothMonitorColor += g_SmoothMonitorStep;
-
-			if (g_SmoothMonitorColor >= 1.0f)
-			{
-				g_SmoothMonitorColor = 1.0f;
-				g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
-			}
-		}
-		else if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNSET)
-		{
-			g_SmoothMonitorColor -= g_SmoothMonitorStep;
-
-			if (g_SmoothMonitorColor <= 0.0f)
-			{
-				g_SmoothMonitorColor = 1.0f;
-				g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
-				glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
-
-				ProcessSmoothAction();
-				return 0;
-			}
-		}
-		else
-			g_SmoothMonitorColor = 1.0f;
-
-		glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
+		if (DrawSmoothMonitor())
+			return 0;
 
 		static DWORD times = GetTickCount() + 3000;
 

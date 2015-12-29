@@ -45,10 +45,8 @@ void TCharacterListScreen::Init()
 
 	if (g_UseSmoothMonitor)
 	{
-		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
-		g_SmoothMonitorColor = 1.0f;
-		//g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
-		//g_SmoothMonitorColor = 0.0f;
+		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
+		g_SmoothMonitorColor = 0.0f;
 		g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
 		m_SmoothScreenAction = 0;
 	}
@@ -96,7 +94,10 @@ int TCharacterListScreen::Render(bool mode)
 		g_LastRenderTime = ticks + g_FrameDelay;
 
 		g_GL.BeginDraw();
-		
+
+		if (DrawSmoothMonitor())
+			return 0;
+
 		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
 		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
 		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
