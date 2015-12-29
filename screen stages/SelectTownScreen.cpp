@@ -49,7 +49,19 @@ void TSelectTownScreen::Init()
 	m_PixelOffset = 0;
 	m_LastScrollChangeTime = 0;
 	m_City = CityList->GetCity(3);
-	
+
+	if (g_UseSmoothMonitor)
+	{
+		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+		g_SmoothMonitorColor = 1.0f;
+		//g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
+		//g_SmoothMonitorColor = 0.0f;
+		g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
+		m_SmoothScreenAction = 0;
+	}
+	else
+		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+
 	Tooltip.SeqIndex = 0;
 	
 	//Prepare textures:

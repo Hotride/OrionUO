@@ -107,18 +107,6 @@ void TMainScreen::Init()
 	UO->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
 }
 //---------------------------------------------------------------------------
-void TMainScreen::CreateSmoothAction(BYTE action)
-{
-	if (g_UseSmoothMonitor)
-	{
-		m_SmoothScreenAction = action;
-		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNSET;
-		g_SmoothMonitorColor = 1.0f;
-	}
-	else
-		ProcessSmoothAction(action);
-}
-//---------------------------------------------------------------------------
 void TMainScreen::ProcessSmoothAction(BYTE action)
 {
 	if (action == 0xFF)
@@ -215,6 +203,7 @@ int TMainScreen::Render(bool mode)
 			{
 				g_SmoothMonitorColor = 1.0f;
 				g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+				glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
 
 				ProcessSmoothAction();
 				return 0;

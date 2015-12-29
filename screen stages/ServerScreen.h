@@ -49,7 +49,6 @@ private:
 	int m_PixelOffset;
 	int m_SelectionServerTempValue;
 
-	void CreateSmoothAction(BYTE action);
 	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
 	TServerScreen();

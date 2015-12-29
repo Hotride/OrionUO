@@ -25,6 +25,7 @@ class TBaseScreen
 {
 protected:
 	BYTE m_SmoothScreenAction;
+
 public:
 	TBaseScreen() :m_SmoothScreenAction(0) {}
 	virtual ~TBaseScreen() {}
@@ -41,6 +42,9 @@ public:
 	//Вычисление смещения объектов в окне скроллбокса и скроллера
 	virtual int CalculateScrollerAndTextPosition(int &currentLine, int &visibleLines, int &maxY, int currentY);
 	virtual int CalculateScrollerY(int &currentLine, int &visibleLines, int &maxY);
+
+	virtual void CreateSmoothAction(BYTE action);
+	virtual void ProcessSmoothAction(BYTE action = 0xFF) {}
 
 	//Эвенты
 	//Нажатие левой кнопки мыши

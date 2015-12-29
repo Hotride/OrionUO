@@ -41,7 +41,6 @@ private:
 	string CryptPW(const char *buf, int len);
 	string DecryptPW(const char *buf, int len);
 
-	void CreateSmoothAction(BYTE action);
 	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
 	TMainScreen();

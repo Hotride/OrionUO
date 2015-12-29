@@ -100,18 +100,6 @@ void TConnectionScreen::Init()
 	UO->ExecuteGumpPart(0x0481, 3); //Button v
 }
 //---------------------------------------------------------------------------
-void TConnectionScreen::CreateSmoothAction(BYTE action)
-{
-	if (g_UseSmoothMonitor)
-	{
-		m_SmoothScreenAction = action;
-		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNSET;
-		g_SmoothMonitorColor = 1.0f;
-	}
-	else
-		ProcessSmoothAction(action);
-}
-//---------------------------------------------------------------------------
 void TConnectionScreen::ProcessSmoothAction(BYTE action)
 {
 	if (action == 0xFF)
@@ -170,6 +158,7 @@ int TConnectionScreen::Render(bool mode)
 			{
 				g_SmoothMonitorColor = 1.0f;
 				g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+				glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
 
 				ProcessSmoothAction();
 				return 0;

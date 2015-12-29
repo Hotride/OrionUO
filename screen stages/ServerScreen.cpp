@@ -202,6 +202,7 @@ int TServerScreen::Render(bool mode)
 			{
 				g_SmoothMonitorColor = 1.0f;
 				g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+				glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
 
 				ProcessSmoothAction();
 				return 0;
@@ -445,18 +446,6 @@ void TServerScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 		m_SelectionServerTempValue = 0;
 		CreateSmoothAction(ID_SMOOTH_SS_SELECT_SERVER);
 	}
-}
-//---------------------------------------------------------------------------
-void TServerScreen::CreateSmoothAction(BYTE action)
-{
-	if (g_UseSmoothMonitor)
-	{
-		m_SmoothScreenAction = action;
-		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNSET;
-		g_SmoothMonitorColor = 1.0f;
-	}
-	else
-		ProcessSmoothAction(action);
 }
 //---------------------------------------------------------------------------
 void TServerScreen::ProcessSmoothAction(BYTE action)

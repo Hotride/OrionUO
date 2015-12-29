@@ -43,6 +43,20 @@ void TCharacterListScreen::Init()
 
 	g_UpdateRange = 18;
 
+	if (g_UseSmoothMonitor)
+	{
+		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+		g_SmoothMonitorColor = 1.0f;
+		//g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
+		//g_SmoothMonitorColor = 0.0f;
+		g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
+		m_SmoothScreenAction = 0;
+	}
+	else
+		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+
+	Tooltip.SeqIndex = 0;
+
 	//Prepare textures on Main Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background
 	UO->ExecuteGump(0x157C); //Main Screen

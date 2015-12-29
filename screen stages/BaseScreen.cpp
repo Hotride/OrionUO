@@ -21,6 +21,18 @@
 
 TBaseScreen *CurrentScreen = NULL;
 //---------------------------------------------------------------------------
+void TBaseScreen::CreateSmoothAction(BYTE action)
+{
+	if (g_UseSmoothMonitor)
+	{
+		m_SmoothScreenAction = action;
+		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNSET;
+		g_SmoothMonitorColor = 1.0f;
+	}
+	else
+		ProcessSmoothAction(action);
+}
+//---------------------------------------------------------------------------
 int TBaseScreen::CalculateScrollerAndTextPosition(int &currentLine, int &visibleLines, int &maxY, int currentY)
 {
 	//Без смещения

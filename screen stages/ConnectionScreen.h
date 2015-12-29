@@ -39,7 +39,6 @@ private:
 	static const int ID_CS_OK = 1;
 	static const int ID_CS_CANCEL = 2;
 
-	void CreateSmoothAction(BYTE action);
 	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
 	TConnectionScreen();
