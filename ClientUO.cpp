@@ -54,11 +54,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 					if (r.top < 0)
 						r.bottom += (r.top * (-1));
 
-					POINT Min = {r.right, r.bottom};
-					POINT  Max = {r.right, r.bottom};
+					POINT min = {r.right, r.bottom};
+					POINT max = {r.right, r.bottom};
 					g_GL.UpdateRect();
-					pInfo->ptMinTrackSize = Min;
-					pInfo->ptMaxTrackSize = Max;
+					pInfo->ptMinTrackSize = min;
+					pInfo->ptMaxTrackSize = max;
 				}
 				else
 				{
@@ -73,12 +73,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 					if (r.top < 0)
 						r.bottom += (r.top * (-1));
 						
-					POINT Min = {g_GameWindowSizeX, g_GameWindowSizeY};
-					pInfo->ptMinTrackSize = Min;
-					POINT  Max = {GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)};
+					POINT min = {g_GameWindowSizeX, g_GameWindowSizeY};
+					pInfo->ptMinTrackSize = min;
+					POINT max = {GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)};
 					g_GL.UpdateRect();
-					pInfo->ptMinTrackSize = Min;
-					pInfo->ptMaxTrackSize = Max;
+					pInfo->ptMinTrackSize = min;
+					pInfo->ptMaxTrackSize = max;
 				}
 
 				return 0;
@@ -114,6 +114,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_LBUTTONDOWN:
 		{
+			if (g_SmoothMonitorMode)
+				break;
+
 			g_GeneratedMouseDown = false;
 			DWORD ticks = GetTickCount();
 			g_LastMouseDownTime = ticks;
@@ -165,6 +168,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_LBUTTONUP:
 		{
+			if (g_SmoothMonitorMode)
+				break;
+
 			if (g_LastLClickTime != -1)
 			{
 				g_SelectGumpObjects = true;
@@ -193,6 +199,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_RBUTTONDOWN:
 		{
+			if (g_SmoothMonitorMode)
+				break;
+
 			DWORD ticks = GetTickCount();
 
 			g_SelectGumpObjects = true;
@@ -239,6 +248,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_RBUTTONUP:
 		{
+			if (g_SmoothMonitorMode)
+				break;
+
 			g_SelectGumpObjects = true;
 
 			CurrentScreen->OnRightMouseUp();
@@ -256,6 +268,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_CHAR:
 		{
+			if (g_SmoothMonitorMode)
+				break;
+
 			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
@@ -270,6 +285,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		//Нажатие на колесико мышки
 		case 0x0208:
 		{
+			if (g_SmoothMonitorMode)
+				break;
+
 			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
@@ -284,6 +302,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		//Колесико мышки вверх/вниз
 		case 0x020A:
 		{
+			if (g_SmoothMonitorMode)
+				break;
+
 			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
@@ -301,6 +322,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_KEYDOWN:
 		case WM_SYSKEYDOWN:
 		{
+			if (g_SmoothMonitorMode)
+				break;
+
 			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
@@ -321,6 +345,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
 		{
+			if (g_SmoothMonitorMode)
+				break;
+
 			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
@@ -980,14 +1007,10 @@ bool TUltimaOnline::Install()
 	g_GL.BindTexture(g_TextureUnlockedGump, 10, 14, pdwult);
 	g_TextureGumpState[0] = g_TextureUnlockedGump;
 
-	DWORD ctBuf[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-	//DWORD ctBuf[4] = { 0, 0xFFFFFFFF, 0xFFFFFFFF, 0 };
-	g_GL.BindTexture(g_CheckerTransTexture, 2, 2, ctBuf);
+	MainScreen->LoadGlobalConfig();
 
 	InitScreen(GS_MAIN);
 
-	MainScreen->LoadGlobalConfig();
-	
 	return true;
 }
 //---------------------------------------------------------------------------

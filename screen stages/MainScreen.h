@@ -26,6 +26,9 @@ private:
 	bool m_SavePassword;
 	bool m_AutoLogin;
 
+	static const BYTE ID_SMOOTH_MS_CONNECT = 1;
+	static const BYTE ID_SMOOTH_MS_QUIT = 2;
+
 	static const int ID_MS_QUIT = 1;
 	static const int ID_MS_ARROW_NEXT = 2;
 	static const int ID_MS_ACCOUNT = 3;
@@ -38,12 +41,14 @@ private:
 	string CryptPW(const char *buf, int len);
 	string DecryptPW(const char *buf, int len);
 
+	void CreateSmoothAction(BYTE action);
+	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
 	TMainScreen();
 	virtual ~TMainScreen();
 
-	SETGET(bool, SavePassword)
-	SETGET(bool, AutoLogin)
+	SETGET(bool, SavePassword);
+	SETGET(bool, AutoLogin);
 	
 	void LoadGlobalConfig();
 	void SaveGlobalConfig();

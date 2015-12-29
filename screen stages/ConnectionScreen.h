@@ -30,10 +30,17 @@ private:
 	CONNECTION_SCREEN_TYPE m_Type;
 	
 	TTextTexture m_Text[32];
+
+	static const BYTE ID_SMOOTH_CS_GO_SCREEN_MAIN = 1;
+	static const BYTE ID_SMOOTH_CS_GO_SCREEN_CHARACTER = 2;
+	static const BYTE ID_SMOOTH_CS_GO_SCREEN_PROFESSION = 3;
+	static const BYTE ID_SMOOTH_CS_SEND_DELETE = 4;
 	
 	static const int ID_CS_OK = 1;
 	static const int ID_CS_CANCEL = 2;
 
+	void CreateSmoothAction(BYTE action);
+	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
 	TConnectionScreen();
 	~TConnectionScreen();

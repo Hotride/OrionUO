@@ -83,6 +83,16 @@ void TMainScreen::Init()
 
 	FontManager->SetSavePixels(false);
 
+	if (g_UseSmoothMonitor)
+	{
+		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
+		g_SmoothMonitorColor = 0.0f;
+		g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
+		m_SmoothScreenAction = 0;
+	}
+	else
+		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+
 	Tooltip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
@@ -95,6 +105,29 @@ void TMainScreen::Init()
 	UO->ExecuteGumpPart(0x15A4, 3); //> gump
 	UO->ExecuteResizepic(0x0BB8); //Account/Password text field
 	UO->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
+}
+//---------------------------------------------------------------------------
+void TMainScreen::CreateSmoothAction(BYTE action)
+{
+	if (g_UseSmoothMonitor)
+	{
+		m_SmoothScreenAction = action;
+		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNSET;
+		g_SmoothMonitorColor = 1.0f;
+	}
+	else
+		ProcessSmoothAction(action);
+}
+//---------------------------------------------------------------------------
+void TMainScreen::ProcessSmoothAction(BYTE action)
+{
+	if (action == 0xFF)
+		action = m_SmoothScreenAction;
+
+	if (action == ID_SMOOTH_MS_CONNECT)
+		UO->Connect();
+	else if (action == ID_SMOOTH_MS_QUIT)
+		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 }
 //---------------------------------------------------------------------------
 void TMainScreen::InitTooltip()
@@ -163,6 +196,34 @@ int TMainScreen::Render(bool mode)
 		g_LastRenderTime = ticks + g_FrameDelay;
 
 		g_GL.BeginDraw();
+
+		if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNRISE)
+		{
+			g_SmoothMonitorColor += g_SmoothMonitorStep;
+
+			if (g_SmoothMonitorColor >= 1.0f)
+			{
+				g_SmoothMonitorColor = 1.0f;
+				g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+			}
+		}
+		else if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNSET)
+		{
+			g_SmoothMonitorColor -= g_SmoothMonitorStep;
+
+			if (g_SmoothMonitorColor <= 0.0f)
+			{
+				g_SmoothMonitorColor = 1.0f;
+				g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+
+				ProcessSmoothAction();
+				return 0;
+			}
+		}
+		else
+			g_SmoothMonitorColor = 1.0f;
+
+		glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
 
 		static DWORD times = GetTickCount() + 3000;
 
@@ -286,9 +347,9 @@ void TMainScreen::OnLeftMouseUp()
 	}
 
 	if (g_LastObjectLeftMouseDown == ID_MS_QUIT) //x button
-		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+		CreateSmoothAction(ID_SMOOTH_MS_QUIT);
 	else if (g_LastObjectLeftMouseDown == ID_MS_ARROW_NEXT) //> button
-		UO->Connect();
+	CreateSmoothAction(ID_SMOOTH_MS_CONNECT);
 	else if (g_LastObjectLeftMouseDown == ID_MS_SAVEPASSWORD) //Save password checkbox
 		m_SavePassword = !m_SavePassword;
 	else if (g_LastObjectLeftMouseDown == ID_MS_AUTOLOGIN) //Auto Login checkbox
@@ -335,7 +396,7 @@ void TMainScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 		}
 		case VK_RETURN:
 		{
-			UO->Connect();
+			CreateSmoothAction(ID_SMOOTH_MS_CONNECT);
 
 			break;
 		}
@@ -349,7 +410,11 @@ void TMainScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 //---------------------------------------------------------------------------
 void TMainScreen::LoadGlobalConfig()
 {
-	FILE *uo_cfg = fopen(FilePath("uo.cfg").c_str(), "r");
+	m_AutoLogin = false;
+	g_UseSmoothMonitor = false;
+	g_SmoothMonitorScale = 1;
+
+	FILE *uo_cfg = fopen(FilePath("uo_debug.cfg").c_str(), "r");
 
 	if (uo_cfg != NULL)
 	{
@@ -384,6 +449,7 @@ void TMainScreen::LoadGlobalConfig()
 				else if (!memcmp(cfgbuf, "acctpassword", 12))
 				{
 					int pln = strlen(ptr);
+
 					if (pln)
 						m_Password->SetText(DecryptPW(ptr, pln));
 
@@ -408,164 +474,69 @@ void TMainScreen::LoadGlobalConfig()
 				}
 				else if (!memcmp(cfgbuf, "autologin", 9))
 				{
-					m_AutoLogin = false;
-
 					_strlwr(ptr);
 					value = ptr;
 
 					if (value == string("yes") || value == string("on"))
 						m_AutoLogin = true;
 				}
+				else if (!memcmp(cfgbuf, "smoothmonitorscale", 18))
+				{
+					char scale = atoi(ptr);
+
+					if (scale > 0 && scale <= 10)
+						g_SmoothMonitorScale = scale;
+				}
+				else if (!memcmp(cfgbuf, "smoothmonitor", 13))
+				{
+					_strlwr(ptr);
+					value = ptr;
+
+					if (value == string("yes") || value == string("on"))
+						g_UseSmoothMonitor = true;
+				}
 			}
 		}
 
 		fclose(uo_cfg);
 	}
 	else
-		TPRINT("uo.cfg is NOT found!\n");
+		TPRINT("uo_debug.cfg is NOT found!\n");
 }
 //---------------------------------------------------------------------------
 void TMainScreen::SaveGlobalConfig()
 {
-	FILE *uo_cfg = fopen(FilePath("uo.cfg").c_str(), "r");
+	FILE *uo_cfg = fopen(FilePath("uo_debug.cfg").c_str(), "w");
 
-	if (uo_cfg != NULL)
+	char buf[128] = { 0 };
+
+	sprintf(buf, "AcctID=%s\n", m_Account->c_str());
+	fputs(buf, uo_cfg);
+
+	if (m_SavePassword)
 	{
-		FILE *uo_cfg_tmp = fopen(FilePath("uo_tmp.cfg").c_str(), "w");
-
-		bool BlockFound[4] = {false, false, false, false};
-
-		char buf[128] = {0};
-
-		while (!feof(uo_cfg))
-		{
-			char cfgbuf[256] = {0};
-			fgets(cfgbuf, 256, uo_cfg);
-			
-			char src[256] = {0};
-			memcpy(src, cfgbuf, 256);
-
-			if (!strlen(cfgbuf))
-				continue;
-
-			cfgbuf[strlen(cfgbuf) - 1] = 0;
-
-			char *ptr = cfgbuf;
-
-			while (*ptr && *ptr != '=')
-				ptr++;
-
-			if (*ptr && *ptr == '=')
-			{
-				*ptr = 0;
-				ptr++;
-				string value(ptr);
-
-				_strlwr(cfgbuf);
-
-				if (!memcmp(cfgbuf, "acctid", 6))
-				{
-					sprintf(buf, "AcctID=%s\n", m_Account->c_str());
-					fputs(buf, uo_cfg_tmp);
-
-					BlockFound[0] = true;
-
-					continue;
-				}
-				else if (!memcmp(cfgbuf, "acctpassword", 12))
-				{
-					if (m_SavePassword)
-					{
-						sprintf(buf, "AcctPassword=%s\n", CryptPW(m_Password->c_str(), m_Password->Length()).c_str());
-						fputs(buf, uo_cfg_tmp);
-					}
-					else
-						fputs("AcctPassword=\n", uo_cfg_tmp);
-
-					BlockFound[1] = true;
-
-					continue;
-				}
-				else if (!memcmp(cfgbuf, "rememberacctpw", 14))
-				{
-					sprintf(buf, "RememberAcctPW=%s\n", (m_SavePassword ? "yes" : "no"));
-					fputs(buf, uo_cfg_tmp);
-					BlockFound[2] = true;
-					continue;
-				}
-				else if (!memcmp(cfgbuf, "autologin", 9))
-				{
-					sprintf(buf, "AutoLogin=%s\n", (m_AutoLogin ? "yes" : "no"));
-					fputs(buf, uo_cfg_tmp);
-					BlockFound[3] = true;
-					continue;
-				}
-			}
-
-			fputs(src, uo_cfg_tmp);
-		}
-		
-		if (!BlockFound[0])
-		{
-			sprintf(buf, "AcctID=%s\n", m_Account->c_str());
-			fputs(buf, uo_cfg_tmp);
-		}
-		if (!BlockFound[1])
-		{
-			if (m_SavePassword)
-			{
-				sprintf(buf, "AcctPassword=%s\n", CryptPW(m_Password->c_str(), m_Password->Length()).c_str());
-				fputs(buf, uo_cfg_tmp);
-			}
-			else
-				fputs("AcctPassword=\n", uo_cfg_tmp);
-		}
-		if (!BlockFound[2])
-		{
-			sprintf(buf, "RememberAcctPW=%s\n", (m_SavePassword ? "yes" : "no"));
-			fputs(buf, uo_cfg_tmp);
-		}
-		if (!BlockFound[3])
-		{
-			sprintf(buf, "AutoLogin=%s\n", (m_AutoLogin ? "yes" : "no"));
-			fputs(buf, uo_cfg_tmp);
-		}
-		
-		fclose(uo_cfg);
-		fclose(uo_cfg_tmp);
-
-		remove(FilePath("uo.cfg").c_str());
-
-		rename(FilePath("uo_tmp.cfg").c_str(), FilePath("uo.cfg").c_str());
+		sprintf(buf, "AcctPassword=%s\n", CryptPW(m_Password->c_str(), m_Password->Length()).c_str());
+		fputs(buf, uo_cfg);
+		sprintf(buf, "RememberAcctPW=yes\n");
+		fputs(buf, uo_cfg);
 	}
 	else
 	{
-		uo_cfg = fopen(FilePath("uo.cfg").c_str(), "w");
-
-		char buf[128] = {0};
-		
-		sprintf(buf, "AcctID=%s\n", m_Account->c_str());
+		fputs("AcctPassword=\n", uo_cfg);
+		sprintf(buf, "RememberAcctPW=no\n");
 		fputs(buf, uo_cfg);
-		
-		if (m_SavePassword)
-		{
-			sprintf(buf, "AcctPassword=%s\n", CryptPW(m_Password->c_str(), m_Password->Length()).c_str());
-			fputs(buf, uo_cfg);
-			sprintf(buf, "RememberAcctPW=yes\n");
-			fputs(buf, uo_cfg);
-		}
-		else
-		{
-			fputs("AcctPassword=\n", uo_cfg);
-			sprintf(buf, "RememberAcctPW=no\n");
-			fputs(buf, uo_cfg);
-		}
-		
-		sprintf(buf, "AutoLogin=%s\n", (m_AutoLogin ? "yes" : "no"));
-		fputs(buf, uo_cfg);
-
-		fclose(uo_cfg);
 	}
+
+	sprintf(buf, "AutoLogin=%s\n", (m_AutoLogin ? "yes" : "no"));
+	fputs(buf, uo_cfg);
+
+	sprintf(buf, "SmoothMonitor=%s\n", (g_UseSmoothMonitor ? "yes" : "no"));
+	fputs(buf, uo_cfg);
+
+	sprintf(buf, "SmoothMonitorScale=%i\n", g_SmoothMonitorScale);
+	fputs(buf, uo_cfg);
+
+	fclose(uo_cfg);
 }
 //---------------------------------------------------------------------------
 string TMainScreen::CryptPW(const char *buf, int len)

@@ -32,7 +32,7 @@ TGumpGeneric::~TGumpGeneric()
 //---------------------------------------------------------------------------
 void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page, int &x, int &y)
 {
-	if (!m_Transparent || g_CheckerTransTexture == NULL)
+	if (!m_Transparent)
 		return;
 
 	glClear(GL_STENCIL_BUFFER_BIT);
@@ -59,7 +59,7 @@ void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page, int &x, int &y)
 					glStencilFunc(GL_ALWAYS, 1, 1);
 					glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-					g_GL.Draw(g_CheckerTransTexture, (GLfloat)(x + gct->X), (GLfloat)(y + gct->Y), 2, 2, (GLfloat)gct->Width, (GLfloat)gct->Height);
+					g_GL.DrawPolygone(0x01010101, (GLfloat)(x + gct->X), (GLfloat)(y + gct->Y), (GLfloat)gct->Width, (GLfloat)gct->Height);
 
 					glColorMask(true, true, true, true);
 					

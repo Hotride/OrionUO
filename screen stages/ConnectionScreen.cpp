@@ -79,6 +79,16 @@ void TConnectionScreen::Init()
 	m_ErrorCode = 0;
 	m_Type = CST_LOGIN;
 
+	if (g_UseSmoothMonitor)
+	{
+		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
+		g_SmoothMonitorColor = 0.0f;
+		g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
+		m_SmoothScreenAction = 0;
+	}
+	else
+		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+
 	Tooltip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
@@ -88,6 +98,36 @@ void TConnectionScreen::Init()
 	UO->ExecuteGump(0x1589); //X gump
 	UO->ExecuteResizepic(0xA28); //Connecting field
 	UO->ExecuteGumpPart(0x0481, 3); //Button v
+}
+//---------------------------------------------------------------------------
+void TConnectionScreen::CreateSmoothAction(BYTE action)
+{
+	if (g_UseSmoothMonitor)
+	{
+		m_SmoothScreenAction = action;
+		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNSET;
+		g_SmoothMonitorColor = 1.0f;
+	}
+	else
+		ProcessSmoothAction(action);
+}
+//---------------------------------------------------------------------------
+void TConnectionScreen::ProcessSmoothAction(BYTE action)
+{
+	if (action == 0xFF)
+		action = m_SmoothScreenAction;
+
+	if (action == ID_SMOOTH_CS_GO_SCREEN_MAIN)
+		UO->InitScreen(GS_MAIN);
+	else if (action == ID_SMOOTH_CS_GO_SCREEN_CHARACTER)
+		UO->InitScreen(GS_CHARACTER);
+	else if (action == ID_SMOOTH_CS_GO_SCREEN_PROFESSION)
+		UO->InitScreen(GS_PROFESSION_SELECT);
+	else if (action == ID_SMOOTH_CS_SEND_DELETE)
+	{
+		TPacketDeleteCharacter packet(CharacterList.Selected);
+		packet.Send();
+	}
 }
 //---------------------------------------------------------------------------
 int TConnectionScreen::Render(bool mode)
@@ -111,7 +151,35 @@ int TConnectionScreen::Render(bool mode)
 		g_LastRenderTime = ticks + g_FrameDelay;
 
 		g_GL.BeginDraw();
-		
+
+		if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNRISE)
+		{
+			g_SmoothMonitorColor += g_SmoothMonitorStep;
+
+			if (g_SmoothMonitorColor >= 1.0f)
+			{
+				g_SmoothMonitorColor = 1.0f;
+				g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+			}
+		}
+		else if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNSET)
+		{
+			g_SmoothMonitorColor -= g_SmoothMonitorStep;
+
+			if (g_SmoothMonitorColor <= 0.0f)
+			{
+				g_SmoothMonitorColor = 1.0f;
+				g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+
+				ProcessSmoothAction();
+				return 0;
+			}
+		}
+		else
+			g_SmoothMonitorColor = 1.0f;
+
+		glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
+
 		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
 		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
 		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
@@ -278,22 +346,19 @@ void TConnectionScreen::OnLeftMouseUp()
 		if (m_Type == CST_CHARACTER_LIST)
 		{
 			if (!m_ConnectionFailed)
-			{
-				TPacketDeleteCharacter packet(CharacterList.Selected);
-				packet.Send();
-			}
+				CreateSmoothAction(ID_SMOOTH_CS_SEND_DELETE);
 			else
-				UO->InitScreen(GS_CHARACTER);
+				CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_CHARACTER);
 		}
 		else if (m_Type == CST_SELECT_PROFESSOIN)
-			UO->InitScreen(GS_PROFESSION_SELECT);
+			CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_PROFESSION);
 		else if (m_Type == CST_GAME || m_Type == CST_GAME_LOGIN)
-			UO->InitScreen(GS_CHARACTER);
+			CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_CHARACTER);
 		else if (m_Type == CST_CONLOST || m_ConnectionFailed)
-			UO->InitScreen(GS_MAIN);
+			CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_MAIN);
 	}
-	else if (g_LastObjectLeftMouseDown == ID_CS_CANCEL) //x button
-		UO->InitScreen(GS_CHARACTER);
+	else if (g_LastObjectLeftMouseDown == ID_CS_CANCEL) //Button x
+		CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_CHARACTER);
 
 	g_LastObjectLeftMouseDown = 0;
 }
@@ -305,35 +370,32 @@ void TConnectionScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 		case VK_RETURN:
 		{
 			if (m_Type == CST_CHARACTER_LIST)
-			{
-				TPacketDeleteCharacter del(CharacterList.Selected);
-				del.Send();
-			}
+				CreateSmoothAction(ID_SMOOTH_CS_SEND_DELETE);
 			else if (m_Type == CST_SELECT_PROFESSOIN)
-				UO->InitScreen(GS_PROFESSION_SELECT);
+				CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_PROFESSION);
 			else if (m_Type == CST_GAME)
 			{
 				if (m_ErrorCode > 0)
-					UO->InitScreen(GS_CHARACTER);
+					CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_CHARACTER);
 			}
 			else if (m_Type == CST_CONLOST || m_ConnectionFailed)
-				UO->InitScreen(GS_MAIN);
+				CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_MAIN);
 
 			break;
 		}
 		case VK_ESCAPE:
 		{
 			if (m_Type == CST_CHARACTER_LIST)
-				UO->InitScreen(GS_CHARACTER);
+				CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_CHARACTER);
 			else if (m_Type == CST_SELECT_PROFESSOIN)
-				UO->InitScreen(GS_PROFESSION_SELECT);
+				CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_PROFESSION);
 			else if (m_Type == CST_GAME)
 			{
 				if (m_ErrorCode > 0)
-					UO->InitScreen(GS_CHARACTER);
+					CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_CHARACTER);
 			}
 			else if (m_Type == CST_CONLOST || m_ConnectionFailed)
-				UO->InitScreen(GS_MAIN);
+				CreateSmoothAction(ID_SMOOTH_CS_GO_SCREEN_MAIN);
 
 			break;
 		}

@@ -22,7 +22,8 @@
 TServerScreen *ServerScreen = NULL;
 //---------------------------------------------------------------------------
 TServerScreen::TServerScreen()
-: TBaseScreen(), m_LastScrollChangeTime(0), m_PixelOffset(0)
+: TBaseScreen(), m_LastScrollChangeTime(0), m_PixelOffset(0),
+m_SelectionServerTempValue(0)
 {
 	FontManager->GenerateA(9, m_Text[0], "Select which shard to play on:", 0x0481);
 	FontManager->GenerateA(9, m_Text[1], "Sort by:", 0x0481);
@@ -40,6 +41,16 @@ void TServerScreen::Init()
 	sprintf(buf, "Ultima Online - %s", MainScreen->m_Account->c_str());
 
 	SetWindowTextA(g_hWnd, buf);
+
+	if (g_UseSmoothMonitor)
+	{
+		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
+		g_SmoothMonitorColor = 0.0f;
+		g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
+		m_SmoothScreenAction = 0;
+	}
+	else
+		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
 
 	Tooltip.SeqIndex = 0;
 
@@ -172,7 +183,35 @@ int TServerScreen::Render(bool mode)
 		g_LastRenderTime = ticks + g_FrameDelay;
 
 		g_GL.BeginDraw();
-		
+
+		if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNRISE)
+		{
+			g_SmoothMonitorColor += g_SmoothMonitorStep;
+
+			if (g_SmoothMonitorColor >= 1.0f)
+			{
+				g_SmoothMonitorColor = 1.0f;
+				g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+			}
+		}
+		else if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNSET)
+		{
+			g_SmoothMonitorColor -= g_SmoothMonitorStep;
+
+			if (g_SmoothMonitorColor <= 0.0f)
+			{
+				g_SmoothMonitorColor = 1.0f;
+				g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+
+				ProcessSmoothAction();
+				return 0;
+			}
+		}
+		else
+			g_SmoothMonitorColor = 1.0f;
+
+		glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
+
 		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
 		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
 		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
@@ -347,7 +386,10 @@ void TServerScreen::OnLeftMouseDown()
 	}
 
 	if (g_LastObjectLeftMouseDown >= ID_SS_SERVER_LIST) //Server selection
-		UO->ServerSelection(g_LastObjectLeftMouseDown - ID_SS_SERVER_LIST);
+	{
+		m_SelectionServerTempValue = g_LastObjectLeftMouseDown - ID_SS_SERVER_LIST;
+		CreateSmoothAction(ID_SMOOTH_SS_SELECT_SERVER);
+	}
 }
 //---------------------------------------------------------------------------
 void TServerScreen::OnLeftMouseUp()
@@ -363,14 +405,14 @@ void TServerScreen::OnLeftMouseUp()
 	}
 
 	if (g_LastObjectLeftMouseDown == ID_SS_QUIT) //x button
-		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+		CreateSmoothAction(ID_SMOOTH_SS_QUIT);
 	else if (g_LastObjectLeftMouseDown == ID_SS_ARROW_PREV) //< button
-	{
-		UO->Disconnect();
-		UO->InitScreen(GS_MAIN);
-	}
+		CreateSmoothAction(ID_SMOOTH_SS_GO_SCREEN_MAIN);
 	else if (g_LastObjectLeftMouseDown == ID_SS_ARROW_NEXT || g_LastObjectLeftMouseDown == ID_SS_EARTH) //> button
-		UO->ServerSelection(0);
+	{
+		m_SelectionServerTempValue = 0;
+		CreateSmoothAction(ID_SMOOTH_SS_SELECT_SERVER);
+	}
 	else if (m_LastScrollChangeTime < GetTickCount())
 	{
 		if (g_LastObjectLeftMouseDown == ID_SS_SCROLLBAR_UP)
@@ -399,7 +441,38 @@ void TServerScreen::OnMouseWheel(MOUSE_WHEEL_STATE state)
 void TServerScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 {
 	if (wparam == VK_RETURN)
-		UO->ServerSelection(0);
+	{
+		m_SelectionServerTempValue = 0;
+		CreateSmoothAction(ID_SMOOTH_SS_SELECT_SERVER);
+	}
+}
+//---------------------------------------------------------------------------
+void TServerScreen::CreateSmoothAction(BYTE action)
+{
+	if (g_UseSmoothMonitor)
+	{
+		m_SmoothScreenAction = action;
+		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNSET;
+		g_SmoothMonitorColor = 1.0f;
+	}
+	else
+		ProcessSmoothAction(action);
+}
+//---------------------------------------------------------------------------
+void TServerScreen::ProcessSmoothAction(BYTE action)
+{
+	if (action == 0xFF)
+		action = m_SmoothScreenAction;
+
+	if (action == ID_SMOOTH_SS_SELECT_SERVER)
+		UO->ServerSelection(m_SelectionServerTempValue);
+	else if (action == ID_SMOOTH_SS_QUIT)
+		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+	else if (action == ID_SMOOTH_SS_GO_SCREEN_MAIN)
+	{
+		UO->Disconnect();
+		UO->InitScreen(GS_MAIN);
+	}
 }
 //----------------------------------------------------------------------------
 void TServerScreen::ListingList(bool direction, int divizor)

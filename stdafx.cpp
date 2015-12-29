@@ -109,8 +109,12 @@ DWORD g_PartyHelperTimer = 0;
 float g_DrawColor = 1.0f;
 bool g_NoDrawRoof = false;
 char g_MaxGroundZ = 0;
-char g_SelecterCharName[30] = {0};
-GLuint g_CheckerTransTexture = 0;
+char g_SelecterCharName[30] = { 0 };
+bool g_UseSmoothMonitor = false;
+BYTE g_SmoothMonitorMode = 0;
+GLfloat g_SmoothMonitorColor = 0.0f;
+GLfloat g_SmoothMonitorStep = 0.03f;
+BYTE g_SmoothMonitorScale = 4;
 
 int g_MouseX = 0;
 int g_MouseY = 0;

@@ -23,9 +23,10 @@
 //Базовый класс стадий окна клиента
 class TBaseScreen
 {
-private:
+protected:
+	BYTE m_SmoothScreenAction;
 public:
-	TBaseScreen() {}
+	TBaseScreen() :m_SmoothScreenAction(0) {}
 	virtual ~TBaseScreen() {}
 
 	//Инициализация

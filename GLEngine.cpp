@@ -25,24 +25,26 @@ bool TGLEngine::GLSetupPixelFormat()
 {
 	PIXELFORMATDESCRIPTOR pfd =
 	{
-		sizeof(PIXELFORMATDESCRIPTOR),
-		1,
-		PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
-		PFD_TYPE_RGBA,
-		24,
-		0,0,0,0,0,0,
-		0,0,
-		0,0,0,0,0,
-		32,
-		0,
-		0,
-		PFD_MAIN_PLANE,
-		0,
-		0,0,
+		sizeof(PIXELFORMATDESCRIPTOR), //nSize
+		1, //nVersion
+		PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER, //dwFlags
+		PFD_TYPE_RGBA, //iPixelType
+		24, //cColorBits
+		0, 0, //cRedBits, cRedShift
+		0, 0, //cGreenBits, cGreenShift
+		0, 0, //cBlueBits, cBlueShift
+		0, 0, //cAlphaBits, cAlphaShift
+		0, 0, 0, 0, 0, //cAccumBits, cAccumRedBits, cAccumGreenBits, cAccumBlueBits, cAccumAlphaBits
+		32, //cDepthBits
+		1, //cStencilBits
+		0, //cAuxBuffers
+		PFD_MAIN_PLANE, //iLayerType
+		0, //bReserved
+		0, //dwLayerMask
+		0, //dwVisibleMask
+		0 //dwDamageMask
 	};
 
-	pfd.cStencilBits = 1;
-	
 	int pixelformat = ChoosePixelFormat(m_DC, &pfd);
 
 	if (!pixelformat)
