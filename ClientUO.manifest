@@ -8,8 +8,9 @@
     version="1.0.0.0"
     type="win32"/>
 <description>Visual Styles</description>
+
 <dependency>
-    <dependentAssembly>
+    <dependentAssembly>    
         <assemblyIdentity
             type="win32"
             name="Microsoft.Windows.Common-Controls"

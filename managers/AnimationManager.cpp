@@ -722,8 +722,11 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 		int y = 0;
 
 		int blocksize = imageWidth * imageHeight * 4;
-		PDWORD pData = new DWORD[blocksize];
-		memset(&pData[0], 0, blocksize);
+
+        //PDWORD pData = new DWORD[blocksize];
+        std::vector<DWORD> pData;
+        pData.resize(blocksize);
+		//memset(&pData[0], 0, blocksize);
 
 		WORD prevLineNum = 0xFF;
 
@@ -753,8 +756,8 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 
 			prevLineNum = lineNum;
 
-			if (y >= 0)
-			{
+			if (y >= 0) {
+
 				if (y >= imageHeight)
 					break;
 
@@ -768,13 +771,12 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 					{
 						int Block = y * imageWidth + (x + j);
 
-						if (m_Grayed)
-						{
+						if (m_Grayed) {
 							BYTE r = GetRValue(pcl);
 							pData[Block] = (0xFF << 24) | (r << 16) | (r << 8) | r;
-						}
-						else
+						} else {
 							pData[Block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+                        }
 					}
 
 					b++;
@@ -786,11 +788,11 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 		}
 
 		if (!partialHue)
-			g_GL.BindTexture(tex->Texture, imageWidth, imageHeight, pData);
+            g_GL.BindTexture(tex->Texture, imageWidth, imageHeight, pData.data());
 		else
-			g_GL.BindTexture(tex->TexturePH, imageWidth, imageHeight, pData);
+			g_GL.BindTexture(tex->TexturePH, imageWidth, imageHeight, pData.data());
 
-		delete pData;
+		//delete pData;
 	}
 
 	return true;
@@ -877,7 +879,7 @@ bool TAnimationManager::TestImagePixels(TTextureAnimationDirection *direction, B
 				b++;
 			}
 
-			p = (PWORD)b;
+			p = (PWORD) b;
 		}
 	}
 

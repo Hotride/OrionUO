@@ -78,6 +78,7 @@
     </Link>
     <Manifest>
       <AdditionalManifestFiles>ClientUO.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
