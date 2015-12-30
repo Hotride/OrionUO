@@ -154,8 +154,11 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 	if (ID < 0x4000) //raw tile
 	{
 		int blocksize = 44 * 44;
-		PDWORD pixels = new DWORD[blocksize];
-		memset(&pixels[0], 0, blocksize * 4);
+		//PDWORD pixels = new DWORD[blocksize];
+		//memset(&pixels[0], 0, blocksize * 4);
+
+		std::vector<DWORD> textureData;
+		textureData.resize(blocksize);
 
 		IFOR(i, 0, 22)
 		{
@@ -163,8 +166,9 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 			{
 				if (*P)
 				{
-					DWORD pcl = ColorManager->Color16To32(*P);
-					pixels[i * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+					DWORD pcl = ColorManager->Color16To32(*P);					
+					//pixels[i * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+					textureData[i * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 				}
 				P++;
 			}
@@ -177,15 +181,17 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 				if (*P)
 				{
 					DWORD pcl = ColorManager->Color16To32(*P);
-					pixels[(i + 22) * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+					//pixels[(i + 22) * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+					textureData[(i + 22) * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 				}
 				P++;
 			}
 		}
 
-		g_GL.BindTexture(th->Texture, 44, 44, pixels);
+		//g_GL.BindTexture(th->Texture, 44, 44, pixels);
+		g_GL.BindTexture(th->Texture, 44, 44, &textureData[0]);
 
-		delete pixels;
+		//delete pixels;
 	}
 	else //run tile
 	{
