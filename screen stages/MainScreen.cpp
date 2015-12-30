@@ -447,7 +447,7 @@ void TMainScreen::LoadGlobalConfig()
 				{
 					char scale = atoi(ptr);
 
-					if (scale > 0 && scale <= 10)
+					if (scale > 0 && scale <= 15)
 						g_SmoothMonitorScale = scale;
 				}
 				else if (!memcmp(cfgbuf, "smoothmonitor", 13))
