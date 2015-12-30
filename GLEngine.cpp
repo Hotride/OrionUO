@@ -206,7 +206,7 @@ void TGLEngine::BindTexture(GLuint &Texture, int Width, int Height, PDWORD pixel
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 }
@@ -234,7 +234,7 @@ void TGLEngine::EndDraw()
 void TGLEngine::EnableAlpha()
 {
 	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.0f);
+    glAlphaFunc(GL_GREATER, 0.0f);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::DisableAlpha()

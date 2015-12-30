@@ -64,6 +64,9 @@ public:
 	SETGET(int, AnimGroup)
 	SETGET(BYTE, Direction)
 
+    float getLuma(int &R, int &G, int &B);
+    void calcAlpha(DWORD *pixels, short &width, short &height);
+
 	void InitBodyconv(PDWORD verdata, string fName);
 	void Load(PDWORD verdata);
 

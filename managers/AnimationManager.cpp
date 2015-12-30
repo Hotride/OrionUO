@@ -641,6 +641,61 @@ void TAnimationManager::ClearUnusedTextures(DWORD ticks)
 	}
 }
 //----------------------------------------------------------------------------
+
+/// <summary>Get luminance value for an RGB value specified</summary>
+/// <param name="R">red component</param>
+/// <param name="G">green component</param>
+/// <param name="B">blue component</param>
+/// <returns>luminance value 0.0-255.0</returns>
+float TAnimationManager::getLuma(int &R, int &G, int &B) 
+{
+    auto _R = (R / 255.0f);
+    auto _G = (G / 255.0f);
+    auto _B = (B / 255.0f);
+
+    auto _Min = min(min(_R, _G), _B);
+    auto _Max = max(max(_R, _G), _B);
+    auto _Delta = _Max - _Min;
+
+    auto L = (_Max + _Min) / 2.0f;
+
+    return L * 255.0f;
+}
+
+//----------------------------------------------------------------------------
+
+/// <summary>Calculate the best guess alpha for adjucent pixels within
+/// specified luma threshold</summary>
+/// <param name="pixels">array of texture pixels in RGBA format</param>
+/// <param name="width">texture width</param>
+/// <param name="height">texture height</param>
+void TAnimationManager::calcAlpha(DWORD *pixels, short &width, short &height)
+{
+    for(auto y=0; y < height; y++)
+        for(auto x=0; x < width; x++) {
+            int idx = width*y + x;
+            auto pixel = pixels[idx];
+            int iR = (pixel) & 0xff;
+            int iG = (pixel >> 8) & 0xff;
+            int iB = (pixel >> 16) & 0xff;
+            int iA = (pixel >> 24) & 0xff;            
+
+            if(iR==0 && iG==0 && iB==0)
+                iA = 0;
+            else
+                iA = 255;
+
+            iB+=50;
+
+            this->getLuma(iR, iG, iB);
+
+            pixels[idx] = (iA << 24) | (iB << 16) | (iG << 8) | iR;
+            
+        }        
+}
+
+//----------------------------------------------------------------------------
+
 bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direction, WORD &id, WORD &color, bool &partialHue, int &offset)
 {
 	direction->Address = 0;
@@ -724,14 +779,14 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 		int blocksize = imageWidth * imageHeight * 4;
 
         //PDWORD pData = new DWORD[blocksize];
+        //memset(&pData[0], 0, blocksize);
         std::vector<DWORD> pData;
-        pData.resize(blocksize);
-		//memset(&pData[0], 0, blocksize);
+        pData.resize(blocksize);		
 
 		WORD prevLineNum = 0xFF;
 
-		while (true)
-		{
+		while (true) {
+
 			WORD rowHeader = *p;
 			p++;
 
@@ -786,6 +841,8 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 
 			}
 		}
+
+        //this->calcAlpha( pData.data(), imageWidth, imageHeight );
 
 		if (!partialHue)
             g_GL.BindTexture(tex->Texture, imageWidth, imageHeight, pData.data());
