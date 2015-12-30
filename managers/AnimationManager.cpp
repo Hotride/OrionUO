@@ -685,7 +685,7 @@ void TAnimationManager::calcAlpha(DWORD *pixels, short &width, short &height)
             else
                 iA = 255;
 
-            iB+=50;
+            iB+=50; // test
 
             this->getLuma(iR, iG, iB);
 
