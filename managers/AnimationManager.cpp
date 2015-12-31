@@ -674,67 +674,50 @@ typedef vector<int> Coords;
 /// <param name="pixels">array of texture pixels in RGBA format</param>
 /// <param name="width">texture width</param>
 /// <param name="height">texture height</param>
-void TAnimationManager::doPixelsAlphaAt(std::vector<DWORD> &pixels, short width, short height, int x, int y) 
+void TAnimationManager::doPixelsAlphaAt(bool* processed, std::vector<DWORD> &pixels, short width, short height, int x, int y) 
 {
 
-    std::deque<Coords> theStack;    
-    auto coords = Coords(2);
-    coords[0] = x;
-    coords[1] = y;
+    //# assume surface is a 2D image and surface[x][y] is the color at x, y.
+    //if surface[x][y] != oldColor: # the base case
+    //    return
+    //surface[x][y] = newColor
+    //floodfill(x + 1, y, oldColor, newColor) # right
+    //floodfill(x - 1, y, oldColor, newColor) # left
+    //floodfill(x, y + 1, oldColor, newColor) # down
+    //floodfill(x, y - 1, oldColor, newColor) # up
 
-    theStack.push_back( coords );
-    
-    while(theStack.size() > 0) {
-        auto coords_xy = theStack.back();
-        theStack.pop_back();
-        auto x1 = coords_xy[0];
-        auto y1 = coords_xy[1];
+	if(x < 0 || y < 0 || x >= width || y >= height)
+		return;
 
-        if(x1 < 0 || y1 < 0 || x1 >= width || y1 >= height)
-            continue;
+	auto idx = width * y + x;
+	auto color = pixels[idx];
 
-            int idx = width*y1 + x1;
-            DWORD color = pixels[idx];
+	unsigned int alpha = (color >> 24) & 0xff;
+	unsigned int blue  = (color >> 16) & 0xff;
+	unsigned int green = (color >> 8) & 0xff;
+	unsigned int red  = color & 0xff;	
 
-            unsigned int alpha = (color & 0xff000000) >> 24;
-            unsigned int blue  = (color & 0x00ff0000) >> 16;
-            unsigned int green = (color & 0x0000ff00) >> 8;
-            unsigned int red   = (color & 0x000000ff); 
+	auto luma = getLuma(red, green, blue);
 
-            float luma = this->getLuma(red, green, blue);
-          
-            if( (luma > this->LUMA_THRESHOLD) || (alpha!=255) )
-                continue;
+	if( (luma > this->LUMA_THRESHOLD) || processed[idx] )
+		return;
 
-            //iA = (((int)(ALPHA_SCALE*luma))/BIT_STEP) * BIT_STEP;
-            //      #alphas[x, y] = int(luma/ALPHA_SCALE)*16  
-            alpha = 255;
-            pixels[idx] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+	alpha = (((int)(ALPHA_SCALE*luma))/BIT_STEP) * BIT_STEP;
+	// alphas[x, y] = int(luma/ALPHA_SCALE)*16  
+    // alpha = 255;
 
-            //theStack.push_back( (x + 1, y) ) // right
-            auto cur_coords = Coords(2);            
-            cur_coords[0] = x1 + 1;
-            cur_coords[1] = y1;
-            theStack.push_back( cur_coords );
-            
-            //theStack.push_back( (x - 1, y) ) // left
-            cur_coords = Coords(2);            
-            cur_coords[0] = x1 - 1;
-            cur_coords[1] = y1;
-            theStack.push_back( cur_coords );
+	pixels[idx] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+	processed[idx] = true;
 
-            //theStack.push_back( (x, y + 1) ) // down
-            cur_coords = Coords(2);            
-            cur_coords[0] = x1;
-            cur_coords[1] = y1 + 1;
-            theStack.push_back( cur_coords );
+	doPixelsAlphaAt(processed, pixels, width, height, x + 1, y);
+    doPixelsAlphaAt(processed, pixels, width, height, x - 1, y);
+    doPixelsAlphaAt(processed, pixels, width, height, x, y + 1);
+    doPixelsAlphaAt(processed, pixels, width, height, x, y - 1);
 
-            //theStack.push_back( (x, y - 1) ) // up
-            cur_coords = Coords(2);            
-            cur_coords[0] = x1;
-            cur_coords[1] = y1 - 1;
-            theStack.push_back( cur_coords );
-    }
+            //unsigned int alpha = (color & 0xff000000) >> 24;
+            //unsigned int blue  = (color & 0x00ff0000) >> 16;
+            //unsigned int green = (color & 0x0000ff00) >> 8;
+            //unsigned int red   = (color & 0x000000ff); 
 }                       
 
 //----------------------------------------------------------------------------
@@ -746,20 +729,25 @@ void TAnimationManager::doPixelsAlphaAt(std::vector<DWORD> &pixels, short width,
 /// <param name="height">texture height</param>
 void TAnimationManager::calcAlpha(std::vector<DWORD> &pixels, short width, short height)
 {
-    
+
+	bool* processed = new bool[pixels.size()];
+	std::fill_n(processed, pixels.size(), false); 
+
     for(auto y=0; y < height; y++){
+		auto row_idx = width*y;
         for(auto x=0; x < width; x++) {
-            DWORD color = pixels[width*y + x];
+			auto idx = row_idx + x;
+            auto color = pixels[idx];
             
             //unsigned int alpha = (color & 0xff000000) >> 24;
             //unsigned int blue  = (color & 0x00ff0000) >> 16;
             //unsigned int green = (color & 0x0000ff00) >> 8;
             //unsigned int red  = (color & 0x000000ff);
 
-			unsigned char alpha = (color >> 24) & 0xff;
-			unsigned char blue  = (color >> 16) & 0xff;
-			unsigned char green = (color >> 8) & 0xff;
-			unsigned char red  = color & 0xff;		
+			unsigned int alpha = (color >> 24) & 0xff;
+			unsigned int blue  = (color >> 16) & 0xff;
+			unsigned int green = (color >> 8) & 0xff;
+			unsigned int red  = color & 0xff;		
             
             //pixels[width*y + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
 
@@ -767,18 +755,13 @@ void TAnimationManager::calcAlpha(std::vector<DWORD> &pixels, short width, short
 			//if (((red!=0) || (green!=0) || (blue!=0)) || (alpha!=255)) // эта строка не срабатывает
             //    continue;
 
-			if( (red!=0) || (blue!=0) || (green!=0))
-				TPRINT( "alpha is %i\n", alpha);
-				continue;
-			
-				
-
-
-
+			if( (red!=0) || (blue!=0) || (green!=0) || processed[idx])
+				continue;					
          
-            //doPixelsAlphaAt(pixels, width, height, x, y);                        
+            doPixelsAlphaAt(processed, pixels, width, height, x, y);                        
         }        
     }
+	delete[] processed;
 }
 
 //----------------------------------------------------------------------------
@@ -865,10 +848,10 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 
 		int blocksize = imageWidth * imageHeight * 4;
 
-        //PDWORD pData = new DWORD[blocksize];
-        //memset(&pData[0], 0, blocksize);
-        std::vector<DWORD> pData;
-        pData.resize(blocksize);		
+        PDWORD pData = new DWORD[blocksize];
+        memset(&pData[0], 0, blocksize);
+        //std::vector<DWORD> pData;
+        //pData.resize(blocksize);		
 
 		WORD prevLineNum = 0xFF;
 
@@ -932,11 +915,11 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
         //calcAlpha( pData, imageWidth, imageHeight );
 
 		if (!partialHue)
-            g_GL.BindTexture(tex->Texture, imageWidth, imageHeight, pData.data());
+            g_GL.BindTexture(tex->Texture, imageWidth, imageHeight, pData);
 		else
-			g_GL.BindTexture(tex->TexturePH, imageWidth, imageHeight, pData.data());
+			g_GL.BindTexture(tex->TexturePH, imageWidth, imageHeight, pData);
 
-		//delete pData;
+		delete pData;
 	}
 
 	return true;
