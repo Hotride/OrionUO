@@ -674,7 +674,7 @@ typedef vector<int> Coords;
 /// <param name="pixels">array of texture pixels in RGBA format</param>
 /// <param name="width">texture width</param>
 /// <param name="height">texture height</param>
-void TAnimationManager::doPixelsAlphaAt(bool* processed, std::vector<DWORD> &pixels, short width, short height, int x, int y) 
+void TAnimationManager::doPixelsAlphaAt(bool* processed, PDWORD pixels, short &width, short &height, int x, int y) 
 {
 
     //# assume surface is a 2D image and surface[x][y] is the color at x, y.
@@ -700,6 +700,7 @@ void TAnimationManager::doPixelsAlphaAt(bool* processed, std::vector<DWORD> &pix
 	auto luma = getLuma(red, green, blue);
 
 	if( (luma > this->LUMA_THRESHOLD) || processed[idx] )
+		processed[idx] = true;
 		return;
 
 	alpha = (((int)(ALPHA_SCALE*luma))/BIT_STEP) * BIT_STEP;
@@ -727,15 +728,19 @@ void TAnimationManager::doPixelsAlphaAt(bool* processed, std::vector<DWORD> &pix
 /// <param name="pixels">array of texture pixels in RGBA format</param>
 /// <param name="width">texture width</param>
 /// <param name="height">texture height</param>
-void TAnimationManager::calcAlpha(std::vector<DWORD> &pixels, short width, short height)
+void TAnimationManager::calcAlpha(PDWORD pixels, short &width, short &height)
 {
+	auto pixels_size = width * height;
 
-	bool* processed = new bool[pixels.size()];
-	std::fill_n(processed, pixels.size(), false); 
+	bool* processed = new bool[pixels_size];
+	std::fill_n(processed, pixels_size, false); 
 
-    for(auto y=0; y < height; y++){
+    for(auto y=0; y < height; y++)
+	{
 		auto row_idx = width*y;
-        for(auto x=0; x < width; x++) {
+
+        for(auto x=0; x < width; x++) 
+		{
 			auto idx = row_idx + x;
             auto color = pixels[idx];
             
@@ -747,13 +752,7 @@ void TAnimationManager::calcAlpha(std::vector<DWORD> &pixels, short width, short
 			unsigned int alpha = (color >> 24) & 0xff;
 			unsigned int blue  = (color >> 16) & 0xff;
 			unsigned int green = (color >> 8) & 0xff;
-			unsigned int red  = color & 0xff;		
-            
-            //pixels[width*y + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
-
-            //if (((red!=0) || (green!=0) || (blue!=0)) || (alpha!=255)) // эта строка не срабатывает
-			//if (((red!=0) || (green!=0) || (blue!=0)) || (alpha!=255)) // эта строка не срабатывает
-            //    continue;
+			unsigned int red  = color & 0xff;		            
 
 			if( (red!=0) || (blue!=0) || (green!=0) || processed[idx])
 				continue;					
@@ -761,6 +760,7 @@ void TAnimationManager::calcAlpha(std::vector<DWORD> &pixels, short width, short
             doPixelsAlphaAt(processed, pixels, width, height, x, y);                        
         }        
     }
+
 	delete[] processed;
 }
 

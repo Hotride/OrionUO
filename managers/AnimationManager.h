@@ -70,8 +70,8 @@ public:
 	SETGET(BYTE, Direction)
 
     float getLuma(unsigned int &R, unsigned int &G, unsigned int &B);
-    void doPixelsAlphaAt(bool* processed, std::vector<DWORD> &pixels, short width, short height, int x, int y);
-    void calcAlpha(std::vector<DWORD> &pixels, short width, short height);
+    void doPixelsAlphaAt(bool* processed, PDWORD pixels, short &width, short &height, int x, int y);
+    void calcAlpha(PDWORD pixels, short &width, short &height);
 
 	void InitBodyconv(PDWORD verdata, string fName);
 	void Load(PDWORD verdata);
