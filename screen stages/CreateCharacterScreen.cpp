@@ -73,15 +73,19 @@ void TCreateCharacterScreen::ProcessSmoothAction(BYTE action)
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
 
-	/*if (action == ID_SMOOTH_SS_SELECT_SERVER)
-	UO->ServerSelection(m_SelectionServerTempValue);
-	else if (action == ID_SMOOTH_SS_QUIT)
-	PostMessage(g_hWnd, WM_CLOSE, 0, 0);
-	else if (action == ID_SMOOTH_SS_GO_SCREEN_MAIN)
+	if (action == ID_SMOOTH_CCS_QUIT)
+		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+	else if (action == ID_SMOOTH_CCS_GO_SCREEN_CHARACTER)
+		UO->InitScreen(GS_CHARACTER);
+	else if (action == ID_SMOOTH_CCS_GO_SCREEN_CONNECT)
 	{
-	UO->Disconnect();
-	UO->InitScreen(GS_MAIN);
-	}*/
+		UO->InitScreen(GS_GAME_CONNECT);
+		ConnectionScreen->Type = CST_GAME;
+		ConnectionScreen->ConnectionFailed = true;
+		ConnectionScreen->ErrorCode = 1;
+	}
+	else if (action == ID_SMOOTH_CCS_GO_SCREEN_SELECT_TOWN)
+		UO->InitScreen(GS_SELECT_TOWN);
 }
 //---------------------------------------------------------------------------
 void TCreateCharacterScreen::InitTooltip()
@@ -903,20 +907,15 @@ void TCreateCharacterScreen::OnLeftMouseUp()
 	}
 
 	if (g_LastObjectLeftMouseDown == 1) //x button
-		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+		CreateSmoothAction(ID_SMOOTH_CCS_QUIT);
 	else if (g_LastObjectLeftMouseDown == 2) //< button
-		UO->InitScreen(GS_CHARACTER);
+		CreateSmoothAction(ID_SMOOTH_CCS_GO_SCREEN_CHARACTER);
 	else if (g_LastObjectLeftMouseDown == 3) //> button
 	{
 		if (EntryPointer->Length() < 2)
-		{
-			UO->InitScreen(GS_GAME_CONNECT);
-			ConnectionScreen->Type = CST_GAME;
-			ConnectionScreen->ConnectionFailed = true;
-			ConnectionScreen->ErrorCode = 1;
-		}
+			CreateSmoothAction(ID_SMOOTH_CCS_GO_SCREEN_CONNECT);
 		else
-			UO->InitScreen(GS_SELECT_TOWN);
+			CreateSmoothAction(ID_SMOOTH_CCS_GO_SCREEN_SELECT_TOWN);
 	}
 	else if (g_LastSelectedObject == 4)
 		CreateCharacterManager.Sex = !CreateCharacterManager.Sex;

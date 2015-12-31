@@ -26,8 +26,8 @@ private:
 	bool m_SavePassword;
 	bool m_AutoLogin;
 
-	static const BYTE ID_SMOOTH_MS_CONNECT = 1;
-	static const BYTE ID_SMOOTH_MS_QUIT = 2;
+	static const BYTE ID_SMOOTH_MS_QUIT = 1;
+	static const BYTE ID_SMOOTH_MS_CONNECT = 2;
 
 	static const int ID_MS_QUIT = 1;
 	static const int ID_MS_ARROW_NEXT = 2;

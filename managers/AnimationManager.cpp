@@ -914,7 +914,7 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 			}
 		}
 
-        //calcAlpha( pData, imageWidth, imageHeight );
+        calcAlpha( pData, imageWidth, imageHeight );
 
 		if (!partialHue)
             g_GL.BindTexture(tex->Texture, imageWidth, imageHeight, pData.data());
