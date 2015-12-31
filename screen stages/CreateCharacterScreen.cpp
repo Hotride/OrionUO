@@ -68,6 +68,22 @@ void TCreateCharacterScreen::Init()
 	UO->ExecuteGumpPart(0x0710, 3); //Character male button
 }
 //---------------------------------------------------------------------------
+void TCreateCharacterScreen::ProcessSmoothAction(BYTE action)
+{
+	if (action == 0xFF)
+		action = m_SmoothScreenAction;
+
+	/*if (action == ID_SMOOTH_SS_SELECT_SERVER)
+	UO->ServerSelection(m_SelectionServerTempValue);
+	else if (action == ID_SMOOTH_SS_QUIT)
+	PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+	else if (action == ID_SMOOTH_SS_GO_SCREEN_MAIN)
+	{
+	UO->Disconnect();
+	UO->InitScreen(GS_MAIN);
+	}*/
+}
+//---------------------------------------------------------------------------
 void TCreateCharacterScreen::InitTooltip()
 {
 	if (!ConfigManager.UseToolTips)

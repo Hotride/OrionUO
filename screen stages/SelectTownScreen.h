@@ -26,6 +26,10 @@ private:
 	int m_PixelOffset;
 	DWORD m_LastScrollChangeTime;
 
+	static const BYTE ID_SMOOTH_STS_QUIT = 1;
+	static const BYTE ID_SMOOTH_STS_GO_SCREEN_CHARACTER = 2;
+	static const BYTE ID_SMOOTH_STS_GO_SCREEN_GAME_CONNECT = 3;
+
 	void ListingList(bool direction, int divizor = 1);
 	
 	static const int ID_STS_QUIT = 1;
@@ -49,6 +53,8 @@ public:
 	TCityItem *m_City;
 
 	void Init();
+
+	void ProcessSmoothAction(BYTE action = 0xFF);
 
 	void InitTooltip();
 

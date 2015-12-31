@@ -73,6 +73,23 @@ void TSelectTownScreen::Init()
 	UO->ExecuteResizepic(0x00FA); //scroll bar
 }
 //---------------------------------------------------------------------------
+void TSelectTownScreen::ProcessSmoothAction(BYTE action)
+{
+	if (action == 0xFF)
+		action = m_SmoothScreenAction;
+
+	if (action == ID_SMOOTH_STS_QUIT)
+		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+	else if (action == ID_SMOOTH_STS_GO_SCREEN_CHARACTER)
+		UO->InitScreen(GS_CHARACTER);
+	else if (action == ID_SMOOTH_STS_GO_SCREEN_GAME_CONNECT)
+	{
+		TPacketCreateCharacter packet(string(CreateCharacterManager.m_Name->c_str()));
+		packet.Send();
+		UO->InitScreen(GS_GAME_CONNECT);
+	}
+}
+//---------------------------------------------------------------------------
 void TSelectTownScreen::InitTooltip()
 {
 	if (!ConfigManager.UseToolTips)
@@ -361,15 +378,11 @@ void TSelectTownScreen::OnLeftMouseUp()
 	}
 
 	if (g_LastObjectLeftMouseDown == ID_STS_QUIT) //x button
-		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+		CreateSmoothAction(ID_SMOOTH_STS_QUIT);
 	else if (g_LastObjectLeftMouseDown == ID_STS_ARROW_PREV) //< button
-		UO->InitScreen(GS_CHARACTER);
+		CreateSmoothAction(ID_SMOOTH_STS_GO_SCREEN_CHARACTER);
 	else if (g_LastObjectLeftMouseDown == ID_STS_ARROW_NEXT) //> button
-	{
-		TPacketCreateCharacter packet(string(CreateCharacterManager.m_Name->c_str()));
-		packet.Send();
-		UO->InitScreen(GS_GAME_CONNECT);
-	}
+		CreateSmoothAction(ID_SMOOTH_STS_GO_SCREEN_GAME_CONNECT);
 
 	g_LastObjectLeftMouseDown = 0;
 }

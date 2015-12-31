@@ -52,7 +52,7 @@ void TGameScreen::Init()
 
 	Tooltip.SeqIndex = 0;
 
-	//Prepare textures on Main Screen:
+	//Prepare textures on Game Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background
 	UO->ExecuteGump(0x157C); //Main Screen
 	UO->ExecuteGump(0x15A0); //Main Screen Notes
@@ -844,6 +844,7 @@ int TGameScreen::Render(bool mode)
 		}
 #endif //UO_DEBUG_INFO!=0
 		
+		g_GL.EnableAlpha();
 		GumpManager->Draw(mode, false);
 		
 		// отрисовка ввода игрока
