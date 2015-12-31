@@ -67,6 +67,34 @@ void TCharacterListScreen::Init()
 	UO->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
 }
 //---------------------------------------------------------------------------
+void TCharacterListScreen::ProcessSmoothAction(BYTE action)
+{
+	if (action == 0xFF)
+		action = m_SmoothScreenAction;
+
+	if (action == ID_SMOOTH_CLS_QUIT)
+		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+	else if (action == ID_SMOOTH_CLS_CONNECT)
+		UO->Connect();
+	else if (action == ID_SMOOTH_CLS_SELECT_CHARACTER)
+	{
+		UO->CharacterSelection(CharacterList.Selected);
+
+		if (!CharacterList.GetName(CharacterList.Selected).length())
+			ConnectionScreen->ErrorCode = 2;
+	}
+	else if (action == ID_SMOOTH_CLS_GO_SCREEN_PROFESSION_SELECT)
+		UO->InitScreen(GS_PROFESSION_SELECT);
+	else if (action == ID_SMOOTH_CLS_GO_SCREEN_DELETE)
+	{
+		if (CharacterList.GetSelectedName().length())
+		{
+			UO->InitScreen(GS_DELETE);
+			ConnectionScreen->Type = CST_CHARACTER_LIST;
+		}
+	}
+}
+//---------------------------------------------------------------------------
 void TCharacterListScreen::InitTooltip()
 {
 	if (!ConfigManager.UseToolTips)
@@ -218,25 +246,16 @@ void TCharacterListScreen::OnLeftMouseUp()
 	}
 
 	if (g_LastObjectLeftMouseDown == ID_CS_QUIT) //x button
-		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+		CreateSmoothAction(ID_SMOOTH_CLS_QUIT);
 	else if (g_LastObjectLeftMouseDown == ID_CS_ARROW_PREV) //< button
-		UO->Connect();
+		CreateSmoothAction(ID_SMOOTH_CLS_CONNECT);
 	else if (g_LastObjectLeftMouseDown == ID_CS_ARROW_NEXT) //> button
-	{
-		UO->CharacterSelection(CharacterList.Selected);
-
-		if (!CharacterList.GetName(CharacterList.Selected).length())
-			ConnectionScreen->ErrorCode = 2;
-	}
+		CreateSmoothAction(ID_SMOOTH_CLS_SELECT_CHARACTER);
 	else if (g_LastObjectLeftMouseDown == ID_CS_NEW) //New button
-		UO->InitScreen(GS_PROFESSION_SELECT);
+		CreateSmoothAction(ID_SMOOTH_CLS_GO_SCREEN_PROFESSION_SELECT);
 	else if (g_LastObjectLeftMouseDown == ID_CS_DELETE) //Delete button
 	{
-		if (CharacterList.GetSelectedName().length())
-		{
-			UO->InitScreen(GS_DELETE);
-			ConnectionScreen->Type = CST_CHARACTER_LIST;
-		}
+		CreateSmoothAction(ID_SMOOTH_CLS_GO_SCREEN_DELETE);
 
 		g_LastObjectLeftMouseDown = 0;
 	}
@@ -258,9 +277,9 @@ bool TCharacterListScreen::OnLeftMouseDoubleClick()
 		if (g_LastSelectedObject == (ID_CS_CHARACTERS + i))
 		{
 			if (!CharacterList.GetName(i).length())
-				UO->InitScreen(GS_PROFESSION_SELECT);
+				CreateSmoothAction(ID_SMOOTH_CLS_GO_SCREEN_PROFESSION_SELECT);
 			else
-				UO->CharacterSelection(CharacterList.Selected);
+				CreateSmoothAction(ID_SMOOTH_CLS_SELECT_CHARACTER);
 
 			return true;
 		}

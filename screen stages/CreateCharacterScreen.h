@@ -29,6 +29,8 @@ public:
 	
 	void Init();
 
+	void ProcessSmoothAction(BYTE action = 0xFF);
+
 	void InitTooltip();
 
 	int Render(bool mode);

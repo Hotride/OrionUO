@@ -87,6 +87,31 @@ void TSelectProfessionScreen::Init()
 	UO->ExecuteGumpPart(0x15E8, 3); //Earth button
 }
 //---------------------------------------------------------------------------
+void TSelectProfessionScreen::ProcessSmoothAction(BYTE action)
+{
+	if (action == 0xFF)
+		action = m_SmoothScreenAction;
+
+
+	static const BYTE ID_SMOOTH_SPS_QUIT = 1;
+	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_CHARACTER = 2;
+	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_GAME_CONNECT = 3;
+	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_CREATE = 4;
+
+
+	if (action == ID_SMOOTH_SPS_QUIT)
+		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+	else if (action == ID_SMOOTH_SPS_GO_SCREEN_CHARACTER)
+		UO->InitScreen(GS_CHARACTER);
+	else if (action == ID_SMOOTH_SPS_GO_SCREEN_GAME_CONNECT)
+	{
+		UO->InitScreen(GS_GAME_CONNECT);
+		ConnectionScreen->Type = CST_SELECT_PROFESSOIN;
+	}
+	else if (action == ID_SMOOTH_SPS_GO_SCREEN_CREATE)
+		UO->InitScreen(GS_CREATE);
+}
+//---------------------------------------------------------------------------
 void TSelectProfessionScreen::InitTooltip()
 {
 	if (!ConfigManager.UseToolTips)
@@ -533,9 +558,9 @@ void TSelectProfessionScreen::OnLeftMouseUp()
 	}
 
 	if (g_LastObjectLeftMouseDown == ID_SPS_QUIT) //x button
-		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+		CreateSmoothAction(ID_SMOOTH_SPS_QUIT);
 	else if (g_LastObjectLeftMouseDown == ID_SPS_ARROW_PREV) //< button
-		UO->InitScreen(GS_CHARACTER);
+		CreateSmoothAction(ID_SMOOTH_SPS_GO_SCREEN_CHARACTER);
 	else if (g_LastObjectLeftMouseDown == ID_SPS_ARROW_NEXT) //> button
 	{
 		if (UsedProfession != NULL)
@@ -553,9 +578,8 @@ void TSelectProfessionScreen::OnLeftMouseUp()
 							if (UsedProfession->GetSkillID(i) == 0xFF || UsedProfession->GetSkillID(i) == UsedProfession->GetSkillID(j))
 							{
 								passed = false;
-								
-								UO->InitScreen(GS_GAME_CONNECT);
-								ConnectionScreen->Type = CST_SELECT_PROFESSOIN;
+
+								CreateSmoothAction(ID_SMOOTH_SPS_GO_SCREEN_GAME_CONNECT);
 
 								break;
 							}
@@ -565,7 +589,7 @@ void TSelectProfessionScreen::OnLeftMouseUp()
 			}
 
 			if (passed)
-				UO->InitScreen(GS_CREATE);
+				CreateSmoothAction(ID_SMOOTH_SPS_GO_SCREEN_CREATE);
 		}
 	}
 	else if (g_LastObjectLeftMouseDown == ID_SPS_ARROW_BACK_PROFESSION || g_LastObjectLeftMouseDown == ID_SPS_LABEL_BACK_PROFESSION) //Arrow < or General Label gump

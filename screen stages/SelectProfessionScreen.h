@@ -27,6 +27,11 @@ private:
 	DWORD m_LastScrollChangeTime;
 	int m_SkillSelection;
 
+	static const BYTE ID_SMOOTH_SPS_QUIT = 1;
+	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_CHARACTER = 2;
+	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_GAME_CONNECT = 3;
+	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_CREATE = 4;
+
 	void ShuffleStats();
 	void ShuffleSkills();
 	
@@ -56,6 +61,8 @@ public:
 	virtual ~TSelectProfessionScreen();
 
 	void Init();
+
+	void ProcessSmoothAction(BYTE action = 0xFF);
 
 	void InitTooltip();
 
