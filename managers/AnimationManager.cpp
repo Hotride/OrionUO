@@ -751,17 +751,32 @@ void TAnimationManager::calcAlpha(std::vector<DWORD> &pixels, short width, short
         for(auto x=0; x < width; x++) {
             DWORD color = pixels[width*y + x];
             
-            unsigned int alpha = (color & 0xff000000) >> 24;
-            unsigned int blue  = (color & 0x00ff0000) >> 16;
-            unsigned int green = (color & 0x0000ff00) >> 8;
-            unsigned int red  = (color & 0x000000ff);        
+            //unsigned int alpha = (color & 0xff000000) >> 24;
+            //unsigned int blue  = (color & 0x00ff0000) >> 16;
+            //unsigned int green = (color & 0x0000ff00) >> 8;
+            //unsigned int red  = (color & 0x000000ff);
+
+			unsigned char alpha = (color >> 24) & 0xff;
+			unsigned char blue  = (color >> 16) & 0xff;
+			unsigned char green = (color >> 8) & 0xff;
+			unsigned char red  = color & 0xff;		
             
             //pixels[width*y + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
 
-            if (((red!=0) || (green!=0) || (blue!=0)) || (alpha!=255)) // эта строка не срабатывает
-                continue;
+            //if (((red!=0) || (green!=0) || (blue!=0)) || (alpha!=255)) // эта строка не срабатывает
+			//if (((red!=0) || (green!=0) || (blue!=0)) || (alpha!=255)) // эта строка не срабатывает
+            //    continue;
+
+			if( (red!=0) || (blue!=0) || (green!=0))
+				TPRINT( "alpha is %i\n", alpha);
+				continue;
+			
+				
+
+
+
          
-            doPixelsAlphaAt(pixels, width, height, x, y);                        
+            //doPixelsAlphaAt(pixels, width, height, x, y);                        
         }        
     }
 }
