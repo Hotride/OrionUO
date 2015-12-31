@@ -25,8 +25,8 @@ class TServerScreen : public TBaseScreen
 private:
 	TTextTexture m_Text[2];
 
-	static const BYTE ID_SMOOTH_SS_SELECT_SERVER = 1;
-	static const BYTE ID_SMOOTH_SS_QUIT = 2;
+	static const BYTE ID_SMOOTH_SS_QUIT = 1;
+	static const BYTE ID_SMOOTH_SS_SELECT_SERVER = 2;
 	static const BYTE ID_SMOOTH_SS_GO_SCREEN_MAIN = 3;
 
 	static const int ID_SS_QUIT = 1;

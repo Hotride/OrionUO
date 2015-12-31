@@ -511,7 +511,8 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 TUltimaOnline::TUltimaOnline()
 : m_StaticData(NULL), m_StaticDataCount(0), m_StaticAnimList(NULL),
 m_UsedLandList(NULL), m_UsedStaticList(NULL), m_UsedGumpList(NULL),
-m_UsedTextureList(NULL), m_UsedSoundList(NULL), m_AnimData(NULL)
+m_UsedTextureList(NULL), m_UsedSoundList(NULL), m_AnimData(NULL),
+m_UsedLightList(NULL)
 {
 	g_Logger = new TLogger();
 	string pth = g_DirectoryPath + "\\uolog.txt";
