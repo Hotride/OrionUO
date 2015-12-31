@@ -45,6 +45,11 @@ private:
 
 	TLinkedList *m_UsedAnimList;
 
+    float LUMA_THRESHOLD;
+    float ALPHA_SCALE;
+    int ALPHA_BITS;
+    int BIT_STEP;
+
 	bool TestImagePixels(TTextureAnimationDirection *direction, BYTE &frame, WORD &id, int &checkX, int &checkY);
 	bool TestPixels(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, WORD id = 0x0000);
 
@@ -64,8 +69,9 @@ public:
 	SETGET(int, AnimGroup)
 	SETGET(BYTE, Direction)
 
-    float getLuma(int &R, int &G, int &B);
-    void calcAlpha(DWORD *pixels, short &width, short &height);
+    float getLuma(unsigned int &R, unsigned int &G, unsigned int &B);
+    void doPixelsAlphaAt(std::vector<DWORD> &pixels, short width, short height, int x, int y);
+    void calcAlpha(std::vector<DWORD> &pixels, short width, short height);
 
 	void InitBodyconv(PDWORD verdata, string fName);
 	void Load(PDWORD verdata);
