@@ -231,6 +231,26 @@ void TGLEngine::EndDraw()
 	SwapBuffers(m_DC);
 }
 //---------------------------------------------------------------------------
+void TGLEngine::BeginStencil()
+{
+	glEnable(GL_STENCIL_TEST);
+
+	glColorMask(false, false, false, false);
+
+	glStencilFunc(GL_ALWAYS, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+}
+//---------------------------------------------------------------------------
+void TGLEngine::EndStencil()
+{
+	glColorMask(true, true, true, true);
+					
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	glStencilFunc(GL_NOTEQUAL, 1, 1);
+
+	glDisable(GL_STENCIL_TEST);
+}
+//---------------------------------------------------------------------------
 void TGLEngine::EnableAlpha()
 {
 	glEnable(GL_ALPHA_TEST);

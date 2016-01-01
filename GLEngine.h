@@ -47,6 +47,9 @@ public:
 
 	void BeginDraw();
 	void EndDraw();
+	
+	void BeginStencil();
+	void EndStencil();
 
 	void EnableAlpha();
 	void DisableAlpha();

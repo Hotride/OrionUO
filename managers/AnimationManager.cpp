@@ -1260,11 +1260,13 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 
 	TGameItem *goi = obj->FindLayer(OL_MOUNT);
 	
+	int lightOffset = 20;
 	int drawX = (int)(x + obj->OffsetX);
 	int drawY = (int)(y + obj->OffsetY) - (z * 4);
 	
 	if (goi != NULL) //Draw mount
 	{
+		lightOffset += 20;
 		WORD mountID = goi->GetMountAnimation();
 
 		m_AnimGroup = obj->GetAnimationGroup(mountID);
@@ -1273,8 +1275,6 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	}
 	
 	m_AnimGroup = animGroup;
-
-	Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
 
 	Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
 
@@ -1297,7 +1297,7 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 
 						STATIC_TILES &tile = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
 
-						LIGHT_DATA light = {tile.Quality, 0, obj->X, obj->Y, obj->Z, drawX, drawY};
+						LIGHT_DATA light = {tile.Quality, 0, obj->X, obj->Y, obj->Z, drawX, drawY - lightOffset};
 
 						if (ConfigManager.ColoredLighting)
 							light.Color = UO->GetLightColor(graphic);
@@ -1465,7 +1465,7 @@ void TAnimationManager::DrawCorpse(TGameItem *obj, int x, int y, int z)
 
 				STATIC_TILES &tile = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
 
-				LIGHT_DATA light = {tile.Quality, 0, obj->X, obj->Y, obj->Z, x, y};
+				LIGHT_DATA light = {tile.Quality, 0, obj->X, obj->Y, obj->Z, x, y - 20};
 
 				if (ConfigManager.ColoredLighting)
 					light.Color = UO->GetLightColor(graphic);
