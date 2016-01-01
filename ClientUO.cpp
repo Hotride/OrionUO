@@ -2874,12 +2874,11 @@ TColoredTextureObject *TUltimaOnline::ExecuteColoredGump(WORD id, WORD color, bo
 {
 	TTextureObject *th = ExecuteGump(id);
 	
-	if (th == NULL)
-		return NULL;
-	
-	if (color)
-	{
-		TColoredTextureObject *cth = th->GetColoredTexture(color);
+	TColoredTextureObject *cth = NULL;
+
+	if (th != NULL && color)
+		{
+		cth = th->GetColoredTexture(color);
 
 		if (partialHue && cth->TexturePH == 0)
 			cth->TexturePH = MulReader.ReadColoredGump(m_GumpDataIndex[id].Address, m_GumpDataIndex[id].Size, color, th, partialHue);

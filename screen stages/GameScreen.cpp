@@ -64,6 +64,15 @@ void TGameScreen::Init()
 	UO->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
 }
 //---------------------------------------------------------------------------
+void TGameScreen::ProcessSmoothAction(BYTE action)
+{
+	if (action == 0xFF)
+		action = m_SmoothScreenAction;
+
+	if (action == ID_SMOOTH_GS_LOGOUT)
+		UO->LogOut();
+}
+//---------------------------------------------------------------------------
 void TGameScreen::InitTooltip()
 {
 	if (!ConfigManager.UseToolTips)

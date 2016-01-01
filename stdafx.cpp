@@ -114,7 +114,7 @@ bool g_UseSmoothMonitor = false;
 BYTE g_SmoothMonitorMode = 0;
 GLfloat g_SmoothMonitorColor = 0.0f;
 GLfloat g_SmoothMonitorStep = 0.03f;
-BYTE g_SmoothMonitorScale = 4;
+BYTE g_SmoothMonitorScale = 15;
 
 int g_MouseX = 0;
 int g_MouseY = 0;

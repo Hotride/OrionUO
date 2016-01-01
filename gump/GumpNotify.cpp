@@ -178,7 +178,7 @@ void TGumpNotify::Process()
 	{
 		case 1:
 		{
-			UO->LogOut();
+			GameScreen->CreateSmoothAction(TGameScreen::ID_SMOOTH_GS_LOGOUT);
 
 			break;
 		}

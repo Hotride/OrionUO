@@ -80,6 +80,10 @@ public:
 	TGameScreen();
 	virtual ~TGameScreen();
 
+	void ProcessSmoothAction(BYTE action = 0xFF);
+	
+	static const BYTE ID_SMOOTH_GS_LOGOUT = 1;
+
 	void CalculateGameWindow();
 
 	void RestoreGameWindowPort() {g_GL.ViewPort(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY, m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowSizeY);}

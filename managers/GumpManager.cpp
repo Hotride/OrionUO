@@ -666,12 +666,12 @@ TGump *TGumpManager::GetTextEntryOwner()
 	while (gump != NULL)
 	{
 		if (gump->EntryPointerHere())
-			return gump;
+			break;
 
 		gump = (TGump*)gump->m_Next;
 	}
 
-	return NULL;
+	return gump;
 }
 //---------------------------------------------------------------------------
 TGump *TGumpManager::GumpExists(DWORD gumpID)
@@ -681,12 +681,12 @@ TGump *TGumpManager::GumpExists(DWORD gumpID)
 	while (gump != NULL)
 	{
 		if (gumpID == (DWORD)gump)
-			return gump;
+			break;
 
 		gump = (TGump*)gump->m_Next;
 	}
 
-	return NULL;
+	return gump;
 }
 //---------------------------------------------------------------------------
 TGump *TGumpManager::GetGump(DWORD serial, DWORD id, GUMP_TYPE type)

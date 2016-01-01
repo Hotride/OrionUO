@@ -122,16 +122,28 @@ g_RenderedObjectsCountInGameWindow++;
 				UO->DrawLandArt(m_Graphic, objColor, drawX, drawY, m_Z);
 			else
 			{
-				GLfloat tCl = 1.0f;
-				glColor3f(tCl, tCl, tCl);
+				if (g_SmoothMonitorMode)
+				{
+					GLfloat tCl = g_DrawColor - 0.1f;
+					glColor3f(tCl, tCl, tCl);
 
-				glEnable(GL_LIGHTING);
+					UO->DrawLandTexture(m_Graphic, objColor, drawX, drawY, m_Rect, m_Normals);
+					
+					glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
+				}
+				else
+				{
+					GLfloat tCl = 1.0f;
+					glColor3f(tCl, tCl, tCl);
 
-				UO->DrawLandTexture(m_Graphic, objColor, drawX, drawY, m_Rect, m_Normals);
+					glEnable(GL_LIGHTING);
 
-				glDisable(GL_LIGHTING);
+					UO->DrawLandTexture(m_Graphic, objColor, drawX, drawY, m_Rect, m_Normals);
 
-				glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
+					glDisable(GL_LIGHTING);
+
+					glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
+				}
 			}
 		}
 		else

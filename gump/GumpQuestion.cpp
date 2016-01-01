@@ -174,7 +174,7 @@ void TGumpQuestion::OnLeftMouseUp()
 	else if (g_LastSelectedObject == ID_GQ_BUTTON_OKAY) //Button okay
 	{
 		if (m_Variant == 1)
-			UO->LogOut();
+			GameScreen->CreateSmoothAction(TGameScreen::ID_SMOOTH_GS_LOGOUT);
 		else if (m_Variant == 2)
 		{
 			UO->AttackReq(ID);

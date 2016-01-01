@@ -1224,12 +1224,12 @@ PACKET_HANDLER(UpdateItem)
 		STATIC_TILES &st = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
 		obj->ObjectFlags = st.Flags;
 
-		if (obj->IsWearable())
+		if (obj->IsWearable() || obj->Graphic == 0x0A28)
 		{
 			obj->ImageID = st.AnimID + 0xC350;
 			obj->AnimID = st.AnimID;
-			UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-			UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
+			UO->ExecuteColoredGump(st.AnimID + 50000, obj->Color, (st.Flags & 0x00040000));
+			UO->ExecuteColoredGump(st.AnimID + 60000, obj->Color, (st.Flags & 0x00040000));
 			obj->UsedLayer = st.Quality;
 		}
 
@@ -1338,12 +1338,12 @@ PACKET_HANDLER(UpdateItemSA)
 		STATIC_TILES &st = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
 		obj->ObjectFlags = st.Flags;
 
-		if (obj->IsWearable())
+		if (obj->IsWearable() || obj->Graphic == 0x0A28)
 		{
 			obj->ImageID = st.AnimID + 0xC350;
 			obj->AnimID = st.AnimID;
-			UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-			UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
+			UO->ExecuteColoredGump(st.AnimID + 50000, obj->Color, (st.Flags & 0x00040000));
+			UO->ExecuteColoredGump(st.AnimID + 60000, obj->Color, (st.Flags & 0x00040000));
 			obj->UsedLayer = st.Quality;
 		}
 
@@ -1473,12 +1473,12 @@ PACKET_HANDLER(UpdateObject)
 			STATIC_TILES &st = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
 			item->ObjectFlags = st.Flags;
 
-			if (item->IsWearable())
+			if (item->IsWearable() || item->Graphic == 0x0A28)
 			{
 				item->ImageID = st.AnimID + 0xC350;
 				item->AnimID = st.AnimID;
-				UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-				UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
+				UO->ExecuteColoredGump(st.AnimID + 50000, item->Color, (st.Flags & 0x00040000));
+				UO->ExecuteColoredGump(st.AnimID + 60000, item->Color, (st.Flags & 0x00040000));
 				item->UsedLayer = st.Quality;
 			}
 
@@ -1546,12 +1546,12 @@ PACKET_HANDLER(UpdateObject)
 
 		obj2->ObjectFlags = st1.Flags;
 
-		if (obj2->IsWearable())
+		if (obj2->IsWearable() || obj2->Graphic == 0x0A28)
 		{
 			obj2->ImageID = st1.AnimID + 0xC350;
 			obj2->AnimID = st1.AnimID;
-			UO->ExecuteGump(st1.AnimID + 50000, (st1.Flags & 0x00040000));
-			UO->ExecuteGump(st1.AnimID + 60000, (st1.Flags & 0x00040000));
+			UO->ExecuteColoredGump(st1.AnimID + 50000, obj2->Color, (st1.Flags & 0x00040000));
+			UO->ExecuteColoredGump(st1.AnimID + 60000, obj2->Color, (st1.Flags & 0x00040000));
 			obj2->UsedLayer = st1.Quality;
 		}
 		else if (layer == OL_MOUNT)
@@ -1614,12 +1614,12 @@ PACKET_HANDLER(EquipItem)
 	STATIC_TILES &st = UO->m_StaticData[id / 32].Tiles[id % 32];
 	obj->ObjectFlags = st.Flags;
 
-	if (obj->IsWearable())
+	if (obj->IsWearable() || obj->Graphic == 0x0A28)
 	{
 		obj->ImageID = st.AnimID + 0xC350;
 		obj->AnimID = st.AnimID;
-		UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-		UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
+		UO->ExecuteColoredGump(st.AnimID + 50000, obj->Color, (st.Flags & 0x00040000));
+		UO->ExecuteColoredGump(st.AnimID + 60000, obj->Color, (st.Flags & 0x00040000));
 		obj->UsedLayer = st.Quality;
 	}
 
@@ -1694,12 +1694,12 @@ PACKET_HANDLER(UpdateContainedItem)
 		STATIC_TILES &st = UO->m_StaticData[ID].Tiles[obj->Graphic - (ID * 32)];
 		obj->ObjectFlags = st.Flags;
 
-		if (obj->IsWearable())
+		if (obj->IsWearable() || obj->Graphic == 0x0A28)
 		{
 			obj->ImageID = st.AnimID + 0xC350;
 			obj->AnimID = st.AnimID;
-			UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-			UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
+			UO->ExecuteColoredGump(st.AnimID + 50000, obj->Color, (st.Flags & 0x00040000));
+			UO->ExecuteColoredGump(st.AnimID + 60000, obj->Color, (st.Flags & 0x00040000));
 			obj->UsedLayer = st.Quality;
 		}
 
@@ -1844,12 +1844,12 @@ PACKET_HANDLER(UpdateContainedItems)
 			STATIC_TILES &st = UO->m_StaticData[ID].Tiles[obj->Graphic - (ID * 32)];
 			obj->ObjectFlags = st.Flags;
 
-			if (obj->IsWearable())
+			if (obj->IsWearable() || obj->Graphic == 0x0A28)
 			{
 				obj->ImageID = st.AnimID + 0xC350;
 				obj->AnimID = st.AnimID;
-				UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-				UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
+				UO->ExecuteColoredGump(st.AnimID + 50000, obj->Color, (st.Flags & 0x00040000));
+				UO->ExecuteColoredGump(st.AnimID + 60000, obj->Color, (st.Flags & 0x00040000));
 				obj->UsedLayer = st.Quality;
 			}
 
@@ -2103,7 +2103,7 @@ PACKET_HANDLER(OpenPaperdoll)
 		gump->UpdateFrame();
 	else
 	{
-		TGumpPaperdoll *gump = new TGumpPaperdoll(serial, 0, 0, false);
+		gump = new TGumpPaperdoll(serial, 0, 0, false);
 		GumpManager->AddGump(gump);
 	}
 }

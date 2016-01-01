@@ -91,7 +91,7 @@ void TGumpPaperdoll::PrepareTextures()
 	UO->ExecuteButton(0x07DC); //Paperdoll button Journal
 	UO->ExecuteButton(0x07DF); //Paperdoll button Skills
 	UO->ExecuteButton(0x07E2); //Paperdoll button Chat
-	UO->ExecuteColoredGump(0x07E2, 0x0386); //Paperdoll button Chat
+	UO->ExecuteColoredGump(0x07E2, 0x0386, false); //Paperdoll button Chat
 	UO->ExecuteButton(0x07E8); //Paperdoll button War
 	UO->ExecuteButton(0x07E5); //Paperdoll button Peace
 	//UO->ExecuteGump(0x0FA1); //Paperdoll mail bag
@@ -117,12 +117,27 @@ void TGumpPaperdoll::PrepareTextures()
 				equipment = obj->FindLayer(UsedLayers[i]);
 
 				if (equipment != NULL && equipment->AnimID)
-					UO->ExecuteColoredGump(equipment->AnimID + gumpOffset, equipment->Color);
+				{
+					int cOfs = gumpOffset;
+
+					if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
+						cOfs = g_MaleGumpOffset;
+
+					UO->ExecuteColoredGump(equipment->AnimID + cOfs, equipment->Color);
+				}
 				else if (ObjectInHand != NULL && UsedLayers[i] == ObjectInHand->UsedLayer && ObjectInHand->AnimID)
 				{
 					equipment = obj->FindLayer(ObjectInHand->UsedLayer);
+
 					if (equipment == NULL)
+					{
+						int cOfs = gumpOffset;
+
+						if (obj->Sex && !UO->ExecuteGump(ObjectInHand->AnimID + cOfs))
+							cOfs = g_MaleGumpOffset;
+
 						UO->ExecuteColoredGump(ObjectInHand->AnimID + gumpOffset, ObjectInHand->Color);
+					}
 				}
 			}
 		}
@@ -131,7 +146,14 @@ void TGumpPaperdoll::PrepareTextures()
 			equipment = obj->FindLayer(OL_ROBE);
 
 			if (equipment != NULL && equipment->AnimID)
-				UO->ExecuteColoredGump(equipment->AnimID + gumpOffset, equipment->Color);
+			{
+				int cOfs = gumpOffset;
+
+				if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
+					cOfs = g_MaleGumpOffset;
+
+				UO->ExecuteColoredGump(equipment->AnimID + cOfs, equipment->Color);
+			}
 		}
 
 		equipment = obj->FindLayer(OL_BACKPACK);
@@ -149,6 +171,8 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 
 		return;
 	}
+
+	PrepareTextures();
 
 	TGameCharacter *obj = World->FindWorldCharacter(Serial);
 	if (obj == NULL)
@@ -225,22 +249,26 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 			else if (CanSelectedButton == ID_GP_BUTTON_SKILLS)
 				gumpID = 0x07E1; //Paperdoll button Skills
 			UO->DrawGump(gumpID, 0, posX + 185, posY + 152);
+			
+			gumpID = 0x07E2;
+			WORD chatColor = 0;
 
 			if (!g_ChatEnabled)
-				UO->DrawGump(0x07E2, 0x03B1, posX + 185, posY + 179);
+				chatColor = 0x0386;
 			else
 			{
-				gumpID = 0x07E2;
 				if (CanPressedButton == ID_GP_BUTTON_CHAT)
 					gumpID = 0x07E3; //Paperdoll button Chat (down)
 				else if (CanSelectedButton == ID_GP_BUTTON_CHAT)
 					gumpID = 0x07E4; //Paperdoll button Chat
-				UO->DrawGump(gumpID, 0, posX + 185, posY + 179);
 			}
+
+			UO->DrawGump(gumpID, chatColor, posX + 185, posY + 179);
 
 			if (g_Player->Warmode)
 			{
 				gumpID = 0x07E8;
+
 				if (CanPressedButton == ID_GP_BUTTON_WARMODE)
 					gumpID = 0x07E9; //Paperdoll button War (down)
 				else if (CanSelectedButton == ID_GP_BUTTON_WARMODE)
@@ -249,11 +277,13 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 			else
 			{
 				gumpID = 0x07E5;
+
 				if (CanPressedButton == ID_GP_BUTTON_WARMODE)
 					gumpID = 0x07E6; //Paperdoll button Peace (down)
 				else if (CanSelectedButton == ID_GP_BUTTON_WARMODE)
 					gumpID = 0x07E7; //Paperdoll button Peace
 			}
+
 			UO->DrawGump(gumpID, 0, posX + 185, posY + 206);
 			
 			//UO->DrawGump(0x0FA1, 0, posX + 80, posY + 4); //Paperdoll mail bag
@@ -299,17 +329,29 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 				equipment = obj->FindLayer(UsedLayers[i]);
 
 				if (equipment != NULL && equipment->AnimID)
-					UO->DrawGump(equipment->AnimID + gumpOffset, equipment->Color, posX, posY);
+				{
+					int cOfs = gumpOffset;
+
+					if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
+						cOfs = g_MaleGumpOffset;
+
+					UO->DrawGump(equipment->AnimID + cOfs, equipment->Color, posX, posY);
+				}
 				else if (g_LastSelectedGump == index && ObjectInHand != NULL && UsedLayers[i] == ObjectInHand->UsedLayer && ObjectInHand->AnimID)
 				{
 					equipment = obj->FindLayer(ObjectInHand->UsedLayer);
 
 					if (equipment == NULL)
 					{
+						int cOfs = gumpOffset;
+
+						if (obj->Sex && !UO->ExecuteGump(ObjectInHand->AnimID + cOfs))
+							cOfs = g_MaleGumpOffset;
+
 						glEnable(GL_BLEND);
 						glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_DST_COLOR);
 
-						UO->DrawGump(ObjectInHand->AnimID + gumpOffset, ObjectInHand->Color, posX, posY);
+						UO->DrawGump(ObjectInHand->AnimID + cOfs, ObjectInHand->Color, posX, posY);
 						
 						glDisable(GL_BLEND);
 					}
@@ -321,7 +363,14 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 			equipment = obj->FindLayer(OL_ROBE);
 
 			if (equipment != NULL && equipment->AnimID)
-				UO->DrawGump(equipment->AnimID + gumpOffset, equipment->Color, posX, posY);
+			{
+				int cOfs = gumpOffset;
+
+				if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
+					cOfs = g_MaleGumpOffset;
+
+				UO->DrawGump(equipment->AnimID + cOfs, equipment->Color, posX, posY);
+			}
 		}
 
 		equipment = obj->FindLayer(OL_BACKPACK);
@@ -623,9 +672,15 @@ int TGumpPaperdoll::Draw(bool &mode)
 			IFOR(i, 0, m_LayerCount)
 			{
 				equipment = obj->FindLayer(UsedLayers[i]);
+
 				if (equipment != NULL && equipment->AnimID != 0)
 				{
-					if (UO->GumpPixelsInXY(equipment->AnimID + gumpOffset, posX, posY))
+					int cOfs = gumpOffset;
+
+					if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
+						cOfs = g_MaleGumpOffset;
+
+					if (UO->GumpPixelsInXY(equipment->AnimID + cOfs, posX, posY))
 						LSG = ID_GP_ITEMS + UsedLayers[i];
 				}
 			}

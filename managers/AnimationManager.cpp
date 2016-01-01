@@ -768,7 +768,6 @@ void TAnimationManager::calcAlpha(std::vector<DWORD> &pixels, short width, short
             //    continue;
 
 			if( (red!=0) || (blue!=0) || (green!=0))
-				TPRINT( "alpha is %i\n", alpha);
 				continue;
 			
 				
