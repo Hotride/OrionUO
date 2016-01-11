@@ -62,6 +62,11 @@ using std::string;
 using std::wstring;
 //---------------------------------------------------------------------------
 #define UO_FW_SHARD 0
+
+extern GLhandleARB ShaderProg;
+extern GLhandleARB VertShader;
+extern GLhandleARB FragShader;
+extern GLuint ShaderTexture;
 //---------------------------------------------------------------------------
 extern int g_LandObjectsCount;
 extern int g_StaticsObjectsCount;
@@ -539,6 +544,7 @@ typedef struct MULTILINES_FONT_INFO
 #include "gump\\GumpBulletinBoardItem.h"
 #include "gump\\GumpWorldMap.h"
 #include "screen stages\\BaseScreen.h"
+#include "screen stages\\DebugScreen.h"
 #include "screen stages\\MainScreen.h"
 #include "screen stages\\ConnectionScreen.h"
 #include "screen stages\\ServerScreen.h"

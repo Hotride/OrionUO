@@ -17,6 +17,11 @@
 *****************************************************************************
 */
 #include "stdafx.h"
+
+GLhandleARB ShaderProg = 0;
+GLhandleARB VertShader = 0;
+GLhandleARB FragShader = 0;
+GLuint ShaderTexture = 0;
 //---------------------------------------------------------------------------
 int g_LandObjectsCount = 0;
 int g_StaticsObjectsCount = 0;

@@ -205,7 +205,7 @@ m_AnimDataIndexCount(0), m_Grayed(false)
     LUMA_THRESHOLD = 20.0f;
     ALPHA_SCALE = 10.0f;
     ALPHA_BITS = 4;
-    BIT_STEP = 256 / (pow(2, ALPHA_BITS));
+    BIT_STEP = (int)(256 / (pow(2, ALPHA_BITS)));
 
 	m_FrameBuffer.Init(FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
 }

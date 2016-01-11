@@ -537,7 +537,13 @@ TUltimaOnline::~TUltimaOnline()
 		delete FontManager;
 		FontManager = NULL;
 	}
-	
+
+	if (DebugScreen != NULL)
+	{
+		delete DebugScreen;
+		DebugScreen = NULL;
+	}
+
 	if (MainScreen != NULL)
 	{
 		delete MainScreen;
@@ -915,7 +921,8 @@ bool TUltimaOnline::Install()
 	ExecuteStaticArt(0x0EED); //gp 1
 	ExecuteStaticArt(0x0EEE); //gp 2-5
 	ExecuteStaticArt(0x0EEF); //gp 6+
-	
+
+	DebugScreen = new TDebugScreen();
 	MainScreen = new TMainScreen();
 	ConnectionScreen = new TConnectionScreen();
 	ServerScreen = new TServerScreen();
@@ -1010,7 +1017,60 @@ bool TUltimaOnline::Install()
 
 	MainScreen->LoadGlobalConfig();
 
+	TMappedHeader fsmh;
+	memset(&fsmh, 0, sizeof(TMappedHeader));
+	FileManager.LoadFileToMemory(fsmh, FilePath("shaders\\shader.frag").c_str());
+	TMappedHeader vsmh;
+	memset(&vsmh, 0, sizeof(TMappedHeader));
+	FileManager.LoadFileToMemory(vsmh, FilePath("shaders\\shader.vert").c_str());
+
+	if (fsmh.Size && vsmh.Size)
+	{
+		ShaderProg = glCreateProgramObjectARB();
+
+
+
+		GLcharARB *strS = (char*)vsmh.Address;
+		int len = vsmh.Size;
+		glShaderSourceARB(VertShader, 1, (const GLcharARB**)&strS, &len);
+
+		VertShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+		glCompileShaderARB(VertShader);
+
+		glAttachObjectARB(ShaderProg, VertShader);
+
+
+
+		strS = (char*)fsmh.Address;
+		len = fsmh.Size;
+		glShaderSourceARB(FragShader, 1, (const GLcharARB**)&strS, &len);
+
+		FragShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+		glCompileShaderARB(FragShader);
+
+		glAttachObjectARB(ShaderProg, FragShader);
+
+
+
+
+		glLinkProgramARB(ShaderProg);
+
+		glValidateProgramARB(ShaderProg);
+
+		ShaderTexture = glGetUniformLocationARB(ShaderProg, "u_texture1");
+
+		glUseProgramObjectARB(0);
+	}
+
+	FileManager.UnloadFileFromMemory(fsmh);
+	FileManager.UnloadFileFromMemory(vsmh);
+
+#ifdef _DEBUG
+	CurrentScreen = DebugScreen;
+	DebugScreen->Init();
+#else
 	InitScreen(GS_MAIN);
+#endif
 
 	return true;
 }
@@ -3109,6 +3169,7 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
 		}
 	}
 
+	glUniform1iARB(ShaderTexture, texture);
 	g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
 }
 //---------------------------------------------------------------------------
@@ -3154,6 +3215,7 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, int width, int h
 		}
 	}
 
+	glUniform1iARB(ShaderTexture, texture);
 	g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH, (GLfloat)width, (GLfloat)height);
 }
 //---------------------------------------------------------------------------

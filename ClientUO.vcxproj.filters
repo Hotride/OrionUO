@@ -411,6 +411,9 @@
     <ClInclude Include="FrameBuffer.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="screen stages\DebugScreen.h">
+      <Filter>Заголовочные файлы\screen stages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -751,6 +754,9 @@
     </ClCompile>
     <ClCompile Include="FrameBuffer.cpp">
       <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="screen stages\DebugScreen.cpp">
+      <Filter>Файлы исходного кода\screen stages</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

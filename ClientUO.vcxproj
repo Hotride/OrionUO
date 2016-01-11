@@ -19,13 +19,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -185,6 +185,7 @@
     <ClInclude Include="screen stages\CharacterListScreen.h" />
     <ClInclude Include="screen stages\ConnectionScreen.h" />
     <ClInclude Include="screen stages\CreateCharacterScreen.h" />
+    <ClInclude Include="screen stages\DebugScreen.h" />
     <ClInclude Include="screen stages\GameBlockedScreen.h" />
     <ClInclude Include="screen stages\GameScreen.h" />
     <ClInclude Include="screen stages\MainScreen.h" />
@@ -303,6 +304,7 @@
     <ClCompile Include="screen stages\CharacterListScreen.cpp" />
     <ClCompile Include="screen stages\ConnectionScreen.cpp" />
     <ClCompile Include="screen stages\CreateCharacterScreen.cpp" />
+    <ClCompile Include="screen stages\DebugScreen.cpp" />
     <ClCompile Include="screen stages\GameBlockedScreen.cpp" />
     <ClCompile Include="screen stages\GameScreen.cpp" />
     <ClCompile Include="screen stages\MainScreen.cpp" />
