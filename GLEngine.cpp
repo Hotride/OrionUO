@@ -217,7 +217,14 @@ void TGLEngine::BeginDraw()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glLoadIdentity();
-	glDisable(GL_DEPTH_TEST);
+	
+	//glDisable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_STENCIL_TEST);
+	glDisable(GL_BLEND);
+	g_ZBuffer = 0.0f;
 
 	EnableAlpha();
 }
@@ -361,7 +368,7 @@ void TGLEngine::DrawLandTexture(GLuint &Texture, float X, float Y, float Width, 
 	glPushMatrix();
 	glLoadIdentity();
 
-	glTranslatef(X + 22, Y + 22 - rc.left, 0.0f);
+	glTranslatef(X + 22, Y + 22 - rc.left, g_ZBuffer);
 	
 	glBegin(GL_QUADS);
 		glNormal3f((GLfloat)normals[3].X, (GLfloat)normals[3].Y, (GLfloat)normals[3].Z);
@@ -385,7 +392,7 @@ void TGLEngine::Draw(GLuint &Texture, float X, float Y, float Width, float Heigh
 	glBindTexture(GL_TEXTURE_2D, Texture);
 
 	glLoadIdentity();
-	glTranslatef(X, Y, 0.0f);
+	glTranslatef(X, Y, g_ZBuffer);
 
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 1.0f); glVertex2f(0.0f, Height);
@@ -400,7 +407,7 @@ void TGLEngine::Draw(GLuint &Texture, float X, float Y, float Width, float Heigh
 	glBindTexture(GL_TEXTURE_2D, Texture);
 
 	glLoadIdentity();
-	glTranslatef(X, Y, 0.0f);
+	glTranslatef(X, Y, g_ZBuffer);
 
 	if (Mirror)
 	{
@@ -427,7 +434,7 @@ void TGLEngine::Draw(GLuint &Texture, float X, float Y, float Width, float Heigh
 	glBindTexture(GL_TEXTURE_2D, Texture);
 
 	glLoadIdentity();
-	glTranslatef(X, Y, 0.0f);
+	glTranslatef(X, Y, g_ZBuffer);
 
 	float draw_countX = DrawWidth / Width;
 	float draw_countY = DrawHeight / Height;

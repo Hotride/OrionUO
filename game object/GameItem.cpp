@@ -99,7 +99,6 @@ int TGameItem::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 	{
 		if (mode)
 		{
-
 #if UO_DEBUG_INFO!=0
 g_RenderedObjectsCountInGameWindow++;
 #endif

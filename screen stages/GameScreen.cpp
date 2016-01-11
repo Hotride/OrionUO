@@ -556,8 +556,6 @@ int TGameScreen::Render(bool mode)
 
 		g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
 		
-		g_GL.Disable(GL_LIGHTING);
-		
 		g_DrawColor = g_SmoothMonitorColor;
 
 		if (!g_UseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
@@ -573,6 +571,7 @@ int TGameScreen::Render(bool mode)
 		g_NoDrawRoof = false;
 		g_MaxGroundZ = 125;
 		int maxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
+		drawModeCount = 1;
 
 		IFOR(drawMode, 0, drawModeCount)
 		{
@@ -638,10 +637,10 @@ int TGameScreen::Render(bool mode)
 
 								bool drawCondition = true;
 
-								if (!drawMode) //Отрисовка ландшафта, воды и перекрытых ландшафтом предметов
+								/*if (!drawMode) //Отрисовка ландшафта, воды и перекрытых ландшафтом предметов
 									drawCondition = (ro->Z < checkZ || ro->RenderType == ROT_LAND_OBJECT);
 								else //Отрисовка надземной части мира
-									drawCondition = (ro->Z >= checkZ && ro->RenderType != ROT_LAND_OBJECT);
+									drawCondition = (ro->Z >= checkZ && ro->RenderType != ROT_LAND_OBJECT);*/
 
 								if (ro->IsInternal())
 									drawCondition = false;
@@ -652,6 +651,7 @@ int TGameScreen::Render(bool mode)
 									continue;
 								}
 
+								g_ZBuffer = (float)(ro->Z + ro->RenderQueueIndex);
 								ro->Draw(mode, DrawPixelsX, DrawPixelsY, ticks);
 
 								ro = nextRo;
@@ -661,6 +661,9 @@ int TGameScreen::Render(bool mode)
 				}
 			}
 		}
+
+		g_ZBuffer = 0.0f;
+		glDisable(GL_DEPTH_TEST);
 
 		if (drawModeCount)
 		{
