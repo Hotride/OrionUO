@@ -1028,24 +1028,22 @@ bool TUltimaOnline::Install()
 	{
 		ShaderProg = glCreateProgramObjectARB();
 
-
+		
+		VertShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
 
 		GLcharARB *strS = (char*)vsmh.Address;
-		int len = vsmh.Size;
-		glShaderSourceARB(VertShader, 1, (const GLcharARB**)&strS, &len);
+		glShaderSourceARB(VertShader, 1, (const GLcharARB**)&strS, NULL);
 
-		VertShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
 		glCompileShaderARB(VertShader);
 
 		glAttachObjectARB(ShaderProg, VertShader);
 
-
+		
+		FragShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
 
 		strS = (char*)fsmh.Address;
-		len = fsmh.Size;
-		glShaderSourceARB(FragShader, 1, (const GLcharARB**)&strS, &len);
+		glShaderSourceARB(FragShader, 1, (const GLcharARB**)&strS, NULL);
 
-		FragShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
 		glCompileShaderARB(FragShader);
 
 		glAttachObjectARB(ShaderProg, FragShader);
