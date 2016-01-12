@@ -103,9 +103,9 @@
 #define MODKEY_SHIFT				0x0400
 //---------------------------------------------------------------------------
 //incremented ordinary for
-#define IFOR(var, value, target) for (int var = value; var < target; var ++)
+#define IFOR(var, start, stop) for (int var = start; var < stop; var ++)
 //decremented ordinary for
-#define DFOR(var, value, target) for (int var = value; var >= target; var --)
+#define DFOR(var, start, stop) for (int var = start; var >= stop; var --)
 //TBaseQueue for [extended]
 #define QFOR(var, src, type) for (type var = (type)src->Begin(); var != NULL; var = (type)src->Next())
 //TBaseQueue for

@@ -668,15 +668,21 @@ struct Coords
 	short y;
 	Coords(short x, short y) { this->x = x; this->y = y; };
 };
-/// <summary>Calculate the best guess alpha for adjucent pixels within
+
+/// <summary>Sets the best guess alpha for adjucent pixels within
 /// specified luma threshold</summary>
+/// <param name="processed">список обработанных пикселей</param>
 /// <param name="pixels">array of texture pixels in RGBA format</param>
 /// <param name="width">texture width</param>
 /// <param name="height">texture height</param>
+/// <param name="x">x координата пикселя</param>
+/// <param name="y">y координата пикселя</param>
+/// <param name="alpha_scale">коэффицент маштабировования прозрачности</param>
+/// <param name="luma_threshold">пороговое значение яркости, 
+/// с начала которого пиксели будут считаться смежными</param>
 void TAnimationManager::setAlphaAt(std::vector<bool> &processed, PDWORD pixels, short &width, short &height, int &x, int &y, float &alpha_scale, float &luma_threshold)
 {
-
-	auto stack = std::deque<Coords>();
+	std::deque<Coords> stack;
 	stack.push_back(Coords(x, y));
 
 	while (stack.size())
@@ -742,12 +748,12 @@ void TAnimationManager::EstimateImageCornerAlpha(PDWORD pixels, short &width, sh
 	std::vector<bool> processed(pixels_count);
 	processed.resize(pixels_count);
 	std::fill(processed.begin(), processed.end(), false);
-
-    for(auto y=0; y < height; y++)
+		
+	IFOR(y, 0, height)
 	{
 		auto row_idx = width*y;
 
-        for(auto x=0; x < width; x++) 
+		IFOR(x, 0, width)        
 		{
 			auto idx = row_idx + x;
             auto color = pixels[idx];
