@@ -126,6 +126,8 @@ int TCharacterListScreen::Render(bool mode)
 		if (DrawSmoothMonitor())
 			return 0;
 
+		glColor3f(1.0f, 1.0f, 1.0f);
+
 		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
 		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
 		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
@@ -175,6 +177,8 @@ int TCharacterListScreen::Render(bool mode)
 		UO->DrawGump(gumpID, 0, 610, 445);
 
 		InitTooltip();
+
+		DrawSmoothMonitorEffect();
 
 		MouseManager.Draw(0x2073); //Main Gump mouse cursor
 

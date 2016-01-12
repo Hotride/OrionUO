@@ -19,7 +19,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -193,6 +193,7 @@
     <ClInclude Include="screen stages\SelectTownScreen.h" />
     <ClInclude Include="screen stages\ServerScreen.h" />
     <ClInclude Include="ServerList.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="SkillGroup.h" />
     <ClInclude Include="Skills.h" />
     <ClInclude Include="stdafx.h" />
@@ -312,6 +313,7 @@
     <ClCompile Include="screen stages\SelectTownScreen.cpp" />
     <ClCompile Include="screen stages\ServerScreen.cpp" />
     <ClCompile Include="ServerList.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkillGroup.cpp" />
     <ClCompile Include="Skills.cpp" />
     <ClCompile Include="stdafx.cpp">

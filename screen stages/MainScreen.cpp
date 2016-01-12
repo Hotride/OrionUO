@@ -188,6 +188,8 @@ int TMainScreen::Render(bool mode)
 		if (DrawSmoothMonitor())
 			return 0;
 
+		glColor3f(1.0f, 1.0f, 1.0f);
+
 		static DWORD times = GetTickCount() + 3000;
 
 		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
@@ -239,6 +241,8 @@ int TMainScreen::Render(bool mode)
 		m_Password->DrawMaskA(5, TextColor, 335, 385);
 
 		InitTooltip();
+
+		DrawSmoothMonitorEffect();
 
 		MouseManager.Draw(0x2073); //Main Gump mouse cursor
 

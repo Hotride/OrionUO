@@ -1,8 +1,8 @@
 /****************************************************************************
 **
-** FrameBuffer.h
+** Shader.h
 **
-** Copyright (C) December 2015 Hotride
+** Copyright (C) January 2016 Hotride
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -17,36 +17,30 @@
 *****************************************************************************
 */
 //---------------------------------------------------------------------------
-#ifndef FrameBufferH
-#define FrameBufferH
+#ifndef ShaderH
+#define ShaderH
 //---------------------------------------------------------------------------
-class TFrameBuffer
+class TShader
 {
-private:
-	int m_Width;
-	int m_Height;
-
-	bool m_Ready;
-	
-	GLint m_OldFrameBuffer;
-	GLuint m_FrameBuffer;
-	GLuint m_Texture;
+protected:
+	GLhandleARB m_Shader;
+	GLhandleARB m_VertexShader;
+	GLhandleARB m_FragmentShader;
+	GLuint m_TexturePointer;
 public:
-	TFrameBuffer();
-	~TFrameBuffer();
-	
-	bool Init(int width, int height);
-	void Free();
-	void Release();
+	TShader(const char *vertexShaderData, const char *fragmentShaderData);
+	virtual ~TShader();
 
-	bool Ready() const { return m_Ready; }
-	bool Ready(int &width, int &height);
 	bool Use();
-	
-	void Draw(float x, float y);
-	void DrawShadow(float x, float y, float width, float height, bool mirror);
 };
-
-extern TFrameBuffer g_LightBuffer;
+//---------------------------------------------------------------------------
+class TDeathShader : public TShader
+{
+public:
+	TDeathShader(const char *vertexShaderData, const char *fragmentShaderData);
+};
+//---------------------------------------------------------------------------
+extern TShader *Shader;
+extern TDeathShader *DeathShader;
 //---------------------------------------------------------------------------
 #endif

@@ -143,6 +143,8 @@ int TConnectionScreen::Render(bool mode)
 		if (DrawSmoothMonitor())
 			return 0;
 
+		glColor3f(1.0f, 1.0f, 1.0f);
+
 		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
 		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
 		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
@@ -151,6 +153,8 @@ int TConnectionScreen::Render(bool mode)
 		if (m_Type != CST_CONLOST)
 			UO->DrawResizepicGump(0xA28, 142, 134, 356, 212); //Connecting field
 		
+		WORD mouseCursorID = 0x2073; //Main Gump mouse cursor
+
 		if (m_Type == CST_CHARACTER_LIST)
 		{
 			if (m_ConnectionFailed)
@@ -178,8 +182,6 @@ int TConnectionScreen::Render(bool mode)
 					GumpID = 0x0480; //Button x pressed
 				UO->DrawGump(GumpID, 0, 348, 304);
 			}
-				
-			MouseManager.Draw(0x2073); //Main Gump mouse cursor
 		}
 		else if (m_Type == CST_GAME)
 		{
@@ -191,14 +193,12 @@ int TConnectionScreen::Render(bool mode)
 				if (CanPressedButton == ID_CS_OK)
 					GumpID = 0x0483; //Button v pressed
 				UO->DrawGump(GumpID, 0, 306, 304);
-
-				MouseManager.Draw(0x2073); //Main Gump mouse cursor
 			}
 			else
 			{
 				m_Text[12].Draw(189, 178);
 
-				MouseManager.Draw(0x2077); //Waiting mouse cursor
+				mouseCursorID = 0x2077; //Waiting mouse cursor
 			}
 		}
 		else if (m_Type == CST_GAME_LOGIN)
@@ -209,8 +209,6 @@ int TConnectionScreen::Render(bool mode)
 			if (CanPressedButton == ID_CS_OK)
 				GumpID = 0x0483; //Button v pressed
 			UO->DrawGump(GumpID, 0, 306, 304);
-
-			MouseManager.Draw(0x2073); //Main Gump mouse cursor
 		}
 		else if (m_Type == CST_SELECT_PROFESSOIN)
 		{
@@ -220,8 +218,6 @@ int TConnectionScreen::Render(bool mode)
 			UO->DrawGump(GumpID, 0, 306, 304);
 
 			m_Text[15].Draw(189, 178);
-				
-			MouseManager.Draw(0x2073); //Main Gump mouse cursor
 		}
 		else if (m_Type == CST_CONLOST)
 		{
@@ -234,7 +230,7 @@ int TConnectionScreen::Render(bool mode)
 				GumpID = 0x0483; //Button v pressed
 			UO->DrawGump(GumpID, 0, 297, 257);
 
-			MouseManager.Draw(0x2077); //Waiting mouse cursor
+			mouseCursorID = 0x2077; //Waiting mouse cursor
 		}
 		else
 		{
@@ -246,16 +242,18 @@ int TConnectionScreen::Render(bool mode)
 				if (CanPressedButton == ID_CS_OK)
 					GumpID = 0x0483; //Button v pressed
 				UO->DrawGump(GumpID, 0, 306, 304);
-
-				MouseManager.Draw(0x2073); //Main Gump mouse cursor
 			}
 			else
 			{
 				m_Text[(int)m_Connected].Draw(189, 178);
 
-				MouseManager.Draw(0x2077); //Waiting mouse cursor
+				mouseCursorID = 0x2077; //Waiting mouse cursor
 			}
 		}
+
+		DrawSmoothMonitorEffect();
+
+		MouseManager.Draw(mouseCursorID);
 
 		g_GL.EndDraw();
 	}

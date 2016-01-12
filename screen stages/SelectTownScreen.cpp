@@ -176,6 +176,8 @@ int TSelectTownScreen::Render(bool mode)
 		if (DrawSmoothMonitor())
 			return 0;
 
+		glColor3f(1.0f, 1.0f, 1.0f);
+
 		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
 
 		UO->DrawGump(0x1598, 0, 57, 49); //Map gump
@@ -245,6 +247,8 @@ int TSelectTownScreen::Render(bool mode)
 		}
 		
 		InitTooltip();
+
+		DrawSmoothMonitorEffect();
 
 		MouseManager.Draw(0x2073); //Main Gump mouse cursor
 		

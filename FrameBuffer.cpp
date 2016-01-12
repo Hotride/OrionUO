@@ -18,6 +18,8 @@
 */
 //---------------------------------------------------------------------------
 #include "stdafx.h"
+
+TFrameBuffer g_LightBuffer;
 //---------------------------------------------------------------------------
 TFrameBuffer::TFrameBuffer()
 : m_Width(0), m_Height(0), m_Ready(false), m_OldFrameBuffer(0), m_FrameBuffer(0),

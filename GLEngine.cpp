@@ -106,25 +106,6 @@ bool TGLEngine::Install(HWND hWnd)
 	glClearStencil(0);
 	glStencilMask(1);
 	
-	/*glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHTING);
-	
-	GLfloat lightKa[] = {0.2f, 0.2f, 0.2f, 1.0f};  // ambient light
-	GLfloat lightKd[] = {0.7f, 0.7f, 0.7f, 1.0f};  // diffuse light
-	GLfloat lightKs[] = {1.0f, 1.0f, 1.0f, 1.0f};  // specular light
-	glLightfv(GL_LIGHT0, GL_AMBIENT, lightKa);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightKd);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, lightKs);
-
-	// position the light
-	float lightPos[4] = {0, 600, 100, 0.5f}; // positional light
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);*/
-
-
-
-
 	GLfloat lightPosition[]= { -100.0f, 300.0f, 5.0f, 0.0f };
 	glLightfv(GL_LIGHT0, GL_POSITION, &lightPosition[0]);
 	
@@ -138,36 +119,6 @@ bool TGLEngine::Install(HWND hWnd)
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
 
 	glEnable(GL_LIGHT0);
-
-
-
-	/*int Level = 30; //31 max
-	GLfloat lv = 10.0f; //5.0 - (Level * 0.1f);
-
-	GLfloat LightAmbient[4] = { lv, lv, lv, lv };
-
-	GLfloat LightDiffuse[]= { 1.0f, 1.0f, 1.0f, 1.0f };
-	GLfloat LightPosition[]= { 0.0f, 0.0f, 0.1f, 0.1f };
-	
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	
-	glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
-
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
-
-	glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);*/
-	
-	/*int idx = 0;
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0 + idx);
-
-	float p[4] = {1, 1, 10000, 1};
-	float d[3] = {0, 10, 0};
-
-	glLightfv(GL_LIGHT0 + idx, GL_POSITION, p);
-	glLightfv(GL_LIGHT0 + idx, GL_SPOT_DIRECTION, d);*/
 
 	glViewport(0, 0, g_ClientWidth, g_ClientHeight);
 	glOrtho(0.0, g_ClientWidth, g_ClientHeight, 0.0, -100.0, 100.0);
@@ -361,9 +312,12 @@ void TGLEngine::DrawTriangle(DWORD Color, float X, float Y, float radius)
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawLandTexture(GLuint &Texture, float X, float Y, float Width, float Height, RECT &rc, TVector *normals)
+void TGLEngine::DrawLandTexture(GLuint &texture, float X, float Y, float Width, float Height, RECT &rc, TVector *normals)
 {
-	glBindTexture(GL_TEXTURE_2D, Texture);
+	if (ShaderTexture != 0)
+		glUniform1iARB(ShaderTexture, texture);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glPushMatrix();
 	glLoadIdentity();
@@ -387,9 +341,12 @@ void TGLEngine::DrawLandTexture(GLuint &Texture, float X, float Y, float Width, 
 	glPopMatrix();
 }
 //---------------------------------------------------------------------------
-void TGLEngine::Draw(GLuint &Texture, float X, float Y, float Width, float Height)
+void TGLEngine::Draw(GLuint &texture, float X, float Y, float Width, float Height)
 {
-	glBindTexture(GL_TEXTURE_2D, Texture);
+	if (ShaderTexture != 0)
+		glUniform1iARB(ShaderTexture, texture);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glLoadIdentity();
 	glTranslatef(X, Y, g_ZBuffer);
@@ -402,9 +359,12 @@ void TGLEngine::Draw(GLuint &Texture, float X, float Y, float Width, float Heigh
 	glEnd();
 }
 //---------------------------------------------------------------------------
-void TGLEngine::Draw(GLuint &Texture, float X, float Y, float Width, float Height, bool Mirror)
+void TGLEngine::Draw(GLuint &texture, float X, float Y, float Width, float Height, bool Mirror)
 {
-	glBindTexture(GL_TEXTURE_2D, Texture);
+	if (ShaderTexture != 0)
+		glUniform1iARB(ShaderTexture, texture);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glLoadIdentity();
 	glTranslatef(X, Y, g_ZBuffer);
@@ -429,9 +389,12 @@ void TGLEngine::Draw(GLuint &Texture, float X, float Y, float Width, float Heigh
 	}
 }
 //---------------------------------------------------------------------------
-void TGLEngine::Draw(GLuint &Texture, float X, float Y, float Width, float Height, float DrawWidth, float DrawHeight)
+void TGLEngine::Draw(GLuint &texture, float X, float Y, float Width, float Height, float DrawWidth, float DrawHeight)
 {
-	glBindTexture(GL_TEXTURE_2D, Texture);
+	if (ShaderTexture != 0)
+		glUniform1iARB(ShaderTexture, texture);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glLoadIdentity();
 	glTranslatef(X, Y, g_ZBuffer);
@@ -452,6 +415,9 @@ void TGLEngine::DrawResizepic(TTextureObject **th, float x, float y, float width
 	IFOR(i, 0, 9)
 	{
 		glLoadIdentity();
+
+		if (ShaderTexture != 0)
+			glUniform1iARB(ShaderTexture, th[i]->Texture);
 
 		glBindTexture(GL_TEXTURE_2D, th[i]->Texture);
 

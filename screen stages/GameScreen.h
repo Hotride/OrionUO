@@ -70,7 +70,6 @@ private:
 
 	LIGHT_DATA m_Light[MAX_LIGHT_SOURCES];
 	int m_LightCount;
-	TFrameBuffer m_LightBuffer;
 
 	void RemoveLight(WORD x, WORD y, char z);
 

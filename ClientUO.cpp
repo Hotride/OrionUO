@@ -791,6 +791,8 @@ TUltimaOnline::~TUltimaOnline()
 
 	FileManager.Unload();
 
+	g_LightBuffer.Free();
+
 	g_GL.Uninstall();
 	
 	if (g_Logger != NULL)
@@ -1015,50 +1017,21 @@ bool TUltimaOnline::Install()
 	g_GL.BindTexture(g_TextureUnlockedGump, 10, 14, pdwult);
 	g_TextureGumpState[0] = g_TextureUnlockedGump;
 
+	g_LightBuffer.Init(GetSystemMetrics(SM_CXMAXIMIZED), GetSystemMetrics(SM_CYMAXIMIZED));
+
 	MainScreen->LoadGlobalConfig();
 
 	TMappedHeader fsmh;
 	memset(&fsmh, 0, sizeof(TMappedHeader));
-	FileManager.LoadFileToMemory(fsmh, FilePath("shaders\\shader.frag").c_str());
+	FileManager.LoadFileToMemory(fsmh, FilePath("shaders\\DeathShader.frag").c_str());
 	TMappedHeader vsmh;
 	memset(&vsmh, 0, sizeof(TMappedHeader));
-	FileManager.LoadFileToMemory(vsmh, FilePath("shaders\\shader.vert").c_str());
+	FileManager.LoadFileToMemory(vsmh, FilePath("shaders\\DeathShader.vert").c_str());
 
 	if (fsmh.Size && vsmh.Size)
-	{
-		ShaderProg = glCreateProgramObjectARB();
+		DeathShader = new TDeathShader((char*)vsmh.Address, (char*)fsmh.Address);
 
-		
-		VertShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
-
-		GLcharARB *strS = (char*)vsmh.Address;
-		glShaderSourceARB(VertShader, 1, (const GLcharARB**)&strS, NULL);
-
-		glCompileShaderARB(VertShader);
-
-		glAttachObjectARB(ShaderProg, VertShader);
-
-		
-		FragShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
-
-		strS = (char*)fsmh.Address;
-		glShaderSourceARB(FragShader, 1, (const GLcharARB**)&strS, NULL);
-
-		glCompileShaderARB(FragShader);
-
-		glAttachObjectARB(ShaderProg, FragShader);
-
-
-
-
-		glLinkProgramARB(ShaderProg);
-
-		glValidateProgramARB(ShaderProg);
-
-		ShaderTexture = glGetUniformLocationARB(ShaderProg, "u_texture1");
-
-		glUseProgramObjectARB(0);
-	}
+	Shader = NULL;
 
 	FileManager.UnloadFileFromMemory(fsmh);
 	FileManager.UnloadFileFromMemory(vsmh);
@@ -3167,7 +3140,6 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
 		}
 	}
 
-	glUniform1iARB(ShaderTexture, texture);
 	g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
 }
 //---------------------------------------------------------------------------
@@ -3213,7 +3185,6 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, int width, int h
 		}
 	}
 
-	glUniform1iARB(ShaderTexture, texture);
 	g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH, (GLfloat)width, (GLfloat)height);
 }
 //---------------------------------------------------------------------------
@@ -3270,14 +3241,9 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 	if (g_OutOfRangeColor)
 		color = g_OutOfRangeColor;
 
-	if (color || g_GrayedPixels)
+	if (color && !g_GrayedPixels)
 	{
-		TColoredTextureObject *cth = NULL;
-
-		if (g_GrayedPixels)
-			cth = th->GetColoredTexture(g_GrayedColor);
-		else
-			cth = th->GetColoredTexture(color);
+		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
 		if (cth->Texture != 0)
 			texture = cth->Texture;
@@ -3302,14 +3268,9 @@ void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
 	if (g_OutOfRangeColor)
 		color = g_OutOfRangeColor;
 
-	if (color || g_GrayedPixels)
+	if (color && !g_GrayedPixels)
 	{
-		TColoredTextureObject *cth = NULL;
-
-		if (g_GrayedPixels)
-			cth = th->GetColoredTexture(g_GrayedColor);
-		else
-			cth = th->GetColoredTexture(color);
+		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
 		if (cth->Texture != 0)
 			texture = cth->Texture;
@@ -3337,14 +3298,9 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 	if (g_OutOfRangeColor)
 		color = g_OutOfRangeColor;
 
-	if (color || g_GrayedPixels)
+	if (color && !g_GrayedPixels)
 	{
-		TColoredTextureObject *cth = NULL;
-
-		if (g_GrayedPixels)
-			cth = th->GetColoredTexture(g_GrayedColor);
-		else
-			cth = th->GetColoredTexture(color);
+		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
 		bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
 
@@ -3393,14 +3349,9 @@ void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int
 	if (g_OutOfRangeColor)
 		color = g_OutOfRangeColor;
 
-	if (color || g_GrayedPixels)
+	if (color && !g_GrayedPixels)
 	{
-		TColoredTextureObject *cth = NULL;
-
-		if (g_GrayedPixels)
-			cth = th->GetColoredTexture(g_GrayedColor);
-		else
-			cth = th->GetColoredTexture(color);
+		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
 		bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
 

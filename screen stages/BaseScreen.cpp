@@ -20,7 +20,6 @@
 #include "stdafx.h"
 
 TBaseScreen *CurrentScreen = NULL;
-
 //---------------------------------------------------------------------------
 int TBaseScreen::DrawSmoothMonitor()
 {
@@ -51,9 +50,32 @@ int TBaseScreen::DrawSmoothMonitor()
 	else
 		g_SmoothMonitorColor = 1.0f;
 
-	glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
+	//glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
 
 	return 0;
+}
+//---------------------------------------------------------------------------
+void TBaseScreen::DrawSmoothMonitorEffect()
+{
+	if (g_SmoothMonitorColor != 1.0f && g_LightBuffer.Ready() && g_LightBuffer.Use())
+	{
+		glClearColor(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glEnable(GL_BLEND);
+
+		g_LightBuffer.Release();
+
+		g_GL.RestorePort();
+
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+		glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+
+		g_LightBuffer.Draw(0.0f, 0.0f);
+
+		glDisable(GL_BLEND);
+	}
 }
 //---------------------------------------------------------------------------
 void TBaseScreen::CreateSmoothAction(BYTE action)

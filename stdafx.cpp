@@ -18,9 +18,6 @@
 */
 #include "stdafx.h"
 
-GLhandleARB ShaderProg = 0;
-GLhandleARB VertShader = 0;
-GLhandleARB FragShader = 0;
 GLuint ShaderTexture = 0;
 //---------------------------------------------------------------------------
 int g_LandObjectsCount = 0;
@@ -239,6 +236,13 @@ void TARGET_GUMP_INFO::Draw()
 		if (HP > 0)
 			UO->DrawGump(0x1069, Color, X, Y, HP, 0);
 	}
+}
+//---------------------------------------------------------------------------
+void UnuseShader()
+{
+	glUseProgramObjectARB(0);
+	ShaderTexture = 0;
+	Shader = NULL;
 }
 //--------------------------------------------------------------------------
 int CalculateSphereOffset(int max, int current, int maxValue, float divizor)

@@ -46,6 +46,7 @@ public:
 	virtual void CreateSmoothAction(BYTE action);
 	virtual void ProcessSmoothAction(BYTE action = 0xFF) {}
 	virtual int DrawSmoothMonitor();
+	virtual void DrawSmoothMonitorEffect();
 
 	//Эвенты
 	//Нажатие левой кнопки мыши

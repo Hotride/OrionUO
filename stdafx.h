@@ -63,9 +63,6 @@ using std::wstring;
 //---------------------------------------------------------------------------
 #define UO_FW_SHARD 0
 
-extern GLhandleARB ShaderProg;
-extern GLhandleARB VertShader;
-extern GLhandleARB FragShader;
 extern GLuint ShaderTexture;
 //---------------------------------------------------------------------------
 extern int g_LandObjectsCount;
@@ -135,7 +132,6 @@ extern BYTE g_PingCount;
 extern BYTE g_PingSequence;
 extern bool g_PacketLoginComplete;
 extern bool g_GrayedPixels;
-const WORD g_GrayedColor = 0xDEAD;
 extern int g_MultiIndexCount;
 extern BYTE g_WalkRequestCount;
 extern DWORD g_LastStepTime;
@@ -339,6 +335,8 @@ inline WORD unpack16(PBYTE buf)
 	return (buf[0] << 8) | buf[1];
 }
 //---------------------------------------------------------------------------
+void UnuseShader();
+//---------------------------------------------------------------------------
 inline void pack32(PBYTE buf, DWORD x)
 {
 	buf[0] = BYTE(x >> 24);
@@ -478,6 +476,7 @@ typedef struct MULTILINES_FONT_INFO
 #include "Logger.h"
 #include "TextData.h"
 #include "GLEngine.h"
+#include "Shader.h"
 #include "FrameBuffer.h"
 #include "RenderObject.h"
 #include "Multi.h"

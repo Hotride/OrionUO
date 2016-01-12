@@ -414,6 +414,9 @@
     <ClInclude Include="screen stages\DebugScreen.h">
       <Filter>Заголовочные файлы\screen stages</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -757,6 +760,9 @@
     </ClCompile>
     <ClCompile Include="screen stages\DebugScreen.cpp">
       <Filter>Файлы исходного кода\screen stages</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

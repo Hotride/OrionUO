@@ -122,7 +122,11 @@ int TDebugScreen::Render(bool mode)
 
 		if (DrawSmoothMonitor())
 			return 0;
-		glUseProgramObjectARB(ShaderProg);
+
+		glColor3f(1.0f, 1.0f, 1.0f);
+
+		DeathShader->Use();
+
 		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_DS_QUIT); //X gump /lighted
 		if (CanPressedButton == ID_DS_QUIT)
 			GumpID = 0x158B; //X gump (pressed)
@@ -132,7 +136,11 @@ int TDebugScreen::Render(bool mode)
 		if (CanPressedButton == ID_DS_GO_SCREEN_MAIN)
 			GumpID = 0x15A6; //> gump pressed
 		UO->DrawGump(GumpID, 0, 610, 445);
-		glUseProgramObjectARB(0);
+
+		UnuseShader();
+
+		DrawSmoothMonitorEffect();
+
 		MouseManager.Draw(0x2073); //Main Gump mouse cursor
 
 		g_GL.EndDraw();

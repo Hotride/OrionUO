@@ -808,17 +808,11 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 
 	PDWORD FrameOffset = (PDWORD)ptr;
 	ptr += (frameCount * sizeof(DWORD));
-	partialHue = (partialHue || m_Grayed);
 
 	IFOR(i, 0, frameCount)
 	{
 		TTextureAnimationFrame *frame = direction->GetFrame(i);
-		TColoredTextureObject *tex = NULL;
-
-		if (m_Grayed)
-			tex = frame->GetColoredTexture(g_GrayedColor);
-		else
-			tex = frame->GetColoredTexture(color);
+		TColoredTextureObject *tex = frame->GetColoredTexture(color);
 
 		if (!partialHue && tex->Texture != 0)
 			continue;
@@ -896,12 +890,7 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 					{
 						int Block = y * imageWidth + (x + j);
 
-						if (m_Grayed) {
-							BYTE r = GetRValue(pcl);
-							pData[Block] = (0xFF << 24) | (r << 16) | (r << 8) | r;
-						} else {
-							pData[Block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-                        }
+						pData[Block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 					}
 
 					b++;
@@ -1178,15 +1167,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 	else
 		color = obj->Color;
 
-	TColoredTextureObject *tex = NULL;
-
-	if (m_Grayed)
-	{
-		partialHue = true;
-		tex = frame->GetColoredTexture(g_GrayedColor);
-	}
-	else
-		tex = frame->GetColoredTexture(color);
+	TColoredTextureObject *tex = frame->GetColoredTexture(color);
 
 	if ((!partialHue && tex->Texture == 0) || (partialHue && tex->TexturePH == 0))
 	{

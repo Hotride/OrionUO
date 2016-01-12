@@ -290,8 +290,6 @@ GLuint TMulReader::ReadColoredArt(WORD ID, DWORD Address, DWORD Size, WORD Color
 	WORD h = 44;
 	WORD w = 44;
 	PWORD P = (PWORD)Address;
-	
-	//bool isGray = ((Color == g_GrayedColor) && g_GrayedPixels);
 
 	//if (!flag || flag > 0xFFFF) //raw tile
 	if (ID < 0x4000) //raw tile
@@ -308,14 +306,7 @@ GLuint TMulReader::ReadColoredArt(WORD ID, DWORD Address, DWORD Size, WORD Color
 				{
 					DWORD pcl = ColorManager->GetColor(*P, Color);
 
-					//if (isGray)
-					if (g_GrayedPixels)
-					{
-						BYTE r = GetRValue(pcl);
-						pixels[i * 44 + j] = (0xFF << 24) | (r << 16) | (r << 8) | r;
-					}
-					else
-						pixels[i * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+					pixels[i * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 				}
 				P++;
 			}
@@ -329,14 +320,7 @@ GLuint TMulReader::ReadColoredArt(WORD ID, DWORD Address, DWORD Size, WORD Color
 				{
 					DWORD pcl = ColorManager->GetColor(*P, Color);
 
-					//if (isGray)
-					if (g_GrayedPixels)
-					{
-						BYTE r = GetRValue(pcl);
-						pixels[(i + 22) * 44 + j] = (0xFF << 24) | (r << 16) | (r << 8) | r;
-					}
-					else
-						pixels[(i + 22) * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+					pixels[(i + 22) * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 				}
 				P++;
 			}
@@ -401,14 +385,7 @@ GLuint TMulReader::ReadColoredArt(WORD ID, DWORD Address, DWORD Size, WORD Color
 					{
 						DWORD pcl = (partialHue ? ColorManager->GetPartialHueColor(*ptr, Color) : ColorManager->GetColor(*ptr, Color));
 
-						//if (isGray)
-						if (g_GrayedPixels)
-						{
-							BYTE r = GetRValue(pcl);
-							pixels[Y * w + X + j] = (0xFF << 24) | (r << 16) | (r << 8) | r;
-						}
-						else
-							pixels[Y * w + X + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+						pixels[Y * w + X + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 					}
 					ptr++;
 				}
@@ -601,8 +578,6 @@ GLuint TMulReader::ReadColoredTexture(DWORD Address, DWORD Size, WORD Color, TTe
 	PDWORD pixels = new DWORD[blocksize];
 	memset(&pixels[0], 0, blocksize * 4);
 
-	//bool isGray = ((Color == g_GrayedColor) && g_GrayedPixels);
-
 	PWORD p = (PWORD)Address;
 	IFOR(i, 0, h)
 	{
@@ -612,14 +587,7 @@ GLuint TMulReader::ReadColoredTexture(DWORD Address, DWORD Size, WORD Color, TTe
 			{
 				DWORD pcl = ColorManager->GetColor(*p, Color);
 
-				//if (isGray)
-				if (g_GrayedPixels)
-				{
-					BYTE r = GetRValue(pcl);
-					pixels[i * w + j] = (0xFF << 24) | (r << 16) | (r << 8) | r;
-				}
-				else
-					pixels[i * w + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+				pixels[i * w + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 			}
 
 			p++;

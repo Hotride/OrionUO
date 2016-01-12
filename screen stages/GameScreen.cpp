@@ -24,12 +24,10 @@ TGameScreen *GameScreen = NULL;
 TGameScreen::TGameScreen()
 : TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false)
 {
-	m_LightBuffer.Init(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 }
 //---------------------------------------------------------------------------
 TGameScreen::~TGameScreen()
 {
-	m_LightBuffer.Free();
 }
 //---------------------------------------------------------------------------
 void TGameScreen::Init()
@@ -556,7 +554,7 @@ int TGameScreen::Render(bool mode)
 
 		g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
 		
-		g_DrawColor = g_SmoothMonitorColor;
+		g_DrawColor = 1.0f;
 
 		if (!g_UseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
 		{
@@ -565,6 +563,14 @@ int TGameScreen::Render(bool mode)
 			if (!ConfigManager.DarkNights)
 				g_DrawColor += 0.2f;
 		}
+
+		if (g_GrayedPixels)
+		{
+			Shader = DeathShader;
+			Shader->Use();
+		}
+		else
+			Shader = NULL;
 
 		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 
@@ -671,7 +677,7 @@ int TGameScreen::Render(bool mode)
 
 			if (g_UseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
 			{
-				if (m_LightBuffer.Ready() && m_LightBuffer.Use())
+				if (g_LightBuffer.Ready() && g_LightBuffer.Use())
 				{
 					float newLightColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f); // + 0.2f;
 
@@ -691,7 +697,7 @@ int TGameScreen::Render(bool mode)
 						UO->DrawLight(light.ID, light.Color, light.DrawX - gameWindowPosX, light.DrawY - gameWindowPosY);
 					}
 
-					m_LightBuffer.Release();
+					g_LightBuffer.Release();
 
 					g_GL.RestorePort();
 
@@ -701,11 +707,15 @@ int TGameScreen::Render(bool mode)
 
 					glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 
-					m_LightBuffer.Draw((float)gameWindowPosX, (float)gameWindowPosY);
+					g_LightBuffer.Draw((float)gameWindowPosX, (float)gameWindowPosY);
 
 					glDisable(GL_BLEND);
 				}
 			}
+
+			UnuseShader();
+
+			DrawSmoothMonitorEffect();
 
 			g_OutOfRangeColor = 0;
 
