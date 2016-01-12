@@ -733,7 +733,7 @@ void TAnimationManager::calcAlpha(PDWORD pixels, short &width, short &height)
 	auto pixels_size = width * height;
 
 	bool* processed = new bool[pixels_size];
-	std::fill_n(processed, pixels_size, false); 
+	std::fill(processed, processed + pixels_size, false);
 
     for(auto y=0; y < height; y++)
 	{
