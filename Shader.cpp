@@ -19,12 +19,13 @@
 //---------------------------------------------------------------------------
 #include "stdafx.h"
 
-TShader *Shader = NULL;
+TBaseShader *CurrentShader = NULL;
 TDeathShader *DeathShader = NULL;
+TColorizerShader *ColorizerShader = NULL;
 //---------------------------------------------------------------------------
 //--------------------------------TShader------------------------------------
 //---------------------------------------------------------------------------
-TShader::TShader(const char *vertexShaderData, const char *fragmentShaderData)
+TBaseShader::TBaseShader(const char *vertexShaderData, const char *fragmentShaderData)
 : m_Shader(0), m_VertexShader(0), m_FragmentShader(0), m_TexturePointer(0)
 {
 	if (vertexShaderData != NULL && fragmentShaderData != NULL)
@@ -46,7 +47,7 @@ TShader::TShader(const char *vertexShaderData, const char *fragmentShaderData)
 	}
 }
 //---------------------------------------------------------------------------
-TShader::~TShader()
+TBaseShader::~TBaseShader()
 {
 	if (m_Shader != 0)
 	{
@@ -65,9 +66,11 @@ TShader::~TShader()
 		glDeleteObjectARB(m_FragmentShader);
 		m_FragmentShader = 0;
 	}
+
+	m_TexturePointer = 0;
 }
 //---------------------------------------------------------------------------
-bool TShader::Use()
+bool TBaseShader::Use()
 {
 	bool result = false;
 
@@ -84,9 +87,31 @@ bool TShader::Use()
 //-----------------------------TDeathShader----------------------------------
 //---------------------------------------------------------------------------
 TDeathShader::TDeathShader(const char *vertexShaderData, const char *fragmentShaderData)
-: TShader(vertexShaderData, fragmentShaderData)
+: TBaseShader(vertexShaderData, fragmentShaderData)
 {
 	if (m_Shader != 0)
 		m_TexturePointer = glGetUniformLocationARB(m_Shader, "usedTexture");
+}
+//---------------------------------------------------------------------------
+//----------------------------TColorizerShader-------------------------------
+//---------------------------------------------------------------------------
+TColorizerShader::TColorizerShader(const char *vertexShaderData, const char *fragmentShaderData)
+: TBaseShader(vertexShaderData, fragmentShaderData)
+{
+	if (m_Shader != 0)
+	{
+		m_TexturePointer = glGetUniformLocationARB(m_Shader, "usedTexture");
+		m_ColorTablePointer = glGetUniformLocationARB(m_Shader, "usedColorTable");
+	}
+}
+//---------------------------------------------------------------------------
+bool TColorizerShader::Use()
+{
+	bool result = TBaseShader::Use();
+
+	if (result)
+		ShaderColorTable = m_ColorTablePointer;
+
+	return result;
 }
 //---------------------------------------------------------------------------

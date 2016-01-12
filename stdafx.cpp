@@ -19,6 +19,7 @@
 #include "stdafx.h"
 
 GLuint ShaderTexture = 0;
+GLuint ShaderColorTable = 0;
 //---------------------------------------------------------------------------
 int g_LandObjectsCount = 0;
 int g_StaticsObjectsCount = 0;
@@ -242,7 +243,8 @@ void UnuseShader()
 {
 	glUseProgramObjectARB(0);
 	ShaderTexture = 0;
-	Shader = NULL;
+	ShaderColorTable = 0;
+	CurrentShader = NULL;
 }
 //--------------------------------------------------------------------------
 int CalculateSphereOffset(int max, int current, int maxValue, float divizor)

@@ -20,7 +20,7 @@
 #ifndef ShaderH
 #define ShaderH
 //---------------------------------------------------------------------------
-class TShader
+class TBaseShader
 {
 protected:
 	GLhandleARB m_Shader;
@@ -28,19 +28,30 @@ protected:
 	GLhandleARB m_FragmentShader;
 	GLuint m_TexturePointer;
 public:
-	TShader(const char *vertexShaderData, const char *fragmentShaderData);
-	virtual ~TShader();
+	TBaseShader(const char *vertexShaderData, const char *fragmentShaderData);
+	virtual ~TBaseShader();
 
-	bool Use();
+	virtual bool Use();
 };
 //---------------------------------------------------------------------------
-class TDeathShader : public TShader
+class TDeathShader : public TBaseShader
 {
 public:
 	TDeathShader(const char *vertexShaderData, const char *fragmentShaderData);
 };
 //---------------------------------------------------------------------------
-extern TShader *Shader;
+class TColorizerShader : public TBaseShader
+{
+protected:
+	GLuint m_ColorTablePointer;
+public:
+	TColorizerShader(const char *vertexShaderData, const char *fragmentShaderData);
+
+	virtual bool Use();
+};
+//---------------------------------------------------------------------------
+extern TBaseShader *CurrentShader;
 extern TDeathShader *DeathShader;
+extern TColorizerShader *ColorizerShader;
 //---------------------------------------------------------------------------
 #endif

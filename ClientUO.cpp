@@ -784,6 +784,20 @@ TUltimaOnline::~TUltimaOnline()
 		g_TextureUnlockedGump= 0;
 	}
 
+	if (DeathShader != NULL)
+	{
+		delete DeathShader;
+		DeathShader = NULL;
+	}
+
+	if (ColorizerShader != NULL)
+	{
+		delete ColorizerShader;
+		ColorizerShader = NULL;
+	}
+
+	CurrentShader = NULL;
+
 	SoundManager.Free();
 
 	ServerList.Clear();
@@ -1021,20 +1035,7 @@ bool TUltimaOnline::Install()
 
 	MainScreen->LoadGlobalConfig();
 
-	TMappedHeader fsmh;
-	memset(&fsmh, 0, sizeof(TMappedHeader));
-	FileManager.LoadFileToMemory(fsmh, FilePath("shaders\\DeathShader.frag").c_str());
-	TMappedHeader vsmh;
-	memset(&vsmh, 0, sizeof(TMappedHeader));
-	FileManager.LoadFileToMemory(vsmh, FilePath("shaders\\DeathShader.vert").c_str());
-
-	if (fsmh.Size && vsmh.Size)
-		DeathShader = new TDeathShader((char*)vsmh.Address, (char*)fsmh.Address);
-
-	Shader = NULL;
-
-	FileManager.UnloadFileFromMemory(fsmh);
-	FileManager.UnloadFileFromMemory(vsmh);
+	LoadShaders();
 
 #ifdef _DEBUG
 	CurrentScreen = DebugScreen;
@@ -2406,6 +2407,37 @@ void TUltimaOnline::LoadAutoLoginNames()
 	}
 }
 //---------------------------------------------------------------------------
+void TUltimaOnline::LoadShaders()
+{
+	CurrentShader = NULL;
+
+	TMappedHeader fsmh;
+	memset(&fsmh, 0, sizeof(TMappedHeader));
+	FileManager.LoadFileToMemory(fsmh, FilePath("shaders\\DeathShader.frag").c_str());
+	TMappedHeader vsmh;
+	memset(&vsmh, 0, sizeof(TMappedHeader));
+	FileManager.LoadFileToMemory(vsmh, FilePath("shaders\\DeathShader.vert").c_str());
+
+	if (fsmh.Size && vsmh.Size)
+		DeathShader = new TDeathShader((char*)vsmh.Address, (char*)fsmh.Address);
+
+	FileManager.UnloadFileFromMemory(fsmh);
+	FileManager.UnloadFileFromMemory(vsmh);
+
+	TMappedHeader cfsmh;
+	memset(&cfsmh, 0, sizeof(TMappedHeader));
+	FileManager.LoadFileToMemory(cfsmh, FilePath("shaders\\ColorizerShader.frag").c_str());
+	TMappedHeader cvsmh;
+	memset(&cvsmh, 0, sizeof(TMappedHeader));
+	FileManager.LoadFileToMemory(cvsmh, FilePath("shaders\\ColorizerShader.vert").c_str());
+
+	if (cfsmh.Size && cvsmh.Size)
+		ColorizerShader = new TColorizerShader((char*)cvsmh.Address, (char*)cfsmh.Address);
+
+	FileManager.UnloadFileFromMemory(cfsmh);
+	FileManager.UnloadFileFromMemory(cvsmh);
+}
+//---------------------------------------------------------------------------
 bool TUltimaOnline::AutoLoginNameExists(string name)
 {
 	if (!g_AutoLoginNames.length())
@@ -3114,7 +3146,7 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
 
 	GLuint texture = th->Texture;
 	
-	if (color)
+	if (color && false)
 	{
 		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
@@ -3140,7 +3172,16 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
 		}
 	}
 
-	g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
+	if (CurrentShader == NULL && color)
+	{
+		ColorizerShader->Use();
+
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
+
+		UnuseShader();
+	}
+	else
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, int width, int height, bool partialHue)
@@ -3159,7 +3200,7 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, int width, int h
 	if (height == 0)
 		height = DH;
 	
-	if (color)
+	if (color && false)
 	{
 		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
@@ -3185,7 +3226,16 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, int width, int h
 		}
 	}
 
-	g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH, (GLfloat)width, (GLfloat)height);
+	if (CurrentShader == NULL && color)
+	{
+		ColorizerShader->Use();
+
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH, (GLfloat)width, (GLfloat)height);
+
+		UnuseShader();
+	}
+	else
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH, (GLfloat)width, (GLfloat)height);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawResizepicGump(WORD id, int x, int y, int width, int height)

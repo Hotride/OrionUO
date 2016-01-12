@@ -566,11 +566,11 @@ int TGameScreen::Render(bool mode)
 
 		if (g_GrayedPixels)
 		{
-			Shader = DeathShader;
-			Shader->Use();
+			CurrentShader = DeathShader;
+			CurrentShader->Use();
 		}
 		else
-			Shader = NULL;
+			CurrentShader = NULL;
 
 		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 

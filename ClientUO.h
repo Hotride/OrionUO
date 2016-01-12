@@ -67,6 +67,7 @@ private:
 	void LoadProfession();
 	void LoadProfessionDescription();
 	void LoadLogin();
+	void LoadShaders();
 
 	void LoadClientConfig();
 	void LoadAutoLoginNames();

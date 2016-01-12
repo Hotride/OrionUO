@@ -125,12 +125,22 @@ int TDebugScreen::Render(bool mode)
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
-		DeathShader->Use();
-
 		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_DS_QUIT); //X gump /lighted
 		if (CanPressedButton == ID_DS_QUIT)
 			GumpID = 0x158B; //X gump (pressed)
-		UO->DrawGump(GumpID, 0, 555, 4);
+		UO->DrawGump(GumpID, 0x21, 555, 4);
+
+		GumpID = 0x1589 + (int)(CanSelectedButton == ID_DS_QUIT); //X gump /lighted
+		if (CanPressedButton == ID_DS_QUIT)
+			GumpID = 0x158B; //X gump (pressed)
+		UO->DrawGump(GumpID, 0, 555, 64);
+
+		DeathShader->Use();
+
+		GumpID = 0x1589 + (int)(CanSelectedButton == ID_DS_QUIT); //X gump /lighted
+		if (CanPressedButton == ID_DS_QUIT)
+			GumpID = 0x158B; //X gump (pressed)
+		UO->DrawGump(GumpID, 0, 555, 124);
 
 		GumpID = 0x15A4 + (int)(CanSelectedButton == ID_DS_GO_SCREEN_MAIN); //> gump / lighted
 		if (CanPressedButton == ID_DS_GO_SCREEN_MAIN)
