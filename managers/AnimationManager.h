@@ -53,6 +53,9 @@ private:
 	bool TestImagePixels(TTextureAnimationDirection *direction, BYTE &frame, WORD &id, int &checkX, int &checkY);
 	bool TestPixels(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, WORD id = 0x0000);
 
+	float getLuma(unsigned char&, unsigned char&, unsigned char&);
+	void setAlphaAt(std::vector<bool>&, PDWORD, short&, short&, int&, int&, float&, float&);
+
 	void Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, WORD id = 0x0000);
 public:
 	TAnimationManager();
@@ -69,9 +72,8 @@ public:
 	SETGET(int, AnimGroup)
 	SETGET(BYTE, Direction)
 
-    float getLuma(unsigned int &R, unsigned int &G, unsigned int &B);
-    void doPixelsAlphaAt(bool* processed, PDWORD pixels, short &width, short &height, int x, int y);
-    void calcAlpha(PDWORD pixels, short &width, short &height);
+
+	void EstimateImageCornerAlpha(PDWORD pixels, short &width, short &height, float alpha_scale = 3.0f, float = 14.0f);
 
 	void InitBodyconv(PDWORD verdata, string fName);
 	void Load(PDWORD verdata);

@@ -652,73 +652,80 @@ void TAnimationManager::ClearUnusedTextures(DWORD ticks)
 /// <param name="G">green component</param>
 /// <param name="B">blue component</param>
 /// <returns>luminance value 0.0-255.0</returns>
-float TAnimationManager::getLuma(unsigned int &R, unsigned int &G, unsigned int &B) 
+float TAnimationManager::getLuma(unsigned char &red, unsigned char &green, unsigned char &blue) 
 {
-    auto _R = (R / 255.0f);
-    auto _G = (G / 255.0f);
-    auto _B = (B / 255.0f);
+	auto min_ = min(min(red, green), blue);
+	auto max_ = max(max(red, green), blue);
+	auto delta_ = ((float)(min_ + max_)) / 2.0f;
 
-    auto _Min = min(min(_R, _G), _B);
-    auto _Max = max(max(_R, _G), _B);
-    auto _Delta = _Max - _Min;
-
-    auto L = (_Max + _Min) / 2.0f;
-
-    return L * 255.0f;
+	return delta_;
 }
 
 //----------------------------------------------------------------------------
-typedef vector<int> Coords;
+struct Coords
+{
+	short x;
+	short y;
+	Coords(short x, short y) { this->x = x; this->y = y; };
+};
 /// <summary>Calculate the best guess alpha for adjucent pixels within
 /// specified luma threshold</summary>
 /// <param name="pixels">array of texture pixels in RGBA format</param>
 /// <param name="width">texture width</param>
 /// <param name="height">texture height</param>
-void TAnimationManager::doPixelsAlphaAt(bool* processed, PDWORD pixels, short &width, short &height, int x, int y) 
+void TAnimationManager::setAlphaAt(std::vector<bool> &processed, PDWORD pixels, short &width, short &height, int &x, int &y, float &alpha_scale, float &luma_threshold)
 {
 
-    //# assume surface is a 2D image and surface[x][y] is the color at x, y.
-    //if surface[x][y] != oldColor: # the base case
-    //    return
-    //surface[x][y] = newColor
-    //floodfill(x + 1, y, oldColor, newColor) # right
-    //floodfill(x - 1, y, oldColor, newColor) # left
-    //floodfill(x, y + 1, oldColor, newColor) # down
-    //floodfill(x, y - 1, oldColor, newColor) # up
+	auto stack = std::deque<Coords>();
+	stack.push_back(Coords(x, y));
 
-	if(x < 0 || y < 0 || x >= width || y >= height)
-		return;
+	while (stack.size())
+	{
+		Coords &coords = stack.back();
+		auto x = coords.x;
+		auto y = coords.y;
 
-	auto idx = width * y + x;
-	auto color = pixels[idx];
+		stack.pop_back();
 
-	unsigned int alpha = (color >> 24) & 0xff;
-	unsigned int blue  = (color >> 16) & 0xff;
-	unsigned int green = (color >> 8) & 0xff;
-	unsigned int red  = color & 0xff;	
+		if (x < 0 || y < 0 || x >= width || y >= height)
+			continue;
 
-	auto luma = getLuma(red, green, blue);
+		auto idx = width * y + x;
+		auto color = pixels[idx];
 
-	if( (luma > this->LUMA_THRESHOLD) || processed[idx] )
+		BYTE alpha = (color >> 24) & 0xff;
+
+		if (alpha != 255 || processed[idx]) {
+			processed[idx] = true;
+			continue;
+		}
+
+		BYTE blue = (color >> 16) & 0xff;
+		BYTE green = (color >> 8) & 0xff;
+		BYTE red = color & 0xff;
+
+		// лума - яркость ч/б пикселя
+		auto luma = getLuma(red, green, blue);
+
+		if (luma > luma_threshold) {
+			processed[idx] = true;
+			continue;
+		}
+
+		// высчитываем новую прозрачность из учета яркости
+		alpha = (((int)(alpha_scale * luma)) / BIT_STEP) * BIT_STEP;
+
+		// выставляем новую альфу для спрайта (собираем пиксель)
+		pixels[idx] = (alpha << 24) | (blue << 16) | (green << 8) | red;
 		processed[idx] = true;
-		return;
 
-	alpha = (((int)(ALPHA_SCALE*luma))/BIT_STEP) * BIT_STEP;
-	// alphas[x, y] = int(luma/ALPHA_SCALE)*16  
-    // alpha = 255;
-
-	pixels[idx] = (alpha << 24) | (blue << 16) | (green << 8) | red;
-	processed[idx] = true;
-
-	doPixelsAlphaAt(processed, pixels, width, height, x + 1, y);
-    doPixelsAlphaAt(processed, pixels, width, height, x - 1, y);
-    doPixelsAlphaAt(processed, pixels, width, height, x, y + 1);
-    doPixelsAlphaAt(processed, pixels, width, height, x, y - 1);
-
-            //unsigned int alpha = (color & 0xff000000) >> 24;
-            //unsigned int blue  = (color & 0x00ff0000) >> 16;
-            //unsigned int green = (color & 0x0000ff00) >> 8;
-            //unsigned int red   = (color & 0x000000ff); 
+		// обрабатываем соседние пиксели
+		stack.push_back(Coords(x + 1, y));
+		stack.push_back(Coords(x - 1, y));
+		stack.push_back(Coords(x, y + 1));
+		stack.push_back(Coords(x, y - 1));
+	}
+ 
 }                       
 
 //----------------------------------------------------------------------------
@@ -728,12 +735,13 @@ void TAnimationManager::doPixelsAlphaAt(bool* processed, PDWORD pixels, short &w
 /// <param name="pixels">array of texture pixels in RGBA format</param>
 /// <param name="width">texture width</param>
 /// <param name="height">texture height</param>
-void TAnimationManager::calcAlpha(PDWORD pixels, short &width, short &height)
+void TAnimationManager::EstimateImageCornerAlpha(PDWORD pixels, short &width, short &height, float alpha_scale, float luma_threshold)
 {
-	auto pixels_size = width * height;
+	auto pixels_count = width * height;
 
-	bool* processed = new bool[pixels_size];
-	std::fill(processed, processed + pixels_size, false);
+	std::vector<bool> processed(pixels_count);
+	processed.resize(pixels_count);
+	std::fill(processed.begin(), processed.end(), false);
 
     for(auto y=0; y < height; y++)
 	{
@@ -744,24 +752,17 @@ void TAnimationManager::calcAlpha(PDWORD pixels, short &width, short &height)
 			auto idx = row_idx + x;
             auto color = pixels[idx];
             
-            //unsigned int alpha = (color & 0xff000000) >> 24;
-            //unsigned int blue  = (color & 0x00ff0000) >> 16;
-            //unsigned int green = (color & 0x0000ff00) >> 8;
-            //unsigned int red  = (color & 0x000000ff);
-
-			unsigned int alpha = (color >> 24) & 0xff;
-			unsigned int blue  = (color >> 16) & 0xff;
-			unsigned int green = (color >> 8) & 0xff;
-			unsigned int red  = color & 0xff;
+			BYTE alpha = (color >> 24) & 0xff;
+			BYTE blue = (color >> 16) & 0xff;
+			BYTE green = (color >> 8) & 0xff;
+			BYTE red = color & 0xff;
 
 			if( (red!=0) || (blue!=0) || (green!=0) || processed[idx])
 				continue;					
          
-            doPixelsAlphaAt(processed, pixels, width, height, x, y);                        
+			setAlphaAt(processed, pixels, width, height, x, y, alpha_scale, luma_threshold);
         }        
     }
-
-	delete[] processed;
 }
 
 //----------------------------------------------------------------------------
@@ -901,7 +902,7 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 			}
 		}
 
-        calcAlpha( pData, imageWidth, imageHeight );
+        EstimateImageCornerAlpha( pData, imageWidth, imageHeight );
 
 		if (!partialHue)
             g_GL.BindTexture(tex->Texture, imageWidth, imageHeight, pData);
