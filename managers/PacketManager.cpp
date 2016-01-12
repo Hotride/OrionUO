@@ -2820,7 +2820,7 @@ PACKET_HANDLER(OpenGump)
 	PBYTE e = p;
 
 	int commandsLen = unpack16(buf + 19);
-	PBYTE end = buf + 21 + commandsLen;
+	PBYTE end = p + commandsLen;
 
 	while (p < end)
 	{
@@ -2837,6 +2837,7 @@ PACKET_HANDLER(OpenGump)
 		int eLen = strlen((char*)e);
 		eLen = (eLen > 19 ? 20 : eLen);
 		memcpy(&lowc[0], &e[0], eLen);
+		lowc[19] = 0;
 		_strlwr(lowc);
 
 		TGumpObject *go = NULL;

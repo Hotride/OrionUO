@@ -4,5 +4,7 @@ void main(void)
 {
 	vec4 textureColor = texture2D(usedTexture, gl_TexCoord[0].xy);
 
-	gl_FragColor = vec4(textureColor.r, textureColor.r, textureColor.r, textureColor.a);
+	float red = textureColor.r * 0.85;
+
+	gl_FragColor = vec4(red, red, red, textureColor.a);
 }

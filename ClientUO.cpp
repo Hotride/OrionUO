@@ -3291,7 +3291,7 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 	if (g_OutOfRangeColor)
 		color = g_OutOfRangeColor;
 
-	if (color && !g_GrayedPixels)
+	if (false && color && !g_GrayedPixels)
 	{
 		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
@@ -3304,7 +3304,16 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 		}
 	}
 	
-	g_GL.DrawLandTexture(texture, (GLfloat)(x - 23), (GLfloat)(y - 23), 44.0f, 44.0f, rc, normals);
+	if (CurrentShader == NULL && color)
+	{
+		ColorizerShader->Use();
+		
+		g_GL.DrawLandTexture(texture, (GLfloat)(x - 23), (GLfloat)(y - 23), 44.0f, 44.0f, rc, normals);
+
+		UnuseShader();
+	}
+	else
+		g_GL.DrawLandTexture(texture, (GLfloat)(x - 23), (GLfloat)(y - 23), 44.0f, 44.0f, rc, normals);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
@@ -3318,7 +3327,7 @@ void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
 	if (g_OutOfRangeColor)
 		color = g_OutOfRangeColor;
 
-	if (color && !g_GrayedPixels)
+	if (false && color && !g_GrayedPixels)
 	{
 		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
@@ -3331,7 +3340,16 @@ void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
 		}
 	}
 	
-	g_GL.Draw(texture, (GLfloat)(x - 23), (GLfloat)((y - 23) - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
+	if (CurrentShader == NULL && color)
+	{
+		ColorizerShader->Use();
+		
+		g_GL.Draw(texture, (GLfloat)(x - 23), (GLfloat)((y - 23) - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
+
+		UnuseShader();
+	}
+	else
+		g_GL.Draw(texture, (GLfloat)(x - 23), (GLfloat)((y - 23) - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool selection)
@@ -3348,7 +3366,7 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 	if (g_OutOfRangeColor)
 		color = g_OutOfRangeColor;
 
-	if (color && !g_GrayedPixels)
+	if (false && color && !g_GrayedPixels)
 	{
 		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
@@ -3380,7 +3398,16 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 	x -= m_StaticDataIndex[id].Width;
 	y -= m_StaticDataIndex[id].Height;
 	
-	g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
+	if (CurrentShader == NULL && color)
+	{
+		ColorizerShader->Use();
+		
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
+
+		UnuseShader();
+	}
+	else
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int z, bool selection)
@@ -3399,7 +3426,7 @@ void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int
 	if (g_OutOfRangeColor)
 		color = g_OutOfRangeColor;
 
-	if (color && !g_GrayedPixels)
+	if (false && color && !g_GrayedPixels)
 	{
 		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
@@ -3430,8 +3457,17 @@ void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int
 
 	x -= m_StaticDataIndex[id].Width;
 	y -= m_StaticDataIndex[id].Height;
+	
+	if (CurrentShader == NULL && color)
+	{
+		ColorizerShader->Use();
+		
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
 
-	g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
+		UnuseShader();
+	}
+	else
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, bool selection, bool onMouse)
@@ -3451,7 +3487,7 @@ void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, 
 		y -= (DH / 2);
 	}
 
-	if (color)
+	if (color && false)
 	{
 		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
@@ -3480,7 +3516,16 @@ void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, 
 
 	}
 	
-	g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH);
+	if (CurrentShader == NULL && color)
+	{
+		ColorizerShader->Use();
+		
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH);
+
+		UnuseShader();
+	}
+	else
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLight(BYTE id, WORD color, int x, int y)
@@ -3492,7 +3537,7 @@ void TUltimaOnline::DrawLight(BYTE id, WORD color, int x, int y)
 	
 	GLuint texture = th->Texture;
 
-	if (color)
+	if (color && false)
 	{
 		TColoredTextureObject *cth = th->GetColoredTexture(color);
 
@@ -3507,8 +3552,17 @@ void TUltimaOnline::DrawLight(BYTE id, WORD color, int x, int y)
 	
 	x -= th->Width / 2;
 	y -= th->Height / 2;
+	
+	if (CurrentShader == NULL && color)
+	{
+		ColorizerShader->Use();
+		
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
 
-	g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
+		UnuseShader();
+	}
+	else
+		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::PolygonePixelsInXY(int x, int y, int width, int height)
