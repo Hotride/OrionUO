@@ -703,7 +703,7 @@ void TAnimationManager::setAlphaAt(std::vector<bool> &processed, PDWORD pixels, 
 		BYTE alpha = (color >> 24) & 0xff;
 
 		if (/*alpha != 255 ||*/ processed[idx]) {
-			processed[idx] = true;
+			//processed[idx] = true;
 			continue;
 		}
 
