@@ -1,4 +1,5 @@
 uniform sampler2D usedTexture;
+uniform int colors[32];
 
 int AND32(int val)
 {
@@ -14,9 +15,9 @@ vec3 Color16To32(int c)
 
 	vec3 v;
 
-	v.r = AND32(c);
+	v.r = AND32(c / 1024.0);
 	v.g = AND32(c / 32.0);
-	v.b = AND32(c / 1024.0);
+	v.b = AND32(c);
 
 	return (v / mod32);
 }
@@ -27,7 +28,7 @@ void main(void)
 
 	int index = AND32(textureColor.r * 32);
 
-	vec3 resultColor = Color16To32(index);
+	vec3 resultColor = Color16To32(colors[index]);
 
 	gl_FragColor = vec4(resultColor, textureColor.a);
 }

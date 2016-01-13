@@ -73,6 +73,22 @@ void TColorManager::SetHuesBlock(int Index, PVERDATA_HUES_GROUP group)
 		memcpy(&m_HuesRange[Index].Entries[i].ColorTable[0], &group->Entries[i].ColorTable[0], sizeof(WORD[32]));
 }
 //---------------------------------------------------------------------------
+void TColorManager::SendColorsToShader(WORD &color)
+{
+	if (color != 0 && color < m_HuesCount)
+	{
+		color -= 1;
+		int g = color / 8;
+		int e = color % 8;
+
+		int c[32];
+		IFOR(i, 0, 32)
+			c[i] = m_HuesRange[g].Entries[e].ColorTable[i];
+
+		glUniform1ivARB(ShaderColorTable, 32, &c[0]);
+	}
+}
+//---------------------------------------------------------------------------
 DWORD TColorManager::Color16To32(WORD &C)
 {
 	return

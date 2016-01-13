@@ -3175,6 +3175,7 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
 	if (CurrentShader == NULL && color)
 	{
 		ColorizerShader->Use();
+		ColorManager->SendColorsToShader(color);
 
 		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
 
@@ -3229,6 +3230,7 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, int width, int h
 	if (CurrentShader == NULL && color)
 	{
 		ColorizerShader->Use();
+		ColorManager->SendColorsToShader(color);
 
 		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH, (GLfloat)width, (GLfloat)height);
 
@@ -3307,6 +3309,7 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 	if (CurrentShader == NULL && color)
 	{
 		ColorizerShader->Use();
+		ColorManager->SendColorsToShader(color);
 		
 		g_GL.DrawLandTexture(texture, (GLfloat)(x - 23), (GLfloat)(y - 23), 44.0f, 44.0f, rc, normals);
 
@@ -3343,6 +3346,7 @@ void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
 	if (CurrentShader == NULL && color)
 	{
 		ColorizerShader->Use();
+		ColorManager->SendColorsToShader(color);
 		
 		g_GL.Draw(texture, (GLfloat)(x - 23), (GLfloat)((y - 23) - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
 
@@ -3401,6 +3405,7 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 	if (CurrentShader == NULL && color)
 	{
 		ColorizerShader->Use();
+		ColorManager->SendColorsToShader(color);
 		
 		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
 
@@ -3461,6 +3466,7 @@ void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int
 	if (CurrentShader == NULL && color)
 	{
 		ColorizerShader->Use();
+		ColorManager->SendColorsToShader(color);
 		
 		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
 
@@ -3519,6 +3525,7 @@ void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, 
 	if (CurrentShader == NULL && color)
 	{
 		ColorizerShader->Use();
+		ColorManager->SendColorsToShader(color);
 		
 		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH);
 
@@ -3556,6 +3563,7 @@ void TUltimaOnline::DrawLight(BYTE id, WORD color, int x, int y)
 	if (CurrentShader == NULL && color)
 	{
 		ColorizerShader->Use();
+		ColorManager->SendColorsToShader(color);
 		
 		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
 

@@ -96,12 +96,12 @@ TDeathShader::TDeathShader(const char *vertexShaderData, const char *fragmentSha
 //----------------------------TColorizerShader-------------------------------
 //---------------------------------------------------------------------------
 TColorizerShader::TColorizerShader(const char *vertexShaderData, const char *fragmentShaderData)
-: TBaseShader(vertexShaderData, fragmentShaderData)
+: TBaseShader(vertexShaderData, fragmentShaderData), m_ColorTablePointer(0)
 {
 	if (m_Shader != 0)
 	{
 		m_TexturePointer = glGetUniformLocationARB(m_Shader, "usedTexture");
-		m_ColorTablePointer = glGetUniformLocationARB(m_Shader, "usedColorTable");
+		m_ColorTablePointer = glGetUniformLocationARB(m_Shader, "colors");
 	}
 }
 //---------------------------------------------------------------------------

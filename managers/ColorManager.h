@@ -37,6 +37,8 @@ public:
 	int GetHuesCount() const {return m_HuesCount;}
 	void SetHuesBlock(int Index, PVERDATA_HUES_GROUP group);
 
+	void SendColorsToShader(WORD &color);
+
 	WORD Color32To16(DWORD &C);
 	DWORD Color16To32(WORD &C);
 	WORD ConvertToGray(WORD &C);
