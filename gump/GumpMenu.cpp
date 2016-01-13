@@ -84,6 +84,8 @@ void TGumpMenu::GenerateFrame(int posX, int posY)
 		int idx = 1;
 		string itemText = "";
 
+		ColorizerShader->Use();
+
 		while (go != NULL)
 		{
 			if (idx == m_CurrentIndex + pageOffs)
@@ -126,6 +128,8 @@ void TGumpMenu::GenerateFrame(int posX, int posY)
 			if (go != NULL)
 				go = (TGumpMenuObject*)go->m_Next;
 		}
+
+		UnuseShader();
 
 		g_GL.RestorePort();
 

@@ -112,6 +112,8 @@ void TGumpContainer::GenerateFrame(int posX, int posY)
 		bool canSelect = (ObjectInHand == NULL || (ObjectInHand != NULL && !g_LeftMouseDown));
 		bool isCorpse = (container->Graphic == 0x2006);
 		
+		ColorizerShader->Use();
+
 		for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
 		{
 			int count = obj->Count;
@@ -156,34 +158,7 @@ void TGumpContainer::GenerateFrame(int posX, int posY)
 			}
 		}
 
-		/*DWORD ticks = GetTickCount();
-
-		for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
-		{
-			int count = obj->Count;
-
-			if ((obj->Layer == OL_NONE || (isCorpse && g_LayerUnsafe[obj->Layer])) && count > 0)
-			{
-				TTextData *td = obj->m_TextControl->m_Head;
-
-				if (td != NULL)
-				{
-					int drawX = posX + obj->X - 84;
-					int drawY = posY + obj->Y;
-
-					while (td != NULL)
-					{
-						TTextTexture &tth = td->m_Texture;
-
-						drawY -= tth.Height;
-						if (td->Timer >= ticks)
-							tth.Draw(drawX, drawY);
-
-						td = td->m_Prev;
-					}
-				}
-			}
-		}*/
+		UnuseShader();
 
 	glEndList();
 

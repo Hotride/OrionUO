@@ -286,7 +286,11 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 							tth.Clear();
 						}
 
+						ColorizerShader->Use();
+
 						UO->DrawStaticArtInContainer(box->Graphic, box->Color, delim1posX, drawY + imageOffsetY);
+
+						UnuseShader();
 						
 						drawY += maxOffset;
 						

@@ -6,5 +6,8 @@ void main(void)
 
 	float red = textureColor.r * 0.85;
 
+	if (red == 0.0)
+		red = textureColor.g * 0.85;
+
 	gl_FragColor = vec4(red, red, red, textureColor.a);
 }

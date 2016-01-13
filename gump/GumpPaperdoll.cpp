@@ -252,10 +252,9 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 			UO->DrawGump(gumpID, 0, posX + 185, posY + 152);
 			
 			gumpID = 0x07E2;
-			WORD chatColor = 0;
 
 			if (!g_ChatEnabled)
-				chatColor = 0x0386;
+				DeathShader->Use();
 			else
 			{
 				if (CanPressedButton == ID_GP_BUTTON_CHAT)
@@ -264,7 +263,10 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 					gumpID = 0x07E4; //Paperdoll button Chat
 			}
 
-			UO->DrawGump(gumpID, chatColor, posX + 185, posY + 179);
+			UO->DrawGump(gumpID, 0, posX + 185, posY + 179);
+			
+			if (!g_ChatEnabled)
+				ColorizerShader->Use();
 
 			if (g_Player->Warmode)
 			{

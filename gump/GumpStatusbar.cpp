@@ -484,8 +484,13 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 				if (obj->Notoriety == NT_CRIMINAL || obj->Notoriety == NT_SOMEONE_GRAY)
 					color = 0;
 
+				ColorizerShader->Use();
+
 				//Гамп статус бара
 				UO->DrawGump(0x0804, color, posX, posY);
+
+				UnuseShader();
+
 				string objName = obj->GetName();
 
 				if (obj->CanChangeName) //Если игрок может изменить имя существу
@@ -517,13 +522,17 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 			}
 			else //Серенький статус
 			{
+				DeathShader->Use();
+
 				//Гамп статус бара
 				UO->DrawGump(0x0804, 0x0386, posX, posY);
 
-				TextEntry->DrawA(1, 0x0386, posX + 16, posY + 14, TS_LEFT, UOFONT_FIXED);
-
 				//Hits
 				UO->DrawGump(0x0805, 0x0386, posX + 34, posY + 38);
+
+				UnuseShader();
+
+				TextEntry->DrawA(1, 0x0386, posX + 16, posY + 14, TS_LEFT, UOFONT_FIXED);
 			}
 		}
 

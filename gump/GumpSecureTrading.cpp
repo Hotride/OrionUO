@@ -163,6 +163,8 @@ void TGumpSecureTrading::GenerateFrame(int posX, int posY)
 		
 		DWORD ticks = GetTickCount();
 
+		ColorizerShader->Use();
+
 		//ќтрисовка нашего товара (при наличии товара)
 		TGameObject *container = World->FindWorldObject(ID);
 		if (container != NULL && container->m_Items != NULL)
@@ -215,32 +217,6 @@ void TGumpSecureTrading::GenerateFrame(int posX, int posY)
 			//¬осстанавливаем размеры рисуемой области
 			g_GL.RestorePort();
 			
-			/*for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
-			{
-				if (obj->Layer == OL_NONE && obj->Count > 0)
-				{
-					TTextData *td = obj->m_TextControl->m_Head;
-
-					if (td != NULL)
-					{
-						int drawX = posX + obj->X - 84;
-						int drawY = posY + obj->Y;
-
-						while (td != NULL)
-						{
-							TTextTexture &tth = td->m_Texture;
-
-							drawY -= tth.Height;
-
-							if (td->Timer >= ticks)
-								tth.Draw(drawX, drawY);
-
-							td = td->m_Prev;
-						}
-					}
-				}
-			}*/
-
 			posX -= 45;
 			posY -= 70;
 		}
@@ -300,34 +276,11 @@ void TGumpSecureTrading::GenerateFrame(int posX, int posY)
 			//¬осстанавливаем размеры рисуемой области
 			g_GL.RestorePort();
 			
-			/*for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
-			{
-				if (obj->Layer == OL_NONE && obj->Count > 0)
-				{
-					TTextData *td = obj->m_TextControl->m_Head;
-
-					if (td != NULL)
-					{
-						int drawX = posX + obj->X - 84;
-						int drawY = posY + obj->Y;
-
-						while (td != NULL)
-						{
-							TTextTexture &tth = td->m_Texture;
-
-							drawY -= tth.Height;
-							if (td->Timer >= ticks)
-								tth.Draw(drawX, drawY);
-
-							td = td->m_Prev;
-						}
-					}
-				}
-			}*/
-
 			posX -= 192;
 			posY -= 70;
 		}
+
+		UnuseShader();
 
 	glEndList();
 

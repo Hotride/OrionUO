@@ -669,135 +669,136 @@ int TGameScreen::Render(bool mode)
 
 		g_ZBuffer = 0.0f;
 		glDisable(GL_DEPTH_TEST);
-
-		if (drawModeCount)
+		
+		if (!g_DeathScreenTimer)
 		{
-			glColor3f(1.0f, 1.0f, 1.0f);
-
-			if (g_UseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
+			if (!g_GrayedPixels)
 			{
-				if (g_LightBuffer.Ready() && g_LightBuffer.Use())
+				glColor3f(1.0f, 1.0f, 1.0f);
+
+				if (g_UseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
 				{
-					float newLightColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f); // + 0.2f;
-
-					if (!ConfigManager.DarkNights)
-						newLightColor += 0.2f;
-
-					UnuseShader();
-
-					glClearColor(newLightColor, newLightColor, newLightColor, 1.0f);
-					glClear(GL_COLOR_BUFFER_BIT);
-
-					glEnable(GL_BLEND);
-					glBlendFunc(GL_ONE, GL_ONE);
-
-					ColorizerShader->Use();
-
-					IFOR(i, 0, m_LightCount)
+					if (g_LightBuffer.Ready() && g_LightBuffer.Use())
 					{
-						LIGHT_DATA &light = m_Light[i];
+						float newLightColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f); // + 0.2f;
 
-						UO->DrawLight(light.ID, light.Color, light.DrawX - gameWindowPosX, light.DrawY - gameWindowPosY);
-					}
-					
-					UnuseShader();
+						if (!ConfigManager.DarkNights)
+							newLightColor += 0.2f;
 
-					g_LightBuffer.Release();
+						UnuseShader();
 
-					g_GL.RestorePort();
+						glClearColor(newLightColor, newLightColor, newLightColor, 1.0f);
+						glClear(GL_COLOR_BUFFER_BIT);
 
-					glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+						glEnable(GL_BLEND);
+						glBlendFunc(GL_ONE, GL_ONE);
 
-					g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
+						ColorizerShader->Use();
 
-					glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-
-					g_LightBuffer.Draw((float)gameWindowPosX, (float)gameWindowPosY);
-
-					glDisable(GL_BLEND);
-				}
-			}
-
-			ColorizerShader->Use();
-
-			TargetGump.Draw();
-			AttackTargetGump.Draw();
-
-			Weather.Draw(gameWindowPosX, gameWindowPosY);
-
-			QuestArrow.Draw(gameWindowCenterX, gameWindowCenterY);
-
-			UnuseShader();
-
-			DrawSmoothMonitorEffect();
-
-			g_OutOfRangeColor = 0;
-
-			g_GrayedPixels = false;
-
-			//Отрисовка сообщений систем чата
-			int TextOffsY = (gameWindowPosY + gameWindowSizeY) - 41;
-			int TextYBounds = gameWindowPosY;
-
-			TTextData *td = SystemChat->m_Head;
-			while (td != NULL)
-			{
-				if (TextOffsY < TextYBounds)
-					break;
-
-				//if (td->GetType() == TT_SYSTEM)
-				{
-					TTextTexture &tth = td->m_Texture;
-
-					TextOffsY -= tth.Height;
-
-					if (td->Timer >= ticks)
-						tth.Draw(gameWindowPosX, TextOffsY);
-				}
-
-				td = td->m_Prev;
-			}
-
-			//Отрисовка текста
-			for (; rto != NULL; rto = rto->m_PrevDraw)
-			{
-				if (!rto->IsText())
-					continue;
-
-				TTextData *td = (TTextData*)rto;
-				
-				if (td->Type != TT_SYSTEM)
-				{
-					TTextTexture &tth = td->m_Texture;
-
-					if (td->Timer >= ticks)
-					{
-						//g_GL.DrawPolygone(0x7f7f7f7f, td->DrawX, td->DrawY, tth.Width, tth.Height);
-
-						if (g_LastObjectType == SOT_TEXT_OBJECT && g_SelectedTextObject == rto)
-							tth.DrawYellow(td->DrawX, td->DrawY);
-						else
+						IFOR(i, 0, m_LightCount)
 						{
-							if (td->Transparent)
-							{
-								glEnable(GL_BLEND);
-								glBlendFunc(GL_ONE, GL_DST_COLOR);
+							LIGHT_DATA &light = m_Light[i];
 
-								tth.Draw(td->DrawX, td->DrawY);
+							UO->DrawLight(light.ID, light.Color, light.DrawX - gameWindowPosX, light.DrawY - gameWindowPosY);
+						}
+					
+						UnuseShader();
 
-								glDisable(GL_BLEND);
-							}
+						g_LightBuffer.Release();
+
+						g_GL.RestorePort();
+
+						glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+						g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
+
+						glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+
+						g_LightBuffer.Draw((float)gameWindowPosX, (float)gameWindowPosY);
+
+						glDisable(GL_BLEND);
+					}
+				}
+				
+				ColorizerShader->Use();
+
+				TargetGump.Draw();
+				AttackTargetGump.Draw();
+
+				Weather.Draw(gameWindowPosX, gameWindowPosY);
+
+				UnuseShader();
+			
+				//Отрисовка сообщений систем чата
+				int TextOffsY = (gameWindowPosY + gameWindowSizeY) - 41;
+				int TextYBounds = gameWindowPosY;
+
+				TTextData *td = SystemChat->m_Head;
+				while (td != NULL)
+				{
+					if (TextOffsY < TextYBounds)
+						break;
+
+					//if (td->GetType() == TT_SYSTEM)
+					{
+						TTextTexture &tth = td->m_Texture;
+
+						TextOffsY -= tth.Height;
+
+						if (td->Timer >= ticks)
+							tth.Draw(gameWindowPosX, TextOffsY);
+					}
+
+					td = td->m_Prev;
+				}
+
+				//Отрисовка текста
+				for (; rto != NULL; rto = rto->m_PrevDraw)
+				{
+					if (!rto->IsText())
+						continue;
+
+					TTextData *td = (TTextData*)rto;
+				
+					if (td->Type != TT_SYSTEM)
+					{
+						TTextTexture &tth = td->m_Texture;
+
+						if (td->Timer >= ticks)
+						{
+							//g_GL.DrawPolygone(0x7f7f7f7f, td->DrawX, td->DrawY, tth.Width, tth.Height);
+
+							if (g_LastObjectType == SOT_TEXT_OBJECT && g_SelectedTextObject == rto)
+								tth.DrawYellow(td->DrawX, td->DrawY);
 							else
-								tth.Draw(td->DrawX, td->DrawY);
+							{
+								if (td->Transparent)
+								{
+									glEnable(GL_BLEND);
+									glBlendFunc(GL_ONE, GL_DST_COLOR);
+
+									tth.Draw(td->DrawX, td->DrawY);
+
+									glDisable(GL_BLEND);
+								}
+								else
+									tth.Draw(td->DrawX, td->DrawY);
+							}
 						}
 					}
 				}
 			}
+
+			QuestArrow.Draw(gameWindowCenterX, gameWindowCenterY);
+
+			DrawSmoothMonitorEffect();
 		}
 		else
-		{
 			FontManager->DrawA(3, "You are dead.", 0, gameWindowCenterX - 30, gameWindowCenterY);
-		}
+		
+		g_OutOfRangeColor = 0;
+
+		g_GrayedPixels = false;
 
 		UnuseShader();
 
@@ -1008,6 +1009,7 @@ int TGameScreen::Render(bool mode)
 			g_NoDrawRoof = false;
 			g_MaxGroundZ = 125;
 			int maxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
+			drawModeCount = 1;
 
 			IFOR(drawMode, 0, drawModeCount)
 			{
