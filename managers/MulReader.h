@@ -32,11 +32,6 @@ public:
 	TTextureObject *ReadTexture(WORD ID, DWORD Address, DWORD Size);
 	TTextureObject *ReadLight(WORD ID, DWORD Address, DWORD Size, WORD Width, WORD Height);
 	
-	GLuint ReadColoredGump(DWORD Address, DWORD Size, WORD Color, TTextureObject *pth, bool partialHue);
-	GLuint ReadColoredArt(WORD ID, DWORD Address, DWORD Size, WORD Color, TTextureObject *pth, bool partialHue);
-	GLuint ReadColoredTexture(DWORD Address, DWORD Size, WORD Color, TTextureObject *pth);
-	GLuint ReadColoredLight(DWORD Address, DWORD Size, WORD Color, TTextureObject *pth);
-	
 	bool GumpPixelsInXY(DWORD Address, DWORD Size, WORD Width, WORD Height, int CheckX, int CheckY);
 	bool ArtPixelsInXY(WORD ID, DWORD Address, DWORD Size, WORD Width, WORD Height, int CheckX, int CheckY);
 };

@@ -51,12 +51,7 @@ void TGumpContainer::PrepareTextures()
 				if (m_IsGameBoard)
 					UO->ExecuteGump(obj->Graphic - GAME_FIGURE_GUMP_OFFSET);
 				else
-				{
-					TTextureObject *to = UO->ExecuteStaticArt(obj->Graphic);
-
-					if (obj->Color && to)
-						to->GetColoredTexture(obj->Color);
-				}
+					UO->ExecuteStaticArt(obj->Graphic);
 			}
 		}
 	}

@@ -64,6 +64,7 @@ using std::wstring;
 #define UO_FW_SHARD 0
 
 extern GLuint ShaderTexture;
+extern GLuint ShaderDrawMode;
 extern GLuint ShaderColorTable;
 //---------------------------------------------------------------------------
 extern int g_LandObjectsCount;

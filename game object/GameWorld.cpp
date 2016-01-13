@@ -119,14 +119,11 @@ void TGameWorld::ProcessAnimation()
 
 					if (direction->Address == 0)
 					{
-						bool partialHue = obj->IsHuman();
-						WORD color = gc->Color;
 						AnimationManager->AnimGroup = animGroup;
 						AnimationManager->Direction = dir;
-						AnimationManager->Color = 0;
 
 						int offset = (animGroup * 5) + dir;
-						AnimationManager->ExecuteDirectionGroup(direction, id, color, partialHue, offset);
+						AnimationManager->ExecuteDirectionGroup(direction, id, offset);
 					}
 
 					if (direction->Address != 0)
@@ -234,14 +231,11 @@ void TGameWorld::ProcessAnimation()
 
 					if (direction->Address == 0)
 					{
-						bool partialHue = obj->IsHuman();
-						WORD color = obj->Color;
 						AnimationManager->AnimGroup = animGroup;
 						AnimationManager->Direction = dir;
-						AnimationManager->Color = 0;
 
 						int offset = (animGroup * 5) + dir;
-						AnimationManager->ExecuteDirectionGroup(direction, id, color, partialHue, offset);
+						AnimationManager->ExecuteDirectionGroup(direction, id, offset);
 					}
 
 					if (direction->Address != 0)

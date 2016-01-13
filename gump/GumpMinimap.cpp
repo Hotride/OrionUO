@@ -145,7 +145,7 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 	glNewList((GLuint)this, GL_COMPILE);
 
 		g_GL.Draw(m_Texture, (float)posX, (float)posY, (float)gumpWidth, (float)gumpHeight);
-			
+		
 		if (m_Count < 6)
 		{
 			posX += (gumpCenterX - 1);
@@ -185,6 +185,7 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 			}
 
 			g_GL.DrawPolygone(0xFF7F7F7F, (float)(posX), (float)(posY), 2, 2);
+
 		}
 
 	glEndList();

@@ -20,10 +20,16 @@
 #ifndef ColorManagerH
 #define ColorManagerH
 //---------------------------------------------------------------------------
+struct INT_HUES
+{
+	int Palette[32];
+};
+//---------------------------------------------------------------------------
 class TColorManager : public IColorManager
 {
 private:
 	PHUES_GROUP m_HuesRange;
+	INT_HUES *m_HuesInt;
 	int m_HuesCount;
 
 	WORD m_Radarcol[0x10000];
@@ -37,6 +43,7 @@ public:
 	int GetHuesCount() const {return m_HuesCount;}
 	void SetHuesBlock(int Index, PVERDATA_HUES_GROUP group);
 
+	void CreateHuesPalette();
 	void SendColorsToShader(WORD &color);
 
 	WORD Color32To16(DWORD &C);

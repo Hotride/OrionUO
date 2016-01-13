@@ -19,32 +19,8 @@
 //---------------------------------------------------------------------------
 #include "stdafx.h"
 //---------------------------------------------------------------------------
-TColoredTextureObject::TColoredTextureObject(WORD color)
-: m_Color(color), Texture(0), TexturePH(0), m_Next(0)
-{
-}
-//---------------------------------------------------------------------------
-TColoredTextureObject::~TColoredTextureObject()
-{
-	if (m_Next != NULL)
-		delete m_Next;
-	m_Next = 0;
-
-	if (Texture)
-	{
-		glDeleteTextures(1, &Texture);
-		Texture = 0;
-	}
-
-	if (TexturePH)
-	{
-		glDeleteTextures(1, &TexturePH);
-		TexturePH = 0;
-	}
-}
-//---------------------------------------------------------------------------
 TTextureObject::TTextureObject()
-: m_Width(0), m_Height(0), Texture(0), Colored(0)
+: m_Width(0), m_Height(0), Texture(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -55,31 +31,6 @@ TTextureObject::~TTextureObject()
 		glDeleteTextures(1, &Texture);
 		Texture = 0;
 	}
-
-	if (Colored != NULL)
-	{
-		delete Colored;
-		Colored = 0;
-	}
-}
-//---------------------------------------------------------------------------
-TColoredTextureObject *TTextureObject::GetColoredTexture(WORD color)
-{
-	TColoredTextureObject *cth = Colored;
-
-	while (cth != NULL)
-	{
-		if (cth->Color == color)
-			return cth;
-
-		cth = cth->m_Next;
-	}
-
-	cth = new TColoredTextureObject(color);
-	cth->m_Next = Colored;
-	Colored = cth;
-
-	return Colored;
 }
 //---------------------------------------------------------------------------
 TIndexObject::TIndexObject()
@@ -113,36 +64,17 @@ TIndexSound::~TIndexSound()
 //---------------------------------------------------------------------------
 TTextureAnimationFrame::TTextureAnimationFrame(int frame)
 : TBaseQueueItem(), m_Frame(frame), m_Width(0), m_Height(0), m_CenterX(0),
-m_CenterY(0), Colored(NULL)
+m_CenterY(0), Texture(0)
 {
 }
 //---------------------------------------------------------------------------
 TTextureAnimationFrame::~TTextureAnimationFrame()
 {
-	if (Colored != NULL)
+	if (Texture)
 	{
-		delete Colored;
-		Colored = NULL;
+		glDeleteTextures(1, &Texture);
+		Texture = 0;
 	}
-}
-//---------------------------------------------------------------------------
-TColoredTextureObject *TTextureAnimationFrame::GetColoredTexture(WORD color)
-{
-	TColoredTextureObject *cth = Colored;
-
-	while (cth != NULL)
-	{
-		if (cth->Color == color)
-			return cth;
-
-		cth = cth->m_Next;
-	}
-
-	cth = new TColoredTextureObject(color);
-	cth->m_Next = Colored;
-	Colored = cth;
-
-	return Colored;
 }
 //---------------------------------------------------------------------------
 TTextureAnimationDirection::TTextureAnimationDirection(int direction)
@@ -273,21 +205,6 @@ TIndexMulti::TIndexMulti()
 //---------------------------------------------------------------------------
 TIndexMulti::~TIndexMulti()
 {
-}
-//---------------------------------------------------------------------------
-TColoredTextTexture::TColoredTextTexture()
-: m_Color(0), m_Texture(0), m_Next(0)
-{
-}
-//---------------------------------------------------------------------------
-TColoredTextTexture::~TColoredTextTexture()
-{
-	if (m_Next != NULL)
-		delete m_Next;
-	m_Next = 0;
-
-	if (m_Texture)
-		glDeleteTextures(1, &m_Texture);
 }
 //---------------------------------------------------------------------------
 TTextTexture::TTextTexture()

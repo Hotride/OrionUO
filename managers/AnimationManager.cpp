@@ -774,10 +774,8 @@ void TAnimationManager::EstimateImageCornerAlpha(PDWORD pixels, short &width, sh
         }        
     }
 }
-
 //----------------------------------------------------------------------------
-
-bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direction, WORD &id, WORD &color, bool &partialHue, int &offset)
+bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direction, WORD &id, int &offset)
 {
 	direction->Address = 0;
 
@@ -823,11 +821,8 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 	IFOR(i, 0, frameCount)
 	{
 		TTextureAnimationFrame *frame = direction->GetFrame(i);
-		TColoredTextureObject *tex = frame->GetColoredTexture(color);
 
-		if (!partialHue && tex->Texture != 0)
-			continue;
-		else if (partialHue && tex->TexturePH != 0)
+		if (frame->Texture != 0)
 			continue;
 
 		PWORD p = (PWORD)((DWORD)dataStart + FrameOffset[i]);
@@ -860,8 +855,8 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 
 		WORD prevLineNum = 0xFF;
 
-		while (true) {
-
+		while (true)
+		{
 			WORD rowHeader = *p;
 			p++;
 
@@ -895,10 +890,10 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 
 				IFOR(j, 0, runLength)
 				{
-					DWORD pcl = (partialHue ? ColorManager->GetPartialHueColor(palette[*b], color) : ColorManager->GetColor(palette[*b], color));
-
 					if (palette[*b])
 					{
+						DWORD pcl = ColorManager->Color16To32(palette[*b]);
+
 						int Block = y * imageWidth + (x + j);
 
 						pData[Block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
@@ -912,12 +907,9 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 			}
 		}
 
-        EstimateImageCornerAlpha( pData, imageWidth, imageHeight );
+        //EstimateImageCornerAlpha( pData, imageWidth, imageHeight );
 
-		if (!partialHue)
-            g_GL.BindTexture(tex->Texture, imageWidth, imageHeight, pData);
-		else
-			g_GL.BindTexture(tex->TexturePH, imageWidth, imageHeight, pData);
+		g_GL.BindTexture(frame->Texture, imageWidth, imageHeight, pData);
 
 		delete pData;
 	}
@@ -1018,13 +1010,8 @@ bool TAnimationManager::TestPixels(TGameObject *obj, int x, int y, bool &mirror,
 	if (obj == NULL)
 		return false;
 
-	bool partialHue = false;
-
 	if (!id)
-	{
-		partialHue = obj->IsHuman();
 		id = obj->GetMountAnimation();
-	}
 	
 	TTextureAnimation *anim = GetAnimation(id);
 
@@ -1037,15 +1024,8 @@ bool TAnimationManager::TestPixels(TGameObject *obj, int x, int y, bool &mirror,
 	if (direction->Address == 0)
 	{
 		int offset = (m_AnimGroup * 5) + m_Direction;
-		WORD color = obj->Color;
 
-		if (m_Color)
-		{
-			color = m_Color;
-			partialHue = false;
-		}
-
-		if (!ExecuteDirectionGroup(direction, id, color, partialHue, offset))
+		if (!ExecuteDirectionGroup(direction, id, offset))
 			return false;
 	}
 
@@ -1147,15 +1127,8 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 	if (direction->Address == 0)
 	{
 		int offset = (m_AnimGroup * 5) + m_Direction;
-		WORD color = obj->Color;
 
-		if (m_Color)
-		{
-			color = m_Color;
-			partialHue = false;
-		}
-
-		if (!ExecuteDirectionGroup(direction, id, color, partialHue, offset))
+		if (!ExecuteDirectionGroup(direction, id, offset))
 			return;
 	}
 
@@ -1178,25 +1151,15 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 	else
 		color = obj->Color;
 
-	TColoredTextureObject *tex = frame->GetColoredTexture(color);
-
-	if ((!partialHue && tex->Texture == 0) || (partialHue && tex->TexturePH == 0))
+	if (frame->Texture == 0)
 	{
-		color = obj->Color;
-
-		if (m_Color)
-		{
-			color = m_Color;
-			partialHue = false;
-		}
-
 		int offset = (m_AnimGroup * 5) + m_Direction;
 
-		if (!ExecuteDirectionGroup(direction, id, color, partialHue, offset))
+		if (!ExecuteDirectionGroup(direction, id, offset))
 			return;
 	}
 
-	GLuint texture = (partialHue ? tex->TexturePH : tex->Texture);
+	GLuint texture = frame->Texture;
 
 	if (texture != 0)
 	{
@@ -1209,6 +1172,18 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			x -= (frame->Width - frame->CenterX);
 		else
 			x -= frame->CenterX;
+
+		int drawMode = (!g_GrayedPixels && color);
+
+		if (drawMode)
+		{
+			if (partialHue)
+				drawMode = 2;
+
+			ColorManager->SendColorsToShader(color);
+		}
+
+		glUniform1iARB(ShaderDrawMode, drawMode);
 
 		g_GL.Draw(texture, (float)x, (float)y, (float)frame->Width, (float)frame->Height, mirror);
 	}

@@ -44,6 +44,7 @@ class TColorizerShader : public TBaseShader
 {
 protected:
 	GLuint m_ColorTablePointer;
+	GLuint m_DrawModePointer;
 public:
 	TColorizerShader(const char *vertexShaderData, const char *fragmentShaderData);
 
@@ -53,6 +54,5 @@ public:
 extern TBaseShader *CurrentShader;
 extern TDeathShader *DeathShader;
 extern TColorizerShader *ColorizerShader;
-extern TColorizerShader *ColorizerPHShader;
 //---------------------------------------------------------------------------
 #endif

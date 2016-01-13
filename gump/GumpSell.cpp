@@ -41,10 +41,7 @@ void TGumpSell::PrepareTextures()
 
 	while (go != NULL)
 	{
-		TTextureObject *to = UO->ExecuteStaticArt(go->Graphic);
-
-		if (go->Color && to)
-			to->GetColoredTexture(go->Color);
+		UO->ExecuteStaticArt(go->Graphic);
 
 		go = (TGumpSellObject*)go->m_Next;
 	}

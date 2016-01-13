@@ -91,7 +91,7 @@ void TGumpPaperdoll::PrepareTextures()
 	UO->ExecuteButton(0x07DC); //Paperdoll button Journal
 	UO->ExecuteButton(0x07DF); //Paperdoll button Skills
 	UO->ExecuteButton(0x07E2); //Paperdoll button Chat
-	UO->ExecuteColoredGump(0x07E2, 0x0386, false); //Paperdoll button Chat
+	UO->ExecuteGump(0x07E2, false); //Paperdoll button Chat
 	UO->ExecuteButton(0x07E8); //Paperdoll button War
 	UO->ExecuteButton(0x07E5); //Paperdoll button Peace
 	//UO->ExecuteGump(0x0FA1); //Paperdoll mail bag
@@ -99,10 +99,9 @@ void TGumpPaperdoll::PrepareTextures()
 	UO->ExecuteGump(0x07D2); //Paperdoll party/profile scroll
 	UO->ExecuteGump(0x07D1); //Paperdoll (other)
 	UO->ExecuteButton(0x07EB); //Paperdoll button Status
-	UO->ExecuteColoredGump(0x000C, bodyColor); //Male gump
-	UO->ExecuteColoredGump(0x000C, 0x03EA); //Male gump (for GM robe)
-	UO->ExecuteColoredGump(0x000D, bodyColor); //Female gump
-	UO->ExecuteColoredGump(0xC72B, bodyColor); //GM robe gump
+	UO->ExecuteGump(0x000C); //Male gump
+	UO->ExecuteGump(0x000D); //Female gump
+	UO->ExecuteGump(0xC72B); //GM robe gump
 	
 	if (obj != NULL)
 	{
@@ -123,7 +122,7 @@ void TGumpPaperdoll::PrepareTextures()
 					if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
 						cOfs = g_MaleGumpOffset;
 
-					UO->ExecuteColoredGump(equipment->AnimID + cOfs, equipment->Color);
+					UO->ExecuteGump(equipment->AnimID + cOfs);
 				}
 				else if (ObjectInHand != NULL && UsedLayers[i] == ObjectInHand->UsedLayer && ObjectInHand->AnimID)
 				{
@@ -136,7 +135,7 @@ void TGumpPaperdoll::PrepareTextures()
 						if (obj->Sex && !UO->ExecuteGump(ObjectInHand->AnimID + cOfs))
 							cOfs = g_MaleGumpOffset;
 
-						UO->ExecuteColoredGump(ObjectInHand->AnimID + gumpOffset, ObjectInHand->Color);
+						UO->ExecuteGump(ObjectInHand->AnimID + gumpOffset);
 					}
 				}
 			}
@@ -152,13 +151,13 @@ void TGumpPaperdoll::PrepareTextures()
 				if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
 					cOfs = g_MaleGumpOffset;
 
-				UO->ExecuteColoredGump(equipment->AnimID + cOfs, equipment->Color);
+				UO->ExecuteGump(equipment->AnimID + cOfs);
 			}
 		}
 
 		equipment = obj->FindLayer(OL_BACKPACK);
 		if (equipment != NULL && equipment->AnimID != 0)
-			UO->ExecuteColoredGump(equipment->AnimID + 50000, equipment->Color);
+			UO->ExecuteGump(equipment->AnimID + 50000);
 	}
 }
 //---------------------------------------------------------------------------
@@ -198,21 +197,23 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 	}
 
 	glNewList((GLuint)index, GL_COMPILE);
-	
+
+		if (Minimized)
+		{
+			UO->DrawGump(0x07EE, 0, posX, posY); //Paperdoll button Character
+			glEndList();
+
+			FrameRedraw = true;
+			FrameCreated = true;
+			return;
+		}
+
+		ColorizerShader->Use();
+
 		WORD gumpID = 0;
 
 		if (Serial == g_PlayerSerial)
 		{
-			if (Minimized)
-			{
-				UO->DrawGump(0x07EE, 0, posX, posY); //Paperdoll button Character
-				glEndList();
-
-				FrameRedraw = true;
-				FrameCreated = true;
-				return;
-			}
-
 			UO->DrawGump(0x07D0, 0, posX, posY); //Paperdoll (self)
 
 			gumpID = 0x07EF;
@@ -313,6 +314,7 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 
 		UO->DrawGump(0x07D2, 0, posX + 23, posY + 196); //Paperdoll profile scroll
 
+		glUniform1iARB(ShaderDrawMode, 0);
 		obj->m_PaperdollTextTexture.Draw(posX + 39, posY + 262);
 
 		posX += 8;
@@ -376,6 +378,8 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 		equipment = obj->FindLayer(OL_BACKPACK);
 		if (equipment != NULL && equipment->AnimID != 0)
 			UO->DrawGump(equipment->AnimID + 50000, equipment->Color, posX, posY);
+
+		UnuseShader();
 
 	glEndList();
 

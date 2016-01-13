@@ -20,21 +20,6 @@
 #ifndef TextureObjectH
 #define TextureObjectH
 //---------------------------------------------------------------------------
-class TColoredTextureObject
-{
-private:
-	WORD m_Color;
-public:
-	TColoredTextureObject(WORD color);
-	~TColoredTextureObject();
-
-	SETGET(WORD, Color)
-	GLuint Texture;
-	GLuint TexturePH;
-
-	TColoredTextureObject *m_Next;
-};
-//---------------------------------------------------------------------------
 class TTextureObject
 {
 private:
@@ -48,9 +33,6 @@ public:
 	SETGET(int, Height)
 
 	GLuint Texture;
-
-	TColoredTextureObject *Colored;
-	TColoredTextureObject *GetColoredTexture(WORD color);
 };
 //---------------------------------------------------------------------------
 class TIndexObject
@@ -129,8 +111,7 @@ public:
 	SETGET(short, CenterX)
 	SETGET(short, CenterY)
 
-	TColoredTextureObject *Colored;
-	TColoredTextureObject *GetColoredTexture(WORD color);
+	GLuint Texture;
 };
 //---------------------------------------------------------------------------
 class TTextureAnimationDirection : public TBaseQueueItem
@@ -218,21 +199,6 @@ public:
 	SETGET(WORD, Count)
 };
 //---------------------------------------------------------------------------
-class TColoredTextTexture
-{
-private:
-	WORD m_Color;
-	GLuint m_Texture;
-public:
-	TColoredTextTexture();
-	~TColoredTextTexture();
-
-	SETGET(WORD, Color)
-	SETGET(GLuint, Texture)
-
-	TColoredTextTexture *m_Next;
-};
-//---------------------------------------------------------------------------
 struct WEB_LINK_RECT
 {
 	WORD LinkID;
@@ -269,8 +235,6 @@ public:
 	
 	void Draw(int x, int y);
 	void DrawYellow(int x, int y);
-
-	//void DrawColored(WORD color, int x, int y);
 
 	bool UnderMouse(int x, int y);
 

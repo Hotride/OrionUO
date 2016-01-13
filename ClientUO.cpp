@@ -796,12 +796,6 @@ TUltimaOnline::~TUltimaOnline()
 		ColorizerShader = NULL;
 	}
 
-	if (ColorizerPHShader != NULL)
-	{
-		delete ColorizerPHShader;
-		ColorizerPHShader = NULL;
-	}
-
 	CurrentShader = NULL;
 
 	SoundManager.Free();
@@ -1634,6 +1628,7 @@ void TUltimaOnline::ClearUnusedTextures()
 
 	clearMap = 1;
 
+	return;
 	m_StaticDataIndex[0x0EED].LastAccessTime = ticks;
 	m_StaticDataIndex[0x0EEE].LastAccessTime = ticks;
 	m_StaticDataIndex[0x0EEF].LastAccessTime = ticks;
@@ -1792,7 +1787,10 @@ void TUltimaOnline::PatchFiles()
 */
 
 	if (!FileManager.UseVerdata || !FileManager.VerdataMul.Address)
+	{
+		ColorManager->CreateHuesPalette();
 		return;
+	}
 
 	int dataCount = *(PDWORD)FileManager.VerdataMul.Address;
 
@@ -1879,6 +1877,8 @@ void TUltimaOnline::PatchFiles()
 			trace_printf("Unused verdata block (fileID) = %i (BlockID+ %i\n", vh->FileID, vh->BlockID);
 		}
 	}
+
+	ColorManager->CreateHuesPalette();
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::LoadSkills()
@@ -2438,14 +2438,6 @@ void TUltimaOnline::LoadShaders()
 	ColorizerShader = new TColorizerShader((char*)vect.Address, (char*)frag.Address);
 
 	FileManager.UnloadFileFromMemory(frag);
-
-
-
-	FileManager.LoadFileToMemory(frag, FilePath("shaders\\ColorizerPHShader.frag").c_str());
-
-	ColorizerPHShader = new TColorizerShader((char*)vect.Address, (char*)frag.Address);
-
-	FileManager.UnloadFileFromMemory(frag);
 	FileManager.UnloadFileFromMemory(vect);
 }
 //---------------------------------------------------------------------------
@@ -2944,27 +2936,6 @@ TTextureObject *TUltimaOnline::ExecuteGump(WORD id, bool partialHue)
 	return io.Texture;
 }
 //---------------------------------------------------------------------------
-TColoredTextureObject *TUltimaOnline::ExecuteColoredGump(WORD id, WORD color, bool partialHue)
-{
-	TTextureObject *th = ExecuteGump(id);
-	
-	TColoredTextureObject *cth = NULL;
-
-	if (th != NULL && color)
-		{
-		cth = th->GetColoredTexture(color);
-
-		if (partialHue && cth->TexturePH == 0)
-			cth->TexturePH = MulReader.ReadColoredGump(m_GumpDataIndex[id].Address, m_GumpDataIndex[id].Size, color, th, partialHue);
-		else if (!partialHue && cth->Texture == 0)
-			cth->Texture = MulReader.ReadColoredGump(m_GumpDataIndex[id].Address, m_GumpDataIndex[id].Size, color, th, partialHue);
-
-		return cth;
-	}
-
-	return NULL;
-}
-//---------------------------------------------------------------------------
 TTextureObject *TUltimaOnline::ExecuteLandArt(WORD id)
 {
 	TIndexObject &io = m_LandDataIndex[id];
@@ -3029,29 +3000,6 @@ TTextureObject *TUltimaOnline::ExecuteStaticArt(WORD id)
 	io.LastAccessTime = GetTickCount();
 
 	return io.Texture;
-}
-//---------------------------------------------------------------------------
-TColoredTextureObject *TUltimaOnline::ExecuteColoredStaticArt(WORD id, WORD color)
-{
-	TTextureObject *th = ExecuteStaticArt(id);
-
-	if (th == NULL)
-		return NULL;
-
-	if (color)
-	{
-		TColoredTextureObject *cth = th->GetColoredTexture(color);
-		bool partialHue = IsPartialHue(GetStaticFlags(id));
-
-		if (partialHue && cth->TexturePH == 0)
-			cth->TexturePH = MulReader.ReadColoredArt(id + 0x4000, m_StaticDataIndex[id].Address, m_StaticDataIndex[id].Size, color, th, partialHue);
-		else if (!partialHue && cth->Texture == 0)
-			cth->Texture = MulReader.ReadColoredArt(id + 0x4000, m_StaticDataIndex[id].Address, m_StaticDataIndex[id].Size, color, th, partialHue);
-
-		return cth;
-	}
-
-	return NULL;
 }
 //---------------------------------------------------------------------------
 TTextureObject *TUltimaOnline::ExecuteTexture(WORD id)
@@ -3152,111 +3100,52 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
 {
 	TTextureObject *th = ExecuteGump(id);
 
-	if (th == NULL)
-		return;
-
-	GLuint texture = th->Texture;
-	
-	if (color && false)
+	if (th != NULL)
 	{
-		TColoredTextureObject *cth = th->GetColoredTexture(color);
+		int drawMode = (!g_GrayedPixels && color);
 
-		if (partialHue)
+		if (drawMode)
 		{
-			if (cth->TexturePH != 0)
-				texture = cth->TexturePH;
-			else
-			{
-				texture = MulReader.ReadColoredGump(m_GumpDataIndex[id].Address, m_GumpDataIndex[id].Size, color, th, partialHue);
-				cth->TexturePH = texture;
-			}
+			if (partialHue)
+				drawMode = 2;
+
+			ColorManager->SendColorsToShader(color);
 		}
-		else
-		{
-			if (cth->Texture != 0)
-				texture = cth->Texture;
-			else
-			{
-				texture = MulReader.ReadColoredGump(m_GumpDataIndex[id].Address, m_GumpDataIndex[id].Size, color, th, partialHue);
-				cth->Texture = texture;
-			}
-		}
+
+		glUniform1iARB(ShaderDrawMode, drawMode);
+
+		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
 	}
-
-	if (CurrentShader == NULL && color)
-	{
-		if (partialHue)
-			ColorizerPHShader->Use();
-		else
-			ColorizerShader->Use();
-
-		ColorManager->SendColorsToShader(color);
-
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
-
-		UnuseShader();
-	}
-	else
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, int width, int height, bool partialHue)
 {
 	TTextureObject *th = ExecuteGump(id);
 
-	if (th == NULL)
-		return;
-
-	GLuint texture = th->Texture;
-	int DW = th->Width;
-	int DH = th->Height;
-	
-	if (width == 0)
-		width = DW;
-	if (height == 0)
-		height = DH;
-	
-	if (color && false)
+	if (th != NULL)
 	{
-		TColoredTextureObject *cth = th->GetColoredTexture(color);
+		int DW = th->Width;
+		int DH = th->Height;
 
-		if (partialHue)
+		if (width == 0)
+			width = DW;
+		if (height == 0)
+			height = DH;
+
+		int drawMode = (!g_GrayedPixels && color);
+
+		if (drawMode)
 		{
-			if (cth->TexturePH != 0)
-				texture = cth->TexturePH;
-			else
-			{
-				texture = MulReader.ReadColoredGump(m_GumpDataIndex[id].Address, m_GumpDataIndex[id].Size, color, th, partialHue);
-				cth->TexturePH = texture;
-			}
+			if (partialHue)
+				drawMode = 2;
+
+			ColorManager->SendColorsToShader(color);
 		}
-		else
-		{
-			if (cth->Texture != 0)
-				texture = cth->Texture;
-			else
-			{
-				texture = MulReader.ReadColoredGump(m_GumpDataIndex[id].Address, m_GumpDataIndex[id].Size, color, th, partialHue);
-				cth->Texture = texture;
-			}
-		}
+
+		glUniform1iARB(ShaderDrawMode, drawMode);
+
+		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH, (GLfloat)width, (GLfloat)height);
 	}
-
-	if (CurrentShader == NULL && color)
-	{
-		if (partialHue)
-			ColorizerPHShader->Use();
-		else
-			ColorizerShader->Use();
-
-		ColorManager->SendColorsToShader(color);
-
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH, (GLfloat)width, (GLfloat)height);
-
-		UnuseShader();
-	}
-	else
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH, (GLfloat)width, (GLfloat)height);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawResizepicGump(WORD id, int x, int y, int width, int height)
@@ -3307,139 +3196,66 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 		return;
 	}
 
-	GLuint texture = th->Texture;
-
 	if (g_OutOfRangeColor)
 		color = g_OutOfRangeColor;
 
-	if (false && color && !g_GrayedPixels)
-	{
-		TColoredTextureObject *cth = th->GetColoredTexture(color);
+	int drawMode = (!g_GrayedPixels && color);
 
-		if (cth->Texture != 0)
-			texture = cth->Texture;
-		else
-		{
-			texture = MulReader.ReadColoredTexture(m_TextureDataIndex[tid].Address, m_TextureDataIndex[tid].Size, color, th);
-			cth->Texture = texture;
-		}
-	}
-	
-	if (CurrentShader == NULL && color)
-	{
-		ColorizerShader->Use();
-
+	if (drawMode)
 		ColorManager->SendColorsToShader(color);
-		
-		g_GL.DrawLandTexture(texture, (GLfloat)(x - 23), (GLfloat)(y - 23), 44.0f, 44.0f, rc, normals);
 
-		UnuseShader();
-	}
-	else
-		g_GL.DrawLandTexture(texture, (GLfloat)(x - 23), (GLfloat)(y - 23), 44.0f, 44.0f, rc, normals);
+	glUniform1iARB(ShaderDrawMode, drawMode);
+
+	g_GL.DrawLandTexture(th->Texture, (GLfloat)(x - 23), (GLfloat)(y - 23), 44.0f, 44.0f, rc, normals);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
 {
 	TTextureObject *th = ExecuteLandArt(id);
-	if (th == NULL)
-		return;
-
-	GLuint texture = th->Texture;
-
-	if (g_OutOfRangeColor)
-		color = g_OutOfRangeColor;
-
-	if (false && color && !g_GrayedPixels)
+	if (th != NULL)
 	{
-		TColoredTextureObject *cth = th->GetColoredTexture(color);
+		if (g_OutOfRangeColor)
+			color = g_OutOfRangeColor;
 
-		if (cth->Texture != 0)
-			texture = cth->Texture;
-		else
-		{
-			texture = MulReader.ReadColoredArt(id, m_LandDataIndex[id].Address, m_LandDataIndex[id].Size, color, th, false);
-			cth->Texture = texture;
-		}
+		int drawMode = (!g_GrayedPixels && color);
+
+		if (drawMode)
+			ColorManager->SendColorsToShader(color);
+
+		glUniform1iARB(ShaderDrawMode, drawMode);
+
+		g_GL.Draw(th->Texture, (GLfloat)(x - 23), (GLfloat)((y - 23) - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
 	}
-	
-	if (CurrentShader == NULL && color)
-	{
-		ColorizerShader->Use();
-
-		ColorManager->SendColorsToShader(color);
-		
-		g_GL.Draw(texture, (GLfloat)(x - 23), (GLfloat)((y - 23) - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
-
-		UnuseShader();
-	}
-	else
-		g_GL.Draw(texture, (GLfloat)(x - 23), (GLfloat)((y - 23) - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool selection)
 {
 	TTextureObject *th = ExecuteStaticArt(id);
-	
-	if (th == NULL)
-		return;
 
-	GLuint texture = th->Texture;
-	int DW = th->Width;
-	int DH = th->Height;
-
-	if (g_OutOfRangeColor)
-		color = g_OutOfRangeColor;
-
-	if (false && color && !g_GrayedPixels)
+	if (th != NULL)
 	{
-		TColoredTextureObject *cth = th->GetColoredTexture(color);
+		if (g_OutOfRangeColor)
+			color = g_OutOfRangeColor;
 
-		bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
+		x -= m_StaticDataIndex[id].Width;
+		y -= m_StaticDataIndex[id].Height;
 
-		if (partialHue)
+		int drawMode = (!g_GrayedPixels && color);
+
+		if (drawMode)
 		{
-			if (cth->TexturePH != 0)
-				texture = cth->TexturePH;
-			else
-			{
-				texture = MulReader.ReadColoredArt(id + 0x4000, m_StaticDataIndex[id].Address, m_StaticDataIndex[id].Size, color, th, partialHue);
-				cth->TexturePH = texture;
-			}
-		}
-		else
-		{
-			if (cth->Texture != 0)
-				texture = cth->Texture;
-			else
-			{
-				texture = MulReader.ReadColoredArt(id + 0x4000, m_StaticDataIndex[id].Address, m_StaticDataIndex[id].Size, color, th, partialHue);
-				cth->Texture = texture;
-			}
+			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
+
+			if (partialHue)
+				drawMode = 2;
+
+			ColorManager->SendColorsToShader(color);
 		}
 
+		glUniform1iARB(ShaderDrawMode, drawMode);
+
+		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
 	}
-
-	x -= m_StaticDataIndex[id].Width;
-	y -= m_StaticDataIndex[id].Height;
-	
-	if (CurrentShader == NULL && color)
-	{
-		bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
-
-		if (partialHue)
-			ColorizerPHShader->Use();
-		else
-			ColorizerShader->Use();
-
-		ColorManager->SendColorsToShader(color);
-		
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
-
-		UnuseShader();
-	}
-	else
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int z, bool selection)
@@ -3448,168 +3264,87 @@ void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int
 
 	TTextureObject *th = ExecuteStaticArt(id);
 
-	if (th == NULL)
-		return;
-
-	GLuint texture = th->Texture;
-	int DW = th->Width;
-	int DH = th->Height;
-
-	if (g_OutOfRangeColor)
-		color = g_OutOfRangeColor;
-
-	if (false && color && !g_GrayedPixels)
+	if (th != NULL)
 	{
-		TColoredTextureObject *cth = th->GetColoredTexture(color);
+		if (g_OutOfRangeColor)
+			color = g_OutOfRangeColor;
 
-		bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
+		x -= m_StaticDataIndex[id].Width;
+		y -= m_StaticDataIndex[id].Height;
 
-		if (partialHue)
+		int drawMode = (!g_GrayedPixels && color);
+
+		if (drawMode)
 		{
-			if (cth->TexturePH != 0)
-				texture = cth->TexturePH;
-			else
-			{
-				texture = MulReader.ReadColoredArt(id + 0x4000, m_StaticDataIndex[id].Address, m_StaticDataIndex[id].Size, color, th, partialHue);
-				cth->TexturePH = texture;
-			}
-		}
-		else
-		{
-			if (cth->Texture != 0)
-				texture = cth->Texture;
-			else
-			{
-				texture = MulReader.ReadColoredArt(id + 0x4000, m_StaticDataIndex[id].Address, m_StaticDataIndex[id].Size, color, th, partialHue);
-				cth->Texture = texture;
-			}
+			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
+
+			if (partialHue)
+				drawMode = 2;
+
+			ColorManager->SendColorsToShader(color);
 		}
 
+		glUniform1iARB(ShaderDrawMode, drawMode);
+
+		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
 	}
-
-	x -= m_StaticDataIndex[id].Width;
-	y -= m_StaticDataIndex[id].Height;
-	
-	if (CurrentShader == NULL && color)
-	{
-		bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
-
-		if (partialHue)
-			ColorizerPHShader->Use();
-		else
-			ColorizerShader->Use();
-
-		ColorManager->SendColorsToShader(color);
-		
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
-
-		UnuseShader();
-	}
-	else
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, bool selection, bool onMouse)
 {
 	TTextureObject *th = ExecuteStaticArt(id);
 
-	if (th == NULL)
-		return;
-
-	GLuint texture = th->Texture;
-	int DW = th->Width;
-	int DH = th->Height;
-
-	if (onMouse)
+	if (th != NULL)
 	{
-		x -= (DW / 2);
-		y -= (DH / 2);
-	}
+		int DW = th->Width;
+		int DH = th->Height;
 
-	if (color && false)
-	{
-		TColoredTextureObject *cth = th->GetColoredTexture(color);
-
-		bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
-
-		if (partialHue)
+		if (onMouse)
 		{
-			if (cth->TexturePH != 0)
-				texture = cth->TexturePH;
-			else
-			{
-				texture = MulReader.ReadColoredArt(id + 0x4000, m_StaticDataIndex[id].Address, m_StaticDataIndex[id].Size, color, th, partialHue);
-				cth->TexturePH = texture;
-			}
-		}
-		else
-		{
-			if (cth->Texture != 0)
-				texture = cth->Texture;
-			else
-			{
-				texture = MulReader.ReadColoredArt(id + 0x4000, m_StaticDataIndex[id].Address, m_StaticDataIndex[id].Size, color, th, partialHue);
-				cth->Texture = texture;
-			}
+			x -= (DW / 2);
+			y -= (DH / 2);
 		}
 
+		int drawMode = (!g_GrayedPixels && color);
+
+		if (drawMode)
+		{
+			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
+
+			if (partialHue)
+				drawMode = 2;
+
+			ColorManager->SendColorsToShader(color);
+		}
+
+		glUniform1iARB(ShaderDrawMode, drawMode);
+
+		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH);
 	}
-	
-	if (CurrentShader == NULL && color)
-	{
-		bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
-
-		if (partialHue)
-			ColorizerPHShader->Use();
-		else
-			ColorizerShader->Use();
-
-		ColorManager->SendColorsToShader(color);
-		
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH);
-
-		UnuseShader();
-	}
-	else
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLight(BYTE id, WORD color, int x, int y)
 {
 	TTextureObject *th = ExecuteLight(id);
 
-	if (th == NULL)
-		return;
-	
-	GLuint texture = th->Texture;
-
-	if (color && false)
+	if (th != NULL)
 	{
-		TColoredTextureObject *cth = th->GetColoredTexture(color);
+		x -= th->Width / 2;
+		y -= th->Height / 2;
 
-		if (cth->Texture != 0)
-			texture = cth->Texture;
-		else
+		int drawMode = 0;
+
+		if (color)
 		{
-			texture = MulReader.ReadColoredLight(m_LightDataIndex[id].Address, m_LightDataIndex[id].Size, color, th);
-			cth->Texture = texture;
-		}
-	}
-	
-	x -= th->Width / 2;
-	y -= th->Height / 2;
-	
-	if (CurrentShader == NULL && color)
-	{
-		ColorizerShader->Use();
-		ColorManager->SendColorsToShader(color);
-		
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
+			drawMode = 3;
 
-		UnuseShader();
+			ColorManager->SendColorsToShader(color);
+		}
+
+		glUniform1iARB(ShaderDrawMode, drawMode);
+
+		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
 	}
-	else
-		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::PolygonePixelsInXY(int x, int y, int width, int height)

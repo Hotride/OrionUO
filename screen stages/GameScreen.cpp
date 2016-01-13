@@ -565,12 +565,11 @@ int TGameScreen::Render(bool mode)
 		}
 
 		if (g_GrayedPixels)
-		{
 			CurrentShader = DeathShader;
-			CurrentShader->Use();
-		}
 		else
-			CurrentShader = NULL;
+			CurrentShader = ColorizerShader;
+
+		CurrentShader->Use();
 
 		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 
@@ -629,11 +628,11 @@ int TGameScreen::Render(bool mode)
 							if (DrawPixelsY - deltaZ < m_RenderBounds.MinPixelsY || DrawPixelsY - deltaZ > m_RenderBounds.MaxPixelsY)
 								continue;
 
-							/*g_OutOfRangeColor = 0;
+							g_OutOfRangeColor = 0;
 							POINT testPos = {mX, mY};
 
 							if (GetDistance(g_Player, testPos) > g_UpdateRange)
-								g_OutOfRangeColor = 0x0386;*/
+								g_OutOfRangeColor = 0x0386;
 
 							char checkZ = mol->DrawZ;
 						
@@ -684,11 +683,15 @@ int TGameScreen::Render(bool mode)
 					if (!ConfigManager.DarkNights)
 						newLightColor += 0.2f;
 
+					UnuseShader();
+
 					glClearColor(newLightColor, newLightColor, newLightColor, 1.0f);
 					glClear(GL_COLOR_BUFFER_BIT);
 
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_ONE, GL_ONE);
+
+					ColorizerShader->Use();
 
 					IFOR(i, 0, m_LightCount)
 					{
@@ -696,6 +699,8 @@ int TGameScreen::Render(bool mode)
 
 						UO->DrawLight(light.ID, light.Color, light.DrawX - gameWindowPosX, light.DrawY - gameWindowPosY);
 					}
+					
+					UnuseShader();
 
 					g_LightBuffer.Release();
 
@@ -713,6 +718,15 @@ int TGameScreen::Render(bool mode)
 				}
 			}
 
+			ColorizerShader->Use();
+
+			TargetGump.Draw();
+			AttackTargetGump.Draw();
+
+			Weather.Draw(gameWindowPosX, gameWindowPosY);
+
+			QuestArrow.Draw(gameWindowCenterX, gameWindowCenterY);
+
 			UnuseShader();
 
 			DrawSmoothMonitorEffect();
@@ -720,13 +734,6 @@ int TGameScreen::Render(bool mode)
 			g_OutOfRangeColor = 0;
 
 			g_GrayedPixels = false;
-
-			TargetGump.Draw();
-			AttackTargetGump.Draw();
-
-			QuestArrow.Draw(gameWindowCenterX, gameWindowCenterY);
-
-			Weather.Draw(gameWindowPosX, gameWindowPosY);
 
 			//Отрисовка сообщений систем чата
 			int TextOffsY = (gameWindowPosY + gameWindowSizeY) - 41;
@@ -791,6 +798,8 @@ int TGameScreen::Render(bool mode)
 		{
 			FontManager->DrawA(3, "You are dead.", 0, gameWindowCenterX - 30, gameWindowCenterY);
 		}
+
+		UnuseShader();
 
 		//Восстанавливаем размеры рисуемой области
 		g_GL.RestorePort();
@@ -867,6 +876,7 @@ int TGameScreen::Render(bool mode)
 #endif //UO_DEBUG_INFO!=0
 		
 		g_GL.EnableAlpha();
+
 		GumpManager->Draw(mode, false);
 		
 		// отрисовка ввода игрока

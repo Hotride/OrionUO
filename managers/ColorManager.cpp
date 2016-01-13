@@ -22,18 +22,19 @@
 TColorManager *ColorManager;
 //---------------------------------------------------------------------------
 TColorManager::TColorManager()
+: m_HuesInt(NULL)
 {
 	DWORD addr = (DWORD)FileManager.HuesMul.Address;
 	DWORD size = FileManager.HuesMul.Size;
 
 	if (addr > 0 && size > 0 && addr != 0xFFFFFFFF && size != 0xFFFFFFFF)
 	{
-		int EntryCount = size / sizeof(HUES_GROUP);
+		int entryCount = size / sizeof(HUES_GROUP);
 
-		m_HuesCount = EntryCount * 8;
-		m_HuesRange = new HUES_GROUP[EntryCount];
+		m_HuesCount = entryCount * 8;
+		m_HuesRange = new HUES_GROUP[entryCount];
 
-		memcpy(m_HuesRange, (PVOID)addr, EntryCount * sizeof(HUES_GROUP));
+		memcpy(m_HuesRange, (PVOID)addr, entryCount * sizeof(HUES_GROUP));
 	}
 	else
 	{
@@ -57,8 +58,16 @@ TColorManager::TColorManager()
 TColorManager::~TColorManager()
 {
 	if (m_HuesRange != NULL)
+	{
 		delete m_HuesRange;
-	m_HuesRange = NULL;
+		m_HuesRange = NULL;
+	}
+
+	if (m_HuesInt != NULL)
+	{
+		delete m_HuesInt;
+		m_HuesInt = NULL;
+	}
 
 	m_HuesCount = 0;
 }
@@ -73,19 +82,28 @@ void TColorManager::SetHuesBlock(int Index, PVERDATA_HUES_GROUP group)
 		memcpy(&m_HuesRange[Index].Entries[i].ColorTable[0], &group->Entries[i].ColorTable[0], sizeof(WORD[32]));
 }
 //---------------------------------------------------------------------------
+void TColorManager::CreateHuesPalette()
+{
+	m_HuesInt = new INT_HUES[m_HuesCount];
+	int entryCount = m_HuesCount / 8;
+
+	IFOR(i, 0, entryCount)
+	{
+		IFOR(j, 0, 8)
+		{
+			IFOR(h, 0, 32)
+				m_HuesInt[(i * 8) + j].Palette[h] = (int)m_HuesRange[i].Entries[j].ColorTable[h];
+		}
+	}
+}
+//---------------------------------------------------------------------------
 void TColorManager::SendColorsToShader(WORD &color)
 {
 	if (color != 0 && color < m_HuesCount)
 	{
 		color -= 1;
-		int g = color / 8;
-		int e = color % 8;
 
-		int c[32];
-		IFOR(i, 0, 32)
-			c[i] = m_HuesRange[g].Entries[e].ColorTable[i];
-
-		glUniform1ivARB(ShaderColorTable, 32, &c[0]);
+		glUniform1ivARB(ShaderColorTable, 32, &m_HuesInt[color].Palette[0]);
 	}
 }
 //---------------------------------------------------------------------------

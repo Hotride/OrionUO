@@ -1228,8 +1228,8 @@ PACKET_HANDLER(UpdateItem)
 		{
 			obj->ImageID = st.AnimID + 0xC350;
 			obj->AnimID = st.AnimID;
-			UO->ExecuteColoredGump(st.AnimID + 50000, obj->Color, (st.Flags & 0x00040000));
-			UO->ExecuteColoredGump(st.AnimID + 60000, obj->Color, (st.Flags & 0x00040000));
+			UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
+			UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
 			obj->UsedLayer = st.Quality;
 		}
 
@@ -1342,8 +1342,8 @@ PACKET_HANDLER(UpdateItemSA)
 		{
 			obj->ImageID = st.AnimID + 0xC350;
 			obj->AnimID = st.AnimID;
-			UO->ExecuteColoredGump(st.AnimID + 50000, obj->Color, (st.Flags & 0x00040000));
-			UO->ExecuteColoredGump(st.AnimID + 60000, obj->Color, (st.Flags & 0x00040000));
+			UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
+			UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
 			obj->UsedLayer = st.Quality;
 		}
 
@@ -1477,8 +1477,8 @@ PACKET_HANDLER(UpdateObject)
 			{
 				item->ImageID = st.AnimID + 0xC350;
 				item->AnimID = st.AnimID;
-				UO->ExecuteColoredGump(st.AnimID + 50000, item->Color, (st.Flags & 0x00040000));
-				UO->ExecuteColoredGump(st.AnimID + 60000, item->Color, (st.Flags & 0x00040000));
+				UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
+				UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
 				item->UsedLayer = st.Quality;
 			}
 
@@ -1550,8 +1550,8 @@ PACKET_HANDLER(UpdateObject)
 		{
 			obj2->ImageID = st1.AnimID + 0xC350;
 			obj2->AnimID = st1.AnimID;
-			UO->ExecuteColoredGump(st1.AnimID + 50000, obj2->Color, (st1.Flags & 0x00040000));
-			UO->ExecuteColoredGump(st1.AnimID + 60000, obj2->Color, (st1.Flags & 0x00040000));
+			UO->ExecuteGump(st1.AnimID + 50000, (st1.Flags & 0x00040000));
+			UO->ExecuteGump(st1.AnimID + 60000, (st1.Flags & 0x00040000));
 			obj2->UsedLayer = st1.Quality;
 		}
 		else if (layer == OL_MOUNT)
@@ -1618,8 +1618,8 @@ PACKET_HANDLER(EquipItem)
 	{
 		obj->ImageID = st.AnimID + 0xC350;
 		obj->AnimID = st.AnimID;
-		UO->ExecuteColoredGump(st.AnimID + 50000, obj->Color, (st.Flags & 0x00040000));
-		UO->ExecuteColoredGump(st.AnimID + 60000, obj->Color, (st.Flags & 0x00040000));
+		UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
+		UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
 		obj->UsedLayer = st.Quality;
 	}
 
@@ -1698,15 +1698,12 @@ PACKET_HANDLER(UpdateContainedItem)
 		{
 			obj->ImageID = st.AnimID + 0xC350;
 			obj->AnimID = st.AnimID;
-			UO->ExecuteColoredGump(st.AnimID + 50000, obj->Color, (st.Flags & 0x00040000));
-			UO->ExecuteColoredGump(st.AnimID + 60000, obj->Color, (st.Flags & 0x00040000));
+			UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
+			UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
 			obj->UsedLayer = st.Quality;
 		}
 
-		if (obj->Color)
-			UO->ExecuteColoredStaticArt(obj->Graphic, obj->Color);
-		else
-			UO->ExecuteStaticArt(obj->Graphic);
+		UO->ExecuteStaticArt(obj->Graphic);
 	}
 
 	World->MoveToTop(obj);
@@ -1848,15 +1845,12 @@ PACKET_HANDLER(UpdateContainedItems)
 			{
 				obj->ImageID = st.AnimID + 0xC350;
 				obj->AnimID = st.AnimID;
-				UO->ExecuteColoredGump(st.AnimID + 50000, obj->Color, (st.Flags & 0x00040000));
-				UO->ExecuteColoredGump(st.AnimID + 60000, obj->Color, (st.Flags & 0x00040000));
+				UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
+				UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
 				obj->UsedLayer = st.Quality;
 			}
 
-			if (obj->Color)
-				UO->ExecuteColoredStaticArt(obj->Graphic, obj->Color);
-			else
-				UO->ExecuteStaticArt(obj->Graphic);
+			UO->ExecuteStaticArt(obj->Graphic);
 		}
 
 		trace_printf("0x%08X<0x%08X:%04X*%d (%d,%d) %04X\n", obj->Container, obj->Serial,
@@ -2903,7 +2897,7 @@ PACKET_HANDLER(OpenGump)
 			sscanf((char*)e, "%d %d %d %d %d %d %d %d %d %d %d", &x, &y, &up, &down, &action, &topage, &number, &tid, &tcolor, &tx, &ty);
 
 			UO->ExecuteButton(up);
-			UO->ExecuteColoredStaticArt(tid, tcolor);
+			UO->ExecuteStaticArt(tid);
 
 			go = new TGumpButtonTileArt(up, up + 1, down, number, topage, action != 0, x, y, tid, tcolor,tx, ty);
 		}

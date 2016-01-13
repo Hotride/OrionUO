@@ -20,6 +20,7 @@
 
 GLuint ShaderTexture = 0;
 GLuint ShaderColorTable = 0;
+GLuint ShaderDrawMode = 0;
 //---------------------------------------------------------------------------
 int g_LandObjectsCount = 0;
 int g_StaticsObjectsCount = 0;
@@ -244,6 +245,7 @@ void UnuseShader()
 	glUseProgramObjectARB(0);
 	ShaderTexture = 0;
 	ShaderColorTable = 0;
+	ShaderDrawMode = 0;
 	CurrentShader = NULL;
 }
 //--------------------------------------------------------------------------

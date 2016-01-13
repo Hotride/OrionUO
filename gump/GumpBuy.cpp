@@ -55,10 +55,7 @@ void TGumpBuy::PrepareTextures()
 
 		while (box != NULL)
 		{
-			TTextureObject *to = UO->ExecuteStaticArt(box->Graphic);
-
-			if (box->Color && to)
-				to->GetColoredTexture(box->Color);
+			UO->ExecuteStaticArt(box->Graphic);
 
 			box = (TGameItem*)box->m_Next;
 		}

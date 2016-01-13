@@ -254,7 +254,7 @@ void TGLEngine::DrawLine(DWORD Color, float X, float Y, float TargetX, float Tar
 	
 	glPopMatrix();
 
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
@@ -278,7 +278,7 @@ void TGLEngine::DrawPolygone(DWORD Color, float X, float Y, float Width, float H
 	glPopMatrix();
 	glTranslatef(0.0f, 0.0f, 0.1f);
 	
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------

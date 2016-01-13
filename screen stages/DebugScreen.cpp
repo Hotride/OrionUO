@@ -125,10 +125,14 @@ int TDebugScreen::Render(bool mode)
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
+		ColorizerShader->Use();
+
 		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_DS_QUIT); //X gump /lighted
 		if (CanPressedButton == ID_DS_QUIT)
 			GumpID = 0x158B; //X gump (pressed)
 		UO->DrawGump(GumpID, 0x21, 555, 4);
+
+		UnuseShader();
 
 		GumpID = 0x1589 + (int)(CanSelectedButton == ID_DS_QUIT); //X gump /lighted
 		if (CanPressedButton == ID_DS_QUIT)

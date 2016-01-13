@@ -233,10 +233,7 @@ void TGumpGeneric::PrepareTextures()
 				{
 					TGumpButtonTileArt *bta = (TGumpButtonTileArt*)item;
 
-					TTextureObject *to = UO->ExecuteStaticArt(bta->TileGraphic);
-
-					if (bta->TileColor && to)
-						to->GetColoredTexture(bta->TileColor);
+					UO->ExecuteStaticArt(bta->TileGraphic);
 				}
 						
 				break;
@@ -271,10 +268,7 @@ void TGumpGeneric::PrepareTextures()
 			}
 			case GOT_TILEPIC:
 			{
-				TTextureObject *to = UO->ExecuteStaticArt(item->Graphic);
-
-				if (item->Color && to)
-					to->GetColoredTexture(item->Color);
+				UO->ExecuteStaticArt(item->Graphic);
 
 				break;
 			}

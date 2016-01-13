@@ -99,9 +99,6 @@ public:
 	TTextureObject *ExecuteTexture(WORD id);
 	TTextureObject *ExecuteLight(BYTE &id);
 	
-	TColoredTextureObject *ExecuteColoredGump(WORD id, WORD color, bool partialHue = true);
-	TColoredTextureObject *ExecuteColoredStaticArt(WORD id, WORD color);
-
 	bool ExecuteGumpPart(WORD id, int count);
 	bool ExecuteResizepic(WORD id) {return ExecuteGumpPart(id, 9);}
 	bool ExecuteButton(WORD id) {return ExecuteGumpPart(id, 3);}

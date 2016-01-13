@@ -61,10 +61,7 @@ void TGumpSecureTrading::PrepareTextures()
 					}
 				}
 
-				TTextureObject *to = UO->ExecuteStaticArt(graphic);
-
-				if (item->Color && to)
-					to->GetColoredTexture(item->Color);
+				UO->ExecuteStaticArt(graphic);
 			}
 
 			item = (TGameItem*)item->m_Next;
@@ -93,10 +90,7 @@ void TGumpSecureTrading::PrepareTextures()
 					}
 				}
 
-				TTextureObject *to = UO->ExecuteStaticArt(graphic);
-
-				if (item->Color && to)
-					to->GetColoredTexture(item->Color);
+				UO->ExecuteStaticArt(graphic);
 			}
 
 			item = (TGameItem*)item->m_Next;

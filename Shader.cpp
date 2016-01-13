@@ -22,7 +22,6 @@
 TBaseShader *CurrentShader = NULL;
 TDeathShader *DeathShader = NULL;
 TColorizerShader *ColorizerShader = NULL;
-TColorizerShader *ColorizerPHShader = NULL;
 //---------------------------------------------------------------------------
 //--------------------------------TShader------------------------------------
 //---------------------------------------------------------------------------
@@ -73,6 +72,8 @@ TBaseShader::~TBaseShader()
 //---------------------------------------------------------------------------
 bool TBaseShader::Use()
 {
+	UnuseShader();
+
 	bool result = false;
 
 	if (m_Shader != 0)
@@ -99,12 +100,14 @@ TDeathShader::TDeathShader(const char *vertexShaderData, const char *fragmentSha
 //----------------------------TColorizerShader-------------------------------
 //---------------------------------------------------------------------------
 TColorizerShader::TColorizerShader(const char *vertexShaderData, const char *fragmentShaderData)
-: TBaseShader(vertexShaderData, fragmentShaderData), m_ColorTablePointer(0)
+: TBaseShader(vertexShaderData, fragmentShaderData), m_ColorTablePointer(0),
+m_DrawModePointer(0)
 {
 	if (m_Shader != 0)
 	{
 		m_TexturePointer = glGetUniformLocationARB(m_Shader, "usedTexture");
 		m_ColorTablePointer = glGetUniformLocationARB(m_Shader, "colors");
+		m_DrawModePointer = glGetUniformLocationARB(m_Shader, "drawMode");
 	}
 	else
 		TPRINT("Failed to create ColorizerShader\n");
@@ -115,7 +118,11 @@ bool TColorizerShader::Use()
 	bool result = TBaseShader::Use();
 
 	if (result)
+	{
 		ShaderColorTable = m_ColorTablePointer;
+		ShaderDrawMode = m_DrawModePointer;
+		glUniform1iARB(ShaderDrawMode, 0);
+	}
 
 	return result;
 }

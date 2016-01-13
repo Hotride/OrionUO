@@ -82,7 +82,7 @@ public:
 
 	void ClearUnusedTextures(DWORD ticks);
 
-	bool ExecuteDirectionGroup(TTextureAnimationDirection *direction, WORD &id, WORD &color, bool &partialHue, int &offset);
+	bool ExecuteDirectionGroup(TTextureAnimationDirection *direction, WORD &id, int &offset);
 
 	void GetAnimDirection(BYTE &dir, bool &mirror);
 
