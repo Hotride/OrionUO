@@ -2418,8 +2418,7 @@ void TUltimaOnline::LoadShaders()
 	memset(&vsmh, 0, sizeof(TMappedHeader));
 	FileManager.LoadFileToMemory(vsmh, FilePath("shaders\\DeathShader.vert").c_str());
 
-	if (fsmh.Size && vsmh.Size)
-		DeathShader = new TDeathShader((char*)vsmh.Address, (char*)fsmh.Address);
+	DeathShader = new TDeathShader((char*)vsmh.Address, (char*)fsmh.Address);
 
 	FileManager.UnloadFileFromMemory(fsmh);
 	FileManager.UnloadFileFromMemory(vsmh);
@@ -2431,8 +2430,7 @@ void TUltimaOnline::LoadShaders()
 	memset(&cvsmh, 0, sizeof(TMappedHeader));
 	FileManager.LoadFileToMemory(cvsmh, FilePath("shaders\\ColorizerShader.vert").c_str());
 
-	if (cfsmh.Size && cvsmh.Size)
-		ColorizerShader = new TColorizerShader((char*)cvsmh.Address, (char*)cfsmh.Address);
+	ColorizerShader = new TColorizerShader((char*)cvsmh.Address, (char*)cfsmh.Address);
 
 	FileManager.UnloadFileFromMemory(cfsmh);
 	FileManager.UnloadFileFromMemory(cvsmh);

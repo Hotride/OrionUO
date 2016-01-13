@@ -91,6 +91,8 @@ TDeathShader::TDeathShader(const char *vertexShaderData, const char *fragmentSha
 {
 	if (m_Shader != 0)
 		m_TexturePointer = glGetUniformLocationARB(m_Shader, "usedTexture");
+	else
+		TPRINT("Failed to create DeathShader\n");
 }
 //---------------------------------------------------------------------------
 //----------------------------TColorizerShader-------------------------------
@@ -103,6 +105,8 @@ TColorizerShader::TColorizerShader(const char *vertexShaderData, const char *fra
 		m_TexturePointer = glGetUniformLocationARB(m_Shader, "usedTexture");
 		m_ColorTablePointer = glGetUniformLocationARB(m_Shader, "colors");
 	}
+	else
+		TPRINT("Failed to create ColorizerShader\n");
 }
 //---------------------------------------------------------------------------
 bool TColorizerShader::Use()
