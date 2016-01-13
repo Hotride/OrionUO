@@ -73,7 +73,7 @@ public:
 	SETGET(BYTE, Direction)
 
 
-	void EstimateImageCornerAlpha(PDWORD pixels, short &width, short &height, float alpha_scale = 3.0f, float = 14.0f);
+	void EstimateImageCornerAlpha(PDWORD pixels, short &width, short &height, float alpha_scale = 3.0f, float luma_threshold = 14.0f);
 
 	void InitBodyconv(PDWORD verdata, string fName);
 	void Load(PDWORD verdata);

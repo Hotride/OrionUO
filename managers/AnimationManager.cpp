@@ -689,19 +689,20 @@ void TAnimationManager::setAlphaAt(std::vector<bool> &processed, PDWORD pixels, 
 	{
 		Coords &coords = stack.back();
 		auto x = coords.x;
-		auto y = coords.y;
+		auto y = coords.y;		
 
 		stack.pop_back();
 
 		if (x < 0 || y < 0 || x >= width || y >= height)
 			continue;
 
-		auto idx = width * y + x;
+		auto idx = width * y + x;		
+
 		auto color = pixels[idx];
 
 		BYTE alpha = (color >> 24) & 0xff;
 
-		if (alpha != 255 || processed[idx]) {
+		if (/*alpha != 255 ||*/ processed[idx]) {
 			processed[idx] = true;
 			continue;
 		}
@@ -710,7 +711,7 @@ void TAnimationManager::setAlphaAt(std::vector<bool> &processed, PDWORD pixels, 
 		BYTE green = (color >> 8) & 0xff;
 		BYTE red = color & 0xff;
 
-		// лума - яркость ч/б пикселя
+		//яркость ч/б пикселя
 		auto luma = getLuma(red, green, blue);
 
 		if (luma > luma_threshold) {
@@ -718,18 +719,18 @@ void TAnimationManager::setAlphaAt(std::vector<bool> &processed, PDWORD pixels, 
 			continue;
 		}
 
-		// высчитываем новую прозрачность из учета яркости
+		//высчитываем новую прозрачность из учета яркости
 		alpha = (((int)(alpha_scale * luma)) / BIT_STEP) * BIT_STEP;
 
-		// выставляем новую альфу для спрайта (собираем пиксель)
+		//выставляем новую альфу для спрайта (собираем пиксель)
 		pixels[idx] = (alpha << 24) | (blue << 16) | (green << 8) | red;
 		processed[idx] = true;
 
-		// обрабатываем соседние пиксели
+		//обрабатываем соседние пиксели
 		stack.push_back(Coords(x + 1, y));
 		stack.push_back(Coords(x - 1, y));
 		stack.push_back(Coords(x, y + 1));
-		stack.push_back(Coords(x, y - 1));
+		stack.push_back(Coords(x, y - 1));		
 	}
  
 }                       
@@ -746,8 +747,10 @@ void TAnimationManager::EstimateImageCornerAlpha(PDWORD pixels, short &width, sh
 	auto pixels_count = width * height;
 
 	std::vector<bool> processed(pixels_count);
-	processed.resize(pixels_count);
+	//processed.resize(pixels_count);
+	auto test = processed.size();
 	std::fill(processed.begin(), processed.end(), false);
+	test = processed.size();
 		
 	IFOR(y, 0, height)
 	{
@@ -756,7 +759,8 @@ void TAnimationManager::EstimateImageCornerAlpha(PDWORD pixels, short &width, sh
 		IFOR(x, 0, width)        
 		{
 			auto idx = row_idx + x;
-            auto color = pixels[idx];
+
+            DWORD color = pixels[idx];
             
 			BYTE alpha = (color >> 24) & 0xff;
 			BYTE blue = (color >> 16) & 0xff;
