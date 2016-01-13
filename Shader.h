@@ -53,5 +53,6 @@ public:
 extern TBaseShader *CurrentShader;
 extern TDeathShader *DeathShader;
 extern TColorizerShader *ColorizerShader;
+extern TColorizerShader *ColorizerPHShader;
 //---------------------------------------------------------------------------
 #endif

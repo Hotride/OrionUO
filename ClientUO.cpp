@@ -796,6 +796,12 @@ TUltimaOnline::~TUltimaOnline()
 		ColorizerShader = NULL;
 	}
 
+	if (ColorizerPHShader != NULL)
+	{
+		delete ColorizerPHShader;
+		ColorizerPHShader = NULL;
+	}
+
 	CurrentShader = NULL;
 
 	SoundManager.Free();
@@ -2411,29 +2417,36 @@ void TUltimaOnline::LoadShaders()
 {
 	CurrentShader = NULL;
 
-	TMappedHeader fsmh;
-	memset(&fsmh, 0, sizeof(TMappedHeader));
-	FileManager.LoadFileToMemory(fsmh, FilePath("shaders\\DeathShader.frag").c_str());
-	TMappedHeader vsmh;
-	memset(&vsmh, 0, sizeof(TMappedHeader));
-	FileManager.LoadFileToMemory(vsmh, FilePath("shaders\\DeathShader.vert").c_str());
+	TMappedHeader frag;
+	memset(&frag, 0, sizeof(TMappedHeader));
+	TMappedHeader vect;
+	memset(&vect, 0, sizeof(TMappedHeader));
 
-	DeathShader = new TDeathShader((char*)vsmh.Address, (char*)fsmh.Address);
+	FileManager.LoadFileToMemory(frag, FilePath("shaders\\DeathShader.frag").c_str());
+	FileManager.LoadFileToMemory(vect, FilePath("shaders\\DeathShader.vert").c_str());
 
-	FileManager.UnloadFileFromMemory(fsmh);
-	FileManager.UnloadFileFromMemory(vsmh);
+	DeathShader = new TDeathShader((char*)vect.Address, (char*)frag.Address);
 
-	TMappedHeader cfsmh;
-	memset(&cfsmh, 0, sizeof(TMappedHeader));
-	FileManager.LoadFileToMemory(cfsmh, FilePath("shaders\\ColorizerShader.frag").c_str());
-	TMappedHeader cvsmh;
-	memset(&cvsmh, 0, sizeof(TMappedHeader));
-	FileManager.LoadFileToMemory(cvsmh, FilePath("shaders\\ColorizerShader.vert").c_str());
+	FileManager.UnloadFileFromMemory(frag);
+	FileManager.UnloadFileFromMemory(vect);
 
-	ColorizerShader = new TColorizerShader((char*)cvsmh.Address, (char*)cfsmh.Address);
 
-	FileManager.UnloadFileFromMemory(cfsmh);
-	FileManager.UnloadFileFromMemory(cvsmh);
+
+	FileManager.LoadFileToMemory(frag, FilePath("shaders\\ColorizerShader.frag").c_str());
+	FileManager.LoadFileToMemory(vect, FilePath("shaders\\ColorizerShader.vert").c_str());
+
+	ColorizerShader = new TColorizerShader((char*)vect.Address, (char*)frag.Address);
+
+	FileManager.UnloadFileFromMemory(frag);
+
+
+
+	FileManager.LoadFileToMemory(frag, FilePath("shaders\\ColorizerPHShader.frag").c_str());
+
+	ColorizerPHShader = new TColorizerShader((char*)vect.Address, (char*)frag.Address);
+
+	FileManager.UnloadFileFromMemory(frag);
+	FileManager.UnloadFileFromMemory(vect);
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::AutoLoginNameExists(string name)
@@ -3172,7 +3185,11 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
 
 	if (CurrentShader == NULL && color)
 	{
-		ColorizerShader->Use();
+		if (partialHue)
+			ColorizerPHShader->Use();
+		else
+			ColorizerShader->Use();
+
 		ColorManager->SendColorsToShader(color);
 
 		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
@@ -3227,7 +3244,11 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, int width, int h
 
 	if (CurrentShader == NULL && color)
 	{
-		ColorizerShader->Use();
+		if (partialHue)
+			ColorizerPHShader->Use();
+		else
+			ColorizerShader->Use();
+
 		ColorManager->SendColorsToShader(color);
 
 		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH, (GLfloat)width, (GLfloat)height);
@@ -3307,6 +3328,7 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 	if (CurrentShader == NULL && color)
 	{
 		ColorizerShader->Use();
+
 		ColorManager->SendColorsToShader(color);
 		
 		g_GL.DrawLandTexture(texture, (GLfloat)(x - 23), (GLfloat)(y - 23), 44.0f, 44.0f, rc, normals);
@@ -3344,6 +3366,7 @@ void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
 	if (CurrentShader == NULL && color)
 	{
 		ColorizerShader->Use();
+
 		ColorManager->SendColorsToShader(color);
 		
 		g_GL.Draw(texture, (GLfloat)(x - 23), (GLfloat)((y - 23) - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
@@ -3402,7 +3425,13 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 	
 	if (CurrentShader == NULL && color)
 	{
-		ColorizerShader->Use();
+		bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
+
+		if (partialHue)
+			ColorizerPHShader->Use();
+		else
+			ColorizerShader->Use();
+
 		ColorManager->SendColorsToShader(color);
 		
 		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
@@ -3463,7 +3492,13 @@ void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int
 	
 	if (CurrentShader == NULL && color)
 	{
-		ColorizerShader->Use();
+		bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
+
+		if (partialHue)
+			ColorizerPHShader->Use();
+		else
+			ColorizerShader->Use();
+
 		ColorManager->SendColorsToShader(color);
 		
 		g_GL.Draw(texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)DW, (GLfloat)DH);
@@ -3522,7 +3557,13 @@ void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, 
 	
 	if (CurrentShader == NULL && color)
 	{
-		ColorizerShader->Use();
+		bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
+
+		if (partialHue)
+			ColorizerPHShader->Use();
+		else
+			ColorizerShader->Use();
+
 		ColorManager->SendColorsToShader(color);
 		
 		g_GL.Draw(texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH);

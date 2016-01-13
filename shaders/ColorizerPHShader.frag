@@ -26,7 +26,7 @@ void main(void)
 {
 	vec4 textureColor = texture2D(usedTexture, gl_TexCoord[0].xy);
 
-	if (textureColor.a != 0.0)
+	if (textureColor.a != 0.0 && textureColor.r == textureColor.g && textureColor.r == b)
 	{
 		int index = AND32(textureColor.r * 32);
 

@@ -22,6 +22,7 @@
 TBaseShader *CurrentShader = NULL;
 TDeathShader *DeathShader = NULL;
 TColorizerShader *ColorizerShader = NULL;
+TColorizerShader *ColorizerPHShader = NULL;
 //---------------------------------------------------------------------------
 //--------------------------------TShader------------------------------------
 //---------------------------------------------------------------------------
