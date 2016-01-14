@@ -3359,17 +3359,26 @@ bool TUltimaOnline::GumpPixelsInXY(WORD id, int x, int y, bool noSubMouse)
 {
 	TIndexObject &io = m_GumpDataIndex[id];
 
-	TTextureObject *th = io.Texture;
-	if (th == NULL)
-		return false;
+	bool result = false;
 
-	if (!noSubMouse)
+	TTextureObject *th = io.Texture;
+	if (th != NULL)
 	{
-		x = g_MouseX - x;
-		y = g_MouseY - y;
+		if (!noSubMouse)
+		{
+			x = g_MouseX - x;
+			y = g_MouseY - y;
+		}
+
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
+			result = th->Data[(y * th->Width) + x] != 0;
+#else
+		result = MulReader.GumpPixelsInXY(io.Address, io.Size, th->Width, th->Height, x, y);
+#endif
 	}
 
-	return MulReader.GumpPixelsInXY(io.Address, io.Size, io.Width, io.Height, x, y);
+	return result;
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::GumpPixelsInXY(WORD id, int x, int y, int width, int height, bool noSubMouse)
@@ -3409,8 +3418,17 @@ bool TUltimaOnline::GumpPixelsInXY(WORD id, int x, int y, int width, int height,
 
 	if (x > width || y > height)
 		return false;
-	
-	return MulReader.GumpPixelsInXY(io.Address, io.Size, io.Width, io.Height, x, y);
+
+	bool result = false;
+
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+	if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
+		result = th->Data[(y * th->Width) + x] != 0;
+#else
+	result = MulReader.GumpPixelsInXY(io.Address, io.Size, th->Width, th->Height, x, y);
+#endif
+
+	return result;
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::ResizepicPixelsInXY(WORD id, int x, int y, int width, int height)
@@ -3542,14 +3560,23 @@ bool TUltimaOnline::StaticPixelsInXY(WORD id, int x, int y, int z)
 {
 	TIndexObject &io = m_StaticDataIndex[id];
 
+	bool result = false;
+
 	TTextureObject *th = io.Texture;
-	if (th == NULL)
-		return false;
+	if (th != NULL)
+	{
+		x = (g_MouseX - x) + io.Width;
+		y = (g_MouseY - y) + io.Height + (z * 4);
 
-	x = (g_MouseX - x) + io.Width;
-	y = (g_MouseY - y) + io.Height + (z * 4);
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
+			result = th->Data[(y * th->Width) + x] != 0;
+#else
+		result = MulReader.ArtPixelsInXY(id + 0x4000, io.Address, io.Size, th->Width, th->Height, x, y);
+#endif
+	}
 
-	return MulReader.ArtPixelsInXY(id + 0x4000, io.Address, io.Size, th->Width, th->Height, x, y);
+	return result;
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::StaticPixelsInXYAnimated(WORD id, int x, int y, int z)
@@ -3558,42 +3585,69 @@ bool TUltimaOnline::StaticPixelsInXYAnimated(WORD id, int x, int y, int z)
 
 	TIndexObject &io = m_StaticDataIndex[id];
 
+	bool result = false;
+
 	TTextureObject *th = io.Texture;
-	if (th == NULL)
-		return false;
+	if (th != NULL)
+	{
+		x = (g_MouseX - x) + io.Width;
+		y = (g_MouseY - y) + io.Height + (z * 4);
 
-	x = (g_MouseX - x) + io.Width;
-	y = (g_MouseY - y) + io.Height + (z * 4);
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
+			result = th->Data[(y * th->Width) + x] != 0;
+#else
+		result = MulReader.ArtPixelsInXY(id + 0x4000, io.Address, io.Size, th->Width, th->Height, x, y);
+#endif
+	}
 
-	return MulReader.ArtPixelsInXY(id + 0x4000, io.Address, io.Size, th->Width, th->Height, x, y);
+	return result;
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::StaticPixelsInXYInContainer(WORD id, int x, int y)
 {
 	TIndexObject &io = m_StaticDataIndex[id];
 
-	TTextureObject *th = io.Texture;
-	if (th == NULL)
-		return false;
-	
-	x = g_MouseX - x;
-	y = g_MouseY - y;
+	bool result = false;
 
-	return MulReader.ArtPixelsInXY(id + 0x4000, io.Address, io.Size, th->Width, th->Height, x, y);
+	TTextureObject *th = io.Texture;
+	if (th != NULL)
+	{
+		x = g_MouseX - x;
+		y = g_MouseY - y;
+
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
+			result = th->Data[(y * th->Width) + x] != 0;
+#else
+		result = MulReader.ArtPixelsInXY(id + 0x4000, io.Address, io.Size, th->Width, th->Height, x, y);
+#endif
+	}
+
+	return result;
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::LandPixelsInXY(WORD id, int x, int  y, int z)
 {
 	TIndexObject &io = m_LandDataIndex[id];
 
+	bool result = false;
+
 	TTextureObject *th = io.Texture;
-	if (th == NULL)
-		return false;
-	
-	x = (g_MouseX - x) + 23;
-	y = (g_MouseY - y) + 23 + (z * 4);
-	
-	return MulReader.ArtPixelsInXY(id, io.Address, io.Size, th->Width, th->Height, x, y);
+	if (th != NULL)
+	{
+		x = (g_MouseX - x) + 23;
+		y = (g_MouseY - y) + 23 + (z * 4);
+
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
+			result = th->Data[(y * th->Width) + x] != 0;
+#else
+		result = MulReader.ArtPixelsInXY(id, io.Address, io.Size, th->Width, th->Height, x, y);
+#endif
+	}
+
+	return result;
 }
 //--------------------------------------------------------------------------
 DWORD TUltimaOnline::GetLandFlags(WORD id)

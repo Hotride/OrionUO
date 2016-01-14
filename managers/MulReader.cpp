@@ -31,9 +31,10 @@ TTextureObject *TMulReader::ReadGump(DWORD Address, DWORD Size, WORD Width, WORD
 	th->Height = Height;
 	th->Texture = 0;
 
-	int datasize = Width * Height;
-	PDWORD pixels = new DWORD[datasize];
-	memset(&pixels[0], 0, datasize * 4);
+	int blocksize = Width * Height;
+
+	PDWORD pixels = new DWORD[blocksize];
+	//memset(&pixels[0], 0, blocksize * 4);
 
 	IFOR(Y, 0, Height)
 	{
@@ -50,11 +51,15 @@ TTextureObject *TMulReader::ReadGump(DWORD Address, DWORD Size, WORD Width, WORD
 		{
 			IFOR(j, 0, gmul[i].Run)
 			{
+				int block = Y * Width + X;
+
 				if (gmul[i].Value)
 				{
 					DWORD pcl = ColorManager->Color16To32(gmul[i].Value);
-					pixels[Y * Width + X] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+					pixels[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 				}
+				else
+					pixels[block] = 0;
 
 				X++;
 			}
@@ -110,6 +115,7 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 	if (ID < 0x4000) //raw tile
 	{
 		int blocksize = 44 * 44;
+
 		PDWORD pixels = new DWORD[blocksize];
 		memset(&pixels[0], 0, blocksize * 4);
 
@@ -119,8 +125,9 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 			{
 				if (*P)
 				{
+					int block = i * 44 + j;
 					DWORD pcl = ColorManager->Color16To32(*P);					
-					pixels[i * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+					pixels[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 				}
 				P++;
 			}
@@ -132,8 +139,9 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 			{
 				if (*P)
 				{
+					int block = (i + 22) * 44 + j;
 					DWORD pcl = ColorManager->Color16To32(*P);
-					pixels[(i + 22) * 44 + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+					pixels[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 				}
 				P++;
 			}
@@ -175,6 +183,7 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 		WORD Run = 0;
 
 		int blocksize = w * h;
+
 		PDWORD pixels = new DWORD[blocksize];
 		memset(&pixels[0], 0, blocksize * 4);
 
@@ -201,7 +210,8 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 					if (*ptr)
 					{
 						DWORD pcl = ColorManager->Color16To32(*ptr);
-						pixels[Y * w + X + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+						int block = Y * w + X + j;
+						pixels[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 					}
 					ptr++;
 				}
@@ -214,7 +224,7 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 				ptr = (PWORD)((DWORD)DataStart + (LineOffsets[Y] * 2));
 			}
 		}
-		if ((ID >= 0x2053 && ID <=0x2062) || (ID >= 0x206A && ID <=0x2079)) //Убираем рамку (если это курсор мышки)
+		if ((ID >= 0x2053 && ID <= 0x2062) || (ID >= 0x206A && ID <= 0x2079)) //Убираем рамку (если это курсор мышки)
 		{
 			IFOR(i, 0, w)
 			{

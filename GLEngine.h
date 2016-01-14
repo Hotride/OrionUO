@@ -43,7 +43,7 @@ public:
 
 	void UpdateRect();
 	
-	void BindTexture(GLuint &Texture, int Width, int Height, PDWORD pixels);
+	void BindTexture(GLuint &texture, int width, int height, PDWORD pixels);
 
 	void BeginDraw();
 	void EndDraw();
@@ -54,21 +54,21 @@ public:
 	void EnableAlpha();
 	void DisableAlpha();
 
-	void ViewPort(int X, int Y, int SizeX, int SizeY);
+	void ViewPort(int x, int y, int sizeX, int sizeY);
 	void RestorePort();
 
 	void Enable(GLenum val) {glEnable(val);}
 	void Disable(GLenum val) {glDisable(val);}
 
-	void DrawLine(DWORD Color, float X, float Y, float TargetX, float TargetY);
-	void DrawPolygone(DWORD Color, float X, float Y, float Width, float Height);
-	void DrawTriangle(DWORD Color, float X, float Y, float radius);
+	void DrawLine(DWORD color, float x, float y, float targetX, float targetY);
+	void DrawPolygone(DWORD color, float x, float y, float width, float height);
+	void DrawTriangle(DWORD color, float x, float y, float radius);
 
-	void DrawLandTexture(GLuint &Texture, float X, float Y, float Width, float Height, RECT &rc, TVector *normals);
-	void Draw(GLuint &Texture, float X, float Y, float Width, float Height);
-	void Draw(GLuint &Texture, float X, float Y, float Width, float Height, bool Mirror);
-	void Draw(GLuint &Texture, float X, float Y, float Width, float Height, float DrawWidth, float DrawHeight);
-	void DrawResizepic(TTextureObject **th, float X, float Y, float W, float H);
+	void DrawLandTexture(GLuint &texture, float x, float y, float width, float height, RECT &rc, TVector *normals);
+	void Draw(GLuint &texture, float x, float y, float width, float height);
+	void Draw(GLuint &texture, float x, float y, float width, float height, bool &mirror);
+	void Draw(GLuint &texture, float x, float y, float width, float height, float drawWidth, float drawHeight);
+	void DrawResizepic(TTextureObject **th, float x, float y, float width, float height);
 };
 
 extern TGLEngine g_GL;

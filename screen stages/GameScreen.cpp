@@ -596,7 +596,7 @@ int TGameScreen::Render(bool mode)
 
 					IFOR(x, 0, 8)
 					{
-						WORD mX = bx * 8 + x;
+						int mX = bx * 8 + x;
 
 						if (mX < m_RenderBounds.RealMinRangeX || mX > m_RenderBounds.RealMaxRangeX)
 							continue;
@@ -605,7 +605,7 @@ int TGameScreen::Render(bool mode)
 
 						IFOR(y, 0, 8)
 						{
-							WORD mY = by * 8 + y;
+							int mY = by * 8 + y;
 
 							if (mY < m_RenderBounds.RealMinRangeY || mY > m_RenderBounds.RealMaxRangeY)
 								continue;
@@ -623,8 +623,6 @@ int TGameScreen::Render(bool mode)
 							if (DrawPixelsX < m_RenderBounds.MinPixelsX || DrawPixelsX > m_RenderBounds.MaxPixelsX)
 								continue;
 
-							TLandObject *mol = ro->GetLand();
-
 							if (DrawPixelsY - deltaZ < m_RenderBounds.MinPixelsY || DrawPixelsY - deltaZ > m_RenderBounds.MaxPixelsY)
 								continue;
 
@@ -634,7 +632,7 @@ int TGameScreen::Render(bool mode)
 							if (GetDistance(g_Player, testPos) > g_UpdateRange)
 								g_OutOfRangeColor = 0x0386;
 
-							char checkZ = mol->DrawZ;
+							//char checkZ = ro->GetLand()->DrawZ;
 						
 							while (ro != NULL)
 							{
@@ -656,7 +654,7 @@ int TGameScreen::Render(bool mode)
 									continue;
 								}
 
-								g_ZBuffer = (float)(ro->Z + ro->RenderQueueIndex);
+								*g_ZBuffer = (float)(ro->Z + ro->RenderQueueIndex);
 								ro->Draw(mode, DrawPixelsX, DrawPixelsY, ticks);
 
 								ro = nextRo;
@@ -667,7 +665,7 @@ int TGameScreen::Render(bool mode)
 			}
 		}
 
-		g_ZBuffer = 0.0f;
+		*g_ZBuffer = 0.0f;
 		glDisable(GL_DEPTH_TEST);
 		
 		if (!g_DeathScreenTimer)
@@ -1026,7 +1024,7 @@ int TGameScreen::Render(bool mode)
 
 						IFOR(x, 0, 8)
 						{
-							WORD mX = bx * 8 + x;
+							int mX = bx * 8 + x;
 							if (mX < m_RenderBounds.RealMinRangeX || mX > m_RenderBounds.RealMaxRangeX)
 								continue;
 
@@ -1034,7 +1032,7 @@ int TGameScreen::Render(bool mode)
 
 							IFOR(y, 0, 8)
 							{
-								WORD mY = by * 8 + y;
+								int mY = by * 8 + y;
 
 								if (mY < m_RenderBounds.RealMinRangeY || mY > m_RenderBounds.RealMaxRangeY)
 									continue;
@@ -1046,35 +1044,33 @@ int TGameScreen::Render(bool mode)
 								if (ro == NULL)
 									continue;
 
-								int DrawPixelsX = gameWindowCenterX + (gx - gy) * 22;
-								int DrawPixelsY = gameWindowCenterY + (gx + gy) * 22;
+								int drawX = gameWindowCenterX + (gx - gy) * 22;
+								int drawY = gameWindowCenterY + (gx + gy) * 22;
 				
-								if (DrawPixelsX < m_RenderBounds.MinPixelsX || DrawPixelsX > m_RenderBounds.MaxPixelsX)
+								if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
 									continue;
 
-								TLandObject *mol = ro->GetLand();
-						
-								if (DrawPixelsY - deltaZ < m_RenderBounds.MinPixelsY || DrawPixelsY - deltaZ > m_RenderBounds.MaxPixelsY)
+								if (drawY - deltaZ < m_RenderBounds.MinPixelsY || drawY - deltaZ > m_RenderBounds.MaxPixelsY)
 									continue;
 						
-								char checkZ = mol->DrawZ;
+								//char checkZ = ro->GetLand()->DrawZ;
 
 								for (; ro != NULL; ro = ro->m_NextXY)
 								{
 									bool drawCondition = true;
 
-									if (!drawMode)
+									/*if (!drawMode)
 										drawCondition = (ro->Z < checkZ || ro->RenderType == ROT_LAND_OBJECT);
 									else
-										drawCondition = (ro->Z >= checkZ && ro->RenderType != ROT_LAND_OBJECT);
+										drawCondition = (ro->Z >= checkZ && ro->RenderType != ROT_LAND_OBJECT);*/
+
+									if (ro->IsInternal())
+										drawCondition = false;
 
 									if ((ro->RenderType != ROT_LAND_OBJECT && ro->Z >= maxDrawZ) || !drawCondition)
 										continue;
 									
-									if (ro->IsInternal())
-										continue;
-
-									ro->Draw(mode, DrawPixelsX, DrawPixelsY, ticks);
+									ro->Draw(mode, drawX, drawY, ticks);
 								}
 							}
 						}

@@ -119,7 +119,7 @@ BYTE g_SmoothMonitorMode = 0;
 GLfloat g_SmoothMonitorColor = 0.0f;
 GLfloat g_SmoothMonitorStep = 0.03f;
 BYTE g_SmoothMonitorScale = 15;
-float g_ZBuffer = 0.0f;
+float g_ZBuffer[4] = { 0.0f };
 
 int g_MouseX = 0;
 int g_MouseY = 0;

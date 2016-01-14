@@ -23,7 +23,7 @@ interface IGLEngine
 
 	virtual void DrawLandTexture(GLuint &Texture, float X, float Y, float Width, float Height, RECT &rc, TVector *normals) = 0;
 	virtual void Draw(GLuint &Texture, float X, float Y, float Width, float Height) = 0;
-	virtual void Draw(GLuint &Texture, float X, float Y, float Width, float Height, bool Mirror) = 0;
+	virtual void Draw(GLuint &Texture, float X, float Y, float Width, float Height, bool &mirror) = 0;
 	virtual void Draw(GLuint &Texture, float X, float Y, float Width, float Height, float DrawWidth, float DrawHeight) = 0;
 	virtual void DrawResizepic(TTextureObject **th, float X, float Y, float W, float H) = 0;
 };

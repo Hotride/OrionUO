@@ -754,7 +754,7 @@ void TAnimationManager::EstimateImageCornerAlpha(PDWORD pixels, short &width, sh
 		
 	IFOR(y, 0, height)
 	{
-		auto row_idx = width*y;
+		auto row_idx = width * y;
 
 		IFOR(x, 0, width)        
 		{
@@ -769,10 +769,10 @@ void TAnimationManager::EstimateImageCornerAlpha(PDWORD pixels, short &width, sh
 
 			if( (red!=0) || (blue!=0) || (green!=0) || processed[idx])
 				continue;					
-         
+
 			setAlphaAt(processed, pixels, width, height, x, y, alpha_scale, luma_threshold);
         }        
-    }
+	}
 }
 //----------------------------------------------------------------------------
 bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direction, WORD &id, int &offset)
@@ -846,12 +846,10 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 		int x = 0;
 		int y = 0;
 
-		int blocksize = imageWidth * imageHeight * 4;
+		int blocksize = imageWidth * imageHeight;
 
         PDWORD pData = new DWORD[blocksize];
-        memset(&pData[0], 0, blocksize);
-        //std::vector<DWORD> pData;
-        //pData.resize(blocksize);		
+        memset(&pData[0], 0, blocksize * 4);
 
 		WORD prevLineNum = 0xFF;
 
@@ -881,8 +879,8 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 
 			prevLineNum = lineNum;
 
-			if (y >= 0) {
-
+			if (y >= 0)
+			{
 				if (y >= imageHeight)
 					break;
 
@@ -894,9 +892,9 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 					{
 						DWORD pcl = ColorManager->Color16To32(palette[*b]);
 
-						int Block = y * imageWidth + (x + j);
+						int block = y * imageWidth + (x + j);
 
-						pData[Block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+						pData[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 					}
 
 					b++;
