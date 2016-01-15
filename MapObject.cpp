@@ -95,6 +95,8 @@ TMapObject::~TMapObject()
 TLandObject::TLandObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z)
 : TMapObject(ROT_LAND_OBJECT, serial, graphic, color, x, y, z), m_DrawZ(z), m_MinZ(z)
 {
+	//m_ObjectFlags = UO->GetLandFlags(graphic);
+
 	memset(&m_Rect, 0, sizeof(RECT));
 	memset(&m_Normals[0], 0, sizeof(m_Normals));
 
@@ -117,34 +119,34 @@ int TLandObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 #if UO_DEBUG_INFO!=0
 g_RenderedObjectsCountInGameWindow++;
 #endif
+			glEnable(GL_DEPTH_TEST);
 
 			if (m_Color == 1)
+			{
 				UO->DrawLandArt(m_Graphic, objColor, drawX, drawY, m_Z);
+			}
 			else
 			{
-				if (g_SmoothMonitorMode)
-				{
-					GLfloat tCl = g_DrawColor - 0.1f;
-					glColor3f(tCl, tCl, tCl);
+				char minZ = m_MinZ + 3;
 
-					UO->DrawLandTexture(m_Graphic, objColor, drawX, drawY, m_Rect, m_Normals);
-					
-					glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
-				}
-				else
-				{
-					GLfloat tCl = 1.0f;
-					glColor3f(tCl, tCl, tCl);
+				if (minZ > m_Z)
+					minZ = m_Z;
 
-					glEnable(GL_LIGHTING);
+				g_ZBuffer = (float)minZ;
 
-					UO->DrawLandTexture(m_Graphic, objColor, drawX, drawY, m_Rect, m_Normals);
+				GLfloat tCl = g_DrawColor - 0.1f;
+				glColor3f(tCl, tCl, tCl);
 
-					glDisable(GL_LIGHTING);
+				glEnable(GL_LIGHTING);
 
-					glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
-				}
+				UO->DrawLandTexture(m_Graphic, objColor, drawX, drawY, m_Rect, m_Normals);
+
+				glDisable(GL_LIGHTING);
+
+				glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 			}
+
+			glDisable(GL_DEPTH_TEST);
 		}
 		else
 		{
@@ -220,7 +222,14 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 			}
 		}
 		else
+		{
+			if (IsSurface() || (IsBackground() && IsUnknown2()))
+				glEnable(GL_DEPTH_TEST);
+
 			UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
+
+			glDisable(GL_DEPTH_TEST);
+		}
 
 		if (IsLightSource() && !IsWall())
 		{

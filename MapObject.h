@@ -45,7 +45,6 @@ public:
 //---------------------------------------------------------------------------
 class TMapObject : public TRenderWorldObject
 {
-private:
 public:
 	TMapObject(RENDER_OBJECT_TYPE type, DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TMapObject();
@@ -53,7 +52,7 @@ public:
 //---------------------------------------------------------------------------
 class TLandObject : public TMapObject
 {
-private:
+protected:
 	RECT m_Rect;
 	char m_DrawZ;
 	char m_MinZ;
@@ -78,15 +77,16 @@ class TStaticObject : public TMapObject
 {
 private:
 	DWORD m_ObjectFlags;
-
 public:
 	TStaticObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TStaticObject() {}
 
-	SETGET(DWORD, ObjectFlags);
-
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
 
+	bool IsStaticObject() {return true;}
+	
+	SETGET(DWORD, ObjectFlags);
+	
 	bool IsBackground() {return (m_ObjectFlags & 0x00000001);}
 	bool IsWeapon() {return (m_ObjectFlags & 0x00000002);}
 	bool IsTransparent() {return (m_ObjectFlags & 0x00000004);}
@@ -119,8 +119,6 @@ public:
 	bool IsDoor() {return (m_ObjectFlags & 0x20000000);}
 	bool IsStairBack() {return (m_ObjectFlags & 0x40000000);}
 	bool IsStairRight() {return (m_ObjectFlags & 0x80000000);}
-
-	bool IsStaticObject() {return true;}
 };
 //---------------------------------------------------------------------------
 #endif

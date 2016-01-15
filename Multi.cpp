@@ -74,7 +74,12 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		}
 		else
 		{
+			if (IsSurface() || (IsBackground() && IsUnknown2()))
+				glEnable(GL_DEPTH_TEST);
+
 			UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
+			
+			glDisable(GL_DEPTH_TEST);
 
 			if (IsLightSource())
 			{

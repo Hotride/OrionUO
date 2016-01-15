@@ -169,13 +169,13 @@ void TGLEngine::BeginDraw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glLoadIdentity();
 	
-	//glDisable(GL_DEPTH_TEST);
-	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
-	*g_ZBuffer = 0.0f;
+	g_ZBuffer = 0.0f;
 
 	EnableAlpha();
 }
@@ -296,7 +296,7 @@ void TGLEngine::DrawTriangle(DWORD color, float x, float y, float radius)
 //---------------------------------------------------------------------------
 void TGLEngine::DrawLandTexture(GLuint &texture, float x, float y, float width, float height, RECT &rc, TVector *normals)
 {
-	glUniform1iARB(ShaderTexture, texture);
+	//glUniform1iARB(ShaderTexture, texture);
 
 	glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -304,62 +304,62 @@ void TGLEngine::DrawLandTexture(GLuint &texture, float x, float y, float width, 
 	
 	glBegin(GL_QUADS);
 		glNormal3f((GLfloat)normals[3].X, (GLfloat)normals[3].Y, (GLfloat)normals[3].Z);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(x, rc.top + y + 22.0f, *g_ZBuffer); //<
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(x, rc.top + y + 22.0f, g_ZBuffer); //<
 		
 		glNormal3f((GLfloat)normals[2].X, (GLfloat)normals[2].Y, (GLfloat)normals[2].Z);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 22.0f, 44.0f + rc.right + y, *g_ZBuffer); //v
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 22.0f, 44.0f + rc.right + y, g_ZBuffer); //v
 		
 		glNormal3f((GLfloat)normals[1].X, (GLfloat)normals[1].Y, (GLfloat)normals[1].Z);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 44.0f, rc.bottom + y + 22.0f, *g_ZBuffer); //>
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 44.0f, rc.bottom + y + 22.0f, g_ZBuffer); //>
 		
 		glNormal3f((GLfloat)normals[0].X, (GLfloat)normals[0].Y, (GLfloat)normals[0].Z);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(x + 22.0f, y, *g_ZBuffer); //^
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(x + 22.0f, y, g_ZBuffer); //^
 	glEnd();
 }
 //---------------------------------------------------------------------------
 void TGLEngine::Draw(GLuint &texture, float x, float y, float width, float height)
 {
-	glUniform1iARB(ShaderTexture, texture);
+	//glUniform1iARB(ShaderTexture, texture);
 
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, *g_ZBuffer);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(x + width, y + height, *g_ZBuffer);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y, *g_ZBuffer);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, *g_ZBuffer);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, g_ZBuffer);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(x + width, y + height, g_ZBuffer);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y, g_ZBuffer);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, g_ZBuffer);
 	glEnd();
 }
 //---------------------------------------------------------------------------
 void TGLEngine::Draw(GLuint &texture, float x, float y, float width, float height, bool &mirror)
 {
-	glUniform1iARB(ShaderTexture, texture);
+	//glUniform1iARB(ShaderTexture, texture);
 
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	if (mirror)
 	{
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y + height, *g_ZBuffer);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + height, *g_ZBuffer);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y, *g_ZBuffer);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y, *g_ZBuffer);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y + height, g_ZBuffer);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + height, g_ZBuffer);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y, g_ZBuffer);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y, g_ZBuffer);
 		glEnd();
 	}
 	else
 	{
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, *g_ZBuffer);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(x + width, y + height, *g_ZBuffer);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y, *g_ZBuffer);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, *g_ZBuffer);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, g_ZBuffer);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(x + width, y + height, g_ZBuffer);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y, g_ZBuffer);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, g_ZBuffer);
 		glEnd();
 	}
 }
 //---------------------------------------------------------------------------
 void TGLEngine::Draw(GLuint &texture, float x, float y, float width, float height, float drawWidth, float drawHeight)
 {
-	glUniform1iARB(ShaderTexture, texture);
+	//glUniform1iARB(ShaderTexture, texture);
 
 	glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -367,10 +367,10 @@ void TGLEngine::Draw(GLuint &texture, float x, float y, float width, float heigh
 	float drawCountY = drawHeight / height;
 
 	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, drawCountY);			glVertex3f(x, y + drawHeight, *g_ZBuffer);
-		glTexCoord2f(drawCountX, drawCountY);	glVertex3f(x + drawWidth, y + drawHeight, *g_ZBuffer);
-		glTexCoord2f(drawCountX, 0.0f);			glVertex3f(x + drawWidth, y, *g_ZBuffer);
-		glTexCoord2f(0.0f, 0.0f);				glVertex3f(x, y, *g_ZBuffer);
+		glTexCoord2f(0.0f, drawCountY);			glVertex3f(x, y + drawHeight, g_ZBuffer);
+		glTexCoord2f(drawCountX, drawCountY);	glVertex3f(x + drawWidth, y + drawHeight, g_ZBuffer);
+		glTexCoord2f(drawCountX, 0.0f);			glVertex3f(x + drawWidth, y, g_ZBuffer);
+		glTexCoord2f(0.0f, 0.0f);				glVertex3f(x, y, g_ZBuffer);
 	glEnd();
 }
 //---------------------------------------------------------------------------
@@ -378,7 +378,7 @@ void TGLEngine::DrawResizepic(TTextureObject **th, float x, float y, float width
 {
 	IFOR(i, 0, 9)
 	{
-		glUniform1iARB(ShaderTexture, th[i]->Texture);
+		//glUniform1iARB(ShaderTexture, th[i]->Texture);
 
 		glBindTexture(GL_TEXTURE_2D, th[i]->Texture);
 

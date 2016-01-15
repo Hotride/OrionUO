@@ -1183,7 +1183,11 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
+		glEnable(GL_DEPTH_TEST);
+
 		g_GL.Draw(texture, (float)x, (float)y, (float)frame->Width, (float)frame->Height, mirror);
+
+		glDisable(GL_DEPTH_TEST);
 	}
 }
 //----------------------------------------------------------------------------

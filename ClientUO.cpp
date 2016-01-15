@@ -3236,7 +3236,7 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 	{
 		if (g_OutOfRangeColor)
 			color = g_OutOfRangeColor;
-
+		
 		x -= m_StaticDataIndex[id].Width;
 		y -= m_StaticDataIndex[id].Height;
 

@@ -353,17 +353,13 @@ int TGameScreen::Render(bool mode)
 	int gameWindowCenterX = m_RenderBounds.GameWindowCenterX;
 	int gameWindowCenterY = m_RenderBounds.GameWindowCenterY;
 	
-	int drawModeCount = 2;
-
-	if (g_DeathScreenTimer > ticks)
-		drawModeCount = 0;
-	else
+	if (g_DeathScreenTimer < ticks)
 		g_DeathScreenTimer = 0;
 
 	//Вычисление положения, прозрачности и отрисовка текста
 	TRenderTextObject *rto = WorldTextRenderer->m_Items;
 
-	if (drawModeCount)
+	if (!g_DeathScreenTimer)
 	{
 		if (mode)
 			WorldTextRenderer->ClearRect();
@@ -576,96 +572,80 @@ int TGameScreen::Render(bool mode)
 		g_NoDrawRoof = false;
 		g_MaxGroundZ = 125;
 		int maxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
-		drawModeCount = 1;
 
-		IFOR(drawMode, 0, drawModeCount)
+		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 		{
-			for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
 			{
-				for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
+				int blockIndex = (bx * 512) + by;
+				TMapBlock *mb = MapManager->GetBlock(blockIndex);
+				if (mb == NULL)
 				{
-					int blockIndex = (bx * 512) + by;
-					TMapBlock *mb = MapManager->GetBlock(blockIndex);
-					if (mb == NULL)
-					{
-						mb = MapManager->AddBlock(blockIndex);
-						mb->X = bx;
-						mb->Y = by;
-						MapManager->LoadBlock(mb);
-					}
+					mb = MapManager->AddBlock(blockIndex);
+					mb->X = bx;
+					mb->Y = by;
+					MapManager->LoadBlock(mb);
+				}
 
-					IFOR(x, 0, 8)
-					{
-						int mX = bx * 8 + x;
+				IFOR(x, 0, 8)
+				{
+					int mX = bx * 8 + x;
 
-						if (mX < m_RenderBounds.RealMinRangeX || mX > m_RenderBounds.RealMaxRangeX)
+					if (mX < m_RenderBounds.RealMinRangeX || mX > m_RenderBounds.RealMaxRangeX)
+						continue;
+
+					int gx = mX - playerX;
+
+					IFOR(y, 0, 8)
+					{
+						int mY = by * 8 + y;
+
+						if (mY < m_RenderBounds.RealMinRangeY || mY > m_RenderBounds.RealMaxRangeY)
+							continue;
+						
+						int gy = mY - playerY;
+
+						TRenderWorldObject *ro = mb->GetRender(x, y);
+
+						if (ro == NULL)
 							continue;
 
-						int gx = mX - playerX;
+						int DrawPixelsX = gameWindowCenterX + (gx - gy) * 22;
+						int DrawPixelsY = gameWindowCenterY + (gx + gy) * 22;
 
-						IFOR(y, 0, 8)
+						if (DrawPixelsX < m_RenderBounds.MinPixelsX || DrawPixelsX > m_RenderBounds.MaxPixelsX)
+							continue;
+
+						if (DrawPixelsY - deltaZ < m_RenderBounds.MinPixelsY || DrawPixelsY - deltaZ > m_RenderBounds.MaxPixelsY)
+							continue;
+
+						g_OutOfRangeColor = 0;
+						POINT testPos = {mX, mY};
+
+						if (GetDistance(g_Player, testPos) > g_UpdateRange)
+							g_OutOfRangeColor = 0x0386;
+
+						while (ro != NULL)
 						{
-							int mY = by * 8 + y;
-
-							if (mY < m_RenderBounds.RealMinRangeY || mY > m_RenderBounds.RealMaxRangeY)
-								continue;
-						
-							int gy = mY - playerY;
-
-							TRenderWorldObject *ro = mb->GetRender(x, y);
-
-							if (ro == NULL)
-								continue;
-
-							int DrawPixelsX = gameWindowCenterX + (gx - gy) * 22;
-							int DrawPixelsY = gameWindowCenterY + (gx + gy) * 22;
-
-							if (DrawPixelsX < m_RenderBounds.MinPixelsX || DrawPixelsX > m_RenderBounds.MaxPixelsX)
-								continue;
-
-							if (DrawPixelsY - deltaZ < m_RenderBounds.MinPixelsY || DrawPixelsY - deltaZ > m_RenderBounds.MaxPixelsY)
-								continue;
-
-							g_OutOfRangeColor = 0;
-							POINT testPos = {mX, mY};
-
-							if (GetDistance(g_Player, testPos) > g_UpdateRange)
-								g_OutOfRangeColor = 0x0386;
-
-							//char checkZ = ro->GetLand()->DrawZ;
-						
-							while (ro != NULL)
+							if (ro->IsInternal() || (!ro->IsLandObject() && ro->Z >= maxDrawZ))
 							{
-								TRenderWorldObject *nextRo = ro->m_NextXY;
-
-								bool drawCondition = true;
-
-								/*if (!drawMode) //Отрисовка ландшафта, воды и перекрытых ландшафтом предметов
-									drawCondition = (ro->Z < checkZ || ro->RenderType == ROT_LAND_OBJECT);
-								else //Отрисовка надземной части мира
-									drawCondition = (ro->Z >= checkZ && ro->RenderType != ROT_LAND_OBJECT);*/
-
-								if (ro->IsInternal())
-									drawCondition = false;
-
-								if ((ro->RenderType != ROT_LAND_OBJECT && ro->Z >= maxDrawZ) || !drawCondition)
-								{
-									ro = nextRo;
-									continue;
-								}
-
-								*g_ZBuffer = (float)(ro->Z + ro->RenderQueueIndex);
-								ro->Draw(mode, DrawPixelsX, DrawPixelsY, ticks);
-
-								ro = nextRo;
+								ro = ro->m_NextXY;
+								continue;
 							}
+								
+							TRenderWorldObject *nextRo = ro->m_NextXY;
+
+							g_ZBuffer = (float)(ro->Z + ro->RenderQueueIndex);
+							ro->Draw(mode, DrawPixelsX, DrawPixelsY, ticks);
+
+							ro = nextRo;
 						}
 					}
 				}
 			}
 		}
 
-		*g_ZBuffer = 0.0f;
+		g_ZBuffer = 0.0f;
 		glDisable(GL_DEPTH_TEST);
 		
 		if (!g_DeathScreenTimer)
@@ -1007,78 +987,62 @@ int TGameScreen::Render(bool mode)
 			g_NoDrawRoof = false;
 			g_MaxGroundZ = 125;
 			int maxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
-			drawModeCount = 1;
 
-			IFOR(drawMode, 0, drawModeCount)
+			for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 			{
-				for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+				for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
 				{
-					for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
+					int blockIndex = (bx * 512) + by;
+					TMapBlock *mb = MapManager->GetBlock(blockIndex);
+					if (mb == NULL)
 					{
-						int blockIndex = (bx * 512) + by;
-						TMapBlock *mb = MapManager->GetBlock(blockIndex);
-						if (mb == NULL)
-						{
-							continue;
-						}
+						continue;
+					}
 
-						IFOR(x, 0, 8)
+					IFOR(x, 0, 8)
+					{
+						int mX = bx * 8 + x;
+						if (mX < m_RenderBounds.RealMinRangeX || mX > m_RenderBounds.RealMaxRangeX)
+							continue;
+
+						int gx = mX - playerX;
+
+						IFOR(y, 0, 8)
 						{
-							int mX = bx * 8 + x;
-							if (mX < m_RenderBounds.RealMinRangeX || mX > m_RenderBounds.RealMaxRangeX)
+							int mY = by * 8 + y;
+
+							if (mY < m_RenderBounds.RealMinRangeY || mY > m_RenderBounds.RealMaxRangeY)
+								continue;
+						
+							int gy = mY - playerY;
+
+							TRenderWorldObject *ro = mb->GetRender(x, y);
+
+							if (ro == NULL)
 								continue;
 
-							int gx = mX - playerX;
-
-							IFOR(y, 0, 8)
-							{
-								int mY = by * 8 + y;
-
-								if (mY < m_RenderBounds.RealMinRangeY || mY > m_RenderBounds.RealMaxRangeY)
-									continue;
-						
-								int gy = mY - playerY;
-
-								TRenderWorldObject *ro = mb->GetRender(x, y);
-
-								if (ro == NULL)
-									continue;
-
-								int drawX = gameWindowCenterX + (gx - gy) * 22;
-								int drawY = gameWindowCenterY + (gx + gy) * 22;
+							int drawX = gameWindowCenterX + (gx - gy) * 22;
+							int drawY = gameWindowCenterY + (gx + gy) * 22;
 				
-								if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+							if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+								continue;
+
+							if (drawY - deltaZ < m_RenderBounds.MinPixelsY || drawY - deltaZ > m_RenderBounds.MaxPixelsY)
+								continue;
+
+							for (; ro != NULL; ro = ro->m_NextXY)
+							{
+								if (ro->IsInternal() || (!ro->IsLandObject() && ro->Z >= maxDrawZ))
 									continue;
-
-								if (drawY - deltaZ < m_RenderBounds.MinPixelsY || drawY - deltaZ > m_RenderBounds.MaxPixelsY)
-									continue;
-						
-								//char checkZ = ro->GetLand()->DrawZ;
-
-								for (; ro != NULL; ro = ro->m_NextXY)
-								{
-									bool drawCondition = true;
-
-									/*if (!drawMode)
-										drawCondition = (ro->Z < checkZ || ro->RenderType == ROT_LAND_OBJECT);
-									else
-										drawCondition = (ro->Z >= checkZ && ro->RenderType != ROT_LAND_OBJECT);*/
-
-									if (ro->IsInternal())
-										drawCondition = false;
-
-									if ((ro->RenderType != ROT_LAND_OBJECT && ro->Z >= maxDrawZ) || !drawCondition)
-										continue;
 									
-									ro->Draw(mode, drawX, drawY, ticks);
-								}
+								ro->Draw(mode, drawX, drawY, ticks);
 							}
 						}
 					}
 				}
 			}
 
-			if (drawModeCount)
+			if (!!g_DeathScreenTimer)
 			{
 				//Проверка текста
 				for (; rto != NULL; rto = rto->m_PrevDraw)

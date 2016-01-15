@@ -36,7 +36,7 @@ public:
 	
 	HDC GetDC() const {return m_DC;}
 	HGLRC GetRC() const {return m_RC;}
-
+	GLuint tex;
 	bool Install(HWND hWnd);
 
 	void Uninstall() {wglMakeCurrent(NULL, NULL); wglDeleteContext(m_RC);}
