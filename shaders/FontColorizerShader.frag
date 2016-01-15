@@ -35,19 +35,17 @@ void main(void)
 
 			vec3 resultColor = Color16To32(colors[index]);
 
-			gl_FragColor = vec4(resultColor, textureColor.a) * gl_Color;
+			gl_FragColor = vec4(resultColor, textureColor.a);
 		}
 		else if (drawMode == 3)
 		{
-			int index = AND32(textureColor.r * 7.96875);
-
-			vec3 resultColor = Color16To32(colors[index]);
+			vec3 resultColor = Color16To32(colors[8]);
 
 			gl_FragColor = vec4(resultColor, textureColor.a);
 		}
 		else
-			gl_FragColor = textureColor * gl_Color;
+			gl_FragColor = textureColor;
 	}
 	else
-		gl_FragColor = textureColor * gl_Color;
+		gl_FragColor = textureColor;
 }

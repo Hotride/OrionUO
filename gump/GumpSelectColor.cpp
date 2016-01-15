@@ -77,8 +77,6 @@ void TGumpSelectColor::GenerateFrame(int posX, int posY)
 		gumpID = 0x0845 + (int)(CanSelectedButton == ID_GSC_SLIDER); //Scroll button / selected
 		UO->DrawGump(gumpID, 0, posX + m_SliderPos, posY + 142);
 
-		glDisable(GL_TEXTURE_2D);
-		
 		WORD startColor = m_ColorRef + 2;
 
 		posX += 34;
@@ -100,9 +98,6 @@ void TGumpSelectColor::GenerateFrame(int posX, int posY)
 					g_GL.DrawPolygone(0x007F7F7F, posX + (x * cellWidthX) + (cellWidthX / 2.0f) - 1.0f, posY + (y * cellWidthY) + (cellWidthY / 2.0f) - 1.0f, 2.0f, 2.0f);
 			}
 		}
-		
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glEnable(GL_TEXTURE_2D);
 
 	glEndList();
 

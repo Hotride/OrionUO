@@ -84,7 +84,6 @@ public:
 	SETGET(DWORD, TimeToRandomFidget);
 	SETGET(BYTE, StepSoundOffset);
 	SETGET(DWORD, CorpseLink);
-	void SetName(string val);
 
 	SETGETEX(char, OffsetX);
 	SETGETEX(char, OffsetY);

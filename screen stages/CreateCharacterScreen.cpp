@@ -210,8 +210,6 @@ int TCreateCharacterScreen::Render(bool mode)
 		
 		if (CreateCharacterManager.SelectedColor == 1)
 		{
-			glDisable(GL_TEXTURE_2D);
-
 			IFOR(x, 0, 8)
 			{
 				IFOR(y, 0, 8)
@@ -226,9 +224,6 @@ int TCreateCharacterScreen::Render(bool mode)
 						g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 15.0f) + 6.5f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
 				}
 			}
-
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glEnable(GL_TEXTURE_2D);
 		}
 		else if (CreateCharacterManager.SelectedColor == 0)
 		{
@@ -236,8 +231,6 @@ int TCreateCharacterScreen::Render(bool mode)
 			if (CanSelectedButton == 7)
 				FColor = 0x0021;
 			FontManager->DrawA(9, "Skin Tone", FColor, 490, 140);
-
-			glDisable(GL_TEXTURE_2D);
 
 			FColor = CreateCharacterManager.SkinTone;
 
@@ -249,15 +242,10 @@ int TCreateCharacterScreen::Render(bool mode)
 			DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
 
 			g_GL.DrawPolygone(clr, 490.0f, 154.0f, 120.0f, 25.0f);
-
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glEnable(GL_TEXTURE_2D);
 		}
 		
 		if (CreateCharacterManager.SelectedColor == 2)
 		{
-			glDisable(GL_TEXTURE_2D);
-
 			IFOR(y, 1, 48)
 			{
 				switch (y % 4)
@@ -298,9 +286,6 @@ int TCreateCharacterScreen::Render(bool mode)
 						g_GL.DrawPolygone(0x007F7F7F, 492.0f + ((x * 6.0f) + 2.5f), 148.0f + ((y * 5.0f) + 2.0f), 2.0f, 2.0f);
 				}
 			}
-
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glEnable(GL_TEXTURE_2D);
 		}
 		else if (CreateCharacterManager.SelectedColor == 0)
 		{
@@ -309,8 +294,6 @@ int TCreateCharacterScreen::Render(bool mode)
 				FColor = 0x0021;
 			FontManager->DrawA(9, "Shirt Color", FColor, 490, 185);
 
-			glDisable(GL_TEXTURE_2D);
-
 			FColor = CreateCharacterManager.GetShirtColor();
 			//if (FColor < 0x044E) FColor = 0x044E;
 			//if (FColor > 0x04AD) FColor = 0x04AD;
@@ -318,15 +301,10 @@ int TCreateCharacterScreen::Render(bool mode)
 			DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
 
 			g_GL.DrawPolygone(clr, 490.0f, 199.0f, 120.0f, 25.0f);
-
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glEnable(GL_TEXTURE_2D);
 		}
 		
 		if (CreateCharacterManager.SelectedColor == 3)
 		{
-			glDisable(GL_TEXTURE_2D);
-
 			IFOR(y, 1, 48)
 			{
 				switch (y % 4)
@@ -367,9 +345,6 @@ int TCreateCharacterScreen::Render(bool mode)
 						g_GL.DrawPolygone(0x007F7F7F, 492.0f + ((x * 6.0f) + 2.5f), 148.0f + ((y * 5.0f) + 2.0f), 2.0f, 2.0f);
 				}
 			}
-
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glEnable(GL_TEXTURE_2D);
 		}
 		else if (CreateCharacterManager.SelectedColor == 0)
 		{
@@ -381,8 +356,6 @@ int TCreateCharacterScreen::Render(bool mode)
 			else
 				FontManager->DrawA(9, "Pants Color", FColor, 490, 230);
 
-			glDisable(GL_TEXTURE_2D);
-
 			FColor = CreateCharacterManager.PantsColor;
 			//if (FColor < 0x044E) FColor = 0x044E;
 			//if (FColor > 0x04AD) FColor = 0x04AD;
@@ -390,15 +363,10 @@ int TCreateCharacterScreen::Render(bool mode)
 			DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
 
 			g_GL.DrawPolygone(clr, 490.0f, 244.0f, 120.0f, 25.0f);
-
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glEnable(GL_TEXTURE_2D);
 		}
 
 		if (CreateCharacterManager.SelectedColor == 4)
 		{
-			glDisable(GL_TEXTURE_2D);
-
 			IFOR(x, 0, 6)
 			{
 				IFOR(y, 0, 8)
@@ -413,9 +381,6 @@ int TCreateCharacterScreen::Render(bool mode)
 						g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 20.0f) + 9.0f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
 				}
 			}
-
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glEnable(GL_TEXTURE_2D);
 		}
 		else if (CreateCharacterManager.SelectedColor == 0)
 		{
@@ -423,8 +388,6 @@ int TCreateCharacterScreen::Render(bool mode)
 			if (CanSelectedButton == 10)
 				FColor = 0x0021;
 			FontManager->DrawA(9, "Hair Color", FColor, 490, 275);
-
-			glDisable(GL_TEXTURE_2D);
 
 			FColor = CreateCharacterManager.HairColor;
 			if (FColor < 0x044E)
@@ -434,9 +397,6 @@ int TCreateCharacterScreen::Render(bool mode)
 
 			DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
 			g_GL.DrawPolygone(clr, 490.0f, 289.0f, 120.0f, 25.0f);
-
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glEnable(GL_TEXTURE_2D);
 		}
 
 		if (CreateCharacterManager.Sex)
@@ -457,8 +417,6 @@ int TCreateCharacterScreen::Render(bool mode)
 		{
 			if (CreateCharacterManager.SelectedColor == 5)
 			{
-				glDisable(GL_TEXTURE_2D);
-
 				IFOR(x, 0, 6)
 				{
 					IFOR(y, 0, 8)
@@ -473,9 +431,6 @@ int TCreateCharacterScreen::Render(bool mode)
 							g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 20.0f) + 9.0f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
 					}
 				}
-
-				glColor3f(1.0f, 1.0f, 1.0f);
-				glEnable(GL_TEXTURE_2D);
 			}
 			else if (CreateCharacterManager.SelectedColor == 0)
 			{
@@ -483,8 +438,6 @@ int TCreateCharacterScreen::Render(bool mode)
 				if (CanSelectedButton == 11)
 					FColor = 0x0021;
 				FontManager->DrawA(9, "Facial Hair Color", FColor, 490, 320);
-
-				glDisable(GL_TEXTURE_2D);
 
 				FColor = CreateCharacterManager.BeardColor;
 				if (FColor < 0x044E)
@@ -495,9 +448,6 @@ int TCreateCharacterScreen::Render(bool mode)
 				DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
 
 				g_GL.DrawPolygone(clr, 490.0f, 333.0f, 120.0f, 25.0f);
-
-				glColor3f(1.0f, 1.0f, 1.0f);
-				glEnable(GL_TEXTURE_2D);
 			}
 
 			UO->DrawGump(0x0761, CreateCharacterManager.SkinTone, 238, 98); //Character create male body gump

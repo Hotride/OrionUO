@@ -37,6 +37,19 @@ TPlayer::~TPlayer()
 	}
 }
 //---------------------------------------------------------------------------
+void TPlayer::SetName(string val)
+{
+	m_Name = val;
+
+	if (g_GameState >= GS_GAME)
+	{
+		char buf[256] = { 0 };
+		sprintf(buf, "Ultima Online - %s (%s)", val.c_str(), ServerList.GetServerName().c_str());
+
+		SetWindowTextA(g_hWnd, buf);
+	}
+}
+//---------------------------------------------------------------------------
 void TPlayer::SetSkillBaseValue(int index, float val)
 {
 	if (index < 0 || index >= g_SkillsCount)

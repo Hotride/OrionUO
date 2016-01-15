@@ -23,7 +23,7 @@ TFontsManager *FontManager = NULL;
 //---------------------------------------------------------------------------
 TFontsManager::TFontsManager()
 : m_SavePixels(false), m_UseHTML(false), m_Font(NULL), m_FontCount(0),
-m_HTMLColor(0xFFFFFFFF), m_CreateYellowTexture(false)
+m_HTMLColor(0xFFFFFFFF)
 {
 	memset(m_UnicodeFontAddress, 0, sizeof(m_UnicodeFontAddress));
 	memset(m_UnicodeFontSize, 0, sizeof(m_UnicodeFontSize));
@@ -690,18 +690,11 @@ bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str,
 	}
 	
 	int blocksize = (height + 1) * (width + 1);
-	PDWORD pwData = NULL;
 
 	if (m_SavePixels)
 	{
 		th.Data = new BYTE[blocksize];
 		memset(&th.Data[0], 0, blocksize);
-
-		if (m_CreateYellowTexture)
-		{
-			pwData = new DWORD[blocksize];
-			memset(&pwData[0], 0, blocksize * 4);
-		}
 	}
 
 	PDWORD pData = new DWORD[blocksize];
@@ -779,19 +772,7 @@ bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str,
 						pData[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 
 						if (m_SavePixels)
-						{
-							if (m_CreateYellowTexture)
-							{
-								if (partialHue)
-									pcl = ColorManager->GetPartialHueColor(pic, 0x0035);
-								else
-									pcl = ColorManager->GetColor(pic, 0x0035);
-
-								pwData[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-							}
-
 							th.Data[block] = 1; //((pic >> 10) & 0x1F);
-						}
 					}
 				}
 			}
@@ -813,17 +794,6 @@ bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str,
 	GLuint tex = 0;
 	g_GL.BindTexture(tex, width, height, pData);
 	th.Texture = tex;
-
-	if (m_CreateYellowTexture)
-	{
-		tex = 0;
-		g_GL.BindTexture(tex, width, height, pwData);
-		th.YellowTexture = tex;
-
-		delete pwData;
-
-		m_CreateYellowTexture = false;
-	}
 
 	delete pData;
 
@@ -2177,18 +2147,10 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 	
 	int blocksize = (height + 1) * (width + 1);
 	
-	PDWORD pwData = NULL;
-
 	if (m_SavePixels)
 	{
 		th.Data = new BYTE[blocksize];
 		memset(&th.Data[0], 0, blocksize);
-
-		if (m_CreateYellowTexture)
-		{
-			pwData = new DWORD[blocksize];
-			memset(&pwData[0], 0, blocksize * 4);
-		}
 	}
 
 	PDWORD pData = new DWORD[blocksize];
@@ -2371,15 +2333,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 								pData[block] = charcolor;
 
 								if (m_SavePixels)
-								{
-									if (m_CreateYellowTexture)
-									{
-										DWORD pcl = ColorManager->GetPolygoneColor(cell, 0x0035);
-										pwData[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-									}
-
 									th.Data[block] = cell;
-								}
 							}
 						}
 					}
@@ -2591,17 +2545,6 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 	g_GL.BindTexture(tex, width, height, pData);
 	th.Texture = tex;
 	
-	if (m_CreateYellowTexture)
-	{
-		tex = 0;
-		g_GL.BindTexture(tex, width, height, pwData);
-		th.YellowTexture = tex;
-
-		delete pwData;
-
-		m_CreateYellowTexture = false;
-	}
-
 	delete pData;
 
 	return true;

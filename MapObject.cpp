@@ -122,9 +122,7 @@ g_RenderedObjectsCountInGameWindow++;
 			glEnable(GL_DEPTH_TEST);
 
 			if (m_Color == 1)
-			{
 				UO->DrawLandArt(m_Graphic, objColor, drawX, drawY, m_Z);
-			}
 			else
 			{
 				char minZ = m_MinZ + 3;

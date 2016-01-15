@@ -554,7 +554,7 @@ int TGameScreen::Render(bool mode)
 
 		if (!g_UseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
 		{
-			g_DrawColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f); // + 0.2f;
+			g_DrawColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f);
 
 			if (!ConfigManager.DarkNights)
 				g_DrawColor += 0.2f;
@@ -578,7 +578,9 @@ int TGameScreen::Render(bool mode)
 			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
 			{
 				int blockIndex = (bx * 512) + by;
+
 				TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
 				if (mb == NULL)
 				{
 					mb = MapManager->AddBlock(blockIndex);
@@ -589,56 +591,57 @@ int TGameScreen::Render(bool mode)
 
 				IFOR(x, 0, 8)
 				{
-					int mX = bx * 8 + x;
+					int currentX = bx * 8 + x;
 
-					if (mX < m_RenderBounds.RealMinRangeX || mX > m_RenderBounds.RealMaxRangeX)
+					if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
 						continue;
 
-					int gx = mX - playerX;
+					int offsetX = currentX - playerX;
 
 					IFOR(y, 0, 8)
 					{
-						int mY = by * 8 + y;
+						int currentY = by * 8 + y;
 
-						if (mY < m_RenderBounds.RealMinRangeY || mY > m_RenderBounds.RealMaxRangeY)
+						if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
 							continue;
 						
-						int gy = mY - playerY;
+						int offsetY = currentY - playerY;
 
-						TRenderWorldObject *ro = mb->GetRender(x, y);
+						TRenderWorldObject *renderObject = mb->GetRender(x, y);
 
-						if (ro == NULL)
+						if (renderObject == NULL)
 							continue;
 
-						int DrawPixelsX = gameWindowCenterX + (gx - gy) * 22;
-						int DrawPixelsY = gameWindowCenterY + (gx + gy) * 22;
+						int drawX = gameWindowCenterX + (offsetX - offsetY) * 22;
+						int drawY = gameWindowCenterY + (offsetX + offsetY) * 22;
 
-						if (DrawPixelsX < m_RenderBounds.MinPixelsX || DrawPixelsX > m_RenderBounds.MaxPixelsX)
+						if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
 							continue;
 
-						if (DrawPixelsY - deltaZ < m_RenderBounds.MinPixelsY || DrawPixelsY - deltaZ > m_RenderBounds.MaxPixelsY)
+						if (drawY - deltaZ < m_RenderBounds.MinPixelsY || drawY - deltaZ > m_RenderBounds.MaxPixelsY)
 							continue;
 
-						g_OutOfRangeColor = 0;
-						POINT testPos = {mX, mY};
+						POINT testPos = { currentX, currentY };
 
 						if (GetDistance(g_Player, testPos) > g_UpdateRange)
 							g_OutOfRangeColor = 0x0386;
+						else
+							g_OutOfRangeColor = 0;
 
-						while (ro != NULL)
+						while (renderObject != NULL)
 						{
-							if (ro->IsInternal() || (!ro->IsLandObject() && ro->Z >= maxDrawZ))
+							if (renderObject->IsInternal() || (!renderObject->IsLandObject() && renderObject->Z >= maxDrawZ))
 							{
-								ro = ro->m_NextXY;
+								renderObject = renderObject->m_NextXY;
 								continue;
 							}
 								
-							TRenderWorldObject *nextRo = ro->m_NextXY;
+							TRenderWorldObject *nextRenderObject = renderObject->m_NextXY;
 
-							g_ZBuffer = (float)(ro->Z + ro->RenderQueueIndex);
-							ro->Draw(mode, DrawPixelsX, DrawPixelsY, ticks);
+							g_ZBuffer = (float)(renderObject->Z + renderObject->RenderQueueIndex);
+							renderObject->Draw(mode, drawX, drawY, ticks);
 
-							ro = nextRo;
+							renderObject = nextRenderObject;
 						}
 					}
 				}
@@ -654,11 +657,11 @@ int TGameScreen::Render(bool mode)
 			{
 				glColor3f(1.0f, 1.0f, 1.0f);
 
-				if (g_UseFrameBuffer && g_PersonalLightLevel < g_LightLevel)
+				if (g_UseFrameBuffer)
 				{
-					if (g_LightBuffer.Ready() && g_LightBuffer.Use())
+					if (g_PersonalLightLevel < g_LightLevel && g_LightBuffer.Ready() && g_LightBuffer.Use())
 					{
-						float newLightColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f); // + 0.2f;
+						float newLightColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f);
 
 						if (!ConfigManager.DarkNights)
 							newLightColor += 0.2f;
@@ -697,6 +700,22 @@ int TGameScreen::Render(bool mode)
 						glDisable(GL_BLEND);
 					}
 				}
+				else if (g_PersonalLightLevel < g_LightLevel)
+				{
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_ONE, GL_ONE);
+
+					ColorizerShader->Use();
+
+					IFOR(i, 0, m_LightCount)
+					{
+						LIGHT_DATA &light = m_Light[i];
+
+						UO->DrawLight(light.ID, light.Color, light.DrawX - gameWindowPosX, light.DrawY - gameWindowPosY);
+					}
+
+					glDisable(GL_BLEND);
+				}
 				
 				ColorizerShader->Use();
 
@@ -708,27 +727,24 @@ int TGameScreen::Render(bool mode)
 				UnuseShader();
 			
 				//Отрисовка сообщений систем чата
-				int TextOffsY = (gameWindowPosY + gameWindowSizeY) - 41;
-				int TextYBounds = gameWindowPosY;
+				int textOffsY = (gameWindowPosY + gameWindowSizeY) - 41;
+				int textYBounds = gameWindowPosY;
 
 				TTextData *td = SystemChat->m_Head;
-				while (td != NULL)
+
+				while (td != NULL && textOffsY >= textYBounds)
 				{
-					if (TextOffsY < TextYBounds)
-						break;
+					TTextTexture &tth = td->m_Texture;
 
-					//if (td->GetType() == TT_SYSTEM)
-					{
-						TTextTexture &tth = td->m_Texture;
+					textOffsY -= tth.Height;
 
-						TextOffsY -= tth.Height;
-
-						if (td->Timer >= ticks)
-							tth.Draw(gameWindowPosX, TextOffsY);
-					}
+					if (td->Timer >= ticks)
+						tth.Draw(gameWindowPosX, textOffsY);
 
 					td = td->m_Prev;
 				}
+
+				FontColorizerShader->Use();
 
 				//Отрисовка текста
 				for (; rto != NULL; rto = rto->m_PrevDraw)
@@ -746,25 +762,40 @@ int TGameScreen::Render(bool mode)
 						{
 							//g_GL.DrawPolygone(0x7f7f7f7f, td->DrawX, td->DrawY, tth.Width, tth.Height);
 
-							if (g_LastObjectType == SOT_TEXT_OBJECT && g_SelectedTextObject == rto)
-								tth.DrawYellow(td->DrawX, td->DrawY);
-							else
+							WORD textColor = td->Color;
+
+							bool isYellowed = (g_LastObjectType == SOT_TEXT_OBJECT && g_SelectedTextObject == rto && World->FindWorldObject(td->Serial) != NULL);
+
+							if (isYellowed)
+								textColor = 0x0035;
+
+							ColorManager->SendColorsToShader(textColor);
+
+							int drawMode = 1;
+
+							if (td->Unicode)
+								drawMode = 3;
+							else if (td->Font != 5 && td->Font != 8)
+								drawMode = 2;
+
+							glUniform1iARB(ShaderDrawMode, drawMode);
+
+							if (td->Transparent)
 							{
-								if (td->Transparent)
-								{
-									glEnable(GL_BLEND);
-									glBlendFunc(GL_ONE, GL_DST_COLOR);
+								glEnable(GL_BLEND);
+								glBlendFunc(GL_ONE, GL_DST_COLOR);
 
-									tth.Draw(td->DrawX, td->DrawY);
+								tth.Draw(td->DrawX, td->DrawY);
 
-									glDisable(GL_BLEND);
-								}
-								else
-									tth.Draw(td->DrawX, td->DrawY);
+								glDisable(GL_BLEND);
 							}
+							else
+								tth.Draw(td->DrawX, td->DrawY);
 						}
 					}
 				}
+
+				UnuseShader();
 			}
 
 			QuestArrow.Draw(gameWindowCenterX, gameWindowCenterY);
@@ -977,6 +1008,36 @@ int TGameScreen::Render(bool mode)
 				g_LastSelectedObject = 2; //Button
 			}
 		}
+
+		if (!g_DeathScreenTimer && g_LastObjectType == SOT_NO_OBJECT)
+		{
+			//Проверка текста
+			for (; rto != NULL; rto = rto->m_PrevDraw)
+			{
+				if (!rto->IsText())
+					continue;
+
+				TTextData *td = (TTextData*)rto;
+
+				if (td->Type != TT_SYSTEM)
+				{
+					if (td->Timer >= ticks)
+					{
+						TTextTexture &tth = td->m_Texture;
+
+						if (tth.UnderMouse(td->DrawX, td->DrawY))
+						{
+							g_LastObjectType = SOT_TEXT_OBJECT;
+							g_LastSelectedObject = 4;
+							g_SelectedTextObject = rto;
+						}
+					}
+				}
+			}
+
+			if (g_LastObjectType == SOT_TEXT_OBJECT)
+				WorldTextRenderer->ToTop(g_SelectedTextObject);
+		}
 		
 		if (g_LastObjectType == SOT_NO_OBJECT) //Если ничего не выбралось - пройдемся по объектам
 		{
@@ -995,34 +1056,33 @@ int TGameScreen::Render(bool mode)
 					int blockIndex = (bx * 512) + by;
 					TMapBlock *mb = MapManager->GetBlock(blockIndex);
 					if (mb == NULL)
-					{
 						continue;
-					}
 
 					IFOR(x, 0, 8)
 					{
-						int mX = bx * 8 + x;
-						if (mX < m_RenderBounds.RealMinRangeX || mX > m_RenderBounds.RealMaxRangeX)
+						int currentX = bx * 8 + x;
+
+						if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
 							continue;
 
-						int gx = mX - playerX;
+						int offsetX = currentX - playerX;
 
 						IFOR(y, 0, 8)
 						{
-							int mY = by * 8 + y;
+							int currentY = by * 8 + y;
 
-							if (mY < m_RenderBounds.RealMinRangeY || mY > m_RenderBounds.RealMaxRangeY)
+							if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
 								continue;
 						
-							int gy = mY - playerY;
+							int offsetY = currentY - playerY;
 
-							TRenderWorldObject *ro = mb->GetRender(x, y);
+							TRenderWorldObject *renderObject = mb->GetRender(x, y);
 
-							if (ro == NULL)
+							if (renderObject == NULL)
 								continue;
 
-							int drawX = gameWindowCenterX + (gx - gy) * 22;
-							int drawY = gameWindowCenterY + (gx + gy) * 22;
+							int drawX = gameWindowCenterX + (offsetX - offsetY) * 22;
+							int drawY = gameWindowCenterY + (offsetX + offsetY) * 22;
 				
 							if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
 								continue;
@@ -1030,46 +1090,16 @@ int TGameScreen::Render(bool mode)
 							if (drawY - deltaZ < m_RenderBounds.MinPixelsY || drawY - deltaZ > m_RenderBounds.MaxPixelsY)
 								continue;
 
-							for (; ro != NULL; ro = ro->m_NextXY)
+							for (; renderObject != NULL; renderObject = renderObject->m_NextXY)
 							{
-								if (ro->IsInternal() || (!ro->IsLandObject() && ro->Z >= maxDrawZ))
+								if (renderObject->IsInternal() || (!renderObject->IsLandObject() && renderObject->Z >= maxDrawZ))
 									continue;
 									
-								ro->Draw(mode, drawX, drawY, ticks);
+								renderObject->Draw(mode, drawX, drawY, ticks);
 							}
 						}
 					}
 				}
-			}
-
-			if (!!g_DeathScreenTimer)
-			{
-				//Проверка текста
-				for (; rto != NULL; rto = rto->m_PrevDraw)
-				{
-					if (!rto->IsText())
-						continue;
-
-					TTextData *td = (TTextData*)rto;
-				
-					if (td->Type != TT_SYSTEM)
-					{
-						if (td->Timer >= ticks)
-						{
-							TTextTexture &tth = td->m_Texture;
-
-							if (tth.UnderMouse(td->DrawX, td->DrawY))
-							{
-								g_LastObjectType = SOT_TEXT_OBJECT;
-								g_LastSelectedObject = 4;
-								g_SelectedTextObject = rto;
-							}
-						}
-					}
-				}
-
-				if (g_LastObjectType == SOT_TEXT_OBJECT)
-					WorldTextRenderer->ToTop(g_SelectedTextObject);
 			}
 		}
 

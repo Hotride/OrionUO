@@ -208,8 +208,7 @@ TIndexMulti::~TIndexMulti()
 }
 //---------------------------------------------------------------------------
 TTextTexture::TTextTexture()
-: m_Width(0), m_Height(0), m_Lines(0), m_Texture(0), m_YellowTexture(0),
-Data(NULL)
+: m_Width(0), m_Height(0), m_Lines(0), m_Texture(0), Data(NULL)
 {
 }
 //---------------------------------------------------------------------------
@@ -219,12 +218,6 @@ TTextTexture::~TTextTexture()
 	{
 		glDeleteTextures(1, &m_Texture);
 		m_Texture = 0;
-	}
-
-	if (m_YellowTexture)
-	{
-		glDeleteTextures(1, &m_YellowTexture);
-		m_YellowTexture = 0;
 	}
 
 	if (Data != NULL)
@@ -246,12 +239,6 @@ void TTextTexture::Clear()
 		m_Texture = 0;
 	}
 
-	if (m_YellowTexture)
-	{
-		glDeleteTextures(1, &m_YellowTexture);
-		m_YellowTexture = 0;
-	}
-
 	if (Data != NULL)
 	{
 		delete Data;
@@ -266,7 +253,6 @@ void TTextTexture::Init()
 	m_Lines = 0;
 
 	m_Texture = 0;
-	m_YellowTexture = 0;
 
 	Data = NULL;
 }
@@ -274,14 +260,6 @@ void TTextTexture::Init()
 void TTextTexture::Draw(int x, int y)
 {
 	if (m_Texture != 0)
-		g_GL.Draw(m_Texture, (GLfloat)x, (GLfloat)y, (GLfloat)m_Width, (GLfloat)m_Height);
-}
-//--------------------------------------------------------------------------
-void TTextTexture::DrawYellow(int x, int y)
-{
-	if (m_YellowTexture != 0)
-		g_GL.Draw(m_YellowTexture, (GLfloat)x, (GLfloat)y, (GLfloat)m_Width, (GLfloat)m_Height);
-	else if (m_Texture != 0)
 		g_GL.Draw(m_Texture, (GLfloat)x, (GLfloat)y, (GLfloat)m_Width, (GLfloat)m_Height);
 }
 //--------------------------------------------------------------------------

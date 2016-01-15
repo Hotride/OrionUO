@@ -49,6 +49,7 @@ public:
 	SETGET(short, Armor)
 	SETGET(DWORD, Gold)
 	SETGET(bool, Warmode)
+	void SetName(string val);
 
 	void SetSkillBaseValue(int index, float val);
 	void SetSkillValue(int index, float val);

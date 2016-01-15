@@ -44,6 +44,8 @@ int TBaseScreen::DrawSmoothMonitor()
 			glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
 
 			ProcessSmoothAction();
+
+			g_GL.EndDraw();
 			return 1;
 		}
 	}

@@ -9,5 +9,5 @@ void main(void)
 	if (red == 0.0)
 		red = textureColor.g * 0.85;
 
-	gl_FragColor = vec4(red, red, red, textureColor.a);
+	gl_FragColor = vec4(red, red, red, textureColor.a) * gl_Color;
 }

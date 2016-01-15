@@ -136,6 +136,9 @@ g_RenderedObjectsCountInGameWindow++;
 						doubleDraw = true;
 				}
 
+				if (IsSurface() || (IsBackground() && IsUnknown2()))
+					glEnable(GL_DEPTH_TEST);
+
 				if (doubleDraw)
 				{
 					drawX -= 2;
@@ -144,6 +147,8 @@ g_RenderedObjectsCountInGameWindow++;
 				}
 				else
 					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z, selMode);
+
+				glDisable(GL_DEPTH_TEST);
 
 				if (IsLightSource())
 				{

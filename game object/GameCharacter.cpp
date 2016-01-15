@@ -45,19 +45,6 @@ TGameCharacter::~TGameCharacter()
 		gump->UpdateFrame();
 }
 //---------------------------------------------------------------------------
-void TGameCharacter::SetName(string val)
-{
-	m_Name = val;
-
-	if (g_GameState >= GS_GAME)
-	{
-		char buf[256] = {0};
-		sprintf(buf, "Ultima Online - %s (%s)", val.c_str(), ServerList.GetServerName().c_str());
-
-		SetWindowTextA(g_hWnd, buf);
-	}
-}
-//---------------------------------------------------------------------------
 void TGameCharacter::SetPaperdollText(string val)
 {
 	m_PaperdollTextTexture.Clear(); //Очищаем текстуру

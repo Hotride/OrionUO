@@ -56,7 +56,6 @@ private:
 	DWORD m_UnicodeFontSize[20];
 
 	bool m_SavePixels;
-	bool m_CreateYellowTexture;
 
 	bool m_UseHTML;
 	DWORD m_HTMLColor;
@@ -75,7 +74,6 @@ public:
 	~TFontsManager();
 	
 	SETGET(bool, SavePixels)
-	SETGET(bool, CreateYellowTexture)
 
 	void SetUseHTML(bool val, DWORD htmlStartColor = 0xFFFFFFFF) {m_UseHTML = val; m_HTMLColor = htmlStartColor;}
 	bool GetUseHTML() const {return m_UseHTML;}

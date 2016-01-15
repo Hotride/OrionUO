@@ -796,6 +796,12 @@ TUltimaOnline::~TUltimaOnline()
 		ColorizerShader = NULL;
 	}
 
+	if (FontColorizerShader != NULL)
+	{
+		delete FontColorizerShader;
+		FontColorizerShader = NULL;
+	}
+
 	CurrentShader = NULL;
 
 	SoundManager.Free();
@@ -2423,19 +2429,25 @@ void TUltimaOnline::LoadShaders()
 	memset(&vect, 0, sizeof(TMappedHeader));
 
 	FileManager.LoadFileToMemory(frag, FilePath("shaders\\DeathShader.frag").c_str());
-	FileManager.LoadFileToMemory(vect, FilePath("shaders\\DeathShader.vert").c_str());
+	FileManager.LoadFileToMemory(vect, FilePath("shaders\\Shader.vert").c_str());
 
 	DeathShader = new TDeathShader((char*)vect.Address, (char*)frag.Address);
 
 	FileManager.UnloadFileFromMemory(frag);
-	FileManager.UnloadFileFromMemory(vect);
 
 
 
 	FileManager.LoadFileToMemory(frag, FilePath("shaders\\ColorizerShader.frag").c_str());
-	FileManager.LoadFileToMemory(vect, FilePath("shaders\\ColorizerShader.vert").c_str());
 
 	ColorizerShader = new TColorizerShader((char*)vect.Address, (char*)frag.Address);
+
+	FileManager.UnloadFileFromMemory(frag);
+
+
+
+	FileManager.LoadFileToMemory(frag, FilePath("shaders\\FontColorizerShader.frag").c_str());
+
+	FontColorizerShader = new TColorizerShader((char*)vect.Address, (char*)frag.Address);
 
 	FileManager.UnloadFileFromMemory(frag);
 	FileManager.UnloadFileFromMemory(vect);
@@ -3180,7 +3192,7 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 		if (::IsWet(tile.Flags))
 		{
 			glDisable(GL_LIGHTING);
-			glColor3f(1.0f, 1.0f, 1.0f);
+			glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 
 			DrawLandArt(id, color, x, y, -5);
 		}
@@ -3835,12 +3847,14 @@ void TUltimaOnline::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, W
 
 				FontManager->SavePixels = true;
 
-				FontManager->CreateYellowTexture = obj->NPC;
+				td->Color = 0;
 
 				if (width > TEXT_MESSAGE_MAX_WIDTH)
 					td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_LEFT);
 				else
 					td->GenerateTexture(0, 0, TS_CENTER);
+
+				td->Color = color;
 
 				FontManager->SavePixels = false;
 
@@ -3872,13 +3886,8 @@ void TUltimaOnline::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, W
 							{
 								topobj = (TGameObject*)topobj->m_Items;
 
-								while (topobj != NULL)
-								{
-									if (topobj->Graphic == 0x1E5E)
-										break;
-
+								while (topobj != NULL && topobj->Graphic != 0x1E5E)
 									topobj = (TGameObject*)topobj->m_Next;
-								}
 
 								if (topobj != NULL)
 									gump = GumpManager->GetGump(0, topobj->Serial, GT_TRADE);
@@ -3954,13 +3963,15 @@ void TUltimaOnline::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD 
 
 				FontManager->SavePixels = true;
 
-				FontManager->CreateYellowTexture = obj->NPC;
+				td->Color = 0;
 
 				if (width > TEXT_MESSAGE_MAX_WIDTH)
 					td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, UOFONT_BLACK_BORDER, TS_LEFT);
 				else
 					td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_CENTER);
 				
+				td->Color = color;
+
 				FontManager->SavePixels = false;
 
 				obj->AddText(td);
@@ -3991,13 +4002,8 @@ void TUltimaOnline::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD 
 							{
 								topobj = (TGameObject*)topobj->m_Items;
 
-								while (topobj != NULL)
-								{
-									if (topobj->Graphic == 0x1E5E)
-										break;
-
+								while (topobj != NULL && topobj->Graphic != 0x1E5E)
 									topobj = (TGameObject*)topobj->m_Next;
-								}
 
 								if (topobj != NULL)
 									gump = GumpManager->GetGump(0, topobj->Serial, GT_TRADE);

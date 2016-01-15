@@ -215,7 +215,6 @@ private:
 	int m_Height;
 	int m_Lines;
 	GLuint m_Texture;
-	GLuint m_YellowTexture;
 public:
 	TTextTexture();
 	virtual ~TTextTexture();
@@ -226,7 +225,6 @@ public:
 	SETGET(int, Height)
 	SETGET(int, Lines)
 	SETGET(GLuint, Texture)
-	SETGET(GLuint, YellowTexture)
 
 	bool Empty() {return (m_Texture == 0);}
 
@@ -234,7 +232,6 @@ public:
 	void Clear();
 	
 	void Draw(int x, int y);
-	void DrawYellow(int x, int y);
 
 	bool UnderMouse(int x, int y);
 
