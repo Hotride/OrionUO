@@ -1286,31 +1286,41 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	}
 	
 	/*TTextureAnimationFrame *frame = GetFrame(obj, animIndex);
-	if (frame != NULL && m_FrameBuffer.Use())
+
+	if (!g_GrayedPixels && frame != NULL && m_FrameBuffer.Use())
 	{
+		TBaseShader *shader = CurrentShader;
+		UnuseShader();
 		int fbWidth = frame->Width;
 		int fbHeight = frame->Height;
-		//m_FrameBuffer.Free();
-		
-		//if (m_FrameBuffer.Init(fbWidth, fbHeight) && m_FrameBuffer.Use())
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		float shadowColor = 0.7f;
+		glColor3f(shadowColor, shadowColor, shadowColor);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
 		
-		Draw(obj, fbWidth / 2, fbHeight, mirror, animIndex);
+		Draw(obj, fbWidth, fbHeight, mirror, animIndex);
 
 		m_FrameBuffer.Release();
 
 		GameScreen->RestoreGameWindowPort();
 		
 		glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-						
-		m_FrameBuffer.DrawShadow((float)drawX + FRAME_BUFFER_WIDTH, (float)drawY - fbHeight, fbWidth, fbHeight, mirror);
-
 		glDisable(GL_BLEND);
+						
+		m_FrameBuffer.DrawShadow((float)drawX - (fbWidth), (float)drawY - fbHeight, fbWidth, fbHeight, mirror);
+		
+
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
+
+		CurrentShader = shader;
+		if (CurrentShader)
+			CurrentShader->Use();
 	}*/
 	
 	if (needHPLine)

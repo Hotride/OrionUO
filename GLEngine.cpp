@@ -87,6 +87,8 @@ bool TGLEngine::Install(HWND hWnd)
 			glGenFramebuffers
 			);
 	}
+	else
+		return false;
 
 	TPRINT("g_UseFrameBuffer = %i\n", g_UseFrameBuffer);
 

@@ -35,31 +35,34 @@ bool TFrameBuffer::Init(int width, int height)
 {
 	bool result = false;
 
-	glGenTextures(1, &m_Texture);
-	glBindTexture(GL_TEXTURE_2D, m_Texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
-	GLint currentFrameBuffer = 0;
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFrameBuffer); 
-
-	glGenFramebuffers(1, &m_FrameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_Texture, 0);
-
-	//GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	//glDrawBuffers(1, DrawBuffers);
-	
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+	if (g_UseFrameBuffer)
 	{
-		m_Width = width;
-		m_Height = height;
+		glGenTextures(1, &m_Texture);
+		glBindTexture(GL_TEXTURE_2D, m_Texture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
-		result = true;
-		m_Ready = true;
+		GLint currentFrameBuffer = 0;
+		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFrameBuffer); 
+
+		glGenFramebuffers(1, &m_FrameBuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_Texture, 0);
+
+		//GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+		//glDrawBuffers(1, DrawBuffers);
+	
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+		{
+			m_Width = width;
+			m_Height = height;
+
+			result = true;
+			m_Ready = true;
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, currentFrameBuffer);
 	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, currentFrameBuffer);
 
 	return result;
 }
@@ -83,22 +86,25 @@ void TFrameBuffer::Free()
 //---------------------------------------------------------------------------
 void TFrameBuffer::Release()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_OldFrameBuffer);
+	if (g_UseFrameBuffer)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, m_OldFrameBuffer);
 	
-	glBindTexture(GL_TEXTURE_2D, m_Texture);
-	glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, m_Texture);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
 }
 //---------------------------------------------------------------------------
 bool TFrameBuffer::Ready(int &width, int &height)
 {
-	return (m_Ready && m_Width == width && m_Height == height);
+	return (g_UseFrameBuffer && m_Ready && m_Width == width && m_Height == height);
 }
 //---------------------------------------------------------------------------
 bool TFrameBuffer::Use()
 {
 	bool result = false;
 
-	if (m_Ready)
+	if (g_UseFrameBuffer && m_Ready)
 	{
 		glEnable(GL_TEXTURE_2D);
 		
@@ -126,7 +132,7 @@ bool TFrameBuffer::Use()
 //---------------------------------------------------------------------------
 void TFrameBuffer::Draw(float x, float y)
 {
-	if (m_Ready)
+	if (g_UseFrameBuffer && m_Ready)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_Texture);
 
@@ -147,47 +153,22 @@ void TFrameBuffer::Draw(float x, float y)
 //---------------------------------------------------------------------------
 void TFrameBuffer::DrawShadow(float x, float y, float width, float height, bool mirror)
 {
-	if (m_Ready)
+	if (g_UseFrameBuffer && m_Ready)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_Texture);
 		
 		glLoadIdentity();
-		glTranslatef(x / 2, y, 0.0f);
+		glTranslatef(x, y, 0.0f);
 		
-		//width = (float)m_Width;
+		width = (float)m_Width;
 		height = (float)m_Height;
-
-		if (mirror)
-		{
-			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f, 1.0f); glVertex2f(width, height);
-				glTexCoord2f(1.0f, 1.0f); glVertex2f(0.0f, height);
-				glTexCoord2f(1.0f, 0.0f); glVertex2f(0.0f, 0.0f);
-				glTexCoord2f(0.0f, 0.0f); glVertex2f(width, 0.0f);
-			glEnd();
-		}
-		else
-		{
-			glBegin(GL_QUADS);
-				/*glTexCoord2f(0.0f, 1.0f); glVertex2f(0.0f, height / 2);
-				glTexCoord2f(1.0f, 1.0f); glVertex2f(width, height / 2);
-				glTexCoord2f(1.0f, 0.0f); glVertex2f(width * 2, 0.0f);
-				glTexCoord2f(0.0f, 0.0f); glVertex2f(width, 0.0f);
-
-
-				/*glTexCoord2f(0.0f, 1.0f); glVertex2f(-x / 2, height);
-				glTexCoord2f(1.0f, 1.0f); glVertex2f(width - x / 2, height);
-				glTexCoord2f(1.0f, 0.0f); glVertex2f(width * 2 - x / 2, height);
-				glTexCoord2f(0.0f, 0.0f); glVertex2f(width - x / 2, 0.0f);
-				*/
-
-			
-				glTexCoord2f(0.0f, 1.0f); glVertex2f(0.0f, height);
-				glTexCoord2f(1.0f, 1.0f); glVertex2f(width, height);
-				glTexCoord2f(1.0f, 0.0f); glVertex2f(width, 0.0f);
-				glTexCoord2f(0.0f, 0.0f); glVertex2f(0.0f, 0.0f);
-			glEnd();
-		}
+		
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(0.0f, height);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(width, height);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(width, 0.0f);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(0.0f, 0.0f);
+		glEnd();
 	}
 }
 //---------------------------------------------------------------------------

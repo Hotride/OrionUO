@@ -73,7 +73,9 @@ TBaseShader::~TBaseShader()
 //---------------------------------------------------------------------------
 bool TBaseShader::Use()
 {
+	TBaseShader *oldShader = CurrentShader;
 	UnuseShader();
+	CurrentShader = oldShader;
 
 	bool result = false;
 
