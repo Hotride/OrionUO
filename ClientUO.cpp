@@ -3963,15 +3963,11 @@ void TUltimaOnline::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD 
 
 				FontManager->SavePixels = true;
 
-				td->Color = 0;
-
 				if (width > TEXT_MESSAGE_MAX_WIDTH)
 					td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, UOFONT_BLACK_BORDER, TS_LEFT);
 				else
 					td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_CENTER);
 				
-				td->Color = color;
-
 				FontManager->SavePixels = false;
 
 				obj->AddText(td);
