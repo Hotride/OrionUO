@@ -54,7 +54,6 @@ class TLandObject : public TMapObject
 {
 protected:
 	RECT m_Rect;
-	char m_DrawZ;
 	char m_MinZ;
 public:
 	TLandObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z);
@@ -63,7 +62,6 @@ public:
 	TVector m_Normals[4];
 
 	SETGET(RECT, Rect);
-	SETGET(char, DrawZ);
 	SETGET(char, MinZ);
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);

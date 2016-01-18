@@ -253,13 +253,6 @@ void TMapBlock::CreateLandTextureRect()
 
 				TMapObject *next = (TMapObject*)obj->m_Next;
 
-				//Коррекция для тайла воды, так они не будут загораживать последующие тайлы ландшафта
-				//if (next != NULL && next->IsWet() && !::IsWet(UO->GetLandFlags(obj->Graphic)))
-					//next->RenderQueueIndex = 5;
-					//drawZ = next->Z + 4;
-
-				//И Z-коордиената отрисовки, чтоб не конфликтовала при рендере со статикой
-				obj->DrawZ = drawZ - 3;
 				obj->MinZ = minZ;
 			}
 		}

@@ -288,7 +288,7 @@ void TGLEngine::DrawTriangle(DWORD color, float x, float y, float radius)
 
 		float pi = (float)M_PI * 2.0f;
 
-		IFOR(i, 0, 360)
+		for (int i = 0; i <= 360; i++)
 		{
 			float a = i / 180.0f * pi;
 			glVertex2f(cos(a) * radius, sin(a) * radius);

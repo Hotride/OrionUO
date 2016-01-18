@@ -93,7 +93,7 @@ TMapObject::~TMapObject()
 }
 //---------------------------------------------------------------------------
 TLandObject::TLandObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z)
-: TMapObject(ROT_LAND_OBJECT, serial, graphic, color, x, y, z), m_DrawZ(z), m_MinZ(z)
+: TMapObject(ROT_LAND_OBJECT, serial, graphic, color, x, y, z), m_MinZ(z)
 {
 	//m_ObjectFlags = UO->GetLandFlags(graphic);
 
