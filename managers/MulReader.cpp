@@ -34,7 +34,8 @@ TTextureObject *TMulReader::ReadGump(DWORD Address, DWORD Size, WORD Width, WORD
 	int blocksize = Width * Height;
 
 	PWORD pixels = new WORD[blocksize];
-	//memset(&pixels[0], 0, blocksize * 4);
+	//memset(&pixels[0], 0, blocksize * 2);
+
 	IFOR(Y, 0, Height)
 	{
 		int GSize = 0;
@@ -397,7 +398,7 @@ TTextureObject *TMulReader::ReadLight(WORD id, DWORD address, DWORD size, WORD w
 	{
 		IFOR(j, 0, width)
 		{
-			WORD val = *p * 8;
+			WORD val = (*p << 10) | (*p << 5) | *p;
 			WORD a = val ? 0x8000 : 0;
 			int block = (i * width) + j;
 			pixels[block] = a | val;

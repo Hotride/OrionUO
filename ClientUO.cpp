@@ -3214,7 +3214,7 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
 		//g_GL.Draw(th->Texture, th->m_VBO_Vertex, x, y);
-		g_GL.Draw(th->Texture, x, y, (GLfloat)th->Width, (GLfloat)th->Height);
+		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
 	}
 }
 //---------------------------------------------------------------------------
@@ -3330,7 +3330,7 @@ void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
 		x -= 23;
 		y = (y - 23) - (z * 4);
 
-		g_GL.Draw(th->Texture, x, y, (GLfloat)th->Width, (GLfloat)th->Height);
+		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
 	}
 }
 //---------------------------------------------------------------------------
@@ -3362,7 +3362,7 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 
 		y -= (z * 4);
 
-		g_GL.Draw(th->Texture, x, y, (GLfloat)th->Width, (GLfloat)th->Height);
+		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
 	}
 }
 //---------------------------------------------------------------------------
@@ -3396,7 +3396,7 @@ void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int
 
 		y -= (z * 4);
 
-		g_GL.Draw(th->Texture, x, y, (GLfloat)th->Width, (GLfloat)th->Height);
+		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
 	}
 }
 //---------------------------------------------------------------------------
@@ -3429,7 +3429,7 @@ void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, 
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		g_GL.Draw(th->Texture, x, y, (GLfloat)DW, (GLfloat)DH);
+		g_GL.Draw(th->Texture, x, y, DW, DH);
 	}
 }
 //---------------------------------------------------------------------------
@@ -3453,7 +3453,7 @@ void TUltimaOnline::DrawLight(BYTE id, WORD color, int x, int y)
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		g_GL.Draw(th->Texture, x, y, (GLfloat)th->Width, (GLfloat)th->Height);
+		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
 	}
 }
 //---------------------------------------------------------------------------
