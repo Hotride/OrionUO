@@ -96,8 +96,6 @@ public:
 
 	SETGET(short, Width)
 	SETGET(short, Height)
-
-	GLuint Texture;
 };
 //---------------------------------------------------------------------------
 class TGumpButton : public TGumpObject

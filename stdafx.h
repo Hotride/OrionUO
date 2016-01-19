@@ -165,7 +165,8 @@ extern float g_DrawColor;
 extern bool g_NoDrawRoof;
 extern char g_MaxGroundZ;
 extern char g_SelecterCharName[30];
-extern float g_ZBuffer;
+extern int g_ZBuffer;
+extern GLuint g_VBO_TexCoord;
 
 const BYTE SMOOTH_MONITOR_NONE = 0;
 const BYTE SMOOTH_MONITOR_SUNRISE = 1;

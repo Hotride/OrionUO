@@ -802,6 +802,12 @@ TUltimaOnline::~TUltimaOnline()
 		FontColorizerShader = NULL;
 	}
 
+	if (LightColorizerShader != NULL)
+	{
+		delete LightColorizerShader;
+		LightColorizerShader = NULL;
+	}
+
 	CurrentShader = NULL;
 
 	SoundManager.Free();
@@ -993,10 +999,11 @@ bool TUltimaOnline::Install()
 
 	g_ClickObject.Init(COT_NONE);
 	
-	DWORD b = 0x00000000;
-	DWORD r = 0xFF0000FF;
-	DWORD g = 0xFF00FF00;
-	DWORD pdwlt[] =
+	WORD b = 0x0000;
+	WORD r = 0xFC00; // 0xFF0000FF;
+	WORD g = 0x83E0; // 0xFF00FF00;
+
+	WORD pdwlt[] =
 	{
 		b, r, r, r, r, r, r, r, b, b,
 		b, r, r, r, r, r, r, r, b, b,
@@ -1013,7 +1020,7 @@ bool TUltimaOnline::Install()
 		b, r, r, r, r, r, r, r, b, b,
 		b, b, r, r, r, r, r, b, b, b
 	};
-	DWORD pdwult[] =
+	WORD pdwult[] =
 	{
 		b, b, b, g, g, g, g, g, g, g,
 		b, b, b, g, g, g, g, g, g, g,
@@ -1031,10 +1038,10 @@ bool TUltimaOnline::Install()
 		b, b, g, g, g, g, g, b, b, b
 	};
 	
-	g_GL.BindTexture(g_TextureLockedGump, 10, 14, pdwlt);
+	g_GL.BindTexture16(g_TextureLockedGump, 10, 14, pdwlt);
 	g_TextureGumpState[1] = g_TextureLockedGump;
 
-	g_GL.BindTexture(g_TextureUnlockedGump, 10, 14, pdwult);
+	g_GL.BindTexture16(g_TextureUnlockedGump, 10, 14, pdwult);
 	g_TextureGumpState[0] = g_TextureUnlockedGump;
 
 	g_LightBuffer.Init(GetSystemMetrics(SM_CXMAXIMIZED), GetSystemMetrics(SM_CYMAXIMIZED));
@@ -2428,8 +2435,8 @@ void TUltimaOnline::LoadShaders()
 	TMappedHeader vect;
 	memset(&vect, 0, sizeof(TMappedHeader));
 
-	FileManager.LoadFileToMemory(frag, FilePath("shaders\\DeathShader.frag").c_str());
 	FileManager.LoadFileToMemory(vect, FilePath("shaders\\Shader.vert").c_str());
+	FileManager.LoadFileToMemory(frag, FilePath("shaders\\DeathShader.frag").c_str());
 
 	DeathShader = new TDeathShader((char*)vect.Address, (char*)frag.Address);
 
@@ -2448,6 +2455,14 @@ void TUltimaOnline::LoadShaders()
 	FileManager.LoadFileToMemory(frag, FilePath("shaders\\FontColorizerShader.frag").c_str());
 
 	FontColorizerShader = new TColorizerShader((char*)vect.Address, (char*)frag.Address);
+
+	FileManager.UnloadFileFromMemory(frag);
+
+
+
+	FileManager.LoadFileToMemory(frag, FilePath("shaders\\LightColorizerShader.frag").c_str());
+
+	LightColorizerShader = new TColorizerShader((char*)vect.Address, (char*)frag.Address);
 
 	FileManager.UnloadFileFromMemory(frag);
 	FileManager.UnloadFileFromMemory(vect);
@@ -2928,6 +2943,24 @@ TTextureObject *TUltimaOnline::ExecuteGump(WORD id, bool partialHue)
 
 		io.Texture = MulReader.ReadGump(io.Address, io.Size, io.Width, io.Height);
 
+		if (io.Texture != NULL)
+		{
+			float vertex[4][2] =
+			{
+				{ 0.0f, (float)io.Texture->Height },
+				{ (float)io.Texture->Width, (float)io.Texture->Height },
+				{ (float)io.Texture->Width, 0.0f },
+				{ 0.0f, 0.0f }
+			};
+
+			GLuint VBO = 0;
+			glGenBuffersARB(1, &VBO);
+			glBindBufferARB(GL_ARRAY_BUFFER_ARB, VBO);
+			glBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * 2 * sizeof(float), &vertex[0], GL_STATIC_DRAW_ARB);
+
+			io.Texture->m_VBO_Vertex = VBO;
+		}
+
 		m_GumpDataIndexCount++;
 
 		if (m_UsedGumpList == NULL)
@@ -2958,6 +2991,24 @@ TTextureObject *TUltimaOnline::ExecuteLandArt(WORD id)
 			return NULL;
 
 		io.Texture = MulReader.ReadArt(id, io.Address, io.Size);
+
+		if (io.Texture != NULL)
+		{
+			float vertex[4][2] =
+			{
+				{ 0.0f, (float)io.Texture->Height },
+				{ (float)io.Texture->Width, (float)io.Texture->Height },
+				{ (float)io.Texture->Width, 0.0f },
+				{ 0.0f, 0.0f }
+			};
+
+			GLuint VBO = 0;
+			glGenBuffersARB(1, &VBO);
+			glBindBufferARB(GL_ARRAY_BUFFER_ARB, VBO);
+			glBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * 2 * sizeof(float), &vertex[0], GL_STATIC_DRAW_ARB);
+
+			io.Texture->m_VBO_Vertex = VBO;
+		}
 
 		m_LandDataIndexCount++;
 
@@ -2993,6 +3044,24 @@ TTextureObject *TUltimaOnline::ExecuteStaticArt(WORD id)
 		io.Width = ((io.Texture->Width / 2) + 1);
 
 		io.Height = io.Texture->Height - 20;
+
+		if (io.Texture != NULL)
+		{
+			float vertex[4][2] =
+			{
+				{ 0.0f, (float)io.Texture->Height },
+				{ (float)io.Texture->Width, (float)io.Texture->Height },
+				{ (float)io.Texture->Width, 0.0f },
+				{ 0.0f, 0.0f }
+			};
+
+			GLuint VBO = 0;
+			glGenBuffersARB(1, &VBO);
+			glBindBufferARB(GL_ARRAY_BUFFER_ARB, VBO);
+			glBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * 2 * sizeof(float), &vertex[0], GL_STATIC_DRAW_ARB);
+
+			io.Texture->m_VBO_Vertex = VBO;
+		}
 
 		m_StaticDataIndexCount++;
 
@@ -3064,6 +3133,24 @@ TTextureObject *TUltimaOnline::ExecuteLight(BYTE &id)
 
 		io.Texture = MulReader.ReadLight(id, io.Address, io.Size, io.Width, io.Height);
 
+		if (io.Texture != NULL)
+		{
+			float vertex[4][2] =
+			{
+				{ 0.0f, (float)io.Texture->Height },
+				{ (float)io.Texture->Width, (float)io.Texture->Height },
+				{ (float)io.Texture->Width, 0.0f },
+				{ 0.0f, 0.0f }
+			};
+
+			GLuint VBO = 0;
+			glGenBuffersARB(1, &VBO);
+			glBindBufferARB(GL_ARRAY_BUFFER_ARB, VBO);
+			glBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * 2 * sizeof(float), &vertex[0], GL_STATIC_DRAW_ARB);
+
+			io.Texture->m_VBO_Vertex = VBO;
+		}
+
 		m_LightDataIndexCount++;
 
 		if (m_UsedLightList == NULL)
@@ -3126,7 +3213,8 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
+		//g_GL.Draw(th->Texture, th->m_VBO_Vertex, x, y);
+		g_GL.Draw(th->Texture, x, y, (GLfloat)th->Width, (GLfloat)th->Height);
 	}
 }
 //---------------------------------------------------------------------------
@@ -3156,7 +3244,7 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, int width, int h
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH, (GLfloat)width, (GLfloat)height);
+		g_GL.Draw(th->Texture, x, y, DW, DH, width, height);
 	}
 }
 //---------------------------------------------------------------------------
@@ -3179,7 +3267,7 @@ void TUltimaOnline::DrawResizepicGump(WORD id, int x, int y, int width, int heig
 			th[i] = pth;
 	}
 
-	g_GL.DrawResizepic(th, (GLfloat)x, (GLfloat)y, (GLfloat)width, (GLfloat)height);
+	g_GL.DrawResizepic(th, x, y, width, height);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, TVector *normals)
@@ -3218,7 +3306,10 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 
 	glUniform1iARB(ShaderDrawMode, drawMode);
 
-	g_GL.DrawLandTexture(th->Texture, (GLfloat)(x - 23), (GLfloat)(y - 23), 44.0f, 44.0f, rc, normals);
+	x -= 23;
+	y -= 23;
+
+	g_GL.DrawLandTexture(th->Texture, x, y, rc, normals);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
@@ -3236,7 +3327,10 @@ void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		g_GL.Draw(th->Texture, (GLfloat)(x - 23), (GLfloat)((y - 23) - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
+		x -= 23;
+		y = (y - 23) - (z * 4);
+
+		g_GL.Draw(th->Texture, x, y, (GLfloat)th->Width, (GLfloat)th->Height);
 	}
 }
 //---------------------------------------------------------------------------
@@ -3266,7 +3360,9 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
+		y -= (z * 4);
+
+		g_GL.Draw(th->Texture, x, y, (GLfloat)th->Width, (GLfloat)th->Height);
 	}
 }
 //---------------------------------------------------------------------------
@@ -3298,7 +3394,9 @@ void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)(y - (z * 4)), (GLfloat)th->Width, (GLfloat)th->Height);
+		y -= (z * 4);
+
+		g_GL.Draw(th->Texture, x, y, (GLfloat)th->Width, (GLfloat)th->Height);
 	}
 }
 //---------------------------------------------------------------------------
@@ -3331,7 +3429,7 @@ void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, 
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)y, (GLfloat)DW, (GLfloat)DH);
+		g_GL.Draw(th->Texture, x, y, (GLfloat)DW, (GLfloat)DH);
 	}
 }
 //---------------------------------------------------------------------------
@@ -3348,14 +3446,14 @@ void TUltimaOnline::DrawLight(BYTE id, WORD color, int x, int y)
 
 		if (color)
 		{
-			drawMode = 3;
+			drawMode = 1;
 
 			ColorManager->SendColorsToShader(color);
 		}
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		g_GL.Draw(th->Texture, (GLfloat)x, (GLfloat)y, (GLfloat)th->Width, (GLfloat)th->Height);
+		g_GL.Draw(th->Texture, x, y, (GLfloat)th->Width, (GLfloat)th->Height);
 	}
 }
 //---------------------------------------------------------------------------

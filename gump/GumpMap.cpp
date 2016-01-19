@@ -179,12 +179,17 @@ int TGumpMap::Draw(__in bool &mode)
 			UO->DrawGump(0x139A, 0, posX + ((m_Width - 66) / 2), posY + m_Height + 37); //Clear Course
 		}
 		
-		g_GL.Draw(Texture, posX + 24.0f, posY + 32.0f, (float)m_Width, (float)m_Height);
+		int tempX = posX + 24;
+		int tempY = posY + 32;
+		g_GL.Draw(Texture, tempX, tempY, (float)m_Width, (float)m_Height);
 
 		if (m_DoubleImage)
 		{
-			g_GL.Draw(Texture, posX + 25.0f, posY + 32.0f, (float)m_Width, (float)m_Height);
-			g_GL.Draw(Texture, posX + 24.0f, posY + 33.0f, (float)m_Width, (float)m_Height);
+			tempX++;
+			g_GL.Draw(Texture, tempX, tempY, (float)m_Width, (float)m_Height);
+			tempX--;
+			tempY++;
+			g_GL.Draw(Texture, tempX, tempY, (float)m_Width, (float)m_Height);
 		}
 
 		UO->DrawGump(0x139D, 0, posX + 174, posY + 177); //N

@@ -44,6 +44,7 @@ public:
 	void UpdateRect();
 	
 	void BindTexture(GLuint &texture, int width, int height, PDWORD pixels);
+	void BindTexture16(GLuint &texture, int width, int height, PWORD pixels);
 
 	void BeginDraw();
 	void EndDraw();
@@ -64,11 +65,12 @@ public:
 	void DrawPolygone(DWORD color, float x, float y, float width, float height);
 	void DrawTriangle(DWORD color, float x, float y, float radius);
 
-	void DrawLandTexture(GLuint &texture, float x, float y, float width, float height, RECT &rc, TVector *normals);
-	void Draw(GLuint &texture, float x, float y, float width, float height);
-	void Draw(GLuint &texture, float x, float y, float width, float height, bool &mirror);
-	void Draw(GLuint &texture, float x, float y, float width, float height, float drawWidth, float drawHeight);
-	void DrawResizepic(TTextureObject **th, float x, float y, float width, float height);
+	void DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVector *normals);
+	void Draw(GLuint &texture, GLuint &vertex, int &x, int &y);
+	void Draw(GLuint &texture, int &x, int &y, int width, int height);
+	void Draw(GLuint &texture, int &x, int &y, int width, int height, bool &mirror);
+	void Draw(GLuint &texture, int &x, int &y, int width, int height, int &drawWidth, int &drawHeight);
+	void DrawResizepic(TTextureObject **th, int &x, int &y, int &width, int &height);
 };
 
 extern TGLEngine g_GL;

@@ -65,7 +65,7 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 	int width = ex - sx;
 	int height = ey - sy;
 
-	PDWORD map = new DWORD[width * height * 4];
+	PWORD map = new WORD[width * height];
 	
 	int x = 0;
 	int y = 0;
@@ -73,16 +73,16 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 	//WORD color = 0x1461;
 	WORD color = 0x1881;
 
-	DWORD data_color = 0; //ColorManager->Color16To32(color);
+	WORD data_color = 0x8000; //ColorManager->Color16To32(color);
 
 	if (width > 200 || height > 200)
 	{
-		data_color = 0x00295A73; //0x004284A5; //ColorManager->Color16To32(color);
+		data_color = 0x9881; // 0x00295A73; //0x004284A5; //ColorManager->Color16To32(color);
 		//data_color = (color & 0x1F) | (2 * (color & 0x7FE0));
 		gump->DoubleImage = true;
 	}
 
-	data_color = (0xFF << 24) | (GetBValue(data_color) << 16) | (GetGValue(data_color) << 8) | GetRValue(data_color);
+	//data_color = (0xFF << 24) | (GetBValue(data_color) << 16) | (GetGValue(data_color) << 8) | GetRValue(data_color);
 
 	while (address < end)
 	{
@@ -117,7 +117,7 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 	}
 
 	GLuint tex = 0;
-	g_GL.BindTexture(tex, width, height, map);
+	g_GL.BindTexture16(tex, width, height, map);
 	gump->Texture = tex;
 
 	delete map;

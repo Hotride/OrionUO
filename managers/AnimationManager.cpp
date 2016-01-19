@@ -848,8 +848,8 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 
 		int blocksize = imageWidth * imageHeight;
 
-        PDWORD pData = new DWORD[blocksize];
-        memset(&pData[0], 0, blocksize * 4);
+		PWORD pData = new WORD[blocksize];
+		memset(&pData[0], 0, blocksize * 2);
 
 		WORD prevLineNum = 0xFF;
 
@@ -888,14 +888,10 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 
 				IFOR(j, 0, runLength)
 				{
-					if (palette[*b])
-					{
-						DWORD pcl = ColorManager->Color16To32(palette[*b]);
-
-						int block = y * imageWidth + (x + j);
-
-						pData[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-					}
+					WORD val = palette[*b];
+					WORD a = val ? 0x8000 : 0;
+					int block = y * imageWidth + (x + j);
+					pData[block] = a | val;
 
 					b++;
 				}
@@ -907,7 +903,7 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 
         //EstimateImageCornerAlpha( pData, imageWidth, imageHeight );
 
-		g_GL.BindTexture(frame->Texture, imageWidth, imageHeight, pData);
+		g_GL.BindTexture16(frame->Texture, imageWidth, imageHeight, pData);
 
 		delete pData;
 	}
@@ -1185,7 +1181,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 		glEnable(GL_DEPTH_TEST);
 
-		g_GL.Draw(texture, (float)x, (float)y, (float)frame->Width, (float)frame->Height, mirror);
+		g_GL.Draw(texture, x, y, (float)frame->Width, (float)frame->Height, mirror);
 
 		glDisable(GL_DEPTH_TEST);
 	}

@@ -33,9 +33,8 @@ TTextureObject *TMulReader::ReadGump(DWORD Address, DWORD Size, WORD Width, WORD
 
 	int blocksize = Width * Height;
 
-	PDWORD pixels = new DWORD[blocksize];
+	PWORD pixels = new WORD[blocksize];
 	//memset(&pixels[0], 0, blocksize * 4);
-
 	IFOR(Y, 0, Height)
 	{
 		int GSize = 0;
@@ -49,24 +48,21 @@ TTextureObject *TMulReader::ReadGump(DWORD Address, DWORD Size, WORD Width, WORD
 		int X = 0;
 		IFOR(i, 0, GSize)
 		{
+			WORD val = gmul[i].Value;
+			WORD a = val ? 0x8000 : 0;
+
 			IFOR(j, 0, gmul[i].Run)
 			{
 				int block = Y * Width + X;
 
-				if (gmul[i].Value)
-				{
-					DWORD pcl = ColorManager->Color16To32(gmul[i].Value);
-					pixels[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-				}
-				else
-					pixels[block] = 0;
+				pixels[block] = a | val;
 
 				X++;
 			}
 		}
 	}
 
-	g_GL.BindTexture(th->Texture, Width, Height, pixels);
+	g_GL.BindTexture16(th->Texture, Width, Height, pixels);
 
 	delete pixels;
 	return th;
@@ -116,19 +112,17 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 	{
 		int blocksize = 44 * 44;
 
-		PDWORD pixels = new DWORD[blocksize];
-		memset(&pixels[0], 0, blocksize * 4);
+		PWORD pixels = new WORD[blocksize];
+		memset(&pixels[0], 0, blocksize * 2);
 
 		IFOR(i, 0, 22)
 		{
 			IFOR(j, 22 - (i + 1), (22 - (i + 1)) + (i + 1) * 2)
 			{
-				if (*P)
-				{
-					int block = i * 44 + j;
-					DWORD pcl = ColorManager->Color16To32(*P);					
-					pixels[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-				}
+				WORD val = *P;
+				WORD a = val ? 0x8000 : 0;
+				int block = i * 44 + j;
+				pixels[block] = a | val;
 				P++;
 			}
 		}
@@ -137,22 +131,20 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 		{
 			IFOR(j, i, i + (22 - i) * 2)
 			{
-				if (*P)
-				{
-					int block = (i + 22) * 44 + j;
-					DWORD pcl = ColorManager->Color16To32(*P);
-					pixels[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-				}
+				WORD val = *P;
+				WORD a = val ? 0x8000 : 0;
+				int block = (i + 22) * 44 + j;
+				pixels[block] = a | val;
 				P++;
 			}
 		}
 
-		g_GL.BindTexture(th->Texture, 44, 44, pixels);
+		g_GL.BindTexture16(th->Texture, 44, 44, pixels);
 
 		delete pixels;
 	}
-	else { //run tile
-
+	else
+	{ //run tile
 		PWORD ptr = (PWORD)((DWORD)Address + 4);
 
 		w = *ptr;
@@ -184,8 +176,8 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 
 		int blocksize = w * h;
 
-		PDWORD pixels = new DWORD[blocksize];
-		memset(&pixels[0], 0, blocksize * 4);
+		PWORD pixels = new WORD[blocksize];
+		memset(&pixels[0], 0, blocksize * 2);
 
 		ptr = (PWORD)((DWORD)DataStart + (*LineOffsets));
 		ID -= 0x4000;
@@ -198,23 +190,23 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 			ptr++;
 			if (XOffs + Run >= 2048)
 			{
-				free(pixels);
+				delete pixels;
 				delete th;
 				return NULL;
 			}
 			else if (XOffs + Run != 0)
 			{
 				X += XOffs;
+
 				IFOR(j, 0, Run)
 				{
-					if (*ptr)
-					{
-						DWORD pcl = ColorManager->Color16To32(*ptr);
-						int block = Y * w + X + j;
-						pixels[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-					}
+					WORD val = *ptr;
+					WORD a = val ? 0x8000 : 0;
+					int block = Y * w + X + j;
+					pixels[block] = a | val;
 					ptr++;
 				}
+
 				X += Run;
 			}
 			else
@@ -239,7 +231,7 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 			}
 		}
 
-		g_GL.BindTexture(th->Texture, w, h, pixels);
+		g_GL.BindTexture16(th->Texture, w, h, pixels);
 
 		delete pixels;
 	}
@@ -367,19 +359,17 @@ TTextureObject *TMulReader::ReadTexture(WORD ID, DWORD Address, DWORD Size)
 	}
 
 	int blocksize = w * h;
-	PDWORD pixels = new DWORD[blocksize];
-	memset(&pixels[0], 0, blocksize * 4);
+	PWORD pixels = new WORD[blocksize];
 
 	PWORD P = (PWORD)Address;
 	IFOR(i, 0, h)
 	{
 		IFOR(j, 0, w)
 		{
-			if (*P)
-			{
-				DWORD pcl = ColorManager->Color16To32(*P);
-				pixels[i * w + j] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-			}
+			WORD val = *P;
+			WORD a = val ? 0x8000 : 0;
+			int block = i * w + j;
+			pixels[block] = a | val;
 			P++;
 		}
 	}
@@ -387,7 +377,7 @@ TTextureObject *TMulReader::ReadTexture(WORD ID, DWORD Address, DWORD Size)
 	th->Width = w;
 	th->Height = h;
 
-	g_GL.BindTexture(th->Texture, w, h, pixels);
+	g_GL.BindTexture16(th->Texture, w, h, pixels);
 
 	delete pixels;
 
@@ -399,7 +389,7 @@ TTextureObject *TMulReader::ReadLight(WORD id, DWORD address, DWORD size, WORD w
 	TTextureObject *th = new TTextureObject();
 	th->Texture = NULL;
 
-	PDWORD pixels = new DWORD[width * height];
+	PWORD pixels = new WORD[width * height];
 
 	PBYTE p = (PBYTE)address;
 
@@ -407,17 +397,10 @@ TTextureObject *TMulReader::ReadLight(WORD id, DWORD address, DWORD size, WORD w
 	{
 		IFOR(j, 0, width)
 		{
-			int pos = (i * width) + j;
-			DWORD pcl = 0;
-
-			if (*p)
-			{
-				BYTE c = *p * 8;
-				pcl = (0xFF << 24) | (c << 16) | (c << 8) | c;
-			}
-			
-			pixels[pos] = pcl;
-
+			WORD val = *p * 8;
+			WORD a = val ? 0x8000 : 0;
+			int block = (i * width) + j;
+			pixels[block] = a | val;
 			p++;
 		}
 	}
@@ -425,7 +408,7 @@ TTextureObject *TMulReader::ReadLight(WORD id, DWORD address, DWORD size, WORD w
 	th->Width = width;
 	th->Height = height;
 
-	g_GL.BindTexture(th->Texture, width, height, pixels);
+	g_GL.BindTexture16(th->Texture, width, height, pixels);
 
 	delete pixels;
 

@@ -33,6 +33,7 @@ public:
 	SETGET(int, Height)
 
 	GLuint Texture;
+	GLuint m_VBO_Vertex;
 };
 //---------------------------------------------------------------------------
 class TIndexObject
@@ -47,11 +48,11 @@ public:
 	TIndexObject();
 	virtual ~TIndexObject();
 
-	SETGET(DWORD, Address)
-	SETGET(DWORD, Size)
-	SETGET(DWORD, LastAccessTime)
-	SETGET(short, Width)
-	SETGET(short, Height)
+	SETGET(DWORD, Address);
+	SETGET(DWORD, Size);
+	SETGET(DWORD, LastAccessTime);
+	SETGET(short, Width);
+	SETGET(short, Height);
 
 	TTextureObject *Texture;
 };

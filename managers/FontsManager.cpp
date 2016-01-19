@@ -808,7 +808,7 @@ void TFontsManager::DrawA(BYTE font, const char *str, WORD color, int x, int y, 
 		return;
 
 	GLuint tex = th.Texture;
-	g_GL.Draw(tex, (GLfloat)x, (GLfloat)y, (GLfloat)th.Width, (GLfloat)th.Height);
+	g_GL.Draw(tex, x, y, (GLfloat)th.Width, (GLfloat)th.Height);
 
 	th.Clear();
 }
@@ -2558,7 +2558,7 @@ void TFontsManager::DrawW(BYTE font, const wchar_t *str, WORD color, int x, int 
 		return;
 
 	GLuint tex = th.Texture;
-	g_GL.Draw(tex, (GLfloat)x, (GLfloat)y, (GLfloat)th.Width, (GLfloat)th.Height);
+	g_GL.Draw(tex, x, y, (GLfloat)th.Width, (GLfloat)th.Height);
 
 	th.Clear();
 }

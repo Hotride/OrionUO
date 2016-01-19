@@ -20,7 +20,7 @@
 #include "stdafx.h"
 //---------------------------------------------------------------------------
 TTextureObject::TTextureObject()
-: m_Width(0), m_Height(0), Texture(0)
+: m_Width(0), m_Height(0), Texture(0), m_VBO_Vertex(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -31,10 +31,17 @@ TTextureObject::~TTextureObject()
 		glDeleteTextures(1, &Texture);
 		Texture = 0;
 	}
+
+	if (m_VBO_Vertex != 0)
+	{
+		glDeleteBuffersARB(1, &m_VBO_Vertex);
+		m_VBO_Vertex = 0;
+	}
 }
 //---------------------------------------------------------------------------
 TIndexObject::TIndexObject()
-: m_Address(0), m_Size(0), m_LastAccessTime(0), m_Width(0), m_Height(0), Texture(0)
+: m_Address(0), m_Size(0), m_LastAccessTime(0), m_Width(0), m_Height(0),
+Texture(NULL)
 {
 }
 //---------------------------------------------------------------------------
@@ -260,7 +267,7 @@ void TTextTexture::Init()
 void TTextTexture::Draw(int x, int y)
 {
 	if (m_Texture != 0)
-		g_GL.Draw(m_Texture, (GLfloat)x, (GLfloat)y, (GLfloat)m_Width, (GLfloat)m_Height);
+		g_GL.Draw(m_Texture, x, y, (GLfloat)m_Width, (GLfloat)m_Height);
 }
 //--------------------------------------------------------------------------
 bool TTextTexture::UnderMouse(int x, int y)

@@ -110,7 +110,10 @@ void TTooltip::Draw(int cursorWidth, int cursorHeight)
 		//g_GL.Draw(g_TransparntBackground, (float)x, (float)y, 2.0f, 2.0f, Texture.Width + 8.0f, Texture.Height + 8.0f);
 
 		GLuint tex = Texture.Texture;
-		g_GL.Draw(tex, x + 6.0f, y + 4.0f, (float)Texture.Width, (float)Texture.Height);
+		int tempX = x + 6;
+		int tempY = y + 4;
+
+		g_GL.Draw(tex, tempX, tempY, (float)Texture.Width, (float)Texture.Height);
 	}
 
 	m_Use = false;

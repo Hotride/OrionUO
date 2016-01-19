@@ -50,6 +50,7 @@ public:
 	DWORD Color16To32(WORD &C);
 	WORD ConvertToGray(WORD &C);
 
+	WORD GetRadarColorData(WORD &C);
 	DWORD GetRadarColor(WORD &C);
 	DWORD GetPolygoneColor(WORD C, WORD Color);
 	DWORD GetUnicodeFontColor(WORD &C, WORD Color);

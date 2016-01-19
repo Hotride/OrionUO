@@ -132,6 +132,11 @@ WORD TColorManager::ConvertToGray(WORD &C)
 	return ((C & 0x1F) * 299 + ((C >> 5) & 0x1F) * 587 + ((C >> 10) & 0x1F) * 114) / 1000;
 }
 //---------------------------------------------------------------------------
+WORD TColorManager::GetRadarColorData(WORD &C)
+{
+	return m_Radarcol[C];
+}
+//---------------------------------------------------------------------------
 DWORD TColorManager::GetRadarColor(WORD &C)
 {
 	return Color16To32(m_Radarcol[C]);

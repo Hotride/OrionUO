@@ -638,7 +638,7 @@ int TGameScreen::Render(bool mode)
 								
 							TRenderWorldObject *nextRenderObject = renderObject->m_NextXY;
 
-							g_ZBuffer = (float)(renderObject->Z + renderObject->RenderQueueIndex);
+							g_ZBuffer = renderObject->Z + renderObject->RenderQueueIndex;
 							renderObject->Draw(mode, drawX, drawY, ticks);
 
 							renderObject = nextRenderObject;
@@ -648,7 +648,7 @@ int TGameScreen::Render(bool mode)
 			}
 		}
 
-		g_ZBuffer = 0.0f;
+		g_ZBuffer = 0;
 		glDisable(GL_DEPTH_TEST);
 		
 		if (!g_DeathScreenTimer)
@@ -674,7 +674,7 @@ int TGameScreen::Render(bool mode)
 						glEnable(GL_BLEND);
 						glBlendFunc(GL_ONE, GL_ONE);
 
-						ColorizerShader->Use();
+						LightColorizerShader->Use();
 
 						IFOR(i, 0, m_LightCount)
 						{

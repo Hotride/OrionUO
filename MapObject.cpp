@@ -130,7 +130,7 @@ g_RenderedObjectsCountInGameWindow++;
 				if (minZ > m_Z)
 					minZ = m_Z;
 
-				g_ZBuffer = (float)minZ;
+				g_ZBuffer = minZ;
 
 				GLfloat tCl = g_DrawColor - 0.1f;
 				glColor3f(tCl, tCl, tCl);

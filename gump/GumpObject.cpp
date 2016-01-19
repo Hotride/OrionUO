@@ -52,33 +52,10 @@ TGumpResizepic::TGumpResizepic(WORD graphic, short x, short y, short width, shor
 TGumpChecktrans::TGumpChecktrans(short x, short y, short width, short height)
 : TGumpObject(GOT_CHECKTRANS, 0, 0, x, y), m_Width(width), m_Height(height)
 {
-	PDWORD pixels = new DWORD[width * height];
-
-	IFOR(i, 0, width)
-	{
-		IFOR(j, 0, height)
-		{
-			DWORD val = 0;
-
-			if (((i + x) % 2) && ((j + y) % 2))
-				val = 0xFFFFFFFF;
-
-			pixels[j * width + i] = val;
-		}
-	}
-
-	g_GL.BindTexture(Texture, width, height, pixels);
-
-	delete pixels;
 }
 //---------------------------------------------------------------------------
 TGumpChecktrans::~TGumpChecktrans()
 {
-	if (Texture != 0)
-	{
-		glDeleteTextures(1, &Texture);
-		Texture = 0;
-	}
 }
 //---------------------------------------------------------------------------
 TGumpButton::TGumpButton(WORD graphic, WORD graphicLighted, WORD graphicPressed, int index, int toPage, bool action, short x, short y)

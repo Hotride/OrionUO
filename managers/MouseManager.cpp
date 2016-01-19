@@ -252,13 +252,13 @@ bool TMouseManager::LoadCursorTextures()
 						OffsY = -(DH / 2.0f);
 					}
 
-					m_CursorOffset[0][j] = OffsX; //X
-					m_CursorOffset[1][j] = OffsY; //Y
+					m_CursorOffset[0][j] = (int)OffsX; //X
+					m_CursorOffset[1][j] = (int)OffsY; //Y
 				}
 				else
 				{
-					m_CursorOffset[0][j] = 0.0f; //X
-					m_CursorOffset[1][j] = 0.0f; //Y
+					m_CursorOffset[0][j] = 0; //X
+					m_CursorOffset[1][j] = 0; //Y
 				}
 			}
 		}
@@ -280,7 +280,10 @@ void TMouseManager::Draw(WORD id)
 		{
 			Tooltip.Draw(th->Width, th->Height);
 
-			g_GL.Draw(th->Texture, (float)g_MouseX + m_CursorOffset[0][id], (float)g_MouseY + m_CursorOffset[1][id], (float)th->Width, (float)th->Height);
+			int x = g_MouseX + m_CursorOffset[0][id];
+			int y = g_MouseY + m_CursorOffset[1][id];
+
+			g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
 		}
 	}
 }

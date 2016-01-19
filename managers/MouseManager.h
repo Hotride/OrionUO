@@ -25,7 +25,7 @@ extern WORD g_CursorData[2][16];
 class TMouseManager
 {
 private:
-	float m_CursorOffset[2][16];
+	int m_CursorOffset[2][16];
 public:
 	TMouseManager() {}
 	~TMouseManager() {}

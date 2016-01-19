@@ -27,18 +27,13 @@ void main(void)
 {
 	vec4 textureColor = texture2D(usedTexture, gl_TexCoord[0].xy);
 
-	if (textureColor.a != 0.0)
+	if (textureColor.a != 0.0 && drawMode == 1)
 	{
-		if (drawMode == 1 || (drawMode == 2 && textureColor.r == textureColor.g && textureColor.r == textureColor.b))
-		{
-			int index = AND32(int(textureColor.r * 31.875));
+		int index = AND32(int(textureColor.r * 7.96875));
 
-			vec3 resultColor = Color16To32(colors[index]);
+		vec3 resultColor = Color16To32(colors[index]);
 
-			gl_FragColor = vec4(resultColor, textureColor.a) * gl_Color;
-		}
-		else
-			gl_FragColor = textureColor * gl_Color;
+		gl_FragColor = vec4(resultColor, textureColor.a);
 	}
 	else
 		gl_FragColor = textureColor * gl_Color;

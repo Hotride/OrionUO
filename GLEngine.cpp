@@ -92,6 +92,18 @@ bool TGLEngine::Install(HWND hWnd)
 
 	TPRINT("g_UseFrameBuffer = %i\n", g_UseFrameBuffer);
 
+	const float texCoords[4][2] =
+	{
+		{ 0.0f, 1.0f },
+		{ 1.0f, 1.0f },
+		{ 1.0f, 0.0f },
+		{ 0.0f, 0.0f }
+	};
+
+	glGenBuffersARB(1, &g_VBO_TexCoord);
+	glBindBufferARB(GL_ARRAY_BUFFER_ARB, g_VBO_TexCoord);
+	glBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * 2 * sizeof(float), &texCoords[0], GL_STATIC_DRAW_ARB);
+
 	glClearColor(0.0, 0.0, 0.0, 1.0);		// Black Background
 	glShadeModel(GL_SMOOTH);				// Enables Smooth Color Shading
 	glClearDepth(1.0);						// Depth Buffer Setup
@@ -156,9 +168,22 @@ void TGLEngine::BindTexture(GLuint &Texture, int Width, int Height, PDWORD pixel
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+}
+//---------------------------------------------------------------------------
+void TGLEngine::BindTexture16(GLuint &Texture, int Width, int Height, PWORD pixels)
+{
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &Texture);
+	glBindTexture(GL_TEXTURE_2D, Texture);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, Width, Height, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, pixels);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::BeginDraw()
@@ -173,7 +198,7 @@ void TGLEngine::BeginDraw()
 	glDisable(GL_LIGHTING);
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
-	g_ZBuffer = 0.0f;
+	g_ZBuffer = 0;
 
 	EnableAlpha();
 }
@@ -210,7 +235,7 @@ void TGLEngine::EndStencil()
 void TGLEngine::EnableAlpha()
 {
 	glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
+	glAlphaFunc(GL_GREATER, 0.0f);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::DisableAlpha()
@@ -282,7 +307,7 @@ void TGLEngine::DrawTriangle(DWORD color, float x, float y, float radius)
 
 	glColor3b(GetRValue(color), GetGValue(color), GetBValue(color));
 
-	glBegin( GL_TRIANGLE_FAN );
+	glBegin(GL_TRIANGLE_FAN);
 
 		glVertex2f(0.0f, 0.0f);
 
@@ -300,7 +325,7 @@ void TGLEngine::DrawTriangle(DWORD color, float x, float y, float radius)
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawLandTexture(GLuint &texture, float x, float y, float width, float height, RECT &rc, TVector *normals)
+void TGLEngine::DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVector *normals)
 {
 	//glUniform1iARB(ShaderTexture, texture);
 
@@ -311,20 +336,41 @@ void TGLEngine::DrawLandTexture(GLuint &texture, float x, float y, float width, 
 	
 	glBegin(GL_QUADS);
 		glNormal3f((GLfloat)normals[3].X, (GLfloat)normals[3].Y, (GLfloat)normals[3].Z);
-		glTexCoord2f(0.0f, 1.0f); glVertex2f(0.0f, rc.top + 22.0f); //<
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, rc.top + 22); //<
 		
 		glNormal3f((GLfloat)normals[2].X, (GLfloat)normals[2].Y, (GLfloat)normals[2].Z);
-		glTexCoord2f(1.0f, 1.0f); glVertex2f(22.0f, 44.0f + rc.right); //v
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(22, rc.right + 44); //v
 		
 		glNormal3f((GLfloat)normals[1].X, (GLfloat)normals[1].Y, (GLfloat)normals[1].Z);
-		glTexCoord2f(1.0f, 0.0f); glVertex2f(44.0f, rc.bottom + 22.0f); //>
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(44, rc.bottom + 22); //>
 		
 		glNormal3f((GLfloat)normals[0].X, (GLfloat)normals[0].Y, (GLfloat)normals[0].Z);
-		glTexCoord2f(0.0f, 0.0f); glVertex2f(22.0f, 0.0f); //^
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(22, 0); //^
 	glEnd();
 }
 //---------------------------------------------------------------------------
-void TGLEngine::Draw(GLuint &texture, float x, float y, float width, float height)
+void TGLEngine::Draw(GLuint &texture, GLuint &vertex, int &x, int &y)
+{
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glTexCoordPointer(4, GL_FLOAT, 0, NULL);
+
+	glBindBufferARB(GL_ARRAY_BUFFER_ARB, g_VBO_TexCoord);
+	glBindBufferARB(GL_ARRAY_BUFFER_ARB, vertex);
+	glVertexPointer(4, GL_FLOAT, 0, NULL);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glLoadIdentity();
+	glTranslatef(x, y, g_ZBuffer);
+
+	glDrawArrays(GL_QUADS, 0, 4);
+
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+//---------------------------------------------------------------------------
+void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height)
 {
 	//glUniform1iARB(ShaderTexture, texture);
 
@@ -334,14 +380,14 @@ void TGLEngine::Draw(GLuint &texture, float x, float y, float width, float heigh
 	glTranslatef(x, y, g_ZBuffer);
 
 	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex2f(0.0f, height);
-		glTexCoord2f(1.0f, 1.0f); glVertex2f(width, height);
-		glTexCoord2f(1.0f, 0.0f); glVertex2f(width, 0.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex2f(0.0f, 0.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, height);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(width, height);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(width, 0);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
 	glEnd();
 }
 //---------------------------------------------------------------------------
-void TGLEngine::Draw(GLuint &texture, float x, float y, float width, float height, bool &mirror)
+void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, bool &mirror)
 {
 	//glUniform1iARB(ShaderTexture, texture);
 
@@ -349,48 +395,48 @@ void TGLEngine::Draw(GLuint &texture, float x, float y, float width, float heigh
 
 	glLoadIdentity();
 	glTranslatef(x, y, g_ZBuffer);
-
-	if (mirror)
-	{
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(width, height);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(0.0f, height);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(0.0f, 0.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(width, 0.0f);
-		glEnd();
-	}
-	else
-	{
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(0.0f, height);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(width, height);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(width, 0.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(0.0f, 0.0f);
-		glEnd();
-	}
-}
-//---------------------------------------------------------------------------
-void TGLEngine::Draw(GLuint &texture, float x, float y, float width, float height, float drawWidth, float drawHeight)
-{
-	//glUniform1iARB(ShaderTexture, texture);
-
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glLoadIdentity();
-	glTranslatef(x, y, g_ZBuffer);
-
-	float drawCountX = drawWidth / width;
-	float drawCountY = drawHeight / height;
 
 	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, drawCountY);			glVertex2f(0.0f, drawHeight);
-		glTexCoord2f(drawCountX, drawCountY);	glVertex2f(drawWidth, drawHeight);
-		glTexCoord2f(drawCountX, 0.0f);			glVertex2f(drawWidth, 0.0f);
-		glTexCoord2f(0.0f, 0.0f);				glVertex2f(0.0f, 0.0f);
+
+		if (mirror)
+		{
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(width, height);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(0, height);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(0, 0);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(width, 0);
+		}
+		else
+		{
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, height);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(width, height);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(width, 0);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
+		}
+
 	glEnd();
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawResizepic(TTextureObject **th, float x, float y, float width, float height)
+void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, int &drawWidth, int &drawHeight)
+{
+	//glUniform1iARB(ShaderTexture, texture);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glLoadIdentity();
+	glTranslatef(x, y, g_ZBuffer);
+
+	float drawCountX = drawWidth / (float)width;
+	float drawCountY = drawHeight / (float)height;
+
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, drawCountY);			glVertex2i(0, drawHeight);
+		glTexCoord2f(drawCountX, drawCountY);	glVertex2i(drawWidth, drawHeight);
+		glTexCoord2f(drawCountX, 0.0f);			glVertex2i(drawWidth, 0);
+		glTexCoord2f(0.0f, 0.0f);				glVertex2i(0, 0);
+	glEnd();
+}
+//---------------------------------------------------------------------------
+void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, int &height)
 {
 	IFOR(i, 0, 9)
 	{
@@ -402,8 +448,8 @@ void TGLEngine::DrawResizepic(TTextureObject **th, float x, float y, float width
 		float drawHeight = (float)th[i]->Height;
 		float drawCountX = 1.0f;
 		float drawCountY = 1.0f;
-		float X = x;
-		float Y = y;
+		int X = x;
+		int Y = y;
 
 		switch (i)
 		{
@@ -500,17 +546,18 @@ void TGLEngine::DrawResizepic(TTextureObject **th, float x, float y, float width
 
 				break;
 			}
-			default: break;
+			default:
+				break;
 		}
 
 		glLoadIdentity();
-		glTranslatef(X, Y, g_ZBuffer);
+		glTranslatef(X, Y, 0);
 
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, drawCountY);			glVertex2f(0.0f, drawHeight);
-			glTexCoord2f(drawCountX, drawCountY);	glVertex2f(drawWidth, drawHeight);
-			glTexCoord2f(drawCountX, 0.0f);			glVertex2f(drawWidth, 0.0f);
-			glTexCoord2f(0.0f, 0.0f);				glVertex2f(0.0f, 0.0f);
+			glTexCoord2f(0.0f, drawCountY);			glVertex2i(0, drawHeight);
+			glTexCoord2f(drawCountX, drawCountY);	glVertex2i(drawWidth, drawHeight);
+			glTexCoord2f(drawCountX, 0.0f);			glVertex2i(drawWidth, 0);
+			glTexCoord2f(0.0f, 0.0f);				glVertex2i(0, 0);
 		glEnd();
 	}
 }

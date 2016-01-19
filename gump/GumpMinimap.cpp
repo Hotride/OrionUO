@@ -60,10 +60,12 @@ void TGumpMinimap::GenerateMap()
 	WORD gumpCenterX = gumpWidth / 2;
 	WORD gumpCenterY = gumpHeight / 2;
 
-	PDWORD data = new DWORD [gumpWidth * gumpHeight * 4];
+	PWORD data = new WORD [gumpWidth * gumpHeight];
 	glBindTexture(GL_TEXTURE_2D, th->Texture);
-	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	//glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, data);
 	//0xFF080808 - pixel
+	//0x8421 - pixel16
 
 	int minBlockX = (m_LastX - blockOffsetX) / 8 - 1;
 	int minBlockY = (m_LastY - blockOffsetY) / 8 - 1;
@@ -104,11 +106,12 @@ void TGumpMinimap::GenerateMap()
 
 						int block = gy * gumpWidth + gx;
 
-						if (data[block] == 0xFF080808)
+						if (data[block] == 0x8421)
 						{
 							WORD color = (mapBlock != NULL ? mapBlock->GetRadarColor(x, y) : mb.Cells[(y * 8) + x].TileID);
-							DWORD pcl = ColorManager->GetRadarColor(color);
-							data[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+							data[block] = 0x8000 | ColorManager->GetRadarColorData(color);
+							//DWORD pcl = ColorManager->GetRadarColor(color);
+							//data[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 						}
 					}
 				}
@@ -116,7 +119,7 @@ void TGumpMinimap::GenerateMap()
 		}
 	}
 
-	g_GL.BindTexture(m_Texture, gumpWidth, gumpHeight, data);
+	g_GL.BindTexture16(m_Texture, gumpWidth, gumpHeight, data);
 
 	delete data;
 }
@@ -144,7 +147,7 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		g_GL.Draw(m_Texture, (float)posX, (float)posY, (float)gumpWidth, (float)gumpHeight);
+		g_GL.Draw(m_Texture, posX, posY, (float)gumpWidth, (float)gumpHeight);
 		
 		if (m_Count < 6)
 		{
@@ -224,7 +227,7 @@ int TGumpMinimap::Draw(bool &mode)
 		glCallList((GLuint)index);
 
 		if (g_ShowGumpLocker)
-			g_GL.Draw(g_TextureGumpState[LockMoving], (GLfloat)posX, (GLfloat)posY, 10.0f, 14.0f);
+			g_GL.Draw(g_TextureGumpState[LockMoving], posX, posY, 10.0f, 14.0f);
 
 		m_Count++;
 
