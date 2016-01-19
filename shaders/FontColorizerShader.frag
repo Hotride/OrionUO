@@ -37,9 +37,9 @@ void main(void)
 
 			gl_FragColor = vec4(resultColor, textureColor.a);
 		}
-		else if (drawMode == 3)
+		else if (drawMode == 3 && textureColor.r > 0.04)
 		{
-			vec3 resultColor = Color16To32(colors[8]);
+			vec3 resultColor = Color16To32(colors[30]);
 
 			gl_FragColor = vec4(resultColor, textureColor.a);
 		}
