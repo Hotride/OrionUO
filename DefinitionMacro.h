@@ -47,6 +47,23 @@
 	#define TDUMP ;/##/
 #endif //UOLOGGER!=0
 //---------------------------------------------------------------------------
+#define ADD_LINKED(list, item) \
+TLinkedList *nextList = list; \
+list = new TLinkedList(&item); \
+list->Next = nextList
+
+/*if (m_UsedGumpList == NULL)
+m_UsedGumpList = new TLinkedList(&m_GumpDataIndex[id]);
+else
+{
+TLinkedList *list = m_UsedGumpList;
+
+while (list != NULL && list->Next != NULL)
+list = list->Next;
+
+list->Next = new TLinkedList(&m_GumpDataIndex[id]);
+}*/
+//---------------------------------------------------------------------------
 //Эффекты шрифта
 #define UOFONT_SOLID			0x01 //Жирный
 #define UOFONT_ITALIC			0x02 //Наклонный

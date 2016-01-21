@@ -33,65 +33,6 @@ public:
 	SETGET(int, Height)
 
 	GLuint Texture;
-	GLuint m_VBO_Vertex;
-};
-//---------------------------------------------------------------------------
-class TIndexObject
-{
-private:
-	DWORD m_Address;
-	DWORD m_Size;
-	DWORD m_LastAccessTime;
-	short m_Width;
-	short m_Height;
-public:
-	TIndexObject();
-	virtual ~TIndexObject();
-
-	SETGET(DWORD, Address);
-	SETGET(DWORD, Size);
-	SETGET(DWORD, LastAccessTime);
-	SETGET(short, Width);
-	SETGET(short, Height);
-
-	TTextureObject *Texture;
-};
-//---------------------------------------------------------------------------
-class TIndexObjectStatic : public TIndexObject
-{
-private:
-	WORD m_Index;
-	char m_Increment;
-	char m_AnimIndex;
-	DWORD m_NextChange;
-	WORD m_LightColor;
-public:
-	TIndexObjectStatic();
-
-	SETGET(WORD, Index)
-	SETGET(char, Increment)
-	SETGET(char, AnimIndex)
-	SETGET(DWORD, NextChange)
-	SETGET(WORD, LightColor)
-};
-//---------------------------------------------------------------------------
-class TIndexSound
-{
-private:
-	DWORD m_Address;
-	DWORD m_Size;
-	DWORD m_Timer;
-	DWORD m_LastAccessTime;
-public:
-	TIndexSound();
-	virtual ~TIndexSound();
-
-	SETGET(DWORD, Address)
-	SETGET(DWORD, Size)
-	SETGET(DWORD, Timer)
-	SETGET(DWORD, LastAccessTime)
-
-	Mix_Chunk *Sound;
 };
 //---------------------------------------------------------------------------
 class TTextureAnimationFrame : public TBaseQueueItem
@@ -155,49 +96,6 @@ public:
 	virtual ~TTextureAnimation();
 
 	TTextureAnimationGroup *GetGroup(BYTE index);
-};
-//---------------------------------------------------------------------------
-class TIndexAnimation
-{
-private:
-	DWORD m_Address;
-	DWORD m_Offset;
-	WORD m_Graphic;
-public:
-	TIndexAnimation();
-	virtual ~TIndexAnimation();
-
-	TTextureAnimation *Group;
-
-	SETGET(DWORD, Address)
-	SETGET(DWORD, Offset)
-	SETGET(WORD, Graphic)
-};
-//---------------------------------------------------------------------------
-class TLinkedList
-{
-private:
-public:
-	TLinkedList(PVOID data);
-	~TLinkedList();
-	
-	PVOID Data;
-	TLinkedList *Next;
-};
-//---------------------------------------------------------------------------
-class TIndexMulti
-{
-private:
-	DWORD m_Address;
-	DWORD m_Size;
-	WORD m_Count;
-public:
-	TIndexMulti();
-	virtual ~TIndexMulti();
-
-	SETGET(DWORD, Address)
-	SETGET(DWORD, Size)
-	SETGET(WORD, Count)
 };
 //---------------------------------------------------------------------------
 struct WEB_LINK_RECT

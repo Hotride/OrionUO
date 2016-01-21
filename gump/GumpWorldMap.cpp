@@ -278,10 +278,10 @@ void TGumpWorldMap::LoadMap(int map)
 		
 		if (!foundInTable && FileManager.MapMul[map].Size != 0 && FileManager.StaticIdx[map].Size != 0 && FileManager.StaticMul[map].Size != 0)
 		{
-			data = (PWORD)(mapsInfoData + ((sizeof(DWORD) * 2) * (map + 1)));
+			PDWORD dataPtr = (PDWORD)(mapsInfoData + ((sizeof(DWORD) * 2) * (map + 1)));
 
-			*data++ = mulMapHash;
-			*data = mulStaticsHash;
+			*dataPtr++ = mulMapHash;
+			*dataPtr = mulStaticsHash;
 
 			data = new WORD[dataSize];
 			dataSize *= 2;
@@ -497,7 +497,7 @@ int TGumpWorldMap::Draw(bool &mode)
 		if (g != NULL)
 		{
 			int tmpX = posX + 110;
-			g_GL.Draw(g->Texture, tmpX, posY, 46.0f, (GLfloat)g->Height);
+			g_GL.Draw(g->Texture, tmpX, posY, 46, g->Height);
 		}
 		else
 			UO->DrawGump(0x098B, 0, posX + 110, posY);
@@ -519,7 +519,7 @@ int TGumpWorldMap::Draw(bool &mode)
 
 		int drawMapX = posX + offsetX + 8;
 		int drawMapY = posY + offsetY + 31;
-		g_GL.Draw(g_MapTexture[map], drawMapX, drawMapY, (GLfloat)mapWidth, (GLfloat)mapHeight);
+		g_GL.Draw(g_MapTexture[map], drawMapX, drawMapY, mapWidth, mapHeight);
 		
 		//Player drawing
 		if (g_CurrentMap == map)

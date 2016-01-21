@@ -1471,13 +1471,6 @@ void TUltimaOnline::LoadIndexFiles()
 			MultiPtr++;
 		}
 	}
-
-	m_LandDataIndexCount = 0;
-	m_StaticDataIndexCount = 0;
-	m_GumpDataIndexCount = 0;
-	m_TextureDataIndexCount = 0;
-	m_SoundDataIndexCount = 0;
-	m_LightDataIndexCount = 0;
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::InitStaticAnimList()
@@ -1556,60 +1549,51 @@ void TUltimaOnline::ProcessStaticAnimList()
 //---------------------------------------------------------------------------
 void TUltimaOnline::UnloadIndexFiles()
 {
-	IFOR(i, 0, 0x10000)
+	TLinkedList *lists[6] =
 	{
-		if (i < 0x4000)
+		m_UsedLandList,
+		m_UsedStaticList,
+		m_UsedGumpList,
+		m_UsedTextureList,
+		m_UsedLightList,
+		m_UsedSoundList
+	};
+
+	IFOR(i, 0, 6)
+	{
+		TLinkedList *list = lists[i];
+
+		while (list != NULL)
 		{
-			if (m_LandDataIndexCount > 0 && m_LandDataIndex[i].Texture != NULL)
-			{
-				delete m_LandDataIndex[i].Texture;
-				m_LandDataIndexCount--;
-			}
+			TLinkedList *delList = list;
 
-			if (m_StaticDataIndexCount > 0 && m_StaticDataIndex[i].Texture != NULL)
+			if (i < 5)
 			{
-				delete m_StaticDataIndex[i].Texture;
-				m_StaticDataIndexCount--;
-			}
-
-			if (i < 0x1000)
-			{
-				if (m_TextureDataIndexCount > 0 && m_TextureDataIndex[i].Texture != NULL)
+				if (((TIndexObject*)(list->Data))->Texture != NULL)
 				{
-					delete m_TextureDataIndex[i].Texture;
-					m_TextureDataIndexCount--;
-				}
-
-				if (i < 0x0800)
-				{
-					if (m_SoundDataIndexCount > 0 && m_SoundDataIndex[i].Sound != NULL)
-					{
-						Mix_FreeChunk(m_SoundDataIndex[i].Sound);
-						m_SoundDataIndex[i].Sound = NULL;
-						m_SoundDataIndexCount--;
-					}
-
-					if (i < 100)
-					{
-						if (m_LightDataIndexCount > 0 && m_LightDataIndex[i].Texture != NULL)
-						{
-							delete m_LightDataIndex[i].Texture;
-							m_LightDataIndexCount--;
-						}
-					}
+					delete ((TIndexObject*)(list->Data))->Texture;
+					((TIndexObject*)(list->Data))->Texture = NULL;
 				}
 			}
-		}
+			else if (((TIndexSound*)(list->Data))->Sound != NULL)
+			{
+				Mix_FreeChunk(((TIndexSound*)(list->Data))->Sound);
+				((TIndexSound*)(list->Data))->Sound = NULL;
+			}
 
-		if (m_GumpDataIndexCount > 0 && m_GumpDataIndex[i].Texture != NULL)
-		{
-			delete m_GumpDataIndex[i].Texture;
-			m_GumpDataIndexCount--;
+			list = list->Next;
+
+			delList->Next = NULL;
+			delete delList;
 		}
-		
-		if (m_LandDataIndexCount < 1 && m_StaticDataIndexCount < 1 && m_GumpDataIndexCount < 1 && m_TextureDataIndexCount < 1 && m_SoundDataIndexCount < 1 && m_LightDataIndexCount < 1)
-			break;
 	}
+
+	m_UsedLandList = NULL;
+	m_UsedStaticList = NULL;
+	m_UsedGumpList = NULL;
+	m_UsedTextureList = NULL;
+	m_UsedLightList = NULL;
+	m_UsedSoundList = NULL;
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::ClearUnusedTextures()
@@ -1682,37 +1666,6 @@ void TUltimaOnline::ClearUnusedTextures()
 				delete obj->Texture;
 				obj->Texture = NULL;
 
-				switch (i)
-				{
-					case 0:
-					{
-						m_LandDataIndexCount--;
-						break;
-					}
-					case 1:
-					{
-						m_StaticDataIndexCount--;
-						break;
-					}
-					case 2:
-					{
-						m_GumpDataIndexCount--;
-						break;
-					}
-					case 3:
-					{
-						m_TextureDataIndexCount--;
-						break;
-					}
-					case 4:
-					{
-						m_LightDataIndexCount--;
-						break;
-					}
-					default:
-						break;
-				}
-			
 				TLinkedList *next = list->Next;
 				if (list == indexList[i])
 				{
@@ -1871,10 +1824,12 @@ void TUltimaOnline::PatchFiles()
 			}
 			else if (vh->Size == 1188)
 			{
-				if ((int)vh->BlockID - 0x0200 >= m_StaticDataCount)
+				int bID = (int)vh->BlockID - 0x0200;
+
+				if (bID < 0 || bID >= m_StaticDataCount)
 					continue;
 
-				memcpy(&m_StaticData[vh->BlockID - 0x0200], (PVOID)(vAddr + vh->Position), sizeof(STATIC_GROUP));
+				memcpy(&m_StaticData[bID], (PVOID)(vAddr + vh->Position), sizeof(STATIC_GROUP));
 			}
 		}
 		else if (vh->FileID == 32) //Hues
@@ -2945,34 +2900,7 @@ TTextureObject *TUltimaOnline::ExecuteGump(WORD id, bool partialHue)
 
 		if (io.Texture != NULL)
 		{
-			float vertex[4][2] =
-			{
-				{ 0.0f, (float)io.Texture->Height },
-				{ (float)io.Texture->Width, (float)io.Texture->Height },
-				{ (float)io.Texture->Width, 0.0f },
-				{ 0.0f, 0.0f }
-			};
-
-			GLuint VBO = 0;
-			glGenBuffersARB(1, &VBO);
-			glBindBufferARB(GL_ARRAY_BUFFER_ARB, VBO);
-			glBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * 2 * sizeof(float), &vertex[0], GL_STATIC_DRAW_ARB);
-
-			io.Texture->m_VBO_Vertex = VBO;
-		}
-
-		m_GumpDataIndexCount++;
-
-		if (m_UsedGumpList == NULL)
-			m_UsedGumpList = new TLinkedList(&m_GumpDataIndex[id]);
-		else
-		{
-			TLinkedList *list = m_UsedGumpList;
-
-			while (list != NULL && list->Next != NULL)
-				list = list->Next;
-			
-			list->Next = new TLinkedList(&m_GumpDataIndex[id]);
+			ADD_LINKED(m_UsedGumpList, m_GumpDataIndex[id]);
 		}
 	}
 
@@ -2994,34 +2922,7 @@ TTextureObject *TUltimaOnline::ExecuteLandArt(WORD id)
 
 		if (io.Texture != NULL)
 		{
-			float vertex[4][2] =
-			{
-				{ 0.0f, (float)io.Texture->Height },
-				{ (float)io.Texture->Width, (float)io.Texture->Height },
-				{ (float)io.Texture->Width, 0.0f },
-				{ 0.0f, 0.0f }
-			};
-
-			GLuint VBO = 0;
-			glGenBuffersARB(1, &VBO);
-			glBindBufferARB(GL_ARRAY_BUFFER_ARB, VBO);
-			glBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * 2 * sizeof(float), &vertex[0], GL_STATIC_DRAW_ARB);
-
-			io.Texture->m_VBO_Vertex = VBO;
-		}
-
-		m_LandDataIndexCount++;
-
-		if (m_UsedLandList == NULL)
-			m_UsedLandList = new TLinkedList(&m_LandDataIndex[id]);
-		else
-		{
-			TLinkedList *list = m_UsedLandList;
-
-			while (list != NULL && list->Next != NULL)
-				list = list->Next;
-			
-			list->Next = new TLinkedList(&m_LandDataIndex[id]);
+			ADD_LINKED(m_UsedLandList, m_LandDataIndex[id]);
 		}
 	}
 	
@@ -3041,40 +2942,13 @@ TTextureObject *TUltimaOnline::ExecuteStaticArt(WORD id)
 
 		io.Texture = MulReader.ReadArt(id + 0x4000, io.Address, io.Size);
 
-		io.Width = ((io.Texture->Width / 2) + 1);
-
-		io.Height = io.Texture->Height - 20;
-
 		if (io.Texture != NULL)
 		{
-			float vertex[4][2] =
-			{
-				{ 0.0f, (float)io.Texture->Height },
-				{ (float)io.Texture->Width, (float)io.Texture->Height },
-				{ (float)io.Texture->Width, 0.0f },
-				{ 0.0f, 0.0f }
-			};
+			io.Width = ((io.Texture->Width / 2) + 1);
 
-			GLuint VBO = 0;
-			glGenBuffersARB(1, &VBO);
-			glBindBufferARB(GL_ARRAY_BUFFER_ARB, VBO);
-			glBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * 2 * sizeof(float), &vertex[0], GL_STATIC_DRAW_ARB);
+			io.Height = io.Texture->Height - 20;
 
-			io.Texture->m_VBO_Vertex = VBO;
-		}
-
-		m_StaticDataIndexCount++;
-
-		if (m_UsedStaticList == NULL)
-			m_UsedStaticList = new TLinkedList(&m_StaticDataIndex[id]);
-		else
-		{
-			TLinkedList *list = m_UsedStaticList;
-
-			while (list != NULL && list->Next != NULL)
-				list = list->Next;
-			
-			list->Next = new TLinkedList(&m_StaticDataIndex[id]);
+			ADD_LINKED(m_UsedStaticList, m_StaticDataIndex[id]);
 		}
 	}
 	
@@ -3099,18 +2973,9 @@ TTextureObject *TUltimaOnline::ExecuteTexture(WORD id)
 
 		io.Texture = MulReader.ReadTexture(id, io.Address, io.Size);
 
-		m_TextureDataIndexCount++;
-
-		if (m_UsedTextureList == NULL)
-			m_UsedTextureList = new TLinkedList(&m_TextureDataIndex[id]);
-		else
+		if (io.Texture != NULL)
 		{
-			TLinkedList *list = m_UsedTextureList;
-
-			while (list != NULL && list->Next != NULL)
-				list = list->Next;
-			
-			list->Next = new TLinkedList(&m_TextureDataIndex[id]);
+			ADD_LINKED(m_UsedTextureList, m_TextureDataIndex[id]);
 		}
 	}
 	
@@ -3135,34 +3000,7 @@ TTextureObject *TUltimaOnline::ExecuteLight(BYTE &id)
 
 		if (io.Texture != NULL)
 		{
-			float vertex[4][2] =
-			{
-				{ 0.0f, (float)io.Texture->Height },
-				{ (float)io.Texture->Width, (float)io.Texture->Height },
-				{ (float)io.Texture->Width, 0.0f },
-				{ 0.0f, 0.0f }
-			};
-
-			GLuint VBO = 0;
-			glGenBuffersARB(1, &VBO);
-			glBindBufferARB(GL_ARRAY_BUFFER_ARB, VBO);
-			glBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * 2 * sizeof(float), &vertex[0], GL_STATIC_DRAW_ARB);
-
-			io.Texture->m_VBO_Vertex = VBO;
-		}
-
-		m_LightDataIndexCount++;
-
-		if (m_UsedLightList == NULL)
-			m_UsedLightList = new TLinkedList(&m_LightDataIndex[id]);
-		else
-		{
-			TLinkedList *list = m_UsedLightList;
-
-			while (list != NULL && list->Next != NULL)
-				list = list->Next;
-			
-			list->Next = new TLinkedList(&m_LightDataIndex[id]);
+			ADD_LINKED(m_UsedLightList, m_LightDataIndex[id]);
 		}
 	}
 	
@@ -3213,7 +3051,6 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		//g_GL.Draw(th->Texture, th->m_VBO_Vertex, x, y);
 		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
 	}
 }
@@ -3842,19 +3679,7 @@ void TUltimaOnline::PlaySoundEffect(WORD id, int volume)
 		if (is.Sound == NULL)
 			return;
 
-		m_SoundDataIndexCount++;
-
-		if (m_UsedSoundList == NULL)
-			m_UsedSoundList = new TLinkedList(&m_SoundDataIndex[id]);
-		else
-		{
-			TLinkedList *list = m_UsedSoundList;
-
-			while (list != NULL && list->Next != NULL)
-				list = list->Next;
-			
-			list->Next = new TLinkedList(&m_SoundDataIndex[id]);
-		}
+		ADD_LINKED(m_UsedSoundList, m_SoundDataIndex[id]);
 	}
 	else
 	{
@@ -3877,40 +3702,36 @@ void TUltimaOnline::PlaySoundEffect(WORD id, int volume)
 //---------------------------------------------------------------------------
 void TUltimaOnline::ResetSoundEffects(DWORD ticks)
 {
-	if (m_SoundDataIndexCount > 0)
+	TLinkedList *list = m_UsedSoundList;
+	TLinkedList *prev = list;
+
+	while (list != NULL)
 	{
-		TLinkedList *list = m_UsedSoundList;
-		TLinkedList *prev = list;
+		TIndexSound *obj = (TIndexSound*)list->Data;
 
-		while (list != NULL)
+		if (obj->Sound != NULL && obj->LastAccessTime + obj->Timer < ticks)
 		{
-			TIndexSound *obj = (TIndexSound*)list->Data;
-		
-			if (obj->Sound != NULL && obj->LastAccessTime + obj->Timer < ticks)
+			Mix_FreeChunk(obj->Sound);
+			obj->Sound = NULL;
+
+			TLinkedList *next = list->Next;
+			if (list == m_UsedSoundList)
 			{
-				Mix_FreeChunk(obj->Sound);
-				obj->Sound = NULL;
-				m_SoundDataIndexCount--;
-			
-				TLinkedList *next = list->Next;
-				if (list == m_UsedSoundList)
-				{
-					m_UsedSoundList = m_UsedSoundList->Next;
-					next = m_UsedSoundList;
-				}
-				else
-					prev->Next = list->Next;
-
-				list->Next = NULL;
-				delete list;
-
-				list = next;
+				m_UsedSoundList = m_UsedSoundList->Next;
+				next = m_UsedSoundList;
 			}
 			else
-			{
-				prev = list;
-				list = list->Next;
-			}
+				prev->Next = list->Next;
+
+			list->Next = NULL;
+			delete list;
+
+			list = next;
+		}
+		else
+		{
+			prev = list;
+			list = list->Next;
 		}
 	}
 }
@@ -3918,12 +3739,12 @@ void TUltimaOnline::ResetSoundEffects(DWORD ticks)
 void TUltimaOnline::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, WORD color, string text)
 {
 	TTextData *td = new TTextData();
-	td->SetUnicode(false);
-	td->SetFont(font);
-	td->SetSerial(serial);
-	td->SetColor(color);
-	td->SetTimer(GetTickCount());
-	td->SetType(type);
+	td->Unicode = false;
+	td->Font = font;
+	td->Serial = serial;
+	td->Color = color;
+	td->Timer = GetTickCount();
+	td->Type = type;
 	td->SetText(text);
 	
 	switch (type)
@@ -4035,12 +3856,12 @@ void TUltimaOnline::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, W
 void TUltimaOnline::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD font, WORD color, wstring text)
 {
 	TTextData *td = new TTextData();
-	td->SetUnicode(true);
-	td->SetFont(font);
-	td->SetSerial(serial);
-	td->SetColor(color);
-	td->SetTimer(GetTickCount());
-	td->SetType(type);
+	td->Unicode = true;
+	td->Font = font;
+	td->Serial = serial;
+	td->Color = color;
+	td->Timer = GetTickCount();
+	td->Type = type;
 	td->SetUnicodeText(text);
 	
 	switch (type)
@@ -4140,21 +3961,21 @@ void TUltimaOnline::AddJournalMessage(TTextData *msg, string name)
 {
 	TTextData *jmsg = new TTextData(msg);
 
-	if (!jmsg->GetUnicode())
+	if (!jmsg->Unicode)
 	{
 		jmsg->SetText(name + jmsg->GetText());
-		jmsg->SetFont(9);
+		jmsg->Font = 9;
 	}
 	else
 	{
-		if (msg->GetType() == TT_SYSTEM)
-			jmsg->SetColor(0);
+		if (msg->Type == TT_SYSTEM)
+			jmsg->Color = 0;
 
 		jmsg->SetUnicodeText(ToWString(name) + jmsg->GetUnicodeText());
-		jmsg->SetFont(0);
+		jmsg->Font = 0;
 	}
 
-	if (msg->GetType() == TT_OBJECT)
+	if (msg->Type == TT_OBJECT)
 		jmsg->GenerateTexture(214, UOFONT_INDENTION | UOFONT_BLACK_BORDER);
 	else
 		jmsg->GenerateTexture(214, UOFONT_INDENTION);

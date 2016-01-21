@@ -1,8 +1,8 @@
 /****************************************************************************
 **
-** MulReader.h
+** LinkedList.cpp
 **
-** Copyright (C) September 2015 Hotride
+** Copyright (C) January 2016 Hotride
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -17,25 +17,21 @@
 *****************************************************************************
 */
 //---------------------------------------------------------------------------
-#ifndef MulReaderH
-#define MulReaderH
+#include "stdafx.h"
 //---------------------------------------------------------------------------
-class TMulReader
+TLinkedList::TLinkedList(PVOID data)
+: Data(data), Next(NULL)
 {
-private:
-public:
-	TMulReader() {}
-	~TMulReader() {}
+}
+//---------------------------------------------------------------------------
+TLinkedList::~TLinkedList()
+{
+	if (Next != NULL)
+	{
+		delete Next;
+		Next = NULL;
+	}
 
-	TTextureObject *ReadGump(DWORD Address, DWORD Size, WORD Width, WORD Height);
-	TTextureObject *ReadArt(WORD ID, DWORD Address, DWORD Size);
-	TTextureObject *ReadTexture(WORD ID, DWORD Address, DWORD Size);
-	TTextureObject *ReadLight(WORD ID, DWORD Address, DWORD Size, WORD Width, WORD Height);
-	
-	bool GumpPixelsInXY(DWORD Address, DWORD Size, WORD Width, WORD Height, int CheckX, int CheckY);
-	bool ArtPixelsInXY(WORD ID, DWORD Address, DWORD Size, WORD Width, WORD Height, int CheckX, int CheckY);
-};
+	Data = NULL;
+}
 //---------------------------------------------------------------------------
-extern TMulReader MulReader;
-//---------------------------------------------------------------------------
-#endif

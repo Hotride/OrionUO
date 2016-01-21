@@ -22,7 +22,7 @@
 TGumpMinimap::TGumpMinimap(DWORD serial, short x, short y, bool minimized)
 : TGump(GT_MINIMAP, serial, x, y), m_Count(0), m_Texture(0), m_LastX(0), m_LastY(0)
 {
-	Minimized = minimized;
+	m_Minimized = minimized;
 }
 //---------------------------------------------------------------------------
 void TGumpMinimap::PrepareTextures()
@@ -34,8 +34,8 @@ void TGumpMinimap::GenerateMap()
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
@@ -47,7 +47,7 @@ void TGumpMinimap::GenerateMap()
 		glDeleteTextures(1, &m_Texture);
 	m_Texture = 0;
 
-	TTextureObject *th = UO->ExecuteGump(0x1393 - (int)Minimized);
+	TTextureObject *th = UO->ExecuteGump(0x1393 - (int)m_Minimized);
 	if (th == NULL)
 		return;
 
@@ -76,7 +76,7 @@ void TGumpMinimap::GenerateMap()
 	{
 		for (int j = minBlockY; j <= maxBlockY; j++)
 		{
-			int blockIndex = (i * 512) + j;
+			int blockIndex = (i * g_MapBlockY[g_CurrentMap]) + j;
 
 			TMapBlock *mapBlock = MapManager->GetBlock(blockIndex);
 			MAP_BLOCK mb = {0};
@@ -147,7 +147,7 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		g_GL.Draw(m_Texture, posX, posY, (float)gumpWidth, (float)gumpHeight);
+		g_GL.Draw(m_Texture, posX, posY, gumpWidth, gumpHeight);
 		
 		if (m_Count < 6)
 		{
@@ -226,8 +226,7 @@ int TGumpMinimap::Draw(bool &mode)
 
 		glCallList((GLuint)index);
 
-		if (g_ShowGumpLocker)
-			g_GL.Draw(g_TextureGumpState[LockMoving], posX, posY, 10.0f, 14.0f);
+		DrawLocker(posX, posY);
 
 		m_Count++;
 

@@ -113,7 +113,7 @@ void TTooltip::Draw(int cursorWidth, int cursorHeight)
 		int tempX = x + 6;
 		int tempY = y + 4;
 
-		g_GL.Draw(tex, tempX, tempY, (float)Texture.Width, (float)Texture.Height);
+		g_GL.Draw(tex, tempX, tempY, Texture.Width, Texture.Height);
 	}
 
 	m_Use = false;

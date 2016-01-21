@@ -41,8 +41,6 @@ private:
 
 	TIndexAnimation m_DataIndex[0x0800];
 
-	int m_AnimDataIndexCount;
-
 	TLinkedList *m_UsedAnimList;
 
     float LUMA_THRESHOLD;

@@ -89,7 +89,7 @@ int TGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 	int bx = playerX / 8;
 	int by = playerY / 8;
 
-	int blockIndex = (bx * 512) + by;
+	int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
 	TMapBlock *mb = MapManager->GetBlock(blockIndex);
 
 	if (mb != NULL)
@@ -577,7 +577,7 @@ int TGameScreen::Render(bool mode)
 		{
 			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
 			{
-				int blockIndex = (bx * 512) + by;
+				int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
 
 				TMapBlock *mb = MapManager->GetBlock(blockIndex);
 
@@ -647,6 +647,9 @@ int TGameScreen::Render(bool mode)
 				}
 			}
 		}
+
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
 
 		g_ZBuffer = 0;
 		glDisable(GL_DEPTH_TEST);
@@ -1053,7 +1056,7 @@ int TGameScreen::Render(bool mode)
 			{
 				for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
 				{
-					int blockIndex = (bx * 512) + by;
+					int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
 					TMapBlock *mb = MapManager->GetBlock(blockIndex);
 					if (mb == NULL)
 						continue;

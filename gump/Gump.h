@@ -66,6 +66,8 @@ public:
 	virtual bool CanBeDisplayed() {return true;}
 	bool CanBeMoved();
 
+	void DrawLocker(int &x, int &y);
+
 	virtual int Draw(bool &mode) {return 0;}
 
 	virtual void OnLeftMouseDown() {}

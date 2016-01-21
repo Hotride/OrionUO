@@ -461,8 +461,7 @@ int TGumpSpellbook::Draw(bool &mode)
 		//Отрисуем гамп
 		glCallList((GLuint)index);
 
-		if (g_ShowGumpLocker)
-			g_GL.Draw(g_TextureGumpState[LockMoving], posX, posY, 10.0f, 14.0f);
+		DrawLocker(posX, posY);
 	}
 	else //Выбор объектов
 	{

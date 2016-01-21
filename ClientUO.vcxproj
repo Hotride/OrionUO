@@ -25,7 +25,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -139,6 +139,8 @@
     <ClInclude Include="gump\GumpTextEntryDialog.h" />
     <ClInclude Include="gump\GumpTip.h" />
     <ClInclude Include="gump\GumpWorldMap.h" />
+    <ClInclude Include="IndexObject.h" />
+    <ClInclude Include="LinkedList.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="managers\AnimationManager.h" />
@@ -262,6 +264,8 @@
     <ClCompile Include="gump\GumpTextEntryDialog.cpp" />
     <ClCompile Include="gump\GumpTip.cpp" />
     <ClCompile Include="gump\GumpWorldMap.cpp" />
+    <ClCompile Include="IndexObject.cpp" />
+    <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Macro.cpp" />
     <ClCompile Include="managers\AnimationManager.cpp" />

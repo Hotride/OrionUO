@@ -51,7 +51,7 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 	int blockX = x / 8;
 	int blockY = y / 8;
 
-	int blockIndex = (blockX * 512) + blockY;
+	int blockIndex = (blockX * g_MapBlockY[g_CurrentMap]) + blockY;
 
 	TMapBlock *block = MapManager->GetBlock(blockIndex);
 

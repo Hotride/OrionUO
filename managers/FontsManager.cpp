@@ -769,7 +769,7 @@ bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str,
 
 						int block = (testY * width) + (x + w);
 
-						pData[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
+						pData[block] = pcl << 8 | 0xFF; // (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 
 						if (m_SavePixels)
 							th.Data[block] = 1; //((pic >> 10) & 0x1F);
@@ -792,7 +792,7 @@ bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str,
 	th.Height = height;
 
 	GLuint tex = 0;
-	g_GL.BindTexture(tex, width, height, pData);
+	g_GL.BindTexture32(tex, width, height, pData);
 	th.Texture = tex;
 
 	delete pData;
@@ -808,7 +808,7 @@ void TFontsManager::DrawA(BYTE font, const char *str, WORD color, int x, int y, 
 		return;
 
 	GLuint tex = th.Texture;
-	g_GL.Draw(tex, x, y, (GLfloat)th.Width, (GLfloat)th.Height);
+	g_GL.Draw(tex, x, y, th.Width, th.Height);
 
 	th.Clear();
 }
@@ -1388,12 +1388,15 @@ HTML_char *TFontsManager::GetHTMLData(BYTE font, const wchar_t *str, int &len, T
 							char *end;
 							charcolor = strtoul(ToString(colorStr + 1).c_str(), &end, 16);
 
-							if (!(charcolor << 24))
+							if (!(charcolor & 0xFF))
+								charcolor |= 0xFF;
+
+							/*if (!(charcolor << 24))
 							{
 								BYTE clrBuf[4] = {0};
 								pack32(clrBuf, charcolor);
 								charcolor = (0xFF << 24) | (clrBuf[3] << 16) | (clrBuf[2] << 8) | clrBuf[1];
-							}
+							}*/
 
 							current_charcolor = charcolor;
 						}
@@ -2168,15 +2171,15 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 		datacolor = 0xFFFFFFFE;
 	else
 	{
-		datacolor = ColorManager->GetPolygoneColor(cell, color);
-		datacolor = (0xFF << 24) | (GetBValue(datacolor) << 16) | (GetGValue(datacolor) << 8) | GetRValue(datacolor);
+		datacolor = ColorManager->GetPolygoneColor(cell, color) << 8 | 0xFF;
+		//datacolor = (0xFF << 24) | (GetBValue(datacolor) << 16) | (GetGValue(datacolor) << 8) | GetRValue(datacolor);
 	}
 
 	bool isItalic = (flags & UOFONT_ITALIC);
 	bool isSolid = (flags & UOFONT_SOLID);
 	bool isBlackBorder = (flags & UOFONT_BLACK_BORDER);
 	bool isUnderline = (flags & UOFONT_UNDERLINE);
-	DWORD blackColor = 0xFF010101;
+	DWORD blackColor = 0x010101FF;
 
 	bool isLink = false;
 	int linkStartX = 0;
@@ -2541,8 +2544,9 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 
 	th.Width = width;
 	th.Height = height;
+
 	GLuint tex = 0;
-	g_GL.BindTexture(tex, width, height, pData);
+	g_GL.BindTexture32(tex, width, height, pData);
 	th.Texture = tex;
 	
 	delete pData;
@@ -2558,7 +2562,7 @@ void TFontsManager::DrawW(BYTE font, const wchar_t *str, WORD color, int x, int 
 		return;
 
 	GLuint tex = th.Texture;
-	g_GL.Draw(tex, x, y, (GLfloat)th.Width, (GLfloat)th.Height);
+	g_GL.Draw(tex, x, y, th.Width, th.Height);
 
 	th.Clear();
 }

@@ -19,10 +19,15 @@
 //---------------------------------------------------------------------------
 #ifndef MapManagerH
 #define MapManagerH
+
+#define USE_BLOCK_MAP 1
 //--------------------------------------------------------------------------
 class TMapManager : public TBaseQueue
 {
 private:
+#if USE_BLOCK_MAP == 1
+	TMapBlock **m_Blocks;
+#endif
 public:
 	TMapManager();
 	virtual ~TMapManager();

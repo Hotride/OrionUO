@@ -626,8 +626,7 @@ int TGumpStatusbar::Draw(bool &mode)
 		//GenerateFrame(posX, posY);
 		glCallList((GLuint)index);
 
-		if (g_ShowGumpLocker)
-			g_GL.Draw(g_TextureGumpState[LockMoving], posX, posY, 10.0f, 14.0f);
+		DrawLocker(posX, posY);
 	}
 	else //ֲûבמנ מבתוךעמג
 	{

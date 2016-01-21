@@ -23,11 +23,21 @@ TMapManager *MapManager;
 //---------------------------------------------------------------------------
 TMapManager::TMapManager()
 : TBaseQueue()
+#if USE_BLOCK_MAP == 1
+, m_Blocks(NULL)
+#endif
 {
 }
 //---------------------------------------------------------------------------
 TMapManager::~TMapManager()
 {
+#if USE_BLOCK_MAP == 1
+	if (m_Blocks != NULL)
+	{
+		delete[] m_Blocks;
+		m_Blocks = NULL;
+	}
+#endif
 }
 //---------------------------------------------------------------------------
 int TMapManager::GetWorldMapBlock(int &map, int &blockX, int &blockY, MAP_BLOCK &mb)
@@ -39,7 +49,7 @@ int TMapManager::GetWorldMapBlock(int &map, int &blockX, int &blockY, MAP_BLOCK 
 	else if ( blockY < 0 || blockY >= g_MapBlockY[map])
 		return 3;
 
-	int block = (blockX * 512) + blockY;
+	int block = (blockX * g_MapBlockY[map]) + blockY;
 	PMAP_BLOCK pmb = (PMAP_BLOCK)((DWORD)FileManager.MapMul[map].Address + (block * sizeof(MAP_BLOCK)));
 	
 	if ((DWORD)pmb  > (DWORD)FileManager.MapMul[map].Address + FileManager.MapMul[map].Size)
@@ -99,7 +109,7 @@ void TMapManager::GetRadarMapBlock(int blockX, int blockY, MAP_BLOCK &mb)
 	if (blockX < 0 || blockY < 0 || blockX >= g_MapBlockX[map] || blockY >= g_MapBlockY[map])
 		return;
 
-	int block = (blockX * 512) + blockY;
+	int block = (blockX * g_MapBlockY[map]) + blockY;
 	PMAP_BLOCK pmb = (PMAP_BLOCK)((DWORD)FileManager.MapMul[map].Address + (block * sizeof(MAP_BLOCK)));
 	
 	if ((DWORD)pmb  > (DWORD)FileManager.MapMul[map].Address + FileManager.MapMul[map].Size)
@@ -150,7 +160,7 @@ void TMapManager::GetMapZ(int x, int y, int &groundZ, int &staticZ)
 {
 	int blockX = x / 8;
 	int blockY = y / 8;
-	int index = (blockX * 512) + blockY;
+	int index = (blockX * g_MapBlockY[g_CurrentMap]) + blockY;
 
 	TMapBlock *block = MapManager->GetBlock(index);
 	if (block == NULL)
@@ -193,6 +203,9 @@ void TMapManager::ClearUnusedBlocks()
 		{
 			DWORD index = block->Index;
 			Delete(block);
+#if USE_BLOCK_MAP == 1
+			m_Blocks[index] = NULL;
+#endif
 		}
 
 		block = next;
@@ -201,26 +214,38 @@ void TMapManager::ClearUnusedBlocks()
 //---------------------------------------------------------------------------
 void TMapManager::Init()
 {
-	int Map = GetActualMap();
+	int map = GetActualMap();
+
+#if USE_BLOCK_MAP == 1
+	if (m_Blocks != NULL)
+	{
+		delete[] m_Blocks;
+		m_Blocks = NULL;
+	}
+
+	int size = g_MapBlockX[map] * g_MapBlockY[map];
+	m_Blocks = new TMapBlock*[size];
+	memset(&m_Blocks[0], 0, sizeof(TMapBlock*)* size);
+#endif
 	
 	const int XY_Offset = 30; //70;
 
-	int MinBlockX = (g_Player->X - XY_Offset) / 8 - 1;
-	int MinBlockY = (g_Player->Y - XY_Offset) / 8 - 1;
-	int MaxBlockX = ((g_Player->X + XY_Offset) / 8) + 1;
-	int MaxBlockY = ((g_Player->Y + XY_Offset) / 8) + 1;
+	int minBlockX = (g_Player->X - XY_Offset) / 8 - 1;
+	int minBlockY = (g_Player->Y - XY_Offset) / 8 - 1;
+	int maxBlockX = ((g_Player->X + XY_Offset) / 8) + 1;
+	int maxBlockY = ((g_Player->Y + XY_Offset) / 8) + 1;
 
-	for (int i = MinBlockX; i <= MaxBlockX; i++)
+	for (int i = minBlockX; i <= maxBlockX; i++)
 	{
-		if (i < 0 || i >= g_MapBlockX[Map])
+		if (i < 0 || i >= g_MapBlockX[map])
 			continue;
 
-		for (int j = MinBlockY; j <= MaxBlockY; j++)
+		for (int j = minBlockY; j <= maxBlockY; j++)
 		{
-			if (j < 0 || j >= g_MapBlockY[Map])
+			if (j < 0 || j >= g_MapBlockY[map])
 				continue;
 
-			int index = (i * 512) + j;
+			int index = (i * g_MapBlockY[map]) + j;
 			TMapBlock *block = GetBlock(index);
 
 			if (block == NULL)
@@ -306,7 +331,7 @@ void TMapManager::AddRender(TRenderWorldObject *item)
 	int x = itemX / 8;
 	int y = itemY / 8;
 	
-	int index = (x * 512) + y;
+	int index = (x * g_MapBlockY[g_CurrentMap]) + y;
 	
 	TMapBlock *block = MapManager->GetBlock(index);
 	
@@ -326,6 +351,7 @@ void TMapManager::AddRender(TRenderWorldObject *item)
 //---------------------------------------------------------------------------
 TMapBlock *TMapManager::GetBlock(DWORD index)
 {
+#if USE_BLOCK_MAP == 0
 	TMapBlock *block = (TMapBlock*)m_Items;
 
 	while (block != NULL)
@@ -339,6 +365,12 @@ TMapBlock *TMapManager::GetBlock(DWORD index)
 
 		block = (TMapBlock*)block->m_Next;
 	}
+#else
+	TMapBlock *block = m_Blocks[index];
+
+	if (block != NULL)
+		block->LastAccessTime = GetTickCount();
+#endif
 
 	return block;
 }
@@ -346,6 +378,10 @@ TMapBlock *TMapManager::GetBlock(DWORD index)
 TMapBlock *TMapManager::AddBlock(DWORD index)
 {
 	TMapBlock *block = (TMapBlock*)Add(new TMapBlock(index));
+
+#if USE_BLOCK_MAP == 1
+	m_Blocks[index] = block;
+#endif
 
 	return block;
 }
@@ -359,6 +395,9 @@ void TMapManager::DeleteBlock(DWORD index)
 		if (block->Index == index)
 		{
 			Delete(block);
+#if USE_BLOCK_MAP == 1
+			m_Blocks[index] = NULL;
+#endif
 
 			break;
 		}

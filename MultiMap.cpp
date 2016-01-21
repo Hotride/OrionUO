@@ -91,7 +91,7 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 
 		BYTE size = pic & 0x7F;
 
-		DWORD color = 0;
+		WORD color = 0;
 		if (pic & 0x80)
 			color = data_color;
 

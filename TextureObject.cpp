@@ -20,7 +20,7 @@
 #include "stdafx.h"
 //---------------------------------------------------------------------------
 TTextureObject::TTextureObject()
-: m_Width(0), m_Height(0), Texture(0), m_VBO_Vertex(0)
+: m_Width(0), m_Height(0), Texture(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -30,42 +30,6 @@ TTextureObject::~TTextureObject()
 	{
 		glDeleteTextures(1, &Texture);
 		Texture = 0;
-	}
-
-	if (m_VBO_Vertex != 0)
-	{
-		glDeleteBuffersARB(1, &m_VBO_Vertex);
-		m_VBO_Vertex = 0;
-	}
-}
-//---------------------------------------------------------------------------
-TIndexObject::TIndexObject()
-: m_Address(0), m_Size(0), m_LastAccessTime(0), m_Width(0), m_Height(0),
-Texture(NULL)
-{
-}
-//---------------------------------------------------------------------------
-TIndexObject::~TIndexObject()
-{
-}
-//---------------------------------------------------------------------------
-TIndexObjectStatic::TIndexObjectStatic()
-: TIndexObject(), m_Index(0), m_Increment(0), m_AnimIndex(0), m_NextChange(0),
-m_LightColor(0)
-{
-}
-//---------------------------------------------------------------------------
-TIndexSound::TIndexSound()
-: m_Address(0), m_Size(0), m_LastAccessTime(0), Sound(NULL)
-{
-}
-//---------------------------------------------------------------------------
-TIndexSound::~TIndexSound()
-{
-	if (Sound != NULL)
-	{
-		Mix_FreeChunk(Sound);
-		Sound = NULL;
 	}
 }
 //---------------------------------------------------------------------------
@@ -175,45 +139,6 @@ TTextureAnimationGroup *TTextureAnimation::GetGroup(BYTE index)
 	return item;
 }
 //---------------------------------------------------------------------------
-TIndexAnimation::TIndexAnimation()
-: m_Address(0), m_Offset(0), m_Graphic(0), Group(NULL)
-{
-}
-//---------------------------------------------------------------------------
-TIndexAnimation::~TIndexAnimation()
-{
-	if (Group != NULL)
-	{
-		delete Group;
-		Group = NULL;
-	}
-}
-//---------------------------------------------------------------------------
-TLinkedList::TLinkedList(PVOID data)
-: Data(data), Next(NULL)
-{
-}
-//---------------------------------------------------------------------------
-TLinkedList::~TLinkedList()
-{
-	if (Next != NULL)
-	{
-		delete Next;
-		Next = NULL;
-	}
-
-	Data = NULL;
-}
-//---------------------------------------------------------------------------
-TIndexMulti::TIndexMulti()
-: m_Address(0), m_Size(0), m_Count(0)
-{
-}
-//---------------------------------------------------------------------------
-TIndexMulti::~TIndexMulti()
-{
-}
-//---------------------------------------------------------------------------
 TTextTexture::TTextTexture()
 : m_Width(0), m_Height(0), m_Lines(0), m_Texture(0), Data(NULL)
 {
@@ -267,7 +192,7 @@ void TTextTexture::Init()
 void TTextTexture::Draw(int x, int y)
 {
 	if (m_Texture != 0)
-		g_GL.Draw(m_Texture, x, y, (GLfloat)m_Width, (GLfloat)m_Height);
+		g_GL.Draw(m_Texture, x, y, m_Width, m_Height);
 }
 //--------------------------------------------------------------------------
 bool TTextTexture::UnderMouse(int x, int y)

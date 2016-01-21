@@ -29,13 +29,13 @@ bool TGLEngine::GLSetupPixelFormat()
 		1, //nVersion
 		PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER, //dwFlags
 		PFD_TYPE_RGBA, //iPixelType
-		24, //cColorBits
+		16, //cColorBits
 		0, 0, //cRedBits, cRedShift
 		0, 0, //cGreenBits, cGreenShift
 		0, 0, //cBlueBits, cBlueShift
 		0, 0, //cAlphaBits, cAlphaShift
 		0, 0, 0, 0, 0, //cAccumBits, cAccumRedBits, cAccumGreenBits, cAccumBlueBits, cAccumAlphaBits
-		32, //cDepthBits
+		16, //cDepthBits
 		1, //cStencilBits
 		0, //cAuxBuffers
 		PFD_MAIN_PLANE, //iLayerType
@@ -64,6 +64,8 @@ bool TGLEngine::GLSetupPixelFormat()
 //---------------------------------------------------------------------------
 bool TGLEngine::Install(HWND hWnd)
 {
+	m_OldTexture = -1;
+
 	m_DC = ::GetDC(hWnd);
 	if (!GLSetupPixelFormat())
 		return false;
@@ -91,18 +93,6 @@ bool TGLEngine::Install(HWND hWnd)
 		return false;
 
 	TPRINT("g_UseFrameBuffer = %i\n", g_UseFrameBuffer);
-
-	const float texCoords[4][2] =
-	{
-		{ 0.0f, 1.0f },
-		{ 1.0f, 1.0f },
-		{ 1.0f, 0.0f },
-		{ 0.0f, 0.0f }
-	};
-
-	glGenBuffersARB(1, &g_VBO_TexCoord);
-	glBindBufferARB(GL_ARRAY_BUFFER_ARB, g_VBO_TexCoord);
-	glBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * 2 * sizeof(float), &texCoords[0], GL_STATIC_DRAW_ARB);
 
 	glClearColor(0.0, 0.0, 0.0, 1.0);		// Black Background
 	glShadeModel(GL_SMOOTH);				// Enables Smooth Color Shading
@@ -160,19 +150,6 @@ void TGLEngine::UpdateRect()
 		GumpManager->RedrawAll();
 }
 //---------------------------------------------------------------------------
-void TGLEngine::BindTexture(GLuint &Texture, int Width, int Height, PDWORD pixels)
-{
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &Texture);
-	glBindTexture(GL_TEXTURE_2D, Texture);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-}
-//---------------------------------------------------------------------------
 void TGLEngine::BindTexture16(GLuint &Texture, int Width, int Height, PWORD pixels)
 {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -184,6 +161,19 @@ void TGLEngine::BindTexture16(GLuint &Texture, int Width, int Height, PWORD pixe
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, Width, Height, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, pixels);
+}
+//---------------------------------------------------------------------------
+void TGLEngine::BindTexture32(GLuint &Texture, int Width, int Height, PDWORD pixels)
+{
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &Texture);
+	glBindTexture(GL_TEXTURE_2D, Texture);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, Width, Height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8, pixels);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::BeginDraw()
@@ -329,61 +319,48 @@ void TGLEngine::DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVect
 {
 	//glUniform1iARB(ShaderTexture, texture);
 
-	glBindTexture(GL_TEXTURE_2D, texture);
+	if (m_OldTexture != texture)
+	{
+		m_OldTexture = texture;
+		glBindTexture(GL_TEXTURE_2D, texture);
+	}
 
 	glLoadIdentity();
-	glTranslatef(x, y - rc.left, g_ZBuffer);
+	glTranslatef((GLfloat)x, y - (GLfloat)rc.left, (GLfloat)g_ZBuffer);
 	
 	glBegin(GL_QUADS);
 		glNormal3f((GLfloat)normals[3].X, (GLfloat)normals[3].Y, (GLfloat)normals[3].Z);
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, rc.top + 22); //<
+		glTexCoord2i(0, 1); glVertex2i(0, rc.top + 22); //<
 		
 		glNormal3f((GLfloat)normals[2].X, (GLfloat)normals[2].Y, (GLfloat)normals[2].Z);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i(22, rc.right + 44); //v
+		glTexCoord2i(1, 1); glVertex2i(22, rc.right + 44); //v
 		
 		glNormal3f((GLfloat)normals[1].X, (GLfloat)normals[1].Y, (GLfloat)normals[1].Z);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i(44, rc.bottom + 22); //>
+		glTexCoord2i(1, 0); glVertex2i(44, rc.bottom + 22); //>
 		
 		glNormal3f((GLfloat)normals[0].X, (GLfloat)normals[0].Y, (GLfloat)normals[0].Z);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(22, 0); //^
+		glTexCoord2i(0, 0); glVertex2i(22, 0); //^
 	glEnd();
-}
-//---------------------------------------------------------------------------
-void TGLEngine::Draw(GLuint &texture, GLuint &vertex, int &x, int &y)
-{
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glTexCoordPointer(4, GL_FLOAT, 0, NULL);
-
-	glBindBufferARB(GL_ARRAY_BUFFER_ARB, g_VBO_TexCoord);
-	glBindBufferARB(GL_ARRAY_BUFFER_ARB, vertex);
-	glVertexPointer(4, GL_FLOAT, 0, NULL);
-
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glLoadIdentity();
-	glTranslatef(x, y, g_ZBuffer);
-
-	glDrawArrays(GL_QUADS, 0, 4);
-
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height)
 {
 	//glUniform1iARB(ShaderTexture, texture);
 
-	glBindTexture(GL_TEXTURE_2D, texture);
+	if (m_OldTexture != texture)
+	{
+		m_OldTexture = texture;
+		glBindTexture(GL_TEXTURE_2D, texture);
+	}
 
 	glLoadIdentity();
-	glTranslatef(x, y, g_ZBuffer);
+	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 
 	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, height);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i(width, height);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i(width, 0);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
+		glTexCoord2i(0, 1); glVertex2i(0, height);
+		glTexCoord2i(1, 1); glVertex2i(width, height);
+		glTexCoord2i(1, 0); glVertex2i(width, 0);
+		glTexCoord2i(0, 0); glVertex2i(0, 0);
 	glEnd();
 }
 //---------------------------------------------------------------------------
@@ -391,26 +368,30 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, boo
 {
 	//glUniform1iARB(ShaderTexture, texture);
 
-	glBindTexture(GL_TEXTURE_2D, texture);
+	if (m_OldTexture != texture)
+	{
+		m_OldTexture = texture;
+		glBindTexture(GL_TEXTURE_2D, texture);
+	}
 
 	glLoadIdentity();
-	glTranslatef(x, y, g_ZBuffer);
+	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 
 	glBegin(GL_QUADS);
 
 		if (mirror)
 		{
-			glTexCoord2f(0.0f, 1.0f); glVertex2i(width, height);
-			glTexCoord2f(1.0f, 1.0f); glVertex2i(0, height);
-			glTexCoord2f(1.0f, 0.0f); glVertex2i(0, 0);
-			glTexCoord2f(0.0f, 0.0f); glVertex2i(width, 0);
+			glTexCoord2i(0, 1); glVertex2i(width, height);
+			glTexCoord2i(1, 1); glVertex2i(0, height);
+			glTexCoord2i(1, 0); glVertex2i(0, 0);
+			glTexCoord2i(0, 0); glVertex2i(width, 0);
 		}
 		else
 		{
-			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, height);
-			glTexCoord2f(1.0f, 1.0f); glVertex2i(width, height);
-			glTexCoord2f(1.0f, 0.0f); glVertex2i(width, 0);
-			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
+			glTexCoord2i(0, 1); glVertex2i(0, height);
+			glTexCoord2i(1, 1); glVertex2i(width, height);
+			glTexCoord2i(1, 0); glVertex2i(width, 0);
+			glTexCoord2i(0, 0); glVertex2i(0, 0);
 		}
 
 	glEnd();
@@ -420,10 +401,14 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, int
 {
 	//glUniform1iARB(ShaderTexture, texture);
 
-	glBindTexture(GL_TEXTURE_2D, texture);
+	if (m_OldTexture != texture)
+	{
+		m_OldTexture = texture;
+		glBindTexture(GL_TEXTURE_2D, texture);
+	}
 
 	glLoadIdentity();
-	glTranslatef(x, y, g_ZBuffer);
+	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 
 	float drawCountX = drawWidth / (float)width;
 	float drawCountY = drawHeight / (float)height;
@@ -444,8 +429,8 @@ void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, i
 
 		glBindTexture(GL_TEXTURE_2D, th[i]->Texture);
 
-		float drawWidth = (float)th[i]->Width;
-		float drawHeight = (float)th[i]->Height;
+		int drawWidth = th[i]->Width;
+		int drawHeight = th[i]->Height;
 		float drawCountX = 1.0f;
 		float drawCountY = 1.0f;
 		int X = x;
@@ -462,7 +447,7 @@ void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, i
 				if (drawWidth < 1)
 					break;
 
-				drawCountX = drawWidth / th[i]->Width;
+				drawCountX = drawWidth / (float)th[i]->Width;
 
 				break;
 			}
@@ -481,7 +466,7 @@ void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, i
 				if (drawHeight < 1)
 					break;
 
-				drawCountY = drawHeight / th[i]->Height;
+				drawCountY = drawHeight / (float)th[i]->Height;
 
 				break;
 			}
@@ -495,7 +480,7 @@ void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, i
 				if (drawHeight < 1)
 					break;
 
-				drawCountY = drawHeight / th[i]->Height;
+				drawCountY = drawHeight / (float)th[i]->Height;
 
 				break;
 			}
@@ -515,7 +500,7 @@ void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, i
 				if (drawWidth < 1)
 					break;
 
-				drawCountX = drawWidth / th[i]->Width;
+				drawCountX = drawWidth / (float)th[i]->Width;
 
 				break;
 			}
@@ -541,8 +526,8 @@ void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, i
 				if (drawHeight < 1)
 					break;
 
-				drawCountX = drawWidth / th[i]->Width;
-				drawCountY = drawHeight / th[i]->Height;
+				drawCountX = drawWidth / (float)th[i]->Width;
+				drawCountY = drawHeight / (float)th[i]->Height;
 
 				break;
 			}
@@ -551,7 +536,7 @@ void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, i
 		}
 
 		glLoadIdentity();
-		glTranslatef(X, Y, 0);
+		glTranslatef((GLfloat)X, (GLfloat)Y, 0.0f);
 
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, drawCountY);			glVertex2i(0, drawHeight);

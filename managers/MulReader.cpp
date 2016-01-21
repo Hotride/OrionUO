@@ -111,10 +111,9 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 	//if (!flag || flag > 0xFFFF) //raw tile
 	if (ID < 0x4000) //raw tile
 	{
-		int blocksize = 44 * 44;
+		const int blocksize = 44 * 44;
 
-		PWORD pixels = new WORD[blocksize];
-		memset(&pixels[0], 0, blocksize * 2);
+		WORD pixels[blocksize] = { 0 };
 
 		IFOR(i, 0, 22)
 		{
@@ -141,8 +140,6 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 		}
 
 		g_GL.BindTexture16(th->Texture, 44, 44, pixels);
-
-		delete pixels;
 	}
 	else
 	{ //run tile

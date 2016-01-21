@@ -181,15 +181,15 @@ int TGumpMap::Draw(__in bool &mode)
 		
 		int tempX = posX + 24;
 		int tempY = posY + 32;
-		g_GL.Draw(Texture, tempX, tempY, (float)m_Width, (float)m_Height);
+		g_GL.Draw(Texture, tempX, tempY, m_Width, m_Height);
 
 		if (m_DoubleImage)
 		{
 			tempX++;
-			g_GL.Draw(Texture, tempX, tempY, (float)m_Width, (float)m_Height);
+			g_GL.Draw(Texture, tempX, tempY, m_Width, m_Height);
 			tempX--;
 			tempY++;
-			g_GL.Draw(Texture, tempX, tempY, (float)m_Width, (float)m_Height);
+			g_GL.Draw(Texture, tempX, tempY, m_Width, m_Height);
 		}
 
 		UO->DrawGump(0x139D, 0, posX + 174, posY + 177); //N

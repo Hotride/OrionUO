@@ -29,6 +29,7 @@ private:
 	HGLRC m_RC;
 
 	bool GLSetupPixelFormat();
+	GLuint m_OldTexture;
 
 public:
 	TGLEngine() {m_DC = NULL; m_RC = NULL;}
@@ -42,9 +43,9 @@ public:
 	void Uninstall() {wglMakeCurrent(NULL, NULL); wglDeleteContext(m_RC);}
 
 	void UpdateRect();
-	
-	void BindTexture(GLuint &texture, int width, int height, PDWORD pixels);
+
 	void BindTexture16(GLuint &texture, int width, int height, PWORD pixels);
+	void BindTexture32(GLuint &texture, int width, int height, PDWORD pixels);
 
 	void BeginDraw();
 	void EndDraw();
@@ -66,7 +67,6 @@ public:
 	void DrawTriangle(DWORD color, float x, float y, float radius);
 
 	void DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVector *normals);
-	void Draw(GLuint &texture, GLuint &vertex, int &x, int &y);
 	void Draw(GLuint &texture, int &x, int &y, int width, int height);
 	void Draw(GLuint &texture, int &x, int &y, int width, int height, bool &mirror);
 	void Draw(GLuint &texture, int &x, int &y, int width, int height, int &drawWidth, int &drawHeight);

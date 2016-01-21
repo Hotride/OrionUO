@@ -166,7 +166,6 @@ extern bool g_NoDrawRoof;
 extern char g_MaxGroundZ;
 extern char g_SelecterCharName[30];
 extern int g_ZBuffer;
-extern GLuint g_VBO_TexCoord;
 
 const BYTE SMOOTH_MONITOR_NONE = 0;
 const BYTE SMOOTH_MONITOR_SUNRISE = 1;
@@ -473,6 +472,8 @@ typedef struct MULTILINES_FONT_INFO
 #include "managers\\FileManager.h"
 #include "BaseQueue.h"
 #include "TextureObject.h"
+#include "IndexObject.h"
+#include "LinkedList.h"
 #include "EntryText.h"
 #include "BookEntryText.h"
 #include "GameConsole.h"

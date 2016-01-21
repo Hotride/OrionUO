@@ -47,13 +47,6 @@ private:
 
 	PBYTE m_AnimData;
 
-	int m_LandDataIndexCount;
-	int m_StaticDataIndexCount;
-	int m_GumpDataIndexCount;
-	int m_TextureDataIndexCount;
-	int m_SoundDataIndexCount;
-	int m_LightDataIndexCount;
-
 	void LoadClientStartupConfig();
 	
 	void LoadIndexFiles();

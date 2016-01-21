@@ -195,7 +195,7 @@ int TAnimationManager::m_UsedLayers[8][m_LayerCount] =
 //----------------------------------------------------------------------------
 TAnimationManager::TAnimationManager()
 : m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0), m_Direction(0),
-m_AnimDataIndexCount(0), m_Grayed(false)
+m_Grayed(false)
 {
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
@@ -558,19 +558,7 @@ TTextureAnimation *TAnimationManager::GetAnimation(WORD id)
 		anim = new TTextureAnimation();
 		m_DataIndex[id].Group = anim;
 
-		if (m_UsedAnimList == NULL)
-			m_UsedAnimList = new TLinkedList(&m_DataIndex[id]);
-		else
-		{
-			TLinkedList *list = m_UsedAnimList;
-
-			while (list != NULL && list->Next != NULL)
-				list = list->Next;
-			
-			list->Next = new TLinkedList(&m_DataIndex[id]);
-		}
-
-		m_AnimDataIndexCount++;
+		ADD_LINKED(m_UsedAnimList, m_DataIndex[id]);
 	}
 
 	return anim;
@@ -578,70 +566,66 @@ TTextureAnimation *TAnimationManager::GetAnimation(WORD id)
 //----------------------------------------------------------------------------
 void TAnimationManager::ClearUnusedTextures(DWORD ticks)
 {
-	if (m_AnimDataIndexCount > 0)
+	TLinkedList *list = m_UsedAnimList;
+	TLinkedList *prev = list;
+
+	ticks -= CLEAR_TEXTURES_DELAY;
+
+	while (list != NULL)
 	{
-		TLinkedList *list = m_UsedAnimList;
-		TLinkedList *prev = list;
+		TIndexAnimation *obj = (TIndexAnimation*)list->Data;
+		TTextureAnimation *anim = obj->Group;
 
-		ticks -= CLEAR_TEXTURES_DELAY;
-
-		while (list != NULL)
+		if (anim != NULL)
 		{
-			TIndexAnimation *obj = (TIndexAnimation*)list->Data;
-			TTextureAnimation *anim = obj->Group;
-		
-			if (anim != NULL)
+			TTextureAnimationGroup *group = (TTextureAnimationGroup*)anim->m_Items;
+
+			while (group != NULL)
 			{
-				TTextureAnimationGroup *group = (TTextureAnimationGroup*)anim->m_Items;
+				TTextureAnimationGroup *nextGroup = (TTextureAnimationGroup*)group->m_Next;
 
-				while (group != NULL)
+				TTextureAnimationDirection *direction = (TTextureAnimationDirection*)group->m_Items;
+
+				while (direction != NULL)
 				{
-					TTextureAnimationGroup *nextGroup = (TTextureAnimationGroup*)group->m_Next;
+					TTextureAnimationDirection *nextDirection = (TTextureAnimationDirection*)direction->m_Next;
 
-					TTextureAnimationDirection *direction = (TTextureAnimationDirection*)group->m_Items;
+					if (direction->LastAccessTime < ticks)
+						group->Delete(direction);
 
-					while (direction != NULL)
-					{
-						TTextureAnimationDirection *nextDirection = (TTextureAnimationDirection*)direction->m_Next;
-
-						if (direction->LastAccessTime < ticks)
-							group->Delete(direction);
-
-						direction = nextDirection;
-					}
-
-					if (group->m_Items == NULL)
-						anim->Delete(group);
-
-					group = nextGroup;
+					direction = nextDirection;
 				}
 
-				TLinkedList *next = list->Next;
+				if (group->m_Items == NULL)
+					anim->Delete(group);
 
-				if (anim->m_Items == NULL)
-				{
-					obj->Group = NULL;
-					m_AnimDataIndexCount--;
-			
-					if (list == m_UsedAnimList)
-					{
-						m_UsedAnimList = next;
-						prev = next;
-					}
-					else
-						prev->Next = next;
-
-					list->Next = NULL;
-					delete list;
-				}
-
-				list = next;
+				group = nextGroup;
 			}
-			else
+
+			TLinkedList *next = list->Next;
+
+			if (anim->m_Items == NULL)
 			{
-				prev = list;
-				list = list->Next;
+				obj->Group = NULL;
+
+				if (list == m_UsedAnimList)
+				{
+					m_UsedAnimList = next;
+					prev = next;
+				}
+				else
+					prev->Next = next;
+
+				list->Next = NULL;
+				delete list;
 			}
+
+			list = next;
+		}
+		else
+		{
+			prev = list;
+			list = list->Next;
 		}
 	}
 }
@@ -1181,7 +1165,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 		glEnable(GL_DEPTH_TEST);
 
-		g_GL.Draw(texture, x, y, (float)frame->Width, (float)frame->Height, mirror);
+		g_GL.Draw(texture, x, y, frame->Width, frame->Height, mirror);
 
 		glDisable(GL_DEPTH_TEST);
 	}

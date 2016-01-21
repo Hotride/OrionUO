@@ -271,7 +271,7 @@ char TMapBlock::GetLandZ(int x, int y, int &map)
 	WORD BlockX = x / 8;
 	WORD BlockY = y /8;
 
-	int Block = (BlockX * 512) + BlockY;
+	int Block = (BlockX * g_MapBlockY[map]) + BlockY;
 
 	//Блок
 	PMAP_BLOCK mb = (PMAP_BLOCK)((DWORD)FileManager.MapMul[map].Address + (Block * sizeof(MAP_BLOCK)));
