@@ -106,6 +106,7 @@ void TConfigManager::DefaultPage6()
 	m_AutoArrange = true;
 	m_AlwaysRun = false;
 	m_DisableMenubar = true;
+	m_GrayOutOfRangeObjects = true;
 }
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage7()
@@ -297,6 +298,7 @@ void TConfigManager::Load(string path)
 			m_AutoArrange = file.ReadByte();
 			m_AlwaysRun = file.ReadByte();
 			m_DisableMenubar = file.ReadByte();
+			m_GrayOutOfRangeObjects = file.ReadByte();
 		}
 		
 		file.Ptr = next;
@@ -448,7 +450,7 @@ void TConfigManager::Save(string path)
 	writer->WriteBuffer();
 	
 	//Page 6
-	writer->WriteByte(8); //size of block
+	writer->WriteByte(9); //size of block
 	writer->WriteByte(6); //page index
 	writer->WriteByte(m_EnablePathfind);
 	writer->WriteByte(m_HoldTabForCombat);
@@ -456,6 +458,7 @@ void TConfigManager::Save(string path)
 	writer->WriteByte(m_AutoArrange);
 	writer->WriteByte(m_AlwaysRun);
 	writer->WriteByte(m_DisableMenubar);
+	writer->WriteByte(m_GrayOutOfRangeObjects);
 	writer->WriteBuffer();
 	
 	//Page 7

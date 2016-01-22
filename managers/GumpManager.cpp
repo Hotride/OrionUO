@@ -856,6 +856,7 @@ void TGumpManager::Load(string path)
 		file.Ptr = (PBYTE)file.Address + (file.Size - 6);
 		short count = file.ReadShort();
 		file.Ptr = oldPtr;
+		bool menubarLoaded = false;
 
 		IFOR(i, 0, count)
 		{
@@ -982,6 +983,17 @@ void TGumpManager::Load(string path)
 
 			if (gump != NULL)
 			{
+				if (gumpType == GT_MENUBAR)
+				{
+					if (menubarLoaded)
+					{
+						delete gump;
+						continue;
+					}
+
+					menubarLoaded = true;
+				}
+
 				gump->MinimizedX = gumpMinimizedX;
 				gump->MinimizedY = gumpMinimizedY;
 				gump->LockMoving = gumpLockMoving;

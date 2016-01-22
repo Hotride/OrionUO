@@ -78,13 +78,11 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 				if (graphic == 2)
 					break;
 
-				char landZ = obj->Z;
-
 				DWORD flags = UO->GetLandFlags(graphic);
 
 				char surface = 0x10 + (char)(!IsImpassable(flags));
 
-				Add(new TPathObject(landZ, 0, surface));
+				Add(new TPathObject(obj->Z, 0, surface));
 
 				break;
 			}
@@ -101,7 +99,7 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 					else if (((TGameObject*)obj)->NPC)
 					{
 						if (!ignoreGameCharacters)
-							Add(new TPathObject(obj->Z, g_CharacterHeight, false));
+							Add(new TPathObject(obj->Z, g_CharacterHeight, 0));
 
 						break;
 					}
@@ -111,7 +109,7 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 
 				bool impSurf = (obj->IsImpassable() || obj->IsSurface() || obj->IsBridge());
 
-				if (graphic == 1 || (obj->IsBackground() && !impSurf) || !impSurf)
+				if (graphic == 1 || !impSurf || (obj->IsBackground() && !impSurf))
 					break;
 
 				STATIC_TILES &st = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
@@ -282,7 +280,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 			if (surface >= 0x20)
 			{
 				surface -= 0x20;
-				isLongStair = true;
+				isLongStair = (curZ <= (z + 6));
 			}
 
 			trace_printf("nowC=%i z=%i newZ=%i curZ=%i top=%i isLongStair=%i\n", c, z, newZ, curZ, top, isLongStair);

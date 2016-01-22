@@ -36,6 +36,7 @@ m_Increment(0), m_LastChangeFrameTime(0)
 TEffect::~TEffect()
 {
 }
+#include <math.h>
 //---------------------------------------------------------------------------
 int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 {
@@ -69,7 +70,57 @@ int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 			ApplyRenderMode();
 
-			UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z + deZ);
+			TTextureObject *th = UO->ExecuteStaticArt(objGraphic);
+
+			if (th != NULL)
+			{
+				glBindTexture(GL_TEXTURE_2D, th->Texture);
+
+				deY -= (m_Z * 4 + deZ);
+
+				double cosA = ((TEffectMoving*)(this))->CosA;
+				double sinA = ((TEffectMoving*)(this))->SinA;
+
+				int posMinX = deX - (th->Width / 2);
+				int posMinY = deY - (th->Height + 4);
+				int posMaxX = posMinX + th->Width;
+				int posMaxY = posMinY + th->Height;
+
+				int mx = posMinX + (posMaxX - posMinX) / 2;
+				int my = posMinY + (posMaxY - posMinY) / 2;
+
+				int tmpX = posMinX - mx;
+				int tmpY = posMinY - my;
+				int x1 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
+				int y1 = my + (int)floor(tmpX * sinA + tmpY * cosA);
+
+				tmpX = posMaxX - mx;
+				tmpY = posMinY - my;
+				int x2 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
+				int y2 = my + (int)floor(tmpX * sinA + tmpY * cosA);
+
+				tmpX = posMaxX - mx;
+				tmpY = posMaxY - my;
+				int x3 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
+				int y3 = my + (int)floor(tmpX * sinA + tmpY * cosA);
+
+				tmpX = posMinX - mx;
+				tmpY = posMaxY - my;
+				int x4 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
+				int y4 = my + (int)floor(tmpX * sinA + tmpY * cosA);
+
+				glLoadIdentity();
+				glTranslatef(deX - posMinX, deY - posMinY, 0.0f);
+
+				glBegin(GL_QUADS);
+					glTexCoord2i(0, 1); glVertex2i(x1, y1);
+					glTexCoord2i(1, 1); glVertex2i(x2, y2);
+					glTexCoord2i(1, 0); glVertex2i(x3, y3);
+					glTexCoord2i(0, 0); glVertex2i(x4, y4);
+				glEnd();
+			}
+
+			//UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z + deZ);
 
 			glDisable(GL_BLEND);
 		}
@@ -247,13 +298,22 @@ TDebugScreen::TDebugScreen()
 : TBaseScreen()
 {
 	effect = new TEffectMoving();
-	effect->Graphic = 0x36BD;
+	effect->Graphic = 0x36E4;
+	effect->Duration = GetTickCount();
+	effect->Speed = 1;
+	effect->X = 0x058A;
+	effect->Y = 0x068C;
+	effect->Z = 7;
+	effect->DestX = 0x058C;
+	effect->DestY = 0x0696;
+
+	/*effect->Graphic = 0x36BD;
 	effect->Duration = GetTickCount() + 150;
 	effect->Speed = 50;
 	effect->X = 0;
 	effect->Y = 0;
 	effect->DestX = 10;
-	effect->DestY = 6;
+	effect->DestY = 6;*/
 
 	effect->Init();
 }
@@ -386,8 +446,8 @@ int TDebugScreen::Render(bool mode)
 		ColorizerShader->Use();
 
 		effect->Update();
-		int gx = effect->X;
-		int gy = effect->Y;
+		int gx = effect->X - (int)0x058A;
+		int gy = effect->Y - (int)0x068C;
 		bool mde = true;
 		ticks = GetTickCount();
 
@@ -395,6 +455,23 @@ int TDebugScreen::Render(bool mode)
 		int drawY = 240 + (gx + gy) * 22;
 
 		effect->Draw(mde, drawX, drawY, ticks);
+
+		/*TTextureObject *th = UO->ExecuteStaticArt(0x36E4);
+
+		if (th != NULL)
+		{
+			glBindTexture(GL_TEXTURE_2D, th->Texture);
+
+			glLoadIdentity();
+			glTranslatef(320.0f, 240.0f, 0.0f);
+
+			glBegin(GL_QUADS);
+				glTexCoord2i(0, 1); glVertex2i(0, th->Height / 2);
+				glTexCoord2i(1, 1); glVertex2i(th->Width * 2, th->Height * 2);
+				glTexCoord2i(1, 0); glVertex2i(th->Width / 2, 0);
+				glTexCoord2i(0, 0); glVertex2i(0, 0);
+			glEnd();
+		}*/
 
 		UnuseShader();
 

@@ -66,6 +66,7 @@ private:
 	bool m_AutoArrange;
 	bool m_AlwaysRun;
 	bool m_DisableMenubar;
+	bool m_GrayOutOfRangeObjects;
 	
 	WORD m_SpeechDelay;
 	bool m_ScaleSpeechDelay;
@@ -115,82 +116,83 @@ public:
 	void DefaultPage9();
 	//10 нету
 	
-	SETGET(bool, Sound)
-	SETGET(bool, Music)
-	SETGET(bool, FootstepsSound)
-	SETGET(bool, CombatMusic)
-	SETGET(BYTE, SoundVolume)
-	SETGET(BYTE, MusicVolume)
+	SETGET(bool, Sound);
+	SETGET(bool, Music);
+	SETGET(bool, FootstepsSound);
+	SETGET(bool, CombatMusic);
+	SETGET(BYTE, SoundVolume);
+	SETGET(BYTE, MusicVolume);
+
+	SETGET(bool, PopupHelpEnabled);
+	SETGET(bool, PopupHelpSticky);
+	SETGET(bool, PopupHelpPersistant);
+	SETGET(WORD, PopupHelpDelay);
+	SETGET(WORD, PopupHelpTextColor);
+	SETGET(WORD, PopupHelpTextFont);
+
+	SETGET(bool, UseToolTips);
+	SETGET(WORD, ToolTipsTextColor);
+	SETGET(WORD, ToolTipsTextFont);
+	SETGET(WORD, ToolTipsDelay);
+
+	SETGET(WORD, ChatColorInputText);
+	SETGET(WORD, ChatColorMenuOption);
+	SETGET(WORD, ChatColorPlayerInMemberList);
+	SETGET(WORD, ChatColorText);
+	SETGET(WORD, ChatColorPlayerNameWithout);
+	SETGET(WORD, ChatColorMuted);
+	SETGET(WORD, ChatColorChannelModeratorName);
+	SETGET(WORD, ChatColorChannelModeratorText);
+	SETGET(WORD, ChatColorMyName);
+	SETGET(WORD, ChatColorMyText);
+	SETGET(WORD, ChatColorSystemMessage);
+	SETGET(WORD, ChatFont);
+	SETGET(WORD, ChatColorBGOutputText);
+	SETGET(WORD, ChatColorBGInputText);
+	SETGET(WORD, ChatColorBGUserList);
+	SETGET(WORD, ChatColorBGConfList);
+	SETGET(WORD, ChatColorBGCommandList);
+
+	SETGET(bool, EnablePathfind);
+	SETGET(bool, HoldTabForCombat);
+	SETGET(bool, OffsetInterfaceWindows);
+	SETGET(bool, AutoArrange);
+	SETGET(bool, AlwaysRun);
+	SETGET(bool, DisableMenubar);
+	SETGET(bool, GrayOutOfRangeObjects);
 	
-	SETGET(bool, PopupHelpEnabled)
-	SETGET(bool, PopupHelpSticky)
-	SETGET(bool, PopupHelpPersistant)
-	SETGET(WORD, PopupHelpDelay)
-	SETGET(WORD, PopupHelpTextColor)
-	SETGET(WORD, PopupHelpTextFont)
-	
-	SETGET(bool, UseToolTips)
-	SETGET(WORD, ToolTipsTextColor)
-	SETGET(WORD, ToolTipsTextFont)
-	SETGET(WORD, ToolTipsDelay)
+	SETGET(WORD, SpeechDelay);
+	SETGET(bool, ScaleSpeechDelay);
+	SETGET(WORD, SpeechColor);
+	SETGET(WORD, EmoteColor);
+	SETGET(WORD, PartyMessageColor);
+	SETGET(bool, DarkNights);
+	SETGET(bool, ColoredLighting);
+	SETGET(bool, StandartCharactersAnimationDelay);
+	SETGET(bool, StandartItemsAnimationDelay);
+	SETGET(bool, LockResizingGameWindow);
+	SETGET(bool, LockGumpsMoving);
 
-	SETGET(WORD, ChatColorInputText)
-	SETGET(WORD, ChatColorMenuOption)
-	SETGET(WORD, ChatColorPlayerInMemberList)
-	SETGET(WORD, ChatColorText)
-	SETGET(WORD, ChatColorPlayerNameWithout)
-	SETGET(WORD, ChatColorMuted)
-	SETGET(WORD, ChatColorChannelModeratorName)
-	SETGET(WORD, ChatColorChannelModeratorText)
-	SETGET(WORD, ChatColorMyName)
-	SETGET(WORD, ChatColorMyText)
-	SETGET(WORD, ChatColorSystemMessage)
-	SETGET(WORD, ChatFont)
-	SETGET(WORD, ChatColorBGOutputText)
-	SETGET(WORD, ChatColorBGInputText)
-	SETGET(WORD, ChatColorBGUserList)
-	SETGET(WORD, ChatColorBGConfList)
-	SETGET(WORD, ChatColorBGCommandList)
+	SETGET(WORD, InnocentColor);
+	SETGET(WORD, FriendlyColor);
+	SETGET(WORD, SomeoneColor);
+	SETGET(WORD, CriminalColor);
+	SETGET(WORD, EnemyColor);
+	SETGET(WORD, MurdererColor);
+	SETGET(bool, CriminalActionsQuery);
 
-	SETGET(bool, EnablePathfind)
-	SETGET(bool, HoldTabForCombat)
-	SETGET(bool, OffsetInterfaceWindows)
-	SETGET(bool, AutoArrange)
-	SETGET(bool, AlwaysRun)
-	SETGET(bool, DisableMenubar)
-	
-	SETGET(WORD, SpeechDelay)
-	SETGET(bool, ScaleSpeechDelay)
-	SETGET(WORD, SpeechColor)
-	SETGET(WORD, EmoteColor)
-	SETGET(WORD, PartyMessageColor)
-	SETGET(bool, DarkNights)
-	SETGET(bool, ColoredLighting)
-	SETGET(bool, StandartCharactersAnimationDelay)
-	SETGET(bool, StandartItemsAnimationDelay)
-	SETGET(bool, LockResizingGameWindow)
-	SETGET(bool, LockGumpsMoving)
-
-	SETGET(WORD, InnocentColor)
-	SETGET(WORD, FriendlyColor)
-	SETGET(WORD, SomeoneColor)
-	SETGET(WORD, CriminalColor)
-	SETGET(WORD, EnemyColor)
-	SETGET(WORD, MurdererColor)
-	SETGET(bool, CriminalActionsQuery)
-
-	SETGET(bool, ShowIncomingNames)
-	SETGET(bool, UseCircleTrans)
-	SETGET(bool, StatReport)
-	SETGET(BYTE, CircleTransRadius)
-	SETGET(BYTE, SkillReport)
-	SETGET(WORD, SpeechFont)
+	SETGET(bool, ShowIncomingNames);
+	SETGET(bool, UseCircleTrans);
+	SETGET(bool, StatReport);
+	SETGET(BYTE, CircleTransRadius);
+	SETGET(BYTE, SkillReport);
+	SETGET(WORD, SpeechFont);
 	void SetConsoleNeedEnter(bool val);
 	bool GetConsoleNeedEnter() const {return m_ConsoleNeedEnter;}
 
-	SETGET(bool, FilterPWOn)
-	SETGET(bool, ObscenityFilter)
-	SETGET(string, FilterPassword)
+	SETGET(bool, FilterPWOn);
+	SETGET(bool, ObscenityFilter);
+	SETGET(string, FilterPassword);
 
 	WORD GetColorByNotoriety(BYTE notoriety);
 

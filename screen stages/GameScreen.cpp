@@ -569,6 +569,8 @@ int TGameScreen::Render(bool mode)
 
 		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 
+		bool useGrayObjects = ConfigManager.GrayOutOfRangeObjects;
+
 		g_NoDrawRoof = false;
 		g_MaxGroundZ = 125;
 		int maxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
@@ -623,7 +625,7 @@ int TGameScreen::Render(bool mode)
 
 						POINT testPos = { currentX, currentY };
 
-						if (GetDistance(g_Player, testPos) > g_UpdateRange)
+						if (useGrayObjects && GetDistance(g_Player, testPos) > g_UpdateRange)
 							g_OutOfRangeColor = 0x0386;
 						else
 							g_OutOfRangeColor = 0;

@@ -3175,7 +3175,7 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 {
 	TTextureObject *th = ExecuteStaticArt(id);
 
-	if (th != NULL)
+	if (th != NULL && id > 1)
 	{
 		if (g_OutOfRangeColor)
 			color = g_OutOfRangeColor;
@@ -3209,7 +3209,7 @@ void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int
 
 	TTextureObject *th = ExecuteStaticArt(id);
 
-	if (th != NULL)
+	if (th != NULL && id > 1)
 	{
 		if (g_OutOfRangeColor)
 			color = g_OutOfRangeColor;

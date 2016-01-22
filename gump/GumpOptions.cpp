@@ -26,7 +26,7 @@ TTextTexture TGumpOptions::m_TexturePage2[8];	//Pop-up Help
 TTextTexture TGumpOptions::m_TexturePage3[6];	//Language
 TTextTexture TGumpOptions::m_TexturePage4[19];	//Chat
 TTextTexture TGumpOptions::m_TexturePage5[7];	//Macro Options
-TTextTexture TGumpOptions::m_TexturePage6[8];	//Interface
+TTextTexture TGumpOptions::m_TexturePage6[9];	//Interface
 TTextTexture TGumpOptions::m_TexturePage7[14];	//Display
 TTextTexture TGumpOptions::m_TexturePage8[9];	//Reputation System
 TTextTexture TGumpOptions::m_TexturePage9[9];	//Miscellaneous
@@ -280,6 +280,9 @@ void TGumpOptions::InitTextTextures()
 
 	str = L"Disable the Menu Bar";
 	FontManager->GenerateW(0, m_TexturePage6[7], str.c_str(), g_OptionsTextColor);
+
+	str = L"Gray out of range objects";
+	FontManager->GenerateW(0, m_TexturePage6[8], str.c_str(), g_OptionsTextColor);
 
 
 
@@ -1925,6 +1928,11 @@ int TGumpOptions::DrawPage6(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DisableMenubar, 0, posX + 64, posY);
 		//UO->DrawUnicodeFont(0, L"Disable the Menu Bar", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[7].Draw(posX + 86, posY);
+
+		posY += 20;
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GrayOutOfRangeObjects, 0, posX + 64, posY);
+		//UO->DrawUnicodeFont(0, L"Gray out of range objects", g_OptionsTextColor, posX + 86, posY);
+		m_TexturePage6[8].Draw(posX + 86, posY);
 	}
 	else
 	{
@@ -1947,6 +1955,8 @@ int TGumpOptions::DrawPage6(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 			LSG = ID_GO_P6_ALWAYS_RUN; //Your character will always run if this is checked
 		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 206))
 			LSG = ID_GO_P6_DISABLE_MENUBAR; //Disable the Menu Bar
+		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 226))
+			LSG = ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS; //Gray out of range objects
 
 		if (LSG != 0)
 			g_LastSelectedObject = LSG;
@@ -2881,6 +2891,8 @@ void TGumpOptions::OnLeftMouseUp()
 					g_OptionsConfig.AlwaysRun = !g_OptionsConfig.AlwaysRun;
 				else if (g_LastObjectLeftMouseDown == ID_GO_P6_DISABLE_MENUBAR) //Disable the Menu Bar
 					g_OptionsConfig.DisableMenubar = !g_OptionsConfig.DisableMenubar;
+				else if (g_LastObjectLeftMouseDown == ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS) //Gray out of range objects
+					g_OptionsConfig.GrayOutOfRangeObjects = !g_OptionsConfig.GrayOutOfRangeObjects;
 
 				break;
 			}
@@ -3148,6 +3160,7 @@ void TGumpOptions::ApplyPageChanges()
 			ConfigManager.AutoArrange = g_OptionsConfig.AutoArrange;
 			ConfigManager.AlwaysRun = g_OptionsConfig.AlwaysRun;
 			ConfigManager.DisableMenubar = g_OptionsConfig.DisableMenubar;
+			ConfigManager.GrayOutOfRangeObjects = g_OptionsConfig.GrayOutOfRangeObjects;
 
 			if (g_OptionsConfig.DisableMenubar)
 				GumpManager->CloseGump(0, 0, GT_MENUBAR);
