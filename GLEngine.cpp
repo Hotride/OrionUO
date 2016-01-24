@@ -110,19 +110,19 @@ bool TGLEngine::Install(HWND hWnd)
 	glClearStencil(0);
 	glStencilMask(1);
 	
-	GLfloat lightPosition[]= { -100.0f, 300.0f, 5.0f, 0.0f };
+	glEnable(GL_LIGHT0);
+
+	GLfloat lightPosition[]= { -1.0f, -1.0f, 0.5f, 0.0f };
 	glLightfv(GL_LIGHT0, GL_POSITION, &lightPosition[0]);
 	
 	GLfloat lightAmbient[]= { 2.0f, 2.0f, 2.0f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_AMBIENT, &lightAmbient[0]);
 	
-	GLfloat lav = 2.2f;
+	GLfloat lav = 1.0f; //2.2f;
 	GLfloat lightAmbientValues[]= { lav, lav, lav, lav };
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, &lightAmbientValues[0]);
 
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
-
-	glEnable(GL_LIGHT0);
 
 	glViewport(0, 0, g_ClientWidth, g_ClientHeight);
 	glOrtho(0.0, g_ClientWidth, g_ClientHeight, 0.0, -100.0, 100.0);
@@ -326,20 +326,20 @@ void TGLEngine::DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVect
 	}
 
 	glLoadIdentity();
-	glTranslatef((GLfloat)x, y - (GLfloat)rc.left, (GLfloat)g_ZBuffer);
+	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 	
 	glBegin(GL_QUADS);
+		glNormal3f((GLfloat)normals[0].X, (GLfloat)normals[0].Y, (GLfloat)normals[0].Z);
+		glTexCoord2i(0, 0); glVertex2i(22, -rc.left); //^
+		
 		glNormal3f((GLfloat)normals[3].X, (GLfloat)normals[3].Y, (GLfloat)normals[3].Z);
-		glTexCoord2i(0, 1); glVertex2i(0, rc.top + 22); //<
+		glTexCoord2i(0, 1); glVertex2i(0, 22 - rc.top); //<
 		
 		glNormal3f((GLfloat)normals[2].X, (GLfloat)normals[2].Y, (GLfloat)normals[2].Z);
-		glTexCoord2i(1, 1); glVertex2i(22, rc.right + 44); //v
+		glTexCoord2i(1, 1); glVertex2i(22,  44 - rc.right); //v
 		
 		glNormal3f((GLfloat)normals[1].X, (GLfloat)normals[1].Y, (GLfloat)normals[1].Z);
-		glTexCoord2i(1, 0); glVertex2i(44, rc.bottom + 22); //>
-		
-		glNormal3f((GLfloat)normals[0].X, (GLfloat)normals[0].Y, (GLfloat)normals[0].Z);
-		glTexCoord2i(0, 0); glVertex2i(22, 0); //^
+		glTexCoord2i(1, 0); glVertex2i(44, 22 - rc.bottom); //>
 	glEnd();
 }
 //---------------------------------------------------------------------------
@@ -361,6 +361,41 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height)
 		glTexCoord2i(1, 1); glVertex2i(width, height);
 		glTexCoord2i(1, 0); glVertex2i(width, 0);
 		glTexCoord2i(0, 0); glVertex2i(0, 0);
+	glEnd();
+}
+//---------------------------------------------------------------------------
+void TGLEngine::DrawShadow(GLuint &texture, int &x, int &y, int width, int height, bool &mirror)
+{
+	//glUniform1iARB(ShaderTexture, texture);
+
+	if (m_OldTexture != texture)
+	{
+		m_OldTexture = texture;
+		glBindTexture(GL_TEXTURE_2D, texture);
+	}
+
+	int h2 = height / 2;
+	glLoadIdentity();
+	y += h2;
+	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
+
+	glBegin(GL_QUADS);
+
+		if (mirror)
+		{
+			glTexCoord2i(0, 1); glVertex2i(width, h2);
+			glTexCoord2i(1, 1); glVertex2i(0, h2);
+			glTexCoord2i(1, 0); glVertex2i(width, 0);
+			glTexCoord2i(0, 0); glVertex2i(width * 2, 0);
+		}
+		else
+		{
+			glTexCoord2i(0, 1); glVertex2i(0, h2); //ë.í.
+			glTexCoord2i(1, 1); glVertex2i(width, h2); //ï.í.
+			glTexCoord2i(1, 0); glVertex2i(width * 2, 0); //ï.â.
+			glTexCoord2i(0, 0); glVertex2i(width, 0); //ë.â.
+		}
+
 	glEnd();
 }
 //---------------------------------------------------------------------------

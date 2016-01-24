@@ -522,14 +522,14 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 			}
 			else //Серенький статус
 			{
-				DeathShader->Use();
+				ColorizerShader->Use();
 
 				//Гамп статус бара
 				UO->DrawGump(0x0804, 0x0386, posX, posY);
 
 				//Hits
 				UO->DrawGump(0x0805, 0x0386, posX + 34, posY + 38);
-
+				
 				UnuseShader();
 
 				TextEntry->DrawA(1, 0x0386, posX + 16, posY + 14, TS_LEFT, UOFONT_FIXED);

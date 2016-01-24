@@ -569,6 +569,7 @@ int TGameScreen::Render(bool mode)
 
 		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 
+		AnimationManager->ShadowCount = 0;
 		bool useGrayObjects = ConfigManager.GrayOutOfRangeObjects;
 
 		g_NoDrawRoof = false;
@@ -649,6 +650,8 @@ int TGameScreen::Render(bool mode)
 				}
 			}
 		}
+
+		AnimationManager->DrawShadows();
 
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
@@ -838,6 +841,7 @@ int TGameScreen::Render(bool mode)
 #pragma endregion
 		
 		char dbf[150] = {0};
+
 		if (charSelected)
 			sprintf(dbf, "FPS=%i Dir=%i Z=%i CS", FPScount, g_Player->Direction, playerZ);
 		else
@@ -862,7 +866,9 @@ int TGameScreen::Render(bool mode)
 					if (g_SelectedObject->Color == 1)
 						sprintf(soName, "Land");
 					else
-						sprintf(soName, "LandTex");
+					{
+						sprintf(soName, "LandTex (mz=%i)", ((TLandObject*)g_SelectedObject)->MinZ);
+					}
 					break;
 				}
 				case ROT_STATIC_OBJECT:
@@ -884,7 +890,7 @@ int TGameScreen::Render(bool mode)
 					break;
 			}
 
-			sprintf(dbf, "Selected:\n%s: Z=%i RQI=%i (SUM=%i)", soName, g_SelectedObject->Z, g_SelectedObject->RenderQueueIndex, g_SelectedObject->Z + g_SelectedObject->RenderQueueIndex);
+			sprintf(dbf, "Selected:\n%s: X=%i Y=%i Z=%i RQI=%i (SUM=%i)\nthis=0x%08X prev=0x%08X next=0x%08X", soName, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, g_SelectedObject->RenderQueueIndex, g_SelectedObject->Z + g_SelectedObject->RenderQueueIndex, g_SelectedObject, g_SelectedObject->m_Prev, g_SelectedObject->m_Next);
 
 			FontManager->DrawA(3, dbf, 0x35, 20, 122);
 		}

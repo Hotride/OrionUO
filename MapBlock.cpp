@@ -111,9 +111,9 @@ void TMapBlock::CreateLandTextureRect()
 			{
 				//Вычисляем текущую и соседние Z-координаты
 				char tileZ1 = obj->Z;
-				char tileZ2 = GetLandZ(obj->X, obj->Y + 1, map);
-				char tileZ3 = GetLandZ(obj->X + 1, obj->Y + 1, map);
-				char tileZ4 = GetLandZ(obj->X + 1, obj->Y, map);
+				char tileZ2 = GetLandZ(obj->X + 1, obj->Y, map);
+				char tileZ3 = GetLandZ(obj->X, obj->Y + 1, map);
+				char tileZ4 = GetLandZ(obj->X + 1, obj->Y + 1, map);
 
 				//Сохранимвреднее значение Z-координаты
 				char drawZ = (char)((tileZ1 + tileZ2 + tileZ3 + tileZ4) / 4);
@@ -129,10 +129,10 @@ void TMapBlock::CreateLandTextureRect()
 					//Значения для рендера
 					RECT r =
 					{
-						(tileZ1 * 4),
-						((tileZ1 - tileZ2) * 4),
-						((tileZ1 - tileZ3) * 4),
-						((tileZ1 - tileZ4) * 4)
+						(tileZ1 * 4), //left
+						(tileZ3 * 4), //top
+						(tileZ4 * 4), //right
+						(tileZ2 * 4) //bottom
 					};
 
 					obj->Rect = r;
@@ -142,65 +142,40 @@ void TMapBlock::CreateLandTextureRect()
 					IFOR(i, -1, 2)
 					{
 						int curX = obj->X + i;
+						int curI = i + 1;
 
 						IFOR(j, -1, 2)
 						{
 							int curY = obj->Y + j;
+							int curJ = j + 1;
 
 							char currentZ = GetLandZ(curX, curY, map);
 							char leftZ = GetLandZ(curX, curY + 1, map);
-							char rightZ = GetLandZ(curX + 1, curY + 1, map);
-							char bottomZ = GetLandZ(curX + 1, curY, map);
+							char rightZ = GetLandZ(curX + 1, curY, map);
+							char bottomZ = GetLandZ(curX + 1, curY + 1, map);
 
 							if (currentZ == leftZ && currentZ == rightZ && currentZ == bottomZ)
 							{
 								IFOR(k, 0, 4)
-									vec[i + 1][j + 1][k].Link(0.0, 0.0, 1.0);
+									vec[curI][curJ][k].Link(0.0, 0.0, 1.0);
 							}
 							else
 							{
-								int curI = i + 1;
-								int curJ = j + 1;
-
-								vec[curI][curJ][0].Link(-22.0, 22.0, (currentZ - bottomZ) * 4);
-								TVector v(-22.0, -22.0, (leftZ - currentZ) * 4);
-								vec[curI][curJ][0].Merge(v);
-								vec[curI][curJ][0].Normalize();
-								
-								vec[curI][curJ][1].Link(22.0, 22.0, (bottomZ - rightZ) * 4);
-								v.Link(-22.0, 22.0, (currentZ - bottomZ) * 4);
-								vec[curI][curJ][1].Merge(v);
-								vec[curI][curJ][1].Normalize();
-								
-								vec[curI][curJ][2].Link(22.0, -22.0, (rightZ - leftZ) * 4);
-								v.Link(22.0, 22.0, (bottomZ - rightZ) * 4);
-								vec[curI][curJ][2].Merge(v);
-								vec[curI][curJ][2].Normalize();
-								
-								vec[curI][curJ][3].Link(-22.0, -22.0, (leftZ - currentZ) * 4);
-								v.Link(22.0, -22.0, (rightZ - leftZ) * 4);
-								vec[curI][curJ][3].Merge(v);
-								vec[curI][curJ][3].Normalize();
-
-								/*vec[curI][curJ][0].Link(-22.0, 22.0, (currentZ - rightZ) * 4);
-								TVector v(-22.0, -22.0, (leftZ - currentZ) * 4);
-								vec[curI][curJ][0].Merge(v);
+								vec[curI][curJ][0].Link(-22.0, 22.0, (currentZ - rightZ) * 4);
+								vec[curI][curJ][0].Merge(-22.0, -22.0, (leftZ - currentZ) * 4);
 								vec[curI][curJ][0].Normalize();
 								
 								vec[curI][curJ][1].Link(22.0, 22.0, (rightZ - bottomZ) * 4);
-								v.Link(-22.0, 22.0, (currentZ - rightZ) * 4);
-								vec[curI][curJ][1].Merge(v);
+								vec[curI][curJ][1].Merge(-22.0, 22.0, (currentZ - rightZ) * 4);
 								vec[curI][curJ][1].Normalize();
 								
 								vec[curI][curJ][2].Link(22.0, -22.0, (bottomZ - leftZ) * 4);
-								v.Link(22.0, 22.0, (rightZ - bottomZ) * 4);
-								vec[curI][curJ][2].Merge(v);
+								vec[curI][curJ][2].Merge(22.0, 22.0, (rightZ - bottomZ) * 4);
 								vec[curI][curJ][2].Normalize();
 								
 								vec[curI][curJ][3].Link(-22.0, -22.0, (leftZ - currentZ) * 4);
-								v.Link(22.0, -22.0, (bottomZ - leftZ) * 4);
-								vec[curI][curJ][3].Merge(v);
-								vec[curI][curJ][3].Normalize();*/
+								vec[curI][curJ][3].Merge(22.0, -22.0, (bottomZ - leftZ) * 4);
+								vec[curI][curJ][3].Normalize();
 							}
 						}
 					}
@@ -226,32 +201,24 @@ void TMapBlock::CreateLandTextureRect()
 					obj->m_Normals[2].Add(vec[i + 1][j + 1][0]);
 					obj->m_Normals[2].Normalize();
 
-					obj->m_Normals[1].Link(vec[i - 1][j][2]);
-					obj->m_Normals[1].Add(vec[i - 1][j + 1][1]);
-					obj->m_Normals[1].Add(vec[i][j][3]);
-					obj->m_Normals[1].Add(vec[i][j + 1][0]);
-					obj->m_Normals[1].Normalize();
+					obj->m_Normals[3].Link(vec[i - 1][j][2]);
+					obj->m_Normals[3].Add(vec[i - 1][j + 1][1]);
+					obj->m_Normals[3].Add(vec[i][j][3]);
+					obj->m_Normals[3].Add(vec[i][j + 1][0]);
+					obj->m_Normals[3].Normalize();
 				}
 
 				//Минимальная Z-координата из всех
 				char minZ = tileZ1;
 
-				//if (tileZ2 > drawZ)
-					//drawZ = tileZ2;
 				if (tileZ2 < minZ)
 					minZ = tileZ2;
 
-				//if (tileZ3 > drawZ)
-					//drawZ = tileZ3;
 				if (tileZ3 < minZ)
 					minZ = tileZ3;
 
-				//if (tileZ4 > drawZ)
-					//drawZ = tileZ4;
 				if (tileZ4 < minZ)
 					minZ = tileZ4;
-
-				TMapObject *next = (TMapObject*)obj->m_Next;
 
 				obj->MinZ = minZ;
 			}

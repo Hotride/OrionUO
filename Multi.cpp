@@ -74,7 +74,7 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		}
 		else
 		{
-			if (IsSurface() || (IsBackground() && IsUnknown2()))
+			if (IsSurface() || (IsBackground() && IsUnknown2()) || IsRoof())
 				glEnable(GL_DEPTH_TEST);
 
 			UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);

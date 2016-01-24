@@ -3117,7 +3117,6 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 		if (::IsWet(tile.Flags))
 		{
 			glDisable(GL_LIGHTING);
-			glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 
 			DrawLandArt(id, color, x, y, -5);
 		}
@@ -3132,21 +3131,38 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 
 		return;
 	}
-
+	
 	if (g_OutOfRangeColor)
 		color = g_OutOfRangeColor;
+	
+	TBaseShader *shader = NULL;
 
 	int drawMode = (!g_GrayedPixels && color);
 
-	if (drawMode)
+	if (!color)
+	{
+		shader = CurrentShader;
+		UnuseShader();
+	}
+	else if (drawMode)
 		ColorManager->SendColorsToShader(color);
 
 	glUniform1iARB(ShaderDrawMode, drawMode);
 
 	x -= 23;
 	y -= 23;
+	
+	glEnable(GL_LIGHTING);
 
 	g_GL.DrawLandTexture(th->Texture, x, y, rc, normals);
+	
+	glDisable(GL_LIGHTING);
+
+	if (shader != NULL)
+	{
+		CurrentShader = shader;
+		shader->Use();
+	}
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
@@ -3594,6 +3610,25 @@ bool TUltimaOnline::LandPixelsInXY(WORD id, int x, int  y, int z)
 #endif
 	}
 
+	return result;
+}
+//---------------------------------------------------------------------------
+bool TUltimaOnline::LandTexturePixelsInXY(int x, int  y, RECT &r)
+{
+	int testX = g_MouseX - x;
+
+	int y0 = -r.left;
+	int y1 = 22 - r.top;
+	int y2 = 44 - r.right;
+	int y3 = 22 - r.bottom;
+	
+	bool result = (
+		(g_MouseY >= testX * (y1 - y0) / -22 + y + y0) &&
+		(g_MouseY >=testX * (y3 - y0) / 22 + y + y0) &&
+		(g_MouseY <= testX * (y3 - y2) / 22 + y+ y2) &&
+		(g_MouseY <= testX * (y1 - y2) / -22 + y + y2)
+		);
+	
 	return result;
 }
 //--------------------------------------------------------------------------

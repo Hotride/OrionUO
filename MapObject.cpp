@@ -54,9 +54,20 @@ void TVector::Add(double x, double y, double z)
 //---------------------------------------------------------------------------
 void TVector::Merge(TVector &v)
 {
-	double newX = m_Y * v.Z + m_Z * v.Y;
-	double newY = m_Z * v.X + m_X * v.Z;
-	double newZ = m_X * v.Y + m_Y * v.X;
+	double newX = m_Y * v.Z - m_Z * v.Y;
+	double newY = m_Z * v.X - m_X * v.Z;
+	double newZ = m_X * v.Y - m_Y * v.X;
+
+	m_X = newX;
+	m_Y = newY;
+	m_Z = newZ;
+}
+//---------------------------------------------------------------------------
+void TVector::Merge(double x, double y, double z)
+{
+	double newX = m_Y * z - m_Z * y;
+	double newY = m_Z * x - m_X * z;
+	double newZ = m_X * y - m_Y * x;
 
 	m_X = newX;
 	m_Y = newY;
@@ -65,9 +76,12 @@ void TVector::Merge(TVector &v)
 //---------------------------------------------------------------------------
 void TVector::Normalize()
 {
+	if (!m_X && !m_Y && !m_Z)
+			return;
+
 	double result = m_X * m_X + m_Y * m_Y + m_Z * m_Z;
 
-	if (result)
+	//if (result)
 	{
 		result = sqrtl(result);
 		
@@ -132,27 +146,30 @@ g_RenderedObjectsCountInGameWindow++;
 
 				g_ZBuffer = minZ;
 
-				GLfloat tCl = g_DrawColor - 0.1f;
-				glColor3f(tCl, tCl, tCl);
-
-				glEnable(GL_LIGHTING);
-
 				UO->DrawLandTexture(m_Graphic, objColor, drawX, drawY, m_Rect, m_Normals);
-
-				glDisable(GL_LIGHTING);
-
-				glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 			}
 
 			glDisable(GL_DEPTH_TEST);
 		}
 		else
 		{
-			if (UO->LandPixelsInXY(m_Graphic, drawX, drawY, m_Z))
+			if (m_Color == 1)
 			{
-				g_LastObjectType = SOT_LAND_OBJECT;
-				g_LastSelectedObject = 2;
-				g_SelectedObject = this;
+				if (UO->LandPixelsInXY(m_Graphic, drawX, drawY, m_Z))
+				{
+					g_LastObjectType = SOT_LAND_OBJECT;
+					g_LastSelectedObject = 2;
+					g_SelectedObject = this;
+				}
+			}
+			else
+			{
+				if (UO->LandTexturePixelsInXY(drawX, drawY, m_Rect))
+				{
+					g_LastObjectType = SOT_LAND_OBJECT;
+					g_LastSelectedObject = 2;
+					g_SelectedObject = this;
+				}
 			}
 		}
 	}
@@ -164,8 +181,10 @@ TStaticObject::TStaticObject(DWORD serial, WORD graphic, WORD color, short x, sh
 : TMapObject(ROT_STATIC_OBJECT, serial, graphic, color, x, y, z)
 {
 	m_ObjectFlags = UO->GetStaticFlags(graphic - 0x4000);
-
-	if (IsBackground())
+	
+	if (IsWet())
+		m_RenderQueueIndex = 0;
+	else if (IsBackground())
 		m_RenderQueueIndex = 3 - (int)IsSurface();
 	else if (IsSurface())
 		m_RenderQueueIndex = 4;
@@ -221,7 +240,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		}
 		else
 		{
-			if (IsSurface() || (IsBackground() && IsUnknown2()))
+			if (IsSurface() || (IsBackground() && IsUnknown2()) || IsRoof())
 				glEnable(GL_DEPTH_TEST);
 
 			UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);

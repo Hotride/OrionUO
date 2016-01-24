@@ -116,6 +116,7 @@ public:
 	bool StaticPixelsInXYAnimated(WORD id, int x, int y, int z);
 	bool StaticPixelsInXYInContainer(WORD id, int x, int y);
 	bool LandPixelsInXY(WORD id, int x, int y, int z);
+	bool LandTexturePixelsInXY(int x, int  y, RECT &r);
 
 	DWORD GetLandFlags(WORD id);
 	DWORD GetStaticFlags(WORD id);

@@ -195,12 +195,13 @@ int TAnimationManager::m_UsedLayers[8][m_LayerCount] =
 //----------------------------------------------------------------------------
 TAnimationManager::TAnimationManager()
 : m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0), m_Direction(0),
-m_Grayed(false)
+m_Grayed(false), m_ShadowCount(0)
 {
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
 	memset(m_SizeIdx, 0, sizeof(m_SizeIdx));
 	memset(m_DataIndex, 0, sizeof(m_DataIndex));
+	memset(&m_ShadowList[0], 0, sizeof(m_ShadowList));
 
     LUMA_THRESHOLD = 20.0f;
     ALPHA_SCALE = 10.0f;
@@ -214,6 +215,44 @@ TAnimationManager::~TAnimationManager()
 {
 	ClearUnusedTextures(GetTickCount() + 100000);
 	m_FrameBuffer.Free();
+}
+//----------------------------------------------------------------------------
+void TAnimationManager::AddShadow(GLuint texture, int drawX, int drawY, int zBuffer, int width, int height, bool mirror)
+{
+	if (m_ShadowCount < 100)
+	{
+		SHADOW_DATA &shadow = m_ShadowList[m_ShadowCount];
+		m_ShadowCount++;
+
+		shadow.Texture = texture;
+		shadow.DrawX = drawX;
+		shadow.DrawY = drawY;
+		shadow.ZBuffer = zBuffer;
+		shadow.Width = width;
+		shadow.Height = height;
+		shadow.Mirror = mirror;
+	}
+}
+//----------------------------------------------------------------------------
+void TAnimationManager::DrawShadows()
+{
+	WORD clr = 0x0386;
+	ColorManager->SendColorsToShader(clr);
+	glUniform1iARB(ShaderDrawMode, 1);
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
+
+	IFOR(i, 0, m_ShadowCount)
+	{
+		SHADOW_DATA &shadow = m_ShadowList[i];
+		g_ZBuffer = shadow.ZBuffer - 1;
+		g_GL.DrawShadow(shadow.Texture, shadow.DrawX, shadow.DrawY, shadow.Width, shadow.Height, shadow.Mirror);
+	}
+
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
 }
 //----------------------------------------------------------------------------
 void TAnimationManager::Load(PDWORD verdata)
@@ -1075,12 +1114,16 @@ TTextureAnimationFrame *TAnimationManager::GetFrame(TGameObject *obj, BYTE &fram
 	return frame;
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, WORD id)
+void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id)
 {
 	if (obj == NULL)
 		return;
 
 	bool partialHue = false;
+	bool isShadow = (id >= 0x10000);
+
+	if (isShadow)
+		id -= 0x10000;
 
 	if (!id)
 	{
@@ -1106,7 +1149,8 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 	{
 		int offset = (m_AnimGroup * 5) + m_Direction;
 
-		if (!ExecuteDirectionGroup(direction, id, offset))
+		WORD wID = id;
+		if (!ExecuteDirectionGroup(direction, wID, offset))
 			return;
 	}
 
@@ -1132,8 +1176,9 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 	if (frame->Texture == 0)
 	{
 		int offset = (m_AnimGroup * 5) + m_Direction;
-
-		if (!ExecuteDirectionGroup(direction, id, offset))
+		
+		WORD wID = id;
+		if (!ExecuteDirectionGroup(direction, wID, offset))
 			return;
 	}
 
@@ -1151,21 +1196,26 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		else
 			x -= frame->CenterX;
 
-		int drawMode = (!g_GrayedPixels && color);
-
-		if (drawMode)
-		{
-			if (partialHue)
-				drawMode = 2;
-
-			ColorManager->SendColorsToShader(color);
-		}
-
-		glUniform1iARB(ShaderDrawMode, drawMode);
-
 		glEnable(GL_DEPTH_TEST);
 
-		g_GL.Draw(texture, x, y, frame->Width, frame->Height, mirror);
+		if (isShadow)
+			AddShadow(texture, x, y, g_ZBuffer, frame->Width, frame->Height, mirror);
+		else
+		{
+			int drawMode = (!g_GrayedPixels && color);
+
+			if (drawMode)
+			{
+				if (partialHue)
+					drawMode = 2;
+
+				ColorManager->SendColorsToShader(color);
+			}
+
+			glUniform1iARB(ShaderDrawMode, drawMode);
+
+			g_GL.Draw(texture, x, y, frame->Width, frame->Height, mirror);
+		}
 
 		glDisable(GL_DEPTH_TEST);
 	}
@@ -1219,11 +1269,14 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 		WORD mountID = goi->GetMountAnimation();
 
 		m_AnimGroup = obj->GetAnimationGroup(mountID);
-
+		
+		Draw(goi, drawX, drawY, mirror, animIndex, mountID + 0x10000);
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID);
 	}
 	
 	m_AnimGroup = animGroup;
+	
+	Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
 
 	Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
 

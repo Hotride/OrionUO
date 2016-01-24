@@ -69,6 +69,7 @@ public:
 	void DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVector *normals);
 	void Draw(GLuint &texture, int &x, int &y, int width, int height);
 	void Draw(GLuint &texture, int &x, int &y, int width, int height, bool &mirror);
+	void DrawShadow(GLuint &texture, int &x, int &y, int width, int height, bool &mirror);
 	void Draw(GLuint &texture, int &x, int &y, int width, int height, int &drawWidth, int &drawHeight);
 	void DrawResizepic(TTextureObject **th, int &x, int &y, int &width, int &height);
 };

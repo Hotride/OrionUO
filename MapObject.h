@@ -36,6 +36,7 @@ public:
 	void Add(TVector &v);
 	void Add(double x, double y, double z);
 	void Merge(TVector &v);
+	void Merge(double x, double y, double z);
 	void Normalize();
 	
 	SETGET(double, X);

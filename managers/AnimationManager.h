@@ -20,6 +20,17 @@
 #ifndef AnimationManagerH
 #define AnimationManagerH
 //---------------------------------------------------------------------------
+struct SHADOW_DATA
+{
+	GLuint Texture;
+	int DrawX;
+	int DrawY;
+	int ZBuffer;
+	int Width;
+	int Height;
+	bool Mirror;
+};
+//---------------------------------------------------------------------------
 class TAnimationManager
 {
 private:
@@ -32,6 +43,9 @@ private:
 	BYTE m_Direction;
 	bool m_Grayed;
 	
+	SHADOW_DATA m_ShadowList[100];
+	int m_ShadowCount;
+
 	static const int FRAME_BUFFER_WIDTH = 300;
 	static const int FRAME_BUFFER_HEIGHT = 300;
 	TFrameBuffer m_FrameBuffer;
@@ -48,13 +62,15 @@ private:
     int ALPHA_BITS;
     int BIT_STEP;
 
+	void AddShadow(GLuint texture, int drawX, int drawY, int zBuffer, int width, int height, bool mirror);
+
 	bool TestImagePixels(TTextureAnimationDirection *direction, BYTE &frame, WORD &id, int &checkX, int &checkY);
 	bool TestPixels(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, WORD id = 0x0000);
 
 	float getLuma(unsigned char&, unsigned char&, unsigned char&);
 	void setAlphaAt(std::vector<bool>&, PDWORD, short&, short&, int&, int&, float&, float&);
 
-	void Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, WORD id = 0x0000);
+	void Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id = 0);
 public:
 	TAnimationManager();
 	~TAnimationManager();
@@ -69,7 +85,7 @@ public:
 	SETGET(WORD, Color)
 	SETGET(int, AnimGroup)
 	SETGET(BYTE, Direction)
-
+	SETGET(int, ShadowCount)
 
 	void EstimateImageCornerAlpha(PDWORD pixels, short &width, short &height, float alpha_scale = 5.0f, float luma_threshold = 18.0f);
 
@@ -94,6 +110,8 @@ public:
 
 	BYTE GetDieGroupIndex(WORD id, bool second);
 	ANIMATION_GROUPS GetGroupIndex(WORD id);
+
+	void DrawShadows();
 };
 
 extern TAnimationManager *AnimationManager;
