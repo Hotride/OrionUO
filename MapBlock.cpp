@@ -118,12 +118,14 @@ void TMapBlock::CreateLandTextureRect()
 				//Сохранимвреднее значение Z-координаты
 				char drawZ = (char)((tileZ1 + tileZ2 + tileZ3 + tileZ4) / 4);
 
-				//Если все Z-координаты равны - укажем что это тайл из артов
-				if (tileZ1 == tileZ2 && tileZ1 == tileZ3 && tileZ1 == tileZ4)
-					obj->Color = 1;
+				LAND_TILES &tile = UO->m_LandData[obj->Graphic / 32].Tiles[obj->Graphic % 32];
+
+				//Если все Z-координаты равны или это тайл воды с отсутствующей текстурой - укажем что это тайл из артов
+				if ((tileZ1 == tileZ2 && tileZ1 == tileZ3 && tileZ1 == tileZ4) || (!tile.TexID && ::IsWet(tile.Flags)))
+					obj->IsStretched = false;
 				else //Или же - текстура
 				{
-					obj->Color = 2;
+					obj->IsStretched = true;
 					obj->Serial = drawZ;
 
 					//Значения для рендера

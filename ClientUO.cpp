@@ -862,8 +862,6 @@ bool TUltimaOnline::Install()
 		return false;
 	}
 	
-	g_GL.Enable(GL_LIGHT1);
-
 	g_GL.UpdateRect();
 	
 	LoadClientConfig();
@@ -3109,22 +3107,8 @@ void TUltimaOnline::DrawResizepicGump(WORD id, int x, int y, int width, int heig
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, TVector *normals)
 {
-	LAND_TILES &tile = m_LandData[id / 32].Tiles[id % 32];
-	WORD tid = tile.TexID;
+	TTextureObject *th = ExecuteTexture(id);
 
-	if (!tid)
-	{
-		if (::IsWet(tile.Flags))
-		{
-			glDisable(GL_LIGHTING);
-
-			DrawLandArt(id, color, x, y, -5);
-		}
-
-		return;
-	}
-
-	TTextureObject *th = ExecuteTexture(tid);
 	if (th == NULL)
 	{
 		DrawLandArt(id, color, x, y, rc.left / 4);
@@ -3181,7 +3165,7 @@ void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
 		x -= 23;
-		y = (y - 23) - (z * 4);
+		y -= 23 + (z * 4);
 
 		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
 	}

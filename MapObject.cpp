@@ -107,7 +107,8 @@ TMapObject::~TMapObject()
 }
 //---------------------------------------------------------------------------
 TLandObject::TLandObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z)
-: TMapObject(ROT_LAND_OBJECT, serial, graphic, color, x, y, z), m_MinZ(z)
+: TMapObject(ROT_LAND_OBJECT, serial, graphic, color, x, y, z), m_MinZ(z),
+m_IsStretched(false)
 {
 	//m_ObjectFlags = UO->GetLandFlags(graphic);
 
@@ -135,7 +136,7 @@ g_RenderedObjectsCountInGameWindow++;
 #endif
 			glEnable(GL_DEPTH_TEST);
 
-			if (m_Color == 1)
+			if (!m_IsStretched)
 				UO->DrawLandArt(m_Graphic, objColor, drawX, drawY, m_Z);
 			else
 			{
@@ -153,7 +154,7 @@ g_RenderedObjectsCountInGameWindow++;
 		}
 		else
 		{
-			if (m_Color == 1)
+			if (!m_IsStretched)
 			{
 				if (UO->LandPixelsInXY(m_Graphic, drawX, drawY, m_Z))
 				{

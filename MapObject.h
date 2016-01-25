@@ -56,6 +56,7 @@ class TLandObject : public TMapObject
 protected:
 	RECT m_Rect;
 	char m_MinZ;
+	bool m_IsStretched;
 public:
 	TLandObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TLandObject() {}
@@ -64,6 +65,7 @@ public:
 
 	SETGET(RECT, Rect);
 	SETGET(char, MinZ);
+	SETGET(bool, IsStretched);
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
 

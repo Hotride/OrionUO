@@ -690,7 +690,7 @@ int TGameScreen::Render(bool mode)
 
 							UO->DrawLight(light.ID, light.Color, light.DrawX - gameWindowPosX, light.DrawY - gameWindowPosY);
 						}
-					
+
 						UnuseShader();
 
 						g_LightBuffer.Release();
@@ -724,87 +724,87 @@ int TGameScreen::Render(bool mode)
 
 					glDisable(GL_BLEND);
 				}
-				
+
 				ColorizerShader->Use();
 
 				TargetGump.Draw();
 				AttackTargetGump.Draw();
 
 				Weather.Draw(gameWindowPosX, gameWindowPosY);
+			}
 
-				UnuseShader();
-			
-				//Отрисовка сообщений систем чата
-				int textOffsY = (gameWindowPosY + gameWindowSizeY) - 41;
-				int textYBounds = gameWindowPosY;
+			UnuseShader();
 
-				TTextData *td = SystemChat->m_Head;
+			//Отрисовка сообщений систем чата
+			int textOffsY = (gameWindowPosY + gameWindowSizeY) - 41;
+			int textYBounds = gameWindowPosY;
 
-				while (td != NULL && textOffsY >= textYBounds)
+			TTextData *td = SystemChat->m_Head;
+
+			while (td != NULL && textOffsY >= textYBounds)
+			{
+				TTextTexture &tth = td->m_Texture;
+
+				textOffsY -= tth.Height;
+
+				if (td->Timer >= ticks)
+					tth.Draw(gameWindowPosX, textOffsY);
+
+				td = td->m_Prev;
+			}
+
+			FontColorizerShader->Use();
+
+			//Отрисовка текста
+			for (; rto != NULL; rto = rto->m_PrevDraw)
+			{
+				if (!rto->IsText())
+					continue;
+
+				TTextData *td = (TTextData*)rto;
+
+				if (td->Type != TT_SYSTEM)
 				{
 					TTextTexture &tth = td->m_Texture;
 
-					textOffsY -= tth.Height;
-
 					if (td->Timer >= ticks)
-						tth.Draw(gameWindowPosX, textOffsY);
-
-					td = td->m_Prev;
-				}
-
-				FontColorizerShader->Use();
-
-				//Отрисовка текста
-				for (; rto != NULL; rto = rto->m_PrevDraw)
-				{
-					if (!rto->IsText())
-						continue;
-
-					TTextData *td = (TTextData*)rto;
-				
-					if (td->Type != TT_SYSTEM)
 					{
-						TTextTexture &tth = td->m_Texture;
+						//g_GL.DrawPolygone(0x7f7f7f7f, td->DrawX, td->DrawY, tth.Width, tth.Height);
 
-						if (td->Timer >= ticks)
+						WORD textColor = td->Color;
+
+						bool isYellowed = (g_LastObjectType == SOT_TEXT_OBJECT && g_SelectedTextObject == rto && World->FindWorldObject(td->Serial) != NULL);
+
+						if (isYellowed)
+							textColor = 0x0035;
+
+						ColorManager->SendColorsToShader(textColor);
+
+						int drawMode = 1;
+
+						if (td->Unicode)
+							drawMode = 3;
+						else if (td->Font != 5 && td->Font != 8)
+							drawMode = 2;
+
+						glUniform1iARB(ShaderDrawMode, drawMode);
+
+						if (td->Transparent)
 						{
-							//g_GL.DrawPolygone(0x7f7f7f7f, td->DrawX, td->DrawY, tth.Width, tth.Height);
+							glEnable(GL_BLEND);
+							glBlendFunc(GL_ONE, GL_DST_COLOR);
 
-							WORD textColor = td->Color;
+							tth.Draw(td->DrawX, td->DrawY);
 
-							bool isYellowed = (g_LastObjectType == SOT_TEXT_OBJECT && g_SelectedTextObject == rto && World->FindWorldObject(td->Serial) != NULL);
-
-							if (isYellowed)
-								textColor = 0x0035;
-
-							ColorManager->SendColorsToShader(textColor);
-
-							int drawMode = 1;
-
-							if (td->Unicode)
-								drawMode = 3;
-							else if (td->Font != 5 && td->Font != 8)
-								drawMode = 2;
-
-							glUniform1iARB(ShaderDrawMode, drawMode);
-
-							if (td->Transparent)
-							{
-								glEnable(GL_BLEND);
-								glBlendFunc(GL_ONE, GL_DST_COLOR);
-
-								tth.Draw(td->DrawX, td->DrawY);
-
-								glDisable(GL_BLEND);
-							}
-							else
-								tth.Draw(td->DrawX, td->DrawY);
+							glDisable(GL_BLEND);
 						}
+						else
+							tth.Draw(td->DrawX, td->DrawY);
 					}
 				}
-
-				UnuseShader();
 			}
+
+			UnuseShader();
 
 			QuestArrow.Draw(gameWindowCenterX, gameWindowCenterY);
 
@@ -863,12 +863,11 @@ int TGameScreen::Render(bool mode)
 			{
 				case ROT_LAND_OBJECT:
 				{
-					if (g_SelectedObject->Color == 1)
+					if (!((TLandObject*)g_SelectedObject)->IsStretched)
 						sprintf(soName, "Land");
 					else
-					{
 						sprintf(soName, "LandTex (mz=%i)", ((TLandObject*)g_SelectedObject)->MinZ);
-					}
+
 					break;
 				}
 				case ROT_STATIC_OBJECT:

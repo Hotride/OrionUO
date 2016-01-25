@@ -178,13 +178,10 @@ void TMapManager::GetMapZ(int x, int y, int &groundZ, int &staticZ)
 
 	while (item != NULL)
 	{
-		if (item->RenderType == ROT_LAND_OBJECT)
+		if (item->IsLandObject())
 			groundZ = item->Z;
-		else
-		{
-			if (staticZ < item->Z)
-				staticZ = item->Z;
-		}
+		else if (staticZ < item->Z)
+			staticZ = item->Z;
 
 		item = (TMapObject*)item->m_Next;
 	}
