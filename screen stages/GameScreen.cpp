@@ -463,8 +463,8 @@ int TGameScreen::Render(bool mode)
 					TEXT_IMAGE_BOUNDS ib;
 					ib.X = drawX;
 					ib.Y = drawY;
-					ib.Width = drawX + tth.Width;
-					ib.Height = drawY + tth.Height;
+					ib.Width = tth.Width;
+					ib.Height = tth.Height;
 					ib.m_Text = td;
 
 					td->Transparent = WorldTextRenderer->InRect(ib, rwo);

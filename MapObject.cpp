@@ -229,7 +229,8 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				if (fib.InRect(g_PlayerRect))
 				{
 					glEnable(GL_BLEND);
-					glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+					//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+					glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
 
 					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
 

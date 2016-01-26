@@ -473,6 +473,21 @@ int TDebugScreen::Render(bool mode)
 			glEnd();
 		}*/
 
+		UO->DrawLandArt(0x03, 0, 320, 240, 30);
+		UO->DrawLandArt(0x03, 0, 320, 240, 20);
+		UO->DrawLandArt(0x03, 0, 320, 240, 10);
+		UO->DrawLandArt(0x03, 0, 320, 240, 0);
+
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 320, 240, 0);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_DST_COLOR);
+		//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+
+		UO->DrawStaticArtAnimated(0x0CE1, 0, 320, 240, 0);
+
+		glDisable(GL_BLEND);
+
 		UnuseShader();
 
 		DrawSmoothMonitorEffect();
