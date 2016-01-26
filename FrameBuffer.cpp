@@ -151,24 +151,3 @@ void TFrameBuffer::Draw(float x, float y)
 	}
 }
 //---------------------------------------------------------------------------
-void TFrameBuffer::DrawShadow(float x, float y, float width, float height, bool mirror)
-{
-	if (g_UseFrameBuffer && m_Ready)
-	{
-		glBindTexture(GL_TEXTURE_2D, m_Texture);
-		
-		glLoadIdentity();
-		glTranslatef(x, y, 0.0f);
-		
-		width = (float)m_Width;
-		height = (float)m_Height;
-		
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(0.0f, height);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(width, height);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(width, 0.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(0.0f, 0.0f);
-		glEnd();
-	}
-}
-//---------------------------------------------------------------------------

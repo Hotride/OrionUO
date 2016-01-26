@@ -992,7 +992,19 @@ PACKET_HANDLER(UpdatePlayer)
 		World->SetPlayer(serial);
 	}
 
+	WORD oldGraphic = g_Player->Graphic;
 	g_Player->Graphic = ReadWord();
+
+	if (oldGraphic && oldGraphic != g_Player->Graphic)
+	{
+		if (g_Player->Dead())
+		{
+			Weather.Reset();
+			Target.Reset();
+
+			g_DeathScreenTimer = GetTickCount() + g_DeathScreenDelay;
+		}
+	}
 	
 	//WORD LastX = g_Player->X;
 	//WORD LastY = g_Player->Y;

@@ -30,6 +30,7 @@ private:
 	
 	char GetLandZ(int x, int y, int &map);
 	char GetRenderZ(TRenderWorldObject *item);
+	bool TestStretched(int x, int y, char &z, int &map, bool recurse);
 public:
 	TMapBlock(DWORD index);
 	virtual ~TMapBlock();

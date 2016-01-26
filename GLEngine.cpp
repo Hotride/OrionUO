@@ -118,7 +118,7 @@ bool TGLEngine::Install(HWND hWnd)
 	GLfloat lightAmbient[]= { 2.0f, 2.0f, 2.0f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_AMBIENT, &lightAmbient[0]);
 	
-	GLfloat lav = 1.0f; //2.2f;
+	GLfloat lav = 0.8f;
 	GLfloat lightAmbientValues[]= { lav, lav, lav, lav };
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, &lightAmbientValues[0]);
 

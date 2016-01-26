@@ -3123,7 +3123,7 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 
 	int drawMode = (!g_GrayedPixels && color);
 
-	if (!color)
+	if (!color && !g_GrayedPixels)
 	{
 		shader = CurrentShader;
 		UnuseShader();
@@ -3599,6 +3599,7 @@ bool TUltimaOnline::LandPixelsInXY(WORD id, int x, int  y, int z)
 //---------------------------------------------------------------------------
 bool TUltimaOnline::LandTexturePixelsInXY(int x, int  y, RECT &r)
 {
+	y -= 23;
 	int testX = g_MouseX - x;
 
 	int y0 = -r.left;

@@ -215,7 +215,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		if (this == g_SelectedObject)
 			objColor = g_SelectStaticColor;
 
-		if (IsFoliage()) // && playerX - 2 < x && playerY - 2 < y)
+		if (IsFoliage())
 		{
 			if (!g_GrayedPixels)
 			{
@@ -229,10 +229,12 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				if (fib.InRect(g_PlayerRect))
 				{
 					glEnable(GL_BLEND);
-					//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-					glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					glColor4f(1.0f, 1.0f, 1.0f, 0.4f);
 
 					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
+					
+					glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 					glDisable(GL_BLEND);
 				}

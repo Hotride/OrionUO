@@ -354,7 +354,17 @@ int TGameScreen::Render(bool mode)
 	int gameWindowCenterY = m_RenderBounds.GameWindowCenterY;
 	
 	if (g_DeathScreenTimer < ticks)
+	{
+		if (g_DeathScreenTimer && g_UseSmoothMonitor)
+		{
+			g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
+			g_SmoothMonitorColor = 0.0f;
+			g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
+			m_SmoothScreenAction = 0;
+		}
+
 		g_DeathScreenTimer = 0;
+	}
 
 	//Вычисление положения, прозрачности и отрисовка текста
 	TRenderTextObject *rto = WorldTextRenderer->m_Items;
@@ -792,10 +802,12 @@ int TGameScreen::Render(bool mode)
 						if (td->Transparent)
 						{
 							glEnable(GL_BLEND);
-							glBlendFunc(GL_ONE, GL_DST_COLOR);
+							glBlendFunc(GL_SRC_COLOR, GL_SRC_ALPHA);
+							glColor4f(1.0f, 1.0f, 1.0f, 0.45f);
 
 							tth.Draw(td->DrawX, td->DrawY);
 
+							glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 							glDisable(GL_BLEND);
 						}
 						else
@@ -810,8 +822,23 @@ int TGameScreen::Render(bool mode)
 
 			DrawSmoothMonitorEffect();
 		}
-		else
+		else if (g_LightBuffer.Ready() && g_LightBuffer.Use())
+		{
+			UnuseShader();
+
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			g_LightBuffer.Release();
+
+			g_GL.RestorePort();
+
+			g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
+
+			g_LightBuffer.Draw((float)gameWindowPosX, (float)gameWindowPosY);
+
 			FontManager->DrawA(3, "You are dead.", 0, gameWindowCenterX - 30, gameWindowCenterY);
+		}
 		
 		g_OutOfRangeColor = 0;
 
@@ -933,6 +960,12 @@ int TGameScreen::Render(bool mode)
 				WORD ohColor = ObjectInHand->Color;
 				WORD ohCount = ObjectInHand->DragCount;
 
+				if (ohColor != 0)
+				{
+					CurrentShader = ColorizerShader;
+					CurrentShader->Use();
+				}
+
 				if (ObjectInHand->IsGameFigure)
 				{
 					TTextureObject *to = UO->ExecuteGump(ohGraphic - GAME_FIGURE_GUMP_OFFSET);
@@ -962,6 +995,9 @@ int TGameScreen::Render(bool mode)
 					if (doubleDraw)
 						UO->DrawStaticArtInContainer(ohGraphic, ohColor, g_MouseX + 5, g_MouseY + 5, false, true);
 				}
+
+				if (ohColor != 0)
+					UnuseShader();
 			}
 
 			InitTooltip();

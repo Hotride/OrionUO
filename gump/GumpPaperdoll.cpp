@@ -353,10 +353,12 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 							cOfs = g_MaleGumpOffset;
 
 						glEnable(GL_BLEND);
-						glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_DST_COLOR);
+						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+						glColor4f(1.0f, 1.0f, 1.0f, 0.7f);
 
 						UO->DrawGump(ObjectInHand->AnimID + cOfs, ObjectInHand->Color, posX, posY);
 						
+						glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 						glDisable(GL_BLEND);
 					}
 				}

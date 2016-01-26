@@ -121,7 +121,7 @@ void TMapBlock::CreateLandTextureRect()
 				LAND_TILES &tile = UO->m_LandData[obj->Graphic / 32].Tiles[obj->Graphic % 32];
 
 				//Если все Z-координаты равны или это тайл воды с отсутствующей текстурой - укажем что это тайл из артов
-				if ((tileZ1 == tileZ2 && tileZ1 == tileZ3 && tileZ1 == tileZ4) || (!tile.TexID && ::IsWet(tile.Flags)))
+				if ((tileZ1 == tileZ2 && tileZ1 == tileZ3 && tileZ1 == tileZ4 && !TestStretched(obj->X, obj->Y, tileZ1, map, true)) || (!tile.TexID && ::IsWet(tile.Flags)))
 					obj->IsStretched = false;
 				else //Или же - текстура
 				{
@@ -228,13 +228,38 @@ void TMapBlock::CreateLandTextureRect()
 	}
 }
 //---------------------------------------------------------------------------
+bool TMapBlock::TestStretched(int x, int y, char &z, int &map, bool recurse)
+{
+	bool result = false;
+
+	IFOR(i, -1, 2)
+	{
+		IFOR(j, -1, 2)
+		{
+			if (recurse)
+				result = TestStretched(x + i, y + j, z, map, false);
+			else
+			{
+				char testZ = GetLandZ(x + i, y + j, map);
+
+				result = (testZ != z && testZ != -125);
+			}
+
+			if (result)
+				break;
+		}
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
 char TMapBlock::GetLandZ(int x, int y, int &map)
 {
 	//Проверки актуальности данных
 	if (!FileManager.MapMul[map].Address || !FileManager.StaticIdx[map].Address || !FileManager.StaticMul[map].Address)
-		return 0;
+		return -125;
 	else if (x < 0 || y < 0 || x >= g_MapSizeX[map] || y >= g_MapSizeY[map])
-		return 0;
+		return -125;
 
 	//Смщение блока
 	WORD BlockX = x / 8;

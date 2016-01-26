@@ -43,12 +43,9 @@ private:
 	BYTE m_Direction;
 	bool m_Grayed;
 	
-	SHADOW_DATA m_ShadowList[100];
+	static const int MAX_SHADOWS_COUNT = 100;
+	SHADOW_DATA m_ShadowList[MAX_SHADOWS_COUNT];
 	int m_ShadowCount;
-
-	static const int FRAME_BUFFER_WIDTH = 300;
-	static const int FRAME_BUFFER_HEIGHT = 300;
-	TFrameBuffer m_FrameBuffer;
 
 	static const int m_LayerCount = 19;
 	static int m_UsedLayers[8][m_LayerCount];

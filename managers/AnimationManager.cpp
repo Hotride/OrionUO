@@ -207,19 +207,16 @@ m_Grayed(false), m_ShadowCount(0)
     ALPHA_SCALE = 10.0f;
     ALPHA_BITS = 4;
     BIT_STEP = (int)(256 / (pow(2, ALPHA_BITS)));
-
-	m_FrameBuffer.Init(FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
 }
 //----------------------------------------------------------------------------
 TAnimationManager::~TAnimationManager()
 {
 	ClearUnusedTextures(GetTickCount() + 100000);
-	m_FrameBuffer.Free();
 }
 //----------------------------------------------------------------------------
 void TAnimationManager::AddShadow(GLuint texture, int drawX, int drawY, int zBuffer, int width, int height, bool mirror)
 {
-	if (m_ShadowCount < 100)
+	if (m_ShadowCount < MAX_SHADOWS_COUNT && !g_GrayedPixels)
 	{
 		SHADOW_DATA &shadow = m_ShadowList[m_ShadowCount];
 		m_ShadowCount++;
@@ -236,23 +233,26 @@ void TAnimationManager::AddShadow(GLuint texture, int drawX, int drawY, int zBuf
 //----------------------------------------------------------------------------
 void TAnimationManager::DrawShadows()
 {
-	WORD clr = 0x0386;
-	ColorManager->SendColorsToShader(clr);
-	glUniform1iARB(ShaderDrawMode, 1);
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
-
-	IFOR(i, 0, m_ShadowCount)
+	if (m_ShadowCount)
 	{
-		SHADOW_DATA &shadow = m_ShadowList[i];
-		g_ZBuffer = shadow.ZBuffer - 1;
-		g_GL.DrawShadow(shadow.Texture, shadow.DrawX, shadow.DrawY, shadow.Width, shadow.Height, shadow.Mirror);
-	}
+		WORD clr = 0x0386;
+		ColorManager->SendColorsToShader(clr);
+		glUniform1iARB(ShaderDrawMode, 1);
 
-	glDisable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
+
+		IFOR(i, 0, m_ShadowCount)
+		{
+			SHADOW_DATA &shadow = m_ShadowList[i];
+			g_ZBuffer = shadow.ZBuffer - 1;
+			g_GL.DrawShadow(shadow.Texture, shadow.DrawX, shadow.DrawY, shadow.Width, shadow.Height, shadow.Mirror);
+		}
+
+		glDisable(GL_BLEND);
+		glDisable(GL_DEPTH_TEST);
+	}
 }
 //----------------------------------------------------------------------------
 void TAnimationManager::Load(PDWORD verdata)

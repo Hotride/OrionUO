@@ -44,7 +44,6 @@ public:
 	bool Use();
 	
 	void Draw(float x, float y);
-	void DrawShadow(float x, float y, float width, float height, bool mirror);
 };
 
 extern TFrameBuffer g_LightBuffer;
