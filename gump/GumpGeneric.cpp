@@ -32,8 +32,7 @@ TGumpGeneric::~TGumpGeneric()
 //---------------------------------------------------------------------------
 void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page, int &x, int &y)
 {
-	if (!m_Transparent)
-		return;
+	m_Transparent = false;
 
 	glClear(GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_STENCIL_TEST);
@@ -65,6 +64,8 @@ void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page, int &x, int &y)
 					
 					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 					glStencilFunc(GL_NOTEQUAL, 1, 1);
+
+					m_Transparent = true;
 
 					break;
 				}
@@ -395,20 +396,35 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 							graphicPressed = ((TGumpRadio*)item)->GraphicChecked;
 						}
 
+						WORD graphic = item->Graphic;
+
 						if (CanPressedButton == objectIndex)
 						{
-							if (isPressed)
-								UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y);
-							else
-								UO->DrawGump(graphicPressed, 0, posX + item->X, posY + item->Y);
+							if (!isPressed)
+								graphic = graphicPressed;
+						}
+						else if (isPressed)
+							graphic = graphicPressed;
+
+
+						if (m_Transparent)
+						{
+							glEnable(GL_BLEND);
+							glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
+
+							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
+
+							glDisable(GL_BLEND);
+
+							glEnable(GL_STENCIL_TEST);
+
+							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
+
+							glDisable(GL_STENCIL_TEST);
 						}
 						else
-						{
-							if (isPressed)
-								UO->DrawGump(graphicPressed, 0, posX + item->X, posY + item->Y);
-							else
-								UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y);
-						}
+							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
+
 						break;
 					}
 					case GOT_GUMPPIC:
@@ -458,7 +474,7 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					}
 					case GOT_CHECKTRANS:
 					{
-						ApplyTransparent(item, m_Page, posX, posY);
+						ApplyTransparent(((TGumpObject*)(item->m_Next)), m_Page, posX, posY);
 						break;
 					}
 					case GOT_PAGE:

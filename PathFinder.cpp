@@ -488,10 +488,10 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 			WALKER_SEND_ITEM correctDirWSI = {newDir, 100};
 			
 			TWalkData *correctDirWD = new TWalkData();
-			correctDirWD->SetX(x);
-			correctDirWD->SetY(y);
-			correctDirWD->SetZ(z);
-			correctDirWD->SetDirection(direction);
+			correctDirWD->X = x;
+			correctDirWD->Y = y;
+			correctDirWD->Z = z;
+			correctDirWD->Direction = direction;
 
 			g_Player->m_WalkStack.Push(correctDirWD);
 
@@ -540,10 +540,10 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	wsi.Dir = direction;
 
 	TWalkData *wd = new TWalkData();
-	wd->SetX(x);
-	wd->SetY(y);
-	wd->SetZ(z);
-	wd->SetDirection(direction);
+	wd->X = x;
+	wd->Y = y;
+	wd->Z = z;
+	wd->Direction = direction;
 
 	g_RemoveRangeXY.x = x;
 	g_RemoveRangeXY.y = y;

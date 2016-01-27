@@ -68,7 +68,7 @@ int TGameCharacter::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		DWORD lastSBsel = g_StatusbarUnderMouse;
 
 		if (!IsPlayer() && g_Player->Warmode && g_LastSelectedObject == m_Serial)
-			g_StatusbarUnderMouse = Serial;
+			g_StatusbarUnderMouse = m_Serial;
 
 		AnimationManager->DrawCharacter(this, drawX, drawY, m_Z); //Draw character
 
@@ -513,19 +513,18 @@ void TGameCharacter::UpdateAnimationInfo(BYTE &dir, bool canChange)
 			int delay = (int)ticks - (int)m_LastStepTime;
 			bool removeStep = (delay >= maxDelay);
 
-			if (X != wd->X || Y != wd->Y)
+			if (m_X != wd->X || m_Y != wd->Y)
 			{
 				float steps = maxDelay / g_AnimCharactersDelayValue;
 				
 				float x = (delay / g_AnimCharactersDelayValue);
 				float y = x;
-				
+				m_OffsetZ = (char)((wd->Z - m_Z) * x);
+
 				wd->GetOffset(x, y, steps);
 
 				m_OffsetX = (char)x;
 				m_OffsetY = (char)y;
-
-				m_OffsetZ = 0;
 			}
 			else
 			{

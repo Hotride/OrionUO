@@ -193,16 +193,16 @@ void TGameScreen::CalculateGameWindow()
 		}
 	}
 
-	int playerZOffset = (g_Player->Z * 4);
+	int playerZOffset = (g_Player->Z * 4) - g_Player->OffsetZ;
 
 	m_RenderBounds.GameWindowCenterX = m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX / 2;
-	m_RenderBounds.GameWindowCenterY = (m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY / 2) + playerZOffset;
+	m_RenderBounds.GameWindowCenterY = (m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY / 2) + (g_Player->Z * 4);
 
 	m_RenderBounds.GameWindowCenterX -= (int)g_Player->OffsetX;
-	m_RenderBounds.GameWindowCenterY -= (int)g_Player->OffsetY;
+	m_RenderBounds.GameWindowCenterY -= (int)(g_Player->OffsetY - g_Player->OffsetZ);
 
 	g_PlayerRect.X = m_RenderBounds.GameWindowCenterX - 40;
-	g_PlayerRect.Y = m_RenderBounds.GameWindowCenterY - 60 - (g_Player->Z * 4);
+	g_PlayerRect.Y = m_RenderBounds.GameWindowCenterY - 60 - playerZOffset;
 	g_PlayerRect.Width = 80;
 	g_PlayerRect.Height = 120;
 
@@ -413,7 +413,7 @@ int TGameScreen::Render(bool mode)
 							TGameCharacter *gc = (TGameCharacter*)go;
 
 							drawX += gc->OffsetX;
-							drawY += gc->OffsetY;
+							drawY += gc->OffsetY - gc->OffsetZ;
 
 							drawY -= 55;
 
@@ -488,7 +488,7 @@ int TGameScreen::Render(bool mode)
 		}
 	}
 	
-	int deltaZ = playerZ * 4;
+	int deltaZ = (playerZ * 4) - g_Player->OffsetZ;
 
 	if (mode)
 	{

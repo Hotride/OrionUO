@@ -1261,7 +1261,7 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	
 	int lightOffset = 20;
 	int drawX = (int)(x + obj->OffsetX);
-	int drawY = (int)(y + obj->OffsetY) - (z * 4);
+	int drawY = (int)(y + obj->OffsetY) - (z * 4) - obj->OffsetZ;
 	
 	if (goi != NULL) //Draw mount
 	{
@@ -1318,44 +1318,6 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 		}
 	}
 	
-	/*TTextureAnimationFrame *frame = GetFrame(obj, animIndex);
-
-	if (!g_GrayedPixels && frame != NULL && m_FrameBuffer.Use())
-	{
-		TBaseShader *shader = CurrentShader;
-		UnuseShader();
-		int fbWidth = frame->Width;
-		int fbHeight = frame->Height;
-
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		float shadowColor = 0.7f;
-		glColor3f(shadowColor, shadowColor, shadowColor);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE, GL_ONE);
-		
-		Draw(obj, fbWidth, fbHeight, mirror, animIndex);
-
-		m_FrameBuffer.Release();
-
-		GameScreen->RestoreGameWindowPort();
-		
-		glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-		glDisable(GL_BLEND);
-						
-		m_FrameBuffer.DrawShadow((float)drawX - (fbWidth), (float)drawY - fbHeight, fbWidth, fbHeight, mirror);
-		
-
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
-
-		CurrentShader = shader;
-		if (CurrentShader)
-			CurrentShader->Use();
-	}*/
-	
 	if (needHPLine)
 	{
 		int per = obj->MaxHits;
@@ -1407,7 +1369,7 @@ bool TAnimationManager::CharacterPixelsInXY(TGameCharacter *obj, int x, int y, i
 	TGameItem *goi = obj->FindLayer(OL_MOUNT);
 	
 	int drawX = (int)(x - obj->OffsetX);
-	int drawY = (int)(y - obj->OffsetY) - (z * 4);
+	int drawY = (int)(y - obj->OffsetY) - (z * 4) - obj->OffsetZ;
 	
 	if (goi != NULL) //Check mount
 	{
