@@ -39,10 +39,10 @@ public:
 	TGumpBook(DWORD serial, short x, short y, short pageCount, bool writable, bool unicode);
 	virtual ~TGumpBook();
 
-	SETGET(bool, Writable)
-	SETGET(short, PageCount)
-	SETGET(bool, Unicode)
-	SETGET(short, Page)
+	SETGET(bool, Writable);
+	SETGET(short, PageCount);
+	SETGET(bool, Unicode);
+	SETGET(short, Page);
 
 	TEntryText *TextEntryAuthor;
 	TEntryText *TextEntryTitle;

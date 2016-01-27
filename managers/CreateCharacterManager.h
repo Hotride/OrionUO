@@ -54,16 +54,16 @@ public:
 	void Init();
 	void Clear();
 
-	SETGET(bool, Sex)
-	SETGET(BYTE, HairStyle)
-	SETGET(BYTE, BeardStyle)
-	SETGET(WORD, SkinTone)
-	SETGET(WORD, ShirtColor)
-	SETGET(WORD, PantsColor)
-	SETGET(WORD, HairColor)
-	SETGET(WORD, BeardColor)
-	SETGET(BYTE, SelectedFace)
-	SETGET(BYTE, SelectedColor)
+	SETGET(bool, Sex);
+	SETGET(BYTE, HairStyle);
+	SETGET(BYTE, BeardStyle);
+	SETGET(WORD, SkinTone);
+	SETGET(WORD, ShirtColor);
+	SETGET(WORD, PantsColor);
+	SETGET(WORD, HairColor);
+	SETGET(WORD, BeardColor);
+	SETGET(BYTE, SelectedFace);
+	SETGET(BYTE, SelectedColor);
 
 	TEntryText *m_Name;
 	

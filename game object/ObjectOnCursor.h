@@ -34,11 +34,11 @@ public:
 	TObjectOnCursor(TGameItem *obj);
 	virtual ~TObjectOnCursor() {}
 
-	SETGET(bool, Separated)
-	SETGET(bool, Deleted)
-	SETGET(bool, Dropped)
-	SETGET(bool, IsGameFigure)
-	SETGET(WORD, DragCount)
+	SETGET(bool, Separated);
+	SETGET(bool, Deleted);
+	SETGET(bool, Dropped);
+	SETGET(bool, IsGameFigure);
+	SETGET(WORD, DragCount);
 };
 //--------------------------------------------------------------------------
 extern TObjectOnCursor *ObjectInHand; //Указатель на объект в руке (на курсоре)

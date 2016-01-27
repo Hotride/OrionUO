@@ -48,7 +48,7 @@ public:
 	
 	static const int ID_GP_TEXT_FIELD = 4;
 
-	SETGET(bool, Changed)
+	SETGET(bool, Changed);
 
 	TEntryText *TextEntry;
 	

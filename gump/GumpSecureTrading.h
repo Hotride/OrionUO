@@ -37,10 +37,10 @@ public:
 	
 	TTextRenderer *GetTextRenderer() {return TextRenderer;}
 
-	SETGET(DWORD, ID2)
-	SETGET(bool, StateMy)
-	SETGET(bool, StateOpponent)
-	SETGET(string, Text)
+	SETGET(DWORD, ID2);
+	SETGET(bool, StateMy);
+	SETGET(bool, StateOpponent);
+	SETGET(string, Text);
 
 	void PrepareTextures();
 

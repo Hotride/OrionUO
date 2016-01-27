@@ -53,7 +53,7 @@ public:
 	static void InitTextTextures();
 	static void ReleaseTextTextures();
 
-	SETGET(int, Page)
+	SETGET(int, Page);
 
 	void PrepareTextures();
 

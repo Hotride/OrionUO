@@ -58,13 +58,13 @@ public:
 	void OnClick(TGump *gump, BYTE font, bool unicode, int x, int y, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
 	void OnKey(TGump *gump, WPARAM wParam);
 
-	SETGET(int, MaxLength)
-	SETGET(int, Width)
-	SETGET(int, MaxWidth)
-	SETGET(bool, Changed)
-	SETGET(WORD, Color)
-	SETGET(int, DrawOffset)
-	SETGET(POINT, CaretPos)
+	SETGET(int, MaxLength);
+	SETGET(int, Width);
+	SETGET(int, MaxWidth);
+	SETGET(bool, Changed);
+	SETGET(WORD, Color);
+	SETGET(int, DrawOffset);
+	SETGET(POINT, CaretPos);
 
 	int Pos() const {return m_Position;}
 

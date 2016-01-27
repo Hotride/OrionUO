@@ -30,9 +30,9 @@ public:
 	TMacroObject(MACRO_CODE code, MACRO_SUB_CODE subCode);
 	virtual ~TMacroObject();
 
-	SETGET(MACRO_CODE, Code)
-	SETGET(MACRO_SUB_CODE, SubCode)
-	SETGET(char, HasSubMenu)
+	SETGET(MACRO_CODE, Code);
+	SETGET(MACRO_SUB_CODE, SubCode);
+	SETGET(char, HasSubMenu);
 
 	virtual int GetType() {return 0;}
 };
@@ -45,7 +45,7 @@ public:
 	TMacroObjectString(MACRO_CODE code, MACRO_SUB_CODE subCode, string str);
 	virtual ~TMacroObjectString();
 
-	SETGET(string, String)
+	SETGET(string, String);
 
 	virtual int GetType() {return 2;}
 };
@@ -76,10 +76,10 @@ public:
 	TMacro(WORD key, bool alt, bool ctrl, bool shift);
 	virtual ~TMacro();
 
-	SETGET(WORD, Key)
-	SETGET(bool, Alt)
-	SETGET(bool, Ctrl)
-	SETGET(bool, Shift)
+	SETGET(WORD, Key);
+	SETGET(bool, Alt);
+	SETGET(bool, Ctrl);
+	SETGET(bool, Shift);
 	
 	static const char *GetActionName(int index) {return m_MacroActionName[index];}
 	static const char *GetAction(int index) {return m_MacroAction[index];}

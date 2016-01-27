@@ -47,8 +47,8 @@ public:
 	int Init(DWORD k1, DWORD k2, DWORD k3, DWORD seed_key); //Login
 	int Init(PBYTE GameSeed); //Game
 
-	SETGET(ENCRYPTION_TYPE, EncryptionType)
-	SETGET(CLIENT_VERSION, ClientVersion)
+	SETGET(ENCRYPTION_TYPE, EncryptionType);
+	SETGET(CLIENT_VERSION, ClientVersion);
 
 	bool Connected() {return (m_LoginSocket.Connected() || m_GameSocket.Connected());}
 

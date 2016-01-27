@@ -44,11 +44,11 @@ public:
 	TConnectionScreen();
 	~TConnectionScreen();
 	
-	SETGET(bool, ConnectionFailed)
-	SETGET(bool, Connected)
-	SETGET(bool, Completed)
-	SETGET(int, ErrorCode)
-	SETGET(CONNECTION_SCREEN_TYPE, Type)
+	SETGET(bool, ConnectionFailed);
+	SETGET(bool, Connected);
+	SETGET(bool, Completed);
+	SETGET(int, ErrorCode);
+	SETGET(CONNECTION_SCREEN_TYPE, Type);
 
 	void Init();
 

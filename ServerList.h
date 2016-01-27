@@ -32,8 +32,8 @@ public:
 	TServerList();
 	~TServerList();
 
-	SETGET(int, Count)
-	SETGET(int, SelectedServer)
+	SETGET(int, Count);
+	SETGET(int, SelectedServer);
 
 	void Init(int count);
 	void Clear();

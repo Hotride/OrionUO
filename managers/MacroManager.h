@@ -35,8 +35,8 @@ public:
 	TMacroManager();
 	virtual ~TMacroManager();
 
-	SETGET(bool, WaitingBandageTarget)
-	SETGET(DWORD, WaitForTargetTimer)
+	SETGET(bool, WaitingBandageTarget);
+	SETGET(DWORD, WaitForTargetTimer);
 
 	TMacro *FindMacro(WORD key, bool alt, bool ctrl, bool shift);
 

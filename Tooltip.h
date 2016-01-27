@@ -36,15 +36,15 @@ public:
 	TTooltip();
 	~TTooltip();
 
-	SETGET(DWORD, Timer)
-	SETGET(DWORD, SeqIndex)
-	SETGET(SELECT_OBJECT_TYPE, Type)
-	SETGET(wstring, Data)
-	SETGET(DWORD, ClilocID)
-	SETGET(int, MaxWidth)
-	SETGET(int, X)
-	SETGET(int, Y)
-	SETGET(bool, Use)
+	SETGET(DWORD, Timer);
+	SETGET(DWORD, SeqIndex);
+	SETGET(SELECT_OBJECT_TYPE, Type);
+	SETGET(wstring, Data);
+	SETGET(DWORD, ClilocID);
+	SETGET(int, MaxWidth);
+	SETGET(int, X);
+	SETGET(int, Y);
+	SETGET(bool, Use);
 
 	TTextTexture Texture;
 

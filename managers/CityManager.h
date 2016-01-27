@@ -29,7 +29,7 @@ public:
 	TCity(string name);
 	virtual ~TCity();
 
-	SETGET(string, Name)
+	SETGET(string, Name);
 
 	//”казатель на текстуру текста
 	TTextTexture m_Texture;

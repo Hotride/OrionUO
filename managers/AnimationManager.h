@@ -79,10 +79,10 @@ public:
 		m_SizeIdx[idx] = SizeIdx;
 	}
 
-	SETGET(WORD, Color)
-	SETGET(int, AnimGroup)
-	SETGET(BYTE, Direction)
-	SETGET(int, ShadowCount)
+	SETGET(WORD, Color);
+	SETGET(int, AnimGroup);
+	SETGET(BYTE, Direction);
+	SETGET(int, ShadowCount);
 
 	void EstimateImageCornerAlpha(PDWORD pixels, short &width, short &height, float alpha_scale = 5.0f, float luma_threshold = 18.0f);
 

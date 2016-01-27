@@ -40,7 +40,7 @@ public:
 	TSkillGroupManager();
 	~TSkillGroupManager();
 
-	SETGET(int, Count)
+	SETGET(int, Count);
 
 	//Выставить группы по-умолчанию
 	void MakeDefault();

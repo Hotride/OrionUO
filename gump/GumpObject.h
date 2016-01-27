@@ -28,7 +28,7 @@ public:
 	TGumpObject(GUMP_OBJECT_TYPE type, WORD graphic, WORD color, short x, short y);
 	virtual ~TGumpObject() {}
 
-	SETGET(GUMP_OBJECT_TYPE, Type)
+	SETGET(GUMP_OBJECT_TYPE, Type);
 };
 //---------------------------------------------------------------------------
 class TGumpPage : public TGumpObject
@@ -39,7 +39,7 @@ public:
 	TGumpPage(int page);
 	virtual ~TGumpPage() {}
 
-	SETGET(int, Page)
+	SETGET(int, Page);
 };
 //---------------------------------------------------------------------------
 class TGumpGroup : public TGumpObject
@@ -50,7 +50,7 @@ public:
 	TGumpGroup(int group);
 	virtual ~TGumpGroup() {}
 
-	SETGET(int, Group)
+	SETGET(int, Group);
 };
 //---------------------------------------------------------------------------
 class TGumpEndGroup : public TGumpObject
@@ -69,7 +69,7 @@ public:
 	TGumpMasterGump(int index);
 	virtual ~TGumpMasterGump() {}
 
-	SETGET(int, Index)
+	SETGET(int, Index);
 };
 //---------------------------------------------------------------------------
 class TGumpResizepic : public TGumpObject
@@ -81,8 +81,8 @@ public:
 	TGumpResizepic(WORD graphic, short x, short y, short width, short height);
 	virtual ~TGumpResizepic() {}
 
-	SETGET(short, Width)
-	SETGET(short, Height)
+	SETGET(short, Width);
+	SETGET(short, Height);
 };
 //---------------------------------------------------------------------------
 class TGumpChecktrans : public TGumpObject
@@ -94,8 +94,8 @@ public:
 	TGumpChecktrans(short x, short y, short width, short height);
 	virtual ~TGumpChecktrans();
 
-	SETGET(short, Width)
-	SETGET(short, Height)
+	SETGET(short, Width);
+	SETGET(short, Height);
 };
 //---------------------------------------------------------------------------
 class TGumpButton : public TGumpObject
@@ -110,11 +110,11 @@ public:
 	TGumpButton(WORD graphic, WORD graphicLighted, WORD graphicPressed, int index, int toPage, bool action, short x, short y);
 	virtual ~TGumpButton() {}
 
-	SETGET(WORD, GraphicLighted)
-	SETGET(WORD, GraphicPressed)
-	SETGET(int, Index)
-	SETGET(int, ToPage)
-	SETGET(bool, Action)
+	SETGET(WORD, GraphicLighted);
+	SETGET(WORD, GraphicPressed);
+	SETGET(int, Index);
+	SETGET(int, ToPage);
+	SETGET(bool, Action);
 };
 //---------------------------------------------------------------------------
 class TGumpButtonTileArt : public TGumpButton
@@ -128,10 +128,10 @@ public:
 	TGumpButtonTileArt(WORD graphic, WORD graphicLighted, WORD graphicPressed, int index, int toPage, bool action, short x, short y, WORD tileGraphic, WORD tileColor, short tileX, short tileY);
 	virtual ~TGumpButtonTileArt() {}
 
-	SETGET(WORD, TileGraphic)
-	SETGET(WORD, TileColor)
-	SETGET(short, TileX)
-	SETGET(short, TileY)
+	SETGET(WORD, TileGraphic);
+	SETGET(WORD, TileColor);
+	SETGET(short, TileX);
+	SETGET(short, TileY);
 };
 //---------------------------------------------------------------------------
 class TGumpCheckbox : public TGumpObject
@@ -145,10 +145,10 @@ public:
 	TGumpCheckbox(WORD graphic, WORD graphicChecked, WORD graphicDisabled, int index, bool action, short x, short y);
 	virtual ~TGumpCheckbox() {}
 
-	SETGET(WORD, GraphicChecked)
-	SETGET(WORD, GraphicDisabled)
-	SETGET(int, Index)
-	SETGET(bool, Action)
+	SETGET(WORD, GraphicChecked);
+	SETGET(WORD, GraphicDisabled);
+	SETGET(int, Index);
+	SETGET(bool, Action);
 };
 //---------------------------------------------------------------------------
 class TGumpRadio : public TGumpObject
@@ -162,10 +162,10 @@ public:
 	TGumpRadio(WORD graphic, WORD graphicChecked, WORD graphicDisabled, int index, bool action, short x, short y);
 	virtual ~TGumpRadio() {}
 
-	SETGET(WORD, GraphicChecked)
-	SETGET(WORD, GraphicDisabled)
-	SETGET(int, Index)
-	SETGET(bool, Action)
+	SETGET(WORD, GraphicChecked);
+	SETGET(WORD, GraphicDisabled);
+	SETGET(int, Index);
+	SETGET(bool, Action);
 };
 //---------------------------------------------------------------------------
 class TGumpText : public TGumpObject
@@ -178,7 +178,7 @@ public:
 
 	TTextTexture m_Text;
 
-	SETGET(int, TextIndex)
+	SETGET(int, TextIndex);
 };
 //---------------------------------------------------------------------------
 class TGumpCroppedText : public TGumpText
@@ -190,8 +190,8 @@ public:
 	TGumpCroppedText(int textIndex, WORD color, short x, short y, short width, short height);
 	virtual ~TGumpCroppedText() {}
 
-	SETGET(short, Width)
-	SETGET(short, Height)
+	SETGET(short, Width);
+	SETGET(short, Height);
 };
 //---------------------------------------------------------------------------
 class TGumpTextEntry : public TGumpText
@@ -206,9 +206,9 @@ public:
 
 	TEntryText *TextEntry;
 
-	SETGET(short, Width)
-	SETGET(short, Height)
-	SETGET(int, Index)
+	SETGET(short, Width);
+	SETGET(short, Height);
+	SETGET(int, Index);
 };
 //---------------------------------------------------------------------------
 class TGumpTextEntryLimited : public TGumpTextEntry
@@ -219,7 +219,7 @@ public:
 	TGumpTextEntryLimited(int textIndex, WORD color, short x, short y, short width, short height, int index, int maxLength);
 	virtual ~TGumpTextEntryLimited() {}
 
-	SETGET(int, MaxLength)
+	SETGET(int, MaxLength);
 };
 //---------------------------------------------------------------------------
 class TGumpTilepic : public TGumpObject
@@ -255,8 +255,8 @@ public:
 	TGumpGumppicTiled(WORD graphic, short x, short y, short width, short height);
 	virtual ~TGumpGumppicTiled() {}
 
-	SETGET(short, Width)
-	SETGET(short, Height)
+	SETGET(short, Width);
+	SETGET(short, Height);
 };
 //---------------------------------------------------------------------------
 class TGumpTooltip : public TGumpObject
@@ -267,7 +267,7 @@ public:
 	TGumpTooltip(int clilocID);
 	virtual ~TGumpTooltip() {}
 
-	SETGET(int, ClilocID)
+	SETGET(int, ClilocID);
 };
 //---------------------------------------------------------------------------
 class TGumpHTMLGump : public TGumpObject
@@ -287,14 +287,14 @@ public:
 	
 	THTMLTextTexture m_Text;
 
-	SETGET(short, Width)
-	SETGET(short, Height)
-	SETGET(int, TextIndex)
-	SETGET(bool, HaveBackground)
-	SETGET(bool, HaveScrollbar)
-	SETGETEX(int, LineOffset)
-	SETGETEX(int, BarOffset)
-	SETGET(wstring, HTMLText)
+	SETGET(short, Width);
+	SETGET(short, Height);
+	SETGET(int, TextIndex);
+	SETGET(bool, HaveBackground);
+	SETGET(bool, HaveScrollbar);
+	SETGETEX(int, LineOffset);
+	SETGETEX(int, BarOffset);
+	SETGET(wstring, HTMLText);
 };
 //---------------------------------------------------------------------------
 class TGumpXFMHTMLGump : public TGumpHTMLGump
@@ -313,8 +313,8 @@ private:
 public:
 	TGumpMenuObject(WORD graphic, WORD color, string text);
 
-	SETGET(bool, Pressed)
-	SETGET(string, Text)
+	SETGET(bool, Pressed);
+	SETGET(string, Text);
 };
 //---------------------------------------------------------------------------
 class TGumpSellObject : public TGumpObject
@@ -330,11 +330,11 @@ public:
 	TGumpSellObject();
 	virtual ~TGumpSellObject() {}
 
-	SETGET(short, Count)
-	SETGET(DWORD, Price)
-	SETGET(string, Name)
-	SETGET(bool, Selected)
-	SETGETEX(short, SelectedCount)
+	SETGET(short, Count);
+	SETGET(DWORD, Price);
+	SETGET(string, Name);
+	SETGET(bool, Selected);
+	SETGETEX(short, SelectedCount);
 };
 //---------------------------------------------------------------------------
 class TGumpBulletinBoardObject : public TGumpObject

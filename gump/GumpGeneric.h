@@ -41,8 +41,6 @@ public:
 	
 	static const int ID_GG_HTML_TEXT = 50000;
 	
-	SETGET(bool, Transparent)
-
 	bool EntryPointerHere();
 	
 	void PrepareTextures();

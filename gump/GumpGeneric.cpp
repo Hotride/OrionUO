@@ -325,9 +325,10 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 		TGumpObject *item = (TGumpObject*)m_Items;
 		int objectIndex = 1;
 		bool haveHTML = false;
+		float alpha[2] = { 1.0f, 0.5f };
 
 		ApplyTransparent(item, m_Page, posX, posY);
-
+		
 		while (item != NULL)
 		{
 			if (item->Type == GOT_PAGE)
@@ -346,10 +347,10 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 						if (m_Transparent)
 						{
 							glEnable(GL_BLEND);
-							glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
+							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 							UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
-
+							
 							glDisable(GL_BLEND);
 
 							glEnable(GL_STENCIL_TEST);
@@ -366,15 +367,47 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					case GOT_BUTTON:
 					case GOT_BUTTONTILEART:
 					{
-						if (CanPressedButton == objectIndex)
-							UO->DrawGump(((TGumpButton*)item)->GraphicPressed, 0, posX + item->X, posY + item->Y);
+						WORD graphic = ((CanPressedButton == objectIndex) ? ((TGumpButton*)item)->GraphicPressed : item->Graphic);
+						
+						if (m_Transparent)
+						{
+							glEnable(GL_BLEND);
+							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+							
+							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
+
+							glDisable(GL_BLEND);
+
+							glEnable(GL_STENCIL_TEST);
+							
+							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
+
+							glDisable(GL_STENCIL_TEST);
+						}
 						else
-							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y);
+							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
 
 						if (item->Type == GOT_BUTTONTILEART)
 						{
 							TGumpButtonTileArt *bta = (TGumpButtonTileArt*)item;
-							UO->DrawStaticArtInContainer(bta->TileGraphic, bta->TileColor, posX + bta->TileX, posY + bta->TileY);
+							
+							if (m_Transparent)
+							{
+								glEnable(GL_BLEND);
+								glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+							
+								UO->DrawStaticArtInContainer(bta->TileGraphic, bta->TileColor, posX + bta->TileX, posY + bta->TileY);
+
+								glDisable(GL_BLEND);
+
+								glEnable(GL_STENCIL_TEST);
+							
+								UO->DrawStaticArtInContainer(bta->TileGraphic, bta->TileColor, posX + bta->TileX, posY + bta->TileY);
+
+								glDisable(GL_STENCIL_TEST);
+							}
+							else
+								UO->DrawStaticArtInContainer(bta->TileGraphic, bta->TileColor, posX + bta->TileX, posY + bta->TileY);
 						}
 						
 						break;
@@ -406,11 +439,10 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 						else if (isPressed)
 							graphic = graphicPressed;
 
-
 						if (m_Transparent)
 						{
 							glEnable(GL_BLEND);
-							glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
+							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
 
@@ -429,25 +461,93 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					}
 					case GOT_GUMPPIC:
 					{
-						UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y);
+						if (m_Transparent)
+						{
+							glEnable(GL_BLEND);
+							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+							
+							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y);
+
+							glDisable(GL_BLEND);
+
+							glEnable(GL_STENCIL_TEST);
+							
+							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y);
+
+							glDisable(GL_STENCIL_TEST);
+						}
+						else
+							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y);
+
 						break;
 					}
 					case GOT_GUMPPICTILED:
 					{
-						UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y, ((TGumpGumppicTiled*)item)->Width, ((TGumpGumppicTiled*)item)->Height);
+						if (m_Transparent)
+						{
+							glEnable(GL_BLEND);
+							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+							
+							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y, ((TGumpGumppicTiled*)item)->Width, ((TGumpGumppicTiled*)item)->Height);
+
+							glDisable(GL_BLEND);
+
+							glEnable(GL_STENCIL_TEST);
+							
+							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y, ((TGumpGumppicTiled*)item)->Width, ((TGumpGumppicTiled*)item)->Height);
+
+							glDisable(GL_STENCIL_TEST);
+						}
+						else
+							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y, ((TGumpGumppicTiled*)item)->Width, ((TGumpGumppicTiled*)item)->Height);
+
 						break;
 					}
 					case GOT_TILEPIC:
 					{
-						UO->DrawStaticArtInContainer(item->Graphic, item->Color, posX + item->X, posY + item->Y);
+						if (m_Transparent)
+						{
+							glEnable(GL_BLEND);
+							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+							
+							UO->DrawStaticArtInContainer(item->Graphic, item->Color, posX + item->X, posY + item->Y);
+
+							glDisable(GL_BLEND);
+
+							glEnable(GL_STENCIL_TEST);
+							
+							UO->DrawStaticArtInContainer(item->Graphic, item->Color, posX + item->X, posY + item->Y);
+
+							glDisable(GL_STENCIL_TEST);
+						}
+						else
+							UO->DrawStaticArtInContainer(item->Graphic, item->Color, posX + item->X, posY + item->Y);
+
 						break;
 					}
 					case GOT_TEXT:
 					case GOT_CROPPEDTEXT:
 					{
 						TGumpText *gt = (TGumpText*)item;
+						
+						if (m_Transparent)
+						{
+							glEnable(GL_BLEND);
+							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+							
+							gt->m_Text.Draw(posX + item->X, posY + item->Y);
 
-						gt->m_Text.Draw(posX + item->X, posY + item->Y);
+							glDisable(GL_BLEND);
+
+							glEnable(GL_STENCIL_TEST);
+							
+							gt->m_Text.Draw(posX + item->X, posY + item->Y);
+
+							glDisable(GL_STENCIL_TEST);
+						}
+						else
+							gt->m_Text.Draw(posX + item->X, posY + item->Y);
+
 						break;
 					}
 					case GOT_TEXTENTRYLIMITED:
@@ -460,8 +560,24 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 							WORD color = item->Color;
 							if (color)
 								color++;
+							
+							if (m_Transparent)
+							{
+								glEnable(GL_BLEND);
+								glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+							
+								gte->TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, posX + item->X, posY + item->Y, TS_LEFT, UOFONT_BLACK_BORDER);
 
-							gte->TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, posX + item->X, posY + item->Y, TS_LEFT, UOFONT_BLACK_BORDER);
+								glDisable(GL_BLEND);
+
+								glEnable(GL_STENCIL_TEST);
+							
+								gte->TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, posX + item->X, posY + item->Y, TS_LEFT, UOFONT_BLACK_BORDER);
+
+								glDisable(GL_STENCIL_TEST);
+							}
+							else
+								gte->TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, posX + item->X, posY + item->Y, TS_LEFT, UOFONT_BLACK_BORDER);
 						}
 						break;
 					}
@@ -475,6 +591,9 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					case GOT_CHECKTRANS:
 					{
 						ApplyTransparent(((TGumpObject*)(item->m_Next)), m_Page, posX, posY);
+						
+						glColor4f(1.0f, 1.0f, 1.0f, alpha[m_Transparent]);
+
 						break;
 					}
 					case GOT_PAGE:
@@ -500,6 +619,8 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 			item = (TGumpObject*)item->m_Next;
 			objectIndex++;
 		}
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 		if (haveHTML)
 		{
@@ -557,27 +678,8 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 								
 								if (htmlGump->HaveBackground)
 								{
-									if (m_Transparent)
-									{
-										glEnable(GL_BLEND);
-										glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
-
-										UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
-										curHeight += 7;
-
-										glDisable(GL_BLEND);
-
-										glEnable(GL_STENCIL_TEST);
-
-										UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
-
-										glDisable(GL_STENCIL_TEST);
-									}
-									else
-									{
-										UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
-										curHeight += 7;
-									}
+									UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
+									curHeight += 7;
 								}
 								else
 								{

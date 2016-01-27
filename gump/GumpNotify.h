@@ -35,10 +35,10 @@ public:
 	TGumpNotify(DWORD serial, short x, short y, BYTE variant, short width, short height, string text);
 	virtual ~TGumpNotify();
 
-	SETGET(BYTE, Variant)
-	SETGET(short, Width)
-	SETGET(short, Height)
-	SETGET(string, Text)
+	SETGET(BYTE, Variant);
+	SETGET(short, Width);
+	SETGET(short, Height);
+	SETGET(string, Text);
 
 	void PrepareTextures();
 

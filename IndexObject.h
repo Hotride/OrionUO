@@ -52,11 +52,11 @@ private:
 public:
 	TIndexObjectStatic();
 
-	SETGET(WORD, Index)
-	SETGET(char, Increment)
-	SETGET(char, AnimIndex)
-	SETGET(DWORD, NextChange)
-	SETGET(WORD, LightColor)
+	SETGET(WORD, Index);
+	SETGET(char, Increment);
+	SETGET(char, AnimIndex);
+	SETGET(DWORD, NextChange);
+	SETGET(WORD, LightColor);
 };
 //---------------------------------------------------------------------------
 class TIndexSound
@@ -70,10 +70,10 @@ public:
 	TIndexSound();
 	virtual ~TIndexSound();
 
-	SETGET(DWORD, Address)
-	SETGET(DWORD, Size)
-	SETGET(DWORD, Timer)
-	SETGET(DWORD, LastAccessTime)
+	SETGET(DWORD, Address);
+	SETGET(DWORD, Size);
+	SETGET(DWORD, Timer);
+	SETGET(DWORD, LastAccessTime);
 
 	Mix_Chunk *Sound;
 };
@@ -90,9 +90,9 @@ public:
 
 	TTextureAnimation *Group;
 
-	SETGET(DWORD, Address)
-	SETGET(DWORD, Offset)
-	SETGET(WORD, Graphic)
+	SETGET(DWORD, Address);
+	SETGET(DWORD, Offset);
+	SETGET(WORD, Graphic);
 };
 //---------------------------------------------------------------------------
 class TIndexMulti
@@ -105,9 +105,9 @@ public:
 	TIndexMulti();
 	virtual ~TIndexMulti();
 
-	SETGET(DWORD, Address)
-	SETGET(DWORD, Size)
-	SETGET(WORD, Count)
+	SETGET(DWORD, Address);
+	SETGET(DWORD, Size);
+	SETGET(WORD, Count);
 };
 //---------------------------------------------------------------------------
 #endif

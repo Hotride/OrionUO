@@ -33,9 +33,9 @@ public:
 
 	static const WORD m_Gump = 0x0194;
 
-	SETGET(WORD, X)
-	SETGET(WORD, Y)
-	SETGET(bool, Enabled)
+	SETGET(WORD, X);
+	SETGET(WORD, Y);
+	SETGET(bool, Enabled);
 
 	void Draw(int &x, int &y);
 };

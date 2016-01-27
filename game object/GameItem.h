@@ -47,13 +47,13 @@ public:
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
 
-	SETGET(BYTE, Layer)
-	SETGET(WORD, AnimID)
-	SETGET(WORD, ImageID)
-	SETGET(BYTE, UsedLayer)
-	SETGET(bool, Opened)
-	SETGET(bool, Dragged)
-	SETGET(DWORD, ObjectFlags)
+	SETGET(BYTE, Layer);
+	SETGET(WORD, AnimID);
+	SETGET(WORD, ImageID);
+	SETGET(BYTE, UsedLayer);
+	SETGET(bool, Opened);
+	SETGET(bool, Dragged);
+	SETGET(DWORD, ObjectFlags);
 
 	//ѕолучить индекс картинки (дл€ анимации)
 	WORD GetMountAnimation();

@@ -41,9 +41,9 @@ public:
 	TTarget();
 	~TTarget() {}
 	
-	SETGET(BYTE, Type)
-	SETGET(BYTE, CursorType)
-	SETGET(WORD, MultiGraphic)
+	SETGET(BYTE, Type);
+	SETGET(BYTE, CursorType);
+	SETGET(WORD, MultiGraphic);
 	
 	void SetData(PBYTE buf, int size);
 	void SetMultiData(PBYTE buf, int size);

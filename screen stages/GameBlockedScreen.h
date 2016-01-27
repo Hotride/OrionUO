@@ -31,7 +31,7 @@ public:
 	
 	void Init();
 	
-	SETGET(BYTE, Code)
+	SETGET(BYTE, Code);
 
 	int Render(bool mode);
 	

@@ -132,7 +132,7 @@ list->Next = new TLinkedList(&m_GumpDataIndex[id]);
 #define SETGET(type, name) \
 	void Set##name(type val) { m_##name = val; } \
 	type Get##name() const { return m_##name; } \
-	__declspec(property(get = Get##name, put = Set##name)) type name;
+	__declspec(property(get = Get##name, put = Set##name)) type name
 //---------------------------------------------------------------------------
 //Set/Get ordinary class property
 #define SETGETEX(type, name) \
@@ -141,12 +141,12 @@ list->Next = new TLinkedList(&m_GumpDataIndex[id]);
 	void Inc##name() { m_##name++; } \
 	void Dec##name() { m_##name--; } \
 	void Add##name(type val) { m_##name += val; } \
-	__declspec(property(get = Get##name, put = Set##name)) type name;
+	__declspec(property(get = Get##name, put = Set##name)) type name
 //---------------------------------------------------------------------------
 //Get ordinary class property customized
 #define GET_PARTY(type, name) \
 	type Get##name(); \
-	__declspec(property(get = Get##name)) type name;
+	__declspec(property(get = Get##name)) type name
 //---------------------------------------------------------------------------
 #define CMP_RANGE(name, id1, id2) (name >= id1 && name <= id2)
 //---------------------------------------------------------------------------

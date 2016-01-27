@@ -32,10 +32,10 @@ public:
 	TSkill();
 	~TSkill() {}
 	
-	SETGET(float, BaseValue)
-	SETGET(float, Value)
-	SETGET(float, Cap)
-	SETGET(BYTE, Status)
+	SETGET(float, BaseValue);
+	SETGET(float, Value);
+	SETGET(float, Cap);
+	SETGET(BYTE, Status);
 };
 //--------------------------------------------------------------------------
 class TSkillSort

@@ -63,14 +63,14 @@ public:
 	static void InitTextTextures();
 	static void ReleaseTextTextures();
 
-	SETGET(int, Width)
-	SETGET(int, Height)
-	SETGET(int, Scale)
-	SETGET(int, Map)
-	SETGET(bool, LinkWithPlayer)
-	SETGET(int, OffsetX)
-	SETGET(int, OffsetY)
-	SETGET(bool, Called)
+	SETGET(int, Width);
+	SETGET(int, Height);
+	SETGET(int, Scale);
+	SETGET(int, Map);
+	SETGET(bool, LinkWithPlayer);
+	SETGET(int, OffsetX);
+	SETGET(int, OffsetY);
+	SETGET(bool, Called);
 
 	void ChangeHeight();
 

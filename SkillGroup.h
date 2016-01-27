@@ -37,9 +37,9 @@ public:
 	TSkillGroupObject();
 	~TSkillGroupObject();
 
-	SETGET(int, Count)
-	SETGET(bool, Maximized)
-	SETGET(BYTE, Selected)
+	SETGET(int, Count);
+	SETGET(bool, Maximized);
+	SETGET(BYTE, Selected);
 
 	void SetName(string val);
 	string GetName() const {return m_Name;}

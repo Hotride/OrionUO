@@ -73,7 +73,7 @@ public:
 	TFontsManager();
 	~TFontsManager();
 	
-	SETGET(bool, SavePixels)
+	SETGET(bool, SavePixels);
 
 	void SetUseHTML(bool val, DWORD htmlStartColor = 0xFFFFFFFF) {m_UseHTML = val; m_HTMLColor = htmlStartColor;}
 	bool GetUseHTML() const {return m_UseHTML;}

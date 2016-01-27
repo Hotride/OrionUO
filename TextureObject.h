@@ -29,8 +29,8 @@ public:
 	TTextureObject();
 	~TTextureObject();
 
-	SETGET(int, Width)
-	SETGET(int, Height)
+	SETGET(int, Width);
+	SETGET(int, Height);
 
 	GLuint Texture;
 };
@@ -47,11 +47,11 @@ public:
 	TTextureAnimationFrame(int frame);
 	virtual ~TTextureAnimationFrame();
 
-	SETGET(BYTE, Frame)
-	SETGET(short, Width)
-	SETGET(short, Height)
-	SETGET(short, CenterX)
-	SETGET(short, CenterY)
+	SETGET(BYTE, Frame);
+	SETGET(short, Width);
+	SETGET(short, Height);
+	SETGET(short, CenterX);
+	SETGET(short, CenterY);
 
 	GLuint Texture;
 };
@@ -67,10 +67,10 @@ public:
 	TTextureAnimationDirection(int direction);
 	virtual ~TTextureAnimationDirection();
 
-	SETGET(BYTE, Direction)
-	SETGET(BYTE, FrameCount)
-	SETGET(DWORD, Address)
-	SETGET(DWORD, LastAccessTime)
+	SETGET(BYTE, Direction);
+	SETGET(BYTE, FrameCount);
+	SETGET(DWORD, Address);
+	SETGET(DWORD, LastAccessTime);
 
 	TTextureAnimationFrame *GetFrame(BYTE frame);
 };
@@ -83,7 +83,7 @@ public:
 	TTextureAnimationGroup(int index);
 	virtual ~TTextureAnimationGroup();
 
-	SETGET(BYTE, Index)
+	SETGET(BYTE, Index);
 
 	TTextureAnimationDirection *GetDirection(BYTE direction);
 };
@@ -120,10 +120,10 @@ public:
 
 	PBYTE Data;
 
-	SETGET(int, Width)
-	SETGET(int, Height)
-	SETGET(int, Lines)
-	SETGET(GLuint, Texture)
+	SETGET(int, Width);
+	SETGET(int, Height);
+	SETGET(int, Lines);
+	SETGET(GLuint, Texture);
 
 	bool Empty() {return (m_Texture == 0);}
 

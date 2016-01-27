@@ -44,17 +44,17 @@ public:
 
 	virtual TTextRenderer *GetTextRenderer() {return NULL;}
 
-	SETGET(GUMP_TYPE, GumpType)
-	SETGET(DWORD, ID)
-	SETGETEX(int, MinimizedX)
-	SETGETEX(int, MinimizedY)
-	SETGET(bool, NoMove)
-	SETGET(bool, NoClose)
-	SETGET(bool, Minimized)
-	SETGET(bool, FrameCreated)
-	SETGET(bool, FrameRedraw)
-	SETGET(bool, Blocked)
-	SETGET(bool, LockMoving)
+	SETGET(GUMP_TYPE, GumpType);
+	SETGET(DWORD, ID);
+	SETGETEX(int, MinimizedX);
+	SETGETEX(int, MinimizedY);
+	SETGET(bool, NoMove);
+	SETGET(bool, NoClose);
+	SETGET(bool, Minimized);
+	SETGET(bool, FrameCreated);
+	SETGET(bool, FrameRedraw);
+	SETGET(bool, Blocked);
+	SETGET(bool, LockMoving);
 
 	virtual void GetBaseProperties(DWORD &serial, WORD &graphic, WORD &color, WORD &x, WORD &y);
 

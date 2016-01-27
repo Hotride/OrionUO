@@ -45,7 +45,7 @@ public:
 	TGumpTip(DWORD serial, short x, short y, bool updates);
 	virtual ~TGumpTip();
 
-	SETGET(bool, Updates)
+	SETGET(bool, Updates);
 
 	TTextTexture m_Text;
 

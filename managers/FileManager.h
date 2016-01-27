@@ -86,8 +86,8 @@ public:
 	
 	TMappedHeader MultiMap;
 
-	SETGET(bool, UseVerdata)
-	SETGET(int, UnicodeFontCount)
+	SETGET(bool, UseVerdata);
+	SETGET(int, UnicodeFontCount);
 
 	bool Load();
 	void Unload();
@@ -114,10 +114,10 @@ public:
 	
 	PBYTE Ptr;
 
-	SETGET(string, FilePath)
-	SETGET(bool, Ready)
-	SETGET(bool, UseBuffer)
-	SETGET(int, BufferCount)
+	SETGET(string, FilePath);
+	SETGET(bool, Ready);
+	SETGET(bool, UseBuffer);
+	SETGET(int, BufferCount);
 
 	void Move(int offset);
 	

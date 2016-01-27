@@ -35,10 +35,10 @@ public:
 	TMapBlock(DWORD index);
 	virtual ~TMapBlock();
 
-	SETGET(DWORD, Index)
-	SETGET(DWORD, LastAccessTime)
-	SETGET(short, X)
-	SETGET(short, Y)
+	SETGET(DWORD, Index);
+	SETGET(DWORD, LastAccessTime);
+	SETGET(short, X);
+	SETGET(short, Y);
 
 	TMapObject *Block[8][8];
 

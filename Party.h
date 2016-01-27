@@ -29,15 +29,15 @@ public:
 	TPartyObject();
 	~TPartyObject() {}
 
-	SETGET(DWORD, Serial)
-	GET_PARTY(short, Hits)
-	GET_PARTY(short, MaxHits)
-	GET_PARTY(short, Mana)
-	GET_PARTY(short, MaxMana)
-	GET_PARTY(short, Stam)
-	GET_PARTY(short, MaxStam)
-	GET_PARTY(NOTORIETY_TYPE, Notoriety)
-	GET_PARTY(bool, CanChangeName)
+	SETGET(DWORD, Serial);
+	GET_PARTY(short, Hits);
+	GET_PARTY(short, MaxHits);
+	GET_PARTY(short, Mana);
+	GET_PARTY(short, MaxMana);
+	GET_PARTY(short, Stam);
+	GET_PARTY(short, MaxStam);
+	GET_PARTY(NOTORIETY_TYPE, Notoriety);
+	GET_PARTY(bool, CanChangeName);
 
 	string GetName(int index);
 };
@@ -55,9 +55,9 @@ public:
 
 	TPartyObject Member[10];
 	
-	SETGET(DWORD, Leader)
-	SETGET(DWORD, Inviter)
-	SETGET(bool, CanLoot)
+	SETGET(DWORD, Leader);
+	SETGET(DWORD, Inviter);
+	SETGET(bool, CanLoot);
 
 	void ParsePacketData(PBYTE buf, int &size);
 

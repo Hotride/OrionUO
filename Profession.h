@@ -40,10 +40,10 @@ public:
 
 	TProfessionCategory *m_Parent;
 
-	SETGET(string, DefName)
-	SETGET(bool, Type)
-	SETGET(WORD, Gump)
-	SETGET(int, Index)
+	SETGET(string, DefName);
+	SETGET(bool, Type);
+	SETGET(WORD, Gump);
+	SETGET(int, Index);
 	
 	void SetName(string str);
 	
@@ -65,9 +65,9 @@ public:
 	TProfession();
 	virtual ~TProfession();
 	
-	SETGET(BYTE, Str)
-	SETGET(BYTE, Int)
-	SETGET(BYTE, Dex)
+	SETGET(BYTE, Str);
+	SETGET(BYTE, Int);
+	SETGET(BYTE, Dex);
 
 	void SetSkillID(int index, BYTE val) {if (index >= 0 && index < 4) m_SkillID[index] = val;}
 	void SetSkillValue(int index, BYTE val) {if (index >= 0 && index < 4) m_SkillValue[index] = val;}

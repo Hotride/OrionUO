@@ -40,9 +40,9 @@ public:
 	
 	TEntryText *TextEntry;
 	
-	SETGET(BYTE, Variant)
-	SETGET(BYTE, ParentID)
-	SETGET(BYTE, ButtonID)
+	SETGET(BYTE, Variant);
+	SETGET(BYTE, ParentID);
+	SETGET(BYTE, ButtonID);
 
 	void PrepareTextures();
 

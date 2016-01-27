@@ -47,14 +47,14 @@ public:
 	TGumpMap(__in DWORD serial, __in short x, __in short y);
 	virtual ~TGumpMap();
 
-	SETGET(int, PlotState)
-	SETGET(int, StartX)
-	SETGET(int, StartY)
-	SETGET(int, EndX)
-	SETGET(int, EndY)
-	SETGET(int, Width)
-	SETGET(int, Height)
-	SETGET(bool, DoubleImage)
+	SETGET(int, PlotState);
+	SETGET(int, StartX);
+	SETGET(int, StartY);
+	SETGET(int, EndX);
+	SETGET(int, EndY);
+	SETGET(int, Width);
+	SETGET(int, Height);
+	SETGET(bool, DoubleImage);
 
 	GLuint Texture;
 

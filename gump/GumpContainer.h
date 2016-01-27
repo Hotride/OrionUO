@@ -37,7 +37,7 @@ public:
 	
 	TTextRenderer *GetTextRenderer() {return TextRenderer;}
 
-	SETGET(bool, IsGameBoard)
+	SETGET(bool, IsGameBoard);
 
 	void PrepareTextures();
 

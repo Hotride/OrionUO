@@ -55,8 +55,8 @@ public:
 	virtual void Free();
 	virtual void Send(int size = 0);
 	
-	SETGETEX(int, Size)
-	SETGET(bool, RemoveBuffer)
+	SETGETEX(int, Size);
+	SETGET(bool, RemoveBuffer);
 	PBYTE Buffer;
 	PBYTE Ptr;
 	

@@ -35,13 +35,13 @@ public:
 	TContainerStack(DWORD serial, short x, short y, short minimizedX, short minimizedY, bool minimized, bool lockMoving);
 	~TContainerStack();
 
-	SETGET(DWORD, Serial)
-	SETGET(short, X)
-	SETGET(short, Y)
-	SETGET(short, MinimizedX)
-	SETGET(short, MinimizedY)
-	SETGET(bool, Minimized)
-	SETGET(bool, LockMoving)
+	SETGET(DWORD, Serial);
+	SETGET(short, X);
+	SETGET(short, Y);
+	SETGET(short, MinimizedX);
+	SETGET(short, MinimizedY);
+	SETGET(bool, Minimized);
+	SETGET(bool, LockMoving);
 
 	TContainerStack *m_Next;
 	TContainerStack *m_Prev;
@@ -82,8 +82,8 @@ public:
 	TContainerRect();
 	~TContainerRect() {}
 
-	SETGET(short, X)
-	SETGET(short, Y)
+	SETGET(short, X);
+	SETGET(short, Y);
 
 	//Функция вычисления смещения для текущей картинки
 	void Calculate(WORD gumpID);

@@ -46,12 +46,12 @@ public:
 	int GetID() const {return m_ID;}
 	float GetScaleRatio() const {return m_ScaleRatio;}
 	
-	SETGETEX(float, SpeedX)
-	SETGETEX(float, SpeedY)
-	SETGETEX(float, X)
-	SETGETEX(float, Y)
-	SETGETEX(float, SpeedAngle)
-	SETGETEX(float, SpeedMagnitude)
+	SETGETEX(float, SpeedX);
+	SETGETEX(float, SpeedY);
+	SETGETEX(float, X);
+	SETGETEX(float, Y);
+	SETGETEX(float, SpeedAngle);
+	SETGETEX(float, SpeedMagnitude);
 };
 //---------------------------------------------------------------------------
 class TWeather
@@ -76,12 +76,12 @@ public:
 
 	TWeatherEffect *m_Items;
 	
-	SETGET(BYTE, Type)
-	SETGETEX(BYTE, Count)
-	SETGETEX(BYTE, CurrentCount)
-	SETGETEX(BYTE, Temperature)
+	SETGET(BYTE, Type);
+	SETGETEX(BYTE, Count);
+	SETGETEX(BYTE, CurrentCount);
+	SETGETEX(BYTE, Temperature);
 	
-	SETGET(DWORD, Timer)
+	SETGET(DWORD, Timer);
 	
 	void Reset();
 

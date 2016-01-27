@@ -33,9 +33,9 @@ public:
 	void Unlink();
 	void ToTop();
 	
-	SETGET(int, DrawX)
-	SETGET(int, DrawY)
-	SETGET(bool, Transparent)
+	SETGET(int, DrawX);
+	SETGET(int, DrawY);
+	SETGET(bool, Transparent);
 
 	virtual bool IsText() {return false;}
 	
@@ -87,14 +87,14 @@ public:
 	TTextData *m_Next;
 	TTextData *m_Prev;
 	
-	SETGET(bool, Unicode)
-	SETGET(TEXT_TYPE, Type)
-	SETGET(DWORD, Serial)
-	SETGET(WORD, Font)
-	SETGET(WORD, Color)
-	SETGET(DWORD, Timer)
-	SETGET(string, Text)
-	SETGET(wstring, UnicodeText)
+	SETGET(bool, Unicode);
+	SETGET(TEXT_TYPE, Type);
+	SETGET(DWORD, Serial);
+	SETGET(WORD, Font);
+	SETGET(WORD, Color);
+	SETGET(DWORD, Timer);
+	SETGET(string, Text);
+	SETGET(wstring, UnicodeText);
 	
 	TTextTexture m_Texture;
 

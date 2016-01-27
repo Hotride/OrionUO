@@ -43,11 +43,11 @@ public:
 	TRenderObject(DWORD serial, WORD graphic, WORD color, short x, short y);
 	virtual ~TRenderObject();
 
-	SETGET(DWORD, Serial)
-	SETGET(WORD, Graphic)
-	SETGET(WORD, Color)
-	SETGETEX(short, X)
-	SETGETEX(short, Y)
+	SETGET(DWORD, Serial);
+	SETGET(WORD, Graphic);
+	SETGET(WORD, Color);
+	SETGETEX(short, X);
+	SETGETEX(short, Y);
 
 	virtual void PrepareTextures() {}
 
@@ -74,9 +74,9 @@ public:
 	int GetTextOffsetY(TTextData *text);
 	bool CanBeTransparent(TRenderTextObject *text);
 
-	SETGETEX(char, Z)
-	SETGETEX(BYTE, RenderQueueIndex)
-	SETGET(RENDER_OBJECT_TYPE, RenderType)
+	SETGETEX(char, Z);
+	SETGETEX(BYTE, RenderQueueIndex);
+	SETGET(RENDER_OBJECT_TYPE, RenderType);
 
 	TRenderWorldObject *m_NextXY;
 	TRenderWorldObject *m_PrevXY;

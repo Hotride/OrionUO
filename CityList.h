@@ -37,10 +37,10 @@ public:
 	//Ссылка на описание города
 	TCity *m_City;
 
-	SETGET(BYTE, LocationIndex)
-	SETGET(string, Name)
-	SETGET(string, Area)
-	SETGET(bool, Selected)
+	SETGET(BYTE, LocationIndex);
+	SETGET(string, Name);
+	SETGET(string, Area);
+	SETGET(bool, Selected);
 
 	//Это старая версия класса
 	virtual bool IsNewCity() {return false;}
@@ -70,11 +70,11 @@ public:
 	//Текстура текста
 	TTextTexture m_Texture;
 
-	SETGET(DWORD, X)
-	SETGET(DWORD, Y)
-	SETGET(DWORD, Z)
-	SETGET(DWORD, MapIndex)
-	//SETGET(DWORD, Cliloc)
+	SETGET(DWORD, X);
+	SETGET(DWORD, Y);
+	SETGET(DWORD, Z);
+	SETGET(DWORD, MapIndex);
+	//SETGET(DWORD, Cliloc);
 
 	//Генерация текстуры по ИД клилока
 	void CreateTextTexture(DWORD clilocID);

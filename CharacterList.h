@@ -40,12 +40,12 @@ public:
 	//Очистка списка
 	void Clear();
 
-	SETGET(int, Count)
-	SETGET(int, Selected)
-	SETGET(bool, OnePerson)
-	SETGET(bool, Have6Slot)
-	SETGET(bool, Have7Slot)
-	SETGET(WORD, ClientFlag)
+	SETGET(int, Count);
+	SETGET(int, Selected);
+	SETGET(bool, OnePerson);
+	SETGET(bool, Have6Slot);
+	SETGET(bool, Have7Slot);
+	SETGET(WORD, ClientFlag);
 
 	void SetName(int pos, string name);
 	

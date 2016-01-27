@@ -44,7 +44,7 @@ public:
 
 	bool CanBeDisplayed() {return false;}
 
-	SETGET(bool, Opened)
+	SETGET(bool, Opened);
 
 	void PrepareTextures();
 

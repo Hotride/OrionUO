@@ -39,8 +39,8 @@ public:
 	TCliloc(const char *lang);
 	virtual ~TCliloc();
 
-	SETGET(string, Language)
-	SETGET(bool, Loaded)
+	SETGET(string, Language);
+	SETGET(bool, Loaded);
 
 	string GetA(DWORD id, string result = "");
 	wstring GetW(DWORD id, string result = "");

@@ -37,7 +37,7 @@ public:
 	TGumpMinimap(DWORD serial, short x, short y, bool minimized);
 	virtual ~TGumpMinimap() {}
 
-	SETGET(WORD, LastX)
+	SETGET(WORD, LastX);
 	
 	void PrepareTextures();
 

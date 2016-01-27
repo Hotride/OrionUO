@@ -40,7 +40,7 @@ public:
 	TGumpMenu(DWORD serial, short x, short y, string text);
 	virtual ~TGumpMenu();
 
-	SETGET(int, Count)
+	SETGET(int, Count);
 	
 	void PrepareTextures();
 

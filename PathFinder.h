@@ -30,9 +30,9 @@ public:
 	TPathObject(char z, char height, char surface);
 	virtual ~TPathObject();
 
-	SETGET(char, Z)
-	SETGET(char, Height)
-	SETGET(BYTE, Surface)
+	SETGET(char, Z);
+	SETGET(char, Height);
+	SETGET(BYTE, Surface);
 };
 //---------------------------------------------------------------------------
 class TPathFinder : public IPathFinder, public TBaseQueue

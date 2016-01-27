@@ -41,14 +41,14 @@ public:
 	TPlayer(DWORD serial);
 	virtual ~TPlayer();
 	
-	SETGET(short, Str)
-	SETGET(short, Int)
-	SETGET(short, Dex)
-	SETGET(WORD, MaxWeight)
-	SETGET(WORD, Weight)
-	SETGET(short, Armor)
-	SETGET(DWORD, Gold)
-	SETGET(bool, Warmode)
+	SETGET(short, Str);
+	SETGET(short, Int);
+	SETGET(short, Dex);
+	SETGET(WORD, MaxWeight);
+	SETGET(WORD, Weight);
+	SETGET(short, Armor);
+	SETGET(DWORD, Gold);
+	SETGET(bool, Warmode);
 	void SetName(string val);
 
 	void SetSkillBaseValue(int index, float val);

@@ -32,8 +32,8 @@ public:
 	TGumpGrayMenu(DWORD serial, short x, short y, string text);
 	virtual ~TGumpGrayMenu();
 
-	SETGET(int, Count)
-	SETGET(string, Text)
+	SETGET(int, Count);
+	SETGET(string, Text);
 
 	void PrepareTextures();
 

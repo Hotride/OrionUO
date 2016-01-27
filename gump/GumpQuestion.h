@@ -31,7 +31,7 @@ public:
 	TGumpQuestion(DWORD serial, short x, short y, BYTE variant);
 	virtual ~TGumpQuestion();
 
-	SETGET(BYTE, Variant)
+	SETGET(BYTE, Variant);
 	
 	void PrepareTextures();
 

@@ -42,15 +42,15 @@ public:
 	//Добавить текст в контейнер
 	void AddText(TTextData *td);
 
-	SETGET(DWORD, Container)
-	SETGET(BYTE, MapIndex)
-	SETGET(WORD, Count)
-	SETGET(BYTE, Flags)
-	virtual SETGET(string, Name)
-	SETGET(bool, NPC)
-	SETGET(bool, Clicked)
-	SETGETEX(char, AnimIndex)
-	SETGET(DWORD, LastAnimationChangeTime)
+	SETGET(DWORD, Container);
+	SETGET(BYTE, MapIndex);
+	SETGET(WORD, Count);
+	SETGET(BYTE, Flags);
+	virtual SETGET(string, Name);
+	SETGET(bool, NPC);
+	SETGET(bool, Clicked);
+	SETGETEX(char, AnimIndex);
+	SETGET(DWORD, LastAnimationChangeTime);
 
 	virtual WORD GetMountAnimation() {return Graphic;}
 

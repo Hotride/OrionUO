@@ -32,10 +32,10 @@ public:
 	TShopItem();
 	~TShopItem();
 
-	SETGETEX(short, Count)
-	SETGET(string, Name)
-	SETGET(DWORD, Price)
-	SETGET(bool, Selected)
+	SETGETEX(short, Count);
+	SETGET(string, Name);
+	SETGET(DWORD, Price);
+	SETGET(bool, Selected);
 
 };
 //---------------------------------------------------------------------------
