@@ -22,13 +22,15 @@
 //---------------------------------------------------------------------------
 class TGumpObject : public TRenderObject
 {
-private:
+protected:
 	GUMP_OBJECT_TYPE m_Type;
 public:
 	TGumpObject(GUMP_OBJECT_TYPE type, WORD graphic, WORD color, short x, short y);
 	virtual ~TGumpObject() {}
 
 	SETGET(GUMP_OBJECT_TYPE, Type);
+
+	virtual void Draw(int &x, int &y, bool &transparent, bool pressed);
 };
 //---------------------------------------------------------------------------
 class TGumpPage : public TGumpObject
@@ -83,6 +85,8 @@ public:
 
 	SETGET(short, Width);
 	SETGET(short, Height);
+
+	virtual void Draw(int &x, int &y, bool &transparent, bool pressed);
 };
 //---------------------------------------------------------------------------
 class TGumpChecktrans : public TGumpObject
@@ -96,6 +100,8 @@ public:
 
 	SETGET(short, Width);
 	SETGET(short, Height);
+
+	virtual void Draw(int &x, int &y, bool &transparent, bool pressed);
 };
 //---------------------------------------------------------------------------
 class TGumpButton : public TGumpObject
@@ -115,6 +121,8 @@ public:
 	SETGET(int, Index);
 	SETGET(int, ToPage);
 	SETGET(bool, Action);
+
+	virtual void Draw(int &x, int &y, bool &transparent, bool pressed);
 };
 //---------------------------------------------------------------------------
 class TGumpButtonTileArt : public TGumpButton
@@ -132,6 +140,8 @@ public:
 	SETGET(WORD, TileColor);
 	SETGET(short, TileX);
 	SETGET(short, TileY);
+
+	virtual void Draw(int &x, int &y, bool &transparent, bool pressed);
 };
 //---------------------------------------------------------------------------
 class TGumpCheckbox : public TGumpObject
@@ -149,6 +159,8 @@ public:
 	SETGET(WORD, GraphicDisabled);
 	SETGET(int, Index);
 	SETGET(bool, Action);
+
+	virtual void Draw(int &x, int &y, bool &transparent, bool pressed);
 };
 //---------------------------------------------------------------------------
 class TGumpRadio : public TGumpObject
@@ -166,6 +178,8 @@ public:
 	SETGET(WORD, GraphicDisabled);
 	SETGET(int, Index);
 	SETGET(bool, Action);
+
+	virtual void Draw(int &x, int &y, bool &transparent, bool pressed);
 };
 //---------------------------------------------------------------------------
 class TGumpText : public TGumpObject
@@ -179,6 +193,8 @@ public:
 	TTextTexture m_Text;
 
 	SETGET(int, TextIndex);
+
+	virtual void Draw(int &x, int &y, bool &transparent, bool pressed);
 };
 //---------------------------------------------------------------------------
 class TGumpCroppedText : public TGumpText
@@ -209,6 +225,8 @@ public:
 	SETGET(short, Width);
 	SETGET(short, Height);
 	SETGET(int, Index);
+
+	virtual void Draw(int &x, int &y, bool &transparent, bool pressed);
 };
 //---------------------------------------------------------------------------
 class TGumpTextEntryLimited : public TGumpTextEntry
@@ -226,16 +244,10 @@ class TGumpTilepic : public TGumpObject
 {
 private:
 public:
-	TGumpTilepic(WORD graphic, short x, short y);
+	TGumpTilepic(WORD graphic, WORD color, short x, short y);
 	virtual ~TGumpTilepic() {}
-};
-//---------------------------------------------------------------------------
-class TGumpTilepicHue : public TGumpObject
-{
-private:
-public:
-	TGumpTilepicHue(WORD graphic, WORD color, short x, short y);
-	virtual ~TGumpTilepicHue() {}
+
+	virtual void Draw(int &x, int &y, bool &transparent, bool pressed);
 };
 //---------------------------------------------------------------------------
 class TGumpGumppic : public TGumpObject
@@ -257,6 +269,8 @@ public:
 
 	SETGET(short, Width);
 	SETGET(short, Height);
+
+	virtual void Draw(int &x, int &y, bool &transparent, bool pressed);
 };
 //---------------------------------------------------------------------------
 class TGumpTooltip : public TGumpObject

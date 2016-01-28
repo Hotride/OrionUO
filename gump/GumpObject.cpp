@@ -24,6 +24,27 @@ TGumpObject::TGumpObject(GUMP_OBJECT_TYPE type, WORD graphic, WORD color, short 
 {
 }
 //---------------------------------------------------------------------------
+void TGumpObject::Draw(int &x, int &y, bool &transparent, bool pressed)
+{
+	if (transparent)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		UO->DrawGump(m_Graphic, m_Color, x + m_X, y + m_Y);
+
+		glDisable(GL_BLEND);
+
+		glEnable(GL_STENCIL_TEST);
+
+		UO->DrawGump(m_Graphic, m_Color, x + m_X, y + m_Y);
+
+		glDisable(GL_STENCIL_TEST);
+	}
+	else
+		UO->DrawGump(m_Graphic, m_Color, x + m_X, y + m_Y);
+}
+//---------------------------------------------------------------------------
 TGumpPage::TGumpPage(int page)
 : TGumpObject(GOT_PAGE, 0, 0, 0, 0), m_Page(page)
 {
@@ -49,9 +70,45 @@ TGumpResizepic::TGumpResizepic(WORD graphic, short x, short y, short width, shor
 {
 }
 //---------------------------------------------------------------------------
+void TGumpResizepic::Draw(int &x, int &y, bool &transparent, bool pressed)
+{
+	if (transparent)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		UO->DrawResizepicGump(m_Graphic, x + m_X, y + m_Y, m_Width, m_Height);
+
+		glDisable(GL_BLEND);
+
+		glEnable(GL_STENCIL_TEST);
+
+		UO->DrawResizepicGump(m_Graphic, x + m_X, y + m_Y, m_Width, m_Height);
+
+		glDisable(GL_STENCIL_TEST);
+	}
+	else
+		UO->DrawResizepicGump(m_Graphic, x + m_X, y + m_Y, m_Width, m_Height);
+}
+//---------------------------------------------------------------------------
 TGumpChecktrans::TGumpChecktrans(short x, short y, short width, short height)
 : TGumpObject(GOT_CHECKTRANS, 0, 0, x, y), m_Width(width), m_Height(height)
 {
+}
+//---------------------------------------------------------------------------
+void TGumpChecktrans::Draw(int &x, int &y, bool &transparent, bool pressed)
+{
+	glColorMask(false, false, false, false);
+
+	glStencilFunc(GL_ALWAYS, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+	g_GL.DrawPolygone(0x01010101, (GLfloat)(x + m_X), (GLfloat)(y + m_Y), (GLfloat)m_Width, (GLfloat)m_Height);
+
+	glColorMask(true, true, true, true);
+
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	glStencilFunc(GL_NOTEQUAL, 1, 1);
 }
 //---------------------------------------------------------------------------
 TGumpChecktrans::~TGumpChecktrans()
@@ -64,11 +121,57 @@ m_GraphicPressed(graphicPressed), m_Index(index), m_ToPage(toPage), m_Action(act
 {
 }
 //---------------------------------------------------------------------------
+void TGumpButton::Draw(int &x, int &y, bool &transparent, bool pressed)
+{
+	WORD graphic = pressed ? m_GraphicPressed : m_Graphic;
+
+	if (transparent)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		UO->DrawGump(graphic, m_Color, x + m_X, y + m_Y);
+
+		glDisable(GL_BLEND);
+
+		glEnable(GL_STENCIL_TEST);
+
+		UO->DrawGump(graphic, m_Color, x + m_X, y + m_Y);
+
+		glDisable(GL_STENCIL_TEST);
+	}
+	else
+		UO->DrawGump(graphic, m_Color, x + m_X, y + m_Y);
+}
+//---------------------------------------------------------------------------
 TGumpButtonTileArt::TGumpButtonTileArt(WORD graphic, WORD graphicLighted, WORD graphicPressed, int index, int toPage, bool action, short x, short y, WORD tileGraphic, WORD tileColor, short tileX, short tileY)
 : TGumpButton(graphic, graphicLighted, graphicPressed, index, toPage, action, x, y),
 m_TileGraphic(tileGraphic), m_TileColor(tileColor), m_TileX(tileX), m_TileY(tileY)
 {
-	Type = GOT_BUTTONTILEART;
+	m_Type = GOT_BUTTONTILEART;
+}
+//---------------------------------------------------------------------------
+void TGumpButtonTileArt::Draw(int &x, int &y, bool &transparent, bool pressed)
+{
+	TGumpButton::Draw(x, y, transparent, pressed);
+
+	if (transparent)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, x + m_TileX, y + m_TileY);
+
+		glDisable(GL_BLEND);
+
+		glEnable(GL_STENCIL_TEST);
+
+		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, x + m_TileX, y + m_TileY);
+
+		glDisable(GL_STENCIL_TEST);
+	}
+	else
+		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, x + m_TileX, y + m_TileY);
 }
 //---------------------------------------------------------------------------
 TGumpCheckbox::TGumpCheckbox(WORD graphic, WORD graphicChecked, WORD graphicDisabled, int index, bool action, short x, short y)
@@ -77,10 +180,56 @@ m_GraphicDisabled(graphicDisabled), m_Index(index), m_Action(action)
 {
 }
 //---------------------------------------------------------------------------
+void TGumpCheckbox::Draw(int &x, int &y, bool &transparent, bool pressed)
+{
+	WORD graphic = pressed ? m_GraphicChecked : m_Graphic;
+
+	if (transparent)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		UO->DrawGump(graphic, m_Color, x + m_X, y + m_Y);
+
+		glDisable(GL_BLEND);
+
+		glEnable(GL_STENCIL_TEST);
+
+		UO->DrawGump(graphic, m_Color, x + m_X, y + m_Y);
+
+		glDisable(GL_STENCIL_TEST);
+	}
+	else
+		UO->DrawGump(graphic, m_Color, x + m_X, y + m_Y);
+}
+//---------------------------------------------------------------------------
 TGumpRadio::TGumpRadio(WORD graphic, WORD graphicChecked, WORD graphicDisabled, int index, bool action, short x, short y)
 : TGumpObject(GOT_RADIO, graphic, 0, x, y), m_GraphicChecked(graphicChecked),
 m_GraphicDisabled(graphicDisabled), m_Index(index), m_Action(action)
 {
+}
+//---------------------------------------------------------------------------
+void TGumpRadio::Draw(int &x, int &y, bool &transparent, bool pressed)
+{
+	WORD graphic = pressed ? m_GraphicChecked : m_Graphic;
+
+	if (transparent)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		UO->DrawGump(graphic, m_Color, x + m_X, y + m_Y);
+
+		glDisable(GL_BLEND);
+
+		glEnable(GL_STENCIL_TEST);
+
+		UO->DrawGump(graphic, m_Color, x + m_X, y + m_Y);
+
+		glDisable(GL_STENCIL_TEST);
+	}
+	else
+		UO->DrawGump(graphic, m_Color, x + m_X, y + m_Y);
 }
 //---------------------------------------------------------------------------
 TGumpText::TGumpText(int textIndex, WORD color, short x, short y)
@@ -91,6 +240,27 @@ TGumpText::TGumpText(int textIndex, WORD color, short x, short y)
 TGumpText::~TGumpText()
 {
 	m_Text.Clear();
+}
+//---------------------------------------------------------------------------
+void TGumpText::Draw(int &x, int &y, bool &transparent, bool pressed)
+{
+	if (transparent)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		m_Text.Draw(x + m_X, y + m_Y);
+
+		glDisable(GL_BLEND);
+
+		glEnable(GL_STENCIL_TEST);
+
+		m_Text.Draw(x + m_X, y + m_Y);
+
+		glDisable(GL_STENCIL_TEST);
+	}
+	else
+		m_Text.Draw(x + m_X, y + m_Y);
 }
 //---------------------------------------------------------------------------
 TGumpCroppedText::TGumpCroppedText(int textIndex, WORD color, short x, short y, short width, short height)
@@ -104,6 +274,34 @@ TGumpTextEntry::TGumpTextEntry(int textIndex, WORD color, short x, short y, shor
 {
 	Type = GOT_TEXTENTRY;
 	TextEntry = new TEntryText();
+}
+//---------------------------------------------------------------------------
+void TGumpTextEntry::Draw(int &x, int &y, bool &transparent, bool pressed)
+{
+	if (TextEntry != NULL)
+	{
+		WORD color = m_Color;
+		if (color)
+			color++;
+
+		if (transparent)
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, x + m_X, y + m_Y, TS_LEFT, UOFONT_BLACK_BORDER);
+
+			glDisable(GL_BLEND);
+
+			glEnable(GL_STENCIL_TEST);
+
+			TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, x + m_X, y + m_Y, TS_LEFT, UOFONT_BLACK_BORDER);
+
+			glDisable(GL_STENCIL_TEST);
+		}
+		else
+			TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, x + m_X, y + m_Y, TS_LEFT, UOFONT_BLACK_BORDER);
+	}
 }
 //---------------------------------------------------------------------------
 TGumpTextEntry::~TGumpTextEntry()
@@ -121,14 +319,30 @@ TGumpTextEntryLimited::TGumpTextEntryLimited(int textIndex, WORD color, short x,
 	Type = GOT_TEXTENTRYLIMITED;
 }
 //---------------------------------------------------------------------------
-TGumpTilepic::TGumpTilepic(WORD graphic, short x, short y)
-: TGumpObject(GOT_TILEPIC, graphic, 0, x, y)
+TGumpTilepic::TGumpTilepic(WORD graphic, WORD color, short x, short y)
+: TGumpObject(GOT_TILEPIC, graphic, color, x, y)
 {
 }
 //---------------------------------------------------------------------------
-TGumpTilepicHue::TGumpTilepicHue(WORD graphic, WORD color, short x, short y)
-: TGumpObject(GOT_TILEPICHUE, graphic, color, x, y)
+void TGumpTilepic::Draw(int &x, int &y, bool &transparent, bool pressed)
 {
+	if (transparent)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		UO->DrawStaticArtInContainer(m_Graphic, m_Color, x + m_X, y + m_Y);
+
+		glDisable(GL_BLEND);
+
+		glEnable(GL_STENCIL_TEST);
+
+		UO->DrawStaticArtInContainer(m_Graphic, m_Color, x + m_X, y + m_Y);
+
+		glDisable(GL_STENCIL_TEST);
+	}
+	else
+		UO->DrawStaticArtInContainer(m_Graphic, m_Color, x + m_X, y + m_Y);
 }
 //---------------------------------------------------------------------------
 TGumpGumppic::TGumpGumppic(WORD graphic, WORD color, short x, short y)
@@ -139,6 +353,27 @@ TGumpGumppic::TGumpGumppic(WORD graphic, WORD color, short x, short y)
 TGumpGumppicTiled::TGumpGumppicTiled(WORD graphic, short x, short y, short width, short height)
 : TGumpObject(GOT_GUMPPICTILED, graphic, 0, x, y), m_Width(width), m_Height(height)
 {
+}
+//---------------------------------------------------------------------------
+void TGumpGumppicTiled::Draw(int &x, int &y, bool &transparent, bool pressed)
+{
+	if (transparent)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		UO->DrawGump(m_Graphic, m_Color, x + m_X, y + m_Y, m_Width, m_Height);
+
+		glDisable(GL_BLEND);
+
+		glEnable(GL_STENCIL_TEST);
+
+		UO->DrawGump(m_Graphic, m_Color, x + m_X, y + m_Y, m_Width, m_Height);
+
+		glDisable(GL_STENCIL_TEST);
+	}
+	else
+		UO->DrawGump(m_Graphic, m_Color, x + m_X, y + m_Y, m_Width, m_Height);
 }
 //---------------------------------------------------------------------------
 TGumpTooltip::TGumpTooltip(int clilocID)

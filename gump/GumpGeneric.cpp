@@ -52,18 +52,7 @@ void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page, int &x, int &y)
 			{
 				case GOT_CHECKTRANS:
 				{
-					TGumpChecktrans *gct = (TGumpChecktrans*)obj;
-					glColorMask(false, false, false, false);
-
-					glStencilFunc(GL_ALWAYS, 1, 1);
-					glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-					g_GL.DrawPolygone(0x01010101, (GLfloat)(x + gct->X), (GLfloat)(y + gct->Y), (GLfloat)gct->Width, (GLfloat)gct->Height);
-
-					glColorMask(true, true, true, true);
-					
-					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-					glStencilFunc(GL_NOTEQUAL, 1, 1);
+					obj->Draw(x, y, m_Transparent, false);
 
 					m_Transparent = true;
 
@@ -342,243 +331,25 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 			{
 				switch (item->Type)
 				{
-					case GOT_RESIZEPIC:
-					{
-						if (m_Transparent)
-						{
-							glEnable(GL_BLEND);
-							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-							UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
-							
-							glDisable(GL_BLEND);
-
-							glEnable(GL_STENCIL_TEST);
-
-							UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
-
-							glDisable(GL_STENCIL_TEST);
-						}
-						else
-							UO->DrawResizepicGump(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height);
-
-						break;
-					}
 					case GOT_BUTTON:
 					case GOT_BUTTONTILEART:
-					{
-						WORD graphic = ((CanPressedButton == objectIndex) ? ((TGumpButton*)item)->GraphicPressed : item->Graphic);
-						
-						if (m_Transparent)
-						{
-							glEnable(GL_BLEND);
-							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-							
-							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
-
-							glDisable(GL_BLEND);
-
-							glEnable(GL_STENCIL_TEST);
-							
-							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
-
-							glDisable(GL_STENCIL_TEST);
-						}
-						else
-							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
-
-						if (item->Type == GOT_BUTTONTILEART)
-						{
-							TGumpButtonTileArt *bta = (TGumpButtonTileArt*)item;
-							
-							if (m_Transparent)
-							{
-								glEnable(GL_BLEND);
-								glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-							
-								UO->DrawStaticArtInContainer(bta->TileGraphic, bta->TileColor, posX + bta->TileX, posY + bta->TileY);
-
-								glDisable(GL_BLEND);
-
-								glEnable(GL_STENCIL_TEST);
-							
-								UO->DrawStaticArtInContainer(bta->TileGraphic, bta->TileColor, posX + bta->TileX, posY + bta->TileY);
-
-								glDisable(GL_STENCIL_TEST);
-							}
-							else
-								UO->DrawStaticArtInContainer(bta->TileGraphic, bta->TileColor, posX + bta->TileX, posY + bta->TileY);
-						}
-						
-						break;
-					}
 					case GOT_CHECKBOX:
 					case GOT_RADIO:
 					{
-						bool isPressed = false;
-						WORD graphicPressed = 0;
-
-						if (item->Type == GOT_CHECKBOX)
-						{
-							isPressed = ((TGumpCheckbox*)item)->Action;
-							graphicPressed = ((TGumpCheckbox*)item)->GraphicChecked;
-						}
-						else
-						{
-							isPressed = ((TGumpRadio*)item)->Action;
-							graphicPressed = ((TGumpRadio*)item)->GraphicChecked;
-						}
-
-						WORD graphic = item->Graphic;
-
-						if (CanPressedButton == objectIndex)
-						{
-							if (!isPressed)
-								graphic = graphicPressed;
-						}
-						else if (isPressed)
-							graphic = graphicPressed;
-
-						if (m_Transparent)
-						{
-							glEnable(GL_BLEND);
-							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
-
-							glDisable(GL_BLEND);
-
-							glEnable(GL_STENCIL_TEST);
-
-							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
-
-							glDisable(GL_STENCIL_TEST);
-						}
-						else
-							UO->DrawGump(graphic, 0, posX + item->X, posY + item->Y);
+						item->Draw(posX, posY, m_Transparent, CanPressedButton == objectIndex);
 
 						break;
 					}
+					case GOT_RESIZEPIC:
 					case GOT_GUMPPIC:
-					{
-						if (m_Transparent)
-						{
-							glEnable(GL_BLEND);
-							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-							
-							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y);
-
-							glDisable(GL_BLEND);
-
-							glEnable(GL_STENCIL_TEST);
-							
-							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y);
-
-							glDisable(GL_STENCIL_TEST);
-						}
-						else
-							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y);
-
-						break;
-					}
 					case GOT_GUMPPICTILED:
-					{
-						if (m_Transparent)
-						{
-							glEnable(GL_BLEND);
-							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-							
-							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y, ((TGumpGumppicTiled*)item)->Width, ((TGumpGumppicTiled*)item)->Height);
-
-							glDisable(GL_BLEND);
-
-							glEnable(GL_STENCIL_TEST);
-							
-							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y, ((TGumpGumppicTiled*)item)->Width, ((TGumpGumppicTiled*)item)->Height);
-
-							glDisable(GL_STENCIL_TEST);
-						}
-						else
-							UO->DrawGump(item->Graphic, 0, posX + item->X, posY + item->Y, ((TGumpGumppicTiled*)item)->Width, ((TGumpGumppicTiled*)item)->Height);
-
-						break;
-					}
 					case GOT_TILEPIC:
-					{
-						if (m_Transparent)
-						{
-							glEnable(GL_BLEND);
-							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-							
-							UO->DrawStaticArtInContainer(item->Graphic, item->Color, posX + item->X, posY + item->Y);
-
-							glDisable(GL_BLEND);
-
-							glEnable(GL_STENCIL_TEST);
-							
-							UO->DrawStaticArtInContainer(item->Graphic, item->Color, posX + item->X, posY + item->Y);
-
-							glDisable(GL_STENCIL_TEST);
-						}
-						else
-							UO->DrawStaticArtInContainer(item->Graphic, item->Color, posX + item->X, posY + item->Y);
-
-						break;
-					}
 					case GOT_TEXT:
 					case GOT_CROPPEDTEXT:
-					{
-						TGumpText *gt = (TGumpText*)item;
-						
-						if (m_Transparent)
-						{
-							glEnable(GL_BLEND);
-							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-							
-							gt->m_Text.Draw(posX + item->X, posY + item->Y);
-
-							glDisable(GL_BLEND);
-
-							glEnable(GL_STENCIL_TEST);
-							
-							gt->m_Text.Draw(posX + item->X, posY + item->Y);
-
-							glDisable(GL_STENCIL_TEST);
-						}
-						else
-							gt->m_Text.Draw(posX + item->X, posY + item->Y);
-
-						break;
-					}
 					case GOT_TEXTENTRYLIMITED:
 					case GOT_TEXTENTRY:
 					{
-						TGumpTextEntry *gte = (TGumpTextEntry*)item;
-
-						if (gte->TextEntry != NULL)
-						{
-							WORD color = item->Color;
-							if (color)
-								color++;
-							
-							if (m_Transparent)
-							{
-								glEnable(GL_BLEND);
-								glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-							
-								gte->TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, posX + item->X, posY + item->Y, TS_LEFT, UOFONT_BLACK_BORDER);
-
-								glDisable(GL_BLEND);
-
-								glEnable(GL_STENCIL_TEST);
-							
-								gte->TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, posX + item->X, posY + item->Y, TS_LEFT, UOFONT_BLACK_BORDER);
-
-								glDisable(GL_STENCIL_TEST);
-							}
-							else
-								gte->TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, posX + item->X, posY + item->Y, TS_LEFT, UOFONT_BLACK_BORDER);
-						}
+						item->Draw(posX, posY, m_Transparent, false);
 						break;
 					}
 					case GOT_HTMLGUMP:
@@ -739,11 +510,6 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 
 							g_GL.RestorePort();
 						
-							break;
-						}
-						case GOT_CHECKTRANS:
-						{
-							ApplyTransparent(item, m_Page, posX, posY);
 							break;
 						}
 						case GOT_PAGE:

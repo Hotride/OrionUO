@@ -2984,7 +2984,7 @@ PACKET_HANDLER(OpenGump)
 
 			UO->ExecuteStaticArt(graphic);
 
-			go = new TGumpTilepicHue(graphic, color, x, y);
+			go = new TGumpTilepic(graphic, color, x, y);
 		}
 		else if (!memcmp(lowc, "tilepic", 7))
 		{
@@ -2994,7 +2994,7 @@ PACKET_HANDLER(OpenGump)
 
 			UO->ExecuteStaticArt(graphic);
 
-			go = new TGumpTilepic(graphic, x, y);
+			go = new TGumpTilepic(graphic, 0, x, y);
 		}
 		else if (!memcmp(lowc, "gumppictiled", 12))
 		{
