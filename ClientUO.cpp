@@ -1044,6 +1044,8 @@ bool TUltimaOnline::Install()
 
 	g_LightBuffer.Init(GetSystemMetrics(SM_CXMAXIMIZED), GetSystemMetrics(SM_CYMAXIMIZED));
 
+	g_CircleOfTransparency.Create(100);
+
 	MainScreen->LoadGlobalConfig();
 
 	LoadShaders();

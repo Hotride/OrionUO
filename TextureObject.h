@@ -22,17 +22,31 @@
 //---------------------------------------------------------------------------
 class TTextureObject
 {
-private:
+protected:
 	int m_Width;
 	int m_Height;
 public:
 	TTextureObject();
-	~TTextureObject();
+	virtual ~TTextureObject();
 
 	SETGET(int, Width);
 	SETGET(int, Height);
 
 	GLuint Texture;
+};
+//---------------------------------------------------------------------------
+class TCircleOfTransparencyTexture : public TTextureObject
+{
+protected:
+	int m_Radius;
+public:
+	TCircleOfTransparencyTexture();
+	virtual ~TCircleOfTransparencyTexture();
+
+	SETGET(int, Radius);
+
+	bool Create(int radius);
+	void Draw(int x, int y);
 };
 //---------------------------------------------------------------------------
 class TTextureAnimationFrame : public TBaseQueueItem
@@ -152,5 +166,7 @@ public:
 	void AddWebLink(WEB_LINK_RECT &wl) {WebLinkRect.push_back(wl);}
 	WORD WebLinkUnderMouse(int x, int y);
 };
+//---------------------------------------------------------------------------
+extern TCircleOfTransparencyTexture g_CircleOfTransparency;
 //---------------------------------------------------------------------------
 #endif

@@ -27,7 +27,7 @@ bool TGLEngine::GLSetupPixelFormat()
 	{
 		sizeof(PIXELFORMATDESCRIPTOR), //nSize
 		1, //nVersion
-		PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER, //dwFlags
+		/*PFD_DRAW_TO_WINDOW |*/ PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER, //dwFlags
 		PFD_TYPE_RGBA, //iPixelType
 		16, //cColorBits
 		0, 0, //cRedBits, cRedShift
@@ -94,7 +94,7 @@ bool TGLEngine::Install(HWND hWnd)
 
 	TPRINT("g_UseFrameBuffer = %i\n", g_UseFrameBuffer);
 
-	glClearColor(0.0, 0.0, 0.0, 1.0);		// Black Background
+	glClearColor(0.0, 0.0, 0.0, 0.0);		// Black Background
 	glShadeModel(GL_SMOOTH);				// Enables Smooth Color Shading
 	glClearDepth(1.0);						// Depth Buffer Setup
 	glEnable(GL_DEPTH_TEST);				// Enable Depth Buffer

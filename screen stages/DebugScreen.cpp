@@ -473,18 +473,41 @@ int TDebugScreen::Render(bool mode)
 			glEnd();
 		}*/
 
-		UO->DrawLandArt(0x03, 0, 320, 240, 30);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 240, 0);
+
+		glEnable(GL_BLEND);
+		//glBlendFunc(GL_ONE, GL_SRC_ALPHA);
+		glBlendFunc(GL_DST_ALPHA, GL_ONE);
+
+
+		g_CircleOfTransparency.Draw(320, 240);
+
+
+		glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 320, 240, 0);
+
+		/*UO->DrawLandArt(0x03, 0, 320, 240, 30);
 		UO->DrawLandArt(0x03, 0, 320, 240, 20);
 		UO->DrawLandArt(0x03, 0, 320, 240, 10);
 		UO->DrawLandArt(0x03, 0, 320, 240, 0);
 
 		UO->DrawStaticArtAnimated(0x0CE0, 0, 320, 240, 0);
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 300, 240, 0);
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 280, 240, 0);
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 260, 240, 0);
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 240, 0);
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 220, 240, 0);
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 200, 240, 0);
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE, GL_DST_COLOR);
+		//glEnable(GL_BLEND);
+		///glBlendFunc(GL_ONE, GL_DST_COLOR);
 		//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 
-		UO->DrawStaticArtAnimated(0x0CE1, 0, 320, 240, 0);
+		UO->DrawStaticArtAnimated(0x0CE1, 0, 320, 240, 0);*/
 
 		glDisable(GL_BLEND);
 

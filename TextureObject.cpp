@@ -18,6 +18,8 @@
 */
 //---------------------------------------------------------------------------
 #include "stdafx.h"
+
+TCircleOfTransparencyTexture g_CircleOfTransparency;
 //---------------------------------------------------------------------------
 TTextureObject::TTextureObject()
 : m_Width(0), m_Height(0), Texture(0)
@@ -30,6 +32,86 @@ TTextureObject::~TTextureObject()
 	{
 		glDeleteTextures(1, &Texture);
 		Texture = 0;
+	}
+}
+//---------------------------------------------------------------------------
+TCircleOfTransparencyTexture::TCircleOfTransparencyTexture()
+: TTextureObject(), m_Radius(0)
+{
+}
+//---------------------------------------------------------------------------
+TCircleOfTransparencyTexture::~TCircleOfTransparencyTexture()
+{
+}
+//---------------------------------------------------------------------------
+bool TCircleOfTransparencyTexture::Create(int radius)
+{
+	if (radius <= 0)
+		return false;
+	else if (radius == m_Radius)
+		return true;
+
+	if (radius > 200)
+		radius = 200;
+
+	int fixRadius = radius + 10;
+	int mulRadius = fixRadius * 2;
+
+	PDWORD pixels = new DWORD[mulRadius * mulRadius];
+
+	if (pixels == NULL)
+		return false;
+
+	m_Width = mulRadius;
+	m_Height = mulRadius;
+
+	if (Texture != NULL)
+	{
+		glDeleteTextures(1, &Texture);
+		Texture = 0;
+	}
+
+	for (int x = -fixRadius; x < fixRadius; x++)
+	{
+		for (int y = -fixRadius; y < fixRadius; y++)
+		{
+			int r = (int)sqrt((x * x) + (y * y));
+
+			int pos = (x + fixRadius) * mulRadius + (y + fixRadius);
+
+			if (r <= radius)
+			{
+				//pixels[pos] = 0x000000FF | (((radius - r) & 0xFF) << 24);
+
+				//pixels[pos] = (((radius - r) & 0xFF) << 8) | ((radius - r) & 0xFF);
+
+				pixels[pos] = (radius - r) & 0xFF;
+			}
+			else
+				pixels[pos] = 0;
+		}
+	}
+
+	g_GL.BindTexture32(Texture, m_Width, m_Height, &pixels[0]);
+
+	delete pixels;
+
+	return true;
+}
+//---------------------------------------------------------------------------
+void TCircleOfTransparencyTexture::Draw(int x, int y)
+{
+	if (Texture != 0)
+	{
+		x -= m_Width / 2;
+		y -= m_Height / 2;
+
+		//glEnable(GL_BLEND);
+		//glBlendFunc(GL_ONE, GL_DST_ALPHA);
+
+		g_GL.Draw(Texture, x, y, m_Width, m_Height);
+
+		//glDisable(GL_BLEND);
 	}
 }
 //---------------------------------------------------------------------------

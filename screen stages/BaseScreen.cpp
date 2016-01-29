@@ -70,7 +70,7 @@ void TBaseScreen::DrawSmoothMonitorEffect()
 
 		g_GL.RestorePort();
 
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 

@@ -236,12 +236,16 @@ void TGameScreen::CalculateGameWindow()
 	if (m_RenderBounds.MaxBlockY >= g_MapBlockY[g_CurrentMap])
 		m_RenderBounds.MaxBlockY = g_MapBlockY[g_CurrentMap] - 1;
 
-	int drawOffset = 120;
+	int drawOffsetX = 30;
 
-	m_RenderBounds.MinPixelsX = m_RenderBounds.GameWindowPosX - drawOffset;
-	m_RenderBounds.MaxPixelsX = m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX + drawOffset;
-	m_RenderBounds.MinPixelsY = m_RenderBounds.GameWindowPosY - drawOffset - playerZOffset;
-	m_RenderBounds.MaxPixelsY = m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY + 200 + playerZOffset;
+	m_RenderBounds.MinPixelsX = m_RenderBounds.GameWindowPosX - drawOffsetX;
+	m_RenderBounds.MaxPixelsX = m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX + drawOffsetX;
+
+	int drawOffsetMinY = 30;
+	int drawOffsetMaxY = 60;
+
+	m_RenderBounds.MinPixelsY = m_RenderBounds.GameWindowPosY - drawOffsetMinY; // -playerZOffset;
+	m_RenderBounds.MaxPixelsY = m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY + drawOffsetMaxY + playerZOffset;
 }
 //---------------------------------------------------------------------------
 void TGameScreen::CheckMouseEvents(bool &charSelected)
@@ -558,7 +562,7 @@ int TGameScreen::Render(bool mode)
 		if (DrawSmoothMonitor())
 			return 0;
 
-		g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
+		//g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
 		
 		g_DrawColor = 1.0f;
 
@@ -707,7 +711,7 @@ int TGameScreen::Render(bool mode)
 
 						g_GL.RestorePort();
 
-						glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+						glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 						g_GL.ViewPort(gameWindowPosX, gameWindowPosY, gameWindowSizeX, gameWindowSizeY);
 
@@ -826,7 +830,7 @@ int TGameScreen::Render(bool mode)
 		{
 			UnuseShader();
 
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			g_LightBuffer.Release();
