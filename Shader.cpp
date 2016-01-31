@@ -90,6 +90,16 @@ bool TBaseShader::Use()
 	return result;
 }
 //---------------------------------------------------------------------------
+void TBaseShader::Pause()
+{
+	glUseProgramObjectARB(0);
+}
+//---------------------------------------------------------------------------
+void TBaseShader::Resume()
+{
+	glUseProgramObjectARB(m_Shader);
+}
+//---------------------------------------------------------------------------
 //-----------------------------TDeathShader----------------------------------
 //---------------------------------------------------------------------------
 TDeathShader::TDeathShader(const char *vertexShaderData, const char *fragmentShaderData)

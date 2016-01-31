@@ -95,6 +95,14 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 	return 0;
 }
+#if UO_ENABLE_DATA_TEST == 1
+//---------------------------------------------------------------------------
+TTextureObject *TGameEffect::GetRenderTexture()
+{
+	m_CanBeRendered = true;
+	return 0;
+}
+#endif
 //---------------------------------------------------------------------------
 WORD TGameEffect::CalculateCurrentGraphic()
 {

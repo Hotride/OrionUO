@@ -71,6 +71,14 @@ private:
 	LIGHT_DATA m_Light[MAX_LIGHT_SOURCES];
 	int m_LightCount;
 
+#if UO_ENABLE_DATA_TEST == 1
+	int m_GameWindowWidth;
+	int m_GameWindowHeight;
+	BYTE m_GameWindowMarkerID;
+	
+	PBYTE m_GameWindowBuffer;
+#endif
+
 	void RemoveLight(WORD x, WORD y, char z);
 
 	int GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ);
@@ -84,6 +92,10 @@ public:
 	static const BYTE ID_SMOOTH_GS_LOGOUT = 1;
 
 	void CalculateGameWindow();
+
+#if UO_ENABLE_DATA_TEST == 1
+	void TestGameWindowData();
+#endif
 
 	void RestoreGameWindowPort() {g_GL.ViewPort(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY, m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowSizeY);}
 

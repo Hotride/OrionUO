@@ -89,6 +89,7 @@ public:
 	TTextureObject *ExecuteGump(WORD id, bool partialHue = true);
 	TTextureObject *ExecuteLandArt(WORD id);
 	TTextureObject *ExecuteStaticArt(WORD id);
+	TTextureObject *ExecuteStaticArtAnimated(WORD id);
 	TTextureObject *ExecuteTexture(WORD id);
 	TTextureObject *ExecuteLight(BYTE &id);
 	
@@ -114,6 +115,8 @@ public:
 	bool ResizepicPixelsInXY(WORD id, int x, int y, int width, int height);
 	bool StaticPixelsInXY(WORD id, int x, int y, int z);
 	bool StaticPixelsInXYAnimated(WORD id, int x, int y, int z);
+	bool StaticPixelsInCircleTrans(WORD id, int x, int y, int z);
+	bool StaticPixelsInCircleTransAnimated(WORD id, int x, int y, int z);
 	bool StaticPixelsInXYInContainer(WORD id, int x, int y);
 	bool LandPixelsInXY(WORD id, int x, int y, int z);
 	bool LandTexturePixelsInXY(int x, int  y, RECT &r);
@@ -124,6 +127,7 @@ public:
 	void GetArtDimension(WORD id, POINT &p);
 	void GetGumpDimension(WORD id, POINT &p);
 	
+	TIndexObject *GetGumpPointer(WORD id);
 	TIndexMulti *GetMultiPointer(WORD id);
 	WORD GetLightColor(WORD id) {return m_StaticDataIndex[id].LightColor;}
 

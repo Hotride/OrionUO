@@ -180,7 +180,7 @@ int TServerScreen::Render(bool mode)
 
 	if (mode)
 	{
-		g_LastRenderTime = ticks + g_FrameDelay;
+		g_LastRenderTime = ticks + (g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]);
 
 		g_GL.BeginDraw();
 

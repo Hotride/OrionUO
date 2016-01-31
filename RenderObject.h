@@ -61,6 +61,9 @@ protected:
 	char m_Z;
 	BYTE m_RenderQueueIndex;
 	RENDER_OBJECT_TYPE m_RenderType;
+#if UO_ENABLE_DATA_TEST == 1
+	bool m_CanBeRendered;
+#endif
 public:
 	TRenderWorldObject(RENDER_OBJECT_TYPE renderType, DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TRenderWorldObject();
@@ -72,11 +75,18 @@ public:
 	
 	int GetTextOffsetX(TTextData *text);
 	int GetTextOffsetY(TTextData *text);
-	bool CanBeTransparent(TRenderTextObject *text);
+	bool TextCanBeTransparent(TRenderTextObject *text);
+
+	virtual bool TranparentTest(int &playerZ) {return false;}
 
 	SETGETEX(char, Z);
 	SETGETEX(BYTE, RenderQueueIndex);
 	SETGET(RENDER_OBJECT_TYPE, RenderType);
+#if UO_ENABLE_DATA_TEST == 1
+	SETGET(bool, CanBeRendered);
+
+	virtual TTextureObject *GetRenderTexture() {return NULL;}
+#endif
 
 	TRenderWorldObject *m_NextXY;
 	TRenderWorldObject *m_PrevXY;

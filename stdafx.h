@@ -166,6 +166,7 @@ extern bool g_NoDrawRoof;
 extern char g_MaxGroundZ;
 extern char g_SelecterCharName[30];
 extern int g_ZBuffer;
+extern bool g_UseCircleTrans;
 
 const BYTE SMOOTH_MONITOR_NONE = 0;
 const BYTE SMOOTH_MONITOR_SUNRISE = 1;
@@ -206,7 +207,9 @@ extern DWORD g_LastTargetObject;
 extern DWORD g_LastAttackObject;
 //---------------------------------------------------------------------------
 extern DWORD g_LastRenderTime;
-extern DWORD g_FrameDelay;
+const int g_FrameDelay_ActiveWindow = 30;
+const int g_FrameDelay_UnactiveWindow = 200;
+static int g_FrameDelay[2] = {g_FrameDelay_UnactiveWindow, g_FrameDelay_ActiveWindow};
 //---------------------------------------------------------------------------
 const WORD g_SelectLandColor = 0x0044;
 const WORD g_SelectStaticColor = 0x0077;

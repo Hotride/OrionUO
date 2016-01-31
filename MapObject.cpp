@@ -178,10 +178,13 @@ g_RenderedObjectsCountInGameWindow++;
 	return 0;
 }
 //---------------------------------------------------------------------------
-TStaticObject::TStaticObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z)
-: TMapObject(ROT_STATIC_OBJECT, serial, graphic, color, x, y, z)
+TStaticObject::TStaticObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z, STATIC_TILES &staticTile)
+: TMapObject(ROT_STATIC_OBJECT, serial, graphic, color, x, y, z),
+m_StaticTile(staticTile)
 {
-	m_ObjectFlags = UO->GetStaticFlags(graphic - 0x4000);
+	WORD id = graphic - 0x4000;
+
+	m_ObjectFlags = m_StaticTile.Flags;
 	
 	if (IsWet())
 		m_RenderQueueIndex = 0;
@@ -191,10 +194,33 @@ TStaticObject::TStaticObject(DWORD serial, WORD graphic, WORD color, short x, sh
 		m_RenderQueueIndex = 4;
 	else
 		m_RenderQueueIndex = 6;
+	
+	if (m_StaticTile.Height > 5)
+		m_CanBeTransparent = 1;
+	else if (IsRoof() || (IsSurface() && IsBackground()) || IsWall())
+		m_CanBeTransparent = 1;
+	else if (m_StaticTile.Height == 5 && IsSurface() && !IsBackground())
+		m_CanBeTransparent = 1;
+	else
+		m_CanBeTransparent = 0;
 
 #if UO_DEBUG_INFO!=0
 	g_StaticsObjectsCount++;
 #endif //UO_DEBUG_INFO!=0
+}
+//---------------------------------------------------------------------------
+bool TStaticObject::TranparentTest(int &playerZ)
+{
+	bool result = true;
+
+	if (m_Z < playerZ - (m_StaticTile.Height - 5))
+		result = false;
+	else if (m_StaticTile.Height == 5 && m_Z > playerZ - 5 && m_Z < playerZ + 5)
+		result = false;
+	else if (playerZ + 5 < m_Z && !m_CanBeTransparent)
+		result = false;
+
+	return result;
 }
 //---------------------------------------------------------------------------
 int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
@@ -234,8 +260,6 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
 					
-					glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
 					glDisable(GL_BLEND);
 				}
 				else
@@ -247,7 +271,24 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 			if (IsSurface() || (IsBackground() && IsUnknown2()) || IsRoof())
 				glEnable(GL_DEPTH_TEST);
 
-			UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
+			if (g_UseCircleTrans)
+			{
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				glColor4f(1.0f, 1.0f, 1.0f, 0.25f);
+						
+				UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
+		
+				glDisable(GL_BLEND);
+		
+				glEnable(GL_STENCIL_TEST);
+		
+				UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
+
+				glDisable(GL_STENCIL_TEST);
+			}
+			else
+				UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
 
 			glDisable(GL_DEPTH_TEST);
 		}
@@ -266,7 +307,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 	}
 	else
 	{
-		if (IsFoliage()) // && playerX - 2 < mX && playerY - 2 < mY)
+		if (IsFoliage())
 		{
 			if (!g_GrayedPixels)
 			{
@@ -286,7 +327,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				}
 			}
 		}
-		else if (UO->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z))
+		else if ((!g_UseCircleTrans || (g_UseCircleTrans && !UO->StaticPixelsInCircleTransAnimated(objGraphic, drawX, drawY, m_Z))) && UO->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z))
 		{
 			g_LastObjectType = SOT_STATIC_OBJECT;
 			g_LastSelectedObject = 3;
@@ -296,4 +337,14 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 	return 0;
 }
+#if UO_ENABLE_DATA_TEST == 1
+//---------------------------------------------------------------------------
+TTextureObject *TStaticObject::GetRenderTexture()
+{
+	if (g_NoDrawRoof && IsRoof())
+		return NULL;
+
+	return UO->ExecuteStaticArtAnimated(m_Graphic - 0x4000);
+}
+#endif
 //---------------------------------------------------------------------------

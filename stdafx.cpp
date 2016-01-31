@@ -120,6 +120,7 @@ GLfloat g_SmoothMonitorColor = 0.0f;
 GLfloat g_SmoothMonitorStep = 0.03f;
 BYTE g_SmoothMonitorScale = 15;
 int g_ZBuffer = 0;
+bool g_UseCircleTrans = false;
 
 int g_MouseX = 0;
 int g_MouseY = 0;
@@ -152,7 +153,6 @@ IMAGE_BOUNDS g_PlayerRect = {0, 0, 0, 0};
 int g_UpdateRange = 18;
 
 DWORD g_LastRenderTime = 0;
-DWORD g_FrameDelay = 0x1E;
 
 TARGET_GUMP_INFO TargetGump = {0, 0, 0, 0};
 TARGET_GUMP_INFO AttackTargetGump = {0, 0, 0, 0};

@@ -183,7 +183,7 @@ void TTarget::LoadMulti(int x, int y, char z)
 		{
 			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(address + (j * sizeof(MULTI_BLOCK)));
 			
-			TMultiObject *mo = new TMultiObject(pmb->ID + 0x4000, x + pmb->X, y + pmb->Y, z + (char)pmb->Z, 2);
+			TMultiObject *mo = new TMultiObject(pmb->ID + 0x4000, x + pmb->X, y + pmb->Y, z + (char)pmb->Z, 2, UO->m_StaticData[pmb->ID / 32].Tiles[pmb->ID % 32]);
 			MapManager->AddRender(mo);
 			AddMultiObject(mo);
 		}

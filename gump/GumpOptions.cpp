@@ -3234,6 +3234,8 @@ void TGumpOptions::ApplyPageChanges()
 			ConfigManager.SkillReport = g_OptionsConfig.SkillReport;
 			ConfigManager.SpeechFont = g_OptionsConfig.SpeechFont;
 
+			g_CircleOfTransparency.Create(ConfigManager.CircleTransRadius);
+
 			break;
 		}
 		case 9: //Filter Options

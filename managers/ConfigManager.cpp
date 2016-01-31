@@ -40,6 +40,8 @@ void TConfigManager::Init()
 	
 	DefaultPage9();
 
+	g_CircleOfTransparency.Create(m_CircleTransRadius);
+
 	m_FilterPWOn = false;
 	m_ObscenityFilter = false;
 	m_FilterPassword = "";
@@ -362,6 +364,8 @@ void TConfigManager::Load(string path)
 			m_SpeechFont = file.ReadWord();
 		}
 		
+		g_CircleOfTransparency.Create(m_CircleTransRadius);
+
 		file.Ptr = next;
 		
 		//Page 10

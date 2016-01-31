@@ -181,7 +181,7 @@ int TMainScreen::Render(bool mode)
 		if (g_LeftMouseDown && g_LastObjectLeftMouseDown == g_LastSelectedObject)
 			CanPressedButton = g_LastObjectLeftMouseDown;
 	
-		g_LastRenderTime = ticks + g_FrameDelay;
+		g_LastRenderTime = ticks + (g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]);
 
 		g_GL.BeginDraw();
 

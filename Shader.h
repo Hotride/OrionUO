@@ -32,6 +32,8 @@ public:
 	virtual ~TBaseShader();
 
 	virtual bool Use();
+	virtual void Pause();
+	virtual void Resume();
 };
 //---------------------------------------------------------------------------
 class TDeathShader : public TBaseShader

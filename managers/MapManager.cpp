@@ -302,7 +302,7 @@ void TMapManager::LoadBlock(TMapBlock *block)
 					int pos = (y * 8) + x;
 					//if (pos > 64) continue;
 				
-					TMapObject *obj = new TStaticObject(pos, sb->Color + 0x4000, sb->Hue, BX + x, BY + y, sb->Z);
+					TMapObject *obj = new TStaticObject(pos, sb->Color + 0x4000, sb->Hue, BX + x, BY + y, sb->Z, UO->m_StaticData[sb->Color / 32].Tiles[sb->Color % 32]);
 					block->AddObject(obj, x, y);
 				}
 			}

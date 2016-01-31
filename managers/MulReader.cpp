@@ -36,6 +36,10 @@ TTextureObject *TMulReader::ReadGump(DWORD Address, DWORD Size, WORD Width, WORD
 	PWORD pixels = new WORD[blocksize];
 	//memset(&pixels[0], 0, blocksize * 2);
 
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+	PBYTE data = new BYTE[blocksize];
+#endif
+
 	IFOR(Y, 0, Height)
 	{
 		int GSize = 0;
@@ -58,12 +62,20 @@ TTextureObject *TMulReader::ReadGump(DWORD Address, DWORD Size, WORD Width, WORD
 
 				pixels[block] = a | val;
 
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+				data[block] = (BYTE)(a ? 1 : 0);
+#endif
+
 				X++;
 			}
 		}
 	}
 
 	g_GL.BindTexture16(th->Texture, Width, Height, pixels);
+
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+	th->Data = data;
+#endif
 
 	delete pixels;
 	return th;
@@ -90,7 +102,9 @@ bool TMulReader::GumpPixelsInXY(DWORD Address, DWORD Size, WORD Width, WORD Heig
 	{
 		IFOR(j, 0, gmul[i].Run)
 		{
-			if (X == CheckX) return (gmul[i].Value != 0);
+			if (X == CheckX)
+				return (gmul[i].Value != 0);
+
 			X++;
 		}
 	}
@@ -114,6 +128,11 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 		const int blocksize = 44 * 44;
 
 		WORD pixels[blocksize] = { 0 };
+		
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+	PBYTE data = new BYTE[blocksize];
+	memset(&data[0], 0, blocksize);
+#endif
 
 		IFOR(i, 0, 22)
 		{
@@ -123,6 +142,9 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 				WORD a = val ? 0x8000 : 0;
 				int block = i * 44 + j;
 				pixels[block] = a | val;
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+				data[block] = (BYTE)(a ? 1 : 0);
+#endif
 				P++;
 			}
 		}
@@ -135,9 +157,16 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 				WORD a = val ? 0x8000 : 0;
 				int block = (i + 22) * 44 + j;
 				pixels[block] = a | val;
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+				data[block] = (BYTE)(a ? 1 : 0);
+#endif
 				P++;
 			}
 		}
+		
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+		th->Data = data;
+#endif
 
 		g_GL.BindTexture16(th->Texture, 44, 44, pixels);
 	}
@@ -176,6 +205,11 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 
 		PWORD pixels = new WORD[blocksize];
 		memset(&pixels[0], 0, blocksize * 2);
+		
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+		PBYTE data = new BYTE[blocksize];
+		memset(&data[0], 0, blocksize);
+#endif
 
 		ptr = (PWORD)((DWORD)DataStart + (*LineOffsets));
 		ID -= 0x4000;
@@ -202,6 +236,9 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 					WORD a = val ? 0x8000 : 0;
 					int block = Y * w + X + j;
 					pixels[block] = a | val;
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+				data[block] = (BYTE)(a ? 1 : 0);
+#endif
 					ptr++;
 				}
 
@@ -230,6 +267,10 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 		}
 
 		g_GL.BindTexture16(th->Texture, w, h, pixels);
+		
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+		th->Data = data;
+#endif
 
 		delete pixels;
 	}

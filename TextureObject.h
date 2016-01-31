@@ -19,6 +19,14 @@
 //---------------------------------------------------------------------------
 #ifndef TextureObjectH
 #define TextureObjectH
+
+#define UO_ENABLE_TEXTURE_DATA_SAVING 1
+
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+#define UO_ENABLE_DATA_TEST 0
+#else
+#define UO_ENABLE_DATA_TEST 0
+#endif
 //---------------------------------------------------------------------------
 class TTextureObject
 {
@@ -33,17 +41,24 @@ public:
 	SETGET(int, Height);
 
 	GLuint Texture;
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+	PBYTE Data;
+#endif
 };
 //---------------------------------------------------------------------------
 class TCircleOfTransparencyTexture : public TTextureObject
 {
 protected:
 	int m_Radius;
+	int m_X;
+	int m_Y;
 public:
 	TCircleOfTransparencyTexture();
 	virtual ~TCircleOfTransparencyTexture();
-
+	
 	SETGET(int, Radius);
+	SETGET(int, X);
+	SETGET(int, Y);
 
 	bool Create(int radius);
 	void Draw(int x, int y);

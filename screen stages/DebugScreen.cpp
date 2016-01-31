@@ -408,7 +408,7 @@ int TDebugScreen::Render(bool mode)
 		if (g_LeftMouseDown && g_LastObjectLeftMouseDown == g_LastSelectedObject)
 			CanPressedButton = g_LastObjectLeftMouseDown;
 
-		g_LastRenderTime = ticks + g_FrameDelay;
+		g_LastRenderTime = ticks + (g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]);
 
 		g_GL.BeginDraw();
 
@@ -472,21 +472,65 @@ int TDebugScreen::Render(bool mode)
 				glTexCoord2i(0, 0); glVertex2i(0, 0);
 			glEnd();
 		}*/
+		
+		g_CircleOfTransparency.Draw(320, 240);
+		
+		UO->DrawLandArt(0x03, 0, 320, 240, 30);
+		UO->DrawLandArt(0x03, 0, 320, 240, 20);
+		UO->DrawLandArt(0x03, 0, 320, 240, 10);
+		UO->DrawLandArt(0x03, 0, 320, 240, 0);
 
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4f(1.0f, 1.0f, 1.0f, 0.15f);
+
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 140, 0);
+
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 240, 0);
+		
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 320, 240, 0);
+		
+		glDisable(GL_BLEND);
+		
+		glEnable(GL_STENCIL_TEST);
+		
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 140, 0);
+
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 240, 0);
+		
+		UO->DrawStaticArtAnimated(0x0CE0, 0, 320, 240, 0);
+
+		glDisable(GL_STENCIL_TEST);
+
+		
+		UnuseShader();
+
+		/*//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		//DPOLY(150, 100, 300, 300);
+		
+		UO->DrawLandArt(0x03, 0, 320, 240, 30);
+		UO->DrawLandArt(0x03, 0, 320, 240, 20);
+		UO->DrawLandArt(0x03, 0, 320, 240, 10);
+		UO->DrawLandArt(0x03, 0, 320, 240, 0);
 
 		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 240, 0);
 
-		glEnable(GL_BLEND);
-		//glBlendFunc(GL_ONE, GL_SRC_ALPHA);
-		glBlendFunc(GL_DST_ALPHA, GL_ONE);
 
 
 		g_CircleOfTransparency.Draw(320, 240);
 
+		static int ccc = 0;
 
-		glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+		if (ccc++ > 10)
+		{
+			if (ccc > 20)
+				ccc = 0;
+		}
+		else
+			glEnable(GL_BLEND);
+
+		glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA);
 
 		UO->DrawStaticArtAnimated(0x0CE0, 0, 320, 240, 0);
 
@@ -509,9 +553,7 @@ int TDebugScreen::Render(bool mode)
 
 		UO->DrawStaticArtAnimated(0x0CE1, 0, 320, 240, 0);*/
 
-		glDisable(GL_BLEND);
-
-		UnuseShader();
+		//glDisable(GL_BLEND);
 
 		DrawSmoothMonitorEffect();
 

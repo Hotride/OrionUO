@@ -68,7 +68,7 @@ public:
 	SETGET(bool, IsStretched);
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
-
+	
 	bool IsLandObject() {return true;}
 
 	bool Ignored() {return (Graphic == 2 || Graphic == 0x1DB || (Graphic >= 0x1AE && Graphic <= 0x1B5));}
@@ -78,15 +78,24 @@ class TStaticObject : public TMapObject
 {
 private:
 	DWORD m_ObjectFlags;
+	STATIC_TILES &m_StaticTile;
+	char m_CanBeTransparent;
 public:
-	TStaticObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z);
+	TStaticObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z, STATIC_TILES &staticTile);
 	virtual ~TStaticObject() {}
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
+	
+	virtual bool TranparentTest(int &playerZ);
+
+#if UO_ENABLE_DATA_TEST == 1
+	virtual TTextureObject *GetRenderTexture();
+#endif
 
 	bool IsStaticObject() {return true;}
 	
 	SETGET(DWORD, ObjectFlags);
+	SETGET(char, CanBeTransparent);
 	
 	bool IsBackground() {return (m_ObjectFlags & 0x00000001);}
 	bool IsWeapon() {return (m_ObjectFlags & 0x00000002);}

@@ -115,7 +115,7 @@ int TCreateCharacterScreen::Render(bool mode)
 		if (g_LeftMouseDown && g_LastObjectLeftMouseDown == g_LastSelectedObject)
 			CanPressedButton = g_LastObjectLeftMouseDown;
 	
-		g_LastRenderTime = ticks + g_FrameDelay;
+		g_LastRenderTime = ticks + (g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]);
 
 		g_GL.BeginDraw();
 
@@ -401,12 +401,16 @@ int TCreateCharacterScreen::Render(bool mode)
 
 		if (CreateCharacterManager.Sex)
 		{
+			ColorizerShader->Use();
+
 			UO->DrawGump(0x0760, CreateCharacterManager.SkinTone, 238, 98); //Character create female body gump
 			UO->DrawGump(0x0714, CreateCharacterManager.ShirtColor, 238, 98); //Character create skirt
 			UO->DrawGump(0x0764, CreateCharacterManager.PantsColor, 238, 98); //Character create dress
 
 			if (CreateCharacterManager.HairStyle)
 				UO->DrawGump(CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).GumpID, CreateCharacterManager.HairColor, 238, 98); //Character hair
+
+			UnuseShader();
 
 			GumpID = 0x070D + (int)(CanSelectedButton == 4); //Character female button
 			if (CanPressedButton == 4)
@@ -449,6 +453,8 @@ int TCreateCharacterScreen::Render(bool mode)
 
 				g_GL.DrawPolygone(clr, 490.0f, 333.0f, 120.0f, 25.0f);
 			}
+			
+			ColorizerShader->Use();
 
 			UO->DrawGump(0x0761, CreateCharacterManager.SkinTone, 238, 98); //Character create male body gump
 			UO->DrawGump(0x0739, CreateCharacterManager.ShirtColor, 238, 98); //Character create shirt
@@ -459,6 +465,8 @@ int TCreateCharacterScreen::Render(bool mode)
 				UO->DrawGump(CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).GumpID, CreateCharacterManager.HairColor, 238, 98); //Character hair
 			if (CreateCharacterManager.BeardStyle)
 				UO->DrawGump(CreateCharacterManager.GetBeard(CreateCharacterManager.BeardStyle).GumpID, CreateCharacterManager.BeardColor, 238, 98); //Character facial hair
+			
+			UnuseShader();
 
 			GumpID = 0x0710 + (int)(CanSelectedButton == 4); //Character male button
 			if (CanPressedButton == 4)

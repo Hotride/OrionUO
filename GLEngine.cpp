@@ -257,7 +257,7 @@ void TGLEngine::DrawLine(DWORD color, float x, float y, float targetX, float tar
 
 	glLoadIdentity();
 
-	glColor3b(GetRValue(color), GetGValue(color), GetBValue(color));
+	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
 
 	glBegin(GL_LINES);
 		glVertex2f(x, y);
@@ -275,7 +275,7 @@ void TGLEngine::DrawPolygone(DWORD color, float x, float y, float width, float h
 	glLoadIdentity();
 	glTranslatef(x, y, 0.0f);
 
-	glColor3b(GetRValue(color), GetGValue(color), GetBValue(color));
+	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
 
 	glBegin(GL_QUADS);
 		glVertex2f(0.0f, height);
@@ -295,7 +295,7 @@ void TGLEngine::DrawTriangle(DWORD color, float x, float y, float radius)
 	glLoadIdentity();
 	glTranslatef(x, y, 0.0f);
 
-	glColor3b(GetRValue(color), GetGValue(color), GetBValue(color));
+	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
 
 	glBegin(GL_TRIANGLE_FAN);
 

@@ -1044,7 +1044,7 @@ bool TUltimaOnline::Install()
 
 	g_LightBuffer.Init(GetSystemMetrics(SM_CXMAXIMIZED), GetSystemMetrics(SM_CYMAXIMIZED));
 
-	g_CircleOfTransparency.Create(100);
+	g_CircleOfTransparency.Create(200);
 
 	MainScreen->LoadGlobalConfig();
 
@@ -2822,15 +2822,22 @@ void TUltimaOnline::Process()
 				}
 			}
 		}
+		
+		if (g_LastRenderTime <= ticks)
+		{
+			GameScreen->CalculateGameWindow();
 
-		GameScreen->CalculateGameWindow();
+#if UO_ENABLE_DATA_TEST == 1
+			GameScreen->TestGameWindowData();
+#endif
 
-		if (CanRenderSelect)
-			GameScreen->Render(false);
+			if (CanRenderSelect)
+				GameScreen->Render(false);
 
-		GameScreen->Render(true);
+			GameScreen->Render(true);
+		}
 	}
-	else
+	else if (g_LastRenderTime <= ticks)
 	{
 		CurrentScreen->Render(false);
 		CurrentScreen->Render(true);
@@ -2929,6 +2936,13 @@ TTextureObject *TUltimaOnline::ExecuteLandArt(WORD id)
 	io.LastAccessTime = GetTickCount();
 
 	return io.Texture;
+}
+//---------------------------------------------------------------------------
+TTextureObject *TUltimaOnline::ExecuteStaticArtAnimated(WORD id)
+{
+	id += m_StaticDataIndex[id].Increment;
+
+	return ExecuteStaticArt(id);
 }
 //---------------------------------------------------------------------------
 TTextureObject *TUltimaOnline::ExecuteStaticArt(WORD id)
@@ -3128,7 +3142,8 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 	if (!color && !g_GrayedPixels)
 	{
 		shader = CurrentShader;
-		UnuseShader();
+		if (shader != NULL)
+			shader->Pause();
 	}
 	else if (drawMode)
 		ColorManager->SendColorsToShader(color);
@@ -3145,10 +3160,7 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 	glDisable(GL_LIGHTING);
 
 	if (shader != NULL)
-	{
-		CurrentShader = shader;
-		shader->Use();
-	}
+		shader->Resume();
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
@@ -3553,6 +3565,64 @@ bool TUltimaOnline::StaticPixelsInXYAnimated(WORD id, int x, int y, int z)
 	return result;
 }
 //---------------------------------------------------------------------------
+bool TUltimaOnline::StaticPixelsInCircleTrans(WORD id, int x, int y, int z)
+{
+	TIndexObject &io = m_StaticDataIndex[id];
+
+	bool result = false;
+
+	TTextureObject *th = io.Texture;
+
+	if (th != NULL)
+	{
+		int cotX = g_CircleOfTransparency.X;
+		int cotWidth = g_CircleOfTransparency.Width;
+
+		if (x < cotX)
+		{
+			if (cotX < x + th->Width)
+				result = true;
+		}
+		else
+		{
+			if (x < cotX + cotWidth)
+				result = true;
+		}
+
+		if (result)
+		{
+			y -= z * 4;
+			
+			int cotY = g_CircleOfTransparency.Y;
+			int cotHeight = g_CircleOfTransparency.Height;
+
+			if (y < cotY)
+			{
+				if (cotY < y + th->Height)
+					result = true;
+				else
+					result = false;
+			}
+			else
+			{
+				if (y < cotY + cotHeight)
+					result = true;
+				else
+					result = false;
+			}
+		}
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
+bool TUltimaOnline::StaticPixelsInCircleTransAnimated(WORD id, int x, int y, int z)
+{
+	id += m_StaticDataIndex[id].Increment;
+
+	return StaticPixelsInCircleTrans(id, x, y, z);
+}
+//---------------------------------------------------------------------------
 bool TUltimaOnline::StaticPixelsInXYInContainer(WORD id, int x, int y)
 {
 	TIndexObject &io = m_StaticDataIndex[id];
@@ -3677,6 +3747,11 @@ void TUltimaOnline::GetGumpDimension(WORD id, POINT &p)
 		p.x = 0;
 		p.y = 0;
 	}
+}
+//---------------------------------------------------------------------------
+TIndexObject *TUltimaOnline::GetGumpPointer(WORD id)
+{
+	return &m_GumpDataIndex[id];
 }
 //---------------------------------------------------------------------------
 TIndexMulti *TUltimaOnline::GetMultiPointer(WORD id)

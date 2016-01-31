@@ -30,6 +30,55 @@ void TGumpMinimap::PrepareTextures()
 	UO->ExecuteGumpPart(0x1392, 2);
 }
 //---------------------------------------------------------------------------
+PWORD TGumpMinimap::GetTextureData(WORD id, int &width, int &height)
+{
+	TIndexObject *io = UO->GetGumpPointer(id);
+
+	if (io == NULL)
+		return NULL;
+
+	DWORD size = io->Size;
+	int DataStart = io->Address;
+	PDWORD LookupList = (PDWORD)DataStart;
+
+	width = io->Width;
+	height = io->Height;
+
+	int blocksize = width * height;
+
+	PWORD pixels = new WORD[blocksize];
+	//memset(&pixels[0], 0, blocksize * 2);
+
+	IFOR(Y, 0, height)
+	{
+		int GSize = 0;
+
+		if (Y < height - 1)
+			GSize = LookupList[Y + 1] - LookupList[Y];
+		else
+			GSize = (size / 4) - LookupList[Y];
+
+		PGUMP_BLOCK gmul = (PGUMP_BLOCK)(DataStart + LookupList[Y] * 4);
+		int X = 0;
+		IFOR(i, 0, GSize)
+		{
+			WORD val = gmul[i].Value;
+			WORD a = val ? 0x8000 : 0;
+
+			IFOR(j, 0, gmul[i].Run)
+			{
+				int block = Y * width + X;
+
+				pixels[block] = a | val;
+
+				X++;
+			}
+		}
+	}
+
+	return pixels;
+}
+//---------------------------------------------------------------------------
 void TGumpMinimap::GenerateMap()
 {
 	if (!g_DrawMode)
@@ -46,25 +95,22 @@ void TGumpMinimap::GenerateMap()
 	if (m_Texture != 0)
 		glDeleteTextures(1, &m_Texture);
 	m_Texture = 0;
+	
+	int gumpWidth = 0;
+	int gumpHeight = 0;
 
-	TTextureObject *th = UO->ExecuteGump(0x1393 - (int)m_Minimized);
-	if (th == NULL)
+	PWORD data = GetTextureData(0x1393 - (int)m_Minimized, gumpWidth, gumpHeight);
+	
+	if (data == NULL)
 		return;
 
-	WORD gumpWidth = th->Width;
-	WORD gumpHeight = th->Height;
+	int blockOffsetX = gumpWidth / 4;
+	int blockOffsetY = gumpHeight / 4;
 
-	WORD blockOffsetX = gumpWidth / 4;
-	WORD blockOffsetY = gumpHeight / 4;
+	int gumpCenterX = gumpWidth / 2;
+	int gumpCenterY = gumpHeight / 2;
 
-	WORD gumpCenterX = gumpWidth / 2;
-	WORD gumpCenterY = gumpHeight / 2;
-
-	PWORD data = new WORD [gumpWidth * gumpHeight];
-	glBindTexture(GL_TEXTURE_2D, th->Texture);
-	//glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, data);
-	//0xFF080808 - pixel
+	//0xFF080808 - pixel32
 	//0x8421 - pixel16
 
 	int minBlockX = (m_LastX - blockOffsetX) / 8 - 1;

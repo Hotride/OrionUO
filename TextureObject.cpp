@@ -23,6 +23,9 @@ TCircleOfTransparencyTexture g_CircleOfTransparency;
 //---------------------------------------------------------------------------
 TTextureObject::TTextureObject()
 : m_Width(0), m_Height(0), Texture(0)
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+, Data(NULL)
+#endif
 {
 }
 //---------------------------------------------------------------------------
@@ -33,10 +36,18 @@ TTextureObject::~TTextureObject()
 		glDeleteTextures(1, &Texture);
 		Texture = 0;
 	}
+
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+	if (Data != NULL)
+	{
+		delete Data;
+		Data = NULL;
+	}
+#endif
 }
 //---------------------------------------------------------------------------
 TCircleOfTransparencyTexture::TCircleOfTransparencyTexture()
-: TTextureObject(), m_Radius(0)
+: TTextureObject(), m_Radius(0), m_X(0), m_Y(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -54,7 +65,7 @@ bool TCircleOfTransparencyTexture::Create(int radius)
 	if (radius > 200)
 		radius = 200;
 
-	int fixRadius = radius + 10;
+	int fixRadius = radius + 1;
 	int mulRadius = fixRadius * 2;
 
 	PDWORD pixels = new DWORD[mulRadius * mulRadius];
@@ -80,13 +91,7 @@ bool TCircleOfTransparencyTexture::Create(int radius)
 			int pos = (x + fixRadius) * mulRadius + (y + fixRadius);
 
 			if (r <= radius)
-			{
-				//pixels[pos] = 0x000000FF | (((radius - r) & 0xFF) << 24);
-
-				//pixels[pos] = (((radius - r) & 0xFF) << 8) | ((radius - r) & 0xFF);
-
 				pixels[pos] = (radius - r) & 0xFF;
-			}
 			else
 				pixels[pos] = 0;
 		}
@@ -106,12 +111,24 @@ void TCircleOfTransparencyTexture::Draw(int x, int y)
 		x -= m_Width / 2;
 		y -= m_Height / 2;
 
-		//glEnable(GL_BLEND);
-		//glBlendFunc(GL_ONE, GL_DST_ALPHA);
+		m_X = x;
+		m_Y = y;
+		
+		glEnable(GL_STENCIL_TEST);
 
+		glColorMask(false, false, false, true);
+
+		glStencilFunc(GL_ALWAYS, 1, 1);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		
 		g_GL.Draw(Texture, x, y, m_Width, m_Height);
+		
+		glColorMask(true, true, true, true);
 
-		//glDisable(GL_BLEND);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+		glStencilFunc(GL_NOTEQUAL, 1, 1);
+
+		glDisable(GL_STENCIL_TEST);
 	}
 }
 //---------------------------------------------------------------------------

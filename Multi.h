@@ -25,15 +25,24 @@ class TMultiObject : public TRenderWorldObject
 private:
 	DWORD m_MultiFlags;
 	DWORD m_ObjectFlags;
+	char m_CanBeTransparent;
+	STATIC_TILES &m_StaticTile;
 
 public:
-	TMultiObject(WORD graphic, short x, short y, char z, DWORD flags);
+	TMultiObject(WORD graphic, short x, short y, char z, DWORD flags, STATIC_TILES &staticTile);
 	virtual ~TMultiObject();
+	
+#if UO_ENABLE_DATA_TEST == 1
+	virtual TTextureObject *GetRenderTexture();
+#endif
 
 	SETGET(DWORD, MultiFlags);
 	SETGET(DWORD, ObjectFlags);
+	SETGET(char, CanBeTransparent);
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
+	
+	virtual bool TranparentTest(int &playerZ);
 
 	bool IsBackground() {return (m_ObjectFlags & 0x00000001);}
 	bool IsWeapon() {return (m_ObjectFlags & 0x00000002);}

@@ -21,17 +21,29 @@
 //----------------------------------------------------------------------------
 //--------------------------------TMultiObject--------------------------------
 //----------------------------------------------------------------------------
-TMultiObject::TMultiObject(WORD graphic, short x, short y, char z, DWORD multiflags)
-: TRenderWorldObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_MultiFlags(multiflags)
+TMultiObject::TMultiObject(WORD graphic, short x, short y, char z, DWORD multiflags, STATIC_TILES &staticTile)
+: TRenderWorldObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_MultiFlags(multiflags),
+m_StaticTile(staticTile)
 {
-	m_ObjectFlags = UO->GetStaticFlags(graphic - 0x4000);
+	WORD id = graphic - 0x4000;
 
+	m_ObjectFlags = m_StaticTile.Flags;
+	
 	if (IsBackground())
 		m_RenderQueueIndex = 3 - (int)IsSurface();
 	else if (IsSurface())
 		m_RenderQueueIndex = 4;
 	else
 		m_RenderQueueIndex = 6;
+	
+	if (m_StaticTile.Height > 5)
+		m_CanBeTransparent = 1;
+	else if (IsRoof() || (IsSurface() && IsBackground()) || IsWall())
+		m_CanBeTransparent = 1;
+	else if (m_StaticTile.Height == 5 && IsSurface() && !IsBackground())
+		m_CanBeTransparent = 1;
+	else
+		m_CanBeTransparent = 0;
 
 #if UO_DEBUG_INFO!=0
 	g_MultiObjectsCount++;
@@ -43,6 +55,20 @@ TMultiObject::~TMultiObject()
 #if UO_DEBUG_INFO!=0
 	g_MultiObjectsCount--;
 #endif //UO_DEBUG_INFO!=0
+}
+//---------------------------------------------------------------------------
+bool TMultiObject::TranparentTest(int &playerZ)
+{
+	bool result = true;
+
+	if (m_Z < playerZ - (m_StaticTile.Height - 5))
+		result = false;
+	else if (m_StaticTile.Height == 5 && m_Z > playerZ - 5 && m_Z < playerZ + 5)
+		result = false;
+	else if (playerZ + 5 < m_Z && !m_CanBeTransparent)
+		result = false;
+
+	return result;
 }
 //---------------------------------------------------------------------------
 int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
@@ -76,8 +102,25 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		{
 			if (IsSurface() || (IsBackground() && IsUnknown2()) || IsRoof())
 				glEnable(GL_DEPTH_TEST);
+			
+			if (g_UseCircleTrans)
+			{
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				glColor4f(1.0f, 1.0f, 1.0f, 0.25f);
+				
+				UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
+		
+				glDisable(GL_BLEND);
+		
+				glEnable(GL_STENCIL_TEST);
+		
+				UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
 
-			UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
+				glDisable(GL_STENCIL_TEST);
+			}
+			else
+				UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
 			
 			glDisable(GL_DEPTH_TEST);
 
@@ -96,7 +139,7 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 	}
 	else
 	{
-		if (UO->StaticPixelsInXY(objGraphic, drawX, drawY, m_Z))
+		if ((!g_UseCircleTrans || (g_UseCircleTrans && !UO->StaticPixelsInCircleTrans(objGraphic, drawX, drawY, m_Z))) && UO->StaticPixelsInXY(objGraphic, drawX, drawY, m_Z))
 		{
 			g_LastObjectType = SOT_STATIC_OBJECT;
 			g_LastSelectedObject = 3;
@@ -106,6 +149,16 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 	return 0;
 }
+#if UO_ENABLE_DATA_TEST == 1
+//---------------------------------------------------------------------------
+TTextureObject *TMultiObject::GetRenderTexture()
+{
+	if (g_NoDrawRoof && IsRoof())
+		return NULL;
+
+	return UO->ExecuteStaticArt(m_Graphic - 0x4000);
+}
+#endif
 //----------------------------------------------------------------------------
 //-----------------------------------TMulti-----------------------------------
 //----------------------------------------------------------------------------

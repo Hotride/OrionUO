@@ -32,6 +32,7 @@ private:
 	WORD m_LastY;
 
 	void GenerateMap();
+	PWORD GetTextureData(WORD id, int &width, int &height);
 
 public:
 	TGumpMinimap(DWORD serial, short x, short y, bool minimized);

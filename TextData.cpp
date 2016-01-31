@@ -127,7 +127,7 @@ bool TTextRenderer::InRect(TEXT_IMAGE_BOUNDS &rect, TRenderWorldObject *rwo)
 	{
 		if ((*it).InRect(rect))
 		{
-			if (rwo == NULL || (rwo != NULL && rwo->CanBeTransparent((*it).m_Text)))
+			if (rwo == NULL || (rwo != NULL && rwo->TextCanBeTransparent((*it).m_Text)))
 			{
 				result = true;
 				break;
