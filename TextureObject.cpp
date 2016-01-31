@@ -53,6 +53,11 @@ TCircleOfTransparencyTexture::TCircleOfTransparencyTexture()
 //---------------------------------------------------------------------------
 TCircleOfTransparencyTexture::~TCircleOfTransparencyTexture()
 {
+	if (PixelData != NULL)
+	{
+		delete PixelData;
+		PixelData = NULL;
+	}
 }
 //---------------------------------------------------------------------------
 bool TCircleOfTransparencyTexture::Create(int radius)
@@ -82,6 +87,15 @@ bool TCircleOfTransparencyTexture::Create(int radius)
 		Texture = 0;
 	}
 
+	if (PixelData != NULL)
+	{
+		delete PixelData;
+		PixelData = NULL;
+	}
+
+	PixelData = new BYTE[m_Width * m_Height];
+	memset(&PixelData[0], 0, m_Width * m_Height);
+
 	for (int x = -fixRadius; x < fixRadius; x++)
 	{
 		for (int y = -fixRadius; y < fixRadius; y++)
@@ -91,7 +105,10 @@ bool TCircleOfTransparencyTexture::Create(int radius)
 			int pos = (x + fixRadius) * mulRadius + (y + fixRadius);
 
 			if (r <= radius)
+			{
 				pixels[pos] = (radius - r) & 0xFF;
+				PixelData[pos] = 1;
+			}
 			else
 				pixels[pos] = 0;
 		}

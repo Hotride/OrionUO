@@ -62,6 +62,8 @@ public:
 
 	bool Create(int radius);
 	void Draw(int x, int y);
+	
+	PBYTE PixelData;
 };
 //---------------------------------------------------------------------------
 class TTextureAnimationFrame : public TBaseQueueItem
