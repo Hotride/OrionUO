@@ -139,7 +139,7 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 	}
 	else
 	{
-		if ((!g_UseCircleTrans || (g_UseCircleTrans && !UO->StaticPixelsInCircleTrans(objGraphic, drawX, drawY, m_Z))) && UO->StaticPixelsInXY(objGraphic, drawX, drawY, m_Z))
+		if (UO->StaticPixelsInXY(objGraphic, drawX, drawY, m_Z) && !g_UseCircleTrans)
 		{
 			g_LastObjectType = SOT_STATIC_OBJECT;
 			g_LastSelectedObject = 3;
@@ -149,16 +149,6 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 	return 0;
 }
-#if UO_ENABLE_DATA_TEST == 1
-//---------------------------------------------------------------------------
-TTextureObject *TMultiObject::GetRenderTexture()
-{
-	if (g_NoDrawRoof && IsRoof())
-		return NULL;
-
-	return UO->ExecuteStaticArt(m_Graphic - 0x4000);
-}
-#endif
 //----------------------------------------------------------------------------
 //-----------------------------------TMulti-----------------------------------
 //----------------------------------------------------------------------------

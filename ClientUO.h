@@ -115,8 +115,7 @@ public:
 	bool ResizepicPixelsInXY(WORD id, int x, int y, int width, int height);
 	bool StaticPixelsInXY(WORD id, int x, int y, int z);
 	bool StaticPixelsInXYAnimated(WORD id, int x, int y, int z);
-	bool StaticPixelsInCircleTrans(WORD id, int x, int y, int z);
-	bool StaticPixelsInCircleTransAnimated(WORD id, int x, int y, int z);
+	bool CircleTransPixelsInXY();
 	bool StaticPixelsInXYInContainer(WORD id, int x, int y);
 	bool LandPixelsInXY(WORD id, int x, int y, int z);
 	bool LandTexturePixelsInXY(int x, int  y, RECT &r);

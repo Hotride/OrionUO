@@ -224,41 +224,6 @@ g_RenderedObjectsCountInGameWindow++;
 
 	return 0;
 }
-#if UO_ENABLE_DATA_TEST == 1
-//---------------------------------------------------------------------------
-TTextureObject *TGameItem::GetRenderTexture()
-{
-	if (IsCorpse()) //Трупик
-	{
-		m_CanBeRendered = true;
-		return NULL;
-	}
-	else
-	{
-		WORD goGraphic = m_Graphic;
-
-		bool doubleDraw = false;
-
-		if (m_Count > 1)
-		{
-			if (goGraphic == 0x0EED)
-			{
-				if (m_Count > 5)
-					goGraphic = 0x0EEF;
-				else
-					goGraphic = 0x0EEE;
-			}
-			else if (IsStackable())
-				doubleDraw = true;
-		}
-
-		if (doubleDraw)
-			return UO->ExecuteStaticArt(goGraphic);
-		else 
-			return UO->ExecuteStaticArtAnimated(goGraphic);
-	}
-}
-#endif
 //---------------------------------------------------------------------------
 WORD TGameItem::GetMountAnimation()
 {

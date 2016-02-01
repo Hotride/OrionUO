@@ -23,22 +23,11 @@ TGameScreen *GameScreen = NULL;
 //---------------------------------------------------------------------------
 TGameScreen::TGameScreen()
 : TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false)
-#if UO_ENABLE_DATA_TEST == 1
-,m_GameWindowWidth(0), m_GameWindowHeight(0), m_GameWindowBuffer(NULL),
-m_GameWindowMarkerID(0)
-#endif
 {
 }
 //---------------------------------------------------------------------------
 TGameScreen::~TGameScreen()
 {
-#if UO_ENABLE_DATA_TEST == 1
-	if (m_GameWindowBuffer != NULL)
-	{
-		delete m_GameWindowBuffer;
-		m_GameWindowBuffer = NULL;
-	}
-#endif
 }
 //---------------------------------------------------------------------------
 void TGameScreen::Init()
@@ -341,191 +330,6 @@ void TGameScreen::AddLight(LIGHT_DATA &light)
 void TGameScreen::RemoveLight(WORD x, WORD y, char z)
 {
 }
-//---------------------------------------------------------------------------
-#if UO_ENABLE_DATA_TEST == 1
-void TGameScreen::TestGameWindowData()
-{
-	if (g_DeathScreenTimer < GetTickCount())
-	{
-		if (g_DeathScreenTimer && g_UseSmoothMonitor)
-		{
-			g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
-			g_SmoothMonitorColor = 0.0f;
-			g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
-			m_SmoothScreenAction = 0;
-		}
-
-		g_DeathScreenTimer = 0;
-	}
-
-	if (g_DeathScreenTimer)
-		return;
-
-	int playerX = g_Player->X;
-	int playerY = g_Player->Y;
-	int playerZ = g_Player->Z;
-
-	int gameWindowPosX = m_RenderBounds.GameWindowPosX;
-	int gameWindowPosY = m_RenderBounds.GameWindowPosY;
-
-	int gameWindowSizeX = m_RenderBounds.GameWindowSizeX;
-	int gameWindowSizeY = m_RenderBounds.GameWindowSizeY;
-
-	int gameWindowCenterX = m_RenderBounds.GameWindowCenterX;
-	int gameWindowCenterY = m_RenderBounds.GameWindowCenterY;
-	
-	if (gameWindowSizeX != m_GameWindowWidth || gameWindowSizeY != m_GameWindowHeight)
-	{
-		if (m_GameWindowBuffer != NULL)
-		{
-			delete m_GameWindowBuffer;
-			m_GameWindowBuffer = NULL;
-		}
-	}
-
-	if (m_GameWindowBuffer == NULL)
-	{
-		m_GameWindowWidth = gameWindowSizeX;
-		m_GameWindowHeight = gameWindowSizeY;
-
-		m_GameWindowBuffer = new BYTE[m_GameWindowWidth * m_GameWindowHeight];
-		memset(&m_GameWindowBuffer[0], 0, m_GameWindowWidth * m_GameWindowHeight);
-	}
-
-	m_GameWindowMarkerID = (m_GameWindowMarkerID + 1) % 10;
-
-	if (!m_GameWindowMarkerID)
-		m_GameWindowMarkerID = 1;
-
-
-	
-	g_NoDrawRoof = false;
-	g_MaxGroundZ = 125;
-	int maxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
-
-	for (int bx = m_RenderBounds.MaxBlockX; bx >= m_RenderBounds.MinBlockX; bx--)
-	{
-		for (int by = m_RenderBounds.MaxBlockY; by >= m_RenderBounds.MinBlockY; by--)
-		{
-			int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
-
-			TMapBlock *mb = MapManager->GetBlock(blockIndex);
-
-			if (mb == NULL)
-			{
-				mb = MapManager->AddBlock(blockIndex);
-				mb->X = bx;
-				mb->Y = by;
-				MapManager->LoadBlock(mb);
-			}
-
-			DFOR(x, 7, 0)
-			{
-				int currentX = bx * 8 + x;
-
-				if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
-					continue;
-
-				int offsetX = currentX - playerX;
-
-				DFOR(y, 7, 0)
-				{
-					int currentY = by * 8 + y;
-
-					if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
-						continue;
-						
-					int offsetY = currentY - playerY;
-
-					int drawX = gameWindowCenterX + (offsetX - offsetY) * 22;
-					int drawY = gameWindowCenterY + (offsetX + offsetY) * 22;
-
-					if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
-						continue;
-
-					for (TRenderWorldObject *renderObject = mb->GetRender(x, y); renderObject != NULL; renderObject = renderObject->m_NextXY)
-					{
-						renderObject->CanBeRendered = false;
-
-						if (renderObject->IsInternal() || (!renderObject->IsLandObject() && renderObject->Z >= maxDrawZ))
-							continue;
-						
-						int testMinZ = drawY;
-						int testMaxZ = drawY;
-						
-						if (renderObject->IsLandObject() && ((TLandObject*)renderObject)->IsStretched)
-						{
-							TLandObject *land = (TLandObject*)renderObject;
-
-							testMaxZ -= (renderObject->Z * 4);
-							testMinZ -= (land->MinZ * 4);
-						}
-						else
-							testMinZ = testMaxZ = drawY - (renderObject->Z * 4);
-
-						if (testMinZ < m_RenderBounds.MinPixelsY || testMaxZ > m_RenderBounds.MaxPixelsY)
-							continue;
-						
-						if (!renderObject->IsLandObject())
-						{
-							TTextureObject *to = renderObject->GetRenderTexture();
-
-							if (to != NULL && to->Data != NULL)
-							{
-								PBYTE data = to->Data;
-								int width = to->Width;
-								int height = to->Height;
-								bool canBeRendered = false;
-								
-								int realRasterX = drawX - gameWindowPosX;
-								int realRasterY = drawY - (gameWindowPosY + renderObject->Z * 4);
-
-								IFOR(j, 0, height)
-								{
-									int rasterPosY = realRasterY + j;
-
-									if (rasterPosY < 0)
-										continue;
-									else if (rasterPosY >= m_GameWindowHeight)
-										break;
-
-									int rasterPos = (rasterPosY * m_GameWindowWidth);
-									int texturePos = (j * width);
-									
-									IFOR(i, 0, width)
-									{
-										int rasterPosX = realRasterX + i;
-										
-										if (rasterPosX < 0)
-											continue;
-										else if (rasterPosX >= m_GameWindowWidth)
-											break;
-										
-										if (data[texturePos + i])
-										{
-											int rasterPosData = rasterPos + rasterPosX;
-
-											if (m_GameWindowBuffer[rasterPosData] != m_GameWindowMarkerID)
-											{
-												m_GameWindowBuffer[rasterPosData] = m_GameWindowMarkerID;
-												canBeRendered = true;
-											}
-										}
-									}
-								}
-
-								renderObject->CanBeRendered = canBeRendered;
-							}
-						}
-						else
-							renderObject->CanBeRendered = true;
-					}
-				}
-			}
-		}
-	}
-}
-#endif
 //---------------------------------------------------------------------------
 int TGameScreen::Render(bool mode)
 {
@@ -843,13 +647,6 @@ int TGameScreen::Render(bool mode)
 						{
 							TRenderWorldObject *nextRenderObject = renderObject->m_NextXY;
 
-#if UO_ENABLE_DATA_TEST == 1
-							if (!renderObject->CanBeRendered)
-							{
-								renderObject = nextRenderObject;
-								continue;
-							}
-#else
 							if (renderObject->IsInternal() || (!renderObject->IsLandObject() && renderObject->Z >= maxDrawZ))
 							{
 								renderObject = nextRenderObject;
@@ -874,7 +671,6 @@ int TGameScreen::Render(bool mode)
 								renderObject = nextRenderObject;
 								continue;
 							}
-#endif
 							
 							g_UseCircleTrans = (ConfigManager.UseCircleTrans && renderObject->TranparentTest(playerZ));
 
@@ -1323,6 +1119,7 @@ int TGameScreen::Render(bool mode)
 			g_NoDrawRoof = false;
 			g_MaxGroundZ = 125;
 			int maxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
+			bool useCircleTrans = (ConfigManager.UseCircleTrans && UO->CircleTransPixelsInXY());
 
 			for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 			{
@@ -1359,10 +1156,6 @@ int TGameScreen::Render(bool mode)
 
 							for (TRenderWorldObject *renderObject = mb->GetRender(x, y); renderObject != NULL; renderObject = renderObject->m_NextXY)
 							{
-#if UO_ENABLE_DATA_TEST == 1
-								if (!renderObject->CanBeRendered)
-									continue;
-#else
 								if (renderObject->IsInternal() || (!renderObject->IsLandObject() && renderObject->Z >= maxDrawZ))
 									continue;
 
@@ -1381,9 +1174,8 @@ int TGameScreen::Render(bool mode)
 
 								if (testMinZ < m_RenderBounds.MinPixelsY || testMaxZ > m_RenderBounds.MaxPixelsY)
 									continue;
-#endif
 
-								g_UseCircleTrans = (ConfigManager.UseCircleTrans && renderObject->TranparentTest(playerZ));
+								g_UseCircleTrans = (useCircleTrans && renderObject->TranparentTest(playerZ));
 
 								renderObject->Draw(mode, drawX, drawY, ticks);
 							}
@@ -1703,7 +1495,7 @@ void TGameScreen::OnMouseWheel(MOUSE_WHEEL_STATE state)
 			else if (state == MWS_DOWN)
 				g_SelectedObject->DecZ();
 		}
-		else //if (g_SelectedObject->RenderType == ROT_STATIC_OBJECT || g_SelectedObject->RenderType == ROT_LAND_OBJECT)
+		else //if (g_SelectedObject->IsStaticObject() || g_SelectedObject->IsLandObject())
 		{
 			if (state == MWS_UP)
 			{

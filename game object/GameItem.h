@@ -47,10 +47,6 @@ public:
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
 	
-#if UO_ENABLE_DATA_TEST == 1
-	virtual TTextureObject *GetRenderTexture();
-#endif
-
 	SETGET(BYTE, Layer);
 	SETGET(WORD, AnimID);
 	SETGET(WORD, ImageID);

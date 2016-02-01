@@ -92,6 +92,8 @@ bool TGLEngine::Install(HWND hWnd)
 	else
 		return false;
 
+	wglSwapIntervalEXT(FALSE);
+
 	TPRINT("g_UseFrameBuffer = %i\n", g_UseFrameBuffer);
 
 	glClearColor(0.0, 0.0, 0.0, 0.0);		// Black Background

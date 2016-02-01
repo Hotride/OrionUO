@@ -92,10 +92,6 @@ public:
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
 
-#if UO_ENABLE_DATA_TEST == 1
-	virtual TTextureObject *GetRenderTexture();
-#endif
-
 	void UpdateSex(); //ќбновить информацию о поле персонажа
 
 	void SetPaperdollText(string val); //—генерировать текстуру текста папердолла

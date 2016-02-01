@@ -327,7 +327,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				}
 			}
 		}
-		else if ((!g_UseCircleTrans || (g_UseCircleTrans && !UO->StaticPixelsInCircleTransAnimated(objGraphic, drawX, drawY, m_Z))) && UO->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z))
+		else if (UO->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z) && !g_UseCircleTrans)
 		{
 			g_LastObjectType = SOT_STATIC_OBJECT;
 			g_LastSelectedObject = 3;
@@ -337,14 +337,4 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 	return 0;
 }
-#if UO_ENABLE_DATA_TEST == 1
-//---------------------------------------------------------------------------
-TTextureObject *TStaticObject::GetRenderTexture()
-{
-	if (g_NoDrawRoof && IsRoof())
-		return NULL;
-
-	return UO->ExecuteStaticArtAnimated(m_Graphic - 0x4000);
-}
-#endif
 //---------------------------------------------------------------------------

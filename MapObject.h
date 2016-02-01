@@ -88,10 +88,6 @@ public:
 	
 	virtual bool TranparentTest(int &playerZ);
 
-#if UO_ENABLE_DATA_TEST == 1
-	virtual TTextureObject *GetRenderTexture();
-#endif
-
 	bool IsStaticObject() {return true;}
 	
 	SETGET(DWORD, ObjectFlags);

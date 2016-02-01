@@ -32,10 +32,6 @@ public:
 	TMultiObject(WORD graphic, short x, short y, char z, DWORD flags, STATIC_TILES &staticTile);
 	virtual ~TMultiObject();
 	
-#if UO_ENABLE_DATA_TEST == 1
-	virtual TTextureObject *GetRenderTexture();
-#endif
-
 	SETGET(DWORD, MultiFlags);
 	SETGET(DWORD, ObjectFlags);
 	SETGET(char, CanBeTransparent);

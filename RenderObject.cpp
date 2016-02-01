@@ -39,12 +39,8 @@ TRenderObject::~TRenderObject()
 TRenderWorldObject::TRenderWorldObject(RENDER_OBJECT_TYPE renderType, DWORD serial, WORD graphic, WORD color, short x, short y, char z)
 : TRenderObject(serial, graphic, color, x, y), m_RenderType(renderType),
 m_Z(z), m_NextXY(NULL), m_PrevXY(NULL), m_RenderQueueIndex(0)
-#if UO_ENABLE_DATA_TEST == 1
-, m_CanBeRendered(true)
-#endif
-//m_NextDraw(NULL), m_PrevDraw(NULL)
 {
-	if (renderType != ROT_LAND_OBJECT && renderType != ROT_EFFECT)
+	if (!IsLandObject() && !IsEffectObject())
 		m_TextControl = new TTextContainer(3);
 	else
 		m_TextControl = NULL;

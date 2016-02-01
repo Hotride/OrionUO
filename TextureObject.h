@@ -21,12 +21,6 @@
 #define TextureObjectH
 
 #define UO_ENABLE_TEXTURE_DATA_SAVING 1
-
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-#define UO_ENABLE_DATA_TEST 0
-#else
-#define UO_ENABLE_DATA_TEST 0
-#endif
 //---------------------------------------------------------------------------
 class TTextureObject
 {

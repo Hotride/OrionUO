@@ -2827,10 +2827,6 @@ void TUltimaOnline::Process()
 		{
 			GameScreen->CalculateGameWindow();
 
-#if UO_ENABLE_DATA_TEST == 1
-			GameScreen->TestGameWindowData();
-#endif
-
 			if (CanRenderSelect)
 				GameScreen->Render(false);
 
@@ -3565,129 +3561,20 @@ bool TUltimaOnline::StaticPixelsInXYAnimated(WORD id, int x, int y, int z)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::StaticPixelsInCircleTrans(WORD id, int x, int y, int z)
+bool TUltimaOnline::CircleTransPixelsInXY()
 {
-	TIndexObject &io = m_StaticDataIndex[id];
+	int x = (g_MouseX - g_CircleOfTransparency.X);
+	int y = (g_MouseY - g_CircleOfTransparency.Y);
 
 	bool result = false;
 
-	TTextureObject *th = io.Texture;
-
-	if (th != NULL)
+	if (x >= 0 && y >= 0 && x < g_CircleOfTransparency.Width && y < g_CircleOfTransparency.Height)
 	{
-		int countX = 0;
-		int cotWidth = g_CircleOfTransparency.Width;
-		int testX[3] = {0, th->Width / 2, th->Width};
-
-		int temp = x - g_CircleOfTransparency.X;
-
-		IFOR(i, 0, 3)
-		{
-			int val = temp + testX[i];
-
-			if (val >= 0 && val < cotWidth)
-			{
-				testX[countX] = val;
-				countX++;
-			}
-		}
-
-		if (countX)
-		{
-			y -= io.Height + z * 4;
-
-			int countY = 0;
-			int cotHeight = g_CircleOfTransparency.Height;
-			int testY[3] = {0, th->Height / 2, th->Height};
-
-			temp = y - g_CircleOfTransparency.Y;
-			
-			IFOR(i, 0, 3)
-			{
-				int val = temp + testY[i];
-
-				if (val >= 0 && val < cotHeight)
-				{
-					testY[countY] = val;
-					countY++;
-				}
-			}
-
-			if (countY)
-			{
-				IFOR(i, 0 && !result, countX)
-				{
-					IFOR(j, 0, countY)
-					{
-						int pos = (testY[j] * g_CircleOfTransparency.Width) + testX[i];
-
-						if (g_CircleOfTransparency.PixelData[pos])
-						{
-							result = true;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-
-		/*int cotX = g_CircleOfTransparency.X;
-
-		if (x < cotX)
-		{
-			if (cotX < x + th->Width)
-				result = true;
-		}
-		else
-		{
-			if (x < cotX + cotWidth)
-				result = true;
-		}
-
-		if (result)
-		{
-			y -= z * 4;
-			
-			int cotY = g_CircleOfTransparency.Y;
-			int cotHeight = g_CircleOfTransparency.Height;
-
-			if (y < cotY)
-			{
-				if (cotY < y + th->Height)
-					result = true;
-				else
-					result = false;
-			}
-			else
-			{
-				if (y < cotY + cotHeight)
-					result = true;
-				else
-					result = false;
-			}
-
-			if (result)
-			{
-				int countX = 0;
-				int countY = 0;
-				
-				int testX[3];
-				int testY[3];
-
-				int temp = x - g_CircleOfTransparency.X;
-			}
-		}*/
+		int pos = (y * g_CircleOfTransparency.Width) + x;
+		result = (g_CircleOfTransparency.PixelData[pos] != 0);
 	}
 
 	return result;
-}
-//---------------------------------------------------------------------------
-bool TUltimaOnline::StaticPixelsInCircleTransAnimated(WORD id, int x, int y, int z)
-{
-	id += m_StaticDataIndex[id].Increment;
-
-	return StaticPixelsInCircleTrans(id, x, y, z);
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::StaticPixelsInXYInContainer(WORD id, int x, int y)
