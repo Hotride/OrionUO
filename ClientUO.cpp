@@ -494,6 +494,8 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		else
+			Sleep(1);
 		
 		if (UO != NULL)
 		{
@@ -501,8 +503,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 
 			UO->Process();
 		}
-
-		Sleep(1);
 	}
 	
 	return (int)msg.wParam;
@@ -2720,8 +2720,19 @@ void TUltimaOnline::Process()
 
 		if (g_LastRenderTime < ticks)
 		{
-			g_RemoveRangeXY.x = g_Player->X;
-			g_RemoveRangeXY.y = g_Player->Y;
+
+			TWalkData *wd = g_Player->m_WalkStack.m_Items;
+
+			if (wd != NULL)
+			{
+				g_RemoveRangeXY.x = wd->X;
+				g_RemoveRangeXY.y = wd->Y;
+			}
+			else
+			{
+				g_RemoveRangeXY.x = g_Player->X;
+				g_RemoveRangeXY.y = g_Player->Y;
+			}
 
 			ProcessStaticAnimList();
 			RemoveRangedObjects();
