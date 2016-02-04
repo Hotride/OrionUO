@@ -1,3 +1,6 @@
+varying vec3 l;
+varying vec3 n;
+
 uniform sampler2D usedTexture;
 uniform int drawMode;
 uniform int colors[32];
@@ -36,6 +39,24 @@ void main(void)
 			vec3 resultColor = Color16To32(colors[index]);
 
 			gl_FragColor = vec4(resultColor, textureColor.a) * gl_Color;
+		}
+		else if (drawMode > 5)
+		{
+			vec3 n2 = normalize(n);
+			vec3 l2 = normalize(l);
+
+			vec4 normal = max(dot(n2, l2) + 0.5, 0.0);
+
+			if (drawMode > 6)
+			{
+				int index = AND32(int(textureColor.r * 31.875));
+
+				vec3 resultColor = Color16To32(colors[index]);
+
+				gl_FragColor = (vec4(resultColor, textureColor.a) * gl_Color) * normal;
+			}
+			else
+				gl_FragColor = (textureColor * gl_Color) * normal;
 		}
 		else
 			gl_FragColor = textureColor * gl_Color;

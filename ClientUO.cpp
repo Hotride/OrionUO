@@ -3142,32 +3142,20 @@ void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, 
 	if (g_OutOfRangeColor)
 		color = g_OutOfRangeColor;
 	
-	TBaseShader *shader = NULL;
+	int drawMode = 6;
 
-	int drawMode = (!g_GrayedPixels && color);
-
-	if (!color && !g_GrayedPixels)
+	if (!g_GrayedPixels && color)
 	{
-		shader = CurrentShader;
-		if (shader != NULL)
-			shader->Pause();
-	}
-	else if (drawMode)
+		drawMode = 7;
 		ColorManager->SendColorsToShader(color);
+	}
 
 	glUniform1iARB(ShaderDrawMode, drawMode);
 
 	x -= 23;
 	y -= 23;
 	
-	glEnable(GL_LIGHTING);
-
 	g_GL.DrawLandTexture(th->Texture, x, y, rc, normals);
-	
-	glDisable(GL_LIGHTING);
-
-	if (shader != NULL)
-		shader->Resume();
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)

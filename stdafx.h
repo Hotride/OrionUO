@@ -208,7 +208,7 @@ extern DWORD g_LastAttackObject;
 //---------------------------------------------------------------------------
 extern DWORD g_LastRenderTime;
 const int g_FrameDelay_ActiveWindow = 30;
-const int g_FrameDelay_UnactiveWindow = 200;
+const int g_FrameDelay_UnactiveWindow = 30; // 200;
 static int g_FrameDelay[2] = {g_FrameDelay_UnactiveWindow, g_FrameDelay_ActiveWindow};
 //---------------------------------------------------------------------------
 const WORD g_SelectLandColor = 0x0044;
