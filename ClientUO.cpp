@@ -494,8 +494,8 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		else
-			Sleep(1);
+		
+		Sleep(1);
 		
 		if (UO != NULL)
 		{

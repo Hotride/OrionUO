@@ -99,6 +99,7 @@ bool TGLEngine::Install(HWND hWnd)
 	glClearColor(0.0, 0.0, 0.0, 0.0);		// Black Background
 	glShadeModel(GL_SMOOTH);				// Enables Smooth Color Shading
 	glClearDepth(1.0);						// Depth Buffer Setup
+	glDisable(GL_DITHER);
 
 	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);   //Realy Nice perspective calculations
 

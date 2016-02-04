@@ -115,13 +115,11 @@ bool TFrameBuffer::Use()
 		glViewport(0, 0, m_Width, m_Height);
 
 		glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
 		glLoadIdentity();
 		
 		glOrtho(0.0, m_Width, 0.0, m_Height, -100.0, 100.0);
 
 		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
 		glLoadIdentity();
 		
 		result = true;
