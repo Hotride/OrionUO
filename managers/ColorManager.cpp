@@ -99,8 +99,12 @@ void TColorManager::CreateHuesPalette()
 //---------------------------------------------------------------------------
 void TColorManager::SendColorsToShader(WORD &color)
 {
-	if (color != 0 && color < m_HuesCount)
+	static WORD oldColor = 0;
+
+	if (color != 0 && oldColor != color) // && color < m_HuesCount)
 	{
+		oldColor = color;
+
 		color -= 1;
 		
 		glUniform1ivARB(ShaderColorTable, 32, &m_HuesInt[color].Palette[0]);

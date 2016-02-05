@@ -258,9 +258,9 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 			else
 			{
 				if (CanPressedButton == ID_GP_BUTTON_CHAT)
-					gumpID = 0x07E3; //Paperdoll button Chat (down)
+					gumpID++; // = 0x07E3; //Paperdoll button Chat (down)
 				else if (CanSelectedButton == ID_GP_BUTTON_CHAT)
-					gumpID = 0x07E4; //Paperdoll button Chat
+					gumpID++; // = 0x07E4; //Paperdoll button Chat
 			}
 
 			UO->DrawGump(gumpID, 0, posX + 185, posY + 179);

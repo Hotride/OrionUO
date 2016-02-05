@@ -686,6 +686,8 @@ int TGameScreen::Render(bool mode)
 
 		AnimationManager->DrawShadows();
 
+		UnuseShader();
+
 		g_ZBuffer = 0;
 		glDisable(GL_DEPTH_TEST);
 		
@@ -693,7 +695,9 @@ int TGameScreen::Render(bool mode)
 		{
 			if (!g_GrayedPixels)
 			{
-				glColor3f(1.0f, 1.0f, 1.0f);
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+				LightColorizerShader->Use();
 
 				if (g_UseFrameBuffer)
 				{
@@ -704,15 +708,11 @@ int TGameScreen::Render(bool mode)
 						if (!ConfigManager.DarkNights)
 							newLightColor += 0.2f;
 
-						UnuseShader();
-
 						glClearColor(newLightColor, newLightColor, newLightColor, 1.0f);
 						glClear(GL_COLOR_BUFFER_BIT);
 
 						glEnable(GL_BLEND);
 						glBlendFunc(GL_ONE, GL_ONE);
-
-						LightColorizerShader->Use();
 
 						IFOR(i, 0, m_LightCount)
 						{
@@ -743,8 +743,6 @@ int TGameScreen::Render(bool mode)
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_ONE, GL_ONE);
 
-					ColorizerShader->Use();
-
 					IFOR(i, 0, m_LightCount)
 					{
 						LIGHT_DATA &light = m_Light[i];
@@ -761,26 +759,6 @@ int TGameScreen::Render(bool mode)
 				AttackTargetGump.Draw();
 
 				Weather.Draw(gameWindowPosX, gameWindowPosY);
-			}
-
-			UnuseShader();
-			
-			//Отрисовка сообщений систем чата
-			int textOffsY = (gameWindowPosY + gameWindowSizeY) - 41;
-			int textYBounds = gameWindowPosY;
-
-			TTextData *td = SystemChat->m_Head;
-
-			while (td != NULL && textOffsY >= textYBounds)
-			{
-				TTextTexture &tth = td->m_Texture;
-
-				textOffsY -= tth.Height;
-
-				if (td->Timer >= ticks)
-					tth.Draw(gameWindowPosX, textOffsY);
-
-				td = td->m_Prev;
 			}
 
 			FontColorizerShader->Use();
@@ -843,14 +821,30 @@ int TGameScreen::Render(bool mode)
 
 			UnuseShader();
 
+			//Отрисовка сообщений систем чата
+			int textOffsY = (gameWindowPosY + gameWindowSizeY) - 41;
+			int textYBounds = gameWindowPosY;
+
+			TTextData *td = SystemChat->m_Head;
+
+			while (td != NULL && textOffsY >= textYBounds)
+			{
+				TTextTexture &tth = td->m_Texture;
+
+				textOffsY -= tth.Height;
+
+				if (td->Timer >= ticks)
+					tth.Draw(gameWindowPosX, textOffsY);
+
+				td = td->m_Prev;
+			}
+
 			QuestArrow.Draw(gameWindowCenterX, gameWindowCenterY);
 
 			DrawSmoothMonitorEffect();
 		}
 		else if (g_LightBuffer.Ready() && g_LightBuffer.Use())
 		{
-			UnuseShader();
-
 			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
@@ -986,10 +980,7 @@ int TGameScreen::Render(bool mode)
 				WORD ohCount = ObjectInHand->DragCount;
 
 				if (ohColor != 0)
-				{
-					CurrentShader = ColorizerShader;
-					CurrentShader->Use();
-				}
+					ColorizerShader->Use();
 
 				if (ObjectInHand->IsGameFigure)
 				{
