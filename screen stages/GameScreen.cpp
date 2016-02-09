@@ -777,8 +777,6 @@ int TGameScreen::Render(bool mode)
 
 					if (td->Timer >= ticks)
 					{
-						//g_GL.DrawPolygone(0x7f7f7f7f, td->DrawX, td->DrawY, tth.Width, tth.Height);
-
 						WORD textColor = td->Color;
 
 						bool isYellowed = (g_LastObjectType == SOT_TEXT_OBJECT && g_SelectedTextObject == rto);
@@ -821,23 +819,7 @@ int TGameScreen::Render(bool mode)
 
 			UnuseShader();
 
-			//Отрисовка сообщений систем чата
-			int textOffsY = (gameWindowPosY + gameWindowSizeY) - 41;
-			int textYBounds = gameWindowPosY;
-
-			TTextData *td = SystemChat->m_Head;
-
-			while (td != NULL && textOffsY >= textYBounds)
-			{
-				TTextTexture &tth = td->m_Texture;
-
-				textOffsY -= tth.Height;
-
-				if (td->Timer >= ticks)
-					tth.Draw(gameWindowPosX, textOffsY);
-
-				td = td->m_Prev;
-			}
+			SystemChat->DrawSystemChat(gameWindowPosX, gameWindowPosY, gameWindowSizeY);
 
 			QuestArrow.Draw(gameWindowCenterX, gameWindowCenterY);
 
@@ -869,7 +851,7 @@ int TGameScreen::Render(bool mode)
 		g_GL.RestorePort();
 
 #pragma region GameWindowScope
-		//Рамка игравого окна
+		//Рамка игрового окна
 		UO->DrawGump(0x0A8D, 0, gameWindowPosX - 4, gameWindowPosY - 4, 0, gameWindowSizeY + 8);
 		UO->DrawGump(0x0A8D, 0, gameWindowPosX + gameWindowSizeX, gameWindowPosY - 4, 0, gameWindowSizeY + 8);
 

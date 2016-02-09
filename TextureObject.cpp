@@ -93,16 +93,20 @@ bool TCircleOfTransparencyTexture::Create(int radius)
 		PixelData = NULL;
 	}
 
-	PixelData = new BYTE[m_Width * m_Height];
-	memset(&PixelData[0], 0, m_Width * m_Height);
+	int dataSize = m_Width * m_Height;
+	PixelData = new BYTE[dataSize];
+	memset(&PixelData[0], 0, dataSize);
 
-	for (int x = -fixRadius; x < fixRadius; x++)
+	IFOR(x, -fixRadius, fixRadius)
 	{
-		for (int y = -fixRadius; y < fixRadius; y++)
-		{
-			int r = (int)sqrt((x * x) + (y * y));
+		int mulX = x * x;
+		int posX = ((x + fixRadius) * mulRadius) + fixRadius;
 
-			int pos = (x + fixRadius) * mulRadius + (y + fixRadius);
+		IFOR(y, -fixRadius, fixRadius)
+		{
+			int r = (int)sqrt(mulX + (y * y));
+
+			int pos = posX + y;
 
 			if (r <= radius)
 			{

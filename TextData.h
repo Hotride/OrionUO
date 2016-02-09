@@ -118,8 +118,9 @@ public:
 	SETGET(int, Size);
 
 	void Add(TTextData *obj);
-
 	void Clear();
+
+	void DrawSystemChat(int &x, int &y, int &height);
 };
 //---------------------------------------------------------------------------
 class TJournal

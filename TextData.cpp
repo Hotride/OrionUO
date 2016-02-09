@@ -242,6 +242,26 @@ void TTextContainer::Add(TTextData *obj)
 	}
 }
 //---------------------------------------------------------------------------
+void TTextContainer::DrawSystemChat(int &x, int &y, int &height)
+{
+	DWORD ticks = GetTickCount();
+	int offset = (y + height) - 41;
+
+	TTextData *td = SystemChat->m_Head;
+
+	while (td != NULL && offset >= y)
+	{
+		TTextTexture &tth = td->m_Texture;
+
+		offset -= tth.Height;
+
+		if (td->Timer >= ticks)
+			tth.Draw(x, offset);
+
+		td = td->m_Prev;
+	}
+}
+//---------------------------------------------------------------------------
 //--------------------------------TJournal----------------------------------
 //---------------------------------------------------------------------------
 TJournal::TJournal(int max_size)
