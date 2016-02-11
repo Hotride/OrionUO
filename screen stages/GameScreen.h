@@ -48,6 +48,10 @@ struct RENDER_VARIABLES_FOR_GAME_WINDOW
 	int MaxPixelsX;
 	int MinPixelsY;
 	int MaxPixelsY;
+
+	int PlayerX;
+	int PlayerY;
+	int PlayerZ;
 };
 //---------------------------------------------------------------------------
 struct LIGHT_DATA
@@ -71,10 +75,15 @@ private:
 	LIGHT_DATA m_Light[MAX_LIGHT_SOURCES];
 	int m_LightCount;
 
-	void RemoveLight(WORD x, WORD y, char z);
-
 	int GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ);
 	void CheckMouseEvents(bool &charSelected);
+
+	TRenderTextObject *m_GameWindowText;
+	void CalculateGameWindowText(bool &mode);
+
+	void DrawGameWindow(bool &mode);
+	void DrawGameWindowLight();
+	void DrawGameWindowText(bool &mode);
 public:
 	TGameScreen();
 	virtual ~TGameScreen();
