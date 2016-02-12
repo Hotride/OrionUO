@@ -20,7 +20,7 @@
 #include "stdafx.h"
 
 
-
+GLfloat matrix[16] = { 0.0f };
 
 
 
@@ -415,6 +415,25 @@ int TDebugScreen::Render(bool mode)
 		if (DrawSmoothMonitor())
 			return 0;
 
+		static bool onc = true;
+
+		if (onc)
+		{
+			onc = false;
+			glGetFloatv(GL_MATRIX_MODE, matrix);
+
+			glListBase(10);
+			glNewList(10, GL_COMPILE);
+
+			glLoadMatrixf(matrix);
+
+			UO->DrawGump(0x085C, 0, 0, 0);
+			UO->DrawGump(0x085C, 0, 100, 0);
+			UO->DrawGump(0x085C, 0, 0, 50);
+
+			glEndList();
+		}
+
 		glColor3f(1.0f, 1.0f, 1.0f);
 
 		ColorizerShader->Use();
@@ -554,6 +573,16 @@ int TDebugScreen::Render(bool mode)
 		UO->DrawStaticArtAnimated(0x0CE1, 0, 320, 240, 0);*/
 
 		//glDisable(GL_BLEND);
+
+		glGetFloatv(GL_MATRIX_MODE, matrix);
+		glCallList(10);
+
+		glLoadIdentity();
+		glGetFloatv(GL_MATRIX_MODE, matrix);
+
+		glCallList(10);
+
+		glLoadIdentity();
 
 		DrawSmoothMonitorEffect();
 

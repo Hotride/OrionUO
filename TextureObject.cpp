@@ -64,11 +64,13 @@ bool TCircleOfTransparencyTexture::Create(int radius)
 {
 	if (radius <= 0)
 		return false;
-	else if (radius == m_Radius)
+	else if (radius > 200)
+		radius = 200;
+
+	if (radius == m_Radius)
 		return true;
 
-	if (radius > 200)
-		radius = 200;
+	m_Radius = radius;
 
 	int fixRadius = radius + 1;
 	int mulRadius = fixRadius * 2;

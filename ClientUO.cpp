@@ -1625,7 +1625,6 @@ void TUltimaOnline::ClearUnusedTextures()
 
 	clearMap = 1;
 
-	return;
 	m_StaticDataIndex[0x0EED].LastAccessTime = ticks;
 	m_StaticDataIndex[0x0EEE].LastAccessTime = ticks;
 	m_StaticDataIndex[0x0EEF].LastAccessTime = ticks;
@@ -1907,11 +1906,11 @@ bool TUltimaOnline::LoadSkills()
 //---------------------------------------------------------------------------
 void TUltimaOnline::UnloadSkills()
 {
-	if (!g_SkillsCount)
-		return;
-	
-	delete []g_Skills;
-	g_Skills = NULL;
+	if (g_Skills != NULL)
+	{
+		delete []g_Skills;
+		g_Skills = NULL;
+	}
 }
 //--------------------------------------------------------------------------
 void TUltimaOnline::LoadProfession()
@@ -2685,12 +2684,17 @@ void TUltimaOnline::SaveLocalConfig()
 
 	path += string("_") + g_Player->GetName() + ".cuo";
 	
-	FILE *file = fopen(path.c_str(), "wb");
-	fclose(file);
+	if (!PathFileExistsA(path.c_str()))
+	{
+		FILE *file = fopen(path.c_str(), "wb");
+		fclose(file);
+	}
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::Process()
 {
+	static DWORD removeUnusedTexturesTime = GetTickCount() + CLEAR_TEXTURES_DELAY;
+
 	ConnectionManager.Recv();
 
 	DWORD ticks = GetTickCount();
@@ -2711,10 +2715,10 @@ void TUltimaOnline::Process()
 	g_CtrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
 	g_ShiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
 
-	g_ShowGumpLocker = ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
-	
 	if (g_GameState >= GS_GAME) // || g_GameState == GS_GAME_BLOCKED)
 	{
+		g_ShowGumpLocker = ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
+
 		g_SelectedObject = NULL;
 		g_SelectedTextObject = NULL;
 
@@ -2849,8 +2853,6 @@ void TUltimaOnline::Process()
 		CurrentScreen->Render(false);
 		CurrentScreen->Render(true);
 	}
-
-	static DWORD removeUnusedTexturesTime = ticks + CLEAR_TEXTURES_DELAY;
 
 	if (removeUnusedTexturesTime < ticks)
 	{
