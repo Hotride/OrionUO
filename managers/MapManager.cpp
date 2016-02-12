@@ -24,7 +24,7 @@ TMapManager *MapManager;
 TMapManager::TMapManager()
 : TBaseQueue()
 #if USE_BLOCK_MAP == 1
-, m_Blocks(NULL)
+, m_Blocks(NULL), m_MaxBlockIndex(0)
 #endif
 {
 }
@@ -37,6 +37,8 @@ TMapManager::~TMapManager()
 		delete[] m_Blocks;
 		m_Blocks = NULL;
 	}
+
+	m_MaxBlockIndex = 0;
 #endif
 }
 //---------------------------------------------------------------------------
@@ -220,9 +222,9 @@ void TMapManager::Init()
 		m_Blocks = NULL;
 	}
 
-	int size = g_MapBlockX[map] * g_MapBlockY[map];
-	m_Blocks = new TMapBlock*[size];
-	memset(&m_Blocks[0], 0, sizeof(TMapBlock*)* size);
+	m_MaxBlockIndex = g_MapBlockX[map] * g_MapBlockY[map];
+	m_Blocks = new TMapBlock*[m_MaxBlockIndex];
+	memset(&m_Blocks[0], 0, sizeof(TMapBlock*)* m_MaxBlockIndex);
 #endif
 	
 	const int XY_Offset = 30; //70;
@@ -363,7 +365,10 @@ TMapBlock *TMapManager::GetBlock(DWORD index)
 		block = (TMapBlock*)block->m_Next;
 	}
 #else
-	TMapBlock *block = m_Blocks[index];
+	TMapBlock *block = NULL;
+
+	if (index < m_MaxBlockIndex)
+		block = m_Blocks[index];
 
 	if (block != NULL)
 		block->LastAccessTime = GetTickCount();
