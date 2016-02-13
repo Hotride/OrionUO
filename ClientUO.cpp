@@ -772,16 +772,13 @@ TUltimaOnline::~TUltimaOnline()
 		ClilocManager = NULL;
 	}
 	
-	if (g_TextureLockedGump != 0)
+	IFOR(i, 0, 2)
 	{
-		glDeleteTextures(1, &g_TextureLockedGump);
-		g_TextureLockedGump= 0;
-	}
-
-	if (g_TextureUnlockedGump != 0)
-	{
-		glDeleteTextures(1, &g_TextureUnlockedGump);
-		g_TextureUnlockedGump= 0;
+		if (g_TextureGumpState[i] != 0)
+		{
+			glDeleteTextures(1, &g_TextureGumpState[i]);
+			g_TextureGumpState[i] = 0;
+		}
 	}
 
 	if (DeathShader != NULL)
@@ -1018,6 +1015,7 @@ bool TUltimaOnline::Install()
 		b, r, r, r, r, r, r, r, b, b,
 		b, b, r, r, r, r, r, b, b, b
 	};
+
 	WORD pdwult[] =
 	{
 		b, b, b, g, g, g, g, g, g, g,
@@ -1036,11 +1034,8 @@ bool TUltimaOnline::Install()
 		b, b, g, g, g, g, g, b, b, b
 	};
 	
-	g_GL.BindTexture16(g_TextureLockedGump, 10, 14, pdwlt);
-	g_TextureGumpState[1] = g_TextureLockedGump;
-
-	g_GL.BindTexture16(g_TextureUnlockedGump, 10, 14, pdwult);
-	g_TextureGumpState[0] = g_TextureUnlockedGump;
+	g_GL.BindTexture16(g_TextureGumpState[1], 10, 14, pdwlt);
+	g_GL.BindTexture16(g_TextureGumpState[0], 10, 14, pdwult);
 
 	g_LightBuffer.Init(GetSystemMetrics(SM_CXMAXIMIZED), GetSystemMetrics(SM_CYMAXIMIZED));
 
@@ -3245,6 +3240,96 @@ void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int
 		y -= (z * 4);
 
 		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
+	}
+}
+//---------------------------------------------------------------------------
+void TUltimaOnline::DrawStaticArtTransparent(WORD id, WORD color, int x, int y, int z, bool selection)
+{
+	TTextureObject *th = ExecuteStaticArt(id);
+
+	if (th != NULL && id > 1)
+	{
+		if (g_OutOfRangeColor)
+			color = g_OutOfRangeColor;
+		
+		x -= m_StaticDataIndex[id].Width;
+		y -= m_StaticDataIndex[id].Height;
+
+		int drawMode = (!g_GrayedPixels && color);
+
+		if (drawMode)
+		{
+			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
+
+			if (partialHue)
+				drawMode = 2;
+
+			ColorManager->SendColorsToShader(color);
+		}
+
+		glUniform1iARB(ShaderDrawMode, drawMode);
+
+		y -= (z * 4);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4f(1.0f, 1.0f, 1.0f, 0.25f);
+		
+		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
+
+		glDisable(GL_BLEND);
+
+		glEnable(GL_STENCIL_TEST);
+		
+		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
+
+		glDisable(GL_STENCIL_TEST);
+	}
+}
+//---------------------------------------------------------------------------
+void TUltimaOnline::DrawStaticArtAnimatedTransparent(WORD id, WORD color, int x, int y, int z, bool selection)
+{
+	id += m_StaticDataIndex[id].Increment;
+
+	TTextureObject *th = ExecuteStaticArt(id);
+
+	if (th != NULL && id > 1)
+	{
+		if (g_OutOfRangeColor)
+			color = g_OutOfRangeColor;
+
+		x -= m_StaticDataIndex[id].Width;
+		y -= m_StaticDataIndex[id].Height;
+
+		int drawMode = (!g_GrayedPixels && color);
+
+		if (drawMode)
+		{
+			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
+
+			if (partialHue)
+				drawMode = 2;
+
+			ColorManager->SendColorsToShader(color);
+		}
+
+		glUniform1iARB(ShaderDrawMode, drawMode);
+
+		y -= (z * 4);
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4f(1.0f, 1.0f, 1.0f, 0.25f);
+		
+		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
+
+		glDisable(GL_BLEND);
+
+		glEnable(GL_STENCIL_TEST);
+		
+		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
+
+		glDisable(GL_STENCIL_TEST);
 	}
 }
 //---------------------------------------------------------------------------

@@ -28,7 +28,7 @@ private:
 #if USE_BLOCK_MAP == 1
 	TMapBlock **m_Blocks;
 #endif
-	int m_MaxBlockIndex;
+	DWORD m_MaxBlockIndex;
 public:
 	TMapManager();
 	virtual ~TMapManager();

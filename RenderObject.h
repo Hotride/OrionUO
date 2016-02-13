@@ -61,19 +61,20 @@ protected:
 	char m_Z;
 	BYTE m_RenderQueueIndex;
 	RENDER_OBJECT_TYPE m_RenderType;
+
 public:
 	TRenderWorldObject(RENDER_OBJECT_TYPE renderType, DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TRenderWorldObject();
 	
-	TTextContainer *m_TextControl; //Ссылка на контейнер для текста
+	//TTextContainer *m_TextControl; //Ссылка на контейнер для текста
 	
 	//Добавить текст в контейнер
-	virtual void AddText(TTextData *td);
+	virtual void AddText(TTextData *td) {}
 	
-	int GetTextOffsetX(TTextData *text);
-	int GetTextOffsetY(TTextData *text);
-	bool TextCanBeTransparent(TRenderTextObject *text);
-
+	virtual int GetTextOffsetX(TTextData *text) {return 0;}
+	virtual int GetTextOffsetY(TTextData *text) {return 0;}
+	virtual bool TextCanBeTransparent(TRenderTextObject *text) {return false;}
+	
 	virtual bool TranparentTest(int &playerZ) {return false;}
 
 	SETGETEX(char, Z);
@@ -84,11 +85,14 @@ public:
 	TRenderWorldObject *m_PrevXY;
 
 	TLandObject *GetLand();
+	
+	virtual BYTE GetLightID() {return 0;}
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks) { return 0; }
 
 	void RemoveRender();
-
+	
+	//Стандартные состояния по флагам из тайлдаты (вердаты)
 	virtual bool IsBackground() {return false;}
 	virtual bool IsWeapon() {return false;}
 	virtual bool IsTransparent() {return false;}
@@ -121,6 +125,8 @@ public:
 	virtual bool IsDoor() {return false;}
 	virtual bool IsStairBack() {return false;}
 	virtual bool IsStairRight() {return false;}
+	
+	virtual bool IsStaticGroupObject() {return false;}
 
 	virtual bool IsLandObject() {return false;}
 	virtual bool IsStaticObject() {return false;}

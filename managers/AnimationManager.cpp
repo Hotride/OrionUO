@@ -1293,19 +1293,8 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 					if (goi->AnimID)
 						Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
 
-					if (goi->IsLightSource())
-					{
-						WORD graphic = goi->Graphic;
-
-						STATIC_TILES &tile = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
-
-						LIGHT_DATA light = {tile.Quality, 0, obj->X, obj->Y, obj->Z, drawX, drawY - lightOffset};
-
-						if (ConfigManager.ColoredLighting)
-							light.Color = UO->GetLightColor(graphic);
-
-						GameScreen->AddLight(light);
-					}
+					if (goi->IsLightSource() && GameScreen->UseLight)
+						GameScreen->AddLight(obj, goi, drawX, drawY - lightOffset);
 				}
 			}
 		}
@@ -1433,19 +1422,8 @@ void TAnimationManager::DrawCorpse(TGameItem *obj, int x, int y, int z)
 			if (goi->AnimID)
 				Draw(goi, x, y, mirror, animIndex, goi->AnimID);
 
-			if (goi->IsLightSource())
-			{
-				WORD graphic = goi->Graphic;
-
-				STATIC_TILES &tile = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
-
-				LIGHT_DATA light = {tile.Quality, 0, obj->X, obj->Y, obj->Z, x, y - 20};
-
-				if (ConfigManager.ColoredLighting)
-					light.Color = UO->GetLightColor(graphic);
-
-				GameScreen->AddLight(light);
-			}
+			if (goi->IsLightSource() && GameScreen->UseLight)
+				GameScreen->AddLight(obj, goi, x, y - 20);
 		}
 	}
 }

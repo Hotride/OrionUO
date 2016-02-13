@@ -22,7 +22,8 @@
 TGameScreen *GameScreen = NULL;
 //---------------------------------------------------------------------------
 TGameScreen::TGameScreen()
-: TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false)
+: TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false),
+m_UseLight(false), m_MaxDrawZ(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -91,6 +92,7 @@ int TGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 
 	int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
 	TMapBlock *mb = MapManager->GetBlock(blockIndex);
+	TMapBlock *mb11 = NULL;
 
 	if (mb != NULL)
 	{
@@ -126,10 +128,48 @@ int TGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 				maxDrawZ = ro->Z;
 			else  if (ro->Z > pz5 && (ro->IsRoof() || (ro->IsBackground() && ro->IsSurface())))
 			{
-				if (maxDrawZ > pz15)
-					maxDrawZ = pz15;
+				bool canNoRoof = !ro->IsRoof();
 
-				noDrawRoof = true;
+				if (!canNoRoof)
+				{
+					if (mb11 == NULL)
+					{
+						playerX++;
+						playerY++;
+
+						bx = playerX / 8;
+						by = playerY / 8;
+
+						blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+						mb11 = MapManager->GetBlock(blockIndex);
+
+						x = playerX % 8;
+						y = playerY % 8;
+					}
+					
+					for (TRenderWorldObject *ro11 = mb11->GetRender(x, y); ro11 != NULL; ro11 = ro11->m_NextXY)
+					{
+						if (!ro11->IsStaticObject() && !ro11->IsGameObject() && !ro11->IsMultiObject())
+							continue;
+
+						if (ro11->IsGameObject() && ((TGameObject*)ro11)->NPC)
+							continue;
+	
+						if (ro11->Z > pz5 && ro11->IsRoof())
+						{
+							canNoRoof = true;
+							break;
+						}
+					}
+				}
+
+				if (canNoRoof)
+				{
+					if (maxDrawZ > pz15)
+						maxDrawZ = pz15;
+
+					noDrawRoof = true;
+				}
 			}
 		}
 	}
@@ -321,13 +361,70 @@ void TGameScreen::CheckMouseEvents(bool &charSelected)
 	}
 }
 //---------------------------------------------------------------------------
-void TGameScreen::AddLight(LIGHT_DATA &light)
+void TGameScreen::AddLight(TRenderWorldObject *rwo, TRenderWorldObject *lightObject, int x, int y)
 {
 	if (m_LightCount < MAX_LIGHT_SOURCES)
 	{
-		memcpy(&m_Light[m_LightCount], &light, sizeof(LIGHT_DATA));
+		bool canBeAdded = true;
+		
+		int testX = rwo->X + 1;
+		int testY = rwo->Y + 1;
+		
+		int bx = testX / 8;
+		int by = testY / 8;
 
-		m_LightCount++;
+		int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+		TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
+		if (mb != NULL)
+		{
+			bx = testX % 8;
+			by = testY % 8;
+			
+			char z5 = rwo->Z + 5;
+		
+			for (TRenderWorldObject *obj = mb->GetRender(bx, by); obj != NULL; obj = obj->m_NextXY)
+			{
+				if (!obj->IsStaticObject() && !obj->IsGameObject() && !obj->IsMultiObject())
+					continue;
+
+				if (obj->IsGameObject() && ((TGameObject*)obj)->NPC)
+					continue;
+
+				int z = obj->Z;
+	
+				if (z >= m_MaxDrawZ)
+					break;
+
+				if (z >= z5 && (obj->IsRoof() || (obj->IsBackground() && obj->IsSurface())))
+				{
+					canBeAdded = false;
+					break;
+				}
+			}
+		}
+
+		if (canBeAdded)
+		{
+			m_Light[m_LightCount].ID = lightObject->GetLightID();
+
+			if (ConfigManager.ColoredLighting)
+			{
+				WORD graphic = lightObject->Graphic;
+
+				if (!lightObject->IsGameObject())
+					graphic -= 0x4000;
+
+				m_Light[m_LightCount].Color = UO->GetLightColor(graphic);
+			}
+			else
+				m_Light[m_LightCount].Color = 0;
+
+			m_Light[m_LightCount].DrawX = x;
+			m_Light[m_LightCount].DrawY = y;
+
+			m_LightCount++;
+		}
 	}
 }
 //---------------------------------------------------------------------------
@@ -460,6 +557,8 @@ void TGameScreen::DrawGameWindow(bool &mode)
 
 	if (mode)
 	{
+		m_UseLight = (g_PersonalLightLevel < g_LightLevel);
+
 		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 
 		AnimationManager->ShadowCount = 0;
@@ -478,7 +577,7 @@ void TGameScreen::DrawGameWindow(bool &mode)
 
 		g_NoDrawRoof = false;
 		g_MaxGroundZ = 125;
-		int maxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
+		m_MaxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
 
 		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 		{
@@ -531,7 +630,7 @@ void TGameScreen::DrawGameWindow(bool &mode)
 						{
 							TRenderWorldObject *nextRenderObject = renderObject->m_NextXY;
 
-							if (renderObject->IsInternal() || (!renderObject->IsLandObject() && renderObject->Z >= maxDrawZ))
+							if (renderObject->IsInternal() || (!renderObject->IsLandObject() && renderObject->Z >= m_MaxDrawZ))
 							{
 								renderObject = nextRenderObject;
 								continue;
@@ -649,11 +748,14 @@ void TGameScreen::DrawGameWindowLight()
 {
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+	if (!m_UseLight)
+		return;
+
 	LightColorizerShader->Use();
 
 	if (g_UseFrameBuffer)
 	{
-		if (g_PersonalLightLevel < g_LightLevel && g_LightBuffer.Ready() && g_LightBuffer.Use())
+		if (g_LightBuffer.Ready() && g_LightBuffer.Use())
 		{
 			float newLightColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f);
 
@@ -685,12 +787,12 @@ void TGameScreen::DrawGameWindowLight()
 
 			glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 
-			g_LightBuffer.Draw((float)m_RenderBounds.GameWindowPosX, (float)m_RenderBounds.GameWindowPosY);
+			g_LightBuffer.Draw(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY);
 
 			glDisable(GL_BLEND);
 		}
 	}
-	else if (g_PersonalLightLevel < g_LightLevel)
+	else
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
@@ -949,7 +1051,7 @@ int TGameScreen::Render(bool mode)
 
 			g_GL.ViewPort(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY, m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowSizeY);
 
-			g_LightBuffer.Draw((float)m_RenderBounds.GameWindowPosX, (float)m_RenderBounds.GameWindowPosY);
+			g_LightBuffer.Draw(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY);
 
 			FontManager->DrawA(3, "You are dead.", 0, m_RenderBounds.GameWindowCenterX - 30, m_RenderBounds.GameWindowCenterY);
 		}
@@ -991,8 +1093,8 @@ int TGameScreen::Render(bool mode)
 		FontManager->DrawA(3, dbf, 0x35, 20, 50);
 
 #if UO_DEBUG_INFO!=0
-		sprintf(dbf, "Rendered %i object counts:\nLand=%i Statics=%i Game=%i Multi=%i",
-			g_RenderedObjectsCountInGameWindow, g_LandObjectsCount, g_StaticsObjectsCount, g_GameObjectsCount, g_MultiObjectsCount);
+		sprintf(dbf, "Rendered %i object counts:\nLand=%i Statics=%i Game=%i Multi=%i Lights=%i",
+			g_RenderedObjectsCountInGameWindow, g_LandObjectsCount, g_StaticsObjectsCount, g_GameObjectsCount, g_MultiObjectsCount, m_LightCount);
 
 		FontManager->DrawA(3, dbf, 0x35, 20, 74);
 
@@ -1030,7 +1132,7 @@ int TGameScreen::Render(bool mode)
 					break;
 			}
 
-			sprintf(dbf, "Selected:\n%s: X=%i Y=%i Z=%i RQI=%i (SUM=%i)\nthis=0x%08X prev=0x%08X next=0x%08X", soName, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, g_SelectedObject->RenderQueueIndex, g_SelectedObject->Z + g_SelectedObject->RenderQueueIndex, g_SelectedObject, g_SelectedObject->m_Prev, g_SelectedObject->m_Next);
+			sprintf(dbf, "Selected:\n%s: G=0x%04X X=%i Y=%i Z=%i RQI=%i (SUM=%i)\nthis=0x%08X prev=0x%08X next=0x%08X", soName, g_SelectedObject->Graphic, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, g_SelectedObject->RenderQueueIndex, g_SelectedObject->Z + g_SelectedObject->RenderQueueIndex, g_SelectedObject, g_SelectedObject->m_Prev, g_SelectedObject->m_Next);
 
 			FontManager->DrawA(3, dbf, 0x35, 20, 122);
 		}

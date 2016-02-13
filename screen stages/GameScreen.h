@@ -58,9 +58,6 @@ struct LIGHT_DATA
 {
 	BYTE ID;
 	WORD Color;
-	WORD X;
-	WORD Y;
-	char Z;
 	int DrawX;
 	int DrawY;
 };
@@ -74,6 +71,8 @@ private:
 
 	LIGHT_DATA m_Light[MAX_LIGHT_SOURCES];
 	int m_LightCount;
+	bool m_UseLight;
+	int m_MaxDrawZ;
 
 	int GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ);
 	void CheckMouseEvents(bool &charSelected);
@@ -100,9 +99,11 @@ public:
 
 	void InitTooltip();
 	
-	void AddLight(LIGHT_DATA &light);
+	void AddLight(TRenderWorldObject *rwo, TRenderWorldObject *lightObject, int x, int y);
 
 	int Render(bool mode);
+
+	SETGET(bool, UseLight);
 
 	void OnLeftMouseDown();
 	void OnLeftMouseUp();

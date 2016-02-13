@@ -711,7 +711,7 @@ bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str,
 	{
 		info = ptr;
 
-		th.Lines++;
+		th.IncLines();
 		
 		int w = 0;
 		if (ptr->Align == TS_CENTER)

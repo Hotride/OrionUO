@@ -45,7 +45,6 @@ m_IsGameFigure(false), m_DragCount(obj->Count)
 	ImageID = obj->ImageID;
 	Container = obj->Container;
 	UsedLayer = obj->UsedLayer;
-	ObjectFlags = obj->ObjectFlags;
 	AnimID = obj->AnimID;
 	MapIndex = obj->MapIndex;
 	Name = obj->GetName();

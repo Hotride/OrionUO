@@ -54,11 +54,11 @@ void TGump::DrawLocker(int &x, int &y)
 //---------------------------------------------------------------------------
 void TGump::GetBaseProperties(DWORD &serial, WORD &graphic, WORD &color, WORD &x, WORD &y)
 {
-	serial = Serial;
-	graphic = Graphic;
-	color = Color;
-	x = X;
-	y = Y;
+	serial = m_Serial;
+	graphic = m_Graphic;
+	color = m_Color;
+	x = m_X;
+	y = m_Y;
 }
 //---------------------------------------------------------------------------
 bool TGump::CanBeMoved()

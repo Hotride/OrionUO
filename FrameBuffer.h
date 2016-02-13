@@ -43,7 +43,7 @@ public:
 	bool Ready(int &width, int &height);
 	bool Use();
 	
-	void Draw(float x, float y);
+	void Draw(int x, int y);
 };
 
 extern TFrameBuffer g_LightBuffer;

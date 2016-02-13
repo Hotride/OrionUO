@@ -40,75 +40,11 @@ TRenderWorldObject::TRenderWorldObject(RENDER_OBJECT_TYPE renderType, DWORD seri
 : TRenderObject(serial, graphic, color, x, y), m_RenderType(renderType),
 m_Z(z), m_NextXY(NULL), m_PrevXY(NULL), m_RenderQueueIndex(0)
 {
-	if (!IsLandObject() && !IsEffectObject())
-		m_TextControl = new TTextContainer(3);
-	else
-		m_TextControl = NULL;
 }
 //---------------------------------------------------------------------------
 TRenderWorldObject::~TRenderWorldObject()
 {
-	if (m_TextControl != NULL)
-	{
-		delete m_TextControl;
-		m_TextControl = NULL;
-	}
-
 	RemoveRender();
-}
-//---------------------------------------------------------------------------
-void TRenderWorldObject::AddText(TTextData *msg)
-{
-	if (m_TextControl != NULL)
-	{
-		m_TextControl->Add(msg);
-
-		UO->AddJournalMessage(msg, "You see: ");
-	}
-}
-//---------------------------------------------------------------------------
-int TRenderWorldObject::GetTextOffsetX(TTextData *text)
-{
-	return text->m_Texture.Width / 2;
-}
-//---------------------------------------------------------------------------
-int TRenderWorldObject::GetTextOffsetY(TTextData *text)
-{
-	int offset = 0;
-
-	TTextData *td = m_TextControl->m_Head;
-
-	while (td != NULL)
-	{
-		offset += td->m_Texture.Height;
-		
-		if (text == td)
-			break;
-
-		td = td->m_Prev;
-	}
-
-	return offset;
-}
-//---------------------------------------------------------------------------
-bool TRenderWorldObject::TextCanBeTransparent(TRenderTextObject *text)
-{
-	bool result = true;
-
-	TTextData *td = m_TextControl->m_Head;
-
-	while (td != NULL)
-	{
-		if (text == td)
-		{
-			result = false;
-			break;
-		}
-
-		td = td->m_Prev;
-	}
-
-	return result;
 }
 //---------------------------------------------------------------------------
 void TRenderWorldObject::RemoveRender()

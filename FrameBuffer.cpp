@@ -128,23 +128,20 @@ bool TFrameBuffer::Use()
 	return result;
 }
 //---------------------------------------------------------------------------
-void TFrameBuffer::Draw(float x, float y)
+void TFrameBuffer::Draw(int x, int y)
 {
 	if (g_UseFrameBuffer && m_Ready)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_Texture);
 
 		glLoadIdentity();
-		glTranslatef(x, y, 0.0f);
+		glTranslatef((GLfloat)x, (GLfloat)y, 0.0f);
 		
-		float width = (float)m_Width;
-		float height = (float)m_Height;
-
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(0.0f, height);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(width, height);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(width, 0.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(0.0f, 0.0f);
+			glTexCoord2i(0, 1); glVertex2i(0, m_Height);
+			glTexCoord2i(1, 1); glVertex2i(m_Width, m_Height);
+			glTexCoord2i(1, 0); glVertex2i(m_Width, 0);
+			glTexCoord2i(0, 0); glVertex2i(0, 0);
 		glEnd();
 	}
 }

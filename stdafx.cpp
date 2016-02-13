@@ -28,8 +28,6 @@ int g_GameObjectsCount = 0;
 int g_MultiObjectsCount = 0;
 int g_RenderedObjectsCountInGameWindow = 0;
 //---------------------------------------------------------------------------
-GLuint g_TextureLockedGump = 0;
-GLuint g_TextureUnlockedGump = 0;
 GLuint g_TextureGumpState[2] = {0, 0};
 bool g_UseFrameBuffer = false;
 //---------------------------------------------------------------------------

@@ -94,7 +94,7 @@ int TGameCharacter::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 	return 0;
 }
 //---------------------------------------------------------------------------
-void TGameCharacter::UpdateSex()
+void TGameCharacter::OnGraphicChange(int direction)
 {
 	//Обновления пола в зависимости от индекса картинки персонажа
 	switch (m_Graphic)
@@ -113,6 +113,25 @@ void TGameCharacter::UpdateSex()
 		}
 		default:
 			break;
+	}
+
+	if (direction == 1000)
+	{
+		if (!m_Clicked && !IsPlayer())
+		{
+			UO->StatusReq(m_Serial);
+
+			if (ConfigManager.ShowIncomingNames)
+				UO->NameReq(m_Serial);
+		}
+	
+		TGump *gump = GumpManager->GetGump(m_Serial, 0, GT_PAPERDOLL);
+		if (gump != NULL)
+			gump->UpdateFrame();
+
+		gump = GumpManager->GetGump(m_Serial, 0, GT_STATUSBAR);
+		if (gump != NULL)
+			gump->UpdateFrame();
 	}
 }
 //---------------------------------------------------------------------------

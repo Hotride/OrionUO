@@ -110,7 +110,7 @@ int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				int y4 = my + (int)floor(tmpX * sinA + tmpY * cosA);
 
 				glLoadIdentity();
-				glTranslatef(deX - posMinX, deY - posMinY, 0.0f);
+				glTranslatef((GLfloat)(deX - posMinX), (GLfloat)(deY - posMinY), 0.0f);
 
 				glBegin(GL_QUADS);
 					glTexCoord2i(0, 1); glVertex2i(x1, y1);

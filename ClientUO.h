@@ -106,6 +106,8 @@ public:
 	void DrawLandArt(WORD id, WORD color, int x, int y, int z);
 	void DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool selection = false);
 	void DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int z, bool selection = false);
+	void DrawStaticArtTransparent(WORD id, WORD color, int x, int y, int z, bool selection = false);
+	void DrawStaticArtAnimatedTransparent(WORD id, WORD color, int x, int y, int z, bool selection = false);
 	void DrawStaticArtInContainer(WORD id, WORD color, int x, int y, bool selection = false, bool onMouse = false);
 	void DrawLight(BYTE id, WORD color, int x, int y);
 	

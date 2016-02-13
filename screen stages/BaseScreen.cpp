@@ -74,7 +74,7 @@ void TBaseScreen::DrawSmoothMonitorEffect()
 
 		glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 
-		g_LightBuffer.Draw(0.0f, 0.0f);
+		g_LightBuffer.Draw(0, 0);
 
 		glDisable(GL_BLEND);
 	}

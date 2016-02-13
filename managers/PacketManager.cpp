@@ -884,7 +884,7 @@ PACKET_HANDLER(EnterWorld)
 		g_Player->SetName(g_SelecterCharName);
 
 	g_Player->Graphic = ReadWord();
-	g_Player->UpdateSex();
+	g_Player->OnGraphicChange();
 
 	g_Player->X = ReadWord();
 	g_Player->Y = ReadWord();
@@ -994,6 +994,7 @@ PACKET_HANDLER(UpdatePlayer)
 
 	WORD oldGraphic = g_Player->Graphic;
 	g_Player->Graphic = ReadWord();
+	g_Player->OnGraphicChange();
 
 	if (oldGraphic && oldGraphic != g_Player->Graphic)
 	{
@@ -1006,8 +1007,6 @@ PACKET_HANDLER(UpdatePlayer)
 		}
 	}
 	
-	//WORD LastX = g_Player->X;
-	//WORD LastY = g_Player->Y;
 	Move(1);
 
 	g_Player->Color = ReadWord() & 0x7FFF;
@@ -1189,27 +1188,7 @@ PACKET_HANDLER(UpdateItem)
 		//obj->Direction = *Ptr; //Направление предмета?
 		dir = ReadByte();
 	}
-
-	if (obj->IsCorpse())
-	{
-		if (World->FindWorldCorpseOwner(serial))
-			obj->AnimIndex = 0;
-		else
-			obj->AnimIndex = 99;
-
-		if (dir & 0x80)
-		{
-			obj->UsedLayer = 1;
-			dir &= 0x7F;
-		}
-		else
-			obj->UsedLayer = 0;
-
-		obj->Layer = dir;
-
-		obj->RenderQueueIndex = 6;
-	}
-
+	
 	obj->X = X;
 	obj->Z = ReadByte();
 
@@ -1229,38 +1208,7 @@ PACKET_HANDLER(UpdateItem)
 	
 	obj->Y = Y;
 
-	graphic = obj->Graphic;
-
-	if (graphic < 0x4000)
-	{
-		STATIC_TILES &st = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
-		obj->ObjectFlags = st.Flags;
-
-		if (obj->IsWearable() || obj->Graphic == 0x0A28)
-		{
-			obj->ImageID = st.AnimID + 0xC350;
-			obj->AnimID = st.AnimID;
-			UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-			UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
-			obj->UsedLayer = st.Quality;
-		}
-
-		if (!obj->IsCorpse())
-		{
-			if (obj->IsBackground())
-				obj->RenderQueueIndex = 3 - (int)obj->IsSurface();
-			else if (obj->IsSurface())
-				obj->RenderQueueIndex = 4;
-			else
-				obj->RenderQueueIndex = 6;
-
-			obj->IncRenderQueueIndex();
-		}
-
-		UO->ExecuteStaticArt(graphic);
-	}
-	else if (obj->m_Items == NULL)
-		obj->LoadMulti();
+	obj->OnGraphicChange(dir);
 
 	World->MoveToTop(obj);
 
@@ -1313,30 +1261,11 @@ PACKET_HANDLER(UpdateItemSA)
 	obj->Graphic = graphic;
 	obj->Count = count;
 
-	if (obj->IsCorpse())
-	{
-		if (World->FindWorldCorpseOwner(serial))
-			obj->AnimIndex = 0;
-		else
-			obj->AnimIndex = 99;
-
-		if (dir & 0x80)
-		{
-			obj->UsedLayer = 1;
-			dir &= 0x7F;
-		}
-		else
-			obj->UsedLayer = 0;
-
-		obj->Layer = dir;
-
-		obj->RenderQueueIndex = 6;
-	}
-
 	obj->X = x;
 	obj->Y = y;
 	obj->Z = z;
 	obj->Color = color;
+	obj->OnGraphicChange(dir);
 
 	obj->Flags = flags;
 
@@ -1344,37 +1273,6 @@ PACKET_HANDLER(UpdateItemSA)
 	trace_printf("0x%04X*%d %d:%d:%d\n", obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
 
 	World->MoveToTop(obj);
-
-	if (type != 0x02)
-	{
-		STATIC_TILES &st = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
-		obj->ObjectFlags = st.Flags;
-
-		if (obj->IsWearable() || obj->Graphic == 0x0A28)
-		{
-			obj->ImageID = st.AnimID + 0xC350;
-			obj->AnimID = st.AnimID;
-			UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-			UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
-			obj->UsedLayer = st.Quality;
-		}
-
-		if (!obj->IsCorpse())
-		{
-			if (obj->IsBackground())
-				obj->RenderQueueIndex = 3 - (int)obj->IsSurface();
-			else if (obj->IsSurface())
-				obj->RenderQueueIndex = 4;
-			else
-				obj->RenderQueueIndex = 6;
-
-			obj->IncRenderQueueIndex();
-		}
-
-		UO->ExecuteStaticArt(graphic);
-	}
-	else
-		obj->LoadMulti();
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateObject)
@@ -1438,10 +1336,7 @@ PACKET_HANDLER(UpdateObject)
 	}
 
 	if (character != NULL)
-	{
 		character->m_WalkStack.Clear();
-		character->UpdateSex();
-	}
 
 	WORD X = ReadWord();
 	obj->X = X & 0x7FFF;
@@ -1454,74 +1349,25 @@ PACKET_HANDLER(UpdateObject)
 	obj->Z = ReadByte();
 
 	BYTE dir = ReadByte();
+
 	if (character != NULL)
-		character->Direction = dir;
-	else if (obj->IsCorpse())
 	{
-		if (World->FindWorldCorpseOwner(serial))
-			obj->AnimIndex = 0;
-		else
-			obj->AnimIndex = 99;
-
-		if (dir & 0x80)
-		{
-			dir &= 0x7F;
-			item->UsedLayer = 1;
-		}
-		else
-			item->UsedLayer = 0;
-
-		item->Layer = dir;
+		character->Direction = dir;
+		obj->OnGraphicChange(1000);
 	}
+	else
+		obj->OnGraphicChange(dir);
 
 	obj->Color = ReadWord() & 0x7FFF;
 
-	if (character == NULL)
-	{
-		graphic = item->Graphic;
-
-		if (item->Graphic < 0x4000)
-		{
-			STATIC_TILES &st = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
-			item->ObjectFlags = st.Flags;
-
-			if (item->IsWearable() || item->Graphic == 0x0A28)
-			{
-				item->ImageID = st.AnimID + 0xC350;
-				item->AnimID = st.AnimID;
-				UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-				UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
-				item->UsedLayer = st.Quality;
-			}
-
-			if (!item->IsCorpse())
-			{
-				if (item->IsBackground())
-					obj->RenderQueueIndex = 3 - (int)item->IsSurface();
-				else if (item->IsSurface())
-					obj->RenderQueueIndex = 4;
-				else
-					obj->RenderQueueIndex = 6;
-
-				obj->IncRenderQueueIndex();
-			}
-			else
-				obj->RenderQueueIndex = 6;
-
-			UO->ExecuteStaticArt(item->Graphic);
-		}
-		else if (item->m_Items == NULL)
-			item->LoadMulti();
-	}
-
 	obj->Flags = ReadByte();
-
 	BYTE noto = ReadByte();
-	if (character != NULL)
-		character->Notoriety = noto;
 
 	if (character != NULL)
+	{
+		character->Notoriety = noto;
 		trace_printf("%d,%d,%d C%04X D%d F%02X N%d\n", obj->X, obj->Y, obj->Z, obj->Color, character->Direction, obj->Flags, character->Notoriety);
+	}
 	else
 		trace_printf("%d,%d,%d C%04X F%02X\n", obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
 
@@ -1554,27 +1400,8 @@ PACKET_HANDLER(UpdateObject)
 
 		trace_printf("\t0x%08X:%04X ", obj2->Serial, obj2->Graphic);
 
-		STATIC_TILES &st1 = UO->m_StaticData[obj2->Graphic / 32].Tiles[obj2->Graphic % 32];
-
-		obj2->ObjectFlags = st1.Flags;
-
-		if (obj2->IsWearable() || obj2->Graphic == 0x0A28)
-		{
-			obj2->ImageID = st1.AnimID + 0xC350;
-			obj2->AnimID = st1.AnimID;
-			UO->ExecuteGump(st1.AnimID + 50000, (st1.Flags & 0x00040000));
-			UO->ExecuteGump(st1.AnimID + 60000, (st1.Flags & 0x00040000));
-			obj2->UsedLayer = st1.Quality;
-		}
-		else if (layer == OL_MOUNT)
-		{
-			obj2->AnimID = st1.AnimID;
-			obj2->UsedLayer = st1.Quality;
-		}
-
-		UO->ExecuteStaticArt(obj2->Graphic);
-
 		World->PutEquipment(obj2, obj, layer);
+		obj2->OnGraphicChange();
 
 		trace_printf("[%d] %04X\n", layer, obj2->Color);
 
@@ -1582,23 +1409,6 @@ PACKET_HANDLER(UpdateObject)
 
 		serial = ReadDWord();
 	}
-
-	if (obj->NPC && !obj->Clicked && obj->Serial != g_PlayerSerial)
-	{
-		serial = obj->Serial;
-		UO->StatusReq(serial);
-
-		if (ConfigManager.ShowIncomingNames)
-			UO->NameReq(serial);
-	}
-	
-	TGump *gump = GumpManager->GetGump(obj->Serial, 0, GT_PAPERDOLL);
-	if (gump != NULL)
-		gump->UpdateFrame();
-
-	gump = GumpManager->GetGump(obj->Serial, 0, GT_STATUSBAR);
-	if (gump != NULL)
-		gump->UpdateFrame();
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(EquipItem)
@@ -1622,20 +1432,8 @@ PACKET_HANDLER(EquipItem)
 	DWORD cserial = ReadDWord();
 	obj->Color = ReadWord();
 
-	int id = obj->Graphic;
-	STATIC_TILES &st = UO->m_StaticData[id / 32].Tiles[id % 32];
-	obj->ObjectFlags = st.Flags;
-
-	if (obj->IsWearable() || obj->Graphic == 0x0A28)
-	{
-		obj->ImageID = st.AnimID + 0xC350;
-		obj->AnimID = st.AnimID;
-		UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-		UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
-		obj->UsedLayer = st.Quality;
-	}
-
 	World->PutEquipment(obj, cserial, layer);
+	obj->OnGraphicChange();
 
 	if (layer < OL_MOUNT)
 	{
@@ -1676,6 +1474,7 @@ PACKET_HANDLER(UpdateContainedItem)
 
 	obj->Layer = OL_NONE;
 	obj->Graphic = ReadWord();
+	obj->OnGraphicChange();
 	Move(1);
 	obj->Count = ReadWord();
 	obj->X = ReadWord();
@@ -1699,23 +1498,6 @@ PACKET_HANDLER(UpdateContainedItem)
 
 		if (bbGump != NULL)
 			bbGump->UpdateFrame();
-	}
-	else
-	{
-		int ID = obj->Graphic / 32;
-		STATIC_TILES &st = UO->m_StaticData[ID].Tiles[obj->Graphic - (ID * 32)];
-		obj->ObjectFlags = st.Flags;
-
-		if (obj->IsWearable() || obj->Graphic == 0x0A28)
-		{
-			obj->ImageID = st.AnimID + 0xC350;
-			obj->AnimID = st.AnimID;
-			UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-			UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
-			obj->UsedLayer = st.Quality;
-		}
-
-		UO->ExecuteStaticArt(obj->Graphic);
 	}
 
 	World->MoveToTop(obj);
@@ -1827,6 +1609,7 @@ PACKET_HANDLER(UpdateContainedItems)
 		World->PutContainer(obj, cserial);
 
 		obj->Graphic = graphic;
+		obj->OnGraphicChange();
 		obj->Count = count;
 		obj->X = x;
 		obj->Y = y;
@@ -1846,23 +1629,6 @@ PACKET_HANDLER(UpdateContainedItems)
 				if (bbGump != NULL)
 					bbGump->UpdateFrame();
 			}
-		}
-		else
-		{
-			int ID = obj->Graphic / 32;
-			STATIC_TILES &st = UO->m_StaticData[ID].Tiles[obj->Graphic - (ID * 32)];
-			obj->ObjectFlags = st.Flags;
-
-			if (obj->IsWearable() || obj->Graphic == 0x0A28)
-			{
-				obj->ImageID = st.AnimID + 0xC350;
-				obj->AnimID = st.AnimID;
-				UO->ExecuteGump(st.AnimID + 50000, (st.Flags & 0x00040000));
-				UO->ExecuteGump(st.AnimID + 60000, (st.Flags & 0x00040000));
-				obj->UsedLayer = st.Quality;
-			}
-
-			UO->ExecuteStaticArt(obj->Graphic);
 		}
 
 		trace_printf("0x%08X<0x%08X:%04X*%d (%d,%d) %04X\n", obj->Container, obj->Serial,
@@ -2028,7 +1794,7 @@ PACKET_HANDLER(UpdateCharacter)
 
 	obj->MapIndex = g_CurrentMap;
 	obj->Graphic = ReadWord();
-	obj->UpdateSex();
+	obj->OnGraphicChange();
 	
 	WORD x = ReadWord();
 	WORD y = ReadWord();
@@ -2047,7 +1813,6 @@ PACKET_HANDLER(UpdateCharacter)
 			obj->LastStepTime = GetTickCount();
 
 		obj->m_WalkStack.Push(wd);
-		//obj->GetAnimationGroup();
 	}
 	else
 	{

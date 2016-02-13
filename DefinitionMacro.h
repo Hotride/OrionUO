@@ -136,12 +136,10 @@ list->Next = new TLinkedList(&m_GumpDataIndex[id]);
 //---------------------------------------------------------------------------
 //Set/Get ordinary class property
 #define SETGETEX(type, name) \
-	void Set##name(type val) { m_##name = val; } \
-	type Get##name() const { return m_##name; } \
+	SETGET(type, name); \
 	void Inc##name() { m_##name++; } \
 	void Dec##name() { m_##name--; } \
-	void Add##name(type val) { m_##name += val; } \
-	__declspec(property(get = Get##name, put = Set##name)) type name
+	void Add##name(type val) { m_##name += val; }
 //---------------------------------------------------------------------------
 //Get ordinary class property customized
 #define GET_PARTY(type, name) \

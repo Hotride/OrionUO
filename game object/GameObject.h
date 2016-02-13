@@ -20,7 +20,7 @@
 #ifndef GameObjectH
 #define GameObjectH
 //--------------------------------------------------------------------------
-class TGameObject : public TRenderWorldObject
+class TGameObject : public TRenderStaticObject
 {
 //private:
 protected:
@@ -53,6 +53,8 @@ public:
 	SETGET(DWORD, LastAnimationChangeTime);
 
 	virtual WORD GetMountAnimation() {return Graphic;}
+
+	virtual void OnGraphicChange(int direction = 0) {}
 
 	//Управление эффектами
 	void DrawEffects(int &drawX, int &drawY, DWORD &ticks);

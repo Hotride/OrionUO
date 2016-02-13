@@ -245,6 +245,7 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 int TGumpMinimap::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
+	static DWORD ticks = GetTickCount();
 
 	int posX = X;
 	int posY = Y;
@@ -274,7 +275,11 @@ int TGumpMinimap::Draw(bool &mode)
 
 		DrawLocker(posX, posY);
 
-		m_Count++;
+		if (ticks < GetTickCount())
+		{
+			m_Count++;
+			ticks = GetTickCount() + 50;
+		}
 
 		if (m_Count > 12)
 			m_Count = 0;

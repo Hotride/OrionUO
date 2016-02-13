@@ -21,7 +21,7 @@
 //---------------------------------------------------------------------------
 TGameItem::TGameItem(DWORD serial)
 :TGameObject(serial), m_Layer(0), m_AnimID(0), m_ImageID(0), m_UsedLayer(0),
-m_Opened(false), m_Dragged(false), m_ObjectFlags(0), ShopItem(NULL)
+m_Opened(false), m_Dragged(false), ShopItem(NULL)
 {
 }
 //---------------------------------------------------------------------------
@@ -70,27 +70,89 @@ void TGameItem::Paste(TObjectOnCursor *obj)
 	m_Next = NULL;
 	m_Prev = NULL;
 	
-	m_Serial = obj->GetSerial();
-	m_Graphic = obj->GetGraphic();
-	m_Color = obj->GetColor();
-	m_X = obj->GetX();
-	m_Y = obj->GetY();
-	m_Z = obj->GetZ();
-	m_Count = obj->GetCount();
-	m_Layer = obj->GetLayer();
-	m_Flags = obj->GetFlags();
-	m_NPC = obj->GetNPC();
-	m_ImageID = obj->GetImageID();
-	m_Container = obj->GetContainer();
-	m_UsedLayer = obj->GetUsedLayer();
+	m_Serial = obj->Serial;
+	m_Graphic = obj->Graphic;
+	m_Color = obj->Color;
+	m_X = obj->X;
+	m_Y = obj->Y;
+	m_Z = obj->Z;
+	m_Count = obj->Count;
+	m_Layer = obj->Layer;
+	m_Flags = obj->Flags;
+	m_NPC = obj->NPC;
+	m_ImageID = obj->ImageID;
+	m_Container = obj->Container;
+	m_UsedLayer = obj->UsedLayer;
 	m_Opened = false;
-	m_ObjectFlags = obj->GetObjectFlags();
-	m_AnimID = obj->GetAnimID();
-	m_MapIndex = obj->GetMapIndex();
+	m_AnimID = obj->AnimID;
+	m_MapIndex = obj->MapIndex;
 	m_Dragged = false;
 	m_Clicked = false;
 
 	SetName(obj->GetName());
+	OnGraphicChange();
+}
+//---------------------------------------------------------------------------
+void TGameItem::OnGraphicChange(int direction)
+{
+	if (m_Graphic < 0x4000)
+	{
+		if (IsCorpse())
+		{
+			if (World->FindWorldCorpseOwner(m_Serial))
+				m_AnimIndex = 0;
+			else
+				m_AnimIndex = 99;
+
+			if (direction & 0x80)
+			{
+				m_UsedLayer = 1;
+				direction &= 0x7F;
+			}
+			else
+				m_UsedLayer = 0;
+
+			m_Layer = direction;
+
+			m_RenderQueueIndex = 6;
+		}
+		else
+		{
+			m_TiledataPtr = &UO->m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32];
+			STATIC_TILES &tile = *m_TiledataPtr;
+
+			if (IsWearable() || m_Graphic == 0x0A28)
+			{
+				m_ImageID = tile.AnimID + 0xC350;
+				m_AnimID = tile.AnimID;
+				
+				bool partialHue = IsPartialHue();
+
+				UO->ExecuteGump(tile.AnimID + g_MaleGumpOffset, partialHue);
+				UO->ExecuteGump(tile.AnimID + g_FemaleGumpOffset, partialHue);
+
+				m_UsedLayer = tile.Quality;
+			}
+			else if (m_Layer == OL_MOUNT)
+			{
+				m_AnimID = tile.AnimID;
+				m_UsedLayer = tile.Quality;
+			}
+
+			if (IsBackground())
+				m_RenderQueueIndex = 3 - (int)IsSurface();
+			else if (IsSurface())
+				m_RenderQueueIndex = 4;
+			else
+				m_RenderQueueIndex = 6;
+
+			m_RenderQueueIndex++;
+
+			UO->ExecuteStaticArt(m_Graphic);
+		}
+	}
+	else if (m_Items == NULL)
+		LoadMulti();
 }
 //---------------------------------------------------------------------------
 int TGameItem::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
@@ -150,17 +212,8 @@ g_RenderedObjectsCountInGameWindow++;
 
 				glDisable(GL_DEPTH_TEST);
 
-				if (IsLightSource())
-				{
-					STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
-
-					LIGHT_DATA light = { tile.Quality, tile.Hue, X, Y, m_Z, drawX, drawY - (m_Z * 4) };
-
-					if (ConfigManager.ColoredLighting)
-						light.Color = UO->GetLightColor(objGraphic);
-
-					GameScreen->AddLight(light);
-				}
+				if (IsLightSource() && GameScreen->UseLight)
+					GameScreen->AddLight(this, this, drawX, drawY - (m_Z * 4));
 			}
 
 			DrawEffects(drawX, drawY, ticks);
@@ -482,7 +535,7 @@ void TGameItem::LoadMulti()
 
 			if (pmb->Flags)
 			{
-				TMultiObject *mo = new TMultiObject(pmb->ID + 0x4000, x + pmb->X, y + pmb->Y, z + (char)pmb->Z, pmb->Flags, UO->m_StaticData[pmb->ID / 32].Tiles[pmb->ID % 32]);
+				TMultiObject *mo = new TMultiObject(pmb->ID, x + pmb->X, y + pmb->Y, z + (char)pmb->Z, pmb->Flags);
 				MapManager->AddRender(mo);
 				AddMultiObject(mo);
 			}

@@ -73,8 +73,6 @@ extern int g_GameObjectsCount;
 extern int g_MultiObjectsCount;
 extern int g_RenderedObjectsCountInGameWindow;
 //---------------------------------------------------------------------------
-extern GLuint g_TextureLockedGump;
-extern GLuint g_TextureUnlockedGump;
 extern GLuint g_TextureGumpState[2];
 extern bool g_UseFrameBuffer;
 //---------------------------------------------------------------------------
@@ -208,7 +206,7 @@ extern DWORD g_LastAttackObject;
 //---------------------------------------------------------------------------
 extern DWORD g_LastRenderTime;
 const int g_FrameDelay_ActiveWindow = 30;
-const int g_FrameDelay_UnactiveWindow = 30; // 200;
+const int g_FrameDelay_UnactiveWindow = (g_FrameDelay_ActiveWindow + 1) * 7;
 static int g_FrameDelay[2] = {g_FrameDelay_UnactiveWindow, g_FrameDelay_ActiveWindow};
 //---------------------------------------------------------------------------
 const WORD g_SelectLandColor = 0x0044;
@@ -486,6 +484,7 @@ typedef struct MULTILINES_FONT_INFO
 #include "Shader.h"
 #include "FrameBuffer.h"
 #include "RenderObject.h"
+#include "MapObject.h"
 #include "Multi.h"
 #include "game object\\GameEffect.h"
 #include "game object\\GameObject.h"
@@ -507,7 +506,6 @@ typedef struct MULTILINES_FONT_INFO
 #include "Target.h"
 #include "SkillGroup.h"
 #include "Weather.h"
-#include "MapObject.h"
 #include "MapBlock.h"
 #include "Container.h"
 #include "QuestArrow.h"

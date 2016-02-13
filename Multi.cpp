@@ -21,13 +21,10 @@
 //----------------------------------------------------------------------------
 //--------------------------------TMultiObject--------------------------------
 //----------------------------------------------------------------------------
-TMultiObject::TMultiObject(WORD graphic, short x, short y, char z, DWORD multiflags, STATIC_TILES &staticTile)
-: TRenderWorldObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_MultiFlags(multiflags),
-m_StaticTile(staticTile)
+TMultiObject::TMultiObject(WORD graphic, short x, short y, char z, DWORD multiflags)
+: TRenderStaticObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_MultiFlags(multiflags)
 {
-	WORD id = graphic - 0x4000;
-
-	m_ObjectFlags = m_StaticTile.Flags;
+	m_Graphic += 0x4000;
 	
 	if (IsBackground())
 		m_RenderQueueIndex = 3 - (int)IsSurface();
@@ -36,11 +33,11 @@ m_StaticTile(staticTile)
 	else
 		m_RenderQueueIndex = 6;
 	
-	if (m_StaticTile.Height > 5)
+	if (((STATIC_TILES*)m_TiledataPtr)->Height > 5)
 		m_CanBeTransparent = 1;
 	else if (IsRoof() || (IsSurface() && IsBackground()) || IsWall())
 		m_CanBeTransparent = 1;
-	else if (m_StaticTile.Height == 5 && IsSurface() && !IsBackground())
+	else if (((STATIC_TILES*)m_TiledataPtr)->Height == 5 && IsSurface() && !IsBackground())
 		m_CanBeTransparent = 1;
 	else
 		m_CanBeTransparent = 0;
@@ -61,9 +58,9 @@ bool TMultiObject::TranparentTest(int &playerZ)
 {
 	bool result = true;
 
-	if (m_Z < playerZ - (m_StaticTile.Height - 5))
+	if (m_Z < playerZ - (((STATIC_TILES*)m_TiledataPtr)->Height - 5))
 		result = false;
-	else if (m_StaticTile.Height == 5 && m_Z > playerZ - 5 && m_Z < playerZ + 5)
+	else if (((STATIC_TILES*)m_TiledataPtr)->Height == 5 && m_Z > playerZ - 5 && m_Z < playerZ + 5)
 		result = false;
 	else if (playerZ + 5 < m_Z && !m_CanBeTransparent)
 		result = false;
@@ -104,37 +101,14 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				glEnable(GL_DEPTH_TEST);
 			
 			if (g_UseCircleTrans)
-			{
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				glColor4f(1.0f, 1.0f, 1.0f, 0.25f);
-				
-				UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
-		
-				glDisable(GL_BLEND);
-		
-				glEnable(GL_STENCIL_TEST);
-		
-				UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
-
-				glDisable(GL_STENCIL_TEST);
-			}
+				UO->DrawStaticArtTransparent(objGraphic, objColor, drawX, drawY, m_Z);
 			else
 				UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
 			
 			glDisable(GL_DEPTH_TEST);
 
-			if (IsLightSource())
-			{
-				STATIC_TILES &tile = UO->m_StaticData[objGraphic / 32].Tiles[objGraphic % 32];
-
-				LIGHT_DATA light = { tile.Quality, tile.Hue, X, Y, m_Z, drawX, drawY - (m_Z * 4) };
-
-				if (ConfigManager.ColoredLighting)
-					light.Color = UO->GetLightColor(objGraphic);
-
-				GameScreen->AddLight(light);
-			}
+			if (IsLightSource() && GameScreen->UseLight)
+				GameScreen->AddLight(this, this, drawX, drawY - (m_Z * 4));
 		}
 	}
 	else

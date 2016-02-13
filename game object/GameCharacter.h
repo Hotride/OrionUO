@@ -92,7 +92,7 @@ public:
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
 
-	void UpdateSex(); //Обновить информацию о поле персонажа
+	void OnGraphicChange(int direction = 0); //Обновить информацию о поле персонажа
 
 	void SetPaperdollText(string val); //Сгенерировать текстуру текста папердолла
 	void SetAnimationGroup(BYTE val); //Установка группы анимации

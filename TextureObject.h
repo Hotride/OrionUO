@@ -147,7 +147,7 @@ public:
 
 	SETGET(int, Width);
 	SETGET(int, Height);
-	SETGET(int, Lines);
+	SETGETEX(int, Lines);
 	SETGET(GLuint, Texture);
 
 	bool Empty() {return (m_Texture == 0);}
