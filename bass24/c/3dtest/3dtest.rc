@@ -1,0 +1,32 @@
+#include "windows.h"
+
+1000 DIALOG DISCARDABLE  100, 100, 245, 165
+STYLE WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "BASS - 3D Test"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Channels (sample/music)",-1,5,0,110,127
+    LISTBOX         10,10,9,100,51,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | 
+                    WS_TABSTOP
+    PUSHBUTTON      "Add ...",11,10,65,48,12
+    PUSHBUTTON      "Remove",12,62,65,48,12,WS_DISABLED
+    PUSHBUTTON      "Play",13,10,81,48,12,WS_DISABLED
+    PUSHBUTTON      "Stop",14,62,81,48,12,WS_DISABLED
+    GROUPBOX        "Movement",-1,5,96,110,31
+    LTEXT           "x:",-1,13,109,8,8
+    EDITTEXT        15,22,107,15,13,ES_NUMBER | WS_DISABLED
+    LTEXT           "z:",-1,43,109,8,8
+    EDITTEXT        16,52,107,15,13,ES_NUMBER | WS_DISABLED
+    PUSHBUTTON      "reset",17,78,108,30,11,WS_DISABLED
+    GROUPBOX        "EAX environment",-1,5,130,110,30
+    COMBOBOX        22,10,141,100,65,CBS_DROPDOWNLIST | WS_DISABLED | 
+                    WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Rolloff factor",-1,120,113,120,23
+    CONTROL         "",20,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | 
+                    WS_TABSTOP,130,123,100,10
+    GROUPBOX        "Doppler factor",-1,120,137,120,23
+    CONTROL         "",21,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | 
+                    WS_TABSTOP,130,147,100,10
+    GROUPBOX        "",-1,120,0,120,111
+    LTEXT           "",30,125,9,109,96,SS_SUNKEN
+END
