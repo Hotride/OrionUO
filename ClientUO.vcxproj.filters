@@ -423,6 +423,9 @@
     <ClInclude Include="IndexObject.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="bass24\c\bass.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -791,5 +794,8 @@
     <None Include="cursor1.cur">
       <Filter>Файлы ресурсов</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="bass24\c\bass.lib" />
   </ItemGroup>
 </Project>
