@@ -56,10 +56,14 @@ public:
 	bool Init();
 	void Free();
 
-	Mix_Chunk *LoadSoundEffect(TIndexSound &is);
+	//Mix_Chunk *LoadSoundEffect(TIndexSound &is);
+
+	HSTREAM LoadSoundEffect(TIndexSound &is);
+
 	std::vector<BYTE> CreateWaveFile(TIndexSound &is);
 
-	void PlaySoundEffect(Mix_Chunk *mix, int volume);
+	//void PlaySoundEffect(Mix_Chunk *mix, int volume);
+	void PlaySoundEffect(HSTREAM stream, int volume);
 
 	void PlayMidi(int index);
 

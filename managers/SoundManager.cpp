@@ -32,21 +32,25 @@ TSoundManager::~TSoundManager()
 //---------------------------------------------------------------------------
 bool TSoundManager::Init()
 {
-	if (SDL_Init(SDL_INIT_AUDIO) < 0)
+	/*if (SDL_Init(SDL_INIT_AUDIO) < 0)
 		return false;
 	
 	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 1, 1024) < 0)
 	{
 		SDL_QuitSubSystem(SDL_INIT_AUDIO);
 		return false;
-	}	
+	}	*/
 
-	trace_printf("Initializing bass sound system.\n");
+	trace_printf("Initializing bass sound system. g_hWnd=%d\n", g_hWnd);
 	// initialize default output device
-	if (!BASS_Init(-1, 44100, 0, g_hWnd, NULL)) {
+	if (!BASS_Init(-1, 48000, BASS_DEVICE_3D, g_hWnd, NULL))
+	{
 		trace_printf("Can't initialize device! (Error code: %d)\n", BASS_ErrorGetCode());
+		return false;
 	} else {
-		trace_printf("Sound init successfull.\n");
+		trace_printf("Sound init successfull.\n");	
+		BASS_SetConfig( BASS_CONFIG_SRC, 3 );
+		BASS_SetConfig(BASS_CONFIG_3DALGORITHM, BASS_3DALG_FULL);
 	}
 	
 	return true;
@@ -56,8 +60,10 @@ void TSoundManager::Free()
 {
 	StopMusic();
 
-	SDL_CloseAudio();
-	SDL_Quit();
+	//SDL_CloseAudio();
+	//SDL_Quit();
+
+	BASS_Free();
 }
 
 /// <summary>Создаёт в памяти 16 битный wave файл для последующего
@@ -66,7 +72,7 @@ void TSoundManager::Free()
 /// <returns>Wave файл в виде вектора байтов</returns>
 std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 {
-	size_t dataSize = is.Size - sizeof(SOUND_BLOCK);
+	int dataSize = is.Size - sizeof(SOUND_BLOCK);
 
 	auto waveSound = std::vector<BYTE>(dataSize + sizeof(WaveHeader));
 	auto waveHeader = (WaveHeader*) waveSound.data();
@@ -85,7 +91,7 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 	waveHeader->bitsPerSample = 16;
 	waveHeader->bytesPerSecond = waveHeader->sampleRate * 
 		(waveHeader->bitsPerSample/8) * waveHeader->numChannels;
-	waveHeader->blockAlign = 4;	
+	waveHeader->blockAlign = 2;	
 	waveHeader->dataSize = dataSize;
 
 	is.Timer = (DWORD)(dataSize / (((float)waveHeader->bytesPerSecond) / 1000.0f));
@@ -93,31 +99,84 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 	auto sndDataPtr = (PBYTE)(is.Address + sizeof(SOUND_BLOCK));
 	std::copy_n( sndDataPtr, dataSize, waveSound.begin() + sizeof(WaveHeader));	
 
+	//FILE *ptr_myfile;
+
+	//ptr_myfile = fopen("test.wav", "wb");
+	//if (!ptr_myfile)
+	//{
+	//	printf("Unable to open file!");
+	//}
+	//	
+	//fwrite(waveSound.data(), waveSound.size(), 1, ptr_myfile);
+	//
+	//fclose(ptr_myfile);
+
+	//HSTREAM hStream = BASS_StreamCreateFile(true, &waveSound[0], 0, waveSound.size(), 0);
+	//BASS_ChannelPlay(hStream, true);	
+
 	return waveSound;
 }
 //---------------------------------------------------------------------------
-Mix_Chunk *TSoundManager::LoadSoundEffect(TIndexSound &is)
+//Mix_Chunk *TSoundManager::LoadSoundEffect(TIndexSound &is)
+//{
+//	auto waveSound = this->CreateWaveFile(is);
+//
+//	SDL_RWops *rWops = SDL_RWFromMem(waveSound.data(), waveSound.size());
+//	Mix_Chunk *mix = Mix_LoadWAV_RW(rWops, 1);
+//
+//	if (mix == NULL)
+//		trace_printf("SDL sound error: %s\n", SDL_GetError());
+//
+//	return mix;
+//}
+
+HSTREAM TSoundManager::LoadSoundEffect(TIndexSound &is)
 {
 	auto waveSound = this->CreateWaveFile(is);
+	BYTE* waveFileMem = new BYTE[waveSound.size()];	
+	std::copy(waveSound.begin(), waveSound.end(), &waveFileMem[0]);
+	
+	HSTREAM hStream = BASS_StreamCreateFile(true, waveFileMem, 0, waveSound.size(), BASS_SAMPLE_FLOAT | BASS_SAMPLE_3D | BASS_SAMPLE_SOFTWARE);
+	
+	if (hStream==0)
+		trace_printf("BASS create stream error: %d\n", BASS_ErrorGetCode());
 
-	SDL_RWops *rWops = SDL_RWFromMem(waveSound.data(), waveSound.size());
-	Mix_Chunk *mix = Mix_LoadWAV_RW(rWops, 1);
+	//trace_printf("Loaded stream: %d\n", hStream);	
 
-	if (mix == NULL)
-		trace_printf("SDL sound error: %s\n", SDL_GetError());
-
-	return mix;
+	//PlaySoundEffect(hStream, 1);
+	
+	return hStream;
 }
+
 //---------------------------------------------------------------------------
-void TSoundManager::PlaySoundEffect(Mix_Chunk *mix, int volume)
+//void TSoundManager::PlaySoundEffect(Mix_Chunk *mix, int volume)
+//{
+//	if (mix == NULL || GetForegroundWindow() != g_hWnd)
+//		return;
+//
+//	Mix_VolumeChunk(mix, volume);
+//
+//	if (Mix_PlayChannel(-1, mix, 0) < 0)
+//		trace_printf("Sound mix error: %s\n", Mix_GetError());
+//}
+
+void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
 {
-	if (mix == NULL || GetForegroundWindow() != g_hWnd)
+	if (volume > 255)
+		volume = 255;
+	else if (volume < 0)
+		volume = 0;	
+
+	if (hStream == 0 || GetForegroundWindow() != g_hWnd)
 		return;
 
-	Mix_VolumeChunk(mix, volume);
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, ((float)volume) / 2.55f);
 
-	if (Mix_PlayChannel(-1, mix, 0) < 0)
-		trace_printf("Sound mix error: %s\n", Mix_GetError());
+	//trace_printf("PlaySoundEffect(HSTREAM %d, ..)", hStream);
+
+	if (!BASS_ChannelPlay(hStream, false))
+		trace_printf("Bass sound play error: %s\n", BASS_ErrorGetCode());
+
 }
 //---------------------------------------------------------------------------
 void TSoundManager::PlayMidi(int index)

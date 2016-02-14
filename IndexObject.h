@@ -75,7 +75,9 @@ public:
 	SETGET(DWORD, Timer);
 	SETGET(DWORD, LastAccessTime);
 
-	Mix_Chunk *Sound;
+	//Mix_Chunk *Sound;
+
+	HSTREAM soundStream;
 };
 //---------------------------------------------------------------------------
 class TIndexAnimation
