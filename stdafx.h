@@ -35,6 +35,7 @@
 #include "glew\include\GL\wglew.h"
 #include <gl\gl.h>
 #include <gl\glu.h>
+#include <bass.h>
 #include <winsock.h>
 #include <deque>
 #include <Shellapi.h>
@@ -53,6 +54,7 @@
 #pragma comment(lib, "Shlwapi.lib")
 #pragma comment(lib, "SDL2-2.0.3\\lib\\x86\\SDL2.lib")
 #pragma comment(lib, "SDL2-2.0.3\\lib\\x86\\SDL2_mixer.lib")
+#pragma comment(lib, "bass.lib")
 
 #pragma warning(disable: 4390)
 #pragma warning(disable: 4800)

@@ -39,6 +39,14 @@ bool TSoundManager::Init()
 	{
 		SDL_QuitSubSystem(SDL_INIT_AUDIO);
 		return false;
+	}	
+
+	trace_printf("Initializing bass sound system.\n");
+	// initialize default output device
+	if (!BASS_Init(-1,44100, 0, g_hWnd, NULL)) {
+		trace_printf("Can't initialize device! (Error code: %d)\n", BASS_ErrorGetCode());
+	} else {
+		trace_printf("Sound init successfull.\n");
 	}
 	
 	return true;
