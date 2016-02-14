@@ -61,8 +61,7 @@ void TSoundManager::Free()
 }
 
 /// <summary>Создаёт в памяти 16 битный wave файл для последующего
-/// проигрывания.
-/// </summary>
+/// проигрывания.</summary>
 /// <param name="is">ссылка на запись звука в MUL файле</param>
 /// <returns>Wave файл в виде вектора байтов</returns>
 std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
@@ -83,11 +82,10 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 	waveHeader->numChannels = 1;
 	waveHeader->sampleRate = 22050;
 	//waveHeader->bytesPerSecond = 88200;
+	waveHeader->bitsPerSample = 16;
 	waveHeader->bytesPerSecond = waveHeader->sampleRate * 
 		(waveHeader->bitsPerSample/8) * waveHeader->numChannels;
-
-	waveHeader->blockAlign = 4;
-	waveHeader->bitsPerSample = 16;	
+	waveHeader->blockAlign = 4;	
 	waveHeader->dataSize = dataSize;
 
 	is.Timer = (DWORD)(dataSize / (((float)waveHeader->bytesPerSecond) / 1000.0f));
