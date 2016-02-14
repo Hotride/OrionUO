@@ -57,6 +57,8 @@ public:
 	void Free();
 
 	Mix_Chunk *LoadSoundEffect(TIndexSound &is);
+	std::vector<BYTE> CreateWaveFile(TIndexSound &is);
+
 	void PlaySoundEffect(Mix_Chunk *mix, int volume);
 
 	void PlayMidi(int index);

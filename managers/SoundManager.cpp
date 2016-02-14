@@ -43,7 +43,7 @@ bool TSoundManager::Init()
 
 	trace_printf("Initializing bass sound system.\n");
 	// initialize default output device
-	if (!BASS_Init(-1,44100, 0, g_hWnd, NULL)) {
+	if (!BASS_Init(-1, 44100, 0, g_hWnd, NULL)) {
 		trace_printf("Can't initialize device! (Error code: %d)\n", BASS_ErrorGetCode());
 	} else {
 		trace_printf("Sound init successfull.\n");
@@ -59,43 +59,54 @@ void TSoundManager::Free()
 	SDL_CloseAudio();
 	SDL_Quit();
 }
+
+/// <summary>Создаёт в памяти 16 битный wave файл для последующего
+/// проигрывания.
+/// </summary>
+/// <param name="is">ссылка на запись звука в MUL файле</param>
+/// <returns>Wave файл в виде вектора байтов</returns>
+std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
+{
+	size_t dataSize = is.Size - sizeof(SOUND_BLOCK);
+
+	auto waveSound = std::vector<BYTE>(dataSize + sizeof(WaveHeader));
+	auto waveHeader = (WaveHeader*) waveSound.data();
+
+	strcpy(waveHeader->chunkId, "RIFF");
+	strcpy(waveHeader->format, "WAVE");
+	strcpy(waveHeader->subChunkId, "fmt ");
+	strcpy(waveHeader->dataChunkId, "data");
+
+	waveHeader->chunkSize = waveSound.size();
+	waveHeader->subChunkSize = 16;
+	waveHeader->audioFormat = 1;
+	waveHeader->numChannels = 1;
+	waveHeader->sampleRate = 22050;
+	//waveHeader->bytesPerSecond = 88200;
+	waveHeader->bytesPerSecond = waveHeader->sampleRate * 
+		(waveHeader->bitsPerSample/8) * waveHeader->numChannels;
+
+	waveHeader->blockAlign = 4;
+	waveHeader->bitsPerSample = 16;	
+	waveHeader->dataSize = dataSize;
+
+	auto from = (PBYTE)(is.Address + sizeof(SOUND_BLOCK));
+	std::copy_n( from, dataSize, waveSound.begin() + sizeof(WaveHeader));
+	
+	is.Timer = (DWORD)(dataSize / (((float)waveHeader->bytesPerSecond) / 1000.0f));
+
+	return waveSound;
+}
 //---------------------------------------------------------------------------
 Mix_Chunk *TSoundManager::LoadSoundEffect(TIndexSound &is)
 {
-	int dataSize = is.Size - sizeof(SOUND_BLOCK);
+	auto waveSound = this->CreateWaveFile(is);
 
-	PBYTE mem = new BYTE[dataSize + sizeof(WaveHeader)];
-	WaveHeader *wh = (WaveHeader*)mem;
-	sprintf(wh->chunkId, "RIFF");
-	wh->chunkSize = dataSize + sizeof(WaveHeader);
-	sprintf(wh->format, "WAVE");
-
-	sprintf(wh->subChunkId, "fmt ");
-	wh->subChunkSize = 16;
-
-	wh->audioFormat = 1;
-	wh->numChannels = 1;
-	wh->sampleRate = 22050;
-	wh->bytesPerSecond = 88200;
-	wh->blockAlign = 4;
-	wh->bitsPerSample = 16;
-	
-	is.Timer = (DWORD)(dataSize / 88.2f);
-
-	sprintf(wh->dataChunkId, "data");
-	wh->dataSize = dataSize;
-	
-	PBYTE ptr = mem + sizeof(WaveHeader);
-	PBYTE from = (PBYTE)(is.Address + sizeof(SOUND_BLOCK));
-
-	memcpy(&ptr[0], &from[0], dataSize);
-
-	SDL_RWops *tmp = SDL_RWFromMem(mem, dataSize + sizeof(WaveHeader));
-	Mix_Chunk *mix = Mix_LoadWAV_RW(tmp, 1);
-	delete mem;
+	SDL_RWops *rWops = SDL_RWFromMem(waveSound.data(), waveSound.size());
+	Mix_Chunk *mix = Mix_LoadWAV_RW(rWops, 1);
 
 	if (mix == NULL)
-		trace_printf("Sound error: %s\n", SDL_GetError());
+		trace_printf("SDL sound error: %s\n", SDL_GetError());
 
 	return mix;
 }
