@@ -90,10 +90,10 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 	waveHeader->bitsPerSample = 16;	
 	waveHeader->dataSize = dataSize;
 
-	auto from = (PBYTE)(is.Address + sizeof(SOUND_BLOCK));
-	std::copy_n( from, dataSize, waveSound.begin() + sizeof(WaveHeader));
-	
 	is.Timer = (DWORD)(dataSize / (((float)waveHeader->bytesPerSecond) / 1000.0f));
+
+	auto sndDataPtr = (PBYTE)(is.Address + sizeof(SOUND_BLOCK));
+	std::copy_n( sndDataPtr, dataSize, waveSound.begin() + sizeof(WaveHeader));	
 
 	return waveSound;
 }
