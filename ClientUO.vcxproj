@@ -90,7 +90,7 @@
       <EnableDpiAwareness>true</EnableDpiAwareness>
     </Manifest>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(ProjectDir)bass24\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d  "$(ProjectDir)bass24\bass.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy bass.dll to build directory </Message>
