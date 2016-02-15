@@ -92,8 +92,8 @@ public:
 	int GetTextOffsetY(TTextData *text);
 	bool TextCanBeTransparent(TRenderTextObject *text);
 	
-	LAND_TILES *GetLandData() {return (LAND_TILES*)m_TiledataPtr;}
-	STATIC_TILES *GetStaticData() {return (STATIC_TILES*)m_TiledataPtr;}
+	STATIC_TILES *GetStaticData() { return m_TiledataPtr; }
+	BYTE GetStaticHeight() { return m_TiledataPtr->Height; }
 
 	BYTE GetLightID() {return m_TiledataPtr->Quality;}
 	

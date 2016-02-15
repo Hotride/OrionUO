@@ -69,64 +69,57 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 
 	while (obj != NULL)
 	{
-		switch (obj->RenderType)
+		WORD graphic = obj->Graphic;
+
+		if (obj->IsLandObject())
 		{
-			case ROT_LAND_OBJECT:
+			if (graphic != 2)
 			{
-				WORD graphic = obj->Graphic;
-
-				if (graphic == 2)
-					break;
-
 				DWORD flags = UO->GetLandFlags(graphic);
 
 				char surface = 0x10 + (char)(!IsImpassable(flags));
 
 				Add(new TPathObject(obj->Z, 0, surface));
-
-				break;
 			}
-			case ROT_STATIC_OBJECT:
-			case ROT_MULTI_OBJECT:
-			case ROT_GAME_OBJECT:
+		}
+		else if (obj->IsStaticGroupObject())
+		{
+			bool canBeAdd = true;
+
+			if (obj->IsGameObject())
 			{
-				WORD graphic = obj->Graphic;
-
-				if (obj->IsGameObject())
+				if (ignoreGameObjects || graphic >= 0x4000 || (ignoreDoors && obj->IsDoor()) || obj->IsInternal()) //GM || isMulti || (ghost && isDoor) || InternalItem
+					canBeAdd = false;
+				else if (((TGameObject*)obj)->NPC)
 				{
-					if (ignoreGameObjects || graphic >= 0x4000 || (ignoreDoors && obj->IsDoor()) || obj->IsInternal()) //GM || isMulti || (ghost && isDoor) || InternalItem
-						break;
-					else if (((TGameObject*)obj)->NPC)
-					{
-						if (!ignoreGameCharacters)
-							Add(new TPathObject(obj->Z, g_CharacterHeight, 0));
+					if (!ignoreGameCharacters)
+						Add(new TPathObject(obj->Z, g_CharacterHeight, 0));
 
-						break;
-					}
+					canBeAdd = false;
 				}
-				else
-					graphic -= 0x4000;
+			}
+			else
+				graphic -= 0x4000;
 
+			if (canBeAdd)
+			{
 				bool impSurf = (obj->IsImpassable() || obj->IsSurface() || obj->IsBridge());
 
 				if (graphic == 1 || !impSurf || (obj->IsBackground() && !impSurf))
-					break;
+				{
+				}
+				else
+				{
+					BYTE height = ((TRenderStaticObject*)obj)->GetStaticHeight();
 
-				STATIC_TILES &st = UO->m_StaticData[graphic / 32].Tiles[graphic % 32];
+					char surface = (char)(obj->IsSurface() && !obj->IsImpassable());
 
-				char height = st.Height;
+					if (obj->IsBridge() && obj->IsPrefixA() && height >= 10) //long stair
+						surface += 0x20;
 
-				char surface = (char)(obj->IsSurface() && !obj->IsImpassable());
-
-				if (obj->IsBridge() && obj->IsPrefixA() && height >= 10) //long stair
-					surface += 0x20;
-
-				Add(new TPathObject(obj->Z, height, surface));
-
-				break;
+					Add(new TPathObject(obj->Z, height, surface));
+				}
 			}
-			default:
-				break;
 		}
 
 		obj = obj->m_NextXY;
@@ -141,38 +134,30 @@ void TPathFinder::CheckLongStairUnderfoot(int &x, int &y, char &z)
 
 	if (CreateItemsList(x, y))
 	{
-		if (m_Items != NULL)
+		for (TPathObject *po = (TPathObject*)m_Items; po != NULL; po = (TPathObject*)po->m_Next)
 		{
-			TPathObject *po = (TPathObject*)m_Items;
+			char surface = po->Surface;
+			int isLongStair = 1;
 
-			while (po != NULL && po->m_Next != NULL)
-				po = (TPathObject*)po->m_Next;
-
-			for (; po != NULL; po = (TPathObject*)po->m_Prev)
+			if (surface >= 0x20)
 			{
-				char surface = po->Surface;
-				int isLongStair = 1;
-
-				if (surface >= 0x20)
-				{
-					surface -= 0x20;
-					isLongStair++;
-				}
-
-				if (surface > 1)
-					surface -= 0x10;
-
-				if (surface)
-				{
-					char top = po->Z + (char)(po->Height / isLongStair);
-
-					if (top == z)
-						m_OnLongStair = (isLongStair > 1);
-				}
+				surface -= 0x20;
+				isLongStair++;
 			}
 
-			Clear();
+			if (surface > 1)
+				surface -= 0x10;
+
+			if (surface)
+			{
+				char top = po->Z + (char)(po->Height / isLongStair);
+
+				if (top == z)
+					m_OnLongStair = (isLongStair > 1);
+			}
 		}
+
+		Clear();
 	}
 }
 //---------------------------------------------------------------------------

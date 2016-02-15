@@ -19,7 +19,7 @@
 //---------------------------------------------------------------------------
 #include "stdafx.h"
 
-TMapManager *MapManager;
+TMapManager *MapManager = NULL;
 //---------------------------------------------------------------------------
 TMapManager::TMapManager()
 : TBaseQueue()
