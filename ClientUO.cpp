@@ -3829,7 +3829,7 @@ void TUltimaOnline::PlaySoundEffect(WORD id, int volume)
 		if (is.LastAccessTime + is.Timer > GetTickCount())
 			return;
 
-		BASS_StreamFree(is.soundStream);
+		SoundManager.FreeStream(is.soundStream);
 
 		is.soundStream = SoundManager.LoadSoundEffect(m_SoundDataIndex[id]);
 	}	

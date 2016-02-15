@@ -49,6 +49,7 @@ private:
 	MCIDEVICEID m_Music;
 
 	void TraceMusicError(DWORD error);
+	std::map<HSTREAM, BYTE*> streams;
 public:
 	TSoundManager();
 	~TSoundManager();
@@ -57,6 +58,8 @@ public:
 	void Free();
 
 	//Mix_Chunk *LoadSoundEffect(TIndexSound &is);
+
+	bool FreeStream(HSTREAM hSteam);
 
 	HSTREAM LoadSoundEffect(TIndexSound &is);
 

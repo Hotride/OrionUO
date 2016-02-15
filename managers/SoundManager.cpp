@@ -69,7 +69,7 @@ BASS_ErrorDescription BASS_ErrorTable[] = {
 	{ BASS_ERROR_UNKNOWN, "some other mystery problem" },
 };
 //------------------------------------------------------------------------------
-char* BASS_ErrorLookupDescription()
+char* BASS_ErrorGetDescription()
 {
 	auto currentErrorCode = BASS_ErrorGetCode();
 
@@ -107,14 +107,14 @@ bool TSoundManager::Init()
 	// initialize default output device
 	if (!BASS_Init(-1, 48000, BASS_DEVICE_3D, g_hWnd, NULL))
 	{
-		trace_printf("Can't initialize device: %s\n", BASS_ErrorLookupDescription());
+		trace_printf("Can't initialize device: %s\n", BASS_ErrorGetDescription());
 		return false;
 	} else {
 		trace_printf("Sound init successfull.\n");	
 		BASS_SetConfig(BASS_CONFIG_SRC, 2); // interpolation method
 
 		if(!BASS_SetConfig(BASS_CONFIG_3DALGORITHM, BASS_3DALG_FULL))
-			trace_printf("Error setting 3d sound: %s\n", BASS_ErrorLookupDescription());
+			trace_printf("Error setting 3d sound: %s\n", BASS_ErrorGetDescription());
 	}
 	
 	return true;
@@ -184,13 +184,18 @@ HSTREAM TSoundManager::LoadSoundEffect(TIndexSound &is)
 	BYTE* waveFileMem = new BYTE[waveSound.size()];	
 	std::copy(waveSound.begin(), waveSound.end(), waveFileMem);
 	
-	HSTREAM hStream = BASS_StreamCreateFile(true, waveFileMem, 0, 
+	auto hStream = BASS_StreamCreateFile(true, waveFileMem, 0, 
 											waveSound.size(), 
 											BASS_SAMPLE_FLOAT | BASS_SAMPLE_3D
-											| BASS_SAMPLE_SOFTWARE);
-	
-	if (hStream==0)
-		trace_printf("BASS create stream error: %s\n", BASS_ErrorDescription());
+											| BASS_SAMPLE_SOFTWARE);	
+
+	if (hStream == 0)
+	{
+		trace_printf("BASS create stream error: %s\n", BASS_ErrorGetDescription());
+		delete[] waveFileMem;
+	}
+	else
+		this->streams[hStream] = waveFileMem;
 	
 	return hStream;
 }
@@ -219,11 +224,25 @@ void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
 
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, ((float)volume) / 2.55f);
 
-	//trace_printf("PlaySoundEffect(HSTREAM %d, ..)", hStream);
-
 	if (!BASS_ChannelPlay(hStream, false))
-		trace_printf("Bass sound play error: %s\n", BASS_ErrorGetCode());
+		trace_printf("Bass sound play error: %s\n", BASS_ErrorGetDescription());
 
+}
+//---------------------------------------------------------------------------
+/// <summary>Очистка звукового стрима и высвобождение памяти.</summary>
+/// <param name="hSteam">BASS stream дескриптер</param>
+bool TSoundManager::FreeStream(HSTREAM hSteam)
+{
+	auto res = BASS_StreamFree(hSteam);
+	auto waveFileIter = streams.find(hSteam);
+
+	if (waveFileIter != streams.end()) {
+		auto waveFile = waveFileIter->second;
+		streams.erase(waveFileIter);
+		delete[] waveFile;
+	}
+
+	return res;
 }
 //---------------------------------------------------------------------------
 void TSoundManager::PlayMidi(int index)
