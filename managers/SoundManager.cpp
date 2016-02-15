@@ -103,7 +103,7 @@ bool TSoundManager::Init()
 		return false;
 	}	*/
 
-	trace_printf("Initializing bass sound system. g_hWnd=%d\n", g_hWnd);
+	trace_printf("Initializing bass sound system.\n");
 	// initialize default output device
 	if (!BASS_Init(-1, 48000, BASS_DEVICE_3D, g_hWnd, NULL))
 	{
@@ -151,7 +151,6 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 	waveHeader->audioFormat = 1;
 	waveHeader->numChannels = 1;
 	waveHeader->sampleRate = 22050;
-	//waveHeader->bytesPerSecond = 88200;
 	waveHeader->bitsPerSample = 16;
 	waveHeader->bytesPerSecond = waveHeader->sampleRate * 
 		(waveHeader->bitsPerSample/8) * waveHeader->numChannels;
@@ -161,22 +160,7 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 	is.Timer = (DWORD)(dataSize / (((float)waveHeader->bytesPerSecond) / 1000.0f));
 
 	auto sndDataPtr = (PBYTE)(is.Address + sizeof(SOUND_BLOCK));
-	std::copy_n( sndDataPtr, dataSize, waveSound.begin() + sizeof(WaveHeader));	
-
-	//FILE *ptr_myfile;
-
-	//ptr_myfile = fopen("test.wav", "wb");
-	//if (!ptr_myfile)
-	//{
-	//	printf("Unable to open file!");
-	//}
-	//	
-	//fwrite(waveSound.data(), waveSound.size(), 1, ptr_myfile);
-	//
-	//fclose(ptr_myfile);
-
-	//HSTREAM hStream = BASS_StreamCreateFile(true, &waveSound[0], 0, waveSound.size(), 0);
-	//BASS_ChannelPlay(hStream, true);	
+	std::copy_n(sndDataPtr, dataSize, waveSound.begin() + sizeof(WaveHeader));	
 
 	return waveSound;
 }
@@ -198,16 +182,15 @@ HSTREAM TSoundManager::LoadSoundEffect(TIndexSound &is)
 {
 	auto waveSound = this->CreateWaveFile(is);
 	BYTE* waveFileMem = new BYTE[waveSound.size()];	
-	std::copy(waveSound.begin(), waveSound.end(), &waveFileMem[0]);
+	std::copy(waveSound.begin(), waveSound.end(), waveFileMem);
 	
-	HSTREAM hStream = BASS_StreamCreateFile(true, waveFileMem, 0, waveSound.size(), BASS_SAMPLE_FLOAT | BASS_SAMPLE_3D | BASS_SAMPLE_SOFTWARE);
+	HSTREAM hStream = BASS_StreamCreateFile(true, waveFileMem, 0, 
+											waveSound.size(), 
+											BASS_SAMPLE_FLOAT | BASS_SAMPLE_3D
+											| BASS_SAMPLE_SOFTWARE);
 	
 	if (hStream==0)
-		trace_printf("BASS create stream error: %d\n", BASS_ErrorGetCode());
-
-	//trace_printf("Loaded stream: %d\n", hStream);	
-
-	//PlaySoundEffect(hStream, 1);	
+		trace_printf("BASS create stream error: %s\n", BASS_ErrorDescription());
 	
 	return hStream;
 }
