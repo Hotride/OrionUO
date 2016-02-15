@@ -913,8 +913,9 @@ bool TUltimaOnline::Install()
 
 	if (!SoundManager.Init())
 	{
-		trace_printf("Error install SDL audio: %s\n", SDL_GetError());
-		MessageBoxA(g_hWnd, "Error install SDL audio", "Error install SDL audio!", MB_OK);
+		//trace_printf("Error install SDL audio: %s\n", SDL_GetError());
+		//trace_printf("Error install BASS audio: %s\n", BASS_error());
+		MessageBoxA(g_hWnd, "Failed to init BASS audio.", "Sound error!", MB_OK);
 
 		return false;
 	}
