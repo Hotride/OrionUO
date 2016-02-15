@@ -30,6 +30,7 @@
 #include <memory.h>
 #include <tchar.h>
 #include <map>
+#include <vector>
 #include <time.h>
 #include "glew\include\GL\glew.h"
 #include "glew\include\GL\wglew.h"
@@ -42,8 +43,15 @@
 #include <Shlwapi.h>
 #include "zlib.h"
 #include <Mmsystem.h>
-#include "SDL2-2.0.3\include\SDL.h"
-#include "SDL2-2.0.3\include\SDL_mixer.h"
+//#include "SDL2-2.0.3\include\SDL.h"
+//#include "SDL2-2.0.3\include\SDL_mixer.h"
+
+//#define _USE_MATH_DEFINES // for C++
+//#include <cmath>
+
+#ifndef M_PI
+	#define M_PI 3.14159265358979323846
+#endif
 
 #pragma comment(lib, "glew32.lib")
 #pragma comment(lib, "opengl32.lib")
@@ -52,8 +60,8 @@
 #pragma comment(lib, "zdll.lib")
 #pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "Shlwapi.lib")
-#pragma comment(lib, "SDL2-2.0.3\\lib\\x86\\SDL2.lib")
-#pragma comment(lib, "SDL2-2.0.3\\lib\\x86\\SDL2_mixer.lib")
+//#pragma comment(lib, "SDL2-2.0.3\\lib\\x86\\SDL2.lib")
+//#pragma comment(lib, "SDL2-2.0.3\\lib\\x86\\SDL2_mixer.lib")
 #pragma comment(lib, "bass.lib")
 
 #pragma warning(disable: 4390)
@@ -305,10 +313,12 @@ struct TARGET_GUMP_INFO
 
 extern TARGET_GUMP_INFO TargetGump;
 extern TARGET_GUMP_INFO AttackTargetGump;
+
 //---------------------------------------------------------------------------
 // перевод Радианов в Градусы
 inline float deg2radf(float degr)
 {
+	
 	return degr * (float)(M_PI / 180.0f);
 }
 //---------------------------------------------------------------------------
@@ -407,13 +417,6 @@ inline bool IsStairRight(DWORD Flags) {return (Flags & 0x80000000);}
 
 
 
-
-
-
-
-
-
-#include <vector>
 using std::vector;
 //---------------------------------------------------------------------------
 typedef struct MULTILINES_FONT_DATA
