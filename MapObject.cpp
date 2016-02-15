@@ -320,18 +320,39 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		{
 			if (!g_GrayedPixels)
 			{
+				/*int treePos = (m_X - g_Player->X) + (m_Y - g_Player->Y);
+
+				bool iransparentFoliage = (treePos > 0 && treePos <= 6);
+
+				if (iransparentFoliage)
+				{
+					treePos = (m_X - g_Player->X) - (m_Y - g_Player->Y);
+
+					iransparentFoliage = (treePos >= -4 && treePos <= 6);
+				}*/
+
+				/*if (iransparentFoliage)
+				{
+					POINT fp = { 0, 0 };
+					UO->GetArtDimension(m_Graphic, fp);
+
+					IMAGE_BOUNDS fib = { drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y };
+
+					iransparentFoliage = fib.InRect(g_PlayerRect);
+				}*/
+
+				//g_GL.DrawPolygone(0x7F7F7F7F, fib.X, fib.Y, fib.Width, fib.Height);
+				
 				POINT fp = { 0, 0 };
 				UO->GetArtDimension(m_Graphic, fp);
 
 				IMAGE_BOUNDS fib = { drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y };
 
-				//g_GL.DrawPolygone(0x7F7F7F7F, fib.X, fib.Y, fib.Width, fib.Height);
-
 				if (fib.InRect(g_PlayerRect))
 				{
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-					glColor4f(1.0f, 1.0f, 1.0f, 0.4f);
+					glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
 
 					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
 					

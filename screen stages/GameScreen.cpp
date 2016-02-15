@@ -385,18 +385,16 @@ void TGameScreen::AddLight(TRenderWorldObject *rwo, TRenderWorldObject *lightObj
 		
 			for (TRenderWorldObject *obj = mb->GetRender(bx, by); obj != NULL; obj = obj->m_NextXY)
 			{
-				if (!obj->IsStaticObject() && !obj->IsGameObject() && !obj->IsMultiObject())
-					continue;
-
-				if (obj->IsGameObject() && ((TGameObject*)obj)->NPC)
+				if (!obj->IsStaticGroupObject() || (obj->IsGameObject() && ((TGameObject*)obj)->NPC))
 					continue;
 
 				int z = obj->Z;
 	
 				if (z >= m_MaxDrawZ)
-					break;
-
-				if (z >= z5 && (obj->IsRoof() || (obj->IsBackground() && obj->IsSurface())))
+					continue;
+				
+				//if (z >= z5 && (obj->IsRoof() || (obj->IsBackground() && obj->IsSurface())))
+				if (z >= z5)
 				{
 					canBeAdded = false;
 					break;

@@ -20,7 +20,7 @@
 #ifndef TextureObjectH
 #define TextureObjectH
 
-#define UO_ENABLE_TEXTURE_DATA_SAVING 1
+#define UO_ENABLE_TEXTURE_DATA_SAVING 0
 //---------------------------------------------------------------------------
 class TTextureObject
 {
