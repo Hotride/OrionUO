@@ -104,17 +104,24 @@ bool TSoundManager::Init()
 	}	*/
 
 	trace_printf("Initializing bass sound system.\n");
-	// initialize default output device
+	// initialize default output device	
 	if (!BASS_Init(-1, 48000, BASS_DEVICE_3D, g_hWnd, NULL))
 	{
 		trace_printf("Can't initialize device: %s\n", BASS_ErrorGetDescription());
 		return false;
 	} else {
 		trace_printf("Sound init successfull.\n");	
-		BASS_SetConfig(BASS_CONFIG_SRC, 2); // interpolation method
+		BASS_SetConfig(BASS_CONFIG_SRC, 3); // interpolation method
 
 		if(!BASS_SetConfig(BASS_CONFIG_3DALGORITHM, BASS_3DALG_FULL))
 			trace_printf("Error setting 3d sound: %s\n", BASS_ErrorGetDescription());
+
+		//BASS_SetConfig(
+		//	BASS_CONFIG_BUFFER, 1000);
+
+		/*BASS_SetConfig(
+			BASS_CONFIG_UPDATEPERIOD,
+			25);*/
 	}
 	
 	return true;
@@ -159,8 +166,8 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 
 	is.Timer = (DWORD)(dataSize / (((float)waveHeader->bytesPerSecond) / 1000.0f));
 
-	auto sndDataPtr = (PBYTE)(is.Address + sizeof(SOUND_BLOCK));
-	std::copy_n(sndDataPtr, dataSize, waveSound.begin() + sizeof(WaveHeader));	
+	auto sndDataPtr = (PBYTE)(is.Address + sizeof(SOUND_BLOCK));	
+	std::copy_n(sndDataPtr+16, dataSize-16, waveSound.begin() + sizeof(WaveHeader));	
 
 	return waveSound;
 }
@@ -184,10 +191,21 @@ HSTREAM TSoundManager::LoadSoundEffect(TIndexSound &is)
 	BYTE* waveFileMem = new BYTE[waveSound.size()];	
 	std::copy(waveSound.begin(), waveSound.end(), waveFileMem);
 	
-	auto hStream = BASS_StreamCreateFile(true, waveFileMem, 0, 
-											waveSound.size(), 
-											BASS_SAMPLE_FLOAT | BASS_SAMPLE_3D
-											| BASS_SAMPLE_SOFTWARE);	
+	auto hStream = BASS_StreamCreateFile(true, waveFileMem, 0,
+		waveSound.size()-16, BASS_SAMPLE_FLOAT | BASS_SAMPLE_3D | BASS_SAMPLE_SOFTWARE);
+
+	//auto hStream = BASS_StreamCreateFile(false, L"c:\\root\\bin\\uo_tools\\UOFiddler\\uselethr.wav", 0, 0, 0);
+
+	
+
+	//auto hStream = BASS_SampleLoad(true, waveFileMem, 0, waveSound.size(), 20, 0);
+	//	//BOOL mem,
+	//	//void *file,
+	//	//QWORD offset,
+	//	//DWORD length,
+	//	//DWORD max,
+	//	//DWORD flags
+	//	//);
 
 	if (hStream == 0)
 	{
@@ -222,6 +240,12 @@ void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
 	if (hStream == 0 || GetForegroundWindow() != g_hWnd)
 		return;
 
+	//HCHANNEL channel = BASS_SampleGetChannel(hStream, true); // get a sample channel
+	//BASS_ChannelSetAttribute(channel, BASS_ATTRIB_VOL, ((float)volume) / 2.55f);
+	//if(!BASS_ChannelPlay(channel, FALSE))
+	//	trace_printf("Bass channel play error: %s\n", BASS_ErrorGetDescription());
+
+
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, ((float)volume) / 2.55f);
 
 	if (!BASS_ChannelPlay(hStream, false))
@@ -229,8 +253,8 @@ void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
 
 }
 //---------------------------------------------------------------------------
-/// <summary>Очистка звукового стрима и высвобождение памяти.</summary>
-/// <param name="hSteam">BASS stream дескриптер</param>
+/// <summary>Очистка звукового потока и высвобождение памяти.</summary>
+/// <param name="hSteam">stream handle</param>
 bool TSoundManager::FreeStream(HSTREAM hSteam)
 {
 	auto res = BASS_StreamFree(hSteam);
