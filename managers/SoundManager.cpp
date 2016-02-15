@@ -159,15 +159,15 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 	waveHeader->numChannels = 1;
 	waveHeader->sampleRate = 22050;
 	waveHeader->bitsPerSample = 16;
-	waveHeader->bytesPerSecond = waveHeader->sampleRate * 
-		(waveHeader->bitsPerSample/8) * waveHeader->numChannels;
-	waveHeader->blockAlign = 2;	
+	waveHeader->bytesPerSecond = 88200; //waveHeader->sampleRate *  (waveHeader->bitsPerSample / 8) * waveHeader->numChannels;
+	waveHeader->blockAlign = 4;	
 	waveHeader->dataSize = dataSize;
 
-	is.Timer = (DWORD)(dataSize / (((float)waveHeader->bytesPerSecond) / 1000.0f));
+	//is.Timer = (DWORD)((dataSize - 16) / (((float)waveHeader->bytesPerSecond) / 1000.0f));
+	is.Timer = (DWORD)((dataSize - 16) / 88.2f);
 
-	auto sndDataPtr = (PBYTE)(is.Address + sizeof(SOUND_BLOCK));	
-	std::copy_n(sndDataPtr+16, dataSize-16, waveSound.begin() + sizeof(WaveHeader));	
+	PBYTE sndDataPtr = (PBYTE)(is.Address + sizeof(SOUND_BLOCK));	
+	std::copy_n(sndDataPtr + 16, dataSize - 16, waveSound.begin() + sizeof(WaveHeader));	
 
 	return waveSound;
 }
