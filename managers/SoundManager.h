@@ -49,7 +49,7 @@ private:
 	MCIDEVICEID m_Music;
 
 	void TraceMusicError(DWORD error);
-	std::map<HSTREAM, BYTE*> streams;
+	//std::map<HSTREAM, BYTE*> streams;
 public:
 	TSoundManager();
 	~TSoundManager();

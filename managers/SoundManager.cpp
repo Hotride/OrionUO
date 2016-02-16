@@ -143,10 +143,9 @@ void TSoundManager::Free()
 /// <returns>Wave файл в виде вектора байтов</returns>
 std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 {
-	int dataSize = is.Size - sizeof(SOUND_BLOCK);
-
+	size_t dataSize = is.Size - sizeof(SOUND_BLOCK);
 	auto waveSound = std::vector<BYTE>(dataSize + sizeof(WaveHeader));
-	auto waveHeader = (WaveHeader*) waveSound.data();
+	auto waveHeader = reinterpret_cast<WaveHeader*>(waveSound.data());
 
 	strcpy(waveHeader->chunkId, "RIFF");
 	strcpy(waveHeader->format, "WAVE");
@@ -164,9 +163,9 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 	waveHeader->dataSize = dataSize;
 
 	//is.Timer = (DWORD)((dataSize - 16) / (((float)waveHeader->bytesPerSecond) / 1000.0f));
-	is.Timer = (DWORD)((dataSize - 16) / 88.2f);
+	is.Timer = static_cast<DWORD>((dataSize - 16) / 88.2f);
 
-	PBYTE sndDataPtr = (PBYTE)(is.Address + sizeof(SOUND_BLOCK));	
+	auto sndDataPtr = reinterpret_cast<PBYTE>(is.Address + sizeof(SOUND_BLOCK));	
 	std::copy_n(sndDataPtr + 16, dataSize - 16, waveSound.begin() + sizeof(WaveHeader));	
 
 	return waveSound;
@@ -187,33 +186,22 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 
 HSTREAM TSoundManager::LoadSoundEffect(TIndexSound &is)
 {
-	auto waveSound = this->CreateWaveFile(is);
-	BYTE* waveFileMem = new BYTE[waveSound.size()];	
-	std::copy(waveSound.begin(), waveSound.end(), waveFileMem);
+	if (is.waveFile.empty()) 
+	{
+		auto waveSound = this->CreateWaveFile(is);
+		is.waveFile.swap(waveSound);
+	}
+
+	size_t waveFileSize = is.Size - sizeof(SOUND_BLOCK) +sizeof(WaveHeader);	
 	
-	auto hStream = BASS_StreamCreateFile(true, waveFileMem, 0,
-		waveSound.size()-16, BASS_SAMPLE_FLOAT | BASS_SAMPLE_3D | BASS_SAMPLE_SOFTWARE);
-
-	//auto hStream = BASS_StreamCreateFile(false, L"c:\\root\\bin\\uo_tools\\UOFiddler\\uselethr.wav", 0, 0, 0);
-
-	
-
-	//auto hStream = BASS_SampleLoad(true, waveFileMem, 0, waveSound.size(), 20, 0);
-	//	//BOOL mem,
-	//	//void *file,
-	//	//QWORD offset,
-	//	//DWORD length,
-	//	//DWORD max,
-	//	//DWORD flags
-	//	//);
+	auto hStream = BASS_StreamCreateFile(true, is.waveFile.data(), 0,
+		is.waveFile.size() - 16, BASS_SAMPLE_FLOAT | BASS_SAMPLE_3D | BASS_SAMPLE_SOFTWARE);
 
 	if (hStream == 0)
 	{
-		trace_printf("BASS create stream error: %s\n", BASS_ErrorGetDescription());
-		delete[] waveFileMem;
+		trace_printf("BASS create stream error: %s\n", BASS_ErrorGetDescription());	
+		is.waveFile.clear();
 	}
-	else
-		this->streams[hStream] = waveFileMem;
 	
 	return hStream;
 }
@@ -240,13 +228,7 @@ void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
 	if (hStream == 0 || GetForegroundWindow() != g_hWnd)
 		return;
 
-	//HCHANNEL channel = BASS_SampleGetChannel(hStream, true); // get a sample channel
-	//BASS_ChannelSetAttribute(channel, BASS_ATTRIB_VOL, ((float)volume) / 2.55f);
-	//if(!BASS_ChannelPlay(channel, FALSE))
-	//	trace_printf("Bass channel play error: %s\n", BASS_ErrorGetDescription());
-
-
-	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, ((float)volume) / 2.55f);
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, static_cast<float>(volume) / 2.55f);
 
 	if (!BASS_ChannelPlay(hStream, false))
 		trace_printf("Bass sound play error: %s\n", BASS_ErrorGetDescription());
@@ -258,13 +240,14 @@ void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
 bool TSoundManager::FreeStream(HSTREAM hSteam)
 {
 	auto res = BASS_StreamFree(hSteam);
-	auto waveFileIter = streams.find(hSteam);
+	//auto waveFileIter = streams.find(hSteam);
 
-	if (waveFileIter != streams.end()) {
-		auto waveFile = waveFileIter->second;
-		streams.erase(waveFileIter);
-		delete[] waveFile;
-	}
+	//if (waveFileIter != streams.end())
+	//{
+	//	auto waveFile = waveFileIter->second;
+	//	streams.erase(waveFileIter);
+	//	delete[] waveFile;
+	//}
 
 	return res;
 }

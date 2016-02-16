@@ -59,6 +59,7 @@ public:
 	SETGET(WORD, LightColor);
 };
 //---------------------------------------------------------------------------
+
 class TIndexSound
 {
 private:
@@ -74,10 +75,11 @@ public:
 	SETGET(DWORD, Size);
 	SETGET(DWORD, Timer);
 	SETGET(DWORD, LastAccessTime);
-
+	
 	//Mix_Chunk *Sound;
 
-	HSTREAM soundStream;
+	WaveFile waveFile;
+	HSTREAM hStream;
 };
 //---------------------------------------------------------------------------
 class TIndexAnimation

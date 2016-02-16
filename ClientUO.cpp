@@ -1391,7 +1391,7 @@ void TUltimaOnline::LoadIndexFiles()
 					sound.LastAccessTime = 0;
 					sound.Timer = 0;
 					//sound.Sound = NULL;
-					sound.soundStream = 0;
+					sound.hStream = 0;
 					
 					if (sound.Address == 0xFFFFFFFF || !sound.Size || sound.Size == 0xFFFFFFFF)
 					{
@@ -1572,11 +1572,11 @@ void TUltimaOnline::UnloadIndexFiles()
 					((TIndexObject*)(list->Data))->Texture = NULL;
 				}
 			}
-			else if (((TIndexSound*)(list->Data))->soundStream != 0)
+			else if (((TIndexSound*)(list->Data))->hStream != 0)
 			{
 				//Mix_FreeChunk(((TIndexSound*)(list->Data))->Sound);
-				BASS_StreamFree(((TIndexSound*)(list->Data))->soundStream);
-				((TIndexSound*)(list->Data))->soundStream = 0;
+				BASS_StreamFree(((TIndexSound*)(list->Data))->hStream);
+				((TIndexSound*)(list->Data))->hStream = 0;
 				//((TIndexSound*)(list->Data))->Sound = NULL;
 			}
 
@@ -3816,11 +3816,11 @@ void TUltimaOnline::PlaySoundEffect(WORD id, int volume)
 	if (is.Address == 0)
 		return;
 
-	if (is.soundStream == 0)
+	if (is.hStream == 0)
 	{
-		is.soundStream = SoundManager.LoadSoundEffect(m_SoundDataIndex[id]);
+		is.hStream = SoundManager.LoadSoundEffect(m_SoundDataIndex[id]);
 
-		if (is.soundStream == 0)
+		if (is.hStream == 0)
 			return;
 
 		ADD_LINKED(m_UsedSoundList, m_SoundDataIndex[id]);
@@ -3829,9 +3829,9 @@ void TUltimaOnline::PlaySoundEffect(WORD id, int volume)
 		if (is.LastAccessTime + is.Timer > GetTickCount())
 			return;
 
-		SoundManager.FreeStream(is.soundStream);
+		SoundManager.FreeStream(is.hStream);
 
-		is.soundStream = SoundManager.LoadSoundEffect(m_SoundDataIndex[id]);
+		is.hStream = SoundManager.LoadSoundEffect(m_SoundDataIndex[id]);
 	}	
 
 	if (volume < 0)
@@ -3839,7 +3839,7 @@ void TUltimaOnline::PlaySoundEffect(WORD id, int volume)
 
 	if (volume > 0)
 	{
-		SoundManager.PlaySoundEffect(is.soundStream, volume);
+		SoundManager.PlaySoundEffect(is.hStream, volume);
 		is.LastAccessTime = GetTickCount();
 	}
 
@@ -3880,13 +3880,13 @@ void TUltimaOnline::ResetSoundEffects(DWORD ticks)
 	{
 		TIndexSound *obj = (TIndexSound*)list->Data;
 
-		if (obj->soundStream != 0 && obj->LastAccessTime + obj->Timer < ticks)
+		if (obj->hStream != 0 && obj->LastAccessTime + obj->Timer < ticks)
 		{
-			BASS_StreamFree(obj->soundStream);
+			BASS_StreamFree(obj->hStream);
 
 			//Mix_FreeChunk(obj->Sound);
 			//obj->Sound = NULL;
-			obj->soundStream = 0;
+			obj->hStream = 0;
 
 			TLinkedList *next = list->Next;
 			if (list == m_UsedSoundList)

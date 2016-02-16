@@ -455,8 +455,10 @@ typedef struct MULTILINES_FONT_INFO
 } *PMULTILINES_FONT_INFO;
 
 #define DPOLY(x, y, w, h) g_GL.DrawPolygone(0x7f7f7f7f, x, y, w, h)
-
-
+//---------------------------------------------------------------------------
+#pragma region game typedefs
+typedef std::vector<BYTE> WaveFile;
+#pragma endregion
 
 
 

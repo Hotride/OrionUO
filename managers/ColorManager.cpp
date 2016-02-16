@@ -101,7 +101,7 @@ void TColorManager::SendColorsToShader(WORD &color)
 {
 	static WORD oldColor = 0;
 
-	if (color != 0 && oldColor != color) // && color < m_HuesCount)
+	if (color != 0 && oldColor != color && color < m_HuesCount)
 	{
 		oldColor = color;
 

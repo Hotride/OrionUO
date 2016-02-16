@@ -36,7 +36,7 @@ m_LightColor(0)
 }
 //---------------------------------------------------------------------------
 TIndexSound::TIndexSound()
-: m_Address(0), m_Size(0), m_LastAccessTime(0), /*Sound(NULL),*/ soundStream(0)
+: m_Address(0), m_Size(0), m_LastAccessTime(0), hStream(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -48,10 +48,10 @@ TIndexSound::~TIndexSound()
 	//	Sound = NULL;
 	//}
 
-	if (this->soundStream != 0)
+	if (this->hStream != 0)
 	{
-		BASS_StreamFree(this->soundStream);
-		soundStream = 0;
+		BASS_StreamFree(this->hStream);
+		hStream = 0;
 	}
 }
 //---------------------------------------------------------------------------
