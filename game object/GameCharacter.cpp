@@ -54,6 +54,50 @@ void TGameCharacter::SetPaperdollText(string val)
 		FontManager->GenerateA(1, m_PaperdollTextTexture, val.c_str(), 0x0386, 185);
 }
 //---------------------------------------------------------------------------
+bool TGameCharacter::IsSitting()
+{
+	bool result = IsHuman();
+
+	if (result)
+	{
+		result = (FindLayer(OL_MOUNT) == NULL);
+
+		if (result)
+		{
+			TRenderWorldObject *obj = this;
+
+			while (obj != NULL && obj->m_PrevXY != NULL)
+				obj = obj->m_PrevXY;
+
+			result = false;
+
+			while (obj != NULL && !result)
+			{
+				if (obj->IsStaticGroupObject() && abs(m_Z - obj->Z) <= 5) //m_Z == obj->Z
+				{
+					WORD graphic = obj->Graphic;
+
+					if (obj->IsGameObject())
+					{
+						if (graphic >= 0x4000 || ((TGameObject*)obj)->NPC)
+							graphic = 0;
+					}
+					else
+						graphic -= 0x4000;
+
+					if (graphic)
+					{
+					}
+				}
+
+				obj = obj->m_NextXY;
+			}
+		}
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
 int TGameCharacter::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 {
 	if (mode)

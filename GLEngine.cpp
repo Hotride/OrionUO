@@ -365,41 +365,6 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height)
 	glEnd();
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawShadow(GLuint &texture, int &x, int &y, int width, int height, bool &mirror)
-{
-	//glUniform1iARB(ShaderTexture, texture);
-
-	if (m_OldTexture != texture)
-	{
-		m_OldTexture = texture;
-		glBindTexture(GL_TEXTURE_2D, texture);
-	}
-
-	int h2 = height / 2;
-	glLoadIdentity();
-	y += h2;
-	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
-
-	glBegin(GL_QUADS);
-
-		if (mirror)
-		{
-			glTexCoord2i(0, 1); glVertex2i(width, h2);
-			glTexCoord2i(1, 1); glVertex2i(0, h2);
-			glTexCoord2i(1, 0); glVertex2i(width, 0);
-			glTexCoord2i(0, 0); glVertex2i(width * 2, 0);
-		}
-		else
-		{
-			glTexCoord2i(0, 1); glVertex2i(0, h2); //ë.í.
-			glTexCoord2i(1, 1); glVertex2i(width, h2); //ï.í.
-			glTexCoord2i(1, 0); glVertex2i(width * 2, 0); //ï.â.
-			glTexCoord2i(0, 0); glVertex2i(width, 0); //ë.â.
-		}
-
-	glEnd();
-}
-//---------------------------------------------------------------------------
 void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, bool &mirror)
 {
 	//glUniform1iARB(ShaderTexture, texture);
@@ -429,6 +394,109 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, boo
 			glTexCoord2i(1, 0); glVertex2i(width, 0);
 			glTexCoord2i(0, 0); glVertex2i(0, 0);
 		}
+
+	glEnd();
+}
+//---------------------------------------------------------------------------
+void TGLEngine::DrawSitting(GLuint &texture, int &x, int &y, int width, int height, bool &mirror)
+{
+	//glUniform1iARB(ShaderTexture, texture);
+
+	if (m_OldTexture != texture)
+	{
+		m_OldTexture = texture;
+		glBindTexture(GL_TEXTURE_2D, texture);
+	}
+
+	glLoadIdentity();
+	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
+
+	const int SITTING_WIDTH_OFFSET = 10;
+
+	int h02 = (int)(height * 0.2f);
+	int h05 = (int)(height * 0.5f);
+	int h075 = (int)(height * 0.75f);
+	int widthOffset = width + SITTING_WIDTH_OFFSET;
+
+	if (mirror)
+	{
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.4f); glVertex2i(width, h05);
+			glTexCoord2f(1.0f, 0.4f); glVertex2i(0, h05);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(0, h02);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(width, h02);
+		glEnd();
+
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, -0.25f); glVertex2i(widthOffset, h075);
+			glTexCoord2f(1.0f, -0.25f); glVertex2i(SITTING_WIDTH_OFFSET, h075);
+			glTexCoord2f(1.0f, -0.6f); glVertex2i(0, h05);
+			glTexCoord2f(0.0f, -0.6f); glVertex2i(width, h05);
+		glEnd();
+
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(widthOffset, height);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(SITTING_WIDTH_OFFSET, height);
+			glTexCoord2f(1.0f, -0.25f); glVertex2i(SITTING_WIDTH_OFFSET, h075);
+			glTexCoord2f(0.0f, -0.25f); glVertex2i(widthOffset, h075);
+		glEnd();
+	}
+	else
+	{
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.4f); glVertex2i(SITTING_WIDTH_OFFSET, h05);
+			glTexCoord2f(1.0f, 0.4f); glVertex2i(widthOffset, h05);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(widthOffset, h02);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(SITTING_WIDTH_OFFSET, h02);
+		glEnd();
+
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, -0.25f); glVertex2i(0, h075);
+			glTexCoord2f(1.0f, -0.25f); glVertex2i(width, h075);
+			glTexCoord2f(1.0f, -0.6f); glVertex2i(widthOffset, h05);
+			glTexCoord2f(0.0f, -0.6f); glVertex2i(SITTING_WIDTH_OFFSET, h05);
+		glEnd();
+
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, height);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(width, height);
+			glTexCoord2f(1.0f, -0.25f); glVertex2i(width, h075);
+			glTexCoord2f(0.0f, -0.25f); glVertex2i(0, h075);
+		glEnd();
+	}
+}
+//---------------------------------------------------------------------------
+void TGLEngine::DrawShadow(GLuint &texture, int &x, int &y, int width, int height, bool &mirror)
+{
+	//glUniform1iARB(ShaderTexture, texture);
+
+	if (m_OldTexture != texture)
+	{
+		m_OldTexture = texture;
+		glBindTexture(GL_TEXTURE_2D, texture);
+	}
+
+	int h2 = height / 2;
+	glLoadIdentity();
+	y += h2;
+	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
+
+	glBegin(GL_QUADS);
+
+	if (mirror)
+	{
+		glTexCoord2i(0, 1); glVertex2i(width, h2);
+		glTexCoord2i(1, 1); glVertex2i(0, h2);
+		glTexCoord2i(1, 0); glVertex2i(width, 0);
+		glTexCoord2i(0, 0); glVertex2i(width * 2, 0);
+	}
+	else
+	{
+		glTexCoord2i(0, 1); glVertex2i(0, h2); //ë.í.
+		glTexCoord2i(1, 1); glVertex2i(width, h2); //ï.í.
+		glTexCoord2i(1, 0); glVertex2i(width * 2, 0); //ï.â.
+		glTexCoord2i(0, 0); glVertex2i(width, 0); //ë.â.
+	}
 
 	glEnd();
 }

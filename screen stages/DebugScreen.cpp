@@ -316,6 +316,39 @@ TDebugScreen::TDebugScreen()
 	effect->DestY = 6;*/
 
 	effect->Init();
+
+
+
+	
+	charobj = new TPlayer(1);
+	g_Player = charobj;
+	charobj->Graphic = 0x0190;
+	charobj->Direction = 4;
+
+	WORD id = charobj->GetMountAnimation();
+	anim = AnimationManager->GetAnimation(id);
+
+	bool mirror = false;
+	BYTE dir = charobj->Direction;
+
+	AnimationManager->GetAnimDirection(dir, mirror);
+
+	if (anim != NULL)
+	{
+		int animGroup = charobj->GetAnimationGroup();
+
+		TTextureAnimationGroup *group = anim->GetGroup(animGroup);
+		TTextureAnimationDirection *direction = group->GetDirection(dir);
+
+		if (direction->Address == 0)
+		{
+			AnimationManager->AnimGroup = animGroup;
+			AnimationManager->Direction = dir;
+
+			int offset = (animGroup * 5) + dir;
+			AnimationManager->ExecuteDirectionGroup(direction, id, offset);
+		}
+	}
 }
 //---------------------------------------------------------------------------
 TDebugScreen::~TDebugScreen()
@@ -524,6 +557,46 @@ int TDebugScreen::Render(bool mode)
 
 		
 		UnuseShader();
+
+		int x = 200;
+		int y = 200;
+		charobj->Direction = 0;
+		charobj->Draw(mode, x, y, ticks);
+
+		x = 300;
+		y = 200;
+		charobj->Direction = 1;
+		charobj->Draw(mode, x, y, ticks);
+
+		x = 400;
+		y = 200;
+		charobj->Direction = 2;
+		charobj->Draw(mode, x, y, ticks);
+
+		x = 500;
+		y = 200;
+		charobj->Direction = 3;
+		charobj->Draw(mode, x, y, ticks);
+
+		x = 600;
+		y = 200;
+		charobj->Direction = 4;
+		charobj->Draw(mode, x, y, ticks);
+
+		x = 200;
+		y = 300;
+		charobj->Direction = 5;
+		charobj->Draw(mode, x, y, ticks);
+
+		x = 300;
+		y = 300;
+		charobj->Direction = 6;
+		charobj->Draw(mode, x, y, ticks);
+
+		x = 400;
+		y = 300;
+		charobj->Direction = 7;
+		charobj->Draw(mode, x, y, ticks);
 
 		/*//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		//DPOLY(150, 100, 300, 300);

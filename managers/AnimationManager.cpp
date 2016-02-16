@@ -195,7 +195,7 @@ int TAnimationManager::m_UsedLayers[8][m_LayerCount] =
 //----------------------------------------------------------------------------
 TAnimationManager::TAnimationManager()
 : m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0), m_Direction(0),
-m_Grayed(false), m_ShadowCount(0)
+m_Grayed(false), m_ShadowCount(0), m_Sitting(false)
 {
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
@@ -1214,7 +1214,10 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 			glUniform1iARB(ShaderDrawMode, drawMode);
 
-			g_GL.Draw(texture, x, y, frame->Width, frame->Height, mirror);
+			if (m_Sitting)
+				g_GL.DrawSitting(texture, x, y, frame->Width, frame->Height, mirror);
+			else
+				g_GL.Draw(texture, x, y, frame->Width, frame->Height, mirror);
 		}
 
 		glDisable(GL_DEPTH_TEST);
@@ -1265,6 +1268,7 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	
 	if (goi != NULL) //Draw mount
 	{
+		m_Sitting = false;
 		lightOffset += 20;
 		WORD mountID = goi->GetMountAnimation();
 
@@ -1272,6 +1276,21 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 		
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID + 0x10000);
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID);
+	}
+	else if (obj->IsSitting())
+	{
+		m_Sitting = true;
+		animGroup = PAG_STAND;
+		animIndex = 0;
+		m_Direction = 1;
+
+		if (obj->Direction == 3)
+			mirror = true;
+
+		if (mirror)
+			layerDir = 2;
+		else
+			layerDir = 4;
 	}
 	
 	m_AnimGroup = animGroup;
@@ -1344,6 +1363,7 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 //----------------------------------------------------------------------------
 bool TAnimationManager::CharacterPixelsInXY(TGameCharacter *obj, int x, int y, int z)
 {
+	m_Sitting = obj->IsSitting();
 	m_Direction = 0;
 	obj->UpdateAnimationInfo(m_Direction);
 
@@ -1390,6 +1410,7 @@ bool TAnimationManager::CharacterPixelsInXY(TGameCharacter *obj, int x, int y, i
 //----------------------------------------------------------------------------
 void TAnimationManager::DrawCorpse(TGameItem *obj, int x, int y, int z)
 {
+	m_Sitting = false;
 	m_Direction = obj->Layer;
 
 	if (m_Direction & 0x80)
@@ -1430,6 +1451,7 @@ void TAnimationManager::DrawCorpse(TGameItem *obj, int x, int y, int z)
 //----------------------------------------------------------------------------
 bool TAnimationManager::CorpsePixelsInXY(TGameItem *obj, int x, int y, int z)
 {
+	m_Sitting = false;
 	m_Direction = obj->Layer;
 	bool mirror = false;
 

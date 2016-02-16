@@ -42,6 +42,7 @@ private:
 	int m_AnimGroup;
 	BYTE m_Direction;
 	bool m_Grayed;
+	bool m_Sitting;
 	
 	static const int MAX_SHADOWS_COUNT = 100;
 	SHADOW_DATA m_ShadowList[MAX_SHADOWS_COUNT];

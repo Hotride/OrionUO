@@ -90,6 +90,8 @@ public:
 	SETGETEX(char, OffsetZ);
 	SETGET(DWORD, LastStepTime);
 
+	bool IsSitting();
+
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
 
 	void OnGraphicChange(int direction = 0); //Обновить информацию о поле персонажа
