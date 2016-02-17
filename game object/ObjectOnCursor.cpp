@@ -32,21 +32,23 @@ TObjectOnCursor::TObjectOnCursor(TGameItem *obj)
 : TGameItem(), m_Separated(false), m_Deleted(false), m_Dropped(false),
 m_IsGameFigure(false), m_DragCount(obj->Count)
 {
-	Serial = obj->Serial;
-	Graphic = obj->Graphic;
-	Color = obj->Color;
-	X = obj->X;
-	Y = obj->Y;
-	Z = obj->Z;
-	Count = obj->Count;
-	Layer = obj->Layer;
-	Flags = obj->Flags;
-	NPC = obj->NPC;
-	ImageID = obj->ImageID;
-	Container = obj->Container;
-	UsedLayer = obj->UsedLayer;
-	AnimID = obj->AnimID;
-	MapIndex = obj->MapIndex;
-	Name = obj->GetName();
+	m_Serial = obj->Serial;
+	m_Graphic = obj->Graphic;
+	m_Color = obj->Color;
+	m_X = obj->X;
+	m_Y = obj->Y;
+	m_Z = obj->Z;
+	m_Count = obj->Count;
+	m_Layer = obj->Layer;
+	m_Flags = obj->Flags;
+	m_NPC = obj->NPC;
+	m_ImageID = obj->ImageID;
+	m_Container = obj->Container;
+	m_UsedLayer = obj->UsedLayer;
+	m_AnimID = obj->AnimID;
+	m_MapIndex = obj->MapIndex;
+	m_Name = obj->GetName();
+
+	m_TiledataPtr = &UO->m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32];
 }
 //---------------------------------------------------------------------------

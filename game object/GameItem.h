@@ -24,7 +24,7 @@ class TObjectOnCursor;
 //--------------------------------------------------------------------------
 class TGameItem : public TGameObject
 {
-private:
+protected:
 	BYTE m_Layer; //Слой
 	WORD m_AnimID; //Индекс анимации
 	WORD m_ImageID; //Индекс гампа для папердолла

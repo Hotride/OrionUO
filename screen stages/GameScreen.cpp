@@ -107,7 +107,7 @@ int TGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 		{
 			if (ro->IsLandObject())
 			{
-				int testZ = ((TLandObject*)ro)->MinZ;
+				int testZ = ((TLandObject*)ro)->Z; //MinZ;
 
 				if (pz15 <= testZ)
 				{
