@@ -32,19 +32,17 @@
 #include <map>
 #include <vector>
 #include <time.h>
-#include "glew\include\GL\glew.h"
-#include "glew\include\GL\wglew.h"
+#include "glew.h"
+#include "wglew.h"
 #include <gl\gl.h>
 #include <gl\glu.h>
-#include <bass.h>
+#include "bass.h"
 #include <winsock.h>
 #include <deque>
 #include <Shellapi.h>
 #include <Shlwapi.h>
 #include "zlib.h"
 #include <Mmsystem.h>
-//#include "SDL2-2.0.3\include\SDL.h"
-//#include "SDL2-2.0.3\include\SDL_mixer.h"
 
 //#define _USE_MATH_DEFINES // for C++
 //#include <cmath>
@@ -60,8 +58,6 @@
 #pragma comment(lib, "zdll.lib")
 #pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "Shlwapi.lib")
-//#pragma comment(lib, "SDL2-2.0.3\\lib\\x86\\SDL2.lib")
-//#pragma comment(lib, "SDL2-2.0.3\\lib\\x86\\SDL2_mixer.lib")
 #pragma comment(lib, "bass.lib")
 
 #pragma warning(disable: 4390)

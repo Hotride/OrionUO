@@ -270,11 +270,11 @@ TStaticObject::TStaticObject(DWORD serial, WORD graphic, WORD color, short x, sh
 	else
 		m_RenderQueueIndex = 6;
 	
-	if (((STATIC_TILES*)m_TiledataPtr)->Height > 5)
+	if (m_TiledataPtr->Height > 5)
 		m_CanBeTransparent = 1;
 	else if (IsRoof() || (IsSurface() && IsBackground()) || IsWall())
 		m_CanBeTransparent = 1;
-	else if (((STATIC_TILES*)m_TiledataPtr)->Height == 5 && IsSurface() && !IsBackground())
+	else if (m_TiledataPtr->Height == 5 && IsSurface() && !IsBackground())
 		m_CanBeTransparent = 1;
 	else
 		m_CanBeTransparent = 0;
@@ -288,9 +288,9 @@ bool TStaticObject::TranparentTest(int &playerZ)
 {
 	bool result = true;
 
-	if (m_Z < playerZ - (((STATIC_TILES*)m_TiledataPtr)->Height - 5))
+	if (m_Z < playerZ - m_TiledataPtr->Height - 5)
 		result = false;
-	else if (((STATIC_TILES*)m_TiledataPtr)->Height == 5 && m_Z > playerZ - 5 && m_Z < playerZ + 5)
+	else if (m_TiledataPtr->Height == 5 && m_Z > playerZ - 5 && m_Z < playerZ + 5)
 		result = false;
 	else if (playerZ + 5 < m_Z && !m_CanBeTransparent)
 		result = false;

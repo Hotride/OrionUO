@@ -23,6 +23,5 @@
 /Release
 /Debug
 /Desktop
-/glew
 /music
-/SDL2-2.0.3
+!/dll/*.dll

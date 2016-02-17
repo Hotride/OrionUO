@@ -63,12 +63,6 @@
     <ClInclude Include="Logger.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="zconf.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="managers\ColorManager.h">
       <Filter>Заголовочные файлы\managers</Filter>
     </ClInclude>
@@ -794,8 +788,5 @@
     <None Include="cursor1.cur">
       <Filter>Файлы ресурсов</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="bass24\c\bass.lib" />
   </ItemGroup>
 </Project>

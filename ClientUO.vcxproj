@@ -45,7 +45,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);$(SolutionDir);D:\glew\include\GL</IncludePath>
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);$(SolutionDir);</IncludePath>
     <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <ReferencePath>$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib</ReferencePath>
   </PropertyGroup>
@@ -63,8 +63,10 @@
       <AdditionalLibraryDirectories>$(ProjectDir)bass24\c</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(ProjectDir)bass24\bass.dll" "$(OutDir)"</Command>
-      <Message>Copy bass.dll to bin directory</Message>
+      <Command>xcopy /y /d  "$(ProjectDir)dll\bass.dll" "$(OutDir)"
+xcopy /y /d  "$(ProjectDir)dll\glew32.dll" "$(OutDir)"
+xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
+      <Message>Copy dlls to bin directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -76,7 +78,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalIncludeDirectories>$(ProjectDir)bass24\c;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -90,10 +92,12 @@
       <EnableDpiAwareness>true</EnableDpiAwareness>
     </Manifest>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(ProjectDir)bass24\bass.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d  "$(ProjectDir)dll\bass.dll" "$(OutDir)"
+xcopy /y /d  "$(ProjectDir)dll\glew32.dll" "$(OutDir)"
+xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>Copy bass.dll to build directory </Message>
+      <Message>Copy dlls to build directory </Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -222,8 +226,6 @@
     <ClInclude Include="VideoRecorder.h" />
     <ClInclude Include="Walker.h" />
     <ClInclude Include="Weather.h" />
-    <ClInclude Include="zconf.h" />
-    <ClInclude Include="zlib.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseQueue.cpp" />
@@ -355,9 +357,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cursor1.cur" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="bass24\c\bass.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
