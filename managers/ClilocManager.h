@@ -22,18 +22,29 @@
 //---------------------------------------------------------------------------
 typedef std::map<DWORD, string> CLILOC_MAP;
 //---------------------------------------------------------------------------
+//Объект с данными клилок-файла
 class TCliloc : public ICliloc, public TBaseQueueItem
 {
 private:
+	//Системные клилоки (id < 1000000)
 	CLILOC_MAP m_ClilocSystem;
+
+	//Обычные клилоки (id >= 1000000 && id < 3000000)
 	CLILOC_MAP m_ClilocRegular;
+
+	//Клилоки для помощи (id >= 3000000)
 	CLILOC_MAP m_ClilocSupport;
 
+	//Указатель на проекцию файла в памяти (оно же ридер)
 	TMappedHeader m_File;
 
+	//Тип клилока
 	string m_Language;
+
+	//Статус загрузки
 	bool m_Loaded;
 
+	//Загрузить клилок
 	string Load(DWORD &id);
 public:
 	TCliloc(const char *lang);
@@ -42,10 +53,14 @@ public:
 	SETGET(string, Language);
 	SETGET(bool, Loaded);
 
+	//Получить ASCII строку по id (и загрузить при необходимости)
 	string GetA(DWORD id, string result = "");
+
+	//Получить Unicode строку по id (и загрузить при необходимости)
 	wstring GetW(DWORD id, string result = "");
 };
 //---------------------------------------------------------------------------
+//Менеджер клилоков
 class TClilocManager : public IClilocManager, public TBaseQueue
 {
 private:
@@ -53,6 +68,7 @@ public:
 	TClilocManager();
 	virtual ~TClilocManager();
 
+	//Получить ссылку на объект клилока (и загрузить при необходимости)
 	TCliloc *Cliloc(const char *lang);
 };
 //---------------------------------------------------------------------------

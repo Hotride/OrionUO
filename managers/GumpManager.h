@@ -20,27 +20,44 @@
 #ifndef GumpManagerH
 #define GumpManagerH
 //--------------------------------------------------------------------------
+//Менеджер гампов
 class TGumpManager : public IGumpManager, public TBaseQueue
 {
 private:
+	//Вычислить количество статусбаров без пати
 	int GetNonpartyStatusbarsCount();
 public:
 	TGumpManager() : TBaseQueue() {}
 	virtual ~TGumpManager() {}
 
+	//Добавить гамп
 	void AddGump(TGump *obj);
+
+	//Получить гамп
 	TGump *GetGump(DWORD serial, DWORD ID, GUMP_TYPE Type);
+
+	//Получить гамп-владелец текущей активной TEntryText
 	TGump *GetTextEntryOwner();
+
+	//Проверить, существует ли гамп
 	TGump *GumpExists(DWORD gumpID);
+
+	//Закрыть все гампы с указанными параметрами
 	void CloseGump(DWORD serial, DWORD ID, GUMP_TYPE Type);
+
+	//Удалить гамп
 	void RemoveGump(TGump *obj);
 
+	//Перерисовать все гампы
 	void RedrawAll();
 
+	//Подготовка текстур
 	void PrepareTextures();
-	
+
+	//Рисование гампов
 	void Draw(bool &mode, bool blocked);
-	
+
+	//События
 	void OnLeftMouseDown(bool blocked);
 	bool OnLeftMouseUp(bool blocked);
 	void OnRightMouseDown(bool blocked);
@@ -51,14 +68,19 @@ public:
 	bool OnCharPress(WPARAM wparam, LPARAM lparam, bool blocked);
 	bool OnKeyPress(WPARAM wparam, LPARAM lparam, bool blocked);
 
+	//Событие удаления менеджера (вызывается перед удалением)
 	void OnDelete();
 
+	//Удалить гампы, которые не могут быть досягаемы из-за изменения дистанции до объекта
 	void RemoveRangedGumps();
-	
+
+	//Загрузка гампов из конфига
 	void Load(string path);
+
+	//Сохранить гампы в конфиг
 	void Save(string path);
 };
-
+//--------------------------------------------------------------------------
 extern TGumpManager *GumpManager;
 //--------------------------------------------------------------------------
 #endif

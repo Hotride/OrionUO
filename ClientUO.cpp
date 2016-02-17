@@ -2867,7 +2867,7 @@ int TUltimaOnline::Send(PBYTE buf, int size)
 	
 	TMessageType &type = PacketManager.GetType(*buf);
 
-	trace_printf("--- ^(%d) s(+%d => %d) Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.name);
+	trace_printf("--- ^(%d) s(+%d => %d) Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
 
 	if (*buf == 0x80 || *buf == 0x91)
 	{
@@ -2880,7 +2880,7 @@ int TUltimaOnline::Send(PBYTE buf, int size)
 	g_LastPacketTime = ticks;
 	g_LastSendTime = ticks;
 
-	if (type.direction != DIR_SEND && type.direction != DIR_BOTH)
+	if (type.Direction != DIR_SEND && type.Direction != DIR_BOTH)
 		warning_printf("message direction invalid: 0x%02X\n", *buf);
 	else
 	{

@@ -20,6 +20,7 @@
 #ifndef CityManagerH
 #define CityManagerH
 //---------------------------------------------------------------------------
+//Данные о городе
 class TCity : public TBaseQueueItem
 {
 private:
@@ -35,6 +36,7 @@ public:
 	TTextTexture m_Texture;
 };
 //---------------------------------------------------------------------------
+//Менеджер списка городов
 class TCityManager : public TBaseQueue
 {
 private:

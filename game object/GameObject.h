@@ -22,7 +22,6 @@
 //--------------------------------------------------------------------------
 class TGameObject : public TRenderStaticObject
 {
-//private:
 protected:
 	DWORD m_Container; //Серийник контейнера, содержащего объект (0xFFFFFFFF - объект лежит в мире)
 	BYTE m_MapIndex; //Карта объекта
@@ -52,7 +51,7 @@ public:
 	SETGETEX(char, AnimIndex);
 	SETGET(DWORD, LastAnimationChangeTime);
 
-	virtual WORD GetMountAnimation() {return Graphic;}
+	virtual WORD GetMountAnimation() {return m_Graphic;}
 
 	virtual void OnGraphicChange(int direction = 0) {}
 

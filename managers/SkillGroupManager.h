@@ -20,6 +20,7 @@
 #ifndef SkillGroupManagerH
 #define SkillGroupManagerH
 //---------------------------------------------------------------------------
+//Менеджер групп навыков
 class TSkillGroupManager
 {
 private:

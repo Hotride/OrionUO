@@ -278,11 +278,11 @@ void TGLEngine::DrawPolygone(DWORD color, float x, float y, float width, float h
 
 	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
 
-	glBegin(GL_QUADS);
+	glBegin(GL_TRIANGLE_STRIP);
 		glVertex2f(0.0f, height);
 		glVertex2f(width, height);
-		glVertex2f(width, 0.0f);
 		glVertex2f(0.0f, 0.0f);
+		glVertex2f(width, 0.0f);
 	glEnd();
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -306,7 +306,7 @@ void TGLEngine::DrawTriangle(DWORD color, float x, float y, float radius)
 
 		for (int i = 0; i <= 360; i++)
 		{
-			float a = i / 180.0f * pi;
+			float a = (i / 180.0f) * pi;
 			glVertex2f(cos(a) * radius, sin(a) * radius);
 		}
 
@@ -328,19 +328,19 @@ void TGLEngine::DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVect
 
 	glLoadIdentity();
 	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
-	
-	glBegin(GL_QUADS);
+
+	glBegin(GL_TRIANGLE_STRIP);
 		glNormal3f((GLfloat)normals[0].X, (GLfloat)normals[0].Y, (GLfloat)normals[0].Z);
 		glTexCoord2i(0, 0); glVertex2i(22, -rc.left); //^
 		
 		glNormal3f((GLfloat)normals[3].X, (GLfloat)normals[3].Y, (GLfloat)normals[3].Z);
 		glTexCoord2i(0, 1); glVertex2i(0, 22 - rc.top); //<
-		
-		glNormal3f((GLfloat)normals[2].X, (GLfloat)normals[2].Y, (GLfloat)normals[2].Z);
-		glTexCoord2i(1, 1); glVertex2i(22,  44 - rc.right); //v
-		
+
 		glNormal3f((GLfloat)normals[1].X, (GLfloat)normals[1].Y, (GLfloat)normals[1].Z);
 		glTexCoord2i(1, 0); glVertex2i(44, 22 - rc.bottom); //>
+		
+		glNormal3f((GLfloat)normals[2].X, (GLfloat)normals[2].Y, (GLfloat)normals[2].Z);
+		glTexCoord2i(1, 1); glVertex2i(22, 44 - rc.right); //v
 	glEnd();
 }
 //---------------------------------------------------------------------------
@@ -357,11 +357,11 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height)
 	glLoadIdentity();
 	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 
-	glBegin(GL_QUADS);
+	glBegin(GL_TRIANGLE_STRIP);
 		glTexCoord2i(0, 1); glVertex2i(0, height);
 		glTexCoord2i(1, 1); glVertex2i(width, height);
-		glTexCoord2i(1, 0); glVertex2i(width, 0);
 		glTexCoord2i(0, 0); glVertex2i(0, 0);
+		glTexCoord2i(1, 0); glVertex2i(width, 0);
 	glEnd();
 }
 //---------------------------------------------------------------------------
@@ -378,21 +378,21 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, boo
 	glLoadIdentity();
 	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 
-	glBegin(GL_QUADS);
+	glBegin(GL_TRIANGLE_STRIP);
 
 		if (mirror)
 		{
 			glTexCoord2i(0, 1); glVertex2i(width, height);
 			glTexCoord2i(1, 1); glVertex2i(0, height);
-			glTexCoord2i(1, 0); glVertex2i(0, 0);
 			glTexCoord2i(0, 0); glVertex2i(width, 0);
+			glTexCoord2i(1, 0); glVertex2i(0, 0);
 		}
 		else
 		{
 			glTexCoord2i(0, 1); glVertex2i(0, height);
 			glTexCoord2i(1, 1); glVertex2i(width, height);
-			glTexCoord2i(1, 0); glVertex2i(width, 0);
 			glTexCoord2i(0, 0); glVertex2i(0, 0);
+			glTexCoord2i(1, 0); glVertex2i(width, 0);
 		}
 
 	glEnd();
@@ -425,16 +425,12 @@ void TGLEngine::DrawSitting(GLuint &texture, int &x, int &y, int width, int heig
 			glTexCoord2f(1.0f, 0.4f); glVertex2i(0, h05);
 			glTexCoord2f(1.0f, 0.0f); glVertex2i(0, h02);
 			glTexCoord2f(0.0f, 0.0f); glVertex2i(width, h02);
-		glEnd();
 
-		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, -0.25f); glVertex2i(widthOffset, h075);
 			glTexCoord2f(1.0f, -0.25f); glVertex2i(SITTING_WIDTH_OFFSET, h075);
 			glTexCoord2f(1.0f, -0.6f); glVertex2i(0, h05);
 			glTexCoord2f(0.0f, -0.6f); glVertex2i(width, h05);
-		glEnd();
 
-		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, 0.0f); glVertex2i(widthOffset, height);
 			glTexCoord2f(1.0f, 0.0f); glVertex2i(SITTING_WIDTH_OFFSET, height);
 			glTexCoord2f(1.0f, -0.25f); glVertex2i(SITTING_WIDTH_OFFSET, h075);
@@ -448,16 +444,12 @@ void TGLEngine::DrawSitting(GLuint &texture, int &x, int &y, int width, int heig
 			glTexCoord2f(1.0f, 0.4f); glVertex2i(widthOffset, h05);
 			glTexCoord2f(1.0f, 0.0f); glVertex2i(widthOffset, h02);
 			glTexCoord2f(0.0f, 0.0f); glVertex2i(SITTING_WIDTH_OFFSET, h02);
-		glEnd();
 
-		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, -0.25f); glVertex2i(0, h075);
 			glTexCoord2f(1.0f, -0.25f); glVertex2i(width, h075);
 			glTexCoord2f(1.0f, -0.6f); glVertex2i(widthOffset, h05);
 			glTexCoord2f(0.0f, -0.6f); glVertex2i(SITTING_WIDTH_OFFSET, h05);
-		glEnd();
 
-		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, height);
 			glTexCoord2f(1.0f, 0.0f); glVertex2i(width, height);
 			glTexCoord2f(1.0f, -0.25f); glVertex2i(width, h075);
@@ -481,22 +473,22 @@ void TGLEngine::DrawShadow(GLuint &texture, int &x, int &y, int width, int heigh
 	y += h2;
 	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 
-	glBegin(GL_QUADS);
+	glBegin(GL_TRIANGLE_STRIP);
 
-	if (mirror)
-	{
-		glTexCoord2i(0, 1); glVertex2i(width, h2);
-		glTexCoord2i(1, 1); glVertex2i(0, h2);
-		glTexCoord2i(1, 0); glVertex2i(width, 0);
-		glTexCoord2i(0, 0); glVertex2i(width * 2, 0);
-	}
-	else
-	{
-		glTexCoord2i(0, 1); glVertex2i(0, h2); //ë.í.
-		glTexCoord2i(1, 1); glVertex2i(width, h2); //ï.í.
-		glTexCoord2i(1, 0); glVertex2i(width * 2, 0); //ï.â.
-		glTexCoord2i(0, 0); glVertex2i(width, 0); //ë.â.
-	}
+		if (mirror)
+		{
+			glTexCoord2i(0, 1); glVertex2i(width, h2);
+			glTexCoord2i(1, 1); glVertex2i(0, h2);
+			glTexCoord2i(0, 0); glVertex2i(width * 2, 0);
+			glTexCoord2i(1, 0); glVertex2i(width, 0);
+		}
+		else
+		{
+			glTexCoord2i(0, 1); glVertex2i(0, h2);
+			glTexCoord2i(1, 1); glVertex2i(width, h2);
+			glTexCoord2i(0, 0); glVertex2i(width, 0);
+			glTexCoord2i(1, 0); glVertex2i(width * 2, 0);
+		}
 
 	glEnd();
 }
@@ -517,11 +509,11 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, int
 	float drawCountX = drawWidth / (float)width;
 	float drawCountY = drawHeight / (float)height;
 
-	glBegin(GL_QUADS);
+	glBegin(GL_TRIANGLE_STRIP);
 		glTexCoord2f(0.0f, drawCountY);			glVertex2i(0, drawHeight);
 		glTexCoord2f(drawCountX, drawCountY);	glVertex2i(drawWidth, drawHeight);
-		glTexCoord2f(drawCountX, 0.0f);			glVertex2i(drawWidth, 0);
 		glTexCoord2f(0.0f, 0.0f);				glVertex2i(0, 0);
+		glTexCoord2f(drawCountX, 0.0f);			glVertex2i(drawWidth, 0);
 	glEnd();
 }
 //---------------------------------------------------------------------------
@@ -642,11 +634,11 @@ void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, i
 		glLoadIdentity();
 		glTranslatef((GLfloat)X, (GLfloat)Y, 0.0f);
 
-		glBegin(GL_QUADS);
+		glBegin(GL_TRIANGLE_STRIP);
 			glTexCoord2f(0.0f, drawCountY);			glVertex2i(0, drawHeight);
 			glTexCoord2f(drawCountX, drawCountY);	glVertex2i(drawWidth, drawHeight);
-			glTexCoord2f(drawCountX, 0.0f);			glVertex2i(drawWidth, 0);
 			glTexCoord2f(0.0f, 0.0f);				glVertex2i(0, 0);
+			glTexCoord2f(drawCountX, 0.0f);			glVertex2i(drawWidth, 0);
 		glEnd();
 	}
 }

@@ -20,15 +20,23 @@
 #ifndef MacroManagerH
 #define MacroManagerH
 //---------------------------------------------------------------------------
+//Макрос менеджер
 class TMacroManager : public TBaseQueue
 {
 private:
+	//Время следующего выполнения
 	DWORD m_NextTimer;
+
+	//Время ожидания таргета
 	DWORD m_WaitForTargetTimer;
+
+	//Ожидание таргета от бинтов
 	bool m_WaitingBandageTarget;
-	
+
+	//Таблица скиллов дял использования
 	static BYTE m_SkillIndexTable[24];
 
+	//Выполнить команды подменю
 	void ProcessSubMenu();
 
 public:
@@ -38,14 +46,22 @@ public:
 	SETGET(bool, WaitingBandageTarget);
 	SETGET(DWORD, WaitForTargetTimer);
 
+	//Поиск макроса
 	TMacro *FindMacro(WORD key, bool alt, bool ctrl, bool shift);
 
+	//Загрузить макросы из конфига
 	void Load(string path);
+
+	//Сохранить макросы в конфиг
 	void Save(string path);
 
+	//Загрузить макросы из опций
 	void LoadFromOptions();
 
+	//Начать выполнение макроса
 	void Execute();
+
+	//Выполнить действие макроса (или набор действий)
 	MACRO_RETURN_CODE Process();
 };
 //---------------------------------------------------------------------------

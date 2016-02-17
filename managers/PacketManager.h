@@ -21,10 +21,10 @@
 #define PacketManagerH
 //---------------------------------------------------------------------------
 class TPacketManager;
-typedef void (TPacketManager::*msg_handler_t)(PBYTE buf, int size);
+typedef void (TPacketManager::*PACKET_FUNCTION)(PBYTE buf, int size);
 //---------------------------------------------------------------------------
 //Направление пакета
-enum msg_dir_t
+enum PACKET_DIRECTION
 {
 	DIR_SEND,	//От клиента серверу
 	DIR_RECV,	//От сервера клиенту
@@ -35,37 +35,66 @@ enum msg_dir_t
 class TMessageType
 {
 public:
-	const char *name;
-	int size;
-	msg_dir_t direction;
-	msg_handler_t handler;
+	//Название пакета
+	const char *Name;
+
+	//Размер пакета
+	int Size;
+
+	//Направление пакета
+	PACKET_DIRECTION Direction;
+
+	//Обработчик пакета
+	PACKET_FUNCTION Handler;
 };
 //---------------------------------------------------------------------------
+//Динамический размер пакета
 const int SIZE_VARIABLE = 0;
 //---------------------------------------------------------------------------
 #define HANDLER_PACKET(name)void Handle ##name (PBYTE buf, int size);
 //---------------------------------------------------------------------------
+//Пакет менеджер
 class TPacketManager
 {
 private:
+	//Список пакеторв
 	static TMessageType m_MessageTypes[];
 
+	//Версия протокола
 	CLIENT_VERSION m_ClientVersion;
-	
+
+	//Указатель на данные пакета
 	PBYTE Ptr;
-	
+
+	//Перемещение по данным пакета
 	inline void Move(int offset) {Ptr += offset;}
 
+	//Прочитать байт
 	BYTE ReadByte();
+
+	//Прочитать слово
 	WORD ReadWord();
+
+	//Прочитать двойное слово
 	DWORD ReadDWord();
+
+	//Прочитать чар
 	char ReadChar();
+
+	//Прочитать шорт
 	short ReadShort();
+
+	//Прочитать инт
 	int ReadInt();
+
+	//Прочитать ASCII строку
 	string ReadString(int size);
+
+	//Прочитать Unicode строку
 	wstring ReadUnicodeString(int size);
 
 protected:
+	//Обработчики пакетов
 	HANDLER_PACKET(LoginError)
 	HANDLER_PACKET(ServerList)
 	HANDLER_PACKET(RelayServer)
@@ -166,16 +195,20 @@ protected:
 public:
 	TPacketManager();
 	~TPacketManager() {}
-	
+
+	//Получить размер пакета
 	int GetPacketSize(BYTE msg);
+
+	//Обработчик пришедшего сообщения
 	void ReceiveHandler(PBYTE buf, int size);
 
 	void SetClientVersion(CLIENT_VERSION val);
 	CLIENT_VERSION GetClientVersion() const {return m_ClientVersion;}
 
+	//Получить указатель на структуру с информацией о пакете
 	TMessageType GetType(BYTE id) const {return m_MessageTypes[id];}
 };
-
+//---------------------------------------------------------------------------
 extern TPacketManager PacketManager;
 //---------------------------------------------------------------------------
 #endif

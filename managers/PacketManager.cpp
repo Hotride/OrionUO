@@ -315,115 +315,115 @@ void TPacketManager::SetClientVersion(CLIENT_VERSION cver)
 	if (m_ClientVersion >= CV_500A)
 	{
 		CVPRINT("Set new length for packet 0x0B (>= 5.0.0a)\n");
-		m_MessageTypes[0x0B].size = 0x07;
+		m_MessageTypes[0x0B].Size = 0x07;
 		CVPRINT("Set new length for packet 0x16 (>= 5.0.0a)\n");
-		m_MessageTypes[0x16].size = SIZE_VARIABLE;
+		m_MessageTypes[0x16].Size = SIZE_VARIABLE;
 		CVPRINT("Set new length for packet 0x31 (>= 5.0.0a)\n");
-		m_MessageTypes[0x31].size = SIZE_VARIABLE;
+		m_MessageTypes[0x31].Size = SIZE_VARIABLE;
 	}
 	else
 	{
 		CVPRINT("Set standart length for packet 0x0B (< 5.0.0a)\n");
-		m_MessageTypes[0x0B].size = 0x10A;
+		m_MessageTypes[0x0B].Size = 0x10A;
 		CVPRINT("Set standart length for packet 0x16 (< 5.0.0a)\n");
-		m_MessageTypes[0x16].size = 0x01;
+		m_MessageTypes[0x16].Size = 0x01;
 		CVPRINT("Set standart length for packet 0x31 (< 5.0.0a)\n");
-		m_MessageTypes[0x31].size = 0x01;
+		m_MessageTypes[0x31].Size = 0x01;
 	}
 
 	if (m_ClientVersion >= CV_5090)
 	{
 		CVPRINT("Set new length for packet 0xE1 (>= 5.0.9.0)\n");
-		m_MessageTypes[0xE1].size = SIZE_VARIABLE;
+		m_MessageTypes[0xE1].Size = SIZE_VARIABLE;
 	}
 	else
 	{
 		CVPRINT("Set standart length for packet 0xE1 (<= 5.0.9.0)\n");
-		m_MessageTypes[0xE1].size = 0x09;
+		m_MessageTypes[0xE1].Size = 0x09;
 	}
 
 	if (m_ClientVersion >= CV_6013)
 	{
 		CVPRINT("Set new length for packet 0xE3 (>= 6.0.1.3)\n");
-		m_MessageTypes[0xE3].size = SIZE_VARIABLE;
+		m_MessageTypes[0xE3].Size = SIZE_VARIABLE;
 		CVPRINT("Set new length for packet 0xE6 (>= 6.0.1.3)\n");
-		m_MessageTypes[0xE6].size = 0x05;
+		m_MessageTypes[0xE6].Size = 0x05;
 		CVPRINT("Set new length for packet 0xE7 (>= 6.0.1.3)\n");
-		m_MessageTypes[0xE7].size = 0x0C;
+		m_MessageTypes[0xE7].Size = 0x0C;
 		CVPRINT("Set new length for packet 0xE8 (>= 6.0.1.3)\n");
-		m_MessageTypes[0xE8].size = 0x0D;
+		m_MessageTypes[0xE8].Size = 0x0D;
 		CVPRINT("Set new length for packet 0xE9 (>= 6.0.1.3)\n");
-		m_MessageTypes[0xE9].size = 0x4B;
+		m_MessageTypes[0xE9].Size = 0x4B;
 		CVPRINT("Set new length for packet 0xEA (>= 6.0.1.3)\n");
-		m_MessageTypes[0xEA].size = 0x03;
+		m_MessageTypes[0xEA].Size = 0x03;
 	}
 	else
 	{
 		CVPRINT("Set standart length for packet 0xE3 (<= 6.0.1.3)\n");
-		m_MessageTypes[0xE3].size = 0x4D;
+		m_MessageTypes[0xE3].Size = 0x4D;
 		CVPRINT("Set standart length for packet 0xE6 (<= 6.0.1.3)\n");
-		m_MessageTypes[0xE6].size = SIZE_VARIABLE;
+		m_MessageTypes[0xE6].Size = SIZE_VARIABLE;
 		CVPRINT("Set standart length for packet 0xE7 (<= 6.0.1.3)\n");
-		m_MessageTypes[0xE7].size = SIZE_VARIABLE;
+		m_MessageTypes[0xE7].Size = SIZE_VARIABLE;
 		CVPRINT("Set standart length for packet 0xE8 (<= 6.0.1.3)\n");
-		m_MessageTypes[0xE8].size = SIZE_VARIABLE;
+		m_MessageTypes[0xE8].Size = SIZE_VARIABLE;
 		CVPRINT("Set standart length for packet 0xE9 (<= 6.0.1.3)\n");
-		m_MessageTypes[0xE9].size = SIZE_VARIABLE;
+		m_MessageTypes[0xE9].Size = SIZE_VARIABLE;
 		CVPRINT("Set standart length for packet 0xEA (<= 6.0.1.3)\n");
-		m_MessageTypes[0xEA].size = SIZE_VARIABLE;
+		m_MessageTypes[0xEA].Size = SIZE_VARIABLE;
 	}
 
 	if (m_ClientVersion >= CV_6017)
 	{
 		CVPRINT("Set new length for packet 0x08 (>= 6.0.1.7)\n");
-		m_MessageTypes[0x08].size = 0x0F;
+		m_MessageTypes[0x08].Size = 0x0F;
 		CVPRINT("Set new length for packet 0x25 (>= 6.0.1.7)\n");
-		m_MessageTypes[0x25].size = 0x15;
+		m_MessageTypes[0x25].Size = 0x15;
 	}
 	else
 	{
 		CVPRINT("Set standart length for packet 0x08 (<= 6.0.1.7)\n");
-		m_MessageTypes[0x08].size = 0x0E;
+		m_MessageTypes[0x08].Size = 0x0E;
 		CVPRINT("Set standart length for packet 0x25 (<= 6.0.1.7)\n");
-		m_MessageTypes[0x25].size = 0x14;
+		m_MessageTypes[0x25].Size = 0x14;
 	}
 
 	if (m_ClientVersion == CV_6060)
 	{
 		CVPRINT("Set new length for packet 0xEE (>= 6.0.6.0)\n");
-		m_MessageTypes[0xEE].size = 0x2000;
+		m_MessageTypes[0xEE].Size = 0x2000;
 		CVPRINT("Set new length for packet 0xEF (>= 6.0.6.0)\n");
-		m_MessageTypes[0xEF].size = 0x2000;
+		m_MessageTypes[0xEF].Size = 0x2000;
 		CVPRINT("Set new length for packet 0xF1 (>= 6.0.6.0)\n");
-		m_MessageTypes[0xF1].size = 0x09;
+		m_MessageTypes[0xF1].Size = 0x09;
 	}
 	else
 	{
 		CVPRINT("Set standart length for packet 0xEE (<= 6.0.6.0)\n");
-		m_MessageTypes[0xEE].size = SIZE_VARIABLE;
+		m_MessageTypes[0xEE].Size = SIZE_VARIABLE;
 		CVPRINT("Set standart length for packet 0xEF (<= 6.0.6.0)\n");
-		m_MessageTypes[0xEF].size = 0x15;
+		m_MessageTypes[0xEF].Size = 0x15;
 		CVPRINT("Set standart length for packet 0xF1 (<= 6.0.6.0)\n");
-		m_MessageTypes[0xF1].size = SIZE_VARIABLE;
+		m_MessageTypes[0xF1].Size = SIZE_VARIABLE;
 	}
 
 	if (m_ClientVersion >= CV_60142)
 	{
 		CVPRINT("Set new length for packet 0xB9 (>= 6.0.14.2)\n");
-		m_MessageTypes[0xB9].size = 0x05;
+		m_MessageTypes[0xB9].Size = 0x05;
 	}
 	else
 	{
 		CVPRINT("Set standart length for packet 0xB9 (<= 6.0.14.2)\n");
-		m_MessageTypes[0xB9].size = 0x03;
+		m_MessageTypes[0xB9].Size = 0x03;
 	}
 
 	if (m_ClientVersion >= CV_7000)
 	{
 		CVPRINT("Set new length for packet 0xEE (>= 7.0.0.0)\n");
-		m_MessageTypes[0xEE].size = 0x2000;
+		m_MessageTypes[0xEE].Size = 0x2000;
 		CVPRINT("Set new length for packet 0xEF (>= 7.0.0.0)\n");
-		m_MessageTypes[0xEF].size = 0x2000;
+		m_MessageTypes[0xEF].Size = 0x2000;
 		/*CVPRINT("Set new length for packet 0xF0 (>= 7.0.0.0)\n");
 		m_MessageTypes[0xF0].size = 0x2000;
 		CVPRINT("Set new length for packet 0xF1 (>= 7.0.0.0)\n");
@@ -434,9 +434,9 @@ void TPacketManager::SetClientVersion(CLIENT_VERSION cver)
 	else
 	{
 		CVPRINT("Set standart length for packet 0xEE (<= 7.0.0.0)\n");
-		m_MessageTypes[0xEE].size = SIZE_VARIABLE;
+		m_MessageTypes[0xEE].Size = SIZE_VARIABLE;
 		CVPRINT("Set standart length for packet 0xEF (<= 7.0.0.0)\n");
-		m_MessageTypes[0xEF].size = 0x15;
+		m_MessageTypes[0xEF].Size = 0x15;
 		/*CVPRINT("Set standart length for packet 0xF0 (<= 7.0.0.0)\n");
 		m_MessageTypes[0xF0].size = SIZE_VARIABLE;
 		CVPRINT("Set standart length for packet 0xF1 (<= 7.0.0.0)\n");
@@ -448,47 +448,47 @@ void TPacketManager::SetClientVersion(CLIENT_VERSION cver)
 	if (m_ClientVersion >= CV_7090)
 	{
 		CVPRINT("Set new length for packet 0x24 (>= 7.0.9.0)\n");
-		m_MessageTypes[0x24].size = 0x09;
+		m_MessageTypes[0x24].Size = 0x09;
 		CVPRINT("Set new length for packet 0x99 (>= 7.0.9.0)\n");
-		m_MessageTypes[0x99].size = 0x1E;
+		m_MessageTypes[0x99].Size = 0x1E;
 		CVPRINT("Set new length for packet 0xBA (>= 7.0.9.0)\n");
-		m_MessageTypes[0xBA].size = 0x0A;
+		m_MessageTypes[0xBA].Size = 0x0A;
 		CVPRINT("Set new length for packet 0xF3 (>= 7.0.9.0)\n");
-		m_MessageTypes[0xF3].size = 0x1A;
+		m_MessageTypes[0xF3].Size = 0x1A;
 
 		//В клиенте 7.0.8.2 уже изменено
 		CVPRINT("Set new length for packet 0xF1 (>= 7.0.9.0)\n");
-		m_MessageTypes[0xF1].size = 0x09;
+		m_MessageTypes[0xF1].Size = 0x09;
 		CVPRINT("Set new length for packet 0xF2 (>= 7.0.9.0)\n");
-		m_MessageTypes[0xF2].size = 0x19;
+		m_MessageTypes[0xF2].Size = 0x19;
 	}
 	else
 	{
 		CVPRINT("Set standart length for packet 0x24 (<= 7.0.9.0)\n");
-		m_MessageTypes[0x24].size = 0x07;
+		m_MessageTypes[0x24].Size = 0x07;
 		CVPRINT("Set standart length for packet 0x99 (<= 7.0.9.0)\n");
-		m_MessageTypes[0x99].size = 0x1A;
+		m_MessageTypes[0x99].Size = 0x1A;
 		CVPRINT("Set standart length for packet 0xBA (<= 7.0.9.0)\n");
-		m_MessageTypes[0xBA].size = 0x06;
+		m_MessageTypes[0xBA].Size = 0x06;
 		CVPRINT("Set standart length for packet 0xF3 (<= 7.0.9.0)\n");
-		m_MessageTypes[0xF3].size = 0x18;
+		m_MessageTypes[0xF3].Size = 0x18;
 
 		//В клиенте 7.0.8.2 уже изменено
 		CVPRINT("Set standart length for packet 0xF1 (<= 7.0.9.0)\n");
-		m_MessageTypes[0xF1].size = SIZE_VARIABLE;
+		m_MessageTypes[0xF1].Size = SIZE_VARIABLE;
 		CVPRINT("Set standart length for packet 0xF2 (<= 7.0.9.0)\n");
-		m_MessageTypes[0xF2].size = SIZE_VARIABLE;
+		m_MessageTypes[0xF2].Size = SIZE_VARIABLE;
 	}
 
 	if (m_ClientVersion >= CV_70180)
 	{
 		CVPRINT("Set new length for packet 0x00 (>= 7.0.18.0)\n");
-		m_MessageTypes[0x00].size = 0x6A;
+		m_MessageTypes[0x00].Size = 0x6A;
 	}
 	else
 	{
 		CVPRINT("Set standart length for packet 0x24 (<= 7.0.18.0)\n");
-		m_MessageTypes[0x00].size = 0x68;
+		m_MessageTypes[0x00].Size = 0x68;
 	}
 }
 //---------------------------------------------------------------------------
@@ -604,7 +604,7 @@ int TPacketManager::GetPacketSize(BYTE msg)
 	if ((int)msg < 0 || (int)msg >= 0x100)
 		return -1;
 
-	return m_MessageTypes[(int)msg].size;
+	return m_MessageTypes[(int)msg].Size;
 }
 //---------------------------------------------------------------------------
 void TPacketManager::ReceiveHandler(PBYTE buf, int size)
@@ -614,23 +614,23 @@ void TPacketManager::ReceiveHandler(PBYTE buf, int size)
 	
 	TMessageType &type = m_MessageTypes[*buf];
 
-	trace_printf("--- ^(%d) r(+%d => %d) Server:: %s\n", ticks - g_LastPacketTime, size, g_TotalRecvSize, type.name);
+	trace_printf("--- ^(%d) r(+%d => %d) Server:: %s\n", ticks - g_LastPacketTime, size, g_TotalRecvSize, type.Name);
 	TDUMP(buf, size);
 	
 	g_LastPacketTime = ticks;
 
-	if (type.direction != DIR_RECV && type.direction != DIR_BOTH)
+	if (type.Direction != DIR_RECV && type.Direction != DIR_BOTH)
 		warning_printf("message direction invalid: 0x%02X\n", *buf);
-	else if (type.handler != 0)
+	else if (type.Handler != 0)
 	{
 		if (PluginManager->PacketRecv(buf, size))
 		{
 			Ptr = buf + 1;
 
-			if (!type.size)
+			if (!type.Size)
 				Ptr += 2;
 
-			(this->*(type.handler))(buf, size);
+			(this->*(type.Handler))(buf, size);
 		}
 	}
 }

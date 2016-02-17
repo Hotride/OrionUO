@@ -20,59 +20,79 @@
 #ifndef AnimationManagerH
 #define AnimationManagerH
 //---------------------------------------------------------------------------
+//Структура с информацией о тени
 struct SHADOW_DATA
 {
+	//Индекс текстуры
 	GLuint Texture;
+
+	//Экранные координаты объекта
 	int DrawX;
 	int DrawY;
+
+	//Значение Z-buffer'а
 	int ZBuffer;
+
+	//Габариты изображения
 	int Width;
 	int Height;
+
+	//Перевернутая картинка или нет
 	bool Mirror;
 };
 //---------------------------------------------------------------------------
+//Менеджер анимаций
 class TAnimationManager
 {
 private:
+	//Адреса файлов в памяти
 	DWORD m_AddressIdx[6];
 	DWORD m_AddressMul[6];
 	DWORD m_SizeIdx[6];
 
+	//Информация о текущем кадре
 	WORD m_Color;
 	int m_AnimGroup;
 	BYTE m_Direction;
 	bool m_Grayed;
 	bool m_Sitting;
-	
+
+	//Данные о тенях
 	static const int MAX_SHADOWS_COUNT = 100;
 	SHADOW_DATA m_ShadowList[MAX_SHADOWS_COUNT];
 	int m_ShadowCount;
 
+	//Упорядоченный список слоев для корректного порядка прорисовки для всех направлений персонажа
 	static const int m_LayerCount = 19;
 	static int m_UsedLayers[8][m_LayerCount];
 
+	//Данные анимаций
 	TIndexAnimation m_DataIndex[0x0800];
 
 	TLinkedList *m_UsedAnimList;
 
-    float LUMA_THRESHOLD;
-    float ALPHA_SCALE;
-    int ALPHA_BITS;
-    int BIT_STEP;
+	float LUMA_THRESHOLD;
+	float ALPHA_SCALE;
+	int ALPHA_BITS;
+	int BIT_STEP;
 
+	//Добавление тени в список
 	void AddShadow(GLuint texture, int drawX, int drawY, int zBuffer, int width, int height, bool mirror);
 
+	//Проверка пикселей картинки в указанных координатах
 	bool TestImagePixels(TTextureAnimationDirection *direction, BYTE &frame, WORD &id, int &checkX, int &checkY);
 	bool TestPixels(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, WORD id = 0x0000);
 
 	float getLuma(unsigned char&, unsigned char&, unsigned char&);
 	void setAlphaAt(std::vector<bool>&, PDWORD, short&, short&, int&, int&, float&, float&);
 
+	//Обобщенная фукнция рисования
 	void Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id = 0);
 public:
 	TAnimationManager();
 	~TAnimationManager();
-	
+
+	//Инициализация адресов
 	void Init(int idx, DWORD AddressIdx, DWORD AddressMul, DWORD SizeIdx)
 	{
 		m_AddressIdx[idx] = AddressIdx;
@@ -87,31 +107,49 @@ public:
 
 	void EstimateImageCornerAlpha(PDWORD pixels, short &width, short &height, float alpha_scale = 5.0f, float luma_threshold = 18.0f);
 
+	//Загрузка файла корректора индексов картинок анимаций
 	void InitBodyconv(PDWORD verdata, string fName);
+
+	//Загрузка данных
 	void Load(PDWORD verdata);
 
+	//Получение ссылки на указанный фрэйм
 	TTextureAnimationFrame *GetFrame(TGameObject *obj, BYTE &frameIndex, WORD id = 0x0000);
 
+	//Очистка неиспользуемых текстур
 	void ClearUnusedTextures(DWORD ticks);
 
+	//Загрузка картинок для указанного направления персонажа
 	bool ExecuteDirectionGroup(TTextureAnimationDirection *direction, WORD &id, int &offset);
 
+	//Коррекция направления и режима зеркального отображения
 	void GetAnimDirection(BYTE &dir, bool &mirror);
 
+	//Получить ссылку на данные анимации
 	TTextureAnimation *GetAnimation(WORD id);
-	
+
+	//Отрисовать персонажа
 	void DrawCharacter(TGameCharacter *obj, int x, int y, int z);
+
+	//Проверить наличие пикселя персонажа в указанных координатах
 	bool CharacterPixelsInXY(TGameCharacter *obj, int X, int Y, int Z);
 
+	//Отрисовать труп
 	void DrawCorpse(TGameItem *obj, int x, int y, int z);
+
+	//Проверить наличие пикселя трупа в указанных координатах
 	bool CorpsePixelsInXY(TGameItem *obj, int x, int y, int z);
 
+	//Получить индекс группы смерти анимации
 	BYTE GetDieGroupIndex(WORD id, bool second);
+
+	//Получить индекс группы по индексу картинки
 	ANIMATION_GROUPS GetGroupIndex(WORD id);
 
+	//Отрисовать тени
 	void DrawShadows();
 };
-
+//---------------------------------------------------------------------------
 extern TAnimationManager *AnimationManager;
 //---------------------------------------------------------------------------
 #endif

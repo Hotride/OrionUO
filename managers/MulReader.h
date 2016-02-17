@@ -20,6 +20,7 @@
 #ifndef MulReaderH
 #define MulReaderH
 //---------------------------------------------------------------------------
+//Читалка текстур
 class TMulReader
 {
 private:

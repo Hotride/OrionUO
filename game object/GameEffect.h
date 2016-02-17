@@ -20,24 +20,27 @@
 #ifndef GameEffectH
 #define GameEffectH
 //--------------------------------------------------------------------------
+//Игровой эффект
 class TGameEffect : public TRenderWorldObject
 {
 //private:
 protected:
-	EFFECT_TYPE m_EffectType;
-	DWORD m_DestSerial;
-	WORD m_DestX;
-	WORD m_DestY;
-	char m_DestZ;
-	BYTE m_Speed;
-	DWORD m_Duration;
-	bool m_FixedDirection;
-	bool m_Explode;
-	DWORD m_RenderMode;
+	EFFECT_TYPE m_EffectType; //Тип эффекта
 
-	int m_AnimIndex;
-	int m_Increment;
-	DWORD m_LastChangeFrameTime;
+	DWORD m_DestSerial; //Серийник назначения
+	WORD m_DestX; //Координата назначения по оси X
+	WORD m_DestY; //Координата назначения по оси Y
+	char m_DestZ; //Координата назначения по оси Z
+
+	BYTE m_Speed; //Скорость
+	DWORD m_Duration; //Время жизни
+	bool m_FixedDirection; //Изменять направление картинки при полете эффекта?
+	bool m_Explode; //Взрывать по достижении цели?
+	DWORD m_RenderMode; //Режим отображения эффекта
+
+	int m_AnimIndex; //Индекс картинки
+	int m_Increment; //Смещение от базового индекса
+	DWORD m_LastChangeFrameTime; //Последнее время изменения картинки
 public:
 	TGameEffect();
 	virtual ~TGameEffect();
@@ -58,14 +61,20 @@ public:
 	SETGET(DWORD, LastChangeFrameTime);
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
-	
+
+	//Получить текущий индекс картинки
 	WORD GetCurrentGraphic();
+
+	//Вычислить текущий индекс картинки
 	WORD CalculateCurrentGraphic();
+
+	//Применение режима отображения
 	void ApplyRenderMode();
 
 	bool IsEffectObject() {return true;}
 };
 //--------------------------------------------------------------------------
+//Движущийся эффект
 class TGameEffectMoving : public TGameEffect
 {
 private:
@@ -98,11 +107,12 @@ public:
 	void Update();
 };
 //--------------------------------------------------------------------------
+//Эффект перемещения предмета
 class TGameEffectDrag : public TGameEffect
 {
 private:
-	int m_OffsetX;
-	int m_OffsetY;
+	int m_OffsetX; //Смещение по оси X
+	int m_OffsetY; //Смещение по оси Y
 public:
 	TGameEffectDrag();
 	virtual ~TGameEffectDrag();

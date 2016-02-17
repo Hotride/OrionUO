@@ -20,20 +20,29 @@
 #ifndef ColorManagerH
 #define ColorManagerH
 //---------------------------------------------------------------------------
+//Структура цветов для отправки в шейдер
 struct INT_HUES
 {
 	GLint Palette[32];
 };
 //---------------------------------------------------------------------------
+//Менеджер цветов
 class TColorManager : public IColorManager
 {
 private:
+	//Указатель на палитру
 	PHUES_GROUP m_HuesRange;
+
+	//Указатель на список цветов для шейдера
 	INT_HUES *m_HuesInt;
+
+	//Количество цветов
 	int m_HuesCount;
 
+	//Данные для радара
 	WORD m_Radarcol[0x10000];
 
+	//Данные из palette.mul
 	PALETTE_BLOCK m_Palette[256];
 
 public:
@@ -41,15 +50,22 @@ public:
 	~TColorManager();
 
 	int GetHuesCount() const {return m_HuesCount;}
+
+	//Патч блока цветов из вердаты
 	void SetHuesBlock(int Index, PVERDATA_HUES_GROUP group);
 
+	//Создание палитры цветов для шейдера
 	void CreateHuesPalette();
+
+	//Отправка цветов в шейдер
 	void SendColorsToShader(WORD &color);
 
+	//Конвертирование цветов
 	WORD Color32To16(DWORD &C);
 	DWORD Color16To32(WORD &C);
 	WORD ConvertToGray(WORD &C);
 
+	//Получить цвет
 	WORD GetRadarColorData(WORD &C);
 	DWORD GetRadarColor(WORD &C);
 	DWORD GetPolygoneColor(WORD C, WORD Color);
@@ -57,7 +73,7 @@ public:
 	DWORD GetColor(WORD &C, WORD Color);
 	DWORD GetPartialHueColor(WORD &C, WORD Color);
 };
-
+//---------------------------------------------------------------------------
 extern TColorManager *ColorManager;
 //---------------------------------------------------------------------------
 #endif

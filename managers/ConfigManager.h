@@ -16,10 +16,11 @@
 **
 *****************************************************************************
 */
-//---------------------------------------------------------------------------
+//--------------------------------------------------------------------------
 #ifndef ConfigManagerH
 #define ConfigManagerH
 //--------------------------------------------------------------------------
+//Менеджер конфига
 class TConfigManager
 {
 private:
@@ -102,9 +103,11 @@ private:
 public:
 	TConfigManager() {}
 	~TConfigManager() {}
-	
+
+	//Инициализация
 	void Init();
-	
+
+	//Проставление значений по-умолчанию
 	void DefaultPage1();
 	void DefaultPage2();
 	void DefaultPage3();
@@ -194,9 +197,13 @@ public:
 	SETGET(bool, ObscenityFilter);
 	SETGET(string, FilterPassword);
 
+	//Получить цвет исходя из "злобности"
 	WORD GetColorByNotoriety(BYTE notoriety);
 
+	//Загрузка конфига
 	void Load(string path);
+
+	//Сохранение конфига
 	void Save(string path);
 };
 //--------------------------------------------------------------------------

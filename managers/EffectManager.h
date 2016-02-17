@@ -16,10 +16,11 @@
 **
 *****************************************************************************
 */
-//---------------------------------------------------------------------------
+//--------------------------------------------------------------------------
 #ifndef EffectManagerH
 #define EffectManagerH
 //--------------------------------------------------------------------------
+//Менеджер эффектов
 class TEffectManager : public TBaseQueue
 {
 private:
@@ -27,15 +28,22 @@ public:
 	TEffectManager() : TBaseQueue() {}
 	virtual ~TEffectManager() {}
 
+	//Добавить эффект
 	void AddEffect(TGameEffect *effect);
+
+	//Удалить эффект
 	void RemoveEffect(TGameEffect *effect);
 
+	//Создать эффект взрыва
 	void CreateExplodeEffect(TGameEffect *effect);
 
+	//Обновление эффектов
 	void UpdateEffects();
+
+	//Удаление эффектов, вышедших за пределы экрана
 	void RemoveRangedEffects();
 };
-
+//--------------------------------------------------------------------------
 extern TEffectManager *EffectManager;
 //--------------------------------------------------------------------------
 #endif

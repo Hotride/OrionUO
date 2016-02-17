@@ -20,6 +20,7 @@
 #ifndef OptionsMacroManagerH
 #define OptionsMacroManagerH
 //---------------------------------------------------------------------------
+//Макрос менеджер для опций
 class TOptionsMacroManager : public TBaseQueue
 {
 private:
@@ -27,7 +28,10 @@ public:
 	TOptionsMacroManager();
 	virtual ~TOptionsMacroManager();
 
+	//Загрузить из списка макросов
 	void LoadFromMacro();
+
+	//Проверка на TEntryText
 	bool EntryPointerHere();
 };
 //---------------------------------------------------------------------------
