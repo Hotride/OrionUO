@@ -23,12 +23,17 @@
 class TMainScreen : public TBaseScreen
 {
 private:
+	//Флаг сохранения пароля
 	bool m_SavePassword;
+
+	//Флаг автологина
 	bool m_AutoLogin;
 
+	//Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_MS_QUIT = 1;
 	static const BYTE ID_SMOOTH_MS_CONNECT = 2;
 
+	//Идентификаторы кнопок
 	static const int ID_MS_QUIT = 1;
 	static const int ID_MS_ARROW_NEXT = 2;
 	static const int ID_MS_ACCOUNT = 3;
@@ -36,11 +41,16 @@ private:
 	static const int ID_MS_SAVEPASSWORD = 5;
 	static const int ID_MS_AUTOLOGIN = 6;
 
+	//Объекты текста
 	TTextTexture m_Text[6];
 
+	//Шифрование пароля для сохранения в конфиг
 	string CryptPW(const char *buf, int len);
+
+	//Расшифровка пароля
 	string DecryptPW(const char *buf, int len);
 
+	//Обработка события после плавного затемнения экрана
 	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
 	TMainScreen();
@@ -48,25 +58,33 @@ public:
 
 	SETGET(bool, SavePassword);
 	SETGET(bool, AutoLogin);
-	
+
+	//Загрузка конфига
 	void LoadGlobalConfig();
+
+	//Сохранение конфига
 	void SaveGlobalConfig();
 
+	//Инициализация
 	void Init();
 
+	//Инициализация тултипа
 	void InitTooltip();
 
+	//Коля для ввода аккаунта и пароля
 	TEntryText *m_Account;
 	TEntryText *m_Password;
 
+	//Рисование экрана
 	int Render(bool mode);
-	
+
+	//События
 	void OnLeftMouseDown();
 	void OnLeftMouseUp();
 	void OnCharPress(WPARAM wparam, LPARAM lparam);
 	void OnKeyPress(WPARAM wparam, LPARAM lparam);
 };
-
+//---------------------------------------------------------------------------
 extern TMainScreen *MainScreen;
 //---------------------------------------------------------------------------
 #endif

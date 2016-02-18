@@ -23,24 +23,28 @@
 class TGameBlockedScreen : public TBaseScreen
 {
 private:
+	//Код блокировки
 	BYTE m_Code;
 
 public:
 	TGameBlockedScreen();
 	~TGameBlockedScreen();
-	
+
+	//Инициализация
 	void Init();
-	
+
 	SETGET(BYTE, Code);
 
+	//Рисование экрана
 	int Render(bool mode);
-	
+
+	//События
 	void OnLeftMouseDown();
 	void OnLeftMouseUp();
 	void OnCharPress(WPARAM wparam, LPARAM lparam);
 	void OnKeyPress(WPARAM wparam, LPARAM lparam);
 };
-
+//---------------------------------------------------------------------------
 extern TGameBlockedScreen *GameBlockedScreen;
 //---------------------------------------------------------------------------
 #endif

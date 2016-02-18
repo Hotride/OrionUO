@@ -23,12 +23,15 @@
 class TServerScreen : public TBaseScreen
 {
 private:
+	//Объекты текста
 	TTextTexture m_Text[2];
 
+	//Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_SS_QUIT = 1;
 	static const BYTE ID_SMOOTH_SS_SELECT_SERVER = 2;
 	static const BYTE ID_SMOOTH_SS_GO_SCREEN_MAIN = 3;
 
+	//Идентификаторы кнопок
 	static const int ID_SS_QUIT = 1;
 	static const int ID_SS_ARROW_PREV = 2;
 	static const int ID_SS_ARROW_NEXT = 3;
@@ -42,30 +45,43 @@ private:
 	static const int ID_SS_SCROLLBAR_BACKGROUND = 11;
 	static const int ID_SS_SERVER_LIST = 20;
 
+	//Получить высоту списка серверов
 	int GetServerListHeight();
+
+	//Пролистать список
 	void ListingList(bool direction, int divizor = 1);
 
+	//Последнее время изменения положения информации в скроллбоксе
 	DWORD m_LastScrollChangeTime;
+
+	//Смещение в пикселях отображаемой информации в скроллбоксе
 	int m_PixelOffset;
+
+	//Временная переменная для идентификации выбранного сервера
 	int m_SelectionServerTempValue;
 
+	//Обработка события после плавного затемнения экрана
 	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
 	TServerScreen();
 	virtual ~TServerScreen();
 
+	//Инициализация
 	void Init();
 
+	//Инициализация тултипа
 	void InitTooltip();
 
+	//Рисование экрана
 	int Render(bool mode);
 	
+	//События
 	void OnLeftMouseDown();
 	void OnLeftMouseUp();
 	void OnMouseWheel(MOUSE_WHEEL_STATE state);
 	void OnKeyPress(WPARAM wparam, LPARAM lparam);
 };
-
+//---------------------------------------------------------------------------
 extern TServerScreen *ServerScreen;
 //---------------------------------------------------------------------------
 #endif

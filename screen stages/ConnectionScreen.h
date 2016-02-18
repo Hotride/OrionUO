@@ -23,22 +23,35 @@
 class TConnectionScreen : public TBaseScreen
 {
 private:
+	//Флаг поровала подключения
 	bool m_ConnectionFailed;
+
+	//Флаг подключения
 	bool m_Connected;
+
+	//Флаг завершения работы экрана
 	bool m_Completed;
+
+	//Код ошибки
 	int m_ErrorCode;
+
+	//Тип экрана
 	CONNECTION_SCREEN_TYPE m_Type;
-	
+
+	//Объекты текста
 	TTextTexture m_Text[32];
 
+	//Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_CS_GO_SCREEN_MAIN = 1;
 	static const BYTE ID_SMOOTH_CS_GO_SCREEN_CHARACTER = 2;
 	static const BYTE ID_SMOOTH_CS_GO_SCREEN_PROFESSION = 3;
 	static const BYTE ID_SMOOTH_CS_SEND_DELETE = 4;
-	
+
+	//Идентификаторы кнопок
 	static const int ID_CS_OK = 1;
 	static const int ID_CS_CANCEL = 2;
 
+	//Обработка события после плавного затемнения экрана
 	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
 	TConnectionScreen();
@@ -50,15 +63,18 @@ public:
 	SETGET(int, ErrorCode);
 	SETGET(CONNECTION_SCREEN_TYPE, Type);
 
+	//Инициализация
 	void Init();
 
+	//Рисование экрана
 	int Render(bool mode);
-	
+
+	//События
 	void OnLeftMouseDown();
 	void OnLeftMouseUp();
 	void OnKeyPress(WPARAM wparam, LPARAM lparam);
 };
-
+//---------------------------------------------------------------------------
 extern TConnectionScreen *ConnectionScreen;
 //---------------------------------------------------------------------------
 #endif

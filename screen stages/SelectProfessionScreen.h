@@ -23,24 +23,38 @@
 class TSelectProfessionScreen : public TBaseScreen
 {
 private:
+	//Смещение в пикселях отображаемой информации в скроллбоксе
 	int m_PixelOffset;
+
+	//Последнее время изменения положения информации в скроллбоксе
 	DWORD m_LastScrollChangeTime;
+
+	//Выбранный навык
 	int m_SkillSelection;
 
+	//Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_SPS_QUIT = 1;
 	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_CHARACTER = 2;
 	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_GAME_CONNECT = 3;
 	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_CREATE = 4;
 
+	//Изменение ползунков характеристик
 	void ShuffleStats();
+
+	//Изменение ползунков навыков
 	void ShuffleSkills();
-	
+
+	//Пролистать список
 	void ListingList(bool direction, int divizor = 1);
+
+	//Получить высоту скроллбокса
 	int GetScrollBoxHeight();
 
+	//Объекты текста
 	TTextTexture m_TextStat[3];
 	TTextTexture m_TextSkillInList[56][2];
-	
+
+	//Идентификаторы кнопок
 	static const int ID_SPS_QUIT = 1;
 	static const int ID_SPS_ARROW_PREV = 2;
 	static const int ID_SPS_ARROW_NEXT = 3;
@@ -60,19 +74,24 @@ public:
 	TSelectProfessionScreen();
 	virtual ~TSelectProfessionScreen();
 
+	//Инициализация
 	void Init();
 
+	//Обработка события после плавного затемнения экрана
 	void ProcessSmoothAction(BYTE action = 0xFF);
 
+	//Инициализация тултипа
 	void InitTooltip();
 
+	//Рисование экрана
 	int Render(bool mode);
-	
+
+	//События
 	void OnLeftMouseDown();
 	void OnLeftMouseUp();
 	void OnMouseWheel(MOUSE_WHEEL_STATE state);
 };
-
+//---------------------------------------------------------------------------
 extern TSelectProfessionScreen *SelectProfessionScreen;
 //---------------------------------------------------------------------------
 #endif

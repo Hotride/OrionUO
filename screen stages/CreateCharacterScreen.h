@@ -23,6 +23,7 @@
 class TCreateCharacterScreen : public TBaseScreen
 {
 private:
+	//Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_CCS_QUIT = 1;
 	static const BYTE ID_SMOOTH_CCS_GO_SCREEN_CHARACTER = 2;
 	static const BYTE ID_SMOOTH_CCS_GO_SCREEN_CONNECT = 3;
@@ -31,21 +32,26 @@ private:
 public:
 	TCreateCharacterScreen();
 	virtual ~TCreateCharacterScreen();
-	
+
+	//Инициализация
 	void Init();
 
+	//Обработка события после плавного затемнения экрана
 	void ProcessSmoothAction(BYTE action = 0xFF);
 
+	//Инициализация тултипа
 	void InitTooltip();
 
+	//Рисование экрана
 	int Render(bool mode);
-	
+
+	//События
 	void OnLeftMouseDown();
 	void OnLeftMouseUp();
 	void OnCharPress(WPARAM wparam, LPARAM lparam);
 	void OnKeyPress(WPARAM wparam, LPARAM lparam);
 };
-
+//---------------------------------------------------------------------------
 extern TCreateCharacterScreen *CreateCharacterScreen;
 //---------------------------------------------------------------------------
 #endif

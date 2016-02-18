@@ -20,32 +20,51 @@
 #ifndef FrameBufferH
 #define FrameBufferH
 //---------------------------------------------------------------------------
+//Класс для работы с фрэймбуфером
 class TFrameBuffer
 {
 private:
+	//Габариты буфера
 	int m_Width;
 	int m_Height;
 
+	//Создан буфер и готов к использованию или нет
 	bool m_Ready;
-	
+
+	//Указатель на предыдущий фрэймбуфер
 	GLint m_OldFrameBuffer;
+
+	//Указатель на фрэймбуфер
 	GLuint m_FrameBuffer;
+
+	//Указатель на текстуру фрэймбуфера
 	GLuint m_Texture;
 public:
 	TFrameBuffer();
 	~TFrameBuffer();
-	
+
+	//Инициализациия
 	bool Init(int width, int height);
+
+	//Очистка фрэймбуфера
 	void Free();
+
+	//Завершение использования фрэймбуфера
 	void Release();
 
+	//Готов или нет буфер
 	bool Ready() const { return m_Ready; }
+
+	//Проверка готовности буфера с потенциальным пересозданием
 	bool Ready(int &width, int &height);
+
+	//Использование буфера
 	bool Use();
-	
+
+	//Отрисовать текстуру буфера
 	void Draw(int x, int y);
 };
-
+//---------------------------------------------------------------------------
 extern TFrameBuffer g_LightBuffer;
 //---------------------------------------------------------------------------
 #endif

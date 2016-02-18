@@ -22,11 +22,17 @@
 //---------------------------------------------------------------------------
 #include <windows.h>
 //---------------------------------------------------------------------------
+//Фрагментированное сообщение
 class TMessageFragment
 {
 private:
+	//Фрагмент данных
 	PBYTE m_data;
+
+	//Полученный размер данных
 	int m_size;
+
+	//Размер сообщения
 	int m_msg_size;
 
 public:
@@ -41,30 +47,54 @@ public:
 	int Size() {return m_size;}
 };
 //---------------------------------------------------------------------------
+//Базовый класс пакета
 class TPacket
 {
 private:
+	//Размер пакета
 	int m_Size;
+
+	//Удалять ли пакет при удалении пакета? (статичный буфер или динамический)
 	bool m_RemoveBuffer;
 
 public:
 	TPacket(int size, bool removeBuffer = true);
 	virtual ~TPacket();
 
+	//Создать пакет указанного размера
 	virtual void Create(int size);
+
+	//Освободить память
 	virtual void Free();
+
+	//Отправить пакет
 	virtual void Send(int size = 0);
 	
 	SETGETEX(int, Size);
 	SETGET(bool, RemoveBuffer);
+
+	//Указатель на буфер
 	PBYTE Buffer;
+
+	//Указатель на позицию в буфере
 	PBYTE Ptr;
-	
+
+	//Переместиться по буферу
 	void Move(int offset) {Ptr += offset;}
+
+	//Записать байт
 	void WriteByte(BYTE val, int offset = 0);
+
+	//Записать слово
 	void WriteWord(WORD val, int offset = 0);
+
+	//Записать двойное слово
 	void WriteDWord(DWORD val, int offset = 0);
+
+	//Записать строку
 	void WriteString(const char *str, int size, int offset = 0);
+
+	//Записать массив байт
 	void WritePByte(PBYTE buf, int size, int offset = 0);
 };
 //---------------------------------------------------------------------------

@@ -23,14 +23,17 @@
 class TCharacterListScreen : public TBaseScreen
 {
 private:
+	//Объект текста
 	TTextTexture m_Text;
 
+	//Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_CLS_QUIT = 1;
 	static const BYTE ID_SMOOTH_CLS_CONNECT = 2;
 	static const BYTE ID_SMOOTH_CLS_SELECT_CHARACTER = 3;
 	static const BYTE ID_SMOOTH_CLS_GO_SCREEN_PROFESSION_SELECT = 4;
 	static const BYTE ID_SMOOTH_CLS_GO_SCREEN_DELETE = 5;
 
+	//Идентификаторы кнопок
 	static const int ID_CS_QUIT = 1;
 	static const int ID_CS_ARROW_PREV = 2;
 	static const int ID_CS_ARROW_NEXT = 3;
@@ -40,20 +43,25 @@ private:
 public:
 	TCharacterListScreen();
 	virtual ~TCharacterListScreen();
-	
+
+	//Инициализация
 	void Init();
 
+	//Обработка события после плавного затемнения экрана
 	void ProcessSmoothAction(BYTE action = 0xFF);
 
+	//Инициализация тултипа
 	void InitTooltip();
 
+	//Рисование экрана
 	int Render(bool mode);
 
+	//События
 	void OnLeftMouseDown();
 	void OnLeftMouseUp();
 	bool OnLeftMouseDoubleClick();
 };
-
+//---------------------------------------------------------------------------
 extern TCharacterListScreen *CharacterListScreen;
 //---------------------------------------------------------------------------
 #endif

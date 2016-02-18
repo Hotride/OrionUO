@@ -20,19 +20,24 @@
 #ifndef GameConsoleH
 #define GameConsoleH
 //---------------------------------------------------------------------------
+//Класс для работы с игровой консолью (чатик) снизу слева игрового окна
 class TGameConsole : public TEntryText
 {
 private:
+	//Тип консоли
 	GAME_CONSOLE_TEXT_TYPE m_Type;
 
+	//Тест данных на не стандартное сообщение
 	wstring IsSystemCommand(const wchar_t *text, int &len, int &member);
 
 public:
 	TGameConsole();
 	virtual ~TGameConsole();
 
+	//Отправить данные консоли
 	void Send();
 
+	//Отрисовать текст консоли
 	void DrawW(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
 };
 //---------------------------------------------------------------------------

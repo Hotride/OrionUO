@@ -24,6 +24,8 @@
 class TBaseScreen
 {
 protected:
+	//Индекс действия, которое необходимо совершить после окончания плавного
+	//перехода затемненного состояния экрана
 	BYTE m_SmoothScreenAction;
 
 public:
@@ -43,9 +45,16 @@ public:
 	virtual int CalculateScrollerAndTextPosition(int &currentLine, int &visibleLines, int &maxY, int currentY);
 	virtual int CalculateScrollerY(int &currentLine, int &visibleLines, int &maxY);
 
+	//Создание плавного затемнения экрана
 	virtual void CreateSmoothAction(BYTE action);
+
+	//Обработка события после перехода
 	virtual void ProcessSmoothAction(BYTE action = 0xFF) {}
+
+	//Вычисление состояния перехода
 	virtual int DrawSmoothMonitor();
+
+	//Наложение эффекта перехода
 	virtual void DrawSmoothMonitorEffect();
 
 	//Эвенты
