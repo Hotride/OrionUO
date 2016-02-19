@@ -21,7 +21,7 @@
 #define MulStrictH
 //--------------------------------------------------------------------------
 #pragma pack (push,1)
-//Основные структуры
+
 typedef struct VERDATA_HEADER
 {
 	DWORD FileID;
@@ -30,33 +30,33 @@ typedef struct VERDATA_HEADER
 	DWORD Size;
 	DWORD GumpData;
 } *PVERDATA_HEADER;
-
+//--------------------------------------------------------------------------
 typedef struct MAP_CELLS_EX
 {
 	WORD TileID;
 	WORD Color;
 	char Z;
 } *PMAP_CELLS_EX;
-
+//--------------------------------------------------------------------------
 typedef struct MAP_CELLS
 {
 	WORD TileID;
 	char Z;
 } *PMAP_CELLS;
-
+//--------------------------------------------------------------------------
 typedef struct MAP_BLOCK
 {
 	DWORD Header;
 	MAP_CELLS Cells[64];
 } *PMAP_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct STAIDX_BLOCK
 {
 	DWORD Position;
 	DWORD Size;
 	DWORD Unknown;
 } *PSTAIDX_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct STATICS_BLOCK
 {
 	WORD Color;
@@ -65,20 +65,20 @@ typedef struct STATICS_BLOCK
 	char Z;
 	WORD Hue;
 } *PSTATICS_BLOCK;
-
+//--------------------------------------------------------------------------
 struct LAND_TILES
 {
 	DWORD Flags;
 	WORD TexID;
 	char Name[20];
 };
-
+//--------------------------------------------------------------------------
 typedef struct LAND_GROUP
 {
 	DWORD Unknown;
 	LAND_TILES Tiles[32];
 } *PLAND_GROUP;
-
+//--------------------------------------------------------------------------
 struct STATIC_TILES
 {
 	DWORD Flags;
@@ -94,20 +94,20 @@ struct STATIC_TILES
 	BYTE Height;
 	char Name[20];
 };
-
+//--------------------------------------------------------------------------
 typedef struct STATIC_GROUP
 {
 	DWORD Unk;
 	STATIC_TILES Tiles[32];
 } *PSTATIC_GROUP;
-
+//--------------------------------------------------------------------------
 typedef struct MULTI_IDX_BLOCK
 {
 	DWORD Position;
 	DWORD Size;
 	DWORD Unknown;
 } *PMULTI_IDX_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct MULTI_BLOCK
 {
 	WORD ID;
@@ -116,7 +116,7 @@ typedef struct MULTI_BLOCK
 	short Z;
 	DWORD Flags;
 } *PMULTI_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct HUES_BLOCK
 {
 	WORD ColorTable[32];
@@ -124,13 +124,13 @@ typedef struct HUES_BLOCK
 	WORD TableEnd;
 	char Name[20];
 } *PHUES_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct HUES_GROUP
 {
 	DWORD Header;
 	HUES_BLOCK Entries[8];
 } *PHUES_GROUP;
-
+//--------------------------------------------------------------------------
 typedef struct VERDATA_HUES_BLOCK
 {
 	WORD ColorTable[32];
@@ -139,13 +139,13 @@ typedef struct VERDATA_HUES_BLOCK
 	char Name[20];
 	WORD Unk[32];
 } *PVERDATA_HUES_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct VERDATA_HUES_GROUP
 {
 	DWORD Header;
 	VERDATA_HUES_BLOCK Entries[8];
 } *PVERDATA_HUES_GROUP;
-
+//--------------------------------------------------------------------------
 typedef struct GUMP_IDX_BLOCK
 {
 	DWORD Position;
@@ -153,26 +153,26 @@ typedef struct GUMP_IDX_BLOCK
 	WORD Height;
 	WORD Width;
 } *PGUMP_IDX_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct GUMP_BLOCK
 {
 	WORD Value;
 	WORD Run;
 } *PGUMP_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct SKILLS_IDX_BLOCK
 {
 	DWORD Position;
 	DWORD Size;
 	DWORD Unknown;
 } *PSKILLS_IDX_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct SKILLS_BLOCK
 {
 	BYTE Button;
 	char *SkillName;
 } *PSKILLS_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct BODYCONV_DATA
 {
 	short Anim2;
@@ -188,7 +188,7 @@ typedef struct BODYCONV_DATA
 		Anim5 = -1;
 	}
 } *PBODYCONV_DATA;
-
+//--------------------------------------------------------------------------
 typedef struct ANIM_DATA
 {
 	char FrameData[64];
@@ -197,14 +197,14 @@ typedef struct ANIM_DATA
 	BYTE FrameInterval;
 	BYTE FrameStart;
 } *PANIM_DATA;
-
+//--------------------------------------------------------------------------
 typedef struct ART_IDX_BLOCK
 {
 	DWORD Position;
 	DWORD Size;
 	DWORD Unknown;
 } *PART_IDX_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct LIGHT_IDX_BLOCK
 {
 	DWORD Position;
@@ -212,7 +212,7 @@ typedef struct LIGHT_IDX_BLOCK
 	WORD Height;
 	WORD Width;
 } *PLIGHT_IDX_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct ANIM_FRAME_INFO
 {
 	short ImageCenterX;
@@ -234,14 +234,14 @@ typedef struct ANIM_FRAME_INFO
 		Address = NULL;
 	}
 } *PANIM_FRAME_INFO;
-
+//--------------------------------------------------------------------------
 typedef struct ANIM_IDX_BLOCK
 {
 	DWORD Position;
 	DWORD Size;
 	DWORD Unknown;
 } *PANIM_IDX_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct ANIM_FRAME
 {
 	short ImageCenterX;
@@ -254,7 +254,7 @@ typedef struct ANIM_FRAME
 	void Reset();
 	void Clear();
 } *PANIM_FRAME;
-
+//--------------------------------------------------------------------------
 typedef struct ANIM_GROUP
 {
 	WORD Palette[256];
@@ -262,54 +262,54 @@ typedef struct ANIM_GROUP
 	DWORD *FrameOffset;
 	PANIM_FRAME Frames;
 } *PANIM_GROUP;
-
+//--------------------------------------------------------------------------
 typedef struct ANIMATION_DATA
 {
 	DWORD FrameCount[5];
 	PANIM_FRAME Frames[5];
 } *PANIMATION_DATA;
-
+//--------------------------------------------------------------------------
 typedef struct TEXTURE_IDX_BLOCK
 {
 	DWORD Position;
 	DWORD Size;
 	DWORD Unknown;
 } *PTEXTURE_IDX_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct PALETTE_BLOCK
 {
 	BYTE R;
 	BYTE G;
 	BYTE B;
 } *PPALETTE_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct FONT_HEADER
 {
 	BYTE Width;
 	BYTE Height;
 	BYTE Unknown;
 } *PFONT_HEADER;
-
+//--------------------------------------------------------------------------
 typedef struct FONT_CHARACTER
 {
 	BYTE Width;
 	BYTE Height;
 	BYTE Unknown;
 } *PFONT_CHARACTER;
-
+//--------------------------------------------------------------------------
 typedef struct FONT_CHARACTER_DATA
 {
 	BYTE Width;
 	BYTE Height;
 	PWORD Data;
 } *PFONT_CHARACTER_DATA;
-
+//--------------------------------------------------------------------------
 typedef struct FONT_DATA
 {
 	BYTE Header;
 	FONT_CHARACTER_DATA Chars[224];
 } *PFONT_DATA;
-
+//--------------------------------------------------------------------------
 struct FONT_OBJECT
 {
 	BYTE Width;
@@ -317,7 +317,7 @@ struct FONT_OBJECT
 	GLuint Texture;
 	PBYTE Data;
 };
-
+//--------------------------------------------------------------------------
 typedef struct UNICODE_FONT_DATA
 {
 	BYTE OffsetX;
@@ -325,7 +325,7 @@ typedef struct UNICODE_FONT_DATA
 	BYTE Width;
 	BYTE Height;
 } *PUNICODE_FONT_DATA;
-
+//--------------------------------------------------------------------------
 typedef struct SOUND_IDX_BLOCK
 {
 	DWORD Position;
@@ -333,7 +333,7 @@ typedef struct SOUND_IDX_BLOCK
 	WORD Index;
 	WORD Reserved;
 } *PSOUND_IDX_BLOCK;
-
+//--------------------------------------------------------------------------
 typedef struct SOUND_BLOCK
 {
 	char Name[16];

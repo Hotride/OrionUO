@@ -263,7 +263,7 @@ char TMapBlock::GetLandZ(int x, int y, int &map)
 
 	//Смщение блока
 	WORD BlockX = x / 8;
-	WORD BlockY = y /8;
+	WORD BlockY = y / 8;
 
 	int Block = (BlockX * g_MapBlockY[map]) + BlockY;
 
