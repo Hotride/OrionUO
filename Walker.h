@@ -16,17 +16,24 @@
 **
 *****************************************************************************
 */
-//---------------------------------------------------------------------------
+//--------------------------------------------------------------------------
 #ifndef WalkerH
 #define WalkerH
 //--------------------------------------------------------------------------
+//Максимальный размер fastwalk стека
 const int MAX_FAST_WALK_STACK_SIZE = 255;
 //--------------------------------------------------------------------------
+//Класс для обработки стека fastwalk
 class TFastWalkStack
 {
 private:
+	//fastwalk стек
 	DWORD m_Keys[MAX_FAST_WALK_STACK_SIZE + 1];
+
+	//Текущий индекс
 	int m_Current;
+
+	//Глубина стека
 	int m_Deep;
 
 public:
@@ -39,12 +46,14 @@ public:
 	DWORD Pop(); //Получить элемент и удалить его из стека
 };
 //--------------------------------------------------------------------------
+//
 struct WALKER_SEND_ITEM
 {
 	BYTE Dir;
 	WORD Time;
 };
 //--------------------------------------------------------------------------
+//Класс для обработки шагов игрока
 class TWalker
 {
 private:
@@ -56,6 +65,7 @@ public:
 	TWalker();
 	~TWalker() {m_SendStack.clear();}
 
+	//Стек шагов
 	std::deque<WALKER_SEND_ITEM> m_SendStack;
 
 	TFastWalkStack m_FastWalkStack; //Указатель на Fast Walk Stack
@@ -67,15 +77,20 @@ public:
 	BYTE GetDirection(BYTE Seq) const {return m_Direction[Seq];} //Получить значение Direction для указанного шага
 };
 //--------------------------------------------------------------------------
+//Класс для работы с шагом
 class TWalkData
 {
 private:
+	//Координаты, куда ведет шаг
 	WORD m_X;
 	WORD m_Y;
 	char m_Z;
+
+	//Направление
 	BYTE m_Direction;
 
 public:
+	//Ссылки на следующий и предыдущий элементы
 	TWalkData *m_Next;
 	TWalkData *m_Prev;
 
@@ -87,28 +102,37 @@ public:
 	SETGET(char, Z);
 	SETGET(BYTE, Direction);
 
+	//Бег или хотьба
 	bool Run() {return (m_Direction & 0x80);}
 
+	//Получить пиксельное смещение для анимации
 	void GetOffset(float &x, float &y, float &steps);
 };
 //--------------------------------------------------------------------------
+//Класс для хранения шагов
 class TWalkStack
 {
 private:
 public:
 	TWalkStack() :m_Items(NULL) {}
 	~TWalkStack() {Clear();}
-	
+
+	//Список шагов
 	TWalkData *m_Items;
-	
+
+	//Верхний шаг
 	TWalkData *Top();
 
 	void Init() {m_Items = NULL;}
 	void Clear();
 
+	Добавить шаг в стек
 	void Push(TWalkData *obj);
+
+	//Удалить шаг из стека
 	void Pop();
 
+	//Есть ли в стеке шаги
 	bool Empty() {return (m_Items == NULL);}
 };
 //--------------------------------------------------------------------------

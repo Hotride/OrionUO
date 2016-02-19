@@ -22,43 +22,68 @@
 //---------------------------------------------------------------------------
 class TProfessionCategory;
 //---------------------------------------------------------------------------
+//Базовый класс профессии
 class TBaseProfession
 {
 private:
+	//Стандартное название профессии
 	string m_DefName;
+
+	//Название профессии
 	string m_Name;
-	bool m_Type; //false - Category; true - Profession
+
+	//Тип профессии. false - Category; true - Profession
+	bool m_Type;
+
+	//Индекс картинки профессии
 	WORD m_Gump;
+
+	//Индекс профессии
 	int m_Index;
 
 public:
 	TBaseProfession();
 	virtual ~TBaseProfession();
-	
+
+	//Текстура названия профессии
 	TTextTexture m_TextureName;
+
+	//Текстура описания профессии
 	TTextTexture m_TextureDescription;
 
+	//Родитель профессии
 	TProfessionCategory *m_Parent;
 
 	SETGET(string, DefName);
 	SETGET(bool, Type);
 	SETGET(WORD, Gump);
 	SETGET(int, Index);
-	
+
 	void SetName(string str);
-	
+
 	string GetName() const {return m_Name;}
-	
+
+	//Добавить описание профессии
 	virtual bool AddDescription(int desc, string name, const char *val);
 };
 //---------------------------------------------------------------------------
+//Класс профессии
 class TProfession : public TBaseProfession
 {
 private:
+	//Навыки профессии
 	BYTE m_SkillID[4];
+
+	//Значения навыков профессии
 	BYTE m_SkillValue[4];
+
+	//Сила
 	BYTE m_Str;
+
+	//Интеллект
 	BYTE m_Int;
+
+	//Ловкость
 	BYTE m_Dex;
 
 public:
@@ -76,24 +101,39 @@ public:
 	BYTE GetSkillValue(int index) const {if (index >= 0 && index < 4) return m_SkillValue[index]; else return 0xFF;}
 };
 //---------------------------------------------------------------------------
+//Класс категории профессии
 class TProfessionCategory : public TBaseProfession
 {
 private:
 public:
 	TProfessionCategory();
 	virtual ~TProfessionCategory();
-	
+
+	//Имена подкатегорий
 	string Childs[4];
 
+	//Количество подкатегорий
 	int m_CatChildCount;
+
+	//Ссылки на категории
 	TProfessionCategory *m_CatChild[4];
 
+	//Количество профессий
 	int m_ProfChildCount;
+
+	//Ссылки на профессии
 	TProfession *m_ProfChild[4];
-	
+
+	//Добавить категорию
 	bool AddCategory(TProfessionCategory *pc, bool topObj = false);
+
+	//Добавить профессию
 	bool Add(TProfession *p);
+
+	//Добавить имя подкатегории
 	void AddChildren(string children);
+
+	//Добавить описание
 	bool AddDescription(int desc, string name, const char *val);
 };
 //---------------------------------------------------------------------------

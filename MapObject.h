@@ -20,9 +20,11 @@
 #ifndef MapObjectH
 #define MapObjectH
 //---------------------------------------------------------------------------
+//Класс вектора нормали
 class TVector
 {
 private:
+	//Координаты
 	double m_X;
 	double m_Y;
 	double m_Z;
@@ -30,13 +32,26 @@ private:
 public:
 	TVector(double x = 0, double y = 0, double z = 0);
 	~TVector() {}
-	
+
+	//Копирование векторов
 	void Link(TVector &v);
+
+	//Изменение координат
 	void Link(double x, double y, double z);
+
+	//Складывание векторов
 	void Add(TVector &v);
+
+	//Складывание координат
 	void Add(double x, double y, double z);
+
+	//Слияние векторов
 	void Merge(TVector &v);
+
+	//Слияние координат
 	void Merge(double x, double y, double z);
+
+	//Нормализация
 	void Normalize();
 	
 	SETGET(double, X);
@@ -44,6 +59,7 @@ public:
 	SETGET(double, Z);
 };
 //---------------------------------------------------------------------------
+//Класс объекта карты
 class TMapObject : public TRenderWorldObject
 {
 public:
@@ -51,32 +67,44 @@ public:
 	virtual ~TMapObject();
 };
 //---------------------------------------------------------------------------
+//Класс ландшафта
 class TLandObject : public TMapObject
 {
 protected:
+	//Координаты привязки вершин
 	RECT m_Rect;
+
+	//Минимальныя Z координата
 	char m_MinZ;
+
+	//Флаг отображения (true - картинка из texmaps, false - из art.mul)
 	bool m_IsStretched;
 public:
 	TLandObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TLandObject() {}
 
+	//Векторы нормали
 	TVector m_Normals[4];
 
 	SETGET(RECT, Rect);
 	SETGET(char, MinZ);
 	SETGET(bool, IsStretched);
 
+	//Отрисовка объекта
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
-	
+
+	//Это объект ландшафта
 	bool IsLandObject() {return true;}
 
+	//Игнорирование при некоторых расчетах
 	bool Ignored() {return (Graphic == 2 || Graphic == 0x1DB || (Graphic >= 0x1AE && Graphic <= 0x1B5));}
 };
 //---------------------------------------------------------------------------
+//Класс обобщенного объекта группы статики
 class TRenderStaticObject : public TMapObject
 {
 protected:
+	//Указатель на структуру данных тайлдаты
 	STATIC_TILES *m_TiledataPtr;
 
 public:
@@ -87,14 +115,22 @@ public:
 	
 	//Добавить текст в контейнер
 	virtual void AddText(TTextData *td);
-	
+
+	//Получить смещение текста по оси X
 	int GetTextOffsetX(TTextData *text);
+
+	//Получить смещение текста по оси Y
 	int GetTextOffsetY(TTextData *text);
+
+	//Проверка, может ли текст быть прозрачным
 	bool TextCanBeTransparent(TRenderTextObject *text);
-	
+
 	STATIC_TILES *GetStaticData() { return m_TiledataPtr; }
+
+	//Получить высоту объекта (по данным из тайлдаты)
 	BYTE GetStaticHeight() { return m_TiledataPtr->Height; }
 
+	//Получить индекс света
 	BYTE GetLightID() {return m_TiledataPtr->Quality;}
 	
 	//Стандартные состояния по флагам из тайлдаты (вердаты)
@@ -130,22 +166,28 @@ public:
 	bool IsDoor() {return (m_TiledataPtr->Flags & 0x20000000);}
 	bool IsStairBack() {return (m_TiledataPtr->Flags & 0x40000000);}
 	bool IsStairRight() {return (m_TiledataPtr->Flags & 0x80000000);}
-	
+
+	//Это объект группы объектов статики
 	bool IsStaticGroupObject() {return true;}
 };
 //---------------------------------------------------------------------------
+//Класс объекта статики
 class TStaticObject : public TRenderStaticObject
 {
 private:
+	//Может ли быть прозрачным
 	char m_CanBeTransparent;
 public:
 	TStaticObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TStaticObject() {}
 
+	//Отрисовка объекта
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
-	
+
+	//Проверка прозрачности (для круга прозрачности)
 	virtual bool TranparentTest(int &playerZ);
 
+	//Это объект статики
 	bool IsStaticObject() {return true;}
 	
 	SETGET(char, CanBeTransparent);

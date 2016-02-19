@@ -20,36 +20,55 @@
 #ifndef ShaderH
 #define ShaderH
 //---------------------------------------------------------------------------
+//Базовый класс для работы с шейдерами
 class TBaseShader
 {
 protected:
+	//Шейдерная программа
 	GLhandleARB m_Shader;
+
+	//Вершинный шейдер
 	GLhandleARB m_VertexShader;
+
+	//Фрагментный (пиксельный) шейдер
 	GLhandleARB m_FragmentShader;
+
+	//Указатель на текстуру для передачи ее шейдеру (можно не использовать, текстура передается автоматически при glBingTexture)
 	GLuint m_TexturePointer;
 public:
 	TBaseShader(const char *vertexShaderData, const char *fragmentShaderData);
 	virtual ~TBaseShader();
 
+	//Использовать шейдер
 	virtual bool Use();
+
+	//Остановить использование шейдера
 	virtual void Pause();
+
+	//Восстановить работу шейдера
 	virtual void Resume();
 };
 //---------------------------------------------------------------------------
+//Класс для работы с шейдером смерти (черно-белый шейдер)
 class TDeathShader : public TBaseShader
 {
 public:
 	TDeathShader(const char *vertexShaderData, const char *fragmentShaderData);
 };
 //---------------------------------------------------------------------------
+//Класс для работы с цветным шейдером
 class TColorizerShader : public TBaseShader
 {
 protected:
+	//Указатель на палитру цветов для передачи ее шейдеру
 	GLuint m_ColorTablePointer;
+
+	//Указатель на метод вывода шейдером
 	GLuint m_DrawModePointer;
 public:
 	TColorizerShader(const char *vertexShaderData, const char *fragmentShaderData);
 
+	//Использовать шейдер
 	virtual bool Use();
 };
 //---------------------------------------------------------------------------

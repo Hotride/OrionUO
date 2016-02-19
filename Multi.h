@@ -20,10 +20,14 @@
 #ifndef MultiH
 #define MultiH
 //---------------------------------------------------------------------------
+//Объект для мульти-объекта
 class TMultiObject : public TRenderStaticObject
 {
 private:
+	//Фгали объекта (2 - мульти с таргета)
 	DWORD m_MultiFlags;
+
+	//Флаг возможности быть прозрачным
 	char m_CanBeTransparent;
 
 public:
@@ -33,20 +37,29 @@ public:
 	SETGET(DWORD, MultiFlags);
 	SETGET(char, CanBeTransparent);
 
+	//Отрисовать объект
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
-	
+
+	//Тест прозрачности (для круга прозрачности)
 	virtual bool TranparentTest(int &playerZ);
 
+	//Это объект мульти
 	bool IsMultiObject() {return true;}
 };
 //---------------------------------------------------------------------------
+//Класс мульти-объекта
 class TMulti : public TBaseQueueItem
 {
 private:
+	//Координаты центра
 	short m_X;
 	short m_Y;
+
+	//Минимальные координаты края мульти-объекта
 	short m_MinX;
 	short m_MinY;
+
+	//Максимальные координаты края мульти-объекта
 	short m_MaxX;
 	short m_MaxY;
 

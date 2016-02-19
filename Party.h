@@ -20,9 +20,11 @@
 #ifndef PartyH
 #define PartyH
 //---------------------------------------------------------------------------
+//Объект группы
 class TPartyObject
 {
 private:
+	//Серийник объекта
 	DWORD m_Serial;
 
 public:
@@ -45,23 +47,33 @@ public:
 class TParty
 {
 private:
+	//Серийник лидера пати
 	DWORD m_Leader;
+
+	//Серийник пригласившего в пати
 	DWORD m_Inviter;
+
+	//Может ли группа лутать труп игрока
 	bool m_CanLoot;
 
 public:
 	TParty();
 	~TParty();
 
+	//Члены группы
 	TPartyObject Member[10];
 	
 	SETGET(DWORD, Leader);
 	SETGET(DWORD, Inviter);
 	SETGET(bool, CanLoot);
 
+	//Обработка пакетов пати
 	void ParsePacketData(PBYTE buf, int &size);
 
+	//Содержит ли пати игрока с данным серийником
 	bool Contains(DWORD serial);
+
+	//Очистить пати
 	void Clear();
 };
 //---------------------------------------------------------------------------

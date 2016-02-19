@@ -19,14 +19,21 @@
 //---------------------------------------------------------------------------
 #ifndef ServerListH
 #define ServerListH
-//--------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//Класс для хранения списка серверов
 class TServerList
 {
 private:
+	//Количество серверов в списке
 	int m_Count;
+
+	//Выбранный сервер
 	int m_SelectedServer;
 
+	//Список индексов серверов
 	PWORD m_Index;
+
+	//Список имен серверов
 	string *m_Name;
 public:
 	TServerList();
@@ -35,9 +42,13 @@ public:
 	SETGET(int, Count);
 	SETGET(int, SelectedServer);
 
+	//Выделить память под сервера
 	void Init(int count);
+
+	//Очистить списки серверов
 	void Clear();
 
+	//Указатель на текстуру текста
 	TTextTexture *TextTexture;
 
 	void SetServer(int pos, WORD index, string name);
@@ -46,7 +57,7 @@ public:
 	WORD GetIndex(int pos) const;
 	string GetName(int pos) const;
 };
-
+//---------------------------------------------------------------------------
 extern TServerList ServerList;
 //---------------------------------------------------------------------------
 #endif

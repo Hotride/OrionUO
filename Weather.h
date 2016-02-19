@@ -20,22 +20,29 @@
 #ifndef WeatherH
 #define WeatherH
 //---------------------------------------------------------------------------
+//Класс эффекта погоды
 class TWeatherEffect
 {
 private:
+	//Координаты эффекта
 	float m_X;
 	float m_Y;
 
+	//Скорость эффекта
 	float m_SpeedX;
 	float m_SpeedY;
 
+	//Индекс эффекта
 	int m_ID;
+
 	float m_ScaleRatio;
 
 	float m_SpeedAngle;
+
 	float m_SpeedMagnitude;
 
 public:
+	//Ссылки на следующий и предыдущий эффекты
 	TWeatherEffect *m_Next;
 	TWeatherEffect *m_Prev;
 
@@ -54,19 +61,33 @@ public:
 	SETGETEX(float, SpeedMagnitude);
 };
 //---------------------------------------------------------------------------
+//Класс для работы с погодой
 class TWeather
 {
 private:
+	//Тип вогоды
 	BYTE m_Type;
+
+	//Максимальное количество эффектов на экране
 	BYTE m_Count;
+
+	//Текущее количество эффектов на экране
 	BYTE m_CurrentCount;
+
+	//Температура
 	BYTE m_Temperature;
 
+	//Направление ветра
 	char m_Wind;
+
+	//Таймер смены ветра
 	DWORD m_WindTimer;
 
+	//Время отрисовки
 	DWORD m_Timer;
-	DWORD m_LastTick; // время в мс предыдущего тика обработки анимации погоды
+
+	//Время последней смены анимации погоды
+	DWORD m_LastTick;
 
 	float m_SimulationRatio; // скорость общей симуляции зависит от этого значения. Больше - медленней.
 
@@ -74,6 +95,7 @@ public:
 	TWeather() : m_LastTick(0), m_SimulationRatio(37), m_Items(NULL) {}
 	~TWeather() {}
 
+	//Погодные эффекты
 	TWeatherEffect *m_Items;
 	
 	SETGET(BYTE, Type);
@@ -82,11 +104,14 @@ public:
 	SETGETEX(BYTE, Temperature);
 	
 	SETGET(DWORD, Timer);
-	
+
+	//Выключить погодные эффекты
 	void Reset();
 
+	//Сгенерировать эффекты
 	void Generate();
-	
+
+	//Отрисовать погодные эффекты
 	void Draw(int &drawX, int &drawY);
 };
 //---------------------------------------------------------------------------

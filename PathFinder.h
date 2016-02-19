@@ -20,11 +20,17 @@
 #ifndef PathFinderH
 #define PathFinderH
 //---------------------------------------------------------------------------
+//Класс объекта в точке пути
 class TPathObject : public TBaseQueueItem
 {
 private:
+	//Координата Z точки
 	char m_Z;
+
+	//Высота точки
 	char m_Height;
+
+	//Идентификатор поверхности
 	BYTE m_Surface;
 public:
 	TPathObject(char z, char height, char surface);
@@ -35,31 +41,50 @@ public:
 	SETGET(BYTE, Surface);
 };
 //---------------------------------------------------------------------------
+//Класс для поиска пути и теста шага на точку
 class TPathFinder : public IPathFinder, public TBaseQueue
 {
 private:
+	//Вычисление новой Z координаты
 	bool CalculateNewZ(int &x, int &y, char &z);
 
+	//Вычисление новых XY координат
 	void GetNewXY(BYTE &direction, int &x, int &y);
+
+	//Создание списка предметов, участвующих в поиске в указанных координатах
 	bool CreateItemsList(int &x, int &y);
 
+	//Флаг, указывающий. что персонаж стоит на длинной лестнице
 	bool m_OnLongStair;
+
+	//Проверка на лестницу под ногами
 	void CheckLongStairUnderfoot(int &x, int &y, char &z);
 
+	//Автоматической передвижение (не сложными махинациями с мышкой)
 	bool m_AutoWalking;
+
+	//Список точек пути
 	POINT *m_Path;
+
+	//Размер точек пути
 	int m_PathSize;
 public:
 	TPathFinder();
 	virtual ~TPathFinder();
 
+	//Проверка на возможность сделать шаг в указанные координаты
 	bool CanWalk(BYTE &direction, int &x, int &y, char &z);
 
+	//Пойти в указанные координаты
 	bool Walk(bool run, BYTE direction);
 
+	//Вычислить новый путь
 	POINT *CalculatePath(int &size, int x, int y, int z);
+
+	//Переместиться в указанные координаты
 	bool WalkTo(int x, int y, int z);
 
+	//Остановить автоматическую ходилку
 	void StopAutoWalk();
 };
 //---------------------------------------------------------------------------

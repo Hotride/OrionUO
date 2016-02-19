@@ -20,17 +20,33 @@
 #ifndef TooltipH
 #define TooltipH
 //---------------------------------------------------------------------------
+//Класс для работы с тултипами
 class TTooltip
 {
 private:
+	//Время фокусировки
 	DWORD m_Timer;
+
+	//Индекс объекта, на который навели мышкой
 	DWORD m_SeqIndex;
+
+	//Тип объекта
 	SELECT_OBJECT_TYPE m_Type;
+
+	//Данные в Unicode строки
 	wstring m_Data;
+
+	//Индекс клилока
 	DWORD m_ClilocID;
+
+	//Максимальная ширина
 	int m_MaxWidth;
+
+	//Экранные координаты
 	int m_X;
 	int m_Y;
+
+	//Флаг использования тултипа
 	bool m_Use;
 public:
 	TTooltip();
@@ -46,13 +62,19 @@ public:
 	SETGET(int, Y);
 	SETGET(bool, Use);
 
+	//Текстура тулпита
 	TTextTexture Texture;
 
+	//Установить тултип из строки
 	void Set(wstring str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int maxWidth = 0, int x = 0, int y = 0);
+
+	//Установить тултип из клилока
 	void Set(DWORD clilocID, string str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int maxWidth = 0, int x = 0, int y = 0);
+
+	//Отрисовать тултип
 	void Draw(int cursorWidth = 0, int cursorHeight = 0);
 };
-
+//---------------------------------------------------------------------------
 extern TTooltip Tooltip;
 //---------------------------------------------------------------------------
 #endif

@@ -23,20 +23,24 @@
 class TLogger
 {
 private:
+	//Хэндл файла
 	FILE *m_file;
 public:
 	TLogger();
 	~TLogger();
 
+	//Инициализирован ли логгер
 	bool Ready() const {return m_file != NULL;}
 
+	//Инициализация логгера
 	void Init(const char *fName);
 
+	//Вывод информации в лог
 	void Print(const char *format, ...);
 	void VPrint(const char *format, va_list ap);
 	void Dump(PBYTE buf, int len);
 };
-
+//---------------------------------------------------------------------------
 extern TLogger *g_Logger;
 //---------------------------------------------------------------------------
 #endif

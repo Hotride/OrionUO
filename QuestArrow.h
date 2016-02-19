@@ -20,26 +20,32 @@
 #ifndef QuestArrowH
 #define QuestArrowH
 //---------------------------------------------------------------------------
+//Класс для работы со стрелкой задания (над головой персонажа)
 class TQuestArrow
 {
 private:
+	//Координаты
 	WORD m_X;
 	WORD m_Y;
+
+	//Флаг активны/выключена
 	bool m_Enabled;
 
 public:
 	TQuestArrow();
 	~TQuestArrow();
 
+	//Индекс начальной картинки стрелки
 	static const WORD m_Gump = 0x0194;
 
 	SETGET(WORD, X);
 	SETGET(WORD, Y);
 	SETGET(bool, Enabled);
 
+	//Отрисовать стрелку
 	void Draw(int &x, int &y);
 };
-
+//---------------------------------------------------------------------------
 extern TQuestArrow QuestArrow;
 //---------------------------------------------------------------------------
 #endif

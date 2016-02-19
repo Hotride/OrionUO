@@ -20,12 +20,20 @@
 #ifndef IndexObjectH
 #define IndexObjectH
 //---------------------------------------------------------------------------
+//Класс для хранения информации о графических данных
 class TIndexObject
 {
 private:
+	//Адрес в памяти
 	DWORD m_Address;
+
+	//Размер данных
 	DWORD m_Size;
+
+	//Время последнего доступа
 	DWORD m_LastAccessTime;
+
+	//Габариты изображения
 	short m_Width;
 	short m_Height;
 public:
@@ -38,16 +46,27 @@ public:
 	SETGET(short, Width);
 	SETGET(short, Height);
 
+	//Указатель на объект текстуры
 	TTextureObject *Texture;
 };
 //---------------------------------------------------------------------------
+//Класс для хранения информации о данных анимации статики
 class TIndexObjectStatic : public TIndexObject
 {
 private:
+	//Стартовый индекс картинки
 	WORD m_Index;
+
+	//Смещение относительно старта
 	char m_Increment;
+
+	//Индекс анимации
 	char m_AnimIndex;
+
+	//Время следующего изменения
 	DWORD m_NextChange;
+
+	//Цвет света (если это является источником света)
 	WORD m_LightColor;
 public:
 	TIndexObjectStatic();
@@ -59,13 +78,20 @@ public:
 	SETGET(WORD, LightColor);
 };
 //---------------------------------------------------------------------------
-
+//Класс для хранения информации о звуковых данных
 class TIndexSound
 {
 private:
+	//Адрес в памяти
 	DWORD m_Address;
+
+	//Размер данных
 	DWORD m_Size;
+
+	//Время выполнения
 	DWORD m_Timer;
+
+	//Время последнего доступа
 	DWORD m_LastAccessTime;
 public:
 	TIndexSound();
@@ -75,23 +101,29 @@ public:
 	SETGET(DWORD, Size);
 	SETGET(DWORD, Timer);
 	SETGET(DWORD, LastAccessTime);
-	
-	//Mix_Chunk *Sound;
 
+	//Указатели на звук
 	WaveFile waveFile;
 	HSTREAM hStream;
 };
 //---------------------------------------------------------------------------
+//Класс для хранения информации о анимации
 class TIndexAnimation
 {
 private:
+	//Адрес в памяти
 	DWORD m_Address;
+
+	//Смещение
 	DWORD m_Offset;
+
+	//Индекс картинки
 	WORD m_Graphic;
 public:
 	TIndexAnimation();
 	virtual ~TIndexAnimation();
 
+	//Указатель на группу анимаций
 	TTextureAnimation *Group;
 
 	SETGET(DWORD, Address);
@@ -99,11 +131,17 @@ public:
 	SETGET(WORD, Graphic);
 };
 //---------------------------------------------------------------------------
+//Класс для хранения информации о мульти-объекте
 class TIndexMulti
 {
 private:
+	//Адрес в памяти
 	DWORD m_Address;
+
+	//Размер данных
 	DWORD m_Size;
+
+	//Количество объектов в мульти-объекте
 	WORD m_Count;
 public:
 	TIndexMulti();
