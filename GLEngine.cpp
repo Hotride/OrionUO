@@ -411,8 +411,6 @@ void TGLEngine::DrawSitting(GLuint &texture, int &x, int &y, int width, int heig
 	glLoadIdentity();
 	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 
-	const int SITTING_WIDTH_OFFSET = 10;
-
 	int h02 = (int)(height * 0.2f);
 	int h05 = (int)(height * 0.5f);
 	int h075 = (int)(height * 0.75f);

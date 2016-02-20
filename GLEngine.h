@@ -91,7 +91,7 @@ public:
 
 
 
-	Нарисовать линию
+	//Нарисовать линию
 	void DrawLine(DWORD color, float x, float y, float targetX, float targetY);
 
 	//Нарисовать прямоугольник

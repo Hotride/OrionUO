@@ -58,13 +58,12 @@ private:
 	bool m_Sitting;
 
 	//Данные о тенях
-	static const int MAX_SHADOWS_COUNT = 100;
 	SHADOW_DATA m_ShadowList[MAX_SHADOWS_COUNT];
 	int m_ShadowCount;
 
 	//Упорядоченный список слоев для корректного порядка прорисовки для всех направлений персонажа
-	static const int m_LayerCount = 19;
-	static int m_UsedLayers[8][m_LayerCount];
+	static const int USED_LAYER_COLUT = 19;
+	static int m_UsedLayers[8][USED_LAYER_COLUT];
 
 	//Данные анимаций
 	TIndexAnimation m_DataIndex[0x0800];

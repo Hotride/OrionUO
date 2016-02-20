@@ -1,50 +1,36 @@
-/****************************************************************************
-**
-** Logger.cpp
-**
-** Copyright (C) September 2015 Hotride
-**
-** This program is free software; you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation; either version 2 of the License, or
-** (at your option) any later version.
-**
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-**
-*****************************************************************************
-*/
 //---------------------------------------------------------------------------
 #include "stdafx.h"
+#include "Logger.h"
+
+#include <stdarg.h>
+#include <locale>
 //---------------------------------------------------------------------------
-TLogger *g_Logger = NULL;
+CLogger g_Logger;
 //---------------------------------------------------------------------------
-TLogger::TLogger()
+CLogger::CLogger()
 : m_file(NULL)
 {
 }
 //---------------------------------------------------------------------------
-TLogger::~TLogger()
+CLogger::~CLogger()
 {
 	if (m_file != NULL)
 	{
-		TPRINT("Log closed.\n");
+        TPRINT("Log closed.\n");
 		fclose(m_file);
 	}
 }
 //---------------------------------------------------------------------------
-void TLogger::Init(const char *fName)
+void CLogger::Init(const char *fName)
 {
 	if (m_file != NULL)
 		fclose(m_file);
 
-	m_file = fopen(fName, "w");
-	g_Logger = this;
+	fopen_s(&m_file, fName, "w");
+	TPRINT("Log opened.\n");
 }
 //---------------------------------------------------------------------------
-void TLogger::Print(const char *format, ...)
+void CLogger::Print(const char *format, ...)
 {
 	if (m_file == NULL)
 		return;
@@ -56,7 +42,7 @@ void TLogger::Print(const char *format, ...)
 	fflush(m_file);
 }
 //---------------------------------------------------------------------------
-void TLogger::VPrint(const char *format, va_list ap)
+void CLogger::VPrint(const char *format, va_list ap)
 {
 	if (m_file == NULL)
 		return;
@@ -65,7 +51,7 @@ void TLogger::VPrint(const char *format, va_list ap)
 	fflush(m_file);
 }
 //---------------------------------------------------------------------------
-void TLogger::Dump(PBYTE buf, int len)
+void CLogger::Dump(unsigned char *buf, int len)
 {
 	if (m_file == NULL)
 		return;
@@ -98,5 +84,36 @@ void TLogger::Dump(PBYTE buf, int len)
 	}
 
 	fflush(m_file);
+}
+//---------------------------------------------------------------------------
+void error_printf(const char * format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+	g_Logger.Print("***Error: ");
+	g_Logger.VPrint(format, arg);
+	va_end(arg);
+}
+//---------------------------------------------------------------------------
+void warning_printf(const char * format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+	g_Logger.Print("**Warning: ");
+	g_Logger.VPrint(format, arg);
+	va_end(arg);
+}
+//---------------------------------------------------------------------------
+void trace_printf(const char * format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+	g_Logger.VPrint(format, arg);
+	va_end(arg);
+}
+//---------------------------------------------------------------------------
+void trace_dump(unsigned char * buf, int length)
+{
+	g_Logger.Dump(buf, length);
 }
 //---------------------------------------------------------------------------

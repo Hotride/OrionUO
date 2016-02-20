@@ -305,7 +305,7 @@ TPacketSelectCharacter::TPacketSelectCharacter(DWORD index, string name)
 	int copyLen = name.length();
 	if (copyLen > 30)
 		copyLen = 30;
-	memcpy(&g_SelecterCharName[0], name.c_str(), copyLen);
+	memcpy(&g_SelectedCharName[0], name.c_str(), copyLen);
 
 	WriteByte(0x5D);
 	WriteDWord(0xEDEDEDED);
@@ -1023,8 +1023,8 @@ TPacketGameWindowSize::TPacketGameWindowSize()
 	WriteWord(0x000D);
 	WriteWord(0x0005);
 	WriteWord(0);
-	WriteWord(g_GameWindowSizeX);
-	WriteWord(g_GameWindowSizeY);
+	WriteWord(g_GameWindowWidth);
+	WriteWord(g_GameWindowHeight);
 	WriteWord(0);
 }
 //---------------------------------------------------------------------------

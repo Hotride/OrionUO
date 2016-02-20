@@ -84,7 +84,7 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		WORD objColor = m_Color;
 
 		if (this == g_SelectedObject)
-			objColor = g_SelectMultiColor;
+			objColor = SELECT_MULTI_COLOR;
 
 		if (m_MultiFlags == 2) //Мульти на таргете
 		{

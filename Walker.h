@@ -20,9 +20,6 @@
 #ifndef WalkerH
 #define WalkerH
 //--------------------------------------------------------------------------
-//Максимальный размер fastwalk стека
-const int MAX_FAST_WALK_STACK_SIZE = 255;
-//--------------------------------------------------------------------------
 //Класс для обработки стека fastwalk
 class TFastWalkStack
 {
@@ -126,7 +123,7 @@ public:
 	void Init() {m_Items = NULL;}
 	void Clear();
 
-	Добавить шаг в стек
+	//Добавить шаг в стек
 	void Push(TWalkData *obj);
 
 	//Удалить шаг из стека

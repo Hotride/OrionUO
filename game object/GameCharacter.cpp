@@ -571,7 +571,7 @@ void TGameCharacter::UpdateAnimationInfo(BYTE &dir, bool canChange)
 		{
 			int onMount = (int)(FindLayer(OL_MOUNT) != NULL);
 
-			int maxDelay = g_CharacterAnimationDelayTable[onMount][run];
+			int maxDelay = CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
 
 			int delay = (int)ticks - (int)m_LastStepTime;
 			bool removeStep = (delay >= maxDelay);

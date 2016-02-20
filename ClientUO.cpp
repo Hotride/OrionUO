@@ -63,8 +63,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				else
 				{
 					RECT r = {0, 0, 0, 0};
-					r.right = g_GameWindowSizeX;
-					r.bottom = g_GameWindowSizeY;
+					r.right = g_GameWindowWidth;
+					r.bottom = g_GameWindowWidth;
 					AdjustWindowRectEx(&r, GetWindowLongA(g_hWnd, GWL_STYLE), FALSE, GetWindowLongA(g_hWnd, GWL_EXSTYLE));
 
 					if (r.left < 0)
@@ -73,7 +73,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 					if (r.top < 0)
 						r.bottom += (r.top * (-1));
 						
-					POINT min = {g_GameWindowSizeX, g_GameWindowSizeY};
+					POINT min = { g_GameWindowWidth, g_GameWindowHeight };
 					pInfo->ptMinTrackSize = min;
 					POINT max = {GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)};
 					g_GL.UpdateRect();
@@ -114,7 +114,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_LBUTTONDOWN:
 		{
-			if (g_SmoothMonitorMode)
+			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
 			g_GeneratedMouseDown = false;
@@ -168,7 +168,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_LBUTTONUP:
 		{
-			if (g_SmoothMonitorMode)
+				if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
 			if (g_LastLClickTime != -1)
@@ -199,7 +199,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_RBUTTONDOWN:
 		{
-			if (g_SmoothMonitorMode)
+			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
 			DWORD ticks = GetTickCount();
@@ -228,8 +228,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			CurrentScreen->OnRightMouseDown();
 			
 			if (!g_LastSelectedGump &&
-				!(g_MouseX < g_GameWindowPosX || g_MouseY < g_GameWindowPosY || g_MouseX > (g_GameWindowPosX + g_GameWindowSizeX) ||
-				g_MouseY > (g_GameWindowPosY + g_GameWindowSizeY)))
+				!(g_MouseX < g_GameWindowPosX || g_MouseY < g_GameWindowPosY || g_MouseX > (g_GameWindowPosX + g_GameWindowWidth) ||
+				g_MouseY > (g_GameWindowPosY + g_GameWindowHeight)))
 			{
 				g_MovingFromMouse = true;
 				g_AutoMoving = false;
@@ -248,7 +248,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_RBUTTONUP:
 		{
-			if (g_SmoothMonitorMode)
+			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
 			g_SelectGumpObjects = true;
@@ -268,7 +268,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_CHAR:
 		{
-			if (g_SmoothMonitorMode)
+			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
 			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
@@ -285,7 +285,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		//Нажатие на колесико мышки
 		case 0x0208:
 		{
-			if (g_SmoothMonitorMode)
+			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
 			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
@@ -302,7 +302,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		//Колесико мышки вверх/вниз
 		case 0x020A:
 		{
-			if (g_SmoothMonitorMode)
+			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
 			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
@@ -322,7 +322,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_KEYDOWN:
 		case WM_SYSKEYDOWN:
 		{
-			if (g_SmoothMonitorMode)
+			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
 			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
@@ -345,7 +345,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
 		{
-			if (g_SmoothMonitorMode)
+			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
 			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
@@ -514,9 +514,8 @@ m_UsedLandList(NULL), m_UsedStaticList(NULL), m_UsedGumpList(NULL),
 m_UsedTextureList(NULL), m_UsedSoundList(NULL), m_AnimData(NULL),
 m_UsedLightList(NULL)
 {
-	g_Logger = new TLogger();
 	string pth = g_DirectoryPath + "\\uolog.txt";
-	g_Logger->Init(pth.c_str());
+	g_Logger.Init(pth.c_str());
 	TPRINT("Log open.\n");
 }
 //---------------------------------------------------------------------------
@@ -817,12 +816,6 @@ TUltimaOnline::~TUltimaOnline()
 	g_LightBuffer.Free();
 
 	g_GL.Uninstall();
-	
-	if (g_Logger != NULL)
-	{
-		delete g_Logger;
-		g_Logger = NULL;
-	}
 }
 //---------------------------------------------------------------------------
 DWORD Reflect(DWORD source, int c)
@@ -4445,8 +4438,8 @@ void TUltimaOnline::Attack(DWORD serial)
 
 		if (target != NULL && (NOTORIETY_TYPE)g_Player->Notoriety == NT_INNOCENT && (NOTORIETY_TYPE)target->Notoriety == NT_INNOCENT)
 		{
-			int x = g_GameWindowPosX + (g_GameWindowSizeX / 2) - 40;
-			int y = g_GameWindowPosY + (g_GameWindowSizeY / 2) - 20;
+			int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 40;
+			int y = g_GameWindowPosY + (g_GameWindowHeight / 2) - 20;
 
 			TGumpQuestion *newgump = new TGumpQuestion(g_PlayerSerial, x, y, 2);
 			newgump->SetID(serial);
@@ -4711,8 +4704,8 @@ void TUltimaOnline::OpenMinimap()
 //---------------------------------------------------------------------------
 void TUltimaOnline::OpenWorldMap()
 {
-	int x = g_GameWindowPosX + (g_GameWindowSizeX / 2) - 200;
-	int y = g_GameWindowPosY + (g_GameWindowSizeY / 2) - 150;
+	int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 200;
+	int y = g_GameWindowPosY + (g_GameWindowHeight / 2) - 150;
 	TGumpWorldMap *gump = new TGumpWorldMap(g_PlayerSerial, x, y);
 	gump->Called = true;
 	GumpManager->AddGump(gump);
@@ -4748,8 +4741,8 @@ void TUltimaOnline::OpenSpellbook()
 //---------------------------------------------------------------------------
 void TUltimaOnline::OpenLogOut()
 {
-	int x = g_GameWindowPosX + (g_GameWindowSizeX / 2) - 40;
-	int y = g_GameWindowPosY + (g_GameWindowSizeY / 2) - 20;
+	int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 40;
+	int y = g_GameWindowPosY + (g_GameWindowHeight / 2) - 20;
 	TGumpQuestion *gump = new TGumpQuestion(g_PlayerSerial, x, y, 1);
 	
 	GumpManager->AddGump(gump);
@@ -4786,10 +4779,6 @@ void TUltimaOnline::OpenPartyManifest()
 	TGumpPartyManifest *gump = new TGumpPartyManifest(0, x, y, Party.CanLoot);
 
 	GumpManager->AddGump(gump);
-}
-//---------------------------------------------------------------------------
-void TUltimaOnline::OpenPartyChat()
-{
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::OpenProfile(DWORD serial)

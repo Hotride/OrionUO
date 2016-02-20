@@ -69,344 +69,330 @@ using std::wstring;
 //---------------------------------------------------------------------------
 #define UO_FW_SHARD 0
 
+#include "Constants.h"
+#include "EnumList.h"
+#include "DefinitionMacro.h"
+//---------------------------------------------------------------------------
+//Указатель на текстуру шейдера
 extern GLuint ShaderTexture;
+
+//Указатель на состояние рисования шейдера
 extern GLuint ShaderDrawMode;
+
+//Указатель на палитру цветов для шейдера
 extern GLuint ShaderColorTable;
 //---------------------------------------------------------------------------
+//Счетчики объектов (только для отладки)
 extern int g_LandObjectsCount;
 extern int g_StaticsObjectsCount;
 extern int g_GameObjectsCount;
 extern int g_MultiObjectsCount;
 extern int g_RenderedObjectsCountInGameWindow;
 //---------------------------------------------------------------------------
+//Текстуры замков для гампов (locked/unlocked)
 extern GLuint g_TextureGumpState[2];
+
+//Возможность использовать фрэймбуфер
 extern bool g_UseFrameBuffer;
 //---------------------------------------------------------------------------
+//Глобальные состояния нажатия дополнительных клавишь
 extern bool g_AltPressed;
 extern bool g_CtrlPressed;
 extern bool g_ShiftPressed;
 //---------------------------------------------------------------------------
+//Использование мышки для перемещения персонажа
 extern bool g_MovingFromMouse;
+
+//Использование автоматического перемещения персонажа за курсором мышки, когда курсор находится в игровом окне
 extern bool g_AutoMoving;
 //---------------------------------------------------------------------------
-#include "EnumList.h"
-#include "DefinitionMacro.h"
-//---------------------------------------------------------------------------
-const int GAME_FIGURE_GUMP_OFFSET = 11369;
-const int TEXT_MESSAGE_MAX_WIDTH = 190;
-//---------------------------------------------------------------------------
+//Инстанс
 extern HINSTANCE g_Hinstance;
+
+//Хэндл окна
 extern HWND g_hWnd;
+
+//Габариты клиентской области окна
 extern int g_ClientWidth;
 extern int g_ClientHeight;
+
+//Путь к папке запуска
 extern string g_DirectoryPath;
+
+//Имя последнего файла, загрузка которого завершилась ошибкой
 extern string g_LastLoadFileError;
-extern string g_ShardIP;
+
+//Текст версии клиента
 extern string g_ClientVersionText;
+
+//Имена для автовхода
 extern string g_AutoLoginNames;
+
+//Последний введенный текст
 extern wstring g_LastConsoleEntry;
+
+//IP сервера
+extern string g_ShardIP;
+
+//Порт к которому подключаться к серверу
 extern int g_ShardPort;
+
+//Время последней отправки пакета серверу
 extern DWORD g_LastSendTime;
+
+//Время последнего пакета от сервера
 extern DWORD g_LastPacketTime;
+
+//Общий размер отправленных пакетов
 extern DWORD g_TotalSendSize;
+
+//Общий размер принятых пакетов
 extern DWORD g_TotalRecvSize;
+
+//Флаг загрузки конфига
 extern bool g_ConfigLoaded;
+
+//Состояние игры (отображаемый экран)
 extern GAME_STATE g_GameState;
+
+//Логин ключи
 extern DWORD g_CryptKey[3];
+
+//Модификатор логин ключа
 extern WORD g_SeedKey;
+
+//Сообщение инициализации шифрования серверу
 extern BYTE g_GameSeed[4];
+
+//Уровень освещенности
 extern BYTE g_LightLevel;
+
+//Уровень освещенности персонажа
 extern BYTE g_PersonalLightLevel;
+
+//Перевернутыый байлист
 extern bool g_InverseBuylist;
+
+//Флаги клиента
 extern DWORD g_ClientFlag;
+
+//Флаги расширений клиента
 extern DWORD g_LockedClientFeatures;
+
+//Максимальный габариты карты в точках по осям
 extern short g_MapSizeX[6];
 extern short g_MapSizeY[6];
+
+//Максимальный габариты карты в блоках по осям
 extern short g_MapBlockX[6];
 extern short g_MapBlockY[6];
+
+//Текстуры карт мира
 extern GLuint g_MapTexture[6];
+
+//Индекс текущей карты
 extern BYTE g_CurrentMap;
-extern int g_GameWindowSizeX;
-extern int g_GameWindowSizeY;
+
+//Габариты игрового окна
+extern int g_GameWindowWidth;
+extern int g_GameWindowHeight;
+
+//Позиция игрового окна
 extern int g_GameWindowPosX;
 extern int g_GameWindowPosY;
+
+//Кодовая страница пользователя
 extern int g_CodePage;
+
+//Время сервера
 extern BYTE g_ServerTimeHour;
 extern BYTE g_ServerTimeMinute;
 extern BYTE g_ServerTimeSecond;
+
+//Счетчик стека пинга
 extern BYTE g_PingCount;
 extern BYTE g_PingSequence;
+
+//Пакет о завершении входа в игру получен
 extern bool g_PacketLoginComplete;
+
+//Рисовать мир в черно-белом представлении
 extern bool g_GrayedPixels;
+
+//Количество индексов мульти-объектов
 extern int g_MultiIndexCount;
+
+//Количество запросов перемещения
 extern BYTE g_WalkRequestCount;
+
+//Время последнего шага
 extern DWORD g_LastStepTime;
+
+//Сумма значений навыков
 extern float g_SkillsTotal;
+
+//Серийник персонажа
 extern DWORD g_PlayerSerial;
+
+//Количество блокирующих меню
 extern int g_GrayMenuCount;
+
+//Отображать в журнале системные сообщения
 extern bool g_JournalShowSystem;
+
+//Отображать в журнале сообщения от объектов
 extern bool g_JournalShowObjects;
+
+//Отображать в журнале внутренние сообщения клиента
 extern bool g_JournalShowClient;
+
+//Серийник статусбара под мышкой
 extern DWORD g_StatusbarUnderMouse;
+
+//Таймер черного экрана от смерти
 extern DWORD g_DeathScreenTimer;
-const DWORD g_DeathScreenDelay = 3000;
+
+//Отмена двойного нажатия мышки
 extern bool g_CancelDoubleClick;
+
+//Тип промпта
 extern PROMPT_TYPE g_ConsolePrompt;
+
+//Данные последнего ASCII промпта
 extern BYTE g_LastASCIIPrompt[11];
+
+//Данные последнего Unicode промпта
 extern BYTE g_LastUnicodePrompt[11];
+
+//Режим рисования. true - рисование, false - выбор объектов
 extern bool g_DrawMode;
+
+//Текущий язык
 extern string g_Language;
+
+//Цвет для объектов, вышедших за пределы g_UpdateRange (если это предусмотрено опциями)
 extern WORD g_OutOfRangeColor;
+
+//Отправлять ли уведомление о выходе из игры
 extern bool g_SendLogoutNotification;
+
+//Включены ли всплывающие меню НПС
 extern bool g_NPCPopupEnabled;
+
+//Включен ли чат
 extern bool g_ChatEnabled;
+
+//Текущий сезон года
 extern BYTE g_Season;
+
+//Модификатор расчета анимации персонажа
 extern float g_AnimCharactersDelayValue;
+
+//Отображать ли локеры гампов
 extern bool g_ShowGumpLocker;
+
+//Серийник для таргета от кнопок пати-гампа
 extern DWORD g_PartyHelperTarget;
+
+//Время жизни для таргета от кнопок пати-гампа
 extern DWORD g_PartyHelperTimer;
+
+//Цвет OpenGL рисования
 extern float g_DrawColor;
+
+//Не рисовать крыши
 extern bool g_NoDrawRoof;
+
+//Максимальное значение Z коордираны ландшафта для рендера
 extern char g_MaxGroundZ;
-extern char g_SelecterCharName[30];
+
+//Имя выбранного персонажа
+extern char g_SelectedCharName[30];
+
+//Значение Z-buffer'а
 extern int g_ZBuffer;
+
+//Возможность использования круга прозрачности
 extern bool g_UseCircleTrans;
-
-const BYTE SMOOTH_MONITOR_NONE = 0;
-const BYTE SMOOTH_MONITOR_SUNRISE = 1;
-const BYTE SMOOTH_MONITOR_SUNSET = 2;
-
-extern bool g_UseSmoothMonitor;
-extern BYTE g_SmoothMonitorMode;
-extern GLfloat g_SmoothMonitorColor;
-extern GLfloat g_SmoothMonitorStep;
-extern BYTE g_SmoothMonitorScale;
 //---------------------------------------------------------------------------
+//Текущие координаты мыши
 extern int g_MouseX;
 extern int g_MouseY;
+
+//Координаты нажатой левой кнопки мыши
 extern int g_DroppedLeftMouseX;
 extern int g_DroppedLeftMouseY;
+
+//Координаты нажатой правой кнопки мыши
 extern int g_DroppedRightMouseX;
 extern int g_DroppedRightMouseY;
+
+//Состояния нажатия кнопок мыши
 extern bool g_RightMouseDown;
 extern bool g_LeftMouseDown;
+//---------------------------------------------------------------------------
+//Выбор объектов гампов
 extern bool g_SelectGumpObjects;
-//---------------------------------------------------------------------------
+
+//Тип выбранного объекта
 extern SELECT_OBJECT_TYPE g_LastObjectType;
+
+//Последний выбранный объект
 extern int g_LastSelectedObject;
+
+//Последний объект, на котором была нажата левая кнопка мыши
 extern int g_LastObjectLeftMouseDown;
+
+//Последний объект, на котором была нажата правая кнопка мыши
 extern int g_LastObjectRightMouseDown;
+
+//Последний выбранный гамп
 extern DWORD g_LastSelectedGump;
+
+//Последний гамп, на котором была нажата левая кнопка мыши
 extern DWORD g_LastGumpLeftMouseDown;
+
+//Время последнего нажатия мышкой на гамп
 extern DWORD g_LastGumpMouseDownTime;
+
+//Время последнего нажатия мышки
 extern DWORD g_LastMouseDownTime;
+
+//Последний гамп, на котором была нажата правая кнопка мыши
 extern DWORD g_LastGumpRightMouseDown;
+
+//Сгенерированное событие нажатия кнопки мыши
 extern bool g_GeneratedMouseDown;
+
+//Последнее время клика мышкой
 extern DWORD g_LastLClickTime;
+
+//Индекс последнего выбранного заклинания
 extern int g_LastSpellIndex;
+
+//Индекс последнего выбранного навыка
 extern int g_LastSkillIndex;
+
+//Запрос нажатия на объект
 extern bool g_ClickObjectReq;
+
+//Последний использованный объект
 extern DWORD g_LastUseObject;
+
+//Последний объект, на который навели прицелом
 extern DWORD g_LastTargetObject;
+
+//Последний атакованный объект
 extern DWORD g_LastAttackObject;
-//---------------------------------------------------------------------------
+
+//Время последней отрисовки
 extern DWORD g_LastRenderTime;
-const int g_FrameDelay_ActiveWindow = 30;
-const int g_FrameDelay_UnactiveWindow = (g_FrameDelay_ActiveWindow + 1) * 7;
-static int g_FrameDelay[2] = {g_FrameDelay_UnactiveWindow, g_FrameDelay_ActiveWindow};
-//---------------------------------------------------------------------------
-const WORD g_SelectLandColor = 0x0044;
-const WORD g_SelectStaticColor = 0x0077;
-const WORD g_SelectMultiColor = 0x0066;
-//---------------------------------------------------------------------------
-const int g_MaleGumpOffset = 50000;
-const int g_FemaleGumpOffset = 60000;
-//---------------------------------------------------------------------------
+
+//Дистанция для обновления предметов
 extern int g_UpdateRange;
+
+//Координаты, с которых следует начинать расчет удаления объектов
 extern POINT g_RemoveRangeXY;
-//---------------------------------------------------------------------------
-const int RemoveObjectRange = 22; //25;
-const int RemoveMultiRange = 35;
-const int RemoveContainerGumpRange = 3;
-//---------------------------------------------------------------------------
-const int g_StepDelayMountRun = 85;
-const int g_StepDelayMountWalk = 185;
-const int g_StepDelayRun = 185;
-const int g_StepDelayWalk = 385;
-//---------------------------------------------------------------------------
-const int g_CharacterAnimationDelayTable[2][2] =
-{
-	//without mount
-	{
-		//walk
-		g_StepDelayWalk,
-		//run
-		g_StepDelayRun
-	},
-	//on mount
-	{
-		//walk
-		g_StepDelayMountWalk,
-		//run
-		g_StepDelayMountRun
-	}
-};
-//---------------------------------------------------------------------------
-extern const bool g_LayerUnsafe[30];
-//---------------------------------------------------------------------------
-const int g_MaxBlockZ = 15;
-const int g_MaxClimbZ = 9;
-const int g_MaxFallZ = 19;
-const int g_MaxClimbMapZ = 19;
-const int g_CharacterHeight = 16;
-//---------------------------------------------------------------------------
-extern char g_SpellCircles[8][15];
-const char *GetReagentName(WORD ID);
-extern WORD g_SpellReagents[64][4];
-extern char g_SpellCastAbr[64][8];
-extern const char *g_CityNames[9];
-//---------------------------------------------------------------------------
-struct POINT3DF
-{
-	float x, y;
-	char z;
-};
-//---------------------------------------------------------------------------
-struct IMAGE_BOUNDS
-{
-	int X;
-	int Y;
-	int Width;
-	int Height;
-
-	bool InRect(IMAGE_BOUNDS &ib);
-};
-//---------------------------------------------------------------------------
-class TRenderTextObject;
-//---------------------------------------------------------------------------
-struct TEXT_IMAGE_BOUNDS : public IMAGE_BOUNDS
-{
-	int X;
-	int Y;
-	int Width;
-	int Height;
-	TRenderTextObject *m_Text;
-
-	bool InRect(TEXT_IMAGE_BOUNDS &ib);
-};
-
-extern IMAGE_BOUNDS g_PlayerRect;
-//---------------------------------------------------------------------------
-struct TARGET_GUMP_INFO
-{
-	int X;
-	int Y;
-	int HP;
-	WORD Color;
-
-	void Draw();
-};
-
-extern TARGET_GUMP_INFO TargetGump;
-extern TARGET_GUMP_INFO AttackTargetGump;
-
-//---------------------------------------------------------------------------
-// перевод Радианов в Градусы
-inline float deg2radf(float degr)
-{
-	
-	return degr * (float)(M_PI / 180.0f);
-}
-//---------------------------------------------------------------------------
-inline float rad2degf(float radians)
-{
-	return (float)(radians * 180.0f / M_PI);
-}
-//---------------------------------------------------------------------------
-inline int RandomInt(int n)
-{
-	return (rand() % n);
-}
-//---------------------------------------------------------------------------
-inline int RandomIntMinMax(int n, int m)
-{
-	return (rand() % (m - n) + n);
-}
-//---------------------------------------------------------------------------
-int CalculateSphereOffset(int max, int current, int maxValue, float divizor = 100.0f);
-int CalculatePercents(int max, int current, int maxValue);
-//---------------------------------------------------------------------------
-inline DWORD unpack32(PBYTE buf)
-{
-	return (buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3];
-}
-//---------------------------------------------------------------------------
-inline WORD unpack16(PBYTE buf)
-{
-	return (buf[0] << 8) | buf[1];
-}
-//---------------------------------------------------------------------------
-void UnuseShader();
-//---------------------------------------------------------------------------
-inline void pack32(PBYTE buf, DWORD x)
-{
-	buf[0] = BYTE(x >> 24);
-	buf[1] = BYTE((x >> 16) & 0xff);
-	buf[2] = BYTE((x >> 8) & 0xff);
-	buf[3] = BYTE(x & 0xff);
-}
-//---------------------------------------------------------------------------
-inline void pack16(PBYTE buf, WORD x)
-{
-	buf[0] = x >> 8;
-	buf[1] = x & 0xff;
-}
-//---------------------------------------------------------------------------
-void error_printf(const char * format, ...) GCC_PRINTF(1,2);
-void warning_printf(const char * format, ...) GCC_PRINTF(1,2);
-void trace_printf(const char * format, ...) GCC_PRINTF(1,2);
-void trace_dump(PBYTE buf, int length);
-//---------------------------------------------------------------------------
-string FilePath(string fName);
-string ToString(wstring wstr);
-wstring ToWString(string str);
-//---------------------------------------------------------------------------
-int gumpuucode2str(const wchar_t *wstr, int wlength, char *receiver, int maxsize);
-int uucode2str(const wchar_t *wstr, int wlength, char *receiver, int maxsize);
-int str2uucode(const char *str, int length, wchar_t* wreceiver, int wmaxsize);
-//---------------------------------------------------------------------------
-inline bool IsBackground(DWORD Flags) {return (Flags & 0x00000001);}
-inline bool IsWeapon(DWORD Flags) {return (Flags & 0x00000002);}
-inline bool IsTransparent(DWORD Flags) {return (Flags & 0x00000004);}
-inline bool IsTranslucent(DWORD Flags) {return (Flags & 0x00000008);}
-inline bool IsWall(DWORD Flags) {return (Flags & 0x00000010);}
-inline bool IsDamaging(DWORD Flags) {return (Flags & 0x00000020);}
-inline bool IsImpassable(DWORD Flags) {return (Flags & 0x00000040);}
-inline bool IsWet(DWORD Flags) {return (Flags & 0x00000080);}
-inline bool IsUnknown(DWORD Flags) {return (Flags & 0x00000100);}
-inline bool IsSurface(DWORD Flags) {return (Flags & 0x00000200);}
-inline bool IsBridge(DWORD Flags) {return (Flags & 0x00000400);}
-inline bool IsStackable(DWORD Flags) {return (Flags & 0x00000800);}
-inline bool IsWindow(DWORD Flags) {return (Flags & 0x00001000);}
-inline bool IsNoShoot(DWORD Flags) {return (Flags & 0x00002000);}
-inline bool IsPrefixA(DWORD Flags) {return (Flags & 0x00004000);}
-inline bool IsPrefixAn(DWORD Flags) {return (Flags & 0x00008000);}
-inline bool IsInternal(DWORD Flags) {return (Flags & 0x00010000);}
-inline bool IsFoliage(DWORD Flags) {return (Flags & 0x00020000);}
-inline bool IsPartialHue(DWORD Flags) {return (Flags & 0x00040000);}
-inline bool IsUnknown1(DWORD Flags) {return (Flags & 0x00080000);}
-inline bool IsMap(DWORD Flags) {return (Flags & 0x00100000);}
-inline bool IsContainer(DWORD Flags) {return (Flags & 0x00200000);}
-inline bool IsWearable(DWORD Flags) {return (Flags & 0x00400000);}
-inline bool IsLightSource(DWORD Flags) {return (Flags & 0x00800000);}
-inline bool IsAnimated(DWORD Flags) {return (Flags & 0x01000000);}
-inline bool IsNoDiagonal(DWORD Flags) {return (Flags & 0x02000000);}
-inline bool IsUnknown2(DWORD Flags) {return (Flags & 0x04000000);}
-inline bool IsArmor(DWORD Flags) {return (Flags & 0x08000000);}
-inline bool IsRoof(DWORD Flags) {return (Flags & 0x10000000);}
-inline bool IsDoor(DWORD Flags) {return (Flags & 0x20000000);}
-inline bool IsStairBack(DWORD Flags) {return (Flags & 0x40000000);}
-inline bool IsStairRight(DWORD Flags) {return (Flags & 0x80000000);}
 //---------------------------------------------------------------------------
 
 
@@ -460,6 +446,7 @@ typedef std::vector<BYTE> WaveFile;
 
 
 //---------------------------------------------------------------------------
+#include "CommonFunctions.h"
 #include "CommonInterfaces.h"
 #include "MulStruct.h"
 #include "ExceptionFilter.h"
@@ -474,6 +461,9 @@ typedef std::vector<BYTE> WaveFile;
 #include "managers\\ConnectionManager.h"
 #include "managers\\PacketManager.h"
 #include "managers\\FileManager.h"
+#include "ImageBounds.h"
+#include "TargetGump.h"
+#include "SmoothMonitor.h"
 #include "BaseQueue.h"
 #include "TextureObject.h"
 #include "IndexObject.h"

@@ -22,31 +22,6 @@
 //---------------------------------------------------------------------------
 #define UO_DEBUG_INFO 1
 //---------------------------------------------------------------------------
-//Включить/выключить логгер.
-//Логгер будет работать в любом случае, но если эта опция выключена
-//то он не будет писать в лог дампы пакетов и всякую отладочкую информацию
-//Если значение равно 2 - будет писать отладочную инфу, но без дампов пакетов
-//Без пакетов от нее толку мало...
-
-#define UOLOGGER 1
-
-#if UOLOGGER != 0
-	#define EPRINT error_printf
-	#define WPRINT warning_printf
-	#define TPRINT trace_printf
-	#define T_TPRINT trace_printf
-	#if UOLOGGER == 2
-		#define TDUMP ;/##/
-	#else //UOLOGGER != 2
-		#define TDUMP trace_dump
-	#endif //UOLOGGER == 2
-#else //UOLOGGER == 0
-	#define EPRINT ;/##/
-	#define WPRINT ;/##/
-	#define TPRINT ;/##/
-	#define TDUMP ;/##/
-#endif //UOLOGGER!=0
-//---------------------------------------------------------------------------
 #define ADD_LINKED(list, item) \
 TLinkedList *nextList = list; \
 list = new TLinkedList(&item); \
@@ -94,26 +69,7 @@ list->Next = new TLinkedList(&m_GumpDataIndex[id]);
 #define CE_RECV_ERROR				-8
 #define CE_RECV_SIZE_ERROR			-9
 //---------------------------------------------------------------------------
-#define DCLICK_DELAY				350
-#define SCROLL_LISTING_DELAY		150
-#define CHANGE_SHOP_COUNT_DELAY		50
-#define CHANGE_MACRO_DELAY			100
-#define CHANGE_MACRO_LIST_DELAY		500
-//---------------------------------------------------------------------------
-//Задержка между отправкой последнего пакета и Ping (0x73) пакетом, 55 секунд
-#define SEND_TIMEOUT_DELAY			55000
-
-#define GUMP_MENU_PIXEL_STEP		5
-
-#define GUMP_SCROLLING_PIXEL_STEP	10
-
-#define CLEAR_TEXTURES_DELAY		30000
-
 #define RANDOM_FIDGET_ANIMATION_DELAY		(30000 + (rand() % 5000))
-
-#define WEATHER_TIMER				(6 * 60 * 1000)
-
-#define WAIT_FOR_TARGET_DELAY		2000
 //---------------------------------------------------------------------------
 #define MODKEY_ALT					0x0100
 #define MODKEY_CTRL					0x0200
@@ -147,15 +103,5 @@ list->Next = new TLinkedList(&m_GumpDataIndex[id]);
 	__declspec(property(get = Get##name)) type name
 //---------------------------------------------------------------------------
 #define CMP_RANGE(name, id1, id2) (name >= id1 && name <= id2)
-//---------------------------------------------------------------------------
-// GCC_NORETURN means the function never returns
-// GCC_PRINTF means the function has printf-style arguments
-#ifdef __GNUC__
-#   define GCC_NORETURN __attribute__((noreturn))
-#   define GCC_PRINTF(n,m) __attribute__((format (printf, n, m)))
-#else
-#   define GCC_NORETURN
-#   define GCC_PRINTF(n,m)
-#endif
 //---------------------------------------------------------------------------
 #endif

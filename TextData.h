@@ -59,7 +59,7 @@ class TTextRenderer : public TRenderTextObject
 {
 private:
 	//Список координат, занятых текстом
-	std::deque<TEXT_IMAGE_BOUNDS> m_TextRect;
+	std::deque<TTextImageBounds> m_TextRect;
 
 public:
 	TTextRenderer();
@@ -75,13 +75,13 @@ public:
 	void ToTop(TRenderTextObject *obj);
 
 	//Добавить координаты текста
-	void AddRect(TEXT_IMAGE_BOUNDS &rect) {m_TextRect.push_back(rect);}
+	void AddRect(TTextImageBounds &rect) {m_TextRect.push_back(rect);}
 
 	//Очистить список координат текста
 	void ClearRect() {m_TextRect.clear();}
 
 	//Проверка, есть ли текст в координатах
-	bool InRect(TEXT_IMAGE_BOUNDS &rect, TRenderWorldObject *rwo);
+	bool InRect(TTextImageBounds &rect, TRenderWorldObject *rwo);
 };
 //---------------------------------------------------------------------------
 //Класс для хранения информации о текстуре текста
@@ -97,7 +97,7 @@ private:
 	//Серийник хозяина
 	DWORD m_Serial;
 
-	/Индекс шрифта
+	//Индекс шрифта
 	WORD m_Font;
 
 	//Цвет

@@ -131,15 +131,15 @@ WORD TMouseManager::GetGameCursor()
 	int war = (int)(g_Player != NULL && g_Player->Warmode);
 	WORD result = g_CursorData[war][9]; //Main Gump mouse cursor
 	
-	int GameWindowCenterX = g_GameWindowPosX + (g_GameWindowSizeX / 2);
-	int GameWindowCenterY = g_GameWindowPosY + (g_GameWindowSizeY / 2);
+	int GameWindowCenterX = g_GameWindowPosX + (g_GameWindowWidth / 2);
+	int GameWindowCenterY = g_GameWindowPosY + (g_GameWindowHeight / 2);
 
 	int facing = GetFacing(GameWindowCenterX, GameWindowCenterY, g_MouseX, g_MouseY, 1);
 	
 	bool mouseInWindow = true;
 
-	if (g_MouseX < g_GameWindowPosX || g_MouseY < g_GameWindowPosY || g_MouseX > (g_GameWindowPosX + g_GameWindowSizeX) ||
-		g_MouseY > (g_GameWindowPosY + g_GameWindowSizeY))
+	if (g_MouseX < g_GameWindowPosX || g_MouseY < g_GameWindowPosY || g_MouseX > (g_GameWindowPosX + g_GameWindowWidth) ||
+		g_MouseY > (g_GameWindowPosY + g_GameWindowHeight))
 		mouseInWindow = false;
 
 	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && !g_LastGumpRightMouseDown)

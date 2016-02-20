@@ -21,7 +21,7 @@
 
 TAnimationManager *AnimationManager = NULL;
 //----------------------------------------------------------------------------
-int TAnimationManager::m_UsedLayers[8][m_LayerCount] =
+int TAnimationManager::m_UsedLayers[8][USED_LAYER_COLUT] =
 {
 	{ //dir 0
 		OL_SHIRT,
@@ -1303,7 +1303,7 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	{
 		if (!obj->Dead())
 		{
-			IFOR(l, 0, m_LayerCount)
+			IFOR(l, 0, USED_LAYER_COLUT)
 			{
 				goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
 
@@ -1349,14 +1349,14 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 			AttackTargetGump.X = drawX - 20;
 			AttackTargetGump.Y = drawY;
 			AttackTargetGump.Color = targetColor;
-			AttackTargetGump.HP = per;
+			AttackTargetGump.Hits = per;
 		}
 		else
 		{
 			TargetGump.X = drawX - 20;
 			TargetGump.Y = drawY;
 			TargetGump.Color = targetColor;
-			TargetGump.HP = per;
+			TargetGump.Hits = per;
 		}
 	}
 }
@@ -1396,7 +1396,7 @@ bool TAnimationManager::CharacterPixelsInXY(TGameCharacter *obj, int x, int y, i
 
 	if (obj->IsHuman()) //Check layred objects
 	{
-		IFOR(l, 0, m_LayerCount && !result)
+		IFOR(l, 0, USED_LAYER_COLUT && !result)
 		{
 			goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
 
@@ -1434,7 +1434,7 @@ void TAnimationManager::DrawCorpse(TGameItem *obj, int x, int y, int z)
 
 	Draw(obj, x, y, mirror, animIndex); //Draw animation
 
-	IFOR(l, 0, m_LayerCount)
+	IFOR(l, 0, USED_LAYER_COLUT)
 	{
 		TGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
 		
@@ -1467,7 +1467,7 @@ bool TAnimationManager::CorpsePixelsInXY(TGameItem *obj, int x, int y, int z)
 
 	bool result = TestPixels(obj, x, y, mirror, animIndex);
 
-	IFOR(l, 0, m_LayerCount && !result)
+	IFOR(l, 0, USED_LAYER_COLUT && !result)
 	{
 		TGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
 

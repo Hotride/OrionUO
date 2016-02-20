@@ -96,8 +96,6 @@ public:
 	void UnloadFileFromMemory(TMappedHeader &object);
 };
 //---------------------------------------------------------------------------
-const int MAX_FILE_BUFFER_SIZE = 0x1000;
-//---------------------------------------------------------------------------
 class TFileWriter
 {
 private:

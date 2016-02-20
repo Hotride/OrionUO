@@ -681,7 +681,7 @@ PACKET_HANDLER(ServerList)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(RelayServer)
 {
-	memset(&g_SelecterCharName[0], 0, sizeof(g_SelecterCharName));
+	memset(&g_SelectedCharName[0], 0, sizeof(g_SelectedCharName));
 	in_addr addr;
 	PDWORD paddr = (PDWORD)Ptr;
 	Move(4);
@@ -880,8 +880,8 @@ PACKET_HANDLER(EnterWorld)
 
 	Move(4);
 
-	if (strlen(g_SelecterCharName))
-		g_Player->SetName(g_SelecterCharName);
+	if (strlen(g_SelectedCharName))
+		g_Player->SetName(g_SelectedCharName);
 
 	g_Player->Graphic = ReadWord();
 	g_Player->OnGraphicChange();
@@ -1003,7 +1003,7 @@ PACKET_HANDLER(UpdatePlayer)
 			Weather.Reset();
 			Target.Reset();
 
-			g_DeathScreenTimer = GetTickCount() + g_DeathScreenDelay;
+			g_DeathScreenTimer = GetTickCount() + DEATH_SCREEN_DELAY;
 		}
 	}
 	
@@ -1986,8 +1986,8 @@ PACKET_HANDLER(OpenContainer)
 
 	if (gumpid == 0xFFFF) //Spellbook
 	{
-		int GameWindowCenterX = (g_GameWindowPosX - 4) + g_GameWindowSizeX / 2;
-		int GameWindowCenterY = (g_GameWindowPosY - 4) + g_GameWindowSizeY / 2;
+		int GameWindowCenterX = (g_GameWindowPosX - 4) + g_GameWindowWidth / 2;
+		int GameWindowCenterY = (g_GameWindowPosY - 4) + g_GameWindowHeight / 2;
 
 		int x = GameWindowCenterX - 200;
 		int y = GameWindowCenterY - 100;
@@ -3203,7 +3203,7 @@ PACKET_HANDLER(DeathScreen)
 	Weather.Reset();
 	Target.Reset();
 
-	g_DeathScreenTimer = GetTickCount() + g_DeathScreenDelay;
+	g_DeathScreenTimer = GetTickCount() + DEATH_SCREEN_DELAY;
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(PlaySoundEffect)

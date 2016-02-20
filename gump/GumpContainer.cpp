@@ -118,7 +118,7 @@ void TGumpContainer::GenerateFrame(int posX, int posY)
 		{
 			int count = obj->Count;
 
-			if ((obj->Layer == OL_NONE || (isCorpse && g_LayerUnsafe[obj->Layer])) && count > 0)
+			if ((obj->Layer == OL_NONE || (isCorpse && LAYER_UNSAFE[obj->Layer])) && count > 0)
 			{
 				WORD graphic = obj->Graphic;
 				WORD color = obj->Color;
@@ -278,12 +278,7 @@ int TGumpContainer::Draw(bool &mode)
 
 					if (mode)
 					{
-						TEXT_IMAGE_BOUNDS ib;
-						ib.X = drawX;
-						ib.Y = drawY;
-						ib.Width = drawX + tth.Width;
-						ib.Height = drawY + tth.Height;
-						ib.m_Text = td;
+						TTextImageBounds ib(drawX, drawY, drawX + tth.Width, drawY + tth.Height, td);
 
 						td->Transparent = TextRenderer->InRect(ib, go);
 
@@ -383,7 +378,7 @@ int TGumpContainer::Draw(bool &mode)
 			{
 				int count = obj->Count;
 
-				if ((obj->Layer == OL_NONE || (isCorpse && g_LayerUnsafe[obj->Layer])) && count > 0)
+				if ((obj->Layer == OL_NONE || (isCorpse && LAYER_UNSAFE[obj->Layer])) && count > 0)
 				{
 					WORD graphic = obj->Graphic;
 					int drawX = posX + obj->X;

@@ -83,15 +83,8 @@ void TMainScreen::Init()
 
 	FontManager->SetSavePixels(false);
 
-	if (g_UseSmoothMonitor)
-	{
-		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
-		g_SmoothMonitorColor = 0.0f;
-		g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
-		m_SmoothScreenAction = 0;
-	}
-	else
-		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+	SmoothMonitor.UseSunrise();
+	m_SmoothScreenAction = 0;
 
 	Tooltip.SeqIndex = 0;
 
@@ -378,8 +371,8 @@ void TMainScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 void TMainScreen::LoadGlobalConfig()
 {
 	m_AutoLogin = false;
-	g_UseSmoothMonitor = false;
-	g_SmoothMonitorScale = 1;
+	SmoothMonitor.Enabled = false;
+	SmoothMonitor.Scale = 1;
 
 	FILE *uo_cfg = fopen(FilePath("uo_debug.cfg").c_str(), "r");
 
@@ -452,7 +445,7 @@ void TMainScreen::LoadGlobalConfig()
 					char scale = atoi(ptr);
 
 					if (scale > 0 && scale <= 15)
-						g_SmoothMonitorScale = scale;
+						SmoothMonitor.Scale = scale;
 				}
 				else if (!memcmp(cfgbuf, "smoothmonitor", 13))
 				{
@@ -460,7 +453,7 @@ void TMainScreen::LoadGlobalConfig()
 					value = ptr;
 
 					if (value == string("yes") || value == string("on"))
-						g_UseSmoothMonitor = true;
+						SmoothMonitor.Enabled = true;
 				}
 			}
 		}
@@ -497,10 +490,10 @@ void TMainScreen::SaveGlobalConfig()
 	sprintf(buf, "AutoLogin=%s\n", (m_AutoLogin ? "yes" : "no"));
 	fputs(buf, uo_cfg);
 
-	sprintf(buf, "SmoothMonitor=%s\n", (g_UseSmoothMonitor ? "yes" : "no"));
+	sprintf(buf, "SmoothMonitor=%s\n", (SmoothMonitor.Enabled ? "yes" : "no"));
 	fputs(buf, uo_cfg);
 
-	sprintf(buf, "SmoothMonitorScale=%i\n", g_SmoothMonitorScale);
+	sprintf(buf, "SmoothMonitorScale=%i\n", SmoothMonitor.Scale);
 	fputs(buf, uo_cfg);
 
 	fclose(uo_cfg);

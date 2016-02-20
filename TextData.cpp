@@ -119,15 +119,15 @@ void TTextRenderer::ToTop(TRenderTextObject *obj)
 		next->m_PrevDraw = obj;
 }
 //---------------------------------------------------------------------------
-bool TTextRenderer::InRect(TEXT_IMAGE_BOUNDS &rect, TRenderWorldObject *rwo)
+bool TTextRenderer::InRect(TTextImageBounds &rect, TRenderWorldObject *rwo)
 {
 	bool result = false;
 
-	for (std::deque<TEXT_IMAGE_BOUNDS>::iterator it = m_TextRect.begin(); it != m_TextRect.end(); it++)
+	for (std::deque<TTextImageBounds>::iterator it = m_TextRect.begin(); it != m_TextRect.end(); it++)
 	{
 		if ((*it).InRect(rect))
 		{
-			if (rwo == NULL || (rwo != NULL && rwo->TextCanBeTransparent((*it).m_Text)))
+			if (rwo == NULL || (rwo != NULL && rwo->TextCanBeTransparent((*it).Text)))
 			{
 				result = true;
 				break;

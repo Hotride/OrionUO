@@ -105,7 +105,7 @@ void TGumpPaperdoll::PrepareTextures()
 	
 	if (obj != NULL)
 	{
-		int gumpOffset = (obj->Sex ? g_FemaleGumpOffset : g_MaleGumpOffset);
+		int gumpOffset = (obj->Sex ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET);
 
 		//Draw equipment & backpack
 		TGameItem *equipment = NULL;
@@ -120,7 +120,7 @@ void TGumpPaperdoll::PrepareTextures()
 					int cOfs = gumpOffset;
 
 					if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
-						cOfs = g_MaleGumpOffset;
+						cOfs = MALE_GUMP_OFFSET;
 
 					UO->ExecuteGump(equipment->AnimID + cOfs);
 				}
@@ -133,7 +133,7 @@ void TGumpPaperdoll::PrepareTextures()
 						int cOfs = gumpOffset;
 
 						if (obj->Sex && !UO->ExecuteGump(ObjectInHand->AnimID + cOfs))
-							cOfs = g_MaleGumpOffset;
+							cOfs = MALE_GUMP_OFFSET;
 
 						UO->ExecuteGump(ObjectInHand->AnimID + gumpOffset);
 					}
@@ -149,7 +149,7 @@ void TGumpPaperdoll::PrepareTextures()
 				int cOfs = gumpOffset;
 
 				if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
-					cOfs = g_MaleGumpOffset;
+					cOfs = MALE_GUMP_OFFSET;
 
 				UO->ExecuteGump(equipment->AnimID + cOfs);
 			}
@@ -322,7 +322,7 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 		posX += 8;
 		posY += 19;
 
-		int gumpOffset = (obj->Sex ? g_FemaleGumpOffset : g_MaleGumpOffset);
+		int gumpOffset = (obj->Sex ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET);
 
 		//Draw equipment & backpack
 		TGameItem *equipment = NULL;
@@ -337,7 +337,7 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 					int cOfs = gumpOffset;
 
 					if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
-						cOfs = g_MaleGumpOffset;
+						cOfs = MALE_GUMP_OFFSET;
 
 					UO->DrawGump(equipment->AnimID + cOfs, equipment->Color, posX, posY);
 				}
@@ -350,7 +350,7 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 						int cOfs = gumpOffset;
 
 						if (obj->Sex && !UO->ExecuteGump(ObjectInHand->AnimID + cOfs))
-							cOfs = g_MaleGumpOffset;
+							cOfs = MALE_GUMP_OFFSET;
 
 						glEnable(GL_BLEND);
 						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -373,7 +373,7 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 				int cOfs = gumpOffset;
 
 				if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
-					cOfs = g_MaleGumpOffset;
+					cOfs = MALE_GUMP_OFFSET;
 
 				UO->DrawGump(equipment->AnimID + cOfs, equipment->Color, posX, posY);
 			}
@@ -515,12 +515,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 						int drawX = posX + td->DrawX - go->GetTextOffsetX(td);
 						int drawY = posY + td->DrawY - go->GetTextOffsetY(td);
 
-						TEXT_IMAGE_BOUNDS ib;
-						ib.X = drawX;
-						ib.Y = drawY;
-						ib.Width = drawX + tth.Width;
-						ib.Height = drawY + tth.Height;
-						ib.m_Text = td;
+						TTextImageBounds ib(drawX, drawY, drawX + tth.Width, drawY + tth.Height, td);
 
 						td->Transparent = TextRenderer->InRect(ib, go);
 
@@ -542,12 +537,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 						tdBuf = tdBuf->m_Next;
 					}
 
-					TEXT_IMAGE_BOUNDS ib;
-					ib.X = drawX;
-					ib.Y = drawY + 1;
-					ib.Width = drawX + tth.Width;
-					ib.Height = drawY + tth.Height;
-					ib.m_Text = td;
+					TTextImageBounds ib(drawX, drawY + 1, drawX + tth.Width, drawY + tth.Height, td);
 
 					td->Transparent = TextRenderer->InRect(ib, NULL);
 
@@ -667,7 +657,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 		else if (UO->GumpPixelsInXY(0x07D2, posX + 23, posY + 196))
 			LSG = ID_GP_PROFILE_SCROLL; //Paperdoll profile scroll
 
-		int gumpOffset = (obj->Sex ? g_FemaleGumpOffset : g_MaleGumpOffset);
+		int gumpOffset = (obj->Sex ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET);
 		
 		posX += 8;
 		posY += 19;
@@ -685,7 +675,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 					int cOfs = gumpOffset;
 
 					if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
-						cOfs = g_MaleGumpOffset;
+						cOfs = MALE_GUMP_OFFSET;
 
 					if (UO->GumpPixelsInXY(equipment->AnimID + cOfs, posX, posY))
 						LSG = ID_GP_ITEMS + UsedLayers[i];

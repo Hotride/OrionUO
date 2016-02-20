@@ -77,7 +77,7 @@ void TGumpSpellbook::InitTextTextures()
 
 	IFOR(i, 0, 8)
 	{
-		FontManager->GenerateA(6, m_TextCircle[i], g_SpellCircles[i], 0x0288);
+		FontManager->GenerateA(6, m_TextCircle[i], SPELL_CIRCLES_NAMES[i], 0x0288);
 		
 		str = GetReagentName(m_ReagentsIndex[i]);
 		FontManager->GenerateA(9, m_TextReagent[i], str.c_str(), 0x0288);
@@ -312,7 +312,7 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 			int addY = 26;
 			if (th.Height < 24)
 				addY = 31;
-			FontManager->DrawA(8, g_SpellCastAbr[SI], 0x0288, posX + 112, posY + addY + th.Height);
+			FontManager->DrawA(8, SPELL_CAST_ABBREVIATURE[SI], 0x0288, posX + 112, posY + addY + th.Height);
 			th.Clear();
 
 			//Полоска
@@ -322,7 +322,7 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 
 			IFOR(i, 0, 4) //Отобразим реагенты, необходимые на каст
 			{
-				id = g_SpellReagents[SI][i];
+				id = SPELL_REAGENTS[SI][i];
 
 				if (!id)
 					break; //Если рега нет - выходим, дальше ничего не будет
@@ -369,7 +369,7 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 			addY = 26;
 			if (th.Height < 24)
 				addY = 31;
-			FontManager->DrawA(8, g_SpellCastAbr[SI], 0x0288, posX + 275, posY + addY + th.Height);
+			FontManager->DrawA(8, SPELL_CAST_ABBREVIATURE[SI], 0x0288, posX + 275, posY + addY + th.Height);
 			th.Clear();
 
 			//Полоска
@@ -379,7 +379,7 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 
 			IFOR(i, 0, 4) //Пройдемся по всем реагентам
 			{
-				id = g_SpellReagents[SI][i];
+				id = SPELL_REAGENTS[SI][i];
 
 				if (!id)
 					break; //Если рега нет - выходим, дальше ничего не будет

@@ -868,7 +868,7 @@ POINT TFontsManager::GetCaretPosW(BYTE font, const wchar_t *str, int pos, int wi
 						p.x += ((char)cptr[0] + (char)cptr[2] + 1);
 					}
 					else if (ch == L' ')
-						p.x += (int)g_UnicodeSpaceWidth;
+						p.x += UNICODE_SPACE_WIDTH;
 					else
 						pos++;
 
@@ -973,7 +973,7 @@ int TFontsManager::CalculateCaretPosW(BYTE font, const wchar_t *str, int x, int 
 						width += ((char)cptr[0] + (char)cptr[2] + 1);
 					}
 					else if (ch == L' ')
-						width += (int)g_UnicodeSpaceWidth;
+						width += UNICODE_SPACE_WIDTH;
 
 					if (width > x)
 						break;
@@ -1023,7 +1023,7 @@ int TFontsManager::GetWidthW(BYTE font, const wchar_t *str, int len)
 			textLength += ((char)ptr[0] + (char)ptr[2] + 1);
 		}
 		else if (str[i] == L' ')
-			textLength += (int)g_UnicodeSpaceWidth;
+			textLength += UNICODE_SPACE_WIDTH;
 	}
 
 	return textLength;
@@ -1054,7 +1054,7 @@ int TFontsManager::GetHeightW(BYTE font, const wchar_t *str, int width, TEXT_ALI
 		info = ptr;
 
 		if (m_UseHTML)
-			textHeight += g_MaxHTMLTextHeight;
+			textHeight += MAX_HTML_TEXT_HEIGHT;
 		else
 			textHeight += ptr->MaxHeight;
 
@@ -1077,7 +1077,7 @@ int TFontsManager::GetHeightW(PMULTILINES_FONT_INFO info)
 	while (info != NULL)
 	{
 		if (m_UseHTML)
-			textHeight += g_MaxHTMLTextHeight;
+			textHeight += MAX_HTML_TEXT_HEIGHT;
 		else
 			textHeight += info->MaxHeight;
 
@@ -1116,7 +1116,7 @@ wstring TFontsManager::GetTextByWidthW(BYTE font, const wchar_t *str, int len, i
 			cw = ((char)ptr[0] + (char)ptr[2] + 1);
 		}
 		else if (str[i] == L' ')
-			cw = (int)g_UnicodeSpaceWidth;
+			cw = UNICODE_SPACE_WIDTH;
 
 		if (cw)
 		{
@@ -1727,7 +1727,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML(BYTE font, const wchar_t *str, 
 
 				// (!ptr->MaxHeight)
 					//ptr->MaxHeight = 14;
-				ptr->MaxHeight = g_MaxHTMLTextHeight;
+				ptr->MaxHeight = MAX_HTML_TEXT_HEIGHT;
 
 				ptr->Data.resize(ptr->CharCount);
 
@@ -1759,7 +1759,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML(BYTE font, const wchar_t *str, 
 
 				//if (!ptr->MaxHeight)
 					//ptr->MaxHeight = 10;
-				ptr->MaxHeight = g_MaxHTMLTextHeight;
+				ptr->MaxHeight = MAX_HTML_TEXT_HEIGHT;
 
 				PMULTILINES_FONT_INFO newptr = new MULTILINES_FONT_INFO();
 				newptr->Reset();
@@ -1791,7 +1791,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML(BYTE font, const wchar_t *str, 
 
 					//if (((char)data[1] + (char)data[3]) > ptr->MaxHeight)
 						//ptr->MaxHeight = ((char)data[1] + (char)data[3]);
-					ptr->MaxHeight = g_MaxHTMLTextHeight;
+					ptr->MaxHeight = MAX_HTML_TEXT_HEIGHT;
 				
 					charCount++;
 
@@ -1809,7 +1809,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML(BYTE font, const wchar_t *str, 
 
 				//if (!ptr->MaxHeight)
 					//ptr->MaxHeight = 10;
-				ptr->MaxHeight = g_MaxHTMLTextHeight;
+				ptr->MaxHeight = MAX_HTML_TEXT_HEIGHT;
 
 				ptr->Data.resize(ptr->CharCount);
 
@@ -1841,7 +1841,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML(BYTE font, const wchar_t *str, 
 
 		if (si == L' ')
 		{
-			readWidth += (int)g_UnicodeSpaceWidth;
+			readWidth += UNICODE_SPACE_WIDTH;
 
 			//if (!ptr->MaxHeight)
 				//ptr->MaxHeight = 5;
@@ -1859,7 +1859,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML(BYTE font, const wchar_t *str, 
 
 	ptr->Width += readWidth;
 	ptr->CharCount += charCount;
-	ptr->MaxHeight = g_MaxHTMLTextHeight;
+	ptr->MaxHeight = MAX_HTML_TEXT_HEIGHT;
 
 	delete htmlData;
 
@@ -2057,7 +2057,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoW(BYTE font, const wchar_t *str, int
 
 		if (si == L' ')
 		{
-			readWidth += (int)g_UnicodeSpaceWidth;
+			readWidth += UNICODE_SPACE_WIDTH;
 
 			if (!ptr->MaxHeight)
 				ptr->MaxHeight = 5;
@@ -2238,7 +2238,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 				int ofsX = 0;
 
 				if (si == L' ')
-					ofsX = g_UnicodeSpaceWidth;
+					ofsX = UNICODE_SPACE_WIDTH;
 				else if ((!table[si] || table[si] == 0xFFFFFFFF) && si != L' ')
 					{}
 				else
@@ -2271,7 +2271,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 			if (si == L' ')
 			{
 				offsX = 0;
-				dw = g_UnicodeSpaceWidth;
+				dw = UNICODE_SPACE_WIDTH;
 			}
 			else
 			{
@@ -2308,7 +2308,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 
 					int italicOffset = 0;
 					if (isItalic)
-						italicOffset = (int)((dh - y) / g_ItalicFontKoeff);
+						italicOffset = (int)((dh - y) / ITALIC_FONT_KOEFFICIENT);
 
 					int testY = offsY + lineOffsY + y;
 
@@ -2357,7 +2357,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 					{
 						int italicOffset = 0;
 						if (isItalic && cy >=0 && cy < dh)
-							italicOffset = (int)((dh - cy) / g_ItalicFontKoeff);
+							italicOffset = (int)((dh - cy) / ITALIC_FONT_KOEFFICIENT);
 
 						int testY = offsY + lineOffsY + cy;
 
@@ -2401,7 +2401,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 					{
 						int italicOffset = 0;
 						if (isItalic)
-							italicOffset = (int)((dh - cy) / g_ItalicFontKoeff);
+							italicOffset = (int)((dh - cy) / ITALIC_FONT_KOEFFICIENT);
 
 						int testY = offsY + lineOffsY + cy;
 
@@ -2438,7 +2438,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 					{
 						int italicOffset = 0;
 						if (isItalic && cy >= 0 && cy < dh)
-							italicOffset = (int)((dh - cy) / g_ItalicFontKoeff);
+							italicOffset = (int)((dh - cy) / ITALIC_FONT_KOEFFICIENT);
 
 						int testY = offsY + lineOffsY + cy;
 
@@ -2495,7 +2495,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 			}
 			else if (si == L' ')
 			{
-				w += g_UnicodeSpaceWidth;
+				w += UNICODE_SPACE_WIDTH;
 
 				if (m_UseHTML)
 				{

@@ -216,8 +216,8 @@ void TSkillGroupManager::Remove(TSkillGroupObject *group)
 {
 	if (group->m_Prev == NULL) //Miscellaneous
 	{
-		int x = g_GameWindowPosX + (g_GameWindowSizeX / 2) - 100;
-		int y = g_GameWindowPosY + (g_GameWindowSizeY / 2) - 62;
+		int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 100;
+		int y = g_GameWindowPosY + (g_GameWindowHeight / 2) - 62;
 
 		TGumpNotify *gump = new TGumpNotify(0, x, y, 2, 200, 125, "Cannot delete this group.");
 

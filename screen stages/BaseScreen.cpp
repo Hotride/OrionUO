@@ -23,71 +23,27 @@ TBaseScreen *CurrentScreen = NULL;
 //---------------------------------------------------------------------------
 int TBaseScreen::DrawSmoothMonitor()
 {
-	if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNRISE)
+	if (SmoothMonitor.Process())
 	{
-		g_SmoothMonitorColor += g_SmoothMonitorStep;
+		ProcessSmoothAction();
 
-		if (g_SmoothMonitorColor >= 1.0f)
-		{
-			g_SmoothMonitorColor = 1.0f;
-			g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
-		}
+		g_GL.EndDraw();
+
+		return 1;
 	}
-	else if (g_SmoothMonitorMode == SMOOTH_MONITOR_SUNSET)
-	{
-		g_SmoothMonitorColor -= g_SmoothMonitorStep;
-
-		if (g_SmoothMonitorColor <= 0.0f)
-		{
-			g_SmoothMonitorColor = 1.0f;
-			g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
-			glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
-
-			ProcessSmoothAction();
-
-			g_GL.EndDraw();
-			return 1;
-		}
-	}
-	else
-		g_SmoothMonitorColor = 1.0f;
-
-	//glColor3f(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor);
 
 	return 0;
 }
 //---------------------------------------------------------------------------
 void TBaseScreen::DrawSmoothMonitorEffect()
 {
-	if (g_SmoothMonitorColor != 1.0f && g_LightBuffer.Ready() && g_LightBuffer.Use())
-	{
-		glClearColor(g_SmoothMonitorColor, g_SmoothMonitorColor, g_SmoothMonitorColor, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glEnable(GL_BLEND);
-
-		g_LightBuffer.Release();
-
-		g_GL.RestorePort();
-
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-		glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-
-		g_LightBuffer.Draw(0, 0);
-
-		glDisable(GL_BLEND);
-	}
+	SmoothMonitor.Draw();
 }
 //---------------------------------------------------------------------------
 void TBaseScreen::CreateSmoothAction(BYTE action)
 {
-	if (g_UseSmoothMonitor)
-	{
+	if (SmoothMonitor.UseSunset())
 		m_SmoothScreenAction = action;
-		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNSET;
-		g_SmoothMonitorColor = 1.0f;
-	}
 	else
 		ProcessSmoothAction(action);
 }

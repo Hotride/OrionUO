@@ -93,7 +93,7 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 				else if (((TGameObject*)obj)->NPC)
 				{
 					if (!ignoreGameCharacters)
-						Add(new TPathObject(obj->Z, g_CharacterHeight, 0));
+						Add(new TPathObject(obj->Z, DEFAULT_CHARACTER_HEIGHT, 0));
 
 					canBeAdd = false;
 				}
@@ -490,7 +490,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 		bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
 
-		wsi.Time = g_CharacterAnimationDelayTable[onMount][run];
+		wsi.Time = CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
 	}
 	else
 	{
@@ -513,7 +513,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 			bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
 
-			wsi.Time = g_CharacterAnimationDelayTable[onMount][run];
+			wsi.Time = CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
 		}
 
 		direction = newDir;

@@ -355,53 +355,120 @@ public:
 
 	//Изменить вармод
 	void ChangeWarmode(BYTE status = 0xFF);
+
+	//Запрос хэлп-меню
 	void HelpRequest();
+
+	//Запрос статуса
 	void StatusReq(DWORD serial);
+
+	//Запрос навыков
 	void SkillsReq(DWORD serial);
+
+	//Изменения состояния навыка
 	void SkillStatusChange(BYTE skill, BYTE state);
+
+	//Кликнуть по объекту
 	void Click(DWORD serial);
+
+	//Запрос имени объекта (клик)
 	void NameReq(DWORD serial) {Click(serial);};
+
+	//Двойное нажатие на объект
 	void DoubleClick(DWORD serial);
+
+	//Запрос папердолла
 	void PaperdollReq(DWORD serial);
-	void Attack(DWORD serial); //Обработка атаки в клиенте
-	void AttackReq(DWORD serial); //Отправка пакета на сервер
+
+	//Обработка атаки в клиенте
+	void Attack(DWORD serial);
+
+	//Отправка пакета на сервер
+	void AttackReq(DWORD serial);
+
+	//Отправка ASCII текста
 	void SendASCIIText(const char *str, SPEECH_TYPE type);
+
+	//Начать каст заклинания
 	void CastSpell(int index);
+
+	//Начать каст заклинания с книги
 	void CastSpellFromBook(int index, DWORD serial);
+
+	//Использовать навык
 	void UseSkill(int index);
+
+	//Открыть дверь
 	void OpenDoor();
+
+	//Запрос анимации эмоции
 	void EmoteAction(const char *action);
+
+	//Клик на всех персонажей в зоне видимости
 	void AllNames();
+
+	//Переход по веб-ссылке
 	void GoToWebLink(string url);
 
 
 
+	//Удаление объектов, вышедших за пределы g_UpdateRange
 	void RemoveRangedObjects();
 
 
 
+	//Выход из игры на основной экран
 	void LogOut();
 
 
 
+	//--------------------------------------------
+	//---Обработка кнопок папердолла и менюбара---
+	//--------------------------------------------
+
+	//Открыть гамп папердолла
 	void OpenPaperdoll();
+
+	//Открыть гамп статуса
 	void OpenStatus(DWORD serial);
+
+	//Открыть гамп мини-карты
 	void OpenMinimap();
+
+	//Открыть гамп карты мира
 	void OpenWorldMap();
+
+	//Открыть гамп журнала
 	void OpenJournal();
+
+	//Открыть гамп навыков
 	void OpenSkills();
+
+	//Открыть рюкзак
 	void OpenBackpack();
+
+	//Открыть книгу заклинаний
 	void OpenSpellbook();
+
+	//Открыть гамп логаута
 	void OpenLogOut();
+
+	//Открыть гамп чата
 	void OpenChat();
+
+	//Открыть гамп опций
 	void OpenConfiguration();
+
+	//Открыть гамп почти
 	void OpenMail();
+
+	//Открыть гамп пати-манифеста
 	void OpenPartyManifest();
-	void OpenPartyChat();
+
+	//Открыть гамп профиля
 	void OpenProfile(DWORD serial = 0);
 };
 //---------------------------------------------------------------------------
 extern TUltimaOnline *UO;
 //---------------------------------------------------------------------------
 #endif
-//---------------------------------------------------------------------------

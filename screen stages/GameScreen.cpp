@@ -39,15 +39,8 @@ void TGameScreen::Init()
 	m_GameWindowMoving = false;
 	m_GameWindowResizing = false;
 
-	if (g_UseSmoothMonitor)
-	{
-		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
-		g_SmoothMonitorColor = 0.0f;
-		g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
-		m_SmoothScreenAction = 0;
-	}
-	else
-		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+	SmoothMonitor.UseSunrise();
+	m_SmoothScreenAction = 0;
 
 	Tooltip.SeqIndex = 0;
 
@@ -186,8 +179,8 @@ void TGameScreen::CalculateGameWindow()
 	m_RenderBounds.GameWindowPosX = g_GameWindowPosX;
 	m_RenderBounds.GameWindowPosY = g_GameWindowPosY;
 
-	m_RenderBounds.GameWindowSizeX = g_GameWindowSizeX;
-	m_RenderBounds.GameWindowSizeY = g_GameWindowSizeY;
+	m_RenderBounds.GameWindowSizeX = g_GameWindowWidth;
+	m_RenderBounds.GameWindowSizeY = g_GameWindowHeight;
 
 	if (g_LastObjectType == SOT_GAME_GUMP_SCOPE && g_LeftMouseDown && !g_LastGumpLeftMouseDown && !g_LastGumpRightMouseDown)
 	{
@@ -529,12 +522,7 @@ void TGameScreen::CalculateGameWindowText(bool &mode)
 
 			if (mode)
 			{
-				TEXT_IMAGE_BOUNDS ib;
-				ib.X = drawX;
-				ib.Y = drawY;
-				ib.Width = tth.Width;
-				ib.Height = tth.Height;
-				ib.m_Text = td;
+				TTextImageBounds ib(drawX, drawY, drawX + tth.Width, drawY + tth.Height, td);
 
 				td->Transparent = WorldTextRenderer->InRect(ib, rwo);
 
@@ -910,13 +898,8 @@ int TGameScreen::Render(bool mode)
 
 	if (g_DeathScreenTimer < ticks)
 	{
-		if (g_DeathScreenTimer && g_UseSmoothMonitor)
-		{
-			g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
-			g_SmoothMonitorColor = 0.0f;
-			g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
+		if (g_DeathScreenTimer && SmoothMonitor.UseSunrise())
 			m_SmoothScreenAction = 0;
-		}
 
 		g_DeathScreenTimer = 0;
 	}
@@ -1344,11 +1327,11 @@ void TGameScreen::OnLeftMouseUp()
 			if (g_GameWindowPosY < 1)
 				g_GameWindowPosY = 0;
 
-			if (g_GameWindowPosX + g_GameWindowSizeX > g_ClientWidth)
-				g_GameWindowPosX = g_ClientWidth - g_GameWindowSizeX;
+			if (g_GameWindowPosX + g_GameWindowWidth > g_ClientWidth)
+				g_GameWindowPosX = g_ClientWidth - g_GameWindowWidth;
 
-			if (g_GameWindowPosY + g_GameWindowSizeY > g_ClientHeight)
-				g_GameWindowPosY = g_ClientHeight - g_GameWindowSizeY;
+			if (g_GameWindowPosY + g_GameWindowHeight > g_ClientHeight)
+				g_GameWindowPosY = g_ClientHeight - g_GameWindowHeight;
 
 			m_GameWindowMoving = false;
 
@@ -1356,14 +1339,14 @@ void TGameScreen::OnLeftMouseUp()
 		}
 		else if (m_GameWindowResizing && g_LastObjectLeftMouseDown == 2)
 		{
-			g_GameWindowSizeX = g_GameWindowSizeX + (g_MouseX - g_DroppedLeftMouseX);
-			g_GameWindowSizeY = g_GameWindowSizeY + (g_MouseY - g_DroppedLeftMouseY);
+			g_GameWindowWidth = g_GameWindowWidth + (g_MouseX - g_DroppedLeftMouseX);
+			g_GameWindowHeight = g_GameWindowHeight + (g_MouseY - g_DroppedLeftMouseY);
 			
-			if (g_GameWindowSizeX < 640)
-				g_GameWindowSizeX = 640;
+			if (g_GameWindowWidth < 640)
+				g_GameWindowWidth = 640;
 			
-			if (g_GameWindowSizeY < 480)
-				g_GameWindowSizeY = 480;
+			if (g_GameWindowHeight < 480)
+				g_GameWindowHeight = 480;
 
 			TPacketGameWindowSize packet;
 			packet.Send();
@@ -1383,7 +1366,7 @@ void TGameScreen::OnLeftMouseUp()
 	int GameWindowPosX = g_GameWindowPosX - 4;
 	int GameWindowPosY = g_GameWindowPosY - 4;
 
-	if (g_MouseX < GameWindowPosX || g_MouseY < GameWindowPosY || g_MouseX > (GameWindowPosX + g_GameWindowSizeX) || g_MouseY > (GameWindowPosY + g_GameWindowSizeY))
+	if (g_MouseX < GameWindowPosX || g_MouseY < GameWindowPosY || g_MouseX > (GameWindowPosX + g_GameWindowWidth) || g_MouseY > (GameWindowPosY + g_GameWindowHeight))
 		return;
 	
 	if (Target.IsTargeting() && g_SelectedObject != NULL)

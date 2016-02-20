@@ -102,12 +102,13 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BaseQueue.h" />
-    <ClInclude Include="bass24\c\bass.h" />
     <ClInclude Include="BookEntryText.h" />
     <ClInclude Include="CharacterList.h" />
     <ClInclude Include="CityList.h" />
     <ClInclude Include="ClientUO.h" />
+    <ClInclude Include="CommonFunctions.h" />
     <ClInclude Include="CommonInterfaces.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="DefinitionMacro.h" />
     <ClInclude Include="EntryText.h" />
@@ -158,6 +159,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="gump\GumpTextEntryDialog.h" />
     <ClInclude Include="gump\GumpTip.h" />
     <ClInclude Include="gump\GumpWorldMap.h" />
+    <ClInclude Include="ImageBounds.h" />
     <ClInclude Include="IndexObject.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="Logger.h" />
@@ -217,8 +219,10 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkillGroup.h" />
     <ClInclude Include="Skills.h" />
+    <ClInclude Include="SmoothMonitor.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Target.h" />
+    <ClInclude Include="TargetGump.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextData.h" />
     <ClInclude Include="TextureObject.h" />
@@ -233,6 +237,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="CharacterList.cpp" />
     <ClCompile Include="CityList.cpp" />
     <ClCompile Include="ClientUO.cpp" />
+    <ClCompile Include="CommonFunctions.cpp" />
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="EntryText.cpp" />
     <ClCompile Include="ExceptionFilter.cpp" />
@@ -281,6 +286,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="gump\GumpTextEntryDialog.cpp" />
     <ClCompile Include="gump\GumpTip.cpp" />
     <ClCompile Include="gump\GumpWorldMap.cpp" />
+    <ClCompile Include="ImageBounds.cpp" />
     <ClCompile Include="IndexObject.cpp" />
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -337,11 +343,13 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkillGroup.cpp" />
     <ClCompile Include="Skills.cpp" />
+    <ClCompile Include="SmoothMonitor.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Target.cpp" />
+    <ClCompile Include="TargetGump.cpp" />
     <ClCompile Include="TextData.cpp" />
     <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="Tooltip.cpp" />

@@ -405,12 +405,7 @@ int TGumpSecureTrading::Draw(bool &mode)
 
 				if (mode)
 				{
-					TEXT_IMAGE_BOUNDS ib;
-					ib.X = drawX;
-					ib.Y = drawY;
-					ib.Width = drawX + tth.Width;
-					ib.Height = drawY + tth.Height;
-					ib.m_Text = td;
+					TTextImageBounds ib(drawX, drawY, drawX + tth.Width, drawY + tth.Height, td);
 
 					td->Transparent = TextRenderer->InRect(ib, go);
 

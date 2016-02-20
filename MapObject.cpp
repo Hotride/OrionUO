@@ -133,7 +133,7 @@ int TLandObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 			WORD objColor = 0;
 
 			if (this == g_SelectedObject)
-				objColor = g_SelectLandColor;
+				objColor = SELECT_LAND_COLOR;
 
 #if UO_DEBUG_INFO!=0
 g_RenderedObjectsCountInGameWindow++;
@@ -314,7 +314,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		WORD objColor = m_Color;
 
 		if (this == g_SelectedObject)
-			objColor = g_SelectStaticColor;
+			objColor = SELECT_STATIC_COLOR;
 
 		if (IsFoliage())
 		{
@@ -346,7 +346,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				POINT fp = { 0, 0 };
 				UO->GetArtDimension(m_Graphic, fp);
 
-				IMAGE_BOUNDS fib = { drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y };
+				TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y);
 
 				if (fib.InRect(g_PlayerRect))
 				{
@@ -387,7 +387,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				POINT fp = { 0, 0 };
 				UO->GetArtDimension(m_Graphic, fp);
 
-				IMAGE_BOUNDS fib = { drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y };
+				TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y);
 
 				if (!fib.InRect(g_PlayerRect))
 				{

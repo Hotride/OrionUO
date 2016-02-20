@@ -116,7 +116,7 @@ TCityManager::TCityManager()
 		{
 			IFOR(i, 0, 9)
 			{
-				TCity *city = new TCity(g_CityNames[i]);
+				TCity *city = new TCity(CITY_NAMES[i]);
 
 				FontManager->SetUseHTML(true);
 

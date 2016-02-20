@@ -128,8 +128,8 @@ void TGameItem::OnGraphicChange(int direction)
 				
 				bool partialHue = IsPartialHue();
 
-				UO->ExecuteGump(tile.AnimID + g_MaleGumpOffset, partialHue);
-				UO->ExecuteGump(tile.AnimID + g_FemaleGumpOffset, partialHue);
+				UO->ExecuteGump(tile.AnimID + MALE_GUMP_OFFSET, partialHue);
+				UO->ExecuteGump(tile.AnimID + FEMALE_GUMP_OFFSET, partialHue);
 
 				m_UsedLayer = tile.Quality;
 			}

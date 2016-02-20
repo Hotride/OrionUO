@@ -2584,10 +2584,10 @@ void TGumpOptions::OnLeftMouseUp()
 		m_Page = 6;
 
 		char buf[20] = {0};
-		sprintf(buf, "%d", g_GameWindowSizeX);
+		sprintf(buf, "%d", g_GameWindowWidth);
 		TextEntryGameSizeX->SetText(buf);
 
-		sprintf(buf, "%d", g_GameWindowSizeY);
+		sprintf(buf, "%d", g_GameWindowHeight);
 		TextEntryGameSizeY->SetText(buf);
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GO_PAGE_7)
@@ -3181,7 +3181,7 @@ void TGumpOptions::ApplyPageChanges()
 			else if (curX > (g_ClientWidth - 20))
 				curX = g_ClientWidth - 20;
 
-			g_GameWindowSizeX = curX;
+			g_GameWindowWidth = curX;
 			
 			int curY = 0;
 			
@@ -3193,7 +3193,7 @@ void TGumpOptions::ApplyPageChanges()
 			else if (curY > (g_ClientHeight - 40))
 				curY = (g_ClientHeight - 40);
 
-			g_GameWindowSizeY = curY;
+			g_GameWindowHeight = curY;
 
 			TPacketGameWindowSize packet;
 			packet.Send();

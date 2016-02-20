@@ -825,7 +825,7 @@ void TGumpManager::RemoveRangedGumps()
 				}
 				case GT_CONTAINER:
 				{
-					if (GetTopObjDistance(g_Player, World->FindWorldObject(gump->Serial)) > RemoveContainerGumpRange)
+					if (GetTopObjDistance(g_Player, World->FindWorldObject(gump->Serial)) > REMOVE_CONTAINER_GUMP_RANGE)
 						RemoveGump(gump);
 					break;
 				}

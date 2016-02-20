@@ -1,33 +1,18 @@
-/****************************************************************************
-**
-** Logger.h
-**
-** Copyright (C) September 2015 Hotride
-**
-** This program is free software; you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation; either version 2 of the License, or
-** (at your option) any later version.
-**
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-**
-*****************************************************************************
-*/
 //---------------------------------------------------------------------------
-#ifndef LoggerH
-#define LoggerH
+#ifndef LOGGER_H_FILE
+#define LOGGER_H_FILE
+
+#include <stdio.h>
 //---------------------------------------------------------------------------
-class TLogger
+class CLogger
 {
 private:
 	//Хэндл файла
 	FILE *m_file;
+
 public:
-	TLogger();
-	~TLogger();
+	CLogger();
+	~CLogger();
 
 	//Инициализирован ли логгер
 	bool Ready() const {return m_file != NULL;}
@@ -38,9 +23,49 @@ public:
 	//Вывод информации в лог
 	void Print(const char *format, ...);
 	void VPrint(const char *format, va_list ap);
-	void Dump(PBYTE buf, int len);
+	void Dump(unsigned char *buf, int len);
 };
 //---------------------------------------------------------------------------
-extern TLogger *g_Logger;
+//Включить/выключить логгер.
+//Логгер будет работать в любом случае, но если эта опция выключена
+//то он не будет писать в лог дампы пакетов и всякую отладочкую информацию
+//Если значение равно 2 - будет писать отладочную инфу, но без дампов пакетов
+//Без пакетов от нее толку мало...
+
+#define CLOGGER 1
+
+#if CLOGGER != 0
+	#define EPRINT error_printf
+	#define WPRINT warning_printf
+	#define TPRINT trace_printf
+	#define T_TPRINT trace_printf
+	#if CLOGGER == 2
+		#define TDUMP ;/##/
+	#else //CLOGGER != 2
+		#define TDUMP trace_dump
+	#endif //CLOGGER == 2
+#else //CLOGGER == 0
+	#define EPRINT ;/##/
+	#define WPRINT ;/##/
+	#define TPRINT ;/##/
+	#define TDUMP ;/##/
+#endif //CLOGGER!=0
 //---------------------------------------------------------------------------
+// GCC_NORETURN means the function never returns
+// GCC_PRINTF means the function has printf-style arguments
+#ifdef __GNUC__
+#   define GCC_NORETURN __attribute__((noreturn))
+#   define GCC_PRINTF(n,m) __attribute__((format (printf, n, m)))
+#else
+#   define GCC_NORETURN
+#   define GCC_PRINTF(n,m)
 #endif
+//---------------------------------------------------------------------------
+void error_printf(const char * format, ...) GCC_PRINTF(1, 2);
+void warning_printf(const char * format, ...) GCC_PRINTF(1, 2);
+void trace_printf(const char * format, ...) GCC_PRINTF(1, 2);
+void trace_dump(unsigned char *buf, int length);
+//---------------------------------------------------------------------------
+extern CLogger g_Logger;
+//---------------------------------------------------------------------------
+#endif //LOGGER_H_FILE

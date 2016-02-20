@@ -42,15 +42,8 @@ void TServerScreen::Init()
 
 	SetWindowTextA(g_hWnd, buf);
 
-	if (g_UseSmoothMonitor)
-	{
-		g_SmoothMonitorMode = SMOOTH_MONITOR_SUNRISE;
-		g_SmoothMonitorColor = 0.0f;
-		g_SmoothMonitorStep = (GLfloat)g_SmoothMonitorScale * 0.01f;
-		m_SmoothScreenAction = 0;
-	}
-	else
-		g_SmoothMonitorMode = SMOOTH_MONITOR_NONE;
+	SmoothMonitor.UseSunrise();
+	m_SmoothScreenAction = 0;
 
 	Tooltip.SeqIndex = 0;
 
