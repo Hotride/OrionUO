@@ -74,6 +74,10 @@ private:
 	WORD m_SpeechColor;
 	WORD m_EmoteColor;
 	WORD m_PartyMessageColor;
+	WORD m_GuildMessageColor;
+	WORD m_AllianceMessageColor;
+	bool m_IgnoreGuildMessage;
+	bool m_IgnoreAllianceMessage;
 	bool m_DarkNights;
 	bool m_ColoredLighting;
 	bool m_StandartCharactersAnimationDelay;
@@ -169,6 +173,10 @@ public:
 	SETGET(WORD, SpeechColor);
 	SETGET(WORD, EmoteColor);
 	SETGET(WORD, PartyMessageColor);
+	SETGET(WORD, GuildMessageColor);
+	SETGET(WORD, AllianceMessageColor);
+	SETGET(bool, IgnoreGuildMessage);
+	SETGET(bool, IgnoreAllianceMessage);
 	SETGET(bool, DarkNights);
 	SETGET(bool, ColoredLighting);
 	SETGET(bool, StandartCharactersAnimationDelay);

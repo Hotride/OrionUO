@@ -407,51 +407,48 @@ void TGLEngine::DrawSitting(GLuint &texture, int &x, int &y, int width, int heig
 		m_OldTexture = texture;
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
-
+	
 	glLoadIdentity();
 	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
+	
+	int h03 = (int)(height * 0.35f);
+	int h06 = (int)(height * 0.6f);
+	int h09 = (int)(height * 0.94f);
 
-	int h02 = (int)(height * 0.2f);
-	int h05 = (int)(height * 0.5f);
-	int h075 = (int)(height * 0.75f);
-	int widthOffset = width + SITTING_WIDTH_OFFSET;
-
+	int widthOffset = width + SITTING_OFFSET_X;
+	
 	if (mirror)
 	{
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 0.4f); glVertex2i(width, h05);
-			glTexCoord2f(1.0f, 0.4f); glVertex2i(0, h05);
-			glTexCoord2f(1.0f, 0.0f); glVertex2i(0, h02);
-			glTexCoord2f(0.0f, 0.0f); glVertex2i(width, h02);
+		glBegin(GL_TRIANGLE_STRIP);
+		
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(width, 0);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(0, 0);
+			glTexCoord2f(0.0f, 0.35f); glVertex2i(width, h03);
+			glTexCoord2f(1.0f, 0.35f); glVertex2i(0, h03);
+			
+			glTexCoord2f(0.0f, 0.65f); glVertex2i(widthOffset, h06);
+			glTexCoord2f(1.0f, 0.65f); glVertex2i(SITTING_OFFSET_X, h06);
+			
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(widthOffset, h09);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(SITTING_OFFSET_X, h09);
 
-			glTexCoord2f(0.0f, -0.25f); glVertex2i(widthOffset, h075);
-			glTexCoord2f(1.0f, -0.25f); glVertex2i(SITTING_WIDTH_OFFSET, h075);
-			glTexCoord2f(1.0f, -0.6f); glVertex2i(0, h05);
-			glTexCoord2f(0.0f, -0.6f); glVertex2i(width, h05);
-
-			glTexCoord2f(0.0f, 0.0f); glVertex2i(widthOffset, height);
-			glTexCoord2f(1.0f, 0.0f); glVertex2i(SITTING_WIDTH_OFFSET, height);
-			glTexCoord2f(1.0f, -0.25f); glVertex2i(SITTING_WIDTH_OFFSET, h075);
-			glTexCoord2f(0.0f, -0.25f); glVertex2i(widthOffset, h075);
 		glEnd();
 	}
 	else
 	{
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 0.4f); glVertex2i(SITTING_WIDTH_OFFSET, h05);
-			glTexCoord2f(1.0f, 0.4f); glVertex2i(widthOffset, h05);
-			glTexCoord2f(1.0f, 0.0f); glVertex2i(widthOffset, h02);
-			glTexCoord2f(0.0f, 0.0f); glVertex2i(SITTING_WIDTH_OFFSET, h02);
+		glBegin(GL_TRIANGLE_STRIP);
+		
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(SITTING_OFFSET_X, 0);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(widthOffset, 0);
+			glTexCoord2f(0.0f, 0.35f); glVertex2i(SITTING_OFFSET_X, h03);
+			glTexCoord2f(1.0f, 0.35f); glVertex2i(widthOffset, h03);
+			
+			glTexCoord2f(0.0f, 0.65f); glVertex2i(0, h06);
+			glTexCoord2f(1.0f, 0.65f); glVertex2i(width, h06);
+			
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, h09);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(width, h09);
 
-			glTexCoord2f(0.0f, -0.25f); glVertex2i(0, h075);
-			glTexCoord2f(1.0f, -0.25f); glVertex2i(width, h075);
-			glTexCoord2f(1.0f, -0.6f); glVertex2i(widthOffset, h05);
-			glTexCoord2f(0.0f, -0.6f); glVertex2i(SITTING_WIDTH_OFFSET, h05);
-
-			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, height);
-			glTexCoord2f(1.0f, 0.0f); glVertex2i(width, height);
-			glTexCoord2f(1.0f, -0.25f); glVertex2i(width, h075);
-			glTexCoord2f(0.0f, -0.25f); glVertex2i(0, h075);
 		glEnd();
 	}
 }

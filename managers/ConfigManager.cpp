@@ -120,6 +120,10 @@ void TConfigManager::DefaultPage7()
 	m_SpeechColor = 0x02B2;
 	m_EmoteColor = 0x0021;
 	m_PartyMessageColor = 0x0044;
+	m_GuildMessageColor = 0x0044;
+	m_AllianceMessageColor = 0x0044;
+	m_IgnoreGuildMessage = false;
+	m_IgnoreAllianceMessage = false;
 	m_DarkNights = false;
 	m_ColoredLighting = true;
 	m_StandartCharactersAnimationDelay = true;
@@ -319,7 +323,10 @@ void TConfigManager::Load(string path)
 			m_SpeechColor = file.ReadWord();
 			m_EmoteColor = file.ReadWord();
 			m_PartyMessageColor = file.ReadWord();
-			file.Move(6); //guild + ally config
+			m_GuildMessageColor = file.ReadWord();
+			m_AllianceMessageColor = file.ReadWord();
+			m_IgnoreGuildMessage = file.ReadByte();
+			m_IgnoreAllianceMessage = file.ReadByte();
 			m_DarkNights = file.ReadByte();
 			m_ColoredLighting = file.ReadByte();
 			m_StandartCharactersAnimationDelay = file.ReadByte();
@@ -475,10 +482,10 @@ void TConfigManager::Save(string path)
 	writer->WriteWord(m_SpeechColor);
 	writer->WriteWord(m_EmoteColor);
 	writer->WriteWord(m_PartyMessageColor);
-	writer->WriteWord(0); //guild color
-	writer->WriteByte(0); //ignore guild
-	writer->WriteWord(0); //ally color
-	writer->WriteByte(0); //ignore ally guild
+	writer->WriteWord(m_GuildMessageColor);
+	writer->WriteWord(m_AllianceMessageColor);
+	writer->WriteByte(m_IgnoreGuildMessage);
+	writer->WriteByte(m_IgnoreAllianceMessage);
 	writer->WriteByte(m_DarkNights);
 	writer->WriteByte(m_ColoredLighting);
 	writer->WriteByte(m_StandartCharactersAnimationDelay);

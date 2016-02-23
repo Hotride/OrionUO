@@ -55,7 +55,7 @@ protected:
 
 	string m_PaperdollText; //Текст титула в папердолле
 
-	bool IsCorrectStep(WORD cx, WORD cy, WORD &x, WORD &y, BYTE &dir);
+	bool IsCorrectStep(WORD &cx, WORD &cy, WORD &x, WORD &y, BYTE &dir);
 public:
 	TGameCharacter(DWORD serial = 0);
 	virtual ~TGameCharacter();
@@ -90,7 +90,7 @@ public:
 	SETGETEX(char, OffsetZ);
 	SETGET(DWORD, LastStepTime);
 
-	bool IsSitting();
+	int IsSitting();
 
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
 
@@ -110,6 +110,7 @@ public:
 	BYTE GetAnimationGroup(WORD graphic = 0); //Получить текущую группу анимации
 	void GetAnimationGroup(ANIMATION_GROUPS group, BYTE &animation); //Скорректировать отношение анимаций
 	bool Staying() {return m_AnimationGroup == 0xFF && m_WalkStack.Empty();} //Если персонаж не движется
+	bool TestStepNoChangeDirection(BYTE group); //Группа анимации хотьбы
 	bool Walking() {return (m_LastStepTime > (DWORD)(GetTickCount() - m_AfterStepDelay));} //Если персонаж идет (или только что закончил передвигаться)
 	void UpdateAnimationInfo(BYTE &dir, bool canChange = false); //Обновить характеристики анимации персонажа
 	bool IsTeleportAction(WORD &x, WORD &y, BYTE &dir);

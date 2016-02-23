@@ -23,7 +23,7 @@ TPathFinder *PathFinder = NULL;
 //---------------------------------------------------------------------------
 //--------------------------------TPathObject--------------------------------
 //---------------------------------------------------------------------------
-TPathObject::TPathObject(char z, char height, char surface)
+TPathObject::TPathObject(int z, char height, char surface)
 : TBaseQueueItem(), m_Z(z), m_Height(height), m_Surface(surface)
 {
 }
@@ -103,12 +103,11 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 
 			if (canBeAdd)
 			{
-				bool impSurf = (obj->IsImpassable() || obj->IsSurface() || obj->IsBridge());
+				bool impSurf = (graphic > 1 && (obj->IsImpassable() || obj->IsSurface() || obj->IsBridge()));
 
-				if (graphic == 1 || !impSurf || (obj->IsBackground() && !impSurf))
-				{
-				}
-				else
+				//if (graphic == 1 || !impSurf || (obj->IsBackground() && !impSurf)) {} else
+
+				if (impSurf)
 				{
 					BYTE height = ((TRenderStaticObject*)obj)->GetStaticHeight();
 
@@ -116,6 +115,9 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 
 					if (obj->IsBridge() && obj->IsPrefixA() && height >= 10) //long stair
 						surface += 0x20;
+
+					if (!height && obj->IsBackground() && obj->IsSurface() && obj->Z >= g_Player->Z + 3)
+						surface += 0x40;
 
 					Add(new TPathObject(obj->Z, height, surface));
 				}
@@ -138,6 +140,9 @@ void TPathFinder::CheckLongStairUnderfoot(int &x, int &y, char &z)
 		{
 			char surface = po->Surface;
 			int isLongStair = 1;
+			
+			if (surface >= 0x40)
+				surface -= 0x40;
 
 			if (surface >= 0x20)
 			{
@@ -168,7 +173,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 	
 	z = g_Player->Z;
 	
-	char newZ = z;
+	int newZ = z;
 
 	if (m_Items != NULL)
 	{
@@ -181,14 +186,20 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 		bool found = false;
 
 		int c = 0;
-		for(; po != NULL; po = (TPathObject*)po->m_Prev)
+		for (; po != NULL; po = (TPathObject*)po->m_Prev)
 		{
 			c++;
-			char height = po->Height;
+			int height = po->Height;
 			int top = po->Z + height;
 			char surface = po->Surface;
 			bool isLand = false;
 			bool isLongStair = false;
+			
+			if (surface >= 0x40)
+			{
+				surface -= 0x40;
+				height = 3;
+			}
 
 			if (surface >= 0x20)
 			{
@@ -254,21 +265,27 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 		trace_printf("c=%i\n", c);
 		c = 0;
 		
-		for(po = poStart; po != NULL; po = (TPathObject*)po->m_Prev)
+		for (po = poStart; po != NULL; po = (TPathObject*)po->m_Prev)
 		{
 			c++;
-			char curZ = po->Z;
+			int curZ = po->Z;
 			int top = curZ + po->Height;
 			char surface = po->Surface;
 			bool isLongStair = false;
 			
+			if (surface >= 0x40)
+			{
+				surface -= 0x40;
+				top += 3;
+			}
+
 			if (surface >= 0x20)
 			{
 				surface -= 0x20;
 				isLongStair = (curZ <= (z + 6));
 			}
 
-			trace_printf("nowC=%i z=%i newZ=%i curZ=%i top=%i isLongStair=%i\n", c, z, newZ, curZ, top, isLongStair);
+			trace_printf("surface=%i nowC=%i z=%i newZ=%i curZ=%i top=%i isLongStair=%i\n", surface, c, z, newZ, curZ, top, isLongStair);
 
 			if (top <= newZ)
 				continue;
@@ -297,7 +314,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 
 					break;
 				}
-				else if (curZ >= newZ && curZ < (newZ + g_MaxBlockZ))
+				else if (curZ >= newZ && curZ <= (newZ + g_MaxBlockZ))
 				{
 					TPRINT("f2_4\n");
 					found = false;

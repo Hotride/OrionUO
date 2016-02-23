@@ -25,7 +25,7 @@ class TPathObject : public TBaseQueueItem
 {
 private:
 	//Координата Z точки
-	char m_Z;
+	int m_Z;
 
 	//Высота точки
 	char m_Height;
@@ -33,10 +33,10 @@ private:
 	//Идентификатор поверхности
 	BYTE m_Surface;
 public:
-	TPathObject(char z, char height, char surface);
+	TPathObject(int z, char height, char surface);
 	virtual ~TPathObject();
 
-	SETGET(char, Z);
+	SETGET(int, Z);
 	SETGET(char, Height);
 	SETGET(BYTE, Surface);
 };

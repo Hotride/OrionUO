@@ -28,7 +28,8 @@ private:
 	static const int ID_GSB_BUTTON_HEAL_1 = 3;
 	static const int ID_GSB_BUTTON_HEAL_2 = 4;
 	static const int ID_GSB_BUTTON_REMOVE_FROM_GROUP = 5;
-	static const int ID_GSB_LOCK_MOVING = 6;
+	static const int ID_GSB_BUFF_GUMP = 6;
+	static const int ID_GSB_LOCK_MOVING = 7;
 
 public:
 	TGumpStatusbar(DWORD serial, short x, short y, bool minimized);

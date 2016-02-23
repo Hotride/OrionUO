@@ -27,7 +27,7 @@ TTextTexture TGumpOptions::m_TexturePage3[6];	//Language
 TTextTexture TGumpOptions::m_TexturePage4[19];	//Chat
 TTextTexture TGumpOptions::m_TexturePage5[7];	//Macro Options
 TTextTexture TGumpOptions::m_TexturePage6[9];	//Interface
-TTextTexture TGumpOptions::m_TexturePage7[14];	//Display
+TTextTexture TGumpOptions::m_TexturePage7[18];	//Display
 TTextTexture TGumpOptions::m_TexturePage8[9];	//Reputation System
 TTextTexture TGumpOptions::m_TexturePage9[9];	//Miscellaneous
 TTextTexture TGumpOptions::m_TexturePage10[2];	//Filter Options
@@ -302,32 +302,44 @@ void TGumpOptions::InitTextTextures()
 	str = L"Scale speech duration based on length";
 	FontManager->GenerateW(0, m_TexturePage7[4], str.c_str(), g_OptionsTextColor);
 
-	str = L"Speech color";
+	str = L"Speech Color";
 	FontManager->GenerateW(0, m_TexturePage7[5], str.c_str(), g_OptionsTextColor);
 
-	str = L"Emote color";
+	str = L"Emote Color";
 	FontManager->GenerateW(0, m_TexturePage7[6], str.c_str(), g_OptionsTextColor);
 
-	str = L"Party Message color";
+	str = L"Party Message Color";
 	FontManager->GenerateW(0, m_TexturePage7[7], str.c_str(), g_OptionsTextColor);
-
-	str = L"Dark Nights";
+	
+	str = L"Guild Message Color";
 	FontManager->GenerateW(0, m_TexturePage7[8], str.c_str(), g_OptionsTextColor);
 
-	str = L"Colored Lighting";
+	str = L"Alliance Message Color";
 	FontManager->GenerateW(0, m_TexturePage7[9], str.c_str(), g_OptionsTextColor);
-
-	str = L"Standard characters animation delay";
+	
+	str = L"Ignore Guild Messages";
 	FontManager->GenerateW(0, m_TexturePage7[10], str.c_str(), g_OptionsTextColor);
 
-	str = L"Standard items animation delay";
+	str = L"Ignore Alliance Messages";
 	FontManager->GenerateW(0, m_TexturePage7[11], str.c_str(), g_OptionsTextColor);
 
-	str = L"Lock game window resizing";
+	str = L"Dark Nights";
 	FontManager->GenerateW(0, m_TexturePage7[12], str.c_str(), g_OptionsTextColor);
 
-	str = L"Lock gumps moving";
+	str = L"Colored Lighting";
 	FontManager->GenerateW(0, m_TexturePage7[13], str.c_str(), g_OptionsTextColor);
+
+	str = L"Standard characters animation delay";
+	FontManager->GenerateW(0, m_TexturePage7[14], str.c_str(), g_OptionsTextColor);
+
+	str = L"Standard items animation delay";
+	FontManager->GenerateW(0, m_TexturePage7[15], str.c_str(), g_OptionsTextColor);
+
+	str = L"Lock game window resizing";
+	FontManager->GenerateW(0, m_TexturePage7[16], str.c_str(), g_OptionsTextColor);
+
+	str = L"Lock gumps moving";
+	FontManager->GenerateW(0, m_TexturePage7[17], str.c_str(), g_OptionsTextColor);
 	
 
 
@@ -415,7 +427,7 @@ void TGumpOptions::ReleaseTextTextures()
 	IFOR(i, 0, 8)
 		m_TexturePage6[i].Clear();
 
-	IFOR(i, 0, 14)
+	IFOR(i, 0, 18)
 		m_TexturePage7[i].Clear();
 
 	IFOR(i, 0, 9)
@@ -472,10 +484,13 @@ void TGumpOptions::GenerateFrame(int posX, int posY)
 		UO->DrawGump(gumpID, 0, posX, posY + 111);
 
 		//Language
-		gumpID = 0x00DE;
-		if (m_Page == 2)
-			gumpID--;
-		UO->DrawGump(gumpID, 0, posX, posY + 177);
+		if (ConnectionManager.ClientVersion < CV_400B)
+		{
+			gumpID = 0x00DE;
+			if (m_Page == 2)
+				gumpID--;
+			UO->DrawGump(gumpID, 0, posX, posY + 177);
+		}
 
 		//Chat
 		gumpID = 0x00E0;
@@ -573,7 +588,8 @@ void TGumpOptions::GenerateFrame(int posX, int posY)
 			}
 			case 2:
 			{
-				DrawPage3(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Language
+				if (ConnectionManager.ClientVersion < CV_400B)
+					DrawPage3(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Language
 				break;
 			}
 			case 3:
@@ -740,13 +756,16 @@ int TGumpOptions::Draw(bool &mode)
 		}
 
 		//Language
-		gumpID = 0x00DE;
-		if (m_Page == 2)
-			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, posX, posY + 177))
+		if (ConnectionManager.ClientVersion < CV_400B)
 		{
-			g_LastSelectedObject = ID_GO_PAGE_2;
-			g_LastSelectedGump = index;
+			gumpID = 0x00DE;
+			if (m_Page == 2)
+				gumpID--;
+			if (UO->GumpPixelsInXY(gumpID, posX, posY + 177))
+			{
+				g_LastSelectedObject = ID_GO_PAGE_2;
+				g_LastSelectedGump = index;
+			}
 		}
 
 		//Chat
@@ -862,7 +881,8 @@ int TGumpOptions::Draw(bool &mode)
 			case 1:
 				return DrawPage2(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Pop-up Help
 			case 2:
-				return DrawPage3(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Language
+				if (ConnectionManager.ClientVersion < CV_400B)
+					return DrawPage3(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Language
 			case 3:
 				return DrawPage4(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Chat
 			case 4:
@@ -2053,6 +2073,8 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		//UO->DrawUnicodeFont(0, L"Scale speech duration based on length", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[4].Draw(posX + 86, posY);
 		
+		int tempY = posY;
+
 		posY += 22;
 		UO->DrawGump(0x00D4, 0, posX + 64, posY);
 		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.SpeechColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
@@ -2074,33 +2096,60 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		posY += 22;
 		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DarkNights, 0, posX + 64, posY);
 		//UO->DrawUnicodeFont(0, L"Dark Nights", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[8].Draw(posX + 86, posY);
+		m_TexturePage7[12].Draw(posX + 86, posY);
 
 		posY += 20;
 		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ColoredLighting, 0, posX + 64, posY);
 		//UO->DrawUnicodeFont(0, L"Colored Lighting", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[9].Draw(posX + 86, posY);
+		m_TexturePage7[13].Draw(posX + 86, posY);
 		
 		posY += 20;
 		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.StandartCharactersAnimationDelay, 0, posX + 64, posY);
 		//UO->DrawUnicodeFont(0, L"Standard characters animation delay", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[10].Draw(posX + 86, posY);
+		m_TexturePage7[14].Draw(posX + 86, posY);
 		
 		posY += 20;
 		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.StandartItemsAnimationDelay, 0, posX + 64, posY);
 		//UO->DrawUnicodeFont(0, L"Standard items animation delay", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[11].Draw(posX + 86, posY);
+		m_TexturePage7[15].Draw(posX + 86, posY);
 
 		posY += 20;
 		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.LockResizingGameWindow, 0, posX + 64, posY);
 		//UO->DrawUnicodeFont(0, L"Lock game window resizing", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[12].Draw(posX + 86, posY);
+		m_TexturePage7[16].Draw(posX + 86, posY);
 
 		posY += 20;
 		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.LockGumpsMoving, 0, posX + 64, posY);
 		//UO->DrawUnicodeFont(0, L"Lock gumps moving", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[13].Draw(posX + 86, posY);
+		m_TexturePage7[17].Draw(posX + 86, posY);
 
+		if (ConnectionManager.ClientVersion >= CV_6000)
+		{
+			posY = tempY;
+			posX += 290;
+		
+			posY += 22;
+			UO->DrawGump(0x00D4, 0, posX + 64, posY);
+			g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.GuildMessageColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+			//UO->DrawUnicodeFont(0, L"Guild Message Color", g_OptionsTextColor, posX + 86, posY);
+			m_TexturePage7[8].Draw(posX + 86, posY);
+		
+			posY += 19;
+			UO->DrawGump(0x00D4, 0, posX + 64, posY);
+			g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.AllianceMessageColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+			//UO->DrawUnicodeFont(0, L"Alliance Message Color", g_OptionsTextColor, posX + 86, posY);
+			m_TexturePage7[9].Draw(posX + 86, posY);
+			
+			posY += 22;
+			UO->DrawGump(0x00D2 + (int)g_OptionsConfig.IgnoreGuildMessage, 0, posX + 64, posY);
+			//UO->DrawUnicodeFont(0, L"Ignore Guild Messages", g_OptionsTextColor, posX + 86, posY);
+			m_TexturePage7[10].Draw(posX + 86, posY);
+
+			posY += 20;
+			UO->DrawGump(0x00D2 + (int)g_OptionsConfig.IgnoreAllianceMessage, 0, posX + 64, posY);
+			//UO->DrawUnicodeFont(0, L"Ignore Alliance Messages", g_OptionsTextColor, posX + 86, posY);
+			m_TexturePage7[11].Draw(posX + 86, posY);
+		}
 	}
 	else
 	{
@@ -2148,6 +2197,20 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 				if (PtInRect(&rcf, pf))
 					LSG = ID_GO_P7_GAME_WINDOW_SIZE_Y; //Game Play Window Size Y
 			}
+		}
+
+		if (!LSG && ConnectionManager.ClientVersion >= CV_6000)
+		{
+			posX += 290;
+
+			if (UO->GumpPixelsInXY(0x00D2, posX, posY + 204))
+				LSG = ID_GO_P7_GUILD_MESSAGE_COLOR; //Guild Message Color
+			else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 223))
+				LSG = ID_GO_P7_ALLIANCE_MESSAGE_COLOR; //Alliance Message Color
+			else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 245))
+				LSG = ID_GO_P7_IGNORE_GUILD_MESSAGE; //Ignore Guild Messages
+			else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 265))
+				LSG = ID_GO_P7_IGNORE_ALLIANCE_MESSAGE; //Ignore Alliance Messages
 		}
 
 		if (LSG != 0)
@@ -2900,16 +2963,16 @@ void TGumpOptions::OnLeftMouseUp()
 			{
 				if (g_LastObjectLeftMouseDown == ID_GO_P7_SCALE_SPEECH_DURATION) //Scale speech duration based on length
 					g_OptionsConfig.ScaleSpeechDelay = !g_OptionsConfig.ScaleSpeechDelay;
-				else if (g_LastObjectLeftMouseDown >= ID_GO_P7_SPEECH_COLOR && g_LastObjectLeftMouseDown <= ID_GO_P7_PARTY_MESSAGE_COLOR) //Speech color
+				else if (g_LastObjectLeftMouseDown >= ID_GO_P7_SPEECH_COLOR && g_LastObjectLeftMouseDown <= ID_GO_P7_ALLIANCE_MESSAGE_COLOR) //Speech color
 				{
-					/*else if (g_LastObjectLeftMouseDown == 101) //Speech color
-					else if (g_LastObjectLeftMouseDown == 102) //Emote color
-					else if (g_LastObjectLeftMouseDown == 103) //Party Message color*/
-					
 					TGumpSelectColor *gump = new TGumpSelectColor(g_PlayerSerial, 100, 100, (SELECT_COLOR_GUMP_STATE)(SCGS_OPT_DISPLAY_SPEECH + (g_LastObjectLeftMouseDown - ID_GO_P7_SPEECH_COLOR)));
 
 					GumpManager->AddGump(gump);
 				}
+				else if (g_LastObjectLeftMouseDown == ID_GO_P7_IGNORE_GUILD_MESSAGE) //Ignore Guild Messages
+					g_OptionsConfig.IgnoreGuildMessage = !g_OptionsConfig.IgnoreGuildMessage;
+				else if (g_LastObjectLeftMouseDown == ID_GO_P7_IGNORE_ALLIANCE_MESSAGE) //Ignore Alliance Messages
+					g_OptionsConfig.IgnoreAllianceMessage = !g_OptionsConfig.IgnoreAllianceMessage;
 				else if (g_LastObjectLeftMouseDown == ID_GO_P7_DARK_NIGHTS) //Dark Nights
 					g_OptionsConfig.DarkNights = !g_OptionsConfig.DarkNights;
 				else if (g_LastObjectLeftMouseDown == ID_GO_P7_COLORED_LIGHTING) //Colored Lighting
@@ -3203,6 +3266,10 @@ void TGumpOptions::ApplyPageChanges()
 			ConfigManager.SpeechColor = g_OptionsConfig.SpeechColor;
 			ConfigManager.EmoteColor = g_OptionsConfig.EmoteColor;
 			ConfigManager.PartyMessageColor = g_OptionsConfig.PartyMessageColor;
+			ConfigManager.GuildMessageColor = g_OptionsConfig.GuildMessageColor;
+			ConfigManager.AllianceMessageColor = g_OptionsConfig.AllianceMessageColor;
+			ConfigManager.IgnoreGuildMessage = g_OptionsConfig.IgnoreGuildMessage;
+			ConfigManager.IgnoreAllianceMessage = g_OptionsConfig.IgnoreAllianceMessage;
 			ConfigManager.DarkNights = g_OptionsConfig.DarkNights;
 			ConfigManager.ColoredLighting = g_OptionsConfig.ColoredLighting;
 			ConfigManager.StandartCharactersAnimationDelay = g_OptionsConfig.StandartCharactersAnimationDelay;

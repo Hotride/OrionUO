@@ -376,6 +376,16 @@ void TGumpSelectColor::OnSelectColor(WORD &color)
 			g_OptionsConfig.PartyMessageColor = color;
 			break;
 		}
+		case SCGS_OPT_DISPLAY_GUILD_MESSAGE:
+		{
+			g_OptionsConfig.GuildMessageColor = color;
+			break;
+		}
+		case SCGS_OPT_DISPLAY_ALLIANCE_MESSAGE:
+		{
+			g_OptionsConfig.AllianceMessageColor = color;
+			break;
+		}
 		case SCGS_OPT_REPSYS_INNOCENT:
 		{
 			g_OptionsConfig.InnocentColor = color;

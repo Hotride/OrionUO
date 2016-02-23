@@ -109,11 +109,14 @@ void TMapBlock::CreateLandTextureRect()
 
 			if (obj != NULL)
 			{
+				int tileX = obj->X;
+				int tileY = obj->Y;
+
 				//Вычисляем текущую и соседние Z-координаты
 				char tileZ1 = obj->Z;
-				char tileZ2 = GetLandZ(obj->X + 1, obj->Y, map);
-				char tileZ3 = GetLandZ(obj->X, obj->Y + 1, map);
-				char tileZ4 = GetLandZ(obj->X + 1, obj->Y + 1, map);
+				char tileZ2 = GetLandZ(tileX + 1, tileY, map);
+				char tileZ3 = GetLandZ(tileX, tileY + 1, map);
+				char tileZ4 = GetLandZ(tileX + 1, tileY + 1, map);
 
 				//Сохранимвреднее значение Z-координаты
 				char drawZ = (char)((tileZ1 + tileZ2 + tileZ3 + tileZ4) / 4);
@@ -121,7 +124,7 @@ void TMapBlock::CreateLandTextureRect()
 				LAND_TILES &tile = UO->m_LandData[obj->Graphic / 32].Tiles[obj->Graphic % 32];
 
 				//Если все Z-координаты равны или это тайл воды с отсутствующей текстурой - укажем что это тайл из артов
-				if ((tileZ1 == tileZ2 && tileZ1 == tileZ3 && tileZ1 == tileZ4 && !TestStretched(obj->X, obj->Y, tileZ1, map, true)) || (!tile.TexID && ::IsWet(tile.Flags)))
+				if ((/*tileZ1 == tileZ2 && tileZ1 == tileZ3 && tileZ1 == tileZ4 &&*/ !TestStretched(tileX, tileY, tileZ1, map, true)) || (!tile.TexID && ::IsWet(tile.Flags)))
 					obj->IsStretched = false;
 				else //Или же - текстура
 				{
@@ -143,12 +146,12 @@ void TMapBlock::CreateLandTextureRect()
 
 					IFOR(i, -1, 2)
 					{
-						int curX = obj->X + i;
+						int curX = tileX + i;
 						int curI = i + 1;
 
 						IFOR(j, -1, 2)
 						{
-							int curY = obj->Y + j;
+							int curY = tileY + j;
 							int curJ = j + 1;
 
 							char currentZ = GetLandZ(curX, curY, map);
@@ -232,9 +235,9 @@ bool TMapBlock::TestStretched(int x, int y, char &z, int &map, bool recurse)
 {
 	bool result = false;
 
-	IFOR(i, -1, 2)
+	IFOR(i, -1, 2 && !result)
 	{
-		IFOR(j, -1, 2)
+		IFOR(j, -1, 2 && !result)
 		{
 			if (recurse)
 				result = TestStretched(x + i, y + j, z, map, false);
@@ -244,9 +247,6 @@ bool TMapBlock::TestStretched(int x, int y, char &z, int &map, bool recurse)
 
 				result = (testZ != z && testZ != -125);
 			}
-
-			if (result)
-				break;
 		}
 	}
 
@@ -262,16 +262,16 @@ char TMapBlock::GetLandZ(int x, int y, int &map)
 		return -125;
 
 	//Смщение блока
-	WORD BlockX = x / 8;
-	WORD BlockY = y / 8;
+	int blockX = x / 8;
+	int blockY = y / 8;
 
-	int Block = (BlockX * g_MapBlockY[map]) + BlockY;
+	int offset = ((blockX * g_MapBlockY[map]) + blockY) * sizeof(MAP_BLOCK);
 
 	//Блок
-	PMAP_BLOCK mb = (PMAP_BLOCK)((DWORD)FileManager.MapMul[map].Address + (Block * sizeof(MAP_BLOCK)));
+	PMAP_BLOCK mb = (PMAP_BLOCK)((DWORD)FileManager.MapMul[map].Address + offset);
 
-	BYTE mX = x % 8;
-	BYTE mY = y % 8;
+	int mX = x % 8;
+	int mY = y % 8;
 
 	return mb->Cells[mY * 8 + mX].Z;
 }

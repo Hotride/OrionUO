@@ -55,7 +55,7 @@ private:
 	int m_AnimGroup;
 	BYTE m_Direction;
 	bool m_Grayed;
-	bool m_Sitting;
+	int m_Sitting;
 
 	//Данные о тенях
 	SHADOW_DATA m_ShadowList[MAX_SHADOWS_COUNT];
@@ -84,6 +84,9 @@ private:
 
 	float getLuma(unsigned char&, unsigned char&, unsigned char&);
 	void setAlphaAt(std::vector<bool>&, PDWORD, short&, short&, int&, int&, float&, float&);
+
+	//Корректировка направления сидячего персонажа, согласно тому. на чем он сидит
+	void FixSittingDirection(BYTE &layerDirection, bool &mirror, int &x, int &y);
 
 	//Обобщенная фукнция рисования
 	void Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id = 0);
@@ -123,6 +126,9 @@ public:
 
 	//Коррекция направления и режима зеркального отображения
 	void GetAnimDirection(BYTE &dir, bool &mirror);
+	
+	//Коррекция направления и режима зеркального отображения для сидячего персонажа
+	void GetSittingAnimDirection(BYTE &dir, bool &mirror, int &x, int &y);
 
 	//Получить ссылку на данные анимации
 	TTextureAnimation *GetAnimation(WORD id);

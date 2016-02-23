@@ -46,7 +46,7 @@ private:
 	static TTextTexture m_TexturePage4[19];	//Chat
 	static TTextTexture m_TexturePage5[7];	//Macro Options
 	static TTextTexture m_TexturePage6[9];	//Interface
-	static TTextTexture m_TexturePage7[14];	//Display
+	static TTextTexture m_TexturePage7[18];	//Display
 	static TTextTexture m_TexturePage8[9];	//Reputation System
 	static TTextTexture m_TexturePage9[9];	//Miscellaneous
 	static TTextTexture m_TexturePage10[2];	//Filter Options
@@ -129,15 +129,19 @@ private:
 	static const int ID_GO_P7_SPEECH_COLOR = 701;
 	static const int ID_GO_P7_EMOTE_COLOR = 702;
 	static const int ID_GO_P7_PARTY_MESSAGE_COLOR = 703;
-	static const int ID_GO_P7_DARK_NIGHTS = 704;
-	static const int ID_GO_P7_COLORED_LIGHTING = 705;
-	static const int ID_GO_P7_AJUST_LONG_SPEECH = 706;
-	static const int ID_GO_P7_GAME_WINDOW_SIZE_X = 707;
-	static const int ID_GO_P7_GAME_WINDOW_SIZE_Y = 708;
-	static const int ID_GO_P7_CHARACTERS_ANIMATION_DELAY = 709;
-	static const int ID_GO_P7_ITEMS_ANIMATION_DELAY = 710;
-	static const int ID_GO_P7_LOCK_GAME_WINDOW_RESIZING = 711;
-	static const int ID_GO_P7_LOCK_GUMP_MOVING = 712;
+	static const int ID_GO_P7_GUILD_MESSAGE_COLOR = 704;
+	static const int ID_GO_P7_ALLIANCE_MESSAGE_COLOR = 705;
+	static const int ID_GO_P7_IGNORE_GUILD_MESSAGE = 706;
+	static const int ID_GO_P7_IGNORE_ALLIANCE_MESSAGE = 707;
+	static const int ID_GO_P7_DARK_NIGHTS = 708;
+	static const int ID_GO_P7_COLORED_LIGHTING = 709;
+	static const int ID_GO_P7_AJUST_LONG_SPEECH = 710;
+	static const int ID_GO_P7_GAME_WINDOW_SIZE_X = 711;
+	static const int ID_GO_P7_GAME_WINDOW_SIZE_Y = 712;
+	static const int ID_GO_P7_CHARACTERS_ANIMATION_DELAY = 713;
+	static const int ID_GO_P7_ITEMS_ANIMATION_DELAY = 714;
+	static const int ID_GO_P7_LOCK_GAME_WINDOW_RESIZING = 715;
+	static const int ID_GO_P7_LOCK_GUMP_MOVING = 716;
 
 	static const int ID_GO_P8_INNOCENT_COLOR = 800;
 	static const int ID_GO_P8_FRIENDLY_COLOR = 801;

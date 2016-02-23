@@ -85,17 +85,24 @@ enum ENCRYPTION_TYPE
 //Версия клиента (для изменения в протоколе и прочих няшках)
 enum CLIENT_VERSION
 {
-	CV_OLD = 0,		//Предшествующие клиенту 3.0.8z, Остальные по логике, исходя из названия
-	CV_308Z,		//classes: paladin, necromancer; custom houses, 5 resistances
-	CV_405A,		//classes: ninja, samurai
-	CV_4011D,		//race: elves
-	CV_500A,		//
+	CV_OLD = 0,		//Предшествующие клиенту 3.0.5d, Остальные по логике, исходя из названия
+	CV_305D,		//Использование клилоков, количество слотов в списке персонажей равно количеству персонажей
+	CV_308D,		//Добавлен параметр Maximum Stats в статусбар
+	CV_308J,		//Добавлен параметр Followers в статусбар
+	CV_308Z,		//Добавлены классы paladin, necromancer; custom houses, 5 resistances, изменено окно выбора профессии
+	CV_400B,		//Удаление тултипов
+	CV_405A,		//Добавлены классы ninja, samurai
+	CV_4011D,		//Изменение окна создания персонажа. Добавлена расса elves
+	CV_500A,		//Кнопки папердолла заменены: Journal -> Quests; Chat -> Guild
+	CV_5020,		//Добавлен гамп бафов
 	CV_5090,		//
+	CV_6000,		//Добавлены цвета гильд/алли чата, игноры чатов. Добавлены опции новой таргет системы, вывод свойств предметов, Object Handles,
 	CV_6013,		//
 	CV_6017,		//
+	CV_6040,		//Увеличилось количество слотов персонажей
 	CV_6060,		//
 	CV_60142,		//
-	CV_60144,		//race: gargoyle
+	CV_60144,		//Изменение окна создания персонажа. Добавлена расса gargoyle
 	CV_7000,		//
 	CV_7090,		//
 	CV_70130,		//
@@ -114,6 +121,14 @@ enum CONNECTION_SCREEN_TYPE
 	CST_SELECT_PROFESSOIN,
 	CST_GAME_LOGIN,
 	CST_GAME
+};
+//---------------------------------------------------------------------------
+//Возможные рассы
+enum CHARACTER_RACE_TYPE
+{
+	CRT_HUMAN = 0,
+	CRT_ELVEN,
+	CRT_GARGOYLE
 };
 //---------------------------------------------------------------------------
 //Состояния ClientFlag для отправки при создании персонажа
@@ -267,6 +282,8 @@ enum SELECT_COLOR_GUMP_STATE
 	SCGS_OPT_DISPLAY_SPEECH,
 	SCGS_OPT_DISPLAY_EMOTE,
 	SCGS_OPT_DISPLAY_PARTY_MESSAGE,
+	SCGS_OPT_DISPLAY_GUILD_MESSAGE,
+	SCGS_OPT_DISPLAY_ALLIANCE_MESSAGE,
 	SCGS_OPT_REPSYS_INNOCENT,
 	SCGS_OPT_REPSYS_FRIENDLY,
 	SCGS_OPT_REPSYS_SOMEONE,

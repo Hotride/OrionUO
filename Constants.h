@@ -29,9 +29,6 @@ const int MAX_LIGHT_SOURCES = 100;
 //Максимальный размер fastwalk стека
 const int MAX_FAST_WALK_STACK_SIZE = 255;
 
-//Смещение для анимации сидячего персонажа по оси X
-const int SITTING_WIDTH_OFFSET = 10;
-
 //Максимальный размер буфера для данных при записи в файл (класс TFileWriter)
 const int MAX_FILE_BUFFER_SIZE = 0x1000;
 
@@ -97,6 +94,9 @@ const int g_MaxClimbMapZ = 19;
 
 //Высота персонажа
 const int DEFAULT_CHARACTER_HEIGHT = 16;
+
+//Высота блокирования пережвижения предметами/персонажами
+const int DEFAULT_BLOCK_HEIGHT = 16;
 
 //Задержка для перемещения бегом на маунте
 const int STEP_DELAY_MOUNT_RUN = 85;
@@ -359,6 +359,150 @@ static char SPELL_CAST_ABBREVIATURE[64][8] =
 	"K V X T",
 	"K V X F",
 	"K V X A"
+};
+
+//Смещение для анимации сидячего персонажа по оси X
+const int SITTING_OFFSET_X = 8;
+
+//Структура данных о предметах, на которых можно сидеть и возможные направления
+struct SITTING_INFO_DATA
+{
+	//Индекс картинки предмета
+	WORD Graphic;
+
+	//Направления анимации для направлени персонажа:
+	//Для 7, 0
+	char Direction1; //0
+
+	//Для 1, 2
+	char Direction2; //2
+	
+	//Для 3, 4
+	char Direction3; //4
+	
+	//Для 5, 6
+	char Direction4; //6
+	
+	//Смещение по оси Y
+	char OffsetY;
+	
+	//Смещение по оси Y при зеркальном отображении персонажа
+	char MirrorOffsetY;
+};
+
+//Количество объектов, на которых можно сидеть
+const int SITTING_ITEMS_COUNT = 96;
+
+#define SITTING_N 0, 0, 0, 0
+#define SITTING_E 2, 2, 2, 2
+#define SITTING_S 4, 4, 4, 4
+#define SITTING_W 6, 6, 6, 6
+#define SITTING_N_S 0, -1, 4, -1
+#define SITTING_E_W -1, 2, -1, 6
+#define SITTING_ALL 0, 2, 4, 6
+#define SITTING_UNKNOWN 0, 2, 4, 6
+
+//Данные о предметах, на которых можно сидеть
+static const SITTING_INFO_DATA SITTING_INFO[SITTING_ITEMS_COUNT] =
+{
+	{ 0x0459, SITTING_N_S, 2, 2 },
+	{ 0x045A, SITTING_E_W, 2, 2 },
+	{ 0x045B, SITTING_N_S, 2, 2 },
+	{ 0x045C, SITTING_E_W, 2, 2 },
+	{ 0x0A2A, SITTING_ALL, -4, -4 },
+	{ 0x0A2B, SITTING_ALL, -8, -8 },
+	{ 0x0B2C, SITTING_E_W, 2, 2 },
+	{ 0x0B2D, SITTING_N_S, 2, 2 },
+	{ 0x0B2F, SITTING_E, 6, 6 },
+	{ 0x0B30, SITTING_W, -8, 8 },
+	{ 0x0B31, SITTING_N, 0, 4 },
+	{ 0x0B32, SITTING_S, 0, 0 },
+	{ 0x0B33, SITTING_E, 0, 0 },
+	{ 0x0B4E, SITTING_E, 0, 0 },
+	{ 0x0B4F, SITTING_S, 0, 0 },
+	{ 0x0B50, SITTING_N, 0, 0 },
+	{ 0x0B51, SITTING_W, 0, 0 },
+	{ 0x0B52, SITTING_E, 0, 0 },
+	{ 0x0B53, SITTING_S, 0, 0 },
+	{ 0x0B54, SITTING_N, 0, 0 },
+	{ 0x0B55, SITTING_W, 0, 0 },
+	{ 0x0B56, SITTING_E, 4, 4 },
+	{ 0x0B57, SITTING_S, 4, 4 },
+	{ 0x0B58, SITTING_W, 0, 8 },
+	{ 0x0B59, SITTING_N, 0, 8 },
+	{ 0x0B5A, SITTING_E, 8, 8 },
+	{ 0x0B5B, SITTING_S, 8, 8 },
+	{ 0x0B5C, SITTING_N, 0, 8 },
+	{ 0x0B5D, SITTING_W, 0, 8 },
+	{ 0x0B5F, SITTING_E_W, 3, 14 },
+	{ 0x0B60, SITTING_E_W, 3, 14 },
+	{ 0x0B61, SITTING_E_W, 3, 14 },
+	{ 0x0B62, SITTING_E_W, 3, 10 },
+	{ 0x0B63, SITTING_E_W, 3, 10 },
+	{ 0x0B64, SITTING_E_W, 3, 10 },
+	{ 0x0B65, SITTING_N_S, 3, 10 },
+	{ 0x0B66, SITTING_N_S, 3, 10 },
+	{ 0x0B67, SITTING_N_S, 3, 10 },
+	{ 0x0B68, SITTING_N_S, 3, 10 },
+	{ 0x0B69, SITTING_N_S, 3, 10 },
+	{ 0x0B6A, SITTING_N_S, 3, 10 },
+	{ 0x0B91, SITTING_S, 6, 6 },
+	{ 0x0B92, SITTING_S, 6, 6 },
+	{ 0x0B93, SITTING_E, 6, 6 },
+	{ 0x0B94, SITTING_E, 6, 6 },
+	{ 0x0CF3, SITTING_E_W, 2, 8 },
+	{ 0x0CF4, SITTING_E_W, 2, 8 },
+	{ 0x0CF6, SITTING_N_S, 2, 8 },
+	{ 0x0CF7, SITTING_N_S, 2, 8 },
+	{ 0x11FC, SITTING_ALL, 2, 7 },
+	{ 0x1218, SITTING_S, 4, 4 },
+	{ 0x1219, SITTING_E, 4, 4 },
+	{ 0x121A, SITTING_N, 0, 8 },
+	{ 0x121B, SITTING_W, 0, 8 },
+	{ 0x1527, SITTING_E, 0, 0 },
+	{ 0x1771, SITTING_ALL, 0, 0 },
+	{ 0x1776, SITTING_ALL, 0, 0 },
+	{ 0x1779, SITTING_ALL, 0, 0 },
+	{ 0x1DC7, SITTING_E_W, 3, 10 },
+	{ 0x1DC8, SITTING_E_W, 3, 10 },
+	{ 0x1DC9, SITTING_E_W, 3, 10 },
+	{ 0x1DCA, SITTING_N_S, 3, 10 },
+	{ 0x1DCB, SITTING_N_S, 3, 10 },
+	{ 0x1DCC, SITTING_N_S, 3, 10 },
+	{ 0x1DCD, SITTING_E_W, 3, 10 },
+	{ 0x1DCE, SITTING_E_W, 3, 10 },
+	{ 0x1DCF, SITTING_E_W, 3, 10 },
+	{ 0x1DD0, SITTING_N_S, 3, 10 },
+	{ 0x1DD1, SITTING_N_S, 3, 10 },
+	{ 0x1DD2, SITTING_E_W, 3, 10 },
+	//Нет данных
+	{ 0x2A58, SITTING_UNKNOWN, 0, 0 },
+	{ 0x2A59, SITTING_UNKNOWN, 0, 0 },
+	{ 0x2A5A, SITTING_UNKNOWN, 0, 0 },
+	{ 0x2A5B, SITTING_UNKNOWN, 10, 10 },
+	{ 0x2A7F, SITTING_UNKNOWN, 0, 0 },
+	{ 0x2A80, SITTING_UNKNOWN, 0, 0 },
+	{ 0x2DDF, SITTING_UNKNOWN, 2, 2 },
+	{ 0x2DE0, SITTING_UNKNOWN, 2, 2 },
+	{ 0x2DE3, SITTING_UNKNOWN, 4, 4 },
+	{ 0x2DE4, SITTING_UNKNOWN, 4, 4 },
+	{ 0x2DE5, SITTING_UNKNOWN, 4, 4 },
+	{ 0x2DE6, SITTING_UNKNOWN, 4, 4 },
+	{ 0x2DEB, SITTING_UNKNOWN, 4, 4 },
+	{ 0x2DEC, SITTING_UNKNOWN, 4, 4 },
+	{ 0x2DED, SITTING_UNKNOWN, 4, 4 },
+	{ 0x2DEE, SITTING_UNKNOWN, 4, 4 },
+	{ 0x2DF5, SITTING_UNKNOWN, 4, 4 },
+	{ 0x2DF6, SITTING_UNKNOWN, 4, 4 },
+	{ 0x3088, SITTING_UNKNOWN, 4, 4 },
+	{ 0x3089, SITTING_UNKNOWN, 4, 4 },
+	{ 0x308A, SITTING_UNKNOWN, 4, 4 },
+	{ 0x308B, SITTING_UNKNOWN, 4, 4 },
+	{ 0x35ED, SITTING_UNKNOWN, 0, 0 },
+	{ 0x35EE, SITTING_UNKNOWN, 0, 0 },
+	//
+	{ 0x3DFF, SITTING_N_S, 2, 2 },
+	{ 0x3E00, SITTING_E_W, 2, 2 }
 };
 //---------------------------------------------------------------------------
 #endif

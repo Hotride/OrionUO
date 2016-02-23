@@ -751,6 +751,9 @@ bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str,
 			{
 				int testY = y + lineOffsY + offsY;
 
+				if (testY >= height)
+					break;
+
 				IFOR(x, 0, dw)
 				{
 					if ((x + w) >= width)
@@ -2303,14 +2306,17 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 
 				IFOR(y, 0, dh)
 				{
+					int testY = offsY + lineOffsY + y;
+					
+					if (testY >= height)
+						break;
+
 					PBYTE scanlines = data;
 					data += scanlineCount;
-
+					
 					int italicOffset = 0;
 					if (isItalic)
 						italicOffset = (int)((dh - y) / ITALIC_FONT_KOEFFICIENT);
-
-					int testY = offsY + lineOffsY + y;
 
 					int testX = w + offsX + italicOffset;
 
@@ -2355,11 +2361,14 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 
 					IFOR(cy, 0, dh)
 					{
+						int testY = offsY + lineOffsY + cy;
+					
+						if (testY >= height)
+							break;
+
 						int italicOffset = 0;
 						if (isItalic && cy >=0 && cy < dh)
 							italicOffset = (int)((dh - cy) / ITALIC_FONT_KOEFFICIENT);
-
-						int testY = offsY + lineOffsY + cy;
 
 						IFOR(cx, minXOk, maxXOk)
 						{
@@ -2399,11 +2408,14 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 
 					IFOR(cy, 0, dh)
 					{
+						int testY = offsY + lineOffsY + cy;
+					
+						if (testY >= height)
+							break;
+
 						int italicOffset = 0;
 						if (isItalic)
 							italicOffset = (int)((dh - cy) / ITALIC_FONT_KOEFFICIENT);
-
-						int testY = offsY + lineOffsY + cy;
 
 						IFOR(cx, 0, dw)
 						{
@@ -2436,11 +2448,14 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 
 					IFOR(cy, minYOk, maxYOk)
 					{
+						int testY = offsY + lineOffsY + cy;
+					
+						if (testY >= height)
+							break;
+
 						int italicOffset = 0;
 						if (isItalic && cy >= 0 && cy < dh)
 							italicOffset = (int)((dh - cy) / ITALIC_FONT_KOEFFICIENT);
-
-						int testY = offsY + lineOffsY + cy;
 
 						IFOR(cx, minXOk, maxXOk)
 						{

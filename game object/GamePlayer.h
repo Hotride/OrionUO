@@ -34,6 +34,29 @@ private:
 
 	DWORD m_Gold; //Количество денег на счету
 
+	//Максимальная сумма статов
+	WORD m_StatsCap;
+	
+	CHARACTER_RACE_TYPE m_Race;
+
+	//Количество подчиненных существ
+	BYTE m_Followers;
+
+	//Максимальное количество подчиненных существ
+	BYTE m_MaxFollowers;
+	
+	short m_FireResistance;
+	short m_ColdResistance;
+	short m_PoisonResistance;
+	short m_EnergyResistance;
+	
+	short m_Luck;
+	
+	short m_MinDamage;
+	short m_MaxDamage;
+	
+	DWORD m_TithingPoints;
+
 	bool m_Warmode; //Режим боя
 
 	TSkill *m_Skills; //Указатель на умения
@@ -49,6 +72,18 @@ public:
 	SETGET(short, Armor);
 	SETGET(DWORD, Gold);
 	SETGET(bool, Warmode);
+	SETGET(WORD, StatsCap);
+	SETGET(BYTE, Followers);
+	SETGET(BYTE, MaxFollowers);
+	SETGET(short, FireResistance);
+	SETGET(short, ColdResistance);
+	SETGET(short, PoisonResistance);
+	SETGET(short, EnergyResistance);
+	SETGET(short, Luck);
+	SETGET(short, MinDamage);
+	SETGET(short, MaxDamage);
+	SETGET(DWORD, TithingPoints);
+	SETGET(CHARACTER_RACE_TYPE, Race);
 	void SetName(string val);
 
 	void SetSkillBaseValue(int index, float val);

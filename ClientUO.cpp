@@ -2459,8 +2459,13 @@ void TUltimaOnline::LoadClientConfig()
 			g_MapBlockY[i] = g_MapSizeY[i] / 8;
 		}
 
-		if (ver == 2)
+		if (ver >= 2)
+		{
 			CharacterList.ClientFlag = file.ReadByte();
+
+			if (ver >= 3)
+				FileManager.UseVerdata = (file.ReadByte() != 0);
+		}
 		else
 			CharacterList.ClientFlag = 0;
 
@@ -2516,6 +2521,10 @@ void TUltimaOnline::LoadPluginConfig()
 		if (ver >= 2)
 		{
 			file.Move(1);
+			
+			if (ver >= 3)
+				file.Move(1);
+
 			char count = file.ReadChar();
 
 			IFOR(i, 0, count)

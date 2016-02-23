@@ -1056,49 +1056,43 @@ PACKET_HANDLER(CharacterStatus)
 
 		if (serial == g_PlayerSerial)
 		{
+			short newStr = ReadShort();
+			short newDex = ReadShort();
+			short newInt = ReadShort();
+
 			if (ConfigManager.StatReport && g_Player->Str)
 			{
-				short pstr = g_Player->Str;
-				short pdex = g_Player->Dex;
-				short pint = g_Player->Int;
+				short currentStr = g_Player->Str;
+				short currentDex = g_Player->Dex;
+				short currentInt = g_Player->Int;
 			
-				short nstr = ReadShort();
-				short ndex = ReadShort();
-				short nint = ReadShort();
-			
-				g_Player->Str = nstr;
-				g_Player->Dex = ndex;
-				g_Player->Int = nint;
-			
-				short cstr = nstr - pstr;
-				short cdex = ndex - pdex;
-				short cint = nint - pint;
+				short deltaStr = newStr - currentStr;
+				short deltaDex = newDex - currentDex;
+				short deltaInt = newInt - currentInt;
 			
 				char str[64] = {0};
-				if (cstr)
+				if (deltaStr)
 				{
-					sprintf(str, "Your strength has changed by %d.  It is now %d.", cstr, nstr);
+					sprintf(str, "Your strength has changed by %d.  It is now %d.", deltaStr, newStr);
 					UO->CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 			
-				if (cdex)
+				if (deltaDex)
 				{
-					sprintf(str, "Your dexterity has changed by %d.  It is now %d.", cdex, ndex);
+					sprintf(str, "Your dexterity has changed by %d.  It is now %d.", deltaDex, newDex);
 					UO->CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 			
-				if (cint)
+				if (deltaInt)
 				{
-					sprintf(str, "Your intelligence has changed by %d.  It is now %d.", cint, nint);
+					sprintf(str, "Your intelligence has changed by %d.  It is now %d.", deltaInt, newInt);
 					UO->CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 			}
-			else
-			{
-				g_Player->SetStr(ReadShort());
-				g_Player->SetDex(ReadShort());
-				g_Player->SetInt(ReadShort());
-			}
+
+			g_Player->Str = newStr;
+			g_Player->Dex = newDex;
+			g_Player->Int = newInt;
 
 			g_Player->Stam = ReadShort();
 			g_Player->MaxStam = ReadShort();
@@ -1109,9 +1103,31 @@ PACKET_HANDLER(CharacterStatus)
 			g_Player->Weight = ReadShort(); //+64
 
 			if (flag >= 5)
+			{
 				g_Player->MaxWeight = ReadShort(); //unpack16(buf + 66);
+				g_Player->Race = (CHARACTER_RACE_TYPE)ReadByte();
+			}
 			else
 				g_Player->MaxWeight = (g_Player->Str * 4) + 25;
+
+			if (flag >= 3)
+			{
+				g_Player->StatsCap = ReadWord();
+				g_Player->Followers = ReadByte();
+				g_Player->MaxFollowers = ReadByte();
+			}
+
+			if (flag >= 4)
+			{
+				g_Player->FireResistance = ReadShort();
+				g_Player->ColdResistance = ReadShort();
+				g_Player->PoisonResistance = ReadShort();
+				g_Player->EnergyResistance = ReadShort();
+				g_Player->Luck = ReadShort();
+				g_Player->MinDamage = ReadShort();
+				g_Player->MaxDamage = ReadShort();
+				g_Player->TithingPoints = ReadDWord();
+			}
 
 			if (!ConnectionScreen->Completed && g_PacketLoginComplete)
 				UO->LoginComplete();

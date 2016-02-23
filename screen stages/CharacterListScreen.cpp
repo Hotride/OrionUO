@@ -104,6 +104,20 @@ int TCharacterListScreen::Render(bool mode)
 			return 0;
 	}
 
+	int count = CharacterList.Count;
+	bool testField = (ConnectionManager.ClientVersion >= CV_305D);
+	int posInList = 0;
+	int yOffset = 150;
+	int yBonus = 0;
+	int listTitleY = 106;
+
+	if (ConnectionManager.ClientVersion >= CV_6040)
+	{
+		listTitleY = 96;
+		yOffset = 125;
+		yBonus = 45;
+	}
+
 	if (mode)
 	{
 		int CanSelectedButton = g_LastSelectedObject;
@@ -130,34 +144,42 @@ int TCharacterListScreen::Render(bool mode)
 			gumpID = 0x158B; //X gump
 		UO->DrawGump(gumpID, 0, 555, 4); //X gump
 		
-		UO->DrawResizepicGump(0xA28, 160, 70, 408, 343); //Character list field
+		UO->DrawResizepicGump(0xA28, 160, 70, 408, 343 + yBonus); //Character list field
 
-		m_Text.Draw(267, 106);
-
-		int count = CharacterList.Count;
+		m_Text.Draw(267, listTitleY);
 
 		IFOR(i, 0, count)
 		{
-			UO->DrawResizepicGump(0xBB8, 224, 150 + (i * 40), 280, 30); //Character name field
+			int len = CharacterList.GetName(i).length();
 
-			WORD FColor = 0x034F;
-			if (CharacterList.Selected == i)
-				FColor = 0x0021;
-			else if (g_LastSelectedObject == (ID_CS_CHARACTERS + i))
-				FColor = 0x03E3;
+			if (!testField || len != 0 || !i)
+			{
+				UO->DrawResizepicGump(0xBB8, 224, yOffset + (posInList * 40), 280, 30); //Character name field
+				
+				if (len)
+				{
+					WORD FColor = 0x034F;
+					if (CharacterList.Selected == i)
+						FColor = 0x0021;
+					else if (g_LastSelectedObject == (ID_CS_CHARACTERS + i))
+						FColor = 0x03E3;
 
-			FontManager->DrawA(5, CharacterList.GetName(i).c_str(), FColor, 229, 150 + (i * 40), 270, TS_CENTER); //Character name
+					FontManager->DrawA(5, CharacterList.GetName(i).c_str(), FColor, 229, yOffset + (posInList * 40), 270, TS_CENTER); //Character name
+				}
+
+				posInList++;
+			}
 		}
 		
 		gumpID = 0x159D + (int)(CanSelectedButton == ID_CS_NEW); //New button
 		if (g_LastObjectLeftMouseDown == ID_CS_NEW)
 			gumpID = 0x159F; //New button pressed
-		UO->DrawGump(gumpID, 0, 224, 350);
+		UO->DrawGump(gumpID, 0, 224, 350 + yBonus);
 		
 		gumpID = 0x159A + (int)(CanSelectedButton == ID_CS_DELETE); //Delete button
 		if (g_LastObjectLeftMouseDown == ID_CS_DELETE)
 			gumpID = 0x159C; //Delete button pressed
-		UO->DrawGump(gumpID, 0, 442, 350);
+		UO->DrawGump(gumpID, 0, 442, 350 + yBonus);
 
 		gumpID = 0x15A1 + (int)(CanSelectedButton == ID_CS_ARROW_PREV); //< gump
 		if (g_LastObjectLeftMouseDown == ID_CS_ARROW_PREV)
@@ -187,21 +209,26 @@ int TCharacterListScreen::Render(bool mode)
 			g_LastSelectedObject = ID_CS_ARROW_PREV; //< gump
 		else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_CS_ARROW_NEXT; //> gump
-		else if (UO->GumpPixelsInXY(0x159D, 224, 350))
+		else if (UO->GumpPixelsInXY(0x159D, 224, 350 + yBonus))
 			g_LastSelectedObject = ID_CS_NEW; //New button
-		else if (UO->GumpPixelsInXY(0x159A, 442, 350))
+		else if (UO->GumpPixelsInXY(0x159A, 442, 350 + yBonus))
 			g_LastSelectedObject = ID_CS_DELETE; //Delete button
 		else
 		{
-			int count = CharacterList.Count;
-
 			IFOR(i, 0, count)
 			{
-				if (UO->ResizepicPixelsInXY(0xBB8, 224, 150 + (i * 40), 280, 30))
-				{
-					g_LastSelectedObject = ID_CS_CHARACTERS + i; //Character name field
+				int len = CharacterList.GetName(i).length();
 
-					break;
+				if (!testField || len != 0 || !i)
+				{
+					if (UO->ResizepicPixelsInXY(0xBB8, 224, yOffset + (posInList * 40), 280, 30))
+					{
+						g_LastSelectedObject = ID_CS_CHARACTERS + i; //Character name field
+
+						break;
+					}
+				
+					posInList++;
 				}
 			}
 		}

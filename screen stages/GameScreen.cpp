@@ -118,7 +118,11 @@ int TGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 				continue;
 	
 			if (ro->Z >= pz15 && maxDrawZ > ro->Z && !ro->IsRoof() && (ro->IsSurface() || ro->IsImpassable()))
+			{
 				maxDrawZ = ro->Z;
+
+				noDrawRoof = true;
+			}
 			else  if (ro->Z > pz5 && (ro->IsRoof() || (ro->IsBackground() && ro->IsSurface())))
 			{
 				bool canNoRoof = !ro->IsRoof();

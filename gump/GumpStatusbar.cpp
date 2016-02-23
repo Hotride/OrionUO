@@ -275,6 +275,9 @@ void TGumpStatusbar::RemoveFromGroup()
 void TGumpStatusbar::PrepareTextures()
 {
 	UO->ExecuteGumpPart(0x0802, 8);
+
+	if (ConnectionManager.ClientVersion >= CV_308D)
+		UO->ExecuteGump(0x2A6C);
 }
 //---------------------------------------------------------------------------
 void TGumpStatusbar::GenerateFrame(int posX, int posY)
@@ -291,7 +294,7 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 
 	//Нажата ли кнопка в окне?
 	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
+	
 	//Может ли быть нажат элемент?
 	int CanPressedButton = 0;
 	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
@@ -303,44 +306,187 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 	{
 		if (!Minimized) //Если это "полная" версия статусбара
 		{
-			UO->DrawGump(0x0802, 0, posX, posY); //Гамп статусбара
-
-			//Отрисуем имя игрока
-			if (g_Player->GetName().length())
-				FontManager->DrawA(1, g_Player->GetName().c_str(), 0x0386, posX + 86, posY + 42);
-
-			//Отрисовка набора характеристик, комментировать не буду...
-
 			char text[30] = {0};
-			sprintf(text, "%d", g_Player->Str);
-			FontManager->DrawA(1, text, 0x0386, posX + 86, posY + 61);
-				
-			sprintf(text, "%d", g_Player->Dex);
-			FontManager->DrawA(1, text, 0x0386, posX + 86, posY + 73);
-				
-			sprintf(text, "%d", g_Player->Int);
-			FontManager->DrawA(1, text, 0x0386, posX + 86, posY + 85);
-				
-			sprintf(text, "%s", (g_Player->Sex ? "F" : "M"));
-			FontManager->DrawA(1, text, 0x0386, posX + 86, posY + 97);
-				
-			sprintf(text, "%d", g_Player->Armor);
-			FontManager->DrawA(1, text, 0x0386, posX + 86, posY + 109);
 
-			sprintf(text, "%d/%d", g_Player->Hits, g_Player->MaxHits);
-			FontManager->DrawA(1, text, 0x0386, posX + 171, posY + 61);
+			WORD gumpID = 0x0802;
+			if (ConnectionManager.ClientVersion >= CV_308D)
+				gumpID = 0x2A6C;
+
+			UO->DrawGump(gumpID, 0, posX, posY); //Гамп статусбара
+
+			//Отрисовка набора характеристик, расположение в зависимости от версии протокола, комментировать не буду...
+			if (ConnectionManager.ClientVersion >= CV_308Z)
+			{
+				//Отрисуем имя игрока
+				if (g_Player->GetName().length())
+					FontManager->DrawA(1, g_Player->GetName().c_str(), 0x0386, posX + 58, posY + 50, 320, TS_CENTER);
 				
-			sprintf(text, "%d/%d", g_Player->Mana, g_Player->MaxMana);
-			FontManager->DrawA(1, text, 0x0386, posX + 171, posY + 73);
+
+
+				//Кнопка вызова гампа бафов
+				if (ConnectionManager.ClientVersion >= CV_5020)
+					UO->DrawGump(0x7538, 0, posX + 40, posY + 50);
+
+
+
+				posX += 88;
+				sprintf(text, "%d", g_Player->Str);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 77);
+
+				sprintf(text, "%d", g_Player->Dex);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 105);
+
+				sprintf(text, "%d", g_Player->Int);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 133);
 				
-			sprintf(text, "%d/%d", g_Player->Stam, g_Player->MaxStam);
-			FontManager->DrawA(1, text, 0x0386, posX + 171, posY + 85);
 				
-			sprintf(text, "%d", g_Player->Gold);
-			FontManager->DrawA(1, text, 0x0386, posX + 171, posY + 97);
 				
-			sprintf(text, "%d", g_Player->Weight);
-			FontManager->DrawA(1, text, 0x0386, posX + 171, posY + 109);
+				float lineY = posY + 82.0f;
+
+				posX += 58;
+				float lineX = posX + 34.0f;
+				int textWidth = 40;
+
+				//Hits
+				sprintf(text, "%d", g_Player->Hits);
+				FontManager->DrawA(1, text, 0x0386, posX , posY + 70, textWidth, TS_CENTER);
+				
+				g_GL.DrawLine(0x1c1c1c1c, (float)posX, lineY, lineX, lineY);
+
+				sprintf(text, "%d", g_Player->MaxHits);
+				FontManager->DrawA(1, text, 0x0386, posX , posY + 83, textWidth, TS_CENTER);
+				
+				//Stam
+				sprintf(text, "%d", g_Player->Stam);
+				FontManager->DrawA(1, text, 0x0386, posX , posY + 98, textWidth, TS_CENTER);
+				
+				lineY = posY + 110.0f;
+				g_GL.DrawLine(0x1c1c1c1c, (float)posX, lineY, lineX, lineY);
+
+				sprintf(text, "%d", g_Player->MaxStam);
+				FontManager->DrawA(1, text, 0x0386, posX , posY + 111, textWidth, TS_CENTER);
+
+				//Mana
+				sprintf(text, "%d", g_Player->Mana);
+				FontManager->DrawA(1, text, 0x0386, posX , posY + 126, textWidth, TS_CENTER);
+				
+				lineY = posY + 138.0f;
+				g_GL.DrawLine(0x1c1c1c1c, (float)posX, lineY, lineX, lineY);
+
+				sprintf(text, "%d", g_Player->MaxMana);
+				FontManager->DrawA(1, text, 0x0386, posX , posY + 139, textWidth, TS_CENTER);
+
+
+				
+				posX += 74;
+
+				sprintf(text, "%d", g_Player->StatsCap);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 77);
+
+				sprintf(text, "%d", g_Player->Luck);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 105);
+				
+				//Weights
+				posX -= 4;
+				lineX = posX + 34.0f;
+
+				sprintf(text, "%d", g_Player->Weight);
+				FontManager->DrawA(1, text, 0x0386, posX , posY + 126, textWidth, TS_CENTER);
+				
+				lineY = posY + 138.0f;
+				g_GL.DrawLine(0x1c1c1c1c, (float)posX, lineY, lineX, lineY);
+
+				sprintf(text, "%d", g_Player->MaxWeight);
+				FontManager->DrawA(1, text, 0x0386, posX , posY + 139, textWidth, TS_CENTER);
+
+				
+
+				posX += 64;
+
+				sprintf(text, "%d-%d", g_Player->MinDamage, g_Player->MaxDamage);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 77);
+
+				sprintf(text, "%d", g_Player->Gold);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 105);
+				
+				sprintf(text, "%d/%d", g_Player->Followers, g_Player->MaxFollowers);
+				FontManager->DrawA(1, text, 0x0386, posX + 5, posY + 133);
+				
+
+				
+				posX += 74;
+
+				sprintf(text, "%d", g_Player->Armor);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 76);
+				
+				sprintf(text, "%d", g_Player->FireResistance);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 92);
+				
+				sprintf(text, "%d", g_Player->ColdResistance);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 106);
+				
+				sprintf(text, "%d", g_Player->PoisonResistance);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 120);
+				
+				sprintf(text, "%d", g_Player->EnergyResistance);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 134);
+			}
+			else
+			{
+				posX += 86;
+
+				//Отрисуем имя игрока
+				if (g_Player->GetName().length())
+					FontManager->DrawA(1, g_Player->GetName().c_str(), 0x0386, posX, posY + 42);
+
+				sprintf(text, "%d", g_Player->Str);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 61);
+
+				sprintf(text, "%d", g_Player->Dex);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 73);
+
+				sprintf(text, "%d", g_Player->Int);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 85);
+
+				sprintf(text, "%s", (g_Player->Sex ? "F" : "M"));
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 97);
+
+				sprintf(text, "%d", g_Player->Armor);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 109);
+
+				posX += 85;
+
+				sprintf(text, "%d/%d", g_Player->Hits, g_Player->MaxHits);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 61);
+
+				sprintf(text, "%d/%d", g_Player->Mana, g_Player->MaxMana);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 73);
+
+				sprintf(text, "%d/%d", g_Player->Stam, g_Player->MaxStam);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 85);
+
+				sprintf(text, "%d", g_Player->Gold);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 97);
+
+				sprintf(text, "%d", g_Player->Weight);
+				FontManager->DrawA(1, text, 0x0386, posX, posY + 109);
+			
+				if (ConnectionManager.ClientVersion == CV_308D)
+				{
+					sprintf(text, "%d", g_Player->StatsCap);
+					FontManager->DrawA(1, text, 0x0386, posX, posY + 124);
+				}
+				else if (ConnectionManager.ClientVersion == CV_308J)
+				{
+					posX += 9;
+
+					sprintf(text, "%d", g_Player->StatsCap);
+					FontManager->DrawA(1, text, 0x0386, posX, posY + 131);
+				
+					sprintf(text, "%d/%d", g_Player->Followers, g_Player->MaxFollowers);
+					FontManager->DrawA(1, text, 0x0386, posX, posY + 144);
+				}
+			}
 		}
 		else //Это уменьшенная врсия статусбара (с полосками)
 		{
@@ -636,18 +782,45 @@ int TGumpStatusbar::Draw(bool &mode)
 		{
 			if (!Minimized) //Полная версия
 			{
-				if (UO->GumpPixelsInXY(0x0802, posX, posY))
+				WORD gumpID = 0x0802;
+				POINT p = {posX, posY};
+
+				if (ConnectionManager.ClientVersion >= CV_308D)
+				{
+					gumpID = 0x2A6C;
+
+					if (ConnectionManager.ClientVersion >= CV_308Z)
+					{
+						p.x += 389;
+						p.y += 152;
+					}
+					else
+					{
+						p.x += 243;
+						p.y += 150;
+					}
+				}
+				else
+				{
+					p.x += 244;
+					p.y += 112;
+				}
+
+				if (UO->GumpPixelsInXY(gumpID, posX, posY))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
+					
+					//Кнопка вызова гампа бафов
+					if (ConnectionManager.ClientVersion >= CV_5020 && UO->GumpPixelsInXY(0x7538, posX + 40, posY + 50))
+						LSG = ID_GSB_BUFF_GUMP;
 				}
 
-				//Кнопка минимизации
-				RECT rc = {0, 0, 16, 16};
-				POINT p = {g_MouseX - (posX + 244), g_MouseY - (posY + 112)};
-
-				if (PtInRect(&rc, p))
+				if (UO->PolygonePixelsInXY(p.x, p.y, 16, 16))
+				{
 					LSG = ID_GSB_MINIMIZE;
+					g_LastSelectedGump = index;
+				}
 			}
 			else //Минимизированный гамп (с полосками)
 			{

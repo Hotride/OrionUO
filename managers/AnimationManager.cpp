@@ -195,7 +195,7 @@ int TAnimationManager::m_UsedLayers[8][USED_LAYER_COLUT] =
 //----------------------------------------------------------------------------
 TAnimationManager::TAnimationManager()
 : m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0), m_Direction(0),
-m_Grayed(false), m_ShadowCount(0), m_Sitting(false)
+m_Grayed(false), m_ShadowCount(0), m_Sitting(0)
 {
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
@@ -583,6 +583,56 @@ void TAnimationManager::GetAnimDirection(BYTE &dir, bool &mirror)
 		default:
 			break;
 	}
+}
+//----------------------------------------------------------------------------
+void TAnimationManager::GetSittingAnimDirection(BYTE &dir, bool &mirror, int &x, int &y)
+{
+	switch (dir)
+	{
+		case 0:
+		{
+			mirror = true;
+			dir = 3;
+
+			break;
+		}
+		case 2:
+		{
+			mirror = true;
+			dir = 1;
+
+			break;
+		}
+		case 4:
+		{
+			mirror = false;
+			dir = 1;
+
+			break;
+		}
+		case 6:
+		{
+			mirror = false;
+			dir = 3;
+
+			break;
+		}
+		default:
+			break;
+	}
+
+			/*if (mirror)
+			{
+				drawX += (SITTING_OFFSET_X / 2) - 1;
+
+				drawY += 5 + sittingData.MirrorOffsetY;
+			}
+			else
+			{
+				drawX -= SITTING_OFFSET_X;
+
+				drawY += 12 + sittingData.OffsetY;
+			}*/
 }
 //----------------------------------------------------------------------------
 TTextureAnimation *TAnimationManager::GetAnimation(WORD id)
@@ -1224,6 +1274,85 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 	}
 }
 //----------------------------------------------------------------------------
+void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, int &x, int &y)
+{
+	const SITTING_INFO_DATA &data = SITTING_INFO[m_Sitting - 1];
+
+	switch (m_Direction)
+	{
+		case 7:
+		case 0:
+		{
+			if (data.Direction1 == -1)
+			{
+				if (m_Direction == 7)
+					m_Direction = data.Direction4;
+				else
+					m_Direction = data.Direction2;
+			}
+			else
+				m_Direction = data.Direction1;
+
+			break;
+		}
+		case 1:
+		case 2:
+		{
+			if (data.Direction2 == -1)
+			{
+				if (m_Direction == 1)
+					m_Direction = data.Direction1;
+				else
+					m_Direction = data.Direction3;
+			}
+			else
+				m_Direction = data.Direction2;
+
+			break;
+		}
+		case 3:
+		case 4:
+		{
+			if (data.Direction3 == -1)
+			{
+				if (m_Direction == 3)
+					m_Direction = data.Direction2;
+				else
+					m_Direction = data.Direction4;
+			}
+			else
+				m_Direction = data.Direction3;
+
+			break;
+		}
+		case 5:
+		case 6:
+		{
+			if (data.Direction4 == -1)
+			{
+				if (m_Direction == 5)
+					m_Direction = data.Direction3;
+				else
+					m_Direction = data.Direction1;
+			}
+			else
+				m_Direction = data.Direction4;
+
+			break;
+		}
+		default:
+			break;
+	}
+
+	layerDirection = m_Direction;
+	GetSittingAnimDirection(m_Direction, mirror, x, y);
+
+	if (mirror)
+		y += data.MirrorOffsetY;
+	else
+		y += data.OffsetY;
+}
+//----------------------------------------------------------------------------
 void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 {
 	WORD targetColor = 0;
@@ -1268,7 +1397,7 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	
 	if (goi != NULL) //Draw mount
 	{
-		m_Sitting = false;
+		m_Sitting = 0;
 		lightOffset += 20;
 		WORD mountID = goi->GetMountAnimation();
 
@@ -1277,25 +1406,25 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID + 0x10000);
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID);
 	}
-	else if (obj->IsSitting())
+	else
 	{
-		m_Sitting = true;
-		animGroup = PAG_STAND;
-		animIndex = 0;
-		m_Direction = 1;
+		m_Sitting = obj->IsSitting();
 
-		if (obj->Direction == 3)
-			mirror = true;
+		if (m_Sitting)
+		{
+			animGroup = PAG_STAND;
+			animIndex = 0;
 
-		if (mirror)
-			layerDir = 2;
-		else
-			layerDir = 4;
+			obj->UpdateAnimationInfo(m_Direction);
+			
+			FixSittingDirection(layerDir, mirror, drawX, drawY);
+		}
 	}
 	
 	m_AnimGroup = animGroup;
 	
-	Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
+	if (!m_Sitting)
+		Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
 
 	Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
 
@@ -1410,7 +1539,7 @@ bool TAnimationManager::CharacterPixelsInXY(TGameCharacter *obj, int x, int y, i
 //----------------------------------------------------------------------------
 void TAnimationManager::DrawCorpse(TGameItem *obj, int x, int y, int z)
 {
-	m_Sitting = false;
+	m_Sitting = 0;
 	m_Direction = obj->Layer;
 
 	if (m_Direction & 0x80)
@@ -1451,7 +1580,7 @@ void TAnimationManager::DrawCorpse(TGameItem *obj, int x, int y, int z)
 //----------------------------------------------------------------------------
 bool TAnimationManager::CorpsePixelsInXY(TGameItem *obj, int x, int y, int z)
 {
-	m_Sitting = false;
+	m_Sitting = 0;
 	m_Direction = obj->Layer;
 	bool mirror = false;
 
