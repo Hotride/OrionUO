@@ -713,6 +713,12 @@ TUltimaOnline::~TUltimaOnline()
 		PathFinder = NULL;
 	}
 
+	if (ProfessionManager != NULL)
+	{
+		delete ProfessionManager;
+		ProfessionManager = NULL;
+	}
+
 	if (OptionsMacroManager != NULL)
 	{
 		delete OptionsMacroManager;
@@ -921,6 +927,8 @@ bool TUltimaOnline::Install()
 	AnimationManager->InitBodyconv(verda, FilePath("Bodyconv.def"));
 
 	ClilocManager = new TClilocManager();
+	ProfessionManager = new TProfessionManager();
+	ProfessionManager->Load();
 
 	LoadProfession();
 	LoadLogin();

@@ -569,5 +569,6 @@ typedef std::vector<BYTE> WaveFile;
 #include "managers\\OptionsMacroManager.h"
 #include "managers\\CityManager.h"
 #include "managers\\PluginManager.h"
+#include "managers\\ProfessionManager.h"
 #include "ClientUO.h"
 //---------------------------------------------------------------------------

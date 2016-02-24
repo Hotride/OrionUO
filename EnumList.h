@@ -123,6 +123,14 @@ enum CONNECTION_SCREEN_TYPE
 	CST_GAME
 };
 //---------------------------------------------------------------------------
+//Типы профессий
+enum PROFESSION_TYPE
+{
+	PT_NO_PROF = 0,
+	PT_CATEGORY,
+	PT_PROFESSION
+};
+//---------------------------------------------------------------------------
 //Возможные рассы
 enum CHARACTER_RACE_TYPE
 {

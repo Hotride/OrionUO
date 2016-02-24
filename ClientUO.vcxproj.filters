@@ -432,6 +432,9 @@
     <ClInclude Include="SmoothMonitor.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="managers\ProfessionManager.h">
+      <Filter>Заголовочные файлы\managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -796,6 +799,9 @@
     </ClCompile>
     <ClCompile Include="SmoothMonitor.cpp">
       <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="managers\ProfessionManager.cpp">
+      <Filter>Файлы исходного кода\managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -182,6 +182,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="managers\OptionsMacroManager.h" />
     <ClInclude Include="managers\PacketManager.h" />
     <ClInclude Include="managers\PluginManager.h" />
+    <ClInclude Include="managers\ProfessionManager.h" />
     <ClInclude Include="managers\SkillGroupManager.h" />
     <ClInclude Include="managers\SoundManager.h" />
     <ClInclude Include="MapBlock.h" />
@@ -309,6 +310,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="managers\OptionsMacroManager.cpp" />
     <ClCompile Include="managers\PacketManager.cpp" />
     <ClCompile Include="managers\PluginManager.cpp" />
+    <ClCompile Include="managers\ProfessionManager.cpp" />
     <ClCompile Include="managers\SkillGroupManager.cpp" />
     <ClCompile Include="managers\SoundManager.cpp" />
     <ClCompile Include="MapBlock.cpp" />
