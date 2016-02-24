@@ -21,60 +21,8 @@
 
 TProfessionManager *ProfessionManager = NULL;
 //---------------------------------------------------------------------------
-//------------------------------TBaseProfession------------------------------
-//---------------------------------------------------------------------------
-TBaseProfession_y::TBaseProfession_y()
-: m_Name(""), m_TrueName(""), m_DescriptionIndex(0), m_TopLevel(false), m_Gump(0),
-m_Type(PT_NO_PROF)
-{
-}
-//---------------------------------------------------------------------------
-TBaseProfession_y::~TBaseProfession_y()
-{
-	m_TextureName.Clear();
-	m_TextureDescription.Clear();
-}
-//---------------------------------------------------------------------------
-void TBaseProfession_y::SetName(string val)
-{
-	m_Name = val;
-
-	FontManager->GenerateW(1, m_TextureName, ToWString(val).c_str(), 0, 30, 185);
-}
-//---------------------------------------------------------------------------
-//-----------------------------TProfessionCategory---------------------------
-//---------------------------------------------------------------------------
-TProfessionCategory_y::TProfessionCategory_y()
-: TBaseProfession_y(), m_Childrens("|")
-{
-}
-//---------------------------------------------------------------------------
-TProfessionCategory_y::~TProfessionCategory_y()
-{
-}
-//---------------------------------------------------------------------------
-void TProfessionCategory_y::AddChildren(string child)
-{
-	m_Childrens += child + "|";
-}
-//---------------------------------------------------------------------------
-//---------------------------------TProfession-------------------------------
-//---------------------------------------------------------------------------
-TProfession_y::TProfession_y()
-: TBaseProfession_y(), m_Str(0), m_Int(0), m_Dex(0)
-{
-	memset(&m_SkillIndex[0], 0, sizeof(m_SkillIndex));
-	memset(&m_SkillValue[0], 0, sizeof(m_SkillValue));
-}
-//---------------------------------------------------------------------------
-TProfession_y::~TProfession_y()
-{
-}
-//---------------------------------------------------------------------------
-//-----------------------------TProfessionManager----------------------------
-//---------------------------------------------------------------------------
 TProfessionManager::TProfessionManager()
-: TBaseQueue(), m_SelectedProfession(NULL)
+: TBaseQueue(), Selected(NULL)
 {
 }
 //---------------------------------------------------------------------------
@@ -325,11 +273,11 @@ bool TProfessionManager::ParseFilePart(FILE *file)
 			break;
 	}
 
-	TBaseProfession_y *obj = NULL;
+	TBaseProfession *obj = NULL;
 
 	if (type == PT_CATEGORY)
 	{
-		TProfessionCategory_y *temp = new TProfessionCategory_y();
+		TProfessionCategory *temp = new TProfessionCategory();
 
 		IFOR(i, 0, (int)childrens.size())
 			temp->AddChildren(childrens[i]);
@@ -338,7 +286,7 @@ bool TProfessionManager::ParseFilePart(FILE *file)
 	}
 	else if (type == PT_PROFESSION)
 	{
-		TProfession_y *temp = new TProfession_y();
+		TProfession *temp = new TProfession();
 
 		temp->Str = stats[0];
 		temp->Int = stats[1];
@@ -365,10 +313,10 @@ bool TProfessionManager::ParseFilePart(FILE *file)
 		obj->Type = type;
 
 		if (topLevel)
-			Add(obj);
+			m_Items->Add(obj);
 		else
 		{
-			TBaseProfession_y *parent = (TBaseProfession_y*)m_Items;
+			TBaseProfession *parent = (TBaseProfession*)m_Items;
 
 			while (parent != NULL)
 			{
@@ -377,7 +325,7 @@ bool TProfessionManager::ParseFilePart(FILE *file)
 				if (result)
 					break;
 
-				parent = (TBaseProfession_y*)parent->m_Next;
+				parent = (TBaseProfession*)parent->m_Next;
 			}
 
 			if (!result)
@@ -388,13 +336,13 @@ bool TProfessionManager::ParseFilePart(FILE *file)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TProfessionManager::AddChild(TBaseProfession_y *parent, TBaseProfession_y *child)
+bool TProfessionManager::AddChild(TBaseProfession *parent, TBaseProfession *child)
 {
 	bool result = false;
 
 	if (parent->Type == PT_CATEGORY)
 	{
-		TProfessionCategory_y *cat = (TProfessionCategory_y*)parent;
+		TProfessionCategory *cat = (TProfessionCategory*)parent;
 
 		string check = string("|") + child->GetName() + "|";
 
@@ -405,7 +353,7 @@ bool TProfessionManager::AddChild(TBaseProfession_y *parent, TBaseProfession_y *
 		}
 		else
 		{
-			TBaseProfession_y *item = (TBaseProfession_y*)cat->m_Items;
+			TBaseProfession *item = (TBaseProfession*)cat->m_Items;
 
 			while (item != NULL)
 			{
@@ -414,7 +362,7 @@ bool TProfessionManager::AddChild(TBaseProfession_y *parent, TBaseProfession_y *
 				if (result)
 					break;
 
-				item = (TBaseProfession_y*)item->m_Next;
+				item = (TBaseProfession*)item->m_Next;
 			}
 		}
 	}
@@ -426,7 +374,14 @@ bool TProfessionManager::Load()
 {
 	bool result = false;
 
-	Profession = new TProfessionCategory();
+	TProfessionCategory *head = new TProfessionCategory();
+	head->SetTrueName("parent");
+	head->SetName("Parent");
+	head->DescriptionIndex = -2;
+	head->Type = PT_CATEGORY;
+	head->Gump = 0x15A9;
+	head->TopLevel = true;
+	Add(head);
 
 	FILE *file = fopen(FilePath("prof.txt").c_str(), "rt");
 
@@ -460,7 +415,7 @@ bool TProfessionManager::Load()
 		UO->ExecuteGump(0x15A9, 0);
 		UO->ExecuteGump(0x15AA, 0);
 
-		TProfession_y *apc = new TProfession_y();
+		TProfession *apc = new TProfession();
 		apc->SetTrueName("advanced");
 		apc->SetName("Advanced");
 		apc->Type = PT_PROFESSION;
@@ -478,7 +433,7 @@ bool TProfessionManager::Load()
 		apc->SetSkillValue(2, 0);
 		apc->SetSkillValue(3, 0);
 
-		Add(apc);
+		head->Add(apc);
 
 		LoadProfessionDescription();
 	}
@@ -522,13 +477,13 @@ void TProfessionManager::LoadProfessionDescription()
 					ptr += strlen(ptr) + 1;
 				}
 
-				//Profession->AddDescription(-2, "parent", ptr);
+				((TBaseProfession*)m_Items)->AddDescription(-2, "parent", ptr);
 				ptr += strlen(ptr) + 1;
 
 				IFOR(i, 0, (int)list.size())
 				{
-					if (!Profession->AddDescription(i - 1, list[i], ptr))
-						trace_printf("Failed to add description! (%s)\n", list[i].c_str());
+					if (!((TBaseProfession*)m_Items)->AddDescription(i - 1, list[i], ptr))
+						TPRINT("Failed to add description! (%s)\n", list[i].c_str());
 
 					ptr += strlen(ptr) + 1;
 				}
@@ -548,5 +503,29 @@ void TProfessionManager::LoadProfessionDescription()
 		TPRINT("Failed to load professn.enu\n");
 		MessageBoxA(g_hWnd, "Failed to load professn.enu", "Failed to load", MB_OK);
 	}
+}
+//--------------------------------------------------------------------------
+TBaseProfession *TProfessionManager::GetParent(TBaseProfession *obj, TBaseProfession *check)
+{
+	if (check == NULL)
+		check = (TBaseProfession*)m_Items;
+
+	if (obj == m_Items)
+		return obj;
+
+	TBaseProfession *item = (TBaseProfession*)check->m_Items;
+	TBaseProfession *result = NULL;
+
+	while (item != NULL && result == NULL)
+	{
+		if (obj == item)
+			result = check;
+		else
+			result = GetParent(obj, item);
+
+		item = (TBaseProfession*)item->m_Next;
+	}
+
+	return result;
 }
 //---------------------------------------------------------------------------

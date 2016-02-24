@@ -69,7 +69,9 @@ private:
 	static const int ID_SPS_SKILLS_FILED = 16;
 	static const int ID_SPS_LABEL = 20;
 	static const int ID_SPS_SKILLS_LIST = 50;
-
+	
+	int RenderOld(bool &mode);
+	int RenderNew(bool &mode);
 public:
 	TSelectProfessionScreen();
 	virtual ~TSelectProfessionScreen();

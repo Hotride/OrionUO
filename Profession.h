@@ -20,30 +20,28 @@
 #ifndef ProfessionH
 #define ProfessionH
 //---------------------------------------------------------------------------
-class TProfessionCategory;
-//---------------------------------------------------------------------------
-//Базовый класс профессии
-class TBaseProfession
+class TBaseProfession : public TBaseQueueItem
 {
 private:
-	//Стандартное название профессии
-	string m_DefName;
-
-	//Название профессии
 	string m_Name;
-
-	//Тип профессии. false - Category; true - Profession
-	bool m_Type;
-
-	//Индекс картинки профессии
+	string m_TrueName;
+	int m_DescriptionIndex;
+	bool m_TopLevel;
 	WORD m_Gump;
-
-	//Индекс профессии
-	int m_Index;
-
+	PROFESSION_TYPE m_Type;
 public:
 	TBaseProfession();
 	virtual ~TBaseProfession();
+
+	SETGET(string, TrueName);
+	SETGET(PROFESSION_TYPE, Type);
+	SETGET(WORD, Gump);
+	SETGET(bool, TopLevel);
+	SETGET(int, DescriptionIndex);
+
+	void SetName(string str);
+
+	string GetName() const { return m_Name; }
 
 	//Текстура названия профессии
 	TTextTexture m_TextureName;
@@ -51,94 +49,45 @@ public:
 	//Текстура описания профессии
 	TTextTexture m_TextureDescription;
 
-	//Родитель профессии
-	TProfessionCategory *m_Parent;
-
-	SETGET(string, DefName);
-	SETGET(bool, Type);
-	SETGET(WORD, Gump);
-	SETGET(int, Index);
-
-	void SetName(string str);
-
-	string GetName() const {return m_Name;}
-
 	//Добавить описание профессии
-	virtual bool AddDescription(int desc, string name, const char *val);
+	bool AddDescription(int desc, string name, const char *val);
 };
 //---------------------------------------------------------------------------
-//Класс профессии
-class TProfession : public TBaseProfession
-{
-private:
-	//Навыки профессии
-	BYTE m_SkillID[4];
-
-	//Значения навыков профессии
-	BYTE m_SkillValue[4];
-
-	//Сила
-	BYTE m_Str;
-
-	//Интеллект
-	BYTE m_Int;
-
-	//Ловкость
-	BYTE m_Dex;
-
-public:
-	TProfession();
-	virtual ~TProfession();
-	
-	SETGET(BYTE, Str);
-	SETGET(BYTE, Int);
-	SETGET(BYTE, Dex);
-
-	void SetSkillID(int index, BYTE val) {if (index >= 0 && index < 4) m_SkillID[index] = val;}
-	void SetSkillValue(int index, BYTE val) {if (index >= 0 && index < 4) m_SkillValue[index] = val;}
-
-	BYTE GetSkillID(int index) const {if (index >= 0 && index < 4) return m_SkillID[index]; else return 0xFF;}
-	BYTE GetSkillValue(int index) const {if (index >= 0 && index < 4) return m_SkillValue[index]; else return 0xFF;}
-};
-//---------------------------------------------------------------------------
-//Класс категории профессии
 class TProfessionCategory : public TBaseProfession
 {
 private:
+	string m_Childrens;
 public:
 	TProfessionCategory();
 	virtual ~TProfessionCategory();
 
-	//Имена подкатегорий
-	string Childs[4];
+	SETGET(string, Childrens);
 
-	//Количество подкатегорий
-	int m_CatChildCount;
-
-	//Ссылки на категории
-	TProfessionCategory *m_CatChild[4];
-
-	//Количество профессий
-	int m_ProfChildCount;
-
-	//Ссылки на профессии
-	TProfession *m_ProfChild[4];
-
-	//Добавить категорию
-	bool AddCategory(TProfessionCategory *pc, bool topObj = false);
-
-	//Добавить профессию
-	bool Add(TProfession *p);
-
-	//Добавить имя подкатегории
-	void AddChildren(string children);
-
-	//Добавить описание
-	bool AddDescription(int desc, string name, const char *val);
+	void AddChildren(string child);
 };
 //---------------------------------------------------------------------------
-extern TProfessionCategory *Profession;
-extern TProfessionCategory *UsedProfessionCategory;
-extern TProfession *UsedProfession;
+class TProfession : public TBaseProfession
+{
+private:
+	BYTE m_SkillIndex[4];
+	BYTE m_SkillValue[4];
+
+	BYTE m_Str;
+	BYTE m_Int;
+	BYTE m_Dex;
+public:
+	TProfession();
+	virtual ~TProfession();
+
+	SETGET(BYTE, Str);
+	SETGET(BYTE, Int);
+	SETGET(BYTE, Dex);
+
+	void SetSkillIndex(int index, BYTE val) { if (index >= 0 && index < 4) m_SkillIndex[index] = val; }
+	void SetSkillValue(int index, BYTE val) { if (index >= 0 && index < 4) m_SkillValue[index] = val; }
+
+	BYTE GetSkillIndex(int index) const { if (index >= 0 && index < 4) return m_SkillIndex[index]; else return 0xFF; }
+	BYTE GetSkillValue(int index) const { if (index >= 0 && index < 4) return m_SkillValue[index]; else return 0xFF; }
+};
 //---------------------------------------------------------------------------
 #endif

@@ -19,15 +19,13 @@
 //---------------------------------------------------------------------------
 #include "stdafx.h"
 
-TProfessionCategory *Profession = NULL;
-TProfessionCategory *UsedProfessionCategory = NULL;
-TProfession *UsedProfession = NULL;
+//---------------------------------------------------------------------------
+//------------------------------TBaseProfession------------------------------
 //---------------------------------------------------------------------------
 TBaseProfession::TBaseProfession()
-: m_Parent(NULL), m_DefName(""), m_Name(""), m_Type(false), m_Gump(0), m_Index(0)
+: m_Name(""), m_TrueName(""), m_DescriptionIndex(0), m_TopLevel(false), m_Gump(0),
+m_Type(PT_NO_PROF)
 {
-	m_TextureName.Clear();
-	m_TextureDescription.Clear();
 }
 //---------------------------------------------------------------------------
 TBaseProfession::~TBaseProfession()
@@ -45,7 +43,9 @@ void TBaseProfession::SetName(string val)
 //---------------------------------------------------------------------------
 bool TBaseProfession::AddDescription(int desc, string name, const char *val)
 {
-	if (m_Index == desc)
+	bool result = m_DescriptionIndex == desc;
+
+	if (result)
 	{
 		SetName(name);
 
@@ -57,176 +57,42 @@ bool TBaseProfession::AddDescription(int desc, string name, const char *val)
 			FontManager->GenerateW(1, m_TextureDescription, ToWString(name + "\n" + val).c_str(), 0, 30, 195);
 
 		FontManager->SetUseHTML(false);
-
-		return true;
+	}
+	else
+	{
+		for (TBaseProfession *obj = (TBaseProfession*)m_Items; obj != NULL && !result; obj = (TBaseProfession*)obj->m_Next)
+			result = obj->AddDescription(desc, name, val);
 	}
 
-	return false;
+	return result;
 }
 //---------------------------------------------------------------------------
-//-------------------------------TProfession--------------------------------
-//---------------------------------------------------------------------------
-TProfession::TProfession()
-: TBaseProfession(), m_Str(0), m_Dex(0), m_Int(0)
-{
-	memset(m_SkillID, 0, sizeof(m_SkillID));
-	memset(m_SkillValue, 0, sizeof(m_SkillValue));
-}
-//---------------------------------------------------------------------------
-TProfession::~TProfession()
-{
-	m_TextureName.Clear();
-	m_TextureDescription.Clear();
-}
-//---------------------------------------------------------------------------
-//-------------------------TProfessionCategory------------------------------
+//-----------------------------TProfessionCategory---------------------------
 //---------------------------------------------------------------------------
 TProfessionCategory::TProfessionCategory()
-: TBaseProfession(), m_CatChildCount(0), m_ProfChildCount(0)
+: TBaseProfession(), m_Childrens("|")
 {
-	IFOR(i, 0, 4)
-	{
-		m_CatChild[i] = NULL;
-		m_ProfChild[i] = NULL;
-		Childs[i] = "";
-	}
-	
-	m_TextureName.Clear();
-	m_TextureDescription.Clear();
 }
 //---------------------------------------------------------------------------
 TProfessionCategory::~TProfessionCategory()
 {
-	IFOR(i, 0, m_CatChildCount)
-	{
-		delete m_CatChild[i];
-		m_CatChild[i] = NULL;
-	}
-
-	IFOR(i, 0, m_ProfChildCount)
-	{
-		delete m_ProfChild[i];
-		m_ProfChild[i] = NULL;
-	}
 }
 //---------------------------------------------------------------------------
-bool TProfessionCategory::AddCategory(TProfessionCategory *pc, bool topObj)
+void TProfessionCategory::AddChildren(string child)
 {
-	if (topObj && m_CatChildCount <= 3)
-	{
-		pc->m_Parent = this;
-		m_CatChild[m_CatChildCount] = pc;
-		m_CatChildCount++;
-
-		return true;
-	}
-
-	if (m_CatChildCount < 4)
-	{
-		IFOR(i, 0, 4)
-		{
-			if (Childs[i] == pc->GetDefName())
-			{
-				pc->m_Parent = this;
-				m_CatChild[m_CatChildCount] = pc;
-				m_CatChildCount++;
-
-				return true;
-			}
-		}
-	}
-
-	if (m_CatChildCount > 0)
-	{
-		IFOR(i, 0, m_CatChildCount)
-		{
-			pc->m_Parent = this;
-
-			if (m_CatChild[i]->AddCategory(pc))
-				return true;
-		}
-	}
-
-	return false;
+	m_Childrens += child + "|";
 }
 //---------------------------------------------------------------------------
-bool TProfessionCategory::Add(TProfession *p)
+//---------------------------------TProfession-------------------------------
+//---------------------------------------------------------------------------
+TProfession::TProfession()
+: TBaseProfession(), m_Str(0), m_Int(0), m_Dex(0)
 {
-	if (m_CatChildCount > 0)
-	{
-		IFOR(i, 0, m_CatChildCount)
-		{
-			if (m_CatChild[i]->Add(p))
-				return true;
-		}
-	}
-
-	if (m_ProfChildCount < 4)
-	{
-		IFOR(i, 0, 4)
-		{
-			if (Childs[i] == p->GetDefName())
-			{
-				p->m_Parent = this;
-				m_ProfChild[m_ProfChildCount] = p;
-				m_ProfChildCount++;
-
-				return true;
-			}
-		}
-	}
-
-	return false;
+	memset(&m_SkillIndex[0], 0, sizeof(m_SkillIndex));
+	memset(&m_SkillValue[0], 0, sizeof(m_SkillValue));
 }
 //---------------------------------------------------------------------------
-void TProfessionCategory::AddChildren(string children)
+TProfession::~TProfession()
 {
-	IFOR(i, 0, 4)
-	{
-		if (!Childs[i].length())
-		{
-			Childs[i] = children;
-
-			break;
-		}
-	}
-}
-//---------------------------------------------------------------------------
-bool TProfessionCategory::AddDescription(int desc, string name, const char *val)
-{
-	if (Index == desc)
-	{
-		SetName(name);
-
-		FontManager->SetUseHTML(true);
-
-		if (desc == -2)
-			FontManager->GenerateW(1, m_TextureDescription, ToWString(val).c_str(), 0, 30, 195);
-		else
-			FontManager->GenerateW(1, m_TextureDescription, ToWString(name + "\n" + val).c_str(), 0, 30, 195);
-		FontManager->SetUseHTML(false);
-
-		return true;
-	}
-
-	if (m_CatChildCount > 0)
-	{
-		IFOR(i, 0, m_CatChildCount)
-		{
-			if (m_CatChild[i]->AddDescription(desc, name, val))
-				return true;
-		}
-	}
-
-	if (m_ProfChildCount > 0 )
-	{
-		IFOR(i, 0, m_ProfChildCount)
-		{
-			if (m_ProfChild[i]->AddDescription(desc, name, val))
-				return true;
-		}
-	}
-
-	return false;
 }
 //---------------------------------------------------------------------------

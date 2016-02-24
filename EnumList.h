@@ -89,7 +89,7 @@ enum CLIENT_VERSION
 	CV_305D,		//Использование клилоков, количество слотов в списке персонажей равно количеству персонажей
 	CV_308D,		//Добавлен параметр Maximum Stats в статусбар
 	CV_308J,		//Добавлен параметр Followers в статусбар
-	CV_308Z,		//Добавлены классы paladin, necromancer; custom houses, 5 resistances, изменено окно выбора профессии
+	CV_308Z,		//Добавлены классы paladin, necromancer; custom houses, 5 resistances, изменено окно выбора профессии, убрана галочка Save Password
 	CV_400B,		//Удаление тултипов
 	CV_405A,		//Добавлены классы ninja, samurai
 	CV_4011D,		//Изменение окна создания персонажа. Добавлена расса elves

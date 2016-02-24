@@ -80,12 +80,6 @@ private:
 	//Выгрузка данных о навыках
 	void UnloadSkills();
 
-	//Загрузка профессий
-	void LoadProfession();
-
-	//Загрузка описания профессий
-	void LoadProfessionDescription();
-
 	//Загрузка логинсервера
 	void LoadLogin();
 

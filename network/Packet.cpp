@@ -224,21 +224,23 @@ TPacketCreateCharacter::TPacketCreateCharacter(string name)
 	WriteDWord(0x00000000); //clientflag
 	WriteDWord(0x00000000); //?
 	WriteDWord(0x00000000); //logincount
-	BYTE val = (BYTE)UsedProfession->Index;
+
+	TProfession *profession = (TProfession*)ProfessionManager->Selected;
+	BYTE val = (BYTE)profession->DescriptionIndex;
 	WriteByte(val); //profession
 	Move(15); //?
 	val = (BYTE)CreateCharacterManager.Sex;
 	WriteByte(val);
-	val = (BYTE)UsedProfession->Str;
+	val = profession->Str;
 	WriteByte(val);
-	val = (BYTE)UsedProfession->Dex;
+	val = profession->Dex;
 	WriteByte(val);
-	val = (BYTE)UsedProfession->Int;
+	val = profession->Int;
 	WriteByte(val);
 
 	IFOR(i, 0, skillsCount)
 	{
-		val = UsedProfession->GetSkillID(i);
+		val = profession->GetSkillIndex(i);
 		if (val == 0xFF)
 		{
 			//error, skill is not selected
@@ -247,7 +249,7 @@ TPacketCreateCharacter::TPacketCreateCharacter(string name)
 		else
 		{
 			WriteByte(val);
-			WriteByte((BYTE)UsedProfession->GetSkillValue(i));
+			WriteByte(profession->GetSkillValue(i));
 		}
 	}
 
