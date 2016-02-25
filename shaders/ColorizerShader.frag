@@ -40,6 +40,17 @@ void main(void)
 
 			gl_FragColor = vec4(resultColor, textureColor.a) * gl_Color;
 		}
+		else if (drawMode > 9)
+		{
+			float red = textureColor.r;
+
+			if (drawMode > 10)
+				red *= 0.5;
+			else
+				red *= 1.5;
+
+			gl_FragColor = vec4(red, red, red, textureColor.a) * gl_Color;
+		}
 		else if (drawMode > 5)
 		{
 			vec3 n2 = normalize(n);

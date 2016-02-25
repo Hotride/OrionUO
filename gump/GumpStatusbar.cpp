@@ -289,6 +289,13 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 
 		return;
 	}
+	
+	if (!ConfigManager.DisableNewTargetSystem && m_Serial == NewTargetSystem.Serial)
+	{
+		TGump *targetGump = GumpManager->GetGump(0, 0, GT_TARGET_SYSTEM);
+		if (targetGump != NULL)
+			targetGump->UpdateFrame();
+	}
 
 	DWORD index = (DWORD)this;
 

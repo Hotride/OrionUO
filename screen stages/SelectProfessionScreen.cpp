@@ -115,8 +115,8 @@ int TSelectProfessionScreen::Render(bool mode)
 {
 	if (ConnectionManager.ClientVersion >= CV_308Z)
 		return RenderNew(mode);
-	else
-		return RenderOld(mode);
+	
+	return RenderOld(mode);
 }
 //---------------------------------------------------------------------------
 int TSelectProfessionScreen::RenderOld(bool &mode)
@@ -476,6 +476,321 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 //---------------------------------------------------------------------------
 int TSelectProfessionScreen::RenderNew(bool &mode)
 {
+	DWORD ticks = GetTickCount();
+
+	if (g_LastRenderTime > ticks)
+	{
+		if (mode || !g_SelectGumpObjects)
+			return 0;
+	}
+
+	int CanSelectedButton = g_LastSelectedObject;
+
+	int CanPressedButton = 0;
+	if (g_LeftMouseDown && g_LastObjectLeftMouseDown == g_LastSelectedObject)
+		CanPressedButton = g_LastObjectLeftMouseDown;
+	
+	//Проверим, вдруг необходимо изменить положение отображаемого элемента
+	if (g_LeftMouseDown && m_LastScrollChangeTime < ticks)
+	{
+		if (g_LastObjectLeftMouseDown == ID_SPS_SCROLLBAR_UP) //Скроллинг вверх (гампом-стрелкой)
+			ListingList(true, 10);
+		else if (g_LastObjectLeftMouseDown == ID_SPS_SCROLLBAR_DOWN) //Скроллинг вниз (гампом-стрелкой)
+			ListingList(false, 10);
+	}
+
+	int scrollerY = 0;
+
+	int heightToScrolling = 0;
+
+	bool canMoveScroller = true;
+
+	int curHeight = GetScrollBoxHeight();
+
+	if (curHeight < 200)
+		canMoveScroller = false;
+	else
+		heightToScrolling = curHeight - 200;
+	
+	int maxScrollerY = 147;
+
+	int visibleLines = heightToScrolling / GUMP_SCROLLING_PIXEL_STEP;
+
+	if (g_LeftMouseDown && g_LastObjectLeftMouseDown == ID_SPS_SCROLLBAR && canMoveScroller) //Scroller pressed
+	{
+		int currentY = (g_MouseY - 25) - 146; //Scroller position
+
+		scrollerY = CalculateScrollerAndTextPosition(m_PixelOffset, visibleLines, maxScrollerY, currentY);
+	}
+	else if (m_PixelOffset && canMoveScroller)
+		scrollerY = CalculateScrollerY(m_PixelOffset, visibleLines, maxScrollerY);
+	
+	TBaseProfession *obj = ProfessionManager->Selected;
+
+	if (mode)
+	{
+		g_LastRenderTime = ticks + (g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]);
+
+		g_GL.BeginDraw();
+
+		if (DrawSmoothMonitor())
+			return 0;
+
+		glColor3f(1.0f, 1.0f, 1.0f);
+
+		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
+		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
+		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
+		
+		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_SPS_QUIT); //X gump /lighted
+		if (CanPressedButton == ID_SPS_QUIT)
+			GumpID = 0x158B; //X gump (pressed)
+		UO->DrawGump(GumpID, 0, 555, 4);
+		
+		GumpID = 0x15A1 + (int)(CanSelectedButton == ID_SPS_ARROW_PREV); //< gump /lighted
+		if (CanPressedButton == ID_SPS_ARROW_PREV)
+			GumpID = 0x15A3; //< gump pressed
+		UO->DrawGump(GumpID, 0, 586, 445); //< gump
+
+		UO->DrawResizepicGump(0xA28, 80, 80, 546, 352); //Character profeccion selection field
+		
+		UO->DrawGump(0x058B, 0, 145, 57); //Create character header
+		UO->DrawGump(0x0589, 0, 222, 44); //Label container
+		
+		GumpID = 0x119C + (int)(CanSelectedButton == ID_SPS_ARROW_BACK_PROFESSION); //Arrow < /lighted
+		if (CanPressedButton == ID_SPS_ARROW_BACK_PROFESSION)
+			GumpID = 0x119E; //Arrow < pressed
+		UO->DrawGump(GumpID, 0, 200, 356); //Arrow <
+		
+
+
+		if (obj->Type == PT_CATEGORY) //category
+		{
+			GumpID = obj->Gump;
+			UO->DrawGump(GumpID, 0, 231, 53); //Label gump
+
+			int offsY = 0;
+
+			int index = 0;
+			for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
+			{
+				UO->DrawGump(0x0589, 0, 500, 100 + offsY); //Label container
+
+				GumpID = child->Gump;
+				if (CanPressedButton == ID_SPS_LABEL + index)
+					GumpID++;
+
+				UO->DrawGump(GumpID, 0, 509, 109 + offsY); //Label gump
+				FontManager->DrawA(9, child->GetName().c_str(), 0x1, 350, 135 + offsY);
+
+				offsY += 79;
+			}
+		}
+		else if (obj->Type == PT_PROFESSION) //profession
+		{
+			UO->DrawGump(obj->Gump, 0, 231, 53); //Label gump
+			
+			const float SphereListWidth = 95.0f;
+			float ValPer = 0.0f;
+			
+			//Stats
+			if (g_LastObjectLeftMouseDown >= ID_SPS_STATS_SPHERE && g_LastObjectLeftMouseDown <= ID_SPS_STATS_SPHERE + 2)
+				ShuffleStats();
+
+			//Skills
+			if (g_LastObjectLeftMouseDown >= ID_SPS_SKILLS_SPHERE && g_LastObjectLeftMouseDown <= ID_SPS_SKILLS_SPHERE + 2)
+				ShuffleSkills();
+
+			TProfession *profession = (TProfession*)obj;
+			char val[15] = {0};
+			int statVal[3] = {profession->Str, profession->Dex, profession->Int};
+
+			int yPtr = 136;
+
+			IFOR(i, 0, 3)
+			{
+				m_TextStat[i].Draw(360, yPtr);
+
+				sprintf(val, "%d", statVal[i]);
+				FontManager->DrawA(1, val, 1, 460, yPtr);
+
+				UO->DrawSphereGump((statVal[i] - 10), 35.0f, 436, yPtr);
+
+				yPtr += 30;
+			}
+
+			if (profession->DescriptionIndex >= 0)
+			{
+				yPtr = 260;
+
+				IFOR(i, 0, 3)
+				{
+					int skillID = profession->GetSkillIndex(i);
+
+					if (skillID >= g_SkillsCount)
+						skillID = 0;
+
+					FontManager->DrawA(1, g_Skills[skillID].m_Name.c_str(), 1, 360, yPtr, 90, TS_LEFT, UOFONT_FIXED);
+
+					sprintf(val, "%d", profession->GetSkillValue(i));
+					FontManager->DrawA(1, val, 1, 460, yPtr);
+
+					yPtr += 32;
+				}
+			}
+			else //advanced
+			{
+				yPtr = 256;
+
+				IFOR(i, 0, 3)
+				{
+					UO->DrawResizepicGump(0xBB8, 350, yPtr, 105, 25); //Skill Name text field
+
+					int skillID = profession->GetSkillIndex(i);
+
+					WORD textColor = 1;
+					
+					if (m_SkillSelection && m_SkillSelection - 1 == i)
+						textColor = 0x0021;
+					else if (g_LastSelectedObject == ID_SPS_SKILLS_FILED + i)
+						textColor = 0x0386;
+					
+					if (skillID >= g_SkillsCount)
+						FontManager->DrawA(9, "Click here", textColor, 354, yPtr + 5);
+					else
+						FontManager->DrawA(9, g_Skills[skillID].m_Name.c_str(), textColor, 354, yPtr + 5, 90, TS_LEFT, UOFONT_FIXED);
+
+					sprintf(val, "%d", profession->GetSkillValue(i));
+
+					FontManager->DrawA(1, val, 1, 460, yPtr + 4);
+
+					yPtr += 32;
+				}
+			}
+
+			//Skills
+			UO->DrawSphereGump(profession->GetSkillValue(0), 50.0f, 436, 258);
+			UO->DrawSphereGump(profession->GetSkillValue(1), 50.0f, 436, 290);
+			UO->DrawSphereGump(profession->GetSkillValue(2), 50.0f, 436, 322);
+
+			GumpID = 0x15A4 + (int)(CanSelectedButton == ID_SPS_ARROW_NEXT);
+			if (CanPressedButton == ID_SPS_ARROW_NEXT)
+				GumpID = 0x15A6; //> gump pressed
+			UO->DrawGump(GumpID, 0, 610, 445); //> gump
+		}
+
+		InitPopupHelp();
+
+		DrawSmoothMonitorEffect();
+
+		MouseManager.Draw(0x2073); //Main Gump mouse cursor
+
+		g_GL.EndDraw();
+	}
+	else
+	{
+		g_LastSelectedObject = 0;
+
+		if (UO->GumpPixelsInXY(0x1589, 555, 4))
+			g_LastSelectedObject = ID_SPS_QUIT; //X gump
+		else if (UO->GumpPixelsInXY(0x15A1, 586, 445))
+			g_LastSelectedObject = ID_SPS_ARROW_PREV; //< gump
+		else if (UO->GumpPixelsInXY(0x119C, 200, 356))
+			g_LastSelectedObject = ID_SPS_ARROW_BACK_PROFESSION; //Arrow <
+		else if (UO->GumpPixelsInXY(0x00FA, 324, 137))
+			g_LastSelectedObject = ID_SPS_SCROLLBAR_UP; //^
+		else if (UO->GumpPixelsInXY(0x00FC, 324, 330))
+			g_LastSelectedObject = ID_SPS_SCROLLBAR_DOWN; //v
+		else if (UO->GumpPixelsInXY(0x00FE, 325, 158 + scrollerY))
+			g_LastSelectedObject = ID_SPS_SCROLLBAR; //bar
+		else if (UO->GumpPixelsInXY(0x0100, 324, 149, 0, 190))
+			g_LastSelectedObject = ID_SPS_SCROLLBAR_BACKGROUND; //background
+		else if (obj->Type == PT_CATEGORY)
+		{
+			if (UO->GumpPixelsInXY(obj->Gump, 231, 53))
+				g_LastSelectedObject = ID_SPS_LABEL_BACK_PROFESSION; //Label gump
+
+			int offsY = 0;
+			int index = 0;
+
+			for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
+			{
+				if (UO->GumpPixelsInXY(child->Gump, 509, 109 + offsY))
+					g_LastSelectedObject = ID_SPS_LABEL + index; //Label gump
+
+				offsY += 79;
+			}
+		}
+		else if (obj->Type == PT_PROFESSION)
+		{
+			if (UO->GumpPixelsInXY(obj->Gump, 231, 53))
+				g_LastSelectedObject = ID_SPS_LABEL_BACK_PROFESSION; //Label gump
+			else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+				g_LastSelectedObject = ID_SPS_ARROW_NEXT; //> gump
+			else
+			{
+				const int sphereListWidth = 95;
+			
+				TProfession *profession = (TProfession*)obj;
+				int statVal[3] = {profession->Str, profession->Dex, profession->Int};
+				int yPtr = 136;
+
+				IFOR(i, 0, 3)
+				{
+					int ofs = CalculateSphereOffset(100, (statVal[i] - 10), sphereListWidth, 35.0f);
+					if (UO->GumpPixelsInXY(0x00D8, 500 + ofs, yPtr)) //Sphere gump
+						g_LastSelectedObject = ID_SPS_STATS_SPHERE + i;
+
+					yPtr += 30;
+				}
+			
+				yPtr = 258;
+
+				IFOR(i, 0, 3)
+				{
+					int ofs = CalculateSphereOffset(100, profession->GetSkillValue(i), sphereListWidth, 50.0f);
+					if (UO->GumpPixelsInXY(0x00D8, 500 + ofs, yPtr)) //Sphere gump
+						g_LastSelectedObject = ID_SPS_SKILLS_SPHERE + i;
+
+					yPtr += 32;
+				}
+				
+				if (profession->DescriptionIndex == -1) //advanced
+				{
+					yPtr = 256;
+
+					IFOR(i, 0, 3)
+					{
+						if (UO->ResizepicPixelsInXY(0xBB8, 350, yPtr, 105, 25)) //Skill Name text field
+							g_LastSelectedObject = ID_SPS_SKILLS_FILED + i;
+
+						yPtr += 32;
+					}
+
+					if (m_SkillSelection && UO->PolygonePixelsInXY(123, 140, 195, 206))
+					{
+						int ofsY = -(m_PixelOffset * GUMP_SCROLLING_PIXEL_STEP);
+
+						yPtr = 140 + ofsY;
+
+						IFOR(i, 0, g_SkillsCount)
+						{
+							int tw = 195; //m_TextSkillInList[i][0].Width;
+							int th = m_TextSkillInList[i][0].Height;
+
+							if (UO->PolygonePixelsInXY(123, yPtr, tw, th))
+								g_LastSelectedObject = ID_SPS_SKILLS_LIST + i;
+
+							yPtr += m_TextSkillInList[i][0].Height;
+						}
+					}
+				}
+			}
+		}
+
+		return g_LastSelectedObject;
+	}
+
 	return 0;
 }
 //---------------------------------------------------------------------------

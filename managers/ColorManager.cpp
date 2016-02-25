@@ -99,24 +99,22 @@ void TColorManager::CreateHuesPalette()
 //---------------------------------------------------------------------------
 void TColorManager::SendColorsToShader(WORD &color)
 {
-	static WORD oldColor = 0;
+	//static WORD oldColor = 0;
 
-	if (color >= SPECTRAL_COLOR)
+	if (color > SPECTRAL_COLOR)
 	{
-		if (oldColor != SPECTRAL_COLOR)
-		{
-			oldColor = SPECTRAL_COLOR;
+		//if (oldColor != SPECTRAL_COLOR)
+		//{
+			//oldColor = SPECTRAL_COLOR;
 
 			glUniform1ivARB(ShaderColorTable, 32, &m_HuesInt[0].Palette[0]);
-		}
+		//}
 	}
-	else if (color != 0 && oldColor != color && color < m_HuesCount)
+	else if (color != 0 /*&& oldColor != color*/ && color < m_HuesCount)
 	{
-		oldColor = color;
+		//oldColor = color;
 
-		color -= 1;
-		
-		glUniform1ivARB(ShaderColorTable, 32, &m_HuesInt[color].Palette[0]);
+		glUniform1ivARB(ShaderColorTable, 32, &m_HuesInt[color - 1].Palette[0]);
 	}
 }
 //---------------------------------------------------------------------------

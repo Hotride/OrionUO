@@ -57,7 +57,7 @@ void TGumpTargetSystem::GenerateFrame(int posX, int posY)
 
 	glNewList((GLuint)index, GL_COMPILE);
 
-		TGameCharacter *obj = World->FindWorldCharacter(Serial);
+		TGameCharacter *obj = World->FindWorldCharacter(NewTargetSystem.Serial);
 		if (obj != NULL)
 		{
 			//Вычисляем цвет статусбара
@@ -203,7 +203,7 @@ void TGumpTargetSystem::OnLeftMouseDown()
 		//Проверим, может быть есть таргет, который нужно повесить на данного чара
 		if (Target.IsTargeting())
 		{
-			Target.SendTargetObject(Serial);
+			Target.SendTargetObject(NewTargetSystem.Serial);
 			g_CancelDoubleClick = true;
 		}
 	}
@@ -223,7 +223,7 @@ void TGumpTargetSystem::OnLeftMouseUp()
 	{
 		//Проверим, может быть есть таргет, который нужно повесить на данного чара
 		/*if (Target.IsTargeting())
-			Target.SendTargetObject(Serial);*/
+			Target.SendTargetObject(NewTargetSystem.Serial);*/
 	}
 }
 //----------------------------------------------------------------------------
@@ -232,7 +232,7 @@ bool TGumpTargetSystem::OnLeftMouseDoubleClick()
 	if (g_GeneratedMouseDown)
 		return false;
 
-	DWORD serial = Serial;
+	DWORD serial = NewTargetSystem.Serial;
 
 	if (serial != g_PlayerSerial)
 	{

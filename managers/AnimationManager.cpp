@@ -1253,29 +1253,32 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		else
 		{
 			int drawMode = (!g_GrayedPixels && color);
-			bool spectralColor = false;
+			bool spectralColor = (color > SPECTRAL_COLOR);
+			
+			if (spectralColor)
+			{
+				glEnable(GL_BLEND);
 
-			if (drawMode)
+				if (color == SPECTRAL_COLOR_SPECIAL)
+				{
+					glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
+					drawMode = 11;
+				}
+				else
+				{
+					glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+					drawMode = 10;
+				}
+			}
+			else if (drawMode)
 			{
 				if (partialHue)
 					drawMode = 2;
 
-				if (color >= SPECTRAL_COLOR)
-				{
-					drawMode = 0;
-					spectralColor = true;
-				}
-				else
-					ColorManager->SendColorsToShader(color);
+				ColorManager->SendColorsToShader(color);
 			}
 
 			glUniform1iARB(ShaderDrawMode, drawMode);
-
-			if (spectralColor)
-			{
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-			}
 
 			if (m_Sitting)
 				g_GL.DrawSitting(texture, x, y, frame->Width, frame->Height, mirror);

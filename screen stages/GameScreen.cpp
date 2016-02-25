@@ -1030,7 +1030,7 @@ int TGameScreen::Render(bool mode)
 		}
 		else if (g_LightBuffer.Ready() && g_LightBuffer.Use())
 		{
-			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			g_LightBuffer.Release();
@@ -1745,6 +1745,8 @@ void TGameScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 			{
 				if (Target.IsTargeting())
 					Target.SendCancelTarget();
+				else if (NewTargetSystem.Serial)
+					NewTargetSystem.Serial = 0;
 
 				if (g_ConsolePrompt)
 					UO->ConsolePromptCancel();
