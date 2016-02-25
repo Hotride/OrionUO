@@ -26,7 +26,7 @@ TTextTexture TGumpOptions::m_TexturePage2[8];	//Pop-up Help
 TTextTexture TGumpOptions::m_TexturePage3[6];	//Language
 TTextTexture TGumpOptions::m_TexturePage4[19];	//Chat
 TTextTexture TGumpOptions::m_TexturePage5[7];	//Macro Options
-TTextTexture TGumpOptions::m_TexturePage6[9];	//Interface
+TTextTexture TGumpOptions::m_TexturePage6[12];	//Interface
 TTextTexture TGumpOptions::m_TexturePage7[18];	//Display
 TTextTexture TGumpOptions::m_TexturePage8[9];	//Reputation System
 TTextTexture TGumpOptions::m_TexturePage9[9];	//Miscellaneous
@@ -284,6 +284,15 @@ void TGumpOptions::InitTextTextures()
 	str = L"Gray out of range objects";
 	FontManager->GenerateW(0, m_TexturePage6[8], str.c_str(), g_OptionsTextColor);
 
+	str = L"Disable New Target System";
+	FontManager->GenerateW(0, m_TexturePage6[9], str.c_str(), g_OptionsTextColor);
+
+	str = L"Object Handles";
+	FontManager->GenerateW(0, m_TexturePage6[10], str.c_str(), g_OptionsTextColor);
+
+	str = L"Display Item Properties Icon";
+	FontManager->GenerateW(0, m_TexturePage6[11], str.c_str(), g_OptionsTextColor);
+
 
 
 	//Display
@@ -424,7 +433,7 @@ void TGumpOptions::ReleaseTextTextures()
 	IFOR(i, 0, 7)
 		m_TexturePage5[i].Clear();
 
-	IFOR(i, 0, 8)
+	IFOR(i, 0, 12)
 		m_TexturePage6[i].Clear();
 
 	IFOR(i, 0, 18)
@@ -1953,6 +1962,21 @@ int TGumpOptions::DrawPage6(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GrayOutOfRangeObjects, 0, posX + 64, posY);
 		//UO->DrawUnicodeFont(0, L"Gray out of range objects", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[8].Draw(posX + 86, posY);
+
+		posY += 20;
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DisableNewTargetSystem, 0, posX + 64, posY);
+		//UO->DrawUnicodeFont(0, L"Disable New Target System", g_OptionsTextColor, posX + 86, posY);
+		m_TexturePage6[9].Draw(posX + 86, posY);
+
+		posY += 20;
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ObjectHandles, 0, posX + 64, posY);
+		//UO->DrawUnicodeFont(0, L"Object Handles", g_OptionsTextColor, posX + 86, posY);
+		m_TexturePage6[10].Draw(posX + 86, posY);
+
+		posY += 20;
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ItemPropertiesIcon, 0, posX + 64, posY);
+		//UO->DrawUnicodeFont(0, L"Display Item Properties Icon", g_OptionsTextColor, posX + 86, posY);
+		m_TexturePage6[11].Draw(posX + 86, posY);
 	}
 	else
 	{
@@ -1977,6 +2001,12 @@ int TGumpOptions::DrawPage6(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 			LSG = ID_GO_P6_DISABLE_MENUBAR; //Disable the Menu Bar
 		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 226))
 			LSG = ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS; //Gray out of range objects
+		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 246))
+			LSG = ID_GO_P6_DISABLE_NEW_TARGET_SYSTEM; //Disable New Target System
+		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 266))
+			LSG = ID_GO_P6_OBJECT_HANDLES; //Object Handles
+		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 286))
+			LSG = ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON; //Display Item Properties Icon
 
 		if (LSG != 0)
 			g_LastSelectedObject = LSG;
@@ -2956,6 +2986,12 @@ void TGumpOptions::OnLeftMouseUp()
 					g_OptionsConfig.DisableMenubar = !g_OptionsConfig.DisableMenubar;
 				else if (g_LastObjectLeftMouseDown == ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS) //Gray out of range objects
 					g_OptionsConfig.GrayOutOfRangeObjects = !g_OptionsConfig.GrayOutOfRangeObjects;
+				else if (g_LastObjectLeftMouseDown == ID_GO_P6_DISABLE_NEW_TARGET_SYSTEM) //Disable New Target System
+					g_OptionsConfig.DisableNewTargetSystem = !g_OptionsConfig.DisableNewTargetSystem;
+				else if (g_LastObjectLeftMouseDown == ID_GO_P6_OBJECT_HANDLES) //Object Handles
+					g_OptionsConfig.ObjectHandles = !g_OptionsConfig.ObjectHandles;
+				else if (g_LastObjectLeftMouseDown == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON) //Display Item Properties Icon
+					g_OptionsConfig.ItemPropertiesIcon = !g_OptionsConfig.ItemPropertiesIcon;
 
 				break;
 			}
@@ -3224,6 +3260,12 @@ void TGumpOptions::ApplyPageChanges()
 			ConfigManager.AlwaysRun = g_OptionsConfig.AlwaysRun;
 			ConfigManager.DisableMenubar = g_OptionsConfig.DisableMenubar;
 			ConfigManager.GrayOutOfRangeObjects = g_OptionsConfig.GrayOutOfRangeObjects;
+			ConfigManager.DisableNewTargetSystem = g_OptionsConfig.DisableNewTargetSystem;
+			ConfigManager.ObjectHandles = g_OptionsConfig.ObjectHandles;
+			ConfigManager.ItemPropertiesIcon = g_OptionsConfig.ItemPropertiesIcon;
+
+			if (!g_OptionsConfig.DisableNewTargetSystem)
+				GumpManager->AddGump(new TGumpTargetSystem(NewTargetSystem.GumpX, NewTargetSystem.GumpY));
 
 			if (g_OptionsConfig.DisableMenubar)
 				GumpManager->CloseGump(0, 0, GT_MENUBAR);

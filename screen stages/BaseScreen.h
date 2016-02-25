@@ -36,7 +36,7 @@ public:
 	virtual void Init() {}
 
 	//Инициализация тултипа
-	virtual void InitTooltip() {}
+	virtual void InitPopupHelp() {}
 
 	//Отрисовка/выбор объектов
 	virtual int Render(bool mode) {return 0;}

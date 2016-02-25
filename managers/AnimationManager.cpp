@@ -1253,21 +1253,36 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		else
 		{
 			int drawMode = (!g_GrayedPixels && color);
+			bool spectralColor = false;
 
 			if (drawMode)
 			{
 				if (partialHue)
 					drawMode = 2;
 
-				ColorManager->SendColorsToShader(color);
+				if (color >= SPECTRAL_COLOR)
+				{
+					drawMode = 0;
+					spectralColor = true;
+				}
+				else
+					ColorManager->SendColorsToShader(color);
 			}
 
 			glUniform1iARB(ShaderDrawMode, drawMode);
+
+			if (spectralColor)
+			{
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+			}
 
 			if (m_Sitting)
 				g_GL.DrawSitting(texture, x, y, frame->Width, frame->Height, mirror);
 			else
 				g_GL.Draw(texture, x, y, frame->Width, frame->Height, mirror);
+
+			glDisable(GL_BLEND);
 		}
 
 		glDisable(GL_DEPTH_TEST);
@@ -1455,6 +1470,15 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 		}
 	}
 	
+	if (NewTargetSystem.Serial == obj->Serial)
+	{
+		NewTargetSystem.Color = targetColor;
+		NewTargetSystem.TopX = drawX - 20;
+		NewTargetSystem.TopY = drawY;
+		NewTargetSystem.BottomX = drawX - 20;
+		NewTargetSystem.BottomY = drawY;
+	}
+
 	if (needHPLine)
 	{
 		int per = obj->MaxHits;

@@ -2837,35 +2837,7 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int z, bool selection)
 {
 	id += m_StaticDataIndex[id].Increment;
-
-	TTextureObject *th = ExecuteStaticArt(id);
-
-	if (th != NULL && id > 1)
-	{
-		if (g_OutOfRangeColor)
-			color = g_OutOfRangeColor;
-
-		x -= m_StaticDataIndex[id].Width;
-		y -= m_StaticDataIndex[id].Height;
-
-		int drawMode = (!g_GrayedPixels && color);
-
-		if (drawMode)
-		{
-			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
-
-			if (partialHue)
-				drawMode = 2;
-
-			ColorManager->SendColorsToShader(color);
-		}
-
-		glUniform1iARB(ShaderDrawMode, drawMode);
-
-		y -= (z * 4);
-
-		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
-	}
+	DrawStaticArt(id, color, x, y, z, selection);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawStaticArtTransparent(WORD id, WORD color, int x, int y, int z, bool selection)
@@ -2915,47 +2887,7 @@ void TUltimaOnline::DrawStaticArtTransparent(WORD id, WORD color, int x, int y, 
 void TUltimaOnline::DrawStaticArtAnimatedTransparent(WORD id, WORD color, int x, int y, int z, bool selection)
 {
 	id += m_StaticDataIndex[id].Increment;
-
-	TTextureObject *th = ExecuteStaticArt(id);
-
-	if (th != NULL && id > 1)
-	{
-		if (g_OutOfRangeColor)
-			color = g_OutOfRangeColor;
-
-		x -= m_StaticDataIndex[id].Width;
-		y -= m_StaticDataIndex[id].Height;
-
-		int drawMode = (!g_GrayedPixels && color);
-
-		if (drawMode)
-		{
-			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
-
-			if (partialHue)
-				drawMode = 2;
-
-			ColorManager->SendColorsToShader(color);
-		}
-
-		glUniform1iARB(ShaderDrawMode, drawMode);
-
-		y -= (z * 4);
-		
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glColor4f(1.0f, 1.0f, 1.0f, 0.25f);
-		
-		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
-
-		glDisable(GL_BLEND);
-
-		glEnable(GL_STENCIL_TEST);
-		
-		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
-
-		glDisable(GL_STENCIL_TEST);
-	}
+	DrawStaticArtTransparent(id, color, x, y, z, selection);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, bool selection, bool onMouse)
@@ -2979,7 +2911,9 @@ void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, 
 		{
 			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
 
-			if (partialHue)
+			if (color >= 0x4000)
+				color = 0x100;
+			else if (partialHue)
 				drawMode = 2;
 
 			ColorManager->SendColorsToShader(color);
@@ -4045,6 +3979,14 @@ void TUltimaOnline::Click(DWORD serial)
 void TUltimaOnline::DoubleClick(DWORD serial)
 {
 	g_LastUseObject = serial;
+
+	if (!ConfigManager.DisableNewTargetSystem && g_LastUseObject < 0x40000000 && g_LastUseObject != g_PlayerSerial)
+	{
+		NewTargetSystem.Serial = serial;
+
+		if (GumpManager->GetGump(serial, 0, GT_TARGET_SYSTEM) == NULL)
+			GumpManager->AddGump(new TGumpTargetSystem(NewTargetSystem.GumpX, NewTargetSystem.GumpY));
+	}
 
 	TPacketDoubleClickRequest packet(serial);
 	packet.Send();

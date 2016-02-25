@@ -58,7 +58,7 @@ void TSelectProfessionScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	Tooltip.SeqIndex = 0;
+	PopupHelp.SeqIndex = 0;
 
 	//Prepare textures:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -104,7 +104,7 @@ void TSelectProfessionScreen::ProcessSmoothAction(BYTE action)
 		UO->InitScreen(GS_CREATE);
 }
 //---------------------------------------------------------------------------
-void TSelectProfessionScreen::InitTooltip()
+void TSelectProfessionScreen::InitPopupHelp()
 {
 	if (!ConfigManager.UseToolTips)
 		return;
@@ -359,7 +359,7 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 			UO->DrawGump(GumpID, 0, 610, 445); //> gump
 		}
 
-		InitTooltip();
+		InitPopupHelp();
 
 		DrawSmoothMonitorEffect();
 

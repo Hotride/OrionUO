@@ -119,7 +119,7 @@ public:
 
 	void Init();
 
-	void InitTooltip();
+	void InitPopupHelp();
 
 	int Render(bool mode);
 

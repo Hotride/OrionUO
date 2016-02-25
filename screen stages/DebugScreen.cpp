@@ -323,6 +323,7 @@ TDebugScreen::TDebugScreen()
 	charobj = new TPlayer(1);
 	g_Player = charobj;
 	charobj->Graphic = 0x0190;
+	charobj->Color = 0x4021;
 	charobj->Direction = 4;
 
 	WORD id = charobj->GetMountAnimation();
@@ -387,7 +388,7 @@ void TDebugScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	Tooltip.SeqIndex = 0;
+	PopupHelp.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -412,7 +413,7 @@ void TDebugScreen::ProcessSmoothAction(BYTE action)
 		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 }
 //---------------------------------------------------------------------------
-void TDebugScreen::InitTooltip()
+void TDebugScreen::InitPopupHelp()
 {
 }
 //---------------------------------------------------------------------------
@@ -548,8 +549,11 @@ int TDebugScreen::Render(bool mode)
 
 		glDisable(GL_STENCIL_TEST);
 
-		
 		UnuseShader();
+
+		g_GL.DrawPolygone(0x1c00001c, 100, 100, 500, 300);
+
+		ColorizerShader->Use();
 
 		int x = 200;
 		int y = 200;
@@ -590,6 +594,8 @@ int TDebugScreen::Render(bool mode)
 		y = 300;
 		charobj->Direction = 7;
 		charobj->Draw(mode, x, y, ticks);
+
+		UnuseShader();
 
 		/*//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		//DPOLY(150, 100, 300, 300);

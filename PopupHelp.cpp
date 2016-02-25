@@ -19,28 +19,28 @@
 //---------------------------------------------------------------------------
 #include "stdafx.h"
 
-TTooltip Tooltip;
+TPopupHelp PopupHelp;
 //---------------------------------------------------------------------------
-TTooltip::TTooltip()
+TPopupHelp::TPopupHelp()
 : m_SeqIndex(0), m_Data(L""), m_ClilocID(0), m_MaxWidth(0), m_X(0), m_Y(0),
 m_Use(false), m_Type(SOT_NO_OBJECT), m_Timer(0)
 {
 	Texture.Clear();
 }
 //---------------------------------------------------------------------------
-TTooltip::~TTooltip()
+TPopupHelp::~TPopupHelp()
 {
 	Texture.Clear();
 }
 //---------------------------------------------------------------------------
-void TTooltip::Set(wstring str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int maxWidth, int x, int y)
+void TPopupHelp::Set(wstring str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int maxWidth, int x, int y)
 {
 	m_Use = !(m_Timer > GetTickCount());
 
 	if (type == m_Type && seqIndex == m_SeqIndex) //Уже забиндено
 		return;
 
-	m_Timer = GetTickCount() + ConfigManager.ToolTipsDelay;
+	m_Timer = GetTickCount() + ConfigManager.PopupHelpDelay;
 	m_Use = false;
 	m_Type = type;
 	m_SeqIndex = seqIndex;
@@ -52,20 +52,20 @@ void TTooltip::Set(wstring str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int max
 
 	Texture.Clear();
 
-	FontManager->GenerateW((BYTE)ConfigManager.ToolTipsTextFont, Texture, m_Data.c_str(), ConfigManager.ToolTipsTextColor, 5, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
+	FontManager->GenerateW((BYTE)ConfigManager.PopupHelpTextFont, Texture, m_Data.c_str(), ConfigManager.PopupHelpTextColor, 5, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
 	//FontManager->GenerateW(1, Texture, m_Data.c_str(), 0x0482, 30, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
 }
 //---------------------------------------------------------------------------
-void TTooltip::Set(DWORD clilocID, string str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int maxWidth, int x, int y)
+void TPopupHelp::Set(DWORD clilocID, string str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int maxWidth, int x, int y)
 {
 	Set(ClilocManager->Cliloc(g_Language.c_str())->GetW(clilocID, str), type, seqIndex, maxWidth, x, y);
 
 	m_ClilocID = clilocID;
 }
 //---------------------------------------------------------------------------
-void TTooltip::Draw(int cursorWidth, int cursorHeight)
+void TPopupHelp::Draw(int cursorWidth, int cursorHeight)
 {
-	if (!m_Use || !ConfigManager.UseToolTips)
+	if (!m_Use || !ConfigManager.PopupHelpEnabled)
 		return;
 
 	if (!m_MaxWidth)

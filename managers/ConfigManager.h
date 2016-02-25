@@ -68,6 +68,10 @@ private:
 	bool m_AlwaysRun;
 	bool m_DisableMenubar;
 	bool m_GrayOutOfRangeObjects;
+	bool m_DisableNewTargetSystem;
+	BYTE m_ItemPropertiesMode;
+	bool m_ItemPropertiesIcon;
+	bool m_ObjectHandles;
 	
 	WORD m_SpeechDelay;
 	bool m_ScaleSpeechDelay;
@@ -167,6 +171,10 @@ public:
 	SETGET(bool, AlwaysRun);
 	SETGET(bool, DisableMenubar);
 	SETGET(bool, GrayOutOfRangeObjects);
+	SETGET(bool, DisableNewTargetSystem);
+	SETGET(BYTE, ItemPropertiesMode);
+	SETGET(bool, ItemPropertiesIcon);
+	SETGET(bool, ObjectHandles);
 	
 	SETGET(WORD, SpeechDelay);
 	SETGET(bool, ScaleSpeechDelay);

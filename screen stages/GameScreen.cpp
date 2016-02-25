@@ -42,7 +42,7 @@ void TGameScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	Tooltip.SeqIndex = 0;
+	PopupHelp.SeqIndex = 0;
 
 	//Prepare textures on Game Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -65,7 +65,7 @@ void TGameScreen::ProcessSmoothAction(BYTE action)
 		UO->LogOut();
 }
 //---------------------------------------------------------------------------
-void TGameScreen::InitTooltip()
+void TGameScreen::InitPopupHelp()
 {
 	if (!ConfigManager.UseToolTips)
 		return;
@@ -971,6 +971,8 @@ int TGameScreen::Render(bool mode)
 		
 		TargetGump.Color = 0;
 		AttackTargetGump.Color = 0;
+		NewTargetSystem.TopY = 0;
+		NewTargetSystem.BottomY = 0;
 
 		m_LightCount = 0;
 
@@ -1010,6 +1012,7 @@ int TGameScreen::Render(bool mode)
 
 				ColorizerShader->Use();
 
+				NewTargetSystem.Draw();
 				TargetGump.Draw();
 				AttackTargetGump.Draw();
 
@@ -1198,7 +1201,7 @@ int TGameScreen::Render(bool mode)
 					UnuseShader();
 			}
 
-			InitTooltip();
+			InitPopupHelp();
 
 			MouseManager.Draw(MouseManager.GetGameCursor()); //Game Gump mouse cursor
 		}

@@ -156,6 +156,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="gump\GumpSpell.h" />
     <ClInclude Include="gump\GumpSpellbook.h" />
     <ClInclude Include="gump\GumpStatusbar.h" />
+    <ClInclude Include="gump\GumpTargetSystem.h" />
     <ClInclude Include="gump\GumpTextEntryDialog.h" />
     <ClInclude Include="gump\GumpTip.h" />
     <ClInclude Include="gump\GumpWorldMap.h" />
@@ -227,7 +228,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextData.h" />
     <ClInclude Include="TextureObject.h" />
-    <ClInclude Include="Tooltip.h" />
+    <ClInclude Include="PopupHelp.h" />
     <ClInclude Include="VideoRecorder.h" />
     <ClInclude Include="Walker.h" />
     <ClInclude Include="Weather.h" />
@@ -284,6 +285,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="gump\GumpSpell.cpp" />
     <ClCompile Include="gump\GumpSpellbook.cpp" />
     <ClCompile Include="gump\GumpStatusbar.cpp" />
+    <ClCompile Include="gump\GumpTargetSystem.cpp" />
     <ClCompile Include="gump\GumpTextEntryDialog.cpp" />
     <ClCompile Include="gump\GumpTip.cpp" />
     <ClCompile Include="gump\GumpWorldMap.cpp" />
@@ -354,7 +356,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="TargetGump.cpp" />
     <ClCompile Include="TextData.cpp" />
     <ClCompile Include="TextureObject.cpp" />
-    <ClCompile Include="Tooltip.cpp" />
+    <ClCompile Include="PopupHelp.cpp" />
     <ClCompile Include="VideoRecorder.cpp" />
     <ClCompile Include="Walker.cpp" />
     <ClCompile Include="Weather.cpp" />

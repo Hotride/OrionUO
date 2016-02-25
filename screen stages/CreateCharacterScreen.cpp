@@ -38,7 +38,7 @@ void TCreateCharacterScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	Tooltip.SeqIndex = 0;
+	PopupHelp.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -81,7 +81,7 @@ void TCreateCharacterScreen::ProcessSmoothAction(BYTE action)
 		UO->InitScreen(GS_SELECT_TOWN);
 }
 //---------------------------------------------------------------------------
-void TCreateCharacterScreen::InitTooltip()
+void TCreateCharacterScreen::InitPopupHelp()
 {
 	if (!ConfigManager.UseToolTips)
 		return;
@@ -467,7 +467,7 @@ int TCreateCharacterScreen::Render(bool mode)
 			UO->DrawGump(GumpID, 0, 310, 408);
 		}
 
-		InitTooltip();
+		InitPopupHelp();
 
 		DrawSmoothMonitorEffect();
 

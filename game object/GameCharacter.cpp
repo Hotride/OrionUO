@@ -29,8 +29,11 @@ m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(0),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
 m_AfterStepDelay(0), m_StepSoundOffset(0), m_CorpseLink(0)
 {
-	RenderQueueIndex = 7; //¬ысокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
+	m_RenderQueueIndex = 7; //¬ысокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_WalkStack.Init(); //»нициализаци€ счетчика шагов
+
+	if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial == serial && GumpManager->GetGump(serial, 0, GT_TARGET_SYSTEM) == NULL)
+		GumpManager->AddGump(new TGumpTargetSystem(NewTargetSystem.GumpX, NewTargetSystem.GumpY));
 }
 //---------------------------------------------------------------------------
 TGameCharacter::~TGameCharacter()

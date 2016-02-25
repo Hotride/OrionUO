@@ -21,7 +21,7 @@
 #define TooltipH
 //---------------------------------------------------------------------------
 //Класс для работы с тултипами
-class TTooltip
+class TPopupHelp
 {
 private:
 	//Время фокусировки
@@ -49,8 +49,8 @@ private:
 	//Флаг использования тултипа
 	bool m_Use;
 public:
-	TTooltip();
-	~TTooltip();
+	TPopupHelp();
+	~TPopupHelp();
 
 	SETGET(DWORD, Timer);
 	SETGET(DWORD, SeqIndex);
@@ -75,6 +75,6 @@ public:
 	void Draw(int cursorWidth = 0, int cursorHeight = 0);
 };
 //---------------------------------------------------------------------------
-extern TTooltip Tooltip;
+extern TPopupHelp PopupHelp;
 //---------------------------------------------------------------------------
 #endif

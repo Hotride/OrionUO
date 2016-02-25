@@ -45,8 +45,8 @@
 #include "zlib.h"
 #include <Mmsystem.h>
 
-//#define _USE_MATH_DEFINES // for C++
-//#include <cmath>
+#define _USE_MATH_DEFINES // for C++
+#include <math.h>
 
 #ifndef M_PI
 	#define M_PI 3.14159265358979323846
@@ -490,7 +490,7 @@ typedef std::vector<BYTE> WaveFile;
 #include "Skills.h"
 #include "game object\\GamePlayer.h"
 #include "game object\\GameWorld.h"
-#include "Tooltip.h"
+#include "PopupHelp.h"
 #include "game object\\ClickObject.h"
 #include "Target.h"
 #include "Party.h"
@@ -541,6 +541,7 @@ typedef std::vector<BYTE> WaveFile;
 #include "gump\\GumpBulletinBoard.h"
 #include "gump\\GumpBulletinBoardItem.h"
 #include "gump\\GumpWorldMap.h"
+#include "gump\\GumpTargetSystem.h"
 #include "screen stages\\BaseScreen.h"
 #include "screen stages\\DebugScreen.h"
 #include "screen stages\\MainScreen.h"

@@ -46,7 +46,7 @@ void TCharacterListScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	Tooltip.SeqIndex = 0;
+	PopupHelp.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -88,7 +88,7 @@ void TCharacterListScreen::ProcessSmoothAction(BYTE action)
 	}
 }
 //---------------------------------------------------------------------------
-void TCharacterListScreen::InitTooltip()
+void TCharacterListScreen::InitPopupHelp()
 {
 	if (!ConfigManager.UseToolTips)
 		return;
@@ -191,7 +191,7 @@ int TCharacterListScreen::Render(bool mode)
 			gumpID = 0x15A6; //> gump pressed
 		UO->DrawGump(gumpID, 0, 610, 445);
 
-		InitTooltip();
+		InitPopupHelp();
 
 		DrawSmoothMonitorEffect();
 

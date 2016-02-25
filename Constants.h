@@ -35,6 +35,9 @@ const int MAX_FILE_BUFFER_SIZE = 0x1000;
 //Динамический размер пакета
 const int SIZE_VARIABLE = 0;
 
+//Спектральный цвет
+const WORD SPECTRAL_COLOR = 0x4000;
+
 //Ширина пробела для юникод шрифтов
 const int UNICODE_SPACE_WIDTH = 8;
 

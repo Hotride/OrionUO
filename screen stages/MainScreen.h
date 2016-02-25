@@ -69,7 +69,7 @@ public:
 	void Init();
 
 	//Инициализация тултипа
-	void InitTooltip();
+	void InitPopupHelp();
 
 	//Коля для ввода аккаунта и пароля
 	TEntryText *m_Account;

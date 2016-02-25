@@ -137,7 +137,7 @@ public:
 	void Init();
 
 	//Инициализация тултипа
-	void InitTooltip();
+	void InitPopupHelp();
 
 	//Функция добавления источника света
 	void AddLight(TRenderWorldObject *rwo, TRenderWorldObject *lightObject, int x, int y);

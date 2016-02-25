@@ -109,6 +109,10 @@ void TConfigManager::DefaultPage6()
 	m_AlwaysRun = false;
 	m_DisableMenubar = true;
 	m_GrayOutOfRangeObjects = true;
+	m_DisableNewTargetSystem = true;
+	m_ItemPropertiesMode = 0;
+	m_ItemPropertiesIcon = false;
+	m_ObjectHandles = false;
 }
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage7()
@@ -305,6 +309,21 @@ void TConfigManager::Load(string path)
 			m_AlwaysRun = file.ReadByte();
 			m_DisableMenubar = file.ReadByte();
 			m_GrayOutOfRangeObjects = file.ReadByte();
+
+			if (blockSize > 9)
+			{
+				m_DisableNewTargetSystem = file.ReadByte();
+				m_ItemPropertiesMode = file.ReadByte();
+				m_ItemPropertiesIcon = file.ReadByte();
+				m_ObjectHandles = file.ReadByte();
+			}
+			else
+			{
+				m_DisableNewTargetSystem = true;
+				m_ItemPropertiesMode = 0;
+				m_ItemPropertiesIcon = false;
+				m_ObjectHandles = false;
+			}
 		}
 		
 		file.Ptr = next;
@@ -461,7 +480,7 @@ void TConfigManager::Save(string path)
 	writer->WriteBuffer();
 	
 	//Page 6
-	writer->WriteByte(9); //size of block
+	writer->WriteByte(13); //size of block
 	writer->WriteByte(6); //page index
 	writer->WriteByte(m_EnablePathfind);
 	writer->WriteByte(m_HoldTabForCombat);
@@ -470,6 +489,10 @@ void TConfigManager::Save(string path)
 	writer->WriteByte(m_AlwaysRun);
 	writer->WriteByte(m_DisableMenubar);
 	writer->WriteByte(m_GrayOutOfRangeObjects);
+	writer->WriteByte(m_DisableNewTargetSystem);
+	writer->WriteByte(m_ItemPropertiesMode);
+	writer->WriteByte(m_ItemPropertiesIcon);
+	writer->WriteByte(m_ObjectHandles);
 	writer->WriteBuffer();
 	
 	//Page 7

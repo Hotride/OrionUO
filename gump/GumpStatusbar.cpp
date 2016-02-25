@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** StatusbarGump.cpp
+** GumpStatusbar.cpp
 **
 ** Copyright (C) September 2015 Hotride
 **

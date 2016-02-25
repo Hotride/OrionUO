@@ -324,9 +324,6 @@
     <ClInclude Include="gump\GumpSell.h">
       <Filter>Заголовочные файлы\gump</Filter>
     </ClInclude>
-    <ClInclude Include="Tooltip.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="managers\SoundManager.h">
       <Filter>Заголовочные файлы\managers</Filter>
     </ClInclude>
@@ -434,6 +431,12 @@
     </ClInclude>
     <ClInclude Include="managers\ProfessionManager.h">
       <Filter>Заголовочные файлы\managers</Filter>
+    </ClInclude>
+    <ClInclude Include="PopupHelp.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="gump\GumpTargetSystem.h">
+      <Filter>Заголовочные файлы\gump</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -701,9 +704,6 @@
     <ClCompile Include="gump\GumpSell.cpp">
       <Filter>Файлы исходного кода\gump</Filter>
     </ClCompile>
-    <ClCompile Include="Tooltip.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="managers\SoundManager.cpp">
       <Filter>Файлы исходного кода\managers</Filter>
     </ClCompile>
@@ -802,6 +802,12 @@
     </ClCompile>
     <ClCompile Include="managers\ProfessionManager.cpp">
       <Filter>Файлы исходного кода\managers</Filter>
+    </ClCompile>
+    <ClCompile Include="PopupHelp.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="gump\GumpTargetSystem.cpp">
+      <Filter>Файлы исходного кода\gump</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

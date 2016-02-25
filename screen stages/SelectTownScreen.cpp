@@ -53,7 +53,7 @@ void TSelectTownScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	Tooltip.SeqIndex = 0;
+	PopupHelp.SeqIndex = 0;
 	
 	//Prepare textures:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -83,7 +83,7 @@ void TSelectTownScreen::ProcessSmoothAction(BYTE action)
 	}
 }
 //---------------------------------------------------------------------------
-void TSelectTownScreen::InitTooltip()
+void TSelectTownScreen::InitPopupHelp()
 {
 	if (!ConfigManager.UseToolTips)
 		return;
@@ -239,7 +239,7 @@ int TSelectTownScreen::Render(bool mode)
 			}
 		}
 		
-		InitTooltip();
+		InitPopupHelp();
 
 		DrawSmoothMonitorEffect();
 

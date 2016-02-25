@@ -40,7 +40,36 @@ public:
 	void Draw();
 };
 //---------------------------------------------------------------------------
+class TNewTargetSystem
+{
+protected:
+	DWORD m_Serial;
+	int m_TopX;
+	int m_TopY;
+	int m_BottomX;
+	int m_BottomY;
+	int m_GumpX;
+	int m_GumpY;
+	WORD m_Color;
+
+public:
+	TNewTargetSystem();
+	~TNewTargetSystem();
+
+	SETGET(DWORD, Serial);
+	SETGET(int, TopX);
+	SETGET(int, TopY);
+	SETGET(int, BottomX);
+	SETGET(int, BottomY);
+	SETGET(int, GumpX);
+	SETGET(int, GumpY);
+	SETGET(WORD, Color);
+
+	void Draw();
+};
+//---------------------------------------------------------------------------
 extern TTargetGump TargetGump;
 extern TTargetGump AttackTargetGump;
+extern TNewTargetSystem NewTargetSystem;
 //---------------------------------------------------------------------------
 #endif

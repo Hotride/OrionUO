@@ -45,7 +45,7 @@ void TServerScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	Tooltip.SeqIndex = 0;
+	PopupHelp.SeqIndex = 0;
 
 	g_UpdateRange = 18;
 
@@ -71,7 +71,7 @@ void TServerScreen::Init()
 	UO->ExecuteGumpPart(0x15E8, 3); //Earth button
 }
 //---------------------------------------------------------------------------
-void TServerScreen::InitTooltip()
+void TServerScreen::InitPopupHelp()
 {
 	if (!ConfigManager.UseToolTips)
 		return;
@@ -80,22 +80,22 @@ void TServerScreen::InitTooltip()
 	{
 		case ID_SS_QUIT:
 		{
-			Tooltip.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
+			PopupHelp.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
 			break;
 		}
 		case ID_SS_ARROW_PREV:
 		{
-			Tooltip.Set(L"Preveous screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			PopupHelp.Set(L"Preveous screen", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_SS_ARROW_NEXT:
 		{
-			Tooltip.Set(L"Next screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			PopupHelp.Set(L"Next screen", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_SS_EARTH:
 		{
-			Tooltip.Set(L"Select first server in list", SOT_NO_OBJECT, g_LastSelectedObject, 100);
+			PopupHelp.Set(L"Select first server in list", SOT_NO_OBJECT, g_LastSelectedObject, 100);
 			break;
 		}
 		default:
@@ -106,7 +106,7 @@ void TServerScreen::InitTooltip()
 	{
 		string cstr("Connect to '" + ServerList.GetName(g_LastSelectedObject - 8) + "' server");
 
-		Tooltip.Set(ToWString(cstr), SOT_NO_OBJECT, g_LastSelectedObject, 100);
+		PopupHelp.Set(ToWString(cstr), SOT_NO_OBJECT, g_LastSelectedObject, 100);
 	}
 }
 //---------------------------------------------------------------------------
@@ -256,7 +256,7 @@ int TServerScreen::Render(bool mode)
 		if (ServerList.Count > 0)
 			FontManager->DrawA(9, ServerList.GetName(0).c_str(), 0x0481, 243, 420);
 		
-		InitTooltip();
+		InitPopupHelp();
 
 		DrawSmoothMonitorEffect();
 

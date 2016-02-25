@@ -278,7 +278,7 @@ void TMouseManager::Draw(WORD id)
 
 		if (id < 16)
 		{
-			Tooltip.Draw(th->Width, th->Height);
+			PopupHelp.Draw(th->Width, th->Height);
 
 			int x = g_MouseX + m_CursorOffset[0][id];
 			int y = g_MouseY + m_CursorOffset[1][id];

@@ -70,7 +70,7 @@ public:
 	void Init();
 
 	//Инициализация тултипа
-	void InitTooltip();
+	void InitPopupHelp();
 
 	//Рисование экрана
 	int Render(bool mode);

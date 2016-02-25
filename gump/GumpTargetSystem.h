@@ -1,8 +1,8 @@
 /****************************************************************************
 **
-** CreateCharacterGump.h
+** GumpTargetSystem.h
 **
-** Copyright (C) September 2015 Hotride
+** Copyright (C) February 2016 Hotride
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -17,41 +17,31 @@
 *****************************************************************************
 */
 //---------------------------------------------------------------------------
-#ifndef CreateCharacterScreenH
-#define CreateCharacterScreenH
+#ifndef GumpTargetSystemH
+#define GumpTargetSystemH
 //---------------------------------------------------------------------------
-class TCreateCharacterScreen : public TBaseScreen
+class TGumpTargetSystem : public TGump
 {
 private:
-	//Идентификаторы событий для плавного перехода
-	static const BYTE ID_SMOOTH_CCS_QUIT = 1;
-	static const BYTE ID_SMOOTH_CCS_GO_SCREEN_CHARACTER = 2;
-	static const BYTE ID_SMOOTH_CCS_GO_SCREEN_CONNECT = 3;
-	static const BYTE ID_SMOOTH_CCS_GO_SCREEN_SELECT_TOWN = 4;
+	static const int ID_GSB_BUFF_GUMP = 1;
+	static const int ID_GSB_LOCK_MOVING = 2;
 
+	string m_OldName;
 public:
-	TCreateCharacterScreen();
-	virtual ~TCreateCharacterScreen();
+	TGumpTargetSystem(short x, short y);
+	virtual ~TGumpTargetSystem();
 
-	//Инициализация
-	void Init();
+	SETGET(string, OldName);
 
-	//Обработка события после плавного затемнения экрана
-	void ProcessSmoothAction(BYTE action = 0xFF);
+	void PrepareTextures();
 
-	//Инициализация тултипа
-	void InitPopupHelp();
+	int Draw(bool &mode);
 
-	//Рисование экрана
-	int Render(bool mode);
-
-	//События
+	void GenerateFrame(int posX, int posY);
+	
 	void OnLeftMouseDown();
 	void OnLeftMouseUp();
-	void OnCharPress(WPARAM wparam, LPARAM lparam);
-	void OnKeyPress(WPARAM wparam, LPARAM lparam);
+	bool OnLeftMouseDoubleClick();
 };
-//---------------------------------------------------------------------------
-extern TCreateCharacterScreen *CreateCharacterScreen;
 //---------------------------------------------------------------------------
 #endif

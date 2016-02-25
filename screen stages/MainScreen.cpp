@@ -86,7 +86,7 @@ void TMainScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	Tooltip.SeqIndex = 0;
+	PopupHelp.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -111,7 +111,7 @@ void TMainScreen::ProcessSmoothAction(BYTE action)
 		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 }
 //---------------------------------------------------------------------------
-void TMainScreen::InitTooltip()
+void TMainScreen::InitPopupHelp()
 {
 	if (!ConfigManager.UseToolTips)
 		return;
@@ -120,32 +120,32 @@ void TMainScreen::InitTooltip()
 	{
 		case ID_MS_QUIT:
 		{
-			Tooltip.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
+			PopupHelp.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
 			break;
 		}
 		case ID_MS_ARROW_NEXT:
 		{
-			Tooltip.Set(3000049, "Next screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			PopupHelp.Set(3000049, "Next screen", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_MS_ACCOUNT:
 		{
-			Tooltip.Set(L"Click here to enter your user name", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			PopupHelp.Set(L"Click here to enter your user name", SOT_NO_OBJECT, g_LastSelectedObject, 150);
 			break;
 		}
 		case ID_MS_PASSWORD:
 		{
-			Tooltip.Set(L"Click here to enter your password", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			PopupHelp.Set(L"Click here to enter your password", SOT_NO_OBJECT, g_LastSelectedObject, 150);
 			break;
 		}
 		case ID_MS_SAVEPASSWORD:
 		{
-			Tooltip.Set(L"Save your password in config file", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			PopupHelp.Set(L"Save your password in config file", SOT_NO_OBJECT, g_LastSelectedObject, 150);
 			break;
 		}
 		case ID_MS_AUTOLOGIN:
 		{
-			Tooltip.Set(L"Auto LogIn (without selection screens)", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			PopupHelp.Set(L"Auto LogIn (without selection screens)", SOT_NO_OBJECT, g_LastSelectedObject, 150);
 			break;
 		}
 		default:
@@ -233,7 +233,7 @@ int TMainScreen::Render(bool mode)
 			TextColor = 0x03E3;
 		m_Password->DrawMaskA(5, TextColor, 335, 385);
 
-		InitTooltip();
+		InitPopupHelp();
 
 		DrawSmoothMonitorEffect();
 
