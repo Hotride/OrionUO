@@ -83,6 +83,46 @@ void TGameObject::Clear()
 	}
 }
 //---------------------------------------------------------------------------
+int TGameObject::IsGold()
+{
+	switch (m_Graphic)
+	{
+		case 0x0EED:
+			return 1;
+		case 0x0EEA:
+			return 2;
+		case 0x0EF0:
+			return 3;
+		default:
+			break;
+	}
+
+	return 0;
+}
+//---------------------------------------------------------------------------
+WORD TGameObject::GetDrawGraphic(bool &doubleDraw)
+{
+	int index = IsGold();
+	WORD result = m_Graphic;
+
+	const WORD graphicAccociateTable[3][3] =
+	{
+		{0x0EED, 0x0EEE, 0x0EEF},
+		{0x0EEA, 0x0EEB, 0x0EEC},
+		{0x0EF0, 0x0EF1, 0x0EF2}
+	};
+
+	if (index)
+	{
+		int graphicIndex = (int)(m_Count > 1) + (int)(m_Count > 5);
+		result = graphicAccociateTable[index - 1][graphicIndex];
+	}
+	else
+		doubleDraw = IsStackable();
+
+	return result;
+}
+//---------------------------------------------------------------------------
 void TGameObject::DrawEffects(int &drawX, int &drawY, DWORD &ticks)
 {
 	TGameEffect *effect = m_Effects;

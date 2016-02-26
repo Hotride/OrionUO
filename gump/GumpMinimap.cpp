@@ -49,17 +49,17 @@ PWORD TGumpMinimap::GetTextureData(WORD id, int &width, int &height)
 	PWORD pixels = new WORD[blocksize];
 	//memset(&pixels[0], 0, blocksize * 2);
 
-	IFOR(Y, 0, height)
+	IFOR(y, 0, height)
 	{
 		int GSize = 0;
 
-		if (Y < height - 1)
-			GSize = LookupList[Y + 1] - LookupList[Y];
+		if (y < height - 1)
+			GSize = LookupList[y + 1] - LookupList[y];
 		else
-			GSize = (size / 4) - LookupList[Y];
+			GSize = (size / 4) - LookupList[y];
 
-		PGUMP_BLOCK gmul = (PGUMP_BLOCK)(DataStart + LookupList[Y] * 4);
-		int X = 0;
+		PGUMP_BLOCK gmul = (PGUMP_BLOCK)(DataStart + LookupList[y] * 4);
+		int x = 0;
 		IFOR(i, 0, GSize)
 		{
 			WORD val = gmul[i].Value;
@@ -67,11 +67,11 @@ PWORD TGumpMinimap::GetTextureData(WORD id, int &width, int &height)
 
 			IFOR(j, 0, gmul[i].Run)
 			{
-				int block = Y * width + X;
+				int block = y * width + x;
 
 				pixels[block] = a | val;
 
-				X++;
+				x++;
 			}
 		}
 	}
@@ -125,7 +125,7 @@ void TGumpMinimap::GenerateMap()
 			int blockIndex = (i * g_MapBlockY[g_CurrentMap]) + j;
 
 			TMapBlock *mapBlock = MapManager->GetBlock(blockIndex);
-			MAP_BLOCK mb = {0};
+			MAP_BLOCK mb = { 0 };
 
 			if (mapBlock == NULL)
 				MapManager->GetRadarMapBlock(i, j, mb);
@@ -156,8 +156,6 @@ void TGumpMinimap::GenerateMap()
 						{
 							WORD color = (mapBlock != NULL ? mapBlock->GetRadarColor(x, y) : mb.Cells[(y * 8) + x].TileID);
 							data[block] = 0x8000 | ColorManager->GetRadarColorData(color);
-							//DWORD pcl = ColorManager->GetRadarColor(color);
-							//data[block] = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 						}
 					}
 				}
@@ -175,7 +173,7 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 	int PlayerX = g_Player->X;
 	int PlayerY = g_Player->Y;
 
-	if (PlayerX != m_LastX || PlayerY != m_LastY)
+	if (PlayerX != m_LastX || PlayerY != m_LastY || m_Texture == 0)
 		GenerateMap();
 
 	TTextureObject *th = UO->ExecuteGump(0x1393 - (int)Minimized);
@@ -268,7 +266,7 @@ int TGumpMinimap::Draw(bool &mode)
 
 	if (mode)
 	{
-		if (!FrameCreated)
+		if (!FrameCreated || m_Texture == 0)
 			GenerateFrame(posX, posY);
 
 		glCallList((GLuint)index);

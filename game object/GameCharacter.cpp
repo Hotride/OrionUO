@@ -431,103 +431,47 @@ void TGameCharacter::SetAnimationGroup(BYTE val)
 //---------------------------------------------------------------------------
 void TGameCharacter::GetAnimationGroup(ANIMATION_GROUPS group, BYTE &animation)
 {
-	const BYTE animTableLO[35] =
+	const BYTE animAssociateTable[35][3] =
 	{
-		LAG_WALK,
-		LAG_WALK,
-		LAG_RUN,
-		LAG_RUN,
-		LAG_STAND,
-		LAG_FIDGET_1,
-		LAG_FIDGET_2,
-		LAG_STAND,
-		LAG_STAND,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_WALK,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_DIE_1,
-		LAG_DIE_2,
-		LAG_WALK,
-		LAG_RUN,
-		LAG_STAND,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_WALK,
-		LAG_EAT,
-		LAG_EAT,
-		LAG_FIDGET_1
+		{ LAG_WALK,			HAG_WALK,			PAG_WALK_UNARMED },
+		{ LAG_WALK,			HAG_WALK,			PAG_WALK_ARMED },
+		{ LAG_RUN,			HAG_WALK,			PAG_RUN_UNARMED },
+		{ LAG_RUN,			HAG_WALK,			PAG_RUN_ARMED },
+		{ LAG_STAND,		HAG_STAND,			PAG_STAND },
+		{ LAG_FIDGET_1,		HAG_FIDGET_1,		PAG_FIDGET_1 },
+		{ LAG_FIDGET_2,		HAG_FIDGET_2,		PAG_FIDGET_2 },
+		{ LAG_STAND,		HAG_ATTACK_1,		PAG_STAND_ONEHANDED_ATTACK },
+		{ LAG_STAND,		HAG_ATTACK_2,		PAG_STAND_TWOHANDED_ATTACK },
+		{ LAG_EAT,			HAG_ATTACK_3,		PAG_ATTACK_ONEHANDED },
+		{ LAG_EAT,			HAG_ATTACK_1,		PAG_ATTACK_UNARMED_1 },
+		{ LAG_EAT,			HAG_ATTACK_2,		PAG_ATTACK_UNARMED_2 },
+		{ LAG_EAT,			HAG_ATTACK_3,		PAG_ATTACK_TWOHANDED_DOWN },
+		{ LAG_EAT,			HAG_ATTACK_1,		PAG_ATTACK_TWOHANDED_WIDE },
+		{ LAG_EAT,			HAG_ATTACK_2,		PAG_ATTACK_TWOHANDED_JAB },
+		{ LAG_WALK,			HAG_WALK,			PAG_WALK_WARMODE },
+		{ LAG_EAT,			HAG_CAST,			PAG_CAST_DIRECTED },
+		{ LAG_EAT,			HAG_CAST,			PAG_CAST_AREA },
+		{ LAG_EAT,			HAG_ATTACK_1,		PAG_ATTACK_BOW },
+		{ LAG_EAT,			HAG_ATTACK_2,		PAG_ATTACK_CROSSBOW },
+		{ LAG_EAT,			HAG_GET_HIT_1,		PAG_GET_HIT },
+		{ LAG_DIE_1,		HAG_DIE_1,			PAG_DIE_1 },
+		{ LAG_DIE_2,		HAG_DIE_2,			PAG_DIE_2 },
+		{ LAG_WALK,			HAG_WALK,			PAG_ONMOUNT_RIDE_SLOW },
+		{ LAG_RUN,			HAG_WALK,			PAG_ONMOUNT_RIDE_FAST },
+		{ LAG_STAND,		HAG_STAND,			PAG_ONMOUNT_STAND },
+		{ LAG_EAT,			HAG_ATTACK_1,		PAG_ONMOUNT_ATTACK },
+		{ LAG_EAT,			HAG_ATTACK_2,		PAG_ONMOUNT_ATTACK_BOW },
+		{ LAG_EAT,			HAG_ATTACK_1,		PAG_ONMOUNT_ATTACK_CROSSBOW },
+		{ LAG_EAT,			HAG_ATTACK_2,		PAG_ONMOUNT_SLAP_HORSE },
+		{ LAG_EAT,			HAG_STAND,			PAG_TURN },
+		{ LAG_WALK,			HAG_WALK,			PAG_ATTACK_UNARMED_AND_WALK },
+		{ LAG_EAT,			HAG_STAND,			PAG_EMOTE_BOW },
+		{ LAG_EAT,			HAG_STAND,			PAG_EMOTE_SALUTE },
+		{ LAG_FIDGET_1,		HAG_FIDGET_1,		PAG_FIDGET_3 }
 	};
 
-	const BYTE animTableHI[35] =
-	{
-		HAG_WALK,
-		HAG_WALK,
-		HAG_WALK,
-		HAG_WALK,
-		HAG_STAND,
-		HAG_FIDGET_1,
-		HAG_FIDGET_2,
-		HAG_ATTACK_1,
-		HAG_ATTACK_2,
-		HAG_ATTACK_3,
-		HAG_ATTACK_1,
-		HAG_ATTACK_2,
-		HAG_ATTACK_3,
-		HAG_ATTACK_1,
-		HAG_ATTACK_2,
-		HAG_WALK,
-		HAG_CAST,
-		HAG_CAST,
-		HAG_ATTACK_1,
-		HAG_ATTACK_2,
-		HAG_GET_HIT_1,
-		HAG_DIE_1,
-		HAG_DIE_2,
-		HAG_WALK,
-		HAG_WALK,
-		HAG_STAND,
-		HAG_ATTACK_1,
-		HAG_ATTACK_2,
-		HAG_ATTACK_1,
-		HAG_ATTACK_2,
-		HAG_STAND,
-		HAG_WALK,
-		HAG_STAND,
-		HAG_STAND,
-		HAG_FIDGET_1
-	};
-
-	switch (group)
-	{
-		case AG_LOW:
-		{
-			if (animation < 35)
-				animation = animTableLO[animation];
-
-			break;
-		}
-		case AG_HIGHT:
-		{
-			if (animation < 35)
-				animation = animTableHI[animation];
-
-			break;
-		}
-		default:
-			break;
-	}
+	if (group && animation < 35)
+		animation = animAssociateTable[animation][group - 1];
 }
 //---------------------------------------------------------------------------
 bool TGameCharacter::TestStepNoChangeDirection(BYTE group)

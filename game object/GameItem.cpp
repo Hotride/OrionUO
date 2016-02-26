@@ -165,8 +165,6 @@ int TGameItem::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 g_RenderedObjectsCountInGameWindow++;
 #endif
 
-			WORD objGraphic = m_Graphic;
-
 			WORD objColor = m_Color;
 
 			if (Hidden())
@@ -178,24 +176,12 @@ g_RenderedObjectsCountInGameWindow++;
 			{
 				bool doubleDraw = false;
 				bool selMode = false;
+				WORD objGraphic = GetDrawGraphic(doubleDraw);
 
 				if (g_LastObjectType == SOT_GAME_OBJECT && !Locked() && g_LastSelectedObject == m_Serial)
 				{
 					objColor = 0x0035;
 					selMode = true;
-				}
-
-				if (m_Count > 1)
-				{
-					if (objGraphic == 0x0EED)
-					{
-						if (m_Count > 5)
-							objGraphic = 0x0EEF;
-						else
-							objGraphic = 0x0EEE;
-					}
-					else if (IsStackable())
-						doubleDraw = true;
 				}
 
 				if (IsSurface() || (IsBackground() && IsUnknown2()))
@@ -231,22 +217,8 @@ g_RenderedObjectsCountInGameWindow++;
 			}
 			else
 			{
-				WORD goGraphic = m_Graphic;
-
 				bool doubleDraw = false;
-
-				if (m_Count > 1)
-				{
-					if (goGraphic == 0x0EED)
-					{
-						if (m_Count > 5)
-							goGraphic = 0x0EEF;
-						else
-							goGraphic = 0x0EEE;
-					}
-					else if (IsStackable())
-						doubleDraw = true;
-				}
+				WORD goGraphic = GetDrawGraphic(doubleDraw);
 
 				if (doubleDraw)
 				{

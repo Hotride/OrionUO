@@ -48,18 +48,8 @@ void TGumpSecureTrading::PrepareTextures()
 		{
 			if (item->Count > 0)
 			{
-				WORD graphic = item->Graphic;
-
-				if (item->Count > 1)
-				{
-					if (graphic == 0x0EED)
-					{
-						if (item->Count > 5)
-							graphic = 0x0EEF;
-						else
-							graphic = 0x0EEE;
-					}
-				}
+				bool doubleDraw = false;
+				WORD graphic = item->GetDrawGraphic(doubleDraw);
 
 				UO->ExecuteStaticArt(graphic);
 			}
@@ -77,18 +67,8 @@ void TGumpSecureTrading::PrepareTextures()
 		{
 			if (item->Count > 0)
 			{
-				WORD graphic = item->Graphic;
-
-				if (item->Count > 1)
-				{
-					if (graphic == 0x0EED)
-					{
-						if (item->Count > 5)
-							graphic = 0x0EEF;
-						else
-							graphic = 0x0EEE;
-					}
-				}
+				bool doubleDraw = false;
+				WORD graphic = item->GetDrawGraphic(doubleDraw);
 
 				UO->ExecuteStaticArt(graphic);
 			}
@@ -178,38 +158,22 @@ void TGumpSecureTrading::GenerateFrame(int posX, int posY)
 
 			while (item != NULL)
 			{
-				if (item->Count > 0)
+				bool doubleDraw = false;
+				WORD graphic = item->GetDrawGraphic(doubleDraw);
+				WORD color = item->Color;
+				bool selMode = false;
+				int drawX = posX + item->X;
+				int drawY = posY + item->Y;
+
+				if (CanSelectedButton == item->Serial)
 				{
-					WORD graphic = item->Graphic;
-					WORD color = item->Color;
-					bool doubleDraw = false;
-					bool selMode = false;
-					int drawX = posX + item->X;
-					int drawY = posY + item->Y;
-
-					if (CanSelectedButton == item->Serial)
-					{
-						color = 0x0035;
-						selMode = true;
-					}
-
-					if (item->Count > 1)
-					{
-						if (graphic == 0x0EED)
-						{
-							if (item->Count > 5)
-								graphic = 0x0EEF;
-							else
-								graphic = 0x0EEE;
-						}
-						else if (item->IsStackable())
-							doubleDraw = true;
-					}
-
-					UO->DrawStaticArtInContainer(graphic, color, drawX, drawY, selMode);
-					if (doubleDraw)
-						UO->DrawStaticArtInContainer(graphic, color, drawX + 5, drawY + 5, selMode);
+					color = 0x0035;
+					selMode = true;
 				}
+
+				UO->DrawStaticArtInContainer(graphic, color, drawX, drawY, selMode);
+				if (doubleDraw)
+					UO->DrawStaticArtInContainer(graphic, color, drawX + 5, drawY + 5, selMode);
 
 				item = (TGameItem*)item->m_Next;
 			}
@@ -236,9 +200,9 @@ void TGumpSecureTrading::GenerateFrame(int posX, int posY)
 
 			while (item != NULL)
 			{
-				WORD graphic = item->Graphic;
-				WORD color = item->Color;
 				bool doubleDraw = false;
+				WORD graphic = item->GetDrawGraphic(doubleDraw);
+				WORD color = item->Color;
 				bool selMode = false;
 				int drawX = posX + item->X;
 				int drawY = posY + item->Y;
@@ -249,26 +213,10 @@ void TGumpSecureTrading::GenerateFrame(int posX, int posY)
 					selMode = true;
 				}
 
-				if (item->Count > 0)
-				{
-					if (item->Count > 1)
-					{
-						if (graphic == 0x0EED)
-						{
-							if (item->Count > 5)
-								graphic = 0x0EEF;
-							else
-								graphic = 0x0EEE;
-						}
-						else if (item->IsStackable())
-							doubleDraw = true;
-					}
+				UO->DrawStaticArtInContainer(graphic, color, drawX, drawY, selMode);
 
-					UO->DrawStaticArtInContainer(graphic, color, drawX, drawY, selMode);
-
-					if (doubleDraw)
-						UO->DrawStaticArtInContainer(graphic, color, drawX + 5, drawY + 5, selMode);
-				}
+				if (doubleDraw)
+					UO->DrawStaticArtInContainer(graphic, color, drawX + 5, drawY + 5, selMode);
 
 				item = (TGameItem*)item->m_Next;
 			}
@@ -496,24 +444,11 @@ int TGumpSecureTrading::Draw(bool &mode)
 			{
 				if (item->Count > 0)
 				{
-					WORD graphic = item->Graphic;
 					bool doubleDraw = false;
+					WORD graphic = item->GetDrawGraphic(doubleDraw);
 					int drawX = posX + item->X;
 					int drawY = posY + item->Y;
 
-					if (item->Count > 1)
-					{
-						if (item->Graphic == 0x0EED)
-						{
-							if (item->Count > 5)
-								graphic = 0x0EEF;
-							else
-								graphic = 0x0EEE;
-						}
-						else if (item->IsStackable())
-							doubleDraw = true;
-					}
-					
 					if (UO->StaticPixelsInXYInContainer(graphic, drawX, drawY))
 						LSG = item->Serial;
 					else if (doubleDraw)
@@ -545,24 +480,11 @@ int TGumpSecureTrading::Draw(bool &mode)
 			{
 				if (item->Count > 0)
 				{
-					WORD graphic = item->Graphic;
 					bool doubleDraw = false;
+					WORD graphic = item->GetDrawGraphic(doubleDraw);
 					int drawX = posX + item->X;
 					int drawY = posY + item->Y;
 
-					if (item->Count > 1)
-					{
-						if (item->Graphic == 0x0EED)
-						{
-							if (item->Count > 5)
-								graphic = 0x0EEF;
-							else
-								graphic = 0x0EEE;
-						}
-						else if (item->IsStackable())
-							doubleDraw = true;
-					}
-					
 					if (UO->StaticPixelsInXYInContainer(graphic, drawX, drawY))
 						LSG = item->Serial;
 					else if (doubleDraw)
@@ -640,16 +562,9 @@ void TGumpSecureTrading::OnLeftMouseUp()
 			x = g_MouseX - x - 45;
 			y = g_MouseY - y - 70;
 
-			WORD graphic = ObjectInHand->Graphic;
+			bool doubleDraw = false;
+			WORD graphic = ObjectInHand->GetDrawGraphic(doubleDraw);
 
-			if (graphic == 0x0EED)
-			{
-				if (ObjectInHand->Count > 5)
-					graphic = 0x0EEF;
-				else if (ObjectInHand->Count > 1)
-					graphic = 0x0EEE;
-			}
-			
 			TTextureObject *th = UO->ExecuteStaticArt(graphic);
 
 			if (th != NULL)

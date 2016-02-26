@@ -3248,6 +3248,10 @@ PACKET_HANDLER(DragAnimation)
 
 	if (graphic == 0x0EED)
 		graphic = 0x0EEF;
+	else if (graphic == 0x0EEA)
+		graphic = 0x0EEC;
+	else if (graphic == 0x0EF0)
+		graphic = 0x0EF2;
 
 	Move(3);
 	WORD count = ReadWord();

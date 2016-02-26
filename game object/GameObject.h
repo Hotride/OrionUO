@@ -78,6 +78,9 @@ public:
 	//Виртуальные указатели
 	virtual bool IsHuman() {return false;}
 	virtual bool IsPlayer() {return false;}
+	
+	int IsGold();
+	WORD GetDrawGraphic(bool &doubleDraw);
 
 	bool IsGameObject() {return true;}
 	bool IsCorpse() {return (Graphic == 0x2006);}

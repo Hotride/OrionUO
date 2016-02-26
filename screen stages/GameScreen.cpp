@@ -1160,7 +1160,9 @@ int TGameScreen::Render(bool mode)
 		{
 			if (ObjectInHand != NULL)
 			{
-				WORD ohGraphic = ObjectInHand->Graphic;
+				bool doubleDraw = false;
+				WORD ohGraphic = ObjectInHand->GetDrawGraphic(doubleDraw);
+
 				WORD ohColor = ObjectInHand->Color;
 				WORD ohCount = ObjectInHand->DragCount;
 
@@ -1176,21 +1178,6 @@ int TGameScreen::Render(bool mode)
 				}
 				else
 				{
-					bool doubleDraw = false;
-
-					if (ohCount > 1)
-					{
-						if (ohGraphic == 0x0EED)
-						{
-							if (ohCount > 5)
-								ohGraphic = 0x0EEF;
-							else
-								ohGraphic = 0x0EEE;
-						}
-						else if (ObjectInHand->IsStackable())
-							doubleDraw = true;
-					}
-
 					UO->DrawStaticArtInContainer(ohGraphic, ohColor, g_MouseX, g_MouseY, false, true);
 
 					if (doubleDraw)

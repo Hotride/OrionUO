@@ -1475,11 +1475,35 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	
 	if (NewTargetSystem.Serial == obj->Serial)
 	{
-		NewTargetSystem.Color = targetColor;
-		NewTargetSystem.TopX = drawX - 20;
-		NewTargetSystem.TopY = drawY;
-		NewTargetSystem.BottomX = drawX - 20;
-		NewTargetSystem.BottomY = drawY;
+		WORD id = obj->GetMountAnimation();
+
+		if (id < 0x0800)
+		{
+			TTextureAnimation *anim = m_DataIndex[id].Group;
+
+			if (anim != NULL)
+			{
+				TTextureAnimationGroup *group = anim->GetGroup(m_AnimGroup);
+				TTextureAnimationDirection *direction = group->GetDirection(m_Direction);
+
+				if (direction->Address != 0)
+				{
+					TTextureAnimationFrame *frame = direction->GetFrame(animIndex);
+
+					int frameHeight = 20;
+
+					if (frame != NULL)
+						frameHeight = frame->Height;
+
+					NewTargetSystem.Color = targetColor;
+					NewTargetSystem.TopX = drawX - 20;
+					NewTargetSystem.TopY = drawY - frameHeight;
+					NewTargetSystem.BottomX = drawX - 20;
+					NewTargetSystem.BottomY = drawY;
+				}
+
+			}
+		}
 	}
 
 	if (needHPLine)

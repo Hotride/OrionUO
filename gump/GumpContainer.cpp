@@ -120,9 +120,9 @@ void TGumpContainer::GenerateFrame(int posX, int posY)
 
 			if ((obj->Layer == OL_NONE || (isCorpse && LAYER_UNSAFE[obj->Layer])) && count > 0)
 			{
-				WORD graphic = obj->Graphic;
-				WORD color = obj->Color;
 				bool doubleDraw = false;
+				WORD graphic = obj->GetDrawGraphic(doubleDraw);
+				WORD color = obj->Color;
 				bool selMode = false;
 				int drawX = posX + obj->X;
 				int drawY = posY + obj->Y;
@@ -137,19 +137,6 @@ void TGumpContainer::GenerateFrame(int posX, int posY)
 					UO->DrawGump(graphic - GAME_FIGURE_GUMP_OFFSET, color, drawX, drawY - 20);
 				else
 				{
-					if (count > 1)
-					{
-						if (graphic == 0x0EED)
-						{
-							if (count > 5)
-								graphic = 0x0EEF;
-							else
-								graphic = 0x0EEE;
-						}
-						else if (obj->IsStackable())
-							doubleDraw = true;
-					}
-
 					UO->DrawStaticArtInContainer(graphic, color, drawX, drawY, selMode);
 
 					if (doubleDraw)
@@ -380,7 +367,8 @@ int TGumpContainer::Draw(bool &mode)
 
 				if ((obj->Layer == OL_NONE || (isCorpse && LAYER_UNSAFE[obj->Layer])) && count > 0)
 				{
-					WORD graphic = obj->Graphic;
+					bool doubleDraw = false;
+					WORD graphic = obj->GetDrawGraphic(doubleDraw);
 					int drawX = posX + obj->X;
 					int drawY = posY + obj->Y;
 
@@ -391,21 +379,6 @@ int TGumpContainer::Draw(bool &mode)
 					}
 					else
 					{
-						bool doubleDraw = false;
-
-						if (count > 1)
-						{
-							if (graphic == 0x0EED)
-							{
-								if (count > 5)
-									graphic = 0x0EEF;
-								else
-									graphic = 0x0EEE;
-							}
-							else if (obj->IsStackable())
-								doubleDraw = true;
-						}
-					
 						if (UO->StaticPixelsInXYInContainer(graphic, drawX, drawY))
 							LSG = obj->Serial;
 
@@ -518,14 +491,8 @@ void TGumpContainer::OnLeftMouseUp()
 	{
 		CONTAINER_OFFSET_RECT &r = g_ContainerOffset[Graphic].rect;
 
-		WORD graphic = ObjectInHand->Graphic;
-		if (graphic == 0x0EED)
-		{
-			if (ObjectInHand->Count > 5)
-				graphic = 0x0EEF;
-			else if (ObjectInHand->Count > 1)
-				graphic = 0x0EEE;
-		}
+		bool doubleDraw = false;
+		WORD graphic = ObjectInHand->GetDrawGraphic(doubleDraw);
 
 		TTextureObject *th = UO->ExecuteStaticArt(graphic);
 		if (m_IsGameBoard)
