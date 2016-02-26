@@ -113,6 +113,7 @@ void TConfigManager::DefaultPage6()
 	m_ItemPropertiesMode = 0;
 	m_ItemPropertiesIcon = false;
 	m_ObjectHandles = false;
+	m_ReduceFPSUnactiveWindow = true;
 }
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage7()
@@ -163,6 +164,16 @@ void TConfigManager::SetConsoleNeedEnter(bool val)
 	m_ConsoleNeedEnter = val;
 	if (m_ConsoleNeedEnter && EntryPointer == GameConsole)
 		EntryPointer = NULL;
+}
+//---------------------------------------------------------------------------
+void TConfigManager::SetReduceFPSUnactiveWindow(bool val)
+{
+	m_ReduceFPSUnactiveWindow = val;
+
+	if (m_ReduceFPSUnactiveWindow)
+		g_FrameDelay[0] = FRAME_DELAY_UNACTIVE_WINDOW;
+	else
+		g_FrameDelay[0] = FRAME_DELAY_ACTIVE_WINDOW;
 }
 //---------------------------------------------------------------------------
 WORD TConfigManager::GetColorByNotoriety(BYTE notoriety)
@@ -316,6 +327,7 @@ void TConfigManager::Load(string path)
 				m_ItemPropertiesMode = file.ReadByte();
 				m_ItemPropertiesIcon = file.ReadByte();
 				m_ObjectHandles = file.ReadByte();
+				SetReduceFPSUnactiveWindow(file.ReadByte());
 			}
 			else
 			{
@@ -323,6 +335,7 @@ void TConfigManager::Load(string path)
 				m_ItemPropertiesMode = 0;
 				m_ItemPropertiesIcon = false;
 				m_ObjectHandles = false;
+				SetReduceFPSUnactiveWindow(true);
 			}
 		}
 		
@@ -480,7 +493,7 @@ void TConfigManager::Save(string path)
 	writer->WriteBuffer();
 	
 	//Page 6
-	writer->WriteByte(13); //size of block
+	writer->WriteByte(14); //size of block
 	writer->WriteByte(6); //page index
 	writer->WriteByte(m_EnablePathfind);
 	writer->WriteByte(m_HoldTabForCombat);
@@ -493,6 +506,7 @@ void TConfigManager::Save(string path)
 	writer->WriteByte(m_ItemPropertiesMode);
 	writer->WriteByte(m_ItemPropertiesIcon);
 	writer->WriteByte(m_ObjectHandles);
+	writer->WriteByte(m_ReduceFPSUnactiveWindow);
 	writer->WriteBuffer();
 	
 	//Page 7

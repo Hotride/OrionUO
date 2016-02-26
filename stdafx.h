@@ -117,6 +117,9 @@ extern HWND g_hWnd;
 extern int g_ClientWidth;
 extern int g_ClientHeight;
 
+//Значения задержек в массиве
+extern int g_FrameDelay[2];
+
 //Путь к папке запуска
 extern string g_DirectoryPath;
 

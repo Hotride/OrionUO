@@ -42,6 +42,7 @@ HINSTANCE g_Hinstance = NULL;
 HWND g_hWnd = NULL;
 int g_ClientWidth = 0;
 int g_ClientHeight = 0;
+int g_FrameDelay[2] = { FRAME_DELAY_UNACTIVE_WINDOW, FRAME_DELAY_ACTIVE_WINDOW };
 string g_DirectoryPath = "";
 string g_LastLoadFileError = "";
 string g_ShardIP = "";

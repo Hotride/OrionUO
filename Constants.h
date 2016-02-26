@@ -65,9 +65,6 @@ const int FRAME_DELAY_ACTIVE_WINDOW = 30;
 //Задержка между кадрами для неактивного окна приложения
 const int FRAME_DELAY_UNACTIVE_WINDOW = (FRAME_DELAY_ACTIVE_WINDOW + 1) * 7;
 
-//Значения задержек в массиве
-static int g_FrameDelay[2] = { FRAME_DELAY_UNACTIVE_WINDOW, FRAME_DELAY_ACTIVE_WINDOW };
-
 //Цвет выбранного ландшафта
 const WORD SELECT_LAND_COLOR = 0x0044;
 

@@ -72,6 +72,7 @@ private:
 	BYTE m_ItemPropertiesMode;
 	bool m_ItemPropertiesIcon;
 	bool m_ObjectHandles;
+	bool m_ReduceFPSUnactiveWindow;
 	
 	WORD m_SpeechDelay;
 	bool m_ScaleSpeechDelay;
@@ -175,6 +176,8 @@ public:
 	SETGET(BYTE, ItemPropertiesMode);
 	SETGET(bool, ItemPropertiesIcon);
 	SETGET(bool, ObjectHandles);
+	void SetReduceFPSUnactiveWindow(bool val);
+	bool GetReduceFPSUnactiveWindow() const { return m_ReduceFPSUnactiveWindow; }
 	
 	SETGET(WORD, SpeechDelay);
 	SETGET(bool, ScaleSpeechDelay);

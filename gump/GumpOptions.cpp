@@ -26,7 +26,7 @@ TTextTexture TGumpOptions::m_TexturePage2[8];	//Pop-up Help
 TTextTexture TGumpOptions::m_TexturePage3[6];	//Language
 TTextTexture TGumpOptions::m_TexturePage4[19];	//Chat
 TTextTexture TGumpOptions::m_TexturePage5[7];	//Macro Options
-TTextTexture TGumpOptions::m_TexturePage6[12];	//Interface
+TTextTexture TGumpOptions::m_TexturePage6[13];	//Interface
 TTextTexture TGumpOptions::m_TexturePage7[18];	//Display
 TTextTexture TGumpOptions::m_TexturePage8[9];	//Reputation System
 TTextTexture TGumpOptions::m_TexturePage9[9];	//Miscellaneous
@@ -289,9 +289,12 @@ void TGumpOptions::InitTextTextures()
 
 	str = L"Object Handles";
 	FontManager->GenerateW(0, m_TexturePage6[10], str.c_str(), g_OptionsTextColor);
+	
+	str = L"Reduce FPS when Window is Unactive";
+	FontManager->GenerateW(0, m_TexturePage6[11], str.c_str(), g_OptionsTextColor);
 
 	str = L"Display Item Properties Icon";
-	FontManager->GenerateW(0, m_TexturePage6[11], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(0, m_TexturePage6[12], str.c_str(), g_OptionsTextColor);
 
 
 
@@ -433,7 +436,7 @@ void TGumpOptions::ReleaseTextTextures()
 	IFOR(i, 0, 7)
 		m_TexturePage5[i].Clear();
 
-	IFOR(i, 0, 12)
+	IFOR(i, 0, 13)
 		m_TexturePage6[i].Clear();
 
 	IFOR(i, 0, 18)
@@ -1972,11 +1975,16 @@ int TGumpOptions::DrawPage6(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ObjectHandles, 0, posX + 64, posY);
 		//UO->DrawUnicodeFont(0, L"Object Handles", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[10].Draw(posX + 86, posY);
+		
+		posY += 20;
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetReduceFPSUnactiveWindow(), 0, posX + 64, posY);
+		//UO->DrawUnicodeFont(0, L"Reduce FPS when Window is Unactive", g_OptionsTextColor, posX + 86, posY);
+		m_TexturePage6[11].Draw(posX + 86, posY);
 
 		posY += 20;
 		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ItemPropertiesIcon, 0, posX + 64, posY);
 		//UO->DrawUnicodeFont(0, L"Display Item Properties Icon", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage6[11].Draw(posX + 86, posY);
+		m_TexturePage6[12].Draw(posX + 86, posY);
 	}
 	else
 	{
@@ -2006,6 +2014,8 @@ int TGumpOptions::DrawPage6(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 266))
 			LSG = ID_GO_P6_OBJECT_HANDLES; //Object Handles
 		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 286))
+			LSG = ID_GO_P6_REDUCE_FPS_UNACTIVE_WINDOW; //Reduce FPS when Window is Unactive
+		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 306))
 			LSG = ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON; //Display Item Properties Icon
 
 		if (LSG != 0)
@@ -2990,6 +3000,8 @@ void TGumpOptions::OnLeftMouseUp()
 					g_OptionsConfig.DisableNewTargetSystem = !g_OptionsConfig.DisableNewTargetSystem;
 				else if (g_LastObjectLeftMouseDown == ID_GO_P6_OBJECT_HANDLES) //Object Handles
 					g_OptionsConfig.ObjectHandles = !g_OptionsConfig.ObjectHandles;
+				else if (g_LastObjectLeftMouseDown == ID_GO_P6_REDUCE_FPS_UNACTIVE_WINDOW) //Reduce FPS when Window is Unactive
+					g_OptionsConfig.SetReduceFPSUnactiveWindow(!g_OptionsConfig.GetReduceFPSUnactiveWindow());
 				else if (g_LastObjectLeftMouseDown == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON) //Display Item Properties Icon
 					g_OptionsConfig.ItemPropertiesIcon = !g_OptionsConfig.ItemPropertiesIcon;
 
@@ -3262,6 +3274,7 @@ void TGumpOptions::ApplyPageChanges()
 			ConfigManager.GrayOutOfRangeObjects = g_OptionsConfig.GrayOutOfRangeObjects;
 			ConfigManager.DisableNewTargetSystem = g_OptionsConfig.DisableNewTargetSystem;
 			ConfigManager.ObjectHandles = g_OptionsConfig.ObjectHandles;
+			ConfigManager.SetReduceFPSUnactiveWindow(g_OptionsConfig.GetReduceFPSUnactiveWindow());
 			ConfigManager.ItemPropertiesIcon = g_OptionsConfig.ItemPropertiesIcon;
 
 			if (!g_OptionsConfig.DisableNewTargetSystem)
