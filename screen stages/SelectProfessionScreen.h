@@ -51,6 +51,7 @@ private:
 	int GetScrollBoxHeight();
 
 	//Объекты текста
+	TTextTexture m_Text;
 	TTextTexture m_TextStat[3];
 	TTextTexture m_TextSkillInList[56][2];
 

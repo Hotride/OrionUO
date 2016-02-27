@@ -2318,7 +2318,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 					if (isItalic)
 						italicOffset = (int)((dh - y) / ITALIC_FONT_KOEFFICIENT);
 
-					int testX = w + offsX + italicOffset;
+					int testX = w + offsX + italicOffset + (int)isSolid;
 
 					IFOR(c, 0, scanlineCount)
 					{
@@ -2381,7 +2381,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 
 							if (!pData[block] && pData[block] != solidColor)
 							{
-								int endX = (cx < dw - 1) ? 2 : 1;
+								int endX = (cx < dw) ? 2 : 1;
 
 								if (endX == 2 && (testX + 1) >= width)
 									endX--;

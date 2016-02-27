@@ -24,6 +24,8 @@ TSelectProfessionScreen *SelectProfessionScreen = NULL;
 TSelectProfessionScreen::TSelectProfessionScreen()
 : TBaseScreen(), m_PixelOffset(0), m_SkillSelection(0), m_LastScrollChangeTime(0)
 {
+	FontManager->GenerateA(2, m_Text, "Choose a Trade for Your Character", 0x0386, 432, TS_CENTER);
+
 	FontManager->GenerateA(1, m_TextStat[0], "Strength", 1);
 	FontManager->GenerateA(1, m_TextStat[1], "Dexterity", 1);
 	FontManager->GenerateA(1, m_TextStat[2], "Intelligence", 1);
@@ -113,7 +115,7 @@ void TSelectProfessionScreen::InitPopupHelp()
 //---------------------------------------------------------------------------
 int TSelectProfessionScreen::Render(bool mode)
 {
-	if (ConnectionManager.ClientVersion >= CV_308Z)
+	//if (ConnectionManager.ClientVersion >= CV_308Z)
 		return RenderNew(mode);
 	
 	return RenderOld(mode);
@@ -552,47 +554,45 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 			GumpID = 0x15A3; //< gump pressed
 		UO->DrawGump(GumpID, 0, 586, 445); //< gump
 
-		UO->DrawResizepicGump(0xA28, 80, 80, 546, 352); //Character profeccion selection field
+		UO->DrawResizepicGump(0x0A28, 100, 80, 470, 372); //Character profeccion selection field
 		
-		UO->DrawGump(0x058B, 0, 145, 57); //Create character header
-		UO->DrawGump(0x0589, 0, 222, 44); //Label container
+		UO->DrawGump(0x058B, 0, 213, 57); //Create character header
+		UO->DrawGump(0x0589, 0, 290, 44); //Label container
 		
-		GumpID = 0x119C + (int)(CanSelectedButton == ID_SPS_ARROW_BACK_PROFESSION); //Arrow < /lighted
-		if (CanPressedButton == ID_SPS_ARROW_BACK_PROFESSION)
-			GumpID = 0x119E; //Arrow < pressed
-		UO->DrawGump(GumpID, 0, 200, 356); //Arrow <
+		m_Text.Draw(120, 126);
 		
+		UO->DrawGump(obj->Gump, 0, 299, 53); //Label gump
 
 
 		if (obj->Type == PT_CATEGORY) //category
 		{
-			GumpID = obj->Gump;
-			UO->DrawGump(GumpID, 0, 231, 53); //Label gump
-
+			int offsX = 0;
 			int offsY = 0;
-
 			int index = 0;
+
 			for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
 			{
-				UO->DrawGump(0x0589, 0, 500, 100 + offsY); //Label container
+				UO->DrawResizepicGump(0x0BB8, 145 + offsX, 168 + offsY, 175, 34); //Text field
+
+				child->m_TextureName.Draw(151 + offsX, 174 + offsY);
 
 				GumpID = child->Gump;
 				if (CanPressedButton == ID_SPS_LABEL + index)
 					GumpID++;
 
-				UO->DrawGump(GumpID, 0, 509, 109 + offsY); //Label gump
-				FontManager->DrawA(9, child->GetName().c_str(), 0x1, 350, 135 + offsY);
+				UO->DrawGump(GumpID, 0, 265 + offsX, 155 + offsY); //Label gump
 
-				offsY += 79;
+				if (offsX)
+				{
+					offsX = 0;
+					offsY += 70;
+				}
+				else
+					offsX = 195;
 			}
 		}
 		else if (obj->Type == PT_PROFESSION) //profession
 		{
-			UO->DrawGump(obj->Gump, 0, 231, 53); //Label gump
-			
-			const float SphereListWidth = 95.0f;
-			float ValPer = 0.0f;
-			
 			//Stats
 			if (g_LastObjectLeftMouseDown >= ID_SPS_STATS_SPHERE && g_LastObjectLeftMouseDown <= ID_SPS_STATS_SPHERE + 2)
 				ShuffleStats();
@@ -605,18 +605,18 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 			char val[15] = {0};
 			int statVal[3] = {profession->Str, profession->Dex, profession->Int};
 
-			int yPtr = 136;
+			int yPtr = 171;
 
 			IFOR(i, 0, 3)
 			{
-				m_TextStat[i].Draw(360, yPtr);
+				m_TextStat[i].Draw(160, yPtr);
 
 				sprintf(val, "%d", statVal[i]);
-				FontManager->DrawA(1, val, 1, 460, yPtr);
+				FontManager->DrawA(1, val, 1, 285, yPtr);
 
-				UO->DrawSphereGump((statVal[i] - 10), 35.0f, 436, yPtr);
+				UO->DrawSphereGump((statVal[i] - 10), 35.0f, 96, yPtr + 20);
 
-				yPtr += 30;
+				yPtr += 80;
 			}
 
 			if (profession->DescriptionIndex >= 0)
@@ -644,7 +644,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 
 				IFOR(i, 0, 3)
 				{
-					UO->DrawResizepicGump(0xBB8, 350, yPtr, 105, 25); //Skill Name text field
+					UO->DrawResizepicGump(0x0BB8, 350, yPtr, 105, 25); //Skill Name text field
 
 					int skillID = profession->GetSkillIndex(i);
 
@@ -695,8 +695,6 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 			g_LastSelectedObject = ID_SPS_QUIT; //X gump
 		else if (UO->GumpPixelsInXY(0x15A1, 586, 445))
 			g_LastSelectedObject = ID_SPS_ARROW_PREV; //< gump
-		else if (UO->GumpPixelsInXY(0x119C, 200, 356))
-			g_LastSelectedObject = ID_SPS_ARROW_BACK_PROFESSION; //Arrow <
 		else if (UO->GumpPixelsInXY(0x00FA, 324, 137))
 			g_LastSelectedObject = ID_SPS_SCROLLBAR_UP; //^
 		else if (UO->GumpPixelsInXY(0x00FC, 324, 330))
@@ -707,18 +705,25 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 			g_LastSelectedObject = ID_SPS_SCROLLBAR_BACKGROUND; //background
 		else if (obj->Type == PT_CATEGORY)
 		{
-			if (UO->GumpPixelsInXY(obj->Gump, 231, 53))
+			if (UO->GumpPixelsInXY(obj->Gump, 290, 44))
 				g_LastSelectedObject = ID_SPS_LABEL_BACK_PROFESSION; //Label gump
 
+			int offsX = 0;
 			int offsY = 0;
 			int index = 0;
 
 			for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
 			{
-				if (UO->GumpPixelsInXY(child->Gump, 509, 109 + offsY))
+				if (UO->GumpPixelsInXY(child->Gump, 265 + offsX, 155 + offsY))
 					g_LastSelectedObject = ID_SPS_LABEL + index; //Label gump
-
-				offsY += 79;
+				
+				if (offsX)
+				{
+					offsX = 0;
+					offsY += 70;
+				}
+				else
+					offsX = 195;
 			}
 		}
 		else if (obj->Type == PT_PROFESSION)

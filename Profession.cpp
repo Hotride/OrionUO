@@ -37,8 +37,8 @@ TBaseProfession::~TBaseProfession()
 void TBaseProfession::SetName(string val)
 {
 	m_Name = val;
-
-	FontManager->GenerateW(1, m_TextureName, ToWString(val).c_str(), 0, 30, 185);
+	
+	FontManager->GenerateW(2, m_TextureName, ToWString(val).c_str(), 0, 30, 185, TS_LEFT, UOFONT_SOLID);
 }
 //---------------------------------------------------------------------------
 bool TBaseProfession::AddDescription(int desc, string name, const char *val)
