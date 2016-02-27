@@ -1211,7 +1211,18 @@ PACKET_HANDLER(UpdateItem)
 	if (Y & 0x8000)
 	{
 		Y &= 0x7FFF;
-		obj->Color = ReadWord();
+		
+		WORD color = ReadWord();
+
+		if (color & 0x8000)
+		{
+			if (!obj->IsHuman() && (obj->NPC || obj->IsCorpse()))
+				color = 0;
+			else
+				color &= 0x7FFF;
+		}
+
+		obj->Color = color;
 	}
 	else
 		obj->Color = 0;
@@ -1280,7 +1291,17 @@ PACKET_HANDLER(UpdateItemSA)
 	obj->X = x;
 	obj->Y = y;
 	obj->Z = z;
+
+	if (color & 0x8000)
+	{
+		if (!obj->IsHuman() && (obj->NPC || obj->IsCorpse()))
+			color = 0;
+		else
+			color &= 0x7FFF;
+	}
+
 	obj->Color = color;
+
 	obj->OnGraphicChange(dir);
 
 	obj->Flags = flags;
@@ -1374,7 +1395,17 @@ PACKET_HANDLER(UpdateObject)
 	else
 		obj->OnGraphicChange(dir);
 
-	obj->Color = ReadWord() & 0x7FFF;
+	WORD color = ReadWord();
+
+	if (color & 0x8000)
+	{
+		if (!obj->IsHuman() && (obj->NPC || obj->IsCorpse()))
+			color = 0;
+		else
+			color &= 0x7FFF;
+	}
+
+	obj->Color = color;
 
 	obj->Flags = ReadByte();
 	BYTE noto = ReadByte();

@@ -116,8 +116,8 @@ public:
 	bool IsTeleportAction(WORD &x, WORD &y, BYTE &dir);
 
 	//Человек ли это
-	bool IsHuman() {return (((Graphic >= 0x0190) && (Graphic <= 0x0193)) || (Graphic == 0x03DB));}
-	bool Dead() {return ((Graphic == 0x0192) || (Graphic == 0x0193));} //Объект мертв
+	bool IsHuman() {return (((m_Graphic >= 0x0190) && (m_Graphic <= 0x0193)) || (m_Graphic == 0x03DB));}
+	bool Dead() {return ((m_Graphic == 0x0192) || (m_Graphic == 0x0193));} //Объект мертв
 	
 	TGameItem *FindLayer(int layer); //Найти объект в контейнере на указанном слое
 };

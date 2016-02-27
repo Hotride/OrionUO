@@ -3281,9 +3281,9 @@ void TGumpOptions::ApplyPageChanges()
 				GumpManager->AddGump(new TGumpTargetSystem(NewTargetSystem.GumpX, NewTargetSystem.GumpY));
 
 			if (g_OptionsConfig.DisableMenubar)
-				GumpManager->CloseGump(0, 0, GT_MENUBAR);
+				GumpManager->CloseGump(g_PlayerSerial, 0, GT_MENUBAR);
 			else
-				GumpManager->AddGump(new TGumpMenubar(0, 0, 0));
+				GumpManager->AddGump(new TGumpMenubar(g_PlayerSerial, 0, 0));
 
 			break;
 		}

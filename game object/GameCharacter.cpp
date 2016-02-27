@@ -435,8 +435,8 @@ void TGameCharacter::GetAnimationGroup(ANIMATION_GROUPS group, BYTE &animation)
 	{
 		{ LAG_WALK,			HAG_WALK,			PAG_WALK_UNARMED },
 		{ LAG_WALK,			HAG_WALK,			PAG_WALK_ARMED },
-		{ LAG_RUN,			HAG_WALK,			PAG_RUN_UNARMED },
-		{ LAG_RUN,			HAG_WALK,			PAG_RUN_ARMED },
+		{ LAG_RUN,			HAG_FLY,			PAG_RUN_UNARMED },
+		{ LAG_RUN,			HAG_FLY,			PAG_RUN_ARMED },
 		{ LAG_STAND,		HAG_STAND,			PAG_STAND },
 		{ LAG_FIDGET_1,		HAG_FIDGET_1,		PAG_FIDGET_1 },
 		{ LAG_FIDGET_2,		HAG_FIDGET_2,		PAG_FIDGET_2 },
@@ -517,7 +517,10 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 			GetAnimationGroup(groupIndex, result);
 	}
 	else
-		groupIndex = AnimationManager->GetGroupIndex(GetMountAnimation());
+	{
+		graphic = GetMountAnimation();
+		groupIndex = AnimationManager->GetGroupIndex(graphic);
+	}
 
 	bool isWalking = Walking();
 	bool isRun = (m_Direction & 0x80);
@@ -543,7 +546,26 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 	else if (groupIndex == AG_HIGHT)
 	{
 		if (isWalking)
+		{
 			result = (BYTE)HAG_WALK;
+
+			if (isRun)
+			{
+				TTextureAnimation *anim = AnimationManager->GetAnimation(graphic);
+
+				if (anim != NULL)
+				{
+					TTextureAnimationGroup *group = anim->GetGroup(HAG_FLY);
+					if (group != NULL)
+					{
+						TTextureAnimationDirection *direction = group->GetDirection(0);
+
+						if (direction != NULL && direction->Address != 0)
+							result = (BYTE)HAG_FLY;
+					}
+				}
+			}
+		}
 		else if (m_AnimationGroup == 0xFF)
 			result = (BYTE)HAG_STAND;
 	}

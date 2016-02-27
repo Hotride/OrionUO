@@ -450,7 +450,7 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 //---------------------------------------------------------------------------
 bool TPathFinder::Walk(bool run, BYTE direction)
 {
-	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 1 || g_Player == NULL)
+	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 1 || g_Player == NULL || g_DeathScreenTimer)
 		return false;
 
 	if (!run)

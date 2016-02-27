@@ -926,7 +926,6 @@ int TGameScreen::Render(bool mode)
 		else
 			currentFPS++;
 
-		TPRINT("g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)] :::: %i %i\n", (int)(GetForegroundWindow() == g_hWnd), g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]);
 		g_LastRenderTime = ticks + g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)];
 
 		bool RMD = false;

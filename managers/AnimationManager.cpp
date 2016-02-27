@@ -1216,13 +1216,6 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 	TTextureAnimationFrame *frame = direction->GetFrame(frameIndex);
 	
-	WORD color = m_Color;
-
-	if (color)
-		partialHue = false;
-	else
-		color = obj->Color;
-
 	if (frame->Texture == 0)
 	{
 		int offset = (m_AnimGroup * 5) + m_Direction;
@@ -1231,7 +1224,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		if (!ExecuteDirectionGroup(direction, wID, offset))
 			return;
 	}
-
+	
 	GLuint texture = frame->Texture;
 
 	if (texture != 0)
@@ -1252,6 +1245,13 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			AddShadow(texture, x, y, g_ZBuffer, frame->Width, frame->Height, mirror);
 		else
 		{
+			WORD color = m_Color;
+
+			if (color)
+				partialHue = false;
+			else
+				color = obj->Color;
+
 			int drawMode = (!g_GrayedPixels && color);
 			bool spectralColor = (color > SPECTRAL_COLOR);
 			
