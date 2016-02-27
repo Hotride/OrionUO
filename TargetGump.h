@@ -44,26 +44,30 @@ class TNewTargetSystem
 {
 protected:
 	DWORD m_Serial;
-	int m_TopX;
+	int m_X;
 	int m_TopY;
-	int m_BottomX;
 	int m_BottomY;
 	int m_GumpX;
 	int m_GumpY;
-	WORD m_Color;
+	int m_Hits;
+	WORD m_GumpTop;
+	WORD m_GumpBottom;
+	WORD m_ColorGump;
 
 public:
 	TNewTargetSystem();
 	~TNewTargetSystem();
 
 	SETGET(DWORD, Serial);
-	SETGET(int, TopX);
+	SETGET(int, X);
 	SETGET(int, TopY);
-	SETGET(int, BottomX);
 	SETGET(int, BottomY);
 	SETGET(int, GumpX);
 	SETGET(int, GumpY);
-	SETGET(WORD, Color);
+	SETGET(int, Hits);
+	SETGET(WORD, GumpTop);
+	SETGET(WORD, GumpBottom);
+	SETGET(WORD, ColorGump);
 
 	void Draw();
 };

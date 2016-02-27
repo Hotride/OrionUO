@@ -64,6 +64,11 @@ void TGameObject::AddText(TTextData *msg)
 	UO->AddJournalMessage(msg, msgname);
 }
 //---------------------------------------------------------------------------
+WORD TGameObject::GetMountAnimation()
+{
+	return m_Graphic; // + UO->GetStaticPointer(m_Graphic)->Increment;
+}
+//---------------------------------------------------------------------------
 void TGameObject::Clear()
 {
 	if (!Empty())

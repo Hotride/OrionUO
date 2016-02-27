@@ -3277,9 +3277,6 @@ void TGumpOptions::ApplyPageChanges()
 			ConfigManager.SetReduceFPSUnactiveWindow(g_OptionsConfig.GetReduceFPSUnactiveWindow());
 			ConfigManager.ItemPropertiesIcon = g_OptionsConfig.ItemPropertiesIcon;
 
-			if (!g_OptionsConfig.DisableNewTargetSystem)
-				GumpManager->AddGump(new TGumpTargetSystem(NewTargetSystem.GumpX, NewTargetSystem.GumpY));
-
 			if (g_OptionsConfig.DisableMenubar)
 				GumpManager->CloseGump(g_PlayerSerial, 0, GT_MENUBAR);
 			else

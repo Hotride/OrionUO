@@ -28,7 +28,7 @@ private:
 
 	string m_OldName;
 public:
-	TGumpTargetSystem(short x, short y);
+	TGumpTargetSystem(DWORD serial, short x, short y);
 	virtual ~TGumpTargetSystem();
 
 	SETGET(string, OldName);

@@ -51,7 +51,7 @@ public:
 	SETGETEX(char, AnimIndex);
 	SETGET(DWORD, LastAnimationChangeTime);
 
-	virtual WORD GetMountAnimation() {return m_Graphic;}
+	virtual WORD GetMountAnimation();
 
 	virtual void OnGraphicChange(int direction = 0) {}
 

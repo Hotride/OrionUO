@@ -41,15 +41,15 @@ void TTargetGump::Draw()
 		UO->DrawGump(0x1068, m_Color, m_X, m_Y);
 
 		if (m_Hits > 0)
-			UO->DrawGump(0x1069, m_Color, m_X, m_Y, m_Hits, 0);
+			UO->DrawGump(0x1069, 0x005A, m_X, m_Y, m_Hits, 0);
 	}
 }
 //--------------------------------------------------------------------------
 //-------------------------------TNewTargetSystem---------------------------
 //--------------------------------------------------------------------------
 TNewTargetSystem::TNewTargetSystem()
-: m_Serial(0), m_TopX(0), m_TopY(0), m_BottomX(0), m_BottomY(0), m_Color(0),
-m_GumpX(20), m_GumpY(20)
+: m_Serial(0), m_X(0), m_TopY(0), m_BottomY(0), m_ColorGump(0), m_GumpTop(0),
+m_GumpBottom(0), m_GumpX(20), m_GumpY(20), m_Hits(0)
 {
 }
 //--------------------------------------------------------------------------
@@ -59,10 +59,18 @@ TNewTargetSystem::~TNewTargetSystem()
 //--------------------------------------------------------------------------
 void TNewTargetSystem::Draw()
 {
-	if (m_Serial != 0 && m_TopY != m_BottomY)
+	if (!ConfigManager.DisableNewTargetSystem && m_ColorGump != 0)
 	{
-		UO->DrawGump(0x1068, m_Color, m_TopX, m_TopY);
-		UO->DrawGump(0x1068, m_Color, m_BottomX, m_BottomY);
+		TIndexObject *top = UO->GetGumpPointer(m_GumpTop);
+
+		int x = m_X - (top->Width / 2);
+
+		UO->DrawGump(m_GumpTop, 0, x, m_TopY - top->Height);
+		UO->DrawGump(m_ColorGump, 0, x, m_TopY - top->Height);
+		UO->DrawGump(m_GumpBottom, 0, x, m_BottomY);
+
+		if (m_Hits > 0)
+			UO->DrawGump(0x1069, 0x005A, m_X - 16, m_BottomY + 15, m_Hits, 0);
 	}
 }
 //---------------------------------------------------------------------------

@@ -19,8 +19,8 @@
 //----------------------------------------------------------------------------
 #include "stdafx.h"
 //---------------------------------------------------------------------------
-TGumpTargetSystem::TGumpTargetSystem(short x, short y)
-: TGump(GT_TARGET_SYSTEM, 0, x, y), m_OldName("")
+TGumpTargetSystem::TGumpTargetSystem(DWORD serial, short x, short y)
+: TGump(GT_TARGET_SYSTEM, serial, x, y), m_OldName("")
 {
 }
 //---------------------------------------------------------------------------
@@ -113,6 +113,9 @@ void TGumpTargetSystem::GenerateFrame(int posX, int posY)
 //----------------------------------------------------------------------------
 int TGumpTargetSystem::Draw(bool &mode)
 {
+	if (m_Serial != NewTargetSystem.Serial)
+		m_Serial = NewTargetSystem.Serial;
+
 	if (ConfigManager.DisableNewTargetSystem || !NewTargetSystem.Serial)
 		return 0;
 

@@ -1390,7 +1390,7 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	if (!obj->IsPlayer() && (isAttack || serial == g_LastTargetObject))
 	{
 		targetColor = ConfigManager.GetColorByNotoriety(obj->Notoriety);
-		needHPLine = true;
+		needHPLine = (serial != NewTargetSystem.Serial);
 
 		if (isAttack)
 			m_Color = targetColor;
@@ -1423,6 +1423,20 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 		
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID + 0x10000);
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID);
+
+		switch (animGroup)
+		{
+			case PAG_FIDGET_1:
+			case PAG_FIDGET_2:
+			case PAG_FIDGET_3:
+			{
+				animGroup = PAG_ONMOUNT_STAND;
+				animIndex = 0;
+				break;
+			}
+			default:
+				break;
+		}
 	}
 	else
 	{
@@ -1473,7 +1487,7 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 		}
 	}
 	
-	if (NewTargetSystem.Serial == obj->Serial)
+	if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial == obj->Serial)
 	{
 		WORD id = obj->GetMountAnimation();
 
@@ -1488,18 +1502,90 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 
 				if (direction->Address != 0)
 				{
-					TTextureAnimationFrame *frame = direction->GetFrame(animIndex);
+					TTextureAnimationFrame *frame = direction->GetFrame(0);
 
+					int frameWidth = 20;
 					int frameHeight = 20;
 
 					if (frame != NULL)
+					{
+						frameWidth = frame->Width;
 						frameHeight = frame->Height;
+					}
 
-					NewTargetSystem.Color = targetColor;
-					NewTargetSystem.TopX = drawX - 20;
-					NewTargetSystem.TopY = drawY - frameHeight;
-					NewTargetSystem.BottomX = drawX - 20;
-					NewTargetSystem.BottomY = drawY;
+					if (frameWidth >= 80)
+					{
+						NewTargetSystem.GumpTop = 0x756D;
+						NewTargetSystem.GumpBottom = 0x756A;
+					}
+					else if (frameWidth >= 40)
+					{
+						NewTargetSystem.GumpTop = 0x756E;
+						NewTargetSystem.GumpBottom = 0x756B;
+					}
+					else
+					{
+						NewTargetSystem.GumpTop = 0x756F;
+						NewTargetSystem.GumpBottom = 0x756C;
+					}
+
+					switch (obj->Notoriety)
+					{
+						case NT_INNOCENT:
+						{
+							NewTargetSystem.ColorGump = 0x7570;
+							break;
+						}
+						case NT_FRIENDLY:
+						{
+							NewTargetSystem.ColorGump = 0x7571;
+							break;
+						}
+						case NT_SOMEONE_GRAY:
+						case NT_CRIMINAL:
+						{
+							NewTargetSystem.ColorGump = 0x7572;
+							break;
+						}
+						case NT_ENEMY:
+						{
+							NewTargetSystem.ColorGump = 0x7573;
+							break;
+						}
+						case NT_MURDERER:
+						{
+							NewTargetSystem.ColorGump = 0x7576;
+							break;
+						}
+						case NT_INVULNERABLE:
+						{
+							NewTargetSystem.ColorGump = 0x7575;
+							break;
+						}
+						default:
+							break;
+					}
+					
+					int per = obj->MaxHits;
+
+					if (per > 0)
+					{
+						per = (obj->Hits * 100) / per;
+
+						if (per > 100)
+							per = 100;
+			
+						if (per < 1)
+							per = 0;
+						else
+							per = (34 * per) / 100;
+
+					}
+					
+					NewTargetSystem.Hits = per;
+					NewTargetSystem.X = drawX;
+					NewTargetSystem.TopY = drawY - frameHeight - 8;
+					NewTargetSystem.BottomY = drawY + 7;
 				}
 
 			}
@@ -1568,6 +1654,20 @@ bool TAnimationManager::CharacterPixelsInXY(TGameCharacter *obj, int x, int y, i
 
 		if (TestPixels(goi, drawX - 3, drawY, mirror, animIndex, mountID))
 			return true;
+
+		switch (animGroup)
+		{
+			case PAG_FIDGET_1:
+			case PAG_FIDGET_2:
+			case PAG_FIDGET_3:
+			{
+				animGroup = PAG_ONMOUNT_STAND;
+				animIndex = 0;
+				break;
+			}
+			default:
+				break;
+		}
 	}
 
 	m_AnimGroup = animGroup;

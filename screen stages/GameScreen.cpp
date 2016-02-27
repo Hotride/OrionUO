@@ -971,8 +971,7 @@ int TGameScreen::Render(bool mode)
 		
 		TargetGump.Color = 0;
 		AttackTargetGump.Color = 0;
-		NewTargetSystem.TopY = 0;
-		NewTargetSystem.BottomY = 0;
+		NewTargetSystem.ColorGump = 0;
 
 		m_LightCount = 0;
 
@@ -1502,6 +1501,7 @@ bool TGameScreen::OnLeftMouseDoubleClick()
 	Render(false);
 
 	bool result = false;
+	DWORD charUnderMouse = 0;
 
 	if (g_LastSelectedGump && GumpManager->OnLeftMouseDoubleClick(false))
 		result = true;
@@ -1514,13 +1514,7 @@ bool TGameScreen::OnLeftMouseDoubleClick()
 			if (!obj->NPC)
 				UO->DoubleClick(g_LastSelectedObject);
 			else
-			{
-				if (g_Player->Warmode) 
-					UO->Attack(g_LastSelectedObject);
-				else
-					UO->DoubleClick(g_LastSelectedObject);
-					//UO->PaperdollReq(g_LastSelectedObject);
-			}
+				charUnderMouse = g_LastSelectedObject;
 		}
 		result = true;
 	}
@@ -1536,14 +1530,29 @@ bool TGameScreen::OnLeftMouseDoubleClick()
 
 			if (obj != NULL && obj->NPC)
 			{
-				if (g_Player->Warmode) 
-					UO->Attack(serial);
-				else
-					UO->DoubleClick(serial);
+				charUnderMouse = serial;
 
 				result = true;
 			}
 		}
+	}
+
+	if (charUnderMouse != 0)
+	{
+		if (!ConfigManager.DisableNewTargetSystem && charUnderMouse < 0x40000000)
+		{
+			GumpManager->CloseGump(NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM);
+			NewTargetSystem.Serial = charUnderMouse;
+
+			if (GumpManager->GetGump(charUnderMouse, 0, GT_TARGET_SYSTEM) == NULL)
+				GumpManager->AddGump(new TGumpTargetSystem(charUnderMouse, NewTargetSystem.GumpX, NewTargetSystem.GumpY));
+		}
+
+		if (g_Player->Warmode && charUnderMouse != g_PlayerSerial)
+			UO->Attack(charUnderMouse);
+		else
+			UO->DoubleClick(charUnderMouse);
+			//UO->PaperdollReq(charUnderMouse);
 	}
 
 	return result;

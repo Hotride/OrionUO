@@ -105,6 +105,26 @@ void TGameWorld::ProcessAnimation()
 
 				WORD id = gc->GetMountAnimation();
 				TTextureAnimation *anim = AnimationManager->GetAnimation(id);
+				int animGroup = gc->GetAnimationGroup();
+
+				TGameItem *mount = gc->FindLayer(OL_MOUNT);
+				if (mount != NULL)
+				{
+					switch (animGroup)
+					{
+						case PAG_FIDGET_1:
+						case PAG_FIDGET_2:
+						case PAG_FIDGET_3:
+						{
+							id = mount->GetMountAnimation();
+							anim = AnimationManager->GetAnimation(id);
+							animGroup = gc->GetAnimationGroup(id);
+							break;
+						}
+						default:
+							break;
+					}
+				}
 
 				bool mirror = false;
 
@@ -112,8 +132,6 @@ void TGameWorld::ProcessAnimation()
 
 				if (anim != NULL)
 				{
-					int animGroup = gc->GetAnimationGroup();
-
 					TTextureAnimationGroup *group = anim->GetGroup(animGroup);
 					TTextureAnimationDirection *direction = group->GetDirection(dir);
 

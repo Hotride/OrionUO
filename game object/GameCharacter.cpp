@@ -33,7 +33,7 @@ m_AfterStepDelay(0), m_StepSoundOffset(0), m_CorpseLink(0)
 	m_WalkStack.Init(); //Инициализация счетчика шагов
 
 	if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial == serial && GumpManager->GetGump(serial, 0, GT_TARGET_SYSTEM) == NULL)
-		GumpManager->AddGump(new TGumpTargetSystem(NewTargetSystem.GumpX, NewTargetSystem.GumpY));
+		GumpManager->AddGump(new TGumpTargetSystem(m_Serial, NewTargetSystem.GumpX, NewTargetSystem.GumpY));
 }
 //---------------------------------------------------------------------------
 TGameCharacter::~TGameCharacter()
@@ -44,6 +44,11 @@ TGameCharacter::~TGameCharacter()
 
 	//Если стянут статусбар - обновим его
 	TGump *gump = GumpManager->GetGump(m_Serial, 0, GT_STATUSBAR);
+	if (gump != NULL)
+		gump->UpdateFrame();
+	
+	//Если стянут статусбар - обновим его
+	gump = GumpManager->GetGump(m_Serial, 0, GT_TARGET_SYSTEM);
 	if (gump != NULL)
 		gump->UpdateFrame();
 }

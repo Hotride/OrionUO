@@ -26,18 +26,6 @@
 TLinkedList *nextList = list; \
 list = new TLinkedList(&item); \
 list->Next = nextList
-
-/*if (m_UsedGumpList == NULL)
-m_UsedGumpList = new TLinkedList(&m_GumpDataIndex[id]);
-else
-{
-TLinkedList *list = m_UsedGumpList;
-
-while (list != NULL && list->Next != NULL)
-list = list->Next;
-
-list->Next = new TLinkedList(&m_GumpDataIndex[id]);
-}*/
 //---------------------------------------------------------------------------
 //Ёффекты шрифта
 #define UOFONT_SOLID			0x01 //∆ирный

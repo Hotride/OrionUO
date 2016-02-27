@@ -3348,7 +3348,12 @@ void TUltimaOnline::GetGumpDimension(WORD id, POINT &p)
 	}
 }
 //---------------------------------------------------------------------------
-TIndexObject *TUltimaOnline::GetGumpPointer(WORD id)
+TIndexObjectStatic *TUltimaOnline::GetStaticPointer(WORD &id)
+{
+	return &m_StaticDataIndex[id];
+}
+//---------------------------------------------------------------------------
+TIndexObject *TUltimaOnline::GetGumpPointer(WORD &id)
 {
 	return &m_GumpDataIndex[id];
 }
@@ -3980,14 +3985,6 @@ void TUltimaOnline::DoubleClick(DWORD serial)
 {
 	g_LastUseObject = serial;
 
-	if (!ConfigManager.DisableNewTargetSystem && g_LastUseObject < 0x40000000 && g_LastUseObject != g_PlayerSerial)
-	{
-		NewTargetSystem.Serial = serial;
-
-		if (GumpManager->GetGump(serial, 0, GT_TARGET_SYSTEM) == NULL)
-			GumpManager->AddGump(new TGumpTargetSystem(NewTargetSystem.GumpX, NewTargetSystem.GumpY));
-	}
-
 	TPacketDoubleClickRequest packet(serial);
 	packet.Send();
 }
@@ -4369,7 +4366,7 @@ void TUltimaOnline::ChangeMap(BYTE newmap)
 	{
 		g_CurrentMap = newmap;
 
-		if (g_Player != NULL)
+		if (World != NULL && g_Player != NULL)
 		{
 			g_Player->MapIndex = g_CurrentMap;
 			g_Player->RemoveRender();

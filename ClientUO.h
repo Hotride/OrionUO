@@ -245,9 +245,12 @@ public:
 	void GetGumpDimension(WORD id, POINT &p);
 
 
+	
+	//Получить указатель на индексник гампа
+	TIndexObjectStatic *GetStaticPointer(WORD &id);
 
 	//Получить указатель на индексник гампа
-	TIndexObject *GetGumpPointer(WORD id);
+	TIndexObject *GetGumpPointer(WORD &id);
 
 	//Получить указатель на индексник мульи
 	TIndexMulti *GetMultiPointer(WORD id);
