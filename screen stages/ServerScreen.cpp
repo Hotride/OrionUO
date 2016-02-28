@@ -73,7 +73,7 @@ void TServerScreen::Init()
 //---------------------------------------------------------------------------
 void TServerScreen::InitPopupHelp()
 {
-	if (!ConfigManager.UseToolTips)
+	if (!ConfigManager.PopupHelpEnabled)
 		return;
 
 	switch (g_LastSelectedObject)

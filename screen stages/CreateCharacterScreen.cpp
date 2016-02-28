@@ -83,7 +83,7 @@ void TCreateCharacterScreen::ProcessSmoothAction(BYTE action)
 //---------------------------------------------------------------------------
 void TCreateCharacterScreen::InitPopupHelp()
 {
-	if (!ConfigManager.UseToolTips)
+	if (!ConfigManager.PopupHelpEnabled)
 		return;
 
 }

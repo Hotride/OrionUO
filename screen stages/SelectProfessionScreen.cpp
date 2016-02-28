@@ -108,14 +108,14 @@ void TSelectProfessionScreen::ProcessSmoothAction(BYTE action)
 //---------------------------------------------------------------------------
 void TSelectProfessionScreen::InitPopupHelp()
 {
-	if (!ConfigManager.UseToolTips)
+	if (!ConfigManager.PopupHelpEnabled)
 		return;
 	
 }
 //---------------------------------------------------------------------------
 int TSelectProfessionScreen::Render(bool mode)
 {
-	//if (ConnectionManager.ClientVersion >= CV_308Z)
+	if (ConnectionManager.ClientVersion >= CV_308Z)
 		return RenderNew(mode);
 	
 	return RenderOld(mode);
@@ -277,11 +277,11 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 			
 			//Stats
 			if (g_LastObjectLeftMouseDown >= ID_SPS_STATS_SPHERE && g_LastObjectLeftMouseDown <= ID_SPS_STATS_SPHERE + 2)
-				ShuffleStats();
+				ShuffleStats(g_MouseX - 500, 65, 45);
 
 			//Skills
 			if (g_LastObjectLeftMouseDown >= ID_SPS_SKILLS_SPHERE && g_LastObjectLeftMouseDown <= ID_SPS_SKILLS_SPHERE + 2)
-				ShuffleSkills();
+				ShuffleSkills(g_MouseX - 500);
 
 			TProfession *profession = (TProfession*)obj;
 			char val[15] = {0};
@@ -330,12 +330,12 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 
 					int skillID = profession->GetSkillIndex(i);
 
-					WORD textColor = 1;
+					WORD textColor = 0x0386;
 					
 					if (m_SkillSelection && m_SkillSelection - 1 == i)
 						textColor = 0x0021;
 					else if (g_LastSelectedObject == ID_SPS_SKILLS_FILED + i)
-						textColor = 0x0386;
+						textColor = 0;
 					
 					if (skillID >= g_SkillsCount)
 						FontManager->DrawA(9, "Click here", textColor, 354, yPtr + 5);
@@ -520,7 +520,12 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 
 	if (g_LeftMouseDown && g_LastObjectLeftMouseDown == ID_SPS_SCROLLBAR && canMoveScroller) //Scroller pressed
 	{
-		int currentY = (g_MouseY - 25) - 146; //Scroller position
+		int currentY = (g_MouseY - 25); //Scroller position
+
+		if (ConnectionManager.ClientVersion >= CV_308Z)
+			currentY -= 177;
+		else
+			currentY -= 146;
 
 		scrollerY = CalculateScrollerAndTextPosition(m_PixelOffset, visibleLines, maxScrollerY, currentY);
 	}
@@ -595,11 +600,11 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 		{
 			//Stats
 			if (g_LastObjectLeftMouseDown >= ID_SPS_STATS_SPHERE && g_LastObjectLeftMouseDown <= ID_SPS_STATS_SPHERE + 2)
-				ShuffleStats();
+				ShuffleStats(g_MouseX - 160, 80, 60);
 
 			//Skills
 			if (g_LastObjectLeftMouseDown >= ID_SPS_SKILLS_SPHERE && g_LastObjectLeftMouseDown <= ID_SPS_SKILLS_SPHERE + 2)
-				ShuffleSkills();
+				ShuffleSkills(g_MouseX - 340);
 
 			TProfession *profession = (TProfession*)obj;
 			char val[15] = {0};
@@ -607,6 +612,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 
 			int yPtr = 171;
 
+			//Stats
 			IFOR(i, 0, 3)
 			{
 				m_TextStat[i].Draw(160, yPtr);
@@ -614,64 +620,69 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 				sprintf(val, "%d", statVal[i]);
 				FontManager->DrawA(1, val, 1, 285, yPtr);
 
-				UO->DrawSphereGump((statVal[i] - 10), 35.0f, 96, yPtr + 20);
+				UO->DrawSphereGump((statVal[i] - 10), 50.0f, 96, yPtr + 20);
 
 				yPtr += 80;
 			}
 
-			if (profession->DescriptionIndex >= 0)
+			yPtr = 171;
+
+			//Skills
+
+			if (m_SkillSelection)
 			{
-				yPtr = 260;
+				UO->DrawResizepicGump(0xBB8, 320, 168, 180, 215); //Description text field
 
-				IFOR(i, 0, 3)
+				//Description scroll bar:
+				UO->DrawGump(0x0100, 0, 500, 180, 0, 190); //background
+				UO->DrawGump(0x00FA, 0, 500, 168); //^
+				UO->DrawGump(0x00FE, 0, 501, 189 + scrollerY); //bar
+				UO->DrawGump(0x00FC, 0, 500, 362); //v
+
+				//Text in box
+				g_GL.ViewPort(324, 172, 172, 206);
+
+				yPtr = 172 - (m_PixelOffset * GUMP_SCROLLING_PIXEL_STEP);
+
+				IFOR(i, 0, g_SkillsCount)
 				{
-					int skillID = profession->GetSkillIndex(i);
+					int selected = (int)(g_LastSelectedObject == ID_SPS_SKILLS_LIST + i);
+					m_TextSkillInList[i][selected].Draw(326, yPtr);
 
-					if (skillID >= g_SkillsCount)
-						skillID = 0;
-
-					FontManager->DrawA(1, g_Skills[skillID].m_Name.c_str(), 1, 360, yPtr, 90, TS_LEFT, UOFONT_FIXED);
-
-					sprintf(val, "%d", profession->GetSkillValue(i));
-					FontManager->DrawA(1, val, 1, 460, yPtr);
-
-					yPtr += 32;
+					yPtr += m_TextSkillInList[i][0].Height;
 				}
-			}
-			else //advanced
-			{
-				yPtr = 256;
 
+				g_GL.RestorePort();
+			}
+			else
+			{
 				IFOR(i, 0, 3)
 				{
-					UO->DrawResizepicGump(0x0BB8, 350, yPtr, 105, 25); //Skill Name text field
+					UO->DrawResizepicGump(0x0BB8, 340, yPtr, 175, 25); //Skill Name text field
 
-					int skillID = profession->GetSkillIndex(i);
+					WORD textColor = 0x0386;
 
-					WORD textColor = 1;
-					
 					if (m_SkillSelection && m_SkillSelection - 1 == i)
 						textColor = 0x0021;
 					else if (g_LastSelectedObject == ID_SPS_SKILLS_FILED + i)
-						textColor = 0x0386;
-					
+						textColor = 0;
+
+					int skillID = profession->GetSkillIndex(i);
+
 					if (skillID >= g_SkillsCount)
-						FontManager->DrawA(9, "Click here", textColor, 354, yPtr + 5);
+						FontManager->DrawA(9, "Click here", textColor, 346, yPtr + 5);
 					else
-						FontManager->DrawA(9, g_Skills[skillID].m_Name.c_str(), textColor, 354, yPtr + 5, 90, TS_LEFT, UOFONT_FIXED);
+						FontManager->DrawA(9, g_Skills[skillID].m_Name.c_str(), textColor, 346, yPtr + 5, 90, TS_LEFT, UOFONT_FIXED);
+
+					UO->DrawSphereGump(profession->GetSkillValue(i), 50.0f, 276, yPtr + 30);
 
 					sprintf(val, "%d", profession->GetSkillValue(i));
 
-					FontManager->DrawA(1, val, 1, 460, yPtr + 4);
+					FontManager->DrawA(1, val, 1, 495, yPtr + 30);
 
-					yPtr += 32;
+					yPtr += 80;
 				}
 			}
-
-			//Skills
-			UO->DrawSphereGump(profession->GetSkillValue(0), 50.0f, 436, 258);
-			UO->DrawSphereGump(profession->GetSkillValue(1), 50.0f, 436, 290);
-			UO->DrawSphereGump(profession->GetSkillValue(2), 50.0f, 436, 322);
 
 			GumpID = 0x15A4 + (int)(CanSelectedButton == ID_SPS_ARROW_NEXT);
 			if (CanPressedButton == ID_SPS_ARROW_NEXT)
@@ -695,26 +706,19 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 			g_LastSelectedObject = ID_SPS_QUIT; //X gump
 		else if (UO->GumpPixelsInXY(0x15A1, 586, 445))
 			g_LastSelectedObject = ID_SPS_ARROW_PREV; //< gump
-		else if (UO->GumpPixelsInXY(0x00FA, 324, 137))
-			g_LastSelectedObject = ID_SPS_SCROLLBAR_UP; //^
-		else if (UO->GumpPixelsInXY(0x00FC, 324, 330))
-			g_LastSelectedObject = ID_SPS_SCROLLBAR_DOWN; //v
-		else if (UO->GumpPixelsInXY(0x00FE, 325, 158 + scrollerY))
-			g_LastSelectedObject = ID_SPS_SCROLLBAR; //bar
-		else if (UO->GumpPixelsInXY(0x0100, 324, 149, 0, 190))
-			g_LastSelectedObject = ID_SPS_SCROLLBAR_BACKGROUND; //background
+		else if (UO->GumpPixelsInXY(obj->Gump, 299, 53))
+			g_LastSelectedObject = ID_SPS_LABEL_BACK_PROFESSION; //Label gump
 		else if (obj->Type == PT_CATEGORY)
 		{
-			if (UO->GumpPixelsInXY(obj->Gump, 290, 44))
-				g_LastSelectedObject = ID_SPS_LABEL_BACK_PROFESSION; //Label gump
-
 			int offsX = 0;
 			int offsY = 0;
 			int index = 0;
 
 			for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
 			{
-				if (UO->GumpPixelsInXY(child->Gump, 265 + offsX, 155 + offsY))
+				if (UO->ResizepicPixelsInXY(0x0BB8, 145 + offsX, 168 + offsY, 175, 34))
+					g_LastSelectedObject = ID_SPS_LABEL + index; //Text field
+				else if (UO->GumpPixelsInXY(child->Gump, 265 + offsX, 155 + offsY))
 					g_LastSelectedObject = ID_SPS_LABEL + index; //Label gump
 				
 				if (offsX)
@@ -728,9 +732,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 		}
 		else if (obj->Type == PT_PROFESSION)
 		{
-			if (UO->GumpPixelsInXY(obj->Gump, 231, 53))
-				g_LastSelectedObject = ID_SPS_LABEL_BACK_PROFESSION; //Label gump
-			else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+			if (UO->GumpPixelsInXY(0x15A4, 610, 445))
 				g_LastSelectedObject = ID_SPS_ARROW_NEXT; //> gump
 			else
 			{
@@ -738,56 +740,72 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 			
 				TProfession *profession = (TProfession*)obj;
 				int statVal[3] = {profession->Str, profession->Dex, profession->Int};
-				int yPtr = 136;
+				int yPtr = 171;
 
+				//Stats
 				IFOR(i, 0, 3)
 				{
-					int ofs = CalculateSphereOffset(100, (statVal[i] - 10), sphereListWidth, 35.0f);
-					if (UO->GumpPixelsInXY(0x00D8, 500 + ofs, yPtr)) //Sphere gump
+					int ofs = CalculateSphereOffset(100, (statVal[i] - 10), sphereListWidth, 50.0f);
+
+					if (UO->GumpPixelsInXY(0x00D8, 160 + ofs, yPtr + 20)) //Sphere gump
 						g_LastSelectedObject = ID_SPS_STATS_SPHERE + i;
 
-					yPtr += 30;
+					yPtr += 80;
 				}
-			
-				yPtr = 258;
 
-				IFOR(i, 0, 3)
+				yPtr = 171;
+
+				//Skills
+
+				//Выбор навыка из списка
+				if (m_SkillSelection)
 				{
-					int ofs = CalculateSphereOffset(100, profession->GetSkillValue(i), sphereListWidth, 50.0f);
-					if (UO->GumpPixelsInXY(0x00D8, 500 + ofs, yPtr)) //Sphere gump
-						g_LastSelectedObject = ID_SPS_SKILLS_SPHERE + i;
-
-					yPtr += 32;
-				}
-				
-				if (profession->DescriptionIndex == -1) //advanced
-				{
-					yPtr = 256;
-
-					IFOR(i, 0, 3)
-					{
-						if (UO->ResizepicPixelsInXY(0xBB8, 350, yPtr, 105, 25)) //Skill Name text field
-							g_LastSelectedObject = ID_SPS_SKILLS_FILED + i;
-
-						yPtr += 32;
-					}
-
-					if (m_SkillSelection && UO->PolygonePixelsInXY(123, 140, 195, 206))
+					if (UO->GumpPixelsInXY(0x00FA, 500, 168))
+						g_LastSelectedObject = ID_SPS_SCROLLBAR_UP; //^
+					else if (UO->GumpPixelsInXY(0x00FC, 500, 362))
+						g_LastSelectedObject = ID_SPS_SCROLLBAR_DOWN; //v
+					else if (UO->GumpPixelsInXY(0x00FE, 501, 189 + scrollerY))
+						g_LastSelectedObject = ID_SPS_SCROLLBAR; //bar
+					else if (UO->GumpPixelsInXY(0x0100, 500, 180, 0, 190))
+						g_LastSelectedObject = ID_SPS_SCROLLBAR_BACKGROUND; //background
+					else if (UO->PolygonePixelsInXY(320, 168, 180, 215))
 					{
 						int ofsY = -(m_PixelOffset * GUMP_SCROLLING_PIXEL_STEP);
 
-						yPtr = 140 + ofsY;
+						yPtr = 172 + ofsY;
 
 						IFOR(i, 0, g_SkillsCount)
 						{
-							int tw = 195; //m_TextSkillInList[i][0].Width;
+							int tw = 164; //m_TextSkillInList[i][0].Width;
 							int th = m_TextSkillInList[i][0].Height;
 
-							if (UO->PolygonePixelsInXY(123, yPtr, tw, th))
+							if (UO->PolygonePixelsInXY(326, yPtr, tw, th))
 								g_LastSelectedObject = ID_SPS_SKILLS_LIST + i;
 
 							yPtr += m_TextSkillInList[i][0].Height;
 						}
+					}
+
+				}
+				else //Настройка значений навыков
+				{
+					IFOR(i, 0, 3)
+					{
+						int ofs = CalculateSphereOffset(100, profession->GetSkillValue(i), sphereListWidth, 50.0f);
+						if (UO->GumpPixelsInXY(0x00D8, 340 + ofs, yPtr + 30)) //Sphere gump
+							g_LastSelectedObject = ID_SPS_SKILLS_SPHERE + i;
+
+						yPtr += 80;
+					}
+
+					yPtr = 171;
+
+					IFOR(i, 0, 3)
+					{
+						if (UO->ResizepicPixelsInXY(0xBB8, 340, yPtr, 175, 25)) //Skill Name text field
+							g_LastSelectedObject = ID_SPS_SKILLS_FILED + i;
+
+						yPtr += 80;
 					}
 				}
 			}
@@ -809,6 +827,9 @@ void TSelectProfessionScreen::OnLeftMouseDown()
 	if (g_LastSelectedObject == ID_SPS_SCROLLBAR_BACKGROUND) //Scrollbar background click
 	{
 		int drawY = 146;
+
+		if (ConnectionManager.ClientVersion >= CV_308Z)
+			drawY = 177;
 
 		int heightToScrolling = GetScrollBoxHeight() - 200;
 
@@ -859,7 +880,19 @@ void TSelectProfessionScreen::OnLeftMouseUp()
 	if (g_LastObjectLeftMouseDown == ID_SPS_QUIT) //x button
 		CreateSmoothAction(ID_SMOOTH_SPS_QUIT);
 	else if (g_LastObjectLeftMouseDown == ID_SPS_ARROW_PREV) //< button
-		CreateSmoothAction(ID_SMOOTH_SPS_GO_SCREEN_CHARACTER);
+	{
+		if (ConnectionManager.ClientVersion >= CV_308Z && ProfessionManager->Selected->Type == PT_PROFESSION && ProfessionManager->Selected->DescriptionIndex == -1 /*Advanced*/)
+		{
+			ProfessionManager->Selected = ProfessionManager->GetParent(ProfessionManager->Selected);
+			g_LastObjectLeftMouseDown = 0;
+			m_PixelOffset = 0;
+			m_SkillSelection = 0;
+
+			return;
+		}
+		else
+			CreateSmoothAction(ID_SMOOTH_SPS_GO_SCREEN_CHARACTER);
+	}
 	else if (g_LastObjectLeftMouseDown == ID_SPS_ARROW_NEXT) //> button
 	{
 		if (obj->Type == PT_PROFESSION)
@@ -913,6 +946,9 @@ void TSelectProfessionScreen::OnLeftMouseUp()
 				m_PixelOffset = 0;
 				m_SkillSelection = 0;
 
+				if (ConnectionManager.ClientVersion >= CV_308Z && child->Type == PT_PROFESSION && child->DescriptionIndex != -1)
+					CreateSmoothAction(ID_SMOOTH_SPS_GO_SCREEN_CREATE);
+
 				return;
 			}
 		}
@@ -959,7 +995,14 @@ void TSelectProfessionScreen::OnMouseWheel(MOUSE_WHEEL_STATE state)
 {
 	if (!g_LeftMouseDown && !g_RightMouseDown && m_LastScrollChangeTime < GetTickCount())
 	{
-		if (g_MouseX >= 123 && g_MouseX < 318 && g_MouseY >= 140 && g_MouseY < 346)
+		bool condition = false;
+
+		if (ConnectionManager.ClientVersion >= CV_308Z)
+			condition = (g_MouseX >= 324 && g_MouseX < 496 && g_MouseY >= 172 && g_MouseY < 378);
+		else
+			condition = (g_MouseX >= 123 && g_MouseX < 318 && g_MouseY >= 140 && g_MouseY < 346);
+
+		if (condition)
 		{
 			if (state == MWS_UP)
 				ListingList(true, 25);
@@ -1009,21 +1052,19 @@ int TSelectProfessionScreen::GetScrollBoxHeight()
 	return result;
 }
 //---------------------------------------------------------------------------
-void TSelectProfessionScreen::ShuffleStats()
+void TSelectProfessionScreen::ShuffleStats(int x, int maxSum, int maxVal)
 {
-	int MX = g_MouseX - 500;
+	if (x < 0)
+		x = 0;
 
-	if (MX < 0)
-		MX = 0;
+	if (x > 95)
+		x = 95;
 
-	if (MX > 95)
-		MX = 95;
+	float valPer = (x / 95.0f) * 100.0f;
+	valPer = (((float)(maxVal - 10)) * valPer) / 100.0f;
 
-	float ValPer = MX / 95.0f * 100.0f;
-	ValPer = (35.0f * ValPer) / 100.0f;
-
-	if (ValPer < 0.0f)
-		ValPer = 0.0f;
+	if (valPer < 0.0f)
+		valPer = 0.0f;
 
 	TProfession *profession = (TProfession*)ProfessionManager->Selected;
 	int stats[3] = {profession->Str, profession->Dex, profession->Int};
@@ -1039,20 +1080,20 @@ void TSelectProfessionScreen::ShuffleStats()
 	if (others_stat[1] == used_stat)
 		others_stat[1]++;
 
-	stats[used_stat] = 10 + (int)ValPer;
+	stats[used_stat] = 10 + (int)valPer;
 
-	int stat_sum = 65 - (stats[0] + stats[1] + stats[2]);
+	int stat_sum = maxSum - (stats[0] + stats[1] + stats[2]);
 
 	if (stat_sum > 0) //stat will decrease
 	{
 		while (stat_sum > 0)
 		{
-			if (stats[others_stat[0]] < 45)
+			if (stats[others_stat[0]] < maxVal)
 			{
 				stat_sum--;
 				stats[others_stat[0]]++;
 			}
-			else if (stats[others_stat[1]] < 45)
+			else if (stats[others_stat[1]] < maxVal)
 			{
 				stat_sum--;
 				stats[others_stat[1]]++;
@@ -1085,17 +1126,15 @@ void TSelectProfessionScreen::ShuffleStats()
 	profession->Int = stats[2];
 }
 //---------------------------------------------------------------------------
-void TSelectProfessionScreen::ShuffleSkills()
+void TSelectProfessionScreen::ShuffleSkills(int x)
 {
-	int MX = g_MouseX - 500;
+	if (x < 0)
+		x = 0;
 
-	if (MX < 0)
-		MX = 0;
+	if (x > 95)
+		x = 95;
 
-	if (MX > 95)
-		MX = 95;
-
-	float ValPer = (MX / 95.0f) * 100.0f;
+	float ValPer = (x / 95.0f) * 100.0f;
 	ValPer = (50.0f * ValPer) / 100.0f;
 
 	if (ValPer < 0)

@@ -90,7 +90,7 @@ void TCharacterListScreen::ProcessSmoothAction(BYTE action)
 //---------------------------------------------------------------------------
 void TCharacterListScreen::InitPopupHelp()
 {
-	if (!ConfigManager.UseToolTips)
+	if (!ConfigManager.PopupHelpEnabled)
 		return;
 }
 //---------------------------------------------------------------------------

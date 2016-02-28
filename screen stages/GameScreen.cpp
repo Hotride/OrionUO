@@ -67,7 +67,7 @@ void TGameScreen::ProcessSmoothAction(BYTE action)
 //---------------------------------------------------------------------------
 void TGameScreen::InitPopupHelp()
 {
-	if (!ConfigManager.UseToolTips)
+	if (!ConfigManager.PopupHelpEnabled)
 		return;
 
 }

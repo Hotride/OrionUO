@@ -39,10 +39,10 @@ private:
 	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_CREATE = 4;
 
 	//Изменение ползунков характеристик
-	void ShuffleStats();
+	void ShuffleStats(int x, int maxSum, int maxVal);
 
 	//Изменение ползунков навыков
-	void ShuffleSkills();
+	void ShuffleSkills(int x);
 
 	//Пролистать список
 	void ListingList(bool direction, int divizor = 1);

@@ -113,7 +113,7 @@ void TMainScreen::ProcessSmoothAction(BYTE action)
 //---------------------------------------------------------------------------
 void TMainScreen::InitPopupHelp()
 {
-	if (!ConfigManager.UseToolTips)
+	if (!ConfigManager.PopupHelpEnabled)
 		return;
 
 	switch (g_LastSelectedObject)

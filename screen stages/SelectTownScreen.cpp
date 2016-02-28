@@ -85,7 +85,7 @@ void TSelectTownScreen::ProcessSmoothAction(BYTE action)
 //---------------------------------------------------------------------------
 void TSelectTownScreen::InitPopupHelp()
 {
-	if (!ConfigManager.UseToolTips)
+	if (!ConfigManager.PopupHelpEnabled)
 		return;
 
 }
