@@ -364,6 +364,33 @@ static char SPELL_CAST_ABBREVIATURE[64][8] =
 	"K V X A"
 };
 
+//Структура с данными о объединениях крон деревьев
+struct TREE_UNIONS
+{
+	//Индекс начала объединения
+	WORD GraphicStart;
+
+	//Индекс завершения объединения
+	WORD GraphicEnd;
+};
+
+//Количество деревьев, имеющих состаные кроны
+const int TREE_COUNT = 9;
+
+//Данные о составных кронах (индексы картинок из клиента 7.0.45.0)
+static const TREE_UNIONS TREE_INFO[TREE_COUNT] =
+{
+	{ 0x0D45, 0x0D4C },
+	{ 0x0D4D, 0x0D53 },
+	{ 0x0D5C, 0x0D62 },
+	{ 0x0D63, 0x0D69 },
+	{ 0x0D73, 0x0D79 },
+	{ 0x0D7A, 0x0D7F },
+	{ 0x0D87, 0x0D8B },
+	{ 0x0D8C, 0x0D90 },
+	{ 0x12BE, 0x12C7 }
+};
+
 //Смещение для анимации сидячего персонажа по оси X
 const int SITTING_OFFSET_X = 8;
 
@@ -405,7 +432,7 @@ const int SITTING_ITEMS_COUNT = 96;
 #define SITTING_ALL 0, 2, 4, 6
 #define SITTING_UNKNOWN 0, 2, 4, 6
 
-//Данные о предметах, на которых можно сидеть
+//Данные о предметах, на которых можно сидеть (индексы картинок из клиента 7.0.45.0)
 static const SITTING_INFO_DATA SITTING_INFO[SITTING_ITEMS_COUNT] =
 {
 	{ 0x0459, SITTING_N_S, 2, 2 },

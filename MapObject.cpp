@@ -185,7 +185,7 @@ g_RenderedObjectsCountInGameWindow++;
 //------------------------------TRenderStaticObject-------------------------
 //---------------------------------------------------------------------------
 TRenderStaticObject::TRenderStaticObject(RENDER_OBJECT_TYPE renderType, DWORD serial, WORD graphic, WORD color, short x, short y, char z)
-: TMapObject(renderType, serial, graphic, color, x, y, z),
+: TMapObject(renderType, serial, graphic, color, x, y, z), m_FoliageTransparentIndex(-1),
 m_TiledataPtr(&UO->m_StaticData[graphic / 32].Tiles[graphic % 32])
 {
 	m_TextControl = new TTextContainer(3);
@@ -343,12 +343,14 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 				//g_GL.DrawPolygone(0x7F7F7F7F, fib.X, fib.Y, fib.Width, fib.Height);
 				
-				POINT fp = { 0, 0 };
+				/*POINT fp = { 0, 0 };
 				UO->GetArtDimension(m_Graphic, fp);
 
 				TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y);
 
-				if (fib.InRect(g_PlayerRect))
+				if (fib.InRect(g_PlayerRect))*/
+
+				if (m_FoliageTransparentIndex == g_FoliageIndex)
 				{
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -384,12 +386,14 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		{
 			if (!g_GrayedPixels)
 			{
-				POINT fp = { 0, 0 };
+				/*POINT fp = { 0, 0 };
 				UO->GetArtDimension(m_Graphic, fp);
 
 				TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y);
 
-				if (!fib.InRect(g_PlayerRect))
+				if (!fib.InRect(g_PlayerRect))*/
+
+				if (m_FoliageTransparentIndex != g_FoliageIndex)
 				{
 					if (UO->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z))
 					{

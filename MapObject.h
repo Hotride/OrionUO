@@ -104,6 +104,9 @@ public:
 class TRenderStaticObject : public TMapObject
 {
 protected:
+	//Индекс прозрачности кроны дерева
+	char m_FoliageTransparentIndex;
+
 	//Указатель на структуру данных тайлдаты
 	STATIC_TILES *m_TiledataPtr;
 
@@ -113,6 +116,8 @@ public:
 	
 	TTextContainer *m_TextControl; //Ссылка на контейнер для текста
 	
+	SETGET(char, FoliageTransparentIndex);
+
 	//Добавить текст в контейнер
 	virtual void AddText(TTextData *td);
 

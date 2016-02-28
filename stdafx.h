@@ -120,6 +120,9 @@ extern int g_ClientHeight;
 //Значения задержек в массиве
 extern int g_FrameDelay[2];
 
+//Индекс прозрачности крон деревьев
+extern char g_FoliageIndex;
+
 //Путь к папке запуска
 extern string g_DirectoryPath;
 

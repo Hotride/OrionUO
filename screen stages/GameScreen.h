@@ -117,6 +117,12 @@ private:
 
 	//ќтображение текста над объектами мира
 	void DrawGameWindowText(bool &mode);
+
+	//ѕрименение прозрачности крон деревьев в указанных координатах
+	void ApplyTransparentFoliageToUnion(WORD &graphic, int &x, int &y, int &z);
+
+	//ѕроверка принадлежности кроны к группе крон (с последующим применением прозрачности всей группе)
+	void CheckFoliageUnion(WORD graphic, int x, int y, int z);
 public:
 	TGameScreen();
 	virtual ~TGameScreen();
@@ -129,6 +135,9 @@ public:
 
 	//¬ычисление параметров игрового окна
 	void CalculateGameWindow();
+
+	//¬ычисление прозрачности крон деревьев (в т.ч. составных)
+	void CalculateFoliageTransparent();
 
 	//¬осстановить размеры отображаемой области игрового окна
 	void RestoreGameWindowPort() {g_GL.ViewPort(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY, m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowSizeY);}

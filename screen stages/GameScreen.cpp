@@ -174,6 +174,138 @@ int TGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 	return maxDrawZ;
 }
 //---------------------------------------------------------------------------
+void TGameScreen::ApplyTransparentFoliageToUnion(WORD &graphic, int &x, int &y, int &z)
+{
+	int bx = x / 8;
+	int by = y / 8;
+
+	int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+	TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
+	if (mb != NULL)
+	{
+		int tx = x % 8;
+		int ty = y % 8;
+
+		for (TRenderWorldObject *obj = mb->GetRender(tx, ty); obj != NULL; obj = obj->m_NextXY)
+		{
+			if (obj->Graphic == graphic && obj->Z == z)
+				((TRenderStaticObject*)obj)->FoliageTransparentIndex = g_FoliageIndex;
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void TGameScreen::CheckFoliageUnion(WORD graphic, int x, int y, int z)
+{
+	graphic -= 0x4000;
+
+	IFOR(i, 0, TREE_COUNT)
+	{
+		const TREE_UNIONS &info = TREE_INFO[i];
+
+		if (info.GraphicStart <= graphic && graphic <= info.GraphicEnd)
+		{
+			while (graphic > info.GraphicStart)
+			{
+				graphic--;
+				x--;
+				y++;
+			}
+
+			for (graphic = info.GraphicStart; graphic <= info.GraphicEnd; graphic++, x++, y--)
+			{
+				WORD testGraphic = graphic + 0x4000;
+				ApplyTransparentFoliageToUnion(testGraphic, x, y, z);
+			}
+
+			break;
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void TGameScreen::CalculateFoliageTransparent()
+{
+	g_FoliageIndex++;
+
+	if (g_FoliageIndex >= 100)
+		g_FoliageIndex = 1;
+
+	for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+	{
+		for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
+		{
+			int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+
+			TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
+			if (mb == NULL)
+			{
+				mb = MapManager->AddBlock(blockIndex);
+				mb->X = bx;
+				mb->Y = by;
+				MapManager->LoadBlock(mb);
+			}
+
+			IFOR(x, 0, 8)
+			{
+				int currentX = bx * 8 + x;
+
+				if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
+					continue;
+
+				int offsetX = currentX - m_RenderBounds.PlayerX;
+
+				IFOR(y, 0, 8)
+				{
+					int currentY = by * 8 + y;
+
+					if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
+						continue;
+
+					int offsetY = currentY - m_RenderBounds.PlayerY;
+
+					int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+					int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+
+					if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+						continue;
+
+					for (TRenderWorldObject *obj = mb->GetRender(x, y); obj != NULL; obj = obj->m_NextXY)
+					{
+						//if (!obj->IsStaticGroupObject() || obj->IsGameObject() || obj->Z >= m_MaxDrawZ)
+						if (!obj->IsStaticObject() || !obj->IsFoliage() || obj->Z >= m_MaxDrawZ)
+							continue;
+
+						int testZ = drawY - (obj->Z * 4);
+
+						if (testZ < m_RenderBounds.MinPixelsY || testZ > m_RenderBounds.MaxPixelsY)
+							continue;
+
+						if (((TRenderStaticObject*)obj)->FoliageTransparentIndex == g_FoliageIndex)
+							continue;
+
+						char index = 0;
+
+						POINT fp = { 0, 0 };
+						UO->GetArtDimension(obj->Graphic, fp);
+
+						TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (obj->Z * 4), fp.x, fp.y);
+
+						if (fib.InRect(g_PlayerRect))
+						{
+							index = g_FoliageIndex;
+
+							CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, obj->Z);
+						}
+
+						((TRenderStaticObject*)obj)->FoliageTransparentIndex = index;
+					}
+				}
+			}
+		}
+	}
+}
+//---------------------------------------------------------------------------
 void TGameScreen::CalculateGameWindow()
 {
 	m_RenderBounds.PlayerX = g_Player->X;
@@ -284,6 +416,10 @@ void TGameScreen::CalculateGameWindow()
 
 	m_RenderBounds.MinPixelsY = m_RenderBounds.GameWindowPosY - drawOffset; // -playerZOffset;
 	m_RenderBounds.MaxPixelsY = m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY + drawOffset; // + playerZOffset;
+
+	g_NoDrawRoof = false;
+	g_MaxGroundZ = 125;
+	m_MaxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
 }
 //---------------------------------------------------------------------------
 void TGameScreen::CheckMouseEvents(bool &charSelected)
@@ -565,10 +701,6 @@ void TGameScreen::DrawGameWindow(bool &mode)
 			}
 		}
 
-		g_NoDrawRoof = false;
-		g_MaxGroundZ = 125;
-		m_MaxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
-
 		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 		{
 			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
@@ -664,9 +796,6 @@ void TGameScreen::DrawGameWindow(bool &mode)
 	}
 	else
 	{
-		g_NoDrawRoof = false;
-		g_MaxGroundZ = 125;
-		int maxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
 		bool useCircleTrans = (ConfigManager.UseCircleTrans && UO->CircleTransPixelsInXY());
 
 		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
@@ -704,7 +833,7 @@ void TGameScreen::DrawGameWindow(bool &mode)
 
 						for (TRenderWorldObject *renderObject = mb->GetRender(x, y); renderObject != NULL; renderObject = renderObject->m_NextXY)
 						{
-							if (renderObject->IsInternal() || (!renderObject->IsLandObject() && renderObject->Z >= maxDrawZ))
+							if (renderObject->IsInternal() || (!renderObject->IsLandObject() && renderObject->Z >= m_MaxDrawZ))
 								continue;
 
 							int testMinZ = drawY;

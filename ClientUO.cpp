@@ -2462,6 +2462,8 @@ void TUltimaOnline::Process()
 		{
 			GameScreen->CalculateGameWindow();
 
+			GameScreen->CalculateFoliageTransparent();
+
 			if (CanRenderSelect)
 				GameScreen->Render(false);
 
