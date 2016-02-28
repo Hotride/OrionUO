@@ -374,10 +374,40 @@ void TGameScreen::CalculateGameWindow()
 	m_RenderBounds.GameWindowCenterX -= (int)g_Player->OffsetX;
 	m_RenderBounds.GameWindowCenterY -= (int)(g_Player->OffsetY - g_Player->OffsetZ);
 
-	g_PlayerRect.X = m_RenderBounds.GameWindowCenterX - 40;
-	g_PlayerRect.Y = m_RenderBounds.GameWindowCenterY - 60 - playerZOffset;
-	g_PlayerRect.Width = 80;
-	g_PlayerRect.Height = 120;
+	int animWidth = 80;
+	int animHeight = 120;
+
+	TTextureAnimation *anim = AnimationManager->GetAnimation(g_Player->GetMountAnimation());
+
+	if (anim != NULL)
+	{
+		TTextureAnimationGroup *group = anim->GetGroup(HAG_FLY);
+		if (group != NULL)
+		{
+			int dir = g_Player->Direction;
+
+			if (dir >= 0x80)
+				dir -= 0x80;
+
+			TTextureAnimationDirection *direction = group->GetDirection(dir);
+
+			if (direction != NULL && direction->Address != 0)
+			{
+				TTextureAnimationFrame *frame = direction->GetFrame(g_Player->AnimIndex);
+
+				if (frame != NULL)
+				{
+					animWidth = frame->Width;
+					animHeight = frame->Height;
+				}
+			}
+		}
+	}
+
+	g_PlayerRect.X = m_RenderBounds.GameWindowCenterX - (animWidth / 2);
+	g_PlayerRect.Y = m_RenderBounds.GameWindowCenterY - (animHeight / 2) - playerZOffset;
+	g_PlayerRect.Width = animWidth;
+	g_PlayerRect.Height = animHeight;
 
 	int rangeX = (m_RenderBounds.GameWindowSizeX / 44) + 1;
 	int rangeY = (m_RenderBounds.GameWindowSizeY / 44) + 1;
