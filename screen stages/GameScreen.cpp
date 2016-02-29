@@ -381,7 +381,7 @@ void TGameScreen::CalculateGameWindow()
 
 	if (anim != NULL)
 	{
-		TTextureAnimationGroup *group = anim->GetGroup(HAG_FLY);
+		TTextureAnimationGroup *group = anim->GetGroup(g_Player->GetAnimationGroup());
 		if (group != NULL)
 		{
 			int dir = g_Player->Direction;
