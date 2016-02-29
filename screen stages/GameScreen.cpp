@@ -23,12 +23,29 @@ TGameScreen *GameScreen = NULL;
 //---------------------------------------------------------------------------
 TGameScreen::TGameScreen()
 : TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false),
-m_UseLight(false), m_MaxDrawZ(0)
+m_UseLight(false), m_MaxDrawZ(0), m_RenderListSize(1000),
+m_RenderListInitalized(false), m_RenderListCount(0)
 {
+	m_RenderList = new RENDER_OBJECT_DATA[1000];
+	//memset(&m_RenderList[0], 0, sizeof(RENDER_OBJECT_DATA) * 1000);
+
+	m_BufferRenderList = new RENDER_OBJECT_DATA[1000];
+	//memset(&m_BufferRenderList[0], 0, sizeof(RENDER_OBJECT_DATA) * 1000);
 }
 //---------------------------------------------------------------------------
 TGameScreen::~TGameScreen()
 {
+	if (m_RenderList != NULL)
+	{
+		delete m_RenderList;
+		m_RenderList = NULL;
+	}
+
+	if (m_BufferRenderList != NULL)
+	{
+		delete m_BufferRenderList;
+		m_BufferRenderList = NULL;
+	}
 }
 //---------------------------------------------------------------------------
 void TGameScreen::Init()
@@ -223,12 +240,35 @@ void TGameScreen::CheckFoliageUnion(WORD graphic, int x, int y, int z)
 	}
 }
 //---------------------------------------------------------------------------
-void TGameScreen::CalculateFoliageTransparent()
+void TGameScreen::IncreaseRenderList()
+{
+	RENDER_OBJECT_DATA *list = new RENDER_OBJECT_DATA[m_RenderListSize + 1000];
+
+	if (list != NULL)
+	{
+		//memset(&list[0], 0, sizeof(RENDER_OBJECT_DATA) * (m_RenderListSize + 1000));
+		memcpy(&list[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListSize);
+
+		delete m_BufferRenderList;
+		m_BufferRenderList = list;
+
+		m_RenderListSize += 1000;
+
+		delete m_RenderList;
+		m_RenderList = new RENDER_OBJECT_DATA[m_RenderListSize];
+		//memset(&m_RenderList[0], 0, sizeof(RENDER_OBJECT_DATA) * m_RenderListSize);
+	}
+}
+//---------------------------------------------------------------------------
+void TGameScreen::CalculateRenderList()
 {
 	g_FoliageIndex++;
 
 	if (g_FoliageIndex >= 100)
 		g_FoliageIndex = 1;
+
+	m_RenderListCount = 0;
+	vector<int> zList;
 
 	for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 	{
@@ -270,35 +310,151 @@ void TGameScreen::CalculateFoliageTransparent()
 					if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
 						continue;
 
+					WORD grayColor = 0;
+
+					if (ConfigManager.GrayOutOfRangeObjects)
+					{
+						POINT testPos = { currentX, currentY };
+
+						if (GetDistance(g_Player, testPos) > g_UpdateRange)
+							grayColor = 0x0386;
+					}
+
 					for (TRenderWorldObject *obj = mb->GetRender(x, y); obj != NULL; obj = obj->m_NextXY)
 					{
-						//if (!obj->IsStaticGroupObject() || obj->IsGameObject() || obj->Z >= m_MaxDrawZ)
-						if (!obj->IsStaticObject() || !obj->IsFoliage() || obj->Z >= m_MaxDrawZ)
+						if (obj->IsInternal() || (!obj->IsLandObject() && obj->Z >= m_MaxDrawZ))
 							continue;
 
-						int testZ = drawY - (obj->Z * 4);
+						int testMinZ = drawY;
+						int testMaxZ = drawY;
 
-						if (testZ < m_RenderBounds.MinPixelsY || testZ > m_RenderBounds.MaxPixelsY)
-							continue;
-
-						if (((TRenderStaticObject*)obj)->FoliageTransparentIndex == g_FoliageIndex)
-							continue;
-
-						char index = 0;
-
-						POINT fp = { 0, 0 };
-						UO->GetArtDimension(obj->Graphic, fp);
-
-						TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (obj->Z * 4), fp.x, fp.y);
-
-						if (fib.InRect(g_PlayerRect))
+						if (obj->IsLandObject() && ((TLandObject*)obj)->IsStretched)
 						{
-							index = g_FoliageIndex;
-
-							CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, obj->Z);
+							testMaxZ -= (obj->Z * 4);
+							testMinZ -= (((TLandObject*)obj)->MinZ * 4);
 						}
+						else
+							testMinZ = testMaxZ = drawY - (obj->Z * 4);
 
-						((TRenderStaticObject*)obj)->FoliageTransparentIndex = index;
+						if (testMinZ < m_RenderBounds.MinPixelsY || testMaxZ > m_RenderBounds.MaxPixelsY)
+							continue;
+
+						if (m_RenderListCount >= m_RenderListSize)
+							IncreaseRenderList();
+
+						m_BufferRenderList[m_RenderListCount].Obj = obj;
+						m_BufferRenderList[m_RenderListCount].X = drawX;
+						m_BufferRenderList[m_RenderListCount].Y = drawY;
+						m_BufferRenderList[m_RenderListCount].GrayColor = grayColor;
+
+						m_RenderListCount++;
+
+						if (obj->IsGameObject())
+						{
+							if (((TGameObject*)obj)->NPC || ((TGameObject*)obj)->IsCorpse())
+							{
+								int z = obj->Z;
+								int zSize = (int)zList.size();
+								bool canAddZ = true;
+
+								IFOR(zi, 0, zSize)
+								{
+									if (zList[zi] == z)
+									{
+										canAddZ = false;
+										break;
+									}
+								}
+
+								if (canAddZ)
+									zList.push_back(z);
+							}
+						}
+						else if (obj->IsFoliage() && ((TRenderStaticObject*)obj)->FoliageTransparentIndex != g_FoliageIndex)
+						{
+							char index = 0;
+
+							POINT fp = { 0, 0 };
+							UO->GetArtDimension(obj->Graphic, fp);
+
+							TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (obj->Z * 4), fp.x, fp.y);
+
+							if (fib.InRect(g_PlayerRect))
+							{
+								index = g_FoliageIndex;
+
+								CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, obj->Z);
+							}
+
+							((TRenderStaticObject*)obj)->FoliageTransparentIndex = index;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if (m_RenderListCount)
+	{
+		int zSize = (int)zList.size();
+
+		if (!zSize)
+			memcpy(&m_RenderList[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListCount);
+		else
+		{
+			auto compareFunction = [](int a, int b)
+			{
+				return (a < b);
+			};
+
+			std::sort(zList.begin(), zList.end(), compareFunction);
+
+			int count = 0;
+
+			IFOR(i, 0, zSize)
+			{
+				int currentZ = zList[i];
+
+				IFOR(j, 0, m_RenderListCount)
+				{
+					TRenderWorldObject *obj = m_BufferRenderList[j].Obj;
+
+					bool canBeAdd = false;
+
+					if (obj != NULL)
+					{
+						int z = obj->Z;
+
+						if (obj->IsLandObject())
+							z = ((TLandObject*)obj)->MinZ;
+
+						if (z <= currentZ)
+						{
+							canBeAdd = (z < currentZ);
+
+							if (!canBeAdd)
+								canBeAdd = (obj->IsSurface() && (obj->IsBackground() || obj->IsImpassable()));
+						}
+					}
+
+					if (canBeAdd)
+					{
+						memcpy(&m_RenderList[count], &m_BufferRenderList[j], sizeof(RENDER_OBJECT_DATA));
+						count++;
+						m_BufferRenderList[j].Obj = NULL;
+					}
+				}
+			}
+
+			if (count < m_RenderListCount)
+			{
+				IFOR(i, 0, m_RenderListCount)
+				{
+					if (m_BufferRenderList[i].Obj != NULL)
+					{
+						memcpy(&m_RenderList[count], &m_BufferRenderList[i], sizeof(RENDER_OBJECT_DATA));
+						count++;
+						m_BufferRenderList[i].Obj = NULL;
 					}
 				}
 			}
@@ -306,7 +462,7 @@ void TGameScreen::CalculateFoliageTransparent()
 	}
 }
 //---------------------------------------------------------------------------
-void TGameScreen::CalculateGameWindow()
+void TGameScreen::CalculateGameWindowBounds()
 {
 	m_RenderBounds.PlayerX = g_Player->X;
 	m_RenderBounds.PlayerY = g_Player->Y;
@@ -731,7 +887,23 @@ void TGameScreen::DrawGameWindow(bool &mode)
 			}
 		}
 
-		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+		IFOR(i, 0, m_RenderListCount)
+		{
+			RENDER_OBJECT_DATA &rod = m_RenderList[i];
+			TRenderWorldObject *obj = rod.Obj;
+
+			if (obj != NULL)
+			{
+				g_OutOfRangeColor = rod.GrayColor;
+
+				g_UseCircleTrans = (ConfigManager.UseCircleTrans && obj->TranparentTest(m_RenderBounds.PlayerZ));
+
+				g_ZBuffer = obj->Z + obj->RenderQueueIndex;
+				obj->Draw(mode, rod.X, rod.Y, ticks);
+			}
+		}
+
+		/*for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 		{
 			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
 			{
@@ -817,7 +989,7 @@ void TGameScreen::DrawGameWindow(bool &mode)
 					}
 				}
 			}
-		}
+		}*/
 
 		AnimationManager->DrawShadows();
 
@@ -828,7 +1000,20 @@ void TGameScreen::DrawGameWindow(bool &mode)
 	{
 		bool useCircleTrans = (ConfigManager.UseCircleTrans && UO->CircleTransPixelsInXY());
 
-		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+		IFOR(i, 0, m_RenderListCount)
+		{
+			RENDER_OBJECT_DATA &rod = m_RenderList[i];
+			TRenderWorldObject *obj = rod.Obj;
+
+			if (obj != NULL)
+			{
+				g_UseCircleTrans = (useCircleTrans && obj->TranparentTest(m_RenderBounds.PlayerZ));
+
+				obj->Draw(mode, rod.X, rod.Y, ticks);
+			}
+		}
+
+		/*for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 		{
 			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
 			{
@@ -889,7 +1074,7 @@ void TGameScreen::DrawGameWindow(bool &mode)
 					}
 				}
 			}
-		}
+		}*/
 	}
 }
 //---------------------------------------------------------------------------
@@ -1058,6 +1243,9 @@ int TGameScreen::Render(bool mode)
 		if (mode || !g_SelectGumpObjects)
 			return 0;
 	}
+
+	if (!m_RenderListInitalized)
+		CalculateRenderList();
 
 	if (g_DeathScreenTimer < ticks)
 	{

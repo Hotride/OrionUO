@@ -2460,14 +2460,17 @@ void TUltimaOnline::Process()
 		
 		if (g_LastRenderTime <= ticks)
 		{
-			GameScreen->CalculateGameWindow();
+			GameScreen->CalculateGameWindowBounds();
 
-			GameScreen->CalculateFoliageTransparent();
+			GameScreen->CalculateRenderList();
+			GameScreen->RenderListInitalized = true;
 
 			if (CanRenderSelect)
 				GameScreen->Render(false);
 
 			GameScreen->Render(true);
+
+			GameScreen->RenderListInitalized = false;
 		}
 	}
 	else if (g_LastRenderTime <= ticks)

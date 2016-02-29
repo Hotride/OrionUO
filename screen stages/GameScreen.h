@@ -73,6 +73,20 @@ struct LIGHT_DATA
 	int DrawY;
 };
 //---------------------------------------------------------------------------
+//Структура данных с информацией для рендера
+struct RENDER_OBJECT_DATA
+{
+	//Ссылка на объект рендера
+	TRenderWorldObject *Obj;
+
+	//Цвет объекта, вышедшего за рамки видимости клиента (если включена опция)
+	WORD GrayColor;
+
+	//Экранные координаты объекта
+	int X;
+	int Y;
+};
+//---------------------------------------------------------------------------
 class TGameScreen : public TBaseScreen
 {
 private:
@@ -84,6 +98,21 @@ private:
 
 	//Возможность изменения размера игрового окна
 	bool m_GameWindowResizing;
+
+	//Список объектов для отображения
+	RENDER_OBJECT_DATA *m_RenderList;
+
+	//Несортированный список объектов
+	RENDER_OBJECT_DATA *m_BufferRenderList;
+
+	//Размер списка объектов рендера
+	int m_RenderListSize;
+
+	//Количество объектов в списке
+	int m_RenderListCount;
+
+	//Флаг, определяющий инициализацию списка рендера
+	bool m_RenderListInitalized;
 
 	//Список источников света
 	LIGHT_DATA m_Light[MAX_LIGHT_SOURCES];
@@ -123,6 +152,9 @@ private:
 
 	//Проверка принадлежности кроны к группе крон (с последующим применением прозрачности всей группе)
 	void CheckFoliageUnion(WORD graphic, int x, int y, int z);
+
+	//Функция увеличесния размера списка рендера
+	void IncreaseRenderList();
 public:
 	TGameScreen();
 	virtual ~TGameScreen();
@@ -134,10 +166,10 @@ public:
 	static const BYTE ID_SMOOTH_GS_LOGOUT = 1;
 
 	//Вычисление параметров игрового окна
-	void CalculateGameWindow();
+	void CalculateGameWindowBounds();
 
-	//Вычисление прозрачности крон деревьев (в т.ч. составных)
-	void CalculateFoliageTransparent();
+	//Расчет списка объектов рендера, вычисление прозрачности крон деревьев (в т.ч. составных)
+	void CalculateRenderList();
 
 	//Восстановить размеры отображаемой области игрового окна
 	void RestoreGameWindowPort() {g_GL.ViewPort(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY, m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowSizeY);}
@@ -155,6 +187,7 @@ public:
 	int Render(bool mode);
 
 	SETGET(bool, UseLight);
+	SETGET(bool, RenderListInitalized);
 
 	//События
 	void OnLeftMouseDown();
