@@ -398,7 +398,7 @@ void TGameScreen::CalculateRenderList()
 	{
 		int zSize = (int)zList.size();
 
-		if (!zSize)
+		if (!zSize || true)
 			memcpy(&m_RenderList[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListCount);
 		else
 		{
@@ -415,33 +415,51 @@ void TGameScreen::CalculateRenderList()
 			{
 				int currentZ = zList[i];
 
-				IFOR(j, 0, m_RenderListCount)
+				IFOR(m, 0, 2)
 				{
-					TRenderWorldObject *obj = m_BufferRenderList[j].Obj;
-
-					bool canBeAdd = false;
-
-					if (obj != NULL)
+					IFOR(j, 0, m_RenderListCount)
 					{
-						int z = obj->Z;
+						TRenderWorldObject *obj = m_BufferRenderList[j].Obj;
 
-						if (obj->IsLandObject())
-							z = ((TLandObject*)obj)->MinZ;
+						bool canBeAdd = false;
 
-						if (z <= currentZ)
+						if (obj != NULL)
 						{
-							canBeAdd = (z < currentZ);
+							int z = obj->Z;
 
-							if (!canBeAdd)
-								canBeAdd = (obj->IsSurface() && (obj->IsBackground() || obj->IsImpassable()));
+							if (obj->IsLandObject())
+							{
+								TLandObject *land = (TLandObject*)obj;
+
+								if (land->IsStretched)
+									z = land->Serial;
+								else
+									z = obj->Z;
+							}
+
+							if (!m)
+								canBeAdd = (z < currentZ);
+							else
+							{
+								if (z == currentZ)
+									canBeAdd = ((obj->IsSurface() && (obj->IsBackground() || obj->IsImpassable())) || obj->IsLandObject());
+							}
+
+							/*if (z <= currentZ)
+							{
+								canBeAdd = (z < currentZ);
+
+								if (!canBeAdd)
+									canBeAdd = ((obj->IsSurface() && (obj->IsBackground() || obj->IsImpassable())) || obj->IsLandObject());
+							}*/
 						}
-					}
 
-					if (canBeAdd)
-					{
-						memcpy(&m_RenderList[count], &m_BufferRenderList[j], sizeof(RENDER_OBJECT_DATA));
-						count++;
-						m_BufferRenderList[j].Obj = NULL;
+						if (canBeAdd)
+						{
+							memcpy(&m_RenderList[count], &m_BufferRenderList[j], sizeof(RENDER_OBJECT_DATA));
+							count++;
+							m_BufferRenderList[j].Obj = NULL;
+						}
 					}
 				}
 			}
@@ -1466,7 +1484,18 @@ int TGameScreen::Render(bool mode)
 					break;
 			}
 
-			sprintf(dbf, "Selected:\n%s: G=0x%04X X=%i Y=%i Z=%i RQI=%i (SUM=%i)\nthis=0x%08X prev=0x%08X next=0x%08X", soName, g_SelectedObject->Graphic, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, g_SelectedObject->RenderQueueIndex, g_SelectedObject->Z + g_SelectedObject->RenderQueueIndex, g_SelectedObject, g_SelectedObject->m_Prev, g_SelectedObject->m_Next);
+			int tz = g_SelectedObject->Z;
+
+			if (g_SelectedObject->IsLandObject())
+			{
+				TLandObject *land = (TLandObject*)g_SelectedObject;
+
+				//Если это тайл текстуры
+				if (land->IsStretched)
+					tz = (char)land->Serial;
+			}
+
+			sprintf(dbf, "Selected:\n%s: G=0x%04X X=%i Y=%i Z=%i (%i) RQI=%i (SUM=%i)\nthis=0x%08X prev=0x%08X next=0x%08X", soName, g_SelectedObject->Graphic, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, tz, g_SelectedObject->RenderQueueIndex, g_SelectedObject->Z + g_SelectedObject->RenderQueueIndex, g_SelectedObject, g_SelectedObject->m_Prev, g_SelectedObject->m_Next);
 
 			FontManager->DrawA(3, dbf, 0x35, 20, 122);
 		}

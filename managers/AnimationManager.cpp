@@ -1239,7 +1239,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		else
 			x -= frame->CenterX;
 
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_DEPTH_TEST);
 
 		if (isShadow)
 			AddShadow(texture, x, y, g_ZBuffer, frame->Width, frame->Height, mirror);

@@ -226,6 +226,8 @@ void TMapBlock::CreateLandTextureRect()
 					minZ = tileZ4;
 
 				obj->MinZ = minZ;
+
+				AddRender(obj, x, y);
 			}
 		}
 	}
@@ -301,11 +303,11 @@ char TMapBlock::GetRenderZ(TRenderWorldObject *item)
 	//Исключения для земли
 	if (item->IsLandObject())
 	{
-		TMapObject *mo = (TMapObject*)item;
+		TLandObject *land = (TLandObject*)item;
 
 		//Если это тайл текстуры
-		if (mo->Color != 1)
-			z = (char)mo->Serial;
+		if (land->IsStretched)
+			z = (char)land->Serial;
 	}
 
 	return z;
@@ -316,6 +318,16 @@ void TMapBlock::AddRender(TRenderWorldObject *item, int &x, int &y)
 	item->RemoveRender();
 
 	TRenderWorldObject *obj = Block[x][y];
+
+	if (obj == item)
+	{
+		if (obj->m_Prev != NULL)
+			obj = (TRenderWorldObject*)obj->m_Prev;
+		else if (obj->m_Next != NULL)
+			obj = (TRenderWorldObject*)obj->m_Next;
+		else
+			return;
+	}
 
 	while (obj != NULL && obj->m_PrevXY != NULL)
 		obj = obj->m_PrevXY;
@@ -365,9 +377,14 @@ void TMapBlock::AddRender(TRenderWorldObject *item, int &x, int &y)
 		obj = obj->m_NextXY;
 	}
 
-	TRenderWorldObject *next = obj->m_NextXY;
+	TRenderWorldObject *next = NULL;
 	
-	obj->m_NextXY = item;
+	if (obj != NULL)
+	{
+		next = obj->m_NextXY;
+		obj->m_NextXY = item;
+	}
+	
 	item->m_PrevXY = obj;
 	item->m_NextXY = next;
 

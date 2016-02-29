@@ -185,7 +185,7 @@ g_RenderedObjectsCountInGameWindow++;
 				}
 
 				if (IsSurface() || (IsBackground() && IsUnknown2()))
-					glEnable(GL_DEPTH_TEST);
+					;// glEnable(GL_DEPTH_TEST);
 
 				if (doubleDraw)
 				{

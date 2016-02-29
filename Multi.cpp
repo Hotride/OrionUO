@@ -98,7 +98,7 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		else
 		{
 			if (IsSurface() || (IsBackground() && IsUnknown2()) || IsRoof())
-				glEnable(GL_DEPTH_TEST);
+				;// glEnable(GL_DEPTH_TEST);
 			
 			if (g_UseCircleTrans)
 				UO->DrawStaticArtTransparent(objGraphic, objColor, drawX, drawY, m_Z);
