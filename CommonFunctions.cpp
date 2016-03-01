@@ -67,6 +67,49 @@ int CalculatePercents(int max, int current, int maxValue)
 	return max;
 }
 //---------------------------------------------------------------------------
+void TileOffsetOnMonitorToXY(int &ofsX, int ofsY, int &x, int &y)
+{
+	if (!ofsX)
+		x = y = ofsY / 2;
+	else if (!ofsY)
+	{
+		x = ofsX / 2;
+		y = -x;
+	}
+	else //if (ofsX && ofsY)
+	{
+		int absX = abs(ofsX);
+		int absY = abs(ofsY);
+		x = ofsX;
+
+		if (ofsY > ofsX)
+		{
+			if (ofsX < 0 && ofsY < 0)
+				y = absX - absY;
+			else if (ofsX > 0 && ofsY > 0)
+				y = absY - absX;
+		}
+		else if (ofsX > ofsY)
+		{
+			if (ofsX < 0 && ofsY < 0)
+				y = -(absY - absX);
+			else if (ofsX > 0 && ofsY > 0)
+				y = -(absX - absY);
+		}
+
+		if (!y && ofsY != ofsX)
+		{
+			if (ofsY < 0)
+				y = -(absX + absY);
+			else
+				y = absX + absY;
+		}
+
+		y /= 2;
+		x += y;
+	}
+}
+//---------------------------------------------------------------------------
 void UnuseShader()
 {
 	glUseProgramObjectARB(0);

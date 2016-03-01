@@ -110,8 +110,6 @@ private:
 	static const int ID_DS_GO_SCREEN_MAIN = 2;
 
 	TEffectMoving *effect;
-	TTextureAnimation *anim;
-	TPlayer *charobj;
 	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
 	TDebugScreen();
@@ -124,8 +122,9 @@ public:
 	int Render(bool mode);
 
 	void OnLeftMouseUp();
+	void OnKeyPress(WPARAM wparam, LPARAM lparam);
 };
-
+//---------------------------------------------------------------------------
 extern TDebugScreen *DebugScreen;
 //---------------------------------------------------------------------------
 #endif

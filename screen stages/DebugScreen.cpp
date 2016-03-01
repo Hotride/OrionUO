@@ -18,12 +18,6 @@
 */
 //---------------------------------------------------------------------------
 #include "stdafx.h"
-
-
-GLfloat matrix[16] = { 0.0f };
-
-
-
 //---------------------------------------------------------------------------
 TEffect::TEffect()
 : TRenderObject(0, 0, 0, 0, 0), m_EffectType(EF_MOVING),
@@ -36,7 +30,6 @@ m_Increment(0), m_LastChangeFrameTime(0)
 TEffect::~TEffect()
 {
 }
-#include <math.h>
 //---------------------------------------------------------------------------
 int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 {
@@ -70,57 +63,60 @@ int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 			ApplyRenderMode();
 
-			TTextureObject *th = UO->ExecuteStaticArt(objGraphic);
-
-			if (th != NULL)
+			if (m_FixedDirection)
+				UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z + deZ);
+			else
 			{
-				glBindTexture(GL_TEXTURE_2D, th->Texture);
+				TTextureObject *th = UO->ExecuteStaticArt(objGraphic);
 
-				deY -= (m_Z * 4 + deZ);
+				if (th != NULL)
+				{
+					glBindTexture(GL_TEXTURE_2D, th->Texture);
 
-				double cosA = ((TEffectMoving*)(this))->CosA;
-				double sinA = ((TEffectMoving*)(this))->SinA;
+					deY -= (m_Z * 4 + deZ);
 
-				int posMinX = deX - (th->Width / 2);
-				int posMinY = deY - (th->Height + 4);
-				int posMaxX = posMinX + th->Width;
-				int posMaxY = posMinY + th->Height;
+					double cosA = ((TEffectMoving*)(this))->CosA;
+					double sinA = ((TEffectMoving*)(this))->SinA;
 
-				int mx = posMinX + (posMaxX - posMinX) / 2;
-				int my = posMinY + (posMaxY - posMinY) / 2;
+					int posMinX = deX - (th->Width / 2);
+					int posMinY = deY - (th->Height + 44);
+					int posMaxX = posMinX + th->Width;
+					int posMaxY = posMinY + th->Height;
 
-				int tmpX = posMinX - mx;
-				int tmpY = posMinY - my;
-				int x1 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
-				int y1 = my + (int)floor(tmpX * sinA + tmpY * cosA);
+					int mx = posMinX + (posMaxX - posMinX) / 2;
+					int my = posMinY + (posMaxY - posMinY) / 2;
 
-				tmpX = posMaxX - mx;
-				tmpY = posMinY - my;
-				int x2 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
-				int y2 = my + (int)floor(tmpX * sinA + tmpY * cosA);
+					int tmpX = posMinX - mx;
+					int tmpY = posMinY - my;
+					int x1 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
+					int y1 = my + (int)floor(tmpX * sinA + tmpY * cosA);
 
-				tmpX = posMaxX - mx;
-				tmpY = posMaxY - my;
-				int x3 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
-				int y3 = my + (int)floor(tmpX * sinA + tmpY * cosA);
+					tmpX = posMaxX - mx;
+					tmpY = posMinY - my;
+					int x2 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
+					int y2 = my + (int)floor(tmpX * sinA + tmpY * cosA);
 
-				tmpX = posMinX - mx;
-				tmpY = posMaxY - my;
-				int x4 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
-				int y4 = my + (int)floor(tmpX * sinA + tmpY * cosA);
+					tmpX = posMaxX - mx;
+					tmpY = posMaxY - my;
+					int x3 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
+					int y3 = my + (int)floor(tmpX * sinA + tmpY * cosA);
 
-				glLoadIdentity();
-				glTranslatef((GLfloat)(deX - posMinX), (GLfloat)(deY - posMinY), 0.0f);
+					tmpX = posMinX - mx;
+					tmpY = posMaxY - my;
+					int x4 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
+					int y4 = my + (int)floor(tmpX * sinA + tmpY * cosA);
 
-				glBegin(GL_QUADS);
-					glTexCoord2i(0, 1); glVertex2i(x1, y1);
-					glTexCoord2i(1, 1); glVertex2i(x2, y2);
-					glTexCoord2i(1, 0); glVertex2i(x3, y3);
-					glTexCoord2i(0, 0); glVertex2i(x4, y4);
-				glEnd();
+					glLoadIdentity();
+					glTranslatef((GLfloat)(deX - posMinX), (GLfloat)(deY - posMinY), 0.0f);
+
+					glBegin(GL_QUADS);
+						glTexCoord2i(0, 1); glVertex2i(x1, y1);
+						glTexCoord2i(1, 1); glVertex2i(x2, y2);
+						glTexCoord2i(1, 0); glVertex2i(x3, y3);
+						glTexCoord2i(0, 0); glVertex2i(x4, y4);
+					glEnd();
+				}
 			}
-
-			//UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z + deZ);
 
 			glDisable(GL_BLEND);
 		}
@@ -164,50 +160,35 @@ void TEffect::ApplyRenderMode()
 {
 	switch (m_RenderMode % 7)
 	{
-	case 0:
-	{
-			  break;
-	}
-	case 1:
-	{
-			  glEnable(GL_BLEND);
-
-			  //glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
-			  break;
-	}
-	case 2:
-	{
-			  glEnable(GL_BLEND);
-			  glBlendFunc(GL_ONE, GL_ONE);
-			  break;
-	}
-	case 3:
-	{
-			  glEnable(GL_BLEND);
-			  glBlendFunc(GL_ONE, GL_ONE);
-			  break;
-	}
-	case 4:
-	{
-			  glEnable(GL_BLEND);
-			  glBlendFunc(GL_ONE, GL_ONE);
-			  break;
-	}
-	case 5:
-	{
-			  glEnable(GL_BLEND);
-			  glBlendFunc(GL_SRC_COLOR, GL_SRC_ALPHA_SATURATE);
-			  break;
-	}
-	case 6:
-	{
-			  glEnable(GL_BLEND);
-			  glBlendFunc(GL_ONE, GL_ONE);
-			  //glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
-			  break;
-	}
-	default:
-		break;
+		case 0:
+			break;
+		case 1:
+			glEnable(GL_BLEND);
+			//glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
+			break;
+		case 2:
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_ONE, GL_ONE);
+			break;
+		case 3:
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_ONE, GL_ONE);
+			break;
+		case 4:
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_ONE, GL_ONE);
+			break;
+		case 5:
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_COLOR, GL_SRC_ALPHA_SATURATE);
+			break;
+		case 6:
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_ONE, GL_ONE);
+			//glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+			break;
+		default:
+			break;
 	}
 }
 //---------------------------------------------------------------------------
@@ -223,9 +204,9 @@ TEffectMoving::~TEffectMoving()
 //---------------------------------------------------------------------------
 void TEffectMoving::Init()
 {
-	m_DiffX = m_DestX - X;
-	m_DiffY = m_DestY - Y;
-	m_DiffZ = m_DestZ - Z;
+	m_DiffX = m_DestX - m_X;
+	m_DiffY = m_DestY - m_Y;
+	m_DiffZ = m_DestZ - m_Z;
 
 	int posX = (m_DiffX - m_DiffY) * 44;
 	int posY = (m_DiffX + m_DiffY) * 44 + m_DiffZ * 4;
@@ -249,7 +230,6 @@ void TEffectMoving::Init()
 	m_CosA = cos(alpha);
 	m_SinA = sin(alpha);
 
-	m_DiffZ = DestZ - Z;
 	m_Distance = (int)floor(sqrt(m_DiffX * m_DiffX + m_DiffY * m_DiffY)) * 2 + 1;
 
 	m_Step = 0;
@@ -260,6 +240,123 @@ void TEffectMoving::Init()
 //---------------------------------------------------------------------------
 void TEffectMoving::Update()
 {
+	/*int cx = 320;
+	int cy = 240;
+
+	int ctx = 10;
+	int cty = 10;
+
+
+
+	int offsetX = m_X - ctx;
+	int offsetY = m_Y - cty;
+
+	int drawX = cx + (offsetX - offsetY) * 22;
+	int drawY = cy + (offsetX + offsetY) * 22;
+
+	int realDrawX = drawX + m_OffsetX;
+	int realDrawY = drawY + m_OffsetY;
+
+	int offsetDestX = m_DestX - ctx;
+	int offsetDestY = m_DestY - cty;
+
+	int drawDestX = cx + (offsetDestX - offsetDestY) * 22;
+	int drawDestY = cy + (offsetDestX + offsetDestY) * 22;
+
+	int x = 0;
+
+	int deltaXY[2] = { abs(drawDestX - realDrawX), abs(drawDestY - realDrawY) };
+
+	if (deltaXY[0] < deltaXY[1])
+	{
+		x = 1;
+
+		int temp = deltaXY[0];
+
+		deltaXY[0] = deltaXY[1];
+		deltaXY[1] = temp;
+	}
+
+	if (deltaXY[0] == 0)
+		deltaXY[0] = 1;
+
+	double delta = deltaXY[1] / deltaXY[0];
+	double stepXY = 0.0;
+
+	int step = m_Speed;// *5;
+	int tempXY[2] = { step, 0 };
+
+	for (int j = 0; j < step; j++)
+	{
+		stepXY += delta;
+
+		if (stepXY >= 0.5)
+		{
+			tempXY[1] += 1;
+
+			stepXY -= 1.0;
+		}
+	}
+
+	bool incX = (realDrawX < drawDestX);
+	bool incY = (realDrawY < drawDestY);
+
+	if (incX)
+	{
+		realDrawX += tempXY[x];
+
+		if (realDrawX > drawDestX)
+			realDrawX = drawDestX;
+	}
+	else
+	{
+		realDrawX -= tempXY[x];
+
+		if (realDrawX < drawDestX)
+			realDrawX = drawDestX;
+	}
+
+	if (incY)
+	{
+		realDrawY += tempXY[(x + 1) % 2];
+
+		if (realDrawY > drawDestY)
+			realDrawY = drawDestY;
+	}
+	else
+	{
+		realDrawY -= tempXY[(x + 1) % 2];
+
+		if (realDrawY < drawDestY)
+			realDrawY = drawDestY;
+	}
+
+	int ox = (realDrawX - cx) / 22;
+	int oy = (realDrawY - cy) / 22;
+
+	int dx = 0;
+	int dy = 0;
+
+	TileOffsetOnMonitorToXY(ox, oy, dx, dy);
+
+	int newX = ctx + dx;
+	int newY = cty + dy;
+
+	if (newX == m_DestX && newY == m_DestY)
+	{
+	}
+	else
+	{
+		int newDrawX = cx + (dx - dy) * 22;
+		int newDrawY = cy + (dx + dy) * 22;
+
+		m_OffsetX = realDrawX - newDrawX;
+		m_OffsetY = realDrawY - newDrawY;
+
+		m_X = newX;
+		m_Y = newY;
+	}*/
+
 	if (m_Step == m_Distance + 1)
 	{
 	}
@@ -269,13 +366,15 @@ void TEffectMoving::Update()
 		int oldY = m_Y;
 		int oldZ = m_Z;
 
-		int newX = oldX + (int)(m_DiffX * m_Step / m_Distance);
-		int newY = oldY + (int)(m_DiffY * m_Step / m_Distance);
-		int newZ = oldZ + (int)(m_DiffZ * m_Step / m_Distance);
+		double offset = m_Step / (double)m_Distance;
 
-		m_OffsetX = (int)floor((m_DiffX - m_DiffY) * 22 * m_Step / m_Distance);
-		m_OffsetY = (int)floor((m_DiffX + m_DiffY) * 22 * m_Step / m_Distance);
-		m_OffsetZ = (int)floor(m_DiffZ * 4 * m_Step / m_Distance);
+		int newX = oldX + (int)(m_DiffX * offset);
+		int newY = oldY + (int)(m_DiffY * offset);
+		int newZ = oldZ + (int)(m_DiffZ * offset);
+
+		m_OffsetX = (int)floor((m_DiffX - m_DiffY) * 22 * offset);
+		m_OffsetY = (int)floor((m_DiffX + m_DiffY) * 22 * offset);
+		m_OffsetZ = (int)floor(m_DiffZ * 4 * offset);
 
 		m_Step++;
 
@@ -297,59 +396,20 @@ TDebugScreen *DebugScreen = NULL;
 TDebugScreen::TDebugScreen()
 : TBaseScreen()
 {
-	effect = new TEffectMoving();
-	effect->Graphic = 0x36E4;
-	effect->Duration = GetTickCount();
-	effect->Speed = 1;
-	effect->X = 0x058A;
-	effect->Y = 0x068C;
-	effect->Z = 7;
-	effect->DestX = 0x058C;
-	effect->DestY = 0x0696;
+	TEffectMoving *ef = new TEffectMoving();
+	ef->Graphic = 0x36E4;
+	ef->Duration = GetTickCount();
+	ef->Speed = 5;
+	ef->X = 10;
+	ef->Y = 10;
+	ef->Z = 0;
+	ef->DestX = 10;
+	ef->DestY = 0;
+	ef->FixedDirection = true;
 
-	/*effect->Graphic = 0x36BD;
-	effect->Duration = GetTickCount() + 150;
-	effect->Speed = 50;
-	effect->X = 0;
-	effect->Y = 0;
-	effect->DestX = 10;
-	effect->DestY = 6;*/
+	ef->Init();
 
-	effect->Init();
-
-
-
-	
-	charobj = new TPlayer(1);
-	g_Player = charobj;
-	charobj->Graphic = 0x0190;
-	charobj->Color = 0x4021;
-	charobj->Direction = 4;
-
-	WORD id = charobj->GetMountAnimation();
-	anim = AnimationManager->GetAnimation(id);
-
-	bool mirror = false;
-	BYTE dir = charobj->Direction;
-
-	AnimationManager->GetAnimDirection(dir, mirror);
-
-	if (anim != NULL)
-	{
-		int animGroup = charobj->GetAnimationGroup();
-
-		TTextureAnimationGroup *group = anim->GetGroup(animGroup);
-		TTextureAnimationDirection *direction = group->GetDirection(dir);
-
-		if (direction->Address == 0)
-		{
-			AnimationManager->AnimGroup = animGroup;
-			AnimationManager->Direction = dir;
-
-			int offset = (animGroup * 5) + dir;
-			AnimationManager->ExecuteDirectionGroup(direction, id, offset);
-		}
-	}
+	effect = ef;
 }
 //---------------------------------------------------------------------------
 TDebugScreen::~TDebugScreen()
@@ -442,58 +502,21 @@ int TDebugScreen::Render(bool mode)
 		if (DrawSmoothMonitor())
 			return 0;
 
-		static bool onc = true;
-
-		if (onc)
-		{
-			onc = false;
-			glGetFloatv(GL_MATRIX_MODE, matrix);
-
-			glListBase(10);
-			glNewList(10, GL_COMPILE);
-
-			glLoadMatrixf(matrix);
-
-			UO->DrawGump(0x085C, 0, 0, 0);
-			UO->DrawGump(0x085C, 0, 100, 0);
-			UO->DrawGump(0x085C, 0, 0, 50);
-
-			glEndList();
-		}
-
-		glColor3f(1.0f, 1.0f, 1.0f);
-
 		ColorizerShader->Use();
 
-		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_DS_QUIT); //X gump /lighted
+		/*WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_DS_QUIT); //X gump /lighted
 		if (CanPressedButton == ID_DS_QUIT)
 			GumpID = 0x158B; //X gump (pressed)
-		UO->DrawGump(GumpID, 0x21, 555, 4);
+		UO->DrawGump(GumpID, 0x21, 555, 4);*/
 
-		UnuseShader();
-
-		GumpID = 0x1589 + (int)(CanSelectedButton == ID_DS_QUIT); //X gump /lighted
-		if (CanPressedButton == ID_DS_QUIT)
-			GumpID = 0x158B; //X gump (pressed)
-		UO->DrawGump(GumpID, 0, 555, 64);
-
-		DeathShader->Use();
-
-		GumpID = 0x1589 + (int)(CanSelectedButton == ID_DS_QUIT); //X gump /lighted
-		if (CanPressedButton == ID_DS_QUIT)
-			GumpID = 0x158B; //X gump (pressed)
-		UO->DrawGump(GumpID, 0, 555, 124);
-
-		GumpID = 0x15A4 + (int)(CanSelectedButton == ID_DS_GO_SCREEN_MAIN); //> gump / lighted
+		WORD GumpID = 0x15A4 + (int)(CanSelectedButton == ID_DS_GO_SCREEN_MAIN); //> gump / lighted
 		if (CanPressedButton == ID_DS_GO_SCREEN_MAIN)
 			GumpID = 0x15A6; //> gump pressed
 		UO->DrawGump(GumpID, 0, 610, 445);
 
-		ColorizerShader->Use();
-
 		effect->Update();
-		int gx = effect->X - (int)0x058A;
-		int gy = effect->Y - (int)0x068C;
+		int gx = effect->X - 10;
+		int gy = effect->Y - 10;
 		bool mde = true;
 		ticks = GetTickCount();
 
@@ -519,142 +542,30 @@ int TDebugScreen::Render(bool mode)
 			glEnd();
 		}*/
 		
-		g_CircleOfTransparency.Draw(320, 240);
-		
-		UO->DrawLandArt(0x03, 0, 320, 240, 30);
-		UO->DrawLandArt(0x03, 0, 320, 240, 20);
-		UO->DrawLandArt(0x03, 0, 320, 240, 10);
-		UO->DrawLandArt(0x03, 0, 320, 240, 0);
-
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glColor4f(1.0f, 1.0f, 1.0f, 0.25f);
-
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 140, 0);
-
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 240, 0);
-		
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 320, 240, 0);
-		
-		glDisable(GL_BLEND);
-		
-		glEnable(GL_STENCIL_TEST);
-		
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 140, 0);
-
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 240, 0);
-		
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 320, 240, 0);
-
-		glDisable(GL_STENCIL_TEST);
-
 		UnuseShader();
 
-		g_GL.DrawPolygone(0x1c00001c, 100, 100, 500, 300);
+		DPOLY(315, 235, 10, 10);
 
-		ColorizerShader->Use();
+		g_GL.DrawLine(0x30000030, 320, 240, g_MouseX, g_MouseY);
 
-		int x = 200;
-		int y = 200;
-		charobj->Direction = 0;
-		charobj->Draw(mode, x, y, ticks);
+		int cx = 320;
+		int cy = 240;
 
-		x = 300;
-		y = 200;
-		charobj->Direction = 1;
-		charobj->Draw(mode, x, y, ticks);
+		int px = g_MouseX;
+		int py = g_MouseY;
 
-		x = 400;
-		y = 200;
-		charobj->Direction = 2;
-		charobj->Draw(mode, x, y, ticks);
+		int ox = (px - cx) / 22;
+		int oy = (py - cy) / 22;
 
-		x = 500;
-		y = 200;
-		charobj->Direction = 3;
-		charobj->Draw(mode, x, y, ticks);
+		int dx = 0;
+		int dy = 0;
 
-		x = 600;
-		y = 200;
-		charobj->Direction = 4;
-		charobj->Draw(mode, x, y, ticks);
+		TileOffsetOnMonitorToXY(ox, oy, dx, dy);
 
-		x = 200;
-		y = 300;
-		charobj->Direction = 5;
-		charobj->Draw(mode, x, y, ticks);
+		char str[100] = { 0 };
+		sprintf(str, "cur = %i %i", 10 + dx, 10 + dy);
 
-		x = 300;
-		y = 300;
-		charobj->Direction = 6;
-		charobj->Draw(mode, x, y, ticks);
-
-		x = 400;
-		y = 300;
-		charobj->Direction = 7;
-		charobj->Draw(mode, x, y, ticks);
-
-		UnuseShader();
-
-		/*//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		//DPOLY(150, 100, 300, 300);
-		
-		UO->DrawLandArt(0x03, 0, 320, 240, 30);
-		UO->DrawLandArt(0x03, 0, 320, 240, 20);
-		UO->DrawLandArt(0x03, 0, 320, 240, 10);
-		UO->DrawLandArt(0x03, 0, 320, 240, 0);
-
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 240, 0);
-
-
-
-		g_CircleOfTransparency.Draw(320, 240);
-
-		static int ccc = 0;
-
-		if (ccc++ > 10)
-		{
-			if (ccc > 20)
-				ccc = 0;
-		}
-		else
-			glEnable(GL_BLEND);
-
-		glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA);
-
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 320, 240, 0);
-
-		/*UO->DrawLandArt(0x03, 0, 320, 240, 30);
-		UO->DrawLandArt(0x03, 0, 320, 240, 20);
-		UO->DrawLandArt(0x03, 0, 320, 240, 10);
-		UO->DrawLandArt(0x03, 0, 320, 240, 0);
-
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 320, 240, 0);
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 300, 240, 0);
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 280, 240, 0);
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 260, 240, 0);
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 240, 240, 0);
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 220, 240, 0);
-		UO->DrawStaticArtAnimated(0x0CE0, 0, 200, 240, 0);
-
-		//glEnable(GL_BLEND);
-		///glBlendFunc(GL_ONE, GL_DST_COLOR);
-		//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-
-		UO->DrawStaticArtAnimated(0x0CE1, 0, 320, 240, 0);*/
-
-		//glDisable(GL_BLEND);
-
-		glGetFloatv(GL_MATRIX_MODE, matrix);
-		glCallList(10);
-
-		glLoadIdentity();
-		glGetFloatv(GL_MATRIX_MODE, matrix);
-
-		glCallList(10);
-
-		glLoadIdentity();
+		FontManager->DrawA(3, str, 0x0386, 20, 20);
 
 		DrawSmoothMonitorEffect();
 
@@ -666,10 +577,10 @@ int TDebugScreen::Render(bool mode)
 	{
 		g_LastSelectedObject = 0;
 
-		if (UO->GumpPixelsInXY(0x1589, 555, 4))
+		/*if (UO->GumpPixelsInXY(0x1589, 555, 4))
 			g_LastSelectedObject = ID_DS_QUIT; //X gump
 		else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
-			g_LastSelectedObject = ID_DS_GO_SCREEN_MAIN; //> gump
+			g_LastSelectedObject = ID_DS_GO_SCREEN_MAIN; //> gump*/
 
 		return g_LastSelectedObject;
 	}
@@ -685,6 +596,28 @@ void TDebugScreen::OnLeftMouseUp()
 	g_DroppedLeftMouseX = 0;
 	g_DroppedLeftMouseY = 0;
 
+	effect->X = 10;
+	effect->Y = 10;
+
+	int cx = 320;
+	int cy = 240;
+
+	int px = g_MouseX;
+	int py = g_MouseY;
+
+	int ox = (px - cx) / 22;
+	int oy = (py - cy) / 22;
+
+	int dx = 0;
+	int dy = 0;
+
+	TileOffsetOnMonitorToXY(ox, oy, dx, dy);
+
+	effect->DestX = 10 + dx;
+	effect->DestY = 10 + dy;
+
+	effect->Init();
+
 	if (g_LastSelectedObject == 0 || g_LastSelectedObject != g_LastObjectLeftMouseDown)
 	{
 		g_LastObjectLeftMouseDown = 0;
@@ -697,5 +630,11 @@ void TDebugScreen::OnLeftMouseUp()
 		CreateSmoothAction(ID_SMOOTH_DS_GO_SCREEN_MAIN);
 
 	g_LastObjectLeftMouseDown = 0;
+}
+//---------------------------------------------------------------------------
+void TDebugScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
+{
+	if (wparam == VK_RETURN)
+		CreateSmoothAction(ID_SMOOTH_DS_GO_SCREEN_MAIN);
 }
 //---------------------------------------------------------------------------

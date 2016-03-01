@@ -76,6 +76,8 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 			int deY = drawY;
 			int deZ = 0;
 
+			ApplyRenderMode();
+
 			if (m_EffectType == EF_MOVING)
 			{
 				TGameEffectMoving *moving = (TGameEffectMoving*)this;
@@ -83,11 +85,11 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				deX += moving->OffsetX;
 				deY += moving->OffsetY;
 				deZ += moving->OffsetZ;
+
+				UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z + deZ);
 			}
-
-			ApplyRenderMode();
-
-			UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z + deZ);
+			else
+				UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z + deZ);
 
 			glDisable(GL_BLEND);
 		}
