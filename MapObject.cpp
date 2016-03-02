@@ -138,7 +138,7 @@ int TLandObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 #if UO_DEBUG_INFO!=0
 g_RenderedObjectsCountInGameWindow++;
 #endif
-			//glEnable(GL_DEPTH_TEST);
+			glEnable(GL_DEPTH_TEST);
 
 			if (!m_IsStretched)
 				UO->DrawLandArt(m_Graphic, objColor, drawX, drawY, m_Z);
@@ -367,7 +367,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		else
 		{
 			if (IsSurface() || (IsBackground() && IsUnknown2()) || IsRoof())
-				;// glEnable(GL_DEPTH_TEST);
+				glEnable(GL_DEPTH_TEST);
 
 			if (g_UseCircleTrans)
 				UO->DrawStaticArtAnimatedTransparent(objGraphic, objColor, drawX, drawY, m_Z);

@@ -106,7 +106,7 @@ public:
 
 	TTextTexture m_PaperdollTextTexture; //Текстура текста папердолла
 
-	string GetPaperdollText() const {return m_PaperdollText;}
+	string GetPaperdollText() const { return m_PaperdollText; }
 	BYTE GetAnimationGroup(WORD graphic = 0); //Получить текущую группу анимации
 	void GetAnimationGroup(ANIMATION_GROUPS group, BYTE &animation); //Скорректировать отношение анимаций
 	bool Staying() {return m_AnimationGroup == 0xFF && m_WalkStack.Empty();} //Если персонаж не движется
@@ -116,8 +116,8 @@ public:
 	bool IsTeleportAction(WORD &x, WORD &y, BYTE &dir);
 
 	//Человек ли это
-	bool IsHuman() {return (((m_Graphic >= 0x0190) && (m_Graphic <= 0x0193)) || (m_Graphic == 0x03DB));}
-	bool Dead() {return ((m_Graphic == 0x0192) || (m_Graphic == 0x0193));} //Объект мертв
+	bool IsHuman() { return (((m_Graphic >= 0x0190) && (m_Graphic <= 0x0193)) || (m_Graphic == 0x03DB) || (m_Graphic == 0x03DF) || (m_Graphic == 0x03E2)); }
+	bool Dead() { return ((m_Graphic == 0x0192) || (m_Graphic == 0x0193)); } //Объект мертв
 	
 	TGameItem *FindLayer(int layer); //Найти объект в контейнере на указанном слое
 };
