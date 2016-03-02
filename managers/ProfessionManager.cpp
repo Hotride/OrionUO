@@ -21,6 +21,26 @@
 
 TProfessionManager *ProfessionManager = NULL;
 //---------------------------------------------------------------------------
+const string TProfessionManager::m_Keys[m_KeyCount] =
+{
+	"begin",
+	"name",
+	"truename",
+	"desc",
+	"toplevel",
+	"gump",
+	"type",
+	"children",
+	"skill",
+	"stat",
+	"str",
+	"int",
+	"dex",
+	"end",
+	"true",
+	"category"
+};
+//---------------------------------------------------------------------------
 TProfessionManager::TProfessionManager()
 : TBaseQueue(), Selected(NULL)
 {
@@ -30,247 +50,136 @@ TProfessionManager::~TProfessionManager()
 {
 }
 //---------------------------------------------------------------------------
-std::vector<string> TProfessionManager::ParseToTokens(const char *str)
+int TProfessionManager::GetKeyCode(const string &key)
 {
-	std::vector<string> vec;
-	string buf = "";
+	string str = ToLowerA(key);
+	int result = 0;
 
-	int len = strlen(str);
-	char *ptr = (char*)str;
-
-	IFOR(i, 0, len)
+	IFOR(i, 0, m_KeyCount && !result)
 	{
-		if (*ptr == '"')
-		{
-			for (; i < len; i++)
-			{
-				ptr++;
-
-				if (*ptr && *ptr == '"')
-					break;
-
-				buf.push_back(*ptr);
-			}
-
-			if (buf.length())
-			{
-				vec.push_back(buf);
-				buf.clear();
-			}
-
-			if (*ptr)
-				ptr++;
-		}
-		else if (*ptr)
-		{
-			if (*ptr == ' ' || *ptr == '\t' || *ptr == ',')
-			{
-				if (buf.length())
-				{
-					vec.push_back(buf);
-					buf.clear();
-				}
-
-				while (*ptr && (*ptr == ' ' || *ptr == '\t' || *ptr == ','))
-					ptr++;
-			}
-			else
-			{
-				buf.push_back(*ptr);
-				ptr++;
-			}
-		}
+		if (str == m_Keys[i])
+			result = i + 1;
 	}
 
-	if (buf.length())
-		vec.push_back(buf);
-
-	return vec;
+	return result;
 }
 //---------------------------------------------------------------------------
-int TProfessionManager::GetKeyCode(const char *str)
-{
-	int index = 0;
-
-	char buf[50] = { 0 };
-
-	int len = strlen(str);
-	if (len)
-	{
-		if (len >= 50)
-			len = 49;
-
-		memcpy(&buf[0], &str[0], len);
-	}
-
-	char *text = _strlwr(buf);
-
-	if (!memcmp(text, "begin", 5))
-		index = PM_CODE_BEGIN;
-	else if (!memcmp(text, "name", 4))
-		index = PM_CODE_NAME;
-	else if (!memcmp(text, "truename", 8))
-		index = PM_CODE_TRUENAME;
-	else if (!memcmp(text, "desc", 4))
-		index = PM_CODE_DESC;
-	else if (!memcmp(text, "toplevel", 8))
-		index = PM_CODE_TOPLEVEL;
-	else if (!memcmp(text, "gump", 4))
-		index = PM_CODE_GUMP;
-	else if (!memcmp(text, "type", 4))
-		index = PM_CODE_TYPE;
-	else if (!memcmp(text, "children", 8))
-		index = PM_CODE_CHILDREN;
-	else if (!memcmp(text, "skill", 5))
-		index = PM_CODE_SKILL;
-	else if (!memcmp(text, "stat", 4))
-		index = PM_CODE_STAT;
-	else if (!memcmp(text, "str", 3))
-		index = PM_CODE_STR;
-	else if (!memcmp(text, "int", 3))
-		index = PM_CODE_INT;
-	else if (!memcmp(text, "dex", 3))
-		index = PM_CODE_DEX;
-	else if (!memcmp(text, "end", 3))
-		index = PM_CODE_END;
-	else if (!memcmp(text, "true", 4))
-		index = PM_CODE_TRUE;
-	else if (!memcmp(text, "category", 8))
-		index = PM_CODE_CATEGORY;
-
-	return index;
-}
-//---------------------------------------------------------------------------
-bool TProfessionManager::ParseFilePart(FILE *file)
+bool TProfessionManager::ParseFilePart(TTextFileParser &file)
 {
 	PROFESSION_TYPE type = PT_NO_PROF;
+	std::vector<string> childrens;
 	string name = "";
 	string trueName = "";
-	std::vector<string> childrens;
 	int descriptionIndex = 0;
 	WORD gump = 0;
 	bool topLevel = false;
 	int skillCount = 0;
 	int skillIndex[4] = { 0xFF, 0xFF, 0xFF, 0xFF };
 	int skillValue[4] = { 0 };
-	int stats[3] = {0};
+	int stats[3] = { 0 };
 
-	char buf[512] = { 0 };
+	bool exit = false;
 
-	while (fgets(buf, 512, file))
+	while (!file.IsEOF() && !exit)
 	{
-		if (!strlen(buf))
+		vector<string> strings = file.ReadTokens();
+
+		if (!strings.size())
 			continue;
 
-		buf[strlen(buf) - 1] = 0;
+		int code = GetKeyCode(strings[0]);
 
-		std::vector<string> tokens = ParseToTokens(buf);
-		int code = 0;
-
-		if (tokens.size())
-			code = GetKeyCode(tokens[0].c_str());
-
-		if (tokens.size() > 1)
+		switch (code)
 		{
-			bool exit = false;
-
-			switch (code)
+			case PM_CODE_BEGIN:
+			case PM_CODE_END:
 			{
-				case PM_CODE_BEGIN:
-				case PM_CODE_END:
-				{
-					exit = true;
-					break;
-				}
-				case PM_CODE_NAME:
-				{
-					name = tokens[1];
-					break;
-				}
-				case PM_CODE_TRUENAME:
-				{
-					trueName = tokens[1];
-					break;
-				}
-				case PM_CODE_DESC:
-				{
-					descriptionIndex = atoi(tokens[1].c_str());
-					break;
-				}
-				case PM_CODE_TOPLEVEL:
-				{
-					topLevel = (GetKeyCode(tokens[1].c_str()) == PM_CODE_TRUE);
-					break;
-				}
-				case PM_CODE_GUMP:
-				{
-					gump = atoi(tokens[1].c_str());
-					
-					UO->ExecuteGump(gump, 0);
-					UO->ExecuteGump(gump + 1, 0);
-					break;
-				}
-				case PM_CODE_TYPE:
-				{
-					if (GetKeyCode(tokens[1].c_str()) == PM_CODE_CATEGORY)
-						type = PT_CATEGORY;
-					else
-						type = PT_PROFESSION;
+				exit = true;
+				break;
+			}
+			case PM_CODE_NAME:
+			{
+				name = strings[1];
+				break;
+			}
+			case PM_CODE_TRUENAME:
+			{
+				trueName = strings[1];
+				break;
+			}
+			case PM_CODE_DESC:
+			{
+				descriptionIndex = atoi(strings[1].c_str());
+				break;
+			}
+			case PM_CODE_TOPLEVEL:
+			{
+				topLevel = (GetKeyCode(strings[1]) == PM_CODE_TRUE);
+				break;
+			}
+			case PM_CODE_GUMP:
+			{
+				gump = atoi(strings[1].c_str());
 
-					break;
-				}
-				case PM_CODE_CHILDREN:
-				{
-					IFOR(j, 1, (int)tokens.size())
-						childrens.push_back(tokens[j]);
+				UO->ExecuteGump(gump, 0);
+				UO->ExecuteGump(gump + 1, 0);
+				break;
+			}
+			case PM_CODE_TYPE:
+			{
+				if (GetKeyCode(strings[1]) == PM_CODE_CATEGORY)
+					type = PT_CATEGORY;
+				else
+					type = PT_PROFESSION;
 
-					break;
-				}
-				case PM_CODE_SKILL:
+				break;
+			}
+			case PM_CODE_CHILDREN:
+			{
+				IFOR(j, 1, (int)strings.size())
+					childrens.push_back(strings[j]);
+
+				break;
+			}
+			case PM_CODE_SKILL:
+			{
+				if (strings.size() > 2 && skillCount < 4)
 				{
-					if (tokens.size() > 2)
+					IFOR(j, 0, 54)
 					{
-						IFOR(j, 0, 54)
+						if (strings[1] == g_SkillName[j])
 						{
-							if (tokens[1] == g_SkillName[j])
-							{
-								skillIndex[skillCount] = j;
-								skillValue[skillCount] = atoi(tokens[2].c_str());
-								skillCount++;
+							skillIndex[skillCount] = j;
+							skillValue[skillCount] = atoi(strings[2].c_str());
+							skillCount++;
 
-								break;
-							}
+							break;
 						}
 					}
-
-					break;
 				}
-				case PM_CODE_STAT:
-				{
-					if (tokens.size() > 2)
-					{
-						code = GetKeyCode(tokens[1].c_str());
-						int val = atoi(tokens[2].c_str());
 
-						if (code == PM_CODE_STR)
-							stats[0] = val;
-						else if (code == PM_CODE_INT)
-							stats[1] = val;
-						else if (code == PM_CODE_DEX)
-							stats[2] = val;
-					}
-
-					break;
-				}
-				default:
-					break;
+				break;
 			}
+			case PM_CODE_STAT:
+			{
+				if (strings.size() > 2)
+				{
+					code = GetKeyCode(strings[1]);
+					int val = atoi(strings[2].c_str());
 
-			if (exit)
+					if (code == PM_CODE_STR)
+						stats[0] = val;
+					else if (code == PM_CODE_INT)
+						stats[1] = val;
+					else if (code == PM_CODE_DEX)
+						stats[2] = val;
+				}
+
+				break;
+			}
+			default:
 				break;
 		}
-		else if (code == PM_CODE_BEGIN || code == PM_CODE_END)
-			break;
 	}
 
 	TBaseProfession *obj = NULL;
@@ -383,34 +292,26 @@ bool TProfessionManager::Load()
 	head->TopLevel = true;
 	Add(head);
 
-	FILE *file = fopen(FilePath("prof.txt").c_str(), "rt");
+	TTextFileParser file(FilePath("prof.txt").c_str(), " \t,", "#;", "\"\"");
 
-	if (file != NULL)
+	if (!file.IsEOF())
 	{
-		while (!feof(file))
+		while (!file.IsEOF())
 		{
-			char buf[512] = { 0 };
-			fgets(buf, 512, file);
+			std::vector<std::string> strings = file.ReadTokens();
 
-			if (!strlen(buf))
-				continue;
-
-			buf[strlen(buf) - 1] = 0;
-			char *text = _strlwr(buf);
-
-			while (*text && (*text == ' ' || *text == '\t'))
-				text++;
-
-			if (!memcmp(text, "begin", 5))
+			if (strings.size() > 0)
 			{
-				result = ParseFilePart(file);
+				if (ToLowerA(strings[0]) == string("begin"))
+				{
+					result = ParseFilePart(file);
 
-				if (!result)
-					break;
+					if (!result)
+						break;
+				}
+
 			}
 		}
-
-		fclose(file);
 
 		UO->ExecuteGump(0x15A9, 0);
 		UO->ExecuteGump(0x15AA, 0);

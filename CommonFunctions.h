@@ -32,6 +32,9 @@ void UnuseShader();
 string FilePath(string fName);
 string ToString(wstring wstr);
 wstring ToWString(string str);
+string ToLowerA(string str);
+string ToUpperA(string str);
+bool ToBool(string &str);
 //---------------------------------------------------------------------------
 int gumpuucode2str(const wchar_t *wstr, int wlength, char *receiver, int maxsize);
 int uucode2str(const wchar_t *wstr, int wlength, char *receiver, int maxsize);

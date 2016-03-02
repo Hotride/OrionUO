@@ -52,6 +52,18 @@ private:
 
 	//Обработка события после плавного затемнения экрана
 	void ProcessSmoothAction(BYTE action = 0xFF);
+
+	enum
+	{
+		MSCC_ACTID = 1,
+		MSCC_ACTPWD,
+		MSCC_REMEMBERPWD,
+		MSCC_AUTOLOGIN,
+		MSCC_SMOOTHMONITOR_SCALE,
+		MSCC_SMOOTHMONITOR
+	};
+
+	int GetConfigKeyCode(string &key);
 public:
 	TMainScreen();
 	virtual ~TMainScreen();

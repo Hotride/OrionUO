@@ -24,26 +24,32 @@
 class TProfessionManager : public TBaseQueue
 {
 private:
-	static const int PM_CODE_BEGIN = 1;
-	static const int PM_CODE_NAME = 2;
-	static const int PM_CODE_TRUENAME = 3;
-	static const int PM_CODE_DESC = 4;
-	static const int PM_CODE_TOPLEVEL = 5;
-	static const int PM_CODE_GUMP = 6;
-	static const int PM_CODE_TYPE = 7;
-	static const int PM_CODE_CHILDREN = 8;
-	static const int PM_CODE_SKILL = 9;
-	static const int PM_CODE_STAT = 10;
-	static const int PM_CODE_STR = 11;
-	static const int PM_CODE_INT = 12;
-	static const int PM_CODE_DEX = 13;
-	static const int PM_CODE_END = 14;
-	static const int PM_CODE_TRUE = 15;
-	static const int PM_CODE_CATEGORY = 16;
+	static const int m_KeyCount = 16;
 
-	std::vector<string> TProfessionManager::ParseToTokens(const char *str);
-	int GetKeyCode(const char *str);
-	bool ParseFilePart(FILE *file);
+	static const string m_Keys[m_KeyCount];
+
+	enum
+	{
+		PM_CODE_BEGIN = 1,
+		PM_CODE_NAME,
+		PM_CODE_TRUENAME,
+		PM_CODE_DESC,
+		PM_CODE_TOPLEVEL,
+		PM_CODE_GUMP,
+		PM_CODE_TYPE,
+		PM_CODE_CHILDREN,
+		PM_CODE_SKILL,
+		PM_CODE_STAT,
+		PM_CODE_STR,
+		PM_CODE_INT,
+		PM_CODE_DEX,
+		PM_CODE_END,
+		PM_CODE_TRUE,
+		PM_CODE_CATEGORY
+	};
+
+	int GetKeyCode(const string &key);
+	bool ParseFilePart(TTextFileParser &file);
 	bool AddChild(TBaseProfession *parent, TBaseProfession *child);
 	void LoadProfessionDescription();
 public:

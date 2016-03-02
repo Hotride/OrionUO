@@ -1914,80 +1914,40 @@ void TUltimaOnline::UnloadSkills()
 //--------------------------------------------------------------------------
 void TUltimaOnline::LoadLogin()
 {
-	FILE *file = fopen(FilePath("login.cfg").c_str(), "rt");
-	if (file != NULL)
+	TTextFileParser file(FilePath("login.cfg").c_str(), "=,", "#;", "");
+
+	while (!file.IsEOF())
 	{
-		while (!feof(file))
+		std::vector<std::string> strings = file.ReadTokens();
+
+		if (strings.size() >= 3)
 		{
-			char buf[512] = {0};
-			fgets(buf, 512, file);
+			string lo = ToLowerA(strings[0]);
 
-			if (!strlen(buf))
-				continue;
-
-			if (!feof(file))
-				buf[strlen(buf) - 1] = 0;
-
-			char *text = _strlwr(buf);
-
-			while (*text && (*text == ' ' || *text == '\t'))
-				text++;
-
-			if (!memcmp(text, "loginserver", 5))
+			if (lo == string("loginserver"))
 			{
-				text += 11;
-
-				while (*text && (*text == ' ' || *text == '\t' || *text == '='))
-					text++;
-
-				char *port = strchr(text, ',');
-
-				if (port >= 0)
-				{
-					*port = 0;
-
-					while (strlen(text) && (text[strlen(text) - 1] == ' ' || text[strlen(text) - 1] == '\t'))
-						text[strlen(text) - 1] = 0;
-
-					g_ShardIP = text;
-					g_ShardPort = atoi(port + 1);
-
-					break;
-				}
+				g_ShardIP = strings[1];
+				g_ShardPort = atoi(strings[2].c_str());
 			}
 		}
-
-		fclose(file);
 	}
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::LoadAutoLoginNames()
 {
-	g_AutoLoginNames = "";
+	TTextFileParser file(FilePath("AutoLoginNames.cfg").c_str(), "", "#;", "");
 
-	FILE *file = fopen(FilePath("AutoLoginNames.cfg").c_str(), "r");
-
-	if (file != NULL)
+	while (!file.IsEOF())
 	{
-		while (!feof(file))
+		std::vector<std::string> strings = file.ReadTokens();
+
+		if (strings.size())
 		{
-			char name[128] = {0};
+			if (!g_AutoLoginNames.length())
+				g_AutoLoginNames = string("|");
 
-			fgets(name, 128, file);
-
-			if (strlen(name) > 1 && *name != '#' && *name != '/')
-			{
-				if (name[strlen(name) - 1] == '\n')
-					name[strlen(name) - 1] = 0;
-
-				if (!g_AutoLoginNames.length())
-					g_AutoLoginNames = string("|");
-
-				g_AutoLoginNames += string(name) + "|";
-			}
+			g_AutoLoginNames += strings[0] + "|";
 		}
-
-		fclose(file);
 	}
 }
 //---------------------------------------------------------------------------

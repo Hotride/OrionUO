@@ -158,6 +158,32 @@ wstring ToWString(string str)
 	return wstr;
 }
 //---------------------------------------------------------------------------
+string ToLowerA(string str)
+{
+	_strlwr(&str[0]);
+	return str;
+}
+//---------------------------------------------------------------------------
+string ToUpperA(string str)
+{
+	_strupr(&str[0]);
+	return str;
+}
+//---------------------------------------------------------------------------
+bool ToBool(string &str)
+{
+	string data = ToLowerA(str);
+
+	const int countOfTrue = 3;
+	const string m_TrueValues[countOfTrue] = { "on", "yes", "true" };
+	bool result = false;
+
+	IFOR(i, 0, countOfTrue && !result)
+		result = (data == m_TrueValues[i]);
+
+	return result;
+}
+//---------------------------------------------------------------------------
 int gumpuucode2str(const wchar_t* wstr, int wlength, LPSTR receiver, int maxsize)
 {
 	if (!wlength || wlength < -1 || maxsize < 1)

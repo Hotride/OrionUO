@@ -438,6 +438,9 @@
     <ClInclude Include="gump\GumpTargetSystem.h">
       <Filter>Заголовочные файлы\gump</Filter>
     </ClInclude>
+    <ClInclude Include="TextFileParser.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -808,6 +811,9 @@
     </ClCompile>
     <ClCompile Include="gump\GumpTargetSystem.cpp">
       <Filter>Файлы исходного кода\gump</Filter>
+    </ClCompile>
+    <ClCompile Include="TextFileParser.cpp">
+      <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

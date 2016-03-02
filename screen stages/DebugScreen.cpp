@@ -48,8 +48,8 @@ int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 		if (objGraphic)
 		{
-			int deX = drawX;
-			int deY = drawY;
+			int deX = 0;// drawX;
+			int deY = 0;// drawY;
 			int deZ = 0;
 
 			if (m_EffectType == EF_MOVING)
@@ -233,13 +233,104 @@ void TEffectMoving::Init()
 	m_Distance = (int)floor(sqrt(m_DiffX * m_DiffX + m_DiffY * m_DiffY)) * 2 + 1;
 
 	m_Step = 0;
-	m_OffsetX = 0;
-	m_OffsetY = 0;
+	m_OffsetX = 320;
+	m_OffsetY = 240;
 	m_OffsetZ = 0;
 }
 //---------------------------------------------------------------------------
 void TEffectMoving::Update()
 {
+	int cx = 320;
+	int cy = 240;
+
+	int ctx = 10;
+	int cty = 10;
+
+
+
+	int realDrawX = cx + m_OffsetX;
+	int realDrawY = cy + m_OffsetY;
+
+	int offsetDestX = m_DestX - ctx;
+	int offsetDestY = m_DestY - cty;
+
+	int drawDestX = cx + (offsetDestX - offsetDestY) * 22;
+	int drawDestY = cy + (offsetDestX + offsetDestY) * 22;
+
+	int x = 0;
+
+	int deltaXY[2] = { abs(drawDestX - realDrawX), abs(drawDestY - realDrawY) };
+
+	if (deltaXY[0] < deltaXY[1])
+	{
+		x = 1;
+
+		int temp = deltaXY[0];
+
+		deltaXY[0] = deltaXY[1];
+		deltaXY[1] = temp;
+	}
+
+	if (deltaXY[0] == 0)
+		deltaXY[0] = 1;
+
+	double delta = deltaXY[1] / deltaXY[0];
+	double stepXY = 0.0;
+
+	int step = m_Speed;// *5;
+	int tempXY[2] = { step, 0 };
+
+	for (int j = 0; j < step; j++)
+	{
+		stepXY += delta;
+
+		if (stepXY >= 0.5)
+		{
+			tempXY[1] += 1;
+
+			stepXY -= 1.0;
+		}
+	}
+
+	bool incX = (realDrawX < drawDestX);
+	bool incY = (realDrawY < drawDestY);
+
+	if (incX)
+	{
+		realDrawX += tempXY[x];
+
+		if (realDrawX > drawDestX)
+			realDrawX = drawDestX;
+	}
+	else
+	{
+		realDrawX -= tempXY[x];
+
+		if (realDrawX < drawDestX)
+			realDrawX = drawDestX;
+	}
+
+	if (incY)
+	{
+		realDrawY += tempXY[(x + 1) % 2];
+
+		if (realDrawY > drawDestY)
+			realDrawY = drawDestY;
+	}
+	else
+	{
+		realDrawY -= tempXY[(x + 1) % 2];
+
+		if (realDrawY < drawDestY)
+			realDrawY = drawDestY;
+	}
+
+	//TPRINT("lofs: %i %i\n", m_OffsetX, m_OffsetY);
+	m_OffsetX = realDrawX - cx;
+	m_OffsetY = realDrawY - cy;
+	//TPRINT("nofs: %i %i\n", m_OffsetX, m_OffsetY);
+
+
 	/*int cx = 320;
 	int cy = 240;
 
@@ -357,7 +448,7 @@ void TEffectMoving::Update()
 		m_Y = newY;
 	}*/
 
-	if (m_Step == m_Distance + 1)
+	/*if (m_Step == m_Distance + 1)
 	{
 	}
 	else
@@ -386,7 +477,7 @@ void TEffectMoving::Update()
 
 			Init();
 		}
-	}
+	}*/
 }
 
 

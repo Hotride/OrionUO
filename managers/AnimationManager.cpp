@@ -346,165 +346,130 @@ void TAnimationManager::InitBodyconv(PDWORD verdata, string fName)
 {
 	Load(verdata);
 
-	FILE *file = fopen(fName.c_str(), "r");
+	TTextFileParser file(fName.c_str(), " \t", "#;", "");
 
-	if (file != NULL)
+	while (!file.IsEOF())
 	{
-		while (!feof(file))
-		{
-			char text[1024] = {0};
-			fgets(text, 1024, file);
+		std::vector<std::string> strings = file.ReadTokens();
 
-			if (!strlen(text) || !isalnum(text[0]))
+		if (strings.size() >= 5)
+		{
+			int anim[4] = { -1, -1, -1, -1 };
+
+			int index = atoi(strings[0].c_str());
+
+			IFOR(i, 0, 4)
+				anim[i] = atoi(strings[i + 1].c_str());
+
+			if (index < 0 || index >= 0x0800)
 				continue;
 
-			int tCount = 0;
-			char *ptr = text;
-			char *end = text + strlen(text);
+			int startAnimID = -1;
+			int animFile = 1;
+			WORD convertedAnimID = 0;
 
-			while (ptr < end)
+			if (anim[0] != -1 && m_AddressIdx[2] != NULL && m_AddressMul[2] != NULL)
 			{
-				if (*ptr == '\t')
-					tCount++;
+				animFile = 2;
 
-				ptr++;
-			}
-		
-			int index = 0;
-			sscanf(text, "%i", &index);
-
-			if (index >= 0 && index < 0x0800)
-			{
-				int idx = 0;
-				int anim2 = -1;
-				int anim3 = -1;
-				int anim4 = -1;
-				int anim5 = -1;
-
-				if (tCount == 1) //Anim2
-					sscanf(text, "%i\t%i", &idx, &anim2);
-				else if (tCount == 2) //Anim2, Anim3
-					sscanf(text, "%i\t%i\t%i", &idx, &anim2, &anim3);
-				else if (tCount == 3) //Anim2, Anim3, Anim4
-					sscanf(text, "%i\t%i\t%i\t%i", &idx, &anim2, &anim3, &anim4);
-				else if (tCount >= 4) //Anim2, Anim3, Anim4, Anim5
-					sscanf(text, "%i\t%i\t%i\t%i\t%i", &idx, &anim2, &anim3, &anim4, &anim5);
-				
-				//trace_printf("\tIndex=%i tCount=%i 2=%i 3=%i 4=%i 5=%i\n", idx, tCount, Anim2, Anim3, Anim4, Anim5);
-
-				int startAnimID = -1;
-				int animFile = 1;
-				WORD convertedAnimID = 0;
-				
-				if (anim2 != -1 && m_AddressIdx[2] != NULL && m_AddressMul[2] != NULL)
+				if (anim[0] >= 200) //Low
 				{
-					animFile = 2;
+					convertedAnimID = anim[0] - 200;
+					startAnimID = (convertedAnimID * 65) + 22000;
+				}
+				else //Hight
+				{
+					startAnimID = anim[0] * 110;
+					convertedAnimID = anim[0];
+				}
+			}
+			else if (anim[1] != -1 && m_AddressIdx[3] != NULL && m_AddressMul[3] != NULL)
+			{
+				animFile = 3;
 
-					if (anim2 >= 200) //Low
+				if (anim[1] >= 200)
+				{
+					if (anim[1] >= 400) //People
 					{
-						convertedAnimID = anim2 - 200;
+						convertedAnimID = anim[1] - 400;
+						startAnimID = (convertedAnimID * 175) + 35000;
+					}
+					else //Low
+					{
+						convertedAnimID = anim[1] - 200;
+						startAnimID = (convertedAnimID * 110) + 22000;
+					}
+				}
+				else //Hight
+				{
+					convertedAnimID = anim[1];
+					startAnimID = (anim[1] * 65) + 9000;
+				}
+			}
+			else if (anim[2] != -1 && m_AddressIdx[4] != NULL && m_AddressMul[4] != NULL)
+			{
+				animFile = 4;
+
+				if (anim[2] >= 200)
+				{
+					if (anim[2] >= 400) //People
+					{
+						convertedAnimID = anim[2] - 400;
+						startAnimID = (convertedAnimID * 175) + 35000;
+					}
+					else //Low
+					{
+						convertedAnimID = anim[2] - 200;
 						startAnimID = (convertedAnimID * 65) + 22000;
 					}
-					else //Hight
+				}
+				else //Hight
+				{
+					convertedAnimID = anim[2];
+					startAnimID = anim[2] * 110;
+				}
+			}
+			else if (anim[3] != -1 && m_AddressIdx[5] != NULL && m_AddressMul[5] != NULL)
+			{
+				animFile = 5;
+
+				if (anim[3] >= 200)
+				{
+					if (anim[3] >= 400) //People
 					{
-						startAnimID = anim2 * 110;
-						convertedAnimID = anim2;
+						convertedAnimID = anim[3] - 400;
+						startAnimID = (convertedAnimID * 175) + 35000;
+					}
+					else //Low
+					{
+						convertedAnimID = anim[3] - 200;
+						startAnimID = (convertedAnimID * 65) + 22000;
 					}
 				}
-				else if (anim3 != -1 && m_AddressIdx[3] != NULL && m_AddressMul[3] != NULL)
+				else //Hight
 				{
-					animFile = 3;
-
-					if (anim3 >= 200)
-					{
-						if (anim3 >= 400) //People
-						{
-							convertedAnimID = anim3 - 400;
-							startAnimID = (convertedAnimID * 175) + 35000;
-						}
-						else //Low
-						{
-							convertedAnimID = anim3 - 200;
-							startAnimID = (convertedAnimID * 110) + 22000;
-						}
-					}
-					else //Hight
-					{
-						convertedAnimID = anim3;
-						startAnimID = (anim3 * 65) + 9000;
-					}
+					convertedAnimID = anim[3];
+					startAnimID = anim[3] * 110;
 				}
-				else if (anim4 != -1 && m_AddressIdx[4] != NULL && m_AddressMul[4] != NULL)
+			}
+
+			if (animFile != 1 && startAnimID != -1)
+			{
+				startAnimID = startAnimID * sizeof(ANIM_IDX_BLOCK);
+
+				if ((DWORD)startAnimID < m_SizeIdx[animFile])
 				{
-					animFile = 4;
+					PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_AddressIdx[animFile] + (startAnimID));
 
-					if (anim4 >= 200)
+					if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
 					{
-						if (anim4 >= 400) //People
-						{
-							convertedAnimID = anim4 - 400;
-							startAnimID = (convertedAnimID * 175) + 35000;
-						}
-						else //Low
-						{
-							convertedAnimID = anim4 - 200;
-							startAnimID = (convertedAnimID * 65) + 22000;
-						}
-					}
-					else //Hight
-					{
-						convertedAnimID = anim4;
-						startAnimID = anim4 * 110;
-					}
-				}
-				else if (anim5 != -1 && m_AddressIdx[5] != NULL && m_AddressMul[5] != NULL)
-				{
-					animFile = 5;
-
-					if (anim5 >= 200)
-					{
-						if (anim5 >= 400) //People
-						{
-							convertedAnimID = anim5 - 400;
-							startAnimID = (convertedAnimID * 175) + 35000;
-						}
-						else //Low
-						{
-							convertedAnimID = anim5 - 200;
-							startAnimID = (convertedAnimID * 65) + 22000;
-						}
-					}
-					else //Hight
-					{
-						convertedAnimID = anim5;
-						startAnimID = anim5 * 110;
-					}
-				}
-
-				if (animFile != 1 && startAnimID != -1)
-				{
-					startAnimID = startAnimID * sizeof(ANIM_IDX_BLOCK);
-
-					if ((DWORD)startAnimID < m_SizeIdx[animFile])
-					{
-						PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_AddressIdx[animFile] + (startAnimID));
-
-						if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
-						{
-							m_DataIndex[idx].Address = (DWORD)aidx;
-							m_DataIndex[idx].Offset = m_AddressMul[animFile];
-							m_DataIndex[idx].Graphic = convertedAnimID;
-						}
+						m_DataIndex[index].Address = (DWORD)aidx;
+						m_DataIndex[index].Offset = m_AddressMul[animFile];
+						m_DataIndex[index].Graphic = convertedAnimID;
 					}
 				}
 			}
 		}
-
-		fclose(file);
-	}
-	else
-	{
-		TPRINT("Bodyconv.def is not found!\n");
 	}
 }
 //---------------------------------------------------------------------------

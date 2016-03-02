@@ -468,6 +468,7 @@ typedef std::vector<BYTE> WaveFile;
 #include "managers\\ConnectionManager.h"
 #include "managers\\PacketManager.h"
 #include "managers\\FileManager.h"
+#include "TextFileParser.h"
 #include "ImageBounds.h"
 #include "TargetGump.h"
 #include "SmoothMonitor.h"

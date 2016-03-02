@@ -227,6 +227,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="TargetGump.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextData.h" />
+    <ClInclude Include="TextFileParser.h" />
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="PopupHelp.h" />
     <ClInclude Include="VideoRecorder.h" />
@@ -355,6 +356,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="Target.cpp" />
     <ClCompile Include="TargetGump.cpp" />
     <ClCompile Include="TextData.cpp" />
+    <ClCompile Include="TextFileParser.cpp" />
     <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="PopupHelp.cpp" />
     <ClCompile Include="VideoRecorder.cpp" />

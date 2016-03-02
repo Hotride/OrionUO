@@ -368,100 +368,106 @@ void TMainScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 	}
 }
 //---------------------------------------------------------------------------
+int TMainScreen::GetConfigKeyCode(string &key)
+{
+	const int keyCount = 6;
+
+	const string m_Keys[keyCount] =
+	{
+		"acctid",
+		"acctpassword",
+		"rememberacctpw",
+		"autologin",
+		"smoothmonitorscale",
+		"smoothmonitor"
+	};
+
+	string str = ToLowerA(key);
+	int result = 0;
+
+	IFOR(i, 0, keyCount && !result)
+	{
+		if (str == m_Keys[i])
+			result = i + 1;
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
 void TMainScreen::LoadGlobalConfig()
 {
 	m_AutoLogin = false;
 	SmoothMonitor.Enabled = false;
 	SmoothMonitor.Scale = 1;
 
-	FILE *uo_cfg = fopen(FilePath("uo_debug.cfg").c_str(), "r");
+	TTextFileParser file(FilePath("uo_debug.cfg").c_str(), "=", "#;", "");
 
-	if (uo_cfg != NULL)
+	while (!file.IsEOF())
 	{
-		while (!feof(uo_cfg))
+		std::vector<std::string> strings = file.ReadTokens();
+
+		if (strings.size() >= 2)
 		{
-			char cfgbuf[256] = {0};
-			fgets(cfgbuf, 256, uo_cfg);
+			int code = GetConfigKeyCode(strings[0]);
 
-			if (!strlen(cfgbuf))
-				continue;
-
-			if (cfgbuf[strlen(cfgbuf) - 1] == '\n')
-				cfgbuf[strlen(cfgbuf) - 1] = 0;
-
-			char *ptr = cfgbuf;
-
-			while (*ptr && *ptr != '=')
-				ptr++;
-
-			if (*ptr && *ptr == '=')
+			switch (code)
 			{
-				*ptr = 0;
-				ptr++;
-				string value(ptr);
-
-				_strlwr(cfgbuf);
-				if (!memcmp(cfgbuf, "acctid", 6))
+				case MSCC_ACTID:
 				{
-					m_Account->SetText(value);
-					m_Account->SetPos(value.length());
+					m_Account->SetText(strings[1]);
+					m_Account->SetPos(strings[1].length());
+					
+					break;
 				}
-				else if (!memcmp(cfgbuf, "acctpassword", 12))
+				case MSCC_ACTPWD:
 				{
-					int pln = strlen(ptr);
+					int len = strings[1].length();
 
-					if (pln)
-						m_Password->SetText(DecryptPW(ptr, pln));
+					if (len)
+						m_Password->SetText(DecryptPW(strings[1].c_str(), len));
 
-					m_Password->SetPos(pln);
+					m_Password->SetPos(len);
+
+					break;
 				}
-				else if (!memcmp(cfgbuf, "rememberacctpw", 14))
+				case MSCC_REMEMBERPWD:
 				{
-					bool save = false;
-
-					_strlwr(ptr);
-					value = ptr;
-
-					if (value == string("yes") || value == string("on"))
-						save = true;
-					else
+					m_SavePassword = ToBool(strings[1]);
+					
+					if (!m_SavePassword)
 					{
 						m_Password->SetText("");
 						m_Password->SetPos(0);
 					}
 
-					m_SavePassword = save;
+					break;
 				}
-				else if (!memcmp(cfgbuf, "autologin", 9))
+				case MSCC_AUTOLOGIN:
 				{
-					_strlwr(ptr);
-					value = ptr;
+					m_AutoLogin = ToBool(strings[1]);
 
-					if (value == string("yes") || value == string("on"))
-						m_AutoLogin = true;
+					break;
 				}
-				else if (!memcmp(cfgbuf, "smoothmonitorscale", 18))
+				case MSCC_SMOOTHMONITOR_SCALE:
 				{
-					char scale = atoi(ptr);
+					int scale = atoi(strings[1].c_str());
 
 					if (scale > 0 && scale <= 15)
 						SmoothMonitor.Scale = scale;
-				}
-				else if (!memcmp(cfgbuf, "smoothmonitor", 13))
-				{
-					_strlwr(ptr);
-					value = ptr;
 
-					if (value == string("yes") || value == string("on"))
-						SmoothMonitor.Enabled = true;
+					break;
 				}
+				case MSCC_SMOOTHMONITOR:
+				{
+					SmoothMonitor.Enabled = ToBool(strings[1]);
+
+					break;
+				}
+				default:
+					break;
 			}
 		}
-
-		fclose(uo_cfg);
 	}
-	else
-		TPRINT("uo_debug.cfg is NOT found!\n");
 }
 //---------------------------------------------------------------------------
 void TMainScreen::SaveGlobalConfig()
