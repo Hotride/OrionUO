@@ -33,8 +33,8 @@ public:
 	TTextureObject *ReadTexture(WORD ID, TIndexObject &io);
 	TTextureObject *ReadLight(WORD ID, TIndexObject &io);
 	
-	bool GumpPixelsInXY(TIndexObject &io, int width, int height, int CheckX, int CheckY);
-	bool ArtPixelsInXY(WORD ID, TIndexObject &io, int width, int height, int CheckX, int CheckY);
+	bool GumpPixelsInXY(TIndexObject &io, int checkX, int checkY);
+	bool ArtPixelsInXY(WORD ID, TIndexObject &io, int checkX, int checkY);
 };
 //---------------------------------------------------------------------------
 extern TMulReader MulReader;

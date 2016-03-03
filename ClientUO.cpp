@@ -3039,7 +3039,7 @@ bool TUltimaOnline::GumpPixelsInXY(WORD id, int x, int y, bool noSubMouse)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.GumpPixelsInXY(io, th->Width, th->Height, x, y);
+		result = MulReader.GumpPixelsInXY(io, x, y);
 #endif
 	}
 
@@ -3090,7 +3090,7 @@ bool TUltimaOnline::GumpPixelsInXY(WORD id, int x, int y, int width, int height,
 	if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 		result = th->Data[(y * th->Width) + x] != 0;
 #else
-	result = MulReader.GumpPixelsInXY(io, th->Width, th->Height, x, y);
+	result = MulReader.GumpPixelsInXY(io, x, y);
 #endif
 
 	return result;
@@ -3237,7 +3237,7 @@ bool TUltimaOnline::StaticPixelsInXY(WORD id, int x, int y, int z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id + 0x4000, io, th->Width, th->Height, x, y);
+		result = MulReader.ArtPixelsInXY(id + 0x4000, io, x, y);
 #endif
 	}
 
@@ -3262,7 +3262,7 @@ bool TUltimaOnline::StaticPixelsInXYAnimated(WORD id, int x, int y, int z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id + 0x4000, io, th->Width, th->Height, x, y);
+		result = MulReader.ArtPixelsInXY(id + 0x4000, io, x, y);
 #endif
 	}
 
@@ -3301,7 +3301,7 @@ bool TUltimaOnline::StaticPixelsInXYInContainer(WORD id, int x, int y)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id + 0x4000, io, th->Width, th->Height, x, y);
+		result = MulReader.ArtPixelsInXY(id + 0x4000, io, x, y);
 #endif
 	}
 
@@ -3324,7 +3324,7 @@ bool TUltimaOnline::LandPixelsInXY(WORD id, int x, int  y, int z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id, io, th->Width, th->Height, x, y);
+		result = MulReader.ArtPixelsInXY(id, io, x, y);
 #endif
 	}
 

@@ -87,31 +87,39 @@ TTextureObject *TMulReader::ReadGump(TIndexObject &io)
 	return th;
 }
 //---------------------------------------------------------------------------
-bool TMulReader::GumpPixelsInXY(TIndexObject &io, int width, int height, int CheckX, int CheckY)
+bool TMulReader::GumpPixelsInXY(TIndexObject &io, int checkX, int checkY)
 {
-	if (CheckX < 0 || CheckY < 0 || CheckX >= width || CheckY >= height)
+	TTextureObject *th = io.Texture;
+
+	//if (th == NULL)
+	//	return false;
+
+	int width = th->Width;
+	int height = th->Height;
+
+	if (checkX < 0 || checkY < 0 || checkX >= width || checkY >= height)
 		return false;
 
-	int DataStart = io.Address;
-	PDWORD LookupList = (PDWORD)DataStart;
+	int dataStart = io.Address;
+	PDWORD lookupList = (PDWORD)dataStart;
 
-	int GSize = 0;
-	if (CheckY < height - 1)
-		GSize = LookupList[CheckY + 1] - LookupList[CheckY];
+	int gSize = 0;
+	if (checkY < height - 1)
+		gSize = lookupList[checkY + 1] - lookupList[checkY];
 	else
-		GSize = (io.Size / 4) - LookupList[CheckY];
+		gSize = (io.Size / 4) - lookupList[checkY];
 
-	PGUMP_BLOCK gmul = (PGUMP_BLOCK)(DataStart + LookupList[CheckY] * 4);
+	PGUMP_BLOCK gmul = (PGUMP_BLOCK)(dataStart + lookupList[checkY] * 4);
 	
-	int X = 0;
-	IFOR(i, 0, GSize)
+	int x = 0;
+	IFOR(i, 0, gSize)
 	{
 		IFOR(j, 0, gmul[i].Run)
 		{
-			if (X == CheckX)
+			if (x == checkX)
 				return (gmul[i].Value != 0);
 
-			X++;
+			x++;
 		}
 	}
 
@@ -300,9 +308,17 @@ TTextureObject *TMulReader::ReadArt(WORD ID, TIndexObject &io)
 	return th;
 }
 //---------------------------------------------------------------------------
-bool TMulReader::ArtPixelsInXY(WORD ID, TIndexObject &io, int width, int height, int CheckX, int CheckY)
+bool TMulReader::ArtPixelsInXY(WORD ID, TIndexObject &io, int checkX, int checkY)
 {
-	if (CheckX < 0 || CheckY < 0 || CheckX >= width || CheckY >= height)
+	TTextureObject *th = io.Texture;
+
+	//if (th == NULL)
+	//	return false;
+
+	int width = th->Width;
+	int height = th->Height;
+
+	if (checkX < 0 || checkY < 0 || checkX >= width || checkY >= height)
 		return false;
 
 	DWORD flag = *(PDWORD)io.Address;
@@ -317,7 +333,9 @@ bool TMulReader::ArtPixelsInXY(WORD ID, TIndexObject &io, int width, int height,
 		{
 			IFOR(j, 22 - (i + 1), (22 - (i + 1)) + (i + 1) * 2)
 			{
-				if (i == CheckY && j == CheckX) return ((*P) != 0);
+				if (i == checkY && j == checkX)
+					return ((*P) != 0);
+
 				P++;
 			}
 		}
@@ -326,7 +344,9 @@ bool TMulReader::ArtPixelsInXY(WORD ID, TIndexObject &io, int width, int height,
 		{
 			IFOR(j, i, i + (22 - i) * 2)
 			{
-				if ((i + 22) == CheckY && j == CheckX) return ((*P) != 0);
+				if ((i + 22) == checkY && j == checkX)
+					return ((*P) != 0);
+
 				P++;
 			}
 		}
@@ -352,40 +372,43 @@ bool TMulReader::ArtPixelsInXY(WORD ID, TIndexObject &io, int width, int height,
 
 		ptr++;
 
-		PWORD LineOffsets = ptr;
-		PVOID DataStart = (PVOID)((DWORD)ptr + (h * 2));
+		PWORD lineOffsets = ptr;
+		PVOID dataStart = (PVOID)((DWORD)ptr + (h * 2));
 
-		int X = 0;
-		int Y = 0;
-		WORD XOffs = 0;
-		WORD Run = 0;
+		int x = 0;
+		int y = 0;
+		WORD xOffs = 0;
+		WORD run = 0;
 
-		ptr = (PWORD)((DWORD)DataStart + (*LineOffsets));
+		ptr = (PWORD)((DWORD)dataStart + (*lineOffsets));
 
-		while (Y < h)
+		while (y < h)
 		{
-			XOffs = *ptr;
+			xOffs = *ptr;
 			ptr++;
-			Run = *ptr;
+			run = *ptr;
 			ptr++;
-			if (XOffs + Run >= 2048)
+
+			if (xOffs + run >= 2048)
 				return false;
-			else if (XOffs + Run != 0)
+			else if (xOffs + run != 0)
 			{
-				X += XOffs;
-				IFOR(j, 0, Run)
+				x += xOffs;
+
+				IFOR(j, 0, run)
 				{
-					if (Y == CheckY && (X + j) == CheckX)
+					if (y == checkY && (x + j) == checkX)
 						return ((*ptr) != 0);
 					ptr++;
 				}
-				X += Run;
+
+				x += run;
 			}
 			else
 			{
-				X = 0;
-				Y++;
-				ptr = (PWORD)((DWORD)DataStart + (LineOffsets[Y] * 2));
+				x = 0;
+				y++;
+				ptr = (PWORD)((DWORD)dataStart + (lineOffsets[y] * 2));
 			}
 		}
 	}
