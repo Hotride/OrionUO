@@ -1877,9 +1877,6 @@ void TUltimaOnline::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= 0x4000)
-				continue;
-
 			std::vector<std::string> newArt = newDataParser.GetTokens(strings[1].c_str());
 
 			int size = (int)newArt.size();
@@ -1888,10 +1885,7 @@ void TUltimaOnline::IndexReplaces()
 			{
 				int checkIndex = atoi(newArt[i].c_str());
 
-				if (checkIndex < 0 || checkIndex >= 0x4000)
-					continue;
-
-				if (index < 0x4000 && checkIndex < 0x4000)
+				if (index < 0x4000 && checkIndex < 0x4000 && m_LandDataIndex[checkIndex].Address != 0)
 				{
 					memcpy(&m_LandDataIndex[index], &m_LandDataIndex[checkIndex], sizeof(TIndexObject));
 					m_LandDataIndex[index].Texture = NULL;
@@ -1899,8 +1893,11 @@ void TUltimaOnline::IndexReplaces()
 
 					break;
 				}
-				else if (index >= 0x4000 && checkIndex >= 0x4000)
+				else if (index >= 0x4000 && checkIndex >= 0x4000 && m_StaticDataIndex[checkIndex - 0x4000].Address != 0)
 				{
+					checkIndex -= 0x4000;
+					index -= 0x4000;
+
 					memcpy(&m_StaticDataIndex[index], &m_StaticDataIndex[checkIndex], sizeof(TIndexObjectStatic));
 					m_StaticDataIndex[index].Texture = NULL;
 					m_StaticDataIndex[index].Color = atoi(strings[2].c_str());

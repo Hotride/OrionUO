@@ -17,7 +17,7 @@
 *.exe
 *.dll
 !ConfigurationEditor.exe
-/Bodyconv1.def
+/Bodyconv.def
 /Body.def
 /stitchin.def
 /Makefile*

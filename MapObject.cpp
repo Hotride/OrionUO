@@ -377,7 +377,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 			glDisable(GL_DEPTH_TEST);
 		}
 
-		if (IsLightSource() && !IsWall() && GameScreen->UseLight)
+		if (IsLightSource() && GameScreen->UseLight)
 			GameScreen->AddLight(this, this, drawX, drawY - (m_Z * 4));
 	}
 	else
