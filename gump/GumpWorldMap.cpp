@@ -527,7 +527,7 @@ int TGumpWorldMap::Draw(bool &mode)
 			DWORD playerColor = 0x7F7F7F7F;
 			g_GL.DrawPolygone(playerColor, posX + offsetX + playerX + 0.0f, posY + offsetY + playerY + 30.0f, 16, 2);
 			g_GL.DrawPolygone(playerColor, posX + offsetX + playerX + 7.0f, posY + offsetY + playerY + 23.0f, 2, 16);
-			g_GL.DrawTriangle(playerColor, posX + offsetX + 8.0f + playerX, posY + offsetY + 31.0f + playerY, 3.0f);
+			g_GL.DrawCircle(playerColor, posX + offsetX + 8.0f + playerX, posY + offsetY + 31.0f + playerY, 3.0f);
 		}
 
 		g_GL.RestorePort();

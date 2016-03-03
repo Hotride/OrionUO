@@ -1696,7 +1696,13 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 						FontManager->DrawA(1, TMacro::GetAction(obj->SubCode), 0x0386, posX + 118, boxPosY + 5, 150, TS_LEFT, UOFONT_FIXED);
 					}
 					else
+					{
+						g_GL.ViewPort(posX + 118, boxPosY + 5, 150, 20);
+
 						((TMacroObjectEntry*)obj)->TextEntry->DrawA(1, 0x0386, posX + 118, boxPosY + 5, TS_LEFT, UOFONT_FIXED);
+
+						g_GL.RestorePort();
+					}
 				}
 
 				boxPosY += 26;

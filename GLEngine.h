@@ -92,13 +92,16 @@ public:
 
 
 	//Нарисовать линию
+	void DrawLine(float x, float y, float targetX, float targetY);
 	void DrawLine(DWORD color, float x, float y, float targetX, float targetY);
 
 	//Нарисовать прямоугольник
+	void DrawPolygone(float x, float y, float width, float height);
 	void DrawPolygone(DWORD color, float x, float y, float width, float height);
 
 	//Нарисовать круг
-	void DrawTriangle(DWORD color, float x, float y, float radius);
+	void DrawCircle(float x, float y, float radius);
+	void DrawCircle(DWORD color, float x, float y, float radius);
 
 
 

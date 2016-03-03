@@ -109,6 +109,8 @@ private:
 	static const int ID_DS_QUIT = 1;
 	static const int ID_DS_GO_SCREEN_MAIN = 2;
 
+	TEntryText *m_Text;
+
 	TEffectMoving *effect;
 	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
@@ -122,6 +124,7 @@ public:
 	int Render(bool mode);
 
 	void OnLeftMouseUp();
+	void OnCharPress(WPARAM wparam, LPARAM lparam);
 	void OnKeyPress(WPARAM wparam, LPARAM lparam);
 };
 //---------------------------------------------------------------------------

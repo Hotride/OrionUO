@@ -110,7 +110,7 @@ public:
 	void EstimateImageCornerAlpha(PDWORD pixels, short &width, short &height, float alpha_scale = 5.0f, float luma_threshold = 18.0f);
 
 	//Загрузка файла корректора индексов картинок анимаций
-	void InitBodyconv(PDWORD verdata, string fName);
+	void InitIndexReplaces(PDWORD verdata);
 
 	//Загрузка данных
 	void Load(PDWORD verdata);

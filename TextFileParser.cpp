@@ -121,7 +121,15 @@ bool TTextFileParser::IsComment()
 
 	//Проход по всем комментариям
 	for (int i = 0; i < m_ComentariesSize && *m_Ptr && !result; i++)
-		result = (*m_Ptr == m_Comentaries[i] || *m_Ptr == '\n');
+	{
+		if (m_Comentaries[i] == '/' && i + 1 < m_ComentariesSize && m_Comentaries[i + 1] == '/' && m_Ptr + 1 < m_EOL)
+		{
+			result = ((m_Ptr[0] == m_Comentaries[i] && m_Ptr[1] == m_Comentaries[i + 1]) || *m_Ptr == '\n');
+			i++;
+		}
+		else
+			result = (*m_Ptr == m_Comentaries[i] || *m_Ptr == '\n');
+	}
 
 	return result;
 }

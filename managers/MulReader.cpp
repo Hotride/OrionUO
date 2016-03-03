@@ -21,17 +21,17 @@
 
 TMulReader MulReader;
 //---------------------------------------------------------------------------
-TTextureObject *TMulReader::ReadGump(DWORD Address, DWORD Size, WORD Width, WORD Height)
+TTextureObject *TMulReader::ReadGump(TIndexObject &io)
 {
-	int DataStart = Address;
+	int DataStart = io.Address;
 	PDWORD LookupList = (PDWORD)DataStart;
 
 	TTextureObject *th = new TTextureObject();
-	th->Width = Width;
-	th->Height = Height;
+	th->Width = io.Width;
+	th->Height = io.Height;
 	th->Texture = 0;
 
-	int blocksize = Width * Height;
+	int blocksize = io.Width * io.Height;
 
 	PWORD pixels = new WORD[blocksize];
 	//memset(&pixels[0], 0, blocksize * 2);
@@ -40,25 +40,31 @@ TTextureObject *TMulReader::ReadGump(DWORD Address, DWORD Size, WORD Width, WORD
 	PBYTE data = new BYTE[blocksize];
 #endif
 
-	IFOR(Y, 0, Height)
+	IFOR(Y, 0, io.Height)
 	{
 		int GSize = 0;
 
-		if (Y < Height - 1)
+		if (Y < io.Height - 1)
 			GSize = LookupList[Y + 1] - LookupList[Y];
 		else
-			GSize = (Size / 4) - LookupList[Y];
+			GSize = (io.Size / 4) - LookupList[Y];
 
 		PGUMP_BLOCK gmul = (PGUMP_BLOCK)(DataStart + LookupList[Y] * 4);
 		int X = 0;
+		WORD color = io.Color;
+
 		IFOR(i, 0, GSize)
 		{
 			WORD val = gmul[i].Value;
+
+			if (color)
+				val = ColorManager->GetColor16(val, color);
+
 			WORD a = val ? 0x8000 : 0;
 
 			IFOR(j, 0, gmul[i].Run)
 			{
-				int block = Y * Width + X;
+				int block = Y * io.Width + X;
 
 				pixels[block] = a | val;
 
@@ -71,7 +77,7 @@ TTextureObject *TMulReader::ReadGump(DWORD Address, DWORD Size, WORD Width, WORD
 		}
 	}
 
-	g_GL.BindTexture16(th->Texture, Width, Height, pixels);
+	g_GL.BindTexture16(th->Texture, io.Width, io.Height, pixels);
 
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 	th->Data = data;
@@ -81,19 +87,19 @@ TTextureObject *TMulReader::ReadGump(DWORD Address, DWORD Size, WORD Width, WORD
 	return th;
 }
 //---------------------------------------------------------------------------
-bool TMulReader::GumpPixelsInXY(DWORD Address, DWORD Size, WORD Width, WORD Height, int CheckX, int CheckY)
+bool TMulReader::GumpPixelsInXY(TIndexObject &io, int width, int height, int CheckX, int CheckY)
 {
-	if (CheckX < 0 || CheckY < 0 || CheckX >= Width || CheckY >= Height)
+	if (CheckX < 0 || CheckY < 0 || CheckX >= width || CheckY >= height)
 		return false;
 
-	int DataStart = Address;
+	int DataStart = io.Address;
 	PDWORD LookupList = (PDWORD)DataStart;
 
 	int GSize = 0;
-	if (CheckY < Height - 1)
+	if (CheckY < height - 1)
 		GSize = LookupList[CheckY + 1] - LookupList[CheckY];
 	else
-		GSize = (Size / 4) - LookupList[CheckY];
+		GSize = (io.Size / 4) - LookupList[CheckY];
 
 	PGUMP_BLOCK gmul = (PGUMP_BLOCK)(DataStart + LookupList[CheckY] * 4);
 	
@@ -112,15 +118,16 @@ bool TMulReader::GumpPixelsInXY(DWORD Address, DWORD Size, WORD Width, WORD Heig
 	return false;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
+TTextureObject *TMulReader::ReadArt(WORD ID, TIndexObject &io)
 {
 	TTextureObject *th = new TTextureObject();
 	th->Texture = 0;
 
-	DWORD flag = *(PDWORD)Address;
+	DWORD flag = *(PDWORD)io.Address;
 	WORD h = 44;
 	WORD w = 44;
-	PWORD P = (PWORD)Address;
+	PWORD P = (PWORD)io.Address;
+	WORD color = io.Color;
 
 	//if (!flag || flag > 0xFFFF) //raw tile
 	if (ID < 0x4000) //raw tile
@@ -139,6 +146,10 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 			IFOR(j, 22 - (i + 1), (22 - (i + 1)) + (i + 1) * 2)
 			{
 				WORD val = *P;
+
+				if (color)
+					val = ColorManager->GetColor16(val, color);
+
 				WORD a = val ? 0x8000 : 0;
 				int block = i * 44 + j;
 				pixels[block] = a | val;
@@ -154,6 +165,10 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 			IFOR(j, i, i + (22 - i) * 2)
 			{
 				WORD val = *P;
+
+				if (color)
+					val = ColorManager->GetColor16(val, color);
+
 				WORD a = val ? 0x8000 : 0;
 				int block = (i + 22) * 44 + j;
 				pixels[block] = a | val;
@@ -172,7 +187,7 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 	}
 	else
 	{ //run tile
-		PWORD ptr = (PWORD)((DWORD)Address + 4);
+		PWORD ptr = (PWORD)((DWORD)io.Address + 4);
 
 		w = *ptr;
 		if (!w || w >= 1024)
@@ -233,6 +248,10 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 				IFOR(j, 0, Run)
 				{
 					WORD val = *ptr;
+
+					if (color)
+						val = ColorManager->GetColor16(val, color);
+
 					WORD a = val ? 0x8000 : 0;
 					int block = Y * w + X + j;
 					pixels[block] = a | val;
@@ -281,15 +300,15 @@ TTextureObject *TMulReader::ReadArt(WORD ID, DWORD Address, DWORD Size)
 	return th;
 }
 //---------------------------------------------------------------------------
-bool TMulReader::ArtPixelsInXY(WORD ID, DWORD Address, DWORD Size, WORD Width, WORD Height, int CheckX, int CheckY)
+bool TMulReader::ArtPixelsInXY(WORD ID, TIndexObject &io, int width, int height, int CheckX, int CheckY)
 {
-	if (CheckX < 0 || CheckY < 0 || CheckX >= Width || CheckY >= Height)
+	if (CheckX < 0 || CheckY < 0 || CheckX >= width || CheckY >= height)
 		return false;
 
-	DWORD flag = *(PDWORD)Address;
+	DWORD flag = *(PDWORD)io.Address;
 	WORD h = 44;
 	WORD w = 44;
-	PWORD P = (PWORD)Address;
+	PWORD P = (PWORD)io.Address;
 
 	//if (!flag || flag > 0xFFFF) //raw tile
 	if (ID < 0x4000) //raw tile
@@ -314,7 +333,7 @@ bool TMulReader::ArtPixelsInXY(WORD ID, DWORD Address, DWORD Size, WORD Width, W
 	}
 	else //run tile
 	{
-		PWORD ptr = (PWORD)((DWORD)Address + 4);
+		PWORD ptr = (PWORD)((DWORD)io.Address + 4);
 
 		w = *ptr;
 		if (!w || w >= 1024)
@@ -374,19 +393,20 @@ bool TMulReader::ArtPixelsInXY(WORD ID, DWORD Address, DWORD Size, WORD Width, W
 	return false;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TMulReader::ReadTexture(WORD ID, DWORD Address, DWORD Size)
+TTextureObject *TMulReader::ReadTexture(WORD ID, TIndexObject &io)
 {
 	TTextureObject *th = new TTextureObject();
 	th->Texture = 0;
+	WORD color = io.Color;
 
 	WORD w = 64;
 	WORD h = 64;
-	if (Size == 0x2000)
+	if (io.Size == 0x2000)
 	{
 		w = 64;
 		h = 64;
 	}
-	else if (Size == 0x8000)
+	else if (io.Size == 0x8000)
 	{
 		w = 128;
 		h = 128;
@@ -400,12 +420,16 @@ TTextureObject *TMulReader::ReadTexture(WORD ID, DWORD Address, DWORD Size)
 	int blocksize = w * h;
 	PWORD pixels = new WORD[blocksize];
 
-	PWORD P = (PWORD)Address;
+	PWORD P = (PWORD)io.Address;
 	IFOR(i, 0, h)
 	{
 		IFOR(j, 0, w)
 		{
 			WORD val = *P;
+
+			if (color)
+				val = ColorManager->GetColor16(val, color);
+
 			WORD a = val ? 0x8000 : 0;
 			int block = i * w + j;
 			pixels[block] = a | val;
@@ -423,31 +447,31 @@ TTextureObject *TMulReader::ReadTexture(WORD ID, DWORD Address, DWORD Size)
 	return th;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TMulReader::ReadLight(WORD id, DWORD address, DWORD size, WORD width, WORD height)
+TTextureObject *TMulReader::ReadLight(WORD id, TIndexObject &io)
 {
 	TTextureObject *th = new TTextureObject();
 	th->Texture = NULL;
 
-	PWORD pixels = new WORD[width * height];
+	PWORD pixels = new WORD[io.Width * io.Height];
 
-	PBYTE p = (PBYTE)address;
+	PBYTE p = (PBYTE)io.Address;
 
-	IFOR(i, 0, height)
+	IFOR(i, 0, io.Height)
 	{
-		IFOR(j, 0, width)
+		IFOR(j, 0, io.Width)
 		{
 			WORD val = (*p << 10) | (*p << 5) | *p;
 			WORD a = val ? 0x8000 : 0;
-			int block = (i * width) + j;
+			int block = (i * io.Width) + j;
 			pixels[block] = a | val;
 			p++;
 		}
 	}
 
-	th->Width = width;
-	th->Height = height;
+	th->Width = io.Width;
+	th->Height = io.Height;
 
-	g_GL.BindTexture16(th->Texture, width, height, pixels);
+	g_GL.BindTexture16(th->Texture, io.Width, io.Height, pixels);
 
 	delete pixels;
 

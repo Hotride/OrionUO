@@ -18,6 +18,8 @@
 *.dll
 !ConfigurationEditor.exe
 /Bodyconv1.def
+/Body.def
+/stitchin.def
 /Makefile*
 /ipch
 /Release

@@ -21,7 +21,7 @@
 //---------------------------------------------------------------------------
 TIndexObject::TIndexObject()
 : m_Address(0), m_Size(0), m_LastAccessTime(0), m_Width(0), m_Height(0),
-Texture(NULL)
+m_Color(0), Texture(NULL)
 {
 }
 //---------------------------------------------------------------------------
@@ -56,7 +56,7 @@ TIndexSound::~TIndexSound()
 }
 //---------------------------------------------------------------------------
 TIndexAnimation::TIndexAnimation()
-: m_Address(0), m_Offset(0), m_Graphic(0), Group(NULL)
+: m_Address(0), m_Offset(0), m_Graphic(0), m_Color(0), Group(NULL)
 {
 }
 //---------------------------------------------------------------------------

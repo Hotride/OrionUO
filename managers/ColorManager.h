@@ -66,6 +66,7 @@ public:
 	WORD ConvertToGray(WORD &C);
 
 	//Получить цвет
+	WORD GetColor16(WORD &c, WORD color);
 	WORD GetRadarColorData(WORD &C);
 	DWORD GetRadarColor(WORD &C);
 	DWORD GetPolygoneColor(WORD C, WORD Color);

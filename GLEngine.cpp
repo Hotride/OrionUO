@@ -252,31 +252,35 @@ void TGLEngine::RestorePort()
 	glMatrixMode(GL_MODELVIEW);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawLine(DWORD color, float x, float y, float targetX, float targetY)
+void TGLEngine::DrawLine(float x, float y, float targetX, float targetY)
 {
 	glDisable(GL_TEXTURE_2D);
 
 	glLoadIdentity();
-
-	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
 
 	glBegin(GL_LINES);
 		glVertex2f(x, y);
 		glVertex2f(targetX, targetY);
 	glEnd();
 
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawPolygone(DWORD color, float x, float y, float width, float height)
+void TGLEngine::DrawLine(DWORD color, float x, float y, float targetX, float targetY)
+{
+	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
+
+	DrawLine(x, y, targetX, targetY);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+}
+//---------------------------------------------------------------------------
+void TGLEngine::DrawPolygone(float x, float y, float width, float height)
 {
 	glDisable(GL_TEXTURE_2D);
 
 	glLoadIdentity();
 	glTranslatef(x, y, 0.0f);
-
-	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
 
 	glBegin(GL_TRIANGLE_STRIP);
 		glVertex2f(0.0f, height);
@@ -285,18 +289,24 @@ void TGLEngine::DrawPolygone(DWORD color, float x, float y, float width, float h
 		glVertex2f(width, 0.0f);
 	glEnd();
 
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawTriangle(DWORD color, float x, float y, float radius)
+void TGLEngine::DrawPolygone(DWORD color, float x, float y, float width, float height)
+{
+	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
+
+	DrawPolygone(x, y, width, height);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+}
+//---------------------------------------------------------------------------
+void TGLEngine::DrawCircle(float x, float y, float radius)
 {
 	glDisable(GL_TEXTURE_2D);
 
 	glLoadIdentity();
 	glTranslatef(x, y, 0.0f);
-
-	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
 
 	glBegin(GL_TRIANGLE_FAN);
 
@@ -312,8 +322,16 @@ void TGLEngine::DrawTriangle(DWORD color, float x, float y, float radius)
 
 	glEnd();
 	
-	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
+}
+//---------------------------------------------------------------------------
+void TGLEngine::DrawCircle(DWORD color, float x, float y, float radius)
+{
+	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
+
+	DrawCircle(x, y, radius);
+
+	glColor3f(1.0f, 1.0f, 1.0f);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVector *normals)

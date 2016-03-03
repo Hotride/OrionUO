@@ -579,6 +579,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoA(BYTE font, const char *str, int le
 					ptr->MaxHeight = 10;
 
 				ptr->Data.resize(ptr->CharCount);
+				charCount = 0;
 
 				if (isFixed || isCropped)
 					break;
@@ -592,7 +593,6 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoA(BYTE font, const char *str, int le
 
 				ptr->Align = align;
 				ptr->CharStart = i;
-				charCount = 0;
 
 				if (ptr->Align == TS_LEFT && (flags & UOFONT_INDENTION))
 					indentionOffset = 14;
@@ -1815,6 +1815,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML(BYTE font, const wchar_t *str, 
 				ptr->MaxHeight = MAX_HTML_TEXT_HEIGHT;
 
 				ptr->Data.resize(ptr->CharCount);
+				charCount = 0;
 
 				if (isFixed || isCropped)
 					break;
@@ -1828,7 +1829,6 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML(BYTE font, const wchar_t *str, 
 
 				ptr->Align = htmlData[i].Align;
 				ptr->CharStart = i;
-				charCount = 0;
 
 				if (ptr->Align == TS_LEFT && (htmlData[i].Flags & UOFONT_INDENTION))
 					indentionOffset = 14;

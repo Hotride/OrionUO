@@ -899,6 +899,7 @@ bool TUltimaOnline::Install()
 	}
 	
 	PatchFiles();
+	IndexReplaces();
 
 	g_SkillSort.Init();
 	
@@ -924,7 +925,7 @@ bool TUltimaOnline::Install()
 		AnimationManager->Init(i, (DWORD)FileManager.AnimIdx[i].Address, (DWORD)FileManager.AnimMul[i].Address, (DWORD)FileManager.AnimIdx[i].Size);
 
 	PDWORD verda = (FileManager.UseVerdata ? (PDWORD)FileManager.VerdataMul.Address : NULL);
-	AnimationManager->InitBodyconv(verda, FilePath("Bodyconv.def"));
+	AnimationManager->InitIndexReplaces(verda);
 
 	ClilocManager = new TClilocManager();
 	ProfessionManager = new TProfessionManager();
@@ -1052,6 +1053,22 @@ bool TUltimaOnline::Install()
 #else
 	InitScreen(GS_MAIN);
 #endif
+
+	/*//TTextFileParser file(FilePath("login.cfg").c_str(), "=,", "#;", "");
+	//TTextFileParser file(FilePath("uo_debug.cfg").c_str(), "=", "#;", "");
+	//TTextFileParser file(FilePath("Bodyconv1.def").c_str(), " \t", "#;", "");
+	//TTextFileParser file(FilePath("prof.txt").c_str(), " \t,", "#;", "\"\"");
+	TTextFileParser file(FilePath("stitchin.def").c_str(), " \t", "#;//", "");
+	
+	while (!file.IsEOF())
+	{
+		vector<string> strings = file.ReadTokens();
+
+		TPRINT("Obtained values:\n");
+
+		for (int i = 0; i < (int)strings.size(); i++)
+			TPRINT("\t[%i]%s\n", i, strings[i].c_str());
+	}*/
 
 	return true;
 }
@@ -1846,6 +1863,87 @@ void TUltimaOnline::PatchFiles()
 
 	ColorManager->CreateHuesPalette();
 }
+//----------------------------------------------------------------------------
+void TUltimaOnline::IndexReplaces()
+{
+	TTextFileParser newDataParser("", " \t,{}", "#;//", "");
+	TTextFileParser artParser(FilePath("Art.def").c_str(), " \t", "#;//", "{}");
+
+	while (!artParser.IsEOF())
+	{
+		std::vector<std::string> strings = artParser.ReadTokens();
+
+		if (strings.size() >= 3)
+		{
+			int index = atoi(strings[0].c_str());
+
+			if (index < 0 || index >= 0x4000)
+				continue;
+
+			std::vector<std::string> newArt = newDataParser.GetTokens(strings[1].c_str());
+
+			int size = (int)newArt.size();
+
+			IFOR(i, 0, size)
+			{
+				int checkIndex = atoi(newArt[i].c_str());
+
+				if (checkIndex < 0 || checkIndex >= 0x4000)
+					continue;
+
+				if (index < 0x4000 && checkIndex < 0x4000)
+				{
+					memcpy(&m_LandDataIndex[index], &m_LandDataIndex[checkIndex], sizeof(TIndexObject));
+					m_LandDataIndex[index].Texture = NULL;
+					m_LandDataIndex[index].Color = atoi(strings[2].c_str());
+
+					break;
+				}
+				else if (index >= 0x4000 && checkIndex >= 0x4000)
+				{
+					memcpy(&m_StaticDataIndex[index], &m_StaticDataIndex[checkIndex], sizeof(TIndexObjectStatic));
+					m_StaticDataIndex[index].Texture = NULL;
+					m_StaticDataIndex[index].Color = atoi(strings[2].c_str());
+
+					break;
+				}
+			}
+		}
+	}
+
+	TTextFileParser gumpParser(FilePath("Gump.def").c_str(), " \t", "#;//", "{}");
+
+	while (!gumpParser.IsEOF())
+	{
+		std::vector<std::string> strings = gumpParser.ReadTokens();
+
+		if (strings.size() >= 3)
+		{
+			int index = atoi(strings[0].c_str());
+
+			if (index < 0 || index >= 0x10000)
+				continue;
+
+			std::vector<std::string> newArt = newDataParser.GetTokens(strings[1].c_str());
+
+			int size = (int)newArt.size();
+
+			IFOR(i, 0, size)
+			{
+				int checkIndex = atoi(newArt[i].c_str());
+
+				if (checkIndex < 0 || checkIndex >= 0x10000)
+					continue;
+
+				memcpy(&m_GumpDataIndex[index], &m_GumpDataIndex[checkIndex], sizeof(TIndexObject));
+				m_GumpDataIndex[index].Texture = NULL;
+				m_GumpDataIndex[index].Color = atoi(strings[2].c_str());
+
+				break;
+			}
+		}
+	}
+}
 //---------------------------------------------------------------------------
 bool TUltimaOnline::LoadSkills()
 {
@@ -2497,7 +2595,7 @@ TTextureObject *TUltimaOnline::ExecuteGump(WORD id, bool partialHue)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = MulReader.ReadGump(io.Address, io.Size, io.Width, io.Height);
+		io.Texture = MulReader.ReadGump(io);
 
 		if (io.Texture != NULL)
 		{
@@ -2519,7 +2617,7 @@ TTextureObject *TUltimaOnline::ExecuteLandArt(WORD id)
 		if (!io.Address || id == 0x02) //nodraw tiles banned
 			return NULL;
 
-		io.Texture = MulReader.ReadArt(id, io.Address, io.Size);
+		io.Texture = MulReader.ReadArt(id, io);
 
 		if (io.Texture != NULL)
 		{
@@ -2548,7 +2646,7 @@ TTextureObject *TUltimaOnline::ExecuteStaticArt(WORD id)
 		if (!io.Address || id == 0x01) //nodraw tiles banned
 			return NULL;
 
-		io.Texture = MulReader.ReadArt(id + 0x4000, io.Address, io.Size);
+		io.Texture = MulReader.ReadArt(id + 0x4000, io);
 
 		if (io.Texture != NULL)
 		{
@@ -2579,7 +2677,7 @@ TTextureObject *TUltimaOnline::ExecuteTexture(WORD id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = MulReader.ReadTexture(id, io.Address, io.Size);
+		io.Texture = MulReader.ReadTexture(id, io);
 
 		if (io.Texture != NULL)
 		{
@@ -2604,7 +2702,7 @@ TTextureObject *TUltimaOnline::ExecuteLight(BYTE &id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = MulReader.ReadLight(id, io.Address, io.Size, io.Width, io.Height);
+		io.Texture = MulReader.ReadLight(id, io);
 
 		if (io.Texture != NULL)
 		{
@@ -2941,7 +3039,7 @@ bool TUltimaOnline::GumpPixelsInXY(WORD id, int x, int y, bool noSubMouse)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.GumpPixelsInXY(io.Address, io.Size, th->Width, th->Height, x, y);
+		result = MulReader.GumpPixelsInXY(io, th->Width, th->Height, x, y);
 #endif
 	}
 
@@ -2992,7 +3090,7 @@ bool TUltimaOnline::GumpPixelsInXY(WORD id, int x, int y, int width, int height,
 	if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 		result = th->Data[(y * th->Width) + x] != 0;
 #else
-	result = MulReader.GumpPixelsInXY(io.Address, io.Size, th->Width, th->Height, x, y);
+	result = MulReader.GumpPixelsInXY(io, th->Width, th->Height, x, y);
 #endif
 
 	return result;
@@ -3139,7 +3237,7 @@ bool TUltimaOnline::StaticPixelsInXY(WORD id, int x, int y, int z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id + 0x4000, io.Address, io.Size, th->Width, th->Height, x, y);
+		result = MulReader.ArtPixelsInXY(id + 0x4000, io, th->Width, th->Height, x, y);
 #endif
 	}
 
@@ -3164,7 +3262,7 @@ bool TUltimaOnline::StaticPixelsInXYAnimated(WORD id, int x, int y, int z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id + 0x4000, io.Address, io.Size, th->Width, th->Height, x, y);
+		result = MulReader.ArtPixelsInXY(id + 0x4000, io, th->Width, th->Height, x, y);
 #endif
 	}
 
@@ -3203,7 +3301,7 @@ bool TUltimaOnline::StaticPixelsInXYInContainer(WORD id, int x, int y)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id + 0x4000, io.Address, io.Size, th->Width, th->Height, x, y);
+		result = MulReader.ArtPixelsInXY(id + 0x4000, io, th->Width, th->Height, x, y);
 #endif
 	}
 
@@ -3226,7 +3324,7 @@ bool TUltimaOnline::LandPixelsInXY(WORD id, int x, int  y, int z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id, io.Address, io.Size, th->Width, th->Height, x, y);
+		result = MulReader.ArtPixelsInXY(id, io, th->Width, th->Height, x, y);
 #endif
 	}
 

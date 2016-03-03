@@ -487,6 +487,9 @@ TDebugScreen *DebugScreen = NULL;
 TDebugScreen::TDebugScreen()
 : TBaseScreen()
 {
+	m_Text = new TEntryText(0, 100);
+	m_Text->SetText("test text");
+
 	TEffectMoving *ef = new TEffectMoving();
 	ef->Graphic = 0x36E4;
 	ef->Duration = GetTickCount();
@@ -505,6 +508,11 @@ TDebugScreen::TDebugScreen()
 //---------------------------------------------------------------------------
 TDebugScreen::~TDebugScreen()
 {
+	if (m_Text != NULL)
+	{
+		delete m_Text;
+		m_Text = NULL;
+	}
 }
 //---------------------------------------------------------------------------
 void TDebugScreen::Init()
@@ -658,6 +666,10 @@ int TDebugScreen::Render(bool mode)
 
 		FontManager->DrawA(3, str, 0x0386, 20, 20);
 
+		EntryPointer = m_Text;
+		m_Text->DrawA(3, 0x0386, 20, 100, TS_LEFT, UOFONT_FIXED);
+		//m_Text->DrawW(1, 0x0021, 20, 100, TS_LEFT, UOFONT_FIXED);
+
 		DrawSmoothMonitorEffect();
 
 		MouseManager.Draw(0x2073); //Main Gump mouse cursor
@@ -723,9 +735,21 @@ void TDebugScreen::OnLeftMouseUp()
 	g_LastObjectLeftMouseDown = 0;
 }
 //---------------------------------------------------------------------------
+void TDebugScreen::OnCharPress(WPARAM wparam, LPARAM lparam)
+{
+	if (wparam == VK_RETURN || wparam == VK_BACK || wparam == VK_ESCAPE || m_Text == NULL)
+		return; //Ignore no print keys
+
+	m_Text->Insert(wparam);
+}
+//---------------------------------------------------------------------------
 void TDebugScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 {
 	if (wparam == VK_RETURN)
 		CreateSmoothAction(ID_SMOOTH_DS_GO_SCREEN_MAIN);
+	else if (wparam == VK_BACK || wparam == VK_ESCAPE)
+		TPRINT("Data text: %s\n", m_Text->c_str());
+	else
+		m_Text->OnKey(NULL, wparam);
 }
 //---------------------------------------------------------------------------

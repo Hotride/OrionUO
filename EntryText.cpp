@@ -412,14 +412,39 @@ void TEntryText::CreateTextureA(BYTE font, string str, WORD color, int width, TE
 		//Чистим текстуру
 		m_Texture.Clear();
 
-		//Генерируем текстуру
-		FontManager->GenerateA(font, m_Texture, str.c_str(), color, m_Width, align, flags);
-
 		//Вычисляем позицию каретки
 		if (m_Position)
-			m_CaretPos = FontManager->GetCaretPosA(font, str.c_str(), m_Position, m_Width, align, flags);
+		{
+			m_CaretPos = FontManager->GetCaretPosA(font, str.c_str(), m_Position, width, align, flags);
+
+			if (flags & UOFONT_FIXED)
+			{
+				if (m_DrawOffset)
+				{
+					if (m_CaretPos.x + m_DrawOffset < 0)
+						m_DrawOffset = -m_CaretPos.x;
+					else if (m_Width + -m_DrawOffset < m_CaretPos.x)
+						m_DrawOffset = m_Width - m_CaretPos.x;
+				}
+				else if (m_Width + m_DrawOffset < m_CaretPos.x)
+					m_DrawOffset = m_Width - m_CaretPos.x;
+				else
+					m_DrawOffset = 0;
+
+				/*if (m_Width + m_DrawOffset < m_CaretPos.x)
+					m_DrawOffset = m_Width - m_CaretPos.x;
+				else
+					m_DrawOffset = 0;*/
+			}
+		}
 		else //Либо обнуляем ее
+		{
 			memset(&m_CaretPos, 0, sizeof(m_CaretPos));
+			m_DrawOffset = 0;
+		}
+
+		//Генерируем текстуру
+		FontManager->GenerateA(font, m_Texture, str.c_str(), color, m_Width + abs(m_DrawOffset), align, flags);
 	}
 }
 //---------------------------------------------------------------------------
@@ -433,14 +458,34 @@ void TEntryText::CreateTextureW(BYTE font, wstring str, WORD color, int width, T
 		//Чистим текстуру
 		m_Texture.Clear();
 
-		//Генерируем текстуру
-		FontManager->GenerateW(font, m_Texture, str.c_str(), color, 30, m_Width, align, flags);
-
 		//Вычисляем позицию каретки
 		if (m_Position)
-			m_CaretPos = FontManager->GetCaretPosW(font, str.c_str(), m_Position, m_Width, align, flags);
+		{
+			m_CaretPos = FontManager->GetCaretPosW(font, str.c_str(), m_Position, width, align, flags);
+
+			if (flags & UOFONT_FIXED)
+			{
+				if (m_DrawOffset)
+				{
+					if (m_CaretPos.x + m_DrawOffset < 0)
+						m_DrawOffset = -m_CaretPos.x;
+					else if (m_Width + -m_DrawOffset < m_CaretPos.x)
+						m_DrawOffset = m_Width - m_CaretPos.x;
+				}
+				else if (m_Width + m_DrawOffset < m_CaretPos.x)
+					m_DrawOffset = m_Width - m_CaretPos.x;
+				else
+					m_DrawOffset = 0;
+			}
+		}
 		else //Либо обнуляем ее
+		{
 			memset(&m_CaretPos, 0, sizeof(m_CaretPos));
+			m_DrawOffset = 0;
+		}
+
+		//Генерируем текстуру
+		FontManager->GenerateW(font, m_Texture, str.c_str(), color, 30, m_Width, align, flags);
 	}
 }
 //---------------------------------------------------------------------------
@@ -453,7 +498,7 @@ void TEntryText::DrawA(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE alig
 		FixMaxWidthA(font);
 
 		//Создаем текстуру
-		CreateTextureA(font, m_CText, color, m_Width, align, flags);
+		CreateTextureA(font, m_CText, color, m_MaxWidth, align, flags);
 
 		//Регистрируем изменения
 		m_Changed = false;

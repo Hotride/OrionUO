@@ -36,6 +36,9 @@ private:
 	//Габариты изображения
 	short m_Width;
 	short m_Height;
+
+	//Стандартный цвет
+	WORD m_Color;
 public:
 	TIndexObject();
 	virtual ~TIndexObject();
@@ -45,6 +48,7 @@ public:
 	SETGET(DWORD, LastAccessTime);
 	SETGET(short, Width);
 	SETGET(short, Height);
+	SETGET(WORD, Color);
 
 	//Указатель на объект текстуры
 	TTextureObject *Texture;
@@ -119,6 +123,9 @@ private:
 
 	//Индекс картинки
 	WORD m_Graphic;
+
+	//Стандартный цвет
+	WORD m_Color;
 public:
 	TIndexAnimation();
 	virtual ~TIndexAnimation();
@@ -129,6 +136,7 @@ public:
 	SETGET(DWORD, Address);
 	SETGET(DWORD, Offset);
 	SETGET(WORD, Graphic);
+	SETGET(WORD, Color);
 };
 //---------------------------------------------------------------------------
 //Класс для хранения информации о мульти-объекте

@@ -342,15 +342,49 @@ void TAnimationManager::Load(PDWORD verdata)
 	}
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::InitBodyconv(PDWORD verdata, string fName)
+void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 {
 	Load(verdata);
 
-	TTextFileParser file(fName.c_str(), " \t", "#;", "");
+	TTextFileParser bodyParser(FilePath("Body.def").c_str(), " \t", "#;//", "{}");
+	TTextFileParser newBodyParser("", " \t,{}", "#;//", "");
 
-	while (!file.IsEOF())
+	while (!bodyParser.IsEOF())
 	{
-		std::vector<std::string> strings = file.ReadTokens();
+		std::vector<std::string> strings = bodyParser.ReadTokens();
+
+		if (strings.size() >= 3)
+		{
+			int index = atoi(strings[0].c_str());
+
+			if (index < 0 || index >= 0x0800)
+				continue;
+
+			std::vector<std::string> newBody = newBodyParser.GetTokens(strings[1].c_str());
+
+			int size = (int)newBody.size();
+
+			IFOR(i, 0, size)
+			{
+				int checkIndex = atoi(newBody[i].c_str());
+
+				if (checkIndex < 0 || checkIndex >= 0x0800 || !m_DataIndex[checkIndex].Offset)
+					continue;
+
+				memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(TIndexAnimation));
+				m_DataIndex[index].Group = NULL;
+				m_DataIndex[index].Color = atoi(strings[2].c_str());
+
+				break;
+			}
+		}
+	}
+
+	TTextFileParser bodyconvParser(FilePath("Bodyconv.def").c_str(), " \t", "#;", "");
+
+	while (!bodyconvParser.IsEOF())
+	{
+		std::vector<std::string> strings = bodyconvParser.ReadTokens();
 
 		if (strings.size() >= 5)
 		{
@@ -856,6 +890,8 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 	PDWORD FrameOffset = (PDWORD)ptr;
 	ptr += (frameCount * sizeof(DWORD));
 
+	WORD color = m_DataIndex[id].Color;
+
 	IFOR(i, 0, frameCount)
 	{
 		TTextureAnimationFrame *frame = direction->GetFrame(i);
@@ -927,6 +963,10 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 				IFOR(j, 0, runLength)
 				{
 					WORD val = palette[*b];
+
+					if (color)
+						val = ColorManager->GetColor16(val, color);
+
 					WORD a = val ? 0x8000 : 0;
 					int block = y * imageWidth + (x + j);
 					pData[block] = a | val;

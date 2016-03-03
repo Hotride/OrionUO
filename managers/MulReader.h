@@ -28,13 +28,13 @@ public:
 	TMulReader() {}
 	~TMulReader() {}
 
-	TTextureObject *ReadGump(DWORD Address, DWORD Size, WORD Width, WORD Height);
-	TTextureObject *ReadArt(WORD ID, DWORD Address, DWORD Size);
-	TTextureObject *ReadTexture(WORD ID, DWORD Address, DWORD Size);
-	TTextureObject *ReadLight(WORD ID, DWORD Address, DWORD Size, WORD Width, WORD Height);
+	TTextureObject *ReadGump(TIndexObject &io);
+	TTextureObject *ReadArt(WORD ID, TIndexObject &io);
+	TTextureObject *ReadTexture(WORD ID, TIndexObject &io);
+	TTextureObject *ReadLight(WORD ID, TIndexObject &io);
 	
-	bool GumpPixelsInXY(DWORD Address, DWORD Size, WORD Width, WORD Height, int CheckX, int CheckY);
-	bool ArtPixelsInXY(WORD ID, DWORD Address, DWORD Size, WORD Width, WORD Height, int CheckX, int CheckY);
+	bool GumpPixelsInXY(TIndexObject &io, int width, int height, int CheckX, int CheckY);
+	bool ArtPixelsInXY(WORD ID, TIndexObject &io, int width, int height, int CheckX, int CheckY);
 };
 //---------------------------------------------------------------------------
 extern TMulReader MulReader;

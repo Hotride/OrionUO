@@ -143,6 +143,20 @@ WORD TColorManager::ConvertToGray(WORD &C)
 	return ((C & 0x1F) * 299 + ((C >> 5) & 0x1F) * 587 + ((C >> 10) & 0x1F) * 114) / 1000;
 }
 //---------------------------------------------------------------------------
+WORD TColorManager::GetColor16(WORD &c, WORD color)
+{
+	if (color != 0 && color < m_HuesCount)
+	{
+		color -= 1;
+		int g = color / 8;
+		int e = color % 8;
+
+		return m_HuesRange[g].Entries[e].ColorTable[(c >> 10) & 0x1F];
+	}
+
+	return c;
+}
+//---------------------------------------------------------------------------
 WORD TColorManager::GetRadarColorData(WORD &C)
 {
 	return m_Radarcol[C];
