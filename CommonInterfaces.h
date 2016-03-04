@@ -60,7 +60,7 @@ interface IUltimaOnline
 	virtual void DrawGump(WORD id, WORD color, int x, int y, bool partialHue) = 0;
 	virtual void DrawGump(WORD id, WORD color, int x, int y, int width, int height, bool partialHue) = 0;
 	virtual void DrawResizepicGump(WORD id, int x, int y, int width, int height) = 0;
-	virtual void DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, TVector *normals) = 0;
+	virtual void DrawLandTexture(WORD &id, WORD &color, int &x, int &y, RECT &rc, TVector *normals) = 0;
 	virtual void DrawLandArt(WORD id, WORD color, int x, int y, int z) = 0;
 	virtual void DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool selection) = 0;
 	virtual void DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int z, bool selection) = 0;

@@ -345,7 +345,7 @@ void TGLEngine::DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVect
 	}
 
 	glLoadIdentity();
-	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
+	glTranslatef(x - 23.0f, y - 23.0f, (GLfloat)g_ZBuffer);
 
 	glBegin(GL_TRIANGLE_STRIP);
 		glNormal3f((GLfloat)normals[0].X, (GLfloat)normals[0].Y, (GLfloat)normals[0].Z);

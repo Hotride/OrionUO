@@ -96,6 +96,8 @@ public:
 	//Это объект ландшафта
 	bool IsLandObject() {return true;}
 
+	void UpdateZ(char zTop, char zRight, char zBottom);
+
 	//Игнорирование при некоторых расчетах
 	bool Ignored() {return (Graphic == 2 || Graphic == 0x1DB || (Graphic >= 0x1AE && Graphic <= 0x1B5));}
 };

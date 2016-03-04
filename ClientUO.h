@@ -134,7 +134,7 @@ public:
 	TTextureObject *ExecuteGump(WORD id, bool partialHue = true);
 
 	//Загрузка текстуры ландшафта из art.mul
-	TTextureObject *ExecuteLandArt(WORD id);
+	TTextureObject *ExecuteLandArt(WORD &id);
 
 	//Загрузка текстуры статики
 	TTextureObject *ExecuteStaticArt(WORD id);
@@ -176,7 +176,7 @@ public:
 	void DrawResizepicGump(WORD id, int x, int y, int width, int height);
 
 	//Нарисовать ландшафт (из texmaps.mul)
-	void DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, TVector *normals);
+	void DrawLandTexture(WORD &id, WORD &color, int &x, int &y, RECT &rc, TVector *normals);
 
 	//Нарисовать ландшафт (из art.mul)
 	void DrawLandArt(WORD id, WORD color, int x, int y, int z);

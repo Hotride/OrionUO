@@ -111,10 +111,11 @@ TMapObject::~TMapObject()
 //---------------------------------TLandObject------------------------------
 //---------------------------------------------------------------------------
 TLandObject::TLandObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z)
-: TMapObject(ROT_LAND_OBJECT, serial, graphic, color, x, y, z), m_MinZ(z),
-m_IsStretched(false)
+: TMapObject(ROT_LAND_OBJECT, serial, graphic, color, x, y, z), m_MinZ(z)
 {
-	//m_ObjectFlags = UO->GetLandFlags(graphic);
+	LAND_TILES &tile = UO->m_LandData[graphic / 32].Tiles[graphic % 32];
+
+	m_IsStretched = (!tile.TexID && ::IsWet(tile.Flags));
 
 	memset(&m_Rect, 0, sizeof(RECT));
 	memset(&m_Normals[0], 0, sizeof(m_Normals));
@@ -122,6 +123,33 @@ m_IsStretched(false)
 #if UO_DEBUG_INFO!=0
 	g_LandObjectsCount++;
 #endif //UO_DEBUG_INFO!=0
+}
+//---------------------------------------------------------------------------
+void TLandObject::UpdateZ(char zTop, char zRight, char zBottom)
+{
+	if (m_IsStretched)
+	{
+		//Сохраним среднее значение Z-координаты
+		m_Serial = ((m_Z + zTop + zRight + zBottom) / 4);
+
+		//Значения для рендера
+		m_Rect.left = m_Z * 4;
+		m_Rect.top = zTop * 4;
+		m_Rect.right = zRight * 4;
+		m_Rect.bottom = zBottom * 4;
+
+		//Минимальная Z-координата из всех
+		m_MinZ = m_Z;
+
+		if (zTop < m_MinZ)
+			m_MinZ = zTop;
+
+		if (zRight < m_MinZ)
+			m_MinZ = zRight;
+
+		if (zBottom < m_MinZ)
+			m_MinZ = zBottom;
+	}
 }
 //---------------------------------------------------------------------------
 int TLandObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
@@ -293,7 +321,7 @@ bool TStaticObject::TranparentTest(int &playerZ)
 		result = false;
 	else if (!height && m_Z <= playerZ)
 		result = false;
-	else if (height == 5 && m_Z > playerZ - 5 && m_Z < playerZ + 5)
+	else if (height == 5 && m_Z >= playerZ - 5 && m_Z < playerZ + 5)
 		result = false;
 	else if (playerZ + 5 < m_Z && !m_CanBeTransparent)
 		result = false;

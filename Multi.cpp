@@ -63,7 +63,7 @@ bool TMultiObject::TranparentTest(int &playerZ)
 		result = false;
 	else if (!height && m_Z <= playerZ)
 		result = false;
-	else if (height == 5 && m_Z > playerZ - 5 && m_Z < playerZ + 5)
+	else if (height == 5 && m_Z >= playerZ - 5 && m_Z < playerZ + 5)
 		result = false;
 	else if (playerZ + 5 < m_Z && !m_CanBeTransparent)
 		result = false;

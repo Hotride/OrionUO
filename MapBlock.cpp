@@ -128,36 +128,20 @@ void TMapBlock::CreateLandTextureRect()
 			{
 				int tileX = obj->X;
 				int tileY = obj->Y;
-
-				//Вычисляем текущую и соседние Z-координаты
 				char tileZ1 = obj->Z;
-				char tileZ2 = GetLandZ(tileX + 1, tileY, map);
-				char tileZ3 = GetLandZ(tileX, tileY + 1, map);
-				char tileZ4 = GetLandZ(tileX + 1, tileY + 1, map);
 
-				//Сохранимвреднее значение Z-координаты
-				char drawZ = (char)((tileZ1 + tileZ2 + tileZ3 + tileZ4) / 4);
-
-				LAND_TILES &tile = UO->m_LandData[obj->Graphic / 32].Tiles[obj->Graphic % 32];
-
-				//Если все Z-координаты равны или это тайл воды с отсутствующей текстурой - укажем что это тайл из артов
-				if ((/*tileZ1 == tileZ2 && tileZ1 == tileZ3 && tileZ1 == tileZ4 &&*/ !TestStretched(tileX, tileY, tileZ1, map, true)) || (!tile.TexID && ::IsWet(tile.Flags)))
+				//Если это тайл воды с отсутствующей текстурой или все Z-координаты равны - укажем что это тайл из артов
+				if (obj->IsStretched || !TestStretched(tileX, tileY, tileZ1, map, true))
+				{
 					obj->IsStretched = false;
+
+					obj->MinZ = tileZ1;
+				}
 				else //Или же - текстура
 				{
 					obj->IsStretched = true;
-					obj->Serial = drawZ;
 
-					//Значения для рендера
-					RECT r =
-					{
-						(tileZ1 * 4), //left
-						(tileZ3 * 4), //top
-						(tileZ4 * 4), //right
-						(tileZ2 * 4) //bottom
-					};
-
-					obj->Rect = r;
+					obj->UpdateZ(GetLandZ(tileX, tileY + 1, map), GetLandZ(tileX + 1, tileY + 1, map), GetLandZ(tileX + 1, tileY, map));
 
 					TVector vec[3][3][4];
 
@@ -229,20 +213,6 @@ void TMapBlock::CreateLandTextureRect()
 					obj->m_Normals[3].Add(vec[i][j + 1][0]);
 					obj->m_Normals[3].Normalize();
 				}
-
-				//Минимальная Z-координата из всех
-				char minZ = tileZ1;
-
-				if (tileZ2 < minZ)
-					minZ = tileZ2;
-
-				if (tileZ3 < minZ)
-					minZ = tileZ3;
-
-				if (tileZ4 < minZ)
-					minZ = tileZ4;
-
-				obj->MinZ = minZ;
 
 				AddRender(obj, x, y);
 			}

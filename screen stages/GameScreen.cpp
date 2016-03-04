@@ -1395,10 +1395,12 @@ int TGameScreen::Render(bool mode)
 
 				if (ObjectInHand->IsGameFigure)
 				{
-					TTextureObject *to = UO->ExecuteGump(ohGraphic - GAME_FIGURE_GUMP_OFFSET);
+					ohGraphic -= GAME_FIGURE_GUMP_OFFSET;
+
+					TTextureObject *to = UO->ExecuteGump(ohGraphic);
 
 					if (to != NULL)
-						UO->DrawGump(ohGraphic - GAME_FIGURE_GUMP_OFFSET, ohColor, g_MouseX - (to->Width / 2), g_MouseY - (to->Height / 2));
+						UO->DrawGump(ohGraphic, ohColor, g_MouseX - (to->Width / 2), g_MouseY - (to->Height / 2));
 				}
 				else
 				{

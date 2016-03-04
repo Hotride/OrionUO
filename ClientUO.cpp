@@ -2728,7 +2728,7 @@ TTextureObject *TUltimaOnline::ExecuteGump(WORD id, bool partialHue)
 	return io.Texture;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TUltimaOnline::ExecuteLandArt(WORD id)
+TTextureObject *TUltimaOnline::ExecuteLandArt(WORD &id)
 {
 	TIndexObject &io = m_LandDataIndex[id];
 
@@ -2933,39 +2933,35 @@ void TUltimaOnline::DrawResizepicGump(WORD id, int x, int y, int width, int heig
 	g_GL.DrawResizepic(th, x, y, width, height);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawLandTexture(WORD id, WORD color, int x, int y, RECT rc, TVector *normals)
+void TUltimaOnline::DrawLandTexture(WORD &id, WORD &color, int &x, int &y, RECT &rc, TVector *normals)
 {
 	TTextureObject *th = ExecuteTexture(id);
 
 	if (th == NULL)
-	{
 		DrawLandArt(id, color, x, y, rc.left / 4);
-
-		return;
-	}
-	
-	if (g_OutOfRangeColor)
-		color = g_OutOfRangeColor;
-	
-	int drawMode = 6;
-
-	if (!g_GrayedPixels && color)
+	else
 	{
-		drawMode = 7;
-		ColorManager->SendColorsToShader(color);
+		if (g_OutOfRangeColor)
+			color = g_OutOfRangeColor;
+
+		int drawMode = 6;
+
+		if (!g_GrayedPixels && color)
+		{
+			drawMode = 7;
+			ColorManager->SendColorsToShader(color);
+		}
+
+		glUniform1iARB(ShaderDrawMode, drawMode);
+
+		g_GL.DrawLandTexture(th->Texture, x, y, rc, normals);
 	}
-
-	glUniform1iARB(ShaderDrawMode, drawMode);
-
-	x -= 23;
-	y -= 23;
-	
-	g_GL.DrawLandTexture(th->Texture, x, y, rc, normals);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
 {
 	TTextureObject *th = ExecuteLandArt(id);
+
 	if (th != NULL)
 	{
 		if (g_OutOfRangeColor)
