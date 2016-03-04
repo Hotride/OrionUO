@@ -66,7 +66,8 @@ private:
 	static int m_UsedLayers[8][USED_LAYER_COLUT];
 
 	//Данные анимаций
-	TIndexAnimation m_DataIndex[0x0800];
+	TIndexAnimation m_DataIndex[MAX_ANIMATIONS_DATA_INDEX_COUNT];
+	WORD m_CorpseReplaces[MAX_ANIMATIONS_DATA_INDEX_COUNT];
 
 	TLinkedList *m_UsedAnimList;
 
@@ -153,6 +154,8 @@ public:
 
 	//Отрисовать тени
 	void DrawShadows();
+
+	void GetCorpseGraphic(WORD &graphic);
 };
 //---------------------------------------------------------------------------
 extern TAnimationManager *AnimationManager;

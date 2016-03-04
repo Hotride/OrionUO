@@ -61,6 +61,23 @@ TMapBlock::~TMapBlock()
 	m_Items = NULL;
 }
 //---------------------------------------------------------------------------
+bool TMapBlock::HasNoExternalData()
+{
+	IFOR(x, 0, 8)
+	{
+		IFOR(y, 0, 8)
+		{
+			for (TRenderWorldObject *obj = GetRender(x, y); obj != NULL; obj = obj->m_NextXY)
+			{
+				if (!obj->IsLandObject() && !obj->IsStaticObject())
+					return false;
+			}
+		}
+	}
+
+	return true;
+}
+//---------------------------------------------------------------------------
 WORD TMapBlock::GetRadarColor(int x, int y)
 {
 	WORD color = 0;

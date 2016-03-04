@@ -35,6 +35,27 @@ const int MAX_FILE_BUFFER_SIZE = 0x1000;
 //Динамический размер пакета
 const int SIZE_VARIABLE = 0;
 
+//Размер таблицы индексов земли из арт.мул
+const int MAX_LAND_DATA_INDEX_COUNT = 0x4000;
+
+//Размер таблицы индексов статики из арт.мул
+const int MAX_STATIC_DATA_INDEX_COUNT = 0x4000;
+
+//Размер таблицы индексов текстур ландшафта
+const int MAX_LAND_TEXTURES_DATA_INDEX_COUNT = 0x1000;
+
+//Размер таблицы индексов гампов
+const int MAX_GUMP_DATA_INDEX_COUNT = 0x10000;
+
+//Размер таблицы индексов звуков
+const int MAX_SOUND_DATA_INDEX_COUNT = 0x0800;
+
+//Размер таблицы индексов анимаций
+const int MAX_ANIMATIONS_DATA_INDEX_COUNT = 0x0800;
+
+//Размер таблицы индексов анимаций
+const int MAX_LIGHTS_DATA_INDEX_COUNT = 100;
+
 //Спектральные цвета
 const WORD SPECTRAL_COLOR = 0x4000;
 

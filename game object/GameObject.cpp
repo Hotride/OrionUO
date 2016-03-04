@@ -389,6 +389,28 @@ int GetDistance(POINT current, TGameObject *target)
 	return 100500;
 }
 //---------------------------------------------------------------------------
+int GetMultiDistance(POINT current, TGameObject *target)
+{
+	int result = 100500;
+
+	if (target != NULL && target->Graphic >= 0x4000)
+	{
+		for (TMulti *multi = (TMulti*)target->m_Items; multi != NULL; multi = (TMulti*)multi->m_Next)
+		{
+			int distx = abs(target->X - current.x);
+			int disty = abs(target->Y - current.y);
+
+			if (disty > distx)
+				distx = disty;
+
+			if (distx < result)
+				result = distx;
+		}
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
 int GetDistance(POINT current, POINT target)
 {
 	int distx = abs(target.x - current.x);

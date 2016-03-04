@@ -202,6 +202,7 @@ m_Grayed(false), m_ShadowCount(0), m_Sitting(0)
 	memset(m_SizeIdx, 0, sizeof(m_SizeIdx));
 	memset(m_DataIndex, 0, sizeof(m_DataIndex));
 	memset(&m_ShadowList[0], 0, sizeof(m_ShadowList));
+	memset(&m_CorpseReplaces[0], 0, sizeof(m_CorpseReplaces));
 
     LUMA_THRESHOLD = 20.0f;
     ALPHA_SCALE = 10.0f;
@@ -257,7 +258,7 @@ void TAnimationManager::DrawShadows()
 //----------------------------------------------------------------------------
 void TAnimationManager::Load(PDWORD verdata)
 {
-	IFOR(i, 0, 0x0800)
+	IFOR(i, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
 	{
 		WORD animID = 0;
 		DWORD findID = 0;
@@ -346,40 +347,9 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 {
 	Load(verdata);
 
-	TTextFileParser bodyParser(FilePath("Body.def").c_str(), " \t", "#;//", "{}");
 	TTextFileParser newBodyParser("", " \t,{}", "#;//", "");
-
-	while (!bodyParser.IsEOF())
-	{
-		std::vector<std::string> strings = bodyParser.ReadTokens();
-
-		if (strings.size() >= 3)
-		{
-			int index = atoi(strings[0].c_str());
-
-			if (index < 0 || index >= 0x0800)
-				continue;
-
-			std::vector<std::string> newBody = newBodyParser.GetTokens(strings[1].c_str());
-
-			int size = (int)newBody.size();
-
-			IFOR(i, 0, size)
-			{
-				int checkIndex = atoi(newBody[i].c_str());
-
-				if (checkIndex < 0 || checkIndex >= 0x0800 || !m_DataIndex[checkIndex].Offset)
-					continue;
-
-				memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(TIndexAnimation));
-				m_DataIndex[index].Group = NULL;
-				m_DataIndex[index].Color = atoi(strings[2].c_str());
-
-				break;
-			}
-		}
-	}
-
+	TTextFileParser bodyParser(FilePath("Body.def").c_str(), " \t", "#;//", "{}");
+	TTextFileParser corpseParser(FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
 	TTextFileParser bodyconvParser(FilePath("Bodyconv.def").c_str(), " \t", "#;", "");
 
 	while (!bodyconvParser.IsEOF())
@@ -395,7 +365,7 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 			IFOR(i, 0, 4)
 				anim[i] = atoi(strings[i + 1].c_str());
 
-			if (index < 0 || index >= 0x0800)
+			if (index < 0 || index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
 				continue;
 
 			int startAnimID = -1;
@@ -502,6 +472,67 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 						m_DataIndex[index].Graphic = convertedAnimID;
 					}
 				}
+			}
+		}
+	}
+
+	while (!bodyParser.IsEOF())
+	{
+		std::vector<std::string> strings = bodyParser.ReadTokens();
+
+		if (strings.size() >= 3)
+		{
+			int index = atoi(strings[0].c_str());
+
+			if (index < 0 || index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				continue;
+
+			std::vector<std::string> newBody = newBodyParser.GetTokens(strings[1].c_str());
+
+			int size = (int)newBody.size();
+
+			IFOR(i, 0, size)
+			{
+				int checkIndex = atoi(newBody[i].c_str());
+
+				if (checkIndex < 0 || checkIndex >= 0x0800 || !m_DataIndex[checkIndex].Offset)
+					continue;
+
+				memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(TIndexAnimation));
+				m_DataIndex[index].Group = NULL;
+				m_DataIndex[index].Color = atoi(strings[2].c_str());
+
+				break;
+			}
+		}
+	}
+
+	while (!corpseParser.IsEOF())
+	{
+		std::vector<std::string> strings = corpseParser.ReadTokens();
+
+		if (strings.size() >= 3)
+		{
+			int index = atoi(strings[0].c_str());
+
+			if (index < 0 || index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				continue;
+
+			std::vector<std::string> newBody = newBodyParser.GetTokens(strings[1].c_str());
+
+			int size = (int)newBody.size();
+
+			IFOR(i, 0, size)
+			{
+				int checkIndex = atoi(newBody[i].c_str());
+
+				if (checkIndex < 0 || checkIndex >= 0x0800 || !m_DataIndex[checkIndex].Offset)
+					continue;
+
+				m_CorpseReplaces[index] = checkIndex;
+				//m_DataIndex[index].Color = atoi(strings[2].c_str());
+
+				break;
 			}
 		}
 	}
@@ -636,7 +667,7 @@ void TAnimationManager::GetSittingAnimDirection(BYTE &dir, bool &mirror, int &x,
 //----------------------------------------------------------------------------
 TTextureAnimation *TAnimationManager::GetAnimation(WORD id)
 {
-	if (id >= 0x0800)
+	if (id >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		return NULL;
 
 	TTextureAnimation *anim = m_DataIndex[id].Group;
@@ -851,7 +882,7 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 {
 	direction->Address = 0;
 
-	if (id > 0x0800 || m_DataIndex[id].Address == NULL)
+	if (id > MAX_ANIMATIONS_DATA_INDEX_COUNT || m_DataIndex[id].Address == NULL)
 		return false;
 
 	PBYTE dataStart = NULL;
@@ -1139,7 +1170,7 @@ TTextureAnimationFrame *TAnimationManager::GetFrame(TGameObject *obj, BYTE &fram
 		if (!id)
 			id = obj->GetMountAnimation();
 
-		if (id < 0x0800)
+		if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		{
 			TTextureAnimation *anim = m_DataIndex[id].Group;
 
@@ -1186,7 +1217,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		id = obj->GetMountAnimation();
 	}
 
-	if (id >= 0x0800)
+	if (id >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		return;
 
 	TTextureAnimation *anim = m_DataIndex[id].Group;
@@ -1496,7 +1527,7 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	{
 		WORD id = obj->GetMountAnimation();
 
-		if (id < 0x0800)
+		if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		{
 			TTextureAnimation *anim = m_DataIndex[id].Group;
 
@@ -1761,5 +1792,11 @@ bool TAnimationManager::CorpsePixelsInXY(TGameItem *obj, int x, int y, int z)
 	}
 
 	return result;
+}
+//----------------------------------------------------------------------------
+void TAnimationManager::GetCorpseGraphic(WORD &graphic)
+{
+	if (graphic >= 0 && graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_CorpseReplaces[graphic])
+		graphic = m_CorpseReplaces[graphic];
 }
 //----------------------------------------------------------------------------

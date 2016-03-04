@@ -36,7 +36,7 @@ private:
 
 public:
 	TGumpMinimap(DWORD serial, short x, short y, bool minimized);
-	virtual ~TGumpMinimap() {}
+	virtual ~TGumpMinimap();
 
 	SETGET(WORD, LastX);
 	

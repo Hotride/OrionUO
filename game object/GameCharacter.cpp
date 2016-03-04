@@ -416,21 +416,6 @@ void TGameCharacter::SetAnimationGroup(BYTE val)
 	m_AnimationDirection = false;
 	m_AnimationFromServer = false;
 
-	/*if (val == 0xFF)
-	{
-		ANIMATION_GROUPS groupIndex = AnimationManager->GetGroupIndex(GetMountAnimation());
-
-		if (groupIndex == AG_LOW)
-		{
-		}
-		else if (groupIndex == AG_HIGHT)
-		{
-		}
-		else if (groupIndex == AG_PEOPLE)
-		{
-		}
-	}*/
-
 	m_AnimationGroup = val;
 }
 //---------------------------------------------------------------------------
@@ -445,8 +430,8 @@ void TGameCharacter::GetAnimationGroup(ANIMATION_GROUPS group, BYTE &animation)
 		{ LAG_STAND,		HAG_STAND,			PAG_STAND },
 		{ LAG_FIDGET_1,		HAG_FIDGET_1,		PAG_FIDGET_1 },
 		{ LAG_FIDGET_2,		HAG_FIDGET_2,		PAG_FIDGET_2 },
-		{ LAG_STAND,		HAG_ATTACK_1,		PAG_STAND_ONEHANDED_ATTACK },
-		{ LAG_STAND,		HAG_ATTACK_2,		PAG_STAND_TWOHANDED_ATTACK },
+		{ LAG_STAND,		HAG_STAND,			PAG_STAND_ONEHANDED_ATTACK },
+		{ LAG_STAND,		HAG_STAND,			PAG_STAND_TWOHANDED_ATTACK },
 		{ LAG_EAT,			HAG_ATTACK_3,		PAG_ATTACK_ONEHANDED },
 		{ LAG_EAT,			HAG_ATTACK_1,		PAG_ATTACK_UNARMED_1 },
 		{ LAG_EAT,			HAG_ATTACK_2,		PAG_ATTACK_UNARMED_2 },
@@ -462,7 +447,7 @@ void TGameCharacter::GetAnimationGroup(ANIMATION_GROUPS group, BYTE &animation)
 		{ LAG_DIE_1,		HAG_DIE_1,			PAG_DIE_1 },
 		{ LAG_DIE_2,		HAG_DIE_2,			PAG_DIE_2 },
 		{ LAG_WALK,			HAG_WALK,			PAG_ONMOUNT_RIDE_SLOW },
-		{ LAG_RUN,			HAG_WALK,			PAG_ONMOUNT_RIDE_FAST },
+		{ LAG_RUN,			HAG_FLY,			PAG_ONMOUNT_RIDE_FAST },
 		{ LAG_STAND,		HAG_STAND,			PAG_ONMOUNT_STAND },
 		{ LAG_EAT,			HAG_ATTACK_1,		PAG_ONMOUNT_ATTACK },
 		{ LAG_EAT,			HAG_ATTACK_2,		PAG_ONMOUNT_ATTACK_BOW },
@@ -500,10 +485,11 @@ bool TGameCharacter::TestStepNoChangeDirection(BYTE group)
 				if (wd->X != m_X || wd->Y != m_Y)
 					result = true;
 			}
+
 			break;
 		}
-	default:
-		break;
+		default:
+			break;
 	}
 	
 	return result;

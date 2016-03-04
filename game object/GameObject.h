@@ -25,7 +25,7 @@ class TGameObject : public TRenderStaticObject
 protected:
 	DWORD m_Container; //Серийник контейнера, содержащего объект (0xFFFFFFFF - объект лежит в мире)
 	BYTE m_MapIndex; //Карта объекта
-	WORD m_Count; //Количество
+	DWORD m_Count; //Количество
 	BYTE m_Flags; //Флаги от сервера
 	string m_Name; //Имя
 	bool m_NPC; //НПС или предмет
@@ -43,7 +43,7 @@ public:
 
 	SETGET(DWORD, Container);
 	SETGET(BYTE, MapIndex);
-	SETGET(WORD, Count);
+	SETGET(DWORD, Count);
 	SETGET(BYTE, Flags);
 	virtual SETGET(string, Name);
 	SETGET(bool, NPC);
@@ -92,6 +92,7 @@ public:
 //Функции для вычисления дистанции
 int GetDistance(TGameObject *current, TGameObject *target);
 int GetDistance(TGameObject *current, POINT target);
+int GetMultiDistance(POINT current, TGameObject *target);
 int GetDistance(POINT current, TGameObject *target);
 int GetDistance(POINT current, POINT target);
 int GetTopObjDistance(TGameObject *current, TGameObject *target);

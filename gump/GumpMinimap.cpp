@@ -23,6 +23,16 @@ TGumpMinimap::TGumpMinimap(DWORD serial, short x, short y, bool minimized)
 : TGump(GT_MINIMAP, serial, x, y), m_Count(0), m_Texture(0), m_LastX(0), m_LastY(0)
 {
 	m_Minimized = minimized;
+	GenerateMap();
+}
+//----------------------------------------------------------------------------
+TGumpMinimap::~TGumpMinimap()
+{
+	if (m_Texture != 0)
+	{
+		glDeleteTextures(1, &m_Texture);
+		m_Texture = 0;
+	}
 }
 //---------------------------------------------------------------------------
 void TGumpMinimap::PrepareTextures()
@@ -81,20 +91,25 @@ PWORD TGumpMinimap::GetTextureData(WORD id, int &width, int &height)
 //---------------------------------------------------------------------------
 void TGumpMinimap::GenerateMap()
 {
-	if (!g_DrawMode)
+	/*if (!g_DrawMode)
 	{
 		m_FrameRedraw = false;
 		m_FrameCreated = false;
 
 		return;
+	}*/
+
+	if (g_Player != NULL)
+	{
+		m_LastX = g_Player->X;
+		m_LastY = g_Player->Y;
 	}
 
-	m_LastX = g_Player->X;
-	m_LastY = g_Player->Y;
-
 	if (m_Texture != 0)
+	{
 		glDeleteTextures(1, &m_Texture);
-	m_Texture = 0;
+		m_Texture = 0;
+	}
 	
 	int gumpWidth = 0;
 	int gumpHeight = 0;
@@ -117,6 +132,12 @@ void TGumpMinimap::GenerateMap()
 	int minBlockY = (m_LastY - blockOffsetY) / 8 - 1;
 	int maxBlockX = ((m_LastX + blockOffsetX) / 8) + 1;
 	int maxBlockY = ((m_LastY + blockOffsetY) / 8) + 1;
+
+	if (minBlockX < 0)
+		minBlockX = 0;
+
+	if (minBlockY < 0)
+		minBlockY = 0;
 
 	for (int i = minBlockX; i <= maxBlockX; i++)
 	{
@@ -170,6 +191,14 @@ void TGumpMinimap::GenerateMap()
 //---------------------------------------------------------------------------
 void TGumpMinimap::GenerateFrame(int posX, int posY)
 {
+	if (!g_DrawMode)
+	{
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
+
+		return;
+	}
+
 	int PlayerX = g_Player->X;
 	int PlayerY = g_Player->Y;
 

@@ -31,13 +31,13 @@ private:
 	DWORD m_CRC_Table[256];
 
 	//Списки информации о данных текстур, звуков и т.п.
-	TIndexObject m_LandDataIndex[0x4000];
-	TIndexObjectStatic m_StaticDataIndex[0x4000];
-	TIndexObject m_GumpDataIndex[0x10000];
-	TIndexObject m_TextureDataIndex[0x1000];
-	TIndexSound m_SoundDataIndex[0x0800];
+	TIndexObject m_LandDataIndex[MAX_LAND_DATA_INDEX_COUNT];
+	TIndexObjectStatic m_StaticDataIndex[MAX_STATIC_DATA_INDEX_COUNT];
+	TIndexObject m_GumpDataIndex[MAX_GUMP_DATA_INDEX_COUNT];
+	TIndexObject m_TextureDataIndex[MAX_LAND_TEXTURES_DATA_INDEX_COUNT];
+	TIndexSound m_SoundDataIndex[MAX_SOUND_DATA_INDEX_COUNT];
 	TIndexMulti m_MultiDataIndex[0x2000];
-	TIndexObject m_LightDataIndex[100];
+	TIndexObject m_LightDataIndex[MAX_LIGHTS_DATA_INDEX_COUNT];
 
 	//Список анимированных картинок
 	TLinkedList *m_StaticAnimList;

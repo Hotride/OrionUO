@@ -477,7 +477,10 @@ WORD TGameItem::GetMountAnimation()
 		}
 	}
 	else if (graphic == 0x2006) //Corpse
+	{
 		graphic = (WORD)m_Count;
+		AnimationManager->GetCorpseGraphic(graphic);
+	}
 
 	return graphic;
 }
@@ -492,14 +495,10 @@ void TGameItem::LoadMulti()
 
 		int count = index->Count;
 		
-		int MinX = 0;
-		int MinY = 0;
-		int MaxX = 0;
-		int MaxY = 0;
-
-		int x = X;
-		int y = Y;
-		char z = Z;
+		int minX = 0;
+		int minY = 0;
+		int maxX = 0;
+		int maxY = 0;
 
 		IFOR(j, 0, count)
 		{
@@ -507,31 +506,31 @@ void TGameItem::LoadMulti()
 
 			if (pmb->Flags)
 			{
-				TMultiObject *mo = new TMultiObject(pmb->ID, x + pmb->X, y + pmb->Y, z + (char)pmb->Z, pmb->Flags);
+				TMultiObject *mo = new TMultiObject(pmb->ID, m_X + pmb->X, m_Y + pmb->Y, m_Z + (char)pmb->Z, pmb->Flags);
 				MapManager->AddRender(mo);
 				AddMultiObject(mo);
 			}
 
-			if (pmb->X < MinX)
-				MinX = pmb->X;
-			if (pmb->X > MaxX)
-				MaxX = pmb->X;
+			if (pmb->X < minX)
+				minX = pmb->X;
+			if (pmb->X > maxX)
+				maxX = pmb->X;
 			
-			if (pmb->Y < MinY)
-				MinY = pmb->Y;
-			if (pmb->Y > MaxY)
-				MaxY = pmb->Y;
+			if (pmb->Y < minY)
+				minY = pmb->Y;
+			if (pmb->Y > maxY)
+				maxY = pmb->Y;
 		}
 
 		TMulti *multi = (TMulti*)m_Items;
 
 		if (multi != NULL)
 		{
-			multi->MinX = MinX;
-			multi->MinY = MinY;
+			multi->MinX = minX;
+			multi->MinY = minY;
 
-			multi->MaxX = MaxX;
-			multi->MaxY = MaxY;
+			multi->MaxX = maxX;
+			multi->MaxY = maxY;
 		}
 	}
 }

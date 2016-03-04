@@ -1170,7 +1170,7 @@ void TUltimaOnline::LoadTiledata()
 
 	memcpy(&m_LandData[0], (PVOID)FileManager.TiledataMul.Address, 512 * sizeof(LAND_GROUP));
 
-	m_StaticDataCount= (FileManager.TiledataMul.Size - 428032) / sizeof(STATIC_GROUP);
+	m_StaticDataCount = (FileManager.TiledataMul.Size - 428032) / sizeof(STATIC_GROUP);
 
 	m_StaticData = new STATIC_GROUP[m_StaticDataCount];
 
@@ -1333,9 +1333,9 @@ void TUltimaOnline::LoadIndexFiles()
 	if (g_MultiIndexCount > 0x2000)
 		g_MultiIndexCount = 0x2000;
 
-	IFOR(i, 0, 0x10000)
+	IFOR(i, 0, MAX_GUMP_DATA_INDEX_COUNT)
 	{ 
-		if (i < 0x4000)
+		if (i < MAX_LAND_DATA_INDEX_COUNT)
 		{
 			TIndexObject &land = m_LandDataIndex[i];
 
@@ -1377,7 +1377,7 @@ void TUltimaOnline::LoadIndexFiles()
 
 			StaticArtPtr++;
 
-			if (i < 0x1000)
+			if (i < MAX_LAND_TEXTURES_DATA_INDEX_COUNT)
 			{
 				TIndexObject &textures = m_TextureDataIndex[i];
 
@@ -1399,7 +1399,7 @@ void TUltimaOnline::LoadIndexFiles()
 
 				TexturePtr++;
 
-				if (i < 0x0800)
+				if (i < MAX_SOUND_DATA_INDEX_COUNT)
 				{
 					TIndexSound &sound = m_SoundDataIndex[i];
 
@@ -1420,7 +1420,7 @@ void TUltimaOnline::LoadIndexFiles()
 
 					SoundPtr++;
 
-					if (i < 100)
+					if (i < MAX_LIGHTS_DATA_INDEX_COUNT)
 					{
 						TIndexObject &light = m_LightDataIndex[i];
 
@@ -1493,7 +1493,7 @@ void TUltimaOnline::InitStaticAnimList()
 
 	if (m_AnimData != NULL)
 	{
-		IFOR(i, 0, 0x4000)
+		IFOR(i, 0, MAX_STATIC_DATA_INDEX_COUNT)
 		{
 			m_StaticDataIndex[i].Index = i;
 
@@ -1783,9 +1783,9 @@ void TUltimaOnline::PatchFiles()
 
 		if (vh->FileID == 4) //Art
 		{
-			if (vh->BlockID >= 0x4000) //Run
+			if (vh->BlockID >= MAX_LAND_DATA_INDEX_COUNT) //Run
 			{
-				WORD ID = (WORD)vh->BlockID - 0x4000;
+				WORD ID = (WORD)vh->BlockID - MAX_LAND_DATA_INDEX_COUNT;
 				m_StaticDataIndex[ID].Address = vAddr + vh->Position;
 				m_StaticDataIndex[ID].Size = vh->Size;
 			}
@@ -1868,6 +1868,10 @@ void TUltimaOnline::IndexReplaces()
 {
 	TTextFileParser newDataParser("", " \t,{}", "#;//", "");
 	TTextFileParser artParser(FilePath("Art.def").c_str(), " \t", "#;//", "{}");
+	TTextFileParser textureParser(FilePath("TexTerr.def").c_str(), " \t", "#;//", "{}");
+	TTextFileParser gumpParser(FilePath("Gump.def").c_str(), " \t", "#;//", "{}");
+	TTextFileParser multiParser(FilePath("Multi.def").c_str(), " \t", "#;//", "{}");
+	TTextFileParser soundParser(FilePath("Sound.def").c_str(), " \t", "#;//", "{}");
 
 	while (!artParser.IsEOF())
 	{
@@ -1877,6 +1881,9 @@ void TUltimaOnline::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
+			if (index < 0 || index >= MAX_LAND_DATA_INDEX_COUNT + MAX_STATIC_DATA_INDEX_COUNT)
+				continue;
+
 			std::vector<std::string> newArt = newDataParser.GetTokens(strings[1].c_str());
 
 			int size = (int)newArt.size();
@@ -1885,7 +1892,10 @@ void TUltimaOnline::IndexReplaces()
 			{
 				int checkIndex = atoi(newArt[i].c_str());
 
-				if (index < 0x4000 && checkIndex < 0x4000 && m_LandDataIndex[checkIndex].Address != 0)
+				if (checkIndex < 0 || checkIndex >= MAX_LAND_DATA_INDEX_COUNT + MAX_STATIC_DATA_INDEX_COUNT)
+					continue;
+
+				if (index < MAX_LAND_DATA_INDEX_COUNT && checkIndex < MAX_LAND_DATA_INDEX_COUNT && m_LandDataIndex[checkIndex].Address != NULL)
 				{
 					memcpy(&m_LandDataIndex[index], &m_LandDataIndex[checkIndex], sizeof(TIndexObject));
 					m_LandDataIndex[index].Texture = NULL;
@@ -1893,10 +1903,10 @@ void TUltimaOnline::IndexReplaces()
 
 					break;
 				}
-				else if (index >= 0x4000 && checkIndex >= 0x4000 && m_StaticDataIndex[checkIndex - 0x4000].Address != 0)
+				else if (index >= MAX_LAND_DATA_INDEX_COUNT && checkIndex >= MAX_LAND_DATA_INDEX_COUNT && m_StaticDataIndex[checkIndex - 0x4000].Address != NULL)
 				{
-					checkIndex -= 0x4000;
-					index -= 0x4000;
+					checkIndex -= MAX_LAND_DATA_INDEX_COUNT;
+					index -= MAX_LAND_DATA_INDEX_COUNT;
 
 					memcpy(&m_StaticDataIndex[index], &m_StaticDataIndex[checkIndex], sizeof(TIndexObjectStatic));
 					m_StaticDataIndex[index].Texture = NULL;
@@ -1908,7 +1918,39 @@ void TUltimaOnline::IndexReplaces()
 		}
 	}
 
-	TTextFileParser gumpParser(FilePath("Gump.def").c_str(), " \t", "#;//", "{}");
+	while (!textureParser.IsEOF())
+	{
+		std::vector<std::string> strings = textureParser.ReadTokens();
+
+		if (strings.size() >= 3)
+		{
+			int index = atoi(strings[0].c_str());
+
+			if (index < 0)
+				continue;
+
+			std::vector<std::string> newTexture = newDataParser.GetTokens(strings[1].c_str());
+
+			int size = (int)newTexture.size();
+
+			IFOR(i, 0, size)
+			{
+				int checkIndex = atoi(newTexture[i].c_str());
+
+				if (checkIndex < 0)
+					continue;
+
+				if (index < MAX_LAND_TEXTURES_DATA_INDEX_COUNT && checkIndex < MAX_LAND_TEXTURES_DATA_INDEX_COUNT && m_TextureDataIndex[checkIndex].Address != NULL)
+				{
+					memcpy(&m_TextureDataIndex[index], &m_TextureDataIndex[checkIndex], sizeof(TIndexObject));
+					m_TextureDataIndex[index].Texture = NULL;
+					m_TextureDataIndex[index].Color = atoi(strings[2].c_str());
+
+					break;
+				}
+			}
+		}
+	}
 
 	while (!gumpParser.IsEOF())
 	{
@@ -1918,23 +1960,104 @@ void TUltimaOnline::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= 0x10000)
+			if (index < 0 || index >= MAX_GUMP_DATA_INDEX_COUNT)
 				continue;
 
-			std::vector<std::string> newArt = newDataParser.GetTokens(strings[1].c_str());
+			std::vector<std::string> newGump = newDataParser.GetTokens(strings[1].c_str());
 
-			int size = (int)newArt.size();
+			int size = (int)newGump.size();
 
 			IFOR(i, 0, size)
 			{
-				int checkIndex = atoi(newArt[i].c_str());
+				int checkIndex = atoi(newGump[i].c_str());
 
-				if (checkIndex < 0 || checkIndex >= 0x10000)
+				if (checkIndex < 0 || checkIndex >= MAX_GUMP_DATA_INDEX_COUNT || m_GumpDataIndex[checkIndex].Address == NULL)
 					continue;
 
 				memcpy(&m_GumpDataIndex[index], &m_GumpDataIndex[checkIndex], sizeof(TIndexObject));
 				m_GumpDataIndex[index].Texture = NULL;
 				m_GumpDataIndex[index].Color = atoi(strings[2].c_str());
+
+				break;
+			}
+		}
+	}
+
+	while (!multiParser.IsEOF())
+	{
+		std::vector<std::string> strings = multiParser.ReadTokens();
+
+		if (strings.size() >= 3)
+		{
+			int index = atoi(strings[0].c_str());
+
+			if (index < 0 || index >= g_MultiIndexCount)
+				continue;
+
+			std::vector<std::string> newMulti = newDataParser.GetTokens(strings[1].c_str());
+
+			int size = (int)newMulti.size();
+
+			IFOR(i, 0, size)
+			{
+				int checkIndex = atoi(newMulti[i].c_str());
+
+				if (checkIndex < 0 || checkIndex >= g_MultiIndexCount && m_MultiDataIndex[checkIndex].Address == NULL)
+					continue;
+
+				memcpy(&m_MultiDataIndex[index], &m_MultiDataIndex[checkIndex], sizeof(TIndexMulti));
+
+				break;
+			}
+		}
+	}
+
+	while (!soundParser.IsEOF())
+	{
+		std::vector<std::string> strings = soundParser.ReadTokens();
+
+		if (strings.size() >= 2)
+		{
+			int index = atoi(strings[0].c_str());
+
+			if (index < 0 || index >= MAX_SOUND_DATA_INDEX_COUNT)
+				continue;
+
+			std::vector<std::string> newSound = newDataParser.GetTokens(strings[1].c_str());
+
+			int size = (int)newSound.size();
+
+			IFOR(i, 0, size)
+			{
+				int checkIndex = atoi(newSound[i].c_str());
+
+				if (checkIndex < -1 || checkIndex >= MAX_SOUND_DATA_INDEX_COUNT)
+					continue;
+
+				TIndexSound &in = m_SoundDataIndex[index];
+
+				if (checkIndex == -1)
+				{
+					in.Address = 0;
+					in.Size = 0;
+					in.Timer = 0;
+					in.LastAccessTime = 0;
+				}
+				else
+				{
+					TIndexSound &out = m_SoundDataIndex[checkIndex];
+
+					if (out.Address == NULL)
+						continue;
+
+					in.Address = out.Address;
+					in.Size = out.Size;
+					in.Timer = out.Timer;
+					in.LastAccessTime = out.LastAccessTime;
+				}
+
+				in.waveFile.clear();
+				in.hStream = NULL;
 
 				break;
 			}
@@ -4170,7 +4293,7 @@ void TUltimaOnline::GoToWebLink(string url)
 void TUltimaOnline::RemoveRangedObjects()
 {
 	int objectsRange = g_UpdateRange + 1;
-	int multiRange = g_UpdateRange + 12;
+	//int multiRange = g_UpdateRange + 12;
 
 	if (World != NULL)
 	{
@@ -4182,14 +4305,12 @@ void TUltimaOnline::RemoveRangedObjects()
 
 			if (go->Container == 0xFFFFFFFF && !go->IsPlayer())
 			{
-				int distance = GetDistance(g_RemoveRangeXY, go);
-				
 				if (go->Graphic >= 0x4000)
 				{
-					if (distance > multiRange)
+					if (GetMultiDistance(g_RemoveRangeXY, go) > objectsRange) //multiRange)
 						World->RemoveObject(go);
 				}
-				else if (distance > objectsRange)
+				else if (GetDistance(g_RemoveRangeXY, go) > objectsRange)
 				{
 					if (Party.Contains(go->Serial))
 						go->RemoveRender();

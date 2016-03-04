@@ -198,7 +198,7 @@ void TMapManager::ClearUnusedBlocks()
 	{
 		TMapBlock *next = (TMapBlock*)block->m_Next;
 
-		if (block->LastAccessTime < ticks)
+		if (block->LastAccessTime < ticks && block->HasNoExternalData())
 		{
 			DWORD index = block->Index;
 			Delete(block);
