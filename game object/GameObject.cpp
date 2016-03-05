@@ -397,8 +397,8 @@ int GetMultiDistance(POINT current, TGameObject *target)
 	{
 		for (TMulti *multi = (TMulti*)target->m_Items; multi != NULL; multi = (TMulti*)multi->m_Next)
 		{
-			int distx = abs(target->X - current.x);
-			int disty = abs(target->Y - current.y);
+			int distx = abs(multi->X - current.x);
+			int disty = abs(multi->Y - current.y);
 
 			if (disty > distx)
 				distx = disty;

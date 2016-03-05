@@ -23,7 +23,7 @@
 class TShopItem
 {
 private:
-	short m_Count; //Количество, которое выделено в списке покупок
+	int m_Count; //Количество, которое выделено в списке покупок
 	string m_Name; //Имя предмета для списка покупок
 	DWORD m_Price; //Цена предмета
 	bool m_Selected; //Выделен в байлисте
@@ -32,7 +32,7 @@ public:
 	TShopItem();
 	~TShopItem();
 
-	SETGETEX(short, Count);
+	SETGETEX(int, Count);
 	SETGET(string, Name);
 	SETGET(DWORD, Price);
 	SETGET(bool, Selected);

@@ -27,7 +27,7 @@ private:
 	bool m_Deleted; //Предмет удален
 	bool m_Dropped; //Бросили предмет (на землю/в контейнер/на персонажа)
 	bool m_IsGameFigure; //Это игровая фигура
-	WORD m_DragCount; //Количество для перемещения
+	DWORD m_DragCount; //Количество для перемещения
 
 public:
 	TObjectOnCursor();
@@ -38,7 +38,7 @@ public:
 	SETGET(bool, Deleted);
 	SETGET(bool, Dropped);
 	SETGET(bool, IsGameFigure);
-	SETGET(WORD, DragCount);
+	SETGET(DWORD, DragCount);
 };
 //--------------------------------------------------------------------------
 extern TObjectOnCursor *ObjectInHand; //Указатель на объект в руке (на курсоре)

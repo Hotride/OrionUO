@@ -1028,7 +1028,7 @@ bool TGumpBuy::OnLeftMouseDoubleClick()
 					{
 						si->Selected = true;
 
-						if (si->Count < box->Count)
+						if (si->Count < (int)box->Count)
 							si->IncCount();
 					}
 					else
@@ -1080,11 +1080,11 @@ bool TGumpBuy::ChangeItemCount(bool increase, int idx, int count)
 				{
 					if (increase) //+
 					{
-						if (si->Count < box->Count)
+						if (si->Count < (int)box->Count)
 						{
 							si->AddCount(count);
 
-							if (si->Count > box->Count)
+							if (si->Count >(int)box->Count)
 								si->Count = box->Count;
 						}
 					}

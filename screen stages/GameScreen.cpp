@@ -1388,7 +1388,7 @@ int TGameScreen::Render(bool mode)
 				WORD ohGraphic = ObjectInHand->GetDrawGraphic(doubleDraw);
 
 				WORD ohColor = ObjectInHand->Color;
-				WORD ohCount = ObjectInHand->DragCount;
+				DWORD ohCount = ObjectInHand->DragCount;
 
 				if (ohColor != 0)
 					ColorizerShader->Use();

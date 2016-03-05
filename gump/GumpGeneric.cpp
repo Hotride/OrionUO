@@ -337,13 +337,21 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					case GOT_RADIO:
 					{
 						item->Draw(posX, posY, m_Transparent, CanPressedButton == objectIndex);
+						break;
+					}
+					case GOT_GUMPPIC:
+					case GOT_TILEPIC:
+					{
+						ColorizerShader->Use();
+						
+						item->Draw(posX, posY, m_Transparent, false);
+						
+						UnuseShader();
 
 						break;
 					}
-					case GOT_RESIZEPIC:
-					case GOT_GUMPPIC:
 					case GOT_GUMPPICTILED:
-					case GOT_TILEPIC:
+					case GOT_RESIZEPIC:
 					case GOT_TEXT:
 					case GOT_CROPPEDTEXT:
 					case GOT_TEXTENTRYLIMITED:
@@ -1153,6 +1161,40 @@ void TGumpGeneric::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 				objectIndex++;
 			}
 		}
+	}
+}
+//----------------------------------------------------------------------------
+void TGumpGeneric::OnCharPress(WPARAM &wparam, LPARAM &lparam)
+{
+	//¬вод текста
+	if (wparam == VK_RETURN || wparam == VK_BACK || EntryPointer == NULL)
+		return; //Ignore no print keys
+
+	TGumpObject *item = (TGumpObject*)m_Items;
+
+	for (; item != NULL; item = (TGumpObject*)item->m_Next)
+	{
+		if (item->Type == GOT_TEXTENTRY || item->Type == GOT_TEXTENTRYLIMITED)
+			break;
+	}
+
+	if (item != NULL)
+	{
+		TGumpTextEntry *gte = (TGumpTextEntry*)item;
+
+		EntryPointer->Insert(wparam);
+
+		if (gte->Type == GOT_TEXTENTRYLIMITED)
+		{
+			int val = FontManager->GetWidthA(6, EntryPointer->c_str(), EntryPointer->Length());
+
+			if (val > 170)
+				EntryPointer->Remove(true);
+			else
+				GenerateFrame(m_X, m_Y);
+		}
+		else
+			GenerateFrame(m_X, m_Y);
 	}
 }
 //----------------------------------------------------------------------------

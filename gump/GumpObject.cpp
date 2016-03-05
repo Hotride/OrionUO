@@ -155,23 +155,27 @@ void TGumpButtonTileArt::Draw(int &x, int &y, bool &transparent, bool pressed)
 {
 	TGumpButton::Draw(x, y, transparent, pressed);
 
+	ColorizerShader->Use();
+
 	if (transparent)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, x + m_TileX, y + m_TileY);
+		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, x + m_X + m_TileX, y + m_Y + m_TileY);
 
 		glDisable(GL_BLEND);
 
 		glEnable(GL_STENCIL_TEST);
 
-		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, x + m_TileX, y + m_TileY);
+		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, x + m_X + m_TileX, y + m_Y + m_TileY);
 
 		glDisable(GL_STENCIL_TEST);
 	}
 	else
-		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, x + m_TileX, y + m_TileY);
+		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, x + m_X + m_TileX, y + m_Y + m_TileY);
+
+	UnuseShader();
 }
 //---------------------------------------------------------------------------
 TGumpCheckbox::TGumpCheckbox(WORD graphic, WORD graphicChecked, WORD graphicDisabled, int index, bool action, short x, short y)
