@@ -290,7 +290,7 @@ void TAnimationManager::Load(PDWORD verdata)
 			{
 				m_DataIndex[i].Address = (DWORD)aidx;
 				m_DataIndex[i].Offset = m_AddressMul[0];
-				m_DataIndex[i].Graphic = animID;
+				m_DataIndex[i].Graphic = i;// animID;
 			}
 		}
 	}
@@ -334,7 +334,7 @@ void TAnimationManager::Load(PDWORD verdata)
 					{
 						m_DataIndex[i].Address = (DWORD)vh;
 						m_DataIndex[i].Offset = 0xFFFFFFFF;
-						m_DataIndex[i].Graphic = animID;
+						m_DataIndex[i].Graphic = i; // animID;
 						//trace_printf("\tLoad verdata anim ID = 0x%04X\n", animID);
 					}
 				}
@@ -371,10 +371,12 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 			int startAnimID = -1;
 			int animFile = 1;
 			WORD convertedAnimID = 0;
+			WORD realAnimID = 0;
 
 			if (anim[0] != -1 && m_AddressIdx[2] != NULL && m_AddressMul[2] != NULL)
 			{
 				animFile = 2;
+				realAnimID = anim[0];
 
 				if (anim[0] >= 200) //Low
 				{
@@ -390,6 +392,7 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 			else if (anim[1] != -1 && m_AddressIdx[3] != NULL && m_AddressMul[3] != NULL)
 			{
 				animFile = 3;
+				realAnimID = anim[1];
 
 				if (anim[1] >= 200)
 				{
@@ -413,6 +416,7 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 			else if (anim[2] != -1 && m_AddressIdx[4] != NULL && m_AddressMul[4] != NULL)
 			{
 				animFile = 4;
+				realAnimID = anim[2];
 
 				if (anim[2] >= 200)
 				{
@@ -436,6 +440,7 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 			else if (anim[3] != -1 && m_AddressIdx[5] != NULL && m_AddressMul[5] != NULL)
 			{
 				animFile = 5;
+				realAnimID = anim[3];
 
 				if (anim[3] >= 200)
 				{
@@ -469,7 +474,7 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 					{
 						m_DataIndex[index].Address = (DWORD)aidx;
 						m_DataIndex[index].Offset = m_AddressMul[animFile];
-						m_DataIndex[index].Graphic = convertedAnimID;
+						m_DataIndex[index].Graphic = realAnimID;// convertedAnimID;
 					}
 				}
 			}
@@ -1798,5 +1803,11 @@ void TAnimationManager::GetCorpseGraphic(WORD &graphic)
 {
 	if (graphic >= 0 && graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_CorpseReplaces[graphic])
 		graphic = m_CorpseReplaces[graphic];
+}
+//----------------------------------------------------------------------------
+void TAnimationManager::GetBodyGraphic(WORD &graphic)
+{
+	if (graphic >= 0 && graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+		graphic = m_DataIndex[graphic].Graphic;
 }
 //----------------------------------------------------------------------------

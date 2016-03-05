@@ -65,8 +65,11 @@ void TGameCharacter::SetPaperdollText(string val)
 int TGameCharacter::IsSitting()
 {
 	int result = 0;
+	WORD testGraphic = m_Graphic;
+	AnimationManager->GetBodyGraphic(testGraphic);
+	bool human = (((testGraphic >= 0x0190) && (testGraphic <= 0x0193)) || (testGraphic == 0x03DB) || (testGraphic == 0x03DF) || (testGraphic == 0x03E2));
 
-	if (IsHuman() && FindLayer(OL_MOUNT) == NULL && !TestStepNoChangeDirection(GetAnimationGroup()))
+	if (human && FindLayer(OL_MOUNT) == NULL && !TestStepNoChangeDirection(GetAnimationGroup()))
 	{
 		TRenderWorldObject *obj = this;
 
@@ -439,8 +442,8 @@ void TGameCharacter::GetAnimationGroup(ANIMATION_GROUPS group, BYTE &animation)
 		{ LAG_EAT,			HAG_ATTACK_1,		PAG_ATTACK_TWOHANDED_WIDE },
 		{ LAG_EAT,			HAG_ATTACK_2,		PAG_ATTACK_TWOHANDED_JAB },
 		{ LAG_WALK,			HAG_WALK,			PAG_WALK_WARMODE },
-		{ LAG_EAT,			HAG_CAST,			PAG_CAST_DIRECTED },
-		{ LAG_EAT,			HAG_CAST,			PAG_CAST_AREA },
+		{ LAG_EAT,			HAG_ATTACK_2,		PAG_CAST_DIRECTED },
+		{ LAG_EAT,			HAG_ATTACK_3,		PAG_CAST_AREA },
 		{ LAG_EAT,			HAG_ATTACK_1,		PAG_ATTACK_BOW },
 		{ LAG_EAT,			HAG_ATTACK_2,		PAG_ATTACK_CROSSBOW },
 		{ LAG_EAT,			HAG_GET_HIT_1,		PAG_GET_HIT },
@@ -500,8 +503,19 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 	ANIMATION_GROUPS groupIndex = AG_LOW;
 	BYTE result = m_AnimationGroup;
 
-	if (graphic)
+	if (!graphic)
+		graphic = GetMountAnimation();
+
+	AnimationManager->GetBodyGraphic(graphic);
+
+	groupIndex = AnimationManager->GetGroupIndex(graphic);
+
+	if (result != 0xFF)
+		GetAnimationGroup(groupIndex, result);
+
+	/*if (graphic)
 	{
+		//AnimationManager->GetBodyGraphic(graphic);
 		groupIndex = AnimationManager->GetGroupIndex(graphic);
 
 		if (result != 0xFF)
@@ -510,8 +524,9 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 	else
 	{
 		graphic = GetMountAnimation();
+		//AnimationManager->GetBodyGraphic(graphic);
 		groupIndex = AnimationManager->GetGroupIndex(graphic);
-	}
+	}*/
 
 	bool isWalking = Walking();
 	bool isRun = (m_Direction & 0x80);
@@ -559,6 +574,10 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 		}
 		else if (m_AnimationGroup == 0xFF)
 			result = (BYTE)HAG_STAND;
+
+		//Глюченный дельфин на всех клиентах
+		if (graphic == 151)
+			result++;
 	}
 	else if (groupIndex == AG_PEOPLE)
 	{

@@ -104,8 +104,9 @@ void TGameWorld::ProcessAnimation()
 					frameIndex++;
 
 				WORD id = gc->GetMountAnimation();
+				AnimationManager->GetBodyGraphic(id);
 				TTextureAnimation *anim = AnimationManager->GetAnimation(id);
-				int animGroup = gc->GetAnimationGroup();
+				int animGroup = gc->GetAnimationGroup(id);
 
 				TGameItem *mount = gc->FindLayer(OL_MOUNT);
 				if (mount != NULL)

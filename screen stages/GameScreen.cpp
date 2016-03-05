@@ -268,7 +268,7 @@ void TGameScreen::CalculateRenderList()
 		g_FoliageIndex = 1;
 
 	m_RenderListCount = 0;
-	vector<int> zList;
+	//vector<int> zList;
 
 	for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 	{
@@ -351,7 +351,7 @@ void TGameScreen::CalculateRenderList()
 
 						if (obj->IsGameObject())
 						{
-							if (((TGameObject*)obj)->NPC || ((TGameObject*)obj)->IsCorpse())
+							/*if (((TGameObject*)obj)->NPC || ((TGameObject*)obj)->IsCorpse())
 							{
 								int z = obj->Z;
 								int zSize = (int)zList.size();
@@ -368,7 +368,7 @@ void TGameScreen::CalculateRenderList()
 
 								if (canAddZ)
 									zList.push_back(z);
-							}
+							}*/
 						}
 						else if (obj->IsFoliage() && ((TRenderStaticObject*)obj)->FoliageTransparentIndex != g_FoliageIndex)
 						{
@@ -396,7 +396,8 @@ void TGameScreen::CalculateRenderList()
 
 	if (m_RenderListCount)
 	{
-		int zSize = (int)zList.size();
+		memcpy(&m_RenderList[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA)* m_RenderListCount);
+		/*int zSize = (int)zList.size();
 
 		if (!zSize || true)
 			memcpy(&m_RenderList[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListCount);
@@ -452,7 +453,7 @@ void TGameScreen::CalculateRenderList()
 								if (!canBeAdd)
 									canBeAdd = ((obj->IsSurface() && (obj->IsBackground() || obj->IsImpassable())) || obj->IsLandObject());
 							}*/
-						}
+						/*}
 
 						if (canBeAdd)
 						{
@@ -476,7 +477,7 @@ void TGameScreen::CalculateRenderList()
 					}
 				}
 			}
-		}
+		}*/
 	}
 }
 //---------------------------------------------------------------------------

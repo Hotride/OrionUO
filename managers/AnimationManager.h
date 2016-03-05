@@ -156,6 +156,7 @@ public:
 	void DrawShadows();
 
 	void GetCorpseGraphic(WORD &graphic);
+	void GetBodyGraphic(WORD &graphic);
 };
 //---------------------------------------------------------------------------
 extern TAnimationManager *AnimationManager;
