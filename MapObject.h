@@ -112,6 +112,8 @@ protected:
 	//Указатель на структуру данных тайлдаты
 	STATIC_TILES *m_TiledataPtr;
 
+	//Может ли быть прозрачным
+	char m_CanBeTransparent;
 public:
 	TRenderStaticObject(RENDER_OBJECT_TYPE renderType, DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TRenderStaticObject();
@@ -122,6 +124,9 @@ public:
 
 	//Добавить текст в контейнер
 	virtual void AddText(TTextData *td);
+
+	//Проверка прозрачности (для круга прозрачности)
+	virtual bool TranparentTest(int &playerZPlus5);
 
 	//Получить смещение текста по оси X
 	int GetTextOffsetX(TTextData *text);
@@ -181,18 +186,12 @@ public:
 //Класс объекта статики
 class TStaticObject : public TRenderStaticObject
 {
-private:
-	//Может ли быть прозрачным
-	char m_CanBeTransparent;
 public:
 	TStaticObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TStaticObject() {}
 
 	//Отрисовка объекта
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
-
-	//Проверка прозрачности (для круга прозрачности)
-	virtual bool TranparentTest(int &playerZ);
 
 	//Это объект статики
 	bool IsStaticObject() {return true;}

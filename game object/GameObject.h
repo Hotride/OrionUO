@@ -55,6 +55,9 @@ public:
 
 	virtual void OnGraphicChange(int direction = 0) {}
 
+	//Проверка прозрачности (для круга прозрачности)
+	virtual bool TranparentTest(int &playerZ) { return false; }
+
 	//Управление эффектами
 	void DrawEffects(int &drawX, int &drawY, DWORD &ticks);
 	void AddEffect(TGameEffect *effect); //Добавить эффект

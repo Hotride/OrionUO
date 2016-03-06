@@ -27,9 +27,6 @@ private:
 	//Фгали объекта (2 - мульти с таргета)
 	DWORD m_MultiFlags;
 
-	//Флаг возможности быть прозрачным
-	char m_CanBeTransparent;
-
 public:
 	TMultiObject(WORD graphic, short x, short y, char z, DWORD flags);
 	virtual ~TMultiObject();
@@ -39,9 +36,6 @@ public:
 
 	//Отрисовать объект
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
-
-	//Тест прозрачности (для круга прозрачности)
-	virtual bool TranparentTest(int &playerZ);
 
 	//Это объект мульти
 	bool IsMultiObject() {return true;}

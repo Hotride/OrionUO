@@ -885,6 +885,7 @@ void TGameScreen::CalculateGameWindowText(bool &mode)
 void TGameScreen::DrawGameWindow(bool &mode)
 {
 	DWORD ticks = GetTickCount();
+	int playerZPlus5 = m_RenderBounds.PlayerZ + 5;
 
 	if (mode)
 	{
@@ -900,7 +901,7 @@ void TGameScreen::DrawGameWindow(bool &mode)
 			if (g_CircleOfTransparency.Create(ConfigManager.CircleTransRadius))
 			{
 				int drawX = m_RenderBounds.GameWindowCenterX + g_Player->OffsetX;
-				int drawY = m_RenderBounds.GameWindowCenterY + g_Player->OffsetY - (m_RenderBounds.PlayerZ * 4 - g_Player->OffsetZ);
+				int drawY = m_RenderBounds.GameWindowCenterY + g_Player->OffsetY - (m_RenderBounds.PlayerZ * 4 + g_Player->OffsetZ);
 
 				g_CircleOfTransparency.Draw(drawX, drawY);
 			}
@@ -915,7 +916,7 @@ void TGameScreen::DrawGameWindow(bool &mode)
 			{
 				g_OutOfRangeColor = rod.GrayColor;
 
-				g_UseCircleTrans = (ConfigManager.UseCircleTrans && obj->TranparentTest(m_RenderBounds.PlayerZ));
+				g_UseCircleTrans = (ConfigManager.UseCircleTrans && obj->TranparentTest(playerZPlus5));
 
 				g_ZBuffer = obj->Z + obj->RenderQueueIndex;
 				obj->Draw(mode, rod.X, rod.Y, ticks);
@@ -938,7 +939,7 @@ void TGameScreen::DrawGameWindow(bool &mode)
 
 			if (obj != NULL)
 			{
-				g_UseCircleTrans = (useCircleTrans && obj->TranparentTest(m_RenderBounds.PlayerZ));
+				g_UseCircleTrans = (useCircleTrans && obj->TranparentTest(playerZPlus5));
 
 				obj->Draw(mode, rod.X, rod.Y, ticks);
 			}

@@ -214,9 +214,19 @@ g_RenderedObjectsCountInGameWindow++;
 //---------------------------------------------------------------------------
 TRenderStaticObject::TRenderStaticObject(RENDER_OBJECT_TYPE renderType, DWORD serial, WORD graphic, WORD color, short x, short y, char z)
 : TMapObject(renderType, serial, graphic, color, x, y, z), m_FoliageTransparentIndex(-1),
-m_TiledataPtr(&UO->m_StaticData[graphic / 32].Tiles[graphic % 32])
+m_TiledataPtr(&UO->m_StaticData[graphic / 32].Tiles[graphic % 32]),
+m_CanBeTransparent(0)
 {
 	m_TextControl = new TTextContainer(3);
+
+	if (m_TiledataPtr->Height > 5)
+		m_CanBeTransparent = 1;
+	else if (IsRoof() || (IsSurface() && IsBackground()) || IsWall())
+		m_CanBeTransparent = 1;
+	else if (m_TiledataPtr->Height == 5 && IsSurface() && !IsBackground())
+		m_CanBeTransparent = 1;
+	else
+		m_CanBeTransparent = 0;
 }
 //---------------------------------------------------------------------------
 TRenderStaticObject::~TRenderStaticObject()
@@ -282,6 +292,18 @@ bool TRenderStaticObject::TextCanBeTransparent(TRenderTextObject *text)
 	return result;
 }
 //---------------------------------------------------------------------------
+bool TRenderStaticObject::TranparentTest(int &playerZPlus5)
+{
+	bool result = true;
+
+	if (m_Z <= playerZPlus5 - m_TiledataPtr->Height)
+		result = false;
+	else if (playerZPlus5 < m_Z && !m_CanBeTransparent)
+		result = false;
+
+	return result;
+}
+//---------------------------------------------------------------------------
 //-------------------------------TStaticObject------------------------------
 //---------------------------------------------------------------------------
 TStaticObject::TStaticObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z)
@@ -298,35 +320,9 @@ TStaticObject::TStaticObject(DWORD serial, WORD graphic, WORD color, short x, sh
 	else
 		m_RenderQueueIndex = 6;
 	
-	if (m_TiledataPtr->Height > 5)
-		m_CanBeTransparent = 1;
-	else if (IsRoof() || (IsSurface() && IsBackground()) || IsWall())
-		m_CanBeTransparent = 1;
-	else if (m_TiledataPtr->Height == 5 && IsSurface() && !IsBackground())
-		m_CanBeTransparent = 1;
-	else
-		m_CanBeTransparent = 0;
-
 #if UO_DEBUG_INFO!=0
 	g_StaticsObjectsCount++;
 #endif //UO_DEBUG_INFO!=0
-}
-//---------------------------------------------------------------------------
-bool TStaticObject::TranparentTest(int &playerZ)
-{
-	bool result = true;
-	int height = m_TiledataPtr->Height;
-
-	if (m_Z < playerZ - height - 5)
-		result = false;
-	else if (!height && m_Z <= playerZ)
-		result = false;
-	else if (height == 5 && m_Z >= playerZ - 5 && m_Z < playerZ + 5)
-		result = false;
-	else if (playerZ + 5 < m_Z && !m_CanBeTransparent)
-		result = false;
-
-	return result;
 }
 //---------------------------------------------------------------------------
 int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
