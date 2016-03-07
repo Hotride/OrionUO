@@ -538,7 +538,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 						int drawX = posX + td->DrawX - go->GetTextOffsetX(td);
 						int drawY = posY + td->DrawY - go->GetTextOffsetY(td);
 
-						TTextImageBounds ib(drawX, drawY, drawX + tth.Width, drawY + tth.Height, td);
+						TTextImageBounds ib(drawX, drawY, tth.Width, tth.Height, td);
 
 						td->Transparent = TextRenderer->InRect(ib, go);
 
@@ -560,7 +560,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 						tdBuf = tdBuf->m_Next;
 					}
 
-					TTextImageBounds ib(drawX, drawY + 1, drawX + tth.Width, drawY + tth.Height, td);
+					TTextImageBounds ib(drawX, drawY + 1, tth.Width, tth.Height, td);
 
 					td->Transparent = TextRenderer->InRect(ib, NULL);
 
@@ -655,6 +655,8 @@ int TGumpPaperdoll::Draw(bool &mode)
 				LSG = ID_GP_BUTTON_SKILLS; //Paperdoll button Skills
 			else if (UO->GumpPixelsInXY(gumpID, posX + 185, posY + 206))
 				LSG = ID_GP_BUTTON_WARMODE; //Paperdoll button War/Peace
+			else if (UO->GumpPixelsInXY(0x0071, posX + 80, posY + 4))
+				LSG = ID_GP_BUTTON_VIRTURE; //David's star (virture button)
 			else
 			{
 				if (ConnectionManager.ClientVersion >= CV_500A)
@@ -966,20 +968,29 @@ bool TGumpPaperdoll::OnLeftMouseDoubleClick()
 
 			result = true;
 		}
-
-		return result;
-	}
-
-	TGameCharacter *container = World->FindWorldCharacter(Serial);
-	if (container != NULL)
-	{
-		int layer = g_LastObjectLeftMouseDown - ID_GP_ITEMS;
-
-		TGameItem *equipment = container->FindLayer(layer);
-		if (equipment != NULL)
+		else if (g_LastObjectLeftMouseDown == ID_GP_BUTTON_VIRTURE)
 		{
-			UO->DoubleClick(equipment->Serial);
+			TPacketVirtureRequest packet(1);
+			packet.Send();
+
 			result = true;
+		}
+	}
+	else
+	{
+		TGameCharacter *container = World->FindWorldCharacter(Serial);
+
+		if (container != NULL)
+		{
+			int layer = g_LastObjectLeftMouseDown - ID_GP_ITEMS;
+
+			TGameItem *equipment = container->FindLayer(layer);
+
+			if (equipment != NULL)
+			{
+				UO->DoubleClick(equipment->Serial);
+				result = true;
+			}
 		}
 	}
 

@@ -24,7 +24,8 @@ TSelectProfessionScreen *SelectProfessionScreen = NULL;
 TSelectProfessionScreen::TSelectProfessionScreen()
 : TBaseScreen(), m_PixelOffset(0), m_SkillSelection(0), m_LastScrollChangeTime(0)
 {
-	FontManager->GenerateA(2, m_Text, "Choose a Trade for Your Character", 0x0386, 432, TS_CENTER);
+	string str = ClilocManager->Cliloc("ENU")->GetA(3000326, "Choose a Trade for Your Character");
+	FontManager->GenerateA(2, m_Text, str.c_str(), 0x0386, 432, TS_CENTER);
 
 	FontManager->GenerateA(1, m_TextStat[0], "Strength", 1);
 	FontManager->GenerateA(1, m_TextStat[1], "Dexterity", 1);
@@ -110,7 +111,51 @@ void TSelectProfessionScreen::InitPopupHelp()
 {
 	if (!ConfigManager.PopupHelpEnabled)
 		return;
-	
+
+	switch (g_LastSelectedObject)
+	{
+		case ID_SPS_QUIT:
+		{
+			PopupHelp.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
+			break;
+		}
+		case ID_SPS_ARROW_NEXT:
+		{
+			PopupHelp.Set(L"Next screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			break;
+		}
+		case ID_SPS_ARROW_PREV:
+		{
+			PopupHelp.Set(L"Preveous screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			break;
+		}
+		case ID_SPS_ARROW_BACK_PROFESSION:
+		case ID_SPS_LABEL_BACK_PROFESSION:
+		{
+			PopupHelp.Set(L"Back to select profession category", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			break;
+		}
+		default:
+			break;
+	}
+
+	if (g_LastSelectedObject >= ID_SPS_LABEL && g_LastSelectedObject < ID_SPS_SKILLS_LIST)
+	{
+		TBaseProfession *obj = ProfessionManager->Selected;
+
+		int index = 0;
+		for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
+		{
+			TPRINT("%i %i child->DescriptionClilocID = %i\n", g_LastSelectedObject, ID_SPS_LABEL + index, child->DescriptionClilocID);
+			if (g_LastSelectedObject == ID_SPS_LABEL + index)
+			{
+				if (child->DescriptionClilocID)
+					PopupHelp.Set(child->DescriptionClilocID, "Description", SOT_NO_OBJECT, g_LastSelectedObject, 350);
+
+				break;
+			}
+		}
+	}
 }
 //---------------------------------------------------------------------------
 int TSelectProfessionScreen::Render(bool mode)

@@ -125,7 +125,7 @@ void TMainScreen::InitPopupHelp()
 		}
 		case ID_MS_ARROW_NEXT:
 		{
-			PopupHelp.Set(3000049, "Next screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			PopupHelp.Set(L"Next screen", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_MS_ACCOUNT:

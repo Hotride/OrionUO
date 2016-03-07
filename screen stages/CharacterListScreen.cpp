@@ -92,6 +92,55 @@ void TCharacterListScreen::InitPopupHelp()
 {
 	if (!ConfigManager.PopupHelpEnabled)
 		return;
+
+	switch (g_LastSelectedObject)
+	{
+		case ID_CS_QUIT:
+		{
+			PopupHelp.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
+			break;
+		}
+		case ID_CS_ARROW_NEXT:
+		{
+			PopupHelp.Set(L"Play UO with selected character", SOT_NO_OBJECT, g_LastSelectedObject);
+			break;
+		}
+		case ID_CS_ARROW_PREV:
+		{
+			PopupHelp.Set(L"Back to shard selection screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			break;
+		}
+		case ID_CS_NEW:
+		{
+			PopupHelp.Set(L"Create new character", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			break;
+		}
+		case ID_CS_DELETE:
+		{
+			PopupHelp.Set(L"Delete this character", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			break;
+		}
+		default:
+			break;
+	}
+
+	if (g_LastSelectedObject >= ID_CS_CHARACTERS)
+	{
+		bool testField = (ConnectionManager.ClientVersion >= CV_305D);
+
+		IFOR(i, 0, CharacterList.Count)
+		{
+			if (!testField || !i || CharacterList.GetName(i).length() != 0)
+			{
+				if (g_LastSelectedObject == (ID_CS_CHARACTERS + i))
+				{
+					PopupHelp.Set(L"Click here to select this character", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+
+					break;
+				}
+			}
+		}
+	}
 }
 //---------------------------------------------------------------------------
 int TCharacterListScreen::Render(bool mode)

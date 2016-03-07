@@ -2812,7 +2812,7 @@ TTextureObject *TUltimaOnline::ExecuteTexture(WORD id)
 //---------------------------------------------------------------------------
 TTextureObject *TUltimaOnline::ExecuteLight(BYTE &id)
 {
-	if (id > 100 || m_LightDataIndex[id].Address == NULL)
+	if (id > MAX_LIGHTS_DATA_INDEX_COUNT)// || m_LightDataIndex[id].Address == NULL)
 		id = 0;
 	
 	TIndexObject &io = m_LightDataIndex[id];

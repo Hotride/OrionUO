@@ -276,17 +276,13 @@ bool TRenderStaticObject::TextCanBeTransparent(TRenderTextObject *text)
 {
 	bool result = true;
 
-	TTextData *td = m_TextControl->m_Head;
-
-	while (td != NULL)
+	for (TTextData *td = m_TextControl->m_Head; td != NULL; td = td->m_Prev)
 	{
 		if (text == td)
 		{
 			result = false;
 			break;
 		}
-
-		td = td->m_Prev;
 	}
 
 	return result;

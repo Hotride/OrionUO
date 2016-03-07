@@ -86,6 +86,26 @@ void TCreateCharacterScreen::InitPopupHelp()
 	if (!ConfigManager.PopupHelpEnabled)
 		return;
 
+	switch (g_LastSelectedObject)
+	{
+		case ID_CCS_QUIT:
+		{
+			PopupHelp.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
+			break;
+		}
+		case ID_CCS_ARROW_NEXT:
+		{
+			PopupHelp.Set(L"Accept this character", SOT_NO_OBJECT, g_LastSelectedObject);
+			break;
+		}
+		case ID_CCS_ARROW_PREV:
+		{
+			PopupHelp.Set(L"Back to character generation screen", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			break;
+		}
+		default:
+			break;
+	}
 }
 //---------------------------------------------------------------------------
 int TCreateCharacterScreen::Render(bool mode)
@@ -121,18 +141,18 @@ int TCreateCharacterScreen::Render(bool mode)
 		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
 		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
 		
-		WORD GumpID = 0x1589 + (int)(CanSelectedButton == 1); //X gump /lighted
-		if (CanPressedButton == 1)
+		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_CCS_QUIT); //X gump /lighted
+		if (CanPressedButton == ID_CCS_QUIT)
 			GumpID = 0x158B; //X gump (pressed)
 		UO->DrawGump(GumpID, 0, 555, 4);
 		
-		GumpID = 0x15A1 + (int)(CanSelectedButton == 2); //< gump /lighted
-		if (CanPressedButton == 2)
+		GumpID = 0x15A1 + (int)(CanSelectedButton == ID_CCS_ARROW_PREV); //< gump /lighted
+		if (CanPressedButton == ID_CCS_ARROW_PREV)
 			GumpID = 0x15A3; //< gump pressed
 		UO->DrawGump(GumpID, 0, 586, 445); //< gump
 
-		GumpID = 0x15A4 + (int)(CanSelectedButton == 3); //> gump /lighted
-		if (CanPressedButton == 3)
+		GumpID = 0x15A4 + (int)(CanSelectedButton == ID_CCS_ARROW_NEXT); //> gump /lighted
+		if (CanPressedButton == ID_CCS_ARROW_NEXT)
 			GumpID = 0x15A6; //> gump pressed
 		UO->DrawGump(GumpID, 0, 610, 445); //> gump
 
@@ -480,15 +500,16 @@ int TCreateCharacterScreen::Render(bool mode)
 		g_LastSelectedObject = 0;
 
 		if (UO->GumpPixelsInXY(0x1589, 555, 4))
-			g_LastSelectedObject = 1; //X gump
+			g_LastSelectedObject = ID_CCS_QUIT; //X gump
 		if (UO->GumpPixelsInXY(0x15A1, 586, 445))
-			g_LastSelectedObject = 2; //< gump
+			g_LastSelectedObject = ID_CCS_ARROW_PREV; //< gump
 		if (UO->GumpPixelsInXY(0x15A4, 610, 445))
-			g_LastSelectedObject = 3; //> gump
+			g_LastSelectedObject = ID_CCS_ARROW_NEXT; //> gump
 		
 		WORD GumpID = 0x0710;
 		if (CreateCharacterManager.Sex)
 			GumpID = 0x070D;
+
 		if (UO->GumpPixelsInXY(GumpID, 310, 408))
 			g_LastSelectedObject = 4; //male / female button
 
@@ -861,11 +882,11 @@ void TCreateCharacterScreen::OnLeftMouseUp()
 		return;
 	}
 
-	if (g_LastObjectLeftMouseDown == 1) //x button
+	if (g_LastObjectLeftMouseDown == ID_CCS_QUIT) //x button
 		CreateSmoothAction(ID_SMOOTH_CCS_QUIT);
-	else if (g_LastObjectLeftMouseDown == 2) //< button
+	else if (g_LastObjectLeftMouseDown == ID_CCS_ARROW_PREV) //< button
 		CreateSmoothAction(ID_SMOOTH_CCS_GO_SCREEN_CHARACTER);
-	else if (g_LastObjectLeftMouseDown == 3) //> button
+	else if (g_LastObjectLeftMouseDown == ID_CCS_ARROW_NEXT) //> button
 	{
 		if (EntryPointer->Length() < 2)
 			CreateSmoothAction(ID_SMOOTH_CCS_GO_SCREEN_CONNECT);

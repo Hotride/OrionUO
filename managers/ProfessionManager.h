@@ -24,7 +24,7 @@
 class TProfessionManager : public TBaseQueue
 {
 private:
-	static const int m_KeyCount = 16;
+	static const int m_KeyCount = 18;
 
 	static const string m_Keys[m_KeyCount];
 
@@ -45,7 +45,9 @@ private:
 		PM_CODE_DEX,
 		PM_CODE_END,
 		PM_CODE_TRUE,
-		PM_CODE_CATEGORY
+		PM_CODE_CATEGORY,
+		PM_CODE_NAME_CLILOC_ID,
+		PM_CODE_DESCRIPTION_CLILOC_ID
 	};
 
 	int GetKeyCode(const string &key);

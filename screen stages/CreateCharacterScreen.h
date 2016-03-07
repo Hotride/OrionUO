@@ -29,6 +29,17 @@ private:
 	static const BYTE ID_SMOOTH_CCS_GO_SCREEN_CONNECT = 3;
 	static const BYTE ID_SMOOTH_CCS_GO_SCREEN_SELECT_TOWN = 4;
 
+	//Идентификаторы кнопок
+	static const int ID_CCS_QUIT = 1;
+	static const int ID_CCS_ARROW_PREV = 2;
+	static const int ID_CCS_ARROW_NEXT = 3;
+	static const int ID_CCS_NAME_FIELD = 4;
+	static const int ID_CCS_MALE_BUTTON = 5;
+	static const int ID_CCS_FEMALE_BUTTON = 6;
+	static const int ID_CCS_HUMAN_RACE_BUTTON = 7;
+	static const int ID_CCS_ELVEN_RACE_BUTTON = 8;
+	static const int ID_CCS_GARGOYLE_RACE_BUTTON = 9;
+
 public:
 	TCreateCharacterScreen();
 	virtual ~TCreateCharacterScreen();

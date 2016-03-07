@@ -3221,6 +3221,7 @@ void TGumpOptions::ApplyPageChanges()
 		case 1: //Pop-up Help
 		{
 			ConfigManager.PopupHelpEnabled = g_OptionsConfig.PopupHelpEnabled;
+			ConfigManager.PopupHelpDelay = g_OptionsConfig.PopupHelpDelay;
 			ConfigManager.PopupHelpTextFont = g_OptionsConfig.PopupHelpTextFont;
 			ConfigManager.PopupHelpTextColor = g_OptionsConfig.PopupHelpTextColor;
 			ConfigManager.PopupHelpSticky = g_OptionsConfig.PopupHelpSticky;
@@ -3230,7 +3231,6 @@ void TGumpOptions::ApplyPageChanges()
 		}
 		case 2: //Language
 		{
-			ConfigManager.UseToolTips = g_OptionsConfig.UseToolTips;
 			ConfigManager.UseToolTips = g_OptionsConfig.UseToolTips;
 			ConfigManager.ToolTipsTextColor = g_OptionsConfig.ToolTipsTextColor;
 			ConfigManager.ToolTipsTextFont = g_OptionsConfig.ToolTipsTextFont;

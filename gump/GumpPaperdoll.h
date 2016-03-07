@@ -34,7 +34,8 @@ private:
 	static const int ID_GP_BUTTON_MINIMIZE = 9;
 	static const int ID_GP_PROFILE_SCROLL = 10;
 	static const int ID_GP_PARTY_MANIFEST_SCROLL = 11;
-	static const int ID_GP_LOCK_MOVING = 12;
+	static const int ID_GP_BUTTON_VIRTURE = 12;
+	static const int ID_GP_LOCK_MOVING = 13;
 	
 	TTextRenderer *TextRenderer;
 	

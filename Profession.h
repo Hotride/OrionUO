@@ -25,6 +25,8 @@ class TBaseProfession : public TBaseQueueItem
 private:
 	string m_Name;
 	string m_TrueName;
+	DWORD m_NameClilocID;
+	DWORD m_DescriptionClilocID;
 	int m_DescriptionIndex;
 	bool m_TopLevel;
 	WORD m_Gump;
@@ -34,6 +36,8 @@ public:
 	virtual ~TBaseProfession();
 
 	SETGET(string, TrueName);
+	SETGET(DWORD, NameClilocID);
+	SETGET(DWORD, DescriptionClilocID);
 	SETGET(PROFESSION_TYPE, Type);
 	SETGET(WORD, Gump);
 	SETGET(bool, TopLevel);

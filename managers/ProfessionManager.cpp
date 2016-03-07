@@ -38,7 +38,9 @@ const string TProfessionManager::m_Keys[m_KeyCount] =
 	"dex",
 	"end",
 	"true",
-	"category"
+	"category",
+	"nameid",
+	"descid"
 };
 //---------------------------------------------------------------------------
 TProfessionManager::TProfessionManager()
@@ -70,6 +72,8 @@ bool TProfessionManager::ParseFilePart(TTextFileParser &file)
 	std::vector<string> childrens;
 	string name = "";
 	string trueName = "";
+	DWORD nameClilocID = 0;
+	DWORD descriptionClilocID = 0;
 	int descriptionIndex = 0;
 	WORD gump = 0;
 	bool topLevel = false;
@@ -177,6 +181,16 @@ bool TProfessionManager::ParseFilePart(TTextFileParser &file)
 
 				break;
 			}
+			case PM_CODE_NAME_CLILOC_ID:
+			{
+				nameClilocID = atoi(strings[1].c_str());
+				break;
+			}
+			case PM_CODE_DESCRIPTION_CLILOC_ID:
+			{
+				descriptionClilocID = atoi(strings[1].c_str());
+				break;
+			}
 			default:
 				break;
 		}
@@ -214,8 +228,10 @@ bool TProfessionManager::ParseFilePart(TTextFileParser &file)
 
 	if (obj != NULL)
 	{
+		obj->NameClilocID = nameClilocID;
 		obj->SetName(name);
 		obj->TrueName = trueName;
+		obj->DescriptionClilocID = descriptionClilocID;
 		obj->DescriptionIndex = descriptionIndex;
 		obj->TopLevel = topLevel;
 		obj->Gump = gump;

@@ -25,8 +25,10 @@ TServerScreen::TServerScreen()
 : TBaseScreen(), m_LastScrollChangeTime(0), m_PixelOffset(0),
 m_SelectionServerTempValue(0)
 {
-	FontManager->GenerateA(9, m_Text[0], "Select which shard to play on:", 0x0481);
-	FontManager->GenerateA(9, m_Text[1], "Sort by:", 0x0481);
+	TCliloc *cliloc = ClilocManager->Cliloc("enu");
+	
+	FontManager->GenerateA(9, m_Text[0], cliloc->GetA(1044579, "Select which shard to play on:").c_str(), 0x0481);
+	FontManager->GenerateA(9, m_Text[1], cliloc->GetA(1044580, "Sort by:").c_str(), 0x0481);
 }
 //---------------------------------------------------------------------------
 TServerScreen::~TServerScreen()
@@ -85,17 +87,17 @@ void TServerScreen::InitPopupHelp()
 		}
 		case ID_SS_ARROW_PREV:
 		{
-			PopupHelp.Set(L"Preveous screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			PopupHelp.Set(L"Back to main menu", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_SS_ARROW_NEXT:
 		{
-			PopupHelp.Set(L"Next screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			PopupHelp.Set(L"Play UO on selected shard", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_SS_EARTH:
 		{
-			PopupHelp.Set(L"Select first server in list", SOT_NO_OBJECT, g_LastSelectedObject, 100);
+			PopupHelp.Set(L"Select last visited shard", SOT_NO_OBJECT, g_LastSelectedObject, 100);
 			break;
 		}
 		default:

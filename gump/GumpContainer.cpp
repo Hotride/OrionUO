@@ -265,7 +265,7 @@ int TGumpContainer::Draw(bool &mode)
 
 					if (mode)
 					{
-						TTextImageBounds ib(drawX, drawY, drawX + tth.Width, drawY + tth.Height, td);
+						TTextImageBounds ib(drawX, drawY, tth.Width, tth.Height, td);
 
 						td->Transparent = TextRenderer->InRect(ib, go);
 

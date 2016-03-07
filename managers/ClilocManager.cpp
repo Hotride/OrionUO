@@ -28,24 +28,16 @@ TCliloc::TCliloc(const char *lang)
 {
 	m_Loaded = false;
 
-	int len = strlen(lang);
-
-	if (len > 3)
-		len = 3;
-
 	memset(&m_File, 0, sizeof(m_File));
+	m_Language = lang;
 
-	if (len > 0)
+	if (m_Language.length())
 	{
-		memcpy(&m_Language[0], &lang[0], len);
-
 		string path = FilePath(string("cliloc.") + lang);
 
 		if (FileManager.LoadFileToMemory(m_File, path.c_str()))
 			m_Loaded = true;
 	}
-	else
-		memset(&m_Language[0], 0, 3);
 }
 //---------------------------------------------------------------------------
 TCliloc::~TCliloc()
@@ -151,20 +143,7 @@ TClilocManager::~TClilocManager()
 //---------------------------------------------------------------------------
 TCliloc *TClilocManager::Cliloc(const char *lang)
 {
-	int len = strlen(lang);
-
-	if (len > 3)
-		len = 3;
-
-	char lowc[3] = {0};
-
-	if (len)
-	{
-		memcpy(&lowc[0], &lang[0], len);
-		_strlwr(lowc);
-	}
-
-	string language(lowc);
+	string language = ToLowerA(lang);
 	TCliloc *obj = (TCliloc*)m_Items;
 
 	while (obj != NULL)
@@ -175,23 +154,24 @@ TCliloc *TClilocManager::Cliloc(const char *lang)
 		obj = (TCliloc*)obj->m_Next;
 	}
 
-	obj = new TCliloc(lowc);
+	obj = new TCliloc(language.c_str());
 
 	if (!obj->Loaded)
 	{
+		const string enu("enu");
 		delete obj;
 
 		obj = (TCliloc*)m_Items;
 
 		while (obj != NULL)
 		{
-			if (obj->GetLanguage() == string("enu"))
+			if (obj->GetLanguage() == enu)
 				return obj;
 
 			obj = (TCliloc*)obj->m_Next;
 		}
 
-		obj = new TCliloc("enu");
+		obj = new TCliloc(enu.c_str());
 	}
 
 	Add(obj);

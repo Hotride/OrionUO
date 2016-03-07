@@ -24,7 +24,7 @@
 //---------------------------------------------------------------------------
 TBaseProfession::TBaseProfession()
 : m_Name(""), m_TrueName(""), m_DescriptionIndex(0), m_TopLevel(false), m_Gump(0),
-m_Type(PT_NO_PROF)
+m_Type(PT_NO_PROF), m_NameClilocID(0), m_DescriptionClilocID(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -36,9 +36,9 @@ TBaseProfession::~TBaseProfession()
 //---------------------------------------------------------------------------
 void TBaseProfession::SetName(string val)
 {
-	m_Name = val;
+	m_Name = ClilocManager->Cliloc("ENU")->GetA(m_NameClilocID, val);
 	
-	FontManager->GenerateW(2, m_TextureName, ToWString(val).c_str(), 0, 30, 185, TS_LEFT, UOFONT_SOLID);
+	FontManager->GenerateW(2, m_TextureName, ToWString(m_Name).c_str(), 0, 30, 185, TS_LEFT, UOFONT_SOLID);
 }
 //---------------------------------------------------------------------------
 bool TBaseProfession::AddDescription(int desc, string name, const char *val)

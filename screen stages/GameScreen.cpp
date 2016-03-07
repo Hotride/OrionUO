@@ -701,6 +701,14 @@ void TGameScreen::CheckMouseEvents(bool &charSelected)
 //---------------------------------------------------------------------------
 void TGameScreen::AddLight(TRenderWorldObject *rwo, TRenderWorldObject *lightObject, int x, int y)
 {
+	if (lightObject->IsStaticGroupObject())
+	{
+		STATIC_TILES *st = ((TRenderStaticObject*)lightObject)->GetStaticData();
+
+		if (st->Quality == 0xFF && lightObject->IsPrefixAn())
+			return;
+	}
+
 	if (m_LightCount < MAX_LIGHT_SOURCES)
 	{
 		bool canBeAdded = true;
@@ -867,7 +875,7 @@ void TGameScreen::CalculateGameWindowText(bool &mode)
 
 			if (mode)
 			{
-				TTextImageBounds ib(drawX, drawY, drawX + tth.Width, drawY + tth.Height, td);
+				TTextImageBounds ib(drawX, drawY, tth.Width, tth.Height, td);
 
 				td->Transparent = WorldTextRenderer->InRect(ib, rwo);
 
