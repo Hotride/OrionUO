@@ -26,9 +26,9 @@ private:
 	static const int ID_GP_BUTTON_HELP = 1;
 	static const int ID_GP_BUTTON_OPTIONS = 2;
 	static const int ID_GP_BUTTON_LOGOUT = 3;
-	static const int ID_GP_BUTTON_JOURNAL = 4;
+	static const int ID_GP_BUTTON_JOURNAL_OR_QUESTS = 4;
 	static const int ID_GP_BUTTON_SKILLS = 5;
-	static const int ID_GP_BUTTON_CHAT = 6;
+	static const int ID_GP_BUTTON_CHAT_OR_GUILD = 6;
 	static const int ID_GP_BUTTON_WARMODE = 7;
 	static const int ID_GP_BUTTON_STATUS = 8;
 	static const int ID_GP_BUTTON_MINIMIZE = 9;

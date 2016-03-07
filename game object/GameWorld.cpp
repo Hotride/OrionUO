@@ -587,6 +587,112 @@ void TGameWorld::MoveToTop(TGameObject *obj)
 	}
 }
 //---------------------------------------------------------------------------
+TGameObject *TGameWorld::SearchWorldObject(DWORD serialStart, int scanDistance, SCAN_TYPE_OBJECT scanType, SCAN_MODE_OBJECT scanMode)
+{
+	TGameObject *result = NULL;
+
+	TGameObject *start = FindWorldObject(serialStart);
+
+	int count = 2;
+	int startI = 0;
+
+	if (scanMode == SMO_PREV)
+	{
+		if (start == NULL || start->m_Prev == NULL)
+		{
+			start = m_Items;
+			startI = 1;
+		}
+		else
+			start = (TGameObject*)start->m_Prev;
+	}
+	else
+	{
+		if (start == NULL || start->m_Next == NULL)
+		{
+			start = m_Items;
+			startI = 1;
+		}
+		else
+			start = (TGameObject*)start->m_Next;
+	}
+
+	if (start != NULL)
+	{
+		TGameObject *obj = start;
+		int distance = 100500;
+		TGameObject *distanceResult = NULL;
+
+		IFOR(i, startI, count && result == NULL)
+		{
+			if (i)
+			{
+				obj = m_Items;
+
+				if (scanMode == SMO_PREV)
+				{
+					while (obj != NULL && obj->m_Next != NULL)
+						obj = (TGameObject*)obj->m_Next;
+				}
+			}
+
+			while (obj != NULL && result == NULL)
+			{
+				int dist = GetDistance(obj, g_Player);
+
+				if (obj->Serial != serialStart && dist <= scanDistance)
+				{
+					bool condition = false;
+
+					if (scanType == STO_OBJECTS)
+						condition = (!obj->NPC && obj->Graphic < 0x4000);
+					else if (obj->NPC && !obj->IsPlayer())
+					{
+						if (scanType == STO_HOSTLE)
+						{
+							TGameCharacter *gc = (TGameCharacter*)obj;
+
+							condition = (gc->Notoriety >= NT_SOMEONE_GRAY || gc->Notoriety <= NT_MURDERER);
+						}
+						else if (scanType == STO_PARTY)
+							condition = Party.Contains(obj->Serial);
+						//else if (scanType == STO_FOLLOWERS)
+						//	condition = false;
+						else //if (scanType == STO_MOBILES)
+							condition = true;
+					}
+
+					if (condition)
+					{
+						if (scanMode == SMO_NEAREST)
+						{
+							if (dist < distance)
+							{
+								distance = dist;
+								distanceResult = obj;
+							}
+						}
+						else
+							result = obj;
+
+						break;
+					}
+				}
+
+				if (scanMode == SMO_PREV)
+					obj = (TGameObject*)obj->m_Prev;
+				else
+					obj = (TGameObject*)obj->m_Next;
+			}
+		}
+
+		if (distanceResult != NULL)
+			result = distanceResult;
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
 void TGameWorld::Dump(BYTE tCount, DWORD serial)
 {
 	trace_printf("World Dump:\n\n");

@@ -3649,6 +3649,32 @@ void TUltimaOnline::ResetSoundEffects(DWORD ticks)
 	}
 }
 //---------------------------------------------------------------------------
+void TUltimaOnline::CreateTextMessageF(BYTE font, WORD color, const char *format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+
+	char buf[256] = { 0 };
+	vsprintf(buf, format, arg);
+
+	UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, font, color, buf);
+
+	va_end(arg);
+}
+//---------------------------------------------------------------------------
+void TUltimaOnline::CreateUnicodeTextMessageF(BYTE font, WORD color, const char *format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+
+	char buf[256] = { 0 };
+	vsprintf(buf, format, arg);
+
+	UO->CreateUnicodeTextMessage(TT_SYSTEM, 0xFFFFFFFF, font, color, ToWString(buf));
+
+	va_end(arg);
+}
+//---------------------------------------------------------------------------
 void TUltimaOnline::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, WORD color, string text)
 {
 	TTextData *td = new TTextData();
@@ -4303,7 +4329,8 @@ void TUltimaOnline::RemoveRangedObjects()
 			{
 				if (go->Graphic >= 0x4000)
 				{
-					if (GetMultiDistance(g_RemoveRangeXY, go) > objectsRange) //multiRange)
+					//if (GetMultiDistance(g_RemoveRangeXY, go) > objectsRange) //multiRange)
+					if (GetDistance(g_RemoveRangeXY, go) > 31)
 						World->RemoveObject(go);
 				}
 				else if (GetDistance(g_RemoveRangeXY, go) > objectsRange)
@@ -4479,10 +4506,6 @@ void TUltimaOnline::OpenBackpack()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenSpellbook()
-{
-}
-//---------------------------------------------------------------------------
 void TUltimaOnline::OpenLogOut()
 {
 	int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 40;
@@ -4531,6 +4554,18 @@ void TUltimaOnline::OpenProfile(DWORD serial)
 		serial = g_PlayerSerial;
 
 	TPacketProfileRequest packet(serial);
+	packet.Send();
+}
+//---------------------------------------------------------------------------
+void TUltimaOnline::RequestGuildGump()
+{
+	TPacketGuildMenuRequest packet;
+	packet.Send();
+}
+//---------------------------------------------------------------------------
+void TUltimaOnline::RequestQuestGump()
+{
+	TPacketQuestMenuRequest packet;
 	packet.Send();
 }
 //---------------------------------------------------------------------------

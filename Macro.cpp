@@ -427,30 +427,30 @@ void TMacro::GetBoundByCode(MACRO_CODE code, int &count, int &offset)
 		case MC_MAXIMIZE:
 		{
 			offset = 9;
-			count = 23;
+			count = 24;
 			break;
 		}
 		case MC_USE_SKILL:
 		{
-			offset = 32;
+			offset = 33;
 			count = 24;
 			break;
 		}
 		case MC_ARM_DISARM:
 		{
-			offset = 56;
+			offset = 57;
 			count = 2;
 			break;
 		}
 		case MC_INVOKE_VIRTURE:
 		{
-			offset = 58;
+			offset = 59;
 			count = 3;
 			break;
 		}
 		case MC_CAST_SPELL:
 		{
-			offset = 61;
+			offset = 62;
 			count = 143;
 			break;
 		}
@@ -458,7 +458,7 @@ void TMacro::GetBoundByCode(MACRO_CODE code, int &count, int &offset)
 		case MC_SELECT_PREVEOUS:
 		case MC_SELECT_NEAREST:
 		{
-			offset = 204;
+			offset = 205;
 			count = 5;
 			break;
 		}

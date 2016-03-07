@@ -295,6 +295,12 @@ public:
 
 
 
+	//Создать текстовое сообщение с форматированным вводом
+	void CreateTextMessageF(BYTE font, WORD color, const char *format, ...);
+
+	//Создать текстовое сообщение с форматированным вводом (Unicode)
+	void CreateUnicodeTextMessageF(BYTE font, WORD color, const char *format, ...);
+
 	//Создать текстовое сообщение (ASCII)
 	void CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, WORD color, string text);
 
@@ -447,9 +453,6 @@ public:
 	//Открыть рюкзак
 	void OpenBackpack();
 
-	//Открыть книгу заклинаний
-	void OpenSpellbook();
-
 	//Открыть гамп логаута
 	void OpenLogOut();
 
@@ -467,6 +470,12 @@ public:
 
 	//Открыть гамп профиля
 	void OpenProfile(DWORD serial = 0);
+
+	//Запросить гамп гильдии
+	void RequestGuildGump();
+
+	//Запросить гамп квестов
+	void RequestQuestGump();
 };
 //---------------------------------------------------------------------------
 extern TUltimaOnline *UO;

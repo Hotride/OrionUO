@@ -1780,7 +1780,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 
 					if (isAction) //Action
 					{
-						if (textNameIndex < 209)
+						if (textNameIndex < 210)
 						{
 							FontManager->DrawA(1, TMacro::GetAction(textNameIndex), 0x0386, posX + 4, itemPosY);
 							textIndex++;

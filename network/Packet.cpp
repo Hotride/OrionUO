@@ -1320,3 +1320,61 @@ TPacketMapMessage::TPacketMapMessage(DWORD serial, MAP_MESSAGE action, BYTE pin,
 	WriteWord(y);
 }
 //---------------------------------------------------------------------------
+TPacketGuildMenuRequest::TPacketGuildMenuRequest()
+: TPacket(10, false)
+{
+	Buffer = m_Buf;
+	Ptr = m_Buf;
+	memset(&m_Buf[0], 0, sizeof(m_Buf));
+
+	WriteByte(0xD7);
+	WriteWord(0x000A);
+	WriteDWord(g_PlayerSerial);
+	WriteWord(0x0028);
+	WriteByte(0x0A);
+}
+//---------------------------------------------------------------------------
+TPacketQuestMenuRequest::TPacketQuestMenuRequest()
+: TPacket(10, false)
+{
+	Buffer = m_Buf;
+	Ptr = m_Buf;
+	memset(&m_Buf[0], 0, sizeof(m_Buf));
+
+	WriteByte(0xD7);
+	WriteWord(0x000A);
+	WriteDWord(g_PlayerSerial);
+	WriteWord(0x0032);
+	WriteByte(0x0A);
+}
+//---------------------------------------------------------------------------
+TPacketVirtureRequest::TPacketVirtureRequest(int buttonID)
+: TPacket(23, false)
+{
+	Buffer = m_Buf;
+	Ptr = m_Buf;
+	memset(&m_Buf[0], 0, sizeof(m_Buf));
+
+	WriteByte(0xB1);
+	WriteWord(0x0017);
+	WriteDWord(g_PlayerSerial);
+	WriteDWord(0x000001CD);
+	WriteDWord(buttonID);
+	WriteDWord(0x00000001);
+	WriteDWord(g_PlayerSerial);
+}
+//---------------------------------------------------------------------------
+TPacketInvokeVirtureRequest::TPacketInvokeVirtureRequest(BYTE id)
+: TPacket(6, false)
+{
+	Buffer = m_Buf;
+	Ptr = m_Buf;
+	memset(&m_Buf[0], 0, sizeof(m_Buf));
+
+	WriteByte(0x12);
+	WriteWord(0x0006);
+	WriteByte(0xF4);
+	WriteByte(id);
+	WriteByte(0x00);
+}
+//---------------------------------------------------------------------------

@@ -165,6 +165,7 @@ int TGameItem::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 g_RenderedObjectsCountInGameWindow++;
 #endif
 
+			WORD objGraphic = m_Graphic;
 			WORD objColor = m_Color;
 
 			if (Hidden())
@@ -176,7 +177,7 @@ g_RenderedObjectsCountInGameWindow++;
 			{
 				bool doubleDraw = false;
 				bool selMode = false;
-				WORD objGraphic = GetDrawGraphic(doubleDraw);
+				objGraphic = GetDrawGraphic(doubleDraw);
 
 				if (g_LastObjectType == SOT_GAME_OBJECT && !Locked() && g_LastSelectedObject == m_Serial)
 				{
@@ -200,6 +201,35 @@ g_RenderedObjectsCountInGameWindow++;
 
 				if (IsLightSource() && GameScreen->UseLight)
 					GameScreen->AddLight(this, this, drawX, drawY - (m_Z * 4));
+			}
+
+			if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial == m_Serial && !Locked())
+			{
+				POINT p = { 20, 20 };
+				UO->GetArtDimension(objGraphic + 0x4000, p);
+
+				if (p.x >= 80)
+				{
+					NewTargetSystem.GumpTop = 0x756D;
+					NewTargetSystem.GumpBottom = 0x756A;
+				}
+				else if (p.x >= 40)
+				{
+					NewTargetSystem.GumpTop = 0x756E;
+					NewTargetSystem.GumpBottom = 0x756B;
+				}
+				else
+				{
+					NewTargetSystem.GumpTop = 0x756F;
+					NewTargetSystem.GumpBottom = 0x756C;
+				}
+
+				NewTargetSystem.ColorGump = 0x7570;
+
+				NewTargetSystem.Hits = 0;
+				NewTargetSystem.X = drawX;
+				NewTargetSystem.TopY = drawY - (m_Z * 4) - p.y - 8;
+				NewTargetSystem.BottomY = drawY - (m_Z * 4) + 7;
 			}
 
 			DrawEffects(drawX, drawY, ticks);

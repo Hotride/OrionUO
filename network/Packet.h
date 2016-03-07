@@ -584,4 +584,36 @@ public:
 	TPacketMapMessage(DWORD serial, MAP_MESSAGE action, BYTE pin = 0, short x = -24, short y = -31);
 };
 //---------------------------------------------------------------------------
+class TPacketGuildMenuRequest : public TPacket
+{
+private:
+	BYTE m_Buf[10];
+public:
+	TPacketGuildMenuRequest();
+};
+//---------------------------------------------------------------------------
+class TPacketQuestMenuRequest : public TPacket
+{
+private:
+	BYTE m_Buf[10];
+public:
+	TPacketQuestMenuRequest();
+};
+//---------------------------------------------------------------------------
+class TPacketVirtureRequest : public TPacket
+{
+private:
+	BYTE m_Buf[23];
+public:
+	TPacketVirtureRequest(int buttonID);
+};
+//---------------------------------------------------------------------------
+class TPacketInvokeVirtureRequest : public TPacket
+{
+private:
+	BYTE m_Buf[6];
+public:
+	TPacketInvokeVirtureRequest(BYTE id);
+};
+//---------------------------------------------------------------------------
 #endif

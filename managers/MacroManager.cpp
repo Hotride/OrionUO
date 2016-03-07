@@ -687,7 +687,12 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			}
 			case MC_TARGET_NEXT:
 			{
-				TGameObject *start = World->FindWorldObject(g_LastTargetObject);
+				TGameObject *obj = World->SearchWorldObject(g_LastTargetObject, 30, STO_MOBILES, SMO_NEXT);
+
+				if (obj != NULL)
+					g_LastTargetObject = obj->Serial;
+
+				/*TGameObject *start = World->FindWorldObject(g_LastTargetObject);
 
 				int count = 2;
 				int startI = 0;
@@ -727,7 +732,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 						if (found)
 							break;
 					}
-				}
+				}*/
 
 				break;
 			}
@@ -787,73 +792,66 @@ MACRO_RETURN_CODE TMacroManager::Process()
 
 				break;
 			}
-			case MC_KILL_GUMP_OPEN:
-			case MC_PRIMARY_ABILITY:
-			case MC_SECONDARY_ABILITY:
-			case MC_EQUIP_LAST_WEAPON:
-			case MC_SET_UPDATE_RANGE:
-			case MC_MODIFY_UPDATE_RANGE:
-			case MC_INCREASE_UPDATE_RANGE:
-			case MC_DECREASE_UPDATE_RANGE:
-			case MC_MAX_UPDATE_RANGE:
-			case MC_MIN_UPDATE_RANGE:
-			case MC_DEFAULT_UPDATE_RANGE:
-			case MC_UPDATE_RANGE_INFO:
 			case MC_ENABLE_RANGE_COLOR:
-			case MC_DISABLE_RANGE_COLOR:
-			case MC_TOGGLE_RANGE_COLOR:
-			case MC_INVOKE_VIRTURE:
-			case MC_SELECT_NEXT:
-			case MC_SELECT_PREVEOUS:
-			case MC_SELECT_NEAREST:
-			case MC_ATTACK_SELECTED_TARGET:
-			case MC_USE_SELECTED_TARGET:
-			case MC_CURRENT_TARGET:
-			case MC_TARGET_SYSTEM_ON_OFF:
-			case MC_TOGGLE_BUICON_WINDOW:
-			case MC_TOGGLE_GARGOYLE_FLYING:
 			{
-				UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x77, "That macro is not work now");
+				ConfigManager.GrayOutOfRangeObjects = true;
 
 				break;
 			}
-			case MC_BANDAGE_SELF:
+			case MC_DISABLE_RANGE_COLOR:
 			{
-				if (m_WaitingBandageTarget)
+				ConfigManager.GrayOutOfRangeObjects = false;
+
+				break;
+			}
+			case MC_TOGGLE_RANGE_COLOR:
+			{
+				ConfigManager.GrayOutOfRangeObjects = !ConfigManager.GrayOutOfRangeObjects;
+
+				break;
+			}
+			case MC_ATTACK_SELECTED_TARGET:
+			{
+				if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial && NewTargetSystem.Serial >= 0x40000000)
+					UO->Attack(NewTargetSystem.Serial);
+
+				break;
+			}
+			case MC_USE_SELECTED_TARGET:
+			{
+				if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial)
+					UO->DoubleClick(NewTargetSystem.Serial);
+
+				break;
+			}
+			case MC_CURRENT_TARGET:
+			{
+				if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial)
 				{
 					if (m_WaitForTargetTimer == 0)
-						m_WaitForTargetTimer = GetTickCount() + 500;
+						m_WaitForTargetTimer = GetTickCount() + 1000;
 
 					if (Target.IsTargeting())
 					{
-						Target.SendTargetObject(g_PlayerSerial);
+						Target.SendTargetObject(NewTargetSystem.Serial);
 
-						m_WaitingBandageTarget = false;
 						m_WaitForTargetTimer = 0;
 					}
 					else if (m_WaitForTargetTimer < GetTickCount())
-					{
-						m_WaitingBandageTarget = false;
 						m_WaitForTargetTimer = 0;
-					}
 					else
 						result = MRC_BREAK_PARSER;
-				}
-				else
-				{
-					TGameItem *bandage = g_Player->FindBandage();
-
-					if (bandage != NULL)
-					{
-						m_WaitingBandageTarget = true;
-						UO->DoubleClick(bandage->Serial);
-
-						result = MRC_BREAK_PARSER;
-					}
 				}
 
 				break;
 			}
+			case MC_TARGET_SYSTEM_ON_OFF:
+			{
+				ConfigManager.DisableNewTargetSystem = !ConfigManager.DisableNewTargetSystem;
+				
+				break;
+			}
+			case MC_BANDAGE_SELF:
 			case MC_BANDAGE_TARGET:
 			{
 				if (m_WaitingBandageTarget)
@@ -863,7 +861,10 @@ MACRO_RETURN_CODE TMacroManager::Process()
 
 					if (Target.IsTargeting())
 					{
-						Target.SendLastTarget(); //Last target or ............................... new target system?
+						if (MacroPointer->Code == MC_BANDAGE_SELF)
+							Target.SendTargetObject(g_PlayerSerial);
+						else if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial)
+							Target.SendTargetObject(NewTargetSystem.Serial);
 
 						m_WaitingBandageTarget = false;
 						m_WaitForTargetTimer = 0;
@@ -888,6 +889,128 @@ MACRO_RETURN_CODE TMacroManager::Process()
 						result = MRC_BREAK_PARSER;
 					}
 				}
+
+				break;
+			}
+			case MC_SET_UPDATE_RANGE:
+			case MC_MODIFY_UPDATE_RANGE:
+			{
+				TMacroObjectString *mos = (TMacroObjectString*)MacroPointer;
+
+				string str = mos->GetString();
+
+				if (str.length())
+				{
+					g_UpdateRange = std::atoi(str.c_str());
+
+					if (g_UpdateRange < 5)
+						g_UpdateRange = 5;
+					else if (g_UpdateRange > 18)
+						g_UpdateRange = 18;
+				}
+
+				break;
+			}
+			case MC_INCREASE_UPDATE_RANGE:
+			{
+				g_UpdateRange++;
+
+				if (g_UpdateRange > 18)
+					g_UpdateRange = 18;
+
+				break;
+			}
+			case MC_DECREASE_UPDATE_RANGE:
+			{
+				g_UpdateRange--;
+
+				if (g_UpdateRange < 5)
+					g_UpdateRange = 5;
+
+				break;
+			}
+			case MC_MAX_UPDATE_RANGE:
+			{
+				g_UpdateRange = 18;
+
+				break;
+			}
+			case MC_MIN_UPDATE_RANGE:
+			{
+				g_UpdateRange = 5;
+
+				break;
+			}
+			case MC_DEFAULT_UPDATE_RANGE:
+			{
+				g_UpdateRange = 18;
+
+				break;
+			}
+			case MC_UPDATE_RANGE_INFO:
+			{
+				UO->CreateTextMessageF(3, 0, "Current update range is %i", g_UpdateRange);
+
+				break;
+			}
+			case MC_SELECT_NEXT:
+			case MC_SELECT_PREVEOUS:
+			case MC_SELECT_NEAREST:
+			{
+				if (ConfigManager.DisableNewTargetSystem)
+					break;
+				
+				SCAN_TYPE_OBJECT scanType = (SCAN_TYPE_OBJECT)(MacroPointer->SubCode - MSC_G7_HOSTLE);
+
+				TGameObject *obj = World->SearchWorldObject(NewTargetSystem.Serial, 10, scanType, (SCAN_MODE_OBJECT)(MacroPointer->Code - MC_SELECT_NEXT));
+
+				if (obj != NULL)
+				{
+					GumpManager->CloseGump(NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM);
+
+					NewTargetSystem.Serial = obj->Serial;
+
+					if (GumpManager->GetGump(NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM) == NULL)
+						GumpManager->AddGump(new TGumpTargetSystem(NewTargetSystem.Serial, NewTargetSystem.GumpX, NewTargetSystem.GumpY));
+				}
+				else
+				{
+					const char *resultNames[5] = {"Hostles", "Party Members", "Followers", "Objects", "Mobiles"};
+
+					UO->CreateUnicodeTextMessageF(0, 0x038A, "There are no %s on the screen to select.", resultNames[scanType]);
+				}
+
+				break;
+			}
+			case MC_TOGGLE_BUICON_WINDOW:
+			{
+				TGump *gump = GumpManager->GetGump(0, 0, GT_BUFF);
+
+				if (gump != NULL)
+					GumpManager->CloseGump(0, 0, GT_BUFF);
+				else
+				{
+					//GumpManager->AddGump(new TGumpBuff());
+				}
+
+				break;
+			}
+			case MC_INVOKE_VIRTURE:
+			{
+				BYTE id = MacroPointer->SubCode - MSC_G5_HONOR + 31;
+
+				TPacketInvokeVirtureRequest packet(id);
+				packet.Send();
+
+				break;
+			}
+			case MC_KILL_GUMP_OPEN:
+			case MC_PRIMARY_ABILITY:
+			case MC_SECONDARY_ABILITY:
+			case MC_EQUIP_LAST_WEAPON:
+			case MC_TOGGLE_GARGOYLE_FLYING:
+			{
+				UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x77, "That macro is not work now");
 
 				break;
 			}

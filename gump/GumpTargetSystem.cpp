@@ -57,14 +57,23 @@ void TGumpTargetSystem::GenerateFrame(int posX, int posY)
 
 	glNewList((GLuint)index, GL_COMPILE);
 
-		TGameCharacter *obj = World->FindWorldCharacter(NewTargetSystem.Serial);
+		TGameObject *obj = World->FindWorldObject(NewTargetSystem.Serial);
 		if (obj != NULL)
 		{
 			//Вычисляем цвет статусбара
-			WORD color = ConfigManager.GetColorByNotoriety(obj->Notoriety);
+			WORD color = 0;
+			TGameCharacter *character = NULL;
+			
+			if (obj->NPC)
+			{
+				character = (TGameCharacter*)obj;
+				NOTORIETY_TYPE noto = (NOTORIETY_TYPE)character->Notoriety;
 
-			if (obj->Notoriety == NT_CRIMINAL || obj->Notoriety == NT_SOMEONE_GRAY)
-				color = 0;
+				color = ConfigManager.GetColorByNotoriety(noto);
+
+				if (noto == NT_CRIMINAL || noto == NT_SOMEONE_GRAY)
+					color = 0;
+			}
 
 			ColorizerShader->Use();
 
@@ -75,21 +84,33 @@ void TGumpTargetSystem::GenerateFrame(int posX, int posY)
 
 			m_OldName = obj->GetName();
 
+			if (!obj->NPC && !m_OldName.length())
+			{
+				STATIC_TILES *st = ((TRenderStaticObject*)obj)->GetStaticData();
+
+				if (st != NULL)
+					m_OldName = st->Name;
+			}
+
 			FontManager->DrawA(1, m_OldName.c_str(), 0x0386, posX + 16, posY + 14, 150, TS_LEFT, UOFONT_FIXED);
 
 			//Hits
 			UO->DrawGump(0x0805, 0, posX + 34, posY + 38);
 				
-			int per = CalculatePercents(obj->MaxHits, obj->Hits, 109);
-			if (per > 0)
+			if (character != NULL)
 			{
-				WORD gumpid = 0x0806; //Character status line (blue)
-				if (obj->Poisoned())
-					gumpid = 0x0808; //Character status line (green)
-				else if (obj->YellowHits())
-					gumpid = 0x0809; //Character status line (yellow)
+				int per = CalculatePercents(character->MaxHits, character->Hits, 109);
 
-				UO->DrawGump(gumpid, 0, posX + 34, posY + 38, per, 0);
+				if (per > 0)
+				{
+					WORD gumpid = 0x0806; //Character status line (blue)
+					if (obj->Poisoned())
+						gumpid = 0x0808; //Character status line (green)
+					else if (obj->YellowHits())
+						gumpid = 0x0809; //Character status line (yellow)
+
+					UO->DrawGump(gumpid, 0, posX + 34, posY + 38, per, 0);
+				}
 			}
 		}
 		else //Серенький статус
@@ -240,7 +261,10 @@ bool TGumpTargetSystem::OnLeftMouseDoubleClick()
 	if (serial != g_PlayerSerial)
 	{
 		if (g_Player->Warmode)
-			UO->Attack(serial); //Если в вармоде - атакуем
+		{
+			if (serial < 0x40000000)
+				UO->Attack(serial); //Если в вармоде - атакуем
+		}
 		else
 			UO->DoubleClick(serial); //Или используем предмет
 

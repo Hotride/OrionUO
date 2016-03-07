@@ -236,12 +236,24 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 			else if (CanSelectedButton == ID_GP_BUTTON_LOGOUT)
 				gumpID = 0x07DB; //Paperdoll button Log Out
 			UO->DrawGump(gumpID, 0, posX + 185, posY + 98);
-				
-			gumpID = 0x07DC;
-			if (CanPressedButton == ID_GP_BUTTON_JOURNAL)
-				 gumpID = 0x07DD; //Paperdoll button Journal (down)
-			else if (CanSelectedButton == ID_GP_BUTTON_JOURNAL)
-				gumpID = 0x07DE; //Paperdoll button Journal
+			
+			if (ConnectionManager.ClientVersion >= CV_500A)
+			{
+				gumpID = 0x57B5;
+				if (CanPressedButton == ID_GP_BUTTON_JOURNAL_OR_QUESTS)
+					gumpID = 0x57B7; //Paperdoll button Quests (down)
+				else if (CanSelectedButton == ID_GP_BUTTON_JOURNAL_OR_QUESTS)
+					gumpID = 0x57B6; //Paperdoll button Quests
+			}
+			else
+			{
+				gumpID = 0x07DC;
+				if (CanPressedButton == ID_GP_BUTTON_JOURNAL_OR_QUESTS)
+					gumpID = 0x07DD; //Paperdoll button Journal (down)
+				else if (CanSelectedButton == ID_GP_BUTTON_JOURNAL_OR_QUESTS)
+					gumpID = 0x07DE; //Paperdoll button Journal
+			}
+
 			UO->DrawGump(gumpID, 0, posX + 185, posY + 125);
 				
 			gumpID = 0x07DF;
@@ -250,17 +262,28 @@ void TGumpPaperdoll::GenerateFrame(int posX, int posY)
 			else if (CanSelectedButton == ID_GP_BUTTON_SKILLS)
 				gumpID = 0x07E1; //Paperdoll button Skills
 			UO->DrawGump(gumpID, 0, posX + 185, posY + 152);
-			
-			gumpID = 0x07E2;
 
-			if (!g_ChatEnabled)
-				DeathShader->Use();
+			if (ConnectionManager.ClientVersion >= CV_500A)
+			{
+				gumpID = 0x57B2;
+				if (CanPressedButton == ID_GP_BUTTON_CHAT_OR_GUILD)
+					gumpID = 0x57B4; //Paperdoll button Guild (down)
+				else if (CanSelectedButton == ID_GP_BUTTON_CHAT_OR_GUILD)
+					gumpID = 0x57B3; //Paperdoll button Guild
+			}
 			else
 			{
-				if (CanPressedButton == ID_GP_BUTTON_CHAT)
-					gumpID++; // = 0x07E3; //Paperdoll button Chat (down)
-				else if (CanSelectedButton == ID_GP_BUTTON_CHAT)
-					gumpID++; // = 0x07E4; //Paperdoll button Chat
+				gumpID = 0x07E2;
+
+				if (!g_ChatEnabled)
+					DeathShader->Use();
+				else
+				{
+					if (CanPressedButton == ID_GP_BUTTON_CHAT_OR_GUILD)
+						gumpID++; // = 0x07E3; //Paperdoll button Chat (down)
+					else if (CanSelectedButton == ID_GP_BUTTON_CHAT_OR_GUILD)
+						gumpID++; // = 0x07E4; //Paperdoll button Chat
+				}
 			}
 
 			UO->DrawGump(gumpID, 0, posX + 185, posY + 179);
@@ -628,16 +651,27 @@ int TGumpPaperdoll::Draw(bool &mode)
 				LSG = ID_GP_BUTTON_OPTIONS; //Paperdoll button Options
 			else if (UO->GumpPixelsInXY(0x07D9, posX + 185, posY + 98))
 				LSG = ID_GP_BUTTON_LOGOUT; //Paperdoll button Log Out
-			else if (UO->GumpPixelsInXY(0x07DC, posX + 185, posY + 125))
-				LSG = ID_GP_BUTTON_JOURNAL; //Paperdoll button Journal
 			else if (UO->GumpPixelsInXY(0x07DF, posX + 185, posY + 152))
 				LSG = ID_GP_BUTTON_SKILLS; //Paperdoll button Skills
-			else if (UO->GumpPixelsInXY(0x07E2, posX + 185, posY + 179))
-				LSG = ID_GP_BUTTON_CHAT; //Paperdoll button Chat
 			else if (UO->GumpPixelsInXY(gumpID, posX + 185, posY + 206))
 				LSG = ID_GP_BUTTON_WARMODE; //Paperdoll button War/Peace
 			else
 			{
+				if (ConnectionManager.ClientVersion >= CV_500A)
+				{
+					if (UO->GumpPixelsInXY(0x57B5, posX + 185, posY + 125))
+						LSG = ID_GP_BUTTON_JOURNAL_OR_QUESTS; //Paperdoll button Quests
+					else if (UO->GumpPixelsInXY(0x57B2, posX + 185, posY + 179))
+						LSG = ID_GP_BUTTON_CHAT_OR_GUILD; //Paperdoll button Guild
+				}
+				else
+				{
+					if (UO->GumpPixelsInXY(0x07DC, posX + 185, posY + 125))
+						LSG = ID_GP_BUTTON_JOURNAL_OR_QUESTS; //Paperdoll button Journal
+					else if (UO->GumpPixelsInXY(0x07E2, posX + 185, posY + 179))
+						LSG = ID_GP_BUTTON_CHAT_OR_GUILD; //Paperdoll button Chat
+				}
+
 				RECT rc = {0, 0, 16, 16};
 				POINT p = {g_MouseX - (posX + 226), g_MouseY - ((posY) + 258)};
 				if (PtInRect(&rc, p))
@@ -840,9 +874,12 @@ void TGumpPaperdoll::OnLeftMouseUp()
 			UO->OpenLogOut();
 			break;
 		}
-		case ID_GP_BUTTON_JOURNAL: //Paperdoll button Journal
+		case ID_GP_BUTTON_JOURNAL_OR_QUESTS: //Paperdoll button Journal
 		{
-			UO->OpenJournal();
+			if (ConnectionManager.ClientVersion >= CV_500A)
+				UO->RequestQuestGump();
+			else
+				UO->OpenJournal();
 			break;
 		}
 		case ID_GP_BUTTON_SKILLS: //Paperdoll button Skills
@@ -850,9 +887,12 @@ void TGumpPaperdoll::OnLeftMouseUp()
 			UO->OpenSkills();
 			break;
 		}
-		case ID_GP_BUTTON_CHAT: //Paperdoll button Chat
+		case ID_GP_BUTTON_CHAT_OR_GUILD: //Paperdoll button Chat
 		{
-			UO->OpenChat();
+			if (ConnectionManager.ClientVersion >= CV_500A)
+				UO->RequestGuildGump();
+			else
+				UO->OpenChat();
 			break;
 		}
 		case ID_GP_BUTTON_WARMODE: //Paperdoll button Peace/War

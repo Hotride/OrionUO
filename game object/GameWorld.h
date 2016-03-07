@@ -92,6 +92,9 @@ public:
 
 	//Дамп предметов, хранящихся в памяти
 	void Dump(BYTE nCount = 0, DWORD serial = 0xFFFFFFFF);
+
+	//Поиск объекта
+	TGameObject *SearchWorldObject(DWORD serialStart, int scanDistance, SCAN_TYPE_OBJECT scanType, SCAN_MODE_OBJECT scanMode);
 };
 //---------------------------------------------------------------------------
 extern TGameWorld *World; //Указатель на мир
