@@ -350,7 +350,7 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 	TTextFileParser newBodyParser("", " \t,{}", "#;//", "");
 	TTextFileParser bodyParser(FilePath("Body.def").c_str(), " \t", "#;//", "{}");
 	TTextFileParser corpseParser(FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
-	TTextFileParser bodyconvParser(FilePath("Bodyconv.def").c_str(), " \t", "#;", "");
+	TTextFileParser bodyconvParser(FilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
 
 	while (!bodyconvParser.IsEOF())
 	{
@@ -500,7 +500,7 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 			{
 				int checkIndex = atoi(newBody[i].c_str());
 
-				if (checkIndex < 0 || checkIndex >= 0x0800 || !m_DataIndex[checkIndex].Offset)
+				if (checkIndex < 0 || checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
 					continue;
 
 				memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(TIndexAnimation));
@@ -531,7 +531,7 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 			{
 				int checkIndex = atoi(newBody[i].c_str());
 
-				if (checkIndex < 0 || checkIndex >= 0x0800 || !m_DataIndex[checkIndex].Offset)
+				if (checkIndex < 0 || checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
 					continue;
 
 				m_CorpseReplaces[index] = checkIndex;

@@ -322,19 +322,18 @@ void TGameScreen::CalculateRenderList()
 
 					for (TRenderWorldObject *obj = mb->GetRender(x, y); obj != NULL; obj = obj->m_NextXY)
 					{
-						if (obj->IsInternal() || (!obj->IsLandObject() && obj->Z >= m_MaxDrawZ))
+						int z = obj->Z;
+
+						if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
 							continue;
 
 						int testMinZ = drawY;
-						int testMaxZ = drawY;
+						int testMaxZ = drawY - (z * 4);
 
 						if (obj->IsLandObject() && ((TLandObject*)obj)->IsStretched)
-						{
-							testMaxZ -= (obj->Z * 4);
 							testMinZ -= (((TLandObject*)obj)->MinZ * 4);
-						}
 						else
-							testMinZ = testMaxZ = drawY - (obj->Z * 4);
+							testMinZ = testMaxZ;
 
 						if (testMinZ < m_RenderBounds.MinPixelsY || testMaxZ > m_RenderBounds.MaxPixelsY)
 							continue;
@@ -377,13 +376,13 @@ void TGameScreen::CalculateRenderList()
 							POINT fp = { 0, 0 };
 							UO->GetArtDimension(obj->Graphic, fp);
 
-							TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (obj->Z * 4), fp.x, fp.y);
+							TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (z * 4), fp.x, fp.y);
 
 							if (fib.InRect(g_PlayerRect))
 							{
 								index = g_FoliageIndex;
 
-								CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, obj->Z);
+								CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
 							}
 
 							((TRenderStaticObject*)obj)->FoliageTransparentIndex = index;
@@ -510,13 +509,8 @@ void TGameScreen::CalculateGameWindowBounds()
 
 			if (opt != NULL)
 			{
-				char txtBuf[20] = {0};
-
-				sprintf(txtBuf, "%i", m_RenderBounds.GameWindowSizeX);
-				opt->TextEntryGameSizeX->SetText(txtBuf);
-
-				sprintf(txtBuf, "%i", m_RenderBounds.GameWindowSizeY);
-				opt->TextEntryGameSizeY->SetText(txtBuf);
+				opt->TextEntryGameSizeX->SetText(std::to_string(m_RenderBounds.GameWindowSizeX));
+				opt->TextEntryGameSizeY->SetText(std::to_string(m_RenderBounds.GameWindowSizeY));
 
 				opt->GenerateFrame(opt->X, opt->Y);
 			}
@@ -545,6 +539,14 @@ void TGameScreen::CalculateGameWindowBounds()
 
 	m_RenderBounds.GameWindowCenterX = m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX / 2;
 	m_RenderBounds.GameWindowCenterY = (m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY / 2) + (g_Player->Z * 4);
+
+	/*int earthquakeMagnitude = RandomInt(11);
+
+	if (earthquakeMagnitude)
+	{
+		m_RenderBounds.GameWindowCenterX += RandomInt(earthquakeMagnitude * 3);
+		m_RenderBounds.GameWindowCenterY += RandomInt(earthquakeMagnitude * 3);
+	}*/
 
 	m_RenderBounds.GameWindowCenterX -= (int)g_Player->OffsetX;
 	m_RenderBounds.GameWindowCenterY -= (int)(g_Player->OffsetY - g_Player->OffsetZ);
@@ -1670,8 +1672,8 @@ void TGameScreen::OnLeftMouseUp()
 		{
 			if (!g_ClickObjectReq)
 			{
-				TGameObject *click_target = World->FindWorldObject(g_LastObjectLeftMouseDown);
-				if (click_target == NULL)
+				TGameObject *clickTarget = World->FindWorldObject(g_LastObjectLeftMouseDown);
+				if (clickTarget == NULL)
 					return;
 
 				g_ClickObjectReq = true;
@@ -1684,12 +1686,17 @@ void TGameScreen::OnLeftMouseUp()
 		{
 			if (g_LastObjectType == SOT_STATIC_OBJECT)
 			{
-				WORD ID = g_SelectedObject->Graphic - 0x4000;
+				TTextData *td = ((TRenderStaticObject*)g_SelectedObject)->m_TextControl->m_Head;
 
-				string str(UO->m_StaticData[ID / 32].Tiles[ID % 32].Name);
+				if (td == NULL || td->Timer < GetTickCount())
+				{
+					WORD id = g_SelectedObject->Graphic - 0x4000;
 
-				if (str.length())
-					UO->CreateTextMessage(TT_CLIENT, (DWORD)g_SelectedObject, 3, 0x03B5, str);
+					string str = ClilocManager->Cliloc(g_Language)->GetA(102000 + id, UO->m_StaticData[id / 32].Tiles[id % 32].Name);
+
+					if (str.length())
+						UO->CreateTextMessage(TT_CLIENT, (DWORD)g_SelectedObject, 3, 0x03B5, str);
+				}
 			}
 			/*else if (g_LastObjectType == SOT_LAND_OBJECT)
 			{

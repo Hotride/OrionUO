@@ -102,16 +102,9 @@ bool TTextFileParser::IsDelimiter()
 //Пропустить все до данных
 void TTextFileParser::SkipToData()
 {
-	//Если символ - разделитель
-	while (IsDelimiter())
-	{
-		//Проход по всем разделителям и смещение указателя
-		for (int i = 0; i < m_DelimitersSize; i++)
-		{
-			while (m_Ptr < m_EOL && *m_Ptr && *m_Ptr == m_Delimiters[i])
-				m_Ptr++;
-		}
-	}
+	//Если символ - разделитель, то проход по всем разделителям и смещение указателя
+	while (m_Ptr < m_EOL && *m_Ptr && IsDelimiter())
+		m_Ptr++;
 }
 //---------------------------------------------------------------------------
 //Проверка на комментарий
@@ -192,7 +185,7 @@ string TTextFileParser::ObtainQuotedData()
 			PBYTE ptr = m_Ptr;
 
 			//Пропустим все до конца строки или до закрывающей кавычки
-			while (ptr < m_End && *ptr && *ptr != '\n'  && *ptr != endQuote)
+			while (ptr < m_EOL && *ptr && *ptr != '\n' && *ptr != endQuote)
 				ptr++;
 
 			//Размер фрагмента
@@ -213,6 +206,9 @@ string TTextFileParser::ObtainQuotedData()
 
 				//Указатель на конец фрагмена
 				m_Ptr = ptr;
+
+				if (m_Ptr < m_EOL && *m_Ptr == endQuote)
+					m_Ptr++;
 			}
 
 			break;

@@ -36,14 +36,14 @@ list->Next = nextList
 #define UOFONT_FIXED			0x20 //Фиксированной длины
 #define UOFONT_CROPPED			0x40 //Фиксированной длины с многоточием
 //---------------------------------------------------------------------------
-#define PLUGIN_FLAGS_PARSE_RECV		0x01
-#define PLUGIN_FLAGS_PARSE_SEND		0x02
-#define PLUGIN_FLAGS_RECV		0x04
-#define PLUGIN_FLAGS_SEND		0x08
-#define PLUGIN_FLAGS_WINDOW_PROC	0x10
-#define PLUGIN_FLAGS_CLIENT_ACCESS	0x20
+#define PLUGIN_FLAGS_PARSE_RECV			0x01
+#define PLUGIN_FLAGS_PARSE_SEND			0x02
+#define PLUGIN_FLAGS_RECV				0x04
+#define PLUGIN_FLAGS_SEND				0x08
+#define PLUGIN_FLAGS_WINDOW_PROC		0x10
+#define PLUGIN_FLAGS_CLIENT_ACCESS		0x20
 #define PLUGIN_FLAGS_GAME_WORLD_DRAW	0x40
-#define PLUGIN_FLAGS_SCENE_DRAW		0x80
+#define PLUGIN_FLAGS_SCENE_DRAW			0x80
 //---------------------------------------------------------------------------
 //Connection Errors
 #define CE_NO_ERROR					0
@@ -68,9 +68,9 @@ list->Next = nextList
 //decremented ordinary for
 #define DFOR(var, start, stop) for (int var = start; var >= stop; var --)
 //TBaseQueue for [extended]
-#define QFOR(var, src, type) for (type var = (type)src->Begin(); var != NULL; var = (type)src->Next())
+#define QFOR(var, start, type) for (type var = (type)start; var != NULL; var = (type)var->m_Next)
 //TBaseQueue for
-#define BQFOR(var, src) QFOR(var, src, TBaseQueueItem*)
+#define BQFOR(var, start) QFOR(var, start, TBaseQueueItem*)
 //---------------------------------------------------------------------------
 //Set/Get ordinary class property
 #define SETGET(type, name) \

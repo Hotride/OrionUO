@@ -36,7 +36,7 @@ TBaseProfession::~TBaseProfession()
 //---------------------------------------------------------------------------
 void TBaseProfession::SetName(string val)
 {
-	m_Name = ClilocManager->Cliloc("ENU")->GetA(m_NameClilocID, val);
+	m_Name = ClilocManager->Cliloc(g_Language)->GetA(m_NameClilocID, val);
 	
 	FontManager->GenerateW(2, m_TextureName, ToWString(m_Name).c_str(), 0, 30, 185, TS_LEFT, UOFONT_SOLID);
 }

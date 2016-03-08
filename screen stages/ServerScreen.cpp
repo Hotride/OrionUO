@@ -25,7 +25,7 @@ TServerScreen::TServerScreen()
 : TBaseScreen(), m_LastScrollChangeTime(0), m_PixelOffset(0),
 m_SelectionServerTempValue(0)
 {
-	TCliloc *cliloc = ClilocManager->Cliloc("enu");
+	TCliloc *cliloc = ClilocManager->Cliloc(g_Language);
 	
 	FontManager->GenerateA(9, m_Text[0], cliloc->GetA(1044579, "Select which shard to play on:").c_str(), 0x0481);
 	FontManager->GenerateA(9, m_Text[1], cliloc->GetA(1044580, "Sort by:").c_str(), 0x0481);

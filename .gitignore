@@ -16,10 +16,8 @@
 *.bat
 *.exe
 *.dll
+*.def
 !ConfigurationEditor.exe
-/Bodyconv.def
-/Body.def
-/stitchin.def
 /Makefile*
 /ipch
 /Release

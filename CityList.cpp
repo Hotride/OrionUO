@@ -61,7 +61,7 @@ void TCityItemNew::CreateTextTexture(DWORD clilocID)
 	FontManager->SetUseHTML(true);
 
 	//Получаем строку клилока с описанием города
-	wstring wtext = ClilocManager->Cliloc(g_Language.c_str())->GetW(clilocID);
+	wstring wtext = ClilocManager->Cliloc(g_Language)->GetW(clilocID);
 
 	//Создаем текстуру текста
 	FontManager->GenerateW(1, m_Texture, wtext.c_str(), 0, 30, 150);

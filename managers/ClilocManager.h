@@ -47,7 +47,7 @@ private:
 	//Загрузить клилок
 	string Load(DWORD &id);
 public:
-	TCliloc(const char *lang);
+	TCliloc(string lang);
 	virtual ~TCliloc();
 
 	SETGET(string, Language);
@@ -64,12 +64,13 @@ public:
 class TClilocManager : public IClilocManager, public TBaseQueue
 {
 private:
+	TCliloc *m_LastCliloc;
 public:
 	TClilocManager();
 	virtual ~TClilocManager();
 
 	//Получить ссылку на объект клилока (и загрузить при необходимости)
-	TCliloc *Cliloc(const char *lang);
+	TCliloc *Cliloc(string lang);
 };
 //---------------------------------------------------------------------------
 extern TClilocManager *ClilocManager;

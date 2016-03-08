@@ -47,7 +47,7 @@ TGameCharacter::~TGameCharacter()
 	if (gump != NULL)
 		gump->UpdateFrame();
 	
-	//Если стянут статусбар - обновим его
+	//Если стянут статусбар таргет системы - обновим его
 	gump = GumpManager->GetGump(m_Serial, 0, GT_TARGET_SYSTEM);
 	if (gump != NULL)
 		gump->UpdateFrame();

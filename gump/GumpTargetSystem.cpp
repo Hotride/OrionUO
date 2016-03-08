@@ -88,8 +88,7 @@ void TGumpTargetSystem::GenerateFrame(int posX, int posY)
 			{
 				STATIC_TILES *st = ((TRenderStaticObject*)obj)->GetStaticData();
 
-				if (st != NULL)
-					m_OldName = st->Name;
+				m_OldName = ClilocManager->Cliloc(g_Language)->GetA(102000 + obj->Graphic, st->Name);
 			}
 
 			FontManager->DrawA(1, m_OldName.c_str(), 0x0386, posX + 16, posY + 14, 150, TS_LEFT, UOFONT_FIXED);

@@ -32,7 +32,7 @@ TMultiObject::TMultiObject(WORD graphic, short x, short y, char z, DWORD multifl
 		m_RenderQueueIndex = 4;
 	else
 		m_RenderQueueIndex = 6;
-	
+
 #if UO_DEBUG_INFO!=0
 	g_MultiObjectsCount++;
 #endif //UO_DEBUG_INFO!=0

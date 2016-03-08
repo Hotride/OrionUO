@@ -110,7 +110,7 @@ TCityManager::TCityManager()
 	}
 	else
 	{
-		TCliloc *cliloc = ClilocManager->Cliloc(g_Language.c_str());
+		TCliloc *cliloc = ClilocManager->Cliloc(g_Language);
 
 		if (cliloc != NULL)
 		{

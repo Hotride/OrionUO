@@ -136,7 +136,7 @@ interface ICliloc
 //----------------------------------------------------------------------------
 interface IClilocManager
 {
-	virtual ICliloc *Cliloc(const char *lang) = 0;
+	virtual ICliloc *Cliloc(string lang) = 0;
 };
 //----------------------------------------------------------------------------
 interface IColorManager

@@ -24,7 +24,7 @@ TSelectProfessionScreen *SelectProfessionScreen = NULL;
 TSelectProfessionScreen::TSelectProfessionScreen()
 : TBaseScreen(), m_PixelOffset(0), m_SkillSelection(0), m_LastScrollChangeTime(0)
 {
-	string str = ClilocManager->Cliloc("ENU")->GetA(3000326, "Choose a Trade for Your Character");
+	string str = ClilocManager->Cliloc(g_Language)->GetA(3000326, "Choose a Trade for Your Character");
 	FontManager->GenerateA(2, m_Text, str.c_str(), 0x0386, 432, TS_CENTER);
 
 	FontManager->GenerateA(1, m_TextStat[0], "Strength", 1);

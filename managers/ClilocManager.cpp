@@ -23,7 +23,7 @@ TClilocManager *ClilocManager = NULL;
 //---------------------------------------------------------------------------
 //------------------------------------TCliloc--------------------------------
 //---------------------------------------------------------------------------
-TCliloc::TCliloc(const char *lang)
+TCliloc::TCliloc(string lang)
 : TBaseQueueItem()
 {
 	m_Loaded = false;
@@ -94,25 +94,25 @@ string TCliloc::GetA(DWORD id, string result)
 	if (id >= 3000000)
 	{
 		CLILOC_MAP::iterator i = m_ClilocSupport.find(id);
-		if (i != m_ClilocSupport.end())
+		if (i != m_ClilocSupport.end() && (*i).second.length())
 			return (*i).second;
 	}
 	else if (id >= 1000000)
 	{
 		CLILOC_MAP::iterator i = m_ClilocRegular.find(id);
-		if (i != m_ClilocRegular.end())
+		if (i != m_ClilocRegular.end() && (*i).second.length())
 			return (*i).second;
 	}
 	else
 	{
 		CLILOC_MAP::iterator i = m_ClilocSystem.find(id);
-		if (i != m_ClilocSystem.end())
+		if (i != m_ClilocSystem.end() && (*i).second.length())
 			return (*i).second;
 	}
 
 	DWORD tmpID = id;
 	string loadStr = Load(tmpID);
-	if (!tmpID)
+	if (!tmpID && loadStr.length())
 		return loadStr;
 	else if (!result.length())
 	{
@@ -133,7 +133,7 @@ wstring TCliloc::GetW(DWORD id, string result)
 //--------------------------------TClilocManager-----------------------------
 //---------------------------------------------------------------------------
 TClilocManager::TClilocManager()
-: TBaseQueue()
+: TBaseQueue(), m_LastCliloc(NULL)
 {
 }
 //---------------------------------------------------------------------------
@@ -141,20 +141,27 @@ TClilocManager::~TClilocManager()
 {
 }
 //---------------------------------------------------------------------------
-TCliloc *TClilocManager::Cliloc(const char *lang)
+TCliloc *TClilocManager::Cliloc(string lang)
 {
 	string language = ToLowerA(lang);
+
+	if (m_LastCliloc != NULL && m_LastCliloc->GetLanguage() == language)
+		return m_LastCliloc;
+
 	TCliloc *obj = (TCliloc*)m_Items;
 
 	while (obj != NULL)
 	{
 		if (obj->GetLanguage() == language)
+		{
+			m_LastCliloc = obj;
 			return obj;
+		}
 
 		obj = (TCliloc*)obj->m_Next;
 	}
 
-	obj = new TCliloc(language.c_str());
+	obj = new TCliloc(language);
 
 	if (!obj->Loaded)
 	{
@@ -166,16 +173,20 @@ TCliloc *TClilocManager::Cliloc(const char *lang)
 		while (obj != NULL)
 		{
 			if (obj->GetLanguage() == enu)
+			{
+				m_LastCliloc = obj;
 				return obj;
+			}
 
 			obj = (TCliloc*)obj->m_Next;
 		}
 
-		obj = new TCliloc(enu.c_str());
+		obj = new TCliloc(enu);
 	}
 
 	Add(obj);
 
+	m_LastCliloc = obj;
 	return obj;
 }
 //---------------------------------------------------------------------------

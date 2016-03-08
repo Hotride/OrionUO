@@ -1059,7 +1059,7 @@ void TGumpGeneric::OnLeftMouseUp()
 								}
 								else
 								{
-									TCliloc *cliloc = ClilocManager->Cliloc(g_Language.c_str());
+									TCliloc *cliloc = ClilocManager->Cliloc(g_Language);
 									wstring text = cliloc->GetW((DWORD)htmlGump->TextIndex);
 		
 									FontManager->GenerateW(1, htmlGump->m_Text, text.c_str(), htmlGump->Color, 30, w, TS_LEFT);

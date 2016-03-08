@@ -423,7 +423,7 @@ TGumpXFMHTMLGump::TGumpXFMHTMLGump(DWORD clilocID, WORD color, short x, short y,
 			FontManager->SetUseHTML(true, 0xFF010101);
 		}
 
-		TCliloc *cliloc = ClilocManager->Cliloc(g_Language.c_str());
+		TCliloc *cliloc = ClilocManager->Cliloc(g_Language);
 		wstring text = cliloc->GetW(clilocID);
 		
 		FontManager->GenerateW(1, m_Text, text.c_str(), color, 30, w);

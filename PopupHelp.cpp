@@ -58,7 +58,7 @@ void TPopupHelp::Set(wstring str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int m
 //---------------------------------------------------------------------------
 void TPopupHelp::Set(DWORD clilocID, string str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int maxWidth, int x, int y)
 {
-	Set(ClilocManager->Cliloc(g_Language.c_str())->GetW(clilocID, str), type, seqIndex, maxWidth, x, y);
+	Set(ClilocManager->Cliloc(g_Language)->GetW(clilocID, str), type, seqIndex, maxWidth, x, y);
 
 	m_ClilocID = clilocID;
 }

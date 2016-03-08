@@ -217,7 +217,10 @@ TRenderStaticObject::TRenderStaticObject(RENDER_OBJECT_TYPE renderType, DWORD se
 m_TiledataPtr(&UO->m_StaticData[graphic / 32].Tiles[graphic % 32]),
 m_CanBeTransparent(0)
 {
-	m_TextControl = new TTextContainer(3);
+	if (renderType == ROT_GAME_OBJECT)
+		m_TextControl = new TTextContainer(3);
+	else
+		m_TextControl = new TTextContainer(1);
 
 	if (m_TiledataPtr->Height > 5)
 		m_CanBeTransparent = 1;
@@ -315,7 +318,9 @@ TStaticObject::TStaticObject(DWORD serial, WORD graphic, WORD color, short x, sh
 		m_RenderQueueIndex = 4;
 	else
 		m_RenderQueueIndex = 6;
-	
+
+	m_TextControl->MaxSize = 1;
+
 #if UO_DEBUG_INFO!=0
 	g_StaticsObjectsCount++;
 #endif //UO_DEBUG_INFO!=0
