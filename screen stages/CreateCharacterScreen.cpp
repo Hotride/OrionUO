@@ -22,7 +22,7 @@
 TCreateCharacterScreen *CreateCharacterScreen = NULL;
 //---------------------------------------------------------------------------
 TCreateCharacterScreen::TCreateCharacterScreen()
-: TBaseScreen()
+: TBaseScreen(), m_StyleSelection(0), m_ColorSelection(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -34,6 +34,8 @@ void TCreateCharacterScreen::Init()
 {
 	CreateCharacterManager.Clear();
 	EntryPointer = CreateCharacterManager.m_Name;
+
+	m_StyleSelection = m_ColorSelection = 0;
 
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
@@ -170,6 +172,7 @@ int TCreateCharacterScreen::Render(bool mode)
 		
 		UO->DrawResizepicGump(0x0E10, 475, 125, 151, 310); //Create character field
 		
+		const WORD textColorRange[2] = { 0x0481 , 0x0021};
 		WORD FColor = 0;
 
 		if (!CreateCharacterManager.Sex)
@@ -221,195 +224,163 @@ int TCreateCharacterScreen::Render(bool mode)
 			}
 		}
 		
-		if (CreateCharacterManager.SelectedColor == 1)
+		if (m_ColorSelection == 0)
 		{
-			IFOR(x, 0, 8)
-			{
-				IFOR(y, 0, 8)
-				{
-					FColor = 0x3EA + (x * 8 + (x < 7 ? y : 0));
-					
-					DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
-					
-					g_GL.DrawPolygone(clr, 490 + (x * 15.0f), 140.0f + (y * 35.0f), 15.0f, 35.0f);
+			FontManager->DrawA(9, "Skin Tone", textColorRange[(int)(CanSelectedButton == ID_CCS_SKIN_TONE)], 490, 140);
 
-					if (g_LastSelectedObject == 40 + (x * 8 + y))
-						g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 15.0f) + 6.5f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
-				}
-			}
-		}
-		else if (CreateCharacterManager.SelectedColor == 0)
-		{
-			FColor = 0x0481;
-			if (CanSelectedButton == 7)
-				FColor = 0x0021;
-			FontManager->DrawA(9, "Skin Tone", FColor, 490, 140);
+			WORD color = CreateCharacterManager.SkinTone;
 
-			FColor = CreateCharacterManager.SkinTone;
+			if (color < 0x03EA)
+				color = 0x03EA;
+			else if (color > 0x0422)
+				color = 0x0422;
 
-			if (FColor < 0x03EA)
-				FColor = 0x03EA;
-			else if (FColor > 0x0422)
-				FColor = 0x0422;
-
-			DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
+			DWORD clr = ColorManager->GetPolygoneColor(cell, color);
 
 			g_GL.DrawPolygone(clr, 490.0f, 154.0f, 120.0f, 25.0f);
-		}
-		
-		if (CreateCharacterManager.SelectedColor == 2)
-		{
-			IFOR(y, 1, 48)
-			{
-				switch (y % 4)
-				{
-					case 0:
-					{
-						FColor = 102 + (y / 4);
-						break;
-					}
-					case 1:
-					{
-						FColor = 202 + (y / 4);
-						break;
-					}
-					case 2:
-					{
-						FColor = 402 + (y / 4);
-						break;
-					}
-					case 3:
-					{
-						FColor = 802 + (y / 4);
-						break;
-					}
-					default:
-						break;
-				}
 
-				IFOR(x, 0, 20)
-				{
-					DWORD clr = ColorManager->GetPolygoneColor(7, FColor);
-					
-					g_GL.DrawPolygone(clr, 492.0f + (x * 6.0f), 148.0f + (y * 5.0f), 6.0f, 5.0f);
 
-					FColor += 5;
 
-					if (g_LastSelectedObject == 110 + (y * 20 + x))
-						g_GL.DrawPolygone(0x007F7F7F, 492.0f + ((x * 6.0f) + 2.5f), 148.0f + ((y * 5.0f) + 2.0f), 2.0f, 2.0f);
-				}
-			}
-		}
-		else if (CreateCharacterManager.SelectedColor == 0)
-		{
-			FColor = 0x0481;
-			if (CanSelectedButton == 8)
-				FColor = 0x0021;
-			FontManager->DrawA(9, "Shirt Color", FColor, 490, 185);
+			FontManager->DrawA(9, "Shirt Color", textColorRange[(int)(CanSelectedButton == ID_CCS_SHIRT_COLOR)], 490, 185);
 
-			FColor = CreateCharacterManager.GetShirtColor();
-			//if (FColor < 0x044E) FColor = 0x044E;
-			//if (FColor > 0x04AD) FColor = 0x04AD;
+			color = CreateCharacterManager.GetShirtColor();
+			//if (color < 0x044E) color = 0x044E;
+			//else if (color > 0x04AD) color = 0x04AD;
 
-			DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
+			clr = ColorManager->GetPolygoneColor(cell, color);
 
 			g_GL.DrawPolygone(clr, 490.0f, 199.0f, 120.0f, 25.0f);
-		}
-		
-		if (CreateCharacterManager.SelectedColor == 3)
-		{
-			IFOR(y, 1, 48)
-			{
-				switch (y % 4)
-				{
-					case 0:
-					{
-						FColor = 102 + (y / 4);
-						break;
-					}
-					case 1:
-					{
-						FColor = 202 + (y / 4);
-						break;
-					}
-					case 2:
-					{
-						FColor = 402 + (y / 4);
-						break;
-					}
-					case 3:
-					{
-						FColor = 802 + (y / 4);
-						break;
-					}
-					default:
-						break;
-				}
 
-				IFOR(x, 0, 20)
-				{
-					DWORD clr = ColorManager->GetPolygoneColor(7, FColor);
-					
-					g_GL.DrawPolygone(clr, 492.0f + (x * 6.0f), 148.0f + (y * 5.0f), 6.0f, 5.0f);
 
-					FColor += 5;
 
-					if (g_LastSelectedObject == 110 + (y * 20 + x))
-						g_GL.DrawPolygone(0x007F7F7F, 492.0f + ((x * 6.0f) + 2.5f), 148.0f + ((y * 5.0f) + 2.0f), 2.0f, 2.0f);
-				}
-			}
-		}
-		else if (CreateCharacterManager.SelectedColor == 0)
-		{
-			FColor = 0x0481;
-			if (CanSelectedButton == 9)
-				FColor = 0x0021;
+			color = textColorRange[(int)(CanSelectedButton == ID_CCS_SKIRT_OR_PANTS_COLOR)];
+
 			if (CreateCharacterManager.Sex)
-				FontManager->DrawA(9, "Skirt Color", FColor, 490, 230);
+				FontManager->DrawA(9, "Skirt Color", color, 490, 230);
 			else
-				FontManager->DrawA(9, "Pants Color", FColor, 490, 230);
+				FontManager->DrawA(9, "Pants Color", color, 490, 230);
 
-			FColor = CreateCharacterManager.PantsColor;
-			//if (FColor < 0x044E) FColor = 0x044E;
-			//if (FColor > 0x04AD) FColor = 0x04AD;
+			color = CreateCharacterManager.PantsColor;
+			//if (color < 0x044E) color = 0x044E;
+			//else if (color > 0x04AD) color = 0x04AD;
 
-			DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
+			clr = ColorManager->GetPolygoneColor(cell, color);
 
 			g_GL.DrawPolygone(clr, 490.0f, 244.0f, 120.0f, 25.0f);
-		}
 
-		if (CreateCharacterManager.SelectedColor == 4)
-		{
-			IFOR(x, 0, 6)
+
+
+			FontManager->DrawA(9, "Hair Color", textColorRange[(int)(CanSelectedButton == ID_CCS_HAIR_COLOR)], 490, 275);
+
+			color = CreateCharacterManager.HairColor;
+
+			if (color < 0x044E)
+				color = 0x044E;
+			else if (color > 0x04AD)
+				color = 0x04AD;
+
+			clr = ColorManager->GetPolygoneColor(cell, color);
+			g_GL.DrawPolygone(clr, 490.0f, 289.0f, 120.0f, 25.0f);
+
+
+
+			if (!CreateCharacterManager.Sex)
 			{
-				IFOR(y, 0, 8)
-				{
-					FColor = 0x44E + (x * 8 + y);
+				FontManager->DrawA(9, "Facial Hair Color", textColorRange[(int)(CanSelectedButton == ID_CCS_FACIAL_HAIR_COLOR)], 490, 320);
 
-					DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
+				color = CreateCharacterManager.BeardColor;
 
-					g_GL.DrawPolygone(clr, 490.0f + (x * 20.0f), 140.0f + (y * 35.0f), 20.0f, 35.0f);
+				if (color < 0x044E)
+					color = 0x044E;
+				else if (color > 0x04AD)
+					color = 0x04AD;
 
-					if (g_LastSelectedObject == 40 + (x * 8 + y))
-						g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 20.0f) + 9.0f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
-				}
+				clr = ColorManager->GetPolygoneColor(cell, color);
+
+				g_GL.DrawPolygone(clr, 490.0f, 333.0f, 120.0f, 25.0f);
 			}
 		}
-		else if (CreateCharacterManager.SelectedColor == 0)
+		else
 		{
-			FColor = 0x0481;
-			if (CanSelectedButton == 10)
-				FColor = 0x0021;
-			FontManager->DrawA(9, "Hair Color", FColor, 490, 275);
+			if (m_ColorSelection == CCSID_SKIN_TONE)
+			{
+				IFOR(x, 0, 8)
+				{
+					IFOR(y, 0, 8)
+					{
+						WORD color = 0x3EA + (x * 8 + (x < 7 ? y : 0));
 
-			FColor = CreateCharacterManager.HairColor;
-			if (FColor < 0x044E)
-				FColor = 0x044E;
-			if (FColor > 0x04AD)
-				FColor = 0x04AD;
+						DWORD clr = ColorManager->GetPolygoneColor(cell, color);
 
-			DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
-			g_GL.DrawPolygone(clr, 490.0f, 289.0f, 120.0f, 25.0f);
+						g_GL.DrawPolygone(clr, 490 + (x * 15.0f), 140.0f + (y * 35.0f), 15.0f, 35.0f);
+
+						if (g_LastSelectedObject == 40 + (x * 8 + y))
+							g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 15.0f) + 6.5f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
+					}
+				}
+			}
+			else if (m_ColorSelection == CCSID_SHIRT_COLOR || m_ColorSelection == CCSID_SKIRT_OR_PANTS_COLOR)
+			{
+				IFOR(y, 1, 48)
+				{
+					WORD color = 0;
+
+					switch (y % 4)
+					{
+						case 0:
+						{
+							color = 102 + (y / 4);
+							break;
+						}
+						case 1:
+						{
+							color = 202 + (y / 4);
+							break;
+						}
+						case 2:
+						{
+							color = 402 + (y / 4);
+							break;
+						}
+						case 3:
+						{
+							color = 802 + (y / 4);
+							break;
+						}
+						default:
+							break;
+					}
+
+					IFOR(x, 0, 20)
+					{
+						DWORD clr = ColorManager->GetPolygoneColor(7, color);
+
+						g_GL.DrawPolygone(clr, 492.0f + (x * 6.0f), 148.0f + (y * 5.0f), 6.0f, 5.0f);
+
+						color += 5;
+
+						if (g_LastSelectedObject == 110 + (y * 20 + x))
+							g_GL.DrawPolygone(0x007F7F7F, 492.0f + ((x * 6.0f) + 2.5f), 148.0f + ((y * 5.0f) + 2.0f), 2.0f, 2.0f);
+					}
+				}
+			}
+			else if (m_ColorSelection == CCSID_HAIR_COLOR || m_ColorSelection == CCSID_FACIAL_HAIR_COLOR)
+			{
+				IFOR(x, 0, 6)
+				{
+					IFOR(y, 0, 8)
+					{
+						WORD color = 0x44E + (x * 8 + y);
+
+						DWORD clr = ColorManager->GetPolygoneColor(cell, color);
+
+						g_GL.DrawPolygone(clr, 490.0f + (x * 20.0f), 140.0f + (y * 35.0f), 20.0f, 35.0f);
+
+						if (g_LastSelectedObject == 40 + (x * 8 + y))
+							g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 20.0f) + 9.0f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
+					}
+				}
+			}
 		}
 
 		if (CreateCharacterManager.Sex)
@@ -432,41 +403,6 @@ int TCreateCharacterScreen::Render(bool mode)
 		}
 		else
 		{
-			if (CreateCharacterManager.SelectedColor == 5)
-			{
-				IFOR(x, 0, 6)
-				{
-					IFOR(y, 0, 8)
-					{
-						FColor = 0x44E + (x * 8 + y);
-
-						DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
-
-						g_GL.DrawPolygone(clr, 490.0f + (x * 20.0f), 140.0f + (y * 35.0f), 20.0f, 35.0f);
-
-						if (g_LastSelectedObject == 40 + (x * 8 + y))
-							g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 20.0f) + 9.0f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
-					}
-				}
-			}
-			else if (CreateCharacterManager.SelectedColor == 0)
-			{
-				FColor = 0x0481;
-				if (CanSelectedButton == 11)
-					FColor = 0x0021;
-				FontManager->DrawA(9, "Facial Hair Color", FColor, 490, 320);
-
-				FColor = CreateCharacterManager.BeardColor;
-				if (FColor < 0x044E)
-					FColor = 0x044E;
-				if (FColor > 0x04AD)
-					FColor = 0x04AD;
-
-				DWORD clr = ColorManager->GetPolygoneColor(cell, FColor);
-
-				g_GL.DrawPolygone(clr, 490.0f, 333.0f, 120.0f, 25.0f);
-			}
-			
 			ColorizerShader->Use();
 
 			UO->DrawGump(0x0761, CreateCharacterManager.SkinTone, 238, 98); //Character create male body gump
@@ -476,6 +412,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 			if (CreateCharacterManager.HairStyle)
 				UO->DrawGump(CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).GumpID, CreateCharacterManager.HairColor, 238, 98); //Character hair
+
 			if (CreateCharacterManager.BeardStyle)
 				UO->DrawGump(CreateCharacterManager.GetBeard(CreateCharacterManager.BeardStyle).GumpID, CreateCharacterManager.BeardColor, 238, 98); //Character facial hair
 			
@@ -505,7 +442,11 @@ int TCreateCharacterScreen::Render(bool mode)
 			g_LastSelectedObject = ID_CCS_ARROW_PREV; //< gump
 		if (UO->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_CCS_ARROW_NEXT; //> gump
-		
+
+		if (CreateCharacterManager.Sex)
+		{
+		}
+
 		WORD GumpID = 0x0710;
 		if (CreateCharacterManager.Sex)
 			GumpID = 0x070D;
@@ -518,7 +459,7 @@ int TCreateCharacterScreen::Render(bool mode)
 			if (CreateCharacterManager.SelectedFace != 2)
 			{
 				if (UO->ResizepicPixelsInXY(0xBB8, 97, 199, 121, 24))
-					g_LastSelectedObject = 5; //Facial Hair text field
+					g_LastSelectedObject = ID_CCS_FACIAL_HAIR_STYLE; //Facial Hair text field
 			}
 			else
 			{
@@ -535,7 +476,7 @@ int TCreateCharacterScreen::Render(bool mode)
 		if (CreateCharacterManager.SelectedFace != 1)
 		{
 			if (UO->ResizepicPixelsInXY(0xBB8, 97, 154, 121, 24))
-				g_LastSelectedObject = 6; //Hair text field
+				g_LastSelectedObject = ID_CCS_HAIR_STYLE; //Hair text field
 		}
 		else
 		{
@@ -550,199 +491,143 @@ int TCreateCharacterScreen::Render(bool mode)
 			}
 		}
 		
-		if (CreateCharacterManager.SelectedColor == 1)
+		if (m_ColorSelection == 0)
 		{
-			RECT rc = {0, 0, 120, 280};
-			POINT p = {g_MouseX - 490, g_MouseY - 140};
+			RECT rc = { 0, 0, 120, 40 };
+			POINT p = { g_MouseX - 491, g_MouseY - 139 };
 
 			if (PtInRect(&rc, p))
+				g_LastSelectedObject = ID_CCS_SKIN_TONE;
+
+
+
+			RECT rc = { 0, 0, 120, 40 };
+			POINT p = { g_MouseX - 491, g_MouseY - 184 };
+
+			if (PtInRect(&rc, p))
+				g_LastSelectedObject = ID_CCS_SHIRT_COLOR;
+
+
+
+			RECT rc = { 0, 0, 120, 40 };
+			POINT p = { g_MouseX - 491, g_MouseY - 229 };
+
+			if (PtInRect(&rc, p))
+				g_LastSelectedObject = ID_CCS_SKIRT_OR_PANTS_COLOR;
+
+
+
+			RECT rc = { 0, 0, 120, 40 };
+			POINT p = { g_MouseX - 491, g_MouseY - 274 };
+
+			if (PtInRect(&rc, p))
+				g_LastSelectedObject = ID_CCS_HAIR_COLOR;
+
+
+
+			if (!CreateCharacterManager.Sex)
 			{
-				int x = p.x / 15;
-				int y = p.y / 35;
+				RECT rc = { 0, 0, 120, 40 };
+				POINT p = { g_MouseX - 491, g_MouseY - 319 };
 
-				int Index = (x * 8 + y);
-
-				g_LastSelectedObject = 40 + Index;
-				WORD ST = 0x03EA + Index;
-
-				if (ST > 0x0422)
-					ST = 0x0422;
-				CreateCharacterManager.SkinTone = ST;
+				if (PtInRect(&rc, p))
+					g_LastSelectedObject = ID_CCS_FACIAL_HAIR_COLOR;
 			}
 		}
-		else if (CreateCharacterManager.SelectedColor == 0)
+		else
 		{
-			RECT rc = {0, 0, 120, 40};
-			POINT p = {g_MouseX - 491, g_MouseY - 139};
-
-			if (PtInRect(&rc, p))
-				g_LastSelectedObject = 7;
-		}
-		
-		if (CreateCharacterManager.SelectedColor == 2)
-		{
-			RECT rc = {0, 0, 120, 240};
-			POINT p = {g_MouseX - 492, g_MouseY - 148};
-
-			if (PtInRect(&rc, p))
+			if (m_ColorSelection == CCSID_SKIN_TONE)
 			{
-				int x = p.x / 6;
-				int y = p.y / 5;
-				
-				int Index = (y * 20 + x);
+				RECT rc = { 0, 0, 120, 280 };
+				POINT p = { g_MouseX - 490, g_MouseY - 140 };
 
-				g_LastSelectedObject = 110 + Index;
-				WORD ST = 0;
-				
-				switch (y % 4)
+				if (PtInRect(&rc, p))
 				{
-					case 0:
-					{
-						ST = 102 + (y / 4);
-						break;
-					}
-					case 1:
-					{
-						ST = 202 + (y / 4);
-						break;
-					}
-					case 2:
-					{
-						ST = 402 + (y / 4);
-						break;
-					}
-					case 3:
-					{
-						ST = 802 + (y / 4);
-						break;
-					}
-					default:
-						break;
+					int x = p.x / 15;
+					int y = p.y / 35;
+
+					int index = (x * 8 + y);
+
+					g_LastSelectedObject = 40 + index;
+					WORD st = 0x03EA + index;
+
+					if (st > 0x0422)
+						st = 0x0422;
+
+					CreateCharacterManager.SkinTone = st;
 				}
-
-				if (ST)
-					ST += (x * 5);
-				
-				if (y)
-					CreateCharacterManager.ShirtColor = ST;
 			}
-		}
-		else if (CreateCharacterManager.SelectedColor == 0)
-		{
-			RECT rc = {0, 0, 120, 40};
-			POINT p = {g_MouseX - 491, g_MouseY - 184};
-
-			if (PtInRect(&rc, p))
-				g_LastSelectedObject = 8;
-		}
-		
-		if (CreateCharacterManager.SelectedColor == 3)
-		{
-			RECT rc = {0, 0, 120, 240};
-			POINT p = {g_MouseX - 492, g_MouseY - 148};
-
-			if (PtInRect(&rc, p))
+			else if (m_ColorSelection == CCSID_SHIRT_COLOR || m_ColorSelection == CCSID_SKIRT_OR_PANTS_COLOR)
 			{
-				int x = p.x / 6;
-				int y = p.y / 5;
-				
-				int Index = (y * 20 + x);
+				RECT rc = { 0, 0, 120, 240 };
+				POINT p = { g_MouseX - 492, g_MouseY - 148 };
 
-				g_LastSelectedObject = 110 + Index;
-				WORD ST = 0;
-				
-				switch (y % 4)
+				if (PtInRect(&rc, p))
 				{
-					case 0:
+					int x = p.x / 6;
+					int y = p.y / 5;
+
+					int index = (y * 20 + x);
+
+					g_LastSelectedObject = 110 + index;
+					WORD st = 0;
+
+					switch (y % 4)
 					{
-						ST = 102 + (y / 4);
-						break;
+						case 0:
+						{
+							st = 102 + (y / 4);
+							break;
+						}
+						case 1:
+						{
+							st = 202 + (y / 4);
+							break;
+						}
+						case 2:
+						{
+							st = 402 + (y / 4);
+							break;
+						}
+						case 3:
+						{
+							st = 802 + (y / 4);
+							break;
+						}
+						default:
+							break;
 					}
-					case 1:
+
+					if (st)
+						st += (x * 5);
+
+					if (y)
 					{
-						ST = 202 + (y / 4);
-						break;
+						if (m_ColorSelection == CCSID_SHIRT_COLOR)
+							CreateCharacterManager.ShirtColor = st;
+						else
+							CreateCharacterManager.PantsColor = st;
 					}
-					case 2:
-					{
-						ST = 402 + (y / 4);
-						break;
-					}
-					case 3:
-					{
-						ST = 802 + (y / 4);
-						break;
-					}
-					default:
-						break;
 				}
-
-				if (ST)
-					ST += (x * 5);
-
-				if (y)
-					CreateCharacterManager.PantsColor = ST;
 			}
-		}
-		else if (CreateCharacterManager.SelectedColor == 0)
-		{
-			RECT rc = {0, 0, 120, 40};
-			POINT p = {g_MouseX - 491, g_MouseY - 229};
-
-			if (PtInRect(&rc, p))
-				g_LastSelectedObject = 9;
-		}
-		
-		if (CreateCharacterManager.SelectedColor == 4)
-		{
-			RECT rc = {0, 0, 120, 280};
-			POINT p = {g_MouseX - 490, g_MouseY - 140};
-
-			if (PtInRect(&rc, p))
+			else if (m_ColorSelection == CCSID_HAIR_COLOR || m_ColorSelection == CCSID_FACIAL_HAIR_COLOR)
 			{
-				int x = p.x / 20;
-				int y = p.y / 35;
-				int Index = (x * 8 + y);
-
-				g_LastSelectedObject = 40 + Index;
-
-				CreateCharacterManager.HairColor = 0x44E + Index;
-			}
-		}
-		else if (CreateCharacterManager.SelectedColor == 0)
-		{
-			RECT rc = {0, 0, 120, 40};
-			POINT p = {g_MouseX - 491, g_MouseY - 274};
-
-			if (PtInRect(&rc, p))
-				g_LastSelectedObject = 10;
-		}
-
-		if (!CreateCharacterManager.Sex)
-		{
-			if (CreateCharacterManager.SelectedColor == 5)
-			{
-				RECT rc = {0, 0, 120, 280};
-				POINT p = {g_MouseX - 490, g_MouseY - 140};
+				RECT rc = { 0, 0, 120, 280 };
+				POINT p = { g_MouseX - 490, g_MouseY - 140 };
 
 				if (PtInRect(&rc, p))
 				{
 					int x = p.x / 20;
 					int y = p.y / 35;
-					int Index = (x * 8 + y);
+					int index = (x * 8 + y);
 
-					g_LastSelectedObject = 40 + Index;
+					g_LastSelectedObject = 40 + index;
 
-					CreateCharacterManager.BeardColor = 0x44E + Index;
+					if (m_ColorSelection == CCSID_HAIR_COLOR)
+						CreateCharacterManager.HairColor = 0x44E + index;
+					else
+						CreateCharacterManager.BeardColor = 0x44E + index;
 				}
-			}
-			else if (CreateCharacterManager.SelectedColor == 0)
-			{
-				RECT rc = {0, 0, 120, 40};
-				POINT p = {g_MouseX - 491, g_MouseY - 319};
-
-				if (PtInRect(&rc, p))
-					g_LastSelectedObject = 11;
 			}
 		}
 
