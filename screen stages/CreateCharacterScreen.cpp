@@ -465,10 +465,11 @@ int TCreateCharacterScreen::Render(bool mode)
 			{
 				IFOR(i, 0, 8)
 				{
-					RECT rc = {0, 0, 170, 25};
-					POINT p = {g_MouseX - 101, g_MouseY - (205 + (i * 14))};
-					if (PtInRect(&rc, p))
+					if (UO->PolygonePixelsInXY(101, 205 + (i * 14), 170, 25))
+					{
 						g_LastSelectedObject = (20 + i); //Facial Hair text field extended
+						break;
+					}
 				}
 			}
 		}
@@ -484,55 +485,26 @@ int TCreateCharacterScreen::Render(bool mode)
 
 			IFOR(i, 0, count)
 			{
-				RECT rc = {0, 0, 123, 25};
-				POINT p = {g_MouseX - 101, g_MouseY - (159 + (i * 14))};
-				if (PtInRect(&rc, p))
+				if (UO->PolygonePixelsInXY(101, 159 + (i * 14), 123, 25))
+				{
 					g_LastSelectedObject = (20 + i); //Hair text field extended
+					break;
+				}
 			}
 		}
 		
 		if (m_ColorSelection == 0)
 		{
-			RECT rc = { 0, 0, 120, 40 };
-			POINT p = { g_MouseX - 491, g_MouseY - 139 };
-
-			if (PtInRect(&rc, p))
+			if (UO->PolygonePixelsInXY(491, 139, 120, 40))
 				g_LastSelectedObject = ID_CCS_SKIN_TONE;
-
-
-
-			RECT rc = { 0, 0, 120, 40 };
-			POINT p = { g_MouseX - 491, g_MouseY - 184 };
-
-			if (PtInRect(&rc, p))
+			else if (UO->PolygonePixelsInXY(491, 184, 120, 40))
 				g_LastSelectedObject = ID_CCS_SHIRT_COLOR;
-
-
-
-			RECT rc = { 0, 0, 120, 40 };
-			POINT p = { g_MouseX - 491, g_MouseY - 229 };
-
-			if (PtInRect(&rc, p))
+			else if (UO->PolygonePixelsInXY(491, 229, 120, 40))
 				g_LastSelectedObject = ID_CCS_SKIRT_OR_PANTS_COLOR;
-
-
-
-			RECT rc = { 0, 0, 120, 40 };
-			POINT p = { g_MouseX - 491, g_MouseY - 274 };
-
-			if (PtInRect(&rc, p))
+			else if (UO->PolygonePixelsInXY(491, 274, 120, 40))
 				g_LastSelectedObject = ID_CCS_HAIR_COLOR;
-
-
-
-			if (!CreateCharacterManager.Sex)
-			{
-				RECT rc = { 0, 0, 120, 40 };
-				POINT p = { g_MouseX - 491, g_MouseY - 319 };
-
-				if (PtInRect(&rc, p))
-					g_LastSelectedObject = ID_CCS_FACIAL_HAIR_COLOR;
-			}
+			else if (!CreateCharacterManager.Sex && UO->PolygonePixelsInXY(491, 319, 120, 40))
+				g_LastSelectedObject = ID_CCS_FACIAL_HAIR_COLOR;
 		}
 		else
 		{

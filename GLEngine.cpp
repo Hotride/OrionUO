@@ -301,7 +301,7 @@ void TGLEngine::DrawPolygone(DWORD color, float x, float y, float width, float h
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawCircle(float x, float y, float radius)
+void TGLEngine::DrawCircle(float x, float y, float radius, int gradientMode)
 {
 	glDisable(GL_TEXTURE_2D);
 
@@ -311,6 +311,9 @@ void TGLEngine::DrawCircle(float x, float y, float radius)
 	glBegin(GL_TRIANGLE_FAN);
 
 		glVertex2f(0.0f, 0.0f);
+
+		if (gradientMode)
+			glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
 
 		float pi = (float)M_PI * 2.0f;
 
@@ -325,13 +328,13 @@ void TGLEngine::DrawCircle(float x, float y, float radius)
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawCircle(DWORD color, float x, float y, float radius)
+void TGLEngine::DrawCircle(DWORD color, float x, float y, float radius, int gradientMode)
 {
 	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
 
-	DrawCircle(x, y, radius);
+	DrawCircle(x, y, radius, gradientMode);
 
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVector *normals)

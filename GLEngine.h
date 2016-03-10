@@ -100,8 +100,8 @@ public:
 	void DrawPolygone(DWORD color, float x, float y, float width, float height);
 
 	//Нарисовать круг
-	void DrawCircle(float x, float y, float radius);
-	void DrawCircle(DWORD color, float x, float y, float radius);
+	void DrawCircle(float x, float y, float radius, int gradientMode = 0);
+	void DrawCircle(DWORD color, float x, float y, float radius, int gradientMode = 0);
 
 
 
