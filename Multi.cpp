@@ -25,8 +25,10 @@ TMultiObject::TMultiObject(WORD graphic, short x, short y, char z, DWORD multifl
 : TRenderStaticObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_MultiFlags(multiflags)
 {
 	m_Graphic += 0x4000;
-	
-	if (IsBackground())
+
+	if (IsWet())
+		m_RenderQueueIndex = 1;
+	else if (IsBackground())
 		m_RenderQueueIndex = 3 - (int)IsSurface();
 	else if (IsSurface())
 		m_RenderQueueIndex = 4;

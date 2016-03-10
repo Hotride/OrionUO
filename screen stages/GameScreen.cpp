@@ -955,6 +955,35 @@ void TGameScreen::DrawGameWindow(bool &mode)
 			}
 		}
 	}
+
+	/*if (ConfigManager.ObjectHandles && g_ShiftPressed && g_CtrlPressed)
+	{
+		if (mode)
+		{
+			IFOR(i, 0, m_RenderListCount)
+			{
+				RENDER_OBJECT_DATA &rod = m_RenderList[i];
+				TRenderWorldObject *obj = rod.Obj;
+
+				if (obj != NULL && obj->IsGameObject())
+				{
+					WORD color = 0;
+					TGameObject *go = (TGameObject*)obj;
+					string name = go->GetName();
+
+					if (go->NPC)
+						color = ConfigManager.GetColorByNotoriety(((TGameCharacter*)obj)->Notoriety);
+					else
+						name = ClilocManager->Cliloc(g_Language)->GetA(102000 + obj->Graphic, name);
+
+					//FontManager->DrawA(3, name.c_str(), color, rod.X, rod.Y, 150, TS_LEFT, UOFONT_FIXED);
+				}
+			}
+		}
+		else
+		{
+		}
+	}*/
 }
 //---------------------------------------------------------------------------
 void TGameScreen::DrawGameWindowLight()

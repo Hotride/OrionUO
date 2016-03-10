@@ -102,6 +102,7 @@ bool TGLEngine::Install(HWND hWnd)
 	glDisable(GL_DITHER);
 
 	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);   //Realy Nice perspective calculations
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
 	glEnable(GL_TEXTURE_2D);
 

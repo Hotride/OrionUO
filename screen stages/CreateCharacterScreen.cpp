@@ -173,55 +173,42 @@ int TCreateCharacterScreen::Render(bool mode)
 		UO->DrawResizepicGump(0x0E10, 475, 125, 151, 310); //Create character field
 		
 		const WORD textColorRange[2] = { 0x0481 , 0x0021};
-		WORD FColor = 0;
 
 		if (!CreateCharacterManager.Sex)
 		{
 			FontManager->DrawA(9, "Facial Hair Style", 0x0481, 100, 187);
 
-			if (CreateCharacterManager.SelectedFace != 2)
+			if (m_StyleSelection == CCSID_FACIAL_HAIR_STYLE)
+			{
+				UO->DrawResizepicGump(0xBB8, 97, 199, 177, 142); //Facial Hair Style text field extended
+
+				IFOR(i, 0, 8)
+					FontManager->DrawA(9, CreateCharacterManager.GetBeard(i).Name.c_str(), textColorRange[(int)(CanSelectedButton == (ID_CCS_STYLE_RANGE + i))], 101, 205 + (i * 14));
+			}
+			else
 			{
 				UO->DrawResizepicGump(0xBB8, 97, 199, 121, 24); //Facial Hair Style text field
 				FontManager->DrawA(9, CreateCharacterManager.GetBeard(CreateCharacterManager.BeardStyle).Name.c_str(), 0x0386, 101, 205, 117, TS_LEFT, UOFONT_FIXED);
 				UO->DrawGump(0x00FD, 0, 200, 201); //v gump
 			}
-			else
-			{
-				UO->DrawResizepicGump(0xBB8, 97, 199, 177, 142); //Facial Hair Style text field extended
-
-				IFOR(i, 0, 8)
-				{
-					FColor = 0x0386;
-					if (CanSelectedButton == 20  + i)
-						FColor = 0x0021;
-
-					FontManager->DrawA(9, CreateCharacterManager.GetBeard(i).Name.c_str(), FColor, 101, 205 + (i * 14));
-				}
-			}
 		}
 
 		FontManager->DrawA(9, "Hair Style", 0x0481, 100, 142);
 
-		if (CreateCharacterManager.SelectedFace != 1)
-		{
-			UO->DrawResizepicGump(0xBB8, 97, 154, 121, 24); //Hair Style text field
-			FontManager->DrawA(9, CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).Name.c_str(), 0x0386, 101, 159);
-			UO->DrawGump(0x00FD, 0, 200, 156); //v gump
-		}
-		else
+		if (m_StyleSelection == CCSID_HAIR_STYLE)
 		{
 			UO->DrawResizepicGump(0xBB8, 97, 154, 130, 170); //Hair Style text field extended
 
 			int count = 10 + (int)CreateCharacterManager.Sex;
 
 			IFOR(i, 0, count)
-			{
-				FColor = 0x0386;
-				if (CanSelectedButton == 20  + i)
-					FColor = 0x0021;
-
-				FontManager->DrawA(9, CreateCharacterManager.GetHair(i).Name.c_str(), FColor, 101, 159 + (i * 14));
-			}
+				FontManager->DrawA(9, CreateCharacterManager.GetHair(i).Name.c_str(), textColorRange[(int)(CanSelectedButton == (ID_CCS_STYLE_RANGE + i))], 101, 159 + (i * 14));
+		}
+		else
+		{
+			UO->DrawResizepicGump(0xBB8, 97, 154, 121, 24); //Hair Style text field
+			FontManager->DrawA(9, CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).Name.c_str(), 0x0386, 101, 159);
+			UO->DrawGump(0x00FD, 0, 200, 156); //v gump
 		}
 		
 		if (m_ColorSelection == 0)
@@ -314,7 +301,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 						g_GL.DrawPolygone(clr, 490 + (x * 15.0f), 140.0f + (y * 35.0f), 15.0f, 35.0f);
 
-						if (g_LastSelectedObject == 40 + (x * 8 + y))
+						if (g_LastSelectedObject == ID_CCS_COLOR_RANGE + (x * 8 + y))
 							g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 15.0f) + 6.5f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
 					}
 				}
@@ -359,7 +346,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 						color += 5;
 
-						if (g_LastSelectedObject == 110 + (y * 20 + x))
+						if (g_LastSelectedObject == ID_CCS_COLOR_RANGE + (y * 20 + x))
 							g_GL.DrawPolygone(0x007F7F7F, 492.0f + ((x * 6.0f) + 2.5f), 148.0f + ((y * 5.0f) + 2.0f), 2.0f, 2.0f);
 					}
 				}
@@ -376,35 +363,26 @@ int TCreateCharacterScreen::Render(bool mode)
 
 						g_GL.DrawPolygone(clr, 490.0f + (x * 20.0f), 140.0f + (y * 35.0f), 20.0f, 35.0f);
 
-						if (g_LastSelectedObject == 40 + (x * 8 + y))
+						if (g_LastSelectedObject == ID_CCS_COLOR_RANGE + (x * 8 + y))
 							g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 20.0f) + 9.0f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
 					}
 				}
 			}
 		}
 
+		ColorizerShader->Use();
+
 		if (CreateCharacterManager.Sex)
 		{
-			ColorizerShader->Use();
-
 			UO->DrawGump(0x0760, CreateCharacterManager.SkinTone, 238, 98); //Character create female body gump
 			UO->DrawGump(0x0714, CreateCharacterManager.ShirtColor, 238, 98); //Character create skirt
 			UO->DrawGump(0x0764, CreateCharacterManager.PantsColor, 238, 98); //Character create dress
 
 			if (CreateCharacterManager.HairStyle)
 				UO->DrawGump(CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).GumpID, CreateCharacterManager.HairColor, 238, 98); //Character hair
-
-			UnuseShader();
-
-			GumpID = 0x070D + (int)(CanSelectedButton == 4); //Character female button
-			if (CanPressedButton == 4)
-				GumpID = 0x070F; //Character female button pressed
-			UO->DrawGump(GumpID, 0, 310, 408);
 		}
 		else
 		{
-			ColorizerShader->Use();
-
 			UO->DrawGump(0x0761, CreateCharacterManager.SkinTone, 238, 98); //Character create male body gump
 			UO->DrawGump(0x0739, CreateCharacterManager.ShirtColor, 238, 98); //Character create shirt
 			UO->DrawGump(0x0738, CreateCharacterManager.PantsColor, 238, 98); //Character create pants
@@ -415,13 +393,29 @@ int TCreateCharacterScreen::Render(bool mode)
 
 			if (CreateCharacterManager.BeardStyle)
 				UO->DrawGump(CreateCharacterManager.GetBeard(CreateCharacterManager.BeardStyle).GumpID, CreateCharacterManager.BeardColor, 238, 98); //Character facial hair
-			
-			UnuseShader();
+		}
 
-			GumpID = 0x0710 + (int)(CanSelectedButton == 4); //Character male button
-			if (CanPressedButton == 4)
-				GumpID = 0x0712; //Character male button pressed
-			UO->DrawGump(GumpID, 0, 310, 408);
+		UnuseShader();
+
+		if (ConnectionManager.ClientVersion < CV_4011D)
+		{
+			if (CreateCharacterManager.Sex)
+			{
+				GumpID = 0x070D + (int)(CanSelectedButton == ID_CCS_FEMALE_BUTTON); //Character female button
+				if (CanPressedButton == ID_CCS_FEMALE_BUTTON)
+					GumpID = 0x070F; //Character female button pressed
+				UO->DrawGump(GumpID, 0, 310, 408);
+			}
+			else
+			{
+				GumpID = 0x0710 + (int)(CanSelectedButton == ID_CCS_MALE_BUTTON); //Character male button
+				if (CanPressedButton == ID_CCS_MALE_BUTTON)
+					GumpID = 0x0712; //Character male button pressed
+				UO->DrawGump(GumpID, 0, 310, 408);
+			}
+		}
+		else
+		{
 		}
 
 		InitPopupHelp();
@@ -438,48 +432,49 @@ int TCreateCharacterScreen::Render(bool mode)
 
 		if (UO->GumpPixelsInXY(0x1589, 555, 4))
 			g_LastSelectedObject = ID_CCS_QUIT; //X gump
-		if (UO->GumpPixelsInXY(0x15A1, 586, 445))
+		else if (UO->GumpPixelsInXY(0x15A1, 586, 445))
 			g_LastSelectedObject = ID_CCS_ARROW_PREV; //< gump
-		if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+		else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_CCS_ARROW_NEXT; //> gump
 
-		if (CreateCharacterManager.Sex)
+		if (ConnectionManager.ClientVersion < CV_4011D)
+		{
+			if (CreateCharacterManager.Sex)
+			{
+				if (UO->GumpPixelsInXY(0x070D, 310, 408))
+					g_LastSelectedObject = ID_CCS_FEMALE_BUTTON; //female button
+			}
+			else
+			{
+				if (UO->GumpPixelsInXY(0x0710, 310, 408))
+					g_LastSelectedObject = ID_CCS_MALE_BUTTON; //male button
+			}
+		}
+		else
 		{
 		}
 
-		WORD GumpID = 0x0710;
-		if (CreateCharacterManager.Sex)
-			GumpID = 0x070D;
-
-		if (UO->GumpPixelsInXY(GumpID, 310, 408))
-			g_LastSelectedObject = 4; //male / female button
-
 		if (!CreateCharacterManager.Sex)
 		{
-			if (CreateCharacterManager.SelectedFace != 2)
-			{
-				if (UO->ResizepicPixelsInXY(0xBB8, 97, 199, 121, 24))
-					g_LastSelectedObject = ID_CCS_FACIAL_HAIR_STYLE; //Facial Hair text field
-			}
-			else
+			if (m_StyleSelection == CCSID_FACIAL_HAIR_STYLE)
 			{
 				IFOR(i, 0, 8)
 				{
 					if (UO->PolygonePixelsInXY(101, 205 + (i * 14), 170, 25))
 					{
-						g_LastSelectedObject = (20 + i); //Facial Hair text field extended
+						g_LastSelectedObject = (ID_CCS_STYLE_RANGE + i); //Facial Hair text field extended
 						break;
 					}
 				}
 			}
+			else
+			{
+				if (UO->ResizepicPixelsInXY(0xBB8, 97, 199, 121, 24))
+					g_LastSelectedObject = ID_CCS_FACIAL_HAIR_STYLE; //Facial Hair text field
+			}
 		}
 
-		if (CreateCharacterManager.SelectedFace != 1)
-		{
-			if (UO->ResizepicPixelsInXY(0xBB8, 97, 154, 121, 24))
-				g_LastSelectedObject = ID_CCS_HAIR_STYLE; //Hair text field
-		}
-		else
+		if (m_StyleSelection == CCSID_HAIR_STYLE)
 		{
 			int count = 10 + (int)CreateCharacterManager.Sex;
 
@@ -487,10 +482,15 @@ int TCreateCharacterScreen::Render(bool mode)
 			{
 				if (UO->PolygonePixelsInXY(101, 159 + (i * 14), 123, 25))
 				{
-					g_LastSelectedObject = (20 + i); //Hair text field extended
+					g_LastSelectedObject = (ID_CCS_STYLE_RANGE + i); //Hair text field extended
 					break;
 				}
 			}
+		}
+		else
+		{
+			if (UO->ResizepicPixelsInXY(0xBB8, 97, 154, 121, 24))
+				g_LastSelectedObject = ID_CCS_HAIR_STYLE; //Hair text field
 		}
 		
 		if (m_ColorSelection == 0)
@@ -520,7 +520,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 					int index = (x * 8 + y);
 
-					g_LastSelectedObject = 40 + index;
+					g_LastSelectedObject = ID_CCS_COLOR_RANGE + index;
 					WORD st = 0x03EA + index;
 
 					if (st > 0x0422)
@@ -541,7 +541,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 					int index = (y * 20 + x);
 
-					g_LastSelectedObject = 110 + index;
+					g_LastSelectedObject = ID_CCS_COLOR_RANGE + index;
 					WORD st = 0;
 
 					switch (y % 4)
@@ -593,7 +593,7 @@ int TCreateCharacterScreen::Render(bool mode)
 					int y = p.y / 35;
 					int index = (x * 8 + y);
 
-					g_LastSelectedObject = 40 + index;
+					g_LastSelectedObject = ID_CCS_COLOR_RANGE + index;
 
 					if (m_ColorSelection == CCSID_HAIR_COLOR)
 						CreateCharacterManager.HairColor = 0x44E + index;
@@ -618,41 +618,40 @@ void TCreateCharacterScreen::OnLeftMouseDown()
 
 	if (g_LastSelectedObject == 0)
 	{
-		if (CreateCharacterManager.SelectedFace != 0)
-			CreateCharacterManager.SelectedFace = 0x00;
+		if (m_StyleSelection != 0)
+			m_StyleSelection = 0;
 
 		return;
 	}
 
 	if (!CreateCharacterManager.Sex)
 	{
-		if (CreateCharacterManager.SelectedFace != 2)
+		if (m_StyleSelection != CCSID_FACIAL_HAIR_STYLE)
 		{
-			if (g_LastSelectedObject == 5)
+			if (g_LastSelectedObject == ID_CCS_FACIAL_HAIR_STYLE)
 			{
-				CreateCharacterManager.SelectedFace = 0x02;
+				m_StyleSelection = CCSID_FACIAL_HAIR_STYLE;
 				return;
 			}
 		}
 		else
 		{
-			IFOR(i, 0, 8)
+			BYTE index = g_LastSelectedObject - ID_CCS_STYLE_RANGE;
+
+			if (index < 8)
 			{
-				if (g_LastSelectedObject == 20  + i)
-				{
-					CreateCharacterManager.BeardStyle = (BYTE)i;
-					CreateCharacterManager.SelectedFace = 0x00;
-					return;
-				}
+				CreateCharacterManager.BeardStyle = (BYTE)index;
+				m_StyleSelection = 0;
+				return;
 			}
 		}
 	}
 
-	if (CreateCharacterManager.SelectedFace != 1)
+	if (m_StyleSelection != CCSID_HAIR_STYLE)
 	{
-		if (g_LastSelectedObject == 6)
+		if (g_LastSelectedObject == ID_CCS_HAIR_STYLE)
 		{
-			CreateCharacterManager.SelectedFace = 0x01;
+			m_StyleSelection = CCSID_HAIR_STYLE;
 			return;
 		}
 	}
@@ -660,70 +659,33 @@ void TCreateCharacterScreen::OnLeftMouseDown()
 	{
 		int count = 10 + (int)CreateCharacterManager.Sex;
 
-		IFOR(i, 0, count)
-		{
-			if (g_LastSelectedObject == 20  + i)
-			{
-				CreateCharacterManager.HairStyle = (BYTE)i;
-				CreateCharacterManager.SelectedFace = 0x00;
-				return;
-			}
-		}
-	}
-		
-	if (g_LastSelectedObject == 7 || g_LastSelectedObject >= 40)
-	{
-		if (CreateCharacterManager.SelectedColor == 1) //Skin Tone
-		{
-			CreateCharacterManager.SelectedColor = 0;
-			return;
-		}
-		else if (CreateCharacterManager.SelectedColor == 0)
-			CreateCharacterManager.SelectedColor = 1;
-	}
-	
-	if (g_LastSelectedObject == 8 || g_LastSelectedObject >= 110)
-	{
-		if (CreateCharacterManager.SelectedColor == 2) //Shirt Color
-		{
-			CreateCharacterManager.SelectedColor = 0;
-			return;
-		}
-		else if (CreateCharacterManager.SelectedColor == 0)
-			CreateCharacterManager.SelectedColor = 2;
-	}
-	
-	if (g_LastSelectedObject == 9 || g_LastSelectedObject >= 110)
-	{
-		if (CreateCharacterManager.SelectedColor == 3) //Skirt / Pants Color
-		{
-			CreateCharacterManager.SelectedColor = 0;
-			return;
-		}
-		else if (CreateCharacterManager.SelectedColor == 0)
-			CreateCharacterManager.SelectedColor = 3;
-	}
-	
-	if (g_LastSelectedObject == 10 || g_LastSelectedObject >= 40)
-	{
-		if (CreateCharacterManager.SelectedColor == 4) //Hair Color
-		{
-			CreateCharacterManager.SelectedColor = 0;
-			return;
-		}
-		else if (CreateCharacterManager.SelectedColor == 0)
-			CreateCharacterManager.SelectedColor = 4;
-	}
+		BYTE index = g_LastSelectedObject - ID_CCS_STYLE_RANGE;
 
-	if (!CreateCharacterManager.Sex)
-	{
-		if (g_LastSelectedObject == 11 || g_LastSelectedObject >= 40)
+		if (index < count)
 		{
-			if (CreateCharacterManager.SelectedColor == 5) //Facial Hair Color
-				CreateCharacterManager.SelectedColor = 0;
-			else if (CreateCharacterManager.SelectedColor == 0)
-				CreateCharacterManager.SelectedColor = 5;
+			CreateCharacterManager.HairStyle = index;
+			m_StyleSelection = 0;
+			return;
 		}
+	}
+	
+	if (m_ColorSelection == 0)
+	{
+		if (g_LastSelectedObject == ID_CCS_SKIN_TONE)
+			m_ColorSelection = CCSID_SKIN_TONE;
+		else if (g_LastSelectedObject == ID_CCS_SHIRT_COLOR)
+			m_ColorSelection = CCSID_SHIRT_COLOR;
+		else if (g_LastSelectedObject == ID_CCS_SKIRT_OR_PANTS_COLOR)
+			m_ColorSelection = CCSID_SKIRT_OR_PANTS_COLOR;
+		else if (g_LastSelectedObject == ID_CCS_HAIR_COLOR)
+			m_ColorSelection = CCSID_HAIR_COLOR;
+		else if (!CreateCharacterManager.Sex && g_LastSelectedObject == ID_CCS_FACIAL_HAIR_COLOR)
+			m_ColorSelection = CCSID_FACIAL_HAIR_COLOR;
+	}
+	else
+	{
+		if (g_LastSelectedObject >= ID_CCS_COLOR_RANGE)
+			m_ColorSelection = 0;
 	}
 }
 //---------------------------------------------------------------------------
@@ -750,8 +712,10 @@ void TCreateCharacterScreen::OnLeftMouseUp()
 		else
 			CreateSmoothAction(ID_SMOOTH_CCS_GO_SCREEN_SELECT_TOWN);
 	}
-	else if (g_LastSelectedObject == 4)
-		CreateCharacterManager.Sex = !CreateCharacterManager.Sex;
+	else if (g_LastSelectedObject == ID_CCS_FEMALE_BUTTON)
+		CreateCharacterManager.Sex = false;
+	else if (g_LastSelectedObject == ID_CCS_MALE_BUTTON)
+		CreateCharacterManager.Sex = true;
 
 	g_LastObjectLeftMouseDown = 0;
 }

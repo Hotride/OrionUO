@@ -311,7 +311,7 @@ TStaticObject::TStaticObject(DWORD serial, WORD graphic, WORD color, short x, sh
 	m_Graphic += 0x4000;
 	
 	if (IsWet())
-		m_RenderQueueIndex = 0;
+		m_RenderQueueIndex = 1;
 	else if (IsBackground())
 		m_RenderQueueIndex = 3 - (int)IsSurface();
 	else if (IsSurface())

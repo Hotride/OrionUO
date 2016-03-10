@@ -35,17 +35,14 @@ private:
 	//Пол персонажа. false - male; true - female
 	bool m_Sex;
 
+	//Расса персонажа
+	char m_Rase;
+
 	//Индекс стиля прически
 	BYTE m_HairStyle;
 
 	//Индекс стиля бороды
 	BYTE m_BeardStyle;
-
-	//Выбранный объект
-	BYTE m_SelectedFace;
-
-	//Выбранный цвет
-	BYTE m_SelectedColor;
 
 	//Цвет тела
 	WORD m_SkinTone;
@@ -77,6 +74,7 @@ public:
 	void Clear();
 
 	SETGET(bool, Sex);
+	SETGET(char, Rase);
 	SETGET(BYTE, HairStyle);
 	SETGET(BYTE, BeardStyle);
 	SETGET(WORD, SkinTone);
@@ -84,8 +82,6 @@ public:
 	SETGET(WORD, PantsColor);
 	SETGET(WORD, HairColor);
 	SETGET(WORD, BeardColor);
-	SETGET(BYTE, SelectedFace);
-	SETGET(BYTE, SelectedColor);
 
 	//Введенное имя персонажа
 	TEntryText *m_Name;

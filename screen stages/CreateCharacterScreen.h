@@ -48,6 +48,9 @@ private:
 	static const int ID_CCS_HAIR_COLOR = 15;
 	static const int ID_CCS_FACIAL_HAIR_COLOR = 16;
 
+	static const int ID_CCS_STYLE_RANGE = 20;
+	static const int ID_CCS_COLOR_RANGE = 40;
+
 	enum
 	{
 		CCSID_HAIR_STYLE = 1,
@@ -59,7 +62,10 @@ private:
 		CCSID_FACIAL_HAIR_COLOR
 	};
 
+	//Выбранный стиль прически/бороды
 	int m_StyleSelection;
+
+	//Выбранный цвет тела/одежды/волосеного покрова
 	int m_ColorSelection;
 
 public:

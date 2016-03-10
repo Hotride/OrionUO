@@ -65,7 +65,7 @@ CC_HAIR_STYLE TCreateCharacterManager::m_BeardStyleTable[8] =
 TCreateCharacterManager::TCreateCharacterManager()
 :m_Sex(false), m_HairStyle(1), m_BeardStyle(0), m_SkinTone(0x03EA),
 m_ShirtColor(0x0084), m_PantsColor(0x035F), m_HairColor(0x044E),
-m_BeardColor(0x044E), m_Name(NULL), m_SelectedFace(0), m_SelectedColor(0)
+m_BeardColor(0x044E), m_Name(NULL), m_Rase(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -95,8 +95,6 @@ void TCreateCharacterManager::Clear()
 	m_Sex = false;
 	m_HairStyle = 1;
 	m_BeardStyle = 0;
-
-	m_SelectedFace = m_SelectedColor = 0;
 
 	m_SkinTone = 0x03EA;
 	m_ShirtColor = 0x0084;
