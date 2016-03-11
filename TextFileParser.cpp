@@ -93,7 +93,7 @@ bool TTextFileParser::IsDelimiter()
 	bool result = false;
 
 	//Проход по всем разделителям
-	for (int i = 0; i < m_DelimitersSize && *m_Ptr && !result; i++)
+	for (int i = 0; i < m_DelimitersSize&& !result; i++)
 		result = (*m_Ptr == m_Delimiters[i]);
 
 	return result;
@@ -110,18 +110,18 @@ void TTextFileParser::SkipToData()
 //Проверка на комментарий
 bool TTextFileParser::IsComment()
 {
-	bool result = false;
+	bool result = (*m_Ptr == '\n');
 
 	//Проход по всем комментариям
-	for (int i = 0; i < m_ComentariesSize && *m_Ptr && !result; i++)
+	for (int i = 0; i < m_ComentariesSize && !result; i++)
 	{
-		if (m_Comentaries[i] == '/' && i + 1 < m_ComentariesSize && m_Comentaries[i + 1] == '/' && m_Ptr + 1 < m_EOL)
+		result = (*m_Ptr == m_Comentaries[i]);
+
+		if (result && i + 1 < m_ComentariesSize && m_Comentaries[i] == m_Comentaries[i + 1] && m_Ptr + 1 < m_EOL)
 		{
-			result = ((m_Ptr[0] == m_Comentaries[i] && m_Ptr[1] == m_Comentaries[i + 1]) || *m_Ptr == '\n');
+			result = (m_Ptr[0] == m_Ptr[1]);
 			i++;
 		}
-		else
-			result = (*m_Ptr == m_Comentaries[i] || *m_Ptr == '\n');
 	}
 
 	return result;

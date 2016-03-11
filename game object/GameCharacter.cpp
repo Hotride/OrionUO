@@ -467,6 +467,60 @@ void TGameCharacter::GetAnimationGroup(ANIMATION_GROUPS group, BYTE &animation)
 		animation = animAssociateTable[animation][group - 1];
 }
 //---------------------------------------------------------------------------
+void TGameCharacter::CorrectAnimationGroup(WORD &graphic, ANIMATION_GROUPS &group, BYTE &animation)
+{
+	if (group == AG_LOW)
+	{
+		switch (animation)
+		{
+			case LAG_DIE_2:
+				animation = LAG_DIE_1;
+				break;
+			case LAG_FIDGET_2:
+				animation = LAG_FIDGET_1;
+				break;
+			case LAG_ATTACK_3:
+			case LAG_ATTACK_2:
+				animation = LAG_ATTACK_1;
+				break;
+			default:
+				break;
+		}
+
+		if (!AnimationManager->AnimationExists(graphic, animation))
+			animation = LAG_STAND;
+	}
+	else if (group == AG_HIGHT)
+	{
+		switch (animation)
+		{
+			case HAG_DIE_2:
+				animation = HAG_DIE_1;
+				break;
+			case HAG_FIDGET_2:
+				animation = HAG_FIDGET_1;
+				break;
+			case HAG_ATTACK_3:
+			case HAG_ATTACK_2:
+				animation = HAG_ATTACK_1;
+				break;
+			case HAG_GET_HIT_3:
+			case HAG_GET_HIT_2:
+				animation = HAG_GET_HIT_1;
+			case HAG_MISC_4:
+			case HAG_MISC_3:
+			case HAG_MISC_2:
+				animation = HAG_MISC_1;
+				break;
+			default:
+				break;
+		}
+
+		if (!AnimationManager->AnimationExists(graphic, animation))
+			animation = HAG_STAND;
+	}
+}
+//---------------------------------------------------------------------------
 bool TGameCharacter::TestStepNoChangeDirection(BYTE group)
 {
 	bool result = false;
@@ -511,7 +565,12 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 	groupIndex = AnimationManager->GetGroupIndex(graphic);
 
 	if (result != 0xFF)
+	{
 		GetAnimationGroup(groupIndex, result);
+
+		if (!AnimationManager->AnimationExists(graphic, result))
+			CorrectAnimationGroup(graphic, groupIndex, result);
+	}
 
 	/*if (graphic)
 	{
@@ -557,7 +616,10 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 
 			if (isRun)
 			{
-				TTextureAnimation *anim = AnimationManager->GetAnimation(graphic);
+				if (AnimationManager->AnimationExists(graphic, HAG_FLY))
+					result = (BYTE)HAG_FLY;
+
+				/*TTextureAnimation *anim = AnimationManager->GetAnimation(graphic);
 
 				if (anim != NULL)
 				{
@@ -569,7 +631,7 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 						if (direction != NULL && direction->Address != 0)
 							result = (BYTE)HAG_FLY;
 					}
-				}
+				}*/
 			}
 		}
 		else if (m_AnimationGroup == 0xFF)

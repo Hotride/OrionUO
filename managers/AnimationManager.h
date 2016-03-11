@@ -155,6 +155,8 @@ public:
 	//Отрисовать тени
 	void DrawShadows();
 
+	bool AnimationExists(WORD &graphic, BYTE group);
+
 	void GetCorpseGraphic(WORD &graphic);
 	void GetBodyGraphic(WORD &graphic);
 };

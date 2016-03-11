@@ -56,6 +56,7 @@ protected:
 	string m_PaperdollText; //Текст титула в папердолле
 
 	bool IsCorrectStep(WORD &cx, WORD &cy, WORD &x, WORD &y, BYTE &dir);
+	void CorrectAnimationGroup(WORD &graphic, ANIMATION_GROUPS &group, BYTE &animation); //Скорректировать отношение анимаций
 public:
 	TGameCharacter(DWORD serial = 0);
 	virtual ~TGameCharacter();

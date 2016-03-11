@@ -360,12 +360,12 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 		{
 			int anim[4] = { -1, -1, -1, -1 };
 
-			int index = atoi(strings[0].c_str());
+			WORD index = atoi(strings[0].c_str());
 
 			IFOR(i, 0, 4)
 				anim[i] = atoi(strings[i + 1].c_str());
 
-			if (index < 0 || index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
 				continue;
 
 			int startAnimID = -1;
@@ -487,9 +487,9 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 
 		if (strings.size() >= 3)
 		{
-			int index = atoi(strings[0].c_str());
+			WORD index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
 				continue;
 
 			std::vector<std::string> newBody = newBodyParser.GetTokens(strings[1].c_str());
@@ -498,9 +498,9 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 
 			IFOR(i, 0, size)
 			{
-				int checkIndex = atoi(newBody[i].c_str());
+				WORD checkIndex = atoi(newBody[i].c_str());
 
-				if (checkIndex < 0 || checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
+				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
 					continue;
 
 				memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(TIndexAnimation));
@@ -518,9 +518,9 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 
 		if (strings.size() >= 3)
 		{
-			int index = atoi(strings[0].c_str());
+			WORD index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
 				continue;
 
 			std::vector<std::string> newBody = newBodyParser.GetTokens(strings[1].c_str());
@@ -529,9 +529,9 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 
 			IFOR(i, 0, size)
 			{
-				int checkIndex = atoi(newBody[i].c_str());
+				WORD checkIndex = atoi(newBody[i].c_str());
 
-				if (checkIndex < 0 || checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
+				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
 					continue;
 
 				m_CorpseReplaces[index] = checkIndex;
@@ -1799,15 +1799,42 @@ bool TAnimationManager::CorpsePixelsInXY(TGameItem *obj, int x, int y, int z)
 	return result;
 }
 //----------------------------------------------------------------------------
+bool TAnimationManager::AnimationExists(WORD &graphic, BYTE group)
+{
+	bool result = false;
+
+	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+	{
+		int offset = group * 5;
+		PBYTE dataStart = NULL;
+
+		if (m_DataIndex[graphic].Offset == 0xFFFFFFFF) //in verdata
+		{
+			PVERDATA_HEADER vh = (PVERDATA_HEADER)(m_DataIndex[graphic].Address + (offset * sizeof(VERDATA_HEADER)));
+			dataStart = (PBYTE)((DWORD)FileManager.VerdataMul.Address + vh->Position);
+		}
+		else //in original mulls
+		{
+			PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_DataIndex[graphic].Address + (offset * sizeof(ANIM_IDX_BLOCK)));
+
+			dataStart = (PBYTE)(m_DataIndex[graphic].Offset + aidx->Position);
+		}
+
+		result = (dataStart != NULL);
+	}
+
+	return result;
+}
+//----------------------------------------------------------------------------
 void TAnimationManager::GetCorpseGraphic(WORD &graphic)
 {
-	if (graphic >= 0 && graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_CorpseReplaces[graphic])
+	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_CorpseReplaces[graphic])
 		graphic = m_CorpseReplaces[graphic];
 }
 //----------------------------------------------------------------------------
 void TAnimationManager::GetBodyGraphic(WORD &graphic)
 {
-	if (graphic >= 0 && graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		graphic = m_DataIndex[graphic].Graphic;
 }
 //----------------------------------------------------------------------------

@@ -1056,9 +1056,10 @@ bool TUltimaOnline::Install()
 
 	/*//TTextFileParser file(FilePath("login.cfg").c_str(), "=,", "#;", "");
 	//TTextFileParser file(FilePath("uo_debug.cfg").c_str(), "=", "#;", "");
-	//TTextFileParser file(FilePath("Bodyconv1.def").c_str(), " \t", "#;", "");
+	//TTextFileParser file(FilePath("Bodyconv.def").c_str(), " \t", "#;", "");
 	//TTextFileParser file(FilePath("prof.txt").c_str(), " \t,", "#;", "\"\"");
-	TTextFileParser file(FilePath("stitchin.def").c_str(), " \t", "#;//", "");
+	//TTextFileParser file(FilePath("stitchin.def").c_str(), " \t", "#;//", "");
+	TTextFileParser file(FilePath("as.cfg").c_str(), " \t", "#;//", "");
 	
 	while (!file.IsEOF())
 	{

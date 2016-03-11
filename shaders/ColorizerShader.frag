@@ -40,34 +40,37 @@ void main(void)
 
 			gl_FragColor = vec4(resultColor, textureColor.a) * gl_Color;
 		}
-		else if (drawMode > 9)
-		{
-			float red = textureColor.r;
-
-			if (drawMode > 10)
-				red *= 0.5;
-			else
-				red *= 1.5;
-
-			gl_FragColor = vec4(red, red, red, textureColor.a) * gl_Color;
-		}
 		else if (drawMode > 5)
 		{
-			vec3 n2 = normalize(n);
-			vec3 l2 = normalize(l);
-
-			vec4 normal = max(dot(n2, l2) + 0.5, 0.0);
-
-			if (drawMode > 6)
+			if (drawMode > 9)
 			{
-				int index = AND32(int(textureColor.r * 31.875));
+				float red = textureColor.r;
 
-				vec3 resultColor = Color16To32(colors[index]);
+				if (drawMode > 10)
+					red *= 0.5;
+				else
+					red *= 1.5;
 
-				gl_FragColor = (vec4(resultColor, textureColor.a) * gl_Color) * normal;
+				gl_FragColor = vec4(red, red, red, textureColor.a) * gl_Color;
 			}
 			else
-				gl_FragColor = (textureColor * gl_Color) * normal;
+			{
+				vec3 n2 = normalize(n);
+				vec3 l2 = normalize(l);
+
+				vec4 normal = max(dot(n2, l2) + 0.5, 0.0);
+
+				if (drawMode > 6)
+				{
+					int index = AND32(int(textureColor.r * 31.875));
+
+					vec3 resultColor = Color16To32(colors[index]);
+
+					gl_FragColor = (vec4(resultColor, textureColor.a) * gl_Color) * normal;
+				}
+				else
+					gl_FragColor = (textureColor * gl_Color) * normal;
+			}
 		}
 		else
 			gl_FragColor = textureColor * gl_Color;
