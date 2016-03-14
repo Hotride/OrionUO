@@ -164,13 +164,14 @@ void TMapManager::GetMapZ(int x, int y, int &groundZ, int &staticZ)
 	int blockY = y / 8;
 	int index = (blockX * g_MapBlockY[g_CurrentMap]) + blockY;
 
-	TMapBlock *block = MapManager->GetBlock(index);
+	TMapBlock *block = GetBlock(index);
+
 	if (block == NULL)
 	{
-		block = MapManager->AddBlock(index);
+		block = AddBlock(index);
 		block->X = blockX;
 		block->Y = blockY;
-		MapManager->LoadBlock(block);
+		LoadBlock(block);
 	}
 	
 	x = x % 8;
@@ -264,7 +265,7 @@ void TMapManager::LoadBlock(TMapBlock *block)
 	
 	if (!FileManager.MapMul[Map].Address || !FileManager.StaticIdx[Map].Address || !FileManager.StaticMul[Map].Address)
 		return;
-
+	//DWORD ticks = GetTickCount();
 	int index = block->Index;
 	PMAP_BLOCK pmb = (PMAP_BLOCK)((DWORD)FileManager.MapMul[Map].Address + (index * sizeof(MAP_BLOCK)));
 	
@@ -291,6 +292,7 @@ void TMapManager::LoadBlock(TMapBlock *block)
 
 		if (scnt > 0)
 		{
+			//TPRINT("LoadBlock prepare statics: %i (%i)\n", GetTickCount() - ticks, scnt);
 			if (scnt > 1024)
 				scnt = 1024;
 
@@ -311,7 +313,9 @@ void TMapManager::LoadBlock(TMapBlock *block)
 		}
 	}
 
+	//TPRINT("LoadBlock created: %i\n", GetTickCount() - ticks);
 	block->CreateLandTextureRect();
+	//TPRINT("LoadBlock land created: %i\n", GetTickCount() - ticks);
 }
 //---------------------------------------------------------------------------
 int TMapManager::GetActualMap()
