@@ -224,7 +224,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 			DWORD clr = ColorManager->GetPolygoneColor(cell, color);
 
-			g_GL.DrawPolygone(clr, 490.0f, 154.0f, 120.0f, 25.0f);
+			g_GL.DrawPolygone(clr, 490, 154, 120, 25);
 
 
 
@@ -236,7 +236,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 			clr = ColorManager->GetPolygoneColor(cell, color);
 
-			g_GL.DrawPolygone(clr, 490.0f, 199.0f, 120.0f, 25.0f);
+			g_GL.DrawPolygone(clr, 490, 199, 120, 25);
 
 
 
@@ -253,7 +253,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 			clr = ColorManager->GetPolygoneColor(cell, color);
 
-			g_GL.DrawPolygone(clr, 490.0f, 244.0f, 120.0f, 25.0f);
+			g_GL.DrawPolygone(clr, 490, 244, 120, 25);
 
 
 
@@ -267,7 +267,7 @@ int TCreateCharacterScreen::Render(bool mode)
 				color = 0x04AD;
 
 			clr = ColorManager->GetPolygoneColor(cell, color);
-			g_GL.DrawPolygone(clr, 490.0f, 289.0f, 120.0f, 25.0f);
+			g_GL.DrawPolygone(clr, 490, 289, 120, 25);
 
 
 
@@ -284,7 +284,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 				clr = ColorManager->GetPolygoneColor(cell, color);
 
-				g_GL.DrawPolygone(clr, 490.0f, 333.0f, 120.0f, 25.0f);
+				g_GL.DrawPolygone(clr, 490, 333, 120, 25);
 			}
 		}
 		else
@@ -299,10 +299,10 @@ int TCreateCharacterScreen::Render(bool mode)
 
 						DWORD clr = ColorManager->GetPolygoneColor(cell, color);
 
-						g_GL.DrawPolygone(clr, 490 + (x * 15.0f), 140.0f + (y * 35.0f), 15.0f, 35.0f);
+						g_GL.DrawPolygone(clr, 490 + (x * 15), 140 + (y * 35), 15, 35);
 
 						if (g_LastSelectedObject == ID_CCS_COLOR_RANGE + (x * 8 + y))
-							g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 15.0f) + 6.5f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
+							g_GL.DrawPolygone(0x007F7F7F, 490 + ((x * 15) + 6), 140 + ((y * 35) + 16), 2, 2);
 					}
 				}
 			}
@@ -342,12 +342,12 @@ int TCreateCharacterScreen::Render(bool mode)
 					{
 						DWORD clr = ColorManager->GetPolygoneColor(7, color);
 
-						g_GL.DrawPolygone(clr, 492.0f + (x * 6.0f), 148.0f + (y * 5.0f), 6.0f, 5.0f);
+						g_GL.DrawPolygone(clr, 492 + (x * 6), 148 + (y * 5), 6, 5);
 
 						color += 5;
 
 						if (g_LastSelectedObject == ID_CCS_COLOR_RANGE + (y * 20 + x))
-							g_GL.DrawPolygone(0x007F7F7F, 492.0f + ((x * 6.0f) + 2.5f), 148.0f + ((y * 5.0f) + 2.0f), 2.0f, 2.0f);
+							g_GL.DrawPolygone(0x007F7F7F, 492 + ((x * 6) + 2), 148 + ((y * 5) + 2), 2, 2);
 					}
 				}
 			}
@@ -361,10 +361,10 @@ int TCreateCharacterScreen::Render(bool mode)
 
 						DWORD clr = ColorManager->GetPolygoneColor(cell, color);
 
-						g_GL.DrawPolygone(clr, 490.0f + (x * 20.0f), 140.0f + (y * 35.0f), 20.0f, 35.0f);
+						g_GL.DrawPolygone(clr, 490 + (x * 20), 140 + (y * 35), 20, 35);
 
 						if (g_LastSelectedObject == ID_CCS_COLOR_RANGE + (x * 8 + y))
-							g_GL.DrawPolygone(0x007F7F7F, 490.0f + ((x * 20.0f) + 9.0f), 140.0f + ((y * 35.0f) + 16.5f), 2.0f, 2.0f);
+							g_GL.DrawPolygone(0x007F7F7F, 490 + ((x * 20) + 9), 140 + ((y * 35) + 16), 2, 2);
 					}
 				}
 			}

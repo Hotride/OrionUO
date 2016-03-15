@@ -348,17 +348,17 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 				
 				
 				
-				float lineY = posY + 82.0f;
+				int lineY = posY + 82;
 
 				posX += 58;
-				float lineX = posX + 34.0f;
+				int lineX = posX + 34;
 				int textWidth = 40;
 
 				//Hits
 				sprintf(text, "%d", g_Player->Hits);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 70, textWidth, TS_CENTER);
 				
-				g_GL.DrawLine(0x1c1c1c1c, (float)posX, lineY, lineX, lineY);
+				g_GL.DrawLine(0x1c1c1c1c, posX, lineY, lineX, lineY);
 
 				sprintf(text, "%d", g_Player->MaxHits);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 83, textWidth, TS_CENTER);
@@ -367,8 +367,8 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 				sprintf(text, "%d", g_Player->Stam);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 98, textWidth, TS_CENTER);
 				
-				lineY = posY + 110.0f;
-				g_GL.DrawLine(0x1c1c1c1c, (float)posX, lineY, lineX, lineY);
+				lineY = posY + 110;
+				g_GL.DrawLine(0x1c1c1c1c, posX, lineY, lineX, lineY);
 
 				sprintf(text, "%d", g_Player->MaxStam);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 111, textWidth, TS_CENTER);
@@ -377,8 +377,8 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 				sprintf(text, "%d", g_Player->Mana);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 126, textWidth, TS_CENTER);
 				
-				lineY = posY + 138.0f;
-				g_GL.DrawLine(0x1c1c1c1c, (float)posX, lineY, lineX, lineY);
+				lineY = posY + 138;
+				g_GL.DrawLine(0x1c1c1c1c, posX, lineY, lineX, lineY);
 
 				sprintf(text, "%d", g_Player->MaxMana);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 139, textWidth, TS_CENTER);
@@ -395,13 +395,13 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 				
 				//Weights
 				posX -= 4;
-				lineX = posX + 34.0f;
+				lineX = posX + 34;
 
 				sprintf(text, "%d", g_Player->Weight);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 126, textWidth, TS_CENTER);
 				
-				lineY = posY + 138.0f;
-				g_GL.DrawLine(0x1c1c1c1c, (float)posX, lineY, lineX, lineY);
+				lineY = posY + 138;
+				g_GL.DrawLine(0x1c1c1c1c, posX, lineY, lineX, lineY);
 
 				sprintf(text, "%d", g_Player->MaxWeight);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 139, textWidth, TS_CENTER);

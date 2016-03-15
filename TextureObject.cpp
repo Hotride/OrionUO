@@ -262,16 +262,16 @@ TTextureAnimationGroup *TTextureAnimation::GetGroup(BYTE index)
 }
 //---------------------------------------------------------------------------
 TTextTexture::TTextTexture()
-: m_Width(0), m_Height(0), m_Lines(0), m_Texture(0), Data(NULL)
+: m_Width(0), m_Height(0), m_Lines(0), Texture(0), Data(NULL)
 {
 }
 //---------------------------------------------------------------------------
 TTextTexture::~TTextTexture()
 {
-	if (m_Texture)
+	if (Texture)
 	{
-		glDeleteTextures(1, &m_Texture);
-		m_Texture = 0;
+		glDeleteTextures(1, &Texture);
+		Texture = 0;
 	}
 
 	if (Data != NULL)
@@ -287,10 +287,10 @@ void TTextTexture::Clear()
 	m_Height = 0;
 	m_Lines = 0;
 
-	if (m_Texture)
+	if (Texture)
 	{
-		glDeleteTextures(1, &m_Texture);
-		m_Texture = 0;
+		glDeleteTextures(1, &Texture);
+		Texture = 0;
 	}
 
 	if (Data != NULL)
@@ -306,15 +306,15 @@ void TTextTexture::Init()
 	m_Height = 0;
 	m_Lines = 0;
 
-	m_Texture = 0;
+	Texture = 0;
 
 	Data = NULL;
 }
 //--------------------------------------------------------------------------
 void TTextTexture::Draw(int x, int y)
 {
-	if (m_Texture != 0)
-		g_GL.Draw(m_Texture, x, y, m_Width, m_Height);
+	if (Texture != 0)
+		g_GL.Draw(Texture, x, y, m_Width, m_Height);
 }
 //--------------------------------------------------------------------------
 bool TTextTexture::UnderMouse(int x, int y)

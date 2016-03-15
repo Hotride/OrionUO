@@ -92,10 +92,10 @@ void TGumpSelectColor::GenerateFrame(int posX, int posY)
 
 				DWORD clr = ColorManager->GetPolygoneColor(cell + (y / 2), FColor);
 
-				g_GL.DrawPolygone(clr, (GLfloat)(posX + (x * cellWidthX)), (GLfloat)(posY + (y * cellWidthY)), (GLfloat)cellWidthX, (GLfloat)cellWidthY);
+				g_GL.DrawPolygone(clr, posX + (x * cellWidthX), posY + (y * cellWidthY), cellWidthX, cellWidthY);
 
 				if (m_SelectedIndex == ID_GSC_COLORS + (x * 30 + y))
-					g_GL.DrawPolygone(0x007F7F7F, posX + (x * cellWidthX) + (cellWidthX / 2.0f) - 1.0f, posY + (y * cellWidthY) + (cellWidthY / 2.0f) - 1.0f, 2.0f, 2.0f);
+					g_GL.DrawPolygone(0x007F7F7F, posX + (x * cellWidthX) + (cellWidthX / 2) - 1, posY + (y * cellWidthY) + (cellWidthY / 2) - 1, 2, 2);
 			}
 		}
 

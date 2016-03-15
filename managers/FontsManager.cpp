@@ -645,16 +645,16 @@ bool TFontsManager::GenerateA(BYTE font, TTextTexture &th, const char *str, WORD
 	return GenerateABase(font, th, str, color, width, align, flags);
 }
 //---------------------------------------------------------------------------
-bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str, WORD &color, int &width, TEXT_ALIGN_TYPE &align, WORD &flags)
+PDWORD TFontsManager::GeneratePixelsA(BYTE &font, TTextTexture &th, const char *str, WORD &color, int &width, TEXT_ALIGN_TYPE &align, WORD &flags)
 {
 	th.Clear();
 
 	if (font > m_FontCount)
-		return false;
+		return NULL;
 
 	int len = strlen(str);
 	if (!len)
-		return false;
+		return NULL;
 
 	FONT_DATA &fd = m_Font[font];
 
@@ -662,11 +662,11 @@ bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str,
 		width = GetWidthA(font, str, len);
 
 	if (!width)
-		return false;
+		return NULL;
 
 	PMULTILINES_FONT_INFO info = GetInfoA(font, str, len, align, flags, width);
 	if (info == NULL)
-		return false;
+		return NULL;
 
 	width += 4;
 
@@ -686,7 +686,7 @@ bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str,
 			delete info;
 		}
 
-		return false;
+		return NULL;
 	}
 	
 	int blocksize = (height + 1) * (width + 1);
@@ -794,11 +794,22 @@ bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str,
 	th.Width = width;
 	th.Height = height;
 
-	GLuint tex = 0;
-	g_GL.BindTexture32(tex, width, height, pData);
-	th.Texture = tex;
+	return pData;
+}
+//---------------------------------------------------------------------------
+bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str, WORD &color, int &width, TEXT_ALIGN_TYPE &align, WORD &flags)
+{
+	PDWORD pixels = GeneratePixelsA(font, th, str, color, width, align, flags);
+	bool result = false;
 
-	delete pData;
+	if (pixels != NULL)
+	{
+		g_GL.BindTexture32(th.Texture, th.Width, th.Height, pixels);
+
+		delete pixels;
+
+		result = true;
+	}
 
 	return true;
 }
@@ -807,13 +818,12 @@ void TFontsManager::DrawA(BYTE font, const char *str, WORD color, int x, int y, 
 {
 	TTextTexture th;
 
-	if (!GenerateA(font, th, str, color, width, align, flags))
-		return;
+	if (GenerateA(font, th, str, color, width, align, flags))
+	{
+		g_GL.Draw(th.Texture, x, y, th.Width, th.Height);
 
-	GLuint tex = th.Texture;
-	g_GL.Draw(tex, x, y, th.Width, th.Height);
-
-	th.Clear();
+		th.Clear();
+	}
 }
 
 
@@ -2107,26 +2117,26 @@ bool TFontsManager::GenerateW(BYTE font, TTextTexture &th, const wchar_t *str, W
 	return GenerateWBase(font, th, str, color, cell, width, align, flags);
 }
 //---------------------------------------------------------------------------
-bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *str, WORD &color, BYTE &cell, int &width, TEXT_ALIGN_TYPE &align, WORD &flags)
+PDWORD TFontsManager::GeneratePixelsW(BYTE &font, TTextTexture &th, const wchar_t *str, WORD &color, BYTE &cell, int &width, TEXT_ALIGN_TYPE &align, WORD &flags)
 {
 	if (font >= 20 || !m_UnicodeFontAddress[font])
-		return false;
+		return NULL;
 
 	int len = lstrlenW(str);
 	if (!len)
-		return false;
-	
+		return NULL;
+
 	if (!width)
 	{
 		width = GetWidthW(font, str, len);
 
 		if (!width)
-			return false;
+			return NULL;
 	}
 
 	PMULTILINES_FONT_INFO info = GetInfoW(font, str, len, align, flags, width);
 	if (info == NULL)
-		return false;
+		return NULL;
 
 	width += 4;
 
@@ -2146,13 +2156,13 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 			delete info;
 		}
 
-		return false;
+		return NULL;
 	}
 
 	height += 4;
-	
+
 	int blocksize = (height + 1) * (width + 1);
-	
+
 	if (m_SavePixels)
 	{
 		th.Data = new BYTE[blocksize];
@@ -2243,22 +2253,23 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 				if (si == L' ')
 					ofsX = UNICODE_SPACE_WIDTH;
 				else if ((!table[si] || table[si] == 0xFFFFFFFF) && si != L' ')
-					{}
+				{
+				}
 				else
 				{
 					PBYTE xData = (PBYTE)((DWORD)table + table[si]);
 					ofsX = (char)xData[2];
 				}
 
-				WEB_LINK_RECT wlr = {oldLink, linkStartX, linkStartY, w - ofsX, linkHeight};
+				WEB_LINK_RECT wlr = { oldLink, linkStartX, linkStartY, w - ofsX, linkHeight };
 				th.AddWebLink(wlr);
 				oldLink = 0;
 			}
 
 			/*if (m_UseHTML)
 			{
-				if (i >= ptr->Data.size()) break;
-				si = ptr->Data[i].item;
+			if (i >= ptr->Data.size()) break;
+			si = ptr->Data[i].item;
 			}*/
 
 			if ((!table[si] || table[si] == 0xFFFFFFFF) && si != L' ')
@@ -2307,13 +2318,13 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 				IFOR(y, 0, dh)
 				{
 					int testY = offsY + lineOffsY + y;
-					
+
 					if (testY >= height)
 						break;
 
 					PBYTE scanlines = data;
 					data += scanlineCount;
-					
+
 					int italicOffset = 0;
 					if (isItalic)
 						italicOffset = (int)((dh - y) / ITALIC_FONT_KOEFFICIENT);
@@ -2362,12 +2373,12 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 					IFOR(cy, 0, dh)
 					{
 						int testY = offsY + lineOffsY + cy;
-					
+
 						if (testY >= height)
 							break;
 
 						int italicOffset = 0;
-						if (isItalic && cy >=0 && cy < dh)
+						if (isItalic && cy >= 0 && cy < dh)
 							italicOffset = (int)((dh - cy) / ITALIC_FONT_KOEFFICIENT);
 
 						IFOR(cx, minXOk, maxXOk)
@@ -2409,7 +2420,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 					IFOR(cy, 0, dh)
 					{
 						int testY = offsY + lineOffsY + cy;
-					
+
 						if (testY >= height)
 							break;
 
@@ -2449,7 +2460,7 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 					IFOR(cy, minYOk, maxYOk)
 					{
 						int testY = offsY + lineOffsY + cy;
-					
+
 						if (testY >= height)
 							break;
 
@@ -2560,26 +2571,36 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 	th.Width = width;
 	th.Height = height;
 
-	GLuint tex = 0;
-	g_GL.BindTexture32(tex, width, height, pData);
-	th.Texture = tex;
-	
-	delete pData;
+	return pData;
+}
+//---------------------------------------------------------------------------
+bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *str, WORD &color, BYTE &cell, int &width, TEXT_ALIGN_TYPE &align, WORD &flags)
+{
+	PDWORD pixels = GeneratePixelsW(font, th, str, color, cell, width, align, flags);
+	bool result = false;
 
-	return true;
+	if (pixels != NULL)
+	{
+		g_GL.BindTexture32(th.Texture, th.Width, th.Height, pixels);
+
+		delete pixels;
+
+		result = true;
+	}
+
+	return result;
 }
 //---------------------------------------------------------------------------
 void TFontsManager::DrawW(BYTE font, const wchar_t *str, WORD color, int x, int y, BYTE cell, int width, TEXT_ALIGN_TYPE align, WORD flags)
 {
 	TTextTexture th;
 
-	if (!GenerateW(font, th, str, color, cell, width, align, flags))
-		return;
+	if (GenerateW(font, th, str, color, cell, width, align, flags))
+	{
+		g_GL.Draw(th.Texture, x, y, th.Width, th.Height);
 
-	GLuint tex = th.Texture;
-	g_GL.Draw(tex, x, y, th.Width, th.Height);
-
-	th.Clear();
+		th.Clear();
+	}
 }
 //---------------------------------------------------------------------------
 BYTE TFontsManager::m_FontIndex[256] =

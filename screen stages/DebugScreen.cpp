@@ -48,9 +48,8 @@ int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 		if (objGraphic)
 		{
-			int deX = 0;// drawX;
-			int deY = 0;// drawY;
-			int deZ = 0;
+			int deX = drawX;
+			int deY = drawY;
 
 			if (m_EffectType == EF_MOVING)
 			{
@@ -58,13 +57,12 @@ int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 				deX += moving->OffsetX;
 				deY += moving->OffsetY;
-				deZ += moving->OffsetZ;
 			}
 
 			ApplyRenderMode();
 
 			if (m_FixedDirection)
-				UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z + deZ);
+				UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z);
 			else
 			{
 				TTextureObject *th = UO->ExecuteStaticArt(objGraphic);
@@ -73,10 +71,10 @@ int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				{
 					glBindTexture(GL_TEXTURE_2D, th->Texture);
 
-					deY -= (m_Z * 4 + deZ);
+					deY -= (m_Z * 4);
 
-					double cosA = ((TEffectMoving*)(this))->CosA;
-					double sinA = ((TEffectMoving*)(this))->SinA;
+					double cosA = ((TEffectMoving*)this)->CosA;
+					double sinA = ((TEffectMoving*)this)->SinA;
 
 					int posMinX = deX - (th->Width / 2);
 					int posMinY = deY - (th->Height + 44);
@@ -110,10 +108,10 @@ int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 					glTranslatef((GLfloat)(deX - posMinX), (GLfloat)(deY - posMinY), 0.0f);
 
 					glBegin(GL_QUADS);
-						glTexCoord2i(0, 1); glVertex2i(x1, y1);
-						glTexCoord2i(1, 1); glVertex2i(x2, y2);
-						glTexCoord2i(1, 0); glVertex2i(x3, y3);
-						glTexCoord2i(0, 0); glVertex2i(x4, y4);
+						glTexCoord2i(0, 0); glVertex2i(x1, y1);
+						glTexCoord2i(0, 1); glVertex2i(x2, y2);
+						glTexCoord2i(1, 1); glVertex2i(x3, y3);
+						glTexCoord2i(1, 0); glVertex2i(x4, y4);
 					glEnd();
 				}
 			}
@@ -160,8 +158,6 @@ void TEffect::ApplyRenderMode()
 {
 	switch (m_RenderMode % 7)
 	{
-		case 0:
-			break;
 		case 1:
 			glEnable(GL_BLEND);
 			//glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
@@ -186,6 +182,7 @@ void TEffect::ApplyRenderMode()
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE);
 			//glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+			//glBlendEquation(GL_FUNC_ADD);
 			break;
 		default:
 			break;
@@ -193,8 +190,7 @@ void TEffect::ApplyRenderMode()
 }
 //---------------------------------------------------------------------------
 TEffectMoving::TEffectMoving()
-: TEffect(), m_DiffX(0), m_DiffY(0), m_DiffZ(0), m_CosA(0.0), m_SinA(0.0),
-m_OffsetX(0), m_OffsetY(0), m_OffsetZ(0), m_Step(0), m_Distance(0)
+: TEffect(), m_CosA(0.0), m_SinA(0.0), m_OffsetX(0), m_OffsetY(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -204,12 +200,12 @@ TEffectMoving::~TEffectMoving()
 //---------------------------------------------------------------------------
 void TEffectMoving::Init()
 {
-	m_DiffX = m_DestX - m_X;
-	m_DiffY = m_DestY - m_Y;
-	m_DiffZ = m_DestZ - m_Z;
+	int diffX = m_DestX - m_X;
+	int diffY = m_DestY - m_Y;
+	int diffZ = m_DestZ - m_Z;
 
-	int posX = (m_DiffX - m_DiffY) * 44;
-	int posY = (m_DiffX + m_DiffY) * 44 + m_DiffZ * 4;
+	int posX = (diffX - diffY) * 44;
+	int posY = (diffX + diffY) * 44 + diffZ * 4;
 
 	double alpha = 0.0;
 	if (posX == 0)
@@ -230,108 +226,13 @@ void TEffectMoving::Init()
 	m_CosA = cos(alpha);
 	m_SinA = sin(alpha);
 
-	m_Distance = (int)floor(sqrt(m_DiffX * m_DiffX + m_DiffY * m_DiffY)) * 2 + 1;
-
-	m_Step = 0;
-	m_OffsetX = 320;
-	m_OffsetY = 240;
-	m_OffsetZ = 0;
+	m_OffsetX = 0;
+	m_OffsetY = 0;
 }
 //---------------------------------------------------------------------------
 void TEffectMoving::Update()
 {
 	int cx = 320;
-	int cy = 240;
-
-	int ctx = 10;
-	int cty = 10;
-
-
-
-	int realDrawX = cx + m_OffsetX;
-	int realDrawY = cy + m_OffsetY;
-
-	int offsetDestX = m_DestX - ctx;
-	int offsetDestY = m_DestY - cty;
-
-	int drawDestX = cx + (offsetDestX - offsetDestY) * 22;
-	int drawDestY = cy + (offsetDestX + offsetDestY) * 22;
-
-	int x = 0;
-
-	int deltaXY[2] = { abs(drawDestX - realDrawX), abs(drawDestY - realDrawY) };
-
-	if (deltaXY[0] < deltaXY[1])
-	{
-		x = 1;
-
-		int temp = deltaXY[0];
-
-		deltaXY[0] = deltaXY[1];
-		deltaXY[1] = temp;
-	}
-
-	if (deltaXY[0] == 0)
-		deltaXY[0] = 1;
-
-	double delta = deltaXY[1] / deltaXY[0];
-	double stepXY = 0.0;
-
-	int step = m_Speed;// *5;
-	int tempXY[2] = { step, 0 };
-
-	for (int j = 0; j < step; j++)
-	{
-		stepXY += delta;
-
-		if (stepXY >= 0.5)
-		{
-			tempXY[1] += 1;
-
-			stepXY -= 1.0;
-		}
-	}
-
-	bool incX = (realDrawX < drawDestX);
-	bool incY = (realDrawY < drawDestY);
-
-	if (incX)
-	{
-		realDrawX += tempXY[x];
-
-		if (realDrawX > drawDestX)
-			realDrawX = drawDestX;
-	}
-	else
-	{
-		realDrawX -= tempXY[x];
-
-		if (realDrawX < drawDestX)
-			realDrawX = drawDestX;
-	}
-
-	if (incY)
-	{
-		realDrawY += tempXY[(x + 1) % 2];
-
-		if (realDrawY > drawDestY)
-			realDrawY = drawDestY;
-	}
-	else
-	{
-		realDrawY -= tempXY[(x + 1) % 2];
-
-		if (realDrawY < drawDestY)
-			realDrawY = drawDestY;
-	}
-
-	//TPRINT("lofs: %i %i\n", m_OffsetX, m_OffsetY);
-	m_OffsetX = realDrawX - cx;
-	m_OffsetY = realDrawY - cy;
-	//TPRINT("nofs: %i %i\n", m_OffsetX, m_OffsetY);
-
-
-	/*int cx = 320;
 	int cy = 240;
 
 	int ctx = 10;
@@ -371,10 +272,10 @@ void TEffectMoving::Update()
 	if (deltaXY[0] == 0)
 		deltaXY[0] = 1;
 
-	double delta = deltaXY[1] / deltaXY[0];
+	double delta = deltaXY[1] / (double)deltaXY[0];
 	double stepXY = 0.0;
 
-	int step = m_Speed;// *5;
+	int step = m_Speed;
 	int tempXY[2] = { step, 0 };
 
 	for (int j = 0; j < step; j++)
@@ -446,38 +347,12 @@ void TEffectMoving::Update()
 
 		m_X = newX;
 		m_Y = newY;
-	}*/
 
-	/*if (m_Step == m_Distance + 1)
-	{
+		if (m_Z < m_DestZ)
+			m_Z++;
+		else if (m_Z > m_DestZ)
+			m_Z--;
 	}
-	else
-	{
-		int oldX = m_X;
-		int oldY = m_Y;
-		int oldZ = m_Z;
-
-		double offset = m_Step / (double)m_Distance;
-
-		int newX = oldX + (int)(m_DiffX * offset);
-		int newY = oldY + (int)(m_DiffY * offset);
-		int newZ = oldZ + (int)(m_DiffZ * offset);
-
-		m_OffsetX = (int)floor((m_DiffX - m_DiffY) * 22 * offset);
-		m_OffsetY = (int)floor((m_DiffX + m_DiffY) * 22 * offset);
-		m_OffsetZ = (int)floor(m_DiffZ * 4 * offset);
-
-		m_Step++;
-
-		if (oldX != newX || oldY != newY || oldZ != newZ)
-		{
-			m_X = newX;
-			m_Y = newY;
-			m_Z = newZ;
-
-			Init();
-		}
-	}*/
 }
 
 
@@ -496,9 +371,11 @@ TDebugScreen::TDebugScreen()
 	ef->Speed = 5;
 	ef->X = 10;
 	ef->Y = 10;
-	ef->Z = 0;
+	ef->Z = 20;
 	ef->DestX = 10;
 	ef->DestY = 0;
+	ef->DestZ = 0;
+	//ef->RenderMode = 3;
 	ef->FixedDirection = true;
 
 	ef->Init();
@@ -518,6 +395,8 @@ TDebugScreen::~TDebugScreen()
 void TDebugScreen::Init()
 {
 	g_ConfigLoaded = false;
+
+	m_ColorRef = 1;
 
 	SetWindowTextA(g_hWnd, "Ultima Online");
 
@@ -624,23 +503,6 @@ int TDebugScreen::Render(bool mode)
 
 		effect->Draw(mde, drawX, drawY, ticks);
 
-		/*TTextureObject *th = UO->ExecuteStaticArt(0x36E4);
-
-		if (th != NULL)
-		{
-			glBindTexture(GL_TEXTURE_2D, th->Texture);
-
-			glLoadIdentity();
-			glTranslatef(320.0f, 240.0f, 0.0f);
-
-			glBegin(GL_QUADS);
-				glTexCoord2i(0, 1); glVertex2i(0, th->Height / 2);
-				glTexCoord2i(1, 1); glVertex2i(th->Width * 2, th->Height * 2);
-				glTexCoord2i(1, 0); glVertex2i(th->Width / 2, 0);
-				glTexCoord2i(0, 0); glVertex2i(0, 0);
-			glEnd();
-		}*/
-		
 		UnuseShader();
 
 		DPOLY(315, 235, 10, 10);
@@ -670,6 +532,9 @@ int TDebugScreen::Render(bool mode)
 		m_Text->DrawA(3, 0x0386, 20, 100, TS_LEFT, UOFONT_FIXED);
 		//m_Text->DrawW(1, 0x0021, 20, 100, TS_LEFT, UOFONT_FIXED);
 
+		//Отрисовка гампа выбора цвета
+		DrawColorsGump();
+
 		DrawSmoothMonitorEffect();
 
 		MouseManager.Draw(0x2073); //Main Gump mouse cursor
@@ -680,15 +545,50 @@ int TDebugScreen::Render(bool mode)
 	{
 		g_LastSelectedObject = 0;
 
-		/*if (UO->GumpPixelsInXY(0x1589, 555, 4))
-			g_LastSelectedObject = ID_DS_QUIT; //X gump
-		else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
-			g_LastSelectedObject = ID_DS_GO_SCREEN_MAIN; //> gump*/
+		if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+			g_LastSelectedObject = ID_DS_GO_SCREEN_MAIN; //> gump
 
 		return g_LastSelectedObject;
 	}
 
 	return 0;
+}
+//---------------------------------------------------------------------------
+void TDebugScreen::DrawColorsGump()
+{
+	int posX = 100;
+	int posY = 100;
+
+	//Gump body
+	UO->DrawGump(0x0906, 0, posX, posY);
+
+	//Okay button
+	UO->DrawGump(0x0907, 0, posX + 208, posY + 138);
+
+	//Scroll button
+	UO->DrawGump(0x0845, 0, posX, posY + 142);
+
+	const int cellWidthX = 8;
+	const int cellWidthY = 8;
+
+	const int cell = 5;
+
+	WORD startColor = m_ColorRef + 2;
+
+	posX += 34;
+	posY += 34;
+
+	IFOR(y, 0, 10)
+	{
+		IFOR(x, 0, 20)
+		{
+			WORD color = startColor + (x * 5 + (y * 100));
+
+			DWORD clr = ColorManager->GetPolygoneColor(5 + (y / 2) + (y % 2), color);
+
+			g_GL.DrawPolygone(clr, posX + (x * cellWidthX), posY + (y * cellWidthY), cellWidthX, cellWidthY);
+		}
+	}
 }
 //---------------------------------------------------------------------------
 void TDebugScreen::OnLeftMouseUp()
@@ -701,6 +601,8 @@ void TDebugScreen::OnLeftMouseUp()
 
 	effect->X = 10;
 	effect->Y = 10;
+	if (!(rand() % 5))
+		effect->Z = 20;
 
 	int cx = 320;
 	int cy = 240;
@@ -727,9 +629,7 @@ void TDebugScreen::OnLeftMouseUp()
 		return;
 	}
 
-	if (g_LastObjectLeftMouseDown == ID_DS_QUIT) //x button
-		CreateSmoothAction(ID_SMOOTH_DS_QUIT);
-	else if (g_LastObjectLeftMouseDown == ID_DS_GO_SCREEN_MAIN) //> button
+	if (g_LastObjectLeftMouseDown == ID_DS_GO_SCREEN_MAIN) //> button
 		CreateSmoothAction(ID_SMOOTH_DS_GO_SCREEN_MAIN);
 
 	g_LastObjectLeftMouseDown = 0;
@@ -739,6 +639,11 @@ void TDebugScreen::OnCharPress(WPARAM wparam, LPARAM lparam)
 {
 	if (wparam == VK_RETURN || wparam == VK_BACK || wparam == VK_ESCAPE || m_Text == NULL)
 		return; //Ignore no print keys
+
+	if (wparam == L'+' && m_ColorRef < 4)
+		m_ColorRef++;
+	else if (wparam == L'-' && m_ColorRef > 0)
+		m_ColorRef--;
 
 	m_Text->Insert(wparam);
 }

@@ -1169,7 +1169,7 @@ int TGumpOptions::DrawPage2(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		DWORD clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.PopupHelpTextColor != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.PopupHelpTextColor);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Text Color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage2[4].Draw(posX + 88, posY);
 		
@@ -1297,7 +1297,7 @@ int TGumpOptions::DrawPage3(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		DWORD clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ToolTipsTextColor != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ToolTipsTextColor);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Color of Tool-tip text", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage3[4].Draw(posX + 88, posY);
 		
@@ -1359,7 +1359,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		DWORD clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorInputText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorInputText);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Input text color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[2].Draw(posX + 88, posY);
 		
@@ -1368,7 +1368,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMenuOption != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMenuOption);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Menu option color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[3].Draw(posX + 88, posY);
 		
@@ -1377,7 +1377,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorPlayerInMemberList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorPlayerInMemberList);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Player color in member list", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[3].Draw(posX + 88, posY);
 		
@@ -1386,7 +1386,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorText);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Chat text color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[5].Draw(posX + 88, posY);
 		
@@ -1395,7 +1395,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorPlayerNameWithout != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorPlayerNameWithout);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Player name without speaking privileges", g_OptionsTextColor, posX + 88, posY, 140);
 		m_TexturePage4[6].Draw(posX + 88, posY);
 		
@@ -1404,7 +1404,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMuted != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMuted);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Muted text color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[7].Draw(posX + 88, posY);
 		
@@ -1413,7 +1413,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorChannelModeratorName != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorChannelModeratorName);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Channel moderator name", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[8].Draw(posX + 88, posY);
 		
@@ -1422,7 +1422,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorChannelModeratorText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorChannelModeratorText);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Channel moderator text", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[9].Draw(posX + 88, posY);
 		
@@ -1431,7 +1431,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMyName != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMyName);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"My name's color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[10].Draw(posX + 88, posY);
 		
@@ -1440,7 +1440,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMyText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMyText);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"My text color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[11].Draw(posX + 88, posY);
 		
@@ -1449,7 +1449,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorSystemMessage != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorSystemMessage);
-		g_GL.DrawPolygone(clr, posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"System message color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[12].Draw(posX + 88, posY);
 
@@ -1460,7 +1460,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGOutputText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGOutputText);
-		g_GL.DrawPolygone(clr, posX + 303.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 303, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Text Output Background Color", g_OptionsTextColor, posX + 324, posY);
 		m_TexturePage4[13].Draw(posX + 324, posY);
 
@@ -1469,7 +1469,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGInputText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGInputText);
-		g_GL.DrawPolygone(clr, posX + 303.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 303, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Text Input Background Color", g_OptionsTextColor, posX + 324, posY);
 		m_TexturePage4[14].Draw(posX + 324, posY);
 
@@ -1478,7 +1478,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGUserList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGUserList);
-		g_GL.DrawPolygone(clr, posX + 303.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 303, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"User List Background Color", g_OptionsTextColor, posX + 324, posY);
 		m_TexturePage4[15].Draw(posX + 324, posY);
 
@@ -1487,7 +1487,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGConfList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGConfList);
-		g_GL.DrawPolygone(clr, posX + 303.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 303, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Conference List Background Color", g_OptionsTextColor, posX + 324, posY);
 		m_TexturePage4[16].Draw(posX + 324, posY);
 
@@ -1496,7 +1496,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGCommandList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGCommandList);
-		g_GL.DrawPolygone(clr, posX + 303.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(clr, posX + 303, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Command List Background Color", g_OptionsTextColor, posX + 324, posY);
 		m_TexturePage4[17].Draw(posX + 324, posY);
 
@@ -1774,7 +1774,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 					{
 						if (textNameIndex == (CanSelectedButton - ID_GO_P5_SELECTION))
 						{
-							g_GL.DrawPolygone(0x7F7F7F7F, posX + 4.0f, (float)itemPosY, 150.0f, 14.0f);
+							g_GL.DrawPolygone(0x7F7F7F7F, posX + 4, itemPosY, 150, 14);
 						}
 					}
 
@@ -2123,19 +2123,19 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 
 		posY += 22;
 		UO->DrawGump(0x00D4, 0, posX + 64, posY);
-		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.SpeechColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.SpeechColor), posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Speech color", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[5].Draw(posX + 86, posY);
 		
 		posY += 19;
 		UO->DrawGump(0x00D4, 0, posX + 64, posY);
-		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.EmoteColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.EmoteColor), posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Emote color", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[6].Draw(posX + 86, posY);
 		
 		posY += 19;
 		UO->DrawGump(0x00D4, 0, posX + 64, posY);
-		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.PartyMessageColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.PartyMessageColor), posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Party Message color", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[7].Draw(posX + 86, posY);
 		
@@ -2176,13 +2176,13 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		
 			posY += 22;
 			UO->DrawGump(0x00D4, 0, posX + 64, posY);
-			g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.GuildMessageColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+			g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.GuildMessageColor), posX + 67, posY + 3, 13, 14);
 			//UO->DrawUnicodeFont(0, L"Guild Message Color", g_OptionsTextColor, posX + 86, posY);
 			m_TexturePage7[8].Draw(posX + 86, posY);
 		
 			posY += 19;
 			UO->DrawGump(0x00D4, 0, posX + 64, posY);
-			g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.AllianceMessageColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+			g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.AllianceMessageColor), posX + 67, posY + 3, 13, 14);
 			//UO->DrawUnicodeFont(0, L"Alliance Message Color", g_OptionsTextColor, posX + 86, posY);
 			m_TexturePage7[9].Draw(posX + 86, posY);
 			
@@ -2284,37 +2284,37 @@ int TGumpOptions::DrawPage8(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		
 		posY += 90;
 		UO->DrawGump(0x00D4, 0, posX + 64, posY);
-		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.InnocentColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.InnocentColor), posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Innocent highlight color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[2].Draw(posX + 88, posY);
 		
 		posY += step;
 		UO->DrawGump(0x00D4, 0, posX + 64, posY);
-		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.FriendlyColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.FriendlyColor), posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Friendly guilds highlight color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[3].Draw(posX + 88, posY);
 		
 		posY += step;
 		UO->DrawGump(0x00D4, 0, posX + 64, posY);
-		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.SomeoneColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.SomeoneColor), posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Someone that can be attacked color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[4].Draw(posX + 88, posY);
 		
 		posY += step;
 		UO->DrawGump(0x00D4, 0, posX + 64, posY);
-		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.CriminalColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.CriminalColor), posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Criminal highlight color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[5].Draw(posX + 88, posY);
 		
 		posY += step;
 		UO->DrawGump(0x00D4, 0, posX + 64, posY);
-		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.EnemyColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.EnemyColor), posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Enemy guildmembers color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[6].Draw(posX + 88, posY);
 		
 		posY += step;
 		UO->DrawGump(0x00D4, 0, posX + 64, posY);
-		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.MurdererColor), posX + 67.0f, posY + 3.0f, 13.0f, 14.0f);
+		g_GL.DrawPolygone(ColorManager->GetPolygoneColor(5, g_OptionsConfig.MurdererColor), posX + 67, posY + 3, 13, 14);
 		//UO->DrawUnicodeFont(0, L"Murderer highlight color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[7].Draw(posX + 88, posY);
 		

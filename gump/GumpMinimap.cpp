@@ -212,9 +212,6 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 	WORD gumpWidth = th->Width;
 	WORD gumpHeight = th->Height;
 
-	WORD blockOffsetX = gumpWidth / 4;
-	WORD blockOffsetY = gumpHeight / 4;
-
 	WORD gumpCenterX = gumpWidth / 2;
 	WORD gumpCenterY = gumpHeight / 2;
 
@@ -253,14 +250,14 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 						DWORD pcl = ColorManager->GetPolygoneColor(cell, color);
 						pcl = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
 						
-						g_GL.DrawPolygone(pcl, (float)(posX + gx), (float)(posY + gy), 2, 2);
+						g_GL.DrawPolygone(pcl, posX + gx, posY + gy, 2, 2);
 					}
 				}
 
 				go = (TGameObject*)go->m_Next;
 			}
 
-			g_GL.DrawPolygone(0xFF7F7F7F, (float)(posX), (float)(posY), 2, 2);
+			g_GL.DrawPolygone(0xFF7F7F7F, posX, posY, 2, 2);
 
 		}
 

@@ -183,9 +183,6 @@ private:
 
 	//Количество строк
 	int m_Lines;
-
-	//Текстура текста
-	GLuint m_Texture;
 public:
 	TTextTexture();
 	virtual ~TTextTexture();
@@ -196,10 +193,12 @@ public:
 	SETGET(int, Width);
 	SETGET(int, Height);
 	SETGETEX(int, Lines);
-	SETGET(GLuint, Texture);
+
+	//Текстура текста
+	GLuint Texture;
 
 	//Создана ли текстура
-	bool Empty() {return (m_Texture == 0);}
+	bool Empty() {return (Texture == 0);}
 
 	//Инициализация
 	void Init();

@@ -101,19 +101,23 @@ void TPopupHelp::Draw(int cursorWidth, int cursorHeight)
 		//glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_COLOR);
 		//glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
 		//glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_DST_COLOR);
-		glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
+		//glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		g_GL.DrawPolygone(0, (float)x, (float)y, Texture.Width + 8.0f, Texture.Height + 8.0f);
+		glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
+
+		g_GL.DrawPolygone(x, y, Texture.Width + 8, Texture.Height + 8);
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		
 		glDisable(GL_BLEND);
 
 		//g_GL.Draw(g_TransparntBackground, (float)x, (float)y, 2.0f, 2.0f, Texture.Width + 8.0f, Texture.Height + 8.0f);
 
-		GLuint tex = Texture.Texture;
 		int tempX = x + 6;
 		int tempY = y + 4;
 
-		g_GL.Draw(tex, tempX, tempY, Texture.Width, Texture.Height);
+		g_GL.Draw(Texture.Texture, tempX, tempY, Texture.Width, Texture.Height);
 	}
 
 	m_Use = false;

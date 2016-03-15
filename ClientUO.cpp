@@ -2470,7 +2470,7 @@ void TUltimaOnline::SaveLocalConfig()
 	path += string("\\") + ServerList.GetServerName();
 	CreateDirectoryA(path.c_str(), NULL);
 
-	char serbuf[100] = {0};
+	char serbuf[20] = {0};
 	sprintf(serbuf, "\\0x%08X", g_PlayerSerial);
 	
 	path += serbuf;
@@ -2523,7 +2523,6 @@ void TUltimaOnline::Process()
 
 		if (g_LastRenderTime < ticks)
 		{
-
 			TWalkData *wd = g_Player->m_WalkStack.m_Items;
 
 			if (wd != NULL)
@@ -2539,6 +2538,8 @@ void TUltimaOnline::Process()
 
 			ProcessStaticAnimList();
 			RemoveRangedObjects();
+
+			EffectManager->UpdateEffects();
 			
 			World->ProcessAnimation();
 		}
@@ -4351,10 +4352,7 @@ void TUltimaOnline::RemoveRangedObjects()
 		GumpManager->RemoveRangedGumps();
 
 	if (EffectManager != NULL)
-	{
 		EffectManager->RemoveRangedEffects();
-		EffectManager->UpdateEffects();
-	}
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::SendWalkStack()

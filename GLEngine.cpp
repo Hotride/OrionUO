@@ -253,21 +253,21 @@ void TGLEngine::RestorePort()
 	glMatrixMode(GL_MODELVIEW);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawLine(float x, float y, float targetX, float targetY)
+void TGLEngine::DrawLine(int x, int y, int targetX, int targetY)
 {
 	glDisable(GL_TEXTURE_2D);
 
 	glLoadIdentity();
 
 	glBegin(GL_LINES);
-		glVertex2f(x, y);
-		glVertex2f(targetX, targetY);
+		glVertex2i(x, y);
+		glVertex2i(targetX, targetY);
 	glEnd();
 
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawLine(DWORD color, float x, float y, float targetX, float targetY)
+void TGLEngine::DrawLine(DWORD color, int x, int y, int targetX, int targetY)
 {
 	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
 
@@ -276,24 +276,24 @@ void TGLEngine::DrawLine(DWORD color, float x, float y, float targetX, float tar
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawPolygone(float x, float y, float width, float height)
+void TGLEngine::DrawPolygone(int x, int y, int width, int height)
 {
 	glDisable(GL_TEXTURE_2D);
 
 	glLoadIdentity();
-	glTranslatef(x, y, 0.0f);
+	glTranslatef((GLfloat)x, (GLfloat)y, 0.0f);
 
 	glBegin(GL_TRIANGLE_STRIP);
-		glVertex2f(0.0f, height);
-		glVertex2f(width, height);
-		glVertex2f(0.0f, 0.0f);
-		glVertex2f(width, 0.0f);
+		glVertex2i(0, height);
+		glVertex2i(width, height);
+		glVertex2i(0, 0);
+		glVertex2i(width, 0);
 	glEnd();
 
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawPolygone(DWORD color, float x, float y, float width, float height)
+void TGLEngine::DrawPolygone(DWORD color, int x, int y, int width, int height)
 {
 	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
 

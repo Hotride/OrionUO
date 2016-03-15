@@ -147,6 +147,9 @@ public:
 	PMULTILINES_FONT_INFO GetInfoA(BYTE font, const char *str, int len, TEXT_ALIGN_TYPE align, WORD flags, int width);
 
 	//Сгенерировать текстуру текста
+	PDWORD GeneratePixelsA(BYTE &font, TTextTexture &th, const char *str, WORD &color, int &width, TEXT_ALIGN_TYPE &align, WORD &flags);
+
+	//Сгенерировать текстуру текста
 	bool GenerateA(BYTE font, TTextTexture &th, const char *str, WORD color = 0, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
 
 	//Отрисовать текст
@@ -178,6 +181,9 @@ public:
 
 	//Получить информацию о тексте (в мультистрочном виде)
 	PMULTILINES_FONT_INFO GetInfoW(BYTE font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, WORD flags, int width);
+
+	//Сгенерировать текстуру текста
+	PDWORD GeneratePixelsW(BYTE &font, TTextTexture &th, const wchar_t *str, WORD &color, BYTE &cell, int &width, TEXT_ALIGN_TYPE &align, WORD &flags);
 
 	//Сгенерировать текстуру текста
 	bool GenerateW(BYTE font, TTextTexture &th, const wchar_t *str, WORD color = 0, BYTE cell = 30, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);

@@ -72,7 +72,7 @@ void TSmoothMonitor::Draw()
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 
-		g_GL.DrawPolygone(0.0f, 0.0f, (GLfloat)g_ClientWidth, (GLfloat)g_ClientHeight);
+		g_GL.DrawPolygone(0, 0, g_ClientWidth, g_ClientHeight);
 
 		glDisable(GL_BLEND);
 	}

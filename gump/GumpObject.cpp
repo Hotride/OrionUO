@@ -103,7 +103,7 @@ void TGumpChecktrans::Draw(int &x, int &y, bool &transparent, bool pressed)
 	glStencilFunc(GL_ALWAYS, 1, 1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-	g_GL.DrawPolygone(0x01010101, (GLfloat)(x + m_X), (GLfloat)(y + m_Y), (GLfloat)m_Width, (GLfloat)m_Height);
+	g_GL.DrawPolygone(0x01010101, x + m_X, y + m_Y, m_Width, m_Height);
 
 	glColorMask(true, true, true, true);
 

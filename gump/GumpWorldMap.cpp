@@ -525,8 +525,8 @@ int TGumpWorldMap::Draw(bool &mode)
 		if (g_CurrentMap == map)
 		{
 			DWORD playerColor = 0x7F7F7F7F;
-			g_GL.DrawPolygone(playerColor, posX + offsetX + playerX + 0.0f, posY + offsetY + playerY + 30.0f, 16, 2);
-			g_GL.DrawPolygone(playerColor, posX + offsetX + playerX + 7.0f, posY + offsetY + playerY + 23.0f, 2, 16);
+			g_GL.DrawPolygone(playerColor, posX + offsetX + playerX + 0, posY + offsetY + playerY + 30, 16, 2);
+			g_GL.DrawPolygone(playerColor, posX + offsetX + playerX + 7, posY + offsetY + playerY + 23, 2, 16);
 			g_GL.DrawCircle(playerColor, posX + offsetX + 8.0f + playerX, posY + offsetY + 31.0f + playerY, 3.0f);
 		}
 
@@ -556,7 +556,7 @@ int TGumpWorldMap::Draw(bool &mode)
 				if (CanSelectedButton >= ID_GWM_LIST)
 				{
 					if (i + 1 == (CanSelectedButton - ID_GWM_LIST))
-						g_GL.DrawPolygone(0x7F7F7F7F, posX + 4.0f, (float)posY, 150.0f, 14.0f);
+						g_GL.DrawPolygone(0x7F7F7F7F, posX + 4, posY, 150, 14);
 				}
 
 				if (m_OpenedList == 1)

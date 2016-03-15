@@ -44,6 +44,7 @@
 #include <Shlwapi.h>
 #include "zlib.h"
 #include <Mmsystem.h>
+#include <process.h>
 
 #define _USE_MATH_DEFINES // for C++
 #include <math.h>

@@ -202,6 +202,7 @@ void TMapManager::ClearUnusedBlocks()
 		{
 			DWORD index = block->Index;
 			Delete(block);
+
 #if USE_BLOCK_MAP == 1
 			m_Blocks[index] = NULL;
 #endif
@@ -224,7 +225,7 @@ void TMapManager::Init()
 
 	m_MaxBlockIndex = g_MapBlockX[map] * g_MapBlockY[map];
 	m_Blocks = new TMapBlock*[m_MaxBlockIndex];
-	memset(&m_Blocks[0], 0, sizeof(TMapBlock*)* m_MaxBlockIndex);
+	memset(&m_Blocks[0], 0, sizeof(TMapBlock*) * m_MaxBlockIndex);
 #endif
 	
 	const int XY_Offset = 30; //70;
@@ -277,7 +278,7 @@ void TMapManager::LoadBlock(TMapBlock *block)
 		{
 			int pos = y * 8 + x;
 
-			TMapObject *obj = new TLandObject(pos, pmb->Cells[pos].TileID, 1, BX + x, BY + y, pmb->Cells[pos].Z);
+			TMapObject *obj = new TLandObject(pos, pmb->Cells[pos].TileID, 0, BX + x, BY + y, pmb->Cells[pos].Z);
 			block->AddObject(obj, x, y);
 		}
 	}

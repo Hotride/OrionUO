@@ -210,7 +210,7 @@ int TGumpMap::Draw(__in bool &mode)
 				int nextDrawX = posX + next->X + 20;
 				int nextDrawY = posY + next->Y + 30;
 
-				g_GL.DrawLine(lineColor[(int)(next == PinOnCursor || go == PinOnCursor)], drawX + 2.0f, drawY + 8.0f, (float)nextDrawX, (float)nextDrawY);
+				g_GL.DrawLine(lineColor[(int)(next == PinOnCursor || go == PinOnCursor)], drawX + 2, drawY + 8, nextDrawX, nextDrawY);
 				
 				if (PinOnCursor == NULL && CanSelectedButton >= ID_GM_PIN_LIST_INSERT && (CanSelectedButton - ID_GM_PIN_LIST_INSERT) == idx)
 				{
