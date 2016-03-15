@@ -3088,7 +3088,7 @@ PACKET_HANDLER(GraphicEffect)
 	DWORD color = 0;
 	DWORD renderMode = 0;
 
-	if (*buf == 0xC0) 
+	if (*buf == 0xC0)
 	{
 		color = ReadDWord();
 		renderMode = ReadDWord();
@@ -3110,7 +3110,7 @@ PACKET_HANDLER(GraphicEffect)
 	effect->DestX = destX;
 	effect->DestY = destY;
 	effect->DestZ = destZ;
-	effect->Speed = speed * 5;
+	effect->Speed = speed + 6;
 	effect->Duration = GetTickCount() + (duration * 50);
 	effect->FixedDirection = (fixedDirection != 0);
 	effect->Explode = (explode != 0);

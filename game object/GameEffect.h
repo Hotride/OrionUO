@@ -78,30 +78,18 @@ public:
 class TGameEffectMoving : public TGameEffect
 {
 private:
-	int m_DiffX;
-	int m_DiffY;
-	int m_DiffZ;
 	double m_CosA;
 	double m_SinA;
 	int m_OffsetX;
 	int m_OffsetY;
-	int m_OffsetZ;
-	int m_Step;
-	int m_Distance;
 public:
 	TGameEffectMoving();
 	virtual ~TGameEffectMoving();
 
-	SETGET(int, DiffX);
-	SETGET(int, DiffY);
-	SETGET(int, DiffZ);
 	SETGET(double, CosA);
 	SETGET(double, SinA);
 	SETGET(int, OffsetX);
 	SETGET(int, OffsetY);
-	SETGET(int, OffsetZ);
-	SETGET(int, Step);
-	SETGET(int, Distance);
 	
 	void Init();
 	void Update();

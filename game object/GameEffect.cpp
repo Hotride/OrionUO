@@ -63,7 +63,7 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		}
 		else if (LastChangeFrameTime < ticks)
 		{
-			LastChangeFrameTime = ticks + m_Speed;
+			LastChangeFrameTime = ticks + 50;
 
 			objGraphic = CalculateCurrentGraphic();
 		}
@@ -74,7 +74,6 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		{
 			int deX = drawX;
 			int deY = drawY;
-			int deZ = 0;
 
 			ApplyRenderMode();
 
@@ -84,13 +83,20 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 				deX += moving->OffsetX;
 				deY += moving->OffsetY;
-				deZ += moving->OffsetZ;
 
-				UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z + deZ);
+				if (moving->FixedDirection)
+					UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z);
+				else
+				{
+					//
+					UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z);
+				}
 			}
 			else
-				UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z + deZ);
+				UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z);
 
+			glColor4f(g_DrawColor, g_DrawColor, g_DrawColor, 1.0f);
+			glBlendEquation(GL_FUNC_ADD);
 			glDisable(GL_BLEND);
 		}
 	}
@@ -133,24 +139,14 @@ void TGameEffect::ApplyRenderMode()
 {
 	switch (m_RenderMode % 7)
 	{
-		case 0:
-		{
-			break;
-		}
-		case 1:
+		case 1: //ok
 		{
 			glEnable(GL_BLEND);
-
-			//glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
+			glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 			break;
 		}
-		case 2:
-		{
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE);
-			break;
-		}
-		case 3:
+		case 2: //ok
+		case 3: //ok
 		{
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE);
@@ -159,20 +155,21 @@ void TGameEffect::ApplyRenderMode()
 		case 4:
 		{
 			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE);
+			glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+			glColor4f(g_DrawColor, g_DrawColor, g_DrawColor, 0.1f);
 			break;
 		}
 		case 5:
 		{
 			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_COLOR, GL_SRC_ALPHA_SATURATE);
+			glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
 			break;
 		}
-		case 6:
+		case 6: //ok
 		{
 			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE);
-			//glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+			glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+			glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
 			break;
 		}
 		default:
@@ -181,8 +178,7 @@ void TGameEffect::ApplyRenderMode()
 }
 //---------------------------------------------------------------------------
 TGameEffectMoving::TGameEffectMoving()
-: TGameEffect(), m_DiffX(0), m_DiffY(0), m_DiffZ(0), m_CosA(0.0), m_SinA(0.0),
-m_OffsetX(0), m_OffsetY(0), m_OffsetZ(0), m_Step(0), m_Distance(0)
+: TGameEffect(), m_CosA(0.0), m_SinA(0.0), m_OffsetX(0), m_OffsetY(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -206,12 +202,12 @@ void TGameEffectMoving::Init()
 		}
 	}
 
-	m_DiffX = m_DestX - X;
-	m_DiffY = m_DestY - Y;
-	m_DiffZ = m_DestZ - Z;
+	int diffX = m_DestX - X;
+	int diffY = m_DestY - Y;
+	int diffZ = m_DestZ - Z;
 
-	int posX = (m_DiffX - m_DiffY) * 44;
-	int posY = (m_DiffX + m_DiffY) * 44 + m_DiffZ * 4;
+	int posX = (diffX - diffY) * 44;
+	int posY = (diffX + diffY) * 44 + diffZ * 4;
 	
 	double alpha = 0.0;
 	if (posX == 0)
@@ -232,18 +228,147 @@ void TGameEffectMoving::Init()
 	m_CosA = cos(alpha);
 	m_SinA = sin(alpha);
 
-	m_DiffZ = DestZ - Z;
-	m_Distance = (int)floor(sqrt(m_DiffX * m_DiffX + m_DiffY * m_DiffY)) * 2 + 1;                
-
-	m_Step = 0;
 	m_OffsetX = 0;
 	m_OffsetY = 0;
-	m_OffsetZ = 0;
 }
 //---------------------------------------------------------------------------
 void TGameEffectMoving::Update()
 {
-	if (m_Step == m_Distance + 1)
+	int cx = g_RenderBounds->GameWindowCenterX;
+	int cy = g_RenderBounds->GameWindowCenterY;
+
+	int ctx = g_Player->X;
+	int cty = g_Player->Y;
+
+	int offsetX = m_X - ctx;
+	int offsetY = m_Y - cty;
+
+	int drawX = cx + (offsetX - offsetY) * 22;
+	int drawY = cy + (offsetX + offsetY) * 22;
+
+	int realDrawX = drawX + m_OffsetX;
+	int realDrawY = drawY + m_OffsetY;
+
+	int offsetDestX = m_DestX - ctx;
+	int offsetDestY = m_DestY - cty;
+
+	int drawDestX = cx + (offsetDestX - offsetDestY) * 22;
+	int drawDestY = cy + (offsetDestX + offsetDestY) * 22;
+
+	int x = 0;
+
+	int deltaXY[2] = { abs(drawDestX - realDrawX), abs(drawDestY - realDrawY) };
+
+	if (deltaXY[0] < deltaXY[1])
+	{
+		x = 1;
+
+		int temp = deltaXY[0];
+
+		deltaXY[0] = deltaXY[1];
+		deltaXY[1] = temp;
+	}
+
+	if (deltaXY[0] == 0)
+		deltaXY[0] = 1;
+
+	double delta = deltaXY[1] / (double)deltaXY[0];
+	double stepXY = 0.0;
+
+	int step = m_Speed;
+	int tempXY[2] = { step, 0 };
+
+	for (int j = 0; j < step; j++)
+	{
+		stepXY += delta;
+
+		if (stepXY >= 0.5)
+		{
+			tempXY[1] += 1;
+
+			stepXY -= 1.0;
+		}
+	}
+
+	bool incX = (realDrawX < drawDestX);
+	bool incY = (realDrawY < drawDestY);
+
+	if (incX)
+	{
+		realDrawX += tempXY[x];
+
+		if (realDrawX > drawDestX)
+			realDrawX = drawDestX;
+	}
+	else
+	{
+		realDrawX -= tempXY[x];
+
+		if (realDrawX < drawDestX)
+			realDrawX = drawDestX;
+	}
+
+	if (incY)
+	{
+		realDrawY += tempXY[(x + 1) % 2];
+
+		if (realDrawY > drawDestY)
+			realDrawY = drawDestY;
+	}
+	else
+	{
+		realDrawY -= tempXY[(x + 1) % 2];
+
+		if (realDrawY < drawDestY)
+			realDrawY = drawDestY;
+	}
+
+	int ox = (realDrawX - cx) / 22;
+	int oy = (realDrawY - cy) / 22;
+
+	int dx = 0;
+	int dy = 0;
+
+	TileOffsetOnMonitorToXY(ox, oy, dx, dy);
+
+	int newX = ctx + dx;
+	int newY = cty + dy;
+
+	if (newX == m_DestX && newY == m_DestY)
+	{
+		if (m_Explode)
+		{
+			TGameObject *obj = World->FindWorldObject(m_Serial);
+
+			if (obj != NULL && obj->GetTopObject() != NULL)
+				EffectManager->CreateExplodeEffect(this);
+		}
+
+		EffectManager->RemoveEffect(this);
+	}
+	else
+	{
+		int newDrawX = cx + (dx - dy) * 22;
+		int newDrawY = cy + (dx + dy) * 22;
+
+		m_OffsetX = realDrawX - newDrawX;
+		m_OffsetY = realDrawY - newDrawY;
+
+		if (m_X != newX || m_Y != newY)
+		{
+			m_X = newX;
+			m_Y = newY;
+
+			if (m_Z < m_DestZ)
+				m_Z++;
+			else if (m_Z > m_DestZ)
+				m_Z--;
+
+			MapManager->AddRender(this);
+		}
+	}
+
+	/*if (m_Step == m_Distance + 1)
 	{
 		if (Explode)
 		{
@@ -281,7 +406,7 @@ void TGameEffectMoving::Update()
 
 			MapManager->AddRender(this);
 		}
-	}
+	}*/
 }
 //---------------------------------------------------------------------------
 TGameEffectDrag::TGameEffectDrag()

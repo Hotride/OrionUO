@@ -47,12 +47,13 @@ void TEffectManager::AddEffect(TGameEffect *effect)
 				TGameEffectMoving *moving = (TGameEffectMoving*)effect;
 				moving->Init();
 
-				if (moving->Distance <= 0)
+				if (moving->X == moving->DestX && moving->Y == moving->DestY)
 				{
 					if (moving->Explode && obj != NULL)
 						CreateExplodeEffect(moving);
 
 					delete effect;
+
 					return;
 				}
 			}
@@ -125,6 +126,7 @@ void TEffectManager::UpdateEffects()
 		if (effect->EffectType == EF_MOVING)
 		{
 			TGameObject *obj = World->FindWorldObject(effect->DestSerial);
+
 			if (obj != NULL)
 			{
 				obj = obj->GetTopObject();
@@ -137,8 +139,7 @@ void TEffectManager::UpdateEffects()
 				}
 			}
 
-			TGameEffectMoving *moving = (TGameEffectMoving*)effect;
-			moving->Update();
+			((TGameEffectMoving*)effect)->Update();
 		}
 
 		effect = next;

@@ -202,5 +202,6 @@ public:
 };
 //---------------------------------------------------------------------------
 extern TGameScreen *GameScreen;
+extern RENDER_VARIABLES_FOR_GAME_WINDOW *g_RenderBounds;
 //---------------------------------------------------------------------------
 #endif

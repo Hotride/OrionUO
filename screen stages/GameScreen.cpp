@@ -20,6 +20,7 @@
 #include "stdafx.h"
 
 TGameScreen *GameScreen = NULL;
+RENDER_VARIABLES_FOR_GAME_WINDOW *g_RenderBounds = NULL;
 //---------------------------------------------------------------------------
 TGameScreen::TGameScreen()
 : TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false),
@@ -31,6 +32,8 @@ m_RenderListInitalized(false), m_RenderListCount(0)
 
 	m_BufferRenderList = new RENDER_OBJECT_DATA[1000];
 	//memset(&m_BufferRenderList[0], 0, sizeof(RENDER_OBJECT_DATA) * 1000);
+
+	g_RenderBounds = &m_RenderBounds;
 }
 //---------------------------------------------------------------------------
 TGameScreen::~TGameScreen()
