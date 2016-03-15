@@ -578,13 +578,14 @@ void TDebugScreen::DrawColorsGump()
 	posX += 34;
 	posY += 34;
 
-	IFOR(y, 0, 10)
+
+	IFOR(x, 0, 20)
 	{
-		IFOR(x, 0, 20)
+		IFOR(y, 0, 10)
 		{
 			WORD color = startColor + (x * 5 + (y * 100));
 
-			DWORD clr = ColorManager->GetPolygoneColor(5 + (y / 2) + (y % 2), color);
+			DWORD clr = ColorManager->GetPolygoneColor(5 + (0.02*color), color);
 
 			g_GL.DrawPolygone(clr, posX + (x * cellWidthX), posY + (y * cellWidthY), cellWidthX, cellWidthY);
 		}
