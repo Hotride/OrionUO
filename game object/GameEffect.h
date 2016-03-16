@@ -71,42 +71,44 @@ public:
 	//Применение режима отображения
 	void ApplyRenderMode();
 
-	bool IsEffectObject() {return true;}
-};
-//--------------------------------------------------------------------------
-//Движущийся эффект
-class TGameEffectMoving : public TGameEffect
-{
-private:
-	double m_CosA;
-	double m_SinA;
-	int m_OffsetX;
-	int m_OffsetY;
-public:
-	TGameEffectMoving();
-	virtual ~TGameEffectMoving();
+	//Отмена режима отображения
+	void RemoveRenderMode();
 
-	SETGET(double, CosA);
-	SETGET(double, SinA);
-	SETGET(int, OffsetX);
-	SETGET(int, OffsetY);
-	
-	void Init();
-	void Update();
+	bool IsEffectObject() {return true;}
+
+	virtual void Update() {}
 };
 //--------------------------------------------------------------------------
 //Эффект перемещения предмета
 class TGameEffectDrag : public TGameEffect
 {
-private:
+//private:
+protected:
 	int m_OffsetX; //Смещение по оси X
 	int m_OffsetY; //Смещение по оси Y
 public:
 	TGameEffectDrag();
 	virtual ~TGameEffectDrag();
 
-	SETGETEX(int, OffsetX);
-	SETGETEX(int, OffsetY);
+	SETGET(int, OffsetX);
+	SETGET(int, OffsetY);
+
+	virtual void Update();
+};
+//--------------------------------------------------------------------------
+//Движущийся эффект
+class TGameEffectMoving : public TGameEffectDrag
+{
+//private:
+protected:
+	float m_Angle;
+public:
+	TGameEffectMoving();
+	virtual ~TGameEffectMoving();
+
+	SETGET(float, Angle);
+
+	virtual void Update();
 };
 //---------------------------------------------------------------------------
 #endif

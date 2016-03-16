@@ -73,45 +73,21 @@ int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 					deY -= (m_Z * 4);
 
-					double cosA = ((TEffectMoving*)this)->CosA;
-					double sinA = ((TEffectMoving*)this)->SinA;
+					int width = th->Width;
+					int heightDiv2 = th->Height / 2;
 
-					int posMinX = deX - (th->Width / 2);
-					int posMinY = deY - (th->Height + 44);
-					int posMaxX = posMinX + th->Width;
-					int posMaxY = posMinY + th->Height;
-
-					int mx = posMinX + (posMaxX - posMinX) / 2;
-					int my = posMinY + (posMaxY - posMinY) / 2;
-
-					int tmpX = posMinX - mx;
-					int tmpY = posMinY - my;
-					int x1 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
-					int y1 = my + (int)floor(tmpX * sinA + tmpY * cosA);
-
-					tmpX = posMaxX - mx;
-					tmpY = posMinY - my;
-					int x2 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
-					int y2 = my + (int)floor(tmpX * sinA + tmpY * cosA);
-
-					tmpX = posMaxX - mx;
-					tmpY = posMaxY - my;
-					int x3 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
-					int y3 = my + (int)floor(tmpX * sinA + tmpY * cosA);
-
-					tmpX = posMinX - mx;
-					tmpY = posMaxY - my;
-					int x4 = mx + (int)floor(tmpX * cosA - tmpY * sinA);
-					int y4 = my + (int)floor(tmpX * sinA + tmpY * cosA);
+					float angle = ((TEffectMoving*)this)->Angle;
 
 					glLoadIdentity();
-					glTranslatef((GLfloat)(deX - posMinX), (GLfloat)(deY - posMinY), 0.0f);
+					glTranslatef((GLfloat)deX, (GLfloat)(deY - heightDiv2), 0.0f);
 
-					glBegin(GL_QUADS);
-						glTexCoord2i(0, 0); glVertex2i(x1, y1);
-						glTexCoord2i(0, 1); glVertex2i(x2, y2);
-						glTexCoord2i(1, 1); glVertex2i(x3, y3);
-						glTexCoord2i(1, 0); glVertex2i(x4, y4);
+					glRotatef(angle, 0.0f, 0.0f, 1.0f);
+
+					glBegin(GL_TRIANGLE_STRIP);
+						glTexCoord2i(0, 1); glVertex2i(0, -heightDiv2);
+						glTexCoord2i(1, 1); glVertex2i(width, -heightDiv2);
+						glTexCoord2i(0, 0); glVertex2i(0, heightDiv2);
+						glTexCoord2i(1, 0); glVertex2i(width, heightDiv2);
 					glEnd();
 				}
 			}
@@ -158,76 +134,51 @@ void TEffect::ApplyRenderMode()
 {
 	switch (m_RenderMode % 7)
 	{
-		case 1:
+		case 1: //ok
+		{
 			glEnable(GL_BLEND);
-			//glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
+			glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 			break;
-		case 2:
+		}
+		case 2: //ok
+		case 3: //ok
+		{
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE);
 			break;
-		case 3:
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE);
-			break;
+		}
 		case 4:
+		{
 			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE);
+			glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+			glColor4f(g_DrawColor, g_DrawColor, g_DrawColor, 0.1f);
 			break;
+		}
 		case 5:
+		{
 			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_COLOR, GL_SRC_ALPHA_SATURATE);
+			glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
 			break;
-		case 6:
+		}
+		case 6: //ok
+		{
 			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE);
-			//glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
-			//glBlendEquation(GL_FUNC_ADD);
+			glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+			glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
 			break;
+		}
 		default:
 			break;
 	}
 }
 //---------------------------------------------------------------------------
 TEffectMoving::TEffectMoving()
-: TEffect(), m_CosA(0.0), m_SinA(0.0), m_OffsetX(0), m_OffsetY(0)
+: TEffect(), m_Angle(0.0f), m_OffsetX(0), m_OffsetY(0)
 {
 }
 //---------------------------------------------------------------------------
 TEffectMoving::~TEffectMoving()
 {
-}
-//---------------------------------------------------------------------------
-void TEffectMoving::Init()
-{
-	int diffX = m_DestX - m_X;
-	int diffY = m_DestY - m_Y;
-	int diffZ = m_DestZ - m_Z;
-
-	int posX = (diffX - diffY) * 44;
-	int posY = (diffX + diffY) * 44 + diffZ * 4;
-
-	double alpha = 0.0;
-	if (posX == 0)
-		alpha = M_PI / 2.0;
-	else
-		alpha = atan(posY / posX);
-
-	if (alpha < 0.0)
-		alpha += M_PI;
-
-	if ((posY > 0) || ((posX > 0) && (posY == 0)))
-		alpha += M_PI;
-
-	alpha -= (M_PI / 2.0);
-	if (alpha < 0)
-		alpha += (2.0 * M_PI);
-
-	m_CosA = cos(alpha);
-	m_SinA = sin(alpha);
-
-	m_OffsetX = 0;
-	m_OffsetY = 0;
 }
 //---------------------------------------------------------------------------
 void TEffectMoving::Update()
@@ -269,24 +220,21 @@ void TEffectMoving::Update()
 		deltaXY[1] = temp;
 	}
 
-	if (deltaXY[0] == 0)
-		deltaXY[0] = 1;
-
-	double delta = deltaXY[1] / (double)deltaXY[0];
-	double stepXY = 0.0;
+	int delta = deltaXY[0] / 2;
+	int stepXY = 0;
 
 	int step = m_Speed;
 	int tempXY[2] = { step, 0 };
 
 	for (int j = 0; j < step; j++)
 	{
-		stepXY += delta;
+		stepXY += deltaXY[1];
 
-		if (stepXY >= 0.5)
+		if (stepXY >= delta)
 		{
-			tempXY[1] += 1;
+			tempXY[1]++;
 
-			stepXY -= 1.0;
+			stepXY -= deltaXY[0];
 		}
 	}
 
@@ -336,6 +284,7 @@ void TEffectMoving::Update()
 
 	if (newX == m_DestX && newY == m_DestY)
 	{
+		m_Z = m_DestZ;
 	}
 	else
 	{
@@ -345,13 +294,18 @@ void TEffectMoving::Update()
 		m_OffsetX = realDrawX - newDrawX;
 		m_OffsetY = realDrawY - newDrawY;
 
-		m_X = newX;
-		m_Y = newY;
+		if (m_X != newX || m_Y != newY)
+		{
+			m_Angle = 180.0f + ((float)atan2(drawDestY - (newDrawY + m_OffsetY), drawDestX - (newDrawX + m_OffsetX)) * 57.295780f); //180.0f / M_PI = 57.295780f
 
-		if (m_Z < m_DestZ)
-			m_Z++;
-		else if (m_Z > m_DestZ)
-			m_Z--;
+			m_X = newX;
+			m_Y = newY;
+
+			if (m_Z < m_DestZ)
+				m_Z++;
+			else if (m_Z > m_DestZ)
+				m_Z--;
+		}
 	}
 }
 
@@ -376,9 +330,8 @@ TDebugScreen::TDebugScreen()
 	ef->DestY = 0;
 	ef->DestZ = 0;
 	//ef->RenderMode = 3;
-	ef->FixedDirection = true;
-
-	ef->Init();
+	ef->FixedDirection = false;
+	ef->Update();
 
 	effect = ef;
 }
@@ -481,11 +434,6 @@ int TDebugScreen::Render(bool mode)
 			return 0;
 
 		ColorizerShader->Use();
-
-		/*WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_DS_QUIT); //X gump /lighted
-		if (CanPressedButton == ID_DS_QUIT)
-			GumpID = 0x158B; //X gump (pressed)
-		UO->DrawGump(GumpID, 0x21, 555, 4);*/
 
 		WORD GumpID = 0x15A4 + (int)(CanSelectedButton == ID_DS_GO_SCREEN_MAIN); //> gump / lighted
 		if (CanPressedButton == ID_DS_GO_SCREEN_MAIN)
@@ -602,7 +550,7 @@ void TDebugScreen::OnLeftMouseUp()
 
 	effect->X = 10;
 	effect->Y = 10;
-	if (!(rand() % 5))
+	if (!(rand() % 15))
 		effect->Z = 20;
 
 	int cx = 320;
@@ -622,7 +570,7 @@ void TDebugScreen::OnLeftMouseUp()
 	effect->DestX = 10 + dx;
 	effect->DestY = 10 + dy;
 
-	effect->Init();
+	effect->Update();
 
 	if (g_LastSelectedObject == 0 || g_LastSelectedObject != g_LastObjectLeftMouseDown)
 	{

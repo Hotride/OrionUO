@@ -45,7 +45,6 @@ void TEffectManager::AddEffect(TGameEffect *effect)
 				}
 
 				TGameEffectMoving *moving = (TGameEffectMoving*)effect;
-				moving->Init();
 
 				if (moving->X == moving->DestX && moving->Y == moving->DestY)
 				{
@@ -58,7 +57,17 @@ void TEffectManager::AddEffect(TGameEffect *effect)
 				}
 			}
 
+			effect->Update();
+
+			if (effect->EffectType != EF_STAY_AT_POS)
+			{
+				TGameEffectDrag *effectDrag = (TGameEffectDrag*)effect;
+				effectDrag->OffsetX = 0;
+				effectDrag->OffsetY = 0;
+			}
+
 			Add(effect);
+
 			MapManager->AddRender(effect);
 
 			break;
@@ -117,30 +126,11 @@ void TEffectManager::CreateExplodeEffect(TGameEffect *effect)
 //---------------------------------------------------------------------------
 void TEffectManager::UpdateEffects()
 {
-	TGameEffect *effect = (TGameEffect*)m_Items;
-
-	while (effect != NULL)
+	for (TGameEffect *effect = (TGameEffect*)m_Items; effect != NULL;)
 	{
 		TGameEffect *next = (TGameEffect*)effect->m_Next;
 
-		if (effect->EffectType == EF_MOVING)
-		{
-			TGameObject *obj = World->FindWorldObject(effect->DestSerial);
-
-			if (obj != NULL)
-			{
-				obj = obj->GetTopObject();
-
-				if (obj != NULL)
-				{
-					effect->DestX = obj->X;
-					effect->DestY = obj->Y;
-					effect->DestZ = obj->Z;
-				}
-			}
-
-			((TGameEffectMoving*)effect)->Update();
-		}
+		effect->Update();
 
 		effect = next;
 	}

@@ -23,6 +23,8 @@
 #pragma once
 #include "resource.h"
 //---------------------------------------------------------------------------
+#define IDT_UPDATE_MOUSE_TIMER		666
+//---------------------------------------------------------------------------
 //Основной класс
 class TUltimaOnline : public IUltimaOnline
 {

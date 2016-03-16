@@ -376,6 +376,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 			break;
 		}
+		case WM_TIMER:
+		{
+			if (wParam == IDT_UPDATE_MOUSE_TIMER)
+				MouseManager.UpdateMouse();
+
+			break;
+		}
 		default:
 			break;
 	}
@@ -383,46 +390,41 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 //---------------------------------------------------------------------------
-ATOM MyRegisterClass()
-{
-	WNDCLASSEX wcex;
-
-	wcex.cbSize = sizeof(WNDCLASSEX);
-
-	wcex.style			= CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc	= WindowProc;
-	wcex.cbClsExtra		= 0;
-	wcex.cbWndExtra		= 0;
-	wcex.hInstance		= g_Hinstance;
-	wcex.hIcon			= LoadIcon(g_Hinstance, MAKEINTRESOURCE(IDI_CLIENTUO));
-	//wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
-	wcex.hCursor		= LoadCursor(g_Hinstance, MAKEINTRESOURCE(IDC_CURSOR1));
-	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName	= NULL;
-	wcex.lpszClassName	= L"Ultima Online";
-	wcex.hIconSm		= LoadIcon(g_Hinstance, MAKEINTRESOURCE(IDI_CLIENTUO));
-
-	return RegisterClassEx(&wcex);
-}
-//---------------------------------------------------------------------------
 BOOL InitInstance(int nCmdShow)
 {
-	int WinWidth = GetSystemMetrics(SM_CXSCREEN);
+	WNDCLASSEX wcex = { 0 };
+	wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WindowProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = g_Hinstance;
+	//wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcex.hCursor = LoadCursor(g_Hinstance, MAKEINTRESOURCE(IDC_CURSOR1));
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = NULL;
+	wcex.lpszClassName = L"Ultima Online";
+	wcex.hIcon = LoadIcon(g_Hinstance, MAKEINTRESOURCE(IDI_CLIENTUO));
+	wcex.hIconSm = LoadIcon(g_Hinstance, MAKEINTRESOURCE(IDI_CLIENTUO));
 
-	if (WinWidth > 640)
-		WinWidth = 640;
+	RegisterClassEx(&wcex);
 
-	WinWidth += (2 * GetSystemMetrics(SM_CXSIZEFRAME));
+	int winWidth = GetSystemMetrics(SM_CXSCREEN);
 
-	int WinHeight = GetSystemMetrics(SM_CYSCREEN);
+	if (winWidth > 640)
+		winWidth = 640;
 
-	if (WinHeight > 480)
-		WinHeight = 480;
+	winWidth += (2 * GetSystemMetrics(SM_CXSIZEFRAME));
 
-	WinHeight += (GetSystemMetrics(SM_CYCAPTION) + (GetSystemMetrics(SM_CYFRAME) * 2));
+	int winHeight = GetSystemMetrics(SM_CYSCREEN);
+
+	if (winHeight > 480)
+		winHeight = 480;
+
+	winHeight += (GetSystemMetrics(SM_CYCAPTION) + (GetSystemMetrics(SM_CYFRAME) * 2));
 
 	g_hWnd = CreateWindowEx(WS_EX_WINDOWEDGE, L"Ultima Online", L"Ultima Online", WS_OVERLAPPEDWINDOW,
-		0, 0, WinWidth, WinHeight, NULL, NULL, g_Hinstance, NULL);
+		0, 0, winWidth, winHeight, NULL, NULL, g_Hinstance, NULL);
 
 	if (!g_hWnd)
 		return FALSE;
@@ -465,6 +467,8 @@ BOOL InitInstance(int nCmdShow)
 		return FALSE;
 	}
 	
+	SetTimer(g_hWnd, IDT_UPDATE_MOUSE_TIMER, 1, NULL);
+
 	ShowWindow(g_hWnd, nCmdShow);
 	UpdateWindow(g_hWnd);
 	
@@ -477,32 +481,23 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 {
 	g_Hinstance = hInstance;
 
-	MyRegisterClass();
-
 	if (!InitInstance(nCmdShow))
 		return FALSE;
 
-	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENTUO));
-
-	MSG msg = {0};
+	MSG msg = { 0 };
 
 	while (msg.message != WM_QUIT)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			TranslateAccelerator(msg.hwnd, hAccelTable, &msg);
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		
-		Sleep(1);
+		else
+			Sleep(1);
 		
 		if (UO != NULL)
-		{
-			MouseManager.UpdateMouse();
-
 			UO->Process();
-		}
 	}
 	
 	return (int)msg.wParam;
@@ -521,6 +516,8 @@ m_UsedLightList(NULL)
 //---------------------------------------------------------------------------
 TUltimaOnline::~TUltimaOnline()
 {
+	KillTimer(g_hWnd, IDT_UPDATE_MOUSE_TIMER);
+
 	if (MainScreen != NULL)
 		MainScreen->SaveGlobalConfig();
 

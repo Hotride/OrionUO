@@ -50,15 +50,9 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				EffectManager->RemoveEffect(this);
 			else
 			{
-				TGameEffectDrag *ed = (TGameEffectDrag*)this;
+				TGameEffectDrag *dragEffect = (TGameEffectDrag*)this;
 
-				int deX = drawX - ed->OffsetX;
-				int deY = drawY - ed->OffsetY;
-
-				UO->DrawStaticArt(m_Graphic, m_Color, deX, deY, m_Z);
-
-				ed->AddOffsetX(10);
-				ed->AddOffsetY(10);
+				UO->DrawStaticArt(m_Graphic, m_Color, drawX - dragEffect->OffsetX, drawY - dragEffect->OffsetY, m_Z);
 			}
 		}
 		else if (LastChangeFrameTime < ticks)
@@ -72,8 +66,8 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 		if (objGraphic)
 		{
-			int deX = drawX;
-			int deY = drawY;
+			int drawEffectX = drawX;
+			int drawEffectY = drawY;
 
 			ApplyRenderMode();
 
@@ -81,23 +75,42 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 			{
 				TGameEffectMoving *moving = (TGameEffectMoving*)this;
 
-				deX += moving->OffsetX;
-				deY += moving->OffsetY;
+				drawEffectX += moving->OffsetX;
+				drawEffectY += moving->OffsetY;
 
 				if (moving->FixedDirection)
-					UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z);
+					UO->DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);
 				else
 				{
-					//
-					UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z);
+					TTextureObject *th = UO->ExecuteStaticArt(objGraphic);
+
+					if (th != NULL)
+					{
+						glBindTexture(GL_TEXTURE_2D, th->Texture);
+
+						drawEffectY -= (m_Z * 4);
+
+						int width = th->Width;
+						int heightDiv2 = th->Height / 2;
+
+						glLoadIdentity();
+						glTranslatef((GLfloat)drawEffectX, (GLfloat)(drawEffectY - heightDiv2), 0.0f);
+
+						glRotatef(moving->Angle, 0.0f, 0.0f, 1.0f);
+
+						glBegin(GL_TRIANGLE_STRIP);
+							glTexCoord2i(0, 1); glVertex2i(0, -heightDiv2);
+							glTexCoord2i(1, 1); glVertex2i(width, -heightDiv2);
+							glTexCoord2i(0, 0); glVertex2i(0, heightDiv2);
+							glTexCoord2i(1, 0); glVertex2i(width, heightDiv2);
+						glEnd();
+					}
 				}
 			}
 			else
-				UO->DrawStaticArt(objGraphic, m_Color, deX, deY, m_Z);
+				UO->DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);
 
-			glColor4f(g_DrawColor, g_DrawColor, g_DrawColor, 1.0f);
-			glBlendEquation(GL_FUNC_ADD);
-			glDisable(GL_BLEND);
+			RemoveRenderMode();
 		}
 	}
 
@@ -137,7 +150,7 @@ WORD TGameEffect::GetCurrentGraphic()
 //---------------------------------------------------------------------------
 void TGameEffect::ApplyRenderMode()
 {
-	switch (m_RenderMode % 7)
+	switch (m_RenderMode)
 	{
 		case 1: //ok
 		{
@@ -177,8 +190,60 @@ void TGameEffect::ApplyRenderMode()
 	}
 }
 //---------------------------------------------------------------------------
+void TGameEffect::RemoveRenderMode()
+{
+	switch (m_RenderMode)
+	{
+		case 1: //ok
+		case 2: //ok
+		case 3: //ok
+		{
+			glDisable(GL_BLEND);
+			break;
+		}
+		case 4:
+		{
+			glDisable(GL_BLEND);
+			glColor4f(g_DrawColor, g_DrawColor, g_DrawColor, 1.0f);
+			break;
+		}
+		case 5:
+		{
+			glDisable(GL_BLEND);
+			break;
+		}
+		case 6: //ok
+		{
+			glDisable(GL_BLEND);
+			glBlendEquation(GL_FUNC_ADD);
+			break;
+		}
+		default:
+			break;
+	}
+}
+//---------------------------------------------------------------------------
+//------------------------------TGameEffectDrag------------------------------
+//---------------------------------------------------------------------------
+TGameEffectDrag::TGameEffectDrag()
+: TGameEffect(), m_OffsetX(0), m_OffsetY(0)
+{
+}
+//---------------------------------------------------------------------------
+TGameEffectDrag::~TGameEffectDrag()
+{
+}
+//---------------------------------------------------------------------------
+void TGameEffectDrag::Update()
+{
+	m_OffsetX += 10;
+	m_OffsetY += 10;
+}
+//---------------------------------------------------------------------------
+//-----------------------------TGameEffectMoving-----------------------------
+//---------------------------------------------------------------------------
 TGameEffectMoving::TGameEffectMoving()
-: TGameEffect(), m_CosA(0.0), m_SinA(0.0), m_OffsetX(0), m_OffsetY(0)
+: TGameEffectDrag(), m_Angle(0.0f)
 {
 }
 //---------------------------------------------------------------------------
@@ -186,14 +251,14 @@ TGameEffectMoving::~TGameEffectMoving()
 {
 }
 //---------------------------------------------------------------------------
-void TGameEffectMoving::Init()
+void TGameEffectMoving::Update()
 {
-	TGameObject *obj = World->FindWorldObject(DestSerial);
+	TGameObject *obj = World->FindWorldObject(m_DestSerial);
 
 	if (obj != NULL)
 	{
 		obj = obj->GetTopObject();
-				
+
 		if (obj != NULL)
 		{
 			m_DestX = obj->X;
@@ -202,62 +267,30 @@ void TGameEffectMoving::Init()
 		}
 	}
 
-	int diffX = m_DestX - X;
-	int diffY = m_DestY - Y;
-	int diffZ = m_DestZ - Z;
+	int screenCenterX = g_RenderBounds->GameWindowCenterX;
+	int screenCenterY = g_RenderBounds->GameWindowCenterY;
 
-	int posX = (diffX - diffY) * 44;
-	int posY = (diffX + diffY) * 44 + diffZ * 4;
-	
-	double alpha = 0.0;
-	if (posX == 0)
-		alpha = M_PI / 2.0;
-	else
-		alpha = atan(posY / posX);
-	
-	if (alpha < 0.0)
-		alpha += M_PI;
+	int playerX = g_Player->X;
+	int playerY = g_Player->Y;
 
-	if ((posY > 0) || ((posX > 0) && (posY == 0)))
-		alpha += M_PI;
+	int offsetX = m_X - playerX;
+	int offsetY = m_Y - playerY;
 
-	alpha -= (M_PI / 2.0);
-	if (alpha < 0)
-		alpha += (2.0 * M_PI);
-	
-	m_CosA = cos(alpha);
-	m_SinA = sin(alpha);
-
-	m_OffsetX = 0;
-	m_OffsetY = 0;
-}
-//---------------------------------------------------------------------------
-void TGameEffectMoving::Update()
-{
-	int cx = g_RenderBounds->GameWindowCenterX;
-	int cy = g_RenderBounds->GameWindowCenterY;
-
-	int ctx = g_Player->X;
-	int cty = g_Player->Y;
-
-	int offsetX = m_X - ctx;
-	int offsetY = m_Y - cty;
-
-	int drawX = cx + (offsetX - offsetY) * 22;
-	int drawY = cy + (offsetX + offsetY) * 22;
+	int drawX = screenCenterX + (offsetX - offsetY) * 22;
+	int drawY = screenCenterY + (offsetX + offsetY) * 22;
 
 	int realDrawX = drawX + m_OffsetX;
 	int realDrawY = drawY + m_OffsetY;
 
-	int offsetDestX = m_DestX - ctx;
-	int offsetDestY = m_DestY - cty;
+	int offsetDestX = m_DestX - playerX;
+	int offsetDestY = m_DestY - playerY;
 
-	int drawDestX = cx + (offsetDestX - offsetDestY) * 22;
-	int drawDestY = cy + (offsetDestX + offsetDestY) * 22;
-
-	int x = 0;
+	int drawDestX = screenCenterX + (offsetDestX - offsetDestY) * 22;
+	int drawDestY = screenCenterY + (offsetDestX + offsetDestY) * 22;
 
 	int deltaXY[2] = { abs(drawDestX - realDrawX), abs(drawDestY - realDrawY) };
+
+	int x = 0;
 
 	if (deltaXY[0] < deltaXY[1])
 	{
@@ -269,31 +302,23 @@ void TGameEffectMoving::Update()
 		deltaXY[1] = temp;
 	}
 
-	if (deltaXY[0] == 0)
-		deltaXY[0] = 1;
+	int delta = deltaXY[0];
+	int stepXY = 0;
+	int tempXY[2] = { m_Speed, 0 };
 
-	double delta = deltaXY[1] / (double)deltaXY[0];
-	double stepXY = 0.0;
-
-	int step = m_Speed;
-	int tempXY[2] = { step, 0 };
-
-	for (int j = 0; j < step; j++)
+	for (int j = 0; j < m_Speed; j++)
 	{
-		stepXY += delta;
+		stepXY += deltaXY[1];
 
-		if (stepXY >= 0.5)
+		if (stepXY >= delta)
 		{
-			tempXY[1] += 1;
+			tempXY[1]++;
 
-			stepXY -= 1.0;
+			stepXY -= deltaXY[0];
 		}
 	}
 
-	bool incX = (realDrawX < drawDestX);
-	bool incY = (realDrawY < drawDestY);
-
-	if (incX)
+	if (realDrawX < drawDestX)
 	{
 		realDrawX += tempXY[x];
 
@@ -308,7 +333,7 @@ void TGameEffectMoving::Update()
 			realDrawX = drawDestX;
 	}
 
-	if (incY)
+	if (realDrawY < drawDestY)
 	{
 		realDrawY += tempXY[(x + 1) % 2];
 
@@ -323,16 +348,16 @@ void TGameEffectMoving::Update()
 			realDrawY = drawDestY;
 	}
 
-	int ox = (realDrawX - cx) / 22;
-	int oy = (realDrawY - cy) / 22;
+	int newOffsetX = (realDrawX - screenCenterX) / 22;
+	int newOffsetY = (realDrawY - screenCenterY) / 22;
 
-	int dx = 0;
-	int dy = 0;
+	int newCoordX = 0;
+	int newCoordY = 0;
 
-	TileOffsetOnMonitorToXY(ox, oy, dx, dy);
+	TileOffsetOnMonitorToXY(newOffsetX, newOffsetY, newCoordX, newCoordY);
 
-	int newX = ctx + dx;
-	int newY = cty + dy;
+	int newX = playerX + newCoordX;
+	int newY = playerY + newCoordY;
 
 	if (newX == m_DestX && newY == m_DestY)
 	{
@@ -341,21 +366,26 @@ void TGameEffectMoving::Update()
 			TGameObject *obj = World->FindWorldObject(m_Serial);
 
 			if (obj != NULL && obj->GetTopObject() != NULL)
+			{
+				m_Z = m_DestZ;
 				EffectManager->CreateExplodeEffect(this);
+			}
 		}
 
 		EffectManager->RemoveEffect(this);
 	}
 	else
 	{
-		int newDrawX = cx + (dx - dy) * 22;
-		int newDrawY = cy + (dx + dy) * 22;
+		int newDrawX = screenCenterX + (newCoordX - newCoordY) * 22;
+		int newDrawY = screenCenterY + (newCoordX + newCoordY) * 22;
 
 		m_OffsetX = realDrawX - newDrawX;
 		m_OffsetY = realDrawY - newDrawY;
 
 		if (m_X != newX || m_Y != newY)
 		{
+			m_Angle = 180.0f + (float)(atan2(drawDestY - (newDrawY + m_OffsetY), drawDestX - (newDrawX + m_OffsetX)) * 57.295780); //180.0f / M_PI = 57.295780f
+
 			m_X = newX;
 			m_Y = newY;
 
@@ -367,54 +397,5 @@ void TGameEffectMoving::Update()
 			MapManager->AddRender(this);
 		}
 	}
-
-	/*if (m_Step == m_Distance + 1)
-	{
-		if (Explode)
-		{
-			TGameObject *obj = World->FindWorldObject(m_Serial);
-
-			if (obj != NULL && obj->GetTopObject() != NULL)
-				EffectManager->CreateExplodeEffect(this);
-		}
-
-		EffectManager->RemoveEffect(this);
-	}
-	else
-	{
-		int oldX = m_X;
-		int oldY = m_Y;
-		int oldZ = m_Z;
-
-		int newX = oldX + (int)(m_DiffX * m_Step / m_Distance);
-		int newY = oldY + (int)(m_DiffY * m_Step / m_Distance);
-		int newZ = oldZ + (int)(m_DiffZ * m_Step / m_Distance);
-
-		m_OffsetX = (int)floor((m_DiffX - m_DiffY) * 22 * m_Step / m_Distance);
-		m_OffsetY = (int)floor((m_DiffX + m_DiffY) * 22 * m_Step / m_Distance);
-		m_OffsetZ = (int)floor(m_DiffZ * 4 * m_Step / m_Distance);
-
-		m_Step++;
-
-		if (oldX != newX || oldY != newY || oldZ != newZ)
-		{
-			m_X = newX;
-			m_Y = newY;
-			m_Z = newZ;
-
-			Init();
-
-			MapManager->AddRender(this);
-		}
-	}*/
-}
-//---------------------------------------------------------------------------
-TGameEffectDrag::TGameEffectDrag()
-: TGameEffect(), m_OffsetX(0), m_OffsetY(0)
-{
-}
-//---------------------------------------------------------------------------
-TGameEffectDrag::~TGameEffectDrag()
-{
 }
 //---------------------------------------------------------------------------

@@ -71,20 +71,17 @@ public:
 class TEffectMoving : public TEffect
 {
 private:
-	double m_CosA;
-	double m_SinA;
+	float m_Angle;
 	int m_OffsetX;
 	int m_OffsetY;
 public:
 	TEffectMoving();
 	virtual ~TEffectMoving();
 
-	SETGET(double, CosA);
-	SETGET(double, SinA);
+	SETGET(float, Angle);
 	SETGET(int, OffsetX);
 	SETGET(int, OffsetY);
 
-	void Init();
 	void Update();
 };
 //---------------------------------------------------------------------------

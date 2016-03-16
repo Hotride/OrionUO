@@ -3091,7 +3091,7 @@ PACKET_HANDLER(GraphicEffect)
 	if (*buf == 0xC0)
 	{
 		color = ReadDWord();
-		renderMode = ReadDWord();
+		renderMode = ReadDWord() % 7;
 	}
 
 	TGameEffect *effect = NULL;
