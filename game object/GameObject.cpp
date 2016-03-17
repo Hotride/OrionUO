@@ -24,6 +24,8 @@ TGameObject::TGameObject(DWORD serial)
 m_MapIndex(0), m_Count(0), m_Flags(0), m_Name(""), m_NPC(false), m_Clicked(false),
 m_Effects(NULL), m_AnimIndex(0), m_LastAnimationChangeTime(GetTickCount())
 {
+	memset(&m_TextureObjectHalndes, 0, sizeof(TTextureObject));
+
 #if UO_DEBUG_INFO!=0
 	g_GameObjectsCount++;
 #endif //UO_DEBUG_INFO!=0
@@ -39,12 +41,119 @@ TGameObject::~TGameObject()
 	
 	m_Next = NULL;
 	m_Prev = NULL;
-	
+
+	if (m_TextureObjectHalndes.Texture != NULL)
+	{
+		glDeleteTextures(1, &m_TextureObjectHalndes.Texture);
+		m_TextureObjectHalndes.Texture = NULL;
+	}
+
 	Clear();
 
 #if UO_DEBUG_INFO!=0
 	g_GameObjectsCount--;
 #endif //UO_DEBUG_INFO!=0
+}
+//---------------------------------------------------------------------------
+void TGameObject::DrawObjectHandlesTexture(int &x, int &y)
+{
+	if (m_TextureObjectHalndes.Texture == NULL)
+	{
+		if (m_NPC || IsCorpse())
+			GenerateObjectHandlesTexture(ToWString(m_Name));
+		else
+			GenerateObjectHandlesTexture(ClilocManager->Cliloc(g_Language)->GetW(102000 + m_Graphic, m_Name));
+	}
+
+	if (m_TextureObjectHalndes.Texture != NULL)
+		g_GL.Draw(m_TextureObjectHalndes.Texture, x, y, m_TextureObjectHalndes.Width, m_TextureObjectHalndes.Height);
+}
+//---------------------------------------------------------------------------
+void TGameObject::GenerateObjectHandlesTexture(wstring text)
+{
+	//m_TextureObjectHalndes.Clear();
+
+	//FontManager->GenerateW(1, m_TextureObjectHalndes, text.c_str(), 0, 30, 120, TS_LEFT, UOFONT_CROPPED);
+
+	if (m_TextureObjectHalndes.Texture != NULL)
+	{
+		glDeleteTextures(1, &m_TextureObjectHalndes.Texture);
+		m_TextureObjectHalndes.Texture = NULL;
+	}
+
+	WORD gumpID = 0x098E;
+	TIndexObject *io = UO->GetGumpPointer(gumpID);
+
+	if (io == NULL)
+		return;
+
+	int gumpWidth = io->Width;
+	int gumpHeight = io->Height;
+
+	int width = gumpWidth - 20;
+
+	if (width < 30)
+		return;
+
+	BYTE font = 1;
+	TTextTexture textTexture;
+	memset(&textTexture, 0, sizeof(TTextTexture));
+	WORD color = 0;
+	BYTE cell = 30;
+	TEXT_ALIGN_TYPE tat = TS_LEFT;
+	WORD flags = UOFONT_FIXED;
+
+	PDWORD textData = FontManager->GeneratePixelsW(font, textTexture, text.c_str(), color, cell, width, tat, flags);
+
+	if (textData == NULL)
+		return;
+
+	color = 0;
+
+	if (m_NPC)
+		color = ConfigManager.GetColorByNotoriety(((TGameCharacter*)this)->Notoriety);
+
+	WORD oldColor = io->Color;
+	io->Color = color;
+
+	PWORD data = MulReader.GetGumpPixels(*io);
+
+	io->Color = oldColor;
+
+	if (data == NULL)
+	{
+		delete textData;
+
+		return;
+	}
+
+	int maxHeight = textTexture.Height;
+
+	IFOR(x, 0, width)
+	{
+		int gumpDataX = x + 10;
+
+		if (gumpDataX >= gumpWidth)
+			break;
+
+		IFOR(y, 0, maxHeight)
+		{
+			int gumpDataY = y + 6;
+
+			if (gumpDataY >= gumpHeight)
+				break;
+
+			if (textData[(y * textTexture.Width) + x])
+				data[(gumpDataY * gumpWidth) + gumpDataX] = ColorManager->Color32To16(textData[(y * textTexture.Width) + x]) | 0x8000;
+		}
+	}
+
+	m_TextureObjectHalndes.Width = gumpWidth;
+	m_TextureObjectHalndes.Height = gumpHeight;
+	g_GL.BindTexture16(m_TextureObjectHalndes.Texture, gumpWidth, gumpHeight, data);
+
+	delete data;
+	delete textData;
 }
 //---------------------------------------------------------------------------
 void TGameObject::AddText(TTextData *msg)
@@ -123,7 +232,7 @@ WORD TGameObject::GetDrawGraphic(bool &doubleDraw)
 		result = graphicAccociateTable[index - 1][graphicIndex];
 	}
 	else
-		doubleDraw = IsStackable();
+		doubleDraw = IsStackable() && (m_Count > 1);
 
 	return result;
 }

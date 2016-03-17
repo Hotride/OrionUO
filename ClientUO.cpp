@@ -467,7 +467,7 @@ BOOL InitInstance(int nCmdShow)
 		return FALSE;
 	}
 	
-	SetTimer(g_hWnd, IDT_UPDATE_MOUSE_TIMER, 1, NULL);
+	SetTimer(g_hWnd, IDT_UPDATE_MOUSE_TIMER, 50, NULL);
 
 	ShowWindow(g_hWnd, nCmdShow);
 	UpdateWindow(g_hWnd);
@@ -497,7 +497,11 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 			Sleep(1);
 		
 		if (UO != NULL)
+		{
+			MouseManager.UpdateMouse();
+
 			UO->Process();
+		}
 	}
 	
 	return (int)msg.wParam;

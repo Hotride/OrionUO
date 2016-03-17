@@ -25,7 +25,8 @@ RENDER_VARIABLES_FOR_GAME_WINDOW *g_RenderBounds = NULL;
 TGameScreen::TGameScreen()
 : TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false),
 m_UseLight(false), m_MaxDrawZ(0), m_RenderListSize(1000),
-m_RenderListInitalized(false), m_RenderListCount(0)
+m_RenderListInitalized(false), m_RenderListCount(0),
+m_ObjectHandlesCount(0)
 {
 	m_RenderList = new RENDER_OBJECT_DATA[1000];
 	//memset(&m_RenderList[0], 0, sizeof(RENDER_OBJECT_DATA) * 1000);
@@ -34,6 +35,8 @@ m_RenderListInitalized(false), m_RenderListCount(0)
 	//memset(&m_BufferRenderList[0], 0, sizeof(RENDER_OBJECT_DATA) * 1000);
 
 	g_RenderBounds = &m_RenderBounds;
+
+	memset(&m_ObjectHandlesList[0], 0, sizeof(OBJECT_HANDLES_DATA) * MAX_OBJECT_HANDLES);
 }
 //---------------------------------------------------------------------------
 TGameScreen::~TGameScreen()
@@ -270,6 +273,7 @@ void TGameScreen::CalculateRenderList()
 	if (g_FoliageIndex >= 100)
 		g_FoliageIndex = 1;
 
+	m_ObjectHandlesCount = 0;
 	m_RenderListCount = 0;
 	//vector<int> zList;
 
@@ -371,6 +375,18 @@ void TGameScreen::CalculateRenderList()
 								if (canAddZ)
 									zList.push_back(z);
 							}*/
+
+
+							if (!((TGameObject*)obj)->Locked() && !g_GrayedPixels && ConfigManager.ObjectHandles && g_ShiftPressed && g_CtrlPressed) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
+							{
+								int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
+
+								m_ObjectHandlesList[index].Obj = (TGameObject*)obj;
+								m_ObjectHandlesList[index].X = drawX;
+								m_ObjectHandlesList[index].Y = drawY;
+
+								m_ObjectHandlesCount++;
+							}
 						}
 						else if (obj->IsFoliage() && ((TRenderStaticObject*)obj)->FoliageTransparentIndex != g_FoliageIndex)
 						{
@@ -395,6 +411,9 @@ void TGameScreen::CalculateRenderList()
 			}
 		}
 	}
+
+	if (m_ObjectHandlesCount > MAX_OBJECT_HANDLES)
+		m_ObjectHandlesCount = MAX_OBJECT_HANDLES;
 
 	if (m_RenderListCount)
 	{
@@ -907,7 +926,7 @@ void TGameScreen::DrawGameWindow(bool &mode)
 		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 
 		AnimationManager->ShadowCount = 0;
-		bool useGrayObjects = ConfigManager.GrayOutOfRangeObjects;
+		//bool useGrayObjects = ConfigManager.GrayOutOfRangeObjects;
 
 		if (ConfigManager.UseCircleTrans)
 		{
@@ -959,34 +978,19 @@ void TGameScreen::DrawGameWindow(bool &mode)
 		}
 	}
 
-	/*if (ConfigManager.ObjectHandles && g_ShiftPressed && g_CtrlPressed)
+	if (mode)
 	{
-		if (mode)
+		UnuseShader();
+
+		IFOR(i, 0, m_ObjectHandlesCount)
 		{
-			IFOR(i, 0, m_RenderListCount)
-			{
-				RENDER_OBJECT_DATA &rod = m_RenderList[i];
-				TRenderWorldObject *obj = rod.Obj;
-
-				if (obj != NULL && obj->IsGameObject())
-				{
-					WORD color = 0;
-					TGameObject *go = (TGameObject*)obj;
-					string name = go->GetName();
-
-					if (go->NPC)
-						color = ConfigManager.GetColorByNotoriety(((TGameCharacter*)obj)->Notoriety);
-					else
-						name = ClilocManager->Cliloc(g_Language)->GetA(102000 + obj->Graphic, name);
-
-					//FontManager->DrawA(3, name.c_str(), color, rod.X, rod.Y, 150, TS_LEFT, UOFONT_FIXED);
-				}
-			}
+			OBJECT_HANDLES_DATA &ohd = m_ObjectHandlesList[i];
+			ohd.Obj->DrawObjectHandlesTexture(ohd.X, ohd.Y);
 		}
-		else
-		{
-		}
-	}*/
+	}
+	else
+	{
+	}
 }
 //---------------------------------------------------------------------------
 void TGameScreen::DrawGameWindowLight()

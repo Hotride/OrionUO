@@ -34,10 +34,13 @@ protected:
 	DWORD m_LastAnimationChangeTime; //Время последнего изменения анимации
 
 	TGameEffect *m_Effects; //Ссылка на список эффектов персонажа
+
+	TTextureObject m_TextureObjectHalndes;
+
 public:
 	TGameObject(DWORD serial = 0);
 	virtual ~TGameObject();
-	
+
 	//Добавить текст в контейнер
 	void AddText(TTextData *td);
 
@@ -51,9 +54,12 @@ public:
 	SETGETEX(char, AnimIndex);
 	SETGET(DWORD, LastAnimationChangeTime);
 
+	void DrawObjectHandlesTexture(int &x, int &y);
+
 	virtual WORD GetMountAnimation();
 
 	virtual void OnGraphicChange(int direction = 0) {}
+	virtual void GenerateObjectHandlesTexture(wstring text);
 
 	//Проверка прозрачности (для круга прозрачности)
 	virtual bool TranparentTest(int &playerZ) { return false; }

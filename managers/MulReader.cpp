@@ -21,15 +21,10 @@
 
 TMulReader MulReader;
 //---------------------------------------------------------------------------
-TTextureObject *TMulReader::ReadGump(TIndexObject &io)
+PWORD TMulReader::GetGumpPixels(TIndexObject &io)
 {
-	int DataStart = io.Address;
-	PDWORD LookupList = (PDWORD)DataStart;
-
-	TTextureObject *th = new TTextureObject();
-	th->Width = io.Width;
-	th->Height = io.Height;
-	th->Texture = 0;
+	int dataStart = io.Address;
+	PDWORD lookupList = (PDWORD)dataStart;
 
 	int blocksize = io.Width * io.Height;
 
@@ -40,20 +35,21 @@ TTextureObject *TMulReader::ReadGump(TIndexObject &io)
 	PBYTE data = new BYTE[blocksize];
 #endif
 
-	IFOR(Y, 0, io.Height)
+	WORD color = io.Color;
+
+	IFOR(y, 0, io.Height)
 	{
-		int GSize = 0;
+		int gSize = 0;
 
-		if (Y < io.Height - 1)
-			GSize = LookupList[Y + 1] - LookupList[Y];
+		if (y < io.Height - 1)
+			gSize = lookupList[y + 1] - lookupList[y];
 		else
-			GSize = (io.Size / 4) - LookupList[Y];
+			gSize = (io.Size / 4) - lookupList[y];
 
-		PGUMP_BLOCK gmul = (PGUMP_BLOCK)(DataStart + LookupList[Y] * 4);
-		int X = 0;
-		WORD color = io.Color;
+		PGUMP_BLOCK gmul = (PGUMP_BLOCK)(dataStart + lookupList[y] * 4);
+		int x = 0;
 
-		IFOR(i, 0, GSize)
+		IFOR(i, 0, gSize)
 		{
 			WORD val = gmul[i].Value;
 
@@ -64,7 +60,7 @@ TTextureObject *TMulReader::ReadGump(TIndexObject &io)
 
 			IFOR(j, 0, gmul[i].Run)
 			{
-				int block = Y * io.Width + X;
+				int block = y * io.Width + x;
 
 				pixels[block] = a | val;
 
@@ -72,10 +68,22 @@ TTextureObject *TMulReader::ReadGump(TIndexObject &io)
 				data[block] = (BYTE)(a ? 1 : 0);
 #endif
 
-				X++;
+				x++;
 			}
 		}
 	}
+
+	return pixels;
+}
+//---------------------------------------------------------------------------
+TTextureObject *TMulReader::ReadGump(TIndexObject &io)
+{
+	TTextureObject *th = new TTextureObject();
+	th->Width = io.Width;
+	th->Height = io.Height;
+	th->Texture = 0;
+
+	PWORD pixels = GetGumpPixels(io);
 
 	g_GL.BindTexture16(th->Texture, io.Width, io.Height, pixels);
 

@@ -87,6 +87,17 @@ struct RENDER_OBJECT_DATA
 	int Y;
 };
 //---------------------------------------------------------------------------
+//Структура данных с информацией для гампа с именем объекта (Object Handles)
+struct OBJECT_HANDLES_DATA
+{
+	//Ссылка на объект рендера
+	TGameObject *Obj;
+
+	//Экранные координаты объекта
+	int X;
+	int Y;
+};
+//---------------------------------------------------------------------------
 class TGameScreen : public TBaseScreen
 {
 private:
@@ -98,6 +109,12 @@ private:
 
 	//Возможность изменения размера игрового окна
 	bool m_GameWindowResizing;
+
+	//Список объектов для вывода
+	OBJECT_HANDLES_DATA m_ObjectHandlesList[MAX_OBJECT_HANDLES];
+
+	//Количество объектов для вывода
+	int m_ObjectHandlesCount;
 
 	//Список объектов для отображения
 	RENDER_OBJECT_DATA *m_RenderList;

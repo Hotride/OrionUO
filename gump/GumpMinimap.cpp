@@ -40,55 +40,6 @@ void TGumpMinimap::PrepareTextures()
 	UO->ExecuteGumpPart(0x1392, 2);
 }
 //---------------------------------------------------------------------------
-PWORD TGumpMinimap::GetTextureData(WORD id, int &width, int &height)
-{
-	TIndexObject *io = UO->GetGumpPointer(id);
-
-	if (io == NULL)
-		return NULL;
-
-	DWORD size = io->Size;
-	int DataStart = io->Address;
-	PDWORD LookupList = (PDWORD)DataStart;
-
-	width = io->Width;
-	height = io->Height;
-
-	int blocksize = width * height;
-
-	PWORD pixels = new WORD[blocksize];
-	//memset(&pixels[0], 0, blocksize * 2);
-
-	IFOR(y, 0, height)
-	{
-		int GSize = 0;
-
-		if (y < height - 1)
-			GSize = LookupList[y + 1] - LookupList[y];
-		else
-			GSize = (size / 4) - LookupList[y];
-
-		PGUMP_BLOCK gmul = (PGUMP_BLOCK)(DataStart + LookupList[y] * 4);
-		int x = 0;
-		IFOR(i, 0, GSize)
-		{
-			WORD val = gmul[i].Value;
-			WORD a = val ? 0x8000 : 0;
-
-			IFOR(j, 0, gmul[i].Run)
-			{
-				int block = y * width + x;
-
-				pixels[block] = a | val;
-
-				x++;
-			}
-		}
-	}
-
-	return pixels;
-}
-//---------------------------------------------------------------------------
 void TGumpMinimap::GenerateMap()
 {
 	/*if (!g_DrawMode)
@@ -111,10 +62,16 @@ void TGumpMinimap::GenerateMap()
 		m_Texture = 0;
 	}
 	
-	int gumpWidth = 0;
-	int gumpHeight = 0;
+	WORD gumpID = 0x1393 - (int)m_Minimized;
+	TIndexObject *io = UO->GetGumpPointer(gumpID);
 
-	PWORD data = GetTextureData(0x1393 - (int)m_Minimized, gumpWidth, gumpHeight);
+	if (io == NULL)
+		return;
+
+	int gumpWidth = io->Width;
+	int gumpHeight = io->Height;
+
+	PWORD data = MulReader.GetGumpPixels(*io);
 	
 	if (data == NULL)
 		return;

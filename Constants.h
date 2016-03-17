@@ -26,6 +26,9 @@ static const int MAX_SHADOWS_COUNT = 100;
 //Масимальное количество источников света на экране
 const int MAX_LIGHT_SOURCES = 100;
 
+//Максимальное количество гампов для вывода Object Handles
+const int MAX_OBJECT_HANDLES = 30;
+
 //Максимальный размер fastwalk стека
 const int MAX_FAST_WALK_STACK_SIZE = 255;
 

@@ -28,6 +28,8 @@ public:
 	TMulReader() {}
 	~TMulReader() {}
 
+	PWORD GetGumpPixels(TIndexObject &io);
+
 	TTextureObject *ReadGump(TIndexObject &io);
 	TTextureObject *ReadArt(WORD ID, TIndexObject &io);
 	TTextureObject *ReadTexture(WORD ID, TIndexObject &io);
