@@ -262,7 +262,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 
 		//found = false;
 
-		trace_printf("c=%i\n", c);
+		TPRINT("c=%i\n", c);
 		c = 0;
 		
 		for (po = poStart; po != NULL; po = (TPathObject*)po->m_Prev)
@@ -285,7 +285,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 				isLongStair = (curZ <= (z + 6));
 			}
 
-			trace_printf("surface=%i nowC=%i z=%i newZ=%i curZ=%i top=%i isLongStair=%i\n", surface, c, z, newZ, curZ, top, isLongStair);
+			TPRINT("surface=%i nowC=%i z=%i newZ=%i curZ=%i top=%i isLongStair=%i\n", surface, c, z, newZ, curZ, top, isLongStair);
 
 			if (top <= newZ)
 				continue;

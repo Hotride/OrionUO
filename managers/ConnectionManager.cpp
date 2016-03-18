@@ -235,7 +235,7 @@ void TConnectionManager::Recv()
 
 				if (msg_size == -1) //Неизвестная длина (такого уже быть не может)
 				{
-					error_printf("Length unknown for message 0x%02X\n", *ptr);
+					EPRINT("Length unknown for message 0x%02X\n", *ptr);
 					msg_size = 0;
 				}
 				else
@@ -322,7 +322,7 @@ void TConnectionManager::Recv()
 
 				if (msg_size == -1) //Неизвестная длина (такого уже быть не может)
 				{
-					error_printf("Length unknown for message 0x%02X\n", *ptr);
+					EPRINT("Length unknown for message 0x%02X\n", *ptr);
 					msg_size = 0;
 				}
 				else

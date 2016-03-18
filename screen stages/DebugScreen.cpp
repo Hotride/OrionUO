@@ -56,7 +56,7 @@ int TEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				TEffectMoving *moving = (TEffectMoving*)this;
 
 				deX += moving->OffsetX;
-				deY += moving->OffsetY;
+				deY += moving->OffsetY + moving->OffsetZ;
 			}
 
 			ApplyRenderMode();
@@ -120,7 +120,7 @@ WORD TEffect::CalculateCurrentGraphic()
 		}
 	}
 
-	//trace_printf("Generate effectID for 0x%04X (add %i)\n", m_Graphic, m_Increment);
+	//TPRINT("Generate effectID for 0x%04X (add %i)\n", m_Graphic, m_Increment);
 
 	return m_Graphic + m_Increment;
 }
@@ -173,7 +173,7 @@ void TEffect::ApplyRenderMode()
 }
 //---------------------------------------------------------------------------
 TEffectMoving::TEffectMoving()
-: TEffect(), m_Angle(0.0f), m_OffsetX(0), m_OffsetY(0)
+: TEffect(), m_Angle(0.0f), m_OffsetX(0), m_OffsetY(0), m_OffsetZ(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -238,10 +238,7 @@ void TEffectMoving::Update()
 		}
 	}
 
-	bool incX = (realDrawX < drawDestX);
-	bool incY = (realDrawY < drawDestY);
-
-	if (incX)
+	if (realDrawX < drawDestX)
 	{
 		realDrawX += tempXY[x];
 
@@ -256,7 +253,7 @@ void TEffectMoving::Update()
 			realDrawX = drawDestX;
 	}
 
-	if (incY)
+	if (realDrawY < drawDestY)
 	{
 		realDrawY += tempXY[(x + 1) % 2];
 
@@ -294,17 +291,55 @@ void TEffectMoving::Update()
 		m_OffsetX = realDrawX - newDrawX;
 		m_OffsetY = realDrawY - newDrawY;
 
-		if (m_X != newX || m_Y != newY)
-		{
-			m_Angle = 180.0f + ((float)atan2(drawDestY - (newDrawY + m_OffsetY), drawDestX - (newDrawX + m_OffsetX)) * 57.295780f); //180.0f / M_PI = 57.295780f
+		int countX = drawDestX - (newDrawX + m_OffsetX);
+		int countY = drawDestY - (newDrawY + m_OffsetY);
+		//int countY = drawDestY - (newDrawY + m_OffsetY + m_OffsetZ) - (m_DestZ - m_Z) * 4;
 
-			m_X = newX;
-			m_Y = newY;
+		if (m_Z != m_DestZ)
+		{
+			int stepsCountX = countX / (tempXY[x] + 1);
+			int stepsCountY = countY / (tempXY[(x + 1) % 2] + 1);
+
+			if (stepsCountX < stepsCountY)
+				stepsCountX = stepsCountY;
+
+			if (stepsCountX <= 0)
+				stepsCountX = 1;
+
+			int totalOffsetZ = 0;
 
 			if (m_Z < m_DestZ)
-				m_Z++;
-			else if (m_Z > m_DestZ)
-				m_Z--;
+				totalOffsetZ = (m_DestZ - m_Z) * 4;
+			else
+				totalOffsetZ = (m_Z - m_DestZ) * 4;
+
+			totalOffsetZ /= stepsCountX;
+
+			if (!totalOffsetZ)
+				totalOffsetZ = 1;
+
+			m_OffsetZ += totalOffsetZ;
+
+			if (m_OffsetZ >= 4)
+			{
+				int countZ = m_OffsetZ / 4;
+				m_OffsetZ -= countZ * 4;
+
+				if (m_Z < m_DestZ)
+					m_Z += countZ;
+				else
+					m_Z -= countZ;
+			}
+		}
+
+		countY -= m_OffsetZ + (m_DestZ - m_Z) * 4;
+
+		m_Angle = 180.0f + ((float)atan2(countY, countX) * 57.295780f); //180.0f / M_PI = 57.295780f
+
+		if (m_X != newX || m_Y != newY)
+		{
+			m_X = newX;
+			m_Y = newY;
 		}
 	}
 }
@@ -481,7 +516,7 @@ int TDebugScreen::Render(bool mode)
 		//m_Text->DrawW(1, 0x0021, 20, 100, TS_LEFT, UOFONT_FIXED);
 
 		//Отрисовка гампа выбора цвета
-		DrawColorsGump();
+		//DrawColorsGump();
 
 		DrawSmoothMonitorEffect();
 
@@ -548,10 +583,15 @@ void TDebugScreen::OnLeftMouseUp()
 	g_DroppedLeftMouseX = 0;
 	g_DroppedLeftMouseY = 0;
 
+	/*effect->OffsetX = 0;
+	effect->OffsetY = 0;
+	effect->OffsetZ = 0;
+
 	effect->X = 10;
 	effect->Y = 10;
-	if (!(rand() % 15))
-		effect->Z = 20;
+
+	if (!(rand() % 2))
+		effect->Z = 20;*/
 
 	int cx = 320;
 	int cy = 240;

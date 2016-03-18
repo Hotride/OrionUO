@@ -102,11 +102,13 @@ class TGameEffectMoving : public TGameEffectDrag
 //private:
 protected:
 	float m_Angle;
+	int m_OffsetZ;
 public:
 	TGameEffectMoving();
 	virtual ~TGameEffectMoving();
 
 	SETGET(float, Angle);
+	SETGET(int, OffsetZ);
 
 	virtual void Update();
 };

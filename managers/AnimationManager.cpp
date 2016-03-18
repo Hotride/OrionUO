@@ -307,7 +307,7 @@ void TAnimationManager::Load(PDWORD verdata)
 			{
 				DWORD graphic = vh->BlockID;
 
-				//trace_printf("vh->ID = 0x%02X vh->BlockID = 0x%08X\n", vh->FileID, graphic);
+				//TPRINT("vh->ID = 0x%02X vh->BlockID = 0x%08X\n", vh->FileID, graphic);
 				
 				IFOR(i, 0, 0x0800)
 				{
@@ -335,7 +335,7 @@ void TAnimationManager::Load(PDWORD verdata)
 						m_DataIndex[i].Address = (DWORD)vh;
 						m_DataIndex[i].Offset = 0xFFFFFFFF;
 						m_DataIndex[i].Graphic = i; // animID;
-						//trace_printf("\tLoad verdata anim ID = 0x%04X\n", animID);
+						//TPRINT("\tLoad verdata anim ID = 0x%04X\n", animID);
 					}
 				}
 			}

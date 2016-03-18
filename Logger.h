@@ -38,7 +38,6 @@ public:
 	#define EPRINT error_printf
 	#define WPRINT warning_printf
 	#define TPRINT trace_printf
-	#define T_TPRINT trace_printf
 	#if CLOGGER == 2
 		#define TDUMP ;/##/
 	#else //CLOGGER != 2

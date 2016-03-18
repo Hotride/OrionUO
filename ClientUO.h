@@ -279,10 +279,7 @@ public:
 	LAND_GROUP m_LandData[512];
 
 	//Данные из тайлдаты по статике
-	PSTATIC_GROUP m_StaticData;
-
-	//Количество данных по статике
-	int m_StaticDataCount;
+	STATIC_GROUP m_StaticData[512];
 
 
 

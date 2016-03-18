@@ -74,6 +74,7 @@ private:
 	float m_Angle;
 	int m_OffsetX;
 	int m_OffsetY;
+	int m_OffsetZ;
 public:
 	TEffectMoving();
 	virtual ~TEffectMoving();
@@ -81,6 +82,7 @@ public:
 	SETGET(float, Angle);
 	SETGET(int, OffsetX);
 	SETGET(int, OffsetY);
+	SETGET(int, OffsetZ);
 
 	void Update();
 };

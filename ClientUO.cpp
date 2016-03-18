@@ -328,7 +328,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
-			//trace_printf("CurrentScreen->OnKeyPress(0x%08X, 0x%08X)\n", wParam, lParam);
+			//TPRINT("CurrentScreen->OnKeyPress(0x%08X, 0x%08X)\n", wParam, lParam);
 			if (wParam == VK_TAB && (lParam & 0x40000000))
 				break; //Уже нажато
 			else if (wParam == VK_F4 && (GetAsyncKeyState(VK_MENU) & 0x80000000)) //Пропускаем Alt + F4
@@ -508,10 +508,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 }
 //---------------------------------------------------------------------------
 TUltimaOnline::TUltimaOnline()
-: m_StaticData(NULL), m_StaticDataCount(0), m_StaticAnimList(NULL),
-m_UsedLandList(NULL), m_UsedStaticList(NULL), m_UsedGumpList(NULL),
-m_UsedTextureList(NULL), m_UsedSoundList(NULL), m_AnimData(NULL),
-m_UsedLightList(NULL)
+: m_StaticAnimList(NULL), m_UsedLandList(NULL), m_UsedStaticList(NULL),
+m_UsedGumpList(NULL), m_UsedTextureList(NULL), m_UsedSoundList(NULL),
+m_AnimData(NULL), m_UsedLightList(NULL)
 {
 	string pth = g_DirectoryPath + "\\uolog.txt";
 	g_Logger.Init(pth.c_str());
@@ -628,12 +627,6 @@ TUltimaOnline::~TUltimaOnline()
 	{
 		delete AnimationManager;
 		AnimationManager = NULL;
-	}
-
-	if (m_StaticData != NULL)
-	{
-		delete m_StaticData;
-		m_StaticData = NULL;
 	}
 
 	if (m_StaticAnimList != NULL)
@@ -816,7 +809,6 @@ TUltimaOnline::~TUltimaOnline()
 	SoundManager.Free();
 
 	ServerList.Clear();
-	m_StaticDataCount = 0;
 
 	FileManager.Unload();
 
@@ -854,7 +846,7 @@ bool TUltimaOnline::Install()
 
 	if (!g_GL.Install(g_hWnd))
 	{
-		trace_printf("Error install OpenGL\n");
+		TPRINT("Error install OpenGL\n");
 		MessageBoxA(g_hWnd, "Error install OpenGL", "Error install OpenGL!", MB_OK);
 		return false;
 	}
@@ -867,7 +859,7 @@ bool TUltimaOnline::Install()
 	if (!FileManager.Load())
 	{
 		string tmp = string("Error loading file: ") + g_LastLoadFileError;
-		trace_printf(tmp.c_str());
+		TPRINT(tmp.c_str());
 		MessageBoxA(g_hWnd, tmp.c_str(), "Error loading file!", MB_OK);
 
 		return false;
@@ -885,7 +877,7 @@ bool TUltimaOnline::Install()
 	FontManager = new TFontsManager();
 	if (!FontManager->LoadFonts())
 	{
-		trace_printf("Error loading fonts\n");
+		TPRINT("Error loading fonts\n");
 		MessageBoxA(g_hWnd, "Error loading fonts", "Error loading fonts!", MB_OK);
 
 		return false;
@@ -893,7 +885,7 @@ bool TUltimaOnline::Install()
 
 	if (!LoadSkills())
 	{
-		trace_printf("Error loading skills\n");
+		TPRINT("Error loading skills\n");
 		MessageBoxA(g_hWnd, "Error loading skills", "Error loading skills!", MB_OK);
 
 		return false;
@@ -906,7 +898,7 @@ bool TUltimaOnline::Install()
 	
 	if (!MouseManager.LoadCursorTextures())
 	{
-		trace_printf("Error loading cursors\n");
+		TPRINT("Error loading cursors\n");
 		MessageBoxA(g_hWnd, "Error loading cursors", "Error loading cursors!", MB_OK);
 
 		return false;
@@ -914,8 +906,8 @@ bool TUltimaOnline::Install()
 
 	if (!SoundManager.Init())
 	{
-		//trace_printf("Error install SDL audio: %s\n", SDL_GetError());
-		//trace_printf("Error install BASS audio: %s\n", BASS_error());
+		//TPRINT("Error install SDL audio: %s\n", SDL_GetError());
+		//TPRINT("Error install BASS audio: %s\n", BASS_error());
 		MessageBoxA(g_hWnd, "Failed to init BASS audio.", "Sound error!", MB_OK);
 
 		return false;
@@ -1172,11 +1164,7 @@ void TUltimaOnline::LoadTiledata()
 
 	memcpy(&m_LandData[0], (PVOID)FileManager.TiledataMul.Address, 512 * sizeof(LAND_GROUP));
 
-	m_StaticDataCount = (FileManager.TiledataMul.Size - 428032) / sizeof(STATIC_GROUP);
-
-	m_StaticData = new STATIC_GROUP[m_StaticDataCount];
-
-	memcpy(&m_StaticData[0], (PVOID)((DWORD)FileManager.TiledataMul.Address + 428032), m_StaticDataCount * sizeof(STATIC_GROUP));
+	memcpy(&m_StaticData[0], (PVOID)((DWORD)FileManager.TiledataMul.Address + 428032), 512 * sizeof(STATIC_GROUP));
 }
 //---------------------------------------------------------------------------
 WORD TUltimaOnline::CalculateLightColor(WORD id)
@@ -1843,7 +1831,7 @@ void TUltimaOnline::PatchFiles()
 			{
 				int bID = (int)vh->BlockID - 0x0200;
 
-				if (bID < 0 || bID >= m_StaticDataCount)
+				if (bID < 0 || bID >= 512)
 					continue;
 
 				memcpy(&m_StaticData[bID], (PVOID)(vAddr + vh->Position), sizeof(STATIC_GROUP));
@@ -1859,7 +1847,7 @@ void TUltimaOnline::PatchFiles()
 		}
 		else if (vh->FileID != 5 && vh->FileID != 6) //no Anim / Animidx
 		{
-			trace_printf("Unused verdata block (fileID) = %i (BlockID+ %i\n", vh->FileID, vh->BlockID);
+			TPRINT("Unused verdata block (fileID) = %i (BlockID+ %i\n", vh->FileID, vh->BlockID);
 		}
 	}
 
@@ -2086,7 +2074,7 @@ bool TUltimaOnline::LoadSkills()
 				start = sidx;
 			end = sidx;
 
-			//trace_printf("Skill load[%d] = %s\n", i, (char*)((DWORD)FileManager.SkillsMul.Address + sidx->Position + 1));
+			//TPRINT("Skill load[%d] = %s\n", i, (char*)((DWORD)FileManager.SkillsMul.Address + sidx->Position + 1));
 		}
 	}
 
@@ -2586,12 +2574,12 @@ void TUltimaOnline::Process()
 						if (gump != NULL)
 						{
 							TTextData *td = new TTextData();
-							td->SetUnicode(false);
-							td->SetFont(3);
-							td->SetSerial(0);
-							td->SetColor(0x03B5);
-							td->SetTimer(GetTickCount());
-							td->SetType(TT_CLIENT);
+							td->Unicode = false;
+							td->Font = 3;
+							td->Serial = 0;
+							td->Color = 0x03B5;
+							td->Timer = GetTickCount();
+							td->Type = TT_CLIENT;
 							td->DrawX = g_MouseX - gump->X;
 							td->DrawY = g_MouseY - gump->Y;
 
@@ -2674,7 +2662,7 @@ int TUltimaOnline::Send(PBYTE buf, int size)
 	
 	TMessageType &type = PacketManager.GetType(*buf);
 
-	trace_printf("--- ^(%d) s(+%d => %d) Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
+	TPRINT("--- ^(%d) s(+%d => %d) Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
 
 	if (*buf == 0x80 || *buf == 0x91)
 	{
@@ -2688,7 +2676,7 @@ int TUltimaOnline::Send(PBYTE buf, int size)
 	g_LastSendTime = ticks;
 
 	if (type.Direction != DIR_SEND && type.Direction != DIR_BOTH)
-		warning_printf("message direction invalid: 0x%02X\n", *buf);
+		WPRINT("message direction invalid: 0x%02X\n", *buf);
 	else
 	{
 		/*if (g_ClientPaused)
@@ -3482,7 +3470,7 @@ DWORD TUltimaOnline::GetLandFlags(WORD id)
 DWORD TUltimaOnline::GetStaticFlags(WORD id)
 {
 	WORD divID = id / 32;
-	if (divID < m_StaticDataCount)
+	if (divID < 512)
 		return m_StaticData[divID].Tiles[id % 32].Flags;
 
 	return 0;
@@ -4066,78 +4054,76 @@ void TUltimaOnline::LoginComplete()
 //---------------------------------------------------------------------------
 void TUltimaOnline::PickupItem(TGameItem *obj, int count, bool isGameFigure)
 {
-	if (ObjectInHand != NULL)
-		return;
+	if (ObjectInHand == NULL)
+	{
+		ObjectInHand = new TObjectOnCursor(obj);
 
-	ObjectInHand = new TObjectOnCursor(obj);
-	
-	if (!count)
-		count = obj->Count;
+		if (!count)
+			count = obj->Count;
 
-	ObjectInHand->Separated = count != obj->Count;
-	ObjectInHand->IsGameFigure = isGameFigure;
-	ObjectInHand->DragCount = count;
+		ObjectInHand->Separated = count != obj->Count;
+		ObjectInHand->IsGameFigure = isGameFigure;
+		ObjectInHand->DragCount = count;
 
-	TPacketPickupRequest packet(obj->Serial, count);
-	packet.Send();
+		TPacketPickupRequest packet(obj->Serial, count);
+		packet.Send();
+	}
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::DropItem(DWORD container, WORD x, WORD y, char z)
 {
-	if (ObjectInHand == NULL)
-		return;
-
-	if (ObjectInHand->Dropped)
+	if (ObjectInHand != NULL)
 	{
-		delete ObjectInHand;
-		ObjectInHand = NULL;
+		if (ObjectInHand->Dropped)
+		{
+			delete ObjectInHand;
+			ObjectInHand = NULL;
+		}
+		else
+		{
+			ObjectInHand->Dropped = true;
 
-		return;
-	}
-
-	ObjectInHand->Dropped = true;
-
-	if (ConnectionManager.ClientVersion >= CV_6017)
-	{
-		TPacketDropRequestNew packet(ObjectInHand->Serial, x, y, z, 0, container);
-		packet.Send();
-	}
-	else
-	{
-		TPacketDropRequestOld packet(ObjectInHand->Serial, x, y, z, container);
-		packet.Send();
+			if (ConnectionManager.ClientVersion >= CV_6017)
+			{
+				TPacketDropRequestNew packet(ObjectInHand->Serial, x, y, z, 0, container);
+				packet.Send();
+			}
+			else
+			{
+				TPacketDropRequestOld packet(ObjectInHand->Serial, x, y, z, container);
+				packet.Send();
+			}
+		}
 	}
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::EquipItem(DWORD container)
 {
-	if (ObjectInHand == NULL)
-		return;
-
-	if (ObjectInHand->Dropped)
+	if (ObjectInHand != NULL)
 	{
-		delete ObjectInHand;
-		ObjectInHand = NULL;
+		if (ObjectInHand->Dropped)
+		{
+			delete ObjectInHand;
+			ObjectInHand = NULL;
+		}
+		else if (ObjectInHand->IsWearable())
+		{
+			ObjectInHand->Dropped = true;
 
-		return;
+			WORD graphic = ObjectInHand->Graphic;
+
+			if (graphic < 0x4000)
+			{
+				STATIC_TILES &st = m_StaticData[graphic / 32].Tiles[graphic % 32];
+
+				if (!container)
+					container = g_PlayerSerial;
+
+				TPacketEquipRequest packet(ObjectInHand->Serial, st.Quality, container);
+				packet.Send();
+			}
+		}
 	}
-
-	if (!ObjectInHand->IsWearable())
-		return;
-
-	ObjectInHand->Dropped = true;
-
-	int ID = ObjectInHand->Graphic / 32;
-	if (ID >= m_StaticDataCount)
-		return;
-
-	STATIC_TILES &st = m_StaticData[ID].Tiles[ObjectInHand->Graphic % 32];
-
-	if (!container)
-		container = g_PlayerSerial;
-
-	TPacketEquipRequest packet(ObjectInHand->Serial, st.Quality, container);
-	packet.Send();
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::ChangeWarmode(BYTE status)
@@ -4248,36 +4234,36 @@ void TUltimaOnline::SendASCIIText(const char *str, SPEECH_TYPE type)
 //---------------------------------------------------------------------------
 void TUltimaOnline::CastSpell(int index)
 {
-	if (index < 0)
-		return;
+	if (index >= 0)
+	{
+		g_LastSpellIndex = index;
 
-	g_LastSpellIndex = index;
-
-	TPacketCastSpell packet(index);
-	packet.Send();
+		TPacketCastSpell packet(index);
+		packet.Send();
+	}
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::CastSpellFromBook(int index, DWORD serial)
 {
-	if (index < 0)
-		return;
+	if (index >= 0)
+	{
+		g_LastSpellIndex = index;
 
-	g_LastSpellIndex = index;
-
-	TPacketCastSpellFromBook packet(index, serial);
-	packet.Send();
-	packet.Free();
+		TPacketCastSpellFromBook packet(index, serial);
+		packet.Send();
+		packet.Free();
+	}
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::UseSkill(int index)
 {
-	if (index < 0)
-		return;
+	if (index >= 0)
+	{
+		g_LastSkillIndex = index;
 
-	g_LastSkillIndex = index;
-	
-	TPacketUseSkill packet(index);
-	packet.Send();
+		TPacketUseSkill packet(index);
+		packet.Send();
+	}
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::OpenDoor()

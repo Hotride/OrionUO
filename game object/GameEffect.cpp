@@ -76,7 +76,7 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				TGameEffectMoving *moving = (TGameEffectMoving*)this;
 
 				drawEffectX += moving->OffsetX;
-				drawEffectY += moving->OffsetY;
+				drawEffectY += moving->OffsetY + moving->OffsetZ;
 
 				if (moving->FixedDirection)
 					UO->DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);
@@ -138,7 +138,7 @@ WORD TGameEffect::CalculateCurrentGraphic()
 		}
 	}
 
-	//trace_printf("Generate effectID for 0x%04X (add %i)\n", m_Graphic, m_Increment);
+	//TPRINT("Generate effectID for 0x%04X (add %i)\n", m_Graphic, m_Increment);
 
 	return m_Graphic + m_Increment;
 }
@@ -243,7 +243,7 @@ void TGameEffectDrag::Update()
 //-----------------------------TGameEffectMoving-----------------------------
 //---------------------------------------------------------------------------
 TGameEffectMoving::TGameEffectMoving()
-: TGameEffectDrag(), m_Angle(0.0f)
+: TGameEffectDrag(), m_Angle(0.0f), m_OffsetZ(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -382,20 +382,71 @@ void TGameEffectMoving::Update()
 		m_OffsetX = realDrawX - newDrawX;
 		m_OffsetY = realDrawY - newDrawY;
 
+		bool wantUpdateInRenderList = false;
+
+		int countX = drawDestX - (newDrawX + m_OffsetX);
+		int countY = drawDestY - (newDrawY + m_OffsetY);
+		//int countY = drawDestY - (newDrawY + m_OffsetY + m_OffsetZ) - (m_DestZ - m_Z) * 4;
+
+		if (m_Z != m_DestZ)
+		{
+			int stepsCountX = countX / (tempXY[x] + 1);
+			int stepsCountY = countY / (tempXY[(x + 1) % 2] + 1);
+
+			if (stepsCountX < stepsCountY)
+				stepsCountX = stepsCountY;
+
+			if (stepsCountX <= 0)
+				stepsCountX = 1;
+
+			int totalOffsetZ = 0;
+
+			bool incZ = m_Z < m_DestZ;
+
+			if (incZ)
+				totalOffsetZ = (m_DestZ - m_Z) * 4;
+			else
+				totalOffsetZ = (m_Z - m_DestZ) * 4;
+
+			totalOffsetZ /= stepsCountX;
+
+			if (!totalOffsetZ)
+				totalOffsetZ = 1;
+
+			m_OffsetZ += totalOffsetZ;
+
+			if (m_OffsetZ >= 4)
+			{
+				int countZ = m_OffsetZ / 4;
+
+				if (incZ)
+					m_Z += countZ;
+				else
+					m_Z -= countZ;
+
+				if (m_Z == m_DestZ)
+					m_OffsetZ = 0;
+				else
+					m_OffsetZ -= countZ * 4;
+
+				wantUpdateInRenderList = true;
+			}
+		}
+
+		countY -= m_OffsetZ + (m_DestZ - m_Z) * 4;
+
+		m_Angle = 180.0f + (float)(atan2(countY, countX) * 57.295780); //180.0f / M_PI = 57.295780f
+
 		if (m_X != newX || m_Y != newY)
 		{
-			m_Angle = 180.0f + (float)(atan2(drawDestY - (newDrawY + m_OffsetY), drawDestX - (newDrawX + m_OffsetX)) * 57.295780); //180.0f / M_PI = 57.295780f
-
 			m_X = newX;
 			m_Y = newY;
 
-			if (m_Z < m_DestZ)
-				m_Z++;
-			else if (m_Z > m_DestZ)
-				m_Z--;
-
-			MapManager->AddRender(this);
+			wantUpdateInRenderList = true;
 		}
+
+		if (wantUpdateInRenderList)
+			MapManager->AddRender(this);
 	}
 }
 //---------------------------------------------------------------------------

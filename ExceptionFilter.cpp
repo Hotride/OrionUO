@@ -11,9 +11,7 @@ LONG __stdcall MyUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *ExceptionI
 	TotalErrorCount++;
 	if(ExceptionInfo->ExceptionRecord)
 	{
-		error_printf("Unhandled exception%3d: 0x%08X at %08X\n", TotalErrorCount,
-			ExceptionInfo->ExceptionRecord->ExceptionCode,
-			ExceptionInfo->ExceptionRecord->ExceptionAddress);
+		EPRINT("Unhandled exception%3d: 0x%08X at %08X\n", TotalErrorCount, ExceptionInfo->ExceptionRecord->ExceptionCode, ExceptionInfo->ExceptionRecord->ExceptionAddress);
 
 		if (g_Hinstance && ErrorCount > 100 && (GetTickCount() - LastErrorTime) < 5000)
 		// crash when too many errors happen too often

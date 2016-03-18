@@ -303,7 +303,7 @@ TPacketManager::TPacketManager()
 #define CV_PRINT 0
 
 #if CV_PRINT!=0
-#define CVPRINT(s) trace_printf(s)
+#define CVPRINT(s) TPRINT(s)
 #else //CV_PRINT==0
 #define CVPRINT(s)
 #endif //CV_PRINT!=0
@@ -614,13 +614,13 @@ void TPacketManager::ReceiveHandler(PBYTE buf, int size)
 	
 	TMessageType &type = m_MessageTypes[*buf];
 
-	trace_printf("--- ^(%d) r(+%d => %d) Server:: %s\n", ticks - g_LastPacketTime, size, g_TotalRecvSize, type.Name);
+	TPRINT("--- ^(%d) r(+%d => %d) Server:: %s\n", ticks - g_LastPacketTime, size, g_TotalRecvSize, type.Name);
 	TDUMP(buf, size);
 	
 	g_LastPacketTime = ticks;
 
 	if (type.Direction != DIR_RECV && type.Direction != DIR_BOTH)
-		warning_printf("message direction invalid: 0x%02X\n", *buf);
+		WPRINT("message direction invalid: 0x%02X\n", *buf);
 	else if (type.Handler != 0)
 	{
 		if (PluginManager->PacketRecv(buf, size))
@@ -664,7 +664,7 @@ PACKET_HANDLER(ServerList)
 	// Calculate expected message size
 	int exSize = 6 + numServers * 40;
 	if (size != exSize)
-		warning_printf("server list message size should be %d\n", exSize);
+		WPRINT("server list message size should be %d\n", exSize);
 
 	IFOR(i, 0, numServers)
 	{
@@ -718,7 +718,7 @@ PACKET_HANDLER(CharacterList)
 			if (autoLogin && AutoPos == -1 && UO->AutoLoginNameExists((char*)Ptr))
 				AutoPos = i;
 
-			trace_printf("%d: %s\n", i, (char*)Ptr);
+			TPRINT("%d: %s\n", i, (char*)Ptr);
 
 			Move(60);
 		}
@@ -813,7 +813,7 @@ PACKET_HANDLER(ResendCharacterList)
 			if (autoLogin && AutoPos == -1 && UO->AutoLoginNameExists((char*)Ptr))
 				AutoPos = i;
 
-			trace_printf("%d: %s\n", i, (char*)Ptr);
+			TPRINT("%d: %s\n", i, (char*)Ptr);
 
 			Move(60);
 		}
@@ -850,7 +850,7 @@ PACKET_HANDLER(EnterWorld)
 	DWORD serial = ReadDWord();
 
 	if (World != NULL)
-		error_printf("duplicate enter world message\n");
+		EPRINT("duplicate enter world message\n");
 	else
 	{
 		if (World != NULL)
@@ -903,7 +903,7 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
 
-	trace_printf("Player 0x%08lX entered the world.\n", serial);
+	TPRINT("Player 0x%08lX entered the world.\n", serial);
 
 	UO->LoadStartupConfig();
 
@@ -988,7 +988,7 @@ PACKET_HANDLER(UpdatePlayer)
 
 	if (serial != g_PlayerSerial)
 	{
-		warning_printf("Current player changed from 0x%08lX to 0x%08lX\n", g_PlayerSerial, serial);
+		WPRINT("Current player changed from 0x%08lX to 0x%08lX\n", g_PlayerSerial, serial);
 		World->SetPlayer(serial);
 	}
 
@@ -1239,7 +1239,7 @@ PACKET_HANDLER(UpdateItem)
 
 	World->MoveToTop(obj);
 
-	trace_printf("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
+	TPRINT("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateItemSA)
@@ -1306,8 +1306,7 @@ PACKET_HANDLER(UpdateItemSA)
 
 	obj->Flags = flags;
 
-	trace_printf("0x%08lX:", serial);
-	trace_printf("0x%04X*%d %d:%d:%d\n", obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
+	TPRINT("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
 
 	World->MoveToTop(obj);
 }
@@ -1348,12 +1347,10 @@ PACKET_HANDLER(UpdateObject)
 
 	obj->MapIndex = g_CurrentMap;
 
-	trace_printf("0x%08X ", serial);
-
 	WORD graphic = ReadWord();
 
 	obj->Graphic = graphic & 0x7FFF;
-	trace_printf("0x%04X ", obj->Graphic);
+	TPRINT("0x%08X 0x%04X ", serial, obj->Graphic);
 
 	if (serial & 0x80000000)
 	{
@@ -1413,10 +1410,10 @@ PACKET_HANDLER(UpdateObject)
 	if (character != NULL)
 	{
 		character->Notoriety = noto;
-		trace_printf("%d,%d,%d C%04X D%d F%02X N%d\n", obj->X, obj->Y, obj->Z, obj->Color, character->Direction, obj->Flags, character->Notoriety);
+		TPRINT("%d,%d,%d C%04X D%d F%02X N%d\n", obj->X, obj->Y, obj->Z, obj->Color, character->Direction, obj->Flags, character->Notoriety);
 	}
 	else
-		trace_printf("%d,%d,%d C%04X F%02X\n", obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
+		TPRINT("%d,%d,%d C%04X F%02X\n", obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
 
 	serial = ReadDWord();
 
@@ -1445,12 +1442,10 @@ PACKET_HANDLER(UpdateObject)
 
 		obj2->Graphic = graphic & 0x7FFF;
 
-		trace_printf("\t0x%08X:%04X ", obj2->Serial, obj2->Graphic);
-
 		World->PutEquipment(obj2, obj, layer);
 		obj2->OnGraphicChange();
 
-		trace_printf("[%d] %04X\n", layer, obj2->Color);
+		TPRINT("\t0x%08X:%04X [%d] %04X\n", obj2->Serial, obj2->Graphic, layer, obj2->Color);
 
 		World->MoveToTop(obj2);
 
@@ -1613,7 +1608,7 @@ PACKET_HANDLER(UpdateContainedItems)
 		{
 			cupd = cserial;
 			TGameObject *objA = World->FindWorldObject(cupd);
-			trace_printf("Making %08X empty...\n", cupd);
+			TPRINT("Making %08X empty...\n", cupd);
 
 			if (objA != NULL)
 			{
@@ -1644,7 +1639,6 @@ PACKET_HANDLER(UpdateContainedItems)
 			}
 		}
 
-		trace_printf("\t|");
 		TGameItem *obj = World->GetWorldItem(serial);
 
 		//if (obj->GetDragged()) UO->CloseGump(obj->GetSerial(), 0, GT_DRAG);
@@ -1678,8 +1672,7 @@ PACKET_HANDLER(UpdateContainedItems)
 			}
 		}
 
-		trace_printf("0x%08X<0x%08X:%04X*%d (%d,%d) %04X\n", obj->Container, obj->Serial,
-			obj->Graphic, obj->Count, obj->X, obj->Y, obj->Color);
+		TPRINT("\t|0x%08X<0x%08X:%04X*%d (%d,%d) %04X\n", obj->Container, obj->Serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Color);
 	}
 
 	if (containerIsCorpse)
@@ -2152,7 +2145,7 @@ PACKET_HANDLER(UpdateSkills)
 	int type = ReadByte();
 	bool HaveCap = (type == 0x02 || type == 0xDF);
 	bool IsSingleUpdate = (type == 0xFF || type == 0xDF);
-	trace_printf("Skill update type %i (Cap=%d)\n", type, HaveCap);
+	TPRINT("Skill update type %i (Cap=%d)\n", type, HaveCap);
 
 	PBYTE end = buf + size;
 
@@ -2194,12 +2187,12 @@ PACKET_HANDLER(UpdateSkills)
 			g_Player->SetSkillStatus(id, lock);
 
 			if (HaveCap)
-				trace_printf("Skill %i is %i|%i|%i\n", id, BaseVal, RealVal, Cap);
+				TPRINT("Skill %i is %i|%i|%i\n", id, BaseVal, RealVal, Cap);
 			else
-				trace_printf("Skill %i is %i|%i\n", id, BaseVal, RealVal);
+				TPRINT("Skill %i is %i|%i\n", id, BaseVal, RealVal);
 		}
 		else
-			trace_printf("Unknown skill update %d\n", id);
+			TPRINT("Unknown skill update %d\n", id);
 	}
 
 	g_SkillsTotal = 0.0f;
@@ -2660,7 +2653,7 @@ PACKET_HANDLER(OpenGump)
 
 		TGumpObject *go = NULL;
 
-		//trace_printf("\tlwr.token=%s\n", lowc);
+		//TPRINT("\tlwr.token=%s\n", lowc);
 		if (!memcmp(lowc, "nodispose", 9))
 			e += 10;
 		else if (!memcmp(lowc, "nomove", 6))
@@ -2925,12 +2918,11 @@ PACKET_HANDLER(OpenCompressedGump)
 
 	if (cLen < 1)
 	{
-		trace_printf("CLen=%d\n", cLen);
-		TPRINT("Server Sends bad Compressed Gumpdata!\n");
+		TPRINT("CLen=%d\nServer Sends bad Compressed Gumpdata!\n", cLen);
 
 		return;
 	}
-	if ((int)(28 + cLen) > size)
+	else if ((int)(28 + cLen) > size)
 	{
 		TPRINT("Server Sends bad Compressed Gumpdata!\n");
 
@@ -2939,22 +2931,19 @@ PACKET_HANDLER(OpenCompressedGump)
 
 	// Layout data.....
 	PBYTE decLayoutData = new BYTE[dLen];
-	trace_printf("Gump layout:\n\tSenderID=0x%08X\n\tGumpID=0x%08X\n\tCLen=%d\n\tDLen=%d\n", senderID, gumpID, cLen, dLen);
-
-	TPRINT("Decompressing layout gump data...\n");
+	TPRINT("Gump layout:\n\tSenderID=0x%08X\n\tGumpID=0x%08X\n\tCLen=%d\n\tDLen=%d\nDecompressing layout gump data...\n", senderID, gumpID, cLen, dLen);
 
 	int z_err = uncompress(decLayoutData, &dLen, Ptr, cLen);
 
 	if (z_err != Z_OK)
 	{
 		delete decLayoutData;
-		trace_printf("Decompress layout gump error %d\n", z_err);
+		TPRINT("Decompress layout gump error %d\n", z_err);
 
 		return;
 	}
 
 	TPRINT("Layout gump data decompressed!\n");
-	//trace_dump(DecLayoutData,DLen);
 	// Text data.....
 
 	Move(cLen);
@@ -2979,14 +2968,12 @@ PACKET_HANDLER(OpenCompressedGump)
 		{
 			delete decLayoutData;
 			delete gumpDecText;
-			trace_printf("Decompress text gump error %d\n", z_err);
+			TPRINT("Decompress text gump error %d\n", z_err);
 
 			return;
 		}
 
-		TPRINT("Text gump data decompressed!\n");
-		trace_printf("Gump text lines:\n\tLinesCount=%d\n\tCTLen=%d\n\tDTLen=%d\n", linesCount, cTLen, dTLen);
-		//trace_dump(GumpDecText,DTLen);
+		TPRINT("Text gump data decompressed!\nGump text lines:\n\tLinesCount=%d\n\tCTLen=%d\n\tDTLen=%d\n", linesCount, cTLen, dTLen);
 	}
 
 	int newsize = 21 + dLen + 2 + dTLen;
@@ -3007,8 +2994,7 @@ PACKET_HANDLER(OpenCompressedGump)
 	else
 		newbuf[newsize - 1] = 0x00;
 
-	trace_printf("Gump decompressed! newsize=%d\n", newsize);
-	//trace_dump(newbuf,newsize);
+	TPRINT("Gump decompressed! newsize=%d\n", newsize);
 
 	Ptr = newbuf + 3;
 	HandleOpenGump(newbuf, newsize);
@@ -3258,7 +3244,7 @@ PACKET_HANDLER(PlaySoundEffect)
 	Move(1);
 	WORD index = ReadWord();
 
-	//trace_printf("Play sound 0x%04X\n", index);
+	//TPRINT("Play sound 0x%04X\n", index);
 	UO->PlaySoundEffect(index);
 }
 //---------------------------------------------------------------------------
@@ -3266,7 +3252,7 @@ PACKET_HANDLER(PlayMusic)
 {
 	WORD index = ReadWord();
 
-	//trace_printf("Play midi music 0x%04X\n", index);
+	//TPRINT("Play midi music 0x%04X\n", index);
 	SoundManager.PlayMidi(index);
 }
 //---------------------------------------------------------------------------
@@ -3419,7 +3405,7 @@ PACKET_HANDLER(DisplayMap)
 	DWORD serial = ReadDWord();
 	WORD gumpid = ReadWord();
 
-	//trace_printf("gumpid = 0x%04X\n", gumpid);
+	//TPRINT("gumpid = 0x%04X\n", gumpid);
 
 	WORD startX = ReadWord();
 	WORD startY = ReadWord();
@@ -3443,9 +3429,9 @@ PACKET_HANDLER(DisplayMap)
 
 	MultiMap->LoadMap(gump);
 
-	//trace_printf("GumpX=%d GumpY=%d\n", startX, startY);
-	//trace_printf("GumpTX=%d GumpTY=%d\n", endX, endY);
-	//trace_printf("GumpW=%d GumpH=%d\n", width, height);
+	//TPRINT("GumpX=%d GumpY=%d\n", startX, startY);
+	//TPRINT("GumpTX=%d GumpTY=%d\n", endX, endY);
+	//TPRINT("GumpW=%d GumpH=%d\n", width, height);
 
 	GumpManager->AddGump(gump);
 

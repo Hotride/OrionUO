@@ -75,7 +75,7 @@ void TSkillSort::Init()
 	//Пройдемся по всем нвыкам (кроме первого)
 	IFOR(i, 1, g_SkillsCount)
 	{
-		//trace_printf("Skill[%d] = %s\n", i, skills[i].SkillName);
+		//TPRINT("Skill[%d] = %s\n", i, skills[i].SkillName);
 
 		//Пройдемся по обработанным
 		IFOR(j, 0, parsed)

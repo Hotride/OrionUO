@@ -695,7 +695,7 @@ TGameObject *TGameWorld::SearchWorldObject(DWORD serialStart, int scanDistance, 
 //---------------------------------------------------------------------------
 void TGameWorld::Dump(BYTE tCount, DWORD serial)
 {
-	trace_printf("World Dump:\n\n");
+	TPRINT("World Dump:\n\n");
 
 	TGameObject *obj = m_Items;
 
@@ -711,16 +711,12 @@ void TGameWorld::Dump(BYTE tCount, DWORD serial)
 		if (obj->Container == serial)
 		{
 			if (obj->Serial == g_Player->Serial)
-				trace_printf("---Player---\n");
+				TPRINT("---Player---\n");
 
 			IFOR(i, 0, tCount)
-				trace_printf("\t");
+				TPRINT("\t");
 
-			trace_printf("%s%08X:%04X[%04X](%%02X)*%i\tin 0x%08X XYZ=%i,%i,%i on Map %i\n",
-				(obj->NPC ? "NPC: " : "Item: "), obj->Serial,
-				obj->Graphic, obj->Color, /*obj->Layer,*/
-				obj->Count, obj->Container, obj->X,
-				obj->Y, obj->Z, obj->MapIndex);
+			TPRINT("%s%08X:%04X[%04X](%%02X)*%i\tin 0x%08X XYZ=%i,%i,%i on Map %i\n", (obj->NPC ? "NPC: " : "Item: "), obj->Serial, obj->Graphic, obj->Color, /*obj->Layer,*/ obj->Count, obj->Container, obj->X, obj->Y, obj->Z, obj->MapIndex);
 
 			if (obj->m_Items != NULL)
 				Dump(tCount + 1, obj->Container);

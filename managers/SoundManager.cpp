@@ -103,18 +103,20 @@ bool TSoundManager::Init()
 		return false;
 	}	*/
 
-	trace_printf("Initializing bass sound system.\n");
+	TPRINT("Initializing bass sound system.\n");
 	// initialize default output device	
 	if (!BASS_Init(-1, 48000, BASS_DEVICE_3D, g_hWnd, NULL))
 	{
-		trace_printf("Can't initialize device: %s\n", BASS_ErrorGetDescription());
+		TPRINT("Can't initialize device: %s\n", BASS_ErrorGetDescription());
 		return false;
-	} else {
-		trace_printf("Sound init successfull.\n");	
+	}
+	else
+	{
+		TPRINT("Sound init successfull.\n");
 		BASS_SetConfig(BASS_CONFIG_SRC, 3); // interpolation method
 
-		if(!BASS_SetConfig(BASS_CONFIG_3DALGORITHM, BASS_3DALG_FULL))
-			trace_printf("Error setting 3d sound: %s\n", BASS_ErrorGetDescription());
+		if (!BASS_SetConfig(BASS_CONFIG_3DALGORITHM, BASS_3DALG_FULL))
+			TPRINT("Error setting 3d sound: %s\n", BASS_ErrorGetDescription());
 
 		//BASS_SetConfig(
 		//	BASS_CONFIG_BUFFER, 1000);
@@ -179,7 +181,7 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 //	Mix_Chunk *mix = Mix_LoadWAV_RW(rWops, 1);
 //
 //	if (mix == NULL)
-//		trace_printf("SDL sound error: %s\n", SDL_GetError());
+//		TPRINT("SDL sound error: %s\n", SDL_GetError());
 //
 //	return mix;
 //}
@@ -199,7 +201,7 @@ HSTREAM TSoundManager::LoadSoundEffect(TIndexSound &is)
 
 	if (hStream == 0)
 	{
-		trace_printf("BASS create stream error: %s\n", BASS_ErrorGetDescription());	
+		TPRINT("BASS create stream error: %s\n", BASS_ErrorGetDescription());
 		is.waveFile.clear();
 	}
 	
@@ -215,7 +217,7 @@ HSTREAM TSoundManager::LoadSoundEffect(TIndexSound &is)
 //	Mix_VolumeChunk(mix, volume);
 //
 //	if (Mix_PlayChannel(-1, mix, 0) < 0)
-//		trace_printf("Sound mix error: %s\n", Mix_GetError());
+//		TPRINT("Sound mix error: %s\n", Mix_GetError());
 //}
 
 void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
@@ -231,7 +233,7 @@ void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, static_cast<float>(volume) / 2.55f);
 
 	if (!BASS_ChannelPlay(hStream, false))
-		trace_printf("Bass sound play error: %s\n", BASS_ErrorGetDescription());
+		TPRINT("Bass sound play error: %s\n", BASS_ErrorGetDescription());
 
 }
 //---------------------------------------------------------------------------
@@ -300,7 +302,7 @@ void TSoundManager::PlayMidi(int index)
 			TraceMusicError(error);
 	}
 	else
-		trace_printf("Music ID is out of renge: %i\n",index);
+		TPRINT("Music ID is out of range: %i\n", index);
 }
 //---------------------------------------------------------------------------
 void TSoundManager::StopMusic()
@@ -330,9 +332,9 @@ void TSoundManager::TraceMusicError(DWORD error)
 		wchar_t szBuf[MAXERRORLENGTH];
 
 		if (mciGetErrorString(error, szBuf, MAXERRORLENGTH))
-			trace_printf("Midi error: %s\n", ToString(szBuf).c_str());
+			TPRINT("Midi error: %s\n", ToString(szBuf).c_str());
 		else
-			trace_printf("Midi error: #%i\n", error);
+			TPRINT("Midi error: #%i\n", error);
 	}
 }
 //---------------------------------------------------------------------------
