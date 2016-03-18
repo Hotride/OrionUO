@@ -110,7 +110,6 @@ void TGumpContainer::GenerateFrame(int posX, int posY)
 		}
 
 		bool canSelect = (ObjectInHand == NULL || (ObjectInHand != NULL && !g_LeftMouseDown));
-		bool isCorpse = (container->Graphic == 0x2006);
 		
 		ColorizerShader->Use();
 
@@ -118,7 +117,7 @@ void TGumpContainer::GenerateFrame(int posX, int posY)
 		{
 			int count = obj->Count;
 
-			if ((obj->Layer == OL_NONE || (isCorpse && LAYER_UNSAFE[obj->Layer])) && count > 0)
+			if ((obj->Layer == OL_NONE || (container->IsCorpse() && LAYER_UNSAFE[obj->Layer])) && count > 0)
 			{
 				bool doubleDraw = false;
 				WORD graphic = obj->GetDrawGraphic(doubleDraw);
@@ -359,13 +358,11 @@ int TGumpContainer::Draw(bool &mode)
 
 		if (container != NULL)
 		{
-			bool isCorpse = (container->Graphic == 0x2006);
-
 			for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
 			{
 				int count = obj->Count;
 
-				if ((obj->Layer == OL_NONE || (isCorpse && LAYER_UNSAFE[obj->Layer])) && count > 0)
+				if ((obj->Layer == OL_NONE || (container->IsCorpse() && LAYER_UNSAFE[obj->Layer])) && count > 0)
 				{
 					bool doubleDraw = false;
 					WORD graphic = obj->GetDrawGraphic(doubleDraw);

@@ -25,7 +25,7 @@ const char *GetReagentName(WORD ID);
 int CalculateSphereOffset(int max, int current, int maxValue, float divizor = 100.0f);
 int CalculatePercents(int max, int current, int maxValue);
 //---------------------------------------------------------------------------
-void TileOffsetOnMonitorToXY(int &ofsX, int ofsY, int &x, int &y);
+void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y);
 //---------------------------------------------------------------------------
 void UnuseShader();
 //---------------------------------------------------------------------------

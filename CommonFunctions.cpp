@@ -67,7 +67,7 @@ int CalculatePercents(int max, int current, int maxValue)
 	return max;
 }
 //---------------------------------------------------------------------------
-void TileOffsetOnMonitorToXY(int &ofsX, int ofsY, int &x, int &y)
+void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y)
 {
 	if (!ofsX)
 		x = y = ofsY / 2;

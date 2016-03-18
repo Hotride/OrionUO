@@ -281,7 +281,7 @@ void TGumpManager::OnRightMouseUp(bool blocked)
 					TGameItem *obj = World->FindWorldItem(gump->Serial);
 					if (obj != NULL)
 					{
-						if (obj->Graphic == 0x2006)
+						if (obj->IsCorpse())
 						{
 							for (TGameItem *gi = (TGameItem*)obj->m_Items; gi != NULL; )
 							{

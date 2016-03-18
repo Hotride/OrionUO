@@ -294,7 +294,11 @@ void TGameObject::DrawEffects(int &drawX, int &drawY, DWORD &ticks)
 			POINT p = {0, 0};
 			UO->GetGumpDimension(gGraphic, p);
 
+			effect->ApplyRenderMode();
+
 			UO->DrawGump(gGraphic, effect->Color, x - (p.x / 2), (y - p.y) - z);
+
+			effect->RemoveRenderMode();
 		}
 		else if (eGraphic != 0)
 		{
@@ -302,7 +306,7 @@ void TGameObject::DrawEffects(int &drawX, int &drawY, DWORD &ticks)
 
 			UO->DrawStaticArt(eGraphic, effect->Color, x, y, gZ);
 
-			glDisable(GL_BLEND);
+			effect->RemoveRenderMode();
 		}
 
 		effect = next;

@@ -506,7 +506,7 @@ WORD TGameItem::GetMountAnimation()
 				break;
 		}
 	}
-	else if (graphic == 0x2006) //Corpse
+	else if (IsCorpse())
 	{
 		graphic = (WORD)m_Count;
 		AnimationManager->GetCorpseGraphic(graphic);

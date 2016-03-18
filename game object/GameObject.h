@@ -23,19 +23,41 @@
 class TGameObject : public TRenderStaticObject
 {
 protected:
-	DWORD m_Container; //Серийник контейнера, содержащего объект (0xFFFFFFFF - объект лежит в мире)
-	BYTE m_MapIndex; //Карта объекта
-	DWORD m_Count; //Количество
-	BYTE m_Flags; //Флаги от сервера
-	string m_Name; //Имя
-	bool m_NPC; //НПС или предмет
-	bool m_Clicked; //На предмет кликнули
-	char m_AnimIndex; //Текущий индекс анимации
-	DWORD m_LastAnimationChangeTime; //Время последнего изменения анимации
+	//Серийник контейнера, содержащего объект (0xFFFFFFFF - объект лежит в мире)
+	DWORD m_Container;
 
-	TGameEffect *m_Effects; //Ссылка на список эффектов персонажа
+	//Карта объекта
+	BYTE m_MapIndex;
 
+	//Количество
+	DWORD m_Count;
+
+	//Флаги от сервера
+	BYTE m_Flags;
+
+	//Имя
+	string m_Name;
+
+	//НПС или предмет
+	bool m_NPC;
+
+	//На предмет кликнули
+	bool m_Clicked;
+
+	//Текущий индекс анимации
+	char m_AnimIndex;
+
+	//Время последнего изменения анимации
+	DWORD m_LastAnimationChangeTime;
+
+	//Ссылка на список эффектов персонажа
+	TGameEffect *m_Effects;
+
+	//Указатель на текстуру дл яопции Object Handles
 	TTextureObject m_TextureObjectHalndes;
+
+	//Создать текстуру для опции Object Handles
+	void GenerateObjectHandlesTexture(wstring text);
 
 public:
 	TGameObject(DWORD serial = 0);
@@ -54,12 +76,14 @@ public:
 	SETGETEX(char, AnimIndex);
 	SETGET(DWORD, LastAnimationChangeTime);
 
+	//Отрисовать текстуру опции Object Handles (автоматически создает текстуру, если она не была создана)
 	void DrawObjectHandlesTexture(int &x, int &y);
 
+	//Получить индекс анимации
 	virtual WORD GetMountAnimation();
 
+	//Событие, вызываемое при изменении индекса картинки
 	virtual void OnGraphicChange(int direction = 0) {}
-	virtual void GenerateObjectHandlesTexture(wstring text);
 
 	//Проверка прозрачности (для круга прозрачности)
 	virtual bool TranparentTest(int &playerZ) { return false; }
@@ -92,7 +116,7 @@ public:
 	WORD GetDrawGraphic(bool &doubleDraw);
 
 	bool IsGameObject() {return true;}
-	bool IsCorpse() {return (Graphic == 0x2006);}
+	bool IsCorpse() {return (m_Graphic == 0x2006);}
 
 	//Найти объект в мире, в котором содержится контейнер
 	TGameObject *GetTopObject();

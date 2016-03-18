@@ -58,8 +58,8 @@ public:
 	//Получить индекс картинки (для анимации)
 	WORD GetMountAnimation();
 
-	virtual bool IsInternal() {return ((m_TiledataPtr->Flags & 0x00010000) && m_Graphic != 0x2006);}
-	bool IsHuman() {return (IsCorpse() && (m_Count >= 0x0190) && (m_Count <= 0x0193));}
+	virtual bool IsInternal() { return ((m_TiledataPtr->Flags & 0x00010000) && !IsCorpse()); }
+	bool IsHuman() { return (IsCorpse() && (m_Count >= 0x0190) && (m_Count <= 0x0193)); }
 
 	//Загрузка мульти в текущий объект
 	void LoadMulti();
