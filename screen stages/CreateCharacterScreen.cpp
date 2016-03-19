@@ -289,20 +289,33 @@ int TCreateCharacterScreen::Render(bool mode)
 		}
 		else
 		{
+			PBYTE huesData = (PBYTE)ColorManager->GetHuesRangePointer() + 32 + 4;
+			int colorOffsetDivider = sizeof(HUES_GROUP) - 4;
+
 			if (m_ColorSelection == CCSID_SKIN_TONE)
 			{
-				IFOR(x, 0, 8)
+				IFOR(y, 0, 8)
 				{
-					IFOR(y, 0, 8)
+					WORD startColor = 0x03E9 + y;
+
+					IFOR(x, 0, 8)
 					{
-						WORD color = 0x3EA + (x * 8 + (x < 7 ? y : 0));
+						int colorIndex = (startColor + ((startColor + (startColor << 2)) << 1)) << 3;
+						colorIndex += (colorIndex / colorOffsetDivider) << 2;
+						WORD color = *(PWORD)(huesData + colorIndex);
 
-						DWORD clr = ColorManager->GetPolygoneColor(cell, color);
+						DWORD clr = ColorManager->Color16To32(color);
 
-						g_GL.DrawPolygone(clr, 490 + (x * 15), 140 + (y * 35), 15, 35);
+						glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
+						g_GL.DrawPolygone(491 + (x * 15), 138 + (y * 35), 15, 35);
 
 						if (g_LastSelectedObject == ID_CCS_COLOR_RANGE + (x * 8 + y))
 							g_GL.DrawPolygone(0x007F7F7F, 490 + ((x * 15) + 6), 140 + ((y * 35) + 16), 2, 2);
+
+						if (x == 6)
+							startColor = 0x03E9 + ((x + 1) * 8);
+						else
+							startColor += 8;
 					}
 				}
 			}
@@ -310,64 +323,52 @@ int TCreateCharacterScreen::Render(bool mode)
 			{
 				IFOR(y, 1, 48)
 				{
-					WORD color = 0;
-
-					switch (y % 4)
-					{
-						case 0:
-						{
-							color = 102 + (y / 4);
-							break;
-						}
-						case 1:
-						{
-							color = 202 + (y / 4);
-							break;
-						}
-						case 2:
-						{
-							color = 402 + (y / 4);
-							break;
-						}
-						case 3:
-						{
-							color = 802 + (y / 4);
-							break;
-						}
-						default:
-							break;
-					}
+					WORD startColor = (1 << (y % 4)) * 100 + 1 + (y / 4);
 
 					IFOR(x, 0, 20)
 					{
-						DWORD clr = ColorManager->GetPolygoneColor(7, color);
+						int colorIndex = (startColor + ((startColor + (startColor << 2)) << 1)) << 3;
+						colorIndex += (colorIndex / colorOffsetDivider) << 2;
+						WORD color = *(PWORD)(huesData + colorIndex);
 
-						g_GL.DrawPolygone(clr, 492 + (x * 6), 148 + (y * 5), 6, 5);
+						DWORD clr = ColorManager->Color16To32(color);
 
-						color += 5;
+						glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
+						g_GL.DrawPolygone(492 + (x * 6), 148 + (y * 5), 6, 5);
 
-						if (g_LastSelectedObject == ID_CCS_COLOR_RANGE + (y * 20 + x))
-							g_GL.DrawPolygone(0x007F7F7F, 492 + ((x * 6) + 2), 148 + ((y * 5) + 2), 2, 2);
+						startColor += 5;
 					}
 				}
 			}
 			else if (m_ColorSelection == CCSID_HAIR_COLOR || m_ColorSelection == CCSID_FACIAL_HAIR_COLOR)
 			{
-				IFOR(x, 0, 6)
+				IFOR(y, 0, 8)
 				{
-					IFOR(y, 0, 8)
+					WORD startColor = 0x44D + y;
+
+					IFOR(x, 0, 6)
 					{
-						WORD color = 0x44E + (x * 8 + y);
+						int colorIndex = (startColor + ((startColor + (startColor << 2)) << 1)) << 3;
+						colorIndex += (colorIndex / colorOffsetDivider) << 2;
+						WORD color = *(PWORD)(huesData + colorIndex);
 
-						DWORD clr = ColorManager->GetPolygoneColor(cell, color);
+						DWORD clr = ColorManager->Color16To32(color);
 
-						g_GL.DrawPolygone(clr, 490 + (x * 20), 140 + (y * 35), 20, 35);
+						glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
+						g_GL.DrawPolygone(490 + (x * 20), 140 + (y * 35), 20, 35);
 
 						if (g_LastSelectedObject == ID_CCS_COLOR_RANGE + (x * 8 + y))
-							g_GL.DrawPolygone(0x007F7F7F, 490 + ((x * 20) + 9), 140 + ((y * 35) + 16), 2, 2);
+							g_GL.DrawPolygone(0x007F7F7F, 490 + ((x * 15) + 6), 140 + ((y * 35) + 16), 2, 2);
+
+						if (x == 6)
+							startColor = 0x03E9 + ((x + 1) * 8);
+						else
+							startColor += 8;
 					}
 				}
 			}
+
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		}
 
 		ColorizerShader->Use();
@@ -542,33 +543,8 @@ int TCreateCharacterScreen::Render(bool mode)
 					int index = (y * 20 + x);
 
 					g_LastSelectedObject = ID_CCS_COLOR_RANGE + index;
-					WORD st = 0;
 
-					switch (y % 4)
-					{
-						case 0:
-						{
-							st = 102 + (y / 4);
-							break;
-						}
-						case 1:
-						{
-							st = 202 + (y / 4);
-							break;
-						}
-						case 2:
-						{
-							st = 402 + (y / 4);
-							break;
-						}
-						case 3:
-						{
-							st = 802 + (y / 4);
-							break;
-						}
-						default:
-							break;
-					}
+					WORD st = (1 << (y % 4)) * 100 + 1 + (y / 4);
 
 					if (st)
 						st += (x * 5);

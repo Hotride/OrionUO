@@ -3503,7 +3503,7 @@ PACKET_HANDLER(DyeData)
 	Move(2);
 	WORD graphic = ReadWord();
 
-	TGumpDye *gump = new TGumpDye(serial, 0, 0, graphic);
+	TGumpDye *gump = new TGumpDye(serial, 100, 100, graphic);
 
 	GumpManager->AddGump(gump);
 }

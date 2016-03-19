@@ -514,7 +514,6 @@ m_AnimData(NULL), m_UsedLightList(NULL)
 {
 	string pth = g_DirectoryPath + "\\uolog.txt";
 	g_Logger.Init(pth.c_str());
-	TPRINT("Log open.\n");
 }
 //---------------------------------------------------------------------------
 TUltimaOnline::~TUltimaOnline()

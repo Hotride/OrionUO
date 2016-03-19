@@ -554,15 +554,13 @@ bool TGameCharacter::TestStepNoChangeDirection(BYTE group)
 //---------------------------------------------------------------------------
 BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 {
-	ANIMATION_GROUPS groupIndex = AG_LOW;
-	BYTE result = m_AnimationGroup;
-
 	if (!graphic)
 		graphic = GetMountAnimation();
 
 	AnimationManager->GetBodyGraphic(graphic);
 
-	groupIndex = AnimationManager->GetGroupIndex(graphic);
+	ANIMATION_GROUPS groupIndex = AnimationManager->GetGroupIndex(graphic);
+	BYTE result = m_AnimationGroup;
 
 	if (result != 0xFF)
 	{

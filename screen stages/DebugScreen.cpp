@@ -351,9 +351,6 @@ TDebugScreen *DebugScreen = NULL;
 TDebugScreen::TDebugScreen()
 : TBaseScreen()
 {
-	m_Text = new TEntryText(0, 100);
-	m_Text->SetText("test text");
-
 	TEffectMoving *ef = new TEffectMoving();
 	ef->Graphic = 0x36E4;
 	ef->Duration = GetTickCount();
@@ -373,18 +370,11 @@ TDebugScreen::TDebugScreen()
 //---------------------------------------------------------------------------
 TDebugScreen::~TDebugScreen()
 {
-	if (m_Text != NULL)
-	{
-		delete m_Text;
-		m_Text = NULL;
-	}
 }
 //---------------------------------------------------------------------------
 void TDebugScreen::Init()
 {
 	g_ConfigLoaded = false;
-
-	m_ColorRef = 1;
 
 	SetWindowTextA(g_hWnd, "Ultima Online");
 
@@ -511,13 +501,6 @@ int TDebugScreen::Render(bool mode)
 
 		FontManager->DrawA(3, str, 0x0386, 20, 20);
 
-		EntryPointer = m_Text;
-		m_Text->DrawA(3, 0x0386, 20, 100, TS_LEFT, UOFONT_FIXED);
-		//m_Text->DrawW(1, 0x0021, 20, 100, TS_LEFT, UOFONT_FIXED);
-
-		//Отрисовка гампа выбора цвета
-		//DrawColorsGump();
-
 		DrawSmoothMonitorEffect();
 
 		MouseManager.Draw(0x2073); //Main Gump mouse cursor
@@ -535,44 +518,6 @@ int TDebugScreen::Render(bool mode)
 	}
 
 	return 0;
-}
-//---------------------------------------------------------------------------
-void TDebugScreen::DrawColorsGump()
-{
-	int posX = 100;
-	int posY = 100;
-
-	//Gump body
-	UO->DrawGump(0x0906, 0, posX, posY);
-
-	//Okay button
-	UO->DrawGump(0x0907, 0, posX + 208, posY + 138);
-
-	//Scroll button
-	UO->DrawGump(0x0845, 0, posX, posY + 142);
-
-	const int cellWidthX = 8;
-	const int cellWidthY = 8;
-
-	const int cell = 5;
-
-	WORD startColor = m_ColorRef + 2;
-
-	posX += 34;
-	posY += 34;
-
-
-	IFOR(x, 0, 20)
-	{
-		IFOR(y, 0, 10)
-		{
-			WORD color = startColor + (x * 5 + (y * 100));
-
-			DWORD clr = ColorManager->GetPolygoneColor(5 + (0.02*color), color);
-
-			g_GL.DrawPolygone(clr, posX + (x * cellWidthX), posY + (y * cellWidthY), cellWidthX, cellWidthY);
-		}
-	}
 }
 //---------------------------------------------------------------------------
 void TDebugScreen::OnLeftMouseUp()
@@ -624,26 +569,9 @@ void TDebugScreen::OnLeftMouseUp()
 	g_LastObjectLeftMouseDown = 0;
 }
 //---------------------------------------------------------------------------
-void TDebugScreen::OnCharPress(WPARAM wparam, LPARAM lparam)
-{
-	if (wparam == VK_RETURN || wparam == VK_BACK || wparam == VK_ESCAPE || m_Text == NULL)
-		return; //Ignore no print keys
-
-	if (wparam == L'+' && m_ColorRef < 4)
-		m_ColorRef++;
-	else if (wparam == L'-' && m_ColorRef > 0)
-		m_ColorRef--;
-
-	m_Text->Insert(wparam);
-}
-//---------------------------------------------------------------------------
 void TDebugScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 {
 	if (wparam == VK_RETURN)
 		CreateSmoothAction(ID_SMOOTH_DS_GO_SCREEN_MAIN);
-	else if (wparam == VK_BACK || wparam == VK_ESCAPE)
-		TPRINT("Data text: %s\n", m_Text->c_str());
-	else
-		m_Text->OnKey(NULL, wparam);
 }
 //---------------------------------------------------------------------------

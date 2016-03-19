@@ -49,6 +49,7 @@ public:
 	TColorManager();
 	~TColorManager();
 
+	PHUES_GROUP GetHuesRangePointer() { return m_HuesRange; }
 	int GetHuesCount() const {return m_HuesCount;}
 
 	//Патч блока цветов из вердаты

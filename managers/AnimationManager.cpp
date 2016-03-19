@@ -1820,7 +1820,14 @@ bool TAnimationManager::AnimationExists(WORD &graphic, BYTE group)
 			dataStart = (PBYTE)(m_DataIndex[graphic].Offset + aidx->Position);
 		}
 
-		result = (dataStart != NULL);
+		if (dataStart != NULL)
+		{
+			dataStart += sizeof(WORD[256]); //Palette
+
+			int frameCount = *((PDWORD)dataStart);
+
+			result = (frameCount > 0);
+		}
 	}
 
 	return result;

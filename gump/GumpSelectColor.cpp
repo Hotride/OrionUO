@@ -77,27 +77,39 @@ void TGumpSelectColor::GenerateFrame(int posX, int posY)
 		gumpID = 0x0845 + (int)(CanSelectedButton == ID_GSC_SLIDER); //Scroll button / selected
 		UO->DrawGump(gumpID, 0, posX + m_SliderPos, posY + 142);
 
-		WORD startColor = m_ColorRef + 2;
-
 		posX += 34;
 		posY += 34;
-		
-		const int cell = 5;
+
+		WORD startColor = m_ColorRef + 1;
+
+		PBYTE huesData = (PBYTE)ColorManager->GetHuesRangePointer() + 32 + 4;
+		int colorOffsetDivider = sizeof(HUES_GROUP) - 4;
 
 		IFOR(y, 0, 10)
 		{
 			IFOR(x, 0, 20)
 			{
-				WORD FColor = startColor + (x * 5 + (y * 100));
+				int colorIndex = (startColor + ((startColor + (startColor << 2)) << 1)) << 3;
 
-				DWORD clr = ColorManager->GetPolygoneColor(cell + (y / 2), FColor);
+				colorIndex += (colorIndex / colorOffsetDivider) << 2;
+				WORD color = *(PWORD)(huesData + colorIndex);
 
-				g_GL.DrawPolygone(clr, posX + (x * cellWidthX), posY + (y * cellWidthY), cellWidthX, cellWidthY);
+				DWORD clr = ColorManager->Color16To32(color);
+
+				glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
+				g_GL.DrawPolygone(posX + (x * cellWidthX), posY + (y * cellWidthY), cellWidthX, cellWidthY);
 
 				if (m_SelectedIndex == ID_GSC_COLORS + (x * 30 + y))
-					g_GL.DrawPolygone(0x007F7F7F, posX + (x * cellWidthX) + (cellWidthX / 2) - 1, posY + (y * cellWidthY) + (cellWidthY / 2) - 1, 2, 2);
+				{
+					glColor3ub(0xFF, 0xFF, 0xFF);
+					g_GL.DrawPolygone(posX + (x * cellWidthX) + (cellWidthX / 2) - 1, posY + (y * cellWidthY) + (cellWidthY / 2) - 1, 2, 2);
+				}
+
+				startColor += 5;
 			}
 		}
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	glEndList();
 
@@ -235,15 +247,15 @@ int TGumpSelectColor::Draw(bool &mode)
 void TGumpSelectColor::OnLeftMouseUp()
 {
 	if (g_LastObjectLeftMouseDown != g_LastSelectedObject)
-		return;
-
-	if (g_LastSelectedObject == ID_GSC_BUTTON_OKAY)
+	{
+	}
+	else if (g_LastSelectedObject == ID_GSC_BUTTON_OKAY)
 	{
 		WORD color = 0;
 
 		WORD startColor = m_ColorRef + 2;
 
-		IFOR(y, 0, 10)
+		IFOR(y, 0, 10 && !color)
 		{
 			IFOR(x, 0, 20)
 			{
@@ -253,15 +265,10 @@ void TGumpSelectColor::OnLeftMouseUp()
 					break;
 				}
 			}
-
-			if (color)
-				break;
 		}
 
-		if (!color)
-			return;
-
-		OnSelectColor(color);
+		if (color)
+			OnSelectColor(color);
 	}
 	else if (g_LastSelectedObject >= ID_GSC_COLORS)
 		m_SelectedIndex = g_LastSelectedObject;
