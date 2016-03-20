@@ -22,7 +22,7 @@
 //---------------------------------------------------------------------------
 class TGumpSelectColor : public TGump
 {
-private:
+protected:
 	static const int ID_GSC_BUTTON_OKAY = 1;
 	static const int ID_GSC_SLIDER = 2;
 	static const int ID_GSC_COLORS = 10;

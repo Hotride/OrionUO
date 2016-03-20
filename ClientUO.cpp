@@ -2639,6 +2639,8 @@ void TUltimaOnline::Process()
 			GameScreen->Render(true);
 
 			GameScreen->RenderListInitalized = false;
+
+			MapManager->Init(true);
 		}
 	}
 	else if (g_LastRenderTime <= ticks)
@@ -3505,6 +3507,7 @@ void TUltimaOnline::GetArtDimension(WORD id, POINT &p)
 void TUltimaOnline::GetGumpDimension(WORD id, POINT &p)
 {
 	TTextureObject *th = m_GumpDataIndex[id].Texture;
+
 	if (th != NULL)
 	{
 		p.x = th->Width;

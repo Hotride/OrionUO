@@ -336,6 +336,9 @@ int TCreateCharacterScreen::Render(bool mode)
 						glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 						g_GL.DrawPolygone(492 + (x * 6), 148 + (y * 5), 6, 5);
 
+						if (g_LastSelectedObject == ID_CCS_COLOR_RANGE + (y * 20 + x))
+							g_GL.DrawPolygone(0x007F7F7F, 492 + ((x * 6) + 2), 148 + ((y * 5) + 2), 2, 2);
+
 						startColor += 5;
 					}
 				}
@@ -358,7 +361,7 @@ int TCreateCharacterScreen::Render(bool mode)
 						g_GL.DrawPolygone(490 + (x * 20), 140 + (y * 35), 20, 35);
 
 						if (g_LastSelectedObject == ID_CCS_COLOR_RANGE + (x * 8 + y))
-							g_GL.DrawPolygone(0x007F7F7F, 490 + ((x * 15) + 6), 140 + ((y * 35) + 16), 2, 2);
+							g_GL.DrawPolygone(0x007F7F7F, 490 + ((x * 20) + 9), 140 + ((y * 35) + 16), 2, 2);
 
 						if (x == 6)
 							startColor = 0x03E9 + ((x + 1) * 8);

@@ -417,7 +417,7 @@ void TGameScreen::CalculateRenderList()
 
 	if (m_RenderListCount)
 	{
-		memcpy(&m_RenderList[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA)* m_RenderListCount);
+		memcpy(&m_RenderList[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListCount);
 		/*int zSize = (int)zList.size();
 
 		if (!zSize || true)
@@ -673,7 +673,7 @@ void TGameScreen::CheckMouseEvents(bool &charSelected)
 
 		if (selobj != NULL && ObjectInHand == NULL && !selobj->Locked() && GetDistance(g_Player, selobj) < 3)
 		{
-			if (selobj->Serial >= 0x40000000 && !g_Player->Dead()) //Item selection
+			if (selobj->Serial >= 0x40000000 && !g_GrayedPixels) //Item selection
 			{
 				if (selobj->IsStackable() && selobj->Count > 1)
 				{
@@ -1013,6 +1013,7 @@ void TGameScreen::DrawGameWindowLight()
 
 			glClearColor(newLightColor, newLightColor, newLightColor, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
+			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE);
@@ -1029,8 +1030,6 @@ void TGameScreen::DrawGameWindowLight()
 			g_LightBuffer.Release();
 
 			g_GL.RestorePort();
-
-			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 			g_GL.ViewPort(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY, m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowSizeY);
 
@@ -1053,10 +1052,10 @@ void TGameScreen::DrawGameWindowLight()
 			UO->DrawLight(light.ID, light.Color, light.DrawX - m_RenderBounds.GameWindowPosX, light.DrawY - m_RenderBounds.GameWindowPosY);
 		}
 
-		UnuseShader();
-
 		glDisable(GL_BLEND);
 	}
+
+	UnuseShader();
 }
 //---------------------------------------------------------------------------
 void TGameScreen::DrawGameWindowText(bool &mode)
@@ -1277,6 +1276,8 @@ int TGameScreen::Render(bool mode)
 				TargetGump.Draw();
 				AttackTargetGump.Draw();
 
+				UnuseShader();
+
 				Weather.Draw(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY);
 			}
 
@@ -1289,20 +1290,13 @@ int TGameScreen::Render(bool mode)
 
 			DrawSmoothMonitorEffect();
 		}
-		else if (g_LightBuffer.Ready() && g_LightBuffer.Use())
+		else
 		{
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+			g_GL.DrawPolygone(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY, m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowSizeY);
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-			g_LightBuffer.Release();
-
-			g_GL.RestorePort();
-
-			g_GL.ViewPort(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY, m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowSizeY);
-
-			g_LightBuffer.Draw(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY);
-
-			FontManager->DrawA(3, "You are dead.", 0, m_RenderBounds.GameWindowCenterX - 30, m_RenderBounds.GameWindowCenterY);
+			FontManager->DrawA(3, "You are dead.", 0, m_RenderBounds.GameWindowCenterX - 50, m_RenderBounds.GameWindowCenterY - 20);
 		}
 		
 		g_OutOfRangeColor = 0;
@@ -1335,9 +1329,9 @@ int TGameScreen::Render(bool mode)
 		char dbf[150] = {0};
 
 		if (charSelected)
-			sprintf(dbf, "FPS=%i Dir=%i Z=%i CS", FPScount, g_Player->Direction, m_RenderBounds.PlayerZ);
+			sprintf(dbf, "FPS=%i Dir=%i Z=%i (MDZ=%i) CS", FPScount, g_Player->Direction, m_RenderBounds.PlayerZ, m_MaxDrawZ);
 		else
-			sprintf(dbf, "FPS=%i Dir=%i Z=%i", FPScount, g_Player->Direction, m_RenderBounds.PlayerZ);
+			sprintf(dbf, "FPS=%i Dir=%i Z=%i (MDZ=%i)", FPScount, g_Player->Direction, m_RenderBounds.PlayerZ, m_MaxDrawZ);
 
 		FontManager->DrawA(3, dbf, 0x35, 20, 50);
 

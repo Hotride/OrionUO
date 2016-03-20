@@ -28,6 +28,8 @@ public:
 	virtual ~TGumpDye();
 
 	void OnSelectColor(WORD &color);
+
+	int Draw(bool &mode);
 };
 //---------------------------------------------------------------------------
 #endif

@@ -153,6 +153,26 @@ void TWeather::Draw(int &drawX, int &drawY)
 	
 	TWeatherEffect *effect = m_Items;
 
+	switch (m_Type)
+	{
+		case WT_RAIN:
+		case WT_FIERCE_STORM:
+		{
+			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+
+			break;
+		}
+		case WT_SNOW:
+		case WT_STORM:
+		{
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+			break;
+		}
+		default:
+			break;
+	}
+
 	while (effect != NULL)
 	{
 		if ((effect->X < drawX || effect->X > (drawX + g_GameWindowWidth)) || (effect->Y < drawY || effect->Y > (drawY + g_GameWindowHeight)))
@@ -187,29 +207,34 @@ void TWeather::Draw(int &drawX, int &drawY)
 			}
 		}        
 
-		WORD graphic = 0x0EED;
-		WORD color = 0x5;
-
 		switch (m_Type)
 		{
-			case 0:
+			case WT_RAIN:
 			{
-				float scale_ratio = effect->GetScaleRatio();
-				effect->SpeedX = -4.5f - (float)scale_ratio;
-				effect->SpeedY = 5.0f + (float)scale_ratio;
+				float scaleRatio = effect->GetScaleRatio();
+				effect->SpeedX = -4.5f - scaleRatio;
+				effect->SpeedY = 5.0f + scaleRatio;
 				break;
 			}
-			case 1:
+			case WT_FIERCE_STORM:
 			{
 				effect->SpeedX = m_Wind;
 				effect->SpeedY = 6.0f;
 				break;
 			}
-			case 2:
+			case WT_SNOW:
+			case WT_STORM:
 			{
-				color = 0x0481;
-				effect->SpeedX = m_Wind;
-				effect->SpeedY = 1.0f;
+				if (m_Type == WT_SNOW)
+				{
+					effect->SpeedX = m_Wind;
+					effect->SpeedY = 1.0f;
+				}
+				else
+				{
+					effect->SpeedX = (m_Wind * 1.5f);
+					effect->SpeedY = 1.5f;
+				}
 
 				if (windChanged)
 				{
@@ -235,51 +260,43 @@ void TWeather::Draw(int &drawX, int &drawY)
 
 				break;
 			}
-			case 3:
+			default:
+				break;
+		}
+
+		float speedOffset = (float)passed / m_SimulationRatio;
+
+		switch (m_Type)
+		{
+			case WT_RAIN:
+			case WT_FIERCE_STORM:
 			{
-				//Color = 0x0481;
-				//effect->SpeedX = (effect->SpeedX * m_Wind);
-				//effect->SpeedY *= 2;
+				int oldX = (int)effect->X;
+				int oldY = (int)effect->Y;
 
-				color = 0x0481;
-				effect->SpeedX = (m_Wind * 1.5f);
-				effect->SpeedY = 1.5f;
+				effect->X += (effect->SpeedX * speedOffset);
+				effect->Y += (effect->SpeedY * speedOffset);
 
-				if (windChanged)
-				{
-					// вычисление угла скорости в градусах
-					effect->SetSpeedAngle(rad2degf(std::atan2f(effect->SpeedX, effect->SpeedY)));
-					// числинное значение скорости
-					effect->SetSpeedMagnitude(sqrtf(powf(effect->SpeedX, 2) + powf(effect->SpeedY, 2)));
-				}
-
-				float speed_angle = effect->GetSpeedAngle();
-				float speed_magnitude = effect->GetSpeedMagnitude();
-
-				// коэффицент скейлирования (используеться для рандомизации скорости снега)
-				speed_magnitude += effect->GetScaleRatio();
-
-				// тут движение УГЛА силы по синусоиде, ID() снежинки добавляется для смещения фазы
-				// хотя там можно заюзать любое постоянное число, например, порядковый номер снежинки
-				speed_angle += SinOscillate(0.4f, 20, currentTick + effect->GetID());
-
-				// обратная проекция на оси X, Y из угла и (скалярного) значения
-				effect->SpeedX = speed_magnitude * sinf(deg2radf(speed_angle));
-				effect->SpeedY = speed_magnitude * cosf(deg2radf(speed_angle));
-
+				g_GL.DrawLine(drawX + oldX, drawY + oldY, drawX + (int)effect->X, drawY + (int)effect->Y);
 				break;
 			}
-			default: break;
-		}        
+			case WT_SNOW:
+			case WT_STORM:
+			{
+				effect->X += (effect->SpeedX * speedOffset);
+				effect->Y += (effect->SpeedY * speedOffset);
 
-		effect->X += (effect->SpeedX * (float(passed) / m_SimulationRatio));
-		effect->Y += (effect->SpeedY * (float(passed) / m_SimulationRatio));
-
-		UO->DrawStaticArtInContainer(graphic, color, drawX + (int)effect->X, drawY + (int)effect->Y);
+				g_GL.DrawPolygone(drawX + (int)effect->X, drawY + (int)effect->Y, 2, 2);
+				break;
+			}
+			default:
+				break;
+		}
 
 		effect = effect->m_Next;
 	}
 
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	m_LastTick = currentTick;
 }
 //---------------------------------------------------------------------------

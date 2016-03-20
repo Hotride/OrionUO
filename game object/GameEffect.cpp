@@ -165,14 +165,13 @@ void TGameEffect::ApplyRenderMode()
 			glBlendFunc(GL_ONE, GL_ONE);
 			break;
 		}
-		case 4:
+		case 4: //?
 		{
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
-			glColor4f(g_DrawColor, g_DrawColor, g_DrawColor, 0.1f);
 			break;
 		}
-		case 5:
+		case 5: //?
 		{
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
@@ -204,7 +203,6 @@ void TGameEffect::RemoveRenderMode()
 		case 4:
 		{
 			glDisable(GL_BLEND);
-			glColor4f(g_DrawColor, g_DrawColor, g_DrawColor, 1.0f);
 			break;
 		}
 		case 5:

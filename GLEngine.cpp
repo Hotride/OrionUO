@@ -96,7 +96,7 @@ bool TGLEngine::Install(HWND hWnd)
 
 	TPRINT("g_UseFrameBuffer = %i\n", g_UseFrameBuffer);
 
-	glClearColor(0.0, 0.0, 0.0, 0.0);		// Black Background
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);		// Black Background
 	glShadeModel(GL_SMOOTH);				// Enables Smooth Color Shading
 	glClearDepth(1.0);						// Depth Buffer Setup
 	glDisable(GL_DITHER);
@@ -127,7 +127,7 @@ bool TGLEngine::Install(HWND hWnd)
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
 
 	glViewport(0, 0, g_ClientWidth, g_ClientHeight);
-	glOrtho(0.0, g_ClientWidth, g_ClientHeight, 0.0, -100.0, 100.0);
+	glOrtho(0.0, g_ClientWidth, g_ClientHeight, 0.0, -150.0, 150.0);
 	
 	return true;
 }
@@ -144,7 +144,7 @@ void TGLEngine::UpdateRect()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	glOrtho(0.0, g_ClientWidth, g_ClientHeight, 0.0, -100.0, 100.0);
+	glOrtho(0.0, g_ClientWidth, g_ClientHeight, 0.0, -150.0, 150.0);
 
 	glMatrixMode(GL_MODELVIEW);
 
@@ -240,7 +240,7 @@ void TGLEngine::ViewPort(int x, int y, int sizeX, int sizeY)
 	glViewport(x, g_ClientHeight - y - sizeY, sizeX, sizeY);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(x, sizeX + x, sizeY + y, y, -100.0, 100.0);
+	glOrtho(x, sizeX + x, sizeY + y, y, -150.0, 150.0);
 	glMatrixMode(GL_MODELVIEW);
 }
 //---------------------------------------------------------------------------
@@ -249,7 +249,7 @@ void TGLEngine::RestorePort()
 	glViewport(0, 0, g_ClientWidth, g_ClientHeight);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0, g_ClientWidth, g_ClientHeight, 0.0, -100.0, 100.0);
+	glOrtho(0.0, g_ClientWidth, g_ClientHeight, 0.0, -150.0, 150.0);
 	glMatrixMode(GL_MODELVIEW);
 }
 //---------------------------------------------------------------------------

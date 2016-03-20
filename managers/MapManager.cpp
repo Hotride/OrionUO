@@ -213,20 +213,23 @@ void TMapManager::ClearUnusedBlocks()
 	}
 }
 //---------------------------------------------------------------------------
-void TMapManager::Init()
+void TMapManager::Init(bool delayed)
 {
 	int map = GetActualMap();
 
 #if USE_BLOCK_MAP == 1
-	if (m_Blocks != NULL)
+	if (!delayed)
 	{
-		delete[] m_Blocks;
-		m_Blocks = NULL;
-	}
+		if (m_Blocks != NULL)
+		{
+			delete[] m_Blocks;
+			m_Blocks = NULL;
+		}
 
-	m_MaxBlockIndex = g_MapBlockX[map] * g_MapBlockY[map];
-	m_Blocks = new TMapBlock*[m_MaxBlockIndex];
-	memset(&m_Blocks[0], 0, sizeof(TMapBlock*) * m_MaxBlockIndex);
+		m_MaxBlockIndex = g_MapBlockX[map] * g_MapBlockY[map];
+		m_Blocks = new TMapBlock*[m_MaxBlockIndex];
+		memset(&m_Blocks[0], 0, sizeof(TMapBlock*) * m_MaxBlockIndex);
+	}
 #endif
 	
 	const int XY_Offset = 30; //70;
@@ -235,6 +238,9 @@ void TMapManager::Init()
 	int minBlockY = (g_Player->Y - XY_Offset) / 8 - 1;
 	int maxBlockX = ((g_Player->X + XY_Offset) / 8) + 1;
 	int maxBlockY = ((g_Player->Y + XY_Offset) / 8) + 1;
+
+	DWORD ticks = GetTickCount();
+	DWORD maxDelay = g_FrameDelay[1] / 2;
 
 	for (int i = minBlockX; i <= maxBlockX; i++)
 	{
@@ -251,6 +257,9 @@ void TMapManager::Init()
 
 			if (block == NULL)
 			{
+				if (delayed && GetTickCount() - ticks >= maxDelay)
+					return;
+
 				block = AddBlock(index);
 				block->X = i;
 				block->Y = j;
@@ -266,20 +275,19 @@ void TMapManager::LoadBlock(TMapBlock *block)
 	
 	if (!FileManager.MapMul[Map].Address || !FileManager.StaticIdx[Map].Address || !FileManager.StaticMul[Map].Address)
 		return;
-	//DWORD ticks = GetTickCount();
+
 	int index = block->Index;
 	PMAP_BLOCK pmb = (PMAP_BLOCK)((DWORD)FileManager.MapMul[Map].Address + (index * sizeof(MAP_BLOCK)));
 	
-	int BX = block->X * 8;
-	int BY = block->Y * 8;
+	int bx = block->X * 8;
+	int by = block->Y * 8;
 
 	IFOR(x, 0, 8)
 	{
 		IFOR(y, 0, 8)
 		{
 			int pos = y * 8 + x;
-
-			TMapObject *obj = new TLandObject(pos, pmb->Cells[pos].TileID, 0, BX + x, BY + y, pmb->Cells[pos].Z);
+			TMapObject *obj = new TLandObject(pos, pmb->Cells[pos].TileID, 0, bx + x, by + y, pmb->Cells[pos].Z);
 			block->AddObject(obj, x, y);
 		}
 	}
@@ -291,32 +299,27 @@ void TMapManager::LoadBlock(TMapBlock *block)
 
 		int scnt = sidx->Size / sizeof(STATICS_BLOCK);
 
-		if (scnt > 0)
+		if (scnt > 1024)
+			scnt = 1024;
+
+		for (int c = 0; c < scnt; c++, sb++)
 		{
-			//TPRINT("LoadBlock prepare statics: %i (%i)\n", GetTickCount() - ticks, scnt);
-			if (scnt > 1024)
-				scnt = 1024;
-
-			for (int c = 0; c < scnt; c++, sb++)
+			if (sb->Color && sb->Color != 0xFFFF)
 			{
-				if (sb->Color && sb->Color != 0xFFFF)
-				{
-					int x = sb->X;
-					int y = sb->Y;
+				int x = sb->X;
+				int y = sb->Y;
 
-					int pos = (y * 8) + x;
-					//if (pos > 64) continue;
-				
-					TMapObject *obj = new TStaticObject(pos, sb->Color, sb->Hue, BX + x, BY + y, sb->Z);
-					block->AddObject(obj, x, y);
-				}
+				int pos = (y * 8) + x;
+				if (pos >= 64)
+					continue;
+
+				TMapObject *obj = new TStaticObject(pos, sb->Color, sb->Hue, bx + x, by + y, sb->Z);
+				block->AddObject(obj, x, y);
 			}
 		}
 	}
 
-	//TPRINT("LoadBlock created: %i\n", GetTickCount() - ticks);
 	block->CreateLandTextureRect();
-	//TPRINT("LoadBlock land created: %i\n", GetTickCount() - ticks);
 }
 //---------------------------------------------------------------------------
 int TMapManager::GetActualMap()

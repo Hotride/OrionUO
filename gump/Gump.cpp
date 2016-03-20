@@ -49,7 +49,10 @@ TGump::~TGump()
 void TGump::DrawLocker(int &x, int &y)
 {
 	if (g_ShowGumpLocker)
+	{
+		g_GL.OldTexture = 0;
 		g_GL.Draw(g_TextureGumpState[m_LockMoving], x, y, 10, 14);
+	}
 }
 //---------------------------------------------------------------------------
 void TGump::GetBaseProperties(DWORD &serial, WORD &graphic, WORD &color, WORD &x, WORD &y)

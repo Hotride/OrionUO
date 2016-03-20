@@ -203,8 +203,8 @@ int TGameObject::IsGold()
 	{
 		case 0x0EED:
 			return 1;
-		case 0x0EEA:
-			return 2;
+		/*case 0x0EEA:
+			return 2;*/
 		case 0x0EF0:
 			return 3;
 		default:

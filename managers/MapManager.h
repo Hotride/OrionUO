@@ -52,7 +52,7 @@ public:
 	void GetMapZ(int x, int y, int &groundZ, int &staticZ);
 
 	//Инициализация
-	void Init();
+	void Init(bool delayed = false);
 
 	//Получить ссылку на блок
 	TMapBlock *GetBlock(DWORD index);

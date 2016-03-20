@@ -44,7 +44,8 @@ public:
 	
 	HDC GetDC() const {return m_DC;}
 	HGLRC GetRC() const {return m_RC;}
-	GLuint tex;
+
+	SETGET(GLuint, OldTexture);
 
 	//Инициализация OpenGL
 	bool Install(HWND hWnd);

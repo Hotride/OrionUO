@@ -63,7 +63,7 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 
 	bool ignoreGameObjects = (g_Player->Graphic == 0x03DB);
 	bool ignoreDoors = g_Player->Dead();
-	bool ignoreGameCharacters = (g_Player->Stam >= g_Player->MaxStam);
+	bool ignoreGameCharacters = (g_Player->Stam >= g_Player->MaxStam || g_Player->Dead());
 
 	TRenderWorldObject *obj = block->GetRender(bx, by);
 

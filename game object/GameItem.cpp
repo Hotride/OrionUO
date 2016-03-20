@@ -185,8 +185,8 @@ g_RenderedObjectsCountInGameWindow++;
 					selMode = true;
 				}
 
-				if (IsSurface() || (IsBackground() && IsUnknown2()))
-					;// glEnable(GL_DEPTH_TEST);
+				//if (IsSurface() || (IsBackground() && IsUnknown2()))
+					// glEnable(GL_DEPTH_TEST);
 
 				if (doubleDraw)
 				{
@@ -197,7 +197,7 @@ g_RenderedObjectsCountInGameWindow++;
 				else
 					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z, selMode);
 
-				glDisable(GL_DEPTH_TEST);
+				//glDisable(GL_DEPTH_TEST);
 
 				if (IsLightSource() && GameScreen->UseLight)
 					GameScreen->AddLight(this, this, drawX, drawY - (m_Z * 4));

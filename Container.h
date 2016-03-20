@@ -77,6 +77,9 @@ struct CONTAINER_OFFSET
 	//Индекс звука открытия (0 - нет звука)
 	WORD OpenSound;
 
+	//Индекс звука закрытия (0 - нет звука)
+	WORD CloseSound;
+
 	//Координаты в гампе для дропа
 	CONTAINER_OFFSET_RECT rect;
 };

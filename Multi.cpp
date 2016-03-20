@@ -76,7 +76,7 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		}
 		else
 		{
-			if (IsSurface() || (IsBackground() && IsUnknown2()) || IsRoof())
+			if (m_CanBeTransparent & 0x10)
 				glEnable(GL_DEPTH_TEST);
 			
 			if (g_UseCircleTrans)

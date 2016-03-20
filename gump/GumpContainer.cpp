@@ -33,6 +33,15 @@ TGumpContainer::~TGumpContainer()
 		delete TextRenderer;
 		TextRenderer = NULL;
 	}
+
+	if (m_Graphic < CONTAINERS_COUNT)
+	{
+		WORD sound = g_ContainerOffset[m_Graphic].CloseSound;
+
+		if (sound)
+			UO->PlaySoundEffect(sound);
+	}
+
 }
 //---------------------------------------------------------------------------
 void TGumpContainer::PrepareTextures()

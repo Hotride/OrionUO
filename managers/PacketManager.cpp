@@ -917,7 +917,7 @@ PACKET_HANDLER(EnterWorld)
 	TPacketGameWindowSize packet;
 	packet.Send();
 	
-	BYTE wbuf[4] = {0x65, 0x02, 0x3C, 0};
+	BYTE wbuf[4] = {0x65, 0x03, 0x46, 0};
 	Ptr = wbuf + 1;
 	HandleSetWeather(wbuf, 4);
 }
@@ -3503,9 +3503,15 @@ PACKET_HANDLER(DyeData)
 	Move(2);
 	WORD graphic = ReadWord();
 
-	TGumpDye *gump = new TGumpDye(serial, 100, 100, graphic);
+	TGumpDye *gump = new TGumpDye(serial, 0, 0, graphic);
 
 	GumpManager->AddGump(gump);
+
+	POINT p = { 0, 0 };
+	UO->GetGumpDimension(0x0906, p);
+
+	gump->X = (WORD)((g_ClientWidth / 2) - (p.x / 2));
+	gump->Y = (WORD)((g_ClientHeight / 2) - (p.y / 2));
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(CharacterProfile)

@@ -214,14 +214,8 @@ g_RenderedObjectsCountInGameWindow++;
 //---------------------------------------------------------------------------
 TRenderStaticObject::TRenderStaticObject(RENDER_OBJECT_TYPE renderType, DWORD serial, WORD graphic, WORD color, short x, short y, char z)
 : TMapObject(renderType, serial, graphic, color, x, y, z), m_FoliageTransparentIndex(-1),
-m_TiledataPtr(&UO->m_StaticData[graphic / 32].Tiles[graphic % 32]),
-m_CanBeTransparent(0)
+m_TiledataPtr(&UO->m_StaticData[graphic / 32].Tiles[graphic % 32])
 {
-	if (renderType == ROT_GAME_OBJECT)
-		m_TextControl = new TTextContainer(3);
-	else
-		m_TextControl = new TTextContainer(1);
-
 	if (m_TiledataPtr->Height > 5)
 		m_CanBeTransparent = 1;
 	else if (IsRoof() || (IsSurface() && IsBackground()) || IsWall())
@@ -230,6 +224,21 @@ m_CanBeTransparent(0)
 		m_CanBeTransparent = 1;
 	else
 		m_CanBeTransparent = 0;
+
+	if (renderType == ROT_GAME_OBJECT)
+	{
+		m_TextControl = new TTextContainer(3);
+
+		if (IsSurface() || (IsBackground() && IsUnknown2()))
+			m_CanBeTransparent |= 0x10;
+	}
+	else
+	{
+		m_TextControl = new TTextContainer(1);
+
+		if (IsSurface() || (IsBackground() && IsUnknown2()) || IsRoof())
+			m_CanBeTransparent |= 0x10;
+	}
 }
 //---------------------------------------------------------------------------
 TRenderStaticObject::~TRenderStaticObject()
@@ -297,7 +306,7 @@ bool TRenderStaticObject::TranparentTest(int &playerZPlus5)
 
 	if (m_Z <= playerZPlus5 - m_TiledataPtr->Height)
 		result = false;
-	else if (playerZPlus5 < m_Z && !m_CanBeTransparent)
+	else if (playerZPlus5 < m_Z && !(m_CanBeTransparent & 0xF))
 		result = false;
 
 	return result;
@@ -348,36 +357,6 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		{
 			if (!g_GrayedPixels)
 			{
-				/*int treePos = (m_X - g_Player->X) + (m_Y - g_Player->Y);
-
-				bool iransparentFoliage = (treePos > 0 && treePos <= 6);
-
-				if (iransparentFoliage)
-				{
-					treePos = (m_X - g_Player->X) - (m_Y - g_Player->Y);
-
-					iransparentFoliage = (treePos >= -4 && treePos <= 6);
-				}*/
-
-				/*if (iransparentFoliage)
-				{
-					POINT fp = { 0, 0 };
-					UO->GetArtDimension(m_Graphic, fp);
-
-					IMAGE_BOUNDS fib = { drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y };
-
-					iransparentFoliage = fib.InRect(g_PlayerRect);
-				}*/
-
-				//g_GL.DrawPolygone(0x7F7F7F7F, fib.X, fib.Y, fib.Width, fib.Height);
-				
-				/*POINT fp = { 0, 0 };
-				UO->GetArtDimension(m_Graphic, fp);
-
-				TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y);
-
-				if (fib.InRect(g_PlayerRect))*/
-
 				if (m_FoliageTransparentIndex == g_FoliageIndex)
 				{
 					glEnable(GL_BLEND);
@@ -394,7 +373,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		}
 		else
 		{
-			if (IsSurface() || (IsBackground() && IsUnknown2()) || IsRoof())
+			if (m_CanBeTransparent & 0x10)
 				glEnable(GL_DEPTH_TEST);
 
 			if (g_UseCircleTrans)
@@ -414,13 +393,6 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		{
 			if (!g_GrayedPixels)
 			{
-				/*POINT fp = { 0, 0 };
-				UO->GetArtDimension(m_Graphic, fp);
-
-				TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (m_Z * 4), fp.x, fp.y);
-
-				if (!fib.InRect(g_PlayerRect))*/
-
 				if (m_FoliageTransparentIndex != g_FoliageIndex)
 				{
 					if (UO->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z))

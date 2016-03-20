@@ -121,8 +121,8 @@ int TGumpSelectColor::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	int posX = X;
-	int posY = Y;
+	int posX = m_X;
+	int posY = m_Y;
 	
 	//Нажата ли кнопка в окне?
 	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
@@ -246,32 +246,32 @@ int TGumpSelectColor::Draw(bool &mode)
 //----------------------------------------------------------------------------
 void TGumpSelectColor::OnLeftMouseUp()
 {
-	if (g_LastObjectLeftMouseDown != g_LastSelectedObject)
+	if (g_LastObjectLeftMouseDown == g_LastSelectedObject)
 	{
-	}
-	else if (g_LastSelectedObject == ID_GSC_BUTTON_OKAY)
-	{
-		WORD color = 0;
-
-		WORD startColor = m_ColorRef + 2;
-
-		IFOR(y, 0, 10 && !color)
+		if (g_LastSelectedObject == ID_GSC_BUTTON_OKAY)
 		{
-			IFOR(x, 0, 20)
+			WORD color = 0;
+
+			WORD startColor = m_ColorRef + 2;
+
+			IFOR(y, 0, 10 && !color)
 			{
-				if (m_SelectedIndex == ID_GSC_COLORS + (x * 30 + y))
+				IFOR(x, 0, 20)
 				{
-					color = startColor + (x * 5 + (y * 100));
-					break;
+					if (m_SelectedIndex == ID_GSC_COLORS + (x * 30 + y))
+					{
+						color = startColor + (x * 5 + (y * 100));
+						break;
+					}
 				}
 			}
-		}
 
-		if (color)
-			OnSelectColor(color);
+			if (color)
+				OnSelectColor(color);
+		}
+		else if (g_LastSelectedObject >= ID_GSC_COLORS)
+			m_SelectedIndex = g_LastSelectedObject;
 	}
-	else if (g_LastSelectedObject >= ID_GSC_COLORS)
-		m_SelectedIndex = g_LastSelectedObject;
 }
 //----------------------------------------------------------------------------
 void TGumpSelectColor::OnSelectColor(WORD &color)

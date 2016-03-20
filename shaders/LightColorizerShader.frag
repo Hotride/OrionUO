@@ -33,8 +33,8 @@ void main(void)
 
 		vec3 resultColor = Color16To32(colors[index]);
 
-		gl_FragColor = vec4(resultColor, textureColor.a);
+		gl_FragColor = (textureColor * vec4(resultColor, 1.0)) * 3.0;
 	}
 	else
-		gl_FragColor = textureColor * gl_Color;
+		gl_FragColor = textureColor;
 }

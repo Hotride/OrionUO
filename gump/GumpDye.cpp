@@ -39,3 +39,45 @@ void TGumpDye::OnSelectColor(WORD &color)
 	GumpManager->RemoveGump(this);
 }
 //----------------------------------------------------------------------------
+int TGumpDye::Draw(bool &mode)
+{
+	int result = TGumpSelectColor::Draw(mode);
+
+	if (mode)
+	{
+		int x = m_X;
+		int y = m_Y;
+
+		if (g_LeftMouseDown && g_LastGumpLeftMouseDown == (DWORD)this && !g_LastObjectLeftMouseDown)
+		{
+			x += g_MouseX - g_DroppedLeftMouseX;
+			y += g_MouseY - g_DroppedLeftMouseY;
+		}
+
+		WORD startColor = m_ColorRef + 2;
+		WORD color = 0;
+
+		IFOR(y, 0, 10 && !color)
+		{
+			IFOR(x, 0, 20)
+			{
+				if (m_SelectedIndex == ID_GSC_COLORS + (x * 30 + y))
+				{
+					color = startColor;
+					break;
+				}
+
+				startColor += 5;
+			}
+		}
+
+		ColorizerShader->Use();
+
+		UO->DrawStaticArtInContainer(0x0FAB, color, x + 200, y + 58);
+
+		UnuseShader();
+	}
+
+	return result;
+}
+//----------------------------------------------------------------------------

@@ -42,14 +42,6 @@ void TGumpMinimap::PrepareTextures()
 //---------------------------------------------------------------------------
 void TGumpMinimap::GenerateMap()
 {
-	/*if (!g_DrawMode)
-	{
-		m_FrameRedraw = false;
-		m_FrameCreated = false;
-
-		return;
-	}*/
-
 	if (g_Player != NULL)
 	{
 		m_LastX = g_Player->X;
@@ -102,11 +94,8 @@ void TGumpMinimap::GenerateMap()
 		{
 			int blockIndex = (i * g_MapBlockY[g_CurrentMap]) + j;
 
-			TMapBlock *mapBlock = MapManager->GetBlock(blockIndex);
 			MAP_BLOCK mb = { 0 };
-
-			if (mapBlock == NULL)
-				MapManager->GetRadarMapBlock(i, j, mb);
+			MapManager->GetRadarMapBlock(i, j, mb);
 
 			IFOR(x, 0, 8)
 			{
@@ -132,7 +121,7 @@ void TGumpMinimap::GenerateMap()
 
 						if (data[block] == 0x8421)
 						{
-							WORD color = (mapBlock != NULL ? mapBlock->GetRadarColor(x, y) : mb.Cells[(y * 8) + x].TileID);
+							WORD color = mb.Cells[(y * 8) + x].TileID;
 							data[block] = 0x8000 | ColorManager->GetRadarColorData(color);
 						}
 					}
@@ -174,6 +163,7 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 
 	glNewList((GLuint)this, GL_COMPILE);
 
+		g_GL.OldTexture = 0;
 		g_GL.Draw(m_Texture, posX, posY, gumpWidth, gumpHeight);
 		
 		if (m_Count < 6)
@@ -193,29 +183,28 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 
 				if (go->NPC && !go->IsPlayer())
 				{
-					int X = go->X - PlayerX;
-					int Y = go->Y - PlayerY;
-
-					int gx = X - Y;
-					int gy = X + Y;
-
-					WORD color = ConfigManager.GetColorByNotoriety(((TGameCharacter*)go)->Notoriety);;
+					WORD color = ConfigManager.GetColorByNotoriety(((TGameCharacter*)go)->Notoriety);
 
 					if (color)
 					{
-						WORD cell = 5;
-						DWORD pcl = ColorManager->GetPolygoneColor(cell, color);
-						pcl = (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-						
-						g_GL.DrawPolygone(pcl, posX + gx, posY + gy, 2, 2);
+						DWORD pcl = ColorManager->GetPolygoneColor(16, color);
+						glColor3ub(GetRValue(pcl), GetGValue(pcl), GetBValue(pcl));
+
+						int x = go->X - PlayerX;
+						int y = go->Y - PlayerY;
+
+						int gx = x - y;
+						int gy = x + y;
+
+						g_GL.DrawPolygone(posX + gx, posY + gy, 2, 2);
 					}
 				}
 
 				go = (TGameObject*)go->m_Next;
 			}
 
-			g_GL.DrawPolygone(0xFF7F7F7F, posX, posY, 2, 2);
-
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			g_GL.DrawPolygone(posX, posY, 2, 2);
 		}
 
 	glEndList();
@@ -252,9 +241,12 @@ int TGumpMinimap::Draw(bool &mode)
 		if (!FrameCreated || m_Texture == 0)
 			GenerateFrame(posX, posY);
 
-		glCallList((GLuint)index);
+		if (m_Texture != 0)
+		{
+			glCallList((GLuint)index);
 
-		DrawLocker(posX, posY);
+			DrawLocker(posX, posY);
+		}
 
 		if (ticks < GetTickCount())
 		{
