@@ -41,6 +41,13 @@ public:
 	SETGET(BYTE, Surface);
 };
 //---------------------------------------------------------------------------
+struct PATH_POINT
+{
+	int X;
+	int Y;
+	int Direction;
+};
+//---------------------------------------------------------------------------
 //Класс для поиска пути и теста шага на точку
 class TPathFinder : public IPathFinder, public TBaseQueue
 {
@@ -64,13 +71,18 @@ private:
 	bool m_AutoWalking;
 
 	//Список точек пути
-	POINT *m_Path;
+	PATH_POINT *m_Path;
+
+	//Текущая точка пути
+	int m_PointIndex;
 
 	//Размер точек пути
 	int m_PathSize;
 public:
 	TPathFinder();
 	virtual ~TPathFinder();
+
+	SETGET(bool, AutoWalking);
 
 	//Проверка на возможность сделать шаг в указанные координаты
 	bool CanWalk(BYTE &direction, int &x, int &y, char &z);
@@ -79,10 +91,13 @@ public:
 	bool Walk(bool run, BYTE direction);
 
 	//Вычислить новый путь
-	POINT *CalculatePath(int &size, int x, int y, int z);
+	PATH_POINT *CalculatePath(int &size, int x, int y, int z);
 
 	//Переместиться в указанные координаты
 	bool WalkTo(int x, int y, int z);
+
+	//Обработка пути
+	void ProcessAutowalk();
 
 	//Остановить автоматическую ходилку
 	void StopAutoWalk();

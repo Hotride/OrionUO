@@ -154,7 +154,8 @@ WORD TMouseManager::GetGameCursor()
 
 		bool run = ((mouse_range >= 150.0f) ? true : false);
 
-		PathFinder->Walk(run, dir - 1);
+		if (!PathFinder->AutoWalking)
+			PathFinder->Walk(run, dir - 1);
 	}
 	
 	bool gumpChecked = ((g_LastSelectedObject && g_LastObjectType != SOT_GAME_OBJECT && g_LastObjectType != SOT_STATIC_OBJECT && g_LastObjectType != SOT_LAND_OBJECT && g_LastObjectType != SOT_TEXT_OBJECT) || g_LastSelectedGump);

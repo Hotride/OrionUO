@@ -480,7 +480,9 @@ int TDebugScreen::Render(bool mode)
 
 		DPOLY(315, 235, 10, 10);
 
-		g_GL.DrawLine(0x30000030, 320, 240, g_MouseX, g_MouseY);
+		glColor4f(0.37f, 0.0f, 0.0f, 1.0f);
+		g_GL.DrawLine(320, 240, g_MouseX, g_MouseY);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 		int cx = 320;
 		int cy = 240;

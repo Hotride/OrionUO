@@ -252,8 +252,6 @@ void TGumpSkills::GenerateFrame(int posX, int posY)
 		//Стандартный цвет выделенной группы/скилла
 		DWORD selectedPolygoneColor = 0x007F7F7F;
 
-		//g_GL.DrawPolygone(0x007F7F7F, drawX, drawY, 260, height - 74);
-
 		//Установим видимую область
 		g_GL.ViewPort(drawX, drawY, 264, height - 74);
 
@@ -320,7 +318,7 @@ void TGumpSkills::GenerateFrame(int posX, int posY)
 						if (selname == 2) //Изменение имени группы
 						{
 							//Отобразим цветной фон
-							g_GL.DrawPolygone(selectedPolygoneColor, drawX + 16, drawY, 200, 14);
+							g_GL.DrawPolygone(drawX + 16, drawY, 200, 14);
 
 							//Текущее название
 							TextEntry->DrawA(6, 0, drawX + 16, drawY - 5);
@@ -334,9 +332,9 @@ void TGumpSkills::GenerateFrame(int posX, int posY)
 
 							//Если выбрана группа или перетаскиваем скилл на текущую группу - подсветим ее
 							if (selname == 1)
-								g_GL.DrawPolygone(selectedPolygoneColor, drawX + 16, drawY, th.Width - 10, 14);
+								g_GL.DrawPolygone(drawX + 16, drawY, th.Width - 10, 14);
 							else if (hightlightGroup)
-								g_GL.DrawPolygone(selectedPolygoneColor, drawX + 16, drawY, 200, 14);
+								g_GL.DrawPolygone(drawX + 16, drawY, 200, 14);
 
 							//Отобразим имя группы (из заранее заготовленной текстуры)
 							th.Draw(drawX + 16, drawY - 5);
@@ -404,7 +402,7 @@ void TGumpSkills::GenerateFrame(int posX, int posY)
 									if (!th.Empty())
 									{
 										if (si == idx)
-											g_GL.DrawPolygone(selectedPolygoneColor, drawX + 20, drawY - 1, 250, 14);
+											g_GL.DrawPolygone(drawX + 20, drawY - 1, 250, 14);
 
 										th.Draw(drawX + 22, drawY - 1);
 									}
@@ -443,7 +441,6 @@ void TGumpSkills::GenerateFrame(int posX, int posY)
 					//Если в группе что-то есть - нарисуем стрелку
 					if (group->GetCount())
 						UO->DrawGump(0x0827, 0, drawX, drawY);
-					//g_GL.DrawPolygone(0x007F7F7F, drawX, drawY, 14, 14);
 
 					drawY += drawStep; //Переходим на следующую позицию координат
 				}

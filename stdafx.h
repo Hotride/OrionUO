@@ -31,7 +31,6 @@
 #include <tchar.h>
 #include <map>
 #include <algorithm>
-#include <vector>
 #include <time.h>
 #include "glew.h"
 #include "wglew.h"
@@ -45,6 +44,13 @@
 #include "zlib.h"
 #include <Mmsystem.h>
 #include <process.h>
+
+#include <vector>
+using std::vector;
+
+#include <string>
+using std::string;
+using std::wstring;
 
 #define _USE_MATH_DEFINES // for C++
 #include <math.h>
@@ -64,10 +70,6 @@
 
 #pragma warning(disable: 4390)
 #pragma warning(disable: 4800)
-
-#include <string>
-using std::string;
-using std::wstring;
 //---------------------------------------------------------------------------
 #define UO_FW_SHARD 0
 
@@ -407,7 +409,6 @@ extern POINT g_RemoveRangeXY;
 
 
 
-using std::vector;
 //---------------------------------------------------------------------------
 typedef struct MULTILINES_FONT_DATA
 {
@@ -444,7 +445,7 @@ typedef struct MULTILINES_FONT_INFO
 	}
 } *PMULTILINES_FONT_INFO;
 
-#define DPOLY(x, y, w, h) g_GL.DrawPolygone(0x7f7f7f7f, x, y, w, h)
+#define DPOLY(x, y, w, h) g_GL.DrawPolygone(x, y, w, h)
 //---------------------------------------------------------------------------
 #pragma region game typedefs
 typedef std::vector<BYTE> WaveFile;

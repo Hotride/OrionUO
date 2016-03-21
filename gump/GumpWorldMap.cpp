@@ -490,7 +490,6 @@ int TGumpWorldMap::Draw(bool &mode)
 		UO->DrawGump(0x098D, 0, posX, posY);
 		m_TextMap[m_Map].Draw(posX + 4, posY);
 		UO->DrawGump(0x0985, 0, posX + 94, posY + 7);
-		//g_GL.DrawPolygone(0x7f7f7f7f, posX, posY, 110, 22);
 
 		//Scale settings
 		TTextureObject *g = UO->ExecuteGump(0x098B);
@@ -504,7 +503,6 @@ int TGumpWorldMap::Draw(bool &mode)
 
 		m_TextScale[m_Scale].Draw(posX + 114, posY);
 		UO->DrawGump(0x0985, 0, posX + 142, posY + 7);
-		//g_GL.DrawPolygone(0x7f7f7f7f, posX + 110, posY, 46, 22);
 
 		//Link with player checkbox settings
 		int drawX = posX + width - m_Text.Width;
@@ -512,7 +510,6 @@ int TGumpWorldMap::Draw(bool &mode)
 
 		drawX -= 26;
 		UO->DrawGump(0x00D2 + (int)m_LinkWithPlayer, 0, drawX, posY + 2);
-		//g_GL.DrawPolygone(0x7f7f7f7f, drawX, posY, m_Text.Width + 26, 22);
 
 		//Map drawing
 		g_GL.ViewPort(posX + 8, posY + 31, mapViewWidth, mapViewHeight);
@@ -524,10 +521,10 @@ int TGumpWorldMap::Draw(bool &mode)
 		//Player drawing
 		if (g_CurrentMap == map)
 		{
-			DWORD playerColor = 0x7F7F7F7F;
-			g_GL.DrawPolygone(playerColor, posX + offsetX + playerX + 0, posY + offsetY + playerY + 30, 16, 2);
-			g_GL.DrawPolygone(playerColor, posX + offsetX + playerX + 7, posY + offsetY + playerY + 23, 2, 16);
-			g_GL.DrawCircle(playerColor, posX + offsetX + 8.0f + playerX, posY + offsetY + 31.0f + playerY, 3.0f);
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			g_GL.DrawPolygone(posX + offsetX + playerX + 0, posY + offsetY + playerY + 30, 16, 2);
+			g_GL.DrawPolygone(posX + offsetX + playerX + 7, posY + offsetY + playerY + 23, 2, 16);
+			g_GL.DrawCircle(posX + offsetX + 8.0f + playerX, posY + offsetY + 31.0f + playerY, 3.0f);
 		}
 
 		g_GL.RestorePort();
@@ -556,7 +553,7 @@ int TGumpWorldMap::Draw(bool &mode)
 				if (CanSelectedButton >= ID_GWM_LIST)
 				{
 					if (i + 1 == (CanSelectedButton - ID_GWM_LIST))
-						g_GL.DrawPolygone(0x7F7F7F7F, posX + 4, posY, 150, 14);
+						g_GL.DrawPolygone(posX + 4, posY, 150, 14);
 				}
 
 				if (m_OpenedList == 1)

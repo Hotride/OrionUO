@@ -267,15 +267,6 @@ void TGLEngine::DrawLine(int x, int y, int targetX, int targetY)
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawLine(DWORD color, int x, int y, int targetX, int targetY)
-{
-	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
-
-	DrawLine(x, y, targetX, targetY);
-
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-}
-//---------------------------------------------------------------------------
 void TGLEngine::DrawPolygone(int x, int y, int width, int height)
 {
 	glDisable(GL_TEXTURE_2D);
@@ -293,15 +284,6 @@ void TGLEngine::DrawPolygone(int x, int y, int width, int height)
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawPolygone(DWORD color, int x, int y, int width, int height)
-{
-	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
-
-	DrawPolygone(x, y, width, height);
-
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-}
-//---------------------------------------------------------------------------
 void TGLEngine::DrawCircle(float x, float y, float radius, int gradientMode)
 {
 	glDisable(GL_TEXTURE_2D);
@@ -311,7 +293,7 @@ void TGLEngine::DrawCircle(float x, float y, float radius, int gradientMode)
 
 	glBegin(GL_TRIANGLE_FAN);
 
-		glVertex2f(0.0f, 0.0f);
+		glVertex2i(0, 0);
 
 		if (gradientMode)
 			glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
@@ -327,15 +309,6 @@ void TGLEngine::DrawCircle(float x, float y, float radius, int gradientMode)
 	glEnd();
 	
 	glEnable(GL_TEXTURE_2D);
-}
-//---------------------------------------------------------------------------
-void TGLEngine::DrawCircle(DWORD color, float x, float y, float radius, int gradientMode)
-{
-	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), 0x7F);
-
-	DrawCircle(x, y, radius, gradientMode);
-
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVector *normals)

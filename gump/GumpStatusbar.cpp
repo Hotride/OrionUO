@@ -358,7 +358,9 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 				sprintf(text, "%d", g_Player->Hits);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 70, textWidth, TS_CENTER);
 				
-				g_GL.DrawLine(0x1c1c1c1c, posX, lineY, lineX, lineY);
+				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
+				g_GL.DrawLine(posX, lineY, lineX, lineY);
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxHits);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 83, textWidth, TS_CENTER);
@@ -368,7 +370,9 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 98, textWidth, TS_CENTER);
 				
 				lineY = posY + 110;
-				g_GL.DrawLine(0x1c1c1c1c, posX, lineY, lineX, lineY);
+				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
+				g_GL.DrawLine(posX, lineY, lineX, lineY);
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxStam);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 111, textWidth, TS_CENTER);
@@ -378,7 +382,9 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 126, textWidth, TS_CENTER);
 				
 				lineY = posY + 138;
-				g_GL.DrawLine(0x1c1c1c1c, posX, lineY, lineX, lineY);
+				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
+				g_GL.DrawLine(posX, lineY, lineX, lineY);
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxMana);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 139, textWidth, TS_CENTER);
@@ -401,7 +407,9 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 126, textWidth, TS_CENTER);
 				
 				lineY = posY + 138;
-				g_GL.DrawLine(0x1c1c1c1c, posX, lineY, lineX, lineY);
+				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
+				g_GL.DrawLine(posX, lineY, lineX, lineY);
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxWeight);
 				FontManager->DrawA(1, text, 0x0386, posX , posY + 139, textWidth, TS_CENTER);

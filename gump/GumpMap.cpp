@@ -120,7 +120,6 @@ int TGumpMap::LineUnderMouse(__inout int &x1, __inout int &y1, __in int x2, __in
 //----------------------------------------------------------------------------
 int TGumpMap::Draw(__in bool &mode)
 {
-	const DWORD lineColor[2] = {0x007F7F7F, 0x006F6F6F};
 	DWORD index = (DWORD)this;
 
 	TGameItem *selobj = World->FindWorldItem(Serial);
@@ -210,7 +209,14 @@ int TGumpMap::Draw(__in bool &mode)
 				int nextDrawX = posX + next->X + 20;
 				int nextDrawY = posY + next->Y + 30;
 
-				g_GL.DrawLine(lineColor[(int)(next == PinOnCursor || go == PinOnCursor)], drawX + 2, drawY + 8, nextDrawX, nextDrawY);
+				if (next == PinOnCursor || go == PinOnCursor)
+					glColor4f(0.87f, 0.87f, 0.87f, 1.0f);
+				else
+					glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+				g_GL.DrawLine(drawX + 2, drawY + 8, nextDrawX, nextDrawY);
+
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 				
 				if (PinOnCursor == NULL && CanSelectedButton >= ID_GM_PIN_LIST_INSERT && (CanSelectedButton - ID_GM_PIN_LIST_INSERT) == idx)
 				{

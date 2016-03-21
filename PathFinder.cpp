@@ -36,7 +36,7 @@ TPathObject::~TPathObject()
 //---------------------------------------------------------------------------
 TPathFinder::TPathFinder()
 : TBaseQueue(), m_OnLongStair(false), m_AutoWalking(false), m_Path(NULL),
-m_PathSize(0)
+m_PointIndex(0), m_PathSize(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -448,6 +448,25 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 	return passed;
 }
 //---------------------------------------------------------------------------
+void TPathFinder::ProcessAutowalk()
+{
+	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 1 && g_LastStepTime <= GetTickCount())
+	{
+		if (m_PointIndex >= 0 && m_PointIndex < m_PathSize)
+		{
+			PATH_POINT &p = m_Path[m_PointIndex];
+			m_PointIndex++;
+
+			BYTE newDir = rand() % 8;
+
+			if (!Walk(ConfigManager.AlwaysRun, newDir))
+				StopAutoWalk();
+		}
+		else
+			StopAutoWalk();
+	}
+}
+//---------------------------------------------------------------------------
 bool TPathFinder::Walk(bool run, BYTE direction)
 {
 	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 1 || g_Player == NULL || g_DeathScreenTimer)
@@ -574,11 +593,11 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	return true;
 }
 //---------------------------------------------------------------------------
-POINT *TPathFinder::CalculatePath(int &size, int x, int y, int z)
+PATH_POINT *TPathFinder::CalculatePath(int &size, int x, int y, int z)
 {
-	size = 0;
+	size = 16;
 
-	return NULL;
+	return new PATH_POINT[size];
 }
 //---------------------------------------------------------------------------
 bool TPathFinder::WalkTo(int x, int y, int z)
@@ -588,7 +607,14 @@ bool TPathFinder::WalkTo(int x, int y, int z)
 	m_Path = CalculatePath(m_PathSize, x, y, z);
 
 	if (m_Path != NULL)
-		delete m_Path;
+	{
+		m_AutoWalking = true;
+		m_PointIndex = 0;
+		ProcessAutowalk();
+
+		//delete m_Path;
+		//m_Path = NULL;
+	}
 
 	return (m_PathSize != 0);
 }

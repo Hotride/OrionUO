@@ -2509,7 +2509,7 @@ void TUltimaOnline::Process()
 		g_SelectedObject = NULL;
 		g_SelectedTextObject = NULL;
 
-		if (g_LastRenderTime < ticks)
+		if (g_LastRenderTime <= ticks)
 		{
 			TWalkData *wd = g_Player->m_WalkStack.m_Items;
 
@@ -2530,9 +2530,11 @@ void TUltimaOnline::Process()
 			EffectManager->UpdateEffects();
 			
 			World->ProcessAnimation();
+
+			PathFinder->ProcessAutowalk();
 		}
 
-		bool CanRenderSelect = false;
+		bool canRenderSelect = false;
 
 		if (g_GameState == GS_GAME)
 		{
@@ -2614,14 +2616,14 @@ void TUltimaOnline::Process()
 				g_ClickObjectReq = false;
 			}
 
-			CanRenderSelect = true;
+			canRenderSelect = true;
 
 			if (g_LastObjectType == SOT_GAME_GUMP_SCOPE)
 			{
 				if (g_LeftMouseDown && !g_LastGumpLeftMouseDown && !g_LastGumpRightMouseDown)
 				{
 					if (g_LastObjectLeftMouseDown == 1 || g_LastObjectLeftMouseDown == 2)
-						CanRenderSelect = false;
+						canRenderSelect = false;
 				}
 			}
 		}
@@ -2633,7 +2635,7 @@ void TUltimaOnline::Process()
 			GameScreen->CalculateRenderList();
 			GameScreen->RenderListInitalized = true;
 
-			if (CanRenderSelect)
+			if (canRenderSelect)
 				GameScreen->Render(false);
 
 			GameScreen->Render(true);

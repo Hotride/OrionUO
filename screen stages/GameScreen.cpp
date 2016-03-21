@@ -1091,14 +1091,19 @@ void TGameScreen::DrawGameWindowText(bool &mode)
 							textColor = 0x0035;
 					}
 
-					ColorManager->SendColorsToShader(textColor);
+					int drawMode = 0;
 
-					int drawMode = 1;
+					if (textColor)
+					{
+						ColorManager->SendColorsToShader(textColor);
 
-					if (td->Unicode)
-						drawMode = 3;
-					else if (td->Font != 5 && td->Font != 8)
-						drawMode = 2;
+						if (td->Unicode)
+							drawMode = 3;
+						else if (td->Font != 5 && td->Font != 8)
+							drawMode = 2;
+						else
+							drawMode = 1;
+					}
 
 					glUniform1iARB(ShaderDrawMode, drawMode);
 
@@ -1834,6 +1839,18 @@ bool TGameScreen::OnLeftMouseDoubleClick()
 //---------------------------------------------------------------------------
 bool TGameScreen::OnRightMouseDoubleClick()
 {
+	if (g_SelectedObject != NULL && !PathFinder->AutoWalking)
+	{
+		if (g_SelectedObject->IsLandObject() || g_SelectedObject->IsSurface())
+		{
+			if (PathFinder->WalkTo(g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z))
+			{
+				UO->CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Pathfinding!");
+				return true;
+			}
+		}
+	}
+
 	return false;
 }
 //---------------------------------------------------------------------------
@@ -1958,56 +1975,64 @@ void TGameScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 			case VK_PRIOR: //PgUp
 			{
 				//walk N (0)
-				PathFinder->Walk(ConfigManager.AlwaysRun, 0);
+				if (!PathFinder->AutoWalking)
+					PathFinder->Walk(ConfigManager.AlwaysRun, 0);
 
 				break;
 			}
 			case VK_NEXT: //PgDown
 			{
 				//walk E (2)
-				PathFinder->Walk(ConfigManager.AlwaysRun, 2);
+				if (!PathFinder->AutoWalking)
+					PathFinder->Walk(ConfigManager.AlwaysRun, 2);
 
 				break;
 			}
 			case VK_HOME:
 			{
 				//walk W (6)
-				PathFinder->Walk(ConfigManager.AlwaysRun, 6);
+				if (!PathFinder->AutoWalking)
+					PathFinder->Walk(ConfigManager.AlwaysRun, 6);
 
 				break;
 			}
 			case VK_END:
 			{
 				//walk S (4)
-				PathFinder->Walk(ConfigManager.AlwaysRun, 4);
+				if (!PathFinder->AutoWalking)
+					PathFinder->Walk(ConfigManager.AlwaysRun, 4);
 
 				break;
 			}
 			case VK_UP:
 			{
 				//Walk NW (7)
-				PathFinder->Walk(ConfigManager.AlwaysRun, 7);
+				if (!PathFinder->AutoWalking)
+					PathFinder->Walk(ConfigManager.AlwaysRun, 7);
 
 				break;
 			}
 			case VK_LEFT:
 			{
 				//Walk SW (5)
-				PathFinder->Walk(ConfigManager.AlwaysRun, 5);
+				if (!PathFinder->AutoWalking)
+					PathFinder->Walk(ConfigManager.AlwaysRun, 5);
 
 				break;
 			}
 			case VK_DOWN:
 			{
 				//Walk SE (3)
-				PathFinder->Walk(ConfigManager.AlwaysRun, 3);
+				if (!PathFinder->AutoWalking)
+					PathFinder->Walk(ConfigManager.AlwaysRun, 3);
 
 				break;
 			}
 			case VK_RIGHT:
 			{
 				//Walk NE (1)
-				PathFinder->Walk(ConfigManager.AlwaysRun, 1);
+				if (!PathFinder->AutoWalking)
+					PathFinder->Walk(ConfigManager.AlwaysRun, 1);
 
 				break;
 			}

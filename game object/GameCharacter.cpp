@@ -231,11 +231,6 @@ int TGameCharacter::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 
 		g_StatusbarUnderMouse = lastSBsel;
 
-		/*if (goc->IsPlayer())
-		{
-		//g_GL.DrawPolygone(0x7F7F7F7F, g_PlayerRect.X, g_PlayerRect.Y, g_PlayerRect.Width, g_PlayerRect.Height);
-		}*/
-
 		DrawEffects(drawX, drawY, ticks);
 	}
 	else

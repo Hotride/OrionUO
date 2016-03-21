@@ -467,7 +467,8 @@ MACRO_RETURN_CODE TMacroManager::Process()
 						dt = 0;
 				}
 
-				PathFinder->Walk(false, dt);
+				if (!PathFinder->AutoWalking)
+					PathFinder->Walk(false, dt);
 
 				break;
 			}

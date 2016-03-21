@@ -38,11 +38,8 @@ interface IGLEngine
 	virtual void Disable(GLenum val) = 0;
 
 	virtual void DrawLine(int X, int Y, int TargetX, int TargetY) = 0;
-	virtual void DrawLine(DWORD Color, int X, int Y, int TargetX, int TargetY) = 0;
 	virtual void DrawPolygone(int X, int Y, int Width, int Height) = 0;
-	virtual void DrawPolygone(DWORD Color, int X, int Y, int Width, int Height) = 0;
 	virtual void DrawCircle(float X, float Y, float radius, int gradientMode) = 0;
-	virtual void DrawCircle(DWORD Color, float X, float Y, float radius, int gradientMode) = 0;
 
 	virtual void DrawLandTexture(GLuint &Texture, int &X, int &Y, RECT &rc, TVector *normals) = 0;
 	virtual void Draw(GLuint &Texture, int &X, int &Y, int Width, int Height) = 0;

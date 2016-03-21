@@ -415,8 +415,6 @@ int TGumpJournal::Draw(bool &mode)
 		if (Minimized)
 			return 0;
 
-		//g_GL.DrawPolygone(0x007F7F7F, posX + 38, posY + 70, 214, Height - 50);
-
 		g_GL.ViewPort(posX + 38, posY + 70, 214, height - 50);
 
 		//Отрисовка сообщений систем чата
