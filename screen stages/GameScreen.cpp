@@ -345,7 +345,7 @@ void TGameScreen::CalculateRenderList()
 						if (testMinZ < m_RenderBounds.MinPixelsY || testMaxZ > m_RenderBounds.MaxPixelsY)
 							continue;
 
-						/*if (m_RenderListCount >= m_RenderListSize)
+						if (m_RenderListCount >= m_RenderListSize)
 							IncreaseRenderList();
 
 						m_BufferRenderList[m_RenderListCount].Obj = obj;
@@ -353,7 +353,7 @@ void TGameScreen::CalculateRenderList()
 						m_BufferRenderList[m_RenderListCount].Y = drawY;
 						m_BufferRenderList[m_RenderListCount].GrayColor = grayColor;
 
-						m_RenderListCount++;*/
+						m_RenderListCount++;
 
 						if (obj->IsGameObject())
 						{
@@ -417,7 +417,7 @@ void TGameScreen::CalculateRenderList()
 
 	if (m_RenderListCount)
 	{
-		//memcpy(&m_RenderList[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListCount);
+		memcpy(&m_RenderList[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListCount);
 		/*int zSize = (int)zList.size();
 
 		if (!zSize || true)
@@ -926,237 +926,6 @@ void TGameScreen::DrawGameWindow(bool &mode)
 		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
 
 		AnimationManager->ShadowCount = 0;
-
-		if (ConfigManager.UseCircleTrans)
-		{
-			if (g_CircleOfTransparency.Create(ConfigManager.CircleTransRadius))
-			{
-				int drawX = m_RenderBounds.GameWindowCenterX + g_Player->OffsetX;
-				int drawY = m_RenderBounds.GameWindowCenterY + g_Player->OffsetY - (m_RenderBounds.PlayerZ * 4 + g_Player->OffsetZ);
-
-				g_CircleOfTransparency.Draw(drawX, drawY);
-			}
-		}
-
-		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
-		{
-			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
-			{
-				int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
-
-				TMapBlock *mb = MapManager->GetBlock(blockIndex);
-
-				if (mb == NULL)
-				{
-					mb = MapManager->AddBlock(blockIndex);
-					mb->X = bx;
-					mb->Y = by;
-					MapManager->LoadBlock(mb);
-				}
-
-				IFOR(x, 0, 8)
-				{
-					int currentX = bx * 8 + x;
-
-					if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
-						continue;
-
-					int offsetX = currentX - m_RenderBounds.PlayerX;
-
-					IFOR(y, 0, 8)
-					{
-						int currentY = by * 8 + y;
-
-						if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
-							continue;
-
-						int offsetY = currentY - m_RenderBounds.PlayerY;
-
-						int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
-						int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
-
-						if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
-							continue;
-
-						TLandObject *land = mb->GetLand(x, y);
-
-						TRenderWorldObject *checkObj = mb->GetRender(x, y);
-						bool wantRedraw = false;
-
-						if (checkObj != NULL && land->ListCreated)
-						{
-							wantRedraw = (GetDistance(checkObj, g_Player) >= 15);
-
-							for (; !wantRedraw && checkObj != NULL; checkObj = checkObj->m_NextXY)
-								wantRedraw = checkObj->IsAnimated();
-						}
-
-						glTranslatef((GLfloat)drawX, (GLfloat)drawY, 0.0f);
-
-						if (!wantRedraw && land->ListCreated)
-						{
-							glCallList((GLuint)land);
-
-							glTranslatef((GLfloat)-drawX, (GLfloat)-drawY, 0.0f);
-
-							continue;
-						}
-
-						WORD grayColor = 0;
-
-						if (ConfigManager.GrayOutOfRangeObjects)
-						{
-							POINT testPos = { currentX, currentY };
-
-							if (GetDistance(g_Player, testPos) > g_UpdateRange)
-								grayColor = 0x0386;
-						}
-
-						land->ListCreated = true;
-
-						glNewList((GLuint)land, GL_COMPILE_AND_EXECUTE);
-
-						for (TRenderWorldObject *obj = mb->GetRender(x, y); obj != NULL; obj = obj->m_NextXY)
-						{
-							int z = obj->Z;
-
-							if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
-								continue;
-
-							int testMinZ = drawY;
-							int testMaxZ = drawY - (z * 4);
-
-							if (obj->IsLandObject() && ((TLandObject*)obj)->IsStretched)
-								testMinZ -= (((TLandObject*)obj)->MinZ * 4);
-							else
-								testMinZ = testMaxZ;
-
-							if (testMinZ < m_RenderBounds.MinPixelsY || testMaxZ > m_RenderBounds.MaxPixelsY)
-								continue;
-
-							g_OutOfRangeColor = grayColor;
-
-							g_UseCircleTrans = (ConfigManager.UseCircleTrans && obj->TranparentTest(playerZPlus5));
-
-							g_ZBuffer = obj->Z + obj->RenderQueueIndex;
-							int dx = 0;
-							int dy = 0;
-							obj->Draw(mode, dx, dy, ticks);
-						}
-
-						glEndList();
-
-						glTranslatef((GLfloat)-drawX, (GLfloat)-drawY, 0.0f);
-					}
-				}
-			}
-		}
-
-		AnimationManager->DrawShadows();
-
-		g_ZBuffer = 0;
-		glDisable(GL_DEPTH_TEST);
-	}
-	else
-	{
-		bool useCircleTrans = (ConfigManager.UseCircleTrans && UO->CircleTransPixelsInXY());
-
-		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
-		{
-			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
-			{
-				int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
-
-				TMapBlock *mb = MapManager->GetBlock(blockIndex);
-
-				if (mb == NULL)
-				{
-					mb = MapManager->AddBlock(blockIndex);
-					mb->X = bx;
-					mb->Y = by;
-					MapManager->LoadBlock(mb);
-				}
-
-				IFOR(x, 0, 8)
-				{
-					int currentX = bx * 8 + x;
-
-					if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
-						continue;
-
-					int offsetX = currentX - m_RenderBounds.PlayerX;
-
-					IFOR(y, 0, 8)
-					{
-						int currentY = by * 8 + y;
-
-						if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
-							continue;
-
-						int offsetY = currentY - m_RenderBounds.PlayerY;
-
-						int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
-						int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
-
-						if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
-							continue;
-
-						TLandObject *land = mb->GetLand(x, y);
-						DWORD checksum = 0;
-
-						for (TRenderWorldObject *obj = mb->GetRender(x, y); obj != NULL; obj = obj->m_NextXY)
-						{
-							int z = obj->Z;
-
-							if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
-								continue;
-
-							int testMinZ = drawY;
-							int testMaxZ = drawY - (z * 4);
-
-							if (obj->IsLandObject() && ((TLandObject*)obj)->IsStretched)
-								testMinZ -= (((TLandObject*)obj)->MinZ * 4);
-							else
-								testMinZ = testMaxZ;
-
-							if (testMinZ < m_RenderBounds.MinPixelsY || testMaxZ > m_RenderBounds.MaxPixelsY)
-								continue;
-
-							g_UseCircleTrans = (useCircleTrans && obj->TranparentTest(playerZPlus5));
-
-							obj->Draw(mode, drawX, drawY, ticks);
-
-							checksum ^= (DWORD)obj;
-						}
-
-						if (land->RenderListChecksum != checksum)
-							land->ListCreated = false;
-					}
-				}
-			}
-		}
-
-		if (g_OldSelectedObject != NULL && g_OldSelectedObject != g_SelectedObject)
-			MapManager->UnselectCreateRenderList(g_OldSelectedXY.x, g_OldSelectedXY.y);
-
-		g_OldSelectedObject = g_SelectedObject;
-
-		if (g_SelectedObject != NULL)
-		{
-			g_OldSelectedXY.x = g_SelectedObject->X;
-			g_OldSelectedXY.y = g_SelectedObject->Y;
-
-			MapManager->UnselectCreateRenderList(g_OldSelectedXY.x, g_OldSelectedXY.y);
-		}
-	}
-
-	/*if (mode)
-	{
-		m_UseLight = (g_PersonalLightLevel < g_LightLevel);
-
-		glColor3f(g_DrawColor, g_DrawColor, g_DrawColor);
-
-		AnimationManager->ShadowCount = 0;
 		//bool useGrayObjects = ConfigManager.GrayOutOfRangeObjects;
 
 		if (ConfigManager.UseCircleTrans)
@@ -1207,7 +976,7 @@ void TGameScreen::DrawGameWindow(bool &mode)
 				obj->Draw(mode, rod.X, rod.Y, ticks);
 			}
 		}
-	}*/
+	}
 
 	if (mode)
 	{

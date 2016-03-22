@@ -157,7 +157,5 @@ public:
 };
 //---------------------------------------------------------------------------
 extern TRenderWorldObject *g_SelectedObject;
-extern TRenderWorldObject *g_OldSelectedObject;
-extern POINT g_OldSelectedXY;
 //---------------------------------------------------------------------------
 #endif

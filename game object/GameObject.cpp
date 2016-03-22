@@ -454,7 +454,7 @@ TGameObject *TGameObject::GetTopObject()
 	return obj;
 }
 //---------------------------------------------------------------------------
-int GetDistance(TRenderWorldObject *current, TRenderWorldObject *target)
+int GetDistance(TGameObject *current, TGameObject *target)
 {
 	if (current != NULL && target != NULL)
 	{
@@ -470,7 +470,7 @@ int GetDistance(TRenderWorldObject *current, TRenderWorldObject *target)
 	return 100500;
 }
 //---------------------------------------------------------------------------
-int GetDistance(TRenderWorldObject *current, POINT target)
+int GetDistance(TGameObject *current, POINT target)
 {
 	if (current != NULL)
 	{
@@ -486,7 +486,7 @@ int GetDistance(TRenderWorldObject *current, POINT target)
 	return 100500;
 }
 //---------------------------------------------------------------------------
-int GetDistance(POINT current, TRenderWorldObject *target)
+int GetDistance(POINT current, TGameObject *target)
 {
 	if (target != NULL)
 	{

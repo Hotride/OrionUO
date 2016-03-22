@@ -213,52 +213,11 @@ void TMapManager::ClearUnusedBlocks()
 	}
 }
 //---------------------------------------------------------------------------
-void TMapManager::UnselectRangedCreateRenderList()
-{
-	int map = GetActualMap();
-
-	const int XY_Offset = 30; //70;
-
-	int minBlockX = (g_Player->X - XY_Offset) / 8 - 1;
-	int minBlockY = (g_Player->Y - XY_Offset) / 8 - 1;
-	int maxBlockX = ((g_Player->X + XY_Offset) / 8) + 1;
-	int maxBlockY = ((g_Player->Y + XY_Offset) / 8) + 1;
-
-	DWORD ticks = GetTickCount();
-	DWORD maxDelay = g_FrameDelay[1] / 2;
-
-	for (int i = minBlockX; i <= maxBlockX; i++)
-	{
-		if (i < 0 || i >= g_MapBlockX[map])
-			continue;
-
-		for (int j = minBlockY; j <= maxBlockY; j++)
-		{
-			if (j < 0 || j >= g_MapBlockY[map])
-				continue;
-
-			int index = (i * g_MapBlockY[map]) + j;
-			TMapBlock *block = GetBlock(index);
-
-			if (block != NULL)
-			{
-				IFOR(x, 0, 8)
-				{
-					IFOR(y, 0, 8)
-					{
-						TLandObject *obj = block->GetLand(x, y);
-						
-						if (obj != NULL)
-							obj->ListCreated = false;
-					}
-				}
-			}
-		}
-	}
-}
-//---------------------------------------------------------------------------
 void TMapManager::Init(bool delayed)
 {
+	if (g_Player == NULL)
+		return;
+
 	int map = GetActualMap();
 
 #if USE_BLOCK_MAP == 1
@@ -438,36 +397,6 @@ TMapBlock *TMapManager::AddBlock(DWORD index)
 #endif
 
 	return block;
-}
-//---------------------------------------------------------------------------
-TLandObject *TMapManager::GetLand(int &x, int &y)
-{
-	int bx = x / 8;
-	int by = y / 8;
-
-	int index = (bx * g_MapBlockY[g_CurrentMap]) + by;
-
-	TMapBlock *block = MapManager->GetBlock(index);
-
-	TLandObject *land = NULL;
-
-	if (block != NULL)
-	{
-		x %= 8;
-		y %= 8;
-
-		land = block->GetLand(x, y);
-	}
-
-	return land;
-}
-//---------------------------------------------------------------------------
-void TMapManager::UnselectCreateRenderList(int x, int y)
-{
-	TLandObject *land = GetLand(x, y);
-
-	if (land != NULL)
-		land->ListCreated = false;
 }
 //---------------------------------------------------------------------------
 void TMapManager::DeleteBlock(DWORD index)

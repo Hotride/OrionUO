@@ -778,7 +778,7 @@ void TGumpSpellbook::OnLeftMouseUp()
 		{
 			int currentCount = spellbook->Count;
 
-			if (currentCount > 0 && currentCount < 64)
+			if (currentCount > 0 && currentCount <= 64)
 			{
 				spells[currentCount - 1] = 1;
 				spellCount++;
@@ -918,7 +918,7 @@ bool TGumpSpellbook::OnLeftMouseDoubleClick()
 		{
 			int currentCount = spellbook->Count;
 
-			if (currentCount > 0 && currentCount < 64)
+			if (currentCount > 0 && currentCount <= 64)
 			{
 				spells[currentCount - 1] = 1;
 				spellCount++;

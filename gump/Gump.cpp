@@ -223,83 +223,86 @@ void TGump::SendRenameRequest()
 //---------------------------------------------------------------------------
 void TGump::SendSellList()
 {
-	/*WORD size = 9;
+	WORD size = 9;
 	WORD count = 0;
 
-	TGumpObject *go = m_Items;
+	TGumpSellObject *go = (TGumpSellObject*)m_Items;
 
 	while (go != NULL)
 	{
-		if (go->GetHeight())
+		if (go->SelectedCount)
 		{
 			size += 6;
 			count++;
 		}
 
-		go = go->m_Next;
+		go = (TGumpSellObject*)go->m_Next;
 	}
 
-	PBYTE buf = (PBYTE)malloc(size);
+	PBYTE buf = new BYTE[size];
 	*buf = 0x9F;
 	pack16(buf + 1, size);
-	pack32(buf + 3, GetSerial());
+	pack32(buf + 3, m_Serial);
 	pack16(buf + 7, count);
 	
 	PBYTE ptr = buf + 9;
 
-	go = m_Items;
+	go = (TGumpSellObject*)m_Items;
 
 	while (go != NULL)
 	{
-		if (go->GetHeight())
+		if (go->SelectedCount)
 		{
-			pack32(ptr, go->GetSerial());
+			pack32(ptr, go->Serial);
 			ptr += 4;
-			pack16(ptr, go->GetHeight());
+			pack16(ptr, go->SelectedCount);
 			ptr += 2;
 		}
 
-		go = go->m_Next;
+		go = (TGumpSellObject*)go->m_Next;
 	}
 
-	UO->SendServer(buf, size);
+	UO->Send(buf, size);
 
-	free(buf);*/
+	delete buf;
 }
 //---------------------------------------------------------------------------
 void TGump::SendBuyList()
 {
-	/*TGameObject *vendor = UO->FindWorldObject(GetSerial());
+	TGameCharacter *vendor = World->FindWorldCharacter(m_Serial);
 
-	if (vendor == NULL) return;
+	if (vendor == NULL)
+		return;
 
 	WORD size = 8;
 	WORD count = 0;
 
-	int Layers[2] = {LAYER_VENDOR_BUY_RESTOCK, LAYER_VENDOR_BUY};
+	int Layers[2] = { OL_BUY_RESTOCK, OL_BUY };
 
 	IFOR(i, 0, 2)
 	{
-		TGameObject *box = vendor->FindLayer(Layers[i]);
+		TGameItem *box = vendor->FindLayer(Layers[i]);
 
 		if (box != NULL)
 		{
-			box = box->m_Items;
+			box = (TGameItem*)box->m_Items;
 
 			while (box != NULL)
 			{
-				if (box->GetShopCount() > 0)
+				TShopItem *si = box->ShopItem;
+
+				if (si != NULL && si->Count > 0)
 				{
 					size += 7;
 					count++;
 				}
 
-				box = box->m_Next;
+				box = (TGameItem*)box->m_Next;
 			}
 		}
 	}
 	
-	PBYTE buf = (PBYTE)malloc(size);
+	PBYTE buf = new BYTE[size];
 	*buf = 0x3B;
 	pack16(buf + 1, size);
 	pack32(buf + 3, GetSerial());
@@ -312,34 +315,36 @@ void TGump::SendBuyList()
 	
 		IFOR(i, 0, 2)
 		{
-			TGameObject *box = vendor->FindLayer(Layers[i]);
+			TGameItem *box = vendor->FindLayer(Layers[i]);
 
 			if (box != NULL)
 			{
-				box = box->m_Items;
+				box = (TGameItem*)box->m_Items;
 
 				while (box != NULL)
 				{
-					if (box->GetShopCount() > 0)
+					TShopItem *si = box->ShopItem;
+
+					if (si != NULL && si->Count > 0)
 					{
 						*ptr = 0x1A;
 						ptr++;
-						pack32(ptr, box->GetSerial());
+						pack32(ptr, box->Serial);
 						ptr += 4;
-						pack16(ptr, box->GetShopCount());
+						pack16(ptr, si->Count);
 						ptr += 2;
 					}
 
-					box = box->m_Next;
+					box = (TGameItem*)box->m_Next;
 				}
 			}
 		}
 	}
 	else buf[7] = 0x00;
 
-	UO->SendServer(buf, size);
+	UO->Send(buf, size);
 
-	free(buf);*/
+	delete buf;
 }
 //---------------------------------------------------------------------------
 void TGump::SendTipRequest(BYTE flag)

@@ -1811,13 +1811,16 @@ bool TAnimationManager::AnimationExists(WORD &graphic, BYTE group)
 		if (m_DataIndex[graphic].Offset == 0xFFFFFFFF) //in verdata
 		{
 			PVERDATA_HEADER vh = (PVERDATA_HEADER)(m_DataIndex[graphic].Address + (offset * sizeof(VERDATA_HEADER)));
-			dataStart = (PBYTE)((DWORD)FileManager.VerdataMul.Address + vh->Position);
+
+			if (vh->Position != 0 && vh->Position != 0xFFFFFFFF)
+				dataStart = (PBYTE)((DWORD)FileManager.VerdataMul.Address + vh->Position);
 		}
 		else //in original mulls
 		{
 			PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_DataIndex[graphic].Address + (offset * sizeof(ANIM_IDX_BLOCK)));
 
-			dataStart = (PBYTE)(m_DataIndex[graphic].Offset + aidx->Position);
+			if (aidx->Position != 0 && aidx->Position != 0xFFFFFFFF)
+				dataStart = (PBYTE)(m_DataIndex[graphic].Offset + aidx->Position);
 		}
 
 		if (dataStart != NULL)

@@ -4069,6 +4069,14 @@ void TUltimaOnline::PickupItem(TGameItem *obj, int count, bool isGameFigure)
 		ObjectInHand->IsGameFigure = isGameFigure;
 		ObjectInHand->DragCount = count;
 
+		if (obj->Container != 0xFFFFFFFF)
+		{
+			TGumpContainer *gump = (TGumpContainer*)GumpManager->GetGump(obj->Container, 0, GT_CONTAINER);
+
+			if (gump != NULL)
+				gump->UpdateFrame();
+		}
+
 		TPacketPickupRequest packet(obj->Serial, count);
 		packet.Send();
 	}
@@ -4289,7 +4297,7 @@ void TUltimaOnline::AllNames()
 
 	while (obj != NULL)
 	{
-		if (obj->NPC && !obj->IsPlayer())
+		if ((obj->NPC && !obj->IsPlayer()) || obj->IsCorpse())
 		{
 			TPacketClickRequest packet(obj->Serial);
 			packet.Send();

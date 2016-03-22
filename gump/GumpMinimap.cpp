@@ -94,8 +94,11 @@ void TGumpMinimap::GenerateMap()
 		{
 			int blockIndex = (i * g_MapBlockY[g_CurrentMap]) + j;
 
+			TMapBlock *mapBlock = MapManager->GetBlock(blockIndex);
 			MAP_BLOCK mb = { 0 };
-			MapManager->GetRadarMapBlock(i, j, mb);
+
+			if (mapBlock == NULL)
+				MapManager->GetRadarMapBlock(i, j, mb);
 
 			IFOR(x, 0, 8)
 			{
@@ -121,7 +124,7 @@ void TGumpMinimap::GenerateMap()
 
 						if (data[block] == 0x8421)
 						{
-							WORD color = mb.Cells[(y * 8) + x].TileID;
+							WORD color = (mapBlock != NULL ? mapBlock->GetRadarColor(x, y) : mb.Cells[(y * 8) + x].TileID);
 							data[block] = 0x8000 | ColorManager->GetRadarColorData(color);
 						}
 					}

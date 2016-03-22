@@ -20,8 +20,6 @@
 #include "stdafx.h"
 
 TRenderWorldObject *g_SelectedObject = NULL;
-TRenderWorldObject *g_OldSelectedObject = NULL;
-POINT g_OldSelectedXY = { 0, 0 };
 //---------------------------------------------------------------------------
 //---------------------------------TRenderObject-----------------------------
 //---------------------------------------------------------------------------

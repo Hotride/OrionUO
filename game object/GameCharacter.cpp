@@ -507,6 +507,9 @@ void TGameCharacter::CorrectAnimationGroup(WORD &graphic, ANIMATION_GROUPS &grou
 			case HAG_MISC_2:
 				animation = HAG_MISC_1;
 				break;
+			case HAG_FLY:
+				animation = HAG_WALK;
+				break;
 			default:
 				break;
 		}
@@ -565,21 +568,6 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 			CorrectAnimationGroup(graphic, groupIndex, result);
 	}
 
-	/*if (graphic)
-	{
-		//AnimationManager->GetBodyGraphic(graphic);
-		groupIndex = AnimationManager->GetGroupIndex(graphic);
-
-		if (result != 0xFF)
-			GetAnimationGroup(groupIndex, result);
-	}
-	else
-	{
-		graphic = GetMountAnimation();
-		//AnimationManager->GetBodyGraphic(graphic);
-		groupIndex = AnimationManager->GetGroupIndex(graphic);
-	}*/
-
 	bool isWalking = Walking();
 	bool isRun = (m_Direction & 0x80);
 
@@ -611,20 +599,6 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 			{
 				if (AnimationManager->AnimationExists(graphic, HAG_FLY))
 					result = (BYTE)HAG_FLY;
-
-				/*TTextureAnimation *anim = AnimationManager->GetAnimation(graphic);
-
-				if (anim != NULL)
-				{
-					TTextureAnimationGroup *group = anim->GetGroup(HAG_FLY);
-					if (group != NULL)
-					{
-						TTextureAnimationDirection *direction = group->GetDirection(0);
-
-						if (direction != NULL && direction->Address != 0)
-							result = (BYTE)HAG_FLY;
-					}
-				}*/
 			}
 		}
 		else if (m_AnimationGroup == 0xFF)
@@ -651,9 +625,13 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 					result = (BYTE)PAG_RUN_ARMED;
 				else
 					result = (BYTE)PAG_RUN_UNARMED;
+
+				if (!AnimationManager->AnimationExists(graphic, result))
+					goto test_walk;
 			}
 			else
 			{
+				test_walk:
 				if (FindLayer(OL_MOUNT) != NULL)
 					result = (BYTE)PAG_ONMOUNT_RIDE_SLOW;
 				else if (FindLayer(OL_1_HAND) != NULL || FindLayer(OL_2_HAND) != NULL)
@@ -742,8 +720,6 @@ void TGameCharacter::UpdateAnimationInfo(BYTE &dir, bool canChange)
 			int delay = (int)ticks - (int)m_LastStepTime;
 			bool removeStep = (delay >= maxDelay);
 
-			MapManager->UnselectCreateRenderList(m_X, m_Y);
-
 			if (m_X != wd->X || m_Y != wd->Y)
 			{
 				float steps = maxDelay / g_AnimCharactersDelayValue;
@@ -772,8 +748,6 @@ void TGameCharacter::UpdateAnimationInfo(BYTE &dir, bool canChange)
 				m_Y = wd->Y;
 				m_Z = wd->Z;
 				m_Direction = wd->Direction;
-
-				MapManager->UnselectCreateRenderList(m_X, m_Y);
 
 				m_AfterStepDelay = maxDelay / 3;
 

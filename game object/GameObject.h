@@ -123,10 +123,10 @@ public:
 };
 //---------------------------------------------------------------------------
 //Функции для вычисления дистанции
-int GetDistance(TRenderWorldObject *current, TRenderWorldObject *target);
-int GetDistance(TRenderWorldObject *current, POINT target);
+int GetDistance(TGameObject *current, TGameObject *target);
+int GetDistance(TGameObject *current, POINT target);
 int GetMultiDistance(POINT current, TGameObject *target);
-int GetDistance(POINT current, TRenderWorldObject *target);
+int GetDistance(POINT current, TGameObject *target);
 int GetDistance(POINT current, POINT target);
 int GetTopObjDistance(TGameObject *current, TGameObject *target);
 //---------------------------------------------------------------------------

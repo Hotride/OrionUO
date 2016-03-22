@@ -288,7 +288,7 @@ void TGumpManager::OnRightMouseUp(bool blocked)
 								TGameItem *next = (TGameItem*)gi->m_Next;
 
 								if (gi->Layer == OL_NONE)
-									obj->Delete(gi);
+									World->RemoveObject(gi);
 
 								gi = next;
 							}
