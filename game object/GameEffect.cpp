@@ -93,7 +93,6 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 						int width = th->Width;
 						int heightDiv2 = th->Height / 2;
 
-						glLoadIdentity();
 						glTranslatef((GLfloat)drawEffectX, (GLfloat)(drawEffectY - heightDiv2), 0.0f);
 
 						glRotatef(moving->Angle, 0.0f, 0.0f, 1.0f);
@@ -104,6 +103,9 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 							glTexCoord2i(0, 0); glVertex2i(0, heightDiv2);
 							glTexCoord2i(1, 0); glVertex2i(width, heightDiv2);
 						glEnd();
+
+						glRotatef(moving->Angle, 0.0f, 0.0f, -1.0f);
+						glTranslatef((GLfloat)-drawEffectX, (GLfloat)-(drawEffectY - heightDiv2), 0.0f);
 					}
 				}
 			}

@@ -83,6 +83,8 @@ public:
 	//Îהועü ןנוהלוע
 	void PutEquipment(TGameItem *obj, TGameObject *container, int layer)
 	{
+		MapManager->UnselectCreateRenderList(container->X, container->Y);
+
 		PutContainer(obj, container);
 		obj->Layer = layer;
 	}

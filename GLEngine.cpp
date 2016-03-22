@@ -257,8 +257,6 @@ void TGLEngine::DrawLine(int x, int y, int targetX, int targetY)
 {
 	glDisable(GL_TEXTURE_2D);
 
-	glLoadIdentity();
-
 	glBegin(GL_LINES);
 		glVertex2i(x, y);
 		glVertex2i(targetX, targetY);
@@ -271,7 +269,6 @@ void TGLEngine::DrawPolygone(int x, int y, int width, int height)
 {
 	glDisable(GL_TEXTURE_2D);
 
-	glLoadIdentity();
 	glTranslatef((GLfloat)x, (GLfloat)y, 0.0f);
 
 	glBegin(GL_TRIANGLE_STRIP);
@@ -281,6 +278,8 @@ void TGLEngine::DrawPolygone(int x, int y, int width, int height)
 		glVertex2i(width, 0);
 	glEnd();
 
+	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
+
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
@@ -288,7 +287,6 @@ void TGLEngine::DrawCircle(float x, float y, float radius, int gradientMode)
 {
 	glDisable(GL_TEXTURE_2D);
 
-	glLoadIdentity();
 	glTranslatef(x, y, 0.0f);
 
 	glBegin(GL_TRIANGLE_FAN);
@@ -307,22 +305,24 @@ void TGLEngine::DrawCircle(float x, float y, float radius, int gradientMode)
 		}
 
 	glEnd();
-	
+
+	glTranslatef(-x, -y, 0.0f);
+
 	glEnable(GL_TEXTURE_2D);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVector *normals)
 {
-	//glUniform1iARB(ShaderTexture, texture);
-
 	if (m_OldTexture != texture)
 	{
 		m_OldTexture = texture;
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 
-	glLoadIdentity();
-	glTranslatef(x - 23.0f, y - 23.0f, (GLfloat)g_ZBuffer);
+	float translateX = x - 23.0f;
+	float translateY = y - 23.0f;
+
+	glTranslatef(translateX, translateY, (GLfloat)g_ZBuffer);
 
 	glBegin(GL_TRIANGLE_STRIP);
 		glNormal3f((GLfloat)normals[0].X, (GLfloat)normals[0].Y, (GLfloat)normals[0].Z);
@@ -337,19 +337,18 @@ void TGLEngine::DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVect
 		glNormal3f((GLfloat)normals[2].X, (GLfloat)normals[2].Y, (GLfloat)normals[2].Z);
 		glTexCoord2i(1, 1); glVertex2i(22, 44 - rc.right); //v
 	glEnd();
+
+	glTranslatef(-translateX, -translateY, (GLfloat)-g_ZBuffer);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height)
 {
-	//glUniform1iARB(ShaderTexture, texture);
-
 	if (m_OldTexture != texture)
 	{
 		m_OldTexture = texture;
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 
-	glLoadIdentity();
 	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 
 	glBegin(GL_TRIANGLE_STRIP);
@@ -358,19 +357,18 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height)
 		glTexCoord2i(0, 0); glVertex2i(0, 0);
 		glTexCoord2i(1, 0); glVertex2i(width, 0);
 	glEnd();
+
+	glTranslatef((GLfloat)-x, (GLfloat)-y, (GLfloat)-g_ZBuffer);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, bool &mirror)
 {
-	//glUniform1iARB(ShaderTexture, texture);
-
 	if (m_OldTexture != texture)
 	{
 		m_OldTexture = texture;
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 
-	glLoadIdentity();
 	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 
 	glBegin(GL_TRIANGLE_STRIP);
@@ -391,19 +389,18 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, boo
 		}
 
 	glEnd();
+
+	glTranslatef((GLfloat)-x, (GLfloat)-y, (GLfloat)-g_ZBuffer);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::DrawSitting(GLuint &texture, int &x, int &y, int width, int height, bool &mirror)
 {
-	//glUniform1iARB(ShaderTexture, texture);
-
 	if (m_OldTexture != texture)
 	{
 		m_OldTexture = texture;
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 	
-	glLoadIdentity();
 	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 	
 	int h03 = (int)(height * 0.35f);
@@ -446,12 +443,12 @@ void TGLEngine::DrawSitting(GLuint &texture, int &x, int &y, int width, int heig
 
 		glEnd();
 	}
+
+	glTranslatef((GLfloat)-x, (GLfloat)-y, (GLfloat)-g_ZBuffer);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::DrawShadow(GLuint &texture, int &x, int &y, int width, int height, bool &mirror)
 {
-	//glUniform1iARB(ShaderTexture, texture);
-
 	if (m_OldTexture != texture)
 	{
 		m_OldTexture = texture;
@@ -459,9 +456,7 @@ void TGLEngine::DrawShadow(GLuint &texture, int &x, int &y, int width, int heigh
 	}
 
 	int h2 = height / 2;
-	glLoadIdentity();
-	y += h2;
-	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
+	glTranslatef((GLfloat)x, (GLfloat)(y + h2), (GLfloat)g_ZBuffer);
 
 	glBegin(GL_TRIANGLE_STRIP);
 
@@ -481,19 +476,18 @@ void TGLEngine::DrawShadow(GLuint &texture, int &x, int &y, int width, int heigh
 		}
 
 	glEnd();
+
+	glTranslatef((GLfloat)-x, (GLfloat)-(y + h2), (GLfloat)-g_ZBuffer);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, int &drawWidth, int &drawHeight)
 {
-	//glUniform1iARB(ShaderTexture, texture);
-
 	if (m_OldTexture != texture)
 	{
 		m_OldTexture = texture;
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 
-	glLoadIdentity();
 	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 
 	float drawCountX = drawWidth / (float)width;
@@ -505,14 +499,14 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, int
 		glTexCoord2f(0.0f, 0.0f);				glVertex2i(0, 0);
 		glTexCoord2f(drawCountX, 0.0f);			glVertex2i(drawWidth, 0);
 	glEnd();
+
+	glTranslatef((GLfloat)-x, (GLfloat)-y, (GLfloat)-g_ZBuffer);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, int &height)
 {
 	IFOR(i, 0, 9)
 	{
-		//glUniform1iARB(ShaderTexture, th[i]->Texture);
-
 		glBindTexture(GL_TEXTURE_2D, th[i]->Texture);
 
 		int drawWidth = th[i]->Width;
@@ -621,7 +615,6 @@ void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, i
 				break;
 		}
 
-		glLoadIdentity();
 		glTranslatef((GLfloat)X, (GLfloat)Y, 0.0f);
 
 		glBegin(GL_TRIANGLE_STRIP);
@@ -630,6 +623,8 @@ void TGLEngine::DrawResizepic(TTextureObject **th, int &x, int &y, int &width, i
 			glTexCoord2f(0.0f, 0.0f);				glVertex2i(0, 0);
 			glTexCoord2f(drawCountX, 0.0f);			glVertex2i(drawWidth, 0);
 		glEnd();
+
+		glTranslatef((GLfloat)-X, (GLfloat)-Y, 0.0f);
 	}
 }
 //---------------------------------------------------------------------------

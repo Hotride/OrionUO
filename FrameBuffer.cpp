@@ -134,7 +134,6 @@ void TFrameBuffer::Draw(int x, int y)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_Texture);
 
-		glLoadIdentity();
 		glTranslatef((GLfloat)x, (GLfloat)y, 0.0f);
 		
 		glBegin(GL_QUADS);
@@ -143,6 +142,8 @@ void TFrameBuffer::Draw(int x, int y)
 			glTexCoord2i(1, 0); glVertex2i(m_Width, 0);
 			glTexCoord2i(0, 0); glVertex2i(0, 0);
 		glEnd();
+
+		glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 	}
 }
 //---------------------------------------------------------------------------

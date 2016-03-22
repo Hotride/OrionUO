@@ -79,6 +79,12 @@ protected:
 
 	//Флаг отображения (true - картинка из texmaps, false - из art.mul)
 	bool m_IsStretched;
+
+	//Создан ли лист для отображения в мире?
+	bool m_ListCreated;
+
+	//Чексумма для формирования рендерлиста
+	DWORD m_RenderListChecksum;
 public:
 	TLandObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TLandObject() {}
@@ -89,6 +95,8 @@ public:
 	SETGET(RECT, Rect);
 	SETGET(char, MinZ);
 	SETGET(bool, IsStretched);
+	SETGET(bool, ListCreated);
+	SETGET(DWORD, RenderListChecksum);
 
 	//Отрисовка объекта
 	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);

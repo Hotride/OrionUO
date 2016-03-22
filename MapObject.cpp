@@ -111,7 +111,8 @@ TMapObject::~TMapObject()
 //---------------------------------TLandObject------------------------------
 //---------------------------------------------------------------------------
 TLandObject::TLandObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z)
-: TMapObject(ROT_LAND_OBJECT, serial, graphic, color, x, y, z), m_MinZ(z)
+: TMapObject(ROT_LAND_OBJECT, serial, graphic, color, x, y, z), m_MinZ(z),
+m_ListCreated(false)
 {
 	LAND_TILES &tile = UO->m_LandData[graphic / 32].Tiles[graphic % 32];
 

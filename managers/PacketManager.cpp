@@ -1011,9 +1011,14 @@ PACKET_HANDLER(UpdatePlayer)
 
 	g_Player->Color = ReadWord() & 0x7FFF;
 	g_Player->Flags = ReadByte();
+	int oldX = g_Player->X;
+	int oldY = g_Player->Y;
 	g_Player->X = ReadWord();
 	g_Player->Y = ReadWord();
 	Move(2);
+
+	if (abs(oldX - g_Player->X) > 1 || abs(oldY - g_Player->Y) > 1)
+		MapManager->UnselectRangedCreateRenderList();
 
 	g_Player->m_WalkStack.Clear();
 
@@ -1239,6 +1244,8 @@ PACKET_HANDLER(UpdateItem)
 
 	World->MoveToTop(obj);
 
+	MapManager->UnselectCreateRenderList(obj->X, obj->Y);
+
 	TPRINT("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
 }
 //---------------------------------------------------------------------------
@@ -1305,6 +1312,8 @@ PACKET_HANDLER(UpdateItemSA)
 	obj->OnGraphicChange(dir);
 
 	obj->Flags = flags;
+
+	MapManager->UnselectCreateRenderList(obj->X, obj->Y);
 
 	TPRINT("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
 
@@ -1418,6 +1427,8 @@ PACKET_HANDLER(UpdateObject)
 	serial = ReadDWord();
 
 	World->MoveToTop(obj);
+
+	MapManager->UnselectCreateRenderList(obj->X, obj->Y);
 
 	PBYTE end = buf + size;
 
@@ -1726,12 +1737,16 @@ PACKET_HANDLER(DenyMoveItem)
 		if (obj == NULL)
 		{
 			obj = World->GetWorldItem(ObjectInHand->Serial);
+
 			if (obj != NULL)
 			{
 				obj->Paste(ObjectInHand);
 				World->PutContainer(obj, ObjectInHand->Container);
 
 				World->MoveToTop(obj);
+
+				if (obj->Container == 0xFFFFFFFF)
+					MapManager->UnselectCreateRenderList(obj->X, obj->Y);
 			}
 		}
 
@@ -1817,7 +1832,12 @@ PACKET_HANDLER(DeleteObject)
 		if (obj->NPC && Party.Contains(obj->Serial))
 			obj->RemoveRender();
 		else
+		{
+			if (obj->Container == 0xFFFFFFFF)
+				MapManager->UnselectCreateRenderList(obj->X, obj->Y);
+
 			World->RemoveObject(obj);
+		}
 	}
 }
 //---------------------------------------------------------------------------
@@ -1841,6 +1861,8 @@ PACKET_HANDLER(UpdateCharacter)
 	char z = ReadChar();
 	BYTE dir = ReadByte();
 
+	MapManager->UnselectCreateRenderList(obj->X, obj->Y);
+
 	if (serial != g_PlayerSerial && !obj->IsTeleportAction(x, y, dir))
 	{
 		TWalkData *wd = new TWalkData();
@@ -1861,6 +1883,8 @@ PACKET_HANDLER(UpdateCharacter)
 		obj->Z = z;
 		obj->Direction = dir;
 	}
+
+	MapManager->UnselectCreateRenderList(x, y);
 
 	obj->Color = ReadWord() & 0x7FFF;
 	obj->Flags = ReadByte();
@@ -1886,6 +1910,8 @@ PACKET_HANDLER(Warmode)
 	gump = GumpManager->GetGump(g_PlayerSerial, 0, GT_PAPERDOLL);
 	if (gump != NULL)
 		gump->UpdateFrame();
+
+	MapManager->UnselectCreateRenderList(g_Player->X, g_Player->Y);
 
 	World->MoveToTop(g_Player);
 }

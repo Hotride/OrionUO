@@ -219,6 +219,8 @@ void TGameWorld::ProcessAnimation()
 						}
 						
 						gc->AnimIndex = frameIndex;
+
+						MapManager->UnselectCreateRenderList(gc->X, gc->Y);
 					}
 				}
 

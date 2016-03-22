@@ -20,7 +20,8 @@
 #include "stdafx.h"
 
 TRenderWorldObject *g_SelectedObject = NULL;
-TRenderWorldObject *g_RenderList = NULL;
+TRenderWorldObject *g_OldSelectedObject = NULL;
+POINT g_OldSelectedXY = { 0, 0 };
 //---------------------------------------------------------------------------
 //---------------------------------TRenderObject-----------------------------
 //---------------------------------------------------------------------------
@@ -57,17 +58,6 @@ void TRenderWorldObject::RemoveRender()
 
 	m_NextXY = NULL;
 	m_PrevXY = NULL;
-
-	/*if (m_PrevDraw != NULL)
-		m_PrevDraw->m_NextDraw = m_NextDraw;
-	else
-		g_RenderList = m_NextDraw;
-
-	if (m_NextDraw != NULL)
-		m_NextDraw->m_PrevDraw = m_PrevDraw;
-
-	m_NextDraw = NULL;
-	m_PrevDraw = NULL;*/
 }
 //---------------------------------------------------------------------------
 TLandObject *TRenderWorldObject::GetLand()

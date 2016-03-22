@@ -54,11 +54,18 @@ public:
 	//Инициализация
 	void Init(bool delayed = false);
 
+	//Снять флаг создания рендер листа
+	void UnselectRangedCreateRenderList();
+
 	//Получить ссылку на блок
 	TMapBlock *GetBlock(DWORD index);
 
 	//Добавить блок
 	TMapBlock *AddBlock(DWORD index);
+
+	TLandObject *GetLand(int &x, int &y);
+
+	void UnselectCreateRenderList(int x, int y);
 
 	//Удалить блок
 	void DeleteBlock(DWORD index);

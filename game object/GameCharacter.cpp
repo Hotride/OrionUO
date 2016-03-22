@@ -742,6 +742,8 @@ void TGameCharacter::UpdateAnimationInfo(BYTE &dir, bool canChange)
 			int delay = (int)ticks - (int)m_LastStepTime;
 			bool removeStep = (delay >= maxDelay);
 
+			MapManager->UnselectCreateRenderList(m_X, m_Y);
+
 			if (m_X != wd->X || m_Y != wd->Y)
 			{
 				float steps = maxDelay / g_AnimCharactersDelayValue;
@@ -770,6 +772,8 @@ void TGameCharacter::UpdateAnimationInfo(BYTE &dir, bool canChange)
 				m_Y = wd->Y;
 				m_Z = wd->Z;
 				m_Direction = wd->Direction;
+
+				MapManager->UnselectCreateRenderList(m_X, m_Y);
 
 				m_AfterStepDelay = maxDelay / 3;
 

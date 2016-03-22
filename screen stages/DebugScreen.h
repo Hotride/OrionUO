@@ -19,73 +19,6 @@
 //---------------------------------------------------------------------------
 #ifndef DebugScreenH
 #define DebugScreenH
-//--------------------------------------------------------------------------
-class TEffect : public TRenderObject
-{
-	//private:
-protected:
-	EFFECT_TYPE m_EffectType;
-	DWORD m_DestSerial;
-	WORD m_DestX;
-	WORD m_DestY;
-	char m_DestZ;
-	BYTE m_Speed;
-	DWORD m_Duration;
-	bool m_FixedDirection;
-	bool m_Explode;
-	DWORD m_RenderMode;
-	char m_Z;
-
-	int m_AnimIndex;
-	int m_Increment;
-	DWORD m_LastChangeFrameTime;
-public:
-	TEffect();
-	virtual ~TEffect();
-
-	SETGET(EFFECT_TYPE, EffectType);
-	SETGET(DWORD, DestSerial);
-	SETGET(WORD, DestX);
-	SETGET(WORD, DestY);
-	SETGET(char, DestZ);
-	SETGET(BYTE, Speed);
-	SETGET(DWORD, Duration);
-	SETGET(bool, FixedDirection);
-	SETGET(bool, Explode);
-	SETGET(DWORD, RenderMode);
-	SETGET(char, Z);
-
-	SETGET(int, AnimIndex);
-	SETGET(int, Increment);
-	SETGET(DWORD, LastChangeFrameTime);
-
-	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
-
-	WORD GetCurrentGraphic();
-	WORD CalculateCurrentGraphic();
-	void ApplyRenderMode();
-
-	bool IsEffectObject() { return true; }
-};
-//--------------------------------------------------------------------------
-class TEffectMoving : public TEffect
-{
-private:
-	float m_Angle;
-	int m_OffsetX;
-	int m_OffsetY;
-	int m_OffsetZ;
-public:
-	TEffectMoving();
-	virtual ~TEffectMoving();
-
-	SETGET(float, Angle);
-	SETGET(int, OffsetX);
-	SETGET(int, OffsetY);
-	SETGET(int, OffsetZ);
-
-	void Update();
-};
 //---------------------------------------------------------------------------
 class TDebugScreen : public TBaseScreen
 {
@@ -96,7 +29,6 @@ private:
 	static const int ID_DS_QUIT = 1;
 	static const int ID_DS_GO_SCREEN_MAIN = 2;
 
-	TEffectMoving *effect;
 	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
 	TDebugScreen();
