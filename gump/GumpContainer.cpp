@@ -70,133 +70,95 @@ void TGumpContainer::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
 	TGameItem *container = World->FindWorldItem(Serial);
+
 	if (container == NULL)
 		return;
 
-	DWORD index = (DWORD)this;
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
+	CalculateGumpState();
 	
-	if (g_LastObjectType == SOT_TEXT_OBJECT)
-		CanSelectedButton = false;
-
-	glNewList((GLuint)index, GL_COMPILE);
+	glNewList((GLuint)this, GL_COMPILE);
 	
-		if (Minimized)
+		if (m_Minimized)
+			UO->DrawGump(0x0050, 0, 0, 0);
+		else
 		{
-			UO->DrawGump(0x0050, 0, posX, posY);
+			UO->DrawGump((WORD)ID, 0, 0, 0);
 
-			glEndList();
-
-			FrameRedraw = true;
-			FrameCreated = true;
-
-			return;
-		}
-
-		UO->DrawGump((WORD)ID, 0, posX, posY);
-
-		if (ID == 0x09)
-		{
-			if (m_CorpseEyesTicks < GetTickCount())
+			if (ID == 0x09)
 			{
-				m_CorpseEyesOffset = (BYTE)!m_CorpseEyesOffset;
-				m_CorpseEyesTicks = GetTickCount() + 750;
+				if (m_CorpseEyesTicks < GetTickCount())
+				{
+					m_CorpseEyesOffset = (BYTE)!m_CorpseEyesOffset;
+					m_CorpseEyesTicks = GetTickCount() + 750;
+				}
+
+				UO->DrawGump(0x0045 + m_CorpseEyesOffset, 0, 45, 30);
 			}
 
-			UO->DrawGump(0x0045 + m_CorpseEyesOffset, 0, posX + 45, posY + 30);
-		}
+			bool canSelect = (ObjectInHand == NULL || (ObjectInHand != NULL && !g_LeftMouseDown));
 
-		bool canSelect = (ObjectInHand == NULL || (ObjectInHand != NULL && !g_LeftMouseDown));
-		
-		ColorizerShader->Use();
+			ColorizerShader->Use();
 
-		for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
-		{
-			int count = obj->Count;
-
-			if ((obj->Layer == OL_NONE || (container->IsCorpse() && LAYER_UNSAFE[obj->Layer])) && count > 0)
+			for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
 			{
-				bool doubleDraw = false;
-				WORD graphic = obj->GetDrawGraphic(doubleDraw);
-				WORD color = obj->Color;
-				bool selMode = false;
-				int drawX = posX + obj->X;
-				int drawY = posY + obj->Y;
+				int count = obj->Count;
 
-				if (canSelect && CanSelectedButton == obj->Serial)
+				if ((obj->Layer == OL_NONE || (container->IsCorpse() && LAYER_UNSAFE[obj->Layer])) && count > 0)
 				{
-					color = 0x0035;
-					selMode = true;
-				}
-				
-				if (m_IsGameBoard)
-					UO->DrawGump(graphic - GAME_FIGURE_GUMP_OFFSET, color, drawX, drawY - 20);
-				else
-				{
-					UO->DrawStaticArtInContainer(graphic, color, drawX, drawY, selMode);
+					bool doubleDraw = false;
+					WORD graphic = obj->GetDrawGraphic(doubleDraw);
+					WORD color = obj->Color;
+					bool selMode = false;
 
-					if (doubleDraw)
-						UO->DrawStaticArtInContainer(graphic, color, drawX + 5, drawY + 5, selMode);
+					if (canSelect && g_GumpSelectElement == obj->Serial)
+					{
+						color = 0x0035;
+						selMode = true;
+					}
+
+					if (m_IsGameBoard)
+						UO->DrawGump(graphic - GAME_FIGURE_GUMP_OFFSET, color, obj->X, obj->Y - 20);
+					else
+					{
+						UO->DrawStaticArtInContainer(graphic, color, obj->X, obj->Y, selMode);
+
+						if (doubleDraw)
+							UO->DrawStaticArtInContainer(graphic, color, obj->X + 5, obj->Y + 5, selMode);
+					}
 				}
 			}
-		}
 
-		UnuseShader();
+			UnuseShader();
+		}
 
 	glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpContainer::Draw(bool &mode)
 {
-	DWORD index = (DWORD)this;
+	CalculateGumpState();
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	if (g_LastObjectType == SOT_TEXT_OBJECT)
-		CanSelectedButton = false;
-	
-	int posX = X;
-	int posY = Y;
-
-	if (Minimized)
-	{
-		posX = MinimizedX;
-		posY = MinimizedY;
-	}
-
-	if (mode && GetTopObjDistance(g_Player, World->FindWorldObject(Serial)) < 3 && IsPressed && ObjectInHand == NULL && g_LastObjectLeftMouseDown != ID_GC_MINIMIZE && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < GetTickCount())))
+	if (mode && GetTopObjDistance(g_Player, World->FindWorldObject(Serial)) < 3 && g_GumpPressed && ObjectInHand == NULL && g_LastObjectLeftMouseDown != ID_GC_MINIMIZE && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < GetTickCount())))
 	{
 		TGameItem *selobj = World->FindWorldItem(g_LastObjectLeftMouseDown);
 		if (selobj != NULL && selobj->IsStackable() && selobj->Count > 1)
 		{
 			TGumpDrag *newgump = new TGumpDrag(g_LastObjectLeftMouseDown, g_MouseX - 80, g_MouseY - 34);
 
-			char text_amount[20] = {0};
-			sprintf(text_amount, "%d", selobj->Count);
-
 			TGump *gumpEntry = GumpManager->GetTextEntryOwner();
 
 			EntryPointer = newgump->TextEntry;
-			EntryPointer->SetText(text_amount);
+			EntryPointer->SetText(std::to_string(selobj->Count));
 			
 			if (gumpEntry != NULL)
 				gumpEntry->UpdateFrame();
@@ -204,6 +166,8 @@ int TGumpContainer::Draw(bool &mode)
 			GumpManager->AddGump(newgump);
 			CurrentScreen->OnLeftMouseDown();
 			selobj->Dragged = true;
+
+			CalculateGumpState();
 		}
 		else if (selobj != NULL)
 		{
@@ -219,31 +183,12 @@ int TGumpContainer::Draw(bool &mode)
 		}
 	}
 	
-	if (CanBeMoved() && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown && ObjectInHand == NULL)
-	{
-		posX += g_MouseX - g_DroppedLeftMouseX;
-		posY += g_MouseY - g_DroppedLeftMouseY;
-		
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (IsPressed || CanSelectedButton || (ID == 0x09 && m_CorpseEyesTicks < GetTickCount()))
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
-	}
-
 	//Вычисление положения, прозрачности и отрисовка текста
 	TRenderTextObject *rto = TextRenderer->m_Items;
 	
 	DWORD ticks = GetTickCount();
 
-	if (!Minimized)
+	if (!m_Minimized)
 	{
 		if (mode)
 			TextRenderer->ClearRect();
@@ -261,24 +206,21 @@ int TGumpContainer::Draw(bool &mode)
 
 			TTextData *td = (TTextData*)rto;
 
-			if (td->Type == TT_OBJECT && td->Timer >= ticks)
+			if (mode && td->Type == TT_OBJECT && td->Timer >= ticks)
 			{
 				TGameObject *go = World->FindWorldObject(td->Serial);
 
 				if (go != NULL && go->Graphic < 0x4000)
 				{
 					TTextTexture &tth = td->m_Texture;
-					int drawX = posX + td->DrawX - go->GetTextOffsetX(td);
-					int drawY = posY + td->DrawY - go->GetTextOffsetY(td);
+					int drawX = td->DrawX - go->GetTextOffsetX(td);
+					int drawY = td->DrawY - go->GetTextOffsetY(td);
 
-					if (mode)
-					{
-						TTextImageBounds ib(drawX, drawY, tth.Width, tth.Height, td);
+					TTextImageBounds ib(drawX, drawY, tth.Width, tth.Height, td);
 
-						td->Transparent = TextRenderer->InRect(ib, go);
+					td->Transparent = TextRenderer->InRect(ib, go);
 
-						TextRenderer->AddRect(ib);
-					}
+					TextRenderer->AddRect(ib);
 				}
 			}
 
@@ -287,14 +229,23 @@ int TGumpContainer::Draw(bool &mode)
 		}
 	}
 
+	DWORD index = (DWORD)this;
+
 	if (mode)
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (g_GumpSelectElement || !m_FrameCreated || (ID == 0x09 && m_CorpseEyesTicks < GetTickCount()))
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
 		
-		if (!Minimized)
+		if (!m_Minimized)
 		{
 			//Отрисовка текста
 			for (; rto != NULL; rto = rto->m_PrevDraw)
@@ -308,8 +259,8 @@ int TGumpContainer::Draw(bool &mode)
 				{
 					TTextTexture &tth = td->m_Texture;
 
-					int drawX = posX + td->DrawX - (tth.Width / 2);
-					int drawY = posY + td->DrawY;
+					int drawX = td->DrawX - (tth.Width / 2);
+					int drawY = td->DrawY;
 					bool transparent = td->Transparent;
 
 					while (td != NULL)
@@ -334,109 +285,115 @@ int TGumpContainer::Draw(bool &mode)
 			}
 		}
 
-		DrawLocker(posX, posY);
+		int lx = 0;
+		DrawLocker(lx, lx);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else
 	{
-		if (Minimized)
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
+		int LSG = 0;
+
+		if (m_Minimized)
 		{
-			if (UO->GumpPixelsInXY(0x0050, posX, posY))
+			if (UO->GumpPixelsInXY(0x0050, 0, 0))
+			{
+				g_LastSelectedObject = 0;
+				g_LastSelectedGump = index;
+			}
+		}
+		else
+		{
+			if (UO->GumpPixelsInXY((WORD)m_ID, 0, 0))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
 			}
 
-			return 0;
-		}
+			if (UO->PolygonePixelsInXY(106, 162, 16, 16))
+				LSG = ID_GC_MINIMIZE;
 
-		if (UO->GumpPixelsInXY((WORD)ID, posX, posY))
-		{
-			g_LastSelectedObject = 0;
-			g_LastSelectedGump = index;
-		}
+			TGameItem *container = World->FindWorldItem(Serial);
 
-		int LSG = 0;
-
-		RECT rc = {0, 0, 16, 16};
-		POINT p = {g_MouseX - (posX + 106), g_MouseY - (posY + 162)};
-
-		if (PtInRect(&rc, p))
-			LSG = ID_GC_MINIMIZE;
-
-		TGameItem *container = World->FindWorldItem(Serial);
-
-		if (container != NULL)
-		{
-			for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
+			if (container != NULL)
 			{
-				int count = obj->Count;
-
-				if ((obj->Layer == OL_NONE || (container->IsCorpse() && LAYER_UNSAFE[obj->Layer])) && count > 0)
+				for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
 				{
-					bool doubleDraw = false;
-					WORD graphic = obj->GetDrawGraphic(doubleDraw);
-					int drawX = posX + obj->X;
-					int drawY = posY + obj->Y;
+					int count = obj->Count;
 
-					if (m_IsGameBoard)
+					if ((obj->Layer == OL_NONE || (container->IsCorpse() && LAYER_UNSAFE[obj->Layer])) && count > 0)
 					{
-						if (UO->GumpPixelsInXY(graphic - GAME_FIGURE_GUMP_OFFSET, drawX, drawY - 20))
-							LSG = obj->Serial;
-					}
-					else
-					{
-						if (UO->StaticPixelsInXYInContainer(graphic, drawX, drawY))
-							LSG = obj->Serial;
+						bool doubleDraw = false;
+						WORD graphic = obj->GetDrawGraphic(doubleDraw);
 
-						if (doubleDraw)
+						if (m_IsGameBoard)
 						{
-							if (UO->StaticPixelsInXYInContainer(graphic, drawX + 5, drawY + 5))
+							if (UO->GumpPixelsInXY(graphic - GAME_FIGURE_GUMP_OFFSET, obj->X, obj->Y - 20))
 								LSG = obj->Serial;
+						}
+						else
+						{
+							if (UO->StaticPixelsInXYInContainer(graphic, obj->X, obj->Y))
+								LSG = obj->Serial;
+
+							if (doubleDraw)
+							{
+								if (UO->StaticPixelsInXYInContainer(graphic, obj->X + 5, obj->Y + 5))
+									LSG = obj->Serial;
+							}
 						}
 					}
 				}
 			}
-		}
-		
-		//Проверка текста
-		for (; rto != NULL; rto = rto->m_PrevDraw)
-		{
-			if (!rto->IsText())
-				continue;
 
-			TTextData *td = (TTextData*)rto;
-				
-			if (td->Type == TT_OBJECT && td->Timer >= ticks)
+			//Проверка текста
+			for (; rto != NULL; rto = rto->m_PrevDraw)
 			{
-				TTextTexture &tth = td->m_Texture;
+				if (!rto->IsText())
+					continue;
 
-				int drawX = posX + td->DrawX - (tth.Width / 2);
-				int drawY = posY + td->DrawY;
+				TTextData *td = (TTextData*)rto;
 
-				while (td != NULL)
+				if (td->Type == TT_OBJECT && td->Timer >= ticks)
 				{
-					drawY -= td->m_Texture.Height;
+					TTextTexture &tth = td->m_Texture;
 
-					td = td->m_Next;
-				}
+					int drawX = td->DrawX - (tth.Width / 2);
+					int drawY = td->DrawY;
 
-				if (tth.UnderMouse(drawX, drawY))
-				{
-					g_LastObjectType = SOT_TEXT_OBJECT;
-					LSG = 1;
-					g_SelectedTextObject = rto;
+					while (td != NULL)
+					{
+						drawY -= td->m_Texture.Height;
+
+						td = td->m_Next;
+					}
+
+					if (tth.UnderMouse(drawX, drawY))
+					{
+						g_LastObjectType = SOT_TEXT_OBJECT;
+						LSG = 1;
+						g_SelectedTextObject = rto;
+					}
 				}
+			}
+
+			if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
+				LSG = ID_GC_LOCK_MOVING;
+
+			if (LSG != 0)
+			{
+				g_LastSelectedObject = LSG;
+				g_LastSelectedGump = index;
 			}
 		}
 
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(posX, posY, 10, 14))
-			LSG = ID_GC_LOCK_MOVING;
-
-		if (LSG != 0)
-		{
-			g_LastSelectedObject = LSG;
-			g_LastSelectedGump = index;
-		}
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		return LSG;
 	}

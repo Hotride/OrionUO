@@ -123,31 +123,9 @@ int TDebugScreen::Render(bool mode)
 			GumpID = 0x15A6; //> gump pressed
 		UO->DrawGump(GumpID, 0, 610, 445);
 
-		static GLuint list = (GLuint)this;
-		static bool list_b = true;
-
-		glTranslatef(130.0f, 130.0f, 0.0f);
-
-		if (list_b)
-		{
-			list_b = false;
-
-			glNewList(list, GL_COMPILE_AND_EXECUTE);
-
-				UO->DrawLandArt(0x00CB, 0x44, 0, 0, 0);
-				UO->DrawStaticArt(0x0D2F, 0, 0, 0, 0);
-				UO->DrawStaticArt(0x0CE6, 0, 0, 0, 0);
-				UO->DrawStaticArt(0x0CE7, 0x21, 0, 0, 0);
-
-			glEndList();
-		}
-		else
-			glCallList(list);
-
-		glTranslatef(-130.0f, -130.0f, 0.0f);
-
 		UnuseShader();
 
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		DPOLY(315, 235, 10, 10);
 
 		glColor4f(0.37f, 0.0f, 0.0f, 1.0f);

@@ -132,6 +132,8 @@ public:
 	SETGET(string, Text);
 	SETGET(wstring, UnicodeText);
 
+	bool CanBeDrawedInJournalGump();
+
 	//Текстура текста
 	TTextTexture m_Texture;
 

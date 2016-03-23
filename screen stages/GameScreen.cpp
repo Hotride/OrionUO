@@ -1839,7 +1839,7 @@ bool TGameScreen::OnLeftMouseDoubleClick()
 //---------------------------------------------------------------------------
 bool TGameScreen::OnRightMouseDoubleClick()
 {
-	if (g_SelectedObject != NULL && !PathFinder->AutoWalking)
+	if (ConfigManager.EnablePathfind && g_SelectedObject != NULL && !PathFinder->AutoWalking)
 	{
 		if (g_SelectedObject->IsLandObject() || g_SelectedObject->IsSurface())
 		{

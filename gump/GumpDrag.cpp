@@ -50,75 +50,54 @@ void TGumpDrag::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	DWORD index = (DWORD)this;
+	CalculateGumpState();
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
+	if (TextEntry != NULL && TextEntry->Changed) //Текстовое поле существует и было изменено, отрисуем его для формирования текстуры
+		TextEntry->DrawA(1, 0x0386, 29, 42);
 
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
+	glNewList((GLuint)this, GL_COMPILE);
 
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	glNewList((GLuint)index, GL_COMPILE);
-
-		UO->DrawGump(0x085C, 0, posX, posY); //Gump
+		UO->DrawGump(0x085C, 0, 0, 0); //Gump
 		
-		WORD gumpID = 0x0845 + (int)(CanSelectedButton == ID_GD_SCROLL); //Scroll button / selected
-		UO->DrawGump(gumpID, 0, posX + m_ScrollPos, posY + 16);
+		WORD gumpID = 0x0845 + (int)(g_GumpSelectElement == ID_GD_SCROLL); //Scroll button / selected
+		UO->DrawGump(gumpID, 0, m_ScrollPos, 16);
 		
 		if (TextEntry != NULL) //Текстовое поле существует, отрисуем его
-			TextEntry->DrawA(1, 0x0386, posX + 29, posY + 42);
+			TextEntry->DrawA(1, 0x0386, 29, 42);
 		
 		gumpID = 0x081A; //Button Okay
-		if (CanPressedButton == ID_GD_OKAY)
+		if (g_GumpPressedElement == ID_GD_OKAY)
 			gumpID = 0x081B; //Button Okay (down)
-		else if (CanSelectedButton == ID_GD_OKAY)
+		else if (g_GumpSelectElement == ID_GD_OKAY)
 			gumpID = 0x081C; //Button Okay selected
-		UO->DrawGump(gumpID, 0, posX + 102, posY + 37);
+		UO->DrawGump(gumpID, 0, 102, 37);
 
 	glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpDrag::Draw(bool &mode)
 {
-	DWORD index = (DWORD)this;
-
 	TGameItem *selobj = World->FindWorldItem(Serial);
 	if (selobj == NULL)
 		return 0; //Объект, к которому привязан ползунок - исчезsel
-	
-	//Для быстрого доступа
-	int posX = X;
-	int posY = Y;
-	
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
 
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
+	DWORD index = (DWORD)this;
 
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
+	CalculateGumpState();
 
 	//Если схватили ползунок - вычислим его позицию и значение в текстовом поле
-	if (mode && IsPressed && g_LastObjectLeftMouseDown == ID_GD_SCROLL)
+	if (mode && g_GumpPressed && g_LastObjectLeftMouseDown == ID_GD_SCROLL)
 	{
-		int CurrentX = g_MouseX - posX - 5; //Текущая позиция ползунка
+		int CurrentX = g_MouseX - (int)g_GumpTranslateX - 5; //Текущая позиция ползунка
 
 		if (CurrentX < 29)
 			CurrentX = 29; //Выход за допустимый предел, корректируем на минимум
@@ -144,68 +123,55 @@ int TGumpDrag::Draw(bool &mode)
 			count = 0; //Позиция равна минимуму, выставляем количество 0
 
 		//Конвертирование текста в строку и запись в текстовое поле гампа
-		char text_amount[20] = {0};
-		sprintf(text_amount, "%d", count);
+		TextEntry->SetText(std::to_string(count));
 
-		TextEntry->SetText(text_amount);
-
-		GenerateFrame(posX, posY);
-		FrameRedraw = false;
-	}
-
-	//Если окошко захвачено для перемещения - вычислим оффсеты
-	if (mode && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += g_MouseX - g_DroppedLeftMouseX;
-		posY += g_MouseY - g_DroppedLeftMouseY;
-		
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (IsPressed || CanSelectedButton)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
+		m_FrameCreated = false;
 	}
 
 	if (mode) //Отрисовка
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (g_GumpPressed || g_GumpSelectElement || !m_FrameCreated)
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
 
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (UO->GumpPixelsInXY(0x085C, posX, posY))
+		if (UO->GumpPixelsInXY(0x085C, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		
-			if (UO->GumpPixelsInXY(0x0845, posX + (int)m_ScrollPos, posY + 16))
+			if (UO->GumpPixelsInXY(0x0845, m_ScrollPos, 16))
 				LSG = ID_GD_SCROLL; //Scroll button
-			else if (UO->GumpPixelsInXY(0x081A, posX + 102, posY + 37))
+			else if (UO->GumpPixelsInXY(0x081A, 102, 37))
 				LSG = ID_GD_OKAY; //Button Okay
-			else
-			{
-				//Текстовое поле
-				RECT rc = {0, 0, 60, 16};
-				POINT p = {g_MouseX - (posX + 28), g_MouseY - (posY + 40)};
-				if (PtInRect(&rc, p))
-					LSG = ID_GD_TEXT_FIELD;
-			}
+			else if (UO->PolygonePixelsInXY(28, 40, 60, 16))
+				LSG = ID_GD_TEXT_FIELD; //Текстовое поле
 
 			if (LSG != 0)
 				g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		return LSG;
 	}
@@ -223,8 +189,8 @@ void TGumpDrag::OnLeftMouseUp()
 		OnOkayPressed();
 	else if (g_LastObjectLeftMouseDown == ID_GD_TEXT_FIELD) //Выбрали текстовое поле
 	{
-		int x = g_MouseX - (X + 28);
-		int y = g_MouseY - (Y + 40);
+		int x = g_MouseX - (m_X + 28);
+		int y = g_MouseY - (m_Y + 40);
 
 		TextEntry->OnClick(this, 1, false, x, y);
 	}
@@ -259,7 +225,7 @@ void TGumpDrag::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 
 				m_ScrollPos = 29 + (int)ValPer;
 
-				GenerateFrame(X, Y);
+				GenerateFrame(m_X, m_Y);
 			}
 		}
 	}
@@ -291,7 +257,7 @@ void TGumpDrag::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 				if (m_StartText)
 					m_StartText = false;
 
-				GenerateFrame(X, Y);
+				GenerateFrame(m_X, m_Y);
 
 				break;
 			}
@@ -302,7 +268,7 @@ void TGumpDrag::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 				if (m_StartText)
 					m_StartText = false;
 
-				GenerateFrame(X, Y);
+				GenerateFrame(m_X, m_Y);
 
 				break;
 			}
@@ -313,7 +279,7 @@ void TGumpDrag::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 				if (m_StartText)
 					m_StartText = false;
 
-				GenerateFrame(X, Y);
+				GenerateFrame(m_X, m_Y);
 
 				break;
 			}
@@ -324,39 +290,14 @@ void TGumpDrag::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 				if (m_StartText)
 					m_StartText = false;
 
-				GenerateFrame(X, Y);
-
-				break;
-			}
-			case VK_BACK:
-			{
-				EntryPointer->Remove(true);
-
-				if (EntryPointer->Length())
-				{
-					int val = atoi(EntryPointer->c_str());
-					float ValPer = (val / item->Count) * 100.0f;
-
-					if (ValPer == 0.0f)
-						ValPer = 0.0f;
-					else
-						ValPer = (ValPer * 93.0f) / 100.0f;
-
-					m_ScrollPos = 29 + (int)ValPer;
-				}
-				else
-					m_ScrollPos = 29;
-
-				if (m_StartText)
-					m_StartText = false;
-
-				GenerateFrame(X, Y);
+				GenerateFrame(m_X, m_Y);
 
 				break;
 			}
 			case VK_DELETE:
+			case VK_BACK:
 			{
-				EntryPointer->Remove(false);
+				EntryPointer->Remove(wparam == VK_BACK);
 
 				if (EntryPointer->Length())
 				{
@@ -376,7 +317,7 @@ void TGumpDrag::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 				if (m_StartText)
 					m_StartText = false;
 
-				GenerateFrame(X, Y);
+				GenerateFrame(m_X, m_Y);
 
 				break;
 			}
@@ -388,21 +329,22 @@ void TGumpDrag::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 //----------------------------------------------------------------------------
 void TGumpDrag::OnOkayPressed()
 {
-	if (ObjectInHand != NULL)
-		return;
-
-	if (TextEntry->Length())
+	if (ObjectInHand == NULL)
 	{
-		int count = atoi(TextEntry->c_str());
-		if (count)
+		if (TextEntry->Length())
 		{
-			TGameItem *obj = World->FindWorldItem(Serial);
+			int count = atoi(TextEntry->c_str());
 
-			if (obj != NULL)
-				UO->PickupItem(obj, count);
+			if (count)
+			{
+				TGameItem *obj = World->FindWorldItem(Serial);
+
+				if (obj != NULL)
+					UO->PickupItem(obj, count);
+			}
 		}
-	}
 
-	GumpManager->RemoveGump(this);
+		GumpManager->RemoveGump(this);
+	}
 }
 //----------------------------------------------------------------------------

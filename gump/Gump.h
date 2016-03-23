@@ -38,6 +38,7 @@ protected:
 	bool m_Blocked;
 	bool m_LockMoving;
 
+	void CalculateGumpState();
 public:
 	TGump(GUMP_TYPE type, DWORD serial, short x, short y);
 	virtual ~TGump();

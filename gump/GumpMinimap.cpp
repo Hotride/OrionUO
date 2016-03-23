@@ -148,41 +148,34 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 		return;
 	}
 
-	int PlayerX = g_Player->X;
-	int PlayerY = g_Player->Y;
+	int playerX = g_Player->X;
+	int playerY = g_Player->Y;
 
-	if (PlayerX != m_LastX || PlayerY != m_LastY || m_Texture == 0)
+	if (playerX != m_LastX || playerY != m_LastY || m_Texture == 0)
 		GenerateMap();
 
 	TTextureObject *th = UO->ExecuteGump(0x1393 - (int)Minimized);
 	if (th == NULL)
 		return;
 
-	WORD gumpWidth = th->Width;
-	WORD gumpHeight = th->Height;
+	int gumpWidth = th->Width;
+	int gumpHeight = th->Height;
 
-	WORD gumpCenterX = gumpWidth / 2;
-	WORD gumpCenterY = gumpHeight / 2;
+	int gumpCenterX = (gumpWidth / 2) - 1;
+	int gumpCenterY = (gumpHeight / 2) - 1;
 
 	glNewList((GLuint)this, GL_COMPILE);
 
 		g_GL.OldTexture = 0;
-		g_GL.Draw(m_Texture, posX, posY, gumpWidth, gumpHeight);
+		int x = 0, y = 0;
+		g_GL.Draw(m_Texture, x, y, gumpWidth, gumpHeight);
 		
 		if (m_Count < 6)
 		{
-			posX += (gumpCenterX - 1);
-			posY += (gumpCenterY - 1);
-
-			TGameObject *go = World->m_Items;
-
-			while (go != NULL)
+			for (TGameObject *go = World->m_Items; go != NULL; go = (TGameObject*)go->m_Next)
 			{
 				if (go->Container != 0xFFFFFFFF || go->Graphic >= 0x4000)
-				{
-					go = (TGameObject*)go->m_Next;
-					continue; //Custom multi
-				}
+					continue; //multi
 
 				if (go->NPC && !go->IsPlayer())
 				{
@@ -193,21 +186,19 @@ void TGumpMinimap::GenerateFrame(int posX, int posY)
 						DWORD pcl = ColorManager->GetPolygoneColor(16, color);
 						glColor3ub(GetRValue(pcl), GetGValue(pcl), GetBValue(pcl));
 
-						int x = go->X - PlayerX;
-						int y = go->Y - PlayerY;
+						int x = go->X - playerX;
+						int y = go->Y - playerY;
 
 						int gx = x - y;
 						int gy = x + y;
 
-						g_GL.DrawPolygone(posX + gx, posY + gy, 2, 2);
+						g_GL.DrawPolygone(gumpCenterX + gx, gumpCenterY + gy, 2, 2);
 					}
 				}
-
-				go = (TGameObject*)go->m_Next;
 			}
 
 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-			g_GL.DrawPolygone(posX, posY, 2, 2);
+			g_GL.DrawPolygone(gumpCenterX, gumpCenterY, 2, 2);
 		}
 
 	glEndList();
@@ -220,35 +211,25 @@ int TGumpMinimap::Draw(bool &mode)
 	DWORD index = (DWORD)this;
 	static DWORD ticks = GetTickCount();
 
-	int posX = X;
-	int posY = Y;
-
-	if (CanBeMoved() && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += g_MouseX - g_DroppedLeftMouseX;
-		posY += g_MouseY - g_DroppedLeftMouseY;
-		
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (!m_Count || m_Count == 6)
-			GenerateFrame(posX, posY);
-		else if (g_Player->X != m_LastX || g_Player->Y != m_LastY)
-			GenerateFrame(posX, posY);
-	}
+	bool minimized = m_Minimized;
+	CalculateGumpState();
+	m_Minimized = minimized;
 
 	if (mode)
 	{
-		if (!FrameCreated || m_Texture == 0)
-			GenerateFrame(posX, posY);
+		if (g_Player->X != m_LastX || g_Player->Y != m_LastY || !m_Count || m_Count == 6 || !m_FrameCreated || m_Texture == 0)
+			GenerateFrame(0, 0);
 
 		if (m_Texture != 0)
 		{
+			glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
+
 			glCallList((GLuint)index);
 
-			DrawLocker(posX, posY);
+			int lo = 0;
+			DrawLocker(lo, lo);
+
+			glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 		}
 
 		if (ticks < GetTickCount())
@@ -262,17 +243,25 @@ int TGumpMinimap::Draw(bool &mode)
 	}
 	else
 	{
-		if (UO->GumpPixelsInXY(0x1393 - (int)Minimized, posX, posY))
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
+		if (UO->GumpPixelsInXY(0x1393 - (int)Minimized, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(posX, posY, 10, 14))
+		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
 		{
 			g_LastSelectedObject = ID_GMM_LOCK_MOVING;
 			g_LastSelectedGump = index;
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 	}
 
 	return 0;
@@ -284,7 +273,7 @@ void TGumpMinimap::OnLeftMouseUp()
 	{
 		if (g_LastObjectLeftMouseDown == ID_GMM_LOCK_MOVING)
 		{
-			LockMoving = !LockMoving;
+			m_LockMoving = !m_LockMoving;
 			g_CancelDoubleClick = true;
 		}
 	}

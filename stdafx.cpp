@@ -118,6 +118,15 @@ char g_SelectedCharName[30] = { 0 };
 int g_ZBuffer = 0;
 bool g_UseCircleTrans = false;
 
+bool g_GumpPressed = false;
+bool g_GumpPressedScroller = 0;
+DWORD g_GumpSelectElement = 0;
+DWORD g_GumpPressedElement = 0;
+int g_GumpMovingOffsetX = 0;
+int g_GumpMovingOffsetY = 0;
+float g_GumpTranslateX = 0.0f;
+float g_GumpTranslateY = 0.0f;
+
 int g_MouseX = 0;
 int g_MouseY = 0;
 int g_DroppedLeftMouseX = 0;

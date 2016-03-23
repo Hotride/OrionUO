@@ -165,6 +165,28 @@ TTextData::~TTextData()
 	m_Texture.Clear();
 }
 //---------------------------------------------------------------------------
+bool TTextData::CanBeDrawedInJournalGump()
+{
+	bool result = true;
+
+	switch (m_Type)
+	{
+		case TT_SYSTEM:
+			result = g_JournalShowSystem;
+			break;
+		case TT_OBJECT:
+			result = g_JournalShowObjects;
+			break;
+		case TT_CLIENT:
+			result = g_JournalShowClient;
+			break;
+		default:
+			break;
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
 void TTextData::GenerateTexture(int MaxWidth, WORD flags, TEXT_ALIGN_TYPE align, BYTE cell, int font)
 {
 	if (m_Unicode)

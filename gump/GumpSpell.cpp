@@ -22,7 +22,7 @@
 TGumpSpell::TGumpSpell(DWORD serial, short x, short y, WORD graphic)
 : TGump(GT_SPELL, serial, x, y)
 {
-	Graphic = graphic;
+	m_Graphic = graphic;
 }
 //---------------------------------------------------------------------------
 TGumpSpell::~TGumpSpell()
@@ -31,34 +31,34 @@ TGumpSpell::~TGumpSpell()
 //---------------------------------------------------------------------------
 void TGumpSpell::PrepareTextures()
 {
-	UO->ExecuteGump(Graphic);
+	UO->ExecuteGump(m_Graphic);
 }
 //---------------------------------------------------------------------------
 void TGumpSpell::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
-
-		return;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 	}
-	
-	glNewList((GLuint)this, GL_COMPILE);
+	else
+	{
+		glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawGump(Graphic, 0, posX, posY);
-		
-	glEndList();
-	
-	FrameCreated = true;
+			UO->DrawGump(m_Graphic, 0, posX, posY);
+
+		glEndList();
+
+		m_FrameCreated = true;
+	}
 }
 //---------------------------------------------------------------------------
 int TGumpSpell::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	int posX = X;
-	int posY = Y;
+	int posX = m_X;
+	int posY = m_Y;
 
 	if (CanBeMoved() && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
 	{
@@ -71,7 +71,7 @@ int TGumpSpell::Draw(bool &mode)
 
 	if (mode)
 	{
-		if (!FrameCreated)
+		if (!m_FrameCreated)
 			GenerateFrame(posX, posY);
 
 		glCallList((GLuint)index);
@@ -80,17 +80,23 @@ int TGumpSpell::Draw(bool &mode)
 	}
 	else
 	{
-		if (UO->GumpPixelsInXY(Graphic, posX, posY))
+		DWORD LSG = 0;
+
+		if (UO->GumpPixelsInXY(m_Graphic, posX, posY))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
+			LSG = index;
 		}
 
 		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(posX, posY, 10, 14))
 		{
 			g_LastSelectedObject = ID_GS_LOCK_MOVING;
 			g_LastSelectedGump = index;
+			LSG = index;
 		}
+
+		return LSG;
 	}
 
 	return 0;
@@ -112,7 +118,7 @@ bool TGumpSpell::OnLeftMouseDoubleClick()
 {
 	if (!g_LastObjectLeftMouseDown)
 	{
-		UO->CastSpell(Serial);
+		UO->CastSpell(m_Serial);
 
 		return true;
 	}

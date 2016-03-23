@@ -22,37 +22,30 @@
 TGumpDye::TGumpDye(DWORD serial, short x, short y, WORD graphic)
 : TGumpSelectColor(serial, x, y, SCGS_OPT_POPUP_TEXT)
 {
-	NoClose = true;
-	GumpType = GT_DYE;
-	Graphic = graphic;
+	m_NoClose = true;
+	m_GumpType = GT_DYE;
+	m_Graphic = graphic;
 }
 //----------------------------------------------------------------------------
 TGumpDye::~TGumpDye()
 {
 }
 //----------------------------------------------------------------------------
-void TGumpDye::OnSelectColor(WORD &color)
+void TGumpDye::GenerateFrame(int posX, int posY)
 {
-	TPacketDyeDataResponse packet(Serial, Graphic, color);
-	packet.Send();
-
-	GumpManager->RemoveGump(this);
-}
-//----------------------------------------------------------------------------
-int TGumpDye::Draw(bool &mode)
-{
-	int result = TGumpSelectColor::Draw(mode);
-
-	if (mode)
+	if (!g_DrawMode)
 	{
-		int x = m_X;
-		int y = m_Y;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
-		if (g_LeftMouseDown && g_LastGumpLeftMouseDown == (DWORD)this && !g_LastObjectLeftMouseDown)
-		{
-			x += g_MouseX - g_DroppedLeftMouseX;
-			y += g_MouseY - g_DroppedLeftMouseY;
-		}
+		return;
+	}
+
+	CalculateGumpState();
+
+	glNewList((GLuint)this, GL_COMPILE);
+
+		TGumpSelectColor::GenerateFrame(posX, posY);
 
 		WORD startColor = m_ColorRef + 2;
 		WORD color = 0;
@@ -73,11 +66,21 @@ int TGumpDye::Draw(bool &mode)
 
 		ColorizerShader->Use();
 
-		UO->DrawStaticArtInContainer(0x0FAB, color, x + 200, y + 58);
+		UO->DrawStaticArtInContainer(0x0FAB, color, 200, 58);
 
 		UnuseShader();
-	}
 
-	return result;
+	glEndList();
+
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
+}
+//----------------------------------------------------------------------------
+void TGumpDye::OnSelectColor(WORD &color)
+{
+	TPacketDyeDataResponse packet(m_Serial, m_Graphic, color);
+	packet.Send();
+
+	GumpManager->RemoveGump(this);
 }
 //----------------------------------------------------------------------------

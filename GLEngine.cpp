@@ -253,6 +253,12 @@ void TGLEngine::RestorePort()
 	glMatrixMode(GL_MODELVIEW);
 }
 //---------------------------------------------------------------------------
+void TGLEngine::Sicceor(int x, int y, int sizeX, int sizeY)
+{
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(x, g_ClientHeight - y - sizeY, sizeX, sizeY);
+}
+//---------------------------------------------------------------------------
 void TGLEngine::DrawLine(int x, int y, int targetX, int targetY)
 {
 	glDisable(GL_TEXTURE_2D);

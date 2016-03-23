@@ -324,6 +324,15 @@ extern int g_ZBuffer;
 
 //¬озможность использовани€ круга прозрачности
 extern bool g_UseCircleTrans;
+
+extern bool g_GumpPressed;
+extern bool g_GumpPressedScroller;
+extern DWORD g_GumpSelectElement;
+extern DWORD g_GumpPressedElement;
+extern int g_GumpMovingOffsetX;
+extern int g_GumpMovingOffsetY;
+extern float g_GumpTranslateX;
+extern float g_GumpTranslateY;
 //---------------------------------------------------------------------------
 //“екущие координаты мыши
 extern int g_MouseX;

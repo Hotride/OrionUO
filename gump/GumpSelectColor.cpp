@@ -40,45 +40,34 @@ void TGumpSelectColor::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	DWORD index = (DWORD)this;
+	if (m_GumpType != GT_DYE)
+	{
+		CalculateGumpState();
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-	
-	glNewList((GLuint)index, GL_COMPILE);
+		glNewList((GLuint)this, GL_COMPILE);
+	}
 
 		const int cellWidthX = 8;
 		const int cellWidthY = 8;
 
-		UO->DrawGump(0x0906, 0, posX, posY); //Body
+		UO->DrawGump(0x0906, 0, 0, 0); //Body
 		
 		WORD gumpID = 0x0907;
-		if (CanPressedButton == ID_GSC_BUTTON_OKAY)
+		if (g_GumpPressedElement == ID_GSC_BUTTON_OKAY)
 			gumpID = 0x0908;
-		else if (CanSelectedButton == ID_GSC_BUTTON_OKAY)
+		else if (g_GumpSelectElement == ID_GSC_BUTTON_OKAY)
 			gumpID = 0x0909;
 
-		UO->DrawGump(gumpID, 0, posX + 208, posY + 138); //Okay button
+		UO->DrawGump(gumpID, 0, 208, 138); //Okay button
 		
-		gumpID = 0x0845 + (int)(CanSelectedButton == ID_GSC_SLIDER); //Scroll button / selected
-		UO->DrawGump(gumpID, 0, posX + m_SliderPos, posY + 142);
-
-		posX += 34;
-		posY += 34;
+		gumpID = 0x0845 + (int)(g_GumpSelectElement == ID_GSC_SLIDER); //Scroll button / selected
+		UO->DrawGump(gumpID, 0, m_SliderPos, 142);
 
 		WORD startColor = m_ColorRef + 1;
 
@@ -97,12 +86,12 @@ void TGumpSelectColor::GenerateFrame(int posX, int posY)
 				DWORD clr = ColorManager->Color16To32(color);
 
 				glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-				g_GL.DrawPolygone(posX + (x * cellWidthX), posY + (y * cellWidthY), cellWidthX, cellWidthY);
+				g_GL.DrawPolygone(34 + (x * cellWidthX), 34 + (y * cellWidthY), cellWidthX, cellWidthY);
 
 				if (m_SelectedIndex == ID_GSC_COLORS + (x * 30 + y))
 				{
 					glColor3ub(0xFF, 0xFF, 0xFF);
-					g_GL.DrawPolygone(posX + (x * cellWidthX) + (cellWidthX / 2) - 1, posY + (y * cellWidthY) + (cellWidthY / 2) - 1, 2, 2);
+					g_GL.DrawPolygone(34 + (x * cellWidthX) + (cellWidthX / 2) - 1, 34 + (y * cellWidthY) + (cellWidthY / 2) - 1, 2, 2);
 				}
 
 				startColor += 5;
@@ -111,34 +100,23 @@ void TGumpSelectColor::GenerateFrame(int posX, int posY)
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	glEndList();
+	if (m_GumpType != GT_DYE)
+	{
+		glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+		m_FrameRedraw = true;
+		m_FrameCreated = true;
+	}
 }
 //----------------------------------------------------------------------------
 int TGumpSelectColor::Draw(bool &mode)
 {
-	DWORD index = (DWORD)this;
+	CalculateGumpState();
 
-	int posX = m_X;
-	int posY = m_Y;
-	
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-	
 	//Если схватили ползунок - вычислим его позицию и значение в текстовом поле
-	if (mode && IsPressed && g_LastObjectLeftMouseDown == ID_GSC_SLIDER)
+	if (mode && g_GumpPressed && g_LastObjectLeftMouseDown == ID_GSC_SLIDER)
 	{
-		int currentX = g_MouseX - posX - 5; //Текущая позиция ползунка
+		int currentX = g_MouseX - (int)g_GumpTranslateX - 5; //Текущая позиция ползунка
 
 		if (currentX < 39)
 			currentX = 39; //Выход за допустимый предел, корректируем на минимум
@@ -166,49 +144,43 @@ int TGumpSelectColor::Draw(bool &mode)
 		m_ColorRef = count;
 	}
 	
-	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += g_MouseX - g_DroppedLeftMouseX;
-		posY += g_MouseY - g_DroppedLeftMouseY;
-	
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (IsPressed || CanSelectedButton)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
-	}
+	DWORD index = (DWORD)this;
 
 	if (mode)
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (g_GumpPressed || g_GumpSelectElement || !m_FrameCreated)
+			GenerateFrame(0, 0);
+		else if (FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else
 	{
 		int LSG = 0;
-		
-		if (UO->GumpPixelsInXY(0x0906, posX, posY))
+
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
+		if (UO->GumpPixelsInXY(0x0906, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 			
-			if (UO->GumpPixelsInXY(0x0907, posX + 208, posY + 138))
+			if (UO->GumpPixelsInXY(0x0907, 208, 138))
 				LSG = ID_GSC_BUTTON_OKAY; //Okay button
-			else if (UO->GumpPixelsInXY(0x0845, posX + m_SliderPos, posY + 142))
+			else if (UO->GumpPixelsInXY(0x0845, m_SliderPos, 142))
 				LSG = ID_GSC_SLIDER; //Scroll button
 		
-			posX += 34;
-			posY += 34;
-			
 			const int cellWidthX = 8;
 			const int cellWidthY = 8;
 
@@ -219,7 +191,7 @@ int TGumpSelectColor::Draw(bool &mode)
 			{
 				IFOR(x, 0, 20)
 				{
-					POINT p = {g_MouseX - (posX + (x * cellWidthX)), g_MouseY - (posY + (y * cellWidthY))};
+					POINT p = {g_MouseX - (34 + (x * cellWidthX)), g_MouseY - (34 + (y * cellWidthY))};
 
 					if (PtInRect(&rc, p))
 					{
@@ -237,6 +209,9 @@ int TGumpSelectColor::Draw(bool &mode)
 			if (LSG != 0)
 				g_LastSelectedObject = LSG;
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		return LSG;
 	}

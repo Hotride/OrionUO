@@ -41,102 +41,81 @@ void TGumpNotify::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	DWORD index = (DWORD)this;
+	CalculateGumpState();
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
+	glNewList((GLuint)this, GL_COMPILE);
 	
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	glNewList((GLuint)index, GL_COMPILE);
-	
-		UO->DrawResizepicGump(0x0A28, posX, posY, m_Width, m_Height); //Background
+		UO->DrawResizepicGump(0x0A28, 0, 0, m_Width, m_Height); //Background
 		
-		FontManager->DrawA(1, m_Text.c_str(), 0x0386, posX + 40, posY + 45, m_Width - 90);
+		FontManager->DrawA(1, m_Text.c_str(), 0x0386, 40, 45, m_Width - 90);
 
-		WORD gumpID = 0x0481 + (int)(CanSelectedButton == ID_GN_BUTTON_OK); //Button v / light
-		if (CanPressedButton == ID_GN_BUTTON_OK)
+		WORD gumpID = 0x0481 + (int)(g_GumpSelectElement == ID_GN_BUTTON_OK); //Button v / light
+		if (g_GumpPressedElement == ID_GN_BUTTON_OK)
 			gumpID = 0x0483; //Button v pressed
 
-		UO->DrawGump(gumpID, 0, posX + (m_Width / 2) - 13, posY + m_Height - 45); //Button v
+		UO->DrawGump(gumpID, 0, (m_Width / 2) - 13, m_Height - 45); //Button v
 
 	glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpNotify::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	int posX = X;
-	int posY = Y;
-	
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
+	CalculateGumpState();
 
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
+	if (mode)
 	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (IsPressed || CanSelectedButton)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
 	}
 
 	if (mode)
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (g_GumpPressed || !m_FrameCreated || g_GumpSelectElement)
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
 		
-		if (UO->ResizepicPixelsInXY(0x0A28, posX, posY, m_Width, m_Height))
+		if (UO->ResizepicPixelsInXY(0x0A28, 0, 0, m_Width, m_Height))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 
-			if (UO->GumpPixelsInXY(0x0481, posX + (m_Width / 2) - 13, posY + m_Height - 45))
+			if (UO->GumpPixelsInXY(0x0481, (m_Width / 2) - 13, m_Height - 45))
 			{
 				LSG = ID_GN_BUTTON_OK;
 				g_LastSelectedObject = ID_GN_BUTTON_OK;
 			}
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		return LSG;
 	}
@@ -154,21 +133,14 @@ void TGumpNotify::OnLeftMouseUp()
 //----------------------------------------------------------------------------
 void TGumpNotify::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 {
-	switch (wparam)
+	if (wparam == VK_RETURN)
 	{
-		case VK_RETURN:
-		{
-			if (ConfigManager.GetConsoleNeedEnter())
-				EntryPointer = NULL;
-			else
-				EntryPointer = GameConsole;
+		if (ConfigManager.GetConsoleNeedEnter())
+			EntryPointer = NULL;
+		else
+			EntryPointer = GameConsole;
 
-			Process();
-
-			break;
-		}
-		default:
-			break;
+		Process();
 	}
 }
 //----------------------------------------------------------------------------

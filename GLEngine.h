@@ -84,6 +84,9 @@ public:
 	//Восстановить стандартную область рисования
 	void RestorePort();
 
+	//Указать область рисования (ножницами, сохраняет мартицу)
+	void Sicceor(int x, int y, int sizeX, int sizeY);
+
 	//Включить режим
 	void Enable(GLenum val) {glEnable(val);}
 

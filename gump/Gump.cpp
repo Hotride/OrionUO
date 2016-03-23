@@ -46,6 +46,41 @@ TGump::~TGump()
 	}
 }
 //---------------------------------------------------------------------------
+void TGump::CalculateGumpState()
+{
+	DWORD index = (DWORD)this;
+
+	g_GumpPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
+	g_GumpPressedScroller = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index);
+	g_GumpSelectElement = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
+	g_GumpPressedElement = ((g_GumpPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject) ? g_LastObjectLeftMouseDown : 0);
+
+	if (g_LastObjectType == SOT_TEXT_OBJECT)
+		g_GumpSelectElement = false;
+
+	if (CanBeMoved() && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
+	{
+		g_GumpMovingOffsetX = g_MouseX - g_DroppedLeftMouseX;
+		g_GumpMovingOffsetY = g_MouseY - g_DroppedLeftMouseY;
+	}
+	else
+	{
+		g_GumpMovingOffsetX = 0;
+		g_GumpMovingOffsetY = 0;
+	}
+
+	if (m_Minimized)
+	{
+		g_GumpTranslateX = (float)(m_MinimizedX + g_GumpMovingOffsetX);
+		g_GumpTranslateY = (float)(m_MinimizedY + g_GumpMovingOffsetY);
+	}
+	else
+	{
+		g_GumpTranslateX = (float)(m_X + g_GumpMovingOffsetX);
+		g_GumpTranslateY = (float)(m_Y + g_GumpMovingOffsetY);
+	}
+}
+//---------------------------------------------------------------------------
 void TGump::DrawLocker(int &x, int &y)
 {
 	if (g_ShowGumpLocker)

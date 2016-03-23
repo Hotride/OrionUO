@@ -3914,6 +3914,11 @@ void TUltimaOnline::AddJournalMessage(TTextData *msg, string name)
 	else
 		jmsg->GenerateTexture(214, UOFONT_INDENTION);
 
+	TGump *gump = GumpManager->GetGump(g_PlayerSerial, 0, GT_JOURNAL);
+
+	if (gump != NULL)
+		gump->UpdateFrame();
+
 	Journal->Add(jmsg);
 }
 //---------------------------------------------------------------------------
