@@ -36,12 +36,17 @@ private:
 
 	DWORD m_LastScrollChangeTime;
 
+	static TTextTexture m_Text[3];
+
 	int m_Height;
 	int m_HeightBuffer;
 
 public:
 	TGumpJournal(DWORD serial, short x, short y, bool minimized);
 	virtual ~TGumpJournal();
+
+	static void InitTextTextures();
+	static void ReleaseTextTextures();
 
 	void PrepareTextures();
 

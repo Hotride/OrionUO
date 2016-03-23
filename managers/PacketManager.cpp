@@ -917,7 +917,7 @@ PACKET_HANDLER(EnterWorld)
 	TPacketGameWindowSize packet;
 	packet.Send();
 	
-	BYTE wbuf[4] = {0x65, 0x03, 0x46, 0};
+	BYTE wbuf[4] = {0x65, 0x01, 0x46, 0};
 	Ptr = wbuf + 1;
 	HandleSetWeather(wbuf, 4);
 }

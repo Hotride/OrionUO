@@ -90,7 +90,8 @@ struct STATIC_TILES
 	WORD AnimID;
 	BYTE Unknown2;
 	BYTE Hue;
-	WORD Unknown3;
+	BYTE SittingOffset;
+	BYTE Unknown3;
 	BYTE Height;
 	char Name[20];
 };

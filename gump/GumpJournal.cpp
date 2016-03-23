@@ -18,6 +18,8 @@
 */
 //----------------------------------------------------------------------------
 #include "stdafx.h"
+
+TTextTexture TGumpJournal::m_Text[3];
 //----------------------------------------------------------------------------
 TGumpJournal::TGumpJournal(DWORD serial, short x, short y, bool minimized)
 : TGump(GT_JOURNAL, serial, x, y), m_Height(200), m_HeightBuffer(0),
@@ -33,6 +35,19 @@ m_LastScrollChangeTime(0)
 //----------------------------------------------------------------------------
 TGumpJournal::~TGumpJournal()
 {
+}
+//----------------------------------------------------------------------------
+void TGumpJournal::InitTextTextures()
+{
+	FontManager->GenerateA(1, m_Text[0], "System", 0x0386);
+	FontManager->GenerateA(1, m_Text[1], "Objects", 0x0386);
+	FontManager->GenerateA(1, m_Text[2], "Client", 0x0386);
+}
+//----------------------------------------------------------------------------
+void TGumpJournal::ReleaseTextTextures()
+{
+	IFOR(i, 0, 3)
+		m_Text[i].Clear();
 }
 //----------------------------------------------------------------------------
 void TGumpJournal::PrepareTextures()
@@ -218,13 +233,13 @@ void TGumpJournal::GenerateFrame(int posX, int posY)
 		UO->DrawGump(0x0823, 0, 18, height + 34); //Bottom scroll
 		
 		UO->DrawGump(0x00D2 + (int)g_JournalShowSystem, 0, 40, height + 43); //Show System
-		FontManager->DrawA(1, "System", 0x0386, 63, height + 47);
+		m_Text[0].Draw(63, height + 47);
 		
 		UO->DrawGump(0x00D2 + (int)g_JournalShowObjects, 0, 126, height + 43); //Show Objects
-		FontManager->DrawA(1, "Objects", 0x0386, 149, height + 47);
+		m_Text[1].Draw(149, height + 47);
 		
 		UO->DrawGump(0x00D2 + (int)g_JournalShowClient, 0, 210, height + 43); //Show Client
-		FontManager->DrawA(1, "Client", 0x0386, 233, height + 47);
+		m_Text[2].Draw(233, height + 47);
 		
 		WORD gumpID = 0x082E + (int)(g_GumpSelectElement == ID_GJ_BUTTON_RESIZE);
 		UO->DrawGump(gumpID, 0, 137, height + 66); //Resize
@@ -493,7 +508,7 @@ int TGumpJournal::Draw(bool &mode)
 
 	if (mode)
 	{
-		if (needUpdateFrame || !m_FrameCreated || (g_GumpSelectElement && !m_HeightBuffer))
+		if (needUpdateFrame || !m_FrameCreated || (g_GumpSelectElement && !m_HeightBuffer) || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
 			GenerateFrame(0, 0);
 		else if (m_FrameRedraw)
 		{

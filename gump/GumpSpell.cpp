@@ -34,62 +34,37 @@ void TGumpSpell::PrepareTextures()
 	UO->ExecuteGump(m_Graphic);
 }
 //---------------------------------------------------------------------------
-void TGumpSpell::GenerateFrame(int posX, int posY)
-{
-	if (!g_DrawMode)
-	{
-		m_FrameRedraw = false;
-		m_FrameCreated = false;
-	}
-	else
-	{
-		glNewList((GLuint)this, GL_COMPILE);
-
-			UO->DrawGump(m_Graphic, 0, posX, posY);
-
-		glEndList();
-
-		m_FrameCreated = true;
-	}
-}
-//---------------------------------------------------------------------------
 int TGumpSpell::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	int posX = m_X;
-	int posY = m_Y;
+	int x = m_X;
+	int y = m_Y;
 
 	if (CanBeMoved() && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
 	{
-		posX += g_MouseX - g_DroppedLeftMouseX;
-		posY += g_MouseY - g_DroppedLeftMouseY;
-
-		if (mode)
-			GenerateFrame(posX, posY);
+		x += g_MouseX - g_DroppedLeftMouseX;
+		y += g_MouseY - g_DroppedLeftMouseY;
 	}
 
 	if (mode)
 	{
-		if (!m_FrameCreated)
-			GenerateFrame(posX, posY);
+		UO->DrawGump(m_Graphic, 0, x, y);
 
-		glCallList((GLuint)index);
-
-		DrawLocker(posX, posY);
+		DrawLocker(x, y);
 	}
 	else
 	{
 		DWORD LSG = 0;
 
-		if (UO->GumpPixelsInXY(m_Graphic, posX, posY))
+		if (UO->GumpPixelsInXY(m_Graphic, x, y))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 			LSG = index;
 		}
 
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(posX, posY, 10, 14))
+		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(x, y, 10, 14))
 		{
 			g_LastSelectedObject = ID_GS_LOCK_MOVING;
 			g_LastSelectedGump = index;

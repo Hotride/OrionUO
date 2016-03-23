@@ -1326,7 +1326,8 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			else
 				g_GL.Draw(texture, x, y, frame->Width, frame->Height, mirror);
 
-			glDisable(GL_BLEND);
+			if (spectralColor)
+				glDisable(GL_BLEND);
 		}
 
 		glDisable(GL_DEPTH_TEST);
@@ -1406,10 +1407,18 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 	layerDirection = m_Direction;
 	GetSittingAnimDirection(m_Direction, mirror, x, y);
 
+	int offsX = UO->m_StaticData[data.Graphic / 32].Tiles[data.Graphic % 32].SittingOffset;
+
 	if (mirror)
+	{
+		x += offsX;
 		y += data.MirrorOffsetY;
+	}
 	else
+	{
+		x -= offsX;
 		y += data.OffsetY;
+	}
 }
 //----------------------------------------------------------------------------
 void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)

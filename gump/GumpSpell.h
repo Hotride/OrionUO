@@ -31,8 +31,6 @@ public:
 
 	void PrepareTextures();
 
-	void GenerateFrame(int posX, int posY);
-
 	int Draw(bool &mode);
 
 	void OnLeftMouseUp();
