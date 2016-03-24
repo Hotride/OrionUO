@@ -1087,7 +1087,7 @@ void TGameScreen::DrawGameWindowText(bool &mode)
 					{
 						TGameObject *textOwner = World->FindWorldObject(td->Serial);
 
-						if (textOwner != NULL && textOwner->NPC)
+						if (textOwner != NULL && (textOwner->NPC || textOwner->IsCorpse()))
 							textColor = 0x0035;
 					}
 
@@ -1807,9 +1807,12 @@ bool TGameScreen::OnLeftMouseDoubleClick()
 
 			TGameObject *obj = World->FindWorldObject(serial);
 
-			if (obj != NULL && obj->NPC)
+			if (obj != NULL && (obj->NPC || obj->IsCorpse()))
 			{
-				charUnderMouse = serial;
+				if (obj->NPC)
+					charUnderMouse = serial;
+				else
+					UO->DoubleClick(serial);
 
 				result = true;
 			}

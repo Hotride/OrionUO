@@ -118,6 +118,33 @@ int TGumpBulletinBoardItem::GetHeight()
 	return TextEntry->m_Texture.Height + 10;
 }
 //---------------------------------------------------------------------------
+void TGumpBulletinBoardItem::CalculateGumpState()
+{
+	TGump::CalculateGumpState();
+
+	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == (DWORD)this && (!g_LastObjectLeftMouseDown || g_LastObjectLeftMouseDown == ID_GBBI_TEXT_FIELD))
+	{
+		g_GumpMovingOffsetX = g_MouseX - g_DroppedLeftMouseX;
+		g_GumpMovingOffsetY = g_MouseY - g_DroppedLeftMouseY;
+	}
+	else
+	{
+		g_GumpMovingOffsetX = 0;
+		g_GumpMovingOffsetY = 0;
+	}
+
+	if (m_Minimized)
+	{
+		g_GumpTranslateX = (float)(m_MinimizedX + g_GumpMovingOffsetX);
+		g_GumpTranslateY = (float)(m_MinimizedY + g_GumpMovingOffsetY);
+	}
+	else
+	{
+		g_GumpTranslateX = (float)(m_X + g_GumpMovingOffsetX);
+		g_GumpTranslateY = (float)(m_Y + g_GumpMovingOffsetY);
+	}
+}
+//---------------------------------------------------------------------------
 void TGumpBulletinBoardItem::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)

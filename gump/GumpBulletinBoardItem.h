@@ -22,7 +22,7 @@
 //---------------------------------------------------------------------------
 class TGumpBulletinBoardItem : public TGump
 {
-private:
+protected:
 	static const int ID_GBBI_BUTTON_RESIZE = 1;
 	static const int ID_GBBI_SCROLLER_UP = 2;
 	static const int ID_GBBI_SCROLLER_DOWN = 3;
@@ -48,6 +48,7 @@ private:
 	void SetHeight(int val);
 
 	void ListingList(bool direction, int divizor = 1);
+	void CalculateGumpState();
 public:
 	TGumpBulletinBoardItem(DWORD serial, short x, short y, BYTE variant, DWORD id, string poster, string subject, string dataTime, string data);
 	virtual ~TGumpBulletinBoardItem();
