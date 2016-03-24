@@ -26,10 +26,15 @@ private:
 	static const int ID_GQ_BUTTON_CANCEL = 1;
 	static const int ID_GQ_BUTTON_OKAY = 2;
 
+	static TTextTexture m_Text[2];
+
 	BYTE m_Variant;
 public:
 	TGumpQuestion(DWORD serial, short x, short y, BYTE variant);
 	virtual ~TGumpQuestion();
+
+	static void InitTextTextures();
+	static void ReleaseTextTextures();
 
 	SETGET(BYTE, Variant);
 	

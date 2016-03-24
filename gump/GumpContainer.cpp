@@ -179,7 +179,7 @@ int TGumpContainer::Draw(bool &mode)
 			g_LastGumpLeftMouseDown = 0;
 			g_LastObjectLeftMouseDown = 0;
 
-			UpdateFrame();
+			m_FrameCreated = false;
 		}
 	}
 	
@@ -285,8 +285,7 @@ int TGumpContainer::Draw(bool &mode)
 			}
 		}
 
-		int lx = 0;
-		DrawLocker(lx, lx);
+		DrawLocker();
 
 		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}

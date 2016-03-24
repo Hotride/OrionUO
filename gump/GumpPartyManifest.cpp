@@ -67,216 +67,185 @@ void TGumpPartyManifest::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	DWORD index = (DWORD)this;
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
+	CalculateGumpState();
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawResizepicGump(0x0A28, posX, posY, 450, 480); //Body
+		UO->DrawResizepicGump(0x0A28, 0, 0, 450, 480); //Body
 		
-		m_Text[0].Draw(posX + 40, posY + 30); //Tell
-		m_Text[1].Draw(posX + 80, posY + 30); //Kick
-		m_Text[2].Draw(posX + 153, posY + 20); //Party Manifest
+		m_Text[0].Draw(40, 30); //Tell
+		m_Text[1].Draw(80, 30); //Kick
+		m_Text[2].Draw(153, 20); //Party Manifest
 		
 		bool isLeader = (Party.Leader == 0 || Party.Leader == g_PlayerSerial);
 		bool isMember = (Party.Leader != 0 && Party.Leader != g_PlayerSerial);
 
-		int yPtr = posY + 48;
+		int yPtr = 48;
 		WORD gumpID = 0;
 
 		IFOR(i, 0, 10)
 		{
 			gumpID = 0x0FAB;
-			if (CanPressedButton - ID_GPM_BUTTON_TELL_MEMBER == i)
+			if (g_GumpPressedElement - ID_GPM_BUTTON_TELL_MEMBER == i)
 				gumpID += 2;
-			else if (CanSelectedButton - ID_GPM_BUTTON_TELL_MEMBER == i)
+			else if (g_GumpSelectElement - ID_GPM_BUTTON_TELL_MEMBER == i)
 				gumpID++;
 
-			UO->DrawGump(gumpID, 0, posX + 40, yPtr + 2);
+			UO->DrawGump(gumpID, 0, 40, yPtr + 2);
 
 			if (isLeader)
 			{
 				gumpID = 0x0FB1;
-				if (CanPressedButton - ID_GPM_BUTTON_KICK_MEMBER == i)
+				if (g_GumpPressedElement - ID_GPM_BUTTON_KICK_MEMBER == i)
 					gumpID += 2;
-				else if (CanSelectedButton - ID_GPM_BUTTON_KICK_MEMBER == i)
+				else if (g_GumpSelectElement - ID_GPM_BUTTON_KICK_MEMBER == i)
 					gumpID++;
 
-				UO->DrawGump(gumpID, 0, posX + 80, yPtr + 2);
+				UO->DrawGump(gumpID, 0, 80, yPtr + 2);
 			}
 			
-			UO->DrawGump(0x0475, 0, posX + 130, yPtr);
+			UO->DrawGump(0x0475, 0, 130, yPtr);
 
 			string name = Party.Member[i].GetName(i + 1);
-			FontManager->DrawA(2, name.c_str(), 0x0386, posX + 140, yPtr + 1, 250, TS_CENTER);
+			FontManager->DrawA(2, name.c_str(), 0x0386, 140, yPtr + 1, 250, TS_CENTER);
 
 			yPtr += 25;
 		}
 		
-		int xPtr = posX + 110;
-		int xPtrGump = posX + 70;
-		
-		gumpID = 0x0FAB + (int)(CanSelectedButton == ID_GPM_BUTTON_SEND_MESSAGE);
-		if (CanPressedButton == ID_GPM_BUTTON_SEND_MESSAGE)
+		gumpID = 0x0FAB + (int)(g_GumpSelectElement == ID_GPM_BUTTON_SEND_MESSAGE);
+		if (g_GumpPressedElement == ID_GPM_BUTTON_SEND_MESSAGE)
 			gumpID = 0x0FAD;
 
-		UO->DrawGump(gumpID, 0, xPtrGump, posY + 307);
-		m_Text[3].Draw(xPtr, posY + 307); //Send the party a message
+		UO->DrawGump(gumpID, 0, 70, 307);
+		m_Text[3].Draw(110, 307); //Send the party a message
 		
 		gumpID = m_CanLoot ? 0x0FA2 : 0x0FA9;
-		UO->DrawGump(gumpID, 0, xPtrGump, posY + 334);
-		m_Text[4 + (int)m_CanLoot].Draw(xPtr, posY + 334); //Party can/CANNOT loot me
+		UO->DrawGump(gumpID, 0, 70, 334);
+		m_Text[4 + (int)m_CanLoot].Draw(110, 334); //Party can/CANNOT loot me
 		
-		gumpID = 0x0FAE + (int)(CanSelectedButton == ID_GPM_BUTTON_LEAVE);
-		if (CanPressedButton == ID_GPM_BUTTON_LEAVE)
+		gumpID = 0x0FAE + (int)(g_GumpSelectElement == ID_GPM_BUTTON_LEAVE);
+		if (g_GumpPressedElement == ID_GPM_BUTTON_LEAVE)
 			gumpID = 0x0FB0;
 
-		UO->DrawGump(gumpID, 0, xPtrGump, posY + 360);
-		m_Text[6 + (int)isMember].Draw(xPtr, posY + 360); //Disband/Leave the party
+		UO->DrawGump(gumpID, 0, 70, 360);
+		m_Text[6 + (int)isMember].Draw(110, 360); //Disband/Leave the party
 		
 		if (isLeader)
 		{
-			gumpID = 0x0FA8 + (int)(CanSelectedButton == ID_GPM_BUTTON_ADD);
-			if (CanPressedButton == ID_GPM_BUTTON_ADD)
+			gumpID = 0x0FA8 + (int)(g_GumpSelectElement == ID_GPM_BUTTON_ADD);
+			if (g_GumpPressedElement == ID_GPM_BUTTON_ADD)
 				gumpID = 0x0FAA;
 
-			UO->DrawGump(gumpID, 0, xPtrGump, posY + 385);
-			m_Text[8].Draw(xPtr, posY + 385); //Add New Member
+			UO->DrawGump(gumpID, 0, 70, 385);
+			m_Text[8].Draw(110, 385); //Add New Member
 		}
 		
-		if (CanPressedButton == ID_GPM_BUTTON_OKAY)
+		if (g_GumpPressedElement == ID_GPM_BUTTON_OKAY)
 			gumpID = 0x00F8; //Okay button (down)
-		else if (CanSelectedButton == ID_GPM_BUTTON_OKAY)
+		else if (g_GumpSelectElement == ID_GPM_BUTTON_OKAY)
 			gumpID = 0x00F7; //Okay button selected
 		else
 			gumpID = 0x00F9; //Okay button
-		UO->DrawGump(gumpID, 0, posX + 130, posY + 430);
+		UO->DrawGump(gumpID, 0, 130, 430);
 		
-		if (CanPressedButton == ID_GPM_BUTTON_CANCEL)
+		if (g_GumpPressedElement == ID_GPM_BUTTON_CANCEL)
 			gumpID = 0x00F1; //Cancel button (down)
-		else if (CanSelectedButton == ID_GPM_BUTTON_CANCEL)
+		else if (g_GumpSelectElement == ID_GPM_BUTTON_CANCEL)
 			gumpID = 0x00F2; //Cancel button selected
 		else
 			gumpID = 0x00F3; //Cancel button
-		UO->DrawGump(gumpID, 0, posX + 236, posY + 430);
+		UO->DrawGump(gumpID, 0, 236, 430);
 
 	glEndList();
 	
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpPartyManifest::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	int posX = X;
-	int posY = Y;
-	
-	if (CanBeMoved() && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-		
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (IsPressed || CanSelectedButton)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
-	}
+	CalculateGumpState();
 
 	if (mode)
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated || g_GumpSelectElement) // || g_GumpPressed
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
 
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (UO->ResizepicPixelsInXY(0x0A28, posX, posY, 450, 480))
+		if (UO->ResizepicPixelsInXY(0x0A28, 0, 0, 450, 480))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 
 			bool isLeader = (Party.Leader == 0 || Party.Leader == g_PlayerSerial);
 			
-			int yPtr = posY + 48;
+			int yPtr = 50;
 			WORD gumpID = 0;
 
 			IFOR(i, 0, 10)
 			{
-				if (UO->GumpPixelsInXY(0x0FAB, posX + 40, yPtr + 2))
+				if (UO->GumpPixelsInXY(0x0FAB, 40, yPtr))
 					LSG = ID_GPM_BUTTON_TELL_MEMBER + i; //Tell
 
 				if (isLeader)
 				{
-					if (UO->GumpPixelsInXY(0x0FB1, posX + 80, yPtr + 2))
+					if (UO->GumpPixelsInXY(0x0FB1, 80, yPtr))
 						LSG = ID_GPM_BUTTON_KICK_MEMBER + i; //Kick
 				}
 
 				yPtr += 25;
 			}
 
-			int xPtr = posX + 110;
-			int xPtrGump = posX + 70;
-		
 			gumpID = m_CanLoot ? 0x0FA2 : 0x0FA9;
 
-			if (UO->GumpPixelsInXY(0x0FAB, xPtrGump, posY + 307))
+			if (UO->GumpPixelsInXY(0x0FAB, 70, 307))
 				LSG = ID_GPM_BUTTON_SEND_MESSAGE; //Send the party a message
-			else if (UO->GumpPixelsInXY(gumpID, xPtrGump, posY + 334))
+			else if (UO->GumpPixelsInXY(gumpID, 70, 334))
 				LSG = ID_GPM_BUTTON_LOOT_TYPE; //Party can/CANNOT loot me
-			else if (UO->GumpPixelsInXY(0x0FAE, xPtrGump, posY + 360))
+			else if (UO->GumpPixelsInXY(0x0FAE, 70, 360))
 				LSG = ID_GPM_BUTTON_LEAVE; //Disband/Leave the party
-			else if (isLeader && UO->GumpPixelsInXY(0x0FA8, xPtrGump, posY + 385))
+			else if (isLeader && UO->GumpPixelsInXY(0x0FA8, 70, 385))
 				LSG = ID_GPM_BUTTON_ADD; //Add New Member
-			else if (UO->GumpPixelsInXY(0x00F9, posX + 130, posY + 430))
+			else if (UO->GumpPixelsInXY(0x00F9, 130, 430))
 				LSG = ID_GPM_BUTTON_OKAY; //Okay button
-			else if (UO->GumpPixelsInXY(0x00F3, posX + 236, posY + 430))
+			else if (UO->GumpPixelsInXY(0x00F3, 236, 430))
 				LSG = ID_GPM_BUTTON_CANCEL; //Cancel button
 
 			if (LSG != 0)
 				g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 		}
-		
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
+
 		return LSG;
 	}
 

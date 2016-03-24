@@ -348,8 +348,8 @@ void TGumpWorldMap::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
@@ -570,7 +570,7 @@ int TGumpWorldMap::Draw(bool &mode)
 	}
 	else //Выбор объектов
 	{
-		if (Minimized)
+		if (m_Minimized)
 		{
 			if (UO->GumpPixelsInXY(0x15E8, posX, posY)) //Earth button
 			{
@@ -700,15 +700,15 @@ void TGumpWorldMap::OnLeftMouseUp()
 						}
 
 						m_Map = index;
-						UpdateFrame();
+						m_FrameCreated = false;
 					}
 
 					break;
 				}
 				case 2:
 				{
-					ScaleOffsets(index, (m_Width / 2), ((m_Height - 30) / 2));
-					UpdateFrame();
+						  ScaleOffsets(index, (m_Width / 2), ((m_Height - 30) / 2));
+						  m_FrameCreated = false;
 
 					break;
 				}
@@ -726,13 +726,13 @@ void TGumpWorldMap::OnLeftMouseUp()
 		}
 		else if (g_LastObjectLeftMouseDown == ID_GWM_MINIMIZE) //Сворачивание
 		{
-			Minimized = true;
-			UpdateFrame();
+			m_Minimized = true;
+			m_FrameCreated = false;
 		}
 		else if (g_LastObjectLeftMouseDown == ID_GWM_LINK_WITH_PLAYER) //Привязка к координатам игрока
 		{
 			m_LinkWithPlayer = !m_LinkWithPlayer;
-			UpdateFrame();
+			m_FrameCreated = false;
 		}
 	}
 
@@ -743,10 +743,10 @@ bool TGumpWorldMap::OnLeftMouseDoubleClick()
 {
 	bool result = false;
 
-	if (Minimized) //При даблклике по мини-гампу - раскрываем его
+	if (m_Minimized) //При даблклике по мини-гампу - раскрываем его
 	{
-		Minimized = false;
-		UpdateFrame();
+		m_Minimized = false;
+		m_FrameCreated = false;
 
 		result = true;
 	}
@@ -757,7 +757,7 @@ bool TGumpWorldMap::OnLeftMouseDoubleClick()
 void TGumpWorldMap::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 {
 	//Если доступно для изменения масштаба
-	if (!Minimized && !g_LeftMouseDown && !g_RightMouseDown && UO->PolygonePixelsInXY(X + 8, Y + 31, m_Width - 16, m_Height - 16) /*g_LastSelectedObject == ID_GWM_MAP*/)
+	if (!m_Minimized && !g_LeftMouseDown && !g_RightMouseDown && UO->PolygonePixelsInXY(m_X + 8, m_Y + 31, m_Width - 16, m_Height - 16) /*g_LastSelectedObject == ID_GWM_MAP*/)
 	{
 		int ofs = 0;
 
@@ -772,7 +772,7 @@ void TGumpWorldMap::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 			int mouseY = ((m_Height - 30) / 2); //g_MouseY - Y + 31;
 
 			ScaleOffsets(m_Scale + ofs, mouseX, mouseY);
-			UpdateFrame();
+			m_FrameCreated = false;
 		}
 	}
 }

@@ -102,162 +102,127 @@ void TGumpMenubar::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = true;
-		FrameCreated = false;
+		m_FrameRedraw = true;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	DWORD index = (DWORD)this;
+	CalculateGumpState();
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	glNewList((GLuint)index, GL_COMPILE);
+	glNewList((GLuint)this, GL_COMPILE);
 	
 		if (!m_Opened)
 		{
-			UO->DrawResizepicGump(0x13BE, posX, posY, 30, 27);
+			UO->DrawResizepicGump(0x13BE, 0, 0, 30, 27);
 
-			UO->DrawGump(0x15A1, 0, posX + 5, posY + 3);
+			UO->DrawGump(0x15A1, 0, 5, 3);
 		}
 		else
 		{
-			UO->DrawResizepicGump(0x13BE, posX, posY, 718, 27);
+			UO->DrawResizepicGump(0x13BE, 0, 0, 718, 27);
 
-			UO->DrawGump(0x15A4, 0, posX + 5, posY + 3);
+			UO->DrawGump(0x15A4, 0, 5, 3);
 
-			posY++;
-			int posYT = posY + 1;
+			UO->DrawGump(0x098B, 0, 30, 1);
+			m_Texture[0][(int)(g_GumpSelectElement == ID_GMB_MAP)].Draw(32, 2 + (int)(g_GumpPressedElement == ID_GMB_MAP ? 2 : 0));
 			
-			UO->DrawGump(0x098B, 0, posX + 30, posY);
-			m_Texture[0][(int)(CanSelectedButton == ID_GMB_MAP)].Draw(posX + 32, posYT + (int)(CanPressedButton == ID_GMB_MAP ? 2 : 0));
+			UO->DrawGump(0x098D, 0, 93, 1);
+			m_Texture[1][(int)(g_GumpSelectElement == ID_GMB_PAPERDOLL)].Draw(96, 2 + (int)(g_GumpPressedElement == ID_GMB_PAPERDOLL ? 2 : 0));
 			
-			UO->DrawGump(0x098D, 0, posX + 93, posY);
-			m_Texture[1][(int)(CanSelectedButton == ID_GMB_PAPERDOLL)].Draw(posX + 96, posYT + (int)(CanPressedButton == ID_GMB_PAPERDOLL ? 2 : 0));
+			UO->DrawGump(0x098D, 0, 201, 1);
+			m_Texture[2][(int)(g_GumpSelectElement == ID_GMB_INVENTORY)].Draw(204, 2 + (int)(g_GumpPressedElement == ID_GMB_INVENTORY ? 2 : 0));
 			
-			UO->DrawGump(0x098D, 0, posX + 201, posY);
-			m_Texture[2][(int)(CanSelectedButton == ID_GMB_INVENTORY)].Draw(posX + 204, posYT + (int)(CanPressedButton == ID_GMB_INVENTORY ? 2 : 0));
+			UO->DrawGump(0x098D, 0, 309, 1);
+			m_Texture[3][(int)(g_GumpSelectElement == ID_GMB_JOURNAL)].Draw(312, 2 + (int)(g_GumpPressedElement == ID_GMB_JOURNAL ? 2 : 0));
 			
-			UO->DrawGump(0x098D, 0, posX + 309, posY);
-			m_Texture[3][(int)(CanSelectedButton == ID_GMB_JOURNAL)].Draw(posX + 312, posYT + (int)(CanPressedButton == ID_GMB_JOURNAL ? 2 : 0));
+			UO->DrawGump(0x098B, 0, 417, 1);
+			m_Texture[4][(int)(g_GumpSelectElement == ID_GMB_CHAT)].Draw(422, 2 + (int)(g_GumpPressedElement == ID_GMB_CHAT ? 2 : 0));
 			
-			UO->DrawGump(0x098B, 0, posX + 417, posY);
-			m_Texture[4][(int)(CanSelectedButton == ID_GMB_CHAT)].Draw(posX + 422, posYT + (int)(CanPressedButton == ID_GMB_CHAT ? 2 : 0));
+			UO->DrawGump(0x098B, 0, 480, 1);
+			m_Texture[5][(int)(g_GumpSelectElement == ID_GMB_HELP)].Draw(482, 2 + (int)(g_GumpPressedElement == ID_GMB_HELP ? 2 : 0));
 			
-			UO->DrawGump(0x098B, 0, posX + 480, posY);
-			m_Texture[5][(int)(CanSelectedButton == ID_GMB_HELP)].Draw(posX + 482, posYT + (int)(CanPressedButton == ID_GMB_HELP ? 2 : 0));
+			UO->DrawGump(0x098D, 0, 543, 1);
+			m_Texture[6][(int)(g_GumpSelectElement == ID_GMB_WORLD_MAP)].Draw(546, 2 + (int)(g_GumpPressedElement == ID_GMB_WORLD_MAP ? 2 : 0));
 			
-			UO->DrawGump(0x098D, 0, posX + 543, posY);
-			m_Texture[6][(int)(CanSelectedButton == ID_GMB_WORLD_MAP)].Draw(posX + 546, posYT + (int)(CanPressedButton == ID_GMB_WORLD_MAP ? 2 : 0));
-			
-			UO->DrawGump(0x098B, 0, posX + 651, posY);
-			m_Texture[7][(int)(CanSelectedButton == ID_GMB_INFO)].Draw(posX + 654, posYT + (int)(CanPressedButton == ID_GMB_INFO ? 2 : 0));
+			UO->DrawGump(0x098B, 0, 651, 1);
+			m_Texture[7][(int)(g_GumpSelectElement == ID_GMB_INFO)].Draw(654, 2 + (int)(g_GumpPressedElement == ID_GMB_INFO ? 2 : 0));
 		}
 
 	glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpMenubar::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	//Для быстрого доступа
-	int posX = X;
-	int posY = Y;
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	//Если окошко захвачено для перемещения - вычислим оффсеты
-	if (mode && CanBeMoved() && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-		
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (IsPressed || CanSelectedButton)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
-	}
+	CalculateGumpState();
 
 	if (mode) //Отрисовка
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated || g_GumpSelectElement) // || g_GumpPressed
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
 
 		if (!m_Opened)
 		{
-			if (UO->ResizepicPixelsInXY(0x13BE, posX, posY, 30, 27))
+			if (UO->ResizepicPixelsInXY(0x13BE, 0, 0, 30, 27))
 			{
 				g_LastSelectedGump = index;
 
-				if (UO->GumpPixelsInXY(0x15A1, posX + 5, posY + 3))
+				if (UO->GumpPixelsInXY(0x15A1, 5, 3))
 					LSG = ID_GMB_MINIMIZE;
 			}
 		}
 		else
 		{
-			if (UO->ResizepicPixelsInXY(0x13BE, posX, posY, 718, 27))
+			if (UO->ResizepicPixelsInXY(0x13BE, 0, 0, 718, 27))
 			{
 				g_LastSelectedGump = index;
 				g_LastSelectedObject = 0;
 			}
 				
-			if (UO->GumpPixelsInXY(0x15A4, posX + 5, posY + 3))
+			if (UO->GumpPixelsInXY(0x15A4, 5, 3))
 				LSG = ID_GMB_MINIMIZE;
 			else
 			{
-				posY++;
-
-				if (UO->GumpPixelsInXY(0x098B, posX + 30, posY))
+				if (UO->GumpPixelsInXY(0x098B, 30, 1))
 					LSG = ID_GMB_MAP;
-				else if (UO->GumpPixelsInXY(0x098D, posX + 93, posY))
+				else if (UO->GumpPixelsInXY(0x098D, 93, 1))
 					LSG = ID_GMB_PAPERDOLL;
-				else if (UO->GumpPixelsInXY(0x098D, posX + 201, posY))
+				else if (UO->GumpPixelsInXY(0x098D, 201, 1))
 					LSG = ID_GMB_INVENTORY;
-				else if (UO->GumpPixelsInXY(0x098D, posX + 309, posY))
+				else if (UO->GumpPixelsInXY(0x098D, 309, 1))
 					LSG = ID_GMB_JOURNAL;
-				else if (UO->GumpPixelsInXY(0x098B, posX + 417, posY))
+				else if (UO->GumpPixelsInXY(0x098B, 417, 1))
 					LSG = ID_GMB_CHAT;
-				else if (UO->GumpPixelsInXY(0x098B, posX + 480, posY))
+				else if (UO->GumpPixelsInXY(0x098B, 480, 1))
 					LSG = ID_GMB_HELP;
-				else if (UO->GumpPixelsInXY(0x098D, posX + 543, posY))
+				else if (UO->GumpPixelsInXY(0x098D, 543, 1))
 					LSG = ID_GMB_WORLD_MAP;
-				else if (UO->GumpPixelsInXY(0x098B, posX + 651, posY))
+				else if (UO->GumpPixelsInXY(0x098B, 651, 1))
 					LSG = ID_GMB_INFO;
 			}
 		}
@@ -267,6 +232,9 @@ int TGumpMenubar::Draw(bool &mode)
 			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 			g_LastSelectedGump = index;
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		return LSG;
 	}

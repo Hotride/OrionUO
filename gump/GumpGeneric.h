@@ -22,7 +22,7 @@
 //---------------------------------------------------------------------------
 class TGumpGeneric : public TGump
 {
-private:
+protected:
 	int m_Page;
 	bool m_Transparent;
 	
@@ -34,7 +34,9 @@ private:
 	static const int ID_GG_SCROLLBAR_BACKGROUND = 40000;
 
 	void ListingList(TGumpHTMLGump *htmlGump, bool direction, int divizor = 1);
-	void ApplyTransparent(TGumpObject *obj, int page, int &x, int &y);
+	void ApplyTransparent(TGumpObject *obj, int page);
+
+	void CalculateGumpState();
 public:
 	TGumpGeneric(DWORD serial, short x, short y, DWORD id);
 	virtual ~TGumpGeneric();

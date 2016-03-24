@@ -22,7 +22,7 @@
 //---------------------------------------------------------------------------
 class TGumpPaperdoll : public TGump
 {
-private:
+protected:
 	static const int ID_GP_BUTTON_HELP = 1;
 	static const int ID_GP_BUTTON_OPTIONS = 2;
 	static const int ID_GP_BUTTON_LOGOUT = 3;
@@ -41,6 +41,8 @@ private:
 	
 	static const int m_LayerCount = 22;
 	static int UsedLayers[m_LayerCount];
+
+	void CalculateGumpState();
 public:
 	TGumpPaperdoll(DWORD serial, short x, short y, bool minimized);
 	virtual ~TGumpPaperdoll();

@@ -85,7 +85,7 @@ public:
 	void RestorePort();
 
 	//”казать область рисовани€ (ножницами, сохран€ет мартицу)
-	void Sicceor(int x, int y, int sizeX, int sizeY);
+	void Scissor(int x, int y, int sizeX, int sizeY);
 
 	//¬ключить режим
 	void Enable(GLenum val) {glEnable(val);}

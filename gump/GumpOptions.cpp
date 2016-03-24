@@ -456,28 +456,19 @@ void TGumpOptions::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
 	DWORD index = (DWORD)this;
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
+	CalculateGumpState();
 
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	glNewList((GLuint)index, GL_COMPILE);
+	glNewList((GLuint)this, GL_COMPILE);
 	
-		UO->DrawResizepicGump(0x0A28, posX + 40, posY, 550, 450); //Body
+		UO->DrawResizepicGump(0x0A28, 40, 0, 550, 450); //Body
 
 
 
@@ -487,13 +478,13 @@ void TGumpOptions::GenerateFrame(int posX, int posY)
 		WORD gumpID = 0x00DA;
 		if (!m_Page)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, posX, posY + 45);
+		UO->DrawGump(gumpID, 0, 0, 45);
 
 		//Pop-up Help
 		gumpID = 0x00DC;
 		if (m_Page == 1)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, posX, posY + 111);
+		UO->DrawGump(gumpID, 0, 0, 111);
 
 		//Language
 		if (ConnectionManager.ClientVersion < CV_400B)
@@ -501,20 +492,20 @@ void TGumpOptions::GenerateFrame(int posX, int posY)
 			gumpID = 0x00DE;
 			if (m_Page == 2)
 				gumpID--;
-			UO->DrawGump(gumpID, 0, posX, posY + 177);
+			UO->DrawGump(gumpID, 0, 0, 177);
 		}
 
 		//Chat
 		gumpID = 0x00E0;
 		if (m_Page == 3)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, posX, posY + 243);
+		UO->DrawGump(gumpID, 0, 0, 243);
 
 		//Macro Options
 		gumpID = 0x00ED;
 		if (m_Page == 4)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, posX, posY + 309);
+		UO->DrawGump(gumpID, 0, 0, 309);
 		
 
 
@@ -524,65 +515,65 @@ void TGumpOptions::GenerateFrame(int posX, int posY)
 		gumpID = 0x00E2;
 		if (m_Page == 5)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, posX + 576, posY + 45);
+		UO->DrawGump(gumpID, 0, 576, 45);
 
 		//Display
 		gumpID = 0x00E4;
 		if (m_Page == 6)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, posX + 576, posY + 111);
+		UO->DrawGump(gumpID, 0, 576, 111);
 
 		//Reputation System
 		gumpID = 0x00E6;
 		if (m_Page == 7)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, posX + 576, posY + 177);
+		UO->DrawGump(gumpID, 0, 576, 177);
 
 		//Miscellaneous
 		gumpID = 0x00E8;
 		if (m_Page == 8)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, posX + 576, posY + 243);
+		UO->DrawGump(gumpID, 0, 576, 243);
 
 		//Filter Options
 		gumpID = 0x00EB;
 		if (m_Page == 9)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, posX + 576, posY + 309);
+		UO->DrawGump(gumpID, 0, 576, 309);
 		
 
 
-		if (CanPressedButton == ID_GO_CANCEL)
+		if (g_GumpPressedElement == ID_GO_CANCEL)
 			gumpID = 0x00F1; //Cancel button (down)
-		else if (CanSelectedButton == ID_GO_CANCEL)
+		else if (g_GumpSelectElement == ID_GO_CANCEL)
 			gumpID = 0x00F2; //Cancel button selected
 		else
 			gumpID = 0x00F3; //Cancel button
-		UO->DrawGump(gumpID, 0, posX + 154, posY + 405);
+		UO->DrawGump(gumpID, 0, 154, 405);
 		
-		if (CanPressedButton == ID_GO_APPLY)
+		if (g_GumpPressedElement == ID_GO_APPLY)
 			gumpID = 0x00F0; //Apply button (down)
-		else if (CanSelectedButton == ID_GO_APPLY)
+		else if (g_GumpSelectElement == ID_GO_APPLY)
 			gumpID = 0x00EE; //Apply button selected
 		else
 			gumpID = 0x00EF; //Apply button
-		UO->DrawGump(gumpID, 0, posX + 248, posY + 405);
+		UO->DrawGump(gumpID, 0, 248, 405);
 		
-		if (CanPressedButton == ID_GO_DEFAULT)
+		if (g_GumpPressedElement == ID_GO_DEFAULT)
 			gumpID = 0x00F4; //Default button (down)
-		else if (CanSelectedButton == ID_GO_DEFAULT)
+		else if (g_GumpSelectElement == ID_GO_DEFAULT)
 			gumpID = 0x00F5; //Default button selected
 		else
 			gumpID = 0x00F6; //Default button
-		UO->DrawGump(gumpID, 0, posX + 346, posY + 405);
+		UO->DrawGump(gumpID, 0, 346, 405);
 		
-		if (CanPressedButton == ID_GO_OKAY)
+		if (g_GumpPressedElement == ID_GO_OKAY)
 			gumpID = 0x00F8; //Okay button (down)
-		else if (CanSelectedButton == ID_GO_OKAY)
+		else if (g_GumpSelectElement == ID_GO_OKAY)
 			gumpID = 0x00F7; //Okay button selected
 		else
 			gumpID = 0x00F9; //Okay button
-		UO->DrawGump(gumpID, 0, posX + 443, posY + 405);
+		UO->DrawGump(gumpID, 0, 443, 405);
 
 		bool renderMode = true;
 
@@ -590,53 +581,53 @@ void TGumpOptions::GenerateFrame(int posX, int posY)
 		{
 			case 0:
 			{
-				DrawPage1(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Sound and Music
+				DrawPage1(renderMode, index); //Sound and Music
 				break;
 			}
 			case 1:
 			{
-				DrawPage2(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Pop-up Help
+				DrawPage2(renderMode, index); //Pop-up Help
 				break;
 			}
 			case 2:
 			{
 				if (ConnectionManager.ClientVersion < CV_400B)
-					DrawPage3(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Language
+					DrawPage3(renderMode, index); //Language
 				break;
 			}
 			case 3:
 			{
-				DrawPage4(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Chat
+				DrawPage4(renderMode, index); //Chat
 				break;
 			}
 			case 4:
 			{
-				DrawPage5(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Macro Options
+				DrawPage5(renderMode, index); //Macro Options
 				break;
 			}
 			case 5:
 			{
-				DrawPage6(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Interface
+				DrawPage6(renderMode, index); //Interface
 				break;
 			}
 			case 6:
 			{
-				DrawPage7(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Display
+				DrawPage7(renderMode, index); //Display
 				break;
 			}
 			case 7:
 			{
-				DrawPage8(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Reputation System
+				DrawPage8(renderMode, index); //Reputation System
 				break;
 			}
 			case 8:
 			{
-				DrawPage9(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Miscellaneous
+				DrawPage9(renderMode, index); //Miscellaneous
 				break;
 			}
 			case 9:
 			{
-				DrawPage10(renderMode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Filter Options
+				DrawPage10(renderMode, index); //Filter Options
 				break;
 			}
 			default:
@@ -645,32 +636,21 @@ void TGumpOptions::GenerateFrame(int posX, int posY)
 
 	glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpOptions::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	int posX = X;
-	int posY = Y;
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
+	CalculateGumpState();
 
 	DWORD ticks = GetTickCount();
+
 	if (m_LastChangeMacroTime < ticks)
 	{
-		if (CanPressedButton == ID_GO_P5_BUTTON_PREVEOUS) //Preveous button
+		if (g_GumpPressedElement == ID_GO_P5_BUTTON_PREVEOUS) //Preveous button
 		{
 			if (m_MacroPointer->m_Prev != NULL)
 			{
@@ -682,7 +662,7 @@ int TGumpOptions::Draw(bool &mode)
 
 			m_LastChangeMacroTime = ticks + CHANGE_MACRO_DELAY;
 		}
-		else if (CanPressedButton == ID_GO_P5_BUTTON_NEXT) //Next button
+		else if (g_GumpPressedElement == ID_GO_P5_BUTTON_NEXT) //Next button
 		{
 			if (m_MacroPointer->m_Next != NULL)
 			{
@@ -696,12 +676,12 @@ int TGumpOptions::Draw(bool &mode)
 		}
 		else if (m_MacroSelection)
 		{
-			if (m_MacroListOffset && g_MouseY < posY + m_MacroListOffsetYStart)
+			if (m_MacroListOffset && g_MouseY < (int)g_GumpTranslateY + m_MacroListOffsetYStart)
 			{
 				m_MacroListOffset -= m_MacroListMaxCount;
 				m_LastChangeMacroTime = ticks + CHANGE_MACRO_LIST_DELAY;
 			}
-			else if ((m_MacroListOffset + m_MacroListMaxCount < m_MacroListCount) && g_MouseY > posY + m_MacroListOffsetYEnd)
+			else if ((m_MacroListOffset + m_MacroListMaxCount < m_MacroListCount) && g_MouseY >(int)g_GumpTranslateY + m_MacroListOffsetYEnd)
 			{
 				m_MacroListOffset += m_MacroListMaxCount;
 				m_LastChangeMacroTime = ticks + CHANGE_MACRO_LIST_DELAY;
@@ -709,35 +689,32 @@ int TGumpOptions::Draw(bool &mode)
 		}
 	}
 
-	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-		
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (IsPressed || CanSelectedButton)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
-	}
-
 	if (mode)
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated || g_GumpSelectElement) // || g_GumpPressed
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else
 	{
-		if (UO->ResizepicPixelsInXY(0x0A28, posX + 40, posY, 550, 450)) //Body
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
+		int LSG = 0;
+
+		if (UO->ResizepicPixelsInXY(0x0A28, 40, 0, 550, 450)) //Body
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -751,21 +728,15 @@ int TGumpOptions::Draw(bool &mode)
 		WORD gumpID = 0x00DA;
 		if (!m_Page)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, posX, posY + 45))
-		{
-			g_LastSelectedObject = ID_GO_PAGE_0;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(gumpID, 0, 45))
+			LSG = ID_GO_PAGE_0;
 
 		//Pop-up Help
 		gumpID = 0x00DC;
 		if (m_Page == 1)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, posX, posY + 111))
-		{
-			g_LastSelectedObject = ID_GO_PAGE_1;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(gumpID, 0, 111))
+			LSG = ID_GO_PAGE_1;
 
 		//Language
 		if (ConnectionManager.ClientVersion < CV_400B)
@@ -773,32 +744,23 @@ int TGumpOptions::Draw(bool &mode)
 			gumpID = 0x00DE;
 			if (m_Page == 2)
 				gumpID--;
-			if (UO->GumpPixelsInXY(gumpID, posX, posY + 177))
-			{
-				g_LastSelectedObject = ID_GO_PAGE_2;
-				g_LastSelectedGump = index;
-			}
+			if (UO->GumpPixelsInXY(gumpID, 0, 177))
+				LSG = ID_GO_PAGE_2;
 		}
 
 		//Chat
 		gumpID = 0x00E0;
 		if (m_Page == 3)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, posX, posY + 243))
-		{
-			g_LastSelectedObject = ID_GO_PAGE_3;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(gumpID, 0, 243))
+			LSG = ID_GO_PAGE_3;
 
 		//Macro Options
 		gumpID = 0x00ED;
 		if (m_Page == 4)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, posX, posY + 309))
-		{
-			g_LastSelectedObject = ID_GO_PAGE_4;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(gumpID, 0, 309))
+			LSG = ID_GO_PAGE_4;
 
 
 		
@@ -808,126 +770,124 @@ int TGumpOptions::Draw(bool &mode)
 		gumpID = 0x00E2;
 		if (m_Page == 5)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, posX + 576, posY + 45))
-		{
-			g_LastSelectedObject = ID_GO_PAGE_5;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(gumpID, 576, 45))
+			LSG = ID_GO_PAGE_5;
 
 		//Display
 		gumpID = 0x00E4;
 		if (m_Page == 6)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, posX + 576, posY + 111))
-		{
-			g_LastSelectedObject = ID_GO_PAGE_6;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(gumpID, 576, 111))
+			LSG = ID_GO_PAGE_6;
 
 		//Reputation System
 		gumpID = 0x00E6;
 		if (m_Page == 7)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, posX + 576, posY + 177))
-		{
-			g_LastSelectedObject = ID_GO_PAGE_7;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(gumpID, 576, 177))
+			LSG = ID_GO_PAGE_7;
 
 		//Miscellaneous
 		gumpID = 0x00E8;
 		if (m_Page == 8)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, posX + 576, posY + 243))
-		{
-			g_LastSelectedObject = ID_GO_PAGE_8;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(gumpID, 576, 243))
+			LSG = ID_GO_PAGE_8;
 
 		//Filter Options
 		gumpID = 0x00EB;
 		if (m_Page == 9)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, posX + 576, posY + 309))
-		{
-			g_LastSelectedObject = ID_GO_PAGE_9;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(gumpID, 576, 309))
+			LSG = ID_GO_PAGE_9;
 		
 
 		 //Cancel button
-		if (UO->GumpPixelsInXY(0x00F3, posX + 154, posY + 405))
-		{
-			g_LastSelectedObject = ID_GO_CANCEL;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(0x00F3, 154, 405))
+			LSG = ID_GO_CANCEL;
 
 		 //Apply button
-		if (UO->GumpPixelsInXY(0x00EF, posX + 248, posY + 405))
-		{
-			g_LastSelectedObject = ID_GO_APPLY;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(0x00EF, 248, 405))
+			LSG = ID_GO_APPLY;
 
 		 //Default button
-		if (UO->GumpPixelsInXY(0x00F6, posX + 346, posY + 405))
-		{
-			g_LastSelectedObject = ID_GO_DEFAULT;
-			g_LastSelectedGump = index;
-		}
+		if (UO->GumpPixelsInXY(0x00F6, 346, 405))
+			LSG = ID_GO_DEFAULT;
 
 		 //Okay button
-		if (UO->GumpPixelsInXY(0x00F9, posX + 443, posY + 405))
+		if (UO->GumpPixelsInXY(0x00F9, 443, 405))
+			LSG = ID_GO_OKAY;
+
+		if (LSG != 0 || g_LastSelectedGump == index)
 		{
-			g_LastSelectedObject = ID_GO_OKAY;
+			int oldLSG = LSG;
+
+			switch (m_Page)
+			{
+				case 0:
+					LSG = DrawPage1(mode, index); //Sound and Music
+					break;
+				case 1:
+					LSG = DrawPage2(mode, index); //Pop-up Help
+					break;
+				case 2:
+					if (ConnectionManager.ClientVersion < CV_400B)
+						LSG = DrawPage3(mode, index); //Language
+					break;
+				case 3:
+					LSG = DrawPage4(mode, index); //Chat
+					break;
+				case 4:
+					LSG = DrawPage5(mode, index); //Macro Options
+					break;
+				case 5:
+					LSG = DrawPage6(mode, index); //Interface
+					break;
+				case 6:
+					LSG = DrawPage7(mode, index); //Display
+					break;
+				case 7:
+					LSG = DrawPage8(mode, index); //Reputation System
+					break;
+				case 8:
+					LSG = DrawPage9(mode, index); //Miscellaneous
+					break;
+				case 9:
+					LSG = DrawPage10(mode, index); //Filter Options
+					break;
+				default:
+					break;
+			}
+
+			if (!LSG)
+				LSG = oldLSG;
+		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
+
+		if (LSG != 0)
+		{
+			g_LastSelectedObject = LSG;
 			g_LastSelectedGump = index;
 		}
-	}
 
-	if (!mode)
-	{
-		switch (m_Page)
-		{
-			case 0:
-				return DrawPage1(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Sound and Music
-			case 1:
-				return DrawPage2(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Pop-up Help
-			case 2:
-				if (ConnectionManager.ClientVersion < CV_400B)
-					return DrawPage3(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Language
-			case 3:
-				return DrawPage4(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Chat
-			case 4:
-				return DrawPage5(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Macro Options
-			case 5:
-				return DrawPage6(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Interface
-			case 6:
-				return DrawPage7(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Display
-			case 7:
-				return DrawPage8(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Reputation System
-			case 8:
-				return DrawPage9(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Miscellaneous
-			case 9:
-				return DrawPage10(mode, index, IsPressed, CanSelectedButton, CanPressedButton, posX, posY); //Filter Options
-			default:
-				break;
-		}
+		return LSG;
 	}
 
 	return 0;
 }
 //----------------------------------------------------------------------------
-int TGumpOptions::DrawPage1(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY)
+int TGumpOptions::DrawPage1(bool &mode, DWORD &index)
 {
 	//Sound and Music
 	if (mode)
 	{
-		
-		if (IsPressed)
+		if (g_GumpPressed)
 		{
 			if (g_LastObjectLeftMouseDown == ID_GO_P1_SOUND_VOLUME) //Sound volume slider pressed
 			{
-				int currentX = g_MouseX - posX - 3; //Текущая позиция ползунка
+				int currentX = g_MouseX - (int)g_GumpTranslateX - 3; //Текущая позиция ползунка
 
 				if (currentX < 64)
 					currentX = 64; //Выход за допустимый предел, корректируем на минимум
@@ -956,7 +916,7 @@ int TGumpOptions::DrawPage1(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 			}
 			else if (g_LastObjectLeftMouseDown == ID_GO_P1_MUSIC_VOLUME) //Music volume slider pressed
 			{
-				int currentX = g_MouseX - posX - 3; //Текущая позиция ползунка
+				int currentX = g_MouseX - (int)g_GumpTranslateX - 3; //Текущая позиция ползунка
 
 				if (currentX < 64)
 					currentX = 64; //Выход за допустимый предел, корректируем на минимум
@@ -986,105 +946,63 @@ int TGumpOptions::DrawPage1(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		}
 
 		//UO->DrawUnicodeFont(0, L"Sound and Music", g_OptionsTextColor, posX + 254, posY + 22);
-		m_TexturePage1[0].Draw(posX + 84, posY + 22);
+		m_TexturePage1[0].Draw(84, 22);
 
 		//UO->DrawUnicodeFontFixed(0, L"Sound and Music", 1, posX + 240, posY + 42, 100);
 		//UO->DrawUnicodeFontCropped(0, L"Sound and Music", 1, posX + 240, posY + 62, 60);
 
 		//UO->DrawUnicodeFont(0, L"These settings affect the sound and music you will hear while playing Ultima Online.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
-		m_TexturePage1[1].Draw(posX + 64, posY + 44);
+		m_TexturePage1[1].Draw(64, 44);
 
-		posY += 90;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.Sound, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.Sound, 0, 64, 90);
 		//UO->DrawUnicodeFont(0, L"Sound on/off", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage1[2].Draw(posX + 86, posY);
+		m_TexturePage1[2].Draw(86, 90);
 
 		//UO->DrawUnicodeFont(0, L"Sound volume", g_OptionsTextColor, posX + 64, posY + 22);
-		m_TexturePage1[3].Draw(posX + 64, posY + 22);
+		m_TexturePage1[3].Draw(64, 112);
 		
-		posY += 43;
-		UO->DrawSphereGump(g_OptionsConfig.SoundVolume, 255.0f, posX, posY);
+		UO->DrawSphereGump(g_OptionsConfig.SoundVolume, 255.0f, 0, 133);
 
-		/*UO->DrawGump(0x00D5, 0, posX + 64, posY); //Sphere line gump start
-		UO->DrawGump(0x00D7, 0, posX + 152, posY); //Sphere line gump end
-		UO->DrawGump(0x00D6, 0, posX + 77, posY, 75, 0); //Sphere line gump body
-
-		float ValPer = (g_OptionsConfig.SoundVolume / 255.0f) * 100.0f;
-		ValPer = (g_SphereListWidth * ValPer) / 100.0f;
-		if (ValPer < 0.0f)
-			ValPer = 0.0f;
-		UO->DrawGump(0x00D8, 0, posX + 64 + (int)ValPer, posY); //Sphere gump*/
-
-		wchar_t text[20] = {0};
-		swprintf(text, L"%d", g_OptionsConfig.SoundVolume);
-		FontManager->DrawW(0, text, g_OptionsTextColor, posX + 176, posY - 3);
+		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.SoundVolume).c_str(), g_OptionsTextColor, 176, 130);
 		
 
 
-		posY += 18;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.Music, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.Music, 0, 64, 151);
 		//UO->DrawUnicodeFont(0, L"Music on/off", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage1[4].Draw(posX + 88, posY);
+		m_TexturePage1[4].Draw(88, 151);
 
 		//UO->DrawUnicodeFont(0, L"Music volume", g_OptionsTextColor, posX + 64, posY + 22);
-		m_TexturePage1[5].Draw(posX + 64, posY + 22);
+		m_TexturePage1[5].Draw(64, 173);
 		
-		posY += 43;
-		UO->DrawSphereGump(g_OptionsConfig.MusicVolume, 255.0f, posX, posY);
+		UO->DrawSphereGump(g_OptionsConfig.MusicVolume, 255.0f, 0, 194);
 
-		/*UO->DrawGump(0x00D5, 0, posX + 64, posY); //Sphere line gump start
-		UO->DrawGump(0x00D7, 0, posX + 152, posY); //Sphere line gump end
-		UO->DrawGump(0x00D6, 0, posX + 77, posY, 75, 0); //Sphere line gump body
-
-		ValPer = (g_OptionsConfig.MusicVolume / 255.0f) * 100.0f;
-		ValPer = (g_SphereListWidth * ValPer) / 100.0f;
-		if (ValPer < 0)
-			ValPer = 0;
-		UO->DrawGump(0x00D8, 0, posX + 64 + (int)ValPer, posY); //Sphere gump*/
-		
-		swprintf(text, L"%d", g_OptionsConfig.MusicVolume);
-		FontManager->DrawW(0, text, g_OptionsTextColor, posX + 176, posY - 3);
+		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.MusicVolume).c_str(), g_OptionsTextColor, 176, 191);
 
 		
-		posY += 18;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.FootstepsSound, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.FootstepsSound, 0, 64, 212);
 		//UO->DrawUnicodeFont(0, L"Play footstep sounds", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage1[6].Draw(posX + 86, posY);
+		m_TexturePage1[6].Draw(86, 212);
 		
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetCombatMusic(), 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetCombatMusic(), 0, 64, 232);
 		//UO->DrawUnicodeFont(0, L"Play combat music", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage1[7].Draw(posX + 88, posY);
+		m_TexturePage1[7].Draw(88, 232);
 	}
 	else
 	{
-		if (g_LastSelectedGump != index)
-			return 0;
-
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x00D2, posX + 64, posY + 90))
+		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P1_SOUND_ON_OFF; //Sound on/off
-		else if (UO->GumpPixelsInXY(0x00D2, posX + 64, posY + 151))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 151))
 			LSG = ID_GO_P1_MUSIC_ON_OFF; //Music on/off
-		else if (UO->GumpPixelsInXY(0x00D2, posX + 64, posY + 212))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 212))
 			LSG = ID_GO_P1_PLAY_FOOTSTEP_SOUNDS; //Play footstep sounds
-		else if (UO->GumpPixelsInXY(0x00D2, posX + 64, posY + 232))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 232))
 			LSG = ID_GO_P1_PLAY_COMBAT_MUSIC; //Play combat music
-		else
-		{
-			RECT rc = {0, 0, (int)g_SphereListWidth + 10, 16};
-			POINT p = {g_MouseX - (posX + 64), g_MouseY - (posY + 130)};
-			if (PtInRect(&rc, p))
+		else if (UO->PolygonePixelsInXY(64, 130, (int)g_SphereListWidth + 10, 16))
 			LSG = ID_GO_P1_SOUND_VOLUME; //Sound volume
-
-			p.y = g_MouseY - (posY + 192);
-			if (PtInRect(&rc, p))
+		else if (UO->PolygonePixelsInXY(64, 192, (int)g_SphereListWidth + 10, 16))
 			LSG = ID_GO_P1_MUSIC_VOLUME; //Music volume
-		}
-		
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
 
 		return LSG;
 	}
@@ -1092,17 +1010,16 @@ int TGumpOptions::DrawPage1(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 	return 0;
 }
 //----------------------------------------------------------------------------
-int TGumpOptions::DrawPage2(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY)
+int TGumpOptions::DrawPage2(bool &mode, DWORD &index)
 {
 	//Pop-up Help
 	if (mode)
 	{
-
-		if (IsPressed)
+		if (g_GumpPressed)
 		{
 			if (g_LastObjectLeftMouseDown == ID_GO_P2_DELAY_BEFORE_POPUPS) //Delay befor Help pops up slider pressed
 			{
-				int currentX = g_MouseX - posX - 3; //Текущая позиция ползунка
+				int currentX = g_MouseX - (int)g_GumpTranslateX - 3; //Текущая позиция ползунка
 
 				if (currentX < 64)
 					currentX = 64; //Выход за допустимый предел, корректируем на минимум
@@ -1132,21 +1049,19 @@ int TGumpOptions::DrawPage2(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		}
 
 		//UO->DrawUnicodeFont(0, L"Pop-up Help", g_OptionsTextColor, posX + 274, posY + 22);
-		m_TexturePage2[0].Draw(posX + 84, posY + 22);
+		m_TexturePage2[0].Draw(84, 22);
 		
 		//UO->DrawUnicodeFont(0, L"These settings configure the behavior of the pop-up help.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
-		m_TexturePage2[1].Draw(posX + 64, posY + 44);
+		m_TexturePage2[1].Draw(64, 44);
 		
-		posY += 90;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.PopupHelpEnabled, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.PopupHelpEnabled, 0, 64, 90);
 		//UO->DrawUnicodeFont(0, L"Use Pop-up Help", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage2[2].Draw(posX + 86, posY);
+		m_TexturePage2[2].Draw(86, 90);
 
 		//UO->DrawUnicodeFont(0, L"Delay befor Help pops up", g_OptionsTextColor, posX + 64, posY + 22);
-		m_TexturePage2[3].Draw(posX + 64, posY + 22);
+		m_TexturePage2[3].Draw(64, 112);
 		
-		posY += 43;
-		UO->DrawSphereGump(g_OptionsConfig.PopupHelpDelay, 5000.0f, posX, posY);
+		UO->DrawSphereGump(g_OptionsConfig.PopupHelpDelay, 5000.0f, 0, 133);
 
 		/*UO->DrawGump(0x00D5, 0, posX + 64, posY); //Sphere line gump start
 		UO->DrawGump(0x00D7, 0, posX + 152, posY); //Sphere line gump end
@@ -1158,65 +1073,48 @@ int TGumpOptions::DrawPage2(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 			ValPer = 0.0f;
 		UO->DrawGump(0x00D8, 0, posX + 64 + (int)ValPer, posY); //Sphere gump*/
 
-		wchar_t text[20] = {0};
-		swprintf(text, L"%d", g_OptionsConfig.PopupHelpDelay);
-		FontManager->DrawW(0, text, g_OptionsTextColor, posX + 176, posY - 3);
+		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.PopupHelpDelay).c_str(), g_OptionsTextColor, 176, 130);
 		
 
 
-		posY += 18;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 151);
 		DWORD clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.PopupHelpTextColor != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.PopupHelpTextColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 154, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Text Color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage2[4].Draw(posX + 88, posY);
+		m_TexturePage2[4].Draw(88, 151);
 		
-		posY += 22;
-		UO->DrawGump(0x00D0, 0, posX + 64, posY);
+		UO->DrawGump(0x00D0, 0, 64, 173);
 		//UO->DrawUnicodeFont(0, L"Help text font", g_OptionsTextColor, posX + 64, posY + 22);
-		m_TexturePage2[5].Draw(posX + 88, posY);
+		m_TexturePage2[5].Draw(88, 173);
 		
-		posY += 24;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.PopupHelpSticky, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.PopupHelpSticky, 0, 64, 197);
 		//UO->DrawUnicodeFont(0, L"Make window Sticky", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage2[6].Draw(posX + 86, posY);
+		m_TexturePage2[6].Draw(86, 197);
 		
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.PopupHelpPersistant, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.PopupHelpPersistant, 0, 64, 217);
 		//UO->DrawUnicodeFont(0, L"Make text Persistant", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage2[7].Draw(posX + 86, posY);
+		m_TexturePage2[7].Draw(86, 217);
 	}
 	else
 	{
-		if (g_LastSelectedGump != index)
-			return 0;
-
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x00D2, posX + 64, posY + 90))
+		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P2_USE_POPUP; //Use Pop-up Help
-		else if (UO->GumpPixelsInXY(0x00D2, posX + 64, posY + 151))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 151))
 			LSG = ID_GO_P2_TEXT_COLOR; //Text Color
-		else if (UO->GumpPixelsInXY(0x00D0, posX + 64, posY + 173))
+		else if (UO->GumpPixelsInXY(0x00D0, 64, 173))
 			LSG = ID_GO_P2_TEXT_FONT; //Help text font
-		else if (UO->GumpPixelsInXY(0x00D2, posX + 64, posY + 197))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 197))
 			LSG = ID_GO_P2_MAKE_WINDOW_STICKY; //Make window Sticky
-		else if (UO->GumpPixelsInXY(0x00D2, posX + 64, posY + 217))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 217))
 			LSG = ID_GO_P2_MAKE_TEXT_PERTISTANT; //Make text Persistant
-		else
-		{
-			RECT rc = {0, 0, (int)g_SphereListWidth + 10, 16};
-			POINT p = {g_MouseX - (posX + 64), g_MouseY - (posY + 130)};
-			if (PtInRect(&rc, p))
-				LSG = ID_GO_P2_DELAY_BEFORE_POPUPS; //Delay befor Help pops up
-		}
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
+		else if (UO->PolygonePixelsInXY(64, 130, (int)g_SphereListWidth + 10, 16))
+			LSG = ID_GO_P2_DELAY_BEFORE_POPUPS; //Delay befor Help pops up
 
 		return LSG;
 	}
@@ -1224,17 +1122,16 @@ int TGumpOptions::DrawPage2(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 	return 0;
 }
 //----------------------------------------------------------------------------
-int TGumpOptions::DrawPage3(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY)
+int TGumpOptions::DrawPage3(bool &mode, DWORD &index)
 {
 	//Language
 	if (mode)
 	{
-
-		if (IsPressed)
+		if (g_GumpPressed)
 		{
 			if (g_LastObjectLeftMouseDown == ID_GO_P3_DELAY_BEFORE_TOOLTIP) //Delay befor Tool-tip appears slider pressed
 			{
-				int currentX = g_MouseX - posX - 3; //Текущая позиция ползунка
+				int currentX = g_MouseX - (int)g_GumpTranslateX - 3; //Текущая позиция ползунка
 
 				if (currentX < 64)
 					currentX = 64; //Выход за допустимый предел, корректируем на минимум
@@ -1264,75 +1161,58 @@ int TGumpOptions::DrawPage3(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		}
 
 		//UO->DrawUnicodeFont(0, L"Language", g_OptionsTextColor, posX + 280, posY + 22);
-		m_TexturePage3[0].Draw(posX + 84, posY + 22);
+		m_TexturePage3[0].Draw(84, 22);
 		
 		//UO->DrawUnicodeFont(0, L"The language you use when playing UO is obtained from your Operating System settings.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
-		m_TexturePage3[1].Draw(posX + 64, posY + 44);
+		m_TexturePage3[1].Draw(64, 44);
 
-		posY += 90;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.UseToolTips, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.UseToolTips, 0, 64, 90);
 		//UO->DrawUnicodeFont(0, L"Use Tool-tips", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage3[2].Draw(posX + 86, posY);
+		m_TexturePage3[2].Draw(86, 90);
 
 		//UO->DrawUnicodeFont(0, L"Delay befor Tool-tip appears", g_OptionsTextColor, posX + 64, posY + 22);
-		m_TexturePage3[3].Draw(posX + 64, posY + 22);
+		m_TexturePage3[3].Draw(64, 112);
 		
-		posY += 43;
-		UO->DrawGump(0x00D5, 0, posX + 64, posY); //Sphere line gump start
-		UO->DrawGump(0x00D7, 0, posX + 152, posY); //Sphere line gump end
-		UO->DrawGump(0x00D6, 0, posX + 77, posY, 75, 0); //Sphere line gump body
+		UO->DrawGump(0x00D5, 0, 64, 133); //Sphere line gump start
+		UO->DrawGump(0x00D7, 0, 152, 133); //Sphere line gump end
+		UO->DrawGump(0x00D6, 0, 77, 133, 75, 0); //Sphere line gump body
 
 		float ValPer = (g_OptionsConfig.ToolTipsDelay / 5000.0f) * 100.0f;
 		ValPer = (g_SphereListWidth * ValPer) / 100.0f;
 		if (ValPer < 0.0f)
 			ValPer = 0.0f;
-		UO->DrawGump(0x00D8, 0, posX + 64 + (int)ValPer, posY); //Sphere gump
+		UO->DrawGump(0x00D8, 0, 64 + (int)ValPer, 133); //Sphere gump
 
-		wchar_t text[20] = {0};
-		swprintf(text, L"%d", g_OptionsConfig.ToolTipsDelay);
-		FontManager->DrawW(0, text, g_OptionsTextColor, posX + 176, posY - 3);
+		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.ToolTipsDelay).c_str(), g_OptionsTextColor, 176, 130);
 		
 
 
-		posY += 18;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 151);
 		DWORD clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ToolTipsTextColor != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ToolTipsTextColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 154, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Color of Tool-tip text", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage3[4].Draw(posX + 88, posY);
+		m_TexturePage3[4].Draw(88, 151);
 		
-		posY += 22;
-		UO->DrawGump(0x00D0, 0, posX + 64, posY);
+		UO->DrawGump(0x00D0, 0, 64, 173);
 		//UO->DrawUnicodeFont(0, L"Font for Tool-tips", g_OptionsTextColor, posX + 64, posY + 22);
-		m_TexturePage3[5].Draw(posX + 88, posY);
+		m_TexturePage3[5].Draw(88, 173);
 	}
 	else
 	{
-		if (g_LastSelectedGump != index)
-			return 0;
-
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x00D2, posX + 64, posY + 90))
+		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P3_USE_TOOLTIP; //Use Tool-tips
-		else if (UO->GumpPixelsInXY(0x00D2, posX + 64, posY + 151))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 151))
 			LSG = ID_GO_P3_TEXT_COLOR; //Color of Tool-tip text
-		else if (UO->GumpPixelsInXY(0x00D0, posX + 64, posY + 173))
+		else if (UO->GumpPixelsInXY(0x00D0, 64, 173))
 			LSG = ID_GO_P3_TEXT_FONT; //Font for Tool-tips
-		else
-		{
-			RECT rc = {0, 0, (int)g_SphereListWidth + 10, 16};
-			POINT p = {g_MouseX - (posX + 64), g_MouseY - (posY + 130)};
-			if (PtInRect(&rc, p))
-				LSG = ID_GO_P3_DELAY_BEFORE_TOOLTIP; //Delay befor Tool-tip appears
-		}
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
+		else if (UO->PolygonePixelsInXY(64, 130, (int)g_SphereListWidth + 10, 16))
+			LSG = ID_GO_P3_DELAY_BEFORE_TOOLTIP; //Delay befor Tool-tip appears
 
 		return LSG;
 	}
@@ -1340,260 +1220,225 @@ int TGumpOptions::DrawPage3(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 	return 0;
 }
 //----------------------------------------------------------------------------
-int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY)
+int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 {
 	//Chat
-
-	const int step = 19;
 
 	if (mode)
 	{
 		//UO->DrawUnicodeFont(0, L"Chat", g_OptionsTextColor, posX + 292, posY + 22);
-		m_TexturePage4[0].Draw(posX + 84, posY + 22);
+		m_TexturePage4[0].Draw(84, 22);
 		
 		//UO->DrawUnicodeFont(0, L"These settings affect the interface display for the chat system.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
-		m_TexturePage4[1].Draw(posX + 64, posY + 44);
+		m_TexturePage4[1].Draw(64, 44);
 		
 
-		posY += 90;
-		
-		int posYStart = posY;
 
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 90);
 		DWORD clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorInputText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorInputText);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 93, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Input text color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage4[2].Draw(posX + 88, posY);
+		m_TexturePage4[2].Draw(88, 90);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 109);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMenuOption != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMenuOption);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 112, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Menu option color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage4[3].Draw(posX + 88, posY);
+		m_TexturePage4[3].Draw(88, 109);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 128);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorPlayerInMemberList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorPlayerInMemberList);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 131, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Player color in member list", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage4[3].Draw(posX + 88, posY);
+		m_TexturePage4[3].Draw(88, 128);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 147);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorText);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 150, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Chat text color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage4[5].Draw(posX + 88, posY);
+		m_TexturePage4[5].Draw(88, 147);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 166);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorPlayerNameWithout != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorPlayerNameWithout);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 169, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Player name without speaking privileges", g_OptionsTextColor, posX + 88, posY, 140);
-		m_TexturePage4[6].Draw(posX + 88, posY);
+		m_TexturePage4[6].Draw(88, 166);
 		
-		posY += step + 16;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 201);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMuted != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMuted);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 204, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Muted text color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage4[7].Draw(posX + 88, posY);
+		m_TexturePage4[7].Draw(88, 201);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 220);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorChannelModeratorName != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorChannelModeratorName);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 223, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Channel moderator name", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage4[8].Draw(posX + 88, posY);
+		m_TexturePage4[8].Draw(88, 220);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 239);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorChannelModeratorText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorChannelModeratorText);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 242, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Channel moderator text", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage4[9].Draw(posX + 88, posY);
+		m_TexturePage4[9].Draw(88, 239);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 258);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMyName != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMyName);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 261, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"My name's color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage4[10].Draw(posX + 88, posY);
+		m_TexturePage4[10].Draw(88, 258);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 277);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMyText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMyText);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 280, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"My text color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage4[11].Draw(posX + 88, posY);
+		m_TexturePage4[11].Draw(88, 277);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 296);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorSystemMessage != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorSystemMessage);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 299, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"System message color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage4[12].Draw(posX + 88, posY);
+		m_TexturePage4[12].Draw(88, 296);
 
 		
 
-		posY = posYStart;
-		UO->DrawGump(0x00D4, 0, posX + 300, posY);
+		UO->DrawGump(0x00D4, 0, 300, 90);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGOutputText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGOutputText);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 303, posY + 3, 13, 14);
+		g_GL.DrawPolygone(303, 93, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Text Output Background Color", g_OptionsTextColor, posX + 324, posY);
-		m_TexturePage4[13].Draw(posX + 324, posY);
+		m_TexturePage4[13].Draw(324, 90);
 
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 300, posY);
+		UO->DrawGump(0x00D4, 0, 300, 109);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGInputText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGInputText);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 303, posY + 3, 13, 14);
+		g_GL.DrawPolygone(303, 112, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Text Input Background Color", g_OptionsTextColor, posX + 324, posY);
-		m_TexturePage4[14].Draw(posX + 324, posY);
+		m_TexturePage4[14].Draw(324, 109);
 
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 300, posY);
+		UO->DrawGump(0x00D4, 0, 300, 128);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGUserList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGUserList);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 303, posY + 3, 13, 14);
+		g_GL.DrawPolygone(303, 131, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"User List Background Color", g_OptionsTextColor, posX + 324, posY);
-		m_TexturePage4[15].Draw(posX + 324, posY);
+		m_TexturePage4[15].Draw(324, 128);
 
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 300, posY);
+		UO->DrawGump(0x00D4, 0, 300, 147);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGConfList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGConfList);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 303, posY + 3, 13, 14);
+		g_GL.DrawPolygone(303, 150, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Conference List Background Color", g_OptionsTextColor, posX + 324, posY);
-		m_TexturePage4[16].Draw(posX + 324, posY);
+		m_TexturePage4[16].Draw(324, 147);
 
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 300, posY);
+		UO->DrawGump(0x00D4, 0, 300, 166);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGCommandList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGCommandList);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 303, posY + 3, 13, 14);
+		g_GL.DrawPolygone(303, 169, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Command List Background Color", g_OptionsTextColor, posX + 324, posY);
-		m_TexturePage4[17].Draw(posX + 324, posY);
+		m_TexturePage4[17].Draw(324, 166);
 
 		
-		posY += 26;
-		UO->DrawGump(0x00D0, 0, posX + 300, posY);
+		UO->DrawGump(0x00D0, 0, 300, 192);
 		//UO->DrawUnicodeFont(0, L"Chat font", g_OptionsTextColor, posX + 300, posY);
-		m_TexturePage4[18].Draw(posX + 324, posY);
+		m_TexturePage4[18].Draw(324, 192);
 	}
 	else
 	{
-		if (g_LastSelectedGump != index)
-			return 0;
-
 		int LSG = 0;
 		
-		int posXStart = posX;
-		posX += 64;
-
-		if (UO->GumpPixelsInXY(0x00D2, posX, posY + 90))
+		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P4_TEXT_COLOR; //Input text color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 109))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 109))
 			LSG = ID_GO_P4_TEXT_COLOR + 1; //Menu option color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 128))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 128))
 			LSG = ID_GO_P4_TEXT_COLOR + 2; //Player color in member list
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 147))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 147))
 			LSG = ID_GO_P4_TEXT_COLOR + 3; //Chat text color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 166))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 166))
 			LSG = ID_GO_P4_TEXT_COLOR + 4; //Player name without speaking privileges
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 201))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 201))
 			LSG = ID_GO_P4_TEXT_COLOR + 5; //Muted text color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 220))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 220))
 			LSG = ID_GO_P4_TEXT_COLOR + 6; //Channel moderator name
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 239))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 239))
 			LSG = ID_GO_P4_TEXT_COLOR + 7; //Channel moderator text
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 258))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 258))
 			LSG = ID_GO_P4_TEXT_COLOR + 8; //My name's color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 277))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 277))
 			LSG = ID_GO_P4_TEXT_COLOR + 9; //My text color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 296))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 296))
 			LSG = ID_GO_P4_TEXT_COLOR + 10; //System message color
-		else
-		{
-			posX = posXStart + 300;
-			
-			if (UO->GumpPixelsInXY(0x00D2, posX, posY + 90))
-				LSG = ID_GO_P4_TEXT_COLOR + 11; //Text Output Background Color
-			else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 109))
-				LSG = ID_GO_P4_TEXT_COLOR + 12; //Text Input Background Color
-			else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 128))
-				LSG = ID_GO_P4_TEXT_COLOR + 13; //User List Background Color
-			else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 147))
-				LSG = ID_GO_P4_TEXT_COLOR + 14; //Conference List Background Color
-			else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 166))
-				LSG = ID_GO_P4_TEXT_COLOR + 15; //Command List Background Color
-			else if (UO->GumpPixelsInXY(0x00D0, posX, posY + 192))
-				LSG = ID_GO_P4_TEXT_FONT; //Chat font
-		}
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
+		else if (UO->GumpPixelsInXY(0x00D2, 300, 90))
+			LSG = ID_GO_P4_TEXT_COLOR + 11; //Text Output Background Color
+		else if (UO->GumpPixelsInXY(0x00D2, 300, 109))
+			LSG = ID_GO_P4_TEXT_COLOR + 12; //Text Input Background Color
+		else if (UO->GumpPixelsInXY(0x00D2, 300, 128))
+			LSG = ID_GO_P4_TEXT_COLOR + 13; //User List Background Color
+		else if (UO->GumpPixelsInXY(0x00D2, 300, 147))
+			LSG = ID_GO_P4_TEXT_COLOR + 14; //Conference List Background Color
+		else if (UO->GumpPixelsInXY(0x00D2, 300, 166))
+			LSG = ID_GO_P4_TEXT_COLOR + 15; //Command List Background Color
+		else if (UO->GumpPixelsInXY(0x00D0, 300, 192))
+			LSG = ID_GO_P4_TEXT_FONT; //Chat font
 
 		return LSG;
 	}
@@ -1601,13 +1446,13 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 	return 0;
 }
 //----------------------------------------------------------------------------
-int TGumpOptions::DrawPage5(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY)
+int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 {
 	const int maxMacroDraw = 7;
 
-	int captionY = posY + 22;
-	posY = captionY + 38;
-	posX += 30;
+	int captionY = 22;
+	int posY = captionY + 38;
+	int posX = 30;
 
 	//Macro Options
 	if (mode)
@@ -1625,82 +1470,82 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 			key = m_MacroPointer->Key;
 		}
 
-		m_TexturePage5[0].Draw(posX + 84, captionY); //"Macro Options"
+		m_TexturePage5[0].Draw(114, 22); //"Macro Options"
 		
 		//Add button
 		WORD gumpID = 0x099C;
-		if (CanPressedButton == ID_GO_P5_BUTTON_ADD)
+		if (g_GumpPressedElement == ID_GO_P5_BUTTON_ADD)
 			gumpID++;
-		else if (CanSelectedButton == ID_GO_P5_BUTTON_ADD)
+		else if (g_GumpSelectElement == ID_GO_P5_BUTTON_ADD)
 			gumpID = 0x099E;
 
-		UO->DrawGump(gumpID, 0, posX + 152, posY);
+		UO->DrawGump(gumpID, 0, posX + 152, 60);
 		
 		//Delete button
-		if (CanPressedButton == ID_GO_P5_BUTTON_DELETE)
+		if (g_GumpPressedElement == ID_GO_P5_BUTTON_DELETE)
 			gumpID = 0x09A0;
 		else
-			gumpID = 0x099F + (int)((CanSelectedButton == ID_GO_P5_BUTTON_DELETE) ? 2 : 0);
+			gumpID = 0x099F + (int)((g_GumpSelectElement == ID_GO_P5_BUTTON_DELETE) ? 2 : 0);
 
-		UO->DrawGump(gumpID, 0, posX + 205, posY);
+		UO->DrawGump(gumpID, 0, posX + 205, 60);
 		
 		//Preveous button
-		if (CanPressedButton == ID_GO_P5_BUTTON_PREVEOUS)
+		if (g_GumpPressedElement == ID_GO_P5_BUTTON_PREVEOUS)
 			gumpID = 0x09A3;
 		else
-			gumpID = 0x09A2 + (int)((CanSelectedButton == ID_GO_P5_BUTTON_PREVEOUS) ? 2 : 0);
+			gumpID = 0x09A2 + (int)((g_GumpSelectElement == ID_GO_P5_BUTTON_PREVEOUS) ? 2 : 0);
 
-		UO->DrawGump(gumpID, 0, posX + 273, posY);
+		UO->DrawGump(gumpID, 0, posX + 273, 60);
 		
 		//Next button
-		if (CanPressedButton == ID_GO_P5_BUTTON_NEXT)
+		if (g_GumpPressedElement == ID_GO_P5_BUTTON_NEXT)
 			gumpID = 0x09A6;
 		else
-			gumpID = 0x09A5 + (int)((CanSelectedButton == ID_GO_P5_BUTTON_NEXT) ? 2 : 0);
+			gumpID = 0x09A5 + (int)((g_GumpSelectElement == ID_GO_P5_BUTTON_NEXT) ? 2 : 0);
 
-		UO->DrawGump(gumpID, 0, posX + 357, posY);
+		UO->DrawGump(gumpID, 0, posX + 357, 60);
 		
-		m_TexturePage5[1].Draw(posX + 134, posY + 22); //"Keystroke"
+		m_TexturePage5[1].Draw(posX + 134, 82); //"Keystroke"
 		
 		//KeyBox
-		UO->DrawGump(0x098B, 0, posX + 133, posY + 52);
-		TextEntryMacro->DrawA(1, 0x0386, posX + 137, posY + 57);
+		UO->DrawGump(0x098B, 0, posX + 133, 112);
+		TextEntryMacro->DrawA(1, 0x0386, posX + 137, 117);
 		
-		m_TexturePage5[2].Draw(posX + 200, posY + 51); //"Key"
+		m_TexturePage5[2].Draw(posX + 200, 111); //"Key"
 		
 		//Shift checkbox
 		if (shift)
 			gumpID = 0x0869;
 		else
-			gumpID = 0x0867 + (int)(CanSelectedButton == ID_GO_P5_BUTTON_SHIFT);
+			gumpID = 0x0867 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_SHIFT);
 
-		UO->DrawGump(gumpID, 0, posX + 248, posY + 19);
+		UO->DrawGump(gumpID, 0, posX + 248, 79);
 		
-		m_TexturePage5[3].Draw(posX + 280, posY + 22); //"Shift"
+		m_TexturePage5[3].Draw(posX + 280, 82); //"Shift"
 		
 		//Alt checkbox
 		if (alt)
 			gumpID = 0x0869;
 		else
-			gumpID = 0x0867 + (int)(CanSelectedButton == ID_GO_P5_BUTTON_ALT);
+			gumpID = 0x0867 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_ALT);
 
-		UO->DrawGump(gumpID, 0, posX + 248, posY + 47);
+		UO->DrawGump(gumpID, 0, posX + 248, 107);
 		
-		m_TexturePage5[4].Draw(posX + 280, posY + 51); //"Alt"
+		m_TexturePage5[4].Draw(posX + 280, 111); //"Alt"
 		
 		//Ctrl checkbox
 		if (ctrl)
 			gumpID = 0x0869;
 		else
-			gumpID = 0x0867 + (int)(CanSelectedButton == ID_GO_P5_BUTTON_CTRL);
+			gumpID = 0x0867 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_CTRL);
 
-		UO->DrawGump(gumpID, 0, posX + 248, posY + 75);
+		UO->DrawGump(gumpID, 0, posX + 248, 135);
 		
-		m_TexturePage5[5].Draw(posX + 280, posY + 80); //"Ctrl"
+		m_TexturePage5[5].Draw(posX + 280, 140); //"Ctrl"
 		
 		posX += 134;
 
-		m_TexturePage5[6].Draw(posX, posY + 103); //"Actions"
+		m_TexturePage5[6].Draw(posX, 163); //"Actions"
 		
 		int boxPosY = posY + 127;
 		int arrowPosY = posY + 133;
@@ -1710,7 +1555,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		if (obj != NULL)
 		{
 			if (obj->m_Prev != NULL)
-				UO->DrawGump(0x0983 + (int)(CanSelectedButton == ID_GO_P5_BUTTON_UP), 0, posX + 292, posY + 113);
+				UO->DrawGump(0x0983 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_UP), 0, posX + 292, posY + 113);
 			
 			int macroCount = 0;
 
@@ -1754,7 +1599,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 			if (macroCount >= maxMacroDraw)
 			{
 				drawEmptyBox = false;
-				UO->DrawGump(0x0985 + (int)(CanSelectedButton == ID_GO_P5_BUTTON_DOWN), 0, posX + 292, boxPosY);
+				UO->DrawGump(0x0985 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_DOWN), 0, posX + 292, boxPosY);
 			}
 			else if (obj->Code == MC_NONE)
 				drawEmptyBox = false;
@@ -1806,9 +1651,9 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 
 				if (textIndex < m_MacroListCount)
 				{
-					if (CanSelectedButton >= ID_GO_P5_SELECTION)
+					if (g_GumpSelectElement >= ID_GO_P5_SELECTION)
 					{
-						if (textNameIndex == (CanSelectedButton - ID_GO_P5_SELECTION))
+						if (textNameIndex == (g_GumpSelectElement - ID_GO_P5_SELECTION))
 							g_GL.DrawPolygone(posX + 4, itemPosY, 150, 14);
 					}
 
@@ -1842,9 +1687,6 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 	}
 	else
 	{
-		if (g_LastSelectedGump != index)
-			return 0;
-
 		int LSG = 0;
 		
 		if (UO->GumpPixelsInXY(0x099C, posX + 152, posY))
@@ -1951,115 +1793,93 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 			}
 		}
 
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
-
 		return LSG;
 	}
 
 	return 0;
 }
 //----------------------------------------------------------------------------
-int TGumpOptions::DrawPage6(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY)
+int TGumpOptions::DrawPage6(bool &mode, DWORD &index)
 {
 	//Interface
 	if (mode)
 	{
 		//UO->DrawUnicodeFont(0, L"Interface", g_OptionsTextColor, posX + 276, posY + 22);
-		m_TexturePage6[0].Draw(posX + 84, posY + 22);
+		m_TexturePage6[0].Draw(84, 22);
 		
 		//UO->DrawUnicodeFont(0, L"These options affect your interface.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
-		m_TexturePage6[1].Draw(posX + 64, posY + 44);
+		m_TexturePage6[1].Draw(64, 44);
 		
-		posY += 90;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.EnablePathfind, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.EnablePathfind, 0, 64, 90);
 		//UO->DrawUnicodeFont(0, L"Enable pathfinding with double-right-click", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage6[2].Draw(posX + 86, posY);
+		m_TexturePage6[2].Draw(86, 90);
 		
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.HoldTabForCombat, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.HoldTabForCombat, 0, 64, 110);
 		//UO->DrawUnicodeFont(0, L"Hold down TAB key for combat, instead of tapping it to toggle combat mode", g_OptionsTextColor, posX + 86, posY, 450);
-		m_TexturePage6[3].Draw(posX + 86, posY);
+		m_TexturePage6[3].Draw(86, 110);
 		
-		posY += 36;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.OffsetInterfaceWindows, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.OffsetInterfaceWindows, 0, 64, 146);
 		//UO->DrawUnicodeFont(0, L"Offset interface windows rather than perfectly stacking them", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage6[4].Draw(posX + 86, posY);
+		m_TexturePage6[4].Draw(86, 146);
 		
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.AutoArrange, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.AutoArrange, 0, 64, 166);
 		//UO->DrawUnicodeFont(0, L"Automatically arrange minimized windows", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage6[5].Draw(posX + 86, posY);
+		m_TexturePage6[5].Draw(86, 166);
 		
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.AlwaysRun, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.AlwaysRun, 0, 64, 186);
 		//UO->DrawUnicodeFont(0, L"Your character will always run if this is checked", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage6[6].Draw(posX + 86, posY);
+		m_TexturePage6[6].Draw(86, 186);
 		
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DisableMenubar, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DisableMenubar, 0, 64, 206);
 		//UO->DrawUnicodeFont(0, L"Disable the Menu Bar", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage6[7].Draw(posX + 86, posY);
+		m_TexturePage6[7].Draw(86, 206);
 
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GrayOutOfRangeObjects, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GrayOutOfRangeObjects, 0, 64, 226);
 		//UO->DrawUnicodeFont(0, L"Gray out of range objects", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage6[8].Draw(posX + 86, posY);
+		m_TexturePage6[8].Draw(86, 226);
 
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DisableNewTargetSystem, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DisableNewTargetSystem, 0, 64, 246);
 		//UO->DrawUnicodeFont(0, L"Disable New Target System", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage6[9].Draw(posX + 86, posY);
+		m_TexturePage6[9].Draw(86, 246);
 
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ObjectHandles, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ObjectHandles, 0, 64, 266);
 		//UO->DrawUnicodeFont(0, L"Object Handles", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage6[10].Draw(posX + 86, posY);
+		m_TexturePage6[10].Draw(86, 266);
 		
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetReduceFPSUnactiveWindow(), 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetReduceFPSUnactiveWindow(), 0, 64, 286);
 		//UO->DrawUnicodeFont(0, L"Reduce FPS when Window is Unactive", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage6[11].Draw(posX + 86, posY);
+		m_TexturePage6[11].Draw(86, 286);
 
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ItemPropertiesIcon, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ItemPropertiesIcon, 0, 64, 306);
 		//UO->DrawUnicodeFont(0, L"Display Item Properties Icon", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage6[12].Draw(posX + 86, posY);
+		m_TexturePage6[12].Draw(86, 306);
 	}
 	else
 	{
-		if (g_LastSelectedGump != index)
-			return 0;
-
 		int LSG = 0;
 		
-		posX += 64;
-
-		if (UO->GumpPixelsInXY(0x00D2, posX, posY + 90))
+		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P6_ENABLE_PATHFINDING; //Enable pathfinding with double-right-click
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 110))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 110))
 			LSG = ID_GO_P6_HOLD_TAB_FOR_COMBAT; //Hold down TAB key for combat, instead of tapping it to toggle combat mode
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 146))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 146))
 			LSG = ID_GO_P6_OFFSET_INTERFACE_WINDOWS; //Offset interface windows rather than perfectly stacking them
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 166))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 166))
 			LSG = ID_GO_P6_AUTO_ARRANGE_MINIMIZED_WINDOWS; //Automatically arrange minimized windows
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 186))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 186))
 			LSG = ID_GO_P6_ALWAYS_RUN; //Your character will always run if this is checked
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 206))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 206))
 			LSG = ID_GO_P6_DISABLE_MENUBAR; //Disable the Menu Bar
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 226))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 226))
 			LSG = ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS; //Gray out of range objects
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 246))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 246))
 			LSG = ID_GO_P6_DISABLE_NEW_TARGET_SYSTEM; //Disable New Target System
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 266))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 266))
 			LSG = ID_GO_P6_OBJECT_HANDLES; //Object Handles
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 286))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 286))
 			LSG = ID_GO_P6_REDUCE_FPS_UNACTIVE_WINDOW; //Reduce FPS when Window is Unactive
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 306))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 306))
 			LSG = ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON; //Display Item Properties Icon
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
 
 		return LSG;
 	}
@@ -2067,16 +1887,16 @@ int TGumpOptions::DrawPage6(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 	return 0;
 }
 //----------------------------------------------------------------------------
-int TGumpOptions::DrawPage7(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY)
+int TGumpOptions::DrawPage7(bool &mode, DWORD &index)
 {
 	//Display
 	if (mode)
 	{
-		if (IsPressed)
+		if (g_GumpPressed)
 		{
 			if (g_LastObjectLeftMouseDown == ID_GO_P7_AJUST_LONG_SPEECH) //Adjust how long speech remains on screen slider pressed
 			{
-				int currentX = g_MouseX - posX - 3; //Текущая позиция ползунка
+				int currentX = g_MouseX - (int)g_GumpTranslateX - 3; //Текущая позиция ползунка
 
 				if (currentX < 64)
 					currentX = 64; //Выход за допустимый предел, корректируем на минимум
@@ -2109,207 +1929,157 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		}
 
 		//UO->DrawUnicodeFont(0, L"Display", g_OptionsTextColor, posX + 276, posY + 22);
-		m_TexturePage7[0].Draw(posX + 84, posY + 22);
+		m_TexturePage7[0].Draw(84, 22);
 		
 		//UO->DrawUnicodeFont(0, L"These options affect your display, and adjusting some of them may improve your graphics performance.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
-		m_TexturePage7[1].Draw(posX + 64, posY + 44);
+		m_TexturePage7[1].Draw(64, 44);
 		
-		posY += 90;
 		//UO->DrawUnicodeFont(0, L"Game Play Window Size", g_OptionsTextColor, posX + 64, posY);
-		m_TexturePage7[2].Draw(posX + 64, posY);
+		m_TexturePage7[2].Draw(64, 90);
 		
-		posY += 22;
-		UO->DrawResizepicGump(0x0BB8, posX + 64, posY, 60, 22); //X field
-		FontManager->DrawW(0, L"x", g_OptionsTextColor, posX + 126, posY);
-		UO->DrawResizepicGump(0x0BB8, posX + 139, posY, 60, 22); //Y field
-		
-		posY += 2;
+		UO->DrawResizepicGump(0x0BB8, 64, 112, 60, 22); //X field
+		FontManager->DrawW(0, L"x", g_OptionsTextColor, 126, 112);
+		UO->DrawResizepicGump(0x0BB8, 139, 112, 60, 22); //Y field
 
-		wchar_t text[20] = {0};
+		TextEntryGameSizeX->DrawW(0, g_OptionsTextColor, 68, 114);
 
-		TextEntryGameSizeX->DrawW(0, g_OptionsTextColor, posX + 68, posY);
-
-		TextEntryGameSizeY->DrawW(0, g_OptionsTextColor, posX + 143, posY);
+		TextEntryGameSizeY->DrawW(0, g_OptionsTextColor, 143, 114);
 
 		//UO->DrawUnicodeFont(0, L"Adjust how long speech remains on screen", g_OptionsTextColor, posX + 64, posY + 26);
-		m_TexturePage7[3].Draw(posX + 64, posY + 26);
+		m_TexturePage7[3].Draw(64, 140);
 		
-		posY += 46;
-		UO->DrawGump(0x00D5, 0, posX + 64, posY); //Sphere line gump start
-		UO->DrawGump(0x00D7, 0, posX + 152, posY); //Sphere line gump end
-		UO->DrawGump(0x00D6, 0, posX + 77, posY, 75, 0); //Sphere line gump body
+		UO->DrawGump(0x00D5, 0, 64, 160); //Sphere line gump start
+		UO->DrawGump(0x00D7, 0, 152, 160); //Sphere line gump end
+		UO->DrawGump(0x00D6, 0, 77, 160, 75, 0); //Sphere line gump body
 
 		float ValPer = (g_OptionsConfig.SpeechDelay / 999.0f) * 100.0f;
 		ValPer = (g_SphereListWidth * ValPer) / 100.0f;
 		if (ValPer < 0.0f)
 			ValPer = 0.0f;
-		UO->DrawGump(0x00D8, 0, posX + 64 + (int)ValPer, posY); //Sphere gump
+		UO->DrawGump(0x00D8, 0, 64 + (int)ValPer, 160); //Sphere gump
 
-		swprintf(text, L"%d", g_OptionsConfig.SpeechDelay);
-		FontManager->DrawW(0, text, g_OptionsTextColor, posX + 176, posY - 3);
+		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.SpeechDelay).c_str(), g_OptionsTextColor, 176, 157);
 		
-		posY += 22;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetScaleSpeechDelay(), 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetScaleSpeechDelay(), 0, 64, 182);
 		//UO->DrawUnicodeFont(0, L"Scale speech duration based on length", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[4].Draw(posX + 86, posY);
+		m_TexturePage7[4].Draw(86, 182);
 		
-		int tempY = posY;
-
-		posY += 22;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 204);
 		DWORD clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.SpeechColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 207, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Speech color", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[5].Draw(posX + 86, posY);
+		m_TexturePage7[5].Draw(86, 204);
 		
-		posY += 19;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 223);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.EmoteColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 226, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Emote color", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[6].Draw(posX + 86, posY);
+		m_TexturePage7[6].Draw(86, 223);
 		
-		posY += 19;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 242);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.PartyMessageColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 245, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Party Message color", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[7].Draw(posX + 86, posY);
+		m_TexturePage7[7].Draw(86, 242);
 		
-		posY += 22;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DarkNights, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DarkNights, 0, 64, 264);
 		//UO->DrawUnicodeFont(0, L"Dark Nights", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[12].Draw(posX + 86, posY);
+		m_TexturePage7[12].Draw(86, 264);
 
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ColoredLighting, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ColoredLighting, 0, 64, 284);
 		//UO->DrawUnicodeFont(0, L"Colored Lighting", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[13].Draw(posX + 86, posY);
+		m_TexturePage7[13].Draw(86, 284);
 		
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.StandartCharactersAnimationDelay, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.StandartCharactersAnimationDelay, 0, 64, 304);
 		//UO->DrawUnicodeFont(0, L"Standard characters animation delay", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[14].Draw(posX + 86, posY);
+		m_TexturePage7[14].Draw(86, 304);
 		
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.StandartItemsAnimationDelay, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.StandartItemsAnimationDelay, 0, 64, 324);
 		//UO->DrawUnicodeFont(0, L"Standard items animation delay", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[15].Draw(posX + 86, posY);
+		m_TexturePage7[15].Draw(86, 324);
 
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.LockResizingGameWindow, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.LockResizingGameWindow, 0, 64, 344);
 		//UO->DrawUnicodeFont(0, L"Lock game window resizing", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[16].Draw(posX + 86, posY);
+		m_TexturePage7[16].Draw(86, 344);
 
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.LockGumpsMoving, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.LockGumpsMoving, 0, 64, 364);
 		//UO->DrawUnicodeFont(0, L"Lock gumps moving", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage7[17].Draw(posX + 86, posY);
+		m_TexturePage7[17].Draw(86, 364);
 
 		if (ConnectionManager.ClientVersion >= CV_6000)
 		{
-			posY = tempY;
-			posX += 290;
-		
-			posY += 22;
-			UO->DrawGump(0x00D4, 0, posX + 64, posY);
+			UO->DrawGump(0x00D4, 0, 354, 204);
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.GuildMessageColor);
 			glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-			g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+			g_GL.DrawPolygone(357, 207, 13, 14);
 			glColor3f(1.0f, 1.0f, 1.0f);
 			//UO->DrawUnicodeFont(0, L"Guild Message Color", g_OptionsTextColor, posX + 86, posY);
-			m_TexturePage7[8].Draw(posX + 86, posY);
+			m_TexturePage7[8].Draw(376, 204);
 		
-			posY += 19;
-			UO->DrawGump(0x00D4, 0, posX + 64, posY);
+			UO->DrawGump(0x00D4, 0, 354, 223);
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.AllianceMessageColor);
 			glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-			g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+			g_GL.DrawPolygone(357, 226, 13, 14);
 			glColor3f(1.0f, 1.0f, 1.0f);
 			//UO->DrawUnicodeFont(0, L"Alliance Message Color", g_OptionsTextColor, posX + 86, posY);
-			m_TexturePage7[9].Draw(posX + 86, posY);
+			m_TexturePage7[9].Draw(376, 223);
 			
-			posY += 22;
-			UO->DrawGump(0x00D2 + (int)g_OptionsConfig.IgnoreGuildMessage, 0, posX + 64, posY);
+			UO->DrawGump(0x00D2 + (int)g_OptionsConfig.IgnoreGuildMessage, 0, 354, 245);
 			//UO->DrawUnicodeFont(0, L"Ignore Guild Messages", g_OptionsTextColor, posX + 86, posY);
-			m_TexturePage7[10].Draw(posX + 86, posY);
+			m_TexturePage7[10].Draw(376, 245);
 
-			posY += 20;
-			UO->DrawGump(0x00D2 + (int)g_OptionsConfig.IgnoreAllianceMessage, 0, posX + 64, posY);
+			UO->DrawGump(0x00D2 + (int)g_OptionsConfig.IgnoreAllianceMessage, 0, 354, 265);
 			//UO->DrawUnicodeFont(0, L"Ignore Alliance Messages", g_OptionsTextColor, posX + 86, posY);
-			m_TexturePage7[11].Draw(posX + 86, posY);
+			m_TexturePage7[11].Draw(376, 265);
 		}
 	}
 	else
 	{
-		if (g_LastSelectedGump != index)
-			return 0;
-
 		int LSG = 0;
 		
-		posX += 64;
-
-		if (UO->GumpPixelsInXY(0x00D2, posX, posY + 182))
+		if (UO->GumpPixelsInXY(0x00D2, 64, 182))
 			LSG = ID_GO_P7_SCALE_SPEECH_DURATION; //Scale speech duration based on length
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 204))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 204))
 			LSG = ID_GO_P7_SPEECH_COLOR; //Speech color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 223))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 223))
 			LSG = ID_GO_P7_EMOTE_COLOR; //Emote color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 242))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 242))
 			LSG = ID_GO_P7_PARTY_MESSAGE_COLOR; //Party Message color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 264))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 264))
 			LSG = ID_GO_P7_DARK_NIGHTS; //Dark Nights
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 284))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 284))
 			LSG = ID_GO_P7_COLORED_LIGHTING; //Colored Lighting
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 304))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 304))
 			LSG = ID_GO_P7_CHARACTERS_ANIMATION_DELAY; //Standard characters animation delay
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 324))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 324))
 			LSG = ID_GO_P7_ITEMS_ANIMATION_DELAY; //Standard items animation delay
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 344))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 344))
 			LSG = ID_GO_P7_LOCK_GAME_WINDOW_RESIZING; //Lock game window resizing
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 364))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 364))
 			LSG = ID_GO_P7_LOCK_GUMP_MOVING; //Lock gump moving
-		else
+		else if (UO->PolygonePixelsInXY(64, 160, (int)g_SphereListWidth + 10, 16))
+			LSG = ID_GO_P7_AJUST_LONG_SPEECH; //Adjust how long speech remains on screen
+		else if (UO->PolygonePixelsInXY(64, 112, 60, 22))
+			LSG = ID_GO_P7_GAME_WINDOW_SIZE_X; //Game Play Window Size X
+		else if (UO->PolygonePixelsInXY(139, 112, 60, 22))
+			LSG = ID_GO_P7_GAME_WINDOW_SIZE_Y; //Game Play Window Size Y
+		else if (ConnectionManager.ClientVersion >= CV_6000)
 		{
-			RECT rc = {0, 0, (int)g_SphereListWidth + 10, 16};
-			POINT p = {g_MouseX - posX, g_MouseY - (posY + 160)};
-			if (PtInRect(&rc, p))
-				LSG = ID_GO_P7_AJUST_LONG_SPEECH; //Adjust how long speech remains on screen
-			else
-			{
-				RECT rcf = {0, 0, 60, 22};
-				POINT pf = {g_MouseX - posX, g_MouseY - (posY + 112)};
-				if (PtInRect(&rcf, pf))
-					LSG = ID_GO_P7_GAME_WINDOW_SIZE_X; //Game Play Window Size X
-
-				pf.x = (g_MouseX - (posX + 75));
-				if (PtInRect(&rcf, pf))
-					LSG = ID_GO_P7_GAME_WINDOW_SIZE_Y; //Game Play Window Size Y
-			}
-		}
-
-		if (!LSG && ConnectionManager.ClientVersion >= CV_6000)
-		{
-			posX += 290;
-
-			if (UO->GumpPixelsInXY(0x00D2, posX, posY + 204))
+			if (UO->GumpPixelsInXY(0x00D2, 354, 204))
 				LSG = ID_GO_P7_GUILD_MESSAGE_COLOR; //Guild Message Color
-			else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 223))
+			else if (UO->GumpPixelsInXY(0x00D2, 354, 223))
 				LSG = ID_GO_P7_ALLIANCE_MESSAGE_COLOR; //Alliance Message Color
-			else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 245))
+			else if (UO->GumpPixelsInXY(0x00D2, 354, 245))
 				LSG = ID_GO_P7_IGNORE_GUILD_MESSAGE; //Ignore Guild Messages
-			else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 265))
+			else if (UO->GumpPixelsInXY(0x00D2, 354, 265))
 				LSG = ID_GO_P7_IGNORE_ALLIANCE_MESSAGE; //Ignore Alliance Messages
 		}
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
 
 		return LSG;
 	}
@@ -2317,105 +2087,88 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 	return 0;
 }
 //----------------------------------------------------------------------------
-int TGumpOptions::DrawPage8(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY)
+int TGumpOptions::DrawPage8(bool &mode, DWORD &index)
 {
 	//Reputation System
-
-	const BYTE step = 19;
 
 	if (mode)
 	{
 		//UO->DrawUnicodeFont(0, L"Reputation System", g_OptionsTextColor, posX + 246, posY + 22);
-		m_TexturePage8[0].Draw(posX + 84, posY + 22);
+		m_TexturePage8[0].Draw(84, 22);
 		
 		//UO->DrawUnicodeFont(0, L"These settings affect the reputation system, which is Ultima Online's system for controlling antisocial behavior.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
-		m_TexturePage8[1].Draw(posX + 64, posY + 44);
+		m_TexturePage8[1].Draw(64, 44);
 		
-		posY += 90;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 90);
 		DWORD clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.InnocentColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 93, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Innocent highlight color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage8[2].Draw(posX + 88, posY);
+		m_TexturePage8[2].Draw(88, 90);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 109);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.FriendlyColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 112, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Friendly guilds highlight color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage8[3].Draw(posX + 88, posY);
+		m_TexturePage8[3].Draw(88, 109);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 128);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.SomeoneColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 131, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Someone that can be attacked color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage8[4].Draw(posX + 88, posY);
+		m_TexturePage8[4].Draw(88, 128);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 147);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.CriminalColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 150, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Criminal highlight color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage8[5].Draw(posX + 88, posY);
+		m_TexturePage8[5].Draw(88, 147);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 166);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.EnemyColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 169, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Enemy guildmembers color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage8[6].Draw(posX + 88, posY);
+		m_TexturePage8[6].Draw(88, 166);
 		
-		posY += step;
-		UO->DrawGump(0x00D4, 0, posX + 64, posY);
+		UO->DrawGump(0x00D4, 0, 64, 185);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.MurdererColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(posX + 67, posY + 3, 13, 14);
+		g_GL.DrawPolygone(67, 188, 13, 14);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		//UO->DrawUnicodeFont(0, L"Murderer highlight color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage8[7].Draw(posX + 88, posY);
+		m_TexturePage8[7].Draw(88, 185);
 		
-		posY += step;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.CriminalActionsQuery, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.CriminalActionsQuery, 0, 64, 204);
 		//UO->DrawUnicodeFont(0, L"Query before performing criminal actions", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage8[8].Draw(posX + 88, posY);
+		m_TexturePage8[8].Draw(88, 204);
 	}
 	else
 	{
-		if (g_LastSelectedGump != index)
-			return 0;
-
 		int LSG = 0;
 		
-		posX += 64;
-
-		if (UO->GumpPixelsInXY(0x00D2, posX, posY + 90))
+		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P8_INNOCENT_COLOR; //Innocent highlight color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 109))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 109))
 			LSG = ID_GO_P8_FRIENDLY_COLOR; //Friendly guilds highlight color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 128))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 128))
 			LSG = ID_GO_P8_SOMEONE_COLOR; //Someone that can be attacked color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 147))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 147))
 			LSG = ID_GO_P8_CRIMINAL_COLOR; //Criminal highlight color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 166))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 166))
 			LSG = ID_GO_P8_ENEMY_COLOR; //Enemy guildmembers color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 185))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 185))
 			LSG = ID_GO_P8_MURDERER_COLOR; //Murderer highlight color
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 204))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 204))
 			LSG = ID_GO_P8_QUERY_CRIMINAL_ACTIONS; //Query before performing criminal actions
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
 
 		return LSG;
 	}
@@ -2423,17 +2176,16 @@ int TGumpOptions::DrawPage8(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 	return 0;
 }
 //----------------------------------------------------------------------------
-int TGumpOptions::DrawPage9(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY)
+int TGumpOptions::DrawPage9(bool &mode, DWORD &index)
 {
 	//Miscellaneous
 	if (mode)
 	{
-		
-		if (IsPressed)
+		if (g_GumpPressed)
 		{
 			if (g_LastObjectLeftMouseDown == ID_GO_P9_TRANSPARENCY_RADIUS) //Set radius of transparency circle slider pressed
 			{
-				int currentX = g_MouseX - posX - 3; //Текущая позиция ползунка
+				int currentX = g_MouseX - (int)g_GumpTranslateX - 3; //Текущая позиция ползунка
 
 				if (currentX < 64)
 					currentX = 64; //Выход за допустимый предел, корректируем на минимум
@@ -2462,7 +2214,7 @@ int TGumpOptions::DrawPage9(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 			}
 			else if (g_LastObjectLeftMouseDown == ID_GO_P9_INFORM_SKILLS) //Inform me when my skills improve this much (in tenths) slider pressed
 			{
-				int currentX = g_MouseX - posX - 3; //Текущая позиция ползунка
+				int currentX = g_MouseX - (int)g_GumpTranslateX - 3; //Текущая позиция ползунка
 
 				if (currentX < 64)
 					currentX = 64; //Выход за допустимый предел, корректируем на минимум
@@ -2492,113 +2244,86 @@ int TGumpOptions::DrawPage9(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 		}
 
 		//UO->DrawUnicodeFont(0, L"Miscellaneous", g_OptionsTextColor, posX + 266, posY + 22);
-		m_TexturePage9[0].Draw(posX + 84, posY + 22);
+		m_TexturePage9[0].Draw(84, 22);
 		
 		//UO->DrawUnicodeFont(0, L"Miscellaneous options.", g_OptionsTextColor, posX + 64, posY + 44);
-		m_TexturePage9[1].Draw(posX + 64, posY + 44);
+		m_TexturePage9[1].Draw(64, 44);
 		
-		int posYStart = posY;
-
-		posY += 90;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ShowIncomingNames, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ShowIncomingNames, 0, 64, 90);
 		//UO->DrawUnicodeFont(0, L"Show Names of Approaching Players", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage9[2].Draw(posX + 88, posY);
+		m_TexturePage9[2].Draw(88, 90);
 
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.UseCircleTrans, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.UseCircleTrans, 0, 64, 110);
 		//UO->DrawUnicodeFont(0, L"Use circle of transparency", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage9[3].Draw(posX + 88, posY);
+		m_TexturePage9[3].Draw(88, 110);
 		
 		//UO->DrawUnicodeFont(0, L"Set radius of transparency circle", g_OptionsTextColor, posX + 64, posY + 22);
-		m_TexturePage9[4].Draw(posX + 64, posY + 22);
+		m_TexturePage9[4].Draw(64, 132);
 		
-		posY += 43;
-		UO->DrawGump(0x00D5, 0, posX + 64, posY); //Sphere line gump start
-		UO->DrawGump(0x00D7, 0, posX + 152, posY); //Sphere line gump end
-		UO->DrawGump(0x00D6, 0, posX + 77, posY, 75, 0); //Sphere line gump body
+		UO->DrawGump(0x00D5, 0, 64, 153); //Sphere line gump start
+		UO->DrawGump(0x00D7, 0, 152, 153); //Sphere line gump end
+		UO->DrawGump(0x00D6, 0, 77, 153, 75, 0); //Sphere line gump body
 
 		float ValPer = (g_OptionsConfig.CircleTransRadius / 200.0f) * 100.0f;
 		ValPer = (g_SphereListWidth * ValPer) / 100.0f;
 		if (ValPer < 0.0f)
 			ValPer = 0.0f;
-		UO->DrawGump(0x00D8, 0, posX + 64 + (int)ValPer, posY); //Sphere gump
+		UO->DrawGump(0x00D8, 0, 64 + (int)ValPer, 153); //Sphere gump
 
-		wchar_t text[20] = {0};
-		swprintf(text, L"%d", g_OptionsConfig.CircleTransRadius);
-		FontManager->DrawW(0, text, g_OptionsTextColor, posX + 176, posY - 3);
+		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.CircleTransRadius).c_str(), g_OptionsTextColor, 176, 150);
 		
 
 
 		//UO->DrawUnicodeFont(0, L"Inform me when my skills improve this much (in tenths)", g_OptionsTextColor, posX + 64, posY + 22);
-		m_TexturePage9[5].Draw(posX + 64, posY + 22);
+		m_TexturePage9[5].Draw(64, 175);
 		
-		posY += 43;
-		UO->DrawGump(0x00D5, 0, posX + 64, posY); //Sphere line gump start
-		UO->DrawGump(0x00D7, 0, posX + 152, posY); //Sphere line gump end
-		UO->DrawGump(0x00D6, 0, posX + 77, posY, 75, 0); //Sphere line gump body
+		UO->DrawGump(0x00D5, 0, 64, 196); //Sphere line gump start
+		UO->DrawGump(0x00D7, 0, 152, 196); //Sphere line gump end
+		UO->DrawGump(0x00D6, 0, 77, 196, 75, 0); //Sphere line gump body
 		
 		ValPer = (g_OptionsConfig.SkillReport / 100.0f) * 100.0f;
 		ValPer = (g_SphereListWidth * ValPer) / 100.0f;
 		if (ValPer < 0)
 			ValPer = 0;
-		UO->DrawGump(0x00D8, 0, posX + 64 + (int)ValPer, posY); //Sphere gump
+		UO->DrawGump(0x00D8, 0, 64 + (int)ValPer, 196); //Sphere gump
 
-		swprintf(text, L"%d", g_OptionsConfig.SkillReport);
-		FontManager->DrawW(0, text, g_OptionsTextColor, posX + 176, posY - 3);
+		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.SkillReport).c_str(), g_OptionsTextColor, 176, 193);
 		
 		
 
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.StatReport, 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.StatReport, 0, 64, 216);
 		//UO->DrawUnicodeFont(0, L"Inform me of increases in strength, dexterity, and intelligence.", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage9[6].Draw(posX + 88, posY);
+		m_TexturePage9[6].Draw(88, 216);
 
-		posY += 20;
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetConsoleNeedEnter(), 0, posX + 64, posY);
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetConsoleNeedEnter(), 0, 64, 236);
 		//UO->DrawUnicodeFont(0, L"Console need press 'Enter' to activate it.", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage9[7].Draw(posX + 88, posY);
+		m_TexturePage9[7].Draw(88, 236);
 		
 
 
 
-		posY += 26;
-		UO->DrawGump(0x00D0, 0, posX + 64, posY);
+		UO->DrawGump(0x00D0, 0, 64, 262);
 		//UO->DrawUnicodeFont(0, L"Set the font for speech", g_OptionsTextColor, posX + 64, posY + 22);
-		m_TexturePage9[8].Draw(posX + 88, posY);
+		m_TexturePage9[8].Draw(88, 262);
 	}
 	else
 	{
-		if (g_LastSelectedGump != index)
-			return 0;
-
 		int LSG = 0;
 		
-		posX += 64;
-
-		if (UO->GumpPixelsInXY(0x00D2, posX, posY + 90))
+		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P9_SHOW_APPROACHING_NAMES; //Show Names of Approaching Players
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 110))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 110))
 			LSG = ID_GO_P9_USE_CIRCLE_OF_TRANSPARENCY; //Use circle of transparency
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 216))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 216))
 			LSG = ID_GO_P9_INFORM_STATS; //Inform me of increases in strength, dexterity, and intelligence.
-		else if (UO->GumpPixelsInXY(0x00D2, posX, posY + 236))
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 236))
 			LSG = ID_GO_P9_CONSOLE_ENTER; //Console need press 'Enter' to activate it.
-		else if (UO->GumpPixelsInXY(0x00D0, posX, posY + 262))
+		else if (UO->GumpPixelsInXY(0x00D0, 64, 262))
 			LSG = ID_GO_P9_SPEECH_FONT; //Set the font for speech
-		else
-		{
-			RECT rc = {0, 0, (int)g_SphereListWidth + 10, 16};
-			POINT p = {g_MouseX - posX, g_MouseY - (posY + 145)};
-			if (PtInRect(&rc, p))
-				LSG = ID_GO_P9_TRANSPARENCY_RADIUS; //Set radius of transparency circle
-
-			p.y = g_MouseY - (posY + 188);
-			if (PtInRect(&rc, p))
-				LSG = ID_GO_P9_INFORM_SKILLS; //Inform me when my skills improve this much (in tenths)
-		}
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
+		else if (UO->PolygonePixelsInXY(64, 145, (int)g_SphereListWidth + 10, 16))
+			LSG = ID_GO_P9_TRANSPARENCY_RADIUS; //Set radius of transparency circle
+		else if (UO->PolygonePixelsInXY(64, 188, (int)g_SphereListWidth + 10, 16))
+			LSG = ID_GO_P9_INFORM_SKILLS; //Inform me when my skills improve this much (in tenths)
 
 		return LSG;
 	}
@@ -2606,7 +2331,7 @@ int TGumpOptions::DrawPage9(bool &mode, DWORD &index, bool &IsPressed, int &CanS
 	return 0;
 }
 //----------------------------------------------------------------------------
-int TGumpOptions::DrawPage10(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY)
+int TGumpOptions::DrawPage10(bool &mode, DWORD &index)
 {
 	//Filter Options
 	if (mode)
@@ -2759,12 +2484,8 @@ void TGumpOptions::OnLeftMouseUp()
 	{
 		m_Page = 6;
 
-		char buf[20] = {0};
-		sprintf(buf, "%d", g_GameWindowWidth);
-		TextEntryGameSizeX->SetText(buf);
-
-		sprintf(buf, "%d", g_GameWindowHeight);
-		TextEntryGameSizeY->SetText(buf);
+		TextEntryGameSizeX->SetText(std::to_string(g_GameWindowWidth));
+		TextEntryGameSizeY->SetText(std::to_string(g_GameWindowHeight));
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GO_PAGE_7)
 		m_Page = 7;

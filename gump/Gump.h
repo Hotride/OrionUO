@@ -38,7 +38,7 @@ protected:
 	bool m_Blocked;
 	bool m_LockMoving;
 
-	void CalculateGumpState();
+	virtual void CalculateGumpState();
 public:
 	TGump(GUMP_TYPE type, DWORD serial, short x, short y);
 	virtual ~TGump();
@@ -67,7 +67,7 @@ public:
 	virtual bool CanBeDisplayed() {return true;}
 	bool CanBeMoved();
 
-	void DrawLocker(int &x, int &y);
+	void DrawLocker();
 
 	virtual int Draw(bool &mode) {return 0;}
 

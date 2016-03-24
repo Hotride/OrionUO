@@ -245,7 +245,7 @@ void TGumpJournal::GenerateFrame(int posX, int posY)
 		UO->DrawGump(gumpID, 0, 137, height + 66); //Resize
 
 
-		g_GL.Sicceor((int)g_GumpTranslateX + 38, (int)g_GumpTranslateY + 70, 214, height - 50);
+		g_GL.Scissor((int)g_GumpTranslateX + 38, (int)g_GumpTranslateY + 70, 214, height - 50);
 
 		//Отрисовка сообщений систем чата
 		int textOffsY = height + 16;
@@ -402,8 +402,6 @@ int TGumpJournal::Draw(bool &mode)
 	
 	int height = m_Height;
 
-	bool needUpdateFrame = false;
-
 	if (m_HeightBuffer)
 	{
 		height += (g_MouseY - m_HeightBuffer);
@@ -417,7 +415,7 @@ int TGumpJournal::Draw(bool &mode)
 			height = buf;
 
 		if (mode)
-			needUpdateFrame = true;
+			m_FrameCreated = false;
 	}
 
 	DWORD ticks = GetTickCount();
@@ -479,7 +477,7 @@ int TGumpJournal::Draw(bool &mode)
 				Journal->SelectionIndex = 1;
 
 			if (mode)
-				needUpdateFrame = true;
+				m_FrameCreated = false;
 		}
 		else if (Journal->SelectionIndex)
 		{
@@ -502,13 +500,13 @@ int TGumpJournal::Draw(bool &mode)
 			}
 
 			if (mode)
-				needUpdateFrame = true;
+				m_FrameCreated = false;
 		}
 	}
 
 	if (mode)
 	{
-		if (needUpdateFrame || !m_FrameCreated || (g_GumpSelectElement && !m_HeightBuffer) || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
+		if (!m_FrameCreated || (g_GumpSelectElement && !m_HeightBuffer) || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
 			GenerateFrame(0, 0);
 		else if (m_FrameRedraw)
 		{
@@ -527,8 +525,7 @@ int TGumpJournal::Draw(bool &mode)
 			return 0;
 		}
 
-		int lx = 0;
-		DrawLocker(lx, lx);
+		DrawLocker();
 
 		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}

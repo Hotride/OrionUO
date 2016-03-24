@@ -118,25 +118,27 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	TGameItem *spellbook = World->FindWorldItem(Serial);
+	TGameItem *spellbook = World->FindWorldItem(m_Serial);
 	if (spellbook == NULL)
 		return; //Если нет спеллбуки - уходим от сюда
 
-	if (Minimized) //Свернута с маленькую книжечку
+	CalculateGumpState();
+
+	if (m_Minimized) //Свернута с маленькую книжечку
 	{
 		glNewList((GLuint)this, GL_COMPILE);
 
-			UO->DrawGump(0x08BA, 0, posX, posY); //Мини-гамп спеллбуки
+			UO->DrawGump(0x08BA, 0, 0, 0); //Мини-гамп спеллбуки
 
 		glEndList();
 
-		FrameCreated = true;
+		m_FrameCreated = true;
 
 		return; //Нам больше нечего отрисовывать
 	}
@@ -166,45 +168,37 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 	if (m_Page < 1)
 		m_Page = 1; //На всякий случай исправим текущую страницу
 
-	if (FrameCreated)
-		glDeleteLists((GLuint)this, 1);
-
 	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawGump(0x08AC, 0, posX, posY); //Гамп книги
+		UO->DrawGump(0x08AC, 0, 0, 0); //Гамп книги
 
 		if (m_Page != 1)
-			UO->DrawGump(0x08BB, 0, posX + 50, posY + 8); //Уголок "Назад"
+			UO->DrawGump(0x08BB, 0, 50, 8); //Уголок "Назад"
 
 		if (m_Page != pageCount)
-			UO->DrawGump(0x08BC, 0, posX + 321, posY + 8); //Уголок "Вперед"
+			UO->DrawGump(0x08BC, 0, 321, 8); //Уголок "Вперед"
 
 		//Круги 1-4 (в кружочках внизу)
-		UO->DrawGump(0x08B1, 0, posX + 58, posY + 175);
-		UO->DrawGump(0x08B2, 0, posX + 93, posY + 175);
-		UO->DrawGump(0x08B3, 0, posX + 130, posY + 175);
-		UO->DrawGump(0x08B4, 0, posX + 164, posY + 175);
+		UO->DrawGump(0x08B1, 0, 58, 175);
+		UO->DrawGump(0x08B2, 0, 93, 175);
+		UO->DrawGump(0x08B3, 0, 130, 175);
+		UO->DrawGump(0x08B4, 0, 164, 175);
 		
 		//Круги 5-8 (в кружочках внизу)
-		UO->DrawGump(0x08B5, 0, posX + 227, posY + 175);
-		UO->DrawGump(0x08B6, 0, posX + 260, posY + 175);
-		UO->DrawGump(0x08B7, 0, posX + 297, posY + 175);
-		UO->DrawGump(0x08B8, 0, posX + 332, posY + 175);
+		UO->DrawGump(0x08B5, 0, 227, 175);
+		UO->DrawGump(0x08B6, 0, 260, 175);
+		UO->DrawGump(0x08B7, 0, 297, 175);
+		UO->DrawGump(0x08B8, 0, 332, 175);
 			
 		if (m_Page <= 4) //Оглавление книги
 		{
-			int drawY = posY + 10;
-
-			m_TextIndex.Draw(posX + 106, drawY);
-			m_TextIndex.Draw(posX + 269, drawY);
+			m_TextIndex.Draw(106, 10);
+			m_TextIndex.Draw(269, 10);
 
 			int pageIdx = (m_Page - 1) * 2;
-			drawY += 20;
 
-			m_TextCircle[pageIdx].Draw(posX + 62, drawY);
-			m_TextCircle[pageIdx + 1].Draw(posX + 225, drawY);
-
-			drawY += 22;
+			m_TextCircle[pageIdx].Draw(62, 30);
+			m_TextCircle[pageIdx + 1].Draw(225, 30);
 
 			//Разрисуем названия спеллов
 			for (int i = 0, si1 = 0, si2 = 0; i < 8; i++)
@@ -214,13 +208,13 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 				//Для левой страницы
 				if (spells[offs])
 				{
-					m_TextSpell[offs].Draw(posX + 62, drawY + (si1 * 15));
+					m_TextSpell[offs].Draw(62, 52 + (si1 * 15));
 
 					//Если совпало с последним использованным заклинанием - отобразим закладку
 					if (offs == g_LastSpellIndex - 1)
 					{
-						UO->DrawGump(0x08AD, 0, posX + 184, posY + 2);
-						UO->DrawGump(0x08AF, 0, posX + 184, drawY + (si1 * 15));
+						UO->DrawGump(0x08AD, 0, 184, 2);
+						UO->DrawGump(0x08AF, 0, 184, 52 + (si1 * 15));
 					}
 
 					si1++;
@@ -231,13 +225,13 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 				//Для правой страницы
 				if (spells[offs])
 				{
-					m_TextSpell[offs].Draw(posX + 225, drawY + (si2 * 15));
+					m_TextSpell[offs].Draw(225, 52 + (si2 * 15));
 
 					//Если совпало с последним использованным заклинанием - отобразим закладку
 					if (offs == g_LastSpellIndex - 1)
 					{
-						UO->DrawGump(0x08AE, 0, posX + 203, posY + 3);
-						UO->DrawGump(0x08B0, 0, posX + 203, drawY + (si2 * 15));
+						UO->DrawGump(0x08AE, 0, 203, 3);
+						UO->DrawGump(0x08B0, 0, 203, 52 + (si2 * 15));
 					}
 
 					si2++;
@@ -274,7 +268,7 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 				{
 					glEndList();
 
-					FrameCreated = true;
+					m_FrameCreated = true;
 
 					return; //Если индексы не совпадают - ошибка, выходим
 				}
@@ -283,7 +277,7 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 			{
 				glEndList();
 
-				FrameCreated = true;
+				m_FrameCreated = true;
 
 				return; //Или же, если счетчик не равен инжекс + 1 - ошибка, выходим
 			}
@@ -292,33 +286,33 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 			{
 				glEndList();
 
-				FrameCreated = true;
+				m_FrameCreated = true;
 
 				return; //Ошибка. Достигли конца списка заклинаний, выходим
 			}
 
 			//Название круга
-			m_TextCircle[(SI / 8)].Draw(posX + 87, posY + 10);
+			m_TextCircle[(SI / 8)].Draw(87, 10);
 
 			//Иконка заклинания
-			UO->DrawGump(0x08C0 + SI, 0, posX + 62, posY + 40);
+			UO->DrawGump(0x08C0 + SI, 0, 62, 40);
 
 			WORD id = (0x2080 + SI); //Для названия заклинания
 			TTextTexture th;
 			FontManager->GenerateA(6, th, UO->m_StaticData[id / 32].Tiles[id % 32].Name, 0x0288, 80);
-			th.Draw(posX + 112, posY + 34);
+			th.Draw(112, 34);
 
 			//Аббревиатура заклинания
 			int addY = 26;
 			if (th.Height < 24)
 				addY = 31;
-			FontManager->DrawA(8, SPELL_CAST_ABBREVIATURE[SI], 0x0288, posX + 112, posY + addY + th.Height);
+			FontManager->DrawA(8, SPELL_CAST_ABBREVIATURE[SI], 0x0288, 112, addY + th.Height);
 			th.Clear();
 
 			//Полоска
-			UO->DrawGump(0x0835, 0, posX + 62, posY + 88, 120, 0);
+			UO->DrawGump(0x0835, 0, 62, 88, 120, 0);
 
-			m_TextReagents.Draw(posX + 62, posY + 92);
+			m_TextReagents.Draw(62, 92);
 
 			IFOR(i, 0, 4) //Отобразим реагенты, необходимые на каст
 			{
@@ -327,14 +321,14 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 				if (!id)
 					break; //Если рега нет - выходим, дальше ничего не будет
 
-				m_TextReagent[GetReagentIndex(id)].Draw(posX + 62, posY + 114 + (i * 14));
+				m_TextReagent[GetReagentIndex(id)].Draw(62, 114 + (i * 14));
 			}
 
 			//Если это последнее скастованное заклинание - отображаем закладку
 			if (SI == g_LastSpellIndex - 1)
 			{
-				UO->DrawGump(0x08AD, 0, posX + 184, posY + 2);
-				UO->DrawGump(0x08AF, 0, posX + 184, posY + 40);
+				UO->DrawGump(0x08AD, 0, 184, 2);
+				UO->DrawGump(0x08AF, 0, 184, 40);
 			}
 
 			//Переходим на следующее заклинание
@@ -350,32 +344,32 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 			{
 				glEndList();
 
-				FrameCreated = true;
+				m_FrameCreated = true;
 
 				return; //Заклинаний больше нет, конец книги достигнут, уходим
 			}
 
 			//Название круга
-			m_TextCircle[(SI / 8)].Draw(posX + 244, posY + 10);
+			m_TextCircle[(SI / 8)].Draw(244, 10);
 
 			//Иконка заклинания
-			UO->DrawGump(0x08C0 + SI, 0, posX + 225, posY + 40);
+			UO->DrawGump(0x08C0 + SI, 0, 225, 40);
 
 			id = (0x2080 + SI); //Для названия заклинания
 			FontManager->GenerateA(6, th, UO->m_StaticData[id / 32].Tiles[id % 32].Name, 0x0288, 80);
-			th.Draw(posX + 275, posY + 34);
+			th.Draw(275, 34);
 
 			//Аббревиатура заклинания
 			addY = 26;
 			if (th.Height < 24)
 				addY = 31;
-			FontManager->DrawA(8, SPELL_CAST_ABBREVIATURE[SI], 0x0288, posX + 275, posY + addY + th.Height);
+			FontManager->DrawA(8, SPELL_CAST_ABBREVIATURE[SI], 0x0288, 275, addY + th.Height);
 			th.Clear();
 
 			//Полоска
-			UO->DrawGump(0x0835, 0, posX + 225, posY + 88, 120, 0);
+			UO->DrawGump(0x0835, 0, 225, 88, 120, 0);
 
-			m_TextReagents.Draw(posX + 225, posY + 92);
+			m_TextReagents.Draw(225, 92);
 
 			IFOR(i, 0, 4) //Пройдемся по всем реагентам
 			{
@@ -384,36 +378,35 @@ void TGumpSpellbook::GenerateFrame(int posX, int posY)
 				if (!id)
 					break; //Если рега нет - выходим, дальше ничего не будет
 
-				m_TextReagent[GetReagentIndex(id)].Draw(posX + 225, posY + 114 + (i * 14));
+				m_TextReagent[GetReagentIndex(id)].Draw(225, 114 + (i * 14));
 			}
 
 			//Если это последнее скастованное заклинание - отображаем закладку
 			if (SI == g_LastSpellIndex - 1)
 			{
-				UO->DrawGump(0x08AE, 0, posX + 203, posY + 3);
-				UO->DrawGump(0x08B0, 0, posX + 203, posY + 40);
+				UO->DrawGump(0x08AE, 0, 203, 3);
+				UO->DrawGump(0x08B0, 0, 203, 40);
 			}
 		}
 
 	glEndList();
 
-	FrameCreated = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpSpellbook::Draw(bool &mode)
 {
-	TGameItem *spellbook = World->FindWorldItem(Serial);
+	TGameItem *spellbook = World->FindWorldItem(m_Serial);
 	if (spellbook == NULL)
 		return 0; //Если нет спеллбуки - уходим от сюда
 
 	//ИД гампа внутри клиента
 	DWORD index = (DWORD)this;
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
+	CalculateGumpState();
 
 	//Нужно вытащить иконку заклинания
-	if (IsPressed && m_Page > 4 && g_LastObjectLeftMouseDown >= ID_GSB_SPELL_ICON_LEFT && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < GetTickCount())))
+	if (g_GumpPressed && m_Page > 4 && g_LastObjectLeftMouseDown >= ID_GSB_SPELL_ICON_LEFT && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < GetTickCount())))
 	{
 		//Создадим новый объект гампа, вычисляем его индекс заклинания
 		if (g_LastObjectLeftMouseDown < ID_GSB_SPELL_ICON_RIGHT)
@@ -430,48 +423,38 @@ int TGumpSpellbook::Draw(bool &mode)
 		CurrentScreen->OnLeftMouseDown();
 	}
 
-	//Выведем координаты (для быстрого доступа)
-	int posX = X;
-	int posY = Y;
-
-	//Если гамп свернут - возьмем соответствующие координаты
-	if (Minimized)
-	{
-		posX = MinimizedX;
-		posY = MinimizedY;
-	}
-
-	//Если гамп захвачен - вычисляем смещение координат
-	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-
-		//Перерисуем гамп
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-
 	if (mode) //Рисование
 	{
 		//Если список отображения не создан
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated)
+			GenerateFrame(0, 0);
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		//Отрисуем гамп
 		glCallList((GLuint)index);
 
-		DrawLocker(posX, posY);
+		DrawLocker();
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
-		if (Minimized) //Если это минимизированная версия гампа
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
+		if (m_Minimized) //Если это минимизированная версия гампа
 		{
-			if (UO->GumpPixelsInXY(0x08BA, posX, posY))
+			if (UO->GumpPixelsInXY(0x08BA, 0, 0))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
 			}
+
+			g_MouseX = oldMouseX;
+			g_MouseY = oldMouseY;
 
 			return 0;
 		}
@@ -502,11 +485,11 @@ int TGumpSpellbook::Draw(bool &mode)
 		if (spellCount % 2)
 			pageCount++; //Фиксим количество (если нечетное)
 
-		if (!Minimized && m_Page < 1)
+		if (m_Page < 1)
 			m_Page = 1; //Фиксим текущую страницу
 
 		//Гамп спеллбуки
-		if (UO->GumpPixelsInXY(0x08AC, posX, posY))
+		if (UO->GumpPixelsInXY(0x08AC, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -521,43 +504,39 @@ int TGumpSpellbook::Draw(bool &mode)
 		//Если имеются предыдущие страницы
 		if (m_Page != 1)
 		{
-			if (UO->GumpPixelsInXY(0x08BB, posX + 50, posY + 8))
+			if (UO->GumpPixelsInXY(0x08BB, 50, 8))
 				LSG = ID_GSB_BUTTON_PREV; //Prev
 		}
 
 		//Если имеются следующие страницы
 		if (m_Page != pageCount)
 		{
-			if (UO->GumpPixelsInXY(0x08BC, posX + 321, posY + 8))
+			if (UO->GumpPixelsInXY(0x08BC, 321, 8))
 				LSG = ID_GSB_BUTTON_NEXT; //Next
 		}
 
-		int checkY = posY + 175;
-
 		//Круги 1-4 (в кружочках внизу)
-		if (UO->GumpPixelsInXY(0x08B1, posX + 58, checkY))
+		if (UO->GumpPixelsInXY(0x08B1, 58, 175))
 			LSG = ID_GSB_BUTTON_CIRCLE_1_2;
-		else if (UO->GumpPixelsInXY(0x08B2, posX + 93, checkY))
+		else if (UO->GumpPixelsInXY(0x08B2, 93, 175))
 			LSG = ID_GSB_BUTTON_CIRCLE_1_2;
-		else if (UO->GumpPixelsInXY(0x08B3, posX + 130, checkY))
+		else if (UO->GumpPixelsInXY(0x08B3, 130, 175))
 			LSG = ID_GSB_BUTTON_CIRCLE_3_4;
-		else if (UO->GumpPixelsInXY(0x08B4, posX + 164, checkY))
+		else if (UO->GumpPixelsInXY(0x08B4, 164, 175))
 			LSG = ID_GSB_BUTTON_CIRCLE_3_4;
 		
 		//Круги 5-8 (в кружочках внизу)
-		else if (UO->GumpPixelsInXY(0x08B5, posX + 227, checkY))
+		else if (UO->GumpPixelsInXY(0x08B5, 227, 175))
 			LSG = ID_GSB_BUTTON_CIRCLE_5_6;
-		else if (UO->GumpPixelsInXY(0x08B6, posX + 260, checkY))
+		else if (UO->GumpPixelsInXY(0x08B6, 260, 175))
 			LSG = ID_GSB_BUTTON_CIRCLE_5_6;
-		else if (UO->GumpPixelsInXY(0x08B7, posX + 297, checkY))
+		else if (UO->GumpPixelsInXY(0x08B7, 297, 175))
 			LSG = ID_GSB_BUTTON_CIRCLE_7_8;
-		else if (UO->GumpPixelsInXY(0x08B8, posX + 332, checkY))
+		else if (UO->GumpPixelsInXY(0x08B8, 332, 175))
 			LSG = ID_GSB_BUTTON_CIRCLE_7_8;
 
 		//Кнопка минимизации гампа
-		RECT rc = {0, 0, 16, 16};
-		POINT p = {g_MouseX - (posX + 6), g_MouseY - (posY + 100)};
-		if (PtInRect(&rc, p))
+		if (UO->PolygonePixelsInXY(6, 100, 16, 16))
 			LSG = ID_GSB_BUTTON_MINIMIZE;
 
 		if (m_Page <= 4) //Если это оглавление книги
@@ -569,8 +548,7 @@ int TGumpSpellbook::Draw(bool &mode)
 
 				if (spells[offs]) //Заклинание левой страницы
 				{
-					POINT p = {g_MouseX - (posX + 62), g_MouseY - (posY + 52 + (si1 * 15))};
-					if (PtInRect(&rc, p))
+					if (UO->PolygonePixelsInXY(62, 52 + (si1 * 15), 100, 16))
 					{
 						LSG = offs + ID_GSB_SPELL_ICON_LEFT;
 						break;
@@ -583,8 +561,7 @@ int TGumpSpellbook::Draw(bool &mode)
 
 				if (spells[offs]) //Заклинание правой страницы
 				{
-					POINT p = {g_MouseX - (posX + 225), g_MouseY - (posY + 52 + (si2 * 15))};
-					if (PtInRect(&rc, p))
+					if (UO->PolygonePixelsInXY(225, 52 + (si2 * 15), 100, 16))
 					{
 						LSG = offs + ID_GSB_SPELL_ICON_RIGHT;
 						break;
@@ -628,6 +605,9 @@ int TGumpSpellbook::Draw(bool &mode)
 					if (LSG != 0)
 						g_LastSelectedObject = LSG;
 
+					g_MouseX = oldMouseX;
+					g_MouseY = oldMouseY;
+
 					return LSG;
 				}
 			}
@@ -636,6 +616,9 @@ int TGumpSpellbook::Draw(bool &mode)
 				//Если счетчик не равен индексу + 1 - ошибка, выходим с сохранением объекта под курсором
 				if (LSG != 0)
 					g_LastSelectedObject = LSG;
+
+				g_MouseX = oldMouseX;
+				g_MouseY = oldMouseY;
 
 				return LSG; //Error...
 			}
@@ -646,11 +629,14 @@ int TGumpSpellbook::Draw(bool &mode)
 				if (LSG != 0)
 					g_LastSelectedObject = LSG;
 
+				g_MouseX = oldMouseX;
+				g_MouseY = oldMouseY;
+
 				return LSG; //Error...
 			}
 
 			//Проверяем гамп иконки заклинания
-			if (UO->GumpPixelsInXY(0x08C0 + SI, posX + 62, posY + 40))
+			if (UO->GumpPixelsInXY(0x08C0 + SI, 62, 40))
 				LSG = ID_GSB_SPELL_ICON_LEFT + SI;
 
 			//Увеличиваем индекс заклинания
@@ -668,11 +654,14 @@ int TGumpSpellbook::Draw(bool &mode)
 				if (LSG != 0)
 					g_LastSelectedObject = LSG;
 
+				g_MouseX = oldMouseX;
+				g_MouseY = oldMouseY;
+
 				return LSG; //End of spellbook
 			}
 
 			//Проверим гамп иконки заклинания
-			if (UO->GumpPixelsInXY(0x08C0 + SI, posX + 225, posY + 40))
+			if (UO->GumpPixelsInXY(0x08C0 + SI, 225, 40))
 				LSG = ID_GSB_SPELL_ICON_RIGHT + SI;
 		}
 
@@ -680,11 +669,14 @@ int TGumpSpellbook::Draw(bool &mode)
 		if (LSG != 0)
 			g_LastSelectedObject = LSG;
 
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(posX, posY, 10, 14))
+		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
 		{
 			g_LastSelectedObject = ID_GSB_LOCK_MOVING;
 			g_LastSelectedGump = index;
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		return LSG;
 	}
@@ -713,9 +705,9 @@ void TGumpSpellbook::OnLeftMouseUp()
 
 			//Инициализируем клик-буффер
 			g_ClickObject.Init(COT_GUMP);
-			g_ClickObject.GumpType = GumpType;
-			g_ClickObject.Serial = Serial;
-			g_ClickObject.GumpID = ID;
+			g_ClickObject.GumpType = m_GumpType;
+			g_ClickObject.Serial = m_Serial;
+			g_ClickObject.GumpID = m_ID;
 			g_ClickObject.GumpButtonID = m_Page - 1;
 
 			//Задаем время до выполнения
@@ -734,9 +726,9 @@ void TGumpSpellbook::OnLeftMouseUp()
 
 			//Инициализируем клик-буффер
 			g_ClickObject.Init(COT_GUMP);
-			g_ClickObject.GumpType = GumpType;
-			g_ClickObject.Serial = Serial;
-			g_ClickObject.GumpID = ID;
+			g_ClickObject.GumpType = m_GumpType;
+			g_ClickObject.Serial = m_Serial;
+			g_ClickObject.GumpID = m_ID;
 			g_ClickObject.GumpButtonID = m_Page + 1;
 
 			//Задаем время до выполнения
@@ -753,8 +745,8 @@ void TGumpSpellbook::OnLeftMouseUp()
 		m_Page = 4; //Переход к оглавлению на круги 7-8
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUTTON_MINIMIZE) //Свернуть гамп
 	{
-		Minimized = true;
-		GenerateFrame(MinimizedX, MinimizedY);
+		m_Minimized = true;
+		m_FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GSB_LOCK_MOVING)
 	{
@@ -765,7 +757,7 @@ void TGumpSpellbook::OnLeftMouseUp()
 	{
 		//Было выбрано заклинание. Стандартные процедуры работы со спеллбукой, описанные выше
 
-		TGameItem *spellbook = World->FindWorldItem(Serial);
+		TGameItem *spellbook = World->FindWorldItem(m_Serial);
 		if (spellbook == NULL)
 			return;
 
@@ -824,9 +816,9 @@ void TGumpSpellbook::OnLeftMouseUp()
 							g_ClickObjectReq = true;
 
 							g_ClickObject.Init(COT_GUMP);
-							g_ClickObject.GumpType = GumpType;
-							g_ClickObject.Serial = Serial;
-							g_ClickObject.GumpID = ID;
+							g_ClickObject.GumpType = m_GumpType;
+							g_ClickObject.Serial = m_Serial;
+							g_ClickObject.GumpID = m_ID;
 							g_ClickObject.GumpButtonID = 5 + ((c - 1) / 2);
 							g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
 						}
@@ -864,9 +856,9 @@ void TGumpSpellbook::OnLeftMouseUp()
 							g_ClickObjectReq = true;
 
 							g_ClickObject.Init(COT_GUMP);
-							g_ClickObject.GumpType = GumpType;
-							g_ClickObject.Serial = Serial;
-							g_ClickObject.GumpID = ID;
+							g_ClickObject.GumpType = m_GumpType;
+							g_ClickObject.Serial = m_Serial;
+							g_ClickObject.GumpID = m_ID;
 							g_ClickObject.GumpButtonID = 5 + ((c - 1) / 2);
 							g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
 						}
@@ -883,7 +875,7 @@ void TGumpSpellbook::OnLeftMouseUp()
 
 	//Если была изменена страница - перерисуем гамп
 	if (lastPage != m_Page)
-		UpdateFrame();
+		m_FrameCreated = false;
 }
 //----------------------------------------------------------------------------
 bool TGumpSpellbook::OnLeftMouseDoubleClick()
@@ -892,19 +884,19 @@ bool TGumpSpellbook::OnLeftMouseDoubleClick()
 	if (!g_LastSelectedGump)
 		return false;
 
-	if (!g_LastObjectLeftMouseDown && Minimized)
+	if (!g_LastObjectLeftMouseDown && m_Minimized)
 	{
 		//Если гамп минимизирован - восстанавливаем его нормальный вид
-		Minimized = false;
-		GenerateFrame(X, Y);
+		m_Minimized = false;
+		m_FrameCreated = false;
 
 		return true;
 	}
-	else if (!Minimized && g_LastObjectLeftMouseDown)
+	else if (!m_Minimized && g_LastObjectLeftMouseDown)
 	{
 		//Если не минимизирован и что-то выбрано
 
-		TGameItem *spellbook = World->FindWorldItem(Serial);
+		TGameItem *spellbook = World->FindWorldItem(m_Serial);
 		if (spellbook == NULL)
 			return false; //Книга отсутствует, проверять нечего, уходим
 
@@ -940,7 +932,7 @@ bool TGumpSpellbook::OnLeftMouseDoubleClick()
 			m_Page = 1;
 
 			//Перерисуем гамп
-			UpdateFrame();
+			m_FrameCreated = false;
 
 			return true;
 		}
@@ -950,7 +942,7 @@ bool TGumpSpellbook::OnLeftMouseDoubleClick()
 			m_Page = pageCount;
 
 			//Перерисуем гамп
-			UpdateFrame();
+			m_FrameCreated = false;
 
 			return true;
 		}
@@ -958,13 +950,13 @@ bool TGumpSpellbook::OnLeftMouseDoubleClick()
 		{
 			//Было использовано заклинание
 			if (g_LastObjectLeftMouseDown < ID_GSB_SPELL_ICON_RIGHT)
-				UO->CastSpellFromBook(g_LastObjectLeftMouseDown - ID_GSB_SPELL_ICON_LEFT + 1, Serial);
+				UO->CastSpellFromBook(g_LastObjectLeftMouseDown - ID_GSB_SPELL_ICON_LEFT + 1, m_Serial);
 			else
-				UO->CastSpellFromBook(g_LastObjectLeftMouseDown - ID_GSB_SPELL_ICON_RIGHT + 1, Serial);
+				UO->CastSpellFromBook(g_LastObjectLeftMouseDown - ID_GSB_SPELL_ICON_RIGHT + 1, m_Serial);
 
 			//Сворачиваем книгу
-			Minimized = true;
-			GenerateFrame(MinimizedX, MinimizedY);
+			m_Minimized = true;
+			m_FrameCreated = false;
 
 			return true;
 		}

@@ -22,7 +22,7 @@
 TGumpSecureTrading::TGumpSecureTrading(DWORD serial, short x, short y, DWORD id, DWORD id2)
 : TGump(GT_TRADE, serial, x, y), m_ID2(id2), m_StateMy(false), m_StateOpponent(false)
 {
-	ID = id;
+	m_ID = id;
 	TextRenderer = new TTextRenderer();
 }
 //----------------------------------------------------------------------------
@@ -39,7 +39,7 @@ void TGumpSecureTrading::PrepareTextures()
 {
 	UO->ExecuteGumpPart(0x0866, 5); //Trade Gump
 
-	TGameObject *container = World->FindWorldObject(ID);
+	TGameObject *container = World->FindWorldObject(m_ID);
 	if (container != NULL && container->m_Items != NULL)
 	{
 		TGameItem *item = (TGameItem*)container->m_Items;
@@ -58,7 +58,7 @@ void TGumpSecureTrading::PrepareTextures()
 		}
 	}
 
-	container = World->FindWorldObject(ID2);
+	container = World->FindWorldObject(m_ID2);
 	if (container != NULL && container->m_Items != NULL)
 	{
 		TGameItem *item = (TGameItem*)container->m_Items;
@@ -82,42 +82,28 @@ void TGumpSecureTrading::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	TGameObject *selobj = World->FindWorldObject(Serial);
+	TGameObject *selobj = World->FindWorldObject(m_Serial);
 	if (selobj == NULL)
 		return; //Объект, к которому привязан гамп - исчез
-	
-	DWORD index = (DWORD)this;
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
+	CalculateGumpState();
 
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-	
 	if (g_LastObjectType == SOT_TEXT_OBJECT)
-	{
-		CanSelectedButton = false;
-		CanPressedButton = false;
-	}
+		g_GumpPressedElement = false;
 
-	glNewList((GLuint)index, GL_COMPILE);
+	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawGump(0x0866, 0, posX, posY); //Trade Gump
+		UO->DrawGump(0x0866, 0, 0, 0); //Trade Gump
 
 		//Наш чекбокс
 		WORD gumpID = 0x0867; //Trade window checkbox unselected
-		if (CanSelectedButton == ID_GST_CHECKBOX)
+		if (g_GumpSelectElement == ID_GST_CHECKBOX)
 		{
 			if (m_StateMy)
 				gumpID = 0x086A; //Trade window checkbox selected (lighted)
@@ -127,45 +113,40 @@ void TGumpSecureTrading::GenerateFrame(int posX, int posY)
 		else if (m_StateMy)
 			gumpID = 0x0869; //Trade window checkbox selected
 
-		UO->DrawGump(gumpID, 0, posX + 52, posY + 29);
+		UO->DrawGump(gumpID, 0, 52, 29);
 		
-		FontManager->DrawA(1, g_Player->GetName().c_str(), 0x0386, posX + 84, posY + 40);
+		FontManager->DrawA(1, g_Player->GetName().c_str(), 0x0386, 84, 40);
 
 		//Чекбокс опонента
 		gumpID = 0x0867; //Trade window checkbox unselected
 		if (m_StateOpponent)
 			gumpID = 0x0869; //Trade window checkbox selected
 
-		UO->DrawGump(gumpID, 0, posX + 266, posY + 160);
+		UO->DrawGump(gumpID, 0, 266, 160);
 		
 		int fontWidth = 260 - FontManager->GetWidthA(1, m_Text.c_str(), m_Text.length());
-		FontManager->DrawA(1, m_Text.c_str(), 0x0386, posX + fontWidth, posY + 170);
+		FontManager->DrawA(1, m_Text.c_str(), 0x0386, fontWidth, 170);
 		
 		DWORD ticks = GetTickCount();
 
 		ColorizerShader->Use();
 
 		//Отрисовка нашего товара (при наличии товара)
-		TGameObject *container = World->FindWorldObject(ID);
+		TGameObject *container = World->FindWorldObject(m_ID);
 		if (container != NULL && container->m_Items != NULL)
 		{
-			g_GL.ViewPort(posX + 45, posY + 70, 110, 80);
+			g_GL.Scissor((int)g_GumpTranslateX + 45, (int)g_GumpTranslateY + 70, 110, 80);
 
-			posX += 45;
-			posY += 70;
-
-			TGameItem *item = (TGameItem*)container->m_Items;
-
-			while (item != NULL)
+			QFOR(item, container->m_Items, TGameItem*)
 			{
 				bool doubleDraw = false;
 				WORD graphic = item->GetDrawGraphic(doubleDraw);
 				WORD color = item->Color;
 				bool selMode = false;
-				int drawX = posX + item->X;
-				int drawY = posY + item->Y;
+				int drawX = 45 + item->X;
+				int drawY = 70 + item->Y;
 
-				if (CanSelectedButton == item->Serial)
+				if (g_GumpSelectElement == item->Serial)
 				{
 					color = 0x0035;
 					selMode = true;
@@ -174,40 +155,30 @@ void TGumpSecureTrading::GenerateFrame(int posX, int posY)
 				UO->DrawStaticArtInContainer(graphic, color, drawX, drawY, selMode);
 				if (doubleDraw)
 					UO->DrawStaticArtInContainer(graphic, color, drawX + 5, drawY + 5, selMode);
-
-				item = (TGameItem*)item->m_Next;
 			}
 		
 			//Восстанавливаем размеры рисуемой области
-			g_GL.RestorePort();
-			
-			posX -= 45;
-			posY -= 70;
+			glDisable(GL_SCISSOR_TEST);
 		}
 		
 
 
 		//Отрисовка нашего опонента (при наличии товара)
-		container = World->FindWorldObject(ID2);
+		container = World->FindWorldObject(m_ID2);
 		if (container != NULL && container->m_Items != NULL)
 		{
-			g_GL.ViewPort(posX + 192, posY + 70, 110, 80);
+			g_GL.Scissor((int)g_GumpTranslateX + 192, (int)g_GumpTranslateY + 70, 110, 80);
 
-			posX += 192;
-			posY += 70;
-
-			TGameItem *item = (TGameItem*)container->m_Items;
-
-			while (item != NULL)
+			QFOR(item, container->m_Items, TGameItem*)
 			{
 				bool doubleDraw = false;
 				WORD graphic = item->GetDrawGraphic(doubleDraw);
 				WORD color = item->Color;
 				bool selMode = false;
-				int drawX = posX + item->X;
-				int drawY = posY + item->Y;
+				int drawX = 192 + item->X;
+				int drawY = 70 + item->Y;
 
-				if (CanSelectedButton == item->Serial)
+				if (g_GumpSelectElement == item->Serial)
 				{
 					color = 0x0035;
 					selMode = true;
@@ -217,53 +188,32 @@ void TGumpSecureTrading::GenerateFrame(int posX, int posY)
 
 				if (doubleDraw)
 					UO->DrawStaticArtInContainer(graphic, color, drawX + 5, drawY + 5, selMode);
-
-				item = (TGameItem*)item->m_Next;
 			}
 
 			//Восстанавливаем размеры рисуемой области
-			g_GL.RestorePort();
-			
-			posX -= 192;
-			posY -= 70;
+			glDisable(GL_SCISSOR_TEST);
 		}
 
 		UnuseShader();
 
 	glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpSecureTrading::Draw(bool &mode)
 {
-	TGameObject *selobj = World->FindWorldObject(Serial);
+	TGameObject *selobj = World->FindWorldObject(m_Serial);
 	if (selobj == NULL)
 		return 0; //Объект, к которому привязан гамп - исчез
 	
 	DWORD index = (DWORD)this;
 
-	//Для быстрого доступа
-	int posX = X;
-	int posY = Y;
+	CalculateGumpState();
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-	
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-	
 	if (g_LastObjectType == SOT_TEXT_OBJECT)
-	{
-		CanSelectedButton = false;
-		CanPressedButton = false;
-	}
+		g_GumpPressedElement = false;
 
 	/*if (mode && GetTopObjDistance(g_Player, selobj) < 3 && IsPressed && ObjectInHand == NULL && g_LastObjectLeftMouseDown != ID_GST_CHECKBOX && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < GetTickCount())))
 	{
@@ -300,26 +250,6 @@ int TGumpSecureTrading::Draw(bool &mode)
 		}
 	}*/
 
-	//Если окошко захвачено для перемещения - вычислим оффсеты
-	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += g_MouseX - g_DroppedLeftMouseX;
-		posY += g_MouseY - g_DroppedLeftMouseY;
-		
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (IsPressed || CanSelectedButton)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
-	}
-	
 	if (mode)
 		TextRenderer->ClearRect();
 
@@ -348,8 +278,8 @@ int TGumpSecureTrading::Draw(bool &mode)
 			if (go != NULL && go->Graphic < 0x4000)
 			{
 				TTextTexture &tth = td->m_Texture;
-				int drawX = posX + td->DrawX - go->GetTextOffsetX(td);
-				int drawY = posY + td->DrawY - go->GetTextOffsetY(td);
+				int drawX = td->DrawX - go->GetTextOffsetX(td);
+				int drawY = td->DrawY - go->GetTextOffsetY(td);
 
 				if (mode)
 				{
@@ -368,86 +298,89 @@ int TGumpSecureTrading::Draw(bool &mode)
 
 	if (mode) //Отрисовка
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated || g_GumpSelectElement || g_GumpMovingOffsetX || g_GumpMovingOffsetY) // || g_GumpPressed
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
 
-		if (!Minimized)
+		//Отрисовка текста
+		for (; rto != NULL; rto = rto->m_PrevDraw)
 		{
-			//Отрисовка текста
-			for (; rto != NULL; rto = rto->m_PrevDraw)
+			if (!rto->IsText())
+				continue;
+
+			TTextData *td = (TTextData*)rto;
+
+			if (td->Type == TT_OBJECT && td->Timer >= ticks)
 			{
-				if (!rto->IsText())
-					continue;
+				TTextTexture &tth = td->m_Texture;
 
-				TTextData *td = (TTextData*)rto;
-				
-				if (td->Type == TT_OBJECT && td->Timer >= ticks)
+				int drawX = td->DrawX - (tth.Width / 2);
+				int drawY = td->DrawY;
+				bool transparent = td->Transparent;
+
+				while (td != NULL)
 				{
-					TTextTexture &tth = td->m_Texture;
+					drawY -= td->m_Texture.Height;
 
-					int drawX = posX + td->DrawX - (tth.Width / 2);
-					int drawY = posY + td->DrawY;
-					bool transparent = td->Transparent;
-
-					while (td != NULL)
-					{
-						drawY -= td->m_Texture.Height;
-
-						td = td->m_Next;
-					}
-
-					if (transparent)
-					{
-						glEnable(GL_BLEND);
-						glBlendFunc(GL_ONE, GL_DST_COLOR);
-
-						tth.Draw(drawX, drawY);
-
-						glDisable(GL_BLEND);
-					}
-					else
-						tth.Draw(drawX, drawY);
+					td = td->m_Next;
 				}
+
+				if (transparent)
+				{
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_ONE, GL_DST_COLOR);
+
+					tth.Draw(drawX, drawY);
+
+					glDisable(GL_BLEND);
+				}
+				else
+					tth.Draw(drawX, drawY);
 			}
 		}
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
 
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (UO->GumpPixelsInXY(0x0866, posX, posY))
+		if (UO->GumpPixelsInXY(0x0866, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 		
-		if (UO->GumpPixelsInXY(0x0867, posX + 52, posY + 29))
+		if (UO->GumpPixelsInXY(0x0867, 52, 29))
 			LSG = ID_GST_CHECKBOX;
 
-		RECT rc = {0, 0, 110, 80};
-		POINT p = {g_MouseX - (posX + 45), g_MouseY - (posY + 70)};
-		//if (PtInRect(&rc, p)) LSG = 2;
-			
 		//Проверка нашего товара (при наличии товара)
-		TGameObject *container = World->FindWorldObject(ID);
+		TGameObject *container = World->FindWorldObject(m_ID);
 
-		if (container != NULL && container->m_Items != NULL && PtInRect(&rc, p))
+		if (container != NULL && container->m_Items != NULL && UO->PolygonePixelsInXY(45, 70, 110, 80))
 		{
-			posX += 45;
-			posY += 70;
-
-			TGameItem *item = (TGameItem*)container->m_Items;
-			while (item != NULL)
+			QFOR(item, container->m_Items, TGameItem*)
 			{
 				if (item->Count > 0)
 				{
 					bool doubleDraw = false;
 					WORD graphic = item->GetDrawGraphic(doubleDraw);
-					int drawX = posX + item->X;
-					int drawY = posY + item->Y;
+					int drawX = 45 + item->X;
+					int drawY = 70 + item->Y;
 
 					if (UO->StaticPixelsInXYInContainer(graphic, drawX, drawY))
 						LSG = item->Serial;
@@ -457,33 +390,21 @@ int TGumpSecureTrading::Draw(bool &mode)
 							LSG = item->Serial;
 					}
 				}
-
-				item = (TGameItem*)item->m_Next;
 			}
-			
-			posX -= 45;
-			posY -= 70;
 		}
 		
-		p.x = g_MouseX - (posX + 192);
+		container = World->FindWorldObject(m_ID2);
 
-		container = World->FindWorldObject(ID2);
-
-		if (container != NULL && container->m_Items != NULL && PtInRect(&rc, p))
+		if (container != NULL && container->m_Items != NULL && UO->PolygonePixelsInXY(192, 70, 110, 80))
 		{
-			posX += 192;
-			posY += 70;
-
-			TGameItem *item = (TGameItem*)container->m_Items;
-
-			while (item != NULL)
+			QFOR(item, container->m_Items, TGameItem*)
 			{
 				if (item->Count > 0)
 				{
 					bool doubleDraw = false;
 					WORD graphic = item->GetDrawGraphic(doubleDraw);
-					int drawX = posX + item->X;
-					int drawY = posY + item->Y;
+					int drawX = 192 + item->X;
+					int drawY = 70 + item->Y;
 
 					if (UO->StaticPixelsInXYInContainer(graphic, drawX, drawY))
 						LSG = item->Serial;
@@ -493,12 +414,7 @@ int TGumpSecureTrading::Draw(bool &mode)
 							LSG = item->Serial;
 					}
 				}
-
-				item = (TGameItem*)item->m_Next;
 			}
-			
-			posX -= 192;
-			posY -= 70;
 		}
 
 		//Проверка текста
@@ -515,8 +431,8 @@ int TGumpSecureTrading::Draw(bool &mode)
 				{
 					TTextTexture &tth = td->m_Texture;
 
-					int drawX = posX + td->DrawX - (tth.Width / 2);
-					int drawY = posY + td->DrawY;
+					int drawX = td->DrawX - (tth.Width / 2);
+					int drawY = td->DrawY;
 
 					while (td != NULL)
 					{
@@ -534,7 +450,10 @@ int TGumpSecureTrading::Draw(bool &mode)
 				}
 			}
 		}
-		
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
+
 		if (LSG != 0)
 		{
 			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
@@ -554,10 +473,7 @@ void TGumpSecureTrading::OnLeftMouseUp()
 		int x = X;
 		int y = Y;
 
-		RECT rc = {0, 0, 110, 80};
-		POINT p = {g_MouseX - (x + 45), g_MouseY - (y + 70)};
-
-		if (PtInRect(&rc, p))
+		if (UO->PolygonePixelsInXY(x + 45, y + 70, 110, 80))
 		{
 			x = g_MouseX - x - 45;
 			y = g_MouseY - y - 70;
@@ -585,7 +501,7 @@ void TGumpSecureTrading::OnLeftMouseUp()
 			if (y < 0)
 				y = 0;
 
-			UO->DropItem(ID, x, y, 0);
+			UO->DropItem(m_ID, x, y, 0);
 		}
 	}
 
@@ -598,7 +514,7 @@ void TGumpSecureTrading::OnLeftMouseUp()
 
 		SendTradingResponse(2);
 
-		GenerateFrame(X, Y);
+		m_FrameCreated = false;
 	}
 	else
 	{
@@ -612,8 +528,8 @@ void TGumpSecureTrading::OnLeftMouseUp()
 			g_ClickObject.Init(COT_GAME_OBJECT);
 			g_ClickObject.Serial = g_LastObjectLeftMouseDown;
 			g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
-			g_ClickObject.X = g_MouseX - X;
-			g_ClickObject.Y = g_MouseY - Y;
+			g_ClickObject.X = g_MouseX - m_X;
+			g_ClickObject.Y = g_MouseY - m_Y;
 		}
 	}
 }

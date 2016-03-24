@@ -23,8 +23,8 @@ TGumpTextEntryDialog::TGumpTextEntryDialog(DWORD serial, short x, short y, BYTE 
 : TGump(GT_TEXT_ENTRY_DIALOG, serial, x, y), m_Text(text), m_Description(description),
 m_Variant(variant), m_MaxLength(maxLength), m_ParentID(0), m_ButtonID(0)
 {
-	NoMove = true;
-	Blocked = true;
+	m_NoMove = true;
+	m_Blocked = true;
 	TextEntry = new TEntryText(maxLength, 0, 0, (variant == 2));
 
 	TGump *gumpEntry = GumpManager->GetTextEntryOwner();
@@ -61,98 +61,104 @@ void TGumpTextEntryDialog::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
-	
+
+	CalculateGumpState();
+
 	glNewList((GLuint)this, GL_COMPILE);
 	
-		UO->DrawGump(0x0474, 0, posX, posY); //Gump
+		UO->DrawGump(0x0474, 0, 0, 0); //Gump
 		
-		FontManager->DrawA(2, m_Text.c_str(), 0x0386, posX + 60, posY + 50);
+		FontManager->DrawA(2, m_Text.c_str(), 0x0386, 60, 50);
 
-		FontManager->DrawA(2, m_Description.c_str(), 0x0386, posX + 60, posY + 108);
-		
+		FontManager->DrawA(2, m_Description.c_str(), 0x0386, 60, 108);
+
+		WORD gumpID = 0x0475; //Text field
+		if (EntryPointer == TextEntry)
+			gumpID = 0x0477; //Text field (active)
+		else if (g_GumpSelectElement == 3)
+			gumpID = 0x0476; //Text field (lighted)
+
+		UO->DrawGump(gumpID, 0, 60, 130); //Text field
+
+		if (gumpID == 0x0477) //Указатель консоли в гампе
+			TextEntry->DrawA(1, 0x0386, 71, 137);
+
+		gumpID = 0x047B; //Button Okay
+		if (g_GumpPressedElement == ID_GTED_BUTTON_OKAY)
+			gumpID = 0x047C; //Button Okay (pressed)
+		else if (g_GumpSelectElement == ID_GTED_BUTTON_OKAY)
+			gumpID = 0x047D; //Button Okay (lighted)
+
+		UO->DrawGump(gumpID, 0, 117, 190); //Button Okay
+
+		if (!NoClose)
+		{
+			gumpID = 0x0478; //Button Cancel
+			if (g_GumpPressedElement == ID_GTED_BUTTON_CANCEL)
+				gumpID = 0x0479; //Button Cancel (pressed)
+			else if (g_GumpSelectElement == ID_GTED_BUTTON_CANCEL)
+				gumpID = 0x047A; //Button Cancel (lighted)
+
+			UO->DrawGump(gumpID, 0, 204, 190); //Button Cancel
+		}
+
 	glEndList();
-	
-	FrameCreated = true;
+
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpTextEntryDialog::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-	
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	int posX = X;
-	int posY = Y;
+	CalculateGumpState();
 
 	if (mode)
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated || g_GumpSelectElement)
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
 
-		WORD gumpID = 0x0475; //Text field
-		if (EntryPointer == TextEntry)
-			gumpID = 0x0477; //Text field (active)
-		else if (CanSelectedButton == 3)
-			gumpID = 0x0476; //Text field (lighted)
-
-		UO->DrawGump(gumpID, 0, posX + 60, posY + 130); //Text field
-
-		if (gumpID == 0x0477) //Указатель консоли в гампе
-			TextEntry->DrawA(1, 0x0386, posX + 71, posY + 137);
-		
-		posY += 190;
-
-		gumpID = 0x047B; //Button Okay
-		if (CanPressedButton == ID_GTED_BUTTON_OKAY)
-			gumpID = 0x047C; //Button Okay (pressed)
-		else if (CanSelectedButton == ID_GTED_BUTTON_OKAY)
-			gumpID = 0x047D; //Button Okay (lighted)
-
-		UO->DrawGump(gumpID, 0, posX + 117, posY); //Button Okay
-		
-		if (!NoClose)
-		{
-			gumpID = 0x0478; //Button Cancel
-			if (CanPressedButton == ID_GTED_BUTTON_CANCEL)
-				gumpID = 0x0479; //Button Cancel (pressed)
-			else if (CanSelectedButton == ID_GTED_BUTTON_CANCEL)
-				gumpID = 0x047A; //Button Cancel (lighted)
-
-			UO->DrawGump(gumpID, 0, posX + 204, posY); //Button Cancel
-		}
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x0474, posX, posY))
+		if (UO->GumpPixelsInXY(0x0474, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 		
-		if (UO->GumpPixelsInXY(0x0475, posX + 60, posY + 130))
+		if (UO->GumpPixelsInXY(0x0475, 60, 130))
 			LSG = ID_GTED_TEXT_FIELD; //Text field
-		else if (UO->GumpPixelsInXY(0x047B, posX + 117, posY + 190))
+		else if (UO->GumpPixelsInXY(0x047B, 117, 190))
 			LSG = ID_GTED_BUTTON_OKAY; //Button okay
-		else if (!NoClose && UO->GumpPixelsInXY(0x0478, posX + 204, posY + 190))
+		else if (!NoClose && UO->GumpPixelsInXY(0x0478, 204, 190))
 			LSG = ID_GTED_BUTTON_CANCEL; //Button cancel
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		if (LSG != 0)
 			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
@@ -192,12 +198,17 @@ void TGumpTextEntryDialog::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 			int val = atoi(EntryPointer->c_str());
 			if (val > m_MaxLength)
 				EntryPointer->Remove(true);
+			else
+				m_FrameCreated = false;
 		}
 	}
 	else if (m_Variant == 1) //Что угодно, но с ограничением по длине
 	{
 		if (EntryPointer->Length() < m_MaxLength)
+		{
 			EntryPointer->Insert(wparam);
+			m_FrameCreated = false;
+		}
 	}
 }
 //----------------------------------------------------------------------------
@@ -214,36 +225,42 @@ void TGumpTextEntryDialog::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 		case VK_HOME:
 		{
 			EntryPointer->SetPos(0);
+			m_FrameCreated = false;
 
 			break;
 		}
 		case VK_END:
 		{
 			EntryPointer->SetPos(EntryPointer->Length());
+			m_FrameCreated = false;
 
 			break;
 		}
 		case VK_LEFT:
 		{
 			EntryPointer->AddPos(-1);
+			m_FrameCreated = false;
 
 			break;
 		}
 		case VK_RIGHT:
 		{
 			EntryPointer->AddPos(1);
+			m_FrameCreated = false;
 
 			break;
 		}
 		case VK_BACK:
 		{
 			EntryPointer->Remove(true);
+			m_FrameCreated = false;
 
 			break;
 		}
 		case VK_DELETE:
 		{
 			EntryPointer->Remove(false);
+			m_FrameCreated = false;
 
 			break;
 		}

@@ -130,7 +130,7 @@ int TGumpDrag::Draw(bool &mode)
 
 	if (mode) //Отрисовка
 	{
-		if (g_GumpPressed || g_GumpSelectElement || !m_FrameCreated)
+		if (!m_FrameCreated || g_GumpSelectElement) // || g_GumpPressed
 			GenerateFrame(0, 0);
 		else if (m_FrameRedraw)
 		{
@@ -201,7 +201,7 @@ void TGumpDrag::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 	if (wparam == VK_RETURN || wparam == VK_BACK || wparam == VK_ESCAPE || EntryPointer == NULL)
 		return; //Ignore no print keys
 
-	TGameItem *item = World->FindWorldItem(Serial);
+	TGameItem *item = World->FindWorldItem(m_Serial);
 	if (item != NULL)
 	{
 		if (wparam >= '0' && wparam <= '9')
@@ -225,7 +225,7 @@ void TGumpDrag::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 
 				m_ScrollPos = 29 + (int)ValPer;
 
-				GenerateFrame(m_X, m_Y);
+				m_FrameCreated = false;
 			}
 		}
 	}
@@ -257,7 +257,7 @@ void TGumpDrag::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 				if (m_StartText)
 					m_StartText = false;
 
-				GenerateFrame(m_X, m_Y);
+				m_FrameCreated = false;
 
 				break;
 			}
@@ -268,7 +268,7 @@ void TGumpDrag::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 				if (m_StartText)
 					m_StartText = false;
 
-				GenerateFrame(m_X, m_Y);
+				m_FrameCreated = false;
 
 				break;
 			}
@@ -279,7 +279,7 @@ void TGumpDrag::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 				if (m_StartText)
 					m_StartText = false;
 
-				GenerateFrame(m_X, m_Y);
+				m_FrameCreated = false;
 
 				break;
 			}
@@ -290,7 +290,7 @@ void TGumpDrag::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 				if (m_StartText)
 					m_StartText = false;
 
-				GenerateFrame(m_X, m_Y);
+				m_FrameCreated = false;
 
 				break;
 			}
@@ -317,7 +317,7 @@ void TGumpDrag::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 				if (m_StartText)
 					m_StartText = false;
 
-				GenerateFrame(m_X, m_Y);
+				m_FrameCreated = false;
 
 				break;
 			}
@@ -337,7 +337,7 @@ void TGumpDrag::OnOkayPressed()
 
 			if (count)
 			{
-				TGameItem *obj = World->FindWorldItem(Serial);
+				TGameItem *obj = World->FindWorldItem(m_Serial);
 
 				if (obj != NULL)
 					UO->PickupItem(obj, count);

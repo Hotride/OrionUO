@@ -33,27 +33,40 @@ void TGumpMenu::PrepareTextures()
 {
 	UO->ExecuteGump(0x0910);
 
-	TGumpMenuObject *go = (TGumpMenuObject*)m_Items;
-
-	while (go != NULL)
-	{
+	QFOR(go, m_Items, TGumpMenuObject*)
 		UO->ExecuteStaticArt(go->Graphic);
+}
+//---------------------------------------------------------------------------
+void TGumpMenu::CalculateGumpState()
+{
+	TGump::CalculateGumpState();
 
-		go = (TGumpMenuObject*)go->m_Next;
+	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == (DWORD)this && (!g_LastObjectLeftMouseDown || g_LastObjectLeftMouseDown > ID_GM_RIGHT))
+	{
+		g_GumpMovingOffsetX = g_MouseX - g_DroppedLeftMouseX;
+		g_GumpMovingOffsetY = g_MouseY - g_DroppedLeftMouseY;
 	}
+	else
+	{
+		g_GumpMovingOffsetX = 0;
+		g_GumpMovingOffsetY = 0;
+	}
+
+	g_GumpTranslateX = (float)(m_X + g_GumpMovingOffsetX);
+	g_GumpTranslateY = (float)(m_Y + g_GumpMovingOffsetY);
 }
 //---------------------------------------------------------------------------
 void TGumpMenu::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	DWORD index = (DWORD)this;
+	CalculateGumpState();
 
 	int posXOffs = 0;
 	int pageOffs = 0;
@@ -72,21 +85,20 @@ void TGumpMenu::GenerateFrame(int posX, int posY)
 		}
 	}
 
-	glNewList((GLuint)index, GL_COMPILE);
+	glNewList((GLuint)this, GL_COMPILE);
 	
-		UO->DrawGump(0x0910, 0, posX, posY);
+		UO->DrawGump(0x0910, 0, 0, 0);
 
-		FontManager->DrawA(1, m_Text.c_str(), 0x0386, posX + 39, posY + 18, 200, TS_LEFT, UOFONT_FIXED);
+		FontManager->DrawA(1, m_Text.c_str(), 0x0386, 39, 18, 200, TS_LEFT, UOFONT_FIXED);
 		
-		g_GL.ViewPort(posX + 40, posY + 42, 217, 49);
+		g_GL.Scissor((int)g_GumpTranslateX + 40, (int)g_GumpTranslateY + 42, 217, 49);
 
-		TGumpMenuObject *go = (TGumpMenuObject*)m_Items;
 		int idx = 1;
 		string itemText = "";
 
 		ColorizerShader->Use();
 
-		while (go != NULL)
+		QFOR(go, m_Items, TGumpMenuObject*)
 		{
 			if (idx == m_CurrentIndex + pageOffs)
 			{
@@ -109,7 +121,7 @@ void TGumpMenu::GenerateFrame(int posX, int posY)
 						else
 							offsH = ((47 - p.y) / 2);
 
-						UO->DrawStaticArtInContainer(go->Graphic, go->Color, posX + 40 + w + posXOffs, posY + 47 + offsH);
+						UO->DrawStaticArtInContainer(go->Graphic, go->Color, 40 + w + posXOffs, 47 + offsH);
 
 						if (g_LastSelectedObject == idx + ID_GM_ITEMS)
 							itemText = go->GetText();
@@ -125,35 +137,33 @@ void TGumpMenu::GenerateFrame(int posX, int posY)
 			}
 
 			idx++;
-			if (go != NULL)
-				go = (TGumpMenuObject*)go->m_Next;
+
+			if (go == NULL)
+				break;
 		}
 
 		UnuseShader();
 
-		g_GL.RestorePort();
+		glDisable(GL_SCISSOR_TEST);
 
 		if (itemText.length())
-			FontManager->DrawA(1, itemText.c_str(), 0x0386, posX + 42, posY + 105, 200, TS_LEFT, UOFONT_FIXED);
+			FontManager->DrawA(1, itemText.c_str(), 0x0386, 42, 105, 200, TS_LEFT, UOFONT_FIXED);
 
 	glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpMenu::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	int posX = X;
-	int posY = Y;
+	CalculateGumpState();
 
-	bool needRedraw = false;
-	
 	if (m_CurrentOffset)
 	{
-		needRedraw = true;
+		m_FrameCreated = false;
 
 		if (m_CurrentOffset < 0) //Prev
 			m_CurrentOffset++;
@@ -161,72 +171,61 @@ int TGumpMenu::Draw(bool &mode)
 			m_CurrentOffset--;
 	}
 
-	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && (!g_LastObjectLeftMouseDown || g_LastObjectLeftMouseDown > ID_GM_RIGHT))
-	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-
-		if (mode)
-			FrameRedraw = true;
-	}
-
 	if (mode)
 	{
 		if (!m_CurrentOffset && g_LastGumpLeftMouseDown == index)
 		{
 			MoveItems();
-			GenerateFrame(posX, posY);
+			m_FrameCreated = false;
 		}
-		else if ((index == g_LastSelectedGump && g_LastSelectedObject >= 10) || needRedraw)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
+
+		if (!m_FrameCreated || (index == g_LastSelectedGump && g_LastSelectedObject >= 10) || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
 		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
 		}
-	}
 
-
-	if (mode)
-	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else
 	{
-		if (UO->GumpPixelsInXY(0x0910, posX, posY))
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
+		if (UO->GumpPixelsInXY(0x0910, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 
 		if (m_CurrentOffset || g_LastSelectedGump != index)
+		{
+			g_MouseX = oldMouseX;
+			g_MouseY = oldMouseY;
+
 			return 0;
+		}
 		
 		int LSG = 0;
 
-		RECT rc = {0, 0, 8, 16};
-		POINT p = {g_MouseX - (posX + 23), g_MouseY - (posY + 59)};
-		if (PtInRect(&rc, p))
+		if (UO->PolygonePixelsInXY(23, 59, 8, 16))
 			LSG = ID_GM_LEFT;
-
-		p.x = g_MouseX - (posX + 261);
-		p.y = g_MouseY - (posY + 59);
-		if (PtInRect(&rc, p))
+		else if (UO->PolygonePixelsInXY(261, 59, 8, 16))
 			LSG = ID_GM_RIGHT;
 		
-		RECT mrc = {0, 0, 217, 49};
-		p.x = g_MouseX - (posX + 40);
-		p.y = g_MouseY - (posY + 47);
-
-		if (PtInRect(&mrc, p))
+		if (UO->PolygonePixelsInXY(40, 47, 217, 49))
 		{
-			TGumpMenuObject *go = (TGumpMenuObject*)m_Items;
 			int idx = 1;
 
-			while (go != NULL)
+			QFOR(go, m_Items, TGumpMenuObject*)
 			{
 				if (idx == m_CurrentIndex)
 				{
@@ -242,10 +241,7 @@ int TGumpMenu::Draw(bool &mode)
 
 						if (mp.x && mp.y)
 						{
-							RECT irc = {0, 0, mp.x, 49};
-							POINT ip = {g_MouseX - (posX + 40 + w), g_MouseY - (posY + 47)};
-
-							if (PtInRect(&irc, ip))
+							if (UO->PolygonePixelsInXY(40 + w, 47, mp.x, 49))
 							{
 								LSG = idx + ID_GM_ITEMS;
 
@@ -264,10 +260,14 @@ int TGumpMenu::Draw(bool &mode)
 					break;
 
 				idx++;
-				if (go != NULL)
-					go = (TGumpMenuObject*)go->m_Next;
+
+				if (go == NULL)
+					break;
 			}
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		if (LSG != 0)
 			g_LastSelectedObject = LSG;
@@ -309,14 +309,12 @@ void TGumpMenu::MoveItems()
 		TGumpMenuObject *prev = NULL;
 		int idx = 1;
 
-		while (go != NULL)
+		for (; go != NULL; go = (TGumpMenuObject*)go->m_Next, idx++)
 		{
 			if (idx == m_CurrentIndex)
 				break;
 
-			idx++;
 			prev = go;
-			go = (TGumpMenuObject*)go->m_Next;
 		}
 
 		m_CurrentItemOffset = 0;
@@ -336,13 +334,10 @@ void TGumpMenu::MoveItems()
 		TGumpMenuObject *go = (TGumpMenuObject*)m_Items;
 		int idx = 1;
 
-		while (go != NULL)
+		for (; go != NULL; go = (TGumpMenuObject*)go->m_Next, idx++)
 		{
 			if (idx == m_CurrentIndex)
 				break;
-
-			idx++;
-			go = (TGumpMenuObject*)go->m_Next;
 		}
 
 		m_CurrentItemOffset = 0;

@@ -38,29 +38,21 @@ void TGumpSelectFont::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	DWORD index = (DWORD)this;
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
+	CalculateGumpState();
 
 	int unicodeFontCount = FileManager.UnicodeFontCount;
 
-	glNewList((GLuint)index, GL_COMPILE);
+	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawResizepicGump(0x0A28, posX, posY, 200, 70 + (unicodeFontCount * 22));
+		UO->DrawResizepicGump(0x0A28, 0, 0, 200, 70 + (unicodeFontCount * 22));
 		
-		FontManager->DrawW(0, L"Select font", 0, posX + 60, posY + 22);
+		FontManager->DrawW(0, L"Select font", 0, 60, 22);
 
 		int selected = 0;
 			
@@ -90,19 +82,18 @@ void TGumpSelectFont::GenerateFrame(int posX, int posY)
 				break;
 		}
 		
-		posX += 50;
-		posY += 24;
+		int drawY = 24;
 
 		IFOR(i, 0, unicodeFontCount)
 		{
-			posY += 22;
+			drawY += 22;
 
 			WORD gumpID = 0x00D0;
-			if ((i == selected && !CanPressedButton) || CanPressedButton == (i + ID_GSF_FONTS))
+			if ((i == selected && !g_GumpPressedElement) || g_GumpPressedElement == (i + ID_GSF_FONTS))
 				gumpID = 0x00D1;
 
-			UO->DrawGump(gumpID, 0, posX, posY);
-			FontManager->DrawW(i, L"This font", 0, posX + 24, posY);
+			UO->DrawGump(gumpID, 0, 50, drawY);
+			FontManager->DrawW(i, L"This font", 0, 74, drawY);
 		}
 
 	glEndList();
@@ -115,61 +106,47 @@ int TGumpSelectFont::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	int posX = X;
-	int posY = Y;
-	
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += g_MouseX - g_DroppedLeftMouseX;
-		posY += g_MouseY - g_DroppedLeftMouseY;
-		
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (IsPressed || CanPressedButton)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
-	}
+	CalculateGumpState();
 
 	if (mode)
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated || g_GumpPressedElement) // || g_GumpPressed
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
+
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
 		
 		int unicodeFontCount = FileManager.UnicodeFontCount;
 
-		if (UO->ResizepicPixelsInXY(0x0A28, posX, posY, 200, 70 + (unicodeFontCount * 22)))
+		if (UO->ResizepicPixelsInXY(0x0A28, 0, 0, 200, 70 + (unicodeFontCount * 22)))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 
-			posX += 50;
-			posY += 24;
+			int drawY = 24;
 
 			IFOR(i, 0, unicodeFontCount)
 			{
-				posY += 22;
+				drawY += 22;
 
-				if (UO->GumpPixelsInXY(0x00D0, posX, posY))
+				if (UO->GumpPixelsInXY(0x00D0, 50, drawY))
 				{
 					LSG = i + ID_GSF_FONTS;
 
@@ -180,6 +157,9 @@ int TGumpSelectFont::Draw(bool &mode)
 			if (LSG != 0)
 				g_LastSelectedObject = LSG;
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		return LSG;
 	}

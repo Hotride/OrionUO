@@ -226,8 +226,7 @@ int TGumpMinimap::Draw(bool &mode)
 
 			glCallList((GLuint)index);
 
-			int lo = 0;
-			DrawLocker(lo, lo);
+			DrawLocker();
 
 			glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 		}

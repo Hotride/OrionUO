@@ -39,23 +39,15 @@ void TGumpTargetSystem::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode || ConfigManager.DisableNewTargetSystem || !NewTargetSystem.Serial)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	DWORD index = (DWORD)this;
+	CalculateGumpState();
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	glNewList((GLuint)index, GL_COMPILE);
+	glNewList((GLuint)this, GL_COMPILE);
 
 		TGameObject *obj = World->FindWorldObject(NewTargetSystem.Serial);
 		if (obj != NULL)
@@ -78,7 +70,7 @@ void TGumpTargetSystem::GenerateFrame(int posX, int posY)
 			ColorizerShader->Use();
 
 			//Гамп статус бара
-			UO->DrawGump(0x0804, color, posX, posY);
+			UO->DrawGump(0x0804, color, 0, 0);
 
 			UnuseShader();
 
@@ -91,10 +83,10 @@ void TGumpTargetSystem::GenerateFrame(int posX, int posY)
 				m_OldName = ClilocManager->Cliloc(g_Language)->GetA(102000 + obj->Graphic, st->Name);
 			}
 
-			FontManager->DrawA(1, m_OldName.c_str(), 0x0386, posX + 16, posY + 14, 150, TS_LEFT, UOFONT_FIXED);
+			FontManager->DrawA(1, m_OldName.c_str(), 0x0386, 16, 14, 150, TS_LEFT, UOFONT_FIXED);
 
 			//Hits
-			UO->DrawGump(0x0805, 0, posX + 34, posY + 38);
+			UO->DrawGump(0x0805, 0, 34, 38);
 				
 			if (character != NULL)
 			{
@@ -108,7 +100,7 @@ void TGumpTargetSystem::GenerateFrame(int posX, int posY)
 					else if (obj->YellowHits())
 						gumpid = 0x0809; //Character status line (yellow)
 
-					UO->DrawGump(gumpid, 0, posX + 34, posY + 38, per, 0);
+					UO->DrawGump(gumpid, 0, 34, 38, per, 0);
 				}
 			}
 		}
@@ -117,18 +109,19 @@ void TGumpTargetSystem::GenerateFrame(int posX, int posY)
 			ColorizerShader->Use();
 
 			//Гамп статус бара
-			UO->DrawGump(0x0804, 0x0386, posX, posY);
+			UO->DrawGump(0x0804, 0x0386, 0, 0);
 
 			//Hits
-			UO->DrawGump(0x0805, 0x0386, posX + 34, posY + 38);
+			UO->DrawGump(0x0805, 0x0386, 34, 38);
 				
 			UnuseShader();
 
-			FontManager->DrawA(1, m_OldName.c_str(), 0x0386, posX + 16, posY + 14, 150, TS_LEFT, UOFONT_FIXED);
+			FontManager->DrawA(1, m_OldName.c_str(), 0x0386, 16, 14, 150, TS_LEFT, UOFONT_FIXED);
 		}
 
 	glEndList();
-	FrameCreated = true;
+	
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpTargetSystem::Draw(bool &mode)
@@ -141,70 +134,46 @@ int TGumpTargetSystem::Draw(bool &mode)
 
 	DWORD index = (DWORD)this;
 
-	//Для быстрого доступа
-	int posX = m_X;
-	int posY = m_Y;
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
+	CalculateGumpState();
 
 	//Если гамп захватили и (может быть) двигают
-	if (CanBeMoved() && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		int offsetX = g_MouseX - g_DroppedLeftMouseX;
-		if (offsetX && Target.IsTargeting())
-			g_GeneratedMouseDown = true;
-
-		int offsetY = g_MouseY - g_DroppedLeftMouseY;
-		if (offsetY && Target.IsTargeting())
-			g_GeneratedMouseDown = true;
-
-		posX += offsetX;
-		posY += offsetY;
-
-		//Окно может (и, скорее всего, должно) быть перерисовано
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (CanPressedButton != 0)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
-	}
+	if (g_GumpMovingOffsetX && Target.IsTargeting())
+		g_GeneratedMouseDown = true;
+	else if (g_GumpMovingOffsetY && Target.IsTargeting())
+		g_GeneratedMouseDown = true;
 
 	if (mode) //Отрисовка
 	{
 		//Если список отображения не был сделан - сделаем его
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated)
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		//Рисуем заранее заготовленный список отображения
 		glCallList((GLuint)index);
 
-		DrawLocker(posX, posY);
+		DrawLocker();
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
 		int LSG = 0;
 
-		if (UO->GumpPixelsInXY(0x0804, posX, posY))
+		if (UO->GumpPixelsInXY(0x0804, (int)g_GumpTranslateX, (int)g_GumpTranslateY))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 			g_StatusbarUnderMouse = index;
 		}
 
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(posX, posY, 10, 14))
+		if (g_ShowGumpLocker && UO->PolygonePixelsInXY((int)g_GumpTranslateX, (int)g_GumpTranslateY, 10, 14))
 		{
 			g_LastSelectedObject = LSG = ID_GSB_LOCK_MOVING;
 			g_LastSelectedGump = index;
@@ -239,7 +208,7 @@ void TGumpTargetSystem::OnLeftMouseUp()
 
 	if (g_LastObjectLeftMouseDown == ID_GSB_LOCK_MOVING)
 	{
-		LockMoving = !LockMoving;
+		m_LockMoving = !m_LockMoving;
 		g_CancelDoubleClick = true;
 	}
 	else if (!g_LastObjectLeftMouseDown)

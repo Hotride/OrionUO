@@ -30,14 +30,14 @@ TGumpGeneric::~TGumpGeneric()
 {
 }
 //---------------------------------------------------------------------------
-void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page, int &x, int &y)
+void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page)
 {
 	m_Transparent = false;
 
 	glClear(GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_STENCIL_TEST);
 
-	while (obj != NULL)
+	for (; obj != NULL; obj = (TGumpObject*)obj->m_Next)
 	{
 		if (obj->Type == GOT_PAGE)
 		{
@@ -52,7 +52,7 @@ void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page, int &x, int &y)
 			{
 				case GOT_CHECKTRANS:
 				{
-					obj->Draw(x, y, m_Transparent, false);
+					obj->Draw(m_Transparent, false);
 
 					m_Transparent = true;
 
@@ -67,8 +67,6 @@ void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page, int &x, int &y)
 					break;
 			}
 		}
-
-		obj = (TGumpObject*)obj->m_Next;
 	}
 
 	glDisable(GL_STENCIL_TEST);
@@ -76,9 +74,7 @@ void TGumpGeneric::ApplyTransparent(TGumpObject *obj, int page, int &x, int &y)
 //---------------------------------------------------------------------------
 void TGumpGeneric::AddText(int index, wstring text)
 {
-	TGumpObject *item = (TGumpObject*)m_Items;
-
-	while (item != NULL)
+	QFOR(item, m_Items, TGumpObject*)
 	{
 		switch (item->Type)
 		{
@@ -166,17 +162,14 @@ void TGumpGeneric::AddText(int index, wstring text)
 			default:
 				break;
 		}
-
-		item = (TGumpObject*)item->m_Next;
 	}
 }
 //---------------------------------------------------------------------------
 bool TGumpGeneric::EntryPointerHere()
 {
 	bool result = false;
-	TGumpObject *item = (TGumpObject*)m_Items;
 
-	while (item != NULL)
+	QFOR(item, m_Items, TGumpObject*)
 	{
 		if (item->Type == GOT_TEXTENTRY || item->Type == GOT_TEXTENTRYLIMITED)
 		{
@@ -189,8 +182,6 @@ bool TGumpGeneric::EntryPointerHere()
 				break;
 			}
 		}
-
-		item = (TGumpObject*)item->m_Next;
 	}
 
 	return result;
@@ -198,9 +189,7 @@ bool TGumpGeneric::EntryPointerHere()
 //---------------------------------------------------------------------------
 void TGumpGeneric::PrepareTextures()
 {
-	TGumpObject *item = (TGumpObject*)m_Items;
-
-	while (item != NULL)
+	QFOR(item, m_Items, TGumpObject*)
 	{
 		switch (item->Type)
 		{
@@ -279,8 +268,6 @@ void TGumpGeneric::PrepareTextures()
 			default:
 				break;
 		}
-
-		item = (TGumpObject*)item->m_Next;
 	}
 }
 //---------------------------------------------------------------------------
@@ -288,26 +275,15 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	DWORD index = (DWORD)this;
+	CalculateGumpState();
 
-	//Нажата ли кнопка в окне?
-	bool IsScrollerPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index);
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	glNewList((GLuint)index, GL_COMPILE);
+	glNewList((GLuint)this, GL_COMPILE);
 
 		int currentPage = 0;
 		int currentGroup = 0;
@@ -316,7 +292,7 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 		bool haveHTML = false;
 		float alpha[2] = { 1.0f, 0.5f };
 
-		ApplyTransparent(item, m_Page, posX, posY);
+		ApplyTransparent(item, m_Page);
 		
 		while (item != NULL)
 		{
@@ -336,7 +312,7 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					case GOT_CHECKBOX:
 					case GOT_RADIO:
 					{
-						item->Draw(posX, posY, m_Transparent, CanPressedButton == objectIndex);
+						item->Draw(m_Transparent, g_GumpPressedElement == objectIndex);
 						break;
 					}
 					case GOT_GUMPPIC:
@@ -344,7 +320,7 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					{
 						ColorizerShader->Use();
 						
-						item->Draw(posX, posY, m_Transparent, false);
+						item->Draw(m_Transparent, false);
 						
 						UnuseShader();
 
@@ -357,7 +333,7 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					case GOT_TEXTENTRYLIMITED:
 					case GOT_TEXTENTRY:
 					{
-						item->Draw(posX, posY, m_Transparent, false);
+						item->Draw(m_Transparent, false);
 						break;
 					}
 					case GOT_HTMLGUMP:
@@ -369,7 +345,7 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 					}
 					case GOT_CHECKTRANS:
 					{
-						ApplyTransparent(((TGumpObject*)(item->m_Next)), m_Page, posX, posY);
+						ApplyTransparent(((TGumpObject*)(item->m_Next)), m_Page);
 						
 						glColor4f(1.0f, 1.0f, 1.0f, alpha[m_Transparent]);
 
@@ -432,14 +408,14 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 
 							if (htmlGump->HaveScrollbar)
 							{
-								int drawX = posX + htmlGump->X;
-								int drawY = posY + htmlGump->Y;
+								int drawX = htmlGump->X;
+								int drawY = htmlGump->Y;
 
 								//Для вычисления задержек между скроллингом
 								DWORD ticks = GetTickCount();
 
 								//Проверим, вдруг необходимо изменить положение отображаемого элемента
-								if (IsPressed && m_LastScrollChangeTime < ticks)
+								if (g_GumpPressed && m_LastScrollChangeTime < ticks)
 								{
 									if (g_LastObjectLeftMouseDown == ID_GG_SCROLLBAR_BUTTON_UP + objectIndex) //Скроллинг вверх (гампом-стрелкой)
 										ListingList(htmlGump, true, 10);
@@ -476,7 +452,7 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 								int visibleLines = heightToScrolling / GUMP_SCROLLING_PIXEL_STEP;
 								int cLine = htmlGump->LineOffset;
 
-								if (IsScrollerPressed && g_LastObjectLeftMouseDown == ID_GG_SCROLLBAR + objectIndex && canMoveScroller) //Scroller pressed
+								if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GG_SCROLLBAR + objectIndex && canMoveScroller) //Scroller pressed
 								{
 									int currentY = (g_MouseY - 25) - drawY; //Scroller position
 
@@ -512,11 +488,11 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 							if (htmlGump->HaveBackground)
 								textHeight -= 4;
 
-							g_GL.ViewPort(drawX, drawY, wOffs, textHeight);
+							g_GL.Scissor((int)g_GumpTranslateX + drawX, (int)g_GumpTranslateY + drawY, wOffs, textHeight);
 
 							htmlGump->m_Text.Draw(drawX, drawY - (htmlGump->LineOffset * GUMP_SCROLLING_PIXEL_STEP));
 
-							g_GL.RestorePort();
+							glDisable(GL_SCISSOR_TEST);
 						
 							break;
 						}
@@ -541,42 +517,49 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 	FrameCreated = true;
 }
 //----------------------------------------------------------------------------
+void TGumpGeneric::CalculateGumpState()
+{
+	TGump::CalculateGumpState();
+
+	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == (DWORD)this && (!g_LastObjectLeftMouseDown || g_LastObjectLeftMouseDown >= ID_GG_HTML_TEXT) && !m_NoMove)
+	{
+		g_GumpMovingOffsetX = g_MouseX - g_DroppedLeftMouseX;
+		g_GumpMovingOffsetY = g_MouseY - g_DroppedLeftMouseY;
+	}
+	else
+	{
+		g_GumpMovingOffsetX = 0;
+		g_GumpMovingOffsetY = 0;
+	}
+
+	g_GumpTranslateX = (float)(m_X + g_GumpMovingOffsetX);
+	g_GumpTranslateY = (float)(m_Y + g_GumpMovingOffsetY);
+}
+//----------------------------------------------------------------------------
 int TGumpGeneric::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	int posX = X;
-	int posY = Y;
-
-	//Нажата ли кнопка в окне?
-	bool IsScrollerPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index);
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && (!g_LastObjectLeftMouseDown || g_LastObjectLeftMouseDown >= ID_GG_HTML_TEXT) && !NoMove)
-	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
+	CalculateGumpState();
 
 	if (mode) //Отрисовка
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated)
+			GenerateFrame(0, 0);
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int currentPage = 0;
 		int currentGroup = 0;
 		TGumpObject *item = (TGumpObject*)m_Items;
@@ -599,7 +582,7 @@ int TGumpGeneric::Draw(bool &mode)
 				{
 					case GOT_RESIZEPIC:
 					{
-						if (UO->ResizepicPixelsInXY(item->Graphic, posX + item->X, posY + item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height))
+						if (UO->ResizepicPixelsInXY(item->Graphic, item->X, item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -608,7 +591,7 @@ int TGumpGeneric::Draw(bool &mode)
 					}
 					case GOT_GUMPPIC:
 					{
-						if (UO->GumpPixelsInXY(item->Graphic, posX + item->X, posY + item->Y))
+						if (UO->GumpPixelsInXY(item->Graphic, item->X, item->Y))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -617,7 +600,7 @@ int TGumpGeneric::Draw(bool &mode)
 					}
 					case GOT_GUMPPICTILED:
 					{
-						if (UO->GumpPixelsInXY(item->Graphic, posX + item->X, posY + item->Y, ((TGumpGumppicTiled*)item)->Width, ((TGumpGumppicTiled*)item)->Height))
+						if (UO->GumpPixelsInXY(item->Graphic, item->X, item->Y, ((TGumpGumppicTiled*)item)->Width, ((TGumpGumppicTiled*)item)->Height))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -626,7 +609,7 @@ int TGumpGeneric::Draw(bool &mode)
 					}
 					case GOT_TILEPIC:
 					{
-						if (UO->StaticPixelsInXYInContainer(item->Graphic, posX + item->X, posY + item->Y))
+						if (UO->StaticPixelsInXYInContainer(item->Graphic, item->X, item->Y))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -635,11 +618,11 @@ int TGumpGeneric::Draw(bool &mode)
 					}
 					case GOT_BUTTONTILEART:
 					{
-						if (UO->GumpPixelsInXY(item->Graphic, posX + item->X, posY + item->Y))
+						if (UO->GumpPixelsInXY(item->Graphic, item->X, item->Y))
 							LSG = objectIndex;
 
 						TGumpButtonTileArt *bta = (TGumpButtonTileArt*)item;
-						if (UO->StaticPixelsInXYInContainer(bta->TileGraphic, posX + bta->TileX, posY + bta->TileY))
+						if (UO->StaticPixelsInXYInContainer(bta->TileGraphic, bta->TileX, bta->TileY))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -650,7 +633,7 @@ int TGumpGeneric::Draw(bool &mode)
 					case GOT_CHECKBOX:
 					case GOT_RADIO:
 					{
-						if (UO->GumpPixelsInXY(item->Graphic, posX + item->X, posY + item->Y))
+						if (UO->GumpPixelsInXY(item->Graphic, item->X, item->Y))
 							LSG = objectIndex;
 						break;
 					}
@@ -659,10 +642,9 @@ int TGumpGeneric::Draw(bool &mode)
 					{
 						TGumpTextEntry *gte = (TGumpTextEntry*)item;
 
-						RECT rc = {0, 0, gte->Width, gte->Height};
-						POINT p = {g_MouseX - (posX + item->X), g_MouseY - (posY + item->Y)};
-						if (PtInRect(&rc, p))
+						if (UO->PolygonePixelsInXY(item->X, item->Y, gte->Width, gte->Height))
 							LSG = objectIndex;
+
 						break;
 					}
 					case GOT_HTMLGUMP:
@@ -727,8 +709,8 @@ int TGumpGeneric::Draw(bool &mode)
 
 							if (htmlGump->HaveScrollbar)
 							{
-								int drawX = posX + htmlGump->X;
-								int drawY = posY + htmlGump->Y;
+								int drawX = htmlGump->X;
+								int drawY = htmlGump->Y;
 							
 								if (htmlGump->HaveBackground && UO->ResizepicPixelsInXY(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height))
 								{
@@ -752,16 +734,14 @@ int TGumpGeneric::Draw(bool &mode)
 								textOffsX = -1;
 								textOffsY = -1;
 							}
-							else if (htmlGump->HaveBackground && UO->ResizepicPixelsInXY(0x0BB8, posX + htmlGump->X, posY + htmlGump->Y, htmlGump->Width, htmlGump->Height))
+							else if (htmlGump->HaveBackground && UO->ResizepicPixelsInXY(0x0BB8, htmlGump->X, htmlGump->Y, htmlGump->Width, htmlGump->Height))
 							{
 								g_LastSelectedObject = 0;
 								LSG = ID_GG_HTML_TEXT + objectIndex;
 								g_LastSelectedGump = index;
 							}
 						
-							RECT rc = {0, 0, wOffs, htmlGump->Height};
-							POINT p = {g_MouseX - (posX + item->X + textOffsX), g_MouseY - (posY + item->Y + textOffsY)};
-							if (PtInRect(&rc, p))
+							if (UO->PolygonePixelsInXY(item->X + textOffsX, item->Y + textOffsY, wOffs, htmlGump->Height))
 							{
 								g_LastSelectedObject = 0;
 								LSG = ID_GG_HTML_TEXT + objectIndex;
@@ -784,6 +764,9 @@ int TGumpGeneric::Draw(bool &mode)
 				objectIndex++;
 			}
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		if (LSG != 0)
 			g_LastSelectedObject = LSG;
@@ -972,8 +955,8 @@ void TGumpGeneric::OnLeftMouseUp()
 
 					if (g_LastObjectLeftMouseDown == objectIndex && gte->TextEntry != NULL)
 					{
-						int x = g_MouseX - (X + item->X);
-						int y = g_MouseY - (Y + item->Y);
+						int x = g_MouseX - (m_X + item->X);
+						int y = g_MouseY - (m_Y + item->Y);
 
 						gte->TextEntry->OnClick(this, 1, false, x, y);
 					}
@@ -1021,8 +1004,8 @@ void TGumpGeneric::OnLeftMouseUp()
 
 					if (g_LastObjectLeftMouseDown == ID_GG_HTML_TEXT + objectIndex)
 					{
-						int drawX = X + htmlGump->X + textOffsX;
-						int drawY = Y + htmlGump->Y + textOffsY - (htmlGump->LineOffset * GUMP_SCROLLING_PIXEL_STEP);
+						int drawX = m_X + htmlGump->X + textOffsX;
+						int drawY = m_Y + htmlGump->Y + textOffsY - (htmlGump->LineOffset * GUMP_SCROLLING_PIXEL_STEP);
 						
 						WORD link = htmlGump->m_Text.WebLinkUnderMouse(drawX, drawY);
 

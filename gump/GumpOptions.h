@@ -51,16 +51,16 @@ private:
 	static TTextTexture m_TexturePage9[9];	//Miscellaneous
 	static TTextTexture m_TexturePage10[2];	//Filter Options
 	
-	int DrawPage1(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY); //Sound and Music
-	int DrawPage2(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY); //Pop-up Help
-	int DrawPage3(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY); //Language
-	int DrawPage4(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY); //Chat
-	int DrawPage5(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY); //Macro Options
-	int DrawPage6(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY); //Interface
-	int DrawPage7(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY); //Display
-	int DrawPage8(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY); //Reputation System
-	int DrawPage9(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY); //Miscellaneous
-	int DrawPage10(bool &mode, DWORD &index, bool &IsPressed, int &CanSelectedButton, int &CanPressedButton, int &posX, int &posY); //Filter Options
+	int DrawPage1(bool &mode, DWORD &index); //Sound and Music
+	int DrawPage2(bool &mode, DWORD &index); //Pop-up Help
+	int DrawPage3(bool &mode, DWORD &index); //Language
+	int DrawPage4(bool &mode, DWORD &index); //Chat
+	int DrawPage5(bool &mode, DWORD &index); //Macro Options
+	int DrawPage6(bool &mode, DWORD &index); //Interface
+	int DrawPage7(bool &mode, DWORD &index); //Display
+	int DrawPage8(bool &mode, DWORD &index); //Reputation System
+	int DrawPage9(bool &mode, DWORD &index); //Miscellaneous
+	int DrawPage10(bool &mode, DWORD &index); //Filter Options
 
 	void ApplyPageChanges();
 	

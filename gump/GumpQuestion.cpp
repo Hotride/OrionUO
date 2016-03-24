@@ -18,16 +18,30 @@
 */
 //---------------------------------------------------------------------------
 #include "stdafx.h"
+
+TTextTexture TGumpQuestion::m_Text[2];
 //---------------------------------------------------------------------------
 TGumpQuestion::TGumpQuestion(DWORD serial, short x, short y, BYTE variant)
 : TGump(GT_QUESTION, serial, x, y), m_Variant(variant)
 {
-	Blocked = true;
+	m_Blocked = true;
 	g_GrayMenuCount++;
 }
 //---------------------------------------------------------------------------
 TGumpQuestion::~TGumpQuestion()
 {
+}
+//----------------------------------------------------------------------------
+void TGumpQuestion::InitTextTextures()
+{
+	FontManager->GenerateA(1, m_Text[0], "Quit\nUltima Online?", 0x0386);
+	FontManager->GenerateA(1, m_Text[1], "This may flag\nyou criminal!", 0x0386);
+}
+//----------------------------------------------------------------------------
+void TGumpQuestion::ReleaseTextTextures()
+{
+	IFOR(i, 0, 2)
+		m_Text[i].Clear();
 }
 //---------------------------------------------------------------------------
 void TGumpQuestion::PrepareTextures()
@@ -41,122 +55,87 @@ void TGumpQuestion::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	DWORD index = (DWORD)this;
+	CalculateGumpState();
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
+	glNewList((GLuint)this, GL_COMPILE);
 	
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-	
-	glNewList((GLuint)index, GL_COMPILE);
-	
-		UO->DrawGump(0x0816, 0, posX, posY);
+		UO->DrawGump(0x0816, 0, 0, 0);
 		
 		if (m_Variant == 1)
-		{
-			FontManager->DrawA(1, "Quit\nUltima Online?", 0x0386, posX + 33, posY + 30);
-			//FontManager->DrawA(1, "Quit", 0x0386, posX + 33, posY + 30);
-			//FontManager->DrawA(1, "Ultima Online?", 0x0386, posX + 33, posY + 45);
-		}
+			m_Text[0].Draw(33, 30);
 		else if (m_Variant == 2)
-		{
-			FontManager->DrawA(1, "This may flag\nyou criminal!", 0x0386, posX + 33, posY + 30);
-			//FontManager->DrawA(1, "This may flag", 0x0386, posX + 33, posY + 30);
-			//FontManager->DrawA(1, "you criminal!", 0x0386, posX + 33, posY + 45);
-		}
+			m_Text[1].Draw(33, 30);
 
 		WORD gumpID = 0x0817;
-		if (CanPressedButton == ID_GQ_BUTTON_CANCEL)
+		if (g_GumpPressedElement == ID_GQ_BUTTON_CANCEL)
 			gumpID = 0x0818;
-		else if (CanSelectedButton == ID_GQ_BUTTON_CANCEL)
+		else if (g_GumpSelectElement == ID_GQ_BUTTON_CANCEL)
 			gumpID = 0x0819;
-		UO->DrawGump(gumpID, 0, posX + 37, posY + 75); //Button cancel
+		UO->DrawGump(gumpID, 0, 37, 75); //Button cancel
 
 		gumpID = 0x081A;
-		if (CanPressedButton == ID_GQ_BUTTON_OKAY)
+		if (g_GumpPressedElement == ID_GQ_BUTTON_OKAY)
 			gumpID = 0x081B;
-		else if (CanSelectedButton == ID_GQ_BUTTON_OKAY)
+		else if (g_GumpSelectElement == ID_GQ_BUTTON_OKAY)
 			gumpID = 0x081C;
-		UO->DrawGump(gumpID, 0, posX + 100, posY + 75); //Button okay
+		UO->DrawGump(gumpID, 0, 100, 75); //Button okay
 
 	glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpQuestion::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-	
-	int posX = X;
-	int posY = Y;
-
-	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-
-		if (mode)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode)
-	{
-		if (IsPressed || CanSelectedButton)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
-	}
+	CalculateGumpState();
 
 	if (mode)
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated || g_GumpSelectElement) // || g_GumpPressed
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x0816, posX, posY))
+		if (UO->GumpPixelsInXY(0x0816, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
+
+			if (UO->GumpPixelsInXY(0x0817, 37, 75))
+				LSG = ID_GQ_BUTTON_CANCEL; //Button cancel
+			else if (UO->GumpPixelsInXY(0x081A, 100, 75))
+				LSG = ID_GQ_BUTTON_OKAY; //Button okay
 		}
 
-		posY += 75;
-
-		if (UO->GumpPixelsInXY(0x0817, posX + 37, posY))
-			LSG = ID_GQ_BUTTON_CANCEL; //Button cancel
-		else if (UO->GumpPixelsInXY(0x081A, posX + 100, posY))
-			LSG = ID_GQ_BUTTON_OKAY; //Button okay
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		if (LSG != 0)
 			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
@@ -177,7 +156,7 @@ void TGumpQuestion::OnLeftMouseUp()
 			GameScreen->CreateSmoothAction(TGameScreen::ID_SMOOTH_GS_LOGOUT);
 		else if (m_Variant == 2)
 		{
-			UO->AttackReq(ID);
+			UO->AttackReq(m_ID);
 			GumpManager->RemoveGump(this);
 		}
 	}

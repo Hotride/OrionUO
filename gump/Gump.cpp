@@ -81,12 +81,13 @@ void TGump::CalculateGumpState()
 	}
 }
 //---------------------------------------------------------------------------
-void TGump::DrawLocker(int &x, int &y)
+void TGump::DrawLocker()
 {
 	if (g_ShowGumpLocker)
 	{
 		g_GL.OldTexture = 0;
-		g_GL.Draw(g_TextureGumpState[m_LockMoving], x, y, 10, 14);
+		int xy = 0;
+		g_GL.Draw(g_TextureGumpState[m_LockMoving], xy, xy, 10, 14);
 	}
 }
 //---------------------------------------------------------------------------

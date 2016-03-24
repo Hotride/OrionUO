@@ -39,7 +39,7 @@ void TGumpBuy::PrepareTextures()
 	UO->ExecuteGump(0x0828);
 	UO->ExecuteGumpPart(0x0037, 2);
 
-	TGameCharacter *vendor = World->FindWorldCharacter(Serial);
+	TGameCharacter *vendor = World->FindWorldCharacter(m_Serial);
 
 	if (vendor == NULL)
 		return;
@@ -66,7 +66,7 @@ void TGumpBuy::CalculateBuyListCount()
 {
 	m_Count = 0;
 
-	TGameCharacter *vendor = World->FindWorldCharacter(Serial);
+	TGameCharacter *vendor = World->FindWorldCharacter(m_Serial);
 
 	if (vendor == NULL)
 		return;
@@ -98,7 +98,7 @@ void TGumpBuy::CalculateSelectedListCount()
 {
 	m_SelectedListCount = 0;
 
-	TGameCharacter *vendor = World->FindWorldCharacter(Serial);
+	TGameCharacter *vendor = World->FindWorldCharacter(m_Serial);
 
 	if (vendor == NULL)
 		return;
@@ -126,44 +126,33 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	TGameCharacter *vendor = World->FindWorldCharacter(Serial);
+	TGameCharacter *vendor = World->FindWorldCharacter(m_Serial);
 
 	if (vendor == NULL)
 		return; //Объект, к которому привязан гамп - исчез
 	
-	DWORD index = (DWORD)this;
-
 	if (!m_Count)
 		CalculateBuyListCount(); //Вычисление размера байлиста (только 1 раз)
 
 	CalculateSelectedListCount(); //Вычисление размеров листа выбранных объектов
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Нажата ли кнопка в окне?
-	bool IsScrollerPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index);
+	CalculateGumpState();
 
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsScrollerPressed)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-	
 	int scrollerY1 = 0;
 	int scrollerY2 = 0;
 
 	int visibleLines = m_Count - 1;
 	int maxScrollerY = 91;
 
-	if (IsScrollerPressed && g_LastObjectLeftMouseDown == ID_GB_SCROLL_1) //Scroller 1 pressed
+	if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GB_SCROLL_1) //Scroller 1 pressed
 	{
-		int currentY = (g_MouseY - 10) - posY; //Scroller 1 position
+		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY; //Scroller 1 position
 
 		scrollerY1 = CalculateScrollerAndTextPosition(m_SelectedLine1, visibleLines, maxScrollerY, currentY);
 	}
@@ -173,24 +162,24 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 	visibleLines = m_SelectedListCount - 1;
 	maxScrollerY = 57;
 	
-	if (IsScrollerPressed && g_LastObjectLeftMouseDown == ID_GB_SCROLL_2) //Scroller 2 pressed
+	if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GB_SCROLL_2) //Scroller 2 pressed
 	{
-		int currentY = (g_MouseY - 10) - posY; //Scroller 2 position
+		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY; //Scroller 2 position
 
 		scrollerY2 = CalculateScrollerAndTextPosition(m_SelectedLine2, visibleLines, maxScrollerY, currentY);
 	}
 	else if (m_SelectedLine2)
 		scrollerY2 = CalculateScrollerY(m_SelectedLine2, visibleLines, maxScrollerY);
 
-	glNewList((GLuint)index, GL_COMPILE);
+	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawGump(0x0870, 0, posX, posY);
+		UO->DrawGump(0x0870, 0, 0, 0);
 
 		//My Inventory
 
-		g_GL.ViewPort(posX + 30, posY + 60, 200, 176);
+		g_GL.Scissor((int)g_GumpTranslateX + 30, (int)g_GumpTranslateY + 60, 200, 176);
 
-		int drawY = posY + 60;
+		int drawY = 60;
 			
 		TTextureObject *thDelim1 = UO->ExecuteGump(0x0039);
 		TTextureObject *thDelim2 = UO->ExecuteGump(0x003A);
@@ -198,8 +187,8 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 			
 		int delim1Height = 20;
 		int delim1Width = 30;
-		int delim1posX = posX + 32;
-		int delim2posX = posX + 62;
+		int delim1posX = 32;
+		int delim2posX = 62;
 		int delim3posX = 30;
 		int delimLineWidth = 140;
 
@@ -211,15 +200,15 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 		{
 			delim1Height = thDelim1->Height;
 			delim1Width = thDelim1->Width;
-			delim2posX = posX + 32 + delim1Width;
-			delim3posX = posX + 226 - thDelim3->Width;
+			delim2posX = 32 + delim1Width;
+			delim3posX = 226 - thDelim3->Width;
 			delimLineWidth = 200 - (thDelim1->Width + thDelim3->Width);
 		}
 
 		int currentIndex = 0;
 		int startIndex = m_SelectedLine1;
 
-		int drawYBounds = posY + 236;
+		int drawYBounds = 236;
 
 		IFOR(i, 0, 2)
 		{
@@ -273,7 +262,7 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 						else
 							textOffsetY = ((maxOffset - tth.Height) / 2);
 
-						tth.Draw(posX + 82, drawY + textOffsetY);
+						tth.Draw(82, drawY + textOffsetY);
 						tth.Clear();
 						
 						str = std::to_string(box->Count - si->Count);
@@ -282,7 +271,7 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 
 						if (!tth.Empty())
 						{
-							tth.Draw(posX + 226 - amountWidth, drawY + (maxOffset / 2) - (tth.Height / 2));
+							tth.Draw(226 - amountWidth, drawY + (maxOffset / 2) - (tth.Height / 2));
 							tth.Clear();
 						}
 
@@ -308,27 +297,22 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 			}
 		}
 
-		g_GL.RestorePort();
+		glDisable(GL_SCISSOR_TEST);
 		
-		//Up
-		//UO->DrawGump(0x0828, 0, posX + 237, posY + 66); //Scroller 1 min
-		//Down
-		//UO->DrawGump(0x0828, 0, posX + 237, posY + 157); //Scroller 1 max
-			
-		UO->DrawGump(0x0828, 0, posX + 237, posY + 66 + scrollerY1); //Scroller 1
+		UO->DrawGump(0x0828, 0, 237, 66 + scrollerY1); //Scroller 1
 
 		//Offer
 
-		UO->DrawGump(0x0871, 0, posX + 170, posY + 214);
+		UO->DrawGump(0x0871, 0, 170, 214);
 			
-		g_GL.ViewPort(posX + 200, posY + 280, 200, 92);
+		g_GL.Scissor((int)g_GumpTranslateX + 200, (int)g_GumpTranslateY + 280, 200, 92);
 
-		drawY = posY + 282;
+		drawY = 282;
 
 		currentIndex = 0;
 		startIndex = m_SelectedLine2;
 
-		drawYBounds = posY + 372;
+		drawYBounds = 372;
 
 		int totalPrice = 0;
 		
@@ -376,7 +360,7 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 				{
 					int maxOffset = tth.Height;
 
-					tth.Draw(posX + 234, drawY);
+					tth.Draw(234, drawY);
 					tth.Clear();
 
 					str = "at " + std::to_string(si->Price) + " g.p.";
@@ -384,7 +368,7 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 
 					if (!tth.Empty())
 					{
-						tth.Draw(posX + 234, drawY + maxOffset - 2);
+						tth.Draw(234, drawY + maxOffset - 2);
 						maxOffset += (tth.Height - 2);
 						tth.Clear();
 					}
@@ -395,14 +379,14 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 
 					if (!tth.Empty())
 					{
-						tth.Draw(posX + 204, drawY);
+						tth.Draw(204, drawY);
 						tth.Clear();
 					}
 
 					int drawOffsetY = drawY + (maxOffset / 2) - 6;
 					
-					UO->DrawGump(0x0037, 0, posX + 356, drawOffsetY); //+
-					UO->DrawGump(0x0038, 0, posX + 376, drawOffsetY); //-
+					UO->DrawGump(0x0037, 0, 356, drawOffsetY); //+
+					UO->DrawGump(0x0038, 0, 376, drawOffsetY); //-
 
 					drawY += maxOffset;
 				}
@@ -413,20 +397,15 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 			}
 		}
 
-		g_GL.RestorePort();
+		glDisable(GL_SCISSOR_TEST);
 		
-		//Up
-		//UO->DrawGump(0x0828, 0, posX + 407, posY + 280); //Scroller 2 min
-		//Down
-		//UO->DrawGump(0x0828, 0, posX + 407, posY + 337); //Scroller 2 max
-
-		UO->DrawGump(0x0828, 0, posX + 407, posY + 280 + scrollerY2); //Scroller 2
+		UO->DrawGump(0x0828, 0, 407, 280 + scrollerY2); //Scroller 2
 		
-		FontManager->DrawA(9, std::to_string(totalPrice).c_str(), 0x0386, posX + 240, posY + 385);
+		FontManager->DrawA(9, std::to_string(totalPrice).c_str(), 0x0386, 240, 385);
 		
-		FontManager->DrawA(9, std::to_string(g_Player->Gold).c_str(), 0x0386, posX + 358, posY + 385);
+		FontManager->DrawA(9, std::to_string(g_Player->Gold).c_str(), 0x0386, 358, 385);
 		
-		if (NoClose)
+		if (m_NoClose)
 		{
 			if (g_Player != NULL)
 			{
@@ -455,55 +434,40 @@ void TGumpBuy::GenerateFrame(int posX, int posY)
 				if (bCounterCount >= 3)
 					bCounterCount = 0;
 
-				FontManager->DrawA(5, name.c_str(), 0x0386, posX + 242, posY + 408);
+				FontManager->DrawA(5, name.c_str(), 0x0386, 242, 408);
 			}
 		}
 
 	glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpBuy::Draw(bool &mode)
 {
-	DWORD index = (DWORD)this;
-
-	TGameCharacter *vendor = World->FindWorldCharacter(Serial);
+	TGameCharacter *vendor = World->FindWorldCharacter(m_Serial);
 
 	if (vendor == NULL)
 		return 0; //Объект, к которому привязан гамп - исчез
-	
-	//Для быстрого доступа
-	int posX = X;
-	int posY = Y;
+
+	DWORD index = (DWORD)this;
+
+	CalculateGumpState();
 
 	if (!m_Count)
 		CalculateBuyListCount(); //Вычисление размера байлиста (только 1 раз)
 
 	CalculateSelectedListCount(); //Вычисление размеров листа выбранных объектов
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Нажата ли кнопка в окне?
-	bool IsScrollerPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsScrollerPressed)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-	
 	DWORD ticks = GetTickCount();
 
-	bool needRedraw = false;
-
-	if (!NoClose)
+	if (!m_NoClose)
 		m_ContinueCounter = 0;
 	else
-		needRedraw = true;
+		m_FrameCreated = false;
 
-	if (mode && CanPressedButton >= ID_GB_BUTTON_INC && CanPressedButton < ID_GB_BUTTON_END && m_LastChangeCountTime < ticks)
+	if (mode && g_GumpPressedElement >= ID_GB_BUTTON_INC && g_GumpPressedElement < ID_GB_BUTTON_END && m_LastChangeCountTime < ticks)
 	{
 		int countToAdd = 1;
 			
@@ -520,11 +484,11 @@ int TGumpBuy::Draw(bool &mode)
 
 		m_StartChangeCountTime++;
 
-		if (CanPressedButton < ID_GB_BUTTON_DEC) //+
-			ChangeItemCount(true, CanPressedButton - ID_GB_BUTTON_INC, countToAdd);
+		if (g_GumpPressedElement < ID_GB_BUTTON_DEC) //+
+			ChangeItemCount(true, g_GumpPressedElement - ID_GB_BUTTON_INC, countToAdd);
 		else //-
 		{
-			if (ChangeItemCount(false, CanPressedButton - ID_GB_BUTTON_DEC, countToAdd))
+			if (ChangeItemCount(false, g_GumpPressedElement - ID_GB_BUTTON_DEC, countToAdd))
 			{
 				g_LeftMouseDown = false;
 				g_LastGumpLeftMouseDown = 0;
@@ -534,38 +498,31 @@ int TGumpBuy::Draw(bool &mode)
 
 		m_LastChangeCountTime = ticks + CHANGE_SHOP_COUNT_DELAY;
 
-		needRedraw = true;
+		m_FrameCreated = false;
 	}
 	
-	if (IsScrollerPressed && m_LastChangedLineTime < ticks)
+	if (g_GumpPressedScroller && m_LastChangedLineTime < ticks)
 	{
 		if (g_LastObjectLeftMouseDown == ID_GB_BUTTON_UP_1) //1 gump ^
 		{
 			ListingList(true, false);
-			needRedraw = true;
+			m_FrameCreated = false;
 		}
 		else if (g_LastObjectLeftMouseDown == ID_GB_BUTTON_DOWN_1) //1 gump v
 		{
 			ListingList(false, false);
-			needRedraw = true;
+			m_FrameCreated = false;
 		}
 		else if (g_LastObjectLeftMouseDown == ID_GB_BUTTON_UP_2) //2 gump ^
 		{
 			ListingList(true, true);
-			needRedraw = true;
+			m_FrameCreated = false;
 		}
 		else if (g_LastObjectLeftMouseDown == ID_GB_BUTTON_DOWN_2) //2 gump v
 		{
 			ListingList(false, true);
-			needRedraw = true;
+			m_FrameCreated = false;
 		}
-	}
-	
-	//Если окошко захвачено для перемещения - вычислим оффсеты
-	if (mode && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += g_MouseX - g_DroppedLeftMouseX;
-		posY += g_MouseY - g_DroppedLeftMouseY;
 	}
 	
 	int scrollerY1 = 66;
@@ -575,88 +532,77 @@ int TGumpBuy::Draw(bool &mode)
 	int visibleLines = m_Count - 1;
 	int maxScrollerY = 91;
 
-	if (IsScrollerPressed && g_LastObjectLeftMouseDown == ID_GB_SCROLL_1) //Scroller 1 pressed
+	if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GB_SCROLL_1) //Scroller 1 pressed
 	{
-		int currentY = (g_MouseY - 10) - posY; //Scroller 1 position
+		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY; //Scroller 1 position
 
 		scrollerY1 = CalculateScrollerAndTextPosition(m_SelectedLine1, visibleLines, maxScrollerY, currentY);
 
 		if (mode)
-			GenerateFrame(posX, posY);
-
-		noRedraw = true;
+			m_FrameCreated = false;
 	}
 	else if (m_SelectedLine1)
 	{
 		scrollerY1 = CalculateScrollerY(m_SelectedLine1, visibleLines, maxScrollerY);
 
 		if (mode)
-			GenerateFrame(posX, posY);
-
-		noRedraw = true;
+			m_FrameCreated = false;
 	}
 
 	visibleLines = m_SelectedListCount - 1;
 	maxScrollerY = 57;
 	
-	if (IsScrollerPressed && g_LastObjectLeftMouseDown == ID_GB_SCROLL_2) //Scroller 2 pressed
+	if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GB_SCROLL_2) //Scroller 2 pressed
 	{
-		int currentY = (g_MouseY - 10) - posY; //Scroller 2 position
+		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY; //Scroller 2 position
 
 		scrollerY2 = CalculateScrollerAndTextPosition(m_SelectedLine2, visibleLines, maxScrollerY, currentY);
 
 		if (mode)
-			GenerateFrame(posX, posY);
-
-		noRedraw = true;
+			m_FrameCreated = false;
 	}
 	else if (m_SelectedLine2)
 	{
 		scrollerY2 = CalculateScrollerY(m_SelectedLine2, visibleLines, maxScrollerY);
 
 		if (mode)
-			GenerateFrame(posX, posY);
-
-		noRedraw = true;
-	}
-
-	//Если окошко захвачено для перемещения - перерисуем гамп
-	if (mode && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		if (!noRedraw)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode && !noRedraw)
-	{
-		if (needRedraw)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
+			m_FrameCreated = false;
 	}
 
 	if (mode) //Отрисовка
 	{
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
 		int LSG = 0;
-		
+
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		bool secondGumpSelected = false;
 
-		if (UO->GumpPixelsInXY(0x0871, posX + 170, posY + 214))
+		if (UO->GumpPixelsInXY(0x0871, 170, 214))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 			secondGumpSelected = true;
 		}
-		else if (UO->GumpPixelsInXY(0x0870, posX, posY))
+		else if (UO->GumpPixelsInXY(0x0870, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -666,7 +612,7 @@ int TGumpBuy::Draw(bool &mode)
 		{
 			//My Inventory
 
-			int drawY = posY + 60;
+			int drawY = 60;
 			
 			TTextureObject *thDelim1 = UO->ExecuteGump(0x0039);
 			
@@ -678,7 +624,7 @@ int TGumpBuy::Draw(bool &mode)
 			int currentIndex = 0;
 			int startIndex = m_SelectedLine1;
 
-			int drawYBounds = posY + 236;
+			int drawYBounds = 236;
 			
 			bool completedSearch = false;
 			
@@ -726,10 +672,7 @@ int TGumpBuy::Draw(bool &mode)
 								if (drawY + maxOffset > drawYBounds)
 									checkHeight = drawYBounds - drawY;
 						
-								RECT rc = {0, 0, 200, checkHeight};
-								POINT p = {g_MouseX - (posX + 30), g_MouseY - drawY};
-			
-								if (PtInRect(&rc, p)) //Item in list on gump 1
+								if (UO->PolygonePixelsInXY(30, drawY, 200, checkHeight)) //Item in list on gump 1
 								{
 									LSG = ID_GB_ITEM_LIST + currentIndex;
 									completedSearch = true;
@@ -752,12 +695,12 @@ int TGumpBuy::Draw(bool &mode)
 
 			if (!completedSearch) //Offer
 			{
-				drawY = posY + 282;
+				drawY = 282;
 
 				currentIndex = 0;
 				startIndex = m_SelectedLine2;
 
-				drawYBounds = posY + 372;
+				drawYBounds = 372;
 
 				IFOR(i, 0, 2)
 				{
@@ -803,19 +746,14 @@ int TGumpBuy::Draw(bool &mode)
 							
 							int drawOffsetY = drawY + (maxOffset / 2) - 4;
 					
-							RECT rc = {0, 0, 14, 14};
-							POINT p = {g_MouseX - (posX + 356), g_MouseY - drawOffsetY};
-			
-							if (PtInRect(&rc, p)) //+
+							if (UO->PolygonePixelsInXY(356, drawOffsetY, 14, 14)) //+
 							{
 								LSG = ID_GB_BUTTON_INC + currentIndex;
 								completedSearch = true;
 								break;
 							}
 
-							p.x = g_MouseX - (posX + 376);
-							
-							if (PtInRect(&rc, p)) //-
+							if (UO->PolygonePixelsInXY(376, drawOffsetY, 14, 14)) //-
 							{
 								LSG = ID_GB_BUTTON_DEC + currentIndex;
 								completedSearch = true;
@@ -836,51 +774,34 @@ int TGumpBuy::Draw(bool &mode)
 			}
 		}
 		
-		if (UO->GumpPixelsInXY(0x0828, posX + 237, posY + 66 + scrollerY1)) //Scroller 1
+		if (UO->GumpPixelsInXY(0x0828, 237, 66 + scrollerY1)) //Scroller 1
 		{
 			g_LastSelectedGump = index;
 			LSG = ID_GB_SCROLL_1;
 		}
-		else if (UO->GumpPixelsInXY(0x0828, posX + 407, posY + 280 + scrollerY2)) //Scroller 2
+		else if (UO->GumpPixelsInXY(0x0828, 407, 280 + scrollerY2)) //Scroller 2
 		{
 			g_LastSelectedGump = index;
 			LSG = ID_GB_SCROLL_2;
 		}
 		else if (g_LastSelectedGump == index)
 		{
-			RECT rc = {0, 0, 20, 16};
-			POINT p = {g_MouseX - (posX + 233), g_MouseY - (posY + 49)};
-			
-			if (PtInRect(&rc, p)) //1 gump ^
+			if (UO->PolygonePixelsInXY(233, 49, 20, 14)) //1 gump ^
 				LSG = ID_GB_BUTTON_UP_1;
-
-			p.y = g_MouseY - (posY + 191);
-			if (PtInRect(&rc, p)) //1 gump v
+			else if (UO->PolygonePixelsInXY(233, 191, 20, 14)) //1 gump v
 				LSG = ID_GB_BUTTON_DOWN_1;
-
-			p.x = g_MouseX - (posX + 403);
-			p.y = g_MouseY - (posY + 264);
-			if (PtInRect(&rc, p)) //2 gump ^
+			else if (UO->PolygonePixelsInXY(403, 264, 20, 14)) //2 gump ^
 				LSG = ID_GB_BUTTON_UP_2;
-			
-			p.y = g_MouseY - (posY + 371);
-			if (PtInRect(&rc, p)) //2 gump v
+			else if (UO->PolygonePixelsInXY(403, 371, 20, 14)) //2 gump v
 				LSG = ID_GB_BUTTON_DOWN_2;
-			
-			rc.right = 34;
-			rc.bottom = 30;
-			p.x = g_MouseX - (posX + 200);
-			p.y = g_MouseY - (posY + 406);
-			if (PtInRect(&rc, p)) //Accept
+			else if (UO->PolygonePixelsInXY(200, 406, 34, 30)) //Accept
 				LSG = ID_GB_BUTTON_ACCEPT;
-			
-			rc.right = 24;
-			rc.bottom = 24;
-			p.x = g_MouseX - (posX + 372);
-			p.y = g_MouseY - (posY + 410);
-			if (PtInRect(&rc, p)) //Clear
+			else if (UO->PolygonePixelsInXY(372, 410, 24, 24)) //Clear
 				LSG = ID_GB_BUTTON_CLEAR;
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		if (LSG != 0)
 			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем

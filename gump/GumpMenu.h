@@ -22,7 +22,7 @@
 //---------------------------------------------------------------------------
 class TGumpMenu : public TGump
 {
-private:
+protected:
 	static const int ID_GM_LEFT = 1;
 	static const int ID_GM_RIGHT = 2;
 	static const int ID_GM_ITEMS = 10;
@@ -36,6 +36,7 @@ private:
 
 	void MoveItems();
 
+	void CalculateGumpState();
 public:
 	TGumpMenu(DWORD serial, short x, short y, string text);
 	virtual ~TGumpMenu();

@@ -67,13 +67,11 @@ void TGumpTip::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
-
-	DWORD index = (DWORD)this;
 
 	int height = m_Height;
 
@@ -88,26 +86,14 @@ void TGumpTip::GenerateFrame(int posX, int posY)
 		if (height >= buf)
 			height = buf;
 	}
-	
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Нажата ли кнопка в окне?
-	bool IsScrollerPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index);
 
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
+	CalculateGumpState();
 
 	int scrollerY = 0;
 
 	int heightToScrolling = 0;
 
-	if (!Minimized)
+	if (!m_Minimized)
 	{
 		bool canMoveScroller = true;
 		if (m_Text.Height < height - 50)
@@ -119,9 +105,9 @@ void TGumpTip::GenerateFrame(int posX, int posY)
 
 		int visibleLines = heightToScrolling / GUMP_SCROLLING_PIXEL_STEP;
 
-		if (IsScrollerPressed && g_LastObjectLeftMouseDown == ID_GT_SCROLLER && canMoveScroller) //Scroller pressed
+		if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GT_SCROLLER && canMoveScroller) //Scroller pressed
 		{
-			int currentY = (g_MouseY - 10) - posY - 72; //Scroller position
+			int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY - 72; //Scroller position
 
 			scrollerY = CalculateScrollerAndTextPosition(m_CurrentLine, visibleLines, maxScrollerY, currentY);
 		}
@@ -130,62 +116,62 @@ void TGumpTip::GenerateFrame(int posX, int posY)
 	}
 
 	//Создание дисплей листа
-	glNewList((GLuint)index, GL_COMPILE);
+	glNewList((GLuint)this, GL_COMPILE);
 
-		if (Minimized)
+		if (m_Minimized)
 		{
 			WORD gumpID = 0x09CB;
 			if (m_Updates)
 				gumpID = 0x09D3;
 
-			UO->DrawGump(gumpID, 0, posX, posY);
+			UO->DrawGump(gumpID, 0, 0, 0);
 
 			//Завершим создание листа и выйдем из процедуры
 			glEndList();
 
-			FrameRedraw = true;
-			FrameCreated = true;
+			m_FrameRedraw = true;
+			m_FrameCreated = true;
 
 			return;
 		}
 
-		UO->DrawGump(0x082D, 0, posX + 137, posY); //Minimize
-		UO->DrawGump(0x0820, 0, posX, posY + 23); //Top scroll
+		UO->DrawGump(0x082D, 0, 137, 0); //Minimize
+		UO->DrawGump(0x0820, 0, 0, 23); //Top scroll
 
 		if (m_Updates) //Updates text gump
-			UO->DrawGump(0x09D2, 0, posX + 112, posY + 35);
+			UO->DrawGump(0x09D2, 0, 112, 35);
 		else //Tips text gump
-			UO->DrawGump(0x09CA, 0, posX + 127, posY + 33);
+			UO->DrawGump(0x09CA, 0, 127, 33);
 		
 		//Tip window body
-		int curPosY = posY + 59;
+		int curPosY = 59;
 
 		while (true)
 		{
-			int deltaHeight = (height + posY) - (curPosY - 36);
+			int deltaHeight = height - (curPosY - 36);
 			if (deltaHeight  < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x0821, 0, posX + 18, curPosY, 0, deltaHeight);
+					UO->DrawGump(0x0821, 0, 18, curPosY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x0821, 0, posX + 18, curPosY);
+				UO->DrawGump(0x0821, 0, 18, curPosY);
 
 			curPosY += 70;
 
-			deltaHeight = (height + posY) - (curPosY - 36);
+			deltaHeight = height - (curPosY - 36);
 
 			if (deltaHeight < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x0822, 0, posX + 18, curPosY, 0, deltaHeight);
+					UO->DrawGump(0x0822, 0, 18, curPosY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x0822, 0, posX + 18, curPosY);
+				UO->DrawGump(0x0822, 0, 18, curPosY);
 
 			curPosY += 70;
 		}
@@ -195,56 +181,47 @@ void TGumpTip::GenerateFrame(int posX, int posY)
 		//Down
 		//UO->DrawGump(0x001F, 0, PosX + 257, PosY + Height - 17); //Scroller
 
-		UO->DrawGump(0x001F, 0, posX + 257, posY + 72 + scrollerY); //Scroller
+		UO->DrawGump(0x001F, 0, 257, 72 + scrollerY); //Scroller
 		
-		UO->DrawGump(0x082B, 0, posX + 30, posY + 58); //Top line
-		UO->DrawGump(0x0824, 0, posX + 249, posY + 56); //^ button
-		UO->DrawGump(0x082B, 0, posX + 31, posY + height + 21); //Bottom line
-		UO->DrawGump(0x0825, 0, posX + 249, posY + height + 17); //v button
+		UO->DrawGump(0x082B, 0, 30, 58); //Top line
+		UO->DrawGump(0x0824, 0, 249, 56); //^ button
+		UO->DrawGump(0x082B, 0, 31, height + 21); //Bottom line
+		UO->DrawGump(0x0825, 0, 249, height + 17); //v button
 
-		g_GL.ViewPort(posX + 36, posY + 68, 214, height - 50);
+		g_GL.Scissor(36, 68, 214, height - 50);
 
-		m_Text.Draw(posX + 36, posY + 68 - (m_CurrentLine * GUMP_SCROLLING_PIXEL_STEP));
+		m_Text.Draw(36, 68 - (m_CurrentLine * GUMP_SCROLLING_PIXEL_STEP));
 
-		g_GL.RestorePort();
+		glDisable(GL_SCISSOR_TEST);
 
-		UO->DrawGump(0x0823, 0, posX + 18, posY + height + 34); //Bottom scroll
+		UO->DrawGump(0x0823, 0, 18, height + 34); //Bottom scroll
 
 		if (!m_Updates)
 		{
-			UO->DrawGump(0x09CC, 0, posX + 35, posY + height + 45); //Previous gump
+			UO->DrawGump(0x09CC, 0, 35, height + 45); //Previous gump
 
 			//UO->DrawGump(0x0823, 0, posX + 18, posY + height + 34); //+/- gump
 
-			UO->DrawGump(0x09CD, 0, posX + 251, posY + height + 45); //Next gump
+			UO->DrawGump(0x09CD, 0, 251, height + 45); //Next gump
 		}
 		
-		WORD gumpID = 0x082E + (int)(CanSelectedButton == 2);
-		UO->DrawGump(gumpID, 0, posX + 137, posY + height + 66); //Resize
+		WORD gumpID = 0x082E + (int)(g_GumpSelectElement == 2);
+		UO->DrawGump(gumpID, 0, 137, height + 66); //Resize
 
 	//Завершаем запись дисплей листа
 	glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpTip::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	//Для быстрого доступа
-	int posX = X;
-	int posY = Y;
-
-	if (Minimized)
-	{
-		posX = MinimizedX;
-		posY = MinimizedY;
-	}
-	
 	int height = m_Height;
-	if (!Minimized && m_HeightBuffer)
+
+	if (!m_Minimized && m_HeightBuffer)
 	{
 		height += (g_MouseY - m_HeightBuffer);
 
@@ -255,25 +232,13 @@ int TGumpTip::Draw(bool &mode)
 		if (height >= buf)
 			height = buf;
 	}
-	
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Нажата ли кнопка в окне?
-	bool IsScrollerPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index);
 
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
+	CalculateGumpState();
 
 	DWORD ticks = GetTickCount();
 
 	//Проверим, вдруг необходимо изменить положение отображаемого элемента
-	if (IsScrollerPressed && m_LastScrollChangeTime < ticks)
+	if (g_GumpPressedScroller && m_LastScrollChangeTime < ticks)
 	{
 		if (g_LastObjectLeftMouseDown == ID_GT_BUTTON_UP) //Скроллинг вверх (гампом-стрелкой)
 			ListingList(true);
@@ -284,9 +249,8 @@ int TGumpTip::Draw(bool &mode)
 	int scrollerY = 0;
 
 	int heightToScrolling = 0;
-	bool noRedraw = false;
 
-	if (!Minimized)
+	if (!m_Minimized)
 	{
 		bool canMoveScroller = true;
 		if (m_Text.Height < height - 50)
@@ -298,94 +262,88 @@ int TGumpTip::Draw(bool &mode)
 
 		int visibleLines = heightToScrolling / GUMP_SCROLLING_PIXEL_STEP;
 
-		if (IsScrollerPressed && g_LastObjectLeftMouseDown == ID_GT_SCROLLER && canMoveScroller) //Scroller pressed
+		if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GT_SCROLLER && canMoveScroller) //Scroller pressed
 		{
-			int currentY = (g_MouseY - 10) - posY - 72; //Scroller position
+			int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY - 72; //Scroller position
 
 			scrollerY = CalculateScrollerAndTextPosition(m_CurrentLine, visibleLines, maxScrollerY, currentY);
 
 			if (mode)
-				GenerateFrame(posX, posY);
-
-			noRedraw = true;
+				m_FrameCreated = false;
 		}
 		else if (m_CurrentLine && canMoveScroller)
 			scrollerY = CalculateScrollerY(m_CurrentLine, visibleLines, maxScrollerY);
 	}
 
-	//Если окошко захвачено для перемещения - вычислим оффсеты
-	if (mode && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-
-		//А так же, если это режим рисования - перерисуем фрэйм
-		if (mode && !m_HeightBuffer)
-			GenerateFrame(posX, posY);
-	}
-	else if (mode && !noRedraw) //Перерисовка фрэйма, при соблюдении необходимых условий
-	{
-		if (CanSelectedButton && !m_HeightBuffer)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
-		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
-		}
-	}
-
 	if (mode) //Отрисовка
 	{
 		//Если фрэйм не был создан - создаем
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated || (g_GumpSelectElement && !m_HeightBuffer) || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		//Отобразим фрэйм
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
-		if (Minimized)
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
+		if (m_Minimized)
 		{
 			WORD gumpID = 0x09CB;
 			if (m_Updates)
 				gumpID = 0x09D3;
 
-			if (UO->GumpPixelsInXY(gumpID, posX, posY))
+			if (UO->GumpPixelsInXY(gumpID, 0, 0))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
 			}
+
+			g_MouseX = oldMouseX;
+			g_MouseY = oldMouseY;
 
 			return 0;
 		}
 		
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x082D, posX + 137, posY)) //Minimize
+		if (UO->GumpPixelsInXY(0x082D, 137, 0)) //Minimize
 		{
 			LSG = ID_GT_BUTTON_MINIMIZE;
 			g_LastSelectedGump = index;
 		}
 		
-		if (UO->GumpPixelsInXY(0x0820, posX, posY + 23)) //Top scroll
+		if (UO->GumpPixelsInXY(0x0820, 0, 23)) //Top scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 
 		//Tip window body
-		int curPosY = posY + 59;
+		int curPosY = 59;
 
 		while (true)
 		{
-			int deltaHeight = (height + posY) - (curPosY - 36);
+			int deltaHeight = height - (curPosY - 36);
 
 			if (deltaHeight  < 70)
 			{
 				if (deltaHeight > 0)
 				{
-					if (UO->GumpPixelsInXY(0x0821, posX + 18, curPosY, 0, deltaHeight))
+					if (UO->GumpPixelsInXY(0x0821, 18, curPosY, 0, deltaHeight))
 					{
 						g_LastSelectedObject = 0;
 						g_LastSelectedGump = index;
@@ -394,7 +352,7 @@ int TGumpTip::Draw(bool &mode)
 
 				break;
 			}
-			else if (UO->GumpPixelsInXY(0x0821, posX + 18, curPosY))
+			else if (UO->GumpPixelsInXY(0x0821, 18, curPosY))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -404,13 +362,13 @@ int TGumpTip::Draw(bool &mode)
 
 			curPosY += 70;
 
-			deltaHeight = (height + posY) - (curPosY - 36);
+			deltaHeight = height - (curPosY - 36);
 
 			if (deltaHeight < 70)
 			{
 				if (deltaHeight > 0)
 				{
-					if (UO->GumpPixelsInXY(0x0822, posX + 18, curPosY, 0, deltaHeight))
+					if (UO->GumpPixelsInXY(0x0822, 18, curPosY, 0, deltaHeight))
 					{
 						g_LastSelectedObject = 0;
 						g_LastSelectedGump = index;
@@ -419,7 +377,7 @@ int TGumpTip::Draw(bool &mode)
 
 				break;
 			}
-			else if (UO->GumpPixelsInXY(0x0822, posX + 18, curPosY))
+			else if (UO->GumpPixelsInXY(0x0822, 18, curPosY))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -430,7 +388,7 @@ int TGumpTip::Draw(bool &mode)
 			curPosY += 70;
 		}
 
-		if (UO->GumpPixelsInXY(0x0823, posX + 18, posY + height + 34)) //Bottom scroll
+		if (UO->GumpPixelsInXY(0x0823, 18, height + 34)) //Bottom scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -438,31 +396,33 @@ int TGumpTip::Draw(bool &mode)
 
 		if (g_LastSelectedGump == index)
 		{
-			if (UO->GumpPixelsInXY(0x0824, posX + 249, posY + 56)) //^ button
+			if (UO->GumpPixelsInXY(0x0824, 249, 56)) //^ button
 				LSG = ID_GT_BUTTON_UP;
-			else if (UO->GumpPixelsInXY(0x0825, posX + 249, posY + height + 17)) //v button
+			else if (UO->GumpPixelsInXY(0x0825, 249, height + 17)) //v button
 				LSG = ID_GT_BUTTON_DOWN;
 
 			if (!m_Updates)
 			{
-				if (UO->GumpPixelsInXY(0x09CC, posX + 35, posY + height + 45)) //Previous gump
+				if (UO->GumpPixelsInXY(0x09CC, 35, height + 45)) //Previous gump
 					LSG = ID_GT_PREV_GUMP;
-				else if (UO->GumpPixelsInXY(0x09CD, posX + 251, posY + height + 45)) //Next gump
+				else if (UO->GumpPixelsInXY(0x09CD, 251, height + 45)) //Next gump
 					LSG = ID_GT_NEXT_GUMP;
 			}
 		}
 
-		if (UO->GumpPixelsInXY(0x001F, posX + 257, posY + 72 + scrollerY)) //Scroller
+		if (UO->GumpPixelsInXY(0x001F, 257, 72 + scrollerY)) //Scroller
 		{
 			g_LastSelectedGump = index;
 			LSG = ID_GT_SCROLLER;
 		}
-		
-		if (UO->GumpPixelsInXY(0x082E, posX + 137, posY + height + 66)) //Resize
+		else if (UO->GumpPixelsInXY(0x082E, 137, height + 66)) //Resize
 		{
 			g_LastSelectedGump = index;
 			LSG = ID_GT_BUTTON_RESIZE;
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		if (LSG != 0)
 			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
@@ -482,9 +442,9 @@ void TGumpTip::OnLeftMouseUp()
 
 	if (g_LastObjectLeftMouseDown == ID_GT_BUTTON_MINIMIZE)
 	{
-		Minimized = true;
+		m_Minimized = true;
 
-		GenerateFrame(MinimizedX, MinimizedY);
+		m_FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GT_BUTTON_RESIZE)
 	{
@@ -503,12 +463,12 @@ void TGumpTip::OnLeftMouseUp()
 	else if (g_LastObjectLeftMouseDown == ID_GT_BUTTON_UP && m_LastScrollChangeTime < ticks)
 	{
 		ListingList(true);
-		UpdateFrame();
+		m_FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GT_BUTTON_DOWN && m_LastScrollChangeTime < ticks)
 	{
 		ListingList(false);
-		UpdateFrame();
+		m_FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GT_PREV_GUMP)
 		SendTipRequest(0);
@@ -518,10 +478,10 @@ void TGumpTip::OnLeftMouseUp()
 //----------------------------------------------------------------------------
 bool TGumpTip::OnLeftMouseDoubleClick()
 {
-	if (Minimized)
+	if (m_Minimized)
 	{
-		Minimized = false;
-		GenerateFrame(X, Y);
+		m_Minimized = false;
+		m_FrameCreated = false;
 
 		return true;
 	}
@@ -531,7 +491,7 @@ bool TGumpTip::OnLeftMouseDoubleClick()
 //----------------------------------------------------------------------------
 void TGumpTip::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 {
-	if (!Minimized && !g_LeftMouseDown && !g_RightMouseDown)
+	if (!m_Minimized && !g_LeftMouseDown && !g_RightMouseDown)
 	{
 		DWORD ticks = GetTickCount();
 
@@ -540,12 +500,12 @@ void TGumpTip::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 			if (state == MWS_UP)
 			{
 				ListingList(true, 25);
-				GenerateFrame(X, Y);
+				m_FrameCreated = false;
 			}
 			else if (state == MWS_DOWN)
 			{
 				ListingList(false, 25);
-				GenerateFrame(X, Y);
+				m_FrameCreated = false;
 			}
 		}
 	}

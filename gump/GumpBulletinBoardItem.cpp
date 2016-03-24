@@ -122,13 +122,13 @@ void TGumpBulletinBoardItem::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
 
-	DWORD index = (DWORD)this;
+	CalculateGumpState();
 
 	int height = m_Height;
 
@@ -144,20 +144,6 @@ void TGumpBulletinBoardItem::GenerateFrame(int posX, int posY)
 			height = buf;
 	}
 	
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Нажата ли кнопка в окне?
-	bool IsScrollerPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
 	int scrollerY = 0;
 
 	int heightToScrolling = 0;
@@ -175,9 +161,9 @@ void TGumpBulletinBoardItem::GenerateFrame(int posX, int posY)
 	
 	int visibleLines = heightToScrolling / GUMP_SCROLLING_PIXEL_STEP;
 
-	if (IsScrollerPressed && g_LastObjectLeftMouseDown == ID_GBBI_SCROLLER && canMoveScroller) //Scroller pressed
+	if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GBBI_SCROLLER && canMoveScroller) //Scroller pressed
 	{
-		int currentY = (g_MouseY - 10) - posY - 120; //Scroller position
+		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY - 120; //Scroller position
 
 		scrollerY = CalculateScrollerAndTextPosition(m_CurrentLine, visibleLines, maxScrollerY, currentY);
 	}
@@ -185,91 +171,92 @@ void TGumpBulletinBoardItem::GenerateFrame(int posX, int posY)
 		scrollerY = CalculateScrollerY(m_CurrentLine, visibleLines, maxScrollerY);
 
 	//Создание дисплей листа
-	glNewList((GLuint)index, GL_COMPILE);
+	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawGump(0x0820, 0, posX, posY); //Top scroll
+		UO->DrawGump(0x0820, 0, 0, 0); //Top scroll
 
 		//Profile window body
-		int curPosY = posY + 36;
+		int curPosY = 36;
 
 		while (true)
 		{
-			int deltaHeight = (height + posY) - (curPosY - 36);
+			int deltaHeight = height - (curPosY - 36);
+
 			if (deltaHeight  < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x0821, 0, posX + 18, curPosY, 0, deltaHeight);
+					UO->DrawGump(0x0821, 0, 18, curPosY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x0821, 0, posX + 18, curPosY);
+				UO->DrawGump(0x0821, 0, 18, curPosY);
 
 			curPosY += 70;
 
-			deltaHeight = (height + posY) - (curPosY - 36);
+			deltaHeight = height - (curPosY - 36);
 
 			if (deltaHeight < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x0822, 0, posX + 18, curPosY, 0, deltaHeight);
+					UO->DrawGump(0x0822, 0, 18, curPosY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x0822, 0, posX + 18, curPosY);
+				UO->DrawGump(0x0822, 0, 18, curPosY);
 
 			curPosY += 70;
 		}
 		
-		UO->DrawGump(0x082B, 0, posX + 30, posY + 34); //Top line
+		UO->DrawGump(0x082B, 0, 30, 34); //Top line
 		
 		//Author
-		m_Text[0].Draw(posX + 30, posY + 40);
-		m_Poster.Draw(posX + 30 + m_Text[0].Width, posY + 46);
+		m_Text[0].Draw(30, 40);
+		m_Poster.Draw(30 + m_Text[0].Width, 46);
 
 		//Time
-		m_Text[1].Draw(posX + 30, posY + 56);
-		m_DataTime.Draw(posX + 30 + m_Text[1].Width, posY + 62);
+		m_Text[1].Draw(30, 56);
+		m_DataTime.Draw(30 + m_Text[1].Width, 62);
 
 		//Subject
-		m_Text[2].Draw(posX + 30, posY + 72);
+		m_Text[2].Draw(30, 72);
 		WORD subjectColor = 0x0386;
 		if (!m_Variant)
 			subjectColor = 0x0008;
-		TextEntrySubject->DrawA(9, subjectColor, posX + 30 + m_Text[2].Width, posY + 78);
+		TextEntrySubject->DrawA(9, subjectColor, 30 + m_Text[2].Width, 78);
 
-		UO->DrawGump(0x0835, 0, posX + 30, posY + 110, 204, 0); //Line
+		UO->DrawGump(0x0835, 0, 30, 110, 204, 0); //Line
 		
-		UO->DrawGump(0x0824, 0, posX + 246, posY + 106); //^ button
-		UO->DrawGump(0x0828, 0, posX + 255, posY + 120 + scrollerY); //Scroller
+		UO->DrawGump(0x0824, 0, 246, 106); //^ button
+		UO->DrawGump(0x0828, 0, 255, 120 + scrollerY); //Scroller
 		
-		g_GL.ViewPort(posX + 30, posY + 120, 220, height - 100);
+		g_GL.Scissor((int)g_GumpTranslateX + 30, (int)g_GumpTranslateY + 120, 220, height - 100);
 
-		int yPtr = posY + 120 - (m_CurrentLine * GUMP_SCROLLING_PIXEL_STEP);
+		int yPtr = 120 - (m_CurrentLine * GUMP_SCROLLING_PIXEL_STEP);
 
-		TextEntry->DrawA(9, 0x0386, posX + 30, yPtr, TS_LEFT, 0);
+		TextEntry->DrawA(9, 0x0386, 30, yPtr, TS_LEFT, 0);
 		
-		g_GL.RestorePort();
+		glDisable(GL_SCISSOR_TEST);
 
-		UO->DrawGump(0x0823, 0, posX + 18, posY + height + 34); //Bottom scroll
-		UO->DrawGump(0x0825, 0, posX + 246, posY + height + 17); //v button
-		UO->DrawGump(0x082B, 0, posX + 30, posY + height + 21); //Bottom line
+		UO->DrawGump(0x0823, 0, 18, height + 34); //Bottom scroll
+		UO->DrawGump(0x0825, 0, 246, height + 17); //v button
+		UO->DrawGump(0x082B, 0, 30, height + 21); //Bottom line
 
 		switch (m_Variant)
 		{
 			case 0:
 			{
-				UO->DrawGump(0x0883, 0, posX + 97, posY + 12); //NEW MESSAGE
-				UO->DrawGump(0x0886, 0, posX + 37, posY + height + 45); //Post
+				UO->DrawGump(0x0883, 0, 97, 12); //NEW MESSAGE
+				UO->DrawGump(0x0886, 0, 37, height + 45); //Post
 
 				break;
 			}
 			case 2:
-				UO->DrawGump(0x0885, 0, posX + 235, posY + height + 45); //Remove
+				UO->DrawGump(0x0885, 0, 235, height + 45); //Remove
 			case 1:
 			{
-				UO->DrawGump(0x0884, 0, posX + 37, posY + height + 45); //Reply
+				UO->DrawGump(0x0884, 0, 37, height + 45); //Reply
 
 				break;
 			}
@@ -277,33 +264,21 @@ void TGumpBulletinBoardItem::GenerateFrame(int posX, int posY)
 				break;
 		}
 
-		WORD gumpID = 0x082E + (int)(CanSelectedButton == ID_GBBI_BUTTON_RESIZE);
-		UO->DrawGump(gumpID, 0, posX + 139, posY + height + 66); //Resize
+		WORD gumpID = 0x082E + (int)(g_GumpSelectElement == ID_GBBI_BUTTON_RESIZE);
+		UO->DrawGump(gumpID, 0, 139, height + 66); //Resize
 
 	//Завершаем запись дисплей листа
 	glEndList();
 
-	FrameRedraw = true;
-	FrameCreated = true;
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpBulletinBoardItem::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	//Для быстрого доступа
-	int posX = X;
-	int posY = Y;
-	bool needRedraw = false;
-
-	//Если окошко захвачено для перемещения - вычислим оффсеты
-	if (mode && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && (!g_LastObjectLeftMouseDown || g_LastObjectLeftMouseDown == ID_GBBI_TEXT_FIELD))
-	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-
-		needRedraw = mode;
-	}
+	CalculateGumpState();
 
 	int height = m_Height;
 
@@ -318,25 +293,12 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 		if (height >= buf)
 			height = buf;
 		
-		needRedraw = mode;
+		if (mode)
+			m_FrameCreated = false;
 	}
 	
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Нажата ли кнопка в окне?
-	bool IsScrollerPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
 	//Проверим, вдруг необходимо изменить положение отображаемого элемента
-	if (IsPressed && m_LastScrollChangeTime < GetTickCount())
+	if (g_GumpPressed && m_LastScrollChangeTime < GetTickCount())
 	{
 		if (g_LastObjectLeftMouseDown == ID_GBBI_SCROLLER_UP) //Скроллинг вверх (гампом-стрелкой)
 			ListingList(true, 10);
@@ -361,70 +323,76 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 
 	int visibleLines = heightToScrolling / GUMP_SCROLLING_PIXEL_STEP;
 
-	if (IsScrollerPressed && g_LastObjectLeftMouseDown == ID_GBBI_SCROLLER && canMoveScroller) //Scroller pressed
+	if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GBBI_SCROLLER && canMoveScroller) //Scroller pressed
 	{
-		int currentY = (g_MouseY - 10) - posY - 120; //Scroller position
+		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY - 120; //Scroller position
 
 		scrollerY = CalculateScrollerAndTextPosition(m_CurrentLine, visibleLines, maxScrollerY, currentY);
 		
-		needRedraw = mode;
+		m_FrameCreated = false;
 	}
 	else if (m_CurrentLine && canMoveScroller)
 		scrollerY = CalculateScrollerY(m_CurrentLine, visibleLines, maxScrollerY);
 
 	if (mode) //Отрисовка
 	{
-		if (CanSelectedButton || needRedraw)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
+		if (g_GumpSelectElement || !m_FrameCreated || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
 		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
 		}
-		//Если фрэйм не был создан - создаем
-		else if (!FrameCreated)
-			GenerateFrame(posX, posY);
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		//Отобразим фрэйм
 		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
 
-		if (UO->GumpPixelsInXY(0x0820, posX, posY + 23)) //Top scroll
+		if (UO->GumpPixelsInXY(0x0820, 0, 23)) //Top scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
-		else if (UO->GumpPixelsInXY(0x0823, posX + 18, posY + height + 34)) //Bottom scroll
+		else if (UO->GumpPixelsInXY(0x0823, 18, height + 34)) //Bottom scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
-		else if (UO->GumpPixelsInXY(0x0828, posX + 255, posY + 120 + scrollerY)) //Scroller
+		else if (UO->GumpPixelsInXY(0x0828, 255, 120 + scrollerY)) //Scroller
 		{
 			g_LastSelectedGump = index;
 			LSG = ID_GBBI_SCROLLER;
 		}
-		else if (UO->GumpPixelsInXY(0x082E, posX + 139, posY + height + 66)) //Resize
+		else if (UO->GumpPixelsInXY(0x082E, 139, height + 66)) //Resize
 		{
 			g_LastSelectedGump = index;
 			LSG = ID_GBBI_BUTTON_RESIZE;
 		}
 		else //body
 		{
-			int curPosY = posY + 59;
+			int curPosY = 59;
 
 			while (true)
 			{
-				int deltaHeight = (height + posY) - (curPosY - 36);
+				int deltaHeight = height - (curPosY - 36);
 
 				if (deltaHeight  < 70)
 				{
 					if (deltaHeight > 0)
 					{
-						if (UO->GumpPixelsInXY(0x0821, posX + 18, curPosY, 0, deltaHeight))
+						if (UO->GumpPixelsInXY(0x0821, 18, curPosY, 0, deltaHeight))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -433,7 +401,7 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 
 					break;
 				}
-				else if (UO->GumpPixelsInXY(0x0821, posX + 18, curPosY))
+				else if (UO->GumpPixelsInXY(0x0821, 18, curPosY))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
@@ -443,13 +411,13 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 
 				curPosY += 70;
 
-				deltaHeight = (height + posY) - (curPosY - 36);
+				deltaHeight = height - (curPosY - 36);
 
 				if (deltaHeight < 70)
 				{
 					if (deltaHeight > 0)
 					{
-						if (UO->GumpPixelsInXY(0x0822, posX + 18, curPosY, 0, deltaHeight))
+						if (UO->GumpPixelsInXY(0x0822, 18, curPosY, 0, deltaHeight))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -458,7 +426,7 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 
 					break;
 				}
-				else if (UO->GumpPixelsInXY(0x0822, posX + 18, curPosY))
+				else if (UO->GumpPixelsInXY(0x0822, 18, curPosY))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
@@ -472,9 +440,9 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 		
 		if (g_LastSelectedGump == index)
 		{
-			if (UO->PolygonePixelsInXY(posX + 246, posY + 106, 20, 18)) //^
+			if (UO->PolygonePixelsInXY(246, 106, 20, 18)) //^
 				LSG = ID_GBBI_SCROLLER_UP;
-			else if (UO->PolygonePixelsInXY(posX + 246, posY + height + 17, 20, 18)) //v
+			else if (UO->PolygonePixelsInXY(246, height + 17, 20, 18)) //v
 				LSG = ID_GBBI_SCROLLER_DOWN;
 			else
 			{
@@ -482,23 +450,23 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 				{
 					case 0:
 					{
-						if (UO->PolygonePixelsInXY(posX + 30 + m_Text[2].Width, posY + 78, 160, 16)) //Subject text
+						if (UO->PolygonePixelsInXY(30 + m_Text[2].Width, 78, 160, 16)) //Subject text
 							LSG = ID_GBBI_SUBJECT_TEXT_FIELD;
-						else if (LSG != ID_GBBI_SCROLLER && UO->PolygonePixelsInXY(posX + 30, posY + 120, 220, height - 100)) //Text
+						else if (LSG != ID_GBBI_SCROLLER && UO->PolygonePixelsInXY(30, 120, 220, height - 100)) //Text
 							LSG = ID_GBBI_TEXT_FIELD;
-						else if (UO->PolygonePixelsInXY(posX + 37, posY + height + 45, 30, 14)) //Post
+						else if (UO->PolygonePixelsInXY(37, height + 45, 30, 14)) //Post
 							LSG = ID_GBBI_POST;
 
 						break;
 					}
 					case 2:
 					{
-						if (UO->PolygonePixelsInXY(posX + 235, posY + height + 45, 50, 14)) //Remove
+						if (UO->PolygonePixelsInXY(235, height + 45, 50, 14)) //Remove
 							LSG = ID_GBBI_REMOVE;
 					}
 					case 1:
 					{
-						if (UO->PolygonePixelsInXY(posX + 37, posY + height + 45, 40, 14)) //Reply
+						if (UO->PolygonePixelsInXY(37, height + 45, 40, 14)) //Reply
 							LSG = ID_GBBI_REPLY;
 
 						break;
@@ -508,6 +476,9 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 				}
 			}
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		if (LSG != 0)
 			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
@@ -522,8 +493,8 @@ void TGumpBulletinBoardItem::OnLeftMouseDown()
 {
 	if (g_LastSelectedObject == ID_GBBI_SUBJECT_TEXT_FIELD)
 	{
-		int x = g_MouseX - (X + 40);
-		int y = g_MouseY - (Y + 44);
+		int x = g_MouseX - (m_X + 40);
+		int y = g_MouseY - (m_Y + 44);
 
 		TextEntrySubject->OnClick(this, 9, true, x, y);
 	}
@@ -531,8 +502,8 @@ void TGumpBulletinBoardItem::OnLeftMouseDown()
 	{
 		int yPtr = 40 - (m_CurrentLine * GUMP_SCROLLING_PIXEL_STEP);
 
-		int x = g_MouseX - (X + 40);
-		int y = g_MouseY - (Y + yPtr + 44);
+		int x = g_MouseX - (m_X + 40);
+		int y = g_MouseY - (m_Y + yPtr + 44);
 
 		TextEntry->OnClick(this, 1, true, x, y);
 	}
@@ -559,7 +530,7 @@ void TGumpBulletinBoardItem::OnLeftMouseUp()
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GBBI_POST)
 	{
-		TPacketBulletinBoardPostMessage packet(ID, 0, TextEntrySubject->c_str(), TextEntry->c_str());
+		TPacketBulletinBoardPostMessage packet(m_ID, 0, TextEntrySubject->c_str(), TextEntry->c_str());
 		packet.Send();
 		packet.Free();
 		
@@ -570,7 +541,7 @@ void TGumpBulletinBoardItem::OnLeftMouseUp()
 		string subj("RE: ");
 		subj += TextEntrySubject->c_str();
 
-		TGumpBulletinBoardItem *gump = new TGumpBulletinBoardItem(0, 0, 0, 0, ID, g_Player->GetName(), subj, "Date/Time",  "");
+		TGumpBulletinBoardItem *gump = new TGumpBulletinBoardItem(0, 0, 0, 0, m_ID, g_Player->GetName(), subj, "Date/Time", "");
 
 		TGump *gumpEntry = GumpManager->GetTextEntryOwner();
 
@@ -583,7 +554,7 @@ void TGumpBulletinBoardItem::OnLeftMouseUp()
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GBBI_REMOVE)
 	{
-		TPacketBulletinBoardRemoveMessage packet(ID, Serial);
+		TPacketBulletinBoardRemoveMessage packet(m_ID, m_Serial);
 		packet.Send();
 
 		//GumpManager->CloseGump(Serial, ID, GT_BULLETIN_BOARD_ITEM);

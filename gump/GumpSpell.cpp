@@ -49,9 +49,13 @@ int TGumpSpell::Draw(bool &mode)
 
 	if (mode)
 	{
-		UO->DrawGump(m_Graphic, 0, x, y);
+		glTranslatef((GLfloat)x, (GLfloat)y, 0.0f);
 
-		DrawLocker(x, y);
+		UO->DrawGump(m_Graphic, 0, 0, 0);
+
+		DrawLocker();
+
+		glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 	}
 	else
 	{

@@ -26,9 +26,9 @@ TGumpStatusbar::TGumpStatusbar(DWORD serial, short x, short y, bool minimized)
 
 	if (minimized)
 	{
-		Minimized = true;
-		MinimizedX = x;
-		MinimizedY = y;
+		m_Minimized = true;
+		m_MinimizedX = x;
+		m_MinimizedY = y;
 	}
 	
 	TGameObject *character = World->FindWorldObject(serial);
@@ -40,7 +40,7 @@ TGumpStatusbar::~TGumpStatusbar()
 {
 	if (ConnectionManager.Connected())
 	{
-		TPacketCloseStatusbarGump packet(Serial);
+		TPacketCloseStatusbarGump packet(m_Serial);
 		packet.Send();
 	}
 
@@ -71,7 +71,7 @@ TGumpStatusbar *TGumpStatusbar::GetTopStatusbar()
 //---------------------------------------------------------------------------
 TGumpStatusbar *TGumpStatusbar::GetNearStatusbar(int &x, int &y)
 {
-	if (InGroup() || !Minimized)
+	if (InGroup() || !m_Minimized)
 		return NULL;
 
 	//154x59 mini-gump
@@ -191,7 +191,7 @@ TGumpStatusbar *TGumpStatusbar::GetNearStatusbar(int &x, int &y)
 //---------------------------------------------------------------------------
 bool TGumpStatusbar::GetStatusbarGroupOffset(int &x, int &y)
 {
-	if (InGroup() && Minimized && g_LeftMouseDown && !g_LastObjectLeftMouseDown)
+	if (InGroup() && m_Minimized && g_LeftMouseDown && !g_LastObjectLeftMouseDown)
 	{
 		TGumpStatusbar *gump = GetTopStatusbar();
 
@@ -284,8 +284,8 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
@@ -297,21 +297,13 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 			targetGump->UpdateFrame();
 	}
 
-	DWORD index = (DWORD)this;
+	CalculateGumpState();
 
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
+	glNewList((GLuint)this, GL_COMPILE);
 
-	glNewList((GLuint)index, GL_COMPILE);
-
-	if (Serial == g_PlayerSerial) //Если это статусбар игрока
+	if (m_Serial == g_PlayerSerial) //Если это статусбар игрока
 	{
-		if (!Minimized) //Если это "полная" версия статусбара
+		if (!m_Minimized) //Если это "полная" версия статусбара
 		{
 			char text[30] = {0};
 
@@ -319,187 +311,164 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 			if (ConnectionManager.ClientVersion >= CV_308D)
 				gumpID = 0x2A6C;
 
-			UO->DrawGump(gumpID, 0, posX, posY); //Гамп статусбара
+			UO->DrawGump(gumpID, 0, 0, 0); //Гамп статусбара
 
 			//Отрисовка набора характеристик, расположение в зависимости от версии протокола, комментировать не буду...
 			if (ConnectionManager.ClientVersion >= CV_308Z)
 			{
 				//Отрисуем имя игрока
 				if (g_Player->GetName().length())
-					FontManager->DrawA(1, g_Player->GetName().c_str(), 0x0386, posX + 58, posY + 50, 320, TS_CENTER);
+					FontManager->DrawA(1, g_Player->GetName().c_str(), 0x0386, 58, 50, 320, TS_CENTER);
 				
 
 
 				//Кнопка вызова гампа бафов
 				if (ConnectionManager.ClientVersion >= CV_5020)
-					UO->DrawGump(0x7538, 0, posX + 40, posY + 50);
+					UO->DrawGump(0x7538, 0, 40, 50);
 
 
 
-				posX += 88;
 				sprintf(text, "%d", g_Player->Str);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 77);
+				FontManager->DrawA(1, text, 0x0386, 88, 77);
 
 				sprintf(text, "%d", g_Player->Dex);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 105);
+				FontManager->DrawA(1, text, 0x0386, 88, 105);
 
 				sprintf(text, "%d", g_Player->Int);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 133);
+				FontManager->DrawA(1, text, 0x0386, 88, 133);
 				
 				
 				
-				int lineY = posY + 82;
-
-				posX += 58;
-				int lineX = posX + 34;
 				int textWidth = 40;
 
 				//Hits
 				sprintf(text, "%d", g_Player->Hits);
-				FontManager->DrawA(1, text, 0x0386, posX , posY + 70, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, posY + 70, textWidth, TS_CENTER);
 				
 				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
-				g_GL.DrawLine(posX, lineY, lineX, lineY);
+				g_GL.DrawLine(146, 82, 180, 82);
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxHits);
-				FontManager->DrawA(1, text, 0x0386, posX , posY + 83, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, posY + 83, textWidth, TS_CENTER);
 				
 				//Stam
 				sprintf(text, "%d", g_Player->Stam);
-				FontManager->DrawA(1, text, 0x0386, posX , posY + 98, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, posY + 98, textWidth, TS_CENTER);
 				
-				lineY = posY + 110;
 				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
-				g_GL.DrawLine(posX, lineY, lineX, lineY);
+				g_GL.DrawLine(146, 110, 180, 110);
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxStam);
-				FontManager->DrawA(1, text, 0x0386, posX , posY + 111, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, posY + 111, textWidth, TS_CENTER);
 
 				//Mana
 				sprintf(text, "%d", g_Player->Mana);
-				FontManager->DrawA(1, text, 0x0386, posX , posY + 126, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, posY + 126, textWidth, TS_CENTER);
 				
-				lineY = posY + 138;
 				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
-				g_GL.DrawLine(posX, lineY, lineX, lineY);
+				g_GL.DrawLine(146, 138, 180, 138);
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxMana);
-				FontManager->DrawA(1, text, 0x0386, posX , posY + 139, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, posY + 139, textWidth, TS_CENTER);
 
 
 				
-				posX += 74;
-
 				sprintf(text, "%d", g_Player->StatsCap);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 77);
+				FontManager->DrawA(1, text, 0x0386, 220, posY + 77);
 
 				sprintf(text, "%d", g_Player->Luck);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 105);
+				FontManager->DrawA(1, text, 0x0386, 220, posY + 105);
 				
 				//Weights
-				posX -= 4;
-				lineX = posX + 34;
-
 				sprintf(text, "%d", g_Player->Weight);
-				FontManager->DrawA(1, text, 0x0386, posX , posY + 126, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 216, posY + 126, textWidth, TS_CENTER);
 				
-				lineY = posY + 138;
 				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
-				g_GL.DrawLine(posX, lineY, lineX, lineY);
+				g_GL.DrawLine(216, 138, 250, 138);
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxWeight);
-				FontManager->DrawA(1, text, 0x0386, posX , posY + 139, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 216, posY + 139, textWidth, TS_CENTER);
 
 				
-
-				posX += 64;
 
 				sprintf(text, "%d-%d", g_Player->MinDamage, g_Player->MaxDamage);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 77);
+				FontManager->DrawA(1, text, 0x0386, 280, posY + 77);
 
 				sprintf(text, "%d", g_Player->Gold);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 105);
+				FontManager->DrawA(1, text, 0x0386, 280, posY + 105);
 				
 				sprintf(text, "%d/%d", g_Player->Followers, g_Player->MaxFollowers);
-				FontManager->DrawA(1, text, 0x0386, posX + 5, posY + 133);
+				FontManager->DrawA(1, text, 0x0386, 280 + 5, posY + 133);
 				
 
-				
-				posX += 74;
 
 				sprintf(text, "%d", g_Player->Armor);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 76);
+				FontManager->DrawA(1, text, 0x0386, 354, posY + 76);
 				
 				sprintf(text, "%d", g_Player->FireResistance);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 92);
+				FontManager->DrawA(1, text, 0x0386, 354, posY + 92);
 				
 				sprintf(text, "%d", g_Player->ColdResistance);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 106);
+				FontManager->DrawA(1, text, 0x0386, 354, posY + 106);
 				
 				sprintf(text, "%d", g_Player->PoisonResistance);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 120);
+				FontManager->DrawA(1, text, 0x0386, 354, posY + 120);
 				
 				sprintf(text, "%d", g_Player->EnergyResistance);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 134);
+				FontManager->DrawA(1, text, 0x0386, 354, posY + 134);
 			}
 			else
 			{
-				posX += 86;
-
 				//Отрисуем имя игрока
 				if (g_Player->GetName().length())
-					FontManager->DrawA(1, g_Player->GetName().c_str(), 0x0386, posX, posY + 42);
+					FontManager->DrawA(1, g_Player->GetName().c_str(), 0x0386, 86, 42);
 
 				sprintf(text, "%d", g_Player->Str);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 61);
+				FontManager->DrawA(1, text, 0x0386, 86, 61);
 
 				sprintf(text, "%d", g_Player->Dex);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 73);
+				FontManager->DrawA(1, text, 0x0386, 86, 73);
 
 				sprintf(text, "%d", g_Player->Int);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 85);
+				FontManager->DrawA(1, text, 0x0386, 86, 85);
 
 				sprintf(text, "%s", (g_Player->Sex ? "F" : "M"));
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 97);
+				FontManager->DrawA(1, text, 0x0386, 86, 97);
 
 				sprintf(text, "%d", g_Player->Armor);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 109);
-
-				posX += 85;
+				FontManager->DrawA(1, text, 0x0386, 86, 109);
 
 				sprintf(text, "%d/%d", g_Player->Hits, g_Player->MaxHits);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 61);
+				FontManager->DrawA(1, text, 0x0386, 171, 61);
 
 				sprintf(text, "%d/%d", g_Player->Mana, g_Player->MaxMana);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 73);
+				FontManager->DrawA(1, text, 0x0386, 171, 73);
 
 				sprintf(text, "%d/%d", g_Player->Stam, g_Player->MaxStam);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 85);
+				FontManager->DrawA(1, text, 0x0386, 171, 85);
 
 				sprintf(text, "%d", g_Player->Gold);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 97);
+				FontManager->DrawA(1, text, 0x0386, 171, 97);
 
 				sprintf(text, "%d", g_Player->Weight);
-				FontManager->DrawA(1, text, 0x0386, posX, posY + 109);
+				FontManager->DrawA(1, text, 0x0386, 171, 109);
 			
 				if (ConnectionManager.ClientVersion == CV_308D)
 				{
 					sprintf(text, "%d", g_Player->StatsCap);
-					FontManager->DrawA(1, text, 0x0386, posX, posY + 124);
+					FontManager->DrawA(1, text, 0x0386, 171, 124);
 				}
 				else if (ConnectionManager.ClientVersion == CV_308J)
 				{
-					posX += 9;
-
 					sprintf(text, "%d", g_Player->StatsCap);
-					FontManager->DrawA(1, text, 0x0386, posX, posY + 131);
+					FontManager->DrawA(1, text, 0x0386, 180, 131);
 				
 					sprintf(text, "%d/%d", g_Player->Followers, g_Player->MaxFollowers);
-					FontManager->DrawA(1, text, 0x0386, posX, posY + 144);
+					FontManager->DrawA(1, text, 0x0386, 180, 144);
 				}
 			}
 		}
@@ -507,44 +476,44 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 		{
 			if (Party.Leader != 0) //inParty
 			{
-				FontManager->DrawA(3, "[* SELF *]", 0x0481, posX + 16, posY - 2);
+				FontManager->DrawA(3, "[* SELF *]", 0x0481, 16, -2);
 
-				WORD gumpID = 0x0938 + (CanPressedButton == ID_GSB_BUTTON_HEAL_1 ? 2 : 0);
-				UO->DrawGump(gumpID, 0, posX + 16, posY + 20);
+				WORD gumpID = 0x0938 + (g_GumpPressedElement == ID_GSB_BUTTON_HEAL_1 ? 2 : 0);
+				UO->DrawGump(gumpID, 0, 16, 20);
 
-				gumpID = 0x0939 + (int)(CanPressedButton == ID_GSB_BUTTON_HEAL_2);
-				UO->DrawGump(gumpID, 0, posX + 16, posY + 33);
+				gumpID = 0x0939 + (int)(g_GumpPressedElement == ID_GSB_BUTTON_HEAL_2);
+				UO->DrawGump(gumpID, 0, 16, 33);
 
 				//Hits
-				UO->DrawGump(0x0028, 0, posX + 34, posY + 20);
+				UO->DrawGump(0x0028, 0, 34, 20);
 
 				int per = CalculatePercents(g_Player->MaxHits, g_Player->Hits, 96);
 				if (per > 0)
-					UO->DrawGump(0x0029, 0, posX + 34, posY + 20, per, 0);
+					UO->DrawGump(0x0029, 0, 34, 20, per, 0);
 				
 				//Mana
-				UO->DrawGump(0x0028, 0, posX + 34, posY + 33);
+				UO->DrawGump(0x0028, 0, 34, 33);
 
 				per = CalculatePercents(g_Player->MaxMana, g_Player->Mana, 96);
 				if (per > 0)
-					UO->DrawGump(0x0029, 0x0482, posX + 34, posY + 33, per, 0); //0x0170 green //0x0035 yellow
+					UO->DrawGump(0x0029, 0x0482, 34, 33, per, 0); //0x0170 green //0x0035 yellow
 				
 				//Stam
-				UO->DrawGump(0x0028, 0, posX + 34, posY + 45);
+				UO->DrawGump(0x0028, 0, 34, 45);
 
 				per = CalculatePercents(g_Player->MaxStam, g_Player->Stam, 96);
 				if (per > 0)
-					UO->DrawGump(0x0029, 0x0075, posX + 34, posY + 45, per, 0);
+					UO->DrawGump(0x0029, 0x0075, 34, 45, per, 0);
 			}
 			else
 			{
 				WORD gumpid = 0x0803; //Гамп статусбара
 				if (g_Player->Warmode)
 					gumpid = 0x0807; //Версия с включенным вармодом
-				UO->DrawGump(gumpid, 0, posX, posY);
+				UO->DrawGump(gumpid, 0, 0, 0);
 			
 				//Hits
-				UO->DrawGump(0x0805, 0, posX + 34, posY + 12);
+				UO->DrawGump(0x0805, 0, 34, 12);
 
 				int per = CalculatePercents(g_Player->MaxHits, g_Player->Hits, 109);
 				if (per > 0)
@@ -555,35 +524,35 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 					else if (g_Player->YellowHits())
 						gumpid = 0x0809; //Character status line (yellow)
 				
-					UO->DrawGump(gumpid, 0, posX + 34, posY + 12, per, 0);
+					UO->DrawGump(gumpid, 0, 34, 12, per, 0);
 				}
 				
 				//Mana
-				UO->DrawGump(0x0805, 0, posX + 34, posY + 25);
+				UO->DrawGump(0x0805, 0, 34, 25);
 
 				per = CalculatePercents(g_Player->MaxMana, g_Player->Mana, 109);
 				if (per > 0)
-					UO->DrawGump(0x0806, 0, posX + 34, posY + 25, per, 0);
+					UO->DrawGump(0x0806, 0, 34, 25, per, 0);
 				
 				//Stam
-				UO->DrawGump(0x0805, 0, posX + 34, posY + 38);
+				UO->DrawGump(0x0805, 0, 34, 38);
 
 				per = CalculatePercents(g_Player->MaxStam, g_Player->Stam, 109);
 				if (per > 0)
-					UO->DrawGump(0x0806, 0, posX + 34, posY + 38, per, 0);
+					UO->DrawGump(0x0806, 0, 34, 38, per, 0);
 			}
 			
 			if (InGroup())
-				UO->DrawGump(0x082C, 0, posX + 136, posY + 24);
+				UO->DrawGump(0x082C, 0, 136, 24);
 		}
 	}
 	else //Чужой статусбар
 	{
-		if (Party.Contains(Serial))
+		if (Party.Contains(m_Serial))
 		{
 			IFOR(i, 0, 10)
 			{
-				if (Party.Member[i].Serial == Serial)
+				if (Party.Member[i].Serial == m_Serial)
 				{
 					TPartyObject &member = Party.Member[i];
 					
@@ -596,39 +565,39 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 						if (TextEntry != EntryPointer && !TextEntry->Length())
 							TextEntry->SetText(memberName);
 
-						TextEntry->DrawA(1, 0x000E, posX + 16, posY - 2, TS_LEFT, UOFONT_FIXED);
+						TextEntry->DrawA(1, 0x000E, 16, -2, TS_LEFT, UOFONT_FIXED);
 					}
 					else if (memberName.length())
-						FontManager->DrawA(1, memberName.c_str(), 0x0386, posX + 16, posY - 2);
+						FontManager->DrawA(1, memberName.c_str(), 0x0386, 16, -2);
 					else if (TextEntry->Length())
-						TextEntry->DrawA(1, 0x0386, posX + 16, posY - 2, TS_LEFT, UOFONT_FIXED);
+						TextEntry->DrawA(1, 0x0386, 16, -2, TS_LEFT, UOFONT_FIXED);
 		
-					WORD gumpID = 0x0938 + (CanPressedButton == ID_GSB_BUTTON_HEAL_1 ? 2 : 0);
-					UO->DrawGump(gumpID, 0, posX + 16, posY + 20);
+					WORD gumpID = 0x0938 + (g_GumpPressedElement == ID_GSB_BUTTON_HEAL_1 ? 2 : 0);
+					UO->DrawGump(gumpID, 0, 16, 20);
 
-					gumpID = 0x0939 + (int)(CanPressedButton == ID_GSB_BUTTON_HEAL_2);
-					UO->DrawGump(gumpID, 0, posX + 16, posY + 33);
+					gumpID = 0x0939 + (int)(g_GumpPressedElement == ID_GSB_BUTTON_HEAL_2);
+					UO->DrawGump(gumpID, 0, 16, 33);
 
 					//Hits
-					UO->DrawGump(0x0028, 0, posX + 34, posY + 20);
+					UO->DrawGump(0x0028, 0, 34, 20);
 
 					int per = CalculatePercents(member.MaxHits, member.Hits, 96);
 					if (per > 0)
-						UO->DrawGump(0x0029, 0, posX + 34, posY + 20, per, 0);
+						UO->DrawGump(0x0029, 0, 34, 20, per, 0);
 				
 					//Mana
-					UO->DrawGump(0x0028, 0, posX + 34, posY + 33);
+					UO->DrawGump(0x0028, 0, 34, 33);
 
 					per = CalculatePercents(member.MaxMana, member.Mana, 96);
 					if (per > 0)
-						UO->DrawGump(0x0029, 0x0482, posX + 34, posY + 33, per, 0); //0x0170 green //0x0035 yellow
+						UO->DrawGump(0x0029, 0x0482, 34, 33, per, 0); //0x0170 green //0x0035 yellow
 				
 					//Stam
-					UO->DrawGump(0x0028, 0, posX + 34, posY + 45);
+					UO->DrawGump(0x0028, 0, 34, 45);
 					
 					per = CalculatePercents(member.MaxStam, member.Stam, 96);
 					if (per > 0)
-						UO->DrawGump(0x0029, 0x0075, posX + 34, posY + 45, per, 0);
+						UO->DrawGump(0x0029, 0x0075, 34, 45, per, 0);
 
 					break;
 				}
@@ -636,7 +605,7 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 		}
 		else
 		{
-			TGameCharacter *obj = World->FindWorldCharacter(Serial);
+			TGameCharacter *obj = World->FindWorldCharacter(m_Serial);
 			if (obj != NULL)
 			{
 				//Вычисляем цвет статусбара
@@ -648,7 +617,7 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 				ColorizerShader->Use();
 
 				//Гамп статус бара
-				UO->DrawGump(0x0804, color, posX, posY);
+				UO->DrawGump(0x0804, color, 0, 0);
 
 				UnuseShader();
 
@@ -659,15 +628,15 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 					if (TextEntry != EntryPointer && !TextEntry->Length())
 						TextEntry->SetText(objName);
 
-					TextEntry->DrawA(1, 0x000E, posX + 16, posY + 14, TS_LEFT, UOFONT_FIXED);
+					TextEntry->DrawA(1, 0x000E, 16, 14, TS_LEFT, UOFONT_FIXED);
 				}
 				else if (objName.length())
-					FontManager->DrawA(1, objName.c_str(), 0x0386, posX + 16, posY + 14, 150, TS_LEFT, UOFONT_FIXED);
+					FontManager->DrawA(1, objName.c_str(), 0x0386, 16, 14, 150, TS_LEFT, UOFONT_FIXED);
 				else if (TextEntry->Length())
-					TextEntry->DrawA(1, 0x0386, posX + 16, posY + 14, TS_LEFT, UOFONT_FIXED);
+					TextEntry->DrawA(1, 0x0386, 16, 14, TS_LEFT, UOFONT_FIXED);
 				
 				//Hits
-				UO->DrawGump(0x0805, 0, posX + 34, posY + 38);
+				UO->DrawGump(0x0805, 0, 34, 38);
 				
 				int per = CalculatePercents(obj->MaxHits, obj->Hits, 109);
 				if (per > 0)
@@ -678,7 +647,7 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 					else if (obj->YellowHits())
 						gumpid = 0x0809; //Character status line (yellow)
 
-					UO->DrawGump(gumpid, 0, posX + 34, posY + 38, per, 0);
+					UO->DrawGump(gumpid, 0, 34, 38, per, 0);
 				}
 			}
 			else //Серенький статус
@@ -686,119 +655,98 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 				ColorizerShader->Use();
 
 				//Гамп статус бара
-				UO->DrawGump(0x0804, 0x0386, posX, posY);
+				UO->DrawGump(0x0804, 0x0386, 0, 0);
 
 				//Hits
-				UO->DrawGump(0x0805, 0x0386, posX + 34, posY + 38);
+				UO->DrawGump(0x0805, 0x0386, 34, 38);
 				
 				UnuseShader();
 
-				TextEntry->DrawA(1, 0x0386, posX + 16, posY + 14, TS_LEFT, UOFONT_FIXED);
+				TextEntry->DrawA(1, 0x0386, 16, 14, TS_LEFT, UOFONT_FIXED);
 			}
 		}
 
 		if (InGroup())
-			UO->DrawGump(0x082C, 0, posX + 136, posY + 24);
+			UO->DrawGump(0x082C, 0, 136, 24);
 	}
 
 	glEndList();
-	FrameCreated = true;
+	
+	m_FrameCreated = true;
 }
 //----------------------------------------------------------------------------
 int TGumpStatusbar::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	//Для быстрого доступа
-	int posX = X;
-	int posY = Y;
-
-	if (Minimized) //Для минимизированной версии другие координаты
-	{
-		posX = MinimizedX;
-		posY = MinimizedY;
-	}
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
+	CalculateGumpState();
 
 	//Если гамп захватили и (может быть) двигают
-	if (CanBeMoved() && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
+	if (g_GumpMovingOffsetX || g_GumpMovingOffsetX)
 	{
-		int offsetX = g_MouseX - g_DroppedLeftMouseX;
-		if (offsetX && Target.IsTargeting())
+		if (Target.IsTargeting())
 			g_GeneratedMouseDown = true;
 
-		int offsetY = g_MouseY - g_DroppedLeftMouseY;
-		if (offsetY && Target.IsTargeting())
-			g_GeneratedMouseDown = true;
-
-		if (InGroup())
-		{
-			posX += offsetX;
-			posY += offsetY;
-		}
-		else
+		if (!InGroup())
 		{
 			int testX = g_MouseX;
 			int testY = g_MouseY;
 
 			if (GetNearStatusbar(testX, testY) != NULL)
 			{
-				posX = testX;
-				posY = testY;
-			}
-			else
-			{
-				posX += offsetX;
-				posY += offsetY;
+				g_GumpTranslateX = (float)testX;
+				g_GumpTranslateX = (float)testY;
 			}
 		}
-
-		//Окно может (и, скорее всего, должно) быть перерисовано
-		if (mode)
-			GenerateFrame(posX, posY);
 	}
-	else if (mode)
+	else
 	{
-		if (GetStatusbarGroupOffset(posX, posY) || CanPressedButton != 0)
-			GenerateFrame(posX, posY);
-		else if (FrameRedraw)
+		int x = (int)g_GumpTranslateX;
+		int y = (int)g_GumpTranslateY;
+
+		if (GetStatusbarGroupOffset(x, y))
 		{
-			GenerateFrame(posX, posY);
-			FrameRedraw = false;
+			g_GumpTranslateX = (float)x;
+			g_GumpTranslateX = (float)y;
+			m_FrameCreated = false;
 		}
 	}
-	else if (GetStatusbarGroupOffset(posX, posY))
-		GenerateFrame(posX, posY);
 
 	if (mode) //Отрисовка
 	{
 		//Если список отображения не был сделан - сделаем его
-		if (!FrameCreated)
-			GenerateFrame(posX, posY);
+		if (!m_FrameCreated)
+			GenerateFrame(0, 0);
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame(0, 0);
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		//Рисуем заранее заготовленный список отображения
-		//GenerateFrame(posX, posY);
 		glCallList((GLuint)index);
 
-		DrawLocker(posX, posY);
+		DrawLocker();
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
 
-		if (Serial == g_PlayerSerial) //Гамп для игрока
+		if (m_Serial == g_PlayerSerial) //Гамп для игрока
 		{
-			if (!Minimized) //Полная версия
+			if (!m_Minimized) //Полная версия
 			{
 				WORD gumpID = 0x0802;
-				POINT p = {posX, posY};
+				POINT p = { 0, 0 };
 
 				if (ConnectionManager.ClientVersion >= CV_308D)
 				{
@@ -806,28 +754,28 @@ int TGumpStatusbar::Draw(bool &mode)
 
 					if (ConnectionManager.ClientVersion >= CV_308Z)
 					{
-						p.x += 389;
-						p.y += 152;
+						p.x = 389;
+						p.y = 152;
 					}
 					else
 					{
-						p.x += 243;
-						p.y += 150;
+						p.x = 243;
+						p.y = 150;
 					}
 				}
 				else
 				{
-					p.x += 244;
-					p.y += 112;
+					p.x = 244;
+					p.y = 112;
 				}
 
-				if (UO->GumpPixelsInXY(gumpID, posX, posY))
+				if (UO->GumpPixelsInXY(gumpID, 0, 0))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
 					
 					//Кнопка вызова гампа бафов
-					if (ConnectionManager.ClientVersion >= CV_5020 && UO->GumpPixelsInXY(0x7538, posX + 40, posY + 50))
+					if (ConnectionManager.ClientVersion >= CV_5020 && UO->GumpPixelsInXY(0x7538, 40, 50))
 						LSG = ID_GSB_BUFF_GUMP;
 				}
 
@@ -839,79 +787,65 @@ int TGumpStatusbar::Draw(bool &mode)
 			}
 			else //Минимизированный гамп (с полосками)
 			{
-				if (UO->GumpPixelsInXY(0x0803, posX, posY))
+				if (UO->GumpPixelsInXY(0x0803, 0, 0))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
 
 					if (Party.Leader != 0) //inParty
 					{
-						if (UO->GumpPixelsInXY(0x0938, posX + 16, posY + 20))
+						if (UO->GumpPixelsInXY(0x0938, 16, 20))
 							LSG = ID_GSB_BUTTON_HEAL_1;
-						else if (UO->GumpPixelsInXY(0x0938, posX + 16, posY + 33))
+						else if (UO->GumpPixelsInXY(0x0938, 16, 33))
 							LSG = ID_GSB_BUTTON_HEAL_2;
 					}
 
-					if (InGroup() && UO->GumpPixelsInXY(0x082C, posX + 136, posY + 24))
-							LSG = ID_GSB_BUTTON_REMOVE_FROM_GROUP;
+					if (InGroup() && UO->GumpPixelsInXY(0x082C, 136, 24))
+						LSG = ID_GSB_BUTTON_REMOVE_FROM_GROUP;
 				}
 			}
 		}
 		else //Чужой гамп
 		{
-			if (UO->GumpPixelsInXY(0x0804, posX, posY))
+			if (UO->GumpPixelsInXY(0x0804, 0, 0))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
 				g_StatusbarUnderMouse = index;
 
-				if (Party.Contains(Serial))
+				if (Party.Contains(m_Serial))
 				{
-					if (UO->GumpPixelsInXY(0x0938,posX + 16, posY + 20))
+					if (UO->GumpPixelsInXY(0x0938, 16, 20))
 						LSG = ID_GSB_BUTTON_HEAL_1;
-					else if (UO->GumpPixelsInXY(0x0938,posX + 16, posY + 33))
+					else if (UO->GumpPixelsInXY(0x0938, 16, 33))
 						LSG = ID_GSB_BUTTON_HEAL_2;
-					
-					TGameCharacter *obj = World->FindWorldCharacter(Serial);
-
-					if (obj != NULL && obj->CanChangeName && TextEntry != NULL)
-					{
-						//Для изменения имени
-						RECT rc = {0, 0, 109, 16};
-						POINT p = {g_MouseX - (posX + 16), g_MouseY - (posY - 2)};
-
-						if (PtInRect(&rc, p))
-							LSG = ID_GSB_TEXT_FIELD;
-					}
 				}
-				else
+
+				TGameCharacter *obj = World->FindWorldCharacter(m_Serial);
+
+				if (obj != NULL && obj->CanChangeName && TextEntry != NULL)
 				{
-					TGameCharacter *obj = World->FindWorldCharacter(Serial);
-
-					if (obj != NULL && obj->CanChangeName && TextEntry != NULL)
-					{
-						//Для изменения имени
-						RECT rc = {0, 0, 109, 16};
-						POINT p = {g_MouseX - (posX + 16), g_MouseY - (posY + 14)};
-
-						if (PtInRect(&rc, p))
-							LSG = ID_GSB_TEXT_FIELD;
-					}
+					//Для изменения имени
+					if (UO->PolygonePixelsInXY(16, 14, 109, 16))
+						LSG = ID_GSB_TEXT_FIELD;
 				}
 
-				if (InGroup() && UO->GumpPixelsInXY(0x082C, posX + 136, posY + 24))
-						LSG = ID_GSB_BUTTON_REMOVE_FROM_GROUP;
+				if (InGroup() && UO->GumpPixelsInXY(0x082C, 136, 24))
+					LSG = ID_GSB_BUTTON_REMOVE_FROM_GROUP;
 			}
 		}
 
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
-
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(posX, posY, 10, 14))
+		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
 		{
-			g_LastSelectedObject = ID_GSB_LOCK_MOVING;
+			LSG = ID_GSB_LOCK_MOVING;
 			g_LastSelectedGump = index;
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
+
+		if (LSG != 0)
+			g_LastSelectedObject = LSG;
 
 		return LSG;
 	}
@@ -929,7 +863,7 @@ void TGumpStatusbar::OnLeftMouseDown()
 		//Проверим, может быть есть таргет, который нужно повесить на данного чара
 		if (Target.IsTargeting())
 		{
-			Target.SendTargetObject(Serial);
+			Target.SendTargetObject(m_Serial);
 			g_CancelDoubleClick = true;
 		}
 	}
@@ -940,26 +874,26 @@ void TGumpStatusbar::OnLeftMouseUp()
 	if (g_GeneratedMouseDown)
 		return;
 
-	if (g_LastObjectLeftMouseDown == ID_GSB_MINIMIZE && Serial == g_PlayerSerial)
+	if (g_LastObjectLeftMouseDown == ID_GSB_MINIMIZE && m_Serial == g_PlayerSerial)
 	{
 		//Кнопка минимизации на полной версии гампа
-		Minimized = true;
-		GenerateFrame(MinimizedX, MinimizedY);
+		m_Minimized = true;
+		m_FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GSB_LOCK_MOVING)
 	{
-		LockMoving = !LockMoving;
+		m_LockMoving = !m_LockMoving;
 		g_CancelDoubleClick = true;
 	}
-	else if (g_LastObjectLeftMouseDown == ID_GSB_TEXT_FIELD && Serial != g_PlayerSerial)
+	else if (g_LastObjectLeftMouseDown == ID_GSB_TEXT_FIELD && m_Serial != g_PlayerSerial)
 	{
 		int bonusY = 14;
 
-		if (Party.Contains(Serial))
+		if (Party.Contains(m_Serial))
 			bonusY = -2;
 
-		int x = g_MouseX - (MinimizedX + 16);
-		int y = g_MouseY - (MinimizedY + bonusY);
+		int x = g_MouseX - (m_MinimizedX + 16);
+		int y = g_MouseY - (m_MinimizedY + bonusY);
 
 		TextEntry->OnClick(this, 1, false, x, y, TS_LEFT, UOFONT_FIXED);
 	}
@@ -967,17 +901,17 @@ void TGumpStatusbar::OnLeftMouseUp()
 	{
 		UO->CastSpell(29);
 		g_PartyHelperTimer = GetTickCount() + 500;
-		g_PartyHelperTarget = Serial;
+		g_PartyHelperTarget = m_Serial;
 		g_CancelDoubleClick = true;
-		UpdateFrame();
+		FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUTTON_HEAL_2)
 	{
 		UO->CastSpell(11);
 		g_PartyHelperTimer = GetTickCount() + 500;
-		g_PartyHelperTarget = Serial;
+		g_PartyHelperTarget = m_Serial;
 		g_CancelDoubleClick = true;
-		UpdateFrame();
+		FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUTTON_REMOVE_FROM_GROUP)
 	{
@@ -987,12 +921,12 @@ void TGumpStatusbar::OnLeftMouseUp()
 			oldGroup = m_GroupPrev;
 
 		RemoveFromGroup();
-		UpdateFrame();
+		m_FrameCreated = false;
 
 		if (oldGroup != NULL)
 		{
 			oldGroup->UpdateGroup(0, 0);
-			oldGroup->UpdateFrame();
+			oldGroup->FrameCreated = false;
 		}
 	}
 	else if (!g_LastObjectLeftMouseDown)
@@ -1008,12 +942,10 @@ bool TGumpStatusbar::OnLeftMouseDoubleClick()
 	if (g_GeneratedMouseDown)
 		return false;
 
-	DWORD serial = Serial;
-
-	if (!g_LastObjectLeftMouseDown && serial == g_PlayerSerial && Minimized)
+	if (!g_LastObjectLeftMouseDown && m_Serial == g_PlayerSerial && m_Minimized)
 	{
 		//Если это статусбар игрока (с полосками) то развернем его до полной версии
-		Minimized = false;
+		m_Minimized = false;
 
 		if (InGroup())
 		{
@@ -1027,27 +959,27 @@ bool TGumpStatusbar::OnLeftMouseDoubleClick()
 			if (oldGroup != NULL)
 			{
 				oldGroup->UpdateGroup(0, 0);
-				oldGroup->UpdateFrame();
+				oldGroup->FrameCreated = false;
 			}
 		}
 
-		UpdateFrame();
+		FrameCreated = false;
 
 		return true;
 	}
-	else if (serial != g_PlayerSerial)
+	else if (m_Serial != g_PlayerSerial)
 	{
 		if (g_Player->Warmode)
-			UO->Attack(serial); //Если в вармоде - атакуем
+			UO->Attack(m_Serial); //Если в вармоде - атакуем
 		else
-			UO->DoubleClick(serial); //Или используем предмет
+			UO->DoubleClick(m_Serial); //Или используем предмет
 
 		return true;
 	}
-	else if (!Minimized)
+	else if (!m_Minimized)
 	{
 		//По даблклику по полной версии статусбара теперь открывается папердолл
-		UO->PaperdollReq(serial);
+		UO->PaperdollReq(m_Serial);
 
 		return true;
 	}
@@ -1073,7 +1005,7 @@ void TGumpStatusbar::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 		if ((EntryPointer->Length() <= 15) && FontManager->GetWidthA(1, TextEntry->c_str(), TextEntry->Pos()) <= 100 && ((wparam >= 'a' && wparam <= 'z') || (wparam >= 'A' && wparam <= 'Z')))
 		{
 			EntryPointer->Insert(wparam);
-			GenerateFrame(X, Y);
+			FrameCreated = false;
 		}
 	}
 }
@@ -1089,7 +1021,7 @@ void TGumpStatusbar::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 				SendRenameRequest();
 			else //Нельзя изменить имя на пустое
 			{
-				TGameObject *obj = World->FindWorldObject(Serial);
+				TGameObject *obj = World->FindWorldObject(m_Serial);
 				if (obj != NULL)
 					EntryPointer->SetText(obj->GetName());
 			}
@@ -1099,49 +1031,49 @@ void TGumpStatusbar::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 			else
 				EntryPointer = GameConsole;
 
-			GenerateFrame(X, Y); //Перерисуем
+			FrameCreated = false; //Перерисуем
 
 			break;
 		}
 		case VK_HOME:
 		{
 			EntryPointer->SetPos(0);
-			GenerateFrame(X, Y);
+			FrameCreated = false;
 
 			break;
 		}
 		case VK_END:
 		{
 			EntryPointer->SetPos(EntryPointer->Length());
-			GenerateFrame(X, Y);
+			FrameCreated = false;
 
 			break;
 		}
 		case VK_LEFT:
 		{
 			EntryPointer->AddPos(-1);
-			GenerateFrame(X, Y);
+			FrameCreated = false;
 
 			break;
 		}
 		case VK_RIGHT:
 		{
 			EntryPointer->AddPos(1);
-			GenerateFrame(X, Y);
+			FrameCreated = false;
 
 			break;
 		}
 		case VK_BACK:
 		{
 			EntryPointer->Remove(true);
-			GenerateFrame(X, Y);
+			FrameCreated = false;
 
 			break;
 		}
 		case VK_DELETE:
 		{
 			EntryPointer->Remove(false);
-			GenerateFrame(X, Y);
+			FrameCreated = false;
 
 			break;
 		}
@@ -1149,7 +1081,7 @@ void TGumpStatusbar::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 		{
 			//По тыку на Esc можно выйти из редактирования имени существа
 
-			TGameObject *obj = World->FindWorldObject(Serial);
+			TGameObject *obj = World->FindWorldObject(m_Serial);
 			if (obj != NULL)
 				EntryPointer->SetText(obj->GetName());
 
@@ -1158,7 +1090,7 @@ void TGumpStatusbar::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 			else
 				EntryPointer = GameConsole;
 
-			GenerateFrame(X, Y); //Перерисуем
+			FrameCreated = false; //Перерисуем
 
 			break;
 		}
