@@ -1702,7 +1702,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML(BYTE font, const wchar_t *str, 
 		if (si == 0x000D || si == L'\n')
 		{
 			if (si == 0x000D || isFixed || isCropped)
-				si = L'';
+				si = 0;
 			else
 				si = L'\n';
 		}
@@ -1921,7 +1921,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoW(BYTE font, const wchar_t *str, int
 		if (si == 0x000D || si == L'\n')
 		{
 			if (isFixed || isCropped)
-				si = L'';
+				si = 0;
 			else
 				si = L'\n';
 		}
