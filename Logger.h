@@ -39,15 +39,15 @@ public:
 	#define WPRINT warning_printf
 	#define TPRINT trace_printf
 	#if CLOGGER == 2
-		#define TDUMP ;/##/
+		#define TDUMP(...)
 	#else //CLOGGER != 2
 		#define TDUMP trace_dump
 	#endif //CLOGGER == 2
 #else //CLOGGER == 0
-	#define EPRINT ;/##/
-	#define WPRINT ;/##/
-	#define TPRINT ;/##/
-	#define TDUMP ;/##/
+	#define EPRINT(...)
+	#define WPRINT(...)
+	#define TPRINT(...)
+	#define TDUMP(...)
 #endif //CLOGGER!=0
 //---------------------------------------------------------------------------
 // GCC_NORETURN means the function never returns

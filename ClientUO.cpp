@@ -117,6 +117,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
+			MouseManager.UpdateMouse();
 			g_GeneratedMouseDown = false;
 			DWORD ticks = GetTickCount();
 			g_LastMouseDownTime = ticks;
@@ -168,8 +169,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_LBUTTONUP:
 		{
-				if (SmoothMonitor.Type != SMT_NONE)
-				break;
+			if (SmoothMonitor.Type != SMT_NONE)
+			break;
+
+			MouseManager.UpdateMouse();
 
 			if (g_LastLClickTime != -1)
 			{
@@ -201,6 +204,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		{
 			if (SmoothMonitor.Type != SMT_NONE)
 				break;
+
+			MouseManager.UpdateMouse();
 
 			DWORD ticks = GetTickCount();
 
@@ -251,6 +256,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
+			MouseManager.UpdateMouse();
+
 			g_SelectGumpObjects = true;
 
 			CurrentScreen->OnRightMouseUp();
@@ -293,6 +300,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 			g_SelectGumpObjects = true;
 
+			MouseManager.UpdateMouse();
+
 			CurrentScreen->OnMouseWheel(MWS_PRESS);
 
 			g_SelectGumpObjects = false;
@@ -309,6 +318,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				return 0;
 
 			g_SelectGumpObjects = true;
+
+			MouseManager.UpdateMouse();
 
 			if (short(HIWORD(wParam)) > 0)
 				CurrentScreen->OnMouseWheel(MWS_UP);
@@ -467,7 +478,7 @@ BOOL InitInstance(int nCmdShow)
 		return FALSE;
 	}
 	
-	SetTimer(g_hWnd, IDT_UPDATE_MOUSE_TIMER, 50, NULL);
+	SetTimer(g_hWnd, IDT_UPDATE_MOUSE_TIMER, 100, NULL);
 
 	ShowWindow(g_hWnd, nCmdShow);
 	UpdateWindow(g_hWnd);
