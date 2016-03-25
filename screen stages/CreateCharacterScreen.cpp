@@ -172,7 +172,8 @@ int TCreateCharacterScreen::Render(bool mode)
 		
 		UO->DrawResizepicGump(0x0E10, 475, 125, 151, 310); //Create character field
 		
-		const WORD textColorRange[2] = { 0x0481 , 0x0021};
+		const WORD hairTextColorRange[2] = { 0x0381, 0x0021 };
+		const WORD toneTextColorRange[2] = { 0x0481, 0x0021 };
 
 		if (!CreateCharacterManager.Sex)
 		{
@@ -183,7 +184,7 @@ int TCreateCharacterScreen::Render(bool mode)
 				UO->DrawResizepicGump(0xBB8, 97, 199, 177, 142); //Facial Hair Style text field extended
 
 				IFOR(i, 0, 8)
-					FontManager->DrawA(9, CreateCharacterManager.GetBeard(i).Name.c_str(), textColorRange[(int)(CanSelectedButton == (ID_CCS_STYLE_RANGE + i))], 101, 205 + (i * 14));
+					FontManager->DrawA(9, CreateCharacterManager.GetBeard(i).Name.c_str(), hairTextColorRange[(int)(CanSelectedButton == (ID_CCS_STYLE_RANGE + i))], 101, 205 + (i * 14));
 			}
 			else
 			{
@@ -202,7 +203,7 @@ int TCreateCharacterScreen::Render(bool mode)
 			int count = 10 + (int)CreateCharacterManager.Sex;
 
 			IFOR(i, 0, count)
-				FontManager->DrawA(9, CreateCharacterManager.GetHair(i).Name.c_str(), textColorRange[(int)(CanSelectedButton == (ID_CCS_STYLE_RANGE + i))], 101, 159 + (i * 14));
+				FontManager->DrawA(9, CreateCharacterManager.GetHair(i).Name.c_str(), hairTextColorRange[(int)(CanSelectedButton == (ID_CCS_STYLE_RANGE + i))], 101, 159 + (i * 14));
 		}
 		else
 		{
@@ -210,10 +211,13 @@ int TCreateCharacterScreen::Render(bool mode)
 			FontManager->DrawA(9, CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).Name.c_str(), 0x0386, 101, 159);
 			UO->DrawGump(0x00FD, 0, 200, 156); //v gump
 		}
-		
+
+		PBYTE huesData = (PBYTE)ColorManager->GetHuesRangePointer() + 32 + 4;
+		int colorOffsetDivider = sizeof(HUES_GROUP) - 4;
+
 		if (m_ColorSelection == 0)
 		{
-			FontManager->DrawA(9, "Skin Tone", textColorRange[(int)(CanSelectedButton == ID_CCS_SKIN_TONE)], 490, 140);
+			FontManager->DrawA(9, "Skin Tone", toneTextColorRange[(int)(CanSelectedButton == ID_CCS_SKIN_TONE)], 490, 140);
 
 			WORD color = CreateCharacterManager.SkinTone;
 
@@ -222,7 +226,11 @@ int TCreateCharacterScreen::Render(bool mode)
 			else if (color > 0x0422)
 				color = 0x0422;
 
-			DWORD clr = ColorManager->GetPolygoneColor(cell, color);
+			int colorIndex = (color + ((color + (color << 2)) << 1)) << 3;
+			colorIndex += (colorIndex / colorOffsetDivider) << 2;
+			color = *(PWORD)(huesData + colorIndex);
+
+			DWORD clr = ColorManager->Color16To32(color);
 
 			glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 			g_GL.DrawPolygone(490, 154, 120, 25);
@@ -230,13 +238,17 @@ int TCreateCharacterScreen::Render(bool mode)
 
 
 
-			FontManager->DrawA(9, "Shirt Color", textColorRange[(int)(CanSelectedButton == ID_CCS_SHIRT_COLOR)], 490, 185);
+			FontManager->DrawA(9, "Shirt Color", toneTextColorRange[(int)(CanSelectedButton == ID_CCS_SHIRT_COLOR)], 490, 185);
 
 			color = CreateCharacterManager.GetShirtColor();
 			//if (color < 0x044E) color = 0x044E;
 			//else if (color > 0x04AD) color = 0x04AD;
 
-			clr = ColorManager->GetPolygoneColor(cell, color);
+			colorIndex = (color + ((color + (color << 2)) << 1)) << 3;
+			colorIndex += (colorIndex / colorOffsetDivider) << 2;
+			color = *(PWORD)(huesData + colorIndex);
+
+			clr = ColorManager->Color16To32(color);
 
 			glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 			g_GL.DrawPolygone(490, 199, 120, 25);
@@ -244,7 +256,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 
 
-			color = textColorRange[(int)(CanSelectedButton == ID_CCS_SKIRT_OR_PANTS_COLOR)];
+			color = toneTextColorRange[(int)(CanSelectedButton == ID_CCS_SKIRT_OR_PANTS_COLOR)];
 
 			if (CreateCharacterManager.Sex)
 				FontManager->DrawA(9, "Skirt Color", color, 490, 230);
@@ -255,7 +267,11 @@ int TCreateCharacterScreen::Render(bool mode)
 			//if (color < 0x044E) color = 0x044E;
 			//else if (color > 0x04AD) color = 0x04AD;
 
-			clr = ColorManager->GetPolygoneColor(cell, color);
+			colorIndex = (color + ((color + (color << 2)) << 1)) << 3;
+			colorIndex += (colorIndex / colorOffsetDivider) << 2;
+			color = *(PWORD)(huesData + colorIndex);
+
+			clr = ColorManager->Color16To32(color);
 
 			glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 			g_GL.DrawPolygone(490, 244, 120, 25);
@@ -263,7 +279,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 
 
-			FontManager->DrawA(9, "Hair Color", textColorRange[(int)(CanSelectedButton == ID_CCS_HAIR_COLOR)], 490, 275);
+			FontManager->DrawA(9, "Hair Color", toneTextColorRange[(int)(CanSelectedButton == ID_CCS_HAIR_COLOR)], 490, 275);
 
 			color = CreateCharacterManager.HairColor;
 
@@ -272,7 +288,11 @@ int TCreateCharacterScreen::Render(bool mode)
 			else if (color > 0x04AD)
 				color = 0x04AD;
 
-			clr = ColorManager->GetPolygoneColor(cell, color);
+			colorIndex = (color + ((color + (color << 2)) << 1)) << 3;
+			colorIndex += (colorIndex / colorOffsetDivider) << 2;
+			color = *(PWORD)(huesData + colorIndex);
+
+			clr = ColorManager->Color16To32(color);
 
 			glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 			g_GL.DrawPolygone(490, 289, 120, 25);
@@ -282,7 +302,7 @@ int TCreateCharacterScreen::Render(bool mode)
 
 			if (!CreateCharacterManager.Sex)
 			{
-				FontManager->DrawA(9, "Facial Hair Color", textColorRange[(int)(CanSelectedButton == ID_CCS_FACIAL_HAIR_COLOR)], 490, 320);
+				FontManager->DrawA(9, "Facial Hair Color", toneTextColorRange[(int)(CanSelectedButton == ID_CCS_FACIAL_HAIR_COLOR)], 490, 320);
 
 				color = CreateCharacterManager.BeardColor;
 
@@ -291,7 +311,11 @@ int TCreateCharacterScreen::Render(bool mode)
 				else if (color > 0x04AD)
 					color = 0x04AD;
 
-				clr = ColorManager->GetPolygoneColor(cell, color);
+				colorIndex = (color + ((color + (color << 2)) << 1)) << 3;
+				colorIndex += (colorIndex / colorOffsetDivider) << 2;
+				color = *(PWORD)(huesData + colorIndex);
+
+				clr = ColorManager->Color16To32(color);
 
 				glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 				g_GL.DrawPolygone(490, 333, 120, 25);
@@ -300,9 +324,6 @@ int TCreateCharacterScreen::Render(bool mode)
 		}
 		else
 		{
-			PBYTE huesData = (PBYTE)ColorManager->GetHuesRangePointer() + 32 + 4;
-			int colorOffsetDivider = sizeof(HUES_GROUP) - 4;
-
 			if (m_ColorSelection == CCSID_SKIN_TONE)
 			{
 				IFOR(y, 0, 8)
@@ -482,11 +503,11 @@ int TCreateCharacterScreen::Render(bool mode)
 		{
 			if (m_StyleSelection == CCSID_FACIAL_HAIR_STYLE)
 			{
-				IFOR(i, 0, 8)
+				DFOR(i, 8, 0)
 				{
 					if (UO->PolygonePixelsInXY(101, 205 + (i * 14), 170, 25))
 					{
-						g_LastSelectedObject = (ID_CCS_STYLE_RANGE + i); //Facial Hair text field extended
+						g_LastSelectedObject = ID_CCS_STYLE_RANGE + i; //Facial Hair text field extended
 						break;
 					}
 				}
@@ -502,11 +523,11 @@ int TCreateCharacterScreen::Render(bool mode)
 		{
 			int count = 10 + (int)CreateCharacterManager.Sex;
 
-			IFOR(i, 0, count)
+			DFOR(i, count, 0)
 			{
 				if (UO->PolygonePixelsInXY(101, 159 + (i * 14), 123, 25))
 				{
-					g_LastSelectedObject = (ID_CCS_STYLE_RANGE + i); //Hair text field extended
+					g_LastSelectedObject = ID_CCS_STYLE_RANGE + i; //Hair text field extended
 					break;
 				}
 			}

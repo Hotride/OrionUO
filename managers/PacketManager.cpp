@@ -1369,13 +1369,24 @@ PACKET_HANDLER(UpdateObject)
 		Move(2);
 	}
 
-	if (character != NULL)
-		character->m_WalkStack.Clear();
-
 	WORD X = ReadWord();
-	obj->X = X & 0x7FFF;
 
-	obj->Y = ReadWord();
+	WORD newX = X & 0x7FFF;
+	WORD newY = ReadWord();
+
+	if (character != NULL && !character->m_WalkStack.Empty())
+	{
+		if (newX != obj->X || newX != obj->X)
+		{
+			obj->X = character->m_WalkStack.m_Items->X;
+			obj->Y = character->m_WalkStack.m_Items->Y;
+			obj->Z = character->m_WalkStack.m_Items->Z;
+			character->m_WalkStack.Clear();
+		}
+	}
+
+	obj->X = newX;
+	obj->Y = newY;
 
 	if (X & 0x8000)
 		Move(1); //direction2 ?????
@@ -3378,6 +3389,7 @@ PACKET_HANDLER(CharacterAnimation)
 		WORD action = ReadWord();
 		Move(1);
 		BYTE frameCount = ReadByte();
+		frameCount = 0;
 		WORD repeatMode = ReadWord();
 		bool frameDirection = (ReadByte() == 0); //true - forward, false - backward
 		bool repeat = (ReadByte() != 0);

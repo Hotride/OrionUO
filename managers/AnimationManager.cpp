@@ -895,7 +895,9 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 	if (m_DataIndex[id].Offset == 0xFFFFFFFF) //in verdata
 	{
 		PVERDATA_HEADER vh = (PVERDATA_HEADER)(m_DataIndex[id].Address + (offset * sizeof(VERDATA_HEADER)));
-		direction->Address = (DWORD)FileManager.VerdataMul.Address + vh->Position;
+
+		if (vh->Position != 0xFFFFFFFF)
+			direction->Address = (DWORD)FileManager.VerdataMul.Address + vh->Position;
 		
 		dataStart = (PBYTE)direction->Address;
 	}
@@ -923,7 +925,7 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 	direction->FrameCount = frameCount;
 	ptr += sizeof(DWORD);
 
-	PDWORD FrameOffset = (PDWORD)ptr;
+	PDWORD frameOffset = (PDWORD)ptr;
 	ptr += (frameCount * sizeof(DWORD));
 
 	WORD color = m_DataIndex[id].Color;
@@ -935,7 +937,7 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 		if (frame->Texture != 0)
 			continue;
 
-		PWORD p = (PWORD)((DWORD)dataStart + FrameOffset[i]);
+		PWORD p = (PWORD)((DWORD)dataStart + frameOffset[i]);
 
 		short imageCenterX = *p;
 		frame->CenterX = imageCenterX;

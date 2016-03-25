@@ -173,6 +173,8 @@ void TWeather::Draw(int &drawX, int &drawY)
 			break;
 	}
 
+	bool changeOffsets = (ConfigManager.GetReduceFPSUnactiveWindow() && (GetForegroundWindow() != g_hWnd));
+
 	while (effect != NULL)
 	{
 		if ((effect->X < drawX || effect->X > (drawX + g_GameWindowWidth)) || (effect->Y < drawY || effect->Y > (drawY + g_GameWindowHeight)))
@@ -274,8 +276,17 @@ void TWeather::Draw(int &drawX, int &drawY)
 				int oldX = (int)effect->X;
 				int oldY = (int)effect->Y;
 
-				effect->X += (effect->SpeedX * speedOffset);
-				effect->Y += (effect->SpeedY * speedOffset);
+				float ofsx = (effect->SpeedX * speedOffset);
+				float ofsy = (effect->SpeedY * speedOffset);
+
+				if (changeOffsets)
+				{
+					oldX += (int)(ofsx - (ofsx / 7.0f));
+					oldY += (int)(ofsy - (ofsy / 7.0f));
+				}
+
+				effect->X += ofsx;
+				effect->Y += ofsy;
 
 				g_GL.DrawLine(drawX + oldX, drawY + oldY, drawX + (int)effect->X, drawY + (int)effect->Y);
 				break;

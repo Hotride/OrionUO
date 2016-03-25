@@ -188,7 +188,7 @@ void TGumpTip::GenerateFrame(int posX, int posY)
 		UO->DrawGump(0x082B, 0, 31, height + 21); //Bottom line
 		UO->DrawGump(0x0825, 0, 249, height + 17); //v button
 
-		g_GL.Scissor(36, 68, 214, height - 50);
+		g_GL.Scissor((int)g_GumpTranslateX + 36, (int)g_GumpTranslateY + 68, 214, height - 50);
 
 		m_Text.Draw(36, 68 - (m_CurrentLine * GUMP_SCROLLING_PIXEL_STEP));
 

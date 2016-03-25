@@ -497,7 +497,12 @@ int TGumpSpellbook::Draw(bool &mode)
 
 		//Мышка не над гампом, дальнейшие проверки не актуальны. Уходим от сюда
 		if (g_LastSelectedGump != index)
+		{
+			g_MouseX = oldMouseX;
+			g_MouseY = oldMouseY;
+
 			return 0;
+		}
 
 		int LSG = 0;
 
