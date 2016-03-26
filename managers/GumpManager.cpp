@@ -297,6 +297,7 @@ void TGumpManager::OnRightMouseUp(bool blocked)
 							obj->Clear();
 
 						obj->Opened = false;
+						g_CancelDoubleClick = true;
 						CloseGump(gump->Serial, 0, GT_CONTAINER);
 					}
 
@@ -306,30 +307,35 @@ void TGumpManager::OnRightMouseUp(bool blocked)
 				{
 					gump->X = 0;
 					gump->Y = 0;
+					g_CancelDoubleClick = true;
 					gump->GenerateFrame(0, 0);
 
 					break;
 				}
 				case GT_MENU:
 				{
+					g_CancelDoubleClick = true;
 					gump->SendMenuResponse(0);
 
 					break;
 				}
 				case GT_TRADE:
 				{
+					g_CancelDoubleClick = true;
 					gump->SendTradingResponse(1);
 
 					break;
 				}
 				case GT_GENERIC:
 				{
+					g_CancelDoubleClick = true;
 					gump->SendGumpResponse(0);
 
 					break;
 				}
 				case GT_OPTIONS:
 				{
+					g_CancelDoubleClick = true;
 					OptionsMacroManager->Clear();
 
 					CloseGump(gump->Serial, gump->ID, gump->GumpType);
@@ -338,6 +344,7 @@ void TGumpManager::OnRightMouseUp(bool blocked)
 				}
 				case GT_STATUSBAR:
 				{
+					g_CancelDoubleClick = true;
 					TGumpStatusbar *sb = ((TGumpStatusbar*)gump)->GetTopStatusbar();
 
 					if (sb != NULL)
@@ -359,6 +366,7 @@ void TGumpManager::OnRightMouseUp(bool blocked)
 				}
 				default:
 				{
+					g_CancelDoubleClick = true;
 					CloseGump(gump->Serial, gump->ID, gump->GumpType);
 
 					break;

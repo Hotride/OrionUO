@@ -170,7 +170,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_LBUTTONUP:
 		{
 			if (SmoothMonitor.Type != SMT_NONE)
-			break;
+				break;
 
 			MouseManager.UpdateMouse();
 
@@ -268,6 +268,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			g_LastGumpRightMouseDown = 0;
 			g_LastSelectedGump = 0;
 			g_MovingFromMouse = false;
+
+			if (g_CancelDoubleClick)
+				LastRClickTime = 0;
 
 			g_SelectGumpObjects = false;
 

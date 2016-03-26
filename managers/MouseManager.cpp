@@ -131,10 +131,10 @@ WORD TMouseManager::GetGameCursor()
 	int war = (int)(g_Player != NULL && g_Player->Warmode);
 	WORD result = g_CursorData[war][9]; //Main Gump mouse cursor
 	
-	int GameWindowCenterX = g_GameWindowPosX + (g_GameWindowWidth / 2);
-	int GameWindowCenterY = g_GameWindowPosY + (g_GameWindowHeight / 2);
+	int gameWindowCenterX = g_GameWindowPosX + (g_GameWindowWidth / 2);
+	int gameWindowCenterY = g_GameWindowPosY + (g_GameWindowHeight / 2);
 
-	int facing = GetFacing(GameWindowCenterX, GameWindowCenterY, g_MouseX, g_MouseY, 1);
+	int facing = GetFacing(gameWindowCenterX, gameWindowCenterY, g_MouseX, g_MouseY, 1);
 	
 	bool mouseInWindow = true;
 
@@ -144,7 +144,7 @@ WORD TMouseManager::GetGameCursor()
 
 	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && !g_LastGumpRightMouseDown)
 	{
-		float mouse_range = std::hypotf((float)(GameWindowCenterX - g_MouseX), (float)(GameWindowCenterY - g_MouseY));
+		float mouse_range = std::hypotf((float)(gameWindowCenterX - g_MouseX), (float)(gameWindowCenterY - g_MouseY));
 		//UO->DrawUnicodeFontFixed(1, std::to_wstring(mouse_range).c_str(), 773, 100, 100, 200);
 
 		int dir = facing;
@@ -158,7 +158,7 @@ WORD TMouseManager::GetGameCursor()
 			PathFinder->Walk(run, dir - 1);
 	}
 	
-	bool gumpChecked = ((g_LastSelectedObject && g_LastObjectType != SOT_GAME_OBJECT && g_LastObjectType != SOT_STATIC_OBJECT && g_LastObjectType != SOT_LAND_OBJECT && g_LastObjectType != SOT_TEXT_OBJECT) || g_LastSelectedGump);
+	bool gumpChecked = (g_LastSelectedGump || (g_LastSelectedObject && g_LastObjectType != SOT_GAME_OBJECT && g_LastObjectType != SOT_STATIC_OBJECT && g_LastObjectType != SOT_LAND_OBJECT && g_LastObjectType != SOT_TEXT_OBJECT));
 
 	if (!mouseInWindow || gumpChecked || (g_LeftMouseDown && g_LastGumpLeftMouseDown))
 	{
