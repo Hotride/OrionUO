@@ -695,21 +695,19 @@ int TGumpStatusbar::Draw(bool &mode)
 			if (GetNearStatusbar(testX, testY) != NULL)
 			{
 				g_GumpTranslateX = (float)testX;
-				g_GumpTranslateX = (float)testY;
+				g_GumpTranslateY = (float)testY;
 			}
 		}
 	}
-	else
+	else if (InGroup())
 	{
 		int x = (int)g_GumpTranslateX;
 		int y = (int)g_GumpTranslateY;
 
-		if (GetStatusbarGroupOffset(x, y))
-		{
-			g_GumpTranslateX = (float)x;
-			g_GumpTranslateX = (float)y;
-			m_FrameCreated = false;
-		}
+		GetStatusbarGroupOffset(x, y);
+
+		g_GumpTranslateX = (float)x;
+		g_GumpTranslateY = (float)y;
 	}
 
 	if (mode) //Отрисовка

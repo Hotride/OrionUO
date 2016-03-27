@@ -2430,8 +2430,7 @@ void TUltimaOnline::LoadLocalConfig()
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x35, lco);
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Welcome to Ultima Online!");*/
 
-	//g_ContainerStack.clear();
-	//g_CheckContainerStackTimer = GetTickCount() + 1000;
+	g_CheckContainerStackTimer = GetTickCount() + 1000;
 
 	char buf[MAX_PATH] = {0};
 	sprintf(buf, "Desktop\\%s\\%s\\0x%08X", MainScreen->m_Account->c_str(), ServerList.GetServerName().c_str(), g_PlayerSerial);
@@ -4212,7 +4211,8 @@ void TUltimaOnline::Click(DWORD serial)
 //---------------------------------------------------------------------------
 void TUltimaOnline::DoubleClick(DWORD serial)
 {
-	g_LastUseObject = serial;
+	if (serial >= 0x40000000)
+		g_LastUseObject = serial;
 
 	TPacketDoubleClickRequest packet(serial);
 	packet.Send();
@@ -4220,7 +4220,7 @@ void TUltimaOnline::DoubleClick(DWORD serial)
 //---------------------------------------------------------------------------
 void TUltimaOnline::PaperdollReq(DWORD serial)
 {
-	g_LastUseObject = serial;
+	//g_LastUseObject = serial;
 
 	TPacketDoubleClickRequest packet(serial | 0x80000000);
 	packet.Send();

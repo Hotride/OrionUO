@@ -126,7 +126,7 @@ const int DEFAULT_CHARACTER_HEIGHT = 16;
 const int DEFAULT_BLOCK_HEIGHT = 16;
 
 //Задержка для перемещения бегом на маунте
-const int STEP_DELAY_MOUNT_RUN = 95; // 85;
+const int STEP_DELAY_MOUNT_RUN = 90; // 85;
 
 //Задержка для перемещения хотьбы на маунте
 const int STEP_DELAY_MOUNT_WALK = 185; // 185;

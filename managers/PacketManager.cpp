@@ -939,6 +939,10 @@ PACKET_HANDLER(UpdateHitpoints)
 	TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
 	if (gump != NULL)
 		gump->UpdateFrame();
+
+	gump = GumpManager->GetGump(serial, 0, GT_TARGET_SYSTEM);
+	if (gump != NULL)
+		gump->UpdateFrame();
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateMana)

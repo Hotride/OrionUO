@@ -466,6 +466,25 @@ void TGumpOptions::GenerateFrame(int posX, int posY)
 
 	CalculateGumpState();
 
+	TMacroObject *obj = m_MacroObjectPointer;
+	if (obj != NULL)
+	{
+		int macroCount = 0;
+
+		while (obj != NULL)
+		{
+			char hasMenu = obj->HasSubMenu;
+
+			if (hasMenu)
+			{
+				if (hasMenu != 1 && ((TMacroObjectEntry*)obj)->TextEntry->Changed)
+					((TMacroObjectEntry*)obj)->TextEntry->DrawA(1, 0x0386, 118, 5, TS_LEFT, UOFONT_FIXED);
+			}
+
+			obj = (TMacroObject*)obj->m_Next;
+		}
+	}
+
 	glNewList((GLuint)this, GL_COMPILE);
 	
 		UO->DrawResizepicGump(0x0A28, 40, 0, 550, 450); //Body
@@ -1578,11 +1597,11 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 					}
 					else
 					{
-						g_GL.ViewPort(posX + 118, boxPosY + 5, 150, 20);
+						g_GL.Scissor((int)g_GumpTranslateX + posX + 118, (int)g_GumpTranslateY + boxPosY + 5, 150, 20);
 
 						((TMacroObjectEntry*)obj)->TextEntry->DrawA(1, 0x0386, posX + 118, boxPosY + 5, TS_LEFT, UOFONT_FIXED);
 
-						g_GL.RestorePort();
+						glDisable(GL_SCISSOR_TEST);
 					}
 				}
 
@@ -2911,9 +2930,7 @@ void TGumpOptions::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 			if (val > 2000)
 				EntryPointer->Remove(true);
 			else
-			{
-				GenerateFrame(X, Y);
-			}
+				m_FrameCreated = false;
 		}
 	}
 	else if (EntryPointer != TextEntryMacro)
@@ -2922,7 +2939,7 @@ void TGumpOptions::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 
 		if (obj != NULL)
 		{
-			char canAdd = 0;
+			bool canAdd = false;
 
 			switch (obj->Code)
 			{
@@ -2931,7 +2948,7 @@ void TGumpOptions::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 				case MC_MODIFY_UPDATE_RANGE:
 				{
 					if (wparam >= '0' && wparam <= '9')
-						canAdd = 1;
+						canAdd = true;
 
 					break;
 				}
@@ -2940,7 +2957,7 @@ void TGumpOptions::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 				case MC_WHISPER:
 				case MC_YELL:
 				{
-					canAdd = 1;
+					canAdd = true;
 
 					break;
 				}
@@ -2951,7 +2968,7 @@ void TGumpOptions::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 			if (canAdd)
 			{
 				EntryPointer->Insert(wparam);
-				GenerateFrame(X, Y);
+				m_FrameCreated = false;
 			}
 		}
 	}
@@ -2965,7 +2982,7 @@ void TGumpOptions::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 
 		TextEntryMacro->SetText(m_HotkeyText[wparam & 0xFF]);
 
-		GenerateFrame(X, Y);
+		m_FrameCreated = false;
 	}
 	else
 	{
@@ -2976,7 +2993,7 @@ void TGumpOptions::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 			else
 				EntryPointer = GameConsole;
 
-			GenerateFrame(X, Y);
+			m_FrameCreated = false;
 		}
 		else
 			EntryPointer->OnKey(this, wparam);

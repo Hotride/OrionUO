@@ -417,7 +417,7 @@ void TGumpContainer::OnLeftMouseUp()
 		return;
 	}
 
-	DWORD dropContainer = Serial;
+	DWORD dropContainer = m_Serial;
 
 	bool canDrop = (GetTopObjDistance(g_Player, World->FindWorldObject(dropContainer)) < 3);
 
@@ -446,8 +446,8 @@ void TGumpContainer::OnLeftMouseUp()
 		}
 	}
 	
-	int x = g_MouseX - X;
-	int y = g_MouseY - Y;
+	int x = g_MouseX - m_X;
+	int y = g_MouseY - m_Y;
 
 	if (canDrop && ObjectInHand != NULL)
 	{
@@ -480,6 +480,17 @@ void TGumpContainer::OnLeftMouseUp()
 
 		if (y < r.MinY)
 			y = r.MinY;
+
+		if (dropContainer != m_Serial)
+		{
+			TGameItem *target = World->FindWorldItem(g_LastSelectedObject);
+
+			if (target->IsContainer())
+			{
+				x = -1;
+				y = -1;
+			}
+		}
 
 		UO->DropItem(dropContainer, x, y, 0);
 	}

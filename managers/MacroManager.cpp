@@ -408,8 +408,7 @@ void TMacroManager::ProcessSubMenu()
 MACRO_RETURN_CODE TMacroManager::Process()
 {
 	MACRO_RETURN_CODE result = MRC_PARSE_NEXT;
-	static DWORD itemInHand1 = 0;
-	static DWORD itemInHand2 = 0;
+	static DWORD itemInHand[2] = { 0, 0 };
 
 	if (MacroPointer == NULL)
 		result = MRC_STOP;
@@ -557,7 +556,8 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			}
 			case MC_LAST_OBJECT:
 			{
-				UO->DoubleClick(g_LastUseObject);
+				if (World->FindWorldObject(g_LastUseObject))
+					UO->DoubleClick(g_LastUseObject);
 
 				break;
 			}
@@ -622,30 +622,25 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			}
 			case MC_ARM_DISARM:
 			{
-				TGameItem *objHand1 = g_Player->FindLayer(OL_1_HAND);
-				TGameItem *objHand2 = g_Player->FindLayer(OL_2_HAND);
+				int handIndex = 1 - (MacroPointer->SubCode - MSC_G4_LEFT_HAND);
 
-				DWORD hand1 = 0;
-				if (objHand1 != NULL)
-					hand1 = objHand1->Serial;
+				if (handIndex < 0 || handIndex > 1)
+					break;
 
-				DWORD hand2 = 0;
-				if (objHand2 != NULL)
-					hand2 = objHand2->Serial;
-
-				if (!hand1 && !hand2)
+				if (itemInHand[handIndex])
 				{
-					if (itemInHand1)
-						UO->DoubleClick(itemInHand1);
+					TGameItem *objHand = World->FindWorldItem(itemInHand[handIndex]);
 
-					if (itemInHand2)
-						UO->DoubleClick(itemInHand2);
+					if (objHand != NULL)
+					{
+						UO->PickupItem(objHand, 1, false);
+						UO->EquipItem(g_PlayerSerial);
+					}
+
+					itemInHand[handIndex] = 0;
 				}
 				else
 				{
-					itemInHand1 = hand1;
-					itemInHand2 = hand2;
-
 					DWORD backpack = 0;
 					TGameItem *objBackpack = g_Player->FindLayer(OL_BACKPACK);
 
@@ -655,22 +650,21 @@ MACRO_RETURN_CODE TMacroManager::Process()
 					if (!backpack)
 						break;
 
-					UO->DropItem(backpack, 0xFFFF, 0xFFFF, 0);
+					TGameItem *objHand = g_Player->FindLayer(OL_1_HAND + handIndex);
 
-					if (objHand1 != NULL)
+					if (objHand != NULL)
 					{
-						UO->PickupItem(objHand1, 1, false);
-						UO->DropItem(backpack, 0xFFFF, 0xFFFF, 0);
-					}
+						itemInHand[handIndex] = objHand->Serial;
 
-					if (objHand2 != NULL)
-					{
-						UO->PickupItem(objHand2, 1, false);
+						UO->PickupItem(objHand, 1, false);
 						UO->DropItem(backpack, 0xFFFF, 0xFFFF, 0);
+
+						TGump *paperdoll = GumpManager->GetGump(g_PlayerSerial, 0, GT_PAPERDOLL);
+
+						if (paperdoll != NULL)
+							paperdoll->FrameCreated = false;
 					}
 				}
-
-//111111111111111111111111111111111111111111111111111111111111111111111111111111111
 
 				break;
 			}
