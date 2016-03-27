@@ -685,7 +685,10 @@ MACRO_RETURN_CODE TMacroManager::Process()
 				TGameObject *obj = World->SearchWorldObject(g_LastTargetObject, 30, STO_MOBILES, SMO_NEXT);
 
 				if (obj != NULL)
+				{
 					g_LastTargetObject = obj->Serial;
+					g_LastAttackObject = obj->Serial;
+				}
 
 				/*TGameObject *start = World->FindWorldObject(g_LastTargetObject);
 
@@ -807,7 +810,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			}
 			case MC_ATTACK_SELECTED_TARGET:
 			{
-				if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial && NewTargetSystem.Serial >= 0x40000000)
+				if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial && NewTargetSystem.Serial < 0x40000000)
 					UO->Attack(NewTargetSystem.Serial);
 
 				break;

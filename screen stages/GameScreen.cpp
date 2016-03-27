@@ -1391,7 +1391,7 @@ int TGameScreen::Render(bool mode)
 					tz = (char)land->Serial;
 			}
 
-			sprintf(dbf, "Selected:\n%s: G=0x%04X X=%i Y=%i Z=%i (%i) RQI=%i (SUM=%i)\nthis=0x%08X prev=0x%08X next=0x%08X", soName, g_SelectedObject->Graphic, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, tz, g_SelectedObject->RenderQueueIndex, g_SelectedObject->Z + g_SelectedObject->RenderQueueIndex, g_SelectedObject, g_SelectedObject->m_Prev, g_SelectedObject->m_Next);
+			sprintf(dbf, "Selected:\n%s: G=0x%04X X=%i Y=%i Z=%i (%i) RQI=%i (SUM=%i)", soName, g_SelectedObject->Graphic, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, tz, g_SelectedObject->RenderQueueIndex, g_SelectedObject->Z + g_SelectedObject->RenderQueueIndex);
 
 			FontManager->DrawA(3, dbf, 0x35, 20, 122);
 		}
@@ -1643,7 +1643,7 @@ void TGameScreen::OnLeftMouseUp()
 		else if (g_LastObjectType == SOT_LAND_OBJECT)
 			Target.SendTargetTile(g_SelectedObject->Graphic, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z);
 		else if (g_LastObjectType == SOT_STATIC_OBJECT)
-			Target.SendTargetTile(g_SelectedObject->Graphic, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z);
+			Target.SendTargetTile(g_SelectedObject->Graphic - 0x4000, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z);
 
 		g_LastLClickTime = 0;
 
@@ -1652,9 +1652,9 @@ void TGameScreen::OnLeftMouseUp()
 	
 	DWORD drop_container = 0xFFFFFFFF;
 	bool can_drop = false;
-	WORD DropX = 0;
-	WORD DropY = 0;
-	char DropZ = 0;
+	WORD dropX = 0;
+	WORD dropY = 0;
+	char dropZ = 0;
 
 	if (g_LastObjectType == SOT_GAME_OBJECT && g_LastSelectedObject && ObjectInHand != NULL)
 	{
@@ -1673,9 +1673,9 @@ void TGameScreen::OnLeftMouseUp()
 
 			if (drop_container != 0xFFFFFFFF)
 			{
-				DropX = target->X;
-				DropY = target->Y;
-				DropZ = target->Z;
+				dropX = target->X;
+				dropY = target->Y;
+				dropZ = target->Z;
 			}
 		}
 	}
@@ -1687,19 +1687,19 @@ void TGameScreen::OnLeftMouseUp()
 
 		if (can_drop)
 		{
-			DropX = g_SelectedObject->X;
-			DropY = g_SelectedObject->Y;
-			DropZ = g_SelectedObject->Z;
+			dropX = g_SelectedObject->X;
+			dropY = g_SelectedObject->Y;
+			dropZ = g_SelectedObject->Z;
 		}
 	}
 	
-	if (can_drop && ObjectInHand != NULL)
+	if (can_drop /*&& ObjectInHand != NULL*/)
 	{
-		if (drop_container == 0xFFFFFFFF && !DropX && !DropY)
+		if (drop_container == 0xFFFFFFFF && !dropX && !dropY)
 			can_drop = false;
 
 		if (can_drop)
-			UO->DropItem(drop_container, DropX, DropY, DropZ);
+			UO->DropItem(drop_container, dropX, dropY, dropZ);
 	}
 	else if (ObjectInHand == NULL)
 	{
@@ -1753,7 +1753,7 @@ void TGameScreen::OnLeftMouseUp()
 			EntryPointer = GameConsole;
 
 		if (gumpEntry != NULL)
-			gumpEntry->UpdateFrame();
+			gumpEntry->FrameCreated = false;
 	}
 }
 //---------------------------------------------------------------------------

@@ -57,8 +57,6 @@ void TEffectManager::AddEffect(TGameEffect *effect)
 				}
 			}
 
-			effect->Update();
-
 			if (effect->EffectType != EF_STAY_AT_POS)
 			{
 				TGameEffectDrag *effectDrag = (TGameEffectDrag*)effect;
@@ -69,6 +67,8 @@ void TEffectManager::AddEffect(TGameEffect *effect)
 			Add(effect);
 
 			MapManager->AddRender(effect);
+
+			effect->Update();
 
 			break;
 		}

@@ -1554,7 +1554,7 @@ PACKET_HANDLER(UpdateContainedItem)
 		TGump *bbGump = GumpManager->GetGump(cserial, 0, GT_BULLETIN_BOARD);
 
 		if (bbGump != NULL)
-			bbGump->UpdateFrame();
+			bbGump->FrameCreated = false;
 	}
 
 	World->MoveToTop(obj);
@@ -1566,12 +1566,12 @@ PACKET_HANDLER(UpdateContainedItem)
 		{
 			TGump *gump = GumpManager->GetGump(cserial, 0, GT_SPELLBOOK);
 			if (gump != NULL)
-				gump->UpdateFrame();
+				gump->FrameCreated = false;
 			else
 			{
 				gump = GumpManager->GetGump(cserial, 0, GT_CONTAINER);
 				if (gump != NULL)
-					gump->UpdateFrame();
+					gump->FrameCreated = false;
 			}
 		}
 
@@ -1581,7 +1581,7 @@ PACKET_HANDLER(UpdateContainedItem)
 		{
 			TGumpSecureTrading *tradeGump = (TGumpSecureTrading*)GumpManager->GetGump(top->Serial, 0, GT_TRADE);
 			if (tradeGump != NULL)
-				tradeGump->UpdateFrame();
+				tradeGump->FrameCreated = false;
 		}
 	}
 }

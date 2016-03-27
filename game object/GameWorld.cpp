@@ -49,7 +49,7 @@ void TGameWorld::ProcessAnimation()
 {
 	TGameObject *obj = (TGameObject*)m_Items;
 	DWORD ticks = GetTickCount();
-	BYTE delay = (ConfigManager.StandartCharactersAnimationDelay ? 0x50 : 50);
+	BYTE delay = (ConfigManager.StandartCharactersAnimationDelay ? 0x75 : 0x50);
 	g_AnimCharactersDelayValue = delay;
 
 	while (obj != NULL)
@@ -673,9 +673,11 @@ TGameObject *TGameWorld::SearchWorldObject(DWORD serialStart, int scanDistance, 
 							}
 						}
 						else
+						{
 							result = obj;
 
-						break;
+							break;
+						}
 					}
 				}
 
