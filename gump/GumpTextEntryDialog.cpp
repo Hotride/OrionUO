@@ -32,7 +32,7 @@ m_Variant(variant), m_MaxLength(maxLength), m_ParentID(0), m_ButtonID(0)
 	EntryPointer = TextEntry;
 	
 	if (gumpEntry != NULL)
-		gumpEntry->UpdateFrame();
+		gumpEntry->FrameCreated = false;
 	
 	if (!g_GrayMenuCount)
 	{
@@ -57,7 +57,7 @@ void TGumpTextEntryDialog::PrepareTextures()
 	UO->ExecuteGump(0x0474);
 }
 //---------------------------------------------------------------------------
-void TGumpTextEntryDialog::GenerateFrame(int posX, int posY)
+void TGumpTextEntryDialog::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -122,10 +122,10 @@ int TGumpTextEntryDialog::Draw(bool &mode)
 	if (mode)
 	{
 		if (!m_FrameCreated || g_GumpSelectElement)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

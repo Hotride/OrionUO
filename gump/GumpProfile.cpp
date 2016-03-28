@@ -97,7 +97,7 @@ int TGumpProfile::GetHeight()
 	return height;
 }
 //---------------------------------------------------------------------------
-void TGumpProfile::GenerateFrame(int posX, int posY)
+void TGumpProfile::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -314,10 +314,10 @@ int TGumpProfile::Draw(bool &mode)
 	{
 		//Если фрэйм не был создан - создаем
 		if (!m_FrameCreated || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

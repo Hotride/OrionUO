@@ -34,7 +34,7 @@ void TGumpSelectFont::PrepareTextures()
 	UO->ExecuteGumpPart(0x00D0, 2);
 }
 //---------------------------------------------------------------------------
-void TGumpSelectFont::GenerateFrame(int posX, int posY)
+void TGumpSelectFont::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -111,10 +111,10 @@ int TGumpSelectFont::Draw(bool &mode)
 	if (mode)
 	{
 		if (!m_FrameCreated || g_GumpPressedElement) // || g_GumpPressed
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

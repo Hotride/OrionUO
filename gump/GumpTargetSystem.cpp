@@ -35,7 +35,7 @@ void TGumpTargetSystem::PrepareTextures()
 	UO->ExecuteGumpPart(0x0802, 8);
 }
 //---------------------------------------------------------------------------
-void TGumpTargetSystem::GenerateFrame(int posX, int posY)
+void TGumpTargetSystem::GenerateFrame()
 {
 	if (!g_DrawMode || ConfigManager.DisableNewTargetSystem || !NewTargetSystem.Serial)
 	{
@@ -146,10 +146,10 @@ int TGumpTargetSystem::Draw(bool &mode)
 	{
 		//≈сли список отображени€ не был сделан - сделаем его
 		if (!m_FrameCreated)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

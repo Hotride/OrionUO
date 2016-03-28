@@ -188,7 +188,7 @@ void TGumpPaperdoll::CalculateGumpState()
 	}
 }
 //---------------------------------------------------------------------------
-void TGumpPaperdoll::GenerateFrame(int posX, int posY)
+void TGumpPaperdoll::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -461,6 +461,13 @@ int TGumpPaperdoll::Draw(bool &mode)
 		}
 	}
 
+	if (g_LastSelectedGump == (DWORD)this && ObjectInHand != NULL && ObjectInHand->AnimID)
+	{
+		TGameItem *equipment = obj->FindLayer(ObjectInHand->UsedLayer);
+
+		m_FrameCreated = (equipment == NULL);
+	}
+
 	//Вычисление положения, прозрачности и отрисовка текста
 	TRenderTextObject *rto = TextRenderer->m_Items;
 	
@@ -534,10 +541,10 @@ int TGumpPaperdoll::Draw(bool &mode)
 	if (mode)
 	{
 		if (!m_FrameCreated || g_GumpSelectElement) // || g_GumpPressed
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 		else
@@ -549,7 +556,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 					TGameItem *equipment = obj->FindLayer(ObjectInHand->UsedLayer);
 					if (equipment == NULL)
 					{
-						GenerateFrame(0, 0);
+						GenerateFrame();
 						break;
 					}
 				}
@@ -896,7 +903,7 @@ void TGumpPaperdoll::OnLeftMouseUp()
 		case ID_GP_BUTTON_MINIMIZE: //Paperdoll button Minimize
 		{
 			m_Minimized = true;
-			GenerateFrame(m_MinimizedX, m_MinimizedY);
+			m_FrameCreated = false;
 			break;
 		}
 		case ID_GP_LOCK_MOVING:

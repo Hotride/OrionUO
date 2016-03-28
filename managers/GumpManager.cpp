@@ -153,7 +153,7 @@ bool TGumpManager::OnLeftMouseUp(bool blocked)
 					int GY = gump->Y + (g_MouseY - g_DroppedLeftMouseY);
 					gump->X = GX;
 					gump->Y = GY;
-					gump->GenerateFrame(gump->X, gump->Y);
+					gump->FrameCreated = false;
 				}
 			}
 			else if (!g_LastObjectLeftMouseDown && gump->CanBeMoved() && !gump->NoMove && ObjectInHand == NULL)
@@ -209,7 +209,7 @@ bool TGumpManager::OnLeftMouseUp(bool blocked)
 					gump->AddY(GY);
 				}
 
-				gump->UpdateFrame();
+				gump->FrameCreated = false;
 			}
 			
 			g_LastObjectLeftMouseDown = LOLMD;
@@ -308,7 +308,7 @@ void TGumpManager::OnRightMouseUp(bool blocked)
 					gump->X = 0;
 					gump->Y = 0;
 					g_CancelDoubleClick = true;
-					gump->GenerateFrame(0, 0);
+					gump->FrameCreated = false;
 
 					break;
 				}
@@ -590,7 +590,7 @@ void TGumpManager::AddGump(TGump *obj)
 
 					MoveToBack(gump);
 
-					gump->UpdateFrame();
+					gump->FrameCreated = false;
 
 					return;
 				}
@@ -1008,7 +1008,7 @@ void TGumpManager::Load(string path)
 
 				GumpManager->AddGump(gump);
 
-				gump->UpdateFrame();
+				gump->FrameCreated = false;
 			}
 
 			file.Ptr = next;

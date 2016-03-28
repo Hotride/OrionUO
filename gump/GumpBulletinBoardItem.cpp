@@ -145,7 +145,7 @@ void TGumpBulletinBoardItem::CalculateGumpState()
 	}
 }
 //---------------------------------------------------------------------------
-void TGumpBulletinBoardItem::GenerateFrame(int posX, int posY)
+void TGumpBulletinBoardItem::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -364,10 +364,10 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 	if (mode) //Отрисовка
 	{
 		if (g_GumpSelectElement || !m_FrameCreated || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 
@@ -575,7 +575,7 @@ void TGumpBulletinBoardItem::OnLeftMouseUp()
 		EntryPointer = gump->TextEntrySubject;
 
 		if (gumpEntry != NULL)
-			gumpEntry->UpdateFrame();
+			gumpEntry->FrameCreated = false;
 
 		GumpManager->AddGump(gump);
 	}
@@ -597,12 +597,12 @@ void TGumpBulletinBoardItem::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 			if (state == MWS_UP)
 			{
 				ListingList(true, 25);
-				GenerateFrame(X, Y);
+				m_FrameCreated = false;
 			}
 			else if (state == MWS_DOWN)
 			{
 				ListingList(false, 25);
-				GenerateFrame(X, Y);
+				m_FrameCreated = false;
 			}
 		}
 	}
@@ -612,7 +612,7 @@ void TGumpBulletinBoardItem::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 {
 	EntryPointer->Insert(wparam);
 
-	GenerateFrame(X, Y);
+	m_FrameCreated = false;
 }
 //----------------------------------------------------------------------------
 void TGumpBulletinBoardItem::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
@@ -621,7 +621,7 @@ void TGumpBulletinBoardItem::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 	{
 		EntryPointer->Insert(L'\n');
 
-		UpdateFrame(); //Перерисуем
+		m_FrameCreated = false;
 	}
 	else
 		EntryPointer->OnKey(this, wparam);

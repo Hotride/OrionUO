@@ -46,7 +46,7 @@ void TGumpGrayMenu::PrepareTextures()
 	UO->ExecuteGumpPart(0x13B2, 2);
 }
 //---------------------------------------------------------------------------
-void TGumpGrayMenu::GenerateFrame(int posX, int posY)
+void TGumpGrayMenu::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -93,7 +93,7 @@ int TGumpGrayMenu::Draw(bool &mode)
 	if (mode)
 	{
 		if (!m_FrameCreated)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 
 		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 

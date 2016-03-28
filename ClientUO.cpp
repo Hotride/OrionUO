@@ -2572,7 +2572,7 @@ void TUltimaOnline::Process()
 						if (gump != NULL)
 						{
 							gump->Page = g_ClickObject.GumpButtonID;
-							gump->UpdateFrame();
+							gump->FrameCreated = false;
 						}
 					}
 					else if (g_ClickObject.GumpType == GT_BOOK)
@@ -2582,7 +2582,7 @@ void TUltimaOnline::Process()
 						if (gump != NULL)
 						{
 							gump->Page = g_ClickObject.GumpButtonID;
-							gump->UpdateFrame();
+							gump->FrameCreated = false;
 						}
 					}
 					else if (g_ClickObject.GumpType == GT_PAPERDOLL)
@@ -3934,7 +3934,7 @@ void TUltimaOnline::AddJournalMessage(TTextData *msg, string name)
 	TGump *gump = GumpManager->GetGump(g_PlayerSerial, 0, GT_JOURNAL);
 
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 
 	Journal->Add(jmsg);
 }
@@ -4096,7 +4096,7 @@ void TUltimaOnline::PickupItem(TGameItem *obj, int count, bool isGameFigure)
 			TGumpContainer *gump = (TGumpContainer*)GumpManager->GetGump(obj->Container, 0, GT_CONTAINER);
 
 			if (gump != NULL)
-				gump->UpdateFrame();
+				gump->FrameCreated = false;
 		}
 
 		TPacketPickupRequest packet(obj->Serial, count);

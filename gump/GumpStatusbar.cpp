@@ -228,7 +228,7 @@ void TGumpStatusbar::UpdateGroup(int x, int y)
 			gump->AddMinimizedY(y);
 
 			GumpManager->MoveToBack(gump);
-			gump->GenerateFrame(gump->MinimizedX, gump->MinimizedY);
+			gump->FrameCreated = false;
 		}
 
 		gump = gump->m_GroupNext;
@@ -257,7 +257,7 @@ void TGumpStatusbar::AddStatusbar(TGumpStatusbar *bar)
 		bar->m_GroupNext = NULL;
 	}
 
-	UpdateFrame();
+	m_FrameCreated = false;
 }
 //---------------------------------------------------------------------------
 void TGumpStatusbar::RemoveFromGroup()
@@ -280,7 +280,7 @@ void TGumpStatusbar::PrepareTextures()
 		UO->ExecuteGump(0x2A6C);
 }
 //---------------------------------------------------------------------------
-void TGumpStatusbar::GenerateFrame(int posX, int posY)
+void TGumpStatusbar::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -294,7 +294,7 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 	{
 		TGump *targetGump = GumpManager->GetGump(m_Serial, 0, GT_TARGET_SYSTEM);
 		if (targetGump != NULL)
-			targetGump->UpdateFrame();
+			targetGump->FrameCreated = false;
 	}
 
 	CalculateGumpState();
@@ -343,83 +343,83 @@ void TGumpStatusbar::GenerateFrame(int posX, int posY)
 
 				//Hits
 				sprintf(text, "%d", g_Player->Hits);
-				FontManager->DrawA(1, text, 0x0386, 146, posY + 70, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, 70, textWidth, TS_CENTER);
 				
 				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
 				g_GL.DrawLine(146, 82, 180, 82);
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxHits);
-				FontManager->DrawA(1, text, 0x0386, 146, posY + 83, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, 83, textWidth, TS_CENTER);
 				
 				//Stam
 				sprintf(text, "%d", g_Player->Stam);
-				FontManager->DrawA(1, text, 0x0386, 146, posY + 98, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, 98, textWidth, TS_CENTER);
 				
 				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
 				g_GL.DrawLine(146, 110, 180, 110);
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxStam);
-				FontManager->DrawA(1, text, 0x0386, 146, posY + 111, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, 111, textWidth, TS_CENTER);
 
 				//Mana
 				sprintf(text, "%d", g_Player->Mana);
-				FontManager->DrawA(1, text, 0x0386, 146, posY + 126, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, 126, textWidth, TS_CENTER);
 				
 				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
 				g_GL.DrawLine(146, 138, 180, 138);
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxMana);
-				FontManager->DrawA(1, text, 0x0386, 146, posY + 139, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 146, 139, textWidth, TS_CENTER);
 
 
 				
 				sprintf(text, "%d", g_Player->StatsCap);
-				FontManager->DrawA(1, text, 0x0386, 220, posY + 77);
+				FontManager->DrawA(1, text, 0x0386, 220, 77);
 
 				sprintf(text, "%d", g_Player->Luck);
-				FontManager->DrawA(1, text, 0x0386, 220, posY + 105);
+				FontManager->DrawA(1, text, 0x0386, 220, 105);
 				
 				//Weights
 				sprintf(text, "%d", g_Player->Weight);
-				FontManager->DrawA(1, text, 0x0386, 216, posY + 126, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 216, 126, textWidth, TS_CENTER);
 				
 				glColor4f(0.22f, 0.22f, 0.22f, 1.0f);
 				g_GL.DrawLine(216, 138, 250, 138);
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 				sprintf(text, "%d", g_Player->MaxWeight);
-				FontManager->DrawA(1, text, 0x0386, 216, posY + 139, textWidth, TS_CENTER);
+				FontManager->DrawA(1, text, 0x0386, 216, 139, textWidth, TS_CENTER);
 
 				
 
 				sprintf(text, "%d-%d", g_Player->MinDamage, g_Player->MaxDamage);
-				FontManager->DrawA(1, text, 0x0386, 280, posY + 77);
+				FontManager->DrawA(1, text, 0x0386, 280, 77);
 
 				sprintf(text, "%d", g_Player->Gold);
-				FontManager->DrawA(1, text, 0x0386, 280, posY + 105);
+				FontManager->DrawA(1, text, 0x0386, 280, 105);
 				
 				sprintf(text, "%d/%d", g_Player->Followers, g_Player->MaxFollowers);
-				FontManager->DrawA(1, text, 0x0386, 280 + 5, posY + 133);
+				FontManager->DrawA(1, text, 0x0386, 280 + 5, 133);
 				
 
 
 				sprintf(text, "%d", g_Player->Armor);
-				FontManager->DrawA(1, text, 0x0386, 354, posY + 76);
+				FontManager->DrawA(1, text, 0x0386, 354, 76);
 				
 				sprintf(text, "%d", g_Player->FireResistance);
-				FontManager->DrawA(1, text, 0x0386, 354, posY + 92);
+				FontManager->DrawA(1, text, 0x0386, 354, 92);
 				
 				sprintf(text, "%d", g_Player->ColdResistance);
-				FontManager->DrawA(1, text, 0x0386, 354, posY + 106);
+				FontManager->DrawA(1, text, 0x0386, 354, 106);
 				
 				sprintf(text, "%d", g_Player->PoisonResistance);
-				FontManager->DrawA(1, text, 0x0386, 354, posY + 120);
+				FontManager->DrawA(1, text, 0x0386, 354, 120);
 				
 				sprintf(text, "%d", g_Player->EnergyResistance);
-				FontManager->DrawA(1, text, 0x0386, 354, posY + 134);
+				FontManager->DrawA(1, text, 0x0386, 354, 134);
 			}
 			else
 			{
@@ -714,10 +714,10 @@ int TGumpStatusbar::Draw(bool &mode)
 	{
 		//≈сли список отображени€ не был сделан - сделаем его
 		if (!m_FrameCreated)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

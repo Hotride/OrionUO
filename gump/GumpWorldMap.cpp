@@ -344,7 +344,7 @@ void TGumpWorldMap::PrepareTextures()
 	UO->ExecuteGump(0x139D);
 }
 //---------------------------------------------------------------------------
-void TGumpWorldMap::GenerateFrame(int posX, int posY)
+void TGumpWorldMap::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{

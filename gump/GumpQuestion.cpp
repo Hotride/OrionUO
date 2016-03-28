@@ -51,7 +51,7 @@ void TGumpQuestion::PrepareTextures()
 	UO->ExecuteButton(0x081A);
 }
 //---------------------------------------------------------------------------
-void TGumpQuestion::GenerateFrame(int posX, int posY)
+void TGumpQuestion::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -101,10 +101,10 @@ int TGumpQuestion::Draw(bool &mode)
 	if (mode)
 	{
 		if (!m_FrameCreated || g_GumpSelectElement) // || g_GumpPressed
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

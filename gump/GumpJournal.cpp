@@ -80,7 +80,7 @@ void TGumpJournal::ChangeHeight()
 	g_ResizedGump = NULL;
 }
 //---------------------------------------------------------------------------
-void TGumpJournal::GenerateFrame(int posX, int posY)
+void TGumpJournal::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -507,10 +507,10 @@ int TGumpJournal::Draw(bool &mode)
 	if (mode)
 	{
 		if (!m_FrameCreated || (g_GumpSelectElement && !m_HeightBuffer) || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			FrameRedraw = false;
 		}
 
@@ -679,7 +679,7 @@ void TGumpJournal::OnLeftMouseUp()
 	if (g_LastObjectLeftMouseDown == ID_GJ_BUTTON_MINIMIZE)
 	{
 		m_Minimized = true;
-		GenerateFrame(m_MinimizedX, m_MinimizedY);
+		m_FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GJ_LOCK_MOVING)
 	{
@@ -709,7 +709,7 @@ void TGumpJournal::OnLeftMouseUp()
 	else if (g_LastObjectLeftMouseDown == ID_GJ_BUTTON_LOCK)
 	{
 		Journal->SelectionIndex = 0;
-		UpdateFrame();
+		m_FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GJ_BUTTON_UP && m_LastScrollChangeTime < ticks)
 	{
@@ -719,7 +719,7 @@ void TGumpJournal::OnLeftMouseUp()
 			Journal->SelectionIndex = Journal->Size;
 
 		m_LastScrollChangeTime = ticks + SCROLL_LISTING_DELAY;
-		UpdateFrame();
+		m_FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GJ_BUTTON_DOWN && m_LastScrollChangeTime < ticks)
 	{
@@ -729,7 +729,7 @@ void TGumpJournal::OnLeftMouseUp()
 			Journal->SelectionIndex = 1;
 
 		m_LastScrollChangeTime = ticks + SCROLL_LISTING_DELAY;
-		UpdateFrame();
+		m_FrameCreated = false;
 	}
 }
 //----------------------------------------------------------------------------
@@ -738,7 +738,7 @@ bool TGumpJournal::OnLeftMouseDoubleClick()
 	if (m_Minimized)
 	{
 		m_Minimized = false;
-		GenerateFrame(m_X, m_Y);
+		m_FrameCreated = false;
 
 		return true;
 	}
@@ -760,7 +760,7 @@ void TGumpJournal::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 				Journal->SelectionIndex = Journal->Size;
 
 			m_LastScrollChangeTime = ticks + (SCROLL_LISTING_DELAY / 4);
-			UpdateFrame();
+			m_FrameCreated = false;
 		}
 		else if (state == MWS_DOWN && m_LastScrollChangeTime < ticks)
 		{
@@ -770,7 +770,7 @@ void TGumpJournal::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 				Journal->SelectionIndex = 1;
 
 			m_LastScrollChangeTime = ticks + (SCROLL_LISTING_DELAY / 4);
-			UpdateFrame();
+			m_FrameCreated = false;
 		}
 	}
 }

@@ -44,7 +44,7 @@ int TGumpBulletinBoard::GetHeight()
 	return (GetItemsCount() * 18);
 }
 //---------------------------------------------------------------------------
-void TGumpBulletinBoard::GenerateFrame(int posX, int posY)
+void TGumpBulletinBoard::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -173,10 +173,10 @@ int TGumpBulletinBoard::Draw(bool &mode)
 	{
 		//Если фрэйм не был создан - создаем
 		if (!m_FrameCreated || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			FrameRedraw = false;
 		}
 
@@ -254,7 +254,7 @@ void TGumpBulletinBoard::OnLeftMouseUp()
 		EntryPointer = gump->TextEntrySubject;
 
 		if (gumpEntry != NULL)
-			gumpEntry->UpdateFrame();
+			gumpEntry->FrameCreated = false;
 
 		GumpManager->AddGump(gump);
 	}
@@ -263,12 +263,12 @@ void TGumpBulletinBoard::OnLeftMouseUp()
 		if (g_LastObjectLeftMouseDown == ID_GBB_BUTTON_UP)
 		{
 			ListingList(true);
-			GenerateFrame(X, Y);
+			m_FrameCreated = false;
 		}
 		else if (g_LastObjectLeftMouseDown == ID_GBB_BUTTON_DOWN)
 		{
 			ListingList(false);
-			GenerateFrame(X, Y);
+			m_FrameCreated = false;
 		}
 	}
 }
@@ -307,12 +307,12 @@ void TGumpBulletinBoard::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 			if (state == MWS_UP)
 			{
 				ListingList(true, 25);
-				GenerateFrame(X, Y);
+				m_FrameCreated = false;
 			}
 			else if (state == MWS_DOWN)
 			{
 				ListingList(false, 25);
-				GenerateFrame(X, Y);
+				m_FrameCreated = false;
 			}
 		}
 	}

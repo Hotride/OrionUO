@@ -271,7 +271,7 @@ void TGumpGeneric::PrepareTextures()
 	}
 }
 //---------------------------------------------------------------------------
-void TGumpGeneric::GenerateFrame(int posX, int posY)
+void TGumpGeneric::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -474,15 +474,15 @@ void TGumpGeneric::GenerateFrame(int posX, int posY)
 								wOffs -= 14;
 							}
 							else if (htmlGump->HaveBackground)
-								UO->DrawResizepicGump(0x0BB8, posX + htmlGump->X, posY + htmlGump->Y, htmlGump->Width, htmlGump->Height);
+								UO->DrawResizepicGump(0x0BB8, htmlGump->X, htmlGump->Y, htmlGump->Width, htmlGump->Height);
 							else
 							{
 								textOffsX = -1;
 								textOffsY = -1;
 							}
 
-							int drawX = posX + htmlGump->X + textOffsX;
-							int drawY = posY + htmlGump->Y + textOffsY;
+							int drawX = htmlGump->X + textOffsX;
+							int drawY = htmlGump->Y + textOffsY;
 						
 							int textHeight = htmlGump->Height;
 							if (htmlGump->HaveBackground)
@@ -545,7 +545,7 @@ int TGumpGeneric::Draw(bool &mode)
 	if (mode) //Отрисовка
 	{
 		if (!m_FrameCreated)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 
 		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
@@ -877,7 +877,7 @@ void TGumpGeneric::OnLeftMouseUp()
 							if (m_Page < 1)
 								m_Page = 1;
 
-							UpdateFrame();
+							m_FrameCreated = false;
 							return;
 						}
 						else //Click button
@@ -895,7 +895,7 @@ void TGumpGeneric::OnLeftMouseUp()
 						TGumpCheckbox *cb = (TGumpCheckbox*)item;
 						cb->Action = !cb->Action;
 						
-						UpdateFrame();
+						m_FrameCreated = false;
 						return;
 					}
 					break;
@@ -942,7 +942,7 @@ void TGumpGeneric::OnLeftMouseUp()
 						}
 
 						tb->Action = true;
-						UpdateFrame();
+						m_FrameCreated = false;
 
 						return;
 					}
@@ -1118,12 +1118,12 @@ void TGumpGeneric::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 									if (state == MWS_UP)
 									{
 										ListingList(htmlGump, true, 25);
-										GenerateFrame(X, Y);
+										m_FrameCreated = false;
 									}
 									else if (state == MWS_DOWN)
 									{
 										ListingList(htmlGump, false, 25);
-										GenerateFrame(X, Y);
+										m_FrameCreated = false;
 									}
 								}
 							}
@@ -1174,10 +1174,10 @@ void TGumpGeneric::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 			if (val > 170)
 				EntryPointer->Remove(true);
 			else
-				GenerateFrame(m_X, m_Y);
+				m_FrameCreated = false;
 		}
 		else
-			GenerateFrame(m_X, m_Y);
+			m_FrameCreated = false;
 	}
 }
 //----------------------------------------------------------------------------

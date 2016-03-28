@@ -102,7 +102,7 @@ void TGumpSkills::PrepareTextures()
 	UO->ExecuteGumpPart(0x0834, 7);
 }
 //---------------------------------------------------------------------------
-void TGumpSkills::GenerateFrame(int posX, int posY)
+void TGumpSkills::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -243,7 +243,7 @@ void TGumpSkills::GenerateFrame(int posX, int posY)
 		drawY += 3;
 
 		//Максимальная координата отображения по оси Y
-		int boundsY = posY + height;
+		int boundsY = height;
 		
 		int si = -1; //Индекс выбранного скилла
 
@@ -582,10 +582,10 @@ int TGumpSkills::Draw(bool &mode)
 	{
 		//Если фрэйм не был создан - создаем
 		if (!m_FrameCreated || g_GumpSelectElement || g_GumpMovingOffsetX || g_GumpMovingOffsetY) // || g_GumpPressed
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

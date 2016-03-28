@@ -66,7 +66,7 @@ void TGumpContainer::PrepareTextures()
 	}
 }
 //---------------------------------------------------------------------------
-void TGumpContainer::GenerateFrame(int posX, int posY)
+void TGumpContainer::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -161,7 +161,7 @@ int TGumpContainer::Draw(bool &mode)
 			EntryPointer->SetText(std::to_string(selobj->Count));
 			
 			if (gumpEntry != NULL)
-				gumpEntry->UpdateFrame();
+				gumpEntry->FrameCreated = false;
 
 			GumpManager->AddGump(newgump);
 			CurrentScreen->OnLeftMouseDown();
@@ -233,11 +233,11 @@ int TGumpContainer::Draw(bool &mode)
 
 	if (mode)
 	{
-		if (g_GumpSelectElement || !m_FrameCreated || (ID == 0x09 && m_CorpseEyesTicks < GetTickCount()))
-			GenerateFrame(0, 0);
+		if (!m_FrameCreated || g_GumpSelectElement || (ID == 0x09 && m_CorpseEyesTicks < GetTickCount()))
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 
@@ -402,10 +402,10 @@ int TGumpContainer::Draw(bool &mode)
 //----------------------------------------------------------------------------
 void TGumpContainer::OnLeftMouseUp()
 {
-	if (!Minimized && g_LastObjectLeftMouseDown == ID_GC_MINIMIZE && ID == 0x003C)
+	if (!m_Minimized && g_LastObjectLeftMouseDown == ID_GC_MINIMIZE && m_ID == 0x003C)
 	{
-		Minimized = true;
-		GenerateFrame(MinimizedX, MinimizedY);
+		m_Minimized = true;
+		m_FrameCreated = false;
 
 		return;
 	}
@@ -517,10 +517,10 @@ bool TGumpContainer::OnLeftMouseDoubleClick()
 {
 	bool result = false;
 
-	if (!g_LastObjectLeftMouseDown && Minimized && ID == 0x003C)
+	if (!g_LastObjectLeftMouseDown && m_Minimized && m_ID == 0x003C)
 	{
-		Minimized = false;
-		GenerateFrame(X, Y);
+		m_Minimized = false;
+		m_FrameCreated = false;
 
 		result = true;
 	}

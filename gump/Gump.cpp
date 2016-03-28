@@ -180,24 +180,6 @@ int TGump::CalculateScrollerY(int &currentLine, int &visibleLines, int &maxY)
 	return scrollerY;
 }
 //---------------------------------------------------------------------------
-void TGump::UpdateFrame()
-{
-	//Если метод рендеринга не рисование - отмечаем, что гамп нужно будет перерисовать перед отображением
-	if (!g_DrawMode)
-	{
-		m_FrameRedraw = false;
-		m_FrameCreated = false;
-	}
-	else
-	{
-		//Перерисовка мрэймов в зависимости от типа гампа (свернут/стандартное отображение)
-		if (m_Minimized && m_GumpType != GT_MINIMAP)
-			GenerateFrame(m_MinimizedX, m_MinimizedY);
-		else
-			GenerateFrame(X, Y);
-	}
-}
-//---------------------------------------------------------------------------
 void TGump::SendGumpResponse(int index)
 {
 	//Ответ на гамп

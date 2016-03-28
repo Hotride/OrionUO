@@ -45,12 +45,12 @@ TGameCharacter::~TGameCharacter()
 	//Если стянут статусбар - обновим его
 	TGump *gump = GumpManager->GetGump(m_Serial, 0, GT_STATUSBAR);
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 	
 	//Если стянут статусбар таргет системы - обновим его
 	gump = GumpManager->GetGump(m_Serial, 0, GT_TARGET_SYSTEM);
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
 void TGameCharacter::SetPaperdollText(string val)
@@ -279,11 +279,11 @@ void TGameCharacter::OnGraphicChange(int direction)
 	
 		TGump *gump = GumpManager->GetGump(m_Serial, 0, GT_PAPERDOLL);
 		if (gump != NULL)
-			gump->UpdateFrame();
+			gump->FrameCreated = false;
 
 		gump = GumpManager->GetGump(m_Serial, 0, GT_STATUSBAR);
 		if (gump != NULL)
-			gump->UpdateFrame();
+			gump->FrameCreated = false;
 	}
 }
 //---------------------------------------------------------------------------

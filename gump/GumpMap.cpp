@@ -37,7 +37,7 @@ void TGumpMap::PrepareTextures()
 	UO->ExecuteGump(0x139D);
 }
 //---------------------------------------------------------------------------
-void TGumpMap::GenerateFrame(int posX, int posY)
+void TGumpMap::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -331,7 +331,7 @@ void TGumpMap::OnLeftMouseUp()
 			TPacketMapMessage packet(Serial, MM_EDIT, m_PlotState);
 			packet.Send();
 
-			GenerateFrame(X, Y);
+			m_FrameCreated = false;
 		}
 		else if (g_LastObjectLeftMouseDown == ID_GM_CLEAR_COURSE) //Clear Course
 		{
@@ -340,7 +340,7 @@ void TGumpMap::OnLeftMouseUp()
 
 			Clear();
 		
-			GenerateFrame(X, Y);
+			m_FrameCreated = false;
 		}
 		else if (m_PlotState && PinOnCursor == NULL)
 		{

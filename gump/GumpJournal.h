@@ -60,7 +60,7 @@ public:
 	
 	int Draw(bool &mode);
 
-	void GenerateFrame(int posX, int posY);
+	void GenerateFrame();
 
 	void OnLeftMouseUp();
 	bool OnLeftMouseDoubleClick();

@@ -96,8 +96,7 @@ interface IGump
 	virtual bool GetBlocked() const = 0;
 	virtual bool GetLockMoving() const = 0;
 
-	virtual void UpdateFrame() = 0;
-	virtual void GenerateFrame(int posX, int posY) = 0;
+	virtual void GenerateFrame() = 0;
 	virtual bool CanBeDisplayed() = 0;
 	virtual bool CanBeMoved() = 0;
 	virtual int Draw(bool &mode) = 0;

@@ -63,7 +63,7 @@ void TGumpTip::ChangeHeight()
 	g_ResizedGump = NULL;
 }
 //---------------------------------------------------------------------------
-void TGumpTip::GenerateFrame(int posX, int posY)
+void TGumpTip::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -279,10 +279,10 @@ int TGumpTip::Draw(bool &mode)
 	{
 		//Если фрэйм не был создан - создаем
 		if (!m_FrameCreated || (g_GumpSelectElement && !m_HeightBuffer) || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

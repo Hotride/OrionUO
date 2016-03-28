@@ -56,7 +56,7 @@ void TGumpMenu::CalculateGumpState()
 	g_GumpTranslateY = (float)(m_Y + g_GumpMovingOffsetY);
 }
 //---------------------------------------------------------------------------
-void TGumpMenu::GenerateFrame(int posX, int posY)
+void TGumpMenu::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -180,10 +180,10 @@ int TGumpMenu::Draw(bool &mode)
 		}
 
 		if (!m_FrameCreated || (index == g_LastSelectedGump && g_LastSelectedObject >= 10) || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

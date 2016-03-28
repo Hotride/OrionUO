@@ -188,9 +188,6 @@ public:
 	//Расчет списка объектов рендера, вычисление прозрачности крон деревьев (в т.ч. составных)
 	void CalculateRenderList();
 
-	//Восстановить размеры отображаемой области игрового окна
-	void RestoreGameWindowPort() {g_GL.ViewPort(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY, m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowSizeY);}
-
 	//Инициализация
 	void Init();
 

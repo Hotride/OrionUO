@@ -36,7 +36,7 @@ void TGumpSelectColor::PrepareTextures()
 	UO->ExecuteGumpPart(0x0845, 2);
 }
 //---------------------------------------------------------------------------
-void TGumpSelectColor::GenerateFrame(int posX, int posY)
+void TGumpSelectColor::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -149,10 +149,10 @@ int TGumpSelectColor::Draw(bool &mode)
 	if (mode)
 	{
 		if (g_GumpPressed || g_GumpSelectElement || !m_FrameCreated)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			FrameRedraw = false;
 		}
 
@@ -406,6 +406,6 @@ void TGumpSelectColor::OnSelectColor(WORD &color)
 
 	TGump *options = GumpManager->GetGump(g_PlayerSerial, 0, GT_OPTIONS);
 	if (options != NULL)
-		options->UpdateFrame();
+		options->FrameCreated = false;
 }
 //----------------------------------------------------------------------------

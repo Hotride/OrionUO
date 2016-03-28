@@ -33,7 +33,7 @@ public:
 	TGumpDrag(DWORD serial, short x, short y);
 	virtual ~TGumpDrag();
 
-	void GenerateFrame(int PosX, int PosY);
+	void GenerateFrame();
 
 	void PrepareTextures();
 

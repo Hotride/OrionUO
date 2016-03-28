@@ -534,7 +534,7 @@ void TGameScreen::CalculateGameWindowBounds()
 				opt->TextEntryGameSizeX->SetText(std::to_string(m_RenderBounds.GameWindowSizeX));
 				opt->TextEntryGameSizeY->SetText(std::to_string(m_RenderBounds.GameWindowSizeY));
 
-				opt->GenerateFrame(opt->X, opt->Y);
+				opt->FrameCreated = false;
 			}
 		}
 
@@ -688,7 +688,7 @@ void TGameScreen::CheckMouseEvents(bool &charSelected)
 					EntryPointer->SetText(text_amount);
 
 					if (gumpEntry != NULL)
-						gumpEntry->UpdateFrame();
+						gumpEntry->FrameCreated = false;
 	
 					GumpManager->AddGump(newgump);
 					CurrentScreen->OnLeftMouseDown();
@@ -1064,6 +1064,22 @@ void TGameScreen::DrawGameWindowText(bool &mode)
 
 	if (mode)
 	{
+		/*for (TRenderTextObject *bgwt = m_GameWindowText; bgwt != NULL; bgwt = bgwt->m_PrevDraw)
+		{
+			if (!bgwt->IsText())
+				continue;
+
+			TTextData *td = (TTextData*)bgwt;
+
+			if (td->Type != TT_SYSTEM)
+			{
+				TTextTexture &tth = td->m_Texture;
+
+				if (td->Timer >= ticks)
+					DPOLY(td->DrawX, td->DrawY, tth.Width, tth.Height);
+			}
+		}*/
+
 		FontColorizerShader->Use();
 
 		for (; m_GameWindowText != NULL; m_GameWindowText = m_GameWindowText->m_PrevDraw)
@@ -1576,7 +1592,7 @@ void TGameScreen::OnLeftMouseUp()
 
 	if (g_ResizedGump != NULL)
 	{
-		g_ResizedGump->UpdateFrame();
+		g_ResizedGump->FrameCreated = false;
 		g_ResizedGump->ChangeHeight();
 
 		return;

@@ -19,7 +19,7 @@
 //----------------------------------------------------------------------------
 #include "stdafx.h"
 
-TTextTexture TGumpMenubar::m_Texture[8][2];
+TTextTexture TGumpMenubar::m_Texture[8];
 //---------------------------------------------------------------------------
 TGumpMenubar::TGumpMenubar(DWORD serial, short x, short y)
 : TGump(GT_MENUBAR, serial, x, y), m_Opened(true)
@@ -43,50 +43,20 @@ void TGumpMenubar::InitTextTextures()
 	if (th2 != NULL)
 		largeWidth = th2->Width;
 
-	WORD yellowTextColor = 0x0036;
-
-	wstring str = L"Map";
-	FontManager->GenerateW(1, m_Texture[0][0], str.c_str(), 0, 30, smallWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[0][1], str.c_str(), yellowTextColor, 30, smallWidth, TS_CENTER);
-	
-	str = L"Paperdoll";
-	FontManager->GenerateW(1, m_Texture[1][0], str.c_str(), 0, 30, largeWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[1][1], str.c_str(), yellowTextColor, 30, largeWidth, TS_CENTER);
-	
-	str = L"Inventory";
-	FontManager->GenerateW(1, m_Texture[2][0], str.c_str(), 0, 30, largeWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[2][1], str.c_str(), yellowTextColor, 30, largeWidth, TS_CENTER);
-	
-	str = L"Journal";
-	FontManager->GenerateW(1, m_Texture[3][0], str.c_str(), 0, 30, largeWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[3][1], str.c_str(), yellowTextColor, 30, largeWidth, TS_CENTER);
-	
-	str = L"Chat";
-	FontManager->GenerateW(1, m_Texture[4][0], str.c_str(), 0, 30, smallWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[4][1], str.c_str(), yellowTextColor, 30, smallWidth, TS_CENTER);
-	
-	str = L"Help";
-	FontManager->GenerateW(1, m_Texture[5][0], str.c_str(), 0, 30, smallWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[5][1], str.c_str(), yellowTextColor, 30, smallWidth, TS_CENTER);
-	
-	str = L"World Map";
-	FontManager->GenerateW(1, m_Texture[6][0], str.c_str(), 0, 30, largeWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[6][1], str.c_str(), yellowTextColor, 30, largeWidth, TS_CENTER);
-	
-	str = L"< ? >";
-	FontManager->GenerateW(1, m_Texture[7][0], str.c_str(), 0, 30, smallWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[7][1], str.c_str(), yellowTextColor, 30, smallWidth, TS_CENTER);
+	FontManager->GenerateW(1, m_Texture[0], L"Map", 0, 30, smallWidth, TS_CENTER);
+	FontManager->GenerateW(1, m_Texture[1], L"Paperdoll", 0, 30, largeWidth, TS_CENTER);
+	FontManager->GenerateW(1, m_Texture[2], L"Inventory", 0, 30, largeWidth, TS_CENTER);
+	FontManager->GenerateW(1, m_Texture[3], L"Journal", 0, 30, largeWidth, TS_CENTER);
+	FontManager->GenerateW(1, m_Texture[4], L"Chat", 0, 30, smallWidth, TS_CENTER);
+	FontManager->GenerateW(1, m_Texture[5], L"Help", 0, 30, smallWidth, TS_CENTER);
+	FontManager->GenerateW(1, m_Texture[6], L"World Map", 0, 30, largeWidth, TS_CENTER);
+	FontManager->GenerateW(1, m_Texture[7], L"< ? >", 0, 30, smallWidth, TS_CENTER);
 }
 //---------------------------------------------------------------------------
 void TGumpMenubar::ReleaseTextTextures()
 {
 	IFOR(i, 0, 8)
-	{
-		IFOR(j, 0, 2)
-		{
-			m_Texture[i][j].Clear();
-		}
-	}
+		m_Texture[i].Clear();
 }
 //---------------------------------------------------------------------------
 void TGumpMenubar::PrepareTextures()
@@ -98,7 +68,7 @@ void TGumpMenubar::PrepareTextures()
 	UO->ExecuteGump(0x098D);
 }
 //---------------------------------------------------------------------------
-void TGumpMenubar::GenerateFrame(int posX, int posY)
+void TGumpMenubar::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -124,29 +94,39 @@ void TGumpMenubar::GenerateFrame(int posX, int posY)
 
 			UO->DrawGump(0x15A4, 0, 5, 3);
 
-			UO->DrawGump(0x098B, 0, 30, 1);
-			m_Texture[0][(int)(g_GumpSelectElement == ID_GMB_MAP)].Draw(32, 2 + (int)(g_GumpPressedElement == ID_GMB_MAP ? 2 : 0));
-			
-			UO->DrawGump(0x098D, 0, 93, 1);
-			m_Texture[1][(int)(g_GumpSelectElement == ID_GMB_PAPERDOLL)].Draw(96, 2 + (int)(g_GumpPressedElement == ID_GMB_PAPERDOLL ? 2 : 0));
-			
-			UO->DrawGump(0x098D, 0, 201, 1);
-			m_Texture[2][(int)(g_GumpSelectElement == ID_GMB_INVENTORY)].Draw(204, 2 + (int)(g_GumpPressedElement == ID_GMB_INVENTORY ? 2 : 0));
-			
-			UO->DrawGump(0x098D, 0, 309, 1);
-			m_Texture[3][(int)(g_GumpSelectElement == ID_GMB_JOURNAL)].Draw(312, 2 + (int)(g_GumpPressedElement == ID_GMB_JOURNAL ? 2 : 0));
-			
-			UO->DrawGump(0x098B, 0, 417, 1);
-			m_Texture[4][(int)(g_GumpSelectElement == ID_GMB_CHAT)].Draw(422, 2 + (int)(g_GumpPressedElement == ID_GMB_CHAT ? 2 : 0));
-			
-			UO->DrawGump(0x098B, 0, 480, 1);
-			m_Texture[5][(int)(g_GumpSelectElement == ID_GMB_HELP)].Draw(482, 2 + (int)(g_GumpPressedElement == ID_GMB_HELP ? 2 : 0));
-			
-			UO->DrawGump(0x098D, 0, 543, 1);
-			m_Texture[6][(int)(g_GumpSelectElement == ID_GMB_WORLD_MAP)].Draw(546, 2 + (int)(g_GumpPressedElement == ID_GMB_WORLD_MAP ? 2 : 0));
-			
-			UO->DrawGump(0x098B, 0, 651, 1);
-			m_Texture[7][(int)(g_GumpSelectElement == ID_GMB_INFO)].Draw(654, 2 + (int)(g_GumpPressedElement == ID_GMB_INFO ? 2 : 0));
+			const int textPosTable[8][4] =
+			{
+				{ 0x098B, 30, 32, ID_GMB_MAP },
+				{ 0x098D, 93, 96, ID_GMB_PAPERDOLL },
+				{ 0x098D, 201, 204, ID_GMB_INVENTORY },
+				{ 0x098D, 309, 312, ID_GMB_JOURNAL },
+				{ 0x098B, 417, 422, ID_GMB_CHAT },
+				{ 0x098B, 480, 482, ID_GMB_HELP },
+				{ 0x098D, 543, 546, ID_GMB_WORLD_MAP },
+				{ 0x098B, 651, 654, ID_GMB_INFO }
+			};
+
+			IFOR(i, 0, 8)
+				UO->DrawGump(textPosTable[i][0], 0, textPosTable[i][1], 1);
+
+			FontColorizerShader->Use();
+
+			IFOR(i, 0, 8)
+			{
+				int drawMode = (int)(g_GumpSelectElement == textPosTable[i][3]);
+
+				if (drawMode)
+				{
+					WORD yellowColor = 0x0036;
+					ColorManager->SendColorsToShader(yellowColor);
+				}
+
+				glUniform1iARB(ShaderDrawMode, drawMode);
+
+				m_Texture[i].Draw(textPosTable[i][2], 2 + (int)(g_GumpPressedElement == textPosTable[i][3] ? 2 : 0));
+			}
+
+			UnuseShader();
 		}
 
 	glEndList();
@@ -164,10 +144,10 @@ int TGumpMenubar::Draw(bool &mode)
 	if (mode) //Отрисовка
 	{
 		if (!m_FrameCreated || g_GumpSelectElement) // || g_GumpPressed
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

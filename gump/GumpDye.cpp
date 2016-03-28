@@ -31,7 +31,7 @@ TGumpDye::~TGumpDye()
 {
 }
 //----------------------------------------------------------------------------
-void TGumpDye::GenerateFrame(int posX, int posY)
+void TGumpDye::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -45,7 +45,7 @@ void TGumpDye::GenerateFrame(int posX, int posY)
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		TGumpSelectColor::GenerateFrame(posX, posY);
+		TGumpSelectColor::GenerateFrame();
 
 		WORD startColor = m_ColorRef + 2;
 		WORD color = 0;

@@ -122,7 +122,7 @@ void TGumpBuy::CalculateSelectedListCount()
 	}
 }
 //---------------------------------------------------------------------------
-void TGumpBuy::GenerateFrame(int posX, int posY)
+void TGumpBuy::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -572,10 +572,10 @@ int TGumpBuy::Draw(bool &mode)
 	if (mode) //Отрисовка
 	{
 		if (!m_FrameCreated || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 
@@ -894,14 +894,14 @@ void TGumpBuy::OnLeftMouseUp()
 				}
 			}
 
-			GenerateFrame(X, Y);
+			m_FrameCreated = false;
 		}
 		else if (g_LastObjectLeftMouseDown < ID_GB_BUTTON_DEC) //+
 		{
 			if (m_LastChangeCountTime > GetTickCount())
 			{
 				ChangeItemCount(true, g_LastObjectLeftMouseDown - ID_GB_BUTTON_INC);
-				GenerateFrame(X, Y);
+				m_FrameCreated = false;
 			}
 		}
 		else //-
@@ -909,7 +909,7 @@ void TGumpBuy::OnLeftMouseUp()
 			if (m_LastChangeCountTime > GetTickCount())
 			{
 				ChangeItemCount(false, g_LastObjectLeftMouseDown - ID_GB_BUTTON_DEC);
-				GenerateFrame(X, Y);
+				m_FrameCreated = false;
 			}
 		}
 	}
@@ -962,7 +962,7 @@ bool TGumpBuy::OnLeftMouseDoubleClick()
 			}
 		}
 
-		GenerateFrame(X, Y);
+		m_FrameCreated = false;
 
 		return true;
 	}
@@ -1062,7 +1062,7 @@ void TGumpBuy::ListingList(bool direction, bool gumpNumber, int divizor)
 				m_SelectedLine1 = 0;
 
 			m_LastChangedLineTime = ticks + (SCROLL_LISTING_DELAY / divizor);
-			GenerateFrame(X, Y);
+			m_FrameCreated = false;
 		}
 		else //Down
 		{
@@ -1074,7 +1074,7 @@ void TGumpBuy::ListingList(bool direction, bool gumpNumber, int divizor)
 				m_SelectedLine1 = visibleLines;
 
 			m_LastChangedLineTime = ticks + (SCROLL_LISTING_DELAY / divizor);
-			GenerateFrame(X, Y);
+			m_FrameCreated = false;
 		}
 	}
 	else //Second gump
@@ -1089,7 +1089,7 @@ void TGumpBuy::ListingList(bool direction, bool gumpNumber, int divizor)
 				m_SelectedLine2 = 0;
 
 			m_LastChangedLineTime = ticks + (SCROLL_LISTING_DELAY / divizor);
-			GenerateFrame(X, Y);
+			m_FrameCreated = false;
 		}
 		else if (m_SelectedListCount) //Down
 		{
@@ -1101,7 +1101,7 @@ void TGumpBuy::ListingList(bool direction, bool gumpNumber, int divizor)
 				m_SelectedLine2 = visibleLines;
 
 			m_LastChangedLineTime = ticks + (SCROLL_LISTING_DELAY / divizor);
-			GenerateFrame(X, Y);
+			m_FrameCreated = false;
 		}
 	}
 }
@@ -1116,20 +1116,17 @@ void TGumpBuy::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 		if (m_LastChangedLineTime > GetTickCount())
 			return;
 
-		register int x = X;
-		register int y = Y;
-
-		if (UO->GumpPixelsInXY(0x0871, x + 170, y + 214))
+		if (UO->GumpPixelsInXY(0x0871, m_X + 170, m_Y + 214))
 		{
 			ListingList((bool)(state == MWS_UP), true, 5);
 
-			GenerateFrame(x, y);
+			m_FrameCreated = false;
 		}
-		else if (UO->GumpPixelsInXY(0x0870, x, y))
+		else if (UO->GumpPixelsInXY(0x0870, m_X, m_Y))
 		{
 			ListingList((bool)(state == MWS_UP), false, 5);
 
-			GenerateFrame(x, y);
+			m_FrameCreated = false;
 		}
 	}
 }

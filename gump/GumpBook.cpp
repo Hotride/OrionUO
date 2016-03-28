@@ -58,7 +58,7 @@ void TGumpBook::PrepareTextures()
 {
 }
 //---------------------------------------------------------------------------
-void TGumpBook::GenerateFrame(int posX, int posY)
+void TGumpBook::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -170,7 +170,7 @@ void TGumpBook::OnLeftMouseUp()
 
 	//Если была изменена страница - перерисуем гамп
 	if (lastPage != m_Page)
-		UpdateFrame();
+		m_FrameCreated = false;
 }
 //----------------------------------------------------------------------------
 bool TGumpBook::OnLeftMouseDoubleClick()
@@ -185,7 +185,7 @@ bool TGumpBook::OnLeftMouseDoubleClick()
 		m_Page = 1;
 
 		//Перерисуем гамп
-		UpdateFrame();
+		m_FrameCreated = false;
 
 		return true;
 	}
@@ -195,7 +195,7 @@ bool TGumpBook::OnLeftMouseDoubleClick()
 		m_Page = m_PageCount;
 
 		//Перерисуем гамп
-		UpdateFrame();
+		m_FrameCreated = false;
 
 		return true;
 	}

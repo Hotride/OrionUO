@@ -78,7 +78,7 @@ void TEntryText::OnClick(TGump *gump, BYTE font, bool unicode, int x, int y, TEX
 
 		//Если гамп найден - обновим окно гампа
 		if (gumpEntry != NULL)
-			gumpEntry->UpdateFrame();
+			gumpEntry->FrameCreated = false;
 
 		//Изменим указатель
 		EntryPointer = this;
@@ -86,7 +86,7 @@ void TEntryText::OnClick(TGump *gump, BYTE font, bool unicode, int x, int y, TEX
 
 	//Если это ентри гампа - обновим его
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
 //Вызывается при обработке нажатия клавиши
@@ -174,7 +174,7 @@ bool TEntryText::Insert(wchar_t ch, TGump *gump)
 
 	//Обновляем гамп (если есть)
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 
 	return true;
 }
@@ -206,7 +206,7 @@ void TEntryText::Remove(bool left, TGump *gump)
 
 	//Обновляем гамп (если есть)
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
 //Очистка
@@ -241,7 +241,7 @@ void TEntryText::AddPos(int val, TGump *gump)
 
 	//Обновляем гамп (если есть)
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
 //Изменение позиции m_Position
@@ -263,7 +263,7 @@ void TEntryText::SetPos(int val, TGump *gump)
 
 	//Обновляем гамп (если есть)
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
 //Изменение текста
@@ -315,7 +315,7 @@ void TEntryText::SetText(const wstring &text)
 		TGump *gump = GumpManager->GetTextEntryOwner();
 
 		if (gump != NULL)
-			gump->UpdateFrame();
+			gump->FrameCreated = false;
 	}
 }
 //---------------------------------------------------------------------------

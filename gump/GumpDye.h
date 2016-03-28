@@ -27,7 +27,7 @@ public:
 	TGumpDye(DWORD serial, short x, short y, WORD graphic);
 	virtual ~TGumpDye();
 
-	void GenerateFrame(int posX, int posY);
+	void GenerateFrame();
 
 	void OnSelectColor(WORD &color);
 };

@@ -33,7 +33,7 @@ private:
 	static const int ID_GMB_WORLD_MAP = 8;
 	static const int ID_GMB_INFO = 9;
 
-	static TTextTexture m_Texture[8][2];
+	static TTextTexture m_Texture[8];
 	bool m_Opened;
 public:
 	TGumpMenubar(DWORD serial, short x, short y);
@@ -50,7 +50,7 @@ public:
 
 	int Draw(bool &mode);
 
-	void GenerateFrame(int posX, int posY);
+	void GenerateFrame();
 
 	void OnLeftMouseUp();
 };

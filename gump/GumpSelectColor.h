@@ -38,7 +38,7 @@ public:
 
 	void PrepareTextures();
 
-	void GenerateFrame(int posX, int posY);
+	virtual void GenerateFrame();
 
 	int Draw(bool &mode);
 

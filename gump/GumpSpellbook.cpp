@@ -114,7 +114,7 @@ void TGumpSpellbook::PrepareTextures()
 	UO->ExecuteGumpPart(0x08C0, 64);
 }
 //----------------------------------------------------------------------------
-void TGumpSpellbook::GenerateFrame(int posX, int posY)
+void TGumpSpellbook::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -427,7 +427,7 @@ int TGumpSpellbook::Draw(bool &mode)
 	{
 		//Если список отображения не создан
 		if (!m_FrameCreated)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 
 		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 

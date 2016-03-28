@@ -138,7 +138,7 @@ void TGumpMinimap::GenerateMap()
 	delete data;
 }
 //---------------------------------------------------------------------------
-void TGumpMinimap::GenerateFrame(int posX, int posY)
+void TGumpMinimap::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -212,13 +212,14 @@ int TGumpMinimap::Draw(bool &mode)
 	static DWORD ticks = GetTickCount();
 
 	bool minimized = m_Minimized;
+	m_Minimized = false;
 	CalculateGumpState();
 	m_Minimized = minimized;
 
 	if (mode)
 	{
 		if (g_Player->X != m_LastX || g_Player->Y != m_LastY || !m_Count || m_Count == 6 || !m_FrameCreated || m_Texture == 0)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 
 		if (m_Texture != 0)
 		{

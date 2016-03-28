@@ -394,7 +394,7 @@ void TMacroManager::ProcessSubMenu()
 				{
 					gump->Minimized = (MacroPointer->Code == MC_MINIMIZE);
 
-					gump->UpdateFrame();
+					gump->FrameCreated = false;
 				}
 			}
 

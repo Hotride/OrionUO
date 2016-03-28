@@ -61,8 +61,7 @@ public:
 
 	virtual void ChangeHeight() {}
 
-	virtual void UpdateFrame();
-	virtual void GenerateFrame(int posX, int posY) {}
+	virtual void GenerateFrame() {}
 
 	virtual bool CanBeDisplayed() {return true;}
 	bool CanBeMoved();

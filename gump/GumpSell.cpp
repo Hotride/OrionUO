@@ -52,7 +52,7 @@ void TGumpSell::CalculateSelectedListCount()
 	}
 }
 //---------------------------------------------------------------------------
-void TGumpSell::GenerateFrame(int posX, int posY)
+void TGumpSell::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -500,10 +500,10 @@ int TGumpSell::Draw(bool &mode)
 	if (mode) //Отрисовка
 	{
 		if (!m_FrameCreated || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

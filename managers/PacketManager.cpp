@@ -938,11 +938,11 @@ PACKET_HANDLER(UpdateHitpoints)
 	
 	TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 
 	gump = GumpManager->GetGump(serial, 0, GT_TARGET_SYSTEM);
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateMana)
@@ -961,7 +961,7 @@ PACKET_HANDLER(UpdateMana)
 	
 	TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateStamina)
@@ -980,7 +980,7 @@ PACKET_HANDLER(UpdateStamina)
 	
 	TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdatePlayer)
@@ -1146,7 +1146,7 @@ PACKET_HANDLER(CharacterStatus)
 		if (sbg->TextEntry != NULL && sbg->TextEntry != EntryPointer)
 			sbg->TextEntry->SetText(name);
 		
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 	}
 }
 //---------------------------------------------------------------------------
@@ -1496,7 +1496,7 @@ PACKET_HANDLER(EquipItem)
 	{
 		TGump *gump = GumpManager->GetGump(cserial, 0, GT_PAPERDOLL);
 		if (gump != NULL)
-			gump->UpdateFrame();
+			gump->FrameCreated = false;
 	}
 
 	if (layer >= OL_BUY_RESTOCK && layer <= OL_SELL)
@@ -1683,7 +1683,7 @@ PACKET_HANDLER(UpdateContainedItems)
 				TGump *bbGump = GumpManager->GetGump(cserial, 0, GT_BULLETIN_BOARD);
 
 				if (bbGump != NULL)
-					bbGump->UpdateFrame();
+					bbGump->FrameCreated = false;
 			}
 		}
 
@@ -1709,12 +1709,12 @@ PACKET_HANDLER(UpdateContainedItems)
 		{
 			TGump *gump = GumpManager->GetGump(contobj->GetSerial(), 0, GT_SPELLBOOK);
 			if (gump != NULL)
-				gump->UpdateFrame();
+				gump->FrameCreated = false;
 			else
 			{
 				gump = GumpManager->GetGump(contobj->GetSerial(), 0, GT_CONTAINER);
 				if (gump != NULL)
-					gump->UpdateFrame();
+					gump->FrameCreated = false;
 			}
 		}
 
@@ -1724,7 +1724,7 @@ PACKET_HANDLER(UpdateContainedItems)
 		{
 			TGumpSecureTrading *tradeGump = (TGumpSecureTrading*)GumpManager->GetGump(top->Serial, 0, GT_TRADE);
 			if (tradeGump != NULL)
-				tradeGump->UpdateFrame();
+				tradeGump->FrameCreated = false;
 		}
 	}
 }
@@ -1801,12 +1801,12 @@ PACKET_HANDLER(DeleteObject)
 			{
 				TGumpSecureTrading *tradeGump = (TGumpSecureTrading*)GumpManager->GetGump(top->Serial, 0, GT_TRADE);
 				if (tradeGump != NULL)
-					tradeGump->UpdateFrame();
+					tradeGump->FrameCreated = false;
 			}
 
 			TGump *gump = GumpManager->GetGump(cont, 0, GT_CONTAINER);
 			if (gump != NULL)
-				gump->UpdateFrame();
+				gump->FrameCreated = false;
 		
 			if (obj->Graphic == 0x0EB0)
 			{
@@ -1824,7 +1824,7 @@ PACKET_HANDLER(DeleteObject)
 						}
 					}
 
-					gump->UpdateFrame();
+					gump->FrameCreated = false;
 				}
 			}
 		}
@@ -1882,7 +1882,7 @@ PACKET_HANDLER(UpdateCharacter)
 	
 	TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 	
 	World->MoveToTop(obj);
 }
@@ -1896,11 +1896,11 @@ PACKET_HANDLER(Warmode)
 	
 	TGump *gump = GumpManager->GetGump(g_PlayerSerial, 0, GT_STATUSBAR);
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 
 	gump = GumpManager->GetGump(g_PlayerSerial, 0, GT_PAPERDOLL);
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 
 	World->MoveToTop(g_Player);
 }
@@ -1926,7 +1926,7 @@ PACKET_HANDLER(OpenPaperdoll)
 
 	TGump *gump = GumpManager->GetGump(serial, 0, GT_PAPERDOLL);
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 	else
 	{
 		gump = new TGumpPaperdoll(serial, 0, 0, false);
@@ -2216,7 +2216,7 @@ PACKET_HANDLER(UpdateSkills)
 
 	TGump *gump = GumpManager->GetGump(g_PlayerSerial, 0, GT_SKILLS);
 	if (gump != NULL)
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(ExtendedCommand)
@@ -2437,7 +2437,7 @@ PACKET_HANDLER(Talk)
 					TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
 
 					if (gump != NULL)
-						gump->UpdateFrame();
+						gump->FrameCreated = false;
 				}
 			}
 		}
@@ -2504,7 +2504,7 @@ PACKET_HANDLER(UnicodeTalk)
 					TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
 
 					if (gump != NULL)
-						gump->UpdateFrame();
+						gump->FrameCreated = false;
 				}
 			}
 		}
@@ -2595,7 +2595,7 @@ PACKET_HANDLER(SecureTrading)
 			gump->StateMy = id1 != 0;
 			gump->StateOpponent = id2 != 0;
 
-			gump->UpdateFrame();
+			gump->FrameCreated = false;
 		}
 	}
 }
@@ -3509,7 +3509,7 @@ PACKET_HANDLER(MapData)
 				break;
 		}
 
-		gump->UpdateFrame();
+		gump->FrameCreated = false;
 	}
 }
 //---------------------------------------------------------------------------
@@ -3750,7 +3750,7 @@ PACKET_HANDLER(BulletinBoardData)
 				if (bbGump != NULL)
 				{
 					bbGump->Clear();
-					bbGump->UpdateFrame();
+					bbGump->FrameCreated = false;
 				}
 
 				item->Opened = true;

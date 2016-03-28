@@ -62,7 +62,7 @@ public:
 
 	int Draw(__in bool &mode);
 
-	void GenerateFrame(__in int posX, __in int posY);
+	void GenerateFrame();
 	
 	void OnLeftMouseDown();
 	void OnLeftMouseUp();

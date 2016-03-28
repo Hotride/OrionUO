@@ -37,7 +37,7 @@ void TGumpNotify::PrepareTextures()
 	UO->ExecuteButton(0x0481);
 }
 //----------------------------------------------------------------------------
-void TGumpNotify::GenerateFrame(int posX, int posY)
+void TGumpNotify::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -80,10 +80,10 @@ int TGumpNotify::Draw(bool &mode)
 	if (mode)
 	{
 		if (g_GumpPressed || !m_FrameCreated || g_GumpSelectElement)
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 

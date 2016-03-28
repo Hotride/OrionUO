@@ -166,7 +166,7 @@ void TParty::ParsePacketData(PBYTE buf, int &size)
 				else
 				{
 					UO->StatusReq(serial);
-					gump->UpdateFrame();
+					gump->FrameCreated = false;
 				}
 
 				ptr += 4;
@@ -177,7 +177,7 @@ void TParty::ParsePacketData(PBYTE buf, int &size)
 			
 			TGump *pmGump = GumpManager->GetGump(0, 0, GT_PARTY_MANIFEST);
 			if (pmGump != NULL)
-				pmGump->UpdateFrame();
+				pmGump->FrameCreated = false;
 
 			break;
 		}

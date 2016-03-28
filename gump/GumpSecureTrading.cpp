@@ -78,7 +78,7 @@ void TGumpSecureTrading::PrepareTextures()
 	}
 }
 //----------------------------------------------------------------------------
-void TGumpSecureTrading::GenerateFrame(int posX, int posY)
+void TGumpSecureTrading::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
@@ -299,10 +299,10 @@ int TGumpSecureTrading::Draw(bool &mode)
 	if (mode) //Отрисовка
 	{
 		if (!m_FrameCreated || g_GumpSelectElement || g_GumpMovingOffsetX || g_GumpMovingOffsetY) // || g_GumpPressed
-			GenerateFrame(0, 0);
+			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
-			GenerateFrame(0, 0);
+			GenerateFrame();
 			m_FrameRedraw = false;
 		}
 
