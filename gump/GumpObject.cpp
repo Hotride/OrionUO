@@ -439,6 +439,12 @@ TGumpXFMHTMLGump::~TGumpXFMHTMLGump()
 TGumpMenuObject::TGumpMenuObject(WORD graphic, WORD color, string text)
 : TGumpObject(GOT_BUTTON, graphic, color, 0, 0), m_Pressed(false), m_Text(text)
 {
+	FontManager->GenerateA(1, Texture, text.c_str(), 0x0386, 330);
+}
+//---------------------------------------------------------------------------
+TGumpMenuObject::~TGumpMenuObject()
+{
+	Texture.Clear();
 }
 //---------------------------------------------------------------------------
 TGumpSellObject::TGumpSellObject()

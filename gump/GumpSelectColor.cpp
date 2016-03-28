@@ -404,8 +404,6 @@ void TGumpSelectColor::OnSelectColor(WORD &color)
 
 	GumpManager->CloseGump(g_PlayerSerial, 0, GT_SELECT_COLOR);
 
-	TGump *options = GumpManager->GetGump(g_PlayerSerial, 0, GT_OPTIONS);
-	if (options != NULL)
-		options->FrameCreated = false;
+	GumpManager->UpdateGump(g_PlayerSerial, 0, GT_OPTIONS);
 }
 //----------------------------------------------------------------------------

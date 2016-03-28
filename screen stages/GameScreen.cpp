@@ -527,14 +527,12 @@ void TGameScreen::CalculateGameWindowBounds()
 			if (m_RenderBounds.GameWindowSizeY < 480)
 				m_RenderBounds.GameWindowSizeY = 480;
 
-			TGumpOptions *opt = (TGumpOptions*)GumpManager->GetGump(g_PlayerSerial, 0, GT_OPTIONS);
+			TGumpOptions *opt = (TGumpOptions*)GumpManager->UpdateGump(g_PlayerSerial, 0, GT_OPTIONS);
 
 			if (opt != NULL)
 			{
 				opt->TextEntryGameSizeX->SetText(std::to_string(m_RenderBounds.GameWindowSizeX));
 				opt->TextEntryGameSizeY->SetText(std::to_string(m_RenderBounds.GameWindowSizeY));
-
-				opt->FrameCreated = false;
 			}
 		}
 

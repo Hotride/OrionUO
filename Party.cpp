@@ -175,9 +175,7 @@ void TParty::ParsePacketData(PBYTE buf, int &size)
 			g_MouseX = x;
 			g_MouseY = y;
 			
-			TGump *pmGump = GumpManager->GetGump(0, 0, GT_PARTY_MANIFEST);
-			if (pmGump != NULL)
-				pmGump->FrameCreated = false;
+			GumpManager->UpdateGump(0, 0, GT_PARTY_MANIFEST);
 
 			break;
 		}

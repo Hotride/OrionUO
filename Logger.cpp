@@ -5,7 +5,7 @@
 #include <stdarg.h>
 #include <locale>
 //---------------------------------------------------------------------------
-CLogger g_Logger;
+CLogger *g_Logger = NULL;
 //---------------------------------------------------------------------------
 CLogger::CLogger()
 : m_file(NULL)
@@ -90,8 +90,8 @@ void error_printf(const char * format, ...)
 {
 	va_list arg;
 	va_start(arg, format);
-	g_Logger.Print("***Error: ");
-	g_Logger.VPrint(format, arg);
+	g_Logger->Print("***Error: ");
+	g_Logger->VPrint(format, arg);
 	va_end(arg);
 }
 //---------------------------------------------------------------------------
@@ -99,8 +99,8 @@ void warning_printf(const char * format, ...)
 {
 	va_list arg;
 	va_start(arg, format);
-	g_Logger.Print("**Warning: ");
-	g_Logger.VPrint(format, arg);
+	g_Logger->Print("**Warning: ");
+	g_Logger->VPrint(format, arg);
 	va_end(arg);
 }
 //---------------------------------------------------------------------------
@@ -108,12 +108,12 @@ void trace_printf(const char * format, ...)
 {
 	va_list arg;
 	va_start(arg, format);
-	g_Logger.VPrint(format, arg);
+	g_Logger->VPrint(format, arg);
 	va_end(arg);
 }
 //---------------------------------------------------------------------------
 void trace_dump(unsigned char * buf, int length)
 {
-	g_Logger.Dump(buf, length);
+	g_Logger->Dump(buf, length);
 }
 //---------------------------------------------------------------------------

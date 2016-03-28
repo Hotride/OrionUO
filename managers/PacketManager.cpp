@@ -936,13 +936,8 @@ PACKET_HANDLER(UpdateHitpoints)
 	obj->MaxHits = ReadShort();
 	obj->Hits = ReadShort();
 	
-	TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
-	if (gump != NULL)
-		gump->FrameCreated = false;
-
-	gump = GumpManager->GetGump(serial, 0, GT_TARGET_SYSTEM);
-	if (gump != NULL)
-		gump->FrameCreated = false;
+	GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
+	GumpManager->UpdateGump(serial, 0, GT_TARGET_SYSTEM);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateMana)
@@ -959,9 +954,7 @@ PACKET_HANDLER(UpdateMana)
 	obj->MaxMana = ReadShort();
 	obj->Mana = ReadShort();
 	
-	TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
-	if (gump != NULL)
-		gump->FrameCreated = false;
+	GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateStamina)
@@ -978,9 +971,7 @@ PACKET_HANDLER(UpdateStamina)
 	obj->MaxStam = ReadShort();
 	obj->Stam = ReadShort();
 	
-	TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
-	if (gump != NULL)
-		gump->FrameCreated = false;
+	GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdatePlayer)
@@ -1027,6 +1018,19 @@ PACKET_HANDLER(UpdatePlayer)
 	g_Player->OffsetX = 0;
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
+
+	if (g_Player->Direction != dir)
+	{
+		TGameItem *bank = g_Player->FindLayer(OL_BANK);
+
+		if (bank != NULL)
+		{
+			TGump *bankContainer = GumpManager->GetGump(bank->Serial, 0, GT_CONTAINER);
+
+			if (bankContainer != NULL)
+				GumpManager->RemoveGump(bankContainer);
+		}
+	}
 
 	g_Player->Direction = dir;
 	g_Player->Z = ReadByte();
@@ -1138,15 +1142,13 @@ PACKET_HANDLER(CharacterStatus)
 		}
 	}
 	
-	TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
+	TGump *gump = GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
 	if (gump != NULL)
 	{
 		TGumpStatusbar *sbg = (TGumpStatusbar*)gump;
 
 		if (sbg->TextEntry != NULL && sbg->TextEntry != EntryPointer)
 			sbg->TextEntry->SetText(name);
-		
-		gump->FrameCreated = false;
 	}
 }
 //---------------------------------------------------------------------------
@@ -1493,11 +1495,7 @@ PACKET_HANDLER(EquipItem)
 	obj->OnGraphicChange();
 
 	if (layer < OL_MOUNT)
-	{
-		TGump *gump = GumpManager->GetGump(cserial, 0, GT_PAPERDOLL);
-		if (gump != NULL)
-			gump->FrameCreated = false;
-	}
+		GumpManager->UpdateGump(cserial, 0, GT_PAPERDOLL);
 
 	if (layer >= OL_BUY_RESTOCK && layer <= OL_SELL)
 		obj->Clear();
@@ -1551,10 +1549,7 @@ PACKET_HANDLER(UpdateContainedItem)
 		TPacketBulletinBoardRequestMessageSummary bbPacket(cserial, obj->Serial);
 		bbPacket.Send();
 
-		TGump *bbGump = GumpManager->GetGump(cserial, 0, GT_BULLETIN_BOARD);
-
-		if (bbGump != NULL)
-			bbGump->FrameCreated = false;
+		GumpManager->UpdateGump(cserial, 0, GT_BULLETIN_BOARD);
 	}
 
 	World->MoveToTop(obj);
@@ -1562,27 +1557,17 @@ PACKET_HANDLER(UpdateContainedItem)
 	TGameItem *container = World->FindWorldItem(cserial);
 	if (container != NULL)
 	{
-		if (container->Opened)
-		{
-			TGump *gump = GumpManager->GetGump(cserial, 0, GT_SPELLBOOK);
-			if (gump != NULL)
-				gump->FrameCreated = false;
-			else
-			{
-				gump = GumpManager->GetGump(cserial, 0, GT_CONTAINER);
-				if (gump != NULL)
-					gump->FrameCreated = false;
-			}
-		}
+		TGump *gump = GumpManager->UpdateGump(cserial, 0, GT_SPELLBOOK);
+		if (gump == NULL)
+			gump = GumpManager->UpdateGump(cserial, 0, GT_CONTAINER);
+
+		if (gump != NULL)
+			container->Opened = true;
 
 		TGameObject *top = container->GetTopObject();
 
 		if (top != NULL)
-		{
-			TGumpSecureTrading *tradeGump = (TGumpSecureTrading*)GumpManager->GetGump(top->Serial, 0, GT_TRADE);
-			if (tradeGump != NULL)
-				tradeGump->FrameCreated = false;
-		}
+			GumpManager->UpdateGump(top->Serial, 0, GT_TRADE);
 	}
 }
 //---------------------------------------------------------------------------
@@ -1680,10 +1665,7 @@ PACKET_HANDLER(UpdateContainedItems)
 			{
 				bbUpdated = true;
 
-				TGump *bbGump = GumpManager->GetGump(cserial, 0, GT_BULLETIN_BOARD);
-
-				if (bbGump != NULL)
-					bbGump->FrameCreated = false;
+				GumpManager->UpdateGump(cserial, 0, GT_BULLETIN_BOARD);
 			}
 		}
 
@@ -1705,27 +1687,17 @@ PACKET_HANDLER(UpdateContainedItems)
 
 	if (contobj != NULL)
 	{
-		if (contobj->Opened)
-		{
-			TGump *gump = GumpManager->GetGump(contobj->GetSerial(), 0, GT_SPELLBOOK);
-			if (gump != NULL)
-				gump->FrameCreated = false;
-			else
-			{
-				gump = GumpManager->GetGump(contobj->GetSerial(), 0, GT_CONTAINER);
-				if (gump != NULL)
-					gump->FrameCreated = false;
-			}
-		}
+		TGump *gump = GumpManager->UpdateGump(contobj->GetSerial(), 0, GT_SPELLBOOK);
+		if (gump == NULL)
+			gump = GumpManager->UpdateGump(contobj->GetSerial(), 0, GT_CONTAINER);
+
+		if (gump != NULL)
+			contobj->Opened = true;
 
 		TGameObject *top = contobj->GetTopObject();
 
 		if (top != NULL)
-		{
-			TGumpSecureTrading *tradeGump = (TGumpSecureTrading*)GumpManager->GetGump(top->Serial, 0, GT_TRADE);
-			if (tradeGump != NULL)
-				tradeGump->FrameCreated = false;
-		}
+			GumpManager->UpdateGump(top->Serial, 0, GT_TRADE);
 	}
 }
 //---------------------------------------------------------------------------
@@ -1798,21 +1770,16 @@ PACKET_HANDLER(DeleteObject)
 			TGameObject *top = obj->GetTopObject();
 
 			if (top != NULL)
-			{
-				TGumpSecureTrading *tradeGump = (TGumpSecureTrading*)GumpManager->GetGump(top->Serial, 0, GT_TRADE);
-				if (tradeGump != NULL)
-					tradeGump->FrameCreated = false;
-			}
+				GumpManager->UpdateGump(top->Serial, 0, GT_TRADE);
 
-			TGump *gump = GumpManager->GetGump(cont, 0, GT_CONTAINER);
-			if (gump != NULL)
-				gump->FrameCreated = false;
+			TGump *gump = GumpManager->UpdateGump(cont, 0, GT_CONTAINER);
 		
 			if (obj->Graphic == 0x0EB0)
 			{
 				GumpManager->CloseGump(serial, cont, GT_BULLETIN_BOARD_ITEM);
 				
-				gump = GumpManager->GetGump(cont, 0, GT_BULLETIN_BOARD);
+				gump = GumpManager->UpdateGump(cont, 0, GT_BULLETIN_BOARD);
+
 				if (gump != NULL)
 				{
 					for (TGumpObject *go = (TGumpObject*)gump->m_Items; go != NULL; go = (TGumpObject*)go->m_Next)
@@ -1823,8 +1790,6 @@ PACKET_HANDLER(DeleteObject)
 							break;
 						}
 					}
-
-					gump->FrameCreated = false;
 				}
 			}
 		}
@@ -1880,9 +1845,7 @@ PACKET_HANDLER(UpdateCharacter)
 	obj->Color = ReadWord() & 0x7FFF;
 	obj->Flags = ReadByte();
 	
-	TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
-	if (gump != NULL)
-		gump->FrameCreated = false;
+	GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
 	
 	World->MoveToTop(obj);
 }
@@ -1894,13 +1857,8 @@ PACKET_HANDLER(Warmode)
 
 	g_Player->Warmode = ReadByte();
 	
-	TGump *gump = GumpManager->GetGump(g_PlayerSerial, 0, GT_STATUSBAR);
-	if (gump != NULL)
-		gump->FrameCreated = false;
-
-	gump = GumpManager->GetGump(g_PlayerSerial, 0, GT_PAPERDOLL);
-	if (gump != NULL)
-		gump->FrameCreated = false;
+	GumpManager->UpdateGump(g_PlayerSerial, 0, GT_STATUSBAR);
+	GumpManager->UpdateGump(g_PlayerSerial, 0, GT_PAPERDOLL);
 
 	World->MoveToTop(g_Player);
 }
@@ -1924,10 +1882,8 @@ PACKET_HANDLER(OpenPaperdoll)
 	if (obj != NULL)
 		obj->SetPaperdollText(ReadString(0));
 
-	TGump *gump = GumpManager->GetGump(serial, 0, GT_PAPERDOLL);
-	if (gump != NULL)
-		gump->FrameCreated = false;
-	else
+	TGump *gump = GumpManager->UpdateGump(serial, 0, GT_PAPERDOLL);
+	if (gump == NULL)
 	{
 		gump = new TGumpPaperdoll(serial, 0, 0, false);
 		GumpManager->AddGump(gump);
@@ -2214,9 +2170,7 @@ PACKET_HANDLER(UpdateSkills)
 	IFOR(i, 0, g_SkillsCount)
 		g_SkillsTotal += g_Player->GetSkillValue(i);
 
-	TGump *gump = GumpManager->GetGump(g_PlayerSerial, 0, GT_SKILLS);
-	if (gump != NULL)
-		gump->FrameCreated = false;
+	GumpManager->UpdateGump(g_PlayerSerial, 0, GT_SKILLS);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(ExtendedCommand)
@@ -2433,12 +2387,7 @@ PACKET_HANDLER(Talk)
 				obj->SetName(name);
 
 				if (obj->NPC)
-				{
-					TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
-
-					if (gump != NULL)
-						gump->FrameCreated = false;
-				}
+					GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
 			}
 		}
 	}
@@ -2500,12 +2449,7 @@ PACKET_HANDLER(UnicodeTalk)
 				obj->SetName(ToString(name));
 				
 				if (obj->NPC)
-				{
-					TGump *gump = GumpManager->GetGump(serial, 0, GT_STATUSBAR);
-
-					if (gump != NULL)
-						gump->FrameCreated = false;
-				}
+					GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
 			}
 		}
 	}
@@ -2586,7 +2530,7 @@ PACKET_HANDLER(SecureTrading)
 		GumpManager->CloseGump(serial, 0, GT_TRADE);
 	else if (type == 2) //Обновление
 	{
-		TGumpSecureTrading *gump = (TGumpSecureTrading*)GumpManager->GetGump(serial, 0, GT_TRADE);
+		TGumpSecureTrading *gump = (TGumpSecureTrading*)GumpManager->UpdateGump(serial, 0, GT_TRADE);
 		if (gump != NULL)
 		{
 			DWORD id1 = ReadDWord();
@@ -2594,8 +2538,6 @@ PACKET_HANDLER(SecureTrading)
 
 			gump->StateMy = id1 != 0;
 			gump->StateOpponent = id2 != 0;
-
-			gump->FrameCreated = false;
 		}
 	}
 }
@@ -3462,7 +3404,7 @@ PACKET_HANDLER(MapData)
 		return;
 
 	DWORD serial = ReadDWord();
-	TGumpMap *gump = (TGumpMap*)GumpManager->GetGump(serial, 0, GT_MAP);
+	TGumpMap *gump = (TGumpMap*)GumpManager->UpdateGump(serial, 0, GT_MAP);
 
 	if (gump != NULL)
 	{
@@ -3508,8 +3450,6 @@ PACKET_HANDLER(MapData)
 			default:
 				break;
 		}
-
-		gump->FrameCreated = false;
 	}
 }
 //---------------------------------------------------------------------------
@@ -3745,13 +3685,10 @@ PACKET_HANDLER(BulletinBoardData)
 			TGameItem *item = World->FindWorldItem(serial);
 			if (item != NULL)
 			{
-				TGump *bbGump = GumpManager->GetGump(serial, 0, GT_BULLETIN_BOARD);
+				TGump *bbGump = GumpManager->UpdateGump(serial, 0, GT_BULLETIN_BOARD);
 
 				if (bbGump != NULL)
-				{
 					bbGump->Clear();
-					bbGump->FrameCreated = false;
-				}
 
 				item->Opened = true;
 			}

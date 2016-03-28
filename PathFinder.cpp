@@ -555,6 +555,16 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 		direction = newDir;
 	}
 
+	TGameItem *bank = g_Player->FindLayer(OL_BANK);
+
+	if (bank != NULL)
+	{
+		TGump *bankContainer = GumpManager->GetGump(bank->Serial, 0, GT_CONTAINER);
+
+		if (bankContainer != NULL)
+			GumpManager->RemoveGump(bankContainer);
+	}
+
 	if (run)
 		direction += 0x80;
 

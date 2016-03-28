@@ -43,14 +43,10 @@ TGameCharacter::~TGameCharacter()
 	m_PaperdollTextTexture.Clear();
 
 	//Если стянут статусбар - обновим его
-	TGump *gump = GumpManager->GetGump(m_Serial, 0, GT_STATUSBAR);
-	if (gump != NULL)
-		gump->FrameCreated = false;
+	GumpManager->UpdateGump(m_Serial, 0, GT_STATUSBAR);
 	
 	//Если стянут статусбар таргет системы - обновим его
-	gump = GumpManager->GetGump(m_Serial, 0, GT_TARGET_SYSTEM);
-	if (gump != NULL)
-		gump->FrameCreated = false;
+	GumpManager->UpdateGump(m_Serial, 0, GT_TARGET_SYSTEM);
 }
 //---------------------------------------------------------------------------
 void TGameCharacter::SetPaperdollText(string val)
@@ -277,13 +273,8 @@ void TGameCharacter::OnGraphicChange(int direction)
 				UO->NameReq(m_Serial);
 		}
 	
-		TGump *gump = GumpManager->GetGump(m_Serial, 0, GT_PAPERDOLL);
-		if (gump != NULL)
-			gump->FrameCreated = false;
-
-		gump = GumpManager->GetGump(m_Serial, 0, GT_STATUSBAR);
-		if (gump != NULL)
-			gump->FrameCreated = false;
+		GumpManager->UpdateGump(m_Serial, 0, GT_PAPERDOLL);
+		GumpManager->UpdateGump(m_Serial, 0, GT_STATUSBAR);
 	}
 }
 //---------------------------------------------------------------------------

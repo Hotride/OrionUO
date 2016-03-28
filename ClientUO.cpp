@@ -526,8 +526,9 @@ TUltimaOnline::TUltimaOnline()
 m_UsedGumpList(NULL), m_UsedTextureList(NULL), m_UsedSoundList(NULL),
 m_AnimData(NULL), m_UsedLightList(NULL)
 {
+	g_Logger = new CLogger();
 	string pth = g_DirectoryPath + "\\uolog.txt";
-	g_Logger.Init(pth.c_str());
+	g_Logger->Init(pth.c_str());
 }
 //---------------------------------------------------------------------------
 TUltimaOnline::~TUltimaOnline()
@@ -830,6 +831,12 @@ TUltimaOnline::~TUltimaOnline()
 	g_LightBuffer.Free();
 
 	g_GL.Uninstall();
+
+	if (g_Logger != NULL)
+	{
+		delete g_Logger;
+		g_Logger = NULL;
+	}
 }
 //---------------------------------------------------------------------------
 DWORD Reflect(DWORD source, int c)
@@ -2567,23 +2574,17 @@ void TUltimaOnline::Process()
 				{
 					if (g_ClickObject.GumpType == GT_SPELLBOOK)
 					{
-						TGumpSpellbook *gump = (TGumpSpellbook*)GumpManager->GetGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
+						TGumpSpellbook *gump = (TGumpSpellbook*)GumpManager->UpdateGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
 
 						if (gump != NULL)
-						{
 							gump->Page = g_ClickObject.GumpButtonID;
-							gump->FrameCreated = false;
-						}
 					}
 					else if (g_ClickObject.GumpType == GT_BOOK)
 					{
-						TGumpBook *gump = (TGumpBook*)GumpManager->GetGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
+						TGumpBook *gump = (TGumpBook*)GumpManager->UpdateGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
 
 						if (gump != NULL)
-						{
 							gump->Page = g_ClickObject.GumpButtonID;
-							gump->FrameCreated = false;
-						}
 					}
 					else if (g_ClickObject.GumpType == GT_PAPERDOLL)
 					{
@@ -3931,10 +3932,7 @@ void TUltimaOnline::AddJournalMessage(TTextData *msg, string name)
 	else
 		jmsg->GenerateTexture(214, UOFONT_INDENTION);
 
-	TGump *gump = GumpManager->GetGump(g_PlayerSerial, 0, GT_JOURNAL);
-
-	if (gump != NULL)
-		gump->FrameCreated = false;
+	GumpManager->UpdateGump(g_PlayerSerial, 0, GT_JOURNAL);
 
 	Journal->Add(jmsg);
 }
@@ -4092,12 +4090,7 @@ void TUltimaOnline::PickupItem(TGameItem *obj, int count, bool isGameFigure)
 		ObjectInHand->DragCount = count;
 
 		if (obj->Container != 0xFFFFFFFF)
-		{
-			TGumpContainer *gump = (TGumpContainer*)GumpManager->GetGump(obj->Container, 0, GT_CONTAINER);
-
-			if (gump != NULL)
-				gump->FrameCreated = false;
-		}
+			GumpManager->UpdateGump(obj->Container, 0, GT_CONTAINER);
 
 		TPacketPickupRequest packet(obj->Serial, count);
 		packet.Send();

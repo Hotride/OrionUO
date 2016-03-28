@@ -33,6 +33,9 @@ public:
 	//Добавить гамп
 	void AddGump(TGump *obj);
 
+	//Обновить гамп
+	TGump *UpdateGump(DWORD serial, DWORD ID, GUMP_TYPE Type);
+
 	//Получить гамп
 	TGump *GetGump(DWORD serial, DWORD ID, GUMP_TYPE Type);
 

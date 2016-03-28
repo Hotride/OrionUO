@@ -326,9 +326,12 @@ private:
 	string m_Text;
 public:
 	TGumpMenuObject(WORD graphic, WORD color, string text);
+	virtual ~TGumpMenuObject();
 
 	SETGET(bool, Pressed);
 	SETGET(string, Text);
+
+	TTextTexture Texture;
 };
 //---------------------------------------------------------------------------
 class TGumpSellObject : public TGumpObject

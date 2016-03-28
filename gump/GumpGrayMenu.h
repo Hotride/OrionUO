@@ -22,12 +22,14 @@
 //---------------------------------------------------------------------------
 class TGumpGrayMenu : public TGump
 {
-private:
+protected:
 	static const int ID_GGM_CANCEL = 100;
 	static const int ID_GGM_CONTINUE = 101;
 
 	int m_Count;
 	string m_Text;
+
+	void CalculateGumpState();
 public:
 	TGumpGrayMenu(DWORD serial, short x, short y, string text);
 	virtual ~TGumpGrayMenu();

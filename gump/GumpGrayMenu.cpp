@@ -46,6 +46,17 @@ void TGumpGrayMenu::PrepareTextures()
 	UO->ExecuteGumpPart(0x13B2, 2);
 }
 //---------------------------------------------------------------------------
+void TGumpGrayMenu::CalculateGumpState()
+{
+	TGump::CalculateGumpState();
+
+	g_GumpMovingOffsetX = 0;
+	g_GumpMovingOffsetY = 0;
+
+	g_GumpTranslateX = (float)m_X;
+	g_GumpTranslateY = (float)m_Y;
+}
+//---------------------------------------------------------------------------
 void TGumpGrayMenu::GenerateFrame()
 {
 	if (!g_DrawMode)
@@ -60,62 +71,69 @@ void TGumpGrayMenu::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawResizepicGump(0x13EC, 0, 0, 400, 121 + (m_Count * 21)); //Body
-		
-		FontManager->DrawA(1, m_Text.c_str(), 0x0386, 20, 16);
-
-		int idx = 1;
+		int gumpHeight = 121;
 
 		QFOR(go, m_Items, TGumpMenuObject*)
 		{
-			int offs = 30 + (idx * 21);
+			int addHeight = go->Texture.Height;
 
-			UO->DrawGump(0x138A, 0, 20, offs); //Button
+			if (addHeight < 21)
+				addHeight = 21;
 
-			offs += 2;
-
-			FontManager->DrawA(1, go->GetText().c_str(), 0x0386, 50, offs);
-
-			idx++;
+			gumpHeight += addHeight;
 		}
+
+		UO->DrawResizepicGump(0x13EC, 0, 0, 400, gumpHeight); //Body
+		
+		FontManager->DrawA(1, m_Text.c_str(), 0x0386, 20, 16);
+
+		int offsetY = 51;
+
+		QFOR(go, m_Items, TGumpMenuObject*)
+		{
+			UO->DrawGump(0x138A + (int)go->Pressed, 0, 20, offsetY); //Button
+
+			offsetY += 2;
+
+			go->Texture.Draw(50, offsetY);
+
+			int addHeight = go->Texture.Height;
+
+			if (addHeight < 21)
+				addHeight = 21;
+
+			offsetY += addHeight;
+		}
+
+		offsetY += 5;
+
+		UO->DrawGump(0x1450 + (int)(g_GumpPressedElement == ID_GGM_CANCEL), 0, 70, offsetY); //CANCEL
+
+		UO->DrawGump(0x13B2 + (int)(g_GumpPressedElement == ID_GGM_CONTINUE), 0, 200, offsetY); //CONTINUE
 
 	glEndList();
 
 	m_FrameCreated = true;
+	m_FrameRedraw = true;
 }
 //----------------------------------------------------------------------------
 int TGumpGrayMenu::Draw(bool &mode)
 {
 	CalculateGumpState();
 
-	int height = 121 + (m_Count * 21);
-
 	if (mode)
 	{
-		if (!m_FrameCreated)
+		if (!m_FrameCreated || g_GumpPressedElement)
 			GenerateFrame();
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame();
+			m_FrameRedraw = false;
+		}
 
 		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
 
 		glCallList((GLuint)this);
-
-		int idx = 1;
-
-		QFOR(go, m_Items, TGumpMenuObject*)
-		{
-			if (go->Pressed)
-			{
-				UO->DrawGump(0x138B, 0, 20, 30 + (idx * 21)); //Button
-
-				break;
-			}
-
-			idx++;
-		}
-
-		UO->DrawGump(0x1450 + (int)(g_GumpPressedElement == ID_GGM_CANCEL), 0, 40, height - 44); //CANCEL
-
-		UO->DrawGump(0x13B2 + (int)(g_GumpPressedElement == ID_GGM_CONTINUE), 0, 160, height - 44); //CONTINUE
 
 		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
@@ -128,36 +146,60 @@ int TGumpGrayMenu::Draw(bool &mode)
 
 		int LSG = 0;
 
+		int gumpHeight = 121;
+
+		QFOR(go, m_Items, TGumpMenuObject*)
+		{
+			int addHeight = go->Texture.Height;
+
+			if (addHeight < 21)
+				addHeight = 21;
+
+			gumpHeight += addHeight;
+		}
+
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (UO->ResizepicPixelsInXY(0x13EC, 0, 0, 400, height))
+		if (UO->ResizepicPixelsInXY(0x13EC, 0, 0, 400, gumpHeight))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = (DWORD)this;
-		}
-		
-		int offs = height - 44;
 
-		if (UO->GumpPixelsInXY(0x1450, 40, offs))
-			LSG = ID_GGM_CANCEL; //CANCEL
-		else if (UO->GumpPixelsInXY(0x13B2, 160, offs))
-			LSG = ID_GGM_CONTINUE; //CONTINUE
-		else //Перебор кнопок
-		{
+			//Перебор кнопок
 			int idx = 1;
+			int offsetY = 51;
 
 			QFOR(go, m_Items, TGumpMenuObject*)
 			{
-				if (UO->GumpPixelsInXY(0x138A, 20, 30 + (idx * 21)))
+				if (UO->GumpPixelsInXY(0x138A, 20, offsetY))
 				{
 					LSG = idx;
 
 					break;
 				}
 
+				offsetY += 2;
+
+				int addHeight = go->Texture.Height;
+
+				if (addHeight < 21)
+					addHeight = 21;
+
+				offsetY += addHeight;
+
 				idx++;
 			}
-		}
 
+			if (!LSG)
+			{
+				offsetY += 5;
+
+				if (UO->GumpPixelsInXY(0x1450, 70, offsetY))
+					LSG = ID_GGM_CANCEL; //CANCEL
+				else if (UO->GumpPixelsInXY(0x13B2, 200, offsetY))
+					LSG = ID_GGM_CONTINUE; //CONTINUE
+			}
+		}
+		
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
 

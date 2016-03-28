@@ -65,6 +65,6 @@ void warning_printf(const char * format, ...) GCC_PRINTF(1, 2);
 void trace_printf(const char * format, ...) GCC_PRINTF(1, 2);
 void trace_dump(unsigned char *buf, int length);
 //---------------------------------------------------------------------------
-extern CLogger g_Logger;
+extern CLogger *g_Logger;
 //---------------------------------------------------------------------------
 #endif //LOGGER_H_FILE

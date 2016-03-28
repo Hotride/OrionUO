@@ -659,10 +659,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 						UO->PickupItem(objHand, 1, false);
 						UO->DropItem(backpack, 0xFFFF, 0xFFFF, 0);
 
-						TGump *paperdoll = GumpManager->GetGump(g_PlayerSerial, 0, GT_PAPERDOLL);
-
-						if (paperdoll != NULL)
-							paperdoll->FrameCreated = false;
+						GumpManager->UpdateGump(g_PlayerSerial, 0, GT_PAPERDOLL);
 					}
 				}
 

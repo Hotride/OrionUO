@@ -465,7 +465,8 @@ int TGumpPaperdoll::Draw(bool &mode)
 	{
 		TGameItem *equipment = obj->FindLayer(ObjectInHand->UsedLayer);
 
-		m_FrameCreated = (equipment == NULL);
+		if (equipment == NULL)
+			m_FrameCreated = false;
 	}
 
 	//Вычисление положения, прозрачности и отрисовка текста

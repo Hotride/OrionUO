@@ -291,11 +291,7 @@ void TGumpStatusbar::GenerateFrame()
 	}
 	
 	if (!ConfigManager.DisableNewTargetSystem && m_Serial == NewTargetSystem.Serial)
-	{
-		TGump *targetGump = GumpManager->GetGump(m_Serial, 0, GT_TARGET_SYSTEM);
-		if (targetGump != NULL)
-			targetGump->FrameCreated = false;
-	}
+		GumpManager->UpdateGump(m_Serial, 0, GT_TARGET_SYSTEM);
 
 	CalculateGumpState();
 

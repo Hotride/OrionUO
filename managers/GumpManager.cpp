@@ -73,7 +73,7 @@ void TGumpManager::Draw(bool &mode, bool blocked)
 //---------------------------------------------------------------------------
 void TGumpManager::RedrawAll()
 {
-	for (TGump *gump = (TGump*)m_Items; gump != NULL; gump = (TGump*)gump->m_Next)
+	QFOR(gump, m_Items, TGump*)
 		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
@@ -693,6 +693,16 @@ TGump *TGumpManager::GumpExists(DWORD gumpID)
 
 		gump = (TGump*)gump->m_Next;
 	}
+
+	return gump;
+}
+//---------------------------------------------------------------------------
+TGump *TGumpManager::UpdateGump(DWORD serial, DWORD id, GUMP_TYPE type)
+{
+	TGump *gump = GetGump(serial, id, type);
+
+	if (gump != NULL)
+		gump->FrameCreated = false;
 
 	return gump;
 }
