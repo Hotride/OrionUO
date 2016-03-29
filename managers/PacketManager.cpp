@@ -1616,7 +1616,7 @@ PACKET_HANDLER(UpdateContainedItems)
 				{
 					containerIsCorpse = true;
 
-					for (TGameItem *citem = (TGameItem*)objA->m_Items; citem != NULL; citem = (TGameItem*)citem->m_Next)
+					QFOR(citem, objA->m_Items, TGameItem*)
 					{
 						int lay = citem->Layer;
 
@@ -1782,7 +1782,7 @@ PACKET_HANDLER(DeleteObject)
 
 				if (gump != NULL)
 				{
-					for (TGumpObject *go = (TGumpObject*)gump->m_Items; go != NULL; go = (TGumpObject*)go->m_Next)
+					QFOR(go, gump->m_Items, TGumpObject*)
 					{
 						if (go->Serial == serial)
 						{

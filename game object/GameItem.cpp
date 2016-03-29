@@ -185,8 +185,10 @@ g_RenderedObjectsCountInGameWindow++;
 					selMode = true;
 				}
 
+#if UO_DEPTH_TEST == 1
 				//if (IsSurface() || (IsBackground() && IsUnknown2()))
 					// glEnable(GL_DEPTH_TEST);
+#endif
 
 				if (doubleDraw)
 				{
@@ -197,7 +199,9 @@ g_RenderedObjectsCountInGameWindow++;
 				else
 					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z, selMode);
 
+#if UO_DEPTH_TEST == 1
 				//glDisable(GL_DEPTH_TEST);
+#endif
 
 				if (IsLightSource() && GameScreen->UseLight)
 					GameScreen->AddLight(this, this, drawX, drawY - (m_Z * 4));
@@ -722,7 +726,7 @@ TGameItem *TGameItem::FindLayer(int layer)
 {
 	TGameItem *item = NULL;
 
-	for (TGameObject *obj = (TGameObject*)m_Items; obj != NULL; obj = (TGameObject*)obj->m_Next)
+	QFOR(obj, m_Items, TGameObject*)
 	{
 		if (((TGameItem*)obj)->Layer == layer)
 		{

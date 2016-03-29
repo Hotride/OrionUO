@@ -767,7 +767,7 @@ TGameItem *TGameCharacter::FindLayer(int layer)
 {
 	TGameItem *item = NULL;
 
-	for (TGameObject *obj = (TGameObject*)m_Items; obj != NULL; obj = (TGameObject*)obj->m_Next)
+	QFOR(obj, m_Items, TGameObject*)
 	{
 		if (((TGameItem*)obj)->Layer == layer)
 		{

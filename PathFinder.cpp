@@ -136,7 +136,7 @@ void TPathFinder::CheckLongStairUnderfoot(int &x, int &y, char &z)
 
 	if (CreateItemsList(x, y))
 	{
-		for (TPathObject *po = (TPathObject*)m_Items; po != NULL; po = (TPathObject*)po->m_Next)
+		QFOR(po, m_Items, TPathObject*)
 		{
 			char surface = po->Surface;
 			int isLongStair = 1;

@@ -71,20 +71,12 @@ private:
 
 	TLinkedList *m_UsedAnimList;
 
-	float LUMA_THRESHOLD;
-	float ALPHA_SCALE;
-	int ALPHA_BITS;
-	int BIT_STEP;
-
 	//Добавление тени в список
 	void AddShadow(GLuint texture, int drawX, int drawY, int zBuffer, int width, int height, bool mirror);
 
 	//Проверка пикселей картинки в указанных координатах
 	bool TestImagePixels(TTextureAnimationDirection *direction, BYTE &frame, WORD &id, int &checkX, int &checkY);
 	bool TestPixels(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, WORD id = 0x0000);
-
-	float getLuma(unsigned char&, unsigned char&, unsigned char&);
-	void setAlphaAt(std::vector<bool>&, PDWORD, short&, short&, int&, int&, float&, float&);
 
 	//Корректировка направления сидячего персонажа, согласно тому. на чем он сидит
 	void FixSittingDirection(BYTE &layerDirection, bool &mirror, int &x, int &y);
@@ -107,8 +99,6 @@ public:
 	SETGET(int, AnimGroup);
 	SETGET(BYTE, Direction);
 	SETGET(int, ShadowCount);
-
-	void EstimateImageCornerAlpha(PDWORD pixels, short &width, short &height, float alpha_scale = 5.0f, float luma_threshold = 18.0f);
 
 	//Загрузка файла корректора индексов картинок анимаций
 	void InitIndexReplaces(PDWORD verdata);

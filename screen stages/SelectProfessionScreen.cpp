@@ -144,7 +144,8 @@ void TSelectProfessionScreen::InitPopupHelp()
 		TBaseProfession *obj = ProfessionManager->Selected;
 
 		int index = 0;
-		for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
+
+		QFOR(child, obj->m_Items, TBaseProfession*)
 		{
 			TPRINT("%i %i child->DescriptionClilocID = %i\n", g_LastSelectedObject, ID_SPS_LABEL + index, child->DescriptionClilocID);
 			if (g_LastSelectedObject == ID_SPS_LABEL + index)
@@ -154,6 +155,8 @@ void TSelectProfessionScreen::InitPopupHelp()
 
 				break;
 			}
+
+			index++;
 		}
 	}
 }
@@ -299,7 +302,8 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 			int offsY = 0;
 
 			int index = 0;
-			for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
+
+			QFOR(child, obj->m_Items, TBaseProfession*)
 			{
 				UO->DrawGump(0x0589, 0, 500, 100 + offsY); //Label container
 
@@ -311,6 +315,8 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 				FontManager->DrawA(9, child->GetName().c_str(), 0x1, 350, 135 + offsY);
 
 				offsY += 79;
+
+				index++;
 			}
 		}
 		else if (obj->Type == PT_PROFESSION) //profession
@@ -440,12 +446,14 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 			int offsY = 0;
 			int index = 0;
 
-			for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
+			QFOR(child, obj->m_Items, TBaseProfession*)
 			{
 				if (UO->GumpPixelsInXY(child->Gump, 509, 109 + offsY))
 					g_LastSelectedObject = ID_SPS_LABEL + index; //Label gump
 
 				offsY += 79;
+
+				index++;
 			}
 		}
 		else if (obj->Type == PT_PROFESSION)
@@ -620,7 +628,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 			int offsY = 0;
 			int index = 0;
 
-			for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
+			QFOR(child, obj->m_Items, TBaseProfession*)
 			{
 				UO->DrawResizepicGump(0x0BB8, 145 + offsX, 168 + offsY, 175, 34); //Text field
 
@@ -639,6 +647,8 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 				}
 				else
 					offsX = 195;
+
+				index++;
 			}
 		}
 		else if (obj->Type == PT_PROFESSION) //profession
@@ -759,7 +769,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 			int offsY = 0;
 			int index = 0;
 
-			for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
+			QFOR(child, obj->m_Items, TBaseProfession*)
 			{
 				if (UO->ResizepicPixelsInXY(0x0BB8, 145 + offsX, 168 + offsY, 175, 34))
 					g_LastSelectedObject = ID_SPS_LABEL + index; //Text field
@@ -773,6 +783,8 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 				}
 				else
 					offsX = 195;
+
+				index++;
 			}
 		}
 		else if (obj->Type == PT_PROFESSION)
@@ -982,7 +994,7 @@ void TSelectProfessionScreen::OnLeftMouseUp()
 	{
 		int index = 0;
 
-		for (TBaseProfession *child = (TBaseProfession*)obj->m_Items; child != NULL; child = (TBaseProfession*)child->m_Next, index++)
+		QFOR(child, obj->m_Items, TBaseProfession*)
 		{
 			if (g_LastObjectLeftMouseDown == ID_SPS_LABEL + index)
 			{
@@ -996,6 +1008,8 @@ void TSelectProfessionScreen::OnLeftMouseUp()
 
 				return;
 			}
+
+			index++;
 		}
 	}
 	else if (obj->Type == PT_PROFESSION)

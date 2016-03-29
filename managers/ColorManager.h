@@ -53,7 +53,7 @@ public:
 	int GetHuesCount() const {return m_HuesCount;}
 
 	//Патч блока цветов из вердаты
-	void SetHuesBlock(int Index, PVERDATA_HUES_GROUP group);
+	void SetHuesBlock(int index, PVERDATA_HUES_GROUP group);
 
 	//Создание палитры цветов для шейдера
 	void CreateHuesPalette();
@@ -62,18 +62,18 @@ public:
 	void SendColorsToShader(WORD &color);
 
 	//Конвертирование цветов
-	WORD Color32To16(DWORD &C);
-	DWORD Color16To32(WORD &C);
-	WORD ConvertToGray(WORD &C);
+	WORD Color32To16(DWORD &c);
+	DWORD Color16To32(WORD &c);
+	WORD ConvertToGray(WORD &c);
 
 	//Получить цвет
 	WORD GetColor16(WORD &c, WORD color);
-	WORD GetRadarColorData(WORD &C);
-	DWORD GetRadarColor(WORD &C);
-	DWORD GetPolygoneColor(WORD C, WORD Color);
-	DWORD GetUnicodeFontColor(WORD &C, WORD Color);
-	DWORD GetColor(WORD &C, WORD Color);
-	DWORD GetPartialHueColor(WORD &C, WORD Color);
+	WORD GetRadarColorData(WORD &c);
+	DWORD GetRadarColor(WORD &c);
+	DWORD GetPolygoneColor(WORD c, WORD color);
+	DWORD GetUnicodeFontColor(WORD &c, WORD color);
+	DWORD GetColor(WORD &c, WORD color);
+	DWORD GetPartialHueColor(WORD &c, WORD color);
 };
 //---------------------------------------------------------------------------
 extern TColorManager *ColorManager;

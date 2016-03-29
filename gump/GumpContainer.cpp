@@ -53,7 +53,7 @@ void TGumpContainer::PrepareTextures()
 	TGameItem *container = World->FindWorldItem(Serial);
 	if (container != NULL)
 	{
-		for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
+		QFOR(obj, container->m_Items, TGameItem*)
 		{
 			if (obj->Layer == OL_NONE && obj->Count > 0)
 			{
@@ -106,7 +106,7 @@ void TGumpContainer::GenerateFrame()
 
 			ColorizerShader->Use();
 
-			for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
+			QFOR(obj, container->m_Items, TGameItem*)
 			{
 				int count = obj->Count;
 
@@ -321,7 +321,7 @@ int TGumpContainer::Draw(bool &mode)
 
 			if (container != NULL)
 			{
-				for (TGameItem *obj = (TGameItem*)container->m_Items; obj != NULL; obj = (TGameItem*)obj->m_Next)
+				QFOR(obj, container->m_Items, TGameItem*)
 				{
 					int count = obj->Count;
 

@@ -28,6 +28,7 @@ TMapBlock::TMapBlock(DWORD index)
 		IFOR(j, 0, 8)
 		{
 			Block[i][j] = NULL;
+			PointerXY[i][j] = NULL;
 		}
 	}
 }

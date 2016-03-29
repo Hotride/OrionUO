@@ -280,8 +280,8 @@ bool TGumpBulletinBoard::OnLeftMouseDoubleClick()
 	if (g_LastObjectLeftMouseDown >= ID_GBB_MESSAGE)
 	{
 		int index = ID_GBB_MESSAGE;
-
-		for (TGumpBulletinBoardObject *item = (TGumpBulletinBoardObject*)m_Items; item != NULL; item = (TGumpBulletinBoardObject*)item->m_Next, index++)
+		
+		QFOR(item, m_Items, TGumpBulletinBoardObject*)
 		{
 			if (index == g_LastObjectLeftMouseDown)
 			{
@@ -290,6 +290,8 @@ bool TGumpBulletinBoard::OnLeftMouseDoubleClick()
 
 				result = true;
 			}
+
+			index++;
 		}
 	}
 

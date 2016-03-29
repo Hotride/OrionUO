@@ -69,7 +69,7 @@ bool TPluginManager::WindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lpara
 {
 	bool result = true;
 
-	for (TPlugin *plugin = (TPlugin*)m_Items; plugin != NULL; plugin = (TPlugin*)plugin->m_Next)
+	QFOR(plugin, m_Items, TPlugin*)
 	{
 		if (plugin->CanWindowProc() && plugin->m_PPS->WindowProc != NULL)
 		{
@@ -87,7 +87,7 @@ bool TPluginManager::PacketRecv(PBYTE buf, int size)
 {
 	bool result = true;
 
-	for (TPlugin *plugin = (TPlugin*)m_Items; plugin != NULL; plugin = (TPlugin*)plugin->m_Next)
+	QFOR(plugin, m_Items, TPlugin*)
 	{
 		if (plugin->CanParseRecv() && plugin->m_PPS->OnRecv != NULL)
 		{
@@ -105,7 +105,7 @@ bool TPluginManager::PacketSend(PBYTE buf, int size)
 {
 	bool result = true;
 
-	for (TPlugin *plugin = (TPlugin*)m_Items; plugin != NULL; plugin = (TPlugin*)plugin->m_Next)
+	QFOR(plugin, m_Items, TPlugin*)
 	{
 		if (plugin->CanParseSend() && plugin->m_PPS->OnSend != NULL)
 		{
@@ -121,7 +121,7 @@ bool TPluginManager::PacketSend(PBYTE buf, int size)
 //---------------------------------------------------------------------------
 void TPluginManager::Disconnect()
 {
-	for (TPlugin *plugin = (TPlugin*)m_Items; plugin != NULL; plugin = (TPlugin*)plugin->m_Next)
+	QFOR(plugin, m_Items, TPlugin*)
 	{
 		if (plugin->m_PPS->OnDisconnect != NULL)
 			plugin->m_PPS->OnDisconnect();
@@ -130,7 +130,7 @@ void TPluginManager::Disconnect()
 //---------------------------------------------------------------------------
 void TPluginManager::WorldDraw()
 {
-	for (TPlugin *plugin = (TPlugin*)m_Items; plugin != NULL; plugin = (TPlugin*)plugin->m_Next)
+	QFOR(plugin, m_Items, TPlugin*)
 	{
 		if (plugin->CanEnterWorldRender() && plugin->m_PPS->OnWorldDraw != NULL)
 			plugin->m_PPS->OnWorldDraw();
@@ -139,7 +139,7 @@ void TPluginManager::WorldDraw()
 //---------------------------------------------------------------------------
 void TPluginManager::SceneDraw()
 {
-	for (TPlugin *plugin = (TPlugin*)m_Items; plugin != NULL; plugin = (TPlugin*)plugin->m_Next)
+	QFOR(plugin, m_Items, TPlugin*)
 	{
 		if (plugin->CanEnterSceneRender() && plugin->m_PPS->OnSceneDraw != NULL)
 			plugin->m_PPS->OnSceneDraw();

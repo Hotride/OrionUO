@@ -72,14 +72,14 @@ TColorManager::~TColorManager()
 	m_HuesCount = 0;
 }
 //---------------------------------------------------------------------------
-void TColorManager::SetHuesBlock(int Index, PVERDATA_HUES_GROUP group)
+void TColorManager::SetHuesBlock(int index, PVERDATA_HUES_GROUP group)
 {
-	if (Index < 0 || Index >= m_HuesCount)
+	if (index < 0 || index >= m_HuesCount)
 		return;
 
-	m_HuesRange[Index].Header = group->Header;
+	m_HuesRange[index].Header = group->Header;
 	IFOR(i, 0, 8)
-		memcpy(&m_HuesRange[Index].Entries[i].ColorTable[0], &group->Entries[i].ColorTable[0], sizeof(WORD[32]));
+		memcpy(&m_HuesRange[index].Entries[i].ColorTable[0], &group->Entries[i].ColorTable[0], sizeof(WORD[32]));
 }
 //---------------------------------------------------------------------------
 void TColorManager::CreateHuesPalette()
@@ -105,7 +105,7 @@ void TColorManager::SendColorsToShader(WORD &color)
 			glUniform1ivARB(ShaderColorTable, 32, &m_HuesInt[0].Palette[0]);
 		else
 		{
-			if (color < m_HuesCount)
+			if (color >= m_HuesCount)
 			{
 				color %= m_HuesCount;
 
@@ -118,29 +118,29 @@ void TColorManager::SendColorsToShader(WORD &color)
 	}
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::Color16To32(WORD &C)
+DWORD TColorManager::Color16To32(WORD &c)
 {
 	return
 	(
-		(((C >> 10) & 0x1F) * 0xFF / 0x1F) |
-		((((C >> 5) & 0x1F) * 0xFF / 0x1F) << 8) |
-		(((C & 0x1F) * 0xFF / 0x1F) << 16)
+		(((c >> 10) & 0x1F) * 0xFF / 0x1F) |
+		((((c >> 5) & 0x1F) * 0xFF / 0x1F) << 8) |
+		(((c & 0x1F) * 0xFF / 0x1F) << 16)
 	);
 }
 //---------------------------------------------------------------------------
-WORD TColorManager::Color32To16(DWORD &C)
+WORD TColorManager::Color32To16(DWORD &c)
 {
 	return
 	(
-		((C & 0xFF) * 32) / 256) |
-		(((((C >> 16) & 0xff) * 32) / 256) << 10) |
-		(((((C >> 8) & 0xff) * 32) / 256) << 5
+		((c & 0xFF) * 32) / 256) |
+		(((((c >> 16) & 0xff) * 32) / 256) << 10) |
+		(((((c >> 8) & 0xff) * 32) / 256) << 5
 	);
 }
 //---------------------------------------------------------------------------
-WORD TColorManager::ConvertToGray(WORD &C)
+WORD TColorManager::ConvertToGray(WORD &c)
 {
-	return ((C & 0x1F) * 299 + ((C >> 5) & 0x1F) * 587 + ((C >> 10) & 0x1F) * 114) / 1000;
+	return ((c & 0x1F) * 299 + ((c >> 5) & 0x1F) * 587 + ((c >> 10) & 0x1F) * 114) / 1000;
 }
 //---------------------------------------------------------------------------
 WORD TColorManager::GetColor16(WORD &c, WORD color)
@@ -157,74 +157,74 @@ WORD TColorManager::GetColor16(WORD &c, WORD color)
 	return c;
 }
 //---------------------------------------------------------------------------
-WORD TColorManager::GetRadarColorData(WORD &C)
+WORD TColorManager::GetRadarColorData(WORD &c)
 {
-	return m_Radarcol[C];
+	return m_Radarcol[c];
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::GetRadarColor(WORD &C)
+DWORD TColorManager::GetRadarColor(WORD &c)
 {
-	return Color16To32(m_Radarcol[C]);
+	return Color16To32(m_Radarcol[c]);
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::GetPolygoneColor(WORD C, WORD Color)
+DWORD TColorManager::GetPolygoneColor(WORD c, WORD color)
 {
-	if (Color != 0 && Color < m_HuesCount)
+	if (color != 0 && color < m_HuesCount)
 	{
-		Color -= 1;
-		int g = Color / 8;
-		int e = Color % 8;
+		color -= 1;
+		int g = color / 8;
+		int e = color % 8;
 
-		return Color16To32(m_HuesRange[g].Entries[e].ColorTable[C]);
+		return Color16To32(m_HuesRange[g].Entries[e].ColorTable[c]);
 	}
 
 	return 0xFF010101; //Black
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::GetUnicodeFontColor(WORD &C, WORD Color)
+DWORD TColorManager::GetUnicodeFontColor(WORD &c, WORD color)
 {
-	if (Color != 0 && Color < m_HuesCount)
+	if (color != 0 && color < m_HuesCount)
 	{
-		Color -= 1;
-		int g = Color / 8;
-		int e = Color % 8;
+		color -= 1;
+		int g = color / 8;
+		int e = color % 8;
 
 		return Color16To32(m_HuesRange[g].Entries[e].ColorTable[8]);
 	}
 
-	return Color16To32(C);
+	return Color16To32(c);
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::GetColor(WORD &C, WORD Color)
+DWORD TColorManager::GetColor(WORD &c, WORD color)
 {
-	if (Color != 0 && Color < m_HuesCount)
+	if (color != 0 && color < m_HuesCount)
 	{
-		Color -= 1;
-		int g = Color / 8;
-		int e = Color % 8;
+		color -= 1;
+		int g = color / 8;
+		int e = color % 8;
 
-		return Color16To32(m_HuesRange[g].Entries[e].ColorTable[(C >> 10) & 0x1F]);
+		return Color16To32(m_HuesRange[g].Entries[e].ColorTable[(c >> 10) & 0x1F]);
 	}
 
-	return Color16To32(C);
+	return Color16To32(c);
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::GetPartialHueColor(WORD &C, WORD Color)
+DWORD TColorManager::GetPartialHueColor(WORD &c, WORD color)
 {
-	if (Color != 0 && Color < m_HuesCount)
+	if (color != 0 && color < m_HuesCount)
 	{
-		Color -= 1;
-		int g = Color / 8;
-		int e = Color % 8;
+		color -= 1;
+		int g = color / 8;
+		int e = color % 8;
 
-		DWORD Cl = Color16To32(C);
+		DWORD cl = Color16To32(c);
 
-		if (GetRValue(Cl) == GetGValue(Cl) && GetBValue(Cl) == GetGValue(Cl))
-			return Color16To32(m_HuesRange[g].Entries[e].ColorTable[(C >> 10) & 0x1F]);
+		if (GetRValue(cl) == GetGValue(cl) && GetBValue(cl) == GetGValue(cl))
+			return Color16To32(m_HuesRange[g].Entries[e].ColorTable[(c >> 10) & 0x1F]);
 
-		return Cl;
+		return cl;
 	}
 
-	return Color16To32(C);
+	return Color16To32(c);
 }
 //---------------------------------------------------------------------------

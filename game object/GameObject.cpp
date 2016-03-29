@@ -508,7 +508,7 @@ int GetMultiDistance(POINT current, TGameObject *target)
 
 	if (target != NULL && target->Graphic >= 0x4000)
 	{
-		for (TMulti *multi = (TMulti*)target->m_Items; multi != NULL; multi = (TMulti*)multi->m_Next)
+		QFOR(multi, target->m_Items, TMulti*)
 		{
 			int distx = abs(multi->X - current.x);
 			int disty = abs(multi->Y - current.y);

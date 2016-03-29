@@ -276,7 +276,193 @@ void TGameScreen::CalculateRenderList()
 	m_ObjectHandlesCount = 0;
 	m_RenderListCount = 0;
 	//vector<int> zList;
+	bool useObjectHandles = (!g_GrayedPixels && ConfigManager.ObjectHandles && g_ShiftPressed && g_CtrlPressed);
 
+#if UO_LAYERED_DEPTH_TEST == 1
+	bool overLand = false;
+	bool pointed = true;
+	int cycle = 0;
+
+	while (pointed)
+	{
+		pointed = false;
+
+		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+		{
+			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
+			{
+				int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+
+				TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
+				if (mb == NULL)
+				{
+					mb = MapManager->AddBlock(blockIndex);
+					mb->X = bx;
+					mb->Y = by;
+					MapManager->LoadBlock(mb);
+				}
+
+				IFOR(x, 0, 8)
+				{
+					int currentX = bx * 8 + x;
+
+					if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
+						continue;
+
+					int offsetX = currentX - m_RenderBounds.PlayerX;
+
+					IFOR(y, 0, 8)
+					{
+						int currentY = by * 8 + y;
+
+						if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
+							continue;
+
+						int offsetY = currentY - m_RenderBounds.PlayerY;
+
+						int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+						int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+
+						if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+							continue;
+
+						WORD grayColor = 0;
+
+						if (ConfigManager.GrayOutOfRangeObjects)
+						{
+							POINT testPos = { currentX, currentY };
+
+							if (GetDistance(g_Player, testPos) > g_UpdateRange)
+								grayColor = 0x0386;
+						}
+
+						TRenderWorldObject *obj = NULL;
+
+						if (!overLand)
+						{
+							mb->PointerXY[x][y] = NULL;
+							obj = mb->GetRender(x, y);
+						}
+						else
+							obj = mb->PointerXY[x][y];
+
+						bool cyclePointed = false;
+						bool waterBreak = false;
+
+						for (; obj != NULL; obj = obj->m_NextXY)
+						{
+							int z = obj->Z;
+
+							if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
+							{
+								mb->PointerXY[x][y] = NULL; // obj->m_NextXY;
+								continue;
+							}
+
+							int testMinZ = drawY;
+							int testMaxZ = drawY - (z * 4);
+
+							if (obj->IsLandObject() && ((TLandObject*)obj)->IsStretched)
+								testMinZ -= (((TLandObject*)obj)->MinZ * 4);
+							else
+								testMinZ = testMaxZ;
+
+							if (testMinZ >= m_RenderBounds.MinPixelsY && testMaxZ <= m_RenderBounds.MaxPixelsY)
+							{
+								//if (cycle == 2)
+								{
+									if (m_RenderListCount >= m_RenderListSize)
+										IncreaseRenderList();
+
+									m_BufferRenderList[m_RenderListCount].Obj = obj;
+									m_BufferRenderList[m_RenderListCount].X = drawX;
+									m_BufferRenderList[m_RenderListCount].Y = drawY;
+									m_BufferRenderList[m_RenderListCount].GrayColor = grayColor;
+
+									m_RenderListCount++;
+								}
+
+								if (obj->IsGameObject())
+								{
+									if (!((TGameObject*)obj)->Locked() && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
+									{
+										int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
+
+										m_ObjectHandlesList[index].Obj = (TGameObject*)obj;
+										m_ObjectHandlesList[index].X = drawX;
+										m_ObjectHandlesList[index].Y = drawY;
+
+										m_ObjectHandlesCount++;
+									}
+								}
+								else if (obj->IsFoliage() && ((TRenderStaticObject*)obj)->FoliageTransparentIndex != g_FoliageIndex)
+								{
+									char index = 0;
+
+									POINT fp = { 0, 0 };
+									UO->GetArtDimension(obj->Graphic, fp);
+
+									TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (z * 4), fp.x, fp.y);
+
+									if (fib.InRect(g_PlayerRect))
+									{
+										index = g_FoliageIndex;
+
+										CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
+									}
+
+									((TRenderStaticObject*)obj)->FoliageTransparentIndex = index;
+								}
+							}
+
+							bool canBePointed = false;
+
+							if (!overLand)
+								canBePointed = obj->IsLandObject();
+							else
+								canBePointed = (obj->IsBackground() && obj->IsSurface());
+							//else if (!obj->IsWall() && obj->IsStaticGroupObject())
+							//	canBePointed = (((TRenderStaticObject*)obj)->CanBeTransparent & 0xF); //obj->IsBackground() && obj->IsSurface();
+
+							if (canBePointed)
+							{
+								mb->PointerXY[x][y] = obj->m_NextXY;
+
+								if (obj->m_NextXY != NULL)
+								{
+									pointed = true;
+
+									if (!overLand && obj->m_NextXY->IsWet())
+									{
+										mb->PointerXY[x][y] = obj->m_NextXY->m_NextXY;
+										waterBreak = true;
+
+										if (obj->m_NextXY->m_NextXY != NULL)
+											pointed = true;
+									}
+								}
+
+								cyclePointed = true;
+
+								if (!waterBreak)
+									break;
+							}
+							else if (waterBreak)
+								break;
+						}
+
+						if (!cyclePointed)
+							mb->PointerXY[x][y] = NULL;
+					}
+				}
+			}
+		}
+
+		cycle++;
+		overLand = true;
+	}
+#else
 	for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 	{
 		for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
@@ -377,7 +563,7 @@ void TGameScreen::CalculateRenderList()
 							}*/
 
 
-							if (!((TGameObject*)obj)->Locked() && !g_GrayedPixels && ConfigManager.ObjectHandles && g_ShiftPressed && g_CtrlPressed) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
+							if (!((TGameObject*)obj)->Locked() && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
 							{
 								int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
 
@@ -411,6 +597,7 @@ void TGameScreen::CalculateRenderList()
 			}
 		}
 	}
+#endif
 
 	if (m_ObjectHandlesCount > MAX_OBJECT_HANDLES)
 		m_ObjectHandlesCount = MAX_OBJECT_HANDLES;
@@ -948,7 +1135,9 @@ void TGameScreen::DrawGameWindow(bool &mode)
 
 				g_UseCircleTrans = (ConfigManager.UseCircleTrans && obj->TranparentTest(playerZPlus5));
 
+#if UO_DEPTH_TEST == 1
 				g_ZBuffer = obj->Z + obj->RenderQueueIndex;
+#endif
 				obj->Draw(mode, rod.X, rod.Y, ticks);
 			}
 		}
@@ -1410,8 +1599,6 @@ int TGameScreen::Render(bool mode)
 			FontManager->DrawA(3, dbf, 0x35, 20, 122);
 		}
 #endif //UO_DEBUG_INFO!=0
-		
-		g_GL.EnableAlpha();
 
 		GumpManager->Draw(mode, false);
 		

@@ -121,6 +121,7 @@ public:
 	TTextContainer *m_TextControl; //Ссылка на контейнер для текста
 	
 	SETGET(char, FoliageTransparentIndex);
+	SETGET(char, CanBeTransparent);
 
 	//Добавить текст в контейнер
 	virtual void AddText(TTextData *td);

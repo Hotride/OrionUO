@@ -203,16 +203,16 @@ m_Grayed(false), m_ShadowCount(0), m_Sitting(0)
 	memset(m_DataIndex, 0, sizeof(m_DataIndex));
 	memset(&m_ShadowList[0], 0, sizeof(m_ShadowList));
 	memset(&m_CorpseReplaces[0], 0, sizeof(m_CorpseReplaces));
-
-    LUMA_THRESHOLD = 20.0f;
-    ALPHA_SCALE = 10.0f;
-    ALPHA_BITS = 4;
-    BIT_STEP = (int)(256 / (pow(2, ALPHA_BITS)));
 }
 //----------------------------------------------------------------------------
 TAnimationManager::~TAnimationManager()
 {
 	ClearUnusedTextures(GetTickCount() + 100000);
+	//1426, 1679 ->center
+	//1426, 1680 ->s
+	//1425, 1680 ->sw
+	//1427, 1679 ->e
+	//1427, 1678 ->ne
 }
 //----------------------------------------------------------------------------
 void TAnimationManager::AddShadow(GLuint texture, int drawX, int drawY, int zBuffer, int width, int height, bool mirror)
@@ -240,7 +240,9 @@ void TAnimationManager::DrawShadows()
 		ColorManager->SendColorsToShader(clr);
 		glUniform1iARB(ShaderDrawMode, 1);
 
+#if UO_DEPTH_TEST == 1
 		glEnable(GL_DEPTH_TEST);
+#endif
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
 
@@ -252,7 +254,9 @@ void TAnimationManager::DrawShadows()
 		}
 
 		glDisable(GL_BLEND);
+#if UO_DEPTH_TEST == 1
 		glDisable(GL_DEPTH_TEST);
+#endif
 	}
 }
 //----------------------------------------------------------------------------
@@ -754,135 +758,6 @@ void TAnimationManager::ClearUnusedTextures(DWORD ticks)
 	}
 }
 //----------------------------------------------------------------------------
-
-/// <summary>Get luminance value for an RGB value specified</summary>
-/// <param name="R">red component</param>
-/// <param name="G">green component</param>
-/// <param name="B">blue component</param>
-/// <returns>luminance value 0.0-255.0</returns>
-float TAnimationManager::getLuma(unsigned char &red, unsigned char &green, unsigned char &blue) 
-{
-	auto min_ = min(min(red, green), blue);
-	auto max_ = max(max(red, green), blue);
-	auto delta_ = ((float)(min_ + max_)) / 2.0f;
-
-	return delta_;
-}
-
-//----------------------------------------------------------------------------
-struct Coords
-{
-	short x;
-	short y;
-	Coords(short x, short y) { this->x = x; this->y = y; };
-};
-
-/// <summary>Sets the best guess alpha for adjucent pixels within
-/// specified luma threshold</summary>
-/// <param name="processed">список обработанных пикселей</param>
-/// <param name="pixels">array of texture pixels in RGBA format</param>
-/// <param name="width">texture width</param>
-/// <param name="height">texture height</param>
-/// <param name="x">x координата пикселя</param>
-/// <param name="y">y координата пикселя</param>
-/// <param name="alpha_scale">коэффицент маштабировования прозрачности</param>
-/// <param name="luma_threshold">пороговое значение яркости, 
-/// с начала которого пиксели будут считаться смежными</param>
-void TAnimationManager::setAlphaAt(std::vector<bool> &processed, PDWORD pixels, short &width, short &height, int &x, int &y, float &alpha_scale, float &luma_threshold)
-{
-	std::deque<Coords> stack;
-	stack.push_back(Coords(x, y));
-
-	while (stack.size())
-	{
-		Coords &coords = stack.back();
-		auto x = coords.x;
-		auto y = coords.y;		
-
-		stack.pop_back();
-
-		if (x < 0 || y < 0 || x >= width || y >= height)
-			continue;
-
-		auto idx = width * y + x;		
-
-		auto color = pixels[idx];
-
-		BYTE alpha = (color >> 24) & 0xff;
-
-		if (/*alpha != 255 ||*/ processed[idx]) {
-			//processed[idx] = true;
-			continue;
-		}
-
-		BYTE blue = (color >> 16) & 0xff;
-		BYTE green = (color >> 8) & 0xff;
-		BYTE red = color & 0xff;
-
-		//яркость ч/б пикселя
-		auto luma = getLuma(red, green, blue);
-
-		if (luma > luma_threshold) {
-			processed[idx] = true;
-			continue;
-		}
-
-		//высчитываем новую прозрачность из учета яркости
-		alpha = (((int)(alpha_scale * luma)) / BIT_STEP) * BIT_STEP;
-
-		//выставляем новую альфу для спрайта (собираем пиксель)
-		pixels[idx] = (alpha << 24) | (blue << 16) | (green << 8) | red;
-		processed[idx] = true;
-
-		//обрабатываем соседние пиксели
-		stack.push_back(Coords(x + 1, y));
-		stack.push_back(Coords(x - 1, y));
-		stack.push_back(Coords(x, y + 1));
-		stack.push_back(Coords(x, y - 1));		
-	}
- 
-}                       
-
-//----------------------------------------------------------------------------
-
-/// <summary>Process each texture pixel with pre-calculated alpha value
-/// from its luminance value and threshold</summary>
-/// <param name="pixels">array of texture pixels in RGBA format</param>
-/// <param name="width">texture width</param>
-/// <param name="height">texture height</param>
-void TAnimationManager::EstimateImageCornerAlpha(PDWORD pixels, short &width, short &height, float alpha_scale, float luma_threshold)
-{
-	auto pixels_count = width * height;
-
-	std::vector<bool> processed(pixels_count);
-	//processed.resize(pixels_count);
-	auto test = processed.size();
-	std::fill(processed.begin(), processed.end(), false);
-	test = processed.size();
-		
-	IFOR(y, 0, height)
-	{
-		auto row_idx = width * y;
-
-		IFOR(x, 0, width)        
-		{
-			auto idx = row_idx + x;
-
-            DWORD color = pixels[idx];
-            
-			BYTE alpha = (color >> 24) & 0xff;
-			BYTE blue = (color >> 16) & 0xff;
-			BYTE green = (color >> 8) & 0xff;
-			BYTE red = color & 0xff;
-
-			if( (red!=0) || (blue!=0) || (green!=0) || processed[idx])
-				continue;					
-
-			setAlphaAt(processed, pixels, width, height, x, y, alpha_scale, luma_threshold);
-        }        
-	}
-}
-//----------------------------------------------------------------------------
 bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direction, WORD &id, int &offset)
 {
 	direction->Address = 0;
@@ -1016,8 +891,6 @@ bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direct
 
 			}
 		}
-
-        //EstimateImageCornerAlpha( pData, imageWidth, imageHeight );
 
 		g_GL.BindTexture16(frame->Texture, imageWidth, imageHeight, pData);
 
@@ -1289,7 +1162,9 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		else
 			x -= frame->CenterX;
 
+#if UO_DEPTH_TEST == 1
 		glEnable(GL_DEPTH_TEST);
+#endif
 
 		if (isShadow)
 			AddShadow(texture, x, y, g_ZBuffer, frame->Width, frame->Height, mirror);
@@ -1339,7 +1214,9 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 				glDisable(GL_BLEND);
 		}
 
+#if UO_DEPTH_TEST == 1
 		glDisable(GL_DEPTH_TEST);
+#endif
 	}
 }
 //----------------------------------------------------------------------------

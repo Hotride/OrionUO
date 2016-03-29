@@ -76,15 +76,19 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		}
 		else
 		{
+#if UO_DEPTH_TEST == 1
 			if (m_CanBeTransparent & 0x10)
 				glEnable(GL_DEPTH_TEST);
+#endif
 			
 			if (g_UseCircleTrans)
 				UO->DrawStaticArtTransparent(objGraphic, objColor, drawX, drawY, m_Z);
 			else
 				UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
-			
+
+#if UO_DEPTH_TEST == 1
 			glDisable(GL_DEPTH_TEST);
+#endif
 
 			if (IsLightSource() && GameScreen->UseLight)
 				GameScreen->AddLight(this, this, drawX, drawY - (m_Z * 4));

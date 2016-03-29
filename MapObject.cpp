@@ -166,7 +166,10 @@ int TLandObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 #if UO_DEBUG_INFO!=0
 g_RenderedObjectsCountInGameWindow++;
 #endif
+
+#if UO_DEPTH_TEST == 1
 			glEnable(GL_DEPTH_TEST);
+#endif
 
 			if (!m_IsStretched)
 				UO->DrawLandArt(m_Graphic, objColor, drawX, drawY, m_Z);
@@ -182,7 +185,9 @@ g_RenderedObjectsCountInGameWindow++;
 				UO->DrawLandTexture(m_Graphic, objColor, drawX, drawY, m_Rect, m_Normals);
 			}
 
+#if UO_DEPTH_TEST == 1
 			glDisable(GL_DEPTH_TEST);
+#endif
 		}
 		else
 		{
@@ -373,15 +378,19 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 		}
 		else
 		{
+#if UO_DEPTH_TEST == 1
 			if (m_CanBeTransparent & 0x10)
 				glEnable(GL_DEPTH_TEST);
+#endif
 
 			if (g_UseCircleTrans)
 				UO->DrawStaticArtAnimatedTransparent(objGraphic, objColor, drawX, drawY, m_Z);
 			else
 				UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
 
+#if UO_DEPTH_TEST == 1
 			glDisable(GL_DEPTH_TEST);
+#endif
 		}
 
 		if (IsLightSource() && GameScreen->UseLight)

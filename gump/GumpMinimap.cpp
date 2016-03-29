@@ -172,7 +172,7 @@ void TGumpMinimap::GenerateFrame()
 		
 		if (m_Count < 6)
 		{
-			for (TGameObject *go = World->m_Items; go != NULL; go = (TGameObject*)go->m_Next)
+			QFOR(go, World->m_Items, TGameObject*)
 			{
 				if (go->Container != 0xFFFFFFFF || go->Graphic >= 0x4000)
 					continue; //multi

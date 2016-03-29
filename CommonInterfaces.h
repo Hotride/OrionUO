@@ -31,21 +31,21 @@ class TGump;
 //----------------------------------------------------------------------------
 interface IGLEngine
 {
-	virtual void ViewPort(int X, int Y, int SizeX, int SizeY) = 0;
+	virtual void ViewPort(int x, int y, int width, int height) = 0;
 	virtual void RestorePort() = 0;
 
-	virtual void Enable(GLenum val) = 0;
-	virtual void Disable(GLenum val) = 0;
+	virtual void Scissor(int x, int y, int width, int height) = 0;
 
-	virtual void DrawLine(int X, int Y, int TargetX, int TargetY) = 0;
-	virtual void DrawPolygone(int X, int Y, int Width, int Height) = 0;
-	virtual void DrawCircle(float X, float Y, float radius, int gradientMode) = 0;
+	virtual void DrawLine(int x, int y, int targetX, int targetY) = 0;
+	virtual void DrawPolygone(int x, int y, int width, int height) = 0;
+	virtual void DrawCircle(float x, float y, float radius, int gradientMode) = 0;
 
-	virtual void DrawLandTexture(GLuint &Texture, int &X, int &Y, RECT &rc, TVector *normals) = 0;
-	virtual void Draw(GLuint &Texture, int &X, int &Y, int Width, int Height) = 0;
-	virtual void Draw(GLuint &Texture, int &X, int &Y, int Width, int Height, bool &mirror) = 0;
-	virtual void Draw(GLuint &Texture, int &X, int &Y, int Width, int Height, int &DrawWidth, int &DrawHeight) = 0;
-	virtual void DrawResizepic(TTextureObject **th, int &X, int &Y, int &W, int &H) = 0;
+	virtual void DrawLandTexture(GLuint &Texture, int &x, int &y, RECT &rc, TVector *normals) = 0;
+	virtual void Draw(GLuint &Texture, int &x, int &y, int width, int height) = 0;
+	virtual void DrawRotated(GLuint &texture, int &x, int &y, int width, int height, float &angle) = 0;
+	virtual void Draw(GLuint &Texture, int &x, int &y, int width, int height, bool &mirror) = 0;
+	virtual void Draw(GLuint &Texture, int &x, int &y, int width, int height, int &drawWidth, int &drawHeight) = 0;
+	virtual void DrawResizepic(TTextureObject **th, int &x, int &y, int &width, int &height) = 0;
 };
 //----------------------------------------------------------------------------
 interface IUltimaOnline

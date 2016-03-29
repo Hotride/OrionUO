@@ -112,11 +112,13 @@ int TBaseQueue::GetItemIndex(TBaseQueueItem *item)
 	int index = 0;
 
 	//Пройдемся по очереди
-	for (TBaseQueueItem *current = m_Items; current != NULL; current = current->m_Next, index++)
+	BQFOR(current, m_Items)
 	{
 		//Если элемент нашелся - возвращаем вычисленный индекс
 		if (current == item)
 			return index;
+
+		index++;
 	}
 
 	//В случае не удачного поиска - вернем -1 (не найдено)
@@ -129,7 +131,8 @@ int TBaseQueue::GetItemsCount()
 
 	//Пройдемся по всем элементам очереди и запомним общее количество
 	//Для экономии памяти не выводит это значение в отдельную переменную
-	for (TBaseQueueItem *current = m_Items; current != NULL; current = current->m_Next, count++);
+	BQFOR(current, m_Items)
+		count++;
 
 	return count;
 }

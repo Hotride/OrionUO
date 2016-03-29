@@ -126,8 +126,7 @@ bool TGLEngine::Install(HWND hWnd)
 
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
 
-	glViewport(0, 0, g_ClientWidth, g_ClientHeight);
-	glOrtho(0.0, g_ClientWidth, g_ClientHeight, 0.0, -150.0, 150.0);
+	ViewPort(0, 0, g_ClientWidth, g_ClientHeight);
 	
 	return true;
 }
@@ -139,43 +138,36 @@ void TGLEngine::UpdateRect()
 	g_ClientWidth = cr.right - cr.left;
 	g_ClientHeight = cr.bottom - cr.top;
 
-	glViewport(0, 0, g_ClientWidth, g_ClientHeight);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	glOrtho(0.0, g_ClientWidth, g_ClientHeight, 0.0, -150.0, 150.0);
-
-	glMatrixMode(GL_MODELVIEW);
+	ViewPort(0, 0, g_ClientWidth, g_ClientHeight);
 
 	if (GumpManager != NULL)
 		GumpManager->RedrawAll();
 }
 //---------------------------------------------------------------------------
-void TGLEngine::BindTexture16(GLuint &Texture, int Width, int Height, PWORD pixels)
+void TGLEngine::BindTexture16(GLuint &texture, int width, int height, PWORD pixels)
 {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &Texture);
-	glBindTexture(GL_TEXTURE_2D, Texture);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, Width, Height, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, width, height, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, pixels);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::BindTexture32(GLuint &Texture, int Width, int Height, PDWORD pixels)
+void TGLEngine::BindTexture32(GLuint &texture, int width, int height, PDWORD pixels)
 {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &Texture);
-	glBindTexture(GL_TEXTURE_2D, Texture);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, Width, Height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8, pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8, pixels);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::BeginDraw()
@@ -192,14 +184,15 @@ void TGLEngine::BeginDraw()
 	glDisable(GL_BLEND);
 	g_ZBuffer = 0;
 
-	EnableAlpha();
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::EndDraw()
 {
 	g_DrawMode = false;
 
-	DisableAlpha();
+	glDisable(GL_ALPHA_TEST);
 
 	SwapBuffers(m_DC);
 }
@@ -224,23 +217,12 @@ void TGLEngine::EndStencil()
 	glDisable(GL_STENCIL_TEST);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::EnableAlpha()
+void TGLEngine::ViewPort(int x, int y, int width, int height)
 {
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.0f);
-}
-//---------------------------------------------------------------------------
-void TGLEngine::DisableAlpha()
-{
-	glDisable(GL_ALPHA_TEST);
-}
-//---------------------------------------------------------------------------
-void TGLEngine::ViewPort(int x, int y, int sizeX, int sizeY)
-{
-	glViewport(x, g_ClientHeight - y - sizeY, sizeX, sizeY);
+	glViewport(x, g_ClientHeight - y - height, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(x, sizeX + x, sizeY + y, y, -150.0, 150.0);
+	glOrtho(x, width + x, height + y, y, -150.0, 150.0);
 	glMatrixMode(GL_MODELVIEW);
 }
 //---------------------------------------------------------------------------
@@ -253,10 +235,10 @@ void TGLEngine::RestorePort()
 	glMatrixMode(GL_MODELVIEW);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::Scissor(int x, int y, int sizeX, int sizeY)
+void TGLEngine::Scissor(int x, int y, int width, int height)
 {
 	glEnable(GL_SCISSOR_TEST);
-	glScissor(x, g_ClientHeight - y - sizeY, sizeX, sizeY);
+	glScissor(x, g_ClientHeight - y - height, width, height);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::DrawLine(int x, int y, int targetX, int targetY)

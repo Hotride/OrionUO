@@ -72,26 +72,14 @@ public:
 	//Выключить буфер трафарета
 	void EndStencil();
 
-	//Включить альфа-тест
-	void EnableAlpha();
-
-	//Выключить альфа-тест
-	void DisableAlpha();
-
 	//Указать область рисования
-	void ViewPort(int x, int y, int sizeX, int sizeY);
+	void ViewPort(int x, int y, int width, int height);
 
 	//Восстановить стандартную область рисования
 	void RestorePort();
 
 	//Указать область рисования (ножницами, сохраняет мартицу)
-	void Scissor(int x, int y, int sizeX, int sizeY);
-
-	//Включить режим
-	void Enable(GLenum val) {glEnable(val);}
-
-	//Выключить режим
-	void Disable(GLenum val) {glDisable(val);}
+	void Scissor(int x, int y, int width, int height);
 
 
 

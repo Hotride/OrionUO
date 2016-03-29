@@ -117,7 +117,7 @@ bool TFrameBuffer::Use()
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		
-		glOrtho(0.0, m_Width, 0.0, m_Height, -100.0, 100.0);
+		glOrtho(0.0, m_Width, 0.0, m_Height, -150.0, 150.0);
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
@@ -132,18 +132,8 @@ void TFrameBuffer::Draw(int x, int y)
 {
 	if (g_UseFrameBuffer && m_Ready)
 	{
-		glBindTexture(GL_TEXTURE_2D, m_Texture);
-
-		glTranslatef((GLfloat)x, (GLfloat)y, 0.0f);
-		
-		glBegin(GL_QUADS);
-			glTexCoord2i(0, 1); glVertex2i(0, m_Height);
-			glTexCoord2i(1, 1); glVertex2i(m_Width, m_Height);
-			glTexCoord2i(1, 0); glVertex2i(m_Width, 0);
-			glTexCoord2i(0, 0); glVertex2i(0, 0);
-		glEnd();
-
-		glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
+		g_GL.OldTexture = 0;
+		g_GL.Draw(m_Texture, x, y, m_Width, m_Height);
 	}
 }
 //---------------------------------------------------------------------------

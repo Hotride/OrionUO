@@ -54,6 +54,9 @@ public:
 	//Данные блока
 	TMapObject *Block[8][8];
 
+	//Ссылка на текущие элементы в очереди подготовки рендер листа
+	TRenderWorldObject *PointerXY[8][8];
+
 	//Добавить объект
 	TMapObject *AddObject(TMapObject *obj, int x, int y);
 
