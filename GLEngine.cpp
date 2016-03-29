@@ -375,7 +375,9 @@ void TGLEngine::DrawRotated(GLuint &texture, int &x, int &y, int width, int heig
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 
-	glTranslatef((GLfloat)x, (GLfloat)(y - height), 0.0f);
+	GLfloat translateY = (GLfloat)(y - height);
+
+	glTranslatef((GLfloat)x, translateY, 0.0f);
 
 	glRotatef(angle, 0.0f, 0.0f, 1.0f);
 
@@ -387,7 +389,7 @@ void TGLEngine::DrawRotated(GLuint &texture, int &x, int &y, int width, int heig
 	glEnd();
 
 	glRotatef(angle, 0.0f, 0.0f, -1.0f);
-	glTranslatef((GLfloat)-x, (GLfloat)-(y - height), 0.0f);
+	glTranslatef((GLfloat)-x, -translateY, 0.0f);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, bool &mirror)
@@ -484,29 +486,30 @@ void TGLEngine::DrawShadow(GLuint &texture, int &x, int &y, int width, int heigh
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 
-	int h2 = height / 2;
-	glTranslatef((GLfloat)x, (GLfloat)(y + h2), (GLfloat)g_ZBuffer);
+	GLfloat translateY = (GLfloat)(y + height);
+
+	glTranslatef((GLfloat)x, translateY, (GLfloat)g_ZBuffer);
 
 	glBegin(GL_TRIANGLE_STRIP);
 
 		if (mirror)
 		{
-			glTexCoord2i(0, 1); glVertex2i(width, h2);
-			glTexCoord2i(1, 1); glVertex2i(0, h2);
+			glTexCoord2i(0, 1); glVertex2i(width, height);
+			glTexCoord2i(1, 1); glVertex2i(0, height);
 			glTexCoord2i(0, 0); glVertex2i(width * 2, 0);
 			glTexCoord2i(1, 0); glVertex2i(width, 0);
 		}
 		else
 		{
-			glTexCoord2i(0, 1); glVertex2i(0, h2);
-			glTexCoord2i(1, 1); glVertex2i(width, h2);
+			glTexCoord2i(0, 1); glVertex2i(0, height);
+			glTexCoord2i(1, 1); glVertex2i(width, height);
 			glTexCoord2i(0, 0); glVertex2i(width, 0);
 			glTexCoord2i(1, 0); glVertex2i(width * 2, 0);
 		}
 
 	glEnd();
 
-	glTranslatef((GLfloat)-x, (GLfloat)-(y + h2), (GLfloat)-g_ZBuffer);
+	glTranslatef((GLfloat)-x, -translateY, (GLfloat)-g_ZBuffer);
 }
 //---------------------------------------------------------------------------
 void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, int &drawWidth, int &drawHeight)

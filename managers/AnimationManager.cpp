@@ -248,7 +248,7 @@ void TAnimationManager::DrawShadows()
 		{
 			SHADOW_DATA &shadow = m_ShadowList[i];
 			g_ZBuffer = shadow.ZBuffer - 1;
-			g_GL.DrawShadow(shadow.Texture, shadow.DrawX, shadow.DrawY, shadow.Width, shadow.Height, shadow.Mirror);
+			g_GL.DrawShadow(shadow.Texture, shadow.DrawX, shadow.DrawY, shadow.Width, shadow.Height / 2, shadow.Mirror);
 		}
 
 		glDisable(GL_BLEND);
@@ -1153,8 +1153,15 @@ bool TAnimationManager::TestPixels(TGameObject *obj, int x, int y, bool &mirror,
 
 	if (frame != NULL)
 	{
+		if (id == 0x23D) //FWUO genie
+			y += 40;
+
 		y -= (frame->Height + frame->CenterY + 3);
-		x -= frame->CenterX;
+		
+		if (mirror)
+			x -= (frame->Width - frame->CenterX);
+		else
+			x -= frame->CenterX;
 
 		x = g_MouseX - x;
 		y = g_MouseY - y;
