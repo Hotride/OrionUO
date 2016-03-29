@@ -112,6 +112,9 @@ public:
 	//Ќарисовать текстуру
 	void Draw(GLuint &texture, int &x, int &y, int width, int height);
 
+	//Ќарисовать повернутую текстуру
+	void DrawRotated(GLuint &texture, int &x, int &y, int width, int height, float &angle);
+
 	//Ќарисовать текстуру с возможностью зеркального отражени€
 	void Draw(GLuint &texture, int &x, int &y, int width, int height, bool &mirror);
 

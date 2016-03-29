@@ -189,6 +189,12 @@ public:
 	//Ќарисовать анимированную статику
 	void DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int z, bool selection = false);
 
+	//Ќарисовать повернутую статику
+	void DrawStaticArtRotated(WORD id, WORD color, int x, int y, int z, float angle);
+
+	//Ќарисовать повернутую анимированную статику
+	void DrawStaticArtAnimatedRotated(WORD id, WORD color, int x, int y, int z, float angle);
+
 	//Ќарисовать прозрачную статику
 	void DrawStaticArtTransparent(WORD id, WORD color, int x, int y, int z, bool selection = false);
 

@@ -81,33 +81,7 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				if (moving->FixedDirection)
 					UO->DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);
 				else
-				{
-					TTextureObject *th = UO->ExecuteStaticArt(objGraphic);
-
-					if (th != NULL)
-					{
-						glBindTexture(GL_TEXTURE_2D, th->Texture);
-
-						drawEffectY -= (m_Z * 4);
-
-						int width = th->Width;
-						int heightDiv2 = th->Height / 2;
-
-						glTranslatef((GLfloat)drawEffectX, (GLfloat)(drawEffectY - heightDiv2), 0.0f);
-
-						glRotatef(moving->Angle, 0.0f, 0.0f, 1.0f);
-
-						glBegin(GL_TRIANGLE_STRIP);
-							glTexCoord2i(0, 1); glVertex2i(0, -heightDiv2);
-							glTexCoord2i(1, 1); glVertex2i(width, -heightDiv2);
-							glTexCoord2i(0, 0); glVertex2i(0, heightDiv2);
-							glTexCoord2i(1, 0); glVertex2i(width, heightDiv2);
-						glEnd();
-						
-						glRotatef(moving->Angle, 0.0f, 0.0f, -1.0f);
-						glTranslatef((GLfloat)-drawEffectX, (GLfloat)-(drawEffectY - heightDiv2), 0.0f);
-					}
-				}
+					UO->DrawStaticArtRotated(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z, moving->Angle);
 			}
 			else
 				UO->DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);

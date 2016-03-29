@@ -367,6 +367,29 @@ void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height)
 	glTranslatef((GLfloat)-x, (GLfloat)-y, (GLfloat)-g_ZBuffer);
 }
 //---------------------------------------------------------------------------
+void TGLEngine::DrawRotated(GLuint &texture, int &x, int &y, int width, int height, float &angle)
+{
+	if (m_OldTexture != texture)
+	{
+		m_OldTexture = texture;
+		glBindTexture(GL_TEXTURE_2D, texture);
+	}
+
+	glTranslatef((GLfloat)x, (GLfloat)(y - height), 0.0f);
+
+	glRotatef(angle, 0.0f, 0.0f, 1.0f);
+
+	glBegin(GL_TRIANGLE_STRIP);
+		glTexCoord2i(0, 1); glVertex2i(0, -height);
+		glTexCoord2i(1, 1); glVertex2i(width, -height);
+		glTexCoord2i(0, 0); glVertex2i(0, height);
+		glTexCoord2i(1, 0); glVertex2i(width, height);
+	glEnd();
+
+	glRotatef(angle, 0.0f, 0.0f, -1.0f);
+	glTranslatef((GLfloat)-x, (GLfloat)-(y - height), 0.0f);
+}
+//---------------------------------------------------------------------------
 void TGLEngine::Draw(GLuint &texture, int &x, int &y, int width, int height, bool &mirror)
 {
 	if (m_OldTexture != texture)

@@ -3031,6 +3031,34 @@ void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int
 	DrawStaticArt(id, color, x, y, z, selection);
 }
 //---------------------------------------------------------------------------
+void TUltimaOnline::DrawStaticArtRotated(WORD id, WORD color, int x, int y, int z, float angle)
+{
+	TTextureObject *th = ExecuteStaticArt(id);
+
+	if (th != NULL && id > 1)
+	{
+		if (g_OutOfRangeColor)
+			color = g_OutOfRangeColor;
+
+		int drawMode = (!g_GrayedPixels && color);
+
+		if (drawMode)
+			ColorManager->SendColorsToShader(color);
+
+		glUniform1iARB(ShaderDrawMode, drawMode);
+
+		y -= (z * 4);
+
+		g_GL.DrawRotated(th->Texture, x, y, th->Width, th->Height / 2, angle);
+	}
+}
+//---------------------------------------------------------------------------
+void TUltimaOnline::DrawStaticArtAnimatedRotated(WORD id, WORD color, int x, int y, int z, float angle)
+{
+	id += m_StaticDataIndex[id].Increment;
+	DrawStaticArtRotated(id, color, x, y, z, angle);
+}
+//---------------------------------------------------------------------------
 void TUltimaOnline::DrawStaticArtTransparent(WORD id, WORD color, int x, int y, int z, bool selection)
 {
 	TTextureObject *th = ExecuteStaticArt(id);
