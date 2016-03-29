@@ -119,9 +119,6 @@ private:
 	//Список объектов для отображения
 	RENDER_OBJECT_DATA *m_RenderList;
 
-	//Несортированный список объектов
-	RENDER_OBJECT_DATA *m_BufferRenderList;
-
 	//Размер списка объектов рендера
 	int m_RenderListSize;
 
@@ -172,6 +169,12 @@ private:
 
 	//Функция увеличесния размера списка рендера
 	void IncreaseRenderList();
+
+	int m_ObjCount;
+	RENDER_OBJECT_DATA *m_ObjList;
+
+	//Функция увеличесния размера списка рендера
+	void IncreaseObjList();
 public:
 	TGameScreen();
 	virtual ~TGameScreen();

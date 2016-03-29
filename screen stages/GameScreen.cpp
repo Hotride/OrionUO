@@ -26,15 +26,13 @@ TGameScreen::TGameScreen()
 : TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false),
 m_UseLight(false), m_MaxDrawZ(0), m_RenderListSize(1000),
 m_RenderListInitalized(false), m_RenderListCount(0),
-m_ObjectHandlesCount(0)
+m_ObjectHandlesCount(0), m_ObjCount(1000)
 {
 	m_RenderList = new RENDER_OBJECT_DATA[1000];
-	//memset(&m_RenderList[0], 0, sizeof(RENDER_OBJECT_DATA) * 1000);
-
-	m_BufferRenderList = new RENDER_OBJECT_DATA[1000];
-	//memset(&m_BufferRenderList[0], 0, sizeof(RENDER_OBJECT_DATA) * 1000);
 
 	g_RenderBounds = &m_RenderBounds;
+
+	m_ObjList = new RENDER_OBJECT_DATA[1000];
 
 	memset(&m_ObjectHandlesList[0], 0, sizeof(OBJECT_HANDLES_DATA) * MAX_OBJECT_HANDLES);
 }
@@ -47,10 +45,10 @@ TGameScreen::~TGameScreen()
 		m_RenderList = NULL;
 	}
 
-	if (m_BufferRenderList != NULL)
+	if (m_ObjList != NULL)
 	{
-		delete m_BufferRenderList;
-		m_BufferRenderList = NULL;
+		delete m_ObjList;
+		m_ObjList = NULL;
 	}
 }
 //---------------------------------------------------------------------------
@@ -252,17 +250,27 @@ void TGameScreen::IncreaseRenderList()
 
 	if (list != NULL)
 	{
-		//memset(&list[0], 0, sizeof(RENDER_OBJECT_DATA) * (m_RenderListSize + 1000));
-		memcpy(&list[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListSize);
-
-		delete m_BufferRenderList;
-		m_BufferRenderList = list;
-
-		m_RenderListSize += 1000;
+		memcpy(&list[0], &m_RenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListSize);
 
 		delete m_RenderList;
-		m_RenderList = new RENDER_OBJECT_DATA[m_RenderListSize];
-		//memset(&m_RenderList[0], 0, sizeof(RENDER_OBJECT_DATA) * m_RenderListSize);
+		m_RenderList = list;
+
+		m_RenderListSize += 1000;
+	}
+}
+//---------------------------------------------------------------------------
+void TGameScreen::IncreaseObjList()
+{
+	RENDER_OBJECT_DATA *list = new RENDER_OBJECT_DATA[m_ObjCount + 1000];
+
+	if (list != NULL)
+	{
+		memcpy(&list[0], &m_ObjList[0], sizeof(RENDER_OBJECT_DATA)* m_ObjCount);
+
+		delete m_ObjList;
+		m_ObjList = list;
+
+		m_ObjCount += 1000;
 	}
 }
 //---------------------------------------------------------------------------
@@ -278,10 +286,964 @@ void TGameScreen::CalculateRenderList()
 	//vector<int> zList;
 	bool useObjectHandles = (!g_GrayedPixels && ConfigManager.ObjectHandles && g_ShiftPressed && g_CtrlPressed);
 
-#if UO_LAYERED_DEPTH_TEST == 1
+#if UO_LAYERED_RENDER == 4
+	bool pointed = true;
+	int cycles = 3;
+
+	IFOR(undergroundLayer, 0, 3)
+	{
+		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+		{
+			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
+			{
+				int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+
+				TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
+				if (mb == NULL)
+				{
+					mb = MapManager->AddBlock(blockIndex);
+					mb->X = bx;
+					mb->Y = by;
+					MapManager->LoadBlock(mb);
+				}
+
+				IFOR(x, 0, 8)
+				{
+					int currentX = bx * 8 + x;
+
+					if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
+						continue;
+
+					int offsetX = currentX - m_RenderBounds.PlayerX;
+
+					IFOR(y, 0, 8)
+					{
+						int currentY = by * 8 + y;
+
+						if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
+							continue;
+
+						int offsetY = currentY - m_RenderBounds.PlayerY;
+
+						int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+						int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+
+						if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+							continue;
+
+						WORD grayColor = 0;
+
+						if (ConfigManager.GrayOutOfRangeObjects)
+						{
+							POINT testPos = { currentX, currentY };
+
+							if (GetDistance(g_Player, testPos) > g_UpdateRange)
+								grayColor = 0x0386;
+						}
+
+						TRenderWorldObject *obj = NULL;
+
+						if (!undergroundLayer)
+						{
+							obj = mb->GetRender(x, y);
+							mb->PointerXY[x][y] = obj;
+						}
+						else
+							obj = mb->PointerXY[x][y];
+
+						bool cyclePointed = false;
+						bool waterBreak = false;
+
+						for (; obj != NULL; obj = obj->m_NextXY)
+						{
+							int z = obj->Z;
+
+							if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
+								continue;
+
+							int testMinZ = drawY;
+							int testMaxZ = drawY - (z * 4);
+
+							if (obj->IsLandObject() && ((TLandObject*)obj)->IsStretched)
+								testMinZ -= (((TLandObject*)obj)->MinZ * 4);
+							else
+								testMinZ = testMaxZ;
+
+							if (testMinZ >= m_RenderBounds.MinPixelsY && testMaxZ <= m_RenderBounds.MaxPixelsY)
+							{
+								if (m_RenderListCount >= m_RenderListSize)
+									IncreaseRenderList();
+
+								bool canAdd = false;
+
+								if (!undergroundLayer && obj->IsBackground() && obj->IsSurface() && !obj->IsLandObject())
+									canAdd = true;
+								else if (undergroundLayer == 1 && !(obj->IsBackground() && obj->IsSurface()) && !obj->IsLandObject())
+									canAdd = true;
+								else if (undergroundLayer == 2 && (obj->IsLandObject() || waterBreak))
+									canAdd = true;
+
+								if (canAdd)
+								{
+									m_RenderList[m_RenderListCount].Obj = obj;
+									m_RenderList[m_RenderListCount].X = drawX;
+									m_RenderList[m_RenderListCount].Y = drawY;
+									m_RenderList[m_RenderListCount].GrayColor = grayColor;
+
+									m_RenderListCount++;
+								}
+							}
+
+							if (undergroundLayer == 2 && obj->IsLandObject())
+							{
+								mb->PointerXY[x][y] = obj->m_NextXY;
+
+								if (obj->m_NextXY != NULL)
+								{
+									pointed = true;
+
+									if (undergroundLayer == 2 && obj->m_NextXY->IsWet())
+									{
+										mb->PointerXY[x][y] = obj->m_NextXY->m_NextXY;
+										waterBreak = true;
+
+										if (obj->m_NextXY->m_NextXY != NULL)
+											pointed = true;
+									}
+								}
+
+								cyclePointed = true;
+
+								if (!waterBreak)
+									break;
+							}
+							else if (waterBreak)
+								break;
+							else if (obj->IsLandObject())
+								break;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	int objListSize = 0;
+
+	for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+	{
+		for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
+		{
+			int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+
+			TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
+			if (mb == NULL)
+			{
+				mb = MapManager->AddBlock(blockIndex);
+				mb->X = bx;
+				mb->Y = by;
+				MapManager->LoadBlock(mb);
+			}
+
+			IFOR(x, 0, 8)
+			{
+				int currentX = bx * 8 + x;
+
+				if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
+					continue;
+
+				int offsetX = currentX - m_RenderBounds.PlayerX;
+
+				IFOR(y, 0, 8)
+				{
+					int currentY = by * 8 + y;
+
+					if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
+						continue;
+
+					int offsetY = currentY - m_RenderBounds.PlayerY;
+
+					int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+					int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+
+					if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+						continue;
+
+					WORD grayColor = 0;
+
+					if (ConfigManager.GrayOutOfRangeObjects)
+					{
+						POINT testPos = { currentX, currentY };
+
+						if (GetDistance(g_Player, testPos) > g_UpdateRange)
+							grayColor = 0x0386;
+					}
+
+					bool cyclePointed = false;
+
+					for (TRenderWorldObject *obj = mb->PointerXY[x][y]; obj != NULL; obj = obj->m_NextXY)
+					{
+						int z = obj->Z;
+
+						if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
+							continue;
+
+						int testZ = drawY - (z * 4);
+
+						if (testZ >= m_RenderBounds.MinPixelsY && testZ <= m_RenderBounds.MaxPixelsY)
+						{
+							if (objListSize >= m_ObjCount)
+								IncreaseObjList();
+
+							m_ObjList[objListSize].Obj = obj;
+							m_ObjList[objListSize].GrayColor = grayColor;
+							m_ObjList[objListSize].X = drawX;
+							m_ObjList[objListSize].Y = drawY;
+
+							objListSize++;
+
+							if (obj->IsGameObject())
+							{
+								if (!((TGameObject*)obj)->Locked() && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
+								{
+									int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
+
+									m_ObjectHandlesList[index].Obj = (TGameObject*)obj;
+									m_ObjectHandlesList[index].X = drawX;
+									m_ObjectHandlesList[index].Y = drawY;
+
+									m_ObjectHandlesCount++;
+								}
+							}
+							else if (obj->IsFoliage() && ((TRenderStaticObject*)obj)->FoliageTransparentIndex != g_FoliageIndex)
+							{
+								char index = 0;
+
+								POINT fp = { 0, 0 };
+								UO->GetArtDimension(obj->Graphic, fp);
+
+								TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (z * 4), fp.x, fp.y);
+
+								if (fib.InRect(g_PlayerRect))
+								{
+									index = g_FoliageIndex;
+
+									CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
+								}
+
+								((TRenderStaticObject*)obj)->FoliageTransparentIndex = index;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	while (pointed)
+	{
+		pointed = false;
+
+		int currentZ = 1000;
+
+		IFOR(i, 0, objListSize)
+		{
+			TRenderWorldObject *obj = m_ObjList[i].Obj;
+
+			if (obj == NULL)
+				continue;
+
+			if (obj->IsBackground() && obj->IsSurface() && obj->Z < currentZ)
+			{
+				currentZ = obj->Z;
+				//break;
+			}
+		}
+
+		//TPRINT("currentZ[%i]=%i\n", cycles, currentZ);
+
+		IFOR(i, 0, objListSize)
+		{
+			RENDER_OBJECT_DATA &rod = m_ObjList[i];
+			TRenderWorldObject *obj = rod.Obj;
+
+			if (obj == NULL)
+				continue;
+
+			int z = obj->Z;
+
+			if (z > currentZ)
+			{
+				pointed = true;
+
+				continue;
+			}
+			else if (z == currentZ && !(obj->IsBackground() && obj->IsSurface()))
+			{
+				pointed = true;
+
+				continue;
+			}
+
+			if (m_RenderListCount >= m_RenderListSize)
+				IncreaseRenderList();
+
+			m_RenderList[m_RenderListCount].Obj = obj;
+			m_RenderList[m_RenderListCount].X = rod.X;
+			m_RenderList[m_RenderListCount].Y = rod.Y;
+			m_RenderList[m_RenderListCount].GrayColor = rod.GrayColor;
+
+			m_RenderListCount++;
+
+			rod.Obj = NULL;
+		}
+
+		cycles++;
+	}
+	//TPRINT("cycles=%i\n", cycles);
+#endif
+
+#if UO_LAYERED_RENDER == 3
+	bool pointed = true;
+	int cycles = 3;
+
+	IFOR(undergroundLayer, 0, 3)
+	{
+		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+		{
+			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
+			{
+				int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+
+				TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
+				if (mb == NULL)
+				{
+					mb = MapManager->AddBlock(blockIndex);
+					mb->X = bx;
+					mb->Y = by;
+					MapManager->LoadBlock(mb);
+				}
+
+				IFOR(x, 0, 8)
+				{
+					int currentX = bx * 8 + x;
+
+					if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
+						continue;
+
+					int offsetX = currentX - m_RenderBounds.PlayerX;
+
+					IFOR(y, 0, 8)
+					{
+						int currentY = by * 8 + y;
+
+						if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
+							continue;
+
+						int offsetY = currentY - m_RenderBounds.PlayerY;
+
+						int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+						int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+
+						if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+							continue;
+
+						WORD grayColor = 0;
+
+						if (ConfigManager.GrayOutOfRangeObjects)
+						{
+							POINT testPos = { currentX, currentY };
+
+							if (GetDistance(g_Player, testPos) > g_UpdateRange)
+								grayColor = 0x0386;
+						}
+
+						TRenderWorldObject *obj = NULL;
+
+						if (!undergroundLayer)
+						{
+							obj = mb->GetRender(x, y);
+							mb->PointerXY[x][y] = obj;
+						}
+						else
+							obj = mb->PointerXY[x][y];
+
+						bool cyclePointed = false;
+						bool waterBreak = false;
+
+						for (; obj != NULL; obj = obj->m_NextXY)
+						{
+							int z = obj->Z;
+
+							if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
+								continue;
+
+							int testMinZ = drawY;
+							int testMaxZ = drawY - (z * 4);
+
+							if (obj->IsLandObject() && ((TLandObject*)obj)->IsStretched)
+								testMinZ -= (((TLandObject*)obj)->MinZ * 4);
+							else
+								testMinZ = testMaxZ;
+
+							if (testMinZ >= m_RenderBounds.MinPixelsY && testMaxZ <= m_RenderBounds.MaxPixelsY)
+							{
+								if (m_RenderListCount >= m_RenderListSize)
+									IncreaseRenderList();
+
+								bool canAdd = false;
+
+								if (!undergroundLayer && obj->IsBackground() && obj->IsSurface() && !obj->IsLandObject())
+									canAdd = true;
+								else if (undergroundLayer == 1 && !(obj->IsBackground() && obj->IsSurface()) && !obj->IsLandObject())
+									canAdd = true;
+								else if (undergroundLayer == 2 && (obj->IsLandObject() || waterBreak))
+									canAdd = true;
+
+								if (canAdd)
+								{
+									m_RenderList[m_RenderListCount].Obj = obj;
+									m_RenderList[m_RenderListCount].X = drawX;
+									m_RenderList[m_RenderListCount].Y = drawY;
+									m_RenderList[m_RenderListCount].GrayColor = grayColor;
+
+									m_RenderListCount++;
+								}
+							}
+
+							if (undergroundLayer == 2 && obj->IsLandObject())
+							{
+								mb->PointerXY[x][y] = obj->m_NextXY;
+
+								if (obj->m_NextXY != NULL)
+								{
+									pointed = true;
+
+									if (undergroundLayer == 2 && obj->m_NextXY->IsWet())
+									{
+										mb->PointerXY[x][y] = obj->m_NextXY->m_NextXY;
+										waterBreak = true;
+
+										if (obj->m_NextXY->m_NextXY != NULL)
+											pointed = true;
+									}
+								}
+
+								cyclePointed = true;
+
+								if (!waterBreak)
+									break;
+							}
+							else if (waterBreak)
+								break;
+							else if (obj->IsLandObject())
+								break;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	while (pointed)
+	{
+		pointed = false;
+
+		int currentZ = 1000;
+
+		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+		{
+			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
+			{
+				int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+
+				TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
+				if (mb == NULL)
+				{
+					mb = MapManager->AddBlock(blockIndex);
+					mb->X = bx;
+					mb->Y = by;
+					MapManager->LoadBlock(mb);
+				}
+
+				IFOR(x, 0, 8)
+				{
+					int currentX = bx * 8 + x;
+
+					if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
+						continue;
+
+					int offsetX = currentX - m_RenderBounds.PlayerX;
+
+					IFOR(y, 0, 8)
+					{
+						int currentY = by * 8 + y;
+
+						if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
+							continue;
+
+						int offsetY = currentY - m_RenderBounds.PlayerY;
+
+						int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+						int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+
+						if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+							continue;
+
+						WORD grayColor = 0;
+
+						if (ConfigManager.GrayOutOfRangeObjects)
+						{
+							POINT testPos = { currentX, currentY };
+
+							if (GetDistance(g_Player, testPos) > g_UpdateRange)
+								grayColor = 0x0386;
+						}
+
+						for (TRenderWorldObject *obj = mb->PointerXY[x][y]; obj != NULL; obj = obj->m_NextXY)
+						{
+							int z = obj->Z;
+
+							if (obj->IsInternal() || z >= m_MaxDrawZ)
+								continue;
+
+							int testZ = drawY - (z * 4);
+
+							if (testZ >= m_RenderBounds.MinPixelsY && testZ <= m_RenderBounds.MaxPixelsY)
+							{
+								if (obj->IsBackground() && obj->IsSurface() && z < currentZ)
+								{
+									currentZ = z;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//TPRINT("currentZ[%i]=%i\n", cycles, currentZ);
+
+		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+		{
+			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
+			{
+				int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+
+				TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
+				if (mb == NULL)
+				{
+					mb = MapManager->AddBlock(blockIndex);
+					mb->X = bx;
+					mb->Y = by;
+					MapManager->LoadBlock(mb);
+				}
+
+				IFOR(x, 0, 8)
+				{
+					int currentX = bx * 8 + x;
+
+					if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
+						continue;
+
+					int offsetX = currentX - m_RenderBounds.PlayerX;
+
+					IFOR(y, 0, 8)
+					{
+						int currentY = by * 8 + y;
+
+						if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
+							continue;
+
+						int offsetY = currentY - m_RenderBounds.PlayerY;
+
+						int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+						int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+
+						if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+							continue;
+
+						WORD grayColor = 0;
+
+						if (ConfigManager.GrayOutOfRangeObjects)
+						{
+							POINT testPos = { currentX, currentY };
+
+							if (GetDistance(g_Player, testPos) > g_UpdateRange)
+								grayColor = 0x0386;
+						}
+
+						bool cyclePointed = false;
+
+						for (TRenderWorldObject *obj = mb->PointerXY[x][y]; obj != NULL; obj = obj->m_NextXY)
+						{
+							int z = obj->Z;
+
+							if (z > currentZ)
+							{
+								pointed = true;
+								cyclePointed = true;
+								mb->PointerXY[x][y] = obj;
+
+								break;
+							}
+
+							if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
+								continue;
+
+							int testMinZ = drawY;
+							int testMaxZ = drawY - (z * 4);
+
+							if (obj->IsLandObject() && ((TLandObject*)obj)->IsStretched)
+								testMinZ -= (((TLandObject*)obj)->MinZ * 4);
+							else
+								testMinZ = testMaxZ;
+
+							if (testMinZ >= m_RenderBounds.MinPixelsY && testMaxZ <= m_RenderBounds.MaxPixelsY)
+							{
+								if (m_RenderListCount >= m_RenderListSize)
+									IncreaseRenderList();
+
+								m_RenderList[m_RenderListCount].Obj = obj;
+								m_RenderList[m_RenderListCount].X = drawX;
+								m_RenderList[m_RenderListCount].Y = drawY;
+								m_RenderList[m_RenderListCount].GrayColor = grayColor;
+
+								m_RenderListCount++;
+
+								if (obj->IsGameObject())
+								{
+									if (!((TGameObject*)obj)->Locked() && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
+									{
+										int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
+
+										m_ObjectHandlesList[index].Obj = (TGameObject*)obj;
+										m_ObjectHandlesList[index].X = drawX;
+										m_ObjectHandlesList[index].Y = drawY;
+
+										m_ObjectHandlesCount++;
+									}
+								}
+								else if (obj->IsFoliage() && ((TRenderStaticObject*)obj)->FoliageTransparentIndex != g_FoliageIndex)
+								{
+									char index = 0;
+
+									POINT fp = { 0, 0 };
+									UO->GetArtDimension(obj->Graphic, fp);
+
+									TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (z * 4), fp.x, fp.y);
+
+									if (fib.InRect(g_PlayerRect))
+									{
+										index = g_FoliageIndex;
+
+										CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
+									}
+
+									((TRenderStaticObject*)obj)->FoliageTransparentIndex = index;
+								}
+
+								if (obj->IsBackground() && obj->IsSurface())
+								{
+									mb->PointerXY[x][y] = obj->m_NextXY;
+
+									if (obj->m_NextXY != NULL)
+										pointed = true;
+
+									cyclePointed = true;
+
+									break;
+								}
+							}
+						}
+
+						if (!cyclePointed)
+							mb->PointerXY[x][y] = NULL;
+					}
+				}
+			}
+		}
+		cycles++;
+	}
+	//TPRINT("cycles=%i\n", cycles);
+#endif
+
+#if UO_LAYERED_RENDER == 2
 	bool overLand = false;
 	bool pointed = true;
-	int cycle = 0;
+	int cycles = 0;
+
+	while (pointed)
+	{
+		pointed = false;
+
+		int currentZ = 1000;
+
+		if (overLand)
+		{
+			for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+			{
+				for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
+				{
+					int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+
+					TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
+					if (mb == NULL)
+					{
+						mb = MapManager->AddBlock(blockIndex);
+						mb->X = bx;
+						mb->Y = by;
+						MapManager->LoadBlock(mb);
+					}
+
+					IFOR(x, 0, 8)
+					{
+						int currentX = bx * 8 + x;
+
+						if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
+							continue;
+
+						int offsetX = currentX - m_RenderBounds.PlayerX;
+
+						IFOR(y, 0, 8)
+						{
+							int currentY = by * 8 + y;
+
+							if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
+								continue;
+
+							int offsetY = currentY - m_RenderBounds.PlayerY;
+
+							int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+							int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+
+							if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+								continue;
+
+							WORD grayColor = 0;
+
+							if (ConfigManager.GrayOutOfRangeObjects)
+							{
+								POINT testPos = { currentX, currentY };
+
+								if (GetDistance(g_Player, testPos) > g_UpdateRange)
+									grayColor = 0x0386;
+							}
+
+							for (TRenderWorldObject *obj = mb->PointerXY[x][y]; obj != NULL; obj = obj->m_NextXY)
+							{
+								int z = obj->Z;
+
+								if (obj->IsInternal() || z >= m_MaxDrawZ)
+									continue;
+
+								int testZ = drawY - (z * 4);
+
+								if (testZ >= m_RenderBounds.MinPixelsY && testZ <= m_RenderBounds.MaxPixelsY)
+								{
+									if (obj->IsBackground() && obj->IsSurface() && z < currentZ)
+									{
+										currentZ = z;
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		//TPRINT("currentZ[%i]=%i\n", cycles, currentZ);
+		
+		for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
+		{
+			for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
+			{
+				int blockIndex = (bx * g_MapBlockY[g_CurrentMap]) + by;
+
+				TMapBlock *mb = MapManager->GetBlock(blockIndex);
+
+				if (mb == NULL)
+				{
+					mb = MapManager->AddBlock(blockIndex);
+					mb->X = bx;
+					mb->Y = by;
+					MapManager->LoadBlock(mb);
+				}
+
+				IFOR(x, 0, 8)
+				{
+					int currentX = bx * 8 + x;
+
+					if (currentX < m_RenderBounds.RealMinRangeX || currentX > m_RenderBounds.RealMaxRangeX)
+						continue;
+
+					int offsetX = currentX - m_RenderBounds.PlayerX;
+
+					IFOR(y, 0, 8)
+					{
+						int currentY = by * 8 + y;
+
+						if (currentY < m_RenderBounds.RealMinRangeY || currentY > m_RenderBounds.RealMaxRangeY)
+							continue;
+
+						int offsetY = currentY - m_RenderBounds.PlayerY;
+
+						int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+						int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+
+						if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+							continue;
+
+						WORD grayColor = 0;
+
+						if (ConfigManager.GrayOutOfRangeObjects)
+						{
+							POINT testPos = { currentX, currentY };
+
+							if (GetDistance(g_Player, testPos) > g_UpdateRange)
+								grayColor = 0x0386;
+						}
+
+						TRenderWorldObject *obj = NULL;
+
+						if (!overLand)
+						{
+							mb->PointerXY[x][y] = NULL;
+							obj = mb->GetRender(x, y);
+						}
+						else
+							obj = mb->PointerXY[x][y];
+
+						bool cyclePointed = false;
+						bool waterBreak = false;
+
+						for (; obj != NULL; obj = obj->m_NextXY)
+						{
+							int z = obj->Z;
+
+							if (z > currentZ)
+							{
+								pointed = true;
+								cyclePointed = true;
+								mb->PointerXY[x][y] = obj;
+
+								break;
+							}
+
+							if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
+								continue;
+
+							int testMinZ = drawY;
+							int testMaxZ = drawY - (z * 4);
+
+							if (obj->IsLandObject() && ((TLandObject*)obj)->IsStretched)
+								testMinZ -= (((TLandObject*)obj)->MinZ * 4);
+							else
+								testMinZ = testMaxZ;
+
+							if (testMinZ >= m_RenderBounds.MinPixelsY && testMaxZ <= m_RenderBounds.MaxPixelsY)
+							{
+								if (m_RenderListCount >= m_RenderListSize)
+									IncreaseRenderList();
+
+								m_RenderList[m_RenderListCount].Obj = obj;
+								m_RenderList[m_RenderListCount].X = drawX;
+								m_RenderList[m_RenderListCount].Y = drawY;
+								m_RenderList[m_RenderListCount].GrayColor = grayColor;
+
+								m_RenderListCount++;
+
+								if (obj->IsGameObject())
+								{
+									if (!((TGameObject*)obj)->Locked() && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
+									{
+										int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
+
+										m_ObjectHandlesList[index].Obj = (TGameObject*)obj;
+										m_ObjectHandlesList[index].X = drawX;
+										m_ObjectHandlesList[index].Y = drawY;
+
+										m_ObjectHandlesCount++;
+									}
+								}
+								else if (obj->IsFoliage() && ((TRenderStaticObject*)obj)->FoliageTransparentIndex != g_FoliageIndex)
+								{
+									char index = 0;
+
+									POINT fp = { 0, 0 };
+									UO->GetArtDimension(obj->Graphic, fp);
+
+									TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (z * 4), fp.x, fp.y);
+
+									if (fib.InRect(g_PlayerRect))
+									{
+										index = g_FoliageIndex;
+
+										CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
+									}
+
+									((TRenderStaticObject*)obj)->FoliageTransparentIndex = index;
+								}
+							}
+
+							bool canBePointed = false;
+
+							if (!overLand)
+								canBePointed = obj->IsLandObject();
+							else
+								canBePointed = (obj->IsBackground() && obj->IsSurface());
+
+							if (canBePointed)
+							{
+								mb->PointerXY[x][y] = obj->m_NextXY;
+
+								if (obj->m_NextXY != NULL)
+								{
+									pointed = true;
+
+									if (!overLand && obj->m_NextXY->IsWet())
+									{
+										mb->PointerXY[x][y] = obj->m_NextXY->m_NextXY;
+										waterBreak = true;
+
+										if (obj->m_NextXY->m_NextXY != NULL)
+											pointed = true;
+									}
+								}
+
+								cyclePointed = true;
+
+								if (!waterBreak)
+									break;
+							}
+							else if (waterBreak)
+								break;
+						}
+
+						if (!cyclePointed)
+							mb->PointerXY[x][y] = NULL;
+					}
+				}
+			}
+		}
+		cycles++;
+		overLand = true;
+	}
+	//TPRINT("cycles=%i\n", cycles);
+#endif
+
+#if UO_LAYERED_RENDER == 1
+	bool overLand = false;
+	bool pointed = true;
 
 	while (pointed)
 	{
@@ -350,13 +1312,15 @@ void TGameScreen::CalculateRenderList()
 						bool cyclePointed = false;
 						bool waterBreak = false;
 
+						TRenderWorldObject *endObj = NULL;
+
 						for (; obj != NULL; obj = obj->m_NextXY)
 						{
 							int z = obj->Z;
 
 							if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
 							{
-								mb->PointerXY[x][y] = NULL; // obj->m_NextXY;
+								//mb->PointerXY[x][y] = NULL;
 								continue;
 							}
 
@@ -370,18 +1334,15 @@ void TGameScreen::CalculateRenderList()
 
 							if (testMinZ >= m_RenderBounds.MinPixelsY && testMaxZ <= m_RenderBounds.MaxPixelsY)
 							{
-								//if (cycle == 2)
-								{
-									if (m_RenderListCount >= m_RenderListSize)
-										IncreaseRenderList();
+								if (m_RenderListCount >= m_RenderListSize)
+									IncreaseRenderList();
 
-									m_BufferRenderList[m_RenderListCount].Obj = obj;
-									m_BufferRenderList[m_RenderListCount].X = drawX;
-									m_BufferRenderList[m_RenderListCount].Y = drawY;
-									m_BufferRenderList[m_RenderListCount].GrayColor = grayColor;
+								m_RenderList[m_RenderListCount].Obj = obj;
+								m_RenderList[m_RenderListCount].X = drawX;
+								m_RenderList[m_RenderListCount].Y = drawY;
+								m_RenderList[m_RenderListCount].GrayColor = grayColor;
 
-									m_RenderListCount++;
-								}
+								m_RenderListCount++;
 
 								if (obj->IsGameObject())
 								{
@@ -414,42 +1375,59 @@ void TGameScreen::CalculateRenderList()
 
 									((TRenderStaticObject*)obj)->FoliageTransparentIndex = index;
 								}
-							}
 
-							bool canBePointed = false;
+								bool canBePointed = false;
 
-							if (!overLand)
-								canBePointed = obj->IsLandObject();
-							else
-								canBePointed = (obj->IsBackground() && obj->IsSurface());
-							//else if (!obj->IsWall() && obj->IsStaticGroupObject())
-							//	canBePointed = (((TRenderStaticObject*)obj)->CanBeTransparent & 0xF); //obj->IsBackground() && obj->IsSurface();
+								if (!overLand)
+									canBePointed = obj->IsLandObject();
+								else
+									canBePointed = ((obj->IsBackground() && obj->IsSurface()) || (endObj == obj));
 
-							if (canBePointed)
-							{
-								mb->PointerXY[x][y] = obj->m_NextXY;
-
-								if (obj->m_NextXY != NULL)
+								if (canBePointed)
 								{
-									pointed = true;
+									mb->PointerXY[x][y] = obj->m_NextXY;
 
-									if (!overLand && obj->m_NextXY->IsWet())
+									if (obj->m_NextXY != NULL)
 									{
-										mb->PointerXY[x][y] = obj->m_NextXY->m_NextXY;
-										waterBreak = true;
+										pointed = true;
 
-										if (obj->m_NextXY->m_NextXY != NULL)
-											pointed = true;
+										if (!overLand)
+										{
+											if (obj->m_NextXY->IsWet())
+											{
+												mb->PointerXY[x][y] = obj->m_NextXY->m_NextXY;
+												waterBreak = true;
+
+												if (obj->m_NextXY->m_NextXY != NULL)
+													pointed = true;
+											}
+										}
+										else if (endObj == NULL)
+										{
+											for (TRenderWorldObject *testObj = NULL; testObj != NULL; testObj = testObj->m_NextXY)
+											{
+												if (testObj->Z > z)
+													break;
+
+												if (testObj->IsBackground() && testObj->IsSurface())
+												{
+													mb->PointerXY[x][y] = endObj->m_NextXY;
+													endObj = testObj;
+
+													break;
+												}
+											}
+										}
 									}
+
+									cyclePointed = true;
+
+									if (!waterBreak)
+										break;
 								}
-
-								cyclePointed = true;
-
-								if (!waterBreak)
+								else if (waterBreak)
 									break;
 							}
-							else if (waterBreak)
-								break;
 						}
 
 						if (!cyclePointed)
@@ -459,10 +1437,11 @@ void TGameScreen::CalculateRenderList()
 			}
 		}
 
-		cycle++;
 		overLand = true;
 	}
-#else
+#endif
+
+#if UO_LAYERED_RENDER == 0
 	for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 	{
 		for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
@@ -534,35 +1513,15 @@ void TGameScreen::CalculateRenderList()
 						if (m_RenderListCount >= m_RenderListSize)
 							IncreaseRenderList();
 
-						m_BufferRenderList[m_RenderListCount].Obj = obj;
-						m_BufferRenderList[m_RenderListCount].X = drawX;
-						m_BufferRenderList[m_RenderListCount].Y = drawY;
-						m_BufferRenderList[m_RenderListCount].GrayColor = grayColor;
+						m_RenderList[m_RenderListCount].Obj = obj;
+						m_RenderList[m_RenderListCount].X = drawX;
+						m_RenderList[m_RenderListCount].Y = drawY;
+						m_RenderList[m_RenderListCount].GrayColor = grayColor;
 
 						m_RenderListCount++;
 
 						if (obj->IsGameObject())
 						{
-							/*if (((TGameObject*)obj)->NPC || ((TGameObject*)obj)->IsCorpse())
-							{
-								int z = obj->Z;
-								int zSize = (int)zList.size();
-								bool canAddZ = true;
-
-								IFOR(zi, 0, zSize)
-								{
-									if (zList[zi] == z)
-									{
-										canAddZ = false;
-										break;
-									}
-								}
-
-								if (canAddZ)
-									zList.push_back(z);
-							}*/
-
-
 							if (!((TGameObject*)obj)->Locked() && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
 							{
 								int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
@@ -601,92 +1560,6 @@ void TGameScreen::CalculateRenderList()
 
 	if (m_ObjectHandlesCount > MAX_OBJECT_HANDLES)
 		m_ObjectHandlesCount = MAX_OBJECT_HANDLES;
-
-	if (m_RenderListCount)
-	{
-		memcpy(&m_RenderList[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListCount);
-		/*int zSize = (int)zList.size();
-
-		if (!zSize || true)
-			memcpy(&m_RenderList[0], &m_BufferRenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListCount);
-		else
-		{
-			auto compareFunction = [](int a, int b)
-			{
-				return (a < b);
-			};
-
-			std::sort(zList.begin(), zList.end(), compareFunction);
-
-			int count = 0;
-
-			IFOR(i, 0, zSize)
-			{
-				int currentZ = zList[i];
-
-				IFOR(m, 0, 2)
-				{
-					IFOR(j, 0, m_RenderListCount)
-					{
-						TRenderWorldObject *obj = m_BufferRenderList[j].Obj;
-
-						bool canBeAdd = false;
-
-						if (obj != NULL)
-						{
-							int z = obj->Z;
-
-							if (obj->IsLandObject())
-							{
-								TLandObject *land = (TLandObject*)obj;
-
-								if (land->IsStretched)
-									z = land->Serial;
-								else
-									z = obj->Z;
-							}
-
-							if (!m)
-								canBeAdd = (z < currentZ);
-							else
-							{
-								if (z == currentZ)
-									canBeAdd = ((obj->IsSurface() && (obj->IsBackground() || obj->IsImpassable())) || obj->IsLandObject());
-							}
-
-							/*if (z <= currentZ)
-							{
-								canBeAdd = (z < currentZ);
-
-								if (!canBeAdd)
-									canBeAdd = ((obj->IsSurface() && (obj->IsBackground() || obj->IsImpassable())) || obj->IsLandObject());
-							}*/
-						/*}
-
-						if (canBeAdd)
-						{
-							memcpy(&m_RenderList[count], &m_BufferRenderList[j], sizeof(RENDER_OBJECT_DATA));
-							count++;
-							m_BufferRenderList[j].Obj = NULL;
-						}
-					}
-				}
-			}
-
-			if (count < m_RenderListCount)
-			{
-				IFOR(i, 0, m_RenderListCount)
-				{
-					if (m_BufferRenderList[i].Obj != NULL)
-					{
-						memcpy(&m_RenderList[count], &m_BufferRenderList[i], sizeof(RENDER_OBJECT_DATA));
-						count++;
-						m_BufferRenderList[i].Obj = NULL;
-					}
-				}
-			}
-		}*/
-	}
 }
 //---------------------------------------------------------------------------
 void TGameScreen::CalculateGameWindowBounds()

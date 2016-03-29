@@ -20,8 +20,8 @@
 #ifndef DefinitionMacroH
 #define DefinitionMacroH
 //---------------------------------------------------------------------------
-#define UO_DEPTH_TEST 0
-#define UO_LAYERED_DEPTH_TEST 1
+#define UO_DEPTH_TEST 1
+#define UO_LAYERED_RENDER 0
 //---------------------------------------------------------------------------
 #define UO_DEBUG_INFO 1
 //---------------------------------------------------------------------------
