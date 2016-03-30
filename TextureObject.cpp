@@ -155,6 +155,30 @@ void TCircleOfTransparencyTexture::Draw(int x, int y)
 	}
 }
 //---------------------------------------------------------------------------
+void TCircleOfTransparencyTexture::Redraw()
+{
+	glClear(GL_STENCIL_BUFFER_BIT);
+
+	if (ConfigManager.UseCircleTrans && Texture != 0)
+	{
+		glEnable(GL_STENCIL_TEST);
+
+		glColorMask(false, false, false, true);
+
+		glStencilFunc(GL_ALWAYS, 1, 1);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+		g_GL.Draw(Texture, m_X, m_Y, m_Width, m_Height);
+
+		glColorMask(true, true, true, true);
+
+		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+		glStencilFunc(GL_NOTEQUAL, 1, 1);
+
+		glDisable(GL_STENCIL_TEST);
+	}
+}
+//---------------------------------------------------------------------------
 TTextureAnimationFrame::TTextureAnimationFrame(int frame)
 : TBaseQueueItem(), m_Frame(frame), m_Width(0), m_Height(0), m_CenterX(0),
 m_CenterY(0), Texture(0)

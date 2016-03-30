@@ -54,7 +54,6 @@ private:
 	WORD m_Color;
 	int m_AnimGroup;
 	BYTE m_Direction;
-	bool m_Grayed;
 	int m_Sitting;
 
 	//Данные о тенях

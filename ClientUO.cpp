@@ -4360,7 +4360,6 @@ void TUltimaOnline::GoToWebLink(string url)
 void TUltimaOnline::RemoveRangedObjects()
 {
 	int objectsRange = g_UpdateRange + 1;
-	//int multiRange = g_UpdateRange + 12;
 
 	if (World != NULL)
 	{
@@ -4374,8 +4373,8 @@ void TUltimaOnline::RemoveRangedObjects()
 			{
 				if (go->Graphic >= 0x4000)
 				{
-					//if (GetMultiDistance(g_RemoveRangeXY, go) > objectsRange) //multiRange)
-					if (GetDistance(g_RemoveRangeXY, go) > 31)
+					if (GetMultiDistance(g_RemoveRangeXY, go) > objectsRange)
+					//if (GetDistance(g_RemoveRangeXY, go) > 31)
 						World->RemoveObject(go);
 				}
 				else if (GetDistance(g_RemoveRangeXY, go) > objectsRange)

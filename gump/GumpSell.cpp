@@ -383,6 +383,9 @@ int TGumpSell::Draw(bool &mode)
 
 	CalculateGumpState();
 
+	if (g_GumpPressedScroller)
+		g_GumpPressedElement = g_LastObjectLeftMouseDown;
+
 	DWORD ticks = GetTickCount();
 
 	if (!m_NoClose)

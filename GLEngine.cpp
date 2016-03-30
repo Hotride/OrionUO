@@ -179,7 +179,6 @@ void TGLEngine::BeginDraw()
 	
 	glDisable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
-	glDisable(GL_LIGHTING);
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
 	g_ZBuffer = 0;

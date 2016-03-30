@@ -70,6 +70,9 @@ public:
 	//Отрисовать текстуру
 	void Draw(int x, int y);
 
+	//Отрисовать текстуру
+	void Redraw();
+
 	//Данные текстуры
 	PBYTE PixelData;
 };

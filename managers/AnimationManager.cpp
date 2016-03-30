@@ -195,7 +195,7 @@ int TAnimationManager::m_UsedLayers[8][USED_LAYER_COLUT] =
 //----------------------------------------------------------------------------
 TAnimationManager::TAnimationManager()
 : m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0), m_Direction(0),
-m_Grayed(false), m_ShadowCount(0), m_Sitting(0)
+m_ShadowCount(0), m_Sitting(0)
 {
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
@@ -208,11 +208,6 @@ m_Grayed(false), m_ShadowCount(0), m_Sitting(0)
 TAnimationManager::~TAnimationManager()
 {
 	ClearUnusedTextures(GetTickCount() + 100000);
-	//1426, 1679 ->center
-	//1426, 1680 ->s
-	//1425, 1680 ->sw
-	//1427, 1679 ->e
-	//1427, 1678 ->ne
 }
 //----------------------------------------------------------------------------
 void TAnimationManager::AddShadow(GLuint texture, int drawX, int drawY, int zBuffer, int width, int height, bool mirror)
@@ -1115,7 +1110,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 	if (!id)
 	{
-		partialHue = obj->IsHuman();
+		partialHue = true; // obj->IsHuman();
 		id = obj->GetMountAnimation();
 	}
 
@@ -1327,7 +1322,6 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	WORD targetColor = 0;
 	bool needHPLine = false;
 	DWORD serial = obj->Serial;
-	m_Grayed = g_GrayedPixels;
 
 	if (obj->Hidden())
 		m_Color = 0x038A;
@@ -1362,8 +1356,16 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	
 	int lightOffset = 20;
 	int drawX = (int)(x + obj->OffsetX);
-	int drawY = (int)(y + obj->OffsetY) - (z * 4) - obj->OffsetZ;
+	int drawY = (int)(y + obj->OffsetY) - (z * 4) - (int)obj->OffsetZ;
 	
+#if UO_TILE_UNDERCHAR_RENDER == 1
+	//1426, 1679 ->center
+	//1426, 1680 ->s
+	//1425, 1680 ->sw
+	//1427, 1679 ->e
+	//1427, 1678 ->ne
+#endif
+
 	if (goi != NULL) //Draw mount
 	{
 		m_Sitting = 0;
@@ -1650,8 +1652,6 @@ void TAnimationManager::DrawCorpse(TGameItem *obj, int x, int y, int z)
 	bool mirror = false;
 
 	GetAnimDirection(m_Direction, mirror);
-
-	m_Grayed = g_GrayedPixels;
 
 	if (obj->Hidden())
 		m_Color = 0x038A;

@@ -567,6 +567,8 @@ void TGameItem::LoadMulti()
 			multi->MaxY = maxY;
 		}
 
+		//TPRINT("multiData: %i %i %i %i\n", minX, minY, maxX, maxY);
+
 		TGumpMinimap *minimap = (TGumpMinimap*)GumpManager->GetGump(g_PlayerSerial, 0, GT_MINIMAP);
 
 		if (minimap != NULL)

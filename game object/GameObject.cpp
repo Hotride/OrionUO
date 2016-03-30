@@ -508,7 +508,34 @@ int GetMultiDistance(POINT current, TGameObject *target)
 
 	if (target != NULL && target->Graphic >= 0x4000)
 	{
-		QFOR(multi, target->m_Items, TMulti*)
+		TMulti *multi = (TMulti*)target->m_Items;
+
+		int multiDistance = abs(multi->MinX);
+		int testDistance = abs(multi->MinY);
+
+		if (multiDistance < testDistance)
+			multiDistance = testDistance;
+
+		testDistance = abs(multi->MaxX) + 1;
+
+		if (multiDistance < testDistance)
+			multiDistance = testDistance;
+
+		testDistance = abs(multi->MaxY) + 1;
+
+		if (multiDistance < testDistance)
+			multiDistance = testDistance;
+
+		int distX = abs(target->X - current.x) - multiDistance;
+		int distY = abs(target->Y - current.y) - multiDistance;
+
+		if (distY > distX)
+			distX = distY;
+
+		if (distX < result)
+			result = distX;
+
+		/*QFOR(multi, target->m_Items, TMulti*)
 		{
 			int distx = abs(multi->X - current.x);
 			int disty = abs(multi->Y - current.y);
@@ -518,7 +545,9 @@ int GetMultiDistance(POINT current, TGameObject *target)
 
 			if (distx < result)
 				result = distx;
-		}
+		}*/
+
+		TPRINT("multiDistance = %i; %i %i %i %i; => %i\n", multiDistance, multi->MinX, multi->MinY, multi->MaxX, multi->MaxY, result);
 	}
 
 	return result;

@@ -455,6 +455,9 @@ int TGumpBuy::Draw(bool &mode)
 
 	CalculateGumpState();
 
+	if (g_GumpPressedScroller)
+		g_GumpPressedElement = g_LastObjectLeftMouseDown;
+
 	if (!m_Count)
 		CalculateBuyListCount(); //Вычисление размера байлиста (только 1 раз)
 
