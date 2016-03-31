@@ -51,6 +51,10 @@ TSelectProfessionScreen::~TSelectProfessionScreen()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация
+@return 
+*/
 void TSelectProfessionScreen::Init()
 {
 	ProfessionManager->Selected = (TBaseProfession*)ProfessionManager->m_Items;
@@ -82,7 +86,12 @@ void TSelectProfessionScreen::Init()
 	UO->ExecuteGumpPart(0x15E8, 3); //Earth button
 }
 //---------------------------------------------------------------------------
-void TSelectProfessionScreen::ProcessSmoothAction(BYTE action)
+/*!
+Обработка события после плавного затемнения экрана
+@param [__in_opt] action Идентификатор действия
+@return 
+*/
+void TSelectProfessionScreen::ProcessSmoothAction( __in_opt BYTE action)
 {
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
@@ -107,6 +116,10 @@ void TSelectProfessionScreen::ProcessSmoothAction(BYTE action)
 		UO->InitScreen(GS_CREATE);
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация всплывающих подсказок
+@return 
+*/
 void TSelectProfessionScreen::InitPopupHelp()
 {
 	if (!ConfigManager.PopupHelpEnabled)
@@ -161,14 +174,25 @@ void TSelectProfessionScreen::InitPopupHelp()
 	}
 }
 //---------------------------------------------------------------------------
-int TSelectProfessionScreen::Render(bool mode)
+/*!
+Отрисовка/выбор объектов
+@param [__in] mode true - отрисовка, false - выбор
+@return При выборе объектов - идентификатор выбранного объекта
+*/
+int TSelectProfessionScreen::Render( __in bool mode)
 {
 	if (ConnectionManager.ClientVersion >= CV_308Z)
-		return RenderNew(mode);
-	
-	return RenderOld(mode);
+		return RenderNew(__in mode);
+
+	return RenderOld(__in mode);
+
 }
 //---------------------------------------------------------------------------
+/*!
+Отрисовка/выбор объектов (старые версии клиентов)
+@param [__in] mode true - отрисовка, false - выбор
+@return При выборе объектов - идентификатор выбранного объекта
+*/
 int TSelectProfessionScreen::RenderOld(bool &mode)
 {
 	DWORD ticks = GetTickCount();
@@ -185,7 +209,7 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 	if (g_LeftMouseDown && g_LastObjectLeftMouseDown == g_LastSelectedObject)
 		CanPressedButton = g_LastObjectLeftMouseDown;
 	
-	//Проверим, вдруг необходимо изменить положение отображаемого элемента
+	//!Проверим, вдруг необходимо изменить положение отображаемого элемента
 	if (g_LeftMouseDown && m_LastScrollChangeTime < ticks)
 	{
 		if (g_LastObjectLeftMouseDown == ID_SPS_SCROLLBAR_UP) //Скроллинг вверх (гампом-стрелкой)
@@ -529,6 +553,11 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Отрисовка/выбор объектов (новые версии клиентов)
+@param [__in] mode true - отрисовка, false - выбор
+@return При выборе объектов - идентификатор выбранного объекта
+*/
 int TSelectProfessionScreen::RenderNew(bool &mode)
 {
 	DWORD ticks = GetTickCount();
@@ -874,6 +903,10 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Нажатие левой кнопки мыши
+@return 
+*/
 void TSelectProfessionScreen::OnLeftMouseDown()
 {
 	Render(false);
@@ -920,6 +953,10 @@ void TSelectProfessionScreen::OnLeftMouseDown()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Отпускание левой кнопки мыши
+@return 
+*/
 void TSelectProfessionScreen::OnLeftMouseUp()
 {
 	Render(false);
@@ -1050,7 +1087,12 @@ void TSelectProfessionScreen::OnLeftMouseUp()
 	g_LastObjectLeftMouseDown = 0;
 }
 //----------------------------------------------------------------------------
-void TSelectProfessionScreen::OnMouseWheel(MOUSE_WHEEL_STATE state)
+/*!
+Обработка средней кнопки (колесика) мыши
+@param [__in] state Состояние колесика
+@return 
+*/
+void TSelectProfessionScreen::OnMouseWheel( __in MOUSE_WHEEL_STATE state)
 {
 	if (!g_LeftMouseDown && !g_RightMouseDown && m_LastScrollChangeTime < GetTickCount())
 	{
@@ -1071,7 +1113,13 @@ void TSelectProfessionScreen::OnMouseWheel(MOUSE_WHEEL_STATE state)
 	}
 }
 //----------------------------------------------------------------------------
-void TSelectProfessionScreen::ListingList(bool direction, int divizor)
+/*!
+Пролистать список
+@param [__in] direction Направление
+@param [__in_opt] divizor Делитель
+@return 
+*/
+void TSelectProfessionScreen::ListingList( __in bool direction, __in_opt int divizor)
 {
 	if (direction) //Up
 	{
@@ -1095,7 +1143,11 @@ void TSelectProfessionScreen::ListingList(bool direction, int divizor)
 
 	m_LastScrollChangeTime = GetTickCount() + (SCROLL_LISTING_DELAY / divizor);
 }
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------3
+/*!
+Получить высоту скроллбокса
+@return
+*/
 int TSelectProfessionScreen::GetScrollBoxHeight()
 {
 	int result = 10;
@@ -1111,7 +1163,14 @@ int TSelectProfessionScreen::GetScrollBoxHeight()
 	return result;
 }
 //---------------------------------------------------------------------------
-void TSelectProfessionScreen::ShuffleStats(int x, int maxSum, int maxVal)
+/*!
+Изменение ползунков характеристик
+@param [__in] x Координата X
+@param [__in] maxSum Максимальная сумма характеристик
+@param [__in] maxVal Максимальное значение характеристик
+@return 
+*/
+void TSelectProfessionScreen::ShuffleStats( __in int x, __in int maxSum, __in int maxVal)
 {
 	if (x < 0)
 		x = 0;
@@ -1185,7 +1244,12 @@ void TSelectProfessionScreen::ShuffleStats(int x, int maxSum, int maxVal)
 	profession->Int = stats[2];
 }
 //---------------------------------------------------------------------------
-void TSelectProfessionScreen::ShuffleSkills(int x)
+/*!
+Изменение ползунков навыков
+@param [__in] x Координата X
+@return 
+*/
+void TSelectProfessionScreen::ShuffleSkills( __in int x)
 {
 	if (x < 0)
 		x = 0;

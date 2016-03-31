@@ -23,39 +23,27 @@
 class TSelectProfessionScreen : public TBaseScreen
 {
 private:
-	//Смещение в пикселях отображаемой информации в скроллбоксе
+	//!Смещение в пикселях отображаемой информации в скроллбоксе
 	int m_PixelOffset;
 
-	//Последнее время изменения положения информации в скроллбоксе
+	//!Последнее время изменения положения информации в скроллбоксе
 	DWORD m_LastScrollChangeTime;
 
-	//Выбранный навык
+	//!Выбранный навык
 	int m_SkillSelection;
 
-	//Идентификаторы событий для плавного перехода
+	//!Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_SPS_QUIT = 1;
 	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_CHARACTER = 2;
 	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_GAME_CONNECT = 3;
 	static const BYTE ID_SMOOTH_SPS_GO_SCREEN_CREATE = 4;
 
-	//Изменение ползунков характеристик
-	void ShuffleStats(int x, int maxSum, int maxVal);
-
-	//Изменение ползунков навыков
-	void ShuffleSkills(int x);
-
-	//Пролистать список
-	void ListingList(bool direction, int divizor = 1);
-
-	//Получить высоту скроллбокса
-	int GetScrollBoxHeight();
-
-	//Объекты текста
+	//!Объекты текста
 	TTextTexture m_Text;
 	TTextTexture m_TextStat[3];
 	TTextTexture m_TextSkillInList[56][2];
 
-	//Идентификаторы кнопок
+	//!Идентификаторы кнопок
 	static const int ID_SPS_QUIT = 1;
 	static const int ID_SPS_ARROW_PREV = 2;
 	static const int ID_SPS_ARROW_NEXT = 3;
@@ -70,29 +58,100 @@ private:
 	static const int ID_SPS_SKILLS_FILED = 16;
 	static const int ID_SPS_LABEL = 20;
 	static const int ID_SPS_SKILLS_LIST = 50;
-	
-	int RenderOld(bool &mode);
-	int RenderNew(bool &mode);
+
+	/*!
+	Изменение ползунков характеристик
+	@param [__in] x Координата X
+	@param [__in] maxSum Максимальная сумма характеристик
+	@param [__in] maxVal Максимальное значение характеристик
+	@return 
+	*/
+	void ShuffleStats(__in int x, __in int maxSum, __in int maxVal);
+
+	/*!
+	Изменение ползунков навыков
+	@param [__in] x Координата X
+	@return 
+	*/
+	void ShuffleSkills(__in int x);
+
+	/*!
+	Пролистать список
+	@param [__in] direction Направление
+	@param [__in_opt] divizor Делитель
+	@return 
+	*/
+	void ListingList(__in bool direction, __in_opt int divizor = 1);
+
+	/*!
+	Получить высоту скроллбокса
+	@return 
+	*/
+	int GetScrollBoxHeight();
+
+	/*!
+	Отрисовка/выбор объектов (старые версии клиентов)
+	@param [__in] mode true - отрисовка, false - выбор
+	@return При выборе объектов - идентификатор выбранного объекта
+	*/
+	int RenderOld(__in bool &mode);
+
+	/*!
+	Отрисовка/выбор объектов (новые версии клиентов)
+	@param [__in] mode true - отрисовка, false - выбор
+	@return При выборе объектов - идентификатор выбранного объекта
+	*/
+	int RenderNew(__in bool &mode);
 public:
 	TSelectProfessionScreen();
 	virtual ~TSelectProfessionScreen();
 
-	//Инициализация
+	/*!
+	Инициализация
+	@return 
+	*/
 	void Init();
 
-	//Обработка события после плавного затемнения экрана
-	void ProcessSmoothAction(BYTE action = 0xFF);
+	/*!
+	Обработка события после плавного затемнения экрана
+	@param [__in_opt] action Идентификатор действия
+	@return 
+	*/
+	void ProcessSmoothAction(__in_opt BYTE action = 0xFF);
 
-	//Инициализация тултипа
+	/*!
+	Инициализация всплывающих подсказок
+	@return 
+	*/
 	void InitPopupHelp();
 
-	//Рисование экрана
-	int Render(bool mode);
+	/*!
+	Отрисовка/выбор объектов
+	@param [__in] mode true - отрисовка, false - выбор
+	@return При выборе объектов - идентификатор выбранного объекта
+	*/
+	int Render(__in bool mode);
 
-	//События
+
+
+	/*!
+	Нажатие левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseDown();
+
+	/*!
+	Отпускание левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseUp();
-	void OnMouseWheel(MOUSE_WHEEL_STATE state);
+
+	/*!
+	Обработка средней кнопки (колесика) мыши
+	@param [__in] state Состояние колесика
+	@return 
+	*/
+	void OnMouseWheel(__in MOUSE_WHEEL_STATE state);
 };
 //---------------------------------------------------------------------------
 extern TSelectProfessionScreen *SelectProfessionScreen;

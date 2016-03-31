@@ -46,6 +46,10 @@ TGump::~TGump()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Вычислить состояние гампа и его элементов для отрисовки
+@return 
+*/
 void TGump::CalculateGumpState()
 {
 	DWORD index = (DWORD)this;
@@ -81,6 +85,10 @@ void TGump::CalculateGumpState()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Отрисовать замочек гампа
+@return 
+*/
 void TGump::DrawLocker()
 {
 	if (g_ShowGumpLocker)
@@ -91,7 +99,16 @@ void TGump::DrawLocker()
 	}
 }
 //---------------------------------------------------------------------------
-void TGump::GetBaseProperties(DWORD &serial, WORD &graphic, WORD &color, WORD &x, WORD &y)
+/*!
+Получить основные характеристики гампа
+@param [__out] serial Серийник
+@param [__out] graphic Графика
+@param [__out] color Цвет
+@param [__out] x Координата X
+@param [__out] y Координата Y
+@return 
+*/
+void TGump::GetBaseProperties( __out DWORD &serial, __out WORD &graphic, __out WORD &color, __out WORD &x, __out WORD &y)
 {
 	serial = m_Serial;
 	graphic = m_Graphic;
@@ -100,6 +117,10 @@ void TGump::GetBaseProperties(DWORD &serial, WORD &graphic, WORD &color, WORD &x
 	y = m_Y;
 }
 //---------------------------------------------------------------------------
+/*!
+Может ли гамп быть подвинут
+@return
+*/
 bool TGump::CanBeMoved()
 {
 	bool result = true;
@@ -110,7 +131,15 @@ bool TGump::CanBeMoved()
 	return result;
 }
 //---------------------------------------------------------------------------
-int TGump::CalculateScrollerAndTextPosition(int &currentLine, int &visibleLines, int &maxY, int currentY)
+/*!
+Вычисление смещения объектов в окне скроллбокса
+@param [__out] currentLine Текущая строка
+@param [__in] visibleLines Количество видимых строк
+@param [__in] maxY Максимальное значение Y координаты
+@param [__in] currentY Текущее значение Y координаты
+@return Координата Y скроллера
+*/
+int TGump::CalculateScrollerAndTextPosition(__out int &currentLine, __in int &visibleLines, __in int &maxY, __in int currentY)
 {
 	//Без смещения
 	int scrollerY = 0;
@@ -158,7 +187,14 @@ int TGump::CalculateScrollerAndTextPosition(int &currentLine, int &visibleLines,
 	return scrollerY;
 }
 //---------------------------------------------------------------------------
-int TGump::CalculateScrollerY(int &currentLine, int &visibleLines, int &maxY)
+/*!
+Вычисление смещения скроллера
+@param [__in] currentLine Текущая строка
+@param [__in] visibleLines Количество видимых строк
+@param [__in] maxY Максимальное значение Y координаты
+@return Координата Y скроллера
+*/
+int TGump::CalculateScrollerY(__in int &currentLine, __in int &visibleLines, __in int &maxY)
 {
 	//Действия, аналогичные коду выше при смещении скроллера
 	float per = (currentLine / (float)visibleLines) * 100.0f;
@@ -180,7 +216,12 @@ int TGump::CalculateScrollerY(int &currentLine, int &visibleLines, int &maxY)
 	return scrollerY;
 }
 //---------------------------------------------------------------------------
-void TGump::SendGumpResponse(int index)
+/*!
+Отправить ответ гампа
+@param [__in] index Индекс кнопки
+@return 
+*/
+void TGump::SendGumpResponse( __in int index)
 {
 	//Ответ на гамп
 	TPacketGumpResponse packet(this, index);
@@ -191,7 +232,12 @@ void TGump::SendGumpResponse(int index)
 	GumpManager->RemoveGump(this);
 }
 //---------------------------------------------------------------------------
-void TGump::SendMenuResponse(int index)
+/*!
+Отправить ответ меню
+@param [__in] index Индекс предмета меню
+@return 
+*/
+void TGump::SendMenuResponse( __in int index)
 {
 	//Ответ на меню
 	TPacketMenuResponse packet(this, index);
@@ -201,7 +247,12 @@ void TGump::SendMenuResponse(int index)
 	GumpManager->RemoveGump(this);
 }
 //---------------------------------------------------------------------------
-void TGump::SendTradingResponse(int code)
+/*!
+Отправить изменение состояния чекбокса трэйд окна
+@param [__in] code Состояние чекбокса
+@return 
+*/
+void TGump::SendTradingResponse( __in int code)
 {
 	//Ответ на трэйд окно
 	TPacketTradeResponse packet(this, code);
@@ -211,7 +262,12 @@ void TGump::SendTradingResponse(int code)
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TGump::SendTextEntryDialogResponse(bool mode)
+/*!
+Отправить ответ ентри диалога
+@param [__in] mode Состояние
+@return 
+*/
+void TGump::SendTextEntryDialogResponse( __in bool mode)
 {
 	TGumpTextEntryDialog *gted = (TGumpTextEntryDialog*)this;
 
@@ -227,6 +283,10 @@ void TGump::SendTextEntryDialogResponse(bool mode)
 	GumpManager->RemoveGump(this);
 }
 //---------------------------------------------------------------------------
+/*!
+Отправить запрос изменения имени
+@return 
+*/
 void TGump::SendRenameRequest()
 {
 	TGumpStatusbar *gsb = (TGumpStatusbar*)this;
@@ -239,6 +299,10 @@ void TGump::SendRenameRequest()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Отправить запрос окна продажи
+@return 
+*/
 void TGump::SendSellList()
 {
 	WORD size = 9;
@@ -285,6 +349,10 @@ void TGump::SendSellList()
 	delete buf;
 }
 //---------------------------------------------------------------------------
+/*!
+Отправить запрос окна покупки
+@return 
+*/
 void TGump::SendBuyList()
 {
 	TGameCharacter *vendor = World->FindWorldCharacter(m_Serial);
@@ -365,7 +433,12 @@ void TGump::SendBuyList()
 	delete buf;
 }
 //---------------------------------------------------------------------------
-void TGump::SendTipRequest(BYTE flag)
+/*!
+Отправить запрос тип окошка
+@param [__in] flag Флаг тип окна
+@return 
+*/
+void TGump::SendTipRequest( __in BYTE flag)
 {
 	//Отправляем запрос диалога Tip/Updates
 	TPacketTipRequest packet((WORD)Serial, flag);

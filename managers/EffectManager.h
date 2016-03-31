@@ -20,30 +20,48 @@
 #ifndef EffectManagerH
 #define EffectManagerH
 //--------------------------------------------------------------------------
-//Менеджер эффектов
+//!Класс менеджера эффектов
 class TEffectManager : public TBaseQueue
 {
-private:
 public:
 	TEffectManager() : TBaseQueue() {}
 	virtual ~TEffectManager() {}
 
-	//Добавить эффект
-	void AddEffect(TGameEffect *effect);
+	/*!
+	Добавить эффект
+	@param [__in] effect Ссылка на эффект
+	@return 
+	*/
+	void AddEffect(__in TGameEffect *effect);
 
-	//Удалить эффект
-	void RemoveEffect(TGameEffect *effect);
+	/*!
+	Удалить эффект
+	@param [__in] effect Ссылка на эффект
+	@return 
+	*/
+	void RemoveEffect(__in TGameEffect *effect);
 
-	//Создать эффект взрыва
-	void CreateExplodeEffect(TGameEffect *effect);
+	/*!
+	Создать эффект взрыва
+	@param [__in] effect Ссылка на эффект
+	@return 
+	*/
+	void CreateExplodeEffect(__in TGameEffect *effect);
 
-	//Обновление эффектов
+	/*!
+	Обновление эффектов
+	@return 
+	*/
 	void UpdateEffects();
 
-	//Удаление эффектов, вышедших за пределы экрана
+	/*!
+	Удаление эффектов, вышедших за пределы экрана
+	@return 
+	*/
 	void RemoveRangedEffects();
 };
 //--------------------------------------------------------------------------
+//!Ссылка на менеджер эффектов
 extern TEffectManager *EffectManager;
 //--------------------------------------------------------------------------
 #endif

@@ -20,41 +20,94 @@
 #ifndef FileManagerH
 #define FileManagerH
 //---------------------------------------------------------------------------
+//!Класс для хранения данных и работе с файлами, спроецированными в память
 class TMappedHeader
 {
-private:
 public:
 	TMappedHeader();
 	~TMappedHeader() {}
 
+	//!Хэндл файла
 	HANDLE File;
+
+	//!Размер файла
 	DWORD Size;
+
+	//!Ссылка на карту
 	HANDLE Map;
+
+	//!Адрес файла в памяти
 	PVOID Address;
 
+	//!Указатель на текущую позицию
 	PBYTE Ptr;
 
-	inline void Move(int offset) {Ptr += offset;}
+	/*!
+	Переместить указатель
+	@param [__in] offset Смещение указателя
+	@return 
+	*/
+	inline void Move(__in int offset) { Ptr += offset; }
 
+	/*!
+	Прочитать байт (1 байт)
+	@return 
+	*/
 	BYTE ReadByte();
+
+	/*!
+	Прочитать слово (2 байта)
+	@return 
+	*/
 	WORD ReadWord();
+
+	/*!
+	Прочитать двойное слово (4 байла)
+	@return 
+	*/
 	DWORD ReadDWord();
+
+	/*!
+	Прочитать символ (1 байт)
+	@return 
+	*/
 	char ReadChar();
+
+	/*!
+	Прочитать короткое значение (2 байта)
+	@return 
+	*/
 	short ReadShort();
+
+	/*!
+	Прочитать целое (4 байта)
+	@return 
+	*/
 	int ReadInt();
-	string ReadString(int size);
+
+	/*!
+	Прочитать строку
+	@param [__in] size Размер строки, если 0 - читает до нуля
+	@return 
+	*/
+	string ReadString(__in int size);
 };
 //---------------------------------------------------------------------------
+//!Класс для работы с файлами
 class TFileManager
 {
 private:
+	//!Использовать ли файл патчей (verdata.mul)
 	bool m_UseVerdata;
+
+	//!Количество загруженных файлов с Unicode-шрифтами
 	int m_UnicodeFontCount;
 
 public:
 	TFileManager() :m_UseVerdata(true), m_UnicodeFontCount(0) {}
 	~TFileManager() {}
 	
+	//!Адреса файлов в памяти
 	TMappedHeader AnimIdx[6];
 	TMappedHeader ArtIdx;
 	TMappedHeader GumpIdx;
@@ -89,27 +142,62 @@ public:
 	SETGET(bool, UseVerdata);
 	SETGET(int, UnicodeFontCount);
 
+	/*!
+	Загрузить файлы
+	@return 
+	*/
 	bool Load();
+
+	/*!
+	Выгрузить файлы
+	@return 
+	*/
 	void Unload();
 
-	bool LoadFileToMemory(TMappedHeader &object, const char *fName);
-	void UnloadFileFromMemory(TMappedHeader &object);
+	/*!
+	Спроецировать файл в память
+	@param [__inout] object Объект для работы с файлом
+	@param [__in] fName Путь к файлу
+	@return 
+	*/
+	bool LoadFileToMemory(__inout TMappedHeader &object, __in const char *fName);
+
+	/*!
+	Выгрузить файл из памяти
+	@param [__inout] object Объект для работы с файлом
+	@return 
+	*/
+	void UnloadFileFromMemory(__inout TMappedHeader &object);
+
 };
 //---------------------------------------------------------------------------
+//!Класс для записи бинарных файлоа
 class TFileWriter
 {
 private:
+	//!Хэндл файла
 	FILE *m_File;
+
+	//!Путь к файлу
 	string m_FilePath;
+
+	//!Использовать ли внутренний буфер для записи
 	bool m_UseBuffer;
+
+	//!Открыт ли файл
 	bool m_Ready;
 
+	//!Количество данных в буфере
 	int m_BufferCount;
+
+	//!Буфер
 	BYTE m_Buffer[MAX_FILE_BUFFER_SIZE];
+
 public:
 	TFileWriter(string path, bool useBuffer);
 	~TFileWriter();
 	
+	//Указатель на данные во внутреннем буфере
 	PBYTE Ptr;
 
 	SETGET(string, FilePath);
@@ -117,20 +205,77 @@ public:
 	SETGET(bool, UseBuffer);
 	SETGET(int, BufferCount);
 
-	void Move(int offset);
-	
-	void WriteByte(BYTE val);
-	void WriteChar(char val);
-	void WriteWord(WORD val);
-	void WriteShort(short val);
-	void WriteDWord(DWORD val);
-	void WriteInt(int val);
-	void WriteAsciiString(string val);
-	void WriteUnicodeString(wstring val);
+	/*!
+	Переместить указатель внутреннего буфера
+	@param [__in] offset Смещение
+	@return 
+	*/
+	void Move(__in int offset);
 
+	/*!
+	Записать байт
+	@param [__in] val Данные
+	@return 
+	*/
+	void WriteByte(__in BYTE val);
+
+	/*!
+	Записать символ
+	@param [__in] val Данные
+	@return
+	*/
+	void WriteChar(char val);
+
+	/*!
+	Записать слово
+	@param [__in] val Данные
+	@return
+	*/
+	void WriteWord(WORD val);
+
+	/*!
+	Записать короткое значение
+	@param [__in] val Данные
+	@return
+	*/
+	void WriteShort(short val);
+
+	/*!
+	Записать двойное слово
+	@param [__in] val Данные
+	@return
+	*/
+	void WriteDWord(DWORD val);
+
+	/*!
+	Записать целое
+	@param [__in] val Данные
+	@return
+	*/
+	void WriteInt(int val);
+
+	/*!
+	Записать ASCII строку
+	@param [__in] val Данные
+	@return 
+	*/
+	void WriteAsciiString(__in string val);
+
+	/*!
+	Записать Unicode строку
+	@param [__in] val Данные
+	@return 
+	*/
+	void WriteUnicodeString(__in wstring val);
+
+	/*!
+	Записать буфер в файл
+	@return 
+	*/
 	void WriteBuffer();
 };
 //---------------------------------------------------------------------------
+//!Менеджер файлов
 extern TFileManager FileManager;
 //---------------------------------------------------------------------------
 #endif

@@ -27,7 +27,12 @@ m_X(0), m_Y(0), m_Z(0), m_GumpButtonID(0)
 {
 }
 //---------------------------------------------------------------------------
-void TClickObject::Init(CLICK_OBJECT_TYPE type)
+/*!
+Инициализация
+@param [__in] type Тип объекта, на который кликнули
+@return 
+*/
+void TClickObject::Init( __in CLICK_OBJECT_TYPE type)
 {
 	m_Type = type;
 	m_Serial = 0;

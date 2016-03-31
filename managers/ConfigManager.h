@@ -20,7 +20,7 @@
 #ifndef ConfigManagerH
 #define ConfigManagerH
 //--------------------------------------------------------------------------
-//Менеджер конфига
+//!Класс менеджера конфига
 class TConfigManager
 {
 private:
@@ -109,14 +109,18 @@ private:
 	bool m_FilterPWOn;
 	bool m_ObscenityFilter;
 	string m_FilterPassword;
+
 public:
 	TConfigManager() {}
 	~TConfigManager() {}
 
-	//Инициализация
+	/*!
+	Инициализация
+	@return 
+	*/
 	void Init();
 
-	//Проставление значений по-умолчанию
+	//!Проставление значений по-умолчанию
 	void DefaultPage1();
 	void DefaultPage2();
 	void DefaultPage3();
@@ -216,17 +220,32 @@ public:
 	SETGET(bool, ObscenityFilter);
 	SETGET(string, FilterPassword);
 
-	//Получить цвет исходя из "злобности"
-	WORD GetColorByNotoriety(BYTE notoriety);
+	/*!
+	Получить цвет исходя из "злобности"
+	@param [__in] notoriety Злобность
+	@return Индекс цвета
+	*/
+	WORD GetColorByNotoriety(__in BYTE notoriety);
 
-	//Загрузка конфига
-	void Load(string path);
+	/*!
+	Загрузка конфига
+	@param [__in] path Путь к файлу с конфигом
+	@return 
+	*/
+	void Load(__in string path);
 
-	//Сохранение конфига
-	void Save(string path);
-};
+	/*!
+	Сохранение конфига
+	@param [__in] path Путь к файлу с конфигом
+	@return 
+	*/
+	void Save(__in string path);
+ };
 //--------------------------------------------------------------------------
+//!Менеджер конфига
 extern TConfigManager ConfigManager;
+
+//!Менеджер кофнига для опций
 extern TConfigManager g_OptionsConfig;
 //--------------------------------------------------------------------------
 #endif

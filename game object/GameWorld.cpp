@@ -45,6 +45,10 @@ TGameWorld::~TGameWorld()
 	m_Items = NULL;
 }
 //---------------------------------------------------------------------------
+/*!
+Обработка анимации всех персонажей
+@return 
+*/
 void TGameWorld::ProcessAnimation()
 {
 	TGameObject *obj = (TGameObject*)m_Items;
@@ -277,7 +281,12 @@ void TGameWorld::ProcessAnimation()
 	}
 }
 //---------------------------------------------------------------------------
-void TGameWorld::CreatePlayer(DWORD serial)
+/*!
+Создать игрока
+@param [__in] serial Серийник игрока
+@return 
+*/
+void TGameWorld::CreatePlayer( __in DWORD serial)
 {
 	RemovePlayer();
 
@@ -296,6 +305,10 @@ void TGameWorld::CreatePlayer(DWORD serial)
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Удалить игрока
+@return 
+*/
 void TGameWorld::RemovePlayer()
 {
 	if (g_Player != NULL)
@@ -309,13 +322,23 @@ void TGameWorld::RemovePlayer()
 	}
 }
 //---------------------------------------------------------------------------
-void TGameWorld::SetPlayer(DWORD serial)
+/*!
+Установить текущего чара с указанным серийником как основного
+@param [__in] serial Серийник нового игрока
+@return 
+*/
+void TGameWorld::SetPlayer( __in DWORD serial)
 {
 	if (serial != g_Player->Serial)
 		CreatePlayer(serial);
 }
 //---------------------------------------------------------------------------
-TGameItem *TGameWorld::GetWorldItem(DWORD serial)
+/*!
+Создать (или взять, если уже существует) игровой предмет
+@param [__in] serial Серийник предмета
+@return Ссылка на предмет
+*/
+TGameItem *TGameWorld::GetWorldItem(__in DWORD serial)
 {
 	WORLD_MAP::iterator i = m_Map.find(serial);
 
@@ -340,7 +363,12 @@ TGameItem *TGameWorld::GetWorldItem(DWORD serial)
 	return (TGameItem*)(*i).second;
 }
 //---------------------------------------------------------------------------
-TGameCharacter *TGameWorld::GetWorldCharacter(DWORD serial)
+/*!
+Создать (или взять, если уже существует) игрового персонажа
+@param [__in] serial Серийник персонажа
+@return Ссылка на персонажа
+*/
+TGameCharacter *TGameWorld::GetWorldCharacter(__in DWORD serial)
 {
 	WORLD_MAP::iterator i = m_Map.find(serial);
 
@@ -365,7 +393,12 @@ TGameCharacter *TGameWorld::GetWorldCharacter(DWORD serial)
 	return (TGameCharacter*)(*i).second;
 }
 //---------------------------------------------------------------------------
-TGameObject *TGameWorld::FindWorldObject(DWORD serial)
+/*!
+Найти игровой объект в памяти
+@param [__in] serial Серийник объекта
+@return Ссылка на объект или NULL
+*/
+TGameObject *TGameWorld::FindWorldObject(__in DWORD serial)
 {
 	TGameObject *result = NULL;
 
@@ -376,7 +409,12 @@ TGameObject *TGameWorld::FindWorldObject(DWORD serial)
 	return result;
 }
 //---------------------------------------------------------------------------
-TGameItem *TGameWorld::FindWorldItem(DWORD serial)
+/*!
+Найти игровой предмет в памяти
+@param [__in] serial Серийник предмета
+@return Ссылка на предмет или NULL
+*/
+TGameItem *TGameWorld::FindWorldItem(__in DWORD serial)
 {
 	TGameItem *result = NULL;
 
@@ -387,7 +425,12 @@ TGameItem *TGameWorld::FindWorldItem(DWORD serial)
 	return result;
 }
 //---------------------------------------------------------------------------
-TGameCharacter *TGameWorld::FindWorldCharacter(DWORD serial)
+/*!
+Найти игрового персонажа в памяти
+@param [__in] serial Серийник персонажа
+@return Ссылка а персонажа или NULL
+*/
+TGameCharacter *TGameWorld::FindWorldCharacter(__in DWORD serial)
 {
 	TGameCharacter *result = NULL;
 
@@ -398,7 +441,12 @@ TGameCharacter *TGameWorld::FindWorldCharacter(DWORD serial)
 	return result;
 }
 //---------------------------------------------------------------------------
-TGameCharacter *TGameWorld::FindWorldCorpseOwner(DWORD serial)
+/*!
+Найти игрового персонажа (владельца трупа) в памяти
+@param [__in] serial Серийник трупа
+@return Ссылка на персонажа или NULL
+*/
+TGameCharacter *TGameWorld::FindWorldCorpseOwner(__in DWORD serial)
 {
 	TGameObject *item = NULL;
 
@@ -414,7 +462,12 @@ TGameCharacter *TGameWorld::FindWorldCorpseOwner(DWORD serial)
 	return (TGameCharacter*)item;
 }
 //---------------------------------------------------------------------------
-void TGameWorld::RemoveObject(TGameObject *obj)
+/*!
+Удалить объект из памяти
+@param [__in] obj Ссылка на объект
+@return 
+*/
+void TGameWorld::RemoveObject( __in TGameObject *obj)
 {
 	RemoveFromContainer(obj);
 
@@ -424,7 +477,12 @@ void TGameWorld::RemoveObject(TGameObject *obj)
 	delete obj;
 }
 //---------------------------------------------------------------------------
-void TGameWorld::RemoveFromContainer(TGameObject *obj)
+/*!
+Вынуть объект из контейнера
+@param [__in] obj Ссылка на объект
+@return 
+*/
+void TGameWorld::RemoveFromContainer( __in TGameObject *obj)
 {
 	if (obj->Container != 0xFFFFFFFF)
 	{
@@ -467,19 +525,35 @@ void TGameWorld::RemoveFromContainer(TGameObject *obj)
 	obj->RemoveRender();
 }
 //---------------------------------------------------------------------------
-void TGameWorld::ClearContainer(TGameObject *obj)
+/*!
+Очистить указанный контейнер
+@param [__in] obj Ссылка на объект (контейнер)
+@return 
+*/
+void TGameWorld::ClearContainer( __in TGameObject *obj)
 {
 	if (!obj->Empty())
 		obj->Clear();
 }
 //---------------------------------------------------------------------------
-void TGameWorld::PutContainer(TGameObject *obj, TGameObject *container)
+/*!
+Положить в контейнер
+@param [__in] obj Ссылка на объект
+@param [__in] container Ссылка на контейнер
+@return 
+*/
+void TGameWorld::PutContainer( __in TGameObject *obj, __in TGameObject *container)
 {
 	RemoveFromContainer(obj);
 	container->AddItem(obj);
 }
 //---------------------------------------------------------------------------
-void TGameWorld::MoveToTop(TGameObject *obj)
+/*!
+Поднять объект вверх в очереди
+@param [__in] obj Ссылка на объект
+@return 
+*/
+void TGameWorld::MoveToTop( __in TGameObject *obj)
 {
 	if (obj == NULL)
 		return;
@@ -587,7 +661,15 @@ void TGameWorld::MoveToTop(TGameObject *obj)
 	}
 }
 //---------------------------------------------------------------------------
-TGameObject *TGameWorld::SearchWorldObject(DWORD serialStart, int scanDistance, SCAN_TYPE_OBJECT scanType, SCAN_MODE_OBJECT scanMode)
+/*!
+Поиск объекта
+@param [__in] serialStart Начальный серийник для поиска
+@param [__in] scanDistance Дистанция поиска
+@param [__in] scanType Тип объектов поиска
+@param [__in] scanMode Режим поиска
+@return Ссылка на найденный объект или NULL
+*/
+TGameObject *TGameWorld::SearchWorldObject(__in DWORD serialStart, __in int scanDistance, __in SCAN_TYPE_OBJECT scanType, __in SCAN_MODE_OBJECT scanMode)
 {
 	TGameObject *result = NULL;
 
@@ -695,6 +777,12 @@ TGameObject *TGameWorld::SearchWorldObject(DWORD serialStart, int scanDistance, 
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Дамп предметов, хранящихся в памяти
+@param [__in] nCount Количество отступов
+@param [__in_opt] serial Серийник родителя
+@return
+*/
 void TGameWorld::Dump(BYTE tCount, DWORD serial)
 {
 	TPRINT("World Dump:\n\n");

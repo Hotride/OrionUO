@@ -20,54 +20,65 @@
 #ifndef AnimationManagerH
 #define AnimationManagerH
 //---------------------------------------------------------------------------
-//Структура с информацией о тени
+//!Структура с информацией о тени
 struct SHADOW_DATA
 {
-	//Индекс текстуры
+	//!Индекс текстуры
 	GLuint Texture;
 
-	//Экранные координаты объекта
+	//!Экранные координаты объекта
 	int DrawX;
 	int DrawY;
 
-	//Значение Z-buffer'а
+	//!Значение Z-buffer'а
 	int ZBuffer;
 
-	//Габариты изображения
+	//!Габариты изображения
 	int Width;
 	int Height;
 
-	//Перевернутая картинка или нет
+	//!Перевернутая картинка или нет
 	bool Mirror;
 };
 //---------------------------------------------------------------------------
-//Менеджер анимаций
+//!Класс менеджера анимаций
 class TAnimationManager
 {
 private:
-	//Адреса файлов в памяти
+	//!Адреса файлов в памяти
 	DWORD m_AddressIdx[6];
 	DWORD m_AddressMul[6];
 	DWORD m_SizeIdx[6];
 
-	//Информация о текущем кадре
+	//!Цвет текущего кадра
 	WORD m_Color;
+
+	//!Группа анимаций текущего кадра
 	int m_AnimGroup;
+
+	//!Направление текущего кадра
 	BYTE m_Direction;
+
+	//!Текущий кадр сидит
 	int m_Sitting;
 
-	//Данные о тенях
+	//!Список теней
 	SHADOW_DATA m_ShadowList[MAX_SHADOWS_COUNT];
+
+	//!Количество теней
 	int m_ShadowCount;
 
-	//Упорядоченный список слоев для корректного порядка прорисовки для всех направлений персонажа
+	//!Упорядоченный список слоев для корректного порядка прорисовки для всех направлений персонажа
 	static const int USED_LAYER_COLUT = 19;
 	static int m_UsedLayers[8][USED_LAYER_COLUT];
 
-	//Данные анимаций
+	//!Данные анимаций
 	TIndexAnimation m_DataIndex[MAX_ANIMATIONS_DATA_INDEX_COUNT];
+
+	//!Список замен для трупов
 	WORD m_CorpseReplaces[MAX_ANIMATIONS_DATA_INDEX_COUNT];
 
+	//!Список используемых анимаций
 	TLinkedList *m_UsedAnimList;
 
 	//Добавление тени в список
@@ -86,70 +97,175 @@ public:
 	TAnimationManager();
 	~TAnimationManager();
 
-	//Инициализация адресов
-	void Init(int idx, DWORD AddressIdx, DWORD AddressMul, DWORD SizeIdx)
+	SETGET(WORD, Color);
+	SETGET(int, AnimGroup);
+	SETGET(BYTE, Direction);
+	SETGET(int, ShadowCount);
+
+	/*!
+	Инициализация адресов
+	@param [__in] idx Индекс файла
+	@param [__in] AddressIdx Адрес файла с таблицей адресов
+	@param [__in] AddressMul Адрес файла с данными
+	@param [__in] SizeIdx Размер файла с таблицей адресов
+	@return 
+	*/
+	void Init( __in int idx, __in DWORD AddressIdx, __in DWORD AddressMul, __in DWORD SizeIdx)
 	{
 		m_AddressIdx[idx] = AddressIdx;
 		m_AddressMul[idx] = AddressMul;
 		m_SizeIdx[idx] = SizeIdx;
 	}
 
-	SETGET(WORD, Color);
-	SETGET(int, AnimGroup);
-	SETGET(BYTE, Direction);
-	SETGET(int, ShadowCount);
+	/*!
+	Загрузка файла корректора индексов картинок анимаций
+	@param [__in] verdata Ссылка на адрес в памяти файла патчей (verdata.mul)
+	@return
+	*/
+	void InitIndexReplaces(__in PDWORD verdata);
 
-	//Загрузка файла корректора индексов картинок анимаций
-	void InitIndexReplaces(PDWORD verdata);
+	/*!
+	Загрузка данных
+	@param [__in] verdata Ссылка на адрес в памяти файла патчей (verdata.mul)
+	@return 
+	*/
+	void Load(__in PDWORD verdata);
 
-	//Загрузка данных
-	void Load(PDWORD verdata);
+	/*!
+	Получение ссылки на указанный фрэйм
+	@param [__in] obj Игровой объект
+	@param [__inout] frameIndex Индекс кадра
+	@param [__in_opt] id Индекс картинки
+	@return Ссылка на кадр анимации
+	*/
+	TTextureAnimationFrame *GetFrame(__in TGameObject *obj, __inout BYTE &frameIndex, __in_opt WORD id = 0x0000);
 
-	//Получение ссылки на указанный фрэйм
-	TTextureAnimationFrame *GetFrame(TGameObject *obj, BYTE &frameIndex, WORD id = 0x0000);
+	/*!
+	Очистка неиспользуемых текстур
+	@param [__in] ticks Таймер удаления
+	@return 
+	*/
+	void ClearUnusedTextures(__in DWORD ticks);
 
-	//Очистка неиспользуемых текстур
-	void ClearUnusedTextures(DWORD ticks);
+	/*!
+	Загрузка картинок для указанного направления персонажа
+	@param [__in] direction Ссылка на направление анимации
+	@param [__in] id Индекс картинки
+	@param [__in] offset Смещение относительно начала анимаций
+	@return true в случае успешной загрузки
+	*/
+	bool ExecuteDirectionGroup(__in TTextureAnimationDirection *direction, __in WORD &id, __in int &offset);
 
-	//Загрузка картинок для указанного направления персонажа
-	bool ExecuteDirectionGroup(TTextureAnimationDirection *direction, WORD &id, int &offset);
+	/*!
+	Коррекция направления и режима зеркального отображения
+	@param [__inout] dir Направление
+	@param [__inout] mirror Зеркальное отображение
+	@return 
+	*/
+	void GetAnimDirection(__inout BYTE &dir, __inout bool &mirror);
 
-	//Коррекция направления и режима зеркального отображения
-	void GetAnimDirection(BYTE &dir, bool &mirror);
-	
-	//Коррекция направления и режима зеркального отображения для сидячего персонажа
-	void GetSittingAnimDirection(BYTE &dir, bool &mirror, int &x, int &y);
+	/*!
+	Коррекция направления и режима зеркального отображения для сидячего персонажа
+	@param [__inout] dir Направление
+	@param [__inout] mirror Зеркальное отображение
+	@param [__inout] x Координата X
+	@param [__inout] y Координата Y
+	@return 
+	*/
+	void GetSittingAnimDirection(__inout BYTE &dir, __inout bool &mirror, __inout int &x, __inout int &y);
 
-	//Получить ссылку на данные анимации
-	TTextureAnimation *GetAnimation(WORD id);
+	/*!
+	Получить ссылку на данные анимации
+	@param [__in] id Индекс картинки
+	@return Ссылка на анимацию
+	*/
+	TTextureAnimation *GetAnimation(__in WORD id);
 
-	//Отрисовать персонажа
-	void DrawCharacter(TGameCharacter *obj, int x, int y, int z);
+	/*!
+	Отрисовать персонажа
+	@param [__in] obj Ссылка на персонажа
+	@param [__in] x Экранная координата X
+	@param [__in] y Экранная координата Y
+	@param [__in] z Координата Z
+	@return 
+	*/
+	void DrawCharacter(__in TGameCharacter *obj, __in int x, __in int y, __in int z);
 
-	//Проверить наличие пикселя персонажа в указанных координатах
-	bool CharacterPixelsInXY(TGameCharacter *obj, int X, int Y, int Z);
+	/*!
+	Проверить наличие пикселя персонажа в указанных координатах
+	@param [__in] obj Ссылка на персонажа
+	@param [__in] x Экранная координата X
+	@param [__in] y Экранная координата Y
+	@param [__in] z Координата Z
+	@return true в случае, если хоть 1 пиксель находится под мышкой
+	*/
+	bool CharacterPixelsInXY(__in TGameCharacter *obj, __in int x, __in int y, __in int z);
 
-	//Отрисовать труп
-	void DrawCorpse(TGameItem *obj, int x, int y, int z);
+	/*!
+	Отрисовать труп
+	@param [__in] obj Ссылка на труп
+	@param [__in] x Экранная координата X
+	@param [__in] y Экранная координата Y
+	@param [__in] z Координата Z
+	@return 
+	*/
+	void DrawCorpse(__in TGameItem *obj, __in int x, __in int y, __in int z);
 
-	//Проверить наличие пикселя трупа в указанных координатах
-	bool CorpsePixelsInXY(TGameItem *obj, int x, int y, int z);
+	/*!
+	Проверить наличие пикселя трупа в указанных координатах
+	@param [__in] obj Ссылка на труп
+	@param [__in] x Экранная координата X
+	@param [__in] y Экранная координата Y
+	@param [__in] z Координата Z
+	@return 
+	*/
+	bool CorpsePixelsInXY(__in TGameItem *obj, __in int x, __in int y, __in int z);
 
-	//Получить индекс группы смерти анимации
-	BYTE GetDieGroupIndex(WORD id, bool second);
+	/*!
+	Получить индекс группы смерти анимации
+	@param [__in] id Byltrc rfhnbyrb
+	@param [__in] second Группа смерти номер 2
+	@return Индекс группы анимации
+	*/
+	BYTE GetDieGroupIndex(__in WORD id, __in bool second);
 
-	//Получить индекс группы по индексу картинки
-	ANIMATION_GROUPS GetGroupIndex(WORD id);
+	/*!
+	Получить индекс группы по индексу картинки
+	@param [__in] id Индекс картинки
+	@return Группа анимаций
+	*/
+	ANIMATION_GROUPS GetGroupIndex(__in WORD id);
 
-	//Отрисовать тени
+	/*!
+	Отрисовать тени
+	@return 
+	*/
 	void DrawShadows();
 
-	bool AnimationExists(WORD &graphic, BYTE group);
+	/*!
+	Существует ли анимация в файле
+	@param [__in] graphic Индекс картинки
+	@param [__in] group Группа анимации
+	@return true в случае успеха
+	*/
+	bool AnimationExists(__in WORD &graphic, __in BYTE group);
 
-	void GetCorpseGraphic(WORD &graphic);
-	void GetBodyGraphic(WORD &graphic);
-};
+	/*!
+	Получить индекс картинки трупа
+	@param [__inout] graphic Индекс картинки
+	@return 
+	*/
+	void GetCorpseGraphic(__inout WORD &graphic);
+
+	/*!
+	Получить индекс анимации
+	@param [__inout] graphic Индекс каритнки
+	@return 
+	*/
+	void GetBodyGraphic(__inout WORD &graphic);
+ };
 //---------------------------------------------------------------------------
+ //!Ссылка на менеджер анимаций
 extern TAnimationManager *AnimationManager;
 //---------------------------------------------------------------------------
 #endif

@@ -20,18 +20,36 @@
 #ifndef ClickObjectH
 #define ClickObjectH
 //---------------------------------------------------------------------------
+//!Объект клика мышкой
 class TClickObject
 {
 private:
-	CLICK_OBJECT_TYPE m_Type; //Тип объекта клика
-	DWORD m_Serial; //Серийник
-	DWORD m_GumpID; //ИД гампп
-	DWORD m_Timer; //Таймер клика
-	GUMP_TYPE m_GumpType; //Тип гампа (если это гамп)
-	WORD m_X; //Координата X
-	WORD m_Y; //Координата Y
-	char m_Z; //Координата Z
-	int m_GumpButtonID; //Индекс кнопки в гампе для клика (если это гамп)
+	//!Тип объекта клика
+	CLICK_OBJECT_TYPE m_Type;
+
+	//!Серийник
+	DWORD m_Serial;
+
+	//!ИД гампа
+	DWORD m_GumpID;
+
+	//!Таймер клика
+	DWORD m_Timer;
+
+	//!Тип гампа (если это гамп)
+	GUMP_TYPE m_GumpType;
+
+	//!Координата X
+	WORD m_X;
+
+	//!Координата Y
+	WORD m_Y;
+
+	//!Координата Z
+	char m_Z;
+
+	//!Индекс кнопки в гампе для клика (если это гамп)
+	int m_GumpButtonID;
 
 public:
 	TClickObject();
@@ -47,8 +65,13 @@ public:
 	SETGET(char, Z);
 	SETGET(int, GumpButtonID);
 
-	//Инициализация под тип объекта
-	void Init(CLICK_OBJECT_TYPE type);
+	/*!
+	Инициализация
+	@param [__in] type Тип объекта, на который кликнули
+	@return 
+	*/
+	void Init(__in CLICK_OBJECT_TYPE type);
+
 };
 //---------------------------------------------------------------------------
 extern TClickObject g_ClickObject; //Ссылка на объект клика

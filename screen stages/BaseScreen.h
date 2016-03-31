@@ -24,59 +24,140 @@
 class TBaseScreen
 {
 protected:
-	//Индекс действия, которое необходимо совершить после окончания плавного
-	//перехода затемненного состояния экрана
+	//!Индекс действия, которое необходимо совершить после окончания плавного перехода затемненного состояния экрана
 	BYTE m_SmoothScreenAction;
 
 public:
 	TBaseScreen() :m_SmoothScreenAction(0) {}
 	virtual ~TBaseScreen() {}
 
-	//Инициализация
+	/*!
+	Инициализация
+	@return 
+	*/
 	virtual void Init() {}
 
-	//Инициализация тултипа
+	/*!
+	Инициализация всплывающих подсказок
+	@return 
+	*/
 	virtual void InitPopupHelp() {}
 
-	//Отрисовка/выбор объектов
-	virtual int Render(bool mode) {return 0;}
+	/*!
+	Отрисовка/выбор объектов
+	@param [__in] mode true - отрисовка, false - выбор
+	@return При выборе объектов - идентификатор выбранного объекта
+	*/
+	virtual int Render(__in bool mode) {return 0;}
 
-	//Вычисление смещения объектов в окне скроллбокса и скроллера
-	virtual int CalculateScrollerAndTextPosition(int &currentLine, int &visibleLines, int &maxY, int currentY);
-	virtual int CalculateScrollerY(int &currentLine, int &visibleLines, int &maxY);
+	/*!
+	Вычисление смещения объектов в окне скроллбокса
+	@param [__out] currentLine Текущая строка
+	@param [__in] visibleLines Количество видимых строк
+	@param [__in] maxY Максимальное значение Y координаты
+	@param [__in] currentY Текущее значение Y координаты
+	@return Координата Y скроллера
+	*/
+	virtual int CalculateScrollerAndTextPosition(__out int &currentLine, __in int &visibleLines, __in int &maxY, __in int currentY);
 
-	//Создание плавного затемнения экрана
-	virtual void CreateSmoothAction(BYTE action);
+	/*!
+	Вычисление смещения скроллера
+	@param [__in] currentLine Текущая строка
+	@param [__in] visibleLines Количество видимых строк
+	@param [__in] maxY Максимальное значение Y координаты
+	@return Координата Y скроллера
+	*/
+	virtual int CalculateScrollerY(__in int &currentLine, __in int &visibleLines, __in int &maxY);
 
-	//Обработка события после перехода
-	virtual void ProcessSmoothAction(BYTE action = 0xFF) {}
+	/*!
+	Создание плавного затемнения экрана
+	@param [__in] action Идентификатор действия
+	@return 
+	*/
+	virtual void CreateSmoothAction(__in BYTE action);
 
-	//Вычисление состояния перехода
+	/*!
+	Обработка события после перехода
+	@param [__in_opt] action Идентификатор действия
+	@return 
+	*/
+	virtual void ProcessSmoothAction(__in_opt BYTE action = 0xFF) {}
+
+	/*!
+	Вычисление состояния перехода
+	@return Индекс состояния
+	*/
 	virtual int DrawSmoothMonitor();
 
-	//Наложение эффекта перехода
+	/*!
+	Наложение эффекта перехода
+	@return 
+	*/
 	virtual void DrawSmoothMonitorEffect();
 
-	//Эвенты
-	//Нажатие левой кнопки мыши
+
+
+	/*!
+	Нажатие левой кнопки мыши
+	@return 
+	*/
 	virtual void OnLeftMouseDown() {}
-	//Отпускание левой кнопки мыши
+
+	/*!
+	Отпускание левой кнопки мыши
+	@return 
+	*/
 	virtual void OnLeftMouseUp() {}
-	//Нажатие правой кнопки мыши
+
+	/*!
+	Нажатие правой кнопки мыши
+	@return 
+	*/
 	virtual void OnRightMouseDown() {}
-	//Отпускание правой кнопки мыши
+
+	/*!
+	Отпускание правой кнопки мыши
+	@return 
+	*/
 	virtual void OnRightMouseUp() {}
-	//Двойной клик левой кнопкой мыши
+
+	/*!
+	Двойной клик левой кнопкой мыши
+	@return true при успешной обработке
+	*/
 	virtual bool OnLeftMouseDoubleClick() {return false;}
-	//Двойной клик правой кнопкой мыши
+
+	/*!
+	Двойной клик правой кнопкой мыши
+	@return true при успешной обработке
+	*/
 	virtual bool OnRightMouseDoubleClick() {return false;}
-	//Обработка средней кнопки (колесика) мыши
-	virtual void OnMouseWheel(MOUSE_WHEEL_STATE state) {}
-	//Обработка нажатия клавишь
-	virtual void OnCharPress(WPARAM wparam, LPARAM lparam) {}
+
+	/*!
+	Обработка средней кнопки (колесика) мыши
+	@param [__in] state Состояние колесика
+	@return 
+	*/
+	virtual void OnMouseWheel(__in MOUSE_WHEEL_STATE state) {}
+
+	/*!
+	Обработка нажатия клавиши
+	@param [__in] wparam не подписанный параметр
+	@param [__in] lparam не подписанный параметр
+	@return 
+	*/
+	virtual void OnCharPress(__in WPARAM wparam, __in LPARAM lparam) {}
+
+	/*!
+	Обработка нажатия клавиши
+	@param [__in] wparam не подписанный параметр
+	@param [__in] lparam не подписанный параметр
+	@return
+	*/
 	virtual void OnKeyPress(WPARAM wparam, LPARAM lparam) {}
 };
 //---------------------------------------------------------------------------
-extern TBaseScreen *CurrentScreen; //Указатель на текущий экран
+//!Указатель на текущий экран
+extern TBaseScreen *CurrentScreen;
 //---------------------------------------------------------------------------
 #endif

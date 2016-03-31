@@ -20,13 +20,21 @@
 #ifndef ShopItemH
 #define ShopItemH
 //--------------------------------------------------------------------------
+//!Класс объекта магазина
 class TShopItem
 {
 private:
-	int m_Count; //Количество, которое выделено в списке покупок
-	string m_Name; //Имя предмета для списка покупок
-	DWORD m_Price; //Цена предмета
-	bool m_Selected; //Выделен в байлисте
+	//!Количество, которое выделено в списке покупок
+	int m_Count;
+
+	//!Имя предмета для списка покупок
+	string m_Name;
+
+	//!Цена предмета
+	DWORD m_Price;
+
+	//!Выделен в байлисте
+	bool m_Selected;
 
 public:
 	TShopItem();
@@ -36,7 +44,6 @@ public:
 	SETGET(string, Name);
 	SETGET(DWORD, Price);
 	SETGET(bool, Selected);
-
 };
 //---------------------------------------------------------------------------
 #endif

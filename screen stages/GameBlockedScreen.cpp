@@ -30,12 +30,21 @@ TGameBlockedScreen::~TGameBlockedScreen()
 {
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация
+@return 
+*/
 void TGameBlockedScreen::Init()
 {
 	m_Code = 0;
 }
 //---------------------------------------------------------------------------
-int TGameBlockedScreen::Render(bool mode)
+/*!
+Отрисовка/выбор объектов
+@param [__in] mode true - отрисовка, false - выбор
+@return При выборе объектов - идентификатор выбранного объекта
+*/
+int TGameBlockedScreen::Render( __in bool mode)
 {
 	if (mode)
 	{
@@ -59,6 +68,10 @@ int TGameBlockedScreen::Render(bool mode)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Нажатие левой кнопки мыши
+@return 
+*/
 void TGameBlockedScreen::OnLeftMouseDown()
 {
 	g_LastSelectedGump = 0;
@@ -69,6 +82,10 @@ void TGameBlockedScreen::OnLeftMouseDown()
 		GumpManager->OnLeftMouseDown(true);
 }
 //---------------------------------------------------------------------------
+/*!
+Отпускание левой кнопки мыши
+@return 
+*/
 void TGameBlockedScreen::OnLeftMouseUp()
 {
 	Render(false);
@@ -77,7 +94,13 @@ void TGameBlockedScreen::OnLeftMouseUp()
 		GumpManager->OnLeftMouseUp(true);
 }
 //---------------------------------------------------------------------------
-void TGameBlockedScreen::OnCharPress(WPARAM wparam, LPARAM lparam)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@return 
+*/
+void TGameBlockedScreen::OnCharPress( __in WPARAM wparam, __in LPARAM lparam)
 {
 	if (EntryPointer == NULL || EntryPointer == GameConsole)
 		return;
@@ -85,7 +108,13 @@ void TGameBlockedScreen::OnCharPress(WPARAM wparam, LPARAM lparam)
 	GumpManager->OnCharPress(wparam, lparam, true);
 }
 //---------------------------------------------------------------------------
-void TGameBlockedScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@return 
+*/
+void TGameBlockedScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 {
 	TGumpNotify *notify = (TGumpNotify*)GumpManager->GetGump(0,0, GT_NOTIFY);
 

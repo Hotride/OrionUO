@@ -32,7 +32,15 @@ TGameEffect::~TGameEffect()
 {
 }
 //---------------------------------------------------------------------------
-int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
+/*!
+Отрисовать эффект
+@param [__in] mode Режим рисования. true - рисование, false - выбор объектов
+@param [__in] drawX Экранная координата X объекта
+@param [__in] drawY Экранная координата Y объекта
+@param [__in] ticks Таймер рендера
+@return При выборе объектов возвращает выбранный элемент
+*/
+int TGameEffect::Draw(__in bool &mode, __in int &drawX, __in int &drawY, __in DWORD &ticks)
 {
 	if (mode)
 	{
@@ -93,6 +101,10 @@ int TGameEffect::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Вычислить текущий индекс картинки
+@return Индекс картинки
+*/
 WORD TGameEffect::CalculateCurrentGraphic()
 {
 	DWORD addressAnimData = (DWORD)FileManager.AnimdataMul.Address;
@@ -114,16 +126,22 @@ WORD TGameEffect::CalculateCurrentGraphic()
 		}
 	}
 
-	//TPRINT("Generate effectID for 0x%04X (add %i)\n", m_Graphic, m_Increment);
-
 	return m_Graphic + m_Increment;
 }
 //---------------------------------------------------------------------------
+/*!
+Получить текущий индекс картинки
+@return Индекс картинки
+*/
 WORD TGameEffect::GetCurrentGraphic()
 {
 	return m_Graphic + m_Increment;
 }
 //---------------------------------------------------------------------------
+/*!
+Применение режима отображения
+@return 
+*/
 void TGameEffect::ApplyRenderMode()
 {
 	switch (m_RenderMode)
@@ -165,6 +183,10 @@ void TGameEffect::ApplyRenderMode()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Отмена режима отображения
+@return 
+*/
 void TGameEffect::RemoveRenderMode()
 {
 	switch (m_RenderMode)
@@ -208,6 +230,10 @@ TGameEffectDrag::~TGameEffectDrag()
 {
 }
 //---------------------------------------------------------------------------
+/*!
+Обновить эффект
+@return
+*/
 void TGameEffectDrag::Update()
 {
 	m_OffsetX += 10;
@@ -225,6 +251,10 @@ TGameEffectMoving::~TGameEffectMoving()
 {
 }
 //---------------------------------------------------------------------------
+/*!
+Обновить эффект
+@return
+*/
 void TGameEffectMoving::Update()
 {
 	TGameObject *obj = World->FindWorldObject(m_DestSerial);

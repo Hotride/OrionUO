@@ -41,8 +41,15 @@ TConnectionManager::~TConnectionManager()
 	m_LastMessageFragment = NULL;
 }
 //---------------------------------------------------------------------------
-//Login socket init
-int TConnectionManager::Init(DWORD k1, DWORD k2, DWORD k3, DWORD seed_key)
+/*!
+Инициализаци логин сокета
+@param [__in] k1 Ключ шифрования 1
+@param [__in] k2 Ключ шифрования 2
+@param [__in] k3 Ключ шифрования 3
+@param [__in] seed_key Семка для генерации шифрования
+@return Код ошибки
+*/
+int TConnectionManager::Init( __in DWORD k1, __in DWORD k2, __in DWORD k3, __in DWORD seed_key)
 {
 	//Сокет уже открыт, ошибка
 	if (m_LoginSocket.Connected())
@@ -79,8 +86,12 @@ int TConnectionManager::Init(DWORD k1, DWORD k2, DWORD k3, DWORD seed_key)
 	return m_LoginSocket.Init();
 }
 //---------------------------------------------------------------------------
-//Game socket init
-int TConnectionManager::Init(PBYTE GameSeed)
+/*!
+Инициализация игрового сокета
+@param [__in] GameSeed Ключ для игрового шифрования
+@return Код ошибки
+*/
+int TConnectionManager::Init(__in PBYTE GameSeed)
 {
 	//Гейм сокет уже открыт, ошибка
 	if (m_GameSocket.Connected())
@@ -103,7 +114,14 @@ int TConnectionManager::Init(PBYTE GameSeed)
 	return m_GameSocket.Init();
 }
 //---------------------------------------------------------------------------
-int TConnectionManager::Connect(const char *IP, int Port, PBYTE GameSeed)
+/*!
+Подключение к серверу
+@param [__in] IP IP адрес сервера
+@param [__in] Port Порт сервера
+@param [__in] GameSeed Ключ для шифрования
+@return Код ошибки
+*/
+int TConnectionManager::Connect( __in const char *IP, __in int Port, __in PBYTE GameSeed)
 {
 	if (m_SocketType) //Логин сокет
 	{
@@ -186,15 +204,24 @@ int TConnectionManager::Connect(const char *IP, int Port, PBYTE GameSeed)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Разорвать подключение
+@return
+*/
 void TConnectionManager::Disconnect()
 {
-	//Фулл дисконнект
+	//!Дисконнект всего, что подключено
 	if (m_LoginSocket.Connected())
 		m_LoginSocket.Disconnect();
+
 	if (m_GameSocket.Connected())
 		m_GameSocket.Disconnect();
 }
 //---------------------------------------------------------------------------
+/*!
+Получить данные с сервера
+@return 
+*/
 void TConnectionManager::Recv()
 {
 	if (m_SocketType) //Логин сокет
@@ -377,6 +404,12 @@ void TConnectionManager::Recv()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Отправить сообщение серверу
+@param [__in] buf Буфер с данными
+@param [__in] size Размер данных
+@return Размер отправленных данных или код ошибки
+*/
 int TConnectionManager::Send(PBYTE buf, int size)
 {
 	if (m_SocketType) //Логин сокет

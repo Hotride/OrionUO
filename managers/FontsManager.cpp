@@ -1216,7 +1216,13 @@ wstring TFontsManager::GetTextByWidthW(BYTE font, const wchar_t *str, int len, i
 	return result;
 }
 //---------------------------------------------------------------------------
-WORD TFontsManager::GetWebLinkID(wchar_t *link, DWORD &color)
+/*!
+Получить индекс ссылки
+@param [__in] link Ссылка
+@param [__out] color Цвет ссылки
+@return Индекс ссылки
+*/
+WORD TFontsManager::GetWebLinkID( __in wchar_t *link, __out DWORD &color)
 {
 	string webLink(ToString(link));
 	WORD linkID = 0;
@@ -1246,7 +1252,16 @@ WORD TFontsManager::GetWebLinkID(wchar_t *link, DWORD &color)
 	return linkID;
 }
 //---------------------------------------------------------------------------
-HTML_char *TFontsManager::GetHTMLData(BYTE font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Получение HTML данных
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] len Длина текста
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return Массив HTML символов
+*/
+HTML_char *TFontsManager::GetHTMLData(__in BYTE font, __in const wchar_t *str, __in int &len, __in TEXT_ALIGN_TYPE align, __in WORD flags)
 {
 	if (len < 1)
 		return NULL;
@@ -1735,7 +1750,17 @@ HTML_char *TFontsManager::GetHTMLData(BYTE font, const wchar_t *str, int &len, T
 	return data;
 }
 //---------------------------------------------------------------------------
-PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML(BYTE font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, WORD flags, int width)
+/*!
+Получение данных многострочного текста HTML
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] len Длина текста
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@param [__in] width Ширина текста
+@return Ссылка на данные
+*/
+PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML( __in BYTE font, __in const wchar_t *str, __in int len, __in TEXT_ALIGN_TYPE align, __in WORD flags, __in int width)
 {
 	HTML_char *htmlData = GetHTMLData(font, str, len, align, flags);
 

@@ -20,54 +20,66 @@
 #ifndef CityListH
 #define CityListH
 //--------------------------------------------------------------------------
-class TCity;
-//--------------------------------------------------------------------------
+//!Класс города (для старых клиентов)
 class TCityItem : public TBaseQueueItem
 {
 private:
-	BYTE m_LocationIndex; //Индекс города
-	string m_Name; //Имя города
-	string m_Area; //Описание территории
-	bool m_Selected; //Выбран ли этот город
+	//!Индекс города
+	BYTE m_LocationIndex;
+
+	//!Имя города
+	string m_Name;
+
+	//!Описание территории
+	string m_Area;
+
+	//!Выбран ли этот город
+	bool m_Selected;
 
 public:
 	TCityItem();
 	virtual ~TCityItem();
 
-	//Ссылка на описание города
-	TCity *m_City;
+	//!Ссылка на описание города
+	class TCity *m_City;
 
 	SETGET(BYTE, LocationIndex);
 	SETGET(string, Name);
 	SETGET(string, Area);
 	SETGET(bool, Selected);
 
-	//Это старая версия класса
+	/*!
+	Определение версии класса
+	@return Новая или старая
+	*/
 	virtual bool IsNewCity() {return false;}
 
-	//Инициализация
+	/*!
+	Инициализация
+	@return 
+	*/
 	void InitCity();
 };
 //--------------------------------------------------------------------------
+//!Класс города (для новых клиентов)
 class TCityItemNew : public TCityItem
 {
 private:
-	//Координаты корода, зачем?
+	//!Координаты корода, зачем?
 	DWORD m_X;
 	DWORD m_Y;
 	DWORD m_Z;
-	//Индекс карты, зачем?
+
+	//!Индекс карты, зачем?
 	DWORD m_MapIndex;
+
 	//DWORD m_Cliloc;
 
 public:
 	TCityItemNew();
 	virtual ~TCityItemNew();
 
-	//Это новая версия класса	
-	bool IsNewCity() {return true;}
-
-	//Текстура текста
+	//!Текстура текста
 	TTextTexture m_Texture;
 
 	SETGET(DWORD, X);
@@ -76,22 +88,36 @@ public:
 	SETGET(DWORD, MapIndex);
 	//SETGET(DWORD, Cliloc);
 
-	//Генерация текстуры по ИД клилока
-	void CreateTextTexture(DWORD clilocID);
+	/*!
+	Определение версии класса
+	@return Новая или старая
+	*/
+	bool IsNewCity() { return true; }
+
+	/*!
+	Генерация текстуры по ИД клилока
+	@param [__in] clilocID Индекс клилока
+	@return 
+	*/
+	void CreateTextTexture(__in DWORD clilocID);
 };
 //--------------------------------------------------------------------------
+//!Класс списка городов
 class TCityList : public TBaseQueue
 {
-private:
-
 public:
 	TCityList();
 	virtual ~TCityList();
 
-	//Получить ссылку на город
-	TCityItem *GetCity(int index);
+	/*!
+	Получить ссылку на город
+	@param [__in] index Индекс города
+	@return 
+	*/
+	TCityItem *GetCity(__in int index);
 };
 //---------------------------------------------------------------------------
-extern TCityList *CityList; //Ссылка на список городов
+//!Ссылка на список городов
+extern TCityList *CityList;
 //---------------------------------------------------------------------------
 #endif

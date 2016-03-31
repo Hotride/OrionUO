@@ -46,6 +46,10 @@ TMainScreen::~TMainScreen()
 	delete m_Password;
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация
+@return 
+*/
 void TMainScreen::Init()
 {
 	g_ConfigLoaded = false;
@@ -100,7 +104,12 @@ void TMainScreen::Init()
 	UO->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
 }
 //---------------------------------------------------------------------------
-void TMainScreen::ProcessSmoothAction(BYTE action)
+/*!
+Обработка события после плавного затемнения экрана
+@param [__in_opt] action Идентификатор действия
+@return 
+*/
+void TMainScreen::ProcessSmoothAction( __in_opt BYTE action)
 {
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
@@ -111,6 +120,10 @@ void TMainScreen::ProcessSmoothAction(BYTE action)
 		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация всплывающих подсказок
+@return 
+*/
 void TMainScreen::InitPopupHelp()
 {
 	if (!ConfigManager.PopupHelpEnabled)
@@ -153,7 +166,12 @@ void TMainScreen::InitPopupHelp()
 	}
 }
 //---------------------------------------------------------------------------
-int TMainScreen::Render(bool mode)
+/*!
+Отрисовка/выбор объектов
+@param [__in] mode true - отрисовка, false - выбор
+@return При выборе объектов - идентификатор выбранного объекта
+*/
+int TMainScreen::Render(__in bool mode)
 {
 	DWORD ticks = GetTickCount();
 
@@ -264,6 +282,10 @@ int TMainScreen::Render(bool mode)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Нажатие левой кнопки мыши
+@return 
+*/
 void TMainScreen::OnLeftMouseDown()
 {
 	Render(false);
@@ -292,6 +314,10 @@ void TMainScreen::OnLeftMouseDown()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Отпускание левой кнопки мыши
+@return 
+*/
 void TMainScreen::OnLeftMouseUp()
 {
 	Render(false);
@@ -318,7 +344,13 @@ void TMainScreen::OnLeftMouseUp()
 	g_LastObjectLeftMouseDown = 0;
 }
 //---------------------------------------------------------------------------
-void TMainScreen::OnCharPress(WPARAM wparam, LPARAM lparam)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@return 
+*/
+void TMainScreen::OnCharPress( __in WPARAM wparam, __in LPARAM lparam)
 {
 	if (wparam == VK_RETURN || wparam == VK_BACK || wparam == VK_ESCAPE || wparam >= 0x100)
 		return; //Ignore no print keys
@@ -338,7 +370,13 @@ void TMainScreen::OnCharPress(WPARAM wparam, LPARAM lparam)
 		EntryPointer->Insert(wparam);
 }
 //---------------------------------------------------------------------------
-void TMainScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@return 
+*/
+void TMainScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 {
 	if (EntryPointer == NULL)
 		EntryPointer = m_Password;
@@ -368,7 +406,12 @@ void TMainScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 	}
 }
 //---------------------------------------------------------------------------
-int TMainScreen::GetConfigKeyCode(string &key)
+/*!
+Получить код конфига по ключу
+@param [__in] key Ключ
+@return 
+*/
+int TMainScreen::GetConfigKeyCode( __in string &key)
 {
 	const int keyCount = 6;
 
@@ -394,6 +437,10 @@ int TMainScreen::GetConfigKeyCode(string &key)
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Загрузка конфига
+@return 
+*/
 void TMainScreen::LoadGlobalConfig()
 {
 	m_AutoLogin = false;
@@ -470,6 +517,10 @@ void TMainScreen::LoadGlobalConfig()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Сохранение конфига
+@return 
+*/
 void TMainScreen::SaveGlobalConfig()
 {
 	FILE *uo_cfg = fopen(FilePath("uo_debug.cfg").c_str(), "w");
@@ -505,7 +556,13 @@ void TMainScreen::SaveGlobalConfig()
 	fclose(uo_cfg);
 }
 //---------------------------------------------------------------------------
-string TMainScreen::CryptPW(const char *buf, int len)
+/*!
+Шифрование пароля для сохранения в конфиг
+@param [__in] buf Не зашифрованный пароль
+@param [__in] len Длина пароля
+@return Зашифрованный пароль
+*/
+string TMainScreen::CryptPW(__in const char *buf, __in int len)
 {
 	char ret[50] = {0};
 
@@ -525,7 +582,13 @@ string TMainScreen::CryptPW(const char *buf, int len)
 	return ret;
 }
 //---------------------------------------------------------------------------
-string TMainScreen::DecryptPW(const char *buf, int len)
+/*!
+Расшифровка пароля
+@param [__in] buf Зашифрованный пароль
+@param [__in] len Длина пароля
+@return Расшифрованный пароль
+*/
+string TMainScreen::DecryptPW(__in const char *buf, __in int len)
 {
 	char ret[50] = {0};
 

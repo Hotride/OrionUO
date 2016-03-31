@@ -20,70 +20,105 @@
 #ifndef ConnectionManagerH
 #define ConnectionManagerH
 //---------------------------------------------------------------------------
-//Менеджер подключения к серверу
+//!Класс менеджера подключения к серверу
 class TConnectionManager
 {
 private:
-	//Подключение к сокету авторизации
+	//!Подключение к сокету авторизации
 	TConnection m_LoginSocket;
 
-	//Подключение к сокету сервера
+	//!Подключение к сокету сервера
 	TConnection m_GameSocket;
 
-	//Фрагментированное сообщение
+	//!Фрагментированное сообщение
 	TMessageFragment *m_LastMessageFragment;
 
-	//Тип шифрования
+	//!Тип шифрования
 	ENCRYPTION_TYPE m_EncryptionType;
 
-	//Версия протокола
+	//!Версия протокола
 	CLIENT_VERSION m_ClientVersion;
 
-	//Шифрование для сокета авторизации
+	//!Шифрование для сокета авторизации
 	TLoginCrypt m_LoginCrypt;
 
-	//Рыбы
+	//!Рыбы
 	TBlowfishCrypt m_BlowfishCrypt;
 	TTwofishCrypt m_TwoFishCrypt;
 
-	//Буфер декомпрессии
+	//!Буфер декомпрессии
 	TDecompressingCopier m_Decompressor;
 
-	//Тип сокета. true - Login, false - game
+	//!Тип сокета. true - Login, false - game
 	bool m_SocketType;
 
 public:
 	TConnectionManager();
 	~TConnectionManager();
 
-	//Инициализаци логин сокета
-	int Init(DWORD k1, DWORD k2, DWORD k3, DWORD seed_key);
-
-	//Инициализация игрового сокета
-	int Init(PBYTE GameSeed);
-
 	SETGET(ENCRYPTION_TYPE, EncryptionType);
 	SETGET(CLIENT_VERSION, ClientVersion);
 
-	//Состояние подключения
+	/*!
+	Инициализаци логин сокета
+	@param [__in] k1 Ключ шифрования 1
+	@param [__in] k2 Ключ шифрования 2
+	@param [__in] k3 Ключ шифрования 3
+	@param [__in] seed_key Семка для генерации шифрования
+	@return Код ошибки
+	*/
+	int Init(__in DWORD k1, __in DWORD k2, __in DWORD k3, __in DWORD seed_key);
+
+	/*!
+	Инициализация игрового сокета
+	@param [__in] GameSeed Ключ для игрового шифрования
+	@return Код ошибки
+	*/
+	int Init(__in PBYTE GameSeed);
+
+	/*!
+	Состояние подключения
+	@return true - подключено
+	*/
 	bool Connected() {return (m_LoginSocket.Connected() || m_GameSocket.Connected());}
 
-	//Подключение к серверу
-	int Connect(const char *IP, int Port, PBYTE GameSeed);
+	/*!
+	Подключение к серверу
+	@param [__in] IP IP адрес сервера
+	@param [__in] Port Порт сервера
+	@param [__in] GameSeed Ключ для шифрования
+	@return Код ошибки
+	*/
+	int Connect(__in const char *IP, __in int Port, __in PBYTE GameSeed);
 
-	//Разорвать подключение
+	/*!
+	Разорвать подключение
+	@return 
+	*/
 	void Disconnect();
 
-	//Получить данные с сервера
+	/*!
+	Получить данные с сервера
+	@return 
+	*/
 	void Recv();
 
-	//Отправить сообщение серверу
-	int Send(PBYTE buf, int size);
+	/*!
+	Отправить сообщение серверу
+	@param [__in] buf Буфер с данными
+	@param [__in] size Размер данных
+	@return Размер отправленных данных или код ошибки
+	*/
+	int Send(__in PBYTE buf, __in int size);
 
-	//Получить свой ИП
+	/*!
+	Получить свой IP-адрес
+	@return 
+	*/
 	PBYTE GetClientIP() const {return (PBYTE)m_LoginCrypt.m_seed;}
 };
 //---------------------------------------------------------------------------
+//!Менеджер подключения
 extern TConnectionManager ConnectionManager;
 //---------------------------------------------------------------------------
 #endif

@@ -77,252 +77,252 @@ using std::wstring;
 #include "EnumList.h"
 #include "DefinitionMacro.h"
 //---------------------------------------------------------------------------
-//Указатель на текстуру шейдера
+//!Указатель на текстуру шейдера
 extern GLuint ShaderTexture;
 
-//Указатель на состояние рисования шейдера
+//!Указатель на состояние рисования шейдера
 extern GLuint ShaderDrawMode;
 
-//Указатель на палитру цветов для шейдера
+//!Указатель на палитру цветов для шейдера
 extern GLuint ShaderColorTable;
 //---------------------------------------------------------------------------
-//Счетчики объектов (только для отладки)
+//!Счетчики объектов (только для отладки)
 extern int g_LandObjectsCount;
 extern int g_StaticsObjectsCount;
 extern int g_GameObjectsCount;
 extern int g_MultiObjectsCount;
 extern int g_RenderedObjectsCountInGameWindow;
 //---------------------------------------------------------------------------
-//Текстуры замков для гампов (locked/unlocked)
+//!Текстуры замков для гампов (locked/unlocked)
 extern GLuint g_TextureGumpState[2];
 
-//Возможность использовать фрэймбуфер
+//!Возможность использовать фрэймбуфер
 extern bool g_UseFrameBuffer;
 //---------------------------------------------------------------------------
-//Глобальные состояния нажатия дополнительных клавишь
+//!Глобальные состояния нажатия дополнительных клавишь
 extern bool g_AltPressed;
 extern bool g_CtrlPressed;
 extern bool g_ShiftPressed;
 //---------------------------------------------------------------------------
-//Использование мышки для перемещения персонажа
+//!Использование мышки для перемещения персонажа
 extern bool g_MovingFromMouse;
 
-//Использование автоматического перемещения персонажа за курсором мышки, когда курсор находится в игровом окне
+//!Использование автоматического перемещения персонажа за курсором мышки, когда курсор находится в игровом окне
 extern bool g_AutoMoving;
 //---------------------------------------------------------------------------
-//Инстанс
+//!Инстанс приложения
 extern HINSTANCE g_Hinstance;
 
-//Хэндл окна
+//!Хэндл окна
 extern HWND g_hWnd;
 
-//Габариты клиентской области окна
+//!Габариты клиентской области окна
 extern int g_ClientWidth;
 extern int g_ClientHeight;
 
-//Значения задержек в массиве
+//!Значения задержек в массиве
 extern int g_FrameDelay[2];
 
-//Индекс прозрачности крон деревьев
+//!Индекс прозрачности крон деревьев
 extern char g_FoliageIndex;
 
-//Путь к папке запуска
+//!Путь к папке запуска
 extern string g_DirectoryPath;
 
-//Имя последнего файла, загрузка которого завершилась ошибкой
+//!Имя последнего файла, загрузка которого завершилась ошибкой
 extern string g_LastLoadFileError;
 
-//Текст версии клиента
+//!Текст версии клиента
 extern string g_ClientVersionText;
 
-//Имена для автовхода
+//!Имена для автовхода
 extern string g_AutoLoginNames;
 
-//Последний введенный текст
+//!Последний введенный текст
 extern wstring g_LastConsoleEntry;
 
-//IP сервера
+//!IP сервера
 extern string g_ShardIP;
 
-//Порт к которому подключаться к серверу
+//!Порт к которому подключаться к серверу
 extern int g_ShardPort;
 
-//Время последней отправки пакета серверу
+//!Время последней отправки пакета серверу
 extern DWORD g_LastSendTime;
 
-//Время последнего пакета от сервера
+//!Время последнего пакета от сервера
 extern DWORD g_LastPacketTime;
 
-//Общий размер отправленных пакетов
+//!Общий размер отправленных пакетов
 extern DWORD g_TotalSendSize;
 
-//Общий размер принятых пакетов
+//!Общий размер принятых пакетов
 extern DWORD g_TotalRecvSize;
 
-//Флаг загрузки конфига
+//!Флаг загрузки конфига
 extern bool g_ConfigLoaded;
 
-//Состояние игры (отображаемый экран)
+//!Состояние игры (отображаемый экран)
 extern GAME_STATE g_GameState;
 
-//Логин ключи
+//!Логин ключи
 extern DWORD g_CryptKey[3];
 
-//Модификатор логин ключа
+//!Модификатор логин ключа
 extern WORD g_SeedKey;
 
-//Сообщение инициализации шифрования серверу
+//!Сообщение инициализации шифрования серверу
 extern BYTE g_GameSeed[4];
 
-//Уровень освещенности
+//!Уровень освещенности
 extern BYTE g_LightLevel;
 
-//Уровень освещенности персонажа
+//!Уровень освещенности персонажа
 extern BYTE g_PersonalLightLevel;
 
-//Перевернутыый байлист
+//!Перевернутыый байлист
 extern bool g_InverseBuylist;
 
-//Флаги клиента
+//!Флаги клиента
 extern DWORD g_ClientFlag;
 
-//Флаги расширений клиента
+//!Флаги расширений клиента
 extern DWORD g_LockedClientFeatures;
 
-//Максимальный габариты карты в точках по осям
+//!Максимальный габариты карты в точках по осям
 extern short g_MapSizeX[6];
 extern short g_MapSizeY[6];
 
-//Максимальный габариты карты в блоках по осям
+//!Максимальный габариты карты в блоках по осям
 extern short g_MapBlockX[6];
 extern short g_MapBlockY[6];
 
-//Текстуры карт мира
+//!Текстуры карт мира
 extern GLuint g_MapTexture[6];
 
-//Индекс текущей карты
+//!Индекс текущей карты
 extern BYTE g_CurrentMap;
 
-//Габариты игрового окна
+//!Габариты игрового окна
 extern int g_GameWindowWidth;
 extern int g_GameWindowHeight;
 
-//Позиция игрового окна
+//!Позиция игрового окна
 extern int g_GameWindowPosX;
 extern int g_GameWindowPosY;
 
-//Кодовая страница пользователя
+//!Кодовая страница пользователя
 extern int g_CodePage;
 
-//Время сервера
+//!Время сервера
 extern BYTE g_ServerTimeHour;
 extern BYTE g_ServerTimeMinute;
 extern BYTE g_ServerTimeSecond;
 
-//Счетчик стека пинга
+//!Счетчик стека пинга
 extern BYTE g_PingCount;
 extern BYTE g_PingSequence;
 
-//Пакет о завершении входа в игру получен
+//!Пакет о завершении входа в игру получен
 extern bool g_PacketLoginComplete;
 
-//Рисовать мир в черно-белом представлении
+//!Рисовать мир в черно-белом представлении
 extern bool g_GrayedPixels;
 
-//Количество индексов мульти-объектов
+//!Количество индексов мульти-объектов
 extern int g_MultiIndexCount;
 
-//Количество запросов перемещения
+//!Количество запросов перемещения
 extern BYTE g_WalkRequestCount;
 
-//Время последнего шага
+//!Время последнего шага
 extern DWORD g_LastStepTime;
 
-//Сумма значений навыков
+//!Сумма значений навыков
 extern float g_SkillsTotal;
 
-//Серийник персонажа
+//!Серийник персонажа
 extern DWORD g_PlayerSerial;
 
-//Количество блокирующих меню
+//!Количество блокирующих меню
 extern int g_GrayMenuCount;
 
-//Отображать в журнале системные сообщения
+//!Отображать в журнале системные сообщения
 extern bool g_JournalShowSystem;
 
-//Отображать в журнале сообщения от объектов
+//!Отображать в журнале сообщения от объектов
 extern bool g_JournalShowObjects;
 
-//Отображать в журнале внутренние сообщения клиента
+//!Отображать в журнале внутренние сообщения клиента
 extern bool g_JournalShowClient;
 
-//Серийник статусбара под мышкой
+//!Серийник статусбара под мышкой
 extern DWORD g_StatusbarUnderMouse;
 
-//Таймер черного экрана от смерти
+//!Таймер черного экрана от смерти
 extern DWORD g_DeathScreenTimer;
 
-//Отмена двойного нажатия мышки
+//!Отмена двойного нажатия мышки
 extern bool g_CancelDoubleClick;
 
-//Тип промпта
+//!Тип промпта
 extern PROMPT_TYPE g_ConsolePrompt;
 
-//Данные последнего ASCII промпта
+//!Данные последнего ASCII промпта
 extern BYTE g_LastASCIIPrompt[11];
 
-//Данные последнего Unicode промпта
+//!Данные последнего Unicode промпта
 extern BYTE g_LastUnicodePrompt[11];
 
-//Режим рисования. true - рисование, false - выбор объектов
+//!Режим рисования. true - рисование, false - выбор объектов
 extern bool g_DrawMode;
 
-//Текущий язык
+//!Текущий язык
 extern string g_Language;
 
-//Цвет для объектов, вышедших за пределы g_UpdateRange (если это предусмотрено опциями)
+//!Цвет для объектов, вышедших за пределы g_UpdateRange (если это предусмотрено опциями)
 extern WORD g_OutOfRangeColor;
 
-//Отправлять ли уведомление о выходе из игры
+//!Отправлять ли уведомление о выходе из игры
 extern bool g_SendLogoutNotification;
 
-//Включены ли всплывающие меню НПС
+//!Включены ли всплывающие меню НПС
 extern bool g_NPCPopupEnabled;
 
-//Включен ли чат
+//!Включен ли чат
 extern bool g_ChatEnabled;
 
-//Текущий сезон года
+//!Текущий сезон года
 extern BYTE g_Season;
 
-//Модификатор расчета анимации персонажа
+//!Модификатор расчета анимации персонажа
 extern float g_AnimCharactersDelayValue;
 
-//Отображать ли локеры гампов
+//!Отображать ли локеры гампов
 extern bool g_ShowGumpLocker;
 
-//Серийник для таргета от кнопок пати-гампа
+//!Серийник для таргета от кнопок пати-гампа
 extern DWORD g_PartyHelperTarget;
 
-//Время жизни для таргета от кнопок пати-гампа
+//!Время жизни для таргета от кнопок пати-гампа
 extern DWORD g_PartyHelperTimer;
 
-//Цвет OpenGL рисования
+//!Цвет OpenGL рисования
 extern float g_DrawColor;
 
-//Не рисовать крыши
+//!Не рисовать крыши
 extern bool g_NoDrawRoof;
 
-//Максимальное значение Z коордираны ландшафта для рендера
+//!Максимальное значение Z коордираны ландшафта для рендера
 extern char g_MaxGroundZ;
 
-//Имя выбранного персонажа
+//!Имя выбранного персонажа
 extern char g_SelectedCharName[30];
 
-//Значение Z-buffer'а
+//!Значение Z-buffer'а
 extern int g_ZBuffer;
 
-//Возможность использования круга прозрачности
+//!Возможность использования круга прозрачности
 extern bool g_UseCircleTrans;
 
 extern bool g_GumpPressed;
@@ -334,83 +334,83 @@ extern int g_GumpMovingOffsetY;
 extern float g_GumpTranslateX;
 extern float g_GumpTranslateY;
 //---------------------------------------------------------------------------
-//Текущие координаты мыши
+//!Текущие координаты мыши
 extern int g_MouseX;
 extern int g_MouseY;
 
-//Координаты нажатой левой кнопки мыши
+//!Координаты нажатой левой кнопки мыши
 extern int g_DroppedLeftMouseX;
 extern int g_DroppedLeftMouseY;
 
-//Координаты нажатой правой кнопки мыши
+//!Координаты нажатой правой кнопки мыши
 extern int g_DroppedRightMouseX;
 extern int g_DroppedRightMouseY;
 
-//Состояния нажатия кнопок мыши
+//!Состояния нажатия кнопок мыши
 extern bool g_RightMouseDown;
 extern bool g_LeftMouseDown;
 //---------------------------------------------------------------------------
-//Выбор объектов гампов
+//!Выбор объектов гампов
 extern bool g_SelectGumpObjects;
 
-//Тип выбранного объекта
+//!Тип выбранного объекта
 extern SELECT_OBJECT_TYPE g_LastObjectType;
 
-//Последний выбранный объект
+//!Последний выбранный объект
 extern int g_LastSelectedObject;
 
-//Последний объект, на котором была нажата левая кнопка мыши
+//!Последний объект, на котором была нажата левая кнопка мыши
 extern int g_LastObjectLeftMouseDown;
 
-//Последний объект, на котором была нажата правая кнопка мыши
+//!Последний объект, на котором была нажата правая кнопка мыши
 extern int g_LastObjectRightMouseDown;
 
-//Последний выбранный гамп
+//!Последний выбранный гамп
 extern DWORD g_LastSelectedGump;
 
-//Последний гамп, на котором была нажата левая кнопка мыши
+//!Последний гамп, на котором была нажата левая кнопка мыши
 extern DWORD g_LastGumpLeftMouseDown;
 
-//Время последнего нажатия мышкой на гамп
+//!Время последнего нажатия мышкой на гамп
 extern DWORD g_LastGumpMouseDownTime;
 
-//Время последнего нажатия мышки
+//!Время последнего нажатия мышки
 extern DWORD g_LastMouseDownTime;
 
-//Последний гамп, на котором была нажата правая кнопка мыши
+//!Последний гамп, на котором была нажата правая кнопка мыши
 extern DWORD g_LastGumpRightMouseDown;
 
-//Сгенерированное событие нажатия кнопки мыши
+//!Сгенерированное событие нажатия кнопки мыши
 extern bool g_GeneratedMouseDown;
 
-//Последнее время клика мышкой
+//!Последнее время клика мышкой
 extern DWORD g_LastLClickTime;
 
-//Индекс последнего выбранного заклинания
+//!Индекс последнего выбранного заклинания
 extern int g_LastSpellIndex;
 
-//Индекс последнего выбранного навыка
+//!Индекс последнего выбранного навыка
 extern int g_LastSkillIndex;
 
-//Запрос нажатия на объект
+//!Запрос нажатия на объект
 extern bool g_ClickObjectReq;
 
-//Последний использованный объект
+//!Последний использованный объект
 extern DWORD g_LastUseObject;
 
-//Последний объект, на который навели прицелом
+//!Последний объект, на который навели прицелом
 extern DWORD g_LastTargetObject;
 
-//Последний атакованный объект
+//!Последний атакованный объект
 extern DWORD g_LastAttackObject;
 
-//Время последней отрисовки
+//!Время последней отрисовки
 extern DWORD g_LastRenderTime;
 
-//Дистанция для обновления предметов
+//!Дистанция для обновления предметов
 extern int g_UpdateRange;
 
-//Координаты, с которых следует начинать расчет удаления объектов
+//!Координаты, с которых следует начинать расчет удаления объектов
 extern POINT g_RemoveRangeXY;
 //---------------------------------------------------------------------------
 
@@ -454,11 +454,12 @@ typedef struct MULTILINES_FONT_INFO
 	}
 } *PMULTILINES_FONT_INFO;
 
+
+
+
 #define DPOLY(x, y, w, h) g_GL.DrawPolygone(x, y, w, h)
 //---------------------------------------------------------------------------
-#pragma region game typedefs
 typedef std::vector<BYTE> WaveFile;
-#pragma endregion
 
 
 

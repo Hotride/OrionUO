@@ -29,8 +29,11 @@ m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(0),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
 m_AfterStepDelay(0), m_StepSoundOffset(0), m_CorpseLink(0)
 {
-	m_RenderQueueIndex = 7; //Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
-	m_WalkStack.Init(); //Инициализация счетчика шагов
+	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
+	m_RenderQueueIndex = 7;
+
+	//!Инициализация счетчика шагов
+	m_WalkStack.Init();
 
 	if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial == serial && GumpManager->GetGump(serial, 0, GT_TARGET_SYSTEM) == NULL)
 		GumpManager->AddGump(new TGumpTargetSystem(m_Serial, NewTargetSystem.GumpX, NewTargetSystem.GumpY));
@@ -38,26 +41,36 @@ m_AfterStepDelay(0), m_StepSoundOffset(0), m_CorpseLink(0)
 //---------------------------------------------------------------------------
 TGameCharacter::~TGameCharacter()
 {
-	//Чистим память
+	//!Чистим память
 	m_WalkStack.Clear();
 	m_PaperdollTextTexture.Clear();
 
-	//Если стянут статусбар - обновим его
+	//!Если стянут статусбар - обновим его
 	GumpManager->UpdateGump(m_Serial, 0, GT_STATUSBAR);
 	
-	//Если стянут статусбар таргет системы - обновим его
+	//!Если стянут статусбар таргет системы - обновим его
 	GumpManager->UpdateGump(m_Serial, 0, GT_TARGET_SYSTEM);
 }
 //---------------------------------------------------------------------------
-void TGameCharacter::SetPaperdollText(string val)
+/*!
+Сгенерировать текстуру текста папердолла
+@param [__in] val Текст папердолла
+@return 
+*/
+void TGameCharacter::GeneratePaperdollText( __in string val)
 {
-	m_PaperdollTextTexture.Clear(); //Очищаем текстуру
-	m_PaperdollText = val;
+	//!Очищаем текстуру
+	m_PaperdollTextTexture.Clear();
 
-	if (val.length()) //Если текст есть - сгенерируем новую текстуру
+	//!Если текст есть - сгенерируем новую текстуру
+	if (val.length())
 		FontManager->GenerateA(1, m_PaperdollTextTexture, val.c_str(), 0x0386, 185);
 }
 //---------------------------------------------------------------------------
+/*!
+Сидит ли персонаж
+@return Индекс объекта из таблицы, на котором он восседает
+*/
 int TGameCharacter::IsSitting()
 {
 	int result = 0;
@@ -207,7 +220,15 @@ int TGameCharacter::IsSitting()
 	return result;
 }
 //---------------------------------------------------------------------------
-int TGameCharacter::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
+/*!
+Отрисовать персонажа
+@param [__in] mode Режим рисования. true - рисование, false - выбор объектов
+@param [__in] drawX Экранная координата X объекта
+@param [__in] drawY Экранная координата Y объекта
+@param [__in] ticks Таймер рендера
+@return При выборе объектов возвращает выбранный элемент
+*/
+int TGameCharacter::Draw( __in bool &mode, __out int &drawX, __in int &drawY, __in DWORD &ticks)
 {
 	if (mode)
 	{
@@ -242,9 +263,14 @@ int TGameCharacter::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 	return 0;
 }
 //---------------------------------------------------------------------------
-void TGameCharacter::OnGraphicChange(int direction)
+/*!
+Обновить информацию о поле персонажа, обновление гампов
+@param [__in_opt] direction Направление персонажа
+@return 
+*/
+void TGameCharacter::OnGraphicChange( __in_opt int direction)
 {
-	//Обновления пола в зависимости от индекса картинки персонажа
+	//!Обновления пола в зависимости от индекса картинки персонажа
 	switch (m_Graphic)
 	{
 		case 0x0190:
@@ -278,7 +304,16 @@ void TGameCharacter::OnGraphicChange(int direction)
 	}
 }
 //---------------------------------------------------------------------------
-bool TGameCharacter::IsCorrectStep(WORD &cx, WORD &cy, WORD &x, WORD &y, BYTE &dir)
+/*!
+Проверка, шаг ли это или телепорт (определяет телепорт на 1 тайл по направлению движения как шаг)
+@param [__inout] cx Текущая координата X
+@param [__inout] cy Текущая координата Y
+@param [__in] x Новая координата X
+@param [__in] y Новая координата Y
+@param [__in] dir Направление персонажа
+@return Результат выполнения шаг/телепорт
+*/
+bool TGameCharacter::IsCorrectStep( __inout WORD &cx, __inout WORD &cy, __in WORD &x, __in WORD &y, __in BYTE &dir)
 {
 	switch (dir & 7)
 	{
@@ -331,7 +366,14 @@ bool TGameCharacter::IsCorrectStep(WORD &cx, WORD &cy, WORD &x, WORD &y, BYTE &d
 	return (cx == x && cy == y);
 }
 //---------------------------------------------------------------------------
-bool TGameCharacter::IsTeleportAction(WORD &x, WORD &y, BYTE &dir)
+/*!
+Проверка изменения координат, телепорт ли это
+@param [__in] x Новая координата X
+@param [__in] y Новая координата Y
+@param [__in] dir Новое направление персонажа
+@return true - телепорт, false - шаг
+*/
+bool TGameCharacter::IsTeleportAction( __in WORD &x, __in WORD &y, __in BYTE &dir)
 {
 	bool result = false;
 
@@ -357,7 +399,17 @@ bool TGameCharacter::IsTeleportAction(WORD &x, WORD &y, BYTE &dir)
 	return result;
 }
 //---------------------------------------------------------------------------
-void TGameCharacter::SetAnimation(BYTE id, BYTE interval, BYTE frameCount, BYTE repeatCount, bool repeat, bool frameDirection)
+/*!
+Установка анимации от сервера
+@param [__in] id Группа анимаци
+@param [__in_opt] interval Задержка между кадрами
+@param [__in_opt] frameCount Количество кадлов анимации
+@param [__in_opt] repeatCount Количество повторов анимации
+@param [__in_opt] repeat Зациклено или нет
+@param [__out_opt] frameDirection Направление прокрутки кадров (вперед/назад)
+@return 
+*/
+void TGameCharacter::SetAnimation( __in BYTE id, __in_opt BYTE interval, __in_opt BYTE frameCount, __in_opt BYTE repeatCount, __in_opt bool repeat, __out_opt bool frameDirection)
 {
 	m_AnimationGroup = id;
 	m_AnimIndex = 0;
@@ -372,6 +424,27 @@ void TGameCharacter::SetAnimation(BYTE id, BYTE interval, BYTE frameCount, BYTE 
 	m_TimeToRandomFidget = GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY;
 }
 //---------------------------------------------------------------------------
+/*!
+Установка группы анимации
+@param [__in] val Новое значение группы анимации
+@return
+*/
+void TGameCharacter::SetAnimationGroup(__in BYTE val)
+{
+	m_AnimationFrameCount = 0;
+	m_AnimationInterval = 0;
+	m_AnimationRepeat = false;
+	m_AnimationRepeatMode = 0;
+	m_AnimationDirection = false;
+	m_AnimationFromServer = false;
+
+	m_AnimationGroup = val;
+}
+//---------------------------------------------------------------------------
+/*!
+Установка случайной анимации (при длительном простое)
+@return 
+*/
 void TGameCharacter::SetRandomFidgetAnimation()
 {
 	m_AnimIndex = 0;
@@ -396,19 +469,13 @@ void TGameCharacter::SetRandomFidgetAnimation()
 	m_AnimationGroup = fidgetAnimTable[groupIndex - 1][RandomInt(3)];
 }
 //---------------------------------------------------------------------------
-void TGameCharacter::SetAnimationGroup(BYTE val)
-{
-	m_AnimationFrameCount = 0;
-	m_AnimationInterval = 0;
-	m_AnimationRepeat = false;
-	m_AnimationRepeatMode = 0;
-	m_AnimationDirection = false;
-	m_AnimationFromServer = false;
-
-	m_AnimationGroup = val;
-}
-//---------------------------------------------------------------------------
-void TGameCharacter::GetAnimationGroup(ANIMATION_GROUPS group, BYTE &animation)
+/*!
+Скорректировать отношение анимаций
+@param [__in] group Группа анимации
+@param [__inout] animation Индекс группы анимации
+@return
+*/
+void TGameCharacter::GetAnimationGroup(__in ANIMATION_GROUPS group, __inout BYTE &animation)
 {
 	const BYTE animAssociateTable[35][3] =
 	{
@@ -453,7 +520,15 @@ void TGameCharacter::GetAnimationGroup(ANIMATION_GROUPS group, BYTE &animation)
 		animation = animAssociateTable[animation][group - 1];
 }
 //---------------------------------------------------------------------------
-void TGameCharacter::CorrectAnimationGroup(WORD &graphic, ANIMATION_GROUPS &group, BYTE &animation)
+
+/*!
+Скорректировать отношение индексов групп анимаций
+@param [__in] graphic Индекс картинки
+@param [__in] group Группа анимаций
+@param [__inout] animation Индекс анимации в группе
+@return 
+*/
+void TGameCharacter::CorrectAnimationGroup( __in WORD &graphic, __in ANIMATION_GROUPS &group, __inout BYTE &animation)
 {
 	if (group == AG_LOW)
 	{
@@ -510,7 +585,12 @@ void TGameCharacter::CorrectAnimationGroup(WORD &graphic, ANIMATION_GROUPS &grou
 	}
 }
 //---------------------------------------------------------------------------
-bool TGameCharacter::TestStepNoChangeDirection(BYTE group)
+/*!
+Проверка на возможность изменения направления персонажа при движении в сидячем положении
+@param [__in] group Индекс группы анимации
+@return Можно изменять направление или нет
+*/
+bool TGameCharacter::TestStepNoChangeDirection(__in BYTE group)
 {
 	bool result = false;
 
@@ -541,7 +621,12 @@ bool TGameCharacter::TestStepNoChangeDirection(BYTE group)
 	return result;
 }
 //---------------------------------------------------------------------------
-BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
+/*!
+Получить текущую группу анимации
+@param [__in_opt] graphic Индекс картинки персонажа
+@return Индекс группы анимации
+*/
+BYTE TGameCharacter::GetAnimationGroup(__in_opt WORD graphic)
 {
 	if (!graphic)
 		graphic = GetMountAnimation();
@@ -595,7 +680,7 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 		else if (m_AnimationGroup == 0xFF)
 			result = (BYTE)HAG_STAND;
 
-		//Глюченный дельфин на всех клиентах
+		//!Глюченный дельфин на всех клиентах
 		if (graphic == 151)
 			result++;
 	}
@@ -659,6 +744,10 @@ BYTE TGameCharacter::GetAnimationGroup(WORD graphic)
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Получить индекс картинки для вычисления картинки анимации
+@return Индекс картинки персонажа
+*/
 WORD TGameCharacter::GetMountAnimation()
 {
 	WORD graphic = m_Graphic;
@@ -679,7 +768,13 @@ WORD TGameCharacter::GetMountAnimation()
 	return graphic;
 }
 //---------------------------------------------------------------------------
-void TGameCharacter::UpdateAnimationInfo(BYTE &dir, bool canChange)
+/*!
+не подписанная функция
+@param [__inout] dir не подписанный параметр
+@param [__in] canChange Можно ли изменять состояние стека хотьбы или нет
+@return 
+*/
+void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange)
 {
 	dir = m_Direction;
 	if (dir & 0x80)
@@ -763,7 +858,12 @@ void TGameCharacter::UpdateAnimationInfo(BYTE &dir, bool canChange)
 	}
 }
 //---------------------------------------------------------------------------
-TGameItem *TGameCharacter::FindLayer(int layer)
+/*!
+Найти объект на указанном слое
+@param [__in] layer Номер слоя
+@return Ссылка на найденный объект или NULL
+*/
+TGameItem *TGameCharacter::FindLayer(__in int layer)
 {
 	TGameItem *item = NULL;
 

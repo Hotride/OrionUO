@@ -20,46 +20,71 @@
 #ifndef GamePlayerH
 #define GamePlayerH
 //--------------------------------------------------------------------------
+//!Класс игрока
 class TPlayer: public TGameCharacter
 {
 private:
-	short m_Str; //Сила
-	short m_Int; //Интеллект
-	short m_Dex; //Ловкость
+	//!Сила
+	short m_Str;
 
-	WORD m_MaxWeight; //Максимальный вес
-	WORD m_Weight; //Текущее значение веса
+	//!Интеллект
+	short m_Int;
 
-	short m_Armor; //Значение брони
+	//!Ловкость
+	short m_Dex;
 
-	DWORD m_Gold; //Количество денег на счету
+	//!Максимальный вес
+	WORD m_MaxWeight;
 
-	//Максимальная сумма статов
+	//!Текущее значение веса
+	WORD m_Weight;
+
+	//!Значение брони
+	short m_Armor;
+
+	//!Количество денег на счету
+	DWORD m_Gold;
+
+	//!Максимальная сумма статов
 	WORD m_StatsCap;
 	
-	CHARACTER_RACE_TYPE m_Race;
+	//CHARACTER_RACE_TYPE m_Race;
 
-	//Количество подчиненных существ
+	//!Количество подчиненных существ
 	BYTE m_Followers;
 
-	//Максимальное количество подчиненных существ
+	//!Максимальное количество подчиненных существ
 	BYTE m_MaxFollowers;
 	
+	//!Сопротивление огню
 	short m_FireResistance;
+
+	//!Сопротивление холоду
 	short m_ColdResistance;
+
+	//!Сопротивление яду
 	short m_PoisonResistance;
+
+	//!Сопротивление енергии
 	short m_EnergyResistance;
 	
+	//!Удача
 	short m_Luck;
-	
+
+	//!Минимальный урон
 	short m_MinDamage;
+
+	//!Максимальный урон
 	short m_MaxDamage;
 	
+	//!Очки для какой-то херни, вроде паладинские
 	DWORD m_TithingPoints;
 
-	bool m_Warmode; //Режим боя
+	//!Режим боя
+	bool m_Warmode;
 
-	TSkill *m_Skills; //Указатель на умения
+	//!Указатель на список умений
+	TSkill *m_Skills;
 public:
 	TPlayer(DWORD serial);
 	virtual ~TPlayer();
@@ -83,25 +108,89 @@ public:
 	SETGET(short, MinDamage);
 	SETGET(short, MaxDamage);
 	SETGET(DWORD, TithingPoints);
-	SETGET(CHARACTER_RACE_TYPE, Race);
-	void SetName(string val);
+	//SETGET(CHARACTER_RACE_TYPE, Race);
 
-	void SetSkillBaseValue(int index, float val);
-	void SetSkillValue(int index, float val);
-	void SetSkillCap(int index, float val);
-	void SetSkillStatus(int index, BYTE val);
-	
-	float GetSkillBaseValue(int index) const;
-	float GetSkillValue(int index) const;
-	float GetSkillCap(int index) const;
-	BYTE GetSkillStatus(int index) const;
+	/*!
+	Установить имя
+	@param [__in] val Новое имя
+	@return 
+	*/
+	void SetName(__in string val);
 
-	//Для поиска бинтов в сумке (и подсумках)
+	/*!
+	Установить базовое значение навыка
+	@param [__in] index Индекс навыка
+	@param [__in] val Новое значение
+	@return 
+	*/
+	void SetSkillBaseValue(__in int index, __in float val);
+
+	/*!
+	Установить значение навыка
+	@param [__in] index Индекс навыка
+	@param [__in] val Новое значение
+	@return 
+	*/
+	void SetSkillValue(__in int index, __in float val);
+
+	/*!
+	Установить максимальное значение навыка
+	@param [__in] index Индекс навыка
+	@param [__in] val Новое значение
+	@return 
+	*/
+	void SetSkillCap(__in int index, __in float val);
+
+	/*!
+	Установить статус навыка
+	@param [__in] index Индекс навыка
+	@param [__in] val Новое состояние
+	@return 
+	*/
+	void SetSkillStatus(__in int index, __in BYTE val);
+
+	/*!
+	Получить базовое значение навыка
+	@param [__in] index Индекс навыка
+	@return Текущее значение
+	*/
+	float GetSkillBaseValue(__in int index) const;
+
+	/*!
+	Получить значение навыка
+	@param [__in] index Индекс навыка
+	@return Текущее значение
+	*/
+	float GetSkillValue(__in int index) const;
+
+	/*!
+	Получить максимальное значение навыка
+	@param [__in] index Индекс навыка
+	@return Текущее значение
+	*/
+	float GetSkillCap(__in int index) const;
+
+	/*!
+	Получить статус навыка
+	@param [__in] index Индекс навыка
+	@return Текущее состояние
+	*/
+	BYTE GetSkillStatus(__in int index) const;
+
+	/*!
+	Поиск бинтов в сумке (и подсумках)
+	@return Ссылка на бинт или NULL
+	*/
 	TGameItem *FindBandage();
 
+	/*!
+	Проверка на игрока (персонаж - игрок человека за компьютером)
+	@return Игрок или нет
+	*/
 	bool IsPlayer() {return true;}
 };
 //---------------------------------------------------------------------------
-extern TPlayer *g_Player; //Ссылка на игрока
+//!Ссылка на игрока
+extern TPlayer *g_Player;
 //---------------------------------------------------------------------------
 #endif

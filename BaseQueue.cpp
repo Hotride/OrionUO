@@ -52,6 +52,10 @@ TBaseQueue::~TBaseQueue()
 	Clear();
 }
 //---------------------------------------------------------------------------
+/*!
+Очистка списка
+@return 
+*/
 void TBaseQueue::Clear()
 {
 	//Если в контейнере есть элементы - достаточно просто удалить первый, остальные удалятся вместе с ним
@@ -62,7 +66,12 @@ void TBaseQueue::Clear()
 	}
 }
 //---------------------------------------------------------------------------
-TBaseQueueItem *TBaseQueue::Add(TBaseQueueItem *item)
+/*!
+Добавление элемента в список
+@param [__in] item Ссылка на новый элемент
+@return Ссылка на новый элемент
+*/
+TBaseQueueItem *TBaseQueue::Add(__in TBaseQueueItem *item)
 {
 	//Если вставляемый элемент не равен нулю
 	if (item != NULL)
@@ -86,7 +95,12 @@ TBaseQueueItem *TBaseQueue::Add(TBaseQueueItem *item)
 	return item;
 }
 //---------------------------------------------------------------------------
-void TBaseQueue::Delete(TBaseQueueItem *item)
+/*!
+Удаление указанного элемента из списка
+@param [__in] item Ссылка на элемент
+@return 
+*/
+void TBaseQueue::Delete( __in TBaseQueueItem *item)
 {
 	//Если элемент не равен нулю
 	if (item != NULL)
@@ -101,13 +115,23 @@ void TBaseQueue::Delete(TBaseQueueItem *item)
 	}
 }
 //---------------------------------------------------------------------------
-void TBaseQueue::Delete(int index)
+/*!
+Удаление элемента с указанным индексом
+@param [__in] index Индекс элемента
+@return
+*/
+void TBaseQueue::Delete(__in int index)
 {
 	//Получим элемент с указанным индексом и удалим его (если есть)
 	Delete(Get(index));
 }
 //---------------------------------------------------------------------------
-int TBaseQueue::GetItemIndex(TBaseQueueItem *item)
+/*!
+Получить индекс указанного элемента
+@param [__in] item Ссылка на элемент
+@return Индекс элемента в очереди
+*/
+int TBaseQueue::GetItemIndex( __in TBaseQueueItem *item)
 {
 	int index = 0;
 
@@ -125,6 +149,10 @@ int TBaseQueue::GetItemIndex(TBaseQueueItem *item)
 	return -1;
 }
 //---------------------------------------------------------------------------
+/*!
+Получить общее количество элементов в списке
+@return Количество объектов в очереди
+*/
 int TBaseQueue::GetItemsCount()
 {
 	int count = 0;
@@ -137,7 +165,12 @@ int TBaseQueue::GetItemsCount()
 	return count;
 }
 //---------------------------------------------------------------------------
-TBaseQueueItem *TBaseQueue::Get(int index)
+/*!
+Получить элемент с указанным индексом
+@param [__in] index Индекс элемента
+@return Ссылка на элемент или NULL
+*/
+TBaseQueueItem *TBaseQueue::Get(__in int index)
 {
 	TBaseQueueItem *item = m_Items;
 
@@ -147,7 +180,13 @@ TBaseQueueItem *TBaseQueue::Get(int index)
 	return item;
 }
 //---------------------------------------------------------------------------
-void TBaseQueue::Insert(TBaseQueueItem *first, TBaseQueueItem *item)
+/*!
+Осуществляет вставку элемента в очередь
+@param [__in] first Ссылка на предшествующий элемент
+@param [__out] item Ссылка на элемент
+@return 
+*/
+void TBaseQueue::Insert( __in TBaseQueueItem *first, __out TBaseQueueItem *item)
 {
 	if (first == NULL)
 	{
@@ -172,7 +211,12 @@ void TBaseQueue::Insert(TBaseQueueItem *first, TBaseQueueItem *item)
 	}
 }
 //---------------------------------------------------------------------------
-void TBaseQueue::Unlink(TBaseQueueItem *item)
+/*!
+Осуществляет изъятие указанного элемента из очереди
+@param [__in] item Ссылка на элемент
+@return 
+*/
+void TBaseQueue::Unlink( __in TBaseQueueItem *item)
 {
 	//Если элемент не равен нулю
 	if (item != NULL)
@@ -197,7 +241,12 @@ void TBaseQueue::Unlink(TBaseQueueItem *item)
 	}
 }
 //---------------------------------------------------------------------------
-void TBaseQueue::MoveToFront(TBaseQueueItem *item)
+/*!
+Поместить элемент в начало очереди
+@param [__in] item Ссылка на элемент
+@return 
+*/
+void TBaseQueue::MoveToFront( __in TBaseQueueItem *item)
 {
 	//Если элемент не равен нулю и не равен началу очереди
 	if (item != NULL && item != m_Items)
@@ -217,7 +266,12 @@ void TBaseQueue::MoveToFront(TBaseQueueItem *item)
 	}
 }
 //---------------------------------------------------------------------------
-void TBaseQueue::MoveToBack(TBaseQueueItem *item)
+/*!
+Поместить элемент в конец очереди
+@param [__in] item Ссылка на элемент
+@return 
+*/
+void TBaseQueue::MoveToBack( __in TBaseQueueItem *item)
 {
 	//Если элемент не равен нулю
 	if (item != NULL)
@@ -239,7 +293,13 @@ void TBaseQueue::MoveToBack(TBaseQueueItem *item)
 	}
 }
 //---------------------------------------------------------------------------
-bool TBaseQueue::Move(TBaseQueueItem *item, bool up)
+/*!
+Переместить элемент вверх/вниз по очереди
+@param [__in] item Ссылка на элемент
+@param [__in] up Вверх или вниз по очереди
+@return true в случае успешного перемещения
+*/
+bool TBaseQueue::Move( __in TBaseQueueItem *item, __in bool up)
 {
 	//Немедленно запишем результат (и исходные данные для первой проверки) в переменную
 	bool result = (item != NULL);
@@ -312,6 +372,10 @@ bool TBaseQueue::Move(TBaseQueueItem *item, bool up)
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Получить указатель на последний элемент
+@return Ссылка на элемент
+*/
 TBaseQueueItem *TBaseQueue::Last()
 {
 	//Начинаем поиск с начала очереди

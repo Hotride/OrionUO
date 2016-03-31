@@ -20,51 +20,53 @@
 #ifndef GameObjectH
 #define GameObjectH
 //--------------------------------------------------------------------------
+//!Класс игрового объекта
 class TGameObject : public TRenderStaticObject
 {
 protected:
-	//Серийник контейнера, содержащего объект (0xFFFFFFFF - объект лежит в мире)
+	//!Серийник контейнера, содержащего объект (0xFFFFFFFF - объект лежит в мире)
 	DWORD m_Container;
 
-	//Карта объекта
+	//!Карта объекта
 	BYTE m_MapIndex;
 
-	//Количество
+	//!Количество
 	DWORD m_Count;
 
-	//Флаги от сервера
+	//!Флаги от сервера
 	BYTE m_Flags;
 
-	//Имя
+	//!Имя
 	string m_Name;
 
-	//НПС или предмет
+	//!НПС или предмет
 	bool m_NPC;
 
-	//На предмет кликнули
+	//!На предмет кликнули
 	bool m_Clicked;
 
-	//Текущий индекс анимации
+	//!Текущий индекс анимации
 	char m_AnimIndex;
 
-	//Время последнего изменения анимации
+	//!Время последнего изменения анимации
 	DWORD m_LastAnimationChangeTime;
 
-	//Ссылка на список эффектов персонажа
+	//!Ссылка на список эффектов персонажа
 	TGameEffect *m_Effects;
 
-	//Указатель на текстуру дл яопции Object Handles
+	//!Указатель на текстуру дл яопции Object Handles
 	TTextureObject m_TextureObjectHalndes;
 
-	//Создать текстуру для опции Object Handles
-	void GenerateObjectHandlesTexture(wstring text);
+	/*!
+	Создать текстуру для опции Object Handles
+	@param [__in] text Текст названия объекта
+	@return 
+	*/
+	void GenerateObjectHandlesTexture(__in wstring text);
 
 public:
 	TGameObject(DWORD serial = 0);
 	virtual ~TGameObject();
-
-	//Добавить текст в контейнер
-	void AddText(TTextData *td);
 
 	SETGET(DWORD, Container);
 	SETGET(BYTE, MapIndex);
@@ -76,58 +78,163 @@ public:
 	SETGETEX(char, AnimIndex);
 	SETGET(DWORD, LastAnimationChangeTime);
 
-	//Отрисовать текстуру опции Object Handles (автоматически создает текстуру, если она не была создана)
-	void DrawObjectHandlesTexture(int &x, int &y);
+	/*!
+	Добавить текст в контейнер
+	@param [__in] td Ссылка на объект текста
+	@return 
+	*/
+	void AddText(__in TTextData *td);
 
-	//Получить индекс анимации
+	/*!
+	Отрисовать текстуру опции Object Handles (автоматически создает текстуру, если она не была создана)
+	@param [__in] x Экранная координата X
+	@param [__in] y Экранная координата Y
+	@return 
+	*/
+	void DrawObjectHandlesTexture(__in int &x, __in int &y);
+
+	/*!
+	Получить индекс анимации
+	@return Индекс анимации
+	*/
 	virtual WORD GetMountAnimation();
-
-	//Событие, вызываемое при изменении индекса картинки
+	
+	/*!
+	Событие, вызываемое при изменении индекса картинки
+	@param [__in_opt] direction Направление объекта
+	@return
+	*/
 	virtual void OnGraphicChange(int direction = 0) {}
 
-	//Проверка прозрачности (для круга прозрачности)
+	/*!
+	Проверка прозрачности (для круга прозрачности)
+	@param [__in] playerZ Координата Z игрока
+	@return Может ли быть прозрачным
+	*/
 	virtual bool TranparentTest(int &playerZ) { return false; }
 
-	//Управление эффектами
-	void DrawEffects(int &drawX, int &drawY, DWORD &ticks);
-	void AddEffect(TGameEffect *effect); //Добавить эффект
-	void RemoveEffect(TGameEffect *effect); //Удалить эффект
+	/*!
+	Отрисовать эффект
+	@param [__in] drawX Экранная координата X
+	@param [__in] drawY Экранная координата Y
+	@param [__in] ticks Таймер рендера
+	@return 
+	*/
+	void DrawEffects(__in int &drawX, __in int &drawY, __in DWORD &ticks);
 
-	//Управление объектами внутри текущего объекта
-	void AddObject(TGameObject *obj); //Добавить объект в список объектов текущего контейнера
-	void AddItem(TGameObject *obj); //Добавить объект в контейнер (this - контейнер)
-	void Reject(TGameObject *obj); //Изъять объект из контейнера
-	//void MoveToTop(TGameObject *obj); //Наверх отрисовки (в конец списка)
+	/*!
+	Добавить эффект
+	@param [__in] effect Ссылка на эффект
+	@return 
+	*/
+	void AddEffect(__in TGameEffect *effect);
 
-	void Clear(); //Очистить контейнер
+	/*!
+	Удалить эффект
+	@param [__in] effect Ссылка на эффект
+	@return 
+	*/
+	void RemoveEffect(__in TGameEffect *effect);
 
-	//Получение значений состояния в зависимости от флагов
+	/*!
+	Добавить объект в список объектов текущего контейнера
+	@param [__in] obj Ссылка на объект
+	@return 
+	*/
+	void AddObject(__in TGameObject *obj); 
+
+	/*!
+	Добавить объект в контейнер (this - контейнер)
+	@param [__in] obj Ссылка на объект
+	@return 
+	*/
+	void AddItem(__in TGameObject *obj);
+
+	/*!
+	Изъять объект из контейнера
+	@param [__in] obj Ссылка на объект
+	@return 
+	*/
+	void Reject(__in TGameObject *obj);
+
+	/*!
+	Очистить контейнер
+	@return 
+	*/
+	void Clear();
+
+	/*!
+	Отравлен ли объект
+	@return
+	*/
 	bool Poisoned() {return (m_Flags & 0x04);}
+
+	/*!
+	Объект имеет желтую полоску жизней
+	@return
+	*/
 	bool YellowHits() {return (m_Flags & 0x08);}
+
+	/*!
+	Можно ли брать объект в руку
+	@return
+	*/
 	bool Locked() {return !(m_Flags & 0x20);}
+
+	/*!
+	Объект в режиме боя
+	@return
+	*/
 	bool InWarMode() {return (m_Flags & 0x40);}
+
+	/*!
+	Объект спрятан
+	@return
+	*/
 	bool Hidden() {return (m_Flags & 0x80);}
 
-	//Виртуальные указатели
+	/*!
+	Проверка на человекоподобного персонажа
+	@return Человекоподобное или нет
+	*/
 	virtual bool IsHuman() {return false;}
-	virtual bool IsPlayer() {return false;}
-	
-	int IsGold();
-	WORD GetDrawGraphic(bool &doubleDraw);
 
+	/*!
+	Проверка на игрока (персонаж - игрок человека за компьютером)
+	@return Игрок или нет
+	*/
+	virtual bool IsPlayer() {return false;}
+
+	/*!
+	Золото ли это
+	@return Индекс в таблице золота
+	*/
+	int IsGold();
+
+	/*!
+	Получить индекс картинки для рисования
+	@param [__out] doubleDraw Двойная отрисовка объекта
+	@return Индекс картинки
+	*/
+	WORD GetDrawGraphic(__out bool &doubleDraw);
+
+	/*!
+	Это игровой объект
+	@return 
+	*/
 	bool IsGameObject() {return true;}
+
+	/*!
+	Это труп
+	@return
+	*/
 	bool IsCorpse() {return (m_Graphic == 0x2006);}
 
-	//Найти объект в мире, в котором содержится контейнер
+	/*!
+	Найти объект в мире, в котором содержится контейнер
+	@return Ссылка на объект в мире
+	*/
 	TGameObject *GetTopObject();
 };
-//---------------------------------------------------------------------------
-//Функции для вычисления дистанции
-int GetDistance(TGameObject *current, TGameObject *target);
-int GetDistance(TGameObject *current, POINT target);
-int GetMultiDistance(POINT current, TGameObject *target);
-int GetDistance(POINT current, TGameObject *target);
-int GetDistance(POINT current, POINT target);
-int GetTopObjDistance(TGameObject *current, TGameObject *target);
 //---------------------------------------------------------------------------
 #endif

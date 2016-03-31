@@ -25,8 +25,8 @@ TPlayer::TPlayer(DWORD serial)
 : TGameCharacter(serial), m_Str(0), m_Int(0), m_Dex(0), m_MaxWeight(0),
 m_Weight(0), m_Armor(0), m_Gold(0), m_Warmode(false), m_StatsCap(0), m_Followers(0),
 m_MaxFollowers(5), m_FireResistance(0), m_ColdResistance(0), m_PoisonResistance(0),
-m_EnergyResistance(0), m_Luck(0), m_MinDamage(0), m_MaxDamage(0), m_TithingPoints(0),
-m_Race(CRT_HUMAN)
+m_EnergyResistance(0), m_Luck(0), m_MinDamage(0), m_MaxDamage(0), m_TithingPoints(0)
+//, m_Race(CRT_HUMAN)
 {
 	m_Skills = new TSkill[g_SkillsCount];
 }
@@ -40,7 +40,12 @@ TPlayer::~TPlayer()
 	}
 }
 //---------------------------------------------------------------------------
-void TPlayer::SetName(string val)
+/*!
+Установить имя
+@param [__in] val Новое имя
+@return 
+*/
+void TPlayer::SetName( __in string val)
 {
 	m_Name = val;
 
@@ -53,7 +58,13 @@ void TPlayer::SetName(string val)
 	}
 }
 //---------------------------------------------------------------------------
-void TPlayer::SetSkillBaseValue(int index, float val)
+/*!
+Установить базовое значение навыка
+@param [__in] index Индекс навыка
+@param [__in] val Новое значение
+@return 
+*/
+void TPlayer::SetSkillBaseValue( __in int index, __in float val)
 {
 	if (index < 0 || index >= g_SkillsCount)
 		return;
@@ -61,7 +72,13 @@ void TPlayer::SetSkillBaseValue(int index, float val)
 	m_Skills[index].SetBaseValue(val);
 }
 //---------------------------------------------------------------------------
-void TPlayer::SetSkillValue(int index, float val)
+/*!
+Установить значение навыка
+@param [__in] index Индекс навыка
+@param [__in] val Новое значение
+@return 
+*/
+void TPlayer::SetSkillValue( __in int index, __in float val)
 {
 	if (index < 0 || index >= g_SkillsCount)
 		return;
@@ -69,7 +86,13 @@ void TPlayer::SetSkillValue(int index, float val)
 	m_Skills[index].SetValue(val);
 }
 //---------------------------------------------------------------------------
-void TPlayer::SetSkillCap(int index, float val)
+/*!
+Установить максимальное значение навыка
+@param [__in] index Индекс навыка
+@param [__in] val Новое значение
+@return 
+*/
+void TPlayer::SetSkillCap( __in int index, __in float val)
 {
 	if (index < 0 || index >= g_SkillsCount)
 		return;
@@ -77,7 +100,13 @@ void TPlayer::SetSkillCap(int index, float val)
 	m_Skills[index].SetCap(val);
 }
 //---------------------------------------------------------------------------
-void TPlayer::SetSkillStatus(int index, BYTE val)
+/*!
+Установить статус навыка
+@param [__in] index Индекс навыка
+@param [__in] val Новое состояние
+@return 
+*/
+void TPlayer::SetSkillStatus( __in int index, __in BYTE val)
 {
 	if (index < 0 || index >= g_SkillsCount)
 		return;
@@ -85,7 +114,12 @@ void TPlayer::SetSkillStatus(int index, BYTE val)
 	m_Skills[index].SetStatus(val);
 }
 //---------------------------------------------------------------------------
-float TPlayer::GetSkillBaseValue(int index) const
+/*!
+Получить базовое значение навыка
+@param [__in] index Индекс навыка
+@return Текущее значение
+*/
+float TPlayer::GetSkillBaseValue( __in int index) const
 {
 	if (index < 0 || index >= g_SkillsCount)
 		return 0.0f;
@@ -93,7 +127,12 @@ float TPlayer::GetSkillBaseValue(int index) const
 	return m_Skills[index].GetBaseValue();
 }
 //---------------------------------------------------------------------------
-float TPlayer::GetSkillValue(int index) const
+/*!
+Получить значение навыка
+@param [__in] index Индекс навыка
+@return Текущее значение
+*/
+float TPlayer::GetSkillValue( __in int index) const
 {
 	if (index < 0 || index >= g_SkillsCount)
 		return 0.0f;
@@ -101,7 +140,12 @@ float TPlayer::GetSkillValue(int index) const
 	return m_Skills[index].GetValue();
 }
 //---------------------------------------------------------------------------
-float TPlayer::GetSkillCap(int index) const
+/*!
+Получить максимальное значение навыка
+@param [__in] index Индекс навыка
+@return Текущее значение
+*/
+float TPlayer::GetSkillCap( __in int index) const
 {
 	if (index < 0 || index >= g_SkillsCount)
 		return 0.0f;
@@ -109,7 +153,12 @@ float TPlayer::GetSkillCap(int index) const
 	return m_Skills[index].GetCap();
 }
 //---------------------------------------------------------------------------
-BYTE TPlayer::GetSkillStatus(int index) const
+/*!
+Получить статус навыка
+@param [__in] index Индекс навыка
+@return Текущее состояние
+*/
+BYTE TPlayer::GetSkillStatus( __in int index) const
 {
 	if (index < 0 || index >= g_SkillsCount)
 		return 0;
@@ -117,6 +166,10 @@ BYTE TPlayer::GetSkillStatus(int index) const
 	return m_Skills[index].GetStatus();
 }
 //---------------------------------------------------------------------------
+/*!
+Поиск бинтов в сумке (и подсумках)
+@return Ссылка на бинт или NULL
+*/
 TGameItem *TPlayer::FindBandage()
 {
 	TGameItem *item = FindLayer(OL_BACKPACK);

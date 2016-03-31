@@ -21,6 +21,10 @@
 
 TBaseScreen *CurrentScreen = NULL;
 //---------------------------------------------------------------------------
+/*!
+Вычисление состояния перехода
+@return Индекс состояния
+*/
 int TBaseScreen::DrawSmoothMonitor()
 {
 	if (SmoothMonitor.Process())
@@ -35,12 +39,21 @@ int TBaseScreen::DrawSmoothMonitor()
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Наложение эффекта перехода
+@return 
+*/
 void TBaseScreen::DrawSmoothMonitorEffect()
 {
 	SmoothMonitor.Draw();
 }
 //---------------------------------------------------------------------------
-void TBaseScreen::CreateSmoothAction(BYTE action)
+/*!
+Создание плавного затемнения экрана
+@param [__in] action Идентификатор действия
+@return 
+*/
+void TBaseScreen::CreateSmoothAction( __in BYTE action)
 {
 	if (SmoothMonitor.UseSunset())
 		m_SmoothScreenAction = action;
@@ -48,7 +61,15 @@ void TBaseScreen::CreateSmoothAction(BYTE action)
 		ProcessSmoothAction(action);
 }
 //---------------------------------------------------------------------------
-int TBaseScreen::CalculateScrollerAndTextPosition(int &currentLine, int &visibleLines, int &maxY, int currentY)
+/*!
+Вычисление смещения объектов в окне скроллбокса
+@param [__out] currentLine Текущая строка
+@param [__in] visibleLines Количество видимых строк
+@param [__in] maxY Максимальное значение Y координаты
+@param [__in] currentY Текущее значение Y координаты
+@return Координата Y скроллера
+*/
+int TBaseScreen::CalculateScrollerAndTextPosition( __out int &currentLine, __in int &visibleLines, __in int &maxY, __in int currentY)
 {
 	//Без смещения
 	int scrollerY = 0;
@@ -96,7 +117,14 @@ int TBaseScreen::CalculateScrollerAndTextPosition(int &currentLine, int &visible
 	return scrollerY;
 }
 //---------------------------------------------------------------------------
-int TBaseScreen::CalculateScrollerY(int &currentLine, int &visibleLines, int &maxY)
+/*!
+Вычисление смещения скроллера
+@param [__in] currentLine Текущая строка
+@param [__in] visibleLines Количество видимых строк
+@param [__in] maxY Максимальное значение Y координаты
+@return Координата Y скроллера
+*/
+int TBaseScreen::CalculateScrollerY( __in int &currentLine, __in int &visibleLines, __in int &maxY)
 {
 	//Действия, аналогичные коду выше при смещении скроллера
 	float per = (currentLine / (float)visibleLines) * 100.0f;

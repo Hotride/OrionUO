@@ -52,6 +52,10 @@ TGameScreen::~TGameScreen()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация
+@return 
+*/
 void TGameScreen::Init()
 {
 	SendMessage(g_hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
@@ -77,7 +81,12 @@ void TGameScreen::Init()
 	UO->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
 }
 //---------------------------------------------------------------------------
-void TGameScreen::ProcessSmoothAction(BYTE action)
+/*!
+Обработка события после плавного затемнения экрана
+@param [__in_opt] action Идентификатор действия
+@return 
+*/
+void TGameScreen::ProcessSmoothAction( __in_opt BYTE action)
 {
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
@@ -86,6 +95,10 @@ void TGameScreen::ProcessSmoothAction(BYTE action)
 		UO->LogOut();
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация всплывающих подсказок
+@return 
+*/
 void TGameScreen::InitPopupHelp()
 {
 	if (!ConfigManager.PopupHelpEnabled)
@@ -93,7 +106,13 @@ void TGameScreen::InitPopupHelp()
 
 }
 //---------------------------------------------------------------------------
-int TGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
+/*!
+Вычисление значений Z координаты для рендера
+@param [__out] noDrawRoof Не рисовать крыши и верхние этажи строений
+@param [__out] maxGroundZ Максимальная Z координата ландшафта
+@return Максимальная Z координата отрисовки
+*/
+int TGameScreen::GetMaxDrawZ( __out bool &noDrawRoof, __out char &maxGroundZ)
 {
 	int playerX = g_Player->X;
 	int playerY = g_Player->Y;
@@ -195,7 +214,15 @@ int TGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 	return maxDrawZ;
 }
 //---------------------------------------------------------------------------
-void TGameScreen::ApplyTransparentFoliageToUnion(WORD &graphic, int &x, int &y, int &z)
+/*!
+Применение прозрачности крон деревьев в указанных координатах
+@param [__in] graphic ндекс картинки дерева
+@param [__in] x Координата X дерева
+@param [__in] y Координата Y дерева
+@param [__in] z Координата Z дерева
+@return 
+*/
+void TGameScreen::ApplyTransparentFoliageToUnion( __in WORD &graphic, __in int &x, __in int &y, __in int &z)
 {
 	int bx = x / 8;
 	int by = y / 8;
@@ -216,7 +243,15 @@ void TGameScreen::ApplyTransparentFoliageToUnion(WORD &graphic, int &x, int &y, 
 	}
 }
 //---------------------------------------------------------------------------
-void TGameScreen::CheckFoliageUnion(WORD graphic, int x, int y, int z)
+/*!
+Проверка принадлежности кроны к группе крон (с последующим применением прозрачности всей группе)
+@param [__in] graphic Индекс картинки дерева
+@param [__in] x Координата X дерева
+@param [__in] y Координата Y дерева
+@param [__in] z Координата Z дерева
+@return 
+*/
+void TGameScreen::CheckFoliageUnion( __in WORD graphic, __in int x, __in int y, __in int z)
 {
 	graphic -= 0x4000;
 
@@ -244,6 +279,10 @@ void TGameScreen::CheckFoliageUnion(WORD graphic, int x, int y, int z)
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Функция увеличесния размера списка рендера
+@return 
+*/
 void TGameScreen::IncreaseRenderList()
 {
 	RENDER_OBJECT_DATA *list = new RENDER_OBJECT_DATA[m_RenderListSize + 1000];
@@ -274,6 +313,10 @@ void TGameScreen::IncreaseObjList()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Расчет списка объектов рендера, вычисление прозрачности крон деревьев (в т.ч. составных)
+@return 
+*/
 void TGameScreen::CalculateRenderList()
 {
 	g_FoliageIndex++;
@@ -1562,6 +1605,10 @@ void TGameScreen::CalculateRenderList()
 		m_ObjectHandlesCount = MAX_OBJECT_HANDLES;
 }
 //---------------------------------------------------------------------------
+/*!
+Вычисление параметров игрового окна
+@return 
+*/
 void TGameScreen::CalculateGameWindowBounds()
 {
 	m_RenderBounds.PlayerX = g_Player->X;
@@ -1709,7 +1756,12 @@ void TGameScreen::CalculateGameWindowBounds()
 	m_MaxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
 }
 //---------------------------------------------------------------------------
-void TGameScreen::CheckMouseEvents(bool &charSelected)
+/*!
+Обработка сообщений мыши (стягивание статуса. драг-гампа и т.п.)
+@param [__out] charSelected Состояние выделения персонажа
+@return 
+*/
+void TGameScreen::CheckMouseEvents( __out bool &charSelected)
 {
 	g_GrayedPixels = g_Player->Dead();
 
@@ -1781,7 +1833,15 @@ void TGameScreen::CheckMouseEvents(bool &charSelected)
 	}
 }
 //---------------------------------------------------------------------------
-void TGameScreen::AddLight(TRenderWorldObject *rwo, TRenderWorldObject *lightObject, int x, int y)
+/*!
+Функция добавления источника света
+@param [__in] rwo Верхний объект, источающий свет
+@param [__in] lightObject Объект, источающий свет
+@param [__in] x Экранная координата X
+@param [__in] y Экранная координата Y
+@return 
+*/
+void TGameScreen::AddLight( __in TRenderWorldObject *rwo, __in TRenderWorldObject *lightObject, __in int x, __in int y)
 {
 	if (lightObject->IsStaticGroupObject())
 	{
@@ -1854,7 +1914,12 @@ void TGameScreen::AddLight(TRenderWorldObject *rwo, TRenderWorldObject *lightObj
 	}
 }
 //---------------------------------------------------------------------------
-void TGameScreen::CalculateGameWindowText(bool &mode)
+/*!
+Вычисление параметров отображаемого текста
+@param [__in] mode true - отрисовка, false - выбор
+@return 
+*/
+void TGameScreen::CalculateGameWindowText( __in bool &mode)
 {
 	if (mode)
 		WorldTextRenderer->ClearRect();
@@ -1972,7 +2037,12 @@ void TGameScreen::CalculateGameWindowText(bool &mode)
 	m_GameWindowText = rto;
 }
 //---------------------------------------------------------------------------
-void TGameScreen::DrawGameWindow(bool &mode)
+/*!
+Рисование игрового окна
+@param [__in] mode true - отрисовка, false - выбор
+@return 
+*/
+void TGameScreen::DrawGameWindow( __in bool &mode)
 {
 	DWORD ticks = GetTickCount();
 	int playerZPlus5 = m_RenderBounds.PlayerZ + 5;
@@ -2053,6 +2123,10 @@ void TGameScreen::DrawGameWindow(bool &mode)
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Отображение источников света
+@return 
+*/
 void TGameScreen::DrawGameWindowLight()
 {
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -2118,7 +2192,12 @@ void TGameScreen::DrawGameWindowLight()
 	UnuseShader();
 }
 //---------------------------------------------------------------------------
-void TGameScreen::DrawGameWindowText(bool &mode)
+/*!
+Отображение текста над объектами мира
+@param [__in] mode true - отрисовка, false - выбор
+@return 
+*/
+void TGameScreen::DrawGameWindowText( __in bool &mode)
 {
 	DWORD ticks = GetTickCount();
 
@@ -2229,7 +2308,12 @@ void TGameScreen::DrawGameWindowText(bool &mode)
 	}
 }
 //---------------------------------------------------------------------------
-int TGameScreen::Render(bool mode)
+/*!
+Отрисовка/выбор объектов
+@param [__in] mode true - отрисовка, false - выбор
+@return При выборе объектов - идентификатор выбранного объекта
+*/
+int TGameScreen::Render(__in bool mode)
 {
 	DWORD ticks = GetTickCount();
 
@@ -2503,7 +2587,7 @@ int TGameScreen::Render(bool mode)
 		}
 		else
 		{
-			if (ObjectInHand != NULL)
+			if (ObjectInHand != NULL && !ObjectInHand->NoDraw)
 			{
 				bool doubleDraw = false;
 				WORD ohGraphic = ObjectInHand->GetDrawGraphic(doubleDraw);
@@ -2614,6 +2698,10 @@ int TGameScreen::Render(bool mode)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Нажатие левой кнопки мыши
+@return
+*/
 void TGameScreen::OnLeftMouseDown()
 {
 	g_SelectGumpObjects = true;
@@ -2644,6 +2732,10 @@ void TGameScreen::OnLeftMouseDown()
 	g_LastGumpLeftMouseDown = g_LastSelectedGump;
 }
 //---------------------------------------------------------------------------
+/*!
+Отпускание левой кнопки мыши
+@return 
+*/
 void TGameScreen::OnLeftMouseUp()
 {
 	Render(false);
@@ -2831,6 +2923,10 @@ void TGameScreen::OnLeftMouseUp()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Нажатие правой кнопки мыши
+@return 
+*/
 void TGameScreen::OnRightMouseDown()
 {
 	Render(false);
@@ -2841,6 +2937,10 @@ void TGameScreen::OnRightMouseDown()
 		GumpManager->OnRightMouseDown(false);
 }
 //---------------------------------------------------------------------------
+/*!
+Отпускание правой кнопки мыши
+@return 
+*/
 void TGameScreen::OnRightMouseUp()
 {
 	Render(false);
@@ -2849,6 +2949,10 @@ void TGameScreen::OnRightMouseUp()
 		GumpManager->OnRightMouseUp(false);
 }
 //---------------------------------------------------------------------------
+/*!
+Двойной клик левой кнопкой мыши
+@return true при успешной обработке
+*/
 bool TGameScreen::OnLeftMouseDoubleClick()
 {
 	Render(false);
@@ -2914,6 +3018,10 @@ bool TGameScreen::OnLeftMouseDoubleClick()
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Двойной клик правой кнопкой мыши
+@return true при успешной обработке
+*/
 bool TGameScreen::OnRightMouseDoubleClick()
 {
 	if (ConfigManager.EnablePathfind && g_SelectedObject != NULL && !PathFinder->AutoWalking)
@@ -2931,7 +3039,12 @@ bool TGameScreen::OnRightMouseDoubleClick()
 	return false;
 }
 //---------------------------------------------------------------------------
-void TGameScreen::OnMouseWheel(MOUSE_WHEEL_STATE state)
+/*!
+Обработка средней кнопки (колесика) мыши
+@param [__in] state Состояние колесика
+@return 
+*/
+void TGameScreen::OnMouseWheel( __in MOUSE_WHEEL_STATE state)
 {
 	Render(false);
 
@@ -2982,7 +3095,13 @@ void TGameScreen::OnMouseWheel(MOUSE_WHEEL_STATE state)
 	}
 }
 //---------------------------------------------------------------------------
-void TGameScreen::OnCharPress(WPARAM wparam, LPARAM lparam)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@return 
+*/
+void TGameScreen::OnCharPress( __in WPARAM wparam, __in LPARAM lparam)
 {
 	if (wparam == VK_RETURN || wparam == VK_BACK || wparam == VK_ESCAPE || EntryPointer == NULL)
 		return; //Ignore no print keys
@@ -3013,7 +3132,13 @@ void TGameScreen::OnCharPress(WPARAM wparam, LPARAM lparam)
 		EntryPointer->Insert(wparam);
 }
 //---------------------------------------------------------------------------
-void TGameScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@return 
+*/
+void TGameScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 {
 	if (!GumpManager->OnKeyPress(wparam, lparam, false))
 	{

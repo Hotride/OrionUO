@@ -22,81 +22,184 @@
 //---------------------------------------------------------------------------
 typedef std::map<DWORD, TGameObject*> WORLD_MAP;
 //---------------------------------------------------------------------------
+//!Класс игрового мира
 class TGameWorld
 {
 private:
-	//Создать игрока
-	void CreatePlayer(DWORD serial);
-	//Удалить игрока
+	/*!
+	Создать игрока
+	@param [__in] serial Серийник игрока
+	@return 
+	*/
+	void CreatePlayer(__in DWORD serial);
+
+	/*!
+	Удалить игрока
+	@return 
+	*/
 	void RemovePlayer();
+
 public:
 	TGameWorld(DWORD serial);
 	~TGameWorld();
 
-	//Предметы в памяти
+	//!Предметы в памяти
 	WORLD_MAP m_Map;
 
-	//Предметы в мире
+	//!Предметы в мире
 	TGameObject *m_Items;
 
-	//Обработка анимации всех персонажей
+	/*!
+	Обработка анимации всех персонажей
+	@return 
+	*/
 	void ProcessAnimation();
 
-	//Установить текущего чара с указанным серийником как основного
-	void SetPlayer(DWORD serial);
+	/*!
+	Установить текущего чара с указанным серийником как основного
+	@param [__in] serial Серийник нового игрока
+	@return 
+	*/
+	void SetPlayer(__in DWORD serial);
 
-	//Создать (или взять, если уже существует) игровой предмет
-	TGameItem *GetWorldItem(DWORD serial);
-	//Создать (или взять, если уже существует) игрового персонажа
-	TGameCharacter *GetWorldCharacter(DWORD serial);
-	//Найти игровой объект в памяти (NULL если нет)
-	TGameObject *FindWorldObject(DWORD serial);
-	//Найти игровой предмет в памяти (NULL если нет)
-	TGameItem *FindWorldItem(DWORD serial);
-	//Найти игрового персонажа в памяти (NULL если нет)
-	TGameCharacter *FindWorldCharacter(DWORD serial);
-	//Найти игрового персонажа (владельца трупа) в памяти (NULL если нет)
-	TGameCharacter *FindWorldCorpseOwner(DWORD serial);
+	/*!
+	Создать (или взять, если уже существует) игровой предмет
+	@param [__in] serial Серийник предмета
+	@return Ссылка на предмет
+	*/
+	TGameItem *GetWorldItem(__in DWORD serial);
 
-	//Удалить объект из памяти
-	void RemoveObject(TGameObject *obj);
-	//Вынуть объект из контейнера
-	void RemoveFromContainer(TGameObject *obj);
-	//Очистить указанный контейнер
-	void ClearContainer(TGameObject *obj);
-	//Положить в контейнер
-	void PutContainer(TGameObject *obj, DWORD container_serial)
+	/*!
+	Создать (или взять, если уже существует) игрового персонажа
+	@param [__in] serial Серийник персонажа
+	@return Ссылка на персонажа
+	*/
+	TGameCharacter *GetWorldCharacter(__in DWORD serial);
+
+	/*!
+	Найти игровой объект в памяти
+	@param [__in] serial Серийник объекта
+	@return Ссылка на объект или NULL
+	*/
+	TGameObject *FindWorldObject(__in DWORD serial);
+
+	/*!
+	Найти игровой предмет в памяти
+	@param [__in] serial Серийник предмета
+	@return Ссылка на предмет или NULL
+	*/
+	TGameItem *FindWorldItem(__in DWORD serial);
+
+	/*!
+	Найти игрового персонажа в памяти
+	@param [__in] serial Серийник персонажа
+	@return Ссылка а персонажа или NULL
+	*/
+	TGameCharacter *FindWorldCharacter(__in DWORD serial);
+
+	/*!
+	Найти игрового персонажа (владельца трупа) в памяти
+	@param [__in] serial Серийник трупа
+	@return Ссылка на персонажа или NULL
+	*/
+	TGameCharacter *FindWorldCorpseOwner(__in DWORD serial);
+
+	/*!
+	Удалить объект из памяти
+	@param [__in] obj Ссылка на объект
+	@return 
+	*/
+	void RemoveObject(__in TGameObject *obj);
+
+	/*!
+	Вынуть объект из контейнера
+	@param [__in] obj Ссылка на объект
+	@return 
+	*/
+	void RemoveFromContainer(__in TGameObject *obj);
+
+	/*!
+	Очистить указанный контейнер
+	@param [__in] obj Ссылка на объект (контейнер)
+	@return 
+	*/
+	void ClearContainer(__in TGameObject *obj);
+
+	/*!
+	Положить в контейнер
+	@param [__in] obj Ссылка на объект
+	@param [__in] containerSerial Серийник контейнера
+	@return 
+	*/
+	void PutContainer( __in TGameObject *obj, __in DWORD containerSerial)
 	{
-		TGameObject *cnt = FindWorldObject(container_serial);
+		TGameObject *cnt = FindWorldObject(containerSerial);
 		if (cnt != NULL)
 			PutContainer(obj, cnt);
 	}
-	//Положить в контейнер
-	void PutContainer(TGameObject *obj, TGameObject *container);
-	//Одеть предмет
-	void PutEquipment(TGameItem *obj, DWORD container_serial, int layer)
+
+	/*!
+	Положить в контейнер
+	@param [__in] obj Ссылка на объект
+	@param [__in] container Ссылка на контейнер
+	@return 
+	*/
+	void PutContainer(__in TGameObject *obj, __in TGameObject *container);
+
+	/*!
+	Одеть предмет
+	@param [__in] obj Ссылка на предмет
+	@param [__in] containerSerial Серийник контейнера
+	@param [__in] layer Слой, в который одеть предмет
+	@return 
+	*/
+	void PutEquipment( __in TGameItem *obj, __in DWORD containerSerial, __in int layer)
 	{
-		TGameObject *cnt = FindWorldObject(container_serial);
+		TGameObject *cnt = FindWorldObject(containerSerial);
 		if (cnt != NULL)
 			PutEquipment(obj, cnt, layer);
 	}
-	//Одеть предмет
-	void PutEquipment(TGameItem *obj, TGameObject *container, int layer)
+
+	/*!
+	Одеть предмет
+	@param [__in] obj Ссылка на объект
+	@param [__in] container Ссылка на контейнер
+	@param [__in] layer Слой, в который одеть предмет
+	@return 
+	*/
+	void PutEquipment( __in TGameItem *obj, __in TGameObject *container, __in int layer)
 	{
 		PutContainer(obj, container);
 		obj->Layer = layer;
 	}
 
-	//Поднять предмет вверх в очереди
-	void MoveToTop(TGameObject *obj);
+	/*!
+	Поднять объект вверх в очереди
+	@param [__in] obj Ссылка на объект
+	@return 
+	*/
+	void MoveToTop(__in TGameObject *obj);
 
-	//Дамп предметов, хранящихся в памяти
-	void Dump(BYTE nCount = 0, DWORD serial = 0xFFFFFFFF);
+	/*!
+	Дамп предметов, хранящихся в памяти
+	@param [__in] nCount Количество отступов
+	@param [__in_opt] serial Серийник родителя
+	@return 
+	*/
+	void Dump(__in BYTE nCount = 0, __in_opt DWORD serial = 0xFFFFFFFF);
 
-	//Поиск объекта
-	TGameObject *SearchWorldObject(DWORD serialStart, int scanDistance, SCAN_TYPE_OBJECT scanType, SCAN_MODE_OBJECT scanMode);
-};
+	/*!
+	Поиск объекта
+	@param [__in] serialStart Начальный серийник для поиска
+	@param [__in] scanDistance Дистанция поиска
+	@param [__in] scanType Тип объектов поиска
+	@param [__in] scanMode Режим поиска
+	@return Ссылка на найденный объект или NULL
+	*/
+	TGameObject *SearchWorldObject(__in DWORD serialStart, __in int scanDistance, __in SCAN_TYPE_OBJECT scanType, __in SCAN_MODE_OBJECT scanMode);
+ };
 //---------------------------------------------------------------------------
-extern TGameWorld *World; //Указатель на мир
+//!Указатель на мир
+extern TGameWorld *World;
 //---------------------------------------------------------------------------
 #endif

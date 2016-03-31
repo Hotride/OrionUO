@@ -23,14 +23,14 @@ TObjectOnCursor *ObjectInHand = NULL;
 //---------------------------------------------------------------------------
 TObjectOnCursor::TObjectOnCursor()
 : TGameItem(), m_Separated(false), m_Deleted(false), m_Dropped(false),
-m_IsGameFigure(false), m_DragCount(1)
+m_IsGameFigure(false), m_DragCount(1), m_NoDraw(false)
 {
 	Name = "";
 }
 //---------------------------------------------------------------------------
 TObjectOnCursor::TObjectOnCursor(TGameItem *obj)
 : TGameItem(), m_Separated(false), m_Deleted(false), m_Dropped(false),
-m_IsGameFigure(false), m_DragCount(obj->Count)
+m_IsGameFigure(false), m_DragCount(obj->Count), m_NoDraw(false)
 {
 	m_Serial = obj->Serial;
 	m_Graphic = obj->Graphic;

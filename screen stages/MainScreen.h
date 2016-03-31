@@ -23,17 +23,17 @@
 class TMainScreen : public TBaseScreen
 {
 private:
-	//Флаг сохранения пароля
+	//!Флаг сохранения пароля
 	bool m_SavePassword;
 
-	//Флаг автологина
+	//!Флаг автологина
 	bool m_AutoLogin;
 
-	//Идентификаторы событий для плавного перехода
+	//!Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_MS_QUIT = 1;
 	static const BYTE ID_SMOOTH_MS_CONNECT = 2;
 
-	//Идентификаторы кнопок
+	//!Идентификаторы кнопок
 	static const int ID_MS_QUIT = 1;
 	static const int ID_MS_ARROW_NEXT = 2;
 	static const int ID_MS_ACCOUNT = 3;
@@ -41,17 +41,8 @@ private:
 	static const int ID_MS_SAVEPASSWORD = 5;
 	static const int ID_MS_AUTOLOGIN = 6;
 
-	//Объекты текста
+	//!Объекты текста
 	TTextTexture m_Text[6];
-
-	//Шифрование пароля для сохранения в конфиг
-	string CryptPW(const char *buf, int len);
-
-	//Расшифровка пароля
-	string DecryptPW(const char *buf, int len);
-
-	//Обработка события после плавного затемнения экрана
-	void ProcessSmoothAction(BYTE action = 0xFF);
 
 	enum
 	{
@@ -63,39 +54,108 @@ private:
 		MSCC_SMOOTHMONITOR
 	};
 
-	int GetConfigKeyCode(string &key);
+	/*!
+	Шифрование пароля для сохранения в конфиг
+	@param [__in] buf Не зашифрованный пароль
+	@param [__in] len Длина пароля
+	@return Зашифрованный пароль
+	*/
+	string CryptPW(__in const char *buf, __in int len);
+
+	/*!
+	Расшифровка пароля
+	@param [__in] buf Зашифрованный пароль
+	@param [__in] len Длина пароля
+	@return Расшифрованный пароль
+	*/
+	string DecryptPW(__in const char *buf, __in int len);
+
+	/*!
+	Получить код конфига по ключу
+	@param [__in] key Ключ
+	@return Код конфига
+	*/
+	int GetConfigKeyCode(__in string &key);
+
 public:
 	TMainScreen();
 	virtual ~TMainScreen();
 
-	SETGET(bool, SavePassword);
-	SETGET(bool, AutoLogin);
-
-	//Загрузка конфига
-	void LoadGlobalConfig();
-
-	//Сохранение конфига
-	void SaveGlobalConfig();
-
-	//Инициализация
-	void Init();
-
-	//Инициализация тултипа
-	void InitPopupHelp();
-
-	//Коля для ввода аккаунта и пароля
+	//!Поля для ввода аккаунта и пароля
 	TEntryText *m_Account;
 	TEntryText *m_Password;
 
-	//Рисование экрана
-	int Render(bool mode);
+	SETGET(bool, SavePassword);
+	SETGET(bool, AutoLogin);
 
-	//События
+	/*!
+	Обработка события после плавного затемнения экрана
+	@param [__in_opt] action Идентификатор действия
+	@return 
+	*/
+	void ProcessSmoothAction(__in_opt BYTE action = 0xFF);
+
+	/*!
+	Загрузка конфига
+	@return 
+	*/
+	void LoadGlobalConfig();
+
+	/*!
+	Сохранение конфига
+	@return 
+	*/
+	void SaveGlobalConfig();
+
+	/*!
+	Инициализация
+	@return 
+	*/
+	void Init();
+
+	/*!
+	Инициализация всплывающих подсказок
+	@return 
+	*/
+	void InitPopupHelp();
+
+	/*!
+	Отрисовка/выбор объектов
+	@param [__in] mode true - отрисовка, false - выбор
+	@return При выборе объектов - идентификатор выбранного объекта
+	*/
+	int Render(__in bool mode);
+
+
+
+	/*!
+	Нажатие левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseDown();
+
+	/*!
+	Отпускание левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseUp();
-	void OnCharPress(WPARAM wparam, LPARAM lparam);
-	void OnKeyPress(WPARAM wparam, LPARAM lparam);
-};
+
+	/*!
+	Обработка нажатия клавиши
+	@param [__in] wparam не подписанный параметр
+	@param [__in] lparam не подписанный параметр
+	@return 
+	*/
+	void OnCharPress(__in WPARAM wparam, __in LPARAM lparam);
+
+	/*!
+	Обработка нажатия клавиши
+	@param [__in] wparam не подписанный параметр
+	@param [__in] lparam не подписанный параметр
+	@return 
+	*/
+	void OnKeyPress(__in WPARAM wparam, __in LPARAM lparam);
+ };
 //---------------------------------------------------------------------------
 extern TMainScreen *MainScreen;
 //---------------------------------------------------------------------------

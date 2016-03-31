@@ -22,30 +22,35 @@
 //---------------------------------------------------------------------------
 typedef std::map<DWORD, string> CLILOC_MAP;
 //---------------------------------------------------------------------------
-//Объект с данными клилок-файла
+//!Класс с данными клилок-файла
 class TCliloc : public ICliloc, public TBaseQueueItem
 {
 private:
-	//Системные клилоки (id < 1000000)
+	//!Системные клилоки (id < 1000000)
 	CLILOC_MAP m_ClilocSystem;
 
-	//Обычные клилоки (id >= 1000000 && id < 3000000)
+	//!Обычные клилоки (id >= 1000000 && id < 3000000)
 	CLILOC_MAP m_ClilocRegular;
 
-	//Клилоки для помощи (id >= 3000000)
+	//!Клилоки для помощи (id >= 3000000)
 	CLILOC_MAP m_ClilocSupport;
 
-	//Указатель на проекцию файла в памяти (оно же ридер)
+	//!Указатель на проекцию файла в памяти (оно же ридер)
 	TMappedHeader m_File;
 
-	//Тип клилока
+	//!Тип клилока
 	string m_Language;
 
-	//Статус загрузки
+	//!Статус загрузки
 	bool m_Loaded;
 
-	//Загрузить клилок
-	string Load(DWORD &id);
+	/*!
+	Загрузить клилок
+	@param [__in] id Индекс клилока
+	@return Результат загрузки или сообщение с ошибкой
+	*/
+	string Load(__in DWORD &id);
+
 public:
 	TCliloc(string lang);
 	virtual ~TCliloc();
@@ -53,26 +58,43 @@ public:
 	SETGET(string, Language);
 	SETGET(bool, Loaded);
 
-	//Получить ASCII строку по id (и загрузить при необходимости)
-	string GetA(DWORD id, string result = "");
+	/*!
+	Получить ASCII строку по id (и загрузить при необходимости)
+	@param [__in] id Индекс клилока
+	@param [__in] result Стандартное сообщение, если клилок не был найден
+	@return Полученный результат, замена или сообщение с ошибкой
+	*/
+	string GetA(__in DWORD id, __in string result = "");
 
-	//Получить Unicode строку по id (и загрузить при необходимости)
-	wstring GetW(DWORD id, string result = "");
+	/*!
+	Получить Unicode строку по id (и загрузить при необходимости)
+	@param [__in] id Индекс клилока
+	@param [__in] result Стандартное сообщение, если клилок не был найден
+	@return Полученный результат, замена или сообщение с ошибкой
+	*/
+	wstring GetW(__in DWORD id, __in string result = "");
 };
 //---------------------------------------------------------------------------
-//Менеджер клилоков
+//!Класс менеджера клилоков
 class TClilocManager : public IClilocManager, public TBaseQueue
 {
 private:
+	//!Ссылка на последний использованный клилок (для более быстрого доступа)
 	TCliloc *m_LastCliloc;
+
 public:
 	TClilocManager();
 	virtual ~TClilocManager();
 
-	//Получить ссылку на объект клилока (и загрузить при необходимости)
-	TCliloc *Cliloc(string lang);
+	/*!
+	Получить ссылку на объект клилока (и загрузить при необходимости)
+	@param [__in] lang Расширение клилока
+	@return Ссылка на клилок
+	*/
+	TCliloc *Cliloc(__in string lang);
 };
 //---------------------------------------------------------------------------
+//!Ссылка на менеджер клилоков
 extern TClilocManager *ClilocManager;
 //---------------------------------------------------------------------------
 #endif

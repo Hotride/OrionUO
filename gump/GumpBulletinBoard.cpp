@@ -320,7 +320,13 @@ void TGumpBulletinBoard::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 	}
 }
 //----------------------------------------------------------------------------
-void TGumpBulletinBoard::ListingList(bool direction, int divizor)
+/*!
+Пролистать список
+@param [__in] direction Направление
+@param [__in_opt] divizor Делитель
+@return
+*/
+void TGumpBulletinBoard::ListingList(__in bool direction, __in_opt int divizor)
 {
 	DWORD ticks = GetTickCount();
 

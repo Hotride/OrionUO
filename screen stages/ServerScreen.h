@@ -23,15 +23,15 @@
 class TServerScreen : public TBaseScreen
 {
 private:
-	//Объекты текста
+	//!Объекты текста
 	TTextTexture m_Text[2];
 
-	//Идентификаторы событий для плавного перехода
+	//!Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_SS_QUIT = 1;
 	static const BYTE ID_SMOOTH_SS_SELECT_SERVER = 2;
 	static const BYTE ID_SMOOTH_SS_GO_SCREEN_MAIN = 3;
 
-	//Идентификаторы кнопок
+	//!Идентификаторы кнопок
 	static const int ID_SS_QUIT = 1;
 	static const int ID_SS_ARROW_PREV = 2;
 	static const int ID_SS_ARROW_NEXT = 3;
@@ -45,41 +45,88 @@ private:
 	static const int ID_SS_SCROLLBAR_BACKGROUND = 11;
 	static const int ID_SS_SERVER_LIST = 20;
 
-	//Получить высоту списка серверов
-	int GetServerListHeight();
-
-	//Пролистать список
-	void ListingList(bool direction, int divizor = 1);
-
-	//Последнее время изменения положения информации в скроллбоксе
+	//!Последнее время изменения положения информации в скроллбоксе
 	DWORD m_LastScrollChangeTime;
 
-	//Смещение в пикселях отображаемой информации в скроллбоксе
+	//!Смещение в пикселях отображаемой информации в скроллбоксе
 	int m_PixelOffset;
 
-	//Временная переменная для идентификации выбранного сервера
+	//!Временная переменная для идентификации выбранного сервера
 	int m_SelectionServerTempValue;
 
-	//Обработка события после плавного затемнения экрана
-	void ProcessSmoothAction(BYTE action = 0xFF);
+	/*!
+	Получить высоту списка серверов
+	@return 
+	*/
+	int GetServerListHeight();
+
+	/*!
+	Пролистать список
+	@param [__in] direction Направление
+	@param [__in] divizor Делитель
+	@return 
+	*/
+	void ListingList(__in bool direction, __in int divizor = 1);
+
 public:
 	TServerScreen();
 	virtual ~TServerScreen();
 
-	//Инициализация
+	/*!
+	Инициализация
+	@return 
+	*/
 	void Init();
 
-	//Инициализация тултипа
+	/*!
+	Инициализация всплывающих подсказок
+	@return 
+	*/
 	void InitPopupHelp();
 
-	//Рисование экрана
-	int Render(bool mode);
+	/*!
+	Обработка события после плавного затемнения экрана
+	@param [__in_opt] action Идентификатор действия
+	@return 
+	*/
+	void ProcessSmoothAction(__in_opt BYTE action = 0xFF);
+
+	/*!
+	Отрисовка/выбор объектов
+	@param [__in] mode true - отрисовка, false - выбор
+	@return При выборе объектов - идентификатор выбранного объекта
+	*/
+	int Render(__in bool mode);
 	
-	//События
+
+
+	/*!
+	Нажатие левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseDown();
+
+	/*!
+	Отпускание левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseUp();
-	void OnMouseWheel(MOUSE_WHEEL_STATE state);
-	void OnKeyPress(WPARAM wparam, LPARAM lparam);
+
+	/*!
+	Обработка средней кнопки (колесика) мыши
+	@param [__in] state Состояние колесика
+	@return 
+	*/
+	void OnMouseWheel(__in MOUSE_WHEEL_STATE state);
+
+	/*!
+	Обработка нажатия клавиши
+	@param [__in] wparam не подписанный параметр
+	@param [__in] lparam не подписанный параметр
+	@return 
+	*/
+	void OnKeyPress(__in WPARAM wparam, __in LPARAM lparam);
+
 };
 //---------------------------------------------------------------------------
 extern TServerScreen *ServerScreen;

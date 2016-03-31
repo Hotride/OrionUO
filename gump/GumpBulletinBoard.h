@@ -20,9 +20,11 @@
 #ifndef GumpBulletinBoardH
 #define GumpBulletinBoardH
 //---------------------------------------------------------------------------
+//!Класс доски объявлений
 class TGumpBulletinBoard : public TGump
 {
 private:
+	//!Идентификаторы кнопок
 	static const int ID_GBB_POST_MESSAGE = 1;
 	static const int ID_GBB_BUTTON_UP = 2;
 	static const int ID_GBB_BUTTON_DOWN = 3;
@@ -35,8 +37,14 @@ private:
 	DWORD m_LastScrollChangeTime;
 
 	int GetHeight();
-	
-	void ListingList(bool direction, int divizor = 1);
+
+	/*!
+	Пролистать список
+	@param [__in] direction Направление
+	@param [__in_opt] divizor Делитель
+	@return
+	*/
+	void ListingList(__in bool direction, __in_opt int divizor = 1);
 
 public:
 	TGumpBulletinBoard(DWORD serial, short x, short y, string name);

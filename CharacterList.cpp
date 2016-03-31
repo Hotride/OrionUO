@@ -25,10 +25,14 @@ TCharacterList::TCharacterList()
 :m_Count(5), m_Selected(0), m_OnePerson(false), m_Have6Slot(false),
 m_Have7Slot(false), m_ClientFlag(0)
 {
-	//Чистим при создании
+	//!Чистим при создании
 	Clear();
 }
 //---------------------------------------------------------------------------
+/*!
+Очистка списка
+@return 
+*/
 void TCharacterList::Clear()
 {
 	IFOR(i, 0, 7)
@@ -40,29 +44,44 @@ void TCharacterList::Clear()
 	m_Have7Slot = false;
 }
 //---------------------------------------------------------------------------
-void TCharacterList::SetName(int pos, string name)
+/*!
+Установить имя персонажа в указанном слоте
+@param [__in] pos Позиция в списке
+@param [__in] name Новое имя
+@return 
+*/
+void TCharacterList::SetName( __in int pos, __in string name)
 {
-	//При корректной позиции записываем имя
+	//!При корректной позиции записываем имя
 	if (pos >= 0 && pos < m_Count)
 		m_Name[pos] = name;
 }
 //---------------------------------------------------------------------------
-string TCharacterList::GetName(int pos) const
+/*!
+Получить имя персонажа в указанном слоте
+@param [__in] pos Позиция в списке
+@return Имя персонажа
+*/
+string TCharacterList::GetName( __in int pos) const
 {
 	string result = "";
 
-	//При корректной позиции возвращаем имя
+	//!При корректной позиции возвращаем имя
 	if (pos >= 0 && pos < m_Count)
 		result = m_Name[pos];
 
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Получить имя выбранного персонажа
+@return Имя персонажа
+*/
 string TCharacterList::GetSelectedName() const
 {
 	string result = "";
 
-	//При корректной позиции возвращаем имя
+	//!При корректной позиции возвращаем имя
 	if (m_Selected >= 0 && m_Selected < m_Count)
 		result = m_Name[m_Selected];
 

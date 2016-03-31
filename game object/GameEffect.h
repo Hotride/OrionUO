@@ -20,27 +20,48 @@
 #ifndef GameEffectH
 #define GameEffectH
 //--------------------------------------------------------------------------
-//Игровой эффект
+//!Игровой эффект
 class TGameEffect : public TRenderWorldObject
 {
-//private:
 protected:
-	EFFECT_TYPE m_EffectType; //Тип эффекта
+	//!Тип эффекта
+	EFFECT_TYPE m_EffectType;
 
-	DWORD m_DestSerial; //Серийник назначения
-	WORD m_DestX; //Координата назначения по оси X
-	WORD m_DestY; //Координата назначения по оси Y
-	char m_DestZ; //Координата назначения по оси Z
+	//!Серийник назначения
+	DWORD m_DestSerial;
 
-	BYTE m_Speed; //Скорость
-	DWORD m_Duration; //Время жизни
-	bool m_FixedDirection; //Изменять направление картинки при полете эффекта?
-	bool m_Explode; //Взрывать по достижении цели?
-	DWORD m_RenderMode; //Режим отображения эффекта
+	//!Координата назначения по оси X
+	WORD m_DestX;
 
-	int m_AnimIndex; //Индекс картинки
-	int m_Increment; //Смещение от базового индекса
-	DWORD m_LastChangeFrameTime; //Последнее время изменения картинки
+	//!Координата назначения по оси Y
+	WORD m_DestY;
+
+	//!Координата назначения по оси Z
+	char m_DestZ;
+
+	//!Скорость
+	BYTE m_Speed;
+
+	//!Время жизни
+	DWORD m_Duration;
+
+	//!Изменять направление картинки при полете эффекта?
+	bool m_FixedDirection;
+
+	//!Взрывать по достижении цели?
+	bool m_Explode;
+
+	//!Режим отображения эффекта
+	DWORD m_RenderMode;
+
+	//!Индекс картинки
+	int m_AnimIndex;
+
+	//!Смещение от базового индекса
+	int m_Increment;
+
+	//!Последнее время изменения картинки
+	DWORD m_LastChangeFrameTime;
 public:
 	TGameEffect();
 	virtual ~TGameEffect();
@@ -60,32 +81,62 @@ public:
 	SETGET(int, Increment);
 	SETGET(DWORD, LastChangeFrameTime);
 
-	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
+	/*!
+	Отрисовать эффект
+	@param [__in] mode Режим рисования. true - рисование, false - выбор объектов
+	@param [__in] drawX Экранная координата X объекта
+	@param [__in] drawY Экранная координата Y объекта
+	@param [__in] ticks Таймер рендера
+	@return При выборе объектов возвращает выбранный элемент
+	*/
+	virtual int Draw(__in bool &mode, __in int &drawX, __in int &drawY, __in DWORD &ticks);
 
-	//Получить текущий индекс картинки
+	/*!
+	Получить текущий индекс картинки
+	@return Индекс картинки
+	*/
 	WORD GetCurrentGraphic();
 
-	//Вычислить текущий индекс картинки
+	/*!
+	Вычислить текущий индекс картинки
+	@return Индекс картинки
+	*/
 	WORD CalculateCurrentGraphic();
 
-	//Применение режима отображения
+	/*!
+	Применение режима отображения
+	@return 
+	*/
 	void ApplyRenderMode();
 
-	//Отмена режима отображения
+	/*!
+	Отмена режима отображения
+	@return 
+	*/
 	void RemoveRenderMode();
 
+	/*!
+	Проверка, эффект ли это
+	@return Эффект или нет
+	*/
 	bool IsEffectObject() {return true;}
 
+	/*!
+	Обновить эффект
+	@return 
+	*/
 	virtual void Update() {}
 };
 //--------------------------------------------------------------------------
 //Эффект перемещения предмета
 class TGameEffectDrag : public TGameEffect
 {
-//private:
 protected:
-	int m_OffsetX; //Смещение по оси X
-	int m_OffsetY; //Смещение по оси Y
+	//!Смещение по оси X
+	int m_OffsetX;
+
+	//!Смещение по оси Y
+	int m_OffsetY;
 public:
 	TGameEffectDrag();
 	virtual ~TGameEffectDrag();
@@ -93,15 +144,21 @@ public:
 	SETGET(int, OffsetX);
 	SETGET(int, OffsetY);
 
+	/*!
+	Обновить эффект
+	@return
+	*/
 	virtual void Update();
 };
 //--------------------------------------------------------------------------
 //Движущийся эффект
 class TGameEffectMoving : public TGameEffectDrag
 {
-//private:
 protected:
+	//!Угол поворота эффекта
 	float m_Angle;
+
+	//!Смещение по оси Z
 	int m_OffsetZ;
 public:
 	TGameEffectMoving();
@@ -110,6 +167,10 @@ public:
 	SETGET(float, Angle);
 	SETGET(int, OffsetZ);
 
+	/*!
+	Обновить эффект
+	@return
+	*/
 	virtual void Update();
 };
 //---------------------------------------------------------------------------

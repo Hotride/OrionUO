@@ -137,6 +137,11 @@ TCityManager::~TCityManager()
 {
 }
 //---------------------------------------------------------------------------
+/*!
+Получить указатель на город
+@param [__in] name Имя города
+@return Ссылка на город или NULL
+*/
 TCity *TCityManager::GetCity(string name)
 {
 	TCity *obj = (TCity*)m_Items;

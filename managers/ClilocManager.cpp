@@ -49,7 +49,12 @@ TCliloc::~TCliloc()
 	m_ClilocSupport.clear();
 }
 //---------------------------------------------------------------------------
-string TCliloc::Load(DWORD &id)
+/*!
+Загрузить клилок
+@param [__in] id Индекс клилока
+@return Результат загрузки или сообщение с ошибкой
+*/
+string TCliloc::Load( __in DWORD &id)
 {
 	string result = "";
 
@@ -89,7 +94,13 @@ string TCliloc::Load(DWORD &id)
 	return result;
 }
 //---------------------------------------------------------------------------
-string TCliloc::GetA(DWORD id, string result)
+/*!
+Получить ASCII строку по id (и загрузить при необходимости)
+@param [__in] id Индекс клилока
+@param [__in] result Стандартное сообщение, если клилок не был найден
+@return Полученный результат, замена или сообщение с ошибкой
+*/
+string TCliloc::GetA( __in DWORD id, __in string result)
 {
 	if (id >= 3000000)
 	{
@@ -125,7 +136,13 @@ string TCliloc::GetA(DWORD id, string result)
 	return result;
 }
 //---------------------------------------------------------------------------
-wstring TCliloc::GetW(DWORD id, string result)
+/*!
+Получить Unicode строку по id (и загрузить при необходимости)
+@param [__in] id Индекс клилока
+@param [__in] result Стандартное сообщение, если клилок не был найден
+@return Полученный результат, замена или сообщение с ошибкой
+*/
+wstring TCliloc::GetW( __in DWORD id, __in string result)
 {
 	return ToWString(GetA(id, result));
 }
@@ -141,6 +158,11 @@ TClilocManager::~TClilocManager()
 {
 }
 //---------------------------------------------------------------------------
+/*!
+Получить ссылку на объект клилока (и загрузить при необходимости)
+@param [__in] lang Расширение клилока
+@return Ссылка на клилок
+*/
 TCliloc *TClilocManager::Cliloc(string lang)
 {
 	string language = ToLowerA(lang);

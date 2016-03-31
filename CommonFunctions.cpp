@@ -184,6 +184,126 @@ bool ToBool(string &str)
 	return result;
 }
 //---------------------------------------------------------------------------
+int GetDistance(TGameObject *current, TGameObject *target)
+{
+	if (current != NULL && target != NULL)
+	{
+		int distx = abs(target->X - current->X);
+		int disty = abs(target->Y - current->Y);
+
+		if (disty > distx)
+			distx = disty;
+
+		return distx;
+	}
+
+	return 100500;
+}
+//---------------------------------------------------------------------------
+int GetDistance(TGameObject *current, POINT target)
+{
+	if (current != NULL)
+	{
+		int distx = abs(target.x - current->X);
+		int disty = abs(target.y - current->Y);
+
+		if (disty > distx)
+			distx = disty;
+
+		return distx;
+	}
+
+	return 100500;
+}
+//---------------------------------------------------------------------------
+int GetDistance(POINT current, TGameObject *target)
+{
+	if (target != NULL)
+	{
+		int distx = abs(target->X - current.x);
+		int disty = abs(target->Y - current.y);
+
+		if (disty > distx)
+			distx = disty;
+
+		return distx;
+	}
+
+	return 100500;
+}
+//---------------------------------------------------------------------------
+int GetMultiDistance(POINT current, TGameObject *target)
+{
+	int result = 100500;
+
+	if (target != NULL && target->Graphic >= 0x4000)
+	{
+		TMulti *multi = (TMulti*)target->m_Items;
+
+		int multiDistance = abs(multi->MinX);
+		int testDistance = abs(multi->MinY);
+
+		if (multiDistance < testDistance)
+			multiDistance = testDistance;
+
+		testDistance = abs(multi->MaxX);
+
+		if (multiDistance < testDistance)
+			multiDistance = testDistance;
+
+		testDistance = abs(multi->MaxY);
+
+		if (multiDistance < testDistance)
+			multiDistance = testDistance;
+
+		multiDistance--;
+
+		int distX = abs(target->X - current.x) - multiDistance;
+		int distY = abs(target->Y - current.y) - multiDistance;
+
+		if (distY > distX)
+			distX = distY;
+
+		if (distX < result)
+			result = distX;
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
+int GetDistance(POINT current, POINT target)
+{
+	int distx = abs(target.x - current.x);
+	int disty = abs(target.y - current.y);
+
+	if (disty > distx)
+		distx = disty;
+
+	return distx;
+}
+//---------------------------------------------------------------------------
+int GetTopObjDistance(TGameObject *current, TGameObject *target)
+{
+	if (current != NULL && target != NULL)
+	{
+		while (target != NULL && target->Container != 0xFFFFFFFF)
+			target = World->FindWorldObject(target->Container);
+
+		if (target != NULL)
+		{
+			int distx = abs(target->X - current->X);
+			int disty = abs(target->Y - current->Y);
+
+			if (disty > distx)
+				distx = disty;
+
+			return distx;
+		}
+	}
+
+	return 100500;
+}
+//---------------------------------------------------------------------------
 int gumpuucode2str(const wchar_t* wstr, int wlength, LPSTR receiver, int maxsize)
 {
 	if (!wlength || wlength < -1 || maxsize < 1)

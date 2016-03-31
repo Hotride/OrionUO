@@ -22,6 +22,10 @@
 TConfigManager ConfigManager;
 TConfigManager g_OptionsConfig;
 //---------------------------------------------------------------------------
+/*!
+Инициализация
+@return 
+*/
 void TConfigManager::Init()
 {
 	DefaultPage1();
@@ -176,7 +180,12 @@ void TConfigManager::SetReduceFPSUnactiveWindow(bool val)
 		g_FrameDelay[0] = FRAME_DELAY_ACTIVE_WINDOW;
 }
 //---------------------------------------------------------------------------
-WORD TConfigManager::GetColorByNotoriety(BYTE notoriety)
+/*!
+Получить цвет исходя из "злобности"
+@param [__in] notoriety Злобность
+@return Индекс цвета
+*/
+WORD TConfigManager::GetColorByNotoriety( __in BYTE notoriety)
 {
 	WORD color = 0;
 
@@ -218,7 +227,12 @@ WORD TConfigManager::GetColorByNotoriety(BYTE notoriety)
 	return color;
 }
 //---------------------------------------------------------------------------
-void TConfigManager::Load(string path)
+/*!
+Загрузка конфига
+@param [__in] path Путь к файлу с конфигом
+@return 
+*/
+void TConfigManager::Load( __in string path)
 {
 	TMappedHeader file;
 	memset(&file, 0, sizeof(TMappedHeader));
@@ -433,7 +447,12 @@ void TConfigManager::Load(string path)
 		Init();
 }
 //---------------------------------------------------------------------------
-void TConfigManager::Save(string path)
+/*!
+Сохранение конфига
+@param [__in] path Путь к файлу с конфигом
+@return 
+*/
+void TConfigManager::Save( __in string path)
 {
 	TFileWriter *writer = new TFileWriter(path, true);
 	

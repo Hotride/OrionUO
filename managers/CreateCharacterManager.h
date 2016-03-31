@@ -20,46 +20,51 @@
 #ifndef CharacterCreateH
 #define CharacterCreateH
 //---------------------------------------------------------------------------
-//Информация о волосеном покрове
+//!Информация о волосеном покрове
 struct CC_HAIR_STYLE
 {
+	//!Индекс гампа
 	WORD GumpID;
+
+	//!Индекс картинки из Art.mul
 	WORD GraphicID;
+
+	//!Название
 	string Name;
 };
 //---------------------------------------------------------------------------
-//Менеджер создания персонажей
+//!Класс менеджера создания персонажей
 class TCreateCharacterManager
 {
 private:
-	//Пол персонажа. false - male; true - female
+	//!Пол персонажа. false - male; true - female
 	bool m_Sex;
 
-	//Расса персонажа
+	//!Расса персонажа
 	char m_Rase;
 
-	//Индекс стиля прически
+	//!Индекс стиля прически
 	BYTE m_HairStyle;
 
-	//Индекс стиля бороды
+	//!Индекс стиля бороды
 	BYTE m_BeardStyle;
 
-	//Цвет тела
+	//!Цвет тела
 	WORD m_SkinTone;
 
-	//Цвет рубахи/платишка
+	//!Цвет рубахи/платишка
 	WORD m_ShirtColor;
 
-	//Цвет шортиков
+	//!Цвет шортиков
 	WORD m_PantsColor;
 
-	//Цвет волос
+	//!Цвет волос
 	WORD m_HairColor;
 
-	//Цвет бороды
+	//!Цвет бороды
 	WORD m_BeardColor;
 
-	//Перечень стилей причесок и бороды
+	//!Перечень стилей причесок и бороды
 	static CC_HAIR_STYLE m_MaleHairStyleTable[10];
 	static CC_HAIR_STYLE m_FemaleHairStyleTable[11];
 	static CC_HAIR_STYLE m_BeardStyleTable[8];
@@ -67,11 +72,8 @@ public:
 	TCreateCharacterManager();
 	~TCreateCharacterManager();
 
-	//Инициализация
-	void Init();
-
-	//Очистка
-	void Clear();
+	//!Введенное имя персонажа
+	TEntryText *m_Name;
 
 	SETGET(bool, Sex);
 	SETGET(char, Rase);
@@ -83,14 +85,35 @@ public:
 	SETGET(WORD, HairColor);
 	SETGET(WORD, BeardColor);
 
-	//Введенное имя персонажа
-	TEntryText *m_Name;
+	/*!
+	Инициализация
+	@return
+	*/
+	void Init();
 
-	//Получить стиль волос/бороды по индексу
-	CC_HAIR_STYLE GetHair(BYTE pos) const;
-	CC_HAIR_STYLE GetBeard(BYTE pos) const;
+	/*!
+	Очистка
+	@return
+	*/
+	void Clear();
+
+	/*!
+	Получить стиль волос
+	@param [__in] pos Индекс волос
+	@return Структура с данными о волосах
+	*/
+	CC_HAIR_STYLE GetHair(__in BYTE pos) const;
+
+	/*!
+	Получить стиль бороды
+	@param [__in] pos Индекс бороды
+	@return Структура с данными о бороде
+	*/
+	CC_HAIR_STYLE GetBeard(__in BYTE pos) const;
+
 };
 //---------------------------------------------------------------------------
+//!Менеджер создания мерсонажа
 extern TCreateCharacterManager CreateCharacterManager;
 //---------------------------------------------------------------------------
 #endif

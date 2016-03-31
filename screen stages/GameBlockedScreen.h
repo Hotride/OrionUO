@@ -23,26 +23,58 @@
 class TGameBlockedScreen : public TBaseScreen
 {
 private:
-	//Код блокировки
+	//!Код блокировки
 	BYTE m_Code;
 
 public:
 	TGameBlockedScreen();
 	~TGameBlockedScreen();
 
-	//Инициализация
-	void Init();
-
 	SETGET(BYTE, Code);
 
-	//Рисование экрана
-	int Render(bool mode);
+	/*!
+	Инициализация
+	@return
+	*/
+	void Init();
 
-	//События
+	/*!
+	Отрисовка/выбор объектов
+	@param [__in] mode true - отрисовка, false - выбор
+	@return При выборе объектов - идентификатор выбранного объекта
+	*/
+	int Render(__in bool mode);
+
+
+
+	/*!
+	Нажатие левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseDown();
+
+	/*!
+	Отпускание левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseUp();
-	void OnCharPress(WPARAM wparam, LPARAM lparam);
-	void OnKeyPress(WPARAM wparam, LPARAM lparam);
+
+	/*!
+	Обработка нажатия клавиши
+	@param [__in] wparam не подписанный параметр
+	@param [__in] lparam не подписанный параметр
+	@return 
+	*/
+	void OnCharPress(__in WPARAM wparam, __in LPARAM lparam);
+
+	/*!
+	Обработка нажатия клавиши
+	@param [__in] wparam не подписанный параметр
+	@param [__in] lparam не подписанный параметр
+	@return 
+	*/
+	void OnKeyPress(__in WPARAM wparam, __in LPARAM lparam);
+
 };
 //---------------------------------------------------------------------------
 extern TGameBlockedScreen *GameBlockedScreen;

@@ -23,17 +23,17 @@
 class TCharacterListScreen : public TBaseScreen
 {
 private:
-	//Объект текста
+	//!Объект текста
 	TTextTexture m_Text;
 
-	//Идентификаторы событий для плавного перехода
+	//!Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_CLS_QUIT = 1;
 	static const BYTE ID_SMOOTH_CLS_CONNECT = 2;
 	static const BYTE ID_SMOOTH_CLS_SELECT_CHARACTER = 3;
 	static const BYTE ID_SMOOTH_CLS_GO_SCREEN_PROFESSION_SELECT = 4;
 	static const BYTE ID_SMOOTH_CLS_GO_SCREEN_DELETE = 5;
 
-	//Идентификаторы кнопок
+	//!Идентификаторы кнопок
 	static const int ID_CS_QUIT = 1;
 	static const int ID_CS_ARROW_PREV = 2;
 	static const int ID_CS_ARROW_NEXT = 3;
@@ -44,21 +44,50 @@ public:
 	TCharacterListScreen();
 	virtual ~TCharacterListScreen();
 
-	//Инициализация
+	/*!
+	Инициализация
+	@return 
+	*/
 	void Init();
 
-	//Обработка события после плавного затемнения экрана
-	void ProcessSmoothAction(BYTE action = 0xFF);
+	/*!
+	Обработка события после перехода
+	@param [__in_opt] action Идентификатор действия
+	@return 
+	*/
+	void ProcessSmoothAction(__in_opt BYTE action = 0xFF);
 
-	//Инициализация тултипа
+	/*!
+	Инициализация всплывающих подсказок
+	@return 
+	*/
 	void InitPopupHelp();
 
-	//Рисование экрана
-	int Render(bool mode);
+	/*!
+	Отрисовка/выбор объектов
+	@param [__in] mode true - отрисовка, false - выбор
+	@return При выборе объектов - идентификатор выбранного объекта
+	*/
+	int Render(__in bool mode);
 
-	//События
+
+
+	/*!
+	Нажатие левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseDown();
+
+	/*!
+	Отпускание левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseUp();
+
+	/*!
+	Двойной клик левой кнопкой мыши
+	@return true при успешной обработке
+	*/
 	bool OnLeftMouseDoubleClick();
 };
 //---------------------------------------------------------------------------

@@ -1880,7 +1880,7 @@ PACKET_HANDLER(OpenPaperdoll)
 
 	TGameCharacter *obj = World->FindWorldCharacter(serial);
 	if (obj != NULL)
-		obj->SetPaperdollText(ReadString(0));
+		obj->GeneratePaperdollText(ReadString(0));
 
 	TGump *gump = GumpManager->UpdateGump(serial, 0, GT_PAPERDOLL);
 	if (gump == NULL)

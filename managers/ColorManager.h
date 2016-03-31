@@ -20,62 +20,150 @@
 #ifndef ColorManagerH
 #define ColorManagerH
 //---------------------------------------------------------------------------
-//Структура цветов для отправки в шейдер
+//!Структура цветов для отправки в шейдер
 struct INT_HUES
 {
+	//!Палитра цветов, 32 штуки
 	GLint Palette[32];
 };
 //---------------------------------------------------------------------------
-//Менеджер цветов
+//!Кдасс менеджера цветов
 class TColorManager : public IColorManager
 {
 private:
-	//Указатель на палитру
+	//!Указатель на палитру
 	PHUES_GROUP m_HuesRange;
 
-	//Указатель на список цветов для шейдера
+	//!Указатель на список цветов для шейдера
 	INT_HUES *m_HuesInt;
 
-	//Количество цветов
+	//!Количество цветов
 	int m_HuesCount;
 
-	//Данные для радара
+	//!Данные для радара
 	WORD m_Radarcol[0x10000];
 
-	//Данные из palette.mul
+	//!Данные из palette.mul
 	PALETTE_BLOCK m_Palette[256];
 
 public:
 	TColorManager();
 	~TColorManager();
 
+	/*!
+	Получить указатель на начало цветов
+	@return Ссылка на цвета
+	*/
 	PHUES_GROUP GetHuesRangePointer() { return m_HuesRange; }
-	int GetHuesCount() const {return m_HuesCount;}
 
-	//Патч блока цветов из вердаты
-	void SetHuesBlock(int index, PVERDATA_HUES_GROUP group);
+	/*!
+	Получить количество цветов
+	@return Количество цветов
+	*/
+	int GetHuesCount() const { return m_HuesCount; }
 
-	//Создание палитры цветов для шейдера
+	/*!
+	Патч блока цветов из вердаты
+	@param [__in] index Индекс в списке
+	@param [__in] group Указатель на цвета патча
+	@return 
+	*/
+	void SetHuesBlock(__in int index, __in PVERDATA_HUES_GROUP group);
+
+	/*!
+	Создание палитры цветов для шейдера
+	@return 
+	*/
 	void CreateHuesPalette();
 
-	//Отправка цветов в шейдер
-	void SendColorsToShader(WORD &color);
+	/*!
+	Отправка цветов в шейдер
+	@param [__in] color Индекс цвета
+	@return 
+	*/
+	void SendColorsToShader(__in WORD &color);
 
-	//Конвертирование цветов
-	WORD Color32To16(DWORD &c);
-	DWORD Color16To32(WORD &c);
-	WORD ConvertToGray(WORD &c);
 
-	//Получить цвет
-	WORD GetColor16(WORD &c, WORD color);
-	WORD GetRadarColorData(WORD &c);
-	DWORD GetRadarColor(WORD &c);
-	DWORD GetPolygoneColor(WORD c, WORD color);
-	DWORD GetUnicodeFontColor(WORD &c, WORD color);
-	DWORD GetColor(WORD &c, WORD color);
-	DWORD GetPartialHueColor(WORD &c, WORD color);
-};
+
+	/*!
+	Конвертирование цвета из 32 бит в 16 бит
+	@param [__in] c 32-битный цвет
+	@return 16-битный цвет
+	*/
+	WORD Color32To16(__in DWORD &c);
+
+	/*!
+	Конвертирование цвета из 16 бит в 32 бит
+	@param [__in] c 16-битный цвет
+	@return 32-битный цвет
+	*/
+	DWORD Color16To32(__in WORD &c);
+
+	/*!
+	Перевод в серый
+	@param [__in] c 16-битный цвет
+	@return 16-битный цвет
+	*/
+	WORD ConvertToGray(__in WORD &c);
+
+
+
+	/*!
+	Получить 16-битный цвет
+	@param [__in] c Исходный цвет
+	@param [__in] color Индекс цвета в палитре
+	@return 16-битный цвет
+	*/
+	WORD GetColor16(__in WORD &c, __in WORD color);
+
+	/*!
+	Получить 16-битный цвет для радара
+	@param [__in] c Исходный 16-битный цвет
+	@return 16-битный цвет
+	*/
+	WORD GetRadarColorData(__in WORD &c);
+
+	/*!
+	Получить 32-битный цвет для радара
+	@param [__in] c Исходный 16-битный цвет
+	@return 32-битный цвет
+	*/
+	DWORD GetRadarColor(__in WORD &c);
+
+	/*!
+	Получить 32-битный цвет без конвертирования входящего цвета
+	@param [__in] c Исходный 16-битный цвет
+	@param [__in] color Индекс цвета в палитре
+	@return 32-битный цвет
+	*/
+	DWORD GetPolygoneColor(__in WORD c, __in WORD color);
+
+	/*!
+	Получить 32-битный цвет для Unicode-шрифтов
+	@param [__in] c Исходный 16-битный цвет
+	@param [__in] color Индекс цвета в палитре
+	@return 32-битный цвет
+	*/
+	DWORD GetUnicodeFontColor(__in WORD &c, __in WORD color);
+
+	/*!
+	Получить 32-битный цвет
+	@param [__in] c Исходный 16-битный цвет
+	@param [__in] color Индекс цвета в палитре
+	@return 32-битный цвет
+	*/
+	DWORD GetColor(__in WORD &c, __in WORD color);
+
+	/*!
+	Получить 32-битный цвет с учетом оттенков серого
+	@param [__in] c Исходный 16-битный цвет
+	@param [__in] color Индекс цвета в палитре
+	@return 32-битный цвет
+	*/
+	DWORD GetPartialHueColor(__in WORD &c, __in WORD color);
+ };
 //---------------------------------------------------------------------------
+//!Ссылка на менеджер цветов
 extern TColorManager *ColorManager;
 //---------------------------------------------------------------------------
 #endif

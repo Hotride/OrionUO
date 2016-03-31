@@ -71,6 +71,10 @@ TConnectionScreen::~TConnectionScreen()
 		m_Text[i].Clear();
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация
+@return 
+*/
 void TConnectionScreen::Init()
 {
 	m_ConnectionFailed = false;
@@ -93,7 +97,12 @@ void TConnectionScreen::Init()
 	UO->ExecuteGumpPart(0x0481, 3); //Button v
 }
 //---------------------------------------------------------------------------
-void TConnectionScreen::ProcessSmoothAction(BYTE action)
+/*!
+Обработка события после плавного затемнения экрана
+@param [__in_opt] action Идентификатор действия
+@return 
+*/
+void TConnectionScreen::ProcessSmoothAction( __in_opt BYTE action)
 {
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
@@ -111,7 +120,12 @@ void TConnectionScreen::ProcessSmoothAction(BYTE action)
 	}
 }
 //---------------------------------------------------------------------------
-int TConnectionScreen::Render(bool mode)
+/*!
+Отрисовка/выбор объектов
+@param [__in] mode true - отрисовка, false - выбор
+@return При выборе объектов - идентификатор выбранного объекта
+*/
+int TConnectionScreen::Render( __in bool mode)
 {
 	DWORD ticks = GetTickCount();
 
@@ -275,6 +289,10 @@ int TConnectionScreen::Render(bool mode)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Нажатие левой кнопки мыши
+@return 
+*/
 void TConnectionScreen::OnLeftMouseDown()
 {
 	Render(false);
@@ -283,6 +301,10 @@ void TConnectionScreen::OnLeftMouseDown()
 	g_LastObjectLeftMouseDown = g_LastSelectedObject;
 }
 //---------------------------------------------------------------------------
+/*!
+Отпускание левой кнопки мыши
+@return 
+*/
 void TConnectionScreen::OnLeftMouseUp()
 {
 	Render(false);
@@ -317,7 +339,13 @@ void TConnectionScreen::OnLeftMouseUp()
 	g_LastObjectLeftMouseDown = 0;
 }
 //---------------------------------------------------------------------------
-void TConnectionScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@return 
+*/
+void TConnectionScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 {
 	switch (wparam)
 	{

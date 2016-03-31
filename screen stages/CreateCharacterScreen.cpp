@@ -30,6 +30,10 @@ TCreateCharacterScreen::~TCreateCharacterScreen()
 {
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация
+@return 
+*/
 void TCreateCharacterScreen::Init()
 {
 	CreateCharacterManager.Clear();
@@ -63,7 +67,12 @@ void TCreateCharacterScreen::Init()
 	UO->ExecuteGumpPart(0x0710, 3); //Character male button
 }
 //---------------------------------------------------------------------------
-void TCreateCharacterScreen::ProcessSmoothAction(BYTE action)
+/*!
+Обработка события после плавного затемнения экрана
+@param [__in_opt] action Идентификатор действия
+@return 
+*/
+void TCreateCharacterScreen::ProcessSmoothAction( __in_opt BYTE action)
 {
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
@@ -83,6 +92,10 @@ void TCreateCharacterScreen::ProcessSmoothAction(BYTE action)
 		UO->InitScreen(GS_SELECT_TOWN);
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация всплывающих подсказок
+@return 
+*/
 void TCreateCharacterScreen::InitPopupHelp()
 {
 	if (!ConfigManager.PopupHelpEnabled)
@@ -110,7 +123,12 @@ void TCreateCharacterScreen::InitPopupHelp()
 	}
 }
 //---------------------------------------------------------------------------
-int TCreateCharacterScreen::Render(bool mode)
+/*!
+Отрисовка/выбор объектов
+@param [__in] mode true - отрисовка, false - выбор
+@return При выборе объектов - идентификатор выбранного объекта
+*/
+int TCreateCharacterScreen::Render( __in bool mode)
 {
 	DWORD ticks = GetTickCount();
 
@@ -629,6 +647,10 @@ int TCreateCharacterScreen::Render(bool mode)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Нажатие левой кнопки мыши
+@return 
+*/
 void TCreateCharacterScreen::OnLeftMouseDown()
 {
 	Render(false);
@@ -709,6 +731,10 @@ void TCreateCharacterScreen::OnLeftMouseDown()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Отпускание левой кнопки мыши
+@return 
+*/
 void TCreateCharacterScreen::OnLeftMouseUp()
 {
 	Render(false);
@@ -740,7 +766,13 @@ void TCreateCharacterScreen::OnLeftMouseUp()
 	g_LastObjectLeftMouseDown = 0;
 }
 //---------------------------------------------------------------------------
-void TCreateCharacterScreen::OnCharPress(WPARAM wparam, LPARAM lparam)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@return 
+*/
+void TCreateCharacterScreen::OnCharPress( __in WPARAM wparam, __in LPARAM lparam)
 {
 	if (wparam == VK_RETURN || wparam == VK_BACK || wparam == VK_ESCAPE || wparam >= 0x100)
 		return; //Ignore no print keys
@@ -760,7 +792,13 @@ void TCreateCharacterScreen::OnCharPress(WPARAM wparam, LPARAM lparam)
 		EntryPointer->Insert(wparam);
 }
 //---------------------------------------------------------------------------
-void TCreateCharacterScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@return 
+*/
+void TCreateCharacterScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 {
 	if (EntryPointer == NULL)
 		EntryPointer = CreateCharacterManager.m_Name;

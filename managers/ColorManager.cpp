@@ -72,7 +72,13 @@ TColorManager::~TColorManager()
 	m_HuesCount = 0;
 }
 //---------------------------------------------------------------------------
-void TColorManager::SetHuesBlock(int index, PVERDATA_HUES_GROUP group)
+/*!
+Патч блока цветов из вердаты
+@param [__in] index Индекс в списке
+@param [__in] group Указатель на цвета патча
+@return 
+*/
+void TColorManager::SetHuesBlock( __in int index, __in PVERDATA_HUES_GROUP group)
 {
 	if (index < 0 || index >= m_HuesCount)
 		return;
@@ -82,6 +88,10 @@ void TColorManager::SetHuesBlock(int index, PVERDATA_HUES_GROUP group)
 		memcpy(&m_HuesRange[index].Entries[i].ColorTable[0], &group->Entries[i].ColorTable[0], sizeof(WORD[32]));
 }
 //---------------------------------------------------------------------------
+/*!
+Создание палитры цветов для шейдера
+@return 
+*/
 void TColorManager::CreateHuesPalette()
 {
 	m_HuesInt = new INT_HUES[m_HuesCount];
@@ -97,7 +107,12 @@ void TColorManager::CreateHuesPalette()
 	}
 }
 //---------------------------------------------------------------------------
-void TColorManager::SendColorsToShader(WORD &color)
+/*!
+Отправка цветов в шейдер
+@param [__in] color Индекс цвета
+@return 
+*/
+void TColorManager::SendColorsToShader( __in WORD &color)
 {
 	if (color != 0)
 	{
@@ -118,7 +133,12 @@ void TColorManager::SendColorsToShader(WORD &color)
 	}
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::Color16To32(WORD &c)
+/*!
+Конвертирование цвета из 16 бит в 32 бит
+@param [__in] c 16-битный цвет
+@return 32-битный цвет
+*/
+DWORD TColorManager::Color16To32( __in WORD &c)
 {
 	return
 	(
@@ -128,7 +148,12 @@ DWORD TColorManager::Color16To32(WORD &c)
 	);
 }
 //---------------------------------------------------------------------------
-WORD TColorManager::Color32To16(DWORD &c)
+/*!
+Конвертирование цвета из 32 бит в 16 бит
+@param [__in] c 32-битный цвет
+@return 16-битный цвет
+*/
+WORD TColorManager::Color32To16( __in DWORD &c)
 {
 	return
 	(
@@ -138,12 +163,23 @@ WORD TColorManager::Color32To16(DWORD &c)
 	);
 }
 //---------------------------------------------------------------------------
-WORD TColorManager::ConvertToGray(WORD &c)
+/*!
+Перевод в серый
+@param [__in] c 16-битный цвет
+@return 16-битный цвет
+*/
+WORD TColorManager::ConvertToGray( __in WORD &c)
 {
 	return ((c & 0x1F) * 299 + ((c >> 5) & 0x1F) * 587 + ((c >> 10) & 0x1F) * 114) / 1000;
 }
 //---------------------------------------------------------------------------
-WORD TColorManager::GetColor16(WORD &c, WORD color)
+/*!
+Получить 16-битный цвет
+@param [__in] c Исходный цвет
+@param [__in] color Индекс цвета в палитре
+@return 16-битный цвет
+*/
+WORD TColorManager::GetColor16( __in WORD &c, __in WORD color)
 {
 	if (color != 0 && color < m_HuesCount)
 	{
@@ -157,17 +193,33 @@ WORD TColorManager::GetColor16(WORD &c, WORD color)
 	return c;
 }
 //---------------------------------------------------------------------------
-WORD TColorManager::GetRadarColorData(WORD &c)
+/*!
+Получить 16-битный цвет для радара
+@param [__in] c Исходный 16-битный цвет
+@return 16-битный цвет
+*/
+WORD TColorManager::GetRadarColorData( __in WORD &c)
 {
 	return m_Radarcol[c];
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::GetRadarColor(WORD &c)
+/*!
+Получить 32-битный цвет для радара
+@param [__in] c Исходный 16-битный цвет
+@return 32-битный цвет
+*/
+DWORD TColorManager::GetRadarColor( __in WORD &c)
 {
 	return Color16To32(m_Radarcol[c]);
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::GetPolygoneColor(WORD c, WORD color)
+/*!
+Получить 32-битный цвет без конвертирования входящего цвета
+@param [__in] c Исходный 16-битный цвет
+@param [__in] color Индекс цвета в палитре
+@return 32-битный цвет
+*/
+DWORD TColorManager::GetPolygoneColor( __in WORD c, __in WORD color)
 {
 	if (color != 0 && color < m_HuesCount)
 	{
@@ -181,7 +233,13 @@ DWORD TColorManager::GetPolygoneColor(WORD c, WORD color)
 	return 0xFF010101; //Black
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::GetUnicodeFontColor(WORD &c, WORD color)
+/*!
+Получить 32-битный цвет для Unicode-шрифтов
+@param [__in] c Исходный 16-битный цвет
+@param [__in] color Индекс цвета в палитре
+@return 32-битный цвет
+*/
+DWORD TColorManager::GetUnicodeFontColor( __in WORD &c, __in WORD color)
 {
 	if (color != 0 && color < m_HuesCount)
 	{
@@ -195,7 +253,13 @@ DWORD TColorManager::GetUnicodeFontColor(WORD &c, WORD color)
 	return Color16To32(c);
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::GetColor(WORD &c, WORD color)
+/*!
+Получить 32-битный цвет
+@param [__in] c Исходный 16-битный цвет
+@param [__in] color Индекс цвета в палитре
+@return 32-битный цвет
+*/
+DWORD TColorManager::GetColor( __in WORD &c, __in WORD color)
 {
 	if (color != 0 && color < m_HuesCount)
 	{
@@ -209,7 +273,13 @@ DWORD TColorManager::GetColor(WORD &c, WORD color)
 	return Color16To32(c);
 }
 //---------------------------------------------------------------------------
-DWORD TColorManager::GetPartialHueColor(WORD &c, WORD color)
+/*!
+Получить 32-битный цвет с учетом оттенков серого
+@param [__in] c Исходный 16-битный цвет
+@param [__in] color Индекс цвета в палитре
+@return 32-битный цвет
+*/
+DWORD TColorManager::GetPartialHueColor( __in WORD &c, __in WORD color)
 {
 	if (color != 0 && color < m_HuesCount)
 	{

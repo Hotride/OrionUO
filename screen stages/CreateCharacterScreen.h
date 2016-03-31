@@ -23,13 +23,13 @@
 class TCreateCharacterScreen : public TBaseScreen
 {
 private:
-	//Идентификаторы событий для плавного перехода
+	//!Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_CCS_QUIT = 1;
 	static const BYTE ID_SMOOTH_CCS_GO_SCREEN_CHARACTER = 2;
 	static const BYTE ID_SMOOTH_CCS_GO_SCREEN_CONNECT = 3;
 	static const BYTE ID_SMOOTH_CCS_GO_SCREEN_SELECT_TOWN = 4;
 
-	//Идентификаторы кнопок
+	//!Идентификаторы кнопок
 	static const int ID_CCS_QUIT = 1;
 	static const int ID_CCS_ARROW_PREV = 2;
 	static const int ID_CCS_ARROW_NEXT = 3;
@@ -62,33 +62,72 @@ private:
 		CCSID_FACIAL_HAIR_COLOR
 	};
 
-	//Выбранный стиль прически/бороды
+	//!Выбранный стиль прически/бороды
 	int m_StyleSelection;
 
-	//Выбранный цвет тела/одежды/волосеного покрова
+	//!Выбранный цвет тела/одежды/волосеного покрова
 	int m_ColorSelection;
 
 public:
 	TCreateCharacterScreen();
 	virtual ~TCreateCharacterScreen();
 
-	//Инициализация
+	/*!
+	Инициализация
+	@return 
+	*/
 	void Init();
 
-	//Обработка события после плавного затемнения экрана
-	void ProcessSmoothAction(BYTE action = 0xFF);
+	/*!
+	Обработка события после плавного затемнения экрана
+	@param [__in_opt] action Идентификатор действия
+	@return 
+	*/
+	void ProcessSmoothAction(__in_opt BYTE action = 0xFF);
 
-	//Инициализация тултипа
+	/*!
+	Инициализация всплывающих подсказок
+	@return 
+	*/
 	void InitPopupHelp();
 
-	//Рисование экрана
-	int Render(bool mode);
+	/*!
+	Отрисовка/выбор объектов
+	@param [__in] mode true - отрисовка, false - выбор
+	@return При выборе объектов - идентификатор выбранного объекта
+	*/
+	int Render(__in bool mode);
 
-	//События
+
+
+	/*!
+	Нажатие левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseDown();
+
+	/*!
+	Отпускание левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseUp();
-	void OnCharPress(WPARAM wparam, LPARAM lparam);
-	void OnKeyPress(WPARAM wparam, LPARAM lparam);
+
+	/*!
+	Обработка нажатия клавиши
+	@param [__in] wparam не подписанный параметр
+	@param [__in] lparam не подписанный параметр
+	@return 
+	*/
+	void OnCharPress(__in WPARAM wparam, __in LPARAM lparam);
+
+	/*!
+	Обработка нажатия клавиши
+	@param [__in] wparam не подписанный параметр
+	@param [__in] lparam не подписанный параметр
+	@return 
+	*/
+	void OnKeyPress(__in WPARAM wparam, __in LPARAM lparam);
+
 };
 //---------------------------------------------------------------------------
 extern TCreateCharacterScreen *CreateCharacterScreen;

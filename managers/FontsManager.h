@@ -20,79 +20,100 @@
 #ifndef FontsManagerH
 #define FontsManagerH
 //--------------------------------------------------------------------------
-//Структура с данными о ссылке
+//!Структура с данными о ссылке
 struct WEB_LINK
 {
-	//Была посещена
+	//!Была посещена
 	bool Visited;
 
-	//Ссылка
+	//!Ссылка
 	string WebLink;
 };
 //--------------------------------------------------------------------------
-//Структура с данными о HTML-символе
+//!Структура с данными о HTML-символе
 struct HTML_char
 {
-	//Индекс символа
+	//!Индекс символа
 	wchar_t Char;
 
-	//Индекс шрифта
+	//!Индекс шрифта
 	BYTE Font;
 
-	//Выравнивание
+	//!Выравнивание
 	TEXT_ALIGN_TYPE Align;
 
-	//Набор флагов
+	//!Набор флагов
 	WORD Flags;
 
-	//Цвет символа
+	//!Цвет символа
 	DWORD Color;
 
-	//Индекс ссылки
+	//!Индекс ссылки
 	WORD LinkID;
 };
 //--------------------------------------------------------------------------
 typedef std::map<WORD, WEB_LINK> WEBLINK_MAP;
 //--------------------------------------------------------------------------
-//Менеджер шрифтов
+//!Класс менеджера шрифтов
 class TFontsManager
 {
 private:
-	//Список ASCII шрифтов
+	//!Список ASCII шрифтов
 	FONT_DATA *m_Font;
 
-	//Количество ASCII ширфтов
+	//!Количество ASCII ширфтов
 	int m_FontCount;
 
-	//Список ссылок
+	//!Список ссылок
 	WEBLINK_MAP m_WebLink;
 
-	//Таблица ассоциации ASCII шрифтов
+	//!Таблица ассоциации ASCII шрифтов
 	static BYTE m_FontIndex[256];
 
-	//Данные о юникод шрифтах: адрес, размер
+	//!Данные о юникод шрифтах: адрес, размер
 	DWORD m_UnicodeFontAddress[20];
 	DWORD m_UnicodeFontSize[20];
 
-	//Сохранение пикселей текстуры
+	//!Сохранение пикселей текстуры
 	bool m_SavePixels;
 
-	//Использование HTML расширений
+	//!Использование HTML расширений
 	bool m_UseHTML;
 
-	//Цвет HTML
+	//!Цвет HTML
 	DWORD m_HTMLColor;
 
-	//Получение индекса ссылки
-	WORD GetWebLinkID(wchar_t *link, DWORD &color);
+	/*!
+	Получить индекс ссылки
+	@param [__in] link Ссылка
+	@param [__out] color Цвет ссылки
+	@return Индекс ссылки
+	*/
+	WORD GetWebLinkID(__in wchar_t *link, __out DWORD &color);
 
-	//Получение HTML данных
-	HTML_char *GetHTMLData(BYTE font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, WORD flags);
+	/*!
+	Получение HTML данных
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] len Длина текста
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@return Массив HTML символов
+	*/
+	HTML_char *GetHTMLData(__in BYTE font, __in const wchar_t *str, __in int &len, __in TEXT_ALIGN_TYPE align, __in WORD flags);
 
-	//Получение данных многострочного текста
-	PMULTILINES_FONT_INFO GetInfoHTML(BYTE font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, WORD flags, int width);
+	/*!
+	Получение данных многострочного текста HTML
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] len Длина текста
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@param [__in] width Ширина текста
+	@return Ссылка на данные
+	*/
+	PMULTILINES_FONT_INFO GetInfoHTML(__in BYTE font, __in const wchar_t *str, __in int len, __in TEXT_ALIGN_TYPE align, __in WORD flags, __in int width);
 
-	//Создание ASCII текстуры
 	bool GenerateABase(BYTE &font, TTextTexture &th, const char *str, WORD &color, int &width, TEXT_ALIGN_TYPE &align, WORD &flags);
 
 	//Создание Unicode текстуры

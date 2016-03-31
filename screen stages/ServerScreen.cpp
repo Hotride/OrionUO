@@ -37,6 +37,10 @@ TServerScreen::~TServerScreen()
 		m_Text[i].Clear();
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация
+@return 
+*/
 void TServerScreen::Init()
 {
 	char buf[128] = {0};
@@ -73,6 +77,10 @@ void TServerScreen::Init()
 	UO->ExecuteGumpPart(0x15E8, 3); //Earth button
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация всплывающих подсказок
+@return 
+*/
 void TServerScreen::InitPopupHelp()
 {
 	if (!ConfigManager.PopupHelpEnabled)
@@ -112,6 +120,10 @@ void TServerScreen::InitPopupHelp()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Получить высоту списка серверов
+@return 
+*/
 int TServerScreen::GetServerListHeight()
 {
 	int height = 10;
@@ -122,7 +134,12 @@ int TServerScreen::GetServerListHeight()
 	return height;
 }
 //---------------------------------------------------------------------------
-int TServerScreen::Render(bool mode)
+/*!
+Отрисовка/выбор объектов
+@param [__in] mode true - отрисовка, false - выбор
+@return При выборе объектов - идентификатор выбранного объекта
+*/
+int TServerScreen::Render(__in bool mode)
 {
 	DWORD ticks = GetTickCount();
 
@@ -317,6 +334,10 @@ int TServerScreen::Render(bool mode)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Нажатие левой кнопки мыши
+@return 
+*/
 void TServerScreen::OnLeftMouseDown()
 {
 	Render(false);
@@ -366,6 +387,10 @@ void TServerScreen::OnLeftMouseDown()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Отпускание левой кнопки мыши
+@return 
+*/
 void TServerScreen::OnLeftMouseUp()
 {
 	Render(false);
@@ -398,7 +423,12 @@ void TServerScreen::OnLeftMouseUp()
 	g_LastObjectLeftMouseDown = 0;
 }
 //----------------------------------------------------------------------------
-void TServerScreen::OnMouseWheel(MOUSE_WHEEL_STATE state)
+/*!
+Обработка средней кнопки (колесика) мыши
+@param [__in] state Состояние колесика
+@return 
+*/
+void TServerScreen::OnMouseWheel( __in MOUSE_WHEEL_STATE state)
 {
 	if (!g_LeftMouseDown && !g_RightMouseDown && m_LastScrollChangeTime < GetTickCount())
 	{
@@ -412,7 +442,13 @@ void TServerScreen::OnMouseWheel(MOUSE_WHEEL_STATE state)
 	}
 }
 //---------------------------------------------------------------------------
-void TServerScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@return 
+*/
+void TServerScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 {
 	if (wparam == VK_RETURN)
 	{
@@ -421,7 +457,12 @@ void TServerScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 	}
 }
 //---------------------------------------------------------------------------
-void TServerScreen::ProcessSmoothAction(BYTE action)
+/*!
+Обработка события после плавного затемнения экрана
+@param [__in_opt] action Идентификатор действия
+@return 
+*/
+void TServerScreen::ProcessSmoothAction( __in_opt BYTE action)
 {
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
@@ -437,7 +478,13 @@ void TServerScreen::ProcessSmoothAction(BYTE action)
 	}
 }
 //----------------------------------------------------------------------------
-void TServerScreen::ListingList(bool direction, int divizor)
+/*!
+Пролистать список
+@param [__in] direction Направление
+@param [__in] divizor Делитель
+@return 
+*/
+void TServerScreen::ListingList( __in bool direction, __in int divizor)
 {
 	if (direction) //Up
 	{

@@ -61,7 +61,12 @@ TGameItem::~TGameItem()
 	}
 }
 //---------------------------------------------------------------------------
-void TGameItem::Paste(TObjectOnCursor *obj)
+/*!
+Вставка данных из объекта в руке (на курсоре)
+@param [__in] obj Ссылка на объект на курсоре
+@return 
+*/
+void TGameItem::Paste( __in TObjectOnCursor *obj)
 {
 	if (obj == NULL)
 		return;
@@ -93,7 +98,12 @@ void TGameItem::Paste(TObjectOnCursor *obj)
 	OnGraphicChange();
 }
 //---------------------------------------------------------------------------
-void TGameItem::OnGraphicChange(int direction)
+/*!
+Событие изменения картинки объекта
+@param [__in_opt] direction Направление предмета (для трупов)
+@return 
+*/
+void TGameItem::OnGraphicChange( __in_opt int direction)
 {
 	if (m_Graphic < 0x4000)
 	{
@@ -155,7 +165,15 @@ void TGameItem::OnGraphicChange(int direction)
 		LoadMulti();
 }
 //---------------------------------------------------------------------------
-int TGameItem::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
+/*!
+Отрисовать предмет
+@param [__in] mode Режим рисования. true - рисование, false - выбор объектов
+@param [__in] drawX Экранная координата X объекта
+@param [__in] drawY Экранная координата Y объекта
+@param [__in] ticks Таймер рендера
+@return При выборе объектов возвращает выбранный элемент
+*/
+int TGameItem::Draw(__in bool &mode, __in int &drawX, __in int &drawY, __in DWORD &ticks)
 {
 	if (m_Container == 0xFFFFFFFF && m_Graphic < 0x4000)
 	{
@@ -284,6 +302,10 @@ g_RenderedObjectsCountInGameWindow++;
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Получить индекс картинки (для анимации)
+@return Индекс картинки
+*/
 WORD TGameItem::GetMountAnimation()
 {
 	WORD graphic = m_Graphic;
@@ -519,6 +541,10 @@ WORD TGameItem::GetMountAnimation()
 	return graphic;
 }
 //---------------------------------------------------------------------------
+/*!
+Загрузка мульти в текущий объект
+@return 
+*/
 void TGameItem::LoadMulti()
 {
 	TIndexMulti *index = UO->GetMultiPointer(m_Graphic - 0x4000);
@@ -567,8 +593,6 @@ void TGameItem::LoadMulti()
 			multi->MaxY = maxY;
 		}
 
-		//TPRINT("multiData: %i %i %i %i\n", minX, minY, maxX, maxY);
-
 		TGumpMinimap *minimap = (TGumpMinimap*)GumpManager->GetGump(g_PlayerSerial, 0, GT_MINIMAP);
 
 		if (minimap != NULL)
@@ -576,7 +600,12 @@ void TGameItem::LoadMulti()
 	}
 }
 //---------------------------------------------------------------------------
-void TGameItem::AddMultiObject(TMultiObject *obj)
+/*!
+Добавить объекта-мульти
+@param [__in] obj Ссылка на мульти-объект
+@return 
+*/
+void TGameItem::AddMultiObject( __in TMultiObject *obj)
 {
 	if (m_Items == NULL)
 	{
@@ -653,7 +682,13 @@ void TGameItem::AddMultiObject(TMultiObject *obj)
 	}
 }
 //---------------------------------------------------------------------------
-TMulti *TGameItem::GetMultiAtXY(short x, short y)
+/*!
+Получение объекта мульти в заданных координатах
+@param [__in] x Координата X
+@param [__in] y Координата Y
+@return Ссылка на мульти или NULL
+*/
+TMulti *TGameItem::GetMultiAtXY(__in short x, __in short y)
 {
 	TMulti *multi = (TMulti*)m_Items;
 
@@ -668,7 +703,13 @@ TMulti *TGameItem::GetMultiAtXY(short x, short y)
 	return multi;
 }
 //---------------------------------------------------------------------------
-TGameItem *TGameItem::FindItem(WORD graphic, WORD color)
+/*!
+Найти объект внутри (рекурсивно) по типу с учетом (и без) цвета
+@param [__in] graphic Индекс картинки
+@param [__in_opt] color Цвет предмета
+@return Ссылка на найденный объект или NULL
+*/
+TGameItem *TGameItem::FindItem(__in WORD graphic, __in_opt WORD color)
 {
 	TGameItem *obj = (TGameItem*)m_Items;
 	TGameItem *item = NULL;
@@ -724,7 +765,12 @@ TGameItem *TGameItem::FindItem(WORD graphic, WORD color)
 	return item;
 }
 //---------------------------------------------------------------------------
-TGameItem *TGameItem::FindLayer(int layer)
+/*!
+Найти объект на указанном слое (для трупов)
+@param [__in] layer Номер слоя
+@return Ссылка на найденный объект или NULL
+*/
+TGameItem *TGameItem::FindLayer(__in int layer)
 {
 	TGameItem *item = NULL;
 

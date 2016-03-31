@@ -21,6 +21,7 @@
 
 TSelectTownScreen *SelectTownScreen = NULL;
 //---------------------------------------------------------------------------
+//!Список точек для отображения кнопок городов
 POINT TSelectTownScreen::m_TownButtonText[9] =
 {
 	//Button     Text
@@ -44,6 +45,10 @@ TSelectTownScreen::~TSelectTownScreen()
 {
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация
+@return 
+*/
 void TSelectTownScreen::Init()
 {
 	m_PixelOffset = 0;
@@ -66,7 +71,12 @@ void TSelectTownScreen::Init()
 	UO->ExecuteResizepic(0x00FA); //scroll bar
 }
 //---------------------------------------------------------------------------
-void TSelectTownScreen::ProcessSmoothAction(BYTE action)
+/*!
+Обработка события после плавного затемнения экрана
+@param [__in_opt] action Идентификатор действия
+@return 
+*/
+void TSelectTownScreen::ProcessSmoothAction( __in_opt BYTE action)
 {
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
@@ -83,6 +93,10 @@ void TSelectTownScreen::ProcessSmoothAction(BYTE action)
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация всплывающих подсказок
+@return 
+*/
 void TSelectTownScreen::InitPopupHelp()
 {
 	if (!ConfigManager.PopupHelpEnabled)
@@ -90,7 +104,13 @@ void TSelectTownScreen::InitPopupHelp()
 
 }
 //---------------------------------------------------------------------------
-void TSelectTownScreen::DrawTownInfo(int x, int y)
+/*!
+Отобразить информацию о городе
+@param [__in] x Координата X
+@param [__in] y Координата Y
+@return 
+*/
+void TSelectTownScreen::DrawTownInfo( __in int x, __in int y)
 {
 	if (m_City != NULL)
 	{
@@ -109,7 +129,12 @@ void TSelectTownScreen::DrawTownInfo(int x, int y)
 	}
 }
 //---------------------------------------------------------------------------
-int TSelectTownScreen::Render(bool mode)
+/*!
+Отрисовка/выбор объектов
+@param [__in] mode true - отрисовка, false - выбор
+@return При выборе объектов - идентификатор выбранного объекта
+*/
+int TSelectTownScreen::Render(__in bool mode)
 {
 	DWORD ticks = GetTickCount();
 
@@ -300,6 +325,10 @@ int TSelectTownScreen::Render(bool mode)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Нажатие левой кнопки мыши
+@return 
+*/
 void TSelectTownScreen::OnLeftMouseDown()
 {
 	Render(false);
@@ -362,6 +391,10 @@ void TSelectTownScreen::OnLeftMouseDown()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Отпускание левой кнопки мыши
+@return 
+*/
 void TSelectTownScreen::OnLeftMouseUp()
 {
 	Render(false);
@@ -384,7 +417,12 @@ void TSelectTownScreen::OnLeftMouseUp()
 	g_LastObjectLeftMouseDown = 0;
 }
 //----------------------------------------------------------------------------
-void TSelectTownScreen::OnMouseWheel(MOUSE_WHEEL_STATE state)
+/*!
+Обработка средней кнопки (колесика) мыши
+@param [__in] state Состояние колесика
+@return 
+*/
+void TSelectTownScreen::OnMouseWheel( __in MOUSE_WHEEL_STATE state)
 {
 	if (!g_LeftMouseDown && !g_RightMouseDown && m_LastScrollChangeTime < GetTickCount())
 	{
@@ -398,6 +436,10 @@ void TSelectTownScreen::OnMouseWheel(MOUSE_WHEEL_STATE state)
 	}
 }
 //----------------------------------------------------------------------------
+/*!
+Получить высоту скроллбокса
+@return Высота скроллбокса
+*/
 int TSelectTownScreen::GetScrollBoxHeight()
 {
 	int result = 10;
@@ -421,7 +463,13 @@ int TSelectTownScreen::GetScrollBoxHeight()
 	return result;
 }
 //----------------------------------------------------------------------------
-void TSelectTownScreen::ListingList(bool direction, int divizor)
+/*!
+Пролистать список
+@param [__in] direction Направление
+@param [__in] divizor Делитель
+@return 
+*/
+void TSelectTownScreen::ListingList( __in bool direction, __in int divizor)
 {
 	if (direction) //Up
 	{

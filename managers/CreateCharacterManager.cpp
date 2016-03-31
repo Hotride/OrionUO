@@ -77,6 +77,10 @@ TCreateCharacterManager::~TCreateCharacterManager()
 	m_Name = NULL;
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация
+@return 
+*/
 void TCreateCharacterManager::Init()
 {
 	m_Name = new TEntryText();
@@ -90,6 +94,10 @@ void TCreateCharacterManager::Init()
 
 }
 //---------------------------------------------------------------------------
+/*!
+Очистка
+@return 
+*/
 void TCreateCharacterManager::Clear()
 {
 	m_Sex = false;
@@ -104,7 +112,12 @@ void TCreateCharacterManager::Clear()
 	m_Name->SetText(L"");
 }
 //---------------------------------------------------------------------------
-CC_HAIR_STYLE TCreateCharacterManager::GetHair(BYTE pos) const
+/*!
+Получить стиль волос
+@param [__in] pos Индекс волос
+@return Структура с данными о волосах
+*/
+CC_HAIR_STYLE TCreateCharacterManager::GetHair( __in BYTE pos) const
 {
 	if (pos < 0  || pos >= (10 + (int)m_Sex))
 		return m_MaleHairStyleTable[0];
@@ -115,7 +128,12 @@ CC_HAIR_STYLE TCreateCharacterManager::GetHair(BYTE pos) const
 	return m_MaleHairStyleTable[pos];
 }
 //---------------------------------------------------------------------------
-CC_HAIR_STYLE TCreateCharacterManager::GetBeard(BYTE pos) const
+/*!
+Получить стиль бороды
+@param [__in] pos Индекс бороды
+@return Структура с данными о бороде
+*/
+CC_HAIR_STYLE TCreateCharacterManager::GetBeard( __in BYTE pos) const
 {
 	if (pos < 0  || pos >= 8)
 		return m_BeardStyleTable[0];

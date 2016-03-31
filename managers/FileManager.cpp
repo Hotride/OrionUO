@@ -28,6 +28,10 @@ TMappedHeader::TMappedHeader()
 {
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать байт (1 байт)
+@return 
+*/
 BYTE TMappedHeader::ReadByte()
 {
 	BYTE result = *Ptr;
@@ -37,6 +41,10 @@ BYTE TMappedHeader::ReadByte()
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать слово (2 байта)
+@return 
+*/
 WORD TMappedHeader::ReadWord()
 {
 	WORD result = *(PWORD)Ptr;
@@ -46,6 +54,10 @@ WORD TMappedHeader::ReadWord()
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать двойное слово (4 байла)
+@return 
+*/
 DWORD TMappedHeader::ReadDWord()
 {
 	DWORD result = *(PDWORD)Ptr;
@@ -55,6 +67,10 @@ DWORD TMappedHeader::ReadDWord()
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать символ (1 байт)
+@return 
+*/
 char TMappedHeader::ReadChar()
 {
 	char result = (char)*Ptr;
@@ -64,6 +80,10 @@ char TMappedHeader::ReadChar()
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать короткое значение (2 байта)
+@return 
+*/
 short TMappedHeader::ReadShort()
 {
 	short result = (short)*(PWORD)Ptr;
@@ -73,6 +93,10 @@ short TMappedHeader::ReadShort()
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать целое (4 байта)
+@return 
+*/
 int TMappedHeader::ReadInt()
 {
 	int result = (int)*(PDWORD)Ptr;
@@ -82,7 +106,12 @@ int TMappedHeader::ReadInt()
 	return result;
 }
 //---------------------------------------------------------------------------
-string TMappedHeader:: ReadString(int size)
+/*!
+Прочитать строку
+@param [__in] size Размер строки, если 0 - читает до нуля
+@return 
+*/
+string TMappedHeader:: ReadString( __in int size)
 {
 	if (!size)
 	{
@@ -108,6 +137,10 @@ string TMappedHeader:: ReadString(int size)
 //---------------------------------------------------------------------------
 //----------------------------------TFileManager-----------------------------
 //---------------------------------------------------------------------------
+/*!
+Загрузить файлы
+@return 
+*/
 bool TFileManager::Load()
 {
 	memset(AnimIdx, 0, sizeof(AnimIdx));
@@ -252,6 +285,10 @@ bool TFileManager::Load()
 	return true;
 }
 //---------------------------------------------------------------------------
+/*!
+Выгрузить файлы
+@return 
+*/
 void TFileManager::Unload()
 {
 	IFOR(i, 0, 6)
@@ -292,6 +329,12 @@ void TFileManager::Unload()
 	UnloadFileFromMemory(VerdataMul);
 }
 //---------------------------------------------------------------------------
+/*!
+Спроецировать файл в память
+@param [__inout] object Объект для работы с файлом
+@param [__in] fName Путь к файлу
+@return
+*/
 bool TFileManager::LoadFileToMemory(TMappedHeader &object, const char *fName)
 {
 	bool result = false;
@@ -333,7 +376,12 @@ bool TFileManager::LoadFileToMemory(TMappedHeader &object, const char *fName)
 	return result;
 }
 //---------------------------------------------------------------------------
-void TFileManager::UnloadFileFromMemory(TMappedHeader &object)
+/*!
+Выгрузить файл из памяти
+@param [__inout] object Объект для работы с файлом
+@return 
+*/
+void TFileManager::UnloadFileFromMemory( __inout TMappedHeader &object)
 {
 	if (object.Address != NULL)
 		UnmapViewOfFile(object.Address);
@@ -374,7 +422,12 @@ TFileWriter::~TFileWriter()
 	}
 }
 //---------------------------------------------------------------------------
-void TFileWriter::Move(int offset)
+/*!
+Переместить указатель внутреннего буфера
+@param [__in] offset Смещение
+@return 
+*/
+void TFileWriter::Move( __in int offset)
 {
 	if (m_File != NULL)
 	{
@@ -429,7 +482,12 @@ FILE_WRITE_BODY(short, Short)
 FILE_WRITE_BODY(DWORD, DWord)
 FILE_WRITE_BODY(int, Int)
 //---------------------------------------------------------------------------
-void TFileWriter::WriteAsciiString(string val)
+/*!
+Записать ASCII строку
+@param [__in] val Данные
+@return 
+*/
+void TFileWriter::WriteAsciiString( __in string val)
 {
 	if (m_File != NULL)
 	{
@@ -459,7 +517,12 @@ void TFileWriter::WriteAsciiString(string val)
 	}
 }
 //---------------------------------------------------------------------------
-void TFileWriter::WriteUnicodeString(wstring val)
+/*!
+Записать Unicode строку
+@param [__in] val Данные
+@return 
+*/
+void TFileWriter::WriteUnicodeString( __in wstring val)
 {
 	if (m_File != NULL)
 	{
@@ -490,6 +553,10 @@ void TFileWriter::WriteUnicodeString(wstring val)
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Записать буфер в файл
+@return 
+*/
 void TFileWriter::WriteBuffer()
 {
 	if (m_File != NULL && m_UseBuffer)

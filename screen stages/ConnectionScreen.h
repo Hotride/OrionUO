@@ -23,36 +23,34 @@
 class TConnectionScreen : public TBaseScreen
 {
 private:
-	//Флаг поровала подключения
+	//!Флаг поровала подключения
 	bool m_ConnectionFailed;
 
-	//Флаг подключения
+	//!Флаг подключения
 	bool m_Connected;
 
-	//Флаг завершения работы экрана
+	//!Флаг завершения работы экрана
 	bool m_Completed;
 
-	//Код ошибки
+	//!Код ошибки
 	int m_ErrorCode;
 
-	//Тип экрана
+	//!Тип экрана
 	CONNECTION_SCREEN_TYPE m_Type;
 
-	//Объекты текста
+	//!Объекты текста
 	TTextTexture m_Text[32];
 
-	//Идентификаторы событий для плавного перехода
+	//!Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_CS_GO_SCREEN_MAIN = 1;
 	static const BYTE ID_SMOOTH_CS_GO_SCREEN_CHARACTER = 2;
 	static const BYTE ID_SMOOTH_CS_GO_SCREEN_PROFESSION = 3;
 	static const BYTE ID_SMOOTH_CS_SEND_DELETE = 4;
 
-	//Идентификаторы кнопок
+	//!Идентификаторы кнопок
 	static const int ID_CS_OK = 1;
 	static const int ID_CS_CANCEL = 2;
 
-	//Обработка события после плавного затемнения экрана
-	void ProcessSmoothAction(BYTE action = 0xFF);
 public:
 	TConnectionScreen();
 	~TConnectionScreen();
@@ -63,16 +61,48 @@ public:
 	SETGET(int, ErrorCode);
 	SETGET(CONNECTION_SCREEN_TYPE, Type);
 
-	//Инициализация
+	/*!
+	Инициализация
+	@return 
+	*/
 	void Init();
 
-	//Рисование экрана
-	int Render(bool mode);
+	/*!
+	Обработка события после плавного затемнения экрана
+	@param [__in_opt] action Идентификатор действия
+	@return 
+	*/
+	void ProcessSmoothAction(__in_opt BYTE action = 0xFF);
 
-	//События
+	/*!
+	Отрисовка/выбор объектов
+	@param [__in] mode true - отрисовка, false - выбор
+	@return При выборе объектов - идентификатор выбранного объекта
+	*/
+	int Render(__in bool mode);
+
+
+
+	/*!
+	Нажатие левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseDown();
+
+	/*!
+	Отпускание левой кнопки мыши
+	@return 
+	*/
 	void OnLeftMouseUp();
-	void OnKeyPress(WPARAM wparam, LPARAM lparam);
+
+	/*!
+	Обработка нажатия клавиши
+	@param [__in] wparam не подписанный параметр
+	@param [__in] lparam не подписанный параметр
+	@return 
+	*/
+	void OnKeyPress(__in WPARAM wparam, __in LPARAM lparam);
+
 };
 //---------------------------------------------------------------------------
 extern TConnectionScreen *ConnectionScreen;

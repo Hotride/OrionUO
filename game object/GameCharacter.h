@@ -20,49 +20,120 @@
 #ifndef GameCharacterH
 #define GameCharacterH
 //--------------------------------------------------------------------------
+//!Игровой персонаж
 class TGameCharacter: public TGameObject
 {
-//private:
 protected:
-	short m_Hits; //Текущее значение ХП
-	short m_MaxHits; //Максимальное значение ХП
-	short m_Mana; //Текущее значение маны
-	short m_MaxMana; //Максимальное значение маны
-	short m_Stam; //Текущее значение стамины
-	short m_MaxStam; //Максимальное значение стамины
-	bool m_Sex; //Пол
-	BYTE m_Race; //Расса
-	BYTE m_Direction; //Направление
-	BYTE m_Notoriety; //Злобность
-	bool m_CanChangeName; //Возможность изменить имя в статус баре
-	BYTE m_AnimationGroup; //Группа анимации
-	BYTE m_AnimationInterval; //Задержка смены кадров
-	BYTE m_AnimationFrameCount; //Количество кадров
-	BYTE m_AnimationRepeatMode; //Метод воспроизведения анимации
-	bool m_AnimationRepeat; //Повторять анимацию?
-	bool m_AnimationDirection; //Направление проигрывания анимации
-	bool m_AnimationFromServer; //Если анимация пришла с сервера
-	DWORD m_LastStepSoundTime; //Время последнего проигрывания звука для хотьбы
-	DWORD m_TimeToRandomFidget; //Время для установки случайной анимации
-	DWORD m_CorpseLink; //Ссылка на труп (для анимации трупа)
+	//!Текущее значение ХП
+	short m_Hits;
+
+	//!Максимальное значение ХП
+	short m_MaxHits;
+
+	//!Текущее значение маны
+	short m_Mana;
+
+	//!Максимальное значение маны
+	short m_MaxMana;
+
+	//!Текущее значение стамины
+	short m_Stam;
+
+	//!Максимальное значение стамины
+	short m_MaxStam;
+
+	//!Пол
+	bool m_Sex;
+
+	//!Расса
+	BYTE m_Race;
+
+	//!Направление
+	BYTE m_Direction;
+
+	//!Злобность
+	BYTE m_Notoriety;
+
+	//!Возможность изменить имя в статус баре
+	bool m_CanChangeName;
+
+	//!Группа анимации
+	BYTE m_AnimationGroup;
+
+	//!Задержка смены кадров
+	BYTE m_AnimationInterval;
+
+	//!Количество кадров
+	BYTE m_AnimationFrameCount;
+
+	//!Метод воспроизведения анимации
+	BYTE m_AnimationRepeatMode;
+
+	//!Повторять анимацию?
+	bool m_AnimationRepeat;
+
+	//!Направление проигрывания анимации
+	bool m_AnimationDirection;
+
+	//!Если анимация пришла с сервера
+	bool m_AnimationFromServer;
+
+	//!Время последнего проигрывания звука для хотьбы
+	DWORD m_LastStepSoundTime;
+
+	//!Время для установки случайной анимации
+	DWORD m_TimeToRandomFidget;
+
+	//!Ссылка на труп (для анимации трупа)
+	DWORD m_CorpseLink;
 	
-	char m_OffsetX; //Смещение картинки по оси X
-	char m_OffsetY; //Смещение картинки по оси Y
-	char m_OffsetZ; //Смещение картинки по оси Z
-	DWORD m_LastStepTime; //Время последнего шага
-	short m_AfterStepDelay; //Задержка после шага (для корректного отображения анимации хотьбы)
-	BYTE m_StepSoundOffset; //Смещение для звука шага
+	//!Смещение картинки по оси X
+	int m_OffsetX;
 
-	string m_PaperdollText; //Текст титула в папердолле
+	//!Смещение картинки по оси Y
+	int m_OffsetY;
 
-	bool IsCorrectStep(WORD &cx, WORD &cy, WORD &x, WORD &y, BYTE &dir);
-	void CorrectAnimationGroup(WORD &graphic, ANIMATION_GROUPS &group, BYTE &animation); //Скорректировать отношение анимаций
+	//!Смещение картинки по оси Z
+	int m_OffsetZ;
+
+	//!Время последнего шага
+	DWORD m_LastStepTime;
+
+	//!Задержка после шага (для корректного отображения анимации хотьбы)
+	short m_AfterStepDelay;
+
+	//!Смещение для звука шага
+	BYTE m_StepSoundOffset;
+	
+	/*!
+	Проверка, шаг ли это или телепорт (определяет телепорт на 1 тайл по направлению движения как шаг)
+	@param [__inout] cx Текущая координата X
+	@param [__inout] cy Текущая координата Y
+	@param [__in] x Новая координата X
+	@param [__in] y Новая координата Y
+	@param [__in] dir Направление персонажа
+	@return Результат выполнения шаг/телепорт
+	*/
+	bool IsCorrectStep(__inout WORD &cx, __inout WORD &cy, __in WORD &x, __in WORD &y, __in BYTE &dir);
+
+	/*!
+	Скорректировать отношение индексов групп анимаций
+	@param [__in] graphic Индекс картинки
+	@param [__in] group Группа анимаций
+	@param [__inout] animation Индекс анимации в группе
+	@return 
+	*/
+	void CorrectAnimationGroup(__in WORD &graphic, __in ANIMATION_GROUPS &group, __inout BYTE &animation);
 public:
 	TGameCharacter(DWORD serial = 0);
 	virtual ~TGameCharacter();
 	
-	TWalkStack m_WalkStack; //Ссылка на счетчик шагов
-	
+	//!Ссылка на счетчик шагов
+	TWalkStack m_WalkStack;
+
+	//!Текстура текста папердолла
+	TTextTexture m_PaperdollTextTexture;
+
 	SETGETEX(short, Hits);
 	SETGETEX(short, MaxHits);
 	SETGETEX(short, MaxMana);
@@ -86,41 +157,143 @@ public:
 	SETGET(BYTE, StepSoundOffset);
 	SETGET(DWORD, CorpseLink);
 
-	SETGETEX(char, OffsetX);
-	SETGETEX(char, OffsetY);
-	SETGETEX(char, OffsetZ);
+	SETGETEX(int, OffsetX);
+	SETGETEX(int, OffsetY);
+	SETGETEX(int, OffsetZ);
 	SETGET(DWORD, LastStepTime);
 
+	/*!
+	Сидит ли персонаж
+	@return Индекс объекта из таблицы, на котором он восседает
+	*/
 	int IsSitting();
 
-	virtual int Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks);
+	/*!
+	Отрисовать персонажа
+	@param [__in] mode Режим рисования. true - рисование, false - выбор объектов
+	@param [__in] drawX Экранная координата X объекта
+	@param [__in] drawY Экранная координата Y объекта
+	@param [__in] ticks Таймер рендера
+	@return При выборе объектов возвращает выбранный элемент
+	*/
+	virtual int Draw(__in bool &mode, __out int &drawX, __in int &drawY, __in DWORD &ticks);
 
-	void OnGraphicChange(int direction = 0); //Обновить информацию о поле персонажа
+	/*!
+	Обновить информацию о поле персонажа, обновление гампов
+	@param [__in_opt] direction Направление персонажа
+	@return 
+	*/
+	void OnGraphicChange(__in_opt int direction = 0);
 
-	void SetPaperdollText(string val); //Сгенерировать текстуру текста папердолла
-	void SetAnimationGroup(BYTE val); //Установка группы анимации
-	void SetRandomFidgetAnimation(); //Установка случайной анимации (при длительном простое)
-	//Установка анимации
-	void SetAnimation(BYTE id, BYTE interval = 0, BYTE frameCount = 0, BYTE repeatCount = 0, bool repeat = false, bool frameDirection = false);
+	/*!
+	Сгенерировать текстуру текста папердолла
+	@param [__in] val Текст папердолла
+	@return 
+	*/
+	void GeneratePaperdollText(__in string val);
 
-	WORD GetMountAnimation(); //Получить индекс картинки для вычисления картинки анимации
+	/*!
+	Установка группы анимации
+	@param [__in] val Новое значение группы анимации
+	@return 
+	*/
+	void SetAnimationGroup(__in BYTE val);
 
-	TTextTexture m_PaperdollTextTexture; //Текстура текста папердолла
+	/*!
+	Установка случайной анимации (при длительном простое)
+	@return 
+	*/
+	void SetRandomFidgetAnimation();
 
-	string GetPaperdollText() const { return m_PaperdollText; }
-	BYTE GetAnimationGroup(WORD graphic = 0); //Получить текущую группу анимации
-	void GetAnimationGroup(ANIMATION_GROUPS group, BYTE &animation); //Скорректировать отношение анимаций
-	bool Staying() {return m_AnimationGroup == 0xFF && m_WalkStack.Empty();} //Если персонаж не движется
-	bool TestStepNoChangeDirection(BYTE group); //Группа анимации хотьбы
-	bool Walking() {return (m_LastStepTime > (DWORD)(GetTickCount() - m_AfterStepDelay));} //Если персонаж идет (или только что закончил передвигаться)
-	void UpdateAnimationInfo(BYTE &dir, bool canChange = false); //Обновить характеристики анимации персонажа
-	bool IsTeleportAction(WORD &x, WORD &y, BYTE &dir);
+	/*!
+	Установка анимации от сервера
+	@param [__in] id Группа анимаци
+	@param [__in_opt] interval Задержка между кадрами
+	@param [__in_opt] frameCount Количество кадлов анимации
+	@param [__in_opt] repeatCount Количество повторов анимации
+	@param [__in_opt] repeat Зациклено или нет
+	@param [__out_opt] frameDirection Направление прокрутки кадров (вперед/назад)
+	@return 
+	*/
+	void SetAnimation(__in BYTE id, __in_opt BYTE interval = 0, __in_opt BYTE frameCount = 0, __in_opt BYTE repeatCount = 0, __in_opt bool repeat = false, __out_opt bool frameDirection = false);
 
-	//Человек ли это
+	/*!
+	Получить индекс картинки для вычисления картинки анимации
+	@return Индекс картинки персонажа
+	*/
+	WORD GetMountAnimation();
+
+	/*!
+	Получить текущую группу анимации
+	@param [__in_opt] graphic Индекс картинки персонажа
+	@return Индекс группы анимации
+	*/
+	BYTE GetAnimationGroup(__in_opt WORD graphic = 0);
+
+	/*!
+	Скорректировать отношение анимаций
+	@param [__in] group Группа анимации
+	@param [__inout] animation Индекс группы анимации
+	@return 
+	*/
+	void GetAnimationGroup(__in ANIMATION_GROUPS group, __inout BYTE &animation);
+
+	/*!
+	Состояние, если персонаж не движется
+	@return true - стоит, false - в движении
+	*/
+	bool Staying() { return m_AnimationGroup == 0xFF && m_WalkStack.Empty(); }
+
+	/*!
+	Проверка на возможность изменения направления персонажа при движении в сидячем положении
+	@param [__in] group Индекс группы анимации
+	@return Можно изменять направление или нет
+	*/
+	bool TestStepNoChangeDirection(__in BYTE group);
+
+	/*!
+	Если персонаж идет (или только что закончил передвигаться)
+	@return true - в движении, false - нет
+	*/
+	bool Walking() {
+		return (m_LastStepTime > (DWORD)(GetTickCount() - m_AfterStepDelay));
+	}
+
+	/*!
+	не подписанная функция
+	@param [__inout] dir не подписанный параметр
+	@param [__in] canChange Можно ли изменять состояние стека хотьбы или нет
+	@return 
+	*/
+	void UpdateAnimationInfo(__inout BYTE &dir, __in bool canChange = false);
+
+	/*!
+	Проверка изменения координат, телепорт ли это
+	@param [__in] x Новая координата X
+	@param [__in] y Новая координата Y
+	@param [__in] dir Новое направление персонажа
+	@return true - телепорт, false - шаг
+	*/
+	bool IsTeleportAction(__in WORD &x, __in WORD &y, __in BYTE &dir);
+
+	/*!
+	Проверка на человекоподобного персонажа
+	@return Человекоподобное или нет
+	*/
 	bool IsHuman() { return (((m_Graphic >= 0x0190) && (m_Graphic <= 0x0193)) || (m_Graphic == 0x03DB) || (m_Graphic == 0x03DF) || (m_Graphic == 0x03E2)); }
-	bool Dead() { return ((m_Graphic == 0x0192) || (m_Graphic == 0x0193)); } //Объект мертв
-	
-	TGameItem *FindLayer(int layer); //Найти объект в контейнере на указанном слое
-};
+
+	/*!
+	Жив или мертв объект
+	@return Мертв или нет
+	*/
+	bool Dead() { return ((m_Graphic == 0x0192) || (m_Graphic == 0x0193)); }
+
+	/*!
+	Найти объект на указанном слое
+	@param [__in] layer Номер слоя
+	@return Ссылка на найденный объект или NULL
+	*/
+	TGameItem *FindLayer(__in int layer);
+ };
 //---------------------------------------------------------------------------
 #endif

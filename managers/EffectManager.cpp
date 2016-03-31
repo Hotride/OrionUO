@@ -21,7 +21,12 @@
 
 TEffectManager *EffectManager = NULL;
 //---------------------------------------------------------------------------
-void TEffectManager::AddEffect(TGameEffect *effect)
+/*!
+Добавить эффект
+@param [__in] effect Ссылка на эффект
+@return 
+*/
+void TEffectManager::AddEffect( __in TGameEffect *effect)
 {
 	switch (effect->EffectType)
 	{
@@ -98,7 +103,12 @@ void TEffectManager::AddEffect(TGameEffect *effect)
 	}
 }
 //---------------------------------------------------------------------------
-void TEffectManager::RemoveEffect(TGameEffect *effect)
+/*!
+Удалить эффект
+@param [__in] effect Ссылка на эффект
+@return 
+*/
+void TEffectManager::RemoveEffect( __in TGameEffect *effect)
 {
 	Unlink(effect);
 
@@ -107,7 +117,12 @@ void TEffectManager::RemoveEffect(TGameEffect *effect)
 	delete effect;
 }
 //---------------------------------------------------------------------------
-void TEffectManager::CreateExplodeEffect(TGameEffect *effect)
+/*!
+Создать эффект взрыва
+@param [__in] effect Ссылка на эффект
+@return 
+*/
+void TEffectManager::CreateExplodeEffect( __in TGameEffect *effect)
 {
 	TGameEffect *newEffect = new TGameEffect();
 
@@ -124,6 +139,10 @@ void TEffectManager::CreateExplodeEffect(TGameEffect *effect)
 	AddEffect(newEffect);
 }
 //---------------------------------------------------------------------------
+/*!
+Обновление эффектов
+@return 
+*/
 void TEffectManager::UpdateEffects()
 {
 	for (TGameEffect *effect = (TGameEffect*)m_Items; effect != NULL;)
@@ -136,6 +155,10 @@ void TEffectManager::UpdateEffects()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Удаление эффектов, вышедших за пределы экрана
+@return 
+*/
 void TEffectManager::RemoveRangedEffects()
 {
 }

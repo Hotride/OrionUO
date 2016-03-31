@@ -242,6 +242,10 @@ void TAnimationManager::AddShadow(GLuint texture, int drawX, int drawY, int zBuf
 #endif
 }
 //----------------------------------------------------------------------------
+/*!
+Отрисовать тени
+@return 
+*/
 void TAnimationManager::DrawShadows()
 {
 	if (m_ShadowCount)
@@ -270,7 +274,12 @@ void TAnimationManager::DrawShadows()
 	}
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::Load(PDWORD verdata)
+/*!
+Загрузка данных
+@param [__in] verdata Ссылка на адрес в памяти файла патчей (verdata.mul)
+@return 
+*/
+void TAnimationManager::Load( __in PDWORD verdata)
 {
 	IFOR(i, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
 	{
@@ -357,7 +366,12 @@ void TAnimationManager::Load(PDWORD verdata)
 	}
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::InitIndexReplaces(PDWORD verdata)
+/*!
+Загрузка файла корректора индексов картинок анимаций
+@param [__in] verdata Ссылка на адрес в памяти файла патчей (verdata.mul)
+@return 
+*/
+void TAnimationManager::InitIndexReplaces( __in PDWORD verdata)
 {
 	Load(verdata);
 
@@ -557,7 +571,12 @@ void TAnimationManager::InitIndexReplaces(PDWORD verdata)
 	}
 }
 //---------------------------------------------------------------------------
-ANIMATION_GROUPS TAnimationManager::GetGroupIndex(WORD id)
+/*!
+Получить индекс группы по индексу картинки
+@param [__in] id Индекс картинки
+@return Группа анимаций
+*/
+ANIMATION_GROUPS TAnimationManager::GetGroupIndex( __in WORD id)
 {
 	ANIMATION_GROUPS group = AG_HIGHT;
 
@@ -572,7 +591,13 @@ ANIMATION_GROUPS TAnimationManager::GetGroupIndex(WORD id)
 	return group;
 }
 //---------------------------------------------------------------------------
-BYTE TAnimationManager::GetDieGroupIndex(WORD id, bool second)
+/*!
+Получить индекс группы смерти анимации
+@param [__in] id Byltrc rfhnbyrb
+@param [__in] second Группа смерти номер 2
+@return Индекс группы анимации
+*/
+BYTE TAnimationManager::GetDieGroupIndex( __in WORD id, __in bool second)
 {
 	BYTE group = 0;
 
@@ -589,7 +614,13 @@ BYTE TAnimationManager::GetDieGroupIndex(WORD id, bool second)
 	return group;
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::GetAnimDirection(BYTE &dir, bool &mirror)
+/*!
+Коррекция направления и режима зеркального отображения
+@param [__inout] dir Направление
+@param [__inout] mirror Зеркальное отображение
+@return 
+*/
+void TAnimationManager::GetAnimDirection( __inout BYTE &dir, __inout bool &mirror)
 {
 	switch (dir)
 	{
@@ -634,7 +665,15 @@ void TAnimationManager::GetAnimDirection(BYTE &dir, bool &mirror)
 	}
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::GetSittingAnimDirection(BYTE &dir, bool &mirror, int &x, int &y)
+/*!
+Коррекция направления и режима зеркального отображения для сидячего персонажа
+@param [__inout] dir Направление
+@param [__inout] mirror Зеркальное отображение
+@param [__inout] x Координата X
+@param [__inout] y Координата Y
+@return 
+*/
+void TAnimationManager::GetSittingAnimDirection( __inout BYTE &dir, __inout bool &mirror, __inout int &x, __inout int &y)
 {
 	switch (dir)
 	{
@@ -684,6 +723,11 @@ void TAnimationManager::GetSittingAnimDirection(BYTE &dir, bool &mirror, int &x,
 			}*/
 }
 //----------------------------------------------------------------------------
+/*!
+Получить ссылку на данные анимации
+@param [__in] id Индекс картинки
+@return Ссылка на анимацию
+*/
 TTextureAnimation *TAnimationManager::GetAnimation(WORD id)
 {
 	if (id >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
@@ -702,7 +746,12 @@ TTextureAnimation *TAnimationManager::GetAnimation(WORD id)
 	return anim;
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::ClearUnusedTextures(DWORD ticks)
+/*!
+Очистка неиспользуемых текстур
+@param [__in] ticks Таймер удаления
+@return 
+*/
+void TAnimationManager::ClearUnusedTextures( __in DWORD ticks)
 {
 	TLinkedList *list = m_UsedAnimList;
 	TLinkedList *prev = list;
@@ -768,7 +817,14 @@ void TAnimationManager::ClearUnusedTextures(DWORD ticks)
 	}
 }
 //----------------------------------------------------------------------------
-bool TAnimationManager::ExecuteDirectionGroup(TTextureAnimationDirection *direction, WORD &id, int &offset)
+/*!
+Загрузка картинок для указанного направления персонажа
+@param [__in] direction Ссылка на направление анимации
+@param [__in] id Индекс картинки
+@param [__in] offset Смещение относительно начала анимаций
+@return true в случае успешной загрузки
+*/
+bool TAnimationManager::ExecuteDirectionGroup( __in TTextureAnimationDirection *direction, __in WORD &id, __in int &offset)
 {
 	direction->Address = 0;
 
@@ -1059,6 +1115,13 @@ bool TAnimationManager::TestPixels(TGameObject *obj, int x, int y, bool &mirror,
 	return false;
 }
 //----------------------------------------------------------------------------
+/*!
+Получение ссылки на указанный фрэйм
+@param [__in] obj Игровой объект
+@param [__inout] frameIndex Индекс кадра
+@param [__in_opt] id Индекс картинки
+@return Ссылка на кадр анимации
+*/
 TTextureAnimationFrame *TAnimationManager::GetFrame(TGameObject *obj, BYTE &frameIndex, WORD id)
 {
 	TTextureAnimationFrame *frame = NULL;
@@ -1317,7 +1380,15 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 	}
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
+/*!
+Отрисовать персонажа
+@param [__in] obj Ссылка на персонажа
+@param [__in] x Экранная координата X
+@param [__in] y Экранная координата Y
+@param [__in] z Координата Z
+@return 
+*/
+void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __in int y, __in int z)
 {
 	WORD targetColor = 0;
 	bool needHPLine = false;
@@ -1580,7 +1651,15 @@ void TAnimationManager::DrawCharacter(TGameCharacter *obj, int x, int y, int z)
 	}
 }
 //----------------------------------------------------------------------------
-bool TAnimationManager::CharacterPixelsInXY(TGameCharacter *obj, int x, int y, int z)
+/*!
+Проверить наличие пикселя персонажа в указанных координатах
+@param [__in] obj Ссылка на персонажа
+@param [__in] x Экранная координата X
+@param [__in] y Экранная координата Y
+@param [__in] z Координата Z
+@return true в случае, если хоть 1 пиксель находится под мышкой
+*/
+bool TAnimationManager::CharacterPixelsInXY( __in TGameCharacter *obj, __in int x, __in int y, __in int z)
 {
 	m_Sitting = obj->IsSitting();
 	m_Direction = 0;
@@ -1641,7 +1720,15 @@ bool TAnimationManager::CharacterPixelsInXY(TGameCharacter *obj, int x, int y, i
 	return result;
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::DrawCorpse(TGameItem *obj, int x, int y, int z)
+/*!
+Отрисовать труп
+@param [__in] obj Ссылка на труп
+@param [__in] x Экранная координата X
+@param [__in] y Экранная координата Y
+@param [__in] z Координата Z
+@return 
+*/
+void TAnimationManager::DrawCorpse( __in TGameItem *obj, __in int x, __in int y, __in int z)
 {
 	m_Sitting = 0;
 	m_Direction = obj->Layer;
@@ -1680,7 +1767,15 @@ void TAnimationManager::DrawCorpse(TGameItem *obj, int x, int y, int z)
 	}
 }
 //----------------------------------------------------------------------------
-bool TAnimationManager::CorpsePixelsInXY(TGameItem *obj, int x, int y, int z)
+/*!
+Проверить наличие пикселя трупа в указанных координатах
+@param [__in] obj Ссылка на труп
+@param [__in] x Экранная координата X
+@param [__in] y Экранная координата Y
+@param [__in] z Координата Z
+@return 
+*/
+bool TAnimationManager::CorpsePixelsInXY( __in TGameItem *obj, __in int x, __in int y, __in int z)
 {
 	m_Sitting = 0;
 	m_Direction = obj->Layer;
@@ -1709,7 +1804,13 @@ bool TAnimationManager::CorpsePixelsInXY(TGameItem *obj, int x, int y, int z)
 	return result;
 }
 //----------------------------------------------------------------------------
-bool TAnimationManager::AnimationExists(WORD &graphic, BYTE group)
+/*!
+Существует ли анимация в файле
+@param [__in] graphic Индекс картинки
+@param [__in] group Группа анимации
+@return true в случае успеха
+*/
+bool TAnimationManager::AnimationExists( __in WORD &graphic, __in BYTE group)
 {
 	bool result = false;
 
@@ -1746,13 +1847,23 @@ bool TAnimationManager::AnimationExists(WORD &graphic, BYTE group)
 	return result;
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::GetCorpseGraphic(WORD &graphic)
+/*!
+Получить индекс картинки трупа
+@param [__inout] graphic Индекс картинки
+@return 
+*/
+void TAnimationManager::GetCorpseGraphic( __inout WORD &graphic)
 {
 	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_CorpseReplaces[graphic])
 		graphic = m_CorpseReplaces[graphic];
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::GetBodyGraphic(WORD &graphic)
+/*!
+Получить индекс анимации
+@param [__inout] graphic Индекс каритнки
+@return 
+*/
+void TAnimationManager::GetBodyGraphic( __inout WORD &graphic)
 {
 	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		graphic = m_DataIndex[graphic].Graphic;

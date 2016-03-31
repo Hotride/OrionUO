@@ -55,7 +55,13 @@ TGameObject::~TGameObject()
 #endif //UO_DEBUG_INFO!=0
 }
 //---------------------------------------------------------------------------
-void TGameObject::DrawObjectHandlesTexture(int &x, int &y)
+/*!
+Отрисовать текстуру опции Object Handles (автоматически создает текстуру, если она не была создана)
+@param [__in] x Экранная координата X
+@param [__in] y Экранная координата Y
+@return 
+*/
+void TGameObject::DrawObjectHandlesTexture( __in int &x, __in int &y)
 {
 	if (m_TextureObjectHalndes.Texture == NULL)
 	{
@@ -69,7 +75,12 @@ void TGameObject::DrawObjectHandlesTexture(int &x, int &y)
 		g_GL.Draw(m_TextureObjectHalndes.Texture, x, y, m_TextureObjectHalndes.Width, m_TextureObjectHalndes.Height);
 }
 //---------------------------------------------------------------------------
-void TGameObject::GenerateObjectHandlesTexture(wstring text)
+/*!
+Создать текстуру для опции Object Handles
+@param [__in] text Текст названия объекта
+@return 
+*/
+void TGameObject::GenerateObjectHandlesTexture( __in wstring text)
 {
 	//m_TextureObjectHalndes.Clear();
 
@@ -156,7 +167,12 @@ void TGameObject::GenerateObjectHandlesTexture(wstring text)
 	delete textData;
 }
 //---------------------------------------------------------------------------
-void TGameObject::AddText(TTextData *msg)
+/*!
+Добавить текст в контейнер
+@param [__in] td Ссылка на объект текста
+@return
+*/
+void TGameObject::AddText(__in TTextData *msg)
 {
 	m_TextControl->Add(msg);
 
@@ -173,11 +189,19 @@ void TGameObject::AddText(TTextData *msg)
 	UO->AddJournalMessage(msg, msgname);
 }
 //---------------------------------------------------------------------------
+/*!
+Получить индекс анимации
+@return Индекс анимации
+*/
 WORD TGameObject::GetMountAnimation()
 {
 	return m_Graphic; // + UO->GetStaticPointer(m_Graphic)->Increment;
 }
 //---------------------------------------------------------------------------
+/*!
+Очистить контейнер
+@return
+*/
 void TGameObject::Clear()
 {
 	if (!Empty())
@@ -197,6 +221,10 @@ void TGameObject::Clear()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Золото ли это
+@return Индекс в таблице золота
+*/
 int TGameObject::IsGold()
 {
 	switch (m_Graphic)
@@ -214,7 +242,12 @@ int TGameObject::IsGold()
 	return 0;
 }
 //---------------------------------------------------------------------------
-WORD TGameObject::GetDrawGraphic(bool &doubleDraw)
+/*!
+Получить индекс картинки для рисования
+@param [__out] doubleDraw Двойная отрисовка объекта
+@return Индекс картинки
+*/
+WORD TGameObject::GetDrawGraphic( __out bool &doubleDraw)
 {
 	int index = IsGold();
 	WORD result = m_Graphic;
@@ -237,7 +270,14 @@ WORD TGameObject::GetDrawGraphic(bool &doubleDraw)
 	return result;
 }
 //---------------------------------------------------------------------------
-void TGameObject::DrawEffects(int &drawX, int &drawY, DWORD &ticks)
+/*!
+Отрисовать эффект
+@param [__in] drawX Экранная координата X
+@param [__in] drawY Экранная координата Y
+@param [__in] ticks Таймер рендера
+@return 
+*/
+void TGameObject::DrawEffects( __in int &drawX, __in int &drawY, __in DWORD &ticks)
 {
 	TGameEffect *effect = m_Effects;
 	char gZ = Z;
@@ -313,7 +353,12 @@ void TGameObject::DrawEffects(int &drawX, int &drawY, DWORD &ticks)
 	}
 }
 //---------------------------------------------------------------------------
-void TGameObject::AddEffect(TGameEffect *effect)
+/*!
+Добавить эффект
+@param [__in] effect Ссылка на эффект
+@return 
+*/
+void TGameObject::AddEffect( __in TGameEffect *effect)
 {
 	if (m_Effects == NULL)
 	{
@@ -330,7 +375,12 @@ void TGameObject::AddEffect(TGameEffect *effect)
 	}
 }
 //---------------------------------------------------------------------------
-void TGameObject::RemoveEffect(TGameEffect *effect)
+/*!
+Удалить эффект
+@param [__in] effect Ссылка на эффект
+@return 
+*/
+void TGameObject::RemoveEffect( __in TGameEffect *effect)
 {
 	if (effect->m_Prev == NULL)
 	{
@@ -352,7 +402,12 @@ void TGameObject::RemoveEffect(TGameEffect *effect)
 	delete effect;
 }
 //---------------------------------------------------------------------------
-void TGameObject::AddObject(TGameObject *obj)
+/*!
+Добавить объект в список объектов текущего контейнера
+@param [__in] obj Ссылка на объект
+@return 
+*/
+void TGameObject::AddObject( __in TGameObject *obj)
 {
 	World->RemoveFromContainer(obj);
 
@@ -378,7 +433,12 @@ void TGameObject::AddObject(TGameObject *obj)
 	}
 }
 //---------------------------------------------------------------------------
-void TGameObject::AddItem(TGameObject *obj)
+/*!
+Добавить объект в контейнер (this - контейнер)
+@param [__in] obj Ссылка на объект
+@return 
+*/
+void TGameObject::AddItem( __in TGameObject *obj)
 {
 	if (obj->Container != 0xFFFFFFFF)
 		return;
@@ -405,7 +465,12 @@ void TGameObject::AddItem(TGameObject *obj)
 	obj->Container = Serial;
 }
 //---------------------------------------------------------------------------
-void TGameObject::Reject(TGameObject *obj)
+/*!
+Изъять объект из контейнера
+@param [__in] obj Ссылка на объект
+@return 
+*/
+void TGameObject::Reject( __in TGameObject *obj)
 {
 	if (obj->Container != Serial)
 		return;
@@ -444,6 +509,10 @@ void TGameObject::Reject(TGameObject *obj)
 	obj->Container = 0xFFFFFFFF;
 }
 //---------------------------------------------------------------------------
+/*!
+Найти объект в мире, в котором содержится контейнер
+@return Ссылка на объект в мире
+*/
 TGameObject *TGameObject::GetTopObject()
 {
 	TGameObject *obj = this;
@@ -452,137 +521,5 @@ TGameObject *TGameObject::GetTopObject()
 		obj = World->FindWorldObject(obj->Container);
 
 	return obj;
-}
-//---------------------------------------------------------------------------
-int GetDistance(TGameObject *current, TGameObject *target)
-{
-	if (current != NULL && target != NULL)
-	{
-		int distx = abs(target->X - current->X);
-		int disty = abs(target->Y - current->Y);
-
-		if (disty > distx)
-			distx = disty;
-
-		return distx;
-	}
-
-	return 100500;
-}
-//---------------------------------------------------------------------------
-int GetDistance(TGameObject *current, POINT target)
-{
-	if (current != NULL)
-	{
-		int distx = abs(target.x - current->X);
-		int disty = abs(target.y - current->Y);
-
-		if (disty > distx)
-			distx = disty;
-
-		return distx;
-	}
-
-	return 100500;
-}
-//---------------------------------------------------------------------------
-int GetDistance(POINT current, TGameObject *target)
-{
-	if (target != NULL)
-	{
-		int distx = abs(target->X - current.x);
-		int disty = abs(target->Y - current.y);
-
-		if (disty > distx)
-			distx = disty;
-
-		return distx;
-	}
-
-	return 100500;
-}
-//---------------------------------------------------------------------------
-int GetMultiDistance(POINT current, TGameObject *target)
-{
-	int result = 100500;
-
-	if (target != NULL && target->Graphic >= 0x4000)
-	{
-		TMulti *multi = (TMulti*)target->m_Items;
-
-		int multiDistance = abs(multi->MinX);
-		int testDistance = abs(multi->MinY);
-
-		if (multiDistance < testDistance)
-			multiDistance = testDistance;
-
-		testDistance = abs(multi->MaxX) + 1;
-
-		if (multiDistance < testDistance)
-			multiDistance = testDistance;
-
-		testDistance = abs(multi->MaxY) + 1;
-
-		if (multiDistance < testDistance)
-			multiDistance = testDistance;
-
-		int distX = abs(target->X - current.x) - multiDistance;
-		int distY = abs(target->Y - current.y) - multiDistance;
-
-		if (distY > distX)
-			distX = distY;
-
-		if (distX < result)
-			result = distX;
-
-		/*QFOR(multi, target->m_Items, TMulti*)
-		{
-			int distx = abs(multi->X - current.x);
-			int disty = abs(multi->Y - current.y);
-
-			if (disty > distx)
-				distx = disty;
-
-			if (distx < result)
-				result = distx;
-		}*/
-
-		TPRINT("multiDistance = %i; %i %i %i %i; => %i\n", multiDistance, multi->MinX, multi->MinY, multi->MaxX, multi->MaxY, result);
-	}
-
-	return result;
-}
-//---------------------------------------------------------------------------
-int GetDistance(POINT current, POINT target)
-{
-	int distx = abs(target.x - current.x);
-	int disty = abs(target.y - current.y);
-
-	if (disty > distx)
-		distx = disty;
-
-	return distx;
-}
-//---------------------------------------------------------------------------
-int GetTopObjDistance(TGameObject *current, TGameObject *target)
-{
-	if (current != NULL && target != NULL)
-	{
-		while (target != NULL && target->Container != 0xFFFFFFFF)
-			target = World->FindWorldObject(target->Container);
-
-		if (target != NULL)
-		{
-			int distx = abs(target->X - current->X);
-			int disty = abs(target->Y - current->Y);
-
-			if (disty > distx)
-				distx = disty;
-
-			return distx; 
-		}
-	}
-
-	return 100500;
 }
 //---------------------------------------------------------------------------

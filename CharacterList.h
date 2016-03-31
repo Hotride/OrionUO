@@ -20,24 +20,39 @@
 #ifndef CharacterListH
 #define CharacterListH
 //--------------------------------------------------------------------------
+//!Класс списка персонажей для экрана выбора персонажей
 class TCharacterList
 {
 private:
-	int m_Count; //Текущее количество персонажей (из пакета)
-	int m_Selected; //Указатель на индекс выбранного персонажа
+	//!Текущее количество персонажей (из пакета)
+	int m_Count;
 
-	bool m_OnePerson; //Доступен всего 1 персонаж с данного аккаунта
-	bool m_Have6Slot; //Данный аккаунт имеет 6 слот
-	bool m_Have7Slot; //Данный аккаунт имеет 7 слот
-	WORD m_ClientFlag; //Флаги для отправки на сервер при создании персонажа
+	//!Указатель на индекс выбранного персонажа
+	int m_Selected;
 
-	string m_Name[7]; //Память под 7 персонажей
+	//!Доступен всего 1 персонаж с данного аккаунта
+	bool m_OnePerson;
+
+	//!Данный аккаунт имеет 6 слот
+	bool m_Have6Slot;
+
+	//!Данный аккаунт имеет 7 слот
+	bool m_Have7Slot;
+
+	//!Флаги для отправки на сервер при создании персонажа
+	WORD m_ClientFlag;
+
+	//!Память под 7 персонажей
+	string m_Name[7];
 
 public:
 	TCharacterList();
 	~TCharacterList() {}
 
-	//Очистка списка
+	/*!
+	Очистка списка
+	@return 
+	*/
 	void Clear();
 
 	SETGET(int, Count);
@@ -47,12 +62,29 @@ public:
 	SETGET(bool, Have7Slot);
 	SETGET(WORD, ClientFlag);
 
-	void SetName(int pos, string name);
-	
-	string GetName(int pos) const;
+	/*!
+	Установить имя персонажа в указанном слоте
+	@param [__in] pos Позиция в списке
+	@param [__in] name Новое имя
+	@return 
+	*/
+	void SetName(__in int pos, __in string name);
+
+	/*!
+	Получить имя персонажа в указанном слоте
+	@param [__in] pos Позиция в списке
+	@return Имя персонажа
+	*/
+	string GetName(__in int pos) const;
+
+	/*!
+	Получить имя выбранного персонажа
+	@return Имя персонажа
+	*/
 	string GetSelectedName() const;
 };
 //---------------------------------------------------------------------------
-extern TCharacterList CharacterList; //Указатель на список персонажей
+//!Указатель на список персонажей
+extern TCharacterList CharacterList;
 //---------------------------------------------------------------------------
 #endif

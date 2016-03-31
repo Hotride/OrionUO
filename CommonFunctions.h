@@ -36,6 +36,15 @@ string ToLowerA(string str);
 string ToUpperA(string str);
 bool ToBool(string &str);
 //---------------------------------------------------------------------------
+//Функции для вычисления дистанции
+class TGameObject;
+int GetDistance(TGameObject *current, TGameObject *target);
+int GetDistance(TGameObject *current, POINT target);
+int GetMultiDistance(POINT current, TGameObject *target);
+int GetDistance(POINT current, TGameObject *target);
+int GetDistance(POINT current, POINT target);
+int GetTopObjDistance(TGameObject *current, TGameObject *target);
+//---------------------------------------------------------------------------
 int gumpuucode2str(const wchar_t *wstr, int wlength, char *receiver, int maxsize);
 int uucode2str(const wchar_t *wstr, int wlength, char *receiver, int maxsize);
 int str2uucode(const char *str, int length, wchar_t* wreceiver, int wmaxsize);

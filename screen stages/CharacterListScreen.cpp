@@ -32,6 +32,10 @@ TCharacterListScreen::~TCharacterListScreen()
 	m_Text.Clear();
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация
+@return 
+*/
 void TCharacterListScreen::Init()
 {
 	char buf[128] = {0};
@@ -60,7 +64,12 @@ void TCharacterListScreen::Init()
 	UO->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
 }
 //---------------------------------------------------------------------------
-void TCharacterListScreen::ProcessSmoothAction(BYTE action)
+/*!
+Обработка события после перехода
+@param [__in_opt] action Идентификатор действия
+@return 
+*/
+void TCharacterListScreen::ProcessSmoothAction( __in_opt BYTE action)
 {
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
@@ -88,6 +97,10 @@ void TCharacterListScreen::ProcessSmoothAction(BYTE action)
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Инициализация всплывающих подсказок
+@return 
+*/
 void TCharacterListScreen::InitPopupHelp()
 {
 	if (!ConfigManager.PopupHelpEnabled)
@@ -143,7 +156,12 @@ void TCharacterListScreen::InitPopupHelp()
 	}
 }
 //---------------------------------------------------------------------------
-int TCharacterListScreen::Render(bool mode)
+/*!
+Отрисовка/выбор объектов
+@param [__in] mode true - отрисовка, false - выбор
+@return При выборе объектов - идентификатор выбранного объекта
+*/
+int TCharacterListScreen::Render( __in bool mode)
 {
 	DWORD ticks = GetTickCount();
 
@@ -288,6 +306,10 @@ int TCharacterListScreen::Render(bool mode)
 	return 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Нажатие левой кнопки мыши
+@return 
+*/
 void TCharacterListScreen::OnLeftMouseDown()
 {
 	Render(false);
@@ -307,6 +329,10 @@ void TCharacterListScreen::OnLeftMouseDown()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Отпускание левой кнопки мыши
+@return 
+*/
 void TCharacterListScreen::OnLeftMouseUp()
 {
 	Render(false);
@@ -336,6 +362,10 @@ void TCharacterListScreen::OnLeftMouseUp()
 		g_LastObjectLeftMouseDown = 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Двойной клик левой кнопкой мыши
+@return true при успешной обработке
+*/
 bool TCharacterListScreen::OnLeftMouseDoubleClick()
 {
 	Render(false);

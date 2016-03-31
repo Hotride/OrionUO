@@ -20,34 +20,39 @@
 #ifndef CityManagerH
 #define CityManagerH
 //---------------------------------------------------------------------------
-//Данные о городе
+//!Класс с данными о городе
 class TCity : public TBaseQueueItem
 {
 private:
-	//Название города
+	//!Название города
 	string m_Name;
+
 public:
 	TCity(string name);
 	virtual ~TCity();
 
 	SETGET(string, Name);
 
-	//Указатель на текстуру текста
+	//!Указатель на текстуру текста
 	TTextTexture m_Texture;
 };
 //---------------------------------------------------------------------------
-//Менеджер списка городов
+//!Класс менеджера списка городов
 class TCityManager : public TBaseQueue
 {
-private:
 public:
 	TCityManager();
 	virtual ~TCityManager();
 
-	//Получить указатель на город
-	TCity *GetCity(string name);
+	/*!
+	Получить указатель на город
+	@param [__in] name Имя города
+	@return Ссылка на город или NULL
+	*/
+	TCity *GetCity(__in string name);
 };
 //---------------------------------------------------------------------------
+//!Ссылка на менеджер городов
 extern TCityManager *CityManager;
 //---------------------------------------------------------------------------
 #endif

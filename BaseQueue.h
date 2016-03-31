@@ -22,66 +22,124 @@
 
 class TBaseQueueItem;
 //---------------------------------------------------------------------------
-//Контейнер для элементов
+//!Контейнер для элементов
 class TBaseQueue
 {
-private:
 public:
 	TBaseQueue();
 	virtual ~TBaseQueue();
 
-	//Первый элемент из списка
+	//!Первый элемент из списка
 	TBaseQueueItem *m_Items;
 
-	//Очистка списка
+	/*!
+	Очистка списка
+	@return 
+	*/
 	virtual void Clear();
 
-	//Добавление элемента в список
-	virtual TBaseQueueItem *Add(TBaseQueueItem *item);
+	/*!
+	Добавление элемента в список
+	@param [__in] item Ссылка на новый элемент
+	@return Ссылка на новый элемент
+	*/
+	virtual TBaseQueueItem *Add(__in TBaseQueueItem *item);
 
-	//Удаление указанного элемента из списка
-	void Delete(TBaseQueueItem *item);
-	//Удаление элемента с указанным индексом
-	void Delete(int index);
+	/*!
+	Удаление указанного элемента из списка
+	@param [__in] item Ссылка на элемент
+	@return 
+	*/
+	void Delete(__in TBaseQueueItem *item);
 
-	//Получить элемент с указанным индексом
-	TBaseQueueItem *Get(int index);
-	//Получить индекс указанного элемента
-	int GetItemIndex(TBaseQueueItem *item);
-	//Получить общее количество элементов в списке
+	/*!
+	Удаление элемента с указанным индексом
+	@param [__in] index Индекс элемента
+	@return 
+	*/
+	void Delete(__in int index);
+
+	/*!
+	Получить элемент с указанным индексом
+	@param [__in] index Индекс элемента
+	@return Ссылка на элемент или NULL
+	*/
+	TBaseQueueItem *Get(__in int index);
+
+	/*!
+	Получить индекс указанного элемента
+	@param [__in] item Ссылка на элемент
+	@return Индекс элемента в очереди
+	*/
+	int GetItemIndex(__in TBaseQueueItem *item);
+
+	/*!
+	Получить общее количество элементов в списке
+	@return Количество объектов в очереди
+	*/
 	int GetItemsCount();
 
-	//Осуществляет изъятие указанного элемента из очереди
-	void Unlink(TBaseQueueItem *item);
-	
-	//Осуществляет вставку элемента в очередь
-	void Insert(TBaseQueueItem *first, TBaseQueueItem *item);
+	/*!
+	Осуществляет изъятие указанного элемента из очереди
+	@param [__in] item Ссылка на элемент
+	@return 
+	*/
+	void Unlink(__in TBaseQueueItem *item);
 
-	//Поместить элемент в начало очереди
-	void MoveToFront(TBaseQueueItem *item);
-	//Поместить элемент в конец очереди
-	void MoveToBack(TBaseQueueItem *item);
-	//Переместить элемент вверх/вниз по очереди
-	bool Move(TBaseQueueItem *item, bool up);
+	/*!
+	Осуществляет вставку элемента в очередь
+	@param [__in] first Ссылка на предшествующий элемент
+	@param [__out] item Ссылка на элемент
+	@return 
+	*/
+	void Insert(__in TBaseQueueItem *first, __out TBaseQueueItem *item);
 
-	//Пустой список или нет
+	/*!
+	Поместить элемент в начало очереди
+	@param [__in] item Ссылка на элемент
+	@return 
+	*/
+	void MoveToFront(__in TBaseQueueItem *item);
+
+	/*!
+	Поместить элемент в конец очереди
+	@param [__in] item Ссылка на элемент
+	@return 
+	*/
+	void MoveToBack(__in TBaseQueueItem *item);
+
+	/*!
+	Переместить элемент вверх/вниз по очереди
+	@param [__in] item Ссылка на элемент
+	@param [__in] up Вверх или вниз по очереди
+	@return true в случае успешного перемещения
+	*/
+	bool Move(__in TBaseQueueItem *item, __in bool up);
+
+	/*!
+	Пустой список или нет
+	@return true в случае успешного перемещения
+	*/
 	bool Empty() const {return (m_Items == NULL);}
 
-	//Указатель на последний элемент
+	/*!
+	Получить указатель на последний элемент
+	@return Ссылка на элемент
+	*/
 	TBaseQueueItem *Last();
 };
 //---------------------------------------------------------------------------
-//Элемент очереди
+//!Элемент очереди
 class TBaseQueueItem : public TBaseQueue
 {
-private:
 public:
 	TBaseQueueItem();
 	virtual ~TBaseQueueItem();
 
-	//Следующий элемент
+	//!Следующий элемент
 	TBaseQueueItem *m_Next;
-	//Предыдущий элемент
+
+	//!Предыдущий элемент
 	TBaseQueueItem *m_Prev;
 };
 //---------------------------------------------------------------------------

@@ -20,15 +20,27 @@
 #ifndef ObjectOnCursorH
 #define ObjectOnCursorH
 //--------------------------------------------------------------------------
+//!Класс объекта на курсоре
 class TObjectOnCursor : public TGameItem
 {
 private:
-	bool m_Separated; //Раньше был в стеке
-	bool m_Deleted; //Предмет удален
-	bool m_Dropped; //Бросили предмет (на землю/в контейнер/на персонажа)
-	bool m_IsGameFigure; //Это игровая фигура
-	DWORD m_DragCount; //Количество для перемещения
+	//!Раньше был в стеке
+	bool m_Separated;
 
+	//!Предмет удален
+	bool m_Deleted;
+
+	//!Бросили предмет (на землю/в контейнер/на персонажа)
+	bool m_Dropped;
+
+	//!Это игровая фигура
+	bool m_IsGameFigure;
+
+	//!Количество для перемещения
+	DWORD m_DragCount;
+
+	//!Не отображать при рендере
+	bool m_NoDraw;
 public:
 	TObjectOnCursor();
 	TObjectOnCursor(TGameItem *obj);
@@ -39,8 +51,10 @@ public:
 	SETGET(bool, Dropped);
 	SETGET(bool, IsGameFigure);
 	SETGET(DWORD, DragCount);
+	SETGET(bool, NoDraw);
 };
 //--------------------------------------------------------------------------
-extern TObjectOnCursor *ObjectInHand; //Указатель на объект в руке (на курсоре)
+//!Указатель на объект в руке (на курсоре)
+extern TObjectOnCursor *ObjectInHand;
 //--------------------------------------------------------------------------
 #endif
