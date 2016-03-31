@@ -3749,7 +3749,11 @@ void TUltimaOnline::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, W
 				td->Color = 0;
 
 				if (width > TEXT_MESSAGE_MAX_WIDTH)
-					td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_LEFT);
+				{
+					width = FontManager->GetWidthExA((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
+					td->GenerateTexture(width, 0, TS_LEFT);
+					//td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_LEFT);
+				}
 				else
 					td->GenerateTexture(0, 0, TS_CENTER);
 
@@ -3818,7 +3822,11 @@ void TUltimaOnline::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, W
 			FontManager->SavePixels = true;
 
 			if (width > TEXT_MESSAGE_MAX_WIDTH)
-				td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);
+			{
+				width = FontManager->GetWidthExA((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
+				td->GenerateTexture(width, 0, TS_LEFT);
+				//td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);
+			}
 			else
 				td->GenerateTexture(0, 0, TS_CENTER);
 
@@ -3863,7 +3871,11 @@ void TUltimaOnline::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD 
 				FontManager->SavePixels = true;
 
 				if (width > TEXT_MESSAGE_MAX_WIDTH)
-					td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, UOFONT_BLACK_BORDER, TS_LEFT);
+				{
+					width = FontManager->GetWidthExW((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, UOFONT_BLACK_BORDER);
+					td->GenerateTexture(width, UOFONT_BLACK_BORDER, TS_LEFT);
+					//td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, UOFONT_BLACK_BORDER, TS_LEFT);
+				}
 				else
 					td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_CENTER);
 				

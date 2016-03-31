@@ -134,6 +134,9 @@ public:
 	//Получить ширину текста
 	int GetWidthA(BYTE font, const char *str, int len = 0);
 
+	//Получить ширину текста
+	int GetWidthExA(BYTE font, const char *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, WORD flags);
+
 	//Получить высоту текста
 	int GetHeightA(BYTE font, const char *str, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
 
@@ -169,6 +172,9 @@ public:
 
 	//Получить ширину текста
 	int GetWidthW(BYTE font, const wchar_t *str, int len = 0);
+
+	//Получить ширину текста
+	int GetWidthExW(BYTE font, const wchar_t *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, WORD flags);
 
 	//Получить высоту текста
 	int GetHeightW(BYTE font, const wchar_t *str, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
