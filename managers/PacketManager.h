@@ -23,75 +23,105 @@
 class TPacketManager;
 typedef void (TPacketManager::*PACKET_FUNCTION)(PBYTE buf, int size);
 //---------------------------------------------------------------------------
-//Направление пакета
+//!Направление пакета
 enum PACKET_DIRECTION
 {
-	DIR_SEND,	//От клиента серверу
-	DIR_RECV,	//От сервера клиенту
-	DIR_BOTH	//В обе стороны
+	DIR_SEND = 0,	//!От клиента серверу
+	DIR_RECV,		//!От сервера клиенту
+	DIR_BOTH		//!В обе стороны
 };
 //---------------------------------------------------------------------------
-//Классик для хранения инфы о пакетах
+//!Класс для хранения информации о пакетах
 class TMessageType
 {
 public:
-	//Название пакета
+	//!Название пакета
 	const char *Name;
 
-	//Размер пакета
+	//!Размер пакета
 	int Size;
 
-	//Направление пакета
+	//!Направление пакета
 	PACKET_DIRECTION Direction;
 
-	//Обработчик пакета
+	//!Обработчик пакета
 	PACKET_FUNCTION Handler;
 };
 //---------------------------------------------------------------------------
 #define HANDLER_PACKET(name)void Handle ##name (PBYTE buf, int size);
 //---------------------------------------------------------------------------
-//Пакет менеджер
+//!Класс менеджера пакетов
 class TPacketManager
 {
 private:
-	//Список пакеторв
+	//!Список пакеторв
 	static TMessageType m_MessageTypes[];
 
-	//Версия протокола
+	//!Версия протокола
 	CLIENT_VERSION m_ClientVersion;
 
-	//Указатель на данные пакета
+	//!Указатель на данные пакета
 	PBYTE Ptr;
 
-	//Перемещение по данным пакета
-	inline void Move(int offset) {Ptr += offset;}
+	/*!
+	Перемещение по данным пакета
+	@param [__in] offset Смещение
+	@return 
+	*/
+	inline void Move(__in int offset) { Ptr += offset; }
 
-	//Прочитать байт
+	/*!
+	Прочитать байт (1 байт)
+	@return Данные
+	*/
 	BYTE ReadByte();
 
-	//Прочитать слово
+	/*!
+	Прочитать слово (2 байта)
+	@return Данные
+	*/
 	WORD ReadWord();
 
-	//Прочитать двойное слово
+	/*!
+	Прочитать двойное слово (4 байта)
+	@return Данные
+	*/
 	DWORD ReadDWord();
 
-	//Прочитать чар
+	/*!
+	Прочитать символ (1 байт)
+	@return Данные
+	*/
 	char ReadChar();
 
-	//Прочитать шорт
+	/*!
+	Прочитать короткое значение (2 байта)
+	@return Данные
+	*/
 	short ReadShort();
 
-	//Прочитать инт
+	/*!
+	Прочитать целое значение (4 байта)
+	@return Данные
+	*/
 	int ReadInt();
 
-	//Прочитать ASCII строку
-	string ReadString(int size);
+	/*!
+	Прочитать ASCII строку
+	@param [__in] size Размер строки, если указан 0 - читает до нуля
+	@return 
+	*/
+	string ReadString(__in int size);
 
-	//Прочитать Unicode строку
-	wstring ReadUnicodeString(int size);
+	/*!
+	Прочитать Unicode строку
+	@param [__in] size Размер строки, если указан 0 - читает до нуля
+	@return Данные
+	*/
+	wstring ReadUnicodeString(__in int size);
 
 protected:
-	//Обработчики пакетов
+	//!Обработчики пакетов
 	HANDLER_PACKET(LoginError)
 	HANDLER_PACKET(ServerList)
 	HANDLER_PACKET(RelayServer)
@@ -193,17 +223,35 @@ public:
 	TPacketManager();
 	~TPacketManager() {}
 
-	//Получить размер пакета
-	int GetPacketSize(BYTE msg);
+	/*!
+	Получить размер пакета
+	@param [__in] msg Индекс пакета
+	@return Размер пакета
+	*/
+	int GetPacketSize(__in BYTE msg);
 
-	//Обработчик пришедшего сообщения
-	void ReceiveHandler(PBYTE buf, int size);
+	/*!
+	Обработчик пришедшего сообщения
+	@param [__in] buf Буфер
+	@param [__in] size Размер сообщения
+	@return 
+	*/
+	void ReceiveHandler(__in PBYTE buf, __in int size);
 
-	void SetClientVersion(CLIENT_VERSION val);
-	CLIENT_VERSION GetClientVersion() const {return m_ClientVersion;}
+	/*!
+	Установить версию протокола клиента и подменить размерности соответствующих пакетов
+	@param [__in] val Новая версия протокола клиента
+	@return 
+	*/
+	void SetClientVersion(__in CLIENT_VERSION val);
+	CLIENT_VERSION GetClientVersion() const { return m_ClientVersion; }
 
-	//Получить указатель на структуру с информацией о пакете
-	TMessageType GetType(BYTE id) const {return m_MessageTypes[id];}
+	/*!
+	Получить указатель на структуру с информацией о пакете
+	@param [__in] id Индекс пакета
+	@return Данные о пакете
+	*/
+	TMessageType GetType(__in BYTE id) const { return m_MessageTypes[id]; }
 };
 //---------------------------------------------------------------------------
 extern TPacketManager PacketManager;

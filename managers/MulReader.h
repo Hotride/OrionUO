@@ -20,25 +20,70 @@
 #ifndef MulReaderH
 #define MulReaderH
 //---------------------------------------------------------------------------
-//Читалка текстур
+//!Класс для чтения данных из файлов и создания текстур
 class TMulReader
 {
-private:
 public:
 	TMulReader() {}
 	~TMulReader() {}
 
-	PWORD GetGumpPixels(TIndexObject &io);
+	/*!
+	Получить массив пикселей гампа
+	@param [__in] io Ссылка на данные о гампе
+	@return Массив пикселей или NULL
+	*/
+	PWORD GetGumpPixels(__in TIndexObject &io);
 
-	TTextureObject *ReadGump(TIndexObject &io);
-	TTextureObject *ReadArt(WORD ID, TIndexObject &io);
-	TTextureObject *ReadTexture(WORD ID, TIndexObject &io);
-	TTextureObject *ReadLight(WORD ID, TIndexObject &io);
-	
-	bool GumpPixelsInXY(TIndexObject &io, int checkX, int checkY);
-	bool ArtPixelsInXY(WORD ID, TIndexObject &io, int checkX, int checkY);
+	/*!
+	Прочитать гамп и сгенерировать текстуру
+	@param [__in] io Ссылка на данные о гампе
+	@return Ссылка на данные о текстуре
+	*/
+	TTextureObject *ReadGump(__in TIndexObject &io);
+
+	/*!
+	Прочитать арт и сгенерировать текстуру
+	@param [__in] ID Индекс арта
+	@param [__in] io Ссылка на данные о арте
+	@return Ссылка на данные о текстуре
+	*/
+	TTextureObject *ReadArt(__in WORD id, __in TIndexObject &io);
+
+	/*!
+	Прочитать текстуру ландшафта и сгенерировать тексруту
+	@param [__in] io Ссылка на данные о текстуре ландшафта
+	@return Ссылка на данные о текстуре
+	*/
+	TTextureObject *ReadTexture(__in TIndexObject &io);
+
+	/*!
+	Прочитать освещение и сгенерировать текстуру
+	@param [__in] io Ссылка на данные о освещении
+	@return Ссылка на данные о текстуре
+	*/
+	TTextureObject *ReadLight(__in TIndexObject &io);
+
+	/*!
+	Проверить нахождение пикселя гампа в указанных координатах
+	@param [__in] io Ссылка на данные о гампе
+	@param [__in] checkX Координата X
+	@param [__in] checkY Координата Y
+	@return true в случае успешного теста
+	*/
+	bool GumpPixelsInXY(__in TIndexObject &io, __in int &checkX, __in int &checkY);
+
+	/*!
+	Проверить нахождение пикселя арта в указанных координатах
+	@param [__in] land Ландшафт или статика
+	@param [__in] io Ссылка на данные о арте
+	@param [__in] checkX Координата X
+	@param [__in] checkY Координата Y
+	@return true в случае успешного теста
+	*/
+	bool ArtPixelsInXY(__in bool land, __in TIndexObject &io, __in  int &checkX, __in  int &checkY);
 };
 //---------------------------------------------------------------------------
+//!Класс чтения данных
 extern TMulReader MulReader;
 //---------------------------------------------------------------------------
 #endif

@@ -21,7 +21,12 @@
 
 TMulReader MulReader;
 //---------------------------------------------------------------------------
-PWORD TMulReader::GetGumpPixels(TIndexObject &io)
+/*!
+Получить массив пикселей гампа
+@param [__in] io Ссылка на данные о гампе
+@return Массив пикселей или NULL
+*/
+PWORD TMulReader::GetGumpPixels( __in TIndexObject &io)
 {
 	int dataStart = io.Address;
 	PDWORD lookupList = (PDWORD)dataStart;
@@ -76,7 +81,12 @@ PWORD TMulReader::GetGumpPixels(TIndexObject &io)
 	return pixels;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TMulReader::ReadGump(TIndexObject &io)
+/*!
+Прочитать гамп и сгенерировать текстуру
+@param [__in] io Ссылка на данные о гампе
+@return Ссылка на данные о текстуре
+*/
+TTextureObject *TMulReader::ReadGump(__in TIndexObject &io)
 {
 	TTextureObject *th = new TTextureObject();
 	th->Width = io.Width;
@@ -95,7 +105,14 @@ TTextureObject *TMulReader::ReadGump(TIndexObject &io)
 	return th;
 }
 //---------------------------------------------------------------------------
-bool TMulReader::GumpPixelsInXY(TIndexObject &io, int checkX, int checkY)
+/*!
+Проверить нахождение пикселя гампа в указанных координатах
+@param [__in] io Ссылка на данные о гампе
+@param [__in] checkX Координата X
+@param [__in] checkY Координата Y
+@return true в случае успешного теста
+*/
+bool TMulReader::GumpPixelsInXY( __in TIndexObject &io, __in int &checkX, __in int &checkY)
 {
 	TTextureObject *th = io.Texture;
 
@@ -134,7 +151,13 @@ bool TMulReader::GumpPixelsInXY(TIndexObject &io, int checkX, int checkY)
 	return false;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TMulReader::ReadArt(WORD ID, TIndexObject &io)
+/*!
+Прочитать арт и сгенерировать текстуру
+@param [__in] ID Индекс арта
+@param [__in] io Ссылка на данные о арте
+@return Ссылка на данные о текстуре
+*/
+TTextureObject *TMulReader::ReadArt(__in WORD id, __in TIndexObject &io)
 {
 	TTextureObject *th = new TTextureObject();
 	th->Texture = 0;
@@ -146,7 +169,7 @@ TTextureObject *TMulReader::ReadArt(WORD ID, TIndexObject &io)
 	WORD color = io.Color;
 
 	//if (!flag || flag > 0xFFFF) //raw tile
-	if (ID < 0x4000) //raw tile
+	if (id < 0x4000) //raw tile
 	{
 		const int blocksize = 44 * 44;
 
@@ -243,7 +266,7 @@ TTextureObject *TMulReader::ReadArt(WORD ID, TIndexObject &io)
 #endif
 
 		ptr = (PWORD)((DWORD)DataStart + (*LineOffsets));
-		ID -= 0x4000;
+		id -= 0x4000;
 
 		while (Y < h)
 		{
@@ -286,7 +309,7 @@ TTextureObject *TMulReader::ReadArt(WORD ID, TIndexObject &io)
 				ptr = (PWORD)((DWORD)DataStart + (LineOffsets[Y] * 2));
 			}
 		}
-		if ((ID >= 0x2053 && ID <= 0x2062) || (ID >= 0x206A && ID <= 0x2079)) //Убираем рамку (если это курсор мышки)
+		if ((id >= 0x2053 && id <= 0x2062) || (id >= 0x206A && id <= 0x2079)) //Убираем рамку (если это курсор мышки)
 		{
 			IFOR(i, 0, w)
 			{
@@ -316,7 +339,15 @@ TTextureObject *TMulReader::ReadArt(WORD ID, TIndexObject &io)
 	return th;
 }
 //---------------------------------------------------------------------------
-bool TMulReader::ArtPixelsInXY(WORD ID, TIndexObject &io, int checkX, int checkY)
+/*!
+Проверить нахождение пикселя арта в указанных координатах
+@param [__in] land Ландшафт или статика
+@param [__in] io Ссылка на данные о арте
+@param [__in] checkX Координата X
+@param [__in] checkY Координата Y
+@return true в случае успешного теста
+*/
+bool TMulReader::ArtPixelsInXY(__in bool land, __in TIndexObject &io, __in int &checkX, __in int &checkY)
 {
 	TTextureObject *th = io.Texture;
 
@@ -334,8 +365,7 @@ bool TMulReader::ArtPixelsInXY(WORD ID, TIndexObject &io, int checkX, int checkY
 	WORD w = 44;
 	PWORD P = (PWORD)io.Address;
 
-	//if (!flag || flag > 0xFFFF) //raw tile
-	if (ID < 0x4000) //raw tile
+	if (land) //raw tile
 	{
 		IFOR(i, 0, 22)
 		{
@@ -424,7 +454,12 @@ bool TMulReader::ArtPixelsInXY(WORD ID, TIndexObject &io, int checkX, int checkY
 	return false;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TMulReader::ReadTexture(WORD ID, TIndexObject &io)
+/*!
+Прочитать текстуру ландшафта и сгенерировать тексруту
+@param [__in] io Ссылка на данные о текстуре ландшафта
+@return Ссылка на данные о текстуре
+*/
+TTextureObject *TMulReader::ReadTexture(__in TIndexObject &io)
 {
 	TTextureObject *th = new TTextureObject();
 	th->Texture = 0;
@@ -478,7 +513,12 @@ TTextureObject *TMulReader::ReadTexture(WORD ID, TIndexObject &io)
 	return th;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TMulReader::ReadLight(WORD id, TIndexObject &io)
+/*!
+Прочитать освещение и сгенерировать текстуру
+@param [__in] io Ссылка на данные о освещении
+@return Ссылка на данные о текстуре
+*/
+TTextureObject *TMulReader::ReadLight(__in TIndexObject &io)
 {
 	TTextureObject *th = new TTextureObject();
 	th->Texture = NULL;

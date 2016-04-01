@@ -42,7 +42,15 @@ TMapManager::~TMapManager()
 #endif
 }
 //---------------------------------------------------------------------------
-int TMapManager::GetWorldMapBlock(int &map, int &blockX, int &blockY, MAP_BLOCK &mb)
+/*!
+Получить блок карты напрямую из мулов
+@param [__in] map Индекс карты
+@param [__in] blockX Координата X блока
+@param [__in] blockY Координата Y блока
+@param [__out] mb Ссылка на блок
+@return Код ошибки (0 - успешно)
+*/
+int TMapManager::GetWorldMapBlock( __in int &map, __in int &blockX, __in int &blockY, __out MAP_BLOCK &mb)
 {
 	if (!FileManager.MapMul[map].Address || !FileManager.StaticIdx[map].Address || !FileManager.StaticMul[map].Address)
 		return 1;
@@ -101,8 +109,20 @@ int TMapManager::GetWorldMapBlock(int &map, int &blockX, int &blockY, MAP_BLOCK 
 	return 0;
 }
 //---------------------------------------------------------------------------
-void TMapManager::GetRadarMapBlock(int blockX, int blockY, MAP_BLOCK &mb)
+/*!
+Получить блок для радара из муллов
+@param [__in] blockX Координата X блока
+@param [__in] blockY Координата Y блока
+@param [__out] mb Ссылка на блок
+@return 
+*/
+void TMapManager::GetRadarMapBlock( __in int blockX, __in int blockY, __out MAP_BLOCK &mb)
 {
+
+/*!
+Получить индекс текущей карты
+@return 
+*/
 	int map = GetActualMap();
 	
 	if (!FileManager.MapMul[map].Address || !FileManager.StaticIdx[map].Address || !FileManager.StaticMul[map].Address)
@@ -158,7 +178,15 @@ void TMapManager::GetRadarMapBlock(int blockX, int blockY, MAP_BLOCK &mb)
 	}
 }
 //---------------------------------------------------------------------------
-void TMapManager::GetMapZ(int x, int y, int &groundZ, int &staticZ)
+/*!
+Получить значение Z координаты для указанной точки в мире
+@param [__in] x Координата X
+@param [__in] y Координата Y
+@param [__out] groundZ Значение Z коррдинаты земли
+@param [__out] staticZ Значение Z коррдинаты статики
+@return 
+*/
+void TMapManager::GetMapZ( __in int x, __in int y, __out int &groundZ, __out int &staticZ)
 {
 	int blockX = x / 8;
 	int blockY = y / 8;
@@ -190,6 +218,10 @@ void TMapManager::GetMapZ(int x, int y, int &groundZ, int &staticZ)
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Удалить неиспользуемые блоки
+@return 
+*/
 void TMapManager::ClearUnusedBlocks()
 {
 	TMapBlock *block = (TMapBlock*)m_Items;
@@ -213,7 +245,12 @@ void TMapManager::ClearUnusedBlocks()
 	}
 }
 //---------------------------------------------------------------------------
-void TMapManager::Init(bool delayed)
+/*!
+Инициализация
+@param [__in_opt] delayed По истечении времени на загрузку выходить из цикла
+@return 
+*/
+void TMapManager::Init( __in_opt bool delayed)
 {
 	if (g_Player == NULL)
 		return;
@@ -272,7 +309,12 @@ void TMapManager::Init(bool delayed)
 	}
 }
 //---------------------------------------------------------------------------
-void TMapManager::LoadBlock(TMapBlock *block)
+/*!
+Загрузить блок
+@param [__inout] block Ссылка на блок для загрузки
+@return 
+*/
+void TMapManager::LoadBlock( __inout TMapBlock *block)
 {
 	int Map = GetActualMap();
 	
@@ -325,6 +367,10 @@ void TMapManager::LoadBlock(TMapBlock *block)
 	block->CreateLandTextureRect();
 }
 //---------------------------------------------------------------------------
+/*!
+Получить индекс текущей карты
+@return
+*/
 int TMapManager::GetActualMap()
 {
 	if (g_CurrentMap == 1 && (!FileManager.MapMul[1].Address || !FileManager.StaticIdx[1].Address || !FileManager.StaticMul[1].Address))
@@ -333,7 +379,12 @@ int TMapManager::GetActualMap()
 	return g_CurrentMap;
 }
 //---------------------------------------------------------------------------
-void TMapManager::AddRender(TRenderWorldObject *item)
+/*!
+Добавить объект рендера
+@param [__in] item Ссылка на объект
+@return 
+*/
+void TMapManager::AddRender( __in TRenderWorldObject *item)
 {
 	int itemX = item->X;
 	int itemY = item->Y;
@@ -359,7 +410,12 @@ void TMapManager::AddRender(TRenderWorldObject *item)
 	block->AddRender(item, x, y);
 }
 //---------------------------------------------------------------------------
-TMapBlock *TMapManager::GetBlock(DWORD index)
+/*!
+Получить ссылку на блок
+@param [__in] index Индекс блока
+@return Ссылка на блок или NULL
+*/
+TMapBlock *TMapManager::GetBlock(__in DWORD index)
 {
 #if USE_BLOCK_MAP == 0
 	TMapBlock *block = (TMapBlock*)m_Items;
@@ -388,7 +444,12 @@ TMapBlock *TMapManager::GetBlock(DWORD index)
 	return block;
 }
 //---------------------------------------------------------------------------
-TMapBlock *TMapManager::AddBlock(DWORD index)
+/*!
+Добавить блок
+@param [__in] index Индекс блока
+@return Ссылка на блок или NULL
+*/
+TMapBlock *TMapManager::AddBlock(__in DWORD index)
 {
 	TMapBlock *block = (TMapBlock*)Add(new TMapBlock(index));
 
@@ -399,7 +460,12 @@ TMapBlock *TMapManager::AddBlock(DWORD index)
 	return block;
 }
 //---------------------------------------------------------------------------
-void TMapManager::DeleteBlock(DWORD index)
+/*!
+Удалить блок
+@param [__in] index Индекс блока
+@return 
+*/
+void TMapManager::DeleteBlock( __in DWORD index)
 {
 	TMapBlock *block = (TMapBlock*)m_Items;
 

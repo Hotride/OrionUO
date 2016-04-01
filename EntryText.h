@@ -20,51 +20,54 @@
 #ifndef EntryTextH
 #define EntryTextH
 //---------------------------------------------------------------------------
-//Класс для работы с полем для ввода текста
+//!Класс для работы с полем для ввода текста
 class TEntryText
 {
 private:
-	//Unicode строка
+	//!Unicode строка
 	wstring m_Text;
 
-	//ASCII строка
+	//!ASCII строка
 	string m_CText;
 
-	//Максимальная длина строки
+	//!Максимальная длина строки
 	int m_MaxLength;
 
-	//Позиция каретки в строке
+	//!Позиция каретки в строке
 	int m_Position;
 
-	//Флаг изменения строки
+	//!Флаг изменения строки
 	bool m_Changed;
 
-	//Смещение рисования текста
+	//!Смещение рисования текста
 	int m_DrawOffset;
 
-	//Ширина текста
+	//!Ширина текста
 	int m_Width;
 
-	//Максимальная ширина текста
+	//!Максимальная ширина текста
 	int m_MaxWidth;
 
-	//Цвет текста
+	//!Цвет текста
 	WORD m_Color;
 
-	//Координаты каретки
+	//!Координаты каретки
 	POINT m_CaretPos;
 
-	//Флаг для ввода только цифр
+	//!Флаг для ввода только цифр
 	bool m_NumberOnly;
 
 public:
 	TEntryText(int maxLength = 0, int width = 0, int maxWidth = 0, bool numberOnly = false);
 	virtual ~TEntryText();
 
-	//Текстура текста
+	//!Текстура текста
 	TTextTexture m_Texture;
 
-	//Очистить данные
+	/*!
+	Очистить данные
+	@return 
+	*/
 	void Clear();
 
 	//Вставить символ

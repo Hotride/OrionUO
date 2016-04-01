@@ -21,6 +21,7 @@
 
 TProfessionManager *ProfessionManager = NULL;
 //---------------------------------------------------------------------------
+//!Ключи конфига
 const string TProfessionManager::m_Keys[m_KeyCount] =
 {
 	"begin",
@@ -52,7 +53,12 @@ TProfessionManager::~TProfessionManager()
 {
 }
 //---------------------------------------------------------------------------
-int TProfessionManager::GetKeyCode(const string &key)
+/*!
+Получить код кофига по строке
+@param [__in] key Строка из файла
+@return Код конфига
+*/
+int TProfessionManager::GetKeyCode( __in const string &key)
 {
 	string str = ToLowerA(key);
 	int result = 0;
@@ -66,7 +72,12 @@ int TProfessionManager::GetKeyCode(const string &key)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TProfessionManager::ParseFilePart(TTextFileParser &file)
+/*!
+Обработать часть файла (загрузка профессии)
+@param [__in] file Указатель на файл
+@return true при успешной обработке
+*/
+bool TProfessionManager::ParseFilePart( __in TTextFileParser &file)
 {
 	PROFESSION_TYPE type = PT_NO_PROF;
 	std::vector<string> childrens;
@@ -261,7 +272,13 @@ bool TProfessionManager::ParseFilePart(TTextFileParser &file)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TProfessionManager::AddChild(TBaseProfession *parent, TBaseProfession *child)
+/*!
+Добавить ребенка в профессию
+@param [__in] parent Ссылка на родителя
+@param [__in] child Ссылка на детишку
+@return true в случае успешного добавления
+*/
+bool TProfessionManager::AddChild(__in TBaseProfession *parent, __in TBaseProfession *child)
 {
 	bool result = false;
 
@@ -295,6 +312,10 @@ bool TProfessionManager::AddChild(TBaseProfession *parent, TBaseProfession *chil
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Загрузка профессий из файла
+@return true в случае успешной загрузки
+*/
 bool TProfessionManager::Load()
 {
 	bool result = false;
@@ -363,6 +384,10 @@ bool TProfessionManager::Load()
 	return result;
 }
 //--------------------------------------------------------------------------
+/*!
+Загрузка описания профессий
+@return 
+*/
 void TProfessionManager::LoadProfessionDescription()
 {
 	TMappedHeader file;
@@ -422,7 +447,13 @@ void TProfessionManager::LoadProfessionDescription()
 	}
 }
 //--------------------------------------------------------------------------
-TBaseProfession *TProfessionManager::GetParent(TBaseProfession *obj, TBaseProfession *check)
+/*!
+Получить родителя профессии
+@param [__in] obj Ссылка на объект профессии
+@param [__in_opt] check Ссылка на проверочный объект профессии
+@return Ссылка на найденного родителя объекта профессии
+*/
+TBaseProfession *TProfessionManager::GetParent(__in TBaseProfession *obj, __in_opt TBaseProfession *check)
 {
 	if (check == NULL)
 		check = (TBaseProfession*)m_Items;

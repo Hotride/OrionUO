@@ -20,12 +20,14 @@
 #ifndef ProfessionManagerH
 #define ProfessionManagerH
 //---------------------------------------------------------------------------
-//Менеджер профессий
+//!Класс менеджера профессий
 class TProfessionManager : public TBaseQueue
 {
 private:
+	//!Количество ключей конфига
 	static const int m_KeyCount = 18;
 
+	//!Ключи конфига
 	static const string m_Keys[m_KeyCount];
 
 	enum
@@ -50,22 +52,57 @@ private:
 		PM_CODE_DESCRIPTION_CLILOC_ID
 	};
 
-	int GetKeyCode(const string &key);
-	bool ParseFilePart(TTextFileParser &file);
-	bool AddChild(TBaseProfession *parent, TBaseProfession *child);
+	/*!
+	Получить код кофига по строке
+	@param [__in] key Строка из файла
+	@return Код конфига
+	*/
+	int GetKeyCode(__in const string &key);
+
+	/*!
+	Обработать часть файла (загрузка профессии)
+	@param [__in] file Указатель на файл
+	@return true при успешной обработке
+	*/
+	bool ParseFilePart(__in TTextFileParser &file);
+
+	/*!
+	Добавить ребенка в профессию
+	@param [__in] parent Ссылка на родителя
+	@param [__in] child Ссылка на детишку
+	@return true в случае успешного добавления
+	*/
+	bool AddChild(__in TBaseProfession *parent, __in TBaseProfession *child);
+
+	/*!
+	Загрузка описания профессий
+	@return 
+	*/
 	void LoadProfessionDescription();
+
 public:
 	TProfessionManager();
 	virtual ~TProfessionManager();
 
-	//Получить указатель на профессию
+	//!Получить указатель на выбранную профессию
 	TBaseProfession *Selected;
-	
-	TBaseProfession *GetParent(TBaseProfession *obj, TBaseProfession *check = NULL);
 
+	/*!
+	Получить родителя профессии
+	@param [__in] obj Ссылка на объект профессии
+	@param [__in_opt] check Ссылка на проверочный объект профессии
+	@return Ссылка на найденного родителя объекта профессии
+	*/
+	TBaseProfession *GetParent(__in TBaseProfession *obj, __in_opt TBaseProfession *check = NULL);
+
+	/*!
+	Загрузка профессий из файла
+	@return true в случае успешной загрузки
+	*/
 	bool Load();
 };
 //---------------------------------------------------------------------------
+//!Ссылка на менеджер профессий
 extern TProfessionManager *ProfessionManager;
 //---------------------------------------------------------------------------
 #endif

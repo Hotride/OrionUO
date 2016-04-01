@@ -280,7 +280,7 @@ void TGameScreen::CheckFoliageUnion( __in WORD graphic, __in int x, __in int y, 
 }
 //---------------------------------------------------------------------------
 /*!
-Функция увеличесния размера списка рендера
+Функция увеличения размера списка рендера
 @return 
 */
 void TGameScreen::IncreaseRenderList()

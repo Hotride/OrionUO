@@ -31,7 +31,13 @@ TFrameBuffer::~TFrameBuffer()
 {
 }
 //---------------------------------------------------------------------------
-bool TFrameBuffer::Init(int width, int height)
+/*!
+Инициализациия буфера
+@param [__in] width Ширина буфера
+@param [__in] height Высота буфера
+@return true в случае успеха
+*/
+bool TFrameBuffer::Init( __in int width, __in int height)
 {
 	bool result = false;
 
@@ -49,9 +55,6 @@ bool TFrameBuffer::Init(int width, int height)
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_Texture, 0);
 
-		//GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-		//glDrawBuffers(1, DrawBuffers);
-	
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
 		{
 			m_Width = width;
@@ -67,6 +70,10 @@ bool TFrameBuffer::Init(int width, int height)
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Очистка фрэймбуфера
+@return
+*/
 void TFrameBuffer::Free()
 {
 	if (m_Texture != 0)
@@ -84,6 +91,10 @@ void TFrameBuffer::Free()
 	m_OldFrameBuffer = 0;
 }
 //---------------------------------------------------------------------------
+/*!
+Завершение использования фрэймбуфера
+@return 
+*/
 void TFrameBuffer::Release()
 {
 	if (g_UseFrameBuffer)
@@ -95,11 +106,21 @@ void TFrameBuffer::Release()
 	}
 }
 //---------------------------------------------------------------------------
-bool TFrameBuffer::Ready(int &width, int &height)
+/*!
+Проверка готовности буфера с потенциальным пересозданием
+@param [__in] width Ширина буфера
+@param [__in] height Высота буфера
+@return true в случае готовности
+*/
+bool TFrameBuffer::Ready( __in int &width, __in int &height)
 {
 	return (g_UseFrameBuffer && m_Ready && m_Width == width && m_Height == height);
 }
 //---------------------------------------------------------------------------
+/*!
+Использование буфера
+@return true в случае успеха
+*/
 bool TFrameBuffer::Use()
 {
 	bool result = false;
@@ -128,7 +149,13 @@ bool TFrameBuffer::Use()
 	return result;
 }
 //---------------------------------------------------------------------------
-void TFrameBuffer::Draw(int x, int y)
+/*!
+Отрисовать текстуру буфера
+@param [__in] x Экранная координата X
+@param [__in] y Экранная координата Y
+@return 
+*/
+void TFrameBuffer::Draw( __in int x, __in int y)
 {
 	if (g_UseFrameBuffer && m_Ready)
 	{

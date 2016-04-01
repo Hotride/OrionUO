@@ -206,7 +206,7 @@ private:
 	void CheckFoliageUnion(__in WORD graphic, __in int x, __in int y, __in int z);
 
 	/*!
-	Функция увеличесния размера списка рендера
+	Функция увеличения размера списка рендера
 	@return 
 	*/
 	void IncreaseRenderList();

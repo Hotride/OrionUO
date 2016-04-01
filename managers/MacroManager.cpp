@@ -38,7 +38,12 @@ TMacroManager::~TMacroManager()
 {
 }
 //---------------------------------------------------------------------------
-void TMacroManager::Load(string path)
+/*!
+Загрузить макросы из конфига
+@param [__in] path Путь к файлу конфига
+@return 
+*/
+void TMacroManager::Load( __in string path)
 {
 	Clear();
 
@@ -60,7 +65,12 @@ void TMacroManager::Load(string path)
 	}
 }
 //---------------------------------------------------------------------------
-void TMacroManager::Save(string path)
+/*!
+Сохранить макросы в конфиг
+@param [__in] path Путь к файлу конфига
+@return 
+*/
+void TMacroManager::Save( __in string path)
 {
 	TFileWriter *writer = new TFileWriter(path, true);
 
@@ -86,7 +96,15 @@ void TMacroManager::Save(string path)
 	delete writer;
 }
 //---------------------------------------------------------------------------
-TMacro *TMacroManager::FindMacro(WORD key, bool alt, bool ctrl, bool shift)
+/*!
+Поиск макроса
+@param [__in] key Индекс кнопки
+@param [__in] alt Зажатый альт
+@param [__in] ctrl Зажатый контрол
+@param [__in] shift Зажатый шифт
+@return Ссылку на макрос или NULL
+*/
+TMacro *TMacroManager::FindMacro(__in WORD key, __in bool alt, __in bool ctrl, __in bool shift)
 {
 	TMacro *obj = (TMacro*)m_Items;
 
@@ -101,6 +119,10 @@ TMacro *TMacroManager::FindMacro(WORD key, bool alt, bool ctrl, bool shift)
 	return obj;
 }
 //---------------------------------------------------------------------------
+/*!
+Загрузить макросы из опций
+@return 
+*/
 void TMacroManager::LoadFromOptions()
 {
 	Clear();
@@ -116,6 +138,10 @@ void TMacroManager::LoadFromOptions()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Начать выполнение макроса
+@return 
+*/
 void TMacroManager::Execute()
 {
 	while (MacroPointer != NULL)
@@ -140,6 +166,10 @@ void TMacroManager::Execute()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Выполнить команды подменю
+@return 
+*/
 void TMacroManager::ProcessSubMenu()
 {
 	switch (MacroPointer->Code)
@@ -405,6 +435,10 @@ void TMacroManager::ProcessSubMenu()
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Выполнить действие макроса (или набор действий)
+@return Код выполнения
+*/
 MACRO_RETURN_CODE TMacroManager::Process()
 {
 	MACRO_RETURN_CODE result = MRC_PARSE_NEXT;

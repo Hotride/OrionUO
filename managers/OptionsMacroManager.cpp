@@ -30,6 +30,10 @@ TOptionsMacroManager::~TOptionsMacroManager()
 {
 }
 //---------------------------------------------------------------------------
+/*!
+«агрузить из списка макросов
+@return 
+*/
 void TOptionsMacroManager::LoadFromMacro()
 {
 	Clear();
@@ -47,6 +51,10 @@ void TOptionsMacroManager::LoadFromMacro()
 		Add(TMacro::CreateBlankMacro());
 }
 //---------------------------------------------------------------------------
+/*!
+ѕроверка на активный TEntryText
+@return true в случае успешной проверки
+*/
 bool TOptionsMacroManager::EntryPointerHere()
 {
 	TMacro *obj = (TMacro*)m_Items;

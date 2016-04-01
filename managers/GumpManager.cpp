@@ -21,6 +21,10 @@
 
 TGumpManager *GumpManager = NULL;
 //---------------------------------------------------------------------------
+/*!
+Подготовка текстур
+@return 
+*/
 void TGumpManager::PrepareTextures()
 {
 	TGump *gump = (TGump*)m_Items;
@@ -33,7 +37,13 @@ void TGumpManager::PrepareTextures()
 	}
 }
 //---------------------------------------------------------------------------
-void TGumpManager::Draw(bool &mode, bool blocked)
+/*!
+Рисование/выбор гампов
+@param [__in] mode true - рисование, false - выбор
+@param [__in] blocked Состояние экрана, для которого рисовать гампы
+@return 
+*/
+void TGumpManager::Draw( __in bool &mode, __in bool blocked)
 {
 	TGump *gump = (TGump*)m_Items;
 	TGump *menuBarGump = NULL;
@@ -71,13 +81,22 @@ void TGumpManager::Draw(bool &mode, bool blocked)
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Перерисовать все гампы
+@return 
+*/
 void TGumpManager::RedrawAll()
 {
 	QFOR(gump, m_Items, TGump*)
 		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
-void TGumpManager::OnLeftMouseDown(bool blocked)
+/*!
+Нажатие левой кнопки мыши
+@param [__in] blocked Состояние экрана
+@return 
+*/
+void TGumpManager::OnLeftMouseDown( __in bool blocked)
 {
 	TGump *gump = (TGump*)m_Items;
 
@@ -102,7 +121,12 @@ void TGumpManager::OnLeftMouseDown(bool blocked)
 	}
 }
 //---------------------------------------------------------------------------
-bool TGumpManager::OnLeftMouseUp(bool blocked)
+/*!
+Отпускание левой кнопки мыши
+@param [__in] blocked Состояние экрана
+@return 
+*/
+bool TGumpManager::OnLeftMouseUp( __in bool blocked)
 {
 	TGump *gump = (TGump*)m_Items;
 
@@ -236,7 +260,12 @@ bool TGumpManager::OnLeftMouseUp(bool blocked)
 	return false;
 }
 //---------------------------------------------------------------------------
-void TGumpManager::OnRightMouseDown(bool blocked)
+/*!
+Нажатие правой кнопки мыши
+@param [__in] blocked Состояние экрана
+@return 
+*/
+void TGumpManager::OnRightMouseDown( __in bool blocked)
 {
 	TGump *gump = (TGump*)m_Items;
 	
@@ -261,7 +290,12 @@ void TGumpManager::OnRightMouseDown(bool blocked)
 	}
 }
 //---------------------------------------------------------------------------
-void TGumpManager::OnRightMouseUp(bool blocked)
+/*!
+Отпускание правой кнопки мыши
+@param [__in] blocked Состояние экрана
+@return 
+*/
+void TGumpManager::OnRightMouseUp( __in bool blocked)
 {
 	TGump *gump = (TGump*)m_Items;
 	
@@ -380,7 +414,12 @@ void TGumpManager::OnRightMouseUp(bool blocked)
 	}
 }
 //---------------------------------------------------------------------------
-bool TGumpManager::OnLeftMouseDoubleClick(bool blocked)
+/*!
+Двойной клик левой кнопкой мыши
+@param [__in] blocked Состояние экрана
+@return true при успешной обработке
+*/
+bool TGumpManager::OnLeftMouseDoubleClick( __in bool blocked)
 {
 	bool result = false;
 	TGump *gump = (TGump*)m_Items;
@@ -407,12 +446,23 @@ bool TGumpManager::OnLeftMouseDoubleClick(bool blocked)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TGumpManager::OnRightMouseDoubleClick(bool blocked)
+/*!
+Двойной клик правой кнопкой мыши
+@param [__in] blocked Состояние экрана
+@return true при успешной обработке
+*/
+bool TGumpManager::OnRightMouseDoubleClick( __in bool blocked)
 {
 	return false;
 }
 //---------------------------------------------------------------------------
-void TGumpManager::OnMouseWheel(MOUSE_WHEEL_STATE state, bool blocked)
+/*!
+Обработка средней кнопки (колесика) мыши
+@param [__in] state Состояние колесика
+@param [__in] blocked Состояние экрана
+@return 
+*/
+void TGumpManager::OnMouseWheel( __in MOUSE_WHEEL_STATE state, __in bool blocked)
 {
 	TGump *gump = (TGump*)m_Items;
 
@@ -429,7 +479,14 @@ void TGumpManager::OnMouseWheel(MOUSE_WHEEL_STATE state, bool blocked)
 	}
 }
 //---------------------------------------------------------------------------
-bool TGumpManager::OnCharPress(WPARAM wparam, LPARAM lparam, bool blocked)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@param [__in] blocked Состояние экрана
+@return true при успешной обработке
+*/
+bool TGumpManager::OnCharPress( __in WPARAM wparam, __in LPARAM lparam, __in bool blocked)
 {
 	TGump *gump = GetTextEntryOwner();
 	bool result = false;
@@ -456,7 +513,14 @@ bool TGumpManager::OnCharPress(WPARAM wparam, LPARAM lparam, bool blocked)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TGumpManager::OnKeyPress(WPARAM wparam, LPARAM lparam, bool blocked)
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@param [__in] blocked Состояние экрана
+@return true при успешной обработке
+*/
+bool TGumpManager::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam, __in bool blocked)
 {
 	bool result = false;
 
@@ -500,6 +564,10 @@ bool TGumpManager::OnKeyPress(WPARAM wparam, LPARAM lparam, bool blocked)
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Вычислить количество статусбаров без пати
+@return Количество non-party статусбыров
+*/
 int TGumpManager::GetNonpartyStatusbarsCount()
 {
 	TGump *gump = (TGump*)m_Items;
@@ -516,7 +584,12 @@ int TGumpManager::GetNonpartyStatusbarsCount()
 	return count;
 }
 //---------------------------------------------------------------------------
-void TGumpManager::AddGump(TGump *obj)
+/*!
+Добавить гамп
+@param [__in] obj Ссылка на гамп
+@return 
+*/
+void TGumpManager::AddGump( __in TGump *obj)
 {
 	if (m_Items == NULL)
 	{
@@ -667,6 +740,10 @@ void TGumpManager::AddGump(TGump *obj)
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Получить гамп-владелец текущей активной TEntryText
+@return Ссылку на гамп или NULL
+*/
 TGump *TGumpManager::GetTextEntryOwner()
 {
 	TGump *gump = (TGump*)m_Items;
@@ -682,7 +759,12 @@ TGump *TGumpManager::GetTextEntryOwner()
 	return gump;
 }
 //---------------------------------------------------------------------------
-TGump *TGumpManager::GumpExists(DWORD gumpID)
+/*!
+Проверить, существует ли гамп
+@param [__in] gumpID ID гампа (в памяти)
+@return
+*/
+TGump *TGumpManager::GumpExists(__in DWORD gumpID)
 {
 	TGump *gump = (TGump*)m_Items;
 
@@ -697,7 +779,14 @@ TGump *TGumpManager::GumpExists(DWORD gumpID)
 	return gump;
 }
 //---------------------------------------------------------------------------
-TGump *TGumpManager::UpdateGump(DWORD serial, DWORD id, GUMP_TYPE type)
+/*!
+Обновить гамп
+@param [__in] serial Серийник гампа
+@param [__in] ID ID гампа
+@param [__in] Type Тип гампа
+@return Ссылку на обновленный гамп или NULL
+*/
+TGump *TGumpManager::UpdateGump(__in DWORD serial, __in DWORD id, __in GUMP_TYPE type)
 {
 	TGump *gump = GetGump(serial, id, type);
 
@@ -707,7 +796,14 @@ TGump *TGumpManager::UpdateGump(DWORD serial, DWORD id, GUMP_TYPE type)
 	return gump;
 }
 //---------------------------------------------------------------------------
-TGump *TGumpManager::GetGump(DWORD serial, DWORD id, GUMP_TYPE type)
+/*!
+Найти гамп
+@param [__in] serial Серийник гампа
+@param [__in] ID ID гампа
+@param [__in] Type Тип гампа
+@return Ссылку на гамп или NULL
+*/
+TGump *TGumpManager::GetGump(__in DWORD serial, __in DWORD id, __in GUMP_TYPE type)
 {
 	TGump *gump = (TGump*)m_Items;
 
@@ -739,7 +835,14 @@ TGump *TGumpManager::GetGump(DWORD serial, DWORD id, GUMP_TYPE type)
 	return gump;
 }
 //---------------------------------------------------------------------------
-void TGumpManager::CloseGump(DWORD serial, DWORD id, GUMP_TYPE type)
+/*!
+Закрыть все гампы с указанными параметрами
+@param [__in] serial Серийник гампа
+@param [__in] ID ID гампа
+@param [__in] Type Тип гампа
+@return
+*/
+void TGumpManager::CloseGump(__in DWORD serial, __in DWORD id, __in GUMP_TYPE type)
 {
 	for (TGump *gump = (TGump*)m_Items; gump != NULL; )
 	{
@@ -774,7 +877,12 @@ void TGumpManager::CloseGump(DWORD serial, DWORD id, GUMP_TYPE type)
 	}
 }
 //---------------------------------------------------------------------------
-void TGumpManager::RemoveGump(TGump *obj)
+/*!
+Удалить гамп
+@param [__in] obj Ссылка на гамп
+@return
+*/
+void TGumpManager::RemoveGump(__in TGump *obj)
 {
 	Unlink(obj);
 
@@ -793,6 +901,10 @@ void TGumpManager::RemoveGump(TGump *obj)
 	delete obj;
 }
 //--------------------------------------------------------------------------
+/*!
+Событие удаления менеджера (вызывается перед удалением)
+@return 
+*/
 void TGumpManager::OnDelete()
 {
 	TGump *gump = (TGump*)m_Items;
@@ -817,6 +929,10 @@ void TGumpManager::OnDelete()
 	}
 }
 //--------------------------------------------------------------------------
+/*!
+Удалить гампы, которые не могут быть досягаемы из-за изменения дистанции до объекта
+@return 
+*/
 void TGumpManager::RemoveRangedGumps()
 {
 	if (World != NULL)
@@ -856,7 +972,12 @@ void TGumpManager::RemoveRangedGumps()
 	}
 }
 //--------------------------------------------------------------------------
-void TGumpManager::Load(string path)
+/*!
+Загрузка гампов из конфига
+@param [__in] path Путь к файлу конфига
+@return 
+*/
+void TGumpManager::Load( __in string path)
 {
 	TMappedHeader file;
 	memset(&file, 0, sizeof(TMappedHeader));
@@ -1038,7 +1159,12 @@ void TGumpManager::Load(string path)
 		UO->PaperdollReq(g_PlayerSerial);
 }
 //--------------------------------------------------------------------------
-void TGumpManager::Save(string path)
+/*!
+Сохранить гампы в конфиг
+@param [__in] path Путь к файлу кофнига
+@return 
+*/
+void TGumpManager::Save( __in string path)
 {
 	TFileWriter *writer = new TFileWriter(path, true);
 

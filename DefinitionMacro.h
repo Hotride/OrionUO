@@ -31,14 +31,14 @@ TLinkedList *nextList = list; \
 list = new TLinkedList(&item); \
 list->Next = nextList
 //---------------------------------------------------------------------------
-//Эффекты шрифта
-#define UOFONT_SOLID			0x01 //Жирный
-#define UOFONT_ITALIC			0x02 //Наклонный
-#define UOFONT_INDENTION		0x04 //Отступ текста (кроме 1 строки) для журнала
-#define UOFONT_BLACK_BORDER		0x08 //Черная обводка
-#define UOFONT_UNDERLINE		0x10 //Подчеркнутый
-#define UOFONT_FIXED			0x20 //Фиксированной длины
-#define UOFONT_CROPPED			0x40 //Фиксированной длины с многоточием
+//!Эффекты шрифта
+#define UOFONT_SOLID			0x01 //!Жирный
+#define UOFONT_ITALIC			0x02 //!Наклонный
+#define UOFONT_INDENTION		0x04 //!Отступ текста (кроме 1 строки) для журнала
+#define UOFONT_BLACK_BORDER		0x08 //!Черная обводка
+#define UOFONT_UNDERLINE		0x10 //!Подчеркнутый
+#define UOFONT_FIXED			0x20 //!Фиксированной длины
+#define UOFONT_CROPPED			0x40 //!Фиксированной длины с многоточием
 //---------------------------------------------------------------------------
 #define PLUGIN_FLAGS_PARSE_RECV			0x01
 #define PLUGIN_FLAGS_PARSE_SEND			0x02
@@ -49,7 +49,7 @@ list->Next = nextList
 #define PLUGIN_FLAGS_GAME_WORLD_DRAW	0x40
 #define PLUGIN_FLAGS_SCENE_DRAW			0x80
 //---------------------------------------------------------------------------
-//Connection Errors
+//!Коды ошибок подключения
 #define CE_NO_ERROR					0
 #define CE_INIT						-1
 #define CE_CREATE					-2
@@ -67,29 +67,29 @@ list->Next = nextList
 #define MODKEY_CTRL					0x0200
 #define MODKEY_SHIFT				0x0400
 //---------------------------------------------------------------------------
-//incremented ordinary for
+//!incremented ordinary for
 #define IFOR(var, start, stop) for (int var = start; var < stop; var ++)
-//decremented ordinary for
+//!decremented ordinary for
 #define DFOR(var, start, stop) for (int var = start; var >= stop; var --)
-//TBaseQueue for [extended]
+//!TBaseQueue for [extended]
 #define QFOR(var, start, type) for (type var = (type)start; var != NULL; var = (type)var->m_Next)
-//TBaseQueue for
+//!TBaseQueue for
 #define BQFOR(var, start) QFOR(var, start, TBaseQueueItem*)
 //---------------------------------------------------------------------------
-//Set/Get ordinary class property
+//!Set/Get ordinary class property
 #define SETGET(type, name) \
 	void Set##name(type val) { m_##name = val; } \
 	type Get##name() const { return m_##name; } \
 	__declspec(property(get = Get##name, put = Set##name)) type name
 //---------------------------------------------------------------------------
-//Set/Get ordinary class property
+//!Set/Get ordinary class property
 #define SETGETEX(type, name) \
 	SETGET(type, name); \
 	void Inc##name() { m_##name++; } \
 	void Dec##name() { m_##name--; } \
 	void Add##name(type val) { m_##name += val; }
 //---------------------------------------------------------------------------
-//Get ordinary class property customized
+//!Get ordinary class property customized
 #define GET_PARTY(type, name) \
 	type Get##name(); \
 	__declspec(property(get = Get##name)) type name

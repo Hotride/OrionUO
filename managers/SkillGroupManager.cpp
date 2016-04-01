@@ -30,6 +30,10 @@ TSkillGroupManager::~TSkillGroupManager()
 {
 }
 //----------------------------------------------------------------------------
+/*!
+Выставить группы по-умолчанию
+@return 
+*/
 void TSkillGroupManager::MakeDefault()
 {
 	Clear();
@@ -172,6 +176,10 @@ void TSkillGroupManager::MakeDefaultBard()
 	Add(group);
 }
 //----------------------------------------------------------------------------
+/*!
+Очистить список групп
+@return 
+*/
 void TSkillGroupManager::Clear()
 {
 	TSkillGroupObject *item = m_Groups;
@@ -189,7 +197,12 @@ void TSkillGroupManager::Clear()
 	m_Groups = NULL;
 }
 //----------------------------------------------------------------------------
-void TSkillGroupManager::Add(TSkillGroupObject *group)
+/*!
+Добавить группу
+@param [__in] group Ссылка на группу
+@return
+*/
+void TSkillGroupManager::Add(__in TSkillGroupObject *group)
 {
 	if (m_Groups == NULL)
 	{
@@ -212,7 +225,12 @@ void TSkillGroupManager::Add(TSkillGroupObject *group)
 	m_Count++;
 }
 //----------------------------------------------------------------------------
-void TSkillGroupManager::Remove(TSkillGroupObject *group)
+/*!
+Удалить группу
+@param [__in] group Ссылка на группу
+@return 
+*/
+void TSkillGroupManager::Remove( __in TSkillGroupObject *group)
 {
 	if (group->m_Prev == NULL) //Miscellaneous
 	{
@@ -242,6 +260,10 @@ void TSkillGroupManager::Remove(TSkillGroupObject *group)
 	}
 }
 //----------------------------------------------------------------------------
+/*!
+Получить список видимых строк
+@return Количество видимых строк
+*/
 int TSkillGroupManager::GetVisibleLinesCount()
 {
 	int count = 0;
@@ -263,7 +285,12 @@ int TSkillGroupManager::GetVisibleLinesCount()
 	return count;
 }
 //----------------------------------------------------------------------------
-void TSkillGroupManager::Load(string path)
+/*!
+Загрузка групп из файла конфига
+@param [__in] path Путь к файлу конфига
+@return 
+*/
+void TSkillGroupManager::Load( __in string path)
 {
 	Clear();
 	
@@ -313,7 +340,12 @@ void TSkillGroupManager::Load(string path)
 		MakeDefault();
 }
 //----------------------------------------------------------------------------
-void TSkillGroupManager::Save(string path)
+/*!
+Сохранение групп в файл конфиг
+@param [__in] path Путьк  файлу конфига
+@return 
+*/
+void TSkillGroupManager::Save( __in string path)
 {
 	TFileWriter *writer = new TFileWriter(path, true);
 	

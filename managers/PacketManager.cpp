@@ -308,7 +308,12 @@ TPacketManager::TPacketManager()
 #define CVPRINT(s)
 #endif //CV_PRINT!=0
 //---------------------------------------------------------------------------
-void TPacketManager::SetClientVersion(CLIENT_VERSION cver)
+/*!
+Установить версию протокола клиента и подменить размерности соответствующих пакетов
+@param [__in] val Новая версия протокола клиента
+@return
+*/
+void TPacketManager::SetClientVersion(__in CLIENT_VERSION cver)
 {
 	m_ClientVersion = cver;
 	
@@ -492,6 +497,10 @@ void TPacketManager::SetClientVersion(CLIENT_VERSION cver)
 	}
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать байт (1 байт)
+@return Данные
+*/
 BYTE TPacketManager::ReadByte()
 {
 	BYTE result = *Ptr;
@@ -501,6 +510,10 @@ BYTE TPacketManager::ReadByte()
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать слово (2 байта)
+@return Данные
+*/
 WORD TPacketManager::ReadWord()
 {
 	WORD result = unpack16(Ptr);
@@ -510,6 +523,10 @@ WORD TPacketManager::ReadWord()
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать двойное слово (4 байта)
+@return Данные
+*/
 DWORD TPacketManager::ReadDWord()
 {
 	DWORD result = unpack32(Ptr);
@@ -519,6 +536,10 @@ DWORD TPacketManager::ReadDWord()
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать символ (1 байт)
+@return Данные
+*/
 char TPacketManager::ReadChar()
 {
 	char result = (char)*Ptr;
@@ -528,6 +549,10 @@ char TPacketManager::ReadChar()
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать короткое значение (2 байта)
+@return Данные
+*/
 short TPacketManager::ReadShort()
 {
 	short result = (short)unpack16(Ptr);
@@ -537,6 +562,10 @@ short TPacketManager::ReadShort()
 	return result;
 }
 //---------------------------------------------------------------------------
+/*!
+Прочитать целое значение (4 байта)
+@return Данные
+*/
 int TPacketManager::ReadInt()
 {
 	int result = (int)unpack32(Ptr);
@@ -546,7 +575,12 @@ int TPacketManager::ReadInt()
 	return result;
 }
 //---------------------------------------------------------------------------
-string TPacketManager:: ReadString(int size)
+/*!
+Прочитать ASCII строку
+@param [__in] size Размер строки, если указан 0 - читает до нуля
+@return Данные
+*/
+string TPacketManager:: ReadString( __in int size)
 {
 	if (!size)
 	{
@@ -570,7 +604,12 @@ string TPacketManager:: ReadString(int size)
 	return result;
 }
 //---------------------------------------------------------------------------
-wstring TPacketManager::ReadUnicodeString(int size)
+/*!
+Прочитать Unicode строку
+@param [__in] size Размер строки, если указан 0 - читает до нуля
+@return Данные
+*/
+wstring TPacketManager::ReadUnicodeString( __in int size)
 {
 	int count = size;
 
@@ -599,7 +638,12 @@ wstring TPacketManager::ReadUnicodeString(int size)
 	return result;
 }
 //---------------------------------------------------------------------------
-int TPacketManager::GetPacketSize(BYTE msg)
+/*!
+Получить размер пакета
+@param [__in] msg Индекс пакета
+@return Размер пакета
+*/
+int TPacketManager::GetPacketSize( __in BYTE msg)
 {
 	if ((int)msg < 0 || (int)msg >= 0x100)
 		return -1;
@@ -607,7 +651,13 @@ int TPacketManager::GetPacketSize(BYTE msg)
 	return m_MessageTypes[(int)msg].Size;
 }
 //---------------------------------------------------------------------------
-void TPacketManager::ReceiveHandler(PBYTE buf, int size)
+/*!
+Обработчик пришедшего сообщения
+@param [__in] buf Буфер
+@param [__in] size Размер сообщения
+@return 
+*/
+void TPacketManager::ReceiveHandler( __in PBYTE buf, __in int size)
 {
 	DWORD ticks = GetTickCount();
 	g_TotalRecvSize += size;

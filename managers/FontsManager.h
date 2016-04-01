@@ -68,7 +68,7 @@ private:
 	WEBLINK_MAP m_WebLink;
 
 	//!Таблица ассоциации ASCII шрифтов
-	static BYTE m_FontIndex[256];
+	static const BYTE m_FontIndex[256];
 
 	//!Данные о юникод шрифтах: адрес, размер
 	DWORD m_UnicodeFontAddress[20];
@@ -114,10 +114,32 @@ private:
 	*/
 	PMULTILINES_FONT_INFO GetInfoHTML(__in BYTE font, __in const wchar_t *str, __in int len, __in TEXT_ALIGN_TYPE align, __in WORD flags, __in int width);
 
-	bool GenerateABase(BYTE &font, TTextTexture &th, const char *str, WORD &color, int &width, TEXT_ALIGN_TYPE &align, WORD &flags);
+	/*!
+	Создание ASCII текстуры
+	@param [__in] font Шрифт
+	@param [__out] th Данные текстуры
+	@param [__in] str Текст
+	@param [__in] color Цвет
+	@param [__in] width Ширина текстуры
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@return true при успешной генерации
+	*/
+	bool GenerateABase(__in BYTE &font, __out TTextTexture &th, __in const char *str, __in WORD &color, __in int &width, __in TEXT_ALIGN_TYPE &align, __in WORD &flags);
 
-	//Создание Unicode текстуры
-	bool GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *str, WORD &color, BYTE &cell, int &width, TEXT_ALIGN_TYPE &align, WORD &flags);
+	/*!
+	Создание Unicode текстуры
+	@param [__in] font Шрифт
+	@param [__out] th Данные текстуры
+	@param [__in] str Текст
+	@param [__in] color Цвет
+	@param [__in] cell Номер ячейки в палитре цветов
+	@param [__in] width Ширина текстуры
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@return true при успешной генерации
+	*/
+	bool GenerateWBase(__in BYTE &font, __out TTextTexture &th, __in const wchar_t *str, __in WORD &color, __in BYTE &cell, __in int &width, __in TEXT_ALIGN_TYPE &align, __in WORD &flags);
 
 public:
 	TFontsManager();
@@ -125,59 +147,176 @@ public:
 	
 	SETGET(bool, SavePixels);
 
-	void SetUseHTML(bool val, DWORD htmlStartColor = 0xFFFFFFFF) {m_UseHTML = val; m_HTMLColor = htmlStartColor;}
-	bool GetUseHTML() const {return m_UseHTML;}
+	/*!
+	Установить использование HTML-тэгов
+	@param [__in] val Состояние использования
+	@param [__in_opt] htmlStartColor Начальный цвет
+	@return
+	*/
+	void SetUseHTML(__in bool val, __in_opt DWORD htmlStartColor = 0xFFFFFFFF) { m_UseHTML = val; m_HTMLColor = htmlStartColor;}
+	bool GetUseHTML() const { return m_UseHTML; }
 	__declspec(property(get = GetUseHTML)) bool UseHTML;
 
-	//Загрузка ASCII шрифтов
+	/*!
+	Загрузка ASCII шрифтов
+	@return true при успешной загрузке
+	*/
 	bool LoadFonts();
 
-	//Переход по ссылке по индексу
-	void GoToWebLink(WORD link);
-	
+	/*!
+	Переход по ссылке по индексу
+	@param [__in] link Индекс ссылки
+	@return 
+	*/
+	void GoToWebLink(__in WORD link);
+
+
 
 	//-----------------------------
 	//---Работа с ASCII шрифтами---
 	//-----------------------------
 
-	//Проверка, печатаемый ли символ
-	bool IsPrintASCII(BYTE index) {return (m_FontIndex[index] != 0xFF);}
+	/*!
+	Проверка, печатаемый ли символ
+	@param [__in] index Индекс символа
+	@return true если это печатаемый символ
+	*/
+	bool IsPrintASCII(__in BYTE index) __in{ return (m_FontIndex[index] != 0xFF); }
 
-	//Получить смещение символа ширифта
-	int GetFontOffsetY(BYTE Number, BYTE Index);
+	/*!
+	Получить смещение символа ширифта
+	@param [__in] font Шрифт
+	@param [__in] index Индекс символа
+	@return Смещение в пикселях
+	*/
+	int GetFontOffsetY(__in BYTE font, __in BYTE index);
 
-	//Получить позицию каретки в тексте
-	POINT GetCaretPosA(BYTE font, const char *str, int pos, int width, TEXT_ALIGN_TYPE align, WORD flags);
+	/*!
+	Получить позицию каретки в тексте
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] pos Текущая позиция в тексте
+	@param [__in] width Ширина текстуры
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@return Координаты каретки
+	*/
+	POINT GetCaretPosA(__in BYTE font, __in const char *str, __in int pos, __in int width, __in TEXT_ALIGN_TYPE align, __in WORD flags);
 
-	//Вычислить положение каретки
-	int CalculateCaretPosA(BYTE font, const char *str, int x, int y, int width, TEXT_ALIGN_TYPE align, WORD flags);
+	/*!
+	Вычислить положение каретки
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] x Координата каретки по оси X
+	@param [__in] y Координата каретки по оси Y
+	@param [__in] width Ширина текстуры
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@return Позиция каретки в строке
+	*/
+	int CalculateCaretPosA(__in BYTE font, __in const char *str, __in int x, __in int y, __in int width, __in TEXT_ALIGN_TYPE align, __in WORD flags);
 
-	//Получить ширину текста
-	int GetWidthA(BYTE font, const char *str, int len = 0);
+	/*!
+	Получить ширину текста
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in_opt] len Длина текста
+	@return Ширина текста в пикселях
+	*/
+	int GetWidthA(__in BYTE font, __in const char *str, __in_opt int len = 0);
 
-	//Получить ширину текста
-	int GetWidthExA(BYTE font, const char *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, WORD flags);
+	/*!
+	Получить ширину текста (с учетом параметров отрисовки)
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] len Длина текста
+	@param [__in] maxWidth Максимальная ширина текстуры
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@return Ширина текста в пикселях
+	*/
+	int GetWidthExA(__in BYTE font, __in const char *str, __in int len, __in int maxWidth, __in TEXT_ALIGN_TYPE align, __in WORD flags);
 
-	//Получить высоту текста
-	int GetHeightA(BYTE font, const char *str, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
+	/*!
+	Получить высоту текста
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in_opt] width Ширина текстуры
+	@param [__in_opt] align Расположение текста
+	@param [__in_opt] flags Эффекты текста
+	@return Высота текста в пикселях
+	*/
+	int GetHeightA(__in BYTE font, __in const char *str, __in_opt int width = 0, __in_opt TEXT_ALIGN_TYPE align = TS_LEFT, __in_opt WORD flags = 0);
 
-	//Получить высоту текста по списку строк
-	int GetHeightA(PMULTILINES_FONT_INFO info);
+	/*!
+	Получить высоту текста по списку строк
+	@param [__in] info Ссылка на мультистрочный текст
+	@return Высота текста в пикселях
+	*/
+	int GetHeightA(__in PMULTILINES_FONT_INFO info);
 
-	//Получить текст указанной ширины
-	string GetTextByWidthA(BYTE font, const char *str, int len, int width, bool IsCropped);
+	/*!
+	Получить текст указанной ширины
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] len Длина текста
+	@param [__in] width Ширина текстуры
+	@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
+	@return Результирующий текст
+	*/
+	string GetTextByWidthA(__in BYTE font, __in const char *str, __in int len, __in int width, __in bool IsCropped);
 
-	//Получить информацию о тексте (в мультистрочном виде)
-	PMULTILINES_FONT_INFO GetInfoA(BYTE font, const char *str, int len, TEXT_ALIGN_TYPE align, WORD flags, int width);
+	/*!
+	Получить информацию о тексте (в мультистрочном виде)
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] len Длина текста
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@param [__in] width Ширина текстуры
+	@return Ссылка на мультистрочный текст или NULL
+	*/
+	PMULTILINES_FONT_INFO GetInfoA(__in BYTE font, __in const char *str, __in int len, __in TEXT_ALIGN_TYPE align, __in WORD flags, __in int width);
 
-	//Сгенерировать текстуру текста
-	PDWORD GeneratePixelsA(BYTE &font, TTextTexture &th, const char *str, WORD &color, int &width, TEXT_ALIGN_TYPE &align, WORD &flags);
+	/*!
+	Сгенерировать пиксели текстуры текста
+	@param [__in] font Шрифт
+	@param [__inout] th Данные о текстуре текста
+	@param [__in] str Текст
+	@param [__in] color Цвет текста
+	@param [__in] width Ширина текстуры
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@return Ссылка на массив пикселей
+	*/
+	PDWORD GeneratePixelsA(__in BYTE &font, __inout TTextTexture &th, __in const char *str, __in WORD &color, __in int &width, __in TEXT_ALIGN_TYPE &align, __in WORD &flags);
 
-	//Сгенерировать текстуру текста
-	bool GenerateA(BYTE font, TTextTexture &th, const char *str, WORD color = 0, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
+	/*!
+	Сгенерировать текстуру текста
+	@param [__in] font Шрифт
+	@param [__inout] th Данные о текстуре текста
+	@param [__in] str Текст
+	@param [__in_opt] color Цвет
+	@param [__in_opt] width Ширина текстуры
+	@param [__in_opt] align Расположение текста
+	@param [__in_opt] flags Эффекты текста
+	@return true при успешной генерации
+	*/
+	bool GenerateA(__in BYTE font, __inout TTextTexture &th, __in const char *str, __in_opt WORD color = 0, __in_opt int width = 0, __in_opt TEXT_ALIGN_TYPE align = TS_LEFT, __in_opt WORD flags = 0);
 
-	//Отрисовать текст
-	void DrawA(BYTE font, const char *str, WORD color, int X, int Y, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
+	/*!
+	Отрисовать текст
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] color Цвет
+	@param [__in] x Экранная координата X
+	@param [__in] y Экранная координата Y
+	@param [__in_opt] width Ширина текстуры
+	@param [__in_opt] align Расположение текста
+	@param [__in_opt] flags Эффекты текста
+	@return 
+	*/
+	void DrawA(__in BYTE font, __in const char *str, __in WORD color, __in int x, __in int y, __in_opt int width = 0, __in_opt TEXT_ALIGN_TYPE align = TS_LEFT, __in_opt WORD flags = 0);
 
 
 
@@ -185,40 +324,138 @@ public:
 	//---Работа с Unicode шрифтами---
 	//-------------------------------
 
-	//Получить позицию каретки в тексте
-	POINT GetCaretPosW(BYTE font, const wchar_t *str, int pos, int width, TEXT_ALIGN_TYPE align, WORD flags);
+	/*!
+	Получить позицию каретки в тексте
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] pos Текущая позиция в тексте
+	@param [__in] width Ширина текстуры
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@return Координаты каретки
+	*/
+	POINT GetCaretPosW(__in BYTE font, __in const wchar_t *str, __in int pos, __in int width, __in TEXT_ALIGN_TYPE align, __in WORD flags);
 
-	//Вычислить положение каретки
-	int CalculateCaretPosW(BYTE font, const wchar_t *str, int x, int y, int width, TEXT_ALIGN_TYPE align, WORD flags);
+	/*!
+	Вычислить положение каретки
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] x Координата каретки по оси X
+	@param [__in] y Координата каретки по оси Y
+	@param [__in] width Ширина текстуры
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@return Позиция каретки в строке
+	*/
+	int CalculateCaretPosW(__in BYTE font, __in const wchar_t *str, __in int x, __in int y, __in int width, __in TEXT_ALIGN_TYPE align, __in WORD flags);
 
-	//Получить ширину текста
-	int GetWidthW(BYTE font, const wchar_t *str, int len = 0);
+	/*!
+	Получить ширину текста
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in_opt] len Длина текста
+	@return Ширина текста в пикселях
+	*/
+	int GetWidthW(__in BYTE font, __in const wchar_t *str, __in_opt int len = 0);
 
-	//Получить ширину текста
-	int GetWidthExW(BYTE font, const wchar_t *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, WORD flags);
+	/*!
+	Получить ширину текста (с учетом параметров отрисовки)
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] len Длина текста
+	@param [__in] maxWidth Максимальная ширина текстуры
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@return Ширина текста в пикселях
+	*/
+	int GetWidthExW(__in BYTE font, __in const wchar_t *str, __in int len, __in int maxWidth, __in TEXT_ALIGN_TYPE align, __in WORD flags);
 
-	//Получить высоту текста
-	int GetHeightW(BYTE font, const wchar_t *str, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
+	/*!
+	Получить высоту текста
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in_opt] width Ширина текстуры
+	@param [__in_opt] align Расположение текста
+	@param [__in_opt] flags Эффекты текста
+	@return Высота текста в пикселях
+	*/
+	int GetHeightW(__in BYTE font, __in const wchar_t *str, __in_opt int width = 0, __in_opt TEXT_ALIGN_TYPE align = TS_LEFT, __in_opt WORD flags = 0);
 
-	//Получить высоту текста по списку строк
-	int GetHeightW(PMULTILINES_FONT_INFO info);
+	/*!
+	Получить высоту текста по списку строк
+	@param [__in] info Ссылка на мультистрочный текст
+	@return Высота текста в пикселях
+	*/
+	int GetHeightW(__in PMULTILINES_FONT_INFO info);
 
-	//Получить текст указанной ширины
-	wstring GetTextByWidthW(BYTE font, const wchar_t *str, int len, int width, bool IsCropped);
+	/*!
+	Получить текст указанной ширины
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] len Длина текста
+	@param [__in] width Ширина текстуры
+	@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
+	@return Результирующий текст
+	*/
+	wstring GetTextByWidthW(__in BYTE font, __in const wchar_t *str, __in int len, __in int width, __in bool IsCropped);
 
-	//Получить информацию о тексте (в мультистрочном виде)
-	PMULTILINES_FONT_INFO GetInfoW(BYTE font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, WORD flags, int width);
+	/*!
+	Получить информацию о тексте (в мультистрочном виде)
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] len Длина текста
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@param [__in] width Ширина текстуры
+	@return Ссылка на мультистрочный текст или NULL
+	*/
+	PMULTILINES_FONT_INFO GetInfoW(__in BYTE font, __in const wchar_t *str, __in int len, __in TEXT_ALIGN_TYPE align, __in WORD flags, __in int width);
 
-	//Сгенерировать текстуру текста
-	PDWORD GeneratePixelsW(BYTE &font, TTextTexture &th, const wchar_t *str, WORD &color, BYTE &cell, int &width, TEXT_ALIGN_TYPE &align, WORD &flags);
+	/*!
+	Сгенерировать пиксели текстуры текста
+	@param [__in] font Шрифт
+	@param [__inout] th Данные о текстуре текста
+	@param [__in] str Текст
+	@param [__in] color Цвет текста
+	@param [__in] cell Ячейка в палитре цветов
+	@param [__in] width Ширина текстуры
+	@param [__in] align Расположение текста
+	@param [__in] flags Эффекты текста
+	@return Ссылка на массив пикселей
+	*/
+	PDWORD GeneratePixelsW(__in BYTE &font, __inout TTextTexture &th, __in const wchar_t *str, __in WORD &color, __in BYTE &cell, __in int &width, __in TEXT_ALIGN_TYPE &align, __in WORD &flags);
 
-	//Сгенерировать текстуру текста
-	bool GenerateW(BYTE font, TTextTexture &th, const wchar_t *str, WORD color = 0, BYTE cell = 30, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
+	/*!
+	Сгенерировать текстуру текста
+	@param [__in] font Шрифт
+	@param [__inout] th Данные о текстуре текста
+	@param [__in] str Текст
+	@param [__in_opt] color Цвет
+	@param [__in_opt] cell Ячейка в палитре цветов
+	@param [__in_opt] width Ширина текстуры
+	@param [__in_opt] align Расположение текста
+	@param [__in_opt] flags Эффекты текста
+	@return true при успешной генерации
+	*/
+	bool GenerateW(__in BYTE font, __inout TTextTexture &th, __in const wchar_t *str, __in_opt WORD color = 0, __in_opt BYTE cell = 30, __in_opt int width = 0, __in_opt TEXT_ALIGN_TYPE align = TS_LEFT, __in_opt WORD flags = 0);
 
-	//Отрисовать текст
-	void DrawW(BYTE font, const wchar_t *str, WORD color, int X, int Y, BYTE cell = 30, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
+	/*!
+	Отрисовать текст
+	@param [__in] font Шрифт
+	@param [__in] str Текст
+	@param [__in] color Цвет
+	@param [__in] x Экранная координата X
+	@param [__in] y Экранная координата Y
+	@param [__in_opt] cell Ячейка в палитре цветов
+	@param [__in_opt] width Ширина текстуры
+	@param [__in_opt] align Расположение текста
+	@param [__in_opt] flags Эффекты текста
+	@return
+	*/
+	void DrawW(__in BYTE font, __in const wchar_t *str, __in WORD color, __in int x, __in int y, __in_opt BYTE cell = 30, __in_opt int width = 0, __in_opt TEXT_ALIGN_TYPE align = TS_LEFT, __in_opt WORD flags = 0);
 };
 //--------------------------------------------------------------------------
+//!Ссылка на менеджер шрифтов
 extern TFontsManager *FontManager;
 //--------------------------------------------------------------------------
 #endif

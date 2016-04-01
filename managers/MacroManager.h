@@ -20,23 +20,26 @@
 #ifndef MacroManagerH
 #define MacroManagerH
 //---------------------------------------------------------------------------
-//Макрос менеджер
+//!Класс менеджера макросов
 class TMacroManager : public TBaseQueue
 {
 private:
-	//Время следующего выполнения
+	//!Время следующего выполнения
 	DWORD m_NextTimer;
 
-	//Время ожидания таргета
+	//!Время ожидания таргета
 	DWORD m_WaitForTargetTimer;
 
-	//Ожидание таргета от бинтов
+	//!Ожидание таргета от бинтов
 	bool m_WaitingBandageTarget;
 
-	//Таблица скиллов дял использования
+	//!Таблица скиллов дял использования
 	static BYTE m_SkillIndexTable[24];
 
-	//Выполнить команды подменю
+	/*!
+	Выполнить команды подменю
+	@return 
+	*/
 	void ProcessSubMenu();
 
 public:
@@ -46,25 +49,50 @@ public:
 	SETGET(bool, WaitingBandageTarget);
 	SETGET(DWORD, WaitForTargetTimer);
 
-	//Поиск макроса
-	TMacro *FindMacro(WORD key, bool alt, bool ctrl, bool shift);
+	/*!
+	Поиск макроса
+	@param [__in] key Индекс кнопки
+	@param [__in] alt Зажатый альт
+	@param [__in] ctrl Зажатый контрол
+	@param [__in] shift Зажатый шифт
+	@return Ссылку на макрос или NULL
+	*/
+	TMacro *FindMacro(__in WORD key, __in bool alt, __in bool ctrl, __in bool shift);
 
-	//Загрузить макросы из конфига
-	void Load(string path);
+	/*!
+	Загрузить макросы из конфига
+	@param [__in] path Путь к файлу конфига
+	@return 
+	*/
+	void Load(__in string path);
 
-	//Сохранить макросы в конфиг
-	void Save(string path);
+	/*!
+	Сохранить макросы в конфиг
+	@param [__in] path Путь к файлу конфига
+	@return 
+	*/
+	void Save(__in string path);
 
-	//Загрузить макросы из опций
+	/*!
+	Загрузить макросы из опций
+	@return 
+	*/
 	void LoadFromOptions();
 
-	//Начать выполнение макроса
+	/*!
+	Начать выполнение макроса
+	@return 
+	*/
 	void Execute();
 
-	//Выполнить действие макроса (или набор действий)
+	/*!
+	Выполнить действие макроса (или набор действий)
+	@return Код выполнения
+	*/
 	MACRO_RETURN_CODE Process();
 };
 //---------------------------------------------------------------------------
+//!Ссылка на менеджер макросов
 extern TMacroManager *MacroManager;
 //---------------------------------------------------------------------------
 #endif

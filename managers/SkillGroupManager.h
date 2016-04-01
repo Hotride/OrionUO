@@ -20,13 +20,14 @@
 #ifndef SkillGroupManagerH
 #define SkillGroupManagerH
 //---------------------------------------------------------------------------
-//Менеджер групп навыков
+//!Класс менеджера групп навыков
 class TSkillGroupManager
 {
 private:
-	int m_Count; //Количество групп
+	//!Количество групп
+	int m_Count;
 
-	//Выставление значение по-умолчанию для стандартных групп
+	//!Выставление значение по-умолчанию для стандартных групп
 	void MakeDefaultMiscellaneous();
 	void MakeDefaultCombat();
 	void MakeDefaultTradeSkills();
@@ -36,31 +37,62 @@ private:
 	void MakeDefaultBard();
 
 public:
-	TSkillGroupObject *m_Groups; //Указатель на список групп
+	//!Указатель на список групп
+	TSkillGroupObject *m_Groups;
 
 	TSkillGroupManager();
 	~TSkillGroupManager();
 
 	SETGET(int, Count);
 
-	//Выставить группы по-умолчанию
+	/*!
+	Выставить группы по-умолчанию
+	@return
+	*/
 	void MakeDefault();
-	//Очистить список групп
-	void Clear();
-	//Добавить группу
-	void Add(TSkillGroupObject *group);
-	//Удалить группу
-	void Remove(TSkillGroupObject *group);
 
-	//Получить список видимых строк
+	/*!
+	Очистить список групп
+	@return 
+	*/
+	void Clear();
+
+	/*!
+	Добавить группу
+	@param [__in] group Ссылка на группу
+	@return 
+	*/
+	void Add(__in TSkillGroupObject *group);
+
+	/*!
+	Удалить группу
+	@param [__in] group Ссылка на группу
+	@return 
+	*/
+	void Remove(__in TSkillGroupObject *group);
+
+	/*!
+	Получить список видимых строк
+	@return Количество видимых строк
+	*/
 	int GetVisibleLinesCount();
 
-	//Загрузка групп из файла конфига
-	void Load(string path);
-	//Сохранение групп в файл конфиг
-	void Save(string path);
+	/*!
+	Загрузка групп из файла конфига
+	@param [__in] path Путь к файлу конфига
+	@return 
+	*/
+	void Load(__in string path);
+
+	/*!
+	Сохранение групп в файл конфиг
+	@param [__in] path Путьк  файлу конфига
+	@return 
+	*/
+	void Save(__in string path);
 };
 //---------------------------------------------------------------------------
+//!Менеджер групп навыков
 extern TSkillGroupManager SkillGroupManager;
 //---------------------------------------------------------------------------
 #endif

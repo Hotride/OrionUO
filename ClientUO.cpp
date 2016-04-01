@@ -2809,7 +2809,7 @@ TTextureObject *TUltimaOnline::ExecuteTexture(WORD id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = MulReader.ReadTexture(id, io);
+		io.Texture = MulReader.ReadTexture(io);
 
 		if (io.Texture != NULL)
 		{
@@ -2834,7 +2834,7 @@ TTextureObject *TUltimaOnline::ExecuteLight(BYTE &id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = MulReader.ReadLight(id, io);
+		io.Texture = MulReader.ReadLight(io);
 
 		if (io.Texture != NULL)
 		{
@@ -3393,7 +3393,7 @@ bool TUltimaOnline::StaticPixelsInXY(WORD id, int x, int y, int z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id + 0x4000, io, x, y);
+		result = MulReader.ArtPixelsInXY(false, io, x, y);
 #endif
 	}
 
@@ -3418,7 +3418,7 @@ bool TUltimaOnline::StaticPixelsInXYAnimated(WORD id, int x, int y, int z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id + 0x4000, io, x, y);
+		result = MulReader.ArtPixelsInXY(false, io, x, y);
 #endif
 	}
 
@@ -3457,7 +3457,7 @@ bool TUltimaOnline::StaticPixelsInXYInContainer(WORD id, int x, int y)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id + 0x4000, io, x, y);
+		result = MulReader.ArtPixelsInXY(false, io, x, y);
 #endif
 	}
 
@@ -3480,7 +3480,7 @@ bool TUltimaOnline::LandPixelsInXY(WORD id, int x, int  y, int z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(id, io, x, y);
+		result = MulReader.ArtPixelsInXY(true, io, x, y);
 #endif
 	}
 

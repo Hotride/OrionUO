@@ -36,6 +36,10 @@ TFontsManager::~TFontsManager()
 	m_WebLink.clear();
 }
 //---------------------------------------------------------------------------
+/*!
+Загрузка ASCII шрифтов
+@return true при успешной загрузке
+*/
 bool TFontsManager::LoadFonts()
 {
 	TMappedHeader &fontFile = FileManager.FontsMul;
@@ -113,7 +117,12 @@ bool TFontsManager::LoadFonts()
 	return true;
 }
 //---------------------------------------------------------------------------
-void TFontsManager::GoToWebLink(WORD link)
+/*!
+Переход по ссылке по индексу
+@param [__in] link Индекс ссылки
+@return 
+*/
+void TFontsManager::GoToWebLink( __in WORD link)
 {
 	WEBLINK_MAP::iterator it = m_WebLink.find(link);
 
@@ -126,7 +135,13 @@ void TFontsManager::GoToWebLink(WORD link)
 //---------------------------------------------------------------------------
 //-----------------------------------ASCII----------------------------------
 //---------------------------------------------------------------------------
-int TFontsManager::GetFontOffsetY(BYTE font, BYTE index)
+/*!
+Получить смещение символа ширифта
+@param [__in] font Шрифт
+@param [__in] index Индекс символа
+@return Смещение в пикселях
+*/
+int TFontsManager::GetFontOffsetY( __in BYTE font, __in BYTE index)
 {
 	int offsY = 0;
 
@@ -151,7 +166,17 @@ int TFontsManager::GetFontOffsetY(BYTE font, BYTE index)
 	return offsY;
 }
 //---------------------------------------------------------------------------
-POINT TFontsManager::GetCaretPosA(BYTE font, const char *str, int pos, int width, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Получить позицию каретки в тексте
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] pos Текущая позиция в тексте
+@param [__in] width Ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return Координаты каретки
+*/
+POINT TFontsManager::GetCaretPosA( __in BYTE font, __in const char *str, __in int pos, __in int width, __in TEXT_ALIGN_TYPE align, __in WORD flags)
 {
 	POINT p = {0, 0};
 
@@ -166,9 +191,9 @@ POINT TFontsManager::GetCaretPosA(BYTE font, const char *str, int pos, int width
 	FONT_DATA &fd = m_Font[font];
 
 	if (!width)
-		width = GetWidthA(font, str, len);
+		width = GetWidthA(__in font, __in str, __in len);
 
-	PMULTILINES_FONT_INFO info = GetInfoA(font, str, len, align, flags, width);
+	PMULTILINES_FONT_INFO info = GetInfoA(__in font, __in str, __in len, __in align, __in flags, __in width);
 	if (info == NULL)
 		return p;
 
@@ -226,7 +251,18 @@ POINT TFontsManager::GetCaretPosA(BYTE font, const char *str, int pos, int width
 	return p;
 }
 //---------------------------------------------------------------------------
-int TFontsManager::CalculateCaretPosA(BYTE font, const char *str, int x, int y, int width, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Вычислить положение каретки
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] x Координата каретки по оси X
+@param [__in] y Координата каретки по оси Y
+@param [__in] width Ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return Позиция каретки в строке
+*/
+int TFontsManager::CalculateCaretPosA( __in BYTE font, __in const char *str, __in int x, __in int y, __in int width, __in TEXT_ALIGN_TYPE align, __in WORD flags)
 {
 	if (font > m_FontCount || x < 0 || y < 0)
 		return 0;
@@ -248,7 +284,7 @@ int TFontsManager::CalculateCaretPosA(BYTE font, const char *str, int x, int y, 
 	if (info == NULL)
 		return 0;
 
-	int height = GetHeightA(info);
+	int height = GetHeightA(__in info);
 
 	PMULTILINES_FONT_INFO ptr = info;
 
@@ -317,7 +353,14 @@ int TFontsManager::CalculateCaretPosA(BYTE font, const char *str, int x, int y, 
 	return pos;
 }
 //---------------------------------------------------------------------------
-int TFontsManager::GetWidthA(BYTE font, const char *str, int len)
+/*!
+Получить ширину текста
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in_opt] len Длина текста
+@return Ширина текста в пикселях
+*/
+int TFontsManager::GetWidthA(__in BYTE font, __in const char *str, __in_opt int len)
 {
 	if (font > m_FontCount)
 		return 0;
@@ -346,7 +389,17 @@ int TFontsManager::GetWidthA(BYTE font, const char *str, int len)
 	return textLength;
 }
 //---------------------------------------------------------------------------
-int TFontsManager::GetWidthExA(BYTE font, const char *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Получить ширину текста (с учетом параметров отрисовки)
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] len Длина текста
+@param [__in] maxWidth Максимальная ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return Ширина текста в пикселях
+*/
+int TFontsManager::GetWidthExA( __in BYTE font, __in const char *str, __in int len, __in int maxWidth, __in TEXT_ALIGN_TYPE align, __in WORD flags)
 {
 	if (font > m_FontCount)
 		return 0;
@@ -380,7 +433,16 @@ int TFontsManager::GetWidthExA(BYTE font, const char *str, int len, int maxWidth
 	return textWidth;
 }
 //---------------------------------------------------------------------------
-int TFontsManager::GetHeightA(BYTE font, const char *str, int width, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Получить высоту текста
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in_opt] width Ширина текстуры
+@param [__in_opt] align Расположение текста
+@param [__in_opt] flags Эффекты текста
+@return Высота текста в пикселях
+*/
+int TFontsManager::GetHeightA(__in BYTE font, __in const char *str, __in_opt int width, __in_opt TEXT_ALIGN_TYPE align, __in_opt WORD flags)
 {
 	if (font > m_FontCount)
 		return 0;
@@ -413,7 +475,12 @@ int TFontsManager::GetHeightA(BYTE font, const char *str, int width, TEXT_ALIGN_
 	return textHeight;
 }
 //---------------------------------------------------------------------------
-int TFontsManager::GetHeightA(PMULTILINES_FONT_INFO info)
+/*!
+Получить высоту текста по списку строк
+@param [__in] info Ссылка на мультистрочный текст
+@return Высота текста в пикселях
+*/
+int TFontsManager::GetHeightA(__in PMULTILINES_FONT_INFO info)
 {
 	int textHeight = 0;
 
@@ -427,7 +494,16 @@ int TFontsManager::GetHeightA(PMULTILINES_FONT_INFO info)
 	return textHeight;
 }
 //---------------------------------------------------------------------------
-string TFontsManager::GetTextByWidthA(BYTE font, const char *str, int len, int width, bool IsCropped)
+/*!
+Получить текст указанной ширины
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] len Длина текста
+@param [__in] width Ширина текстуры
+@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
+@return Результирующий текст
+*/
+string TFontsManager::GetTextByWidthA( __in BYTE font, __in const char *str, __in int len, __in int width, __in bool IsCropped)
 {
 	if (!len || font > m_FontCount)
 		return string("");
@@ -467,7 +543,17 @@ string TFontsManager::GetTextByWidthA(BYTE font, const char *str, int len, int w
 	return result;
 }
 //---------------------------------------------------------------------------
-PMULTILINES_FONT_INFO TFontsManager::GetInfoA(BYTE font, const char *str, int len, TEXT_ALIGN_TYPE align, WORD flags, int width)
+/*!
+Получить информацию о тексте (в мультистрочном виде)
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] len Длина текста
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@param [__in] width Ширина текстуры
+@return Ссылка на мультистрочный текст или NULL
+*/
+PMULTILINES_FONT_INFO TFontsManager::GetInfoA(__in BYTE font, __in const char *str, __in int len, __in TEXT_ALIGN_TYPE align, __in WORD flags, __in int width)
 {
 	if (font > m_FontCount)
 		return NULL;
@@ -654,7 +740,18 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoA(BYTE font, const char *str, int le
 	return info;
 }
 //---------------------------------------------------------------------------
-bool TFontsManager::GenerateA(BYTE font, TTextTexture &th, const char *str, WORD color, int width, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Сгенерировать текстуру текста
+@param [__in] font Шрифт
+@param [__inout] th Данные о текстуре текста
+@param [__in] str Текст
+@param [__in_opt] color Цвет
+@param [__in_opt] width Ширина текстуры
+@param [__in_opt] align Расположение текста
+@param [__in_opt] flags Эффекты текста
+@return true при успешной генерации
+*/
+bool TFontsManager::GenerateA(__in BYTE font, __inout TTextTexture &th, __in const char *str, __in_opt WORD color, __in_opt int width, __in_opt TEXT_ALIGN_TYPE align, __in_opt WORD flags)
 {
 	if ((flags & UOFONT_FIXED) || (flags & UOFONT_CROPPED))
 	{
@@ -679,7 +776,18 @@ bool TFontsManager::GenerateA(BYTE font, TTextTexture &th, const char *str, WORD
 	return GenerateABase(font, th, str, color, width, align, flags);
 }
 //---------------------------------------------------------------------------
-PDWORD TFontsManager::GeneratePixelsA(BYTE &font, TTextTexture &th, const char *str, WORD &color, int &width, TEXT_ALIGN_TYPE &align, WORD &flags)
+/*!
+Сгенерировать пиксели текстуры текста
+@param [__in] font Шрифт
+@param [__inout] th Данные о текстуре текста
+@param [__in] str Текст
+@param [__in] color Цвет текста
+@param [__in] width Ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return Ссылка на массив пикселей
+*/
+PDWORD TFontsManager::GeneratePixelsA( __in BYTE &font, __inout TTextTexture &th, __in const char *str, __in WORD &color, __in int &width, __in TEXT_ALIGN_TYPE &align, __in WORD &flags)
 {
 	th.Clear();
 
@@ -831,7 +939,18 @@ PDWORD TFontsManager::GeneratePixelsA(BYTE &font, TTextTexture &th, const char *
 	return pData;
 }
 //---------------------------------------------------------------------------
-bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str, WORD &color, int &width, TEXT_ALIGN_TYPE &align, WORD &flags)
+/*!
+Создание ASCII текстуры
+@param [__in] font Шрифт
+@param [__out] th Данные текстуры
+@param [__in] str Текст
+@param [__in] color Цвет
+@param [__in] width Ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return true при успешной генерации
+*/
+bool TFontsManager::GenerateABase(__in BYTE &font, __out TTextTexture &th, __in const char *str, __in WORD &color, __in int &width, __in TEXT_ALIGN_TYPE &align, __in WORD &flags)
 {
 	PDWORD pixels = GeneratePixelsA(font, th, str, color, width, align, flags);
 	bool result = false;
@@ -848,7 +967,19 @@ bool TFontsManager::GenerateABase(BYTE &font, TTextTexture &th, const char *str,
 	return true;
 }
 //---------------------------------------------------------------------------
-void TFontsManager::DrawA(BYTE font, const char *str, WORD color, int x, int y, int width, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Отрисовать текст
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] color Цвет
+@param [__in] x Экранная координата X
+@param [__in] y Экранная координата Y
+@param [__in_opt] width Ширина текстуры
+@param [__in_opt] align Расположение текста
+@param [__in_opt] flags Эффекты текста
+@return 
+*/
+void TFontsManager::DrawA(__in BYTE font, __in const char *str, __in WORD color, __in int x, __in int y, __in_opt int width, __in_opt TEXT_ALIGN_TYPE align, __in_opt WORD flags)
 {
 	TTextTexture th;
 
@@ -871,7 +1002,17 @@ void TFontsManager::DrawA(BYTE font, const char *str, WORD color, int x, int y, 
 //---------------------------------------------------------------------------
 //----------------------------------Unicode----------------------------------
 //---------------------------------------------------------------------------
-POINT TFontsManager::GetCaretPosW(BYTE font, const wchar_t *str, int pos, int width, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Получить позицию каретки в тексте
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] pos Текущая позиция в тексте
+@param [__in] width Ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return Координаты каретки
+*/
+POINT TFontsManager::GetCaretPosW(__in BYTE font, __in const wchar_t *str, __in int pos, __in int width, __in TEXT_ALIGN_TYPE align, __in WORD flags)
 {
 	POINT p = {0, 0};
 
@@ -952,7 +1093,18 @@ POINT TFontsManager::GetCaretPosW(BYTE font, const wchar_t *str, int pos, int wi
 	return p;
 }
 //---------------------------------------------------------------------------
-int TFontsManager::CalculateCaretPosW(BYTE font, const wchar_t *str, int x, int y, int width, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Вычислить положение каретки
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] x Координата каретки по оси X
+@param [__in] y Координата каретки по оси Y
+@param [__in] width Ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return Позиция каретки в строке
+*/
+int TFontsManager::CalculateCaretPosW(__in BYTE font, __in const wchar_t *str, __in int x, __in int y, __in int width, __in TEXT_ALIGN_TYPE align, __in WORD flags)
 {
 	if (x < 0 || y < 0 || font >= 20 || !m_UnicodeFontAddress[font])
 		return 0;
@@ -1046,7 +1198,14 @@ int TFontsManager::CalculateCaretPosW(BYTE font, const wchar_t *str, int x, int 
 	return pos;
 }
 //---------------------------------------------------------------------------
-int TFontsManager::GetWidthW(BYTE font, const wchar_t *str, int len)
+/*!
+Получить ширину текста
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in_opt] len Длина текста
+@return Ширина текста в пикселях
+*/
+int TFontsManager::GetWidthW(__in BYTE font, __in const wchar_t *str, __in_opt int len)
 {
 	if (font >= 20 || !m_UnicodeFontAddress[font])
 		return 0;
@@ -1076,7 +1235,17 @@ int TFontsManager::GetWidthW(BYTE font, const wchar_t *str, int len)
 	return textLength;
 }
 //---------------------------------------------------------------------------
-int TFontsManager::GetWidthExW(BYTE font, const wchar_t *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Получить ширину текста (с учетом параметров отрисовки)
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] len Длина текста
+@param [__in] maxWidth Максимальная ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return Ширина текста в пикселях
+*/
+int TFontsManager::GetWidthExW(__in BYTE font, __in const wchar_t *str, __in int len, __in int maxWidth, __in TEXT_ALIGN_TYPE align, __in WORD flags)
 {
 	if (font >= 20 || !m_UnicodeFontAddress[font])
 		return 0;
@@ -1110,7 +1279,16 @@ int TFontsManager::GetWidthExW(BYTE font, const wchar_t *str, int len, int maxWi
 	return textWidth;
 }
 //---------------------------------------------------------------------------
-int TFontsManager::GetHeightW(BYTE font, const wchar_t *str, int width, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Получить высоту текста
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in_opt] width Ширина текстуры
+@param [__in_opt] align Расположение текста
+@param [__in_opt] flags Эффекты текста
+@return Высота текста в пикселях
+*/
+int TFontsManager::GetHeightW(__in BYTE font, __in const wchar_t *str, __in_opt int width, __in_opt TEXT_ALIGN_TYPE align, __in_opt WORD flags)
 {
 	if (font >= 20 || !m_UnicodeFontAddress[font])
 		return 0;
@@ -1148,7 +1326,12 @@ int TFontsManager::GetHeightW(BYTE font, const wchar_t *str, int width, TEXT_ALI
 	return textHeight;
 }
 //---------------------------------------------------------------------------
-int TFontsManager::GetHeightW(PMULTILINES_FONT_INFO info)
+/*!
+Получить высоту текста по списку строк
+@param [__in] info Ссылка на мультистрочный текст
+@return Высота текста в пикселях
+*/
+int TFontsManager::GetHeightW(__in PMULTILINES_FONT_INFO info)
 {
 	if (info == NULL)
 		return 0;
@@ -1168,7 +1351,16 @@ int TFontsManager::GetHeightW(PMULTILINES_FONT_INFO info)
 	return textHeight;
 }
 //---------------------------------------------------------------------------
-wstring TFontsManager::GetTextByWidthW(BYTE font, const wchar_t *str, int len, int width, bool IsCropped)
+/*!
+Получить текст указанной ширины
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] len Длина текста
+@param [__in] width Ширина текстуры
+@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
+@return Результирующий текст
+*/
+wstring TFontsManager::GetTextByWidthW(__in BYTE font, __in const wchar_t *str, __in int len, __in int width, __in bool IsCropped)
 {
 	if (font >= 20 || !m_UnicodeFontAddress[font] || !len)
 		return wstring(L"");
@@ -1972,7 +2164,17 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoHTML( __in BYTE font, __in const wch
 	return info;
 }
 //---------------------------------------------------------------------------
-PMULTILINES_FONT_INFO TFontsManager::GetInfoW(BYTE font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, WORD flags, int width)
+/*!
+Получить информацию о тексте (в мультистрочном виде)
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] len Длина текста
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@param [__in] width Ширина текстуры
+@return Ссылка на мультистрочный текст или NULL
+*/
+PMULTILINES_FONT_INFO TFontsManager::GetInfoW(__in BYTE font, __in const wchar_t *str, __in int len, __in TEXT_ALIGN_TYPE align, __in WORD flags, __in int width)
 {
 	if (font >= 20 || !m_UnicodeFontAddress[font])
 		return NULL;
@@ -2185,7 +2387,19 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoW(BYTE font, const wchar_t *str, int
 	return info;
 }
 //---------------------------------------------------------------------------
-bool TFontsManager::GenerateW(BYTE font, TTextTexture &th, const wchar_t *str, WORD color, BYTE cell, int width, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Сгенерировать текстуру текста
+@param [__in] font Шрифт
+@param [__inout] th Данные о текстуре текста
+@param [__in] str Текст
+@param [__in_opt] color Цвет
+@param [__in_opt] cell Ячейка в палитре цветов
+@param [__in_opt] width Ширина текстуры
+@param [__in_opt] align Расположение текста
+@param [__in_opt] flags Эффекты текста
+@return true при успешной генерации
+*/
+bool TFontsManager::GenerateW(__in BYTE font, __inout TTextTexture &th, __in const wchar_t *str, __in_opt WORD color, __in_opt BYTE cell, __in_opt int width, __in_opt TEXT_ALIGN_TYPE align, __in_opt WORD flags)
 {
 	if ((flags & UOFONT_FIXED) || (flags & UOFONT_CROPPED))
 	{
@@ -2210,6 +2424,18 @@ bool TFontsManager::GenerateW(BYTE font, TTextTexture &th, const wchar_t *str, W
 	return GenerateWBase(font, th, str, color, cell, width, align, flags);
 }
 //---------------------------------------------------------------------------
+/*!
+Сгенерировать пиксели текстуры текста
+@param [__in] font Шрифт
+@param [__inout] th Данные о текстуре текста
+@param [__in] str Текст
+@param [__in] color Цвет текста
+@param [__in] cell Ячейка в палитре цветов
+@param [__in] width Ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return Ссылка на массив пикселей
+*/
 PDWORD TFontsManager::GeneratePixelsW(BYTE &font, TTextTexture &th, const wchar_t *str, WORD &color, BYTE &cell, int &width, TEXT_ALIGN_TYPE &align, WORD &flags)
 {
 	if (font >= 20 || !m_UnicodeFontAddress[font])
@@ -2667,7 +2893,19 @@ PDWORD TFontsManager::GeneratePixelsW(BYTE &font, TTextTexture &th, const wchar_
 	return pData;
 }
 //---------------------------------------------------------------------------
-bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *str, WORD &color, BYTE &cell, int &width, TEXT_ALIGN_TYPE &align, WORD &flags)
+/*!
+Создание Unicode текстуры
+@param [__in] font Шрифт
+@param [__out] th Данные текстуры
+@param [__in] str Текст
+@param [__in] color Цвет
+@param [__in] cell Номер ячейки в палитре цветов
+@param [__in] width Ширина текстуры
+@param [__in] align Расположение текста
+@param [__in] flags Эффекты текста
+@return true при успешной генерации
+*/
+bool TFontsManager::GenerateWBase(__in BYTE &font, __out TTextTexture &th, __in const wchar_t *str, __in WORD &color, __in BYTE &cell, __in int &width, __in TEXT_ALIGN_TYPE &align, __in WORD &flags)
 {
 	PDWORD pixels = GeneratePixelsW(font, th, str, color, cell, width, align, flags);
 	bool result = false;
@@ -2684,7 +2922,20 @@ bool TFontsManager::GenerateWBase(BYTE &font, TTextTexture &th, const wchar_t *s
 	return result;
 }
 //---------------------------------------------------------------------------
-void TFontsManager::DrawW(BYTE font, const wchar_t *str, WORD color, int x, int y, BYTE cell, int width, TEXT_ALIGN_TYPE align, WORD flags)
+/*!
+Отрисовать текст
+@param [__in] font Шрифт
+@param [__in] str Текст
+@param [__in] color Цвет
+@param [__in] x Экранная координата X
+@param [__in] y Экранная координата Y
+@param [__in_opt] cell Ячейка в палитре цветов
+@param [__in_opt] width Ширина текстуры
+@param [__in_opt] align Расположение текста
+@param [__in_opt] flags Эффекты текста
+@return
+*/
+void TFontsManager::DrawW(__in BYTE font, __in const wchar_t *str, __in WORD color, __in int x, __in int y, __in_opt BYTE cell, __in_opt int width, __in_opt TEXT_ALIGN_TYPE align, __in_opt WORD flags)
 {
 	TTextTexture th;
 
@@ -2696,7 +2947,8 @@ void TFontsManager::DrawW(BYTE font, const wchar_t *str, WORD color, int x, int 
 	}
 }
 //---------------------------------------------------------------------------
-BYTE TFontsManager::m_FontIndex[256] =
+//!Таблица ассоциации ASCII шрифтов
+const BYTE TFontsManager::m_FontIndex[256] =
 {
 	0xFF, //0
 	0xFF, //1

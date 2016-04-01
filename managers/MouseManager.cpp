@@ -33,6 +33,10 @@ WORD g_CursorData[2][16] =
 	}
 };
 //---------------------------------------------------------------------------
+/*!
+Обновить координаты мыши
+@return 
+*/
 void TMouseManager::UpdateMouse()
 {
 	POINT ptMouse;
@@ -54,12 +58,26 @@ void TMouseManager::UpdateMouse()
 		ShowCursor(false);*/
 }
 //---------------------------------------------------------------------------
-int TMouseManager::Sgn(int val)
+/*!
+Конвертирование значения направления
+@param [__in] val Значение направления
+@return Смещение
+*/
+int TMouseManager::Sgn( __in int val)
 {
 	return (0 < val) - (val < 0);
 }
 //---------------------------------------------------------------------------
-int TMouseManager::GetFacing(int x1, int  y1, int  to_x, int to_y, int current_facing)
+/*!
+Получить направление курсора относительно центра игрового окна
+@param [__in] x1 Координата X центра
+@param [__in] y1 Координата Y центра
+@param [__in] to_x Координата X мыши
+@param [__in] to_y Координата Y мыши
+@param [__in] current_facing Текущее направление
+@return Направление курсора
+*/
+int TMouseManager::GetFacing( __in int x1, __in int  y1, __in int  to_x, __in int to_y, __in int current_facing)
 {
 	int shiftX = to_x - x1;
 	int shiftY = to_y - y1;
@@ -126,6 +144,10 @@ int TMouseManager::GetFacing(int x1, int  y1, int  to_x, int to_y, int current_f
 	return current_facing;
 }
 //---------------------------------------------------------------------------
+/*!
+Получить индекс картинки игрового курсора
+@return Индекс картинки
+*/
 WORD TMouseManager::GetGameCursor()
 {
 	int war = (int)(g_Player != NULL && g_Player->Warmode);
@@ -177,6 +199,10 @@ WORD TMouseManager::GetGameCursor()
 	return g_CursorData[war][facing];
 }
 //---------------------------------------------------------------------------
+/*!
+Загрузка текстур курсора
+@return true при успешной загрузке
+*/
 bool TMouseManager::LoadCursorTextures()
 {
 	bool result = true;
@@ -267,7 +293,12 @@ bool TMouseManager::LoadCursorTextures()
 	return result;
 }
 //---------------------------------------------------------------------------
-void TMouseManager::Draw(WORD id)
+/*!
+Отрисовать курсор
+@param [__in] id Индекс картинки курсора
+@return 
+*/
+void TMouseManager::Draw( __in WORD id)
 {
 	TTextureObject *th = UO->ExecuteStaticArt(id);
 	if (th != NULL)

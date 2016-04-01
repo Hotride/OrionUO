@@ -209,7 +209,10 @@ void TEntryText::Remove(bool left, TGump *gump)
 		gump->FrameCreated = false;
 }
 //---------------------------------------------------------------------------
-//Очистка
+/*!
+Очистить данные
+@return 
+*/
 void TEntryText::Clear()
 {
 	//Очистка

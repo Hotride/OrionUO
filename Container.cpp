@@ -68,42 +68,47 @@ TContainerRect::TContainerRect()
 {
 }
 //----------------------------------------------------------------------------
-void TContainerRect::Calculate(WORD gumpID)
+/*!
+‘ункци€ вычислени€ смещени€ дл€ текущей картинки
+@param [__in] gumpID »ндекс картинки
+@return 
+*/
+void TContainerRect::Calculate( __in WORD gumpID)
 {
-	//”казатель на текстуру
+	//!”казатель на текстуру
 	TTextureObject *tex = UO->ExecuteGump(gumpID);
 
-	//≈сли текстура есть в пам€ти
+	//!≈сли текстура есть в пам€ти
 	if (tex != NULL)
 	{
-		//≈сли выключено смещение - открываем гамп в правом верхнем углу клиента
+		//!≈сли выключено смещение - открываем гамп в правом верхнем углу клиента
 		if (!ConfigManager.OffsetInterfaceWindows)
 		{
 			m_X = g_ClientWidth - tex->Width;
 			m_Y = g_ClientHeight - tex->Height;
 		}
-		else //»ли вычисл€ем смещение и открываем в результируемых координатах
+		else //!»ли вычисл€ем смещение и открываем в результируемых координатах
 		{
 			int passed = 0;
 
-			//÷икл в 4 итерации и пока не будут валидные координаты
+			//!÷икл в 4 итерации и пока не будут валидные координаты
 			IFOR(i, 0, 4 && !passed)
 			{
-				//ѕора измен€ть смещение по оси Y и обнул€ть по оси X
+				//!ѕора измен€ть смещение по оси Y и обнул€ть по оси X
 				if (m_X + tex->Width + CONTAINERS_RECT_STEP > g_ClientWidth)
 				{
 					m_X = CONTAINERS_RECT_DEFAULT_POS;
 
-					//≈сли смещение по оси Y достигло максимума - выставим стандартное значение
+					//!≈сли смещение по оси Y достигло максимума - выставим стандартное значение
 					if (m_Y + tex->Height + CONTAINERS_RECT_LINESTEP > g_ClientHeight)
 						m_Y = CONTAINERS_RECT_DEFAULT_POS;
 					else
 						m_Y += CONTAINERS_RECT_LINESTEP;
 				}
-				//ѕора измен€ть смещение по оси X и обнул€ть по оси Y
+				//!ѕора измен€ть смещение по оси X и обнул€ть по оси Y
 				else if (m_Y + tex->Height + CONTAINERS_RECT_STEP > g_ClientHeight)
 				{
-					//≈сли смещение по оси X достигло максимума - выставим стандартное значение
+					//!≈сли смещение по оси X достигло максимума - выставим стандартное значение
 					if (m_X + tex->Width + CONTAINERS_RECT_LINESTEP > g_ClientWidth)
 						m_X = CONTAINERS_RECT_DEFAULT_POS;
 					else
@@ -111,13 +116,13 @@ void TContainerRect::Calculate(WORD gumpID)
 
 					m_Y = CONTAINERS_RECT_DEFAULT_POS;
 				}
-				else //¬се отлично, пропускаем дальше
+				else //!¬се отлично, пропускаем дальше
 					passed = i + 1;
 			}
 
-			if (!passed) //—мещение не вычислено. ¬ыставим значение по-умолчанию
+			if (!passed) //!—мещение не вычислено. ¬ыставим значение по-умолчанию
 				MakeDefault();
-			else if (passed == 1) //ѕрошло с 1 раза, можно изменить смещение
+			else if (passed == 1) //!ѕрошло с 1 раза, можно изменить смещение
 			{
 				m_X += CONTAINERS_RECT_STEP;
 				m_Y += CONTAINERS_RECT_STEP;
