@@ -658,7 +658,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			{
 				int handIndex = 1 - (MacroPointer->SubCode - MSC_G4_LEFT_HAND);
 
-				if (handIndex < 0 || handIndex > 1)
+				if (handIndex < 0 || handIndex > 1 || ObjectInHand != NULL)
 					break;
 
 				if (itemInHand[handIndex])
@@ -669,6 +669,12 @@ MACRO_RETURN_CODE TMacroManager::Process()
 					{
 						UO->PickupItem(objHand, 1, false);
 						UO->EquipItem(g_PlayerSerial);
+
+						if (ObjectInHand != NULL)
+						{
+							delete ObjectInHand;
+							ObjectInHand = NULL;
+						}
 					}
 
 					itemInHand[handIndex] = 0;
@@ -692,6 +698,12 @@ MACRO_RETURN_CODE TMacroManager::Process()
 
 						UO->PickupItem(objHand, 1, false);
 						UO->DropItem(backpack, 0xFFFF, 0xFFFF, 0);
+
+						if (ObjectInHand != NULL)
+						{
+							delete ObjectInHand;
+							ObjectInHand = NULL;
+						}
 
 						GumpManager->UpdateGump(g_PlayerSerial, 0, GT_PAPERDOLL);
 					}

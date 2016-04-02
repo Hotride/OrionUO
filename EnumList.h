@@ -858,8 +858,6 @@ typedef void __cdecl VOID_PROC();
 bool __cdecl PluginRecvFunction(PBYTE buf, int size);
 bool __cdecl PluginSendFunction(PBYTE buf, int size);
 //---------------------------------------------------------------------------
-class TPlugin;
-//---------------------------------------------------------------------------
 typedef struct PLUGIN_INTERFACE
 {
 	//struct PLUGIN_CLIENT_INTERFACE *Client;
@@ -872,7 +870,7 @@ typedef struct PLUGIN_INTERFACE
 	PACKET_PROC *Recv;
 	PACKET_PROC *Send;
 
-	TPlugin *Owner;
+	class TPlugin *Owner;
 
 	WINDOW_PROC *WindowProc;
 	PACKET_PROC *OnRecv;
