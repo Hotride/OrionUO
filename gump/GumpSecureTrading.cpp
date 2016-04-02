@@ -470,38 +470,43 @@ void TGumpSecureTrading::OnLeftMouseUp()
 {
 	if (ObjectInHand != NULL)
 	{
-		int x = X;
-		int y = Y;
+		int x = m_X;
+		int y = m_Y;
 
 		if (UO->PolygonePixelsInXY(x + 45, y + 70, 110, 80))
 		{
-			x = g_MouseX - x - 45;
-			y = g_MouseY - y - 70;
-
-			bool doubleDraw = false;
-			WORD graphic = ObjectInHand->GetDrawGraphic(doubleDraw);
-
-			TTextureObject *th = UO->ExecuteStaticArt(graphic);
-
-			if (th != NULL)
+			if (GetTopObjDistance(g_Player, World->FindWorldObject(m_ID2)) < 3)
 			{
-				x -= (th->Width / 2);
-				y -= (th->Height / 2);
+				x = g_MouseX - x - 45;
+				y = g_MouseY - y - 70;
 
-				if (x + th->Width > 110)
-					x = 110 - th->Width;
+				bool doubleDraw = false;
+				WORD graphic = ObjectInHand->GetDrawGraphic(doubleDraw);
 
-				if (y + th->Height > 80)
-					y = 80 - th->Height;
+				TTextureObject *th = UO->ExecuteStaticArt(graphic);
+
+				if (th != NULL)
+				{
+					x -= (th->Width / 2);
+					y -= (th->Height / 2);
+
+					if (x + th->Width > 110)
+						x = 110 - th->Width;
+
+					if (y + th->Height > 80)
+						y = 80 - th->Height;
+				}
+
+				if (x < 0)
+					x = 0;
+
+				if (y < 0)
+					y = 0;
+
+				UO->DropItem(m_ID, x, y, 0);
 			}
-			
-			if (x < 0)
-				x = 0;
-
-			if (y < 0)
-				y = 0;
-
-			UO->DropItem(m_ID, x, y, 0);
+			else
+				UO->PlaySoundEffect(0x0051);
 		}
 	}
 

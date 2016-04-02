@@ -770,8 +770,6 @@ int TGumpPaperdoll::Draw(bool &mode)
 //----------------------------------------------------------------------------
 void TGumpPaperdoll::OnLeftMouseUp()
 {
-	bool IsPlayerPaperdoll = (m_Serial == g_PlayerSerial);
-
 	TGameCharacter *container = World->FindWorldCharacter(m_Serial);
 	if (container == NULL && g_LastSelectedObject >= ID_GP_ITEMS)
 		return;
@@ -779,12 +777,12 @@ void TGumpPaperdoll::OnLeftMouseUp()
 	//Что-то в руке
 	if ((!g_LastSelectedObject || g_LastSelectedObject >= ID_GP_ITEMS) && ObjectInHand != NULL)
 	{
-		bool CanWear = true;
+		bool canWear = true;
 
-		if (!IsPlayerPaperdoll && GetDistance(g_Player, container) > 3)
-			CanWear = false;
+		if (m_Serial != g_PlayerSerial && GetDistance(g_Player, container) > 3)
+			canWear = false;
 
-		if (CanWear && container != NULL)
+		if (canWear && container != NULL)
 		{
 			int layer = g_LastSelectedObject - ID_GP_ITEMS;
 
@@ -793,7 +791,7 @@ void TGumpPaperdoll::OnLeftMouseUp()
 				TGameItem *equipment = container->FindLayer(layer);
 				if (equipment != NULL)
 				{
-					if (!IsPlayerPaperdoll)
+					if (m_Serial != g_PlayerSerial)
 						UO->DropItem(container->Serial, 0xFFFF, 0xFFFF, 0);
 					else
 						UO->DropItem(equipment->Serial, 0xFFFF, 0xFFFF, 0);
@@ -809,7 +807,7 @@ void TGumpPaperdoll::OnLeftMouseUp()
 				TGameItem *equipment = container->FindLayer(ObjectInHand->UsedLayer);
 				if (equipment == NULL) //На этом слое ничего нет
 				{
-					if (!IsPlayerPaperdoll)
+					if (m_Serial != g_PlayerSerial)
 						UO->EquipItem(container->Serial);
 					else
 						UO->EquipItem();
@@ -821,6 +819,8 @@ void TGumpPaperdoll::OnLeftMouseUp()
 				}
 			}
 		}
+		else
+			UO->PlaySoundEffect(0x0051);
 	}
 	
 	if (g_LastObjectLeftMouseDown != g_LastSelectedObject)
@@ -831,21 +831,21 @@ void TGumpPaperdoll::OnLeftMouseUp()
 		int layer = g_LastObjectLeftMouseDown - ID_GP_ITEMS;
 		TGameItem *equipment = container->FindLayer(layer);
 
-		if (equipment == NULL)
-			return;
-
-		if (Target.IsTargeting())
-			Target.SendTargetObject(equipment->Serial);
-		else if (ObjectInHand == NULL) //Click on object
+		if (equipment != NULL)
 		{
-			if (!g_ClickObjectReq)
+			if (Target.IsTargeting())
+				Target.SendTargetObject(equipment->Serial);
+			else if (ObjectInHand == NULL) //Click on object
 			{
-				g_ClickObjectReq = true;
-				g_ClickObject.Init(COT_GAME_OBJECT);
-				g_ClickObject.Serial = equipment->Serial;
-				g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
-				g_ClickObject.X = g_MouseX - X;
-				g_ClickObject.Y = g_MouseY - Y;
+				if (!g_ClickObjectReq)
+				{
+					g_ClickObjectReq = true;
+					g_ClickObject.Init(COT_GAME_OBJECT);
+					g_ClickObject.Serial = equipment->Serial;
+					g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
+					g_ClickObject.X = g_MouseX - X;
+					g_ClickObject.Y = g_MouseY - Y;
+				}
 			}
 		}
 
@@ -909,7 +909,7 @@ void TGumpPaperdoll::OnLeftMouseUp()
 		}
 		case ID_GP_LOCK_MOVING:
 		{
-			LockMoving = !LockMoving;
+			m_LockMoving = !m_LockMoving;
 			g_CancelDoubleClick = true;
 			break;
 		}

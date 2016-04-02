@@ -2577,18 +2577,24 @@ void TUltimaOnline::Process()
 						TGumpSpellbook *gump = (TGumpSpellbook*)GumpManager->UpdateGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
 
 						if (gump != NULL)
+						{
 							gump->Page = g_ClickObject.GumpButtonID;
+							UO->PlaySoundEffect(0x0055);
+						}
 					}
 					else if (g_ClickObject.GumpType == GT_BOOK)
 					{
 						TGumpBook *gump = (TGumpBook*)GumpManager->UpdateGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
 
 						if (gump != NULL)
+						{
 							gump->Page = g_ClickObject.GumpButtonID;
+							UO->PlaySoundEffect(0x0055);
+						}
 					}
 					else if (g_ClickObject.GumpType == GT_PAPERDOLL)
 					{
-						TGumpPaperdoll *gump = (TGumpPaperdoll*)GumpManager->GetGump(g_ClickObject.Serial, 0, g_ClickObject.GumpType);
+						TGumpPaperdoll *gump = (TGumpPaperdoll*)GumpManager->UpdateGump(g_ClickObject.Serial, 0, g_ClickObject.GumpType);
 
 						if (gump != NULL)
 						{

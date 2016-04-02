@@ -54,15 +54,15 @@ void TGump::CalculateGumpState()
 {
 	DWORD index = (DWORD)this;
 
-	g_GumpPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	g_GumpPressedScroller = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index);
+	g_GumpPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index && ObjectInHand == NULL);
+	g_GumpPressedScroller = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && ObjectInHand == NULL);
 	g_GumpSelectElement = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
 	g_GumpPressedElement = ((g_GumpPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject) ? g_LastObjectLeftMouseDown : 0);
 
 	if (g_LastObjectType == SOT_TEXT_OBJECT)
 		g_GumpSelectElement = false;
 
-	if (CanBeMoved() && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
+	if (CanBeMoved() && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown && ObjectInHand == NULL)
 	{
 		g_GumpMovingOffsetX = g_MouseX - g_DroppedLeftMouseX;
 		g_GumpMovingOffsetY = g_MouseY - g_DroppedLeftMouseY;

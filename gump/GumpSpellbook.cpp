@@ -938,6 +938,7 @@ bool TGumpSpellbook::OnLeftMouseDoubleClick()
 
 			//Перерисуем гамп
 			m_FrameCreated = false;
+			UO->PlaySoundEffect(0x0055);
 
 			return true;
 		}
@@ -948,6 +949,7 @@ bool TGumpSpellbook::OnLeftMouseDoubleClick()
 
 			//Перерисуем гамп
 			m_FrameCreated = false;
+			UO->PlaySoundEffect(0x0055);
 
 			return true;
 		}

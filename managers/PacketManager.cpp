@@ -2060,6 +2060,7 @@ PACKET_HANDLER(OpenContainer)
 			y = 0;
 
 		gump = new TGumpSpellbook(serial, x, y);
+		UO->PlaySoundEffect(0x0055);
 	}
 	else if (gumpid == 0x0030) //Buylist
 	{

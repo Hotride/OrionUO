@@ -2844,6 +2844,8 @@ void TGameScreen::OnLeftMouseUp()
 				dropZ = target->Z;
 			}
 		}
+		else
+			UO->PlaySoundEffect(0x0051);
 	}
 	else if ((g_LastObjectType == SOT_LAND_OBJECT || g_LastObjectType == SOT_STATIC_OBJECT) && ObjectInHand != NULL && g_SelectedObject != NULL)
 	{
@@ -2857,6 +2859,8 @@ void TGameScreen::OnLeftMouseUp()
 			dropY = g_SelectedObject->Y;
 			dropZ = g_SelectedObject->Z;
 		}
+		else
+			UO->PlaySoundEffect(0x0051);
 	}
 	
 	if (can_drop /*&& ObjectInHand != NULL*/)

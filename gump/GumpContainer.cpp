@@ -445,7 +445,10 @@ void TGumpContainer::OnLeftMouseUp()
 			}
 		}
 	}
-	
+
+	if (!canDrop && ObjectInHand != NULL)
+		UO->PlaySoundEffect(0x0051);
+
 	int x = g_MouseX - m_X;
 	int y = g_MouseY - m_Y;
 
