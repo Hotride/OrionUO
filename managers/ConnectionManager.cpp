@@ -412,6 +412,21 @@ void TConnectionManager::Recv()
 */
 int TConnectionManager::Send(PBYTE buf, int size)
 {
+#if UO_ABYSS_SHARD == 1
+	if (buf[0] == 0x34)
+		buf[0] = 0x71;
+	else if (buf[0] == 0x72)
+		buf[0] = 0x6C;
+	else if (buf[0] == 0x6C)
+		buf[0] = 0x72;
+	else if (buf[0] == 0x3B)
+		buf[0] = 0x34;
+	else if (buf[0] == 0x6F)
+		buf[0] = 0x56;
+	else if (buf[0] == 0x56)
+		buf[0] = 0x6F;
+#endif
+
 	if (m_SocketType) //Логин сокет
 	{
 		if (!m_LoginSocket.Connected())

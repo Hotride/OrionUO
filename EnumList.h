@@ -851,34 +851,4 @@ enum GAME_CONSOLE_TEXT_TYPE
 	GCTT_PARTY_DECLINE
 };
 //---------------------------------------------------------------------------
-typedef bool WINDOW_PROC(HWND, UINT, WPARAM, LPARAM);
-typedef bool __cdecl PACKET_PROC(PBYTE, int);
-typedef void __cdecl VOID_PROC();
-//---------------------------------------------------------------------------
-bool __cdecl PluginRecvFunction(PBYTE buf, int size);
-bool __cdecl PluginSendFunction(PBYTE buf, int size);
-//---------------------------------------------------------------------------
-typedef struct PLUGIN_INTERFACE
-{
-	//struct PLUGIN_CLIENT_INTERFACE *Client;
-
-	HWND hWnd;
-	CLIENT_VERSION ClientVersion;
-	bool InverseBuylist;
-	//bool UseVerdata;
-	
-	PACKET_PROC *Recv;
-	PACKET_PROC *Send;
-
-	class TPlugin *Owner;
-
-	WINDOW_PROC *WindowProc;
-	PACKET_PROC *OnRecv;
-	PACKET_PROC *OnSend;
-	VOID_PROC *OnDisconnect;
-	VOID_PROC *OnWorldDraw;
-	VOID_PROC *OnSceneDraw;
-} *PPLUGIN_INTERFACE;
-//---------------------------------------------------------------------------
 #endif
-//---------------------------------------------------------------------------

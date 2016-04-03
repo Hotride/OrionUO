@@ -236,7 +236,7 @@ int GetMultiDistance(POINT current, TGameObject *target)
 {
 	int result = 100500;
 
-	if (target != NULL && target->Graphic >= 0x4000)
+	if (target != NULL && target->Graphic >= 0x4000 && target->m_Items != NULL)
 	{
 		TMulti *multi = (TMulti*)target->m_Items;
 

@@ -210,9 +210,8 @@ g_RenderedObjectsCountInGameWindow++;
 
 				if (doubleDraw)
 				{
-					drawX -= 2;
-					UO->DrawStaticArt(objGraphic, objColor, drawX, drawY - 5, m_Z, selMode);
-					UO->DrawStaticArt(objGraphic, objColor, drawX + 5, drawY, m_Z, selMode);
+					UO->DrawStaticArt(objGraphic, objColor, drawX - 2, drawY - 5, m_Z, selMode);
+					UO->DrawStaticArt(objGraphic, objColor, drawX + 3, drawY, m_Z, selMode);
 				}
 				else
 					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z, selMode);
@@ -274,15 +273,13 @@ g_RenderedObjectsCountInGameWindow++;
 
 				if (doubleDraw)
 				{
-					drawX -= 2;
-
-					if (UO->StaticPixelsInXY(goGraphic, drawX, drawY - 5, m_Z))
+					if (UO->StaticPixelsInXY(goGraphic, drawX - 2, drawY - 5, m_Z))
 					{
 						g_LastObjectType = SOT_GAME_OBJECT;
 						g_LastSelectedObject = m_Serial;
 						g_SelectedObject = this;
 					}
-					else if (UO->StaticPixelsInXY(goGraphic, drawX + 5, drawY, m_Z))
+					else if (UO->StaticPixelsInXY(goGraphic, drawX + 3, drawY, m_Z))
 					{
 						g_LastObjectType = SOT_GAME_OBJECT;
 						g_LastSelectedObject = m_Serial;

@@ -16,7 +16,9 @@
 **
 *****************************************************************************
 */
-#pragma once
+#ifndef stdafxH
+#define stdafxH
+//---------------------------------------------------------------------------
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_NON_CONFORMING_SWPRINTFS
 #include "targetver.h"
@@ -72,9 +74,11 @@ using std::wstring;
 #pragma warning(disable: 4800)
 //---------------------------------------------------------------------------
 #define UO_FW_SHARD 0
+#define UO_ABYSS_SHARD 0
 
 #include "Constants.h"
 #include "EnumList.h"
+#include "PluginInterface.h"
 #include "DefinitionMacro.h"
 //---------------------------------------------------------------------------
 //!Указатель на текстуру шейдера
@@ -109,6 +113,8 @@ extern bool g_MovingFromMouse;
 
 //!Использование автоматического перемещения персонажа за курсором мышки, когда курсор находится в игровом окне
 extern bool g_AutoMoving;
+
+extern bool g_AbyssPacket03First;
 //---------------------------------------------------------------------------
 //!Инстанс приложения
 extern HINSTANCE g_Hinstance;
@@ -592,3 +598,4 @@ typedef std::vector<BYTE> WaveFile;
 #include "managers\\ProfessionManager.h"
 #include "ClientUO.h"
 //---------------------------------------------------------------------------
+#endif

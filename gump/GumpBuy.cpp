@@ -152,7 +152,7 @@ void TGumpBuy::GenerateFrame()
 
 	if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GB_SCROLL_1) //Scroller 1 pressed
 	{
-		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY; //Scroller 1 position
+		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY - 66; //Scroller 1 position
 
 		scrollerY1 = CalculateScrollerAndTextPosition(m_SelectedLine1, visibleLines, maxScrollerY, currentY);
 	}
@@ -164,7 +164,7 @@ void TGumpBuy::GenerateFrame()
 	
 	if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GB_SCROLL_2) //Scroller 2 pressed
 	{
-		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY; //Scroller 2 position
+		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY - 280; //Scroller 2 position
 
 		scrollerY2 = CalculateScrollerAndTextPosition(m_SelectedLine2, visibleLines, maxScrollerY, currentY);
 	}
@@ -528,8 +528,8 @@ int TGumpBuy::Draw(bool &mode)
 		}
 	}
 	
-	int scrollerY1 = 66;
-	int scrollerY2 = 280;
+	int scrollerY1 = 0; // 66;
+	int scrollerY2 = 0; // 280;
 	bool noRedraw = false;
 
 	int visibleLines = m_Count - 1;
@@ -537,7 +537,7 @@ int TGumpBuy::Draw(bool &mode)
 
 	if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GB_SCROLL_1) //Scroller 1 pressed
 	{
-		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY; //Scroller 1 position
+		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY - 66; //Scroller 1 position
 
 		scrollerY1 = CalculateScrollerAndTextPosition(m_SelectedLine1, visibleLines, maxScrollerY, currentY);
 
@@ -557,7 +557,7 @@ int TGumpBuy::Draw(bool &mode)
 	
 	if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GB_SCROLL_2) //Scroller 2 pressed
 	{
-		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY; //Scroller 2 position
+		int currentY = (g_MouseY - 10) - (int)g_GumpTranslateY - 280; //Scroller 2 position
 
 		scrollerY2 = CalculateScrollerAndTextPosition(m_SelectedLine2, visibleLines, maxScrollerY, currentY);
 

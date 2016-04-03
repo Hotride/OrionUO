@@ -40,7 +40,7 @@ TMessageType TPacketManager::m_MessageTypes[0x100] =
 	/*0x00*/ SMSG("Create Character", 0x68),
 	/*0x01*/ SMSG("Disconnect", 0x05),
 	/*0x02*/ SMSG("Walk Request", 0x07),
-	/*0x03*/ SMSG("Client Talk", SIZE_VARIABLE),
+	/*0x03*/ BMSGH("Client Talk", SIZE_VARIABLE, ClientTalk),
 	/*0x04*/ SMSG("Request God mode (God client)", 0x02),
 	/*0x05*/ SMSG("Attack", 0x05),
 	/*0x06*/ SMSG("Double Click", 0x05),
@@ -218,7 +218,7 @@ TMessageType TPacketManager::m_MessageTypes[0x100] =
 	/*0xB2*/ BMSG("Chat Data", SIZE_VARIABLE),
 	/*0xB3*/ RMSG("Chat Text ?", SIZE_VARIABLE),
 	/*0xB4*/ UMSG(SIZE_VARIABLE),
-	/*0xB5*/ BMSG("Open Chat Window", 0x40),
+	/*0xB5*/ BMSGH("Open Chat Window", 0x40, OpenChat),
 	/*0xB6*/ SMSG("Popup Help Request", 0x09),
 	/*0xB7*/ RMSG("Popup Help Data", SIZE_VARIABLE),
 	/*0xB8*/ BMSGH("Character Profile", SIZE_VARIABLE, CharacterProfile),
@@ -686,6 +686,35 @@ void TPacketManager::ReceiveHandler( __in PBYTE buf, __in int size)
 }
 //---------------------------------------------------------------------------
 #define PACKET_HANDLER(name) void TPacketManager::Handle ##name (PBYTE buf, int size)
+//---------------------------------------------------------------------------
+PACKET_HANDLER(ClientTalk)
+{
+	if (!g_AbyssPacket03First)
+	{
+		if (buf[4] == 0x78)
+		{
+			Ptr = buf + 7;
+			HandleUpdateObject(buf + 4, unpack16(buf + 5));
+		}
+		else if (buf[4] == 0x3C)
+		{
+			Ptr = buf + 7;
+			HandleUpdateContainedItems(buf + 4, unpack16(buf + 5));
+		}
+		else if (buf[4] == 0x25)
+		{
+			Ptr = buf + 5;
+			HandleUpdateContainedItem(buf + 4, 0x14);
+		}
+		else if (buf[4] == 0x2E)
+		{
+			Ptr = buf + 5;
+			HandleEquipItem(buf + 4, 0x0F);
+		}
+	}
+
+	g_AbyssPacket03First = false;
+}
 //---------------------------------------------------------------------------
 PACKET_HANDLER(LoginError)
 {
@@ -3843,5 +3872,11 @@ PACKET_HANDLER(DisplayDeath)
 	TGameCharacter *gc = World->FindWorldCharacter(serial);
 	if (gc != NULL)
 		gc->CorpseLink = corpseSerial;
+}
+//---------------------------------------------------------------------------
+PACKET_HANDLER(OpenChat)
+{
+	BYTE newbuf[4] = { 0xf0, 0x00, 0x04, 0xff };
+	UO->Send(newbuf, 4);
 }
 //---------------------------------------------------------------------------

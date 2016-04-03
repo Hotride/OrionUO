@@ -33,6 +33,7 @@ bool g_UseFrameBuffer = false;
 //---------------------------------------------------------------------------
 bool g_MovingFromMouse = false;
 bool g_AutoMoving = false;
+bool g_AbyssPacket03First = true;
 //---------------------------------------------------------------------------
 bool g_AltPressed = false;
 bool g_CtrlPressed = false;

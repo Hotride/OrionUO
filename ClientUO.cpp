@@ -98,6 +98,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 					PluginManager->WindowProc(hWnd, message, wParam, lParam);
 
 				UO->SaveLocalConfig();
+
 				__try
 				{
 					delete UO;

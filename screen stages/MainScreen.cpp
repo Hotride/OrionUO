@@ -204,6 +204,7 @@ int TMainScreen::Render(__in bool mode)
 		static DWORD times = GetTickCount() + 3000;
 
 		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
+		UO->DrawGump(0x0E14, 0, 0, 0); //Main Gump background 2
 		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
 		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
 		UO->DrawResizepicGump(0x13BE, 128, 288, 451, 157); //ActPwd Container
@@ -468,10 +469,21 @@ void TMainScreen::LoadGlobalConfig()
 				}
 				case MSCC_ACTPWD:
 				{
-					int len = strings[1].length();
+					string password("");
+					int size = strings.size();
+
+					IFOR(i, 1, size)
+					{
+						if (i > 1)
+							password += "=";
+
+						password += strings[i];
+					}
+
+					int len = password.length();
 
 					if (len)
-						m_Password->SetText(DecryptPW(strings[1].c_str(), len));
+						m_Password->SetText(DecryptPW(password.c_str(), len));
 
 					m_Password->SetPos(len);
 

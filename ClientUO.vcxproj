@@ -205,6 +205,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="network\UOHuffman.h" />
     <ClInclude Include="Party.h" />
     <ClInclude Include="PathFinder.h" />
+    <ClInclude Include="PluginInterface.h" />
     <ClInclude Include="Profession.h" />
     <ClInclude Include="QuestArrow.h" />
     <ClInclude Include="RenderObject.h" />

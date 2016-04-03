@@ -169,9 +169,13 @@ TPacketFirstLogin::TPacketFirstLogin()
 	memset(&m_Buf[0], 0, sizeof(m_Buf));
 
 	WriteByte(0x80);
+#if UO_ABYSS_SHARD == 1
+	m_Buf[61] = 0xFF;
+#else
 	WriteString(MainScreen->m_Account->c_str(), 30);
 	WriteString(MainScreen->m_Password->c_str(), 30);
 	WriteByte(0xFF);
+#endif
 }
 //---------------------------------------------------------------------------
 TPacketSelectServer::TPacketSelectServer(BYTE index)
@@ -195,6 +199,9 @@ TPacketSecondLogin::TPacketSecondLogin()
 	WriteByte(0x91);
 	WritePByte(g_GameSeed, 4);
 	WriteString(MainScreen->m_Account->c_str(), 30);
+#if UO_ABYSS_SHARD == 1
+	WriteWord(0xFF07);
+#endif
 	WriteString(MainScreen->m_Password->c_str(), 30);
 }
 //---------------------------------------------------------------------------

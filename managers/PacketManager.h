@@ -122,6 +122,7 @@ private:
 
 protected:
 	//!Обработчики пакетов
+	HANDLER_PACKET(ClientTalk)
 	HANDLER_PACKET(LoginError)
 	HANDLER_PACKET(ServerList)
 	HANDLER_PACKET(RelayServer)
@@ -198,6 +199,7 @@ protected:
 	HANDLER_PACKET(Season)
 	HANDLER_PACKET(BulletinBoardData)
 	HANDLER_PACKET(DisplayDeath)
+	HANDLER_PACKET(OpenChat)
 
 //Не обработаны
 /*
