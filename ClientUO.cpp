@@ -963,6 +963,13 @@ bool TUltimaOnline::Install()
 	ExecuteStaticArt(0x0EEE); //gp 2-5
 	ExecuteStaticArt(0x0EEF); //gp 6+
 
+	CreateDirectoryA(FilePath("snapshots").c_str(), NULL);
+
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+
+	TPRINT("snapshot_d(%i.%i.%i)_t(%i.%i.%i_%i).fmt\n", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+
 	DebugScreen = new TDebugScreen();
 	MainScreen = new TMainScreen();
 	ConnectionScreen = new TConnectionScreen();
