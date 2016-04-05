@@ -1533,7 +1533,7 @@ PACKET_HANDLER(UpdateObject)
 
 		BYTE layer = ReadByte();
 
-		if (graphic & 0x8000)
+		if (graphic & 0x8000 || (m_ClientVersion >= CV_709))
 			obj2->Color = ReadWord();
 
 		obj2->Graphic = graphic & 0x7FFF;
@@ -3033,8 +3033,11 @@ PACKET_HANDLER(OpenCompressedGump)
 
 	TPRINT("Gump decompressed! newsize=%d\n", newsize);
 
-	Ptr = newbuf + 3;
-	HandleOpenGump(newbuf, newsize);
+	if (PluginManager->PacketRecv(newbuf, newsize))
+	{
+		Ptr = newbuf + 3;
+		HandleOpenGump(newbuf, newsize);
+	}
 
 	delete decLayoutData;
 
