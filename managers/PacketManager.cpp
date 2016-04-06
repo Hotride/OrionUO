@@ -1533,7 +1533,7 @@ PACKET_HANDLER(UpdateObject)
 
 		BYTE layer = ReadByte();
 
-		if (graphic & 0x8000 || (m_ClientVersion >= CV_709))
+		if (graphic & 0x8000 || (m_ClientVersion >= CV_7090))
 			obj2->Color = ReadWord();
 
 		obj2->Graphic = graphic & 0x7FFF;
