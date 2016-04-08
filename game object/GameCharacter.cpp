@@ -830,6 +830,21 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 
 			if (removeStep)
 			{
+				if (PluginManager != NULL)
+				{
+					if (m_X != wd->X)
+						PluginManager->WindowProc(g_hWnd, UOMSG_UPDATE_PLAYER_X, (WPARAM)wd->X, 0);
+
+					if (m_Y != wd->Y)
+						PluginManager->WindowProc(g_hWnd, UOMSG_UPDATE_PLAYER_Y, (WPARAM)wd->Y, 0);
+
+					if (m_Z != wd->Z)
+						PluginManager->WindowProc(g_hWnd, UOMSG_UPDATE_PLAYER_Z, (WPARAM)wd->Z, 0);
+
+					if (m_Direction != wd->Direction)
+						PluginManager->WindowProc(g_hWnd, UOMSG_UPDATE_PLAYER_DIR, (WPARAM)wd->Direction, 0);
+				}
+
 				m_X = wd->X;
 				m_Y = wd->Y;
 				m_Z = wd->Z;

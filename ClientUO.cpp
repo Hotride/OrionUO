@@ -4049,6 +4049,9 @@ void TUltimaOnline::ServerSelection(int pos)
 
 	ServerList.SelectedServer = pos;
 
+	if (PluginManager != NULL)
+		PluginManager->WindowProc(g_hWnd, UOMSG_SET_SERVER_NAME, (WPARAM)ServerList.GetServerName().c_str(), 0);
+
 	TPacketSelectServer packet((BYTE)ServerList.GetIndex(pos));
 	packet.Send();
 }
@@ -4062,6 +4065,9 @@ void TUltimaOnline::RelayServer(const char *ip, int port, PBYTE gameSeed)
 		if (ConnectionManager.Connect(ip, port, g_GameSeed) == CE_NO_ERROR)
 		{
 			ConnectionScreen->Connected = true;
+
+			if (PluginManager != NULL)
+				PluginManager->WindowProc(g_hWnd, UOMSG_SET_ACCOUNT, (WPARAM)MainScreen->m_Account->c_str(), 0);
 
 			TPacketSecondLogin packet;
 			packet.Send();
@@ -4083,6 +4089,9 @@ void TUltimaOnline::CharacterSelection(int pos)
 {
 	InitScreen(GS_GAME_CONNECT);
 	ConnectionScreen->Type = CST_GAME;
+
+	if (PluginManager != NULL)
+		PluginManager->WindowProc(g_hWnd, UOMSG_SET_PLAYER_NAME, (WPARAM)CharacterList.GetName(pos).c_str(), 0);
 
 	TPacketSelectCharacter packet(pos, CharacterList.GetName(pos));
 	packet.Send();
