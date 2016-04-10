@@ -386,8 +386,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_NCACTIVATE:
 		case WM_NCPAINT:
 		{
-			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
-				return 0;
+			if (PluginManager != NULL)
+				return PluginManager->WindowProc(hWnd, message, wParam, lParam);
 
 			break;
 		}
@@ -398,6 +398,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 			break;
 		}
+		case UOMSG_RECV:
+			PacketManager.PluginReceiveHandler((PBYTE)wParam, lParam);
+			break;
+		case UOMSG_SEND:
+			ConnectionManager.Send((PBYTE)wParam, lParam);
+			break;
 		default:
 			break;
 	}
@@ -2359,7 +2365,6 @@ void TUltimaOnline::LoadPluginConfig()
 				string subName = file.ReadString(len);
 				
 				HMODULE dll = LoadLibraryA(FilePath(name).c_str());
-				//HMODULE dll = LoadLibraryA(name.c_str());
 
 				if (dll != NULL)
 				{
@@ -2387,11 +2392,11 @@ void TUltimaOnline::LoadPluginConfig()
 					{
 						plugin->m_PPS->Owner = plugin;
 
-						//if (plugin->CanClientAccess())
-							//plugin->m_PPS->Client = ClientInterface;
+						if (plugin->CanClientAccess())
+							plugin->m_PPS->Client = &PluginClientInterface;
 						
 						if (plugin->CanParseRecv())
-							plugin->m_PPS->Recv= PluginRecvFunction;
+							plugin->m_PPS->Recv = PluginRecvFunction;
 
 						if (plugin->CanParseSend())
 							plugin->m_PPS->Send = PluginSendFunction;
@@ -4027,6 +4032,9 @@ void TUltimaOnline::Connect()
 //---------------------------------------------------------------------------
 void TUltimaOnline::Disconnect()
 {
+	if (PluginManager != NULL)
+		PluginManager->Disconnect();
+
 	if (SystemChat != NULL)
 		SystemChat->Clear();
 

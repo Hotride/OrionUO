@@ -652,6 +652,37 @@ int TPacketManager::GetPacketSize( __in BYTE msg)
 }
 //---------------------------------------------------------------------------
 /*!
+Обработчик пришедшего сообщения от плагина
+@param [__in] buf Буфер
+@param [__in] size Размер сообщения
+@return
+*/
+void TPacketManager::PluginReceiveHandler(__in PBYTE buf, __in int size)
+{
+	DWORD ticks = GetTickCount();
+	g_TotalRecvSize += size;
+
+	TMessageType &type = m_MessageTypes[*buf];
+
+	TPRINT("--- ^(%d) r(+%d => %d) Plugin:: %s\n", ticks - g_LastPacketTime, size, g_TotalRecvSize, type.Name);
+	TDUMP(buf, size);
+
+	g_LastPacketTime = ticks;
+
+	if (type.Direction != DIR_RECV && type.Direction != DIR_BOTH)
+		WPRINT("message direction invalid: 0x%02X\n", *buf);
+	else if (type.Handler != 0)
+	{
+		Ptr = buf + 1;
+
+		if (!type.Size)
+			Ptr += 2;
+
+		(this->*(type.Handler))(buf, size);
+	}
+}
+//---------------------------------------------------------------------------
+/*!
 Обработчик пришедшего сообщения
 @param [__in] buf Буфер
 @param [__in] size Размер сообщения
@@ -2420,10 +2451,10 @@ PACKET_HANDLER(Talk)
 	DWORD serial = ReadDWord();
 	WORD graphic = ReadWord();
 	SPEECH_TYPE type = (SPEECH_TYPE)ReadByte();
-	WORD text_color = ReadWord();
+	WORD textColor = ReadWord();
 	WORD font = ReadWord();
 
-	if (!serial && font == 0xFFFF && text_color == 0xFFFF)
+	if (!serial && font == 0xFFFF && textColor == 0xFFFF)
 	{
 		BYTE sbuffer[0x28] =
 		{
@@ -2447,16 +2478,16 @@ PACKET_HANDLER(Talk)
 	}
 
 	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || name == string("System"))
-		UO->CreateTextMessage(TT_SYSTEM, serial, font, text_color, str);
+		UO->CreateTextMessage(TT_SYSTEM, serial, font, textColor, str);
 	else
 	{
 		if (type == ST_EMOTE)
 		{
-			text_color = ConfigManager.EmoteColor;
+			textColor = ConfigManager.EmoteColor;
 			str = "*" + str + "*";
 		}
 
-		UO->CreateTextMessage(TT_OBJECT, serial, font, text_color, str);
+		UO->CreateTextMessage(TT_OBJECT, serial, font, textColor, str);
 
 		//if (serial >= 0x40000000) //Только для предметов
 		{
@@ -2481,11 +2512,11 @@ PACKET_HANDLER(UnicodeTalk)
 	DWORD serial = ReadDWord();
 	WORD graphic = ReadWord();
 	SPEECH_TYPE type = (SPEECH_TYPE)ReadByte();
-	WORD text_color = ReadWord();
+	WORD textColor = ReadWord();
 	WORD font = ReadWord();
 	DWORD language = ReadDWord();
 
-	if (!serial && font == 0xFFFF && text_color == 0xFFFF)
+	if (!serial && font == 0xFFFF && textColor == 0xFFFF)
 	{
 		BYTE sbuffer[0x28] =
 		{
@@ -2509,16 +2540,16 @@ PACKET_HANDLER(UnicodeTalk)
 	}
 	
 	if (type == ST_BROADCAST /*|| type == ST_SYSTEM*/ || serial == 0xFFFFFFFF || !serial || name == wstring(L"System"))
-		UO->CreateUnicodeTextMessage(TT_SYSTEM, serial, ConfigManager.SpeechFont, text_color, str);
+		UO->CreateUnicodeTextMessage(TT_SYSTEM, serial, ConfigManager.SpeechFont, textColor, str);
 	else
 	{
 		if (type == ST_EMOTE)
 		{
-			text_color = ConfigManager.EmoteColor;
+			textColor = ConfigManager.EmoteColor;
 			str = L"*" + str + L"*";
 		}
 		
-		UO->CreateUnicodeTextMessage(TT_OBJECT, serial, ConfigManager.SpeechFont, text_color, str);
+		UO->CreateUnicodeTextMessage(TT_OBJECT, serial, ConfigManager.SpeechFont, textColor, str);
 		
 		//if (serial >= 0x40000000) //Только для предметов
 		{

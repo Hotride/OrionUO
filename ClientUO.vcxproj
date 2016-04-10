@@ -71,6 +71,9 @@ xcopy /y /d  "$(ProjectDir)dll\glew32.dll" "$(OutDir)"
 xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
       <Message>Copy dlls to bin directory</Message>
     </PostBuildEvent>
+    <Manifest>
+      <AdditionalManifestFiles>ClientUO.manifest</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

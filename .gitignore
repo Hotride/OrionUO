@@ -17,9 +17,11 @@
 *.exe
 *.dll
 *.def
+*.ini
 !ConfigurationEditor.exe
 /Makefile*
 /ipch
+/OrionAssistConfig
 /Release
 /Debug
 /Desktop

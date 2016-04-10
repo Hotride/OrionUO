@@ -293,7 +293,7 @@ void TGameCharacter::OnGraphicChange( __in_opt int direction)
 	{
 		if (!m_Clicked && !IsPlayer())
 		{
-			UO->StatusReq(m_Serial);
+			//UO->StatusReq(m_Serial);
 
 			if (ConfigManager.ShowIncomingNames)
 				UO->NameReq(m_Serial);
@@ -830,7 +830,7 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 
 			if (removeStep)
 			{
-				if (PluginManager != NULL)
+				if (PluginManager != NULL && IsPlayer())
 				{
 					if (m_X != wd->X)
 						PluginManager->WindowProc(g_hWnd, UOMSG_UPDATE_PLAYER_X, (WPARAM)wd->X, 0);

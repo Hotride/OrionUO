@@ -56,6 +56,9 @@ void TPlayer::SetName( __in string val)
 
 		SetWindowTextA(g_hWnd, buf);
 	}
+
+	if (PluginManager != NULL)
+		PluginManager->WindowProc(g_hWnd, UOMSG_SET_PLAYER_NAME, (WPARAM)val.c_str(), 0);
 }
 //---------------------------------------------------------------------------
 /*!

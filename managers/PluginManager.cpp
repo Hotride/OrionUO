@@ -23,14 +23,16 @@ TPluginManager *PluginManager = NULL;
 //---------------------------------------------------------------------------
 bool __cdecl PluginRecvFunction(PBYTE buf, int size)
 {
-	PacketManager.ReceiveHandler(buf, size);
+	SendMessage(g_hWnd, UOMSG_RECV, (WPARAM)buf, size);
+	//PacketManager.PluginReceiveHandler(buf, size);
 
 	return true;
 }
 //---------------------------------------------------------------------------
 bool __cdecl PluginSendFunction(PBYTE buf, int size)
 {
-	ConnectionManager.Send(buf, size);
+	SendMessage(g_hWnd, UOMSG_SEND, (WPARAM)buf, size);
+	//ConnectionManager.Send(buf, size);
 
 	return true;
 }
@@ -47,6 +49,7 @@ TPlugin::TPlugin(DWORD flags)
 	m_PPS->hWnd = g_hWnd;
 	m_PPS->ClientVersion = PacketManager.GetClientVersion();
 	m_PPS->InverseBuylist = g_InverseBuylist;
+	m_PPS->UseVerdata = FileManager.UseVerdata;
 }
 //---------------------------------------------------------------------------
 TPlugin::~TPlugin()

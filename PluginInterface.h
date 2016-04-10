@@ -20,7 +20,7 @@
 #ifndef PluginInterfaceH
 #define PluginInterfaceH
 //---------------------------------------------------------------------------
-typedef bool WINDOW_PROC(HWND, UINT, WPARAM, LPARAM);
+typedef LRESULT WINDOW_PROC(HWND, UINT, WPARAM, LPARAM);
 typedef bool __cdecl PACKET_PROC(PBYTE, int);
 typedef void __cdecl VOID_PROC();
 //---------------------------------------------------------------------------
@@ -31,6 +31,8 @@ typedef void __cdecl VOID_PROC();
 #define UOMSG_UPDATE_PLAYER_Y		WM_USER + 664
 #define UOMSG_UPDATE_PLAYER_Z		WM_USER + 665
 #define UOMSG_UPDATE_PLAYER_DIR		WM_USER + 666
+#define UOMSG_RECV					WM_USER + 667
+#define UOMSG_SEND					WM_USER + 668
 //---------------------------------------------------------------------------
 bool __cdecl PluginRecvFunction(PBYTE buf, int size);
 bool __cdecl PluginSendFunction(PBYTE buf, int size);

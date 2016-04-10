@@ -241,6 +241,14 @@ public:
 	void ReceiveHandler(__in PBYTE buf, __in int size);
 
 	/*!
+	Обработчик пришедшего сообщения от плагина
+	@param [__in] buf Буфер
+	@param [__in] size Размер сообщения
+	@return
+	*/
+	void PluginReceiveHandler(__in PBYTE buf, __in int size);
+
+	/*!
 	Установить версию протокола клиента и подменить размерности соответствующих пакетов
 	@param [__in] val Новая версия протокола клиента
 	@return 
