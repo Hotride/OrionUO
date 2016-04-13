@@ -186,7 +186,7 @@ m_GraphicDisabled(graphicDisabled), m_Index(index), m_Action(action)
 //---------------------------------------------------------------------------
 void TGumpCheckbox::Draw(bool &transparent, bool pressed)
 {
-	WORD graphic = pressed ? m_GraphicChecked : m_Graphic;
+	WORD graphic = (pressed || m_Action) ? m_GraphicChecked : m_Graphic;
 
 	if (transparent)
 	{
@@ -215,7 +215,7 @@ m_GraphicDisabled(graphicDisabled), m_Index(index), m_Action(action)
 //---------------------------------------------------------------------------
 void TGumpRadio::Draw(bool &transparent, bool pressed)
 {
-	WORD graphic = pressed ? m_GraphicChecked : m_Graphic;
+	WORD graphic = (pressed || m_Action) ? m_GraphicChecked : m_Graphic;
 
 	if (transparent)
 	{

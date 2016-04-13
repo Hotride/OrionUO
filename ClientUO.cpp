@@ -282,7 +282,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
-			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
+			if (PluginManager != NULL && PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
 			g_SelectGumpObjects = true;
@@ -299,7 +299,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
-			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
+			if (PluginManager != NULL && PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
 			g_SelectGumpObjects = true;
@@ -318,7 +318,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
-			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
+			if (PluginManager != NULL && PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
 			g_SelectGumpObjects = true;
@@ -340,7 +340,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
-			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
+			if (PluginManager != NULL && PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
 			//TPRINT("CurrentScreen->OnKeyPress(0x%08X, 0x%08X)\n", wParam, lParam);
@@ -363,7 +363,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
-			if (PluginManager != NULL && !PluginManager->WindowProc(hWnd, message, wParam, lParam))
+			if (PluginManager != NULL && PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
 			if (wParam == VK_TAB && UO != NULL && g_GameState == GS_GAME)
@@ -386,7 +386,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_NCACTIVATE:
 		case WM_NCPAINT:
 		{
-			if (PluginManager != NULL)
+			if (PluginManager != NULL && !PluginManager->Empty())
 				return PluginManager->WindowProc(hWnd, message, wParam, lParam);
 
 			break;

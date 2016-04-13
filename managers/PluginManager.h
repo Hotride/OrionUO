@@ -47,7 +47,7 @@ public:
 	TPluginManager();
 	virtual ~TPluginManager() {}
 
-	bool WindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT WindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	bool PacketRecv(PBYTE buf, int size);
 	bool PacketSend(PBYTE buf, int size);
 	void Disconnect();

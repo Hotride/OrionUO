@@ -68,18 +68,19 @@ TPluginManager::TPluginManager()
 {
 }
 //---------------------------------------------------------------------------
-bool TPluginManager::WindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT TPluginManager::WindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	bool result = true;
+	LRESULT result = 0;
 
 	QFOR(plugin, m_Items, TPlugin*)
 	{
 		if (plugin->CanWindowProc() && plugin->m_PPS->WindowProc != NULL)
 		{
-			bool funRet = plugin->m_PPS->WindowProc(hWnd, msg, wparam, lparam);
+			result = plugin->m_PPS->WindowProc(hWnd, msg, wparam, lparam);
+			/*bool funRet = plugin->m_PPS->WindowProc(hWnd, msg, wparam, lparam);
 
 			if (result)
-				result = funRet;
+				result = funRet;*/
 		}
 	}
 

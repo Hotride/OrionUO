@@ -293,7 +293,10 @@ enum GUMP_OBJECT_TYPE
 	GOT_HTMLGUMP,			//!ХТМЛ гамп
 	GOT_XFMHTMLGUMP,		//!ХТМЛ гамп из клилока (цветной там же)
 	GOT_XFMHTMLTOKEN,		//
-	GOT_TOOLTIP				//
+	GOT_TOOLTIP,				//
+	GOT_NOMOVE,
+	GOT_NOCLOSE,
+	GOT_NODISPOSE
 };
 //---------------------------------------------------------------------------
 enum SELECT_COLOR_GUMP_STATE
