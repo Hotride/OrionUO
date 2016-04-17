@@ -166,6 +166,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			else
 				g_LastLClickTime = ticks;
 
+			if (g_PopupMenu != NULL && g_LastSelectedGump != (DWORD)g_PopupMenu)
+				GumpManager->RemoveGump(g_PopupMenu);
+
 			break;
 		}
 		case WM_LBUTTONUP:
@@ -249,6 +252,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			g_SelectGumpObjects = false;
 
 			LastRClickTime = ticks;
+
+			if (g_PopupMenu != NULL && g_LastSelectedGump != (DWORD)g_PopupMenu)
+				GumpManager->RemoveGump(g_PopupMenu);
 
 			break;
 		}
@@ -2618,7 +2624,18 @@ void TUltimaOnline::Process()
 			if (g_ClickObjectReq && g_ClickObject.Timer < ticks)
 			{
 				if (g_ClickObject.Type == COT_GAME_OBJECT)
+				{
 					NameReq(g_ClickObject.Serial);
+
+					if (g_ClickObject.Serial < 0x40000000)
+					{
+						if (!ConfigManager.HoldShiftForContextMenus || g_ShiftPressed)
+						{
+							TPacketRequestPopupMenu packet(g_ClickObject.Serial);
+							packet.Send();
+						}
+					}
+				}
 				else if (g_ClickObject.Type == COT_GUMP)
 				{
 					if (g_ClickObject.GumpType == GT_SPELLBOOK)
@@ -4550,6 +4567,8 @@ void TUltimaOnline::LogOut()
 	}
 	TPRINT("\tObjectInHand removed?\n");
 	
+	g_PopupMenu = NULL;
+
 	if (GumpManager != NULL)
 		GumpManager->Clear();
 	TPRINT("\tGump List cleared?\n");

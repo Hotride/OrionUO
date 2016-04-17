@@ -18,6 +18,7 @@
 *.dll
 *.def
 *.ini
+*.sc
 !ConfigurationEditor.exe
 /Makefile*
 /ipch

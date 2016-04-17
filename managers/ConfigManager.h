@@ -73,6 +73,7 @@ private:
 	bool m_ItemPropertiesIcon;
 	bool m_ObjectHandles;
 	bool m_ReduceFPSUnactiveWindow;
+	bool m_HoldShiftForContextMenus;
 	
 	WORD m_SpeechDelay;
 	bool m_ScaleSpeechDelay;
@@ -182,6 +183,7 @@ public:
 	SETGET(bool, ObjectHandles);
 	void SetReduceFPSUnactiveWindow(bool val);
 	bool GetReduceFPSUnactiveWindow() const { return m_ReduceFPSUnactiveWindow; }
+	SETGET(bool, HoldShiftForContextMenus);
 	
 	SETGET(WORD, SpeechDelay);
 	SETGET(bool, ScaleSpeechDelay);

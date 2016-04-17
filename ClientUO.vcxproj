@@ -152,6 +152,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="gump\GumpOptions.h" />
     <ClInclude Include="gump\GumpPaperdoll.h" />
     <ClInclude Include="gump\GumpPartyManifest.h" />
+    <ClInclude Include="gump\GumpPopupMenu.h" />
     <ClInclude Include="gump\GumpProfile.h" />
     <ClInclude Include="gump\GumpQuestion.h" />
     <ClInclude Include="gump\GumpSecureTrading.h" />
@@ -283,6 +284,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="gump\GumpOptions.cpp" />
     <ClCompile Include="gump\GumpPaperdoll.cpp" />
     <ClCompile Include="gump\GumpPartyManifest.cpp" />
+    <ClCompile Include="gump\GumpPopupMenu.cpp" />
     <ClCompile Include="gump\GumpProfile.cpp" />
     <ClCompile Include="gump\GumpQuestion.cpp" />
     <ClCompile Include="gump\GumpSecureTrading.cpp" />

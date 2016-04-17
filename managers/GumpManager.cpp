@@ -663,6 +663,9 @@ void TGumpManager::AddGump( __in TGump *obj)
 					obj->m_Next = NULL;
 					delete obj;
 
+					if (gump->GumpType == GT_POPUP_MENU)
+						g_PopupMenu = (TGumpPopupMenu*)gump;
+
 					if (gumpType == GT_CONTAINER || gumpType == GT_JOURNAL || gumpType == GT_SKILLS)
 						gump->Minimized = false;
 					else if (gumpType == GT_MINIMAP)

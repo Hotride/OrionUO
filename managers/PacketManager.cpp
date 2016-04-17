@@ -2430,6 +2430,53 @@ PACKET_HANDLER(ExtendedCommand)
 
 			break;
 		}
+		case 0x14:
+		{
+			Move(1);
+			BYTE mode = ReadByte();
+			DWORD serial = ReadDWord();
+			BYTE count = ReadByte();
+
+			TGumpPopupMenu *menu = new TGumpPopupMenu(serial, g_MouseX, g_MouseY);
+			int width = 0;
+			int height = 20;
+
+			IFOR(i, 0, count)
+			{
+				WORD index = ReadWord();
+				DWORD cliloc = 3000000 + ReadWord();
+				WORD flags = ReadWord();
+				WORD color = 0xFFFF;
+
+				if (flags == 0x20)
+					color = ReadWord();
+
+				TGumpText *item = new TGumpText(index, color, 0, 0);
+
+				wstring str = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
+				FontManager->GenerateW(1, item->m_Text, str.c_str(), color);
+
+				height += item->m_Text.Height;
+
+				if (width < item->m_Text.Width)
+					width = item->m_Text.Width;
+
+				menu->Add(item);
+			}
+
+			width += 20;
+
+			if (height <= 20 || width <= 20)
+				delete menu;
+			else
+			{
+				menu->Width = width;
+				menu->Height = height;
+				GumpManager->AddGump(menu);
+			}
+
+			break;
+		}
 		case 0x16: ////Close User Interface Windows
 		{
 			//ID:

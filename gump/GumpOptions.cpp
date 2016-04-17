@@ -26,7 +26,7 @@ TTextTexture TGumpOptions::m_TexturePage2[8];	//Pop-up Help
 TTextTexture TGumpOptions::m_TexturePage3[6];	//Language
 TTextTexture TGumpOptions::m_TexturePage4[19];	//Chat
 TTextTexture TGumpOptions::m_TexturePage5[7];	//Macro Options
-TTextTexture TGumpOptions::m_TexturePage6[13];	//Interface
+TTextTexture TGumpOptions::m_TexturePage6[14];	//Interface
 TTextTexture TGumpOptions::m_TexturePage7[18];	//Display
 TTextTexture TGumpOptions::m_TexturePage8[9];	//Reputation System
 TTextTexture TGumpOptions::m_TexturePage9[9];	//Miscellaneous
@@ -296,6 +296,9 @@ void TGumpOptions::InitTextTextures()
 	str = L"Display Item Properties Icon";
 	FontManager->GenerateW(0, m_TexturePage6[12], str.c_str(), g_OptionsTextColor);
 
+	str = L"Hold Shift For Context Menus";
+	FontManager->GenerateW(0, m_TexturePage6[13], str.c_str(), g_OptionsTextColor);
+
 
 
 	//Display
@@ -436,7 +439,7 @@ void TGumpOptions::ReleaseTextTextures()
 	IFOR(i, 0, 7)
 		m_TexturePage5[i].Clear();
 
-	IFOR(i, 0, 13)
+	IFOR(i, 0, 14)
 		m_TexturePage6[i].Clear();
 
 	IFOR(i, 0, 18)
@@ -1872,6 +1875,10 @@ int TGumpOptions::DrawPage6(bool &mode, DWORD &index)
 		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ItemPropertiesIcon, 0, 64, 306);
 		//UO->DrawUnicodeFont(0, L"Display Item Properties Icon", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[12].Draw(86, 306);
+
+		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.HoldShiftForContextMenus, 0, 64, 326);
+		//UO->DrawUnicodeFont(0, L"Hold Shift For Context Menus", g_OptionsTextColor, posX + 86, posY);
+		m_TexturePage6[13].Draw(86, 326);
 	}
 	else
 	{
@@ -1899,7 +1906,9 @@ int TGumpOptions::DrawPage6(bool &mode, DWORD &index)
 			LSG = ID_GO_P6_REDUCE_FPS_UNACTIVE_WINDOW; //Reduce FPS when Window is Unactive
 		else if (UO->GumpPixelsInXY(0x00D2, 64, 306))
 			LSG = ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON; //Display Item Properties Icon
-
+		else if (UO->GumpPixelsInXY(0x00D2, 64, 326))
+			LSG = ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS; //Hold Shift For Context Menus
+		
 		return LSG;
 	}
 
@@ -2817,6 +2826,8 @@ void TGumpOptions::OnLeftMouseUp()
 					g_OptionsConfig.SetReduceFPSUnactiveWindow(!g_OptionsConfig.GetReduceFPSUnactiveWindow());
 				else if (g_LastObjectLeftMouseDown == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON) //Display Item Properties Icon
 					g_OptionsConfig.ItemPropertiesIcon = !g_OptionsConfig.ItemPropertiesIcon;
+				else if (g_LastObjectLeftMouseDown == ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS) //Hold Shift For Context Menus
+					g_OptionsConfig.HoldShiftForContextMenus = !g_OptionsConfig.HoldShiftForContextMenus;
 
 				break;
 			}
@@ -3087,6 +3098,7 @@ void TGumpOptions::ApplyPageChanges()
 			ConfigManager.ObjectHandles = g_OptionsConfig.ObjectHandles;
 			ConfigManager.SetReduceFPSUnactiveWindow(g_OptionsConfig.GetReduceFPSUnactiveWindow());
 			ConfigManager.ItemPropertiesIcon = g_OptionsConfig.ItemPropertiesIcon;
+			ConfigManager.HoldShiftForContextMenus = g_OptionsConfig.HoldShiftForContextMenus;
 
 			if (g_OptionsConfig.DisableMenubar)
 				GumpManager->CloseGump(g_PlayerSerial, 0, GT_MENUBAR);

@@ -118,6 +118,7 @@ void TConfigManager::DefaultPage6()
 	m_ItemPropertiesIcon = false;
 	m_ObjectHandles = false;
 	m_ReduceFPSUnactiveWindow = true;
+	m_HoldShiftForContextMenus = true;
 }
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage7()
@@ -342,6 +343,11 @@ void TConfigManager::Load( __in string path)
 				m_ItemPropertiesIcon = file.ReadByte();
 				m_ObjectHandles = file.ReadByte();
 				SetReduceFPSUnactiveWindow(file.ReadByte());
+
+				if (blockSize > 14)
+					m_HoldShiftForContextMenus = file.ReadByte();
+				else
+					m_HoldShiftForContextMenus = true;
 			}
 			else
 			{
@@ -350,6 +356,7 @@ void TConfigManager::Load( __in string path)
 				m_ItemPropertiesIcon = false;
 				m_ObjectHandles = false;
 				SetReduceFPSUnactiveWindow(true);
+				m_HoldShiftForContextMenus = true;
 			}
 		}
 		
@@ -512,7 +519,7 @@ void TConfigManager::Save( __in string path)
 	writer->WriteBuffer();
 	
 	//Page 6
-	writer->WriteByte(14); //size of block
+	writer->WriteByte(15); //size of block
 	writer->WriteByte(6); //page index
 	writer->WriteByte(m_EnablePathfind);
 	writer->WriteByte(m_HoldTabForCombat);
@@ -526,6 +533,7 @@ void TConfigManager::Save( __in string path)
 	writer->WriteByte(m_ItemPropertiesIcon);
 	writer->WriteByte(m_ObjectHandles);
 	writer->WriteByte(m_ReduceFPSUnactiveWindow);
+	writer->WriteByte(m_HoldShiftForContextMenus);
 	writer->WriteBuffer();
 	
 	//Page 7

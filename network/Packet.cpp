@@ -1399,16 +1399,3 @@ TPacketMegaClilocRequest::TPacketMegaClilocRequest(vector<DWORD> list)
 		WriteDWord(list[i]);
 }
 //---------------------------------------------------------------------------
-TPacketPopupMenuRequest::TPacketPopupMenuRequest(DWORD serial)
-: TPacket(9, false)
-{
-	Buffer = m_Buf;
-	Ptr = m_Buf;
-	memset(&m_Buf[0], 0, sizeof(m_Buf));
-
-	WriteByte(0x12);
-	WriteWord(0x0009);
-	WriteWord(0x0013);
-	WriteDWord(serial);
-}
-//---------------------------------------------------------------------------

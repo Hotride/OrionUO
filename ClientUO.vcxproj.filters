@@ -444,6 +444,9 @@
     <ClInclude Include="PluginInterface.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="gump\GumpPopupMenu.h">
+      <Filter>Заголовочные файлы\gump</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -817,6 +820,9 @@
     </ClCompile>
     <ClCompile Include="TextFileParser.cpp">
       <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="gump\GumpPopupMenu.cpp">
+      <Filter>Файлы исходного кода\gump</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
