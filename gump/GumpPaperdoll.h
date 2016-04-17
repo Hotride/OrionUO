@@ -55,6 +55,8 @@ public:
 
 	void PrepareTextures();
 
+	void OnPopupHelp();
+
 	void GenerateFrame();
 
 	int Draw(bool &mode);

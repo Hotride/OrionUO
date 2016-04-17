@@ -189,6 +189,25 @@ void TGumpPaperdoll::CalculateGumpState()
 		g_GumpTranslateY = (float)(m_Y + g_GumpMovingOffsetY);
 	}
 }
+//----------------------------------------------------------------------------
+void TGumpPaperdoll::OnPopupHelp()
+{
+	DWORD selected = ((g_LastSelectedGump == (DWORD)this) ? g_LastSelectedObject : 0);
+
+	if (!m_Minimized && selected >= ID_GP_ITEMS)
+	{
+		int layer = selected - ID_GP_ITEMS;
+
+		TGameCharacter *character = World->FindWorldCharacter(m_Serial);
+		if (character != NULL)
+		{
+			TGameObject *obj = character->FindLayer(layer);
+
+			if (obj != NULL && obj->ClilocMessage.length())
+				PopupHelp.Set(obj->ClilocMessage, SOT_GAME_OBJECT, obj->Serial);
+		}
+	}
+}
 //---------------------------------------------------------------------------
 void TGumpPaperdoll::GenerateFrame()
 {

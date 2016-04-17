@@ -623,4 +623,12 @@ public:
 	TPacketMegaClilocRequest(vector<DWORD> list);
 };
 //---------------------------------------------------------------------------
+class TPacketPopupMenuRequest : public TPacket
+{
+private:
+	BYTE m_Buf[9];
+public:
+	TPacketPopupMenuRequest(DWORD serial);
+};
+//---------------------------------------------------------------------------
 #endif

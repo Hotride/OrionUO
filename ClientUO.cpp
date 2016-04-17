@@ -2720,13 +2720,11 @@ void TUltimaOnline::Process()
 			if (PluginManager != NULL)
 				PluginManager->SceneDraw();
 
-			TPRINT("remove corpses start\n");
 			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); i++)
 			{
 				if (i->second < ticks)
 					i = g_CorpseSerialList.erase(i);
 			}
-			TPRINT("remove corpses end\n");
 		}
 	}
 	else if (g_LastRenderTime <= ticks)

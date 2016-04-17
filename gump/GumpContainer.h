@@ -43,6 +43,8 @@ public:
 
 	int Draw(bool &mode);
 
+	void OnPopupHelp();
+
 	void GenerateFrame();
 
 	void OnLeftMouseUp();

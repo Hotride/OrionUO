@@ -4114,13 +4114,16 @@ PACKET_HANDLER(MegaCliloc)
 	WORD wat2 = ReadWord();
 	DWORD testedSerial = ReadDWord();
 	wstring message(L"");
+
+	if (!obj->NPC)
+		message = L"<basefont color=\"yellow\">"; //yellow //#FFFF00
+
 	PBYTE end = buf + size;
+	bool first = true;
 
 	while (Ptr < end)
 	{
 		DWORD cliloc = ReadDWord();
-
-		TPRINT("new cliloc id = 0x%08x\n", cliloc);
 
 		if (!cliloc)
 			break;
@@ -4132,15 +4135,23 @@ PACKET_HANDLER(MegaCliloc)
 			wstring argument((wchar_t*)Ptr, len / 2);
 			Ptr += len;
 
-			if (message.length())
+			wstring str = ClilocManager->ParseArgumentsToClilocString(cliloc, argument);
+
+			if (message.length() && !first)
 				message += L"\n";
 
-			message += ClilocManager->ParseArgumentsToClilocString(cliloc, argument);
+			message += str;
+
+			if (first && !obj->NPC)
+				message += L"<basefont color=\"#FFFFFFFF\">";
+
+			first = false;
 
 			TPRINT("Cliloc: 0x%08X len=%i arg=%s\n", cliloc, len, ToString(argument).c_str());
 		}
 	}
 
+	obj->ClilocMessage = message;
 	TPRINT("message=%s\n", ToString(message).c_str());
 }
 //---------------------------------------------------------------------------

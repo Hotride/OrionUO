@@ -23,7 +23,7 @@ TFontsManager *FontManager = NULL;
 //---------------------------------------------------------------------------
 TFontsManager::TFontsManager()
 : m_SavePixels(false), m_UseHTML(false), m_Font(NULL), m_FontCount(0),
-m_HTMLColor(0xFFFFFFFF)
+m_HTMLColor(0xFFFFFFFF), m_RecalculateWidthByInfo(false)
 {
 	memset(m_UnicodeFontAddress, 0, sizeof(m_UnicodeFontAddress));
 	memset(m_UnicodeFontSize, 0, sizeof(m_UnicodeFontSize));
@@ -1651,6 +1651,9 @@ HTML_char *TFontsManager::GetHTMLData(__in BYTE font, __in const wchar_t *str, _
 					{
 						i += 6;
 
+						if (str[i] == L'"')
+							i++;
+
 						wchar_t colorStr[20] = {0};
 
 						IFOR(j, i, len)
@@ -1665,6 +1668,9 @@ HTML_char *TFontsManager::GetHTMLData(__in BYTE font, __in const wchar_t *str, _
 								if (colorLen > 10)
 									colorLen = 10;
 
+								if (colorLen && colorStr[colorLen - 1] == L'"')
+									colorStr[colorLen - 1] = 0;
+
 								colorStr[colorLen] = 0;
 
 								break;
@@ -1676,15 +1682,12 @@ HTML_char *TFontsManager::GetHTMLData(__in BYTE font, __in const wchar_t *str, _
 							char *end;
 							charcolor = strtoul(ToString(colorStr + 1).c_str(), &end, 16);
 
-							if (!(charcolor & 0xFF))
-								charcolor |= 0xFF;
+							//if (!(charcolor & 0xFF))
+							//	charcolor |= 0xFF;
 
-							/*if (!(charcolor << 24))
-							{
-								BYTE clrBuf[4] = {0};
-								pack32(clrBuf, charcolor);
-								charcolor = (0xFF << 24) | (clrBuf[3] << 16) | (clrBuf[2] << 8) | clrBuf[1];
-							}*/
+							BYTE clrBuf[4] = { 0 };
+							pack32(clrBuf, charcolor);
+							charcolor = (clrBuf[3] << 24) | (clrBuf[2] << 16) | (clrBuf[1] << 8) | 0xFF;
 
 							current_charcolor = charcolor;
 						}
@@ -1693,41 +1696,41 @@ HTML_char *TFontsManager::GetHTMLData(__in BYTE font, __in const wchar_t *str, _
 							_wcslwr(colorStr);
 
 							if (!memcmp(colorStr, L"red", 6))
-								charcolor = 0xFFFF0000;
-							else if (!memcmp(colorStr, L"cyan", 8))
-								charcolor = 0xFF00FFFF;
-							else if (!memcmp(colorStr, L"blue", 8))
 								charcolor = 0xFF0000FF;
+							else if (!memcmp(colorStr, L"cyan", 8))
+								charcolor = 0x00FFFFFF;
+							else if (!memcmp(colorStr, L"blue", 8))
+								charcolor = 0x0000FFFF;
 							else if (!memcmp(colorStr, L"darkblue", 16))
-								charcolor = 0xFF0000A0;
+								charcolor = 0x0000A0FF;
 							else if (!memcmp(colorStr, L"lightblue", 18))
-								charcolor = 0xFFADD8E6;
+								charcolor = 0xADD8E6FF;
 							else if (!memcmp(colorStr, L"purple", 12))
-								charcolor = 0xFF800080;
+								charcolor = 0x800080FF;
 							else if (!memcmp(colorStr, L"yellow", 12))
-								charcolor = 0xFFFFFF00;
+								charcolor = 0x00FFFFFF;
 							else if (!memcmp(colorStr, L"lime", 8))
-								charcolor = 0xFF00FF00;
+								charcolor = 0x00FF00FF;
 							else if (!memcmp(colorStr, L"magenta", 14))
-								charcolor = 0xFFFF00FF;
+								charcolor = 0xFF00FFFF;
 							else if (!memcmp(colorStr, L"white", 10))
-								charcolor = 0xFFFFFEFE;
+								charcolor = 0xFFFEFEFF;
 							else if (!memcmp(colorStr, L"silver", 12))
-								charcolor = 0xFFC0C0C0;
+								charcolor = 0xC0C0C0FF;
 							else if (!memcmp(colorStr, L"gray", 8) || !memcmp(colorStr, L"grey", 8))
-								charcolor = 0xFF808080;
+								charcolor = 0x808080FF;
 							else if (!memcmp(colorStr, L"black", 10))
-								charcolor = 0xFF010101;
+								charcolor = 0x010101FF;
 							else if (!memcmp(colorStr, L"orange", 12))
-								charcolor = 0xFFFFA500;
+								charcolor = 0xFFA500FF;
 							else if (!memcmp(colorStr, L"brown", 10))
-								charcolor = 0xFFA52A2A;
+								charcolor = 0xA52A2AFF;
 							else if (!memcmp(colorStr, L"maroon", 12))
-								charcolor = 0xFF800000;
+								charcolor = 0x800000FF;
 							else if (!memcmp(colorStr, L"green", 10))
-								charcolor = 0xFF008000;
+								charcolor = 0x008000FF;
 							else if (!memcmp(colorStr, L"olive", 10))
-								charcolor = 0xFF808000;
+								charcolor = 0x808000FF;
 
 							current_charcolor = charcolor;
 						}
@@ -2445,6 +2448,8 @@ PDWORD TFontsManager::GeneratePixelsW(BYTE &font, TTextTexture &th, const wchar_
 	if (!len)
 		return NULL;
 
+	int oldWidth = width;
+
 	if (!width)
 	{
 		width = GetWidthW(font, str, len);
@@ -2456,6 +2461,20 @@ PDWORD TFontsManager::GeneratePixelsW(BYTE &font, TTextTexture &th, const wchar_
 	PMULTILINES_FONT_INFO info = GetInfoW(font, str, len, align, flags, width);
 	if (info == NULL)
 		return NULL;
+
+	if (!oldWidth && m_RecalculateWidthByInfo)
+	{
+		PMULTILINES_FONT_INFO ptr = info;
+		width = 0;
+
+		while (ptr != NULL)
+		{
+			if (ptr->Width > width)
+				width = ptr->Width;
+
+			ptr = ptr->m_Next;
+		}
+	}
 
 	width += 4;
 
@@ -2499,13 +2518,11 @@ PDWORD TFontsManager::GeneratePixelsW(BYTE &font, TTextTexture &th, const wchar_
 	PMULTILINES_FONT_INFO ptr = info;
 
 	DWORD datacolor = 0;
+
 	if (/*m_UseHTML &&*/ color == 0xFFFF)
 		datacolor = 0xFFFFFFFE;
 	else
-	{
 		datacolor = ColorManager->GetPolygoneColor(cell, color) << 8 | 0xFF;
-		//datacolor = (0xFF << 24) | (GetBValue(datacolor) << 16) | (GetGValue(datacolor) << 8) | GetRValue(datacolor);
-	}
 
 	bool isItalic = (flags & UOFONT_ITALIC);
 	bool isSolid = (flags & UOFONT_SOLID);

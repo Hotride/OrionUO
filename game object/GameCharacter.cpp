@@ -36,7 +36,12 @@ m_AfterStepDelay(0), m_StepSoundOffset(0)
 	m_WalkStack.Init();
 
 	if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial == serial && GumpManager->GetGump(serial, 0, GT_TARGET_SYSTEM) == NULL)
+	{
+		TPacketStatusRequest packet(m_Serial);
+		packet.Send();
+
 		GumpManager->AddGump(new TGumpTargetSystem(m_Serial, NewTargetSystem.GumpX, NewTargetSystem.GumpY));
+	}
 }
 //---------------------------------------------------------------------------
 TGameCharacter::~TGameCharacter()

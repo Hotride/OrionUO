@@ -1384,6 +1384,7 @@ TPacketInvokeVirtureRequest::TPacketInvokeVirtureRequest(BYTE id)
 	WriteByte(id);
 	WriteByte(0x00);
 }
+//---------------------------------------------------------------------------
 TPacketMegaClilocRequest::TPacketMegaClilocRequest(vector<DWORD> list)
 : TPacket(0, true)
 {
@@ -1396,5 +1397,18 @@ TPacketMegaClilocRequest::TPacketMegaClilocRequest(vector<DWORD> list)
 
 	IFOR(i, 0, len)
 		WriteDWord(list[i]);
+}
+//---------------------------------------------------------------------------
+TPacketPopupMenuRequest::TPacketPopupMenuRequest(DWORD serial)
+: TPacket(9, false)
+{
+	Buffer = m_Buf;
+	Ptr = m_Buf;
+	memset(&m_Buf[0], 0, sizeof(m_Buf));
+
+	WriteByte(0x12);
+	WriteWord(0x0009);
+	WriteWord(0x0013);
+	WriteDWord(serial);
 }
 //---------------------------------------------------------------------------

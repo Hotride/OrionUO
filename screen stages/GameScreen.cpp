@@ -104,6 +104,21 @@ void TGameScreen::InitPopupHelp()
 	if (!ConfigManager.PopupHelpEnabled)
 		return;
 
+	FontManager->SetUseHTML(true);
+	FontManager->RecalculateWidthByInfo = true;
+
+	if (g_LastSelectedGump)
+		GumpManager->OnPopupHelp();
+	else if (g_LastObjectType == SOT_GAME_OBJECT && g_LastSelectedObject)
+	{
+		TGameObject *obj = World->FindWorldObject(g_LastSelectedObject);
+
+		if (obj != NULL && (obj->NPC || !obj->Locked()) && obj->ClilocMessage.length())
+			PopupHelp.Set(obj->ClilocMessage, SOT_GAME_OBJECT, g_LastSelectedObject);
+	}
+
+	FontManager->RecalculateWidthByInfo = false;
+	FontManager->SetUseHTML(false);
 }
 //---------------------------------------------------------------------------
 /*!
@@ -3031,7 +3046,12 @@ bool TGameScreen::OnLeftMouseDoubleClick()
 			NewTargetSystem.Serial = charUnderMouse;
 
 			if (GumpManager->GetGump(charUnderMouse, 0, GT_TARGET_SYSTEM) == NULL)
+			{
+				TPacketStatusRequest packet(charUnderMouse);
+				packet.Send();
+
 				GumpManager->AddGump(new TGumpTargetSystem(charUnderMouse, NewTargetSystem.GumpX, NewTargetSystem.GumpY));
+			}
 		}
 
 		if (g_Player->Warmode && charUnderMouse != g_PlayerSerial)

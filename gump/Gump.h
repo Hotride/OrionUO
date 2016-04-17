@@ -130,6 +130,8 @@ public:
 	*/
 	virtual int Draw(__in bool &mode) { return 0; }
 
+	virtual void OnPopupHelp() {}
+
 	/*!
 	Нажатие левой кнопки мыши
 	@return

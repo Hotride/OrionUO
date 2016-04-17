@@ -83,6 +83,8 @@ private:
 	//!Цвет HTML
 	DWORD m_HTMLColor;
 
+	bool m_RecalculateWidthByInfo;
+
 	/*!
 	Получить индекс ссылки
 	@param [__in] link Ссылка
@@ -146,6 +148,7 @@ public:
 	~TFontsManager();
 	
 	SETGET(bool, SavePixels);
+	SETGET(bool, RecalculateWidthByInfo);
 
 	/*!
 	Установить использование HTML-тэгов

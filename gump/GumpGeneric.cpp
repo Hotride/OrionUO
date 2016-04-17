@@ -544,7 +544,7 @@ int TGumpGeneric::Draw(bool &mode)
 
 	if (mode) //Отрисовка
 	{
-		if (!m_FrameCreated)
+		if (!m_FrameCreated || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
 			GenerateFrame();
 
 		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);

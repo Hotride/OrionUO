@@ -1012,7 +1012,15 @@ MACRO_RETURN_CODE TMacroManager::Process()
 					NewTargetSystem.Serial = obj->Serial;
 
 					if (GumpManager->GetGump(NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM) == NULL)
+					{
+						if (NewTargetSystem.Serial < 0x40000000)
+						{
+							TPacketStatusRequest packet(NewTargetSystem.Serial);
+							packet.Send();
+						}
+
 						GumpManager->AddGump(new TGumpTargetSystem(NewTargetSystem.Serial, NewTargetSystem.GumpX, NewTargetSystem.GumpY));
+					}
 				}
 				else
 				{

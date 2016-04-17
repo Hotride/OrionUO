@@ -65,6 +65,39 @@ void TGumpContainer::PrepareTextures()
 		}
 	}
 }
+//----------------------------------------------------------------------------
+void TGumpContainer::OnPopupHelp()
+{
+	if (!m_Minimized)
+	{
+		DWORD selected = ((g_LastSelectedGump == (DWORD)this) ? g_LastSelectedObject : 0);
+
+		TGameObject *obj = World->FindWorldObject(selected);
+
+		if (obj != NULL && obj->ClilocMessage.length())
+			PopupHelp.Set(obj->ClilocMessage, SOT_GAME_OBJECT, selected);
+	}
+
+	/*DWORD selected = ((g_LastSelectedGump == (DWORD)this) ? g_LastSelectedObject : 0);
+
+	if (!m_Minimized && selected)
+	{
+		TGameItem *container = World->FindWorldItem(Serial);
+
+		if (container != NULL)
+		{
+			QFOR(obj, container->m_Items, TGameItem*)
+			{
+				if (selected == obj->Serial && obj->ClilocMessage.length())
+				{
+					PopupHelp.Set(obj->ClilocMessage, SOT_GAME_OBJECT, selected);
+
+					break;
+				}
+			}
+		}
+	}*/
+}
 //---------------------------------------------------------------------------
 void TGumpContainer::GenerateFrame()
 {

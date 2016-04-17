@@ -81,6 +81,19 @@ void TGumpManager::Draw( __in bool &mode, __in bool blocked)
 	}
 }
 //---------------------------------------------------------------------------
+void TGumpManager::OnPopupHelp()
+{
+	QFOR(gump, m_Items, TGump*)
+	{
+		if (g_LastSelectedGump == (DWORD)gump)
+		{
+			gump->OnPopupHelp();
+
+			break;
+		}
+	}
+}
+//---------------------------------------------------------------------------
 /*!
 Перерисовать все гампы
 @return 
