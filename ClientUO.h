@@ -26,7 +26,7 @@
 #define IDT_UPDATE_MOUSE_TIMER		666
 //---------------------------------------------------------------------------
 //Основной класс
-class TUltimaOnline : public IUltimaOnline
+class TUltimaOnline
 {
 private:
 	//CRC32 таблица

@@ -90,7 +90,7 @@ void TGumpOptions::PrepareTextures()
 	UO->ExecuteButton(0x09A2);
 	UO->ExecuteButton(0x09A5);
 	UO->ExecuteGumpPart(0x09B5, 5);
-	UO->ExecuteGumpPart(0x0983, 9);
+	UO->ExecuteGumpPart(0x0983, 11);
 	UO->ExecuteGumpPart(0x00D0, 42);
 }
 //----------------------------------------------------------------------------

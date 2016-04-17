@@ -89,7 +89,9 @@ void TGumpPaperdoll::PrepareTextures()
 	UO->ExecuteButton(0x07D6); //Paperdoll button Options
 	UO->ExecuteButton(0x07D9); //Paperdoll button Log Out
 	UO->ExecuteButton(0x07DC); //Paperdoll button Journal
+	UO->ExecuteButton(0x57B5); //Paperdoll button Quests
 	UO->ExecuteButton(0x07DF); //Paperdoll button Skills
+	UO->ExecuteButton(0x57B2); //Paperdoll button Guild
 	UO->ExecuteButton(0x07E2); //Paperdoll button Chat
 	UO->ExecuteGump(0x07E2, false); //Paperdoll button Chat
 	UO->ExecuteButton(0x07E8); //Paperdoll button War

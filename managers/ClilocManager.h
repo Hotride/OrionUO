@@ -23,7 +23,7 @@
 typedef std::map<DWORD, string> CLILOC_MAP;
 //---------------------------------------------------------------------------
 //! ласс с данными клилок-файла
-class TCliloc : public ICliloc, public TBaseQueueItem
+class TCliloc : public TBaseQueueItem
 {
 private:
 	//!—истемные клилоки (id < 1000000)
@@ -76,7 +76,7 @@ public:
 };
 //---------------------------------------------------------------------------
 //! ласс менеджера клилоков
-class TClilocManager : public IClilocManager, public TBaseQueue
+class TClilocManager : public TBaseQueue
 {
 private:
 	//!—сылка на последний использованный клилок (дл€ более быстрого доступа)
@@ -92,6 +92,8 @@ public:
 	@return —сылка на клилок
 	*/
 	TCliloc *Cliloc(__in string lang);
+
+	wstring ParseArgumentsToClilocString(DWORD cliloc, wstring args);
 };
 //---------------------------------------------------------------------------
 //!—сылка на менеджер клилоков

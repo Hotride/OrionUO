@@ -1102,6 +1102,41 @@ bool TUltimaOnline::Install()
 			TPRINT("\t[%i]%s\n", i, strings[i].c_str());
 	}*/
 
+	/*wstring str(L"maasdf ~1_AMOUNT~ of era~2_STING~s abi");
+	wstring arg(L"15 creds\tse");
+
+	vector<wstring> vec;
+
+	while (true)
+	{
+		size_t pos = arg.find(L"\t");
+
+		if (pos != string::npos)
+		{
+			vec.push_back(arg.substr(0, pos));
+			arg = arg.substr(pos + 1);
+		}
+		else
+		{
+			vec.push_back(arg);
+			break;
+		}
+	}
+
+	IFOR(i, 0, (int)vec.size())
+	{
+		size_t pos1 = str.find(L"~");
+
+		if (pos1 == string::npos)
+			break;
+
+		size_t pos2 = str.find(L"~", pos1 + 1);
+
+		str.replace(pos1, pos2 - pos1 + 1, vec[i]);
+	}
+
+	TPRINT("replaced: %s\n", ToString(str).c_str());*/
+
 	return true;
 }
 //---------------------------------------------------------------------------
@@ -2325,12 +2360,12 @@ DWORD TUltimaOnline::GetFileHashCode(DWORD address, DWORD size)
 //---------------------------------------------------------------------------
 void TUltimaOnline::LoadPluginConfig()
 {
-	PluginClientInterface._GL = &g_GL;
-	PluginClientInterface._UO = UO;
-	PluginClientInterface._GumpManager = GumpManager;
-	PluginClientInterface._ClilocManager = ClilocManager;
-	PluginClientInterface._ColorManager = ColorManager;
-	PluginClientInterface._PathFinder = PathFinder;
+	PluginClientInterface._GL = NULL; // &g_GL;
+	PluginClientInterface._UO = NULL; // UO;
+	PluginClientInterface._GumpManager = NULL; // GumpManager;
+	PluginClientInterface._ClilocManager = NULL; // ClilocManager;
+	PluginClientInterface._ColorManager = NULL; // ColorManager;
+	PluginClientInterface._PathFinder = NULL; // PathFinder;
 
 	TMappedHeader file;
 	memset(&file, 0, sizeof(file));
@@ -2520,6 +2555,7 @@ void TUltimaOnline::Process()
 	static DWORD removeUnusedTexturesTime = GetTickCount() + CLEAR_TEXTURES_DELAY;
 
 	ConnectionManager.Recv();
+	PacketManager.SendMegaClilocRequests();
 
 	DWORD ticks = GetTickCount();
 	
@@ -2680,6 +2716,17 @@ void TUltimaOnline::Process()
 			GameScreen->RenderListInitalized = false;
 
 			MapManager->Init(true);
+
+			if (PluginManager != NULL)
+				PluginManager->SceneDraw();
+
+			TPRINT("remove corpses start\n");
+			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); i++)
+			{
+				if (i->second < ticks)
+					i = g_CorpseSerialList.erase(i);
+			}
+			TPRINT("remove corpses end\n");
 		}
 	}
 	else if (g_LastRenderTime <= ticks)
@@ -4320,6 +4367,9 @@ void TUltimaOnline::AttackReq(DWORD serial)
 {
 	g_LastAttackObject = serial;
 	
+	TPacketStatusRequest statusReq(serial);
+	statusReq.Send();
+
 	TPacketAttackRequest packet(serial);
 	packet.Send();
 }

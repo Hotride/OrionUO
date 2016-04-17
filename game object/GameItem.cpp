@@ -109,10 +109,17 @@ void TGameItem::OnGraphicChange( __in_opt int direction)
 	{
 		if (IsCorpse())
 		{
-			if (World->FindWorldCorpseOwner(m_Serial))
-				m_AnimIndex = 0;
-			else
-				m_AnimIndex = 99;
+			m_AnimIndex = 99;
+
+			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); i++)
+			{
+				if (i->first == m_Serial)
+				{
+					g_CorpseSerialList.erase(i);
+					m_AnimIndex = 0;
+					break;
+				}
+			}
 
 			if (direction & 0x80)
 			{
@@ -130,6 +137,9 @@ void TGameItem::OnGraphicChange( __in_opt int direction)
 		{
 			m_TiledataPtr = &UO->m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32];
 			STATIC_TILES &tile = *m_TiledataPtr;
+
+			if (ToLowerA(tile.Name) == "nodraw")
+				m_Graphic = 1;
 
 			if (IsWearable() || m_Graphic == 0x0A28)
 			{
@@ -175,7 +185,7 @@ void TGameItem::OnGraphicChange( __in_opt int direction)
 */
 int TGameItem::Draw(__in bool &mode, __in int &drawX, __in int &drawY, __in DWORD &ticks)
 {
-	if (m_Container == 0xFFFFFFFF && m_Graphic < 0x4000)
+	if (m_Container == 0xFFFFFFFF && m_Graphic < 0x4000 && m_Graphic != 1)
 	{
 		if (mode)
 		{
@@ -563,9 +573,16 @@ void TGameItem::LoadMulti()
 
 			if (pmb->Flags)
 			{
-				TMultiObject *mo = new TMultiObject(pmb->ID, m_X + pmb->X, m_Y + pmb->Y, m_Z + (char)pmb->Z, pmb->Flags);
+				TRenderStaticObject *mo = new TMultiObject(pmb->ID, m_X + pmb->X, m_Y + pmb->Y, m_Z + (char)pmb->Z, pmb->Flags);
+
+				if (ToLowerA(mo->GetStaticData()->Name) == "nodraw")
+				{
+					delete mo;
+					continue;
+				}
+
 				MapManager->AddRender(mo);
-				AddMultiObject(mo);
+				AddMultiObject((TMultiObject*)mo);
 			}
 
 			if (pmb->X < minX)

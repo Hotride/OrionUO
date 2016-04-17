@@ -23,7 +23,7 @@
 class TVector;
 //---------------------------------------------------------------------------
 //Класс по работе с функциями OpenGL
-class TGLEngine : public IGLEngine
+class TGLEngine
 {
 private:
 	//Контекст устройства

@@ -230,7 +230,7 @@ TMessageType TPacketManager::m_MessageTypes[0x100] =
 	/*0xBE*/ BMSGH("Assist Version", SIZE_VARIABLE, AssistVersion),
 	/*0xBF*/ BMSGH("Extended Command", SIZE_VARIABLE, ExtendedCommand),
 	/*0xC0*/ RMSGH("Graphical Effect", 0x24, GraphicEffect),
-	/*0xC1*/ RMSG("Display cliloc String", SIZE_VARIABLE),
+	/*0xC1*/ RMSGH("Display cliloc String", SIZE_VARIABLE, DisplayClilocString),
 	/*0xC2*/ BMSGH("Unicode prompt", SIZE_VARIABLE, UnicodePrompt),
 	/*0xC3*/ UMSG(SIZE_VARIABLE),
 	/*0xC4*/ UMSG(0x06),
@@ -241,7 +241,7 @@ TMessageType TPacketManager::m_MessageTypes[0x100] =
 	/*0xC9*/ UMSG(0x06),
 	/*0xCA*/ UMSG(0x06),
 	/*0xCB*/ UMSG(0x07),
-	/*0xCC*/ RMSG("Localized Text Plus String", SIZE_VARIABLE),
+	/*0xCC*/ RMSGH("Localized Text Plus String", SIZE_VARIABLE, DisplayClilocString),
 	/*0xCD*/ UMSG(0x01),
 	/*0xCE*/ UMSG(SIZE_VARIABLE),
 	/*0xCF*/ UMSG(0x4e),
@@ -251,7 +251,7 @@ TMessageType TPacketManager::m_MessageTypes[0x100] =
 	/*0xD3*/ RMSGH("Update Object (New)", SIZE_VARIABLE, UpdateObject),
 	/*0xD4*/ BMSGH("Open Book (New)", SIZE_VARIABLE, OpenBookNew),
 	/*0xD5*/ UMSG(SIZE_VARIABLE),
-	/*0xD6*/ BMSG("+Mega cliloc", SIZE_VARIABLE),
+	/*0xD6*/ BMSGH("Mega cliloc", SIZE_VARIABLE, MegaCliloc),
 	/*0xD7*/ BMSG("+AoS command", SIZE_VARIABLE),
 	/*0xD8*/ RMSG("+Custom house", SIZE_VARIABLE),
 	/*0xD9*/ SMSG("+Metrics", 0x10c),
@@ -716,6 +716,18 @@ void TPacketManager::ReceiveHandler( __in PBYTE buf, __in int size)
 	}
 }
 //---------------------------------------------------------------------------
+void TPacketManager::SendMegaClilocRequests()
+{
+	if (m_MegaClilocRequests.size())
+	{
+		TPacketMegaClilocRequest packet(m_MegaClilocRequests);
+		packet.Send();
+		packet.Free();
+
+		m_MegaClilocRequests.clear();
+	}
+}
+//---------------------------------------------------------------------------
 #define PACKET_HANDLER(name) void TPacketManager::Handle ##name (PBYTE buf, int size)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(ClientTalk)
@@ -724,23 +736,27 @@ PACKET_HANDLER(ClientTalk)
 	{
 		if (buf[4] == 0x78)
 		{
-			Ptr = buf + 7;
-			HandleUpdateObject(buf + 4, unpack16(buf + 5));
+			//Ptr = buf + 7;
+			//HandleUpdateObject(buf + 4, unpack16(buf + 5));
+			ReceiveHandler(buf + 4, unpack16(buf + 5));
 		}
 		else if (buf[4] == 0x3C)
 		{
-			Ptr = buf + 7;
-			HandleUpdateContainedItems(buf + 4, unpack16(buf + 5));
+			//Ptr = buf + 7;
+			//HandleUpdateContainedItems(buf + 4, unpack16(buf + 5));
+			ReceiveHandler(buf + 4, unpack16(buf + 5));
 		}
 		else if (buf[4] == 0x25)
 		{
-			Ptr = buf + 5;
-			HandleUpdateContainedItem(buf + 4, 0x14);
+			//Ptr = buf + 5;
+			//HandleUpdateContainedItem(buf + 4, 0x14);
+			ReceiveHandler(buf + 4, 0x14);
 		}
 		else if (buf[4] == 0x2E)
 		{
-			Ptr = buf + 5;
-			HandleEquipItem(buf + 4, 0x0F);
+			//Ptr = buf + 5;
+			//HandleEquipItem(buf + 4, 0x0F);
+			ReceiveHandler(buf + 4, 0x0F);
 		}
 	}
 
@@ -1012,6 +1028,9 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->OffsetX = 0;
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
+
+	if (!g_Player->GetClilocMessage().length())
+		m_MegaClilocRequests.push_back(g_Player->Serial);
 
 	TPRINT("Player 0x%08lX entered the world.\n", serial);
 
@@ -1355,6 +1374,9 @@ PACKET_HANDLER(UpdateItem)
 
 	World->MoveToTop(obj);
 
+	if (!obj->GetClilocMessage().length())
+		m_MegaClilocRequests.push_back(obj->Serial);
+
 	TPRINT("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
 }
 //---------------------------------------------------------------------------
@@ -1423,6 +1445,9 @@ PACKET_HANDLER(UpdateItemSA)
 	obj->Flags = flags;
 
 	TPRINT("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
+
+	if (!obj->GetClilocMessage().length())
+		m_MegaClilocRequests.push_back(obj->Serial);
 
 	World->MoveToTop(obj);
 }
@@ -1542,6 +1567,9 @@ PACKET_HANDLER(UpdateObject)
 	else
 		TPRINT("%d,%d,%d C%04X F%02X\n", obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
 
+	if (!obj->GetClilocMessage().length())
+		m_MegaClilocRequests.push_back(obj->Serial);
+
 	serial = ReadDWord();
 
 	World->MoveToTop(obj);
@@ -1550,6 +1578,8 @@ PACKET_HANDLER(UpdateObject)
 
 	if (*buf != 0x78)
 		end -= 6;
+
+	vector<DWORD> megaClilocRequestList;
 
 	while (serial != 0)
 	{
@@ -1574,9 +1604,21 @@ PACKET_HANDLER(UpdateObject)
 
 		TPRINT("\t0x%08X:%04X [%d] %04X\n", obj2->Serial, obj2->Graphic, layer, obj2->Color);
 
+		if (!obj2->GetClilocMessage().length())
+			megaClilocRequestList.push_back(obj2->Serial);
+
 		World->MoveToTop(obj2);
 
 		serial = ReadDWord();
+	}
+
+	if (megaClilocRequestList.size())
+	{
+		TPacketMegaClilocRequest packet(megaClilocRequestList);
+		packet.Send();
+		packet.Free();
+
+		megaClilocRequestList.clear();
 	}
 }
 //---------------------------------------------------------------------------
@@ -1603,6 +1645,9 @@ PACKET_HANDLER(EquipItem)
 
 	World->PutEquipment(obj, cserial, layer);
 	obj->OnGraphicChange();
+
+	if (!obj->GetClilocMessage().length())
+		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (layer < OL_MOUNT)
 		GumpManager->UpdateGump(cserial, 0, GT_PAPERDOLL);
@@ -1637,7 +1682,6 @@ PACKET_HANDLER(UpdateContainedItem)
 	obj->Dragged = false;
 	obj->MapIndex = g_CurrentMap;
 
-	obj->Layer = OL_NONE;
 	obj->Graphic = ReadWord();
 	obj->OnGraphicChange();
 	Move(1);
@@ -1650,9 +1694,28 @@ PACKET_HANDLER(UpdateContainedItem)
 		Move(1);
 
 	DWORD cserial = ReadDWord();
-	World->PutContainer(obj, cserial);
+	bool canPut = true;
+
+	if (obj->Layer != OL_NONE)
+	{
+		TGameObject *container = World->FindWorldObject(cserial);
+		if (container != NULL && container->IsCorpse())
+		{
+			canPut = false;
+			World->PutEquipment(obj, container, obj->Layer);
+		}
+	}
+
+	if (canPut)
+	{
+		obj->Layer = OL_NONE;
+		World->PutContainer(obj, cserial);
+	}
 
 	obj->Color = ReadWord();
+
+	if (!obj->GetClilocMessage().length())
+		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (obj->Graphic == 0x0EB0) //Message board item
 	{
@@ -1693,6 +1756,7 @@ PACKET_HANDLER(UpdateContainedItems)
 	bool bbUpdated = false;
 	vector<CORPSE_EQUIPMENT_DATA> vced;
 	bool containerIsCorpse = false;
+	vector<DWORD> megaClilocRequestList;
 
 	IFOR(i, 0, count)
 	{
@@ -1707,6 +1771,18 @@ PACKET_HANDLER(UpdateContainedItems)
 			Move(1);
 
 		DWORD cserial = ReadDWord();
+
+		if (cupd && cserial != cupd)
+		{
+			PBYTE oldPtr = Ptr;
+			Ptr -= 5;
+
+			cserial = ReadDWord();
+
+			if (cserial != cupd)
+				continue;
+		}
+
 		WORD color = ReadWord();
 
 		contobj = World->GetWorldItem(cserial);
@@ -1742,7 +1818,7 @@ PACKET_HANDLER(UpdateContainedItems)
 
 				if (contobj->Opened)
 				{
-					TGump *gameGump = GumpManager->GetGump(contobj->GetSerial(), 0, GT_CONTAINER);
+					TGump *gameGump = GumpManager->GetGump(contobj->Serial, 0, GT_CONTAINER);
 					if (gameGump != NULL)
 						isContGameBoard = ((TGumpContainer*)gameGump)->IsGameBoard;
 				}
@@ -1756,6 +1832,9 @@ PACKET_HANDLER(UpdateContainedItems)
 
 		obj->MapIndex = g_CurrentMap;
 		obj->Layer = 0;
+
+		if (!obj->GetClilocMessage().length())
+			megaClilocRequestList.push_back(obj->Serial);
 
 		World->PutContainer(obj, cserial);
 
@@ -1782,6 +1861,15 @@ PACKET_HANDLER(UpdateContainedItems)
 		TPRINT("\t|0x%08X<0x%08X:%04X*%d (%d,%d) %04X\n", obj->Container, obj->Serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Color);
 	}
 
+	if (megaClilocRequestList.size())
+	{
+		TPacketMegaClilocRequest packet(megaClilocRequestList);
+		packet.Send();
+		packet.Free();
+
+		megaClilocRequestList.clear();
+	}
+
 	if (containerIsCorpse)
 	{
 		IFOR(i, 0, (int)vced.size())
@@ -1797,9 +1885,9 @@ PACKET_HANDLER(UpdateContainedItems)
 
 	if (contobj != NULL)
 	{
-		TGump *gump = GumpManager->UpdateGump(contobj->GetSerial(), 0, GT_SPELLBOOK);
+		TGump *gump = GumpManager->UpdateGump(contobj->Serial, 0, GT_SPELLBOOK);
 		if (gump == NULL)
-			gump = GumpManager->UpdateGump(contobj->GetSerial(), 0, GT_CONTAINER);
+			gump = GumpManager->UpdateGump(contobj->Serial, 0, GT_CONTAINER);
 
 		if (gump != NULL)
 			contobj->Opened = true;
@@ -1823,9 +1911,11 @@ PACKET_HANDLER(DenyMoveItem)
 		if (obj == NULL)
 		{
 			obj = World->GetWorldItem(ObjectInHand->Serial);
+
 			if (obj != NULL)
 			{
 				obj->Paste(ObjectInHand);
+				m_MegaClilocRequests.push_back(obj->Serial);
 				World->PutContainer(obj, ObjectInHand->Container);
 
 				World->MoveToTop(obj);
@@ -1851,7 +1941,7 @@ PACKET_HANDLER(DeleteObject)
 
 		if (sep)
 			ObjectInHand->Separated = false;
-		else if (ObjectInHand->Deleted)
+		else if (ObjectInHand->Dropped/*Deleted*/)
 		{
 			delete ObjectInHand;
 			ObjectInHand = NULL;
@@ -1925,7 +2015,10 @@ PACKET_HANDLER(UpdateCharacter)
 	obj->MapIndex = g_CurrentMap;
 	obj->Graphic = ReadWord();
 	obj->OnGraphicChange();
-	
+
+	if (!obj->GetClilocMessage().length())
+		m_MegaClilocRequests.push_back(obj->Serial);
+
 	WORD x = ReadWord();
 	WORD y = ReadWord();
 	char z = ReadChar();
@@ -3900,17 +3993,154 @@ PACKET_HANDLER(BulletinBoardData)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(DisplayDeath)
 {
+	if (World == NULL)
+		return;
+
 	DWORD serial = ReadDWord();
 	DWORD corpseSerial = ReadDWord();
 
-	TGameCharacter *gc = World->FindWorldCharacter(serial);
-	if (gc != NULL)
-		gc->CorpseLink = corpseSerial;
+	TGameItem *obj = World->FindWorldItem(corpseSerial);
+	if (obj != NULL)
+		obj->AnimIndex = 0;
+	else
+	{
+		pair<DWORD, DWORD> p(corpseSerial, GetTickCount() + 1000);
+		g_CorpseSerialList.push_back(p);
+	}
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(OpenChat)
 {
 	BYTE newbuf[4] = { 0xf0, 0x00, 0x04, 0xff };
 	UO->Send(newbuf, 4);
+}
+//---------------------------------------------------------------------------
+PACKET_HANDLER(DisplayClilocString)
+{
+	if (World == NULL)
+		return;
+
+	DWORD serial = ReadDWord();
+	WORD graphic = ReadWord();
+	BYTE type = ReadByte();
+	WORD color = ReadWord();
+	WORD font = ReadWord();
+	DWORD cliloc = ReadDWord();
+
+	BYTE flags = 0;
+	if (*buf == 0xCC)
+		flags = ReadByte();
+
+	string name = ReadString(30);
+
+	string affix = "";
+	if (*buf == 0xCC)
+		affix = ReadString(0);
+
+	wstring args((wchar_t*)Ptr);
+	wstring message = ClilocManager->ParseArgumentsToClilocString(cliloc, args);
+	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
+
+	/*vector<wstring> arguments;
+
+	while (true)
+	{
+		size_t pos = args.find(L"\t");
+
+		if (pos != string::npos)
+		{
+			arguments.push_back(args.substr(0, pos));
+			args = args.substr(pos + 1);
+		}
+		else
+		{
+			arguments.push_back(args);
+			break;
+		}
+	}
+
+	IFOR(i, 0, (int)arguments.size())
+	{
+		size_t pos1 = message.find(L"~");
+
+		if (pos1 == string::npos)
+			break;
+
+		size_t pos2 = message.find(L"~", pos1 + 1);
+
+		message.replace(pos1, pos2 - pos1 + 1, arguments[i]);
+	}*/
+
+	if (/*type == ST_BROADCAST || type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || name == string("System"))
+		UO->CreateUnicodeTextMessage(TT_SYSTEM, serial, font, color, message);
+	else
+	{
+		/*if (type == ST_EMOTE)
+		{
+			color = ConfigManager.EmoteColor;
+			str = L"*" + str + L"*";
+		}*/
+
+		UO->CreateUnicodeTextMessage(TT_OBJECT, serial, font, color, message);
+
+		//if (serial >= 0x40000000) //Только для предметов
+		{
+			TGameObject *obj = World->FindWorldObject(serial);
+
+			if (obj != NULL && !obj->GetName().length())
+			{
+				obj->SetName(name);
+
+				if (obj->NPC)
+					GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
+			}
+		}
+	}
+}
+//---------------------------------------------------------------------------
+PACKET_HANDLER(MegaCliloc)
+{
+	if (World == NULL)
+		return;
+
+	WORD wat = ReadWord();
+	DWORD serial = ReadDWord();
+
+	TGameObject *obj = World->FindWorldObject(serial);
+
+	if (obj == NULL)
+		return;
+
+	WORD wat2 = ReadWord();
+	DWORD testedSerial = ReadDWord();
+	wstring message(L"");
+	PBYTE end = buf + size;
+
+	while (Ptr < end)
+	{
+		DWORD cliloc = ReadDWord();
+
+		TPRINT("new cliloc id = 0x%08x\n", cliloc);
+
+		if (!cliloc)
+			break;
+
+		short len = ReadShort();
+
+		if (len > 0)
+		{
+			wstring argument((wchar_t*)Ptr, len / 2);
+			Ptr += len;
+
+			if (message.length())
+				message += L"\n";
+
+			message += ClilocManager->ParseArgumentsToClilocString(cliloc, argument);
+
+			TPRINT("Cliloc: 0x%08X len=%i arg=%s\n", cliloc, len, ToString(argument).c_str());
+		}
+	}
+
+	TPRINT("message=%s\n", ToString(message).c_str());
 }
 //---------------------------------------------------------------------------

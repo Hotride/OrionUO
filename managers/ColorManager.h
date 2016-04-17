@@ -28,7 +28,7 @@ struct INT_HUES
 };
 //---------------------------------------------------------------------------
 //! дасс менеджера цветов
-class TColorManager : public IColorManager
+class TColorManager
 {
 private:
 	//!”казатель на палитру

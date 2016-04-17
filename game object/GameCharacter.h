@@ -84,9 +84,6 @@ protected:
 	//!Время для установки случайной анимации
 	DWORD m_TimeToRandomFidget;
 
-	//!Ссылка на труп (для анимации трупа)
-	DWORD m_CorpseLink;
-	
 	//!Смещение картинки по оси X
 	int m_OffsetX;
 
@@ -155,7 +152,6 @@ public:
 	SETGET(DWORD, LastStepSoundTime);
 	SETGET(DWORD, TimeToRandomFidget);
 	SETGET(BYTE, StepSoundOffset);
-	SETGET(DWORD, CorpseLink);
 
 	SETGETEX(int, OffsetX);
 	SETGETEX(int, OffsetY);

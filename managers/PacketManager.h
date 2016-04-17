@@ -120,6 +120,7 @@ private:
 	*/
 	wstring ReadUnicodeString(__in int size);
 
+	vector<DWORD> m_MegaClilocRequests;
 protected:
 	//!Обработчики пакетов
 	HANDLER_PACKET(ClientTalk)
@@ -200,6 +201,8 @@ protected:
 	HANDLER_PACKET(BulletinBoardData)
 	HANDLER_PACKET(DisplayDeath)
 	HANDLER_PACKET(OpenChat)
+	HANDLER_PACKET(DisplayClilocString)
+	HANDLER_PACKET(MegaCliloc)
 
 //Не обработаны
 /*
@@ -211,9 +214,6 @@ protected:
 0xB3 RMSG("Chat Text ?", SIZE_VARIABLE),
 0xB5 BMSG("Open Chat Window", 0x40),
 0xB7 RMSG("Popup Help Data", SIZE_VARIABLE),
-0xC1 RMSG("Display cliloc String", SIZE_VARIABLE),
-0xCC RMSG("Localized Text Plus String", SIZE_VARIABLE),
-0xD6 BMSG("+Mega cliloc",SIZE_VARIABLE),
 0xD7 BMSG("+AoS command",SIZE_VARIABLE),
 0xD8 RMSG("+Custom house",SIZE_VARIABLE),
 0xDC RMSG("OPL Info Packet", 9),
@@ -262,6 +262,8 @@ public:
 	@return Данные о пакете
 	*/
 	TMessageType GetType(__in BYTE id) const { return m_MessageTypes[id]; }
+
+	void SendMegaClilocRequests();
 };
 //---------------------------------------------------------------------------
 extern TPacketManager PacketManager;

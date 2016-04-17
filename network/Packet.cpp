@@ -1384,4 +1384,17 @@ TPacketInvokeVirtureRequest::TPacketInvokeVirtureRequest(BYTE id)
 	WriteByte(id);
 	WriteByte(0x00);
 }
+TPacketMegaClilocRequest::TPacketMegaClilocRequest(vector<DWORD> list)
+: TPacket(0, true)
+{
+	int len = (int)list.size();
+	int size = 3 + (len * 4);
+	Create(size);
+
+	WriteByte(0xD6);
+	WriteWord((WORD)size);
+
+	IFOR(i, 0, len)
+		WriteDWord(list[i]);
+}
 //---------------------------------------------------------------------------

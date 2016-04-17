@@ -27,7 +27,7 @@ m_AnimationRepeatMode(1), m_AnimationDirection(false), m_AnimationFromServer(fal
 m_MaxMana(0), m_MaxStam(0), m_Mana(0), m_Stam(0), m_OffsetX(0), m_OffsetY(0),
 m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(0),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
-m_AfterStepDelay(0), m_StepSoundOffset(0), m_CorpseLink(0)
+m_AfterStepDelay(0), m_StepSoundOffset(0)
 {
 	//!¬ысокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;
@@ -295,7 +295,7 @@ void TGameCharacter::OnGraphicChange( __in_opt int direction)
 		{
 			//UO->StatusReq(m_Serial);
 
-			if (ConfigManager.ShowIncomingNames)
+			if (ConfigManager.ShowIncomingNames && !m_Name.length())
 				UO->NameReq(m_Serial);
 		}
 	

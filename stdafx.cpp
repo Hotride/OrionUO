@@ -156,6 +156,7 @@ DWORD g_LastUseObject = 0;
 DWORD g_LastTargetObject = 0;
 DWORD g_LastAttackObject = 0;
 int g_UpdateRange = 18;
+CORPSE_LIST_MAP g_CorpseSerialList;
 
 DWORD g_LastRenderTime = 0;
 

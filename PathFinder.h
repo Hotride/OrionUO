@@ -49,7 +49,7 @@ struct PATH_POINT
 };
 //---------------------------------------------------------------------------
 //Класс для поиска пути и теста шага на точку
-class TPathFinder : public IPathFinder, public TBaseQueue
+class TPathFinder : public TBaseQueue
 {
 private:
 	//Вычисление новой Z координаты

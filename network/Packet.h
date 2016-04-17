@@ -616,4 +616,11 @@ public:
 	TPacketInvokeVirtureRequest(BYTE id);
 };
 //---------------------------------------------------------------------------
+class TPacketMegaClilocRequest : public TPacket
+{
+private:
+public:
+	TPacketMegaClilocRequest(vector<DWORD> list);
+};
+//---------------------------------------------------------------------------
 #endif

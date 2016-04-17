@@ -21,7 +21,7 @@
 #define GumpH
 //---------------------------------------------------------------------------
 //!Базовый класс гампов
-class TGump : public IGump, public TRenderObject
+class TGump : public TRenderObject
 {
 protected:
 	//!Тип гампа

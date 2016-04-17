@@ -38,7 +38,7 @@ TGumpStatusbar::TGumpStatusbar(DWORD serial, short x, short y, bool minimized)
 //---------------------------------------------------------------------------
 TGumpStatusbar::~TGumpStatusbar()
 {
-	if (ConnectionManager.Connected())
+	if (ConnectionManager.Connected() && World != NULL && World->FindWorldObject(m_Serial) != NULL)
 	{
 		TPacketCloseStatusbarGump packet(m_Serial);
 		packet.Send();

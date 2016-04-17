@@ -358,8 +358,12 @@ void TMapManager::LoadBlock( __inout TMapBlock *block)
 				if (pos >= 64)
 					continue;
 
-				TMapObject *obj = new TStaticObject(pos, sb->Color, sb->Hue, bx + x, by + y, sb->Z);
-				block->AddObject(obj, x, y);
+				TRenderStaticObject *obj = new TStaticObject(pos, sb->Color, sb->Hue, bx + x, by + y, sb->Z);
+
+				if (ToLowerA(obj->GetStaticData()->Name) == "nodraw")
+					delete obj;
+				else
+					block->AddObject(obj, x, y);
 			}
 		}
 	}

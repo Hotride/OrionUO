@@ -142,7 +142,7 @@ string TCliloc::GetA( __in DWORD id, __in string result)
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-wstring TCliloc::GetW( __in DWORD id, __in string result)
+wstring TCliloc::GetW(__in DWORD id, __in string result)
 {
 	return ToWString(GetA(id, result));
 }
@@ -210,5 +210,42 @@ TCliloc *TClilocManager::Cliloc(string lang)
 
 	m_LastCliloc = obj;
 	return obj;
+}
+//---------------------------------------------------------------------------
+wstring TClilocManager::ParseArgumentsToClilocString(DWORD cliloc, wstring args)
+{
+	wstring message = Cliloc(g_Language)->GetW(cliloc);
+
+	vector<wstring> arguments;
+
+	while (true)
+	{
+		size_t pos = args.find(L"\t");
+
+		if (pos != string::npos)
+		{
+			arguments.push_back(args.substr(0, pos));
+			args = args.substr(pos + 1);
+		}
+		else
+		{
+			arguments.push_back(args);
+			break;
+		}
+	}
+
+	IFOR(i, 0, (int)arguments.size())
+	{
+		size_t pos1 = message.find(L"~");
+
+		if (pos1 == string::npos)
+			break;
+
+		size_t pos2 = message.find(L"~", pos1 + 1);
+
+		message.replace(pos1, pos2 - pos1 + 1, arguments[i]);
+	}
+
+	return message;
 }
 //---------------------------------------------------------------------------

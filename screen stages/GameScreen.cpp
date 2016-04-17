@@ -2121,6 +2121,9 @@ void TGameScreen::DrawGameWindow( __in bool &mode)
 	else
 	{
 	}
+
+	if (mode && PluginManager != NULL)
+		PluginManager->WorldDraw();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -2801,19 +2804,38 @@ void TGameScreen::OnLeftMouseUp()
 
 	if (g_MouseX < GameWindowPosX || g_MouseY < GameWindowPosY || g_MouseX > (GameWindowPosX + g_GameWindowWidth) || g_MouseY > (GameWindowPosY + g_GameWindowHeight))
 		return;
-	
-	if (Target.IsTargeting() && g_SelectedObject != NULL)
+
+	if (Target.IsTargeting())
 	{
-		if (g_LastObjectType == SOT_GAME_OBJECT && g_LastSelectedObject)
-			Target.SendTargetObject(g_LastSelectedObject);
-		else if (g_LastObjectType == SOT_LAND_OBJECT)
-			Target.SendTargetTile(g_SelectedObject->Graphic, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z);
-		else if (g_LastObjectType == SOT_STATIC_OBJECT)
-			Target.SendTargetTile(g_SelectedObject->Graphic - 0x4000, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z);
+		if (g_LastObjectType == SOT_TEXT_OBJECT && g_SelectedTextObject != NULL)
+		{
+			TTextData *td = (TTextData*)g_SelectedTextObject;
 
-		g_LastLClickTime = 0;
+			if (td->Type == TT_OBJECT)
+			{
+				TGameObject *obj = World->FindWorldObject(td->Serial);
 
-		return;
+				if (obj != NULL && (obj->NPC || obj->IsCorpse()))
+					Target.SendTargetObject(td->Serial);
+			}
+
+			g_LastLClickTime = 0;
+
+			return;
+		}
+		else if (g_SelectedObject != NULL)
+		{
+			if (g_LastObjectType == SOT_GAME_OBJECT && g_LastSelectedObject)
+				Target.SendTargetObject(g_LastSelectedObject);
+			else if (g_LastObjectType == SOT_LAND_OBJECT)
+				Target.SendTargetTile(0/*g_SelectedObject->Graphic*/, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z);
+			else if (g_LastObjectType == SOT_STATIC_OBJECT)
+				Target.SendTargetTile(g_SelectedObject->Graphic - 0x4000, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z);
+
+			g_LastLClickTime = 0;
+
+			return;
+		}
 	}
 	
 	DWORD drop_container = 0xFFFFFFFF;
@@ -2837,7 +2859,7 @@ void TGameScreen::OnLeftMouseUp()
 			else if (target->NPC)
 				drop_container = target->Serial;
 
-			if (drop_container != 0xFFFFFFFF)
+			//if (drop_container != 0xFFFFFFFF)
 			{
 				dropX = target->X;
 				dropY = target->Y;
@@ -3132,7 +3154,7 @@ void TGameScreen::OnCharPress( __in WPARAM wparam, __in LPARAM lparam)
 		EntryPointer->SetText(g_LastConsoleEntry);
 		EntryPointer->SetPos(g_LastConsoleEntry.length());
 	}
-	else if (!altPressed && !ctrlPressed && EntryPointer->Length() < 60)
+	else if (isprint(wparam) && !altPressed && !ctrlPressed && EntryPointer->Length() < 60)
 		EntryPointer->Insert(wparam);
 }
 //---------------------------------------------------------------------------

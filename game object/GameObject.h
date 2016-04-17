@@ -64,6 +64,8 @@ protected:
 	*/
 	void GenerateObjectHandlesTexture(__in wstring text);
 
+	wstring m_ClilocMessage;
+
 public:
 	TGameObject(DWORD serial = 0);
 	virtual ~TGameObject();
@@ -77,6 +79,7 @@ public:
 	SETGET(bool, Clicked);
 	SETGETEX(char, AnimIndex);
 	SETGET(DWORD, LastAnimationChangeTime);
+	SETGET(wstring, ClilocMessage);
 
 	/*!
 	Добавить текст в контейнер

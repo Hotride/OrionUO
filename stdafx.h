@@ -54,6 +54,8 @@ using std::vector;
 using std::string;
 using std::wstring;
 
+using std::pair;
+
 #define _USE_MATH_DEFINES // for C++
 #include <math.h>
 
@@ -418,6 +420,9 @@ extern int g_UpdateRange;
 
 //!Координаты, с которых следует начинать расчет удаления объектов
 extern POINT g_RemoveRangeXY;
+
+typedef vector<pair<DWORD, DWORD>> CORPSE_LIST_MAP;
+extern CORPSE_LIST_MAP g_CorpseSerialList;
 //---------------------------------------------------------------------------
 
 

@@ -442,27 +442,6 @@ TGameCharacter *TGameWorld::FindWorldCharacter(__in DWORD serial)
 }
 //---------------------------------------------------------------------------
 /*!
-Найти игрового персонажа (владельца трупа) в памяти
-@param [__in] serial Серийник трупа
-@return Ссылка на персонажа или NULL
-*/
-TGameCharacter *TGameWorld::FindWorldCorpseOwner(__in DWORD serial)
-{
-	TGameObject *item = NULL;
-
-	if (serial)
-	{
-		for (item = (TGameObject*)m_Items; item != NULL; item = (TGameObject*)item->m_Next)
-		{
-			if (item->NPC && ((TGameCharacter*)item)->CorpseLink == serial)
-				break;
-		}
-	}
-
-	return (TGameCharacter*)item;
-}
-//---------------------------------------------------------------------------
-/*!
 Удалить объект из памяти
 @param [__in] obj Ссылка на объект
 @return 

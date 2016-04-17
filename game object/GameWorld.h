@@ -98,13 +98,6 @@ public:
 	TGameCharacter *FindWorldCharacter(__in DWORD serial);
 
 	/*!
-	Найти игрового персонажа (владельца трупа) в памяти
-	@param [__in] serial Серийник трупа
-	@return Ссылка на персонажа или NULL
-	*/
-	TGameCharacter *FindWorldCorpseOwner(__in DWORD serial);
-
-	/*!
 	Удалить объект из памяти
 	@param [__in] obj Ссылка на объект
 	@return 

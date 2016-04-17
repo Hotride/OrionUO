@@ -21,7 +21,7 @@
 #define GumpManagerH
 //--------------------------------------------------------------------------
 //!Класс менеджера гампов
-class TGumpManager : public IGumpManager, public TBaseQueue
+class TGumpManager : public TBaseQueue
 {
 private:
 	/*!
