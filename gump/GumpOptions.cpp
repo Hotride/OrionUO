@@ -3133,8 +3133,11 @@ void TGumpOptions::ApplyPageChanges()
 
 			g_GameWindowHeight = curY;
 
-			TPacketGameWindowSize packet;
-			packet.Send();
+			if (PacketManager.GetClientVersion() >= CV_200)
+			{
+				TPacketGameWindowSize packet;
+				packet.Send();
+			}
 
 			ConfigManager.SpeechDelay = g_OptionsConfig.SpeechDelay;
 			ConfigManager.ScaleSpeechDelay = g_OptionsConfig.ScaleSpeechDelay;

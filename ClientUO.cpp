@@ -4200,11 +4200,17 @@ void TUltimaOnline::LoginComplete()
 		langPacket.Send();
 		langPacket.Free();
 
-		//TPacketClientType clientTypePacket(g_ClientFlag);
-		//clientTypePacket.Send();
-	
-		//TPacketClientViewRange vrPacket(g_UpdateRange);
-		//vrPacket.Send();
+		if (PacketManager.GetClientVersion() >= CV_306E)
+		{
+			TPacketClientType clientTypePacket(g_ClientFlag);
+			clientTypePacket.Send();
+		}
+
+		if (PacketManager.GetClientVersion() >= CV_305D)
+		{
+			TPacketClientViewRange vrPacket(g_UpdateRange);
+			vrPacket.Send();
+		}
 
 		InitScreen(GS_GAME);
 

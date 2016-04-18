@@ -1029,7 +1029,7 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
 
-	if (!g_Player->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A &&!g_Player->GetClilocMessage().length())
 		m_MegaClilocRequests.push_back(g_Player->Serial);
 
 	TPRINT("Player 0x%08lX entered the world.\n", serial);
@@ -1043,8 +1043,11 @@ PACKET_HANDLER(EnterWorld)
 	
 	UO->StatusReq(g_PlayerSerial);
 	
-	TPacketGameWindowSize packet;
-	packet.Send();
+	if (m_ClientVersion >= CV_200)
+	{
+		TPacketGameWindowSize packet;
+		packet.Send();
+	}
 	
 	BYTE wbuf[4] = {0x65, 0x01, 0x46, 0};
 	Ptr = wbuf + 1;
@@ -1374,7 +1377,7 @@ PACKET_HANDLER(UpdateItem)
 
 	World->MoveToTop(obj);
 
-	if (!obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A &&!obj->GetClilocMessage().length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	TPRINT("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
@@ -1446,7 +1449,7 @@ PACKET_HANDLER(UpdateItemSA)
 
 	TPRINT("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
 
-	if (!obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A &&!obj->GetClilocMessage().length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	World->MoveToTop(obj);
@@ -1567,7 +1570,7 @@ PACKET_HANDLER(UpdateObject)
 	else
 		TPRINT("%d,%d,%d C%04X F%02X\n", obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
 
-	if (!obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A &&!obj->GetClilocMessage().length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	serial = ReadDWord();
@@ -1604,7 +1607,7 @@ PACKET_HANDLER(UpdateObject)
 
 		TPRINT("\t0x%08X:%04X [%d] %04X\n", obj2->Serial, obj2->Graphic, layer, obj2->Color);
 
-		if (!obj2->GetClilocMessage().length())
+		if (m_ClientVersion >= CV_500A && !obj2->GetClilocMessage().length())
 			megaClilocRequestList.push_back(obj2->Serial);
 
 		World->MoveToTop(obj2);
@@ -1646,7 +1649,7 @@ PACKET_HANDLER(EquipItem)
 	World->PutEquipment(obj, cserial, layer);
 	obj->OnGraphicChange();
 
-	if (!obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A &&!obj->GetClilocMessage().length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (layer < OL_MOUNT)
@@ -1714,7 +1717,7 @@ PACKET_HANDLER(UpdateContainedItem)
 
 	obj->Color = ReadWord();
 
-	if (!obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A &&!obj->GetClilocMessage().length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (obj->Graphic == 0x0EB0) //Message board item
@@ -1833,7 +1836,7 @@ PACKET_HANDLER(UpdateContainedItems)
 		obj->MapIndex = g_CurrentMap;
 		obj->Layer = 0;
 
-		if (!obj->GetClilocMessage().length())
+		if (m_ClientVersion >= CV_500A &&!obj->GetClilocMessage().length())
 			megaClilocRequestList.push_back(obj->Serial);
 
 		World->PutContainer(obj, cserial);
@@ -1915,7 +1918,9 @@ PACKET_HANDLER(DenyMoveItem)
 			if (obj != NULL)
 			{
 				obj->Paste(ObjectInHand);
-				m_MegaClilocRequests.push_back(obj->Serial);
+
+				if (m_ClientVersion >= CV_500A)
+					m_MegaClilocRequests.push_back(obj->Serial);
 				World->PutContainer(obj, ObjectInHand->Container);
 
 				World->MoveToTop(obj);
@@ -2016,7 +2021,7 @@ PACKET_HANDLER(UpdateCharacter)
 	obj->Graphic = ReadWord();
 	obj->OnGraphicChange();
 
-	if (!obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A &&!obj->GetClilocMessage().length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	WORD x = ReadWord();
@@ -4087,36 +4092,6 @@ PACKET_HANDLER(DisplayClilocString)
 	wstring args((wchar_t*)Ptr);
 	wstring message = ClilocManager->ParseArgumentsToClilocString(cliloc, args);
 	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
-
-	/*vector<wstring> arguments;
-
-	while (true)
-	{
-		size_t pos = args.find(L"\t");
-
-		if (pos != string::npos)
-		{
-			arguments.push_back(args.substr(0, pos));
-			args = args.substr(pos + 1);
-		}
-		else
-		{
-			arguments.push_back(args);
-			break;
-		}
-	}
-
-	IFOR(i, 0, (int)arguments.size())
-	{
-		size_t pos1 = message.find(L"~");
-
-		if (pos1 == string::npos)
-			break;
-
-		size_t pos2 = message.find(L"~", pos1 + 1);
-
-		message.replace(pos1, pos2 - pos1 + 1, arguments[i]);
-	}*/
 
 	if (/*type == ST_BROADCAST || type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || name == string("System"))
 		UO->CreateUnicodeTextMessage(TT_SYSTEM, serial, font, color, message);

@@ -113,7 +113,7 @@ void TGumpMenubar::GenerateFrame()
 
 			IFOR(i, 0, 8)
 			{
-				int drawMode = (int)(g_GumpSelectElement == textPosTable[i][3]);
+				int drawMode = (int)(g_GumpSelectElement == textPosTable[i][3]) * 4;
 
 				if (drawMode)
 				{

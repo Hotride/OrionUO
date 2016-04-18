@@ -82,6 +82,9 @@ void TScreenshotBuilder::SaveScreen()
 
 	delete pixels;
 
+	if (g_GameState >= GS_GAME)
+		UO->CreateTextMessageF(3, 0, "Screenshot saved to: %s", path.c_str());
+
 	/*TPRINT("Saving screen to:\n");
 	TPRINT(path.c_str());
 	TPRINT("\n");*/

@@ -2799,8 +2799,11 @@ void TGameScreen::OnLeftMouseUp()
 			if (g_GameWindowHeight < 480)
 				g_GameWindowHeight = 480;
 
-			TPacketGameWindowSize packet;
-			packet.Send();
+			if (PacketManager.GetClientVersion() >= CV_200)
+			{
+				TPacketGameWindowSize packet;
+				packet.Send();
+			}
 
 			m_GameWindowResizing = false;
 
