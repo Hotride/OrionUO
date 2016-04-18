@@ -537,6 +537,7 @@ typedef std::vector<BYTE> WaveFile;
 #include "PathFinder.h"
 #include "Macro.h"
 #include "CityList.h"
+#include "ScreenshotBuilder.h"
 #include "VideoRecorder.h"
 #include "gump\\GumpObject.h"
 #include "gump\\Gump.h"

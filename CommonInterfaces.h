@@ -20,148 +20,92 @@
 #ifndef CommonInterfacesH
 #define CommonInterfacesH
 //----------------------------------------------------------------------------
-#ifndef interface
-#define interface struct
+#ifndef UOInterface
+#define UOInterface struct
 #endif
 //----------------------------------------------------------------------------
-class TTextureObject;
-class TVector;
-class TMappedHeader;
-class TGump;
+//IGLEngine
+typedef void __cdecl FUNCDEF_SCISSOR(int, int, int, int);
+typedef void __cdecl FUNCDEF_DRAW_LINE(DWORD, int, int, int, int);
+typedef void __cdecl FUNCDEF_DRAW_POLYGONE(DWORD, int, int, int, int);
+typedef void __cdecl FUNCDEF_DRAW_CIRCLE(DWORD, float, float, float, int);
+
+//IUltimaOnline
+typedef DWORD __cdecl FUNCDEF_GET_LAND_FLAGS(WORD);
+typedef DWORD __cdecl FUNCDEF_GET_STATIC_FLAGS(WORD);
+
+//IClilocManager
+typedef string __cdecl FUNCDEF_GET_CLILOC_A(DWORD, string);
+typedef wstring __cdecl FUNCDEF_GET_CLILOC_W(DWORD, string);
+typedef wstring __cdecl FUNCDEF_GET_CLILOC_ARGUMENTS(DWORD, wstring);
+
+//IColorManager
+typedef int __cdecl FUNCDEF_GET_HUES_COUNT();
+typedef WORD __cdecl FUNCDEF_GET_COLOR32TO16(DWORD&);
+typedef DWORD __cdecl FUNCDEF_GET_COLOR16TO32(WORD&);
+typedef WORD __cdecl FUNCDEF_GET_COLOR_TO_GRAY(WORD&);
+typedef DWORD __cdecl FUNCDEF_GET_POLYGONE_COLOR(WORD, WORD);
+typedef DWORD __cdecl FUNCDEF_GET_COLOR(WORD&, WORD);
+typedef DWORD __cdecl FUNCDEF_GET_PRTIAL_HUE_COLOR(WORD&, WORD);
+
+//IPathFinder
+typedef bool __cdecl FUNCDEF_GET_CAN_WALK(BYTE&, int&, int&, char&);
+typedef bool __cdecl FUNCDEF_GET_WALK(bool, BYTE);
 //----------------------------------------------------------------------------
-interface IGLEngine
+UOInterface IGLEngine
 {
-	virtual void ViewPort(int x, int y, int width, int height) = 0;
-	virtual void RestorePort() = 0;
-
-	virtual void Scissor(int x, int y, int width, int height) = 0;
-
-	virtual void DrawLine(int x, int y, int targetX, int targetY) = 0;
-	virtual void DrawPolygone(int x, int y, int width, int height) = 0;
-	virtual void DrawCircle(float x, float y, float radius, int gradientMode) = 0;
-
-	virtual void DrawLandTexture(GLuint &Texture, int &x, int &y, RECT &rc, TVector *normals) = 0;
-	virtual void Draw(GLuint &Texture, int &x, int &y, int width, int height) = 0;
-	virtual void DrawRotated(GLuint &texture, int &x, int &y, int width, int height, float &angle) = 0;
-	virtual void Draw(GLuint &Texture, int &x, int &y, int width, int height, bool &mirror) = 0;
-	virtual void Draw(GLuint &Texture, int &x, int &y, int width, int height, int &drawWidth, int &drawHeight) = 0;
-	virtual void DrawResizepic(TTextureObject **th, int &x, int &y, int &width, int &height) = 0;
+	FUNCDEF_SCISSOR *Scissor;
+	FUNCDEF_DRAW_LINE *DrawLine;
+	FUNCDEF_DRAW_POLYGONE *DrawPolygone;
+	FUNCDEF_DRAW_CIRCLE *DrawCircle;
 };
 //----------------------------------------------------------------------------
-interface IUltimaOnline
+UOInterface IUltimaOnline
 {
-	virtual bool ExecuteGumpPart(WORD id, int count) = 0;
-
-	virtual void DrawSphereGump(int value, float maxValue, int x, int y, int width) = 0;
-
-	virtual void DrawGump(WORD id, WORD color, int x, int y, bool partialHue) = 0;
-	virtual void DrawGump(WORD id, WORD color, int x, int y, int width, int height, bool partialHue) = 0;
-	virtual void DrawResizepicGump(WORD id, int x, int y, int width, int height) = 0;
-	virtual void DrawLandTexture(WORD &id, WORD &color, int &x, int &y, RECT &rc, TVector *normals) = 0;
-	virtual void DrawLandArt(WORD id, WORD color, int x, int y, int z) = 0;
-	virtual void DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool selection) = 0;
-	virtual void DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int z, bool selection) = 0;
-	virtual void DrawStaticArtInContainer(WORD id, WORD color, int x, int y, bool selection, bool onMouse) = 0;
-	virtual void DrawLight(BYTE id, WORD color, int x, int y) = 0;
-
-	virtual bool PolygonePixelsInXY(int x, int y, int width, int height) = 0;
-	virtual bool GumpPixelsInXY(WORD id, int x, int y, bool noSubMouse) = 0;
-	virtual bool GumpPixelsInXY(WORD id, int x, int y, int width, int height, bool noSubMouse) = 0;
-	virtual bool ResizepicPixelsInXY(WORD id, int x, int y, int width, int height) = 0;
-	virtual bool StaticPixelsInXY(WORD id, int x, int y, int z) = 0;
-	virtual bool StaticPixelsInXYAnimated(WORD id, int x, int y, int z) = 0;
-	virtual bool StaticPixelsInXYInContainer(WORD id, int x, int y) = 0;
-	virtual bool LandPixelsInXY(WORD id, int x, int y, int z) = 0;
-
-	virtual DWORD GetLandFlags(WORD id) = 0;
-	virtual DWORD GetStaticFlags(WORD id) = 0;
-
-	virtual void GetArtDimension(WORD id, POINT &p) = 0;
-	virtual void GetGumpDimension(WORD id, POINT &p) = 0;
+	FUNCDEF_GET_LAND_FLAGS *GetLandFlags;
+	FUNCDEF_GET_STATIC_FLAGS *GetStaticFlags;
 };
 //----------------------------------------------------------------------------
-interface IGump
+UOInterface IClilocManager
 {
-	virtual void GetBaseProperties(DWORD &serial, WORD &graphic, WORD &color, WORD &x, WORD &y) = 0;
+	FUNCDEF_GET_CLILOC_A *GetClilocA;
+	FUNCDEF_GET_CLILOC_W *GetClilocW;
 
-	virtual GUMP_TYPE GetGumpType() const = 0;
-	virtual DWORD GetID() const = 0;
-	virtual int GetMinimizedX() const = 0;
-	virtual int GetMinimizedY() const = 0;
-	virtual bool GetNoMove() const = 0;
-	virtual bool GetNoClose() const = 0;
-	virtual bool GetMinimized() const = 0;
-	virtual bool GetFrameCreated() const = 0;
-	virtual bool GetFrameRedraw() const = 0;
-	virtual bool GetBlocked() const = 0;
-	virtual bool GetLockMoving() const = 0;
-
-	virtual void GenerateFrame() = 0;
-	virtual bool CanBeDisplayed() = 0;
-	virtual bool CanBeMoved() = 0;
-	virtual int Draw(bool &mode) = 0;
-	virtual void OnLeftMouseDown() = 0;
-	virtual void OnLeftMouseUp() = 0;
-	virtual void OnRightMouseDown() = 0;
-	virtual void OnRightMouseUp() = 0;
-	virtual bool OnLeftMouseDoubleClick() = 0;
-	virtual bool OnRightMouseDoubleClick() = 0;
-	virtual void OnMouseWheel(MOUSE_WHEEL_STATE &state) = 0;
-	virtual void OnCharPress(WPARAM &wparam, LPARAM &lparam) = 0;
-	virtual void OnKeyPress(WPARAM &wparam, LPARAM &lparam) = 0;
-	virtual bool EntryPointerHere() = 0;
+	FUNCDEF_GET_CLILOC_ARGUMENTS *GetClilocArguments;
 };
 //----------------------------------------------------------------------------
-interface IGumpManager
+UOInterface IColorManager
 {
-	virtual void AddGump(TGump *obj) = 0;
-	virtual IGump *GetGump(DWORD serial, DWORD ID, GUMP_TYPE Type) = 0;
-	virtual IGump *GumpExists(DWORD gumpID) = 0;
-	virtual void CloseGump(DWORD serial, DWORD ID, GUMP_TYPE Type) = 0;
-	virtual void RemoveGump(TGump *obj) = 0;
-};
-//----------------------------------------------------------------------------
-interface ICliloc
-{
-	virtual string GetLanguage() const = 0;
-	virtual bool GetLoaded() const = 0;
+	FUNCDEF_GET_HUES_COUNT *GetHuesCount;
 
-	virtual string GetA(DWORD id, string result) = 0;
-	virtual wstring GetW(DWORD id, string result) = 0;
-};
-//----------------------------------------------------------------------------
-interface IClilocManager
-{
-	virtual ICliloc *Cliloc(string lang) = 0;
-};
-//----------------------------------------------------------------------------
-interface IColorManager
-{
-	virtual int GetHuesCount() const = 0;
+	FUNCDEF_GET_COLOR32TO16 *Color32To16;
+	FUNCDEF_GET_COLOR16TO32 *Color16To32;
+	FUNCDEF_GET_COLOR_TO_GRAY *ConvertToGray;
 
-	virtual WORD Color32To16(DWORD &C) = 0;
-	virtual DWORD Color16To32(WORD &C) = 0;
-	virtual WORD ConvertToGray(WORD &C) = 0;
-
-	virtual DWORD GetPolygoneColor(WORD C, WORD Color) = 0;
-	virtual DWORD GetColor(WORD &C, WORD Color) = 0;
-	virtual DWORD GetPartialHueColor(WORD &C, WORD Color) = 0;
+	FUNCDEF_GET_POLYGONE_COLOR *GetPolygoneColor;
+	FUNCDEF_GET_COLOR *GetColor;
+	FUNCDEF_GET_PRTIAL_HUE_COLOR *GetPartialHueColor;
 };
 //----------------------------------------------------------------------------
-interface IPathFinder
+UOInterface IPathFinder
 {
-	virtual bool CanWalk(BYTE &direction, int &x, int &y, char &z) = 0;
-	virtual bool Walk(bool run, BYTE direction) = 0;
+	FUNCDEF_GET_CAN_WALK *CanWalk;
+	FUNCDEF_GET_WALK *Walk;
 };
+//---------------------------------------------------------------------------
+extern IGLEngine g_Interface_GL;
+extern IUltimaOnline g_Interface_UO;
+extern IClilocManager g_Interface_ClilocManager;
+extern IColorManager g_Interface_ColorManager;
+extern IPathFinder g_Interface_PathFinder;
 //---------------------------------------------------------------------------
 typedef struct PLUGIN_CLIENT_INTERFACE
 {
-	IGLEngine *_GL;
-	IUltimaOnline *_UO;
-	IGumpManager *_GumpManager;
-	IClilocManager *_ClilocManager;
-	IColorManager *_ColorManager;
-	IPathFinder *_PathFinder;
+	IGLEngine *GL;
+	IUltimaOnline *UO;
+	IClilocManager *ClilocManager;
+	IColorManager *ColorManager;
+	IPathFinder *PathFinder;
 } *PPLUGIN_CLIENT_INTERFACE;
 //----------------------------------------------------------------------------
 extern PLUGIN_CLIENT_INTERFACE PluginClientInterface;

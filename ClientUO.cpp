@@ -377,6 +377,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				if (ConfigManager.HoldTabForCombat)
 					UO->ChangeWarmode(0);
 			}
+			else if (wParam == 0x2C) //Print Screen
+				g_ScreenshotBuilder.SaveScreen();
 
 			return 0; //break;
 		}
@@ -976,11 +978,6 @@ bool TUltimaOnline::Install()
 	ExecuteStaticArt(0x0EEF); //gp 6+
 
 	CreateDirectoryA(FilePath("snapshots").c_str(), NULL);
-
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-
-	TPRINT("snapshot_d(%i.%i.%i)_t(%i.%i.%i_%i).fmt\n", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 
 	DebugScreen = new TDebugScreen();
 	MainScreen = new TMainScreen();
@@ -2366,12 +2363,11 @@ DWORD TUltimaOnline::GetFileHashCode(DWORD address, DWORD size)
 //---------------------------------------------------------------------------
 void TUltimaOnline::LoadPluginConfig()
 {
-	PluginClientInterface._GL = NULL; // &g_GL;
-	PluginClientInterface._UO = NULL; // UO;
-	PluginClientInterface._GumpManager = NULL; // GumpManager;
-	PluginClientInterface._ClilocManager = NULL; // ClilocManager;
-	PluginClientInterface._ColorManager = NULL; // ColorManager;
-	PluginClientInterface._PathFinder = NULL; // PathFinder;
+	PluginClientInterface.GL = &g_Interface_GL;
+	PluginClientInterface.UO = &g_Interface_UO;
+	PluginClientInterface.ClilocManager = &g_Interface_ClilocManager;
+	PluginClientInterface.ColorManager = &g_Interface_ColorManager;
+	PluginClientInterface.PathFinder = &g_Interface_PathFinder;
 
 	TMappedHeader file;
 	memset(&file, 0, sizeof(file));
@@ -2754,6 +2750,13 @@ void TUltimaOnline::Process()
 	{
 		ClearUnusedTextures();
 		removeUnusedTexturesTime = ticks + CLEAR_TEXTURES_DELAY;
+	}
+
+	static bool once = true;
+	if (once)
+	{
+		once = false;
+		//PrintWindow(g_hWnd, hdc)
 	}
 }
 //---------------------------------------------------------------------------

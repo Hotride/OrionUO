@@ -447,6 +447,9 @@
     <ClInclude Include="gump\GumpPopupMenu.h">
       <Filter>Заголовочные файлы\gump</Filter>
     </ClInclude>
+    <ClInclude Include="ScreenshotBuilder.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -823,6 +826,12 @@
     </ClCompile>
     <ClCompile Include="gump\GumpPopupMenu.cpp">
       <Filter>Файлы исходного кода\gump</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonInterfaces.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenshotBuilder.cpp">
+      <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

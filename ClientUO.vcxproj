@@ -225,6 +225,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="screen stages\SelectProfessionScreen.h" />
     <ClInclude Include="screen stages\SelectTownScreen.h" />
     <ClInclude Include="screen stages\ServerScreen.h" />
+    <ClInclude Include="ScreenshotBuilder.h" />
     <ClInclude Include="ServerList.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkillGroup.h" />
@@ -249,6 +250,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="CityList.cpp" />
     <ClCompile Include="ClientUO.cpp" />
     <ClCompile Include="CommonFunctions.cpp" />
+    <ClCompile Include="CommonInterfaces.cpp" />
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="EntryText.cpp" />
     <ClCompile Include="ExceptionFilter.cpp" />
@@ -353,6 +355,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="screen stages\SelectProfessionScreen.cpp" />
     <ClCompile Include="screen stages\SelectTownScreen.cpp" />
     <ClCompile Include="screen stages\ServerScreen.cpp" />
+    <ClCompile Include="ScreenshotBuilder.cpp" />
     <ClCompile Include="ServerList.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkillGroup.cpp" />

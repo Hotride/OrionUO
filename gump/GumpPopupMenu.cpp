@@ -24,7 +24,6 @@ TGumpPopupMenu *g_PopupMenu = NULL;
 TGumpPopupMenu::TGumpPopupMenu(DWORD serial, short x, short y)
 : TGump(GT_POPUP_MENU, serial, x, y), m_Width(0), m_Height(0)
 {
-	m_NoMove = true;
 	g_PopupMenu = this;
 }
 //---------------------------------------------------------------------------
