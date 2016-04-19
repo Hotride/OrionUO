@@ -58,11 +58,6 @@ void TGumpSelectFont::GenerateFrame()
 			
 		switch (m_State)
 		{
-			case SFGS_OPT_POPUP:
-			{
-				selected = g_OptionsConfig.PopupHelpTextFont;
-				break;
-			}
 			case SFGS_OPT_TOOLTIP:
 			{
 				selected = g_OptionsConfig.ToolTipsTextFont;
@@ -174,13 +169,6 @@ void TGumpSelectFont::OnLeftMouseUp()
 
 	switch (m_State)
 	{
-		case SFGS_OPT_POPUP:
-		{
-			g_OptionsConfig.PopupHelpTextFont = g_LastObjectLeftMouseDown - ID_GSF_FONTS;
-			GumpManager->CloseGump(g_PlayerSerial, 0, GT_SELECT_FONT);
-
-			break;
-		}
 		case SFGS_OPT_TOOLTIP:
 		{
 			g_OptionsConfig.ToolTipsTextFont = g_LastObjectLeftMouseDown - ID_GSF_FONTS;

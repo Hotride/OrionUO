@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** PopupHelp.h
+** ToolTip.h
 **
 ** Copyright (C) September 2015 Hotride
 **
@@ -17,11 +17,11 @@
 *****************************************************************************
 */
 //---------------------------------------------------------------------------
-#ifndef PopupHelpH
-#define PopupHelpH
+#ifndef ToolTipH
+#define ToolTipH
 //---------------------------------------------------------------------------
 //Класс для работы с тултипами
-class TPopupHelp
+class TToolTip
 {
 private:
 	//Время фокусировки
@@ -49,8 +49,8 @@ private:
 	//Флаг использования тултипа
 	bool m_Use;
 public:
-	TPopupHelp();
-	~TPopupHelp();
+	TToolTip();
+	~TToolTip();
 
 	SETGET(DWORD, Timer);
 	SETGET(DWORD, SeqIndex);
@@ -75,6 +75,6 @@ public:
 	void Draw(int cursorWidth = 0, int cursorHeight = 0);
 };
 //---------------------------------------------------------------------------
-extern TPopupHelp PopupHelp;
+extern TToolTip ToolTip;
 //---------------------------------------------------------------------------
 #endif

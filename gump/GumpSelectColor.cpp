@@ -253,11 +253,6 @@ void TGumpSelectColor::OnSelectColor(WORD &color)
 {
 	switch (m_State)
 	{
-		case SCGS_OPT_POPUP_TEXT:
-		{
-			g_OptionsConfig.PopupHelpTextColor = color;
-			break;
-		}
 		case SCGS_OPT_TOOLTIP_TEXT:
 		{
 			g_OptionsConfig.ToolTipsTextColor = color;

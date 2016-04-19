@@ -22,7 +22,7 @@
 const WORD g_OptionsTextColor = 0;
 //----------------------------------------------------------------------------
 TTextTexture TGumpOptions::m_TexturePage1[8];	//Sound and Music
-TTextTexture TGumpOptions::m_TexturePage2[8];	//Pop-up Help
+TTextTexture TGumpOptions::m_TexturePage2[2];	//Orion's configuration
 TTextTexture TGumpOptions::m_TexturePage3[6];	//Language
 TTextTexture TGumpOptions::m_TexturePage4[19];	//Chat
 TTextTexture TGumpOptions::m_TexturePage5[7];	//Macro Options
@@ -123,30 +123,12 @@ void TGumpOptions::InitTextTextures()
 
 
 
-	//Pop-up Help
-	str = L"Pop-up Help";
+	//Orion's configuration
+	str = L"Orion's configuration";
 	FontManager->GenerateW(0, m_TexturePage2[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
 
-	str = L"These settings configure the behavior of the pop-up help.";
+	str = L"These settings configure the Orion UO Client.";
 	FontManager->GenerateW(0, m_TexturePage2[1], str.c_str(), g_OptionsTextColor);
-
-	str = L"Use Pop-up Help";
-	FontManager->GenerateW(0, m_TexturePage2[2], str.c_str(), g_OptionsTextColor);
-
-	str = L"Delay befor Help pops up";
-	FontManager->GenerateW(0, m_TexturePage2[3], str.c_str(), g_OptionsTextColor);
-
-	str = L"Text Color";
-	FontManager->GenerateW(0, m_TexturePage2[4], str.c_str(), g_OptionsTextColor);
-
-	str = L"Help text font";
-	FontManager->GenerateW(0, m_TexturePage2[5], str.c_str(), g_OptionsTextColor);
-
-	str = L"Make window Sticky";
-	FontManager->GenerateW(0, m_TexturePage2[6], str.c_str(), g_OptionsTextColor);
-
-	str = L"Make text Persistant";
-	FontManager->GenerateW(0, m_TexturePage2[7], str.c_str(), g_OptionsTextColor);
 
 
 
@@ -427,7 +409,7 @@ void TGumpOptions::ReleaseTextTextures()
 	IFOR(i, 0, 8)
 		m_TexturePage1[i].Clear();
 
-	IFOR(i, 0, 8)
+	IFOR(i, 0, 2)
 		m_TexturePage2[i].Clear();
 
 	IFOR(i, 0, 6)
@@ -502,20 +484,17 @@ void TGumpOptions::GenerateFrame()
 			gumpID--;
 		UO->DrawGump(gumpID, 0, 0, 45);
 
-		//Pop-up Help
+		//Orion's configuration
 		gumpID = 0x00DC;
 		if (m_Page == 1)
 			gumpID--;
 		UO->DrawGump(gumpID, 0, 0, 111);
 
 		//Language
-		if (ConnectionManager.ClientVersion < CV_400B)
-		{
-			gumpID = 0x00DE;
-			if (m_Page == 2)
-				gumpID--;
-			UO->DrawGump(gumpID, 0, 0, 177);
-		}
+		gumpID = 0x00DE;
+		if (m_Page == 2)
+			gumpID--;
+		UO->DrawGump(gumpID, 0, 0, 177);
 
 		//Chat
 		gumpID = 0x00E0;
@@ -608,13 +587,12 @@ void TGumpOptions::GenerateFrame()
 			}
 			case 1:
 			{
-				DrawPage2(renderMode, index); //Pop-up Help
+				DrawPage2(renderMode, index); //Orion's configuration
 				break;
 			}
 			case 2:
 			{
-				if (ConnectionManager.ClientVersion < CV_400B)
-					DrawPage3(renderMode, index); //Language
+				DrawPage3(renderMode, index); //Language
 				break;
 			}
 			case 3:
@@ -753,7 +731,7 @@ int TGumpOptions::Draw(bool &mode)
 		if (UO->GumpPixelsInXY(gumpID, 0, 45))
 			LSG = ID_GO_PAGE_0;
 
-		//Pop-up Help
+		//Orion's configuration
 		gumpID = 0x00DC;
 		if (m_Page == 1)
 			gumpID--;
@@ -761,14 +739,11 @@ int TGumpOptions::Draw(bool &mode)
 			LSG = ID_GO_PAGE_1;
 
 		//Language
-		if (ConnectionManager.ClientVersion < CV_400B)
-		{
-			gumpID = 0x00DE;
-			if (m_Page == 2)
-				gumpID--;
-			if (UO->GumpPixelsInXY(gumpID, 0, 177))
-				LSG = ID_GO_PAGE_2;
-		}
+		gumpID = 0x00DE;
+		if (m_Page == 2)
+			gumpID--;
+		if (UO->GumpPixelsInXY(gumpID, 0, 177))
+			LSG = ID_GO_PAGE_2;
 
 		//Chat
 		gumpID = 0x00E0;
@@ -850,11 +825,10 @@ int TGumpOptions::Draw(bool &mode)
 					LSG = DrawPage1(mode, index); //Sound and Music
 					break;
 				case 1:
-					LSG = DrawPage2(mode, index); //Pop-up Help
+					LSG = DrawPage2(mode, index); //Orion's configuration
 					break;
 				case 2:
-					if (ConnectionManager.ClientVersion < CV_400B)
-						LSG = DrawPage3(mode, index); //Language
+					LSG = DrawPage3(mode, index); //Language
 					break;
 				case 3:
 					LSG = DrawPage4(mode, index); //Chat
@@ -1034,98 +1008,19 @@ int TGumpOptions::DrawPage1(bool &mode, DWORD &index)
 //----------------------------------------------------------------------------
 int TGumpOptions::DrawPage2(bool &mode, DWORD &index)
 {
-	//Pop-up Help
+	//Orion's configuration
 	if (mode)
 	{
-		if (g_GumpPressed)
-		{
-			if (g_LastObjectLeftMouseDown == ID_GO_P2_DELAY_BEFORE_POPUPS) //Delay befor Help pops up slider pressed
-			{
-				int currentX = g_MouseX - (int)g_GumpTranslateX - 3; //Текущая позиция ползунка
-
-				if (currentX < 64)
-					currentX = 64; //Выход за допустимый предел, корректируем на минимум
-				else if (currentX > 152)
-					currentX = 152; //Выход за допустимый предел, корректируем на максимум
-			
-				int count = g_OptionsConfig.PopupHelpDelay; //Количество предметов в стеке
-				if (currentX > 64) //Позиция ползунка больше минимума
-				{
-					if (currentX < 152) //Позиция ползунка меньше максимума, вычисляем
-					{
-						float ValPer = ((currentX - 64.0f) / g_SphereListWidth) * 100.0f;
-
-						if (ValPer == 0.0f)
-							count = 0;
-						else
-							count = (int)(5000 * ValPer) / 100;
-					}
-					else
-						count = 5000; //Позиция равна максимуму, выставляем значение 255
-				}
-				else
-					count = 0; //Позиция равна минимуму, выставляем значение 0
-
-				g_OptionsConfig.PopupHelpDelay = count;
-			}
-		}
-
-		//UO->DrawUnicodeFont(0, L"Pop-up Help", g_OptionsTextColor, posX + 274, posY + 22);
 		m_TexturePage2[0].Draw(84, 22);
 		
-		//UO->DrawUnicodeFont(0, L"These settings configure the behavior of the pop-up help.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
 		m_TexturePage2[1].Draw(64, 44);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.PopupHelpEnabled, 0, 64, 90);
-		//UO->DrawUnicodeFont(0, L"Use Pop-up Help", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage2[2].Draw(86, 90);
-
-		//UO->DrawUnicodeFont(0, L"Delay befor Help pops up", g_OptionsTextColor, posX + 64, posY + 22);
-		m_TexturePage2[3].Draw(64, 112);
-		
-		UO->DrawSphereGump(g_OptionsConfig.PopupHelpDelay, 5000.0f, 0, 133);
-
-		/*UO->DrawGump(0x00D5, 0, posX + 64, posY); //Sphere line gump start
-		UO->DrawGump(0x00D7, 0, posX + 152, posY); //Sphere line gump end
-		UO->DrawGump(0x00D6, 0, posX + 77, posY, 75, 0); //Sphere line gump body
-
-		float ValPer = (g_OptionsConfig.PopupHelpDelay / 5000.0f) * 100.0f;
-		ValPer = (g_SphereListWidth * ValPer) / 100.0f;
-		if (ValPer < 0.0f)
-			ValPer = 0.0f;
-		UO->DrawGump(0x00D8, 0, posX + 64 + (int)ValPer, posY); //Sphere gump*/
-
-		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.PopupHelpDelay).c_str(), g_OptionsTextColor, 176, 130);
-		
-
-
-		UO->DrawGump(0x00D4, 0, 64, 151);
-		DWORD clr = 0xFF7F7F7F;
-		if (g_OptionsConfig.PopupHelpTextColor != 0xFFFF)
-			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.PopupHelpTextColor);
-		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
-		g_GL.DrawPolygone(67, 154, 13, 14);
-		glColor3f(1.0f, 1.0f, 1.0f);
-		//UO->DrawUnicodeFont(0, L"Text Color", g_OptionsTextColor, posX + 88, posY);
-		m_TexturePage2[4].Draw(88, 151);
-		
-		UO->DrawGump(0x00D0, 0, 64, 173);
-		//UO->DrawUnicodeFont(0, L"Help text font", g_OptionsTextColor, posX + 64, posY + 22);
-		m_TexturePage2[5].Draw(88, 173);
-		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.PopupHelpSticky, 0, 64, 197);
-		//UO->DrawUnicodeFont(0, L"Make window Sticky", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage2[6].Draw(86, 197);
-		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.PopupHelpPersistant, 0, 64, 217);
-		//UO->DrawUnicodeFont(0, L"Make text Persistant", g_OptionsTextColor, posX + 86, posY);
-		m_TexturePage2[7].Draw(86, 217);
 	}
 	else
 	{
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
+		/*if (UO->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P2_USE_POPUP; //Use Pop-up Help
 		else if (UO->GumpPixelsInXY(0x00D2, 64, 151))
 			LSG = ID_GO_P2_TEXT_COLOR; //Text Color
@@ -1136,7 +1031,7 @@ int TGumpOptions::DrawPage2(bool &mode, DWORD &index)
 		else if (UO->GumpPixelsInXY(0x00D2, 64, 217))
 			LSG = ID_GO_P2_MAKE_TEXT_PERTISTANT; //Make text Persistant
 		else if (UO->PolygonePixelsInXY(64, 130, (int)g_SphereListWidth + 10, 16))
-			LSG = ID_GO_P2_DELAY_BEFORE_POPUPS; //Delay befor Help pops up
+			LSG = ID_GO_P2_DELAY_BEFORE_POPUPS; //Delay befor Help pops up*/
 
 		return LSG;
 	}
@@ -2608,27 +2503,8 @@ void TGumpOptions::OnLeftMouseUp()
 
 				break;
 			}
-			case 1: //Pop-up Help
+			case 1: //Orion's configuration
 			{
-				if (g_LastObjectLeftMouseDown == ID_GO_P2_USE_POPUP) //Use Pop-up Help
-					g_OptionsConfig.PopupHelpEnabled = !g_OptionsConfig.PopupHelpEnabled;
-				else if (g_LastObjectLeftMouseDown == ID_GO_P2_TEXT_COLOR) //Text Color
-				{
-					TGumpSelectColor *gump = new TGumpSelectColor(g_PlayerSerial, 100, 100, SCGS_OPT_POPUP_TEXT);
-
-					GumpManager->AddGump(gump);
-				}
-				else if (g_LastObjectLeftMouseDown == ID_GO_P2_TEXT_FONT) //Font
-				{
-					TGumpSelectFont*gump = new TGumpSelectFont(g_PlayerSerial, 320, 240, SFGS_OPT_POPUP);
-
-					GumpManager->AddGump(gump);
-				}
-				else if (g_LastObjectLeftMouseDown == ID_GO_P2_MAKE_WINDOW_STICKY) //Make window Sticky
-					g_OptionsConfig.PopupHelpSticky = !g_OptionsConfig.PopupHelpSticky;
-				else if (g_LastObjectLeftMouseDown == ID_GO_P2_MAKE_TEXT_PERTISTANT) //Make text Persistant
-					g_OptionsConfig.PopupHelpPersistant = !g_OptionsConfig.PopupHelpPersistant;
-
 				break;
 			}
 			case 2: //Language
@@ -3034,15 +2910,8 @@ void TGumpOptions::ApplyPageChanges()
 
 			break;
 		}
-		case 1: //Pop-up Help
+		case 1: //Orion's configuration
 		{
-			ConfigManager.PopupHelpEnabled = g_OptionsConfig.PopupHelpEnabled;
-			ConfigManager.PopupHelpDelay = g_OptionsConfig.PopupHelpDelay;
-			ConfigManager.PopupHelpTextFont = g_OptionsConfig.PopupHelpTextFont;
-			ConfigManager.PopupHelpTextColor = g_OptionsConfig.PopupHelpTextColor;
-			ConfigManager.PopupHelpSticky = g_OptionsConfig.PopupHelpSticky;
-			ConfigManager.PopupHelpPersistant = g_OptionsConfig.PopupHelpPersistant;
-
 			break;
 		}
 		case 2: //Language

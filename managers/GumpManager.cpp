@@ -81,13 +81,13 @@ void TGumpManager::Draw( __in bool &mode, __in bool blocked)
 	}
 }
 //---------------------------------------------------------------------------
-void TGumpManager::OnPopupHelp()
+void TGumpManager::OnToolTip()
 {
 	QFOR(gump, m_Items, TGump*)
 	{
 		if (g_LastSelectedGump == (DWORD)gump)
 		{
-			gump->OnPopupHelp();
+			gump->OnToolTip();
 
 			break;
 		}

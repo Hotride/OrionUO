@@ -520,7 +520,7 @@ typedef std::vector<BYTE> WaveFile;
 #include "Skills.h"
 #include "game object\\GamePlayer.h"
 #include "game object\\GameWorld.h"
-#include "PopupHelp.h"
+#include "ToolTip.h"
 #include "game object\\ClickObject.h"
 #include "Target.h"
 #include "Party.h"

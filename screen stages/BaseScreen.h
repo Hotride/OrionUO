@@ -41,7 +41,7 @@ public:
 	Инициализация всплывающих подсказок
 	@return 
 	*/
-	virtual void InitPopupHelp() {}
+	virtual void InitToolTip() {}
 
 	/*!
 	Отрисовка/выбор объектов

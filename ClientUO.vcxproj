@@ -238,7 +238,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="TextData.h" />
     <ClInclude Include="TextFileParser.h" />
     <ClInclude Include="TextureObject.h" />
-    <ClInclude Include="PopupHelp.h" />
+    <ClInclude Include="ToolTip.h" />
     <ClInclude Include="VideoRecorder.h" />
     <ClInclude Include="Walker.h" />
     <ClInclude Include="Weather.h" />
@@ -370,7 +370,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="TextData.cpp" />
     <ClCompile Include="TextFileParser.cpp" />
     <ClCompile Include="TextureObject.cpp" />
-    <ClCompile Include="PopupHelp.cpp" />
+    <ClCompile Include="ToolTip.cpp" />
     <ClCompile Include="VideoRecorder.cpp" />
     <ClCompile Include="Walker.cpp" />
     <ClCompile Include="Weather.cpp" />

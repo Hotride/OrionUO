@@ -43,7 +43,7 @@ public:
 
 	int Draw(bool &mode);
 
-	void OnPopupHelp();
+	void OnToolTip();
 
 	void GenerateFrame();
 

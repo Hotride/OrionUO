@@ -31,12 +31,7 @@ private:
 	BYTE m_SoundVolume;
 	BYTE m_MusicVolume;
 	
-	bool m_PopupHelpEnabled;
-	bool m_PopupHelpSticky;
-	bool m_PopupHelpPersistant;
-	WORD m_PopupHelpDelay;
-	WORD m_PopupHelpTextColor;
-	WORD m_PopupHelpTextFont;
+	//page 2 vars
 	
 	bool m_UseToolTips;
 	WORD m_ToolTipsTextColor;
@@ -140,12 +135,7 @@ public:
 	SETGET(BYTE, SoundVolume);
 	SETGET(BYTE, MusicVolume);
 
-	SETGET(bool, PopupHelpEnabled);
-	SETGET(bool, PopupHelpSticky);
-	SETGET(bool, PopupHelpPersistant);
-	SETGET(WORD, PopupHelpDelay);
-	SETGET(WORD, PopupHelpTextColor);
-	SETGET(WORD, PopupHelpTextFont);
+	//page 2 setget
 
 	SETGET(bool, UseToolTips);
 	SETGET(WORD, ToolTipsTextColor);

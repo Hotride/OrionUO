@@ -66,7 +66,7 @@ void TGumpContainer::PrepareTextures()
 	}
 }
 //----------------------------------------------------------------------------
-void TGumpContainer::OnPopupHelp()
+void TGumpContainer::OnToolTip()
 {
 	if (!m_Minimized)
 	{
@@ -75,7 +75,7 @@ void TGumpContainer::OnPopupHelp()
 		TGameObject *obj = World->FindWorldObject(selected);
 
 		if (obj != NULL && obj->ClilocMessage.length())
-			PopupHelp.Set(obj->ClilocMessage, SOT_GAME_OBJECT, selected);
+			ToolTip.Set(obj->ClilocMessage, SOT_GAME_OBJECT, selected);
 	}
 
 	/*DWORD selected = ((g_LastSelectedGump == (DWORD)this) ? g_LastSelectedObject : 0);
@@ -90,7 +90,7 @@ void TGumpContainer::OnPopupHelp()
 			{
 				if (selected == obj->Serial && obj->ClilocMessage.length())
 				{
-					PopupHelp.Set(obj->ClilocMessage, SOT_GAME_OBJECT, selected);
+					ToolTip.Set(obj->ClilocMessage, SOT_GAME_OBJECT, selected);
 
 					break;
 				}

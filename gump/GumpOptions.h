@@ -41,7 +41,7 @@ private:
 	static const int m_MacroListMaxCount = 20;
 
 	static TTextTexture m_TexturePage1[8];	//Sound and Music
-	static TTextTexture m_TexturePage2[8];	//Pop-up Help
+	static TTextTexture m_TexturePage2[2];	//Orion's configuration
 	static TTextTexture m_TexturePage3[6];	//Language
 	static TTextTexture m_TexturePage4[19];	//Chat
 	static TTextTexture m_TexturePage5[7];	//Macro Options
@@ -86,12 +86,7 @@ private:
 	static const int ID_GO_P1_SOUND_VOLUME = 104;
 	static const int ID_GO_P1_MUSIC_VOLUME = 105;
 	
-	static const int ID_GO_P2_USE_POPUP = 200;
-	static const int ID_GO_P2_TEXT_COLOR = 201;
-	static const int ID_GO_P2_TEXT_FONT = 202;
-	static const int ID_GO_P2_MAKE_WINDOW_STICKY = 203;
-	static const int ID_GO_P2_MAKE_TEXT_PERTISTANT = 204;
-	static const int ID_GO_P2_DELAY_BEFORE_POPUPS = 205;
+	//static const int ID_GO_P2_USE_POPUP = 200;
 
 	static const int ID_GO_P3_USE_TOOLTIP = 300;
 	static const int ID_GO_P3_TEXT_COLOR = 301;

@@ -121,10 +121,14 @@ protected:
 	@return 
 	*/
 	void CorrectAnimationGroup(__in WORD &graphic, __in ANIMATION_GROUPS &group, __inout BYTE &animation);
+
 public:
 	TGameCharacter(DWORD serial = 0);
 	virtual ~TGameCharacter();
-	
+
+	//—сылка на контейнер дл€ текста урона
+	TTextContainer *m_DamageTextControl;
+
 	//!—сылка на счетчик шагов
 	TWalkStack m_WalkStack;
 

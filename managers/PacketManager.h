@@ -203,6 +203,7 @@ protected:
 	HANDLER_PACKET(OpenChat)
 	HANDLER_PACKET(DisplayClilocString)
 	HANDLER_PACKET(MegaCliloc)
+	HANDLER_PACKET(Damage)
 
 //Не обработаны
 /*

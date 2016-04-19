@@ -51,7 +51,7 @@ void TServerScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	PopupHelp.SeqIndex = 0;
+	ToolTip.SeqIndex = 0;
 
 	g_UpdateRange = 18;
 
@@ -81,31 +81,31 @@ void TServerScreen::Init()
 Инициализация всплывающих подсказок
 @return 
 */
-void TServerScreen::InitPopupHelp()
+void TServerScreen::InitToolTip()
 {
-	if (!ConfigManager.PopupHelpEnabled)
+	if (!ConfigManager.UseToolTips)
 		return;
 
 	switch (g_LastSelectedObject)
 	{
 		case ID_SS_QUIT:
 		{
-			PopupHelp.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
+			ToolTip.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
 			break;
 		}
 		case ID_SS_ARROW_PREV:
 		{
-			PopupHelp.Set(L"Back to main menu", SOT_NO_OBJECT, g_LastSelectedObject);
+			ToolTip.Set(L"Back to main menu", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_SS_ARROW_NEXT:
 		{
-			PopupHelp.Set(L"Play UO on selected shard", SOT_NO_OBJECT, g_LastSelectedObject);
+			ToolTip.Set(L"Play UO on selected shard", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_SS_EARTH:
 		{
-			PopupHelp.Set(L"Select last visited shard", SOT_NO_OBJECT, g_LastSelectedObject, 100);
+			ToolTip.Set(L"Select last visited shard", SOT_NO_OBJECT, g_LastSelectedObject, 100);
 			break;
 		}
 		default:
@@ -116,7 +116,7 @@ void TServerScreen::InitPopupHelp()
 	{
 		string cstr("Connect to '" + ServerList.GetName(g_LastSelectedObject - 8) + "' server");
 
-		PopupHelp.Set(ToWString(cstr), SOT_NO_OBJECT, g_LastSelectedObject, 100);
+		ToolTip.Set(ToWString(cstr), SOT_NO_OBJECT, g_LastSelectedObject, 100);
 	}
 }
 //---------------------------------------------------------------------------
@@ -275,7 +275,7 @@ int TServerScreen::Render(__in bool mode)
 		if (ServerList.Count > 0)
 			FontManager->DrawA(9, ServerList.GetName(0).c_str(), 0x0481, 243, 420);
 		
-		InitPopupHelp();
+		InitToolTip();
 
 		DrawSmoothMonitorEffect();
 

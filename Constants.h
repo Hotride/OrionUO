@@ -20,6 +20,20 @@
 #ifndef ConstantsH
 #define ConstantsH
 //---------------------------------------------------------------------------
+//!Задержка между кадрами для активного окна приложения
+const int FRAME_DELAY_ACTIVE_WINDOW = 30;
+
+//!Задержка между кадрами для неактивного окна приложения
+const int FRAME_DELAY_UNACTIVE_WINDOW = (FRAME_DELAY_ACTIVE_WINDOW + 1) * 7;
+
+const int DAMAGE_TEXT_NORMAL_DELAY = 800;
+
+const int DAMAGE_TEXT_TRANSPARENT_DELAY = 400;
+
+const int DAMAGE_TEXT_STEP = 2;
+
+const int DAMAGE_TEXT_ALPHA_STEP = (DAMAGE_TEXT_TRANSPARENT_DELAY / FRAME_DELAY_ACTIVE_WINDOW);
+
 //!Максимальное количество теней на экране
 static const int MAX_SHADOWS_COUNT = 100;
 
@@ -82,12 +96,6 @@ const int TEXT_MESSAGE_MAX_WIDTH = 190;
 
 //!Время жизни черного экрана
 const DWORD DEATH_SCREEN_DELAY = 3000;
-
-//!Задержка между кадрами для активного окна приложения
-const int FRAME_DELAY_ACTIVE_WINDOW = 30;
-
-//!Задержка между кадрами для неактивного окна приложения
-const int FRAME_DELAY_UNACTIVE_WINDOW = (FRAME_DELAY_ACTIVE_WINDOW + 1) * 7;
 
 //!Цвет выбранного ландшафта
 const WORD SELECT_LAND_COLOR = 0x0044;

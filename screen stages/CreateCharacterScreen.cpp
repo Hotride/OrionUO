@@ -44,7 +44,7 @@ void TCreateCharacterScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	PopupHelp.SeqIndex = 0;
+	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -96,26 +96,26 @@ void TCreateCharacterScreen::ProcessSmoothAction( __in_opt BYTE action)
 Инициализация всплывающих подсказок
 @return 
 */
-void TCreateCharacterScreen::InitPopupHelp()
+void TCreateCharacterScreen::InitToolTip()
 {
-	if (!ConfigManager.PopupHelpEnabled)
+	if (!ConfigManager.UseToolTips)
 		return;
 
 	switch (g_LastSelectedObject)
 	{
 		case ID_CCS_QUIT:
 		{
-			PopupHelp.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
+			ToolTip.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
 			break;
 		}
 		case ID_CCS_ARROW_NEXT:
 		{
-			PopupHelp.Set(L"Accept this character", SOT_NO_OBJECT, g_LastSelectedObject);
+			ToolTip.Set(L"Accept this character", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_CCS_ARROW_PREV:
 		{
-			PopupHelp.Set(L"Back to character generation screen", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			ToolTip.Set(L"Back to character generation screen", SOT_NO_OBJECT, g_LastSelectedObject, 150);
 			break;
 		}
 		default:
@@ -481,7 +481,7 @@ int TCreateCharacterScreen::Render( __in bool mode)
 		{
 		}
 
-		InitPopupHelp();
+		InitToolTip();
 
 		DrawSmoothMonitorEffect();
 

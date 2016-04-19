@@ -65,7 +65,7 @@ void TSelectProfessionScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	PopupHelp.SeqIndex = 0;
+	ToolTip.SeqIndex = 0;
 
 	//Prepare textures:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -120,32 +120,32 @@ void TSelectProfessionScreen::ProcessSmoothAction( __in_opt BYTE action)
 Инициализация всплывающих подсказок
 @return 
 */
-void TSelectProfessionScreen::InitPopupHelp()
+void TSelectProfessionScreen::InitToolTip()
 {
-	if (!ConfigManager.PopupHelpEnabled)
+	if (!ConfigManager.UseToolTips)
 		return;
 
 	switch (g_LastSelectedObject)
 	{
 		case ID_SPS_QUIT:
 		{
-			PopupHelp.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
+			ToolTip.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
 			break;
 		}
 		case ID_SPS_ARROW_NEXT:
 		{
-			PopupHelp.Set(L"Next screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			ToolTip.Set(L"Next screen", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_SPS_ARROW_PREV:
 		{
-			PopupHelp.Set(L"Preveous screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			ToolTip.Set(L"Preveous screen", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_SPS_ARROW_BACK_PROFESSION:
 		case ID_SPS_LABEL_BACK_PROFESSION:
 		{
-			PopupHelp.Set(L"Back to select profession category", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			ToolTip.Set(L"Back to select profession category", SOT_NO_OBJECT, g_LastSelectedObject, 150);
 			break;
 		}
 		default:
@@ -164,7 +164,7 @@ void TSelectProfessionScreen::InitPopupHelp()
 			if (g_LastSelectedObject == ID_SPS_LABEL + index)
 			{
 				if (child->DescriptionClilocID)
-					PopupHelp.Set(child->DescriptionClilocID, "Description", SOT_NO_OBJECT, g_LastSelectedObject, 350);
+					ToolTip.Set(child->DescriptionClilocID, "Description", SOT_NO_OBJECT, g_LastSelectedObject, 350);
 
 				break;
 			}
@@ -436,7 +436,7 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 			UO->DrawGump(GumpID, 0, 610, 445); //> gump
 		}
 
-		InitPopupHelp();
+		InitToolTip();
 
 		DrawSmoothMonitorEffect();
 
@@ -774,7 +774,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 			UO->DrawGump(GumpID, 0, 610, 445); //> gump
 		}
 
-		InitPopupHelp();
+		InitToolTip();
 
 		DrawSmoothMonitorEffect();
 

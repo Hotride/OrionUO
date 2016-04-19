@@ -190,7 +190,7 @@ void TGumpPaperdoll::CalculateGumpState()
 	}
 }
 //----------------------------------------------------------------------------
-void TGumpPaperdoll::OnPopupHelp()
+void TGumpPaperdoll::OnToolTip()
 {
 	DWORD selected = ((g_LastSelectedGump == (DWORD)this) ? g_LastSelectedObject : 0);
 
@@ -204,7 +204,7 @@ void TGumpPaperdoll::OnPopupHelp()
 			TGameObject *obj = character->FindLayer(layer);
 
 			if (obj != NULL && obj->ClilocMessage.length())
-				PopupHelp.Set(obj->ClilocMessage, SOT_GAME_OBJECT, obj->Serial);
+				ToolTip.Set(obj->ClilocMessage, SOT_GAME_OBJECT, obj->Serial);
 		}
 	}
 }

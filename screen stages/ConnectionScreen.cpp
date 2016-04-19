@@ -86,7 +86,7 @@ void TConnectionScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	PopupHelp.SeqIndex = 0;
+	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background

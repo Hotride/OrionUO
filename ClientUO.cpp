@@ -432,7 +432,7 @@ BOOL InitInstance(int nCmdShow)
 	wcex.hCursor = LoadCursor(g_Hinstance, MAKEINTRESOURCE(IDC_CURSOR1));
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = L"Ultima Online";
+	wcex.lpszClassName = L"Orion UO Client";
 	wcex.hIcon = LoadIcon(g_Hinstance, MAKEINTRESOURCE(IDI_CLIENTUO));
 	wcex.hIconSm = LoadIcon(g_Hinstance, MAKEINTRESOURCE(IDI_CLIENTUO));
 
@@ -452,7 +452,7 @@ BOOL InitInstance(int nCmdShow)
 
 	winHeight += (GetSystemMetrics(SM_CYCAPTION) + (GetSystemMetrics(SM_CYFRAME) * 2));
 
-	g_hWnd = CreateWindowEx(WS_EX_WINDOWEDGE, L"Ultima Online", L"Ultima Online", WS_OVERLAPPEDWINDOW,
+	g_hWnd = CreateWindowEx(WS_EX_WINDOWEDGE, L"Orion UO Client", L"Ultima Online", WS_OVERLAPPEDWINDOW,
 		0, 0, winWidth, winHeight, NULL, NULL, g_Hinstance, NULL);
 
 	if (!g_hWnd)

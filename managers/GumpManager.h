@@ -108,7 +108,7 @@ public:
 	*/
 	void Draw(__in bool &mode, __in bool blocked);
 
-	void OnPopupHelp();
+	void OnToolTip();
 
 
 

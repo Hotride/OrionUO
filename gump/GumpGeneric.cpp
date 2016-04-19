@@ -140,14 +140,14 @@ void TGumpGeneric::AddText(int index, wstring text)
 							color = 0xFFFF;
 
 							if (!ghtml->HaveScrollbar)
-								FontManager->SetUseHTML(true, 0xFF010101);
+								FontManager->SetUseHTML(true, 0x010101FF);
 							else
 								FontManager->SetUseHTML(true);
 						}
 						else
 						{
 							w -= 9;
-							FontManager->SetUseHTML(true, 0xFF010101);
+							FontManager->SetUseHTML(true, 0x010101FF);
 						}
 
 						ghtml->SetHTMLText(text);

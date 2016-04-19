@@ -20,7 +20,7 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------
 TGumpDye::TGumpDye(DWORD serial, short x, short y, WORD graphic)
-: TGumpSelectColor(serial, x, y, SCGS_OPT_POPUP_TEXT)
+: TGumpSelectColor(serial, x, y, SCGS_OPT_TOOLTIP_TEXT)
 {
 	m_NoClose = true;
 	m_GumpType = GT_DYE;

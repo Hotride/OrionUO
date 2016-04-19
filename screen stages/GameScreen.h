@@ -255,7 +255,7 @@ public:
 	Инициализация всплывающих подсказок
 	@return 
 	*/
-	void InitPopupHelp();
+	void InitToolTip();
 
 	/*!
 	Функция добавления источника света

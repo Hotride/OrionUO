@@ -432,9 +432,6 @@
     <ClInclude Include="managers\ProfessionManager.h">
       <Filter>Заголовочные файлы\managers</Filter>
     </ClInclude>
-    <ClInclude Include="PopupHelp.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="gump\GumpTargetSystem.h">
       <Filter>Заголовочные файлы\gump</Filter>
     </ClInclude>
@@ -448,6 +445,9 @@
       <Filter>Заголовочные файлы\gump</Filter>
     </ClInclude>
     <ClInclude Include="ScreenshotBuilder.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolTip.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
@@ -815,9 +815,6 @@
     <ClCompile Include="managers\ProfessionManager.cpp">
       <Filter>Файлы исходного кода\managers</Filter>
     </ClCompile>
-    <ClCompile Include="PopupHelp.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="gump\GumpTargetSystem.cpp">
       <Filter>Файлы исходного кода\gump</Filter>
     </ClCompile>
@@ -831,6 +828,9 @@
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="ScreenshotBuilder.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolTip.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>

@@ -67,7 +67,7 @@ void TGameScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	PopupHelp.SeqIndex = 0;
+	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Game Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -99,22 +99,22 @@ void TGameScreen::ProcessSmoothAction( __in_opt BYTE action)
 Инициализация всплывающих подсказок
 @return 
 */
-void TGameScreen::InitPopupHelp()
+void TGameScreen::InitToolTip()
 {
-	if (!ConfigManager.PopupHelpEnabled)
+	if (!ConfigManager.UseToolTips)
 		return;
 
 	FontManager->SetUseHTML(true);
 	FontManager->RecalculateWidthByInfo = true;
 
 	if (g_LastSelectedGump)
-		GumpManager->OnPopupHelp();
+		GumpManager->OnToolTip();
 	else if (g_LastObjectType == SOT_GAME_OBJECT && g_LastSelectedObject)
 	{
 		TGameObject *obj = World->FindWorldObject(g_LastSelectedObject);
 
 		if (obj != NULL && (obj->NPC || !obj->Locked()) && obj->ClilocMessage.length())
-			PopupHelp.Set(obj->ClilocMessage, SOT_GAME_OBJECT, g_LastSelectedObject);
+			ToolTip.Set(obj->ClilocMessage, SOT_GAME_OBJECT, g_LastSelectedObject);
 	}
 
 	FontManager->RecalculateWidthByInfo = false;
@@ -2298,6 +2298,69 @@ void TGameScreen::DrawGameWindowText( __in bool &mode)
 		}
 
 		UnuseShader();
+
+		QFOR(obj, World->m_Items, TGameObject*)
+		{
+			if (obj->NPC)
+			{
+				TGameCharacter *character = (TGameCharacter*)obj;
+
+				int gox = obj->X - m_RenderBounds.PlayerX;
+				int goy = obj->Y - m_RenderBounds.PlayerY;
+
+				int drawX = m_RenderBounds.GameWindowCenterX + ((gox - goy) * 22);
+				int drawY = ((m_RenderBounds.GameWindowCenterY + ((gox + goy) * 22)) - (obj->Z * 4));
+
+				drawX += character->OffsetX;
+				drawY += character->OffsetY - character->OffsetZ;
+
+				drawY -= 55;
+
+				if (character->FindLayer(OL_MOUNT) != NULL)
+					drawY -= 25;
+
+				QFOR(text, character->m_DamageTextControl->m_Top, TTextData*)
+				{
+					if (text->m_Texture.Empty())
+						continue;
+
+					if (text->Timer < ticks)
+					{
+						if (text->Transparent)
+							continue;
+						else
+						{
+							text->Timer = ticks + DAMAGE_TEXT_TRANSPARENT_DELAY;
+							text->Transparent = true;
+							text->Color = 0x00FF;
+						}
+					}
+
+					if (text->Transparent)
+					{
+						glEnable(GL_BLEND);
+						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+						BYTE alpha = (BYTE)text->Color;
+						if (alpha >= DAMAGE_TEXT_ALPHA_STEP)
+							text->Color -= DAMAGE_TEXT_ALPHA_STEP;
+						else
+							text->Color = 0;
+
+						glColor4ub(0xFF, 0xFF, 0xFF, alpha);
+
+						text->m_Texture.Draw(drawX - text->DrawX, drawY + text->DrawY);
+
+						glEnable(GL_BLEND);
+						glColor4ub(0xFF, 0xFF, 0xFF, 0xFF);
+					}
+					else
+						text->m_Texture.Draw(drawX - text->DrawX, drawY + text->DrawY);
+
+					text->DrawY -= DAMAGE_TEXT_STEP;
+				}
+			}
+		}
 	}
 	else
 	{
@@ -2637,7 +2700,7 @@ int TGameScreen::Render(__in bool mode)
 					UnuseShader();
 			}
 
-			InitPopupHelp();
+			InitToolTip();
 
 			MouseManager.Draw(MouseManager.GetGameCursor()); //Game Gump mouse cursor
 		}

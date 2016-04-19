@@ -66,12 +66,6 @@ void TConfigManager::DefaultPage1()
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage2()
 {
-	m_PopupHelpEnabled = true;
-	m_PopupHelpSticky = false;
-	m_PopupHelpPersistant = true;
-	m_PopupHelpDelay = 1000;
-	m_PopupHelpTextColor = 0xFFFF;
-	m_PopupHelpTextFont = 1;
 }
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage3()
@@ -268,12 +262,6 @@ void TConfigManager::Load( __in string path)
 
 		if (file.ReadChar() == 2)
 		{
-			m_PopupHelpEnabled = file.ReadByte();
-			m_PopupHelpSticky = file.ReadByte();
-			m_PopupHelpPersistant = file.ReadByte();
-			m_PopupHelpDelay = file.ReadWord();
-			m_PopupHelpTextColor = file.ReadWord();
-			m_PopupHelpTextFont = file.ReadWord();
 		}
 		
 		file.Ptr = next;
@@ -477,14 +465,8 @@ void TConfigManager::Save( __in string path)
 	writer->WriteBuffer();
 	
 	//Page 2
-	writer->WriteByte(11); //size of block
+	writer->WriteByte(2); //size of block
 	writer->WriteByte(2); //page index
-	writer->WriteByte(m_PopupHelpEnabled);
-	writer->WriteByte(m_PopupHelpSticky);
-	writer->WriteByte(m_PopupHelpPersistant);
-	writer->WriteWord(m_PopupHelpDelay);
-	writer->WriteWord(m_PopupHelpTextColor);
-	writer->WriteWord(m_PopupHelpTextFont);
 	writer->WriteBuffer();
 	
 	//Page 3

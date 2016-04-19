@@ -48,7 +48,7 @@ TMessageType TPacketManager::m_MessageTypes[0x100] =
 	/*0x08*/ SMSG("Drop Item", 0x0e),
 	/*0x09*/ SMSG("Single Click", 0x05),
 	/*0x0A*/ SMSG("Edit (God client)", 0x0b),
-	/*0x0B*/ RMSG("Damage Visualization",0x07),
+	/*0x0B*/ RMSGH("Damage Visualization", 0x07, Damage),
 	/*0x0C*/ BMSG("Edit tiledata (God client)", SIZE_VARIABLE),
 	/*0x0D*/ UMSG(0x03),
 	/*0x0E*/ UMSG(0x01),
@@ -4175,5 +4175,47 @@ PACKET_HANDLER(MegaCliloc)
 
 	obj->ClilocMessage = message;
 	TPRINT("message=%s\n", ToString(message).c_str());
+}
+//---------------------------------------------------------------------------
+PACKET_HANDLER(Damage)
+{
+	if (World == NULL)
+		return;
+
+	DWORD serial = ReadDWord();
+	TGameCharacter *character = World->FindWorldCharacter(serial);
+
+	if (character != NULL)
+	{
+		int damage = ReadWord();
+
+		TTextData *text = new TTextData();
+		text->Unicode = false;
+		text->Font = 3;
+		text->Serial = serial;
+		text->Color = 0x0035;
+		text->Type = TT_OBJECT;
+		text->SetText(std::to_string(damage));
+		text->GenerateTexture(0);
+		text->DrawX = text->m_Texture.Width / 2;
+		int height = text->m_Texture.Height;
+
+		TTextData *head = character->m_DamageTextControl->m_Head;
+		if (head != NULL)
+		{
+			height += head->DrawY;
+
+			if (height > 0)
+			{
+				if (height > 100)
+					height = 0;
+
+				text->DrawY = height;
+			}
+		}
+
+		character->m_DamageTextControl->Add(text);
+		text->Timer = GetTickCount() + DAMAGE_TEXT_NORMAL_DELAY;
+	}
 }
 //---------------------------------------------------------------------------

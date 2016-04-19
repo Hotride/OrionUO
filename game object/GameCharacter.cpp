@@ -32,6 +32,8 @@ m_AfterStepDelay(0), m_StepSoundOffset(0)
 	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;
 
+	m_DamageTextControl = new TTextContainer(10);
+
 	//!Инициализация счетчика шагов
 	m_WalkStack.Init();
 
@@ -49,6 +51,12 @@ TGameCharacter::~TGameCharacter()
 	//!Чистим память
 	m_WalkStack.Clear();
 	m_PaperdollTextTexture.Clear();
+
+	if (m_DamageTextControl != NULL)
+	{
+		delete m_DamageTextControl;
+		m_DamageTextControl = NULL;
+	}
 
 	//!Если стянут статусбар - обновим его
 	GumpManager->UpdateGump(m_Serial, 0, GT_STATUSBAR);

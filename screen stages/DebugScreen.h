@@ -36,7 +36,7 @@ public:
 
 	void Init();
 
-	void InitPopupHelp();
+	void InitToolTip();
 
 	int Render(bool mode);
 

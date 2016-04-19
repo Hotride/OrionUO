@@ -50,7 +50,7 @@ int TGameBlockedScreen::Render( __in bool mode)
 	{
 		GumpManager->Draw(mode, true);
 		
-		InitPopupHelp();
+		InitToolTip();
 
 		MouseManager.Draw(0x2073); //Main Gump mouse cursor
 	}

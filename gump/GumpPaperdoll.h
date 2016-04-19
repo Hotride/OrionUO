@@ -55,7 +55,7 @@ public:
 
 	void PrepareTextures();
 
-	void OnPopupHelp();
+	void OnToolTip();
 
 	void GenerateFrame();
 

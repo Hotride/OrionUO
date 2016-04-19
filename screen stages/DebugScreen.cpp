@@ -62,7 +62,7 @@ void TDebugScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	PopupHelp.SeqIndex = 0;
+	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -87,7 +87,7 @@ void TDebugScreen::ProcessSmoothAction(BYTE action)
 		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 }
 //---------------------------------------------------------------------------
-void TDebugScreen::InitPopupHelp()
+void TDebugScreen::InitToolTip()
 {
 }
 //---------------------------------------------------------------------------

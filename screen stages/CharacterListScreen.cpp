@@ -50,7 +50,7 @@ void TCharacterListScreen::Init()
 	SmoothMonitor.UseSunrise();
 	m_SmoothScreenAction = 0;
 
-	PopupHelp.SeqIndex = 0;
+	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
 	UO->ExecuteGump(0x0588); //Main Screen background
@@ -101,36 +101,36 @@ void TCharacterListScreen::ProcessSmoothAction( __in_opt BYTE action)
 Инициализация всплывающих подсказок
 @return 
 */
-void TCharacterListScreen::InitPopupHelp()
+void TCharacterListScreen::InitToolTip()
 {
-	if (!ConfigManager.PopupHelpEnabled)
+	if (!ConfigManager.UseToolTips)
 		return;
 
 	switch (g_LastSelectedObject)
 	{
 		case ID_CS_QUIT:
 		{
-			PopupHelp.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
+			ToolTip.Set(L"Quit Ultima Online", SOT_NO_OBJECT, g_LastSelectedObject, 80);
 			break;
 		}
 		case ID_CS_ARROW_NEXT:
 		{
-			PopupHelp.Set(L"Play UO with selected character", SOT_NO_OBJECT, g_LastSelectedObject);
+			ToolTip.Set(L"Play UO with selected character", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_CS_ARROW_PREV:
 		{
-			PopupHelp.Set(L"Back to shard selection screen", SOT_NO_OBJECT, g_LastSelectedObject);
+			ToolTip.Set(L"Back to shard selection screen", SOT_NO_OBJECT, g_LastSelectedObject);
 			break;
 		}
 		case ID_CS_NEW:
 		{
-			PopupHelp.Set(L"Create new character", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			ToolTip.Set(L"Create new character", SOT_NO_OBJECT, g_LastSelectedObject, 150);
 			break;
 		}
 		case ID_CS_DELETE:
 		{
-			PopupHelp.Set(L"Delete this character", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+			ToolTip.Set(L"Delete this character", SOT_NO_OBJECT, g_LastSelectedObject, 150);
 			break;
 		}
 		default:
@@ -147,7 +147,7 @@ void TCharacterListScreen::InitPopupHelp()
 			{
 				if (g_LastSelectedObject == (ID_CS_CHARACTERS + i))
 				{
-					PopupHelp.Set(L"Click here to select this character", SOT_NO_OBJECT, g_LastSelectedObject, 150);
+					ToolTip.Set(L"Click here to select this character", SOT_NO_OBJECT, g_LastSelectedObject, 150);
 
 					break;
 				}
@@ -258,7 +258,7 @@ int TCharacterListScreen::Render( __in bool mode)
 			gumpID = 0x15A6; //> gump pressed
 		UO->DrawGump(gumpID, 0, 610, 445);
 
-		InitPopupHelp();
+		InitToolTip();
 
 		DrawSmoothMonitorEffect();
 

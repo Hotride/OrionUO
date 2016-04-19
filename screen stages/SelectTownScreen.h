@@ -93,7 +93,7 @@ public:
 	Инициализация всплывающих подсказок
 	@return 
 	*/
-	void InitPopupHelp();
+	void InitToolTip();
 
 	/*!
 	Отрисовка/выбор объектов
