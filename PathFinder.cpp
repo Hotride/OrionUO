@@ -824,7 +824,7 @@ bool TPathFinder::FindPath(int maxNodes)
 {
 	int curNode = 0;
 
-	m_ClosedList[0].Used = 1;
+	m_ClosedList[0].Used = true;
 
 	m_ClosedList[0].X = m_StartPoint.x;
 	m_ClosedList[0].Y = m_StartPoint.y;
@@ -832,7 +832,7 @@ bool TPathFinder::FindPath(int maxNodes)
 	m_ClosedList[0].DistFromGoalCost = GetGoalDistCost(m_StartPoint, 0);
 	m_ClosedList[0].Cost = m_ClosedList[0].DistFromGoalCost;
 
-	for (;;)
+	while (true)
 	{
 		OpenNodes(&m_ClosedList[curNode]);
 

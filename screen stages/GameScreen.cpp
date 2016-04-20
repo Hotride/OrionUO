@@ -1773,10 +1773,9 @@ void TGameScreen::CalculateGameWindowBounds()
 //---------------------------------------------------------------------------
 /*!
 ќбработка сообщений мыши (ст€гивание статуса. драг-гампа и т.п.)
-@param [__out] charSelected —осто€ние выделени€ персонажа
 @return 
 */
-void TGameScreen::CheckMouseEvents( __out bool &charSelected)
+void TGameScreen::CheckMouseEvents()
 {
 	g_GrayedPixels = g_Player->Dead();
 
@@ -1835,16 +1834,8 @@ void TGameScreen::CheckMouseEvents( __out bool &charSelected)
 				UO->OpenStatus(selchar->Serial);
 				CurrentScreen->OnLeftMouseDown();
 				g_GeneratedMouseDown = true;
-				charSelected = true;
 			}
 		}
-	}
-	else if (g_LastObjectType == SOT_GAME_OBJECT) //Character selection
-	{
-		TGameCharacter *selobj = World->FindWorldCharacter(g_LastSelectedObject);
-
-		if (selobj != NULL && selobj->Serial < 0x40000000)
-			charSelected = true;
 	}
 }
 //---------------------------------------------------------------------------
@@ -2488,9 +2479,7 @@ int TGameScreen::Render(__in bool mode)
 
 		g_RenderedObjectsCountInGameWindow = 0;
 		
-		bool charSelected = false;
-
-		CheckMouseEvents(charSelected);
+		CheckMouseEvents();
 		
 		TargetGump.Color = 0;
 		AttackTargetGump.Color = 0;
@@ -2587,17 +2576,14 @@ int TGameScreen::Render(__in bool mode)
 
 		UO->DrawGump(resizeGumpID, 0, m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX - 3, m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY - 3);
 #pragma endregion
-		
+
+#if UO_DEBUG_INFO!=0
 		char dbf[150] = {0};
 
-		if (charSelected)
-			sprintf(dbf, "FPS=%i Dir=%i Z=%i (MDZ=%i) CS", FPScount, g_Player->Direction, m_RenderBounds.PlayerZ, m_MaxDrawZ);
-		else
-			sprintf(dbf, "FPS=%i Dir=%i Z=%i (MDZ=%i)", FPScount, g_Player->Direction, m_RenderBounds.PlayerZ, m_MaxDrawZ);
+		sprintf(dbf, "FPS=%i Dir=%i Z=%i (MDZ=%i)", FPScount, g_Player->Direction, m_RenderBounds.PlayerZ, m_MaxDrawZ);
 
 		FontManager->DrawA(3, dbf, 0x35, 20, 50);
 
-#if UO_DEBUG_INFO!=0
 		sprintf(dbf, "Rendered %i object counts:\nLand=%i Statics=%i Game=%i Multi=%i Lights=%i",
 			g_RenderedObjectsCountInGameWindow, g_LandObjectsCount, g_StaticsObjectsCount, g_GameObjectsCount, g_MultiObjectsCount, m_LightCount);
 
@@ -2662,16 +2648,6 @@ int TGameScreen::Render(__in bool mode)
 		if (multiOnTarget)
 			Target.UnloadMulti();
 		
-		/*static DWORD times = GetTickCount();
-		static int mi = 0;
-		g_GL.Draw(g_MapTexture[mi], 0, 0, g_MapSizeX[mi] / 10, g_MapSizeY[mi] / 10);
-
-		if (times < ticks)
-		{
-			times = ticks + 1000;
-			mi = (mi + 1) % 2;
-		}*/
-
 		if (g_GameState == GS_GAME_BLOCKED)
 		{
 			g_RightMouseDown = RMD;

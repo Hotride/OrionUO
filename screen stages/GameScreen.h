@@ -153,10 +153,9 @@ private:
 
 	/*!
 	Обработка сообщений мыши (стягивание статуса. драг-гампа и т.п.)
-	@param [__out] charSelected Состояние выделения персонажа
 	@return 
 	*/
-	void CheckMouseEvents(__out bool &charSelected);
+	void CheckMouseEvents();
 
 	/*!
 	Вычисление параметров отображаемого текста
