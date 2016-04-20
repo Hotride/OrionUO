@@ -163,8 +163,10 @@ void TGameItem::OnGraphicChange( __in_opt int direction)
 				m_RenderQueueIndex = 3 - (int)IsSurface();
 			else if (IsSurface())
 				m_RenderQueueIndex = 4;
-			else
+			else if (IsAnimated())
 				m_RenderQueueIndex = 6;
+			else
+				m_RenderQueueIndex = 5;
 
 			m_RenderQueueIndex++;
 
