@@ -3241,7 +3241,7 @@ void TGameScreen::OnCharPress( __in WPARAM wparam, __in LPARAM lparam)
 		EntryPointer->SetText(g_LastConsoleEntry);
 		EntryPointer->SetPos(g_LastConsoleEntry.length());
 	}
-	else if (isprint(wparam) && !altPressed && !ctrlPressed && EntryPointer->Length() < 60)
+	else if (iswprint(wparam) && !altPressed && !ctrlPressed && EntryPointer->Length() < 60)
 		EntryPointer->Insert(wparam);
 }
 //---------------------------------------------------------------------------
