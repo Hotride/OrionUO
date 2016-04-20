@@ -2583,12 +2583,6 @@ PACKET_HANDLER(ConfirmWalk)
 	g_Player->Notoriety = newnoto;
 
 	World->MoveToTop(g_Player);
-
-	BYTE dmg[7] = { 0 };
-	*dmg = 0x0B;
-	pack32(dmg + 1, g_PlayerSerial);
-	pack16(dmg + 5, (WORD)(rand() % 65536));
-	ReceiveHandler(dmg, sizeof(dmg));
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(OpenUrl)
