@@ -47,7 +47,7 @@ public:
 	@param [__in] io Ссылка на данные о арте
 	@return Ссылка на данные о текстуре
 	*/
-	TTextureObject *ReadArt(__in WORD id, __in TIndexObject &io);
+	TTextureObject *ReadArt(__in const WORD &id, __in TIndexObject &io);
 
 	/*!
 	Прочитать текстуру ландшафта и сгенерировать тексруту
@@ -70,7 +70,7 @@ public:
 	@param [__in] checkY Координата Y
 	@return true в случае успешного теста
 	*/
-	bool GumpPixelsInXY(__in TIndexObject &io, __in int &checkX, __in int &checkY);
+	bool GumpPixelsInXY(__in TIndexObject &io, __in const int &checkX, __in const int &checkY);
 
 	/*!
 	Проверить нахождение пикселя арта в указанных координатах
@@ -80,7 +80,7 @@ public:
 	@param [__in] checkY Координата Y
 	@return true в случае успешного теста
 	*/
-	bool ArtPixelsInXY(__in bool land, __in TIndexObject &io, __in  int &checkX, __in  int &checkY);
+	bool ArtPixelsInXY(__in const bool &land, __in TIndexObject &io, __in const int &checkX, __in const int &checkY);
 };
 //---------------------------------------------------------------------------
 //!Класс чтения данных

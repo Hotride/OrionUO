@@ -51,6 +51,8 @@ typedef DWORD __cdecl FUNCDEF_GET_PRTIAL_HUE_COLOR(WORD&, WORD);
 //IPathFinder
 typedef bool __cdecl FUNCDEF_GET_CAN_WALK(BYTE&, int&, int&, char&);
 typedef bool __cdecl FUNCDEF_GET_WALK(bool, BYTE);
+typedef bool __cdecl FUNCDEF_GET_WALK_TO(int, int, int, int);
+typedef void __cdecl FUNCDEF_GET_STOP_AUTOWALK();
 //----------------------------------------------------------------------------
 UOInterface IGLEngine
 {
@@ -91,6 +93,8 @@ UOInterface IPathFinder
 {
 	FUNCDEF_GET_CAN_WALK *CanWalk;
 	FUNCDEF_GET_WALK *Walk;
+	FUNCDEF_GET_WALK_TO *WalkTo;
+	FUNCDEF_GET_STOP_AUTOWALK *StopAutowalk;
 };
 //---------------------------------------------------------------------------
 extern IGLEngine g_Interface_GL;

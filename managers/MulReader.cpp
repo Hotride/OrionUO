@@ -112,7 +112,7 @@ TTextureObject *TMulReader::ReadGump(__in TIndexObject &io)
 @param [__in] checkY Координата Y
 @return true в случае успешного теста
 */
-bool TMulReader::GumpPixelsInXY( __in TIndexObject &io, __in int &checkX, __in int &checkY)
+bool TMulReader::GumpPixelsInXY(__in TIndexObject &io, __in const int &checkX, __in const int &checkY)
 {
 	TTextureObject *th = io.Texture;
 
@@ -157,7 +157,7 @@ bool TMulReader::GumpPixelsInXY( __in TIndexObject &io, __in int &checkX, __in i
 @param [__in] io Ссылка на данные о арте
 @return Ссылка на данные о текстуре
 */
-TTextureObject *TMulReader::ReadArt(__in WORD id, __in TIndexObject &io)
+TTextureObject *TMulReader::ReadArt(__in const WORD &id, __in TIndexObject &io)
 {
 	TTextureObject *th = new TTextureObject();
 	th->Texture = 0;
@@ -266,7 +266,6 @@ TTextureObject *TMulReader::ReadArt(__in WORD id, __in TIndexObject &io)
 #endif
 
 		ptr = (PWORD)((DWORD)DataStart + (*LineOffsets));
-		id -= 0x4000;
 
 		while (Y < h)
 		{
@@ -309,7 +308,8 @@ TTextureObject *TMulReader::ReadArt(__in WORD id, __in TIndexObject &io)
 				ptr = (PWORD)((DWORD)DataStart + (LineOffsets[Y] * 2));
 			}
 		}
-		if ((id >= 0x2053 && id <= 0x2062) || (id >= 0x206A && id <= 0x2079)) //Убираем рамку (если это курсор мышки)
+
+		if ((id >= 0x6053 && id <= 0x6062) || (id >= 0x606A && id <= 0x6079)) //Убираем рамку (если это курсор мышки)
 		{
 			IFOR(i, 0, w)
 			{
@@ -347,7 +347,7 @@ TTextureObject *TMulReader::ReadArt(__in WORD id, __in TIndexObject &io)
 @param [__in] checkY Координата Y
 @return true в случае успешного теста
 */
-bool TMulReader::ArtPixelsInXY(__in bool land, __in TIndexObject &io, __in int &checkX, __in int &checkY)
+bool TMulReader::ArtPixelsInXY(__in const bool &land, __in TIndexObject &io, __in const int &checkX, __in const int &checkY)
 {
 	TTextureObject *th = io.Texture;
 

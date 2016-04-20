@@ -125,6 +125,39 @@ bool __cdecl FUNCBODY_GetWalk(bool run, BYTE direction)
 	return PathFinder->Walk(run, direction);
 }
 //---------------------------------------------------------------------------
+bool __cdecl FUNCBODY_GetWalkTo(int x, int y, int z, int distance)
+{
+	bool result = PathFinder->WalkTo(x, y, z, distance);
+
+	if (result)
+	{
+		while (PathFinder->AutoWalking)
+			Sleep(100);
+
+		POINT p = { g_Player->X, g_Player->Y };
+
+		TWalkData *wd = g_Player->m_WalkStack.Top();
+
+		if (wd != NULL)
+		{
+			p.x = wd->X;
+			p.y = wd->Y;
+		}
+
+		POINT startPoint = { x, y };
+
+		result = (GetDistance(p, startPoint) <= distance);
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
+void __cdecl FUNCBODY_GetStopAutowalk()
+{
+	if (PathFinder->PathFindidngCanBeCancelled)
+		PathFinder->StopAutoWalk();
+}
+//---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 IGLEngine g_Interface_GL =
@@ -162,6 +195,8 @@ IColorManager g_Interface_ColorManager =
 IPathFinder g_Interface_PathFinder =
 {
 	FUNCBODY_GetCanWalk,
-	FUNCBODY_GetWalk
+	FUNCBODY_GetWalk,
+	FUNCBODY_GetWalkTo,
+	FUNCBODY_GetStopAutowalk
 };
 //---------------------------------------------------------------------------

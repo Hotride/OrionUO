@@ -27,6 +27,8 @@ public:
 	virtual ~TScreenshotBuilder();
 
 	void SaveScreen();
+
+	PDWORD GetScenePixels(const int &x, const int &y, const int &width, const int &height);
 };
 //---------------------------------------------------------------------------
 extern TScreenshotBuilder g_ScreenshotBuilder;

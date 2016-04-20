@@ -2802,7 +2802,7 @@ int TUltimaOnline::Send(PBYTE buf, int size)
 	return 0;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TUltimaOnline::ExecuteGump(WORD id, bool partialHue)
+TTextureObject *TUltimaOnline::ExecuteGump(const WORD &id, const bool &partialHue)
 {
 	TIndexObject &io = m_GumpDataIndex[id];
 
@@ -2824,7 +2824,7 @@ TTextureObject *TUltimaOnline::ExecuteGump(WORD id, bool partialHue)
 	return io.Texture;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TUltimaOnline::ExecuteLandArt(WORD &id)
+TTextureObject *TUltimaOnline::ExecuteLandArt(const WORD &id)
 {
 	TIndexObject &io = m_LandDataIndex[id];
 
@@ -2846,14 +2846,12 @@ TTextureObject *TUltimaOnline::ExecuteLandArt(WORD &id)
 	return io.Texture;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TUltimaOnline::ExecuteStaticArtAnimated(WORD id)
+TTextureObject *TUltimaOnline::ExecuteStaticArtAnimated(const WORD &id)
 {
-	id += m_StaticDataIndex[id].Increment;
-
-	return ExecuteStaticArt(id);
+	return ExecuteStaticArt(id + m_StaticDataIndex[id].Increment);
 }
 //---------------------------------------------------------------------------
-TTextureObject *TUltimaOnline::ExecuteStaticArt(WORD id)
+TTextureObject *TUltimaOnline::ExecuteStaticArt(const WORD &id)
 {
 	TIndexObject &io = m_StaticDataIndex[id];
 
@@ -2931,7 +2929,7 @@ TTextureObject *TUltimaOnline::ExecuteLight(BYTE &id)
 	return io.Texture;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::ExecuteGumpPart(WORD id, int count)
+bool TUltimaOnline::ExecuteGumpPart(const WORD &id, const int &count)
 {
 	bool result = true;
 
@@ -2944,7 +2942,7 @@ bool TUltimaOnline::ExecuteGumpPart(WORD id, int count)
 	return result;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawSphereGump(int value, float maxValue, int x, int y, int width)
+void TUltimaOnline::DrawSphereGump(const int &value, const float &maxValue, const int &x, const int &y, const int &width)
 {
 	DrawGump(0x00D5, 0, x + 64, y); //Sphere line gump start
 	DrawGump(0x00D7, 0, x + 152, y); //Sphere line gump end
@@ -2955,7 +2953,7 @@ void TUltimaOnline::DrawSphereGump(int value, float maxValue, int x, int y, int 
 	DrawGump(0x00D8, 0, x + 64 + ofs, y); //Sphere gump
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
+void TUltimaOnline::DrawGump(const WORD &id, const WORD &color, const int &x, const int &y, const bool &partialHue)
 {
 	TTextureObject *th = ExecuteGump(id);
 
@@ -2977,7 +2975,7 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, bool partialHue)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, int width, int height, bool partialHue)
+void TUltimaOnline::DrawGump(const WORD &id, const WORD &color, const int &x, const int &y, int width, int height, const bool &partialHue)
 {
 	TTextureObject *th = ExecuteGump(id);
 
@@ -3007,7 +3005,7 @@ void TUltimaOnline::DrawGump(WORD id, WORD color, int x, int y, int width, int h
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawResizepicGump(WORD id, int x, int y, int width, int height)
+void TUltimaOnline::DrawResizepicGump(const WORD &id, const int &x, const int &y, const int &width, const int &height)
 {
 	TTextureObject *th[9] = {NULL};
 
@@ -3029,7 +3027,7 @@ void TUltimaOnline::DrawResizepicGump(WORD id, int x, int y, int width, int heig
 	g_GL.DrawResizepic(th, x, y, width, height);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawLandTexture(WORD &id, WORD &color, int &x, int &y, RECT &rc, TVector *normals)
+void TUltimaOnline::DrawLandTexture(const WORD &id, WORD color, const int &x, const int &y, RECT &rc, TVector *normals)
 {
 	TTextureObject *th = ExecuteTexture(id);
 
@@ -3054,7 +3052,7 @@ void TUltimaOnline::DrawLandTexture(WORD &id, WORD &color, int &x, int &y, RECT 
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
+void TUltimaOnline::DrawLandArt(const WORD &id, WORD color, const int &x, const int &y, const int &z)
 {
 	TTextureObject *th = ExecuteLandArt(id);
 
@@ -3070,14 +3068,11 @@ void TUltimaOnline::DrawLandArt(WORD id, WORD color, int x, int y, int z)
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		x -= 23;
-		y -= 23 + (z * 4);
-
-		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
+		g_GL.Draw(th->Texture, x - 23, y - (23 + (z * 4)), th->Width, th->Height);
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool selection)
+void TUltimaOnline::DrawStaticArt(const WORD &id, WORD color, const int &x, const int &y, const int &z, const bool &selection)
 {
 	TTextureObject *th = ExecuteStaticArt(id);
 
@@ -3086,9 +3081,6 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 		if (g_OutOfRangeColor)
 			color = g_OutOfRangeColor;
 		
-		x -= m_StaticDataIndex[id].Width;
-		y -= m_StaticDataIndex[id].Height;
-
 		int drawMode = (!g_GrayedPixels && color);
 
 		if (drawMode)
@@ -3103,19 +3095,16 @@ void TUltimaOnline::DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		y -= (z * 4);
-
-		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
+		g_GL.Draw(th->Texture, x - m_StaticDataIndex[id].Width, y - (m_StaticDataIndex[id].Height + (z * 4)), th->Width, th->Height);
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int z, bool selection)
+void TUltimaOnline::DrawStaticArtAnimated(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const bool &selection)
 {
-	id += m_StaticDataIndex[id].Increment;
-	DrawStaticArt(id, color, x, y, z, selection);
+	DrawStaticArt(id + m_StaticDataIndex[id].Increment, color, x, y, z, selection);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtRotated(WORD id, WORD color, int x, int y, int z, float angle)
+void TUltimaOnline::DrawStaticArtRotated(const WORD &id, WORD color, const int &x, const int &y, const int &z, const float &angle)
 {
 	TTextureObject *th = ExecuteStaticArt(id);
 
@@ -3131,19 +3120,16 @@ void TUltimaOnline::DrawStaticArtRotated(WORD id, WORD color, int x, int y, int 
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		y -= (z * 4);
-
-		g_GL.DrawRotated(th->Texture, x, y, th->Width, th->Height / 2, angle);
+		g_GL.DrawRotated(th->Texture, x, y - (z * 4), th->Width, th->Height / 2, angle);
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtAnimatedRotated(WORD id, WORD color, int x, int y, int z, float angle)
+void TUltimaOnline::DrawStaticArtAnimatedRotated(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const float &angle)
 {
-	id += m_StaticDataIndex[id].Increment;
-	DrawStaticArtRotated(id, color, x, y, z, angle);
+	DrawStaticArtRotated(id + m_StaticDataIndex[id].Increment, color, x, y, z, angle);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtTransparent(WORD id, WORD color, int x, int y, int z, bool selection)
+void TUltimaOnline::DrawStaticArtTransparent(const WORD &id, WORD color, int x, int y, const int &z, const bool &selection)
 {
 	TTextureObject *th = ExecuteStaticArt(id);
 
@@ -3187,13 +3173,12 @@ void TUltimaOnline::DrawStaticArtTransparent(WORD id, WORD color, int x, int y, 
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtAnimatedTransparent(WORD id, WORD color, int x, int y, int z, bool selection)
+void TUltimaOnline::DrawStaticArtAnimatedTransparent(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const bool &selection)
 {
-	id += m_StaticDataIndex[id].Increment;
-	DrawStaticArtTransparent(id, color, x, y, z, selection);
+	DrawStaticArtTransparent(id + m_StaticDataIndex[id].Increment, color, x, y, z, selection);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, bool selection, bool onMouse)
+void TUltimaOnline::DrawStaticArtInContainer(const WORD &id, WORD color, int x, int y, const bool &selection, const bool &onMouse)
 {
 	TTextureObject *th = ExecuteStaticArt(id);
 
@@ -3228,15 +3213,12 @@ void TUltimaOnline::DrawStaticArtInContainer(WORD id, WORD color, int x, int y, 
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawLight(BYTE id, WORD color, int x, int y)
+void TUltimaOnline::DrawLight(BYTE id, const WORD &color, const int &x, const int &y)
 {
 	TTextureObject *th = ExecuteLight(id);
 
 	if (th != NULL)
 	{
-		x -= th->Width / 2;
-		y -= th->Height / 2;
-
 		int drawMode = 0;
 
 		if (color)
@@ -3248,11 +3230,11 @@ void TUltimaOnline::DrawLight(BYTE id, WORD color, int x, int y)
 
 		glUniform1iARB(ShaderDrawMode, drawMode);
 
-		g_GL.Draw(th->Texture, x, y, th->Width, th->Height);
+		g_GL.Draw(th->Texture, x - (th->Width / 2), y - (th->Height / 2), th->Width, th->Height);
 	}
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::PolygonePixelsInXY(int x, int y, int width, int height)
+bool TUltimaOnline::PolygonePixelsInXY(int x, int y, const int &width, const int &height)
 {
 	x = g_MouseX - x;
 	y = g_MouseY - y;
@@ -3260,7 +3242,7 @@ bool TUltimaOnline::PolygonePixelsInXY(int x, int y, int width, int height)
 	return !(x < 0 || y < 0 || x >= width || y >= height);
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::GumpPixelsInXY(WORD id, int x, int y, bool noSubMouse)
+bool TUltimaOnline::GumpPixelsInXY(const WORD &id, int x, int y, const bool &noSubMouse)
 {
 	TIndexObject &io = m_GumpDataIndex[id];
 
@@ -3286,7 +3268,7 @@ bool TUltimaOnline::GumpPixelsInXY(WORD id, int x, int y, bool noSubMouse)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::GumpPixelsInXY(WORD id, int x, int y, int width, int height, bool noSubMouse)
+bool TUltimaOnline::GumpPixelsInXY(const WORD &id, int x, int y, int width, int height, const bool &noSubMouse)
 {
 	if (!noSubMouse)
 	{
@@ -3336,7 +3318,7 @@ bool TUltimaOnline::GumpPixelsInXY(WORD id, int x, int y, int width, int height,
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::ResizepicPixelsInXY(WORD id, int x, int y, int width, int height)
+bool TUltimaOnline::ResizepicPixelsInXY(const WORD &id, int x, int y, const int &width, const int &height)
 {
 	x = g_MouseX - x;
 	y = g_MouseY - y;
@@ -3461,7 +3443,7 @@ bool TUltimaOnline::ResizepicPixelsInXY(WORD id, int x, int y, int width, int he
 	return false;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::StaticPixelsInXY(WORD id, int x, int y, int z)
+bool TUltimaOnline::StaticPixelsInXY(const WORD &id, int x, int y, const int &z)
 {
 	TIndexObject &io = m_StaticDataIndex[id];
 
@@ -3484,29 +3466,9 @@ bool TUltimaOnline::StaticPixelsInXY(WORD id, int x, int y, int z)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::StaticPixelsInXYAnimated(WORD id, int x, int y, int z)
+bool TUltimaOnline::StaticPixelsInXYAnimated(const WORD &id, const int &x, const int &y, const int &z)
 {
-	id += m_StaticDataIndex[id].Increment;
-
-	TIndexObject &io = m_StaticDataIndex[id];
-
-	bool result = false;
-
-	TTextureObject *th = io.Texture;
-	if (th != NULL)
-	{
-		x = (g_MouseX - x) + io.Width;
-		y = (g_MouseY - y) + io.Height + (z * 4);
-
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
-			result = th->Data[(y * th->Width) + x] != 0;
-#else
-		result = MulReader.ArtPixelsInXY(false, io, x, y);
-#endif
-	}
-
-	return result;
+	return StaticPixelsInXY(id + m_StaticDataIndex[id].Increment, x, y, z);
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::CircleTransPixelsInXY()
@@ -3525,7 +3487,7 @@ bool TUltimaOnline::CircleTransPixelsInXY()
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::StaticPixelsInXYInContainer(WORD id, int x, int y)
+bool TUltimaOnline::StaticPixelsInXYInContainer(const WORD &id, int x, int y)
 {
 	TIndexObject &io = m_StaticDataIndex[id];
 
@@ -3548,7 +3510,7 @@ bool TUltimaOnline::StaticPixelsInXYInContainer(WORD id, int x, int y)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::LandPixelsInXY(WORD id, int x, int  y, int z)
+bool TUltimaOnline::LandPixelsInXY(const WORD &id, int x, int  y, const int &z)
 {
 	TIndexObject &io = m_LandDataIndex[id];
 
@@ -3591,16 +3553,16 @@ bool TUltimaOnline::LandTexturePixelsInXY(int x, int  y, RECT &r)
 	return result;
 }
 //--------------------------------------------------------------------------
-DWORD TUltimaOnline::GetLandFlags(WORD id)
+DWORD TUltimaOnline::GetLandFlags(const WORD &id)
 {
-	WORD DivID = id / 32;
-	if (DivID < 512)
-		return m_LandData[DivID].Tiles[id % 32].Flags;
+	WORD divID = id / 32;
+	if (divID < 512)
+		return m_LandData[divID].Tiles[id % 32].Flags;
 
 	return 0;
 }
 //--------------------------------------------------------------------------
-DWORD TUltimaOnline::GetStaticFlags(WORD id)
+DWORD TUltimaOnline::GetStaticFlags(const WORD &id)
 {
 	WORD divID = id / 32;
 	if (divID < 512)
@@ -3609,7 +3571,7 @@ DWORD TUltimaOnline::GetStaticFlags(WORD id)
 	return 0;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::GetArtDimension(WORD id, POINT &p)
+void TUltimaOnline::GetArtDimension(const WORD &id, POINT &p)
 {
 	p.x = 0;
 	p.y = 0;
@@ -3636,7 +3598,7 @@ void TUltimaOnline::GetArtDimension(WORD id, POINT &p)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::GetGumpDimension(WORD id, POINT &p)
+void TUltimaOnline::GetGumpDimension(const WORD &id, POINT &p)
 {
 	TTextureObject *th = m_GumpDataIndex[id].Texture;
 
@@ -3652,22 +3614,22 @@ void TUltimaOnline::GetGumpDimension(WORD id, POINT &p)
 	}
 }
 //---------------------------------------------------------------------------
-TIndexObjectStatic *TUltimaOnline::GetStaticPointer(WORD &id)
+TIndexObjectStatic *TUltimaOnline::GetStaticPointer(const WORD &id)
 {
 	return &m_StaticDataIndex[id];
 }
 //---------------------------------------------------------------------------
-TIndexObject *TUltimaOnline::GetGumpPointer(WORD &id)
+TIndexObject *TUltimaOnline::GetGumpPointer(const WORD &id)
 {
 	return &m_GumpDataIndex[id];
 }
 //---------------------------------------------------------------------------
-TIndexMulti *TUltimaOnline::GetMultiPointer(WORD id)
+TIndexMulti *TUltimaOnline::GetMultiPointer(const WORD &id)
 {
 	return &m_MultiDataIndex[id];
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::PlaySoundEffect(WORD id, int volume)
+void TUltimaOnline::PlaySoundEffect(const WORD &id, int volume)
 {
 	if (id >= 0x0800 || !ConfigManager.Sound)
 		return;

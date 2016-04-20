@@ -69,6 +69,7 @@ private:
 	bool m_ObjectHandles;
 	bool m_ReduceFPSUnactiveWindow;
 	bool m_HoldShiftForContextMenus;
+	bool m_HoldShiftForEnablePathfind;
 	
 	WORD m_SpeechDelay;
 	bool m_ScaleSpeechDelay;
@@ -174,6 +175,7 @@ public:
 	void SetReduceFPSUnactiveWindow(bool val);
 	bool GetReduceFPSUnactiveWindow() const { return m_ReduceFPSUnactiveWindow; }
 	SETGET(bool, HoldShiftForContextMenus);
+	SETGET(bool, HoldShiftForEnablePathfind);
 	
 	SETGET(WORD, SpeechDelay);
 	SETGET(bool, ScaleSpeechDelay);

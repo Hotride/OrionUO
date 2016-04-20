@@ -2305,6 +2305,11 @@ void TGameScreen::DrawGameWindowText( __in bool &mode)
 			{
 				TGameCharacter *character = (TGameCharacter*)obj;
 
+				TTextContainer *textContainer = character->m_DamageTextControl;
+
+				if (textContainer->m_Top == NULL)
+					continue;
+
 				int gox = obj->X - m_RenderBounds.PlayerX;
 				int goy = obj->Y - m_RenderBounds.PlayerY;
 
@@ -2319,15 +2324,24 @@ void TGameScreen::DrawGameWindowText( __in bool &mode)
 				if (character->FindLayer(OL_MOUNT) != NULL)
 					drawY -= 25;
 
-				QFOR(text, character->m_DamageTextControl->m_Top, TTextData*)
+				for (TTextData *text = textContainer->m_Top; text != NULL; )
 				{
+					TTextData *next = text->m_Next;
+
 					if (text->m_Texture.Empty())
+					{
+						text = next;
 						continue;
+					}
 
 					if (text->Timer < ticks)
 					{
 						if (text->Transparent)
+						{
+							textContainer->Delete(text);
+							text = next;
 							continue;
+						}
 						else
 						{
 							text->Timer = ticks + DAMAGE_TEXT_TRANSPARENT_DELAY;
@@ -2358,6 +2372,8 @@ void TGameScreen::DrawGameWindowText( __in bool &mode)
 						text->m_Texture.Draw(drawX - text->DrawX, drawY + text->DrawY);
 
 					text->DrawY -= DAMAGE_TEXT_STEP;
+
+					text = next;
 				}
 			}
 		}
@@ -3054,6 +3070,15 @@ void TGameScreen::OnRightMouseUp()
 	
 	if (g_RightMouseDown && g_LastGumpRightMouseDown)
 		GumpManager->OnRightMouseUp(false);
+
+	if (g_ShiftPressed && ConfigManager.HoldShiftForEnablePathfind && ConfigManager.EnablePathfind && g_SelectedObject != NULL && !PathFinder->AutoWalking)
+	{
+		if (g_SelectedObject->IsLandObject() || g_SelectedObject->IsSurface())
+		{
+			if (PathFinder->WalkTo(g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, 0))
+				UO->CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Pathfinding!");
+		}
+	}
 }
 //---------------------------------------------------------------------------
 /*!
@@ -3140,7 +3165,7 @@ bool TGameScreen::OnRightMouseDoubleClick()
 	{
 		if (g_SelectedObject->IsLandObject() || g_SelectedObject->IsSurface())
 		{
-			if (PathFinder->WalkTo(g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z))
+			if (PathFinder->WalkTo(g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, 0))
 			{
 				UO->CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Pathfinding!");
 				return true;
@@ -3356,6 +3381,8 @@ void TGameScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 					Target.SendCancelTarget();
 				else if (NewTargetSystem.Serial)
 					NewTargetSystem.Serial = 0;
+				else if (PathFinder->AutoWalking && PathFinder->PathFindidngCanBeCancelled)
+					PathFinder->StopAutoWalk();
 
 				if (g_ConsolePrompt)
 					UO->ConsolePromptCancel();

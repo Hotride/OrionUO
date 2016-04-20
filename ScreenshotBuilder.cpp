@@ -67,8 +67,7 @@ void TScreenshotBuilder::SaveScreen()
 	bmFileHeader.bfReserved2 = 0;
 	bmFileHeader.bfOffBits = 54;
 
-	PDWORD pixels = new DWORD[width * height];
-	glReadPixels(0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, &pixels[0]);
+	PDWORD pixels = GetScenePixels(0, 0, width, height);
 
 	FILE *file = fopen(path.c_str(), "wb");
 
@@ -88,5 +87,14 @@ void TScreenshotBuilder::SaveScreen()
 	/*TPRINT("Saving screen to:\n");
 	TPRINT(path.c_str());
 	TPRINT("\n");*/
+}
+//---------------------------------------------------------------------------
+PDWORD TScreenshotBuilder::GetScenePixels(const int &x, const int &y, const int &width, const int &height)
+{
+	PDWORD pixels = new DWORD[width * height];
+
+	glReadPixels(x, y, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, &pixels[0]);
+
+	return pixels;
 }
 //---------------------------------------------------------------------------

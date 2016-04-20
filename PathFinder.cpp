@@ -32,12 +32,39 @@ TPathObject::~TPathObject()
 {
 }
 //---------------------------------------------------------------------------
+//---------------------------------TPathNode---------------------------------
+//---------------------------------------------------------------------------
+TPathNode::TPathNode()
+: m_Parent(NULL), m_X(0), m_Y(0), m_Z(0), m_Used(false), m_Cost(0),
+m_Direction(0), m_DistFromStartCost(0), m_DistFromGoalCost(0)
+{
+}
+//---------------------------------------------------------------------------
+TPathNode::~TPathNode()
+{
+	m_Parent = NULL;
+}
+//---------------------------------------------------------------------------
+void TPathNode::Reset()
+{
+	m_Parent = NULL;
+	m_Used = false;
+	m_X = m_Y = m_Z = m_Direction = m_Cost = m_DistFromStartCost = m_DistFromGoalCost = 0;
+}
+//---------------------------------------------------------------------------
 //---------------------------------TPathFinder-------------------------------
 //---------------------------------------------------------------------------
 TPathFinder::TPathFinder()
-: TBaseQueue(), m_OnLongStair(false), m_AutoWalking(false), m_Path(NULL),
-m_PointIndex(0), m_PathSize(0)
+: TBaseQueue(), m_OnLongStair(false), m_AutoWalking(false), m_PointIndex(0),
+m_PathSize(0), /*m_StartX(0), m_StartY(0), m_EndX(0), m_EndY(0),*/ m_GoalNode(0),
+m_GoalFound(false), m_ActiveOpenNodes(0), m_ActiveClosedNodes(0),
+m_PathFindDistance(0), m_PathFindidngCanBeCancelled(false)
 {
+	m_StartPoint.x = 0;
+	m_StartPoint.y = 0;
+
+	m_EndPoint.x = 0;
+	m_EndPoint.y = 0;
 }
 //---------------------------------------------------------------------------
 TPathFinder::~TPathFinder()
@@ -56,7 +83,13 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 	TMapBlock *block = MapManager->GetBlock(blockIndex);
 
 	if (block == NULL)
-		return false;
+	{
+		block = MapManager->AddBlock(blockIndex);
+		block->X = blockX;
+		block->Y = blockY;
+		MapManager->LoadBlock(block);
+		//return false;
+	}
 
 	int bx = x % 8;
 	int by = y % 8;
@@ -234,7 +267,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 					else
 						newZ = top;
 					
-					TPRINT("f1::Found_1::newZ=%i (top=%i)\n", newZ, top);
+					//TPRINT("f1::Found_1::newZ=%i (top=%i)\n", newZ, top);
 					found = true;
 
 					if (height > 1)
@@ -245,7 +278,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 					if (found && abs(z - newZ) < abs(z - top))
 						break;
 					
-					TPRINT("f1::Found_2::newZ=%i\n", newZ);
+					//TPRINT("f1::Found_2::newZ=%i\n", newZ);
 					newZ = top;
 					found = true;
 				}
@@ -254,7 +287,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 
 		if (!found)
 		{
-			TPRINT("Failed 1\n");
+			//TPRINT("Failed 1\n");
 			Clear();
 
 			return false;
@@ -262,7 +295,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 
 		//found = false;
 
-		TPRINT("c=%i\n", c);
+		//TPRINT("c=%i\n", c);
 		c = 0;
 		
 		for (po = poStart; po != NULL; po = (TPathObject*)po->m_Prev)
@@ -285,7 +318,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 				isLongStair = (curZ <= (z + 6));
 			}
 
-			TPRINT("surface=%i nowC=%i z=%i newZ=%i curZ=%i top=%i isLongStair=%i\n", surface, c, z, newZ, curZ, top, isLongStair);
+			//TPRINT("surface=%i nowC=%i z=%i newZ=%i curZ=%i top=%i isLongStair=%i\n", surface, c, z, newZ, curZ, top, isLongStair);
 
 			if (top <= newZ)
 				continue;
@@ -295,28 +328,28 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 			{
 				if (top > newZ && top < (newZ + g_MaxBlockZ))
 				{
-					TPRINT("f2_1\n");
+					//TPRINT("f2_1\n");
 					found = false;
 
 					break;
 				}
 				else if (curZ >= z && curZ < (z + (g_MaxBlockZ / 2)))
 				{
-					TPRINT("f2_2\n");
+					//TPRINT("f2_2\n");
 					found = false;
 
 					break;
 				}
 				else if (curZ <= z && top >= (z + (g_MaxBlockZ / 2)))
 				{
-					TPRINT("f2_3\n");
+					//TPRINT("f2_3\n");
 					found = false;
 
 					break;
 				}
 				else if (curZ >= newZ && curZ <= (newZ + g_MaxBlockZ))
 				{
-					TPRINT("f2_4\n");
+					//TPRINT("f2_4\n");
 					found = false;
 
 					break;
@@ -326,7 +359,7 @@ bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 
 		if (!found)
 		{
-			TPRINT("Failed 2\n");
+			//TPRINT("Failed 2\n");
 			Clear();
 
 			return false;
@@ -446,25 +479,6 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 	}
 
 	return passed;
-}
-//---------------------------------------------------------------------------
-void TPathFinder::ProcessAutowalk()
-{
-	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 1 && g_LastStepTime <= GetTickCount())
-	{
-		if (m_PointIndex >= 0 && m_PointIndex < m_PathSize)
-		{
-			PATH_POINT &p = m_Path[m_PointIndex];
-			m_PointIndex++;
-
-			BYTE newDir = rand() % 8;
-
-			if (!Walk(ConfigManager.AlwaysRun, newDir))
-				StopAutoWalk();
-		}
-		else
-			StopAutoWalk();
-	}
 }
 //---------------------------------------------------------------------------
 bool TPathFinder::Walk(bool run, BYTE direction)
@@ -603,41 +617,325 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	return true;
 }
 //---------------------------------------------------------------------------
-PATH_POINT *TPathFinder::CalculatePath(int &size, int x, int y, int z)
+int TPathFinder::GetGoalDistCost(const POINT &p, int cost)
 {
-	size = 16;
-
-	return new PATH_POINT[size];
+	return (abs(m_EndPoint.x - p.x) + abs(m_EndPoint.y - p.y)) * cost;
 }
 //---------------------------------------------------------------------------
-bool TPathFinder::WalkTo(int x, int y, int z)
+bool TPathFinder::DoesNotExistOnOpenList(int x, int y)
 {
+	bool result = false;
+
+	IFOR(i, 0, PATHFINDER_MAX_NODES)
+	{
+		if (m_OpenList[i].Used &&m_OpenList[i].X == x && m_OpenList[i].Y == y)
+		{
+			result = true;
+			break;
+		}
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
+bool TPathFinder::DoesNotExistOnClosedList(int x, int y)
+{
+	bool result = false;
+
+	IFOR(i, 0, PATHFINDER_MAX_NODES)
+	{
+		if (m_ClosedList[i].Used && m_ClosedList[i].X == x && m_ClosedList[i].Y == y)
+		{
+			result = true;
+			break;
+		}
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
+int TPathFinder::AddNodeToList(int list, int direction, int x, int y, int z, TPathNode *parentNode, int cost)
+{
+	if (!list)
+	{
+		if (!DoesNotExistOnClosedList(x, y))
+		{
+			if (!DoesNotExistOnOpenList(x, y))
+			{
+				IFOR(i, 0, PATHFINDER_MAX_NODES)
+				{
+					if (!m_OpenList[i].Used)
+					{
+						m_OpenList[i].Used = true;
+
+						m_OpenList[i].Direction = direction;
+						m_OpenList[i].X = x;
+						m_OpenList[i].Y = y;
+						m_OpenList[i].Z = z;
+						POINT p = { x, y };
+
+						m_OpenList[i].DistFromGoalCost = GetGoalDistCost(p, cost);
+						m_OpenList[i].DistFromStartCost = parentNode->DistFromStartCost + cost;
+						m_OpenList[i].Cost = m_OpenList[i].DistFromGoalCost + m_OpenList[i].DistFromStartCost;
+
+						m_OpenList[i].Parent = parentNode;
+
+						//if (x == m_EndX && y == m_EndY)
+						if (GetDistance(m_EndPoint, p) <= m_PathFindDistance)
+						{
+							m_GoalFound = true;
+							m_GoalNode = i;
+						}
+
+						m_ActiveOpenNodes++;
+
+						return i;
+					}
+				}
+
+				return -1;
+			}
+			else
+			{
+				IFOR(i, 0, PATHFINDER_MAX_NODES)
+				{
+					if (m_OpenList[i].Used)
+					{
+						if (m_OpenList[i].X == x && m_OpenList[i].Y == y)
+						{
+							int startCost = parentNode->DistFromStartCost + cost;
+
+							if (m_OpenList[i].DistFromStartCost > startCost)
+							{
+								m_OpenList[i].Parent = parentNode;
+								m_OpenList[i].DistFromStartCost = startCost + cost;
+								m_OpenList[i].Cost = m_OpenList[i].DistFromGoalCost + m_OpenList[i].DistFromStartCost;
+							}
+
+							return i;
+						}
+					}
+				}
+			}
+		}
+		else
+			return 0;
+	}
+	else
+	{
+		parentNode->Used = false;
+
+		IFOR(i, 0, PATHFINDER_MAX_NODES)
+		{
+			if (!m_ClosedList[i].Used)
+			{
+				m_ClosedList[i].Used = true;
+
+				m_ClosedList[i].DistFromGoalCost = parentNode->DistFromGoalCost;
+				m_ClosedList[i].DistFromStartCost = parentNode->DistFromStartCost;
+				m_ClosedList[i].Cost = m_ClosedList[i].DistFromGoalCost + m_ClosedList[i].DistFromStartCost;
+				m_ClosedList[i].Direction = parentNode->Direction;
+				m_ClosedList[i].X = parentNode->X;
+				m_ClosedList[i].Y = parentNode->Y;
+				m_ClosedList[i].Z = parentNode->Z;
+				m_ClosedList[i].Parent = parentNode->Parent;
+
+				m_ActiveOpenNodes--;
+				m_ActiveClosedNodes++;
+
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	return -1;
+}
+//---------------------------------------------------------------------------
+bool TPathFinder::OpenNodes(TPathNode *node)
+{
+	bool found = false;
+
+	IFOR(i, 0, 8)
+	{
+		BYTE direction = (BYTE)i;
+		int x = node->X;
+		int y = node->Y;
+		char z = (char)node->Z;
+
+		BYTE oldDirection = direction;
+
+		if (CanWalk(direction, x, y, z))
+		{
+			if (direction != oldDirection)
+				continue;
+
+			int diagonal = i % 2;
+
+			if (diagonal)
+			{
+				BYTE wantDirection = (BYTE)i;
+				int wantX = node->X;
+				int wantY = node->Y;
+
+				GetNewXY(wantDirection, wantX, wantY);
+
+				if (x != wantX || y != wantY)
+					diagonal = -1;
+			}
+
+			if (diagonal >= 0 && AddNodeToList(0, direction, x, y, z, node, 1 + diagonal) != -1)
+				found = true;
+			else
+				continue;
+		}
+	}
+
+	return found;
+}
+//---------------------------------------------------------------------------
+int TPathFinder::FindCheapestNode()
+{
+	int cheapestCost = 9999999;
+	int cheapestNode = -1;
+
+	IFOR(i, 0, PATHFINDER_MAX_NODES)
+	{
+		if (m_OpenList[i].Used)
+		{
+			if (m_OpenList[i].Cost < cheapestCost)
+			{
+				cheapestNode = i;
+				cheapestCost = m_OpenList[i].Cost;
+			}
+		}
+	}
+
+	int result = -1;
+
+	if (cheapestNode != -1)
+		result = AddNodeToList(1, 0, 0, 0, 0, &m_OpenList[cheapestNode], 2);
+
+	return result;
+}
+//---------------------------------------------------------------------------
+bool TPathFinder::FindPath(int maxNodes)
+{
+	int curNode = 0;
+
+	m_ClosedList[0].Used = 1;
+
+	m_ClosedList[0].X = m_StartPoint.x;
+	m_ClosedList[0].Y = m_StartPoint.y;
+
+	m_ClosedList[0].DistFromGoalCost = GetGoalDistCost(m_StartPoint, 0);
+	m_ClosedList[0].Cost = m_ClosedList[0].DistFromGoalCost;
+
+	for (;;)
+	{
+		OpenNodes(&m_ClosedList[curNode]);
+
+		if (m_GoalFound)
+		{
+			int totalNodes = 0;
+
+			TPathNode *GoalNode = &m_OpenList[m_GoalNode];
+
+			while (GoalNode->Parent != NULL)
+			{
+				GoalNode = GoalNode->Parent;
+				totalNodes++;
+			};
+
+			totalNodes++;
+
+			m_PathSize = totalNodes;
+
+			GoalNode = &m_OpenList[m_GoalNode];
+
+			while (totalNodes > 0)
+			{
+				totalNodes--;
+				m_Path[totalNodes] = GoalNode;
+				GoalNode = GoalNode->Parent;
+			};
+
+			break;
+		}
+
+		curNode = FindCheapestNode();
+
+		if (curNode == -1)
+			return false;
+
+		if (m_ActiveClosedNodes >= maxNodes)
+			return false;
+	}
+
+	return true;
+}
+//---------------------------------------------------------------------------
+bool TPathFinder::WalkTo(int x, int y, int z, int distance)
+{
+	IFOR(i, 0, m_ActiveOpenNodes)
+		m_OpenList[i].Reset();
+
+	IFOR(i, 0, m_ActiveClosedNodes)
+		m_ClosedList[i].Reset();
+
+	m_StartPoint.x = g_Player->X;
+	m_StartPoint.y = g_Player->Y;
+	m_EndPoint.x = x;
+	m_EndPoint.y = y;
+	m_GoalNode = 0;
+	m_GoalFound = false;
+	m_ActiveOpenNodes = 0;
+	m_ActiveClosedNodes = 0;
+	m_PathFindDistance = distance;
+	m_PathSize = 0;
+	m_PathFindidngCanBeCancelled = true;
+
 	StopAutoWalk();
 
-	m_Path = CalculatePath(m_PathSize, x, y, z);
-
-	if (m_Path != NULL)
+	if (FindPath(PATHFINDER_MAX_NODES))
 	{
 		m_AutoWalking = true;
-		m_PointIndex = 0;
+		m_PointIndex = 1;
 		ProcessAutowalk();
-
-		//delete m_Path;
-		//m_Path = NULL;
 	}
 
 	return (m_PathSize != 0);
+}
+//---------------------------------------------------------------------------
+void TPathFinder::ProcessAutowalk()
+{
+	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 1 && g_LastStepTime <= GetTickCount())
+	{
+		if (m_PointIndex >= 0 && m_PointIndex < m_PathSize)
+		{
+			TPathNode *p = m_Path[m_PointIndex];
+
+			BYTE olddir = g_Player->Direction;
+
+			TWalkData *walker = g_Player->m_WalkStack.Top();
+			if (walker != NULL)
+				olddir = walker->Direction;
+
+			if ((olddir & 7) == p->Direction)
+				m_PointIndex++;
+
+			if (!Walk(ConfigManager.AlwaysRun, p->Direction))
+				StopAutoWalk();
+		}
+		else
+			StopAutoWalk();
+	}
 }
 //---------------------------------------------------------------------------
 void TPathFinder::StopAutoWalk()
 {
 	m_AutoWalking = false;
 	m_PathSize = 0;
-
-	if (m_Path != NULL)
-	{
-		delete m_Path;
-		m_Path = NULL;
-	}
 }
 //---------------------------------------------------------------------------

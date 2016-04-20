@@ -45,7 +45,7 @@ private:
 	static TTextTexture m_TexturePage3[6];	//Language
 	static TTextTexture m_TexturePage4[19];	//Chat
 	static TTextTexture m_TexturePage5[7];	//Macro Options
-	static TTextTexture m_TexturePage6[14];	//Interface
+	static TTextTexture m_TexturePage6[15];	//Interface
 	static TTextTexture m_TexturePage7[18];	//Display
 	static TTextTexture m_TexturePage8[9];	//Reputation System
 	static TTextTexture m_TexturePage9[9];	//Miscellaneous
@@ -124,6 +124,7 @@ private:
 	static const int ID_GO_P6_REDUCE_FPS_UNACTIVE_WINDOW = 609;
 	static const int ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON = 610;
 	static const int ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS = 611;
+	static const int ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING = 612;
 
 	static const int ID_GO_P7_SCALE_SPEECH_DURATION = 700;
 	static const int ID_GO_P7_SPEECH_COLOR = 701;

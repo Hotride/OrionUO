@@ -133,16 +133,16 @@ public:
 
 
 	//Загрузка текстуры гампа
-	TTextureObject *ExecuteGump(WORD id, bool partialHue = true);
+	TTextureObject *ExecuteGump(const WORD &id, const bool &partialHue = true);
 
 	//Загрузка текстуры ландшафта из art.mul
-	TTextureObject *ExecuteLandArt(WORD &id);
+	TTextureObject *ExecuteLandArt(const WORD &id);
 
 	//Загрузка текстуры статики
-	TTextureObject *ExecuteStaticArt(WORD id);
+	TTextureObject *ExecuteStaticArt(const WORD &id);
 
 	//Загрузка текстуры анимированной статики
-	TTextureObject *ExecuteStaticArtAnimated(WORD id);
+	TTextureObject *ExecuteStaticArtAnimated(const WORD &id);
 
 	//Загрузка текстуры ландшафта (из texmaps.mul)
 	TTextureObject *ExecuteTexture(WORD id);
@@ -153,88 +153,88 @@ public:
 
 
 	//Загрузка элементов гампов
-	bool ExecuteGumpPart(WORD id, int count);
+	bool ExecuteGumpPart(const WORD &id, const int &count);
 
 	//Загрузка элементов фона гампа
-	bool ExecuteResizepic(WORD id) {return ExecuteGumpPart(id, 9);}
+	bool ExecuteResizepic(const WORD &id) { return ExecuteGumpPart(id, 9); }
 
 	//Загрузка элементов кнопки гампа
-	bool ExecuteButton(WORD id) {return ExecuteGumpPart(id, 3);}
+	bool ExecuteButton(const WORD &id) { return ExecuteGumpPart(id, 3); }
 
 
 
 	//Отрисовка гампа-ползунка (составной гамп)
-	void DrawSphereGump(int value, float maxValue, int x, int y, int width = 95);
+	void DrawSphereGump(const int &value, const float &maxValue, const int &x, const int &y, const int &width = 95);
 
 
 
 	//Нарисовать гамп
-	void DrawGump(WORD id, WORD color, int x, int y, bool partialHue = false);
+	void DrawGump(const WORD &id, const WORD &color, const int &x, const int &y, const bool &partialHue = false);
 
 	//Нарисовать замощенный гамп
-	void DrawGump(WORD id, WORD color, int x, int y, int width, int height, bool partialHue = false);
+	void DrawGump(const WORD &id, const WORD &color, const int &x, const int &y, int width, int height, const bool &partialHue = false);
 
 	//Нарисовать фон гампа
-	void DrawResizepicGump(WORD id, int x, int y, int width, int height);
+	void DrawResizepicGump(const WORD &id, const int &x, const int &y, const int &width, const int &height);
 
 	//Нарисовать ландшафт (из texmaps.mul)
-	void DrawLandTexture(WORD &id, WORD &color, int &x, int &y, RECT &rc, TVector *normals);
+	void DrawLandTexture(const WORD &id, WORD color, const int &x, const int &y, RECT &rc, TVector *normals);
 
 	//Нарисовать ландшафт (из art.mul)
-	void DrawLandArt(WORD id, WORD color, int x, int y, int z);
+	void DrawLandArt(const WORD &id, WORD color, const int &x, const int &y, const int &z);
 
 	//Нарисовать статику
-	void DrawStaticArt(WORD id, WORD color, int x, int y, int z, bool selection = false);
+	void DrawStaticArt(const WORD &id, WORD color, const int &x, const int &y, const int &z, const bool &selection = false);
 
 	//Нарисовать анимированную статику
-	void DrawStaticArtAnimated(WORD id, WORD color, int x, int y, int z, bool selection = false);
+	void DrawStaticArtAnimated(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const bool &selection = false);
 
 	//Нарисовать повернутую статику
-	void DrawStaticArtRotated(WORD id, WORD color, int x, int y, int z, float angle);
+	void DrawStaticArtRotated(const WORD &id, WORD color, const int &x, const int &y, const int &z, const float &angle);
 
 	//Нарисовать повернутую анимированную статику
-	void DrawStaticArtAnimatedRotated(WORD id, WORD color, int x, int y, int z, float angle);
+	void DrawStaticArtAnimatedRotated(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const float &angle);
 
 	//Нарисовать прозрачную статику
-	void DrawStaticArtTransparent(WORD id, WORD color, int x, int y, int z, bool selection = false);
+	void DrawStaticArtTransparent(const WORD &id, WORD color, int x, int y, const int &z, const bool &selection = false);
 
 	//Нарисовать прозрачную анимированную статику
-	void DrawStaticArtAnimatedTransparent(WORD id, WORD color, int x, int y, int z, bool selection = false);
+	void DrawStaticArtAnimatedTransparent(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const bool &selection = false);
 
 	//Нарисовать статику в контейнере
-	void DrawStaticArtInContainer(WORD id, WORD color, int x, int y, bool selection = false, bool onMouse = false);
+	void DrawStaticArtInContainer(const WORD &id, WORD color, int x, int y, const bool &selection = false, const bool &onMouse = false);
 
 	//Нарисовать свет
-	void DrawLight(BYTE id, WORD color, int x, int y);
+	void DrawLight(BYTE id, const WORD &color, const int &x, const int &y);
 	
 
 
 	//Проверка прямоугольника под курсором мышки
-	bool PolygonePixelsInXY(int x, int y, int width, int height);
+	bool PolygonePixelsInXY(int x, int y, const int &width, const int &height);
 
 	//Проверка гампа под курсором мышки
-	bool GumpPixelsInXY(WORD id, int x, int y, bool noSubMouse = false);
+	bool GumpPixelsInXY(const WORD &id, int x, int y, const bool &noSubMouse = false);
 
 	//Проверка замощенного гампа под курсором мышки
-	bool GumpPixelsInXY(WORD id, int x, int y, int width, int height, bool noSubMouse = false);
+	bool GumpPixelsInXY(const WORD &id, int x, int y, int width, int height, const bool &noSubMouse = false);
 
 	//Проверка фона под курсором мышки
-	bool ResizepicPixelsInXY(WORD id, int x, int y, int width, int height);
+	bool ResizepicPixelsInXY(const WORD &id, int x, int y, const int &width, const int &height);
 
 	//Проверка статики под курсором мышки
-	bool StaticPixelsInXY(WORD id, int x, int y, int z);
+	bool StaticPixelsInXY(const WORD &id, int x, int y, const int &z);
 
 	//Проверка анимированной статики под курсором мышки
-	bool StaticPixelsInXYAnimated(WORD id, int x, int y, int z);
+	bool StaticPixelsInXYAnimated(const WORD &id, const int &x, const int &y, const int &z);
 
 	//Проверка круга прозрачности под курсором мышки
 	bool CircleTransPixelsInXY();
 
 	//Проверка статики в контейнере под курсором мышки
-	bool StaticPixelsInXYInContainer(WORD id, int x, int y);
+	bool StaticPixelsInXYInContainer(const WORD &id, int x, int y);
 
 	//Проверка ландшафта (из art.mul) под курсором мышки
-	bool LandPixelsInXY(WORD id, int x, int y, int z);
+	bool LandPixelsInXY(const WORD &id, int x, int y, const int &z);
 
 	//Проверка растянутого ландшафта (из texmaps.mul) под курсором мышки
 	bool LandTexturePixelsInXY(int x, int  y, RECT &r);
@@ -242,39 +242,39 @@ public:
 
 
 	//Получить флаги ландшафта
-	DWORD GetLandFlags(WORD id);
+	DWORD GetLandFlags(const WORD &id);
 
 	//Получить флаги статики
-	DWORD GetStaticFlags(WORD id);
+	DWORD GetStaticFlags(const WORD &id);
 
 
 
 	//Получить габариты картинки статики
-	void GetArtDimension(WORD id, POINT &p);
+	void GetArtDimension(const WORD &id, POINT &p);
 
 	//Получить габариты картинки гампа
-	void GetGumpDimension(WORD id, POINT &p);
+	void GetGumpDimension(const WORD &id, POINT &p);
 
 
 	
 	//Получить указатель на индексник гампа
-	TIndexObjectStatic *GetStaticPointer(WORD &id);
+	TIndexObjectStatic *GetStaticPointer(const WORD &id);
 
 	//Получить указатель на индексник гампа
-	TIndexObject *GetGumpPointer(WORD &id);
+	TIndexObject *GetGumpPointer(const WORD &id);
 
 	//Получить указатель на индексник мульи
-	TIndexMulti *GetMultiPointer(WORD id);
+	TIndexMulti *GetMultiPointer(const WORD &id);
 
 
 
 	//Получить цвет света
-	WORD GetLightColor(WORD id) {return m_StaticDataIndex[id].LightColor;}
+	WORD GetLightColor(const WORD &id) { return m_StaticDataIndex[id].LightColor; }
 
 
 
 	//Проиграть звуковой эффект
-	void PlaySoundEffect(WORD index, int volume = -1);
+	void PlaySoundEffect(const WORD &index, int volume = -1);
 
 	//Удалить неиспользуемые звуковые эффекты
 	void ResetSoundEffects(DWORD ticks);

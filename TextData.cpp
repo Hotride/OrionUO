@@ -264,6 +264,31 @@ void TTextContainer::Add(TTextData *obj)
 	}
 }
 //---------------------------------------------------------------------------
+void TTextContainer::Delete(TTextData *obj)
+{
+	TTextData *next = obj->m_Next;
+	TTextData *prev = obj->m_Prev;
+
+	if (next != NULL)
+		next->m_Prev = prev;
+
+	if (prev != NULL)
+		prev->m_Next = next;
+
+	obj->m_Next = NULL;
+	obj->m_Prev = NULL;
+
+	if (obj == m_Head)
+		m_Head = prev;
+	
+	if (obj == m_Top)
+		m_Top = next;
+
+	delete obj;
+
+	m_Size--;
+}
+//---------------------------------------------------------------------------
 void TTextContainer::DrawSystemChat(int &x, int &y, int &height)
 {
 	DWORD ticks = GetTickCount();

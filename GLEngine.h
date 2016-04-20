@@ -57,8 +57,8 @@ public:
 	void UpdateRect();
 
 	//Загрузка текстур 16 и 32 бит
-	void BindTexture16(GLuint &texture, int width, int height, PWORD pixels);
-	void BindTexture32(GLuint &texture, int width, int height, PDWORD pixels);
+	void BindTexture16(GLuint &texture, const int &width, const int &height, PWORD pixels);
+	void BindTexture32(GLuint &texture, const int &width, const int &height, PDWORD pixels);
 
 	//Очистить экран и начать рисование
 	void BeginDraw();
@@ -73,50 +73,50 @@ public:
 	void EndStencil();
 
 	//Указать область рисования
-	void ViewPort(int x, int y, int width, int height);
+	void ViewPort(const int &x, const int &y, const int &width, const int &height);
 
 	//Восстановить стандартную область рисования
 	void RestorePort();
 
 	//Указать область рисования (ножницами, сохраняет мартицу)
-	void Scissor(int x, int y, int width, int height);
+	void Scissor(const int &x, const int &y, const int &width, const int &height);
 
 
 
 	//Нарисовать линию
-	void DrawLine(int x, int y, int targetX, int targetY);
+	void DrawLine(const int &x, const int &y, const int &targetX, const int &targetY);
 
 	//Нарисовать прямоугольник
-	void DrawPolygone(int x, int y, int width, int height);
+	void DrawPolygone(const int &x, const int &y, const int &width, const int &height);
 
 	//Нарисовать круг
-	void DrawCircle(float x, float y, float radius, int gradientMode = 0);
+	void DrawCircle(const float &x, const float &y, const float &radius, const int &gradientMode = 0);
 
 
 
 	//Нарисовать текстуру ландшафта
-	void DrawLandTexture(GLuint &texture, int &x, int &y, RECT &rc, TVector *normals);
+	void DrawLandTexture(GLuint &texture, const int &x, const int &y, RECT &rc, TVector *normals);
 
 	//Нарисовать текстуру
-	void Draw(GLuint &texture, int &x, int &y, int width, int height);
+	void Draw(GLuint &texture, const int &x, const int &y, const int &width, const int &height);
 
 	//Нарисовать повернутую текстуру
-	void DrawRotated(GLuint &texture, int &x, int &y, int width, int height, float &angle);
+	void DrawRotated(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const float &angle);
 
 	//Нарисовать текстуру с возможностью зеркального отражения
-	void Draw(GLuint &texture, int &x, int &y, int width, int height, bool &mirror);
+	void Draw(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror);
 
 	//Нарисовать текстуру сидячего персонажа
-	void DrawSitting(GLuint &texture, int &x, int &y, int width, int height, bool &mirror);
+	void DrawSitting(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror);
 
 	//Нарисовать тень
-	void DrawShadow(GLuint &texture, int &x, int &y, int width, int height, bool &mirror);
+	void DrawShadow(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror);
 
 	//Замостить текстуру на заданные габариты
-	void Draw(GLuint &texture, int &x, int &y, int width, int height, int &drawWidth, int &drawHeight);
+	void Draw(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const int &drawWidth, const int &drawHeight);
 
 	//Нарисовать фон
-	void DrawResizepic(TTextureObject **th, int &x, int &y, int &width, int &height);
+	void DrawResizepic(TTextureObject **th, const int &x, const int &y, const int &width, const int &height);
 };
 //---------------------------------------------------------------------------
 extern TGLEngine g_GL;

@@ -113,6 +113,7 @@ void TConfigManager::DefaultPage6()
 	m_ObjectHandles = false;
 	m_ReduceFPSUnactiveWindow = true;
 	m_HoldShiftForContextMenus = true;
+	m_HoldShiftForEnablePathfind = false;
 }
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage7()
@@ -323,6 +324,8 @@ void TConfigManager::Load( __in string path)
 			m_AlwaysRun = file.ReadByte();
 			m_DisableMenubar = file.ReadByte();
 			m_GrayOutOfRangeObjects = file.ReadByte();
+			m_HoldShiftForContextMenus = true;
+			m_HoldShiftForEnablePathfind = false;
 
 			if (blockSize > 9)
 			{
@@ -333,9 +336,12 @@ void TConfigManager::Load( __in string path)
 				SetReduceFPSUnactiveWindow(file.ReadByte());
 
 				if (blockSize > 14)
+				{
 					m_HoldShiftForContextMenus = file.ReadByte();
-				else
-					m_HoldShiftForContextMenus = true;
+
+					if (blockSize > 15)
+						m_HoldShiftForEnablePathfind = file.ReadByte();
+				}
 			}
 			else
 			{
@@ -344,7 +350,6 @@ void TConfigManager::Load( __in string path)
 				m_ItemPropertiesIcon = false;
 				m_ObjectHandles = false;
 				SetReduceFPSUnactiveWindow(true);
-				m_HoldShiftForContextMenus = true;
 			}
 		}
 		
@@ -501,7 +506,7 @@ void TConfigManager::Save( __in string path)
 	writer->WriteBuffer();
 	
 	//Page 6
-	writer->WriteByte(15); //size of block
+	writer->WriteByte(16); //size of block
 	writer->WriteByte(6); //page index
 	writer->WriteByte(m_EnablePathfind);
 	writer->WriteByte(m_HoldTabForCombat);
@@ -516,6 +521,7 @@ void TConfigManager::Save( __in string path)
 	writer->WriteByte(m_ObjectHandles);
 	writer->WriteByte(m_ReduceFPSUnactiveWindow);
 	writer->WriteByte(m_HoldShiftForContextMenus);
+	writer->WriteByte(m_HoldShiftForEnablePathfind);
 	writer->WriteBuffer();
 	
 	//Page 7

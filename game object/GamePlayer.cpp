@@ -25,7 +25,8 @@ TPlayer::TPlayer(DWORD serial)
 : TGameCharacter(serial), m_Str(0), m_Int(0), m_Dex(0), m_MaxWeight(0),
 m_Weight(0), m_Armor(0), m_Gold(0), m_Warmode(false), m_StatsCap(0), m_Followers(0),
 m_MaxFollowers(5), m_FireResistance(0), m_ColdResistance(0), m_PoisonResistance(0),
-m_EnergyResistance(0), m_Luck(0), m_MinDamage(0), m_MaxDamage(0), m_TithingPoints(0)
+m_EnergyResistance(0), m_Luck(0), m_MinDamage(0), m_MaxDamage(0), m_TithingPoints(0),
+m_LockStr(0), m_LockInt(0), m_LockDex(0)
 //, m_Race(CRT_HUMAN)
 {
 	m_Skills = new TSkill[g_SkillsCount];

@@ -112,7 +112,7 @@ void TColorManager::CreateHuesPalette()
 @param [__in] color Индекс цвета
 @return 
 */
-void TColorManager::SendColorsToShader( __in WORD &color)
+void TColorManager::SendColorsToShader( __in WORD color)
 {
 	if (color != 0)
 	{

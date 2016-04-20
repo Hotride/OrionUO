@@ -33,6 +33,12 @@ private:
 	//!Ловкость
 	short m_Dex;
 
+	BYTE m_LockStr;
+
+	BYTE m_LockInt;
+
+	BYTE m_LockDex;
+
 	//!Максимальный вес
 	WORD m_MaxWeight;
 
@@ -92,6 +98,9 @@ public:
 	SETGET(short, Str);
 	SETGET(short, Int);
 	SETGET(short, Dex);
+	SETGET(BYTE, LockStr);
+	SETGET(BYTE, LockInt);
+	SETGET(BYTE, LockDex);
 	SETGET(WORD, MaxWeight);
 	SETGET(WORD, Weight);
 	SETGET(short, Armor);

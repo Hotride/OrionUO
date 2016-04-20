@@ -2435,7 +2435,7 @@ PACKET_HANDLER(ExtendedCommand)
 
 			break;
 		}
-		case 0x14:
+		case 0x14: //Display Popup/context menu (2D and KR)
 		{
 			Move(1);
 			BYTE mode = ReadByte();
@@ -2482,7 +2482,7 @@ PACKET_HANDLER(ExtendedCommand)
 
 			break;
 		}
-		case 0x16: ////Close User Interface Windows
+		case 0x16: //Close User Interface Windows
 		{
 			//ID:
 			//0x01: Paperdoll
@@ -2517,6 +2517,20 @@ PACKET_HANDLER(ExtendedCommand)
 				default:
 					break;
 			}
+
+			break;
+		}
+		case 0x1A: //Extended stats
+		{
+			BYTE stat = ReadByte();
+			BYTE state = ReadByte();
+
+			if (stat == 0)
+				g_Player->LockStr = state;
+			else if (stat == 1)
+				g_Player->LockDex = state;
+			else if (stat == 2)
+				g_Player->LockInt = state;
 
 			break;
 		}
@@ -2569,6 +2583,12 @@ PACKET_HANDLER(ConfirmWalk)
 	g_Player->Notoriety = newnoto;
 
 	World->MoveToTop(g_Player);
+
+	BYTE dmg[7] = { 0 };
+	*dmg = 0x0B;
+	pack32(dmg + 1, g_PlayerSerial);
+	pack16(dmg + 5, (WORD)(rand() % 65536));
+	ReceiveHandler(dmg, sizeof(dmg));
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(OpenUrl)

@@ -164,6 +164,9 @@ public:
 	//Добавить текст
 	void Add(TTextData *obj);
 
+	//Удалить текст
+	void Delete(TTextData *obj);
+
 	//Очистить контейнер
 	void Clear();
 

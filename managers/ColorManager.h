@@ -81,7 +81,7 @@ public:
 	@param [__in] color Индекс цвета
 	@return 
 	*/
-	void SendColorsToShader(__in WORD &color);
+	void SendColorsToShader(__in WORD color);
 
 
 
