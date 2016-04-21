@@ -20,7 +20,7 @@
 #ifndef PathFinderH
 #define PathFinderH
 //---------------------------------------------------------------------------
-const int PATHFINDER_MAX_NODES = 1000;
+const int PATHFINDER_MAX_NODES = 10000;
 //---------------------------------------------------------------------------
 //Класс объекта в точке пути
 class TPathObject : public TBaseQueueItem

@@ -28,21 +28,21 @@ void __cdecl FUNCBODY_Scissor(int x, int y, int width, int height)
 //---------------------------------------------------------------------------
 void __cdecl FUNCBODY_DrawLine(DWORD color, int x, int y, int width, int height)
 {
-	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), (color >> 24) & 0xFF);
+	glColor4ub(GetRValue(color), GetGValue(color), GetBValue(color), (color >> 24) & 0xFF);
 	g_GL.DrawLine(x, y, width, height);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //---------------------------------------------------------------------------
 void __cdecl FUNCBODY_DrawPolygone(DWORD color, int x, int y, int width, int height)
 {
-	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), (color >> 24) & 0xFF);
+	glColor4ub(GetRValue(color), GetGValue(color), GetBValue(color), (color >> 24) & 0xFF);
 	g_GL.DrawPolygone(x, y, width, height);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //---------------------------------------------------------------------------
 void __cdecl FUNCBODY_DrawCircle(DWORD color, float x, float y, float radius, int gradientMode)
 {
-	glColor4b(GetRValue(color), GetGValue(color), GetBValue(color), (color >> 24) & 0xFF);
+	glColor4ub(GetRValue(color), GetGValue(color), GetBValue(color), (color >> 24) & 0xFF);
 	g_GL.DrawCircle(x, y, radius, gradientMode);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }

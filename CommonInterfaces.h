@@ -23,6 +23,7 @@
 #ifndef UOInterface
 #define UOInterface struct
 #endif
+void __cdecl FUNCBODY_DrawPolygone(DWORD color, int x, int y, int width, int height);
 //----------------------------------------------------------------------------
 //IGLEngine
 typedef void __cdecl FUNCDEF_SCISSOR(int, int, int, int);

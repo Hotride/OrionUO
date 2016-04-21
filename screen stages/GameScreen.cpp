@@ -2123,13 +2123,13 @@ void TGameScreen::DrawGameWindow( __in bool &mode)
 			OBJECT_HANDLES_DATA &ohd = m_ObjectHandlesList[i];
 			ohd.Obj->DrawObjectHandlesTexture(ohd.X, ohd.Y);
 		}
+
+		if (PluginManager != NULL)
+			PluginManager->WorldDraw();
 	}
 	else
 	{
 	}
-
-	if (mode && PluginManager != NULL)
-		PluginManager->WorldDraw();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -2647,7 +2647,10 @@ int TGameScreen::Render(__in bool mode)
 		
 		if (multiOnTarget)
 			Target.UnloadMulti();
-		
+
+		if (PluginManager != NULL)
+			PluginManager->SceneDraw();
+
 		if (g_GameState == GS_GAME_BLOCKED)
 		{
 			g_RightMouseDown = RMD;
@@ -2794,6 +2797,9 @@ void TGameScreen::OnLeftMouseDown()
 			m_GameWindowMoving = true;
 		else if (g_LastSelectedObject == 2)
 			m_GameWindowResizing = true;
+
+		if (g_GumpConsoleType != NULL)
+			GumpManager->MoveToBack(g_GumpConsoleType);
 	}
 	
 	g_SelectGumpObjects = false;

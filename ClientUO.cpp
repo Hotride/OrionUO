@@ -2732,9 +2732,6 @@ void TUltimaOnline::Process()
 
 			MapManager->Init(true);
 
-			if (PluginManager != NULL)
-				PluginManager->SceneDraw();
-
 			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); i++)
 			{
 				if (i->second < ticks)

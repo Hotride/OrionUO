@@ -55,13 +55,6 @@ void TGumpConsoleType::InitTextTextures()
 		FontManager->GenerateA(3, m_Text[0][i], str.c_str());
 	}
 
-	/*FontManager->GenerateA(3, m_Text[0][1], " ! ");
-	FontManager->GenerateA(3, m_Text[0][2], " ; ");
-	FontManager->GenerateA(3, m_Text[0][3], " : ");
-	FontManager->GenerateA(3, m_Text[0][4], " . ");
-	FontManager->GenerateA(3, m_Text[0][5], " ? ");
-	FontManager->GenerateA(3, m_Text[0][6], " / ");*/
-
 	FontManager->GenerateA(3, m_Text[1][0], " Normal ");
 	FontManager->GenerateA(3, m_Text[1][1], " Yell ");
 	FontManager->GenerateA(3, m_Text[1][2], " Whisper ");
@@ -99,14 +92,14 @@ bool TGumpConsoleType::ConsoleIsEmpty()
 		case GCTT_BROADCAST:
 		case GCTT_PARTY:
 		{	   
-			result = (wstring(GameConsole->Data()) == m_ConsolePrefix[m_SelectedType]);
+			result = (m_ConsolePrefix[m_SelectedType] == GameConsole->Data());
 			break;
 		}
 		default:
 			break;
 	}
 
-	return false;
+	return result;
 }
 //----------------------------------------------------------------------------
 void TGumpConsoleType::DeleteConsolePrefix()
@@ -260,7 +253,7 @@ void TGumpConsoleType::GenerateFrame()
 
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				glColor4f(0.3f, 0.3f, 0.3f, 0.3f);
+				glColor4f(0.3f, 0.3f, 0.3f, 0.5f);
 
 				g_GL.DrawPolygone(offsetX + 1, offsetY, text.Width - 2, text.Height);
 
