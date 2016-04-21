@@ -450,6 +450,9 @@
     <ClInclude Include="ToolTip.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="gump\GumpConsoleType.h">
+      <Filter>Заголовочные файлы\gump</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -832,6 +835,9 @@
     </ClCompile>
     <ClCompile Include="ToolTip.cpp">
       <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="gump\GumpConsoleType.cpp">
+      <Filter>Файлы исходного кода\gump</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

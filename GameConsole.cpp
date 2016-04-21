@@ -130,7 +130,7 @@ wstring TGameConsole::IsSystemCommand(const wchar_t *text, int &len, int &member
 	m_Type = GCTT_NORMAL;
 	wstring result = L"";
 
-	if (*text == L'/') //Party
+	if (*text == m_ConsolePrefix[GCTT_PARTY][0]) //Party
 	{
 		string lStr = ToString(text);
 		const char *cText = lStr.c_str();
@@ -187,30 +187,30 @@ wstring TGameConsole::IsSystemCommand(const wchar_t *text, int &len, int &member
 			m_Type = GCTT_PARTY;
 		}
 	}
-	else if (!memcmp(&text[0], L"! ", 4)) //Yell
+	else if (!memcmp(&text[0], m_ConsolePrefix[GCTT_YELL].c_str(), 4)) //Yell
 	{
 		result = L"Yell:";
 		m_Type = GCTT_YELL;
 	}
-	else if (!memcmp(&text[0], L"; ", 4)) //Whisper
+	else if (!memcmp(&text[0], m_ConsolePrefix[GCTT_WHISPER].c_str(), 4)) //Whisper
 	{
 		result = L"Whisper:";
 		m_Type = GCTT_WHISPER;
 	}
-	else if (!memcmp(&text[0], L": ", 4)) //Emote
+	else if (!memcmp(&text[0], m_ConsolePrefix[GCTT_EMOTE].c_str(), 4)) //Emote
 	{
 		result = L"Emote:";
 		m_Type = GCTT_EMOTE;
 	}
-	else if (g_Player->Graphic == 0x03DB && (*text == L'=' || *text == L'.')) //C
+	else if (g_Player->Graphic == 0x03DB && (*text == L'=' || *text == m_ConsolePrefix[GCTT_C][0])) //C
 	{
 		result = L"C:";
-		m_Type = GCTT_EMOTE;
+		m_Type = GCTT_C;
 	}
-	else if (!memcmp(&text[0], L"! ", 4)) //Broadcast
+	else if (!memcmp(&text[0], m_ConsolePrefix[GCTT_BROADCAST].c_str(), 4)) //Broadcast
 	{
 		result = L"Broadcast:";
-		m_Type = GCTT_EMOTE;
+		m_Type = GCTT_BROADCAST;
 	}
 
 	return result;

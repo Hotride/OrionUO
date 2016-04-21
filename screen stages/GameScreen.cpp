@@ -3236,7 +3236,7 @@ void TGameScreen::OnCharPress( __in WPARAM wparam, __in LPARAM lparam)
 	bool ctrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
 	//bool shiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
 
-	if (EntryPointer == GameConsole && !EntryPointer->Length() && lparam == 0x100001 && ctrlPressed)
+	if (EntryPointer == GameConsole && (!EntryPointer->Length() || (g_GumpConsoleType != NULL && g_GumpConsoleType->ConsoleIsEmpty())) && lparam == 0x100001 && ctrlPressed)
 	{
 		EntryPointer->SetText(g_LastConsoleEntry);
 		EntryPointer->SetPos(g_LastConsoleEntry.length());
@@ -3284,6 +3284,9 @@ void TGameScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 				}
 				else
 					EntryPointer = GameConsole;
+
+				if (g_GumpConsoleType != NULL)
+					g_GumpConsoleType->SetConsolePrefix();
 
 				break;
 			}

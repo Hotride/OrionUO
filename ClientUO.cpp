@@ -788,6 +788,7 @@ TUltimaOnline::~TUltimaOnline()
 
 	EntryPointer = NULL;
 
+	TGumpConsoleType::ReleaseTextTextures();
 	TGumpQuestion::ReleaseTextTextures();
 	TGumpJournal::ReleaseTextTextures();
 	TGumpMenubar::ReleaseTextTextures();
@@ -1012,6 +1013,7 @@ bool TUltimaOnline::Install()
 
 	CreateCharacterManager.Init();
 
+	TGumpConsoleType::InitTextTextures();
 	TGumpQuestion::InitTextTextures();
 	TGumpJournal::InitTextTextures();
 	TGumpMenubar::InitTextTextures();

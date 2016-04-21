@@ -41,6 +41,17 @@ public:
 	void DrawW(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0);
 };
 //---------------------------------------------------------------------------
+static const wstring m_ConsolePrefix[7] =
+{
+	L"", //Normal
+	L"! ", //Yell
+	L"; ", //Whisper
+	L": ", //Emote
+	L".", //Command
+	L"? ", //Broadcast
+	L"/ ", //Party
+};
+//---------------------------------------------------------------------------
 extern TGameConsole *GameConsole;
 //---------------------------------------------------------------------------
 #endif

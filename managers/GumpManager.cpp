@@ -999,6 +999,8 @@ void TGumpManager::Load( __in string path)
 	
 	bool paperdollRequested = false;
 	bool menubarFound = false;
+	bool minimizedConsoleType = false;
+	bool showFullTextConsoleType = false;
 
 	if (file.Size)
 	{
@@ -1129,6 +1131,12 @@ void TGumpManager::Load( __in string path)
 
 					break;
 				}
+				case GT_CONSOLE_TYPE:
+				{
+					minimizedConsoleType = gumpMinimized;
+					showFullTextConsoleType = file.ReadByte();
+					break;
+				}
 				default:
 					break;
 			}
@@ -1170,6 +1178,8 @@ void TGumpManager::Load( __in string path)
 
 	if (!paperdollRequested)
 		UO->PaperdollReq(g_PlayerSerial);
+
+	GumpManager->Add(new TGumpConsoleType(minimizedConsoleType, showFullTextConsoleType));
 }
 //--------------------------------------------------------------------------
 /*!
@@ -1187,6 +1197,23 @@ void TGumpManager::Save( __in string path)
 	short count = 0;
 
 	TGump *gump = (TGump*)m_Items;
+
+	auto saveDefaultGumpProperties = [](TFileWriter *writer, TGump *gump, const int &size)
+	{
+		writer->WriteByte(size);
+		writer->WriteByte(gump->GumpType);
+		writer->WriteWord(gump->X);
+		writer->WriteWord(gump->Y);
+
+		if (gump->GumpType == GT_MENUBAR)
+			writer->WriteByte(((TGumpMenubar*)gump)->Opened);
+		else //buff
+			writer->WriteByte(gump->Minimized);
+
+		writer->WriteWord(gump->MinimizedX);
+		writer->WriteWord(gump->MinimizedY);
+		writer->WriteByte(gump->LockMoving);
+	};
 
 	while (gump != NULL)
 	{
@@ -1213,14 +1240,7 @@ void TGumpManager::Save( __in string path)
 				else if (gump->GumpType == GT_WORLD_MAP)
 					size += 11;
 
-				writer->WriteByte(size);
-				writer->WriteByte(gump->GumpType);
-				writer->WriteWord(gump->X);
-				writer->WriteWord(gump->Y);
-				writer->WriteByte(gump->Minimized);
-				writer->WriteWord(gump->MinimizedX);
-				writer->WriteWord(gump->MinimizedY);
-				writer->WriteByte(gump->LockMoving);
+				saveDefaultGumpProperties(writer, gump, size);
 
 				if (gump->GumpType == GT_JOURNAL)
 					writer->WriteWord(((TGumpJournal*)gump)->GetHeight());
@@ -1249,19 +1269,7 @@ void TGumpManager::Save( __in string path)
 			case GT_MENUBAR:
 			case GT_BUFF:
 			{
-				writer->WriteByte(12); //size
-				writer->WriteByte(gump->GumpType);
-				writer->WriteWord(gump->X);
-				writer->WriteWord(gump->Y);
-
-				if (gump->GumpType == GT_MENUBAR)
-					writer->WriteByte(((TGumpMenubar*)gump)->Opened);
-				else //buff
-					writer->WriteByte(gump->Minimized);
-				
-				writer->WriteWord(gump->MinimizedX);
-				writer->WriteWord(gump->MinimizedY);
-				writer->WriteByte(gump->LockMoving);
+				saveDefaultGumpProperties(writer, gump, 12);
 
 				writer->WriteBuffer();
 				count++;
@@ -1286,15 +1294,9 @@ void TGumpManager::Save( __in string path)
 				}
 				else
 					size += 2;
-				
-				writer->WriteByte(size); //size
-				writer->WriteByte(gump->GumpType);
-				writer->WriteWord(gump->X);
-				writer->WriteWord(gump->Y);
-				writer->WriteByte(gump->Minimized);
-				writer->WriteWord(gump->MinimizedX);
-				writer->WriteWord(gump->MinimizedY);
-				writer->WriteByte(gump->LockMoving);
+
+				saveDefaultGumpProperties(writer, gump, size);
+
 				writer->WriteDWord(gump->Serial);
 				
 				if (gump->GumpType == GT_SPELL)
@@ -1304,6 +1306,15 @@ void TGumpManager::Save( __in string path)
 				count++;
 
 				break;
+			}
+			case GT_CONSOLE_TYPE:
+			{
+				saveDefaultGumpProperties(writer, gump, 13);
+
+				writer->WriteByte(((TGumpConsoleType*)gump)->ShowFullText);
+
+				writer->WriteBuffer();
+				count++;
 			}
 			default:
 				break;
