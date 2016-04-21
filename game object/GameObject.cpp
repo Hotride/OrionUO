@@ -22,8 +22,8 @@
 TGameObject::TGameObject(DWORD serial)
 : TRenderStaticObject(ROT_GAME_OBJECT, serial, 0, 0, 0, 0, 0), m_Container(0xFFFFFFFF),
 m_MapIndex(0), m_Count(0), m_Flags(0), m_Name(""), m_NPC(false), m_Clicked(false),
-m_Effects(NULL), m_AnimIndex(0), m_LastAnimationChangeTime(GetTickCount()),
-m_ClilocMessage(L"")
+m_Effects(NULL), m_AnimIndex(0), m_YouSeeJournalPrefix(false),
+m_LastAnimationChangeTime(GetTickCount()), m_ClilocMessage(L"")
 {
 	memset(&m_TextureObjectHalndes, 0, sizeof(TTextureObject));
 
@@ -179,13 +179,16 @@ void TGameObject::AddText(__in TTextData *msg)
 
 	string msgname = "You see: ";
 
-	if (m_Clicked)
+	if (!m_YouSeeJournalPrefix)
+		msgname = m_Name + ": ";
+
+	/*if (m_Clicked)
 	{
 		m_Clicked = false;
 
 		if (IsPlayer()) //(m_NPC)
 			msgname = m_Name + ": ";
-	}
+	}*/
 
 	UO->AddJournalMessage(msg, msgname);
 }

@@ -164,10 +164,9 @@ WORD TMouseManager::GetGameCursor()
 		g_MouseY > (g_GameWindowPosY + g_GameWindowHeight))
 		mouseInWindow = false;
 
-	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && !g_LastGumpRightMouseDown)
+	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && !g_LastGumpRightMouseDown && !(g_ShiftPressed && ConfigManager.HoldShiftForEnablePathfind && ConfigManager.EnablePathfind))
 	{
 		float mouse_range = std::hypotf((float)(gameWindowCenterX - g_MouseX), (float)(gameWindowCenterY - g_MouseY));
-		//UO->DrawUnicodeFontFixed(1, std::to_wstring(mouse_range).c_str(), 773, 100, 100, 200);
 
 		int dir = facing;
 

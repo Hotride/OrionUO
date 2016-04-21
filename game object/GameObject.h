@@ -48,6 +48,8 @@ protected:
 	//!Текущий индекс анимации
 	char m_AnimIndex;
 
+	bool m_YouSeeJournalPrefix;
+
 	//!Время последнего изменения анимации
 	DWORD m_LastAnimationChangeTime;
 
@@ -78,6 +80,7 @@ public:
 	SETGET(bool, NPC);
 	SETGET(bool, Clicked);
 	SETGETEX(char, AnimIndex);
+	SETGET(bool, YouSeeJournalPrefix);
 	SETGET(DWORD, LastAnimationChangeTime);
 	SETGET(wstring, ClilocMessage);
 

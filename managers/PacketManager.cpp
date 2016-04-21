@@ -2646,13 +2646,18 @@ PACKET_HANDLER(Talk)
 			str = "*" + str + "*";
 		}
 
+		TGameObject *obj = World->FindWorldObject(serial);
+
+		if (obj != NULL)
+			obj->YouSeeJournalPrefix = (type == ST_SYSTEM);
+
 		UO->CreateTextMessage(TT_OBJECT, serial, font, textColor, str);
 
-		//if (serial >= 0x40000000) //Только для предметов
+		if (obj != NULL)
 		{
-			TGameObject *obj = World->FindWorldObject(serial);
+			obj->YouSeeJournalPrefix = false;
 
-			if (obj != NULL && !obj->GetName().length())
+			if (!obj->GetName().length())
 			{
 				obj->SetName(name);
 
@@ -2707,17 +2712,22 @@ PACKET_HANDLER(UnicodeTalk)
 			textColor = ConfigManager.EmoteColor;
 			str = L"*" + str + L"*";
 		}
-		
+
+		TGameObject *obj = World->FindWorldObject(serial);
+
+		if (obj != NULL)
+			obj->YouSeeJournalPrefix = (type == ST_SYSTEM);
+
 		UO->CreateUnicodeTextMessage(TT_OBJECT, serial, ConfigManager.SpeechFont, textColor, str);
 		
-		//if (serial >= 0x40000000) //Только для предметов
+		if (obj != NULL)
 		{
-			TGameObject *obj = World->FindWorldObject(serial);
+			obj->YouSeeJournalPrefix = false;
 
-			if (obj != NULL && !obj->GetName().length())
+			if (!obj->GetName().length())
 			{
 				obj->SetName(ToString(name));
-				
+
 				if (obj->NPC)
 					GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
 			}
