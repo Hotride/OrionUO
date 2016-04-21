@@ -4526,6 +4526,13 @@ void TUltimaOnline::LogOut()
 	}
 	TPRINT("\tWalker deleted?\n");
 
+	if (ObjectInHand != NULL)
+	{
+		delete ObjectInHand;
+		ObjectInHand = NULL;
+	}
+	TPRINT("\tObjectInHand removed?\n");
+
 	if (World != NULL)
 	{
 		delete World;
@@ -4533,18 +4540,11 @@ void TUltimaOnline::LogOut()
 	}
 	TPRINT("\tWorld removed?\n");
 	
-	if (ObjectInHand != NULL)
-	{
-		delete ObjectInHand;
-		ObjectInHand = NULL;
-	}
-	TPRINT("\tObjectInHand removed?\n");
-	
 	g_PopupMenu = NULL;
 
 	if (GumpManager != NULL)
 		GumpManager->Clear();
-	TPRINT("\tGump List cleared?\n");
+	TPRINT("\tGump Manager cleared?\n");
 	
 	if (EffectManager != NULL)
 		EffectManager->Clear();
@@ -4555,10 +4555,11 @@ void TUltimaOnline::LogOut()
 
 	if (GameConsole != NULL)
 		GameConsole->Clear();
-	EntryPointer = NULL;
 	TPRINT("\tGame console cleared?\n");
 
+	EntryPointer = NULL;
 	g_GrayMenuCount = 0;
+
 	Target.Reset();
 	TPRINT("\tTarget reseted?\n");
 
@@ -4569,6 +4570,11 @@ void TUltimaOnline::LogOut()
 	if (Journal != NULL)
 		Journal->Clear();
 	TPRINT("\tJournal cleared?\n");
+
+	if (MapManager != NULL)
+		MapManager->Clear();
+
+	g_CurrentMap = 0;
 
 	InitScreen(GS_MAIN);
 	TPRINT("TUltimaOnline::LogOut->End\n");
