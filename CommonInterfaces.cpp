@@ -47,6 +47,47 @@ void __cdecl FUNCBODY_DrawCircle(DWORD color, float x, float y, float radius, in
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //---------------------------------------------------------------------------
+void __cdecl FUNCBODY_DrawTextA(int x, int y, BYTE font, const char *text, WORD color, int width, TEXT_ALIGN_TYPE align, WORD flags)
+{
+	TTextTexture th;
+	FontManager->GenerateA(font, th, text, color, width, align, flags);
+	th.Draw(x, y);
+	th.Clear();
+}
+//---------------------------------------------------------------------------
+void __cdecl FUNCBODY_DrawTextW(int x, int y, BYTE font, const wchar_t *text, WORD color, int width, TEXT_ALIGN_TYPE align, WORD flags)
+{
+	TTextTexture th;
+	FontManager->GenerateW(font, th, text, color, 30, width, align, flags);
+	th.Draw(x, y);
+	th.Clear();
+}
+//---------------------------------------------------------------------------
+void __cdecl FUNCBODY_DrawArt(int x, int y, WORD graphic, WORD color)
+{
+	UO->DrawStaticArt(graphic, color, x, y, 0);
+}
+//---------------------------------------------------------------------------
+void __cdecl FUNCBODY_DrawArtAnimated(int x, int y, WORD graphic, WORD color)
+{
+	UO->DrawStaticArtAnimated(graphic, color, x, y, 0);
+}
+//---------------------------------------------------------------------------
+void __cdecl FUNCBODY_DrawResizepicGump(int x, int y, WORD graphic, int width, int height)
+{
+	UO->DrawResizepicGump(graphic, x, y, width, height);
+}
+//---------------------------------------------------------------------------
+void __cdecl FUNCBODY_DrawGump(int x, int y, WORD graphic, WORD color)
+{
+	UO->DrawGump(graphic, color, x, y);
+}
+//---------------------------------------------------------------------------
+void __cdecl FUNCBODY_DrawGumppic(int x, int y, WORD graphic, WORD color, int width, int height)
+{
+	UO->DrawGump(graphic, color, x, y, width, height);
+}
+//---------------------------------------------------------------------------
 //IUltimaOnline
 //---------------------------------------------------------------------------
 DWORD __cdecl FUNCBODY_GetLandFlags(WORD graphic)
@@ -57,6 +98,16 @@ DWORD __cdecl FUNCBODY_GetLandFlags(WORD graphic)
 DWORD __cdecl FUNCBODY_GetStaticFlags(WORD graphic)
 {
 	return UO->GetStaticFlags(graphic);
+}
+//---------------------------------------------------------------------------
+int __cdecl FUNCBODY_GetConfigValue(const char *option)
+{
+	return UO->GetConfigValue(option);
+}
+//---------------------------------------------------------------------------
+void __cdecl FUNCBODY_SetConfigValue(const char *option, int value)
+{
+	UO->GetConfigValue(option, value);
 }
 //---------------------------------------------------------------------------
 //IClilocManager
@@ -158,6 +209,11 @@ void __cdecl FUNCBODY_GetStopAutowalk()
 		PathFinder->StopAutoWalk();
 }
 //---------------------------------------------------------------------------
+bool __cdecl FUNCBODY_GetAutowalking()
+{
+	return PathFinder->AutoWalking;
+}
+//---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 IGLEngine g_Interface_GL =
@@ -165,7 +221,14 @@ IGLEngine g_Interface_GL =
 	FUNCBODY_Scissor,
 	FUNCBODY_DrawLine,
 	FUNCBODY_DrawPolygone,
-	FUNCBODY_DrawCircle
+	FUNCBODY_DrawCircle,
+	FUNCBODY_DrawTextA,
+	FUNCBODY_DrawTextW,
+	FUNCBODY_DrawArt,
+	FUNCBODY_DrawArtAnimated,
+	FUNCBODY_DrawResizepicGump,
+	FUNCBODY_DrawGump,
+	FUNCBODY_DrawGumppic
 };
 //---------------------------------------------------------------------------
 IUltimaOnline g_Interface_UO =
@@ -197,6 +260,7 @@ IPathFinder g_Interface_PathFinder =
 	FUNCBODY_GetCanWalk,
 	FUNCBODY_GetWalk,
 	FUNCBODY_GetWalkTo,
-	FUNCBODY_GetStopAutowalk
+	FUNCBODY_GetStopAutowalk,
+	FUNCBODY_GetAutowalking
 };
 //---------------------------------------------------------------------------

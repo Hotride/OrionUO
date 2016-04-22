@@ -271,6 +271,8 @@ public:
 	//Получить цвет света
 	WORD GetLightColor(const WORD &id) { return m_StaticDataIndex[id].LightColor; }
 
+	int GetConfigValue(const char *option, int value = -1);
+
 
 
 	//Проиграть звуковой эффект

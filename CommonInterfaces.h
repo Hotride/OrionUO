@@ -23,17 +23,25 @@
 #ifndef UOInterface
 #define UOInterface struct
 #endif
-void __cdecl FUNCBODY_DrawPolygone(DWORD color, int x, int y, int width, int height);
 //----------------------------------------------------------------------------
 //IGLEngine
 typedef void __cdecl FUNCDEF_SCISSOR(int, int, int, int);
 typedef void __cdecl FUNCDEF_DRAW_LINE(DWORD, int, int, int, int);
 typedef void __cdecl FUNCDEF_DRAW_POLYGONE(DWORD, int, int, int, int);
 typedef void __cdecl FUNCDEF_DRAW_CIRCLE(DWORD, float, float, float, int);
+typedef void __cdecl FUNCDEF_DRAW_TEXT_A(int, int, BYTE, const char*, WORD, int, TEXT_ALIGN_TYPE, WORD);
+typedef void __cdecl FUNCDEF_DRAW_TEXT_W(int, int, BYTE, const wchar_t*, WORD, int, TEXT_ALIGN_TYPE, WORD);
+typedef void __cdecl FUNCDEF_DRAW_ART(int, int, WORD, WORD);
+typedef void __cdecl FUNCDEF_DRAW_ART_ANIMATED(int, int, WORD, WORD);
+typedef void __cdecl FUNCDEF_DRAW_RESIZEPIC_GUMP(int, int, WORD, int, int);
+typedef void __cdecl FUNCDEF_DRAW_GUMP(int, int, WORD, WORD);
+typedef void __cdecl FUNCDEF_DRAW_GUMPPIC(int, int, WORD, WORD, int, int);
 
 //IUltimaOnline
 typedef DWORD __cdecl FUNCDEF_GET_LAND_FLAGS(WORD);
 typedef DWORD __cdecl FUNCDEF_GET_STATIC_FLAGS(WORD);
+typedef int __cdecl FUNCDEF_GET_CONFIG_VALUE(const char*);
+typedef void __cdecl FUNCDEF_SET_CONFIG_VALUE(const char*, int);
 
 //IClilocManager
 typedef string __cdecl FUNCDEF_GET_CLILOC_A(DWORD, string);
@@ -54,6 +62,7 @@ typedef bool __cdecl FUNCDEF_GET_CAN_WALK(BYTE&, int&, int&, char&);
 typedef bool __cdecl FUNCDEF_GET_WALK(bool, BYTE);
 typedef bool __cdecl FUNCDEF_GET_WALK_TO(int, int, int, int);
 typedef void __cdecl FUNCDEF_GET_STOP_AUTOWALK();
+typedef bool __cdecl FUNCDEF_GET_AUTOWALKING();
 //----------------------------------------------------------------------------
 UOInterface IGLEngine
 {
@@ -61,12 +70,21 @@ UOInterface IGLEngine
 	FUNCDEF_DRAW_LINE *DrawLine;
 	FUNCDEF_DRAW_POLYGONE *DrawPolygone;
 	FUNCDEF_DRAW_CIRCLE *DrawCircle;
+	FUNCDEF_DRAW_TEXT_A *DrawTextA;
+	FUNCDEF_DRAW_TEXT_W *DrawTextW;
+	FUNCDEF_DRAW_ART *DrawArt;
+	FUNCDEF_DRAW_ART_ANIMATED *DrawArtAnimated;
+	FUNCDEF_DRAW_RESIZEPIC_GUMP *DrawResizepicGump;
+	FUNCDEF_DRAW_GUMP *DrawGump;
+	FUNCDEF_DRAW_GUMPPIC *DrawGumppic;
 };
 //----------------------------------------------------------------------------
 UOInterface IUltimaOnline
 {
 	FUNCDEF_GET_LAND_FLAGS *GetLandFlags;
 	FUNCDEF_GET_STATIC_FLAGS *GetStaticFlags;
+	FUNCDEF_GET_CONFIG_VALUE *GetConfigValue;
+	FUNCDEF_SET_CONFIG_VALUE *SetConfigValue;
 };
 //----------------------------------------------------------------------------
 UOInterface IClilocManager
@@ -96,6 +114,7 @@ UOInterface IPathFinder
 	FUNCDEF_GET_WALK *Walk;
 	FUNCDEF_GET_WALK_TO *WalkTo;
 	FUNCDEF_GET_STOP_AUTOWALK *StopAutowalk;
+	FUNCDEF_GET_AUTOWALKING *GetAutowalking;
 };
 //---------------------------------------------------------------------------
 extern IGLEngine g_Interface_GL;

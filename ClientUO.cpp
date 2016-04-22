@@ -3628,6 +3628,42 @@ TIndexMulti *TUltimaOnline::GetMultiPointer(const WORD &id)
 	return &m_MultiDataIndex[id];
 }
 //---------------------------------------------------------------------------
+int TUltimaOnline::GetConfigValue(const char *option, int value)
+{
+	string key = ToLowerA(option);
+
+	if (key == "alwaysrun")
+	{
+		if (value == -1)
+			value = ConfigManager.AlwaysRun;
+		else
+			ConfigManager.AlwaysRun = (value != 0);
+	}
+	else if (key == "circletransvalue")
+	{
+		if (value == -1)
+			value = ConfigManager.CircleTransRadius;
+		else
+		{
+			if (value < 0)
+				value = 0;
+			else if (value > 255)
+				value = 255;
+
+			ConfigManager.CircleTransRadius = value;
+		}
+	}
+	else if (key == "circletrans")
+	{
+		if (value == -1)
+			value = ConfigManager.UseCircleTrans;
+		else
+			ConfigManager.UseCircleTrans = (value != 0);
+	}
+
+	return value;
+}
+//---------------------------------------------------------------------------
 void TUltimaOnline::PlaySoundEffect(const WORD &id, int volume)
 {
 	if (id >= 0x0800 || !ConfigManager.Sound)
