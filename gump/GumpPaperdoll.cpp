@@ -315,9 +315,9 @@ void TGumpPaperdoll::GenerateFrame()
 				else
 				{
 					if (g_GumpPressedElement == ID_GP_BUTTON_CHAT_OR_GUILD)
-						gumpID++; // = 0x07E3; //Paperdoll button Chat (down)
+						gumpID = 0x07E3; //Paperdoll button Chat (down)
 					else if (g_GumpSelectElement == ID_GP_BUTTON_CHAT_OR_GUILD)
-						gumpID++; // = 0x07E4; //Paperdoll button Chat
+						gumpID = 0x07E4; //Paperdoll button Chat
 				}
 			}
 

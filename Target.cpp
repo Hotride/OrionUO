@@ -77,17 +77,33 @@ void TTarget::SetMultiData(PBYTE buf, int size)
 	m_CursorID = unpack32(buf + 2);
 }
 //---------------------------------------------------------------------------
-void TTarget::SendTargetObject(DWORD Serial)
+void TTarget::SendTargetObject(DWORD serial)
 {
 	if (!m_Targeting)
 		return; //Если в клиенте нет таргета - выход
 
-	g_LastTargetObject = Serial;
+	if (serial != g_PlayerSerial)
+		g_LastTargetObject = serial;
 
 	//Пишем серийник объекта, на который ткнули прицелом, остальное - затираем
-	pack32(m_Data + 7, Serial);
-	pack32(m_Data + 11, 0);
-	pack32(m_Data + 15, 0);
+	pack32(m_Data + 7, serial);
+	m_Data[1] = 0;
+
+	TGameObject *obj = (World != NULL ? World->FindWorldObject(serial) : NULL);
+
+	if (obj != NULL)
+	{
+		pack16(m_Data + 11, obj->X);
+		pack16(m_Data + 13, obj->Y);
+		m_Data[15] = 0;
+		m_Data[16] = obj->Z;
+		pack16(m_Data + 17, obj->Graphic);
+	}
+	else
+	{
+		pack32(m_Data + 11, 0);
+		pack32(m_Data + 15, 0);
+	}
 
 	//Скопируем для LastTarget
 	memcpy(m_LastData, m_Data, sizeof(m_Data));
@@ -99,6 +115,8 @@ void TTarget::SendTargetTile(WORD tileID, WORD X, WORD Y, char Z)
 {
 	if (!m_Targeting)
 		return; //Если в клиенте нет таргета - выход
+
+	m_Data[1] = 1;
 
 	//Пишем координаты и индекс тайла, на который ткнули, остальное трем
 	pack32(m_Data + 7, 0);

@@ -2645,6 +2645,8 @@ int TGameScreen::Render(__in bool mode)
 		// отрисовка ввода игрока
 		GameConsole->DrawW((BYTE)ConfigManager.SpeechFont, ConfigManager.SpeechColor, m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY - 18, TS_LEFT, UOFONT_BLACK_BORDER | UOFONT_FIXED);
 		
+		//UO->DrawResizepicGump(0x24EA, 200, 200, 142, 20);
+
 		if (multiOnTarget)
 			Target.UnloadMulti();
 

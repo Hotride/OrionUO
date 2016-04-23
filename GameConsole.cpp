@@ -46,7 +46,7 @@ void TGameConsole::Send()
 			int member = -1;
 			IsSystemCommand(Data(), len, member);
 
-			if (m_Type != GCTT_NORMAL && len > 2)
+			if ((m_Type != GCTT_NORMAL && len > 2) || m_Type == GCTT_PARTY)
 			{
 				if (m_Type == GCTT_YELL)
 				{

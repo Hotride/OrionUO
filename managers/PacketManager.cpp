@@ -1291,6 +1291,12 @@ PACKET_HANDLER(UpdateItem)
 
 	DWORD serial = ReadDWord();
 	WORD graphic = ReadWord();
+
+#if UO_ABYSS_SHARD == 1
+	if ((graphic & 0x7FFF) == 0x0E5C)
+		return;
+#endif
+
 	WORD count = 0;
 
 	if (serial & 0x80000000)
@@ -1970,15 +1976,18 @@ PACKET_HANDLER(DeleteObject)
 	{
 		DWORD cont = obj->Container;
 
-		if (cont != 0)
+		if (cont != 0xFFFFFFFF)
 		{
 			TGameObject *top = obj->GetTopObject();
 
 			if (top != NULL)
 				GumpManager->UpdateGump(top->Serial, 0, GT_TRADE);
 
+			if (!obj->NPC && ((TGameItem*)obj)->Layer != OL_NONE)
+				GumpManager->UpdateGump(cont, 0, GT_PAPERDOLL);
+
 			TGump *gump = GumpManager->UpdateGump(cont, 0, GT_CONTAINER);
-		
+
 			if (obj->Graphic == 0x0EB0)
 			{
 				GumpManager->CloseGump(serial, cont, GT_BULLETIN_BOARD_ITEM);

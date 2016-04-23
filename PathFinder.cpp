@@ -828,16 +828,20 @@ bool TPathFinder::FindPath(int maxNodes)
 
 	m_ClosedList[0].X = m_StartPoint.x;
 	m_ClosedList[0].Y = m_StartPoint.y;
+	m_ClosedList[0].Z = g_Player->Z;
 
 	m_ClosedList[0].DistFromGoalCost = GetGoalDistCost(m_StartPoint, 0);
 	m_ClosedList[0].Cost = m_ClosedList[0].DistFromGoalCost;
+	TPRINT("Pathfinding:start\n");
 
-	while (true)
+	while (m_AutoWalking)
 	{
+		TPRINT("Pathfinding:open nodes\n");
 		OpenNodes(&m_ClosedList[curNode]);
 
 		if (m_GoalFound)
 		{
+			TPRINT("Pathfinding:goal found\n");
 			int totalNodes = 0;
 
 			TPathNode *GoalNode = &m_OpenList[m_GoalNode];
@@ -854,16 +858,19 @@ bool TPathFinder::FindPath(int maxNodes)
 
 			GoalNode = &m_OpenList[m_GoalNode];
 
+			TPRINT("Pathfinding:calculating goal\n");
 			while (totalNodes > 0)
 			{
 				totalNodes--;
 				m_Path[totalNodes] = GoalNode;
 				GoalNode = GoalNode->Parent;
 			};
+			TPRINT("Pathfinding:break\n");
 
 			break;
 		}
 
+		TPRINT("Pathfinding:find cheapest node\n");
 		curNode = FindCheapestNode();
 
 		if (curNode == -1)
@@ -872,6 +879,7 @@ bool TPathFinder::FindPath(int maxNodes)
 		if (m_ActiveClosedNodes >= maxNodes)
 			return false;
 	}
+	TPRINT("Pathfinding:end\n");
 
 	return true;
 }
@@ -897,13 +905,15 @@ bool TPathFinder::WalkTo(int x, int y, int z, int distance)
 	m_PathFindidngCanBeCancelled = true;
 
 	StopAutoWalk();
+	m_AutoWalking = true;
 
 	if (FindPath(PATHFINDER_MAX_NODES))
 	{
-		m_AutoWalking = true;
 		m_PointIndex = 1;
 		ProcessAutowalk();
 	}
+	else
+		m_AutoWalking = false;
 
 	return (m_PathSize != 0);
 }
