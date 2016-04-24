@@ -179,7 +179,7 @@ WORD TColorManager::ConvertToGray( __in WORD &c)
 @param [__in] color Индекс цвета в палитре
 @return 16-битный цвет
 */
-WORD TColorManager::GetColor16( __in WORD &c, __in WORD color)
+WORD TColorManager::GetColor16( __in const WORD &c, __in WORD color)
 {
 	if (color != 0 && color < m_HuesCount)
 	{

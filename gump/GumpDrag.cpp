@@ -216,10 +216,10 @@ void TGumpDrag::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 			{
 				int val = atoi(EntryPointer->c_str());
 
-				float ValPer = (val / item->Count) * 100.0f;
+				float ValPer = (val * 100.0f) / item->Count;
 
-				if (ValPer == 0.0f)
-					val = 0;
+				if (ValPer <= 0.0f)
+					ValPer = 0.0f;
 				else
 					ValPer = (ValPer * 93.0f) / 100.0f;
 

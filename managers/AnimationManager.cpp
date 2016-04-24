@@ -212,7 +212,6 @@ TAnimationManager::~TAnimationManager()
 //----------------------------------------------------------------------------
 void TAnimationManager::AddShadow(GLuint texture, int drawX, int drawY, int zBuffer, int width, int height, bool mirror)
 {
-#if UO_LAYERED_RENDER == 0
 	if (m_ShadowCount < MAX_SHADOWS_COUNT && !g_GrayedPixels)
 	{
 		SHADOW_DATA &shadow = m_ShadowList[m_ShadowCount];
@@ -226,20 +225,6 @@ void TAnimationManager::AddShadow(GLuint texture, int drawX, int drawY, int zBuf
 		shadow.Height = height;
 		shadow.Mirror = mirror;
 	}
-#else
-	WORD clr = 0x0386;
-	ColorManager->SendColorsToShader(clr);
-	glUniform1iARB(ShaderDrawMode, 1);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
-
-	g_ZBuffer = zBuffer - 1;
-	g_GL.DrawShadow(texture, drawX, drawY, width, height / 2, mirror);
-
-	glDisable(GL_BLEND);
-
-#endif
 }
 //----------------------------------------------------------------------------
 /*!

@@ -1079,6 +1079,8 @@ bool TUltimaOnline::Install()
 
 	g_CircleOfTransparency.Create(200);
 
+	CreateObjectHandlesBackground();
+
 	MainScreen->LoadGlobalConfig();
 
 	LoadShaders();
@@ -1090,59 +1092,162 @@ bool TUltimaOnline::Install()
 	InitScreen(GS_MAIN);
 #endif
 
-	/*//TTextFileParser file(FilePath("login.cfg").c_str(), "=,", "#;", "");
-	//TTextFileParser file(FilePath("uo_debug.cfg").c_str(), "=", "#;", "");
-	//TTextFileParser file(FilePath("Bodyconv.def").c_str(), " \t", "#;", "");
-	//TTextFileParser file(FilePath("prof.txt").c_str(), " \t,", "#;", "\"\"");
-	//TTextFileParser file(FilePath("stitchin.def").c_str(), " \t", "#;//", "");
-	TTextFileParser file(FilePath("as.cfg").c_str(), " \t", "#;//", "");
-	
-	while (!file.IsEOF())
+	return true;
+}
+//---------------------------------------------------------------------------
+void TUltimaOnline::CreateObjectHandlesBackground()
+{
+	TTextureObject *th[9] = { NULL };
+	WORD gumpID[9] = { 0 };
+
+	IFOR(i, 0, 9)
 	{
-		vector<string> strings = file.ReadTokens();
+		TTextureObject *pth = ExecuteGump(0x24EA + i);
 
-		TPRINT("Obtained values:\n");
-
-		for (int i = 0; i < (int)strings.size(); i++)
-			TPRINT("\t[%i]%s\n", i, strings[i].c_str());
-	}*/
-
-	/*wstring str(L"maasdf ~1_AMOUNT~ of era~2_STING~s abi");
-	wstring arg(L"15 creds\tse");
-
-	vector<wstring> vec;
-
-	while (true)
-	{
-		size_t pos = arg.find(L"\t");
-
-		if (pos != string::npos)
+		if (pth == NULL)
 		{
-			vec.push_back(arg.substr(0, pos));
-			arg = arg.substr(pos + 1);
+			EPRINT("Failed to create Object Handles background data!\n");
+			return;
+		}
+
+		if (i == 4)
+		{
+			th[8] = pth;
+			gumpID[8] = 0x24EA + i;
+		}
+		else if (i > 4)
+		{
+			th[i - 1] = pth;
+			gumpID[i - 1] = 0x24EA + i;
 		}
 		else
 		{
-			vec.push_back(arg);
-			break;
+			th[i] = pth;
+			gumpID[i] = 0x24EA + i;
 		}
 	}
 
-	IFOR(i, 0, (int)vec.size())
+	IFOR(i, 0, 8)
 	{
-		size_t pos1 = str.find(L"~");
+		if (i == 3 || i == 4)
+			continue;
 
-		if (pos1 == string::npos)
-			break;
+		TIndexObject &io = m_GumpDataIndex[gumpID[i]];
 
-		size_t pos2 = str.find(L"~", pos1 + 1);
+		int drawWidth = io.Width;
+		int drawHeight = io.Height;
+		int drawX = 0;
+		int drawY = 0;
 
-		str.replace(pos1, pos2 - pos1 + 1, vec[i]);
+		switch (i)
+		{
+			case 1:
+			{
+				drawX = th[0]->Width;
+
+				drawWidth = g_ObjectHandlesWidth - th[0]->Width - th[2]->Width;
+
+				break;
+			}
+			case 2:
+			{
+				drawX = g_ObjectHandlesWidth - drawWidth;
+
+				break;
+			}
+			case 3:
+			{
+				drawY = th[0]->Height;
+
+				drawHeight = g_ObjectHandlesHeight - th[0]->Height - th[5]->Height;
+
+				break;
+			}
+			case 4:
+			{
+				drawX = g_ObjectHandlesWidth - drawWidth;
+				drawY = th[2]->Height;
+
+				drawHeight = g_ObjectHandlesHeight - th[2]->Height - th[7]->Height;
+
+				break;
+			}
+			case 5:
+			{
+				drawY = g_ObjectHandlesHeight - drawHeight;
+
+				break;
+			}
+			case 6:
+			{
+				drawX = th[5]->Width;
+				drawY = g_ObjectHandlesHeight - drawHeight;
+
+				drawWidth = g_ObjectHandlesWidth - th[5]->Width - th[7]->Width;
+
+				break;
+			}
+			case 7:
+			{
+				drawX = g_ObjectHandlesWidth - drawWidth;
+				drawY = g_ObjectHandlesHeight - drawHeight;
+
+				break;
+			}
+			case 8:
+			{
+				drawX = th[0]->Width;
+				drawY = th[0]->Height;
+
+				drawWidth = g_ObjectHandlesWidth - th[0]->Width - th[2]->Width;
+				drawHeight = g_ObjectHandlesHeight - th[2]->Height - th[7]->Height;
+
+				break;
+			}
+			default:
+				break;
+		}
+
+		if (drawX < 0)
+			drawX = 0;
+
+		if (drawY < 0)
+			drawY = 0;
+
+		drawWidth += drawX;
+		if (drawWidth > g_ObjectHandlesWidth)
+			drawWidth = g_ObjectHandlesWidth - drawX;
+
+		drawHeight += drawY;
+		if (drawHeight > g_ObjectHandlesHeight)
+			drawHeight = g_ObjectHandlesHeight - drawY;
+
+		PWORD pixels = MulReader.GetGumpPixels(io);
+
+		if (pixels != NULL)
+		{
+			int gumpWidth = io.Width;
+			int gumpHeight = io.Height;
+			int srcX = 0;
+
+			IFOR(x, drawX, drawWidth)
+			{
+				int srcY = 0;
+				IFOR(y, drawY, drawHeight)
+				{
+					WORD &pixel = g_ObjectHandlesBackgroundPixels[(y * g_ObjectHandlesWidth) + x];
+					if (pixel == 0)
+						pixel = pixels[((srcY % gumpHeight) * gumpWidth) + (srcX % gumpWidth)];
+
+					srcY++;
+				}
+
+				srcX++;
+			}
+
+			delete pixels;
+		}
 	}
-
-	TPRINT("replaced: %s\n", ToString(str).c_str());*/
-
-	return true;
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::InitScreen(GAME_STATE state)

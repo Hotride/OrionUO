@@ -164,7 +164,7 @@ WORD TMouseManager::GetGameCursor()
 		g_MouseY > (g_GameWindowPosY + g_GameWindowHeight))
 		mouseInWindow = false;
 
-	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && !g_LastGumpRightMouseDown && !(g_ShiftPressed && ConfigManager.HoldShiftForEnablePathfind && ConfigManager.EnablePathfind))
+	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && !g_LastGumpRightMouseDown && !((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && ConfigManager.HoldShiftForEnablePathfind && ConfigManager.EnablePathfind))
 	{
 		float mouse_range = std::hypotf((float)(gameWindowCenterX - g_MouseX), (float)(gameWindowCenterY - g_MouseY));
 

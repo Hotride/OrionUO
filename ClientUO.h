@@ -102,6 +102,9 @@ private:
 
 	//Обработка стека шагов
 	void SendWalkStack();
+
+	void CreateObjectHandlesBackground();
+
 public:
 	TUltimaOnline();
 	~TUltimaOnline();

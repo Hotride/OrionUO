@@ -93,11 +93,12 @@ public:
 
 	/*!
 	ќтрисовать текстуру опции Object Handles (автоматически создает текстуру, если она не была создана)
+	@param [__in] mode –ежим отображени€
 	@param [__in] x Ёкранна€ координата X
 	@param [__in] y Ёкранна€ координата Y
 	@return 
 	*/
-	void DrawObjectHandlesTexture(__in int &x, __in int &y);
+	void DrawObjectHandlesTexture(__in const bool &mode, __in int &x, __in int &y);
 
 	/*!
 	ѕолучить индекс анимации

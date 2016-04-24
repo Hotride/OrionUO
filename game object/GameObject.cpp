@@ -62,18 +62,43 @@ TGameObject::~TGameObject()
 @param [__in] y Ёкранна€ координата Y
 @return 
 */
-void TGameObject::DrawObjectHandlesTexture( __in int &x, __in int &y)
+void TGameObject::DrawObjectHandlesTexture(__in const bool &mode, __in int &x, __in int &y)
 {
-	if (m_TextureObjectHalndes.Texture == NULL)
+	if (mode)
 	{
-		if (m_NPC || IsCorpse())
-			GenerateObjectHandlesTexture(ToWString(m_Name));
-		else
-			GenerateObjectHandlesTexture(ClilocManager->Cliloc(g_Language)->GetW(102000 + m_Graphic, m_Name));
-	}
+		if (m_TextureObjectHalndes.Texture == NULL)
+		{
+			if (m_NPC || IsCorpse())
+				GenerateObjectHandlesTexture(ToWString(m_Name));
+			else
+				GenerateObjectHandlesTexture(ClilocManager->Cliloc(g_Language)->GetW(102000 + m_Graphic, m_Name));
+		}
 
-	if (m_TextureObjectHalndes.Texture != NULL)
-		g_GL.Draw(m_TextureObjectHalndes.Texture, x, y, m_TextureObjectHalndes.Width, m_TextureObjectHalndes.Height);
+		if (m_TextureObjectHalndes.Texture != NULL)
+			g_GL.Draw(m_TextureObjectHalndes.Texture, x, y, m_TextureObjectHalndes.Width, m_TextureObjectHalndes.Height);
+	}
+	else
+	{
+		if (m_TextureObjectHalndes.Texture != NULL)
+		{
+			int testX = g_MouseX - x;
+
+			if (testX < 0 || testX >= g_ObjectHandlesWidth)
+				return;
+
+			int testY = g_MouseY - y;
+
+			if (testY < 0 || testY >= g_ObjectHandlesHeight)
+				return;
+
+			if (g_ObjectHandlesBackgroundPixels[(testY * g_ObjectHandlesWidth) + testX] != 0)
+			{
+				g_LastObjectType = SOT_GAME_OBJECT;
+				g_LastSelectedObject = m_Serial;
+				g_SelectedObject = this;
+			}
+		}
+	}
 }
 //---------------------------------------------------------------------------
 /*!
@@ -83,60 +108,64 @@ void TGameObject::DrawObjectHandlesTexture( __in int &x, __in int &y)
 */
 void TGameObject::GenerateObjectHandlesTexture( __in wstring text)
 {
-	//m_TextureObjectHalndes.Clear();
-
-	//FontManager->GenerateW(1, m_TextureObjectHalndes, text.c_str(), 0, 30, 120, TS_LEFT, UOFONT_CROPPED);
-
 	if (m_TextureObjectHalndes.Texture != NULL)
 	{
 		glDeleteTextures(1, &m_TextureObjectHalndes.Texture);
 		m_TextureObjectHalndes.Texture = NULL;
 	}
 
-	WORD gumpID = 0x098E;
-	TIndexObject *io = UO->GetGumpPointer(gumpID);
-
-	if (io == NULL)
-		return;
-
-	int gumpWidth = io->Width;
-	int gumpHeight = io->Height;
-
-	int width = gumpWidth - 20;
-
-	if (width < 30)
-		return;
+	int width = g_ObjectHandlesWidth - 20;
 
 	BYTE font = 1;
 	TTextTexture textTexture;
 	memset(&textTexture, 0, sizeof(TTextTexture));
-	WORD color = 0;
+	WORD color = 0xFFFF;
 	BYTE cell = 30;
-	TEXT_ALIGN_TYPE tat = TS_LEFT;
-	WORD flags = UOFONT_FIXED;
+	TEXT_ALIGN_TYPE tat = TS_CENTER;
+	WORD flags = 0;
+
+	if (FontManager->GetWidthW(font, text.c_str(), text.length()) > width)
+		text = FontManager->GetTextByWidthW(font, text.c_str(), text.length(), width - 6, true);
 
 	PDWORD textData = FontManager->GeneratePixelsW(font, textTexture, text.c_str(), color, cell, width, tat, flags);
 
 	if (textData == NULL)
 		return;
 
+	static const int size = g_ObjectHandlesWidth * g_ObjectHandlesHeight;
+	WORD pixels[size] = { 0 };
+
+	memcpy(&pixels[0], &g_ObjectHandlesBackgroundPixels[0], size * 2);
+
 	color = 0;
 
 	if (m_NPC)
-		color = ConfigManager.GetColorByNotoriety(((TGameCharacter*)this)->Notoriety);
-
-	WORD oldColor = io->Color;
-	io->Color = color;
-
-	PWORD data = MulReader.GetGumpPixels(*io);
-
-	io->Color = oldColor;
-
-	if (data == NULL)
 	{
-		delete textData;
+		if (IsPlayer())
+			color = 0x0386;
+		else
+			color = ConfigManager.GetColorByNotoriety(((TGameCharacter*)this)->Notoriety);
 
-		return;
+		if (color)
+		{
+			IFOR(x, 0, g_ObjectHandlesWidth)
+			{
+				IFOR(y, 0, g_ObjectHandlesHeight)
+				{
+					WORD &pixel = pixels[(y * g_ObjectHandlesWidth) + x];
+
+					if (pixel)
+					{
+						BYTE r = (pixel & 0x1F);
+						BYTE g = ((pixel >> 5) & 0x1F);
+						BYTE b = ((pixel >> 10) & 0x1F);
+
+						if (r == g && r == b)
+							pixel = ColorManager->GetColor16(pixel, color) | 0x8000;
+					}
+				}
+			}
+		}
 	}
 
 	int maxHeight = textTexture.Height;
@@ -145,26 +174,37 @@ void TGameObject::GenerateObjectHandlesTexture( __in wstring text)
 	{
 		int gumpDataX = x + 10;
 
-		if (gumpDataX >= gumpWidth)
+		if (gumpDataX >= g_ObjectHandlesWidth)
 			break;
 
 		IFOR(y, 0, maxHeight)
 		{
-			int gumpDataY = y + 6;
+			int gumpDataY = y + 1;
 
-			if (gumpDataY >= gumpHeight)
+			if (gumpDataY >= g_ObjectHandlesHeight)
 				break;
 
-			if (textData[(y * textTexture.Width) + x])
-				data[(gumpDataY * gumpWidth) + gumpDataX] = ColorManager->Color32To16(textData[(y * textTexture.Width) + x]) | 0x8000;
+			DWORD &pixel = textData[(y * textTexture.Width) + x];
+
+			if (pixel)
+			{
+				PBYTE bytes = (PBYTE)&pixel;
+				BYTE buf = bytes[0];
+				bytes[0] = bytes[3];
+				bytes[3] = buf;
+				buf = bytes[1];
+				bytes[1] = bytes[2];
+				bytes[2] = buf;
+				pixels[(gumpDataY * g_ObjectHandlesWidth) + gumpDataX] = ColorManager->Color32To16(pixel) | 0x8000;
+			}
 		}
 	}
 
-	m_TextureObjectHalndes.Width = gumpWidth;
-	m_TextureObjectHalndes.Height = gumpHeight;
-	g_GL.BindTexture16(m_TextureObjectHalndes.Texture, gumpWidth, gumpHeight, data);
+	m_TextureObjectHalndes.Width = g_ObjectHandlesWidth;
+	m_TextureObjectHalndes.Height = g_ObjectHandlesHeight;
 
-	delete data;
+	g_GL.BindTexture16(m_TextureObjectHalndes.Texture, g_ObjectHandlesWidth, g_ObjectHandlesHeight, pixels);
+
 	delete textData;
 }
 //---------------------------------------------------------------------------

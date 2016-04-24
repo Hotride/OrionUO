@@ -30,6 +30,7 @@ int g_RenderedObjectsCountInGameWindow = 0;
 //---------------------------------------------------------------------------
 GLuint g_TextureGumpState[2] = {0, 0};
 bool g_UseFrameBuffer = false;
+WORD g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight] = { 0 };
 //---------------------------------------------------------------------------
 bool g_MovingFromMouse = false;
 bool g_AutoMoving = false;

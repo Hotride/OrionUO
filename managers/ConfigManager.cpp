@@ -217,6 +217,11 @@ WORD TConfigManager::GetColorByNotoriety( __in BYTE notoriety)
 			color = m_MurdererColor;
 			break;
 		}
+		case NT_INVULNERABLE:
+		{
+			color = 0x0034;
+			break;
+		}
 		default: break;
 	}
 

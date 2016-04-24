@@ -114,7 +114,7 @@ public:
 	@param [__in] color Индекс цвета в палитре
 	@return 16-битный цвет
 	*/
-	WORD GetColor16(__in WORD &c, __in WORD color);
+	WORD GetColor16(__in const WORD &c, __in WORD color);
 
 	/*!
 	Получить 16-битный цвет для радара

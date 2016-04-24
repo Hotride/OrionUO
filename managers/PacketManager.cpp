@@ -1312,7 +1312,7 @@ PACKET_HANDLER(UpdateItem)
 		return;
 	}
 	
-	if (ObjectInHand != NULL && ObjectInHand->Serial == obj->Serial)
+	if (ObjectInHand != NULL && ObjectInHand->Serial == obj->Serial && ObjectInHand->Dropped)
 	{
 		delete ObjectInHand;
 		ObjectInHand = NULL;

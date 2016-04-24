@@ -21,7 +21,6 @@
 #define DefinitionMacroH
 //---------------------------------------------------------------------------
 #define UO_DEPTH_TEST 1
-#define UO_LAYERED_RENDER 0
 #define UO_TILE_UNDERCHAR_RENDER 1
 //---------------------------------------------------------------------------
 #define UO_DEBUG_INFO 1

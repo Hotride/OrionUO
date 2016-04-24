@@ -104,6 +104,10 @@ extern GLuint g_TextureGumpState[2];
 
 //!Возможность использовать фрэймбуфер
 extern bool g_UseFrameBuffer;
+
+const int g_ObjectHandlesWidth = 142;
+const int g_ObjectHandlesHeight = 20;
+extern WORD g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight];
 //---------------------------------------------------------------------------
 //!Глобальные состояния нажатия дополнительных клавишь
 extern bool g_AltPressed;
