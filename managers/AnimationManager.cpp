@@ -1384,7 +1384,7 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 		m_Color = 0x038A;
 	else if (g_StatusbarUnderMouse == serial)
 		m_Color = ConfigManager.GetColorByNotoriety(obj->Notoriety);
-	else if (obj->Graphic == 400 || obj->Graphic == 401)
+	else if (obj->IsHuman())
 		m_Color = 0;
 	else
 		m_Color = obj->Color;
@@ -1730,7 +1730,9 @@ void TAnimationManager::DrawCorpse( __in TGameItem *obj, __in int x, __in int y,
 
 	if (obj->Hidden())
 		m_Color = 0x038A;
-	else if (obj->Graphic < 400 && obj->Graphic > 401)
+	else if (obj->IsHuman())
+		m_Color = 0;
+	else
 		m_Color = obj->Color;
 
 	BYTE animIndex = obj->AnimIndex;
