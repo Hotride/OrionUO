@@ -1379,12 +1379,15 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 	bool needHPLine = false;
 	DWORD serial = obj->Serial;
 
+	m_Color = 0;
 	if (obj->Hidden())
 		m_Color = 0x038A;
 	else if (g_StatusbarUnderMouse == serial)
 		m_Color = ConfigManager.GetColorByNotoriety(obj->Notoriety);
-	else
+	else if (obj->Graphic == 400 || obj->Graphic == 401)
 		m_Color = 0;
+	else
+		m_Color = obj->Color;
 
 	bool isAttack = (serial == g_LastAttackObject);
 
@@ -1727,8 +1730,8 @@ void TAnimationManager::DrawCorpse( __in TGameItem *obj, __in int x, __in int y,
 
 	if (obj->Hidden())
 		m_Color = 0x038A;
-	else
-		m_Color = 0;
+	else if (obj->Graphic < 400 && obj->Graphic > 401)
+		m_Color = obj->Color;
 
 	BYTE animIndex = obj->AnimIndex;
 	m_AnimGroup = GetDieGroupIndex(obj->GetMountAnimation(), obj->UsedLayer);

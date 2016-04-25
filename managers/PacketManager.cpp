@@ -1122,8 +1122,7 @@ PACKET_HANDLER(UpdatePlayer)
 	}
 	
 	Move(1);
-
-	g_Player->Color = ReadWord() & 0x7FFF;
+	g_Player->Color = ReadWord();
 	g_Player->Flags = ReadByte();
 	g_Player->X = ReadWord();
 	g_Player->Y = ReadWord();
