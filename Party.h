@@ -68,10 +68,10 @@ public:
 	SETGET(bool, CanLoot);
 
 	//Обработка пакетов пати
-	void ParsePacketData(PBYTE buf, int &size);
+	void ParsePacketData(PBYTE buf, const int &size);
 
 	//Содержит ли пати игрока с данным серийником
-	bool Contains(DWORD serial);
+	bool Contains(const DWORD &serial);
 
 	//Очистить пати
 	void Clear();

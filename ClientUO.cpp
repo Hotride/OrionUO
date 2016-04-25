@@ -2330,7 +2330,7 @@ void TUltimaOnline::LoadAutoLoginNames()
 
 	while (!file.IsEOF())
 	{
-		std::vector<std::string> strings = file.ReadTokens();
+		vector<string> strings = file.ReadTokens();
 
 		if (strings.size())
 		{
@@ -2346,15 +2346,16 @@ void TUltimaOnline::LoadShaders()
 {
 	CurrentShader = NULL;
 
+#if UO_USE_SHADER_FILES == 1
 	TMappedHeader frag;
 	memset(&frag, 0, sizeof(TMappedHeader));
-	TMappedHeader vect;
+	TMappedHeader vert;
 	memset(&vect, 0, sizeof(TMappedHeader));
 
-	FileManager.LoadFileToMemory(vect, FilePath("shaders\\Shader.vert").c_str());
+	FileManager.LoadFileToMemory(vert, FilePath("shaders\\Shader.vert").c_str());
 	FileManager.LoadFileToMemory(frag, FilePath("shaders\\DeathShader.frag").c_str());
 
-	DeathShader = new TDeathShader((char*)vect.Address, (char*)frag.Address);
+	DeathShader = new TDeathShader((char*)vert.Address, (char*)frag.Address);
 
 	FileManager.UnloadFileFromMemory(frag);
 
@@ -2362,7 +2363,7 @@ void TUltimaOnline::LoadShaders()
 
 	FileManager.LoadFileToMemory(frag, FilePath("shaders\\ColorizerShader.frag").c_str());
 
-	ColorizerShader = new TColorizerShader((char*)vect.Address, (char*)frag.Address);
+	ColorizerShader = new TColorizerShader((char*)vert.Address, (char*)frag.Address);
 
 	FileManager.UnloadFileFromMemory(frag);
 
@@ -2370,7 +2371,7 @@ void TUltimaOnline::LoadShaders()
 
 	FileManager.LoadFileToMemory(frag, FilePath("shaders\\FontColorizerShader.frag").c_str());
 
-	FontColorizerShader = new TColorizerShader((char*)vect.Address, (char*)frag.Address);
+	FontColorizerShader = new TColorizerShader((char*)vert.Address, (char*)frag.Address);
 
 	FileManager.UnloadFileFromMemory(frag);
 
@@ -2378,10 +2379,16 @@ void TUltimaOnline::LoadShaders()
 
 	FileManager.LoadFileToMemory(frag, FilePath("shaders\\LightColorizerShader.frag").c_str());
 
-	LightColorizerShader = new TColorizerShader((char*)vect.Address, (char*)frag.Address);
+	LightColorizerShader = new TColorizerShader((char*)vert.Address, (char*)frag.Address);
 
 	FileManager.UnloadFileFromMemory(frag);
-	FileManager.UnloadFileFromMemory(vect);
+	FileManager.UnloadFileFromMemory(vert);
+#else
+	DeathShader = new TDeathShader(g_Vert_ShaderData, g_Frag_DeathShaderData);
+	ColorizerShader = new TColorizerShader(g_Vert_ShaderData, g_Frag_ColorizerShaderData);
+	FontColorizerShader = new TColorizerShader(g_Vert_ShaderData, g_Frag_FontShaderData);
+	LightColorizerShader = new TColorizerShader(g_Vert_ShaderData, g_Frag_LightShaderData);
+#endif
 }
 //---------------------------------------------------------------------------
 bool TUltimaOnline::AutoLoginNameExists(string name)

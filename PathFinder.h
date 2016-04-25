@@ -101,7 +101,7 @@ private:
 	void GetNewXY(BYTE &direction, int &x, int &y);
 
 	//Создание списка предметов, участвующих в поиске в указанных координатах
-	bool CreateItemsList(int &x, int &y);
+	bool CreateItemsList(int &x, int &y, char &z);
 
 	//Флаг, указывающий. что персонаж стоит на длинной лестнице
 	bool m_OnLongStair;
@@ -144,9 +144,9 @@ private:
 
 	int GetGoalDistCost(const POINT &p, int cost);
 
-	bool DoesNotExistOnOpenList(int x, int y);
+	bool DoesNotExistOnOpenList(int x, int y, int z);
 
-	bool DoesNotExistOnClosedList(int x, int y);
+	bool DoesNotExistOnClosedList(int x, int y, int z);
 
 	int AddNodeToList(int list, int direction, int x, int y, int z, TPathNode *parentNode, int cost);
 

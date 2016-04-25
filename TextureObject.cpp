@@ -179,7 +179,7 @@ void TCircleOfTransparencyTexture::Redraw()
 	}
 }
 //---------------------------------------------------------------------------
-TTextureAnimationFrame::TTextureAnimationFrame(int frame)
+TTextureAnimationFrame::TTextureAnimationFrame(const int &frame)
 : TBaseQueueItem(), m_Frame(frame), m_Width(0), m_Height(0), m_CenterX(0),
 m_CenterY(0), Texture(0)
 {
@@ -204,7 +204,7 @@ TTextureAnimationDirection::~TTextureAnimationDirection()
 {
 }
 //---------------------------------------------------------------------------
-TTextureAnimationFrame *TTextureAnimationDirection::GetFrame(BYTE frame)
+TTextureAnimationFrame *TTextureAnimationDirection::GetFrame(const BYTE &frame)
 {
 	TTextureAnimationFrame *item = (TTextureAnimationFrame*)m_Items;
 
@@ -234,7 +234,7 @@ TTextureAnimationGroup::~TTextureAnimationGroup()
 {
 }
 //---------------------------------------------------------------------------
-TTextureAnimationDirection *TTextureAnimationGroup::GetDirection(BYTE direction)
+TTextureAnimationDirection *TTextureAnimationGroup::GetDirection(const BYTE &direction)
 {
 	TTextureAnimationDirection *item = (TTextureAnimationDirection*)m_Items;
 
@@ -264,7 +264,7 @@ TTextureAnimation::~TTextureAnimation()
 {
 }
 //---------------------------------------------------------------------------
-TTextureAnimationGroup *TTextureAnimation::GetGroup(BYTE index)
+TTextureAnimationGroup *TTextureAnimation::GetGroup(const BYTE &index)
 {
 	TTextureAnimationGroup *item = (TTextureAnimationGroup*)m_Items;
 
@@ -335,7 +335,7 @@ void TTextTexture::Init()
 	Data = NULL;
 }
 //--------------------------------------------------------------------------
-void TTextTexture::Draw(int x, int y)
+void TTextTexture::Draw(const int &x, const int &y)
 {
 	if (Texture != 0)
 		g_GL.Draw(Texture, x, y, m_Width, m_Height);

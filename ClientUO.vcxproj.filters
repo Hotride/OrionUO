@@ -453,6 +453,9 @@
     <ClInclude Include="gump\GumpConsoleType.h">
       <Filter>Заголовочные файлы\gump</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderData.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

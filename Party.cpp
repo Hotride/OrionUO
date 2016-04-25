@@ -78,7 +78,7 @@ TParty::~TParty()
 {
 }
 //----------------------------------------------------------------------------
-bool TParty::Contains(DWORD serial)
+bool TParty::Contains(const DWORD &serial)
 {
 	bool result = false;
 
@@ -104,7 +104,7 @@ void TParty::Clear()
 		Member[i].Serial = 0;;
 }
 //----------------------------------------------------------------------------
-void TParty::ParsePacketData(PBYTE buf, int &size)
+void TParty::ParsePacketData(PBYTE buf, const int &size)
 {
 	int pSize = size - 5;
 

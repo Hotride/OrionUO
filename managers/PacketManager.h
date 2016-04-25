@@ -21,7 +21,7 @@
 #define PacketManagerH
 //---------------------------------------------------------------------------
 class TPacketManager;
-typedef void (TPacketManager::*PACKET_FUNCTION)(PBYTE buf, int size);
+typedef void (TPacketManager::*PACKET_FUNCTION)(PBYTE buf, const int &size);
 //---------------------------------------------------------------------------
 //!Направление пакета
 enum PACKET_DIRECTION
@@ -48,7 +48,7 @@ public:
 	PACKET_FUNCTION Handler;
 };
 //---------------------------------------------------------------------------
-#define HANDLER_PACKET(name)void Handle ##name (PBYTE buf, int size);
+#define HANDLER_PACKET(name)void Handle ##name (PBYTE buf, const int &size);
 //---------------------------------------------------------------------------
 //!Класс менеджера пакетов
 class TPacketManager
@@ -231,7 +231,7 @@ public:
 	@param [__in] msg Индекс пакета
 	@return Размер пакета
 	*/
-	int GetPacketSize(__in BYTE msg);
+	int GetPacketSize(__in const BYTE &msg) const { return m_MessageTypes[msg].Size; }
 
 	/*!
 	Обработчик пришедшего сообщения
@@ -239,7 +239,7 @@ public:
 	@param [__in] size Размер сообщения
 	@return 
 	*/
-	void ReceiveHandler(__in PBYTE buf, __in int size);
+	void ReceiveHandler(__in PBYTE buf, __in const int &size);
 
 	/*!
 	Обработчик пришедшего сообщения от плагина
@@ -247,7 +247,7 @@ public:
 	@param [__in] size Размер сообщения
 	@return
 	*/
-	void PluginReceiveHandler(__in PBYTE buf, __in int size);
+	void PluginReceiveHandler(__in PBYTE buf, __in const int &size);
 
 	/*!
 	Установить версию протокола клиента и подменить размерности соответствующих пакетов
@@ -262,7 +262,7 @@ public:
 	@param [__in] id Индекс пакета
 	@return Данные о пакете
 	*/
-	TMessageType GetType(__in BYTE id) const { return m_MessageTypes[id]; }
+	TMessageType GetType(__in const BYTE &id) const { return m_MessageTypes[id]; }
 
 	void SendMegaClilocRequests();
 };

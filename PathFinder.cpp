@@ -71,7 +71,7 @@ TPathFinder::~TPathFinder()
 {
 }
 //---------------------------------------------------------------------------
-bool TPathFinder::CreateItemsList(int &x, int &y)
+bool TPathFinder::CreateItemsList(int &x, int &y, char &z)
 {
 	Clear();
 
@@ -149,7 +149,7 @@ bool TPathFinder::CreateItemsList(int &x, int &y)
 					if (obj->IsBridge() && obj->IsPrefixA() && height >= 10) //long stair
 						surface += 0x20;
 
-					if (!height && obj->IsBackground() && obj->IsSurface() && obj->Z >= g_Player->Z + 3)
+					if (!height && obj->IsBackground() && obj->IsSurface() && obj->Z >= z + 3)
 						surface += 0x40;
 
 					Add(new TPathObject(obj->Z, height, surface));
@@ -167,7 +167,7 @@ void TPathFinder::CheckLongStairUnderfoot(int &x, int &y, char &z)
 {
 	m_OnLongStair = false;
 
-	if (CreateItemsList(x, y))
+	if (CreateItemsList(x, y, z))
 	{
 		QFOR(po, m_Items, TPathObject*)
 		{
@@ -201,10 +201,8 @@ void TPathFinder::CheckLongStairUnderfoot(int &x, int &y, char &z)
 //---------------------------------------------------------------------------
 bool TPathFinder::CalculateNewZ(int &x, int &y, char &z)
 {
-	if (!CreateItemsList(x, y))
+	if (!CreateItemsList(x, y, z))
 		return false;
-	
-	z = g_Player->Z;
 	
 	int newZ = z;
 
@@ -622,13 +620,15 @@ int TPathFinder::GetGoalDistCost(const POINT &p, int cost)
 	return (abs(m_EndPoint.x - p.x) + abs(m_EndPoint.y - p.y)) * cost;
 }
 //---------------------------------------------------------------------------
-bool TPathFinder::DoesNotExistOnOpenList(int x, int y)
+bool TPathFinder::DoesNotExistOnOpenList(int x, int y, int z)
 {
 	bool result = false;
 
 	IFOR(i, 0, PATHFINDER_MAX_NODES)
 	{
-		if (m_OpenList[i].Used &&m_OpenList[i].X == x && m_OpenList[i].Y == y)
+		TPathNode &node = m_OpenList[i];
+
+		if (node.Used && node.X == x && node.Y == y && node.Z == z)
 		{
 			result = true;
 			break;
@@ -638,13 +638,15 @@ bool TPathFinder::DoesNotExistOnOpenList(int x, int y)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TPathFinder::DoesNotExistOnClosedList(int x, int y)
+bool TPathFinder::DoesNotExistOnClosedList(int x, int y, int z)
 {
 	bool result = false;
 
 	IFOR(i, 0, PATHFINDER_MAX_NODES)
 	{
-		if (m_ClosedList[i].Used && m_ClosedList[i].X == x && m_ClosedList[i].Y == y)
+		TPathNode &node = m_ClosedList[i];
+
+		if (node.Used && node.X == x && node.Y == y && node.Z == z)
 		{
 			result = true;
 			break;
@@ -658,27 +660,29 @@ int TPathFinder::AddNodeToList(int list, int direction, int x, int y, int z, TPa
 {
 	if (!list)
 	{
-		if (!DoesNotExistOnClosedList(x, y))
+		if (!DoesNotExistOnClosedList(x, y, z))
 		{
-			if (!DoesNotExistOnOpenList(x, y))
+			if (!DoesNotExistOnOpenList(x, y, z))
 			{
 				IFOR(i, 0, PATHFINDER_MAX_NODES)
 				{
-					if (!m_OpenList[i].Used)
-					{
-						m_OpenList[i].Used = true;
+					TPathNode &node = m_OpenList[i];
 
-						m_OpenList[i].Direction = direction;
-						m_OpenList[i].X = x;
-						m_OpenList[i].Y = y;
-						m_OpenList[i].Z = z;
+					if (!node.Used)
+					{
+						node.Used = true;
+
+						node.Direction = direction;
+						node.X = x;
+						node.Y = y;
+						node.Z = z;
 						POINT p = { x, y };
 
-						m_OpenList[i].DistFromGoalCost = GetGoalDistCost(p, cost);
-						m_OpenList[i].DistFromStartCost = parentNode->DistFromStartCost + cost;
-						m_OpenList[i].Cost = m_OpenList[i].DistFromGoalCost + m_OpenList[i].DistFromStartCost;
+						node.DistFromGoalCost = GetGoalDistCost(p, cost);
+						node.DistFromStartCost = parentNode->DistFromStartCost + cost;
+						node.Cost = node.DistFromGoalCost + node.DistFromStartCost;
 
-						m_OpenList[i].Parent = parentNode;
+						node.Parent = parentNode;
 
 						//if (x == m_EndX && y == m_EndY)
 						if (GetDistance(m_EndPoint, p) <= m_PathFindDistance)
@@ -692,24 +696,24 @@ int TPathFinder::AddNodeToList(int list, int direction, int x, int y, int z, TPa
 						return i;
 					}
 				}
-
-				return -1;
 			}
 			else
 			{
 				IFOR(i, 0, PATHFINDER_MAX_NODES)
 				{
-					if (m_OpenList[i].Used)
+					TPathNode &node = m_OpenList[i];
+
+					if (node.Used)
 					{
-						if (m_OpenList[i].X == x && m_OpenList[i].Y == y)
+						if (node.X == x && node.Y == y && node.Z == z)
 						{
 							int startCost = parentNode->DistFromStartCost + cost;
 
-							if (m_OpenList[i].DistFromStartCost > startCost)
+							if (node.DistFromStartCost > startCost)
 							{
-								m_OpenList[i].Parent = parentNode;
-								m_OpenList[i].DistFromStartCost = startCost + cost;
-								m_OpenList[i].Cost = m_OpenList[i].DistFromGoalCost + m_OpenList[i].DistFromStartCost;
+								node.Parent = parentNode;
+								node.DistFromStartCost = startCost + cost;
+								node.Cost = node.DistFromGoalCost + node.DistFromStartCost;
 							}
 
 							return i;
@@ -727,18 +731,20 @@ int TPathFinder::AddNodeToList(int list, int direction, int x, int y, int z, TPa
 
 		IFOR(i, 0, PATHFINDER_MAX_NODES)
 		{
-			if (!m_ClosedList[i].Used)
-			{
-				m_ClosedList[i].Used = true;
+			TPathNode &node = m_ClosedList[i];
 
-				m_ClosedList[i].DistFromGoalCost = parentNode->DistFromGoalCost;
-				m_ClosedList[i].DistFromStartCost = parentNode->DistFromStartCost;
-				m_ClosedList[i].Cost = m_ClosedList[i].DistFromGoalCost + m_ClosedList[i].DistFromStartCost;
-				m_ClosedList[i].Direction = parentNode->Direction;
-				m_ClosedList[i].X = parentNode->X;
-				m_ClosedList[i].Y = parentNode->Y;
-				m_ClosedList[i].Z = parentNode->Z;
-				m_ClosedList[i].Parent = parentNode->Parent;
+			if (!node.Used)
+			{
+				node.Used = true;
+
+				node.DistFromGoalCost = parentNode->DistFromGoalCost;
+				node.DistFromStartCost = parentNode->DistFromStartCost;
+				node.Cost = node.DistFromGoalCost + node.DistFromStartCost;
+				node.Direction = parentNode->Direction;
+				node.X = parentNode->X;
+				node.Y = parentNode->Y;
+				node.Z = parentNode->Z;
+				node.Parent = parentNode->Parent;
 
 				m_ActiveOpenNodes--;
 				m_ActiveClosedNodes++;
@@ -746,8 +752,6 @@ int TPathFinder::AddNodeToList(int list, int direction, int x, int y, int z, TPa
 				return i;
 			}
 		}
-
-		return -1;
 	}
 
 	return -1;

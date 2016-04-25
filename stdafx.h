@@ -78,6 +78,8 @@ using std::pair;
 #define UO_FW_SHARD 0
 #define UO_ABYSS_SHARD 0
 
+#define UO_USE_SHADER_FILES 0
+
 #include "Constants.h"
 #include "EnumList.h"
 #include "PluginInterface.h"
@@ -608,6 +610,7 @@ typedef std::vector<BYTE> WaveFile;
 #include "managers\\CityManager.h"
 #include "managers\\PluginManager.h"
 #include "managers\\ProfessionManager.h"
+#include "ShaderData.h"
 #include "ClientUO.h"
 //---------------------------------------------------------------------------
 #endif

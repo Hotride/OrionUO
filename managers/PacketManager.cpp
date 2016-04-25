@@ -639,25 +639,12 @@ wstring TPacketManager::ReadUnicodeString( __in int size)
 }
 //---------------------------------------------------------------------------
 /*!
-Получить размер пакета
-@param [__in] msg Индекс пакета
-@return Размер пакета
-*/
-int TPacketManager::GetPacketSize( __in BYTE msg)
-{
-	if ((int)msg < 0 || (int)msg >= 0x100)
-		return -1;
-
-	return m_MessageTypes[(int)msg].Size;
-}
-//---------------------------------------------------------------------------
-/*!
 Обработчик пришедшего сообщения от плагина
 @param [__in] buf Буфер
 @param [__in] size Размер сообщения
 @return
 */
-void TPacketManager::PluginReceiveHandler(__in PBYTE buf, __in int size)
+void TPacketManager::PluginReceiveHandler(__in PBYTE buf, __in const int &size)
 {
 	DWORD ticks = GetTickCount();
 	g_TotalRecvSize += size;
@@ -688,7 +675,7 @@ void TPacketManager::PluginReceiveHandler(__in PBYTE buf, __in int size)
 @param [__in] size Размер сообщения
 @return 
 */
-void TPacketManager::ReceiveHandler( __in PBYTE buf, __in int size)
+void TPacketManager::ReceiveHandler(__in PBYTE buf, __in const int &size)
 {
 	DWORD ticks = GetTickCount();
 	g_TotalRecvSize += size;
@@ -728,7 +715,7 @@ void TPacketManager::SendMegaClilocRequests()
 	}
 }
 //---------------------------------------------------------------------------
-#define PACKET_HANDLER(name) void TPacketManager::Handle ##name (PBYTE buf, int size)
+#define PACKET_HANDLER(name) void TPacketManager::Handle ##name (PBYTE buf, const int &size)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(ClientTalk)
 {
@@ -2397,7 +2384,8 @@ PACKET_HANDLER(ExtendedCommand)
 
 	switch (cmd)
 	{
-		case 0: break;
+		case 0:
+			break;
 		case 1: //Initialize Fast Walk Prevention
 		{
 			IFOR(i, 0, 6)
@@ -2413,9 +2401,9 @@ PACKET_HANDLER(ExtendedCommand)
 		}
 		case 4: //Close generic gump
 		{
-			DWORD Serial = ReadDWord();
-			DWORD ID = ReadDWord();
-			GumpManager->CloseGump(Serial, ID, GT_GENERIC);
+			DWORD serial = ReadDWord();
+			DWORD id = ReadDWord();
+			GumpManager->CloseGump(serial, id, GT_GENERIC);
 
 			break;
 		}
@@ -2439,8 +2427,8 @@ PACKET_HANDLER(ExtendedCommand)
 		}
 		case 0xC: //Close statusbar gump
 		{
-			DWORD Serial = ReadDWord();
-			GumpManager->CloseGump(Serial, 0, GT_STATUSBAR);
+			DWORD serial = ReadDWord();
+			GumpManager->CloseGump(serial, 0, GT_STATUSBAR);
 
 			break;
 		}
@@ -4171,7 +4159,7 @@ PACKET_HANDLER(MegaCliloc)
 	wstring message(L"");
 
 	if (!obj->NPC)
-		message = L"<basefont color=\"yellow\">"; //yellow //#FFFF00
+		message = L"<basefont color=\"yellow\">";
 
 	PBYTE end = buf + size;
 	bool first = true;
@@ -4197,17 +4185,20 @@ PACKET_HANDLER(MegaCliloc)
 
 			message += str;
 
-			if (first && !obj->NPC)
-				message += L"<basefont color=\"#FFFFFFFF\">";
+			if (first)
+			{
+				if (!obj->NPC)
+					message += L"<basefont color=\"#FFFFFFFF\">";
 
-			first = false;
+				first = false;
+			}
 
-			TPRINT("Cliloc: 0x%08X len=%i arg=%s\n", cliloc, len, ToString(argument).c_str());
+			//TPRINT("Cliloc: 0x%08X len=%i arg=%s\n", cliloc, len, ToString(argument).c_str());
 		}
 	}
 
 	obj->ClilocMessage = message;
-	TPRINT("message=%s\n", ToString(message).c_str());
+	//TPRINT("message=%s\n", ToString(message).c_str());
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(Damage)

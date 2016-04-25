@@ -92,7 +92,7 @@ private:
 	short m_CenterX;
 	short m_CenterY;
 public:
-	TTextureAnimationFrame(int frame);
+	TTextureAnimationFrame(const int &frame);
 	virtual ~TTextureAnimationFrame();
 
 	SETGET(BYTE, Frame);
@@ -130,7 +130,7 @@ public:
 	SETGET(DWORD, LastAccessTime);
 
 	//Получить ссылку на фрэйм
-	TTextureAnimationFrame *GetFrame(BYTE frame);
+	TTextureAnimationFrame *GetFrame(const BYTE &frame);
 };
 //---------------------------------------------------------------------------
 //Класс для работы с группой анимаций
@@ -146,7 +146,7 @@ public:
 	SETGET(BYTE, Index);
 
 	//Получить ссылку на направление
-	TTextureAnimationDirection *GetDirection(BYTE direction);
+	TTextureAnimationDirection *GetDirection(const BYTE &direction);
 };
 //---------------------------------------------------------------------------
 //Класс для работы с группами текстур анимаций
@@ -158,7 +158,7 @@ public:
 	virtual ~TTextureAnimation();
 
 	//Получить ссылку на группу
-	TTextureAnimationGroup *GetGroup(BYTE index);
+	TTextureAnimationGroup *GetGroup(const BYTE &index);
 };
 //---------------------------------------------------------------------------
 //Структура данных для хранения информации о веб-ссылке
@@ -210,7 +210,7 @@ public:
 	void Clear();
 
 	//Отрисовать текстуру
-	void Draw(int x, int y);
+	void Draw(const int &x, const int &y);
 
 	//Проверка на наличие текстуры под мышкой
 	bool UnderMouse(int x, int y);

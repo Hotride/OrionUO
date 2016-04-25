@@ -229,6 +229,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="ScreenshotBuilder.h" />
     <ClInclude Include="ServerList.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderData.h" />
     <ClInclude Include="SkillGroup.h" />
     <ClInclude Include="Skills.h" />
     <ClInclude Include="SmoothMonitor.h" />

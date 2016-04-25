@@ -120,7 +120,7 @@ void TBaseQueue::Delete( __in TBaseQueueItem *item)
 @param [__in] index Индекс элемента
 @return
 */
-void TBaseQueue::Delete(__in int index)
+void TBaseQueue::Delete(__in const int &index)
 {
 	//Получим элемент с указанным индексом и удалим его (если есть)
 	Delete(Get(index));
@@ -299,7 +299,7 @@ void TBaseQueue::MoveToBack( __in TBaseQueueItem *item)
 @param [__in] up Вверх или вниз по очереди
 @return true в случае успешного перемещения
 */
-bool TBaseQueue::Move( __in TBaseQueueItem *item, __in bool up)
+bool TBaseQueue::Move(__in TBaseQueueItem *item, __in const bool &up)
 {
 	//Немедленно запишем результат (и исходные данные для первой проверки) в переменную
 	bool result = (item != NULL);
