@@ -54,6 +54,11 @@ public:
 	@return 
 	*/
 	void ProcessAnimation();
+	/*!
+	ќбработка звуков перемещени€
+	@return
+	*/
+	void ProcessSound(DWORD ticks, TGameCharacter *gc);
 
 	/*!
 	”становить текущего чара с указанным серийником как основного
