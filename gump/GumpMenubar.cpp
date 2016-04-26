@@ -43,14 +43,14 @@ void TGumpMenubar::InitTextTextures()
 	if (th2 != NULL)
 		largeWidth = th2->Width;
 
-	FontManager->GenerateW(1, m_Texture[0], L"Map", 0, 30, smallWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[1], L"Paperdoll", 0, 30, largeWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[2], L"Inventory", 0, 30, largeWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[3], L"Journal", 0, 30, largeWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[4], L"Chat", 0, 30, smallWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[5], L"Help", 0, 30, smallWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[6], L"World Map", 0, 30, largeWidth, TS_CENTER);
-	FontManager->GenerateW(1, m_Texture[7], L"< ? >", 0, 30, smallWidth, TS_CENTER);
+	FontManager->GenerateW(0, m_Texture[0], L"Map", 0, 30, smallWidth, TS_CENTER);
+	FontManager->GenerateW(0, m_Texture[1], L"Paperdoll", 0, 30, largeWidth, TS_CENTER);
+	FontManager->GenerateW(0, m_Texture[2], L"Inventory", 0, 30, largeWidth, TS_CENTER);
+	FontManager->GenerateW(0, m_Texture[3], L"Journal", 0, 30, largeWidth, TS_CENTER);
+	FontManager->GenerateW(0, m_Texture[4], L"Chat", 0, 30, smallWidth, TS_CENTER);
+	FontManager->GenerateW(0, m_Texture[5], L"Help", 0, 30, smallWidth, TS_CENTER);
+	FontManager->GenerateW(0, m_Texture[6], L"World Map", 0, 30, largeWidth, TS_CENTER);
+	FontManager->GenerateW(0, m_Texture[7], L"< ? >", 0, 30, smallWidth, TS_CENTER);
 }
 //---------------------------------------------------------------------------
 void TGumpMenubar::ReleaseTextTextures()

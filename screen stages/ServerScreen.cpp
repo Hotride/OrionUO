@@ -114,7 +114,7 @@ void TServerScreen::InitToolTip()
 
 	if (g_LastSelectedObject >= ID_SS_SERVER_LIST)
 	{
-		string cstr("Connect to '" + ServerList.GetName(g_LastSelectedObject - 8) + "' server");
+		string cstr("Connect to '" + ServerList.GetName(g_LastSelectedObject - ID_SS_SERVER_LIST) + "' server");
 
 		ToolTip.Set(ToWString(cstr), SOT_NO_OBJECT, g_LastSelectedObject, 100);
 	}

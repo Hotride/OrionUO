@@ -53,7 +53,7 @@ void TToolTip::Set(wstring str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int max
 	Texture.Clear();
 
 	FontManager->GenerateW((BYTE)ConfigManager.ToolTipsTextFont, Texture, m_Data.c_str(), ConfigManager.ToolTipsTextColor, 5, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
-	//FontManager->GenerateW(1, Texture, m_Data.c_str(), 0x0482, 30, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
+	//FontManager->GenerateW(0, Texture, m_Data.c_str(), 0x0482, 30, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
 }
 //---------------------------------------------------------------------------
 void TToolTip::Set(DWORD clilocID, string str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int maxWidth, int x, int y)
@@ -69,10 +69,10 @@ void TToolTip::Draw(int cursorWidth, int cursorHeight)
 		return;
 
 	if (!m_MaxWidth)
-		m_MaxWidth = FontManager->GetWidthW(1, m_Data.c_str(), m_Data.length());
+		m_MaxWidth = FontManager->GetWidthW((BYTE)ConfigManager.ToolTipsTextFont, m_Data.c_str(), m_Data.length());
 
 	if (Texture.Empty())
-		FontManager->GenerateW(1, Texture, m_Data.c_str(), 0x0482, 30, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
+		FontManager->GenerateW((BYTE)ConfigManager.ToolTipsTextFont, Texture, m_Data.c_str(), ConfigManager.ToolTipsTextColor /*0x0482*/, 30, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
 
 	if (!Texture.Empty())
 	{
@@ -98,10 +98,6 @@ void TToolTip::Draw(int cursorWidth, int cursorHeight)
 		}
 		
 		glEnable(GL_BLEND);
-		//glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_COLOR);
-		//glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
-		//glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_DST_COLOR);
-		//glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
@@ -111,8 +107,6 @@ void TToolTip::Draw(int cursorWidth, int cursorHeight)
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		
 		glDisable(GL_BLEND);
-
-		//g_GL.Draw(g_TransparntBackground, (float)x, (float)y, 2.0f, 2.0f, Texture.Width + 8.0f, Texture.Height + 8.0f);
 
 		int tempX = x + 6;
 		int tempY = y + 4;

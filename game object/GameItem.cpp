@@ -537,6 +537,16 @@ WORD TGameItem::GetMountAnimation()
 				graphic = 799; // Armored Swamp Dragon
 				break;
 			}
+			case 16069:
+			{
+				graphic = 213; // ???
+				break;
+			}
+			case 16016:
+			{
+				graphic = 276; // Reptalon
+				break;
+			}
 			default:
 				break;
 		}

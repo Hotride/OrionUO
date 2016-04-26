@@ -470,24 +470,6 @@ void TMainScreen::LoadGlobalConfig()
 				}
 				case MSCC_ACTPWD:
 				{
-					/*string password("");
-					int size = strings.size();
-
-					IFOR(i, 1, size)
-					{
-						if (i > 1)
-							password += "=";
-
-						password += strings[i];
-					}
-
-					int len = password.length();
-
-					if (len)
-						m_Password->SetText(DecryptPW(password.c_str(), len));
-
-					m_Password->SetPos(len);*/
-					
 					filePtr += strings[0].length();
 
 					while (*filePtr && (*filePtr == ' ' || *filePtr == '\t'))
@@ -501,13 +483,21 @@ void TMainScreen::LoadGlobalConfig()
 					while (*end && *end != '\n' && *end != '\r')
 						end++;
 
-					string password((char*)filePtr, end - filePtr);
-					int len = password.length();
+					if (end - filePtr > 0)
+					{
+						string password((char*)filePtr, end - filePtr);
+						int len = password.length();
 
-					if (len)
-						m_Password->SetText(DecryptPW(password.c_str(), len));
+						if (len)
+							m_Password->SetText(DecryptPW(password.c_str(), len));
 
-					m_Password->SetPos(len);
+						m_Password->SetPos(len);
+					}
+					else
+					{
+						m_Password->SetText("");
+						m_Password->SetPos(0);
+					}
 
 					break;
 				}

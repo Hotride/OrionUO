@@ -238,10 +238,13 @@ int TCharacterListScreen::Render( __in bool mode)
 			}
 		}
 		
-		gumpID = 0x159D + (int)(CanSelectedButton == ID_CS_NEW); //New button
-		if (g_LastObjectLeftMouseDown == ID_CS_NEW)
-			gumpID = 0x159F; //New button pressed
-		UO->DrawGump(gumpID, 0, 224, 350 + yBonus);
+		if (!CharacterList.OnePerson)
+		{
+			gumpID = 0x159D + (int)(CanSelectedButton == ID_CS_NEW); //New button
+			if (g_LastObjectLeftMouseDown == ID_CS_NEW)
+				gumpID = 0x159F; //New button pressed
+			UO->DrawGump(gumpID, 0, 224, 350 + yBonus);
+		}
 		
 		gumpID = 0x159A + (int)(CanSelectedButton == ID_CS_DELETE); //Delete button
 		if (g_LastObjectLeftMouseDown == ID_CS_DELETE)
@@ -276,7 +279,7 @@ int TCharacterListScreen::Render( __in bool mode)
 			g_LastSelectedObject = ID_CS_ARROW_PREV; //< gump
 		else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_CS_ARROW_NEXT; //> gump
-		else if (UO->GumpPixelsInXY(0x159D, 224, 350 + yBonus))
+		else if (!CharacterList.OnePerson && UO->GumpPixelsInXY(0x159D, 224, 350 + yBonus))
 			g_LastSelectedObject = ID_CS_NEW; //New button
 		else if (UO->GumpPixelsInXY(0x159A, 442, 350 + yBonus))
 			g_LastSelectedObject = ID_CS_DELETE; //Delete button

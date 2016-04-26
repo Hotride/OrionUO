@@ -93,7 +93,7 @@ TCityManager::TCityManager()
 
 					wstring wtext = ToWString(text);
 					TTextTexture &th = city->m_Texture;
-					FontManager->GenerateW(1, th, wtext.c_str(), 0, 30, 150);
+					FontManager->GenerateW(0, th, wtext.c_str(), 0, 30, 150);
 
 					FontManager->SetUseHTML(false);
 
@@ -123,7 +123,7 @@ TCityManager::TCityManager()
 				wstring wtext = cliloc->GetW(1075072 + i);
 
 				TTextTexture &th = city->m_Texture;
-				FontManager->GenerateW(1, th, wtext.c_str(), 0, 30, 150);
+				FontManager->GenerateW(0, th, wtext.c_str(), 0, 30, 150);
 
 				FontManager->SetUseHTML(false);
 

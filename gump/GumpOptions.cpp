@@ -96,7 +96,7 @@ void TGumpOptions::PrepareTextures()
 //----------------------------------------------------------------------------
 void TGumpOptions::InitTextTextures()
 {
-	BYTE font = (BYTE)(ConnectionManager.ClientVersion >= CV_305D);
+	BYTE font = 0; // (BYTE)(ConnectionManager.ClientVersion >= CV_305D);
 
 	//Sound and Music
 	wstring str = L"Sound and Music";

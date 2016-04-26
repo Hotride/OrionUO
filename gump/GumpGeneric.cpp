@@ -98,7 +98,7 @@ void TGumpGeneric::AddText(int index, wstring text)
 					if (color)
 						color++;
 
-					FontManager->GenerateW((BYTE)(ConnectionManager.ClientVersion >= CV_305D), gt->m_Text, text.c_str(), color, 30, width, TS_LEFT, flags);
+					FontManager->GenerateW(0, gt->m_Text, text.c_str(), color, 30, width, TS_LEFT, flags);
 				}
 
 				break;
@@ -151,7 +151,7 @@ void TGumpGeneric::AddText(int index, wstring text)
 						}
 
 						ghtml->SetHTMLText(text);
-						FontManager->GenerateW((BYTE)(ConnectionManager.ClientVersion >= CV_305D), ghtml->m_Text, text.c_str(), color, 30, w, TS_LEFT);
+						FontManager->GenerateW(0, ghtml->m_Text, text.c_str(), color, 30, w, TS_LEFT);
 
 						FontManager->SetUseHTML(false);
 					}
@@ -1038,14 +1038,14 @@ void TGumpGeneric::OnLeftMouseUp()
 									if (!htmlGump->HaveBackground)
 										color = 0xFFFF;
 
-									FontManager->GenerateW(1, htmlGump->m_Text, htmlGump->GetHTMLText().c_str(), color, 30, w, TS_LEFT);
+									FontManager->GenerateW(0, htmlGump->m_Text, htmlGump->GetHTMLText().c_str(), color, 30, w, TS_LEFT);
 								}
 								else
 								{
 									TCliloc *cliloc = ClilocManager->Cliloc(g_Language);
 									wstring text = cliloc->GetW((DWORD)htmlGump->TextIndex);
 		
-									FontManager->GenerateW(1, htmlGump->m_Text, text.c_str(), htmlGump->Color, 30, w, TS_LEFT);
+									FontManager->GenerateW(0, htmlGump->m_Text, text.c_str(), htmlGump->Color, 30, w, TS_LEFT);
 								}
 
 								FontManager->SetUseHTML(false);

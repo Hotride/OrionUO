@@ -73,7 +73,7 @@ void TCityItemNew::CreateTextTexture( __in DWORD clilocID)
 	wstring wtext = ClilocManager->Cliloc(g_Language)->GetW(clilocID);
 
 	//!Создаем текстуру текста
-	FontManager->GenerateW(1, m_Texture, wtext.c_str(), 0, 30, 150);
+	FontManager->GenerateW(0, m_Texture, wtext.c_str(), 0, 30, 150);
 
 	//!Выключаем обработку HTML-тэгов
 	FontManager->SetUseHTML(false);

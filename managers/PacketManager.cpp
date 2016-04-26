@@ -2441,7 +2441,7 @@ PACKET_HANDLER(ExtendedCommand)
 				TGumpText *item = new TGumpText(index, color, 0, 0);
 
 				wstring str = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
-				FontManager->GenerateW(1, item->m_Text, str.c_str(), color);
+				FontManager->GenerateW(0, item->m_Text, str.c_str(), color);
 
 				height += item->m_Text.Height;
 

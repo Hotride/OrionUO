@@ -52,9 +52,9 @@ bool TBaseProfession::AddDescription(int desc, string name, const char *val)
 		FontManager->SetUseHTML(true);
 
 		if (desc == -2)
-			FontManager->GenerateW(1, m_TextureDescription, ToWString(val).c_str(), 0, 30, 195);
+			FontManager->GenerateW(0, m_TextureDescription, ToWString(val).c_str(), 0, 30, 195);
 		else
-			FontManager->GenerateW(1, m_TextureDescription, ToWString(name + "\n" + val).c_str(), 0, 30, 195);
+			FontManager->GenerateW(0, m_TextureDescription, ToWString(name + "\n" + val).c_str(), 0, 30, 195);
 
 		FontManager->SetUseHTML(false);
 	}

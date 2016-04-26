@@ -23,8 +23,8 @@ TGumpProfile::TGumpProfile(DWORD serial, short x, short y, wstring topText, wstr
 : TGump(GT_PROFILE, serial, x, y), m_Height(200), m_HeightBuffer(0), m_CurrentLine(0),
 m_LastScrollChangeTime(0), m_Changed(false)
 {
-	FontManager->GenerateW(1, m_TopText, topText.c_str(), 0, 30, 140);
-	FontManager->GenerateW(1, m_BottomText, bottomText.c_str(), 0, 30, 190);
+	FontManager->GenerateW(0, m_TopText, topText.c_str(), 0, 30, 140);
+	FontManager->GenerateW(0, m_BottomText, bottomText.c_str(), 0, 30, 190);
 
 	TextEntry = new TEntryText(0, 210);
 	TextEntry->SetText(dataText);
