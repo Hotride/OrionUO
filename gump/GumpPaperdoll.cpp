@@ -362,14 +362,22 @@ void TGumpPaperdoll::GenerateFrame()
 			gumpID = 0x07ED; //Paperdoll button Status
 		UO->DrawGump(gumpID, 0, 185, 233);
 		
+		WORD color = obj->Color;
+
+		if (color & 0x8000)
+			color &= 0x7FFF;
+
+		if (color & 0x4000)
+			color &= 0x3FFF;
+
 		if (obj->Graphic == 0x0190 || obj->Graphic == 0x0192)
-			UO->DrawGump(0x000C, obj->Color, 8, 19, true); //Male gump
+			UO->DrawGump(0x000C, color, 8, 19, true); //Male gump
 		else if (obj->Graphic == 0x0191 || obj->Graphic == 0x0193)
-			UO->DrawGump(0x000D, obj->Color, 8, 19, true); //Female gump
+			UO->DrawGump(0x000D, color, 8, 19, true); //Female gump
 		else if (obj->Graphic == 0x03DB)
 		{
 			UO->DrawGump(0x000C, 0x03EA, 8, 19, true); //Male gump
-			UO->DrawGump(0xC72B, obj->Color, 8, 19); //GM robe gump
+			UO->DrawGump(0xC72B, color, 8, 19); //GM robe gump
 		}
 
 		UO->DrawGump(0x07D2, 0, 23, 196); //Paperdoll profile scroll
