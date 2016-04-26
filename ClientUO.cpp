@@ -392,6 +392,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			break;
 		}
 		case WM_NCACTIVATE:
+		{
+			if (wParam == 0)
+				SoundManager.Stop();
+			else
+				SoundManager.Start();
+			break;
+		}
 		case WM_NCPAINT:
 		{
 			if (PluginManager != NULL && !PluginManager->Empty())

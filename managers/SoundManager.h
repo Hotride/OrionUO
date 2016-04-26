@@ -56,6 +56,8 @@ public:
 	
 	bool Init();
 	void Free();
+	void Start();
+	void Stop();
 
 	//Mix_Chunk *LoadSoundEffect(TIndexSound &is);
 

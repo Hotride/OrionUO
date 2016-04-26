@@ -139,6 +139,18 @@ void TSoundManager::Free()
 	BASS_Free();
 }
 
+void TSoundManager::Stop()
+{
+	StopMusic();
+	BASS_Stop();
+}
+
+
+void TSoundManager::Start()
+{
+	BASS_Start();
+}
+
 /// <summary>Создаёт в памяти 16 битный wave файл для последующего
 /// проигрывания.</summary>
 /// <param name="is">ссылка на запись звука в MUL файле</param>
