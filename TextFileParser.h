@@ -81,6 +81,8 @@ public:
 	//Проверка на конец файла
 	bool IsEOF();
 
+	PBYTE GetFilePtr() { return m_File.Ptr; }
+
 	//Прочитать токены из файла
 	vector<string> ReadTokens(bool trim = true);
 

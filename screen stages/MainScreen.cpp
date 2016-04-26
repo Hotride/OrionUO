@@ -452,6 +452,7 @@ void TMainScreen::LoadGlobalConfig()
 
 	while (!file.IsEOF())
 	{
+		PBYTE filePtr = file.GetFilePtr();
 		std::vector<std::string> strings = file.ReadTokens();
 
 		if (strings.size() >= 2)
@@ -469,7 +470,7 @@ void TMainScreen::LoadGlobalConfig()
 				}
 				case MSCC_ACTPWD:
 				{
-					string password("");
+					/*string password("");
 					int size = strings.size();
 
 					IFOR(i, 1, size)
@@ -480,6 +481,27 @@ void TMainScreen::LoadGlobalConfig()
 						password += strings[i];
 					}
 
+					int len = password.length();
+
+					if (len)
+						m_Password->SetText(DecryptPW(password.c_str(), len));
+
+					m_Password->SetPos(len);*/
+					
+					filePtr += strings[0].length();
+
+					while (*filePtr && (*filePtr == ' ' || *filePtr == '\t'))
+						filePtr++;
+
+					if (*filePtr = '=')
+						filePtr++;
+
+					PBYTE end = filePtr;
+
+					while (*end && *end != '\n' && *end != '\r')
+						end++;
+
+					string password((char*)filePtr, end - filePtr);
 					int len = password.length();
 
 					if (len)
