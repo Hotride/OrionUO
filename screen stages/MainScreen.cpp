@@ -493,7 +493,7 @@ void TMainScreen::LoadGlobalConfig()
 					while (*filePtr && (*filePtr == ' ' || *filePtr == '\t'))
 						filePtr++;
 
-					if (*filePtr = '=')
+					if (*filePtr == '=')
 						filePtr++;
 
 					PBYTE end = filePtr;
