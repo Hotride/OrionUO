@@ -98,7 +98,7 @@ void TGumpGeneric::AddText(int index, wstring text)
 					if (color)
 						color++;
 
-					FontManager->GenerateW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), gt->m_Text, text.c_str(), color, 30, width, TS_LEFT, flags);
+					FontManager->GenerateW((BYTE)(ConnectionManager.ClientVersion >= CV_305D), gt->m_Text, text.c_str(), color, 30, width, TS_LEFT, flags);
 				}
 
 				break;
@@ -151,7 +151,7 @@ void TGumpGeneric::AddText(int index, wstring text)
 						}
 
 						ghtml->SetHTMLText(text);
-						FontManager->GenerateW(1, ghtml->m_Text, text.c_str(), color, 30, w, TS_LEFT);
+						FontManager->GenerateW((BYTE)(ConnectionManager.ClientVersion >= CV_305D), ghtml->m_Text, text.c_str(), color, 30, w, TS_LEFT);
 
 						FontManager->SetUseHTML(false);
 					}

@@ -96,310 +96,312 @@ void TGumpOptions::PrepareTextures()
 //----------------------------------------------------------------------------
 void TGumpOptions::InitTextTextures()
 {
+	BYTE font = (BYTE)(ConnectionManager.ClientVersion >= CV_305D);
+
 	//Sound and Music
 	wstring str = L"Sound and Music";
-	FontManager->GenerateW(0, m_TexturePage1[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
+	FontManager->GenerateW(font, m_TexturePage1[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
 
 	str = L"These settings affect the sound and music you will hear while playing Ultima Online.";
-	FontManager->GenerateW(0, m_TexturePage1[1], str.c_str(), g_OptionsTextColor, 30, 500);
+	FontManager->GenerateW(font, m_TexturePage1[1], str.c_str(), g_OptionsTextColor, 30, 500);
 
 	str = L"Sound on/off";
-	FontManager->GenerateW(0, m_TexturePage1[2], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage1[2], str.c_str(), g_OptionsTextColor);
 
 	str = L"Sound volume";
-	FontManager->GenerateW(0, m_TexturePage1[3], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage1[3], str.c_str(), g_OptionsTextColor);
 
 	str = L"Music on/off";
-	FontManager->GenerateW(0, m_TexturePage1[4], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage1[4], str.c_str(), g_OptionsTextColor);
 
 	str = L"Music volume";
-	FontManager->GenerateW(0, m_TexturePage1[5], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage1[5], str.c_str(), g_OptionsTextColor);
 
 	str = L"Play footstep sounds";
-	FontManager->GenerateW(0, m_TexturePage1[6], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage1[6], str.c_str(), g_OptionsTextColor);
 
 	str = L"Play combat music";
-	FontManager->GenerateW(0, m_TexturePage1[7], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage1[7], str.c_str(), g_OptionsTextColor);
 
 
 
 	//Orion's configuration
 	str = L"Orion's configuration";
-	FontManager->GenerateW(0, m_TexturePage2[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
+	FontManager->GenerateW(font, m_TexturePage2[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
 
 	str = L"These settings configure the Orion UO Client.";
-	FontManager->GenerateW(0, m_TexturePage2[1], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage2[1], str.c_str(), g_OptionsTextColor);
 
 
 
 	//Language
 	str = L"Language";
-	FontManager->GenerateW(0, m_TexturePage3[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
+	FontManager->GenerateW(font, m_TexturePage3[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
 
 	str = L"The language you use when playing UO is obtained from your Operating System settings.";
-	FontManager->GenerateW(0, m_TexturePage3[1], str.c_str(), g_OptionsTextColor, 30, 480);
+	FontManager->GenerateW(font, m_TexturePage3[1], str.c_str(), g_OptionsTextColor, 30, 480);
 
 	str = L"Use Tool-tips";
-	FontManager->GenerateW(0, m_TexturePage3[2], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage3[2], str.c_str(), g_OptionsTextColor);
 
 	str = L"Delay befor Tool-tip appears";
-	FontManager->GenerateW(0, m_TexturePage3[3], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage3[3], str.c_str(), g_OptionsTextColor);
 
 	str = L"Color of Tool-tip text";
-	FontManager->GenerateW(0, m_TexturePage3[4], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage3[4], str.c_str(), g_OptionsTextColor);
 
 	str = L"Font for Tool-tips";
-	FontManager->GenerateW(0, m_TexturePage3[5], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage3[5], str.c_str(), g_OptionsTextColor);
 
 
 
 	//Chat
 	str = L"Chat";
-	FontManager->GenerateW(0, m_TexturePage4[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
+	FontManager->GenerateW(font, m_TexturePage4[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
 
 	str = L"These settings affect the interface display for the chat system.";
-	FontManager->GenerateW(0, m_TexturePage4[1], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[1], str.c_str(), g_OptionsTextColor);
 
 	str = L"Input text color";
-	FontManager->GenerateW(0, m_TexturePage4[2], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[2], str.c_str(), g_OptionsTextColor);
 
 	str = L"Menu option color";
-	FontManager->GenerateW(0, m_TexturePage4[3], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[3], str.c_str(), g_OptionsTextColor);
 
 	str = L"Player color in member list";
-	FontManager->GenerateW(0, m_TexturePage4[4], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[4], str.c_str(), g_OptionsTextColor);
 
 	str = L"Chat text color";
-	FontManager->GenerateW(0, m_TexturePage4[5], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[5], str.c_str(), g_OptionsTextColor);
 
 	str = L"Player name without speaking privileges";
-	FontManager->GenerateW(0, m_TexturePage4[6], str.c_str(), g_OptionsTextColor, 30, 160);
+	FontManager->GenerateW(font, m_TexturePage4[6], str.c_str(), g_OptionsTextColor, 30, 160);
 
 	str = L"Muted text color";
-	FontManager->GenerateW(0, m_TexturePage4[7], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[7], str.c_str(), g_OptionsTextColor);
 
 	str = L"Channel moderator name";
-	FontManager->GenerateW(0, m_TexturePage4[8], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[8], str.c_str(), g_OptionsTextColor);
 
 	str = L"Channel moderator text";
-	FontManager->GenerateW(0, m_TexturePage4[9], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[9], str.c_str(), g_OptionsTextColor);
 
 	str = L"My name's color";
-	FontManager->GenerateW(0, m_TexturePage4[10], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[10], str.c_str(), g_OptionsTextColor);
 
 	str = L"My text color";
-	FontManager->GenerateW(0, m_TexturePage4[11], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[11], str.c_str(), g_OptionsTextColor);
 
 	str = L"System message color";
-	FontManager->GenerateW(0, m_TexturePage4[12], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[12], str.c_str(), g_OptionsTextColor);
 
 	str = L"Text Output Background Color";
-	FontManager->GenerateW(0, m_TexturePage4[13], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[13], str.c_str(), g_OptionsTextColor);
 
 	str = L"Text Input Background Color";
-	FontManager->GenerateW(0, m_TexturePage4[14], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[14], str.c_str(), g_OptionsTextColor);
 
 	str = L"User List Background Color";
-	FontManager->GenerateW(0, m_TexturePage4[15], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[15], str.c_str(), g_OptionsTextColor);
 
 	str = L"Conference List Background Color";
-	FontManager->GenerateW(0, m_TexturePage4[16], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[16], str.c_str(), g_OptionsTextColor);
 
 	str = L"Command List Background Color";
-	FontManager->GenerateW(0, m_TexturePage4[17], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[17], str.c_str(), g_OptionsTextColor);
 
 	str = L"Chat font";
-	FontManager->GenerateW(0, m_TexturePage4[18], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage4[18], str.c_str(), g_OptionsTextColor);
 
 
 
 	//Macro Options
 	str = L"Macro Options";
-	FontManager->GenerateW(0, m_TexturePage5[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
+	FontManager->GenerateW(font, m_TexturePage5[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
 	
 	str = L"Keystroke";
-	FontManager->GenerateW(0, m_TexturePage5[1], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage5[1], str.c_str(), g_OptionsTextColor);
 	
 	str = L"Key";
-	FontManager->GenerateW(0, m_TexturePage5[2], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage5[2], str.c_str(), g_OptionsTextColor);
 	
 	str = L"Shift";
-	FontManager->GenerateW(0, m_TexturePage5[3], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage5[3], str.c_str(), g_OptionsTextColor);
 	
 	str = L"Alt";
-	FontManager->GenerateW(0, m_TexturePage5[4], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage5[4], str.c_str(), g_OptionsTextColor);
 	
 	str = L"Ctrl";
-	FontManager->GenerateW(0, m_TexturePage5[5], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage5[5], str.c_str(), g_OptionsTextColor);
 	
 	str = L"Actions";
-	FontManager->GenerateW(0, m_TexturePage5[6], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage5[6], str.c_str(), g_OptionsTextColor);
 
 
 
 
 	//Interface
 	str = L"Interface";
-	FontManager->GenerateW(0, m_TexturePage6[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
+	FontManager->GenerateW(font, m_TexturePage6[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
 
 	str = L"These options affect your interface.";
-	FontManager->GenerateW(0, m_TexturePage6[1], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[1], str.c_str(), g_OptionsTextColor);
 
 	str = L"Enable pathfinding with double-right-click";
-	FontManager->GenerateW(0, m_TexturePage6[2], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[2], str.c_str(), g_OptionsTextColor);
 
 	str = L"Hold down TAB key for combat, instead of tapping it to toggle combat mode";
-	FontManager->GenerateW(0, m_TexturePage6[3], str.c_str(), g_OptionsTextColor, 30, 450);
+	FontManager->GenerateW(font, m_TexturePage6[3], str.c_str(), g_OptionsTextColor, 30, 450);
 
 	str = L"Offset interface windows rather than perfectly stacking them";
-	FontManager->GenerateW(0, m_TexturePage6[4], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[4], str.c_str(), g_OptionsTextColor);
 
 	str = L"Automatically arrange minimized windows";
-	FontManager->GenerateW(0, m_TexturePage6[5], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[5], str.c_str(), g_OptionsTextColor);
 
 	str = L"Your character will always run if this is checked";
-	FontManager->GenerateW(0, m_TexturePage6[6], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[6], str.c_str(), g_OptionsTextColor);
 
 	str = L"Disable the Menu Bar";
-	FontManager->GenerateW(0, m_TexturePage6[7], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[7], str.c_str(), g_OptionsTextColor);
 
 	str = L"Gray out of range objects";
-	FontManager->GenerateW(0, m_TexturePage6[8], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[8], str.c_str(), g_OptionsTextColor);
 
 	str = L"Disable New Target System";
-	FontManager->GenerateW(0, m_TexturePage6[9], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[9], str.c_str(), g_OptionsTextColor);
 
 	str = L"Object Handles";
-	FontManager->GenerateW(0, m_TexturePage6[10], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[10], str.c_str(), g_OptionsTextColor);
 	
 	str = L"Reduce FPS when Window is Unactive";
-	FontManager->GenerateW(0, m_TexturePage6[11], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[11], str.c_str(), g_OptionsTextColor);
 
 	str = L"Display Item Properties Icon";
-	FontManager->GenerateW(0, m_TexturePage6[12], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[12], str.c_str(), g_OptionsTextColor);
 
 	str = L"Hold Shift For Context Menus";
-	FontManager->GenerateW(0, m_TexturePage6[13], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[13], str.c_str(), g_OptionsTextColor);
 
 	str = L"Hold Shift For Enable Pathfinding";
-	FontManager->GenerateW(0, m_TexturePage6[14], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage6[14], str.c_str(), g_OptionsTextColor);
 
 
 
 	//Display
 	str = L"Display";
-	FontManager->GenerateW(0, m_TexturePage7[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
+	FontManager->GenerateW(font, m_TexturePage7[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
 
 	str = L"These options affect your display, and adjusting some of them may improve your graphics performance.";
-	FontManager->GenerateW(0, m_TexturePage7[1], str.c_str(), g_OptionsTextColor, 30, 500);
+	FontManager->GenerateW(font, m_TexturePage7[1], str.c_str(), g_OptionsTextColor, 30, 500);
 
 	str = L"Game Play Window Size";
-	FontManager->GenerateW(0, m_TexturePage7[2], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[2], str.c_str(), g_OptionsTextColor);
 
 	str = L"Adjust how long speech remains on screen";
-	FontManager->GenerateW(0, m_TexturePage7[3], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[3], str.c_str(), g_OptionsTextColor);
 
 	str = L"Scale speech duration based on length";
-	FontManager->GenerateW(0, m_TexturePage7[4], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[4], str.c_str(), g_OptionsTextColor);
 
 	str = L"Speech Color";
-	FontManager->GenerateW(0, m_TexturePage7[5], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[5], str.c_str(), g_OptionsTextColor);
 
 	str = L"Emote Color";
-	FontManager->GenerateW(0, m_TexturePage7[6], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[6], str.c_str(), g_OptionsTextColor);
 
 	str = L"Party Message Color";
-	FontManager->GenerateW(0, m_TexturePage7[7], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[7], str.c_str(), g_OptionsTextColor);
 	
 	str = L"Guild Message Color";
-	FontManager->GenerateW(0, m_TexturePage7[8], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[8], str.c_str(), g_OptionsTextColor);
 
 	str = L"Alliance Message Color";
-	FontManager->GenerateW(0, m_TexturePage7[9], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[9], str.c_str(), g_OptionsTextColor);
 	
 	str = L"Ignore Guild Messages";
-	FontManager->GenerateW(0, m_TexturePage7[10], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[10], str.c_str(), g_OptionsTextColor);
 
 	str = L"Ignore Alliance Messages";
-	FontManager->GenerateW(0, m_TexturePage7[11], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[11], str.c_str(), g_OptionsTextColor);
 
 	str = L"Dark Nights";
-	FontManager->GenerateW(0, m_TexturePage7[12], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[12], str.c_str(), g_OptionsTextColor);
 
 	str = L"Colored Lighting";
-	FontManager->GenerateW(0, m_TexturePage7[13], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[13], str.c_str(), g_OptionsTextColor);
 
 	str = L"Standard characters animation delay";
-	FontManager->GenerateW(0, m_TexturePage7[14], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[14], str.c_str(), g_OptionsTextColor);
 
 	str = L"Standard items animation delay";
-	FontManager->GenerateW(0, m_TexturePage7[15], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[15], str.c_str(), g_OptionsTextColor);
 
 	str = L"Lock game window resizing";
-	FontManager->GenerateW(0, m_TexturePage7[16], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[16], str.c_str(), g_OptionsTextColor);
 
 	str = L"Lock gumps moving";
-	FontManager->GenerateW(0, m_TexturePage7[17], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage7[17], str.c_str(), g_OptionsTextColor);
 	
 
 
 	//Reputation System
 	str = L"Reputation System";
-	FontManager->GenerateW(0, m_TexturePage8[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
+	FontManager->GenerateW(font, m_TexturePage8[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
 
 	str = L"These settings affect the reputation system, which is Ultima Online's system for controlling antisocial behavior.";
-	FontManager->GenerateW(0, m_TexturePage8[1], str.c_str(), g_OptionsTextColor, 30, 500);
+	FontManager->GenerateW(font, m_TexturePage8[1], str.c_str(), g_OptionsTextColor, 30, 500);
 
 	str = L"Innocent highlight color";
-	FontManager->GenerateW(0, m_TexturePage8[2], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage8[2], str.c_str(), g_OptionsTextColor);
 
 	str = L"Friendly guilds highlight color";
-	FontManager->GenerateW(0, m_TexturePage8[3], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage8[3], str.c_str(), g_OptionsTextColor);
 
 	str = L"Someone that can be attacked color";
-	FontManager->GenerateW(0, m_TexturePage8[4], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage8[4], str.c_str(), g_OptionsTextColor);
 
 	str = L"Criminal highlight color";
-	FontManager->GenerateW(0, m_TexturePage8[5], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage8[5], str.c_str(), g_OptionsTextColor);
 
 	str = L"Enemy guildmembers color";
-	FontManager->GenerateW(0, m_TexturePage8[6], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage8[6], str.c_str(), g_OptionsTextColor);
 
 	str = L"Murderer highlight color";
-	FontManager->GenerateW(0, m_TexturePage8[7], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage8[7], str.c_str(), g_OptionsTextColor);
 
 	str = L"Query before performing criminal actions";
-	FontManager->GenerateW(0, m_TexturePage8[8], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage8[8], str.c_str(), g_OptionsTextColor);
 
 
 
 	//Miscellaneous
 	str = L"Miscellaneous";
-	FontManager->GenerateW(0, m_TexturePage9[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
+	FontManager->GenerateW(font, m_TexturePage9[0], str.c_str(), g_OptionsTextColor, 30, 460, TS_CENTER);
 
 	str = L"Miscellaneous options.";
-	FontManager->GenerateW(0, m_TexturePage9[1], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage9[1], str.c_str(), g_OptionsTextColor);
 
 	str = L"Show Names of Approaching Players";
-	FontManager->GenerateW(0, m_TexturePage9[2], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage9[2], str.c_str(), g_OptionsTextColor);
 
 	str = L"Use circle of transparency";
-	FontManager->GenerateW(0, m_TexturePage9[3], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage9[3], str.c_str(), g_OptionsTextColor);
 
 	str = L"Set radius of transparency circle";
-	FontManager->GenerateW(0, m_TexturePage9[4], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage9[4], str.c_str(), g_OptionsTextColor);
 
 	str = L"Inform me when my skills improve this much (in tenths)";
-	FontManager->GenerateW(0, m_TexturePage9[5], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage9[5], str.c_str(), g_OptionsTextColor);
 
 	str = L"Inform me of increases in strength, dexterity, and intelligence.";
-	FontManager->GenerateW(0, m_TexturePage9[6], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage9[6], str.c_str(), g_OptionsTextColor);
 
 	str = L"Console need press 'Enter' to activate it.";
-	FontManager->GenerateW(0, m_TexturePage9[7], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage9[7], str.c_str(), g_OptionsTextColor);
 
 	str = L"Set the font for speech";
-	FontManager->GenerateW(0, m_TexturePage9[8], str.c_str(), g_OptionsTextColor);
+	FontManager->GenerateW(font, m_TexturePage9[8], str.c_str(), g_OptionsTextColor);
 
 
 
