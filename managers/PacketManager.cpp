@@ -1522,11 +1522,6 @@ PACKET_HANDLER(UpdateObject)
 	else
 		obj->OnGraphicChange(dir);
 
-	TPRINT("0x%08X 0x%04X ", serial, obj->Graphic);
-
-	if (obj->NPC)
-		TPRINT("NPC ");
-
 	obj->Color = ReadWord();
 
 	obj->Flags = ReadByte();
@@ -1535,12 +1530,12 @@ PACKET_HANDLER(UpdateObject)
 	if (character != NULL)
 	{
 		character->Notoriety = noto;
-		TPRINT("%d,%d,%d C%04X D%d F%02X N%d\n", obj->X, obj->Y, obj->Z, obj->Color, character->Direction, obj->Flags, character->Notoriety);
+		TPRINT("0x%08X 0x%04X NPC %d,%d,%d C%04X F%02X D%d N%d\n", serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags, character->Direction, character->Notoriety);
 	}
 	else
-		TPRINT("%d,%d,%d C%04X F%02X\n", obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
+		TPRINT("0x%08X 0x%04X %d,%d,%d C%04X F%02X\n", serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
 
-	if (m_ClientVersion >= CV_500A &&!obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	serial = ReadDWord();
@@ -2023,7 +2018,7 @@ PACKET_HANDLER(UpdateCharacter)
 		obj->Direction = dir;
 	}
 
-	obj->Color = ReadWord() & 0x7FFF;
+	obj->Color = ReadWord();
 	obj->Flags = ReadByte();
 	
 	GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);

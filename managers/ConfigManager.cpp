@@ -444,12 +444,37 @@ void TConfigManager::Load( __in string path)
 		{
 			g_GameWindowPosX = file.ReadWord();
 			g_GameWindowPosY = file.ReadWord();
+
+			if (blockSize > 6)
+			{
+				bool zoomed = file.ReadByte();
+
+				int windowX = file.ReadShort();
+				int windowY = file.ReadShort();
+				int windowWidth = file.ReadShort();
+				int windowHeight = file.ReadShort();
+
+				SendMessage(g_hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+
+				if (zoomed)
+					SendMessage(g_hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+				else
+					SetWindowPos(g_hWnd, NULL, windowX, windowY, windowWidth, windowHeight, 0);
+			}
 		}
 
 		FileManager.UnloadFileFromMemory(file);
 	}
 	else
+	{
 		Init();
+
+		if (g_GameState >= GS_GAME)
+		{
+			SendMessage(g_hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+			SendMessage(g_hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+		}
+	}
 }
 //---------------------------------------------------------------------------
 /*!
@@ -581,10 +606,21 @@ void TConfigManager::Save( __in string path)
 	writer->WriteBuffer();
 	
 	//No page
-	writer->WriteByte(6); //size of block
+	writer->WriteByte(6 + 9); //size of block
 	writer->WriteByte(0); //page index
 	writer->WriteWord(g_GameWindowPosX);
 	writer->WriteWord(g_GameWindowPosY);
+
+	writer->WriteByte(IsZoomed(g_hWnd));
+
+	RECT rect = { 0 };
+	GetWindowRect(g_hWnd, &rect);
+
+	writer->WriteShort((short)rect.left);
+	writer->WriteShort((short)rect.top);
+	writer->WriteShort((short)(rect.right - rect.left));
+	writer->WriteShort((short)(rect.bottom - rect.top));
+
 	writer->WriteBuffer();
 	
 	/*b = (BYTE)m_FilterPWOn;

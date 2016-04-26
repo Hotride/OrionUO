@@ -1165,10 +1165,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		id -= 0x10000;
 
 	if (!id)
-	{
-		//partialHue = true; // obj->IsHuman();
 		id = obj->GetMountAnimation();
-	}
 
 	if (id >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		return;

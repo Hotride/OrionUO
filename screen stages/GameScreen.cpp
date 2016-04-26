@@ -58,8 +58,8 @@ TGameScreen::~TGameScreen()
 */
 void TGameScreen::Init()
 {
-	SendMessage(g_hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
-	SendMessage(g_hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+	//SendMessage(g_hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+	//SendMessage(g_hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 
 	m_GameWindowMoving = false;
 	m_GameWindowResizing = false;
