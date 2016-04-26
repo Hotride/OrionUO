@@ -3807,7 +3807,7 @@ void TUltimaOnline::PlaySoundEffect(const WORD &id, int volume)
 		is.hStream = SoundManager.LoadSoundEffect(m_SoundDataIndex[id]);
 	}	
 
-	if (volume < 0)
+	if (volume < 0 || volume > ConfigManager.SoundVolume)
 		volume = ConfigManager.SoundVolume;
 
 	if (volume > 0)

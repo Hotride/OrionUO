@@ -3465,9 +3465,23 @@ PACKET_HANDLER(PlaySoundEffect)
 {
 	Move(1);
 	WORD index = ReadWord();
+	WORD volume = ReadWord();
+	WORD xCoord = ReadWord();
+	WORD yCoord = ReadWord();
 
+	struct tagPOINT coords;
+	coords.x = xCoord;
+	coords.y = yCoord;
+	int distance = GetDistance(g_Player, coords);
 	//TPRINT("Play sound 0x%04X\n", index);
-	UO->PlaySoundEffect(index);
+	if (distance > 18)
+		volume = 0;
+	else if (distance == 0)
+		volume = 255;
+	else
+		volume = 255 / distance;
+	UO->PlaySoundEffect(index, volume);
+	
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(PlayMusic)

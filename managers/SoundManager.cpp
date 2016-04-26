@@ -230,7 +230,7 @@ void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
 	if (hStream == 0 || GetForegroundWindow() != g_hWnd)
 		return;
 
-	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, static_cast<float>(volume) / 2.55f);
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, static_cast<float>(volume)/200);
 
 	if (!BASS_ChannelPlay(hStream, false))
 		TPRINT("Bass sound play error: %s\n", BASS_ErrorGetDescription());
