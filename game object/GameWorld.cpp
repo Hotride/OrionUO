@@ -44,6 +44,42 @@ TGameWorld::~TGameWorld()
 
 	m_Items = NULL;
 }
+void TGameWorld::ProcessSound(DWORD ticks, TGameCharacter *gc)
+{
+	if (ConfigManager.FootstepsSound && gc->IsHuman() && !gc->Hidden())
+	{
+		TWalkData *wd = gc->m_WalkStack.Top();
+
+		if (wd != NULL && gc->LastStepSoundTime < ticks)
+		{
+			int incID = gc->StepSoundOffset;
+			int soundID = 0x012B;
+			int delaySound = 400;
+
+			if (gc->FindLayer(OL_MOUNT) != NULL)
+			{
+				if (wd->Direction & 0x80)
+				{
+					soundID = 0x0129;
+					delaySound = 150;
+				}
+				else
+				{
+					//soundID = 0x0129;
+					incID = 0;
+					delaySound = 350;
+				}
+			}
+
+			soundID += incID;
+			gc->StepSoundOffset = (incID + 1) % 2;
+
+			UO->PlaySoundEffect(soundID, ConfigManager.SoundVolume); //0x0129 - 0x0134
+
+			gc->LastStepSoundTime = ticks + delaySound;
+		}
+	}
+}
 //---------------------------------------------------------------------------
 /*!
 Обработка анимации всех персонажей
@@ -64,39 +100,7 @@ void TGameWorld::ProcessAnimation()
 			BYTE dir = 0;
 			gc->UpdateAnimationInfo(dir, true);
 
-			if (ConfigManager.FootstepsSound && gc->IsHuman())
-			{
-				TWalkData *wd = gc->m_WalkStack.Top();
-
-				if (wd != NULL && gc->LastStepSoundTime < ticks)
-				{
-					int incID = gc->StepSoundOffset;
-					int soundID = 0x012B;
-					int delaySound = 400;
-
-					if (gc->FindLayer(OL_MOUNT) != NULL)
-					{
-						if (wd->Direction & 0x80)
-						{
-							soundID = 0x0129;
-							delaySound = 150;
-						}
-						else
-						{
-							//soundID = 0x0129;
-							incID = 0;
-							delaySound = 350;
-						}
-					}
-
-					soundID += incID;
-					gc->StepSoundOffset = (incID + 1) % 2;
-
-					UO->PlaySoundEffect(soundID, ConfigManager.SoundVolume); //0x0129 - 0x0134
-
-					gc->LastStepSoundTime = ticks + delaySound;
-				}
-			}
+			ProcessSound(ticks, gc);
 
 			if (gc->LastAnimationChangeTime < ticks)
 			{
