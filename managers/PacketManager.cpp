@@ -1342,17 +1342,7 @@ PACKET_HANDLER(UpdateItem)
 	{
 		Y &= 0x7FFF;
 		
-		WORD color = ReadWord();
-
-		if (color & 0x8000)
-		{
-			if (!obj->IsHuman() && (obj->NPC || obj->IsCorpse()))
-				color = 0;
-			else
-				color &= 0x7FFF;
-		}
-
-		obj->Color = color;
+		obj->Color = ReadWord();
 	}
 	else
 		obj->Color = 0;
@@ -1425,14 +1415,6 @@ PACKET_HANDLER(UpdateItemSA)
 	obj->Y = y;
 	obj->Z = z;
 
-	if (color & 0x8000)
-	{
-		if (!obj->IsHuman() && (obj->NPC || obj->IsCorpse()))
-			color = 0;
-		else
-			color &= 0x7FFF;
-	}
-
 	obj->Color = color;
 
 	obj->OnGraphicChange(dir);
@@ -1486,7 +1468,6 @@ PACKET_HANDLER(UpdateObject)
 	WORD graphic = ReadWord();
 
 	obj->Graphic = graphic & 0x7FFF;
-	TPRINT("0x%08X 0x%04X ", serial, obj->Graphic);
 
 	if (serial & 0x80000000)
 	{
@@ -1494,10 +1475,7 @@ PACKET_HANDLER(UpdateObject)
 		obj->NPC = false;
 	}
 	else
-	{
 		obj->NPC = true;
-		TPRINT("NPC ");
-	}
 
 	if (graphic & 0x8000)
 	{
@@ -1535,21 +1513,21 @@ PACKET_HANDLER(UpdateObject)
 	{
 		character->Direction = dir;
 		obj->OnGraphicChange(1000);
+
+		TGump *statusGump = GumpManager->UpdateGump(character->Serial, 0, GT_STATUSBAR);
+
+		if (statusGump != NULL)
+			UO->StatusReq(character->Serial);
 	}
 	else
 		obj->OnGraphicChange(dir);
 
-	WORD color = ReadWord();
+	TPRINT("0x%08X 0x%04X ", serial, obj->Graphic);
 
-	if (color & 0x8000)
-	{
-		if (!obj->IsHuman() && (obj->NPC || obj->IsCorpse()))
-			color = 0;
-		else
-			color &= 0x7FFF;
-	}
+	if (obj->NPC)
+		TPRINT("NPC ");
 
-	obj->Color = color;
+	obj->Color = ReadWord();
 
 	obj->Flags = ReadByte();
 	BYTE noto = ReadByte();

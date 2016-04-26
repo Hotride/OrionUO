@@ -116,7 +116,7 @@ void TColorManager::SendColorsToShader( __in WORD color)
 {
 	if (color != 0)
 	{
-		if (color > SPECTRAL_COLOR)
+		if (color & SPECTRAL_COLOR)
 			glUniform1ivARB(ShaderColorTable, 32, &m_HuesInt[0].Palette[0]);
 		else
 		{

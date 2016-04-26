@@ -1150,7 +1150,15 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 	if (obj == NULL)
 		return;
 
+	WORD objColor = obj->Color;
 	bool partialHue = false;
+
+	if (objColor & 0x8000)
+	{
+		partialHue = true;
+		objColor &= 0x7FFF;
+	}
+
 	bool isShadow = (id >= 0x10000);
 
 	if (isShadow)
@@ -1158,7 +1166,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 	if (!id)
 	{
-		partialHue = true; // obj->IsHuman();
+		//partialHue = true; // obj->IsHuman();
 		id = obj->GetMountAnimation();
 	}
 
@@ -1233,10 +1241,10 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			if (color)
 				partialHue = false;
 			else
-				color = obj->Color;
+				color = objColor;
 
 			int drawMode = (!g_GrayedPixels && color);
-			bool spectralColor = (color > SPECTRAL_COLOR);
+			bool spectralColor = (color & SPECTRAL_COLOR);
 			
 			if (spectralColor)
 			{
@@ -1379,15 +1387,12 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 	bool needHPLine = false;
 	DWORD serial = obj->Serial;
 
-	m_Color = 0;
 	if (obj->Hidden())
 		m_Color = 0x038A;
 	else if (g_StatusbarUnderMouse == serial)
 		m_Color = ConfigManager.GetColorByNotoriety(obj->Notoriety);
-	else if (obj->IsHuman())
-		m_Color = 0;
 	else
-		m_Color = obj->Color;
+		m_Color = 0;
 
 	bool isAttack = (serial == g_LastAttackObject);
 
@@ -1730,10 +1735,8 @@ void TAnimationManager::DrawCorpse( __in TGameItem *obj, __in int x, __in int y,
 
 	if (obj->Hidden())
 		m_Color = 0x038A;
-	else if (obj->IsHuman())
-		m_Color = 0;
 	else
-		m_Color = obj->Color;
+		m_Color = 0;
 
 	BYTE animIndex = obj->AnimIndex;
 	m_AnimGroup = GetDieGroupIndex(obj->GetMountAnimation(), obj->UsedLayer);
