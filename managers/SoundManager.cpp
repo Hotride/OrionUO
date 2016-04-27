@@ -94,15 +94,6 @@ TSoundManager::~TSoundManager()
 //---------------------------------------------------------------------------
 bool TSoundManager::Init()
 {
-	/*if (SDL_Init(SDL_INIT_AUDIO) < 0)
-		return false;
-	
-	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 1, 1024) < 0)
-	{
-		SDL_QuitSubSystem(SDL_INIT_AUDIO);
-		return false;
-	}	*/
-
 	TPRINT("Initializing bass sound system.\n");
 	// initialize default output device	
 	if (!BASS_Init(-1, 48000, BASS_DEVICE_3D, g_hWnd, NULL))
@@ -117,13 +108,6 @@ bool TSoundManager::Init()
 
 		if (!BASS_SetConfig(BASS_CONFIG_3DALGORITHM, BASS_3DALG_FULL))
 			TPRINT("Error setting 3d sound: %s\n", BASS_ErrorGetDescription());
-
-		//BASS_SetConfig(
-		//	BASS_CONFIG_BUFFER, 1000);
-
-		/*BASS_SetConfig(
-			BASS_CONFIG_UPDATEPERIOD,
-			25);*/
 	}
 	
 	return true;
@@ -132,10 +116,6 @@ bool TSoundManager::Init()
 void TSoundManager::Free()
 {
 	StopMusic();
-
-	//SDL_CloseAudio();
-	//SDL_Quit();
-
 	BASS_Free();
 }
 
@@ -172,11 +152,10 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 	waveHeader->numChannels = 1;
 	waveHeader->sampleRate = 22050;
 	waveHeader->bitsPerSample = 16;
-	waveHeader->bytesPerSecond = 88200; //waveHeader->sampleRate *  (waveHeader->bitsPerSample / 8) * waveHeader->numChannels;
+	waveHeader->bytesPerSecond = 88200;
 	waveHeader->blockAlign = 4;	
 	waveHeader->dataSize = dataSize;
 
-	//is.Timer = (DWORD)((dataSize - 16) / (((float)waveHeader->bytesPerSecond) / 1000.0f));
 	is.Timer = static_cast<DWORD>((dataSize - 16) / 88.2f);
 
 	auto sndDataPtr = reinterpret_cast<PBYTE>(is.Address + sizeof(SOUND_BLOCK));	
@@ -184,19 +163,6 @@ std::vector<BYTE> TSoundManager::CreateWaveFile(TIndexSound &is)
 
 	return waveSound;
 }
-//---------------------------------------------------------------------------
-//Mix_Chunk *TSoundManager::LoadSoundEffect(TIndexSound &is)
-//{
-//	auto waveSound = this->CreateWaveFile(is);
-//
-//	SDL_RWops *rWops = SDL_RWFromMem(waveSound.data(), waveSound.size());
-//	Mix_Chunk *mix = Mix_LoadWAV_RW(rWops, 1);
-//
-//	if (mix == NULL)
-//		TPRINT("SDL sound error: %s\n", SDL_GetError());
-//
-//	return mix;
-//}
 
 HSTREAM TSoundManager::LoadSoundEffect(TIndexSound &is)
 {
@@ -220,18 +186,6 @@ HSTREAM TSoundManager::LoadSoundEffect(TIndexSound &is)
 	return hStream;
 }
 
-//---------------------------------------------------------------------------
-//void TSoundManager::PlaySoundEffect(Mix_Chunk *mix, int volume)
-//{
-//	if (mix == NULL || GetForegroundWindow() != g_hWnd)
-//		return;
-//
-//	Mix_VolumeChunk(mix, volume);
-//
-//	if (Mix_PlayChannel(-1, mix, 0) < 0)
-//		TPRINT("Sound mix error: %s\n", Mix_GetError());
-//}
-
 void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
 {
 	if (volume > 255)
@@ -242,7 +196,7 @@ void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
 	if (hStream == 0 || GetForegroundWindow() != g_hWnd)
 		return;
 
-	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, static_cast<float>(volume)/200);
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, static_cast<float>(volume)/255);
 
 	if (!BASS_ChannelPlay(hStream, false))
 		TPRINT("Bass sound play error: %s\n", BASS_ErrorGetDescription());
@@ -254,15 +208,6 @@ void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
 bool TSoundManager::FreeStream(HSTREAM hSteam)
 {
 	auto res = BASS_StreamFree(hSteam);
-	//auto waveFileIter = streams.find(hSteam);
-
-	//if (waveFileIter != streams.end())
-	//{
-	//	auto waveFile = waveFileIter->second;
-	//	streams.erase(waveFileIter);
-	//	delete[] waveFile;
-	//}
-
 	return res;
 }
 //---------------------------------------------------------------------------
