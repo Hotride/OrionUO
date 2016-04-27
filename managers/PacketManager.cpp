@@ -3771,137 +3771,7 @@ PACKET_HANDLER(ClientViewRange)
 	g_UpdateRange = ReadByte();
 }
 //---------------------------------------------------------------------------
-PACKET_HANDLER(OpenBook)
-{
-	if (World == NULL)
-		return;
-
-	DWORD serial = unpack32(buf + 1);
-	BYTE flags = buf[5];
-	WORD pageCount = unpack16(buf + 7);
-
-	TGumpBook *gump = new TGumpBook(serial, 0, 0, pageCount, flags != 0, false);
-
-	char title[60] = {0};
-	memcpy(&title[0], &buf[9], 60);
-
-	gump->TextEntryTitle->SetText(title);
-
-	char author[30] = {0};
-	memcpy(&author[0], &buf[9], 30);
-
-	gump->TextEntryAuthor->SetText(author);
-
-	GumpManager->AddGump(gump);
-}
-//---------------------------------------------------------------------------
-PACKET_HANDLER(OpenBookNew)
-{
-	if (World == NULL)
-		return;
-
-	DWORD serial = ReadDWord();
-	BYTE flag1 = ReadByte();
-	BYTE flag2 = ReadByte();
-	WORD pageCount = ReadWord();
-
-	TGumpBook *gump = new TGumpBook(serial, 0, 0, pageCount, (flag1 + flag2) != 0, true);
-
-	PBYTE ptr = buf + 11;
-
-	int authorLen = ReadWord();
-	ptr += 2;
-
-	if (authorLen > 0)
-	{
-		wchar_t *author = new wchar_t[authorLen];
-		*author = 0;
-		PBYTE aptr = (PBYTE)author;
-		//
-		ptr += (authorLen * 2);
-		//
-		gump->TextEntryAuthor->SetText(author);
-
-		delete author;
-	}
-	else
-		ptr += 2;
-
-	int titleLen = unpack16(ptr);
-	ptr += 2;
-
-	if (titleLen > 0)
-	{
-		wchar_t *title = new wchar_t[titleLen];
-		*title = 0;
-		PBYTE tptr = (PBYTE)title;
-		//
-		gump->TextEntryTitle->SetText(title);
-
-		delete title;
-	}
-
-	GumpManager->AddGump(gump);
-}
-//---------------------------------------------------------------------------
-PACKET_HANDLER(BookData)
-{
-	if (World == NULL)
-		return;
-
-	DWORD serial = unpack32(buf + 3);
-
-	TGumpBook *gump = (TGumpBook*)GumpManager->GetGump(serial, 0, GT_BOOK);
-
-	if (gump != NULL)
-	{
-		WORD pageCount = unpack16(buf + 7);
-		bool unicode = gump->Unicode;
-
-		PBYTE ptr = buf + 9;
-
-		IFOR(i, 0, pageCount)
-		{
-			WORD page = unpack16(ptr);
-			ptr += 2;
-			gump->Page = page - 1;
-
-			WORD lineCount = unpack16(ptr);
-			ptr += 2;
-
-			TEntryText *entry = gump->TextEntry[i % 2];
-			entry->Clear();
-
-			if (!unicode)
-			{
-				IFOR(j, 0, lineCount)
-				{
-					char ch = *ptr++;
-
-					if (!ch)
-						break;
-
-					entry->Insert(ch);
-				}
-			}
-			else
-			{
-				IFOR(j, 0, lineCount)
-				{
-					wchar_t ch = (ptr[1] << 16) | ptr[0];
-					ptr += 2;
-
-					if (!ch)
-						break;
-
-					entry->Insert(ch);
-				}
-			}
-		}
-	}
-}
-//---------------------------------------------------------------------------
-PACKET_HANDLER(KarriosClientSpecial)
+PACKET_HANDLER(KrriosClientSpecial)
 {
 	TPacketRazorAnswer packet;
 	packet.Send();
@@ -4239,6 +4109,136 @@ PACKET_HANDLER(Damage)
 
 		character->m_DamageTextControl->Add(text);
 		text->Timer = GetTickCount() + DAMAGE_TEXT_NORMAL_DELAY;
+	}
+}
+//---------------------------------------------------------------------------
+PACKET_HANDLER(OpenBook)
+{
+	if (World == NULL)
+		return;
+
+	DWORD serial = unpack32(buf + 1);
+	BYTE flags = buf[5];
+	WORD pageCount = unpack16(buf + 7);
+
+	TGumpBook *gump = new TGumpBook(serial, 0, 0, pageCount, flags != 0, false);
+
+	char title[60] = { 0 };
+	memcpy(&title[0], &buf[9], 60);
+
+	gump->TextEntryTitle->SetText(title);
+
+	char author[30] = { 0 };
+	memcpy(&author[0], &buf[9], 30);
+
+	gump->TextEntryAuthor->SetText(author);
+
+	GumpManager->AddGump(gump);
+}
+//---------------------------------------------------------------------------
+PACKET_HANDLER(OpenBookNew)
+{
+	if (World == NULL)
+		return;
+
+	DWORD serial = ReadDWord();
+	BYTE flag1 = ReadByte();
+	BYTE flag2 = ReadByte();
+	WORD pageCount = ReadWord();
+
+	TGumpBook *gump = new TGumpBook(serial, 0, 0, pageCount, (flag1 + flag2) != 0, true);
+
+	PBYTE ptr = buf + 11;
+
+	int authorLen = ReadWord();
+	ptr += 2;
+
+	if (authorLen > 0)
+	{
+		wchar_t *author = new wchar_t[authorLen];
+		*author = 0;
+		PBYTE aptr = (PBYTE)author;
+		//
+		ptr += (authorLen * 2);
+		//
+		gump->TextEntryAuthor->SetText(author);
+
+		delete author;
+	}
+	else
+		ptr += 2;
+
+	int titleLen = unpack16(ptr);
+	ptr += 2;
+
+	if (titleLen > 0)
+	{
+		wchar_t *title = new wchar_t[titleLen];
+		*title = 0;
+		PBYTE tptr = (PBYTE)title;
+		//
+		gump->TextEntryTitle->SetText(title);
+
+		delete title;
+	}
+
+	GumpManager->AddGump(gump);
+}
+//---------------------------------------------------------------------------
+PACKET_HANDLER(BookData)
+{
+	if (World == NULL)
+		return;
+
+	DWORD serial = unpack32(buf + 3);
+
+	TGumpBook *gump = (TGumpBook*)GumpManager->GetGump(serial, 0, GT_BOOK);
+
+	if (gump != NULL)
+	{
+		WORD pageCount = unpack16(buf + 7);
+		bool unicode = gump->Unicode;
+
+		PBYTE ptr = buf + 9;
+
+		IFOR(i, 0, pageCount)
+		{
+			WORD page = unpack16(ptr);
+			ptr += 2;
+			gump->Page = page - 1;
+
+			WORD lineCount = unpack16(ptr);
+			ptr += 2;
+
+			TEntryText *entry = gump->TextEntry[i % 2];
+			entry->Clear();
+
+			if (!unicode)
+			{
+				IFOR(j, 0, lineCount)
+				{
+					char ch = *ptr++;
+
+					if (!ch)
+						break;
+
+					entry->Insert(ch);
+				}
+			}
+			else
+			{
+				IFOR(j, 0, lineCount)
+				{
+					wchar_t ch = (ptr[1] << 16) | ptr[0];
+					ptr += 2;
+
+					if (!ch)
+						break;
+
+					entry->Insert(ch);
+				}
+			}
+		}
 	}
 }
 //---------------------------------------------------------------------------

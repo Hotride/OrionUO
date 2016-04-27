@@ -62,8 +62,8 @@ void TGumpBook::GenerateFrame()
 {
 	if (!g_DrawMode)
 	{
-		FrameRedraw = false;
-		FrameCreated = false;
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
 		return;
 	}
