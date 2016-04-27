@@ -397,7 +397,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				SoundManager.Stop();
 			else
 				SoundManager.Start();
-			break;
 		}
 		case WM_NCPAINT:
 		{
