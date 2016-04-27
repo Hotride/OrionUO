@@ -323,232 +323,272 @@ WORD TGameItem::GetMountAnimation()
 	{
 		switch (graphic)
 		{
-			//FWUO
-			case 0x2F01:
+			case 0x3E90: // 16016 Reptalon
 			{
-				graphic = 0xD5; // Polar bear
+				graphic = 0x0114;
 				break;
 			}
-			case 0x2F03:
+			case 0x3E91: // 16017
 			{
-				graphic = 0xF6; // Ridgeback
+				graphic = 0x0115;
 				break;
 			}
-			case 0x2F04:
+			case 0x3E92: // 16018
 			{
-				graphic = 0xF3; // Skeletal mount
+				graphic = 0x011C;
 				break;
 			}
-			case 0x2F05:
+			case 0x3E94: // 16020
 			{
-				graphic = 0x23D; // Genie
+				graphic = 0x00F3;
 				break;
 			}
-			case 0x2F10:
+			case 0x3E95: // 16021
 			{
-				graphic = 0xEB; // Kyryn
+				graphic = 0x00A9;
 				break;
 			}
-			case 0x3001:
+			case 0x3E97: // 16023 Ethereal Giant Beetle
 			{
-				graphic = 0xF4; // Beetle
+				graphic = 0x00C3;
+				break;
+			}
+			case 0x3E98: // 16024 Ethereal Swamp Dragon
+			{
+				graphic = 0x00C2;
+				break;
+			}
+			case 0x3E9A: // 16026 Ethereal Ridgeback
+			{
+				graphic = 0x00C1;
+				break;
+			}
+			case 0x3E9B: // 16027
+			case 0x3E9D: // 16029 Ethereal Unicorn
+			{
+				graphic = 0x00C0;
+				break;
+			}
+			case 0x3E9C: // 16028 Ethereal Kirin
+			{
+				graphic = 0x00BF;
+				break;
+			}
+			case 0x3E9E: // 16030
+			{
+				graphic = 0x00BE;
+				break;
+			}
+			case 0x3EA0: // 16032 light grey/horse3
+			{
+				graphic = 0x00E2;
+				break;
+			}
+			case 0x3EA1: // 16033 greybrown/horse4
+			{
+				graphic = 0x00E4;
+				break;
+			}
+			case 0x3EA2: // 16034 dark brown/horse
+			{
+				graphic = 0x00CC;
+				break;
+			}
+			case 0x3EA3: // 16035 desert ostard
+			{
+				graphic = 0x00D2;
+				break;
+			}
+			case 0x3EA4: // 16036 frenzied ostard (=zostrich)
+			{
+				graphic = 0x00DA;
+				break;
+			}
+			case 0x3EA5: // 16037 forest ostard
+			{
+				graphic = 0x00DB;
+				break;
+			}
+			case 0x3EA6: // 16038 Llama
+			{
+				graphic = 0x00DC;
+				break;
+			}
+			case 0x3EA7: // 16039 Nightmare / Vortex
+			{
+				graphic = 0x0074;
+				break;
+			}
+			case 0x3EA8: // 16040 Silver Steed
+			{
+				graphic = 0x0075;
+				break;
+			}
+			case 0x3EA9: // 16041 Nightmare
+			{
+				graphic = 0x0072;
+				break;
+			}
+			case 0x3EAA: // 16042 Ethereal Horse
+			{
+				graphic = 0x0073;
+				break;
+			}
+			case 0x3EAB: // 16043 Ethereal Llama
+			{
+				graphic = 0x00AA;
+				break;
+			}
+			case 0x3EAC: // 16044 Ethereal Ostard
+			{
+				graphic = 0x00AB;
+				break;
+			}
+			case 0x3EAD: // 16045 Kirin
+			{
+				graphic = 0x0084;
+				break;
+			}
+			case 0x3EAF: // 16047 War Horse (Blood Red)
+			{
+				graphic = 0x0078;
+				break;
+			}
+			case 0x3EB0: // 16048 War Horse (Light Green)
+			{
+				graphic = 0x0079;
+				break;
+			}
+			case 0x3EB1: // 16049 War Horse (Light Blue)
+			{
+				graphic = 0x0077;
+				break;
+			}
+			case 0x3EB2: // 16050 War Horse (Purple)
+			{
+				graphic = 0x0076;
+				break;
+			}
+			case 0x3EB3: // 16051 Sea Horse (Medium Blue)
+			{
+				graphic = 0x0090;
+				break;
+			}
+			case 0x3EB4: // 16052 Unicorn
+			{
+				graphic = 0x007A;
+				break;
+			}
+			case 0x3EB5: // 16053 Nightmare
+			{
+				graphic = 0x00B1;
+				break;
+			}
+			case 0x3EB6: // 16054 Nightmare 4
+			{
+				graphic = 0x00B2;
+				break;
+			}
+			case 0x3EB7: // 16055 Dark Steed
+			{
+				graphic = 0x00B3;
+				break;
+			}
+			case 0x3EB8: // 16056 Ridgeback
+			{
+				graphic = 0x00BC;
+				break;
+			}
+			case 0x3EBA: // 16058 Ridgeback, Savage
+			{
+				graphic = 0x00BB;
+				break;
+			}
+			case 0x3EBB: // 16059 Skeletal Mount
+			{
+				graphic = 0x0319;
+				break;
+			}
+			case 0x3EBC: // 16060 Beetle
+			{
+				graphic = 0x0317;
+				break;
+			}
+			case 0x3EBD: // 16061 SwampDragon
+			{
+				graphic = 0x031A;
+				break;
+			}
+			case 0x3EBE: // 16062 Armored Swamp Dragon
+			{
+				graphic = 0x031F;
+				break;
+			}
+			case 0x3EC5: // 16069
+			case 0x3F3A: // 16186 snow bear ???
+			{
+				graphic = 0x00D5;
+				break;
+			}
+			case 0x3EC6: // 16070
+			{
+				graphic = 0x01B0;
+				break;
+			}
+			case 0x3EC7: // 16071
+			{
+				graphic = 0x04E6;
+				break;
+			}
+			case 0x3EC8: // 16072
+			{
+				graphic = 0x04E7;
+				break;
+			}
+			case 0x3EC9: // 16073
+			{
+				graphic = 0x042D;
 				break;
 			}
 
+			//start FWUO ???
+			case 0x2F01: // 12033 Polar bear
+			{
+				graphic = 0x00D5;
+				break;
+			}
+			case 0x2F03: // 12035 Ridgeback
+			{
+				graphic = 0x00F6;
+				break;
+			}
+			case 0x2F04: // 12036 Skeletal mount
+			{
+				graphic = 0x00F3;
+				break;
+			}
+			case 0x2F05: // 12037 Genie
+			{
+				graphic = 0x023D;
+				break;
+			}
+			case 0x2F10: // 12048 Kyryn
+			{
+				graphic = 0x00EB;
+				break;
+			}
+			case 0x3001: // 12289 Beetle
+			{
+				graphic = 0x00F4;
+				break;
+			}
+			//end FWUO ???
 
-
-			case 16034:
+			default: //lightbrown/horse2
 			{
-				graphic = 204; //dark brown/horse
+				graphic = 0x00C8;
 				break;
 			}
-			case 16031:
-			{
-				graphic = 200; //lightbrown/horse2
-				break;
-			}
-			case 16032:
-			{
-				graphic = 226; //light grey/horse3
-				break;
-			}
-			case 16033:
-			{
-				graphic = 228; //greybrown/horse4
-				break;
-			}
-			case 16038:
-			{
-				graphic = 220; //Llama
-				break;
-			}
-			case 16035:
-			{
-				graphic = 210; //desert ostard
-				break;
-			}
-			case 16186:
-			{
-				graphic = 213; //snow bear
-				break;
-			}
-			case 16036:
-			{
-				graphic = 218; //frenzied ostard (=zostrich)
-				break;
-			}
-			case 16037:
-			{
-				graphic = 219; //forest ostard
-				break;
-			}
-			case 16039:
-			{
-				graphic = 177; // Nightmare / Vortex
-				break;
-			}
-			case 16040:
-			{
-				graphic = 117; // Silver Steed
-				break;
-			}
-			case 16041:
-			{
-				graphic = 114; // Nightmare
-				break;
-			}
-			case 16042:
-			{
-				graphic = 115; // Ethereal Horse
-				break;
-			}
-			case 16043:
-			{
-				graphic = 170; // Ethereal Llama
-				break;
-			}
-			case 16044:
-			{
-				graphic = 171; // Ethereal Ostard
-				break;
-			}
-			case 16023:
-			{
-				graphic = 195; // Ethereal Giant Beetle
-				break;
-			}
-			case 16024:
-			{
-				graphic = 194; // Ethereal Swamp Dragon
-				break;
-			}
-			case 16026:
-			{
-				graphic = 193; // Ethereal Ridgeback
-				break;
-			}
-			case 16028:
-			{
-				graphic = 191; // Ethereal Kirin
-				break;
-			}
-			case 16029:
-			{
-				graphic = 192; // Ethereal Unicorn
-				break;
-			}
-			case 16047:
-			{
-				graphic = 120; // War Horse (Blood Red)
-				break;
-			}
-			case 16048:
-			{
-				graphic = 121; // War Horse (Light Green)
-				break;
-			}
-			case 16049:
-			{
-				graphic = 119; // War Horse (Light Blue)
-				break;
-			}
-			case 16051:
-			{
-				graphic = 144; // Sea Horse (Medium Blue)
-				break;
-			}
-			case 16053:
-			{
-				graphic = 116; // Nightmare
-				break;
-			}
-			case 16054:
-			{
-				graphic = 178; // Nightmare 4
-				break;
-			}
-			case 16045:
-			{
-				graphic = 132; // Kirin
-				break;
-			}
-			case 16050:
-			{
-				graphic = 118; // War Horse (Purple)
-				break;
-			}
-			case 16052:
-			{
-				graphic = 122; // Unicorn
-				break;
-			}
-			case 16055:
-			{
-				graphic = 179; // Dark Steed
-				break;
-			}
-			case 16056:
-			{
-				graphic = 187; // Ridgeback
-				break;
-			}
-			case 16058:
-			{
-				graphic = 188; // Ridgeback, Savage
-				break;
-			}
-			case 16059:
-			{
-				graphic = 793; // Skeletal Mount
-				break;
-			}
-			case 16060:
-			{
-				graphic = 791; // Beetle
-				break;
-			}
-			case 16061:
-			{
-				graphic = 794; // SwampDragon
-				break;
-			}
-			case 16062:
-			{
-				graphic = 799; // Armored Swamp Dragon
-				break;
-			}
-			case 16069:
-			{
-				graphic = 213; // ???
-				break;
-			}
-			case 16016:
-			{
-				graphic = 276; // Reptalon
-				break;
-			}
-			default:
-				break;
 		}
 	}
 	else if (IsCorpse())

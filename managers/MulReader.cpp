@@ -340,6 +340,99 @@ TTextureObject *TMulReader::ReadArt(__in const WORD &id, __in TIndexObject &io)
 }
 //---------------------------------------------------------------------------
 /*!
+Прочитать арт и вычислить реальные пииксельные границы картинки
+@param [__in] io Ссылка на данные о арте
+@param [__out] r Структура с габаритами на выходе
+@return Ссылка на данные о текстуре
+*/
+void TMulReader::ReadStaticArtPixelDimension(__in TIndexObject &io, __out RECT &r)
+{
+	DWORD flag = *(PDWORD)io.Address;
+	WORD h = 44;
+	WORD w = 44;
+	PWORD P = (PWORD)io.Address;
+
+	PWORD ptr = (PWORD)((DWORD)io.Address + 4);
+
+	w = *ptr;
+	if (!w || w >= 1024)
+		return;
+
+	ptr++;
+
+	h = *ptr;
+
+	if (!h || (h * 2) > 5120)
+		return;
+
+	ptr++;
+
+	PWORD LineOffsets = ptr;
+	PVOID DataStart = (PVOID)((DWORD)ptr + (h * 2));
+
+	int X = 0;
+	int Y = 0;
+	WORD XOffs = 0;
+	WORD Run = 0;
+
+	ptr = (PWORD)((DWORD)DataStart + (*LineOffsets));
+
+	int minX = w;
+	int minY = h;
+	int maxX = 0;
+	int maxY = 0;
+
+	while (Y < h)
+	{
+		XOffs = *ptr;
+		ptr++;
+		Run = *ptr;
+		ptr++;
+		if (XOffs + Run >= 2048)
+			return;
+		else if (XOffs + Run != 0)
+		{
+			X += XOffs;
+
+			IFOR(j, 0, Run)
+			{
+				if (*ptr)
+				{
+					int testX = X + j;
+
+					if (testX < minX)
+						minX = testX;
+
+					if (testX > maxX)
+						maxX = testX;
+
+					if (Y < minY)
+						minY = Y;
+
+					if (Y > maxY)
+						maxY = Y;
+				}
+
+				ptr++;
+			}
+
+			X += Run;
+		}
+		else
+		{
+			X = 0;
+			Y++;
+			ptr = (PWORD)((DWORD)DataStart + (LineOffsets[Y] * 2));
+		}
+	}
+
+	r.left = minX;
+	r.right = maxX - minX;
+	r.top = minY;
+	r.bottom = maxY - minY;
+}
+//---------------------------------------------------------------------------
+/*!
 Проверить нахождение пикселя арта в указанных координатах
 @param [__in] land Ландшафт или статика
 @param [__in] io Ссылка на данные о арте

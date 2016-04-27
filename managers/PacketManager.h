@@ -189,10 +189,7 @@ protected:
 	HANDLER_PACKET(DyeData)
 	HANDLER_PACKET(CharacterProfile)
 	HANDLER_PACKET(ClientViewRange)
-	HANDLER_PACKET(OpenBook)
-	HANDLER_PACKET(OpenBookNew)
-	HANDLER_PACKET(BookData)
-	HANDLER_PACKET(KarriosClientSpecial)
+	HANDLER_PACKET(KrriosClientSpecial)
 	HANDLER_PACKET(AssistVersion)
 	HANDLER_PACKET(CharacterListNotification)
 	HANDLER_PACKET(ErrorCode)
@@ -204,6 +201,9 @@ protected:
 	HANDLER_PACKET(DisplayClilocString)
 	HANDLER_PACKET(MegaCliloc)
 	HANDLER_PACKET(Damage)
+	HANDLER_PACKET(OpenBook)
+	HANDLER_PACKET(OpenBookNew)
+	HANDLER_PACKET(BookData)
 
 //Не обработаны
 /*

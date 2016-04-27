@@ -1211,9 +1211,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			return;
 	}
 	
-	GLuint texture = frame->Texture;
-
-	if (texture != 0)
+	if (frame->Texture != 0)
 	{
 		if (id == 0x23D) //FWUO genie
 			y += 40;
@@ -1230,7 +1228,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 #endif
 
 		if (isShadow)
-			AddShadow(texture, x, y, g_ZBuffer, frame->Width, frame->Height, mirror);
+			AddShadow(frame->Texture, x, y, g_ZBuffer, frame->Width, frame->Height, mirror);
 		else
 		{
 			WORD color = m_Color;
@@ -1269,9 +1267,9 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			glUniform1iARB(ShaderDrawMode, drawMode);
 
 			if (m_Sitting)
-				g_GL.DrawSitting(texture, x, y, frame->Width, frame->Height, mirror);
+				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror);
 			else
-				g_GL.Draw(texture, x, y, frame->Width, frame->Height, mirror);
+				g_GL.Draw(frame->Texture, x, y, frame->Width, frame->Height, mirror);
 
 			if (spectralColor)
 				glDisable(GL_BLEND);

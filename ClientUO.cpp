@@ -397,7 +397,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				SoundManager.Stop();
 			else
 				SoundManager.Start();
-			break;
 		}
 		case WM_NCPAINT:
 		{
@@ -3714,6 +3713,11 @@ void TUltimaOnline::GetArtDimension(const WORD &id, POINT &p)
 			p.y = th->Height;
 		}
 	}
+}
+//---------------------------------------------------------------------------
+void TUltimaOnline::GetStaticArtRealPixelDimension(const WORD &id, RECT &r)
+{
+	MulReader.ReadStaticArtPixelDimension(m_StaticDataIndex[id], r);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::GetGumpDimension(const WORD &id, POINT &p)
