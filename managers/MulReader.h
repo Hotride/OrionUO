@@ -50,6 +50,14 @@ public:
 	TTextureObject *ReadArt(__in const WORD &id, __in TIndexObject &io);
 
 	/*!
+	Прочитать арт и вычислить реальные пииксельные границы картинки
+	@param [__in] io Ссылка на данные о арте
+	@param [__out] r Структура с габаритами на выходе
+	@return Ссылка на данные о текстуре
+	*/
+	void ReadStaticArtPixelDimension(__in TIndexObject &io, __out RECT &r);
+
+	/*!
 	Прочитать текстуру ландшафта и сгенерировать тексруту
 	@param [__in] io Ссылка на данные о текстуре ландшафта
 	@return Ссылка на данные о текстуре

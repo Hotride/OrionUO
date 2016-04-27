@@ -3715,6 +3715,11 @@ void TUltimaOnline::GetArtDimension(const WORD &id, POINT &p)
 	}
 }
 //---------------------------------------------------------------------------
+void TUltimaOnline::GetStaticArtRealPixelDimension(const WORD &id, RECT &r)
+{
+	MulReader.ReadStaticArtPixelDimension(m_StaticDataIndex[id], r);
+}
+//---------------------------------------------------------------------------
 void TUltimaOnline::GetGumpDimension(const WORD &id, POINT &p)
 {
 	TTextureObject *th = m_GumpDataIndex[id].Texture;

@@ -455,16 +455,32 @@ void TGameScreen::CalculateRenderList()
 						{
 							char index = 0;
 
-							POINT fp = { 0, 0 };
-							UO->GetArtDimension(obj->Graphic, fp);
+							bool foliageCanBeChecked = (m_RenderBounds.PlayerX <= currentX && m_RenderBounds.PlayerY <= currentY);
 
-							TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (z * 4), fp.x, fp.y);
-
-							if (fib.InRect(g_PlayerRect))
+							if (!foliageCanBeChecked)
 							{
-								index = g_FoliageIndex;
+								foliageCanBeChecked = (m_RenderBounds.PlayerY <= currentY && m_RenderBounds.PlayerX <= currentX + 1);
 
-								CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
+								if (!foliageCanBeChecked)
+									foliageCanBeChecked = (m_RenderBounds.PlayerX <= currentX && m_RenderBounds.PlayerY <= currentY + 1);
+							}
+
+							if (foliageCanBeChecked)
+							{
+								POINT fp = { 0, 0 };
+								UO->GetArtDimension(obj->Graphic, fp);
+
+								RECT realRect = { 0 };
+								UO->GetStaticArtRealPixelDimension(obj->Graphic - 0x4000, realRect);
+
+								TImageBounds fib(drawX - fp.x / 2 + realRect.left, drawY - fp.y - (z * 4) + realRect.top, realRect.right, realRect.bottom);
+
+								if (fib.InRect(g_PlayerRect))
+								{
+									index = g_FoliageIndex;
+
+									CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
+								}
 							}
 
 							((TRenderStaticObject*)obj)->FoliageTransparentIndex = index;
@@ -976,6 +992,7 @@ void TGameScreen::DrawGameWindow( __in bool &mode)
 	if (mode)
 	{
 		UnuseShader();
+		g_GL.DrawPolygone(g_PlayerRect.X, g_PlayerRect.Y, g_PlayerRect.Width, g_PlayerRect.Height);
 
 		IFOR(i, 0, m_ObjectHandlesCount)
 		{

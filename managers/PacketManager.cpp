@@ -277,7 +277,7 @@ TMessageType TPacketManager::m_MessageTypes[0x100] =
 	/*0xED*/ SMSG("Unequip item macro", SIZE_VARIABLE),
 	/*0xEE*/ UMSG(SIZE_VARIABLE),
 	/*0xEF*/ SMSG("KR/2D Client Login/Seed", 0x15),
-	/*0xF0*/ BMSGH("Karrios client special", SIZE_VARIABLE, KarriosClientSpecial),
+	/*0xF0*/ BMSGH("Krrios client special", SIZE_VARIABLE, KrriosClientSpecial),
 	/*0xF1*/ BMSG("Freeshard List", SIZE_VARIABLE),
 	/*0xF2*/ UMSG(SIZE_VARIABLE),
 	/*0xF3*/ RMSGH("Update Item (SA)", 0x18, UpdateItemSA),

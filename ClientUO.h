@@ -255,6 +255,9 @@ public:
 	//Получить габариты картинки статики
 	void GetArtDimension(const WORD &id, POINT &p);
 
+	//Получить габариты картинки статики (реальные пиксельные границы)
+	void GetStaticArtRealPixelDimension(const WORD &id, RECT &r);
+
 	//Получить габариты картинки гампа
 	void GetGumpDimension(const WORD &id, POINT &p);
 
