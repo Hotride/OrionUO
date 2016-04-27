@@ -461,6 +461,11 @@ void TConfigManager::Load( __in string path)
 				else
 					SetWindowPos(g_hWnd, NULL, windowX, windowY, windowWidth, windowHeight, 0);
 			}
+			else
+			{
+				SendMessage(g_hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+				SendMessage(g_hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+			}
 		}
 
 		FileManager.UnloadFileFromMemory(file);
