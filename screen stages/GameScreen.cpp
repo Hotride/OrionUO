@@ -570,6 +570,7 @@ void TGameScreen::CalculateGameWindowBounds()
 
 	int animWidth = 80;
 	int animHeight = 120;
+	int animCenterY = 0;
 
 	TTextureAnimation *anim = AnimationManager->GetAnimation(g_Player->GetMountAnimation());
 
@@ -578,28 +579,32 @@ void TGameScreen::CalculateGameWindowBounds()
 		TTextureAnimationGroup *group = anim->GetGroup(g_Player->GetAnimationGroup());
 		if (group != NULL)
 		{
-			int dir = g_Player->Direction;
+			BYTE dir = g_Player->Direction;
 
 			if (dir >= 0x80)
 				dir -= 0x80;
+
+			bool mirror = false;
+			AnimationManager->GetAnimDirection(dir, mirror);
 
 			TTextureAnimationDirection *direction = group->GetDirection(dir);
 
 			if (direction != NULL && direction->Address != 0)
 			{
-				TTextureAnimationFrame *frame = direction->GetFrame(g_Player->AnimIndex);
+				TTextureAnimationFrame *frame = direction->GetFrame(/*g_Player->AnimIndex*/0);
 
 				if (frame != NULL)
 				{
 					animWidth = frame->Width;
 					animHeight = frame->Height;
+					animCenterY = frame->CenterY;
 				}
 			}
 		}
 	}
 
 	g_PlayerRect.X = m_RenderBounds.GameWindowCenterX - (animWidth / 2);
-	g_PlayerRect.Y = m_RenderBounds.GameWindowCenterY - (animHeight / 2) - playerZOffset;
+	g_PlayerRect.Y = m_RenderBounds.GameWindowCenterY - animHeight - playerZOffset - animCenterY;
 	g_PlayerRect.Width = animWidth;
 	g_PlayerRect.Height = animHeight;
 
@@ -992,7 +997,6 @@ void TGameScreen::DrawGameWindow( __in bool &mode)
 	if (mode)
 	{
 		UnuseShader();
-		g_GL.DrawPolygone(g_PlayerRect.X, g_PlayerRect.Y, g_PlayerRect.Width, g_PlayerRect.Height);
 
 		IFOR(i, 0, m_ObjectHandlesCount)
 		{
