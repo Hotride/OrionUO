@@ -26,13 +26,11 @@ TGameScreen::TGameScreen()
 : TBaseScreen(), m_GameWindowMoving(false), m_GameWindowResizing(false),
 m_UseLight(false), m_MaxDrawZ(0), m_RenderListSize(1000),
 m_RenderListInitalized(false), m_RenderListCount(0),
-m_ObjectHandlesCount(0), m_ObjCount(1000)
+m_ObjectHandlesCount(0)
 {
 	m_RenderList = new RENDER_OBJECT_DATA[1000];
 
 	g_RenderBounds = &m_RenderBounds;
-
-	m_ObjList = new RENDER_OBJECT_DATA[1000];
 
 	memset(&m_ObjectHandlesList[0], 0, sizeof(OBJECT_HANDLES_DATA) * MAX_OBJECT_HANDLES);
 }
@@ -44,12 +42,6 @@ TGameScreen::~TGameScreen()
 		delete m_RenderList;
 		m_RenderList = NULL;
 	}
-
-	if (m_ObjList != NULL)
-	{
-		delete m_ObjList;
-		m_ObjList = NULL;
-	}
 }
 //---------------------------------------------------------------------------
 /*!
@@ -58,9 +50,6 @@ TGameScreen::~TGameScreen()
 */
 void TGameScreen::Init()
 {
-	//SendMessage(g_hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
-	//SendMessage(g_hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
-
 	m_GameWindowMoving = false;
 	m_GameWindowResizing = false;
 
@@ -237,7 +226,7 @@ int TGameScreen::GetMaxDrawZ( __out bool &noDrawRoof, __out char &maxGroundZ)
 @param [__in] z Координата Z дерева
 @return 
 */
-void TGameScreen::ApplyTransparentFoliageToUnion( __in WORD &graphic, __in int &x, __in int &y, __in int &z)
+void TGameScreen::ApplyTransparentFoliageToUnion(__in const WORD &graphic, __in const int &x, __in const int &y, __in const int &z)
 {
 	int bx = x / 8;
 	int by = y / 8;
@@ -284,10 +273,7 @@ void TGameScreen::CheckFoliageUnion( __in WORD graphic, __in int x, __in int y, 
 			}
 
 			for (graphic = info.GraphicStart; graphic <= info.GraphicEnd; graphic++, x++, y--)
-			{
-				WORD testGraphic = graphic + 0x4000;
-				ApplyTransparentFoliageToUnion(testGraphic, x, y, z);
-			}
+				ApplyTransparentFoliageToUnion(graphic + 0x4000, x, y, z);
 
 			break;
 		}
@@ -310,21 +296,6 @@ void TGameScreen::IncreaseRenderList()
 		m_RenderList = list;
 
 		m_RenderListSize += 1000;
-	}
-}
-//---------------------------------------------------------------------------
-void TGameScreen::IncreaseObjList()
-{
-	RENDER_OBJECT_DATA *list = new RENDER_OBJECT_DATA[m_ObjCount + 1000];
-
-	if (list != NULL)
-	{
-		memcpy(&list[0], &m_ObjList[0], sizeof(RENDER_OBJECT_DATA)* m_ObjCount);
-
-		delete m_ObjList;
-		m_ObjList = list;
-
-		m_ObjCount += 1000;
 	}
 }
 //---------------------------------------------------------------------------

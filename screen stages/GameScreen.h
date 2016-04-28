@@ -192,7 +192,7 @@ private:
 	@param [__in] z Координата Z дерева
 	@return 
 	*/
-	void ApplyTransparentFoliageToUnion(__in WORD &graphic, __in int &x, __in int &y, __in int &z);
+	void ApplyTransparentFoliageToUnion(__in const WORD &graphic, __in const int &x, __in const int &y, __in const int &z);
 
 	/*!
 	Проверка принадлежности кроны к группе крон (с последующим применением прозрачности всей группе)
@@ -210,11 +210,6 @@ private:
 	*/
 	void IncreaseRenderList();
 
-	int m_ObjCount;
-	RENDER_OBJECT_DATA *m_ObjList;
-
-	//Функция увеличесния размера списка рендера
-	void IncreaseObjList();
 public:
 	TGameScreen();
 	virtual ~TGameScreen();
