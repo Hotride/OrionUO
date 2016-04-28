@@ -479,16 +479,24 @@ void TGameScreen::CalculateRenderList()
 								POINT fp = { 0, 0 };
 								UO->GetArtDimension(obj->Graphic, fp);
 
-								RECT realRect = { 0 };
-								UO->GetStaticArtRealPixelDimension(obj->Graphic - 0x4000, realRect);
-
-								TImageBounds fib(drawX - fp.x / 2 + realRect.left, drawY - fp.y - (z * 4) + realRect.top, realRect.right, realRect.bottom);
+								TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (z * 4), fp.x, fp.y);
 
 								if (fib.InRect(g_PlayerRect))
 								{
-									index = g_FoliageIndex;
+									RECT realRect = { 0 };
+									UO->GetStaticArtRealPixelDimension(obj->Graphic - 0x4000, realRect);
 
-									CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
+									fib.X += realRect.left;
+									fib.Y += realRect.top;
+									fib.Width = realRect.right;
+									fib.Height = realRect.bottom;
+
+									if (fib.InRect(g_PlayerRect))
+									{
+										index = g_FoliageIndex;
+
+										CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
+									}
 								}
 							}
 
