@@ -206,6 +206,19 @@ TTextureAnimationDirection::~TTextureAnimationDirection()
 //---------------------------------------------------------------------------
 TTextureAnimationFrame *TTextureAnimationDirection::GetFrame(const BYTE &frame)
 {
+	TTextureAnimationFrame *item = FindFrame(frame);
+
+	if (item == NULL)
+	{
+		item = new TTextureAnimationFrame(frame);
+		Add(item);
+	}
+
+	return item;
+}
+//---------------------------------------------------------------------------
+TTextureAnimationFrame *TTextureAnimationDirection::FindFrame(const BYTE &frame)
+{
 	TTextureAnimationFrame *item = (TTextureAnimationFrame*)m_Items;
 
 	while (item != NULL)
@@ -214,12 +227,6 @@ TTextureAnimationFrame *TTextureAnimationDirection::GetFrame(const BYTE &frame)
 			break;
 
 		item = (TTextureAnimationFrame*)item->m_Next;
-	}
-
-	if (item == NULL)
-	{
-		item = new TTextureAnimationFrame(frame);
-		Add(item);
 	}
 
 	return item;

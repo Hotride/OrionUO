@@ -438,8 +438,17 @@ void TGameScreen::CalculateRenderList()
 								if (go->NPC)
 								{
 									TGameCharacter *character = (TGameCharacter*)go;
+
+									ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(go);
+
 									m_ObjectHandlesList[index].X += character->OffsetX;
-									m_ObjectHandlesList[index].Y += character->OffsetY - (character->OffsetZ + 75);
+									m_ObjectHandlesList[index].Y += character->OffsetY - (character->OffsetZ + dims.Height + dims.CenterY);
+								}
+								else if (go->IsCorpse())
+								{
+									ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(go);
+
+									m_ObjectHandlesList[index].Y -= (dims.Height + dims.CenterY);
 								}
 								else
 								{
@@ -568,7 +577,7 @@ void TGameScreen::CalculateGameWindowBounds()
 	m_RenderBounds.GameWindowCenterX -= (int)g_Player->OffsetX;
 	m_RenderBounds.GameWindowCenterY -= (int)(g_Player->OffsetY - g_Player->OffsetZ);
 
-	int animWidth = 80;
+	/*int animWidth = 80;
 	int animHeight = 120;
 	int animCenterY = 0;
 
@@ -591,7 +600,7 @@ void TGameScreen::CalculateGameWindowBounds()
 
 			if (direction != NULL && direction->Address != 0)
 			{
-				TTextureAnimationFrame *frame = direction->GetFrame(/*g_Player->AnimIndex*/0);
+				TTextureAnimationFrame *frame = direction->GetFrame(g_Player->AnimIndex);
 
 				if (frame != NULL)
 				{
@@ -601,12 +610,14 @@ void TGameScreen::CalculateGameWindowBounds()
 				}
 			}
 		}
-	}
+	}*/
 
-	g_PlayerRect.X = m_RenderBounds.GameWindowCenterX - (animWidth / 2);
-	g_PlayerRect.Y = m_RenderBounds.GameWindowCenterY - animHeight - playerZOffset - animCenterY;
-	g_PlayerRect.Width = animWidth;
-	g_PlayerRect.Height = animHeight;
+	ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(g_Player);
+
+	g_PlayerRect.X = m_RenderBounds.GameWindowCenterX - (dims.Width / 2);
+	g_PlayerRect.Y = m_RenderBounds.GameWindowCenterY - dims.Height - playerZOffset - dims.CenterY;
+	g_PlayerRect.Width = dims.Width;
+	g_PlayerRect.Height = dims.Height;
 
 	int rangeX = (m_RenderBounds.GameWindowSizeX / 44) + 1;
 	int rangeY = (m_RenderBounds.GameWindowSizeY / 44) + 1;
@@ -853,10 +864,18 @@ void TGameScreen::CalculateGameWindowText( __in bool &mode)
 						drawX += gc->OffsetX;
 						drawY += gc->OffsetY - gc->OffsetZ;
 
-						drawY -= 55;
+						ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(go, 0);
+						drawY -= (dims.Height + dims.CenterY);
+
+						/*drawY -= 55;
 
 						if (gc->FindLayer(OL_MOUNT) != NULL)
-							drawY -= 25;
+							drawY -= 25;*/
+					}
+					else if (go->IsCorpse())
+					{
+						ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(go, 0);
+						drawY -= (dims.Height + dims.CenterY);
 					}
 					else
 					{
@@ -1195,10 +1214,13 @@ void TGameScreen::DrawGameWindowText( __in bool &mode)
 				drawX += character->OffsetX;
 				drawY += character->OffsetY - character->OffsetZ;
 
-				drawY -= 55;
+				ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(character, 0);
+				drawY -= (dims.Height + dims.CenterY);
+
+				/*drawY -= 55;
 
 				if (character->FindLayer(OL_MOUNT) != NULL)
-					drawY -= 25;
+					drawY -= 25;*/
 
 				for (TTextData *text = textContainer->m_Top; text != NULL; )
 				{

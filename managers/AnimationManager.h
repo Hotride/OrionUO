@@ -20,6 +20,14 @@
 #ifndef AnimationManagerH
 #define AnimationManagerH
 //---------------------------------------------------------------------------
+struct ANIMATION_DIMENSIONS
+{
+	int Width;
+	int Height;
+	int CenterX;
+	int CenterY;
+};
+//---------------------------------------------------------------------------
 //!Структура с информацией о тени
 struct SHADOW_DATA
 {
@@ -93,6 +101,7 @@ private:
 
 	//Обобщенная фукнция рисования
 	void Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id = 0);
+
 public:
 	TAnimationManager();
 	~TAnimationManager();
@@ -263,6 +272,8 @@ public:
 	@return 
 	*/
 	void GetBodyGraphic(__inout WORD &graphic);
+
+	ANIMATION_DIMENSIONS GetAnimationDimensions(TGameObject *obj, BYTE frameIndex = 0xFF);
  };
 //---------------------------------------------------------------------------
  //!Ссылка на менеджер анимаций

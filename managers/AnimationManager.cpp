@@ -865,19 +865,19 @@ bool TAnimationManager::ExecuteDirectionGroup( __in TTextureAnimationDirection *
 
 		PWORD p = (PWORD)((DWORD)dataStart + frameOffset[i]);
 
-		short imageCenterX = *p;
+		short imageCenterX = (short)*p;
 		frame->CenterX = imageCenterX;
 		p++;
 
-		short imageCenterY = *p;
+		short imageCenterY = (short)*p;
 		frame->CenterY = imageCenterY;
 		p++;
 
-		short imageWidth = *p;
+		short imageWidth = (short)*p;
 		frame->Width = imageWidth;
 		p++;
 
-		short imageHeight = *p;
+		short imageHeight = (short)*p;
 		frame->Height = imageHeight;
 		p++;
 
@@ -1855,5 +1855,112 @@ void TAnimationManager::GetBodyGraphic( __inout WORD &graphic)
 {
 	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		graphic = m_DataIndex[graphic].Graphic;
+}
+//----------------------------------------------------------------------------
+ANIMATION_DIMENSIONS TAnimationManager::GetAnimationDimensions(TGameObject *obj, BYTE frameIndex)
+{
+	ANIMATION_DIMENSIONS result = { 0 };
+
+	BYTE dir = 0;
+	BYTE animGroup = 0;
+
+	if (obj->NPC)
+	{
+		((TGameCharacter*)obj)->UpdateAnimationInfo(dir);
+		animGroup = ((TGameCharacter*)obj)->GetAnimationGroup();
+	}
+	else
+	{
+		dir = ((TGameItem*)obj)->Layer;
+		animGroup = GetDieGroupIndex(obj->GetMountAnimation(), ((TGameItem*)obj)->UsedLayer);
+	}
+
+	if (dir & 0x80)
+		dir &= 0x7F;
+
+	bool mirror = false;
+	GetAnimDirection(dir, mirror);
+
+	if (frameIndex == 0xFF)
+		frameIndex = (BYTE)obj->AnimIndex;
+
+	TTextureAnimation *anim = GetAnimation(obj->GetMountAnimation());
+
+	bool found = false;
+
+	if (anim != NULL)
+	{
+		TTextureAnimationGroup *group = anim->GetGroup(animGroup);
+
+		if (group != NULL)
+		{
+			TTextureAnimationDirection *direction = group->GetDirection(dir);
+
+			if (direction != NULL && direction->Address != NULL)
+			{
+				TTextureAnimationFrame *frame = direction->FindFrame(frameIndex);
+
+				if (frame != NULL)
+				{
+					result.Width = frame->Width;
+					result.Height = frame->Height;
+					result.CenterX = frame->CenterX;
+					result.CenterY = frame->CenterY;
+
+					found = true;
+				}
+			}
+		}
+	}
+	
+	if (!found)
+	{
+		WORD graphic = obj->GetMountAnimation();
+
+		if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+		{
+			int offset = animGroup * 5;
+			PBYTE dataStart = NULL;
+
+			if (m_DataIndex[graphic].Offset == 0xFFFFFFFF) //in verdata
+			{
+				PVERDATA_HEADER vh = (PVERDATA_HEADER)(m_DataIndex[graphic].Address + (offset * sizeof(VERDATA_HEADER)));
+
+				if (vh->Position != 0 && vh->Position != 0xFFFFFFFF)
+					dataStart = (PBYTE)((DWORD)FileManager.VerdataMul.Address + vh->Position);
+			}
+			else //in original mulls
+			{
+				PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_DataIndex[graphic].Address + (offset * sizeof(ANIM_IDX_BLOCK)));
+
+				if (aidx->Position != 0 && aidx->Position != 0xFFFFFFFF)
+					dataStart = (PBYTE)(m_DataIndex[graphic].Offset + aidx->Position);
+			}
+
+			if (dataStart != NULL)
+			{
+				dataStart += sizeof(WORD[256]); //Palette
+
+				int frameCount = *((PDWORD)dataStart);
+
+				//if (frameIndex >= frameCount)
+				//	frameIndex = 0;
+
+				if (frameIndex < frameCount)
+				{
+					PDWORD frameOffset = (PDWORD)(dataStart + sizeof(DWORD));
+
+					PWORD p = (PWORD)(dataStart + frameOffset[frameIndex]);
+
+					result.CenterX = (short)*p++;
+					result.CenterY = (short)*p++;
+					result.Width = (short)*p++;
+					result.Height = (short)*p++;
+				}
+			}
+		}
+	}
+
+	return result;
 }
 //----------------------------------------------------------------------------

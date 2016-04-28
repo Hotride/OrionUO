@@ -131,6 +131,9 @@ public:
 
 	//Получить ссылку на фрэйм
 	TTextureAnimationFrame *GetFrame(const BYTE &frame);
+
+	//Найти ссылку на фрэйм
+	TTextureAnimationFrame *FindFrame(const BYTE &frame);
 };
 //---------------------------------------------------------------------------
 //Класс для работы с группой анимаций
