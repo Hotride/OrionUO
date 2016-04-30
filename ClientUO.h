@@ -283,13 +283,13 @@ public:
 
 
 	//Проиграть звуковой эффект
-	void PlaySoundEffect(const WORD &index, int volume = -1);
+	void PlaySoundEffect(const WORD &index, float volume = -1);
 
 	//Проиграть музыку mp3 либо midi
 	void PlayMusic(int index);
 
 	//Удалить неиспользуемые звуковые эффекты
-	void ResetSoundEffects(DWORD ticks);
+	void AdjustSoundEffects(DWORD ticks, float volume = -1);
 
 
 

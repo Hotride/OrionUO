@@ -1918,7 +1918,7 @@ void TUltimaOnline::ClearUnusedTextures()
 		}
 	}
 
-	ResetSoundEffects(ticks);
+	AdjustSoundEffects(ticks);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::PatchFiles()
@@ -2604,7 +2604,7 @@ void TUltimaOnline::LoadStartupConfig()
 	SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
 
 	if (!ConfigManager.Sound)
-		UO->ResetSoundEffects(GetTickCount() + 100000);
+		UO->AdjustSoundEffects(GetTickCount() + 100000);
 
 	if (!ConfigManager.Music)
 		SoundManager.StopMusic();
@@ -2644,7 +2644,7 @@ void TUltimaOnline::LoadLocalConfig()
 	SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
 
 	if (!ConfigManager.Sound)
-		UO->ResetSoundEffects(GetTickCount() + 100000);
+		UO->AdjustSoundEffects(GetTickCount() + 100000);
 
 	if (!ConfigManager.Music)
 		SoundManager.StopMusic();
@@ -3809,13 +3809,10 @@ int TUltimaOnline::GetConfigValue(const char *option, int value)
 	return value;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::PlaySoundEffect(const WORD &id, int volume)
+void TUltimaOnline::PlaySoundEffect(const WORD &id, float volume)
 {
 	if (id >= 0x0800 || !ConfigManager.Sound)
 		return;
-
-	//HSTREAM hStream = BASS_StreamCreateFile(false, L"c:\\n_frst01.wav", 0, 0, 0);
-	//BASS_ChannelPlay(hStream, true);	
 
 	TIndexSound &is = m_SoundDataIndex[id];
 	
@@ -3840,8 +3837,8 @@ void TUltimaOnline::PlaySoundEffect(const WORD &id, int volume)
 		is.hStream = SoundManager.LoadSoundEffect(m_SoundDataIndex[id]);
 	}	
 
-	if (volume < 0 || volume > ConfigManager.SoundVolume)
-		volume = ConfigManager.SoundVolume;
+	if (volume <= 0)
+		volume = SoundManager.GetVolumeValue();
 
 	if (volume > 0)
 	{
@@ -3886,7 +3883,7 @@ void TUltimaOnline::PlayMusic(int index)
 	//SoundManager.PlayMidi(index);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::ResetSoundEffects(DWORD ticks)
+void TUltimaOnline::AdjustSoundEffects(DWORD ticks, float volume)
 {
 	TLinkedList *list = m_UsedSoundList;
 	TLinkedList *prev = list;
@@ -3897,12 +3894,18 @@ void TUltimaOnline::ResetSoundEffects(DWORD ticks)
 
 		if (obj->hStream != 0 && obj->LastAccessTime + obj->Timer < ticks)
 		{
-			BASS_StreamFree(obj->hStream);
+			if (volume > 0)
+			{
+				BASS_ChannelSetAttribute(obj->hStream, BASS_ATTRIB_VOL, volume);
+			}
+			else
+			{
+				BASS_StreamFree(obj->hStream);
 
-			//Mix_FreeChunk(obj->Sound);
-			//obj->Sound = NULL;
-			obj->hStream = 0;
-
+				//Mix_FreeChunk(obj->Sound);
+				//obj->Sound = NULL;
+				obj->hStream = 0;
+			}
 			TLinkedList *next = list->Next;
 			if (list == m_UsedSoundList)
 			{

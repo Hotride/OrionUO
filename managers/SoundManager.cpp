@@ -131,6 +131,28 @@ void TSoundManager::ResumeSound()
 	BASS_Start();
 }
 
+/// <summary>Расчитывает громкость звука с учетом громкости в клиенте
+/// и возможной дистанции для эффетов.</summary>
+/// <param name="distance">расстояние для эффектов.
+///При значении -1 расстояние не учитывается.</param>
+/// <returns>громкость для BASS библиотеки.</returns>
+float TSoundManager::GetVolumeValue(int distance, bool music)
+{
+	float volume = BASS_GetVolume();
+	WORD clientConfigVolume = music ? ConfigManager.MusicVolume : ConfigManager.SoundVolume;
+	if (volume == 0 || clientConfigVolume == 0) return 0;
+	float clientsVolumeValue = (static_cast<float>(255) / static_cast<float>(clientConfigVolume));
+	volume /= clientsVolumeValue;
+	if (distance > g_UpdateRange || distance < 1)
+		return volume;
+	else
+	{
+		float soundValuePerDistance = volume  / g_UpdateRange;
+		return volume - (soundValuePerDistance * distance);
+	}
+		 
+}
+
 /// <summary>Создаёт в памяти 16 битный wave файл для последующего
 /// проигрывания.</summary>
 /// <param name="is">ссылка на запись звука в MUL файле</param>
@@ -186,17 +208,12 @@ HSTREAM TSoundManager::LoadSoundEffect(TIndexSound &is)
 	return hStream;
 }
 
-void TSoundManager::PlaySoundEffect(HSTREAM hStream, int volume)
+void TSoundManager::PlaySoundEffect(HSTREAM hStream, float volume)
 {
-	if (volume > 255)
-		volume = 255;
-	else if (volume < 0)
-		volume = 0;	
-
 	if (hStream == 0 || GetForegroundWindow() != g_hWnd)
 		return;
 
-	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, static_cast<float>(volume)/255);
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, volume);
 
 	if (!BASS_ChannelPlay(hStream, false))
 		TPRINT("Bass sound play error: %s\n", BASS_ErrorGetDescription());
@@ -223,9 +240,6 @@ void TSoundManager::PlayMidi(int index)
 	if (index >= 0 && index < MIDI_MUSIC_COUNT)
 	{
 		StopMusic();
-
-		if (!ConfigManager.Music || GetForegroundWindow() != g_hWnd)
-			return;
 
 		MCI_OPEN_PARMS openParm = {0};
 		openParm.dwCallback = (DWORD)g_hWnd;
@@ -264,13 +278,11 @@ void TSoundManager::PlayMidi(int index)
 
 void TSoundManager::PlayMP3(std::string fileName, bool loop)
 {	
-	if (m_Music != 0)
-		BASS_ChannelStop(m_Music);
+		if (m_Music != 0)
+			BASS_ChannelStop(m_Music);
 		
-		if (!ConfigManager.Music || GetForegroundWindow() != g_hWnd)
-			return;
 		HSTREAM streamHandle = BASS_StreamCreateFile(FALSE, fileName.c_str(), 0, 0, 0);
-		BASS_ChannelSetAttribute(streamHandle, BASS_ATTRIB_VOL, static_cast<float>(ConfigManager.SoundVolume) / 255);
+		BASS_ChannelSetAttribute(streamHandle, BASS_ATTRIB_VOL, GetVolumeValue(-1, true));
 		BASS_ChannelPlay(streamHandle, loop ? 1 : 0);
 		m_Music = streamHandle;
 }
@@ -289,10 +301,11 @@ void TSoundManager::StopMusic()
 	}
 }
 //---------------------------------------------------------------------------
-void TSoundManager::SetMusicVolume(int volume)
+void TSoundManager::SetMusicVolume(float volume)
 {
 	if (m_Music != 0)
 	{
+		BASS_ChannelSetAttribute(m_Music, BASS_ATTRIB_VOL, volume);
 	}
 }
 //---------------------------------------------------------------------------
