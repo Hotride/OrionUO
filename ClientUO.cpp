@@ -3160,26 +3160,31 @@ void TUltimaOnline::DrawResizepicGump(const WORD &id, const int &x, const int &y
 //---------------------------------------------------------------------------
 void TUltimaOnline::DrawLandTexture(const WORD &id, WORD color, const int &x, const int &y, RECT &rc, TVector *normals)
 {
-	TTextureObject *th = ExecuteTexture(id);
-
-	if (th == NULL)
+	if (id == 2)
 		DrawLandArt(id, color, x, y, rc.left / 4);
 	else
 	{
-		if (g_OutOfRangeColor)
-			color = g_OutOfRangeColor;
+		TTextureObject *th = ExecuteTexture(id);
 
-		int drawMode = 6;
-
-		if (!g_GrayedPixels && color)
+		if (th == NULL)
+			DrawLandArt(id, color, x, y, rc.left / 4);
+		else
 		{
-			drawMode = 7;
-			ColorManager->SendColorsToShader(color);
+			if (g_OutOfRangeColor)
+				color = g_OutOfRangeColor;
+
+			int drawMode = 6;
+
+			if (!g_GrayedPixels && color)
+			{
+				drawMode = 7;
+				ColorManager->SendColorsToShader(color);
+			}
+
+			glUniform1iARB(ShaderDrawMode, drawMode);
+
+			g_GL.DrawLandTexture(th->Texture, x, y, rc, normals);
 		}
-
-		glUniform1iARB(ShaderDrawMode, drawMode);
-
-		g_GL.DrawLandTexture(th->Texture, x, y, rc, normals);
 	}
 }
 //---------------------------------------------------------------------------
