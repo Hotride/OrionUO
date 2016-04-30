@@ -2922,18 +2922,18 @@ void TGumpOptions::ApplyPageChanges()
 			
 		    //Выключаем звук эффектов.
 			if (ConfigManager.Sound && !g_OptionsConfig.Sound)
-			{				
-				ConfigManager.Sound = g_OptionsConfig.Sound;
+			{								
 				UO->AdjustSoundEffects(GetTickCount() + 100000);
 			}
+			ConfigManager.Sound = g_OptionsConfig.Sound;
 
 
 			//Выключаем звук музыки.
 			if (ConfigManager.Music && !g_OptionsConfig.Music)
 			{
-				SoundManager.StopMusic();
-				ConfigManager.Music = g_OptionsConfig.Music;
+				SoundManager.StopMusic();				
 			}
+			ConfigManager.Music = g_OptionsConfig.Music;
 
 			ConfigManager.FootstepsSound = g_OptionsConfig.FootstepsSound;
 			ConfigManager.CombatMusic = g_OptionsConfig.CombatMusic;
