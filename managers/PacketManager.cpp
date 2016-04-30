@@ -3474,13 +3474,8 @@ PACKET_HANDLER(PlaySoundEffect)
 	coords.y = yCoord;
 	int distance = GetDistance(g_Player, coords);
 	//TPRINT("Play sound 0x%04X\n", index);
-	if (distance > g_UpdateRange)
-		volume = 0;
-	else if (distance == 0)
-		volume = 255;
-	else
-		volume = 255 / distance;
-	UO->PlaySoundEffect(index, volume);
+
+	UO->PlaySoundEffect(index, SoundManager.GetVolumeValue(distance));
 	
 }
 //---------------------------------------------------------------------------
@@ -3489,7 +3484,8 @@ PACKET_HANDLER(PlayMusic)
 	WORD index = ReadWord();
 
 	//TPRINT("Play midi music 0x%04X\n", index);
-	
+	if (!ConfigManager.Music || GetForegroundWindow() != g_hWnd || ConfigManager.MusicVolume < 1)
+		return;
 	UO->PlayMusic(index);
 }
 //---------------------------------------------------------------------------

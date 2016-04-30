@@ -62,12 +62,15 @@ public:
 
 	bool FreeStream(HSTREAM hSteam);
 
+	//Метод расчета звука. При расчете учитываются: звук клиента, дистанция для эффектов.
+	float GetVolumeValue(int distance = -1);
+
 	HSTREAM LoadSoundEffect(TIndexSound &is);
 
 	std::vector<BYTE> CreateWaveFile(TIndexSound &is);
 
 	//void PlaySoundEffect(Mix_Chunk *mix, int volume);
-	void PlaySoundEffect(HSTREAM stream, int volume);
+	void PlaySoundEffect(HSTREAM stream, float volume);
 
 	void PlayMidi(int index);
 

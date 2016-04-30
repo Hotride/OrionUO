@@ -3806,13 +3806,10 @@ int TUltimaOnline::GetConfigValue(const char *option, int value)
 	return value;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::PlaySoundEffect(const WORD &id, int volume)
+void TUltimaOnline::PlaySoundEffect(const WORD &id, float volume)
 {
 	if (id >= 0x0800 || !ConfigManager.Sound)
 		return;
-
-	//HSTREAM hStream = BASS_StreamCreateFile(false, L"c:\\n_frst01.wav", 0, 0, 0);
-	//BASS_ChannelPlay(hStream, true);	
 
 	TIndexSound &is = m_SoundDataIndex[id];
 	
@@ -3837,8 +3834,8 @@ void TUltimaOnline::PlaySoundEffect(const WORD &id, int volume)
 		is.hStream = SoundManager.LoadSoundEffect(m_SoundDataIndex[id]);
 	}	
 
-	if (volume < 0 || volume > ConfigManager.SoundVolume)
-		volume = ConfigManager.SoundVolume;
+	if (volume <= 0)
+		volume = SoundManager.GetVolumeValue();
 
 	if (volume > 0)
 	{
