@@ -3489,7 +3489,8 @@ PACKET_HANDLER(PlayMusic)
 	WORD index = ReadWord();
 
 	//TPRINT("Play midi music 0x%04X\n", index);
-	SoundManager.PlayMidi(index);
+	
+	UO->PlayMusic(index);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(DragAnimation)

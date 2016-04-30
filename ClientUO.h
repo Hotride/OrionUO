@@ -38,6 +38,7 @@ private:
 	TIndexObject m_GumpDataIndex[MAX_GUMP_DATA_INDEX_COUNT];
 	TIndexObject m_TextureDataIndex[MAX_LAND_TEXTURES_DATA_INDEX_COUNT];
 	TIndexSound m_SoundDataIndex[MAX_SOUND_DATA_INDEX_COUNT];
+	TMP3Struct m_MP3Data[MAX_MP3_COUNT];
 	TIndexMulti m_MultiDataIndex[0x2000];
 	TIndexObject m_LightDataIndex[MAX_LIGHTS_DATA_INDEX_COUNT];
 
@@ -283,6 +284,9 @@ public:
 
 	//Проиграть звуковой эффект
 	void PlaySoundEffect(const WORD &index, int volume = -1);
+
+	//Проиграть музыку mp3 либо midi
+	void PlayMusic(int index);
 
 	//Удалить неиспользуемые звуковые эффекты
 	void ResetSoundEffects(DWORD ticks);

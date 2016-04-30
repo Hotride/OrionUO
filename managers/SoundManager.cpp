@@ -18,6 +18,8 @@
 */
 //---------------------------------------------------------------------------
 #include "stdafx.h"
+#include <fstream>
+#include <string>
 
 //---------------------------------------------------------------------------
 #pragma region BASS.DLL error code descriptions
@@ -109,7 +111,6 @@ bool TSoundManager::Init()
 		if (!BASS_SetConfig(BASS_CONFIG_3DALGORITHM, BASS_3DALG_FULL))
 			TPRINT("Error setting 3d sound: %s\n", BASS_ErrorGetDescription());
 	}
-	
 	return true;
 }
 //---------------------------------------------------------------------------
@@ -122,7 +123,7 @@ void TSoundManager::Free()
 void TSoundManager::Stop()
 {
 	StopMusic();
-	BASS_Stop();
+	BASS_Pause();
 }
 
 
@@ -220,7 +221,7 @@ void TSoundManager::PlayMidi(int index)
 		"\\4MB"
 	};
 
-	if (index >= 0 && index < MUSIC_COUNT)
+	if (index >= 0 && index < MIDI_MUSIC_COUNT)
 	{
 		StopMusic();
 
@@ -261,10 +262,23 @@ void TSoundManager::PlayMidi(int index)
 	else
 		TPRINT("Music ID is out of range: %i\n", index);
 }
+
+void TSoundManager::PlayMP3(std::string fileName, bool loop)
+{	
+	if (m_Music != 0)
+		BASS_ChannelStop(m_Music);
+		
+		if (!ConfigManager.Music || GetForegroundWindow() != g_hWnd)
+			return;
+		HSTREAM streamHandle = BASS_StreamCreateFile(FALSE, fileName.c_str(), 0, 0, 0);
+		BASS_ChannelSetAttribute(streamHandle, BASS_ATTRIB_VOL, static_cast<float>(ConfigManager.SoundVolume) / 255);
+		BASS_ChannelPlay(streamHandle, loop ? 1 : 0);
+		m_Music = streamHandle;
+}
 //---------------------------------------------------------------------------
 void TSoundManager::StopMusic()
 {
-	if (m_Music != 0)
+	/*if (m_Music != 0)
 	{
 		MCI_GENERIC_PARMS mciGen;
 		DWORD error = mciSendCommand(m_Music, MCI_STOP, MCI_WAIT, (DWORD)(LPMCI_GENERIC_PARMS)&mciGen);
@@ -272,7 +286,7 @@ void TSoundManager::StopMusic()
 		TraceMusicError(error);
 
 		m_Music = 0;
-	}
+	}*/
 }
 //---------------------------------------------------------------------------
 void TSoundManager::SetMusicVolume(int volume)
@@ -295,7 +309,7 @@ void TSoundManager::TraceMusicError(DWORD error)
 	}
 }
 //---------------------------------------------------------------------------
-const char *TSoundManager::m_MusicName[MUSIC_COUNT] =
+const char *TSoundManager::m_MusicName[MIDI_MUSIC_COUNT] =
 {
 	"oldult01.mid",
 	"create1.mid",

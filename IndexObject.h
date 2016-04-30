@@ -160,4 +160,17 @@ public:
 	SETGET(WORD, Count);
 };
 //---------------------------------------------------------------------------
+//Структура для хранения информации об мп3
+struct TMP3Struct
+{
+private:
+	std::string m_FileName;
+	bool m_Loop;
+public:
+	TMP3Struct();
+	virtual ~TMP3Struct();
+	SETGET(std::string, FileName);
+	SETGET(bool, Loop);
+};
+//---------------------------------------------------------------------------
 #endif

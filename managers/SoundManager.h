@@ -43,10 +43,9 @@ struct WaveHeader
 class TSoundManager
 {
 private:
-	static const int MUSIC_COUNT = 57;
-	static const char *m_MusicName[MUSIC_COUNT];
-
-	MCIDEVICEID m_Music;
+	static const int MIDI_MUSIC_COUNT = 57;
+	static const char *m_MusicName[MIDI_MUSIC_COUNT];
+	HSTREAM m_Music = 0;
 
 	void TraceMusicError(DWORD error);
 	//std::map<HSTREAM, BYTE*> streams;
@@ -71,6 +70,8 @@ public:
 	void PlaySoundEffect(HSTREAM stream, int volume);
 
 	void PlayMidi(int index);
+
+	void PlayMP3(std::string fileName, bool loop);
 
 	void StopMusic();
 

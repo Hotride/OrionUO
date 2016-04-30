@@ -2051,6 +2051,7 @@ void TUltimaOnline::IndexReplaces()
 	TTextFileParser gumpParser(FilePath("Gump.def").c_str(), " \t", "#;//", "{}");
 	TTextFileParser multiParser(FilePath("Multi.def").c_str(), " \t", "#;//", "{}");
 	TTextFileParser soundParser(FilePath("Sound.def").c_str(), " \t", "#;//", "{}");
+	TTextFileParser mp3Parser(FilePath("Music\\Digital\\Config.txt").c_str(), " ,", "#;", "");
 
 	while (!artParser.IsEOF())
 	{
@@ -2241,6 +2242,19 @@ void TUltimaOnline::IndexReplaces()
 				break;
 			}
 		}
+	}
+	while (!mp3Parser.IsEOF())
+	{
+		std::vector<std::string> strings = mp3Parser.ReadTokens();
+		int size = strings.size();
+		if (size > 0)
+		{
+			TMP3Struct &mp3 = m_MP3Data[std::stoi(strings[0])];
+			if (size > 1)
+				mp3.FileName = FilePath("Music\\Digital\\" + strings[1] + ".mp3");
+			if (size > 2)
+				mp3.Loop = true;
+		}		
 	}
 }
 //---------------------------------------------------------------------------
@@ -2577,7 +2591,7 @@ void TUltimaOnline::LoadClientStartupConfig()
 	SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
 
 	if (ConfigManager.Music)
-		SoundManager.PlayMidi(8);
+		PlayMusic(8);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::LoadStartupConfig()
@@ -3853,6 +3867,15 @@ void TUltimaOnline::PlaySoundEffect(const WORD &id, int volume)
 	//	SoundManager.PlaySoundEffect(is.Sound, volume);
 	//	is.LastAccessTime = GetTickCount();
 	//}
+}
+//---------------------------------------------------------------------------
+void TUltimaOnline::PlayMusic(int index)
+{
+	//Тимур, здесь прикручивай взависимости от конфига играть мп3 или миди.
+	//Сейчас только мп3 будет играть.
+	TMP3Struct &mp3Info = m_MP3Data[index];
+	SoundManager.PlayMP3(mp3Info.FileName, mp3Info.Loop);
+	//SoundManager.PlayMidi(index);
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::ResetSoundEffects(DWORD ticks)

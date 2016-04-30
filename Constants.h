@@ -67,6 +67,9 @@ const int MAX_GUMP_DATA_INDEX_COUNT = 0x10000;
 //!Размер таблицы индексов звуков
 const int MAX_SOUND_DATA_INDEX_COUNT = 0x0800;
 
+//!Размер массива с мп3 файлами
+const int MAX_MP3_COUNT = 100;
+
 //!Размер таблицы индексов анимаций
 const int MAX_ANIMATIONS_DATA_INDEX_COUNT = 0x0800;
 
