@@ -120,14 +120,13 @@ void TSoundManager::Free()
 	BASS_Free();
 }
 
-void TSoundManager::Stop()
+void TSoundManager::PauseSound()
 {
-	StopMusic();
 	BASS_Pause();
 }
 
 
-void TSoundManager::Start()
+void TSoundManager::ResumeSound()
 {
 	BASS_Start();
 }
@@ -278,15 +277,16 @@ void TSoundManager::PlayMP3(std::string fileName, bool loop)
 //---------------------------------------------------------------------------
 void TSoundManager::StopMusic()
 {
-	/*if (m_Music != 0)
+	if (m_Music != 0)
 	{
-		MCI_GENERIC_PARMS mciGen;
+		//midi music stopping code via mci.
+		/*MCI_GENERIC_PARMS mciGen;
 		DWORD error = mciSendCommand(m_Music, MCI_STOP, MCI_WAIT, (DWORD)(LPMCI_GENERIC_PARMS)&mciGen);
 
-		TraceMusicError(error);
-
+		TraceMusicError(error);*/
+		BASS_ChannelStop(m_Music);
 		m_Music = 0;
-	}*/
+	}
 }
 //---------------------------------------------------------------------------
 void TSoundManager::SetMusicVolume(int volume)
