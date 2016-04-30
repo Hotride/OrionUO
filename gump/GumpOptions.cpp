@@ -2905,21 +2905,37 @@ void TGumpOptions::ApplyPageChanges()
 	switch (m_Page)
 	{
 		case 0: //Sound and Music
-		{
-			ConfigManager.Sound = g_OptionsConfig.Sound;
-			ConfigManager.Music = g_OptionsConfig.Music;
+		{		
+			//Меняем громкость звука эффектам и текущим эффектам
+			if (ConfigManager.SoundVolume != g_OptionsConfig.SoundVolume)
+			{
+				ConfigManager.SoundVolume = g_OptionsConfig.SoundVolume;
+			}
+
+			//Меняем громкость звука музыке и текущей музыке
+			if (ConfigManager.MusicVolume != g_OptionsConfig.MusicVolume)
+			{
+				ConfigManager.MusicVolume = g_OptionsConfig.MusicVolume;
+				SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
+			}
+			
+		    //Выключаем звук эффектов.
+			if (ConfigManager.Sound && !g_OptionsConfig.Sound)
+			{
+				UO->ResetSoundEffects(GetTickCount() + 100000);
+				ConfigManager.Sound = g_OptionsConfig.Sound;
+			}
+
+
+			//Выключаем звук музыки.
+			if (ConfigManager.Music && !g_OptionsConfig.Music)
+			{
+				SoundManager.StopMusic();
+				ConfigManager.Music = g_OptionsConfig.Music;
+			}
+
 			ConfigManager.FootstepsSound = g_OptionsConfig.FootstepsSound;
 			ConfigManager.CombatMusic = g_OptionsConfig.CombatMusic;
-			ConfigManager.SoundVolume = g_OptionsConfig.SoundVolume;
-			ConfigManager.MusicVolume = g_OptionsConfig.MusicVolume;
-
-			SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
-
-			if (!ConfigManager.Sound)
-				UO->ResetSoundEffects(GetTickCount() + 100000);
-
-			if (!ConfigManager.Music)
-				SoundManager.StopMusic();
 
 			break;
 		}
