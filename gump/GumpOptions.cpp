@@ -2910,20 +2910,21 @@ void TGumpOptions::ApplyPageChanges()
 			if (ConfigManager.SoundVolume != g_OptionsConfig.SoundVolume)
 			{
 				ConfigManager.SoundVolume = g_OptionsConfig.SoundVolume;
+				UO->AdjustSoundEffects(GetTickCount() + 100000, SoundManager.GetVolumeValue());
 			}
 
 			//Меняем громкость звука музыке и текущей музыке
 			if (ConfigManager.MusicVolume != g_OptionsConfig.MusicVolume)
 			{
 				ConfigManager.MusicVolume = g_OptionsConfig.MusicVolume;
-				SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
+				SoundManager.SetMusicVolume(SoundManager.GetVolumeValue(-1, true));
 			}
 			
 		    //Выключаем звук эффектов.
 			if (ConfigManager.Sound && !g_OptionsConfig.Sound)
-			{
-				UO->ResetSoundEffects(GetTickCount() + 100000);
+			{				
 				ConfigManager.Sound = g_OptionsConfig.Sound;
+				UO->AdjustSoundEffects(GetTickCount() + 100000);
 			}
 
 

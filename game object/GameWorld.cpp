@@ -74,7 +74,7 @@ void TGameWorld::ProcessSound(DWORD ticks, TGameCharacter *gc)
 			soundID += incID;
 			gc->StepSoundOffset = (incID + 1) % 2;
 
-			UO->PlaySoundEffect(soundID, ConfigManager.SoundVolume); //0x0129 - 0x0134
+			UO->PlaySoundEffect(soundID, SoundManager.GetVolumeValue()); //0x0129 - 0x0134
 
 			gc->LastStepSoundTime = ticks + delaySound;
 		}

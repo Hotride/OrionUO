@@ -289,7 +289,7 @@ public:
 	void PlayMusic(int index);
 
 	//Удалить неиспользуемые звуковые эффекты
-	void ResetSoundEffects(DWORD ticks);
+	void AdjustSoundEffects(DWORD ticks, float volume = -1);
 
 
 

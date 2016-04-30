@@ -136,17 +136,18 @@ void TSoundManager::ResumeSound()
 /// <param name="distance">расстояние для эффектов.
 ///При значении -1 расстояние не учитывается.</param>
 /// <returns>громкость для BASS библиотеки.</returns>
-float TSoundManager::GetVolumeValue(int distance)
+float TSoundManager::GetVolumeValue(int distance, bool music)
 {
 	float volume = BASS_GetVolume();
-	if (volume == 0 || ConfigManager.SoundVolume == 0) return 0;
-	float clientsVolumeValue = static_cast<float>(255/ConfigManager.SoundVolume);
+	WORD clientConfigVolume = music ? ConfigManager.MusicVolume : ConfigManager.SoundVolume;
+	if (volume == 0 || clientConfigVolume == 0) return 0;
+	float clientsVolumeValue = (static_cast<float>(255) / static_cast<float>(clientConfigVolume));
 	volume /= clientsVolumeValue;
 	if (distance > g_UpdateRange || distance < 1)
 		return volume;
 	else
 	{
-		float soundValuePerDistance = ( volume / 2) / g_UpdateRange;
+		float soundValuePerDistance = volume  / g_UpdateRange;
 		return volume - (soundValuePerDistance * distance);
 	}
 		 
@@ -281,7 +282,7 @@ void TSoundManager::PlayMP3(std::string fileName, bool loop)
 			BASS_ChannelStop(m_Music);
 		
 		HSTREAM streamHandle = BASS_StreamCreateFile(FALSE, fileName.c_str(), 0, 0, 0);
-		BASS_ChannelSetAttribute(streamHandle, BASS_ATTRIB_VOL, GetVolumeValue());
+		BASS_ChannelSetAttribute(streamHandle, BASS_ATTRIB_VOL, GetVolumeValue(-1, true));
 		BASS_ChannelPlay(streamHandle, loop ? 1 : 0);
 		m_Music = streamHandle;
 }
@@ -300,10 +301,11 @@ void TSoundManager::StopMusic()
 	}
 }
 //---------------------------------------------------------------------------
-void TSoundManager::SetMusicVolume(int volume)
+void TSoundManager::SetMusicVolume(float volume)
 {
 	if (m_Music != 0)
 	{
+		BASS_ChannelSetAttribute(m_Music, BASS_ATTRIB_VOL, volume);
 	}
 }
 //---------------------------------------------------------------------------

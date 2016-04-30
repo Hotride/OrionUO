@@ -63,7 +63,7 @@ public:
 	bool FreeStream(HSTREAM hSteam);
 
 	//Метод расчета звука. При расчете учитываются: звук клиента, дистанция для эффектов.
-	float GetVolumeValue(int distance = -1);
+	float GetVolumeValue(int distance = -1, bool music = false);
 
 	HSTREAM LoadSoundEffect(TIndexSound &is);
 
@@ -78,7 +78,7 @@ public:
 
 	void StopMusic();
 
-	void SetMusicVolume(int volume);
+	void SetMusicVolume(float volume);
 };
 //--------------------------------------------------------------------------
 extern TSoundManager SoundManager;
