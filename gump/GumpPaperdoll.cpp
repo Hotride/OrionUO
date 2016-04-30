@@ -402,7 +402,7 @@ void TGumpPaperdoll::GenerateFrame()
 					if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
 						cOfs = MALE_GUMP_OFFSET;
 
-					UO->DrawGump(equipment->AnimID + cOfs, equipment->Color, 8, 19);
+					UO->DrawGump(equipment->AnimID + cOfs, equipment->Color, 8, 19, equipment->IsPartialHue());
 				}
 				else if (g_LastSelectedGump == (DWORD)this && ObjectInHand != NULL && UsedLayers[i] == ObjectInHand->UsedLayer && ObjectInHand->AnimID)
 				{
@@ -419,7 +419,7 @@ void TGumpPaperdoll::GenerateFrame()
 						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 						glColor4f(1.0f, 1.0f, 1.0f, 0.7f);
 
-						UO->DrawGump(ObjectInHand->AnimID + cOfs, ObjectInHand->Color, 8, 19);
+						UO->DrawGump(ObjectInHand->AnimID + cOfs, ObjectInHand->Color, 8, 19, ObjectInHand->IsPartialHue());
 						
 						glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 						glDisable(GL_BLEND);
@@ -438,13 +438,13 @@ void TGumpPaperdoll::GenerateFrame()
 				if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
 					cOfs = MALE_GUMP_OFFSET;
 
-				UO->DrawGump(equipment->AnimID + cOfs, equipment->Color, 8, 19);
+				UO->DrawGump(equipment->AnimID + cOfs, equipment->Color, 8, 19, equipment->IsPartialHue());
 			}
 		}
 
 		equipment = obj->FindLayer(OL_BACKPACK);
 		if (equipment != NULL && equipment->AnimID != 0)
-			UO->DrawGump(equipment->AnimID + 50000, equipment->Color, 8, 19);
+			UO->DrawGump(equipment->AnimID + 50000, equipment->Color, 8, 19, equipment->IsPartialHue());
 
 		UnuseShader();
 

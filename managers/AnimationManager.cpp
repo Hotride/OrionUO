@@ -1151,7 +1151,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		return;
 
 	WORD objColor = obj->Color;
-	bool partialHue = false;
+	bool partialHue = obj->IsPartialHue();
 
 	if (objColor & 0x8000)
 	{
