@@ -95,7 +95,7 @@ void TTarget::SendTargetObject(DWORD serial)
 	{
 		pack16(m_Data + 11, obj->X);
 		pack16(m_Data + 13, obj->Y);
-		m_Data[15] = 0;
+		m_Data[15] = 0xFF;
 		m_Data[16] = obj->Z;
 		pack16(m_Data + 17, obj->Graphic);
 	}
@@ -122,7 +122,7 @@ void TTarget::SendTargetTile(WORD tileID, WORD X, WORD Y, char Z)
 	pack32(m_Data + 7, 0);
 	pack16(m_Data + 11, X);
 	pack16(m_Data + 13, Y);
-	m_Data[15] = 0x00;
+	m_Data[15] = 0xFF;
 
 	if (m_MultiGraphic != 0)
 	{

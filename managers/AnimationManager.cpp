@@ -1215,13 +1215,75 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 	{
 		if (id == 0x23D) //FWUO genie
 			y += 40;
-	
-		y -= (frame->Height + frame->CenterY + 3);
 
-		if (mirror)
-			x -= (frame->Width - frame->CenterX);
+		TGameObject *owner = NULL;
+
+		if (false && !obj->NPC && ((TGameItem*)obj)->Layer == OL_MOUNT)
+			owner = World->FindWorldObject(obj->Container);
+
+		if (owner != NULL)
+		{
+			ANIMATION_DIMENSIONS dims = GetAnimationDimensions(owner);
+
+			int charX = 0;
+			int charY = y - dims.Height - dims.CenterY;// +3;
+
+			int mountX = 0;
+			int mountY = y - frame->Height - frame->CenterY;// +3;
+
+			if (mirror)
+			{
+				charX = x + dims.CenterX - dims.Width;
+				mountX = x + frame->CenterX - frame->Width;
+			}
+			else
+			{
+				charX = x - dims.CenterX;
+				mountX = x - frame->CenterX;
+			}
+
+			y = mountY + (int)(charY + dims.Height - mountY - frame->Height);
+
+			x = mountX + (int)((charX - mountX) / 2);
+
+			/*ANIMATION_DIMENSIONS dims = GetAnimationDimensions(owner);
+
+			int charY = -(dims.Height + dims.CenterY + 3);
+			int charX = 0;
+
+			int mountY = -(frame->Height + frame->CenterY + 3);
+			int mountX = 0;
+
+			if (mirror)
+			{
+				charX = (dims.CenterX - dims.Width);
+				mountX = (frame->CenterX - frame->Width);
+			}
+			else
+			{
+				charX = -dims.CenterX;
+				mountX = -frame->CenterX;
+			}
+
+			//y += (int)(charY + dims.Height - mountY - frame->Height);
+			y -= (frame->Height + frame->CenterY + 3);
+
+			x -= frame->Width / 2;
+
+			if (mirror)
+				x -= (int)((charX - mountX) / 2);
+			else
+				x -= (int)((charX - mountX) / 2);*/
+		}
 		else
-			x -= frame->CenterX;
+		{
+			y -= (frame->Height + frame->CenterY + 3);
+
+			if (mirror)
+				x -= (frame->Width - frame->CenterX);
+			else
+				x -= frame->CenterX;
+		}
 
 #if UO_DEPTH_TEST == 1
 		glEnable(GL_DEPTH_TEST);

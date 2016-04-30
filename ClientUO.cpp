@@ -2677,6 +2677,9 @@ void TUltimaOnline::SaveLocalConfig()
 	MacroManager->Save(path + "\\macros_debug.cuo");
 	GumpManager->Save(path + "\\gumps_debug.cuo");
 
+	ConfigManager.Save(FilePath("options_debug.cuo").c_str());
+	MacroManager->Save(FilePath("macros_debug.cuo").c_str());
+
 	path += string("_") + g_Player->GetName() + ".cuo";
 	
 	if (!PathFileExistsA(path.c_str()))
