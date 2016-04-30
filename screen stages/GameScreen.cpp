@@ -415,12 +415,6 @@ void TGameScreen::CalculateRenderList()
 									m_ObjectHandlesList[index].X += character->OffsetX;
 									m_ObjectHandlesList[index].Y += character->OffsetY - (character->OffsetZ + dims.Height + dims.CenterY);
 								}
-								else if (go->IsCorpse())
-								{
-									ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(go);
-
-									m_ObjectHandlesList[index].Y -= (dims.Height + dims.CenterY);
-								}
 								else
 								{
 									POINT p = { 0 };
@@ -851,19 +845,8 @@ void TGameScreen::CalculateGameWindowText( __in bool &mode)
 						if (gc->FindLayer(OL_MOUNT) != NULL)
 							drawY -= 25;*/
 					}
-					else if (go->IsCorpse())
-					{
-						ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(go, 0);
-						drawY -= (dims.Height + dims.CenterY);
-					}
 					else
-					{
-						WORD gID = go->Graphic;
-
-						int height = UO->m_StaticData[gID / 32].Tiles[gID % 32].Height;
-
-						drawY -= (height + 20);
-					}
+						drawY -= (go->GetStaticData()->Height + 20);
 
 					drawX -= go->GetTextOffsetX(td);
 					drawY -= go->GetTextOffsetY(td);

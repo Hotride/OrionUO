@@ -4096,6 +4096,7 @@ void TUltimaOnline::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD 
 		case TT_OBJECT:
 		{
 			TGameObject *obj = World->FindWorldObject(serial);
+
 			if (obj != NULL)
 			{
 				int width = FontManager->GetWidthW((BYTE)font, text.c_str(), text.length());

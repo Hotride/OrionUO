@@ -117,6 +117,16 @@ bool TFontsManager::LoadFonts()
 	return true;
 }
 //---------------------------------------------------------------------------
+BYTE TFontsManager::UnicodeFontExists(const BYTE &font)
+{
+	if (font >= FileManager.UnicodeFontCount)
+		return 0;
+	else if (m_UnicodeFontAddress[font] == NULL)
+		return 0;
+
+	return font;
+}
+//---------------------------------------------------------------------------
 /*!
 Переход по ссылке по индексу
 @param [__in] link Индекс ссылки

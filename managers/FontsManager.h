@@ -166,6 +166,8 @@ public:
 	*/
 	bool LoadFonts();
 
+	BYTE UnicodeFontExists(const BYTE &font);
+
 	/*!
 	Переход по ссылке по индексу
 	@param [__in] link Индекс ссылки

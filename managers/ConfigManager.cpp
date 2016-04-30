@@ -72,7 +72,7 @@ void TConfigManager::DefaultPage3()
 {
 	m_UseToolTips = true;
 	m_ToolTipsTextColor = 0xFFFF;
-	m_ToolTipsTextFont = 1;
+	m_ToolTipsTextFont = 0;
 	m_ToolTipsDelay = 1000;
 }
 //---------------------------------------------------------------------------
@@ -95,7 +95,7 @@ void TConfigManager::DefaultPage4()
 	m_ChatColorBGConfList = 0xFFFF;
 	m_ChatColorBGCommandList = 0xFFFF;
 	
-	m_ChatFont = 2;
+	m_ChatFont = 0;
 }
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage6()

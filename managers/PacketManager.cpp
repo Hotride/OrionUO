@@ -2631,13 +2631,8 @@ PACKET_HANDLER(Talk)
 		TGameObject *obj = World->FindWorldObject(serial);
 
 		if (obj != NULL)
-			obj->YouSeeJournalPrefix = (type == ST_SYSTEM);
-
-		UO->CreateTextMessage(TT_OBJECT, serial, font, textColor, str);
-
-		if (obj != NULL)
 		{
-			obj->YouSeeJournalPrefix = false;
+			obj->YouSeeJournalPrefix = (type == ST_SYSTEM);
 
 			if (!obj->GetName().length())
 			{
@@ -2647,6 +2642,11 @@ PACKET_HANDLER(Talk)
 					GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
 			}
 		}
+
+		UO->CreateTextMessage(TT_OBJECT, serial, font, textColor, str);
+
+		if (obj != NULL)
+			obj->YouSeeJournalPrefix = false;
 	}
 }
 //---------------------------------------------------------------------------
@@ -2698,13 +2698,8 @@ PACKET_HANDLER(UnicodeTalk)
 		TGameObject *obj = World->FindWorldObject(serial);
 
 		if (obj != NULL)
-			obj->YouSeeJournalPrefix = (type == ST_SYSTEM);
-
-		UO->CreateUnicodeTextMessage(TT_OBJECT, serial, ConfigManager.SpeechFont, textColor, str);
-		
-		if (obj != NULL)
 		{
-			obj->YouSeeJournalPrefix = false;
+			obj->YouSeeJournalPrefix = (type == ST_SYSTEM);
 
 			if (!obj->GetName().length())
 			{
@@ -2714,6 +2709,11 @@ PACKET_HANDLER(UnicodeTalk)
 					GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
 			}
 		}
+
+		UO->CreateUnicodeTextMessage(TT_OBJECT, serial, ConfigManager.SpeechFont, textColor, str);
+
+		if (obj != NULL)
+			obj->YouSeeJournalPrefix = false;
 	}
 }
 //---------------------------------------------------------------------------
@@ -3967,7 +3967,7 @@ PACKET_HANDLER(DisplayClilocString)
 	WORD graphic = ReadWord();
 	BYTE type = ReadByte();
 	WORD color = ReadWord();
-	WORD font = ReadWord();
+	WORD font = FontManager->UnicodeFontExists((BYTE)ReadWord());
 	DWORD cliloc = ReadDWord();
 
 	BYTE flags = 0;
@@ -3994,8 +3994,6 @@ PACKET_HANDLER(DisplayClilocString)
 			str = L"*" + str + L"*";
 		}*/
 
-		UO->CreateUnicodeTextMessage(TT_OBJECT, serial, font, color, message);
-
 		//if (serial >= 0x40000000) //Только для предметов
 		{
 			TGameObject *obj = World->FindWorldObject(serial);
@@ -4008,6 +4006,8 @@ PACKET_HANDLER(DisplayClilocString)
 					GumpManager->UpdateGump(serial, 0, GT_STATUSBAR);
 			}
 		}
+
+		UO->CreateUnicodeTextMessage(TT_OBJECT, serial, font, color, message);
 	}
 }
 //---------------------------------------------------------------------------
