@@ -905,7 +905,7 @@ int TGumpOptions::DrawPage1(bool &mode, DWORD &index)
 						if (ValPer == 0.0f)
 							count = 0;
 						else
-							count = (int)(255 * ValPer) / 100;
+							count = (int)((255 * ValPer) / 100.0f);
 					}
 					else
 						count = 255; //ѕозици€ равна максимуму, выставл€ем значение 255
@@ -934,7 +934,7 @@ int TGumpOptions::DrawPage1(bool &mode, DWORD &index)
 						if (ValPer == 0.0f)
 							count = 0;
 						else
-							count = (int)(255.0f * ValPer) / 100;
+							count = (int)((255 * ValPer) / 100.0f);
 					}
 					else
 						count = 255; //ѕозици€ равна максимуму, выставл€ем значение 255
@@ -962,7 +962,7 @@ int TGumpOptions::DrawPage1(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Sound volume", g_OptionsTextColor, posX + 64, posY + 22);
 		m_TexturePage1[3].Draw(64, 112);
 		
-		UO->DrawSphereGump(g_OptionsConfig.SoundVolume, 255.0f, 0, 133);
+		UO->DrawSphereGump(g_OptionsConfig.SoundVolume, 255.0f, 0, 133, 90);
 
 		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.SoundVolume).c_str(), g_OptionsTextColor, 176, 130);
 		
@@ -975,7 +975,7 @@ int TGumpOptions::DrawPage1(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Music volume", g_OptionsTextColor, posX + 64, posY + 22);
 		m_TexturePage1[5].Draw(64, 173);
 		
-		UO->DrawSphereGump(g_OptionsConfig.MusicVolume, 255.0f, 0, 194);
+		UO->DrawSphereGump(g_OptionsConfig.MusicVolume, 255.0f, 0, 194, 90);
 
 		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.MusicVolume).c_str(), g_OptionsTextColor, 176, 191);
 
