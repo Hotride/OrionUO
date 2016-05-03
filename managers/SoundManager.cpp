@@ -319,10 +319,11 @@ void TSoundManager::StopMusic()
 //---------------------------------------------------------------------------
 void TSoundManager::SetMusicVolume(float volume)
 {
-	if (m_Music != 0)
-	{
+	if (m_Music != 0 && BASS_ChannelIsActive(m_Music))
 		BASS_ChannelSetAttribute(m_Music, BASS_ATTRIB_VOL, volume);
-	}
+
+	if (m_WarMusic != 0 && BASS_ChannelIsActive(m_WarMusic))
+		BASS_ChannelSetAttribute(m_WarMusic, BASS_ATTRIB_VOL, volume);
 }
 //---------------------------------------------------------------------------
 void TSoundManager::TraceMusicError(DWORD error)
