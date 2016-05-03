@@ -4462,6 +4462,11 @@ void TUltimaOnline::ChangeWarmode(BYTE status)
 		newstatus = status;
 	}
 
+	if (newstatus == 1)
+		//38, 39 и 40 это индексы боевой музыки.
+		UO->PlayMusic(rand() % (40 - 38 + 1) + 38);
+	else if (newstatus == 0)
+		SoundManager.StopMusic();
 	TPacketChangeWarmode packet(newstatus);
 	packet.Send();
 }
