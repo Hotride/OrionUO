@@ -138,6 +138,7 @@ public:
 	TMappedHeader VerdataMul;
 	
 	TMappedHeader MultiMap;
+	TMappedHeader SpeechMul;
 
 	SETGET(bool, UseVerdata);
 	SETGET(int, UnicodeFontCount);
