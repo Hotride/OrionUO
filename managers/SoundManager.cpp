@@ -123,6 +123,7 @@ void TSoundManager::Free()
 void TSoundManager::PauseSound()
 {
 	BASS_Pause();
+	UO->AdjustSoundEffects(GetTickCount() + 100000);
 }
 
 
@@ -278,27 +279,22 @@ void TSoundManager::PlayMidi(int index)
 
 void TSoundManager::PlayMP3(std::string fileName, bool loop)
 {	
-		if (m_Music != 0)
-			BASS_ChannelStop(m_Music);
-		
-		HSTREAM streamHandle = BASS_StreamCreateFile(FALSE, fileName.c_str(), 0, 0, 0);
-		BASS_ChannelSetAttribute(streamHandle, BASS_ATTRIB_VOL, GetVolumeValue(-1, true));
-		BASS_ChannelPlay(streamHandle, loop ? 1 : 0);
-		m_Music = streamHandle;
+	StopMusic();
+	HSTREAM streamHandle = BASS_StreamCreateFile(FALSE, fileName.c_str(), 0, 0, 0);
+	BASS_ChannelSetAttribute(streamHandle, BASS_ATTRIB_VOL, GetVolumeValue(-1, true));
+	BASS_ChannelPlay(streamHandle, loop ? 1 : 0);
+	m_Music = streamHandle;
 }
 //---------------------------------------------------------------------------
 void TSoundManager::StopMusic()
 {
-	if (m_Music != 0)
-	{
-		//midi music stopping code via mci.
-		/*MCI_GENERIC_PARMS mciGen;
-		DWORD error = mciSendCommand(m_Music, MCI_STOP, MCI_WAIT, (DWORD)(LPMCI_GENERIC_PARMS)&mciGen);
+	//midi music stopping code via mci.
+	/*MCI_GENERIC_PARMS mciGen;
+	DWORD error = mciSendCommand(m_Music, MCI_STOP, MCI_WAIT, (DWORD)(LPMCI_GENERIC_PARMS)&mciGen);
 
-		TraceMusicError(error);*/
-		BASS_ChannelStop(m_Music);
-		m_Music = 0;
-	}
+	TraceMusicError(error);*/
+	BASS_ChannelStop(m_Music);
+	m_Music = 0;
 }
 //---------------------------------------------------------------------------
 void TSoundManager::SetMusicVolume(float volume)
