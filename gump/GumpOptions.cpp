@@ -2931,7 +2931,8 @@ void TGumpOptions::ApplyPageChanges()
 			//Выключаем звук музыки.
 			if (ConfigManager.Music && !g_OptionsConfig.Music)
 			{
-				SoundManager.StopMusic();				
+				SoundManager.StopMusic();	
+				SoundManager.StopWarMusic();
 			}
 			ConfigManager.Music = g_OptionsConfig.Music;
 

@@ -277,14 +277,34 @@ void TSoundManager::PlayMidi(int index)
 		TPRINT("Music ID is out of range: %i\n", index);
 }
 
-void TSoundManager::PlayMP3(std::string fileName, bool loop)
-{	
-	StopMusic();
+void TSoundManager::PlayMP3(std::string fileName, bool loop, bool warmode)
+{
+	if (warmode)
+		BASS_ChannelStop(m_Music);
+	else
+		StopMusic();
 	HSTREAM streamHandle = BASS_StreamCreateFile(FALSE, fileName.c_str(), 0, 0, 0);
 	BASS_ChannelSetAttribute(streamHandle, BASS_ATTRIB_VOL, GetVolumeValue(-1, true));
 	BASS_ChannelPlay(streamHandle, loop ? 1 : 0);
-	m_Music = streamHandle;
+	if (warmode)
+		m_WarMusic = streamHandle;
+	else
+		m_Music = streamHandle;
 }
+//---------------------------------------------------------------------------
+void TSoundManager::StopWarMusic()
+{
+	//midi music stopping code via mci.
+	/*MCI_GENERIC_PARMS mciGen;
+	DWORD error = mciSendCommand(m_Music, MCI_STOP, MCI_WAIT, (DWORD)(LPMCI_GENERIC_PARMS)&mciGen);
+
+	TraceMusicError(error);*/
+	BASS_ChannelStop(m_WarMusic);
+	m_WarMusic = 0;
+	if (m_Music != 0 && !BASS_ChannelIsActive(m_Music))
+		BASS_ChannelPlay(m_Music, 1);
+}
+//-
 //---------------------------------------------------------------------------
 void TSoundManager::StopMusic()
 {
