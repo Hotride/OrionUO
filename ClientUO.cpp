@@ -3878,6 +3878,7 @@ void TUltimaOnline::PlayMusic(int index)
 {
 	//Тимур, здесь прикручивай взависимости от конфига играть мп3 или миди.
 	//Сейчас только мп3 будет играть.
+	if (index >= MAX_MP3_COUNT) return;
 	TMP3Struct &mp3Info = m_MP3Data[index];
 	SoundManager.PlayMP3(mp3Info.FileName, mp3Info.Loop);
 	//SoundManager.PlayMidi(index);
