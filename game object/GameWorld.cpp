@@ -44,6 +44,7 @@ TGameWorld::~TGameWorld()
 
 	m_Items = NULL;
 }
+//---------------------------------------------------------------------------
 void TGameWorld::ProcessSound(DWORD ticks, TGameCharacter *gc)
 {
 	if (ConfigManager.FootstepsSound && gc->IsHuman() && !gc->Hidden())
@@ -89,7 +90,7 @@ void TGameWorld::ProcessAnimation()
 {
 	TGameObject *obj = (TGameObject*)m_Items;
 	DWORD ticks = GetTickCount();
-	BYTE delay = (ConfigManager.StandartCharactersAnimationDelay ? 0x75 : 0x50);
+	BYTE delay = (ConfigManager.StandartCharactersAnimationDelay ? 0x50 : 50); // 0x75 : 0x50
 	g_AnimCharactersDelayValue = delay;
 
 	while (obj != NULL)
