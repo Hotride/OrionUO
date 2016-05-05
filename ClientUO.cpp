@@ -4671,7 +4671,7 @@ void TUltimaOnline::RemoveRangedObjects()
 //---------------------------------------------------------------------------
 void TUltimaOnline::SendWalkStack()
 {
-	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 1 || !Walker->m_SendStack.size())
+	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 2 || !Walker->m_SendStack.size())
 		return;
 
 	WALKER_SEND_ITEM &wsi = Walker->m_SendStack.front();

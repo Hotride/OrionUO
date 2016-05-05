@@ -481,7 +481,7 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 //---------------------------------------------------------------------------
 bool TPathFinder::Walk(bool run, BYTE direction)
 {
-	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 1 || g_Player == NULL || g_DeathScreenTimer)
+	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 2 || g_Player == NULL || g_DeathScreenTimer)
 		return false;
 
 	if (!run)
@@ -918,7 +918,7 @@ bool TPathFinder::WalkTo(int x, int y, int z, int distance)
 //---------------------------------------------------------------------------
 void TPathFinder::ProcessAutowalk()
 {
-	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 1 && g_LastStepTime <= GetTickCount())
+	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 2 && g_LastStepTime <= GetTickCount())
 	{
 		if (m_PointIndex >= 0 && m_PointIndex < m_PathSize)
 		{

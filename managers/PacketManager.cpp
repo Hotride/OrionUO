@@ -1036,9 +1036,9 @@ PACKET_HANDLER(EnterWorld)
 		packet.Send();
 	}
 	
-	BYTE wbuf[4] = {0x65, 0x01, 0x46, 0};
+	/*BYTE wbuf[4] = {0x65, 0x01, 0x46, 0};
 	Ptr = wbuf + 1;
-	HandleSetWeather(wbuf, 4);
+	HandleSetWeather(wbuf, 4);*/
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateHitpoints)
