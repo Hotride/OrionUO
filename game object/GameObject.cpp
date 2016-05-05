@@ -144,7 +144,7 @@ void TGameObject::GenerateObjectHandlesTexture( __in wstring text)
 		if (IsPlayer())
 			color = 0x0386;
 		else
-			color = ConfigManager.GetColorByNotoriety(((TGameCharacter*)this)->Notoriety);
+			color = ConfigManager.GetColorByNotoriety(this->GameCharacterPtr()->Notoriety);
 
 		if (color)
 		{
@@ -332,7 +332,7 @@ void TGameObject::DrawEffects( __in int &drawX, __in int &drawY, __in DWORD &tic
 
 	if (NPC)
 	{
-		TGameCharacter *gc = (TGameCharacter*)this;
+		TGameCharacter *gc = this->GameCharacterPtr();
 		x += gc->OffsetX;
 		y += gc->OffsetY;
 	}

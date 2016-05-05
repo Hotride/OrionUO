@@ -21,6 +21,9 @@
 #define RenderObjectH
 //---------------------------------------------------------------------------
 class TLandObject;
+
+class TRenderStaticObject;
+class TGameCharacter;
 //---------------------------------------------------------------------------
 //Класс для работы с объектами рендера
 class TRenderObject : public TBaseQueueItem
@@ -70,6 +73,10 @@ protected:
 	//Тип объекта рендера
 	RENDER_OBJECT_TYPE m_RenderType;
 
+#if UO_RENDER_LIST_SORT == 1
+	BYTE m_CurrentRenderIndex;
+#endif
+
 public:
 	TRenderWorldObject(RENDER_OBJECT_TYPE renderType, DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TRenderWorldObject();
@@ -94,6 +101,9 @@ public:
 	SETGETEX(char, Z);
 	SETGETEX(BYTE, RenderQueueIndex);
 	SETGET(RENDER_OBJECT_TYPE, RenderType);
+#if UO_RENDER_LIST_SORT == 1
+	SETGET(BYTE, CurrentRenderIndex);
+#endif
 
 	//Ссылки на предыдущий и следующий элементы в очереди рендера
 	TRenderWorldObject *m_NextXY;
@@ -154,6 +164,10 @@ public:
 	virtual bool IsGameObject() {return false;}
 	virtual bool IsMultiObject() {return false;}
 	virtual bool IsEffectObject() {return false;}
+
+	virtual TRenderStaticObject *StaticGroupObjectPtr() { return NULL; }
+	virtual TLandObject *LandObjectPtr() { return NULL; }
+	virtual TGameCharacter *GameCharacterPtr() { return NULL; }
 };
 //---------------------------------------------------------------------------
 extern TRenderWorldObject *g_SelectedObject;

@@ -893,17 +893,12 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 */
 TGameItem *TGameCharacter::FindLayer(__in int layer)
 {
-	TGameItem *item = NULL;
-
-	QFOR(obj, m_Items, TGameObject*)
+	QFOR(obj, m_Items, TGameItem*)
 	{
-		if (((TGameItem*)obj)->Layer == layer)
-		{
-			item = (TGameItem*)obj;
-			break;
-		}
+		if (obj->Layer == layer)
+			return obj;
 	}
 
-	return item;
+	return NULL;
 }
 //---------------------------------------------------------------------------

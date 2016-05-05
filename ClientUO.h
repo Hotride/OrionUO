@@ -286,7 +286,7 @@ public:
 	void PlaySoundEffect(const WORD &index, float volume = -1);
 
 	//Проиграть музыку mp3 либо midi
-	void PlayMusic(int index);
+	void PlayMusic(int index, bool warmode = false);
 
 	//Удалить неиспользуемые звуковые эффекты
 	void AdjustSoundEffects(DWORD ticks, float volume = -1);

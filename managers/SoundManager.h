@@ -46,6 +46,7 @@ private:
 	static const int MIDI_MUSIC_COUNT = 57;
 	static const char *m_MusicName[MIDI_MUSIC_COUNT];
 	HSTREAM m_Music = 0;
+	HSTREAM m_WarMusic = 0;
 
 	void TraceMusicError(DWORD error);
 	//std::map<HSTREAM, BYTE*> streams;
@@ -74,9 +75,11 @@ public:
 
 	void PlayMidi(int index);
 
-	void PlayMP3(std::string fileName, bool loop);
+	void PlayMP3(std::string fileName, bool loop, bool warmode = false);
 
 	void StopMusic();
+
+	void StopWarMusic();
 
 	void SetMusicVolume(float volume);
 };

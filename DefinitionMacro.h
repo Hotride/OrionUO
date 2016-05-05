@@ -20,8 +20,9 @@
 #ifndef DefinitionMacroH
 #define DefinitionMacroH
 //---------------------------------------------------------------------------
-#define UO_DEPTH_TEST 1
-#define UO_TILE_UNDERCHAR_RENDER 1
+#define UO_DEPTH_TEST 0
+#define UO_RENDER_LIST_SORT 1
+#define UO_CHECKERBOARD_SEQUENCE_RENDER_LIST 1
 //---------------------------------------------------------------------------
 #define UO_DEBUG_INFO 1
 //---------------------------------------------------------------------------
@@ -77,16 +78,16 @@ list->Next = nextList
 //---------------------------------------------------------------------------
 //!Set/Get ordinary class property
 #define SETGET(type, name) \
-	void Set##name(type val) { m_##name = val; } \
-	type Get##name() const { return m_##name; } \
+	inline void Set##name(type val) { m_##name = val; } \
+	inline type Get##name() const { return m_##name; } \
 	__declspec(property(get = Get##name, put = Set##name)) type name
 //---------------------------------------------------------------------------
 //!Set/Get ordinary class property
 #define SETGETEX(type, name) \
 	SETGET(type, name); \
-	void Inc##name() { m_##name++; } \
-	void Dec##name() { m_##name--; } \
-	void Add##name(type val) { m_##name += val; }
+	inline void Inc##name() { m_##name++; } \
+	inline void Dec##name() { m_##name--; } \
+	inline void Add##name(type val) { m_##name += val; }
 //---------------------------------------------------------------------------
 //!Get ordinary class property customized
 #define GET_PARTY(type, name) \

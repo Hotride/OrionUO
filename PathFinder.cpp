@@ -142,7 +142,7 @@ bool TPathFinder::CreateItemsList(int &x, int &y, char &z)
 
 				if (impSurf)
 				{
-					BYTE height = ((TRenderStaticObject*)obj)->GetStaticHeight();
+					BYTE height = obj->StaticGroupObjectPtr()->GetStaticHeight();
 
 					char surface = (char)(obj->IsSurface() && !obj->IsImpassable());
 

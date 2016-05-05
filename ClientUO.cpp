@@ -3874,12 +3874,13 @@ void TUltimaOnline::PlaySoundEffect(const WORD &id, float volume)
 	//}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::PlayMusic(int index)
+void TUltimaOnline::PlayMusic(int index, bool warmode)
 {
 	//Тимур, здесь прикручивай взависимости от конфига играть мп3 или миди.
 	//Сейчас только мп3 будет играть.
+	if (index >= MAX_MP3_COUNT) return;
 	TMP3Struct &mp3Info = m_MP3Data[index];
-	SoundManager.PlayMP3(mp3Info.FileName, mp3Info.Loop);
+	SoundManager.PlayMP3(mp3Info.FileName, mp3Info.Loop, warmode);
 	//SoundManager.PlayMidi(index);
 }
 //---------------------------------------------------------------------------
@@ -4461,6 +4462,11 @@ void TUltimaOnline::ChangeWarmode(BYTE status)
 		newstatus = status;
 	}
 
+	if (newstatus == 1 && ConfigManager.Music)
+		//38, 39 и 40 это индексы боевой музыки.
+		UO->PlayMusic(rand() % (40 - 38 + 1) + 38, true);
+	else if (newstatus == 0)
+		SoundManager.StopWarMusic();
 	TPacketChangeWarmode packet(newstatus);
 	packet.Send();
 }
