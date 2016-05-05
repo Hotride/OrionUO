@@ -58,7 +58,7 @@ void TGumpTargetSystem::GenerateFrame()
 			
 			if (obj->NPC)
 			{
-				character = (TGameCharacter*)obj;
+				character = obj->GameCharacterPtr();
 				NOTORIETY_TYPE noto = (NOTORIETY_TYPE)character->Notoriety;
 
 				color = ConfigManager.GetColorByNotoriety(noto);
@@ -78,7 +78,7 @@ void TGumpTargetSystem::GenerateFrame()
 
 			if (!obj->NPC && !m_OldName.length())
 			{
-				STATIC_TILES *st = ((TRenderStaticObject*)obj)->GetStaticData();
+				STATIC_TILES *st = obj->StaticGroupObjectPtr()->GetStaticData();
 
 				m_OldName = ClilocManager->Cliloc(g_Language)->GetA(102000 + obj->Graphic, st->Name);
 			}

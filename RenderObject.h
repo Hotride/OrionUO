@@ -21,6 +21,12 @@
 #define RenderObjectH
 //---------------------------------------------------------------------------
 class TLandObject;
+
+class TRenderStaticObject;
+class TStaticObject;
+class TGameObject;
+class TGameItem;
+class TGameCharacter;
 //---------------------------------------------------------------------------
 //Класс для работы с объектами рендера
 class TRenderObject : public TBaseQueueItem
@@ -154,6 +160,12 @@ public:
 	virtual bool IsGameObject() {return false;}
 	virtual bool IsMultiObject() {return false;}
 	virtual bool IsEffectObject() {return false;}
+
+	virtual TRenderStaticObject *StaticGroupObjectPtr() { return NULL; }
+	virtual TLandObject *LandObjectPtr() { return NULL; }
+	virtual TGameObject *GameObjectPtr() { return NULL; }
+	virtual TGameItem *GameItemPtr() { return NULL; }
+	virtual TGameCharacter *GameCharacterPtr() { return NULL; }
 };
 //---------------------------------------------------------------------------
 extern TRenderWorldObject *g_SelectedObject;

@@ -100,6 +100,8 @@ public:
 
 	//Игнорирование при некоторых расчетах
 	bool Ignored() {return (Graphic == 2 || Graphic == 0x1DB || (Graphic >= 0x1AE && Graphic <= 0x1B5));}
+
+	virtual TLandObject *LandObjectPtr() { return this; }
 };
 //---------------------------------------------------------------------------
 //Класс обобщенного объекта группы статики
@@ -114,6 +116,7 @@ protected:
 
 	//Может ли быть прозрачным
 	char m_CanBeTransparent;
+
 public:
 	TRenderStaticObject(RENDER_OBJECT_TYPE renderType, DWORD serial, WORD graphic, WORD color, short x, short y, char z);
 	virtual ~TRenderStaticObject();
@@ -182,6 +185,8 @@ public:
 
 	//Это объект группы объектов статики
 	bool IsStaticGroupObject() {return true;}
+
+	virtual TRenderStaticObject *StaticGroupObjectPtr() { return this; }
 };
 //---------------------------------------------------------------------------
 //Класс объекта статики

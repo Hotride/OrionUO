@@ -1928,8 +1928,9 @@ ANIMATION_DIMENSIONS TAnimationManager::GetAnimationDimensions(TGameObject *obj,
 
 	if (obj->NPC)
 	{
-		((TGameCharacter*)obj)->UpdateAnimationInfo(dir);
-		animGroup = ((TGameCharacter*)obj)->GetAnimationGroup();
+		TGameCharacter *gc = obj->GameCharacterPtr();
+		gc->UpdateAnimationInfo(dir);
+		animGroup = gc->GetAnimationGroup();
 	}
 	else
 	{

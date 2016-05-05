@@ -242,6 +242,8 @@ public:
 	@return —сылка на объект в мире
 	*/
 	TGameObject *GetTopObject();
+
+	virtual TGameObject *GameObjectPtr() { return this; }
 };
 //---------------------------------------------------------------------------
 #endif

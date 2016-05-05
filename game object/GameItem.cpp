@@ -625,7 +625,7 @@ void TGameItem::LoadMulti()
 
 			if (pmb->Flags)
 			{
-				TRenderStaticObject *mo = new TMultiObject(pmb->ID, m_X + pmb->X, m_Y + pmb->Y, m_Z + (char)pmb->Z, pmb->Flags);
+				TMultiObject *mo = new TMultiObject(pmb->ID, m_X + pmb->X, m_Y + pmb->Y, m_Z + (char)pmb->Z, pmb->Flags);
 
 				if (ToLowerA(mo->GetStaticData()->Name) == "nodraw")
 				{
@@ -634,7 +634,7 @@ void TGameItem::LoadMulti()
 				}
 
 				MapManager->AddRender(mo);
-				AddMultiObject((TMultiObject*)mo);
+				AddMultiObject(mo);
 			}
 
 			if (pmb->X < minX)
@@ -687,9 +687,7 @@ void TGameItem::AddMultiObject( __in TMultiObject *obj)
 
 		if (multi != NULL)
 		{
-			TMultiObject *multiobj = (TMultiObject*)multi->m_Items;
-
-			while (multiobj != NULL)
+			QFOR(multiobj, multi->m_Items, TMultiObject*)
 			{
 				if (obj->Z < multiobj->Z)
 				{
@@ -718,8 +716,6 @@ void TGameItem::AddMultiObject( __in TMultiObject *obj)
 
 					return;
 				}
-
-				multiobj = (TMultiObject*)multiobj->m_Next;
 			}
 
 			//Если пришли сюда - что-то пошло не так
@@ -732,17 +728,13 @@ void TGameItem::AddMultiObject( __in TMultiObject *obj)
 			obj->m_Next = NULL;
 			obj->m_Prev = NULL;
 
-			multi = (TMulti*)m_Items;
-
-			while (multi != NULL)
+			QFOR(multi, m_Items, TMulti*)
 			{
 				if (multi->m_Next == NULL)
 				{
 					multi->m_Next = newmulti;
 					break;
 				}
-
-				multi = (TMulti*)multi->m_Next;
 			}
 		}
 	}
@@ -756,17 +748,13 @@ void TGameItem::AddMultiObject( __in TMultiObject *obj)
 */
 TMulti *TGameItem::GetMultiAtXY(__in short x, __in short y)
 {
-	TMulti *multi = (TMulti*)m_Items;
-
-	while (multi != NULL)
+	QFOR(multi, m_Items, TMulti*)
 	{
 		if (multi->X == x && multi->Y == y)
 			return multi;
-
-		multi = (TMulti*)multi->m_Next;
 	}
 
-	return multi;
+	return NULL;
 }
 //---------------------------------------------------------------------------
 /*!
@@ -777,14 +765,13 @@ TMulti *TGameItem::GetMultiAtXY(__in short x, __in short y)
 */
 TGameItem *TGameItem::FindItem(__in WORD graphic, __in_opt WORD color)
 {
-	TGameItem *obj = (TGameItem*)m_Items;
 	TGameItem *item = NULL;
 
 	if (color == 0xFFFF) //Поиск по минимальному цвету
 	{
 		WORD minColor = 0xFFFF;
 
-		while (obj != NULL)
+		QFOR(obj, m_Items, TGameItem*)
 		{
 			if (obj->Graphic == graphic)
 			{
@@ -805,13 +792,11 @@ TGameItem *TGameItem::FindItem(__in WORD graphic, __in_opt WORD color)
 					minColor = found->Color;
 				}
 			}
-
-			obj = (TGameItem*)obj->m_Next;
 		}
 	}
 	else //стандартный поиск
 	{
-		while (obj != NULL)
+		QFOR(obj, m_Items, TGameItem*)
 		{
 			if (obj->Graphic == graphic && obj->Color == color)
 				item = obj;
@@ -823,8 +808,6 @@ TGameItem *TGameItem::FindItem(__in WORD graphic, __in_opt WORD color)
 				if (found != NULL)
 					item = found;
 			}
-
-			obj = (TGameItem*)obj->m_Next;
 		}
 	}
 
@@ -838,17 +821,12 @@ TGameItem *TGameItem::FindItem(__in WORD graphic, __in_opt WORD color)
 */
 TGameItem *TGameItem::FindLayer(__in int layer)
 {
-	TGameItem *item = NULL;
-
-	QFOR(obj, m_Items, TGameObject*)
+	QFOR(obj, m_Items, TGameItem*)
 	{
-		if (((TGameItem*)obj)->Layer == layer)
-		{
-			item = (TGameItem*)obj;
-			break;
-		}
+		if (obj->Layer == layer)
+			return obj;
 	}
 
-	return item;
+	return NULL;
 }
 //---------------------------------------------------------------------------

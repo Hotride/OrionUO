@@ -142,9 +142,11 @@ int TGameScreen::GetMaxDrawZ( __out bool &noDrawRoof, __out char &maxGroundZ)
 
 		for (TRenderWorldObject *ro = mb->GetRender(x, y); ro != NULL; ro = ro->m_NextXY)
 		{
-			if (ro->IsLandObject())
+			TLandObject *land = ro->LandObjectPtr();
+
+			if (land != NULL)
 			{
-				int testZ = ((TLandObject*)ro)->Z; //MinZ;
+				int testZ = land->Z; //MinZ;
 
 				if (pz15 <= testZ)
 				{
@@ -158,7 +160,7 @@ int TGameScreen::GetMaxDrawZ( __out bool &noDrawRoof, __out char &maxGroundZ)
 			if (!ro->IsStaticObject() && !ro->IsGameObject() && !ro->IsMultiObject())
 				continue;
 
-			if (ro->IsGameObject() && ((TGameObject*)ro)->NPC)
+			if (ro->IsGameObject() && ro->GameObjectPtr()->NPC)
 				continue;
 	
 			if (ro->Z >= pz15 && maxDrawZ > ro->Z && !ro->IsRoof() && (ro->IsSurface() || ro->IsImpassable()))
@@ -242,7 +244,7 @@ void TGameScreen::ApplyTransparentFoliageToUnion(__in const WORD &graphic, __in 
 		for (TRenderWorldObject *obj = mb->GetRender(tx, ty); obj != NULL; obj = obj->m_NextXY)
 		{
 			if (obj->Graphic == graphic && obj->Z == z)
-				((TRenderStaticObject*)obj)->FoliageTransparentIndex = g_FoliageIndex;
+				obj->StaticGroupObjectPtr()->FoliageTransparentIndex = g_FoliageIndex;
 		}
 	}
 }
@@ -376,8 +378,10 @@ void TGameScreen::CalculateRenderList()
 						int testMinZ = drawY;
 						int testMaxZ = drawY - (z * 4);
 
-						if (obj->IsLandObject() && ((TLandObject*)obj)->IsStretched)
-							testMinZ -= (((TLandObject*)obj)->MinZ * 4);
+						TLandObject *land = obj->LandObjectPtr();
+
+						if (land != NULL && land->IsStretched)
+							testMinZ -= (land->MinZ * 4);
 						else
 							testMinZ = testMaxZ;
 
@@ -408,7 +412,7 @@ void TGameScreen::CalculateRenderList()
 
 								if (go->NPC)
 								{
-									TGameCharacter *character = (TGameCharacter*)go;
+									TGameCharacter *character = go->GameCharacterPtr();
 
 									ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(go);
 
@@ -425,7 +429,7 @@ void TGameScreen::CalculateRenderList()
 								m_ObjectHandlesCount++;
 							}
 						}
-						else if (obj->IsFoliage() && ((TRenderStaticObject*)obj)->FoliageTransparentIndex != g_FoliageIndex)
+						else if (obj->IsFoliage() && obj->StaticGroupObjectPtr()->FoliageTransparentIndex != g_FoliageIndex)
 						{
 							char index = 0;
 
@@ -465,7 +469,7 @@ void TGameScreen::CalculateRenderList()
 								}
 							}
 
-							((TRenderStaticObject*)obj)->FoliageTransparentIndex = index;
+							obj->StaticGroupObjectPtr()->FoliageTransparentIndex = index;
 						}
 					}
 				}
@@ -715,7 +719,7 @@ void TGameScreen::AddLight( __in TRenderWorldObject *rwo, __in TRenderWorldObjec
 {
 	if (lightObject->IsStaticGroupObject())
 	{
-		STATIC_TILES *st = ((TRenderStaticObject*)lightObject)->GetStaticData();
+		STATIC_TILES *st = lightObject->StaticGroupObjectPtr()->GetStaticData();
 
 		if (st->Quality == 0xFF && lightObject->IsPrefixAn())
 			return;
@@ -832,7 +836,7 @@ void TGameScreen::CalculateGameWindowText( __in bool &mode)
 
 					if (go->NPC)
 					{
-						TGameCharacter *gc = (TGameCharacter*)go;
+						TGameCharacter *gc = go->GameCharacterPtr();
 
 						drawX += gc->OffsetX;
 						drawY += gc->OffsetY - gc->OffsetZ;
@@ -1160,7 +1164,7 @@ void TGameScreen::DrawGameWindowText( __in bool &mode)
 		{
 			if (obj->NPC)
 			{
-				TGameCharacter *character = (TGameCharacter*)obj;
+				TGameCharacter *character = obj->GameCharacterPtr();
 
 				TTextContainer *textContainer = character->m_DamageTextControl;
 
@@ -1466,10 +1470,10 @@ int TGameScreen::Render(__in bool mode)
 			{
 				case ROT_LAND_OBJECT:
 				{
-					if (!((TLandObject*)g_SelectedObject)->IsStretched)
+					if (!g_SelectedObject->LandObjectPtr()->IsStretched)
 						sprintf(soName, "Land");
 					else
-						sprintf(soName, "LandTex (mz=%i)", ((TLandObject*)g_SelectedObject)->MinZ);
+						sprintf(soName, "LandTex (mz=%i)", g_SelectedObject->LandObjectPtr()->MinZ);
 
 					break;
 				}
@@ -1494,14 +1498,11 @@ int TGameScreen::Render(__in bool mode)
 
 			int tz = g_SelectedObject->Z;
 
-			if (g_SelectedObject->IsLandObject())
-			{
-				TLandObject *land = (TLandObject*)g_SelectedObject;
+			TLandObject *land = g_SelectedObject->LandObjectPtr();
 
-				//Если это тайл текстуры
-				if (land->IsStretched)
-					tz = (char)land->Serial;
-			}
+			//Если это тайл текстуры
+			if (land != NULL && land->IsStretched)
+				tz = (char)land->Serial;
 
 			sprintf(dbf, "Selected:\n%s: G=0x%04X X=%i Y=%i Z=%i (%i) RQI=%i (SUM=%i)", soName, g_SelectedObject->Graphic, g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, tz, g_SelectedObject->RenderQueueIndex, g_SelectedObject->Z + g_SelectedObject->RenderQueueIndex);
 
@@ -1861,7 +1862,7 @@ void TGameScreen::OnLeftMouseUp()
 		{
 			if (g_LastObjectType == SOT_STATIC_OBJECT)
 			{
-				TTextData *td = ((TRenderStaticObject*)g_SelectedObject)->m_TextControl->m_Head;
+				TTextData *td = g_SelectedObject->StaticGroupObjectPtr()->m_TextControl->m_Head;
 
 				if (td == NULL || td->Timer < GetTickCount())
 				{

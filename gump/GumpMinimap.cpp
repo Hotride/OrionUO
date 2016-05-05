@@ -179,7 +179,7 @@ void TGumpMinimap::GenerateFrame()
 
 				if (go->NPC && !go->IsPlayer())
 				{
-					WORD color = ConfigManager.GetColorByNotoriety(((TGameCharacter*)go)->Notoriety);
+					WORD color = ConfigManager.GetColorByNotoriety(go->GameCharacterPtr()->Notoriety);
 
 					if (color)
 					{
