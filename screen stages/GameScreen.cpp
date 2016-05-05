@@ -160,7 +160,7 @@ int TGameScreen::GetMaxDrawZ( __out bool &noDrawRoof, __out char &maxGroundZ)
 			if (!ro->IsStaticObject() && !ro->IsGameObject() && !ro->IsMultiObject())
 				continue;
 
-			if (ro->IsGameObject() && ro->GameObjectPtr()->NPC)
+			if (ro->IsGameObject() && ((TGameObject*)ro)->NPC)
 				continue;
 	
 			if (ro->Z >= pz15 && maxDrawZ > ro->Z && !ro->IsRoof() && (ro->IsSurface() || ro->IsImpassable()))
@@ -314,10 +314,79 @@ void TGameScreen::CalculateRenderList()
 
 	m_ObjectHandlesCount = 0;
 	m_RenderListCount = 0;
-	//vector<int> zList;
 	int objectHandlesOffsetX = g_ObjectHandlesWidth / 2;
 	bool useObjectHandles = (!g_GrayedPixels && ConfigManager.ObjectHandles && g_ShiftPressed && g_CtrlPressed);
 
+	static BYTE renderIndex = 1;
+
+#if UO_CHECKERBOARD_SEQUENCE_RENDER_LIST == 1
+	int minX = m_RenderBounds.RealMinRangeX;
+	int minY = m_RenderBounds.RealMinRangeY;
+
+	int maxX = m_RenderBounds.RealMaxRangeX;
+	int maxY = m_RenderBounds.RealMaxRangeY;
+
+	IFOR(i, 0, 2)
+	{
+		int minValue = minY;
+		int maxValue = maxY;
+
+		if (i)
+		{
+			minValue = minX;
+			maxValue = maxX;
+		}
+
+		IFOR(lead, minValue, maxValue)
+		{
+			int x = minX;
+			int y = lead;
+
+			if (i)
+			{
+				x = lead;
+				y = maxY;
+			}
+
+			while (true)
+			{
+				if (x < minX || x > maxX || y < minY || y > maxY)
+					break;
+				else
+				{
+					int offsetX = x - m_RenderBounds.PlayerX;
+					int offsetY = y - m_RenderBounds.PlayerY;
+
+					int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+					int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+
+					if (drawX >= m_RenderBounds.MinPixelsX && drawX <= m_RenderBounds.MaxPixelsX)
+					{
+						int blockX = x / 8;
+						int blockY = y / 8;
+
+						int blockIndex = (blockX * g_MapBlockY[g_CurrentMap]) + blockY;
+
+						TMapBlock *block = MapManager->GetBlock(blockIndex);
+
+						if (block == NULL)
+						{
+							block = MapManager->AddBlock(blockIndex);
+							block->X = blockX;
+							block->Y = blockY;
+							MapManager->LoadBlock(block);
+						}
+
+						AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX);
+					}
+				}
+
+				x++;
+				y--;
+			}
+		}
+	}
+#else
 	for (int bx = m_RenderBounds.MinBlockX; bx <= m_RenderBounds.MaxBlockX; bx++)
 	{
 		for (int by = m_RenderBounds.MinBlockY; by <= m_RenderBounds.MaxBlockY; by++)
@@ -358,127 +427,245 @@ void TGameScreen::CalculateRenderList()
 					if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
 						continue;
 
-					WORD grayColor = 0;
-
-					if (ConfigManager.GrayOutOfRangeObjects)
-					{
-						POINT testPos = { currentX, currentY };
-
-						if (GetDistance(g_Player, testPos) > g_UpdateRange)
-							grayColor = 0x0386;
-					}
-
-					for (TRenderWorldObject *obj = mb->GetRender(x, y); obj != NULL; obj = obj->m_NextXY)
-					{
-						int z = obj->Z;
-
-						if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
-							continue;
-
-						int testMinZ = drawY;
-						int testMaxZ = drawY - (z * 4);
-
-						TLandObject *land = obj->LandObjectPtr();
-
-						if (land != NULL && land->IsStretched)
-							testMinZ -= (land->MinZ * 4);
-						else
-							testMinZ = testMaxZ;
-
-						if (testMinZ < m_RenderBounds.MinPixelsY || testMaxZ > m_RenderBounds.MaxPixelsY)
-							continue;
-
-						if (m_RenderListCount >= m_RenderListSize)
-							IncreaseRenderList();
-
-						m_RenderList[m_RenderListCount].Obj = obj;
-						m_RenderList[m_RenderListCount].X = drawX;
-						m_RenderList[m_RenderListCount].Y = drawY;
-						m_RenderList[m_RenderListCount].GrayColor = grayColor;
-
-						m_RenderListCount++;
-
-						if (obj->IsGameObject())
-						{
-							TGameObject *go = (TGameObject*)obj;
-
-							if (((!go->Locked() && go->Graphic < 0x4000) || go->NPC) && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
-							{
-								int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
-
-								m_ObjectHandlesList[index].Obj = go;
-								m_ObjectHandlesList[index].X = drawX - objectHandlesOffsetX;
-								m_ObjectHandlesList[index].Y = drawY - (go->Z * 4);
-
-								if (go->NPC)
-								{
-									TGameCharacter *character = go->GameCharacterPtr();
-
-									ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(go);
-
-									m_ObjectHandlesList[index].X += character->OffsetX;
-									m_ObjectHandlesList[index].Y += character->OffsetY - (character->OffsetZ + dims.Height + dims.CenterY);
-								}
-								else
-								{
-									POINT p = { 0 };
-									UO->GetArtDimension(go->Graphic + 0x4000, p);
-									m_ObjectHandlesList[index].Y -= p.y;
-								}
-
-								m_ObjectHandlesCount++;
-							}
-						}
-						else if (obj->IsFoliage() && obj->StaticGroupObjectPtr()->FoliageTransparentIndex != g_FoliageIndex)
-						{
-							char index = 0;
-
-							bool foliageCanBeChecked = (m_RenderBounds.PlayerX <= currentX && m_RenderBounds.PlayerY <= currentY);
-
-							if (!foliageCanBeChecked)
-							{
-								foliageCanBeChecked = (m_RenderBounds.PlayerY <= currentY && m_RenderBounds.PlayerX <= currentX + 1);
-
-								if (!foliageCanBeChecked)
-									foliageCanBeChecked = (m_RenderBounds.PlayerX <= currentX && m_RenderBounds.PlayerY <= currentY + 1);
-							}
-
-							if (foliageCanBeChecked)
-							{
-								POINT fp = { 0, 0 };
-								UO->GetArtDimension(obj->Graphic, fp);
-
-								TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (z * 4), fp.x, fp.y);
-
-								if (fib.InRect(g_PlayerRect))
-								{
-									RECT realRect = { 0 };
-									UO->GetStaticArtRealPixelDimension(obj->Graphic - 0x4000, realRect);
-
-									fib.X += realRect.left;
-									fib.Y += realRect.top;
-									fib.Width = realRect.right;
-									fib.Height = realRect.bottom;
-
-									if (fib.InRect(g_PlayerRect))
-									{
-										index = g_FoliageIndex;
-
-										CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
-									}
-								}
-							}
-
-							obj->StaticGroupObjectPtr()->FoliageTransparentIndex = index;
-						}
-					}
+					AddTileToRenderList(mb->GetRender(x, y), drawX, drawY, currentX, currentY, renderIndex, useObjectHandles, objectHandlesOffsetX);
 				}
 			}
 		}
 	}
+#endif
 
 	if (m_ObjectHandlesCount > MAX_OBJECT_HANDLES)
 		m_ObjectHandlesCount = MAX_OBJECT_HANDLES;
+
+#if UO_RENDER_LIST_SORT == 1
+	renderIndex++;
+
+	if (renderIndex >= 100)
+		renderIndex = 1;
+#endif
+}
+//---------------------------------------------------------------------------
+void TGameScreen::AddTileToRenderList(TRenderWorldObject *obj, const int &drawX, const int &drawY, const int &worldX, const int &worldY, const BYTE &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX, const int &maxZ)
+{
+	WORD grayColor = 0;
+
+	if (ConfigManager.GrayOutOfRangeObjects)
+	{
+		POINT testPos = { worldX, worldY };
+
+		if (GetDistance(g_Player, testPos) > g_UpdateRange)
+			grayColor = 0x0386;
+	}
+
+	//if (maxZ != 150)
+	//	grayColor = 0x0021;
+
+	for (; obj != NULL; obj = obj->m_NextXY)
+	{
+#if UO_RENDER_LIST_SORT == 1
+		if (obj->CurrentRenderIndex == renderIndex)
+			continue;
+
+		int maxObjectZ = obj->Z + obj->RenderQueueIndex;
+
+		TRenderStaticObject *rso = obj->StaticGroupObjectPtr();
+
+		if (rso != NULL)
+		{
+			if (rso->IsGameObject() && ((TGameObject*)rso)->NPC)
+				maxObjectZ += DEFAULT_CHARACTER_HEIGHT;
+			else
+				maxObjectZ += rso->GetStaticHeight();
+		}
+
+		if (maxObjectZ >= maxZ)
+			break;
+
+		obj->CurrentRenderIndex = renderIndex;
+#endif
+
+		int z = obj->Z;
+
+		if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
+			continue;
+
+		int testMinZ = drawY;
+		int testMaxZ = drawY - (z * 4);
+
+		TLandObject *land = obj->LandObjectPtr();
+
+		if (land != NULL && land->IsStretched)
+			testMinZ -= (land->MinZ * 4);
+		else
+			testMinZ = testMaxZ;
+
+		if (testMinZ < m_RenderBounds.MinPixelsY || testMaxZ > m_RenderBounds.MaxPixelsY)
+			continue;
+
+		if (obj->IsGameObject())
+		{
+			TGameObject *go = (TGameObject*)obj;
+
+			if (((!go->Locked() && go->Graphic < 0x4000) || go->NPC) && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
+			{
+				int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
+
+				m_ObjectHandlesList[index].Obj = go;
+				m_ObjectHandlesList[index].X = drawX - objectHandlesOffsetX;
+				m_ObjectHandlesList[index].Y = drawY - (go->Z * 4);
+
+				if (go->NPC)
+				{
+					TGameCharacter *character = go->GameCharacterPtr();
+
+					ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(go);
+
+					m_ObjectHandlesList[index].X += character->OffsetX;
+					m_ObjectHandlesList[index].Y += character->OffsetY - (character->OffsetZ + dims.Height + dims.CenterY);
+				}
+				else
+				{
+					POINT p = { 0 };
+					UO->GetArtDimension(go->Graphic + 0x4000, p);
+					m_ObjectHandlesList[index].Y -= p.y;
+				}
+
+				m_ObjectHandlesCount++;
+			}
+
+#if UO_RENDER_LIST_SORT == 1
+			if (go->NPC || go->IsCorpse())
+				AddOffsetCharacterTileToRenderList(go, drawX, drawY, renderIndex, useObjectHandles, objectHandlesOffsetX);
+#endif
+		}
+		else if (obj->IsFoliage() && obj->StaticGroupObjectPtr()->FoliageTransparentIndex != g_FoliageIndex)
+		{
+			char index = 0;
+
+			bool foliageCanBeChecked = (m_RenderBounds.PlayerX <= worldX && m_RenderBounds.PlayerY <= worldY);
+
+			if (!foliageCanBeChecked)
+			{
+				foliageCanBeChecked = (m_RenderBounds.PlayerY <= worldY && m_RenderBounds.PlayerX <= worldX + 1);
+
+				if (!foliageCanBeChecked)
+					foliageCanBeChecked = (m_RenderBounds.PlayerX <= worldX && m_RenderBounds.PlayerY <= worldY + 1);
+			}
+
+			if (foliageCanBeChecked)
+			{
+				POINT fp = { 0, 0 };
+				UO->GetArtDimension(obj->Graphic, fp);
+
+				TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (z * 4), fp.x, fp.y);
+
+				if (fib.InRect(g_PlayerRect))
+				{
+					RECT realRect = { 0 };
+					UO->GetStaticArtRealPixelDimension(obj->Graphic - 0x4000, realRect);
+
+					fib.X += realRect.left;
+					fib.Y += realRect.top;
+					fib.Width = realRect.right;
+					fib.Height = realRect.bottom;
+
+					if (fib.InRect(g_PlayerRect))
+					{
+						index = g_FoliageIndex;
+
+						CheckFoliageUnion(obj->Graphic, obj->X, obj->Y, z);
+					}
+				}
+			}
+
+			obj->StaticGroupObjectPtr()->FoliageTransparentIndex = index;
+		}
+
+		if (m_RenderListCount >= m_RenderListSize)
+			IncreaseRenderList();
+
+		m_RenderList[m_RenderListCount].Obj = obj;
+		m_RenderList[m_RenderListCount].X = drawX;
+		m_RenderList[m_RenderListCount].Y = drawY;
+		m_RenderList[m_RenderListCount].GrayColor = grayColor;
+
+		m_RenderListCount++;
+	}
+}
+//---------------------------------------------------------------------------
+void TGameScreen::AddOffsetCharacterTileToRenderList(TGameObject *obj, int drawX, int drawY, const BYTE &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX)
+{
+	int characterX = obj->X;
+	int characterY = obj->Y;
+
+	ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(obj);
+	TGameCharacter *character = obj->GameCharacterPtr();
+
+	if (character != NULL)
+	{
+		drawX += character->OffsetX;
+		drawY += character->OffsetY - character->OffsetZ; // (character->OffsetZ + dims.Height + dims.CenterY);
+	}
+
+	vector<pair<int, int>> coordinates;
+
+	coordinates.push_back(pair<int, int>(characterX, characterY + 1));
+	coordinates.push_back(pair<int, int>(characterX, characterY + 2));
+
+	coordinates.push_back(pair<int, int>(characterX + 1, characterY - 2));
+	coordinates.push_back(pair<int, int>(characterX + 1, characterY - 1));
+	coordinates.push_back(pair<int, int>(characterX + 1, characterY));
+	coordinates.push_back(pair<int, int>(characterX + 1, characterY + 1));
+	coordinates.push_back(pair<int, int>(characterX + 1, characterY + 2));
+
+	coordinates.push_back(pair<int, int>(characterX + 2, characterY - 2));
+	coordinates.push_back(pair<int, int>(characterX + 2, characterY - 1));
+	coordinates.push_back(pair<int, int>(characterX + 2, characterY));
+	coordinates.push_back(pair<int, int>(characterX + 2, characterY + 1));
+	coordinates.push_back(pair<int, int>(characterX + 2, characterY + 2));
+
+	int size = coordinates.size();
+
+	int maxZ = obj->Z + obj->RenderQueueIndex;
+
+	IFOR(i, 0, size)
+	{
+		int x = coordinates[i].first;
+
+		if (x < m_RenderBounds.RealMinRangeX || x > m_RenderBounds.RealMaxRangeX)
+			continue;
+
+		int y = coordinates[i].second;
+
+		if (y < m_RenderBounds.RealMinRangeY || y > m_RenderBounds.RealMaxRangeY)
+			continue;
+
+		int offsetX = x - m_RenderBounds.PlayerX;
+		int offsetY = y - m_RenderBounds.PlayerY;
+
+		int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+		int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+
+		if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
+			continue;
+
+		int blockX = x / 8;
+		int blockY = y / 8;
+
+		int blockIndex = (blockX * g_MapBlockY[g_CurrentMap]) + blockY;
+
+		TMapBlock *block = MapManager->GetBlock(blockIndex);
+
+		if (block == NULL)
+		{
+			block = MapManager->AddBlock(blockIndex);
+			block->X = blockX;
+			block->Y = blockY;
+			MapManager->LoadBlock(block);
+		}
+
+		AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX, maxZ);
+	}
 }
 //---------------------------------------------------------------------------
 /*!
@@ -553,41 +740,6 @@ void TGameScreen::CalculateGameWindowBounds()
 
 	m_RenderBounds.GameWindowCenterX -= (int)g_Player->OffsetX;
 	m_RenderBounds.GameWindowCenterY -= (int)(g_Player->OffsetY - g_Player->OffsetZ);
-
-	/*int animWidth = 80;
-	int animHeight = 120;
-	int animCenterY = 0;
-
-	TTextureAnimation *anim = AnimationManager->GetAnimation(g_Player->GetMountAnimation());
-
-	if (anim != NULL)
-	{
-		TTextureAnimationGroup *group = anim->GetGroup(g_Player->GetAnimationGroup());
-		if (group != NULL)
-		{
-			BYTE dir = g_Player->Direction;
-
-			if (dir >= 0x80)
-				dir -= 0x80;
-
-			bool mirror = false;
-			AnimationManager->GetAnimDirection(dir, mirror);
-
-			TTextureAnimationDirection *direction = group->GetDirection(dir);
-
-			if (direction != NULL && direction->Address != 0)
-			{
-				TTextureAnimationFrame *frame = direction->GetFrame(g_Player->AnimIndex);
-
-				if (frame != NULL)
-				{
-					animWidth = frame->Width;
-					animHeight = frame->Height;
-					animCenterY = frame->CenterY;
-				}
-			}
-		}
-	}*/
 
 	ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(g_Player);
 

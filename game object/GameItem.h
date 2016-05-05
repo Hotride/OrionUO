@@ -132,8 +132,6 @@ public:
 	@return —сылка на найденный объект или NULL
 	*/
 	TGameItem *FindLayer(__in int layer);
-
-	virtual TGameItem *GameItemPtr() { return this; }
 };
 //---------------------------------------------------------------------------
 #endif

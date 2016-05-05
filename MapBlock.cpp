@@ -376,7 +376,7 @@ void TMapBlock::AddRender(TRenderWorldObject *item, int &x, int &y)
 		next->m_PrevXY = item;
 }
 //---------------------------------------------------------------------------
-TRenderWorldObject *TMapBlock::GetRender(int &x, int &y)
+TRenderWorldObject *TMapBlock::GetRender(const int &x, const int &y)
 {
 	TRenderWorldObject *obj = Block[x][y];
 
