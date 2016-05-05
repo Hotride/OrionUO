@@ -1479,14 +1479,6 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 	int drawX = (int)(x + obj->OffsetX);
 	int drawY = (int)(y + obj->OffsetY) - (z * 4) - (int)obj->OffsetZ;
 	
-#if UO_TILE_UNDERCHAR_RENDER == 1
-	//1426, 1679 ->center
-	//1426, 1680 ->s
-	//1425, 1680 ->sw
-	//1427, 1679 ->e
-	//1427, 1678 ->ne
-#endif
-
 	if (goi != NULL) //Draw mount
 	{
 		m_Sitting = 0;
@@ -1928,8 +1920,9 @@ ANIMATION_DIMENSIONS TAnimationManager::GetAnimationDimensions(TGameObject *obj,
 
 	if (obj->NPC)
 	{
-		((TGameCharacter*)obj)->UpdateAnimationInfo(dir);
-		animGroup = ((TGameCharacter*)obj)->GetAnimationGroup();
+		TGameCharacter *gc = obj->GameCharacterPtr();
+		gc->UpdateAnimationInfo(dir);
+		animGroup = gc->GetAnimationGroup();
 	}
 	else
 	{

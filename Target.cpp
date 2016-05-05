@@ -224,9 +224,7 @@ void TTarget::AddMultiObject(TMultiObject *obj)
 
 		if (multi != NULL)
 		{
-			TMultiObject *multiobj = (TMultiObject*)multi->m_Items;
-
-			while (multiobj != NULL)
+			QFOR(multiobj, multi->m_Items, TMultiObject*)
 			{
 				if (obj->Z < multiobj->Z)
 				{
@@ -255,8 +253,6 @@ void TTarget::AddMultiObject(TMultiObject *obj)
 
 					return;
 				}
-
-				multiobj = (TMultiObject*)multiobj->m_Next;
 			}
 
 			//Если пришли сюда - что-то пошло не так

@@ -210,6 +210,10 @@ private:
 	*/
 	void IncreaseRenderList();
 
+	void AddTileToRenderList(TRenderWorldObject *obj, const int &drawX, const int &drawY, const int &worldX, const int &worldY, const BYTE &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX, const int &maxZ = 150);
+
+	void AddOffsetCharacterTileToRenderList(TGameObject *obj, int drawX, int drawY, const BYTE &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX);
+
 public:
 	TGameScreen();
 	virtual ~TGameScreen();

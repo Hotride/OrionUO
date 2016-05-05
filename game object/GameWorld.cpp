@@ -44,6 +44,7 @@ TGameWorld::~TGameWorld()
 
 	m_Items = NULL;
 }
+//---------------------------------------------------------------------------
 void TGameWorld::ProcessSound(DWORD ticks, TGameCharacter *gc)
 {
 	if (ConfigManager.FootstepsSound && gc->IsHuman() && !gc->Hidden())
@@ -89,14 +90,14 @@ void TGameWorld::ProcessAnimation()
 {
 	TGameObject *obj = (TGameObject*)m_Items;
 	DWORD ticks = GetTickCount();
-	BYTE delay = (ConfigManager.StandartCharactersAnimationDelay ? 0x75 : 0x50);
+	BYTE delay = (ConfigManager.StandartCharactersAnimationDelay ? 0x50 : 50); // 0x75 : 0x50
 	g_AnimCharactersDelayValue = delay;
 
 	while (obj != NULL)
 	{
 		if (obj->NPC)
 		{
-			TGameCharacter *gc = (TGameCharacter*)obj;
+			TGameCharacter *gc = obj->GameCharacterPtr();
 			BYTE dir = 0;
 			gc->UpdateAnimationInfo(dir, true);
 
@@ -394,7 +395,7 @@ TGameCharacter *TGameWorld::GetWorldCharacter(__in DWORD serial)
 		return obj;
 	}
 
-	return (TGameCharacter*)(*i).second;
+	return i->second->GameCharacterPtr();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -440,7 +441,7 @@ TGameCharacter *TGameWorld::FindWorldCharacter(__in DWORD serial)
 
 	WORLD_MAP::iterator i = m_Map.find(serial);
 	if (i != m_Map.end() && ((*i).second)->NPC)
-		result = (TGameCharacter*)(*i).second;
+		result = i->second->GameCharacterPtr();
 
 	return result;
 }
@@ -715,7 +716,7 @@ TGameObject *TGameWorld::SearchWorldObject(__in DWORD serialStart, __in int scan
 					{
 						if (scanType == STO_HOSTLE)
 						{
-							TGameCharacter *gc = (TGameCharacter*)obj;
+							TGameCharacter *gc = obj->GameCharacterPtr();
 
 							condition = (gc->Notoriety >= NT_SOMEONE_GRAY || gc->Notoriety <= NT_MURDERER);
 						}

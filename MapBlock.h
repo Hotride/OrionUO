@@ -67,7 +67,7 @@ public:
 	void AddRender(TRenderWorldObject *item, int &x, int &y);
 
 	//Получить начало очереди рендера
-	TRenderWorldObject *GetRender(int &x, int &y);
+	TRenderWorldObject *GetRender(const int &x, const int &y);
 
 	//Получить цвет точки для радара
 	WORD GetRadarColor(int x, int y);

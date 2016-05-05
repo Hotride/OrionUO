@@ -308,17 +308,13 @@ void TGump::SendSellList()
 	WORD size = 9;
 	WORD count = 0;
 
-	TGumpSellObject *go = (TGumpSellObject*)m_Items;
-
-	while (go != NULL)
+	QFOR(go, m_Items, TGumpSellObject*)
 	{
 		if (go->SelectedCount)
 		{
 			size += 6;
 			count++;
 		}
-
-		go = (TGumpSellObject*)go->m_Next;
 	}
 
 	PBYTE buf = new BYTE[size];
@@ -329,9 +325,7 @@ void TGump::SendSellList()
 	
 	PBYTE ptr = buf + 9;
 
-	go = (TGumpSellObject*)m_Items;
-
-	while (go != NULL)
+	QFOR(go, m_Items, TGumpSellObject*)
 	{
 		if (go->SelectedCount)
 		{
@@ -340,8 +334,6 @@ void TGump::SendSellList()
 			pack16(ptr, go->SelectedCount);
 			ptr += 2;
 		}
-
-		go = (TGumpSellObject*)go->m_Next;
 	}
 
 	UO->Send(buf, size);
@@ -367,13 +359,11 @@ void TGump::SendBuyList()
 
 	IFOR(i, 0, 2)
 	{
-		TGameItem *box = vendor->FindLayer(Layers[i]);
+		TGameItem *vendorBox = vendor->FindLayer(Layers[i]);
 
-		if (box != NULL)
+		if (vendorBox != NULL)
 		{
-			box = (TGameItem*)box->m_Items;
-
-			while (box != NULL)
+			QFOR(box, vendorBox->m_Items, TGameItem*)
 			{
 				TShopItem *si = box->ShopItem;
 
@@ -382,8 +372,6 @@ void TGump::SendBuyList()
 					size += 7;
 					count++;
 				}
-
-				box = (TGameItem*)box->m_Next;
 			}
 		}
 	}
@@ -401,13 +389,11 @@ void TGump::SendBuyList()
 	
 		IFOR(i, 0, 2)
 		{
-			TGameItem *box = vendor->FindLayer(Layers[i]);
+			TGameItem *vendorBox = vendor->FindLayer(Layers[i]);
 
-			if (box != NULL)
+			if (vendorBox != NULL)
 			{
-				box = (TGameItem*)box->m_Items;
-
-				while (box != NULL)
+				QFOR(box, vendorBox->m_Items, TGameItem*)
 				{
 					TShopItem *si = box->ShopItem;
 
@@ -420,8 +406,6 @@ void TGump::SendBuyList()
 						pack16(ptr, si->Count);
 						ptr += 2;
 					}
-
-					box = (TGameItem*)box->m_Next;
 				}
 			}
 		}

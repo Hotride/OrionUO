@@ -288,15 +288,11 @@ char TMapBlock::GetRenderZ(TRenderWorldObject *item)
 	//Получаем Z-координату для рендера
 	char z = item->Z;
 
-	//Исключения для земли
-	if (item->IsLandObject())
-	{
-		TLandObject *land = (TLandObject*)item;
+	TLandObject *land = item->LandObjectPtr();
 
-		//Если это тайл текстуры
-		if (land->IsStretched)
-			z = (char)land->Serial;
-	}
+	//Исключения для земли, если это тайл текстуры
+	if (land != NULL && land->IsStretched)
+		z = (char)land->Serial;
 
 	return z;
 }
@@ -380,7 +376,7 @@ void TMapBlock::AddRender(TRenderWorldObject *item, int &x, int &y)
 		next->m_PrevXY = item;
 }
 //---------------------------------------------------------------------------
-TRenderWorldObject *TMapBlock::GetRender(int &x, int &y)
+TRenderWorldObject *TMapBlock::GetRender(const int &x, const int &y)
 {
 	TRenderWorldObject *obj = Block[x][y];
 
