@@ -21,7 +21,7 @@
 
 TAnimationManager *AnimationManager = NULL;
 //----------------------------------------------------------------------------
-int TAnimationManager::m_UsedLayers[8][USED_LAYER_COLUT] =
+int TAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 {
 	{ //dir 0
 		OL_SHIRT,
@@ -1293,7 +1293,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		{
 			//AddShadow(frame->Texture, x, y, g_ZBuffer, frame->Width, frame->Height, mirror);
 
-			ColorManager->SendColorsToShader(0x0386);
+			ColorManager->SendColorsToShader(0x0388/*0x0386*/);
 			glUniform1iARB(ShaderDrawMode, 1);
 
 			glEnable(GL_BLEND);
@@ -1442,6 +1442,282 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 	}
 }
 //----------------------------------------------------------------------------
+void TAnimationManager::DrawCharacterAAA(__in TGameCharacter *obj, __in int x, __in int y, __in int z)
+{
+	if (g_UseFrameBuffer)
+	{
+		if (g_CharacterBuffer.Ready() && g_CharacterBuffer.Use())
+		{
+			glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+			WORD targetColor = 0;
+			bool needHPLine = false;
+			DWORD serial = obj->Serial;
+
+			if (obj->Hidden())
+				m_Color = 0x038A;
+			else if (g_StatusbarUnderMouse == serial)
+				m_Color = ConfigManager.GetColorByNotoriety(obj->Notoriety);
+			else
+				m_Color = 0;
+
+			bool isAttack = (serial == g_LastAttackObject);
+
+			if (!obj->IsPlayer() && (isAttack || serial == g_LastTargetObject))
+			{
+				targetColor = ConfigManager.GetColorByNotoriety(obj->Notoriety);
+				needHPLine = (serial != NewTargetSystem.Serial);
+
+				if (isAttack)
+					m_Color = targetColor;
+			}
+	
+			m_Direction = 0;
+			obj->UpdateAnimationInfo(m_Direction);
+
+			bool mirror = false;
+			BYTE layerDir = m_Direction;
+	
+			GetAnimDirection(m_Direction, mirror);
+
+			BYTE animIndex = obj->AnimIndex;
+			BYTE animGroup = obj->GetAnimationGroup();
+
+			TGameItem *goi = obj->FindLayer(OL_MOUNT);
+	
+			int lightOffset = 20;
+			int drawX = (int)(x + obj->OffsetX);
+			int drawY = (int)(y + obj->OffsetY) - (z * 4) - (int)obj->OffsetZ;
+	
+			if (goi != NULL) //Draw mount
+			{
+				m_Sitting = 0;
+				lightOffset += 20;
+				WORD mountID = goi->GetMountAnimation();
+
+				m_AnimGroup = obj->GetAnimationGroup(mountID);
+		
+				Draw(goi, drawX, drawY, mirror, animIndex, mountID + 0x10000);
+				Draw(goi, drawX, drawY, mirror, animIndex, mountID);
+
+				switch (animGroup)
+				{
+					case PAG_FIDGET_1:
+					case PAG_FIDGET_2:
+					case PAG_FIDGET_3:
+					{
+						animGroup = PAG_ONMOUNT_STAND;
+						animIndex = 0;
+						break;
+					}
+					default:
+						break;
+				}
+			}
+			else
+			{
+				m_Sitting = obj->IsSitting();
+
+				if (m_Sitting)
+				{
+					animGroup = PAG_STAND;
+					animIndex = 0;
+
+					obj->UpdateAnimationInfo(m_Direction);
+			
+					FixSittingDirection(layerDir, mirror, drawX, drawY);
+				}
+			}
+	
+			m_AnimGroup = animGroup;
+	
+			if (!m_Sitting)
+				Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
+
+			Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
+
+			if (obj->IsHuman()) //Draw layred objects
+			{
+				if (!obj->Dead())
+				{
+					IFOR(l, 0, USED_LAYER_COUNT)
+					{
+						goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
+
+						if (goi != NULL)
+						{
+							if (goi->AnimID)
+								Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
+
+							if (goi->IsLightSource() && GameScreen->UseLight)
+								GameScreen->AddLight(obj, goi, drawX, drawY - lightOffset);
+						}
+					}
+				}
+				else
+				{
+					goi = obj->FindLayer(OL_ROBE);
+
+					if (goi != NULL && goi->AnimID)
+						Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
+				}
+			}
+	
+			if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial == obj->Serial)
+			{
+				WORD id = obj->GetMountAnimation();
+
+				if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				{
+					TTextureAnimation *anim = m_DataIndex[id].Group;
+
+					if (anim != NULL)
+					{
+						TTextureAnimationGroup *group = anim->GetGroup(m_AnimGroup);
+						TTextureAnimationDirection *direction = group->GetDirection(m_Direction);
+
+						if (direction->Address != 0)
+						{
+							TTextureAnimationFrame *frame = direction->GetFrame(0);
+
+							int frameWidth = 20;
+							int frameHeight = 20;
+
+							if (frame != NULL)
+							{
+								frameWidth = frame->Width;
+								frameHeight = frame->Height;
+							}
+
+							if (frameWidth >= 80)
+							{
+								NewTargetSystem.GumpTop = 0x756D;
+								NewTargetSystem.GumpBottom = 0x756A;
+							}
+							else if (frameWidth >= 40)
+							{
+								NewTargetSystem.GumpTop = 0x756E;
+								NewTargetSystem.GumpBottom = 0x756B;
+							}
+							else
+							{
+								NewTargetSystem.GumpTop = 0x756F;
+								NewTargetSystem.GumpBottom = 0x756C;
+							}
+
+							switch (obj->Notoriety)
+							{
+								case NT_INNOCENT:
+								{
+									NewTargetSystem.ColorGump = 0x7570;
+									break;
+								}
+								case NT_FRIENDLY:
+								{
+									NewTargetSystem.ColorGump = 0x7571;
+									break;
+								}
+								case NT_SOMEONE_GRAY:
+								case NT_CRIMINAL:
+								{
+									NewTargetSystem.ColorGump = 0x7572;
+									break;
+								}
+								case NT_ENEMY:
+								{
+									NewTargetSystem.ColorGump = 0x7573;
+									break;
+								}
+								case NT_MURDERER:
+								{
+									NewTargetSystem.ColorGump = 0x7576;
+									break;
+								}
+								case NT_INVULNERABLE:
+								{
+									NewTargetSystem.ColorGump = 0x7575;
+									break;
+								}
+								default:
+									break;
+							}
+					
+							int per = obj->MaxHits;
+
+							if (per > 0)
+							{
+								per = (obj->Hits * 100) / per;
+
+								if (per > 100)
+									per = 100;
+			
+								if (per < 1)
+									per = 0;
+								else
+									per = (34 * per) / 100;
+
+							}
+					
+							NewTargetSystem.Hits = per;
+							NewTargetSystem.X = drawX;
+							NewTargetSystem.TopY = drawY - frameHeight - 8;
+							NewTargetSystem.BottomY = drawY + 7;
+						}
+
+					}
+				}
+			}
+
+			if (needHPLine)
+			{
+				int per = obj->MaxHits;
+
+				if (per > 0)
+				{
+					per = (obj->Hits * 100) / per;
+
+					if (per > 100)
+						per = 100;
+			
+					if (per < 1)
+						per = 0;
+					else
+						per = (34 * per) / 100;
+
+				}
+
+				if (isAttack)
+				{
+					AttackTargetGump.X = drawX - 20;
+					AttackTargetGump.Y = drawY;
+					AttackTargetGump.Color = targetColor;
+					AttackTargetGump.Hits = per;
+				}
+				else
+				{
+					TargetGump.X = drawX - 20;
+					TargetGump.Y = drawY;
+					TargetGump.Color = targetColor;
+					TargetGump.Hits = per;
+				}
+			}
+
+			g_CharacterBuffer.Release();
+
+			g_GL.RestorePort();
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+
+			g_CharacterBuffer.DrawShadow(0, 0);
+
+			glDisable(GL_BLEND);
+		}
+	}
+}
+//----------------------------------------------------------------------------
 /*!
 ќтрисовать персонажа
 @param [__in] obj —сылка на персонажа
@@ -1452,6 +1728,9 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 */
 void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __in int y, __in int z)
 {
+	//DrawCharacterAAA(obj, x, y, z);
+	//return;
+
 	WORD targetColor = 0;
 	bool needHPLine = false;
 	DWORD serial = obj->Serial;
@@ -1542,7 +1821,7 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 	{
 		if (!obj->Dead())
 		{
-			IFOR(l, 0, USED_LAYER_COLUT)
+			IFOR(l, 0, USED_LAYER_COUNT)
 			{
 				goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
 
@@ -1762,7 +2041,7 @@ bool TAnimationManager::CharacterPixelsInXY( __in TGameCharacter *obj, __in int 
 
 	if (obj->IsHuman()) //Check layred objects
 	{
-		IFOR(l, 0, USED_LAYER_COLUT && !result)
+		IFOR(l, 0, USED_LAYER_COUNT && !result)
 		{
 			goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
 
@@ -1806,7 +2085,7 @@ void TAnimationManager::DrawCorpse( __in TGameItem *obj, __in int x, __in int y,
 
 	Draw(obj, x, y, mirror, animIndex); //Draw animation
 
-	IFOR(l, 0, USED_LAYER_COLUT)
+	IFOR(l, 0, USED_LAYER_COUNT)
 	{
 		TGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
 		
@@ -1847,7 +2126,7 @@ bool TAnimationManager::CorpsePixelsInXY( __in TGameItem *obj, __in int x, __in 
 
 	bool result = TestPixels(obj, x, y, mirror, animIndex);
 
-	IFOR(l, 0, USED_LAYER_COLUT && !result)
+	IFOR(l, 0, USED_LAYER_COUNT && !result)
 	{
 		TGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
 

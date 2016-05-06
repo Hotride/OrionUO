@@ -83,7 +83,15 @@ void TTarget::SendTargetObject(DWORD serial)
 		return; //Если в клиенте нет таргета - выход
 
 	if (serial != g_PlayerSerial)
+	{
 		g_LastTargetObject = serial;
+
+		if (serial < 0x40000000)
+		{
+			TPacketStatusRequest packet(serial);
+			packet.Send();
+		}
+	}
 
 	//Пишем серийник объекта, на который ткнули прицелом, остальное - затираем
 	pack32(m_Data + 7, serial);

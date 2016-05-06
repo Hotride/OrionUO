@@ -1082,6 +1082,7 @@ bool TUltimaOnline::Install()
 	g_GL.BindTexture16(g_TextureGumpState[0], 10, 14, pdwult);
 
 	g_LightBuffer.Init(GetSystemMetrics(SM_CXMAXIMIZED), GetSystemMetrics(SM_CYMAXIMIZED));
+	g_CharacterBuffer.Init(GetSystemMetrics(SM_CXMAXIMIZED), GetSystemMetrics(SM_CYMAXIMIZED));
 
 	g_CircleOfTransparency.Create(200);
 

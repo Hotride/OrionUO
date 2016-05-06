@@ -20,6 +20,7 @@
 #include "stdafx.h"
 
 TFrameBuffer g_LightBuffer;
+TFrameBuffer g_CharacterBuffer;
 //---------------------------------------------------------------------------
 TFrameBuffer::TFrameBuffer()
 : m_Width(0), m_Height(0), m_Ready(false), m_OldFrameBuffer(0), m_FrameBuffer(0),
@@ -29,6 +30,7 @@ m_Texture(0)
 //---------------------------------------------------------------------------
 TFrameBuffer::~TFrameBuffer()
 {
+	Free();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -156,6 +158,21 @@ bool TFrameBuffer::Use()
 @return 
 */
 void TFrameBuffer::Draw( __in int x, __in int y)
+{
+	if (g_UseFrameBuffer && m_Ready)
+	{
+		g_GL.OldTexture = 0;
+		g_GL.Draw(m_Texture, x, y, m_Width, m_Height);
+	}
+}
+//---------------------------------------------------------------------------
+/*!
+ќтрисовать текстуру буфера
+@param [__in] x Ёкранна€ координата X
+@param [__in] y Ёкранна€ координата Y
+@return
+*/
+void TFrameBuffer::DrawShadow(__in int x, __in int y)
 {
 	if (g_UseFrameBuffer && m_Ready)
 	{

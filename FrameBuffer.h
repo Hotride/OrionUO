@@ -92,9 +92,11 @@ public:
 	*/
 	void Draw(__in int x, __in int y);
 
+	void DrawShadow(__in int x, __in int y);
 };
 //---------------------------------------------------------------------------
 //!Буфер для освещения
 extern TFrameBuffer g_LightBuffer;
+extern TFrameBuffer g_CharacterBuffer;
 //---------------------------------------------------------------------------
 #endif

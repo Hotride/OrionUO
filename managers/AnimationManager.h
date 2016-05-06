@@ -77,8 +77,8 @@ private:
 	int m_ShadowCount;
 
 	//!”пор€доченный список слоев дл€ корректного пор€дка прорисовки дл€ всех направлений персонажа
-	static const int USED_LAYER_COLUT = 19;
-	static int m_UsedLayers[8][USED_LAYER_COLUT];
+	static const int USED_LAYER_COUNT = 19;
+	static int m_UsedLayers[8][USED_LAYER_COUNT];
 
 	//!ƒанные анимаций
 	TIndexAnimation m_DataIndex[MAX_ANIMATIONS_DATA_INDEX_COUNT];
@@ -199,6 +199,8 @@ public:
 	@return 
 	*/
 	void DrawCharacter(__in TGameCharacter *obj, __in int x, __in int y, __in int z);
+
+	void DrawCharacterAAA(__in TGameCharacter *obj, __in int x, __in int y, __in int z);
 
 	/*!
 	ѕроверить наличие пиксел€ персонажа в указанных координатах
