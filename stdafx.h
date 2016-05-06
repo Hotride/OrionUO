@@ -152,8 +152,14 @@ extern string g_ClientVersionText;
 //!Имена для автовхода
 extern string g_AutoLoginNames;
 
-//!Последний введенный текст
-extern wstring g_LastConsoleEntry;
+//!Стек последнего введенного текста
+extern wstring g_ConsoleStack[MAX_CONSOLE_STACK_SIZE];
+
+//!Количество добавленного в стек текста
+extern int g_ConsoleStackCount;
+
+//!Указатель на текущий элемент стека
+extern int g_ConsoleSelectedIndex;
 
 //!IP сервера
 extern string g_ShardIP;

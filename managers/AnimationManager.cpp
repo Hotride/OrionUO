@@ -1290,7 +1290,19 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 #endif
 
 		if (isShadow)
-			AddShadow(frame->Texture, x, y, g_ZBuffer, frame->Width, frame->Height, mirror);
+		{
+			//AddShadow(frame->Texture, x, y, g_ZBuffer, frame->Width, frame->Height, mirror);
+
+			ColorManager->SendColorsToShader(0x0386);
+			glUniform1iARB(ShaderDrawMode, 1);
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
+
+			g_GL.DrawShadow(frame->Texture, x, y, frame->Width, frame->Height / 2, mirror);
+
+			glDisable(GL_BLEND);
+		}
 		else
 		{
 			WORD color = m_Color;

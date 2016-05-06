@@ -4268,6 +4268,10 @@ void TUltimaOnline::Disconnect()
 	Party.Inviter = 0;
 	Party.Clear();
 
+	g_ConsoleStack[0] = L"";
+	g_ConsoleStackCount = 0;
+	g_ConsoleSelectedIndex = 0;
+
 	g_ResizedGump = NULL;
 }
 //---------------------------------------------------------------------------

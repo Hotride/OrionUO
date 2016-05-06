@@ -984,7 +984,6 @@ PACKET_HANDLER(EnterWorld)
 		g_PingSequence = 0;
 		g_ClickObject.Init(COT_NONE);
 		Weather.Reset();
-		g_LastConsoleEntry = L"";
 		g_SkillsTotal = 0.0f;
 		g_ConsolePrompt = PT_NONE;
 		MacroPointer = NULL;

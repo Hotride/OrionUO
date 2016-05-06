@@ -1108,7 +1108,7 @@ void TGameScreen::DrawGameWindow( __in bool &mode)
 			}
 		}
 
-		AnimationManager->DrawShadows();
+		//AnimationManager->DrawShadows();
 
 		g_ZBuffer = 0;
 		glDisable(GL_DEPTH_TEST);
@@ -2264,10 +2264,18 @@ void TGameScreen::OnCharPress( __in WPARAM wparam, __in LPARAM lparam)
 	bool ctrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
 	//bool shiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
 
-	if (EntryPointer == GameConsole && (!EntryPointer->Length() || (g_GumpConsoleType != NULL && g_GumpConsoleType->ConsoleIsEmpty())) && lparam == 0x100001 && ctrlPressed)
+	if (EntryPointer == GameConsole && /*(!EntryPointer->Length() || (g_GumpConsoleType != NULL && g_GumpConsoleType->ConsoleIsEmpty())) &&*/ lparam == 0x100001 && ctrlPressed)
 	{
-		EntryPointer->SetText(g_LastConsoleEntry);
-		EntryPointer->SetPos(g_LastConsoleEntry.length());
+		if (g_ConsoleStackCount)
+		{
+			EntryPointer->SetText(g_ConsoleStack[g_ConsoleSelectedIndex]);
+			EntryPointer->SetPos(g_ConsoleStack[g_ConsoleSelectedIndex].length());
+
+			g_ConsoleSelectedIndex--;
+
+			if (g_ConsoleSelectedIndex < 0)
+				g_ConsoleSelectedIndex = (g_ConsoleStackCount - 1) % MAX_CONSOLE_STACK_SIZE;
+		}
 	}
 	else if (iswprint(wparam) && !altPressed && !ctrlPressed && EntryPointer->Length() < 60)
 		EntryPointer->Insert(wparam);
@@ -2298,7 +2306,14 @@ void TGameScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 							UO->ConsolePromptSend();
 						else if (EntryPointer->Length())
 						{
-							g_LastConsoleEntry = wstring(EntryPointer->Data());
+							g_ConsoleStack[g_ConsoleStackCount % MAX_CONSOLE_STACK_SIZE] = EntryPointer->Data();
+							g_ConsoleStackCount++;
+
+							if (g_ConsoleStackCount > 1100)
+								g_ConsoleStackCount -= 1000;
+
+							g_ConsoleSelectedIndex = (g_ConsoleStackCount - 1) % MAX_CONSOLE_STACK_SIZE;
+
 							GameConsole->Send();
 						}
 
