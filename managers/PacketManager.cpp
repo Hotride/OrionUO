@@ -1115,7 +1115,12 @@ PACKET_HANDLER(UpdatePlayer)
 		{
 			Weather.Reset();
 			Target.Reset();
-
+			if (ConfigManager.Music)
+			{
+				SoundManager.StopMusic();
+				SoundManager.StopWarMusic();
+				UO->PlayMusic(42, true);
+			}
 			g_DeathScreenTimer = GetTickCount() + DEATH_SCREEN_DELAY;
 		}
 	}
@@ -3456,8 +3461,6 @@ PACKET_HANDLER(DeathScreen)
 {
 	Weather.Reset();
 	Target.Reset();
-	SoundManager.StopMusic();
-	UO->PlayMusic(42, true);
 	g_DeathScreenTimer = GetTickCount() + DEATH_SCREEN_DELAY;
 }
 //---------------------------------------------------------------------------
