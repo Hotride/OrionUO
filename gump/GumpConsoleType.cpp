@@ -162,6 +162,7 @@ void TGumpConsoleType::PrepareTextures()
 {
 	UO->ExecuteGump(0x0984);
 	UO->ExecuteGump(0x0986);
+	UO->ExecuteGumpPart(0x00D2, 2);
 }
 //----------------------------------------------------------------------------
 void TGumpConsoleType::OnToolTip()

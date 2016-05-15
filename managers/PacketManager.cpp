@@ -2532,6 +2532,57 @@ PACKET_HANDLER(ExtendedCommand)
 
 			break;
 		}
+		case 0x1B: //New spellbook content
+		{
+			Move(2);
+			DWORD serial = ReadDWord();
+
+			TGameItem *spellbook = World->FindWorldItem(serial);
+
+			if (spellbook == NULL)
+			{
+				TPRINT("Where is a spellbook?!?\n");
+				return;
+			}
+
+			World->ClearContainer(spellbook);
+
+			WORD graphic = ReadWord();
+			SPELLBOOK_TYPE bookType = (SPELLBOOK_TYPE)ReadWord();
+
+			DWORD spells[2] = { 0 };
+			
+			IFOR(j, 0, 2)
+			{
+				IFOR(i, 0, 4)
+					spells[j] |= (ReadByte() << (i * 8));
+			}
+
+			switch (bookType)
+			{
+				case ST_MAGE:
+				{
+					IFOR(j, 0, 2)
+					{
+						IFOR(i, 0, 32)
+						{
+							if (spells[j] & (1 << i))
+							{
+								TGameItem *spellItem = new TGameItem();
+								spellItem->Graphic = 0x1F2E;
+								spellItem->Count = (j * 32) + i + 1;
+
+								spellbook->AddItem(spellItem);
+							}
+						}
+					}
+
+					break;
+				}
+				default:
+					break;
+			}
+		}
 		default:
 			break;
 	}
