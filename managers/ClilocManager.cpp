@@ -62,6 +62,7 @@ string TCliloc::Load( __in DWORD &id)
 	{
 		m_File.Ptr = (PBYTE)m_File.Address;
 		PBYTE eof = m_File.Ptr + m_File.Size;
+		m_File.Move(6);
 
 		while (m_File.Ptr < eof)
 		{
@@ -242,6 +243,9 @@ wstring TClilocManager::ParseArgumentsToClilocString(DWORD cliloc, wstring args)
 			break;
 
 		size_t pos2 = message.find(L"~", pos1 + 1);
+
+		if (pos2 == string::npos)
+			break;
 
 		message.replace(pos1, pos2 - pos1 + 1, arguments[i]);
 	}
