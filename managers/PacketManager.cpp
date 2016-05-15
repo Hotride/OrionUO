@@ -3353,7 +3353,7 @@ PACKET_HANDLER(GraphicEffect)
 	short destY = ReadShort();
 	char destZ = ReadChar();
 	BYTE speed = ReadByte();
-	BYTE duration = ReadByte();
+	short duration = (short)ReadByte() * 50;
 	//what is in 24-25 bytes?
 	Move(2);
 	BYTE fixedDirection = ReadByte();
@@ -3384,8 +3384,20 @@ PACKET_HANDLER(GraphicEffect)
 	effect->DestX = destX;
 	effect->DestY = destY;
 	effect->DestZ = destZ;
-	effect->Speed = 50; // speed + 6;
-	effect->Duration = GetTickCount() + (duration * 50);
+
+	DWORD addressAnimData = (DWORD)FileManager.AnimdataMul.Address;
+
+	if (addressAnimData)
+	{
+		DWORD addr = (graphic * 68) + 4 * ((graphic / 8) + 1);
+		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + addr);
+
+		effect->Speed = (pad->FrameInterval - effect->Speed) * 50;
+	}
+	else
+		effect->Speed = speed + 6;
+
+	effect->Duration = GetTickCount() + duration;
 	effect->FixedDirection = (fixedDirection != 0);
 	effect->Explode = (explode != 0);
 	

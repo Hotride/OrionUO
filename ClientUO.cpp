@@ -1722,16 +1722,14 @@ void TUltimaOnline::ProcessStaticAnimList()
 
 				obj->NextChange = ticks + (pad->FrameInterval * delay);
 				
-				if (offset < pad->FrameCount - 1)
+				if (offset < pad->FrameCount)
 				{
 					obj->Increment = pad->FrameData[offset];
 					offset++;
 				}
-				else
-				{
-					obj->Increment = pad->FrameData[offset];
+
+				if (offset >= pad->FrameCount)
 					offset = 0;
-				}
 
 				obj->AnimIndex = offset;
 			}
