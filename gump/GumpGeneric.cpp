@@ -454,7 +454,7 @@ void TGumpGeneric::GenerateFrame()
 
 								if (g_GumpPressedScroller && g_LastObjectLeftMouseDown == ID_GG_SCROLLBAR + objectIndex && canMoveScroller) //Scroller pressed
 								{
-									int currentY = (g_MouseY - 25) - drawY; //Scroller position
+									int currentY = (g_MouseY - 30) - (int)g_GumpTranslateY - drawY; //Scroller position
 
 									scrollerY = CalculateScrollerAndTextPosition(cLine, visibleLines, maxScrollerY, currentY);
 
@@ -541,6 +541,103 @@ int TGumpGeneric::Draw(bool &mode)
 	DWORD index = (DWORD)this;
 
 	CalculateGumpState();
+
+	DWORD ticks = GetTickCount();
+	int currentTestPage = 0;
+	int objectTestIndex = 1;
+
+	QFOR(item, m_Items, TGumpObject*)
+	{
+		if (item->Type == GOT_PAGE)
+		{
+			currentTestPage = ((TGumpPage*)item)->Page;
+
+			if (currentTestPage >= 2 && currentTestPage > m_Page)
+				break;
+		}
+		else if (currentTestPage == m_Page || !currentTestPage)
+		{
+			switch (item->Type)
+			{
+				case GOT_HTMLGUMP:
+				{
+					TGumpHTMLGump *htmlGump = (TGumpHTMLGump*)item;
+					
+					if (htmlGump->HaveScrollbar)
+					{
+						if (g_GumpPressedScroller && m_LastScrollChangeTime < ticks)
+						{
+							static const int pixelStep = 4;
+
+							if (g_LastObjectLeftMouseDown == ID_GG_SCROLLBAR_BUTTON_UP + objectTestIndex) //htmlgump ^
+							{
+								ListingList(htmlGump, true, pixelStep);
+								m_FrameCreated = false;
+							}
+							else if (g_LastObjectLeftMouseDown == ID_GG_SCROLLBAR_BUTTON_DOWN + objectTestIndex) //htmlgump v
+							{
+								ListingList(htmlGump, false, pixelStep);
+								m_FrameCreated = false;
+							}
+							else if (g_LastObjectLeftMouseDown == ID_GG_SCROLLBAR_BACKGROUND + objectTestIndex)
+							{
+								int drawY = m_Y + htmlGump->Y + 21 + htmlGump->BarOffset;
+
+								if (g_DroppedLeftMouseY < drawY) //^
+								{
+									ListingList(htmlGump, true, pixelStep);
+									m_FrameCreated = false;
+								}
+								else if (g_DroppedLeftMouseY > drawY + 25) //v
+								{
+									ListingList(htmlGump, false, pixelStep);
+									m_FrameCreated = false;
+								}
+							}
+						}
+
+						int scrollerY = 0;
+						int heightToScrolling = 0;
+						bool canMoveScroller = true;
+						int curHeight = htmlGump->m_Text.Height;
+						int maxScrollerY = htmlGump->Height;
+						int offset = htmlGump->BarOffset;
+
+						if (curHeight < htmlGump->Height)
+							canMoveScroller = false;
+						else
+							heightToScrolling = curHeight - htmlGump->Height;
+
+						int visibleLines = heightToScrolling / GUMP_SCROLLING_PIXEL_STEP;
+
+						if (g_LeftMouseDown && g_LastObjectLeftMouseDown == ID_GG_SCROLLBAR + objectTestIndex && canMoveScroller) //Scroller pressed
+						{
+							int currentY = (g_MouseY - 30) - m_Y - htmlGump->Y; //Scroller position
+
+							htmlGump->BarOffset = CalculateScrollerAndTextPosition(offset, visibleLines, maxScrollerY, currentY);
+							m_FrameCreated = false;
+						}
+						else if (htmlGump->BarOffset && canMoveScroller)
+						{
+							htmlGump->BarOffset = CalculateScrollerY(offset, visibleLines, maxScrollerY);
+							m_FrameCreated = false;
+						}
+					}
+
+					break;
+				}
+				case GOT_PAGE:
+				{
+					currentTestPage = ((TGumpPage*)item)->Page;
+					break;
+				}
+				default:
+					break;
+			}
+		}
+
+		objectTestIndex++;
+	}
 
 	if (mode) //Отрисовка
 	{
@@ -779,7 +876,7 @@ int TGumpGeneric::Draw(bool &mode)
 //----------------------------------------------------------------------------
 void TGumpGeneric::OnLeftMouseDown()
 {
-	if (g_LastObjectLeftMouseDown != g_LastSelectedObject || g_LastObjectLeftMouseDown < ID_GG_SCROLLBAR_BACKGROUND)
+	/*if (g_LastObjectLeftMouseDown != g_LastSelectedObject || g_LastObjectLeftMouseDown < ID_GG_SCROLLBAR_BACKGROUND)
 		return;
 
 	int currentPage = 0;
@@ -838,7 +935,7 @@ void TGumpGeneric::OnLeftMouseDown()
 
 		item = (TGumpObject*)item->m_Next;
 		objectIndex++;
-	}
+	}*/
 }
 //----------------------------------------------------------------------------
 void TGumpGeneric::OnLeftMouseUp()
@@ -1210,6 +1307,7 @@ void TGumpGeneric::ListingList(TGumpHTMLGump *htmlGump, bool direction, int divi
 	else //Down
 	{
 		int maxidx = htmlGump->m_Text.Height;
+
 		if (htmlGump->HaveBackground)
 			maxidx += 7;
 
