@@ -121,7 +121,7 @@ WORD TGameEffect::CalculateCurrentGraphic()
 		}
 		else
 		{
-			m_AnimIndex  = 0;
+			m_AnimIndex = 0;
 			m_Increment = pad->FrameData[m_AnimIndex];
 		}
 	}

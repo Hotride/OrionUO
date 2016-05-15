@@ -2026,25 +2026,28 @@ PACKET_HANDLER(UpdateCharacter)
 	char z = ReadChar();
 	BYTE dir = ReadByte();
 
-	if (serial != g_PlayerSerial && !obj->IsTeleportAction(x, y, dir))
+	if (!obj->IsTeleportAction(x, y, dir))
 	{
-		TWalkData *wd = new TWalkData();
-		wd->X = x;
-		wd->Y = y;
-		wd->Z = z;
-		wd->Direction = dir;
+		if (serial != g_PlayerSerial)
+		{
+			TWalkData *wd = new TWalkData();
+			wd->X = x;
+			wd->Y = y;
+			wd->Z = z;
+			wd->Direction = dir;
 
-		if (obj->m_WalkStack.Empty())
-			obj->LastStepTime = GetTickCount();
+			if (obj->m_WalkStack.Empty())
+				obj->LastStepTime = GetTickCount();
 
-		obj->m_WalkStack.Push(wd);
-	}
-	else
-	{
-		obj->X = x;
-		obj->Y = y;
-		obj->Z = z;
-		obj->Direction = dir;
+			obj->m_WalkStack.Push(wd);
+		}
+		else
+		{
+			obj->X = x;
+			obj->Y = y;
+			obj->Z = z;
+			obj->Direction = dir;
+		}
 	}
 
 	obj->Color = ReadWord();
@@ -3381,7 +3384,7 @@ PACKET_HANDLER(GraphicEffect)
 	effect->DestX = destX;
 	effect->DestY = destY;
 	effect->DestZ = destZ;
-	effect->Speed = speed + 6;
+	effect->Speed = 50; // speed + 6;
 	effect->Duration = GetTickCount() + (duration * 50);
 	effect->FixedDirection = (fixedDirection != 0);
 	effect->Explode = (explode != 0);
