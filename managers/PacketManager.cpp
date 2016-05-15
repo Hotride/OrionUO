@@ -3389,8 +3389,7 @@ PACKET_HANDLER(GraphicEffect)
 
 	if (addressAnimData)
 	{
-		DWORD addr = (graphic * 68) + 4 * ((graphic / 8) + 1);
-		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + addr);
+		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + ((graphic * 68) + 4 * ((graphic / 8) + 1)));
 
 		effect->Speed = (pad->FrameInterval - effect->Speed) * 50;
 	}

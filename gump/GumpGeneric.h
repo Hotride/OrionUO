@@ -55,6 +55,7 @@ public:
 	void OnLeftMouseUp();
 	void OnMouseWheel(MOUSE_WHEEL_STATE &state);
 	void OnCharPress(WPARAM &wparam, LPARAM &lparam);
+	void OnKeyPress(WPARAM &wparam, LPARAM &lparam);
 
 	void AddText(int index, wstring text);
 };

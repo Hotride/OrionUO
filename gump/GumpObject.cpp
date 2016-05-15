@@ -293,18 +293,18 @@ void TGumpTextEntry::Draw(bool &transparent, bool pressed)
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, m_X, m_Y, TS_LEFT, UOFONT_BLACK_BORDER);
+			TextEntry->DrawW(0, color, m_X, m_Y, TS_LEFT, UOFONT_BLACK_BORDER);
 
 			glDisable(GL_BLEND);
 
 			glEnable(GL_STENCIL_TEST);
 
-			TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, m_X, m_Y, TS_LEFT, UOFONT_BLACK_BORDER);
+			TextEntry->DrawW(0, color, m_X, m_Y, TS_LEFT, UOFONT_BLACK_BORDER);
 
 			glDisable(GL_STENCIL_TEST);
 		}
 		else
-			TextEntry->DrawW((BYTE)(ConnectionManager.ClientVersion > CV_OLD), color, m_X, m_Y, TS_LEFT, UOFONT_BLACK_BORDER);
+			TextEntry->DrawW(0, color, m_X, m_Y, TS_LEFT, UOFONT_BLACK_BORDER);
 	}
 }
 //---------------------------------------------------------------------------
@@ -321,6 +321,9 @@ TGumpTextEntryLimited::TGumpTextEntryLimited(int textIndex, WORD color, short x,
 : TGumpTextEntry(textIndex, color, x, y, width, height, index), m_MaxLength(maxLength)
 {
 	Type = GOT_TEXTENTRYLIMITED;
+
+	if (TextEntry != NULL)
+		TextEntry->MaxLength = MaxLength;
 }
 //---------------------------------------------------------------------------
 TGumpTilepic::TGumpTilepic(WORD graphic, WORD color, short x, short y)

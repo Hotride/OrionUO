@@ -779,7 +779,7 @@ int TGumpGeneric::Draw(bool &mode)
 //----------------------------------------------------------------------------
 void TGumpGeneric::OnLeftMouseDown()
 {
-	if (g_LastObjectLeftMouseDown != g_LastSelectedObject)
+	if (g_LastObjectLeftMouseDown != g_LastSelectedObject || g_LastObjectLeftMouseDown < ID_GG_SCROLLBAR_BACKGROUND)
 		return;
 
 	int currentPage = 0;
@@ -959,7 +959,9 @@ void TGumpGeneric::OnLeftMouseUp()
 						int y = g_MouseY - (m_Y + item->Y);
 
 						gte->TextEntry->OnClick(this, 1, false, x, y);
+						m_FrameCreated = false;
 					}
+
 					break;
 				}
 				case GOT_HTMLGUMP:
@@ -1181,6 +1183,21 @@ void TGumpGeneric::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 	}
 }
 //----------------------------------------------------------------------------
+void TGumpGeneric::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
+{
+	if (wparam == VK_RETURN)
+	{
+		if (ConfigManager.GetConsoleNeedEnter())
+			EntryPointer = NULL;
+		else
+			EntryPointer = GameConsole;
+
+		m_FrameCreated = false;
+	}
+	else
+		EntryPointer->OnKey(this, wparam);
+}
+//----------------------------------------------------------------------------
 void TGumpGeneric::ListingList(TGumpHTMLGump *htmlGump, bool direction, int divizor)
 {
 	if (direction) //Up
@@ -1208,5 +1225,6 @@ void TGumpGeneric::ListingList(TGumpHTMLGump *htmlGump, bool direction, int divi
 	}
 
 	m_LastScrollChangeTime = GetTickCount() + (SCROLL_LISTING_DELAY / divizor);
+	m_FrameCreated = false;
 }
 //----------------------------------------------------------------------------
