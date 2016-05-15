@@ -1517,15 +1517,15 @@ HTML_char *TFontsManager::GetHTMLData(__in BYTE font, __in const wchar_t *str, _
 				if (!(current_flags & UOFONT_INDENTION))
 					current_flags |= UOFONT_INDENTION;
 
-				i += 3;
-				si = L'\n';
+				i += 2;
+				continue;
 			}
 			else if (!memcmp(lstr, L"</p>", 8))
 			{
 				if (current_flags & UOFONT_INDENTION)
 					current_flags ^= UOFONT_INDENTION;
 
-				i += 8;
+				i += 3;
 				si = L'\n';
 			}
 			else if (!memcmp(lstr, L"<u>", 6))
