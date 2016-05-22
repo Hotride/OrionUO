@@ -153,7 +153,7 @@ void TGumpProfile::GenerateFrame()
 	}
 
 	if (TextEntry->Changed)
-		TextEntry->DrawW(1, 0, 40, /*yPtr +*/ 44, TS_LEFT, 0);
+		TextEntry->DrawW(0, 0, 40, /*yPtr +*/ 44, TS_LEFT, 0);
 
 	//Создание дисплей листа
 	glNewList((GLuint)this, GL_COMPILE);
@@ -220,12 +220,10 @@ void TGumpProfile::GenerateFrame()
 		UO->DrawGump(0x005E, 0, 230, yPtr); //top text ornament
 		m_TopText.Draw(89, yPtr - m_TopText.Height + 22);
 
-		if (TextEntry->Length())
-		{
-			TextEntry->DrawW(1, 0, 40, yPtr + 44, TS_LEFT, 0);
+		TextEntry->DrawW(0, 0, 40, yPtr + 44, TS_LEFT, 0);
 
+		if (TextEntry->Length())
 			yPtr += TextEntry->m_Texture.Height;
-		}
 		else
 			yPtr += 14;
 

@@ -590,9 +590,9 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoA(__in BYTE font, __in const char *s
 	{
 		char si = str[i];
 
-		if (si == 0x0D || si == '\n')
+		if (si == '\r' || si == '\n')
 		{
-			if (si == 0x0D || isFixed || isCropped)
+			if (si == '\r' || isFixed || isCropped)
 				continue;
 			else
 				si = '\n';
@@ -660,7 +660,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoA(__in BYTE font, __in const char *s
 					ptr->Width = 1;
 
 				if (!ptr->MaxHeight)
-					ptr->MaxHeight = 10;
+					ptr->MaxHeight = 14;
 
 				PMULTILINES_FONT_INFO newptr = new MULTILINES_FONT_INFO();
 				newptr->Reset();
@@ -706,7 +706,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoA(__in BYTE font, __in const char *s
 					ptr->Width = 1;
 
 				if (!ptr->MaxHeight)
-					ptr->MaxHeight = 10;
+					ptr->MaxHeight = 14;
 
 				ptr->Data.resize(ptr->CharCount);
 				charCount = 0;
@@ -746,6 +746,12 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoA(__in BYTE font, __in const char *s
 
 	ptr->Width += readWidth;
 	ptr->CharCount += charCount;
+
+	if (!readWidth && len && (str[len - 1] == '\n' || str[len - 1] == '\r'))
+	{
+		ptr->Width = 1;
+		ptr->MaxHeight = 14;
+	}
 
 	return info;
 }
@@ -2226,7 +2232,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoW(__in BYTE font, __in const wchar_t
 	{
 		wchar_t si = str[i];
 
-		if (si == 0x000D || si == L'\n')
+		if (si == L'\r' || si == L'\n')
 		{
 			if (isFixed || isCropped)
 				si = 0;
@@ -2297,7 +2303,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoW(__in BYTE font, __in const wchar_t
 					ptr->Width = 1;
 
 				if (!ptr->MaxHeight)
-					ptr->MaxHeight = 10;
+					ptr->MaxHeight = 14;
 
 				PMULTILINES_FONT_INFO newptr = new MULTILINES_FONT_INFO();
 				newptr->Reset();
@@ -2346,7 +2352,7 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoW(__in BYTE font, __in const wchar_t
 					ptr->Width = 1;
 
 				if (!ptr->MaxHeight)
-					ptr->MaxHeight = 10;
+					ptr->MaxHeight = 14;
 
 				ptr->Data.resize(ptr->CharCount);
 
@@ -2396,6 +2402,12 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoW(__in BYTE font, __in const wchar_t
 
 	ptr->Width += readWidth;
 	ptr->CharCount += charCount;
+
+	if (!readWidth && len && (str[len - 1] == L'\n' || str[len - 1] == L'\r'))
+	{
+		ptr->Width = 1;
+		ptr->MaxHeight = 14;
+	}
 
 	return info;
 }
