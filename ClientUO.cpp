@@ -566,11 +566,11 @@ TUltimaOnline::~TUltimaOnline()
 
 	UnloadIndexFiles();
 
-	/*if (SpeechManager != NULL)
+	if (SpeechManager != NULL)
 	{
 		delete SpeechManager;
 		SpeechManager = NULL;
-	}*/
+	}
 
 	if (FontManager != NULL)
 	{
@@ -940,14 +940,14 @@ bool TUltimaOnline::Install()
 
 		return false;
 	}
-	/*SpeechManager = new TSpeechManager();
+	SpeechManager = new TSpeechManager();
 	if (!SpeechManager->LoadSpeech())
 	{
 		TPRINT("Error loading speech.mul\n");
 		MessageBoxA(g_hWnd, "Error loading speech.mul", "Error loading speech.mul!", MB_OK);
 
 		return false;
-	}*/
+	}
 	
 	PatchFiles();
 	IndexReplaces();
