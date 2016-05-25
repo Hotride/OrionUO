@@ -456,6 +456,9 @@
     <ClInclude Include="ShaderData.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="managers\SpeechManager.h">
+      <Filter>Заголовочные файлы\managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -841,6 +844,9 @@
     </ClCompile>
     <ClCompile Include="gump\GumpConsoleType.cpp">
       <Filter>Файлы исходного кода\gump</Filter>
+    </ClCompile>
+    <ClCompile Include="managers\SpeechManager.cpp">
+      <Filter>Файлы исходного кода\managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
