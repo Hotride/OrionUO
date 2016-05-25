@@ -173,6 +173,7 @@ bool TFileManager::Load()
 	memset(&VerdataMul, 0, sizeof(TMappedHeader));
 	
 	memset(&MultiMap, 0, sizeof(TMappedHeader));
+	memset(&SpeechMul, 0, sizeof(TMappedHeader));
 
 	if (!LoadFileToMemory(AnimIdx[0], FilePath("anim.idx").c_str()))
 		return false;
@@ -200,6 +201,9 @@ bool TFileManager::Load()
 	if (!LoadFileToMemory(MultiMap, FilePath("multimap.rle").c_str()))
 		return false;
 
+	if (!LoadFileToMemory(SpeechMul, FilePath("speech.mul").c_str()))
+		 return false;
+	
 	IFOR(i, 0, 6)
 	{
 		char buf[50] = {0};
@@ -316,6 +320,7 @@ void TFileManager::Unload()
 	IFOR(i, 0, 6)
 		UnloadFileFromMemory(MapMul[i]);
 	UnloadFileFromMemory(MultiMul);
+	UnloadFileFromMemory(SpeechMul);
 	UnloadFileFromMemory(PaletteMul);
 	UnloadFileFromMemory(RadarcolMul);
 	UnloadFileFromMemory(SkillsMul);
