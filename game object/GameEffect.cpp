@@ -113,17 +113,15 @@ WORD TGameEffect::CalculateCurrentGraphic()
 	{
 		DWORD addr = (m_Graphic * 68) + 4 * ((m_Graphic / 8) + 1);
 		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + addr);
-			
-		if (m_AnimIndex < (int)pad->FrameCount - 1)
+
+		if (m_AnimIndex < (int)pad->FrameCount)
 		{
 			m_Increment = pad->FrameData[m_AnimIndex];
 			m_AnimIndex++;
 		}
-		else
-		{
-			m_AnimIndex  = 0;
-			m_Increment = pad->FrameData[m_AnimIndex];
-		}
+
+		if (m_AnimIndex >= (int)pad->FrameCount)
+			m_AnimIndex = 0;
 	}
 
 	return m_Graphic + m_Increment;

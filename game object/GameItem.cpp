@@ -524,6 +524,11 @@ WORD TGameItem::GetMountAnimation()
 				graphic = 0x031F;
 				break;
 			}
+			case 0x3EC3: //16067 Beetle
+			{
+				graphic = 0x02D4;
+				break;
+			}
 			case 0x3EC5: // 16069
 			case 0x3F3A: // 16186 snow bear ???
 			{

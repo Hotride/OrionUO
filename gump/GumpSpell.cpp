@@ -87,7 +87,7 @@ void TGumpSpell::OnLeftMouseUp()
 	{
 		if (g_LastObjectLeftMouseDown == ID_GS_LOCK_MOVING)
 		{
-			LockMoving = !LockMoving;
+			m_LockMoving = !m_LockMoving;
 			g_CancelDoubleClick = true;
 		}
 	}

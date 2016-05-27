@@ -330,11 +330,17 @@ void TGameObject::DrawEffects( __in int &drawX, __in int &drawY, __in DWORD &tic
 	int x = drawX;
 	int y = drawY;
 
-	if (NPC)
+	if (m_NPC)
 	{
-		TGameCharacter *gc = this->GameCharacterPtr();
+		TGameCharacter *gc = GameCharacterPtr();
+
 		x += gc->OffsetX;
 		y += gc->OffsetY;
+
+		//ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(this);
+
+		//x += dims.Width / 2;
+		//y -= dims.Height / 2;
 	}
 
 	while (effect != NULL)

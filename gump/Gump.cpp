@@ -94,8 +94,7 @@ void TGump::DrawLocker()
 	if (g_ShowGumpLocker)
 	{
 		g_GL.OldTexture = 0;
-		int xy = 0;
-		g_GL.Draw(g_TextureGumpState[m_LockMoving], xy, xy, 10, 14);
+		g_GL.Draw(g_TextureGumpState[m_LockMoving], 0, 0, 10, 14);
 	}
 }
 //---------------------------------------------------------------------------

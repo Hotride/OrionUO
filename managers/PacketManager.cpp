@@ -1501,28 +1501,12 @@ PACKET_HANDLER(UpdateObject)
 
 	WORD newX = X;
 	WORD newY = ReadWord();
-
-	if (character != NULL && !character->m_WalkStack.Empty())
-	{
-		if (newX != obj->X || newX != obj->X)
-		{
-			obj->X = character->m_WalkStack.m_Items->X;
-			obj->Y = character->m_WalkStack.m_Items->Y;
-			obj->Z = character->m_WalkStack.m_Items->Z;
-			character->m_WalkStack.Clear();
-		}
-	}
-
-	obj->X = newX;
-	obj->Y = newY;
-
-	obj->Z = ReadByte();
+	char newZ = ReadByte();
 
 	BYTE dir = ReadByte();
 
 	if (character != NULL)
 	{
-		character->Direction = dir;
 		obj->OnGraphicChange(1000);
 
 		TGump *statusGump = GumpManager->UpdateGump(character->Serial, 0, GT_STATUSBAR);
@@ -1535,8 +1519,36 @@ PACKET_HANDLER(UpdateObject)
 
 	obj->Color = ReadWord();
 
+	bool hidden = obj->Hidden();
 	obj->Flags = ReadByte();
+	bool updateCoords = (hidden == obj->Hidden());
+
 	BYTE noto = ReadByte();
+
+	if (updateCoords)
+	{
+		if (character != NULL && !character->m_WalkStack.Empty())
+		{
+			if (newX != obj->X || newX != obj->X)
+			{
+				obj->X = character->m_WalkStack.m_Items->X;
+				obj->Y = character->m_WalkStack.m_Items->Y;
+				obj->Z = character->m_WalkStack.m_Items->Z;
+				character->m_WalkStack.Clear();
+				updateCoords = false;
+			}
+		}
+
+		if (updateCoords)
+		{
+			obj->X = newX;
+			obj->Y = newY;
+			obj->Z = newZ;
+
+			if (character != NULL)
+				character->Direction = dir;
+		}
+	}
 
 	if (character != NULL)
 	{
@@ -2014,25 +2026,28 @@ PACKET_HANDLER(UpdateCharacter)
 	char z = ReadChar();
 	BYTE dir = ReadByte();
 
-	if (serial != g_PlayerSerial && !obj->IsTeleportAction(x, y, dir))
+	if (!obj->IsTeleportAction(x, y, dir))
 	{
-		TWalkData *wd = new TWalkData();
-		wd->X = x;
-		wd->Y = y;
-		wd->Z = z;
-		wd->Direction = dir;
+		if (serial != g_PlayerSerial)
+		{
+			TWalkData *wd = new TWalkData();
+			wd->X = x;
+			wd->Y = y;
+			wd->Z = z;
+			wd->Direction = dir;
 
-		if (obj->m_WalkStack.Empty())
-			obj->LastStepTime = GetTickCount();
+			if (obj->m_WalkStack.Empty())
+				obj->LastStepTime = GetTickCount();
 
-		obj->m_WalkStack.Push(wd);
-	}
-	else
-	{
-		obj->X = x;
-		obj->Y = y;
-		obj->Z = z;
-		obj->Direction = dir;
+			obj->m_WalkStack.Push(wd);
+		}
+		else
+		{
+			obj->X = x;
+			obj->Y = y;
+			obj->Z = z;
+			obj->Direction = dir;
+		}
 	}
 
 	obj->Color = ReadWord();
@@ -2519,6 +2534,57 @@ PACKET_HANDLER(ExtendedCommand)
 				g_Player->LockInt = state;
 
 			break;
+		}
+		case 0x1B: //New spellbook content
+		{
+			Move(2);
+			DWORD serial = ReadDWord();
+
+			TGameItem *spellbook = World->FindWorldItem(serial);
+
+			if (spellbook == NULL)
+			{
+				TPRINT("Where is a spellbook?!?\n");
+				return;
+			}
+
+			World->ClearContainer(spellbook);
+
+			WORD graphic = ReadWord();
+			SPELLBOOK_TYPE bookType = (SPELLBOOK_TYPE)ReadWord();
+
+			DWORD spells[2] = { 0 };
+			
+			IFOR(j, 0, 2)
+			{
+				IFOR(i, 0, 4)
+					spells[j] |= (ReadByte() << (i * 8));
+			}
+
+			switch (bookType)
+			{
+				case ST_MAGE:
+				{
+					IFOR(j, 0, 2)
+					{
+						IFOR(i, 0, 32)
+						{
+							if (spells[j] & (1 << i))
+							{
+								TGameItem *spellItem = new TGameItem();
+								spellItem->Graphic = 0x1F2E;
+								spellItem->Count = (j * 32) + i + 1;
+
+								spellbook->AddItem(spellItem);
+							}
+						}
+					}
+
+					break;
+				}
+				default:
+					break;
+			}
 		}
 		default:
 			break;
@@ -3219,11 +3285,7 @@ PACKET_HANDLER(OpenCompressedGump)
 
 	TPRINT("Gump decompressed! newsize=%d\n", newsize);
 
-	if (PluginManager->PacketRecv(newbuf, newsize))
-	{
-		Ptr = newbuf + 3;
-		HandleOpenGump(newbuf, newsize);
-	}
+	ReceiveHandler(newbuf, newsize);
 
 	delete decLayoutData;
 
@@ -3291,7 +3353,7 @@ PACKET_HANDLER(GraphicEffect)
 	short destY = ReadShort();
 	char destZ = ReadChar();
 	BYTE speed = ReadByte();
-	BYTE duration = ReadByte();
+	short duration = (short)ReadByte() * 50;
 	//what is in 24-25 bytes?
 	Move(2);
 	BYTE fixedDirection = ReadByte();
@@ -3322,8 +3384,19 @@ PACKET_HANDLER(GraphicEffect)
 	effect->DestX = destX;
 	effect->DestY = destY;
 	effect->DestZ = destZ;
-	effect->Speed = speed + 6;
-	effect->Duration = GetTickCount() + (duration * 50);
+
+	DWORD addressAnimData = (DWORD)FileManager.AnimdataMul.Address;
+
+	if (addressAnimData)
+	{
+		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + ((graphic * 68) + 4 * ((graphic / 8) + 1)));
+
+		effect->Speed = (pad->FrameInterval - effect->Speed) * 50;
+	}
+	else
+		effect->Speed = speed + 6;
+
+	effect->Duration = GetTickCount() + duration;
 	effect->FixedDirection = (fixedDirection != 0);
 	effect->Explode = (explode != 0);
 	

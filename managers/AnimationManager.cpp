@@ -552,6 +552,8 @@ void TAnimationManager::InitIndexReplaces( __in PDWORD verdata)
 
 				break;
 			}
+			//Прийдется сбросить кривой индекс, который портит жуку айди трупа.
+			m_CorpseReplaces[330] = 0;
 		}
 	}
 }
@@ -1743,13 +1745,16 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 		m_Color = 0;
 
 	bool isAttack = (serial == g_LastAttackObject);
+	bool underMouseTarget = (g_LastObjectType == SOT_GAME_OBJECT && serial == g_LastSelectedObject && Target.IsTargeting());
 
-	if (!obj->IsPlayer() && (isAttack || serial == g_LastTargetObject))
+	if (!obj->IsPlayer() && (isAttack || underMouseTarget || serial == g_LastTargetObject))
 	{
 		targetColor = ConfigManager.GetColorByNotoriety(obj->Notoriety);
-		needHPLine = (serial != NewTargetSystem.Serial);
 
-		if (isAttack)
+		if (isAttack || serial == g_LastTargetObject)
+			needHPLine = (serial != NewTargetSystem.Serial);
+
+		if (isAttack || underMouseTarget)
 			m_Color = targetColor;
 	}
 	
