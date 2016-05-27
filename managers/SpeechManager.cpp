@@ -21,22 +21,69 @@
 
 TSpeechManager *SpeechManager = NULL;
 //---------------------------------------------------------------------------
+//--------------------------------TSpeechItem--------------------------------
+//---------------------------------------------------------------------------
+TSpeechItem::TSpeechItem()
+: m_Code(0), m_Data(L""), m_CheckStart(false), m_CheckEnd(false)
+{
+}
+//---------------------------------------------------------------------------
+TSpeechItem::~TSpeechItem()
+{
+}
+//---------------------------------------------------------------------------
+//------------------------------TSpeechManager-------------------------------
+//---------------------------------------------------------------------------
 TSpeechManager::TSpeechManager()
 {
 }
-
 //---------------------------------------------------------------------------
 TSpeechManager::~TSpeechManager()
 {
 }
-
 //---------------------------------------------------------------------------
 /*!
-Загрузка ASCII шрифтов
+Загрузка
 @return true при успешной загрузке
 */
 bool TSpeechManager::LoadSpeech()
 {
+	TMappedHeader &file = FileManager.SpeechMul;
+
+	while (!file.IsEof())
+	{
+		TSpeechItem item;
+		item.Code = file.ReadWordLE();
+		WORD len = file.ReadWordLE();
+		wstring str = file.ReadUtf8String(len);
+
+		const WCHAR *data = str.c_str();
+
+		DFOR(i, str.length(), 1)
+		{
+			if (data[i])
+			{
+				if (data[i] == L'*')
+				{
+					item.CheckEnd = true;
+					str.resize(i);
+				}
+
+				break;
+			}
+		}
+
+		if (str.length() && *str.c_str() == L'*')
+		{
+			item.CheckStart = true;
+			str.erase(str.begin());
+		}
+
+		item.Data = str;
+
+		//TPRINT("[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, ToString(str).c_str());
+	}
+
 	return true;
 }
 //---------------------------------------------------------------------------

@@ -20,6 +20,24 @@
 #ifndef SpeechManagerH
 #define SpeechManagerH
 //--------------------------------------------------------------------------
+class TSpeechItem
+{
+private:
+	WORD m_Code;
+	wstring m_Data;
+	bool m_CheckStart;
+	bool m_CheckEnd;
+
+public:
+	TSpeechItem();
+	virtual ~TSpeechItem();
+
+	SETGET(WORD, Code);
+	SETGET(wstring, Data);
+	SETGET(bool, CheckStart);
+	SETGET(bool, CheckEnd);
+};
+//--------------------------------------------------------------------------
 //!Класс менеджера cпича
 class TSpeechManager
 {
