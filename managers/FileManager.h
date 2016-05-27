@@ -55,76 +55,76 @@ public:
 	inline void Move(__in int offset) { Ptr += offset; }
 
 	/*!
-	Прочитать байт (1 байт) big-endian
+	Прочитать байт (1 байт) little-endian
 	@return 
 	*/
 	BYTE ReadByte();
 
 	/*!
-	Прочитать байт (1 байт) little-endian
+	Прочитать байт (1 байт) big-endian
 	@return
 	*/
-	BYTE ReadByteLE();
+	BYTE ReadByteBE();
 
 	/*!
-	Прочитать слово (2 байта) big-endian
+	Прочитать слово (2 байта) little-endian
 	@return 
 	*/
 	WORD ReadWord();
 
 	/*!
-	Прочитать слово (2 байта) little-endian
+	Прочитать слово (2 байта) big-endian
 	@return
 	*/
-	WORD ReadWordLE();
+	WORD ReadWordBE();
 
 	/*!
-	Прочитать двойное слово (4 байла) big-endian
+	Прочитать двойное слово (4 байла) little-endian
 	@return 
 	*/
 	DWORD ReadDWord();
 
 	/*!
-	Прочитать двойное слово (4 байла) little-endian
+	Прочитать двойное слово (4 байла) big-endian
 	@return
 	*/
-	DWORD ReadDWordLE();
+	DWORD ReadDWordBE();
 
 	/*!
-	Прочитать символ (1 байт) big-endian
+	Прочитать символ (1 байт) little-endian
 	@return 
 	*/
 	char ReadChar();
 
 	/*!
-	Прочитать символ (1 байт) little-endian
+	Прочитать символ (1 байт) big-endian
 	@return
 	*/
-	char ReadCharLE();
+	char ReadCharBE();
 
 	/*!
-	Прочитать короткое значение (2 байта) big-endian
+	Прочитать короткое значение (2 байта) little-endian
 	@return 
 	*/
 	short ReadShort();
 
 	/*!
-	Прочитать короткое значение (2 байта) little-endian
+	Прочитать короткое значение (2 байта) big-endian
 	@return
 	*/
-	short ReadShortLE();
+	short ReadShortBE();
 
 	/*!
-	Прочитать целое (4 байта) big-endian
+	Прочитать целое (4 байта) little-endian
 	@return 
 	*/
 	int ReadInt();
 
 	/*!
-	Прочитать целое (4 байта) little-endian
+	Прочитать целое (4 байта) big-endian
 	@return
 	*/
-	int ReadIntLE();
+	int ReadIntBE();
 
 	/*!
 	Прочитать строку

@@ -29,7 +29,7 @@ TMappedHeader::TMappedHeader()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать байт (1 байт) big-endian
+Прочитать байт (1 байт) little-endian
 @return 
 */
 BYTE TMappedHeader::ReadByte()
@@ -42,10 +42,10 @@ BYTE TMappedHeader::ReadByte()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать байт (1 байт) little-endian
+Прочитать байт (1 байт) big-endian
 @return
 */
-BYTE TMappedHeader::ReadByteLE()
+BYTE TMappedHeader::ReadByteBE()
 {
 	BYTE result = *Ptr;
 
@@ -55,7 +55,7 @@ BYTE TMappedHeader::ReadByteLE()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать слово (2 байта) big-endian
+Прочитать слово (2 байта) little-endian
 @return 
 */
 WORD TMappedHeader::ReadWord()
@@ -68,10 +68,10 @@ WORD TMappedHeader::ReadWord()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать слово (2 байта) little-endian
+Прочитать слово (2 байта) big-endian
 @return
 */
-WORD TMappedHeader::ReadWordLE()
+WORD TMappedHeader::ReadWordBE()
 {
 	WORD result = unpack16(Ptr);
 
@@ -81,7 +81,7 @@ WORD TMappedHeader::ReadWordLE()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать двойное слово (4 байла) big-endian
+Прочитать двойное слово (4 байла) little-endian
 @return 
 */
 DWORD TMappedHeader::ReadDWord()
@@ -94,10 +94,10 @@ DWORD TMappedHeader::ReadDWord()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать двойное слово (4 байла) little-endian
+Прочитать двойное слово (4 байла) big-endian
 @return
 */
-DWORD TMappedHeader::ReadDWordLE()
+DWORD TMappedHeader::ReadDWordBE()
 {
 	DWORD result = unpack32(Ptr);
 
@@ -107,7 +107,7 @@ DWORD TMappedHeader::ReadDWordLE()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать символ (1 байт) big-endian
+Прочитать символ (1 байт) little-endian
 @return 
 */
 char TMappedHeader::ReadChar()
@@ -120,10 +120,10 @@ char TMappedHeader::ReadChar()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать символ (1 байт) little-endian
+Прочитать символ (1 байт) big-endian
 @return
 */
-char TMappedHeader::ReadCharLE()
+char TMappedHeader::ReadCharBE()
 {
 	char result = (char)*Ptr;
 
@@ -133,7 +133,7 @@ char TMappedHeader::ReadCharLE()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать короткое значение (2 байта) big-endian
+Прочитать короткое значение (2 байта) little-endian
 @return 
 */
 short TMappedHeader::ReadShort()
@@ -146,10 +146,10 @@ short TMappedHeader::ReadShort()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать короткое значение (2 байта) little-endian
+Прочитать короткое значение (2 байта) big-endian
 @return
 */
-short TMappedHeader::ReadShortLE()
+short TMappedHeader::ReadShortBE()
 {
 	short result = (short)unpack16(Ptr);
 
@@ -159,7 +159,7 @@ short TMappedHeader::ReadShortLE()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать целое (4 байта) big-endian
+Прочитать целое (4 байта) little-endian
 @return 
 */
 int TMappedHeader::ReadInt()
@@ -172,10 +172,10 @@ int TMappedHeader::ReadInt()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать целое (4 байта) little-endian
+Прочитать целое (4 байта) big-endian
 @return
 */
-int TMappedHeader::ReadIntLE()
+int TMappedHeader::ReadIntBE()
 {
 	int result = (int)unpack32(Ptr);
 

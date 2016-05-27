@@ -53,8 +53,8 @@ bool TSpeechManager::LoadSpeech()
 	while (!file.IsEof())
 	{
 		TSpeechItem item;
-		item.Code = file.ReadWordLE();
-		WORD len = file.ReadWordLE();
+		item.Code = file.ReadWordBE();
+		WORD len = file.ReadWordBE();
 		wstring str = file.ReadUtf8String(len);
 
 		const WCHAR *data = str.c_str();
