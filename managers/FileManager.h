@@ -39,8 +39,13 @@ public:
 	//!Адрес файла в памяти
 	PVOID Address;
 
+	//!Указатель на конец файла
+	PBYTE End;
+
 	//!Указатель на текущую позицию
 	PBYTE Ptr;
+
+	inline bool IsEof() { return (Ptr >= End); }
 
 	/*!
 	Переместить указатель
@@ -50,40 +55,76 @@ public:
 	inline void Move(__in int offset) { Ptr += offset; }
 
 	/*!
-	Прочитать байт (1 байт)
+	Прочитать байт (1 байт) little-endian
 	@return 
 	*/
 	BYTE ReadByte();
 
 	/*!
-	Прочитать слово (2 байта)
+	Прочитать байт (1 байт) big-endian
+	@return
+	*/
+	BYTE ReadByteBE();
+
+	/*!
+	Прочитать слово (2 байта) little-endian
 	@return 
 	*/
 	WORD ReadWord();
 
 	/*!
-	Прочитать двойное слово (4 байла)
+	Прочитать слово (2 байта) big-endian
+	@return
+	*/
+	WORD ReadWordBE();
+
+	/*!
+	Прочитать двойное слово (4 байла) little-endian
 	@return 
 	*/
 	DWORD ReadDWord();
 
 	/*!
-	Прочитать символ (1 байт)
+	Прочитать двойное слово (4 байла) big-endian
+	@return
+	*/
+	DWORD ReadDWordBE();
+
+	/*!
+	Прочитать символ (1 байт) little-endian
 	@return 
 	*/
 	char ReadChar();
 
 	/*!
-	Прочитать короткое значение (2 байта)
+	Прочитать символ (1 байт) big-endian
+	@return
+	*/
+	char ReadCharBE();
+
+	/*!
+	Прочитать короткое значение (2 байта) little-endian
 	@return 
 	*/
 	short ReadShort();
 
 	/*!
-	Прочитать целое (4 байта)
+	Прочитать короткое значение (2 байта) big-endian
+	@return
+	*/
+	short ReadShortBE();
+
+	/*!
+	Прочитать целое (4 байта) little-endian
 	@return 
 	*/
 	int ReadInt();
+
+	/*!
+	Прочитать целое (4 байта) big-endian
+	@return
+	*/
+	int ReadIntBE();
 
 	/*!
 	Прочитать строку
@@ -91,6 +132,13 @@ public:
 	@return 
 	*/
 	string ReadString(__in int size);
+
+	/*!
+	Прочитать строку utf-8
+	@param [__in] size Размер строки
+	@return
+	*/
+	wstring ReadUtf8String(__in int size);
 };
 //---------------------------------------------------------------------------
 //!Класс для работы с файлами
@@ -138,6 +186,7 @@ public:
 	TMappedHeader VerdataMul;
 	
 	TMappedHeader MultiMap;
+	TMappedHeader SpeechMul;
 
 	SETGET(bool, UseVerdata);
 	SETGET(int, UnicodeFontCount);

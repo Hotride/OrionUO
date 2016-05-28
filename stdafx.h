@@ -616,6 +616,7 @@ typedef std::vector<BYTE> WaveFile;
 #include "managers\\CityManager.h"
 #include "managers\\PluginManager.h"
 #include "managers\\ProfessionManager.h"
+#include "managers\\SpeechManager.h"
 #include "ShaderData.h"
 #include "ClientUO.h"
 //---------------------------------------------------------------------------

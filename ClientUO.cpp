@@ -565,7 +565,13 @@ TUltimaOnline::~TUltimaOnline()
 	Disconnect();
 
 	UnloadIndexFiles();
-	
+
+	if (SpeechManager != NULL)
+	{
+		delete SpeechManager;
+		SpeechManager = NULL;
+	}
+
 	if (FontManager != NULL)
 	{
 		delete FontManager;
@@ -931,6 +937,14 @@ bool TUltimaOnline::Install()
 	{
 		TPRINT("Error loading skills\n");
 		MessageBoxA(g_hWnd, "Error loading skills", "Error loading skills!", MB_OK);
+
+		return false;
+	}
+	SpeechManager = new TSpeechManager();
+	if (!SpeechManager->LoadSpeech())
+	{
+		TPRINT("Error loading speech.mul\n");
+		MessageBoxA(g_hWnd, "Error loading speech.mul", "Error loading speech.mul!", MB_OK);
 
 		return false;
 	}
@@ -2317,7 +2331,7 @@ void TUltimaOnline::UnloadSkills()
 {
 	if (g_Skills != NULL)
 	{
-		delete []g_Skills;
+		delete[]g_Skills;
 		g_Skills = NULL;
 	}
 }

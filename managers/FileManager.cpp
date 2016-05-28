@@ -24,12 +24,12 @@ TFileManager FileManager;
 //----------------------------------TFileManager-----------------------------
 //---------------------------------------------------------------------------
 TMappedHeader::TMappedHeader()
-: File(0), Size(0), Map(0), Address(NULL), Ptr(NULL)
+: File(0), Size(0), Map(0), Address(NULL), Ptr(NULL), End(NULL)
 {
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать байт (1 байт)
+Прочитать байт (1 байт) little-endian
 @return 
 */
 BYTE TMappedHeader::ReadByte()
@@ -42,7 +42,20 @@ BYTE TMappedHeader::ReadByte()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать слово (2 байта)
+Прочитать байт (1 байт) big-endian
+@return
+*/
+BYTE TMappedHeader::ReadByteBE()
+{
+	BYTE result = *Ptr;
+
+	Ptr++;
+
+	return result;
+}
+//---------------------------------------------------------------------------
+/*!
+Прочитать слово (2 байта) little-endian
 @return 
 */
 WORD TMappedHeader::ReadWord()
@@ -55,7 +68,20 @@ WORD TMappedHeader::ReadWord()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать двойное слово (4 байла)
+Прочитать слово (2 байта) big-endian
+@return
+*/
+WORD TMappedHeader::ReadWordBE()
+{
+	WORD result = unpack16(Ptr);
+
+	Ptr += 2;
+
+	return result;
+}
+//---------------------------------------------------------------------------
+/*!
+Прочитать двойное слово (4 байла) little-endian
 @return 
 */
 DWORD TMappedHeader::ReadDWord()
@@ -68,7 +94,20 @@ DWORD TMappedHeader::ReadDWord()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать символ (1 байт)
+Прочитать двойное слово (4 байла) big-endian
+@return
+*/
+DWORD TMappedHeader::ReadDWordBE()
+{
+	DWORD result = unpack32(Ptr);
+
+	Ptr += 4;
+
+	return result;
+}
+//---------------------------------------------------------------------------
+/*!
+Прочитать символ (1 байт) little-endian
 @return 
 */
 char TMappedHeader::ReadChar()
@@ -81,7 +120,20 @@ char TMappedHeader::ReadChar()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать короткое значение (2 байта)
+Прочитать символ (1 байт) big-endian
+@return
+*/
+char TMappedHeader::ReadCharBE()
+{
+	char result = (char)*Ptr;
+
+	Ptr++;
+
+	return result;
+}
+//---------------------------------------------------------------------------
+/*!
+Прочитать короткое значение (2 байта) little-endian
 @return 
 */
 short TMappedHeader::ReadShort()
@@ -94,12 +146,38 @@ short TMappedHeader::ReadShort()
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать целое (4 байта)
+Прочитать короткое значение (2 байта) big-endian
+@return
+*/
+short TMappedHeader::ReadShortBE()
+{
+	short result = (short)unpack16(Ptr);
+
+	Ptr += 2;
+
+	return result;
+}
+//---------------------------------------------------------------------------
+/*!
+Прочитать целое (4 байта) little-endian
 @return 
 */
 int TMappedHeader::ReadInt()
 {
 	int result = (int)*(PDWORD)Ptr;
+
+	Ptr += 4;
+
+	return result;
+}
+//---------------------------------------------------------------------------
+/*!
+Прочитать целое (4 байта) big-endian
+@return
+*/
+int TMappedHeader::ReadIntBE()
+{
+	int result = (int)unpack32(Ptr);
 
 	Ptr += 4;
 
@@ -123,14 +201,27 @@ string TMappedHeader:: ReadString( __in int size)
 		size = (buf - Ptr) + 1;
 	}
 
-	char *str = new char[size + 1];
-	memcpy(&str[0], &Ptr[0], size);
-	str[size] = 0;
+	string result(size + 1, 0);
+
+	memcpy(&result[0], &Ptr[0], size);
+	result[size] = 0;
 
 	Ptr += size;
 
-	string result(str);
-	delete str;
+	return result;
+}
+//---------------------------------------------------------------------------
+/*!
+Прочитать строку
+@param [__in] size Размер строки, если 0 - читает до нуля
+@return
+*/
+wstring TMappedHeader::ReadUtf8String(__in int size)
+{
+	wstring result = L"";
+
+	if (size)
+		result = DecodeUTF8(ReadString(size));
 
 	return result;
 }
@@ -173,6 +264,7 @@ bool TFileManager::Load()
 	memset(&VerdataMul, 0, sizeof(TMappedHeader));
 	
 	memset(&MultiMap, 0, sizeof(TMappedHeader));
+	memset(&SpeechMul, 0, sizeof(TMappedHeader));
 
 	if (!LoadFileToMemory(AnimIdx[0], FilePath("anim.idx").c_str()))
 		return false;
@@ -200,6 +292,9 @@ bool TFileManager::Load()
 	if (!LoadFileToMemory(MultiMap, FilePath("multimap.rle").c_str()))
 		return false;
 
+	if (!LoadFileToMemory(SpeechMul, FilePath("speech.mul").c_str()))
+		 return false;
+	
 	IFOR(i, 0, 6)
 	{
 		char buf[50] = {0};
@@ -316,6 +411,7 @@ void TFileManager::Unload()
 	IFOR(i, 0, 6)
 		UnloadFileFromMemory(MapMul[i]);
 	UnloadFileFromMemory(MultiMul);
+	UnloadFileFromMemory(SpeechMul);
 	UnloadFileFromMemory(PaletteMul);
 	UnloadFileFromMemory(RadarcolMul);
 	UnloadFileFromMemory(SkillsMul);
@@ -363,7 +459,10 @@ bool TFileManager::LoadFileToMemory(TMappedHeader &object, const char *fName)
 					CloseHandle(object.File);
 				}
 				else
+				{
 					object.Ptr = (PBYTE)object.Address;
+					object.End = (PBYTE)object.Address + object.Size;
+				}
 			}
 			else
 				CloseHandle(object.File);

@@ -552,6 +552,8 @@ void TAnimationManager::InitIndexReplaces( __in PDWORD verdata)
 
 				break;
 			}
+			//Прийдется сбросить кривой индекс, который портит жуку айди трупа.
+			m_CorpseReplaces[330] = 0;
 		}
 	}
 }

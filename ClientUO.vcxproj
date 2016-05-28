@@ -194,6 +194,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="managers\ProfessionManager.h" />
     <ClInclude Include="managers\SkillGroupManager.h" />
     <ClInclude Include="managers\SoundManager.h" />
+    <ClInclude Include="managers\SpeechManager.h" />
     <ClInclude Include="MapBlock.h" />
     <ClInclude Include="MapObject.h" />
     <ClInclude Include="MulStruct.h" />
@@ -330,6 +331,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="managers\ProfessionManager.cpp" />
     <ClCompile Include="managers\SkillGroupManager.cpp" />
     <ClCompile Include="managers\SoundManager.cpp" />
+    <ClCompile Include="managers\SpeechManager.cpp" />
     <ClCompile Include="MapBlock.cpp" />
     <ClCompile Include="MapObject.cpp" />
     <ClCompile Include="MulStruct.cpp" />

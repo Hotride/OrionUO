@@ -119,12 +119,73 @@ void UnuseShader()
 	CurrentShader = NULL;
 }
 //---------------------------------------------------------------------------
-string FilePath(string fName)
+string FilePath(const string &fName)
 {
 	return g_DirectoryPath + "\\" + fName;
 }
 //---------------------------------------------------------------------------
-string ToString(wstring wstr)
+string EncodeUTF8(const wstring &wstr)
+{
+	int size = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
+	string result = "";
+
+	if (size > 0)
+	{
+		result.resize(size + 1);
+		WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &result[0], size, NULL, NULL);
+		result[size] = 0;
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
+wstring DecodeUTF8(const string &str)
+{
+	int size = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
+	wstring result = L"";
+
+	if (size > 0)
+	{
+		result.resize(size + 1);
+		MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &result[0], size);
+		result[size] = 0;
+	}
+
+	return result;
+}
+//---------------------------------------------------------------------------
+string ToString(const wstring &wstr)
+{
+	string str = "";
+	int size = wstr.length();
+	int newSize = ::WideCharToMultiByte(GetACP(), 0, wstr.c_str(), size, NULL, 0, NULL, NULL);
+
+	if (newSize > 0)
+	{
+		str.resize(newSize + 1);
+		::WideCharToMultiByte(GetACP(), 0, wstr.c_str(), size, &str[0], newSize, NULL, NULL);
+		str[newSize] = 0;
+	}
+
+	return str;
+}
+//---------------------------------------------------------------------------
+wstring ToWString(const string &str)
+{
+	int size = str.length();
+	wstring wstr = L"";
+
+	if (size > 0)
+	{
+		wstr.resize(size + 1);
+		MultiByteToWideChar(GetACP(), 0, str.c_str(), size, &wstr[0], size);
+		wstr[size] = 0;
+	}
+
+	return wstr;
+}
+//---------------------------------------------------------------------------
+/*string ToString(wstring wstr)
 {
 	int size = wstr.length();
 	string str = "";
@@ -156,7 +217,7 @@ wstring ToWString(string str)
 	}
 
 	return wstr;
-}
+}*/
 //---------------------------------------------------------------------------
 string ToLowerA(string str)
 {
