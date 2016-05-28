@@ -4196,15 +4196,15 @@ PACKET_HANDLER(OpenBook)
 
 	TGumpBook *gump = new TGumpBook(serial, 0, 0, pageCount, flags != 0, false);
 
-	char title[60] = { 0 };
-	memcpy(&title[0], &buf[9], 60);
+	//char title[60] = { 0 };
+	//memcpy(&title[0], &buf[9], 60);
 
-	gump->TextEntryTitle->SetText(title);
+	gump->TextEntryTitle->SetText(ReadString(60));
 
-	char author[30] = { 0 };
-	memcpy(&author[0], &buf[9], 30);
+	//char author[30] = { 0 };
+	//memcpy(&author[0], &buf[9], 30);
 
-	gump->TextEntryAuthor->SetText(author);
+	gump->TextEntryAuthor->SetText(ReadString(30));
 
 	GumpManager->AddGump(gump);
 }

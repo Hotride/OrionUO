@@ -67,47 +67,58 @@ void TGumpBook::GenerateFrame()
 
 		return;
 	}
+
+	CalculateGumpState();
+
+	glNewList((GLuint)this, GL_COMPILE);
+
+		UO->DrawGump(0x01FE, 0, 0, 0); //Body
+
+	glEndList();
+
+	m_FrameCreated = true;
+	m_FrameRedraw = true;
 }
 //----------------------------------------------------------------------------
 int TGumpBook::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	//Для быстрого доступа
-	int posX = X;
-	int posY = Y;
-
-	if (Minimized)
-	{
-		posX = MinimizedX;
-		posY = MinimizedY;
-	}
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-
-	//Если окошко захвачено для перемещения - вычислим оффсеты
-	if (mode && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-	}
+	CalculateGumpState();
 
 	if (mode) //Отрисовка
 	{
-		//0x01FE
+		if (!m_FrameCreated || g_GumpPressedElement || g_GumpMovingOffsetX || g_GumpMovingOffsetY)
+			GenerateFrame();
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame();
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
+
+		glCallList((GLuint)this);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
+
+		if (UO->GumpPixelsInXY(0x01FE, 0, 0))
+		{
+			g_LastSelectedGump = (DWORD)this;
+			LSG = 0;
+		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 
 		if (LSG != 0)
 			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
