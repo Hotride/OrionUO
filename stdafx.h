@@ -54,6 +54,9 @@ using std::vector;
 using std::string;
 using std::wstring;
 
+#include <unordered_map>
+using std::unordered_map;
+
 using std::pair;
 
 #define _USE_MATH_DEFINES // for C++

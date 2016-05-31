@@ -59,6 +59,7 @@ bool TSpeechManager::LoadSpeech()
 
 		const WCHAR *data = str.c_str();
 
+		
 		DFOR(i, str.length(), 1)
 		{
 			if (data[i])
@@ -79,9 +80,10 @@ bool TSpeechManager::LoadSpeech()
 			str.erase(str.begin());
 		}
 
+		my_map[str] = 1;
 		item.Data = str;
 
-		//TPRINT("[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, ToString(str).c_str());
+		TPRINT("[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, ToString(str).c_str());
 	}
 
 	return true;

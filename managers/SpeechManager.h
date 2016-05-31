@@ -19,6 +19,7 @@
 //--------------------------------------------------------------------------
 #ifndef SpeechManagerH
 #define SpeechManagerH
+
 //--------------------------------------------------------------------------
 class TSpeechItem
 {
@@ -42,6 +43,7 @@ public:
 class TSpeechManager
 {
 private:
+	unordered_map<wstring, int> m_LocalsVectorPtrs;
 public:
 	TSpeechManager();
 	~TSpeechManager();
