@@ -113,6 +113,8 @@ bool TSpeechManager::LoadLangCodes()
 {
 	vector<TLangCode> langCodes;
 	TMappedHeader &file = FileManager.LangcodeIff;
+
+	//скипаем заголовок файла
 	file.ReadString(36);
 
 	while (!file.IsEof())
@@ -124,10 +126,11 @@ bool TSpeechManager::LoadLangCodes()
 
 		DWORD entryLen = file.ReadDWordBE();
 		item.LangString = file.ReadString(0);
-		item.Unknown = file.ReadDWord(); // LangCode 99.99%
+		item.Unknown = file.ReadDWord(); // LangCode 99.99% ( абревиатура локали )
 		item.LangName = file.ReadString(0);
 		item.LangCountry = file.ReadString(0);
 
+		//длинна LangName и LangCountry + null terminator всегда являются четным количеством в файле.
 		if ((item.LangName.length() + item.LangCountry.length() + 2) % 2) {
 			int x = file.ReadByte();
 			
