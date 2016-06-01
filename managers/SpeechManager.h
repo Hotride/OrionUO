@@ -24,7 +24,7 @@
 class TLangCode
 {
 private:
-	DWORD m_Code;
+	string m_Code;
 	string m_LangString;
 	DWORD m_Unknown;
 	string m_LangName;
@@ -34,7 +34,7 @@ public:
 	TLangCode();
 	virtual ~TLangCode();
 
-	SETGET(DWORD, Code);
+	SETGET(string, Code);
 	SETGET(string, LangString);
 	SETGET(DWORD, Unknown);
 	SETGET(string, LangName);

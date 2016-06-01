@@ -24,7 +24,7 @@ TSpeechManager *SpeechManager = NULL;
 //--------------------------------TLangCode--------------------------------
 //---------------------------------------------------------------------------
 TLangCode::TLangCode()
-: m_Code(0), m_LangString(), m_Unknown(0), m_LangName(), m_LangCountry()
+: m_Code(), m_LangString(), m_Unknown(0), m_LangName(), m_LangCountry()
 {
 }
 //---------------------------------------------------------------------------
@@ -120,28 +120,30 @@ bool TSpeechManager::LoadLangCodes()
 	while (!file.IsEof())
 	{
 		
-		TLangCode item;
+		TLangCode langCodeData;
 
-		file.ReadString(4); // read "CODE" string
+		langCodeData.Code = file.ReadString(4); // read "CODE" string
 
 		DWORD entryLen = file.ReadDWordBE();
-		item.LangString = file.ReadString(0);
-		item.Unknown = file.ReadDWord(); // LangCode 99.99% ( абревиатура локали )
-		item.LangName = file.ReadString(0);
-		item.LangCountry = file.ReadString(0);
+		langCodeData.LangString = file.ReadString(0);
+		langCodeData.Unknown = file.ReadDWord(); // LangCode 99.99% ( абревиатура локали )
+		langCodeData.LangName = file.ReadString(0);
+		langCodeData.LangCountry = file.ReadString(0);
 
 		//длинна LangName и LangCountry + null terminator всегда являются четным количеством в файле.
-		if ((item.LangName.length() + item.LangCountry.length() + 2) % 2) {
-			int x = file.ReadByte();
+		if ((langCodeData.LangName.length() + langCodeData.LangCountry.length() + 2) % 2) {
+			int nullTerminator = file.ReadByte();
 			
-			if (x != 0) {
-				throw std::invalid_argument("speechManager @ 138, x != 0 with modulus -.-' cry cry cry");
+			if (nullTerminator != 0) {
+				throw "speechManager @ 138, invalid null terminator in langcodes.iff";
 			}
 		}
 				
-		m_LangCodes.push_back(item);
+		m_LangCodes.push_back(langCodeData);
 		//TPRINT("[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, ToString(str).c_str());
 	}
+	if (m_LangCodes.size() != 135)
+		return false;
 
 	return true;
 }
