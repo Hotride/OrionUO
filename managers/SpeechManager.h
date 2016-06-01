@@ -21,6 +21,26 @@
 #define SpeechManagerH
 
 //--------------------------------------------------------------------------
+class TLangCode
+{
+private:
+	DWORD m_Code;
+	string m_LangString;
+	DWORD m_Unknown;
+	string m_LangName;
+	string m_LangCountry;
+
+public:
+	TLangCode();
+	virtual ~TLangCode();
+
+	SETGET(DWORD, Code);
+	SETGET(string, LangString);
+	SETGET(DWORD, Unknown);
+	SETGET(string, LangName);
+	SETGET(string, LangCountry);
+};
+//--------------------------------------------------------------------------
 class TSpeechItem
 {
 private:
@@ -44,6 +64,7 @@ class TSpeechManager
 {
 private:
 	unordered_map<wstring, int> m_LocalsVectorPtrs;
+	
 public:
 	TSpeechManager();
 	~TSpeechManager();
@@ -53,6 +74,11 @@ public:
 	@return true при успешной загрузке
 	*/
 	bool LoadSpeech();
+	/*!
+	Загрузка данных о локалях
+	@return true при успешной загрузке
+	*/
+	bool LoadLangCodes();
 };
 //--------------------------------------------------------------------------
 //!Ссылка на менеджер cпича

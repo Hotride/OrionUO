@@ -187,6 +187,7 @@ public:
 	
 	TMappedHeader MultiMap;
 	TMappedHeader SpeechMul;
+	TMappedHeader LangcodeIff;
 
 	SETGET(bool, UseVerdata);
 	SETGET(int, UnicodeFontCount);

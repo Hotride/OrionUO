@@ -21,6 +21,17 @@
 
 TSpeechManager *SpeechManager = NULL;
 //---------------------------------------------------------------------------
+//--------------------------------TLangCode--------------------------------
+//---------------------------------------------------------------------------
+TLangCode::TLangCode()
+: m_Code(0), m_LangString(), m_Unknown(0), m_LangName(), m_LangCountry()
+{
+}
+//---------------------------------------------------------------------------
+TLangCode::~TLangCode()
+{
+}
+//---------------------------------------------------------------------------
 //--------------------------------TSpeechItem--------------------------------
 //---------------------------------------------------------------------------
 TSpeechItem::TSpeechItem()
@@ -43,11 +54,15 @@ TSpeechManager::~TSpeechManager()
 }
 //---------------------------------------------------------------------------
 /*!
-Загрузка
+Загрузка данных из Speech.mul
 @return true при успешной загрузке
 */
 bool TSpeechManager::LoadSpeech()
 {
+	if (!LoadLangCodes())
+		return false;
+
+	vector<TSpeechItem> items;
 	TMappedHeader &file = FileManager.SpeechMul;
 
 	while (!file.IsEof())
@@ -81,7 +96,47 @@ bool TSpeechManager::LoadSpeech()
 		}
 
 		item.Data = str;
+		items.push_back(item);
 
+		//TPRINT("[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, ToString(str).c_str());
+	}
+
+	return true;
+}
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+/*!
+Загрузка данных из Langcode.iff
+@return true при успешной загрузке
+*/
+bool TSpeechManager::LoadLangCodes()
+{
+	vector<TLangCode> langCodes;
+	TMappedHeader &file = FileManager.LangcodeIff;
+	file.ReadString(36);
+
+	while (!file.IsEof())
+	{
+		
+		TLangCode item;
+
+		file.ReadString(4); // read "CODE" string
+
+		DWORD entryLen = file.ReadDWordBE();
+		item.LangString = file.ReadString(0);
+		item.Unknown = file.ReadDWord(); // LangCode 99.99%
+		item.LangName = file.ReadString(0);
+		item.LangCountry = file.ReadString(0);
+
+		if ((item.LangName.length() + item.LangCountry.length() + 2) % 2) {
+			int x = file.ReadByte();
+			
+			if (x != 0) {
+				throw std::invalid_argument("speechManager @ 138, x != 0 with modulus -.-' cry cry cry");
+			}
+		}
+				
+		langCodes.push_back(item);
 		//TPRINT("[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, ToString(str).c_str());
 	}
 
