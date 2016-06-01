@@ -25,19 +25,26 @@ class TLangCode
 {
 private:
 	string m_Code;
-	string m_LangString;
-	DWORD m_Unknown;
-	string m_LangName;
+	string m_LangString;	
+	DWORD m_Unknown;	
+	string m_LangName;	
 	string m_LangCountry;
-
 public:
 	TLangCode();
 	virtual ~TLangCode();
 
 	SETGET(string, Code);
+
+	//! Строковая, уникальная абревиатура локали.
 	SETGET(string, LangString);
+
+	//! Числовая абревиатура группы? локали.
 	SETGET(DWORD, Unknown);
+
+	//! Название языка.
 	SETGET(string, LangName);
+
+	//! Название страны.
 	SETGET(string, LangCountry);
 };
 //--------------------------------------------------------------------------
@@ -53,8 +60,12 @@ public:
 	TSpeechItem();
 	virtual ~TSpeechItem();
 
+	//! Код посылаемый клиенту.
 	SETGET(WORD, Code);
+
+	//! Строка с ключевым словом для поиска в вводе.
 	SETGET(wstring, Data);
+
 	SETGET(bool, CheckStart);
 	SETGET(bool, CheckEnd);
 };

@@ -122,11 +122,11 @@ bool TSpeechManager::LoadLangCodes()
 		
 		TLangCode langCodeData;
 
-		langCodeData.Code = file.ReadString(4); // read "CODE" string
+		langCodeData.Code = file.ReadString(4);
 
 		DWORD entryLen = file.ReadDWordBE();
-		langCodeData.LangString = file.ReadString(0);
-		langCodeData.Unknown = file.ReadDWord(); // LangCode 99.99% ( абревиатура локали )
+		langCodeData.LangString = file.ReadString(0); 
+		langCodeData.Unknown = file.ReadDWord(); 
 		langCodeData.LangName = file.ReadString(0);
 		langCodeData.LangCountry = file.ReadString(0);
 
