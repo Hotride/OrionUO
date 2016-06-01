@@ -51,6 +51,7 @@ TSpeechManager::TSpeechManager()
 //---------------------------------------------------------------------------
 TSpeechManager::~TSpeechManager()
 {
+	m_LangCodes.clear();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -111,7 +112,6 @@ bool TSpeechManager::LoadSpeech()
 */
 bool TSpeechManager::LoadLangCodes()
 {
-	vector<TLangCode> langCodes;
 	TMappedHeader &file = FileManager.LangcodeIff;
 
 	//скипаем заголовок файла
@@ -139,7 +139,7 @@ bool TSpeechManager::LoadLangCodes()
 			}
 		}
 				
-		langCodes.push_back(item);
+		m_LangCodes.push_back(item);
 		//TPRINT("[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, ToString(str).c_str());
 	}
 
