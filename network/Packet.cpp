@@ -512,14 +512,18 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	//-----------------------------------
 	//if true  - speechType is 0xC0
 	//code
+	BYTE typeValue = (BYTE)type;
 
 	vector<int> *codes = new vector<int>;
 	SpeechManager->GetKeywords(text, codes);
 
+	//encoded
+	if (codes->size() > 0)
+		typeValue |= 0xC0;
 
 	WriteByte(0xAD);
 	WriteWord((WORD)size);
-	WriteByte((BYTE)type);
+	WriteByte(typeValue);
 	WriteWord(color);
 	WriteWord(font);
 	WritePByte(language, 4);
