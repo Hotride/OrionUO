@@ -119,10 +119,6 @@ void TGameConsole::Send()
 
 		}
 
-		//-----------------------------------
-		//Точка входа для поиска кода из speech.mul
-		//-----------------------------------
-
 		TPacketUnicodeSpeechRequest packet(Data() + offset, speechType, 3, ConfigManager.SpeechColor, (PBYTE)g_Language.c_str());
 		packet.Send();
 		packet.Free();

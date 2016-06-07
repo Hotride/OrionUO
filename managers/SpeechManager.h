@@ -91,6 +91,8 @@ public:
 	@return true при успешной загрузке
 	*/
 	bool LoadLangCodes();
+
+	void GetKeywords(const wchar_t *text, vector<int> *codes);
 };
 //--------------------------------------------------------------------------
 //!—сылка на менеджер cпича

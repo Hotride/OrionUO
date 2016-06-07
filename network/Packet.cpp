@@ -506,7 +506,17 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	int len = lstrlenW(text);
 	int size = 12 + (len * 2) + 2;
 	Create(size);
-	
+
+	//-----------------------------------
+	//Точка входа для поиска кода из speech.mul
+	//-----------------------------------
+	//if true  - speechType is 0xC0
+	//code
+
+	vector<int> *codes = new vector<int>;
+	SpeechManager->GetKeywords(text, codes);
+
+
 	WriteByte(0xAD);
 	WriteWord((WORD)size);
 	WriteByte((BYTE)type);
@@ -514,6 +524,7 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	WriteWord(font);
 	WritePByte(language, 4);
 
+	
 	PBYTE str = (PBYTE)text;
 
 	IFOR(i, 0, len)
@@ -524,6 +535,8 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 		Ptr++;
 		str += 2;
 	}
+	codes->clear();
+	delete codes;
 }
 //---------------------------------------------------------------------------
 TPacketCastSpell::TPacketCastSpell(int index)

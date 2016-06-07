@@ -73,7 +73,8 @@ bool TSpeechManager::LoadSpeech()
 		item.Code = file.ReadWordBE();
 		WORD len = file.ReadWordBE();
 		wstring str = file.ReadUtf8String(len);
-
+		//срезаем двойной нуль терминал.
+		str = str.substr(0, str.length() - 2);
 		const WCHAR *data = str.c_str();
 
 		
@@ -147,5 +148,45 @@ bool TSpeechManager::LoadLangCodes()
 		return false;
 
 	return true;
+}
+
+void TSpeechManager::GetKeywords(const wchar_t *text, vector<int> *codes)
+{
+	int size = m_SpeechEntries.size();
+	wstring input(text);
+	//to lower, case insensitive approach.
+	transform(input.begin(), input.end(), input.begin(), ::tolower);
+	IFOR(i, 0, size) 
+	{
+		wstring data = m_SpeechEntries[i].Data;
+		if (m_SpeechEntries[i].CheckStart)
+		{
+			if (data.length() > input.length()) continue;
+			wstring end = input.substr(input.length() - data.length());
+			int hits = end.find(data);
+			if (hits  > -1 && data.length() > 0)
+			{
+				codes->push_back(m_SpeechEntries[i].Code);				
+			}
+		}
+		else if (m_SpeechEntries[i].CheckEnd)
+		{
+			if (data.length() > input.length()) continue;
+			wstring start = input.substr(0, data.length());
+			int hits = start.find(data);
+			if (hits  > -1 && data.length() > 0)
+			{
+				codes->push_back(m_SpeechEntries[i].Code);
+			}
+		}
+		else
+		{
+			int hits = input.find(data);
+			if (hits > -1 && data.length() > 0)
+			{
+				codes->push_back(m_SpeechEntries[i].Code);
+			}
+		}
+	}
 }
 //---------------------------------------------------------------------------

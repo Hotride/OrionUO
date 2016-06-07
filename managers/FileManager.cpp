@@ -201,7 +201,7 @@ string TMappedHeader:: ReadString( __in int size)
 		size = (buf - Ptr) + 1;
 	}
 
-	string result(size + 1, 0);
+ 	string result(size + 1, 0);
 
 	memcpy(&result[0], &Ptr[0], size);
 	result[size] = 0;
