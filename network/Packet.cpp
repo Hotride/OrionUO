@@ -513,7 +513,8 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	SpeechManager->GetKeywords(text, codes);
 
 	//encoded
-	if (codes->size() > 0)
+	bool encoded = codes->size() > 0;
+	if (encoded)
 		typeValue |= 0xC0;
 
 	WriteByte(0xAD);
@@ -523,7 +524,30 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	WriteWord(font);
 	WritePByte(language, 4);
 
-	
+	if (encoded)
+	{
+			/*BYTE[] t = new BYTE[(int)Math.Ceiling((triggerCount + 1) * 1.5f)];
+                // write 12 bits at a time. first write count: byte then half byte.
+                t[0] = (byte)((triggerCount & 0x0FF0) >> 4);
+                t[1] = (byte)((triggerCount & 0x000F) << 4);
+                for (int i = 0; i < triggerCount; i++)
+                {
+                    int index = (int)((i + 1) * 1.5f);
+                    if (i % 2 == 0) // write half byte and then byte
+                    {
+                        t[index + 0] |= (byte)((triggers[i] & 0x0F00) >> 8);
+                        t[index + 1] = (byte)(triggers[i] & 0x00FF);
+                    }
+                    else // write byte and then half byte
+                    {
+                        t[index] = (byte)((triggers[i] & 0x0FF0) >> 4);
+                        t[index + 1] = (byte)((triggers[i] & 0x000F) << 4);
+                    }
+                }
+                Stream.BaseStream.Write(t, 0, t.Length);
+                Stream.WriteAsciiNull(text);*/
+	}
+
 	PBYTE str = (PBYTE)text;
 
 	IFOR(i, 0, len)
