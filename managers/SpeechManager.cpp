@@ -51,6 +51,7 @@ TSpeechManager::TSpeechManager()
 //---------------------------------------------------------------------------
 TSpeechManager::~TSpeechManager()
 {
+	m_SpeechEntries.clear();
 	m_LangCodes.clear();
 }
 //---------------------------------------------------------------------------
@@ -60,10 +61,10 @@ TSpeechManager::~TSpeechManager()
 */
 bool TSpeechManager::LoadSpeech()
 {
-	if (!LoadLangCodes())
-		return false;
+	//Временно вырублено.
+	//if (!LoadLangCodes())
+	//	return false;
 
-	vector<TSpeechItem> items;
 	TMappedHeader &file = FileManager.SpeechMul;
 
 	while (!file.IsEof())
@@ -97,7 +98,7 @@ bool TSpeechManager::LoadSpeech()
 		}
 
 		item.Data = str;
-		items.push_back(item);
+		m_SpeechEntries.push_back(item);
 
 		//TPRINT("[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, ToString(str).c_str());
 	}

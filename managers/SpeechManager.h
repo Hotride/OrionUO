@@ -74,7 +74,7 @@ public:
 class TSpeechManager
 {
 private:
-	unordered_map<wstring, int> m_LocalsVectorPtrs;
+	vector<TSpeechItem> m_SpeechEntries;
 	vector<TLangCode> m_LangCodes;
 	
 public:
