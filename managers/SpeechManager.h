@@ -86,12 +86,14 @@ public:
 	@return true при успешной загрузке
 	*/
 	bool LoadSpeech();
+
 	/*!
 	Загрузка данных о локалях
 	@return true при успешной загрузке
 	*/
 	bool LoadLangCodes();
 
+	//Достаём вектор с кодами словосочетаний найденных в вводе
 	void GetKeywords(const wchar_t *text, vector<int> *codes);
 };
 //--------------------------------------------------------------------------

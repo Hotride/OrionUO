@@ -507,11 +507,6 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	int size = 12 + (len * 2) + 2;
 	Create(size);
 
-	//-----------------------------------
-	//Точка входа для поиска кода из speech.mul
-	//-----------------------------------
-	//if true  - speechType is 0xC0
-	//code
 	BYTE typeValue = (BYTE)type;
 
 	vector<int> *codes = new vector<int>;
