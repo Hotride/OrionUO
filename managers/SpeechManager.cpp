@@ -158,34 +158,31 @@ void TSpeechManager::GetKeywords(const wchar_t *text, vector<int> &codes)
 	transform(input.begin(), input.end(), input.begin(), ::tolower);
 	IFOR(i, 0, size) 
 	{
-		wstring data = m_SpeechEntries[i].Data;
-		if (m_SpeechEntries[i].CheckStart)
+		TSpeechItem entry = m_SpeechEntries[i];
+		wstring data = entry.Data;
+		if (data.length() > input.length() || data.length() == 0) continue;
+		if (!entry.CheckStart)
 		{
-			if (data.length() > input.length()) continue;
-			wstring end = input.substr(input.length() - data.length());
-			int hits = end.find(data);
-			if (hits  > -1 && data.length() > 0)
-			{
-				codes.push_back(m_SpeechEntries[i].Code);				
-			}
-		}
-		else if (m_SpeechEntries[i].CheckEnd)
-		{
-			if (data.length() > input.length()) continue;
 			wstring start = input.substr(0, data.length());
 			int hits = start.find(data);
-			if (hits  > -1 && data.length() > 0)
+			if (hits < 0)
 			{
-				codes.push_back(m_SpeechEntries[i].Code);
+				continue;
 			}
 		}
-		else
+		if (!entry.CheckEnd)
 		{
-			int hits = input.find(data);
-			if (hits > -1 && data.length() > 0)
+			wstring end = input.substr(input.length() - data.length());
+			int hits = end.find(data);
+			if (hits < 0)
 			{
-				codes.push_back(m_SpeechEntries[i].Code);
+				continue;
 			}
+		}
+		int hits = input.find(data);
+		if (hits > -1)
+		{
+			codes.push_back(entry.Code);
 		}
 	}
 }
