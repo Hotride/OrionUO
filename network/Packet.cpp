@@ -559,14 +559,13 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 		}
 
 		wstring ws(text);
-		string utf8String = ToString(ws);
-		WriteString(utf8String.data(), len*2);
-		//WriteString()
-		/*base.m_Stream.Write(Encoding.UTF8.GetBytes(ToSay));
-		base.m_Stream.Write((byte)0);*/
+		string utf8String = EncodeUTF8(ws);
+		WriteString(utf8String.data(), len * 2);
+		// в данном случае надо посылать как utf8, так читает сервер.
 	}
 	else
 	{
+		//в этом случае посылаем как юникод!?
 		PBYTE str = (PBYTE)text;
 
 		IFOR(i, 0, len)
@@ -578,10 +577,6 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 			str += 2;
 		}
 	}
-	/*base.m_Stream.WriteUnicode(ToSay);
-      base.m_Stream.Write((short) 0)*/
-	//Ќадо пон€ть в чем фишка в разнице кодировки если сообщение несет в себе код дл€ »».
-
 }
 //---------------------------------------------------------------------------
 TPacketCastSpell::TPacketCastSpell(int index)
