@@ -150,7 +150,7 @@ bool TSpeechManager::LoadLangCodes()
 	return true;
 }
 
-void TSpeechManager::GetKeywords(const wchar_t *text, vector<int> codes)
+void TSpeechManager::GetKeywords(const wchar_t *text, vector<int> &codes)
 {
 	int size = m_SpeechEntries.size();
 	wstring input(text);
