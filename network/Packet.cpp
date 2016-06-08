@@ -515,7 +515,7 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	//encoded
 	bool encoded = codes.size() > 0;
 	if (encoded)
-		typeValue = ST_ENCODED_COMMAND;
+		typeValue |= ST_ENCODED_COMMAND;
 
 	WriteByte(0xAD);
 	WriteWord((WORD)size);
@@ -524,30 +524,40 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	WriteWord(font);
 	WritePByte(language, 4);
 
+	//Sallos aka PlayUO algorithm
 	if (encoded)
 	{
-			/*BYTE[] t = new BYTE[(int)Math.Ceiling((triggerCount + 1) * 1.5f)];
-                // write 12 bits at a time. first write count: byte then half byte.
-                t[0] = (byte)((triggerCount & 0x0FF0) >> 4);
-                t[1] = (byte)((triggerCount & 0x000F) << 4);
-                for (int i = 0; i < triggerCount; i++)
-                {
-                    int index = (int)((i + 1) * 1.5f);
-                    if (i % 2 == 0) // write half byte and then byte
-                    {
-                        t[index + 0] |= (byte)((triggers[i] & 0x0F00) >> 8);
-                        t[index + 1] = (byte)(triggers[i] & 0x00FF);
-                    }
-                    else // write byte and then half byte
-                    {
-                        t[index] = (byte)((triggers[i] & 0x0FF0) >> 4);
-                        t[index + 1] = (byte)((triggers[i] & 0x000F) << 4);
-                    }
-                }
-                Stream.BaseStream.Write(t, 0, t.Length);
-                Stream.WriteAsciiNull(text);*/
+		int length = codes.size();
+		WriteByte(length >> 4);
+		int num3 = length & 15;
+		bool flag = false;
+		int index = 0;
+		while (index < length)
+		{
+			int keywordID = codes[index];
+			if (flag)
+			{
+				WriteByte(keywordID >> 4);
+				num3 = keywordID & 15;
+			}
+			else
+			{
+				WriteByte(((num3 << 4) | ((keywordID >> 8) & 15)));
+				WriteByte(keywordID);
+			}
+			index++;
+			flag = !flag;
+		}
+		if (!flag)
+		{
+			WriteByte(num3 << 4);
+		}
+		/*base.m_Stream.Write(Encoding.UTF8.GetBytes(ToSay));
+		base.m_Stream.Write((byte)0);*/
 	}
-
+	/*base.m_Stream.WriteUnicode(ToSay);
+      base.m_Stream.Write((short) 0)*/
+	//Надо понять в чем фишка в разнице кодировки если сообщение несет в себе код для ИИ.
 	PBYTE str = (PBYTE)text;
 
 	IFOR(i, 0, len)
