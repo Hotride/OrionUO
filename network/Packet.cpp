@@ -559,8 +559,7 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 		}
 
 		wstring ws(text);
-		string utf8String = EncodeUTF8(ws);
-		WriteString(utf8String.data(), len * 2);
+		WriteString(EncodeUTF8(ws).data(), len * 2);
 		// в данном случае надо посылать как utf8, так читает сервер.
 	}
 	else
