@@ -505,7 +505,6 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 {
 	int len = lstrlenW(text);
 	int size = 12 + (len * 2) + 2;
-	Create(size);
 
 	BYTE typeValue = (BYTE)type;
 
@@ -515,7 +514,13 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	//encoded
 	bool encoded = codes.size() > 0;
 	if (encoded)
+	{
 		typeValue |= ST_ENCODED_COMMAND;
+		size += 4;
+	}
+
+	Create(size);
+
 
 	WriteByte(0xAD);
 	WriteWord((WORD)size);
