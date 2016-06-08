@@ -150,7 +150,7 @@ bool TSpeechManager::LoadLangCodes()
 	return true;
 }
 
-void TSpeechManager::GetKeywords(const wchar_t *text, vector<int> *codes)
+void TSpeechManager::GetKeywords(const wchar_t *text, vector<int> codes)
 {
 	int size = m_SpeechEntries.size();
 	wstring input(text);
@@ -166,7 +166,7 @@ void TSpeechManager::GetKeywords(const wchar_t *text, vector<int> *codes)
 			int hits = end.find(data);
 			if (hits  > -1 && data.length() > 0)
 			{
-				codes->push_back(m_SpeechEntries[i].Code);				
+				codes.push_back(m_SpeechEntries[i].Code);				
 			}
 		}
 		else if (m_SpeechEntries[i].CheckEnd)
@@ -176,7 +176,7 @@ void TSpeechManager::GetKeywords(const wchar_t *text, vector<int> *codes)
 			int hits = start.find(data);
 			if (hits  > -1 && data.length() > 0)
 			{
-				codes->push_back(m_SpeechEntries[i].Code);
+				codes.push_back(m_SpeechEntries[i].Code);
 			}
 		}
 		else
@@ -184,7 +184,7 @@ void TSpeechManager::GetKeywords(const wchar_t *text, vector<int> *codes)
 			int hits = input.find(data);
 			if (hits > -1 && data.length() > 0)
 			{
-				codes->push_back(m_SpeechEntries[i].Code);
+				codes.push_back(m_SpeechEntries[i].Code);
 			}
 		}
 	}

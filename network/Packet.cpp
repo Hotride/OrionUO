@@ -509,13 +509,13 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 
 	BYTE typeValue = (BYTE)type;
 
-	vector<int> *codes = new vector<int>;
+	vector<int> codes;
 	SpeechManager->GetKeywords(text, codes);
 
 	//encoded
-	bool encoded = codes->size() > 0;
+	bool encoded = codes.size() > 0;
 	if (encoded)
-		typeValue |= 0xC0;
+		typeValue = ST_ENCODED_COMMAND;
 
 	WriteByte(0xAD);
 	WriteWord((WORD)size);
@@ -558,8 +558,6 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 		Ptr++;
 		str += 2;
 	}
-	codes->clear();
-	delete codes;
 }
 //---------------------------------------------------------------------------
 TPacketCastSpell::TPacketCastSpell(int index)
