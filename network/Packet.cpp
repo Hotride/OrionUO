@@ -557,22 +557,31 @@ TPacketUnicodeSpeechRequest::TPacketUnicodeSpeechRequest(const wchar_t *text, SP
 		{
 			WriteByte(num3 << 4);
 		}
+
+		wstring ws(text);
+		string utf8String = ToString(ws);
+		WriteString(utf8String.data(), len*2);
+		//WriteString()
 		/*base.m_Stream.Write(Encoding.UTF8.GetBytes(ToSay));
 		base.m_Stream.Write((byte)0);*/
+	}
+	else
+	{
+		PBYTE str = (PBYTE)text;
+
+		IFOR(i, 0, len)
+		{
+			*Ptr = *(str + 1);
+			Ptr++;
+			*Ptr = *str;
+			Ptr++;
+			str += 2;
+		}
 	}
 	/*base.m_Stream.WriteUnicode(ToSay);
       base.m_Stream.Write((short) 0)*/
 	//Надо понять в чем фишка в разнице кодировки если сообщение несет в себе код для ИИ.
-	PBYTE str = (PBYTE)text;
 
-	IFOR(i, 0, len)
-	{
-		*Ptr = *(str + 1);
-		Ptr++;
-		*Ptr = *str;
-		Ptr++;
-		str += 2;
-	}
 }
 //---------------------------------------------------------------------------
 TPacketCastSpell::TPacketCastSpell(int index)
