@@ -143,6 +143,7 @@ int TGameCharacter::IsSitting()
 					case 0x0B5B:
 					case 0x0B5C:
 					case 0x0B5D:
+					case 0x0B5E:
 					case 0x0B5F:
 					case 0x0B60:
 					case 0x0B61:

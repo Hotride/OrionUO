@@ -458,7 +458,7 @@ struct SITTING_INFO_DATA
 };
 
 //!Количество объектов, на которых можно сидеть
-const int SITTING_ITEMS_COUNT = 96;
+const int SITTING_ITEMS_COUNT = 97;
 
 #define SITTING_N 0, 0, 0, 0
 #define SITTING_E 2, 2, 2, 2
@@ -501,6 +501,7 @@ static const SITTING_INFO_DATA SITTING_INFO[SITTING_ITEMS_COUNT] =
 	{ 0x0B5B, SITTING_S, 8, 8 },
 	{ 0x0B5C, SITTING_N, 0, 8 },
 	{ 0x0B5D, SITTING_W, 0, 8 },
+	{ 0x0B5E, SITTING_ALL, -8, -8 },
 	{ 0x0B5F, SITTING_E_W, 3, 14 },
 	{ 0x0B60, SITTING_E_W, 3, 14 },
 	{ 0x0B61, SITTING_E_W, 3, 14 },
