@@ -617,33 +617,36 @@ void TGumpStatusbar::GenerateFrame()
 
 				UnuseShader();
 
-				string objName = obj->GetName();
-
-				if (obj->CanChangeName) //Если игрок может изменить имя существу
+				if (obj->MaxHits > 0)
 				{
-					if (TextEntry != EntryPointer && !TextEntry->Length())
-						TextEntry->SetText(objName);
+					string objName = obj->GetName();
 
-					TextEntry->DrawA(1, 0x000E, 16, 14, TS_LEFT, UOFONT_FIXED);
-				}
-				else if (objName.length())
-					FontManager->DrawA(1, objName.c_str(), 0x0386, 16, 14, 150, TS_LEFT, UOFONT_FIXED);
-				else if (TextEntry->Length())
-					TextEntry->DrawA(1, 0x0386, 16, 14, TS_LEFT, UOFONT_FIXED);
-				
-				//Hits
-				UO->DrawGump(0x0805, 0, 34, 38);
-				
-				int per = CalculatePercents(obj->MaxHits, obj->Hits, 109);
-				if (per > 0)
-				{
-					WORD gumpid = 0x0806; //Character status line (blue)
-					if (obj->Poisoned())
-						gumpid = 0x0808; //Character status line (green)
-					else if (obj->YellowHits())
-						gumpid = 0x0809; //Character status line (yellow)
+					if (obj->CanChangeName) //Если игрок может изменить имя существу
+					{
+						if (TextEntry != EntryPointer && !TextEntry->Length())
+							TextEntry->SetText(objName);
 
-					UO->DrawGump(gumpid, 0, 34, 38, per, 0);
+						TextEntry->DrawA(1, 0x000E, 16, 14, TS_LEFT, UOFONT_FIXED);
+					}
+					else if (objName.length())
+						FontManager->DrawA(1, objName.c_str(), 0x0386, 16, 14, 150, TS_LEFT, UOFONT_FIXED);
+					else if (TextEntry->Length())
+						TextEntry->DrawA(1, 0x0386, 16, 14, TS_LEFT, UOFONT_FIXED);
+
+					//Hits
+					UO->DrawGump(0x0805, 0, 34, 38);
+
+					int per = CalculatePercents(obj->MaxHits, obj->Hits, 109);
+					if (per > 0)
+					{
+						WORD gumpid = 0x0806; //Character status line (blue)
+						if (obj->Poisoned())
+							gumpid = 0x0808; //Character status line (green)
+						else if (obj->YellowHits())
+							gumpid = 0x0809; //Character status line (yellow)
+
+						UO->DrawGump(gumpid, 0, 34, 38, per, 0);
+					}
 				}
 			}
 			else //Серенький статус
@@ -817,7 +820,7 @@ int TGumpStatusbar::Draw(bool &mode)
 
 				TGameCharacter *obj = World->FindWorldCharacter(m_Serial);
 
-				if (obj != NULL && obj->CanChangeName && TextEntry != NULL)
+				if (obj != NULL && obj->MaxHits > 0 && obj->CanChangeName && TextEntry != NULL)
 				{
 					//Для изменения имени
 					if (UO->PolygonePixelsInXY(16, 14, 109, 16))
@@ -897,7 +900,7 @@ void TGumpStatusbar::OnLeftMouseUp()
 		g_PartyHelperTimer = GetTickCount() + 500;
 		g_PartyHelperTarget = m_Serial;
 		g_CancelDoubleClick = true;
-		FrameCreated = false;
+		m_FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUTTON_HEAL_2)
 	{
@@ -905,7 +908,7 @@ void TGumpStatusbar::OnLeftMouseUp()
 		g_PartyHelperTimer = GetTickCount() + 500;
 		g_PartyHelperTarget = m_Serial;
 		g_CancelDoubleClick = true;
-		FrameCreated = false;
+		m_FrameCreated = false;
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUTTON_REMOVE_FROM_GROUP)
 	{
@@ -957,7 +960,7 @@ bool TGumpStatusbar::OnLeftMouseDoubleClick()
 			}
 		}
 
-		FrameCreated = false;
+		m_FrameCreated = false;
 
 		return true;
 	}
@@ -999,7 +1002,7 @@ void TGumpStatusbar::OnCharPress(WPARAM &wparam, LPARAM &lparam)
 		if ((EntryPointer->Length() <= 15) && FontManager->GetWidthA(1, TextEntry->c_str(), TextEntry->Pos()) <= 100 && ((wparam >= 'a' && wparam <= 'z') || (wparam >= 'A' && wparam <= 'Z')))
 		{
 			EntryPointer->Insert(wparam);
-			FrameCreated = false;
+			m_FrameCreated = false;
 		}
 	}
 }
@@ -1025,49 +1028,49 @@ void TGumpStatusbar::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 			else
 				EntryPointer = GameConsole;
 
-			FrameCreated = false; //Перерисуем
+			m_FrameCreated = false; //Перерисуем
 
 			break;
 		}
 		case VK_HOME:
 		{
 			EntryPointer->SetPos(0);
-			FrameCreated = false;
+			m_FrameCreated = false;
 
 			break;
 		}
 		case VK_END:
 		{
 			EntryPointer->SetPos(EntryPointer->Length());
-			FrameCreated = false;
+			m_FrameCreated = false;
 
 			break;
 		}
 		case VK_LEFT:
 		{
 			EntryPointer->AddPos(-1);
-			FrameCreated = false;
+			m_FrameCreated = false;
 
 			break;
 		}
 		case VK_RIGHT:
 		{
 			EntryPointer->AddPos(1);
-			FrameCreated = false;
+			m_FrameCreated = false;
 
 			break;
 		}
 		case VK_BACK:
 		{
 			EntryPointer->Remove(true);
-			FrameCreated = false;
+			m_FrameCreated = false;
 
 			break;
 		}
 		case VK_DELETE:
 		{
 			EntryPointer->Remove(false);
-			FrameCreated = false;
+			m_FrameCreated = false;
 
 			break;
 		}
@@ -1084,7 +1087,7 @@ void TGumpStatusbar::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 			else
 				EntryPointer = GameConsole;
 
-			FrameCreated = false; //Перерисуем
+			m_FrameCreated = false; //Перерисуем
 
 			break;
 		}
