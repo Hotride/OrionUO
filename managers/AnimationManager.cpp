@@ -2268,7 +2268,7 @@ ANIMATION_DIMENSIONS TAnimationManager::GetAnimationDimensions(TGameObject *obj,
 	{
 		WORD graphic = obj->GetMountAnimation();
 
-		if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+		if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_DataIndex[graphic].Address != 0)
 		{
 			int offset = animGroup * 5;
 			PBYTE dataStart = NULL;
