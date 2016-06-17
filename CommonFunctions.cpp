@@ -231,7 +231,19 @@ string ToUpperA(string str)
 	return str;
 }
 //---------------------------------------------------------------------------
-bool ToBool(string &str)
+wstring ToLowerW(wstring str)
+{
+	_wcslwr(&str[0]);
+	return str;
+}
+//---------------------------------------------------------------------------
+wstring ToUpperW(wstring str)
+{
+	_wcsupr(&str[0]);
+	return str;
+}
+//---------------------------------------------------------------------------
+bool ToBool(const string &str)
 {
 	string data = ToLowerA(str);
 

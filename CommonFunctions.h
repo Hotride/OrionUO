@@ -36,7 +36,9 @@ string ToString(const wstring &wstr);
 wstring ToWString(const string &str);
 string ToLowerA(string str);
 string ToUpperA(string str);
-bool ToBool(string &str);
+wstring ToLowerW(wstring str);
+wstring ToUpperW(wstring str);
+bool ToBool(const string &str);
 //---------------------------------------------------------------------------
 //Функции для вычисления дистанции
 class TGameObject;
