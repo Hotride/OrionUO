@@ -156,6 +156,8 @@ private:
 
 	bool FindPath(int maxNodes);
 
+	int GetWalkSpeed(const bool &run, const bool &onMount);
+
 public:
 	TPathFinder();
 	virtual ~TPathFinder();

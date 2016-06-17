@@ -342,6 +342,9 @@ extern char g_MaxGroundZ;
 //!Имя выбранного персонажа
 extern char g_SelectedCharName[30];
 
+//!Режим скорости перемещения персонажа
+extern BYTE g_SpeedMode;
+
 //!Значение Z-buffer'а
 extern int g_ZBuffer;
 

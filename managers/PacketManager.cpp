@@ -2586,6 +2586,11 @@ PACKET_HANDLER(ExtendedCommand)
 					break;
 			}
 		}
+		case 0x26:
+		{
+			g_SpeedMode = ReadByte();
+			break;
+		}
 		default:
 			break;
 	}

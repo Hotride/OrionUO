@@ -479,6 +479,16 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 	return passed;
 }
 //---------------------------------------------------------------------------
+int TPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
+{
+	if (g_SpeedMode == 1)
+		return CHARACTER_ANIMATION_DELAY_TABLE[onMount][1];
+	else if (g_SpeedMode == 2)
+		return CHARACTER_ANIMATION_DELAY_TABLE[onMount][0];
+
+	return CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
+}
+//---------------------------------------------------------------------------
 bool TPathFinder::Walk(bool run, BYTE direction)
 {
 	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 2 || g_Player == NULL || g_DeathScreenTimer)
@@ -538,7 +548,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 		bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
 
-		wsi.Time = CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
+		wsi.Time = GetWalkSpeed(run, onMount);
 	}
 	else
 	{
@@ -561,7 +571,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 			bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
 
-			wsi.Time = CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
+			wsi.Time = GetWalkSpeed(run, onMount);
 		}
 
 		direction = newDir;

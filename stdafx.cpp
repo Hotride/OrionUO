@@ -118,6 +118,7 @@ float g_DrawColor = 1.0f;
 bool g_NoDrawRoof = false;
 char g_MaxGroundZ = 0;
 char g_SelectedCharName[30] = { 0 };
+BYTE g_SpeedMode = 0;
 
 int g_ZBuffer = 0;
 bool g_UseCircleTrans = false;
