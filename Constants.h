@@ -139,16 +139,16 @@ const int DEFAULT_CHARACTER_HEIGHT = 16;
 const int DEFAULT_BLOCK_HEIGHT = 16;
 
 //!Задержка для перемещения бегом на маунте
-const int STEP_DELAY_MOUNT_RUN = 100; // 90; // 85;
+const int STEP_DELAY_MOUNT_RUN = 95; // 90; // 85;
 
 //!Задержка для перемещения хотьбы на маунте
-const int STEP_DELAY_MOUNT_WALK = 200; // 185; // 185;
+const int STEP_DELAY_MOUNT_WALK = 195; // 185; // 185;
 
 //!Задержка для перемещения бегом
-const int STEP_DELAY_RUN = 200; // 175; //185;
+const int STEP_DELAY_RUN = 185; // 175; //185;
 
 //!Задержка для перемещения хотьбы
-const int STEP_DELAY_WALK = 400; // 370; //385;
+const int STEP_DELAY_WALK = 380; // 370; //385;
 
 //!Таблица задержек перемещений
 const int CHARACTER_ANIMATION_DELAY_TABLE[2][2] =
