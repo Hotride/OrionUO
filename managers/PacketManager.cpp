@@ -260,7 +260,7 @@ TMessageType TPacketManager::m_MessageTypes[0x100] =
 	/*0xDC*/ RMSG("OPL Info Packet", 9),
 	/*0xDD*/ RMSGH("Compressed Gump", SIZE_VARIABLE, OpenCompressedGump),
 	/*0xDE*/ UMSG(SIZE_VARIABLE),
-	/*0xDF*/ RMSG("Buff/Debuff", SIZE_VARIABLE),
+	/*0xDF*/ RMSGH("Buff/Debuff", SIZE_VARIABLE, BuffDebuff),
 	/*0xE0*/ SMSG("Bug Report KR", SIZE_VARIABLE),
 	/*0xE1*/ SMSG("Client Type KR/SA", 0x09),
 	/*0xE2*/ RMSG("New Character Animation", 0xa),
@@ -4316,6 +4316,38 @@ PACKET_HANDLER(BookData)
 					entry->Insert(ch);
 				}
 			}
+		}
+	}
+}
+//---------------------------------------------------------------------------
+PACKET_HANDLER(BuffDebuff)
+{
+	if (World == NULL)
+		return;
+
+	DWORD serial = ReadDWord();
+
+	TGumpBook *gump = (TGumpBook*)GumpManager->GetGump(serial, 0, GT_BUFF);
+
+	if (gump != NULL)
+	{
+		WORD iconID = ReadWord();
+		WORD mode = ReadWord();
+
+		if (mode)
+		{
+			Move(12);
+
+			WORD timer = ReadWord();
+
+			Move(3);
+
+			DWORD titleCliloc = ReadDWord();
+			DWORD descriptionCliloc = ReadDWord();
+
+			Move(6);
+
+			//arguments
 		}
 	}
 }
