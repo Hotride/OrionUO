@@ -459,6 +459,9 @@
     <ClInclude Include="managers\SpeechManager.h">
       <Filter>Заголовочные файлы\managers</Filter>
     </ClInclude>
+    <ClInclude Include="gump\GumpBuff.h">
+      <Filter>Заголовочные файлы\gump</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -847,6 +850,9 @@
     </ClCompile>
     <ClCompile Include="managers\SpeechManager.cpp">
       <Filter>Файлы исходного кода\managers</Filter>
+    </ClCompile>
+    <ClCompile Include="gump\GumpBuff.cpp">
+      <Filter>Файлы исходного кода\gump</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

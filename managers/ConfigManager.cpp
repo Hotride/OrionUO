@@ -50,6 +50,8 @@ void TConfigManager::Init()
 	m_ObscenityFilter = false;
 	m_FilterPassword = "";
 	
+	m_ToggleBufficonWindow = true;
+
 	g_GameWindowPosX = 0;
 	g_GameWindowPosY = 0;
 }
@@ -460,6 +462,11 @@ void TConfigManager::Load( __in string path)
 					SendMessage(g_hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 				else
 					SetWindowPos(g_hWnd, NULL, windowX, windowY, windowWidth, windowHeight, 0);
+
+				if (blockSize > 15)
+				{
+					m_ToggleBufficonWindow = file.ReadByte();
+				}
 			}
 			else
 			{
@@ -611,7 +618,7 @@ void TConfigManager::Save( __in string path)
 	writer->WriteBuffer();
 	
 	//No page
-	writer->WriteByte(6 + 9); //size of block
+	writer->WriteByte(6 + 9 + 1); //size of block
 	writer->WriteByte(0); //page index
 	writer->WriteWord(g_GameWindowPosX);
 	writer->WriteWord(g_GameWindowPosY);
@@ -625,6 +632,8 @@ void TConfigManager::Save( __in string path)
 	writer->WriteShort((short)rect.top);
 	writer->WriteShort((short)(rect.right - rect.left));
 	writer->WriteShort((short)(rect.bottom - rect.top));
+
+	writer->WriteByte(m_ToggleBufficonWindow);
 
 	writer->WriteBuffer();
 	

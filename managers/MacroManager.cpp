@@ -809,11 +809,9 @@ MACRO_RETURN_CODE TMacroManager::Process()
 					TGump *next = (TGump*)gump->m_Next;
 
 					if (gump->GumpType == GT_OPTIONS)
-					{
 						OptionsMacroManager->Clear();
-					}
 
-					if (gump->GumpType != GT_MENUBAR)
+					if (gump->GumpType != GT_MENUBAR && gump->GumpType != GT_BUFF && (gump->GumpType != GT_GENERIC && !gump->NoClose))
 						GumpManager->RemoveGump(gump);
 
 					gump = next;
@@ -1033,14 +1031,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			}
 			case MC_TOGGLE_BUICON_WINDOW:
 			{
-				TGump *gump = GumpManager->GetGump(0, 0, GT_BUFF);
-
-				if (gump != NULL)
-					GumpManager->CloseGump(0, 0, GT_BUFF);
-				else
-				{
-					//GumpManager->AddGump(new TGumpBuff());
-				}
+				ConfigManager.ToggleBufficonWindow = !ConfigManager.ToggleBufficonWindow;
 
 				break;
 			}

@@ -731,6 +731,7 @@ TPacketGumpResponse::TPacketGumpResponse(TGump *gump, int code)
 	textptr += 4;
 
 	item = (TGumpObject*)gump->m_Items;
+	int entryTextIndex = 0;
 
 	while (item != NULL)
 	{
@@ -755,7 +756,7 @@ TPacketGumpResponse::TPacketGumpResponse(TGump *gump, int code)
 			{
 				TGumpTextEntry *gte = (TGumpTextEntry*)item;
 
-				pack16(textptr, gte->TextIndex);
+				pack16(textptr, entryTextIndex/*gte->TextIndex*/);
 				textptr += 2;
 				int tlen = gte->TextEntry->Length();
 				pack16(textptr, tlen);
@@ -769,6 +770,9 @@ TPacketGumpResponse::TPacketGumpResponse(TGump *gump, int code)
 					*textptr = gteText[i];
 					textptr++;
 				}
+
+				entryTextIndex++;
+
 				break;
 			}
 			default:

@@ -358,6 +358,14 @@ void TGumpManager::OnRightMouseUp( __in bool blocked)
 
 					break;
 				}
+				case GT_BUFF:
+				{
+					gump->X = g_GameWindowPosX;
+					gump->Y = g_GameWindowPosY + g_GameWindowHeight;
+					gump->FrameCreated = false;
+
+					break;
+				}
 				case GT_MENU:
 				{
 					gump->SendMenuResponse(0);
@@ -1000,6 +1008,7 @@ void TGumpManager::Load( __in string path)
 	
 	bool paperdollRequested = false;
 	bool menubarFound = false;
+	bool bufficonWindowFound = false;
 	bool minimizedConsoleType = false;
 	bool showFullTextConsoleType = false;
 
@@ -1092,7 +1101,9 @@ void TGumpManager::Load( __in string path)
 				{
 					if (gumpType == GT_BUFF)
 					{
-						//gump = new TGumpBuff(g_PlayerSerial, gumpX, gumpY);
+						bufficonWindowFound = true;
+						gump = new TGumpBuff(g_PlayerSerial, gumpX, gumpY);
+						gump->Graphic = file.ReadWord();
 					}
 					else if (!ConfigManager.DisableMenubar)
 					{
@@ -1176,6 +1187,9 @@ void TGumpManager::Load( __in string path)
 		mbg->Opened = true;
 		GumpManager->AddGump(mbg);
 	}
+
+	if (!bufficonWindowFound)
+		GumpManager->AddGump(new TGumpBuff(g_PlayerSerial, g_GameWindowPosX, g_GameWindowPosY + g_GameWindowHeight));
 
 	if (!paperdollRequested)
 		UO->PaperdollReq(g_PlayerSerial);
@@ -1268,9 +1282,19 @@ void TGumpManager::Save( __in string path)
 				break;
 			}
 			case GT_MENUBAR:
-			case GT_BUFF:
 			{
 				saveDefaultGumpProperties(writer, gump, 12);
+
+				writer->WriteBuffer();
+				count++;
+
+				break;
+			}
+			case GT_BUFF:
+			{
+				saveDefaultGumpProperties(writer, gump, 14);
+
+				writer->WriteWord(gump->Graphic);
 
 				writer->WriteBuffer();
 				count++;

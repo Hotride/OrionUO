@@ -107,6 +107,8 @@ private:
 	bool m_ObscenityFilter;
 	string m_FilterPassword;
 
+	bool m_ToggleBufficonWindow;
+
 public:
 	TConfigManager() {}
 	~TConfigManager() {}
@@ -213,6 +215,8 @@ public:
 	SETGET(bool, FilterPWOn);
 	SETGET(bool, ObscenityFilter);
 	SETGET(string, FilterPassword);
+
+	SETGET(bool, ToggleBufficonWindow);
 
 	/*!
 	Получить цвет исходя из "злобности"

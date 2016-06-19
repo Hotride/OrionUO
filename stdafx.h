@@ -593,6 +593,7 @@ typedef std::vector<BYTE> WaveFile;
 #include "gump\\GumpTargetSystem.h"
 #include "gump\\GumpPopupMenu.h"
 #include "gump\\GumpConsoleType.h"
+#include "gump\\GumpBuff.h"
 #include "screen stages\\BaseScreen.h"
 #include "screen stages\\DebugScreen.h"
 #include "screen stages\\MainScreen.h"

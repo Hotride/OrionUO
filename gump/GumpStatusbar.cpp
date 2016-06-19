@@ -926,6 +926,8 @@ void TGumpStatusbar::OnLeftMouseUp()
 			oldGroup->FrameCreated = false;
 		}
 	}
+	else if (g_LastObjectLeftMouseDown == ID_GSB_BUFF_GUMP)
+		ConfigManager.ToggleBufficonWindow = true;
 	else if (!g_LastObjectLeftMouseDown)
 	{
 		//Проверим, может быть есть таргет, который нужно повесить на данного чара

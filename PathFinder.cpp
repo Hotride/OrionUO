@@ -481,10 +481,9 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 //---------------------------------------------------------------------------
 int TPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 {
-	if (!onMount && (g_SpeedMode == CST_FAST_UNMOUNT || g_SpeedMode == CST_FAST_UNMOUNT_AND_CANT_RUN))
-		return CHARACTER_ANIMATION_DELAY_TABLE[1][run];
+	bool mounted = (onMount || (g_SpeedMode == CST_FAST_UNMOUNT || g_SpeedMode == CST_FAST_UNMOUNT_AND_CANT_RUN));
 
-	return CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
+	return CHARACTER_ANIMATION_DELAY_TABLE[mounted][run];
 }
 //---------------------------------------------------------------------------
 bool TPathFinder::Walk(bool run, BYTE direction)
