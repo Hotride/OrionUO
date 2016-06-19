@@ -343,7 +343,7 @@ extern char g_MaxGroundZ;
 extern char g_SelectedCharName[30];
 
 //!Режим скорости перемещения персонажа
-extern BYTE g_SpeedMode;
+extern CHARACTER_SPEED_TYPE g_SpeedMode;
 
 //!Значение Z-buffer'а
 extern int g_ZBuffer;

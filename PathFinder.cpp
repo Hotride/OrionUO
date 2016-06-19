@@ -481,10 +481,8 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 //---------------------------------------------------------------------------
 int TPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 {
-	if (g_SpeedMode == 1)
-		return CHARACTER_ANIMATION_DELAY_TABLE[onMount][1];
-	else if (g_SpeedMode == 2)
-		return CHARACTER_ANIMATION_DELAY_TABLE[onMount][0];
+	if (!onMount && (g_SpeedMode == CST_FAST_UNMOUNT || g_SpeedMode == CST_FAST_UNMOUNT_AND_CANT_RUN))
+		return CHARACTER_ANIMATION_DELAY_TABLE[1][run];
 
 	return CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
 }
@@ -494,7 +492,9 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 2 || g_Player == NULL || g_DeathScreenTimer)
 		return false;
 
-	if (!run)
+	if (g_SpeedMode >= CST_CANT_RUN)
+		run = false;
+	else if (!run)
 		run = ConfigManager.AlwaysRun;
 
 	int x = g_Player->X;

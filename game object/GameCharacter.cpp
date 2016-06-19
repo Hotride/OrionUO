@@ -813,9 +813,7 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 
 		if (canChange)
 		{
-			int onMount = (int)(FindLayer(OL_MOUNT) != NULL);
-
-			int maxDelay = CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
+			int maxDelay = PathFinder->GetWalkSpeed(run, FindLayer(OL_MOUNT) != NULL); // CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
 
 			int delay = (int)ticks - (int)m_LastStepTime;
 			bool removeStep = (delay >= maxDelay);

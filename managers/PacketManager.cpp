@@ -2588,7 +2588,13 @@ PACKET_HANDLER(ExtendedCommand)
 		}
 		case 0x26:
 		{
-			g_SpeedMode = ReadByte();
+			BYTE val = ReadByte();
+
+			if (val > CST_FAST_UNMOUNT_AND_CANT_RUN)
+				val = 0;
+
+			g_SpeedMode = (CHARACTER_SPEED_TYPE)val;
+
 			break;
 		}
 		default:
