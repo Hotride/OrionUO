@@ -444,7 +444,7 @@ void TGumpContainer::OnLeftMouseUp()
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GC_LOCK_MOVING)
 	{
-		LockMoving = !LockMoving;
+		m_LockMoving = !m_LockMoving;
 		g_CancelDoubleClick = true;
 
 		return;

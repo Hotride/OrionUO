@@ -2757,6 +2757,11 @@ void TUltimaOnline::Process()
 			World->ProcessAnimation();
 
 			PathFinder->ProcessAutowalk();
+
+			TGumpBuff *gumpBuff = (TGumpBuff*)GumpManager->GetGump(g_PlayerSerial, 0, GT_BUFF);
+
+			if (gumpBuff != NULL)
+				gumpBuff->UpdateBuffIcons();
 		}
 
 		bool canRenderSelect = false;

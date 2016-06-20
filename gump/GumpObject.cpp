@@ -270,13 +270,13 @@ void TGumpText::Draw(bool &transparent, bool pressed)
 TGumpCroppedText::TGumpCroppedText(int textIndex, WORD color, short x, short y, short width, short height)
 : TGumpText(textIndex, color, x, y), m_Width(width), m_Height(height)
 {
-	Type = GOT_CROPPEDTEXT;
+	m_Type = GOT_CROPPEDTEXT;
 }
 //---------------------------------------------------------------------------
 TGumpTextEntry::TGumpTextEntry(int textIndex, WORD color, short x, short y, short width, short height, int index)
 : TGumpText(textIndex, color, x, y), m_Width(width), m_Height(height), m_Index(index)
 {
-	Type = GOT_TEXTENTRY;
+	m_Type = GOT_TEXTENTRY;
 	TextEntry = new TEntryText();
 }
 //---------------------------------------------------------------------------
@@ -320,7 +320,7 @@ TGumpTextEntry::~TGumpTextEntry()
 TGumpTextEntryLimited::TGumpTextEntryLimited(int textIndex, WORD color, short x, short y, short width, short height, int index, int maxLength)
 : TGumpTextEntry(textIndex, color, x, y, width, height, index), m_MaxLength(maxLength)
 {
-	Type = GOT_TEXTENTRYLIMITED;
+	m_Type = GOT_TEXTENTRYLIMITED;
 
 	if (TextEntry != NULL)
 		TextEntry->MaxLength = MaxLength;
@@ -404,7 +404,7 @@ TGumpHTMLGump::~TGumpHTMLGump()
 TGumpXFMHTMLGump::TGumpXFMHTMLGump(DWORD clilocID, WORD color, short x, short y, short width, short height, bool haveBackground, bool haveScrollbar)
 : TGumpHTMLGump((int)clilocID, x, y, width, height, haveBackground, haveScrollbar)
 {
-	Color = color;
+	m_Color = color;
 
 	int w = width;
 	if (haveScrollbar)
@@ -459,7 +459,7 @@ m_Selected(false), m_SelectedCount(0)
 TGumpBulletinBoardObject::TGumpBulletinBoardObject(DWORD serial, string text)
 : TGumpObject(GOT_BUTTON, 0, 0, 0, 0)
 {
-	Serial = serial;
+	m_Serial = serial;
 
 	FontManager->GenerateA(9, Texture, text.c_str(), 0x0386);
 }
@@ -467,5 +467,15 @@ TGumpBulletinBoardObject::TGumpBulletinBoardObject(DWORD serial, string text)
 TGumpBulletinBoardObject::~TGumpBulletinBoardObject()
 {
 	Texture.Clear();
+}
+//---------------------------------------------------------------------------
+TGumpBuffObject::TGumpBuffObject(WORD graphic, DWORD timer, wstring text)
+: TGumpObject(GOT_BUTTON, graphic, 0, 0, 0), m_Timer(timer), m_Text(text),
+m_TooltipTimer(0), m_DecAlpha(true), m_Alpha(0xFF)
+{
+}
+//---------------------------------------------------------------------------
+TGumpBuffObject::~TGumpBuffObject()
+{
 }
 //---------------------------------------------------------------------------

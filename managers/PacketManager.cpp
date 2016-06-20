@@ -4437,6 +4437,8 @@ endloop    Buffs <<<<
 				Move(6);
 
 				//arguments
+
+				//gump->Add(new TGumpBuffObject(iconID, GetTickCount() + (timer * 1000), L"Buff text"));
 			}
 		}
 	}

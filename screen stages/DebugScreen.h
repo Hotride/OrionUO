@@ -30,6 +30,8 @@ private:
 	static const int ID_DS_GO_SCREEN_MAIN = 2;
 
 	void ProcessSmoothAction(BYTE action = 0xFF);
+
+	TGumpBuff *m_BuffGump;
 public:
 	TDebugScreen();
 	virtual ~TDebugScreen();

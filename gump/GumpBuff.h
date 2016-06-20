@@ -23,13 +23,28 @@
 class TGumpBuff : public TGump
 {
 private:
-	static const int ID_GB_NEXT_WINDOW_DIRECTION = 1;
+	static const int BUFF_ITEM_STEP_OFFSET_X = 2;
+	static const int BUFF_ITEM_STEP_OFFSET_Y = 2;
+	static const int MUNIMUM_ICON_ALPHA = 80;
+	static const int ALPHA_CHANGE_KOEFF = 600;
+	static const int USE_ALPHA_BLENDING_WHEN_TIMER_LESS = 10000;
 
-	bool UnderMouse();
+	static const int ID_GB_NEXT_WINDOW_DIRECTION = 1;
+	static const int ID_GB_LOCK_MOVING = 2;
+	static const int ID_GB_BUFF_ITEM = 10;
+
+	void GetGumpStatus(POINT &ball, POINT &items, bool &useX, bool &decX, bool &decY, POINT &startGump, POINT &endGump);
+
+protected:
+	void CalculateGumpState();
 
 public:
 	TGumpBuff(DWORD serial, short x, short y);
 	virtual ~TGumpBuff();
+
+	void UpdateBuffIcons();
+
+	void OnToolTip();
 
 	void PrepareTextures();
 

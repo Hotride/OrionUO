@@ -364,4 +364,24 @@ public:
 	TTextTexture Texture;
 };
 //---------------------------------------------------------------------------
+class TGumpBuffObject : public TGumpObject
+{
+private:
+	DWORD m_Timer;
+	wstring m_Text;
+	DWORD m_TooltipTimer;
+	bool m_DecAlpha;
+	BYTE m_Alpha;
+
+public:
+	TGumpBuffObject(WORD graphic, DWORD timer, wstring text);
+	virtual ~TGumpBuffObject();
+
+	SETGET(DWORD, Timer);
+	SETGET(wstring, Text);
+	SETGET(DWORD, TooltipTimer);
+	SETGET(bool, DecAlpha);
+	SETGET(BYTE, Alpha);
+};
+//---------------------------------------------------------------------------
 #endif
