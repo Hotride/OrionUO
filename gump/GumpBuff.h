@@ -23,8 +23,8 @@
 class TGumpBuff : public TGump
 {
 private:
-	static const int BUFF_ITEM_STEP_OFFSET_X = 2;
-	static const int BUFF_ITEM_STEP_OFFSET_Y = 2;
+	static const int BUFF_ITEM_STEP_OFFSET_X = 3;
+	static const int BUFF_ITEM_STEP_OFFSET_Y = 3;
 	static const int MUNIMUM_ICON_ALPHA = 80;
 	static const int ALPHA_CHANGE_KOEFF = 600;
 	static const int USE_ALPHA_BLENDING_WHEN_TIMER_LESS = 10000;

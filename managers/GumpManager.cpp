@@ -178,6 +178,11 @@ bool TGumpManager::OnLeftMouseUp( __in bool blocked)
 						g_LastObjectLeftMouseDown = 0;
 					break;
 				}
+				case GT_BUFF:
+				{
+					g_LastObjectLeftMouseDown = 0;
+					break;
+				}
 				default:
 					break;
 			}
@@ -360,9 +365,10 @@ void TGumpManager::OnRightMouseUp( __in bool blocked)
 				}
 				case GT_BUFF:
 				{
-					gump->X = g_GameWindowPosX;
-					gump->Y = g_GameWindowPosY + g_GameWindowHeight;
+					//gump->X = g_GameWindowPosX;
+					//gump->Y = g_GameWindowPosY + g_GameWindowHeight;
 					gump->FrameCreated = false;
+					ConfigManager.ToggleBufficonWindow = false;
 
 					break;
 				}

@@ -33,6 +33,10 @@ void TGumpBuff::PrepareTextures()
 {
 	UO->ExecuteGump(m_Graphic);
 
+	//Crustal balls
+	UO->ExecuteGump(0x7589);
+	UO->ExecuteGump(0x7585);
+
 	QFOR(item, m_Items, TGumpBuffObject*)
 		UO->ExecuteGump(item->Graphic);
 }
@@ -89,35 +93,42 @@ void TGumpBuff::UpdateBuffIcons()
 //----------------------------------------------------------------------------
 void TGumpBuff::OnToolTip()
 {
-	DWORD selected = ((g_LastSelectedGump == (DWORD)this) ? g_LastSelectedObject : 0);
-
-	if (selected)
+	if (g_LastSelectedGump == (DWORD)this)
 	{
-		if (selected == ID_GB_NEXT_WINDOW_DIRECTION)
+		if (g_LastSelectedObject == ID_GB_NEXT_WINDOW_DIRECTION)
 		{
 		}
-		else
+		else if (g_LastSelectedObject)
 		{
 			DWORD ticks = GetTickCount();
 			int index = 0;
 
 			QFOR(item, m_Items, TGumpBuffObject*)
 			{
-				if (selected == ID_GB_BUFF_ITEM + index)
+				if (g_LastSelectedObject == ID_GB_BUFF_ITEM + index)
 				{
 					if (item->TooltipTimer < ticks)
 					{
 						item->TooltipTimer = ticks + ((item->Timer - ticks) % 1000);
-						ToolTip.SeqIndex = 0;
-					}
+						ToolTip.SeqIndex = 0xFFFFFFFF;
 
-					ToolTip.Set(item->Text, SOT_GAME_OBJECT, selected);
+						ToolTip.Set(item->Text, SOT_GAME_OBJECT, g_LastSelectedObject);
+
+						ToolTip.Timer = 0;
+						ToolTip.Use = true;
+					}
+					else
+						ToolTip.Set(item->Text, SOT_GAME_OBJECT, g_LastSelectedObject);
 
 					break;
 				}
 
 				index++;
 			}
+		}
+		else
+		{
+			ToolTip.Set(L"Buffs and Debuffs will appear here.", SOT_GAME_OBJECT, g_LastSelectedObject, 120);
 		}
 	}
 }
@@ -126,40 +137,56 @@ void TGumpBuff::GetGumpStatus(POINT &ball, POINT &items, bool &useX, bool &decX,
 {
 	startGump.x = 0;
 	startGump.y = 0;
+
 	UO->GetGumpDimension(m_Graphic, endGump);
 
 	switch (m_Graphic)
 	{
-		case 0x757F: //^
+		case 0x757F: //v
 		{
-			decY = true;
+			ball.x = 0;
+			ball.y = 0;
+			items.x = 25;
+			items.y = 25;
+			decY = false;
 			decX = false;
 			useX = false;
 			break;
 		}
-		case 0x7580: //>
+		case 0x7581: //^
 		{
-			decY = false;
-			decX = false;
-			useX = true;
-			break;
-		}
-		case 0x7581: //v
-		{
-			decY = false;
+			ball.x = 34;
+			ball.y = 78;
+			items.x = 7;
+			items.y = 52;
+			decY = true;
 			decX = false;
 			useX = false;
 			break;
 		}
 		case 0x7582: //<
 		{
+			ball.x = 76;
+			ball.y = 36;
+			items.x = 52;
+			items.y = 7;
 			decY = false;
 			decX = true;
 			useX = true;
 			break;
 		}
+		case 0x7580: //>
 		default:
+		{
+			ball.x = -2;
+			ball.y = 36;
+			items.x = 20;
+			items.y = 7;
+			decY = false;
+			decX = false;
+			useX = true;
 			break;
+		}
 	}
 
 	POINT itemsOfs = items;
@@ -174,31 +201,17 @@ void TGumpBuff::GetGumpStatus(POINT &ball, POINT &items, bool &useX, bool &decX,
 		if (useX)
 		{
 			if (decX)
-				itemsOfs.x -= gumpDim.x;
-		}
-		else if (decY)
-			itemsOfs.y -= gumpDim.y;
-
-		int addValX = 0;
-		int addValY = 0;
-
-		if (useX)
-		{
-			if (decX)
-				addValX = -BUFF_ITEM_STEP_OFFSET_X;
+				itemsOfs.x -= gumpDim.x + BUFF_ITEM_STEP_OFFSET_X;
 			else
-				addValX = gumpDim.x + BUFF_ITEM_STEP_OFFSET_X;
+				itemsOfs.x += gumpDim.x + BUFF_ITEM_STEP_OFFSET_X;
 		}
 		else
 		{
 			if (decY)
-				addValY = -BUFF_ITEM_STEP_OFFSET_Y;
+				itemsOfs.y -= gumpDim.y + BUFF_ITEM_STEP_OFFSET_Y;
 			else
-				addValY = gumpDim.y + BUFF_ITEM_STEP_OFFSET_Y;
+				itemsOfs.y += gumpDim.y + BUFF_ITEM_STEP_OFFSET_Y;
 		}
-
-		itemsOfs.x += addValX;
-		itemsOfs.y += addValY;
 	}
 
 	if (useX)
@@ -254,16 +267,20 @@ void TGumpBuff::GenerateFrame()
 
 		GetGumpStatus(ballCoordinates, startCoordinates, useX, decX, decY, startGump, endGump);
 
-		g_GL.DrawPolygone(startGump.x - 10, startGump.y - 10, abs(startGump.x) + endGump.x + 20, abs(startGump.y) + endGump.y + 20);
+		//g_GL.DrawPolygone(startGump.x - 10, startGump.y - 10, abs(startGump.x) + endGump.x + 20, abs(startGump.y) + endGump.y + 20);
 
 		UO->DrawGump(m_Graphic, 0, 0, 0); //Body
 
-		UO->DrawGump(m_Graphic, 0, ballCoordinates.x, ballCoordinates.y); //Crystal ball
+		WORD gumpID = ((g_GumpSelectElement == ID_GB_NEXT_WINDOW_DIRECTION) ? 0x7589 : 0x7585);
+
+		UO->DrawGump(gumpID, 0, ballCoordinates.x, ballCoordinates.y); //Crystal ball
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		DWORD ticks = GetTickCount();
+
+		int ii = 0;
 
 		QFOR(item, m_Items, TGumpBuffObject*)
 		{
@@ -273,37 +290,30 @@ void TGumpBuff::GenerateFrame()
 			POINT gumpDim = { 0, 0 };
 			UO->GetGumpDimension(item->Graphic, gumpDim);
 
-			if (useX)
-			{
-				if (decX)
-					startCoordinates.x -= gumpDim.x;
-			}
-			else if (decY)
-				startCoordinates.y -= gumpDim.y;
-
 			glColor4ub(0xFF, 0xFF, 0xFF, item->Alpha);
-			UO->DrawGump(item->Graphic, 0, startCoordinates.x, startCoordinates.y); //Buff item
 
-			int decValX = 0;
-			int decValY = 0;
+			gumpID = item->Graphic;
 
+			if (ii == 1)
+				gumpID = 0x7563;
+			if (ii == 2)
+				gumpID = 0x7542;
+			UO->DrawGump(gumpID, 0, startCoordinates.x, startCoordinates.y); //Buff item
+			ii++;
 			if (useX)
 			{
 				if (decX)
-					decValX = -BUFF_ITEM_STEP_OFFSET_X;
+					startCoordinates.x -= gumpDim.x + BUFF_ITEM_STEP_OFFSET_X;
 				else
-					decValX = gumpDim.x + BUFF_ITEM_STEP_OFFSET_X;
+					startCoordinates.x += gumpDim.x + BUFF_ITEM_STEP_OFFSET_X;
 			}
 			else
 			{
 				if (decY)
-					decValY = -BUFF_ITEM_STEP_OFFSET_Y;
+					startCoordinates.y -= gumpDim.y + BUFF_ITEM_STEP_OFFSET_Y;
 				else
-					decValY = gumpDim.y + BUFF_ITEM_STEP_OFFSET_Y;
+					startCoordinates.y += gumpDim.y + BUFF_ITEM_STEP_OFFSET_Y;
 			}
-
-			startCoordinates.x += decValX;
-			startCoordinates.y += decValY;
 		}
 
 		glDisable(GL_BLEND);
@@ -338,6 +348,9 @@ int TGumpBuff::Draw(bool &mode)
 {
 	if (!ConfigManager.ToggleBufficonWindow)
 		return 0;
+
+	if (m_Graphic < 0x757F || m_Graphic > 0x7582)
+		m_Graphic = 0x7580;
 
 	DWORD index = (DWORD)this;
 
@@ -385,7 +398,7 @@ int TGumpBuff::Draw(bool &mode)
 		{
 			g_LastSelectedGump = (DWORD)this;
 
-			if (UO->GumpPixelsInXY(m_Graphic, ballCoordinates.x, ballCoordinates.y))
+			if (UO->GumpPixelsInXY(0x7585, ballCoordinates.x, ballCoordinates.y))
 				LSG = ID_GB_NEXT_WINDOW_DIRECTION; //Crystal ball
 			else
 			{
@@ -396,40 +409,26 @@ int TGumpBuff::Draw(bool &mode)
 					POINT gumpDim = { 0, 0 };
 					UO->GetGumpDimension(item->Graphic, gumpDim);
 
-					if (useX)
-					{
-						if (decX)
-							startCoordinates.x -= gumpDim.x;
-					}
-					else if (decY)
-						startCoordinates.y -= gumpDim.y;
-
-					if (UO->GumpPixelsInXY(m_Graphic, ballCoordinates.x, ballCoordinates.y))
+					if (UO->GumpPixelsInXY(item->Graphic, startCoordinates.x, startCoordinates.y))
 					{
 						LSG = ID_GB_BUFF_ITEM + index; //Buff item
 						break;
 					}
 
-					int decValX = 0;
-					int decValY = 0;
-
 					if (useX)
 					{
 						if (decX)
-							decValX = -BUFF_ITEM_STEP_OFFSET_X;
+							startCoordinates.x -= gumpDim.x + BUFF_ITEM_STEP_OFFSET_X;
 						else
-							decValX = gumpDim.x + BUFF_ITEM_STEP_OFFSET_X;
+							startCoordinates.x += gumpDim.x + BUFF_ITEM_STEP_OFFSET_X;
 					}
 					else
 					{
 						if (decY)
-							decValY = -BUFF_ITEM_STEP_OFFSET_Y;
+							startCoordinates.y -= gumpDim.y + BUFF_ITEM_STEP_OFFSET_Y;
 						else
-							decValY = gumpDim.y + BUFF_ITEM_STEP_OFFSET_Y;
+							startCoordinates.y += gumpDim.y + BUFF_ITEM_STEP_OFFSET_Y;
 					}
-
-					startCoordinates.x += decValX;
-					startCoordinates.y += decValY;
 
 					index++;
 				}
@@ -459,10 +458,30 @@ void TGumpBuff::OnLeftMouseUp()
 
 	if (g_LastObjectLeftMouseDown == ID_GB_NEXT_WINDOW_DIRECTION)
 	{
-		m_Graphic++;
-
-		if (m_Graphic > 0x7582)
-			m_Graphic = 0x757F;
+		switch (m_Graphic)
+		{
+			case 0x7580:
+			{
+				m_Graphic = 0x7582;
+				break;
+			}
+			case 0x7581:
+			{
+				m_Graphic = 0x757F;
+				break;
+			}
+			case 0x7582:
+			{
+				m_Graphic = 0x7581;
+				break;
+			}
+			case 0x757F:
+			default:
+			{
+				m_Graphic = 0x7580;
+				break;
+			}
+		}
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GB_LOCK_MOVING)
 		m_LockMoving = !m_LockMoving;
