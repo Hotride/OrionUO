@@ -86,7 +86,7 @@ void TFrameBuffer::Free()
 
 	if (m_FrameBuffer != 0)
 	{
-		glDeleteBuffers(1, &m_FrameBuffer);
+		glDeleteFramebuffers(1, &m_FrameBuffer);
 		m_FrameBuffer = 0;
 	}
 

@@ -4333,27 +4333,111 @@ PACKET_HANDLER(BuffDebuff)
 
 	DWORD serial = ReadDWord();
 
-	TGumpBook *gump = (TGumpBook*)GumpManager->GetGump(serial, 0, GT_BUFF);
+/*
+df 
+00 2e 
+00 00 2b b5 
+04 04 
+00 01 
+00 00 00 00 04 04 00 01 00 00 00 00 
+01 ca 
+00 00 00 
+00 10 6a 6b 
+00 10 6a 6c 
+00 00 00 00 
+00 00 
+00 00 
+00 00
 
-	if (gump != NULL)
+
+
+df 
+00 46 
+00 00 2b b5 
+04 05 
+00 01 
+00 00 00 00 04 05 00 01 00 00 00 00 
+00 85 
+00 00 00 
+00 10 6a 66 
+00 10 56 82 
+00 00 00 00 
+00 01 
+00 00 09 00 2b 00 20 00 39 00 20 00 41 00 72 00 6d 00 6f 00 72 00 00 00 00 01 00 00
+
+
+
+
+Buffs And Attributes Packet.
+from server
+byte    ID (DF)
+word    Packet Size
+dword    Player Serial
+word    Buff Type
+			(
+				BonusStr = 0x01, BonusDex = 0x02, BonusInt = 0x03, BonusHits = 0x07, BonusStamina = 0x08, BonusMana = 0x09, 
+				RegenHits = 0x0A, RegenStam = 0x0B, RegenMana = 0x0C, NightSight = 0x0D, Luck = 0x0E, ReflectPhysical = 0x10, 
+				EnhancePotions = 0x11, AttackChance = 0x12, DefendChance = 0x13, SpellDamage = 0x14, CastRecovery = 0x15, 
+				CastSpeed = 0x16, ManaCost = 0x17, ReagentCost = 0x18, WeaponSpeed = 0x19, WeaponDamage = 0x1A, 
+				PhysicalResistance = 0x1B, FireResistance = 0x1C, ColdResistance = 0x1D, PoisonResistance = 0x1E, 
+				EnergyResistance = 0x1F, MaxPhysicalResistance = 0x20, MaxFireResistance = 0x21, MaxColdResistance = 0x22, 
+				MaxPoisonResistance = 0x23, MaxEnergyResistance = 0x24, AmmoCost = 0x26, KarmaLoss = 0x28, 0x3EA+ = buff icons
+			)
+
+word    Buffs Count
+
+loop    Buffs >>>
+	word    Source Type
+				(
+					0 = Character, 50 = two-handed weapon, 53 = one-handed weapon or spellbook, 54 = shield or ranged weapon,
+					55 = shoes, 56 = pants or legs, 58 = helm or hat, 59 = gloves, 60 = ring, 61 = talisman, 62 = necklace or gorget,
+					64 = waist, 65 = inner torso, 66 = bracelet, 69 = middle torso, 70 = earring, 71 = arms, 72 = cloak or quiver,
+					74 = outer torso, 1000 = spells
+				)
+
+	word    0x00
+	word    Buff Icon ID (0 for attributes)
+	word    Buff Queue Index (Delta Value for attributes)
+	dword    0x00
+	word    Buff Duration in seconds (0 for attributes)
+	byte[3]    0x00
+	dword    Buff Title Cliloc
+	dword    Buff Secondary Cliloc (0 for attributes)
+	dword    Buff Third Cliloc (0 for attributes)
+	word    Primary Cliloc Arguments Length (0 for attributes)
+	uchar[*]    Primary Cliloc Arguments
+	word    Secondary Cliloc Arguments Length (0 for attributes)
+	uchar[*]    Secondary Cliloc Arguments
+	word    Third Cliloc Arguments Length (0 for attributes)
+	uchar[*]    Third Cliloc Arguments
+endloop    Buffs <<<<
+*/
+
+	WORD iconID = ReadWord();
+
+	if (iconID >= 0x03EA)
 	{
-		WORD iconID = ReadWord();
 		WORD mode = ReadWord();
 
-		if (mode)
+		TGumpBuff *gump = (TGumpBuff*)GumpManager->UpdateGump(serial, 0, GT_BUFF);
+
+		if (gump != NULL)
 		{
-			Move(12);
+			if (mode)
+			{
+				Move(12);
 
-			WORD timer = ReadWord();
+				WORD timer = ReadWord();
 
-			Move(3);
+				Move(3);
 
-			DWORD titleCliloc = ReadDWord();
-			DWORD descriptionCliloc = ReadDWord();
+				DWORD titleCliloc = ReadDWord();
+				DWORD descriptionCliloc = ReadDWord();
 
-			Move(6);
+				Move(6);
 
-			//arguments
+				//arguments
+			}
 		}
 	}
 }

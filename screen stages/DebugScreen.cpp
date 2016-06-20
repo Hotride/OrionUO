@@ -115,45 +115,60 @@ int TDebugScreen::Render(bool mode)
 
 		if (DrawSmoothMonitor())
 			return 0;
+		TFrameBuffer fb;
+		fb.Init(640, 480);
 
-		ColorizerShader->Use();
+		if (fb.Ready() && fb.Use())
+		{
+			ColorizerShader->Use();
 
-		WORD GumpID = 0x15A4 + (int)(CanSelectedButton == ID_DS_GO_SCREEN_MAIN); //> gump / lighted
-		if (CanPressedButton == ID_DS_GO_SCREEN_MAIN)
-			GumpID = 0x15A6; //> gump pressed
-		UO->DrawGump(GumpID, 0, 610, 445);
+			WORD GumpID = 0x15A4 + (int)(CanSelectedButton == ID_DS_GO_SCREEN_MAIN); //> gump / lighted
+			if (CanPressedButton == ID_DS_GO_SCREEN_MAIN)
+				GumpID = 0x15A6; //> gump pressed
+			UO->DrawGump(GumpID, 0, 610, 445);
 
-		UnuseShader();
+			UnuseShader();
 
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		DPOLY(315, 235, 10, 10);
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			DPOLY(315, 235, 10, 10);
 
-		glColor4f(0.37f, 0.0f, 0.0f, 1.0f);
-		g_GL.DrawLine(320, 240, g_MouseX, g_MouseY);
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			glColor4f(0.37f, 0.0f, 0.0f, 1.0f);
+			g_GL.DrawLine(320, 240, g_MouseX, g_MouseY);
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-		int cx = 320;
-		int cy = 240;
+			int cx = 320;
+			int cy = 240;
 
-		int px = g_MouseX;
-		int py = g_MouseY;
+			int px = g_MouseX;
+			int py = g_MouseY;
 
-		int ox = (px - cx) / 22;
-		int oy = (py - cy) / 22;
+			int ox = (px - cx) / 22;
+			int oy = (py - cy) / 22;
 
-		int dx = 0;
-		int dy = 0;
+			int dx = 0;
+			int dy = 0;
 
-		TileOffsetOnMonitorToXY(ox, oy, dx, dy);
+			TileOffsetOnMonitorToXY(ox, oy, dx, dy);
 
-		char str[100] = { 0 };
-		sprintf(str, "cur = %i %i", 10 + dx, 10 + dy);
+			char str[100] = { 0 };
+			sprintf(str, "cur = %i %i", 10 + dx, 10 + dy);
 
-		FontManager->DrawA(3, str, 0x0386, 20, 20);
+			FontManager->DrawA(3, str, 0x0386, 20, 20);
 
-		DrawSmoothMonitorEffect();
+			DrawSmoothMonitorEffect();
 
-		MouseManager.Draw(0x2073); //Main Gump mouse cursor
+			fb.Release();
+
+			g_GL.RestorePort();
+
+			g_GL.ViewPort(0, 0, 640, 480);
+
+			fb.Draw(0, 0);
+
+			MouseManager.Draw(0x2073); //Main Gump mouse cursor
+		}
+
+		fb.Free();
 
 		g_GL.EndDraw();
 	}
