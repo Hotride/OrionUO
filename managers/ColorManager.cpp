@@ -102,7 +102,7 @@ void TColorManager::CreateHuesPalette()
 		IFOR(j, 0, 8)
 		{
 			IFOR(h, 0, 32)
-				m_HuesInt[(i * 8) + j].Palette[h] = (int)m_HuesRange[i].Entries[j].ColorTable[h];
+				m_HuesInt[(i * 8) + j].Palette[h] = (float)m_HuesRange[i].Entries[j].ColorTable[h];
 		}
 	}
 }
@@ -117,7 +117,7 @@ void TColorManager::SendColorsToShader( __in WORD color)
 	if (color != 0)
 	{
 		if (color & SPECTRAL_COLOR)
-			glUniform1ivARB(ShaderColorTable, 32, &m_HuesInt[0].Palette[0]);
+			glUniform1fvARB(ShaderColorTable, 32, &m_HuesInt[0].Palette[0]);
 		else
 		{
 			if (color >= m_HuesCount)
@@ -128,7 +128,7 @@ void TColorManager::SendColorsToShader( __in WORD color)
 					color = 1;
 			}
 			
-			glUniform1ivARB(ShaderColorTable, 32, &m_HuesInt[color - 1].Palette[0]);
+			glUniform1fvARB(ShaderColorTable, 32, &m_HuesInt[color - 1].Palette[0]);
 		}
 	}
 }

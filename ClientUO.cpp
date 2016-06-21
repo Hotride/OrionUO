@@ -2430,7 +2430,7 @@ void TUltimaOnline::LoadShaders()
 	TMappedHeader frag;
 	memset(&frag, 0, sizeof(TMappedHeader));
 	TMappedHeader vert;
-	memset(&vect, 0, sizeof(TMappedHeader));
+	memset(&vert, 0, sizeof(TMappedHeader));
 
 	FileManager.LoadFileToMemory(vert, FilePath("shaders\\Shader.vert").c_str());
 	FileManager.LoadFileToMemory(frag, FilePath("shaders\\DeathShader.frag").c_str());
