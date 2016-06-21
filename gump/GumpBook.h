@@ -35,9 +35,15 @@ private:
 	short m_Page;
 	bool m_Unicode;
 
+	static TTextTexture m_TextTitle;
+	static TTextTexture m_TextBy;
+
 public:
 	TGumpBook(DWORD serial, short x, short y, short pageCount, bool writable, bool unicode);
 	virtual ~TGumpBook();
+
+	static void InitTextTextures();
+	static void ReleaseTextTextures();
 
 	SETGET(bool, Writable);
 	SETGET(short, PageCount);

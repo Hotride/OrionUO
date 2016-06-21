@@ -31,7 +31,7 @@ private:
 
 	void ProcessSmoothAction(BYTE action = 0xFF);
 
-	TGumpBuff *m_BuffGump;
+	TGumpBook *m_BookGump;
 public:
 	TDebugScreen();
 	virtual ~TDebugScreen();

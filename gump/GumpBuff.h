@@ -42,6 +42,10 @@ public:
 	TGumpBuff(DWORD serial, short x, short y);
 	virtual ~TGumpBuff();
 
+	void AddBuff(const WORD &id, const DWORD &timer, const wstring &text);
+
+	void DeleteBuff(const WORD &id);
+
 	void UpdateBuffIcons();
 
 	void OnToolTip();

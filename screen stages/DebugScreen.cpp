@@ -24,28 +24,16 @@ TDebugScreen *DebugScreen = NULL;
 TDebugScreen::TDebugScreen()
 : TBaseScreen()
 {
-	m_BuffGump = new TGumpBuff(0, 200, 200);
-	m_BuffGump->Graphic = 0x7580;
-
-	m_BuffGump->Add(new TGumpBuffObject(0x08C0, GetTickCount() + 11000, L"Buff text"));
-	m_BuffGump->Add(new TGumpBuffObject(0x08C1, GetTickCount() + 21000, L"Buff text"));
-	m_BuffGump->Add(new TGumpBuffObject(0x08C2, GetTickCount() + 13000, L"Buff text"));
-	m_BuffGump->Add(new TGumpBuffObject(0x08C3, GetTickCount() + 24000, L"Buff text"));
-	m_BuffGump->Add(new TGumpBuffObject(0x08C4, GetTickCount() + 18000, L"Buff text"));
-	m_BuffGump->Add(new TGumpBuffObject(0x08C5, GetTickCount() + 15000, L"Buff text"));
+	m_BookGump = new TGumpBook(0, 0, 0, 64, true, false);
 }
 //---------------------------------------------------------------------------
 TDebugScreen::~TDebugScreen()
 {
-	delete m_BuffGump;
+	delete m_BookGump;
 }
 //---------------------------------------------------------------------------
 void TDebugScreen::Init()
 {
-	ConfigManager.ToggleBufficonWindow = true;
-	ConfigManager.UseToolTips = true;
-	ConfigManager.ToolTipsDelay = 100;
-
 	g_ConfigLoaded = false;
 
 	SetWindowTextA(g_hWnd, "Ultima Online");
@@ -103,7 +91,7 @@ void TDebugScreen::ProcessSmoothAction(BYTE action)
 //---------------------------------------------------------------------------
 void TDebugScreen::InitToolTip()
 {
-	m_BuffGump->OnToolTip();
+	m_BookGump->OnToolTip();
 }
 //---------------------------------------------------------------------------
 int TDebugScreen::Render(bool mode)
@@ -130,8 +118,6 @@ int TDebugScreen::Render(bool mode)
 
 		if (DrawSmoothMonitor())
 			return 0;
-
-		m_BuffGump->UpdateBuffIcons();
 
 		TFrameBuffer fb;
 		fb.Init(640, 480);
@@ -183,7 +169,7 @@ int TDebugScreen::Render(bool mode)
 
 			fb.Draw(0, 0);
 
-			m_BuffGump->Draw(mode);
+			m_BookGump->Draw(mode);
 
 			InitToolTip();
 
@@ -201,7 +187,7 @@ int TDebugScreen::Render(bool mode)
 		if (UO->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_DS_GO_SCREEN_MAIN; //> gump
 		else
-			g_LastSelectedObject = m_BuffGump->Draw(mode);
+			g_LastSelectedObject = m_BookGump->Draw(mode);
 
 		return g_LastSelectedObject;
 	}

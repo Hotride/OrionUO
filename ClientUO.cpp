@@ -808,6 +808,7 @@ TUltimaOnline::~TUltimaOnline()
 	TGumpSpellbook::ReleaseTextTextures();
 	TGumpPartyManifest::ReleaseTextTextures();
 	TGumpWorldMap::ReleaseTextTextures();
+	TGumpBook::ReleaseTextTextures();
 	
 	if (ClilocManager != NULL)
 	{
@@ -1041,6 +1042,7 @@ bool TUltimaOnline::Install()
 	TGumpSpellbook::InitTextTextures();
 	TGumpPartyManifest::InitTextTextures();
 	TGumpWorldMap::InitTextTextures();
+	TGumpBook::InitTextTextures();
 
 	Party.Leader = 0;
 	Party.Inviter = 0;
@@ -1112,6 +1114,51 @@ bool TUltimaOnline::Install()
 #else
 	InitScreen(GS_MAIN);
 #endif
+
+	/*TMappedHeader mh;
+	memset(&mh, 0, sizeof(mh));
+
+	if (FileManager.LoadFileToMemory(mh, FilePath("Client7.exe").c_str()))
+	{
+		PBYTE ptr = (PBYTE)mh.Address;
+		PBYTE end = ptr + mh.Size;
+
+		while (ptr < end - 2)
+		{
+			WORD val = *(PWORD)ptr;
+
+			if (val == 0x7558 || val == 0x7542 || val == 0x7563)
+				TPRINT("[0x%04X]=0x%08X\n", val, ptr - (PBYTE)mh.Address);
+
+			ptr++;
+		}
+
+		FileManager.UnloadFileFromMemory(mh);
+	}*/
+
+	/*TTextFileParser tfp(FilePath("cld1.txt").c_str(), " ", "", "");
+
+	WORD id[126] = { 0 };
+
+	while (!tfp.IsEOF())
+	{
+		std::vector<std::string> strings = tfp.ReadTokens();
+
+		int sz = (int)strings.size();
+
+		if (sz >= 2)
+		{
+			char *end;
+			int v = strtoul(strings[0].c_str(), &end, 16);
+
+			id[(v - 4004) / 4] = strtoul(strings[1].c_str(), &end, 16);
+		}
+	}
+
+	TPRINT("{ ");
+	IFOR(i, 0, 126)
+		TPRINT("0x%04X, ", id[i]);
+	TPRINT("}\n");*/
 
 	return true;
 }

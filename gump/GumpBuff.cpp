@@ -91,6 +91,39 @@ void TGumpBuff::UpdateBuffIcons()
 	}
 }
 //----------------------------------------------------------------------------
+void TGumpBuff::AddBuff(const WORD &id, const DWORD &timer, const wstring &text)
+{
+	QFOR(item, m_Items, TGumpBuffObject*)
+	{
+		if (item->Graphic == id)
+		{
+			item->Timer = timer;
+			item->Text = text;
+			item->DecAlpha = true;
+			item->Alpha = 0xFF;
+			item->TooltipTimer = 0;
+
+			MoveToBack(item);
+
+			return;
+		}
+	}
+
+	Add(new TGumpBuffObject(id, timer, text));
+}
+//----------------------------------------------------------------------------
+void TGumpBuff::DeleteBuff(const WORD &id)
+{
+	QFOR(item, m_Items, TGumpBuffObject*)
+	{
+		if (item->Graphic == id)
+		{
+			Delete(item);
+			break;
+		}
+	}
+}
+//----------------------------------------------------------------------------
 void TGumpBuff::OnToolTip()
 {
 	if (g_LastSelectedGump == (DWORD)this)

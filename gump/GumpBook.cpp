@@ -18,6 +18,9 @@
 */
 //----------------------------------------------------------------------------
 #include "stdafx.h"
+
+TTextTexture TGumpBook::m_TextTitle;
+TTextTexture TGumpBook::m_TextBy;
 //----------------------------------------------------------------------------
 TGumpBook::TGumpBook(DWORD serial, short x, short y, short pageCount, bool writable, bool unicode)
 : TGump(GT_BOOK, serial, x, y), m_PageCount(pageCount), m_Writable(writable),
@@ -54,6 +57,18 @@ TGumpBook::~TGumpBook()
 	}
 }
 //----------------------------------------------------------------------------
+void TGumpBook::InitTextTextures()
+{
+	FontManager->GenerateA(6, m_TextTitle, "TITLE", 0);
+	FontManager->GenerateA(6, m_TextBy, "by", 0);
+}
+//----------------------------------------------------------------------------
+void TGumpBook::ReleaseTextTextures()
+{
+	m_TextTitle.Clear();
+	m_TextBy.Clear();
+}
+//----------------------------------------------------------------------------
 void TGumpBook::PrepareTextures()
 {
 }
@@ -73,6 +88,9 @@ void TGumpBook::GenerateFrame()
 	glNewList((GLuint)this, GL_COMPILE);
 
 		UO->DrawGump(0x01FE, 0, 0, 0); //Body
+
+		m_TextTitle.Draw(60, 220);
+		m_TextBy.Draw(60, 420);
 
 	glEndList();
 
