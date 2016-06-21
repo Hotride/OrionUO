@@ -52,7 +52,7 @@ public:
 
 	TEntryText *TextEntryAuthor;
 	TEntryText *TextEntryTitle;
-	TBookEntryText *TextEntry[2];
+	TBookEntryText *TextEntry;
 
 	void PrepareTextures();
 

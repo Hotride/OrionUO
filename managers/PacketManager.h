@@ -77,13 +77,13 @@ private:
 	BYTE ReadByte();
 
 	/*!
-	Прочитать слово (2 байта)
+	Прочитать слово (2 байта) (big endian)
 	@return Данные
 	*/
 	WORD ReadWord();
 
 	/*!
-	Прочитать двойное слово (4 байта)
+	Прочитать двойное слово (4 байта) (big endian)
 	@return Данные
 	*/
 	DWORD ReadDWord();
@@ -95,13 +95,13 @@ private:
 	char ReadChar();
 
 	/*!
-	Прочитать короткое значение (2 байта)
+	Прочитать короткое значение (2 байта) (big endian)
 	@return Данные
 	*/
 	short ReadShort();
 
 	/*!
-	Прочитать целое значение (4 байта)
+	Прочитать целое значение (4 байта) (big endian)
 	@return Данные
 	*/
 	int ReadInt();

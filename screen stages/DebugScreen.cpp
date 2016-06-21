@@ -25,6 +25,10 @@ TDebugScreen::TDebugScreen()
 : TBaseScreen()
 {
 	m_BookGump = new TGumpBook(0, 0, 0, 64, true, false);
+
+	m_BookGump->TextEntryTitle->SetText("kl;l");
+	m_BookGump->TextEntryAuthor->SetText("unknown");
+	m_BookGump->TextEntry[1].SetText("ty\nery346\n\n\n\n6\n3");
 }
 //---------------------------------------------------------------------------
 TDebugScreen::~TDebugScreen()

@@ -4201,20 +4201,14 @@ PACKET_HANDLER(OpenBook)
 	if (World == NULL)
 		return;
 
-	DWORD serial = unpack32(buf + 1);
-	BYTE flags = buf[5];
-	WORD pageCount = unpack16(buf + 7);
+	DWORD serial = ReadDWord();
+	BYTE flags = ReadByte();
+	Move(1);
+	WORD pageCount = ReadWord();
 
 	TGumpBook *gump = new TGumpBook(serial, 0, 0, pageCount, flags != 0, false);
 
-	//char title[60] = { 0 };
-	//memcpy(&title[0], &buf[9], 60);
-
 	gump->TextEntryTitle->SetText(ReadString(60));
-
-	//char author[30] = { 0 };
-	//memcpy(&author[0], &buf[9], 30);
-
 	gump->TextEntryAuthor->SetText(ReadString(30));
 
 	GumpManager->AddGump(gump);
@@ -4232,10 +4226,9 @@ PACKET_HANDLER(OpenBookNew)
 
 	TGumpBook *gump = new TGumpBook(serial, 0, 0, pageCount, (flag1 + flag2) != 0, true);
 
-	PBYTE ptr = buf + 11;
-
 	int authorLen = ReadWord();
-	ptr += 2;
+
+	PBYTE ptr = buf + 13;
 
 	if (authorLen > 0)
 	{
@@ -4274,53 +4267,55 @@ PACKET_HANDLER(BookData)
 	if (World == NULL)
 		return;
 
-	DWORD serial = unpack32(buf + 3);
+	DWORD serial = ReadDWord();
 
 	TGumpBook *gump = (TGumpBook*)GumpManager->GetGump(serial, 0, GT_BOOK);
 
 	if (gump != NULL)
 	{
-		WORD pageCount = unpack16(buf + 7);
-		bool unicode = gump->Unicode;
-
-		PBYTE ptr = buf + 9;
+		WORD pageCount = ReadWord();
 
 		IFOR(i, 0, pageCount)
 		{
-			WORD page = unpack16(ptr);
-			ptr += 2;
-			gump->Page = page - 1;
+			WORD page = ReadWord();
 
-			WORD lineCount = unpack16(ptr);
-			ptr += 2;
+			if (page >= gump->PageCount)
+				continue;
 
-			TEntryText *entry = gump->TextEntry[i % 2];
+			TEntryText *entry = &gump->TextEntry[page];
 			entry->Clear();
 
-			if (!unicode)
+			WORD lineCount = ReadWord();
+
+			if (!gump->Unicode)
 			{
+				string str = "";
+
 				IFOR(j, 0, lineCount)
 				{
-					char ch = *ptr++;
+					if (j)
+						str += '\n';
 
-					if (!ch)
-						break;
-
-					entry->Insert(ch);
+					str += ReadString(0);
 				}
+
+				entry->SetText(str);
+
+				TPRINT("BookPageData[%i] = %s\n", page, str.c_str());
 			}
 			else
 			{
+				wstring str = L"";
+
 				IFOR(j, 0, lineCount)
 				{
-					wchar_t ch = (ptr[1] << 16) | ptr[0];
-					ptr += 2;
+					if (j)
+						str += L'\n';
 
-					if (!ch)
-						break;
-
-					entry->Insert(ch);
+					str += ReadUnicodeString(0);
 				}
+
+				entry->SetText(str);
 			}
 		}
 	}
