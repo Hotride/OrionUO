@@ -1,27 +1,6 @@
 uniform sampler2D usedTexture;
 uniform int drawMode;
-uniform float colors[32];
-
-int AND32(int val)
-{
-	while (val > 31)
-		val -= 32;
-
-	return val;
-}
-
-vec3 Color16To32(int c)
-{
-	const vec3 mod32 = vec3(31.0, 31.0, 31.0);
-
-	vec3 v;
-
-	v.r = float(AND32(c / 1024));
-	v.g = float(AND32(c / 32));
-	v.b = float(AND32(c));
-
-	return (v / mod32);
-}
+uniform float colors[96];
 
 void main(void)
 {
@@ -29,11 +8,9 @@ void main(void)
 
 	if (textureColor.a != 0.0 && drawMode == 1)
 	{
-		int index = AND32(int(textureColor.r * 7.96875));
+		int index = int(textureColor.r * 7.96875) * 3;
 
-		vec3 resultColor = Color16To32(int(colors[index]));
-
-		gl_FragColor = (textureColor * vec4(resultColor, 1.0)) * 3.0;
+		gl_FragColor = (textureColor * vec4(colors[index], colors[index + 1], colors[index + 2], 1.0)) * 3.0;
 	}
 	else
 		gl_FragColor = textureColor;

@@ -90,19 +90,29 @@ void TColorManager::SetHuesBlock( __in int index, __in PVERDATA_HUES_GROUP group
 //---------------------------------------------------------------------------
 /*!
 Создание палитры цветов для шейдера
-@return 
+@return
 */
 void TColorManager::CreateHuesPalette()
 {
-	m_HuesInt = new INT_HUES[m_HuesCount];
+	m_HuesInt = new FLOAT_HUES[m_HuesCount];
 	int entryCount = m_HuesCount / 8;
 
 	IFOR(i, 0, entryCount)
 	{
 		IFOR(j, 0, 8)
 		{
+			FLOAT_HUES &fh = m_HuesInt[(i * 8) + j];
+
 			IFOR(h, 0, 32)
-				m_HuesInt[(i * 8) + j].Palette[h] = (float)m_HuesRange[i].Entries[j].ColorTable[h];
+			{
+				int idx = h * 3;
+
+				WORD c = m_HuesRange[i].Entries[j].ColorTable[h];
+
+				fh.Palette[idx] = (((c >> 10) & 0x1F) / 31.0f);
+				fh.Palette[idx + 1] = (((c >> 5) & 0x1F) / 31.0f);
+				fh.Palette[idx + 2] = ((c & 0x1F) / 31.0f);
+			}
 		}
 	}
 }
@@ -110,14 +120,14 @@ void TColorManager::CreateHuesPalette()
 /*!
 Отправка цветов в шейдер
 @param [__in] color Индекс цвета
-@return 
+@return
 */
-void TColorManager::SendColorsToShader( __in WORD color)
+void TColorManager::SendColorsToShader(__in WORD color)
 {
 	if (color != 0)
 	{
 		if (color & SPECTRAL_COLOR)
-			glUniform1fvARB(ShaderColorTable, 32, &m_HuesInt[0].Palette[0]);
+			glUniform1fv(ShaderColorTable, 32 * 3, &m_HuesInt[0].Palette[0]);
 		else
 		{
 			if (color >= m_HuesCount)
@@ -127,8 +137,8 @@ void TColorManager::SendColorsToShader( __in WORD color)
 				if (!color)
 					color = 1;
 			}
-			
-			glUniform1fvARB(ShaderColorTable, 32, &m_HuesInt[color - 1].Palette[0]);
+
+			glUniform1fv(ShaderColorTable, 32 * 3, &m_HuesInt[color - 1].Palette[0]);
 		}
 	}
 }
