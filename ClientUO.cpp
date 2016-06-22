@@ -1160,6 +1160,34 @@ bool TUltimaOnline::Install()
 		TPRINT("0x%04X, ", id[i]);
 	TPRINT("}\n");*/
 
+	/*TTextFileParser tfp(FilePath("ilog.txt").c_str(), " ", "", "");
+
+	int mi = 111111;
+	int ma = 0;
+	int mi380 = 0;
+
+	while (!tfp.IsEOF())
+	{
+		std::vector<std::string> strings = tfp.ReadTokens();
+
+		int sz = (int)strings.size();
+
+		if (sz == 2 && strings[0] == "WalkReqDelta")
+		{
+			int v = atoi(strings[1].c_str());
+
+			if (v < 380)
+				mi380++;
+			else if (v < mi)
+				mi = v;
+
+			if (v > ma)
+				ma = v;
+		}
+	}
+
+	TPRINT("mi=%i ma=%i; mi380=%i\n", mi, ma, mi380);*/
+
 	return true;
 }
 //---------------------------------------------------------------------------

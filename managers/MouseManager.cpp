@@ -173,7 +173,7 @@ WORD TMouseManager::GetGameCursor()
 		if (!dir)
 			dir = 8;
 
-		bool run = ((mouse_range >= 150.0f) ? true : false);
+		bool run = ((mouse_range >= 190.0f) ? true : false);
 
 		if (!PathFinder->AutoWalking)
 			PathFinder->Walk(run, dir - 1);

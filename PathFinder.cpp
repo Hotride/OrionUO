@@ -479,11 +479,13 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 	return passed;
 }
 //---------------------------------------------------------------------------
-int TPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
+int TPathFinder::GetWalkSpeed(const bool &run, const bool &onMount, const bool &randomize)
 {
 	bool mounted = (onMount || (g_SpeedMode == CST_FAST_UNMOUNT || g_SpeedMode == CST_FAST_UNMOUNT_AND_CANT_RUN));
 
-	return CHARACTER_ANIMATION_DELAY_TABLE[mounted][run];
+	int speed = CHARACTER_ANIMATION_DELAY_TABLE[mounted][run];
+
+	return speed;
 }
 //---------------------------------------------------------------------------
 bool TPathFinder::Walk(bool run, BYTE direction)
@@ -547,7 +549,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 		bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
 
-		wsi.Time = GetWalkSpeed(run, onMount);
+		wsi.Time = GetWalkSpeed(run, onMount, true);
 	}
 	else
 	{
