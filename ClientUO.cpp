@@ -4774,10 +4774,33 @@ void TUltimaOnline::RemoveRangedObjects()
 //---------------------------------------------------------------------------
 void TUltimaOnline::SendWalkStack()
 {
-	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 2 || !Walker->m_SendStack.size())
+	static bool lastRun = false;
+	static bool lastMount = false;
+	static int lastDir = -1;
+	static int timerDelta = 0;
+
+	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || !Walker->m_SendStack.size())
 		return;
 
 	WALKER_SEND_ITEM &wsi = Walker->m_SendStack.front();
+
+	bool run = (wsi.Dir & 0x80);
+	bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
+	int dir = wsi.Dir & 0x7f;
+
+	if (run == lastRun && onMount == lastMount && dir == lastDir)
+	{
+		if (abs(timerDelta) > 100)
+			timerDelta = 0;
+
+		if (timerDelta)
+		{
+			wsi.Time -= timerDelta;
+			timerDelta = 0;
+		}
+		else
+			timerDelta = GetTickCount() - (int)g_LastStepTime;
+	}
 
 	BYTE seq = Walker->GetSequence();
 	Walker->SetSequence(seq, wsi.Dir);

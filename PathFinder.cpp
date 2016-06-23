@@ -479,18 +479,16 @@ bool TPathFinder::CanWalk(BYTE &direction, int &x, int &y, char &z)
 	return passed;
 }
 //---------------------------------------------------------------------------
-int TPathFinder::GetWalkSpeed(const bool &run, const bool &onMount, const bool &randomize)
+int TPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 {
 	bool mounted = (onMount || (g_SpeedMode == CST_FAST_UNMOUNT || g_SpeedMode == CST_FAST_UNMOUNT_AND_CANT_RUN));
 
-	int speed = CHARACTER_ANIMATION_DELAY_TABLE[mounted][run];
-
-	return speed;
+	return CHARACTER_ANIMATION_DELAY_TABLE[mounted][run];
 }
 //---------------------------------------------------------------------------
 bool TPathFinder::Walk(bool run, BYTE direction)
 {
-	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 2 || g_Player == NULL || g_DeathScreenTimer)
+	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || g_Player == NULL || g_DeathScreenTimer)
 		return false;
 
 	if (g_SpeedMode >= CST_CANT_RUN)
@@ -549,7 +547,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 		bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
 
-		wsi.Time = GetWalkSpeed(run, onMount, true);
+		wsi.Time = GetWalkSpeed(run, onMount);
 	}
 	else
 	{
@@ -573,6 +571,26 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 			bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
 
 			wsi.Time = GetWalkSpeed(run, onMount);
+		}
+		else
+		{
+			if (Walker->m_SendStack.size() > 1)
+			{
+				if (!g_Player->m_WalkStack.Empty())
+				{
+					TWalkData *delWD = g_Player->m_WalkStack.m_Items->m_Next;
+					g_Player->m_WalkStack.m_Items->m_Next = NULL;
+
+					while (delWD != NULL)
+					{
+						TWalkData *nextWD = delWD->m_Next;
+						delete delWD;
+						delWD = nextWD;
+					}
+				}
+
+				Walker->m_SendStack.resize(1);
+			}
 		}
 
 		direction = newDir;
@@ -929,7 +947,7 @@ bool TPathFinder::WalkTo(int x, int y, int z, int distance)
 //---------------------------------------------------------------------------
 void TPathFinder::ProcessAutowalk()
 {
-	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 2 && g_LastStepTime <= GetTickCount())
+	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 3 && g_LastStepTime <= GetTickCount())
 	{
 		if (m_PointIndex >= 0 && m_PointIndex < m_PathSize)
 		{

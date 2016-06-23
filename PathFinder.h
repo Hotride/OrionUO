@@ -178,7 +178,7 @@ public:
 	//Остановить автоматическую ходилку
 	void StopAutoWalk();
 
-	int GetWalkSpeed(const bool &run, const bool &onMount, const bool &randomize = false);
+	int GetWalkSpeed(const bool &run, const bool &onMount);
 };
 //---------------------------------------------------------------------------
 extern TPathFinder *PathFinder;
