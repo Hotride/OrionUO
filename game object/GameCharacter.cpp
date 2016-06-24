@@ -813,10 +813,11 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 
 		if (canChange)
 		{
-			int maxDelay = (int)(PathFinder->GetWalkSpeed(run, FindLayer(OL_MOUNT) != NULL) * 0.9f); // CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
+			int maxDelay = PathFinder->GetWalkSpeed(run, FindLayer(OL_MOUNT) != NULL); // CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
 
 			int delay = (int)ticks - (int)m_LastStepTime;
 			bool removeStep = (delay >= maxDelay);
+			bool directionChange = false;
 
 			if (m_X != wd->X || m_Y != wd->Y)
 			{
@@ -837,7 +838,9 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 				m_OffsetY = 0;
 				m_OffsetZ = 0;
 
-				removeStep = (delay >= 100); //direction change
+				directionChange = true;
+
+				removeStep = true; //direction change
 			}
 
 			if (removeStep)
@@ -862,13 +865,19 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 				m_Z = wd->Z;
 				m_Direction = wd->Direction;
 
-				m_AfterStepDelay = maxDelay / 3;
+				m_AfterStepDelay = 200; // maxDelay / 3;
 
 				m_OffsetX = 0;
 				m_OffsetY = 0;
 				m_OffsetZ = 0;
 
 				m_WalkStack.Pop();
+
+				if (directionChange)
+				{
+					UpdateAnimationInfo(dir, canChange);
+					return;
+				}
 
 				MapManager->AddRender(this);
 				//World->MoveToTop(this);

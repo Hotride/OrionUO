@@ -4774,19 +4774,41 @@ void TUltimaOnline::RemoveRangedObjects()
 //---------------------------------------------------------------------------
 void TUltimaOnline::SendWalkStack()
 {
+	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || !Walker->m_SendStack.size())
+		return;
+
 	static bool lastRun = false;
 	static bool lastMount = false;
 	static int lastDir = -1;
 	static int timerDelta = 0;
-
-	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || !Walker->m_SendStack.size())
-		return;
+	static int lastStepTime = 0;
 
 	WALKER_SEND_ITEM &wsi = Walker->m_SendStack.front();
 
 	bool run = (wsi.Dir & 0x80);
 	bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
 	int dir = wsi.Dir & 0x7f;
+
+
+
+	SYSTEMTIME st = { 0 };
+	GetLocalTime(&st);
+	int currentStepTime = st.wMilliseconds + (st.wSecond * 1000) + (st.wMinute * 60 * 1000);
+
+	static DWORD lwt = 0;
+
+	if (g_Player->FindLayer(OL_MOUNT) != NULL)
+		trace_printf("Mounted");
+
+	if (run)
+		trace_printf("Run");
+	else
+		trace_printf("Walk");
+
+	trace_printf("ReqDelta %i\n", currentStepTime - lwt);
+	lwt = currentStepTime;
+
+
 
 	if (run == lastRun && onMount == lastMount && dir == lastDir)
 	{
@@ -4795,12 +4817,21 @@ void TUltimaOnline::SendWalkStack()
 
 		if (timerDelta)
 		{
-			wsi.Time -= timerDelta;
+			wsi.Time += (timerDelta + wsi.Time - (currentStepTime - lastStepTime));
 			timerDelta = 0;
 		}
 		else
-			timerDelta = GetTickCount() - (int)g_LastStepTime;
+			timerDelta = wsi.Time - (currentStepTime - lastStepTime);
+
+		TPRINT("timerDelta=%i\n", timerDelta);
 	}
+	else
+		timerDelta = 0;
+
+	lastStepTime = currentStepTime;
+	lastRun = run;
+	lastMount = onMount;
+	lastDir = dir;
 
 	BYTE seq = Walker->GetSequence();
 	Walker->SetSequence(seq, wsi.Dir);
