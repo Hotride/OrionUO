@@ -865,7 +865,7 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 				m_Z = wd->Z;
 				m_Direction = wd->Direction;
 
-				m_AfterStepDelay = 200; // maxDelay / 3;
+				m_AfterStepDelay = WALKING_DELAY;
 
 				m_OffsetX = 0;
 				m_OffsetY = 0;

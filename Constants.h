@@ -151,7 +151,10 @@ const int STEP_DELAY_RUN = 180;
 const int STEP_DELAY_WALK = 380;
 
 //!Задержка для смены направления
-const int TURN_DELAY = 50;
+const int TURN_DELAY = 100;
+
+//!Задержка таймера хотьбы
+const int WALKING_DELAY = 200;
 
 //!Таблица задержек перемещений
 const int CHARACTER_ANIMATION_DELAY_TABLE[2][2] =

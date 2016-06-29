@@ -513,7 +513,7 @@ bool TPathFinder::WalkEx(bool run, BYTE direction)
 	}
 
 	WALKER_SEND_ITEM wsi;
-	wsi.Time = 100;
+	wsi.Time = TURN_DELAY;
 
 	if ((olddir & 7) == (direction & 7)) //Повернуты куда надо
 	{
@@ -526,10 +526,7 @@ bool TPathFinder::WalkEx(bool run, BYTE direction)
 			return false;
 
 		if ((direction & 7) != newDir)
-		{
-			wsi.Time = 100;
 			direction = newDir;
-		}
 		else
 		{
 			direction = newDir;
@@ -666,7 +663,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	}
 
 	WALKER_SEND_ITEM wsi;
-	wsi.Time = 100;
+	wsi.Time = TURN_DELAY;
 
 	if ((olddir & 7) == (direction & 7)) //Повернуты куда надо
 	{
@@ -680,7 +677,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 		if ((direction & 7) != newDir)
 		{
-			WALKER_SEND_ITEM correctDirWSI = {newDir, 100};
+			WALKER_SEND_ITEM correctDirWSI = { newDir, TURN_DELAY };
 			
 			TWalkData *correctDirWD = new TWalkData();
 			correctDirWD->X = x;
