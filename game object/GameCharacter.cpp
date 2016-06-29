@@ -823,7 +823,7 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 			{
 				float steps = maxDelay / g_AnimCharactersDelayValue;
 				
-				float x = (delay / g_AnimCharactersDelayValue);
+				float x = ((delay - XY_DRAW_OFFSET_COMPENSATION )/ g_AnimCharactersDelayValue);
 				float y = x;
 				m_OffsetZ = (char)((wd->Z - m_Z) * x);
 

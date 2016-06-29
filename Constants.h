@@ -23,7 +23,7 @@
 const int MAX_CONSOLE_STACK_SIZE = 100;
 
 //!Задержка между кадрами для активного окна приложения
-const int FRAME_DELAY_ACTIVE_WINDOW = 30;
+const int FRAME_DELAY_ACTIVE_WINDOW = 15;
 
 //!Задержка между кадрами для неактивного окна приложения
 const int FRAME_DELAY_UNACTIVE_WINDOW = (FRAME_DELAY_ACTIVE_WINDOW + 1) * 7;
@@ -149,6 +149,9 @@ const int STEP_DELAY_RUN = 180;
 
 //!Задержка для перемещения хотьбы
 const int STEP_DELAY_WALK = 380;
+
+//!Компенсация для оффсетов, что-бы твой персонаж у тебя на экране вперед не вырисовывался.
+const int XY_DRAW_OFFSET_COMPENSATION = 20;
 
 //!Задержка для смены направления
 const int TURN_DELAY = 100;
