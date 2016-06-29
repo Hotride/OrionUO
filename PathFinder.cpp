@@ -486,8 +486,161 @@ int TPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 	return CHARACTER_ANIMATION_DELAY_TABLE[mounted][run];
 }
 //---------------------------------------------------------------------------
+bool TPathFinder::WalkEx(bool run, BYTE direction)
+{
+	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || g_Player == NULL || g_DeathScreenTimer)
+		return false;
+
+	if (g_SpeedMode >= CST_CANT_RUN)
+		run = false;
+	else if (!run)
+		run = ConfigManager.AlwaysRun;
+
+	int x = g_Player->X;
+	int y = g_Player->Y;
+	char z = g_Player->Z;
+	BYTE olddir = g_Player->Direction;
+
+	bool emptyStack = true;
+	TWalkData *walker = g_Player->m_WalkStack.Top();
+	if (walker != NULL)
+	{
+		x = walker->X;
+		y = walker->Y;
+		z = walker->Z;
+		olddir = walker->Direction;
+		emptyStack = false;
+	}
+
+	WALKER_SEND_ITEM wsi;
+	wsi.Time = 100;
+
+	if ((olddir & 7) == (direction & 7)) //Повернуты куда надо
+	{
+		BYTE newDir = direction;
+		int newX = x;
+		int newY = y;
+		char newZ = z;
+
+		if (!CanWalk(newDir, newX, newY, newZ))
+			return false;
+
+		if ((direction & 7) != newDir)
+		{
+			wsi.Time = 100;
+			direction = newDir;
+		}
+		else
+		{
+			direction = newDir;
+			x = newX;
+			y = newY;
+			z = newZ;
+
+			bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
+
+			wsi.Time = GetWalkSpeed(run, onMount);
+		}
+	}
+	else
+	{
+		BYTE newDir = direction;
+		int newX = x;
+		int newY = y;
+		char newZ = z;
+
+		if (!CanWalk(newDir, newX, newY, newZ))
+		{
+			if ((olddir & 7) == newDir)
+				return false;
+		}
+
+		if ((olddir & 7) == newDir)
+		{
+			x = newX;
+			y = newY;
+			z = newZ;
+
+			bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
+
+			wsi.Time = GetWalkSpeed(run, onMount);
+		}
+
+		direction = newDir;
+	}
+
+	TGameItem *bank = g_Player->FindLayer(OL_BANK);
+
+	if (bank != NULL)
+	{
+		TGump *bankContainer = GumpManager->GetGump(bank->Serial, 0, GT_CONTAINER);
+
+		if (bankContainer != NULL)
+			GumpManager->RemoveGump(bankContainer);
+	}
+
+	if (run)
+		direction += 0x80;
+
+	wsi.Dir = direction;
+
+	TWalkData *wd = new TWalkData();
+	wd->X = x;
+	wd->Y = y;
+	wd->Z = z;
+	wd->Direction = direction;
+
+	g_RemoveRangeXY.x = x;
+	g_RemoveRangeXY.y = y;
+
+	g_UpdateRange--;
+
+	UO->RemoveRangedObjects();
+
+	g_UpdateRange++;
+
+	if (emptyStack)
+	{
+		if (!g_Player->Walking())
+			g_Player->SetAnimation(0xFF);
+
+		g_Player->LastStepTime = GetTickCount();
+	}
+
+	g_Player->m_WalkStack.Push(wd);
+
+	World->MoveToTop(g_Player);
+
+
+	BYTE seq = Walker->GetSequence();
+	Walker->SetSequence(seq, wsi.Dir);
+
+	BYTE buf[7] = { 0 };
+	*buf = 0x02;
+	buf[1] = wsi.Dir;
+	buf[2] = seq;
+	pack32(buf + 3, Walker->m_FastWalkStack.Pop());
+
+	UO->Send(buf, 7);
+
+	g_WalkRequestCount++;
+
+	Walker->IncSequence();
+
+	g_LastStepTime = GetTickCount() + wsi.Time;
+
+	//Walker->m_SendStack.push_back(wsi);
+	g_Player->GetAnimationGroup();
+
+	return true;
+}
+//---------------------------------------------------------------------------
 bool TPathFinder::Walk(bool run, BYTE direction)
 {
+#if UO_UNUSE_WALK_STACK == 1
+	return WalkEx(run, direction);
+#endif
+
 	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || g_Player == NULL || g_DeathScreenTimer)
 		return false;
 

@@ -20,6 +20,8 @@
 #ifndef DefinitionMacroH
 #define DefinitionMacroH
 //---------------------------------------------------------------------------
+#define UO_UNUSE_WALK_STACK 1
+
 #define UO_DEPTH_TEST 0
 #define UO_RENDER_LIST_SORT 1
 #define UO_CHECKERBOARD_SEQUENCE_RENDER_LIST 1

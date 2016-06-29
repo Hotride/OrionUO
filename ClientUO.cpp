@@ -4774,6 +4774,10 @@ void TUltimaOnline::RemoveRangedObjects()
 //---------------------------------------------------------------------------
 void TUltimaOnline::SendWalkStack()
 {
+#if UO_UNUSE_WALK_STACK == 1
+	return;
+#endif
+
 	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || !Walker->m_SendStack.size())
 		return;
 

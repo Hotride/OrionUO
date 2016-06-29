@@ -166,6 +166,7 @@ public:
 	//ѕроверка на возможность сделать шаг в указанные координаты
 	bool CanWalk(BYTE &direction, int &x, int &y, char &z);
 
+	bool WalkEx(bool run, BYTE direction);
 	//ѕойти в указанные координаты
 	bool Walk(bool run, BYTE direction);
 
