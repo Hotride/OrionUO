@@ -4784,7 +4784,7 @@ void TUltimaOnline::SendWalkStack()
 	static int lastStepTime = 0;
 
 	WALKER_SEND_ITEM &wsi = Walker->m_SendStack.front();
-
+	
 	bool run = (wsi.Dir & 0x80);
 	bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
 	int dir = wsi.Dir & 0x7f;
@@ -4807,13 +4807,18 @@ void TUltimaOnline::SendWalkStack()
 
 	Walker->IncSequence();
 
-	if (onMount && run)
+	if (lastDir != wsi.Dir)
+		g_LastStepTime = GetTickCount() + TURN_DELAY;
+	else if (onMount && run)
 		g_LastStepTime = GetTickCount() + STEP_DELAY_MOUNT_RUN;
 	else if (onMount || run)
 		g_LastStepTime = GetTickCount() + STEP_DELAY_RUN;			
 	else
 		g_LastStepTime = GetTickCount() + STEP_DELAY_WALK;
 
+
+
+	lastDir = wsi.Dir;
 	Walker->m_SendStack.pop_front();
 }
 //---------------------------------------------------------------------------
