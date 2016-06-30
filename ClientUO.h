@@ -101,9 +101,6 @@ private:
 	//Вычисление цвета света
 	WORD CalculateLightColor(WORD id);
 
-	//Обработка стека шагов
-	void SendWalkStack();
-
 	void CreateObjectHandlesBackground();
 
 public:

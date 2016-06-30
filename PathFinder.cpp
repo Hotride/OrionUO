@@ -486,9 +486,9 @@ int TPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 	return CHARACTER_ANIMATION_DELAY_TABLE[mounted][run];
 }
 //---------------------------------------------------------------------------
-bool TPathFinder::WalkEx(bool run, BYTE direction)
+bool TPathFinder::Walk(bool run, BYTE direction)
 {
-	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || g_Player == NULL || g_DeathScreenTimer)
+	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || g_Player == NULL || g_DeathScreenTimer || g_GameState != GS_GAME)
 		return false;
 
 	if (g_SpeedMode >= CST_CANT_RUN)
@@ -501,6 +501,8 @@ bool TPathFinder::WalkEx(bool run, BYTE direction)
 	char z = g_Player->Z;
 	BYTE olddir = g_Player->Direction;
 
+	bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
+
 	bool emptyStack = true;
 	TWalkData *walker = g_Player->m_WalkStack.Top();
 	if (walker != NULL)
@@ -512,8 +514,7 @@ bool TPathFinder::WalkEx(bool run, BYTE direction)
 		emptyStack = false;
 	}
 
-	WALKER_SEND_ITEM wsi;
-	wsi.Time = TURN_DELAY;
+	WORD walkTime = TURN_DELAY;
 
 	if ((olddir & 7) == (direction & 7)) //Повернуты куда надо
 	{
@@ -534,9 +535,7 @@ bool TPathFinder::WalkEx(bool run, BYTE direction)
 			y = newY;
 			z = newZ;
 
-			bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
-
-			wsi.Time = GetWalkSpeed(run, onMount);
+			walkTime = GetWalkSpeed(run, onMount);
 		}
 	}
 	else
@@ -558,9 +557,7 @@ bool TPathFinder::WalkEx(bool run, BYTE direction)
 			y = newY;
 			z = newZ;
 
-			bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
-
-			wsi.Time = GetWalkSpeed(run, onMount);
+			walkTime = GetWalkSpeed(run, onMount);
 		}
 
 		direction = newDir;
@@ -578,8 +575,6 @@ bool TPathFinder::WalkEx(bool run, BYTE direction)
 
 	if (run)
 		direction += 0x80;
-
-	wsi.Dir = direction;
 
 	TWalkData *wd = new TWalkData();
 	wd->X = x;
@@ -608,13 +603,12 @@ bool TPathFinder::WalkEx(bool run, BYTE direction)
 
 	World->MoveToTop(g_Player);
 
-
 	BYTE seq = Walker->GetSequence();
-	Walker->SetSequence(seq, wsi.Dir);
+	Walker->SetSequence(seq, direction);
 
 	BYTE buf[7] = { 0 };
 	*buf = 0x02;
-	buf[1] = wsi.Dir;
+	buf[1] = direction;
 	buf[2] = seq;
 	pack32(buf + 3, Walker->m_FastWalkStack.Pop());
 
@@ -624,172 +618,73 @@ bool TPathFinder::WalkEx(bool run, BYTE direction)
 
 	Walker->IncSequence();
 
-	g_LastStepTime = GetTickCount() + wsi.Time;
+	g_LastStepTime = GetTickCount() + walkTime;
 
-	//Walker->m_SendStack.push_back(wsi);
 	g_Player->GetAnimationGroup();
 
-	return true;
-}
-//---------------------------------------------------------------------------
-bool TPathFinder::Walk(bool run, BYTE direction)
-{
-#if UO_UNUSE_WALK_STACK == 1
-	return WalkEx(run, direction);
-#endif
 
-	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || g_Player == NULL || g_DeathScreenTimer)
-		return false;
 
-	if (g_SpeedMode >= CST_CANT_RUN)
-		run = false;
-	else if (!run)
-		run = ConfigManager.AlwaysRun;
+	
+	//Тест дельты передвижения
 
-	int x = g_Player->X;
-	int y = g_Player->Y;
-	char z = g_Player->Z;
-	BYTE olddir = g_Player->Direction;
+	/*static bool lastRun = false;
+	static bool lastMount = false;
+	static int lastDir = -1;
+	static int timerDelta = 0;
+	static int lastStepTime = 0;*/
 
-	bool emptyStack = true;
-	TWalkData *walker = g_Player->m_WalkStack.Top();
-	if (walker != NULL)
-	{
-		x = walker->X;
-		y = walker->Y;
-		z = walker->Z;
-		olddir = walker->Direction;
-		emptyStack = false;
-	}
 
-	WALKER_SEND_ITEM wsi;
-	wsi.Time = TURN_DELAY;
+	/*SYSTEMTIME st = { 0 };
+	GetLocalTime(&st);
+	int currentStepTime = st.wMilliseconds + (st.wSecond * 1000) + (st.wMinute * 60000);
 
-	if ((olddir & 7) == (direction & 7)) //Повернуты куда надо
-	{
-		BYTE newDir = direction;
-		int newX = x;
-		int newY = y;
-		char newZ = z;
+	static DWORD lwt = 0;
 
-		if (!CanWalk(newDir, newX, newY, newZ))
-			return false;
-
-		if ((direction & 7) != newDir)
-		{
-			WALKER_SEND_ITEM correctDirWSI = { newDir, TURN_DELAY };
-			
-			TWalkData *correctDirWD = new TWalkData();
-			correctDirWD->X = x;
-			correctDirWD->Y = y;
-			correctDirWD->Z = z;
-			correctDirWD->Direction = direction;
-
-			g_Player->m_WalkStack.Push(correctDirWD);
-
-			Walker->m_SendStack.push_back(correctDirWSI);
-		}
-		
-		direction = newDir;
-		x = newX;
-		y = newY;
-		z = newZ;
-
-		bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
-
-		wsi.Time = GetWalkSpeed(run, onMount);
-	}
-	else
-	{
-		BYTE newDir = direction;
-		int newX = x;
-		int newY = y;
-		char newZ = z;
-
-		if (!CanWalk(newDir, newX, newY, newZ))
-		{
-			if ((olddir & 7) == newDir)
-				return false;
-		}
-
-		if ((olddir & 7) == newDir)
-		{
-			x = newX;
-			y = newY;
-			z = newZ;
-
-			bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
-
-			wsi.Time = GetWalkSpeed(run, onMount);
-		}
-		else
-		{
-			if (Walker->m_SendStack.size() > 1)
-			{
-				if (!g_Player->m_WalkStack.Empty())
-				{
-					TWalkData *delWD = g_Player->m_WalkStack.m_Items->m_Next;
-					g_Player->m_WalkStack.m_Items->m_Next = NULL;
-
-					while (delWD != NULL)
-					{
-						TWalkData *nextWD = delWD->m_Next;
-						delete delWD;
-						delWD = nextWD;
-					}
-				}
-
-				Walker->m_SendStack.resize(1);
-			}
-		}
-
-		direction = newDir;
-	}
-
-	TGameItem *bank = g_Player->FindLayer(OL_BANK);
-
-	if (bank != NULL)
-	{
-		TGump *bankContainer = GumpManager->GetGump(bank->Serial, 0, GT_CONTAINER);
-
-		if (bankContainer != NULL)
-			GumpManager->RemoveGump(bankContainer);
-	}
+	if (onMount)
+		trace_printf("Mounted");
 
 	if (run)
-		direction += 0x80;
+		trace_printf("Run");
+	else
+		trace_printf("Walk");
 
-	wsi.Dir = direction;
+	int nowDelta = wsi.Time - ((currentStepTime - lwt));
 
-	TWalkData *wd = new TWalkData();
-	wd->X = x;
-	wd->Y = y;
-	wd->Z = z;
-	wd->Direction = direction;
+	if (nowDelta > 70)
+		nowDelta = 0;
 
-	g_RemoveRangeXY.x = x;
-	g_RemoveRangeXY.y = y;
+	g_LastStepTime = GetTickCount() + walkTime + nowDelta;
 
-	g_UpdateRange--;
+	trace_printf("ReqDelta %i\n", nowDelta);
 
-	UO->RemoveRangedObjects();
+	lwt = currentStepTime;*/
 
-	g_UpdateRange++;
 
-	if (emptyStack)
+
+	/*int dir = direction & 0x7f;
+
+	if (run == lastRun && onMount == lastMount && dir == lastDir)
 	{
-		if (!g_Player->Walking())
-			g_Player->SetAnimation(0xFF);
+		if (abs(timerDelta) > 100)
+			timerDelta = 0;
 
-		g_Player->LastStepTime = GetTickCount();
+		if (timerDelta)
+		{
+			wsi.Time += (timerDelta + walkTime - (currentStepTime - lastStepTime));
+			timerDelta = 0;
+		}
+		else
+			timerDelta = walkTime - (currentStepTime - lastStepTime);
+
+		TPRINT("timerDelta=%i\n", timerDelta);
 	}
+	else
+		timerDelta = 0;
 
-	g_Player->m_WalkStack.Push(wd);
-
-	World->MoveToTop(g_Player);
-
-	Walker->m_SendStack.push_back(wsi);
-	g_Player->GetAnimationGroup();
+	lastStepTime = currentStepTime;
+	lastRun = run;
+	lastMount = onMount;
+	lastDir = dir;*/
 
 	return true;
 }

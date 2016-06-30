@@ -67,7 +67,6 @@ TWalker::TWalker()
 {
 	memset(m_Direction, 0, sizeof(m_Direction));
 	m_FastWalkStack.Reset();
-	m_SendStack.clear();
 }
 //---------------------------------------------------------------------------
 void TWalker::IncSequence()

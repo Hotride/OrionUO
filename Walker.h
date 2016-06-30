@@ -43,13 +43,6 @@ public:
 	DWORD Pop(); //Получить элемент и удалить его из стека
 };
 //--------------------------------------------------------------------------
-//
-struct WALKER_SEND_ITEM
-{
-	BYTE Dir;
-	WORD Time;
-};
-//--------------------------------------------------------------------------
 //Класс для обработки шагов игрока
 class TWalker
 {
@@ -60,10 +53,7 @@ private:
 
 public:
 	TWalker();
-	~TWalker() {m_SendStack.clear();}
-
-	//Стек шагов
-	std::deque<WALKER_SEND_ITEM> m_SendStack;
+	~TWalker() {}
 
 	TFastWalkStack m_FastWalkStack; //Указатель на Fast Walk Stack
 	

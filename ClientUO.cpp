@@ -2845,8 +2845,6 @@ void TUltimaOnline::Process()
 
 		if (g_GameState == GS_GAME)
 		{
-			SendWalkStack();
-
 			MacroManager->Execute();
 
 			if (g_ClickObjectReq && g_ClickObject.Timer < ticks)
@@ -4772,91 +4770,6 @@ void TUltimaOnline::RemoveRangedObjects()
 
 	if (EffectManager != NULL)
 		EffectManager->RemoveRangedEffects();
-}
-//---------------------------------------------------------------------------
-void TUltimaOnline::SendWalkStack()
-{
-#if UO_UNUSE_WALK_STACK == 1
-	return;
-#endif
-
-	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || !Walker->m_SendStack.size())
-		return;
-
-	/*static bool lastRun = false;
-	static bool lastMount = false;
-	static int lastDir = -1;
-	static int timerDelta = 0;
-	static int lastStepTime = 0;*/
-
-	WALKER_SEND_ITEM &wsi = Walker->m_SendStack.front();
-
-	bool run = (wsi.Dir & 0x80);
-	bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
-	int dir = wsi.Dir & 0x7f;
-
-
-
-	/*SYSTEMTIME st = { 0 };
-	GetLocalTime(&st);
-	int currentStepTime = st.wMilliseconds + (st.wSecond * 1000) + (st.wMinute * 60 * 1000);
-
-	static DWORD lwt = 0;
-
-	if (g_Player->FindLayer(OL_MOUNT) != NULL)
-		trace_printf("Mounted");
-
-	if (run)
-		trace_printf("Run");
-	else
-		trace_printf("Walk");
-
-	trace_printf("ReqDelta %i\n", currentStepTime - lwt);
-	lwt = currentStepTime;
-
-
-
-	if (run == lastRun && onMount == lastMount && dir == lastDir)
-	{
-		if (abs(timerDelta) > 100)
-			timerDelta = 0;
-
-		if (timerDelta)
-		{
-			wsi.Time += (timerDelta + wsi.Time - (currentStepTime - lastStepTime));
-			timerDelta = 0;
-		}
-		else
-			timerDelta = wsi.Time - (currentStepTime - lastStepTime);
-
-		TPRINT("timerDelta=%i\n", timerDelta);
-	}
-	else
-		timerDelta = 0;
-
-	lastStepTime = currentStepTime;
-	lastRun = run;
-	lastMount = onMount;
-	lastDir = dir;*/
-
-	BYTE seq = Walker->GetSequence();
-	Walker->SetSequence(seq, wsi.Dir);
-
-	BYTE buf[7] = {0};
-	*buf = 0x02;
-	buf[1] = wsi.Dir;
-	buf[2] = seq;
-	pack32(buf + 3, Walker->m_FastWalkStack.Pop());
-
-	Send(buf, 7);
-
-	g_WalkRequestCount++;
-
-	Walker->IncSequence();
-
-	g_LastStepTime = GetTickCount() + wsi.Time;
-
-	Walker->m_SendStack.pop_front();
 }
 //---------------------------------------------------------------------------
 void TUltimaOnline::LogOut()
