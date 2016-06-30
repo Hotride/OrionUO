@@ -1518,6 +1518,40 @@ HTML_char *TFontsManager::GetHTMLData(__in BYTE font, __in const wchar_t *str, _
 				i += 8;
 				si = L'\n';
 			}
+			else if (!memcmp(lstr, L"<left>", 12))
+			{
+				current_align = TS_LEFT;
+
+				if (newlen)
+					si = L'\n';
+				else
+					si = 0;
+
+				i += 5;
+			}
+			else if (!memcmp(lstr, L"</left>", 14))
+			{
+				current_align = align;
+				i += 6;
+				si = L'\n';
+			}
+			else if (!memcmp(lstr, L"<right>", 14))
+			{
+				current_align = TS_RIGHT;
+
+				if (newlen)
+					si = L'\n';
+				else
+					si = 0;
+
+				i += 6;
+			}
+			else if (!memcmp(lstr, L"</right>", 16))
+			{
+				current_align = align;
+				i += 7;
+				si = L'\n';
+			}
 			else if (!memcmp(lstr, L"<p>", 6))
 			{
 				if (!(current_flags & UOFONT_INDENTION))
