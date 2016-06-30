@@ -51,7 +51,7 @@ void TGumpBuff::UpdateBuffIcons()
 
 		int delta = (int)(item->Timer - ticks);
 
-		if (delta < USE_ALPHA_BLENDING_WHEN_TIMER_LESS)
+		if (item->Timer != 0xFFFFFFFF && delta < USE_ALPHA_BLENDING_WHEN_TIMER_LESS)
 		{
 			m_FrameCreated = false;
 
@@ -91,13 +91,18 @@ void TGumpBuff::UpdateBuffIcons()
 	}
 }
 //----------------------------------------------------------------------------
-void TGumpBuff::AddBuff(const WORD &id, const DWORD &timer, const wstring &text)
+void TGumpBuff::AddBuff(const WORD &id, const WORD &timer, const wstring &text)
 {
+	DWORD ticks = 0xFFFFFFFF;
+
+	if (timer)
+		ticks = GetTickCount() + (timer * 1000);
+
 	QFOR(item, m_Items, TGumpBuffObject*)
 	{
 		if (item->Graphic == id)
 		{
-			item->Timer = timer;
+			item->Timer = ticks;
 			item->Text = text;
 			item->DecAlpha = true;
 			item->Alpha = 0xFF;
@@ -109,7 +114,7 @@ void TGumpBuff::AddBuff(const WORD &id, const DWORD &timer, const wstring &text)
 		}
 	}
 
-	Add(new TGumpBuffObject(id, timer, text));
+	Add(new TGumpBuffObject(id, ticks, text));
 }
 //----------------------------------------------------------------------------
 void TGumpBuff::DeleteBuff(const WORD &id)
@@ -140,18 +145,25 @@ void TGumpBuff::OnToolTip()
 			{
 				if (g_LastSelectedObject == ID_GB_BUFF_ITEM + index)
 				{
-					if (item->TooltipTimer < ticks)
+					FontManager->SetUseHTML(true);
+
+					if (item->Timer != 0xFFFFFFFF && item->TooltipTimer < ticks)
 					{
 						item->TooltipTimer = ticks + ((item->Timer - ticks) % 1000);
 						ToolTip.SeqIndex = 0xFFFFFFFF;
 
-						ToolTip.Set(item->Text, SOT_GAME_OBJECT, g_LastSelectedObject);
+						wchar_t buf[512] = { 0 };
+						wsprintf(buf, L"%s\nTimeLeft: %i seconds.", item->Text.c_str(), (item->Timer - ticks) / 1000);
+
+						ToolTip.Set(buf, SOT_GAME_OBJECT, g_LastSelectedObject);
 
 						ToolTip.Timer = 0;
 						ToolTip.Use = true;
 					}
 					else
 						ToolTip.Set(item->Text, SOT_GAME_OBJECT, g_LastSelectedObject);
+
+					FontManager->SetUseHTML(false);
 
 					break;
 				}
@@ -317,7 +329,7 @@ void TGumpBuff::GenerateFrame()
 
 		QFOR(item, m_Items, TGumpBuffObject*)
 		{
-			if (item->Timer < ticks)
+			if (item->Timer != 0xFFFFFFFF && item->Timer < ticks)
 				continue;
 
 			POINT gumpDim = { 0, 0 };
@@ -325,13 +337,7 @@ void TGumpBuff::GenerateFrame()
 
 			glColor4ub(0xFF, 0xFF, 0xFF, item->Alpha);
 
-			gumpID = item->Graphic;
-
-			if (ii == 1)
-				gumpID = 0x7563;
-			if (ii == 2)
-				gumpID = 0x7542;
-			UO->DrawGump(gumpID, 0, startCoordinates.x, startCoordinates.y); //Buff item
+			UO->DrawGump(item->Graphic, 0, startCoordinates.x, startCoordinates.y); //Buff item
 			ii++;
 			if (useX)
 			{
