@@ -393,6 +393,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_NCACTIVATE:
 		{
+			if (!g_ConfigLoaded)
+				break;
 			if (wParam == 0)
 				SoundManager.PauseSound();
 			else
