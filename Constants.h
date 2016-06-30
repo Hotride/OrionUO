@@ -23,7 +23,7 @@
 const int MAX_CONSOLE_STACK_SIZE = 100;
 
 //!Задержка между кадрами для активного окна приложения
-const int FRAME_DELAY_ACTIVE_WINDOW = 15;
+const int FRAME_DELAY_ACTIVE_WINDOW = 30;
 
 //!Задержка между кадрами для неактивного окна приложения
 const int FRAME_DELAY_UNACTIVE_WINDOW = (FRAME_DELAY_ACTIVE_WINDOW + 1) * 7;
