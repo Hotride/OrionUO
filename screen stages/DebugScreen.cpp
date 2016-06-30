@@ -29,6 +29,8 @@ TDebugScreen::TDebugScreen()
 	m_BookGump->TextEntryTitle->SetText("kl;l");
 	m_BookGump->TextEntryAuthor->SetText("unknown");
 	m_BookGump->TextEntry[1].SetText("ty\nery346\n\n\n\n6\n3");
+	m_BookGump->TextEntry[2].SetText("77343\n\n\n\n\nrtry\n\n3ty");
+	m_BookGump->TextEntry[3].SetText("56\n\n\n\n3\n3\n3\n");
 }
 //---------------------------------------------------------------------------
 TDebugScreen::~TDebugScreen()

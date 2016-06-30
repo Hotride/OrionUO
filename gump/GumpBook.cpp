@@ -30,6 +30,10 @@ m_Unicode(unicode), m_Page(2)
 	TextEntryTitle = new TEntryText();
 
 	TextEntry = new TBookEntryText[pageCount];
+	m_PageIndexText = new TTextTexture[pageCount];
+
+	IFOR(i, 0, pageCount)
+		FontManager->GenerateA(9, m_PageIndexText[i], std::to_string(i).c_str(), 0x0386);
 }
 //----------------------------------------------------------------------------
 TGumpBook::~TGumpBook()
@@ -51,6 +55,12 @@ TGumpBook::~TGumpBook()
 		delete[] TextEntry;
 		TextEntry = NULL;
 	}
+
+	if (m_PageIndexText != NULL)
+	{
+		delete[] m_PageIndexText;
+		m_PageIndexText = NULL;
+	}
 }
 //----------------------------------------------------------------------------
 void TGumpBook::InitTextTextures()
@@ -67,6 +77,7 @@ void TGumpBook::ReleaseTextTextures()
 //----------------------------------------------------------------------------
 void TGumpBook::PrepareTextures()
 {
+	UO->ExecuteGumpPart(0x01FE, 3);
 }
 //---------------------------------------------------------------------------
 void TGumpBook::GenerateFrame()
@@ -83,6 +94,12 @@ void TGumpBook::GenerateFrame()
 
 		UO->DrawGump(0x01FE, 0, 0, 0); //Body
 
+		if (m_Page)
+			UO->DrawGump(0x01FF, 0, 0, 0); //Last page
+
+		if (m_Page + 2 < m_PageCount)
+			UO->DrawGump(0x0200, 0, 356, 0); //Next page
+
 		if (!m_Page)
 		{
 			m_TextTitle.Draw(78, 32);
@@ -94,25 +111,17 @@ void TGumpBook::GenerateFrame()
 			TextEntryAuthor->DrawA(4, 0, 41, 158);
 
 			TextEntry[1].DrawA(4, 0, 224, 32);
-
-			FontManager->DrawA(9, "1", 0x0386, 299, 202);
+			m_PageIndexText[1].Draw(299, 202);
 		}
 		else
 		{
-			TextEntry[m_Page].DrawA(4, 0, 41, 158);
-
-			char pageIndexText[10] = { 0 };
-			sprintf(pageIndexText, "%i", m_Page);
-
-			FontManager->DrawA(9, pageIndexText, 0x0386, 100, 100);
+			TextEntry[m_Page].DrawA(4, 0, 38, 32);
+			m_PageIndexText[m_Page].Draw(112, 202);
 
 			if (m_Page + 1 < m_PageCount)
 			{
 				TextEntry[m_Page + 1].DrawA(4, 0, 224, 32);
-
-				sprintf(pageIndexText, "%i", m_Page + 1);
-
-				FontManager->DrawA(9, pageIndexText, 0x0386, 299, 202);
+				m_PageIndexText[m_Page + 1].Draw(299, 202);
 			}
 		}
 
@@ -156,7 +165,18 @@ int TGumpBook::Draw(bool &mode)
 		if (UO->GumpPixelsInXY(0x01FE, 0, 0))
 		{
 			g_LastSelectedGump = (DWORD)this;
-			LSG = 0;
+
+			if (m_Page && UO->GumpPixelsInXY(0x01FF, 0, 0))
+				LSG = ID_GB_BUTTON_PREV; //Last page
+			else if (m_Page + 2 < m_PageCount && UO->GumpPixelsInXY(0x0200, 356, 0))
+				LSG = ID_GB_BUTTON_NEXT; //Next page
+
+			if (!m_Page)
+			{
+			}
+			else
+			{
+			}
 		}
 
 		g_MouseX = oldMouseX;

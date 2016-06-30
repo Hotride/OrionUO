@@ -35,6 +35,8 @@ private:
 	short m_Page;
 	bool m_Unicode;
 
+	TTextTexture *m_PageIndexText;
+
 	static TTextTexture m_TextTitle;
 	static TTextTexture m_TextBy;
 
