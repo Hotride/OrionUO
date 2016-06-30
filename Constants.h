@@ -139,19 +139,16 @@ const int DEFAULT_CHARACTER_HEIGHT = 16;
 const int DEFAULT_BLOCK_HEIGHT = 16;
 
 //!Задержка для перемещения бегом на маунте
-const int STEP_DELAY_MOUNT_RUN = 80;
+const int STEP_DELAY_MOUNT_RUN = 100;
 
 //!Задержка для перемещения хотьбы на маунте
-const int STEP_DELAY_MOUNT_WALK = 180;
+const int STEP_DELAY_MOUNT_WALK = 200;
 
 //!Задержка для перемещения бегом
-const int STEP_DELAY_RUN = 180;
+const int STEP_DELAY_RUN = 200;
 
 //!Задержка для перемещения хотьбы
-const int STEP_DELAY_WALK = 380;
-
-//!Компенсация для оффсетов, что-бы твой персонаж у тебя на экране вперед не вырисовывался.
-const int XY_DRAW_OFFSET_COMPENSATION = 20;
+const int STEP_DELAY_WALK = 400;
 
 //!Задержка для смены направления
 const int TURN_DELAY = 100;
