@@ -215,6 +215,9 @@ TCliloc *TClilocManager::Cliloc(string lang)
 //---------------------------------------------------------------------------
 wstring TClilocManager::ParseArgumentsToClilocString(DWORD cliloc, wstring args)
 {
+	while (args.length() && args[0] == L'\t')
+		args.erase(args.begin());
+
 	wstring message = Cliloc(g_Language)->GetW(cliloc);
 
 	vector<wstring> arguments;

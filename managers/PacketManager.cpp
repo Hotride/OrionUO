@@ -4418,7 +4418,10 @@ df
 00 10 56 82 
 00 00 00 00 
 00 01 
-00 00 09 00 2b 00 20 00 39 00 20 00 41 00 72 00 6d 00 6f 00 72 00 00 00 00 01 00 00
+00 00 
+09 00 2b 00 20 00 39 00 20 00 41 00 72 00 6d 00 6f 00 72 00 00 00 
+00 01 
+00 00
 
 
 
@@ -4472,134 +4475,6 @@ endloop    Buffs <<<<
 
 	const int tableCount = 126;
 
-	/*WORD table[tableCount] = { 0 };
-	table[0] = 0x754C;
-	table[1] = 0x754A;
-	table[2] = 0x0000;
-	table[3] = 0x0000;
-	table[4] = 0x755E;
-	table[5] = 0x7549;
-	table[6] = 0x7551;
-	table[7] = 0x7556;
-	table[8] = 0x753A;
-	table[9] = 0x754D;
-	table[10] = 0x754E;
-	table[11] = 0x7565;
-	table[12] = 0x753B;
-	table[13] = 0x7543;
-	table[14] = 0x7544;
-	table[15] = 0x7546;
-	table[16] = 0x755C;
-	table[17] = 0x755F;
-	table[18] = 0x7566;
-	table[19] = 0x7554;
-	table[20] = 0x7540;
-	table[21] = 0x7568;
-	table[22] = 0x754F;
-	table[23] = 0x7550;
-	table[24] = 0x7553;
-	table[25] = 0x753E;
-	table[26] = 0x755D;
-	table[27] = 0x7563;
-	table[28] = 0x7562;
-	table[29] = 0x753F;
-	table[30] = 0x7559;
-	table[31] = 0x7557;
-	table[32] = 0x754B;
-	table[33] = 0x753D;
-	table[34] = 0x7561;
-	table[35] = 0x7558;
-	table[36] = 0x755B;
-	table[37] = 0x7560;
-	table[38] = 0x7541;
-	table[39] = 0x7545;
-	table[40] = 0x7552;
-	table[41] = 0x7569;
-	table[42] = 0x7548;
-	table[43] = 0x755A;
-	table[44] = 0x753C;
-	table[45] = 0x7547;
-	table[46] = 0x7567;
-	table[47] = 0x7542;
-	table[48] = 0x758A;
-	table[49] = 0x758B;
-	table[50] = 0x758C;
-	table[51] = 0x758D;
-	table[52] = 0x0000;
-	table[53] = 0x758E;
-	table[54] = 0x094B;
-	table[55] = 0x094C;
-	table[56] = 0x094D;
-	table[57] = 0x094E;
-	table[58] = 0x094F;
-	table[59] = 0x0950;
-	table[60] = 0x753E;
-	table[61] = 0x5011;
-	table[62] = 0x7590;
-	table[63] = 0x7591;
-	table[64] = 0x7592;
-	table[65] = 0x7593;
-	table[66] = 0x7594;
-	table[67] = 0x7595;
-	table[68] = 0x7596;
-	table[69] = 0x7598;
-	table[70] = 0x7599;
-	table[71] = 0x759B;
-	table[72] = 0x759C;
-	table[73] = 0x759E;
-	table[74] = 0x759F;
-	table[75] = 0x75A0;
-	table[76] = 0x75A1;
-	table[77] = 0x75A3;
-	table[78] = 0x75A4;
-	table[79] = 0x75A5;
-	table[80] = 0x75A6;
-	table[81] = 0x75A7;
-	table[82] = 0x75C0;
-	table[83] = 0x75C1;
-	table[84] = 0x75C2;
-	table[85] = 0x75C3;
-	table[86] = 0x75C4;
-	table[87] = 0x75F2;
-	table[88] = 0x75F3;
-	table[89] = 0x75F4;
-	table[90] = 0x75F5;
-	table[91] = 0x75F6;
-	table[92] = 0x75F7;
-	table[93] = 0x75F8;
-	table[94] = 0x75F9;
-	table[95] = 0x75FA;
-	table[96] = 0x75FB;
-	table[97] = 0x75FC;
-	table[98] = 0x75FD;
-	table[99] = 0x75FE;
-	table[100] = 0x75FF;
-	table[101] = 0x7600;
-	table[102] = 0x7601;
-	table[103] = 0x7602;
-	table[104] = 0x7603;
-	table[105] = 0x7604;
-	table[106] = 0x7605;
-	table[107] = 0x7606;
-	table[108] = 0x7607;
-	table[109] = 0x7608;
-	table[110] = 0x7609;
-	table[111] = 0x760A;
-	table[112] = 0x760B;
-	table[113] = 0x760C;
-	table[114] = 0x760D;
-	table[115] = 0x760E;
-	table[116] = 0x760F;
-	table[117] = 0x7610;
-	table[118] = 0x7611;
-	table[119] = 0x7612;
-	table[120] = 0x7613;
-	table[121] = 0x7614;
-	table[122] = 0x7615;
-	table[123] = 0x75C5;
-	table[124] = 0x75F6;
-	table[125] = 0x761B;*/
-
 	static const WORD table[tableCount] =
 	{
 		0x754C, 0x754A, 0x0000, 0x0000, 0x755E, 0x7549, 0x7551, 0x7556, 0x753A, 0x754D,
@@ -4617,7 +4492,7 @@ endloop    Buffs <<<<
 		0x7613, 0x7614, 0x7615, 0x75C5, 0x75F6, 0x761B
 	};
 
-	const WORD buffIconStart = 0x03E1; //0x03EA ???
+	const WORD buffIconStart = 0x03E9; //0x03EA ???
 
 	DWORD serial = ReadDWord();
 
@@ -4635,7 +4510,7 @@ endloop    Buffs <<<<
 			{
 				Move(12);
 
-				DWORD timer = ReadWord();
+				WORD timer = ReadWord();
 
 				Move(3);
 
@@ -4643,11 +4518,27 @@ endloop    Buffs <<<<
 				DWORD descriptionCliloc = ReadDWord();
 				DWORD wtfCliloc = ReadDWord();
 
-				Move(2);
+				Move(4);
 
-				//arguments
+				wstring title = ClilocManager->Cliloc(g_Language)->GetW(titleCliloc).c_str();
+				wstring description = L"";
+				wstring wtf = L"";
 
-				gump->AddBuff(table[iconID], GetTickCount() + (timer * 1000), L"Buff text");
+				if (descriptionCliloc)
+				{
+					wstring arguments((wchar_t*)Ptr);
+					//TPRINT("Buff arguments: %s\n", ToString(arguments).c_str());
+					//TPRINT("Buff arguments: %s\n", ToString(ClilocManager->ParseArgumentsToClilocString(descriptionCliloc, arguments)).c_str());
+
+					description = L'\n' + ClilocManager->ParseArgumentsToClilocString(descriptionCliloc, arguments);
+				}
+
+				if (wtfCliloc)
+					wtf = L'\n' + ClilocManager->Cliloc(g_Language)->GetW(wtfCliloc).c_str();
+
+				wstring text = L"<left>" + title + description + wtf + L"</left>";
+
+				gump->AddBuff(table[iconID], timer, text);
 			}
 			else
 				gump->DeleteBuff(table[iconID]);
