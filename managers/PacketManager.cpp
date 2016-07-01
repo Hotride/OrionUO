@@ -4526,11 +4526,16 @@ endloop    Buffs <<<<
 
 				if (descriptionCliloc)
 				{
-					wstring arguments((wchar_t*)Ptr);
+					//wstring arguments((wchar_t*)Ptr);
+					wstring arguments = ReadUnicodeStringLE(0);
+
 					//TPRINT("Buff arguments: %s\n", ToString(arguments).c_str());
 					//TPRINT("Buff arguments: %s\n", ToString(ClilocManager->ParseArgumentsToClilocString(descriptionCliloc, arguments)).c_str());
 
 					description = L'\n' + ClilocManager->ParseArgumentsToClilocString(descriptionCliloc, arguments);
+
+					if (description.length() < 2)
+						description = L"";
 				}
 
 				if (wtfCliloc)
