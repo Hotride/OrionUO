@@ -114,11 +114,18 @@ private:
 	string ReadString(__in int size);
 
 	/*!
-	Прочитать Unicode строку
+	Прочитать Unicode строку (big-endian)
 	@param [__in] size Размер строки, если указан 0 - читает до нуля
 	@return Данные
 	*/
 	wstring ReadUnicodeString(__in int size);
+
+	/*!
+	Прочитать Unicode строку (little-endian)
+	@param [__in] size Размер строки, если указан 0 - читает до нуля
+	@return Данные
+	*/
+	wstring ReadUnicodeStringLE(__in int size);
 
 	vector<DWORD> m_MegaClilocRequests;
 protected:

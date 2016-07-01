@@ -580,7 +580,7 @@ int TPacketManager::ReadInt()
 @param [__in] size Размер строки, если указан 0 - читает до нуля
 @return Данные
 */
-string TPacketManager:: ReadString( __in int size)
+string TPacketManager::ReadString( __in int size)
 {
 	if (!size)
 	{
@@ -605,7 +605,7 @@ string TPacketManager:: ReadString( __in int size)
 }
 //---------------------------------------------------------------------------
 /*!
-Прочитать Unicode строку
+Прочитать Unicode строку (big-endian)
 @param [__in] size Размер строки, если указан 0 - читает до нуля
 @return Данные
 */
@@ -621,9 +621,67 @@ wstring TPacketManager::ReadUnicodeString( __in int size)
 
 	IFOR(i, 0, count)
 	{
-		*pStr = (Ptr[0] << 8) | Ptr[1];
+		//*pStr = (Ptr[0] << 8) | Ptr[1];
+
+		wchar_t ch = (Ptr[0] << 8) | Ptr[1];
+
+		if (ch < 0x0400)
+		{
+			if (ch != 0xFF)
+				ch = (char)(ch % 0xFF);
+			else
+				ch = (char)ch;
+		}
+
+		*pStr = ch;
+
 		Ptr += 2;
 			
+		if (!size && *pStr == 0)
+			break;
+
+		pStr++;
+	}
+
+	str[count] = 0;
+
+	wstring result(str);
+	delete str;
+
+	return result;
+}
+//---------------------------------------------------------------------------
+/*!
+Прочитать Unicode строку (little-endian)
+@param [__in] size Размер строки, если указан 0 - читает до нуля
+@return Данные
+*/
+wstring TPacketManager::ReadUnicodeStringLE(__in int size)
+{
+	int count = size;
+
+	if (!count)
+		count = 1024;
+
+	wchar_t *str = new wchar_t[count + 1];
+	wchar_t *pStr = str;
+
+	IFOR(i, 0, count)
+	{
+		wchar_t ch = *(PWORD)Ptr;
+		
+		if (ch < 0x0400)
+		{
+			if (ch != 0xFF)
+				ch = (char)(ch % 0xFF);
+			else
+				ch = (char)ch;
+		}
+
+		*pStr = ch;
+
+		Ptr += 2;
+
 		if (!size && *pStr == 0)
 			break;
 
@@ -2757,7 +2815,8 @@ PACKET_HANDLER(UnicodeTalk)
 		return;
 	}
 	
-	wstring name((wchar_t*)Ptr);
+	//wstring name((wchar_t*)Ptr);
+	wstring name = ReadUnicodeStringLE(0);
 	wstring str = L"";
 
 	if (size > 48)
@@ -4063,7 +4122,8 @@ PACKET_HANDLER(DisplayClilocString)
 	if (*buf == 0xCC)
 		affix = ReadString(0);
 
-	wstring args((wchar_t*)Ptr);
+	//wstring args((wchar_t*)Ptr);
+	wstring args = ReadUnicodeStringLE(0);
 	wstring message = ClilocManager->ParseArgumentsToClilocString(cliloc, args);
 	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
 
@@ -4128,8 +4188,10 @@ PACKET_HANDLER(MegaCliloc)
 
 		if (len > 0)
 		{
-			wstring argument((wchar_t*)Ptr, len / 2);
-			Ptr += len;
+			//wstring argument((wchar_t*)Ptr, len / 2);
+			//Ptr += len;
+
+			wstring argument = ReadUnicodeStringLE(len / 2);
 
 			wstring str = ClilocManager->ParseArgumentsToClilocString(cliloc, argument);
 
@@ -4301,7 +4363,7 @@ PACKET_HANDLER(BookData)
 
 				entry->SetText(str);
 
-				TPRINT("BookPageData[%i] = %s\n", page, str.c_str());
+				//TPRINT("BookPageData[%i] = %s\n", page, str.c_str());
 			}
 			else
 			{
