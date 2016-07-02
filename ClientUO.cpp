@@ -2797,8 +2797,8 @@ void TUltimaOnline::Process()
 		Send(ping, 2);
 	}
 
-	if (IsIconic(g_hWnd))
-		return;
+	//if (IsIconic(g_hWnd))
+		//return;
 
 	g_AltPressed = GetAsyncKeyState(VK_MENU) & 0x80000000;
 	g_CtrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
