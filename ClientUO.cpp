@@ -2797,9 +2797,6 @@ void TUltimaOnline::Process()
 		Send(ping, 2);
 	}
 
-	//if (IsIconic(g_hWnd))
-		//return;
-
 	g_AltPressed = GetAsyncKeyState(VK_MENU) & 0x80000000;
 	g_CtrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
 	g_ShiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
@@ -2951,10 +2948,14 @@ void TUltimaOnline::Process()
 			GameScreen->CalculateRenderList();
 			GameScreen->RenderListInitalized = true;
 
-			if (canRenderSelect)
-				GameScreen->Render(false);
 
-			GameScreen->Render(true);
+			if (!IsIconic(g_hWnd))
+			{
+				if (canRenderSelect)
+					GameScreen->Render(false);
+
+				GameScreen->Render(true);
+			}
 
 			GameScreen->RenderListInitalized = false;
 
@@ -2969,21 +2970,17 @@ void TUltimaOnline::Process()
 	}
 	else if (g_LastRenderTime <= ticks)
 	{
-		CurrentScreen->Render(false);
-		CurrentScreen->Render(true);
+		if (!IsIconic(g_hWnd))
+		{
+			CurrentScreen->Render(false);
+			CurrentScreen->Render(true);
+		}
 	}
 
 	if (removeUnusedTexturesTime < ticks)
 	{
 		ClearUnusedTextures();
 		removeUnusedTexturesTime = ticks + CLEAR_TEXTURES_DELAY;
-	}
-
-	static bool once = true;
-	if (once)
-	{
-		once = false;
-		//PrintWindow(g_hWnd, hdc)
 	}
 }
 //---------------------------------------------------------------------------
