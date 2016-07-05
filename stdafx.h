@@ -259,7 +259,7 @@ extern int g_MultiIndexCount;
 extern BYTE g_WalkRequestCount;
 
 //!Время последнего шага
-extern DWORD g_LastStepTime;
+extern DWORD g_PendingDelayTime;
 
 //!Сумма значений навыков
 extern float g_SkillsTotal;

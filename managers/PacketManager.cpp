@@ -1031,7 +1031,7 @@ PACKET_HANDLER(EnterWorld)
 		if (Walker != NULL)
 			delete Walker;
 		Walker = new TWalker();
-		g_LastStepTime = 0;
+		g_PendingDelayTime = 0;
 
 		if (ObjectInHand != NULL)
 			delete ObjectInHand;

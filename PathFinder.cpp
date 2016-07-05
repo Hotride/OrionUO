@@ -489,7 +489,7 @@ int TPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 bool TPathFinder::Walk(bool run, BYTE direction)
 {
 	DWORD currentTime = timeGetTime();
-	if (g_LastStepTime >  currentTime || g_WalkRequestCount > 3 || g_Player == NULL || g_DeathScreenTimer || g_GameState != GS_GAME)
+	if (g_PendingDelayTime >  currentTime || g_WalkRequestCount > 3 || g_Player == NULL || g_DeathScreenTimer || g_GameState != GS_GAME)
 		return false;
 
 	if (g_SpeedMode >= CST_CANT_RUN)
@@ -614,24 +614,13 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 	Walker->IncSequence();
 
-	g_LastStepTime = currentTime + walkTime;
+	#pragma region step_request delta counting
 
-	g_Player->GetAnimationGroup();
-
-
-
-	
-	//“ест дельты передвижени€
-
-	/*static bool lastRun = false;
+	static bool lastRun = false;
 	static bool lastMount = false;
 	static int lastDir = -1;
 	static int timerDelta = 0;
-	static int lastStepTime = 0;*/
-
-
-	/*
-	int currentStepTime = GetCurrentLocalTime();
+	static int lastStepTime = 0;
 
 	static DWORD lwt = 0;
 
@@ -643,21 +632,22 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	else
 		trace_printf("Walk");
 
-	int nowDelta = wsi.Time - ((currentStepTime - lwt));
+	//¬ысчитываем актуальную дельту с помощью разници во времени между прошлым и текущим шагом.
+	int nowDelta = walkTime - ((currentTime - lwt));
 
-	if (nowDelta > 70)
+	if (abs(nowDelta) > 70);
 		nowDelta = 0;
-
-	g_LastStepTime = timeGetTime() + walkTime + nowDelta;
 
 	trace_printf("ReqDelta %i\n", nowDelta);
 
-	lwt = currentStepTime;*/
+	lwt = currentTime;// <-- “екущее врем€ дл€ следующей дельты без учета поворотов!?
 
 
 
-	/*int dir = direction & 0x7f;
+	int dir = direction & 0x7f;
 
+	/* 
+	// од забагован и не пон€тно нужен-ли в итоге.
 	if (run == lastRun && onMount == lastMount && dir == lastDir)
 	{
 		if (abs(timerDelta) > 100)
@@ -665,21 +655,37 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 		if (timerDelta)
 		{
-			wsi.Time += (timerDelta + walkTime - (currentStepTime - lastStepTime));
+			auto walktimeVar = currentTime - lastStepTime;
+			if (walktimeVar > 500)
+			{
+				TPRINT("DAFUQQQQQ=%i\n", timerDelta);
+			}
+			walkTime += timerDelta + walkTime - walktimeVar; <-- тут walkTime может выйти чуть-ли не равным макс значению WORD, если отн€ть от него и сделать его негативным.
+			                                                 // Ёто и заставл€ло врем€-от-времени чара сто€ть штыком на +- секунд 30-40.
+			if (walkTime > 500)
+			{
+				TPRINT("DAFUQQQQQ=%i\n", timerDelta);
+			}
 			timerDelta = 0;
 		}
 		else
-			timerDelta = walkTime - (currentStepTime - lastStepTime);
+			timerDelta = walkTime - (currentTime - lastStepTime);
 
 		TPRINT("timerDelta=%i\n", timerDelta);
 	}
 	else
-		timerDelta = 0;
+		timerDelta = 0;*/
 
-	lastStepTime = currentStepTime;
+	lastStepTime = currentTime;
 	lastRun = run;
 	lastMount = onMount;
-	lastDir = dir;*/
+	lastDir = dir;
+
+
+	#pragma endregion
+
+	g_PendingDelayTime = currentTime + walkTime + nowDelta;
+	g_Player->GetAnimationGroup();
 
 	return true;
 }
@@ -987,7 +993,7 @@ bool TPathFinder::WalkTo(int x, int y, int z, int distance)
 //---------------------------------------------------------------------------
 void TPathFinder::ProcessAutowalk()
 {
-	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 3 && g_LastStepTime <= timeGetTime())
+	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 3 && g_PendingDelayTime <= timeGetTime())
 	{
 		if (m_PointIndex >= 0 && m_PointIndex < m_PathSize)
 		{
