@@ -87,7 +87,7 @@ void TEffectManager::AddEffect( __in TGameEffect *effect)
 				{
 					UO->ExecuteGumpPart(0x4E20, 10);
 
-					effect->Duration = GetTickCount() + 400;
+					effect->Duration = timeGetTime() + 400;
 					effect->Speed = 50;
 				}
 
@@ -130,7 +130,7 @@ void TEffectManager::CreateExplodeEffect( __in TGameEffect *effect)
 	newEffect->Serial = effect->DestSerial;
 	newEffect->Graphic = 0x36CB;
 	newEffect->Speed = 50;
-	newEffect->Duration = GetTickCount() + 400;
+	newEffect->Duration = timeGetTime() + 400;
 	//newEffect->FixedDirection = (fixedDirection != 0);
 	
 	newEffect->Color = effect->Color;

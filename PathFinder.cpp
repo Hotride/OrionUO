@@ -488,7 +488,8 @@ int TPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 //---------------------------------------------------------------------------
 bool TPathFinder::Walk(bool run, BYTE direction)
 {
-	if (g_LastStepTime > GetTickCount() || g_WalkRequestCount > 3 || g_Player == NULL || g_DeathScreenTimer || g_GameState != GS_GAME)
+	DWORD currentTime = timeGetTime();
+	if (g_LastStepTime >  currentTime || g_WalkRequestCount > 3 || g_Player == NULL || g_DeathScreenTimer || g_GameState != GS_GAME)
 		return false;
 
 	if (g_SpeedMode >= CST_CANT_RUN)
@@ -591,7 +592,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 		if (!g_Player->Walking())
 			g_Player->SetAnimation(0xFF);
 
-		g_Player->LastStepTime = GetTickCount();
+		g_Player->LastStepTime = currentTime;
 	}
 
 	g_Player->m_WalkStack.Push(wd);
@@ -613,7 +614,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 	Walker->IncSequence();
 
-	g_LastStepTime = GetTickCount() + walkTime;
+	g_LastStepTime = currentTime + walkTime;
 
 	g_Player->GetAnimationGroup();
 
@@ -647,7 +648,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	if (nowDelta > 70)
 		nowDelta = 0;
 
-	g_LastStepTime = GetTickCount() + walkTime + nowDelta;
+	g_LastStepTime = timeGetTime() + walkTime + nowDelta;
 
 	trace_printf("ReqDelta %i\n", nowDelta);
 
@@ -986,7 +987,7 @@ bool TPathFinder::WalkTo(int x, int y, int z, int distance)
 //---------------------------------------------------------------------------
 void TPathFinder::ProcessAutowalk()
 {
-	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 3 && g_LastStepTime <= GetTickCount())
+	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 3 && g_LastStepTime <= timeGetTime())
 	{
 		if (m_PointIndex >= 0 && m_PointIndex < m_PathSize)
 		{

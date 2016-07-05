@@ -446,7 +446,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 
 	if (MacroPointer == NULL)
 		result = MRC_STOP;
-	else if (m_NextTimer <= GetTickCount())
+	else if (m_NextTimer <= timeGetTime())
 	{
 		switch (MacroPointer->Code)
 		{
@@ -621,7 +621,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			case MC_LAST_TARGET:
 			{
 				if (m_WaitForTargetTimer == 0)
-					m_WaitForTargetTimer = GetTickCount() + 1000;
+					m_WaitForTargetTimer = timeGetTime() + 1000;
 
 				if (Target.IsTargeting())
 				{
@@ -629,7 +629,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 
 					m_WaitForTargetTimer = 0;
 				}
-				else if (m_WaitForTargetTimer < GetTickCount())
+				else if (m_WaitForTargetTimer < timeGetTime())
 					m_WaitForTargetTimer = 0;
 				else
 					result = MRC_BREAK_PARSER;
@@ -639,7 +639,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			case MC_TARGET_SELF:
 			{
 				if (m_WaitForTargetTimer == 0)
-					m_WaitForTargetTimer = GetTickCount() + 1000;
+					m_WaitForTargetTimer = timeGetTime() + 1000;
 
 				if (Target.IsTargeting())
 				{
@@ -647,7 +647,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 
 					m_WaitForTargetTimer = 0;
 				}
-				else if (m_WaitForTargetTimer < GetTickCount())
+				else if (m_WaitForTargetTimer < timeGetTime())
 					m_WaitForTargetTimer = 0;
 				else
 					result = MRC_BREAK_PARSER;
@@ -714,9 +714,9 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			case MC_WAIT_FOR_TARGET:
 			{
 				if (m_WaitForTargetTimer == 0)
-					m_WaitForTargetTimer = GetTickCount() + 1000;
+					m_WaitForTargetTimer = timeGetTime() + 1000;
 
-				if (Target.IsTargeting() || m_WaitForTargetTimer < GetTickCount())
+				if (Target.IsTargeting() || m_WaitForTargetTimer < timeGetTime())
 					m_WaitForTargetTimer = 0;
 				else
 					result = MRC_BREAK_PARSER;
@@ -790,7 +790,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 				string str = mos->GetString();
 				
 				if (str.length())
-					m_NextTimer = GetTickCount() + std::atoi(str.c_str());
+					m_NextTimer = timeGetTime() + std::atoi(str.c_str());
 
 				break;
 			}
@@ -868,7 +868,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 				if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial)
 				{
 					if (m_WaitForTargetTimer == 0)
-						m_WaitForTargetTimer = GetTickCount() + 1000;
+						m_WaitForTargetTimer = timeGetTime() + 1000;
 
 					if (Target.IsTargeting())
 					{
@@ -876,7 +876,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 
 						m_WaitForTargetTimer = 0;
 					}
-					else if (m_WaitForTargetTimer < GetTickCount())
+					else if (m_WaitForTargetTimer < timeGetTime())
 						m_WaitForTargetTimer = 0;
 					else
 						result = MRC_BREAK_PARSER;
@@ -896,7 +896,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 				if (m_WaitingBandageTarget)
 				{
 					if (m_WaitForTargetTimer == 0)
-						m_WaitForTargetTimer = GetTickCount() + 500;
+						m_WaitForTargetTimer = timeGetTime() + 500;
 
 					if (Target.IsTargeting())
 					{
@@ -908,7 +908,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 						m_WaitingBandageTarget = false;
 						m_WaitForTargetTimer = 0;
 					}
-					else if (m_WaitForTargetTimer < GetTickCount())
+					else if (m_WaitForTargetTimer < timeGetTime())
 					{
 						m_WaitingBandageTarget = false;
 						m_WaitForTargetTimer = 0;

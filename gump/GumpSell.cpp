@@ -386,7 +386,7 @@ int TGumpSell::Draw(bool &mode)
 	if (g_GumpPressedScroller)
 		g_GumpPressedElement = g_LastObjectLeftMouseDown;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = timeGetTime();
 
 	if (!m_NoClose)
 		m_ContinueCounter = 0;
@@ -734,7 +734,7 @@ void TGumpSell::OnLeftMouseDown()
 		if (g_LastSelectedObject >= ID_GS_BUTTON_INC && g_LastSelectedObject < ID_GS_BUTTON_END) // +/-
 		{
 			m_StartChangeCountTime = 0;
-			m_LastChangeCountTime = GetTickCount() + (CHANGE_SHOP_COUNT_DELAY * 5);
+			m_LastChangeCountTime = timeGetTime() + (CHANGE_SHOP_COUNT_DELAY * 5);
 		}
 	}
 }
@@ -786,14 +786,14 @@ void TGumpSell::OnLeftMouseUp()
 		}
 		else if (g_LastObjectLeftMouseDown < ID_GS_BUTTON_DEC) //+
 		{
-			if (m_LastChangeCountTime > GetTickCount())
+			if (m_LastChangeCountTime > timeGetTime())
 				ChangeItemCount(true, g_LastObjectLeftMouseDown - ID_GS_BUTTON_INC);
 
 			m_FrameCreated = false;
 		}
 		else //-
 		{
-			if (m_LastChangeCountTime > GetTickCount())
+			if (m_LastChangeCountTime > timeGetTime())
 				ChangeItemCount(false, g_LastObjectLeftMouseDown - ID_GS_BUTTON_DEC);
 
 			m_FrameCreated = false;
@@ -897,7 +897,7 @@ void TGumpSell::ListingList(bool direction, bool gumpNumber, int divizor)
 {
 	if (m_NoClose) return;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = timeGetTime();
 
 	if (!gumpNumber) //First gump
 	{
@@ -956,7 +956,7 @@ void TGumpSell::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 
 	if (!g_LeftMouseDown && !g_RightMouseDown && state != MWS_PRESS)
 	{
-		if (m_LastChangedLineTime > GetTickCount())
+		if (m_LastChangedLineTime > timeGetTime())
 			return;
 
 		if (UO->GumpPixelsInXY(0x0873, m_X + 170, m_Y + 214))

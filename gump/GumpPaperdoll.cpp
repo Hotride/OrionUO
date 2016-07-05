@@ -468,7 +468,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 	if (g_LastObjectType == SOT_TEXT_OBJECT)
 		g_GumpPressedElement = false;
 
-	if (mode && !g_Player->Dead() && Serial == g_PlayerSerial && g_GumpPressed && ObjectInHand == NULL && g_LastObjectLeftMouseDown != 0xFFFFFFFF && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < GetTickCount())))
+	if (mode && !g_Player->Dead() && Serial == g_PlayerSerial && g_GumpPressed && ObjectInHand == NULL && g_LastObjectLeftMouseDown != 0xFFFFFFFF && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < timeGetTime())))
 	{
 		int layer = g_LastObjectLeftMouseDown - ID_GP_ITEMS;
 
@@ -501,7 +501,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 	//Вычисление положения, прозрачности и отрисовка текста
 	TRenderTextObject *rto = TextRenderer->m_Items;
 	
-	DWORD ticks = GetTickCount();
+	DWORD ticks = timeGetTime();
 
 	if (!m_Minimized)
 	{
@@ -871,7 +871,7 @@ void TGumpPaperdoll::OnLeftMouseUp()
 					g_ClickObjectReq = true;
 					g_ClickObject.Init(COT_GAME_OBJECT);
 					g_ClickObject.Serial = equipment->Serial;
-					g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
+					g_ClickObject.Timer = timeGetTime() + DCLICK_DELAY;
 					g_ClickObject.X = g_MouseX - X;
 					g_ClickObject.Y = g_MouseY - Y;
 				}
@@ -954,7 +954,7 @@ void TGumpPaperdoll::OnLeftMouseUp()
 				g_ClickObject.Serial = m_Serial;
 				g_ClickObject.GumpID = 0;
 				g_ClickObject.GumpButtonID = (int)(g_LastObjectLeftMouseDown == ID_GP_PROFILE_SCROLL);
-				g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
+				g_ClickObject.Timer = timeGetTime() + DCLICK_DELAY;
 			}
 
 			break;

@@ -897,7 +897,7 @@ void TGumpStatusbar::OnLeftMouseUp()
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUTTON_HEAL_1)
 	{
 		UO->CastSpell(29);
-		g_PartyHelperTimer = GetTickCount() + 500;
+		g_PartyHelperTimer = timeGetTime() + 500;
 		g_PartyHelperTarget = m_Serial;
 		g_CancelDoubleClick = true;
 		m_FrameCreated = false;
@@ -905,7 +905,7 @@ void TGumpStatusbar::OnLeftMouseUp()
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUTTON_HEAL_2)
 	{
 		UO->CastSpell(11);
-		g_PartyHelperTimer = GetTickCount() + 500;
+		g_PartyHelperTimer = timeGetTime() + 500;
 		g_PartyHelperTarget = m_Serial;
 		g_CancelDoubleClick = true;
 		m_FrameCreated = false;

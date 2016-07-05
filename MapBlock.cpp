@@ -20,7 +20,7 @@
 #include "stdafx.h"
 //---------------------------------------------------------------------------
 TMapBlock::TMapBlock(DWORD index)
-: TBaseQueueItem(), m_Index(index), m_LastAccessTime(GetTickCount()), m_X(0), m_Y(0)
+: TBaseQueueItem(), m_Index(index), m_LastAccessTime(timeGetTime()), m_X(0), m_Y(0)
 {
 	//Обнуляем блок
 	IFOR(i, 0, 8)

@@ -811,7 +811,7 @@ void TGameScreen::CheckMouseEvents()
 			g_StatusbarUnderMouse = 0;
 	}
 
-	if (g_LastObjectType == SOT_GAME_OBJECT && g_LastObjectLeftMouseDown && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastMouseDownTime + DCLICK_DELAY < GetTickCount())))
+	if (g_LastObjectType == SOT_GAME_OBJECT && g_LastObjectLeftMouseDown && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastMouseDownTime + DCLICK_DELAY < timeGetTime())))
 	{
 		TGameItem *selobj = World->FindWorldItem(g_LastObjectLeftMouseDown);
 
@@ -1067,7 +1067,7 @@ void TGameScreen::CalculateGameWindowText( __in bool &mode)
 */
 void TGameScreen::DrawGameWindow( __in bool &mode)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = timeGetTime();
 	int playerZPlus5 = m_RenderBounds.PlayerZ + 5;
 
 	if (mode)
@@ -1230,7 +1230,7 @@ void TGameScreen::DrawGameWindowLight()
 */
 void TGameScreen::DrawGameWindowText( __in bool &mode)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = timeGetTime();
 
 	if (mode)
 	{
@@ -1428,7 +1428,7 @@ void TGameScreen::DrawGameWindowText( __in bool &mode)
 */
 int TGameScreen::Render(__in bool mode)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = timeGetTime();
 
 	if (g_LastRenderTime > ticks)
 	{
@@ -1452,7 +1452,7 @@ int TGameScreen::Render(__in bool mode)
 
 	if (mode)
 	{
-		static DWORD lastRender = GetTickCount() + 1000;
+		static DWORD lastRender = timeGetTime() + 1000;
 		static int currentFPS = 0;
 		static int FPScount = 0;
 
@@ -2007,7 +2007,7 @@ void TGameScreen::OnLeftMouseUp()
 				g_ClickObjectReq = true;
 				g_ClickObject.Init(COT_GAME_OBJECT);
 				g_ClickObject.Serial = g_LastObjectLeftMouseDown;
-				g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
+				g_ClickObject.Timer = timeGetTime() + DCLICK_DELAY;
 			}
 		}
 		else if (g_SelectedObject)
@@ -2016,7 +2016,7 @@ void TGameScreen::OnLeftMouseUp()
 			{
 				TTextData *td = g_SelectedObject->StaticGroupObjectPtr()->m_TextControl->m_Head;
 
-				if (td == NULL || td->Timer < GetTickCount())
+				if (td == NULL || td->Timer < timeGetTime())
 				{
 					WORD id = g_SelectedObject->Graphic - 0x4000;
 

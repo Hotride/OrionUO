@@ -412,7 +412,7 @@ void TGumpGeneric::GenerateFrame()
 								int drawY = htmlGump->Y;
 
 								//Для вычисления задержек между скроллингом
-								DWORD ticks = GetTickCount();
+								DWORD ticks = timeGetTime();
 
 								//Проверим, вдруг необходимо изменить положение отображаемого элемента
 								if (g_GumpPressed && m_LastScrollChangeTime < ticks)
@@ -542,7 +542,7 @@ int TGumpGeneric::Draw(bool &mode)
 
 	CalculateGumpState();
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = timeGetTime();
 	int currentTestPage = 0;
 	int objectTestIndex = 1;
 
@@ -1090,7 +1090,7 @@ void TGumpGeneric::OnLeftMouseUp()
 							}
 						}*/
 						
-						DWORD ticks = GetTickCount();
+						DWORD ticks = timeGetTime();
 
 						if (m_LastScrollChangeTime < ticks)
 						{
@@ -1183,7 +1183,7 @@ void TGumpGeneric::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 {
 	if (g_LastSelectedObject != 0 && !g_LeftMouseDown && !g_RightMouseDown)
 	{
-		DWORD ticks = GetTickCount();
+		DWORD ticks = timeGetTime();
 
 		if (m_LastScrollChangeTime < ticks)
 		{
@@ -1322,7 +1322,7 @@ void TGumpGeneric::ListingList(TGumpHTMLGump *htmlGump, bool direction, int divi
 			htmlGump->LineOffset = maxidx;
 	}
 
-	m_LastScrollChangeTime = GetTickCount() + (SCROLL_LISTING_DELAY / divizor);
+	m_LastScrollChangeTime = timeGetTime() + (SCROLL_LISTING_DELAY / divizor);
 	m_FrameCreated = false;
 }
 //----------------------------------------------------------------------------

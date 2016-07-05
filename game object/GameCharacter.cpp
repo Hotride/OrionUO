@@ -25,8 +25,8 @@ m_Notoriety(0), m_CanChangeName(false), m_AnimationGroup(0xFF),
 m_AnimationInterval(0), m_AnimationFrameCount(0), m_AnimationRepeat(false),
 m_AnimationRepeatMode(1), m_AnimationDirection(false), m_AnimationFromServer(false),
 m_MaxMana(0), m_MaxStam(0), m_Mana(0), m_Stam(0), m_OffsetX(0), m_OffsetY(0),
-m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(0),
-m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
+m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(timeGetTime()), m_Race(0),
+m_TimeToRandomFidget(timeGetTime() + RANDOM_FIDGET_ANIMATION_DELAY),
 m_AfterStepDelay(0), m_StepSoundOffset(0)
 {
 	//!¬ысокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
@@ -434,8 +434,8 @@ void TGameCharacter::SetAnimation( __in BYTE id, __in_opt BYTE interval, __in_op
 	m_AnimationDirection = frameDirection;
 	m_AnimationFromServer = false;
 
-	m_LastAnimationChangeTime = GetTickCount();
-	m_TimeToRandomFidget = GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY;
+	m_LastAnimationChangeTime = timeGetTime();
+	m_TimeToRandomFidget = timeGetTime() + RANDOM_FIDGET_ANIMATION_DELAY;
 }
 //---------------------------------------------------------------------------
 /*!
@@ -469,7 +469,7 @@ void TGameCharacter::SetRandomFidgetAnimation()
 	m_AnimationRepeat = false;
 	m_AnimationFromServer = true;
 
-	m_TimeToRandomFidget = GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY;
+	m_TimeToRandomFidget = timeGetTime() + RANDOM_FIDGET_ANIMATION_DELAY;
 
 	ANIMATION_GROUPS groupIndex = AnimationManager->GetGroupIndex(GetMountAnimation());
 
@@ -798,7 +798,7 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 
 	if (wd != NULL)
 	{
-		DWORD ticks = GetTickCount();
+		DWORD ticks = timeGetTime();
 
 		m_TimeToRandomFidget = ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 		

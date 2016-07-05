@@ -651,7 +651,7 @@ int TGumpOptions::Draw(bool &mode)
 
 	CalculateGumpState();
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = timeGetTime();
 
 	if (m_LastChangeMacroTime < ticks)
 	{
@@ -2290,7 +2290,7 @@ void TGumpOptions::OnLeftMouseDown()
 			TextEntryMacro->SetText(m_HotkeyText[m_MacroPointer->Key & 0xFF]);
 		}
 
-		m_LastChangeMacroTime = GetTickCount() + CHANGE_MACRO_DELAY;
+		m_LastChangeMacroTime = timeGetTime() + CHANGE_MACRO_DELAY;
 	}
 	else if (g_LastSelectedObject == ID_GO_P5_BUTTON_NEXT) //Next button
 	{
@@ -2302,7 +2302,7 @@ void TGumpOptions::OnLeftMouseDown()
 			TextEntryMacro->SetText(m_HotkeyText[m_MacroPointer->Key & 0xFF]);
 		}
 
-		m_LastChangeMacroTime = GetTickCount() + CHANGE_MACRO_DELAY;
+		m_LastChangeMacroTime = timeGetTime() + CHANGE_MACRO_DELAY;
 	}
 	else if (g_LastSelectedObject >= ID_GO_P5_LEFT_BOX && g_LastSelectedObject < ID_GO_P5_RIGHT_BOX) //Left action box
 	{
@@ -2910,7 +2910,7 @@ void TGumpOptions::ApplyPageChanges()
 			if (ConfigManager.SoundVolume != g_OptionsConfig.SoundVolume)
 			{
 				ConfigManager.SoundVolume = g_OptionsConfig.SoundVolume;
-				UO->AdjustSoundEffects(GetTickCount() + 100000, SoundManager.GetVolumeValue());
+				UO->AdjustSoundEffects(timeGetTime() + 100000, SoundManager.GetVolumeValue());
 			}
 
 			//Меняем громкость звука музыке и текущей музыке
@@ -2923,7 +2923,7 @@ void TGumpOptions::ApplyPageChanges()
 		    //Выключаем звук эффектов.
 			if (ConfigManager.Sound && !g_OptionsConfig.Sound)
 			{								
-				UO->AdjustSoundEffects(GetTickCount() + 100000);
+				UO->AdjustSoundEffects(timeGetTime() + 100000);
 			}
 			ConfigManager.Sound = g_OptionsConfig.Sound;
 

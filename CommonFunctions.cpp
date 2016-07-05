@@ -257,14 +257,6 @@ bool ToBool(const string &str)
 	return result;
 }
 //---------------------------------------------------------------------------
-int GetCurrentLocalTime()
-{
-	SYSTEMTIME st = { 0 };
-	GetLocalTime(&st);
-
-	return st.wMilliseconds + (st.wSecond * 1000) + (st.wMinute * 60000);
-}
-//---------------------------------------------------------------------------
 int GetDistance(TGameObject *current, TGameObject *target)
 {
 	if (current != NULL && target != NULL)
