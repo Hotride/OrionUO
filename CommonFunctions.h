@@ -39,6 +39,9 @@ string ToUpperA(string str);
 wstring ToLowerW(wstring str);
 wstring ToUpperW(wstring str);
 bool ToBool(const string &str);
+int GetCurrentLocalTime();
+const int MAX_LOCAL_TIME = 3600000; //60 * 60 * 1000
+#define NEXT_LOCAL_TIME(t) ((t) % MAX_LOCAL_TIME);
 //---------------------------------------------------------------------------
 //Функции для вычисления дистанции
 class TGameObject;

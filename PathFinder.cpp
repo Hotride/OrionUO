@@ -629,9 +629,8 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	static int lastStepTime = 0;*/
 
 
-	/*SYSTEMTIME st = { 0 };
-	GetLocalTime(&st);
-	int currentStepTime = st.wMilliseconds + (st.wSecond * 1000) + (st.wMinute * 60000);
+	/*
+	int currentStepTime = GetCurrentLocalTime();
 
 	static DWORD lwt = 0;
 
