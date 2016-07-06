@@ -130,7 +130,7 @@ void TCreateCharacterScreen::InitToolTip()
 */
 int TCreateCharacterScreen::Render( __in bool mode)
 {
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (g_LastRenderTime > ticks)
 	{

@@ -23,7 +23,7 @@ TGameObject::TGameObject(DWORD serial)
 : TRenderStaticObject(ROT_GAME_OBJECT, serial, 0, 0, 0, 0, 0), m_Container(0xFFFFFFFF),
 m_MapIndex(0), m_Count(0), m_Flags(0), m_Name(""), m_NPC(false), m_Clicked(false),
 m_Effects(NULL), m_AnimIndex(0), m_YouSeeJournalPrefix(false),
-m_LastAnimationChangeTime(timeGetTime()), m_ClilocMessage(L"")
+m_LastAnimationChangeTime(GetTickCount()), m_ClilocMessage(L"")
 {
 	memset(&m_TextureObjectHalndes, 0, sizeof(TTextureObject));
 

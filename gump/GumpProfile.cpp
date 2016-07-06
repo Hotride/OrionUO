@@ -484,7 +484,7 @@ void TGumpProfile::OnLeftMouseUp()
 	if (g_LastObjectLeftMouseDown != g_LastSelectedObject)
 		return;
 
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (g_LastObjectLeftMouseDown == ID_GP_BUTTON_MINIMIZE)
 	{
@@ -539,7 +539,7 @@ void TGumpProfile::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 {
 	if (!m_Minimized && !g_LeftMouseDown && !g_RightMouseDown)
 	{
-		DWORD ticks = timeGetTime();
+		DWORD ticks = GetTickCount();
 
 		if (m_LastScrollChangeTime < ticks)
 		{
@@ -559,7 +559,7 @@ void TGumpProfile::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 //----------------------------------------------------------------------------
 void TGumpProfile::ListingList(bool direction, int divizor)
 {
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (direction) //Up
 	{

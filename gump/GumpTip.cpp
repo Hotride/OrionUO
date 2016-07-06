@@ -235,7 +235,7 @@ int TGumpTip::Draw(bool &mode)
 
 	CalculateGumpState();
 
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	//Проверим, вдруг необходимо изменить положение отображаемого элемента
 	if (g_GumpPressedScroller && m_LastScrollChangeTime < ticks)
@@ -438,7 +438,7 @@ void TGumpTip::OnLeftMouseUp()
 	if (g_LastObjectLeftMouseDown != g_LastSelectedObject)
 		return;
 
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (g_LastObjectLeftMouseDown == ID_GT_BUTTON_MINIMIZE)
 	{
@@ -493,7 +493,7 @@ void TGumpTip::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 {
 	if (!m_Minimized && !g_LeftMouseDown && !g_RightMouseDown)
 	{
-		DWORD ticks = timeGetTime();
+		DWORD ticks = GetTickCount();
 
 		if (m_LastScrollChangeTime < ticks)
 		{
@@ -513,7 +513,7 @@ void TGumpTip::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 //----------------------------------------------------------------------------
 void TGumpTip::ListingList(bool direction, int divizor)
 {
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (direction) //Up
 	{

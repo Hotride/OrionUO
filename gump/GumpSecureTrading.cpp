@@ -127,7 +127,7 @@ void TGumpSecureTrading::GenerateFrame()
 		int fontWidth = 260 - FontManager->GetWidthA(1, m_Text.c_str(), m_Text.length());
 		FontManager->DrawA(1, m_Text.c_str(), 0x0386, fontWidth, 170);
 		
-		DWORD ticks = timeGetTime();
+		DWORD ticks = GetTickCount();
 
 		ColorizerShader->Use();
 
@@ -215,7 +215,7 @@ int TGumpSecureTrading::Draw(bool &mode)
 	if (g_LastObjectType == SOT_TEXT_OBJECT)
 		g_GumpPressedElement = false;
 
-	/*if (mode && GetTopObjDistance(g_Player, selobj) < 3 && IsPressed && ObjectInHand == NULL && g_LastObjectLeftMouseDown != ID_GST_CHECKBOX && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < timeGetTime())))
+	/*if (mode && GetTopObjDistance(g_Player, selobj) < 3 && IsPressed && ObjectInHand == NULL && g_LastObjectLeftMouseDown != ID_GST_CHECKBOX && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < GetTickCount())))
 	{
 		TGameItem *selobj = World->FindWorldItem(g_LastObjectLeftMouseDown);
 
@@ -253,7 +253,7 @@ int TGumpSecureTrading::Draw(bool &mode)
 	if (mode)
 		TextRenderer->ClearRect();
 
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 	
 	//Вычисление положения, прозрачности и отрисовка текста
 	TRenderTextObject *rto = TextRenderer->m_Items;
@@ -532,7 +532,7 @@ void TGumpSecureTrading::OnLeftMouseUp()
 			g_ClickObjectReq = true;
 			g_ClickObject.Init(COT_GAME_OBJECT);
 			g_ClickObject.Serial = g_LastObjectLeftMouseDown;
-			g_ClickObject.Timer = timeGetTime() + DCLICK_DELAY;
+			g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
 			g_ClickObject.X = g_MouseX - m_X;
 			g_ClickObject.Y = g_MouseY - m_Y;
 		}

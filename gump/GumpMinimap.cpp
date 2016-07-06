@@ -209,7 +209,7 @@ void TGumpMinimap::GenerateFrame()
 int TGumpMinimap::Draw(bool &mode)
 {
 	DWORD index = (DWORD)this;
-	static DWORD ticks = timeGetTime();
+	static DWORD ticks = GetTickCount();
 
 	bool minimized = m_Minimized;
 	m_Minimized = false;
@@ -232,10 +232,10 @@ int TGumpMinimap::Draw(bool &mode)
 			glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 		}
 
-		if (ticks < timeGetTime())
+		if (ticks < GetTickCount())
 		{
 			m_Count++;
-			ticks = timeGetTime() + 50;
+			ticks = GetTickCount() + 50;
 		}
 
 		if (m_Count > 12)

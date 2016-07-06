@@ -134,7 +134,7 @@ int TConnectionManager::Connect( __in const char *IP, __in int Port, __in PBYTE 
 		{
 			//Для старых клиентов посылаем сразу же 4 байта
 			g_TotalSendSize = 4;
-			g_LastPacketTime = timeGetTime();
+			g_LastPacketTime = GetTickCount();
 			g_LastSendTime = g_LastPacketTime;
 
 			if (m_ClientVersion < CV_6060)
@@ -189,7 +189,7 @@ int TConnectionManager::Connect( __in const char *IP, __in int Port, __in PBYTE 
 			return CE_CONNECTED; //Уже подключены
 
 		g_TotalSendSize = 4;
-		g_LastPacketTime = timeGetTime();
+		g_LastPacketTime = GetTickCount();
 		g_LastSendTime = g_LastPacketTime;
 		int ret = m_GameSocket.Connect(IP, Port);
 

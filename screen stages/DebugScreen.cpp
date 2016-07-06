@@ -102,7 +102,7 @@ void TDebugScreen::InitToolTip()
 //---------------------------------------------------------------------------
 int TDebugScreen::Render(bool mode)
 {
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (g_LastRenderTime > ticks)
 	{

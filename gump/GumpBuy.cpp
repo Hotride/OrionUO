@@ -463,7 +463,7 @@ int TGumpBuy::Draw(bool &mode)
 
 	CalculateSelectedListCount(); //Вычисление размеров листа выбранных объектов
 
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (!m_NoClose)
 		m_ContinueCounter = 0;
@@ -823,7 +823,7 @@ void TGumpBuy::OnLeftMouseDown()
 	if (g_LastSelectedObject >= ID_GB_BUTTON_INC && g_LastSelectedObject < ID_GB_BUTTON_END) // +/-
 	{
 		m_StartChangeCountTime = 0;
-		m_LastChangeCountTime = timeGetTime() + (CHANGE_SHOP_COUNT_DELAY * 5);
+		m_LastChangeCountTime = GetTickCount() + (CHANGE_SHOP_COUNT_DELAY * 5);
 	}
 }
 //----------------------------------------------------------------------------
@@ -835,7 +835,7 @@ void TGumpBuy::OnLeftMouseUp()
 	if (g_LastObjectLeftMouseDown != g_LastSelectedObject)
 		return;
 
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 	
 	if (g_LastObjectLeftMouseDown == ID_GB_BUTTON_UP_1) //1 gump ^
 	{
@@ -901,7 +901,7 @@ void TGumpBuy::OnLeftMouseUp()
 		}
 		else if (g_LastObjectLeftMouseDown < ID_GB_BUTTON_DEC) //+
 		{
-			if (m_LastChangeCountTime > timeGetTime())
+			if (m_LastChangeCountTime > GetTickCount())
 			{
 				ChangeItemCount(true, g_LastObjectLeftMouseDown - ID_GB_BUTTON_INC);
 				m_FrameCreated = false;
@@ -909,7 +909,7 @@ void TGumpBuy::OnLeftMouseUp()
 		}
 		else //-
 		{
-			if (m_LastChangeCountTime > timeGetTime())
+			if (m_LastChangeCountTime > GetTickCount())
 			{
 				ChangeItemCount(false, g_LastObjectLeftMouseDown - ID_GB_BUTTON_DEC);
 				m_FrameCreated = false;
@@ -1053,7 +1053,7 @@ void TGumpBuy::ListingList(bool direction, bool gumpNumber, int divizor)
 	if (NoClose)
 		return;
 
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (!gumpNumber) //First gump
 	{
@@ -1116,7 +1116,7 @@ void TGumpBuy::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 
 	if (!g_LeftMouseDown && !g_RightMouseDown && state != MWS_PRESS)
 	{
-		if (m_LastChangedLineTime > timeGetTime())
+		if (m_LastChangedLineTime > GetTickCount())
 			return;
 
 		if (UO->GumpPixelsInXY(0x0871, m_X + 170, m_Y + 214))

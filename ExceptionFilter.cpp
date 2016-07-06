@@ -5,7 +5,7 @@ LONG __stdcall MyUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *ExceptionI
 {
 	static int TotalErrorCount = 0;
 	static int ErrorCount = 0;
-	static DWORD LastErrorTime = timeGetTime();
+	static DWORD LastErrorTime = GetTickCount();
 
 	ErrorCount++;
 	TotalErrorCount++;
@@ -13,17 +13,17 @@ LONG __stdcall MyUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *ExceptionI
 	{
 		EPRINT("Unhandled exception%3d: 0x%08X at %08X\n", TotalErrorCount, ExceptionInfo->ExceptionRecord->ExceptionCode, ExceptionInfo->ExceptionRecord->ExceptionAddress);
 
-		if (g_Hinstance && ErrorCount > 100 && (timeGetTime() - LastErrorTime) < 5000)
+		if (g_Hinstance && ErrorCount > 100 && (GetTickCount() - LastErrorTime) < 5000)
 		// crash when too many errors happen too often
 		{
 			//DumpErrorInformation(ExceptionInfo->ContextRecord);
 			if (MessageBoxA(0, "UO client performed an unrecoverable invalid operation.\nTerminate?", 0, MB_ICONSTOP | MB_YESNO) == IDYES) ExitProcess(1);
 		}
 
-		if (g_Hinstance && (timeGetTime() - LastErrorTime) > 5000) // reset error count every 5 sec
+		if (g_Hinstance && (GetTickCount() - LastErrorTime) > 5000) // reset error count every 5 sec
 		{
 			ErrorCount = 0;
-			LastErrorTime = timeGetTime();
+			LastErrorTime = GetTickCount();
 		}
 
 		/*int B = 255 & PEEKB(ExceptionInfo->ContextRecord->Eip);	// this can cause another crash...

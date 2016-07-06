@@ -89,7 +89,7 @@ void TGameWorld::ProcessSound(DWORD ticks, TGameCharacter *gc)
 void TGameWorld::ProcessAnimation()
 {
 	TGameObject *obj = (TGameObject*)m_Items;
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 	BYTE delay = (ConfigManager.StandartCharactersAnimationDelay ? 0x50 : 50); // 0x75 : 0x50
 	g_AnimCharactersDelayValue = delay;
 

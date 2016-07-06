@@ -225,7 +225,7 @@ void TMapManager::GetMapZ( __in int x, __in int y, __out int &groundZ, __out int
 void TMapManager::ClearUnusedBlocks()
 {
 	TMapBlock *block = (TMapBlock*)m_Items;
-	DWORD ticks = timeGetTime() - CLEAR_TEXTURES_DELAY;
+	DWORD ticks = GetTickCount() - CLEAR_TEXTURES_DELAY;
 
 	while (block != NULL)
 	{
@@ -279,7 +279,7 @@ void TMapManager::Init( __in_opt bool delayed)
 	int maxBlockX = ((g_Player->X + XY_Offset) / 8) + 1;
 	int maxBlockY = ((g_Player->Y + XY_Offset) / 8) + 1;
 
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 	DWORD maxDelay = g_FrameDelay[1] / 2;
 
 	for (int i = minBlockX; i <= maxBlockX; i++)
@@ -297,7 +297,7 @@ void TMapManager::Init( __in_opt bool delayed)
 
 			if (block == NULL)
 			{
-				if (delayed && timeGetTime() - ticks >= maxDelay)
+				if (delayed && GetTickCount() - ticks >= maxDelay)
 					return;
 
 				block = AddBlock(index);
@@ -428,7 +428,7 @@ TMapBlock *TMapManager::GetBlock(__in DWORD index)
 	{
 		if (block->Index == index)
 		{
-			block->LastAccessTime = timeGetTime();
+			block->LastAccessTime = GetTickCount();
 
 			break;
 		}
@@ -442,7 +442,7 @@ TMapBlock *TMapManager::GetBlock(__in DWORD index)
 		block = m_Blocks[index];
 
 	if (block != NULL)
-		block->LastAccessTime = timeGetTime();
+		block->LastAccessTime = GetTickCount();
 #endif
 
 	return block;

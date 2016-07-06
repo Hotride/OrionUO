@@ -127,7 +127,7 @@ void TConnectionScreen::ProcessSmoothAction( __in_opt BYTE action)
 */
 int TConnectionScreen::Render( __in bool mode)
 {
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (g_LastRenderTime > ticks)
 	{

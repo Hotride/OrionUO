@@ -223,6 +223,23 @@ void TGumpBook::OnLeftMouseUp()
 				newPage = m_PageCount - 1;
 		}
 	}
+	else if (m_Writable)
+	{
+		TEntryText *entry = NULL;
+
+		if (g_LastObjectLeftMouseDown == ID_GB_TEXT_AREA_AUTHOR)
+			entry = TextEntryAuthor;
+		else if (g_LastObjectLeftMouseDown == ID_GB_TEXT_AREA_TITLE)
+			entry = TextEntryTitle;
+		else if (g_LastObjectLeftMouseDown == ID_GB_TEXT_AREA_PAGE_LEFT)
+			entry = &TextEntry[m_Page];
+		else if (g_LastObjectLeftMouseDown == ID_GB_TEXT_AREA_PAGE_RIGHT)
+			entry = &TextEntry[m_Page + 1];
+
+		if (entry != NULL)
+		{
+		}
+	}
 
 	if (newPage > -1)
 	{
@@ -237,7 +254,7 @@ void TGumpBook::OnLeftMouseUp()
 		g_ClickObject.GumpButtonID = newPage;
 
 		//Задаем время до выполнения
-		g_ClickObject.Timer = timeGetTime() + DCLICK_DELAY;
+		g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
 	}
 }
 //----------------------------------------------------------------------------

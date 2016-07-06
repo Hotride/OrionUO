@@ -136,7 +136,7 @@ void TSelectTownScreen::DrawTownInfo( __in int x, __in int y)
 */
 int TSelectTownScreen::Render(__in bool mode)
 {
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (g_LastRenderTime > ticks)
 	{
@@ -424,7 +424,7 @@ void TSelectTownScreen::OnLeftMouseUp()
 */
 void TSelectTownScreen::OnMouseWheel( __in MOUSE_WHEEL_STATE state)
 {
-	if (!g_LeftMouseDown && !g_RightMouseDown && m_LastScrollChangeTime < timeGetTime())
+	if (!g_LeftMouseDown && !g_RightMouseDown && m_LastScrollChangeTime < GetTickCount())
 	{
 		if (g_MouseX >= 452 && g_MouseX < 610 && g_MouseY >= 60 && g_MouseY < 427)
 		{
@@ -491,6 +491,6 @@ void TSelectTownScreen::ListingList( __in bool direction, __in int divizor)
 			m_PixelOffset = maxidx;
 	}
 
-	m_LastScrollChangeTime = timeGetTime() + (SCROLL_LISTING_DELAY / divizor);
+	m_LastScrollChangeTime = GetTickCount() + (SCROLL_LISTING_DELAY / divizor);
 }
 //---------------------------------------------------------------------------

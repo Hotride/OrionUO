@@ -291,7 +291,7 @@ void TTextContainer::Delete(TTextData *obj)
 //---------------------------------------------------------------------------
 void TTextContainer::DrawSystemChat(int &x, int &y, int &height)
 {
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 	int offset = (y + height) - 41;
 
 	TTextData *td = SystemChat->m_Head;

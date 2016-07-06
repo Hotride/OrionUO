@@ -406,7 +406,7 @@ int TGumpSpellbook::Draw(bool &mode)
 	CalculateGumpState();
 
 	//Нужно вытащить иконку заклинания
-	if (g_GumpPressed && m_Page > 4 && g_LastObjectLeftMouseDown >= ID_GSB_SPELL_ICON_LEFT && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < timeGetTime())))
+	if (g_GumpPressed && m_Page > 4 && g_LastObjectLeftMouseDown >= ID_GSB_SPELL_ICON_LEFT && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < GetTickCount())))
 	{
 		//Создадим новый объект гампа, вычисляем его индекс заклинания
 		if (g_LastObjectLeftMouseDown < ID_GSB_SPELL_ICON_RIGHT)
@@ -716,7 +716,7 @@ void TGumpSpellbook::OnLeftMouseUp()
 			g_ClickObject.GumpButtonID = m_Page - 1;
 
 			//Задаем время до выполнения
-			g_ClickObject.Timer = timeGetTime() + DCLICK_DELAY;
+			g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
 		}
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUTTON_NEXT) //Next
@@ -737,7 +737,7 @@ void TGumpSpellbook::OnLeftMouseUp()
 			g_ClickObject.GumpButtonID = m_Page + 1;
 
 			//Задаем время до выполнения
-			g_ClickObject.Timer = timeGetTime() + DCLICK_DELAY;
+			g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
 		}
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUTTON_CIRCLE_1_2)
@@ -825,7 +825,7 @@ void TGumpSpellbook::OnLeftMouseUp()
 							g_ClickObject.Serial = m_Serial;
 							g_ClickObject.GumpID = m_ID;
 							g_ClickObject.GumpButtonID = 5 + ((c - 1) / 2);
-							g_ClickObject.Timer = timeGetTime() + DCLICK_DELAY;
+							g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
 						}
 
 						//gump->SetPage(5 + ((c - 1) / 2));
@@ -865,7 +865,7 @@ void TGumpSpellbook::OnLeftMouseUp()
 							g_ClickObject.Serial = m_Serial;
 							g_ClickObject.GumpID = m_ID;
 							g_ClickObject.GumpButtonID = 5 + ((c - 1) / 2);
-							g_ClickObject.Timer = timeGetTime() + DCLICK_DELAY;
+							g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
 						}
 
 						//gump->SetPage(5 + ((c - 1) / 2));

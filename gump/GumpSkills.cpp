@@ -495,7 +495,7 @@ int TGumpSkills::Draw(bool &mode)
 	}
 
 	//Для вычисления задержек между скроллингом
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	//Проверим, вдруг необходимо изменить положение отображаемого элемента
 	if (g_GumpPressedScroller && m_LastChangedLineTime < ticks)
@@ -994,7 +994,7 @@ void TGumpSkills::OnLeftMouseUp()
 	}
 
 	//Текущее количество тиков
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (g_LastObjectLeftMouseDown == ID_GS_BUTTON_MINIMIZE) //Сворачиваем гамп
 	{
@@ -1192,7 +1192,7 @@ void TGumpSkills::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 {
 	if (!m_Minimized && !g_LeftMouseDown && !g_RightMouseDown) //Доступно для скроллинга
 	{
-		DWORD ticks = timeGetTime();
+		DWORD ticks = GetTickCount();
 
 		if (state == MWS_UP && m_LastChangedLineTime < ticks) //Скроллинг вверх
 		{

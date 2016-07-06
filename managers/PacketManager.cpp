@@ -704,7 +704,7 @@ wstring TPacketManager::ReadUnicodeStringLE(__in int size)
 */
 void TPacketManager::PluginReceiveHandler(__in PBYTE buf, __in const int &size)
 {
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 	g_TotalRecvSize += size;
 
 	TMessageType &type = m_MessageTypes[*buf];
@@ -735,7 +735,7 @@ void TPacketManager::PluginReceiveHandler(__in PBYTE buf, __in const int &size)
 */
 void TPacketManager::ReceiveHandler(__in PBYTE buf, __in const int &size)
 {
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 	g_TotalRecvSize += size;
 	
 	TMessageType &type = m_MessageTypes[*buf];
@@ -1179,7 +1179,7 @@ PACKET_HANDLER(UpdatePlayer)
 				SoundManager.StopWarMusic();
 				UO->PlayMusic(42, true);
 			}
-			g_DeathScreenTimer = timeGetTime() + DEATH_SCREEN_DELAY;
+			g_DeathScreenTimer = GetTickCount() + DEATH_SCREEN_DELAY;
 		}
 	}
 	
@@ -2095,7 +2095,7 @@ PACKET_HANDLER(UpdateCharacter)
 			wd->Direction = dir;
 
 			if (obj->m_WalkStack.Empty())
-				obj->LastStepTime = timeGetTime();
+				obj->LastStepTime = GetTickCount();
 
 			obj->m_WalkStack.Push(wd);
 		}
@@ -2184,7 +2184,7 @@ PACKET_HANDLER(SetWeather)
 		Weather.SetCount(70);
 
 	Weather.SetTemperature(ReadByte());
-	Weather.SetTimer(timeGetTime() + WEATHER_TIMER);
+	Weather.SetTimer(GetTickCount() + WEATHER_TIMER);
 	Weather.Generate();
 
 	switch (type)
@@ -2356,7 +2356,7 @@ PACKET_HANDLER(OpenContainer)
 				cont = cont->m_Next;
 			}
 
-			if (g_CheckContainerStackTimer < timeGetTime() && ContainerStack != NULL)
+			if (g_CheckContainerStackTimer < GetTickCount() && ContainerStack != NULL)
 			{
 				delete ContainerStack;
 				ContainerStack = NULL;
@@ -2715,7 +2715,7 @@ PACKET_HANDLER(Target)
 {
 	Target.SetData(buf, size);
 
-	if (g_PartyHelperTimer > timeGetTime() && g_PartyHelperTarget)
+	if (g_PartyHelperTimer > GetTickCount() && g_PartyHelperTarget)
 	{
 		Target.SendTargetObject(g_PartyHelperTarget);
 		g_PartyHelperTimer = 0;
@@ -3466,7 +3466,7 @@ PACKET_HANDLER(GraphicEffect)
 	else
 		effect->Speed = speed + 6;
 
-	effect->Duration = timeGetTime() + duration;
+	effect->Duration = GetTickCount() + duration;
 	effect->FixedDirection = (fixedDirection != 0);
 	effect->Explode = (explode != 0);
 	
@@ -3604,7 +3604,7 @@ PACKET_HANDLER(DeathScreen)
 {
 	Weather.Reset();
 	Target.Reset();
-	g_DeathScreenTimer = timeGetTime() + DEATH_SCREEN_DELAY;
+	g_DeathScreenTimer = GetTickCount() + DEATH_SCREEN_DELAY;
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(PlaySoundEffect)
@@ -3683,7 +3683,7 @@ PACKET_HANDLER(DragAnimation)
 	effect->DestY = destY;
 	effect->DestZ = destZ;
 	effect->Speed = 5;
-	effect->Duration = timeGetTime() + 5000;
+	effect->Duration = GetTickCount() + 5000;
 
 	effect->Graphic = graphic;
 
@@ -4089,7 +4089,7 @@ PACKET_HANDLER(DisplayDeath)
 		obj->AnimIndex = 0;
 	else
 	{
-		pair<DWORD, DWORD> p(corpseSerial, timeGetTime() + 1000);
+		pair<DWORD, DWORD> p(corpseSerial, GetTickCount() + 1000);
 		g_CorpseSerialList.push_back(p);
 	}
 }
@@ -4254,7 +4254,7 @@ PACKET_HANDLER(Damage)
 		}
 
 		character->m_DamageTextControl->Add(text);
-		text->Timer = timeGetTime() + DAMAGE_TEXT_NORMAL_DELAY;
+		text->Timer = GetTickCount() + DAMAGE_TEXT_NORMAL_DELAY;
 	}
 }
 //---------------------------------------------------------------------------

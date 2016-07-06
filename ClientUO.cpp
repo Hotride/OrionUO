@@ -120,7 +120,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 			MouseManager.UpdateMouse();
 			g_GeneratedMouseDown = false;
-			DWORD ticks = timeGetTime();
+			DWORD ticks = GetTickCount();
 			g_LastMouseDownTime = ticks;
 			g_CancelDoubleClick = false;
 
@@ -211,7 +211,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 			MouseManager.UpdateMouse();
 
-			DWORD ticks = timeGetTime();
+			DWORD ticks = GetTickCount();
 
 			g_SelectGumpObjects = true;
 
@@ -1798,7 +1798,7 @@ void TUltimaOnline::ProcessStaticAnimList()
 	{
 		TLinkedList *list = m_StaticAnimList;
 
-		DWORD ticks = timeGetTime();
+		DWORD ticks = GetTickCount();
 		int delay = (ConfigManager.StandartItemsAnimationDelay ? 0x50 : 50);
 
 		while (list != NULL)
@@ -1889,7 +1889,7 @@ void TUltimaOnline::ClearUnusedTextures()
 
 	static int clearMap = 0;
 
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 
 	if (clearMap == 1)
 	{
@@ -2695,7 +2695,7 @@ void TUltimaOnline::LoadStartupConfig()
 	SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
 
 	if (!ConfigManager.Sound)
-		UO->AdjustSoundEffects(timeGetTime() + 100000);
+		UO->AdjustSoundEffects(GetTickCount() + 100000);
 
 	if (!ConfigManager.Music)
 		SoundManager.StopMusic();
@@ -2712,7 +2712,7 @@ void TUltimaOnline::LoadLocalConfig()
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x35, lco);
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Welcome to Ultima Online!");*/
 
-	g_CheckContainerStackTimer = timeGetTime() + 1000;
+	g_CheckContainerStackTimer = GetTickCount() + 1000;
 
 	char buf[MAX_PATH] = {0};
 	sprintf(buf, "Desktop\\%s\\%s\\0x%08X", MainScreen->m_Account->c_str(), ServerList.GetServerName().c_str(), g_PlayerSerial);
@@ -2735,7 +2735,7 @@ void TUltimaOnline::LoadLocalConfig()
 	SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
 
 	if (!ConfigManager.Sound)
-		UO->AdjustSoundEffects(timeGetTime() + 100000);
+		UO->AdjustSoundEffects(GetTickCount() + 100000);
 
 	if (!ConfigManager.Music)
 		SoundManager.StopMusic();
@@ -2782,12 +2782,12 @@ void TUltimaOnline::SaveLocalConfig()
 //---------------------------------------------------------------------------
 void TUltimaOnline::Process()
 {
-	static DWORD removeUnusedTexturesTime = timeGetTime() + CLEAR_TEXTURES_DELAY;
+	static DWORD removeUnusedTexturesTime = GetTickCount() + CLEAR_TEXTURES_DELAY;
 
 	ConnectionManager.Recv();
 	PacketManager.SendMegaClilocRequests();
 
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 	
 	if (g_GameState >= GS_CHARACTER && g_LastSendTime + SEND_TIMEOUT_DELAY < ticks)
 	{
@@ -2893,7 +2893,7 @@ void TUltimaOnline::Process()
 							td->Font = 3;
 							td->Serial = 0;
 							td->Color = 0x03B5;
-							td->Timer = timeGetTime();
+							td->Timer = GetTickCount();
 							td->Type = TT_CLIENT;
 							td->DrawX = g_MouseX - gump->X;
 							td->DrawY = g_MouseY - gump->Y;
@@ -2987,7 +2987,7 @@ void TUltimaOnline::Process()
 //---------------------------------------------------------------------------
 int TUltimaOnline::Send(PBYTE buf, int size)
 {
-	DWORD ticks = timeGetTime();
+	DWORD ticks = GetTickCount();
 	g_TotalSendSize += size;
 	
 	TMessageType &type = PacketManager.GetType(*buf);
@@ -3044,7 +3044,7 @@ TTextureObject *TUltimaOnline::ExecuteGump(const WORD &id, const bool &partialHu
 		}
 	}
 
-	io.LastAccessTime = timeGetTime();
+	io.LastAccessTime = GetTickCount();
 
 	return io.Texture;
 }
@@ -3066,7 +3066,7 @@ TTextureObject *TUltimaOnline::ExecuteLandArt(const WORD &id)
 		}
 	}
 	
-	io.LastAccessTime = timeGetTime();
+	io.LastAccessTime = GetTickCount();
 
 	return io.Texture;
 }
@@ -3097,7 +3097,7 @@ TTextureObject *TUltimaOnline::ExecuteStaticArt(const WORD &id)
 		}
 	}
 	
-	io.LastAccessTime = timeGetTime();
+	io.LastAccessTime = GetTickCount();
 
 	return io.Texture;
 }
@@ -3124,7 +3124,7 @@ TTextureObject *TUltimaOnline::ExecuteTexture(WORD id)
 		}
 	}
 	
-	io.LastAccessTime = timeGetTime();
+	io.LastAccessTime = GetTickCount();
 
 	return io.Texture;
 }
@@ -3149,7 +3149,7 @@ TTextureObject *TUltimaOnline::ExecuteLight(BYTE &id)
 		}
 	}
 	
-	io.LastAccessTime = timeGetTime();
+	io.LastAccessTime = GetTickCount();
 
 	return io.Texture;
 }
@@ -3920,7 +3920,7 @@ void TUltimaOnline::PlaySoundEffect(const WORD &id, float volume)
 		ADD_LINKED(m_UsedSoundList, m_SoundDataIndex[id]);
 	}
 	else {
-		if (is.LastAccessTime + is.Timer > timeGetTime())
+		if (is.LastAccessTime + is.Timer > GetTickCount())
 			return;
 
 		SoundManager.FreeStream(is.hStream);
@@ -3934,7 +3934,7 @@ void TUltimaOnline::PlaySoundEffect(const WORD &id, float volume)
 	if (volume > 0)
 	{
 		SoundManager.PlaySoundEffect(is.hStream, volume);
-		is.LastAccessTime = timeGetTime();
+		is.LastAccessTime = GetTickCount();
 	}
 
 	//if (is.Sound == NULL)
@@ -3948,7 +3948,7 @@ void TUltimaOnline::PlaySoundEffect(const WORD &id, float volume)
 	//}
 	//else
 	//{
-	//	if (is.LastAccessTime + is.Timer > timeGetTime())
+	//	if (is.LastAccessTime + is.Timer > GetTickCount())
 	//		return;
 
 	//	Mix_FreeChunk(is.Sound);
@@ -3961,7 +3961,7 @@ void TUltimaOnline::PlaySoundEffect(const WORD &id, float volume)
 	//if (volume > 0)
 	//{
 	//	SoundManager.PlaySoundEffect(is.Sound, volume);
-	//	is.LastAccessTime = timeGetTime();
+	//	is.LastAccessTime = GetTickCount();
 	//}
 }
 //---------------------------------------------------------------------------
@@ -4053,7 +4053,7 @@ void TUltimaOnline::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, W
 	td->Font = font;
 	td->Serial = serial;
 	td->Color = color;
-	td->Timer = timeGetTime();
+	td->Timer = GetTickCount();
 	td->Type = type;
 	td->SetText(text);
 	
@@ -4178,7 +4178,7 @@ void TUltimaOnline::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD 
 	td->Font = font;
 	td->Serial = serial;
 	td->Color = color;
-	td->Timer = timeGetTime();
+	td->Timer = GetTickCount();
 	td->Type = type;
 	td->SetUnicodeText(text);
 	

@@ -69,7 +69,7 @@ void TWeather::Reset()
 //---------------------------------------------------------------------------
 void TWeather::Generate()
 {
-	m_LastTick = timeGetTime();
+	m_LastTick = GetTickCount();
 
 	if (m_Type == 0xFF || m_Type == 0xFE)
 		return;
@@ -103,7 +103,7 @@ void TWeather::Generate()
 //---------------------------------------------------------------------------
 void TWeather::Draw(int &drawX, int &drawY)
 {    
-	DWORD currentTick = timeGetTime();
+	DWORD currentTick = GetTickCount();
     
 	bool removeEffects = false;
 

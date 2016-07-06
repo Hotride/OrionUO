@@ -123,7 +123,7 @@ void TSoundManager::Free()
 void TSoundManager::PauseSound()
 {
 	BASS_Pause();
-	UO->AdjustSoundEffects(timeGetTime() + 100000);
+	UO->AdjustSoundEffects(GetTickCount() + 100000);
 }
 
 
