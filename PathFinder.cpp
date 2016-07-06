@@ -619,10 +619,8 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	static bool lastRun = false;
 	static bool lastMount = false;
 	static int lastDir = -1;
-	static int timerDelta = 0;
+	static int lastDelta = 0;
 	static int lastStepTime = 0;
-
-	static DWORD lwt = 0;
 
 	if (onMount)
 		trace_printf("Mounted");
@@ -633,53 +631,28 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 		trace_printf("Walk");
 
 	//¬ысчитываем актуальную дельту с помощью разници во времени между прошлым и текущим шагом.
-	int nowDelta = walkTime - ((currentTime - lwt));
+	int nowDelta = 0;
+	
+	if (lastDir == direction && lastMount == onMount && lastRun == run)
+	{
+		nowDelta = walkTime - (currentTime - lastStepTime);
+		if (abs(nowDelta) > 70)
+			nowDelta = 0;
+		else if (lastDelta < 0)
+			nowDelta /= 2 + abs(lastDelta);
+		else if (lastDelta > 0)
+			nowDelta /= 2 - abs(lastDelta);
+	}
 
-	if (abs(nowDelta) > 70);
-		nowDelta = 0;
 
 	trace_printf("ReqDelta %i\n", nowDelta);
 
-	lwt = currentTime;// <-- “екущее врем€ дл€ следующей дельты без учета поворотов!?
+	lastStepTime = currentTime;// <-- “екущее врем€ дл€ следующей дельты без учета поворотов!?
 
-
-
-	int dir = direction & 0x7f;
-
-	/* 
-	// од забагован и не пон€тно нужен-ли в итоге.
-	if (run == lastRun && onMount == lastMount && dir == lastDir)
-	{
-		if (abs(timerDelta) > 100)
-			timerDelta = 0;
-
-		if (timerDelta)
-		{
-			auto walktimeVar = currentTime - lastStepTime;
-			if (walktimeVar > 500)
-			{
-				TPRINT("DAFUQQQQQ=%i\n", timerDelta);
-			}
-			walkTime += timerDelta + walkTime - walktimeVar; <-- тут walkTime может выйти чуть-ли не равным макс значению WORD, если отн€ть от него и сделать его негативным.
-			                                                 // Ёто и заставл€ло врем€-от-времени чара сто€ть штыком на +- секунд 30-40.
-			if (walkTime > 500)
-			{
-				TPRINT("DAFUQQQQQ=%i\n", timerDelta);
-			}
-			timerDelta = 0;
-		}
-		else
-			timerDelta = walkTime - (currentTime - lastStepTime);
-
-		TPRINT("timerDelta=%i\n", timerDelta);
-	}
-	else
-		timerDelta = 0;*/
-
-	lastStepTime = currentTime;
+	lastDelta = nowDelta;
 	lastRun = run;
 	lastMount = onMount;
-	lastDir = dir;
+	lastDir = direction;
 
 
 	#pragma endregion
