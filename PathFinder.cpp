@@ -638,14 +638,14 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 		nowDelta = walkTime - (currentTime - lastStepTime);
 		if (abs(nowDelta) > 70)
 			nowDelta = 0;
-		else if (lastDelta < 0)
-			nowDelta /= 2 + abs(lastDelta);
+		/*else if (lastDelta < 0)
+			nowDelta = nowDelta + (abs(lastDelta) / 2);
 		else if (lastDelta > 0)
-			nowDelta /= 2 - abs(lastDelta);
+			nowDelta = nowDelta - (abs(lastDelta) / 2);*/
 	}
 
 
-	trace_printf("ReqDelta %i\n", nowDelta);
+	TPRINT("ReqDelta %i\n", nowDelta);
 
 	lastStepTime = currentTime;// <-- Текущее время для следующей дельты без учета поворотов!?
 
