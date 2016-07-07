@@ -24,7 +24,7 @@ TTextTexture TGumpBook::m_TextBy;
 //----------------------------------------------------------------------------
 TGumpBook::TGumpBook(DWORD serial, short x, short y, short pageCount, bool writable, bool unicode)
 : TGump(GT_BOOK, serial, x, y), m_PageCount(pageCount), m_Writable(writable),
-m_Unicode(unicode), m_Page(2)
+m_Unicode(unicode), m_Page(0)
 {
 	TextEntryAuthor = new TEntryText();
 	TextEntryTitle = new TEntryText();
@@ -65,8 +65,10 @@ TGumpBook::~TGumpBook()
 //----------------------------------------------------------------------------
 void TGumpBook::InitTextTextures()
 {
-	FontManager->GenerateA(4, m_TextTitle, "TITLE", 1);
-	FontManager->GenerateA(4, m_TextBy, "by", 1);
+	FontManager->UnusePartialHue = true;
+	FontManager->GenerateA(4, m_TextTitle, "TITLE", 0x0386);
+	FontManager->GenerateA(4, m_TextBy, "by", 0x0386);
+	FontManager->UnusePartialHue = false;
 }
 //----------------------------------------------------------------------------
 void TGumpBook::ReleaseTextTextures()
@@ -102,27 +104,34 @@ void TGumpBook::GenerateFrame()
 
 		if (!m_Page)
 		{
+			//Название книги
 			m_TextTitle.Draw(78, 32);
+			TextEntryTitle->DrawA(4, 0, 41, 65);
 
-			TextEntryTitle->DrawA(4, 0, 41, 63);
+			//Автор
+			m_TextBy.Draw(88, 134);
+			TextEntryAuthor->DrawA(4, 0, 41, 160);
 
-			m_TextBy.Draw(88, 132);
-
-			TextEntryAuthor->DrawA(4, 0, 41, 158);
-
-			TextEntry[1].DrawA(4, 0, 224, 32);
+			//Правая страница
+			FontManager->UnusePartialHue = true;
+			TextEntry[1].DrawA(4, 0x0012, 224, 34);
 			m_PageIndexText[1].Draw(299, 202);
+			FontManager->UnusePartialHue = false;
 		}
 		else
 		{
-			TextEntry[m_Page].DrawA(4, 0, 38, 32);
+			FontManager->UnusePartialHue = true;
+			//Левая страница
+			TextEntry[m_Page].DrawA(4, 0x0012, 38, 34);
 			m_PageIndexText[m_Page].Draw(112, 202);
 
 			if (m_Page + 1 < m_PageCount)
 			{
-				TextEntry[m_Page + 1].DrawA(4, 0, 224, 32);
+				//Правая страница
+				TextEntry[m_Page + 1].DrawA(4, 0x0012, 224, 34);
 				m_PageIndexText[m_Page + 1].Draw(299, 202);
 			}
+			FontManager->UnusePartialHue = false;
 		}
 
 	glEndList();
@@ -170,12 +179,21 @@ int TGumpBook::Draw(bool &mode)
 				LSG = ID_GB_BUTTON_PREV; //Last page
 			else if (m_Page + 2 < m_PageCount && UO->GumpPixelsInXY(0x0200, 356, 0))
 				LSG = ID_GB_BUTTON_NEXT; //Next page
-
-			if (!m_Page)
+			else if (!m_Page)
 			{
+				if (UO->PolygonePixelsInXY(41, 65, 150, 22))
+					LSG = ID_GB_TEXT_AREA_TITLE; //Text title
+				else if (UO->PolygonePixelsInXY(41, 160, 150, 44))
+					LSG = ID_GB_TEXT_AREA_AUTHOR; //Text author
+				else if (UO->PolygonePixelsInXY(224, 34, 160, 166))
+					LSG = ID_GB_TEXT_AREA_PAGE_RIGHT; //Text right area
 			}
 			else
 			{
+				if (UO->PolygonePixelsInXY(38, 34, 160, 166))
+					LSG = ID_GB_TEXT_AREA_PAGE_LEFT; //Text left area
+				else if (UO->PolygonePixelsInXY(224, 34, 160, 166))
+					LSG = ID_GB_TEXT_AREA_PAGE_RIGHT; //Text right area
 			}
 		}
 
@@ -201,8 +219,6 @@ void TGumpBook::OnLeftMouseUp()
 
 	if (g_LastObjectLeftMouseDown == ID_GB_BUTTON_PREV) //Prev
 	{
-		//Ткнули по уголку "назад"
-
 		if (!g_ClickObjectReq && m_Page > 0) //Если не было запроса на клик
 		{
 			newPage = m_Page - 2;
@@ -213,8 +229,6 @@ void TGumpBook::OnLeftMouseUp()
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GB_BUTTON_NEXT) //Next
 	{
-		//Ткнули по уголку "назад"
-
 		if (!g_ClickObjectReq && m_Page < m_PageCount) //Если не было запроса на клик
 		{
 			newPage = m_Page + 2;
@@ -225,20 +239,38 @@ void TGumpBook::OnLeftMouseUp()
 	}
 	else if (m_Writable)
 	{
+		int x = g_MouseX - m_X;
+		int y = g_MouseY - m_Y;
+
 		TEntryText *entry = NULL;
 
 		if (g_LastObjectLeftMouseDown == ID_GB_TEXT_AREA_AUTHOR)
+		{
 			entry = TextEntryAuthor;
+			x -= 41;
+			y -= 160;
+		}
 		else if (g_LastObjectLeftMouseDown == ID_GB_TEXT_AREA_TITLE)
+		{
 			entry = TextEntryTitle;
+			x -= 41;
+			y -= 65;
+		}
 		else if (g_LastObjectLeftMouseDown == ID_GB_TEXT_AREA_PAGE_LEFT)
+		{
 			entry = &TextEntry[m_Page];
+			x -= 38;
+			y -= 34;
+		}
 		else if (g_LastObjectLeftMouseDown == ID_GB_TEXT_AREA_PAGE_RIGHT)
+		{
 			entry = &TextEntry[m_Page + 1];
+			x -= 224;
+			y -= 34;
+		}
 
 		if (entry != NULL)
-		{
-		}
+			entry->OnClick(this, 4, false /*m_Unicode*/, x, y);
 	}
 
 	if (newPage > -1)
@@ -252,6 +284,12 @@ void TGumpBook::OnLeftMouseUp()
 		g_ClickObject.Serial = Serial;
 		g_ClickObject.GumpID = ID;
 		g_ClickObject.GumpButtonID = newPage;
+
+		//TEST~>>
+		m_Page = newPage;
+		m_FrameCreated = false;
+		g_ClickObjectReq = false;
+		//TEST~<<
 
 		//Задаем время до выполнения
 		g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;

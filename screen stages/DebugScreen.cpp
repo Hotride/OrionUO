@@ -28,7 +28,7 @@ TDebugScreen::TDebugScreen()
 
 	m_BookGump->TextEntryTitle->SetText("kl;l");
 	m_BookGump->TextEntryAuthor->SetText("unknown");
-	m_BookGump->TextEntry[1].SetText("ty\nery346\n\n\n\n6\n3");
+	m_BookGump->TextEntry[1].SetText("ty\nery346\n\n\n6\n3");
 	m_BookGump->TextEntry[2].SetText("77343\n\n\n\n\nrtry\n\n3ty");
 	m_BookGump->TextEntry[3].SetText("56\n\n\n\n3\n3\n3\n");
 }
@@ -215,7 +215,9 @@ void TDebugScreen::OnLeftMouseUp()
 		return;
 	}
 
-	if (g_LastObjectLeftMouseDown == ID_DS_GO_SCREEN_MAIN) //> button
+	if (g_LastSelectedGump == (DWORD)m_BookGump)
+		m_BookGump->OnLeftMouseUp();
+	else if (g_LastObjectLeftMouseDown == ID_DS_GO_SCREEN_MAIN) //> button
 		CreateSmoothAction(ID_SMOOTH_DS_GO_SCREEN_MAIN);
 
 	g_LastObjectLeftMouseDown = 0;

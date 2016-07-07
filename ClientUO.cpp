@@ -2809,7 +2809,7 @@ void TUltimaOnline::Process()
 		g_SelectedObject = NULL;
 		g_SelectedTextObject = NULL;
 
-		if (g_LastRenderTime <= ticks)
+		//if (g_LastRenderTime <= ticks)
 		{
 			TWalkData *wd = g_Player->m_WalkStack.m_Items;
 
@@ -2843,6 +2843,8 @@ void TUltimaOnline::Process()
 
 		if (g_GameState == GS_GAME)
 		{
+			MouseManager.ProcessWalking();
+
 			MacroManager->Execute();
 
 			if (g_ClickObjectReq && g_ClickObject.Timer < ticks)

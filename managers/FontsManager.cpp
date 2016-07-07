@@ -23,7 +23,7 @@ TFontsManager *FontManager = NULL;
 //---------------------------------------------------------------------------
 TFontsManager::TFontsManager()
 : m_SavePixels(false), m_UseHTML(false), m_Font(NULL), m_FontCount(0),
-m_HTMLColor(0xFFFFFFFF), m_RecalculateWidthByInfo(false)
+m_HTMLColor(0xFFFFFFFF), m_RecalculateWidthByInfo(false), m_UnusePartialHue(false)
 {
 	memset(m_UnicodeFontAddress, 0, sizeof(m_UnicodeFontAddress));
 	memset(m_UnicodeFontSize, 0, sizeof(m_UnicodeFontSize));
@@ -159,8 +159,8 @@ int TFontsManager::GetFontOffsetY( __in BYTE font, __in BYTE index)
 		offsY = 1;
 	else if (!(index >= 0x41 && index <= 0x5A) && !(index >= 0xC0 && index <= 0xDF) && index != 0xA8)
 	{
-		const int offsetCharTable[] = {2, 0, 2, 2, 2, 0, 2, 2, 0, 0};
-		const int offsetSymbolTable[] = {1, 0, 1, 1, 1, 0, 1, 1, 0, 0};
+		const int offsetCharTable[] = {2, 0, 2, 2, 0, 0, 2, 2, 0, 0};
+		const int offsetSymbolTable[] = {1, 0, 1, 1, -1, 0, 1, 1, 0, 0};
 
 		if (font < 10)
 		{
@@ -753,6 +753,21 @@ PMULTILINES_FONT_INFO TFontsManager::GetInfoA(__in BYTE font, __in const char *s
 		ptr->MaxHeight = 14;
 	}
 
+	if (font == 4)
+	{
+		ptr = info;
+
+		while (ptr != NULL)
+		{
+			if (ptr->Width > 1)
+				ptr->MaxHeight = ptr->MaxHeight + 2;
+			else
+				ptr->MaxHeight = ptr->MaxHeight + 6;
+
+			ptr = ptr->m_Next;
+		}
+	}
+
 	return info;
 }
 //---------------------------------------------------------------------------
@@ -862,7 +877,7 @@ PDWORD TFontsManager::GeneratePixelsA( __in BYTE &font, __inout TTextTexture &th
 	int lineOffsY = 0;
 	PMULTILINES_FONT_INFO ptr = info;
 
-	bool partialHue = (font != 5 && font != 8);
+	bool partialHue = (font != 5 && font != 8) && !m_UnusePartialHue;
 	int font6OffsetY = (int)(font == 6) * 7;
 
 	while (ptr != NULL)

@@ -67,6 +67,8 @@ private:
 	//!Список ссылок
 	WEBLINK_MAP m_WebLink;
 
+	bool m_UnusePartialHue;
+
 	//!Таблица ассоциации ASCII шрифтов
 	static const BYTE m_FontIndex[256];
 
@@ -149,6 +151,7 @@ public:
 	
 	SETGET(bool, SavePixels);
 	SETGET(bool, RecalculateWidthByInfo);
+	SETGET(bool, UnusePartialHue);
 
 	/*!
 	Установить использование HTML-тэгов

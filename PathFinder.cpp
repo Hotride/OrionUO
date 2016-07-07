@@ -645,7 +645,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	}
 
 
-	TPRINT("ReqDelta %i\n", nowDelta);
+	TPRINT("ReqDelta %i\n", /*nowDelta*/currentTime - lastStepTime);
 
 	lastStepTime = currentTime;// <-- Текущее время для следующей дельты без учета поворотов!?
 
@@ -657,7 +657,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 	#pragma endregion
 
-	g_PendingDelayTime = currentTime + walkTime + nowDelta;
+	g_PendingDelayTime = currentTime + walkTime; // +nowDelta;
 	g_Player->GetAnimationGroup();
 
 	return true;

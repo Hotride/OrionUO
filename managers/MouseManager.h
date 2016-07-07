@@ -71,6 +71,12 @@ public:
 	WORD GetGameCursor();
 
 	/*!
+	Обработка движения персонажа
+	@return 
+	*/
+	void ProcessWalking();
+
+	/*!
 	Отрисовать курсор
 	@param [__in] id Индекс картинки курсора
 	@return 
