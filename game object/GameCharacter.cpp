@@ -27,7 +27,7 @@ m_AnimationRepeatMode(1), m_AnimationDirection(false), m_AnimationFromServer(fal
 m_MaxMana(0), m_MaxStam(0), m_Mana(0), m_Stam(0), m_OffsetX(0), m_OffsetY(0),
 m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(0),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
-m_AfterStepDelay(0), m_StepSoundOffset(0)
+m_StepSoundOffset(0)
 {
 	//!¬ысокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;
@@ -813,7 +813,7 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 
 		if (canChange)
 		{
-			int maxDelay = PathFinder->GetWalkSpeed(run, FindLayer(OL_MOUNT) != NULL); // CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
+			int maxDelay = PathFinder->GetWalkSpeed(run, FindLayer(OL_MOUNT) != NULL) - 15; // CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
 
 			int delay = (int)ticks - (int)m_LastStepTime;
 			bool removeStep = (delay >= maxDelay);
@@ -823,7 +823,7 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 			{
 				float steps = maxDelay / g_AnimCharactersDelayValue;
 				
-				float x = delay/ g_AnimCharactersDelayValue;
+				float x = delay / g_AnimCharactersDelayValue;
 				float y = x;
 				m_OffsetZ = (char)((wd->Z - m_Z) * x);
 
@@ -864,8 +864,6 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 				m_Y = wd->Y;
 				m_Z = wd->Z;
 				m_Direction = wd->Direction;
-
-				m_AfterStepDelay = WALKING_DELAY;
 
 				m_OffsetX = 0;
 				m_OffsetY = 0;

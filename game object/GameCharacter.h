@@ -96,9 +96,6 @@ protected:
 	//!Время последнего шага
 	DWORD m_LastStepTime;
 
-	//!Задержка после шага (для корректного отображения анимации хотьбы)
-	short m_AfterStepDelay;
-
 	//!Смещение для звука шага
 	BYTE m_StepSoundOffset;
 	
@@ -146,7 +143,6 @@ public:
 	SETGET(BYTE, Direction);
 	SETGET(BYTE, Notoriety);
 	SETGET(bool, CanChangeName);
-	SETGET(short, AfterStepDelay);
 	SETGET(BYTE, AnimationInterval);
 	SETGET(BYTE, AnimationFrameCount);
 	SETGET(BYTE, AnimationRepeatMode);
@@ -256,7 +252,7 @@ public:
 	@return true - в движении, false - нет
 	*/
 	bool Walking() {
-		return (m_LastStepTime > (DWORD)(GetTickCount() - m_AfterStepDelay));
+		return (m_LastStepTime > (DWORD)(GetTickCount() - WALKING_DELAY));
 	}
 
 	/*!
