@@ -318,9 +318,49 @@ void TGumpStatusbar::GenerateFrame()
 				
 
 
-				//Кнопка вызова гампа бафов
 				if (ConnectionManager.ClientVersion >= CV_5020)
+				{
+					//Кнопка вызова гампа бафов
 					UO->DrawGump(0x7538, 0, 40, 50);
+
+					//Кнопочки для изменения роста/лока статов
+					if (ConnectionManager.ClientVersion >= CV_60142)
+					{
+						//Str
+						BYTE status = g_Player->LockStr; //Статус (вниз/вверх/замок)
+
+						gumpID = 0x0984; //Up
+						if (status == 1)
+							gumpID = 0x0986; //Down
+						else if (status == 2)
+							gumpID = 0x082C; //Lock
+						UO->DrawGump(gumpID, 0, 40, 76);
+
+
+
+						//Dex
+						status = g_Player->LockDex; //Статус (вниз/вверх/замок)
+
+						gumpID = 0x0984; //Up
+						if (status == 1)
+							gumpID = 0x0986; //Down
+						else if (status == 2)
+							gumpID = 0x082C; //Lock
+						UO->DrawGump(gumpID, 0, 40, 102);
+
+
+
+						//Int
+						status = g_Player->LockInt; //Статус (вниз/вверх/замок)
+
+						gumpID = 0x0984; //Up
+						if (status == 1)
+							gumpID = 0x0986; //Down
+						else if (status == 2)
+							gumpID = 0x082C; //Lock
+						UO->DrawGump(gumpID, 0, 40, 132);
+					}
+				}
 
 
 
@@ -773,8 +813,55 @@ int TGumpStatusbar::Draw(bool &mode)
 				}
 
 				//Кнопка вызова гампа бафов
-				if (ConnectionManager.ClientVersion >= CV_5020 && UO->GumpPixelsInXY(0x7538, 40, 50))
-					LSG = ID_GSB_BUFF_GUMP;
+				if (ConnectionManager.ClientVersion >= CV_5020)
+				{
+					if (UO->GumpPixelsInXY(0x7538, 40, 50))
+						LSG = ID_GSB_BUFF_GUMP;
+
+					//Кнопочки для изменения роста/лока статов
+					if (ConnectionManager.ClientVersion >= CV_60142)
+					{
+						//Str
+						BYTE status = g_Player->LockStr; //Статус (вниз/вверх/замок)
+
+						gumpID = 0x0984; //Up
+						if (status == 1)
+							gumpID = 0x0986; //Down
+						else if (status == 2)
+							gumpID = 0x082C; //Lock
+
+						if (UO->GumpPixelsInXY(gumpID, 40, 76))
+							LSG = ID_GSB_BUFF_LOCKER_STR;
+
+
+
+						//Dex
+						status = g_Player->LockDex; //Статус (вниз/вверх/замок)
+
+						gumpID = 0x0984; //Up
+						if (status == 1)
+							gumpID = 0x0986; //Down
+						else if (status == 2)
+							gumpID = 0x082C; //Lock
+
+						if (UO->GumpPixelsInXY(gumpID, 40, 102))
+							LSG = ID_GSB_BUFF_LOCKER_DEX;
+
+
+
+						//Int
+						status = g_Player->LockInt; //Статус (вниз/вверх/замок)
+
+						gumpID = 0x0984; //Up
+						if (status == 1)
+							gumpID = 0x0986; //Down
+						else if (status == 2)
+							gumpID = 0x082C; //Lock
+
+						if (UO->GumpPixelsInXY(gumpID, 40, 132))
+							LSG = ID_GSB_BUFF_LOCKER_INT;
+					}
+				}
 
 				if (UO->PolygonePixelsInXY(p.x, p.y, 16, 16))
 				{
@@ -928,6 +1015,24 @@ void TGumpStatusbar::OnLeftMouseUp()
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUFF_GUMP)
 		ConfigManager.ToggleBufficonWindow = true;
+	else if (g_LastObjectLeftMouseDown == ID_GSB_BUFF_LOCKER_STR)
+	{
+		BYTE state = (g_Player->LockStr + 1) % 3;
+
+		TPacketChangeStatLockStateRequest(0, state).Send();
+	}
+	else if (g_LastObjectLeftMouseDown == ID_GSB_BUFF_LOCKER_DEX)
+	{
+		BYTE state = (g_Player->LockDex + 1) % 3;
+
+		TPacketChangeStatLockStateRequest(1, state).Send();
+	}
+	else if (g_LastObjectLeftMouseDown == ID_GSB_BUFF_LOCKER_INT)
+	{
+		BYTE state = (g_Player->LockInt + 1) % 3;
+
+		TPacketChangeStatLockStateRequest(2, state).Send();
+	}
 	else if (!g_LastObjectLeftMouseDown)
 	{
 		//Проверим, может быть есть таргет, который нужно повесить на данного чара

@@ -620,7 +620,15 @@ class TPacketMegaClilocRequest : public TPacket
 {
 private:
 public:
-	TPacketMegaClilocRequest(vector<DWORD> list);
+	TPacketMegaClilocRequest(const vector<DWORD> &list);
+};
+//---------------------------------------------------------------------------
+class TPacketChangeStatLockStateRequest : public TPacket
+{
+private:
+	BYTE m_Buf[7];
+public:
+	TPacketChangeStatLockStateRequest(BYTE stat, BYTE state);
 };
 //---------------------------------------------------------------------------
 #endif

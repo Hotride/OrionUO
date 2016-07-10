@@ -2579,17 +2579,24 @@ PACKET_HANDLER(ExtendedCommand)
 
 			break;
 		}
-		case 0x1A: //Extended stats
+		case 0x19: //Extended stats
 		{
-			BYTE stat = ReadByte();
-			BYTE state = ReadByte();
+			Move(1);
+			
+			if (ReadDWord() == g_PlayerSerial)
+			{
+				Move(1);
+				BYTE state = ReadByte();
 
-			if (stat == 0)
-				g_Player->LockStr = state;
-			else if (stat == 1)
-				g_Player->LockDex = state;
-			else if (stat == 2)
-				g_Player->LockInt = state;
+				g_Player->LockStr = (state >> 4) & 3;
+				g_Player->LockDex = (state >> 2) & 3;
+				g_Player->LockInt = state & 3;
+
+				TGump *statusbar = GumpManager->GetGump(g_PlayerSerial, 0, GT_STATUSBAR);
+
+				if (statusbar != NULL && !statusbar->Minimized)
+					statusbar->FrameCreated = false;
+			}
 
 			break;
 		}
