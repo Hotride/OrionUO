@@ -2507,8 +2507,8 @@ PACKET_HANDLER(ExtendedCommand)
 
 			IFOR(i, 0, count)
 			{
+				DWORD cliloc = ReadDWord();
 				WORD index = ReadWord();
-				DWORD cliloc = 3000000 + ReadWord();
 				WORD flags = ReadWord();
 				WORD color = 0xFFFF;
 
