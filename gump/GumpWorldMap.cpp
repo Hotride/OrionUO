@@ -249,7 +249,7 @@ void TGumpWorldMap::LoadMap(int map)
 		PWORD data = NULL;
 		DWORD dataSize = g_MapSizeX[map] * g_MapSizeY[map];
 
-		if (file.Size != 0 && file.Size != (dataSize * 4))
+		if (file.Size != 0 && file.Size != (dataSize * 2))
 		{
 			memcpy(&mapsInfoData[0], (PBYTE)file.Address, mapsInfoFileSize);
 			mapHash = file.ReadDWord();
@@ -284,7 +284,6 @@ void TGumpWorldMap::LoadMap(int map)
 			*dataPtr = mulStaticsHash;
 
 			data = new WORD[dataSize];
-			dataSize *= 2;
 
 			IFOR(bx, 0, g_MapBlockX[map])
 			{
@@ -307,7 +306,9 @@ void TGumpWorldMap::LoadMap(int map)
 							WORD pcl = 0x8000 | ColorManager->GetRadarColorData(color);
 							int block = py * g_MapSizeX[map] + px;
 							data[block] = pcl;
-							data[block + 1] = pcl;
+
+							if (x < 7 && y < 7)
+								data[block + 1] = pcl;
 						}
 					}
 				}
@@ -319,8 +320,7 @@ void TGumpWorldMap::LoadMap(int map)
 
 			if (mapDataFile != NULL)
 			{
-				PBYTE pData = (PBYTE)data;
-				fwrite(&pData[0], dataSize, 1, mapDataFile);
+				fwrite(&data[0], 2, dataSize, mapDataFile);
 				fclose(mapDataFile);
 			}
 
