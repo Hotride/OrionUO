@@ -277,7 +277,23 @@ void TGumpStatusbar::PrepareTextures()
 	UO->ExecuteGumpPart(0x0802, 8);
 
 	if (ConnectionManager.ClientVersion >= CV_308D)
+	{
 		UO->ExecuteGump(0x2A6C);
+
+		if (ConnectionManager.ClientVersion >= CV_5020)
+		{
+			//Кнопка вызова гампа бафов
+			UO->ExecuteGump(0x7538);
+
+			//Кнопочки для изменения роста/лока статов
+			if (ConnectionManager.ClientVersion >= CV_60142)
+			{
+				UO->ExecuteGump(0x0984);
+				UO->ExecuteGump(0x0986);
+				UO->ExecuteGump(0x082C);
+			}
+		}
+	}
 }
 //---------------------------------------------------------------------------
 void TGumpStatusbar::GenerateFrame()
