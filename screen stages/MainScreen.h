@@ -84,6 +84,7 @@ public:
 	//!Поля для ввода аккаунта и пароля
 	TEntryText *m_Account;
 	TEntryText *m_Password;
+	TEntryText *m_PasswordFake;
 
 	SETGET(bool, SavePassword);
 	SETGET(bool, AutoLogin);

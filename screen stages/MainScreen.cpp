@@ -26,6 +26,7 @@ TMainScreen::TMainScreen()
 {
 	m_Account = new TEntryText(32, 0, 300);
 	m_Password = new TEntryText(32, 0, 300);
+	m_PasswordFake = new TEntryText(32, 0, 300);
 
 	FontManager->GenerateA(2, m_Text[0], "Log in to Ultima Online", 0x0386);
 	FontManager->GenerateA(2, m_Text[1], "Account Name", 0x0386);
@@ -44,6 +45,7 @@ TMainScreen::~TMainScreen()
 	
 	delete m_Account;
 	delete m_Password;
+	delete m_PasswordFake;
 }
 //---------------------------------------------------------------------------
 /*!
@@ -68,9 +70,12 @@ void TMainScreen::Init()
 		r.bottom += (r.top * (-1));
 
 	if (!m_SavePassword)
+	{
 		m_Password->SetText(L"");
+		m_PasswordFake->SetText(L"");
+	}
 
-	EntryPointer = m_Password;
+	EntryPointer = m_PasswordFake;
 
 	SetWindowPos(g_hWnd, HWND_TOP, 0, 0, r.right, r.bottom, 0);
 
@@ -246,11 +251,11 @@ int TMainScreen::Render(__in bool mode)
 		m_Account->DrawA(5, TextColor, 335, 343);
 
 		TextColor = 0x034F;
-		if (EntryPointer == m_Password)
+		if (EntryPointer == m_PasswordFake)
 			TextColor = 0x0021;
 		else if (g_LastSelectedObject == ID_MS_PASSWORD)
 			TextColor = 0x03E3;
-		m_Password->DrawMaskA(5, TextColor, 335, 385);
+		m_PasswordFake->DrawMaskA(5, TextColor, 335, 385);
 
 		InitToolTip();
 
@@ -311,7 +316,8 @@ void TMainScreen::OnLeftMouseDown()
 		int x = g_MouseX - 335;
 		int y = g_MouseY - 385;
 
-		m_Password->OnClick(NULL, 5, false, x, y);
+		m_PasswordFake->OnClick(NULL, 5, false, x, y);
+		m_Password->SetPos(m_PasswordFake->Pos());
 	}
 }
 //---------------------------------------------------------------------------
@@ -358,7 +364,7 @@ void TMainScreen::OnCharPress( __in WPARAM wparam, __in LPARAM lparam)
 	else if (!FontManager->IsPrintASCII(wparam & 0xFF))
 		return;
 	else if (EntryPointer == NULL)
-		EntryPointer = m_Password;
+		EntryPointer = m_PasswordFake;
 
 	wchar_t wstr[2] = {0};
 	wstr[0] = wparam;
@@ -368,7 +374,15 @@ void TMainScreen::OnCharPress( __in WPARAM wparam, __in LPARAM lparam)
 		return;
 
 	if (EntryPointer->Length() < 16) //add char to text field
-		EntryPointer->Insert(wparam);
+	{
+		if (EntryPointer == m_PasswordFake)
+		{
+			if (EntryPointer->Insert(L'*'))
+				m_Password->Insert(wparam);
+		}
+		else
+			EntryPointer->Insert(wparam);
+	}
 }
 //---------------------------------------------------------------------------
 /*!
@@ -380,14 +394,14 @@ void TMainScreen::OnCharPress( __in WPARAM wparam, __in LPARAM lparam)
 void TMainScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 {
 	if (EntryPointer == NULL)
-		EntryPointer = m_Password;
+		EntryPointer = m_PasswordFake;
 
 	switch (wparam)
 	{
 		case VK_TAB:
 		{
 			if (EntryPointer == m_Account)
-				EntryPointer = m_Password;
+				EntryPointer = m_PasswordFake;
 			else
 				EntryPointer = m_Account;
 
@@ -401,7 +415,11 @@ void TMainScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 		}
 		default:
 		{
+			if (EntryPointer == m_PasswordFake)
+				m_Password->OnKey(NULL, wparam);
+
 			EntryPointer->OnKey(NULL, wparam);
+
 			break;
 		}
 	}
@@ -489,12 +507,19 @@ void TMainScreen::LoadGlobalConfig()
 						int len = password.length();
 
 						if (len)
+						{
 							m_Password->SetText(DecryptPW(password.c_str(), len));
+
+							IFOR(zv, 0, len)
+								m_PasswordFake->Insert(L'*');
+						}
 
 						m_Password->SetPos(len);
 					}
 					else
 					{
+						m_PasswordFake->SetText("");
+						m_PasswordFake->SetPos(0);
 						m_Password->SetText("");
 						m_Password->SetPos(0);
 					}
@@ -507,6 +532,8 @@ void TMainScreen::LoadGlobalConfig()
 					
 					if (!m_SavePassword)
 					{
+						m_PasswordFake->SetText("");
+						m_PasswordFake->SetPos(0);
 						m_Password->SetText("");
 						m_Password->SetPos(0);
 					}

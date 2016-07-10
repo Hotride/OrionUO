@@ -287,7 +287,10 @@ void TEntryText::SetText(const wstring &text)
 
 	//»зменим текст и выставим указатель в конец текста
 	m_Text = text;
-	m_Position = m_Text.length();
+	m_Position = m_Text.length() - 1;
+
+	if (m_Position < 0)
+		m_Position = 0;
 
 	//≈сли указана максимальна€ длина
 	if (m_MaxLength > 0)
