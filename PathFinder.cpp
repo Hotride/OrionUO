@@ -583,7 +583,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 	g_UpdateRange--;
 
-	UO->RemoveRangedObjects();
+	//UO->RemoveRangedObjects();
 
 	g_UpdateRange++;
 
