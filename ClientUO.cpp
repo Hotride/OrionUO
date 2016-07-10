@@ -2809,7 +2809,7 @@ void TUltimaOnline::Process()
 		g_SelectedObject = NULL;
 		g_SelectedTextObject = NULL;
 
-		//if (g_LastRenderTime <= ticks)
+		if (g_LastRenderTime <= ticks)
 		{
 			TWalkData *wd = g_Player->m_WalkStack.m_Items;
 
@@ -2828,16 +2828,16 @@ void TUltimaOnline::Process()
 			RemoveRangedObjects();
 
 			EffectManager->UpdateEffects();
-			
-			World->ProcessAnimation();
-
-			PathFinder->ProcessAutowalk();
 
 			TGumpBuff *gumpBuff = (TGumpBuff*)GumpManager->GetGump(g_PlayerSerial, 0, GT_BUFF);
 
 			if (gumpBuff != NULL)
 				gumpBuff->UpdateBuffIcons();
 		}
+
+		World->ProcessAnimation();
+
+		PathFinder->ProcessAutowalk();
 
 		bool canRenderSelect = false;
 
