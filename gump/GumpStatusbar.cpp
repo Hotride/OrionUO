@@ -770,11 +770,11 @@ int TGumpStatusbar::Draw(bool &mode)
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
-					
-					//Кнопка вызова гампа бафов
-					if (ConnectionManager.ClientVersion >= CV_5020 && UO->GumpPixelsInXY(0x7538, 40, 50))
-						LSG = ID_GSB_BUFF_GUMP;
 				}
+
+				//Кнопка вызова гампа бафов
+				if (ConnectionManager.ClientVersion >= CV_5020 && UO->GumpPixelsInXY(0x7538, 40, 50))
+					LSG = ID_GSB_BUFF_GUMP;
 
 				if (UO->PolygonePixelsInXY(p.x, p.y, 16, 16))
 				{
@@ -788,18 +788,18 @@ int TGumpStatusbar::Draw(bool &mode)
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
-
-					if (Party.Leader != 0) //inParty
-					{
-						if (UO->GumpPixelsInXY(0x0938, 16, 20))
-							LSG = ID_GSB_BUTTON_HEAL_1;
-						else if (UO->GumpPixelsInXY(0x0938, 16, 33))
-							LSG = ID_GSB_BUTTON_HEAL_2;
-					}
-
-					if (InGroup() && UO->GumpPixelsInXY(0x082C, 136, 24))
-						LSG = ID_GSB_BUTTON_REMOVE_FROM_GROUP;
 				}
+
+				if (Party.Leader != 0) //inParty
+				{
+					if (UO->GumpPixelsInXY(0x0938, 16, 20))
+						LSG = ID_GSB_BUTTON_HEAL_1;
+					else if (UO->GumpPixelsInXY(0x0938, 16, 33))
+						LSG = ID_GSB_BUTTON_HEAL_2;
+				}
+
+				if (InGroup() && UO->GumpPixelsInXY(0x082C, 136, 24))
+					LSG = ID_GSB_BUTTON_REMOVE_FROM_GROUP;
 			}
 		}
 		else //Чужой гамп
@@ -809,40 +809,40 @@ int TGumpStatusbar::Draw(bool &mode)
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
 				g_StatusbarUnderMouse = index;
-
-				if (Party.Contains(m_Serial))
-				{
-					if (UO->GumpPixelsInXY(0x0938, 16, 20))
-						LSG = ID_GSB_BUTTON_HEAL_1;
-					else if (UO->GumpPixelsInXY(0x0938, 16, 33))
-						LSG = ID_GSB_BUTTON_HEAL_2;
-				}
-
-				TGameCharacter *obj = World->FindWorldCharacter(m_Serial);
-
-				if (obj != NULL && obj->MaxHits > 0 && obj->CanChangeName && TextEntry != NULL)
-				{
-					//Для изменения имени
-					if (UO->PolygonePixelsInXY(16, 14, 109, 16))
-						LSG = ID_GSB_TEXT_FIELD;
-				}
-
-				if (InGroup() && UO->GumpPixelsInXY(0x082C, 136, 24))
-					LSG = ID_GSB_BUTTON_REMOVE_FROM_GROUP;
 			}
+
+			if (Party.Contains(m_Serial))
+			{
+				if (UO->GumpPixelsInXY(0x0938, 16, 20))
+					LSG = ID_GSB_BUTTON_HEAL_1;
+				else if (UO->GumpPixelsInXY(0x0938, 16, 33))
+					LSG = ID_GSB_BUTTON_HEAL_2;
+			}
+
+			TGameCharacter *obj = World->FindWorldCharacter(m_Serial);
+
+			if (obj != NULL && obj->MaxHits > 0 && obj->CanChangeName && TextEntry != NULL)
+			{
+				//Для изменения имени
+				if (UO->PolygonePixelsInXY(16, 14, 109, 16))
+					LSG = ID_GSB_TEXT_FIELD;
+			}
+
+			if (InGroup() && UO->GumpPixelsInXY(0x082C, 136, 24))
+				LSG = ID_GSB_BUTTON_REMOVE_FROM_GROUP;
 		}
 
 		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
-		{
 			LSG = ID_GSB_LOCK_MOVING;
-			g_LastSelectedGump = index;
-		}
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
 
 		if (LSG != 0)
+		{
+			g_LastSelectedGump = index;
 			g_LastSelectedObject = LSG;
+		}
 
 		return LSG;
 	}
