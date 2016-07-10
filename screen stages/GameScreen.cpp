@@ -321,10 +321,24 @@ void TGameScreen::CalculateRenderList()
 
 #if UO_CHECKERBOARD_SEQUENCE_RENDER_LIST == 1
 	int minX = m_RenderBounds.RealMinRangeX;
+
+	if (minX < 0)
+		minX = 0;
+
 	int minY = m_RenderBounds.RealMinRangeY;
 
+	if (minY < 0)
+		minY = 0;
+
 	int maxX = m_RenderBounds.RealMaxRangeX;
+
+	if (maxX > g_MapSizeX[g_CurrentMap])
+		maxX = g_MapSizeX[g_CurrentMap];
+
 	int maxY = m_RenderBounds.RealMaxRangeY;
+
+	if (maxY > g_MapSizeY[g_CurrentMap])
+		maxY = g_MapSizeY[g_CurrentMap];
 
 	IFOR(i, 0, 2)
 	{
