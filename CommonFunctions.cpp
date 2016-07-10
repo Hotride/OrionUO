@@ -133,7 +133,7 @@ string EncodeUTF8(const wstring &wstr)
 	{
 		result.resize(size + 1);
 		WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &result[0], size, NULL, NULL);
-		result[size] = 0;
+		result.resize(size); // result[size] = 0;
 	}
 
 	return result;
@@ -148,7 +148,7 @@ wstring DecodeUTF8(const string &str)
 	{
 		result.resize(size + 1);
 		MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &result[0], size);
-		result[size] = 0;
+		result.resize(size); // result[size] = 0;
 	}
 
 	return result;
@@ -164,7 +164,7 @@ string ToString(const wstring &wstr)
 	{
 		str.resize(newSize + 1);
 		::WideCharToMultiByte(GetACP(), 0, wstr.c_str(), size, &str[0], newSize, NULL, NULL);
-		str[newSize] = 0;
+		str.resize(newSize); // str[newSize] = 0;
 	}
 
 	return str;
@@ -179,45 +179,11 @@ wstring ToWString(const string &str)
 	{
 		wstr.resize(size + 1);
 		MultiByteToWideChar(GetACP(), 0, str.c_str(), size, &wstr[0], size);
-		wstr[size] = 0;
+		wstr.resize(size); // wstr[size] = 0;
 	}
 
 	return wstr;
 }
-//---------------------------------------------------------------------------
-/*string ToString(wstring wstr)
-{
-	int size = wstr.length();
-	string str = "";
-
-	if (size > 0)
-	{
-		char *text = new char[size + 1];
-		int len = uucode2str(wstr.c_str(), size, &text[0], size);
-		text[size] = 0;
-		str = text;
-		delete text;
-	}
-
-	return str;
-}
-//---------------------------------------------------------------------------
-wstring ToWString(string str)
-{
-	int size = str.length();
-	wstring wstr = L"";
-
-	if (size)
-	{
-		wchar_t *wbuf = new wchar_t[size + 1];
-		MultiByteToWideChar(GetACP(), 0, str.c_str(), size, &wbuf[0], size);
-		wbuf[size] = 0;
-		wstr = wbuf;
-		delete wbuf;
-	}
-
-	return wstr;
-}*/
 //---------------------------------------------------------------------------
 string ToLowerA(string str)
 {
