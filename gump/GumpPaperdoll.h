@@ -35,7 +35,8 @@ protected:
 	static const int ID_GP_PROFILE_SCROLL = 10;
 	static const int ID_GP_PARTY_MANIFEST_SCROLL = 11;
 	static const int ID_GP_BUTTON_VIRTURE = 12;
-	static const int ID_GP_LOCK_MOVING = 13;
+	static const int ID_GP_BOOK = 13;
+	static const int ID_GP_LOCK_MOVING = 14;
 	
 	TTextRenderer *TextRenderer;
 	

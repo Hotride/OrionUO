@@ -443,10 +443,21 @@ void TGumpPaperdoll::GenerateFrame()
 		}
 
 		equipment = obj->FindLayer(OL_BACKPACK);
+
 		if (equipment != NULL && equipment->AnimID != 0)
-			UO->DrawGump(equipment->AnimID + 50000, equipment->Color, 8, 19, equipment->IsPartialHue());
+		{
+			int bpX = 8;
+
+			if (ConnectionManager.ClientVersion >= CV_60142)
+				bpX = 2;
+
+			UO->DrawGump(equipment->AnimID + 50000, equipment->Color, bpX, 19, equipment->IsPartialHue());
+		}
 
 		UnuseShader();
+
+		//if (ConnectionManager.ClientVersion >= CV_60142)
+		//	UO->DrawGump(0x2B34, 0, 156, 200);
 
 	glEndList();
 
@@ -742,11 +753,20 @@ int TGumpPaperdoll::Draw(bool &mode)
 		}
 
 		equipment = obj->FindLayer(OL_BACKPACK);
+
 		if (equipment != NULL && equipment->AnimID != 0)
 		{
-			if (UO->GumpPixelsInXY(equipment->AnimID + 50000, 8, 19))
+			int bpX = 8;
+
+			if (ConnectionManager.ClientVersion >= CV_60142)
+				bpX = 2;
+
+			if (UO->GumpPixelsInXY(equipment->AnimID + 50000, bpX, 19))
 				LSG = ID_GP_ITEMS + OL_BACKPACK;
 		}
+
+		//if (ConnectionManager.ClientVersion >= CV_60142 &&  UO->GumpPixelsInXY(0x2B34, 156, 200))
+		//	LSG = ID_GP_BOOK;
 		
 		//Проверка текста
 		for (; rto != NULL; rto = rto->m_PrevDraw)
@@ -957,6 +977,10 @@ void TGumpPaperdoll::OnLeftMouseUp()
 				g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
 			}
 
+			break;
+		}
+		case ID_GP_BOOK:
+		{
 			break;
 		}
 		default:
