@@ -2815,8 +2815,8 @@ PACKET_HANDLER(UnicodeTalk)
 		return;
 	}
 	
-	//wstring name((wchar_t*)Ptr);
-	wstring name = ReadUnicodeStringLE(0);
+	wstring name((wchar_t*)Ptr);
+	//wstring name = ReadUnicodeStringLE(0);
 	wstring str = L"";
 
 	if (size > 48)
@@ -4122,8 +4122,8 @@ PACKET_HANDLER(DisplayClilocString)
 	if (*buf == 0xCC)
 		affix = ReadString(0);
 
-	//wstring args((wchar_t*)Ptr);
-	wstring args = ReadUnicodeStringLE(0);
+	wstring args((wchar_t*)Ptr);
+	//wstring args = ReadUnicodeStringLE(0);
 	wstring message = ClilocManager->ParseArgumentsToClilocString(cliloc, args);
 	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
 
@@ -4186,32 +4186,35 @@ PACKET_HANDLER(MegaCliloc)
 
 		short len = ReadShort();
 
+		wstring argument = L"";
+
 		if (len > 0)
 		{
-			//wstring argument((wchar_t*)Ptr, len / 2);
-			//Ptr += len;
-
-			wstring argument = ReadUnicodeStringLE(len / 2);
-
-			wstring str = ClilocManager->ParseArgumentsToClilocString(cliloc, argument);
-
-			if (message.length() && !first)
-				message += L"\n";
-
-			message += str;
-
-			if (first)
-			{
-				if (!obj->NPC)
-					message += L"<basefont color=\"#FFFFFFFF\">";
-
-				first = false;
-			}
-
-			//TPRINT("Cliloc: 0x%08X len=%i arg=%s\n", cliloc, len, ToString(argument).c_str());
+			argument = wstring((wchar_t*)Ptr, len / 2);
+			Ptr += len;
+			//wstring argument = ReadUnicodeStringLE(len / 2);
 		}
+
+		wstring str = ClilocManager->ParseArgumentsToClilocString(cliloc, argument);
+		//TPRINT("Cliloc: argstr=%s\n", ToString(str).c_str());
+
+		if (message.length() && !first)
+			message += L"\n";
+
+		message += str;
+
+		if (first)
+		{
+			if (!obj->NPC)
+				message += L"<basefont color=\"#FFFFFFFF\">";
+
+			first = false;
+		}
+
+		//TPRINT("Cliloc: 0x%08X len=%i arg=%s\n", cliloc, len, ToString(argument).c_str());
 	}
 
+	//TDUMP((PBYTE)message.c_str(), message.length() * 2);
 	obj->ClilocMessage = message;
 	//TPRINT("message=%s\n", ToString(message).c_str());
 }

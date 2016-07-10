@@ -218,7 +218,7 @@ wstring TClilocManager::ParseArgumentsToClilocString(DWORD cliloc, wstring args)
 	while (args.length() && args[0] == L'\t')
 		args.erase(args.begin());
 
-	wstring message = Cliloc(g_Language)->GetW(cliloc);
+	wstring message = Cliloc(g_Language)->GetW(cliloc).c_str();
 
 	vector<wstring> arguments;
 
@@ -249,6 +249,12 @@ wstring TClilocManager::ParseArgumentsToClilocString(DWORD cliloc, wstring args)
 
 		if (pos2 == string::npos)
 			break;
+
+		if (arguments[i].length() > 1 && *arguments[i].c_str() == L'#')
+		{
+			DWORD id = _wtoi(arguments[i].c_str() + 1);
+			arguments[i] = Cliloc(g_Language)->GetW(id).c_str();
+		}
 
 		message.replace(pos1, pos2 - pos1 + 1, arguments[i]);
 	}
