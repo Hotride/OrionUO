@@ -79,10 +79,15 @@ void TGumpManager::Draw( __in bool &mode, __in bool blocked)
 		gump = next;
 	}
 
-	if (menuBarGump != NULL && menuBarGump->Draw(mode))
+	if (menuBarGump != NULL)
 	{
-		if (!mode)
+		int result = menuBarGump->Draw(mode);
+
+		if (result)
+		{
+			g_LastSelectedObject = result;
 			g_LastSelectedGump = (DWORD)menuBarGump;
+		}
 	}
 }
 //---------------------------------------------------------------------------

@@ -169,12 +169,10 @@ int TGumpMenubar::Draw(bool &mode)
 		if (!m_Opened)
 		{
 			if (UO->ResizepicPixelsInXY(0x13BE, 0, 0, 30, 27))
-			{
 				g_LastSelectedGump = index;
 
-				if (UO->GumpPixelsInXY(0x15A1, 5, 3))
-					LSG = ID_GMB_MINIMIZE;
-			}
+			if (UO->GumpPixelsInXY(0x15A1, 5, 3))
+				LSG = ID_GMB_MINIMIZE;
 		}
 		else
 		{
@@ -183,28 +181,25 @@ int TGumpMenubar::Draw(bool &mode)
 				g_LastSelectedGump = index;
 				g_LastSelectedObject = 0;
 			}
-				
+
 			if (UO->GumpPixelsInXY(0x15A4, 5, 3))
 				LSG = ID_GMB_MINIMIZE;
-			else
-			{
-				if (UO->GumpPixelsInXY(0x098B, 30, 1))
-					LSG = ID_GMB_MAP;
-				else if (UO->GumpPixelsInXY(0x098D, 93, 1))
-					LSG = ID_GMB_PAPERDOLL;
-				else if (UO->GumpPixelsInXY(0x098D, 201, 1))
-					LSG = ID_GMB_INVENTORY;
-				else if (UO->GumpPixelsInXY(0x098D, 309, 1))
-					LSG = ID_GMB_JOURNAL;
-				else if (UO->GumpPixelsInXY(0x098B, 417, 1))
-					LSG = ID_GMB_CHAT;
-				else if (UO->GumpPixelsInXY(0x098B, 480, 1))
-					LSG = ID_GMB_HELP;
-				else if (UO->GumpPixelsInXY(0x098D, 543, 1))
-					LSG = ID_GMB_WORLD_MAP;
-				else if (UO->GumpPixelsInXY(0x098B, 651, 1))
-					LSG = ID_GMB_INFO;
-			}
+			else if (UO->GumpPixelsInXY(0x098B, 30, 1))
+				LSG = ID_GMB_MAP;
+			else if (UO->GumpPixelsInXY(0x098D, 93, 1))
+				LSG = ID_GMB_PAPERDOLL;
+			else if (UO->GumpPixelsInXY(0x098D, 201, 1))
+				LSG = ID_GMB_INVENTORY;
+			else if (UO->GumpPixelsInXY(0x098D, 309, 1))
+				LSG = ID_GMB_JOURNAL;
+			else if (UO->GumpPixelsInXY(0x098B, 417, 1))
+				LSG = ID_GMB_CHAT;
+			else if (UO->GumpPixelsInXY(0x098B, 480, 1))
+				LSG = ID_GMB_HELP;
+			else if (UO->GumpPixelsInXY(0x098D, 543, 1))
+				LSG = ID_GMB_WORLD_MAP;
+			else if (UO->GumpPixelsInXY(0x098B, 651, 1))
+				LSG = ID_GMB_INFO;
 		}
 
 		g_MouseX = oldMouseX;
@@ -226,6 +221,7 @@ void TGumpMenubar::OnLeftMouseUp()
 		case ID_GMB_MINIMIZE:
 		{
 			m_Opened = !m_Opened;
+			m_FrameCreated = false;
 
 			break;
 		}
