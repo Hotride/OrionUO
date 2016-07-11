@@ -321,24 +321,10 @@ void TGameScreen::CalculateRenderList()
 
 #if UO_CHECKERBOARD_SEQUENCE_RENDER_LIST == 1
 	int minX = m_RenderBounds.RealMinRangeX;
-
-	if (minX < 0)
-		minX = 0;
-
 	int minY = m_RenderBounds.RealMinRangeY;
 
-	if (minY < 0)
-		minY = 0;
-
 	int maxX = m_RenderBounds.RealMaxRangeX;
-
-	if (maxX > g_MapSizeX[g_CurrentMap])
-		maxX = g_MapSizeX[g_CurrentMap];
-
 	int maxY = m_RenderBounds.RealMaxRangeY;
-
-	if (maxY > g_MapSizeY[g_CurrentMap])
-		maxY = g_MapSizeY[g_CurrentMap];
 
 	IFOR(i, 0, 2)
 	{
@@ -771,9 +757,24 @@ void TGameScreen::CalculateGameWindowBounds()
 		rangeY = rangeX;
 
 	m_RenderBounds.RealMinRangeX = g_Player->X - rangeX;
+
+	if (m_RenderBounds.RealMinRangeX < 0)
+		m_RenderBounds.RealMinRangeX = 0;
+
 	m_RenderBounds.RealMaxRangeX = g_Player->X + rangeX;
+
+	if (m_RenderBounds.RealMaxRangeX >= g_MapSizeX[g_CurrentMap])
+		m_RenderBounds.RealMaxRangeX = g_MapSizeX[g_CurrentMap];
+
 	m_RenderBounds.RealMinRangeY = g_Player->Y - rangeY;
+
+	if (m_RenderBounds.RealMinRangeY < 0)
+		m_RenderBounds.RealMinRangeY = 0;
+
 	m_RenderBounds.RealMaxRangeY = g_Player->Y + rangeY;
+
+	if (m_RenderBounds.RealMaxRangeY >= g_MapSizeY[g_CurrentMap])
+		m_RenderBounds.RealMaxRangeY = g_MapSizeY[g_CurrentMap];
 
 	m_RenderBounds.MinBlockX = (m_RenderBounds.RealMinRangeX / 8) - 1;
 	m_RenderBounds.MinBlockY = (m_RenderBounds.RealMinRangeY / 8) - 1;
