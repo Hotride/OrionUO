@@ -179,7 +179,7 @@ int TGumpMap::Draw(__in bool &mode)
 		}
 		
 		int tempX = posX + 24;
-		int tempY = posY + 32;
+		int tempY = posY + 31;
 		g_GL.Draw(Texture, tempX, tempY, m_Width, m_Height);
 
 		if (m_DoubleImage)
