@@ -573,6 +573,7 @@ bool TGumpManager::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam, __in bool
 				case GT_PROFILE:
 				case GT_BULLETIN_BOARD_ITEM:
 				case GT_GENERIC:
+				case GT_BOOK:
 				{
 					gump->OnKeyPress(wparam, lparam);
 

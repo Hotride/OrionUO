@@ -40,6 +40,8 @@ private:
 	static TTextTexture m_TextTitle;
 	static TTextTexture m_TextBy;
 
+	void InsertInContent(const WPARAM &wparam);
+
 public:
 	TGumpBook(DWORD serial, short x, short y, short pageCount, bool writable, bool unicode);
 	virtual ~TGumpBook();

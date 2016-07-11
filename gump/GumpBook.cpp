@@ -26,8 +26,8 @@ TGumpBook::TGumpBook(DWORD serial, short x, short y, short pageCount, bool writa
 : TGump(GT_BOOK, serial, x, y), m_PageCount(pageCount), m_Writable(writable),
 m_Unicode(unicode), m_Page(0)
 {
-	TextEntryAuthor = new TEntryText();
-	TextEntryTitle = new TEntryText();
+	TextEntryAuthor = new TEntryText(0, 150);
+	TextEntryTitle = new TEntryText(0, 150);
 
 	TextEntry = new TBookEntryText[pageCount];
 	m_PageIndexText = new TTextTexture[pageCount];
@@ -278,7 +278,7 @@ void TGumpBook::OnLeftMouseUp()
 		}
 
 		if (entry != NULL)
-			entry->OnClick(this, 4, false /*m_Unicode*/, x, y);
+			entry->OnClick(this, (m_Unicode ? 0 : 4), m_Unicode, x, y);
 	}
 
 	if (newPage > -1)
@@ -337,120 +337,106 @@ bool TGumpBook::OnLeftMouseDoubleClick()
 	return false;
 }
 //----------------------------------------------------------------------------
-void TGumpBook::OnCharPress(WPARAM &wparam, LPARAM &lparam)
+void TGumpBook::InsertInContent(const WPARAM &wparam)
 {
-	if (wparam == VK_RETURN || wparam == VK_BACK || wparam == VK_ESCAPE || EntryPointer == NULL)
-		return; //Ignore no print keys
+	int page = m_Page;
 
-	if (EntryPointer == TextEntryTitle)
+	if (page > 0 && page < m_PageCount)
 	{
-	}
-	else if (EntryPointer == TextEntryAuthor)
-	{
-	}
-	else
-	{
-		int page = m_Page;
+		bool isSecondEntry = false;
 
-		if (page > 0 && page < m_PageCount)
+		if (EntryPointer != &TextEntry[page])
 		{
-			if (EntryPointer != &TextEntry[page])
+			if (page < m_PageCount - 1 && EntryPointer == &TextEntry[page + 1])
 			{
-				if (page < m_PageCount - 1 && EntryPointer == &TextEntry[page + 1])
-					page++;
-				else
-					return;
+				isSecondEntry = true;
+				page++;
 			}
-		}
-	}
-
-	/*if (!result && TextEntry != NULL)
-	{
-		IFOR(i, 0, m_PageCount && !result)
-			result = (EntryPointer == &TextEntry[i]);
-
-	if (wparam >= '0' && wparam <= '9')
-	{
-		if (m_StartText)
-		{
-			EntryPointer->Clear();
-			m_StartText = false;
+			else
+				return;
 		}
 
 		if (EntryPointer->Insert(wparam))
 		{
-			int val = atoi(EntryPointer->c_str());
-
-			float ValPer = (val * 100.0f) / item->Count;
-
-			if (ValPer <= 0.0f)
-				ValPer = 0.0f;
+			if (m_Unicode)
+			{
+				if (EntryPointer->GetLinesCountW(0) > 10)
+					EntryPointer->Remove(true);
+			}
 			else
-				ValPer = (ValPer * 93.0f) / 100.0f;
-
-			m_ScrollPos = 29 + (int)ValPer;
+			{
+				if (EntryPointer->GetLinesCountA(4) > 10)
+					EntryPointer->Remove(true);
+			}
 
 			m_FrameCreated = false;
 		}
-	}*/
+		//page
+	}
+}
+//----------------------------------------------------------------------------
+void TGumpBook::OnCharPress(WPARAM &wparam, LPARAM &lparam)
+{
+	if (wparam == VK_RETURN || wparam == VK_BACK || wparam == VK_ESCAPE || EntryPointer == NULL || !m_Writable)
+		return; //Ignore no print keys
+
+	if (EntryPointer == TextEntryTitle || EntryPointer == TextEntryAuthor)
+	{
+		if (EntryPointer->Insert(wparam))
+		{
+			if (m_Unicode)
+			{
+				if (EntryPointer->GetLinesCountW(0) > 1)
+					EntryPointer->Remove(true);
+			}
+			else
+			{
+				int count = 1;
+
+				if (EntryPointer == TextEntryTitle)
+					count++;
+
+				if (EntryPointer->GetLinesCountA(4) > count)
+					EntryPointer->Remove(true);
+			}
+
+			m_FrameCreated = false;
+		}
+	}
+	else
+		InsertInContent(wparam);
 }
 //----------------------------------------------------------------------------
 void TGumpBook::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 {
-	TGameItem *item = World->FindWorldItem(Serial);
+	if (!m_Writable)
+		return;
 
-	if (item != NULL)
+	switch (wparam)
 	{
-		switch (wparam)
+		case VK_RETURN:
 		{
-			/*case VK_RETURN:
+			if (EntryPointer != TextEntryTitle && EntryPointer != TextEntryAuthor)
 			{
-				if (ConfigManager.GetConsoleNeedEnter())
-					EntryPointer = NULL;
-				else
-					EntryPointer = GameConsole;
-
-				break;
-			}*/
-			case VK_HOME:
-			{
-				EntryPointer->SetPos(0);
+				InsertInContent(L'\n');
 				m_FrameCreated = false;
-
-				break;
 			}
-			case VK_END:
-			{
-				EntryPointer->SetPos(EntryPointer->Length());
-				m_FrameCreated = false;
 
-				break;
-			}
-			case VK_LEFT:
-			{
-				EntryPointer->AddPos(-1);
-				m_FrameCreated = false;
-
-				break;
-			}
-			case VK_RIGHT:
-			{
-				EntryPointer->AddPos(1);
-				m_FrameCreated = false;
-
-				break;
-			}
-			case VK_DELETE:
-			case VK_BACK:
-			{
-				EntryPointer->Remove(wparam == VK_BACK);
-				m_FrameCreated = false;
-
-				break;
-			}
-			default:
-				break;
+			break;
 		}
+		case VK_HOME:
+		case VK_END:
+		case VK_LEFT:
+		case VK_RIGHT:
+		case VK_BACK:
+		case VK_DELETE:
+		{
+			EntryPointer->OnKey(this, wparam);
+			m_FrameCreated = false;
+			break;
+		}
+		default:
+			break;
 	}
 }
 //----------------------------------------------------------------------------

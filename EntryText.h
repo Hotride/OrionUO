@@ -70,6 +70,12 @@ public:
 	*/
 	void Clear();
 
+	//Получить количество строк
+	int GetLinesCountA(BYTE font, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0, int width = 0);
+
+	//Получить количество строк
+	int GetLinesCountW(BYTE font, TEXT_ALIGN_TYPE align = TS_LEFT, WORD flags = 0, int width = 0);
+
 	//Вставить символ
 	bool Insert(wchar_t ch, TGump *gump = NULL);
 

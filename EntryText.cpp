@@ -135,6 +135,48 @@ void TEntryText::OnKey(TGump *gump, WPARAM wParam)
 	}
 }
 //---------------------------------------------------------------------------
+//Получить количество строк
+int TEntryText::GetLinesCountA(BYTE font, TEXT_ALIGN_TYPE align, WORD flags, int width)
+{
+	if (!width)
+		width = m_Width;
+
+	MULTILINES_FONT_INFO *info = FontManager->GetInfoA(font, c_str(), Length(), align, flags, width);
+
+	int count = 0;
+
+	while (info != NULL)
+	{
+		MULTILINES_FONT_INFO *next = info->m_Next;
+		delete info;
+		info = next;
+		count++;
+	}
+
+	return count;
+}
+//---------------------------------------------------------------------------
+//Получить количество строк
+int TEntryText::GetLinesCountW(BYTE font, TEXT_ALIGN_TYPE align, WORD flags, int width)
+{
+	if (!width)
+		width = m_Width;
+
+	MULTILINES_FONT_INFO *info = FontManager->GetInfoW(font, Data(), Length(), align, flags, width);
+
+	int count = 0;
+
+	while (info != NULL)
+	{
+		MULTILINES_FONT_INFO *next = info->m_Next;
+		delete info;
+		info = next;
+		count++;
+	}
+
+	return count;
+}
+//---------------------------------------------------------------------------
 //Вставить символ относительно m_Position
 bool TEntryText::Insert(wchar_t ch, TGump *gump)
 {
