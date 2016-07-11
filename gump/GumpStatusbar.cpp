@@ -941,12 +941,6 @@ int TGumpStatusbar::Draw(bool &mode)
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
 
-		if (LSG != 0)
-		{
-			g_LastSelectedGump = index;
-			g_LastSelectedObject = LSG;
-		}
-
 		return LSG;
 	}
 

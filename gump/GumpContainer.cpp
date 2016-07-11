@@ -416,12 +416,6 @@ int TGumpContainer::Draw(bool &mode)
 
 			if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
 				LSG = ID_GC_LOCK_MOVING;
-
-			if (LSG != 0)
-			{
-				g_LastSelectedObject = LSG;
-				g_LastSelectedGump = index;
-			}
 		}
 
 		g_MouseX = oldMouseX;

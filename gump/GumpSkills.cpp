@@ -718,124 +718,45 @@ int TGumpSkills::Draw(bool &mode)
 		else if (UO->PolygonePixelsInXY(60, height + 44, 80, 14))
 			LSG = ID_GS_BUTTON_NEW_GROUP;
 		
-		if (g_LastSelectedGump == index && !LSG)
+		int startIndex = m_CurrentLine;
+		int currentIndex = 0;
+		
+		int drawX = 28;
+		int drawY = 75;
+
+		const int drawStep = 17;
+		
+		int boundsY = height;
+
+		int groupIndex = 0;
+		
+		if (g_Player != NULL)
 		{
-			int startIndex = m_CurrentLine;
-			int currentIndex = 0;
-		
-			int drawX = 28;
-			int drawY = 75;
+			PSKILLS_DATA Skills = g_Skills;
 
-			const int drawStep = 17;
-		
-			int boundsY = height;
-
-			int groupIndex = 0;
-		
-			if (g_Player != NULL)
+			TSkillGroupObject *group = SkillGroupManager.m_Groups;
+			while (group != NULL)
 			{
-				PSKILLS_DATA Skills = g_Skills;
+				if (drawY + 10 >= boundsY)
+					break;
 
-				TSkillGroupObject *group = SkillGroupManager.m_Groups;
-				while (group != NULL)
+				bool canDraw = (currentIndex >= startIndex);
+				currentIndex++;
+
+				if (canDraw)
 				{
-					if (drawY + 10 >= boundsY)
+					TTextTexture &th = group->m_Texture;
+
+					if (th.Width && UO->PolygonePixelsInXY(drawX + 16, drawY, th.Width - 10, 14))
+					{
+						LSG = ID_GS_GROUP + groupIndex;
 						break;
+					}
+				}
 
-					bool canDraw = (currentIndex >= startIndex);
-					currentIndex++;
-
+				if (group->GetMaximized())
+				{
 					if (canDraw)
-					{
-						TTextTexture &th = group->m_Texture;
-
-						if (th.Width && UO->PolygonePixelsInXY(drawX + 16, drawY, th.Width - 10, 14))
-						{
-							LSG = ID_GS_GROUP + groupIndex;
-							break;
-						}
-					}
-
-					if (group->GetMaximized())
-					{
-						if (canDraw)
-						{
-							if (group->GetCount() && UO->PolygonePixelsInXY(drawX, drawY, 14, 14))
-							{
-								LSG = ID_GS_GROUP_MINIMIZE + groupIndex;
-
-								break;
-							}
-
-							drawY += (drawStep + 2);
-						}
-
-						bool completedSearch = false;
-
-						int cnt = group->GetCount();
-						IFOR(i, 0, cnt)
-						{
-							if (completedSearch)
-								break;
-
-							if (drawY + 10 >= boundsY)
-								break;
-
-							canDraw = (currentIndex >= startIndex);
-							currentIndex++;
-
-							if (canDraw)
-							{
-								BYTE idx = group->GetItem(i);
-								if (idx < g_SkillsCount)
-								{
-									if (Skills[idx].m_Button && UO->GumpPixelsInXY(0x0837, drawX + 8, drawY))
-									{
-										LSG = ID_GS_SKILL_BUTTON + idx; //Button
-										completedSearch = true;
-
-										break;
-									}
-
-									TTextTexture &th = Skills[idx].m_Texture;
-									int width = 150;
-
-									if (th.Width > 150)
-										width = th.Width;
-
-									if (UO->PolygonePixelsInXY(drawX + 22, drawY - 1, width, 14))
-									{
-										LSG = ID_GS_SKILL + idx; //Name
-										completedSearch = true;
-
-										break;
-									}
-
-									BYTE status = g_Player->GetSkillStatus(idx);
-
-									WORD gumpID = 0x0984; //Up
-									if (status == 1)
-										gumpID = 0x0986; //Down
-									else if (status == 2)
-										gumpID = 0x082C; //Lock
-
-									if (UO->GumpPixelsInXY(gumpID, drawX + 251, drawY - 1))
-									{
-										LSG = ID_GS_SKILL_STATE + idx;
-										completedSearch = true;
-
-										break;
-									}
-								
-									drawY += drawStep;
-								}
-							}
-						}
-
-						if (completedSearch)
-							break;
-					}
-					else if (canDraw)
 					{
 						if (group->GetCount() && UO->PolygonePixelsInXY(drawX, drawY, 14, 14))
 						{
@@ -844,23 +765,93 @@ int TGumpSkills::Draw(bool &mode)
 							break;
 						}
 
-						drawY += drawStep;
+						drawY += (drawStep + 2);
 					}
 
-					groupIndex++;
-					group = group->m_Next;
+					bool completedSearch = false;
+
+					int cnt = group->GetCount();
+					IFOR(i, 0, cnt)
+					{
+						if (completedSearch)
+							break;
+
+						if (drawY + 10 >= boundsY)
+							break;
+
+						canDraw = (currentIndex >= startIndex);
+						currentIndex++;
+
+						if (canDraw)
+						{
+							BYTE idx = group->GetItem(i);
+							if (idx < g_SkillsCount)
+							{
+								if (Skills[idx].m_Button && UO->GumpPixelsInXY(0x0837, drawX + 8, drawY))
+								{
+									LSG = ID_GS_SKILL_BUTTON + idx; //Button
+									completedSearch = true;
+
+									break;
+								}
+
+								TTextTexture &th = Skills[idx].m_Texture;
+								int width = 150;
+
+								if (th.Width > 150)
+									width = th.Width;
+
+								if (UO->PolygonePixelsInXY(drawX + 22, drawY - 1, width, 14))
+								{
+									LSG = ID_GS_SKILL + idx; //Name
+									completedSearch = true;
+
+									break;
+								}
+
+								BYTE status = g_Player->GetSkillStatus(idx);
+
+								WORD gumpID = 0x0984; //Up
+								if (status == 1)
+									gumpID = 0x0986; //Down
+								else if (status == 2)
+									gumpID = 0x082C; //Lock
+
+								if (UO->GumpPixelsInXY(gumpID, drawX + 251, drawY - 1))
+								{
+									LSG = ID_GS_SKILL_STATE + idx;
+									completedSearch = true;
+
+									break;
+								}
+								
+								drawY += drawStep;
+							}
+						}
+					}
+
+					if (completedSearch)
+						break;
 				}
+				else if (canDraw)
+				{
+					if (group->GetCount() && UO->PolygonePixelsInXY(drawX, drawY, 14, 14))
+					{
+						LSG = ID_GS_GROUP_MINIMIZE + groupIndex;
+
+						break;
+					}
+
+					drawY += drawStep;
+				}
+
+				groupIndex++;
+				group = group->m_Next;
 			}
 		}
 
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
-
 		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
-		{
 			g_LastSelectedObject = ID_GS_LOCK_MOVING;
-			g_LastSelectedGump = index;
-		}
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;

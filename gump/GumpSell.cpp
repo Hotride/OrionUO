@@ -690,16 +690,10 @@ int TGumpSell::Draw(bool &mode)
 		}
 		
 		if (UO->GumpPixelsInXY(0x0828, 237, 66 + scrollerY1)) //Scroller 1
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GS_SCROLL_1;
-		}
 		else if (UO->GumpPixelsInXY(0x0828, 407, 280 + scrollerY2)) //Scroller 2
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GS_SCROLL_2;
-		}
-		else if (g_LastSelectedGump == index)
+		else
 		{
 			if (UO->PolygonePixelsInXY(233, 49, 20, 16)) //1 gump ^
 				LSG = ID_GS_BUTTON_UP_1;
@@ -717,9 +711,6 @@ int TGumpSell::Draw(bool &mode)
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 
 		return LSG;
 	}

@@ -175,39 +175,36 @@ int TGumpSelectColor::Draw(bool &mode)
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
+		}
 			
-			if (UO->GumpPixelsInXY(0x0907, 208, 138))
-				LSG = ID_GSC_BUTTON_OKAY; //Okay button
-			else if (UO->GumpPixelsInXY(0x0845, m_SliderPos, 142))
-				LSG = ID_GSC_SLIDER; //Scroll button
+		if (UO->GumpPixelsInXY(0x0907, 208, 138))
+			LSG = ID_GSC_BUTTON_OKAY; //Okay button
+		else if (UO->GumpPixelsInXY(0x0845, m_SliderPos, 142))
+			LSG = ID_GSC_SLIDER; //Scroll button
 		
-			const int cellWidthX = 8;
-			const int cellWidthY = 8;
+		const int cellWidthX = 8;
+		const int cellWidthY = 8;
 
-			bool found = false;
-			RECT rc = {0, 0, cellWidthX, cellWidthY};
+		bool found = false;
+		RECT rc = {0, 0, cellWidthX, cellWidthY};
 		
-			IFOR(y, 0, 10)
+		IFOR(y, 0, 10)
+		{
+			IFOR(x, 0, 20)
 			{
-				IFOR(x, 0, 20)
+				POINT p = {g_MouseX - (34 + (x * cellWidthX)), g_MouseY - (34 + (y * cellWidthY))};
+
+				if (PtInRect(&rc, p))
 				{
-					POINT p = {g_MouseX - (34 + (x * cellWidthX)), g_MouseY - (34 + (y * cellWidthY))};
+					LSG = (ID_GSC_COLORS + (x * 30) + y);
+					found = true;
 
-					if (PtInRect(&rc, p))
-					{
-						LSG = (ID_GSC_COLORS + (x * 30) + y);
-						found = true;
-
-						break;
-					}
-				}
-
-				if (found)
 					break;
+				}
 			}
 
-			if (LSG != 0)
-				g_LastSelectedObject = LSG;
+			if (found)
+				break;
 		}
 
 		g_MouseX = oldMouseX;

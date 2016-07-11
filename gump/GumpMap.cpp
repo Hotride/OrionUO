@@ -305,12 +305,6 @@ int TGumpMap::Draw(__in bool &mode)
 			}
 		}
 		
-		if (LSG != 0)
-		{
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
-			g_LastSelectedGump = index;
-		}
-
 		return LSG;
 	}
 

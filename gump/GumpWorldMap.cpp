@@ -624,12 +624,6 @@ int TGumpWorldMap::Draw(bool &mode)
 			UO->DrawGump(0x09B9, 0, posX - 5, posY);
 		}
 
-		if (LSG != 0)
-		{
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
-			g_LastSelectedGump = index;
-		}
-
 		return LSG;
 	}
 

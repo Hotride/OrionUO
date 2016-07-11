@@ -663,7 +663,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 
 		if (m_Serial == g_PlayerSerial)
 		{
-			if (Minimized)
+			if (m_Minimized)
 			{
 				if (UO->GumpPixelsInXY(0x07EE, 0, 0))
 				{
@@ -800,16 +800,10 @@ int TGumpPaperdoll::Draw(bool &mode)
 		}
 		
 		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
-		{
 			LSG = ID_GP_LOCK_MOVING;
-			g_LastSelectedGump = index;
-		}
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
 
 		return LSG;
 	}

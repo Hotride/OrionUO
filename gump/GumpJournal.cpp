@@ -623,42 +623,27 @@ int TGumpJournal::Draw(bool &mode)
 			g_LastSelectedGump = index;
 		}
 
-		if (g_LastSelectedGump == index)
-		{
-			if (UO->GumpPixelsInXY(0x00D2, 40, height + 43)) //Show System
-				LSG = ID_GJ_SHOW_SYSTEM;
-			else if (UO->GumpPixelsInXY(0x00D2, 126, height + 43)) //Show Objects
-				LSG = ID_GJ_SHOW_OBJECTS;
-			else if (UO->GumpPixelsInXY(0x00D2, 210, height + 43)) //Show Client
-				LSG = ID_GJ_SHOW_CLIENTS;
-			else if (UO->GumpPixelsInXY(0x082C, 233, height + 17)) //Lock
-				LSG = ID_GJ_BUTTON_LOCK;
-			else if (UO->GumpPixelsInXY(0x0824, 249, 56)) //^ button
-				LSG = ID_GJ_BUTTON_UP;
-			else if (UO->GumpPixelsInXY(0x0825, 249, height + 17)) //v button
-				LSG = ID_GJ_BUTTON_DOWN;
-		}
+		if (UO->GumpPixelsInXY(0x00D2, 40, height + 43)) //Show System
+			LSG = ID_GJ_SHOW_SYSTEM;
+		else if (UO->GumpPixelsInXY(0x00D2, 126, height + 43)) //Show Objects
+			LSG = ID_GJ_SHOW_OBJECTS;
+		else if (UO->GumpPixelsInXY(0x00D2, 210, height + 43)) //Show Client
+			LSG = ID_GJ_SHOW_CLIENTS;
+		else if (UO->GumpPixelsInXY(0x082C, 233, height + 17)) //Lock
+			LSG = ID_GJ_BUTTON_LOCK;
+		else if (UO->GumpPixelsInXY(0x0824, 249, 56)) //^ button
+			LSG = ID_GJ_BUTTON_UP;
+		else if (UO->GumpPixelsInXY(0x0825, 249, height + 17)) //v button
+			LSG = ID_GJ_BUTTON_DOWN;
 		
 		if (UO->GumpPixelsInXY(0x001F, 257, scrollerY)) //Scroller
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GJ_SCROLLER;
-		}
 		
 		if (UO->GumpPixelsInXY(0x082E, 137, height + 66)) //Resize
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GJ_BUTTON_RESIZE;
-		}
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
 
 		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
-		{
-			g_LastSelectedObject = ID_GJ_LOCK_MOVING;
-			g_LastSelectedGump = index;
-		}
+			LSG = ID_GJ_LOCK_MOVING;
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;

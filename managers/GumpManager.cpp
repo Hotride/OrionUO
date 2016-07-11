@@ -65,8 +65,13 @@ void TGumpManager::Draw( __in bool &mode, __in bool blocked)
 			{
 				if (blocked == gump->Blocked && gump->CanBeDisplayed())
 				{
-					if (gump->Draw(mode))
+					int result = gump->Draw(mode);
+
+					if (result)
+					{
+						g_LastSelectedObject = result;
 						g_LastSelectedGump = (DWORD)gump;
+					}
 				}
 			}
 		}

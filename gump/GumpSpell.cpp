@@ -59,21 +59,16 @@ int TGumpSpell::Draw(bool &mode)
 	}
 	else
 	{
-		DWORD LSG = 0;
+		int LSG = 0;
 
 		if (UO->GumpPixelsInXY(m_Graphic, x, y))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
-			LSG = index;
 		}
 
 		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(x, y, 10, 14))
-		{
-			g_LastSelectedObject = ID_GS_LOCK_MOVING;
-			g_LastSelectedGump = index;
-			LSG = index;
-		}
+			LSG = ID_GS_LOCK_MOVING;
 
 		return LSG;
 	}

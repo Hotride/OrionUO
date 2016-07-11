@@ -134,23 +134,20 @@ int TGumpSelectFont::Draw(bool &mode)
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
+		}
 
-			int drawY = 24;
+		int drawY = 24;
 
-			IFOR(i, 0, unicodeFontCount)
+		IFOR(i, 0, unicodeFontCount)
+		{
+			drawY += 22;
+
+			if (UO->GumpPixelsInXY(0x00D0, 50, drawY))
 			{
-				drawY += 22;
+				LSG = i + ID_GSF_FONTS;
 
-				if (UO->GumpPixelsInXY(0x00D0, 50, drawY))
-				{
-					LSG = i + ID_GSF_FONTS;
-
-					break;
-				}
+				break;
 			}
-
-			if (LSG != 0)
-				g_LastSelectedObject = LSG;
 		}
 
 		g_MouseX = oldMouseX;

@@ -607,9 +607,6 @@ int TGumpSpellbook::Draw(bool &mode)
 				//Если счетчик не равен индексу - ошибка, выходим с сохранением объекта под курсором
 				if (c != idx)
 				{
-					if (LSG != 0)
-						g_LastSelectedObject = LSG;
-
 					g_MouseX = oldMouseX;
 					g_MouseY = oldMouseY;
 
@@ -618,10 +615,6 @@ int TGumpSpellbook::Draw(bool &mode)
 			}
 			else if (c != idx + 1)
 			{
-				//Если счетчик не равен индексу + 1 - ошибка, выходим с сохранением объекта под курсором
-				if (LSG != 0)
-					g_LastSelectedObject = LSG;
-
 				g_MouseX = oldMouseX;
 				g_MouseY = oldMouseY;
 
@@ -630,10 +623,6 @@ int TGumpSpellbook::Draw(bool &mode)
 
 			if (SI == 64)
 			{
-				//Если счетчик достиг конца списка заклинаний - ошибка, выходим с сохранением объекта под курсором
-				if (LSG != 0)
-					g_LastSelectedObject = LSG;
-
 				g_MouseX = oldMouseX;
 				g_MouseY = oldMouseY;
 
@@ -655,10 +644,6 @@ int TGumpSpellbook::Draw(bool &mode)
 
 			if (SI == 64)
 			{
-				//Если счетчик не равен концу списка заклинаний - ошибка, выходим с сохранением объекта под курсором
-				if (LSG != 0)
-					g_LastSelectedObject = LSG;
-
 				g_MouseX = oldMouseX;
 				g_MouseY = oldMouseY;
 
@@ -670,15 +655,8 @@ int TGumpSpellbook::Draw(bool &mode)
 				LSG = ID_GSB_SPELL_ICON_RIGHT + SI;
 		}
 
-		//Если что-то нашлось - сохраняем индекс объекта
-		if (LSG != 0)
-			g_LastSelectedObject = LSG;
-
 		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
-		{
-			g_LastSelectedObject = ID_GSB_LOCK_MOVING;
-			g_LastSelectedGump = index;
-		}
+			LSG = ID_GSB_LOCK_MOVING;
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;

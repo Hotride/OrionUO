@@ -435,7 +435,7 @@ int TGumpBuff::Draw(bool &mode)
 
 		if ((g_MouseX >= startGump.x && g_MouseX <= endGump.x && g_MouseY >= startGump.y && g_MouseY <= endGump.y))
 		{
-			g_LastSelectedGump = (DWORD)this;
+			g_LastSelectedGump = index;
 
 			if (UO->GumpPixelsInXY(0x7585, ballCoordinates.x, ballCoordinates.y))
 				LSG = ID_GB_NEXT_WINDOW_DIRECTION; //Crystal ball
@@ -479,9 +479,6 @@ int TGumpBuff::Draw(bool &mode)
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 
 		return LSG;
 	}

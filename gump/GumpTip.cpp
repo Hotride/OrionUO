@@ -394,38 +394,26 @@ int TGumpTip::Draw(bool &mode)
 			g_LastSelectedGump = index;
 		}
 
-		if (g_LastSelectedGump == index)
-		{
-			if (UO->GumpPixelsInXY(0x0824, 249, 56)) //^ button
-				LSG = ID_GT_BUTTON_UP;
-			else if (UO->GumpPixelsInXY(0x0825, 249, height + 17)) //v button
-				LSG = ID_GT_BUTTON_DOWN;
+		if (UO->GumpPixelsInXY(0x0824, 249, 56)) //^ button
+			LSG = ID_GT_BUTTON_UP;
+		else if (UO->GumpPixelsInXY(0x0825, 249, height + 17)) //v button
+			LSG = ID_GT_BUTTON_DOWN;
 
-			if (!m_Updates)
-			{
-				if (UO->GumpPixelsInXY(0x09CC, 35, height + 45)) //Previous gump
-					LSG = ID_GT_PREV_GUMP;
-				else if (UO->GumpPixelsInXY(0x09CD, 251, height + 45)) //Next gump
-					LSG = ID_GT_NEXT_GUMP;
-			}
+		if (!m_Updates)
+		{
+			if (UO->GumpPixelsInXY(0x09CC, 35, height + 45)) //Previous gump
+				LSG = ID_GT_PREV_GUMP;
+			else if (UO->GumpPixelsInXY(0x09CD, 251, height + 45)) //Next gump
+				LSG = ID_GT_NEXT_GUMP;
 		}
 
 		if (UO->GumpPixelsInXY(0x001F, 257, 72 + scrollerY)) //Scroller
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GT_SCROLLER;
-		}
 		else if (UO->GumpPixelsInXY(0x082E, 137, height + 66)) //Resize
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GT_BUTTON_RESIZE;
-		}
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 
 		return LSG;
 	}

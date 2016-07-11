@@ -172,36 +172,31 @@ int TGumpBook::Draw(bool &mode)
 		int LSG = 0;
 
 		if (UO->GumpPixelsInXY(0x01FE, 0, 0))
-		{
-			g_LastSelectedGump = (DWORD)this;
+			g_LastSelectedGump = index;
 
-			if (m_Page && UO->GumpPixelsInXY(0x01FF, 0, 0))
-				LSG = ID_GB_BUTTON_PREV; //Last page
-			else if (m_Page + 2 < m_PageCount && UO->GumpPixelsInXY(0x0200, 356, 0))
-				LSG = ID_GB_BUTTON_NEXT; //Next page
-			else if (!m_Page)
-			{
-				if (UO->PolygonePixelsInXY(41, 65, 150, 22))
-					LSG = ID_GB_TEXT_AREA_TITLE; //Text title
-				else if (UO->PolygonePixelsInXY(41, 160, 150, 44))
-					LSG = ID_GB_TEXT_AREA_AUTHOR; //Text author
-				else if (UO->PolygonePixelsInXY(224, 34, 160, 166))
-					LSG = ID_GB_TEXT_AREA_PAGE_RIGHT; //Text right area
-			}
-			else
-			{
-				if (UO->PolygonePixelsInXY(38, 34, 160, 166))
-					LSG = ID_GB_TEXT_AREA_PAGE_LEFT; //Text left area
-				else if (UO->PolygonePixelsInXY(224, 34, 160, 166))
-					LSG = ID_GB_TEXT_AREA_PAGE_RIGHT; //Text right area
-			}
+		if (m_Page && UO->GumpPixelsInXY(0x01FF, 0, 0))
+			LSG = ID_GB_BUTTON_PREV; //Last page
+		else if (m_Page + 2 < m_PageCount && UO->GumpPixelsInXY(0x0200, 356, 0))
+			LSG = ID_GB_BUTTON_NEXT; //Next page
+		else if (!m_Page)
+		{
+			if (UO->PolygonePixelsInXY(41, 65, 150, 22))
+				LSG = ID_GB_TEXT_AREA_TITLE; //Text title
+			else if (UO->PolygonePixelsInXY(41, 160, 150, 44))
+				LSG = ID_GB_TEXT_AREA_AUTHOR; //Text author
+			else if (UO->PolygonePixelsInXY(224, 34, 160, 166))
+				LSG = ID_GB_TEXT_AREA_PAGE_RIGHT; //Text right area
+		}
+		else
+		{
+			if (UO->PolygonePixelsInXY(38, 34, 160, 166))
+				LSG = ID_GB_TEXT_AREA_PAGE_LEFT; //Text left area
+			else if (UO->PolygonePixelsInXY(224, 34, 160, 166))
+				LSG = ID_GB_TEXT_AREA_PAGE_RIGHT; //Text right area
 		}
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 
 		return LSG;
 	}

@@ -201,38 +201,35 @@ int TGumpBulletinBoard::Draw(bool &mode)
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
-			
-			if (UO->PolygonePixelsInXY(15, 170, 80, 80))
-				LSG = ID_GBB_POST_MESSAGE;
-			else if (UO->PolygonePixelsInXY(355, 142, 20, 20))
-				LSG = ID_GBB_BUTTON_UP;
-			else if (UO->PolygonePixelsInXY(355, 318, 20, 20))
-				LSG = ID_GBB_BUTTON_DOWN;
-			else if (UO->PolygonePixelsInXY(127, 159, 230, 330))
+		}
+
+		if (UO->PolygonePixelsInXY(15, 170, 80, 80))
+			LSG = ID_GBB_POST_MESSAGE;
+		else if (UO->PolygonePixelsInXY(355, 142, 20, 20))
+			LSG = ID_GBB_BUTTON_UP;
+		else if (UO->PolygonePixelsInXY(355, 318, 20, 20))
+			LSG = ID_GBB_BUTTON_DOWN;
+		else if (UO->PolygonePixelsInXY(127, 159, 230, 330))
+		{
+			int currentIndex = 0;
+
+			TBaseQueueItem *item = m_Items;
+
+			int yPtr = 159 - (m_CurrentLine * GUMP_SCROLLING_PIXEL_STEP);
+
+			while (item != NULL)
 			{
-				int currentIndex = 0;
+				if (UO->PolygonePixelsInXY(127, yPtr, 230, 18))
+					LSG = ID_GBB_MESSAGE + currentIndex;
 
-				TBaseQueueItem *item = m_Items;
-
-				int yPtr = 159 - (m_CurrentLine * GUMP_SCROLLING_PIXEL_STEP);
-
-				while (item != NULL)
-				{
-					if (UO->PolygonePixelsInXY(127, yPtr, 230, 18))
-						LSG = ID_GBB_MESSAGE + currentIndex;
-
-					currentIndex++;
-					yPtr += 18;
-					item = (TGumpBulletinBoardObject*)item->m_Next;
-				}
+				currentIndex++;
+				yPtr += 18;
+				item = (TGumpBulletinBoardObject*)item->m_Next;
 			}
 		}
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 
 		return LSG;
 	}

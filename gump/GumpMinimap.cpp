@@ -248,21 +248,16 @@ int TGumpMinimap::Draw(bool &mode)
 		g_MouseX -= (int)g_GumpTranslateX;
 		g_MouseY -= (int)g_GumpTranslateY;
 
-		DWORD LSG = 0;
+		int LSG = 0;
 
 		if (UO->GumpPixelsInXY(0x1393 - (int)Minimized, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
-			LSG = index;
 		}
 
 		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
-		{
-			g_LastSelectedObject = ID_GMM_LOCK_MOVING;
-			g_LastSelectedGump = index;
-			LSG = index;
-		}
+			LSG = ID_GMM_LOCK_MOVING;
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;

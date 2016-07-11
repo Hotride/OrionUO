@@ -398,15 +398,9 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 			g_LastSelectedGump = index;
 		}
 		else if (UO->GumpPixelsInXY(0x0828, 255, 120 + scrollerY)) //Scroller
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GBBI_SCROLLER;
-		}
 		else if (UO->GumpPixelsInXY(0x082E, 139, height + 66)) //Resize
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GBBI_BUTTON_RESIZE;
-		}
 		else //body
 		{
 			int curPosY = 59;
@@ -465,50 +459,44 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 			}
 		}
 		
-		if (g_LastSelectedGump == index)
+		if (UO->PolygonePixelsInXY(246, 106, 20, 18)) //^
+			LSG = ID_GBBI_SCROLLER_UP;
+		else if (UO->PolygonePixelsInXY(246, height + 17, 20, 18)) //v
+			LSG = ID_GBBI_SCROLLER_DOWN;
+		else
 		{
-			if (UO->PolygonePixelsInXY(246, 106, 20, 18)) //^
-				LSG = ID_GBBI_SCROLLER_UP;
-			else if (UO->PolygonePixelsInXY(246, height + 17, 20, 18)) //v
-				LSG = ID_GBBI_SCROLLER_DOWN;
-			else
+			switch (m_Variant)
 			{
-				switch (m_Variant)
+				case 0:
 				{
-					case 0:
-					{
-						if (UO->PolygonePixelsInXY(30 + m_Text[2].Width, 78, 160, 16)) //Subject text
-							LSG = ID_GBBI_SUBJECT_TEXT_FIELD;
-						else if (LSG != ID_GBBI_SCROLLER && UO->PolygonePixelsInXY(30, 120, 220, height - 100)) //Text
-							LSG = ID_GBBI_TEXT_FIELD;
-						else if (UO->PolygonePixelsInXY(37, height + 45, 30, 14)) //Post
-							LSG = ID_GBBI_POST;
+					if (UO->PolygonePixelsInXY(30 + m_Text[2].Width, 78, 160, 16)) //Subject text
+						LSG = ID_GBBI_SUBJECT_TEXT_FIELD;
+					else if (LSG != ID_GBBI_SCROLLER && UO->PolygonePixelsInXY(30, 120, 220, height - 100)) //Text
+						LSG = ID_GBBI_TEXT_FIELD;
+					else if (UO->PolygonePixelsInXY(37, height + 45, 30, 14)) //Post
+						LSG = ID_GBBI_POST;
 
-						break;
-					}
-					case 2:
-					{
-						if (UO->PolygonePixelsInXY(235, height + 45, 50, 14)) //Remove
-							LSG = ID_GBBI_REMOVE;
-					}
-					case 1:
-					{
-						if (UO->PolygonePixelsInXY(37, height + 45, 40, 14)) //Reply
-							LSG = ID_GBBI_REPLY;
-
-						break;
-					}
-					default:
-						break;
+					break;
 				}
+				case 2:
+				{
+					if (UO->PolygonePixelsInXY(235, height + 45, 50, 14)) //Remove
+						LSG = ID_GBBI_REMOVE;
+				}
+				case 1:
+				{
+					if (UO->PolygonePixelsInXY(37, height + 45, 40, 14)) //Reply
+						LSG = ID_GBBI_REPLY;
+
+					break;
+				}
+				default:
+					break;
 			}
 		}
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 
 		return LSG;
 	}

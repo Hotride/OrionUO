@@ -174,10 +174,7 @@ int TGumpTargetSystem::Draw(bool &mode)
 		}
 
 		if (g_ShowGumpLocker && UO->PolygonePixelsInXY((int)g_GumpTranslateX, (int)g_GumpTranslateY, 10, 14))
-		{
-			g_LastSelectedObject = LSG = ID_GSB_LOCK_MOVING;
-			g_LastSelectedGump = index;
-		}
+			LSG = ID_GSB_LOCK_MOVING;
 
 		return LSG;
 	}

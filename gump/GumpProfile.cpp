@@ -350,10 +350,7 @@ int TGumpProfile::Draw(bool &mode)
 		int LSG = 0;
 		
 		if (UO->GumpPixelsInXY(0x082D, 137, 0)) //Minimize
-		{
 			LSG = ID_GP_BUTTON_MINIMIZE;
-			g_LastSelectedGump = index;
-		}
 		
 		if (UO->GumpPixelsInXY(0x0820, 0, 23)) //Top scroll
 		{
@@ -422,10 +419,7 @@ int TGumpProfile::Draw(bool &mode)
 			int yPtr = m_TopText.Height + 40 - (m_CurrentLine * GUMP_SCROLLING_PIXEL_STEP);
 
 			if (UO->GumpPixelsInXY(0x005C, 40, yPtr))
-			{
-				g_LastSelectedGump = index;
 				LSG = ID_GP_APPLY;
-			}
 			
 			int textHeight = 14;
 
@@ -443,22 +437,13 @@ int TGumpProfile::Draw(bool &mode)
 		}
 
 		if (UO->GumpPixelsInXY(0x001F, 257, 72 + scrollerY)) //Scroller
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GP_SCROLLER;
-		}
 		
 		if (UO->GumpPixelsInXY(0x082E, 137, height + 66)) //Resize
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GP_BUTTON_RESIZE;
-		}
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 
 		return LSG;
 	}

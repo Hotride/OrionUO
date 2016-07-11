@@ -127,18 +127,15 @@ int TGumpQuestion::Draw(bool &mode)
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
-
-			if (UO->GumpPixelsInXY(0x0817, 37, 75))
-				LSG = ID_GQ_BUTTON_CANCEL; //Button cancel
-			else if (UO->GumpPixelsInXY(0x081A, 100, 75))
-				LSG = ID_GQ_BUTTON_OKAY; //Button okay
 		}
+
+		if (UO->GumpPixelsInXY(0x0817, 37, 75))
+			LSG = ID_GQ_BUTTON_CANCEL; //Button cancel
+		else if (UO->GumpPixelsInXY(0x081A, 100, 75))
+			LSG = ID_GQ_BUTTON_OKAY; //Button okay
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 
 		return LSG;
 	}

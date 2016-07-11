@@ -207,12 +207,6 @@ int TGumpMenubar::Draw(bool &mode)
 			}
 		}
 
-		if (LSG != 0)
-		{
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
-			g_LastSelectedGump = index;
-		}
-
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
 

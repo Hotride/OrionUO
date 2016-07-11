@@ -130,30 +130,27 @@ int TGumpPopupMenu::Draw(bool &mode)
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = (DWORD)this;
+		}
 
-			int offsetY = 10;
-			int width = m_Width - 20;
-			int index = 1;
+		int offsetY = 10;
+		int width = m_Width - 20;
+		int index = 1;
 
-			QFOR(item, m_Items, TGumpText*)
+		QFOR(item, m_Items, TGumpText*)
+		{
+			if (UO->PolygonePixelsInXY(10, offsetY, width, item->m_Text.Height))
 			{
-				if (UO->PolygonePixelsInXY(10, offsetY, width, item->m_Text.Height))
-				{
-					LSG = index;
+				LSG = index;
 
-					break;
-				}
-
-				offsetY += item->m_Text.Height;
-				index++;
+				break;
 			}
+
+			offsetY += item->m_Text.Height;
+			index++;
 		}
 		
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 
 		return LSG;
 	}

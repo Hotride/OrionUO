@@ -160,9 +160,6 @@ int TGumpTextEntryDialog::Draw(bool &mode)
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
 
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
-
 		return LSG;
 	}
 

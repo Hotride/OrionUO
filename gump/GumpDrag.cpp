@@ -158,17 +158,14 @@ int TGumpDrag::Draw(bool &mode)
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
-		
-			if (UO->GumpPixelsInXY(0x0845, m_ScrollPos, 16))
-				LSG = ID_GD_SCROLL; //Scroll button
-			else if (UO->GumpPixelsInXY(0x081A, 102, 37))
-				LSG = ID_GD_OKAY; //Button Okay
-			else if (UO->PolygonePixelsInXY(28, 40, 60, 16))
-				LSG = ID_GD_TEXT_FIELD; //Текстовое поле
-
-			if (LSG != 0)
-				g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 		}
+		
+		if (UO->GumpPixelsInXY(0x0845, m_ScrollPos, 16))
+			LSG = ID_GD_SCROLL; //Scroll button
+		else if (UO->GumpPixelsInXY(0x081A, 102, 37))
+			LSG = ID_GD_OKAY; //Button Okay
+		else if (UO->PolygonePixelsInXY(28, 40, 60, 16))
+			LSG = ID_GD_TEXT_FIELD; //Текстовое поле
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;

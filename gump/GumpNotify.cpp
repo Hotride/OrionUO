@@ -106,13 +106,10 @@ int TGumpNotify::Draw(bool &mode)
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
-
-			if (UO->GumpPixelsInXY(0x0481, (m_Width / 2) - 13, m_Height - 45))
-			{
-				LSG = ID_GN_BUTTON_OK;
-				g_LastSelectedObject = ID_GN_BUTTON_OK;
-			}
 		}
+
+		if (UO->GumpPixelsInXY(0x0481, (m_Width / 2) - 13, m_Height - 45))
+			LSG = ID_GN_BUTTON_OK;
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;

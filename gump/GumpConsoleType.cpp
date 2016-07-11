@@ -352,12 +352,6 @@ int TGumpConsoleType::Draw(bool &mode)
 				LSG = ID_GCT_SHOW_FULL_TEXT;
 		}
 
-		if (LSG != 0)
-		{
-			g_LastSelectedObject = LSG;
-			g_LastSelectedGump = index;
-		}
-
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
 

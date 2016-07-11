@@ -867,12 +867,6 @@ int TGumpOptions::Draw(bool &mode)
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
 
-		if (LSG != 0)
-		{
-			g_LastSelectedObject = LSG;
-			g_LastSelectedGump = index;
-		}
-
 		return LSG;
 	}
 

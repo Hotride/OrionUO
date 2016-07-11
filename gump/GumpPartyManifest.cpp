@@ -204,44 +204,41 @@ int TGumpPartyManifest::Draw(bool &mode)
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
+		}
 
-			bool isLeader = (Party.Leader == 0 || Party.Leader == g_PlayerSerial);
+		bool isLeader = (Party.Leader == 0 || Party.Leader == g_PlayerSerial);
 			
-			int yPtr = 50;
-			WORD gumpID = 0;
+		int yPtr = 50;
+		WORD gumpID = 0;
 
-			IFOR(i, 0, 10)
+		IFOR(i, 0, 10)
+		{
+			if (UO->GumpPixelsInXY(0x0FAB, 40, yPtr))
+				LSG = ID_GPM_BUTTON_TELL_MEMBER + i; //Tell
+
+			if (isLeader)
 			{
-				if (UO->GumpPixelsInXY(0x0FAB, 40, yPtr))
-					LSG = ID_GPM_BUTTON_TELL_MEMBER + i; //Tell
-
-				if (isLeader)
-				{
-					if (UO->GumpPixelsInXY(0x0FB1, 80, yPtr))
-						LSG = ID_GPM_BUTTON_KICK_MEMBER + i; //Kick
-				}
-
-				yPtr += 25;
+				if (UO->GumpPixelsInXY(0x0FB1, 80, yPtr))
+					LSG = ID_GPM_BUTTON_KICK_MEMBER + i; //Kick
 			}
 
-			gumpID = m_CanLoot ? 0x0FA2 : 0x0FA9;
-
-			if (UO->GumpPixelsInXY(0x0FAB, 70, 307))
-				LSG = ID_GPM_BUTTON_SEND_MESSAGE; //Send the party a message
-			else if (UO->GumpPixelsInXY(gumpID, 70, 334))
-				LSG = ID_GPM_BUTTON_LOOT_TYPE; //Party can/CANNOT loot me
-			else if (UO->GumpPixelsInXY(0x0FAE, 70, 360))
-				LSG = ID_GPM_BUTTON_LEAVE; //Disband/Leave the party
-			else if (isLeader && UO->GumpPixelsInXY(0x0FA8, 70, 385))
-				LSG = ID_GPM_BUTTON_ADD; //Add New Member
-			else if (UO->GumpPixelsInXY(0x00F9, 130, 430))
-				LSG = ID_GPM_BUTTON_OKAY; //Okay button
-			else if (UO->GumpPixelsInXY(0x00F3, 236, 430))
-				LSG = ID_GPM_BUTTON_CANCEL; //Cancel button
-
-			if (LSG != 0)
-				g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
+			yPtr += 25;
 		}
+
+		gumpID = m_CanLoot ? 0x0FA2 : 0x0FA9;
+
+		if (UO->GumpPixelsInXY(0x0FAB, 70, 307))
+			LSG = ID_GPM_BUTTON_SEND_MESSAGE; //Send the party a message
+		else if (UO->GumpPixelsInXY(gumpID, 70, 334))
+			LSG = ID_GPM_BUTTON_LOOT_TYPE; //Party can/CANNOT loot me
+		else if (UO->GumpPixelsInXY(0x0FAE, 70, 360))
+			LSG = ID_GPM_BUTTON_LEAVE; //Disband/Leave the party
+		else if (isLeader && UO->GumpPixelsInXY(0x0FA8, 70, 385))
+			LSG = ID_GPM_BUTTON_ADD; //Add New Member
+		else if (UO->GumpPixelsInXY(0x00F9, 130, 430))
+			LSG = ID_GPM_BUTTON_OKAY; //Okay button
+		else if (UO->GumpPixelsInXY(0x00F3, 236, 430))
+			LSG = ID_GPM_BUTTON_CANCEL; //Cancel button
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;

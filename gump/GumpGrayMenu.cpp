@@ -163,48 +163,45 @@ int TGumpGrayMenu::Draw(bool &mode)
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = (DWORD)this;
+		}
 
-			//Перебор кнопок
-			int idx = 1;
-			int offsetY = 51;
+		//Перебор кнопок
+		int idx = 1;
+		int offsetY = 51;
 
-			QFOR(go, m_Items, TGumpMenuObject*)
+		QFOR(go, m_Items, TGumpMenuObject*)
+		{
+			if (UO->GumpPixelsInXY(0x138A, 20, offsetY))
 			{
-				if (UO->GumpPixelsInXY(0x138A, 20, offsetY))
-				{
-					LSG = idx;
+				LSG = idx;
 
-					break;
-				}
-
-				offsetY += 2;
-
-				int addHeight = go->Texture.Height;
-
-				if (addHeight < 21)
-					addHeight = 21;
-
-				offsetY += addHeight;
-
-				idx++;
+				break;
 			}
 
-			if (!LSG)
-			{
-				offsetY += 5;
+			offsetY += 2;
 
-				if (UO->GumpPixelsInXY(0x1450, 70, offsetY))
-					LSG = ID_GGM_CANCEL; //CANCEL
-				else if (UO->GumpPixelsInXY(0x13B2, 200, offsetY))
-					LSG = ID_GGM_CONTINUE; //CONTINUE
-			}
+			int addHeight = go->Texture.Height;
+
+			if (addHeight < 21)
+				addHeight = 21;
+
+			offsetY += addHeight;
+
+			idx++;
+		}
+
+		if (!LSG)
+		{
+			offsetY += 5;
+
+			if (UO->GumpPixelsInXY(0x1450, 70, offsetY))
+				LSG = ID_GGM_CANCEL; //CANCEL
+			else if (UO->GumpPixelsInXY(0x13B2, 200, offsetY))
+				LSG = ID_GGM_CONTINUE; //CONTINUE
 		}
 		
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 
 		return LSG;
 	}

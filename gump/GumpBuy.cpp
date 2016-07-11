@@ -611,183 +611,174 @@ int TGumpBuy::Draw(bool &mode)
 			g_LastSelectedGump = index;
 		}
 
-		if (g_LastSelectedGump == index)
+		//My Inventory
+
+		int drawY = 60;
+			
+		TTextureObject *thDelim1 = UO->ExecuteGump(0x0039);
+			
+		int delimHeight = 20;
+
+		if (thDelim1 != NULL)
+			delimHeight = thDelim1->Height;
+
+		int currentIndex = 0;
+		int startIndex = m_SelectedLine1;
+
+		int drawYBounds = 236;
+			
+		bool completedSearch = false;
+			
+		if (!secondGumpSelected)
 		{
-			//My Inventory
-
-			int drawY = 60;
-			
-			TTextureObject *thDelim1 = UO->ExecuteGump(0x0039);
-			
-			int delimHeight = 20;
-
-			if (thDelim1 != NULL)
-				delimHeight = thDelim1->Height;
-
-			int currentIndex = 0;
-			int startIndex = m_SelectedLine1;
-
-			int drawYBounds = 236;
-			
-			bool completedSearch = false;
-			
-			if (!secondGumpSelected)
+			IFOR(i, 0, 2)
 			{
-				IFOR(i, 0, 2)
+				TGameItem *box = vendor->FindLayer(m_Layers[i]);
+
+				if (box == NULL)
+					continue;
+
+				box = (TGameItem*)box->m_Items;
+
+				while (box != NULL)
 				{
-					TGameItem *box = vendor->FindLayer(m_Layers[i]);
+					TShopItem *si = box->ShopItem;
 
-					if (box == NULL)
-						continue;
-
-					box = (TGameItem*)box->m_Items;
-
-					while (box != NULL)
+					if (currentIndex < startIndex || si == NULL)
 					{
-						TShopItem *si = box->ShopItem;
-
-						if (currentIndex < startIndex || si == NULL)
-						{
-							currentIndex++;
-							box = (TGameItem*)box->m_Next;
-							continue;
-						}
-
-						if (drawY >= drawYBounds)
-							break;
-
-						POINT p_art = {0, 0};
-						UO->GetArtDimension(box->Graphic + 0x4000, p_art);
-
-						if (p_art.y)
-						{
-							string str = si->GetName() + " at " + std::to_string(si->Price) + "gp";
-							int textHeight = FontManager->GetHeightA(9, str.c_str(), 90);
-						
-							if (textHeight)
-							{
-								int maxOffset = p_art.y;
-
-								if (maxOffset < textHeight)
-									maxOffset = textHeight;
-
-								int checkHeight = maxOffset;
-								if (drawY + maxOffset > drawYBounds)
-									checkHeight = drawYBounds - drawY;
-						
-								if (UO->PolygonePixelsInXY(30, drawY, 200, checkHeight)) //Item in list on gump 1
-								{
-									LSG = ID_GB_ITEM_LIST + currentIndex;
-									completedSearch = true;
-									break;
-								}
-
-								drawY += (maxOffset + delimHeight);
-							}
-						}
-
 						currentIndex++;
-
-						if (completedSearch)
-							break;
-
 						box = (TGameItem*)box->m_Next;
-					}
-				}
-			}
-
-			if (!completedSearch) //Offer
-			{
-				drawY = 282;
-
-				currentIndex = 0;
-				startIndex = m_SelectedLine2;
-
-				drawYBounds = 372;
-
-				IFOR(i, 0, 2)
-				{
-					TGameItem *box = vendor->FindLayer(m_Layers[i]);
-
-					if (box == NULL)
 						continue;
+					}
 
-					box = (TGameItem*)box->m_Items;
+					if (drawY >= drawYBounds)
+						break;
 
-					while (box != NULL)
+					POINT p_art = {0, 0};
+					UO->GetArtDimension(box->Graphic + 0x4000, p_art);
+
+					if (p_art.y)
 					{
-						TShopItem *si = box->ShopItem;
-
-						if (si == NULL || si->Count == 0)
-						{
-							box = (TGameItem*)box->m_Next;
-							continue;
-						}
-
-						if (currentIndex < startIndex)
-						{
-							currentIndex++;
-							box = (TGameItem*)box->m_Next;
-							continue;
-						}
-
-						if (drawY >= drawYBounds)
-							break;
-
-						string str = si->GetName();
-						int textHeight = FontManager->GetHeightA(9, str.c_str(), 100);
-
+						string str = si->GetName() + " at " + std::to_string(si->Price) + "gp";
+						int textHeight = FontManager->GetHeightA(9, str.c_str(), 90);
+						
 						if (textHeight)
 						{
-							int maxOffset = textHeight;
+							int maxOffset = p_art.y;
 
-							str = "at " + std::to_string(si->Price) + " g.p.";
-							textHeight = FontManager->GetHeightA(9, str.c_str(), 100);
+							if (maxOffset < textHeight)
+								maxOffset = textHeight;
 
-							if (textHeight)
-								maxOffset += (textHeight - 2);
+							int checkHeight = maxOffset;
+							if (drawY + maxOffset > drawYBounds)
+								checkHeight = drawYBounds - drawY;
+						
+							if (UO->PolygonePixelsInXY(30, drawY, 200, checkHeight)) //Item in list on gump 1
+							{
+								LSG = ID_GB_ITEM_LIST + currentIndex;
+								completedSearch = true;
+								break;
+							}
+
+							drawY += (maxOffset + delimHeight);
+						}
+					}
+
+					currentIndex++;
+
+					if (completedSearch)
+						break;
+
+					box = (TGameItem*)box->m_Next;
+				}
+			}
+		}
+
+		if (!completedSearch) //Offer
+		{
+			drawY = 282;
+
+			currentIndex = 0;
+			startIndex = m_SelectedLine2;
+
+			drawYBounds = 372;
+
+			IFOR(i, 0, 2)
+			{
+				TGameItem *box = vendor->FindLayer(m_Layers[i]);
+
+				if (box == NULL)
+					continue;
+
+				box = (TGameItem*)box->m_Items;
+
+				while (box != NULL)
+				{
+					TShopItem *si = box->ShopItem;
+
+					if (si == NULL || si->Count == 0)
+					{
+						box = (TGameItem*)box->m_Next;
+						continue;
+					}
+
+					if (currentIndex < startIndex)
+					{
+						currentIndex++;
+						box = (TGameItem*)box->m_Next;
+						continue;
+					}
+
+					if (drawY >= drawYBounds)
+						break;
+
+					string str = si->GetName();
+					int textHeight = FontManager->GetHeightA(9, str.c_str(), 100);
+
+					if (textHeight)
+					{
+						int maxOffset = textHeight;
+
+						str = "at " + std::to_string(si->Price) + " g.p.";
+						textHeight = FontManager->GetHeightA(9, str.c_str(), 100);
+
+						if (textHeight)
+							maxOffset += (textHeight - 2);
 							
-							int drawOffsetY = drawY + (maxOffset / 2) - 4;
+						int drawOffsetY = drawY + (maxOffset / 2) - 4;
 					
-							if (UO->PolygonePixelsInXY(356, drawOffsetY, 14, 14)) //+
-							{
-								LSG = ID_GB_BUTTON_INC + currentIndex;
-								completedSearch = true;
-								break;
-							}
-
-							if (UO->PolygonePixelsInXY(376, drawOffsetY, 14, 14)) //-
-							{
-								LSG = ID_GB_BUTTON_DEC + currentIndex;
-								completedSearch = true;
-								break;
-							}
-
-							drawY += maxOffset;
+						if (UO->PolygonePixelsInXY(356, drawOffsetY, 14, 14)) //+
+						{
+							LSG = ID_GB_BUTTON_INC + currentIndex;
+							completedSearch = true;
+							break;
 						}
 
-						currentIndex++;
-
-						if (completedSearch)
+						if (UO->PolygonePixelsInXY(376, drawOffsetY, 14, 14)) //-
+						{
+							LSG = ID_GB_BUTTON_DEC + currentIndex;
+							completedSearch = true;
 							break;
+						}
 
-						box = (TGameItem*)box->m_Next;
+						drawY += maxOffset;
 					}
+
+					currentIndex++;
+
+					if (completedSearch)
+						break;
+
+					box = (TGameItem*)box->m_Next;
 				}
 			}
 		}
 		
 		if (UO->GumpPixelsInXY(0x0828, 237, 66 + scrollerY1)) //Scroller 1
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GB_SCROLL_1;
-		}
 		else if (UO->GumpPixelsInXY(0x0828, 407, 280 + scrollerY2)) //Scroller 2
-		{
-			g_LastSelectedGump = index;
 			LSG = ID_GB_SCROLL_2;
-		}
-		else if (g_LastSelectedGump == index)
+		else
 		{
 			if (UO->PolygonePixelsInXY(233, 49, 20, 14)) //1 gump ^
 				LSG = ID_GB_BUTTON_UP_1;
@@ -805,9 +796,6 @@ int TGumpBuy::Draw(bool &mode)
 
 		g_MouseX = oldMouseX;
 		g_MouseY = oldMouseY;
-
-		if (LSG != 0)
-			g_LastSelectedObject = LSG; //Если что-то нашлось - выбираем
 
 		return LSG;
 	}
