@@ -223,9 +223,27 @@ void TDebugScreen::OnLeftMouseUp()
 	g_LastObjectLeftMouseDown = 0;
 }
 //---------------------------------------------------------------------------
+void TDebugScreen::OnCharPress(__in WPARAM wparam, __in LPARAM lparam)
+{
+	if (wparam == VK_RETURN || wparam == VK_BACK || wparam == VK_ESCAPE)
+		return; //Ignore no print keys
+
+	wchar_t wstr[2] = { 0 };
+	wstr[0] = wparam;
+	wstring str(wstr);
+
+	if (!str.length())
+		return;
+
+	if (m_BookGump != NULL && m_BookGump->EntryPointerHere())
+		m_BookGump->OnCharPress(wparam, lparam);
+}
+//---------------------------------------------------------------------------
 void TDebugScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 {
-	if (wparam == VK_RETURN)
-		CreateSmoothAction(ID_SMOOTH_DS_GO_SCREEN_MAIN);
+	if (m_BookGump != NULL && m_BookGump->EntryPointerHere())
+		m_BookGump->OnKeyPress(wparam, lparam);
+	//if (wparam == VK_RETURN)
+	//	CreateSmoothAction(ID_SMOOTH_DS_GO_SCREEN_MAIN);
 }
 //---------------------------------------------------------------------------

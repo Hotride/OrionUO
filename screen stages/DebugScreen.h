@@ -43,6 +43,7 @@ public:
 	int Render(bool mode);
 
 	void OnLeftMouseUp();
+	void OnCharPress(WPARAM wparam, LPARAM lparam);
 	void OnKeyPress(WPARAM wparam, LPARAM lparam);
 };
 //---------------------------------------------------------------------------

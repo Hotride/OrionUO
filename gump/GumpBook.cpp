@@ -81,6 +81,19 @@ void TGumpBook::PrepareTextures()
 {
 	UO->ExecuteGumpPart(0x01FE, 3);
 }
+//----------------------------------------------------------------------------
+bool TGumpBook::EntryPointerHere()
+{
+	bool result = (EntryPointer == TextEntryAuthor || EntryPointer == TextEntryTitle);
+
+	if (!result && TextEntry != NULL)
+	{
+		IFOR(i, 0, m_PageCount && !result)
+			result = (EntryPointer == &TextEntry[i]);
+	}
+
+	return result;
+}
 //---------------------------------------------------------------------------
 void TGumpBook::GenerateFrame()
 {
@@ -322,5 +335,122 @@ bool TGumpBook::OnLeftMouseDoubleClick()
 	}
 
 	return false;
+}
+//----------------------------------------------------------------------------
+void TGumpBook::OnCharPress(WPARAM &wparam, LPARAM &lparam)
+{
+	if (wparam == VK_RETURN || wparam == VK_BACK || wparam == VK_ESCAPE || EntryPointer == NULL)
+		return; //Ignore no print keys
+
+	if (EntryPointer == TextEntryTitle)
+	{
+	}
+	else if (EntryPointer == TextEntryAuthor)
+	{
+	}
+	else
+	{
+		int page = m_Page;
+
+		if (page > 0 && page < m_PageCount)
+		{
+			if (EntryPointer != &TextEntry[page])
+			{
+				if (page < m_PageCount - 1 && EntryPointer == &TextEntry[page + 1])
+					page++;
+				else
+					return;
+			}
+		}
+	}
+
+	/*if (!result && TextEntry != NULL)
+	{
+		IFOR(i, 0, m_PageCount && !result)
+			result = (EntryPointer == &TextEntry[i]);
+
+	if (wparam >= '0' && wparam <= '9')
+	{
+		if (m_StartText)
+		{
+			EntryPointer->Clear();
+			m_StartText = false;
+		}
+
+		if (EntryPointer->Insert(wparam))
+		{
+			int val = atoi(EntryPointer->c_str());
+
+			float ValPer = (val * 100.0f) / item->Count;
+
+			if (ValPer <= 0.0f)
+				ValPer = 0.0f;
+			else
+				ValPer = (ValPer * 93.0f) / 100.0f;
+
+			m_ScrollPos = 29 + (int)ValPer;
+
+			m_FrameCreated = false;
+		}
+	}*/
+}
+//----------------------------------------------------------------------------
+void TGumpBook::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
+{
+	TGameItem *item = World->FindWorldItem(Serial);
+
+	if (item != NULL)
+	{
+		switch (wparam)
+		{
+			/*case VK_RETURN:
+			{
+				if (ConfigManager.GetConsoleNeedEnter())
+					EntryPointer = NULL;
+				else
+					EntryPointer = GameConsole;
+
+				break;
+			}*/
+			case VK_HOME:
+			{
+				EntryPointer->SetPos(0);
+				m_FrameCreated = false;
+
+				break;
+			}
+			case VK_END:
+			{
+				EntryPointer->SetPos(EntryPointer->Length());
+				m_FrameCreated = false;
+
+				break;
+			}
+			case VK_LEFT:
+			{
+				EntryPointer->AddPos(-1);
+				m_FrameCreated = false;
+
+				break;
+			}
+			case VK_RIGHT:
+			{
+				EntryPointer->AddPos(1);
+				m_FrameCreated = false;
+
+				break;
+			}
+			case VK_DELETE:
+			case VK_BACK:
+			{
+				EntryPointer->Remove(wparam == VK_BACK);
+				m_FrameCreated = false;
+
+				break;
+			}
+			default:
+				break;
+		}
+	}
 }
 //----------------------------------------------------------------------------

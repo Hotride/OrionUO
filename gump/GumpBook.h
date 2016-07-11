@@ -64,6 +64,11 @@ public:
 
 	void OnLeftMouseUp();
 	bool OnLeftMouseDoubleClick();
+
+	void OnCharPress(WPARAM &wparam, LPARAM &lparam);
+	void OnKeyPress(WPARAM &wparam, LPARAM &lparam);
+
+	bool EntryPointerHere();
 };
 //---------------------------------------------------------------------------
 #endif
