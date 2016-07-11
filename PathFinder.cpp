@@ -578,14 +578,14 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	wd->Z = z;
 	wd->Direction = direction;
 
-	g_RemoveRangeXY.x = x;
+	/*g_RemoveRangeXY.x = x;
 	g_RemoveRangeXY.y = y;
 
 	g_UpdateRange--;
 
-	//UO->RemoveRangedObjects();
+	UO->RemoveRangedObjects();
 
-	g_UpdateRange++;
+	g_UpdateRange++;*/
 
 	if (emptyStack)
 	{
