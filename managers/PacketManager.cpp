@@ -3462,7 +3462,7 @@ PACKET_HANDLER(GraphicEffect)
 	effect->DestY = destY;
 	effect->DestZ = destZ;
 
-	DWORD addressAnimData = (DWORD)FileManager.AnimdataMul.Address;
+	/*DWORD addressAnimData = (DWORD)FileManager.AnimdataMul.Address;
 
 	if (addressAnimData)
 	{
@@ -3470,7 +3470,7 @@ PACKET_HANDLER(GraphicEffect)
 
 		effect->Speed = (pad->FrameInterval - effect->Speed) * 50;
 	}
-	else
+	else*/
 		effect->Speed = speed + 6;
 
 	effect->Duration = GetTickCount() + duration;
