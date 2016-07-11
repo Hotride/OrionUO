@@ -36,6 +36,7 @@ private:
 	bool m_Unicode;
 
 	TTextTexture *m_PageIndexText;
+	bool *m_ChangedPage;
 
 	static TTextTexture m_TextTitle;
 	static TTextTexture m_TextBy;
@@ -56,7 +57,7 @@ public:
 
 	TEntryText *TextEntryAuthor;
 	TEntryText *TextEntryTitle;
-	TBookEntryText *TextEntry;
+	TEntryText *TextEntry;
 
 	void PrepareTextures();
 

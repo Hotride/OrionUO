@@ -366,9 +366,6 @@
     <ClInclude Include="gump\GumpBook.h">
       <Filter>Заголовочные файлы\gump</Filter>
     </ClInclude>
-    <ClInclude Include="BookEntryText.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="managers\CityManager.h">
       <Filter>Заголовочные файлы\managers</Filter>
     </ClInclude>
@@ -765,9 +762,6 @@
       <Filter>Файлы исходного кода\gump</Filter>
     </ClCompile>
     <ClCompile Include="GameConsole.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="BookEntryText.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="gump\GumpBook.cpp">

@@ -518,7 +518,6 @@ typedef std::vector<BYTE> WaveFile;
 #include "IndexObject.h"
 #include "LinkedList.h"
 #include "EntryText.h"
-#include "BookEntryText.h"
 #include "GameConsole.h"
 #include "Logger.h"
 #include "TextData.h"

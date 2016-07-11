@@ -546,7 +546,7 @@ void TEntryText::DrawA(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE alig
 		FixMaxWidthA(font);
 
 		//Создаем текстуру
-		CreateTextureA(font, m_CText, color, m_MaxWidth, align, flags);
+		CreateTextureA(font, m_CText, color, /*m_MaxWidth*/m_Width, align, flags);
 
 		//Регистрируем изменения
 		m_Changed = false;

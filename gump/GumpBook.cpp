@@ -29,11 +29,16 @@ m_Unicode(unicode), m_Page(0)
 	TextEntryAuthor = new TEntryText(0, 150);
 	TextEntryTitle = new TEntryText(0, 150);
 
-	TextEntry = new TBookEntryText[pageCount];
+	TextEntry = new TEntryText[pageCount];
+	m_ChangedPage = new bool[pageCount];
 	m_PageIndexText = new TTextTexture[pageCount];
 
 	IFOR(i, 0, pageCount)
+	{
 		FontManager->GenerateA(9, m_PageIndexText[i], std::to_string(i).c_str(), 0x0386);
+		TextEntry[i].Width = 166;
+		m_ChangedPage[i] = false;
+	}
 }
 //----------------------------------------------------------------------------
 TGumpBook::~TGumpBook()
@@ -54,6 +59,12 @@ TGumpBook::~TGumpBook()
 	{
 		delete[] TextEntry;
 		TextEntry = NULL;
+	}
+
+	if (m_ChangedPage != NULL)
+	{
+		delete m_ChangedPage;
+		m_ChangedPage = NULL;
 	}
 
 	if (m_PageIndexText != NULL)
@@ -193,9 +204,9 @@ int TGumpBook::Draw(bool &mode)
 			LSG = ID_GB_BUTTON_NEXT; //Next page
 		else if (!m_Page)
 		{
-			if (UO->PolygonePixelsInXY(41, 65, 150, 22))
+			if (UO->PolygonePixelsInXY(41, 65, 150, (m_Unicode ? 22 : 44)))
 				LSG = ID_GB_TEXT_AREA_TITLE; //Text title
-			else if (UO->PolygonePixelsInXY(41, 160, 150, 44))
+			else if (UO->PolygonePixelsInXY(41, 160, 150, 22))
 				LSG = ID_GB_TEXT_AREA_AUTHOR; //Text author
 			else if (UO->PolygonePixelsInXY(224, 34, 160, 166))
 				LSG = ID_GB_TEXT_AREA_PAGE_RIGHT; //Text right area
@@ -341,7 +352,7 @@ void TGumpBook::InsertInContent(const WPARAM &wparam)
 {
 	int page = m_Page;
 
-	if (page > 0 && page < m_PageCount)
+	if (page >= 0 && page < m_PageCount)
 	{
 		bool isSecondEntry = false;
 
@@ -360,12 +371,12 @@ void TGumpBook::InsertInContent(const WPARAM &wparam)
 		{
 			if (m_Unicode)
 			{
-				if (EntryPointer->GetLinesCountW(0) > 10)
+				if (EntryPointer->GetLinesCountW(0) > 8)
 					EntryPointer->Remove(true);
 			}
 			else
 			{
-				if (EntryPointer->GetLinesCountA(4) > 10)
+				if (EntryPointer->GetLinesCountA(4) > 8)
 					EntryPointer->Remove(true);
 			}
 
