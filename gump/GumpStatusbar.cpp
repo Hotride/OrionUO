@@ -296,6 +296,33 @@ void TGumpStatusbar::PrepareTextures()
 	}
 }
 //---------------------------------------------------------------------------
+void TGumpStatusbar::CalculateGumpState()
+{
+	TGump::CalculateGumpState();
+
+	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == (DWORD)this && (!g_LastObjectLeftMouseDown || g_LastObjectLeftMouseDown > ID_GSB_LOCK_MOVING))
+	{
+		g_GumpMovingOffsetX = g_MouseX - g_DroppedLeftMouseX;
+		g_GumpMovingOffsetY = g_MouseY - g_DroppedLeftMouseY;
+	}
+	else
+	{
+		g_GumpMovingOffsetX = 0;
+		g_GumpMovingOffsetY = 0;
+	}
+
+	if (m_Minimized)
+	{
+		g_GumpTranslateX = (float)(m_MinimizedX + g_GumpMovingOffsetX);
+		g_GumpTranslateY = (float)(m_MinimizedY + g_GumpMovingOffsetY);
+	}
+	else
+	{
+		g_GumpTranslateX = (float)(m_X + g_GumpMovingOffsetX);
+		g_GumpTranslateY = (float)(m_Y + g_GumpMovingOffsetY);
+	}
+}
+//---------------------------------------------------------------------------
 void TGumpStatusbar::GenerateFrame()
 {
 	if (!g_DrawMode)
@@ -427,7 +454,7 @@ void TGumpStatusbar::GenerateFrame()
 				FontManager->DrawA(1, text, 0x0386, 146, 139, textWidth, TS_CENTER);
 
 
-				
+
 				sprintf(text, "%d", g_Player->StatsCap);
 				FontManager->DrawA(1, text, 0x0386, 220, 77);
 
@@ -460,16 +487,16 @@ void TGumpStatusbar::GenerateFrame()
 
 				sprintf(text, "%d", g_Player->Armor);
 				FontManager->DrawA(1, text, 0x0386, 354, 76);
-				
+
 				sprintf(text, "%d", g_Player->FireResistance);
 				FontManager->DrawA(1, text, 0x0386, 354, 92);
-				
+
 				sprintf(text, "%d", g_Player->ColdResistance);
 				FontManager->DrawA(1, text, 0x0386, 354, 106);
-				
+
 				sprintf(text, "%d", g_Player->PoisonResistance);
 				FontManager->DrawA(1, text, 0x0386, 354, 120);
-				
+
 				sprintf(text, "%d", g_Player->EnergyResistance);
 				FontManager->DrawA(1, text, 0x0386, 354, 134);
 			}
@@ -834,6 +861,41 @@ int TGumpStatusbar::Draw(bool &mode)
 					if (UO->GumpPixelsInXY(0x7538, 40, 50))
 						LSG = ID_GSB_BUFF_GUMP;
 
+					if (UO->PolygonePixelsInXY(58, 70, 59, 24))
+						LSG = ID_GSB_TEXT_STR;
+					else if (UO->PolygonePixelsInXY(58, 98, 59, 24))
+						LSG = ID_GSB_TEXT_DEX;
+					else if (UO->PolygonePixelsInXY(58, 126, 59, 24))
+						LSG = ID_GSB_TEXT_INT;
+					else if (UO->PolygonePixelsInXY(124, 70, 59, 24))
+						LSG = ID_GSB_TEXT_HITS;
+					else if (UO->PolygonePixelsInXY(124, 98, 59, 24))
+						LSG = ID_GSB_TEXT_STAM;
+					else if (UO->PolygonePixelsInXY(124, 126, 59, 24))
+						LSG = ID_GSB_TEXT_MANA;
+					else if (UO->PolygonePixelsInXY(188, 70, 65, 24))
+						LSG = ID_GSB_TEXT_TITHING_POINTS; //Maximum stats in original???
+					else if (UO->PolygonePixelsInXY(188, 98, 65, 24))
+						LSG = ID_GSB_TEXT_LUCK;
+					else if (UO->PolygonePixelsInXY(188, 126, 65, 24))
+						LSG = ID_GSB_TEXT_WEIGHT;
+					else if (UO->PolygonePixelsInXY(260, 70, 69, 24))
+						LSG = ID_GSB_TEXT_DAMAGE;
+					else if (UO->PolygonePixelsInXY(260, 98, 69, 24))
+						LSG = ID_GSB_TEXT_GOLD;
+					else if (UO->PolygonePixelsInXY(260, 126, 69, 24))
+						LSG = ID_GSB_TEXT_FOLLOWERS;
+					else if (UO->PolygonePixelsInXY(334, 76, 40, 14))
+						LSG = ID_GSB_TEXT_RESISTANCE_PHYSICAL;
+					else if (UO->PolygonePixelsInXY(334, 92, 40, 14))
+						LSG = ID_GSB_TEXT_RESISTANCE_FIRE;
+					else if (UO->PolygonePixelsInXY(334, 106, 40, 14))
+						LSG = ID_GSB_TEXT_RESISTANCE_COLD;
+					else if (UO->PolygonePixelsInXY(334, 120, 40, 14))
+						LSG = ID_GSB_TEXT_RESISTANCE_POISON;
+					else if (UO->PolygonePixelsInXY(334, 134, 40, 14))
+						LSG = ID_GSB_TEXT_RESISTANCE_ENERGY;
+
 					// нопочки дл€ изменени€ роста/лока статов
 					if (ConnectionManager.ClientVersion >= CV_60142)
 					{
@@ -876,6 +938,42 @@ int TGumpStatusbar::Draw(bool &mode)
 
 						if (UO->GumpPixelsInXY(gumpID, 40, 132))
 							LSG = ID_GSB_BUFF_LOCKER_INT;
+					}
+				}
+				else
+				{
+					if (UO->PolygonePixelsInXY(86, 61, 34, 12))
+						LSG = ID_GSB_TEXT_STR;
+					else if (UO->PolygonePixelsInXY(86, 73, 34, 12))
+						LSG = ID_GSB_TEXT_DEX;
+					else if (UO->PolygonePixelsInXY(86, 85, 34, 12))
+						LSG = ID_GSB_TEXT_INT;
+					else if (UO->PolygonePixelsInXY(86, 97, 34, 12))
+						LSG = ID_GSB_TEXT_SEX;
+					else if (UO->PolygonePixelsInXY(86, 109, 34, 12))
+						LSG = ID_GSB_TEXT_ARMOR;
+					else if (UO->PolygonePixelsInXY(171, 61, 66, 12))
+						LSG = ID_GSB_TEXT_HITS;
+					else if (UO->PolygonePixelsInXY(171, 73, 66, 12))
+						LSG = ID_GSB_TEXT_MANA;
+					else if (UO->PolygonePixelsInXY(171, 85, 66, 12))
+						LSG = ID_GSB_TEXT_STAM;
+					else if (UO->PolygonePixelsInXY(171, 97, 66, 12))
+						LSG = ID_GSB_TEXT_GOLD;
+					else if (UO->PolygonePixelsInXY(171, 109, 66, 12))
+						LSG = ID_GSB_TEXT_WEIGHT;
+
+					if (ConnectionManager.ClientVersion == CV_308D)
+					{
+						if (UO->PolygonePixelsInXY(171, 124, 34, 12))
+							LSG = ID_GSB_TEXT_MAX_STATS;
+					}
+					else if (ConnectionManager.ClientVersion == CV_308J)
+					{
+						if (UO->PolygonePixelsInXY(180, 131, 34, 12))
+							LSG = ID_GSB_TEXT_MAX_STATS;
+						else if (UO->PolygonePixelsInXY(171, 144, 34, 12))
+							LSG = ID_GSB_TEXT_FOLLOWERS;
 					}
 				}
 

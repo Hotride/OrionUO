@@ -188,6 +188,12 @@ bool TGumpManager::OnLeftMouseUp( __in bool blocked)
 						g_LastObjectLeftMouseDown = 0;
 					break;
 				}
+				case GT_STATUSBAR:
+				{
+					if (g_LastObjectLeftMouseDown > TGumpStatusbar::ID_GSB_LOCK_MOVING)
+						g_LastObjectLeftMouseDown = 0;
+					break;
+				}
 				case GT_BUFF:
 				{
 					g_LastObjectLeftMouseDown = 0;
