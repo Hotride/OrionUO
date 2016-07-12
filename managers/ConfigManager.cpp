@@ -68,6 +68,7 @@ void TConfigManager::DefaultPage1()
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage2()
 {
+	SetClientFPS(32);
 }
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage3()
@@ -168,6 +169,20 @@ void TConfigManager::SetConsoleNeedEnter(bool val)
 		EntryPointer = NULL;
 }
 //---------------------------------------------------------------------------
+void TConfigManager::SetClientFPS(BYTE val)
+{
+	if (val < 16)
+		val = 16;
+	else if (val > 64)
+		val = 64;
+
+	m_ClientFPS = val;
+	g_FrameDelay[1] = 1000 / m_ClientFPS;
+
+	if (!m_ReduceFPSUnactiveWindow)
+		g_FrameDelay[0] = g_FrameDelay[1];
+}
+//---------------------------------------------------------------------------
 void TConfigManager::SetReduceFPSUnactiveWindow(bool val)
 {
 	m_ReduceFPSUnactiveWindow = val;
@@ -175,7 +190,7 @@ void TConfigManager::SetReduceFPSUnactiveWindow(bool val)
 	if (m_ReduceFPSUnactiveWindow)
 		g_FrameDelay[0] = FRAME_DELAY_UNACTIVE_WINDOW;
 	else
-		g_FrameDelay[0] = FRAME_DELAY_ACTIVE_WINDOW;
+		g_FrameDelay[0] = g_FrameDelay[1];
 }
 //---------------------------------------------------------------------------
 /*!
@@ -270,6 +285,12 @@ void TConfigManager::Load( __in string path)
 
 		if (file.ReadChar() == 2)
 		{
+			if (blockSize > 2)
+			{
+				SetClientFPS(file.ReadByte());
+			}
+			else
+				SetClientFPS(32);
 		}
 		
 		file.Ptr = next;
@@ -513,7 +534,8 @@ void TConfigManager::Save( __in string path)
 	
 	//Page 2
 	writer->WriteByte(2); //size of block
-	writer->WriteByte(2); //page index
+	writer->WriteByte(3); //page index
+	writer->WriteByte(m_ClientFPS); //page index
 	writer->WriteBuffer();
 	
 	//Page 3

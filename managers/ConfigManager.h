@@ -32,6 +32,7 @@ private:
 	BYTE m_MusicVolume;
 	
 	//page 2 vars
+	BYTE m_ClientFPS;
 	
 	bool m_UseToolTips;
 	WORD m_ToolTipsTextColor;
@@ -139,6 +140,8 @@ public:
 	SETGET(BYTE, MusicVolume);
 
 	//page 2 setget
+	void SetClientFPS(BYTE val);
+	BYTE GetClientFPS() const { return m_ClientFPS; }
 
 	SETGET(bool, UseToolTips);
 	SETGET(WORD, ToolTipsTextColor);

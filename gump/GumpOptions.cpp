@@ -22,7 +22,7 @@
 const WORD g_OptionsTextColor = 0;
 //----------------------------------------------------------------------------
 TTextTexture TGumpOptions::m_TexturePage1[8];	//Sound and Music
-TTextTexture TGumpOptions::m_TexturePage2[2];	//Orion's configuration
+TTextTexture TGumpOptions::m_TexturePage2[3];	//Orion's configuration
 TTextTexture TGumpOptions::m_TexturePage3[6];	//Language
 TTextTexture TGumpOptions::m_TexturePage4[19];	//Chat
 TTextTexture TGumpOptions::m_TexturePage5[7];	//Macro Options
@@ -132,6 +132,8 @@ void TGumpOptions::InitTextTextures()
 	str = L"These settings configure the Orion UO Client.";
 	FontManager->GenerateW(font, m_TexturePage2[1], str.c_str(), g_OptionsTextColor);
 
+	str = L"FPS rate:";
+	FontManager->GenerateW(font, m_TexturePage2[2], str.c_str(), g_OptionsTextColor);
 
 
 	//Language
@@ -414,7 +416,7 @@ void TGumpOptions::ReleaseTextTextures()
 	IFOR(i, 0, 8)
 		m_TexturePage1[i].Clear();
 
-	IFOR(i, 0, 2)
+	IFOR(i, 0, 3)
 		m_TexturePage2[i].Clear();
 
 	IFOR(i, 0, 6)
@@ -1010,27 +1012,56 @@ int TGumpOptions::DrawPage2(bool &mode, DWORD &index)
 	//Orion's configuration
 	if (mode)
 	{
+		if (g_GumpPressed)
+		{
+			if (g_LastObjectLeftMouseDown == ID_GO_P2_CLIENT_FPS) //FPS rate slider pressed
+			{
+				int currentX = g_MouseX - (int)g_GumpTranslateX - 3; //Текущая позиция ползунка
+
+				if (currentX < 64)
+					currentX = 64; //Выход за допустимый предел, корректируем на минимум
+				else if (currentX > 152)
+					currentX = 152; //Выход за допустимый предел, корректируем на максимум
+			
+				int count = g_OptionsConfig.GetClientFPS() - 16; //Количество предметов в стеке
+
+				if (currentX > 64) //Позиция ползунка больше минимума
+				{
+					if (currentX < 152) //Позиция ползунка меньше максимума, вычисляем
+					{
+						float ValPer = ((currentX - 64.0f) / g_SphereListWidth) * 100.0f;
+
+						if (ValPer == 0.0f)
+							count = 16;
+						else
+							count = (int)((48 * ValPer) / 100.0f) + 16;
+					}
+					else
+						count = 64; //Позиция равна максимуму, выставляем значение 64
+				}
+				else
+					count = 16; //Позиция равна минимуму, выставляем значение 16
+
+				g_OptionsConfig.SetClientFPS(count);
+			}
+		}
+
 		m_TexturePage2[0].Draw(84, 22);
 		
 		m_TexturePage2[1].Draw(64, 44);
 		
+		m_TexturePage2[2].Draw(64, 90); //FPS rate:
+		
+		UO->DrawSphereGump(g_OptionsConfig.GetClientFPS() - 16, 48.0f, 0, 111, 90);
+
+		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.GetClientFPS()).c_str(), g_OptionsTextColor, 176, 108);
 	}
 	else
 	{
 		int LSG = 0;
 		
-		/*if (UO->GumpPixelsInXY(0x00D2, 64, 90))
-			LSG = ID_GO_P2_USE_POPUP; //Use Pop-up Help
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 151))
-			LSG = ID_GO_P2_TEXT_COLOR; //Text Color
-		else if (UO->GumpPixelsInXY(0x00D0, 64, 173))
-			LSG = ID_GO_P2_TEXT_FONT; //Help text font
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 197))
-			LSG = ID_GO_P2_MAKE_WINDOW_STICKY; //Make window Sticky
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 217))
-			LSG = ID_GO_P2_MAKE_TEXT_PERTISTANT; //Make text Persistant
-		else if (UO->PolygonePixelsInXY(64, 130, (int)g_SphereListWidth + 10, 16))
-			LSG = ID_GO_P2_DELAY_BEFORE_POPUPS; //Delay befor Help pops up*/
+		if (UO->PolygonePixelsInXY(64, 109, (int)g_SphereListWidth + 10, 16))
+			LSG = ID_GO_P2_CLIENT_FPS; //FPS rate:
 
 		return LSG;
 	}
