@@ -32,16 +32,19 @@ TQuestArrow::~TQuestArrow()
 //--------------------------------------------------------------------------
 void TQuestArrow::Draw(int &x, int &y)
 {
-	if (Enabled)
+	UO->DrawGump(0x0194, 0, 100, 100);
+
+	if (m_Enabled)
 	{
-		int dir = MouseManager.GetFacing(g_Player->X, g_Player->Y, X, Y, 0);
+		int dir = MouseManager.GetFacing(g_Player->X, g_Player->Y, m_X, m_Y, 0);
 
 		WORD gumpID = m_Gump + dir;
 		POINT p;
 
 		UO->GetGumpDimension(gumpID, p);
 
-		UO->DrawGump(gumpID, 0, x + (p.x / 2), y + (p.y / 2));
+		UO->DrawGump(gumpID, 0, x, y);
+		//UO->DrawGump(gumpID, 0, x + (p.x / 2), y + (p.y / 2));
 	}
 }
 //----------------------------------------------------------------------------

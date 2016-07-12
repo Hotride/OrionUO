@@ -1096,6 +1096,13 @@ PACKET_HANDLER(EnterWorld)
 	/*BYTE wbuf[4] = {0x65, 0x01, 0x46, 0};
 	Ptr = wbuf + 1;
 	HandleSetWeather(wbuf, 4);*/
+
+	BYTE qab[6] = { 0xBA, 0x01 };
+	pack16(qab + 2, g_Player->X + 10);
+	pack16(qab + 4, g_Player->Y + 10);
+
+	Ptr = qab + 1;
+	HandleDisplayQuestArrow(qab, 6);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateHitpoints)
