@@ -140,8 +140,8 @@ public:
 	SETGET(BYTE, MusicVolume);
 
 	//page 2 setget
-	void SetClientFPS(BYTE val);
-	BYTE GetClientFPS() const { return m_ClientFPS; }
+	SETGET(BYTE, ClientFPS);
+	void UpdateClientFPS();
 
 	SETGET(bool, UseToolTips);
 	SETGET(WORD, ToolTipsTextColor);

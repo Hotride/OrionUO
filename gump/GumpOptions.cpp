@@ -1023,7 +1023,7 @@ int TGumpOptions::DrawPage2(bool &mode, DWORD &index)
 				else if (currentX > 152)
 					currentX = 152; //Выход за допустимый предел, корректируем на максимум
 			
-				int count = g_OptionsConfig.GetClientFPS() - 16; //Количество предметов в стеке
+				int count = g_OptionsConfig.ClientFPS - 16; //Количество предметов в стеке
 
 				if (currentX > 64) //Позиция ползунка больше минимума
 				{
@@ -1042,7 +1042,7 @@ int TGumpOptions::DrawPage2(bool &mode, DWORD &index)
 				else
 					count = 16; //Позиция равна минимуму, выставляем значение 16
 
-				g_OptionsConfig.SetClientFPS(count);
+				g_OptionsConfig.ClientFPS = count;
 			}
 		}
 
@@ -2968,6 +2968,9 @@ void TGumpOptions::ApplyPageChanges()
 		}
 		case 1: //Orion's configuration
 		{
+			ConfigManager.ClientFPS = g_OptionsConfig.ClientFPS;
+			ConfigManager.UpdateClientFPS();
+
 			break;
 		}
 		case 2: //Language

@@ -1197,6 +1197,32 @@ void TGumpManager::Load( __in string path)
 
 		FileManager.UnloadFileFromMemory(file);
 	}
+	else
+	{
+		GumpManager->AddGump(new TGumpPaperdoll(g_PlayerSerial, g_GameWindowPosX + g_GameWindowWidth, g_GameWindowPosY, false));
+		GumpManager->AddGump(new TGumpStatusbar(g_PlayerSerial, g_GameWindowPosX + g_GameWindowWidth, g_GameWindowPosY + g_GameWindowHeight - 50, false));
+		GumpManager->AddGump(new TGumpMinimap(g_PlayerSerial, g_GameWindowPosX, g_GameWindowPosY, true));
+
+		if (g_Player != NULL)
+		{
+			TGameItem *backpack = g_Player->FindLayer(OL_BACKPACK);
+
+			if (backpack != NULL)
+			{
+				TContainerStack *cs = new TContainerStack(backpack->Serial, g_GameWindowPosX, g_GameWindowPosY, g_GameWindowPosX, g_GameWindowPosY, false, false);
+
+				if (ContainerStack != NULL)
+					ContainerStack->m_Prev = cs;
+
+				cs->m_Next = ContainerStack;
+				cs->m_Prev = NULL;
+
+				ContainerStack = cs;
+
+				UO->DoubleClick(backpack->Serial);
+			}
+		}
+	}
 
 	if (!ConfigManager.DisableMenubar && !menubarFound)
 	{

@@ -68,7 +68,7 @@ void TConfigManager::DefaultPage1()
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage2()
 {
-	SetClientFPS(32);
+	m_ClientFPS = 32;
 }
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage3()
@@ -76,7 +76,7 @@ void TConfigManager::DefaultPage3()
 	m_UseToolTips = true;
 	m_ToolTipsTextColor = 0xFFFF;
 	m_ToolTipsTextFont = 0;
-	m_ToolTipsDelay = 1000;
+	m_ToolTipsDelay = 200;
 }
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage4()
@@ -108,8 +108,8 @@ void TConfigManager::DefaultPage6()
 	m_OffsetInterfaceWindows = true;
 	m_AutoArrange = true;
 	m_AlwaysRun = false;
-	m_DisableMenubar = true;
-	m_GrayOutOfRangeObjects = true;
+	m_DisableMenubar = false;
+	m_GrayOutOfRangeObjects = false;
 	m_DisableNewTargetSystem = true;
 	m_ItemPropertiesMode = 0;
 	m_ItemPropertiesIcon = false;
@@ -123,7 +123,7 @@ void TConfigManager::DefaultPage7()
 {
 	g_GameWindowWidth = 800;
 	g_GameWindowHeight = 600;
-	m_SpeechDelay = 100;
+	m_SpeechDelay = 500;
 	m_ScaleSpeechDelay = true;
 	m_SpeechColor = 0x02B2;
 	m_EmoteColor = 0x0021;
@@ -136,8 +136,8 @@ void TConfigManager::DefaultPage7()
 	m_ColoredLighting = true;
 	m_StandartCharactersAnimationDelay = true;
 	m_StandartItemsAnimationDelay = true;
-	m_LockResizingGameWindow = true;
-	m_LockGumpsMoving = false;
+	m_LockResizingGameWindow = false;
+	m_LockGumpsMoving = true;
 }
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage8()
@@ -169,14 +169,13 @@ void TConfigManager::SetConsoleNeedEnter(bool val)
 		EntryPointer = NULL;
 }
 //---------------------------------------------------------------------------
-void TConfigManager::SetClientFPS(BYTE val)
+void TConfigManager::UpdateClientFPS()
 {
-	if (val < 16)
-		val = 16;
-	else if (val > 64)
-		val = 64;
+	if (m_ClientFPS < 16)
+		m_ClientFPS = 16;
+	else if (m_ClientFPS > 64)
+		m_ClientFPS = 64;
 
-	m_ClientFPS = val;
 	g_FrameDelay[1] = 1000 / m_ClientFPS;
 
 	if (!m_ReduceFPSUnactiveWindow)
@@ -286,11 +285,9 @@ void TConfigManager::Load( __in string path)
 		if (file.ReadChar() == 2)
 		{
 			if (blockSize > 2)
-			{
-				SetClientFPS(file.ReadByte());
-			}
+				m_ClientFPS = file.ReadByte();
 			else
-				SetClientFPS(32);
+				m_ClientFPS = 32;
 		}
 		
 		file.Ptr = next;
@@ -508,6 +505,8 @@ void TConfigManager::Load( __in string path)
 			SendMessage(g_hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 		}
 	}
+
+	UpdateClientFPS();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -533,8 +532,8 @@ void TConfigManager::Save( __in string path)
 	writer->WriteBuffer();
 	
 	//Page 2
-	writer->WriteByte(2); //size of block
-	writer->WriteByte(3); //page index
+	writer->WriteByte(3); //size of block
+	writer->WriteByte(2); //page index
 	writer->WriteByte(m_ClientFPS); //page index
 	writer->WriteBuffer();
 	
