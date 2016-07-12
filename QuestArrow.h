@@ -24,6 +24,9 @@
 class TQuestArrow
 {
 private:
+	//Таймер подсветки
+	DWORD m_Timer;
+
 	//Координаты
 	WORD m_X;
 	WORD m_Y;
@@ -36,14 +39,15 @@ public:
 	~TQuestArrow();
 
 	//Индекс начальной картинки стрелки
-	static const WORD m_Gump = 0x0194;
+	static const WORD m_Gump = 0x1194;
 
+	SETGET(DWORD, Timer);
 	SETGET(WORD, X);
 	SETGET(WORD, Y);
 	SETGET(bool, Enabled);
 
 	//Отрисовать стрелку
-	void Draw(int &x, int &y);
+	void Draw(const RENDER_VARIABLES_FOR_GAME_WINDOW &bounds);
 };
 //---------------------------------------------------------------------------
 extern TQuestArrow QuestArrow;

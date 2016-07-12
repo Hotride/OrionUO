@@ -1577,7 +1577,7 @@ int TGameScreen::Render(__in bool mode)
 
 			SystemChat->DrawSystemChat(m_RenderBounds.GameWindowPosX, m_RenderBounds.GameWindowPosY, m_RenderBounds.GameWindowSizeY);
 
-			QuestArrow.Draw(m_RenderBounds.GameWindowCenterX, m_RenderBounds.GameWindowCenterY);
+			QuestArrow.Draw(m_RenderBounds);
 
 			DrawSmoothMonitorEffect();
 		}
@@ -1620,7 +1620,7 @@ int TGameScreen::Render(__in bool mode)
 #if UO_DEBUG_INFO!=0
 		char dbf[150] = {0};
 
-		sprintf(dbf, "FPS=%i Dir=%i Z=%i (MDZ=%i)", FPScount, g_Player->Direction, m_RenderBounds.PlayerZ, m_MaxDrawZ);
+		sprintf(dbf, "FPS=%i (%ims) Dir=%i Z=%i (MDZ=%i)", FPScount, g_FrameDelay[1], g_Player->Direction, m_RenderBounds.PlayerZ, m_MaxDrawZ);
 
 		FontManager->DrawA(3, dbf, 0x35, 20, 50);
 

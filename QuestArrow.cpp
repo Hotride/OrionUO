@@ -30,21 +30,48 @@ TQuestArrow::~TQuestArrow()
 {
 }
 //--------------------------------------------------------------------------
-void TQuestArrow::Draw(int &x, int &y)
+void TQuestArrow::Draw(const RENDER_VARIABLES_FOR_GAME_WINDOW &bounds)
 {
-	UO->DrawGump(0x0194, 0, 100, 100);
-
 	if (m_Enabled)
 	{
 		int dir = MouseManager.GetFacing(g_Player->X, g_Player->Y, m_X, m_Y, 0);
 
-		WORD gumpID = m_Gump + dir;
-		POINT p;
+		WORD gumpID = m_Gump + ((dir + 1) % 8);
 
+		POINT p = { 0 };
 		UO->GetGumpDimension(gumpID, p);
 
-		UO->DrawGump(gumpID, 0, x, y);
-		//UO->DrawGump(gumpID, 0, x + (p.x / 2), y + (p.y / 2));
+		int gox = m_X - g_Player->X;
+		int goy = m_Y - g_Player->Y;
+
+		int x = bounds.GameWindowCenterX + ((gox - goy) * 22) - (p.x / 2);
+		int y = bounds.GameWindowCenterY + ((gox + goy) * 22) - (p.y / 2);
+
+		if (x < bounds.GameWindowPosX)
+			x = bounds.GameWindowPosX;
+		else if (x > bounds.GameWindowPosX + bounds.GameWindowSizeX - p.x)
+			x = bounds.GameWindowPosX + bounds.GameWindowSizeX - p.x;
+
+		if (y < bounds.GameWindowPosY)
+			y = bounds.GameWindowPosY;
+		else if (y > bounds.GameWindowPosY + bounds.GameWindowSizeY - p.y)
+			y = bounds.GameWindowPosY + bounds.GameWindowSizeY - p.y;
+
+		DWORD ticks = GetTickCount();
+
+		if (m_Timer < ticks)
+		{
+			if (m_Timer + 120 < ticks)
+				m_Timer = ticks + 1000;
+
+			ColorizerShader->Use();
+
+			UO->DrawGump(gumpID, 0x0021, x, y);
+
+			UnuseShader();
+		}
+		else
+			UO->DrawGump(gumpID, 0, x, y);
 	}
 }
 //----------------------------------------------------------------------------
