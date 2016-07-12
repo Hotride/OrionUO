@@ -2470,7 +2470,7 @@ PACKET_HANDLER(ExtendedCommand)
 			{
 				if (gump->GumpType == GT_GENERIC && gump->ID == id)
 				{
-					(TGumpGeneric*)gump->SendGumpResponse(button);
+					((TGumpGeneric*)gump)->SendGumpResponse(button);
 
 					break;
 				}
