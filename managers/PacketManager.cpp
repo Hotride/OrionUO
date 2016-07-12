@@ -2463,9 +2463,18 @@ PACKET_HANDLER(ExtendedCommand)
 		}
 		case 4: //Close generic gump
 		{
-			DWORD serial = ReadDWord();
 			DWORD id = ReadDWord();
-			GumpManager->CloseGump(serial, id, GT_GENERIC);
+			DWORD button = ReadDWord();
+
+			QFOR(gump, GumpManager->m_Items, TGump*)
+			{
+				if (gump->GumpType == GT_GENERIC && gump->ID == id)
+				{
+					(TGumpGeneric*)gump->SendGumpResponse(button);
+
+					break;
+				}
+			}
 
 			break;
 		}
