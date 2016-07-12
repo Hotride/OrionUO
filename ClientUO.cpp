@@ -2783,6 +2783,7 @@ void TUltimaOnline::SaveLocalConfig()
 void TUltimaOnline::Process()
 {
 	static DWORD removeUnusedTexturesTime = GetTickCount() + CLEAR_TEXTURES_DELAY;
+	static DWORD processGameObjectsTimer = GetTickCount();
 
 	ConnectionManager.Recv();
 	PacketManager.SendMegaClilocRequests();
@@ -2809,7 +2810,7 @@ void TUltimaOnline::Process()
 		g_SelectedObject = NULL;
 		g_SelectedTextObject = NULL;
 
-		if (g_LastRenderTime <= ticks)
+		if (processGameObjectsTimer <= ticks)
 		{
 			TWalkData *wd = g_Player->m_WalkStack.m_Items;
 
@@ -2833,7 +2834,12 @@ void TUltimaOnline::Process()
 
 			if (gumpBuff != NULL)
 				gumpBuff->UpdateBuffIcons();
+
+			processGameObjectsTimer = ticks + 30;
 		}
+
+		if (abs((int)processGameObjectsTimer - (int)ticks) > 500)
+			processGameObjectsTimer = ticks + 30;
 
 		World->ProcessAnimation();
 
