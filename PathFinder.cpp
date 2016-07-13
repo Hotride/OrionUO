@@ -627,32 +627,33 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	static int lastDelta = 0;
 	static int lastStepTime = 0;
 
-	if (onMount)
+	/*if (onMount)
 		trace_printf("Mounted");
 
 	if (run)
 		trace_printf("Run");
 	else
-		trace_printf("Walk");
+		trace_printf("Walk");*/
 
 	//Высчитываем актуальную дельту с помощью разници во времени между прошлым и текущим шагом.
 	int nowDelta = 0;
 	
 	if (lastDir == direction && lastMount == onMount && lastRun == run)
 	{
-		nowDelta = walkTime - (currentTime - lastStepTime);
+		nowDelta = (currentTime - lastStepTime) - walkTime + lastDelta;
+
 		if (abs(nowDelta) > 70)
 			nowDelta = 0;
-		/*else if (lastDelta < 0)
-			nowDelta = nowDelta + (abs(lastDelta) / 2);
-		else if (lastDelta > 0)
-			nowDelta = nowDelta - (abs(lastDelta) / 2);*/
+
+		lastDelta = nowDelta;
 	}
+	else
+		lastDelta = 0;
 
 
-	TPRINT("ReqDelta %i\n", /*nowDelta*/currentTime - lastStepTime);
+	//TPRINT("ReqDelta (%i) %i\n", nowDelta, currentTime - lastStepTime);
 
-	lastStepTime = currentTime;// <-- Текущее время для следующей дельты без учета поворотов!?
+	lastStepTime = currentTime;
 
 	lastDelta = nowDelta;
 	lastRun = run;
@@ -662,7 +663,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 
 	#pragma endregion
 
-	g_PendingDelayTime = currentTime + walkTime; // +nowDelta;
+	g_PendingDelayTime = currentTime + walkTime - nowDelta;
 	g_Player->GetAnimationGroup();
 
 	return true;
