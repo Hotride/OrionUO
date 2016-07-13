@@ -270,7 +270,7 @@ TPacketCreateCharacter::TPacketCreateCharacter(string name)
 
 	WORD location = 0;
 	if (city != NULL)
-		location = city->LocationIndex;
+		location = city->LocationIndex - 1;
 
 	WriteWord(location); //location
 	WriteWord(0x0000); //?
