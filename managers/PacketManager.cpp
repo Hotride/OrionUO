@@ -3969,6 +3969,14 @@ PACKET_HANDLER(ErrorCode)
 PACKET_HANDLER(AttackCharacter)
 {
 	g_LastAttackObject = ReadDWord();
+
+	if (g_LastAttackObject != 0 && World != NULL)
+	{
+		TGameCharacter *obj = World->FindWorldCharacter(g_LastAttackObject);
+
+		if (obj != NULL && !obj->MaxHits)
+			TPacketStatusRequest(g_LastAttackObject).Send();
+	}
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(Season)
