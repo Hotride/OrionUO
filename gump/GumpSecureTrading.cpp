@@ -131,6 +131,11 @@ void TGumpSecureTrading::GenerateFrame()
 
 		ColorizerShader->Use();
 
+		DWORD ignoreSerial = 0;
+
+		if (ObjectInHand != NULL)
+			ignoreSerial = ObjectInHand->Serial;
+
 		//Отрисовка нашего товара (при наличии товара)
 		TGameObject *container = World->FindWorldObject(m_ID);
 		if (container != NULL && container->m_Items != NULL)
@@ -139,6 +144,9 @@ void TGumpSecureTrading::GenerateFrame()
 
 			QFOR(item, container->m_Items, TGameItem*)
 			{
+				if (item->Serial == ignoreSerial)
+					continue;
+
 				bool doubleDraw = false;
 				WORD graphic = item->GetDrawGraphic(doubleDraw);
 				WORD color = item->Color;

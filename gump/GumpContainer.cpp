@@ -137,13 +137,18 @@ void TGumpContainer::GenerateFrame()
 
 			bool canSelect = (ObjectInHand == NULL || (ObjectInHand != NULL && !g_LeftMouseDown));
 
+			DWORD ignoreSerial = 0;
+
+			if (ObjectInHand != NULL)
+				ignoreSerial = ObjectInHand->Serial;
+
 			ColorizerShader->Use();
 
 			QFOR(obj, container->m_Items, TGameItem*)
 			{
 				int count = obj->Count;
 
-				if ((obj->Layer == OL_NONE || (container->IsCorpse() && LAYER_UNSAFE[obj->Layer])) && count > 0)
+				if ((obj->Layer == OL_NONE || (container->IsCorpse() && LAYER_UNSAFE[obj->Layer])) && count > 0 && obj->Serial != ignoreSerial)
 				{
 					bool doubleDraw = false;
 					WORD graphic = obj->GetDrawGraphic(doubleDraw);

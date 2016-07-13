@@ -387,6 +387,11 @@ void TGumpPaperdoll::GenerateFrame()
 
 		int gumpOffset = (obj->Sex ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET);
 
+		DWORD ignoreSerial = 0;
+
+		if (ObjectInHand != NULL)
+			ignoreSerial = ObjectInHand->Serial;
+
 		//Draw equipment & backpack
 		TGameItem *equipment = NULL;
 		if (obj->IsHuman() && !obj->Dead())
@@ -395,7 +400,7 @@ void TGumpPaperdoll::GenerateFrame()
 			{
 				equipment = obj->FindLayer(UsedLayers[i]);
 
-				if (equipment != NULL && equipment->AnimID)
+				if (equipment != NULL && equipment->AnimID && equipment->Serial != ignoreSerial)
 				{
 					int cOfs = gumpOffset;
 

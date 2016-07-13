@@ -1105,6 +1105,11 @@ void TGameScreen::DrawGameWindow( __in bool &mode)
 			}
 		}
 
+		DWORD ignoreSerial = 0;
+
+		if (ObjectInHand != NULL)
+			ignoreSerial = ObjectInHand->Serial;
+
 		IFOR(i, 0, m_RenderListCount)
 		{
 			RENDER_OBJECT_DATA &rod = m_RenderList[i];
@@ -1112,6 +1117,9 @@ void TGameScreen::DrawGameWindow( __in bool &mode)
 
 			if (obj != NULL)
 			{
+				if (obj->IsGameObject() && obj->Serial == ignoreSerial)
+					continue;
+
 				g_OutOfRangeColor = rod.GrayColor;
 
 				g_UseCircleTrans = (ConfigManager.UseCircleTrans && obj->TranparentTest(playerZPlus5));
