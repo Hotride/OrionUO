@@ -279,6 +279,9 @@ void TSoundManager::PlayMidi(int index)
 
 void TSoundManager::PlayMP3(std::string fileName, bool loop, bool warmode)
 {
+	if (warmode && m_WarMusic != 0)
+		return;
+
 	if (warmode)
 		BASS_ChannelStop(m_Music);
 	else
