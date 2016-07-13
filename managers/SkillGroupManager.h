@@ -82,7 +82,7 @@ public:
 	@param [__in] path Путь к файлу конфига
 	@return 
 	*/
-	void Load(__in string path);
+	bool Load(__in string path);
 
 	/*!
 	Сохранение групп в файл конфиг

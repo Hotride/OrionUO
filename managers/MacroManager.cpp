@@ -39,12 +39,232 @@ TMacroManager::~TMacroManager()
 }
 //---------------------------------------------------------------------------
 /*!
+Конвертирование строки в виртуальный код клавиши
+@param [__in] strings Исходные строки, при склейке получим входную строку
+@return Ключ
+*/
+WORD TMacroManager::ConvertStringToKeyCode(__in const vector<string> &strings)
+{
+	string str = strings[0];
+
+	for (int i = 1; i < (int)strings.size() - 3; i++)
+		str += " " + strings[i];
+
+	WORD key = 0;
+
+	if (str.length() == 1)
+		key = *str.c_str();
+	else if (str.length())
+	{
+		str = ToUpperA(str);
+
+		if (str == "ESC")
+			key = VK_ESCAPE;
+		else if (str == "BACKSPACE")
+			key = VK_BACK;
+		else if (str == "TAB")
+			key = VK_TAB;
+		else if (str == "ENTER")
+			key = VK_RETURN;
+		else if (str == "CTRL")
+			key = VK_CONTROL;
+		else if (str == "ALT")
+			key = VK_MENU;
+		else if (str == "SHIFT")
+			key = VK_SHIFT;
+		else if (str == "SPACE")
+			key = VK_SPACE;
+		else if (str == "CAPS LOCK")
+			key = VK_CAPITAL;
+		else if (str == "F1")
+			key = VK_F1;
+		else if (str == "F2")
+			key = VK_F2;
+		else if (str == "F3")
+			key = VK_F3;
+		else if (str == "F4")
+			key = VK_F4;
+		else if (str == "F5")
+			key = VK_F5;
+		else if (str == "F6")
+			key = VK_F6;
+		else if (str == "F7")
+			key = VK_F7;
+		else if (str == "F8")
+			key = VK_F8;
+		else if (str == "F9")
+			key = VK_F9;
+		else if (str == "F10")
+			key = VK_F10;
+		else if (str == "F11")
+			key = VK_F11;
+		else if (str == "F12")
+			key = VK_F12;
+		else if (str == "PAUSE")
+			key = VK_PAUSE;
+		else if (str == "SCROLL LOCK")
+			key = VK_SCROLL;
+		else if (str == "NUM 0")
+			key = VK_NUMPAD0;
+		else if (str == "NUM 1")
+			key = VK_NUMPAD1;
+		else if (str == "NUM 2")
+			key = VK_NUMPAD2;
+		else if (str == "NUM 3")
+			key = VK_NUMPAD3;
+		else if (str == "NUM 4")
+			key = VK_NUMPAD4;
+		else if (str == "NUM 5")
+			key = VK_NUMPAD5;
+		else if (str == "NUM 6")
+			key = VK_NUMPAD6;
+		else if (str == "NUM 7")
+			key = VK_NUMPAD7;
+		else if (str == "NUM 8")
+			key = VK_NUMPAD8;
+		else if (str == "NUM 9")
+			key = VK_NUMPAD9;
+		else if (str == "NUM *")
+			key = 42;
+		else if (str == "NUM -")
+			key = 45;
+		else if (str == "NUM +")
+			key = 43;
+		else if (str == "NUM DEL")
+			key = 46;
+	}
+
+	return key;
+}
+//---------------------------------------------------------------------------
+/*!
+Сконвертировать файл макросов оригинального клиента
+@param [__in] path Путь к файлу с макросами
+@return true при успешном конвертировании
+*/
+bool TMacroManager::Convert(__in string path)
+{
+	TTextFileParser file(path.c_str(), " ", "", "");
+
+	//Позиции доп. кнопок в списке, индыксация с конца, т.е. strings.size() - position
+	const int MACRO_POSITION_ALT = 2;
+	const int MACRO_POSITION_CTRL = 3;
+	const int MACRO_POSITION_SHIFT = 1;
+
+	while (!file.IsEOF())
+	{
+		vector<string> strings = file.ReadTokens();
+		int size = strings.size();
+
+		if (!size)
+			continue;
+
+		if (size != 4)
+		{
+			EPRINT("Macros converter. Unwaited start args count = %i!!!\n", size);
+			continue;
+		}
+
+		//TPRINT("Key: %s [alt=%i ctrl=%i shift=%i]\n", strings[0].c_str(), atoi(strings[MACRO_ALT_POSITION].c_str()), atoi(strings[MACRO_CTRL_POSITION].c_str()), atoi(strings[MACRO_SHIFT_POSITION].c_str()));
+		bool macroAdded = false;
+
+		TMacro *macro = new TMacro(ConvertStringToKeyCode(strings), atoi(strings[size - MACRO_POSITION_ALT].c_str()), atoi(strings[size - MACRO_POSITION_CTRL].c_str()), atoi(strings[size - MACRO_POSITION_SHIFT].c_str()));
+
+		while (!file.IsEOF())
+		{
+			PBYTE filePtr = file.GetFilePtr();
+			vector<string> data = file.ReadTokens();
+
+			if (!data.size())
+				continue;
+
+			//Конец секции макросов
+			if (*data[0].c_str() == '#')
+			{
+				macroAdded = true;
+
+				Add(macro);
+
+				break;
+			}
+
+			string upData = ToUpperA(data[0]);
+			MACRO_CODE code = MC_NONE;
+
+			IFOR(i, 0, TMacro::MACRO_ACTION_NAME_COUNT)
+			{
+				if (upData == ToUpperA(TMacro::m_MacroActionName[i]))
+				{
+					code = (MACRO_CODE)i;
+
+					//TPRINT("Action found (%i): %s\n", i, TMacro::m_MacroActionName[i]);
+
+					break;
+				}
+			}
+			
+			if (code != MC_NONE)
+			{
+				TMacroObject *obj = TMacro::CreateMacro(code, false);
+
+				if (obj->GetType() == 2) //Аргументы - строка
+				{
+					filePtr += data[0].length() + 1;
+
+					PBYTE end = filePtr;
+
+					while (*end && *end != '\n' && *end != '\r')
+						end++;
+
+					if (end - filePtr > 0)
+					{
+						string args((char*)filePtr, end - filePtr);
+						//TPRINT("\tSub action string is: %s\n", args.c_str());
+
+						((TMacroObjectString*)obj)->String = args;
+					}
+				}
+				else if (data.size() > 1) //Аргументы - код (значение), либо просто код макроса
+				{
+					upData = data[1];
+
+					IFOR(i, 2, (int)data.size())
+						upData += " " + data[i];
+
+					upData = ToUpperA(upData);
+
+					IFOR(i, 0, TMacro::MACRO_ACTION_COUNT)
+					{
+						if (upData == ToUpperA(TMacro::m_MacroAction[i]))
+						{
+							obj->SubCode = (MACRO_SUB_CODE)i;
+
+							//TPRINT("\tSub action found (%i): %s\n", i, TMacro::m_MacroAction[i]);
+
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		//TPRINT("Cycle ends with add: %i\n", macroAdded);
+
+		if (!macroAdded)
+			Add(macro);
+	}
+
+	return PathFileExistsA(path.c_str());
+}
+//---------------------------------------------------------------------------
+/*!
 Загрузить макросы из конфига
 @param [__in] path Путь к файлу конфига
 @return 
 */
-void TMacroManager::Load( __in string path)
+bool TMacroManager::Load(__in string path, __in string originalPath)
 {
+	bool result = false;
 	Clear();
 
 	TMappedHeader file;
@@ -62,7 +282,13 @@ void TMacroManager::Load( __in string path)
 			Add(TMacro::Load(file));
 
 		FileManager.UnloadFileFromMemory(file);
+
+		result = true;
 	}
+	else
+		result = Convert(originalPath);
+
+	return result;
 }
 //---------------------------------------------------------------------------
 /*!

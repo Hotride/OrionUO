@@ -83,15 +83,18 @@ private:
 	bool m_Alt;
 	bool m_Ctrl;
 	bool m_Shift;
-
-	//Названия макросов
-	static const char *m_MacroActionName[60];
-
-	//Названия действий
-	static const char *m_MacroAction[210];
 public:
 	TMacro(WORD key, bool alt, bool ctrl, bool shift);
 	virtual ~TMacro();
+
+	static const int MACRO_ACTION_NAME_COUNT = 60;
+	static const int MACRO_ACTION_COUNT = 210;
+
+	//Названия макросов
+	static const char *m_MacroActionName[MACRO_ACTION_NAME_COUNT];
+
+	//Названия действий
+	static const char *m_MacroAction[MACRO_ACTION_COUNT];
 
 	SETGET(WORD, Key);
 	SETGET(bool, Alt);
@@ -114,7 +117,7 @@ public:
 	static TMacro *CreateBlankMacro();
 
 	//Создать макрос по коду
-	static TMacroObject *CreateMacro(MACRO_CODE code);
+	static TMacroObject *CreateMacro(MACRO_CODE code, bool forOptionsGump = true);
 
 	//Получить смещение индекса названия относительно начала списка и количество в группе
 	static void GetBoundByCode(MACRO_CODE code, int &count, int &offset);

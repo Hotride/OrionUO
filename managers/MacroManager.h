@@ -42,6 +42,13 @@ private:
 	*/
 	void ProcessSubMenu();
 
+	/*!
+	Конвертирование строки в виртуальный код клавиши
+	@param [__in] strings Исходные строки, при склейке получим входную строку
+	@return Ключ
+	*/
+	WORD ConvertStringToKeyCode(__in const vector<string> &strings);
+
 public:
 	TMacroManager();
 	virtual ~TMacroManager();
@@ -60,11 +67,19 @@ public:
 	TMacro *FindMacro(__in WORD key, __in bool alt, __in bool ctrl, __in bool shift);
 
 	/*!
+	Сконвертировать файл макросов оригинального клиента
+	@param [__in] path Путь к файлу с макросами
+	@return true при успешном конвертировании
+	*/
+	bool Convert(__in string path);
+
+	/*!
 	Загрузить макросы из конфига
 	@param [__in] path Путь к файлу конфига
+	@param [__in] originalPath Путь к файлу с макросами оригинального клиента
 	@return 
 	*/
-	void Load(__in string path);
+	bool Load(__in string path, __in string originalPath);
 
 	/*!
 	Сохранить макросы в конфиг

@@ -233,7 +233,7 @@ public:
 	@param [__in] path Путь к файлу с конфигом
 	@return 
 	*/
-	void Load(__in string path);
+	bool Load(__in string path);
 
 	/*!
 	Сохранение конфига

@@ -1118,6 +1118,8 @@ bool TUltimaOnline::Install()
 	InitScreen(GS_MAIN);
 #endif
 
+	//MacroManager->Convert(FilePath("macros.txt"));
+
 	/*TMappedHeader mh;
 	memset(&mh, 0, sizeof(mh));
 
@@ -2719,9 +2721,31 @@ void TUltimaOnline::LoadLocalConfig()
 
 	string path(buf);
 
-	ConfigManager.Load(path + "\\options_debug.cuo");
-	SkillGroupManager.Load(path + "\\skills_debug.cuo");
-	MacroManager->Load(path + "\\macros_debug.cuo");
+	if (!ConfigManager.Load(path + "\\options_debug.cuo"))
+	{
+		if (!ConfigManager.Load(FilePath("options_debug.cuo")))
+		{
+			ConfigManager.Init();
+
+			if (g_GameState >= GS_GAME)
+			{
+				SendMessage(g_hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+				SendMessage(g_hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+			}
+		}
+	}
+
+	if (!SkillGroupManager.Load(path + "\\skills_debug.cuo"))
+		SkillGroupManager.Load(FilePath("skills_debug.cuo"));
+
+	if (!MacroManager->Load(path + "\\macros_debug.cuo", path + "\\macros.txt"))
+	{
+		if (!MacroManager->Load(FilePath("\\macros_debug.cuo"), FilePath("\\macros.txt")))
+		{
+			//Создать стандартные макросы
+		}
+	}
+
 	GumpManager->Load(path + "\\gumps_debug.cuo");
 
 	if (ConfigManager.OffsetInterfaceWindows)

@@ -290,8 +290,10 @@ int TSkillGroupManager::GetVisibleLinesCount()
 @param [__in] path Путь к файлу конфига
 @return 
 */
-void TSkillGroupManager::Load( __in string path)
+bool TSkillGroupManager::Load( __in string path)
 {
+	bool result = false;
+
 	Clear();
 	
 	TMappedHeader file;
@@ -335,9 +337,13 @@ void TSkillGroupManager::Load( __in string path)
 		}
 
 		FileManager.UnloadFileFromMemory(file);
+
+		result = true;
 	}
 	else
 		MakeDefault();
+
+	return result;
 }
 //----------------------------------------------------------------------------
 /*!

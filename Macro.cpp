@@ -130,7 +130,7 @@ TMacro *TMacro::CreateBlankMacro()
 	return obj;
 }
 //---------------------------------------------------------------------------
-TMacroObject *TMacro::CreateMacro(MACRO_CODE code)
+TMacroObject *TMacro::CreateMacro(MACRO_CODE code, bool forOptionsGump)
 {
 	TMacroObject *obj = NULL;
 	
@@ -145,7 +145,10 @@ TMacroObject *TMacro::CreateMacro(MACRO_CODE code)
 		case MC_SET_UPDATE_RANGE:
 		case MC_MODIFY_UPDATE_RANGE:
 		{
-			obj = new TMacroObjectEntry(code, MSC_NONE, "");
+			if (forOptionsGump)
+				obj = new TMacroObjectEntry(code, MSC_NONE, "");
+			else
+				obj = new TMacroObjectString(code, MSC_NONE, "");
 					
 			break;
 		}
@@ -468,7 +471,7 @@ void TMacro::GetBoundByCode(MACRO_CODE code, int &count, int &offset)
 
 }
 //---------------------------------------------------------------------------
-const char *TMacro::m_MacroActionName[60] =
+const char *TMacro::m_MacroActionName[MACRO_ACTION_NAME_COUNT] =
 {
 	"(NONE)",
 	"Say",
@@ -532,7 +535,7 @@ const char *TMacro::m_MacroActionName[60] =
 	"ToggleGargoyleFlying"
 };
 //---------------------------------------------------------------------------
-const char *TMacro::m_MacroAction[210] =
+const char *TMacro::m_MacroAction[MACRO_ACTION_COUNT] =
 {
 	"?",
 	"NW (top)", //Walk group
@@ -551,7 +554,7 @@ const char *TMacro::m_MacroAction[210] =
 	"Mage Spellbook",
 	"Chat",
 	"Backpack",
-	"Owerview",
+	"Overview",
 	"World Map",
 	"Mail",
 	"Party Manifest",

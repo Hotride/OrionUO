@@ -249,8 +249,9 @@ WORD TConfigManager::GetColorByNotoriety( __in BYTE notoriety)
 @param [__in] path Путь к файлу с конфигом
 @return 
 */
-void TConfigManager::Load( __in string path)
+bool TConfigManager::Load( __in string path)
 {
+	bool result = false;
 	TMappedHeader file;
 	memset(&file, 0, sizeof(TMappedHeader));
 
@@ -494,8 +495,10 @@ void TConfigManager::Load( __in string path)
 		}
 
 		FileManager.UnloadFileFromMemory(file);
+
+		result = true;
 	}
-	else
+	/*else
 	{
 		Init();
 
@@ -504,9 +507,11 @@ void TConfigManager::Load( __in string path)
 			SendMessage(g_hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
 			SendMessage(g_hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 		}
-	}
+	}*/
 
 	UpdateClientFPS();
+
+	return result;
 }
 //---------------------------------------------------------------------------
 /*!
