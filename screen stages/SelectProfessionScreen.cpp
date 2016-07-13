@@ -68,22 +68,22 @@ void TSelectProfessionScreen::Init()
 	ToolTip.SeqIndex = 0;
 
 	//Prepare textures:
-	UO->ExecuteGump(0x0588); //Main Screen background
-	UO->ExecuteGump(0x157C); //Main Screen
-	UO->ExecuteGump(0x15A0); //Main Screen Notes
-	UO->ExecuteGumpPart(0x1589, 3); //X gump
-	UO->ExecuteGumpPart(0x15A1, 3); //< gump
-	UO->ExecuteGumpPart(0x15A4, 3); //> gump
-	UO->ExecuteGump(0x058B); //Create character header
-	UO->ExecuteGump(0x0589); //Label container
-	UO->ExecuteGumpPart(0x119C, 3); //Arrow <
-	UO->ExecuteResizepic(0x0BB8); //Description text field
-	UO->ExecuteResizepic(0x0A28); //Character profeccion selection field
-	UO->ExecuteResizepic(0x00FA); //scroll bar
-	UO->ExecuteGumpPart(0x00D5, 3); //Sphere line gump
+	Orion->ExecuteGump(0x0588); //Main Screen background
+	Orion->ExecuteGump(0x157C); //Main Screen
+	Orion->ExecuteGump(0x15A0); //Main Screen Notes
+	Orion->ExecuteGumpPart(0x1589, 3); //X gump
+	Orion->ExecuteGumpPart(0x15A1, 3); //< gump
+	Orion->ExecuteGumpPart(0x15A4, 3); //> gump
+	Orion->ExecuteGump(0x058B); //Create character header
+	Orion->ExecuteGump(0x0589); //Label container
+	Orion->ExecuteGumpPart(0x119C, 3); //Arrow <
+	Orion->ExecuteResizepic(0x0BB8); //Description text field
+	Orion->ExecuteResizepic(0x0A28); //Character profeccion selection field
+	Orion->ExecuteResizepic(0x00FA); //scroll bar
+	Orion->ExecuteGumpPart(0x00D5, 3); //Sphere line gump
 
-	UO->ExecuteGump(0x0589); //Earth container
-	UO->ExecuteGumpPart(0x15E8, 3); //Earth button
+	Orion->ExecuteGump(0x0589); //Earth container
+	Orion->ExecuteGumpPart(0x15E8, 3); //Earth button
 }
 //---------------------------------------------------------------------------
 /*!
@@ -106,14 +106,14 @@ void TSelectProfessionScreen::ProcessSmoothAction( __in_opt BYTE action)
 	if (action == ID_SMOOTH_SPS_QUIT)
 		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 	else if (action == ID_SMOOTH_SPS_GO_SCREEN_CHARACTER)
-		UO->InitScreen(GS_CHARACTER);
+		Orion->InitScreen(GS_CHARACTER);
 	else if (action == ID_SMOOTH_SPS_GO_SCREEN_GAME_CONNECT)
 	{
-		UO->InitScreen(GS_GAME_CONNECT);
+		Orion->InitScreen(GS_GAME_CONNECT);
 		ConnectionScreen->Type = CST_SELECT_PROFESSOIN;
 	}
 	else if (action == ID_SMOOTH_SPS_GO_SCREEN_CREATE)
-		UO->InitScreen(GS_CREATE);
+		Orion->InitScreen(GS_CREATE);
 }
 //---------------------------------------------------------------------------
 /*!
@@ -257,39 +257,39 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
-		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
-		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
-		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
+		Orion->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
+		Orion->DrawGump(0x157C, 0, 0, 0); //Main Gump
+		Orion->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
 		
 		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_SPS_QUIT); //X gump /lighted
 		if (CanPressedButton == ID_SPS_QUIT)
 			GumpID = 0x158B; //X gump (pressed)
-		UO->DrawGump(GumpID, 0, 555, 4);
+		Orion->DrawGump(GumpID, 0, 555, 4);
 		
 		GumpID = 0x15A1 + (int)(CanSelectedButton == ID_SPS_ARROW_PREV); //< gump /lighted
 		if (CanPressedButton == ID_SPS_ARROW_PREV)
 			GumpID = 0x15A3; //< gump pressed
-		UO->DrawGump(GumpID, 0, 586, 445); //< gump
+		Orion->DrawGump(GumpID, 0, 586, 445); //< gump
 
-		UO->DrawResizepicGump(0xA28, 80, 80, 546, 352); //Character profeccion selection field
+		Orion->DrawResizepicGump(0xA28, 80, 80, 546, 352); //Character profeccion selection field
 		
-		UO->DrawGump(0x058B, 0, 145, 57); //Create character header
-		UO->DrawGump(0x0589, 0, 222, 44); //Label container
+		Orion->DrawGump(0x058B, 0, 145, 57); //Create character header
+		Orion->DrawGump(0x0589, 0, 222, 44); //Label container
 		
 		GumpID = 0x119C + (int)(CanSelectedButton == ID_SPS_ARROW_BACK_PROFESSION); //Arrow < /lighted
 		if (CanPressedButton == ID_SPS_ARROW_BACK_PROFESSION)
 			GumpID = 0x119E; //Arrow < pressed
-		UO->DrawGump(GumpID, 0, 200, 356); //Arrow <
+		Orion->DrawGump(GumpID, 0, 200, 356); //Arrow <
 		
 
 
-		UO->DrawResizepicGump(0xBB8, 120, 137, 204, 214); //Description text field
+		Orion->DrawResizepicGump(0xBB8, 120, 137, 204, 214); //Description text field
 		
 		//Description scroll bar:
-		UO->DrawGump(0x0100, 0, 324, 149, 0, 190); //background
-		UO->DrawGump(0x00FA, 0, 324, 137); //^
-		UO->DrawGump(0x00FE, 0, 325, 158 + scrollerY); //bar
-		UO->DrawGump(0x00FC, 0, 324, 330); //v
+		Orion->DrawGump(0x0100, 0, 324, 149, 0, 190); //background
+		Orion->DrawGump(0x00FA, 0, 324, 137); //^
+		Orion->DrawGump(0x00FE, 0, 325, 158 + scrollerY); //bar
+		Orion->DrawGump(0x00FC, 0, 324, 330); //v
 		
 		//Text in box
 		g_GL.ViewPort(123, 140, 195, 206);
@@ -321,7 +321,7 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 		if (obj->Type == PT_CATEGORY) //category
 		{
 			GumpID = obj->Gump;
-			UO->DrawGump(GumpID, 0, 231, 53); //Label gump
+			Orion->DrawGump(GumpID, 0, 231, 53); //Label gump
 
 			int offsY = 0;
 
@@ -329,13 +329,13 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 
 			QFOR(child, obj->m_Items, TBaseProfession*)
 			{
-				UO->DrawGump(0x0589, 0, 500, 100 + offsY); //Label container
+				Orion->DrawGump(0x0589, 0, 500, 100 + offsY); //Label container
 
 				GumpID = child->Gump;
 				if (CanPressedButton == ID_SPS_LABEL + index)
 					GumpID++;
 
-				UO->DrawGump(GumpID, 0, 509, 109 + offsY); //Label gump
+				Orion->DrawGump(GumpID, 0, 509, 109 + offsY); //Label gump
 				FontManager->DrawA(9, child->GetName().c_str(), 0x1, 350, 135 + offsY);
 
 				offsY += 79;
@@ -345,7 +345,7 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 		}
 		else if (obj->Type == PT_PROFESSION) //profession
 		{
-			UO->DrawGump(obj->Gump, 0, 231, 53); //Label gump
+			Orion->DrawGump(obj->Gump, 0, 231, 53); //Label gump
 			
 			const float SphereListWidth = 95.0f;
 			float ValPer = 0.0f;
@@ -371,7 +371,7 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 				sprintf(val, "%d", statVal[i]);
 				FontManager->DrawA(1, val, 1, 460, yPtr);
 
-				UO->DrawSphereGump((statVal[i] - 10), 35.0f, 436, yPtr);
+				Orion->DrawSphereGump((statVal[i] - 10), 35.0f, 436, yPtr);
 
 				yPtr += 30;
 			}
@@ -401,7 +401,7 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 
 				IFOR(i, 0, 3)
 				{
-					UO->DrawResizepicGump(0xBB8, 350, yPtr, 105, 25); //Skill Name text field
+					Orion->DrawResizepicGump(0xBB8, 350, yPtr, 105, 25); //Skill Name text field
 
 					int skillID = profession->GetSkillIndex(i);
 
@@ -426,14 +426,14 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 			}
 
 			//Skills
-			UO->DrawSphereGump(profession->GetSkillValue(0), 50.0f, 436, 258);
-			UO->DrawSphereGump(profession->GetSkillValue(1), 50.0f, 436, 290);
-			UO->DrawSphereGump(profession->GetSkillValue(2), 50.0f, 436, 322);
+			Orion->DrawSphereGump(profession->GetSkillValue(0), 50.0f, 436, 258);
+			Orion->DrawSphereGump(profession->GetSkillValue(1), 50.0f, 436, 290);
+			Orion->DrawSphereGump(profession->GetSkillValue(2), 50.0f, 436, 322);
 
 			GumpID = 0x15A4 + (int)(CanSelectedButton == ID_SPS_ARROW_NEXT);
 			if (CanPressedButton == ID_SPS_ARROW_NEXT)
 				GumpID = 0x15A6; //> gump pressed
-			UO->DrawGump(GumpID, 0, 610, 445); //> gump
+			Orion->DrawGump(GumpID, 0, 610, 445); //> gump
 		}
 
 		InitToolTip();
@@ -448,23 +448,23 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 	{
 		g_LastSelectedObject = 0;
 
-		if (UO->GumpPixelsInXY(0x1589, 555, 4))
+		if (Orion->GumpPixelsInXY(0x1589, 555, 4))
 			g_LastSelectedObject = ID_SPS_QUIT; //X gump
-		else if (UO->GumpPixelsInXY(0x15A1, 586, 445))
+		else if (Orion->GumpPixelsInXY(0x15A1, 586, 445))
 			g_LastSelectedObject = ID_SPS_ARROW_PREV; //< gump
-		else if (UO->GumpPixelsInXY(0x119C, 200, 356))
+		else if (Orion->GumpPixelsInXY(0x119C, 200, 356))
 			g_LastSelectedObject = ID_SPS_ARROW_BACK_PROFESSION; //Arrow <
-		else if (UO->GumpPixelsInXY(0x00FA, 324, 137))
+		else if (Orion->GumpPixelsInXY(0x00FA, 324, 137))
 			g_LastSelectedObject = ID_SPS_SCROLLBAR_UP; //^
-		else if (UO->GumpPixelsInXY(0x00FC, 324, 330))
+		else if (Orion->GumpPixelsInXY(0x00FC, 324, 330))
 			g_LastSelectedObject = ID_SPS_SCROLLBAR_DOWN; //v
-		else if (UO->GumpPixelsInXY(0x00FE, 325, 158 + scrollerY))
+		else if (Orion->GumpPixelsInXY(0x00FE, 325, 158 + scrollerY))
 			g_LastSelectedObject = ID_SPS_SCROLLBAR; //bar
-		else if (UO->GumpPixelsInXY(0x0100, 324, 149, 0, 190))
+		else if (Orion->GumpPixelsInXY(0x0100, 324, 149, 0, 190))
 			g_LastSelectedObject = ID_SPS_SCROLLBAR_BACKGROUND; //background
 		else if (obj->Type == PT_CATEGORY)
 		{
-			if (UO->GumpPixelsInXY(obj->Gump, 231, 53))
+			if (Orion->GumpPixelsInXY(obj->Gump, 231, 53))
 				g_LastSelectedObject = ID_SPS_LABEL_BACK_PROFESSION; //Label gump
 
 			int offsY = 0;
@@ -472,7 +472,7 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 
 			QFOR(child, obj->m_Items, TBaseProfession*)
 			{
-				if (UO->GumpPixelsInXY(child->Gump, 509, 109 + offsY))
+				if (Orion->GumpPixelsInXY(child->Gump, 509, 109 + offsY))
 					g_LastSelectedObject = ID_SPS_LABEL + index; //Label gump
 
 				offsY += 79;
@@ -482,9 +482,9 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 		}
 		else if (obj->Type == PT_PROFESSION)
 		{
-			if (UO->GumpPixelsInXY(obj->Gump, 231, 53))
+			if (Orion->GumpPixelsInXY(obj->Gump, 231, 53))
 				g_LastSelectedObject = ID_SPS_LABEL_BACK_PROFESSION; //Label gump
-			else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+			else if (Orion->GumpPixelsInXY(0x15A4, 610, 445))
 				g_LastSelectedObject = ID_SPS_ARROW_NEXT; //> gump
 			else
 			{
@@ -497,7 +497,7 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 				IFOR(i, 0, 3)
 				{
 					int ofs = CalculateSphereOffset(100, (statVal[i] - 10), sphereListWidth, 35.0f);
-					if (UO->GumpPixelsInXY(0x00D8, 500 + ofs, yPtr)) //Sphere gump
+					if (Orion->GumpPixelsInXY(0x00D8, 500 + ofs, yPtr)) //Sphere gump
 						g_LastSelectedObject = ID_SPS_STATS_SPHERE + i;
 
 					yPtr += 30;
@@ -508,7 +508,7 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 				IFOR(i, 0, 3)
 				{
 					int ofs = CalculateSphereOffset(100, profession->GetSkillValue(i), sphereListWidth, 50.0f);
-					if (UO->GumpPixelsInXY(0x00D8, 500 + ofs, yPtr)) //Sphere gump
+					if (Orion->GumpPixelsInXY(0x00D8, 500 + ofs, yPtr)) //Sphere gump
 						g_LastSelectedObject = ID_SPS_SKILLS_SPHERE + i;
 
 					yPtr += 32;
@@ -520,13 +520,13 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 
 					IFOR(i, 0, 3)
 					{
-						if (UO->ResizepicPixelsInXY(0xBB8, 350, yPtr, 105, 25)) //Skill Name text field
+						if (Orion->ResizepicPixelsInXY(0xBB8, 350, yPtr, 105, 25)) //Skill Name text field
 							g_LastSelectedObject = ID_SPS_SKILLS_FILED + i;
 
 						yPtr += 32;
 					}
 
-					if (m_SkillSelection && UO->PolygonePixelsInXY(123, 140, 195, 206))
+					if (m_SkillSelection && Orion->PolygonePixelsInXY(123, 140, 195, 206))
 					{
 						int ofsY = -(m_PixelOffset * GUMP_SCROLLING_PIXEL_STEP);
 
@@ -537,7 +537,7 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 							int tw = 195; //m_TextSkillInList[i][0].Width;
 							int th = m_TextSkillInList[i][0].Height;
 
-							if (UO->PolygonePixelsInXY(123, yPtr, tw, th))
+							if (Orion->PolygonePixelsInXY(123, yPtr, tw, th))
 								g_LastSelectedObject = ID_SPS_SKILLS_LIST + i;
 
 							yPtr += m_TextSkillInList[i][0].Height;
@@ -627,28 +627,28 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
-		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
-		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
-		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
+		Orion->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
+		Orion->DrawGump(0x157C, 0, 0, 0); //Main Gump
+		Orion->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
 		
 		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_SPS_QUIT); //X gump /lighted
 		if (CanPressedButton == ID_SPS_QUIT)
 			GumpID = 0x158B; //X gump (pressed)
-		UO->DrawGump(GumpID, 0, 555, 4);
+		Orion->DrawGump(GumpID, 0, 555, 4);
 		
 		GumpID = 0x15A1 + (int)(CanSelectedButton == ID_SPS_ARROW_PREV); //< gump /lighted
 		if (CanPressedButton == ID_SPS_ARROW_PREV)
 			GumpID = 0x15A3; //< gump pressed
-		UO->DrawGump(GumpID, 0, 586, 445); //< gump
+		Orion->DrawGump(GumpID, 0, 586, 445); //< gump
 
-		UO->DrawResizepicGump(0x0A28, 100, 80, 470, 372); //Character profeccion selection field
+		Orion->DrawResizepicGump(0x0A28, 100, 80, 470, 372); //Character profeccion selection field
 		
-		UO->DrawGump(0x058B, 0, 213, 57); //Create character header
-		UO->DrawGump(0x0589, 0, 290, 44); //Label container
+		Orion->DrawGump(0x058B, 0, 213, 57); //Create character header
+		Orion->DrawGump(0x0589, 0, 290, 44); //Label container
 		
 		m_Text.Draw(120, 126);
 		
-		UO->DrawGump(obj->Gump, 0, 299, 53); //Label gump
+		Orion->DrawGump(obj->Gump, 0, 299, 53); //Label gump
 
 
 		if (obj->Type == PT_CATEGORY) //category
@@ -659,7 +659,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 
 			QFOR(child, obj->m_Items, TBaseProfession*)
 			{
-				UO->DrawResizepicGump(0x0BB8, 145 + offsX, 168 + offsY, 175, 34); //Text field
+				Orion->DrawResizepicGump(0x0BB8, 145 + offsX, 168 + offsY, 175, 34); //Text field
 
 				child->m_TextureName.Draw(151 + offsX, 174 + offsY);
 
@@ -667,7 +667,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 				if (CanPressedButton == ID_SPS_LABEL + index)
 					GumpID++;
 
-				UO->DrawGump(GumpID, 0, 265 + offsX, 155 + offsY); //Label gump
+				Orion->DrawGump(GumpID, 0, 265 + offsX, 155 + offsY); //Label gump
 
 				if (offsX)
 				{
@@ -704,7 +704,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 				sprintf(val, "%d", statVal[i]);
 				FontManager->DrawA(1, val, 1, 285, yPtr);
 
-				UO->DrawSphereGump((statVal[i] - 10), 50.0f, 96, yPtr + 20);
+				Orion->DrawSphereGump((statVal[i] - 10), 50.0f, 96, yPtr + 20);
 
 				yPtr += 80;
 			}
@@ -715,13 +715,13 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 
 			if (m_SkillSelection)
 			{
-				UO->DrawResizepicGump(0xBB8, 320, 168, 180, 215); //Description text field
+				Orion->DrawResizepicGump(0xBB8, 320, 168, 180, 215); //Description text field
 
 				//Description scroll bar:
-				UO->DrawGump(0x0100, 0, 500, 180, 0, 190); //background
-				UO->DrawGump(0x00FA, 0, 500, 168); //^
-				UO->DrawGump(0x00FE, 0, 501, 189 + scrollerY); //bar
-				UO->DrawGump(0x00FC, 0, 500, 362); //v
+				Orion->DrawGump(0x0100, 0, 500, 180, 0, 190); //background
+				Orion->DrawGump(0x00FA, 0, 500, 168); //^
+				Orion->DrawGump(0x00FE, 0, 501, 189 + scrollerY); //bar
+				Orion->DrawGump(0x00FC, 0, 500, 362); //v
 
 				//Text in box
 				g_GL.ViewPort(324, 172, 172, 206);
@@ -742,7 +742,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 			{
 				IFOR(i, 0, 3)
 				{
-					UO->DrawResizepicGump(0x0BB8, 340, yPtr, 175, 25); //Skill Name text field
+					Orion->DrawResizepicGump(0x0BB8, 340, yPtr, 175, 25); //Skill Name text field
 
 					WORD textColor = 0x0386;
 
@@ -758,7 +758,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 					else
 						FontManager->DrawA(9, g_Skills[skillID].m_Name.c_str(), textColor, 346, yPtr + 5, 90, TS_LEFT, UOFONT_FIXED);
 
-					UO->DrawSphereGump(profession->GetSkillValue(i), 50.0f, 276, yPtr + 30);
+					Orion->DrawSphereGump(profession->GetSkillValue(i), 50.0f, 276, yPtr + 30);
 
 					sprintf(val, "%d", profession->GetSkillValue(i));
 
@@ -771,7 +771,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 			GumpID = 0x15A4 + (int)(CanSelectedButton == ID_SPS_ARROW_NEXT);
 			if (CanPressedButton == ID_SPS_ARROW_NEXT)
 				GumpID = 0x15A6; //> gump pressed
-			UO->DrawGump(GumpID, 0, 610, 445); //> gump
+			Orion->DrawGump(GumpID, 0, 610, 445); //> gump
 		}
 
 		InitToolTip();
@@ -786,11 +786,11 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 	{
 		g_LastSelectedObject = 0;
 
-		if (UO->GumpPixelsInXY(0x1589, 555, 4))
+		if (Orion->GumpPixelsInXY(0x1589, 555, 4))
 			g_LastSelectedObject = ID_SPS_QUIT; //X gump
-		else if (UO->GumpPixelsInXY(0x15A1, 586, 445))
+		else if (Orion->GumpPixelsInXY(0x15A1, 586, 445))
 			g_LastSelectedObject = ID_SPS_ARROW_PREV; //< gump
-		else if (UO->GumpPixelsInXY(obj->Gump, 299, 53))
+		else if (Orion->GumpPixelsInXY(obj->Gump, 299, 53))
 			g_LastSelectedObject = ID_SPS_LABEL_BACK_PROFESSION; //Label gump
 		else if (obj->Type == PT_CATEGORY)
 		{
@@ -800,9 +800,9 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 
 			QFOR(child, obj->m_Items, TBaseProfession*)
 			{
-				if (UO->ResizepicPixelsInXY(0x0BB8, 145 + offsX, 168 + offsY, 175, 34))
+				if (Orion->ResizepicPixelsInXY(0x0BB8, 145 + offsX, 168 + offsY, 175, 34))
 					g_LastSelectedObject = ID_SPS_LABEL + index; //Text field
-				else if (UO->GumpPixelsInXY(child->Gump, 265 + offsX, 155 + offsY))
+				else if (Orion->GumpPixelsInXY(child->Gump, 265 + offsX, 155 + offsY))
 					g_LastSelectedObject = ID_SPS_LABEL + index; //Label gump
 				
 				if (offsX)
@@ -818,7 +818,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 		}
 		else if (obj->Type == PT_PROFESSION)
 		{
-			if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+			if (Orion->GumpPixelsInXY(0x15A4, 610, 445))
 				g_LastSelectedObject = ID_SPS_ARROW_NEXT; //> gump
 			else
 			{
@@ -833,7 +833,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 				{
 					int ofs = CalculateSphereOffset(100, (statVal[i] - 10), sphereListWidth, 50.0f);
 
-					if (UO->GumpPixelsInXY(0x00D8, 160 + ofs, yPtr + 20)) //Sphere gump
+					if (Orion->GumpPixelsInXY(0x00D8, 160 + ofs, yPtr + 20)) //Sphere gump
 						g_LastSelectedObject = ID_SPS_STATS_SPHERE + i;
 
 					yPtr += 80;
@@ -846,15 +846,15 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 				//Выбор навыка из списка
 				if (m_SkillSelection)
 				{
-					if (UO->GumpPixelsInXY(0x00FA, 500, 168))
+					if (Orion->GumpPixelsInXY(0x00FA, 500, 168))
 						g_LastSelectedObject = ID_SPS_SCROLLBAR_UP; //^
-					else if (UO->GumpPixelsInXY(0x00FC, 500, 362))
+					else if (Orion->GumpPixelsInXY(0x00FC, 500, 362))
 						g_LastSelectedObject = ID_SPS_SCROLLBAR_DOWN; //v
-					else if (UO->GumpPixelsInXY(0x00FE, 501, 189 + scrollerY))
+					else if (Orion->GumpPixelsInXY(0x00FE, 501, 189 + scrollerY))
 						g_LastSelectedObject = ID_SPS_SCROLLBAR; //bar
-					else if (UO->GumpPixelsInXY(0x0100, 500, 180, 0, 190))
+					else if (Orion->GumpPixelsInXY(0x0100, 500, 180, 0, 190))
 						g_LastSelectedObject = ID_SPS_SCROLLBAR_BACKGROUND; //background
-					else if (UO->PolygonePixelsInXY(320, 168, 180, 215))
+					else if (Orion->PolygonePixelsInXY(320, 168, 180, 215))
 					{
 						int ofsY = -(m_PixelOffset * GUMP_SCROLLING_PIXEL_STEP);
 
@@ -865,7 +865,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 							int tw = 164; //m_TextSkillInList[i][0].Width;
 							int th = m_TextSkillInList[i][0].Height;
 
-							if (UO->PolygonePixelsInXY(326, yPtr, tw, th))
+							if (Orion->PolygonePixelsInXY(326, yPtr, tw, th))
 								g_LastSelectedObject = ID_SPS_SKILLS_LIST + i;
 
 							yPtr += m_TextSkillInList[i][0].Height;
@@ -878,7 +878,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 					IFOR(i, 0, 3)
 					{
 						int ofs = CalculateSphereOffset(100, profession->GetSkillValue(i), sphereListWidth, 50.0f);
-						if (UO->GumpPixelsInXY(0x00D8, 340 + ofs, yPtr + 30)) //Sphere gump
+						if (Orion->GumpPixelsInXY(0x00D8, 340 + ofs, yPtr + 30)) //Sphere gump
 							g_LastSelectedObject = ID_SPS_SKILLS_SPHERE + i;
 
 						yPtr += 80;
@@ -888,7 +888,7 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 
 					IFOR(i, 0, 3)
 					{
-						if (UO->ResizepicPixelsInXY(0xBB8, 340, yPtr, 175, 25)) //Skill Name text field
+						if (Orion->ResizepicPixelsInXY(0xBB8, 340, yPtr, 175, 25)) //Skill Name text field
 							g_LastSelectedObject = ID_SPS_SKILLS_FILED + i;
 
 						yPtr += 80;

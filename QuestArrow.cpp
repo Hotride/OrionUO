@@ -39,7 +39,7 @@ void TQuestArrow::Draw(const RENDER_VARIABLES_FOR_GAME_WINDOW &bounds)
 		WORD gumpID = m_Gump + ((dir + 1) % 8);
 
 		POINT p = { 0 };
-		UO->GetGumpDimension(gumpID, p);
+		Orion->GetGumpDimension(gumpID, p);
 
 		int gox = m_X - g_Player->X;
 		int goy = m_Y - g_Player->Y;
@@ -66,12 +66,12 @@ void TQuestArrow::Draw(const RENDER_VARIABLES_FOR_GAME_WINDOW &bounds)
 
 			ColorizerShader->Use();
 
-			UO->DrawGump(gumpID, 0x0021, x, y);
+			Orion->DrawGump(gumpID, 0x0021, x, y);
 
 			UnuseShader();
 		}
 		else
-			UO->DrawGump(gumpID, 0, x, y);
+			Orion->DrawGump(gumpID, 0, x, y);
 	}
 }
 //----------------------------------------------------------------------------

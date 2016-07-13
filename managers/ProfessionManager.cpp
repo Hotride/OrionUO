@@ -136,8 +136,8 @@ bool TProfessionManager::ParseFilePart( __in TTextFileParser &file)
 			{
 				gump = atoi(strings[1].c_str());
 
-				UO->ExecuteGump(gump, 0);
-				UO->ExecuteGump(gump + 1, 0);
+				Orion->ExecuteGump(gump, 0);
+				Orion->ExecuteGump(gump + 1, 0);
 				break;
 			}
 			case PM_CODE_TYPE:
@@ -350,8 +350,8 @@ bool TProfessionManager::Load()
 			}
 		}
 
-		UO->ExecuteGump(0x15A9, 0);
-		UO->ExecuteGump(0x15AA, 0);
+		Orion->ExecuteGump(0x15A9, 0);
+		Orion->ExecuteGump(0x15AA, 0);
 
 		TProfession *apc = new TProfession();
 		apc->SetTrueName("advanced");

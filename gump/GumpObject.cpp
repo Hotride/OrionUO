@@ -31,18 +31,18 @@ void TGumpObject::Draw(bool &transparent, bool pressed)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		UO->DrawGump(m_Graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(m_Graphic, m_Color, m_X, m_Y);
 
 		glDisable(GL_BLEND);
 
 		glEnable(GL_STENCIL_TEST);
 
-		UO->DrawGump(m_Graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(m_Graphic, m_Color, m_X, m_Y);
 
 		glDisable(GL_STENCIL_TEST);
 	}
 	else
-		UO->DrawGump(m_Graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(m_Graphic, m_Color, m_X, m_Y);
 }
 //---------------------------------------------------------------------------
 TGumpPage::TGumpPage(int page)
@@ -77,18 +77,18 @@ void TGumpResizepic::Draw(bool &transparent, bool pressed)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		UO->DrawResizepicGump(m_Graphic, m_X, m_Y, m_Width, m_Height);
+		Orion->DrawResizepicGump(m_Graphic, m_X, m_Y, m_Width, m_Height);
 
 		glDisable(GL_BLEND);
 
 		glEnable(GL_STENCIL_TEST);
 
-		UO->DrawResizepicGump(m_Graphic, m_X, m_Y, m_Width, m_Height);
+		Orion->DrawResizepicGump(m_Graphic, m_X, m_Y, m_Width, m_Height);
 
 		glDisable(GL_STENCIL_TEST);
 	}
 	else
-		UO->DrawResizepicGump(m_Graphic, m_X, m_Y, m_Width, m_Height);
+		Orion->DrawResizepicGump(m_Graphic, m_X, m_Y, m_Width, m_Height);
 }
 //---------------------------------------------------------------------------
 TGumpChecktrans::TGumpChecktrans(short x, short y, short width, short height)
@@ -130,18 +130,18 @@ void TGumpButton::Draw(bool &transparent, bool pressed)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		UO->DrawGump(graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(graphic, m_Color, m_X, m_Y);
 
 		glDisable(GL_BLEND);
 
 		glEnable(GL_STENCIL_TEST);
 
-		UO->DrawGump(graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(graphic, m_Color, m_X, m_Y);
 
 		glDisable(GL_STENCIL_TEST);
 	}
 	else
-		UO->DrawGump(graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(graphic, m_Color, m_X, m_Y);
 }
 //---------------------------------------------------------------------------
 TGumpButtonTileArt::TGumpButtonTileArt(WORD graphic, WORD graphicLighted, WORD graphicPressed, int index, int toPage, bool action, short x, short y, WORD tileGraphic, WORD tileColor, short tileX, short tileY)
@@ -162,18 +162,18 @@ void TGumpButtonTileArt::Draw(bool &transparent, bool pressed)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, m_X + m_TileX, m_Y + m_TileY);
+		Orion->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, m_X + m_TileX, m_Y + m_TileY);
 
 		glDisable(GL_BLEND);
 
 		glEnable(GL_STENCIL_TEST);
 
-		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, m_X + m_TileX, m_Y + m_TileY);
+		Orion->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, m_X + m_TileX, m_Y + m_TileY);
 
 		glDisable(GL_STENCIL_TEST);
 	}
 	else
-		UO->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, m_X + m_TileX, m_Y + m_TileY);
+		Orion->DrawStaticArtInContainer(m_TileGraphic, m_TileColor, m_X + m_TileX, m_Y + m_TileY);
 
 	UnuseShader();
 }
@@ -193,18 +193,18 @@ void TGumpCheckbox::Draw(bool &transparent, bool pressed)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		UO->DrawGump(graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(graphic, m_Color, m_X, m_Y);
 
 		glDisable(GL_BLEND);
 
 		glEnable(GL_STENCIL_TEST);
 
-		UO->DrawGump(graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(graphic, m_Color, m_X, m_Y);
 
 		glDisable(GL_STENCIL_TEST);
 	}
 	else
-		UO->DrawGump(graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(graphic, m_Color, m_X, m_Y);
 }
 //---------------------------------------------------------------------------
 TGumpRadio::TGumpRadio(WORD graphic, WORD graphicChecked, WORD graphicDisabled, int index, bool action, short x, short y)
@@ -222,18 +222,18 @@ void TGumpRadio::Draw(bool &transparent, bool pressed)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		UO->DrawGump(graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(graphic, m_Color, m_X, m_Y);
 
 		glDisable(GL_BLEND);
 
 		glEnable(GL_STENCIL_TEST);
 
-		UO->DrawGump(graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(graphic, m_Color, m_X, m_Y);
 
 		glDisable(GL_STENCIL_TEST);
 	}
 	else
-		UO->DrawGump(graphic, m_Color, m_X, m_Y);
+		Orion->DrawGump(graphic, m_Color, m_X, m_Y);
 }
 //---------------------------------------------------------------------------
 TGumpText::TGumpText(int textIndex, WORD color, short x, short y)
@@ -338,18 +338,18 @@ void TGumpTilepic::Draw(bool &transparent, bool pressed)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		UO->DrawStaticArtInContainer(m_Graphic, m_Color, m_X, m_Y);
+		Orion->DrawStaticArtInContainer(m_Graphic, m_Color, m_X, m_Y);
 
 		glDisable(GL_BLEND);
 
 		glEnable(GL_STENCIL_TEST);
 
-		UO->DrawStaticArtInContainer(m_Graphic, m_Color, m_X, m_Y);
+		Orion->DrawStaticArtInContainer(m_Graphic, m_Color, m_X, m_Y);
 
 		glDisable(GL_STENCIL_TEST);
 	}
 	else
-		UO->DrawStaticArtInContainer(m_Graphic, m_Color, m_X, m_Y);
+		Orion->DrawStaticArtInContainer(m_Graphic, m_Color, m_X, m_Y);
 }
 //---------------------------------------------------------------------------
 TGumpGumppic::TGumpGumppic(WORD graphic, WORD color, short x, short y)
@@ -369,18 +369,18 @@ void TGumpGumppicTiled::Draw(bool &transparent, bool pressed)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		UO->DrawGump(m_Graphic, m_Color, m_X, m_Y, m_Width, m_Height);
+		Orion->DrawGump(m_Graphic, m_Color, m_X, m_Y, m_Width, m_Height);
 
 		glDisable(GL_BLEND);
 
 		glEnable(GL_STENCIL_TEST);
 
-		UO->DrawGump(m_Graphic, m_Color, m_X, m_Y, m_Width, m_Height);
+		Orion->DrawGump(m_Graphic, m_Color, m_X, m_Y, m_Width, m_Height);
 
 		glDisable(GL_STENCIL_TEST);
 	}
 	else
-		UO->DrawGump(m_Graphic, m_Color, m_X, m_Y, m_Width, m_Height);
+		Orion->DrawGump(m_Graphic, m_Color, m_X, m_Y, m_Width, m_Height);
 }
 //---------------------------------------------------------------------------
 TGumpTooltip::TGumpTooltip(int clilocID)

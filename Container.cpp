@@ -76,7 +76,7 @@ TContainerRect::TContainerRect()
 void TContainerRect::Calculate( __in WORD gumpID)
 {
 	//!Указатель на текстуру
-	TTextureObject *tex = UO->ExecuteGump(gumpID);
+	TTextureObject *tex = Orion->ExecuteGump(gumpID);
 
 	//!Если текстура есть в памяти
 	if (tex != NULL)

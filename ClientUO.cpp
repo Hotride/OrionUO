@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "ClientUO.h"
 
-TUltimaOnline *UO = NULL;
+TOrion *Orion = NULL;
 PLUGIN_CLIENT_INTERFACE PluginClientInterface = { 0 };
 //---------------------------------------------------------------------------
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -34,7 +34,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_GETMINMAXINFO:
 		case WM_SIZE:
 		{
-			if (UO == NULL || IsIconic(g_hWnd))
+			if (Orion == NULL || IsIconic(g_hWnd))
 				return DefWindowProc(hWnd, message, wParam, lParam);
 				
 			if (message == WM_GETMINMAXINFO)
@@ -92,20 +92,20 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_NCDESTROY:
 		case WM_DESTROY:
 		{
-			if (UO != NULL)
+			if (Orion != NULL)
 			{
 				if (PluginManager != NULL)
 					PluginManager->WindowProc(hWnd, message, wParam, lParam);
 
-				UO->SaveLocalConfig();
+				Orion->SaveLocalConfig();
 
 				__try
 				{
-					delete UO;
+					delete Orion;
 				}
 				__finally
 				{
-					UO = NULL;
+					Orion = NULL;
 				}
 			}
 			
@@ -372,10 +372,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (PluginManager != NULL && PluginManager->WindowProc(hWnd, message, wParam, lParam))
 				return 0;
 
-			if (wParam == VK_TAB && UO != NULL && g_GameState == GS_GAME)
+			if (wParam == VK_TAB && Orion != NULL && g_GameState == GS_GAME)
 			{
 				if (ConfigManager.HoldTabForCombat)
-					UO->ChangeWarmode(0);
+					Orion->ChangeWarmode(0);
 			}
 			else if (wParam == 0x2C) //Print Screen
 				g_ScreenshotBuilder.SaveScreen();
@@ -493,14 +493,14 @@ BOOL InitInstance(int nCmdShow)
 	g_ClientWidth = r.right - r.left;
 	g_ClientHeight = r.bottom - r.top;
 
-	UO = new TUltimaOnline();
+	Orion = new TOrion();
 
-	if (UO == NULL)
+	if (Orion == NULL)
 		return FALSE;
 
-	if (!UO->Install())
+	if (!Orion->Install())
 	{
-		delete UO;
+		delete Orion;
 		return FALSE;
 	}
 	
@@ -509,7 +509,7 @@ BOOL InitInstance(int nCmdShow)
 	ShowWindow(g_hWnd, nCmdShow);
 	UpdateWindow(g_hWnd);
 	
-	UO->LoadPluginConfig();
+	Orion->LoadPluginConfig();
 
 	return TRUE;
 }
@@ -533,18 +533,18 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 		else
 			Sleep(1);
 		
-		if (UO != NULL)
+		if (Orion != NULL)
 		{
 			MouseManager.UpdateMouse();
 
-			UO->Process();
+			Orion->Process();
 		}
 	}
 	
 	return (int)msg.wParam;
 }
 //---------------------------------------------------------------------------
-TUltimaOnline::TUltimaOnline()
+TOrion::TOrion()
 : m_StaticAnimList(NULL), m_UsedLandList(NULL), m_UsedStaticList(NULL),
 m_UsedGumpList(NULL), m_UsedTextureList(NULL), m_UsedSoundList(NULL),
 m_AnimData(NULL), m_UsedLightList(NULL)
@@ -554,7 +554,7 @@ m_AnimData(NULL), m_UsedLightList(NULL)
 	g_Logger->Init(pth.c_str());
 }
 //---------------------------------------------------------------------------
-TUltimaOnline::~TUltimaOnline()
+TOrion::~TOrion()
 {
 	KillTimer(g_hWnd, IDT_UPDATE_MOUSE_TIMER);
 
@@ -886,7 +886,7 @@ DWORD Reflect(DWORD source, int c)
 	return value;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::Install()
+bool TOrion::Install()
 {
 	IFOR(i, 0, 256)
 	{
@@ -1196,7 +1196,7 @@ bool TUltimaOnline::Install()
 	return true;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::CreateObjectHandlesBackground()
+void TOrion::CreateObjectHandlesBackground()
 {
 	TTextureObject *th[9] = { NULL };
 	WORD gumpID[9] = { 0 };
@@ -1351,7 +1351,7 @@ void TUltimaOnline::CreateObjectHandlesBackground()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::InitScreen(GAME_STATE state)
+void TOrion::InitScreen(GAME_STATE state)
 {
 	g_GameState = state;
 	g_RightMouseDown = false;
@@ -1441,7 +1441,7 @@ void TUltimaOnline::InitScreen(GAME_STATE state)
 		CurrentScreen->Init();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::LoadTiledata()
+void TOrion::LoadTiledata()
 {
 	if (!FileManager.TiledataMul.Address)
 		return;
@@ -1451,7 +1451,7 @@ void TUltimaOnline::LoadTiledata()
 	memcpy(&m_StaticData[0], (PVOID)((DWORD)FileManager.TiledataMul.Address + 428032), 512 * sizeof(STATIC_GROUP));
 }
 //---------------------------------------------------------------------------
-WORD TUltimaOnline::CalculateLightColor(WORD id)
+WORD TOrion::CalculateLightColor(WORD id)
 {
 	WORD color = m_StaticData[id / 32].Tiles[id % 32].Hue;
 
@@ -1593,7 +1593,7 @@ WORD TUltimaOnline::CalculateLightColor(WORD id)
 	return color;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::LoadIndexFiles()
+void TOrion::LoadIndexFiles()
 {
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)FileManager.ArtIdx.Address;
 	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((DWORD)FileManager.ArtIdx.Address + (0x4000 * sizeof(ART_IDX_BLOCK)));
@@ -1761,7 +1761,7 @@ void TUltimaOnline::LoadIndexFiles()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::InitStaticAnimList()
+void TOrion::InitStaticAnimList()
 {
 	TLinkedList *firstItem = NULL;
 
@@ -1794,7 +1794,7 @@ void TUltimaOnline::InitStaticAnimList()
 	m_StaticAnimList = firstItem;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::ProcessStaticAnimList()
+void TOrion::ProcessStaticAnimList()
 {
 	if (m_AnimData)
 	{
@@ -1833,7 +1833,7 @@ void TUltimaOnline::ProcessStaticAnimList()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::UnloadIndexFiles()
+void TOrion::UnloadIndexFiles()
 {
 	TLinkedList *lists[6] =
 	{
@@ -1884,7 +1884,7 @@ void TUltimaOnline::UnloadIndexFiles()
 	m_UsedSoundList = NULL;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::ClearUnusedTextures()
+void TOrion::ClearUnusedTextures()
 {
 	if (g_GameState < GS_GAME)
 		return;
@@ -2014,7 +2014,7 @@ void TUltimaOnline::ClearUnusedTextures()
 	AdjustSoundEffects(ticks);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::PatchFiles()
+void TOrion::PatchFiles()
 {
 /*
 	-map0 = 0;
@@ -2136,7 +2136,7 @@ void TUltimaOnline::PatchFiles()
 	ColorManager->CreateHuesPalette();
 }
 //----------------------------------------------------------------------------
-void TUltimaOnline::IndexReplaces()
+void TOrion::IndexReplaces()
 {
 	TTextFileParser newDataParser("", " \t,{}", "#;//", "");
 	TTextFileParser artParser(FilePath("Art.def").c_str(), " \t", "#;//", "{}");
@@ -2351,7 +2351,7 @@ void TUltimaOnline::IndexReplaces()
 	}
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::LoadSkills()
+bool TOrion::LoadSkills()
 {
 	if (!FileManager.SkillsIdx.Address || !FileManager.SkillsMul.Address || g_SkillsCount)
 		return false;
@@ -2407,7 +2407,7 @@ bool TUltimaOnline::LoadSkills()
 	return true;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::UnloadSkills()
+void TOrion::UnloadSkills()
 {
 	if (g_Skills != NULL)
 	{
@@ -2416,7 +2416,7 @@ void TUltimaOnline::UnloadSkills()
 	}
 }
 //--------------------------------------------------------------------------
-void TUltimaOnline::LoadLogin()
+void TOrion::LoadLogin()
 {
 	TTextFileParser file(FilePath("login.cfg").c_str(), "=,", "#;", "");
 
@@ -2437,7 +2437,7 @@ void TUltimaOnline::LoadLogin()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::LoadAutoLoginNames()
+void TOrion::LoadAutoLoginNames()
 {
 	TTextFileParser file(FilePath("AutoLoginNames.cfg").c_str(), "", "#;", "");
 
@@ -2455,7 +2455,7 @@ void TUltimaOnline::LoadAutoLoginNames()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::LoadShaders()
+void TOrion::LoadShaders()
 {
 	CurrentShader = NULL;
 
@@ -2504,7 +2504,7 @@ void TUltimaOnline::LoadShaders()
 #endif
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::AutoLoginNameExists(string name)
+bool TOrion::AutoLoginNameExists(string name)
 {
 	if (!g_AutoLoginNames.length())
 		return false;
@@ -2514,7 +2514,7 @@ bool TUltimaOnline::AutoLoginNameExists(string name)
 	return (g_AutoLoginNames.find(search) != string::npos);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::LoadClientConfig()
+void TOrion::LoadClientConfig()
 {
 	TMappedHeader file;
 	memset(&file, 0, sizeof(file));
@@ -2571,7 +2571,7 @@ void TUltimaOnline::LoadClientConfig()
 	}
 }
 //---------------------------------------------------------------------------
-DWORD TUltimaOnline::GetFileHashCode(DWORD address, DWORD size)
+DWORD TOrion::GetFileHashCode(DWORD address, DWORD size)
 {
 	DWORD crc = 0xFFFFFFFF;
 
@@ -2588,7 +2588,7 @@ DWORD TUltimaOnline::GetFileHashCode(DWORD address, DWORD size)
 	return (crc & 0xFFFFFFFF);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::LoadPluginConfig()
+void TOrion::LoadPluginConfig()
 {
 	PluginClientInterface.GL = &g_Interface_GL;
 	PluginClientInterface.UO = &g_Interface_UO;
@@ -2677,7 +2677,7 @@ void TUltimaOnline::LoadPluginConfig()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::LoadClientStartupConfig()
+void TOrion::LoadClientStartupConfig()
 {
 	ConfigManager.Load(FilePath("options_debug.cuo"));
 
@@ -2687,7 +2687,7 @@ void TUltimaOnline::LoadClientStartupConfig()
 		PlayMusic(8);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::LoadStartupConfig()
+void TOrion::LoadStartupConfig()
 {
 	char buf[MAX_PATH] = {0};
 	sprintf(buf, "Desktop\\%s\\%s\\0x%08X\\options_debug.cuo", MainScreen->m_Account->c_str(), ServerList.GetServerName().c_str(), g_PlayerSerial);
@@ -2697,13 +2697,13 @@ void TUltimaOnline::LoadStartupConfig()
 	SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
 
 	if (!ConfigManager.Sound)
-		UO->AdjustSoundEffects(GetTickCount() + 100000);
+		Orion->AdjustSoundEffects(GetTickCount() + 100000);
 
 	if (!ConfigManager.Music)
 		SoundManager.StopMusic();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::LoadLocalConfig()
+void TOrion::LoadLocalConfig()
 {
 	if (g_ConfigLoaded)
 		return;
@@ -2759,7 +2759,7 @@ void TUltimaOnline::LoadLocalConfig()
 	SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
 
 	if (!ConfigManager.Sound)
-		UO->AdjustSoundEffects(GetTickCount() + 100000);
+		Orion->AdjustSoundEffects(GetTickCount() + 100000);
 
 	if (!ConfigManager.Music)
 		SoundManager.StopMusic();
@@ -2767,7 +2767,7 @@ void TUltimaOnline::LoadLocalConfig()
 	g_ConfigLoaded = true;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::SaveLocalConfig()
+void TOrion::SaveLocalConfig()
 {
 	if (!g_ConfigLoaded)
 		return;
@@ -2804,7 +2804,7 @@ void TUltimaOnline::SaveLocalConfig()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::Process()
+void TOrion::Process()
 {
 	static DWORD removeUnusedTexturesTime = GetTickCount() + CLEAR_TEXTURES_DELAY;
 	static DWORD processGameObjectsTimer = GetTickCount();
@@ -2901,7 +2901,7 @@ void TUltimaOnline::Process()
 						if (gump != NULL)
 						{
 							gump->Page = g_ClickObject.GumpButtonID;
-							UO->PlaySoundEffect(0x0055);
+							Orion->PlaySoundEffect(0x0055);
 						}
 					}
 					else if (g_ClickObject.GumpType == GT_BOOK)
@@ -2911,7 +2911,7 @@ void TUltimaOnline::Process()
 						if (gump != NULL)
 						{
 							gump->Page = g_ClickObject.GumpButtonID;
-							UO->PlaySoundEffect(0x0055);
+							Orion->PlaySoundEffect(0x0055);
 						}
 					}
 					else if (g_ClickObject.GumpType == GT_PAPERDOLL)
@@ -2954,7 +2954,7 @@ void TUltimaOnline::Process()
 							if (tr != NULL)
 								tr->Add(td);
 
-							UO->AddJournalMessage(td, "");
+							Orion->AddJournalMessage(td, "");
 						}
 					}
 				}
@@ -3017,7 +3017,7 @@ void TUltimaOnline::Process()
 	}
 }
 //---------------------------------------------------------------------------
-int TUltimaOnline::Send(PBYTE buf, int size)
+int TOrion::Send(PBYTE buf, int size)
 {
 	DWORD ticks = GetTickCount();
 	g_TotalSendSize += size;
@@ -3059,7 +3059,7 @@ int TUltimaOnline::Send(PBYTE buf, int size)
 	return 0;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TUltimaOnline::ExecuteGump(const WORD &id, const bool &partialHue)
+TTextureObject *TOrion::ExecuteGump(const WORD &id, const bool &partialHue)
 {
 	TIndexObject &io = m_GumpDataIndex[id];
 
@@ -3081,7 +3081,7 @@ TTextureObject *TUltimaOnline::ExecuteGump(const WORD &id, const bool &partialHu
 	return io.Texture;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TUltimaOnline::ExecuteLandArt(const WORD &id)
+TTextureObject *TOrion::ExecuteLandArt(const WORD &id)
 {
 	TIndexObject &io = m_LandDataIndex[id];
 
@@ -3103,12 +3103,12 @@ TTextureObject *TUltimaOnline::ExecuteLandArt(const WORD &id)
 	return io.Texture;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TUltimaOnline::ExecuteStaticArtAnimated(const WORD &id)
+TTextureObject *TOrion::ExecuteStaticArtAnimated(const WORD &id)
 {
 	return ExecuteStaticArt(id + m_StaticDataIndex[id].Increment);
 }
 //---------------------------------------------------------------------------
-TTextureObject *TUltimaOnline::ExecuteStaticArt(const WORD &id)
+TTextureObject *TOrion::ExecuteStaticArt(const WORD &id)
 {
 	TIndexObject &io = m_StaticDataIndex[id];
 
@@ -3134,7 +3134,7 @@ TTextureObject *TUltimaOnline::ExecuteStaticArt(const WORD &id)
 	return io.Texture;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TUltimaOnline::ExecuteTexture(WORD id)
+TTextureObject *TOrion::ExecuteTexture(WORD id)
 {
 	id = m_LandData[id / 32].Tiles[id % 32].TexID;
 
@@ -3161,7 +3161,7 @@ TTextureObject *TUltimaOnline::ExecuteTexture(WORD id)
 	return io.Texture;
 }
 //---------------------------------------------------------------------------
-TTextureObject *TUltimaOnline::ExecuteLight(BYTE &id)
+TTextureObject *TOrion::ExecuteLight(BYTE &id)
 {
 	if (id >= MAX_LIGHTS_DATA_INDEX_COUNT)
 		id = 0;
@@ -3186,7 +3186,7 @@ TTextureObject *TUltimaOnline::ExecuteLight(BYTE &id)
 	return io.Texture;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::ExecuteGumpPart(const WORD &id, const int &count)
+bool TOrion::ExecuteGumpPart(const WORD &id, const int &count)
 {
 	bool result = true;
 
@@ -3199,7 +3199,7 @@ bool TUltimaOnline::ExecuteGumpPart(const WORD &id, const int &count)
 	return result;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawSphereGump(const int &value, const float &maxValue, const int &x, const int &y, const int &width)
+void TOrion::DrawSphereGump(const int &value, const float &maxValue, const int &x, const int &y, const int &width)
 {
 	DrawGump(0x00D5, 0, x + 64, y); //Sphere line gump start
 	DrawGump(0x00D7, 0, x + 152, y); //Sphere line gump end
@@ -3210,7 +3210,7 @@ void TUltimaOnline::DrawSphereGump(const int &value, const float &maxValue, cons
 	DrawGump(0x00D8, 0, x + 64 + ofs, y); //Sphere gump
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawGump(const WORD &id, const WORD &color, const int &x, const int &y, const bool &partialHue)
+void TOrion::DrawGump(const WORD &id, const WORD &color, const int &x, const int &y, const bool &partialHue)
 {
 	TTextureObject *th = ExecuteGump(id);
 
@@ -3232,7 +3232,7 @@ void TUltimaOnline::DrawGump(const WORD &id, const WORD &color, const int &x, co
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawGump(const WORD &id, const WORD &color, const int &x, const int &y, int width, int height, const bool &partialHue)
+void TOrion::DrawGump(const WORD &id, const WORD &color, const int &x, const int &y, int width, int height, const bool &partialHue)
 {
 	TTextureObject *th = ExecuteGump(id);
 
@@ -3262,7 +3262,7 @@ void TUltimaOnline::DrawGump(const WORD &id, const WORD &color, const int &x, co
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawResizepicGump(const WORD &id, const int &x, const int &y, const int &width, const int &height)
+void TOrion::DrawResizepicGump(const WORD &id, const int &x, const int &y, const int &width, const int &height)
 {
 	TTextureObject *th[9] = {NULL};
 
@@ -3284,7 +3284,7 @@ void TUltimaOnline::DrawResizepicGump(const WORD &id, const int &x, const int &y
 	g_GL.DrawResizepic(th, x, y, width, height);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawLandTexture(const WORD &id, WORD color, const int &x, const int &y, RECT &rc, TVector *normals)
+void TOrion::DrawLandTexture(const WORD &id, WORD color, const int &x, const int &y, RECT &rc, TVector *normals)
 {
 	if (id == 2)
 		DrawLandArt(id, color, x, y, rc.left / 4);
@@ -3314,7 +3314,7 @@ void TUltimaOnline::DrawLandTexture(const WORD &id, WORD color, const int &x, co
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawLandArt(const WORD &id, WORD color, const int &x, const int &y, const int &z)
+void TOrion::DrawLandArt(const WORD &id, WORD color, const int &x, const int &y, const int &z)
 {
 	TTextureObject *th = ExecuteLandArt(id);
 
@@ -3334,7 +3334,7 @@ void TUltimaOnline::DrawLandArt(const WORD &id, WORD color, const int &x, const 
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArt(const WORD &id, WORD color, const int &x, const int &y, const int &z, const bool &selection)
+void TOrion::DrawStaticArt(const WORD &id, WORD color, const int &x, const int &y, const int &z, const bool &selection)
 {
 	TTextureObject *th = ExecuteStaticArt(id);
 
@@ -3361,12 +3361,12 @@ void TUltimaOnline::DrawStaticArt(const WORD &id, WORD color, const int &x, cons
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtAnimated(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const bool &selection)
+void TOrion::DrawStaticArtAnimated(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const bool &selection)
 {
 	DrawStaticArt(id + m_StaticDataIndex[id].Increment, color, x, y, z, selection);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtRotated(const WORD &id, WORD color, const int &x, const int &y, const int &z, const float &angle)
+void TOrion::DrawStaticArtRotated(const WORD &id, WORD color, const int &x, const int &y, const int &z, const float &angle)
 {
 	TTextureObject *th = ExecuteStaticArt(id);
 
@@ -3386,12 +3386,12 @@ void TUltimaOnline::DrawStaticArtRotated(const WORD &id, WORD color, const int &
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtAnimatedRotated(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const float &angle)
+void TOrion::DrawStaticArtAnimatedRotated(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const float &angle)
 {
 	DrawStaticArtRotated(id + m_StaticDataIndex[id].Increment, color, x, y, z, angle);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtTransparent(const WORD &id, WORD color, int x, int y, const int &z, const bool &selection)
+void TOrion::DrawStaticArtTransparent(const WORD &id, WORD color, int x, int y, const int &z, const bool &selection)
 {
 	TTextureObject *th = ExecuteStaticArt(id);
 
@@ -3435,12 +3435,12 @@ void TUltimaOnline::DrawStaticArtTransparent(const WORD &id, WORD color, int x, 
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtAnimatedTransparent(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const bool &selection)
+void TOrion::DrawStaticArtAnimatedTransparent(const WORD &id, const WORD &color, const int &x, const int &y, const int &z, const bool &selection)
 {
 	DrawStaticArtTransparent(id + m_StaticDataIndex[id].Increment, color, x, y, z, selection);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawStaticArtInContainer(const WORD &id, WORD color, int x, int y, const bool &selection, const bool &onMouse)
+void TOrion::DrawStaticArtInContainer(const WORD &id, WORD color, int x, int y, const bool &selection, const bool &onMouse)
 {
 	TTextureObject *th = ExecuteStaticArt(id);
 
@@ -3475,7 +3475,7 @@ void TUltimaOnline::DrawStaticArtInContainer(const WORD &id, WORD color, int x, 
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DrawLight(BYTE id, const WORD &color, const int &x, const int &y)
+void TOrion::DrawLight(BYTE id, const WORD &color, const int &x, const int &y)
 {
 	TTextureObject *th = ExecuteLight(id);
 
@@ -3496,7 +3496,7 @@ void TUltimaOnline::DrawLight(BYTE id, const WORD &color, const int &x, const in
 	}
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::PolygonePixelsInXY(int x, int y, const int &width, const int &height)
+bool TOrion::PolygonePixelsInXY(int x, int y, const int &width, const int &height)
 {
 	x = g_MouseX - x;
 	y = g_MouseY - y;
@@ -3504,7 +3504,7 @@ bool TUltimaOnline::PolygonePixelsInXY(int x, int y, const int &width, const int
 	return !(x < 0 || y < 0 || x >= width || y >= height);
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::GumpPixelsInXY(const WORD &id, int x, int y, const bool &noSubMouse)
+bool TOrion::GumpPixelsInXY(const WORD &id, int x, int y, const bool &noSubMouse)
 {
 	TIndexObject &io = m_GumpDataIndex[id];
 
@@ -3530,7 +3530,7 @@ bool TUltimaOnline::GumpPixelsInXY(const WORD &id, int x, int y, const bool &noS
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::GumpPixelsInXY(const WORD &id, int x, int y, int width, int height, const bool &noSubMouse)
+bool TOrion::GumpPixelsInXY(const WORD &id, int x, int y, int width, int height, const bool &noSubMouse)
 {
 	if (!noSubMouse)
 	{
@@ -3580,7 +3580,7 @@ bool TUltimaOnline::GumpPixelsInXY(const WORD &id, int x, int y, int width, int 
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::ResizepicPixelsInXY(const WORD &id, int x, int y, const int &width, const int &height)
+bool TOrion::ResizepicPixelsInXY(const WORD &id, int x, int y, const int &width, const int &height)
 {
 	x = g_MouseX - x;
 	y = g_MouseY - y;
@@ -3705,7 +3705,7 @@ bool TUltimaOnline::ResizepicPixelsInXY(const WORD &id, int x, int y, const int 
 	return false;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::StaticPixelsInXY(const WORD &id, int x, int y, const int &z)
+bool TOrion::StaticPixelsInXY(const WORD &id, int x, int y, const int &z)
 {
 	TIndexObject &io = m_StaticDataIndex[id];
 
@@ -3728,12 +3728,12 @@ bool TUltimaOnline::StaticPixelsInXY(const WORD &id, int x, int y, const int &z)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::StaticPixelsInXYAnimated(const WORD &id, const int &x, const int &y, const int &z)
+bool TOrion::StaticPixelsInXYAnimated(const WORD &id, const int &x, const int &y, const int &z)
 {
 	return StaticPixelsInXY(id + m_StaticDataIndex[id].Increment, x, y, z);
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::CircleTransPixelsInXY()
+bool TOrion::CircleTransPixelsInXY()
 {
 	int x = (g_MouseX - g_CircleOfTransparency.X);
 	int y = (g_MouseY - g_CircleOfTransparency.Y);
@@ -3749,7 +3749,7 @@ bool TUltimaOnline::CircleTransPixelsInXY()
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::StaticPixelsInXYInContainer(const WORD &id, int x, int y)
+bool TOrion::StaticPixelsInXYInContainer(const WORD &id, int x, int y)
 {
 	TIndexObject &io = m_StaticDataIndex[id];
 
@@ -3772,7 +3772,7 @@ bool TUltimaOnline::StaticPixelsInXYInContainer(const WORD &id, int x, int y)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::LandPixelsInXY(const WORD &id, int x, int  y, const int &z)
+bool TOrion::LandPixelsInXY(const WORD &id, int x, int  y, const int &z)
 {
 	TIndexObject &io = m_LandDataIndex[id];
 
@@ -3795,7 +3795,7 @@ bool TUltimaOnline::LandPixelsInXY(const WORD &id, int x, int  y, const int &z)
 	return result;
 }
 //---------------------------------------------------------------------------
-bool TUltimaOnline::LandTexturePixelsInXY(int x, int  y, RECT &r)
+bool TOrion::LandTexturePixelsInXY(int x, int  y, RECT &r)
 {
 	y -= 23;
 	int testX = g_MouseX - x;
@@ -3815,7 +3815,7 @@ bool TUltimaOnline::LandTexturePixelsInXY(int x, int  y, RECT &r)
 	return result;
 }
 //--------------------------------------------------------------------------
-DWORD TUltimaOnline::GetLandFlags(const WORD &id)
+DWORD TOrion::GetLandFlags(const WORD &id)
 {
 	WORD divID = id / 32;
 	if (divID < 512)
@@ -3824,7 +3824,7 @@ DWORD TUltimaOnline::GetLandFlags(const WORD &id)
 	return 0;
 }
 //--------------------------------------------------------------------------
-DWORD TUltimaOnline::GetStaticFlags(const WORD &id)
+DWORD TOrion::GetStaticFlags(const WORD &id)
 {
 	WORD divID = id / 32;
 	if (divID < 512)
@@ -3833,7 +3833,7 @@ DWORD TUltimaOnline::GetStaticFlags(const WORD &id)
 	return 0;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::GetArtDimension(const WORD &id, POINT &p)
+void TOrion::GetArtDimension(const WORD &id, POINT &p)
 {
 	p.x = 0;
 	p.y = 0;
@@ -3860,12 +3860,12 @@ void TUltimaOnline::GetArtDimension(const WORD &id, POINT &p)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::GetStaticArtRealPixelDimension(const WORD &id, RECT &r)
+void TOrion::GetStaticArtRealPixelDimension(const WORD &id, RECT &r)
 {
 	MulReader.ReadStaticArtPixelDimension(m_StaticDataIndex[id], r);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::GetGumpDimension(const WORD &id, POINT &p)
+void TOrion::GetGumpDimension(const WORD &id, POINT &p)
 {
 	TTextureObject *th = m_GumpDataIndex[id].Texture;
 
@@ -3881,22 +3881,22 @@ void TUltimaOnline::GetGumpDimension(const WORD &id, POINT &p)
 	}
 }
 //---------------------------------------------------------------------------
-TIndexObjectStatic *TUltimaOnline::GetStaticPointer(const WORD &id)
+TIndexObjectStatic *TOrion::GetStaticPointer(const WORD &id)
 {
 	return &m_StaticDataIndex[id];
 }
 //---------------------------------------------------------------------------
-TIndexObject *TUltimaOnline::GetGumpPointer(const WORD &id)
+TIndexObject *TOrion::GetGumpPointer(const WORD &id)
 {
 	return &m_GumpDataIndex[id];
 }
 //---------------------------------------------------------------------------
-TIndexMulti *TUltimaOnline::GetMultiPointer(const WORD &id)
+TIndexMulti *TOrion::GetMultiPointer(const WORD &id)
 {
 	return &m_MultiDataIndex[id];
 }
 //---------------------------------------------------------------------------
-int TUltimaOnline::GetConfigValue(const char *option, int value)
+int TOrion::GetConfigValue(const char *option, int value)
 {
 	string key = ToLowerA(option);
 
@@ -3932,7 +3932,7 @@ int TUltimaOnline::GetConfigValue(const char *option, int value)
 	return value;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::PlaySoundEffect(const WORD &id, float volume)
+void TOrion::PlaySoundEffect(const WORD &id, float volume)
 {
 	if (id >= 0x0800 || !ConfigManager.Sound)
 		return;
@@ -3997,7 +3997,7 @@ void TUltimaOnline::PlaySoundEffect(const WORD &id, float volume)
 	//}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::PlayMusic(int index, bool warmode)
+void TOrion::PlayMusic(int index, bool warmode)
 {
 	//Тимур, здесь прикручивай взависимости от конфига играть мп3 или миди.
 	//Сейчас только мп3 будет играть.
@@ -4007,7 +4007,7 @@ void TUltimaOnline::PlayMusic(int index, bool warmode)
 	//SoundManager.PlayMidi(index);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::AdjustSoundEffects(DWORD ticks, float volume)
+void TOrion::AdjustSoundEffects(DWORD ticks, float volume)
 {
 	TLinkedList *list = m_UsedSoundList;
 	TLinkedList *prev = list;
@@ -4052,7 +4052,7 @@ void TUltimaOnline::AdjustSoundEffects(DWORD ticks, float volume)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::CreateTextMessageF(BYTE font, WORD color, const char *format, ...)
+void TOrion::CreateTextMessageF(BYTE font, WORD color, const char *format, ...)
 {
 	va_list arg;
 	va_start(arg, format);
@@ -4060,12 +4060,12 @@ void TUltimaOnline::CreateTextMessageF(BYTE font, WORD color, const char *format
 	char buf[256] = { 0 };
 	vsprintf(buf, format, arg);
 
-	UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, font, color, buf);
+	Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, font, color, buf);
 
 	va_end(arg);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::CreateUnicodeTextMessageF(BYTE font, WORD color, const char *format, ...)
+void TOrion::CreateUnicodeTextMessageF(BYTE font, WORD color, const char *format, ...)
 {
 	va_list arg;
 	va_start(arg, format);
@@ -4073,12 +4073,12 @@ void TUltimaOnline::CreateUnicodeTextMessageF(BYTE font, WORD color, const char 
 	char buf[256] = { 0 };
 	vsprintf(buf, format, arg);
 
-	UO->CreateUnicodeTextMessage(TT_SYSTEM, 0xFFFFFFFF, font, color, ToWString(buf));
+	Orion->CreateUnicodeTextMessage(TT_SYSTEM, 0xFFFFFFFF, font, color, ToWString(buf));
 
 	va_end(arg);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, WORD color, string text)
+void TOrion::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, WORD color, string text)
 {
 	TTextData *td = new TTextData();
 	td->Unicode = false;
@@ -4203,7 +4203,7 @@ void TUltimaOnline::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, W
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD font, WORD color, wstring text)
+void TOrion::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD font, WORD color, wstring text)
 {
 	TTextData *td = new TTextData();
 	td->Unicode = true;
@@ -4306,13 +4306,13 @@ void TUltimaOnline::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD 
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::AddSystemMessage(TTextData *msg)
+void TOrion::AddSystemMessage(TTextData *msg)
 {
 	SystemChat->Add(msg);
 	AddJournalMessage(msg, "");
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::AddJournalMessage(TTextData *msg, string name)
+void TOrion::AddJournalMessage(TTextData *msg, string name)
 {
 	TTextData *jmsg = new TTextData(msg);
 
@@ -4340,7 +4340,7 @@ void TUltimaOnline::AddJournalMessage(TTextData *msg, string name)
 	Journal->Add(jmsg);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::Connect()
+void TOrion::Connect()
 {
 	InitScreen(GS_MAIN_CONNECT);
 
@@ -4374,7 +4374,7 @@ void TUltimaOnline::Connect()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::Disconnect()
+void TOrion::Disconnect()
 {
 	if (PluginManager != NULL)
 		PluginManager->Disconnect();
@@ -4398,7 +4398,7 @@ void TUltimaOnline::Disconnect()
 	g_ResizedGump = NULL;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::ServerSelection(int pos)
+void TOrion::ServerSelection(int pos)
 {
 	InitScreen(GS_SERVER_CONNECT);
 	Process();
@@ -4412,7 +4412,7 @@ void TUltimaOnline::ServerSelection(int pos)
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::RelayServer(const char *ip, int port, PBYTE gameSeed)
+void TOrion::RelayServer(const char *ip, int port, PBYTE gameSeed)
 {
 	if (ConnectionManager.Init(gameSeed) == CE_NO_ERROR)
 	{
@@ -4441,7 +4441,7 @@ void TUltimaOnline::RelayServer(const char *ip, int port, PBYTE gameSeed)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::CharacterSelection(int pos)
+void TOrion::CharacterSelection(int pos)
 {
 	InitScreen(GS_GAME_CONNECT);
 	ConnectionScreen->Type = CST_GAME;
@@ -4453,7 +4453,7 @@ void TUltimaOnline::CharacterSelection(int pos)
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::LoginComplete()
+void TOrion::LoginComplete()
 {
 	if (!ConnectionScreen->Completed)
 	{
@@ -4501,7 +4501,7 @@ void TUltimaOnline::LoginComplete()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::PickupItem(TGameItem *obj, int count, bool isGameFigure)
+void TOrion::PickupItem(TGameItem *obj, int count, bool isGameFigure)
 {
 	if (ObjectInHand == NULL)
 	{
@@ -4522,7 +4522,7 @@ void TUltimaOnline::PickupItem(TGameItem *obj, int count, bool isGameFigure)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DropItem(DWORD container, WORD x, WORD y, char z)
+void TOrion::DropItem(DWORD container, WORD x, WORD y, char z)
 {
 	if (ObjectInHand != NULL)
 	{
@@ -4549,7 +4549,7 @@ void TUltimaOnline::DropItem(DWORD container, WORD x, WORD y, char z)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::EquipItem(DWORD container)
+void TOrion::EquipItem(DWORD container)
 {
 	if (ObjectInHand != NULL)
 	{
@@ -4578,7 +4578,7 @@ void TUltimaOnline::EquipItem(DWORD container)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::ChangeWarmode(BYTE status)
+void TOrion::ChangeWarmode(BYTE status)
 {
 	BYTE newstatus = (BYTE)(!g_Player->Warmode);
 	if (status != 0xFF)
@@ -4591,38 +4591,38 @@ void TUltimaOnline::ChangeWarmode(BYTE status)
 
 	if (newstatus == 1 && ConfigManager.Music)
 		//38, 39 и 40 это индексы боевой музыки.
-		UO->PlayMusic(rand() % (40 - 38 + 1) + 38, true);
+		Orion->PlayMusic(rand() % (40 - 38 + 1) + 38, true);
 	else if (newstatus == 0)
 		SoundManager.StopWarMusic();
 	TPacketChangeWarmode packet(newstatus);
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::HelpRequest()
+void TOrion::HelpRequest()
 {
 	TPacketHelpRequest packet;
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::StatusReq(DWORD serial)
+void TOrion::StatusReq(DWORD serial)
 {
 	TPacketStatusRequest packet(serial);
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::SkillsReq(DWORD serial)
+void TOrion::SkillsReq(DWORD serial)
 {
 	TPacketSkillsRequest packet(serial);
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::SkillStatusChange(BYTE skill, BYTE state)
+void TOrion::SkillStatusChange(BYTE skill, BYTE state)
 {
 	TPacketSkillsStatusChangeRequest packet(skill, state);
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::Click(DWORD serial)
+void TOrion::Click(DWORD serial)
 {
 	TPacketClickRequest packet(serial);
 	packet.Send();
@@ -4632,7 +4632,7 @@ void TUltimaOnline::Click(DWORD serial)
 		obj->Clicked = true;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::DoubleClick(DWORD serial)
+void TOrion::DoubleClick(DWORD serial)
 {
 	if (serial >= 0x40000000)
 		g_LastUseObject = serial;
@@ -4641,7 +4641,7 @@ void TUltimaOnline::DoubleClick(DWORD serial)
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::PaperdollReq(DWORD serial)
+void TOrion::PaperdollReq(DWORD serial)
 {
 	//g_LastUseObject = serial;
 
@@ -4649,7 +4649,7 @@ void TUltimaOnline::PaperdollReq(DWORD serial)
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::Attack(DWORD serial)
+void TOrion::Attack(DWORD serial)
 {
 	if (ConfigManager.CriminalActionsQuery && World != NULL)
 	{
@@ -4665,7 +4665,7 @@ void TUltimaOnline::Attack(DWORD serial)
 			
 			GumpManager->AddGump(newgump);
 
-			UO->InitScreen(GS_GAME_BLOCKED);
+			Orion->InitScreen(GS_GAME_BLOCKED);
 			GameBlockedScreen->Code = 3;
 
 			return;
@@ -4675,7 +4675,7 @@ void TUltimaOnline::Attack(DWORD serial)
 	AttackReq(serial);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::AttackReq(DWORD serial)
+void TOrion::AttackReq(DWORD serial)
 {
 	g_LastAttackObject = serial;
 	
@@ -4686,14 +4686,14 @@ void TUltimaOnline::AttackReq(DWORD serial)
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::SendASCIIText(const char *str, SPEECH_TYPE type)
+void TOrion::SendASCIIText(const char *str, SPEECH_TYPE type)
 {
 	TPacketASCIISpeechRequest packet(str, type, 3, ConfigManager.SpeechColor);
 	packet.Send();
 	packet.Free();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::CastSpell(int index)
+void TOrion::CastSpell(int index)
 {
 	if (index >= 0)
 	{
@@ -4704,7 +4704,7 @@ void TUltimaOnline::CastSpell(int index)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::CastSpellFromBook(int index, DWORD serial)
+void TOrion::CastSpellFromBook(int index, DWORD serial)
 {
 	if (index >= 0)
 	{
@@ -4716,7 +4716,7 @@ void TUltimaOnline::CastSpellFromBook(int index, DWORD serial)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::UseSkill(int index)
+void TOrion::UseSkill(int index)
 {
 	if (index >= 0)
 	{
@@ -4727,20 +4727,20 @@ void TUltimaOnline::UseSkill(int index)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenDoor()
+void TOrion::OpenDoor()
 {
 	TPacketOpenDoor packet;
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::EmoteAction(const char *action)
+void TOrion::EmoteAction(const char *action)
 {
 	TPacketEmoteAction packet(action);
 	packet.Send();
 	packet.Free();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::AllNames()
+void TOrion::AllNames()
 {
 	TGameObject *obj = World->m_Items;
 
@@ -4756,13 +4756,13 @@ void TUltimaOnline::AllNames()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::GoToWebLink(string url)
+void TOrion::GoToWebLink(string url)
 {
 	if (url.length())
 		ShellExecuteA(0, "Open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::RemoveRangedObjects()
+void TOrion::RemoveRangedObjects()
 {
 	int objectsRange = g_UpdateRange + 1;
 
@@ -4802,7 +4802,7 @@ void TUltimaOnline::RemoveRangedObjects()
 		EffectManager->RemoveRangedEffects();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::LogOut()
+void TOrion::LogOut()
 {
 	TPRINT("TUltimaOnline::LogOut->Start\n");
 	SaveLocalConfig();
@@ -4877,12 +4877,12 @@ void TUltimaOnline::LogOut()
 	TPRINT("TUltimaOnline::LogOut->End\n");
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenPaperdoll()
+void TOrion::OpenPaperdoll()
 {
 	PaperdollReq(g_PlayerSerial);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenStatus(DWORD serial)
+void TOrion::OpenStatus(DWORD serial)
 {
 	int x = g_MouseX - 76;
 	int y = g_MouseY - 30;
@@ -4894,13 +4894,13 @@ void TUltimaOnline::OpenStatus(DWORD serial)
 	GumpManager->AddGump(gump);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenMinimap()
+void TOrion::OpenMinimap()
 {
 	TGumpMinimap *gump = new TGumpMinimap(g_PlayerSerial, 0, 0, true);
 	GumpManager->AddGump(gump);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenWorldMap()
+void TOrion::OpenWorldMap()
 {
 	int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 200;
 	int y = g_GameWindowPosY + (g_GameWindowHeight / 2) - 150;
@@ -4909,21 +4909,21 @@ void TUltimaOnline::OpenWorldMap()
 	GumpManager->AddGump(gump);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenJournal()
+void TOrion::OpenJournal()
 {
 	TGumpJournal *gump = new TGumpJournal(g_PlayerSerial, 0, 0, false);
 
 	GumpManager->AddGump(gump);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenSkills()
+void TOrion::OpenSkills()
 {
 	TGumpSkills *gump = new TGumpSkills(g_PlayerSerial, 0, 0, false);
 
 	GumpManager->AddGump(gump);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenBackpack()
+void TOrion::OpenBackpack()
 {
 	if (g_Player != NULL)
 	{
@@ -4933,7 +4933,7 @@ void TUltimaOnline::OpenBackpack()
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenLogOut()
+void TOrion::OpenLogOut()
 {
 	int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 40;
 	int y = g_GameWindowPosY + (g_GameWindowHeight / 2) - 20;
@@ -4945,11 +4945,11 @@ void TUltimaOnline::OpenLogOut()
 	GameBlockedScreen->SetCode(3);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenChat()
+void TOrion::OpenChat()
 {
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenConfiguration()
+void TOrion::OpenConfiguration()
 {
 	int x = (GetSystemMetrics(SM_CXSCREEN) / 2) - 383;
 	int y = (GetSystemMetrics(SM_CYSCREEN) / 2) - 260;
@@ -4961,11 +4961,11 @@ void TUltimaOnline::OpenConfiguration()
 	GumpManager->AddGump(gump);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenMail()
+void TOrion::OpenMail()
 {
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenPartyManifest()
+void TOrion::OpenPartyManifest()
 {
 	int x = (g_ClientWidth / 2) - 272;
 	int y = (g_ClientHeight / 2) - 240;
@@ -4975,7 +4975,7 @@ void TUltimaOnline::OpenPartyManifest()
 	GumpManager->AddGump(gump);
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::OpenProfile(DWORD serial)
+void TOrion::OpenProfile(DWORD serial)
 {
 	if (!serial)
 		serial = g_PlayerSerial;
@@ -4984,19 +4984,19 @@ void TUltimaOnline::OpenProfile(DWORD serial)
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::RequestGuildGump()
+void TOrion::RequestGuildGump()
 {
 	TPacketGuildMenuRequest packet;
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::RequestQuestGump()
+void TOrion::RequestQuestGump()
 {
 	TPacketQuestMenuRequest packet;
 	packet.Send();
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::ChangeMap(BYTE newmap)
+void TOrion::ChangeMap(BYTE newmap)
 {
 	if (newmap < 0 || newmap > 5)
 		newmap = 0;
@@ -5030,7 +5030,7 @@ void TUltimaOnline::ChangeMap(BYTE newmap)
 	}
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::ConsolePromptSend()
+void TOrion::ConsolePromptSend()
 {
 	int len = GameConsole->Length();
 	bool cancel = (len < 1);
@@ -5060,7 +5060,7 @@ void TUltimaOnline::ConsolePromptSend()
 	g_ConsolePrompt = PT_NONE;
 }
 //---------------------------------------------------------------------------
-void TUltimaOnline::ConsolePromptCancel()
+void TOrion::ConsolePromptCancel()
 {
 	switch (g_ConsolePrompt)
 	{

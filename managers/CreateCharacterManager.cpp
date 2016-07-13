@@ -86,11 +86,11 @@ void TCreateCharacterManager::Init()
 	m_Name = new TEntryText();
 
 	IFOR(i, 1, 11)
-		UO->ExecuteGump(m_FemaleHairStyleTable[i].GumpID, 0);
+		Orion->ExecuteGump(m_FemaleHairStyleTable[i].GumpID, 0);
 	IFOR(i, 1, 10)
-		UO->ExecuteGump(m_MaleHairStyleTable[i].GumpID, 0);
+		Orion->ExecuteGump(m_MaleHairStyleTable[i].GumpID, 0);
 	IFOR(i, 1, 8)
-		UO->ExecuteGump(m_BeardStyleTable[i].GumpID, 0);
+		Orion->ExecuteGump(m_BeardStyleTable[i].GumpID, 0);
 
 }
 //---------------------------------------------------------------------------

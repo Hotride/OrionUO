@@ -81,17 +81,17 @@ bool TGumpOptions::EntryPointerHere()
 //----------------------------------------------------------------------------
 void TGumpOptions::PrepareTextures()
 {
-	UO->ExecuteResizepic(0x00C8);
-	UO->ExecuteResizepic(0x0A28);
-	UO->ExecuteResizepic(0x0BB8);
-	UO->ExecuteButton(0x0867);
-	UO->ExecuteButton(0x099C);
-	UO->ExecuteButton(0x099F);
-	UO->ExecuteButton(0x09A2);
-	UO->ExecuteButton(0x09A5);
-	UO->ExecuteGumpPart(0x09B5, 5);
-	UO->ExecuteGumpPart(0x0983, 11);
-	UO->ExecuteGumpPart(0x00D0, 42);
+	Orion->ExecuteResizepic(0x00C8);
+	Orion->ExecuteResizepic(0x0A28);
+	Orion->ExecuteResizepic(0x0BB8);
+	Orion->ExecuteButton(0x0867);
+	Orion->ExecuteButton(0x099C);
+	Orion->ExecuteButton(0x099F);
+	Orion->ExecuteButton(0x09A2);
+	Orion->ExecuteButton(0x09A5);
+	Orion->ExecuteGumpPart(0x09B5, 5);
+	Orion->ExecuteGumpPart(0x0983, 11);
+	Orion->ExecuteGumpPart(0x00D0, 42);
 }
 //----------------------------------------------------------------------------
 void TGumpOptions::InitTextTextures()
@@ -479,7 +479,7 @@ void TGumpOptions::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 	
-		UO->DrawResizepicGump(0x0A28, 40, 0, 550, 450); //Body
+		Orion->DrawResizepicGump(0x0A28, 40, 0, 550, 450); //Body
 
 
 
@@ -489,31 +489,31 @@ void TGumpOptions::GenerateFrame()
 		WORD gumpID = 0x00DA;
 		if (!m_Page)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, 0, 45);
+		Orion->DrawGump(gumpID, 0, 0, 45);
 
 		//Orion's configuration
 		gumpID = 0x00DC;
 		if (m_Page == 1)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, 0, 111);
+		Orion->DrawGump(gumpID, 0, 0, 111);
 
 		//Language
 		gumpID = 0x00DE;
 		if (m_Page == 2)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, 0, 177);
+		Orion->DrawGump(gumpID, 0, 0, 177);
 
 		//Chat
 		gumpID = 0x00E0;
 		if (m_Page == 3)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, 0, 243);
+		Orion->DrawGump(gumpID, 0, 0, 243);
 
 		//Macro Options
 		gumpID = 0x00ED;
 		if (m_Page == 4)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, 0, 309);
+		Orion->DrawGump(gumpID, 0, 0, 309);
 		
 
 
@@ -523,31 +523,31 @@ void TGumpOptions::GenerateFrame()
 		gumpID = 0x00E2;
 		if (m_Page == 5)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, 576, 45);
+		Orion->DrawGump(gumpID, 0, 576, 45);
 
 		//Display
 		gumpID = 0x00E4;
 		if (m_Page == 6)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, 576, 111);
+		Orion->DrawGump(gumpID, 0, 576, 111);
 
 		//Reputation System
 		gumpID = 0x00E6;
 		if (m_Page == 7)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, 576, 177);
+		Orion->DrawGump(gumpID, 0, 576, 177);
 
 		//Miscellaneous
 		gumpID = 0x00E8;
 		if (m_Page == 8)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, 576, 243);
+		Orion->DrawGump(gumpID, 0, 576, 243);
 
 		//Filter Options
 		gumpID = 0x00EB;
 		if (m_Page == 9)
 			gumpID--;
-		UO->DrawGump(gumpID, 0, 576, 309);
+		Orion->DrawGump(gumpID, 0, 576, 309);
 		
 
 
@@ -557,7 +557,7 @@ void TGumpOptions::GenerateFrame()
 			gumpID = 0x00F2; //Cancel button selected
 		else
 			gumpID = 0x00F3; //Cancel button
-		UO->DrawGump(gumpID, 0, 154, 405);
+		Orion->DrawGump(gumpID, 0, 154, 405);
 		
 		if (g_GumpPressedElement == ID_GO_APPLY)
 			gumpID = 0x00F0; //Apply button (down)
@@ -565,7 +565,7 @@ void TGumpOptions::GenerateFrame()
 			gumpID = 0x00EE; //Apply button selected
 		else
 			gumpID = 0x00EF; //Apply button
-		UO->DrawGump(gumpID, 0, 248, 405);
+		Orion->DrawGump(gumpID, 0, 248, 405);
 		
 		if (g_GumpPressedElement == ID_GO_DEFAULT)
 			gumpID = 0x00F4; //Default button (down)
@@ -573,7 +573,7 @@ void TGumpOptions::GenerateFrame()
 			gumpID = 0x00F5; //Default button selected
 		else
 			gumpID = 0x00F6; //Default button
-		UO->DrawGump(gumpID, 0, 346, 405);
+		Orion->DrawGump(gumpID, 0, 346, 405);
 		
 		if (g_GumpPressedElement == ID_GO_OKAY)
 			gumpID = 0x00F8; //Okay button (down)
@@ -581,7 +581,7 @@ void TGumpOptions::GenerateFrame()
 			gumpID = 0x00F7; //Okay button selected
 		else
 			gumpID = 0x00F9; //Okay button
-		UO->DrawGump(gumpID, 0, 443, 405);
+		Orion->DrawGump(gumpID, 0, 443, 405);
 
 		bool renderMode = true;
 
@@ -721,7 +721,7 @@ int TGumpOptions::Draw(bool &mode)
 
 		int LSG = 0;
 
-		if (UO->ResizepicPixelsInXY(0x0A28, 40, 0, 550, 450)) //Body
+		if (Orion->ResizepicPixelsInXY(0x0A28, 40, 0, 550, 450)) //Body
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -735,35 +735,35 @@ int TGumpOptions::Draw(bool &mode)
 		WORD gumpID = 0x00DA;
 		if (!m_Page)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, 0, 45))
+		if (Orion->GumpPixelsInXY(gumpID, 0, 45))
 			LSG = ID_GO_PAGE_0;
 
 		//Orion's configuration
 		gumpID = 0x00DC;
 		if (m_Page == 1)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, 0, 111))
+		if (Orion->GumpPixelsInXY(gumpID, 0, 111))
 			LSG = ID_GO_PAGE_1;
 
 		//Language
 		gumpID = 0x00DE;
 		if (m_Page == 2)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, 0, 177))
+		if (Orion->GumpPixelsInXY(gumpID, 0, 177))
 			LSG = ID_GO_PAGE_2;
 
 		//Chat
 		gumpID = 0x00E0;
 		if (m_Page == 3)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, 0, 243))
+		if (Orion->GumpPixelsInXY(gumpID, 0, 243))
 			LSG = ID_GO_PAGE_3;
 
 		//Macro Options
 		gumpID = 0x00ED;
 		if (m_Page == 4)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, 0, 309))
+		if (Orion->GumpPixelsInXY(gumpID, 0, 309))
 			LSG = ID_GO_PAGE_4;
 
 
@@ -774,52 +774,52 @@ int TGumpOptions::Draw(bool &mode)
 		gumpID = 0x00E2;
 		if (m_Page == 5)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, 576, 45))
+		if (Orion->GumpPixelsInXY(gumpID, 576, 45))
 			LSG = ID_GO_PAGE_5;
 
 		//Display
 		gumpID = 0x00E4;
 		if (m_Page == 6)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, 576, 111))
+		if (Orion->GumpPixelsInXY(gumpID, 576, 111))
 			LSG = ID_GO_PAGE_6;
 
 		//Reputation System
 		gumpID = 0x00E6;
 		if (m_Page == 7)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, 576, 177))
+		if (Orion->GumpPixelsInXY(gumpID, 576, 177))
 			LSG = ID_GO_PAGE_7;
 
 		//Miscellaneous
 		gumpID = 0x00E8;
 		if (m_Page == 8)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, 576, 243))
+		if (Orion->GumpPixelsInXY(gumpID, 576, 243))
 			LSG = ID_GO_PAGE_8;
 
 		//Filter Options
 		gumpID = 0x00EB;
 		if (m_Page == 9)
 			gumpID--;
-		if (UO->GumpPixelsInXY(gumpID, 576, 309))
+		if (Orion->GumpPixelsInXY(gumpID, 576, 309))
 			LSG = ID_GO_PAGE_9;
 		
 
 		 //Cancel button
-		if (UO->GumpPixelsInXY(0x00F3, 154, 405))
+		if (Orion->GumpPixelsInXY(0x00F3, 154, 405))
 			LSG = ID_GO_CANCEL;
 
 		 //Apply button
-		if (UO->GumpPixelsInXY(0x00EF, 248, 405))
+		if (Orion->GumpPixelsInXY(0x00EF, 248, 405))
 			LSG = ID_GO_APPLY;
 
 		 //Default button
-		if (UO->GumpPixelsInXY(0x00F6, 346, 405))
+		if (Orion->GumpPixelsInXY(0x00F6, 346, 405))
 			LSG = ID_GO_DEFAULT;
 
 		 //Okay button
-		if (UO->GumpPixelsInXY(0x00F9, 443, 405))
+		if (Orion->GumpPixelsInXY(0x00F9, 443, 405))
 			LSG = ID_GO_OKAY;
 
 		if (LSG != 0 || g_LastSelectedGump == index)
@@ -951,36 +951,36 @@ int TGumpOptions::DrawPage1(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"These settings affect the sound and music you will hear while playing Ultima Online.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
 		m_TexturePage1[1].Draw(64, 44);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.Sound, 0, 64, 90);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.Sound, 0, 64, 90);
 		//UO->DrawUnicodeFont(0, L"Sound on/off", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage1[2].Draw(86, 90);
 
 		//UO->DrawUnicodeFont(0, L"Sound volume", g_OptionsTextColor, posX + 64, posY + 22);
 		m_TexturePage1[3].Draw(64, 112);
 		
-		UO->DrawSphereGump(g_OptionsConfig.SoundVolume, 255.0f, 0, 133, 90);
+		Orion->DrawSphereGump(g_OptionsConfig.SoundVolume, 255.0f, 0, 133, 90);
 
 		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.SoundVolume).c_str(), g_OptionsTextColor, 176, 130);
 		
 
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.Music, 0, 64, 151);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.Music, 0, 64, 151);
 		//UO->DrawUnicodeFont(0, L"Music on/off", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage1[4].Draw(88, 151);
 
 		//UO->DrawUnicodeFont(0, L"Music volume", g_OptionsTextColor, posX + 64, posY + 22);
 		m_TexturePage1[5].Draw(64, 173);
 		
-		UO->DrawSphereGump(g_OptionsConfig.MusicVolume, 255.0f, 0, 194, 90);
+		Orion->DrawSphereGump(g_OptionsConfig.MusicVolume, 255.0f, 0, 194, 90);
 
 		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.MusicVolume).c_str(), g_OptionsTextColor, 176, 191);
 
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.FootstepsSound, 0, 64, 212);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.FootstepsSound, 0, 64, 212);
 		//UO->DrawUnicodeFont(0, L"Play footstep sounds", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage1[6].Draw(86, 212);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetCombatMusic(), 0, 64, 232);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.GetCombatMusic(), 0, 64, 232);
 		//UO->DrawUnicodeFont(0, L"Play combat music", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage1[7].Draw(88, 232);
 	}
@@ -988,17 +988,17 @@ int TGumpOptions::DrawPage1(bool &mode, DWORD &index)
 	{
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
+		if (Orion->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P1_SOUND_ON_OFF; //Sound on/off
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 151))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 151))
 			LSG = ID_GO_P1_MUSIC_ON_OFF; //Music on/off
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 212))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 212))
 			LSG = ID_GO_P1_PLAY_FOOTSTEP_SOUNDS; //Play footstep sounds
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 232))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 232))
 			LSG = ID_GO_P1_PLAY_COMBAT_MUSIC; //Play combat music
-		else if (UO->PolygonePixelsInXY(64, 130, (int)g_SphereListWidth + 10, 16))
+		else if (Orion->PolygonePixelsInXY(64, 130, (int)g_SphereListWidth + 10, 16))
 			LSG = ID_GO_P1_SOUND_VOLUME; //Sound volume
-		else if (UO->PolygonePixelsInXY(64, 192, (int)g_SphereListWidth + 10, 16))
+		else if (Orion->PolygonePixelsInXY(64, 192, (int)g_SphereListWidth + 10, 16))
 			LSG = ID_GO_P1_MUSIC_VOLUME; //Music volume
 
 		return LSG;
@@ -1052,7 +1052,7 @@ int TGumpOptions::DrawPage2(bool &mode, DWORD &index)
 		
 		m_TexturePage2[2].Draw(64, 90); //FPS rate:
 		
-		UO->DrawSphereGump(g_OptionsConfig.GetClientFPS() - 16, 48.0f, 0, 111, 90);
+		Orion->DrawSphereGump(g_OptionsConfig.GetClientFPS() - 16, 48.0f, 0, 111, 90);
 
 		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.GetClientFPS()).c_str(), g_OptionsTextColor, 176, 108);
 	}
@@ -1060,7 +1060,7 @@ int TGumpOptions::DrawPage2(bool &mode, DWORD &index)
 	{
 		int LSG = 0;
 		
-		if (UO->PolygonePixelsInXY(64, 109, (int)g_SphereListWidth + 10, 16))
+		if (Orion->PolygonePixelsInXY(64, 109, (int)g_SphereListWidth + 10, 16))
 			LSG = ID_GO_P2_CLIENT_FPS; //FPS rate:
 
 		return LSG;
@@ -1113,28 +1113,28 @@ int TGumpOptions::DrawPage3(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"The language you use when playing UO is obtained from your Operating System settings.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
 		m_TexturePage3[1].Draw(64, 44);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.UseToolTips, 0, 64, 90);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.UseToolTips, 0, 64, 90);
 		//UO->DrawUnicodeFont(0, L"Use Tool-tips", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage3[2].Draw(86, 90);
 
 		//UO->DrawUnicodeFont(0, L"Delay befor Tool-tip appears", g_OptionsTextColor, posX + 64, posY + 22);
 		m_TexturePage3[3].Draw(64, 112);
 		
-		UO->DrawGump(0x00D5, 0, 64, 133); //Sphere line gump start
-		UO->DrawGump(0x00D7, 0, 152, 133); //Sphere line gump end
-		UO->DrawGump(0x00D6, 0, 77, 133, 75, 0); //Sphere line gump body
+		Orion->DrawGump(0x00D5, 0, 64, 133); //Sphere line gump start
+		Orion->DrawGump(0x00D7, 0, 152, 133); //Sphere line gump end
+		Orion->DrawGump(0x00D6, 0, 77, 133, 75, 0); //Sphere line gump body
 
 		float ValPer = (g_OptionsConfig.ToolTipsDelay / 5000.0f) * 100.0f;
 		ValPer = (g_SphereListWidth * ValPer) / 100.0f;
 		if (ValPer < 0.0f)
 			ValPer = 0.0f;
-		UO->DrawGump(0x00D8, 0, 64 + (int)ValPer, 133); //Sphere gump
+		Orion->DrawGump(0x00D8, 0, 64 + (int)ValPer, 133); //Sphere gump
 
 		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.ToolTipsDelay).c_str(), g_OptionsTextColor, 176, 130);
 		
 
 
-		UO->DrawGump(0x00D4, 0, 64, 151);
+		Orion->DrawGump(0x00D4, 0, 64, 151);
 		DWORD clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ToolTipsTextColor != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ToolTipsTextColor);
@@ -1144,7 +1144,7 @@ int TGumpOptions::DrawPage3(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Color of Tool-tip text", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage3[4].Draw(88, 151);
 		
-		UO->DrawGump(0x00D0, 0, 64, 173);
+		Orion->DrawGump(0x00D0, 0, 64, 173);
 		//UO->DrawUnicodeFont(0, L"Font for Tool-tips", g_OptionsTextColor, posX + 64, posY + 22);
 		m_TexturePage3[5].Draw(88, 173);
 	}
@@ -1152,13 +1152,13 @@ int TGumpOptions::DrawPage3(bool &mode, DWORD &index)
 	{
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
+		if (Orion->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P3_USE_TOOLTIP; //Use Tool-tips
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 151))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 151))
 			LSG = ID_GO_P3_TEXT_COLOR; //Color of Tool-tip text
-		else if (UO->GumpPixelsInXY(0x00D0, 64, 173))
+		else if (Orion->GumpPixelsInXY(0x00D0, 64, 173))
 			LSG = ID_GO_P3_TEXT_FONT; //Font for Tool-tips
-		else if (UO->PolygonePixelsInXY(64, 130, (int)g_SphereListWidth + 10, 16))
+		else if (Orion->PolygonePixelsInXY(64, 130, (int)g_SphereListWidth + 10, 16))
 			LSG = ID_GO_P3_DELAY_BEFORE_TOOLTIP; //Delay befor Tool-tip appears
 
 		return LSG;
@@ -1181,7 +1181,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		
 
 
-		UO->DrawGump(0x00D4, 0, 64, 90);
+		Orion->DrawGump(0x00D4, 0, 64, 90);
 		DWORD clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorInputText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorInputText);
@@ -1191,7 +1191,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Input text color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[2].Draw(88, 90);
 		
-		UO->DrawGump(0x00D4, 0, 64, 109);
+		Orion->DrawGump(0x00D4, 0, 64, 109);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMenuOption != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMenuOption);
@@ -1201,7 +1201,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Menu option color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[3].Draw(88, 109);
 		
-		UO->DrawGump(0x00D4, 0, 64, 128);
+		Orion->DrawGump(0x00D4, 0, 64, 128);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorPlayerInMemberList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorPlayerInMemberList);
@@ -1211,7 +1211,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Player color in member list", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[3].Draw(88, 128);
 		
-		UO->DrawGump(0x00D4, 0, 64, 147);
+		Orion->DrawGump(0x00D4, 0, 64, 147);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorText);
@@ -1221,7 +1221,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Chat text color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[5].Draw(88, 147);
 		
-		UO->DrawGump(0x00D4, 0, 64, 166);
+		Orion->DrawGump(0x00D4, 0, 64, 166);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorPlayerNameWithout != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorPlayerNameWithout);
@@ -1231,7 +1231,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Player name without speaking privileges", g_OptionsTextColor, posX + 88, posY, 140);
 		m_TexturePage4[6].Draw(88, 166);
 		
-		UO->DrawGump(0x00D4, 0, 64, 201);
+		Orion->DrawGump(0x00D4, 0, 64, 201);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMuted != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMuted);
@@ -1241,7 +1241,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Muted text color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[7].Draw(88, 201);
 		
-		UO->DrawGump(0x00D4, 0, 64, 220);
+		Orion->DrawGump(0x00D4, 0, 64, 220);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorChannelModeratorName != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorChannelModeratorName);
@@ -1251,7 +1251,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Channel moderator name", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[8].Draw(88, 220);
 		
-		UO->DrawGump(0x00D4, 0, 64, 239);
+		Orion->DrawGump(0x00D4, 0, 64, 239);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorChannelModeratorText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorChannelModeratorText);
@@ -1261,7 +1261,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Channel moderator text", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[9].Draw(88, 239);
 		
-		UO->DrawGump(0x00D4, 0, 64, 258);
+		Orion->DrawGump(0x00D4, 0, 64, 258);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMyName != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMyName);
@@ -1271,7 +1271,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"My name's color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[10].Draw(88, 258);
 		
-		UO->DrawGump(0x00D4, 0, 64, 277);
+		Orion->DrawGump(0x00D4, 0, 64, 277);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorMyText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorMyText);
@@ -1281,7 +1281,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"My text color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage4[11].Draw(88, 277);
 		
-		UO->DrawGump(0x00D4, 0, 64, 296);
+		Orion->DrawGump(0x00D4, 0, 64, 296);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorSystemMessage != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorSystemMessage);
@@ -1293,7 +1293,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 
 		
 
-		UO->DrawGump(0x00D4, 0, 300, 90);
+		Orion->DrawGump(0x00D4, 0, 300, 90);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGOutputText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGOutputText);
@@ -1303,7 +1303,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Text Output Background Color", g_OptionsTextColor, posX + 324, posY);
 		m_TexturePage4[13].Draw(324, 90);
 
-		UO->DrawGump(0x00D4, 0, 300, 109);
+		Orion->DrawGump(0x00D4, 0, 300, 109);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGInputText != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGInputText);
@@ -1313,7 +1313,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Text Input Background Color", g_OptionsTextColor, posX + 324, posY);
 		m_TexturePage4[14].Draw(324, 109);
 
-		UO->DrawGump(0x00D4, 0, 300, 128);
+		Orion->DrawGump(0x00D4, 0, 300, 128);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGUserList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGUserList);
@@ -1323,7 +1323,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"User List Background Color", g_OptionsTextColor, posX + 324, posY);
 		m_TexturePage4[15].Draw(324, 128);
 
-		UO->DrawGump(0x00D4, 0, 300, 147);
+		Orion->DrawGump(0x00D4, 0, 300, 147);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGConfList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGConfList);
@@ -1333,7 +1333,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Conference List Background Color", g_OptionsTextColor, posX + 324, posY);
 		m_TexturePage4[16].Draw(324, 147);
 
-		UO->DrawGump(0x00D4, 0, 300, 166);
+		Orion->DrawGump(0x00D4, 0, 300, 166);
 		clr = 0xFF7F7F7F;
 		if (g_OptionsConfig.ChatColorBGCommandList != 0xFFFF)
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.ChatColorBGCommandList);
@@ -1344,7 +1344,7 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 		m_TexturePage4[17].Draw(324, 166);
 
 		
-		UO->DrawGump(0x00D0, 0, 300, 192);
+		Orion->DrawGump(0x00D0, 0, 300, 192);
 		//UO->DrawUnicodeFont(0, L"Chat font", g_OptionsTextColor, posX + 300, posY);
 		m_TexturePage4[18].Draw(324, 192);
 	}
@@ -1352,39 +1352,39 @@ int TGumpOptions::DrawPage4(bool &mode, DWORD &index)
 	{
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
+		if (Orion->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P4_TEXT_COLOR; //Input text color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 109))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 109))
 			LSG = ID_GO_P4_TEXT_COLOR + 1; //Menu option color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 128))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 128))
 			LSG = ID_GO_P4_TEXT_COLOR + 2; //Player color in member list
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 147))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 147))
 			LSG = ID_GO_P4_TEXT_COLOR + 3; //Chat text color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 166))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 166))
 			LSG = ID_GO_P4_TEXT_COLOR + 4; //Player name without speaking privileges
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 201))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 201))
 			LSG = ID_GO_P4_TEXT_COLOR + 5; //Muted text color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 220))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 220))
 			LSG = ID_GO_P4_TEXT_COLOR + 6; //Channel moderator name
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 239))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 239))
 			LSG = ID_GO_P4_TEXT_COLOR + 7; //Channel moderator text
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 258))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 258))
 			LSG = ID_GO_P4_TEXT_COLOR + 8; //My name's color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 277))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 277))
 			LSG = ID_GO_P4_TEXT_COLOR + 9; //My text color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 296))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 296))
 			LSG = ID_GO_P4_TEXT_COLOR + 10; //System message color
-		else if (UO->GumpPixelsInXY(0x00D2, 300, 90))
+		else if (Orion->GumpPixelsInXY(0x00D2, 300, 90))
 			LSG = ID_GO_P4_TEXT_COLOR + 11; //Text Output Background Color
-		else if (UO->GumpPixelsInXY(0x00D2, 300, 109))
+		else if (Orion->GumpPixelsInXY(0x00D2, 300, 109))
 			LSG = ID_GO_P4_TEXT_COLOR + 12; //Text Input Background Color
-		else if (UO->GumpPixelsInXY(0x00D2, 300, 128))
+		else if (Orion->GumpPixelsInXY(0x00D2, 300, 128))
 			LSG = ID_GO_P4_TEXT_COLOR + 13; //User List Background Color
-		else if (UO->GumpPixelsInXY(0x00D2, 300, 147))
+		else if (Orion->GumpPixelsInXY(0x00D2, 300, 147))
 			LSG = ID_GO_P4_TEXT_COLOR + 14; //Conference List Background Color
-		else if (UO->GumpPixelsInXY(0x00D2, 300, 166))
+		else if (Orion->GumpPixelsInXY(0x00D2, 300, 166))
 			LSG = ID_GO_P4_TEXT_COLOR + 15; //Command List Background Color
-		else if (UO->GumpPixelsInXY(0x00D0, 300, 192))
+		else if (Orion->GumpPixelsInXY(0x00D0, 300, 192))
 			LSG = ID_GO_P4_TEXT_FONT; //Chat font
 
 		return LSG;
@@ -1426,7 +1426,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 		else if (g_GumpSelectElement == ID_GO_P5_BUTTON_ADD)
 			gumpID = 0x099E;
 
-		UO->DrawGump(gumpID, 0, posX + 152, 60);
+		Orion->DrawGump(gumpID, 0, posX + 152, 60);
 		
 		//Delete button
 		if (g_GumpPressedElement == ID_GO_P5_BUTTON_DELETE)
@@ -1434,7 +1434,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 		else
 			gumpID = 0x099F + (int)((g_GumpSelectElement == ID_GO_P5_BUTTON_DELETE) ? 2 : 0);
 
-		UO->DrawGump(gumpID, 0, posX + 205, 60);
+		Orion->DrawGump(gumpID, 0, posX + 205, 60);
 		
 		//Preveous button
 		if (g_GumpPressedElement == ID_GO_P5_BUTTON_PREVEOUS)
@@ -1442,7 +1442,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 		else
 			gumpID = 0x09A2 + (int)((g_GumpSelectElement == ID_GO_P5_BUTTON_PREVEOUS) ? 2 : 0);
 
-		UO->DrawGump(gumpID, 0, posX + 273, 60);
+		Orion->DrawGump(gumpID, 0, posX + 273, 60);
 		
 		//Next button
 		if (g_GumpPressedElement == ID_GO_P5_BUTTON_NEXT)
@@ -1450,12 +1450,12 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 		else
 			gumpID = 0x09A5 + (int)((g_GumpSelectElement == ID_GO_P5_BUTTON_NEXT) ? 2 : 0);
 
-		UO->DrawGump(gumpID, 0, posX + 357, 60);
+		Orion->DrawGump(gumpID, 0, posX + 357, 60);
 		
 		m_TexturePage5[1].Draw(posX + 134, 82); //"Keystroke"
 		
 		//KeyBox
-		UO->DrawGump(0x098B, 0, posX + 133, 112);
+		Orion->DrawGump(0x098B, 0, posX + 133, 112);
 		TextEntryMacro->DrawA(1, 0x0386, posX + 137, 117);
 		
 		m_TexturePage5[2].Draw(posX + 200, 111); //"Key"
@@ -1466,7 +1466,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 		else
 			gumpID = 0x0867 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_SHIFT);
 
-		UO->DrawGump(gumpID, 0, posX + 248, 79);
+		Orion->DrawGump(gumpID, 0, posX + 248, 79);
 		
 		m_TexturePage5[3].Draw(posX + 280, 82); //"Shift"
 		
@@ -1476,7 +1476,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 		else
 			gumpID = 0x0867 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_ALT);
 
-		UO->DrawGump(gumpID, 0, posX + 248, 107);
+		Orion->DrawGump(gumpID, 0, posX + 248, 107);
 		
 		m_TexturePage5[4].Draw(posX + 280, 111); //"Alt"
 		
@@ -1486,7 +1486,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 		else
 			gumpID = 0x0867 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_CTRL);
 
-		UO->DrawGump(gumpID, 0, posX + 248, 135);
+		Orion->DrawGump(gumpID, 0, posX + 248, 135);
 		
 		m_TexturePage5[5].Draw(posX + 280, 140); //"Ctrl"
 		
@@ -1502,24 +1502,24 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 		if (obj != NULL)
 		{
 			if (obj->m_Prev != NULL)
-				UO->DrawGump(0x0983 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_UP), 0, posX + 292, posY + 113);
+				Orion->DrawGump(0x0983 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_UP), 0, posX + 292, posY + 113);
 			
 			int macroCount = 0;
 
 			while (obj != NULL && macroCount < maxMacroDraw)
 			{
-				UO->DrawGump(0x098D, 0, posX, boxPosY);
+				Orion->DrawGump(0x098D, 0, posX, boxPosY);
 				FontManager->DrawA(1, TMacro::GetActionName(obj->Code), 0x0386, posX + 4, boxPosY + 5, 98, TS_CENTER, UOFONT_FIXED);
-				UO->DrawGump(0x0985, 0, posX + 94, arrowPosY);
+				Orion->DrawGump(0x0985, 0, posX + 94, arrowPosY);
 
 				char hasMenu = obj->HasSubMenu;
 				if (hasMenu)
 				{
-					UO->DrawGump(0x098E, 0, posX + 112, boxPosY);
+					Orion->DrawGump(0x098E, 0, posX + 112, boxPosY);
 
 					if (hasMenu == 1) //Нужна стрелочка вниз
 					{
-						UO->DrawGump(0x0985, 0, posX + 274, arrowPosY);
+						Orion->DrawGump(0x0985, 0, posX + 274, arrowPosY);
 						
 						FontManager->DrawA(1, TMacro::GetAction(obj->SubCode), 0x0386, posX + 118, boxPosY + 5, 150, TS_LEFT, UOFONT_FIXED);
 					}
@@ -1546,7 +1546,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 			if (macroCount >= maxMacroDraw)
 			{
 				drawEmptyBox = false;
-				UO->DrawGump(0x0985 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_DOWN), 0, posX + 292, boxPosY);
+				Orion->DrawGump(0x0985 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_DOWN), 0, posX + 292, boxPosY);
 			}
 			else if (obj->Code == MC_NONE)
 				drawEmptyBox = false;
@@ -1554,8 +1554,8 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 
 		if (drawEmptyBox)
 		{
-			UO->DrawGump(0x098D, 0, posX, boxPosY);
-			UO->DrawGump(0x0985, 0, posX + 94, arrowPosY);
+			Orion->DrawGump(0x098D, 0, posX, boxPosY);
+			Orion->DrawGump(0x0985, 0, posX + 94, arrowPosY);
 		}
 
 		if (m_MacroSelection)
@@ -1573,10 +1573,10 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 			posY += m_MacroListOffsetYStart;
 				
 			//Top
-			UO->DrawGump(0x09B5, 0, posX - 5, posY - 11);
+			Orion->DrawGump(0x09B5, 0, posX - 5, posY - 11);
 
 			if (textIndex > 0)
-				UO->DrawGump(0x0983, 0, posX + 85, posY - 8);
+				Orion->DrawGump(0x0983, 0, posX + 85, posY - 8);
 				
 			int ofs = 0;
 
@@ -1592,7 +1592,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 
 				int itemPosY = posY + (i * 15);
 
-				UO->DrawGump(gumpID, 0, posX, itemPosY);
+				Orion->DrawGump(gumpID, 0, posX, itemPosY);
 				
 				int textNameIndex = textIndex + m_MacroListNameOffset;
 
@@ -1626,31 +1626,31 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 			int offsBottomY = (m_MacroListOffsetYEnd - m_MacroListOffsetYStart);
 
 			//Bottom
-			UO->DrawGump(0x09B9, 0, posX - 5, posY + offsBottomY);
+			Orion->DrawGump(0x09B9, 0, posX - 5, posY + offsBottomY);
 
 			if (m_MacroListOffset + m_MacroListMaxCount < m_MacroListCount)
-				UO->DrawGump(0x0985, 0, posX + 85, posY + offsBottomY - 2);
+				Orion->DrawGump(0x0985, 0, posX + 85, posY + offsBottomY - 2);
 		}
 	}
 	else
 	{
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x099C, posX + 152, posY))
+		if (Orion->GumpPixelsInXY(0x099C, posX + 152, posY))
 			LSG = ID_GO_P5_BUTTON_ADD; //Add
-		else if (UO->GumpPixelsInXY(0x099F, posX + 205, posY))
+		else if (Orion->GumpPixelsInXY(0x099F, posX + 205, posY))
 			LSG = ID_GO_P5_BUTTON_DELETE; //Delete
-		else if (UO->GumpPixelsInXY(0x09A2, posX + 273, posY))
+		else if (Orion->GumpPixelsInXY(0x09A2, posX + 273, posY))
 			LSG = ID_GO_P5_BUTTON_PREVEOUS; //Preveous
-		else if (UO->GumpPixelsInXY(0x09A5, posX + 357, posY))
+		else if (Orion->GumpPixelsInXY(0x09A5, posX + 357, posY))
 			LSG = ID_GO_P5_BUTTON_NEXT; //Next
-		else if (UO->GumpPixelsInXY(0x098B, posX + 133, posY + 52))
+		else if (Orion->GumpPixelsInXY(0x098B, posX + 133, posY + 52))
 			LSG = ID_GO_P5_KEY_BOX; //Key box
-		else if (UO->GumpPixelsInXY(0x0867, posX + 248, posY + 19))
+		else if (Orion->GumpPixelsInXY(0x0867, posX + 248, posY + 19))
 			LSG = ID_GO_P5_BUTTON_SHIFT; //Shift
-		else if (UO->GumpPixelsInXY(0x0867, posX + 248, posY + 47))
+		else if (Orion->GumpPixelsInXY(0x0867, posX + 248, posY + 47))
 			LSG = ID_GO_P5_BUTTON_ALT; //Shift
-		else if (UO->GumpPixelsInXY(0x0867, posX + 248, posY + 75))
+		else if (Orion->GumpPixelsInXY(0x0867, posX + 248, posY + 75))
 			LSG = ID_GO_P5_BUTTON_CTRL; //Shift
 
 		posX += 134;
@@ -1662,20 +1662,20 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 		TMacroObject *obj = m_MacroObjectPointer;
 		if (obj != NULL)
 		{
-			if (obj->m_Prev != NULL && UO->GumpPixelsInXY(0x0983, posX + 292, posY + 113))
+			if (obj->m_Prev != NULL && Orion->GumpPixelsInXY(0x0983, posX + 292, posY + 113))
 				LSG = ID_GO_P5_BUTTON_UP; //UP arrow
 			
 			int macroCount = 0;
 
 			while (obj != NULL && macroCount < maxMacroDraw)
 			{
-				if (UO->GumpPixelsInXY(0x098D, posX, boxPosY))
+				if (Orion->GumpPixelsInXY(0x098D, posX, boxPosY))
 					LSG = ID_GO_P5_LEFT_BOX + macroCount; //Left macro box
 
 				char hasMenu = obj->HasSubMenu;
 				if (hasMenu)
 				{
-					if (UO->GumpPixelsInXY(0x098E, posX + 112, boxPosY))
+					if (Orion->GumpPixelsInXY(0x098E, posX + 112, boxPosY))
 						LSG = ID_GO_P5_RIGHT_BOX + macroCount; //Right macro box
 				}
 
@@ -1693,7 +1693,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 			{
 				drawEmptyBox = false;
 
-				if (UO->GumpPixelsInXY(0x0985, posX + 292, boxPosY))
+				if (Orion->GumpPixelsInXY(0x0985, posX + 292, boxPosY))
 					LSG = ID_GO_P5_BUTTON_DOWN; //Down arrow
 			}
 			else if (obj->Code == MC_NONE)
@@ -1705,7 +1705,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 
 		if (drawEmptyBox)
 		{
-			if (UO->GumpPixelsInXY(0x098D, posX, boxPosY))
+			if (Orion->GumpPixelsInXY(0x098D, posX, boxPosY))
 				LSG = ID_GO_P5_EMPTY_BOX; //Empty macro box
 		}
 
@@ -1732,7 +1732,7 @@ int TGumpOptions::DrawPage5(bool &mode, DWORD &index)
 
 			IFOR(i, 0, count)
 			{
-				if (UO->GumpPixelsInXY(0x09B6 + ofs, posX, posY + (i * 15)))
+				if (Orion->GumpPixelsInXY(0x09B6 + ofs, posX, posY + (i * 15)))
 					LSG = ID_GO_P5_SELECTION + textIndex + m_MacroListNameOffset;
 					
 				ofs = (ofs + 1) % 3;
@@ -1757,55 +1757,55 @@ int TGumpOptions::DrawPage6(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"These options affect your interface.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
 		m_TexturePage6[1].Draw(64, 44);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.EnablePathfind, 0, 64, 90);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.EnablePathfind, 0, 64, 90);
 		//UO->DrawUnicodeFont(0, L"Enable pathfinding with double-right-click", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[2].Draw(86, 90);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.HoldTabForCombat, 0, 64, 110);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.HoldTabForCombat, 0, 64, 110);
 		//UO->DrawUnicodeFont(0, L"Hold down TAB key for combat, instead of tapping it to toggle combat mode", g_OptionsTextColor, posX + 86, posY, 450);
 		m_TexturePage6[3].Draw(86, 110);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.OffsetInterfaceWindows, 0, 64, 146);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.OffsetInterfaceWindows, 0, 64, 146);
 		//UO->DrawUnicodeFont(0, L"Offset interface windows rather than perfectly stacking them", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[4].Draw(86, 146);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.AutoArrange, 0, 64, 166);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.AutoArrange, 0, 64, 166);
 		//UO->DrawUnicodeFont(0, L"Automatically arrange minimized windows", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[5].Draw(86, 166);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.AlwaysRun, 0, 64, 186);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.AlwaysRun, 0, 64, 186);
 		//UO->DrawUnicodeFont(0, L"Your character will always run if this is checked", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[6].Draw(86, 186);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DisableMenubar, 0, 64, 206);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.DisableMenubar, 0, 64, 206);
 		//UO->DrawUnicodeFont(0, L"Disable the Menu Bar", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[7].Draw(86, 206);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GrayOutOfRangeObjects, 0, 64, 226);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.GrayOutOfRangeObjects, 0, 64, 226);
 		//UO->DrawUnicodeFont(0, L"Gray out of range objects", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[8].Draw(86, 226);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DisableNewTargetSystem, 0, 64, 246);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.DisableNewTargetSystem, 0, 64, 246);
 		//UO->DrawUnicodeFont(0, L"Disable New Target System", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[9].Draw(86, 246);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ObjectHandles, 0, 64, 266);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.ObjectHandles, 0, 64, 266);
 		//UO->DrawUnicodeFont(0, L"Object Handles", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[10].Draw(86, 266);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetReduceFPSUnactiveWindow(), 0, 64, 286);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.GetReduceFPSUnactiveWindow(), 0, 64, 286);
 		//UO->DrawUnicodeFont(0, L"Reduce FPS when Window is Unactive", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[11].Draw(86, 286);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ItemPropertiesIcon, 0, 64, 306);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.ItemPropertiesIcon, 0, 64, 306);
 		//UO->DrawUnicodeFont(0, L"Display Item Properties Icon", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[12].Draw(86, 306);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.HoldShiftForContextMenus, 0, 64, 326);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.HoldShiftForContextMenus, 0, 64, 326);
 		//UO->DrawUnicodeFont(0, L"Hold Shift For Context Menus", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[13].Draw(86, 326);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.HoldShiftForEnablePathfind, 0, 64, 346);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.HoldShiftForEnablePathfind, 0, 64, 346);
 		//UO->DrawUnicodeFont(0, L"Hold Shift For Enable Pathfinding", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage6[14].Draw(86, 346);
 	}
@@ -1813,31 +1813,31 @@ int TGumpOptions::DrawPage6(bool &mode, DWORD &index)
 	{
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
+		if (Orion->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P6_ENABLE_PATHFINDING; //Enable pathfinding with double-right-click
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 110))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 110))
 			LSG = ID_GO_P6_HOLD_TAB_FOR_COMBAT; //Hold down TAB key for combat, instead of tapping it to toggle combat mode
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 146))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 146))
 			LSG = ID_GO_P6_OFFSET_INTERFACE_WINDOWS; //Offset interface windows rather than perfectly stacking them
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 166))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 166))
 			LSG = ID_GO_P6_AUTO_ARRANGE_MINIMIZED_WINDOWS; //Automatically arrange minimized windows
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 186))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 186))
 			LSG = ID_GO_P6_ALWAYS_RUN; //Your character will always run if this is checked
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 206))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 206))
 			LSG = ID_GO_P6_DISABLE_MENUBAR; //Disable the Menu Bar
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 226))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 226))
 			LSG = ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS; //Gray out of range objects
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 246))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 246))
 			LSG = ID_GO_P6_DISABLE_NEW_TARGET_SYSTEM; //Disable New Target System
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 266))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 266))
 			LSG = ID_GO_P6_OBJECT_HANDLES; //Object Handles
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 286))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 286))
 			LSG = ID_GO_P6_REDUCE_FPS_UNACTIVE_WINDOW; //Reduce FPS when Window is Unactive
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 306))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 306))
 			LSG = ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON; //Display Item Properties Icon
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 326))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 326))
 			LSG = ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS; //Hold Shift For Context Menus
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 346))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 346))
 			LSG = ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING; //Hold Shift For Enable Pathfinding
 		
 		return LSG;
@@ -1896,9 +1896,9 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Game Play Window Size", g_OptionsTextColor, posX + 64, posY);
 		m_TexturePage7[2].Draw(64, 90);
 		
-		UO->DrawResizepicGump(0x0BB8, 64, 112, 60, 22); //X field
+		Orion->DrawResizepicGump(0x0BB8, 64, 112, 60, 22); //X field
 		FontManager->DrawW(0, L"x", g_OptionsTextColor, 126, 112);
-		UO->DrawResizepicGump(0x0BB8, 139, 112, 60, 22); //Y field
+		Orion->DrawResizepicGump(0x0BB8, 139, 112, 60, 22); //Y field
 
 		TextEntryGameSizeX->DrawW(0, g_OptionsTextColor, 68, 114);
 
@@ -1907,23 +1907,23 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Adjust how long speech remains on screen", g_OptionsTextColor, posX + 64, posY + 26);
 		m_TexturePage7[3].Draw(64, 140);
 		
-		UO->DrawGump(0x00D5, 0, 64, 160); //Sphere line gump start
-		UO->DrawGump(0x00D7, 0, 152, 160); //Sphere line gump end
-		UO->DrawGump(0x00D6, 0, 77, 160, 75, 0); //Sphere line gump body
+		Orion->DrawGump(0x00D5, 0, 64, 160); //Sphere line gump start
+		Orion->DrawGump(0x00D7, 0, 152, 160); //Sphere line gump end
+		Orion->DrawGump(0x00D6, 0, 77, 160, 75, 0); //Sphere line gump body
 
 		float ValPer = (g_OptionsConfig.SpeechDelay / 999.0f) * 100.0f;
 		ValPer = (g_SphereListWidth * ValPer) / 100.0f;
 		if (ValPer < 0.0f)
 			ValPer = 0.0f;
-		UO->DrawGump(0x00D8, 0, 64 + (int)ValPer, 160); //Sphere gump
+		Orion->DrawGump(0x00D8, 0, 64 + (int)ValPer, 160); //Sphere gump
 
 		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.SpeechDelay).c_str(), g_OptionsTextColor, 176, 157);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetScaleSpeechDelay(), 0, 64, 182);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.GetScaleSpeechDelay(), 0, 64, 182);
 		//UO->DrawUnicodeFont(0, L"Scale speech duration based on length", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[4].Draw(86, 182);
 		
-		UO->DrawGump(0x00D4, 0, 64, 204);
+		Orion->DrawGump(0x00D4, 0, 64, 204);
 		DWORD clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.SpeechColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 		g_GL.DrawPolygone(67, 207, 13, 14);
@@ -1931,7 +1931,7 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Speech color", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[5].Draw(86, 204);
 		
-		UO->DrawGump(0x00D4, 0, 64, 223);
+		Orion->DrawGump(0x00D4, 0, 64, 223);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.EmoteColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 		g_GL.DrawPolygone(67, 226, 13, 14);
@@ -1939,7 +1939,7 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Emote color", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[6].Draw(86, 223);
 		
-		UO->DrawGump(0x00D4, 0, 64, 242);
+		Orion->DrawGump(0x00D4, 0, 64, 242);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.PartyMessageColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 		g_GL.DrawPolygone(67, 245, 13, 14);
@@ -1947,33 +1947,33 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Party Message color", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[7].Draw(86, 242);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.DarkNights, 0, 64, 264);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.DarkNights, 0, 64, 264);
 		//UO->DrawUnicodeFont(0, L"Dark Nights", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[12].Draw(86, 264);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ColoredLighting, 0, 64, 284);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.ColoredLighting, 0, 64, 284);
 		//UO->DrawUnicodeFont(0, L"Colored Lighting", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[13].Draw(86, 284);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.StandartCharactersAnimationDelay, 0, 64, 304);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.StandartCharactersAnimationDelay, 0, 64, 304);
 		//UO->DrawUnicodeFont(0, L"Standard characters animation delay", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[14].Draw(86, 304);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.StandartItemsAnimationDelay, 0, 64, 324);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.StandartItemsAnimationDelay, 0, 64, 324);
 		//UO->DrawUnicodeFont(0, L"Standard items animation delay", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[15].Draw(86, 324);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.LockResizingGameWindow, 0, 64, 344);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.LockResizingGameWindow, 0, 64, 344);
 		//UO->DrawUnicodeFont(0, L"Lock game window resizing", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[16].Draw(86, 344);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.LockGumpsMoving, 0, 64, 364);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.LockGumpsMoving, 0, 64, 364);
 		//UO->DrawUnicodeFont(0, L"Lock gumps moving", g_OptionsTextColor, posX + 86, posY);
 		m_TexturePage7[17].Draw(86, 364);
 
 		if (ConnectionManager.ClientVersion >= CV_6000)
 		{
-			UO->DrawGump(0x00D4, 0, 354, 204);
+			Orion->DrawGump(0x00D4, 0, 354, 204);
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.GuildMessageColor);
 			glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 			g_GL.DrawPolygone(357, 207, 13, 14);
@@ -1981,7 +1981,7 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index)
 			//UO->DrawUnicodeFont(0, L"Guild Message Color", g_OptionsTextColor, posX + 86, posY);
 			m_TexturePage7[8].Draw(376, 204);
 		
-			UO->DrawGump(0x00D4, 0, 354, 223);
+			Orion->DrawGump(0x00D4, 0, 354, 223);
 			clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.AllianceMessageColor);
 			glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 			g_GL.DrawPolygone(357, 226, 13, 14);
@@ -1989,11 +1989,11 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index)
 			//UO->DrawUnicodeFont(0, L"Alliance Message Color", g_OptionsTextColor, posX + 86, posY);
 			m_TexturePage7[9].Draw(376, 223);
 			
-			UO->DrawGump(0x00D2 + (int)g_OptionsConfig.IgnoreGuildMessage, 0, 354, 245);
+			Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.IgnoreGuildMessage, 0, 354, 245);
 			//UO->DrawUnicodeFont(0, L"Ignore Guild Messages", g_OptionsTextColor, posX + 86, posY);
 			m_TexturePage7[10].Draw(376, 245);
 
-			UO->DrawGump(0x00D2 + (int)g_OptionsConfig.IgnoreAllianceMessage, 0, 354, 265);
+			Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.IgnoreAllianceMessage, 0, 354, 265);
 			//UO->DrawUnicodeFont(0, L"Ignore Alliance Messages", g_OptionsTextColor, posX + 86, posY);
 			m_TexturePage7[11].Draw(376, 265);
 		}
@@ -2002,41 +2002,41 @@ int TGumpOptions::DrawPage7(bool &mode, DWORD &index)
 	{
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x00D2, 64, 182))
+		if (Orion->GumpPixelsInXY(0x00D2, 64, 182))
 			LSG = ID_GO_P7_SCALE_SPEECH_DURATION; //Scale speech duration based on length
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 204))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 204))
 			LSG = ID_GO_P7_SPEECH_COLOR; //Speech color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 223))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 223))
 			LSG = ID_GO_P7_EMOTE_COLOR; //Emote color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 242))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 242))
 			LSG = ID_GO_P7_PARTY_MESSAGE_COLOR; //Party Message color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 264))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 264))
 			LSG = ID_GO_P7_DARK_NIGHTS; //Dark Nights
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 284))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 284))
 			LSG = ID_GO_P7_COLORED_LIGHTING; //Colored Lighting
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 304))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 304))
 			LSG = ID_GO_P7_CHARACTERS_ANIMATION_DELAY; //Standard characters animation delay
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 324))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 324))
 			LSG = ID_GO_P7_ITEMS_ANIMATION_DELAY; //Standard items animation delay
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 344))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 344))
 			LSG = ID_GO_P7_LOCK_GAME_WINDOW_RESIZING; //Lock game window resizing
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 364))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 364))
 			LSG = ID_GO_P7_LOCK_GUMP_MOVING; //Lock gump moving
-		else if (UO->PolygonePixelsInXY(64, 160, (int)g_SphereListWidth + 10, 16))
+		else if (Orion->PolygonePixelsInXY(64, 160, (int)g_SphereListWidth + 10, 16))
 			LSG = ID_GO_P7_AJUST_LONG_SPEECH; //Adjust how long speech remains on screen
-		else if (UO->PolygonePixelsInXY(64, 112, 60, 22))
+		else if (Orion->PolygonePixelsInXY(64, 112, 60, 22))
 			LSG = ID_GO_P7_GAME_WINDOW_SIZE_X; //Game Play Window Size X
-		else if (UO->PolygonePixelsInXY(139, 112, 60, 22))
+		else if (Orion->PolygonePixelsInXY(139, 112, 60, 22))
 			LSG = ID_GO_P7_GAME_WINDOW_SIZE_Y; //Game Play Window Size Y
 		else if (ConnectionManager.ClientVersion >= CV_6000)
 		{
-			if (UO->GumpPixelsInXY(0x00D2, 354, 204))
+			if (Orion->GumpPixelsInXY(0x00D2, 354, 204))
 				LSG = ID_GO_P7_GUILD_MESSAGE_COLOR; //Guild Message Color
-			else if (UO->GumpPixelsInXY(0x00D2, 354, 223))
+			else if (Orion->GumpPixelsInXY(0x00D2, 354, 223))
 				LSG = ID_GO_P7_ALLIANCE_MESSAGE_COLOR; //Alliance Message Color
-			else if (UO->GumpPixelsInXY(0x00D2, 354, 245))
+			else if (Orion->GumpPixelsInXY(0x00D2, 354, 245))
 				LSG = ID_GO_P7_IGNORE_GUILD_MESSAGE; //Ignore Guild Messages
-			else if (UO->GumpPixelsInXY(0x00D2, 354, 265))
+			else if (Orion->GumpPixelsInXY(0x00D2, 354, 265))
 				LSG = ID_GO_P7_IGNORE_ALLIANCE_MESSAGE; //Ignore Alliance Messages
 		}
 
@@ -2058,7 +2058,7 @@ int TGumpOptions::DrawPage8(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"These settings affect the reputation system, which is Ultima Online's system for controlling antisocial behavior.", g_OptionsTextColor, posX + 64, posY + 44, 480.0f);
 		m_TexturePage8[1].Draw(64, 44);
 		
-		UO->DrawGump(0x00D4, 0, 64, 90);
+		Orion->DrawGump(0x00D4, 0, 64, 90);
 		DWORD clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.InnocentColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 		g_GL.DrawPolygone(67, 93, 13, 14);
@@ -2066,7 +2066,7 @@ int TGumpOptions::DrawPage8(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Innocent highlight color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[2].Draw(88, 90);
 		
-		UO->DrawGump(0x00D4, 0, 64, 109);
+		Orion->DrawGump(0x00D4, 0, 64, 109);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.FriendlyColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 		g_GL.DrawPolygone(67, 112, 13, 14);
@@ -2074,7 +2074,7 @@ int TGumpOptions::DrawPage8(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Friendly guilds highlight color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[3].Draw(88, 109);
 		
-		UO->DrawGump(0x00D4, 0, 64, 128);
+		Orion->DrawGump(0x00D4, 0, 64, 128);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.SomeoneColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 		g_GL.DrawPolygone(67, 131, 13, 14);
@@ -2082,7 +2082,7 @@ int TGumpOptions::DrawPage8(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Someone that can be attacked color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[4].Draw(88, 128);
 		
-		UO->DrawGump(0x00D4, 0, 64, 147);
+		Orion->DrawGump(0x00D4, 0, 64, 147);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.CriminalColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 		g_GL.DrawPolygone(67, 150, 13, 14);
@@ -2090,7 +2090,7 @@ int TGumpOptions::DrawPage8(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Criminal highlight color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[5].Draw(88, 147);
 		
-		UO->DrawGump(0x00D4, 0, 64, 166);
+		Orion->DrawGump(0x00D4, 0, 64, 166);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.EnemyColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 		g_GL.DrawPolygone(67, 169, 13, 14);
@@ -2098,7 +2098,7 @@ int TGumpOptions::DrawPage8(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Enemy guildmembers color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[6].Draw(88, 166);
 		
-		UO->DrawGump(0x00D4, 0, 64, 185);
+		Orion->DrawGump(0x00D4, 0, 64, 185);
 		clr = ColorManager->GetPolygoneColor(5, g_OptionsConfig.MurdererColor);
 		glColor3ub((GetRValue(clr)), GetGValue(clr), GetBValue(clr));
 		g_GL.DrawPolygone(67, 188, 13, 14);
@@ -2106,7 +2106,7 @@ int TGumpOptions::DrawPage8(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Murderer highlight color", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[7].Draw(88, 185);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.CriminalActionsQuery, 0, 64, 204);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.CriminalActionsQuery, 0, 64, 204);
 		//UO->DrawUnicodeFont(0, L"Query before performing criminal actions", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage8[8].Draw(88, 204);
 	}
@@ -2114,19 +2114,19 @@ int TGumpOptions::DrawPage8(bool &mode, DWORD &index)
 	{
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
+		if (Orion->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P8_INNOCENT_COLOR; //Innocent highlight color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 109))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 109))
 			LSG = ID_GO_P8_FRIENDLY_COLOR; //Friendly guilds highlight color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 128))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 128))
 			LSG = ID_GO_P8_SOMEONE_COLOR; //Someone that can be attacked color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 147))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 147))
 			LSG = ID_GO_P8_CRIMINAL_COLOR; //Criminal highlight color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 166))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 166))
 			LSG = ID_GO_P8_ENEMY_COLOR; //Enemy guildmembers color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 185))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 185))
 			LSG = ID_GO_P8_MURDERER_COLOR; //Murderer highlight color
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 204))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 204))
 			LSG = ID_GO_P8_QUERY_CRIMINAL_ACTIONS; //Query before performing criminal actions
 
 		return LSG;
@@ -2208,26 +2208,26 @@ int TGumpOptions::DrawPage9(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Miscellaneous options.", g_OptionsTextColor, posX + 64, posY + 44);
 		m_TexturePage9[1].Draw(64, 44);
 		
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.ShowIncomingNames, 0, 64, 90);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.ShowIncomingNames, 0, 64, 90);
 		//UO->DrawUnicodeFont(0, L"Show Names of Approaching Players", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage9[2].Draw(88, 90);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.UseCircleTrans, 0, 64, 110);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.UseCircleTrans, 0, 64, 110);
 		//UO->DrawUnicodeFont(0, L"Use circle of transparency", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage9[3].Draw(88, 110);
 		
 		//UO->DrawUnicodeFont(0, L"Set radius of transparency circle", g_OptionsTextColor, posX + 64, posY + 22);
 		m_TexturePage9[4].Draw(64, 132);
 		
-		UO->DrawGump(0x00D5, 0, 64, 153); //Sphere line gump start
-		UO->DrawGump(0x00D7, 0, 152, 153); //Sphere line gump end
-		UO->DrawGump(0x00D6, 0, 77, 153, 75, 0); //Sphere line gump body
+		Orion->DrawGump(0x00D5, 0, 64, 153); //Sphere line gump start
+		Orion->DrawGump(0x00D7, 0, 152, 153); //Sphere line gump end
+		Orion->DrawGump(0x00D6, 0, 77, 153, 75, 0); //Sphere line gump body
 
 		float ValPer = (g_OptionsConfig.CircleTransRadius / 200.0f) * 100.0f;
 		ValPer = (g_SphereListWidth * ValPer) / 100.0f;
 		if (ValPer < 0.0f)
 			ValPer = 0.0f;
-		UO->DrawGump(0x00D8, 0, 64 + (int)ValPer, 153); //Sphere gump
+		Orion->DrawGump(0x00D8, 0, 64 + (int)ValPer, 153); //Sphere gump
 
 		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.CircleTransRadius).c_str(), g_OptionsTextColor, 176, 150);
 		
@@ -2236,32 +2236,32 @@ int TGumpOptions::DrawPage9(bool &mode, DWORD &index)
 		//UO->DrawUnicodeFont(0, L"Inform me when my skills improve this much (in tenths)", g_OptionsTextColor, posX + 64, posY + 22);
 		m_TexturePage9[5].Draw(64, 175);
 		
-		UO->DrawGump(0x00D5, 0, 64, 196); //Sphere line gump start
-		UO->DrawGump(0x00D7, 0, 152, 196); //Sphere line gump end
-		UO->DrawGump(0x00D6, 0, 77, 196, 75, 0); //Sphere line gump body
+		Orion->DrawGump(0x00D5, 0, 64, 196); //Sphere line gump start
+		Orion->DrawGump(0x00D7, 0, 152, 196); //Sphere line gump end
+		Orion->DrawGump(0x00D6, 0, 77, 196, 75, 0); //Sphere line gump body
 		
 		ValPer = (g_OptionsConfig.SkillReport / 100.0f) * 100.0f;
 		ValPer = (g_SphereListWidth * ValPer) / 100.0f;
 		if (ValPer < 0)
 			ValPer = 0;
-		UO->DrawGump(0x00D8, 0, 64 + (int)ValPer, 196); //Sphere gump
+		Orion->DrawGump(0x00D8, 0, 64 + (int)ValPer, 196); //Sphere gump
 
 		FontManager->DrawW(0, std::to_wstring(g_OptionsConfig.SkillReport).c_str(), g_OptionsTextColor, 176, 193);
 		
 		
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.StatReport, 0, 64, 216);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.StatReport, 0, 64, 216);
 		//UO->DrawUnicodeFont(0, L"Inform me of increases in strength, dexterity, and intelligence.", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage9[6].Draw(88, 216);
 
-		UO->DrawGump(0x00D2 + (int)g_OptionsConfig.GetConsoleNeedEnter(), 0, 64, 236);
+		Orion->DrawGump(0x00D2 + (int)g_OptionsConfig.GetConsoleNeedEnter(), 0, 64, 236);
 		//UO->DrawUnicodeFont(0, L"Console need press 'Enter' to activate it.", g_OptionsTextColor, posX + 88, posY);
 		m_TexturePage9[7].Draw(88, 236);
 		
 
 
 
-		UO->DrawGump(0x00D0, 0, 64, 262);
+		Orion->DrawGump(0x00D0, 0, 64, 262);
 		//UO->DrawUnicodeFont(0, L"Set the font for speech", g_OptionsTextColor, posX + 64, posY + 22);
 		m_TexturePage9[8].Draw(88, 262);
 	}
@@ -2269,19 +2269,19 @@ int TGumpOptions::DrawPage9(bool &mode, DWORD &index)
 	{
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x00D2, 64, 90))
+		if (Orion->GumpPixelsInXY(0x00D2, 64, 90))
 			LSG = ID_GO_P9_SHOW_APPROACHING_NAMES; //Show Names of Approaching Players
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 110))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 110))
 			LSG = ID_GO_P9_USE_CIRCLE_OF_TRANSPARENCY; //Use circle of transparency
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 216))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 216))
 			LSG = ID_GO_P9_INFORM_STATS; //Inform me of increases in strength, dexterity, and intelligence.
-		else if (UO->GumpPixelsInXY(0x00D2, 64, 236))
+		else if (Orion->GumpPixelsInXY(0x00D2, 64, 236))
 			LSG = ID_GO_P9_CONSOLE_ENTER; //Console need press 'Enter' to activate it.
-		else if (UO->GumpPixelsInXY(0x00D0, 64, 262))
+		else if (Orion->GumpPixelsInXY(0x00D0, 64, 262))
 			LSG = ID_GO_P9_SPEECH_FONT; //Set the font for speech
-		else if (UO->PolygonePixelsInXY(64, 145, (int)g_SphereListWidth + 10, 16))
+		else if (Orion->PolygonePixelsInXY(64, 145, (int)g_SphereListWidth + 10, 16))
 			LSG = ID_GO_P9_TRANSPARENCY_RADIUS; //Set radius of transparency circle
-		else if (UO->PolygonePixelsInXY(64, 188, (int)g_SphereListWidth + 10, 16))
+		else if (Orion->PolygonePixelsInXY(64, 188, (int)g_SphereListWidth + 10, 16))
 			LSG = ID_GO_P9_INFORM_SKILLS; //Inform me when my skills improve this much (in tenths)
 
 		return LSG;
@@ -2935,7 +2935,7 @@ void TGumpOptions::ApplyPageChanges()
 			if (ConfigManager.SoundVolume != g_OptionsConfig.SoundVolume)
 			{
 				ConfigManager.SoundVolume = g_OptionsConfig.SoundVolume;
-				UO->AdjustSoundEffects(GetTickCount() + 100000, SoundManager.GetVolumeValue());
+				Orion->AdjustSoundEffects(GetTickCount() + 100000, SoundManager.GetVolumeValue());
 			}
 
 			//Меняем громкость звука музыке и текущей музыке
@@ -2948,7 +2948,7 @@ void TGumpOptions::ApplyPageChanges()
 		    //Выключаем звук эффектов.
 			if (ConfigManager.Sound && !g_OptionsConfig.Sound)
 			{								
-				UO->AdjustSoundEffects(GetTickCount() + 100000);
+				Orion->AdjustSoundEffects(GetTickCount() + 100000);
 			}
 			ConfigManager.Sound = g_OptionsConfig.Sound;
 

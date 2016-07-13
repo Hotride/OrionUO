@@ -70,7 +70,7 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 
-			UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
+			Orion->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
 
 			glDisable(GL_BLEND);
 		}
@@ -82,9 +82,9 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 #endif
 			
 			if (g_UseCircleTrans)
-				UO->DrawStaticArtTransparent(objGraphic, objColor, drawX, drawY, m_Z);
+				Orion->DrawStaticArtTransparent(objGraphic, objColor, drawX, drawY, m_Z);
 			else
-				UO->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
+				Orion->DrawStaticArt(objGraphic, objColor, drawX, drawY, m_Z);
 
 #if UO_DEPTH_TEST == 1
 			glDisable(GL_DEPTH_TEST);
@@ -96,7 +96,7 @@ int TMultiObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 	}
 	else
 	{
-		if (UO->StaticPixelsInXY(objGraphic, drawX, drawY, m_Z) && !g_UseCircleTrans)
+		if (Orion->StaticPixelsInXY(objGraphic, drawX, drawY, m_Z) && !g_UseCircleTrans)
 		{
 			g_LastObjectType = SOT_STATIC_OBJECT;
 			g_LastSelectedObject = 3;

@@ -113,7 +113,7 @@ TMapObject::~TMapObject()
 TLandObject::TLandObject(DWORD serial, WORD graphic, WORD color, short x, short y, char z)
 : TMapObject(ROT_LAND_OBJECT, serial, graphic, color, x, y, z), m_MinZ(z)
 {
-	LAND_TILES &tile = UO->m_LandData[graphic / 32].Tiles[graphic % 32];
+	LAND_TILES &tile = Orion->m_LandData[graphic / 32].Tiles[graphic % 32];
 
 	m_IsStretched = (!tile.TexID && ::IsWet(tile.Flags));
 
@@ -172,7 +172,7 @@ g_RenderedObjectsCountInGameWindow++;
 #endif
 
 			if (!m_IsStretched)
-				UO->DrawLandArt(m_Graphic, objColor, drawX, drawY, m_Z);
+				Orion->DrawLandArt(m_Graphic, objColor, drawX, drawY, m_Z);
 			else
 			{
 				char minZ = m_MinZ + 3;
@@ -182,7 +182,7 @@ g_RenderedObjectsCountInGameWindow++;
 
 				g_ZBuffer = minZ;
 
-				UO->DrawLandTexture(m_Graphic, objColor, drawX, drawY, m_Rect, m_Normals);
+				Orion->DrawLandTexture(m_Graphic, objColor, drawX, drawY, m_Rect, m_Normals);
 			}
 
 #if UO_DEPTH_TEST == 1
@@ -193,7 +193,7 @@ g_RenderedObjectsCountInGameWindow++;
 		{
 			if (!m_IsStretched)
 			{
-				if (UO->LandPixelsInXY(m_Graphic, drawX, drawY, m_Z))
+				if (Orion->LandPixelsInXY(m_Graphic, drawX, drawY, m_Z))
 				{
 					g_LastObjectType = SOT_LAND_OBJECT;
 					g_LastSelectedObject = 2;
@@ -202,7 +202,7 @@ g_RenderedObjectsCountInGameWindow++;
 			}
 			else
 			{
-				if (UO->LandTexturePixelsInXY(drawX, drawY, m_Rect))
+				if (Orion->LandTexturePixelsInXY(drawX, drawY, m_Rect))
 				{
 					g_LastObjectType = SOT_LAND_OBJECT;
 					g_LastSelectedObject = 2;
@@ -219,7 +219,7 @@ g_RenderedObjectsCountInGameWindow++;
 //---------------------------------------------------------------------------
 TRenderStaticObject::TRenderStaticObject(RENDER_OBJECT_TYPE renderType, DWORD serial, WORD graphic, WORD color, short x, short y, char z)
 : TMapObject(renderType, serial, graphic, color, x, y, z), m_FoliageTransparentIndex(-1),
-m_TiledataPtr(&UO->m_StaticData[graphic / 32].Tiles[graphic % 32])
+m_TiledataPtr(&Orion->m_StaticData[graphic / 32].Tiles[graphic % 32])
 {
 	if (m_TiledataPtr->Height > 5)
 		m_CanBeTransparent = 1;
@@ -261,7 +261,7 @@ void TRenderStaticObject::AddText(TTextData *msg)
 	{
 		m_TextControl->Add(msg);
 
-		UO->AddJournalMessage(msg, "You see: ");
+		Orion->AddJournalMessage(msg, "You see: ");
 	}
 }
 //---------------------------------------------------------------------------
@@ -368,12 +368,12 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 					glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
 
-					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
+					Orion->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
 					
 					glDisable(GL_BLEND);
 				}
 				else
-					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
+					Orion->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
 			}
 		}
 		else
@@ -384,9 +384,9 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 #endif
 
 			if (g_UseCircleTrans)
-				UO->DrawStaticArtAnimatedTransparent(objGraphic, objColor, drawX, drawY, m_Z);
+				Orion->DrawStaticArtAnimatedTransparent(objGraphic, objColor, drawX, drawY, m_Z);
 			else
-				UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
+				Orion->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z);
 
 #if UO_DEPTH_TEST == 1
 			glDisable(GL_DEPTH_TEST);
@@ -404,7 +404,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 			{
 				if (m_FoliageTransparentIndex != g_FoliageIndex)
 				{
-					if (UO->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z))
+					if (Orion->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z))
 					{
 						g_LastObjectType = SOT_STATIC_OBJECT;
 						g_LastSelectedObject = 3;
@@ -413,7 +413,7 @@ int TStaticObject::Draw(bool &mode, int &drawX, int &drawY, DWORD &ticks)
 				}
 			}
 		}
-		else if (UO->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z) && !g_UseCircleTrans)
+		else if (Orion->StaticPixelsInXYAnimated(objGraphic, drawX, drawY, m_Z) && !g_UseCircleTrans)
 		{
 			g_LastObjectType = SOT_STATIC_OBJECT;
 			g_LastSelectedObject = 3;

@@ -90,7 +90,7 @@ void TGumpBook::ReleaseTextTextures()
 //----------------------------------------------------------------------------
 void TGumpBook::PrepareTextures()
 {
-	UO->ExecuteGumpPart(0x01FE, 3);
+	Orion->ExecuteGumpPart(0x01FE, 3);
 }
 //----------------------------------------------------------------------------
 bool TGumpBook::EntryPointerHere()
@@ -118,13 +118,13 @@ void TGumpBook::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawGump(0x01FE, 0, 0, 0); //Body
+		Orion->DrawGump(0x01FE, 0, 0, 0); //Body
 
 		if (m_Page)
-			UO->DrawGump(0x01FF, 0, 0, 0); //Last page
+			Orion->DrawGump(0x01FF, 0, 0, 0); //Last page
 
 		if (m_Page + 2 < m_PageCount)
-			UO->DrawGump(0x0200, 0, 356, 0); //Next page
+			Orion->DrawGump(0x0200, 0, 356, 0); //Next page
 
 		if (!m_Page)
 		{
@@ -210,27 +210,27 @@ int TGumpBook::Draw(bool &mode)
 
 		int LSG = 0;
 
-		if (UO->GumpPixelsInXY(0x01FE, 0, 0))
+		if (Orion->GumpPixelsInXY(0x01FE, 0, 0))
 			g_LastSelectedGump = index;
 
-		if (m_Page && UO->GumpPixelsInXY(0x01FF, 0, 0))
+		if (m_Page && Orion->GumpPixelsInXY(0x01FF, 0, 0))
 			LSG = ID_GB_BUTTON_PREV; //Last page
-		else if (m_Page + 2 < m_PageCount && UO->GumpPixelsInXY(0x0200, 356, 0))
+		else if (m_Page + 2 < m_PageCount && Orion->GumpPixelsInXY(0x0200, 356, 0))
 			LSG = ID_GB_BUTTON_NEXT; //Next page
 		else if (!m_Page)
 		{
-			if (UO->PolygonePixelsInXY(41, 65, 150, (m_Unicode ? 22 : 44)))
+			if (Orion->PolygonePixelsInXY(41, 65, 150, (m_Unicode ? 22 : 44)))
 				LSG = ID_GB_TEXT_AREA_TITLE; //Text title
-			else if (UO->PolygonePixelsInXY(41, 160, 150, 22))
+			else if (Orion->PolygonePixelsInXY(41, 160, 150, 22))
 				LSG = ID_GB_TEXT_AREA_AUTHOR; //Text author
-			else if (UO->PolygonePixelsInXY(224, 34, 160, 166))
+			else if (Orion->PolygonePixelsInXY(224, 34, 160, 166))
 				LSG = ID_GB_TEXT_AREA_PAGE_RIGHT; //Text right area
 		}
 		else
 		{
-			if (UO->PolygonePixelsInXY(38, 34, 160, 166))
+			if (Orion->PolygonePixelsInXY(38, 34, 160, 166))
 				LSG = ID_GB_TEXT_AREA_PAGE_LEFT; //Text left area
-			else if (UO->PolygonePixelsInXY(224, 34, 160, 166))
+			else if (Orion->PolygonePixelsInXY(224, 34, 160, 166))
 				LSG = ID_GB_TEXT_AREA_PAGE_RIGHT; //Text right area
 		}
 

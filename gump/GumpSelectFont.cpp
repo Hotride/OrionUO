@@ -30,8 +30,8 @@ TGumpSelectFont::~TGumpSelectFont()
 //---------------------------------------------------------------------------
 void TGumpSelectFont::PrepareTextures()
 {
-	UO->ExecuteResizepic(0x0A28);
-	UO->ExecuteGumpPart(0x00D0, 2);
+	Orion->ExecuteResizepic(0x0A28);
+	Orion->ExecuteGumpPart(0x00D0, 2);
 }
 //---------------------------------------------------------------------------
 void TGumpSelectFont::GenerateFrame()
@@ -50,7 +50,7 @@ void TGumpSelectFont::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawResizepicGump(0x0A28, 0, 0, 200, 70 + (unicodeFontCount * 22));
+		Orion->DrawResizepicGump(0x0A28, 0, 0, 200, 70 + (unicodeFontCount * 22));
 		
 		FontManager->DrawW(0, L"Select font", 0, 60, 22);
 
@@ -87,7 +87,7 @@ void TGumpSelectFont::GenerateFrame()
 			if ((i == selected && !g_GumpPressedElement) || g_GumpPressedElement == (i + ID_GSF_FONTS))
 				gumpID = 0x00D1;
 
-			UO->DrawGump(gumpID, 0, 50, drawY);
+			Orion->DrawGump(gumpID, 0, 50, drawY);
 			FontManager->DrawW(i, L"This font", 0, 74, drawY);
 		}
 
@@ -130,7 +130,7 @@ int TGumpSelectFont::Draw(bool &mode)
 		
 		int unicodeFontCount = FileManager.UnicodeFontCount;
 
-		if (UO->ResizepicPixelsInXY(0x0A28, 0, 0, 200, 70 + (unicodeFontCount * 22)))
+		if (Orion->ResizepicPixelsInXY(0x0A28, 0, 0, 200, 70 + (unicodeFontCount * 22)))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -142,7 +142,7 @@ int TGumpSelectFont::Draw(bool &mode)
 		{
 			drawY += 22;
 
-			if (UO->GumpPixelsInXY(0x00D0, 50, drawY))
+			if (Orion->GumpPixelsInXY(0x00D0, 50, drawY))
 			{
 				LSG = i + ID_GSF_FONTS;
 

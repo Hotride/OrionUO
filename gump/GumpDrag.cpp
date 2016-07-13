@@ -41,9 +41,9 @@ TGumpDrag::~TGumpDrag()
 //---------------------------------------------------------------------------
 void TGumpDrag::PrepareTextures()
 {
-	UO->ExecuteGump(0x085C);
-	UO->ExecuteGumpPart(0x0845, 2);
-	UO->ExecuteButton(0x081A);
+	Orion->ExecuteGump(0x085C);
+	Orion->ExecuteGumpPart(0x0845, 2);
+	Orion->ExecuteButton(0x081A);
 }
 //---------------------------------------------------------------------------
 void TGumpDrag::GenerateFrame()
@@ -63,10 +63,10 @@ void TGumpDrag::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawGump(0x085C, 0, 0, 0); //Gump
+		Orion->DrawGump(0x085C, 0, 0, 0); //Gump
 		
 		WORD gumpID = 0x0845 + (int)(g_GumpSelectElement == ID_GD_SCROLL); //Scroll button / selected
-		UO->DrawGump(gumpID, 0, m_ScrollPos, 16);
+		Orion->DrawGump(gumpID, 0, m_ScrollPos, 16);
 		
 		if (TextEntry != NULL) //Текстовое поле существует, отрисуем его
 			TextEntry->DrawA(1, 0x0386, 29, 42);
@@ -76,7 +76,7 @@ void TGumpDrag::GenerateFrame()
 			gumpID = 0x081B; //Button Okay (down)
 		else if (g_GumpSelectElement == ID_GD_OKAY)
 			gumpID = 0x081C; //Button Okay selected
-		UO->DrawGump(gumpID, 0, 102, 37);
+		Orion->DrawGump(gumpID, 0, 102, 37);
 
 	glEndList();
 
@@ -154,17 +154,17 @@ int TGumpDrag::Draw(bool &mode)
 		int LSG = 0;
 
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (UO->GumpPixelsInXY(0x085C, 0, 0))
+		if (Orion->GumpPixelsInXY(0x085C, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 		
-		if (UO->GumpPixelsInXY(0x0845, m_ScrollPos, 16))
+		if (Orion->GumpPixelsInXY(0x0845, m_ScrollPos, 16))
 			LSG = ID_GD_SCROLL; //Scroll button
-		else if (UO->GumpPixelsInXY(0x081A, 102, 37))
+		else if (Orion->GumpPixelsInXY(0x081A, 102, 37))
 			LSG = ID_GD_OKAY; //Button Okay
-		else if (UO->PolygonePixelsInXY(28, 40, 60, 16))
+		else if (Orion->PolygonePixelsInXY(28, 40, 60, 16))
 			LSG = ID_GD_TEXT_FIELD; //Текстовое поле
 
 		g_MouseX = oldMouseX;
@@ -337,7 +337,7 @@ void TGumpDrag::OnOkayPressed()
 				TGameItem *obj = World->FindWorldItem(m_Serial);
 
 				if (obj != NULL)
-					UO->PickupItem(obj, count);
+					Orion->PickupItem(obj, count);
 			}
 		}
 

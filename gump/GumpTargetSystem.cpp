@@ -32,7 +32,7 @@ TGumpTargetSystem::~TGumpTargetSystem()
 //---------------------------------------------------------------------------
 void TGumpTargetSystem::PrepareTextures()
 {
-	UO->ExecuteGumpPart(0x0802, 8);
+	Orion->ExecuteGumpPart(0x0802, 8);
 }
 //---------------------------------------------------------------------------
 void TGumpTargetSystem::GenerateFrame()
@@ -70,7 +70,7 @@ void TGumpTargetSystem::GenerateFrame()
 			ColorizerShader->Use();
 
 			//Гамп статус бара
-			UO->DrawGump(0x0804, color, 0, 0);
+			Orion->DrawGump(0x0804, color, 0, 0);
 
 			UnuseShader();
 
@@ -86,7 +86,7 @@ void TGumpTargetSystem::GenerateFrame()
 			FontManager->DrawA(1, m_OldName.c_str(), 0x0386, 16, 14, 150, TS_LEFT, UOFONT_FIXED);
 
 			//Hits
-			UO->DrawGump(0x0805, 0, 34, 38);
+			Orion->DrawGump(0x0805, 0, 34, 38);
 				
 			if (character != NULL)
 			{
@@ -100,7 +100,7 @@ void TGumpTargetSystem::GenerateFrame()
 					else if (obj->YellowHits())
 						gumpid = 0x0809; //Character status line (yellow)
 
-					UO->DrawGump(gumpid, 0, 34, 38, per, 0);
+					Orion->DrawGump(gumpid, 0, 34, 38, per, 0);
 				}
 			}
 		}
@@ -109,10 +109,10 @@ void TGumpTargetSystem::GenerateFrame()
 			ColorizerShader->Use();
 
 			//Гамп статус бара
-			UO->DrawGump(0x0804, 0x0386, 0, 0);
+			Orion->DrawGump(0x0804, 0x0386, 0, 0);
 
 			//Hits
-			UO->DrawGump(0x0805, 0x0386, 34, 38);
+			Orion->DrawGump(0x0805, 0x0386, 34, 38);
 				
 			UnuseShader();
 
@@ -166,14 +166,14 @@ int TGumpTargetSystem::Draw(bool &mode)
 	{
 		int LSG = 0;
 
-		if (UO->GumpPixelsInXY(0x0804, (int)g_GumpTranslateX, (int)g_GumpTranslateY))
+		if (Orion->GumpPixelsInXY(0x0804, (int)g_GumpTranslateX, (int)g_GumpTranslateY))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 			g_StatusbarUnderMouse = index;
 		}
 
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY((int)g_GumpTranslateX, (int)g_GumpTranslateY, 10, 14))
+		if (g_ShowGumpLocker && Orion->PolygonePixelsInXY((int)g_GumpTranslateX, (int)g_GumpTranslateY, 10, 14))
 			LSG = ID_GSB_LOCK_MOVING;
 
 		return LSG;
@@ -228,10 +228,10 @@ bool TGumpTargetSystem::OnLeftMouseDoubleClick()
 		if (g_Player->Warmode)
 		{
 			if (serial < 0x40000000)
-				UO->Attack(serial); //Если в вармоде - атакуем
+				Orion->Attack(serial); //Если в вармоде - атакуем
 		}
 		else
-			UO->DoubleClick(serial); //Или используем предмет
+			Orion->DoubleClick(serial); //Или используем предмет
 
 		return true;
 	}

@@ -80,7 +80,7 @@ void TGameConsole::Send()
 					else
 					{
 						string str = "Note to self: " + ToString(Data() + offset);
-						UO->CreateTextMessage(TT_SYSTEM, 0, 3, 0, str);
+						Orion->CreateTextMessage(TT_SYSTEM, 0, 3, 0, str);
 					}
 
 					return;
@@ -96,7 +96,7 @@ void TGameConsole::Send()
 						Party.Inviter = 0;
 					}
 					else
-						UO->CreateTextMessage(TT_SYSTEM, 0, 3, 0, "No one has invited you to be in a party.");
+						Orion->CreateTextMessage(TT_SYSTEM, 0, 3, 0, "No one has invited you to be in a party.");
 
 					return;
 				}
@@ -111,7 +111,7 @@ void TGameConsole::Send()
 						Party.Inviter = 0;
 					}
 					else
-						UO->CreateTextMessage(TT_SYSTEM, 0, 3, 0, "No one has invited you to be in a party.");
+						Orion->CreateTextMessage(TT_SYSTEM, 0, 3, 0, "No one has invited you to be in a party.");
 
 					return;
 				}

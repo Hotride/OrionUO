@@ -53,15 +53,15 @@ void TCharacterListScreen::Init()
 	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
-	UO->ExecuteGump(0x0588); //Main Screen background
-	UO->ExecuteGump(0x157C); //Main Screen
-	UO->ExecuteGump(0x15A0); //Main Screen Notes
-	UO->ExecuteResizepic(0x13BE); //ActPwd Container
-	UO->ExecuteGump(0x058A); //Main Screen Castle?
-	UO->ExecuteGumpPart(0x1589, 3); //X gump
-	UO->ExecuteGumpPart(0x15A4, 3); //> gump
-	UO->ExecuteResizepic(0x0BB8); //Account/Password text field
-	UO->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
+	Orion->ExecuteGump(0x0588); //Main Screen background
+	Orion->ExecuteGump(0x157C); //Main Screen
+	Orion->ExecuteGump(0x15A0); //Main Screen Notes
+	Orion->ExecuteResizepic(0x13BE); //ActPwd Container
+	Orion->ExecuteGump(0x058A); //Main Screen Castle?
+	Orion->ExecuteGumpPart(0x1589, 3); //X gump
+	Orion->ExecuteGumpPart(0x15A4, 3); //> gump
+	Orion->ExecuteResizepic(0x0BB8); //Account/Password text field
+	Orion->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
 }
 //---------------------------------------------------------------------------
 /*!
@@ -77,21 +77,21 @@ void TCharacterListScreen::ProcessSmoothAction( __in_opt BYTE action)
 	if (action == ID_SMOOTH_CLS_QUIT)
 		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 	else if (action == ID_SMOOTH_CLS_CONNECT)
-		UO->Connect();
+		Orion->Connect();
 	else if (action == ID_SMOOTH_CLS_SELECT_CHARACTER)
 	{
-		UO->CharacterSelection(CharacterList.Selected);
+		Orion->CharacterSelection(CharacterList.Selected);
 
 		if (!CharacterList.GetName(CharacterList.Selected).length())
 			ConnectionScreen->ErrorCode = 2;
 	}
 	else if (action == ID_SMOOTH_CLS_GO_SCREEN_PROFESSION_SELECT)
-		UO->InitScreen(GS_PROFESSION_SELECT);
+		Orion->InitScreen(GS_PROFESSION_SELECT);
 	else if (action == ID_SMOOTH_CLS_GO_SCREEN_DELETE)
 	{
 		if (CharacterList.GetSelectedName().length())
 		{
-			UO->InitScreen(GS_DELETE);
+			Orion->InitScreen(GS_DELETE);
 			ConnectionScreen->Type = CST_CHARACTER_LIST;
 		}
 	}
@@ -202,16 +202,16 @@ int TCharacterListScreen::Render( __in bool mode)
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
-		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
-		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
-		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
+		Orion->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
+		Orion->DrawGump(0x157C, 0, 0, 0); //Main Gump
+		Orion->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
 
 		WORD gumpID = 0x1589 + (int)(CanSelectedButton == ID_CS_QUIT); //X gump /lighted
 		if (g_LastObjectLeftMouseDown == ID_CS_QUIT)
 			gumpID = 0x158B; //X gump
-		UO->DrawGump(gumpID, 0, 555, 4); //X gump
+		Orion->DrawGump(gumpID, 0, 555, 4); //X gump
 		
-		UO->DrawResizepicGump(0xA28, 160, 70, 408, 343 + yBonus); //Character list field
+		Orion->DrawResizepicGump(0xA28, 160, 70, 408, 343 + yBonus); //Character list field
 
 		m_Text.Draw(267, listTitleY);
 
@@ -221,7 +221,7 @@ int TCharacterListScreen::Render( __in bool mode)
 
 			if (!testField || len != 0 || !i)
 			{
-				UO->DrawResizepicGump(0xBB8, 224, yOffset + (posInList * 40), 280, 30); //Character name field
+				Orion->DrawResizepicGump(0xBB8, 224, yOffset + (posInList * 40), 280, 30); //Character name field
 				
 				if (len)
 				{
@@ -243,23 +243,23 @@ int TCharacterListScreen::Render( __in bool mode)
 			gumpID = 0x159D + (int)(CanSelectedButton == ID_CS_NEW); //New button
 			if (g_LastObjectLeftMouseDown == ID_CS_NEW)
 				gumpID = 0x159F; //New button pressed
-			UO->DrawGump(gumpID, 0, 224, 350 + yBonus);
+			Orion->DrawGump(gumpID, 0, 224, 350 + yBonus);
 		}
 		
 		gumpID = 0x159A + (int)(CanSelectedButton == ID_CS_DELETE); //Delete button
 		if (g_LastObjectLeftMouseDown == ID_CS_DELETE)
 			gumpID = 0x159C; //Delete button pressed
-		UO->DrawGump(gumpID, 0, 442, 350 + yBonus);
+		Orion->DrawGump(gumpID, 0, 442, 350 + yBonus);
 
 		gumpID = 0x15A1 + (int)(CanSelectedButton == ID_CS_ARROW_PREV); //< gump
 		if (g_LastObjectLeftMouseDown == ID_CS_ARROW_PREV)
 			gumpID = 0x15A3; //< gump pressed
-		UO->DrawGump(gumpID, 0, 586, 445);
+		Orion->DrawGump(gumpID, 0, 586, 445);
 
 		gumpID = 0x15A4 + (int)(CanSelectedButton == ID_CS_ARROW_NEXT); //> gump
 		if (g_LastObjectLeftMouseDown == ID_CS_ARROW_NEXT)
 			gumpID = 0x15A6; //> gump pressed
-		UO->DrawGump(gumpID, 0, 610, 445);
+		Orion->DrawGump(gumpID, 0, 610, 445);
 
 		InitToolTip();
 
@@ -273,15 +273,15 @@ int TCharacterListScreen::Render( __in bool mode)
 	{
 		g_LastSelectedObject = 0;
 
-		if (UO->GumpPixelsInXY(0x1589, 555, 4))
+		if (Orion->GumpPixelsInXY(0x1589, 555, 4))
 			g_LastSelectedObject = ID_CS_QUIT; //X gump
-		else if (UO->GumpPixelsInXY(0x15A1, 586, 445))
+		else if (Orion->GumpPixelsInXY(0x15A1, 586, 445))
 			g_LastSelectedObject = ID_CS_ARROW_PREV; //< gump
-		else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+		else if (Orion->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_CS_ARROW_NEXT; //> gump
-		else if (!CharacterList.OnePerson && UO->GumpPixelsInXY(0x159D, 224, 350 + yBonus))
+		else if (!CharacterList.OnePerson && Orion->GumpPixelsInXY(0x159D, 224, 350 + yBonus))
 			g_LastSelectedObject = ID_CS_NEW; //New button
-		else if (UO->GumpPixelsInXY(0x159A, 442, 350 + yBonus))
+		else if (Orion->GumpPixelsInXY(0x159A, 442, 350 + yBonus))
 			g_LastSelectedObject = ID_CS_DELETE; //Delete button
 		else
 		{
@@ -291,7 +291,7 @@ int TCharacterListScreen::Render( __in bool mode)
 
 				if (!testField || len != 0 || !i)
 				{
-					if (UO->ResizepicPixelsInXY(0xBB8, 224, yOffset + (posInList * 40), 280, 30))
+					if (Orion->ResizepicPixelsInXY(0xBB8, 224, yOffset + (posInList * 40), 280, 30))
 					{
 						g_LastSelectedObject = ID_CS_CHARACTERS + i; //Character name field
 

@@ -85,7 +85,7 @@ void TEffectManager::AddEffect( __in TGameEffect *effect)
 			{
 				if (effect->EffectType == EF_LIGHTING)
 				{
-					UO->ExecuteGumpPart(0x4E20, 10);
+					Orion->ExecuteGumpPart(0x4E20, 10);
 
 					effect->Duration = GetTickCount() + 400;
 					effect->Speed = 50;

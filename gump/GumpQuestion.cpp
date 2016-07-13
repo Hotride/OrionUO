@@ -46,9 +46,9 @@ void TGumpQuestion::ReleaseTextTextures()
 //---------------------------------------------------------------------------
 void TGumpQuestion::PrepareTextures()
 {
-	UO->ExecuteGump(0x0816);
-	UO->ExecuteButton(0x0817);
-	UO->ExecuteButton(0x081A);
+	Orion->ExecuteGump(0x0816);
+	Orion->ExecuteButton(0x0817);
+	Orion->ExecuteButton(0x081A);
 }
 //---------------------------------------------------------------------------
 void TGumpQuestion::GenerateFrame()
@@ -65,7 +65,7 @@ void TGumpQuestion::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 	
-		UO->DrawGump(0x0816, 0, 0, 0);
+		Orion->DrawGump(0x0816, 0, 0, 0);
 		
 		if (m_Variant == 1)
 			m_Text[0].Draw(33, 30);
@@ -77,14 +77,14 @@ void TGumpQuestion::GenerateFrame()
 			gumpID = 0x0818;
 		else if (g_GumpSelectElement == ID_GQ_BUTTON_CANCEL)
 			gumpID = 0x0819;
-		UO->DrawGump(gumpID, 0, 37, 75); //Button cancel
+		Orion->DrawGump(gumpID, 0, 37, 75); //Button cancel
 
 		gumpID = 0x081A;
 		if (g_GumpPressedElement == ID_GQ_BUTTON_OKAY)
 			gumpID = 0x081B;
 		else if (g_GumpSelectElement == ID_GQ_BUTTON_OKAY)
 			gumpID = 0x081C;
-		UO->DrawGump(gumpID, 0, 100, 75); //Button okay
+		Orion->DrawGump(gumpID, 0, 100, 75); //Button okay
 
 	glEndList();
 
@@ -123,15 +123,15 @@ int TGumpQuestion::Draw(bool &mode)
 
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x0816, 0, 0))
+		if (Orion->GumpPixelsInXY(0x0816, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 
-		if (UO->GumpPixelsInXY(0x0817, 37, 75))
+		if (Orion->GumpPixelsInXY(0x0817, 37, 75))
 			LSG = ID_GQ_BUTTON_CANCEL; //Button cancel
-		else if (UO->GumpPixelsInXY(0x081A, 100, 75))
+		else if (Orion->GumpPixelsInXY(0x081A, 100, 75))
 			LSG = ID_GQ_BUTTON_OKAY; //Button okay
 
 		g_MouseX = oldMouseX;
@@ -153,7 +153,7 @@ void TGumpQuestion::OnLeftMouseUp()
 			GameScreen->CreateSmoothAction(TGameScreen::ID_SMOOTH_GS_LOGOUT);
 		else if (m_Variant == 2)
 		{
-			UO->AttackReq(m_ID);
+			Orion->AttackReq(m_ID);
 			GumpManager->RemoveGump(this);
 		}
 	}

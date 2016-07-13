@@ -216,7 +216,7 @@ bool TMouseManager::LoadCursorTextures()
 		{
 			WORD ID = g_CursorData[i][j];
 
-			TTextureObject *pth = UO->ExecuteStaticArt(ID);
+			TTextureObject *pth = Orion->ExecuteStaticArt(ID);
 
 			if (!i)
 			{
@@ -303,7 +303,7 @@ bool TMouseManager::LoadCursorTextures()
 */
 void TMouseManager::Draw( __in WORD id)
 {
-	TTextureObject *th = UO->ExecuteStaticArt(id);
+	TTextureObject *th = Orion->ExecuteStaticArt(id);
 	if (th != NULL)
 	{
 		if (id < 0x206A)

@@ -406,31 +406,31 @@ void TMacroManager::ProcessSubMenu()
 			{
 				case MSC_G2_CONFIGURATION:
 				{
-					UO->OpenConfiguration();
+					Orion->OpenConfiguration();
 
 					break;
 				}
 				case MSC_G2_PAPERDOLL:
 				{
-					UO->PaperdollReq(g_PlayerSerial);
+					Orion->PaperdollReq(g_PlayerSerial);
 
 					break;
 				}
 				case MSC_G2_STATUS:
 				{
-					UO->OpenStatus(g_PlayerSerial);
+					Orion->OpenStatus(g_PlayerSerial);
 
 					break;
 				}
 				case MSC_G2_JOURNAL:
 				{
-					UO->OpenJournal();
+					Orion->OpenJournal();
 
 					break;
 				}
 				case MSC_G2_SKILLS:
 				{
-					UO->OpenSkills();
+					Orion->OpenSkills();
 
 					break;
 				}
@@ -494,26 +494,26 @@ void TMacroManager::ProcessSubMenu()
 					TGameItem *backpack = g_Player->FindLayer(OL_BACKPACK);
 
 					if (backpack != NULL)
-						UO->DoubleClick(backpack->Serial);
+						Orion->DoubleClick(backpack->Serial);
 
 					break;
 				}
 				case MSC_G2_OWERVIEW:
 				{
-					UO->OpenMinimap();
+					Orion->OpenMinimap();
 
 					break;
 				}
 				case MSC_G2_WORLD_MAP:
 				{
-					UO->OpenWorldMap();
+					Orion->OpenWorldMap();
 
 					break;
 				}
 				case MSC_G2_MAIL:
 				case MSC_G2_PARTY_MANIFEST:
 				{
-					UO->OpenPartyManifest();
+					Orion->OpenPartyManifest();
 
 					break;
 				}
@@ -733,7 +733,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			}
 			case MC_WAR_PEACE:
 			{
-				UO->ChangeWarmode();
+				Orion->ChangeWarmode();
 				
 				break;
 			}
@@ -775,7 +775,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			}
 			case MC_OPEN_DOOR:
 			{
-				UO->OpenDoor();
+				Orion->OpenDoor();
 
 				break;
 			}
@@ -788,14 +788,14 @@ MACRO_RETURN_CODE TMacroManager::Process()
 					skill = m_SkillIndexTable[skill];
 					
 					if (skill != 0xFF)
-						UO->UseSkill(skill);
+						Orion->UseSkill(skill);
 				}
 
 				break;
 			}
 			case MC_LAST_SKILL:
 			{
-				UO->UseSkill(g_LastSkillIndex);
+				Orion->UseSkill(g_LastSkillIndex);
 
 				break;
 			}
@@ -804,20 +804,20 @@ MACRO_RETURN_CODE TMacroManager::Process()
 				int spell = (MacroPointer->SubCode - MSC_G6_CLUMSY + 1);
 
 				if (spell > 0 && spell <= 143)
-					UO->CastSpell(spell);
+					Orion->CastSpell(spell);
 
 				break;
 			}
 			case MC_LAST_SPELL:
 			{
-				UO->CastSpell(g_LastSpellIndex);
+				Orion->CastSpell(g_LastSpellIndex);
 
 				break;
 			}
 			case MC_LAST_OBJECT:
 			{
 				if (World->FindWorldObject(g_LastUseObject))
-					UO->DoubleClick(g_LastUseObject);
+					Orion->DoubleClick(g_LastUseObject);
 
 				break;
 			}
@@ -828,19 +828,19 @@ MACRO_RETURN_CODE TMacroManager::Process()
 
 				int index = MacroPointer->Code - MC_BOW;
 
-				UO->EmoteAction(emote[index]);
+				Orion->EmoteAction(emote[index]);
 
 				break;
 			}
 			case MC_QUIT_GAME:
 			{
-				UO->OpenLogOut();
+				Orion->OpenLogOut();
 
 				break;
 			}
 			case MC_ALL_NAMES:
 			{
-				UO->AllNames();
+				Orion->AllNames();
 
 				break;
 			}
@@ -893,8 +893,8 @@ MACRO_RETURN_CODE TMacroManager::Process()
 
 					if (objHand != NULL)
 					{
-						UO->PickupItem(objHand, 1, false);
-						UO->EquipItem(g_PlayerSerial);
+						Orion->PickupItem(objHand, 1, false);
+						Orion->EquipItem(g_PlayerSerial);
 
 						if (ObjectInHand != NULL)
 						{
@@ -922,8 +922,8 @@ MACRO_RETURN_CODE TMacroManager::Process()
 					{
 						itemInHand[handIndex] = objHand->Serial;
 
-						UO->PickupItem(objHand, 1, false);
-						UO->DropItem(backpack, 0xFFFF, 0xFFFF, 0);
+						Orion->PickupItem(objHand, 1, false);
+						Orion->DropItem(backpack, 0xFFFF, 0xFFFF, 0);
 
 						if (ObjectInHand != NULL)
 						{
@@ -1005,7 +1005,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			}
 			case MC_ATTACK_LAST:
 			{
-				UO->Attack(g_LastAttackObject);
+				Orion->Attack(g_LastAttackObject);
 
 				break;
 			}
@@ -1053,7 +1053,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			}
 			case MC_SAVE_DESKTOP:
 			{
-				UO->SaveLocalConfig();
+				Orion->SaveLocalConfig();
 
 				break;
 			}
@@ -1078,14 +1078,14 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			case MC_ATTACK_SELECTED_TARGET:
 			{
 				if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial && NewTargetSystem.Serial < 0x40000000)
-					UO->Attack(NewTargetSystem.Serial);
+					Orion->Attack(NewTargetSystem.Serial);
 
 				break;
 			}
 			case MC_USE_SELECTED_TARGET:
 			{
 				if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial)
-					UO->DoubleClick(NewTargetSystem.Serial);
+					Orion->DoubleClick(NewTargetSystem.Serial);
 
 				break;
 			}
@@ -1149,7 +1149,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 					if (bandage != NULL)
 					{
 						m_WaitingBandageTarget = true;
-						UO->DoubleClick(bandage->Serial);
+						Orion->DoubleClick(bandage->Serial);
 
 						result = MRC_BREAK_PARSER;
 					}
@@ -1214,7 +1214,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			}
 			case MC_UPDATE_RANGE_INFO:
 			{
-				UO->CreateTextMessageF(3, 0, "Current update range is %i", g_UpdateRange);
+				Orion->CreateTextMessageF(3, 0, "Current update range is %i", g_UpdateRange);
 
 				break;
 			}
@@ -1250,7 +1250,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 				{
 					const char *resultNames[5] = {"Hostles", "Party Members", "Followers", "Objects", "Mobiles"};
 
-					UO->CreateUnicodeTextMessageF(0, 0x038A, "There are no %s on the screen to select.", resultNames[scanType]);
+					Orion->CreateUnicodeTextMessageF(0, 0x038A, "There are no %s on the screen to select.", resultNames[scanType]);
 				}
 
 				break;
@@ -1276,7 +1276,7 @@ MACRO_RETURN_CODE TMacroManager::Process()
 			case MC_EQUIP_LAST_WEAPON:
 			case MC_TOGGLE_GARGOYLE_FLYING:
 			{
-				UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x77, "That macro is not work now");
+				Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x77, "That macro is not work now");
 
 				break;
 			}

@@ -149,7 +149,7 @@ void TParty::ParsePacketData(PBYTE buf, const int &size)
 				TGumpStatusbar *gump = (TGumpStatusbar*)GumpManager->GetGump(serial, 0, GT_STATUSBAR);
 				if (gump == NULL)
 				{
-					UO->OpenStatus(serial);
+					Orion->OpenStatus(serial);
 					
 					gump = (TGumpStatusbar*)GumpManager->GetGump(serial, 0, GT_STATUSBAR);
 
@@ -165,7 +165,7 @@ void TParty::ParsePacketData(PBYTE buf, const int &size)
 				}
 				else
 				{
-					UO->StatusReq(serial);
+					Orion->StatusReq(serial);
 					gump->FrameCreated = false;
 				}
 
@@ -209,7 +209,7 @@ void TParty::ParsePacketData(PBYTE buf, const int &size)
 				{
 					string str = "[" + Member[i].GetName(i) + "]: " + ToString((wchar_t*)newstr);
 
-					UO->CreateTextMessage(TT_SYSTEM, serial, 3, ConfigManager.PartyMessageColor, str);
+					Orion->CreateTextMessage(TT_SYSTEM, serial, 3, ConfigManager.PartyMessageColor, str);
 
 					break;
 				}

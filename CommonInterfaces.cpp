@@ -65,49 +65,49 @@ void __cdecl FUNCBODY_DrawTextW(int x, int y, BYTE font, const wchar_t *text, WO
 //---------------------------------------------------------------------------
 void __cdecl FUNCBODY_DrawArt(int x, int y, WORD graphic, WORD color)
 {
-	UO->DrawStaticArt(graphic, color, x, y, 0);
+	Orion->DrawStaticArt(graphic, color, x, y, 0);
 }
 //---------------------------------------------------------------------------
 void __cdecl FUNCBODY_DrawArtAnimated(int x, int y, WORD graphic, WORD color)
 {
-	UO->DrawStaticArtAnimated(graphic, color, x, y, 0);
+	Orion->DrawStaticArtAnimated(graphic, color, x, y, 0);
 }
 //---------------------------------------------------------------------------
 void __cdecl FUNCBODY_DrawResizepicGump(int x, int y, WORD graphic, int width, int height)
 {
-	UO->DrawResizepicGump(graphic, x, y, width, height);
+	Orion->DrawResizepicGump(graphic, x, y, width, height);
 }
 //---------------------------------------------------------------------------
 void __cdecl FUNCBODY_DrawGump(int x, int y, WORD graphic, WORD color)
 {
-	UO->DrawGump(graphic, color, x, y);
+	Orion->DrawGump(graphic, color, x, y);
 }
 //---------------------------------------------------------------------------
 void __cdecl FUNCBODY_DrawGumppic(int x, int y, WORD graphic, WORD color, int width, int height)
 {
-	UO->DrawGump(graphic, color, x, y, width, height);
+	Orion->DrawGump(graphic, color, x, y, width, height);
 }
 //---------------------------------------------------------------------------
 //IUltimaOnline
 //---------------------------------------------------------------------------
 DWORD __cdecl FUNCBODY_GetLandFlags(WORD graphic)
 {
-	return UO->GetLandFlags(graphic);
+	return Orion->GetLandFlags(graphic);
 }
 //---------------------------------------------------------------------------
 DWORD __cdecl FUNCBODY_GetStaticFlags(WORD graphic)
 {
-	return UO->GetStaticFlags(graphic);
+	return Orion->GetStaticFlags(graphic);
 }
 //---------------------------------------------------------------------------
 int __cdecl FUNCBODY_GetConfigValue(const char *option)
 {
-	return UO->GetConfigValue(option);
+	return Orion->GetConfigValue(option);
 }
 //---------------------------------------------------------------------------
 void __cdecl FUNCBODY_SetConfigValue(const char *option, int value)
 {
-	UO->GetConfigValue(option, value);
+	Orion->GetConfigValue(option, value);
 }
 //---------------------------------------------------------------------------
 //IClilocManager

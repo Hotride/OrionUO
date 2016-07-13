@@ -33,8 +33,8 @@ TGumpNotify::~TGumpNotify()
 //----------------------------------------------------------------------------
 void TGumpNotify::PrepareTextures()
 {
-	UO->ExecuteResizepic(0x0A28);
-	UO->ExecuteButton(0x0481);
+	Orion->ExecuteResizepic(0x0A28);
+	Orion->ExecuteButton(0x0481);
 }
 //----------------------------------------------------------------------------
 void TGumpNotify::GenerateFrame()
@@ -51,7 +51,7 @@ void TGumpNotify::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 	
-		UO->DrawResizepicGump(0x0A28, 0, 0, m_Width, m_Height); //Background
+		Orion->DrawResizepicGump(0x0A28, 0, 0, m_Width, m_Height); //Background
 		
 		FontManager->DrawA(1, m_Text.c_str(), 0x0386, 40, 45, m_Width - 90);
 
@@ -59,7 +59,7 @@ void TGumpNotify::GenerateFrame()
 		if (g_GumpPressedElement == ID_GN_BUTTON_OK)
 			gumpID = 0x0483; //Button v pressed
 
-		UO->DrawGump(gumpID, 0, (m_Width / 2) - 13, m_Height - 45); //Button v
+		Orion->DrawGump(gumpID, 0, (m_Width / 2) - 13, m_Height - 45); //Button v
 
 	glEndList();
 
@@ -102,13 +102,13 @@ int TGumpNotify::Draw(bool &mode)
 
 		int LSG = 0;
 		
-		if (UO->ResizepicPixelsInXY(0x0A28, 0, 0, m_Width, m_Height))
+		if (Orion->ResizepicPixelsInXY(0x0A28, 0, 0, m_Width, m_Height))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 
-		if (UO->GumpPixelsInXY(0x0481, (m_Width / 2) - 13, m_Height - 45))
+		if (Orion->GumpPixelsInXY(0x0481, (m_Width / 2) - 13, m_Height - 45))
 			LSG = ID_GN_BUTTON_OK;
 
 		g_MouseX = oldMouseX;

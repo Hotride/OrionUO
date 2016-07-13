@@ -121,7 +121,7 @@ void TPacket::Send(int size)
 		size = m_Size;
 
 	if (Buffer != NULL)
-		UO->Send(Buffer, m_Size);
+		Orion->Send(Buffer, m_Size);
 }
 //---------------------------------------------------------------------------
 void TPacket::WriteByte(BYTE val, int offset)

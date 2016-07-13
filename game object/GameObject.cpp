@@ -230,7 +230,7 @@ void TGameObject::AddText(__in TTextData *msg)
 			msgname = m_Name + ": ";
 	}*/
 
-	UO->AddJournalMessage(msg, msgname);
+	Orion->AddJournalMessage(msg, msgname);
 }
 //---------------------------------------------------------------------------
 /*!
@@ -382,11 +382,11 @@ void TGameObject::DrawEffects( __in int &drawX, __in int &drawY, __in DWORD &tic
 		if (gGraphic != 0)
 		{
 			POINT p = {0, 0};
-			UO->GetGumpDimension(gGraphic, p);
+			Orion->GetGumpDimension(gGraphic, p);
 
 			effect->ApplyRenderMode();
 
-			UO->DrawGump(gGraphic, effect->Color, x - (p.x / 2), (y - p.y) - z);
+			Orion->DrawGump(gGraphic, effect->Color, x - (p.x / 2), (y - p.y) - z);
 
 			effect->RemoveRenderMode();
 		}
@@ -394,7 +394,7 @@ void TGameObject::DrawEffects( __in int &drawX, __in int &drawY, __in DWORD &tic
 		{
 			effect->ApplyRenderMode();
 
-			UO->DrawStaticArt(eGraphic, effect->Color, x, y, gZ);
+			Orion->DrawStaticArt(eGraphic, effect->Color, x, y, gZ);
 
 			effect->RemoveRenderMode();
 		}

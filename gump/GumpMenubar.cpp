@@ -32,8 +32,8 @@ TGumpMenubar::~TGumpMenubar()
 //---------------------------------------------------------------------------
 void TGumpMenubar::InitTextTextures()
 {
-	TTextureObject *th1 = UO->ExecuteGump(0x098B);
-	TTextureObject *th2 = UO->ExecuteGump(0x098D);
+	TTextureObject *th1 = Orion->ExecuteGump(0x098B);
+	TTextureObject *th2 = Orion->ExecuteGump(0x098D);
 	
 	int smallWidth = 50;
 	if (th1 != NULL)
@@ -61,11 +61,11 @@ void TGumpMenubar::ReleaseTextTextures()
 //---------------------------------------------------------------------------
 void TGumpMenubar::PrepareTextures()
 {
-	UO->ExecuteResizepic(0x13BE);
-	UO->ExecuteGump(0x15A1);
-	UO->ExecuteGump(0x15A4);
-	UO->ExecuteGump(0x098B);
-	UO->ExecuteGump(0x098D);
+	Orion->ExecuteResizepic(0x13BE);
+	Orion->ExecuteGump(0x15A1);
+	Orion->ExecuteGump(0x15A4);
+	Orion->ExecuteGump(0x098B);
+	Orion->ExecuteGump(0x098D);
 }
 //---------------------------------------------------------------------------
 void TGumpMenubar::GenerateFrame()
@@ -84,15 +84,15 @@ void TGumpMenubar::GenerateFrame()
 	
 		if (!m_Opened)
 		{
-			UO->DrawResizepicGump(0x13BE, 0, 0, 30, 27);
+			Orion->DrawResizepicGump(0x13BE, 0, 0, 30, 27);
 
-			UO->DrawGump(0x15A1, 0, 5, 3);
+			Orion->DrawGump(0x15A1, 0, 5, 3);
 		}
 		else
 		{
-			UO->DrawResizepicGump(0x13BE, 0, 0, 718, 27);
+			Orion->DrawResizepicGump(0x13BE, 0, 0, 718, 27);
 
-			UO->DrawGump(0x15A4, 0, 5, 3);
+			Orion->DrawGump(0x15A4, 0, 5, 3);
 
 			const int textPosTable[8][4] =
 			{
@@ -107,7 +107,7 @@ void TGumpMenubar::GenerateFrame()
 			};
 
 			IFOR(i, 0, 8)
-				UO->DrawGump(textPosTable[i][0], 0, textPosTable[i][1], 1);
+				Orion->DrawGump(textPosTable[i][0], 0, textPosTable[i][1], 1);
 
 			FontColorizerShader->Use();
 
@@ -168,37 +168,37 @@ int TGumpMenubar::Draw(bool &mode)
 
 		if (!m_Opened)
 		{
-			if (UO->ResizepicPixelsInXY(0x13BE, 0, 0, 30, 27))
+			if (Orion->ResizepicPixelsInXY(0x13BE, 0, 0, 30, 27))
 				g_LastSelectedGump = index;
 
-			if (UO->GumpPixelsInXY(0x15A1, 5, 3))
+			if (Orion->GumpPixelsInXY(0x15A1, 5, 3))
 				LSG = ID_GMB_MINIMIZE;
 		}
 		else
 		{
-			if (UO->ResizepicPixelsInXY(0x13BE, 0, 0, 718, 27))
+			if (Orion->ResizepicPixelsInXY(0x13BE, 0, 0, 718, 27))
 			{
 				g_LastSelectedGump = index;
 				g_LastSelectedObject = 0;
 			}
 
-			if (UO->GumpPixelsInXY(0x15A4, 5, 3))
+			if (Orion->GumpPixelsInXY(0x15A4, 5, 3))
 				LSG = ID_GMB_MINIMIZE;
-			else if (UO->GumpPixelsInXY(0x098B, 30, 1))
+			else if (Orion->GumpPixelsInXY(0x098B, 30, 1))
 				LSG = ID_GMB_MAP;
-			else if (UO->GumpPixelsInXY(0x098D, 93, 1))
+			else if (Orion->GumpPixelsInXY(0x098D, 93, 1))
 				LSG = ID_GMB_PAPERDOLL;
-			else if (UO->GumpPixelsInXY(0x098D, 201, 1))
+			else if (Orion->GumpPixelsInXY(0x098D, 201, 1))
 				LSG = ID_GMB_INVENTORY;
-			else if (UO->GumpPixelsInXY(0x098D, 309, 1))
+			else if (Orion->GumpPixelsInXY(0x098D, 309, 1))
 				LSG = ID_GMB_JOURNAL;
-			else if (UO->GumpPixelsInXY(0x098B, 417, 1))
+			else if (Orion->GumpPixelsInXY(0x098B, 417, 1))
 				LSG = ID_GMB_CHAT;
-			else if (UO->GumpPixelsInXY(0x098B, 480, 1))
+			else if (Orion->GumpPixelsInXY(0x098B, 480, 1))
 				LSG = ID_GMB_HELP;
-			else if (UO->GumpPixelsInXY(0x098D, 543, 1))
+			else if (Orion->GumpPixelsInXY(0x098D, 543, 1))
 				LSG = ID_GMB_WORLD_MAP;
-			else if (UO->GumpPixelsInXY(0x098B, 651, 1))
+			else if (Orion->GumpPixelsInXY(0x098B, 651, 1))
 				LSG = ID_GMB_INFO;
 		}
 
@@ -227,43 +227,43 @@ void TGumpMenubar::OnLeftMouseUp()
 		}
 		case ID_GMB_MAP:
 		{
-			UO->OpenMinimap();
+			Orion->OpenMinimap();
 
 			break;
 		}
 		case ID_GMB_PAPERDOLL:
 		{
-			UO->OpenPaperdoll();
+			Orion->OpenPaperdoll();
 
 			break;
 		}
 		case ID_GMB_INVENTORY:
 		{
-			UO->OpenBackpack();
+			Orion->OpenBackpack();
 
 			break;
 		}
 		case ID_GMB_JOURNAL:
 		{
-			UO->OpenJournal();
+			Orion->OpenJournal();
 
 			break;
 		}
 		case ID_GMB_CHAT:
 		{
-			UO->OpenChat();
+			Orion->OpenChat();
 
 			break;
 		}
 		case ID_GMB_HELP:
 		{
-			UO->HelpRequest();
+			Orion->HelpRequest();
 
 			break;
 		}
 		case ID_GMB_WORLD_MAP:
 		{
-			UO->OpenWorldMap();
+			Orion->OpenWorldMap();
 
 			break;
 		}

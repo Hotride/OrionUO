@@ -39,16 +39,16 @@ TGumpContainer::~TGumpContainer()
 		WORD sound = g_ContainerOffset[m_Graphic].CloseSound;
 
 		if (sound)
-			UO->PlaySoundEffect(sound);
+			Orion->PlaySoundEffect(sound);
 	}
 
 }
 //---------------------------------------------------------------------------
 void TGumpContainer::PrepareTextures()
 {
-	UO->ExecuteGump(0x0050); //Minimized
-	UO->ExecuteGumpPart(0x0045, 2); //Corpse eyes
-	UO->ExecuteGump((WORD)ID);
+	Orion->ExecuteGump(0x0050); //Minimized
+	Orion->ExecuteGumpPart(0x0045, 2); //Corpse eyes
+	Orion->ExecuteGump((WORD)ID);
 	
 	TGameItem *container = World->FindWorldItem(Serial);
 	if (container != NULL)
@@ -58,9 +58,9 @@ void TGumpContainer::PrepareTextures()
 			if (obj->Layer == OL_NONE && obj->Count > 0)
 			{
 				if (m_IsGameBoard)
-					UO->ExecuteGump(obj->Graphic - GAME_FIGURE_GUMP_OFFSET);
+					Orion->ExecuteGump(obj->Graphic - GAME_FIGURE_GUMP_OFFSET);
 				else
-					UO->ExecuteStaticArt(obj->Graphic);
+					Orion->ExecuteStaticArt(obj->Graphic);
 			}
 		}
 	}
@@ -119,10 +119,10 @@ void TGumpContainer::GenerateFrame()
 	glNewList((GLuint)this, GL_COMPILE);
 	
 		if (m_Minimized)
-			UO->DrawGump(0x0050, 0, 0, 0);
+			Orion->DrawGump(0x0050, 0, 0, 0);
 		else
 		{
-			UO->DrawGump((WORD)ID, 0, 0, 0);
+			Orion->DrawGump((WORD)ID, 0, 0, 0);
 
 			if (ID == 0x09)
 			{
@@ -132,7 +132,7 @@ void TGumpContainer::GenerateFrame()
 					m_CorpseEyesTicks = GetTickCount() + 750;
 				}
 
-				UO->DrawGump(0x0045 + m_CorpseEyesOffset, 0, 45, 30);
+				Orion->DrawGump(0x0045 + m_CorpseEyesOffset, 0, 45, 30);
 			}
 
 			bool canSelect = (ObjectInHand == NULL || (ObjectInHand != NULL && !g_LeftMouseDown));
@@ -162,13 +162,13 @@ void TGumpContainer::GenerateFrame()
 					}
 
 					if (m_IsGameBoard)
-						UO->DrawGump(graphic - GAME_FIGURE_GUMP_OFFSET, color, obj->X, obj->Y - 20);
+						Orion->DrawGump(graphic - GAME_FIGURE_GUMP_OFFSET, color, obj->X, obj->Y - 20);
 					else
 					{
-						UO->DrawStaticArtInContainer(graphic, color, obj->X, obj->Y, selMode);
+						Orion->DrawStaticArtInContainer(graphic, color, obj->X, obj->Y, selMode);
 
 						if (doubleDraw)
-							UO->DrawStaticArtInContainer(graphic, color, obj->X + 5, obj->Y + 5, selMode);
+							Orion->DrawStaticArtInContainer(graphic, color, obj->X + 5, obj->Y + 5, selMode);
 					}
 				}
 			}
@@ -212,7 +212,7 @@ int TGumpContainer::Draw(bool &mode)
 			if (Target.IsTargeting())
 				Target.SendCancelTarget();
 
-			UO->PickupItem(selobj, 0, m_IsGameBoard);
+			Orion->PickupItem(selobj, 0, m_IsGameBoard);
 
 			g_LastGumpLeftMouseDown = 0;
 			g_LastObjectLeftMouseDown = 0;
@@ -338,7 +338,7 @@ int TGumpContainer::Draw(bool &mode)
 
 		if (m_Minimized)
 		{
-			if (UO->GumpPixelsInXY(0x0050, 0, 0))
+			if (Orion->GumpPixelsInXY(0x0050, 0, 0))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -346,13 +346,13 @@ int TGumpContainer::Draw(bool &mode)
 		}
 		else
 		{
-			if (UO->GumpPixelsInXY((WORD)m_ID, 0, 0))
+			if (Orion->GumpPixelsInXY((WORD)m_ID, 0, 0))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
 			}
 
-			if (UO->PolygonePixelsInXY(106, 162, 16, 16))
+			if (Orion->PolygonePixelsInXY(106, 162, 16, 16))
 				LSG = ID_GC_MINIMIZE;
 
 			TGameItem *container = World->FindWorldItem(Serial);
@@ -370,17 +370,17 @@ int TGumpContainer::Draw(bool &mode)
 
 						if (m_IsGameBoard)
 						{
-							if (UO->GumpPixelsInXY(graphic - GAME_FIGURE_GUMP_OFFSET, obj->X, obj->Y - 20))
+							if (Orion->GumpPixelsInXY(graphic - GAME_FIGURE_GUMP_OFFSET, obj->X, obj->Y - 20))
 								LSG = obj->Serial;
 						}
 						else
 						{
-							if (UO->StaticPixelsInXYInContainer(graphic, obj->X, obj->Y))
+							if (Orion->StaticPixelsInXYInContainer(graphic, obj->X, obj->Y))
 								LSG = obj->Serial;
 
 							if (doubleDraw)
 							{
-								if (UO->StaticPixelsInXYInContainer(graphic, obj->X + 5, obj->Y + 5))
+								if (Orion->StaticPixelsInXYInContainer(graphic, obj->X + 5, obj->Y + 5))
 									LSG = obj->Serial;
 							}
 						}
@@ -419,7 +419,7 @@ int TGumpContainer::Draw(bool &mode)
 				}
 			}
 
-			if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
+			if (g_ShowGumpLocker && Orion->PolygonePixelsInXY(0, 0, 10, 14))
 				LSG = ID_GC_LOCK_MOVING;
 		}
 
@@ -479,7 +479,7 @@ void TGumpContainer::OnLeftMouseUp()
 	}
 
 	if (!canDrop && ObjectInHand != NULL)
-		UO->PlaySoundEffect(0x0051);
+		Orion->PlaySoundEffect(0x0051);
 
 	int x = g_MouseX - m_X;
 	int y = g_MouseY - m_Y;
@@ -491,10 +491,10 @@ void TGumpContainer::OnLeftMouseUp()
 		bool doubleDraw = false;
 		WORD graphic = ObjectInHand->GetDrawGraphic(doubleDraw);
 
-		TTextureObject *th = UO->ExecuteStaticArt(graphic);
+		TTextureObject *th = Orion->ExecuteStaticArt(graphic);
 		if (m_IsGameBoard)
 		{
-			th = UO->ExecuteGump(graphic - GAME_FIGURE_GUMP_OFFSET);
+			th = Orion->ExecuteGump(graphic - GAME_FIGURE_GUMP_OFFSET);
 			y += 20;
 		}
 
@@ -527,7 +527,7 @@ void TGumpContainer::OnLeftMouseUp()
 			}
 		}
 
-		UO->DropItem(dropContainer, x, y, 0);
+		Orion->DropItem(dropContainer, x, y, 0);
 	}
 	else if (ObjectInHand == NULL)
 	{
@@ -561,7 +561,7 @@ bool TGumpContainer::OnLeftMouseDoubleClick()
 	}
 	else if (g_LastSelectedObject && g_LastSelectedObject != ID_GC_MINIMIZE)
 	{
-		UO->DoubleClick(g_LastSelectedObject);
+		Orion->DoubleClick(g_LastSelectedObject);
 
 		result = true;
 	}

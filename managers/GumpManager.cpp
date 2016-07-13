@@ -437,7 +437,7 @@ void TGumpManager::OnRightMouseUp( __in bool blocked)
 				}
 				case GT_SPELLBOOK:
 				{
-					UO->PlaySoundEffect(0x0055);
+					Orion->PlaySoundEffect(0x0055);
 				}
 				default:
 				{
@@ -739,7 +739,7 @@ void TGumpManager::AddGump( __in TGump *obj)
 			{
 				RemoveGump(gump);
 
-				UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "You have too many non-party status bars");
+				Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "You have too many non-party status bars");
 
 				break;
 			}
@@ -758,7 +758,7 @@ void TGumpManager::AddGump( __in TGump *obj)
 				WORD sound = g_ContainerOffset[obj->Graphic].OpenSound;
 
 				if (sound)
-					UO->PlaySoundEffect(sound);
+					Orion->PlaySoundEffect(sound);
 
 				break;
 			}
@@ -1067,7 +1067,7 @@ void TGumpManager::Load( __in string path)
 				{
 					gump = new TGumpPaperdoll(g_PlayerSerial, gumpX, gumpY, gumpMinimized);
 							
-					UO->PaperdollReq(g_PlayerSerial);
+					Orion->PaperdollReq(g_PlayerSerial);
 					paperdollRequested = true;
 
 					break;
@@ -1161,7 +1161,7 @@ void TGumpManager::Load( __in string path)
 
 						ContainerStack = cs;
 
-						UO->DoubleClick(serial);
+						Orion->DoubleClick(serial);
 					}
 
 					break;
@@ -1225,7 +1225,7 @@ void TGumpManager::Load( __in string path)
 
 				ContainerStack = cs;
 
-				UO->DoubleClick(backpack->Serial);
+				Orion->DoubleClick(backpack->Serial);
 			}
 		}
 	}
@@ -1241,7 +1241,7 @@ void TGumpManager::Load( __in string path)
 		GumpManager->AddGump(new TGumpBuff(g_PlayerSerial, g_GameWindowPosX, g_GameWindowPosY + g_GameWindowHeight));
 
 	if (!paperdollRequested)
-		UO->PaperdollReq(g_PlayerSerial);
+		Orion->PaperdollReq(g_PlayerSerial);
 
 	GumpManager->Add(new TGumpConsoleType(minimizedConsoleType, showFullTextConsoleType));
 }

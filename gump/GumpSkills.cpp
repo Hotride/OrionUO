@@ -92,14 +92,14 @@ void TGumpSkills::ChangeHeight()
 //---------------------------------------------------------------------------
 void TGumpSkills::PrepareTextures()
 {
-	UO->ExecuteGump(0x1F40); //Top scroll
-	UO->ExecuteGump(0x1F43); //Bottom scroll
-	UO->ExecuteGumpPart(0x0938, 2); //Real/Cap buttons
-	UO->ExecuteGumpPart(0x1F41, 2); //Body
-	UO->ExecuteGump(0x0984);
-	UO->ExecuteGump(0x0986);
-	UO->ExecuteGumpPart(0x0824, 12);
-	UO->ExecuteGumpPart(0x0834, 7);
+	Orion->ExecuteGump(0x1F40); //Top scroll
+	Orion->ExecuteGump(0x1F43); //Bottom scroll
+	Orion->ExecuteGumpPart(0x0938, 2); //Real/Cap buttons
+	Orion->ExecuteGumpPart(0x1F41, 2); //Body
+	Orion->ExecuteGump(0x0984);
+	Orion->ExecuteGump(0x0986);
+	Orion->ExecuteGumpPart(0x0824, 12);
+	Orion->ExecuteGumpPart(0x0834, 7);
 }
 //---------------------------------------------------------------------------
 void TGumpSkills::GenerateFrame()
@@ -158,7 +158,7 @@ void TGumpSkills::GenerateFrame()
 		if (m_Minimized) //Если это свернутый гамп
 		{
 			//Мини-гамп скиллов
-			UO->DrawGump(0x0839, 0, 0, 0);
+			Orion->DrawGump(0x0839, 0, 0, 0);
 
 			//Завершим создание листа и выйдем из процедуры
 			glEndList();
@@ -171,12 +171,12 @@ void TGumpSkills::GenerateFrame()
 
 		//Нормальное состояние гампа
 
-		UO->DrawGump(0x082D, 0, 167, 0); //Minimize
+		Orion->DrawGump(0x082D, 0, 167, 0); //Minimize
 		
-		UO->DrawGump(0x1F40, 0, 0, 23); //Top scroll
-		UO->DrawGump(0x0834, 0, 82, 34); //Skills text gump
-		UO->DrawGump(0x0938 + (int)m_ShowReal, 0, 226, 34); //Real
-		UO->DrawGump(0x0938 + (int)m_ShowCap, 0, 280, 34); //Cap
+		Orion->DrawGump(0x1F40, 0, 0, 23); //Top scroll
+		Orion->DrawGump(0x0834, 0, 82, 34); //Skills text gump
+		Orion->DrawGump(0x0938 + (int)m_ShowReal, 0, 226, 34); //Real
+		Orion->DrawGump(0x0938 + (int)m_ShowCap, 0, 280, 34); //Cap
 		//UO->DrawFont(1, "Show:   Real    Cap", 0x0386, posX + 180, posY + 33);
 		m_Text.Draw(180, 33);
 
@@ -191,12 +191,12 @@ void TGumpSkills::GenerateFrame()
 			if (deltaHeight  < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x1F41, 0, 21, curposY, 0, deltaHeight);
+					Orion->DrawGump(0x1F41, 0, 21, curposY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x1F41, 0, 21, curposY);
+				Orion->DrawGump(0x1F41, 0, 21, curposY);
 
 			curposY += 70;
 
@@ -205,12 +205,12 @@ void TGumpSkills::GenerateFrame()
 			if (deltaHeight < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x1F42, 0, 21, curposY, 0, deltaHeight);
+					Orion->DrawGump(0x1F42, 0, 21, curposY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x1F42, 0, 21, curposY);
+				Orion->DrawGump(0x1F42, 0, 21, curposY);
 
 			curposY += 70;
 		}
@@ -220,7 +220,7 @@ void TGumpSkills::GenerateFrame()
 		//Down
 		//UO->DrawGump(0x0828, 0, posX + 296, posY + height - 32); //Scroller
 
-		UO->DrawGump(0x0828, 0, 296, 72 + scrollerY); //Scroller
+		Orion->DrawGump(0x0828, 0, 296, 72 + scrollerY); //Scroller
 
 		//Индекс строки для начала отображения
 		int startIndex = m_CurrentLine;
@@ -323,7 +323,7 @@ void TGumpSkills::GenerateFrame()
 							int fw = 11 + th.Width;
 							int lw = 215 - fw;
 							if (lw > 0)
-								UO->DrawGump(0x0835, 0, drawX + fw, drawY + 5, lw, 0);
+								Orion->DrawGump(0x0835, 0, drawX + fw, drawY + 5, lw, 0);
 						}
 					}
 				}
@@ -334,7 +334,7 @@ void TGumpSkills::GenerateFrame()
 					{
 						//Если в группе что-то есть - отобразим стрелку
 						if (group->GetCount())
-							UO->DrawGump(0x0826, 0, drawX, drawY);
+							Orion->DrawGump(0x0826, 0, drawX, drawY);
 
 						//Смещаем указатель на стандартный шаг + 2 (только для группы)
 						drawY += (drawStep + 2);
@@ -375,7 +375,7 @@ void TGumpSkills::GenerateFrame()
 										if (g_GumpSelectElement == ID_GS_SKILL_BUTTON + idx)
 											gumpID = 0x0838; //Selected button
 
-										UO->DrawGump(gumpID, 0, drawX + 8, drawY); //Button
+										Orion->DrawGump(gumpID, 0, drawX + 8, drawY); //Button
 									}
 
 									TTextTexture &th = Skills[idx].m_Texture; //Name
@@ -394,7 +394,7 @@ void TGumpSkills::GenerateFrame()
 										gumpID = 0x0986; //Down
 									else if (status == 2)
 										gumpID = 0x082C; //Lock
-									UO->DrawGump(gumpID, 0, drawX + 251, drawY - 1);
+									Orion->DrawGump(gumpID, 0, drawX + 251, drawY - 1);
 
 									//Значение скилла (учитывая выбранный флаг отображения)
 									float val = g_Player->GetSkillBaseValue(idx);
@@ -420,7 +420,7 @@ void TGumpSkills::GenerateFrame()
 				{
 					//Если в группе что-то есть - нарисуем стрелку
 					if (group->GetCount())
-						UO->DrawGump(0x0827, 0, drawX, drawY);
+						Orion->DrawGump(0x0827, 0, drawX, drawY);
 
 					drawY += drawStep; //Переходим на следующую позицию координат
 				}
@@ -436,15 +436,15 @@ void TGumpSkills::GenerateFrame()
 		//Восстанавливаем размер рабочей области
 		glDisable(GL_SCISSOR_TEST);
 
-		UO->DrawGump(0x082B, 0, 30, 60); //Top line
-		UO->DrawGump(0x0824, 0, 294, 56); //^ button
+		Orion->DrawGump(0x082B, 0, 30, 60); //Top line
+		Orion->DrawGump(0x0824, 0, 294, 56); //^ button
 		
-		UO->DrawGump(0x082B, 0, 31, height - 1); //Bottom line
-		UO->DrawGump(0x0836, 0, 30, height + 13); //Skills comment gump
-		UO->DrawGump(0x0825, 0, 294, height + 3); //v button
+		Orion->DrawGump(0x082B, 0, 31, height - 1); //Bottom line
+		Orion->DrawGump(0x0836, 0, 30, height + 13); //Skills comment gump
+		Orion->DrawGump(0x0825, 0, 294, height + 3); //v button
 
-		UO->DrawGump(0x1F43, 0, 21, height + 34); //Bottom scroll
-		UO->DrawGump(0x083A, 0, 60, height + 44); //New Group gump
+		Orion->DrawGump(0x1F43, 0, 21, height + 34); //Bottom scroll
+		Orion->DrawGump(0x083A, 0, 60, height + 44); //New Group gump
 
 		//Общая сумма скиллов
 		char totalSkills[20] = {0};
@@ -454,7 +454,7 @@ void TGumpSkills::GenerateFrame()
 		WORD gumpID = 0x082E;
 		if (g_GumpSelectElement == ID_GS_BUTTON_RESIZE)
 			gumpID = 0x082F;
-		UO->DrawGump(gumpID, 0, 167, height + 66); //Resize
+		Orion->DrawGump(gumpID, 0, 167, height + 66); //Resize
 
 	//Завершаем запись дисплей листа
 	glEndList();
@@ -607,7 +607,7 @@ int TGumpSkills::Draw(bool &mode)
 
 		if (m_Minimized) //Если гамп свернут
 		{
-			if (UO->GumpPixelsInXY(0x0839, 0, 0))
+			if (Orion->GumpPixelsInXY(0x0839, 0, 0))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -624,12 +624,12 @@ int TGumpSkills::Draw(bool &mode)
 
 		int LSG = 0;
 
-		if (UO->GumpPixelsInXY(0x082D, 167, 0)) //Minimize
+		if (Orion->GumpPixelsInXY(0x082D, 167, 0)) //Minimize
 		{
 			LSG = ID_GS_BUTTON_MINIMIZE;
 			g_LastSelectedGump = index;
 		}
-		else if (UO->GumpPixelsInXY(0x1F40, 0, 23)) //Top scroll
+		else if (Orion->GumpPixelsInXY(0x1F40, 0, 23)) //Top scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -648,7 +648,7 @@ int TGumpSkills::Draw(bool &mode)
 				{
 					if (deltaHeight > 0)
 					{
-						if (UO->GumpPixelsInXY(0x1F41, 21, curposY, 0, deltaHeight))
+						if (Orion->GumpPixelsInXY(0x1F41, 21, curposY, 0, deltaHeight))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -657,7 +657,7 @@ int TGumpSkills::Draw(bool &mode)
 
 					break;
 				}
-				else if (UO->GumpPixelsInXY(0x1F41, 21, curposY))
+				else if (Orion->GumpPixelsInXY(0x1F41, 21, curposY))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
@@ -673,7 +673,7 @@ int TGumpSkills::Draw(bool &mode)
 				{
 					if (deltaHeight > 0)
 					{
-						if (UO->GumpPixelsInXY(0x1F42, 21, curposY, 0, deltaHeight))
+						if (Orion->GumpPixelsInXY(0x1F42, 21, curposY, 0, deltaHeight))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -682,7 +682,7 @@ int TGumpSkills::Draw(bool &mode)
 
 					break;
 				}
-				else if (UO->GumpPixelsInXY(0x1F42, 21, curposY))
+				else if (Orion->GumpPixelsInXY(0x1F42, 21, curposY))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
@@ -694,28 +694,28 @@ int TGumpSkills::Draw(bool &mode)
 			}
 		}
 		
-		if (UO->GumpPixelsInXY(0x1F43, 21, height + 34)) //Bottom scroll
+		if (Orion->GumpPixelsInXY(0x1F43, 21, height + 34)) //Bottom scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 		
-		if (UO->GumpPixelsInXY(0x082E, 167, height + 66)) //Resize
+		if (Orion->GumpPixelsInXY(0x082E, 167, height + 66)) //Resize
 		{
 			LSG = ID_GS_BUTTON_RESIZE;
 			g_LastSelectedGump = index;
 		}
-		else if (UO->GumpPixelsInXY(0x0938, 226, 34)) //Real
+		else if (Orion->GumpPixelsInXY(0x0938, 226, 34)) //Real
 			LSG = ID_GS_SHOW_REAL;
-		else if (UO->GumpPixelsInXY(0x0938, 280, 34)) //Cap
+		else if (Orion->GumpPixelsInXY(0x0938, 280, 34)) //Cap
 			LSG = ID_GS_SHOW_CAP;
-		else if (UO->GumpPixelsInXY(0x0824, 294, 56)) //^ button
+		else if (Orion->GumpPixelsInXY(0x0824, 294, 56)) //^ button
 			LSG = ID_GS_BUTTON_UP;
-		else if (UO->GumpPixelsInXY(0x0825, 294, height + 3)) //v button
+		else if (Orion->GumpPixelsInXY(0x0825, 294, height + 3)) //v button
 			LSG = ID_GS_BUTTON_DOWN;
-		else if (UO->GumpPixelsInXY(0x0828, 296, 72 + scrollerY)) //Scroller
+		else if (Orion->GumpPixelsInXY(0x0828, 296, 72 + scrollerY)) //Scroller
 			LSG = ID_GS_SCROLLER;
-		else if (UO->PolygonePixelsInXY(60, height + 44, 80, 14))
+		else if (Orion->PolygonePixelsInXY(60, height + 44, 80, 14))
 			LSG = ID_GS_BUTTON_NEW_GROUP;
 		
 		int startIndex = m_CurrentLine;
@@ -747,7 +747,7 @@ int TGumpSkills::Draw(bool &mode)
 				{
 					TTextTexture &th = group->m_Texture;
 
-					if (th.Width && UO->PolygonePixelsInXY(drawX + 16, drawY, th.Width - 10, 14))
+					if (th.Width && Orion->PolygonePixelsInXY(drawX + 16, drawY, th.Width - 10, 14))
 					{
 						LSG = ID_GS_GROUP + groupIndex;
 						break;
@@ -758,7 +758,7 @@ int TGumpSkills::Draw(bool &mode)
 				{
 					if (canDraw)
 					{
-						if (group->GetCount() && UO->PolygonePixelsInXY(drawX, drawY, 14, 14))
+						if (group->GetCount() && Orion->PolygonePixelsInXY(drawX, drawY, 14, 14))
 						{
 							LSG = ID_GS_GROUP_MINIMIZE + groupIndex;
 
@@ -787,7 +787,7 @@ int TGumpSkills::Draw(bool &mode)
 							BYTE idx = group->GetItem(i);
 							if (idx < g_SkillsCount)
 							{
-								if (Skills[idx].m_Button && UO->GumpPixelsInXY(0x0837, drawX + 8, drawY))
+								if (Skills[idx].m_Button && Orion->GumpPixelsInXY(0x0837, drawX + 8, drawY))
 								{
 									LSG = ID_GS_SKILL_BUTTON + idx; //Button
 									completedSearch = true;
@@ -801,7 +801,7 @@ int TGumpSkills::Draw(bool &mode)
 								if (th.Width > 150)
 									width = th.Width;
 
-								if (UO->PolygonePixelsInXY(drawX + 22, drawY - 1, width, 14))
+								if (Orion->PolygonePixelsInXY(drawX + 22, drawY - 1, width, 14))
 								{
 									LSG = ID_GS_SKILL + idx; //Name
 									completedSearch = true;
@@ -817,7 +817,7 @@ int TGumpSkills::Draw(bool &mode)
 								else if (status == 2)
 									gumpID = 0x082C; //Lock
 
-								if (UO->GumpPixelsInXY(gumpID, drawX + 251, drawY - 1))
+								if (Orion->GumpPixelsInXY(gumpID, drawX + 251, drawY - 1))
 								{
 									LSG = ID_GS_SKILL_STATE + idx;
 									completedSearch = true;
@@ -835,7 +835,7 @@ int TGumpSkills::Draw(bool &mode)
 				}
 				else if (canDraw)
 				{
-					if (group->GetCount() && UO->PolygonePixelsInXY(drawX, drawY, 14, 14))
+					if (group->GetCount() && Orion->PolygonePixelsInXY(drawX, drawY, 14, 14))
 					{
 						LSG = ID_GS_GROUP_MINIMIZE + groupIndex;
 
@@ -850,7 +850,7 @@ int TGumpSkills::Draw(bool &mode)
 			}
 		}
 
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
+		if (g_ShowGumpLocker && Orion->PolygonePixelsInXY(0, 0, 10, 14))
 			g_LastSelectedObject = ID_GS_LOCK_MOVING;
 
 		g_MouseX = oldMouseX;
@@ -1067,7 +1067,7 @@ void TGumpSkills::OnLeftMouseUp()
 			else
 				status = 0;
 
-			UO->SkillStatusChange(idx, status);
+			Orion->SkillStatusChange(idx, status);
 			g_Player->SetSkillStatus(idx, status);
 		}
 		else if (g_LastObjectLeftMouseDown >= ID_GS_SKILL) //Выбор названия скилла
@@ -1098,7 +1098,7 @@ void TGumpSkills::OnLeftMouseUp()
 			if (idx < 0 || idx >= g_SkillsCount)
 				return;
 
-			UO->UseSkill(idx);
+			Orion->UseSkill(idx);
 		}
 		else if (g_LastObjectLeftMouseDown >= ID_GS_GROUP) //Выбор названия группы
 		{

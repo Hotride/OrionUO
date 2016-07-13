@@ -45,7 +45,7 @@ void TGumpPopupMenu::CalculateGumpState()
 //---------------------------------------------------------------------------
 void TGumpPopupMenu::PrepareTextures()
 {
-	UO->ExecuteResizepic(0x0A3C);
+	Orion->ExecuteResizepic(0x0A3C);
 }
 //---------------------------------------------------------------------------
 void TGumpPopupMenu::GenerateFrame()
@@ -66,7 +66,7 @@ void TGumpPopupMenu::GenerateFrame()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
 
-		UO->DrawResizepicGump(0x0A3C, 0, 0, m_Width, m_Height); //Body
+		Orion->DrawResizepicGump(0x0A3C, 0, 0, m_Width, m_Height); //Body
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glDisable(GL_BLEND);
@@ -126,7 +126,7 @@ int TGumpPopupMenu::Draw(bool &mode)
 
 		int gumpHeight = 121;
 
-		if (UO->ResizepicPixelsInXY(0x0A3C, 0, 0, m_Width, m_Height))
+		if (Orion->ResizepicPixelsInXY(0x0A3C, 0, 0, m_Width, m_Height))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = (DWORD)this;
@@ -138,7 +138,7 @@ int TGumpPopupMenu::Draw(bool &mode)
 
 		QFOR(item, m_Items, TGumpText*)
 		{
-			if (UO->PolygonePixelsInXY(10, offsetY, width, item->m_Text.Height))
+			if (Orion->PolygonePixelsInXY(10, offsetY, width, item->m_Text.Height))
 			{
 				LSG = index;
 

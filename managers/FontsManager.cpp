@@ -139,7 +139,7 @@ void TFontsManager::GoToWebLink( __in WORD link)
 	if (it != m_WebLink.end())
 	{
 		(*it).second.Visited = true;
-		UO->GoToWebLink((*it).second.WebLink);
+		Orion->GoToWebLink((*it).second.WebLink);
 	}
 }
 //---------------------------------------------------------------------------

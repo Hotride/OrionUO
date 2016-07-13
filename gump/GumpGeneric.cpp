@@ -195,7 +195,7 @@ void TGumpGeneric::PrepareTextures()
 		{
 			case GOT_RESIZEPIC:
 			{
-				UO->ExecuteResizepic(item->Graphic);
+				Orion->ExecuteResizepic(item->Graphic);
 
 				break;
 			}
@@ -204,15 +204,15 @@ void TGumpGeneric::PrepareTextures()
 			{
 				TGumpButton *btn = (TGumpButton*)item;
 
-				UO->ExecuteGump(btn->Graphic);
-				UO->ExecuteGump(btn->GraphicPressed);
-				UO->ExecuteGump(btn->GraphicLighted);
+				Orion->ExecuteGump(btn->Graphic);
+				Orion->ExecuteGump(btn->GraphicPressed);
+				Orion->ExecuteGump(btn->GraphicLighted);
 
 				if (item->Type == GOT_BUTTONTILEART)
 				{
 					TGumpButtonTileArt *bta = (TGumpButtonTileArt*)item;
 
-					UO->ExecuteStaticArt(bta->TileGraphic);
+					Orion->ExecuteStaticArt(bta->TileGraphic);
 				}
 						
 				break;
@@ -220,20 +220,20 @@ void TGumpGeneric::PrepareTextures()
 			case GOT_RADIO:
 			case GOT_CHECKBOX:
 			{
-				UO->ExecuteGump(item->Graphic);
+				Orion->ExecuteGump(item->Graphic);
 
 				if (item->Type == GOT_CHECKBOX)
 				{
 					TGumpCheckbox *cb = (TGumpCheckbox*)item;
-					UO->ExecuteGump(cb->GraphicChecked);
-					UO->ExecuteGump(cb->GraphicDisabled);
+					Orion->ExecuteGump(cb->GraphicChecked);
+					Orion->ExecuteGump(cb->GraphicDisabled);
 
 				}
 				else
 				{
 					TGumpRadio *rb = (TGumpRadio*)item;
-					UO->ExecuteGump(rb->GraphicChecked);
-					UO->ExecuteGump(rb->GraphicDisabled);
+					Orion->ExecuteGump(rb->GraphicChecked);
+					Orion->ExecuteGump(rb->GraphicDisabled);
 				}
 
 				break;
@@ -241,13 +241,13 @@ void TGumpGeneric::PrepareTextures()
 			case GOT_GUMPPIC:
 			case GOT_GUMPPICTILED:
 			{
-				UO->ExecuteGump(item->Graphic);
+				Orion->ExecuteGump(item->Graphic);
 
 				break;
 			}
 			case GOT_TILEPIC:
 			{
-				UO->ExecuteStaticArt(item->Graphic);
+				Orion->ExecuteStaticArt(item->Graphic);
 
 				break;
 			}
@@ -255,13 +255,13 @@ void TGumpGeneric::PrepareTextures()
 			case GOT_XFMHTMLGUMP:
 			case GOT_XFMHTMLTOKEN:
 			{
-				UO->ExecuteResizepic(0x0BB8);
+				Orion->ExecuteResizepic(0x0BB8);
 
-				UO->ExecuteGump(0x00FF); //^ background
-				UO->ExecuteGump(0x0100); //background
-				UO->ExecuteGump(0x00FA); //^
-				UO->ExecuteGump(0x00FE); //bar
-				UO->ExecuteGump(0x00FC); //v
+				Orion->ExecuteGump(0x00FF); //^ background
+				Orion->ExecuteGump(0x0100); //background
+				Orion->ExecuteGump(0x00FA); //^
+				Orion->ExecuteGump(0x00FE); //bar
+				Orion->ExecuteGump(0x00FC); //v
 
 				break;
 			}
@@ -433,7 +433,7 @@ void TGumpGeneric::GenerateFrame()
 								
 								if (htmlGump->HaveBackground)
 								{
-									UO->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
+									Orion->DrawResizepicGump(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height);
 									curHeight += 7;
 								}
 								else
@@ -466,15 +466,15 @@ void TGumpGeneric::GenerateFrame()
 								htmlGump->BarOffset = scrollerY;
 
 								drawX += (htmlGump->Width - 15);
-								UO->DrawGump(0x0100, 0, drawX, drawY + 21, 0, htmlGump->Height - 28); //background
-								UO->DrawGump(0x00FA, 0, drawX, drawY); //^
-								UO->DrawGump(0x00FE, 0, drawX + 1, drawY + 21 + scrollerY); //bar
-								UO->DrawGump(0x00FC, 0, drawX, drawY + htmlGump->Height - 21); //v
+								Orion->DrawGump(0x0100, 0, drawX, drawY + 21, 0, htmlGump->Height - 28); //background
+								Orion->DrawGump(0x00FA, 0, drawX, drawY); //^
+								Orion->DrawGump(0x00FE, 0, drawX + 1, drawY + 21 + scrollerY); //bar
+								Orion->DrawGump(0x00FC, 0, drawX, drawY + htmlGump->Height - 21); //v
 
 								wOffs -= 14;
 							}
 							else if (htmlGump->HaveBackground)
-								UO->DrawResizepicGump(0x0BB8, htmlGump->X, htmlGump->Y, htmlGump->Width, htmlGump->Height);
+								Orion->DrawResizepicGump(0x0BB8, htmlGump->X, htmlGump->Y, htmlGump->Width, htmlGump->Height);
 							else
 							{
 								textOffsX = -1;
@@ -679,7 +679,7 @@ int TGumpGeneric::Draw(bool &mode)
 				{
 					case GOT_RESIZEPIC:
 					{
-						if (UO->ResizepicPixelsInXY(item->Graphic, item->X, item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height))
+						if (Orion->ResizepicPixelsInXY(item->Graphic, item->X, item->Y, ((TGumpResizepic*)item)->Width, ((TGumpResizepic*)item)->Height))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -688,7 +688,7 @@ int TGumpGeneric::Draw(bool &mode)
 					}
 					case GOT_GUMPPIC:
 					{
-						if (UO->GumpPixelsInXY(item->Graphic, item->X, item->Y))
+						if (Orion->GumpPixelsInXY(item->Graphic, item->X, item->Y))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -697,7 +697,7 @@ int TGumpGeneric::Draw(bool &mode)
 					}
 					case GOT_GUMPPICTILED:
 					{
-						if (UO->GumpPixelsInXY(item->Graphic, item->X, item->Y, ((TGumpGumppicTiled*)item)->Width, ((TGumpGumppicTiled*)item)->Height))
+						if (Orion->GumpPixelsInXY(item->Graphic, item->X, item->Y, ((TGumpGumppicTiled*)item)->Width, ((TGumpGumppicTiled*)item)->Height))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -706,7 +706,7 @@ int TGumpGeneric::Draw(bool &mode)
 					}
 					case GOT_TILEPIC:
 					{
-						if (UO->StaticPixelsInXYInContainer(item->Graphic, item->X, item->Y))
+						if (Orion->StaticPixelsInXYInContainer(item->Graphic, item->X, item->Y))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -715,11 +715,11 @@ int TGumpGeneric::Draw(bool &mode)
 					}
 					case GOT_BUTTONTILEART:
 					{
-						if (UO->GumpPixelsInXY(item->Graphic, item->X, item->Y))
+						if (Orion->GumpPixelsInXY(item->Graphic, item->X, item->Y))
 							LSG = objectIndex;
 
 						TGumpButtonTileArt *bta = (TGumpButtonTileArt*)item;
-						if (UO->StaticPixelsInXYInContainer(bta->TileGraphic, bta->TileX, bta->TileY))
+						if (Orion->StaticPixelsInXYInContainer(bta->TileGraphic, bta->TileX, bta->TileY))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -730,7 +730,7 @@ int TGumpGeneric::Draw(bool &mode)
 					case GOT_CHECKBOX:
 					case GOT_RADIO:
 					{
-						if (UO->GumpPixelsInXY(item->Graphic, item->X, item->Y))
+						if (Orion->GumpPixelsInXY(item->Graphic, item->X, item->Y))
 							LSG = objectIndex;
 						break;
 					}
@@ -739,7 +739,7 @@ int TGumpGeneric::Draw(bool &mode)
 					{
 						TGumpTextEntry *gte = (TGumpTextEntry*)item;
 
-						if (UO->PolygonePixelsInXY(item->X, item->Y, gte->Width, gte->Height))
+						if (Orion->PolygonePixelsInXY(item->X, item->Y, gte->Width, gte->Height))
 							LSG = objectIndex;
 
 						break;
@@ -809,7 +809,7 @@ int TGumpGeneric::Draw(bool &mode)
 								int drawX = htmlGump->X;
 								int drawY = htmlGump->Y;
 							
-								if (htmlGump->HaveBackground && UO->ResizepicPixelsInXY(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height))
+								if (htmlGump->HaveBackground && Orion->ResizepicPixelsInXY(0x0BB8, drawX, drawY, htmlGump->Width - 15, htmlGump->Height))
 								{
 									g_LastSelectedObject = 0;
 									LSG = ID_GG_HTML_TEXT + objectIndex;
@@ -818,27 +818,27 @@ int TGumpGeneric::Draw(bool &mode)
 
 								drawX += (htmlGump->Width - 15);
 							
-								if (UO->GumpPixelsInXY(0x00FA, drawX, drawY))
+								if (Orion->GumpPixelsInXY(0x00FA, drawX, drawY))
 									LSG = ID_GG_SCROLLBAR_BUTTON_UP + objectIndex; //^
-								else if (UO->GumpPixelsInXY(0x00FC, drawX, drawY + htmlGump->Height - 21))
+								else if (Orion->GumpPixelsInXY(0x00FC, drawX, drawY + htmlGump->Height - 21))
 									LSG = ID_GG_SCROLLBAR_BUTTON_DOWN + objectIndex; //v
-								else if (UO->GumpPixelsInXY(0x00FE, drawX + 1, drawY + 21 + htmlGump->BarOffset))
+								else if (Orion->GumpPixelsInXY(0x00FE, drawX + 1, drawY + 21 + htmlGump->BarOffset))
 									LSG = ID_GG_SCROLLBAR + objectIndex; //bar
-								else if (UO->GumpPixelsInXY(0x0100, drawX, drawY + 21, 0, htmlGump->Height - 28))
+								else if (Orion->GumpPixelsInXY(0x0100, drawX, drawY + 21, 0, htmlGump->Height - 28))
 									LSG = ID_GG_SCROLLBAR_BACKGROUND + objectIndex; //background
 
 								wOffs -= 14;
 								textOffsX = -1;
 								textOffsY = -1;
 							}
-							else if (htmlGump->HaveBackground && UO->ResizepicPixelsInXY(0x0BB8, htmlGump->X, htmlGump->Y, htmlGump->Width, htmlGump->Height))
+							else if (htmlGump->HaveBackground && Orion->ResizepicPixelsInXY(0x0BB8, htmlGump->X, htmlGump->Y, htmlGump->Width, htmlGump->Height))
 							{
 								g_LastSelectedObject = 0;
 								LSG = ID_GG_HTML_TEXT + objectIndex;
 								g_LastSelectedGump = index;
 							}
 						
-							if (UO->PolygonePixelsInXY(item->X + textOffsX, item->Y + textOffsY, wOffs, htmlGump->Height))
+							if (Orion->PolygonePixelsInXY(item->X + textOffsX, item->Y + textOffsY, wOffs, htmlGump->Height))
 							{
 								g_LastSelectedObject = 0;
 								LSG = ID_GG_HTML_TEXT + objectIndex;

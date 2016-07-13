@@ -31,14 +31,14 @@ TGumpBuff::~TGumpBuff()
 //----------------------------------------------------------------------------
 void TGumpBuff::PrepareTextures()
 {
-	UO->ExecuteGump(m_Graphic);
+	Orion->ExecuteGump(m_Graphic);
 
 	//Crustal balls
-	UO->ExecuteGump(0x7589);
-	UO->ExecuteGump(0x7585);
+	Orion->ExecuteGump(0x7589);
+	Orion->ExecuteGump(0x7585);
 
 	QFOR(item, m_Items, TGumpBuffObject*)
-		UO->ExecuteGump(item->Graphic);
+		Orion->ExecuteGump(item->Graphic);
 }
 //----------------------------------------------------------------------------
 void TGumpBuff::UpdateBuffIcons()
@@ -183,7 +183,7 @@ void TGumpBuff::GetGumpStatus(POINT &ball, POINT &items, bool &useX, bool &decX,
 	startGump.x = 0;
 	startGump.y = 0;
 
-	UO->GetGumpDimension(m_Graphic, endGump);
+	Orion->GetGumpDimension(m_Graphic, endGump);
 
 	switch (m_Graphic)
 	{
@@ -241,7 +241,7 @@ void TGumpBuff::GetGumpStatus(POINT &ball, POINT &items, bool &useX, bool &decX,
 		bool moved = false;
 
 		POINT gumpDim = { 0, 0 };
-		UO->GetGumpDimension(item->Graphic, gumpDim);
+		Orion->GetGumpDimension(item->Graphic, gumpDim);
 
 		if (useX)
 		{
@@ -314,11 +314,11 @@ void TGumpBuff::GenerateFrame()
 
 		//g_GL.DrawPolygone(startGump.x - 10, startGump.y - 10, abs(startGump.x) + endGump.x + 20, abs(startGump.y) + endGump.y + 20);
 
-		UO->DrawGump(m_Graphic, 0, 0, 0); //Body
+		Orion->DrawGump(m_Graphic, 0, 0, 0); //Body
 
 		WORD gumpID = ((g_GumpSelectElement == ID_GB_NEXT_WINDOW_DIRECTION) ? 0x7589 : 0x7585);
 
-		UO->DrawGump(gumpID, 0, ballCoordinates.x, ballCoordinates.y); //Crystal ball
+		Orion->DrawGump(gumpID, 0, ballCoordinates.x, ballCoordinates.y); //Crystal ball
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -333,11 +333,11 @@ void TGumpBuff::GenerateFrame()
 				continue;
 
 			POINT gumpDim = { 0, 0 };
-			UO->GetGumpDimension(item->Graphic, gumpDim);
+			Orion->GetGumpDimension(item->Graphic, gumpDim);
 
 			glColor4ub(0xFF, 0xFF, 0xFF, item->Alpha);
 
-			UO->DrawGump(item->Graphic, 0, startCoordinates.x, startCoordinates.y); //Buff item
+			Orion->DrawGump(item->Graphic, 0, startCoordinates.x, startCoordinates.y); //Buff item
 			ii++;
 			if (useX)
 			{
@@ -437,7 +437,7 @@ int TGumpBuff::Draw(bool &mode)
 		{
 			g_LastSelectedGump = index;
 
-			if (UO->GumpPixelsInXY(0x7585, ballCoordinates.x, ballCoordinates.y))
+			if (Orion->GumpPixelsInXY(0x7585, ballCoordinates.x, ballCoordinates.y))
 				LSG = ID_GB_NEXT_WINDOW_DIRECTION; //Crystal ball
 			else
 			{
@@ -446,9 +446,9 @@ int TGumpBuff::Draw(bool &mode)
 				QFOR(item, m_Items, TGumpBuffObject*)
 				{
 					POINT gumpDim = { 0, 0 };
-					UO->GetGumpDimension(item->Graphic, gumpDim);
+					Orion->GetGumpDimension(item->Graphic, gumpDim);
 
-					if (UO->GumpPixelsInXY(item->Graphic, startCoordinates.x, startCoordinates.y))
+					if (Orion->GumpPixelsInXY(item->Graphic, startCoordinates.x, startCoordinates.y))
 					{
 						LSG = ID_GB_BUFF_ITEM + index; //Buff item
 						break;
@@ -474,7 +474,7 @@ int TGumpBuff::Draw(bool &mode)
 			}
 		}
 
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
+		if (g_ShowGumpLocker && Orion->PolygonePixelsInXY(0, 0, 10, 14))
 			LSG = ID_GB_LOCK_MOVING;
 
 		g_MouseX = oldMouseX;

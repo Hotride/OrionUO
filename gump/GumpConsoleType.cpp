@@ -160,9 +160,9 @@ void TGumpConsoleType::SetConsolePrefix()
 //----------------------------------------------------------------------------
 void TGumpConsoleType::PrepareTextures()
 {
-	UO->ExecuteGump(0x0984);
-	UO->ExecuteGump(0x0986);
-	UO->ExecuteGumpPart(0x00D2, 2);
+	Orion->ExecuteGump(0x0984);
+	Orion->ExecuteGump(0x0986);
+	Orion->ExecuteGumpPart(0x00D2, 2);
 }
 //----------------------------------------------------------------------------
 void TGumpConsoleType::OnToolTip()
@@ -241,7 +241,7 @@ void TGumpConsoleType::GenerateFrame()
 		if (!m_Minimized)
 			gump -= 2;
 
-		UO->DrawGump(gump, 0, 0, 6);
+		Orion->DrawGump(gump, 0, 0, 6);
 
 		if (!m_Minimized)
 		{
@@ -275,7 +275,7 @@ void TGumpConsoleType::GenerateFrame()
 
 			offsetY += m_Text[(int)m_ShowFullText][0].Height + 3;
 
-			UO->DrawGump(0x00D2 + (int)m_ShowFullText, 0, 0, offsetY + 2);
+			Orion->DrawGump(0x00D2 + (int)m_ShowFullText, 0, 0, offsetY + 2);
 
 			m_TextCheckbox.Draw(24, offsetY);
 		}
@@ -328,7 +328,7 @@ int TGumpConsoleType::Draw(bool &mode)
 
 		int LSG = 0;
 
-		if (UO->PolygonePixelsInXY(0, 6, 14, 14))
+		if (Orion->PolygonePixelsInXY(0, 6, 14, 14))
 			LSG = ID_GCT_MINIMIZE;
 
 		if (!m_Minimized)
@@ -340,7 +340,7 @@ int TGumpConsoleType::Draw(bool &mode)
 			{
 				TTextTexture &text = m_Text[(int)m_ShowFullText][i];
 
-				if (UO->PolygonePixelsInXY(offsetX, offsetY, text.Width, text.Height))
+				if (Orion->PolygonePixelsInXY(offsetX, offsetY, text.Width, text.Height))
 					LSG = i + 1;
 
 				offsetX += text.Width;
@@ -348,7 +348,7 @@ int TGumpConsoleType::Draw(bool &mode)
 
 			offsetY += m_Text[(int)m_ShowFullText][0].Height + 3;
 
-			if (UO->GumpPixelsInXY(0x00D2, 0, offsetY + 2))
+			if (Orion->GumpPixelsInXY(0x00D2, 0, offsetY + 2))
 				LSG = ID_GCT_SHOW_FULL_TEXT;
 		}
 

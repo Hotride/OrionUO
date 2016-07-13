@@ -89,12 +89,12 @@ void TConnectionScreen::Init()
 	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
-	UO->ExecuteGump(0x0588); //Main Screen background
-	UO->ExecuteGump(0x157C); //Main Screen
-	UO->ExecuteGump(0x15A0); //Main Screen Notes
-	UO->ExecuteGump(0x1589); //X gump
-	UO->ExecuteResizepic(0xA28); //Connecting field
-	UO->ExecuteGumpPart(0x0481, 3); //Button v
+	Orion->ExecuteGump(0x0588); //Main Screen background
+	Orion->ExecuteGump(0x157C); //Main Screen
+	Orion->ExecuteGump(0x15A0); //Main Screen Notes
+	Orion->ExecuteGump(0x1589); //X gump
+	Orion->ExecuteResizepic(0xA28); //Connecting field
+	Orion->ExecuteGumpPart(0x0481, 3); //Button v
 }
 //---------------------------------------------------------------------------
 /*!
@@ -108,11 +108,11 @@ void TConnectionScreen::ProcessSmoothAction( __in_opt BYTE action)
 		action = m_SmoothScreenAction;
 
 	if (action == ID_SMOOTH_CS_GO_SCREEN_MAIN)
-		UO->InitScreen(GS_MAIN);
+		Orion->InitScreen(GS_MAIN);
 	else if (action == ID_SMOOTH_CS_GO_SCREEN_CHARACTER)
-		UO->InitScreen(GS_CHARACTER);
+		Orion->InitScreen(GS_CHARACTER);
 	else if (action == ID_SMOOTH_CS_GO_SCREEN_PROFESSION)
-		UO->InitScreen(GS_PROFESSION_SELECT);
+		Orion->InitScreen(GS_PROFESSION_SELECT);
 	else if (action == ID_SMOOTH_CS_SEND_DELETE)
 	{
 		TPacketDeleteCharacter packet(CharacterList.Selected);
@@ -152,13 +152,13 @@ int TConnectionScreen::Render( __in bool mode)
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
-		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
-		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
-		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
-		UO->DrawGump(0x1589, 0, 555, 4); //X gump
+		Orion->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
+		Orion->DrawGump(0x157C, 0, 0, 0); //Main Gump
+		Orion->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
+		Orion->DrawGump(0x1589, 0, 555, 4); //X gump
 		
 		if (m_Type != CST_CONLOST)
-			UO->DrawResizepicGump(0xA28, 142, 134, 356, 212); //Connecting field
+			Orion->DrawResizepicGump(0xA28, 142, 134, 356, 212); //Connecting field
 		
 		WORD mouseCursorID = 0x2073; //Main Gump mouse cursor
 
@@ -171,7 +171,7 @@ int TConnectionScreen::Render( __in bool mode)
 				WORD GumpID = 0x0481 + (int)(CanSelectedButton == ID_CS_OK);  //Button v / lighted
 				if (CanPressedButton == ID_CS_OK)
 					GumpID = 0x0483; //Button v pressed
-				UO->DrawGump(GumpID, 0, 306, 304);
+				Orion->DrawGump(GumpID, 0, 306, 304);
 			}
 			else
 			{
@@ -182,12 +182,12 @@ int TConnectionScreen::Render( __in bool mode)
 				WORD GumpID = 0x0481 + (int)(CanSelectedButton == ID_CS_OK);  //Button v / lighted
 				if (CanPressedButton == ID_CS_OK)
 					GumpID = 0x0483; //Button v pressed
-				UO->DrawGump(GumpID, 0, 264, 304);
+				Orion->DrawGump(GumpID, 0, 264, 304);
 			
 				GumpID = 0x047E + (int)(CanSelectedButton == ID_CS_CANCEL);  //Button x / lighted
 				if (CanPressedButton == ID_CS_CANCEL)
 					GumpID = 0x0480; //Button x pressed
-				UO->DrawGump(GumpID, 0, 348, 304);
+				Orion->DrawGump(GumpID, 0, 348, 304);
 			}
 		}
 		else if (m_Type == CST_GAME)
@@ -199,7 +199,7 @@ int TConnectionScreen::Render( __in bool mode)
 				WORD GumpID = 0x0481 + (int)(CanSelectedButton == ID_CS_OK);  //Button v / lighted
 				if (CanPressedButton == ID_CS_OK)
 					GumpID = 0x0483; //Button v pressed
-				UO->DrawGump(GumpID, 0, 306, 304);
+				Orion->DrawGump(GumpID, 0, 306, 304);
 			}
 			else
 			{
@@ -215,27 +215,27 @@ int TConnectionScreen::Render( __in bool mode)
 			WORD GumpID = 0x0481 + (int)(CanSelectedButton == ID_CS_OK);  //Button v / lighted
 			if (CanPressedButton == ID_CS_OK)
 				GumpID = 0x0483; //Button v pressed
-			UO->DrawGump(GumpID, 0, 306, 304);
+			Orion->DrawGump(GumpID, 0, 306, 304);
 		}
 		else if (m_Type == CST_SELECT_PROFESSOIN)
 		{
 			WORD GumpID = 0x0481 + (int)(CanSelectedButton == ID_CS_OK);  //Button v / lighted
 			if (CanPressedButton == ID_CS_OK)
 				GumpID = 0x0483; //Button v pressed
-			UO->DrawGump(GumpID, 0, 306, 304);
+			Orion->DrawGump(GumpID, 0, 306, 304);
 
 			m_Text[15].Draw(189, 178);
 		}
 		else if (m_Type == CST_CONLOST)
 		{
-			UO->DrawResizepicGump(0xA28, 210, 178, 203, 121); //Connecting field
+			Orion->DrawResizepicGump(0xA28, 210, 178, 203, 121); //Connecting field
 
 			m_Text[2].Draw(215, 222);
 			
 			WORD GumpID = 0x0481 + (int)(CanSelectedButton == ID_CS_OK);  //Button v / lighted
 			if (CanPressedButton == ID_CS_OK)
 				GumpID = 0x0483; //Button v pressed
-			UO->DrawGump(GumpID, 0, 297, 257);
+			Orion->DrawGump(GumpID, 0, 297, 257);
 
 			mouseCursorID = 0x2077; //Waiting mouse cursor
 		}
@@ -248,7 +248,7 @@ int TConnectionScreen::Render( __in bool mode)
 				WORD GumpID = 0x0481 + (int)(CanSelectedButton == ID_CS_OK);  //Button v / lighted
 				if (CanPressedButton == ID_CS_OK)
 					GumpID = 0x0483; //Button v pressed
-				UO->DrawGump(GumpID, 0, 306, 304);
+				Orion->DrawGump(GumpID, 0, 306, 304);
 			}
 			else
 			{
@@ -270,17 +270,17 @@ int TConnectionScreen::Render( __in bool mode)
 		
 		if (!m_ConnectionFailed && m_Type == CST_CHARACTER_LIST)
 		{
-			if (UO->GumpPixelsInXY(0x0481, 264, 304))
+			if (Orion->GumpPixelsInXY(0x0481, 264, 304))
 				g_LastSelectedObject = ID_CS_OK; //Button v
-			else if (UO->GumpPixelsInXY(0x047E, 348, 304))
+			else if (Orion->GumpPixelsInXY(0x047E, 348, 304))
 				g_LastSelectedObject = ID_CS_CANCEL; //Button x
 		}
 		else if (m_Type == CST_CONLOST)
 		{
-			if (UO->GumpPixelsInXY(0x0481, 297, 257))
+			if (Orion->GumpPixelsInXY(0x0481, 297, 257))
 				g_LastSelectedObject = ID_CS_OK; //Button v
 		}
-		else if (UO->GumpPixelsInXY(0x0481, 306, 304))
+		else if (Orion->GumpPixelsInXY(0x0481, 306, 304))
 			g_LastSelectedObject = ID_CS_OK; //Button v
 		
 		return g_LastSelectedObject;

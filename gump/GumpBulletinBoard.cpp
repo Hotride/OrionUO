@@ -34,9 +34,9 @@ TGumpBulletinBoard::~TGumpBulletinBoard()
 //----------------------------------------------------------------------------
 void TGumpBulletinBoard::PrepareTextures()
 {
-	UO->ExecuteGump(0x087A);
-	UO->ExecuteGump(0x0828);
-	UO->ExecuteGump(0x1523);
+	Orion->ExecuteGump(0x087A);
+	Orion->ExecuteGump(0x0828);
+	Orion->ExecuteGump(0x1523);
 }
 //----------------------------------------------------------------------------
 int TGumpBulletinBoard::GetHeight()
@@ -93,11 +93,11 @@ void TGumpBulletinBoard::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawGump(0x087A, 0, 0, 0);
+		Orion->DrawGump(0x087A, 0, 0, 0);
 
 		m_Text.Draw(159, 36);
 		
-		UO->DrawGump(0x0828, 0, 357, 162 + scrollerY);
+		Orion->DrawGump(0x0828, 0, 357, 162 + scrollerY);
 
 		TGumpBulletinBoardObject *item = (TGumpBulletinBoardObject*)m_Items;
 
@@ -109,7 +109,7 @@ void TGumpBulletinBoard::GenerateFrame()
 
 		while (item != NULL)
 		{
-			UO->DrawGump(0x1523, 0, 127, yPtr);
+			Orion->DrawGump(0x1523, 0, 127, yPtr);
 			item->Texture.Draw(150, yPtr + 1);
 
 			yPtr += 18;
@@ -197,19 +197,19 @@ int TGumpBulletinBoard::Draw(bool &mode)
 		int LSG = 0;
 
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (UO->GumpPixelsInXY(0x087A, 0, 0))
+		if (Orion->GumpPixelsInXY(0x087A, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 
-		if (UO->PolygonePixelsInXY(15, 170, 80, 80))
+		if (Orion->PolygonePixelsInXY(15, 170, 80, 80))
 			LSG = ID_GBB_POST_MESSAGE;
-		else if (UO->PolygonePixelsInXY(355, 142, 20, 20))
+		else if (Orion->PolygonePixelsInXY(355, 142, 20, 20))
 			LSG = ID_GBB_BUTTON_UP;
-		else if (UO->PolygonePixelsInXY(355, 318, 20, 20))
+		else if (Orion->PolygonePixelsInXY(355, 318, 20, 20))
 			LSG = ID_GBB_BUTTON_DOWN;
-		else if (UO->PolygonePixelsInXY(127, 159, 230, 330))
+		else if (Orion->PolygonePixelsInXY(127, 159, 230, 330))
 		{
 			int currentIndex = 0;
 
@@ -219,7 +219,7 @@ int TGumpBulletinBoard::Draw(bool &mode)
 
 			while (item != NULL)
 			{
-				if (UO->PolygonePixelsInXY(127, yPtr, 230, 18))
+				if (Orion->PolygonePixelsInXY(127, yPtr, 230, 18))
 					LSG = ID_GBB_MESSAGE + currentIndex;
 
 				currentIndex++;

@@ -31,7 +31,7 @@ TGumpSpell::~TGumpSpell()
 //---------------------------------------------------------------------------
 void TGumpSpell::PrepareTextures()
 {
-	UO->ExecuteGump(m_Graphic);
+	Orion->ExecuteGump(m_Graphic);
 }
 //---------------------------------------------------------------------------
 int TGumpSpell::Draw(bool &mode)
@@ -51,7 +51,7 @@ int TGumpSpell::Draw(bool &mode)
 	{
 		glTranslatef((GLfloat)x, (GLfloat)y, 0.0f);
 
-		UO->DrawGump(m_Graphic, 0, 0, 0);
+		Orion->DrawGump(m_Graphic, 0, 0, 0);
 
 		DrawLocker();
 
@@ -61,13 +61,13 @@ int TGumpSpell::Draw(bool &mode)
 	{
 		int LSG = 0;
 
-		if (UO->GumpPixelsInXY(m_Graphic, x, y))
+		if (Orion->GumpPixelsInXY(m_Graphic, x, y))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(x, y, 10, 14))
+		if (g_ShowGumpLocker && Orion->PolygonePixelsInXY(x, y, 10, 14))
 			LSG = ID_GS_LOCK_MOVING;
 
 		return LSG;
@@ -92,7 +92,7 @@ bool TGumpSpell::OnLeftMouseDoubleClick()
 {
 	if (!g_LastObjectLeftMouseDown)
 	{
-		UO->CastSpell(m_Serial);
+		Orion->CastSpell(m_Serial);
 
 		return true;
 	}

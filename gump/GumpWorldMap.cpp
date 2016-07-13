@@ -237,10 +237,10 @@ void TGumpWorldMap::LoadMap(int map)
 
 		DWORD hashSizeContent = (g_MapSizeX[map] << 16) | g_MapSizeY[map];
 
-		DWORD mulMapHash = UO->GetFileHashCode((DWORD)FileManager.MapMul[map].Address, FileManager.MapMul[map].Size);
+		DWORD mulMapHash = Orion->GetFileHashCode((DWORD)FileManager.MapMul[map].Address, FileManager.MapMul[map].Size);
 		mulMapHash ^= hashSizeContent;
-		DWORD mulStaticsHash = UO->GetFileHashCode((DWORD)FileManager.StaticIdx[map].Address, FileManager.StaticIdx[map].Size);
-		mulStaticsHash ^= UO->GetFileHashCode((DWORD)FileManager.StaticMul[map].Address, FileManager.StaticMul[map].Size);
+		DWORD mulStaticsHash = Orion->GetFileHashCode((DWORD)FileManager.StaticIdx[map].Address, FileManager.StaticIdx[map].Size);
+		mulStaticsHash ^= Orion->GetFileHashCode((DWORD)FileManager.StaticMul[map].Address, FileManager.StaticMul[map].Size);
 		mulStaticsHash ^= hashSizeContent;
 
 		char pathBuf[50] = {0};
@@ -339,9 +339,9 @@ void TGumpWorldMap::LoadMap(int map)
 //---------------------------------------------------------------------------
 void TGumpWorldMap::PrepareTextures()
 {
-	UO->ExecuteResizepic(0x0A3C);
-	UO->ExecuteGumpPart(0x0837, 2);
-	UO->ExecuteGump(0x139D);
+	Orion->ExecuteResizepic(0x0A3C);
+	Orion->ExecuteGumpPart(0x0837, 2);
+	Orion->ExecuteGump(0x139D);
 }
 //---------------------------------------------------------------------------
 void TGumpWorldMap::GenerateFrame()
@@ -456,7 +456,7 @@ int TGumpWorldMap::Draw(bool &mode)
 	{
 		if (Minimized)
 		{
-			UO->DrawGump(0x15E8, 0, posX, posY); //Earth button
+			Orion->DrawGump(0x15E8, 0, posX, posY); //Earth button
 
 			return 0;
 		}
@@ -477,39 +477,39 @@ int TGumpWorldMap::Draw(bool &mode)
 			m_OffsetY = offsetY;
 		}
 
-		UO->DrawGump(0x082D, 0, posX + (width / 2) - 10, posY); //Minimize
+		Orion->DrawGump(0x082D, 0, posX + (width / 2) - 10, posY); //Minimize
 
-		UO->DrawResizepicGump(0x0A3C, posX, posY + 23, width, height);
+		Orion->DrawResizepicGump(0x0A3C, posX, posY + 23, width, height);
 
 		//Ресайзер
 		WORD resizeGumpID = 0x0837 + (int)(CanPressedButton == 2);
 
-		UO->DrawGump(resizeGumpID, 0, posX + width - 8, posY + 23 + height - 10);
+		Orion->DrawGump(resizeGumpID, 0, posX + width - 8, posY + 23 + height - 10);
 		
 		//Map settings
-		UO->DrawGump(0x098D, 0, posX, posY);
+		Orion->DrawGump(0x098D, 0, posX, posY);
 		m_TextMap[m_Map].Draw(posX + 4, posY);
-		UO->DrawGump(0x0985, 0, posX + 94, posY + 7);
+		Orion->DrawGump(0x0985, 0, posX + 94, posY + 7);
 
 		//Scale settings
-		TTextureObject *g = UO->ExecuteGump(0x098B);
+		TTextureObject *g = Orion->ExecuteGump(0x098B);
 		if (g != NULL)
 		{
 			int tmpX = posX + 110;
 			g_GL.Draw(g->Texture, tmpX, posY, 46, g->Height);
 		}
 		else
-			UO->DrawGump(0x098B, 0, posX + 110, posY);
+			Orion->DrawGump(0x098B, 0, posX + 110, posY);
 
 		m_TextScale[m_Scale].Draw(posX + 114, posY);
-		UO->DrawGump(0x0985, 0, posX + 142, posY + 7);
+		Orion->DrawGump(0x0985, 0, posX + 142, posY + 7);
 
 		//Link with player checkbox settings
 		int drawX = posX + width - m_Text.Width;
 		m_Text.Draw(drawX, posY);
 
 		drawX -= 26;
-		UO->DrawGump(0x00D2 + (int)m_LinkWithPlayer, 0, drawX, posY + 2);
+		Orion->DrawGump(0x00D2 + (int)m_LinkWithPlayer, 0, drawX, posY + 2);
 
 		//Map drawing
 		g_GL.ViewPort(posX + 8, posY + 31, mapViewWidth, mapViewHeight);
@@ -539,7 +539,7 @@ int TGumpWorldMap::Draw(bool &mode)
 		{
 			posY += 12;
 			//Top
-			UO->DrawGump(0x09B5, 0, posX - 5, posY - 11);
+			Orion->DrawGump(0x09B5, 0, posX - 5, posY - 11);
 
 			int ofs = 0;
 
@@ -548,7 +548,7 @@ int TGumpWorldMap::Draw(bool &mode)
 				WORD gumpID = 0x09B6 + ofs;
 				ofs = (ofs + 1) % 3;
 
-				UO->DrawGump(gumpID, 0, posX, posY);
+				Orion->DrawGump(gumpID, 0, posX, posY);
 				
 				if (CanSelectedButton >= ID_GWM_LIST)
 				{
@@ -565,14 +565,14 @@ int TGumpWorldMap::Draw(bool &mode)
 			}
 
 			//Bottom
-			UO->DrawGump(0x09B9, 0, posX - 5, posY);
+			Orion->DrawGump(0x09B9, 0, posX - 5, posY);
 		}
 	}
 	else //Выбор объектов
 	{
 		if (m_Minimized)
 		{
-			if (UO->GumpPixelsInXY(0x15E8, posX, posY)) //Earth button
+			if (Orion->GumpPixelsInXY(0x15E8, posX, posY)) //Earth button
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -584,36 +584,36 @@ int TGumpWorldMap::Draw(bool &mode)
 		int LSG = 0;
 
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (UO->ResizepicPixelsInXY(0x0A3C, posX, posY + 23, width, height))
+		if (Orion->ResizepicPixelsInXY(0x0A3C, posX, posY + 23, width, height))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 
-		if (UO->GumpPixelsInXY(0x082D, posX + (width / 2) - 10, posY)) //Minimize
+		if (Orion->GumpPixelsInXY(0x082D, posX + (width / 2) - 10, posY)) //Minimize
 			LSG = ID_GWM_MINIMIZE;
-		else if (UO->GumpPixelsInXY(0x0837, posX + width - 8, posY + 23 + height - 10)) //Ресайзер
+		else if (Orion->GumpPixelsInXY(0x0837, posX + width - 8, posY + 23 + height - 10)) //Ресайзер
 			LSG = ID_GWM_RESIZE;
-		else if ((!m_LinkWithPlayer || g_CurrentMap != map) && UO->PolygonePixelsInXY(posX + 8, posY + 31, mapViewWidth, mapViewHeight)) //Карта
+		else if ((!m_LinkWithPlayer || g_CurrentMap != map) && Orion->PolygonePixelsInXY(posX + 8, posY + 31, mapViewWidth, mapViewHeight)) //Карта
 			LSG = ID_GWM_MAP;
-		else if (UO->PolygonePixelsInXY(posX, posY, 110, 22)) //Настройки карты
+		else if (Orion->PolygonePixelsInXY(posX, posY, 110, 22)) //Настройки карты
 			LSG = ID_GWM_MAP_LIST;
-		else if (UO->PolygonePixelsInXY(posX + 110, posY, 46, 22)) //Настройки масштаба
+		else if (Orion->PolygonePixelsInXY(posX + 110, posY, 46, 22)) //Настройки масштаба
 			LSG = ID_GWM_SCALE_LIST;
-		else if (UO->PolygonePixelsInXY(posX + width - (m_Text.Width + 26), posY, m_Text.Width + 26, 22)) //Настройки привязки к координатам игрока
+		else if (Orion->PolygonePixelsInXY(posX + width - (m_Text.Width + 26), posY, m_Text.Width + 26, 22)) //Настройки привязки к координатам игрока
 			LSG = ID_GWM_LINK_WITH_PLAYER;
 		
 		if (m_OpenedList)
 		{
 			posY += 12;
 			//Top
-			UO->DrawGump(0x09B5, 0, posX - 5, posY - 11);
+			Orion->DrawGump(0x09B5, 0, posX - 5, posY - 11);
 
 			int ofs = 0;
 
 			IFOR(i, 0, 7)
 			{
-				if (UO->GumpPixelsInXY(0x09B6 + ofs, posX, posY))
+				if (Orion->GumpPixelsInXY(0x09B6 + ofs, posX, posY))
 					LSG = ID_GWM_LIST + i + 1;
 				
 				ofs = (ofs + 1) % 3;
@@ -621,7 +621,7 @@ int TGumpWorldMap::Draw(bool &mode)
 			}
 
 			//Bottom
-			UO->DrawGump(0x09B9, 0, posX - 5, posY);
+			Orion->DrawGump(0x09B9, 0, posX - 5, posY);
 		}
 
 		return LSG;
@@ -751,7 +751,7 @@ bool TGumpWorldMap::OnLeftMouseDoubleClick()
 void TGumpWorldMap::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 {
 	//Если доступно для изменения масштаба
-	if (!m_Minimized && !g_LeftMouseDown && !g_RightMouseDown && UO->PolygonePixelsInXY(m_X + 8, m_Y + 31, m_Width - 16, m_Height - 16) /*g_LastSelectedObject == ID_GWM_MAP*/)
+	if (!m_Minimized && !g_LeftMouseDown && !g_RightMouseDown && Orion->PolygonePixelsInXY(m_X + 8, m_Y + 31, m_Width - 16, m_Height - 16) /*g_LastSelectedObject == ID_GWM_MAP*/)
 	{
 		int ofs = 0;
 

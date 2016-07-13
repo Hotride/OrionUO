@@ -845,9 +845,9 @@ PACKET_HANDLER(ServerList)
 	}
 
 	if (numServers && MainScreen->AutoLogin)
-		UO->ServerSelection(0);
+		Orion->ServerSelection(0);
 	else
-		UO->InitScreen(GS_SERVER);
+		Orion->InitScreen(GS_SERVER);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(RelayServer)
@@ -860,14 +860,14 @@ PACKET_HANDLER(RelayServer)
 	char relayIP[30] = {0};
 	strncpy(relayIP, inet_ntoa(addr), 29);
 	int relayPort = ReadShort();
-	UO->RelayServer(relayIP, relayPort, Ptr);
+	Orion->RelayServer(relayIP, relayPort, Ptr);
 	g_PacketLoginComplete = false;
 	g_CurrentMap = 0;
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(CharacterList)
 {
-	UO->InitScreen(GS_CHARACTER);
+	Orion->InitScreen(GS_CHARACTER);
 
 	int numSlots = ReadChar();
 	TPRINT("/======Chars===\n");
@@ -886,7 +886,7 @@ PACKET_HANDLER(CharacterList)
 		{
 			CharacterList.SetName(i, (char*)Ptr);
 
-			if (autoLogin && AutoPos == -1 && UO->AutoLoginNameExists((char*)Ptr))
+			if (autoLogin && AutoPos == -1 && Orion->AutoLoginNameExists((char*)Ptr))
 				AutoPos = i;
 
 			TPRINT("%d: %s\n", i, (char*)Ptr);
@@ -956,13 +956,13 @@ PACKET_HANDLER(CharacterList)
 		CharacterList.Selected = AutoPos ;
 
 		if (CharacterList.GetName(AutoPos).length())
-			UO->CharacterSelection(AutoPos);
+			Orion->CharacterSelection(AutoPos);
 	}
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(ResendCharacterList)
 {
-	UO->InitScreen(GS_CHARACTER);
+	Orion->InitScreen(GS_CHARACTER);
 
 	int numSlots = ReadByte();
 	TPRINT("/======Resend chars===\n");
@@ -981,7 +981,7 @@ PACKET_HANDLER(ResendCharacterList)
 		{
 			CharacterList.SetName(i, (char*)Ptr);
 
-			if (autoLogin && AutoPos == -1 && UO->AutoLoginNameExists((char*)Ptr))
+			if (autoLogin && AutoPos == -1 && Orion->AutoLoginNameExists((char*)Ptr))
 				AutoPos = i;
 
 			TPRINT("%d: %s\n", i, (char*)Ptr);
@@ -998,7 +998,7 @@ PACKET_HANDLER(ResendCharacterList)
 		CharacterList.Selected = AutoPos ;
 
 		if (CharacterList.GetName(AutoPos).length())
-			UO->CharacterSelection(AutoPos);
+			Orion->CharacterSelection(AutoPos);
 	}
 }
 //---------------------------------------------------------------------------
@@ -1006,7 +1006,7 @@ PACKET_HANDLER(LoginComplete)
 {
 	g_PacketLoginComplete = true;
 
-	UO->LoginComplete();
+	Orion->LoginComplete();
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(SetTime)
@@ -1078,14 +1078,14 @@ PACKET_HANDLER(EnterWorld)
 
 	TPRINT("Player 0x%08lX entered the world.\n", serial);
 
-	UO->LoadStartupConfig();
+	Orion->LoadStartupConfig();
 
 	g_LastSpellIndex = 0;
 	g_LastSkillIndex = 1;
 
-	UO->Click(g_PlayerSerial);
+	Orion->Click(g_PlayerSerial);
 	
-	UO->StatusReq(g_PlayerSerial);
+	Orion->StatusReq(g_PlayerSerial);
 	
 	if (m_ClientVersion >= CV_200)
 	{
@@ -1177,7 +1177,7 @@ PACKET_HANDLER(UpdatePlayer)
 			{
 				SoundManager.StopMusic();
 				SoundManager.StopWarMusic();
-				UO->PlayMusic(42, true);
+				Orion->PlayMusic(42, true);
 			}
 			g_DeathScreenTimer = GetTickCount() + DEATH_SCREEN_DELAY;
 		}
@@ -1262,19 +1262,19 @@ PACKET_HANDLER(CharacterStatus)
 				if (deltaStr)
 				{
 					sprintf(str, "Your strength has changed by %d.  It is now %d.", deltaStr, newStr);
-					UO->CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
+					Orion->CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 			
 				if (deltaDex)
 				{
 					sprintf(str, "Your dexterity has changed by %d.  It is now %d.", deltaDex, newDex);
-					UO->CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
+					Orion->CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 			
 				if (deltaInt)
 				{
 					sprintf(str, "Your intelligence has changed by %d.  It is now %d.", deltaInt, newInt);
-					UO->CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
+					Orion->CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 			}
 
@@ -1318,7 +1318,7 @@ PACKET_HANDLER(CharacterStatus)
 			}
 
 			if (!ConnectionScreen->Completed && g_PacketLoginComplete)
-				UO->LoginComplete();
+				Orion->LoginComplete();
 		}
 	}
 	
@@ -1570,7 +1570,7 @@ PACKET_HANDLER(UpdateObject)
 		TGump *statusGump = GumpManager->UpdateGump(character->Serial, 0, GT_STATUSBAR);
 
 		if (statusGump != NULL)
-			UO->StatusReq(character->Serial);
+			Orion->StatusReq(character->Serial);
 	}
 	else
 		obj->OnGraphicChange(dir);
@@ -2170,7 +2170,7 @@ PACKET_HANDLER(Ping)
 	if (g_PingCount)
 		g_PingCount--;
 	else
-		UO->Send(buf, 2);
+		Orion->Send(buf, 2);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(SetWeather)
@@ -2191,22 +2191,22 @@ PACKET_HANDLER(SetWeather)
 	{
 		case 0:
 		{
-			UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to rain.");
+			Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to rain.");
 			break;
 		}
 		case 1:
 		{
-			UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A fierce storm approaches.");
+			Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A fierce storm approaches.");
 			break;
 		}
 		case 2:
 		{
-			UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to snow.");
+			Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to snow.");
 			break;
 		}
 		case 3:
 		{
-			UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A storm is brewing.");
+			Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A storm is brewing.");
 			break;
 		}
 		case 0xFE:
@@ -2276,7 +2276,7 @@ PACKET_HANDLER(OpenContainer)
 			y = 0;
 
 		gump = new TGumpSpellbook(serial, x, y);
-		UO->PlaySoundEffect(0x0055);
+		Orion->PlaySoundEffect(0x0055);
 	}
 	else if (gumpid == 0x0030) //Buylist
 	{
@@ -2305,7 +2305,7 @@ PACKET_HANDLER(OpenContainer)
 		gump = new TGumpContainer(serial, ContainerRect.X, ContainerRect.Y);
 		gump->Graphic = graphic;
 		((TGumpContainer*)gump)->IsGameBoard = (gumpid == 0x091A || gumpid == 0x092E);
-		UO->ExecuteGump(gumpid, 0);
+		Orion->ExecuteGump(gumpid, 0);
 	}
 
 	if (gump == NULL)
@@ -2415,7 +2415,7 @@ PACKET_HANDLER(UpdateSkills)
 					char str[128] = {0};
 					sprintf(str, "Your skill in %s has %s by %.1f%%.  It is now %.1f%%.", g_Skills[id].m_Name.c_str(), ((change < 0) ? "decreased" : "increased"), change, g_Player->GetSkillBaseValue(id) + change);
 					//else if (change > 0) sprintf(str, "Your skill in %s has increased by %.1f%%.  It is now %.1f%%.", UO->m_Skills[id].m_Name.c_str(), change, obj->GetSkillBaseValue(id) + change);
-					UO->CreateTextMessage(TT_SYSTEM, 0, 3, 0x58, str);
+					Orion->CreateTextMessage(TT_SYSTEM, 0, 3, 0x58, str);
 				}
 			}
 
@@ -2492,7 +2492,7 @@ PACKET_HANDLER(ExtendedCommand)
 		}
 		case 8: //Set cursor / map
 		{
-			UO->ChangeMap(ReadByte());
+			Orion->ChangeMap(ReadByte());
 
 			break;
 		}
@@ -2724,7 +2724,7 @@ PACKET_HANDLER(ConfirmWalk)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(OpenUrl)
 {
-	UO->GoToWebLink(ReadString(0));
+	Orion->GoToWebLink(ReadString(0));
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(Target)
@@ -2759,7 +2759,7 @@ PACKET_HANDLER(Talk)
 			0x18, 0x1e, 0x72, 0x0f, 0x59, 0xad, 0xf5, 0x00
 		};
 
-		UO->Send(sbuffer, 0x28);
+		Orion->Send(sbuffer, 0x28);
 
 		return;
 	}
@@ -2774,7 +2774,7 @@ PACKET_HANDLER(Talk)
 	}
 
 	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || name == string("System"))
-		UO->CreateTextMessage(TT_SYSTEM, serial, font, textColor, str);
+		Orion->CreateTextMessage(TT_SYSTEM, serial, font, textColor, str);
 	else
 	{
 		if (type == ST_EMOTE)
@@ -2798,7 +2798,7 @@ PACKET_HANDLER(Talk)
 			}
 		}
 
-		UO->CreateTextMessage(TT_OBJECT, serial, font, textColor, str);
+		Orion->CreateTextMessage(TT_OBJECT, serial, font, textColor, str);
 
 		if (obj != NULL)
 			obj->YouSeeJournalPrefix = false;
@@ -2826,7 +2826,7 @@ PACKET_HANDLER(UnicodeTalk)
 			0x18, 0x1e, 0x72, 0x0f, 0x59, 0xad, 0xf5, 0x00
 		};
 
-		UO->Send(sbuffer, 0x28);
+		Orion->Send(sbuffer, 0x28);
 
 		return;
 	}
@@ -2842,7 +2842,7 @@ PACKET_HANDLER(UnicodeTalk)
 	}
 	
 	if (type == ST_BROADCAST /*|| type == ST_SYSTEM*/ || serial == 0xFFFFFFFF || !serial || name == wstring(L"System"))
-		UO->CreateUnicodeTextMessage(TT_SYSTEM, serial, ConfigManager.SpeechFont, textColor, str);
+		Orion->CreateUnicodeTextMessage(TT_SYSTEM, serial, ConfigManager.SpeechFont, textColor, str);
 	else
 	{
 		if (type == ST_EMOTE)
@@ -2866,7 +2866,7 @@ PACKET_HANDLER(UnicodeTalk)
 			}
 		}
 
-		UO->CreateUnicodeTextMessage(TT_OBJECT, serial, ConfigManager.SpeechFont, textColor, str);
+		Orion->CreateUnicodeTextMessage(TT_OBJECT, serial, ConfigManager.SpeechFont, textColor, str);
 
 		if (obj != NULL)
 			obj->YouSeeJournalPrefix = false;
@@ -2907,7 +2907,7 @@ PACKET_HANDLER(OpenMenuGump)
 	IFOR(i, 0, count)
 	{
 		WORD graphic = ReadWord();
-		UO->ExecuteStaticArt(graphic);
+		Orion->ExecuteStaticArt(graphic);
 
 		WORD color = ReadWord();
 		if (color)
@@ -3069,7 +3069,7 @@ PACKET_HANDLER(OpenGump)
 			int x = 0, y = 0, w = 0, h = 0, graphic = 0;
 			sscanf((char*)e, "%d %d %d %d %d", &x, &y, &graphic, &w, &h);
 
-			UO->ExecuteResizepic(graphic);
+			Orion->ExecuteResizepic(graphic);
 
 			go = new TGumpResizepic(graphic, x, y, w, h);
 		}
@@ -3087,8 +3087,8 @@ PACKET_HANDLER(OpenGump)
 			int x = 0, y = 0, action = 0, topage = 0, number = 0, up = 0, down = 0, tid = 0, tcolor = 0, tx = 0, ty = 0;
 			sscanf((char*)e, "%d %d %d %d %d %d %d %d %d %d %d", &x, &y, &up, &down, &action, &topage, &number, &tid, &tcolor, &tx, &ty);
 
-			UO->ExecuteButton(up);
-			UO->ExecuteStaticArt(tid);
+			Orion->ExecuteButton(up);
+			Orion->ExecuteStaticArt(tid);
 
 			go = new TGumpButtonTileArt(up, up + 1, down, number, topage, action != 0, x, y, tid, tcolor,tx, ty);
 		}
@@ -3098,7 +3098,7 @@ PACKET_HANDLER(OpenGump)
 			int x = 0, y = 0, action = 0, topage = 0, number = 0, up = 0, down = 0;
 			sscanf((char*)e, "%d %d %d %d %d %d %d", &x, &y, &up, &down, &action, &topage, &number);
 
-			UO->ExecuteButton(up);
+			Orion->ExecuteButton(up);
 
 			go = new TGumpButton(up, up + 1, down, number, topage, action != 0, x, y);
 		}
@@ -3108,8 +3108,8 @@ PACKET_HANDLER(OpenGump)
 			int x = 0, y = 0, state = 0, number = 0, up = 0, down = 0;
 			sscanf((char*)e, "%d %d %d %d %d %d", &x, &y, &up, &down, &state, &number);
 
-			UO->ExecuteGump(up, 0);
-			UO->ExecuteGump(down, 0);
+			Orion->ExecuteGump(up, 0);
+			Orion->ExecuteGump(down, 0);
 
 			go = new TGumpCheckbox(up, down, up + 1, number, state != 0, x, y);
 		}
@@ -3119,8 +3119,8 @@ PACKET_HANDLER(OpenGump)
 			int x = 0, y = 0, state = 0, number = 0, up = 0, down = 0;
 			sscanf((char*)e, "%d %d %d %d %d %d", &x, &y, &up, &down, &state, &number);
 
-			UO->ExecuteGump(up, 0);
-			UO->ExecuteGump(down, 0);
+			Orion->ExecuteGump(up, 0);
+			Orion->ExecuteGump(down, 0);
 
 			go = new TGumpRadio(up, down, up + 1, number, state != 0, x, y);
 		}
@@ -3162,7 +3162,7 @@ PACKET_HANDLER(OpenGump)
 			int x = 0, y = 0, graphic = 0, color = 0;
 			sscanf((char*)e, "%d %d %d %d", &x, &y, &graphic, &color);
 
-			UO->ExecuteStaticArt(graphic);
+			Orion->ExecuteStaticArt(graphic);
 
 			go = new TGumpTilepic(graphic, color, x, y);
 		}
@@ -3172,7 +3172,7 @@ PACKET_HANDLER(OpenGump)
 			int x = 0, y = 0, graphic = 0;
 			sscanf((char*)e, "%d %d %d", &x, &y, &graphic);
 
-			UO->ExecuteStaticArt(graphic);
+			Orion->ExecuteStaticArt(graphic);
 
 			go = new TGumpTilepic(graphic, 0, x, y);
 		}
@@ -3182,7 +3182,7 @@ PACKET_HANDLER(OpenGump)
 			int x = 0, y = 0, w = 0, h = 0, graphic = 0;
 			sscanf((char*)e, "%d %d %d %d %d", &x, &y, &w, &h, &graphic);
 
-			UO->ExecuteGump(graphic, 0);
+			Orion->ExecuteGump(graphic, 0);
 
 			go = new TGumpGumppicTiled(graphic, x, y, w, h);
 		}
@@ -3192,7 +3192,7 @@ PACKET_HANDLER(OpenGump)
 			int x = 0, y = 0, graphic = 0, color = 0;
 			sscanf((char*)e, "%d %d %d", &x, &y, &graphic);
 
-			UO->ExecuteGump(graphic, 0);
+			Orion->ExecuteGump(graphic, 0);
 
 			char bufptr[20] = {0};
 			sprintf(bufptr, "%d %d %d", x, y, graphic);
@@ -3637,7 +3637,7 @@ PACKET_HANDLER(PlaySoundEffect)
 	int distance = GetDistance(g_Player, coords);
 	//TPRINT("Play sound 0x%04X\n", index);
 
-	UO->PlaySoundEffect(index, SoundManager.GetVolumeValue(distance));
+	Orion->PlaySoundEffect(index, SoundManager.GetVolumeValue(distance));
 	
 }
 //---------------------------------------------------------------------------
@@ -3648,7 +3648,7 @@ PACKET_HANDLER(PlayMusic)
 	//TPRINT("Play midi music 0x%04X\n", index);
 	if (!ConfigManager.Music || GetForegroundWindow() != g_hWnd || ConfigManager.MusicVolume < 1)
 		return;
-	UO->PlayMusic(index);
+	Orion->PlayMusic(index);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(DragAnimation)
@@ -3737,8 +3737,8 @@ PACKET_HANDLER(ASCIIPrompt)
 
 	if (g_ConsolePrompt != PT_NONE)
 	{
-		UO->ConsolePromptCancel();
-		UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Previous prompt cancelled.");
+		Orion->ConsolePromptCancel();
+		Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Previous prompt cancelled.");
 	}
 
 	g_ConsolePrompt = PT_ASCII;
@@ -3752,8 +3752,8 @@ PACKET_HANDLER(UnicodePrompt)
 
 	if (g_ConsolePrompt != PT_NONE)
 	{
-		UO->ConsolePromptCancel();
-		UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Previous prompt cancelled.");
+		Orion->ConsolePromptCancel();
+		Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Previous prompt cancelled.");
 	}
 
 	g_ConsolePrompt = PT_UNICODE;
@@ -3903,7 +3903,7 @@ PACKET_HANDLER(DyeData)
 	GumpManager->AddGump(gump);
 
 	POINT p = { 0, 0 };
-	UO->GetGumpDimension(0x0906, p);
+	Orion->GetGumpDimension(0x0906, p);
 
 	gump->X = (WORD)((g_ClientWidth / 2) - (p.x / 2));
 	gump->Y = (WORD)((g_ClientHeight / 2) - (p.y / 2));
@@ -3948,7 +3948,7 @@ PACKET_HANDLER(AssistVersion)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(CharacterListNotification)
 {
-	UO->InitScreen(GS_DELETE);
+	Orion->InitScreen(GS_DELETE);
 	ConnectionScreen->Type = CST_CHARACTER_LIST;
 	ConnectionScreen->ConnectionFailed = true;
 	ConnectionScreen->ErrorCode = ReadByte();
@@ -3958,7 +3958,7 @@ PACKET_HANDLER(ErrorCode)
 {
 	BYTE code = ReadByte();
 
-	UO->InitScreen(GS_DELETE);
+	Orion->InitScreen(GS_DELETE);
 	ConnectionScreen->Type = CST_GAME_LOGIN;
 	ConnectionScreen->ErrorCode = code;
 
@@ -4122,7 +4122,7 @@ PACKET_HANDLER(DisplayDeath)
 PACKET_HANDLER(OpenChat)
 {
 	BYTE newbuf[4] = { 0xf0, 0x00, 0x04, 0xff };
-	UO->Send(newbuf, 4);
+	Orion->Send(newbuf, 4);
 }
 //---------------------------------------------------------------------------
 PACKET_HANDLER(DisplayClilocString)
@@ -4153,7 +4153,7 @@ PACKET_HANDLER(DisplayClilocString)
 	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
 
 	if (/*type == ST_BROADCAST || type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || name == string("System"))
-		UO->CreateUnicodeTextMessage(TT_SYSTEM, serial, font, color, message);
+		Orion->CreateUnicodeTextMessage(TT_SYSTEM, serial, font, color, message);
 	else
 	{
 		/*if (type == ST_EMOTE)
@@ -4175,7 +4175,7 @@ PACKET_HANDLER(DisplayClilocString)
 			}
 		}
 
-		UO->CreateUnicodeTextMessage(TT_OBJECT, serial, font, color, message);
+		Orion->CreateUnicodeTextMessage(TT_OBJECT, serial, font, color, message);
 	}
 }
 //---------------------------------------------------------------------------

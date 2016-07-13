@@ -27,7 +27,7 @@ TGumpGrayMenu::TGumpGrayMenu(DWORD serial, short x, short y, string text)
 
 	if (!g_GrayMenuCount)
 	{
-		UO->InitScreen(GS_GAME_BLOCKED);
+		Orion->InitScreen(GS_GAME_BLOCKED);
 		GameBlockedScreen->Code = 1;
 	}
 
@@ -40,10 +40,10 @@ TGumpGrayMenu::~TGumpGrayMenu()
 //---------------------------------------------------------------------------
 void TGumpGrayMenu::PrepareTextures()
 {
-	UO->ExecuteResizepic(0x13EC);
-	UO->ExecuteGumpPart(0x138A, 2);
-	UO->ExecuteGumpPart(0x1450, 2);
-	UO->ExecuteGumpPart(0x13B2, 2);
+	Orion->ExecuteResizepic(0x13EC);
+	Orion->ExecuteGumpPart(0x138A, 2);
+	Orion->ExecuteGumpPart(0x1450, 2);
+	Orion->ExecuteGumpPart(0x13B2, 2);
 }
 //---------------------------------------------------------------------------
 void TGumpGrayMenu::CalculateGumpState()
@@ -83,7 +83,7 @@ void TGumpGrayMenu::GenerateFrame()
 			gumpHeight += addHeight;
 		}
 
-		UO->DrawResizepicGump(0x13EC, 0, 0, 400, gumpHeight); //Body
+		Orion->DrawResizepicGump(0x13EC, 0, 0, 400, gumpHeight); //Body
 		
 		FontManager->DrawA(1, m_Text.c_str(), 0x0386, 20, 16);
 
@@ -91,7 +91,7 @@ void TGumpGrayMenu::GenerateFrame()
 
 		QFOR(go, m_Items, TGumpMenuObject*)
 		{
-			UO->DrawGump(0x138A + (int)go->Pressed, 0, 20, offsetY); //Button
+			Orion->DrawGump(0x138A + (int)go->Pressed, 0, 20, offsetY); //Button
 
 			offsetY += 2;
 
@@ -107,9 +107,9 @@ void TGumpGrayMenu::GenerateFrame()
 
 		offsetY += 5;
 
-		UO->DrawGump(0x1450 + (int)(g_GumpPressedElement == ID_GGM_CANCEL), 0, 70, offsetY); //CANCEL
+		Orion->DrawGump(0x1450 + (int)(g_GumpPressedElement == ID_GGM_CANCEL), 0, 70, offsetY); //CANCEL
 
-		UO->DrawGump(0x13B2 + (int)(g_GumpPressedElement == ID_GGM_CONTINUE), 0, 200, offsetY); //CONTINUE
+		Orion->DrawGump(0x13B2 + (int)(g_GumpPressedElement == ID_GGM_CONTINUE), 0, 200, offsetY); //CONTINUE
 
 	glEndList();
 
@@ -159,7 +159,7 @@ int TGumpGrayMenu::Draw(bool &mode)
 		}
 
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (UO->ResizepicPixelsInXY(0x13EC, 0, 0, 400, gumpHeight))
+		if (Orion->ResizepicPixelsInXY(0x13EC, 0, 0, 400, gumpHeight))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = (DWORD)this;
@@ -171,7 +171,7 @@ int TGumpGrayMenu::Draw(bool &mode)
 
 		QFOR(go, m_Items, TGumpMenuObject*)
 		{
-			if (UO->GumpPixelsInXY(0x138A, 20, offsetY))
+			if (Orion->GumpPixelsInXY(0x138A, 20, offsetY))
 			{
 				LSG = idx;
 
@@ -194,9 +194,9 @@ int TGumpGrayMenu::Draw(bool &mode)
 		{
 			offsetY += 5;
 
-			if (UO->GumpPixelsInXY(0x1450, 70, offsetY))
+			if (Orion->GumpPixelsInXY(0x1450, 70, offsetY))
 				LSG = ID_GGM_CANCEL; //CANCEL
-			else if (UO->GumpPixelsInXY(0x13B2, 200, offsetY))
+			else if (Orion->GumpPixelsInXY(0x13B2, 200, offsetY))
 				LSG = ID_GGM_CONTINUE; //CONTINUE
 		}
 		
@@ -233,7 +233,7 @@ void TGumpGrayMenu::OnLeftMouseUp()
 		}
 
 		//Ничего не выбрали
-		UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x21, "You must choose the section of menu.");
+		Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x21, "You must choose the section of menu.");
 	}
 	else
 	{

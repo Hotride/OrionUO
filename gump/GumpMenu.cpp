@@ -31,10 +31,10 @@ TGumpMenu::~TGumpMenu()
 //---------------------------------------------------------------------------
 void TGumpMenu::PrepareTextures()
 {
-	UO->ExecuteGump(0x0910);
+	Orion->ExecuteGump(0x0910);
 
 	QFOR(go, m_Items, TGumpMenuObject*)
-		UO->ExecuteStaticArt(go->Graphic);
+		Orion->ExecuteStaticArt(go->Graphic);
 }
 //---------------------------------------------------------------------------
 void TGumpMenu::CalculateGumpState()
@@ -87,7 +87,7 @@ void TGumpMenu::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 	
-		UO->DrawGump(0x0910, 0, 0, 0);
+		Orion->DrawGump(0x0910, 0, 0, 0);
 
 		FontManager->DrawA(1, m_Text.c_str(), 0x0386, 39, 18, 200, TS_LEFT, UOFONT_FIXED);
 		
@@ -110,7 +110,7 @@ void TGumpMenu::GenerateFrame()
 						break;
 
 					POINT p = {0, 0};
-					UO->GetArtDimension(go->Graphic + 0x4000, p);
+					Orion->GetArtDimension(go->Graphic + 0x4000, p);
 
 					if (p.x && p.y)
 					{
@@ -121,7 +121,7 @@ void TGumpMenu::GenerateFrame()
 						else
 							offsH = ((47 - p.y) / 2);
 
-						UO->DrawStaticArtInContainer(go->Graphic, go->Color, 40 + w + posXOffs, 47 + offsH);
+						Orion->DrawStaticArtInContainer(go->Graphic, go->Color, 40 + w + posXOffs, 47 + offsH);
 
 						if (g_LastSelectedObject == idx + ID_GM_ITEMS)
 							itemText = go->GetText();
@@ -200,7 +200,7 @@ int TGumpMenu::Draw(bool &mode)
 		g_MouseX -= (int)g_GumpTranslateX;
 		g_MouseY -= (int)g_GumpTranslateY;
 
-		if (UO->GumpPixelsInXY(0x0910, 0, 0))
+		if (Orion->GumpPixelsInXY(0x0910, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -216,12 +216,12 @@ int TGumpMenu::Draw(bool &mode)
 		
 		int LSG = 0;
 
-		if (UO->PolygonePixelsInXY(23, 59, 8, 16))
+		if (Orion->PolygonePixelsInXY(23, 59, 8, 16))
 			LSG = ID_GM_LEFT;
-		else if (UO->PolygonePixelsInXY(261, 59, 8, 16))
+		else if (Orion->PolygonePixelsInXY(261, 59, 8, 16))
 			LSG = ID_GM_RIGHT;
 		
-		if (UO->PolygonePixelsInXY(40, 47, 217, 49))
+		if (Orion->PolygonePixelsInXY(40, 47, 217, 49))
 		{
 			int idx = 1;
 
@@ -237,11 +237,11 @@ int TGumpMenu::Draw(bool &mode)
 							break;
 
 						POINT mp = {0, 0};
-						UO->GetArtDimension(go->Graphic + 0x4000, mp);
+						Orion->GetArtDimension(go->Graphic + 0x4000, mp);
 
 						if (mp.x && mp.y)
 						{
-							if (UO->PolygonePixelsInXY(40 + w, 47, mp.x, 49))
+							if (Orion->PolygonePixelsInXY(40 + w, 47, mp.x, 49))
 							{
 								LSG = idx + ID_GM_ITEMS;
 
@@ -319,7 +319,7 @@ void TGumpMenu::MoveItems()
 		if (idx == m_CurrentIndex && go != NULL && go != m_Items && prev != NULL)
 		{
 			POINT p = {0, 0};
-			UO->GetArtDimension(prev->Graphic + 0x4000, p);
+			Orion->GetArtDimension(prev->Graphic + 0x4000, p);
 			m_CurrentItemOffset = p.x;
 			m_CurrentOffset += -(p.x / GUMP_MENU_PIXEL_STEP);
 		}
@@ -342,7 +342,7 @@ void TGumpMenu::MoveItems()
 		if (idx == m_CurrentIndex && go != NULL && go->m_Next != NULL)
 		{
 			POINT p = {0, 0};
-			UO->GetArtDimension(go->Graphic + 0x4000, p);
+			Orion->GetArtDimension(go->Graphic + 0x4000, p);
 			m_CurrentItemOffset = p.x;
 			m_CurrentOffset = p.x / GUMP_MENU_PIXEL_STEP;
 		}

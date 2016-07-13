@@ -32,12 +32,12 @@ TGumpTip::~TGumpTip()
 //----------------------------------------------------------------------------
 void TGumpTip::PrepareTextures()
 {
-	UO->ExecuteGumpPart(0x09CA, 4);
-	UO->ExecuteGumpPart(0x09D2, 2);
-	UO->ExecuteGumpPart(0x0820, 6);
-	UO->ExecuteGump(0x082B);
-	UO->ExecuteGumpPart(0x082D, 3);
-	UO->ExecuteGump(0x001F);
+	Orion->ExecuteGumpPart(0x09CA, 4);
+	Orion->ExecuteGumpPart(0x09D2, 2);
+	Orion->ExecuteGumpPart(0x0820, 6);
+	Orion->ExecuteGump(0x082B);
+	Orion->ExecuteGumpPart(0x082D, 3);
+	Orion->ExecuteGump(0x001F);
 }
 //----------------------------------------------------------------------------
 void TGumpTip::SetHeight(int val)
@@ -124,7 +124,7 @@ void TGumpTip::GenerateFrame()
 			if (m_Updates)
 				gumpID = 0x09D3;
 
-			UO->DrawGump(gumpID, 0, 0, 0);
+			Orion->DrawGump(gumpID, 0, 0, 0);
 
 			//Завершим создание листа и выйдем из процедуры
 			glEndList();
@@ -135,13 +135,13 @@ void TGumpTip::GenerateFrame()
 			return;
 		}
 
-		UO->DrawGump(0x082D, 0, 137, 0); //Minimize
-		UO->DrawGump(0x0820, 0, 0, 23); //Top scroll
+		Orion->DrawGump(0x082D, 0, 137, 0); //Minimize
+		Orion->DrawGump(0x0820, 0, 0, 23); //Top scroll
 
 		if (m_Updates) //Updates text gump
-			UO->DrawGump(0x09D2, 0, 112, 35);
+			Orion->DrawGump(0x09D2, 0, 112, 35);
 		else //Tips text gump
-			UO->DrawGump(0x09CA, 0, 127, 33);
+			Orion->DrawGump(0x09CA, 0, 127, 33);
 		
 		//Tip window body
 		int curPosY = 59;
@@ -152,12 +152,12 @@ void TGumpTip::GenerateFrame()
 			if (deltaHeight  < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x0821, 0, 18, curPosY, 0, deltaHeight);
+					Orion->DrawGump(0x0821, 0, 18, curPosY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x0821, 0, 18, curPosY);
+				Orion->DrawGump(0x0821, 0, 18, curPosY);
 
 			curPosY += 70;
 
@@ -166,12 +166,12 @@ void TGumpTip::GenerateFrame()
 			if (deltaHeight < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x0822, 0, 18, curPosY, 0, deltaHeight);
+					Orion->DrawGump(0x0822, 0, 18, curPosY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x0822, 0, 18, curPosY);
+				Orion->DrawGump(0x0822, 0, 18, curPosY);
 
 			curPosY += 70;
 		}
@@ -181,12 +181,12 @@ void TGumpTip::GenerateFrame()
 		//Down
 		//UO->DrawGump(0x001F, 0, PosX + 257, PosY + Height - 17); //Scroller
 
-		UO->DrawGump(0x001F, 0, 257, 72 + scrollerY); //Scroller
+		Orion->DrawGump(0x001F, 0, 257, 72 + scrollerY); //Scroller
 		
-		UO->DrawGump(0x082B, 0, 30, 58); //Top line
-		UO->DrawGump(0x0824, 0, 249, 56); //^ button
-		UO->DrawGump(0x082B, 0, 31, height + 21); //Bottom line
-		UO->DrawGump(0x0825, 0, 249, height + 17); //v button
+		Orion->DrawGump(0x082B, 0, 30, 58); //Top line
+		Orion->DrawGump(0x0824, 0, 249, 56); //^ button
+		Orion->DrawGump(0x082B, 0, 31, height + 21); //Bottom line
+		Orion->DrawGump(0x0825, 0, 249, height + 17); //v button
 
 		g_GL.Scissor((int)g_GumpTranslateX + 36, (int)g_GumpTranslateY + 68, 214, height - 50);
 
@@ -194,19 +194,19 @@ void TGumpTip::GenerateFrame()
 
 		glDisable(GL_SCISSOR_TEST);
 
-		UO->DrawGump(0x0823, 0, 18, height + 34); //Bottom scroll
+		Orion->DrawGump(0x0823, 0, 18, height + 34); //Bottom scroll
 
 		if (!m_Updates)
 		{
-			UO->DrawGump(0x09CC, 0, 35, height + 45); //Previous gump
+			Orion->DrawGump(0x09CC, 0, 35, height + 45); //Previous gump
 
 			//UO->DrawGump(0x0823, 0, posX + 18, posY + height + 34); //+/- gump
 
-			UO->DrawGump(0x09CD, 0, 251, height + 45); //Next gump
+			Orion->DrawGump(0x09CD, 0, 251, height + 45); //Next gump
 		}
 		
 		WORD gumpID = 0x082E + (int)(g_GumpSelectElement == 2);
-		UO->DrawGump(gumpID, 0, 137, height + 66); //Resize
+		Orion->DrawGump(gumpID, 0, 137, height + 66); //Resize
 
 	//Завершаем запись дисплей листа
 	glEndList();
@@ -306,7 +306,7 @@ int TGumpTip::Draw(bool &mode)
 			if (m_Updates)
 				gumpID = 0x09D3;
 
-			if (UO->GumpPixelsInXY(gumpID, 0, 0))
+			if (Orion->GumpPixelsInXY(gumpID, 0, 0))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -320,13 +320,13 @@ int TGumpTip::Draw(bool &mode)
 		
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x082D, 137, 0)) //Minimize
+		if (Orion->GumpPixelsInXY(0x082D, 137, 0)) //Minimize
 		{
 			LSG = ID_GT_BUTTON_MINIMIZE;
 			g_LastSelectedGump = index;
 		}
 		
-		if (UO->GumpPixelsInXY(0x0820, 0, 23)) //Top scroll
+		if (Orion->GumpPixelsInXY(0x0820, 0, 23)) //Top scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -343,7 +343,7 @@ int TGumpTip::Draw(bool &mode)
 			{
 				if (deltaHeight > 0)
 				{
-					if (UO->GumpPixelsInXY(0x0821, 18, curPosY, 0, deltaHeight))
+					if (Orion->GumpPixelsInXY(0x0821, 18, curPosY, 0, deltaHeight))
 					{
 						g_LastSelectedObject = 0;
 						g_LastSelectedGump = index;
@@ -352,7 +352,7 @@ int TGumpTip::Draw(bool &mode)
 
 				break;
 			}
-			else if (UO->GumpPixelsInXY(0x0821, 18, curPosY))
+			else if (Orion->GumpPixelsInXY(0x0821, 18, curPosY))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -368,7 +368,7 @@ int TGumpTip::Draw(bool &mode)
 			{
 				if (deltaHeight > 0)
 				{
-					if (UO->GumpPixelsInXY(0x0822, 18, curPosY, 0, deltaHeight))
+					if (Orion->GumpPixelsInXY(0x0822, 18, curPosY, 0, deltaHeight))
 					{
 						g_LastSelectedObject = 0;
 						g_LastSelectedGump = index;
@@ -377,7 +377,7 @@ int TGumpTip::Draw(bool &mode)
 
 				break;
 			}
-			else if (UO->GumpPixelsInXY(0x0822, 18, curPosY))
+			else if (Orion->GumpPixelsInXY(0x0822, 18, curPosY))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -388,28 +388,28 @@ int TGumpTip::Draw(bool &mode)
 			curPosY += 70;
 		}
 
-		if (UO->GumpPixelsInXY(0x0823, 18, height + 34)) //Bottom scroll
+		if (Orion->GumpPixelsInXY(0x0823, 18, height + 34)) //Bottom scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 
-		if (UO->GumpPixelsInXY(0x0824, 249, 56)) //^ button
+		if (Orion->GumpPixelsInXY(0x0824, 249, 56)) //^ button
 			LSG = ID_GT_BUTTON_UP;
-		else if (UO->GumpPixelsInXY(0x0825, 249, height + 17)) //v button
+		else if (Orion->GumpPixelsInXY(0x0825, 249, height + 17)) //v button
 			LSG = ID_GT_BUTTON_DOWN;
 
 		if (!m_Updates)
 		{
-			if (UO->GumpPixelsInXY(0x09CC, 35, height + 45)) //Previous gump
+			if (Orion->GumpPixelsInXY(0x09CC, 35, height + 45)) //Previous gump
 				LSG = ID_GT_PREV_GUMP;
-			else if (UO->GumpPixelsInXY(0x09CD, 251, height + 45)) //Next gump
+			else if (Orion->GumpPixelsInXY(0x09CD, 251, height + 45)) //Next gump
 				LSG = ID_GT_NEXT_GUMP;
 		}
 
-		if (UO->GumpPixelsInXY(0x001F, 257, 72 + scrollerY)) //Scroller
+		if (Orion->GumpPixelsInXY(0x001F, 257, 72 + scrollerY)) //Scroller
 			LSG = ID_GT_SCROLLER;
-		else if (UO->GumpPixelsInXY(0x082E, 137, height + 66)) //Resize
+		else if (Orion->GumpPixelsInXY(0x082E, 137, height + 66)) //Resize
 			LSG = ID_GT_BUTTON_RESIZE;
 
 		g_MouseX = oldMouseX;

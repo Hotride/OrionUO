@@ -241,7 +241,7 @@ void TSkillGroupManager::Remove( __in TSkillGroupObject *group)
 
 		GumpManager->AddGump(gump);
 		
-		UO->InitScreen(GS_GAME_BLOCKED);
+		Orion->InitScreen(GS_GAME_BLOCKED);
 		GameBlockedScreen->Code = 4;
 	}
 	else

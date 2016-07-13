@@ -178,7 +178,7 @@ void TTarget::SendLastTarget()
 //---------------------------------------------------------------------------
 void TTarget::SendTarget()
 {
-	UO->Send(m_Data, sizeof(m_Data));
+	Orion->Send(m_Data, sizeof(m_Data));
 
 	//Чистим данные
 	memset(m_Data, 0, sizeof(m_Data));
@@ -197,7 +197,7 @@ void TTarget::UnloadMulti()
 //---------------------------------------------------------------------------
 void TTarget::LoadMulti(int x, int y, char z)
 {
-	TIndexMulti *index = UO->GetMultiPointer(m_MultiGraphic);
+	TIndexMulti *index = Orion->GetMultiPointer(m_MultiGraphic);
 	
 	if (index != NULL && index->Address != NULL)
 	{

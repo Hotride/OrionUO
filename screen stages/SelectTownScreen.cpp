@@ -61,14 +61,14 @@ void TSelectTownScreen::Init()
 	ToolTip.SeqIndex = 0;
 	
 	//Prepare textures:
-	UO->ExecuteGump(0x0588); //Main Screen background
-	UO->ExecuteGump(0x157C); //Main Screen
-	UO->ExecuteGump(0x15A0); //Main Screen Notes
-	UO->ExecuteGumpPart(0x1589, 3); //X gump
-	UO->ExecuteGumpPart(0x15A1, 3); //< gump
-	UO->ExecuteGumpPart(0x15A4, 3); //> gump
-	UO->ExecuteResizepic(0x0A28); //scroll bar field
-	UO->ExecuteResizepic(0x00FA); //scroll bar
+	Orion->ExecuteGump(0x0588); //Main Screen background
+	Orion->ExecuteGump(0x157C); //Main Screen
+	Orion->ExecuteGump(0x15A0); //Main Screen Notes
+	Orion->ExecuteGumpPart(0x1589, 3); //X gump
+	Orion->ExecuteGumpPart(0x15A1, 3); //< gump
+	Orion->ExecuteGumpPart(0x15A4, 3); //> gump
+	Orion->ExecuteResizepic(0x0A28); //scroll bar field
+	Orion->ExecuteResizepic(0x00FA); //scroll bar
 }
 //---------------------------------------------------------------------------
 /*!
@@ -84,12 +84,12 @@ void TSelectTownScreen::ProcessSmoothAction( __in_opt BYTE action)
 	if (action == ID_SMOOTH_STS_QUIT)
 		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 	else if (action == ID_SMOOTH_STS_GO_SCREEN_CHARACTER)
-		UO->InitScreen(GS_CHARACTER);
+		Orion->InitScreen(GS_CHARACTER);
 	else if (action == ID_SMOOTH_STS_GO_SCREEN_GAME_CONNECT)
 	{
 		TPacketCreateCharacter packet(string(CreateCharacterManager.m_Name->c_str()));
 		packet.Send();
-		UO->InitScreen(GS_GAME_CONNECT);
+		Orion->InitScreen(GS_GAME_CONNECT);
 	}
 }
 //---------------------------------------------------------------------------
@@ -196,35 +196,35 @@ int TSelectTownScreen::Render(__in bool mode)
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
-		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
+		Orion->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
 
-		UO->DrawGump(0x1598, 0, 57, 49); //Map gump
+		Orion->DrawGump(0x1598, 0, 57, 49); //Map gump
 	
-		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
-		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
+		Orion->DrawGump(0x157C, 0, 0, 0); //Main Gump
+		Orion->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
 
 		WORD GumpID = 0x1589 + (int)(CanSelectedButton == 1); //X gump /lighted
 		if (CanPressedButton == 1)
 			GumpID = 0x158B; //X gump (pressed)
-		UO->DrawGump(GumpID, 0, 555, 4);
+		Orion->DrawGump(GumpID, 0, 555, 4);
 		
 		GumpID = 0x15A1 + (int)(CanSelectedButton == 2); //< gump /lighted
 		if (CanPressedButton == 2)
 			GumpID = 0x15A3; //< gump pressed
-		UO->DrawGump(GumpID, 0, 586, 445); //< gump
+		Orion->DrawGump(GumpID, 0, 586, 445); //< gump
 
 		GumpID = 0x15A4 + (int)(CanSelectedButton == 3); //> gump /lighted
 		if (CanPressedButton == 3)
 			GumpID = 0x15A6; //> gump pressed
-		UO->DrawGump(GumpID, 0, 610, 445); //> gump
+		Orion->DrawGump(GumpID, 0, 610, 445); //> gump
 
-		UO->DrawResizepicGump(0xBB8, 452, 60, 158, 367); //Description text field
+		Orion->DrawResizepicGump(0xBB8, 452, 60, 158, 367); //Description text field
 
 		//Description scroll bar:
-		UO->DrawGump(0x0100, 0, 610, 66, 0, 355); //background
-		UO->DrawGump(0x00FA, 0, 610, 60); //^
-		UO->DrawGump(0x00FE, 0, 611, 81 + scrollerY); //bar
-		UO->DrawGump(0x00FC, 0, 610, 406); //v
+		Orion->DrawGump(0x0100, 0, 610, 66, 0, 355); //background
+		Orion->DrawGump(0x00FA, 0, 610, 60); //^
+		Orion->DrawGump(0x00FE, 0, 611, 81 + scrollerY); //bar
+		Orion->DrawGump(0x00FC, 0, 610, 406); //v
 
 		g_GL.ViewPort(452, 60, 158, 367);
 
@@ -253,7 +253,7 @@ int TSelectTownScreen::Render(__in bool mode)
 					textColor = 0x0099;
 				}
 
-				UO->DrawGump(gumpID, 0, bx, by);
+				Orion->DrawGump(gumpID, 0, bx, by);
 
 				by -= 20;
 
@@ -276,19 +276,19 @@ int TSelectTownScreen::Render(__in bool mode)
 	{
 		g_LastSelectedObject = 0;
 		
-		if (UO->GumpPixelsInXY(0x1589, 555, 4))
+		if (Orion->GumpPixelsInXY(0x1589, 555, 4))
 			g_LastSelectedObject = ID_STS_QUIT; //X gump
-		else if (UO->GumpPixelsInXY(0x15A1, 586, 445))
+		else if (Orion->GumpPixelsInXY(0x15A1, 586, 445))
 			g_LastSelectedObject = ID_STS_ARROW_PREV; //< gump
-		else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+		else if (Orion->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_STS_ARROW_NEXT; //> gump
-		else if (UO->GumpPixelsInXY(0x00FA, 610, 60))
+		else if (Orion->GumpPixelsInXY(0x00FA, 610, 60))
 			g_LastSelectedObject = ID_STS_SCROLLBAR_UP; //^
-		else if (UO->GumpPixelsInXY(0x00FC, 610, 406))
+		else if (Orion->GumpPixelsInXY(0x00FC, 610, 406))
 			g_LastSelectedObject = ID_STS_SCROLLBAR_DOWN; //v
-		else if (UO->GumpPixelsInXY(0x00FE, 611, 81 + scrollerY))
+		else if (Orion->GumpPixelsInXY(0x00FE, 611, 81 + scrollerY))
 			g_LastSelectedObject = ID_STS_SCROLLBAR; //bar
-		else if (UO->GumpPixelsInXY(0x0100, 610, 66, 0, 355))
+		else if (Orion->GumpPixelsInXY(0x0100, 610, 66, 0, 355))
 			g_LastSelectedObject = ID_STS_SCROLLBAR_BACKGROUND; //background
 		else
 		{
@@ -301,7 +301,7 @@ int TSelectTownScreen::Render(__in bool mode)
 					int bx = m_TownButtonText[i].x;
 					int by = m_TownButtonText[i].y;
 
-					if (UO->GumpPixelsInXY(0x0837, bx, by))
+					if (Orion->GumpPixelsInXY(0x0837, bx, by))
 						g_LastSelectedObject = ID_STS_TOWN + i;
 					else
 					{
@@ -312,7 +312,7 @@ int TSelectTownScreen::Render(__in bool mode)
 
 						int tw = FontManager->GetWidthA(3, city->GetName().c_str());
 						
-						if (UO->PolygonePixelsInXY(bx, by, tw, 16))
+						if (Orion->PolygonePixelsInXY(bx, by, tw, 16))
 							g_LastSelectedObject = ID_STS_TOWN + i;
 					}
 				}

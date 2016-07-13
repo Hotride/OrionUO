@@ -26,7 +26,7 @@
 #define IDT_UPDATE_MOUSE_TIMER		666
 //---------------------------------------------------------------------------
 //Основной класс
-class TUltimaOnline
+class TOrion
 {
 private:
 	//CRC32 таблица
@@ -104,8 +104,8 @@ private:
 	void CreateObjectHandlesBackground();
 
 public:
-	TUltimaOnline();
-	~TUltimaOnline();
+	TOrion();
+	~TOrion();
 
 	//Инициализация
 	bool Install();
@@ -492,6 +492,6 @@ public:
 	void RequestQuestGump();
 };
 //---------------------------------------------------------------------------
-extern TUltimaOnline *UO;
+extern TOrion *Orion;
 //---------------------------------------------------------------------------
 #endif

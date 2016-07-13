@@ -37,7 +37,7 @@ TGumpSecureTrading::~TGumpSecureTrading()
 //----------------------------------------------------------------------------
 void TGumpSecureTrading::PrepareTextures()
 {
-	UO->ExecuteGumpPart(0x0866, 5); //Trade Gump
+	Orion->ExecuteGumpPart(0x0866, 5); //Trade Gump
 
 	TGameObject *container = World->FindWorldObject(m_ID);
 	if (container != NULL && container->m_Items != NULL)
@@ -51,7 +51,7 @@ void TGumpSecureTrading::PrepareTextures()
 				bool doubleDraw = false;
 				WORD graphic = item->GetDrawGraphic(doubleDraw);
 
-				UO->ExecuteStaticArt(graphic);
+				Orion->ExecuteStaticArt(graphic);
 			}
 
 			item = (TGameItem*)item->m_Next;
@@ -70,7 +70,7 @@ void TGumpSecureTrading::PrepareTextures()
 				bool doubleDraw = false;
 				WORD graphic = item->GetDrawGraphic(doubleDraw);
 
-				UO->ExecuteStaticArt(graphic);
+				Orion->ExecuteStaticArt(graphic);
 			}
 
 			item = (TGameItem*)item->m_Next;
@@ -99,7 +99,7 @@ void TGumpSecureTrading::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawGump(0x0866, 0, 0, 0); //Trade Gump
+		Orion->DrawGump(0x0866, 0, 0, 0); //Trade Gump
 
 		//Наш чекбокс
 		WORD gumpID = 0x0867; //Trade window checkbox unselected
@@ -113,7 +113,7 @@ void TGumpSecureTrading::GenerateFrame()
 		else if (m_StateMy)
 			gumpID = 0x0869; //Trade window checkbox selected
 
-		UO->DrawGump(gumpID, 0, 52, 29);
+		Orion->DrawGump(gumpID, 0, 52, 29);
 		
 		FontManager->DrawA(1, g_Player->GetName().c_str(), 0x0386, 84, 40);
 
@@ -122,7 +122,7 @@ void TGumpSecureTrading::GenerateFrame()
 		if (m_StateOpponent)
 			gumpID = 0x0869; //Trade window checkbox selected
 
-		UO->DrawGump(gumpID, 0, 266, 160);
+		Orion->DrawGump(gumpID, 0, 266, 160);
 		
 		int fontWidth = 260 - FontManager->GetWidthA(1, m_Text.c_str(), m_Text.length());
 		FontManager->DrawA(1, m_Text.c_str(), 0x0386, fontWidth, 170);
@@ -160,9 +160,9 @@ void TGumpSecureTrading::GenerateFrame()
 					selMode = true;
 				}
 
-				UO->DrawStaticArtInContainer(graphic, color, drawX, drawY, selMode);
+				Orion->DrawStaticArtInContainer(graphic, color, drawX, drawY, selMode);
 				if (doubleDraw)
-					UO->DrawStaticArtInContainer(graphic, color, drawX + 5, drawY + 5, selMode);
+					Orion->DrawStaticArtInContainer(graphic, color, drawX + 5, drawY + 5, selMode);
 			}
 		
 			//Восстанавливаем размеры рисуемой области
@@ -192,10 +192,10 @@ void TGumpSecureTrading::GenerateFrame()
 					selMode = true;
 				}
 
-				UO->DrawStaticArtInContainer(graphic, color, drawX, drawY, selMode);
+				Orion->DrawStaticArtInContainer(graphic, color, drawX, drawY, selMode);
 
 				if (doubleDraw)
-					UO->DrawStaticArtInContainer(graphic, color, drawX + 5, drawY + 5, selMode);
+					Orion->DrawStaticArtInContainer(graphic, color, drawX + 5, drawY + 5, selMode);
 			}
 
 			//Восстанавливаем размеры рисуемой области
@@ -367,19 +367,19 @@ int TGumpSecureTrading::Draw(bool &mode)
 		int LSG = 0;
 
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (UO->GumpPixelsInXY(0x0866, 0, 0))
+		if (Orion->GumpPixelsInXY(0x0866, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 		
-		if (UO->GumpPixelsInXY(0x0867, 52, 29))
+		if (Orion->GumpPixelsInXY(0x0867, 52, 29))
 			LSG = ID_GST_CHECKBOX;
 
 		//Проверка нашего товара (при наличии товара)
 		TGameObject *container = World->FindWorldObject(m_ID);
 
-		if (container != NULL && container->m_Items != NULL && UO->PolygonePixelsInXY(45, 70, 110, 80))
+		if (container != NULL && container->m_Items != NULL && Orion->PolygonePixelsInXY(45, 70, 110, 80))
 		{
 			QFOR(item, container->m_Items, TGameItem*)
 			{
@@ -390,11 +390,11 @@ int TGumpSecureTrading::Draw(bool &mode)
 					int drawX = 45 + item->X;
 					int drawY = 70 + item->Y;
 
-					if (UO->StaticPixelsInXYInContainer(graphic, drawX, drawY))
+					if (Orion->StaticPixelsInXYInContainer(graphic, drawX, drawY))
 						LSG = item->Serial;
 					else if (doubleDraw)
 					{
-						if (UO->StaticPixelsInXYInContainer(graphic, drawX + 5, drawY + 5))
+						if (Orion->StaticPixelsInXYInContainer(graphic, drawX + 5, drawY + 5))
 							LSG = item->Serial;
 					}
 				}
@@ -403,7 +403,7 @@ int TGumpSecureTrading::Draw(bool &mode)
 		
 		container = World->FindWorldObject(m_ID2);
 
-		if (container != NULL && container->m_Items != NULL && UO->PolygonePixelsInXY(192, 70, 110, 80))
+		if (container != NULL && container->m_Items != NULL && Orion->PolygonePixelsInXY(192, 70, 110, 80))
 		{
 			QFOR(item, container->m_Items, TGameItem*)
 			{
@@ -414,11 +414,11 @@ int TGumpSecureTrading::Draw(bool &mode)
 					int drawX = 192 + item->X;
 					int drawY = 70 + item->Y;
 
-					if (UO->StaticPixelsInXYInContainer(graphic, drawX, drawY))
+					if (Orion->StaticPixelsInXYInContainer(graphic, drawX, drawY))
 						LSG = item->Serial;
 					else if (doubleDraw)
 					{
-						if (UO->StaticPixelsInXYInContainer(graphic, drawX + 5, drawY + 5))
+						if (Orion->StaticPixelsInXYInContainer(graphic, drawX + 5, drawY + 5))
 							LSG = item->Serial;
 					}
 				}
@@ -475,7 +475,7 @@ void TGumpSecureTrading::OnLeftMouseUp()
 		int x = m_X;
 		int y = m_Y;
 
-		if (UO->PolygonePixelsInXY(x + 45, y + 70, 110, 80))
+		if (Orion->PolygonePixelsInXY(x + 45, y + 70, 110, 80))
 		{
 			if (GetTopObjDistance(g_Player, World->FindWorldObject(m_ID2)) < 3)
 			{
@@ -485,7 +485,7 @@ void TGumpSecureTrading::OnLeftMouseUp()
 				bool doubleDraw = false;
 				WORD graphic = ObjectInHand->GetDrawGraphic(doubleDraw);
 
-				TTextureObject *th = UO->ExecuteStaticArt(graphic);
+				TTextureObject *th = Orion->ExecuteStaticArt(graphic);
 
 				if (th != NULL)
 				{
@@ -505,10 +505,10 @@ void TGumpSecureTrading::OnLeftMouseUp()
 				if (y < 0)
 					y = 0;
 
-				UO->DropItem(m_ID, x, y, 0);
+				Orion->DropItem(m_ID, x, y, 0);
 			}
 			else
-				UO->PlaySoundEffect(0x0051);
+				Orion->PlaySoundEffect(0x0051);
 		}
 	}
 

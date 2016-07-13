@@ -291,7 +291,7 @@ void TConnectionManager::Recv()
 			TPRINT("Failed to Recv()...Disconnecting...\n");
 			m_LoginSocket.Disconnect();
 
-			UO->InitScreen(GS_MAIN_CONNECT);
+			Orion->InitScreen(GS_MAIN_CONNECT);
 			ConnectionScreen->Type = CST_CONLOST;
 		}
 	}
@@ -383,7 +383,7 @@ void TConnectionManager::Recv()
 			if (g_GameState == GS_GAME || (g_GameState == GS_GAME_BLOCKED && GameBlockedScreen->Code))
 			{
 				string str = "Disconnected from " + ServerList.GetServerName();
-				UO->CreateTextMessage(TT_SYSTEM, 0, 3, 0x21, str);
+				Orion->CreateTextMessage(TT_SYSTEM, 0, 3, 0x21, str);
 
 				int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 100;
 				int y = g_GameWindowPosY + (g_GameWindowHeight / 2) - 62;
@@ -392,12 +392,12 @@ void TConnectionManager::Recv()
 
 				GumpManager->AddGump(gump);
 
-				UO->InitScreen(GS_GAME_BLOCKED);
+				Orion->InitScreen(GS_GAME_BLOCKED);
 				GameBlockedScreen->Code = 0;
 			}
 			else
 			{
-				UO->InitScreen(GS_MAIN_CONNECT);
+				Orion->InitScreen(GS_MAIN_CONNECT);
 				ConnectionScreen->Type = CST_CONLOST;
 			}
 		}

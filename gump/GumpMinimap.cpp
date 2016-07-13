@@ -37,7 +37,7 @@ TGumpMinimap::~TGumpMinimap()
 //---------------------------------------------------------------------------
 void TGumpMinimap::PrepareTextures()
 {
-	UO->ExecuteGumpPart(0x1392, 2);
+	Orion->ExecuteGumpPart(0x1392, 2);
 }
 //---------------------------------------------------------------------------
 void TGumpMinimap::GenerateMap()
@@ -55,7 +55,7 @@ void TGumpMinimap::GenerateMap()
 	}
 	
 	WORD gumpID = 0x1393 - (int)m_Minimized;
-	TIndexObject *io = UO->GetGumpPointer(gumpID);
+	TIndexObject *io = Orion->GetGumpPointer(gumpID);
 
 	if (io == NULL)
 		return;
@@ -154,7 +154,7 @@ void TGumpMinimap::GenerateFrame()
 	if (playerX != m_LastX || playerY != m_LastY || m_Texture == 0)
 		GenerateMap();
 
-	TTextureObject *th = UO->ExecuteGump(0x1393 - (int)Minimized);
+	TTextureObject *th = Orion->ExecuteGump(0x1393 - (int)Minimized);
 	if (th == NULL)
 		return;
 
@@ -250,13 +250,13 @@ int TGumpMinimap::Draw(bool &mode)
 
 		int LSG = 0;
 
-		if (UO->GumpPixelsInXY(0x1393 - (int)Minimized, 0, 0))
+		if (Orion->GumpPixelsInXY(0x1393 - (int)Minimized, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
+		if (g_ShowGumpLocker && Orion->PolygonePixelsInXY(0, 0, 10, 14))
 			LSG = ID_GMM_LOCK_MOVING;
 
 		g_MouseX = oldMouseX;

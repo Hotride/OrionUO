@@ -51,16 +51,16 @@ void TGumpPartyManifest::ReleaseTextTextures()
 //---------------------------------------------------------------------------
 void TGumpPartyManifest::PrepareTextures()
 {
-	UO->ExecuteResizepic(0x0A28);
-	UO->ExecuteButton(0x0FAB);
-	UO->ExecuteButton(0x0FB1);
-	UO->ExecuteGump(0x0475);
-	UO->ExecuteGump(0x0FA2);
-	UO->ExecuteGump(0x0FA9);
-	UO->ExecuteButton(0x00F1);
-	UO->ExecuteButton(0x00F7);
-	UO->ExecuteButton(0x0FAE);
-	UO->ExecuteButton(0x0FA8);
+	Orion->ExecuteResizepic(0x0A28);
+	Orion->ExecuteButton(0x0FAB);
+	Orion->ExecuteButton(0x0FB1);
+	Orion->ExecuteGump(0x0475);
+	Orion->ExecuteGump(0x0FA2);
+	Orion->ExecuteGump(0x0FA9);
+	Orion->ExecuteButton(0x00F1);
+	Orion->ExecuteButton(0x00F7);
+	Orion->ExecuteButton(0x0FAE);
+	Orion->ExecuteButton(0x0FA8);
 }
 //---------------------------------------------------------------------------
 void TGumpPartyManifest::GenerateFrame()
@@ -77,7 +77,7 @@ void TGumpPartyManifest::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawResizepicGump(0x0A28, 0, 0, 450, 480); //Body
+		Orion->DrawResizepicGump(0x0A28, 0, 0, 450, 480); //Body
 		
 		m_Text[0].Draw(40, 30); //Tell
 		m_Text[1].Draw(80, 30); //Kick
@@ -97,7 +97,7 @@ void TGumpPartyManifest::GenerateFrame()
 			else if (g_GumpSelectElement - ID_GPM_BUTTON_TELL_MEMBER == i)
 				gumpID++;
 
-			UO->DrawGump(gumpID, 0, 40, yPtr + 2);
+			Orion->DrawGump(gumpID, 0, 40, yPtr + 2);
 
 			if (isLeader)
 			{
@@ -107,10 +107,10 @@ void TGumpPartyManifest::GenerateFrame()
 				else if (g_GumpSelectElement - ID_GPM_BUTTON_KICK_MEMBER == i)
 					gumpID++;
 
-				UO->DrawGump(gumpID, 0, 80, yPtr + 2);
+				Orion->DrawGump(gumpID, 0, 80, yPtr + 2);
 			}
 			
-			UO->DrawGump(0x0475, 0, 130, yPtr);
+			Orion->DrawGump(0x0475, 0, 130, yPtr);
 
 			string name = Party.Member[i].GetName(i + 1);
 			FontManager->DrawA(2, name.c_str(), 0x0386, 140, yPtr + 1, 250, TS_CENTER);
@@ -122,18 +122,18 @@ void TGumpPartyManifest::GenerateFrame()
 		if (g_GumpPressedElement == ID_GPM_BUTTON_SEND_MESSAGE)
 			gumpID = 0x0FAD;
 
-		UO->DrawGump(gumpID, 0, 70, 307);
+		Orion->DrawGump(gumpID, 0, 70, 307);
 		m_Text[3].Draw(110, 307); //Send the party a message
 		
 		gumpID = m_CanLoot ? 0x0FA2 : 0x0FA9;
-		UO->DrawGump(gumpID, 0, 70, 334);
+		Orion->DrawGump(gumpID, 0, 70, 334);
 		m_Text[4 + (int)m_CanLoot].Draw(110, 334); //Party can/CANNOT loot me
 		
 		gumpID = 0x0FAE + (int)(g_GumpSelectElement == ID_GPM_BUTTON_LEAVE);
 		if (g_GumpPressedElement == ID_GPM_BUTTON_LEAVE)
 			gumpID = 0x0FB0;
 
-		UO->DrawGump(gumpID, 0, 70, 360);
+		Orion->DrawGump(gumpID, 0, 70, 360);
 		m_Text[6 + (int)isMember].Draw(110, 360); //Disband/Leave the party
 		
 		if (isLeader)
@@ -142,7 +142,7 @@ void TGumpPartyManifest::GenerateFrame()
 			if (g_GumpPressedElement == ID_GPM_BUTTON_ADD)
 				gumpID = 0x0FAA;
 
-			UO->DrawGump(gumpID, 0, 70, 385);
+			Orion->DrawGump(gumpID, 0, 70, 385);
 			m_Text[8].Draw(110, 385); //Add New Member
 		}
 		
@@ -152,7 +152,7 @@ void TGumpPartyManifest::GenerateFrame()
 			gumpID = 0x00F7; //Okay button selected
 		else
 			gumpID = 0x00F9; //Okay button
-		UO->DrawGump(gumpID, 0, 130, 430);
+		Orion->DrawGump(gumpID, 0, 130, 430);
 		
 		if (g_GumpPressedElement == ID_GPM_BUTTON_CANCEL)
 			gumpID = 0x00F1; //Cancel button (down)
@@ -160,7 +160,7 @@ void TGumpPartyManifest::GenerateFrame()
 			gumpID = 0x00F2; //Cancel button selected
 		else
 			gumpID = 0x00F3; //Cancel button
-		UO->DrawGump(gumpID, 0, 236, 430);
+		Orion->DrawGump(gumpID, 0, 236, 430);
 
 	glEndList();
 	
@@ -200,7 +200,7 @@ int TGumpPartyManifest::Draw(bool &mode)
 		int LSG = 0;
 
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (UO->ResizepicPixelsInXY(0x0A28, 0, 0, 450, 480))
+		if (Orion->ResizepicPixelsInXY(0x0A28, 0, 0, 450, 480))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -213,12 +213,12 @@ int TGumpPartyManifest::Draw(bool &mode)
 
 		IFOR(i, 0, 10)
 		{
-			if (UO->GumpPixelsInXY(0x0FAB, 40, yPtr))
+			if (Orion->GumpPixelsInXY(0x0FAB, 40, yPtr))
 				LSG = ID_GPM_BUTTON_TELL_MEMBER + i; //Tell
 
 			if (isLeader)
 			{
-				if (UO->GumpPixelsInXY(0x0FB1, 80, yPtr))
+				if (Orion->GumpPixelsInXY(0x0FB1, 80, yPtr))
 					LSG = ID_GPM_BUTTON_KICK_MEMBER + i; //Kick
 			}
 
@@ -227,17 +227,17 @@ int TGumpPartyManifest::Draw(bool &mode)
 
 		gumpID = m_CanLoot ? 0x0FA2 : 0x0FA9;
 
-		if (UO->GumpPixelsInXY(0x0FAB, 70, 307))
+		if (Orion->GumpPixelsInXY(0x0FAB, 70, 307))
 			LSG = ID_GPM_BUTTON_SEND_MESSAGE; //Send the party a message
-		else if (UO->GumpPixelsInXY(gumpID, 70, 334))
+		else if (Orion->GumpPixelsInXY(gumpID, 70, 334))
 			LSG = ID_GPM_BUTTON_LOOT_TYPE; //Party can/CANNOT loot me
-		else if (UO->GumpPixelsInXY(0x0FAE, 70, 360))
+		else if (Orion->GumpPixelsInXY(0x0FAE, 70, 360))
 			LSG = ID_GPM_BUTTON_LEAVE; //Disband/Leave the party
-		else if (isLeader && UO->GumpPixelsInXY(0x0FA8, 70, 385))
+		else if (isLeader && Orion->GumpPixelsInXY(0x0FA8, 70, 385))
 			LSG = ID_GPM_BUTTON_ADD; //Add New Member
-		else if (UO->GumpPixelsInXY(0x00F9, 130, 430))
+		else if (Orion->GumpPixelsInXY(0x00F9, 130, 430))
 			LSG = ID_GPM_BUTTON_OKAY; //Okay button
-		else if (UO->GumpPixelsInXY(0x00F3, 236, 430))
+		else if (Orion->GumpPixelsInXY(0x00F3, 236, 430))
 			LSG = ID_GPM_BUTTON_CANCEL; //Cancel button
 
 		g_MouseX = oldMouseX;
@@ -271,7 +271,7 @@ void TGumpPartyManifest::OnLeftMouseUp()
 	else if (g_LastObjectLeftMouseDown == ID_GPM_BUTTON_SEND_MESSAGE)
 	{
 		if (Party.Leader == 0)
-			UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "You are not in a party.");
+			Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "You are not in a party.");
 		else
 			GameConsole->SetText(L"/");
 	}
@@ -280,7 +280,7 @@ void TGumpPartyManifest::OnLeftMouseUp()
 	else if (g_LastObjectLeftMouseDown == ID_GPM_BUTTON_LEAVE)
 	{
 		if (Party.Leader == 0)
-			UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "You are not in a party.");
+			Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "You are not in a party.");
 		else
 		{
 //???????????????
@@ -308,7 +308,7 @@ void TGumpPartyManifest::OnLeftMouseUp()
 		int memberIndex = g_LastObjectLeftMouseDown - ID_GPM_BUTTON_TELL_MEMBER;
 		
 		if (Party.Member[memberIndex].Serial == 0)
-			UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "There is no one in that party slot.");
+			Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "There is no one in that party slot.");
 		else
 		{
 			char buf[10] = {0};
@@ -321,7 +321,7 @@ void TGumpPartyManifest::OnLeftMouseUp()
 		int memberIndex = g_LastObjectLeftMouseDown - ID_GPM_BUTTON_KICK_MEMBER;
 		
 		if (Party.Member[memberIndex].Serial == 0)
-			UO->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "There is no one in that party slot.");
+			Orion->CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "There is no one in that party slot.");
 		else
 		{
 			TPacketPartyRemoveRequest packet(Party.Member[memberIndex].Serial);

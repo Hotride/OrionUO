@@ -310,7 +310,7 @@ void TGameCharacter::OnGraphicChange( __in_opt int direction)
 			//UO->StatusReq(m_Serial);
 
 			if (ConfigManager.ShowIncomingNames && !m_Name.length())
-				UO->NameReq(m_Serial);
+				Orion->NameReq(m_Serial);
 		}
 	
 		GumpManager->UpdateGump(m_Serial, 0, GT_PAPERDOLL);

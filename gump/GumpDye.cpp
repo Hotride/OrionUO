@@ -66,7 +66,7 @@ void TGumpDye::GenerateFrame()
 
 		ColorizerShader->Use();
 
-		UO->DrawStaticArtInContainer(0x0FAB, color, 200, 58);
+		Orion->DrawStaticArtInContainer(0x0FAB, color, 200, 58);
 
 		UnuseShader();
 

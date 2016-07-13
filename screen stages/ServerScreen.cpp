@@ -59,22 +59,22 @@ void TServerScreen::Init()
 	m_PixelOffset = 0;
 
 	//Prepare textures on Main Screen:
-	UO->ExecuteGump(0x0588); //Main Screen background
-	UO->ExecuteGump(0x157C); //Main Screen
-	UO->ExecuteGump(0x15A0); //Main Screen Notes
-	UO->ExecuteResizepic(0x13BE); //ActPwd Container
-	UO->ExecuteGump(0x058A); //Main Screen Castle?
-	UO->ExecuteGumpPart(0x1589, 3); //X gump
-	UO->ExecuteGumpPart(0x15A1, 3); //< gump
-	UO->ExecuteGumpPart(0x15A4, 3); //> gump
-	UO->ExecuteResizepic(0x0DAC); //Server list field
-	UO->ExecuteResizepic(0x00FA); //Server list scroll bar:
+	Orion->ExecuteGump(0x0588); //Main Screen background
+	Orion->ExecuteGump(0x157C); //Main Screen
+	Orion->ExecuteGump(0x15A0); //Main Screen Notes
+	Orion->ExecuteResizepic(0x13BE); //ActPwd Container
+	Orion->ExecuteGump(0x058A); //Main Screen Castle?
+	Orion->ExecuteGumpPart(0x1589, 3); //X gump
+	Orion->ExecuteGumpPart(0x15A1, 3); //< gump
+	Orion->ExecuteGumpPart(0x15A4, 3); //> gump
+	Orion->ExecuteResizepic(0x0DAC); //Server list field
+	Orion->ExecuteResizepic(0x00FA); //Server list scroll bar:
 
-	UO->ExecuteGumpPart(0x093B, 3); //TimeZone button
-	UO->ExecuteGumpPart(0x093E, 3); //Full button
-	UO->ExecuteGumpPart(0x0941, 3); //Connection button
-	UO->ExecuteGump(0x0589); //Earth container
-	UO->ExecuteGumpPart(0x15E8, 3); //Earth button
+	Orion->ExecuteGumpPart(0x093B, 3); //TimeZone button
+	Orion->ExecuteGumpPart(0x093E, 3); //Full button
+	Orion->ExecuteGumpPart(0x0941, 3); //Connection button
+	Orion->ExecuteGump(0x0589); //Earth container
+	Orion->ExecuteGumpPart(0x15E8, 3); //Earth button
 }
 //---------------------------------------------------------------------------
 /*!
@@ -201,34 +201,34 @@ int TServerScreen::Render(__in bool mode)
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
-		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
-		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
-		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
+		Orion->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
+		Orion->DrawGump(0x157C, 0, 0, 0); //Main Gump
+		Orion->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
 	
 		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_SS_QUIT); //X gump /lighted
 		if (CanPressedButton == ID_SS_QUIT)
 			GumpID = 0x158B; //X gump (pressed)
-		UO->DrawGump(GumpID, 0, 555, 4);
+		Orion->DrawGump(GumpID, 0, 555, 4);
 		
 		GumpID = 0x15A1 + (int)(CanSelectedButton == ID_SS_ARROW_PREV); //< gump /lighted
 		if (CanPressedButton == ID_SS_ARROW_PREV)
 			GumpID = 0x15A3; //< gump pressed
-		UO->DrawGump(GumpID, 0, 586, 445); //< gump
+		Orion->DrawGump(GumpID, 0, 586, 445); //< gump
 
 		GumpID = 0x15A4 + (int)(CanSelectedButton == ID_SS_ARROW_NEXT); //> gump /lighted
 		if (CanPressedButton == ID_SS_ARROW_NEXT)
 			GumpID = 0x15A6; //> gump pressed
-		UO->DrawGump(GumpID, 0, 610, 445); //> gump
+		Orion->DrawGump(GumpID, 0, 610, 445); //> gump
 		
 		m_Text[0].Draw(233, 62);
 
-		UO->DrawResizepicGump(0x0DAC, 150, 90, 380, 271); //Server list field
+		Orion->DrawResizepicGump(0x0DAC, 150, 90, 380, 271); //Server list field
 		
 		//Server list scroll bar:
-		UO->DrawGump(0x0100, 0, 530, 111, 0, 240); //background
-		UO->DrawGump(0x00FA, 0, 530, 91); //^
-		UO->DrawGump(0x00FE, 0, 531, 112 + scrollerY); //bar
-		UO->DrawGump(0x00FC, 0, 530, 338); //v
+		Orion->DrawGump(0x0100, 0, 530, 111, 0, 240); //background
+		Orion->DrawGump(0x00FA, 0, 530, 91); //^
+		Orion->DrawGump(0x00FE, 0, 531, 112 + scrollerY); //bar
+		Orion->DrawGump(0x00FC, 0, 530, 338); //v
 
 		g_GL.ViewPort(170, 100, 346, 250);
 
@@ -253,24 +253,24 @@ int TServerScreen::Render(__in bool mode)
 		GumpID = 0x093B + (int)(CanSelectedButton == ID_SS_TIME_ZONE ? 2 : 0); //TimeZone button /lighted
 		if (CanPressedButton == ID_SS_TIME_ZONE)
 			GumpID = 0x093C; //TimeZone button pressed
-		UO->DrawGump(GumpID, 0, 230, 366); //TimeZone button
+		Orion->DrawGump(GumpID, 0, 230, 366); //TimeZone button
 
 		GumpID = 0x093E + (int)(CanSelectedButton == ID_SS_FULL ? 2 : 0);  //Full button /lighted
 		if (CanPressedButton == ID_SS_FULL)
 			GumpID = 0x093F; //Full button pressed
-		UO->DrawGump(GumpID, 0, 338, 366); //Full button
+		Orion->DrawGump(GumpID, 0, 338, 366); //Full button
 
 		GumpID = 0x0941 + (int)(CanSelectedButton == ID_SS_CONNECTION ? 2 : 0); //Connection button /lighted
 		if (CanPressedButton == ID_SS_CONNECTION)
 			GumpID = 0x0942; //Connection button pressed
-		UO->DrawGump(GumpID, 0, 446, 366); //Connection button
+		Orion->DrawGump(GumpID, 0, 446, 366); //Connection button
 
-		UO->DrawGump(0x0589, 0, 150, 390); //Earth container
+		Orion->DrawGump(0x0589, 0, 150, 390); //Earth container
 
 		GumpID = 0x15E8 + (int)(CanSelectedButton == ID_SS_EARTH); //Earth button /lighted
 		if (CanPressedButton == ID_SS_EARTH)
 			GumpID = 0x15EA; //Earth button pressed
-		UO->DrawGump(GumpID, 0, 160, 400); //Earth button
+		Orion->DrawGump(GumpID, 0, 160, 400); //Earth button
 		
 		if (ServerList.Count > 0)
 			FontManager->DrawA(9, ServerList.GetName(0).c_str(), 0x0481, 243, 420);
@@ -287,27 +287,27 @@ int TServerScreen::Render(__in bool mode)
 	{
 		g_LastSelectedObject = 0;
 
-		if (UO->GumpPixelsInXY(0x1589, 555, 4))
+		if (Orion->GumpPixelsInXY(0x1589, 555, 4))
 			g_LastSelectedObject = ID_SS_QUIT; //X gump
-		else if (UO->GumpPixelsInXY(0x15A1, 586, 445))
+		else if (Orion->GumpPixelsInXY(0x15A1, 586, 445))
 			g_LastSelectedObject = ID_SS_ARROW_PREV; //< gump
-		else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+		else if (Orion->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_SS_ARROW_NEXT; //> gump
-		else if (UO->GumpPixelsInXY(0x093B, 230, 366))
+		else if (Orion->GumpPixelsInXY(0x093B, 230, 366))
 			g_LastSelectedObject = ID_SS_TIME_ZONE; //TimeZone button
-		else if (UO->GumpPixelsInXY(0x093E, 338, 366))
+		else if (Orion->GumpPixelsInXY(0x093E, 338, 366))
 			g_LastSelectedObject = ID_SS_FULL; //Full button
-		else if (UO->GumpPixelsInXY(0x0941, 446, 366))
+		else if (Orion->GumpPixelsInXY(0x0941, 446, 366))
 			g_LastSelectedObject = ID_SS_CONNECTION; //Connection button
-		else if (UO->GumpPixelsInXY(0x15E8, 160, 400))
+		else if (Orion->GumpPixelsInXY(0x15E8, 160, 400))
 			g_LastSelectedObject = ID_SS_EARTH; //Earth button
-		else if (UO->GumpPixelsInXY(0x00FA, 530, 91))
+		else if (Orion->GumpPixelsInXY(0x00FA, 530, 91))
 			g_LastSelectedObject = ID_SS_SCROLLBAR_UP; //^
-		else if (UO->GumpPixelsInXY(0x00FC, 530, 338))
+		else if (Orion->GumpPixelsInXY(0x00FC, 530, 338))
 			g_LastSelectedObject = ID_SS_SCROLLBAR_DOWN; //v
-		else if (UO->GumpPixelsInXY(0x00FE, 531, 112 + scrollerY))
+		else if (Orion->GumpPixelsInXY(0x00FE, 531, 112 + scrollerY))
 			g_LastSelectedObject = ID_SS_SCROLLBAR; //bar
-		else if (UO->GumpPixelsInXY(0x0100, 530, 111, 0, 240))
+		else if (Orion->GumpPixelsInXY(0x0100, 530, 111, 0, 240))
 			g_LastSelectedObject = ID_SS_SCROLLBAR_BACKGROUND; //background
 		else if (g_MouseX >= 170 && g_MouseX < 516 && g_MouseY >= 100 && g_MouseY < 350)
 		{
@@ -468,13 +468,13 @@ void TServerScreen::ProcessSmoothAction( __in_opt BYTE action)
 		action = m_SmoothScreenAction;
 
 	if (action == ID_SMOOTH_SS_SELECT_SERVER)
-		UO->ServerSelection(m_SelectionServerTempValue);
+		Orion->ServerSelection(m_SelectionServerTempValue);
 	else if (action == ID_SMOOTH_SS_QUIT)
 		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 	else if (action == ID_SMOOTH_SS_GO_SCREEN_MAIN)
 	{
-		UO->Disconnect();
-		UO->InitScreen(GS_MAIN);
+		Orion->Disconnect();
+		Orion->InitScreen(GS_MAIN);
 	}
 }
 //----------------------------------------------------------------------------

@@ -335,7 +335,7 @@ void TGump::SendSellList()
 		}
 	}
 
-	UO->Send(buf, size);
+	Orion->Send(buf, size);
 
 	delete buf;
 }
@@ -411,7 +411,7 @@ void TGump::SendBuyList()
 	}
 	else buf[7] = 0x00;
 
-	UO->Send(buf, size);
+	Orion->Send(buf, size);
 
 	delete buf;
 }

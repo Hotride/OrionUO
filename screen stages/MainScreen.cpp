@@ -98,15 +98,15 @@ void TMainScreen::Init()
 	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
-	UO->ExecuteGump(0x0588); //Main Screen background
-	UO->ExecuteGump(0x157C); //Main Screen
-	UO->ExecuteGump(0x15A0); //Main Screen Notes
-	UO->ExecuteResizepic(0x13BE); //ActPwd Container
-	UO->ExecuteGump(0x058A); //Main Screen Castle?
-	UO->ExecuteGumpPart(0x1589, 3); //X gump
-	UO->ExecuteGumpPart(0x15A4, 3); //> gump
-	UO->ExecuteResizepic(0x0BB8); //Account/Password text field
-	UO->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
+	Orion->ExecuteGump(0x0588); //Main Screen background
+	Orion->ExecuteGump(0x157C); //Main Screen
+	Orion->ExecuteGump(0x15A0); //Main Screen Notes
+	Orion->ExecuteResizepic(0x13BE); //ActPwd Container
+	Orion->ExecuteGump(0x058A); //Main Screen Castle?
+	Orion->ExecuteGumpPart(0x1589, 3); //X gump
+	Orion->ExecuteGumpPart(0x15A4, 3); //> gump
+	Orion->ExecuteResizepic(0x0BB8); //Account/Password text field
+	Orion->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
 }
 //---------------------------------------------------------------------------
 /*!
@@ -120,7 +120,7 @@ void TMainScreen::ProcessSmoothAction( __in_opt BYTE action)
 		action = m_SmoothScreenAction;
 
 	if (action == ID_SMOOTH_MS_CONNECT)
-		UO->Connect();
+		Orion->Connect();
 	else if (action == ID_SMOOTH_MS_QUIT)
 		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 }
@@ -208,22 +208,22 @@ int TMainScreen::Render(__in bool mode)
 
 		static DWORD times = GetTickCount() + 3000;
 
-		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
-		UO->DrawGump(0x0E14, 0, 0, 0); //Main Gump background 2
-		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
-		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
-		UO->DrawResizepicGump(0x13BE, 128, 288, 451, 157); //ActPwd Container
-		UO->DrawGump(0x058A, 0, 286, 45); //Main Gump Castle?
+		Orion->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
+		Orion->DrawGump(0x0E14, 0, 0, 0); //Main Gump background 2
+		Orion->DrawGump(0x157C, 0, 0, 0); //Main Gump
+		Orion->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
+		Orion->DrawResizepicGump(0x13BE, 128, 288, 451, 157); //ActPwd Container
+		Orion->DrawGump(0x058A, 0, 286, 45); //Main Gump Castle?
 
 		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_MS_QUIT); //X gump /lighted
 		if (CanPressedButton == ID_MS_QUIT)
 			GumpID = 0x158B; //X gump (pressed)
-		UO->DrawGump(GumpID, 0, 555, 4);
+		Orion->DrawGump(GumpID, 0, 555, 4);
 		
 		GumpID = 0x15A4 + (int)(arrowLighted || (CanSelectedButton == ID_MS_ARROW_NEXT)); //> gump / lighted
 		if (CanPressedButton == ID_MS_ARROW_NEXT)
 			GumpID = 0x15A6; //> gump pressed
-		UO->DrawGump(GumpID, 0, 610, 445);
+		Orion->DrawGump(GumpID, 0, 610, 445);
 
 		if (lastArrowTick < ticks)
 		{
@@ -231,10 +231,10 @@ int TMainScreen::Render(__in bool mode)
 			lastArrowTick = ticks + 500;
 		}
 
-		UO->DrawResizepicGump(0x0BB8, 328, 343, 210, 30); //Account text field
-		UO->DrawResizepicGump(0x0BB8, 328, 383, 210, 30); //Password text field
-		UO->DrawGump(0x00D3 - (int)(m_SavePassword == false), 0, 328, 417); //Checkbox on / off
-		UO->DrawGump(0x00D3 - (int)(m_AutoLogin == false), 0, 183, 417); //Checkbox on / off
+		Orion->DrawResizepicGump(0x0BB8, 328, 343, 210, 30); //Account text field
+		Orion->DrawResizepicGump(0x0BB8, 328, 383, 210, 30); //Password text field
+		Orion->DrawGump(0x00D3 - (int)(m_SavePassword == false), 0, 328, 417); //Checkbox on / off
+		Orion->DrawGump(0x00D3 - (int)(m_AutoLogin == false), 0, 183, 417); //Checkbox on / off
 		
 		m_Text[0].Draw(253, 305);
 		m_Text[1].Draw(183, 345);
@@ -269,17 +269,17 @@ int TMainScreen::Render(__in bool mode)
 	{
 		g_LastSelectedObject = 0;
 
-		if (UO->GumpPixelsInXY(0x1589, 555, 4))
+		if (Orion->GumpPixelsInXY(0x1589, 555, 4))
 			g_LastSelectedObject = ID_MS_QUIT; //X gump
-		else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+		else if (Orion->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_MS_ARROW_NEXT; //> gump
-		else if (UO->ResizepicPixelsInXY(0xBB8, 328, 343, 210, 30))
+		else if (Orion->ResizepicPixelsInXY(0xBB8, 328, 343, 210, 30))
 			g_LastSelectedObject = ID_MS_ACCOUNT; //Account text field
-		else if (UO->ResizepicPixelsInXY(0xBB8, 328, 383, 210, 30))
+		else if (Orion->ResizepicPixelsInXY(0xBB8, 328, 383, 210, 30))
 			g_LastSelectedObject = ID_MS_PASSWORD; //Password text field
-		else if (UO->GumpPixelsInXY(0x00D3, 328, 417))
+		else if (Orion->GumpPixelsInXY(0x00D3, 328, 417))
 			g_LastSelectedObject = ID_MS_SAVEPASSWORD; //Save password checkbox
-		else if (UO->GumpPixelsInXY(0x00D3, 183, 417))
+		else if (Orion->GumpPixelsInXY(0x00D3, 183, 417))
 			g_LastSelectedObject = ID_MS_AUTOLOGIN; //Auto Login checkbox
 
 		return g_LastSelectedObject;

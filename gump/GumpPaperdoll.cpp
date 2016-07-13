@@ -83,27 +83,27 @@ void TGumpPaperdoll::PrepareTextures()
 	if (obj != NULL)
 		bodyColor = obj->Color;
 
-	UO->ExecuteGump(0x07EE); //Paperdoll button Character
-	UO->ExecuteGump(0x07D0); //Paperdoll (self)
-	UO->ExecuteButton(0x07EF); //Paperdoll button Help
-	UO->ExecuteButton(0x07D6); //Paperdoll button Options
-	UO->ExecuteButton(0x07D9); //Paperdoll button Log Out
-	UO->ExecuteButton(0x07DC); //Paperdoll button Journal
-	UO->ExecuteButton(0x57B5); //Paperdoll button Quests
-	UO->ExecuteButton(0x07DF); //Paperdoll button Skills
-	UO->ExecuteButton(0x57B2); //Paperdoll button Guild
-	UO->ExecuteButton(0x07E2); //Paperdoll button Chat
-	UO->ExecuteGump(0x07E2, false); //Paperdoll button Chat
-	UO->ExecuteButton(0x07E8); //Paperdoll button War
-	UO->ExecuteButton(0x07E5); //Paperdoll button Peace
+	Orion->ExecuteGump(0x07EE); //Paperdoll button Character
+	Orion->ExecuteGump(0x07D0); //Paperdoll (self)
+	Orion->ExecuteButton(0x07EF); //Paperdoll button Help
+	Orion->ExecuteButton(0x07D6); //Paperdoll button Options
+	Orion->ExecuteButton(0x07D9); //Paperdoll button Log Out
+	Orion->ExecuteButton(0x07DC); //Paperdoll button Journal
+	Orion->ExecuteButton(0x57B5); //Paperdoll button Quests
+	Orion->ExecuteButton(0x07DF); //Paperdoll button Skills
+	Orion->ExecuteButton(0x57B2); //Paperdoll button Guild
+	Orion->ExecuteButton(0x07E2); //Paperdoll button Chat
+	Orion->ExecuteGump(0x07E2, false); //Paperdoll button Chat
+	Orion->ExecuteButton(0x07E8); //Paperdoll button War
+	Orion->ExecuteButton(0x07E5); //Paperdoll button Peace
 	//UO->ExecuteGump(0x0FA1); //Paperdoll mail bag
-	UO->ExecuteGump(0x0071); //David's star
-	UO->ExecuteGump(0x07D2); //Paperdoll party/profile scroll
-	UO->ExecuteGump(0x07D1); //Paperdoll (other)
-	UO->ExecuteButton(0x07EB); //Paperdoll button Status
-	UO->ExecuteGump(0x000C); //Male gump
-	UO->ExecuteGump(0x000D); //Female gump
-	UO->ExecuteGump(0xC72B); //GM robe gump
+	Orion->ExecuteGump(0x0071); //David's star
+	Orion->ExecuteGump(0x07D2); //Paperdoll party/profile scroll
+	Orion->ExecuteGump(0x07D1); //Paperdoll (other)
+	Orion->ExecuteButton(0x07EB); //Paperdoll button Status
+	Orion->ExecuteGump(0x000C); //Male gump
+	Orion->ExecuteGump(0x000D); //Female gump
+	Orion->ExecuteGump(0xC72B); //GM robe gump
 	
 	if (obj != NULL)
 	{
@@ -121,10 +121,10 @@ void TGumpPaperdoll::PrepareTextures()
 				{
 					int cOfs = gumpOffset;
 
-					if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
+					if (obj->Sex && !Orion->ExecuteGump(equipment->AnimID + cOfs))
 						cOfs = MALE_GUMP_OFFSET;
 
-					UO->ExecuteGump(equipment->AnimID + cOfs);
+					Orion->ExecuteGump(equipment->AnimID + cOfs);
 				}
 				else if (ObjectInHand != NULL && UsedLayers[i] == ObjectInHand->UsedLayer && ObjectInHand->AnimID)
 				{
@@ -134,10 +134,10 @@ void TGumpPaperdoll::PrepareTextures()
 					{
 						int cOfs = gumpOffset;
 
-						if (obj->Sex && !UO->ExecuteGump(ObjectInHand->AnimID + cOfs))
+						if (obj->Sex && !Orion->ExecuteGump(ObjectInHand->AnimID + cOfs))
 							cOfs = MALE_GUMP_OFFSET;
 
-						UO->ExecuteGump(ObjectInHand->AnimID + gumpOffset);
+						Orion->ExecuteGump(ObjectInHand->AnimID + gumpOffset);
 					}
 				}
 			}
@@ -150,16 +150,16 @@ void TGumpPaperdoll::PrepareTextures()
 			{
 				int cOfs = gumpOffset;
 
-				if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
+				if (obj->Sex && !Orion->ExecuteGump(equipment->AnimID + cOfs))
 					cOfs = MALE_GUMP_OFFSET;
 
-				UO->ExecuteGump(equipment->AnimID + cOfs);
+				Orion->ExecuteGump(equipment->AnimID + cOfs);
 			}
 		}
 
 		equipment = obj->FindLayer(OL_BACKPACK);
 		if (equipment != NULL && equipment->AnimID != 0)
-			UO->ExecuteGump(equipment->AnimID + 50000);
+			Orion->ExecuteGump(equipment->AnimID + 50000);
 	}
 }
 //---------------------------------------------------------------------------
@@ -234,7 +234,7 @@ void TGumpPaperdoll::GenerateFrame()
 
 		if (m_Minimized)
 		{
-			UO->DrawGump(0x07EE, 0, 0, 0); //Paperdoll button Character
+			Orion->DrawGump(0x07EE, 0, 0, 0); //Paperdoll button Character
 			glEndList();
 
 			m_FrameRedraw = true;
@@ -249,28 +249,28 @@ void TGumpPaperdoll::GenerateFrame()
 
 		if (m_Serial == g_PlayerSerial)
 		{
-			UO->DrawGump(0x07D0, 0, 0, 0); //Paperdoll (self)
+			Orion->DrawGump(0x07D0, 0, 0, 0); //Paperdoll (self)
 
 			gumpID = 0x07EF;
 			if (g_GumpPressedElement == ID_GP_BUTTON_HELP)
 				gumpID = 0x07F0; //Paperdoll button Help (down)
 			else if (g_GumpSelectElement == ID_GP_BUTTON_HELP)
 				gumpID = 0x07F1; //Paperdoll button Help
-			UO->DrawGump(gumpID, 0, 185, 44);
+			Orion->DrawGump(gumpID, 0, 185, 44);
 				
 			gumpID = 0x07D6;
 			if (g_GumpPressedElement == ID_GP_BUTTON_OPTIONS)
 				gumpID = 0x07D7; //Paperdoll button Options (down)
 			else if (g_GumpSelectElement == ID_GP_BUTTON_OPTIONS)
 				gumpID = 0x07D8; //Paperdoll button Options
-			UO->DrawGump(gumpID, 0, 185, 71);
+			Orion->DrawGump(gumpID, 0, 185, 71);
 				
 			gumpID = 0x07D9;
 			if (g_GumpPressedElement == ID_GP_BUTTON_LOGOUT)
 				gumpID = 0x07DA; //Paperdoll button Log Out (down)
 			else if (g_GumpSelectElement == ID_GP_BUTTON_LOGOUT)
 				gumpID = 0x07DB; //Paperdoll button Log Out
-			UO->DrawGump(gumpID, 0, 185, 98);
+			Orion->DrawGump(gumpID, 0, 185, 98);
 			
 			if (ConnectionManager.ClientVersion >= CV_500A)
 			{
@@ -289,14 +289,14 @@ void TGumpPaperdoll::GenerateFrame()
 					gumpID = 0x07DE; //Paperdoll button Journal
 			}
 
-			UO->DrawGump(gumpID, 0, 185, 125);
+			Orion->DrawGump(gumpID, 0, 185, 125);
 				
 			gumpID = 0x07DF;
 			if (g_GumpPressedElement == ID_GP_BUTTON_SKILLS)
 				gumpID = 0x07E0; //Paperdoll button Skills (down)
 			else if (g_GumpSelectElement == ID_GP_BUTTON_SKILLS)
 				gumpID = 0x07E1; //Paperdoll button Skills
-			UO->DrawGump(gumpID, 0, 185, 152);
+			Orion->DrawGump(gumpID, 0, 185, 152);
 
 			if (ConnectionManager.ClientVersion >= CV_500A)
 			{
@@ -321,7 +321,7 @@ void TGumpPaperdoll::GenerateFrame()
 				}
 			}
 
-			UO->DrawGump(gumpID, 0, 185, 179);
+			Orion->DrawGump(gumpID, 0, 185, 179);
 			
 			if (!g_ChatEnabled)
 				ColorizerShader->Use();
@@ -345,22 +345,22 @@ void TGumpPaperdoll::GenerateFrame()
 					gumpID = 0x07E7; //Paperdoll button Peace
 			}
 
-			UO->DrawGump(gumpID, 0, 185, 206);
+			Orion->DrawGump(gumpID, 0, 185, 206);
 			
 			//UO->DrawGump(0x0FA1, 0, posX + 80, posY + 4); //Paperdoll mail bag
-			UO->DrawGump(0x0071, 0, 80, 4); //David's star
+			Orion->DrawGump(0x0071, 0, 80, 4); //David's star
 			
-			UO->DrawGump(0x07D2, 0, 37, 196); //Paperdoll party scroll
+			Orion->DrawGump(0x07D2, 0, 37, 196); //Paperdoll party scroll
 		}
 		else
-			UO->DrawGump(0x07D1, 0, 0, 0); //Paperdoll (other)
+			Orion->DrawGump(0x07D1, 0, 0, 0); //Paperdoll (other)
 
 		gumpID = 0x07EB;
 		if (g_GumpPressedElement == ID_GP_BUTTON_STATUS)
 			gumpID = 0x07EC; //Paperdoll button Status (down)
 		else if (g_GumpSelectElement == ID_GP_BUTTON_STATUS)
 			gumpID = 0x07ED; //Paperdoll button Status
-		UO->DrawGump(gumpID, 0, 185, 233);
+		Orion->DrawGump(gumpID, 0, 185, 233);
 		
 		WORD color = obj->Color;
 
@@ -371,16 +371,16 @@ void TGumpPaperdoll::GenerateFrame()
 			color &= 0x3FFF;
 
 		if (obj->Graphic == 0x0190 || obj->Graphic == 0x0192)
-			UO->DrawGump(0x000C, color, 8, 19, true); //Male gump
+			Orion->DrawGump(0x000C, color, 8, 19, true); //Male gump
 		else if (obj->Graphic == 0x0191 || obj->Graphic == 0x0193)
-			UO->DrawGump(0x000D, color, 8, 19, true); //Female gump
+			Orion->DrawGump(0x000D, color, 8, 19, true); //Female gump
 		else if (obj->Graphic == 0x03DB)
 		{
-			UO->DrawGump(0x000C, 0x03EA, 8, 19, true); //Male gump
-			UO->DrawGump(0xC72B, color, 8, 19); //GM robe gump
+			Orion->DrawGump(0x000C, 0x03EA, 8, 19, true); //Male gump
+			Orion->DrawGump(0xC72B, color, 8, 19); //GM robe gump
 		}
 
-		UO->DrawGump(0x07D2, 0, 23, 196); //Paperdoll profile scroll
+		Orion->DrawGump(0x07D2, 0, 23, 196); //Paperdoll profile scroll
 
 		glUniform1iARB(ShaderDrawMode, 0);
 		obj->m_PaperdollTextTexture.Draw(39, 262);
@@ -404,10 +404,10 @@ void TGumpPaperdoll::GenerateFrame()
 				{
 					int cOfs = gumpOffset;
 
-					if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
+					if (obj->Sex && !Orion->ExecuteGump(equipment->AnimID + cOfs))
 						cOfs = MALE_GUMP_OFFSET;
 
-					UO->DrawGump(equipment->AnimID + cOfs, equipment->Color, 8, 19, equipment->IsPartialHue());
+					Orion->DrawGump(equipment->AnimID + cOfs, equipment->Color, 8, 19, equipment->IsPartialHue());
 				}
 				else if (g_LastSelectedGump == (DWORD)this && ObjectInHand != NULL && UsedLayers[i] == ObjectInHand->UsedLayer && ObjectInHand->AnimID)
 				{
@@ -417,14 +417,14 @@ void TGumpPaperdoll::GenerateFrame()
 					{
 						int cOfs = gumpOffset;
 
-						if (obj->Sex && !UO->ExecuteGump(ObjectInHand->AnimID + cOfs))
+						if (obj->Sex && !Orion->ExecuteGump(ObjectInHand->AnimID + cOfs))
 							cOfs = MALE_GUMP_OFFSET;
 
 						glEnable(GL_BLEND);
 						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 						glColor4f(1.0f, 1.0f, 1.0f, 0.7f);
 
-						UO->DrawGump(ObjectInHand->AnimID + cOfs, ObjectInHand->Color, 8, 19, ObjectInHand->IsPartialHue());
+						Orion->DrawGump(ObjectInHand->AnimID + cOfs, ObjectInHand->Color, 8, 19, ObjectInHand->IsPartialHue());
 						
 						glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 						glDisable(GL_BLEND);
@@ -440,10 +440,10 @@ void TGumpPaperdoll::GenerateFrame()
 			{
 				int cOfs = gumpOffset;
 
-				if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
+				if (obj->Sex && !Orion->ExecuteGump(equipment->AnimID + cOfs))
 					cOfs = MALE_GUMP_OFFSET;
 
-				UO->DrawGump(equipment->AnimID + cOfs, equipment->Color, 8, 19, equipment->IsPartialHue());
+				Orion->DrawGump(equipment->AnimID + cOfs, equipment->Color, 8, 19, equipment->IsPartialHue());
 			}
 		}
 
@@ -456,7 +456,7 @@ void TGumpPaperdoll::GenerateFrame()
 			if (ConnectionManager.ClientVersion >= CV_60142)
 				bpX = 2;
 
-			UO->DrawGump(equipment->AnimID + 50000, equipment->Color, bpX, 19, equipment->IsPartialHue());
+			Orion->DrawGump(equipment->AnimID + 50000, equipment->Color, bpX, 19, equipment->IsPartialHue());
 		}
 
 		UnuseShader();
@@ -497,7 +497,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 				if (Target.IsTargeting())
 					Target.SendCancelTarget();
 
-				UO->PickupItem(equipment);
+				Orion->PickupItem(equipment);
 				//g_LastGumpLeftMouseDown = 0;
 				g_LastObjectLeftMouseDown = 0;
 				g_DroppedLeftMouseX = g_MouseX;
@@ -670,7 +670,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 		{
 			if (m_Minimized)
 			{
-				if (UO->GumpPixelsInXY(0x07EE, 0, 0))
+				if (Orion->GumpPixelsInXY(0x07EE, 0, 0))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index; //Paperdoll button Character
@@ -681,57 +681,57 @@ int TGumpPaperdoll::Draw(bool &mode)
 
 				return 0;
 			}
-			else if (UO->GumpPixelsInXY(0x07D0, 0, 0))
+			else if (Orion->GumpPixelsInXY(0x07D0, 0, 0))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index; //Paperdoll (self)
 			}
 			
 			WORD gumpID = (g_Player->Warmode ? 0x07E8 : 0x07E5); //Paperdoll button War or Peace
-			if (UO->GumpPixelsInXY(0x07EF, 185, 44))
+			if (Orion->GumpPixelsInXY(0x07EF, 185, 44))
 				LSG = ID_GP_BUTTON_HELP; //Paperdoll button Help
-			else if (UO->GumpPixelsInXY(0x07D6, 185, 71))
+			else if (Orion->GumpPixelsInXY(0x07D6, 185, 71))
 				LSG = ID_GP_BUTTON_OPTIONS; //Paperdoll button Options
-			else if (UO->GumpPixelsInXY(0x07D9, 185, 98))
+			else if (Orion->GumpPixelsInXY(0x07D9, 185, 98))
 				LSG = ID_GP_BUTTON_LOGOUT; //Paperdoll button Log Out
-			else if (UO->GumpPixelsInXY(0x07DF, 185, 152))
+			else if (Orion->GumpPixelsInXY(0x07DF, 185, 152))
 				LSG = ID_GP_BUTTON_SKILLS; //Paperdoll button Skills
-			else if (UO->GumpPixelsInXY(gumpID, 185, 206))
+			else if (Orion->GumpPixelsInXY(gumpID, 185, 206))
 				LSG = ID_GP_BUTTON_WARMODE; //Paperdoll button War/Peace
-			else if (UO->GumpPixelsInXY(0x0071, 80, 4))
+			else if (Orion->GumpPixelsInXY(0x0071, 80, 4))
 				LSG = ID_GP_BUTTON_VIRTURE; //David's star (virture button)
 			else
 			{
 				if (ConnectionManager.ClientVersion >= CV_500A)
 				{
-					if (UO->GumpPixelsInXY(0x57B5, 185, 125))
+					if (Orion->GumpPixelsInXY(0x57B5, 185, 125))
 						LSG = ID_GP_BUTTON_JOURNAL_OR_QUESTS; //Paperdoll button Quests
-					else if (UO->GumpPixelsInXY(0x57B2, 185, 179))
+					else if (Orion->GumpPixelsInXY(0x57B2, 185, 179))
 						LSG = ID_GP_BUTTON_CHAT_OR_GUILD; //Paperdoll button Guild
 				}
 				else
 				{
-					if (UO->GumpPixelsInXY(0x07DC, 185, 125))
+					if (Orion->GumpPixelsInXY(0x07DC, 185, 125))
 						LSG = ID_GP_BUTTON_JOURNAL_OR_QUESTS; //Paperdoll button Journal
-					else if (UO->GumpPixelsInXY(0x07E2, 185, 179))
+					else if (Orion->GumpPixelsInXY(0x07E2, 185, 179))
 						LSG = ID_GP_BUTTON_CHAT_OR_GUILD; //Paperdoll button Chat
 				}
 
-				if (UO->PolygonePixelsInXY(226, 258, 16, 16))
+				if (Orion->PolygonePixelsInXY(226, 258, 16, 16))
 					LSG = ID_GP_BUTTON_MINIMIZE;
-				else if (UO->GumpPixelsInXY(0x07D2, 37, 196))
+				else if (Orion->GumpPixelsInXY(0x07D2, 37, 196))
 					LSG = ID_GP_PARTY_MANIFEST_SCROLL; //Paperdoll party manifest scroll
 			}
 		}
-		else if (UO->GumpPixelsInXY(0x07D1, 0, 0))
+		else if (Orion->GumpPixelsInXY(0x07D1, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index; //Paperdoll (other)
 		}
 		
-		if (UO->GumpPixelsInXY(0x07EB, 185, 233))
+		if (Orion->GumpPixelsInXY(0x07EB, 185, 233))
 			LSG = ID_GP_BUTTON_STATUS; //Paperdoll button Status
-		else if (UO->GumpPixelsInXY(0x07D2, 23, 196))
+		else if (Orion->GumpPixelsInXY(0x07D2, 23, 196))
 			LSG = ID_GP_PROFILE_SCROLL; //Paperdoll profile scroll
 
 		int gumpOffset = (obj->Sex ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET);
@@ -748,10 +748,10 @@ int TGumpPaperdoll::Draw(bool &mode)
 				{
 					int cOfs = gumpOffset;
 
-					if (obj->Sex && !UO->ExecuteGump(equipment->AnimID + cOfs))
+					if (obj->Sex && !Orion->ExecuteGump(equipment->AnimID + cOfs))
 						cOfs = MALE_GUMP_OFFSET;
 
-					if (UO->GumpPixelsInXY(equipment->AnimID + cOfs, 8, 19))
+					if (Orion->GumpPixelsInXY(equipment->AnimID + cOfs, 8, 19))
 						LSG = ID_GP_ITEMS + UsedLayers[i];
 				}
 			}
@@ -766,7 +766,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 			if (ConnectionManager.ClientVersion >= CV_60142)
 				bpX = 2;
 
-			if (UO->GumpPixelsInXY(equipment->AnimID + 50000, bpX, 19))
+			if (Orion->GumpPixelsInXY(equipment->AnimID + 50000, bpX, 19))
 				LSG = ID_GP_ITEMS + OL_BACKPACK;
 		}
 
@@ -804,7 +804,7 @@ int TGumpPaperdoll::Draw(bool &mode)
 			}
 		}
 		
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
+		if (g_ShowGumpLocker && Orion->PolygonePixelsInXY(0, 0, 10, 14))
 			LSG = ID_GP_LOCK_MOVING;
 
 		g_MouseX = oldMouseX;
@@ -840,9 +840,9 @@ void TGumpPaperdoll::OnLeftMouseUp()
 				if (equipment != NULL)
 				{
 					if (m_Serial != g_PlayerSerial)
-						UO->DropItem(container->Serial, 0xFFFF, 0xFFFF, 0);
+						Orion->DropItem(container->Serial, 0xFFFF, 0xFFFF, 0);
 					else
-						UO->DropItem(equipment->Serial, 0xFFFF, 0xFFFF, 0);
+						Orion->DropItem(equipment->Serial, 0xFFFF, 0xFFFF, 0);
 
 					g_DroppedLeftMouseX = g_MouseX;
 					g_DroppedLeftMouseY = g_MouseY;
@@ -856,9 +856,9 @@ void TGumpPaperdoll::OnLeftMouseUp()
 				if (equipment == NULL) //На этом слое ничего нет
 				{
 					if (m_Serial != g_PlayerSerial)
-						UO->EquipItem(container->Serial);
+						Orion->EquipItem(container->Serial);
 					else
-						UO->EquipItem();
+						Orion->EquipItem();
 
 					g_DroppedLeftMouseX = g_MouseX;
 					g_DroppedLeftMouseY = g_MouseY;
@@ -868,7 +868,7 @@ void TGumpPaperdoll::OnLeftMouseUp()
 			}
 		}
 		else
-			UO->PlaySoundEffect(0x0051);
+			Orion->PlaySoundEffect(0x0051);
 	}
 	
 	if (g_LastObjectLeftMouseDown != g_LastSelectedObject)
@@ -904,48 +904,48 @@ void TGumpPaperdoll::OnLeftMouseUp()
 	{
 		case ID_GP_BUTTON_HELP: //Paperdoll button Help
 		{
-			UO->HelpRequest();
+			Orion->HelpRequest();
 			break;
 		}
 		case ID_GP_BUTTON_OPTIONS: //Paperdoll button Options
 		{
-			UO->OpenConfiguration();
+			Orion->OpenConfiguration();
 			break;
 		}
 		case ID_GP_BUTTON_LOGOUT: //Paperdoll button Log Out
 		{
-			UO->OpenLogOut();
+			Orion->OpenLogOut();
 			break;
 		}
 		case ID_GP_BUTTON_JOURNAL_OR_QUESTS: //Paperdoll button Journal
 		{
 			if (ConnectionManager.ClientVersion >= CV_500A)
-				UO->RequestQuestGump();
+				Orion->RequestQuestGump();
 			else
-				UO->OpenJournal();
+				Orion->OpenJournal();
 			break;
 		}
 		case ID_GP_BUTTON_SKILLS: //Paperdoll button Skills
 		{
-			UO->OpenSkills();
+			Orion->OpenSkills();
 			break;
 		}
 		case ID_GP_BUTTON_CHAT_OR_GUILD: //Paperdoll button Chat
 		{
 			if (ConnectionManager.ClientVersion >= CV_500A)
-				UO->RequestGuildGump();
+				Orion->RequestGuildGump();
 			else
-				UO->OpenChat();
+				Orion->OpenChat();
 			break;
 		}
 		case ID_GP_BUTTON_WARMODE: //Paperdoll button Peace/War
 		{
-			UO->ChangeWarmode();
+			Orion->ChangeWarmode();
 			break;
 		}
 		case ID_GP_BUTTON_STATUS: //Paperdoll button Status
 		{
-			UO->OpenStatus(m_Serial);
+			Orion->OpenStatus(m_Serial);
 			g_LastLClickTime = 0;
 			break;
 		}
@@ -1003,13 +1003,13 @@ bool TGumpPaperdoll::OnLeftMouseDoubleClick()
 	{
 		if (g_LastObjectLeftMouseDown == ID_GP_PROFILE_SCROLL)
 		{
-			UO->OpenProfile(m_Serial);
+			Orion->OpenProfile(m_Serial);
 
 			result = true;
 		}
 		else if (g_LastObjectLeftMouseDown == ID_GP_PARTY_MANIFEST_SCROLL)
 		{
-			UO->OpenPartyManifest();
+			Orion->OpenPartyManifest();
 
 			result = true;
 		}
@@ -1033,7 +1033,7 @@ bool TGumpPaperdoll::OnLeftMouseDoubleClick()
 
 			if (equipment != NULL)
 			{
-				UO->DoubleClick(equipment->Serial);
+				Orion->DoubleClick(equipment->Serial);
 				result = true;
 			}
 		}

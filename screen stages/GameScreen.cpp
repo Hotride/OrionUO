@@ -59,15 +59,15 @@ void TGameScreen::Init()
 	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Game Screen:
-	UO->ExecuteGump(0x0588); //Main Screen background
-	UO->ExecuteGump(0x157C); //Main Screen
-	UO->ExecuteGump(0x15A0); //Main Screen Notes
-	UO->ExecuteResizepic(0x13BE); //ActPwd Container
-	UO->ExecuteGump(0x058A); //Main Screen Castle?
-	UO->ExecuteGumpPart(0x1589, 3); //X gump
-	UO->ExecuteGumpPart(0x15A4, 3); //> gump
-	UO->ExecuteResizepic(0x0BB8); //Account/Password text field
-	UO->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
+	Orion->ExecuteGump(0x0588); //Main Screen background
+	Orion->ExecuteGump(0x157C); //Main Screen
+	Orion->ExecuteGump(0x15A0); //Main Screen Notes
+	Orion->ExecuteResizepic(0x13BE); //ActPwd Container
+	Orion->ExecuteGump(0x058A); //Main Screen Castle?
+	Orion->ExecuteGumpPart(0x1589, 3); //X gump
+	Orion->ExecuteGumpPart(0x15A4, 3); //> gump
+	Orion->ExecuteResizepic(0x0BB8); //Account/Password text field
+	Orion->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
 }
 //---------------------------------------------------------------------------
 /*!
@@ -81,7 +81,7 @@ void TGameScreen::ProcessSmoothAction( __in_opt BYTE action)
 		action = m_SmoothScreenAction;
 
 	if (action == ID_SMOOTH_GS_LOGOUT)
-		UO->LogOut();
+		Orion->LogOut();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -526,7 +526,7 @@ void TGameScreen::AddTileToRenderList(TRenderWorldObject *obj, const int &drawX,
 				else
 				{
 					POINT p = { 0 };
-					UO->GetArtDimension(go->Graphic + 0x4000, p);
+					Orion->GetArtDimension(go->Graphic + 0x4000, p);
 					m_ObjectHandlesList[index].Y -= p.y;
 				}
 
@@ -555,14 +555,14 @@ void TGameScreen::AddTileToRenderList(TRenderWorldObject *obj, const int &drawX,
 			if (foliageCanBeChecked)
 			{
 				POINT fp = { 0, 0 };
-				UO->GetArtDimension(obj->Graphic, fp);
+				Orion->GetArtDimension(obj->Graphic, fp);
 
 				TImageBounds fib(drawX - fp.x / 2, drawY - fp.y - (z * 4), fp.x, fp.y);
 
 				if (fib.InRect(g_PlayerRect))
 				{
 					RECT realRect = { 0 };
-					UO->GetStaticArtRealPixelDimension(obj->Graphic - 0x4000, realRect);
+					Orion->GetStaticArtRealPixelDimension(obj->Graphic - 0x4000, realRect);
 
 					fib.X += realRect.left;
 					fib.Y += realRect.top;
@@ -855,7 +855,7 @@ void TGameScreen::CheckMouseEvents()
 				}
 				else if (!Target.IsTargeting())
 				{
-					UO->PickupItem(selobj);
+					Orion->PickupItem(selobj);
 					//g_LastGumpLeftMouseDown = 0;
 					g_LastObjectLeftMouseDown = 0;
 				}
@@ -866,7 +866,7 @@ void TGameScreen::CheckMouseEvents()
 			TGameCharacter *selchar = World->FindWorldCharacter(g_LastObjectLeftMouseDown);
 			if (selchar!= NULL) //Character selection
 			{
-				UO->OpenStatus(selchar->Serial);
+				Orion->OpenStatus(selchar->Serial);
 				CurrentScreen->OnLeftMouseDown();
 				g_GeneratedMouseDown = true;
 			}
@@ -942,7 +942,7 @@ void TGameScreen::AddLight( __in TRenderWorldObject *rwo, __in TRenderWorldObjec
 				if (!lightObject->IsGameObject())
 					graphic -= 0x4000;
 
-				m_Light[m_LightCount].Color = UO->GetLightColor(graphic);
+				m_Light[m_LightCount].Color = Orion->GetLightColor(graphic);
 			}
 			else
 				m_Light[m_LightCount].Color = 0;
@@ -1039,7 +1039,7 @@ void TGameScreen::CalculateGameWindowText( __in bool &mode)
 
 					WORD gID = rwo->Graphic - 0x4000;
 
-					int height = UO->m_StaticData[gID / 32].Tiles[gID % 32].Height;
+					int height = Orion->m_StaticData[gID / 32].Tiles[gID % 32].Height;
 
 					drawY -= (height + 20);
 
@@ -1138,7 +1138,7 @@ void TGameScreen::DrawGameWindow( __in bool &mode)
 	}
 	else
 	{
-		bool useCircleTrans = (ConfigManager.UseCircleTrans && UO->CircleTransPixelsInXY());
+		bool useCircleTrans = (ConfigManager.UseCircleTrans && Orion->CircleTransPixelsInXY());
 
 		IFOR(i, 0, m_RenderListCount)
 		{
@@ -1210,7 +1210,7 @@ void TGameScreen::DrawGameWindowLight()
 			{
 				LIGHT_DATA &light = m_Light[i];
 
-				UO->DrawLight(light.ID, light.Color, light.DrawX - m_RenderBounds.GameWindowPosX, light.DrawY - m_RenderBounds.GameWindowPosY);
+				Orion->DrawLight(light.ID, light.Color, light.DrawX - m_RenderBounds.GameWindowPosX, light.DrawY - m_RenderBounds.GameWindowPosY);
 			}
 
 			UnuseShader();
@@ -1237,7 +1237,7 @@ void TGameScreen::DrawGameWindowLight()
 		{
 			LIGHT_DATA &light = m_Light[i];
 
-			UO->DrawLight(light.ID, light.Color, light.DrawX - m_RenderBounds.GameWindowPosX, light.DrawY - m_RenderBounds.GameWindowPosY);
+			Orion->DrawLight(light.ID, light.Color, light.DrawX - m_RenderBounds.GameWindowPosX, light.DrawY - m_RenderBounds.GameWindowPosY);
 		}
 
 		glDisable(GL_BLEND);
@@ -1609,11 +1609,11 @@ int TGameScreen::Render(__in bool mode)
 
 #pragma region GameWindowScope
 		//Рамка игрового окна
-		UO->DrawGump(0x0A8D, 0, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY - 4, 0, m_RenderBounds.GameWindowSizeY + 8);
-		UO->DrawGump(0x0A8D, 0, m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowPosY - 4, 0, m_RenderBounds.GameWindowSizeY + 8);
+		Orion->DrawGump(0x0A8D, 0, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY - 4, 0, m_RenderBounds.GameWindowSizeY + 8);
+		Orion->DrawGump(0x0A8D, 0, m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowPosY - 4, 0, m_RenderBounds.GameWindowSizeY + 8);
 
-		UO->DrawGump(0x0A8C, 0, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY - 4, m_RenderBounds.GameWindowSizeX + 4, 0);
-		UO->DrawGump(0x0A8C, 0, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY, m_RenderBounds.GameWindowSizeX + 8, 0);
+		Orion->DrawGump(0x0A8C, 0, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY - 4, m_RenderBounds.GameWindowSizeX + 4, 0);
+		Orion->DrawGump(0x0A8C, 0, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY, m_RenderBounds.GameWindowSizeX + 8, 0);
 
 		//Ресайзер / замок
 		WORD resizeGumpID = 0x0837; //button
@@ -1622,7 +1622,7 @@ int TGameScreen::Render(__in bool mode)
 		else if (g_LastObjectType == SOT_GAME_GUMP_SCOPE && g_LastObjectLeftMouseDown == 2)
 			resizeGumpID++; //lighted button
 
-		UO->DrawGump(resizeGumpID, 0, m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX - 3, m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY - 3);
+		Orion->DrawGump(resizeGumpID, 0, m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX - 3, m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY - 3);
 #pragma endregion
 
 #if UO_DEBUG_INFO!=0
@@ -1723,17 +1723,17 @@ int TGameScreen::Render(__in bool mode)
 				{
 					ohGraphic -= GAME_FIGURE_GUMP_OFFSET;
 
-					TTextureObject *to = UO->ExecuteGump(ohGraphic);
+					TTextureObject *to = Orion->ExecuteGump(ohGraphic);
 
 					if (to != NULL)
-						UO->DrawGump(ohGraphic, ohColor, g_MouseX - (to->Width / 2), g_MouseY - (to->Height / 2));
+						Orion->DrawGump(ohGraphic, ohColor, g_MouseX - (to->Width / 2), g_MouseY - (to->Height / 2));
 				}
 				else
 				{
-					UO->DrawStaticArtInContainer(ohGraphic, ohColor, g_MouseX, g_MouseY, false, true);
+					Orion->DrawStaticArtInContainer(ohGraphic, ohColor, g_MouseX, g_MouseY, false, true);
 
 					if (doubleDraw)
-						UO->DrawStaticArtInContainer(ohGraphic, ohColor, g_MouseX + 5, g_MouseY + 5, false, true);
+						Orion->DrawStaticArtInContainer(ohGraphic, ohColor, g_MouseX + 5, g_MouseY + 5, false, true);
 				}
 
 				if (ohColor != 0)
@@ -1765,22 +1765,22 @@ int TGameScreen::Render(__in bool mode)
 		}
 		
 		//Если ничего не выбралось - пройдемся по рамке
-		if (UO->GumpPixelsInXY(0x0A8D, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY - 4, 0, m_RenderBounds.GameWindowSizeY + 8))
+		if (Orion->GumpPixelsInXY(0x0A8D, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY - 4, 0, m_RenderBounds.GameWindowSizeY + 8))
 		{
 			g_LastObjectType = SOT_GAME_GUMP_SCOPE;
 			g_LastSelectedObject = 1;
 		}
-		else if (UO->GumpPixelsInXY(0x0A8D, m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowPosY - 4, 0, m_RenderBounds.GameWindowSizeY + 8))
+		else if (Orion->GumpPixelsInXY(0x0A8D, m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX, m_RenderBounds.GameWindowPosY - 4, 0, m_RenderBounds.GameWindowSizeY + 8))
 		{
 			g_LastObjectType = SOT_GAME_GUMP_SCOPE;
 			g_LastSelectedObject = 1;
 		}
-		else if (UO->GumpPixelsInXY(0x0A8C, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY - 4, m_RenderBounds.GameWindowSizeX + 8, 0))
+		else if (Orion->GumpPixelsInXY(0x0A8C, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY - 4, m_RenderBounds.GameWindowSizeX + 8, 0))
 		{
 			g_LastObjectType = SOT_GAME_GUMP_SCOPE;
 			g_LastSelectedObject = 1;
 		}
-		else if (UO->GumpPixelsInXY(0x0A8C, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY, m_RenderBounds.GameWindowSizeX + 8, 0))
+		else if (Orion->GumpPixelsInXY(0x0A8C, m_RenderBounds.GameWindowPosX - 4, m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY, m_RenderBounds.GameWindowSizeX + 8, 0))
 		{
 			g_LastObjectType = SOT_GAME_GUMP_SCOPE;
 			g_LastSelectedObject = 1;
@@ -1788,7 +1788,7 @@ int TGameScreen::Render(__in bool mode)
 		
 		if (!ConfigManager.LockResizingGameWindow)
 		{
-			if (UO->GumpPixelsInXY(0x0837, m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX - 3, m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY - 3))
+			if (Orion->GumpPixelsInXY(0x0837, m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX - 3, m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY - 3))
 			{
 				g_LastObjectType = SOT_GAME_GUMP_SCOPE;
 				g_LastSelectedObject = 2; //Button
@@ -1991,7 +1991,7 @@ void TGameScreen::OnLeftMouseUp()
 			}
 		}
 		else
-			UO->PlaySoundEffect(0x0051);
+			Orion->PlaySoundEffect(0x0051);
 	}
 	else if ((g_LastObjectType == SOT_LAND_OBJECT || g_LastObjectType == SOT_STATIC_OBJECT) && ObjectInHand != NULL && g_SelectedObject != NULL)
 	{
@@ -2006,7 +2006,7 @@ void TGameScreen::OnLeftMouseUp()
 			dropZ = g_SelectedObject->Z;
 		}
 		else
-			UO->PlaySoundEffect(0x0051);
+			Orion->PlaySoundEffect(0x0051);
 	}
 	
 	if (can_drop /*&& ObjectInHand != NULL*/)
@@ -2015,7 +2015,7 @@ void TGameScreen::OnLeftMouseUp()
 			can_drop = false;
 
 		if (can_drop)
-			UO->DropItem(drop_container, dropX, dropY, dropZ);
+			Orion->DropItem(drop_container, dropX, dropY, dropZ);
 	}
 	else if (ObjectInHand == NULL)
 	{
@@ -2043,10 +2043,10 @@ void TGameScreen::OnLeftMouseUp()
 				{
 					WORD id = g_SelectedObject->Graphic - 0x4000;
 
-					string str = ClilocManager->Cliloc(g_Language)->GetA(102000 + id, UO->m_StaticData[id / 32].Tiles[id % 32].Name);
+					string str = ClilocManager->Cliloc(g_Language)->GetA(102000 + id, Orion->m_StaticData[id / 32].Tiles[id % 32].Name);
 
 					if (str.length())
-						UO->CreateTextMessage(TT_CLIENT, (DWORD)g_SelectedObject, 3, 0x03B5, str);
+						Orion->CreateTextMessage(TT_CLIENT, (DWORD)g_SelectedObject, 3, 0x03B5, str);
 				}
 			}
 			/*else if (g_LastObjectType == SOT_LAND_OBJECT)
@@ -2103,7 +2103,7 @@ void TGameScreen::OnRightMouseUp()
 		if (g_SelectedObject->IsLandObject() || g_SelectedObject->IsSurface())
 		{
 			if (PathFinder->WalkTo(g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, 0))
-				UO->CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Pathfinding!");
+				Orion->CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Pathfinding!");
 		}
 	}
 }
@@ -2128,7 +2128,7 @@ bool TGameScreen::OnLeftMouseDoubleClick()
 		if (obj != NULL)
 		{
 			if (!obj->NPC)
-				UO->DoubleClick(g_LastSelectedObject);
+				Orion->DoubleClick(g_LastSelectedObject);
 			else
 				charUnderMouse = g_LastSelectedObject;
 		}
@@ -2149,7 +2149,7 @@ bool TGameScreen::OnLeftMouseDoubleClick()
 				if (obj->NPC)
 					charUnderMouse = serial;
 				else
-					UO->DoubleClick(serial);
+					Orion->DoubleClick(serial);
 
 				result = true;
 			}
@@ -2173,9 +2173,9 @@ bool TGameScreen::OnLeftMouseDoubleClick()
 		}
 
 		if (g_Player->Warmode && charUnderMouse != g_PlayerSerial)
-			UO->Attack(charUnderMouse);
+			Orion->Attack(charUnderMouse);
 		else
-			UO->DoubleClick(charUnderMouse);
+			Orion->DoubleClick(charUnderMouse);
 			//UO->PaperdollReq(charUnderMouse);
 	}
 
@@ -2194,7 +2194,7 @@ bool TGameScreen::OnRightMouseDoubleClick()
 		{
 			if (PathFinder->WalkTo(g_SelectedObject->X, g_SelectedObject->Y, g_SelectedObject->Z, 0))
 			{
-				UO->CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Pathfinding!");
+				Orion->CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Pathfinding!");
 				return true;
 			}
 		}
@@ -2326,7 +2326,7 @@ void TGameScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 					if (EntryPointer == GameConsole)
 					{
 						if (g_ConsolePrompt)
-							UO->ConsolePromptSend();
+							Orion->ConsolePromptSend();
 						else if (EntryPointer->Length())
 						{
 							g_ConsoleStack[g_ConsoleStackCount % MAX_CONSOLE_STACK_SIZE] = EntryPointer->Data();
@@ -2430,7 +2430,7 @@ void TGameScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 					PathFinder->StopAutoWalk();
 
 				if (g_ConsolePrompt)
-					UO->ConsolePromptCancel();
+					Orion->ConsolePromptCancel();
 
 				break;
 			}
@@ -2442,9 +2442,9 @@ void TGameScreen::OnKeyPress( __in WPARAM wparam, __in LPARAM lparam)
 	if (wparam == VK_TAB)
 	{
 		if (ConfigManager.HoldTabForCombat)
-			UO->ChangeWarmode(1);
+			Orion->ChangeWarmode(1);
 		else
-			UO->ChangeWarmode();
+			Orion->ChangeWarmode();
 	}
 
 	if (MacroPointer == NULL)

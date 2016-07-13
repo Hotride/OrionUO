@@ -32,9 +32,9 @@ TGumpMap::~TGumpMap()
 //---------------------------------------------------------------------------
 void TGumpMap::PrepareTextures()
 {
-	UO->ExecuteResizepic(0x1432);
-	UO->ExecuteGumpPart(0x1398, 4);
-	UO->ExecuteGump(0x139D);
+	Orion->ExecuteResizepic(0x1432);
+	Orion->ExecuteGumpPart(0x1398, 4);
+	Orion->ExecuteGump(0x139D);
 }
 //---------------------------------------------------------------------------
 void TGumpMap::GenerateFrame()
@@ -168,14 +168,14 @@ int TGumpMap::Draw(__in bool &mode)
 
 	if (mode) //Отрисовка
 	{
-		UO->DrawResizepicGump(0x1432, posX, posY, m_Width + 44, m_Height + 61); //Map Gump
+		Orion->DrawResizepicGump(0x1432, posX, posY, m_Width + 44, m_Height + 61); //Map Gump
 
 		if (m_PlotState == 0)
-			UO->DrawGump(0x1398, 0, posX + ((m_Width - 100) / 2), posY + 5); //Plot Course
+			Orion->DrawGump(0x1398, 0, posX + ((m_Width - 100) / 2), posY + 5); //Plot Course
 		else if (m_PlotState == 1)
 		{
-			UO->DrawGump(0x1399, 0, posX + ((m_Width - 70) / 2), posY + 5); //Stop Plotting
-			UO->DrawGump(0x139A, 0, posX + ((m_Width - 66) / 2), posY + m_Height + 37); //Clear Course
+			Orion->DrawGump(0x1399, 0, posX + ((m_Width - 70) / 2), posY + 5); //Stop Plotting
+			Orion->DrawGump(0x139A, 0, posX + ((m_Width - 66) / 2), posY + m_Height + 37); //Clear Course
 		}
 		
 		int tempX = posX + 24;
@@ -191,7 +191,7 @@ int TGumpMap::Draw(__in bool &mode)
 			g_GL.Draw(Texture, tempX, tempY, m_Width, m_Height);
 		}
 
-		UO->DrawGump(0x139D, 0, posX + 174, posY + 177); //N
+		Orion->DrawGump(0x139D, 0, posX + 174, posY + 177); //N
 
 		//Отрисовка кнопок
 		TGumpObject *go = (TGumpObject*)m_Items;
@@ -224,13 +224,13 @@ int TGumpMap::Draw(__in bool &mode)
 					int checkY = drawY + 8;
 
 					if (LineUnderMouse(checkX, checkY, nextDrawX, nextDrawY))
-						UO->DrawGump(0x139B, 0, checkX - 2, checkY - 8);
+						Orion->DrawGump(0x139B, 0, checkX - 2, checkY - 8);
 				}
 			}
 
 			if (go != PinOnCursor)
 			{
-				UO->DrawGump(0x139B, 0, drawX, drawY);
+				Orion->DrawGump(0x139B, 0, drawX, drawY);
 
 				char text[10] = {0};
 				sprintf(text, "%d", idx);
@@ -248,7 +248,7 @@ int TGumpMap::Draw(__in bool &mode)
 		int LSG = 0;
 
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (UO->ResizepicPixelsInXY(0x1432, posX, posY, m_Width + 44, m_Height + 61))
+		if (Orion->ResizepicPixelsInXY(0x1432, posX, posY, m_Width + 44, m_Height + 61))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -256,14 +256,14 @@ int TGumpMap::Draw(__in bool &mode)
 
 		if (m_PlotState == 0)
 		{
-			if (UO->GumpPixelsInXY(0x1398, posX + ((m_Width - 99) / 2), posY + 5)) //Plot Course
+			if (Orion->GumpPixelsInXY(0x1398, posX + ((m_Width - 99) / 2), posY + 5)) //Plot Course
 				LSG = ID_GM_PLOT_COURSE;
 		}
 		else if (m_PlotState == 1)
 		{
-			if (UO->GumpPixelsInXY(0x1398, posX + ((m_Width - 69) / 2), posY + 5)) //Stop Plotting
+			if (Orion->GumpPixelsInXY(0x1398, posX + ((m_Width - 69) / 2), posY + 5)) //Stop Plotting
 				LSG = ID_GM_STOP_PLOTTING;
-			else if (UO->GumpPixelsInXY(0x1398, posX + ((m_Width - 66) / 2), posY + m_Height + 37)) //Clear Course
+			else if (Orion->GumpPixelsInXY(0x1398, posX + ((m_Width - 66) / 2), posY + m_Height + 37)) //Clear Course
 				LSG = ID_GM_CLEAR_COURSE;
 
 			TGumpObject *go = (TGumpObject*)m_Items;
@@ -274,7 +274,7 @@ int TGumpMap::Draw(__in bool &mode)
 				int drawX = posX + go->X + 18;
 				int drawY = posY + go->Y + 21;
 
-				if (UO->PolygonePixelsInXY(drawX, drawY, 10, 10))
+				if (Orion->PolygonePixelsInXY(drawX, drawY, 10, 10))
 					LSG = ID_GM_PIN_LIST + idx;
 			}
 
@@ -383,7 +383,7 @@ void TGumpMap::OnLeftMouseUp()
 					int x = X + 24;
 					int y = Y + 32;
 
-					if (UO->PolygonePixelsInXY(x, y, m_Width, m_Height))
+					if (Orion->PolygonePixelsInXY(x, y, m_Width, m_Height))
 					{
 						x = g_MouseX - x - 4;
 						y = g_MouseY - y - 2;
@@ -405,7 +405,7 @@ void TGumpMap::OnLeftMouseUp()
 
 		int idx = g_LastObjectLeftMouseDown - ID_GM_PIN_LIST - 1;
 
-		if (UO->PolygonePixelsInXY(x, y, m_Width, m_Height))
+		if (Orion->PolygonePixelsInXY(x, y, m_Width, m_Height))
 		{
 			x = g_MouseX - (x - 4);
 			y = g_MouseY - (y - 2);

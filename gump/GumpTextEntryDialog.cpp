@@ -36,7 +36,7 @@ m_Variant(variant), m_MaxLength(maxLength), m_ParentID(0), m_ButtonID(0)
 	
 	if (!g_GrayMenuCount)
 	{
-		UO->InitScreen(GS_GAME_BLOCKED);
+		Orion->InitScreen(GS_GAME_BLOCKED);
 		GameBlockedScreen->Code = 2;
 	}
 
@@ -54,7 +54,7 @@ TGumpTextEntryDialog::~TGumpTextEntryDialog()
 //---------------------------------------------------------------------------
 void TGumpTextEntryDialog::PrepareTextures()
 {
-	UO->ExecuteGump(0x0474);
+	Orion->ExecuteGump(0x0474);
 }
 //---------------------------------------------------------------------------
 void TGumpTextEntryDialog::GenerateFrame()
@@ -71,7 +71,7 @@ void TGumpTextEntryDialog::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 	
-		UO->DrawGump(0x0474, 0, 0, 0); //Gump
+		Orion->DrawGump(0x0474, 0, 0, 0); //Gump
 		
 		FontManager->DrawA(2, m_Text.c_str(), 0x0386, 60, 50);
 
@@ -83,7 +83,7 @@ void TGumpTextEntryDialog::GenerateFrame()
 		else if (g_GumpSelectElement == 3)
 			gumpID = 0x0476; //Text field (lighted)
 
-		UO->DrawGump(gumpID, 0, 60, 130); //Text field
+		Orion->DrawGump(gumpID, 0, 60, 130); //Text field
 
 		if (gumpID == 0x0477) //Указатель консоли в гампе
 			TextEntry->DrawA(1, 0x0386, 71, 137);
@@ -94,7 +94,7 @@ void TGumpTextEntryDialog::GenerateFrame()
 		else if (g_GumpSelectElement == ID_GTED_BUTTON_OKAY)
 			gumpID = 0x047D; //Button Okay (lighted)
 
-		UO->DrawGump(gumpID, 0, 117, 190); //Button Okay
+		Orion->DrawGump(gumpID, 0, 117, 190); //Button Okay
 
 		if (!NoClose)
 		{
@@ -104,7 +104,7 @@ void TGumpTextEntryDialog::GenerateFrame()
 			else if (g_GumpSelectElement == ID_GTED_BUTTON_CANCEL)
 				gumpID = 0x047A; //Button Cancel (lighted)
 
-			UO->DrawGump(gumpID, 0, 204, 190); //Button Cancel
+			Orion->DrawGump(gumpID, 0, 204, 190); //Button Cancel
 		}
 
 	glEndList();
@@ -144,17 +144,17 @@ int TGumpTextEntryDialog::Draw(bool &mode)
 
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x0474, 0, 0))
+		if (Orion->GumpPixelsInXY(0x0474, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 		
-		if (UO->GumpPixelsInXY(0x0475, 60, 130))
+		if (Orion->GumpPixelsInXY(0x0475, 60, 130))
 			LSG = ID_GTED_TEXT_FIELD; //Text field
-		else if (UO->GumpPixelsInXY(0x047B, 117, 190))
+		else if (Orion->GumpPixelsInXY(0x047B, 117, 190))
 			LSG = ID_GTED_BUTTON_OKAY; //Button okay
-		else if (!NoClose && UO->GumpPixelsInXY(0x0478, 204, 190))
+		else if (!NoClose && Orion->GumpPixelsInXY(0x0478, 204, 190))
 			LSG = ID_GTED_BUTTON_CANCEL; //Button cancel
 
 		g_MouseX = oldMouseX;

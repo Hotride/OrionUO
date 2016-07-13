@@ -47,24 +47,24 @@ void TCreateCharacterScreen::Init()
 	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
-	UO->ExecuteGump(0x0588); //Main Screen background
-	UO->ExecuteGump(0x157C); //Main Screen
-	UO->ExecuteGump(0x15A0); //Main Screen Notes
-	UO->ExecuteGumpPart(0x1589, 3); //X gump
-	UO->ExecuteGumpPart(0x15A1, 3); //< gump
-	UO->ExecuteGumpPart(0x15A4, 3); //> gump
-	UO->ExecuteResizepic(0x0E10); //Create character field
-	UO->ExecuteGump(0x0709); //Character name gump
-	UO->ExecuteGumpPart(0x070A, 3); //Character name field
-	UO->ExecuteGump(0x0708); //Cheate character podium
-	UO->ExecuteResizepic(0xBB8); //text field
-	UO->ExecuteGump(0x00FD); //v gump
-	UO->ExecuteGumpPart(0x070D, 3); //Character female button
-	UO->ExecuteGump(0x0761); //Character create male body gump
-	UO->ExecuteGump(0x0739); //Character create shirt
-	UO->ExecuteGump(0x0738); //Character create pants
-	UO->ExecuteGump(0x0762); //Character create shoes
-	UO->ExecuteGumpPart(0x0710, 3); //Character male button
+	Orion->ExecuteGump(0x0588); //Main Screen background
+	Orion->ExecuteGump(0x157C); //Main Screen
+	Orion->ExecuteGump(0x15A0); //Main Screen Notes
+	Orion->ExecuteGumpPart(0x1589, 3); //X gump
+	Orion->ExecuteGumpPart(0x15A1, 3); //< gump
+	Orion->ExecuteGumpPart(0x15A4, 3); //> gump
+	Orion->ExecuteResizepic(0x0E10); //Create character field
+	Orion->ExecuteGump(0x0709); //Character name gump
+	Orion->ExecuteGumpPart(0x070A, 3); //Character name field
+	Orion->ExecuteGump(0x0708); //Cheate character podium
+	Orion->ExecuteResizepic(0xBB8); //text field
+	Orion->ExecuteGump(0x00FD); //v gump
+	Orion->ExecuteGumpPart(0x070D, 3); //Character female button
+	Orion->ExecuteGump(0x0761); //Character create male body gump
+	Orion->ExecuteGump(0x0739); //Character create shirt
+	Orion->ExecuteGump(0x0738); //Character create pants
+	Orion->ExecuteGump(0x0762); //Character create shoes
+	Orion->ExecuteGumpPart(0x0710, 3); //Character male button
 }
 //---------------------------------------------------------------------------
 /*!
@@ -80,16 +80,16 @@ void TCreateCharacterScreen::ProcessSmoothAction( __in_opt BYTE action)
 	if (action == ID_SMOOTH_CCS_QUIT)
 		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 	else if (action == ID_SMOOTH_CCS_GO_SCREEN_CHARACTER)
-		UO->InitScreen(GS_CHARACTER);
+		Orion->InitScreen(GS_CHARACTER);
 	else if (action == ID_SMOOTH_CCS_GO_SCREEN_CONNECT)
 	{
-		UO->InitScreen(GS_GAME_CONNECT);
+		Orion->InitScreen(GS_GAME_CONNECT);
 		ConnectionScreen->Type = CST_GAME;
 		ConnectionScreen->ConnectionFailed = true;
 		ConnectionScreen->ErrorCode = 1;
 	}
 	else if (action == ID_SMOOTH_CCS_GO_SCREEN_SELECT_TOWN)
-		UO->InitScreen(GS_SELECT_TOWN);
+		Orion->InitScreen(GS_SELECT_TOWN);
 }
 //---------------------------------------------------------------------------
 /*!
@@ -157,38 +157,38 @@ int TCreateCharacterScreen::Render( __in bool mode)
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
-		UO->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
-		UO->DrawGump(0x157C, 0, 0, 0); //Main Gump
-		UO->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
+		Orion->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
+		Orion->DrawGump(0x157C, 0, 0, 0); //Main Gump
+		Orion->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
 		
 		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_CCS_QUIT); //X gump /lighted
 		if (CanPressedButton == ID_CCS_QUIT)
 			GumpID = 0x158B; //X gump (pressed)
-		UO->DrawGump(GumpID, 0, 555, 4);
+		Orion->DrawGump(GumpID, 0, 555, 4);
 		
 		GumpID = 0x15A1 + (int)(CanSelectedButton == ID_CCS_ARROW_PREV); //< gump /lighted
 		if (CanPressedButton == ID_CCS_ARROW_PREV)
 			GumpID = 0x15A3; //< gump pressed
-		UO->DrawGump(GumpID, 0, 586, 445); //< gump
+		Orion->DrawGump(GumpID, 0, 586, 445); //< gump
 
 		GumpID = 0x15A4 + (int)(CanSelectedButton == ID_CCS_ARROW_NEXT); //> gump /lighted
 		if (CanPressedButton == ID_CCS_ARROW_NEXT)
 			GumpID = 0x15A6; //> gump pressed
-		UO->DrawGump(GumpID, 0, 610, 445); //> gump
+		Orion->DrawGump(GumpID, 0, 610, 445); //> gump
 
-		UO->DrawResizepicGump(0x0E10, 82, 125, 151, 310); //Create character field
+		Orion->DrawResizepicGump(0x0E10, 82, 125, 151, 310); //Create character field
 		
-		UO->DrawGump(0x0709, 0, 280, 53); //Character name gump
+		Orion->DrawGump(0x0709, 0, 280, 53); //Character name gump
 
-		UO->DrawGump(0x070A, 0, 240, 73); //Character name field (
-		UO->DrawGump(0x070B, 0, 248, 73, 215, 0); //Character name field body
-		UO->DrawGump(0x070C, 0, 463, 73); //Character name field )
+		Orion->DrawGump(0x070A, 0, 240, 73); //Character name field (
+		Orion->DrawGump(0x070B, 0, 248, 73, 215, 0); //Character name field body
+		Orion->DrawGump(0x070C, 0, 463, 73); //Character name field )
 		
 		EntryPointer->DrawA(5, 1, 257, 65);
 		
-		UO->DrawGump(0x0708, 0, 238, 98); //Cheate character podium
+		Orion->DrawGump(0x0708, 0, 238, 98); //Cheate character podium
 		
-		UO->DrawResizepicGump(0x0E10, 475, 125, 151, 310); //Create character field
+		Orion->DrawResizepicGump(0x0E10, 475, 125, 151, 310); //Create character field
 		
 		const WORD hairTextColorRange[2] = { 0x0381, 0x0021 };
 		const WORD toneTextColorRange[2] = { 0x0481, 0x0021 };
@@ -199,16 +199,16 @@ int TCreateCharacterScreen::Render( __in bool mode)
 
 			if (m_StyleSelection == CCSID_FACIAL_HAIR_STYLE)
 			{
-				UO->DrawResizepicGump(0xBB8, 97, 199, 177, 142); //Facial Hair Style text field extended
+				Orion->DrawResizepicGump(0xBB8, 97, 199, 177, 142); //Facial Hair Style text field extended
 
 				IFOR(i, 0, 8)
 					FontManager->DrawA(9, CreateCharacterManager.GetBeard(i).Name.c_str(), hairTextColorRange[(int)(CanSelectedButton == (ID_CCS_STYLE_RANGE + i))], 101, 205 + (i * 14));
 			}
 			else
 			{
-				UO->DrawResizepicGump(0xBB8, 97, 199, 121, 24); //Facial Hair Style text field
+				Orion->DrawResizepicGump(0xBB8, 97, 199, 121, 24); //Facial Hair Style text field
 				FontManager->DrawA(9, CreateCharacterManager.GetBeard(CreateCharacterManager.BeardStyle).Name.c_str(), 0x0386, 101, 205, 117, TS_LEFT, UOFONT_FIXED);
-				UO->DrawGump(0x00FD, 0, 200, 201); //v gump
+				Orion->DrawGump(0x00FD, 0, 200, 201); //v gump
 			}
 		}
 
@@ -216,7 +216,7 @@ int TCreateCharacterScreen::Render( __in bool mode)
 
 		if (m_StyleSelection == CCSID_HAIR_STYLE)
 		{
-			UO->DrawResizepicGump(0xBB8, 97, 154, 130, 170); //Hair Style text field extended
+			Orion->DrawResizepicGump(0xBB8, 97, 154, 130, 170); //Hair Style text field extended
 
 			int count = 10 + (int)CreateCharacterManager.Sex;
 
@@ -225,9 +225,9 @@ int TCreateCharacterScreen::Render( __in bool mode)
 		}
 		else
 		{
-			UO->DrawResizepicGump(0xBB8, 97, 154, 121, 24); //Hair Style text field
+			Orion->DrawResizepicGump(0xBB8, 97, 154, 121, 24); //Hair Style text field
 			FontManager->DrawA(9, CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).Name.c_str(), 0x0386, 101, 159);
-			UO->DrawGump(0x00FD, 0, 200, 156); //v gump
+			Orion->DrawGump(0x00FD, 0, 200, 156); //v gump
 		}
 
 		PBYTE huesData = (PBYTE)ColorManager->GetHuesRangePointer() + 32 + 4;
@@ -437,25 +437,25 @@ int TCreateCharacterScreen::Render( __in bool mode)
 
 		if (CreateCharacterManager.Sex)
 		{
-			UO->DrawGump(0x0760, CreateCharacterManager.SkinTone, 238, 98); //Character create female body gump
-			UO->DrawGump(0x0714, CreateCharacterManager.ShirtColor, 238, 98); //Character create skirt
-			UO->DrawGump(0x0764, CreateCharacterManager.PantsColor, 238, 98); //Character create dress
+			Orion->DrawGump(0x0760, CreateCharacterManager.SkinTone, 238, 98); //Character create female body gump
+			Orion->DrawGump(0x0714, CreateCharacterManager.ShirtColor, 238, 98); //Character create skirt
+			Orion->DrawGump(0x0764, CreateCharacterManager.PantsColor, 238, 98); //Character create dress
 
 			if (CreateCharacterManager.HairStyle)
-				UO->DrawGump(CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).GumpID, CreateCharacterManager.HairColor, 238, 98); //Character hair
+				Orion->DrawGump(CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).GumpID, CreateCharacterManager.HairColor, 238, 98); //Character hair
 		}
 		else
 		{
-			UO->DrawGump(0x0761, CreateCharacterManager.SkinTone, 238, 98); //Character create male body gump
-			UO->DrawGump(0x0739, CreateCharacterManager.ShirtColor, 238, 98); //Character create shirt
-			UO->DrawGump(0x0738, CreateCharacterManager.PantsColor, 238, 98); //Character create pants
-			UO->DrawGump(0x0762, 0, 238, 98); //Character create shoes
+			Orion->DrawGump(0x0761, CreateCharacterManager.SkinTone, 238, 98); //Character create male body gump
+			Orion->DrawGump(0x0739, CreateCharacterManager.ShirtColor, 238, 98); //Character create shirt
+			Orion->DrawGump(0x0738, CreateCharacterManager.PantsColor, 238, 98); //Character create pants
+			Orion->DrawGump(0x0762, 0, 238, 98); //Character create shoes
 
 			if (CreateCharacterManager.HairStyle)
-				UO->DrawGump(CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).GumpID, CreateCharacterManager.HairColor, 238, 98); //Character hair
+				Orion->DrawGump(CreateCharacterManager.GetHair(CreateCharacterManager.HairStyle).GumpID, CreateCharacterManager.HairColor, 238, 98); //Character hair
 
 			if (CreateCharacterManager.BeardStyle)
-				UO->DrawGump(CreateCharacterManager.GetBeard(CreateCharacterManager.BeardStyle).GumpID, CreateCharacterManager.BeardColor, 238, 98); //Character facial hair
+				Orion->DrawGump(CreateCharacterManager.GetBeard(CreateCharacterManager.BeardStyle).GumpID, CreateCharacterManager.BeardColor, 238, 98); //Character facial hair
 		}
 
 		UnuseShader();
@@ -467,14 +467,14 @@ int TCreateCharacterScreen::Render( __in bool mode)
 				GumpID = 0x070D + (int)(CanSelectedButton == ID_CCS_FEMALE_BUTTON); //Character female button
 				if (CanPressedButton == ID_CCS_FEMALE_BUTTON)
 					GumpID = 0x070F; //Character female button pressed
-				UO->DrawGump(GumpID, 0, 310, 408);
+				Orion->DrawGump(GumpID, 0, 310, 408);
 			}
 			else
 			{
 				GumpID = 0x0710 + (int)(CanSelectedButton == ID_CCS_MALE_BUTTON); //Character male button
 				if (CanPressedButton == ID_CCS_MALE_BUTTON)
 					GumpID = 0x0712; //Character male button pressed
-				UO->DrawGump(GumpID, 0, 310, 408);
+				Orion->DrawGump(GumpID, 0, 310, 408);
 			}
 		}
 		else
@@ -493,23 +493,23 @@ int TCreateCharacterScreen::Render( __in bool mode)
 	{
 		g_LastSelectedObject = 0;
 
-		if (UO->GumpPixelsInXY(0x1589, 555, 4))
+		if (Orion->GumpPixelsInXY(0x1589, 555, 4))
 			g_LastSelectedObject = ID_CCS_QUIT; //X gump
-		else if (UO->GumpPixelsInXY(0x15A1, 586, 445))
+		else if (Orion->GumpPixelsInXY(0x15A1, 586, 445))
 			g_LastSelectedObject = ID_CCS_ARROW_PREV; //< gump
-		else if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+		else if (Orion->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_CCS_ARROW_NEXT; //> gump
 
 		if (ConnectionManager.ClientVersion < CV_4011D)
 		{
 			if (CreateCharacterManager.Sex)
 			{
-				if (UO->GumpPixelsInXY(0x070D, 310, 408))
+				if (Orion->GumpPixelsInXY(0x070D, 310, 408))
 					g_LastSelectedObject = ID_CCS_FEMALE_BUTTON; //female button
 			}
 			else
 			{
-				if (UO->GumpPixelsInXY(0x0710, 310, 408))
+				if (Orion->GumpPixelsInXY(0x0710, 310, 408))
 					g_LastSelectedObject = ID_CCS_MALE_BUTTON; //male button
 			}
 		}
@@ -523,7 +523,7 @@ int TCreateCharacterScreen::Render( __in bool mode)
 			{
 				DFOR(i, 8, 0)
 				{
-					if (UO->PolygonePixelsInXY(101, 205 + (i * 14), 170, 25))
+					if (Orion->PolygonePixelsInXY(101, 205 + (i * 14), 170, 25))
 					{
 						g_LastSelectedObject = ID_CCS_STYLE_RANGE + i; //Facial Hair text field extended
 						break;
@@ -532,7 +532,7 @@ int TCreateCharacterScreen::Render( __in bool mode)
 			}
 			else
 			{
-				if (UO->ResizepicPixelsInXY(0xBB8, 97, 199, 121, 24))
+				if (Orion->ResizepicPixelsInXY(0xBB8, 97, 199, 121, 24))
 					g_LastSelectedObject = ID_CCS_FACIAL_HAIR_STYLE; //Facial Hair text field
 			}
 		}
@@ -543,7 +543,7 @@ int TCreateCharacterScreen::Render( __in bool mode)
 
 			DFOR(i, count, 0)
 			{
-				if (UO->PolygonePixelsInXY(101, 159 + (i * 14), 123, 25))
+				if (Orion->PolygonePixelsInXY(101, 159 + (i * 14), 123, 25))
 				{
 					g_LastSelectedObject = ID_CCS_STYLE_RANGE + i; //Hair text field extended
 					break;
@@ -552,21 +552,21 @@ int TCreateCharacterScreen::Render( __in bool mode)
 		}
 		else
 		{
-			if (UO->ResizepicPixelsInXY(0xBB8, 97, 154, 121, 24))
+			if (Orion->ResizepicPixelsInXY(0xBB8, 97, 154, 121, 24))
 				g_LastSelectedObject = ID_CCS_HAIR_STYLE; //Hair text field
 		}
 		
 		if (m_ColorSelection == 0)
 		{
-			if (UO->PolygonePixelsInXY(491, 139, 120, 40))
+			if (Orion->PolygonePixelsInXY(491, 139, 120, 40))
 				g_LastSelectedObject = ID_CCS_SKIN_TONE;
-			else if (UO->PolygonePixelsInXY(491, 184, 120, 40))
+			else if (Orion->PolygonePixelsInXY(491, 184, 120, 40))
 				g_LastSelectedObject = ID_CCS_SHIRT_COLOR;
-			else if (UO->PolygonePixelsInXY(491, 229, 120, 40))
+			else if (Orion->PolygonePixelsInXY(491, 229, 120, 40))
 				g_LastSelectedObject = ID_CCS_SKIRT_OR_PANTS_COLOR;
-			else if (UO->PolygonePixelsInXY(491, 274, 120, 40))
+			else if (Orion->PolygonePixelsInXY(491, 274, 120, 40))
 				g_LastSelectedObject = ID_CCS_HAIR_COLOR;
-			else if (!CreateCharacterManager.Sex && UO->PolygonePixelsInXY(491, 319, 120, 40))
+			else if (!CreateCharacterManager.Sex && Orion->PolygonePixelsInXY(491, 319, 120, 40))
 				g_LastSelectedObject = ID_CCS_FACIAL_HAIR_COLOR;
 		}
 		else

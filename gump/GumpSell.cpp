@@ -32,13 +32,13 @@ TGumpSell::~TGumpSell()
 //----------------------------------------------------------------------------
 void TGumpSell::PrepareTextures()
 {
-	UO->ExecuteGumpPart(0x0872, 2);
-	UO->ExecuteGumpPart(0x0039, 3);
-	UO->ExecuteGump(0x0828);
-	UO->ExecuteGumpPart(0x0037, 2);
+	Orion->ExecuteGumpPart(0x0872, 2);
+	Orion->ExecuteGumpPart(0x0039, 3);
+	Orion->ExecuteGump(0x0828);
+	Orion->ExecuteGumpPart(0x0037, 2);
 
 	QFOR(go, m_Items, TGumpSellObject*)
-		UO->ExecuteStaticArt(go->Graphic);
+		Orion->ExecuteStaticArt(go->Graphic);
 }
 //----------------------------------------------------------------------------
 void TGumpSell::CalculateSelectedListCount()
@@ -105,7 +105,7 @@ void TGumpSell::GenerateFrame()
 
 	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawGump(0x0872, 0, 0, 0);
+		Orion->DrawGump(0x0872, 0, 0, 0);
 
 		//My Inventory
 
@@ -113,9 +113,9 @@ void TGumpSell::GenerateFrame()
 
 		int drawY = 60;
 			
-		TTextureObject *thDelim1 = UO->ExecuteGump(0x0039);
-		TTextureObject *thDelim2 = UO->ExecuteGump(0x003A);
-		TTextureObject *thDelim3 = UO->ExecuteGump(0x003B);
+		TTextureObject *thDelim1 = Orion->ExecuteGump(0x0039);
+		TTextureObject *thDelim2 = Orion->ExecuteGump(0x003A);
+		TTextureObject *thDelim3 = Orion->ExecuteGump(0x003B);
 		
 		int delim1Height = 20;
 		int delim1Width = 30;
@@ -157,7 +157,7 @@ void TGumpSell::GenerateFrame()
 			if (drawY >= drawYBounds)
 				break;
 
-			TTextureObject *th = UO->ExecuteStaticArt(go->Graphic);
+			TTextureObject *th = Orion->ExecuteStaticArt(go->Graphic);
 
 			if (th != NULL)
 			{
@@ -199,15 +199,15 @@ void TGumpSell::GenerateFrame()
 
 					ColorizerShader->Use();
 
-					UO->DrawStaticArtInContainer(go->Graphic, go->Color, delim1posX, drawY + imageOffsetY);
+					Orion->DrawStaticArtInContainer(go->Graphic, go->Color, delim1posX, drawY + imageOffsetY);
 
 					UnuseShader();
 					
 					drawY += maxOffset;
 					
-					UO->DrawGump(0x0039, 0, delim1posX, drawY);
-					UO->DrawGump(0x003A, 0, delim2posX, drawY, delimLineWidth, 0);
-					UO->DrawGump(0x003B, 0, delim3posX, drawY);
+					Orion->DrawGump(0x0039, 0, delim1posX, drawY);
+					Orion->DrawGump(0x003A, 0, delim2posX, drawY, delimLineWidth, 0);
+					Orion->DrawGump(0x003B, 0, delim3posX, drawY);
 
 					drawY += delim1Height;
 				}
@@ -225,11 +225,11 @@ void TGumpSell::GenerateFrame()
 		//Down
 		//UO->DrawGump(0x0828, 0, posX + 237, posY + 157); //Scroller 1 max
 			
-		UO->DrawGump(0x0828, 0, 237, 66 + scrollerY1); //Scroller 1
+		Orion->DrawGump(0x0828, 0, 237, 66 + scrollerY1); //Scroller 1
 
 		//Offer
 
-		UO->DrawGump(0x0873, 0, 170, 214);
+		Orion->DrawGump(0x0873, 0, 170, 214);
 			
 		g_GL.Scissor((int)g_GumpTranslateX + 200, (int)g_GumpTranslateY + 280, 200, 92);
 
@@ -306,8 +306,8 @@ void TGumpSell::GenerateFrame()
 
 				int drawOffsetY = drawY + (maxOffset / 2) - 6;
 					
-				UO->DrawGump(0x0037, 0, 356, drawOffsetY); //+
-				UO->DrawGump(0x0038, 0, 376, drawOffsetY); //-
+				Orion->DrawGump(0x0037, 0, 356, drawOffsetY); //+
+				Orion->DrawGump(0x0038, 0, 376, drawOffsetY); //-
 
 				drawY += maxOffset;
 			}
@@ -324,7 +324,7 @@ void TGumpSell::GenerateFrame()
 		//Down
 		//UO->DrawGump(0x0828, 0, posX + 407, posY + 337); //Scroller 2 max
 
-		UO->DrawGump(0x0828, 0, 407, 280 + scrollerY2); //Scroller 2
+		Orion->DrawGump(0x0828, 0, 407, 280 + scrollerY2); //Scroller 2
 
 		FontManager->DrawA(9, std::to_string(totalPrice).c_str(), 0x0386, 358, 386);
 		
@@ -527,13 +527,13 @@ int TGumpSell::Draw(bool &mode)
 
 		bool secondGumpSelected = false;
 
-		if (UO->GumpPixelsInXY(0x0873, 170, 214))
+		if (Orion->GumpPixelsInXY(0x0873, 170, 214))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 			secondGumpSelected = true;
 		}
-		else if (UO->GumpPixelsInXY(0x0872, 0, 0))
+		else if (Orion->GumpPixelsInXY(0x0872, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -545,7 +545,7 @@ int TGumpSell::Draw(bool &mode)
 
 			int drawY = 60;
 			
-			TTextureObject *thDelim1 = UO->ExecuteGump(0x0039);
+			TTextureObject *thDelim1 = Orion->ExecuteGump(0x0039);
 			
 			int delimHeight = 20;
 
@@ -576,7 +576,7 @@ int TGumpSell::Draw(bool &mode)
 						break;
 
 					POINT p_art = {0, 0};
-					UO->GetArtDimension(go->Graphic + 0x4000, p_art);
+					Orion->GetArtDimension(go->Graphic + 0x4000, p_art);
 
 					if (p_art.y)
 					{
@@ -594,7 +594,7 @@ int TGumpSell::Draw(bool &mode)
 							if (drawY + maxOffset > drawYBounds)
 								checkHeight = drawYBounds - drawY;
 						
-							if (UO->PolygonePixelsInXY(30, drawY, 200, checkHeight)) //Item in list on gump 1
+							if (Orion->PolygonePixelsInXY(30, drawY, 200, checkHeight)) //Item in list on gump 1
 							{
 								LSG = ID_GS_ITEM_LIST + currentIndex;
 								completedSearch = true;
@@ -660,7 +660,7 @@ int TGumpSell::Draw(bool &mode)
 							
 						int drawOffsetY = drawY + (maxOffset / 2) - 4;
 					
-						if (UO->PolygonePixelsInXY(356, drawOffsetY, 14, 14)) //+
+						if (Orion->PolygonePixelsInXY(356, drawOffsetY, 14, 14)) //+
 						{
 							LSG = ID_GS_BUTTON_INC + currentIndex;
 							completedSearch = true;
@@ -668,7 +668,7 @@ int TGumpSell::Draw(bool &mode)
 							break;
 						}
 
-						if (UO->PolygonePixelsInXY(376, drawOffsetY, 14, 14)) //-
+						if (Orion->PolygonePixelsInXY(376, drawOffsetY, 14, 14)) //-
 						{
 							LSG = ID_GS_BUTTON_DEC + currentIndex;
 							completedSearch = true;
@@ -689,23 +689,23 @@ int TGumpSell::Draw(bool &mode)
 			}
 		}
 		
-		if (UO->GumpPixelsInXY(0x0828, 237, 66 + scrollerY1)) //Scroller 1
+		if (Orion->GumpPixelsInXY(0x0828, 237, 66 + scrollerY1)) //Scroller 1
 			LSG = ID_GS_SCROLL_1;
-		else if (UO->GumpPixelsInXY(0x0828, 407, 280 + scrollerY2)) //Scroller 2
+		else if (Orion->GumpPixelsInXY(0x0828, 407, 280 + scrollerY2)) //Scroller 2
 			LSG = ID_GS_SCROLL_2;
 		else
 		{
-			if (UO->PolygonePixelsInXY(233, 49, 20, 16)) //1 gump ^
+			if (Orion->PolygonePixelsInXY(233, 49, 20, 16)) //1 gump ^
 				LSG = ID_GS_BUTTON_UP_1;
-			else if (UO->PolygonePixelsInXY(191, 49, 20, 16)) //1 gump v
+			else if (Orion->PolygonePixelsInXY(191, 49, 20, 16)) //1 gump v
 				LSG = ID_GS_BUTTON_DOWN_1;
-			else if (UO->PolygonePixelsInXY(403, 264, 20, 16)) //2 gump ^
+			else if (Orion->PolygonePixelsInXY(403, 264, 20, 16)) //2 gump ^
 				LSG = ID_GS_BUTTON_UP_2;
-			else if (UO->PolygonePixelsInXY(403, 371, 20, 16)) //2 gump v
+			else if (Orion->PolygonePixelsInXY(403, 371, 20, 16)) //2 gump v
 				LSG = ID_GS_BUTTON_DOWN_2;
-			else if (UO->PolygonePixelsInXY(200, 406, 34, 30)) //Accept
+			else if (Orion->PolygonePixelsInXY(200, 406, 34, 30)) //Accept
 				LSG = ID_GS_BUTTON_ACCEPT;
-			else if (UO->PolygonePixelsInXY(372, 410, 24, 24)) //Clear
+			else if (Orion->PolygonePixelsInXY(372, 410, 24, 24)) //Clear
 				LSG = ID_GS_BUTTON_CLEAR;
 		}
 
@@ -950,7 +950,7 @@ void TGumpSell::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 		if (m_LastChangedLineTime > GetTickCount())
 			return;
 
-		if (UO->GumpPixelsInXY(0x0873, m_X + 170, m_Y + 214))
+		if (Orion->GumpPixelsInXY(0x0873, m_X + 170, m_Y + 214))
 		{
 			ListingList((bool)(state == MWS_UP), true, 5);
 
@@ -958,7 +958,7 @@ void TGumpSell::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 		}
 		else
 		{
-			if (UO->GumpPixelsInXY(0x0872, m_X, m_Y))
+			if (Orion->GumpPixelsInXY(0x0872, m_X, m_Y))
 			{
 				ListingList((bool)(state == MWS_UP), false, 5);
 

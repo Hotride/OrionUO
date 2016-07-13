@@ -135,7 +135,7 @@ void TGameItem::OnGraphicChange( __in_opt int direction)
 		}
 		else
 		{
-			m_TiledataPtr = &UO->m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32];
+			m_TiledataPtr = &Orion->m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32];
 			STATIC_TILES &tile = *m_TiledataPtr;
 
 			if (ToLowerA(tile.Name) == "nodraw")
@@ -148,8 +148,8 @@ void TGameItem::OnGraphicChange( __in_opt int direction)
 				
 				bool partialHue = IsPartialHue();
 
-				UO->ExecuteGump(tile.AnimID + MALE_GUMP_OFFSET, partialHue);
-				UO->ExecuteGump(tile.AnimID + FEMALE_GUMP_OFFSET, partialHue);
+				Orion->ExecuteGump(tile.AnimID + MALE_GUMP_OFFSET, partialHue);
+				Orion->ExecuteGump(tile.AnimID + FEMALE_GUMP_OFFSET, partialHue);
 
 				m_UsedLayer = tile.Quality;
 			}
@@ -170,7 +170,7 @@ void TGameItem::OnGraphicChange( __in_opt int direction)
 
 			m_RenderQueueIndex++;
 
-			UO->ExecuteStaticArt(m_Graphic);
+			Orion->ExecuteStaticArt(m_Graphic);
 		}
 	}
 	else if (m_Items == NULL)
@@ -222,11 +222,11 @@ g_RenderedObjectsCountInGameWindow++;
 
 				if (doubleDraw)
 				{
-					UO->DrawStaticArt(objGraphic, objColor, drawX - 2, drawY - 5, m_Z, selMode);
-					UO->DrawStaticArt(objGraphic, objColor, drawX + 3, drawY, m_Z, selMode);
+					Orion->DrawStaticArt(objGraphic, objColor, drawX - 2, drawY - 5, m_Z, selMode);
+					Orion->DrawStaticArt(objGraphic, objColor, drawX + 3, drawY, m_Z, selMode);
 				}
 				else
-					UO->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z, selMode);
+					Orion->DrawStaticArtAnimated(objGraphic, objColor, drawX, drawY, m_Z, selMode);
 
 #if UO_DEPTH_TEST == 1
 				//glDisable(GL_DEPTH_TEST);
@@ -239,7 +239,7 @@ g_RenderedObjectsCountInGameWindow++;
 			if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial == m_Serial && !Locked())
 			{
 				POINT p = { 20, 20 };
-				UO->GetArtDimension(objGraphic + 0x4000, p);
+				Orion->GetArtDimension(objGraphic + 0x4000, p);
 
 				if (p.x >= 80)
 				{
@@ -285,20 +285,20 @@ g_RenderedObjectsCountInGameWindow++;
 
 				if (doubleDraw)
 				{
-					if (UO->StaticPixelsInXY(goGraphic, drawX - 2, drawY - 5, m_Z))
+					if (Orion->StaticPixelsInXY(goGraphic, drawX - 2, drawY - 5, m_Z))
 					{
 						g_LastObjectType = SOT_GAME_OBJECT;
 						g_LastSelectedObject = m_Serial;
 						g_SelectedObject = this;
 					}
-					else if (UO->StaticPixelsInXY(goGraphic, drawX + 3, drawY, m_Z))
+					else if (Orion->StaticPixelsInXY(goGraphic, drawX + 3, drawY, m_Z))
 					{
 						g_LastObjectType = SOT_GAME_OBJECT;
 						g_LastSelectedObject = m_Serial;
 						g_SelectedObject = this;
 					}
 				}
-				else if (UO->StaticPixelsInXYAnimated(goGraphic, drawX, drawY, m_Z))
+				else if (Orion->StaticPixelsInXYAnimated(goGraphic, drawX, drawY, m_Z))
 				{
 					g_LastObjectType = SOT_GAME_OBJECT;
 					g_LastSelectedObject = m_Serial;
@@ -611,7 +611,7 @@ WORD TGameItem::GetMountAnimation()
 */
 void TGameItem::LoadMulti()
 {
-	TIndexMulti *index = UO->GetMultiPointer(m_Graphic - 0x4000);
+	TIndexMulti *index = Orion->GetMultiPointer(m_Graphic - 0x4000);
 	
 	if (index != NULL && index->Address != NULL)
 	{

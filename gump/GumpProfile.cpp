@@ -51,11 +51,11 @@ TGumpProfile::~TGumpProfile()
 //----------------------------------------------------------------------------
 void TGumpProfile::PrepareTextures()
 {
-	UO->ExecuteGump(0x001F);
-	UO->ExecuteGumpPart(0x005C, 6);
-	UO->ExecuteGumpPart(0x0820, 4);
-	UO->ExecuteButton(0x082D);
-	UO->ExecuteGump(0x09D4);
+	Orion->ExecuteGump(0x001F);
+	Orion->ExecuteGumpPart(0x005C, 6);
+	Orion->ExecuteGumpPart(0x0820, 4);
+	Orion->ExecuteButton(0x082D);
+	Orion->ExecuteGump(0x09D4);
 }
 //----------------------------------------------------------------------------
 void TGumpProfile::SetHeight(int val)
@@ -160,7 +160,7 @@ void TGumpProfile::GenerateFrame()
 
 		if (m_Minimized)
 		{
-			UO->DrawGump(0x09D4, 0, 0, 0);
+			Orion->DrawGump(0x09D4, 0, 0, 0);
 
 			//Завершим создание листа и выйдем из процедуры
 			glEndList();
@@ -171,8 +171,8 @@ void TGumpProfile::GenerateFrame()
 			return;
 		}
 
-		UO->DrawGump(0x082D, 0, 137, 0); //Minimize
-		UO->DrawGump(0x0820, 0, 0, 23); //Top scroll
+		Orion->DrawGump(0x082D, 0, 137, 0); //Minimize
+		Orion->DrawGump(0x0820, 0, 0, 23); //Top scroll
 
 		//Profile window body
 		int curPosY = 59;
@@ -183,12 +183,12 @@ void TGumpProfile::GenerateFrame()
 			if (deltaHeight  < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x0821, 0, 18, curPosY, 0, deltaHeight);
+					Orion->DrawGump(0x0821, 0, 18, curPosY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x0821, 0, 18, curPosY);
+				Orion->DrawGump(0x0821, 0, 18, curPosY);
 
 			curPosY += 70;
 
@@ -197,17 +197,17 @@ void TGumpProfile::GenerateFrame()
 			if (deltaHeight < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x0822, 0, 18, curPosY, 0, deltaHeight);
+					Orion->DrawGump(0x0822, 0, 18, curPosY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x0822, 0, 18, curPosY);
+				Orion->DrawGump(0x0822, 0, 18, curPosY);
 
 			curPosY += 70;
 		}
 
-		UO->DrawGump(0x001F, 0, 257, 72 + scrollerY); //Scroller
+		Orion->DrawGump(0x001F, 0, 257, 72 + scrollerY); //Scroller
 		
 		int yPtr = m_TopText.Height + 40;
 
@@ -215,9 +215,9 @@ void TGumpProfile::GenerateFrame()
 		
 		yPtr -= (m_CurrentLine * GUMP_SCROLLING_PIXEL_STEP);
 
-		UO->DrawGump(0x005C, 0, 40, yPtr); //top text ornament
-		UO->DrawGump(0x005D, 0, 92, yPtr, 138, 0); //top text ornament
-		UO->DrawGump(0x005E, 0, 230, yPtr); //top text ornament
+		Orion->DrawGump(0x005C, 0, 40, yPtr); //top text ornament
+		Orion->DrawGump(0x005D, 0, 92, yPtr, 138, 0); //top text ornament
+		Orion->DrawGump(0x005E, 0, 230, yPtr); //top text ornament
 		m_TopText.Draw(89, yPtr - m_TopText.Height + 22);
 
 		TextEntry->DrawW(0, 0, 40, yPtr + 44, TS_LEFT, 0);
@@ -229,18 +229,18 @@ void TGumpProfile::GenerateFrame()
 
 		yPtr += 47;
 		
-		UO->DrawGump(0x005F, 0, 40, yPtr); //bottom text ornament
-		UO->DrawGump(0x0060, 0, 49, yPtr + 9, 197, 0); //bottom text ornament
-		UO->DrawGump(0x0061, 0, 246, yPtr); //bottom text ornament
+		Orion->DrawGump(0x005F, 0, 40, yPtr); //bottom text ornament
+		Orion->DrawGump(0x0060, 0, 49, yPtr + 9, 197, 0); //bottom text ornament
+		Orion->DrawGump(0x0061, 0, 246, yPtr); //bottom text ornament
 
 		m_BottomText.Draw(38, yPtr + 26);
 		
 		glDisable(GL_SCISSOR_TEST);
 
-		UO->DrawGump(0x0823, 0, 18, height + 34); //Bottom scroll
+		Orion->DrawGump(0x0823, 0, 18, height + 34); //Bottom scroll
 
 		WORD gumpID = 0x082E + (int)(g_GumpSelectElement == ID_GP_BUTTON_RESIZE);
-		UO->DrawGump(gumpID, 0, 137, height + 66); //Resize
+		Orion->DrawGump(gumpID, 0, 137, height + 66); //Resize
 
 	//Завершаем запись дисплей листа
 	glEndList();
@@ -335,7 +335,7 @@ int TGumpProfile::Draw(bool &mode)
 
 		if (m_Minimized)
 		{
-			if (UO->GumpPixelsInXY(0x09D4, 0, 0))
+			if (Orion->GumpPixelsInXY(0x09D4, 0, 0))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -349,10 +349,10 @@ int TGumpProfile::Draw(bool &mode)
 		
 		int LSG = 0;
 		
-		if (UO->GumpPixelsInXY(0x082D, 137, 0)) //Minimize
+		if (Orion->GumpPixelsInXY(0x082D, 137, 0)) //Minimize
 			LSG = ID_GP_BUTTON_MINIMIZE;
 		
-		if (UO->GumpPixelsInXY(0x0820, 0, 23)) //Top scroll
+		if (Orion->GumpPixelsInXY(0x0820, 0, 23)) //Top scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -369,7 +369,7 @@ int TGumpProfile::Draw(bool &mode)
 			{
 				if (deltaHeight > 0)
 				{
-					if (UO->GumpPixelsInXY(0x0821, 18, curPosY, 0, deltaHeight))
+					if (Orion->GumpPixelsInXY(0x0821, 18, curPosY, 0, deltaHeight))
 					{
 						g_LastSelectedObject = 0;
 						g_LastSelectedGump = index;
@@ -378,7 +378,7 @@ int TGumpProfile::Draw(bool &mode)
 
 				break;
 			}
-			else if (UO->GumpPixelsInXY(0x0821, 18, curPosY))
+			else if (Orion->GumpPixelsInXY(0x0821, 18, curPosY))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -394,7 +394,7 @@ int TGumpProfile::Draw(bool &mode)
 			{
 				if (deltaHeight > 0)
 				{
-					if (UO->GumpPixelsInXY(0x0822, 18, curPosY, 0, deltaHeight))
+					if (Orion->GumpPixelsInXY(0x0822, 18, curPosY, 0, deltaHeight))
 					{
 						g_LastSelectedObject = 0;
 						g_LastSelectedGump = index;
@@ -403,7 +403,7 @@ int TGumpProfile::Draw(bool &mode)
 
 				break;
 			}
-			else if (UO->GumpPixelsInXY(0x0822, 18, curPosY))
+			else if (Orion->GumpPixelsInXY(0x0822, 18, curPosY))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -418,7 +418,7 @@ int TGumpProfile::Draw(bool &mode)
 		{
 			int yPtr = m_TopText.Height + 40 - (m_CurrentLine * GUMP_SCROLLING_PIXEL_STEP);
 
-			if (UO->GumpPixelsInXY(0x005C, 40, yPtr))
+			if (Orion->GumpPixelsInXY(0x005C, 40, yPtr))
 				LSG = ID_GP_APPLY;
 			
 			int textHeight = 14;
@@ -426,20 +426,20 @@ int TGumpProfile::Draw(bool &mode)
 			if (TextEntry->Length())
 				textHeight = TextEntry->m_Texture.Height;
 
-			if (UO->PolygonePixelsInXY(40, yPtr + 44, 210, textHeight))
+			if (Orion->PolygonePixelsInXY(40, yPtr + 44, 210, textHeight))
 				LSG = ID_GP_TEXT_FIELD;
 		}
 
-		if (UO->GumpPixelsInXY(0x0823, 18, height + 34)) //Bottom scroll
+		if (Orion->GumpPixelsInXY(0x0823, 18, height + 34)) //Bottom scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 
-		if (UO->GumpPixelsInXY(0x001F, 257, 72 + scrollerY)) //Scroller
+		if (Orion->GumpPixelsInXY(0x001F, 257, 72 + scrollerY)) //Scroller
 			LSG = ID_GP_SCROLLER;
 		
-		if (UO->GumpPixelsInXY(0x082E, 137, height + 66)) //Resize
+		if (Orion->GumpPixelsInXY(0x082E, 137, height + 66)) //Resize
 			LSG = ID_GP_BUTTON_RESIZE;
 
 		g_MouseX = oldMouseX;

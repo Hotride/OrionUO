@@ -108,7 +108,7 @@ bool TPathFinder::CreateItemsList(int &x, int &y, char &z)
 		{
 			if (graphic != 2)
 			{
-				DWORD flags = UO->GetLandFlags(graphic);
+				DWORD flags = Orion->GetLandFlags(graphic);
 
 				char surface = 0x10 + (char)(!IsImpassable(flags));
 
@@ -613,7 +613,7 @@ bool TPathFinder::Walk(bool run, BYTE direction)
 	buf[2] = seq;
 	pack32(buf + 3, Walker->m_FastWalkStack.Pop());
 
-	UO->Send(buf, 7);
+	Orion->Send(buf, 7);
 
 	g_WalkRequestCount++;
 

@@ -274,23 +274,23 @@ void TGumpStatusbar::RemoveFromGroup()
 //---------------------------------------------------------------------------
 void TGumpStatusbar::PrepareTextures()
 {
-	UO->ExecuteGumpPart(0x0802, 8);
+	Orion->ExecuteGumpPart(0x0802, 8);
 
 	if (ConnectionManager.ClientVersion >= CV_308D)
 	{
-		UO->ExecuteGump(0x2A6C);
+		Orion->ExecuteGump(0x2A6C);
 
 		if (ConnectionManager.ClientVersion >= CV_5020)
 		{
 			//Кнопка вызова гампа бафов
-			UO->ExecuteGump(0x7538);
+			Orion->ExecuteGump(0x7538);
 
 			//Кнопочки для изменения роста/лока статов
 			if (ConnectionManager.ClientVersion >= CV_60142)
 			{
-				UO->ExecuteGump(0x0984);
-				UO->ExecuteGump(0x0986);
-				UO->ExecuteGump(0x082C);
+				Orion->ExecuteGump(0x0984);
+				Orion->ExecuteGump(0x0986);
+				Orion->ExecuteGump(0x082C);
 			}
 		}
 	}
@@ -350,7 +350,7 @@ void TGumpStatusbar::GenerateFrame()
 			if (ConnectionManager.ClientVersion >= CV_308D)
 				gumpID = 0x2A6C;
 
-			UO->DrawGump(gumpID, 0, 0, 0); //Гамп статусбара
+			Orion->DrawGump(gumpID, 0, 0, 0); //Гамп статусбара
 
 			//Отрисовка набора характеристик, расположение в зависимости от версии протокола, комментировать не буду...
 			if (ConnectionManager.ClientVersion >= CV_308Z)
@@ -364,7 +364,7 @@ void TGumpStatusbar::GenerateFrame()
 				if (ConnectionManager.ClientVersion >= CV_5020)
 				{
 					//Кнопка вызова гампа бафов
-					UO->DrawGump(0x7538, 0, 40, 50);
+					Orion->DrawGump(0x7538, 0, 40, 50);
 
 					//Кнопочки для изменения роста/лока статов
 					if (ConnectionManager.ClientVersion >= CV_60142)
@@ -377,7 +377,7 @@ void TGumpStatusbar::GenerateFrame()
 							gumpID = 0x0986; //Down
 						else if (status == 2)
 							gumpID = 0x082C; //Lock
-						UO->DrawGump(gumpID, 0, 40, 76);
+						Orion->DrawGump(gumpID, 0, 40, 76);
 
 
 
@@ -389,7 +389,7 @@ void TGumpStatusbar::GenerateFrame()
 							gumpID = 0x0986; //Down
 						else if (status == 2)
 							gumpID = 0x082C; //Lock
-						UO->DrawGump(gumpID, 0, 40, 102);
+						Orion->DrawGump(gumpID, 0, 40, 102);
 
 
 
@@ -401,7 +401,7 @@ void TGumpStatusbar::GenerateFrame()
 							gumpID = 0x0986; //Down
 						else if (status == 2)
 							gumpID = 0x082C; //Lock
-						UO->DrawGump(gumpID, 0, 40, 132);
+						Orion->DrawGump(gumpID, 0, 40, 132);
 					}
 				}
 
@@ -558,41 +558,41 @@ void TGumpStatusbar::GenerateFrame()
 				FontManager->DrawA(3, "[* SELF *]", 0x0481, 16, -2);
 
 				WORD gumpID = 0x0938 + (g_GumpPressedElement == ID_GSB_BUTTON_HEAL_1 ? 2 : 0);
-				UO->DrawGump(gumpID, 0, 16, 20);
+				Orion->DrawGump(gumpID, 0, 16, 20);
 
 				gumpID = 0x0939 + (int)(g_GumpPressedElement == ID_GSB_BUTTON_HEAL_2);
-				UO->DrawGump(gumpID, 0, 16, 33);
+				Orion->DrawGump(gumpID, 0, 16, 33);
 
 				//Hits
-				UO->DrawGump(0x0028, 0, 34, 20);
+				Orion->DrawGump(0x0028, 0, 34, 20);
 
 				int per = CalculatePercents(g_Player->MaxHits, g_Player->Hits, 96);
 				if (per > 0)
-					UO->DrawGump(0x0029, 0, 34, 20, per, 0);
+					Orion->DrawGump(0x0029, 0, 34, 20, per, 0);
 				
 				//Mana
-				UO->DrawGump(0x0028, 0, 34, 33);
+				Orion->DrawGump(0x0028, 0, 34, 33);
 
 				per = CalculatePercents(g_Player->MaxMana, g_Player->Mana, 96);
 				if (per > 0)
-					UO->DrawGump(0x0029, 0x0482, 34, 33, per, 0); //0x0170 green //0x0035 yellow
+					Orion->DrawGump(0x0029, 0x0482, 34, 33, per, 0); //0x0170 green //0x0035 yellow
 				
 				//Stam
-				UO->DrawGump(0x0028, 0, 34, 45);
+				Orion->DrawGump(0x0028, 0, 34, 45);
 
 				per = CalculatePercents(g_Player->MaxStam, g_Player->Stam, 96);
 				if (per > 0)
-					UO->DrawGump(0x0029, 0x0075, 34, 45, per, 0);
+					Orion->DrawGump(0x0029, 0x0075, 34, 45, per, 0);
 			}
 			else
 			{
 				WORD gumpid = 0x0803; //Гамп статусбара
 				if (g_Player->Warmode)
 					gumpid = 0x0807; //Версия с включенным вармодом
-				UO->DrawGump(gumpid, 0, 0, 0);
+				Orion->DrawGump(gumpid, 0, 0, 0);
 			
 				//Hits
-				UO->DrawGump(0x0805, 0, 34, 12);
+				Orion->DrawGump(0x0805, 0, 34, 12);
 
 				int per = CalculatePercents(g_Player->MaxHits, g_Player->Hits, 109);
 				if (per > 0)
@@ -603,26 +603,26 @@ void TGumpStatusbar::GenerateFrame()
 					else if (g_Player->YellowHits())
 						gumpid = 0x0809; //Character status line (yellow)
 				
-					UO->DrawGump(gumpid, 0, 34, 12, per, 0);
+					Orion->DrawGump(gumpid, 0, 34, 12, per, 0);
 				}
 				
 				//Mana
-				UO->DrawGump(0x0805, 0, 34, 25);
+				Orion->DrawGump(0x0805, 0, 34, 25);
 
 				per = CalculatePercents(g_Player->MaxMana, g_Player->Mana, 109);
 				if (per > 0)
-					UO->DrawGump(0x0806, 0, 34, 25, per, 0);
+					Orion->DrawGump(0x0806, 0, 34, 25, per, 0);
 				
 				//Stam
-				UO->DrawGump(0x0805, 0, 34, 38);
+				Orion->DrawGump(0x0805, 0, 34, 38);
 
 				per = CalculatePercents(g_Player->MaxStam, g_Player->Stam, 109);
 				if (per > 0)
-					UO->DrawGump(0x0806, 0, 34, 38, per, 0);
+					Orion->DrawGump(0x0806, 0, 34, 38, per, 0);
 			}
 			
 			if (InGroup())
-				UO->DrawGump(0x082C, 0, 136, 24);
+				Orion->DrawGump(0x082C, 0, 136, 24);
 		}
 	}
 	else //Чужой статусбар
@@ -652,31 +652,31 @@ void TGumpStatusbar::GenerateFrame()
 						TextEntry->DrawA(1, 0x0386, 16, -2, TS_LEFT, UOFONT_FIXED);
 		
 					WORD gumpID = 0x0938 + (g_GumpPressedElement == ID_GSB_BUTTON_HEAL_1 ? 2 : 0);
-					UO->DrawGump(gumpID, 0, 16, 20);
+					Orion->DrawGump(gumpID, 0, 16, 20);
 
 					gumpID = 0x0939 + (int)(g_GumpPressedElement == ID_GSB_BUTTON_HEAL_2);
-					UO->DrawGump(gumpID, 0, 16, 33);
+					Orion->DrawGump(gumpID, 0, 16, 33);
 
 					//Hits
-					UO->DrawGump(0x0028, 0, 34, 20);
+					Orion->DrawGump(0x0028, 0, 34, 20);
 
 					int per = CalculatePercents(member.MaxHits, member.Hits, 96);
 					if (per > 0)
-						UO->DrawGump(0x0029, 0, 34, 20, per, 0);
+						Orion->DrawGump(0x0029, 0, 34, 20, per, 0);
 				
 					//Mana
-					UO->DrawGump(0x0028, 0, 34, 33);
+					Orion->DrawGump(0x0028, 0, 34, 33);
 
 					per = CalculatePercents(member.MaxMana, member.Mana, 96);
 					if (per > 0)
-						UO->DrawGump(0x0029, 0x0482, 34, 33, per, 0); //0x0170 green //0x0035 yellow
+						Orion->DrawGump(0x0029, 0x0482, 34, 33, per, 0); //0x0170 green //0x0035 yellow
 				
 					//Stam
-					UO->DrawGump(0x0028, 0, 34, 45);
+					Orion->DrawGump(0x0028, 0, 34, 45);
 					
 					per = CalculatePercents(member.MaxStam, member.Stam, 96);
 					if (per > 0)
-						UO->DrawGump(0x0029, 0x0075, 34, 45, per, 0);
+						Orion->DrawGump(0x0029, 0x0075, 34, 45, per, 0);
 
 					break;
 				}
@@ -696,7 +696,7 @@ void TGumpStatusbar::GenerateFrame()
 				ColorizerShader->Use();
 
 				//Гамп статус бара
-				UO->DrawGump(0x0804, color, 0, 0);
+				Orion->DrawGump(0x0804, color, 0, 0);
 
 				UnuseShader();
 
@@ -717,7 +717,7 @@ void TGumpStatusbar::GenerateFrame()
 						TextEntry->DrawA(1, 0x0386, 16, 14, TS_LEFT, UOFONT_FIXED);
 
 					//Hits
-					UO->DrawGump(0x0805, 0, 34, 38);
+					Orion->DrawGump(0x0805, 0, 34, 38);
 
 					int per = CalculatePercents(obj->MaxHits, obj->Hits, 109);
 					if (per > 0)
@@ -728,7 +728,7 @@ void TGumpStatusbar::GenerateFrame()
 						else if (obj->YellowHits())
 							gumpid = 0x0809; //Character status line (yellow)
 
-						UO->DrawGump(gumpid, 0, 34, 38, per, 0);
+						Orion->DrawGump(gumpid, 0, 34, 38, per, 0);
 					}
 				}
 			}
@@ -737,10 +737,10 @@ void TGumpStatusbar::GenerateFrame()
 				ColorizerShader->Use();
 
 				//Гамп статус бара
-				UO->DrawGump(0x0804, 0x0386, 0, 0);
+				Orion->DrawGump(0x0804, 0x0386, 0, 0);
 
 				//Hits
-				UO->DrawGump(0x0805, 0x0386, 34, 38);
+				Orion->DrawGump(0x0805, 0x0386, 34, 38);
 				
 				UnuseShader();
 
@@ -749,7 +749,7 @@ void TGumpStatusbar::GenerateFrame()
 		}
 
 		if (InGroup())
-			UO->DrawGump(0x082C, 0, 136, 24);
+			Orion->DrawGump(0x082C, 0, 136, 24);
 	}
 
 	glEndList();
@@ -849,7 +849,7 @@ int TGumpStatusbar::Draw(bool &mode)
 					p.y = 112;
 				}
 
-				if (UO->GumpPixelsInXY(gumpID, 0, 0))
+				if (Orion->GumpPixelsInXY(gumpID, 0, 0))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
@@ -858,42 +858,42 @@ int TGumpStatusbar::Draw(bool &mode)
 				//Кнопка вызова гампа бафов
 				if (ConnectionManager.ClientVersion >= CV_5020)
 				{
-					if (UO->GumpPixelsInXY(0x7538, 40, 50))
+					if (Orion->GumpPixelsInXY(0x7538, 40, 50))
 						LSG = ID_GSB_BUFF_GUMP;
 
-					if (UO->PolygonePixelsInXY(58, 70, 59, 24))
+					if (Orion->PolygonePixelsInXY(58, 70, 59, 24))
 						LSG = ID_GSB_TEXT_STR;
-					else if (UO->PolygonePixelsInXY(58, 98, 59, 24))
+					else if (Orion->PolygonePixelsInXY(58, 98, 59, 24))
 						LSG = ID_GSB_TEXT_DEX;
-					else if (UO->PolygonePixelsInXY(58, 126, 59, 24))
+					else if (Orion->PolygonePixelsInXY(58, 126, 59, 24))
 						LSG = ID_GSB_TEXT_INT;
-					else if (UO->PolygonePixelsInXY(124, 70, 59, 24))
+					else if (Orion->PolygonePixelsInXY(124, 70, 59, 24))
 						LSG = ID_GSB_TEXT_HITS;
-					else if (UO->PolygonePixelsInXY(124, 98, 59, 24))
+					else if (Orion->PolygonePixelsInXY(124, 98, 59, 24))
 						LSG = ID_GSB_TEXT_STAM;
-					else if (UO->PolygonePixelsInXY(124, 126, 59, 24))
+					else if (Orion->PolygonePixelsInXY(124, 126, 59, 24))
 						LSG = ID_GSB_TEXT_MANA;
-					else if (UO->PolygonePixelsInXY(188, 70, 65, 24))
+					else if (Orion->PolygonePixelsInXY(188, 70, 65, 24))
 						LSG = ID_GSB_TEXT_TITHING_POINTS; //Maximum stats in original???
-					else if (UO->PolygonePixelsInXY(188, 98, 65, 24))
+					else if (Orion->PolygonePixelsInXY(188, 98, 65, 24))
 						LSG = ID_GSB_TEXT_LUCK;
-					else if (UO->PolygonePixelsInXY(188, 126, 65, 24))
+					else if (Orion->PolygonePixelsInXY(188, 126, 65, 24))
 						LSG = ID_GSB_TEXT_WEIGHT;
-					else if (UO->PolygonePixelsInXY(260, 70, 69, 24))
+					else if (Orion->PolygonePixelsInXY(260, 70, 69, 24))
 						LSG = ID_GSB_TEXT_DAMAGE;
-					else if (UO->PolygonePixelsInXY(260, 98, 69, 24))
+					else if (Orion->PolygonePixelsInXY(260, 98, 69, 24))
 						LSG = ID_GSB_TEXT_GOLD;
-					else if (UO->PolygonePixelsInXY(260, 126, 69, 24))
+					else if (Orion->PolygonePixelsInXY(260, 126, 69, 24))
 						LSG = ID_GSB_TEXT_FOLLOWERS;
-					else if (UO->PolygonePixelsInXY(334, 76, 40, 14))
+					else if (Orion->PolygonePixelsInXY(334, 76, 40, 14))
 						LSG = ID_GSB_TEXT_RESISTANCE_PHYSICAL;
-					else if (UO->PolygonePixelsInXY(334, 92, 40, 14))
+					else if (Orion->PolygonePixelsInXY(334, 92, 40, 14))
 						LSG = ID_GSB_TEXT_RESISTANCE_FIRE;
-					else if (UO->PolygonePixelsInXY(334, 106, 40, 14))
+					else if (Orion->PolygonePixelsInXY(334, 106, 40, 14))
 						LSG = ID_GSB_TEXT_RESISTANCE_COLD;
-					else if (UO->PolygonePixelsInXY(334, 120, 40, 14))
+					else if (Orion->PolygonePixelsInXY(334, 120, 40, 14))
 						LSG = ID_GSB_TEXT_RESISTANCE_POISON;
-					else if (UO->PolygonePixelsInXY(334, 134, 40, 14))
+					else if (Orion->PolygonePixelsInXY(334, 134, 40, 14))
 						LSG = ID_GSB_TEXT_RESISTANCE_ENERGY;
 
 					//Кнопочки для изменения роста/лока статов
@@ -908,7 +908,7 @@ int TGumpStatusbar::Draw(bool &mode)
 						else if (status == 2)
 							gumpID = 0x082C; //Lock
 
-						if (UO->GumpPixelsInXY(gumpID, 40, 76))
+						if (Orion->GumpPixelsInXY(gumpID, 40, 76))
 							LSG = ID_GSB_BUFF_LOCKER_STR;
 
 
@@ -922,7 +922,7 @@ int TGumpStatusbar::Draw(bool &mode)
 						else if (status == 2)
 							gumpID = 0x082C; //Lock
 
-						if (UO->GumpPixelsInXY(gumpID, 40, 102))
+						if (Orion->GumpPixelsInXY(gumpID, 40, 102))
 							LSG = ID_GSB_BUFF_LOCKER_DEX;
 
 
@@ -936,48 +936,48 @@ int TGumpStatusbar::Draw(bool &mode)
 						else if (status == 2)
 							gumpID = 0x082C; //Lock
 
-						if (UO->GumpPixelsInXY(gumpID, 40, 132))
+						if (Orion->GumpPixelsInXY(gumpID, 40, 132))
 							LSG = ID_GSB_BUFF_LOCKER_INT;
 					}
 				}
 				else
 				{
-					if (UO->PolygonePixelsInXY(86, 61, 34, 12))
+					if (Orion->PolygonePixelsInXY(86, 61, 34, 12))
 						LSG = ID_GSB_TEXT_STR;
-					else if (UO->PolygonePixelsInXY(86, 73, 34, 12))
+					else if (Orion->PolygonePixelsInXY(86, 73, 34, 12))
 						LSG = ID_GSB_TEXT_DEX;
-					else if (UO->PolygonePixelsInXY(86, 85, 34, 12))
+					else if (Orion->PolygonePixelsInXY(86, 85, 34, 12))
 						LSG = ID_GSB_TEXT_INT;
-					else if (UO->PolygonePixelsInXY(86, 97, 34, 12))
+					else if (Orion->PolygonePixelsInXY(86, 97, 34, 12))
 						LSG = ID_GSB_TEXT_SEX;
-					else if (UO->PolygonePixelsInXY(86, 109, 34, 12))
+					else if (Orion->PolygonePixelsInXY(86, 109, 34, 12))
 						LSG = ID_GSB_TEXT_ARMOR;
-					else if (UO->PolygonePixelsInXY(171, 61, 66, 12))
+					else if (Orion->PolygonePixelsInXY(171, 61, 66, 12))
 						LSG = ID_GSB_TEXT_HITS;
-					else if (UO->PolygonePixelsInXY(171, 73, 66, 12))
+					else if (Orion->PolygonePixelsInXY(171, 73, 66, 12))
 						LSG = ID_GSB_TEXT_MANA;
-					else if (UO->PolygonePixelsInXY(171, 85, 66, 12))
+					else if (Orion->PolygonePixelsInXY(171, 85, 66, 12))
 						LSG = ID_GSB_TEXT_STAM;
-					else if (UO->PolygonePixelsInXY(171, 97, 66, 12))
+					else if (Orion->PolygonePixelsInXY(171, 97, 66, 12))
 						LSG = ID_GSB_TEXT_GOLD;
-					else if (UO->PolygonePixelsInXY(171, 109, 66, 12))
+					else if (Orion->PolygonePixelsInXY(171, 109, 66, 12))
 						LSG = ID_GSB_TEXT_WEIGHT;
 
 					if (ConnectionManager.ClientVersion == CV_308D)
 					{
-						if (UO->PolygonePixelsInXY(171, 124, 34, 12))
+						if (Orion->PolygonePixelsInXY(171, 124, 34, 12))
 							LSG = ID_GSB_TEXT_MAX_STATS;
 					}
 					else if (ConnectionManager.ClientVersion == CV_308J)
 					{
-						if (UO->PolygonePixelsInXY(180, 131, 34, 12))
+						if (Orion->PolygonePixelsInXY(180, 131, 34, 12))
 							LSG = ID_GSB_TEXT_MAX_STATS;
-						else if (UO->PolygonePixelsInXY(171, 144, 34, 12))
+						else if (Orion->PolygonePixelsInXY(171, 144, 34, 12))
 							LSG = ID_GSB_TEXT_FOLLOWERS;
 					}
 				}
 
-				if (UO->PolygonePixelsInXY(p.x, p.y, 16, 16))
+				if (Orion->PolygonePixelsInXY(p.x, p.y, 16, 16))
 				{
 					LSG = ID_GSB_MINIMIZE;
 					g_LastSelectedGump = index;
@@ -985,7 +985,7 @@ int TGumpStatusbar::Draw(bool &mode)
 			}
 			else //Минимизированный гамп (с полосками)
 			{
-				if (UO->GumpPixelsInXY(0x0803, 0, 0))
+				if (Orion->GumpPixelsInXY(0x0803, 0, 0))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
@@ -993,19 +993,19 @@ int TGumpStatusbar::Draw(bool &mode)
 
 				if (Party.Leader != 0) //inParty
 				{
-					if (UO->GumpPixelsInXY(0x0938, 16, 20))
+					if (Orion->GumpPixelsInXY(0x0938, 16, 20))
 						LSG = ID_GSB_BUTTON_HEAL_1;
-					else if (UO->GumpPixelsInXY(0x0938, 16, 33))
+					else if (Orion->GumpPixelsInXY(0x0938, 16, 33))
 						LSG = ID_GSB_BUTTON_HEAL_2;
 				}
 
-				if (InGroup() && UO->GumpPixelsInXY(0x082C, 136, 24))
+				if (InGroup() && Orion->GumpPixelsInXY(0x082C, 136, 24))
 					LSG = ID_GSB_BUTTON_REMOVE_FROM_GROUP;
 			}
 		}
 		else //Чужой гамп
 		{
-			if (UO->GumpPixelsInXY(0x0804, 0, 0))
+			if (Orion->GumpPixelsInXY(0x0804, 0, 0))
 			{
 				g_LastSelectedObject = 0;
 				g_LastSelectedGump = index;
@@ -1014,9 +1014,9 @@ int TGumpStatusbar::Draw(bool &mode)
 
 			if (Party.Contains(m_Serial))
 			{
-				if (UO->GumpPixelsInXY(0x0938, 16, 20))
+				if (Orion->GumpPixelsInXY(0x0938, 16, 20))
 					LSG = ID_GSB_BUTTON_HEAL_1;
-				else if (UO->GumpPixelsInXY(0x0938, 16, 33))
+				else if (Orion->GumpPixelsInXY(0x0938, 16, 33))
 					LSG = ID_GSB_BUTTON_HEAL_2;
 			}
 
@@ -1025,15 +1025,15 @@ int TGumpStatusbar::Draw(bool &mode)
 			if (obj != NULL && obj->MaxHits > 0 && obj->CanChangeName && TextEntry != NULL)
 			{
 				//Для изменения имени
-				if (UO->PolygonePixelsInXY(16, 14, 109, 16))
+				if (Orion->PolygonePixelsInXY(16, 14, 109, 16))
 					LSG = ID_GSB_TEXT_FIELD;
 			}
 
-			if (InGroup() && UO->GumpPixelsInXY(0x082C, 136, 24))
+			if (InGroup() && Orion->GumpPixelsInXY(0x082C, 136, 24))
 				LSG = ID_GSB_BUTTON_REMOVE_FROM_GROUP;
 		}
 
-		if (g_ShowGumpLocker && UO->PolygonePixelsInXY(0, 0, 10, 14))
+		if (g_ShowGumpLocker && Orion->PolygonePixelsInXY(0, 0, 10, 14))
 			LSG = ID_GSB_LOCK_MOVING;
 
 		g_MouseX = oldMouseX;
@@ -1091,7 +1091,7 @@ void TGumpStatusbar::OnLeftMouseUp()
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUTTON_HEAL_1)
 	{
-		UO->CastSpell(29);
+		Orion->CastSpell(29);
 		g_PartyHelperTimer = GetTickCount() + 500;
 		g_PartyHelperTarget = m_Serial;
 		g_CancelDoubleClick = true;
@@ -1099,7 +1099,7 @@ void TGumpStatusbar::OnLeftMouseUp()
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GSB_BUTTON_HEAL_2)
 	{
-		UO->CastSpell(11);
+		Orion->CastSpell(11);
 		g_PartyHelperTimer = GetTickCount() + 500;
 		g_PartyHelperTarget = m_Serial;
 		g_CancelDoubleClick = true;
@@ -1182,16 +1182,16 @@ bool TGumpStatusbar::OnLeftMouseDoubleClick()
 	else if (m_Serial != g_PlayerSerial)
 	{
 		if (g_Player->Warmode)
-			UO->Attack(m_Serial); //Если в вармоде - атакуем
+			Orion->Attack(m_Serial); //Если в вармоде - атакуем
 		else
-			UO->DoubleClick(m_Serial); //Или используем предмет
+			Orion->DoubleClick(m_Serial); //Или используем предмет
 
 		return true;
 	}
 	else if (!m_Minimized)
 	{
 		//По даблклику по полной версии статусбара теперь открывается папердолл
-		UO->PaperdollReq(m_Serial);
+		Orion->PaperdollReq(m_Serial);
 
 		return true;
 	}

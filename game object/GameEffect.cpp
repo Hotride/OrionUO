@@ -60,7 +60,7 @@ int TGameEffect::Draw(__in bool &mode, __in int &drawX, __in int &drawY, __in DW
 			{
 				TGameEffectDrag *dragEffect = (TGameEffectDrag*)this;
 
-				UO->DrawStaticArt(m_Graphic, m_Color, drawX - dragEffect->OffsetX, drawY - dragEffect->OffsetY, m_Z);
+				Orion->DrawStaticArt(m_Graphic, m_Color, drawX - dragEffect->OffsetX, drawY - dragEffect->OffsetY, m_Z);
 			}
 		}
 		else if (LastChangeFrameTime < ticks)
@@ -87,12 +87,12 @@ int TGameEffect::Draw(__in bool &mode, __in int &drawX, __in int &drawY, __in DW
 				drawEffectY += moving->OffsetY + moving->OffsetZ;
 
 				if (moving->FixedDirection)
-					UO->DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);
+					Orion->DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);
 				else
-					UO->DrawStaticArtRotated(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z, moving->Angle);
+					Orion->DrawStaticArtRotated(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z, moving->Angle);
 			}
 			else
-				UO->DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);
+				Orion->DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);
 
 			RemoveRenderMode();
 		}

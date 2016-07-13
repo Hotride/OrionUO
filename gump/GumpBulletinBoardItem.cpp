@@ -62,26 +62,26 @@ TGumpBulletinBoardItem::~TGumpBulletinBoardItem()
 //----------------------------------------------------------------------------
 void TGumpBulletinBoardItem::PrepareTextures()
 {
-	UO->ExecuteGumpPart(0x0820, 6);
-	UO->ExecuteGump(0x0828);
-	UO->ExecuteGump(0x0835);
-	UO->ExecuteGump(0x082B);
-	UO->ExecuteGumpPart(0x082E, 2);
+	Orion->ExecuteGumpPart(0x0820, 6);
+	Orion->ExecuteGump(0x0828);
+	Orion->ExecuteGump(0x0835);
+	Orion->ExecuteGump(0x082B);
+	Orion->ExecuteGumpPart(0x082E, 2);
 
 	switch (m_Variant)
 	{
 		case 0:
 		{
-			UO->ExecuteGump(0x0883); //NEW MESSAGE
-			UO->ExecuteGump(0x0886); //Pos
+			Orion->ExecuteGump(0x0883); //NEW MESSAGE
+			Orion->ExecuteGump(0x0886); //Pos
 
 			break;
 		}
 		case 2:
-			UO->ExecuteGump(0x0885); //Remove
+			Orion->ExecuteGump(0x0885); //Remove
 		case 1:
 		{
-			UO->ExecuteGump(0x0884); //Reply
+			Orion->ExecuteGump(0x0884); //Reply
 
 			break;
 		}
@@ -200,7 +200,7 @@ void TGumpBulletinBoardItem::GenerateFrame()
 	//Создание дисплей листа
 	glNewList((GLuint)this, GL_COMPILE);
 
-		UO->DrawGump(0x0820, 0, 0, 0); //Top scroll
+		Orion->DrawGump(0x0820, 0, 0, 0); //Top scroll
 
 		//Profile window body
 		int curPosY = 36;
@@ -212,12 +212,12 @@ void TGumpBulletinBoardItem::GenerateFrame()
 			if (deltaHeight  < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x0821, 0, 18, curPosY, 0, deltaHeight);
+					Orion->DrawGump(0x0821, 0, 18, curPosY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x0821, 0, 18, curPosY);
+				Orion->DrawGump(0x0821, 0, 18, curPosY);
 
 			curPosY += 70;
 
@@ -226,17 +226,17 @@ void TGumpBulletinBoardItem::GenerateFrame()
 			if (deltaHeight < 70)
 			{
 				if (deltaHeight > 0)
-					UO->DrawGump(0x0822, 0, 18, curPosY, 0, deltaHeight);
+					Orion->DrawGump(0x0822, 0, 18, curPosY, 0, deltaHeight);
 
 				break;
 			}
 			else
-				UO->DrawGump(0x0822, 0, 18, curPosY);
+				Orion->DrawGump(0x0822, 0, 18, curPosY);
 
 			curPosY += 70;
 		}
 		
-		UO->DrawGump(0x082B, 0, 30, 34); //Top line
+		Orion->DrawGump(0x082B, 0, 30, 34); //Top line
 		
 		//Author
 		m_Text[0].Draw(30, 40);
@@ -253,10 +253,10 @@ void TGumpBulletinBoardItem::GenerateFrame()
 			subjectColor = 0x0008;
 		TextEntrySubject->DrawA(9, subjectColor, 30 + m_Text[2].Width, 78);
 
-		UO->DrawGump(0x0835, 0, 30, 110, 204, 0); //Line
+		Orion->DrawGump(0x0835, 0, 30, 110, 204, 0); //Line
 		
-		UO->DrawGump(0x0824, 0, 246, 106); //^ button
-		UO->DrawGump(0x0828, 0, 255, 120 + scrollerY); //Scroller
+		Orion->DrawGump(0x0824, 0, 246, 106); //^ button
+		Orion->DrawGump(0x0828, 0, 255, 120 + scrollerY); //Scroller
 		
 		g_GL.Scissor((int)g_GumpTranslateX + 30, (int)g_GumpTranslateY + 120, 220, height - 100);
 
@@ -266,24 +266,24 @@ void TGumpBulletinBoardItem::GenerateFrame()
 		
 		glDisable(GL_SCISSOR_TEST);
 
-		UO->DrawGump(0x0823, 0, 18, height + 34); //Bottom scroll
-		UO->DrawGump(0x0825, 0, 246, height + 17); //v button
-		UO->DrawGump(0x082B, 0, 30, height + 21); //Bottom line
+		Orion->DrawGump(0x0823, 0, 18, height + 34); //Bottom scroll
+		Orion->DrawGump(0x0825, 0, 246, height + 17); //v button
+		Orion->DrawGump(0x082B, 0, 30, height + 21); //Bottom line
 
 		switch (m_Variant)
 		{
 			case 0:
 			{
-				UO->DrawGump(0x0883, 0, 97, 12); //NEW MESSAGE
-				UO->DrawGump(0x0886, 0, 37, height + 45); //Post
+				Orion->DrawGump(0x0883, 0, 97, 12); //NEW MESSAGE
+				Orion->DrawGump(0x0886, 0, 37, height + 45); //Post
 
 				break;
 			}
 			case 2:
-				UO->DrawGump(0x0885, 0, 235, height + 45); //Remove
+				Orion->DrawGump(0x0885, 0, 235, height + 45); //Remove
 			case 1:
 			{
-				UO->DrawGump(0x0884, 0, 37, height + 45); //Reply
+				Orion->DrawGump(0x0884, 0, 37, height + 45); //Reply
 
 				break;
 			}
@@ -292,7 +292,7 @@ void TGumpBulletinBoardItem::GenerateFrame()
 		}
 
 		WORD gumpID = 0x082E + (int)(g_GumpSelectElement == ID_GBBI_BUTTON_RESIZE);
-		UO->DrawGump(gumpID, 0, 139, height + 66); //Resize
+		Orion->DrawGump(gumpID, 0, 139, height + 66); //Resize
 
 	//Завершаем запись дисплей листа
 	glEndList();
@@ -387,19 +387,19 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 
 		int LSG = 0;
 
-		if (UO->GumpPixelsInXY(0x0820, 0, 23)) //Top scroll
+		if (Orion->GumpPixelsInXY(0x0820, 0, 23)) //Top scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
-		else if (UO->GumpPixelsInXY(0x0823, 18, height + 34)) //Bottom scroll
+		else if (Orion->GumpPixelsInXY(0x0823, 18, height + 34)) //Bottom scroll
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
-		else if (UO->GumpPixelsInXY(0x0828, 255, 120 + scrollerY)) //Scroller
+		else if (Orion->GumpPixelsInXY(0x0828, 255, 120 + scrollerY)) //Scroller
 			LSG = ID_GBBI_SCROLLER;
-		else if (UO->GumpPixelsInXY(0x082E, 139, height + 66)) //Resize
+		else if (Orion->GumpPixelsInXY(0x082E, 139, height + 66)) //Resize
 			LSG = ID_GBBI_BUTTON_RESIZE;
 		else //body
 		{
@@ -413,7 +413,7 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 				{
 					if (deltaHeight > 0)
 					{
-						if (UO->GumpPixelsInXY(0x0821, 18, curPosY, 0, deltaHeight))
+						if (Orion->GumpPixelsInXY(0x0821, 18, curPosY, 0, deltaHeight))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -422,7 +422,7 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 
 					break;
 				}
-				else if (UO->GumpPixelsInXY(0x0821, 18, curPosY))
+				else if (Orion->GumpPixelsInXY(0x0821, 18, curPosY))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
@@ -438,7 +438,7 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 				{
 					if (deltaHeight > 0)
 					{
-						if (UO->GumpPixelsInXY(0x0822, 18, curPosY, 0, deltaHeight))
+						if (Orion->GumpPixelsInXY(0x0822, 18, curPosY, 0, deltaHeight))
 						{
 							g_LastSelectedObject = 0;
 							g_LastSelectedGump = index;
@@ -447,7 +447,7 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 
 					break;
 				}
-				else if (UO->GumpPixelsInXY(0x0822, 18, curPosY))
+				else if (Orion->GumpPixelsInXY(0x0822, 18, curPosY))
 				{
 					g_LastSelectedObject = 0;
 					g_LastSelectedGump = index;
@@ -459,9 +459,9 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 			}
 		}
 		
-		if (UO->PolygonePixelsInXY(246, 106, 20, 18)) //^
+		if (Orion->PolygonePixelsInXY(246, 106, 20, 18)) //^
 			LSG = ID_GBBI_SCROLLER_UP;
-		else if (UO->PolygonePixelsInXY(246, height + 17, 20, 18)) //v
+		else if (Orion->PolygonePixelsInXY(246, height + 17, 20, 18)) //v
 			LSG = ID_GBBI_SCROLLER_DOWN;
 		else
 		{
@@ -469,23 +469,23 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 			{
 				case 0:
 				{
-					if (UO->PolygonePixelsInXY(30 + m_Text[2].Width, 78, 160, 16)) //Subject text
+					if (Orion->PolygonePixelsInXY(30 + m_Text[2].Width, 78, 160, 16)) //Subject text
 						LSG = ID_GBBI_SUBJECT_TEXT_FIELD;
-					else if (LSG != ID_GBBI_SCROLLER && UO->PolygonePixelsInXY(30, 120, 220, height - 100)) //Text
+					else if (LSG != ID_GBBI_SCROLLER && Orion->PolygonePixelsInXY(30, 120, 220, height - 100)) //Text
 						LSG = ID_GBBI_TEXT_FIELD;
-					else if (UO->PolygonePixelsInXY(37, height + 45, 30, 14)) //Post
+					else if (Orion->PolygonePixelsInXY(37, height + 45, 30, 14)) //Post
 						LSG = ID_GBBI_POST;
 
 					break;
 				}
 				case 2:
 				{
-					if (UO->PolygonePixelsInXY(235, height + 45, 50, 14)) //Remove
+					if (Orion->PolygonePixelsInXY(235, height + 45, 50, 14)) //Remove
 						LSG = ID_GBBI_REMOVE;
 				}
 				case 1:
 				{
-					if (UO->PolygonePixelsInXY(37, height + 45, 40, 14)) //Reply
+					if (Orion->PolygonePixelsInXY(37, height + 45, 40, 14)) //Reply
 						LSG = ID_GBBI_REPLY;
 
 					break;

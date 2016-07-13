@@ -31,9 +31,9 @@ TGumpSelectColor::~TGumpSelectColor()
 //---------------------------------------------------------------------------
 void TGumpSelectColor::PrepareTextures()
 {
-	UO->ExecuteGump(0x0906);
-	UO->ExecuteButton(0x0907);
-	UO->ExecuteGumpPart(0x0845, 2);
+	Orion->ExecuteGump(0x0906);
+	Orion->ExecuteButton(0x0907);
+	Orion->ExecuteGumpPart(0x0845, 2);
 }
 //---------------------------------------------------------------------------
 void TGumpSelectColor::GenerateFrame()
@@ -56,7 +56,7 @@ void TGumpSelectColor::GenerateFrame()
 		const int cellWidthX = 8;
 		const int cellWidthY = 8;
 
-		UO->DrawGump(0x0906, 0, 0, 0); //Body
+		Orion->DrawGump(0x0906, 0, 0, 0); //Body
 		
 		WORD gumpID = 0x0907;
 		if (g_GumpPressedElement == ID_GSC_BUTTON_OKAY)
@@ -64,10 +64,10 @@ void TGumpSelectColor::GenerateFrame()
 		else if (g_GumpSelectElement == ID_GSC_BUTTON_OKAY)
 			gumpID = 0x0909;
 
-		UO->DrawGump(gumpID, 0, 208, 138); //Okay button
+		Orion->DrawGump(gumpID, 0, 208, 138); //Okay button
 		
 		gumpID = 0x0845 + (int)(g_GumpSelectElement == ID_GSC_SLIDER); //Scroll button / selected
-		UO->DrawGump(gumpID, 0, m_SliderPos, 142);
+		Orion->DrawGump(gumpID, 0, m_SliderPos, 142);
 
 		WORD startColor = m_ColorRef + 1;
 
@@ -171,15 +171,15 @@ int TGumpSelectColor::Draw(bool &mode)
 		g_MouseX -= (int)g_GumpTranslateX;
 		g_MouseY -= (int)g_GumpTranslateY;
 
-		if (UO->GumpPixelsInXY(0x0906, 0, 0))
+		if (Orion->GumpPixelsInXY(0x0906, 0, 0))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
 		}
 			
-		if (UO->GumpPixelsInXY(0x0907, 208, 138))
+		if (Orion->GumpPixelsInXY(0x0907, 208, 138))
 			LSG = ID_GSC_BUTTON_OKAY; //Okay button
-		else if (UO->GumpPixelsInXY(0x0845, m_SliderPos, 142))
+		else if (Orion->GumpPixelsInXY(0x0845, m_SliderPos, 142))
 			LSG = ID_GSC_SLIDER; //Scroll button
 		
 		const int cellWidthX = 8;

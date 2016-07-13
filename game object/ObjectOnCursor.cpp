@@ -49,6 +49,6 @@ m_IsGameFigure(false), m_DragCount(obj->Count), m_NoDraw(false)
 	m_MapIndex = obj->MapIndex;
 	m_Name = obj->GetName();
 
-	m_TiledataPtr = &UO->m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32];
+	m_TiledataPtr = &Orion->m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32];
 }
 //---------------------------------------------------------------------------

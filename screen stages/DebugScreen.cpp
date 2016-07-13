@@ -73,15 +73,15 @@ void TDebugScreen::Init()
 	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
-	UO->ExecuteGump(0x0588); //Main Screen background
-	UO->ExecuteGump(0x157C); //Main Screen
-	UO->ExecuteGump(0x15A0); //Main Screen Notes
-	UO->ExecuteResizepic(0x13BE); //ActPwd Container
-	UO->ExecuteGump(0x058A); //Main Screen Castle?
-	UO->ExecuteGumpPart(0x1589, 3); //X gump
-	UO->ExecuteGumpPart(0x15A4, 3); //> gump
-	UO->ExecuteResizepic(0x0BB8); //Account/Password text field
-	UO->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
+	Orion->ExecuteGump(0x0588); //Main Screen background
+	Orion->ExecuteGump(0x157C); //Main Screen
+	Orion->ExecuteGump(0x15A0); //Main Screen Notes
+	Orion->ExecuteResizepic(0x13BE); //ActPwd Container
+	Orion->ExecuteGump(0x058A); //Main Screen Castle?
+	Orion->ExecuteGumpPart(0x1589, 3); //X gump
+	Orion->ExecuteGumpPart(0x15A4, 3); //> gump
+	Orion->ExecuteResizepic(0x0BB8); //Account/Password text field
+	Orion->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
 }
 //---------------------------------------------------------------------------
 void TDebugScreen::ProcessSmoothAction(BYTE action)
@@ -90,7 +90,7 @@ void TDebugScreen::ProcessSmoothAction(BYTE action)
 		action = m_SmoothScreenAction;
 
 	if (action == ID_SMOOTH_DS_GO_SCREEN_MAIN)
-		UO->InitScreen(GS_MAIN);
+		Orion->InitScreen(GS_MAIN);
 	else if (action == ID_SMOOTH_DS_QUIT)
 		PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 }
@@ -135,7 +135,7 @@ int TDebugScreen::Render(bool mode)
 			WORD GumpID = 0x15A4 + (int)(CanSelectedButton == ID_DS_GO_SCREEN_MAIN); //> gump / lighted
 			if (CanPressedButton == ID_DS_GO_SCREEN_MAIN)
 				GumpID = 0x15A6; //> gump pressed
-			UO->DrawGump(GumpID, 0, 610, 445);
+			Orion->DrawGump(GumpID, 0, 610, 445);
 
 			UnuseShader();
 
@@ -190,7 +190,7 @@ int TDebugScreen::Render(bool mode)
 	{
 		g_LastSelectedObject = 0;
 
-		if (UO->GumpPixelsInXY(0x15A4, 610, 445))
+		if (Orion->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_DS_GO_SCREEN_MAIN; //> gump
 		else
 			g_LastSelectedObject = m_BookGump->Draw(mode);
