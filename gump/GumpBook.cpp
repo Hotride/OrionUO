@@ -130,15 +130,24 @@ void TGumpBook::GenerateFrame()
 		{
 			//Название книги
 			m_TextTitle.Draw(78, 32);
-			TextEntryTitle->DrawA(4, 0, 41, 65);
+			if (m_Unicode)
+				TextEntryTitle->DrawW(0, 0, 41, 65);
+			else
+				TextEntryTitle->DrawA(4, 0, 41, 65);
 
 			//Автор
 			m_TextBy.Draw(88, 134);
-			TextEntryAuthor->DrawA(4, 0, 41, 160);
+			if (m_Unicode)
+				TextEntryAuthor->DrawW(0, 0, 41, 160);
+			else
+				TextEntryAuthor->DrawA(4, 0, 41, 160);
 
 			//Правая страница
 			FontManager->UnusePartialHue = true;
-			TextEntry[1].DrawA(4, 0x0012, 224, 34);
+			if (m_Unicode)
+				TextEntry[1].DrawW(0, 0x0012, 224, 34);
+			else
+				TextEntry[1].DrawA(4, 0x0012, 224, 34);
 			m_PageIndexText[1].Draw(299, 202);
 			FontManager->UnusePartialHue = false;
 		}
@@ -146,13 +155,19 @@ void TGumpBook::GenerateFrame()
 		{
 			FontManager->UnusePartialHue = true;
 			//Левая страница
-			TextEntry[m_Page].DrawA(4, 0x0012, 38, 34);
+			if (m_Unicode)
+				TextEntry[m_Page].DrawW(0, 0x0012, 38, 34);
+			else
+				TextEntry[m_Page].DrawA(4, 0x0012, 38, 34);
 			m_PageIndexText[m_Page].Draw(112, 202);
 
 			if (m_Page + 1 < m_PageCount)
 			{
 				//Правая страница
-				TextEntry[m_Page + 1].DrawA(4, 0x0012, 224, 34);
+				if (m_Unicode)
+					TextEntry[m_Page + 1].DrawW(0, 0x0012, 224, 34);
+				else
+					TextEntry[m_Page + 1].DrawA(4, 0x0012, 224, 34);
 				m_PageIndexText[m_Page + 1].Draw(299, 202);
 			}
 			FontManager->UnusePartialHue = false;
@@ -231,7 +246,7 @@ int TGumpBook::Draw(bool &mode)
 void TGumpBook::OnLeftMouseUp()
 {
 	//Проверим валидность переменных
-	if (g_LastObjectLeftMouseDown != g_LastSelectedObject || !g_LastObjectLeftMouseDown || Minimized || !g_LastSelectedGump)
+	if (g_LastObjectLeftMouseDown != g_LastSelectedObject || !g_LastObjectLeftMouseDown || !g_LastSelectedGump)
 		return;
 
 	int newPage = -1;
