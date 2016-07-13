@@ -388,11 +388,15 @@ void TGumpBook::InsertInContent(const WPARAM &wparam)
 			{
 				if (EntryPointer->GetLinesCountW(0) > 8)
 					EntryPointer->Remove(true);
+				else
+					m_ChangedPage[page] = true;
 			}
 			else
 			{
 				if (EntryPointer->GetLinesCountA(4) > 8)
 					EntryPointer->Remove(true);
+				else
+					m_ChangedPage[page] = true;
 			}
 
 			m_FrameCreated = false;
