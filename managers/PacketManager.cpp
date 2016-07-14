@@ -621,17 +621,7 @@ wstring TPacketManager::ReadUnicodeString( __in int size)
 
 	IFOR(i, 0, count)
 	{
-		//*pStr = (Ptr[0] << 8) | Ptr[1];
-
 		wchar_t ch = (Ptr[0] << 8) | Ptr[1];
-
-		if (ch < 0x0400)
-		{
-			if (ch != 0xFF)
-				ch = (char)(ch % 0xFF);
-			else
-				ch = (char)ch;
-		}
 
 		*pStr = ch;
 
