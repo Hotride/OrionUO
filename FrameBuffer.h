@@ -28,6 +28,10 @@ private:
 	int m_Width;
 	int m_Height;
 
+	//!Начальные координаты для отрисовки буффера
+	int m_ViewPortX;
+	int m_ViewPortY;
+
 	//!Создан буфер и готов к использованию или нет
 	bool m_Ready;
 
@@ -93,6 +97,18 @@ public:
 	void Draw(__in int x, __in int y);
 
 	void DrawShadow(__in int x, __in int y);
+
+	//! Х координата для начала отрисовки буффера.
+	SETGET(int, ViewPortX);
+
+	//! У координата для начала отрисовки буффера.
+	SETGET(int, ViewPortY);
+
+	//! Ширина отрисовки буффера.
+	SETGET(int, Width);
+
+	//! Высота отрисовки буффера.
+	SETGET(int, Height);
 };
 //---------------------------------------------------------------------------
 //!Буфер для освещения

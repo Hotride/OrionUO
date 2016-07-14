@@ -24,7 +24,7 @@ TFrameBuffer g_CharacterBuffer;
 //---------------------------------------------------------------------------
 TFrameBuffer::TFrameBuffer()
 : m_Width(0), m_Height(0), m_Ready(false), m_OldFrameBuffer(0), m_FrameBuffer(0),
-m_Texture(0)
+m_Texture(0), m_ViewPortX(0), m_ViewPortY(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -135,7 +135,7 @@ bool TFrameBuffer::Use()
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
         glBindTexture(GL_TEXTURE_2D, m_Texture);
 
-		glViewport(0, 0, m_Width, m_Height);
+		glViewport(m_ViewPortX, m_ViewPortY, m_Width, m_Height);
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
