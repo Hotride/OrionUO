@@ -3196,7 +3196,7 @@ PACKET_HANDLER(OpenGump)
 			
 			go = new TGumpGumppic(graphic, color, x, y);
 		}
-		else if (!memcmp(lowc, "xfmhtmlgump", 11))
+		else if (!memcmp(lowc, "xmfhtmlgump", 11))
 		{
 			e += 12;
 			int x = 0, y = 0, w = 0, h = 0, background = 0, scrollbar = 0, clilocID = 0;
