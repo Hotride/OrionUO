@@ -26,6 +26,7 @@ m_Effects(NULL), m_AnimIndex(0), m_YouSeeJournalPrefix(false),
 m_LastAnimationChangeTime(GetTickCount()), m_ClilocMessage(L"")
 {
 	memset(&m_TextureObjectHalndes, 0, sizeof(TTextureObject));
+	memset(&m_FrameInfo, 0, sizeof(DRAW_FRAME_INFORMATION));
 
 #if UO_DEBUG_INFO!=0
 	g_GameObjectsCount++;

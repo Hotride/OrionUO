@@ -2804,6 +2804,91 @@ void TOrion::SaveLocalConfig()
 	}
 }
 //---------------------------------------------------------------------------
+void TOrion::ProcessDelayedClicks()
+{
+	if (g_ClickObjectReq && g_ClickObject.Timer < GetTickCount())
+	{
+		if (g_ClickObject.Type == COT_GAME_OBJECT)
+		{
+			NameReq(g_ClickObject.Serial);
+
+			if (g_ClickObject.Serial < 0x40000000)
+			{
+				if (!ConfigManager.HoldShiftForContextMenus || g_ShiftPressed)
+				{
+					TPacketRequestPopupMenu packet(g_ClickObject.Serial);
+					packet.Send();
+				}
+			}
+		}
+		else if (g_ClickObject.Type == COT_GUMP)
+		{
+			if (g_ClickObject.GumpType == GT_SPELLBOOK)
+			{
+				TGumpSpellbook *gump = (TGumpSpellbook*)GumpManager->UpdateGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
+
+				if (gump != NULL)
+				{
+					gump->Page = g_ClickObject.GumpButtonID;
+					Orion->PlaySoundEffect(0x0055);
+				}
+			}
+			else if (g_ClickObject.GumpType == GT_BOOK)
+			{
+				TGumpBook *gump = (TGumpBook*)GumpManager->UpdateGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
+
+				if (gump != NULL)
+					gump->ChangePage(g_ClickObject.GumpButtonID);
+			}
+			else if (g_ClickObject.GumpType == GT_PAPERDOLL)
+			{
+				TGumpPaperdoll *gump = (TGumpPaperdoll*)GumpManager->UpdateGump(g_ClickObject.Serial, 0, g_ClickObject.GumpType);
+
+				if (gump != NULL)
+				{
+					TTextData *td = new TTextData();
+					td->Unicode = false;
+					td->Font = 3;
+					td->Serial = 0;
+					td->Color = 0x03B5;
+					td->Timer = GetTickCount();
+					td->Type = TT_CLIENT;
+					td->DrawX = g_MouseX - gump->X;
+					td->DrawY = g_MouseY - gump->Y;
+
+					string text = "Party Manifest";
+					if (g_ClickObject.GumpButtonID)
+						text = "Character Profile";
+
+					td->SetText(text);
+
+					int width = FontManager->GetWidthA(3, text.c_str(), text.length());
+
+					FontManager->SavePixels = true;
+
+					if (width > TEXT_MESSAGE_MAX_WIDTH)
+						td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);
+					else
+						td->GenerateTexture(0, 0, TS_CENTER);
+
+					FontManager->SavePixels = false;
+
+					gump->m_TextContainer->Add(td);
+
+					TTextRenderer *tr = gump->GetTextRenderer();
+
+					if (tr != NULL)
+						tr->Add(td);
+
+					Orion->AddJournalMessage(td, "");
+				}
+			}
+		}
+
+		g_ClickObjectReq = false;
+	}
+}
+//---------------------------------------------------------------------------
 void TOrion::Process()
 {
 	static DWORD removeUnusedTexturesTime = GetTickCount() + CLEAR_TEXTURES_DELAY;
@@ -2877,90 +2962,7 @@ void TOrion::Process()
 
 			MacroManager->Execute();
 
-			if (g_ClickObjectReq && g_ClickObject.Timer < ticks)
-			{
-				if (g_ClickObject.Type == COT_GAME_OBJECT)
-				{
-					NameReq(g_ClickObject.Serial);
-
-					if (g_ClickObject.Serial < 0x40000000)
-					{
-						if (!ConfigManager.HoldShiftForContextMenus || g_ShiftPressed)
-						{
-							TPacketRequestPopupMenu packet(g_ClickObject.Serial);
-							packet.Send();
-						}
-					}
-				}
-				else if (g_ClickObject.Type == COT_GUMP)
-				{
-					if (g_ClickObject.GumpType == GT_SPELLBOOK)
-					{
-						TGumpSpellbook *gump = (TGumpSpellbook*)GumpManager->UpdateGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
-
-						if (gump != NULL)
-						{
-							gump->Page = g_ClickObject.GumpButtonID;
-							Orion->PlaySoundEffect(0x0055);
-						}
-					}
-					else if (g_ClickObject.GumpType == GT_BOOK)
-					{
-						TGumpBook *gump = (TGumpBook*)GumpManager->UpdateGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
-
-						if (gump != NULL)
-						{
-							gump->Page = g_ClickObject.GumpButtonID;
-							Orion->PlaySoundEffect(0x0055);
-						}
-					}
-					else if (g_ClickObject.GumpType == GT_PAPERDOLL)
-					{
-						TGumpPaperdoll *gump = (TGumpPaperdoll*)GumpManager->UpdateGump(g_ClickObject.Serial, 0, g_ClickObject.GumpType);
-
-						if (gump != NULL)
-						{
-							TTextData *td = new TTextData();
-							td->Unicode = false;
-							td->Font = 3;
-							td->Serial = 0;
-							td->Color = 0x03B5;
-							td->Timer = GetTickCount();
-							td->Type = TT_CLIENT;
-							td->DrawX = g_MouseX - gump->X;
-							td->DrawY = g_MouseY - gump->Y;
-
-							string text = "Party Manifest";
-							if (g_ClickObject.GumpButtonID)
-								text = "Character Profile";
-
-							td->SetText(text);
-
-							int width = FontManager->GetWidthA(3, text.c_str(), text.length());
-
-							FontManager->SavePixels = true;
-
-							if (width > TEXT_MESSAGE_MAX_WIDTH)
-								td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);
-							else
-								td->GenerateTexture(0, 0, TS_CENTER);
-
-							FontManager->SavePixels = false;
-
-							gump->m_TextContainer->Add(td);
-
-							TTextRenderer *tr = gump->GetTextRenderer();
-
-							if (tr != NULL)
-								tr->Add(td);
-
-							Orion->AddJournalMessage(td, "");
-						}
-					}
-				}
-
-				g_ClickObjectReq = false;
-			}
+			ProcessDelayedClicks();
 
 			canRenderSelect = true;
 

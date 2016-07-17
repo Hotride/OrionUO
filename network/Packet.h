@@ -631,4 +631,13 @@ public:
 	TPacketChangeStatLockStateRequest(BYTE stat, BYTE state);
 };
 //---------------------------------------------------------------------------
+class TGumpBook;
+//---------------------------------------------------------------------------
+class TPacketBookPageData : public TPacket
+{
+private:
+public:
+	TPacketBookPageData(TGumpBook *gump, int page);
+};
+//---------------------------------------------------------------------------
 #endif

@@ -1178,6 +1178,8 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 	{
 		anim = new TTextureAnimation();
 		m_DataIndex[id].Group = anim;
+
+		ADD_LINKED(m_UsedAnimList, m_DataIndex[id]);
 	}
 
 	TTextureAnimationGroup *group = anim->GetGroup(m_AnimGroup);
@@ -1295,13 +1297,45 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		{
 			//AddShadow(frame->Texture, x, y, g_ZBuffer, frame->Width, frame->Height, mirror);
 
-			ColorManager->SendColorsToShader(0x0388/*0x0386*/);
+			ColorManager->SendColorsToShader(0x0386);
 			glUniform1iARB(ShaderDrawMode, 1);
 
 			glEnable(GL_BLEND);
-			glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
+			glBlendFunc(GL_ZERO, GL_DST_COLOR);
 
-			g_GL.DrawShadow(frame->Texture, x, y, frame->Width, frame->Height / 2, mirror);
+			int fWidth = frame->Width;
+			int fHeight = frame->Height;
+
+			TTextureAnimationFrame *frame0 = direction->GetFrame(0);
+
+			if (frame0 != NULL && frame0->Texture != 0)
+			{
+				fWidth = frame0->Width;
+				fHeight = frame0->Height;
+			}
+
+			if (obj->NPC)
+			{
+				TGameItem *mount = ((TGameCharacter*)obj)->FindLayer(OL_MOUNT);
+
+				if (mount != NULL)
+				{
+					WORD mountID = mount->GetMountAnimation();
+
+					ANIMATION_DIMENSIONS dim = GetAnimationDimensions(mount, frameIndex, m_Direction, ((TGameCharacter*)obj)->GetAnimationGroup(mountID));
+
+					//y += (frame->Height + frame->CenterY + 3);
+					//y -= (dim.Height + dim.CenterY + 3);
+					y += 10;
+
+					if (mirror)
+						x += (dim.Width - dim.CenterX);
+					else
+						x += dim.CenterX;
+				}
+			}
+
+			g_GL.DrawShadow(frame->Texture, x, y, fWidth, fHeight / 2, mirror);
 
 			glDisable(GL_BLEND);
 		}
@@ -1444,278 +1478,302 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 	}
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::DrawCharacterAAA(__in TGameCharacter *obj, __in int x, __in int y, __in int z)
+void TAnimationManager::DrawIntoFrameBuffer(__in TGameCharacter *obj, __in int x, __in int y)
 {
-	if (g_UseFrameBuffer)
+	m_Direction = 0;
+	obj->UpdateAnimationInfo(m_Direction);
+
+	bool mirror = false;
+	BYTE layerDir = m_Direction;
+
+	GetAnimDirection(m_Direction, mirror);
+
+	BYTE animIndex = obj->AnimIndex;
+	BYTE animGroup = obj->GetAnimationGroup();
+
+	TGameItem *goi = obj->FindLayer(OL_MOUNT);
+
+	int lightOffset = 20;
+
+	/*DRAW_FRAME_INFORMATION &dfInfo = obj->m_FrameInfo;
+	CurrentShader->Pause();
+	g_GL.DrawPolygone(drawX - dfInfo.OffsetX, drawY - dfInfo.OffsetY, dfInfo.Width, dfInfo.Height);
+	CurrentShader->Resume();*/
+
+	if (goi != NULL) //Draw mount
 	{
-		if (g_CharacterBuffer.Ready() && g_CharacterBuffer.Use())
+		m_Sitting = 0;
+		lightOffset += 20;
+		WORD mountID = goi->GetMountAnimation();
+
+		m_AnimGroup = obj->GetAnimationGroup(mountID);
+
+		Draw(goi, x, y, mirror, animIndex, mountID);
+
+		switch (animGroup)
 		{
-			glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-			WORD targetColor = 0;
-			bool needHPLine = false;
-			DWORD serial = obj->Serial;
-
-			if (obj->Hidden())
-				m_Color = 0x038A;
-			else if (g_StatusbarUnderMouse == serial)
-				m_Color = ConfigManager.GetColorByNotoriety(obj->Notoriety);
-			else
-				m_Color = 0;
-
-			bool isAttack = (serial == g_LastAttackObject);
-
-			if (!obj->IsPlayer() && (isAttack || serial == g_LastTargetObject))
+			case PAG_FIDGET_1:
+			case PAG_FIDGET_2:
+			case PAG_FIDGET_3:
 			{
-				targetColor = ConfigManager.GetColorByNotoriety(obj->Notoriety);
-				needHPLine = (serial != NewTargetSystem.Serial);
-
-				if (isAttack)
-					m_Color = targetColor;
+				animGroup = PAG_ONMOUNT_STAND;
+				animIndex = 0;
+				break;
 			}
-	
-			m_Direction = 0;
+			default:
+				break;
+		}
+	}
+	else
+	{
+		m_Sitting = obj->IsSitting();
+
+		if (m_Sitting)
+		{
+			animGroup = PAG_STAND;
+			animIndex = 0;
+
 			obj->UpdateAnimationInfo(m_Direction);
 
-			bool mirror = false;
-			BYTE layerDir = m_Direction;
-	
-			GetAnimDirection(m_Direction, mirror);
+			FixSittingDirection(layerDir, mirror, x, y);
+		}
+	}
 
-			BYTE animIndex = obj->AnimIndex;
-			BYTE animGroup = obj->GetAnimationGroup();
+	m_AnimGroup = animGroup;
 
-			TGameItem *goi = obj->FindLayer(OL_MOUNT);
-	
-			int lightOffset = 20;
-			int drawX = (int)(x + obj->OffsetX);
-			int drawY = (int)(y + obj->OffsetY) - (z * 4) - (int)obj->OffsetZ;
-	
-			if (goi != NULL) //Draw mount
+	Draw(obj, x, y, mirror, animIndex); //Draw character
+
+	if (obj->IsHuman()) //Draw layred objects
+	{
+		if (!obj->Dead())
+		{
+			IFOR(l, 0, USED_LAYER_COUNT)
 			{
-				m_Sitting = 0;
-				lightOffset += 20;
-				WORD mountID = goi->GetMountAnimation();
+				goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
 
-				m_AnimGroup = obj->GetAnimationGroup(mountID);
-		
-				Draw(goi, drawX, drawY, mirror, animIndex, mountID + 0x10000);
-				Draw(goi, drawX, drawY, mirror, animIndex, mountID);
-
-				switch (animGroup)
+				if (goi != NULL)
 				{
-					case PAG_FIDGET_1:
-					case PAG_FIDGET_2:
-					case PAG_FIDGET_3:
-					{
-						animGroup = PAG_ONMOUNT_STAND;
-						animIndex = 0;
-						break;
-					}
-					default:
-						break;
+					if (goi->AnimID)
+						Draw(goi, x, y, mirror, animIndex, goi->AnimID);
+
+					if (goi->IsLightSource() && GameScreen->UseLight)
+						GameScreen->AddLight(obj, goi, x, y - lightOffset);
 				}
 			}
-			else
-			{
-				m_Sitting = obj->IsSitting();
+		}
+		else
+		{
+			goi = obj->FindLayer(OL_ROBE);
 
-				if (m_Sitting)
-				{
-					animGroup = PAG_STAND;
-					animIndex = 0;
+			if (goi != NULL && goi->AnimID)
+				Draw(goi, x, y, mirror, animIndex, goi->AnimID);
+		}
+	}
+}
+//----------------------------------------------------------------------------
+void TAnimationManager::DrawCharacterAAA(__in TGameCharacter *obj, __in int x, __in int y, __in int z)
+{
+	WORD targetColor = 0;
+	bool needHPLine = false;
+	DWORD serial = obj->Serial;
 
-					obj->UpdateAnimationInfo(m_Direction);
-			
-					FixSittingDirection(layerDir, mirror, drawX, drawY);
-				}
-			}
-	
-			m_AnimGroup = animGroup;
-	
-			if (!m_Sitting)
-				Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
+	if (obj->Hidden())
+		m_Color = 0x038A;
+	else if (g_StatusbarUnderMouse == serial)
+		m_Color = ConfigManager.GetColorByNotoriety(obj->Notoriety);
+	else
+		m_Color = 0;
 
-			Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
+	bool isAttack = (serial == g_LastAttackObject);
+	bool underMouseTarget = (g_LastObjectType == SOT_GAME_OBJECT && serial == g_LastSelectedObject && Target.IsTargeting());
 
-			if (obj->IsHuman()) //Draw layred objects
-			{
-				if (!obj->Dead())
-				{
-					IFOR(l, 0, USED_LAYER_COUNT)
-					{
-						goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
+	if (!obj->IsPlayer() && (isAttack || underMouseTarget || serial == g_LastTargetObject))
+	{
+		targetColor = ConfigManager.GetColorByNotoriety(obj->Notoriety);
 
-						if (goi != NULL)
-						{
-							if (goi->AnimID)
-								Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
+		if (isAttack || serial == g_LastTargetObject)
+			needHPLine = (serial != NewTargetSystem.Serial);
 
-							if (goi->IsLightSource() && GameScreen->UseLight)
-								GameScreen->AddLight(obj, goi, drawX, drawY - lightOffset);
-						}
-					}
-				}
-				else
-				{
-					goi = obj->FindLayer(OL_ROBE);
+		if (isAttack || underMouseTarget)
+			m_Color = targetColor;
+	}
 
-					if (goi != NULL && goi->AnimID)
-						Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
-				}
-			}
-	
-			if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial == obj->Serial)
-			{
-				WORD id = obj->GetMountAnimation();
+	int drawX = (int)(x + obj->OffsetX);
+	int drawY = (int)(y + obj->OffsetY) - (z * 4) - (int)obj->OffsetZ;
 
-				if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT)
-				{
-					TTextureAnimation *anim = m_DataIndex[id].Group;
+	bool fbCreated = false;
 
-					if (anim != NULL)
-					{
-						TTextureAnimationGroup *group = anim->GetGroup(m_AnimGroup);
-						TTextureAnimationDirection *direction = group->GetDirection(m_Direction);
+	if (g_UseFrameBuffer)
+	{
+		DRAW_FRAME_INFORMATION &dfInfo = obj->m_FrameInfo;
 
-						if (direction->Address != 0)
-						{
-							TTextureAnimationFrame *frame = direction->GetFrame(0);
+		if (dfInfo.Width + dfInfo.Height && g_CharacterBuffer.Init(dfInfo.Width, dfInfo.Height) && g_CharacterBuffer.Use())
+		{
+			fbCreated = true;
 
-							int frameWidth = 20;
-							int frameHeight = 20;
+			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-							if (frame != NULL)
-							{
-								frameWidth = frame->Width;
-								frameHeight = frame->Height;
-							}
-
-							if (frameWidth >= 80)
-							{
-								NewTargetSystem.GumpTop = 0x756D;
-								NewTargetSystem.GumpBottom = 0x756A;
-							}
-							else if (frameWidth >= 40)
-							{
-								NewTargetSystem.GumpTop = 0x756E;
-								NewTargetSystem.GumpBottom = 0x756B;
-							}
-							else
-							{
-								NewTargetSystem.GumpTop = 0x756F;
-								NewTargetSystem.GumpBottom = 0x756C;
-							}
-
-							switch (obj->Notoriety)
-							{
-								case NT_INNOCENT:
-								{
-									NewTargetSystem.ColorGump = 0x7570;
-									break;
-								}
-								case NT_FRIENDLY:
-								{
-									NewTargetSystem.ColorGump = 0x7571;
-									break;
-								}
-								case NT_SOMEONE_GRAY:
-								case NT_CRIMINAL:
-								{
-									NewTargetSystem.ColorGump = 0x7572;
-									break;
-								}
-								case NT_ENEMY:
-								{
-									NewTargetSystem.ColorGump = 0x7573;
-									break;
-								}
-								case NT_MURDERER:
-								{
-									NewTargetSystem.ColorGump = 0x7576;
-									break;
-								}
-								case NT_INVULNERABLE:
-								{
-									NewTargetSystem.ColorGump = 0x7575;
-									break;
-								}
-								default:
-									break;
-							}
-					
-							int per = obj->MaxHits;
-
-							if (per > 0)
-							{
-								per = (obj->Hits * 100) / per;
-
-								if (per > 100)
-									per = 100;
-			
-								if (per < 1)
-									per = 0;
-								else
-									per = (34 * per) / 100;
-
-							}
-					
-							NewTargetSystem.Hits = per;
-							NewTargetSystem.X = drawX;
-							NewTargetSystem.TopY = drawY - frameHeight - 8;
-							NewTargetSystem.BottomY = drawY + 7;
-						}
-
-					}
-				}
-			}
-
-			if (needHPLine)
-			{
-				int per = obj->MaxHits;
-
-				if (per > 0)
-				{
-					per = (obj->Hits * 100) / per;
-
-					if (per > 100)
-						per = 100;
-			
-					if (per < 1)
-						per = 0;
-					else
-						per = (34 * per) / 100;
-
-				}
-
-				if (isAttack)
-				{
-					AttackTargetGump.X = drawX - 20;
-					AttackTargetGump.Y = drawY;
-					AttackTargetGump.Color = targetColor;
-					AttackTargetGump.Hits = per;
-				}
-				else
-				{
-					TargetGump.X = drawX - 20;
-					TargetGump.Y = drawY;
-					TargetGump.Color = targetColor;
-					TargetGump.Hits = per;
-				}
-			}
+			DrawIntoFrameBuffer(obj, dfInfo.OffsetX, dfInfo.OffsetY);
 
 			g_CharacterBuffer.Release();
 
 			g_GL.RestorePort();
 
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+			g_GL.ViewPort(g_RenderBounds->GameWindowPosX, g_RenderBounds->GameWindowPosY, g_RenderBounds->GameWindowSizeX, g_RenderBounds->GameWindowSizeY);
 
-			g_CharacterBuffer.DrawShadow(0, 0);
+			glUniform1iARB(ShaderDrawMode, 0);
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_ZERO, GL_DST_COLOR);
+
+			g_CharacterBuffer.DrawShadow(drawX - dfInfo.OffsetX, drawY - dfInfo.OffsetY);
 
 			glDisable(GL_BLEND);
+
+			g_CharacterBuffer.Draw(drawX - dfInfo.OffsetX, drawY - dfInfo.OffsetY);
+		}
+	}
+
+	if (!fbCreated)
+		DrawIntoFrameBuffer(obj, drawX, drawY);
+
+	if (!ConfigManager.DisableNewTargetSystem && NewTargetSystem.Serial == obj->Serial)
+	{
+		WORD id = obj->GetMountAnimation();
+
+		if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+		{
+			TTextureAnimation *anim = m_DataIndex[id].Group;
+
+			if (anim != NULL)
+			{
+				TTextureAnimationGroup *group = anim->GetGroup(m_AnimGroup);
+				TTextureAnimationDirection *direction = group->GetDirection(m_Direction);
+
+				if (direction->Address != 0)
+				{
+					TTextureAnimationFrame *frame = direction->GetFrame(0);
+
+					int frameWidth = 20;
+					int frameHeight = 20;
+
+					if (frame != NULL)
+					{
+						frameWidth = frame->Width;
+						frameHeight = frame->Height;
+					}
+
+					if (frameWidth >= 80)
+					{
+						NewTargetSystem.GumpTop = 0x756D;
+						NewTargetSystem.GumpBottom = 0x756A;
+					}
+					else if (frameWidth >= 40)
+					{
+						NewTargetSystem.GumpTop = 0x756E;
+						NewTargetSystem.GumpBottom = 0x756B;
+					}
+					else
+					{
+						NewTargetSystem.GumpTop = 0x756F;
+						NewTargetSystem.GumpBottom = 0x756C;
+					}
+
+					switch (obj->Notoriety)
+					{
+						case NT_INNOCENT:
+						{
+							NewTargetSystem.ColorGump = 0x7570;
+							break;
+						}
+						case NT_FRIENDLY:
+						{
+							NewTargetSystem.ColorGump = 0x7571;
+							break;
+						}
+						case NT_SOMEONE_GRAY:
+						case NT_CRIMINAL:
+						{
+							NewTargetSystem.ColorGump = 0x7572;
+							break;
+						}
+						case NT_ENEMY:
+						{
+							NewTargetSystem.ColorGump = 0x7573;
+							break;
+						}
+						case NT_MURDERER:
+						{
+							NewTargetSystem.ColorGump = 0x7576;
+							break;
+						}
+						case NT_INVULNERABLE:
+						{
+							NewTargetSystem.ColorGump = 0x7575;
+							break;
+						}
+						default:
+							break;
+					}
+
+					int per = obj->MaxHits;
+
+					if (per > 0)
+					{
+						per = (obj->Hits * 100) / per;
+
+						if (per > 100)
+							per = 100;
+
+						if (per < 1)
+							per = 0;
+						else
+							per = (34 * per) / 100;
+
+					}
+
+					NewTargetSystem.Hits = per;
+					NewTargetSystem.X = drawX;
+					NewTargetSystem.TopY = drawY - frameHeight - 8;
+					NewTargetSystem.BottomY = drawY + 7;
+				}
+
+			}
+		}
+	}
+
+	if (needHPLine)
+	{
+		int per = obj->MaxHits;
+
+		if (per > 0)
+		{
+			per = (obj->Hits * 100) / per;
+
+			if (per > 100)
+				per = 100;
+
+			if (per < 1)
+				per = 0;
+			else
+				per = (34 * per) / 100;
+
+		}
+
+		if (isAttack)
+		{
+			AttackTargetGump.X = drawX - 20;
+			AttackTargetGump.Y = drawY;
+			AttackTargetGump.Color = targetColor;
+			AttackTargetGump.Hits = per;
+		}
+		else
+		{
+			TargetGump.X = drawX - 20;
+			TargetGump.Y = drawY;
+			TargetGump.Color = targetColor;
+			TargetGump.Hits = per;
 		}
 	}
 }
@@ -1768,6 +1826,7 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 
 	BYTE animIndex = obj->AnimIndex;
 	BYTE animGroup = obj->GetAnimationGroup();
+	m_AnimGroup = animGroup;
 
 	TGameItem *goi = obj->FindLayer(OL_MOUNT);
 	
@@ -1775,8 +1834,15 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 	int drawX = (int)(x + obj->OffsetX);
 	int drawY = (int)(y + obj->OffsetY) - (z * 4) - (int)obj->OffsetZ;
 	
+	/*DRAW_FRAME_INFORMATION &dfInfo = obj->m_FrameInfo;
+	CurrentShader->Pause();
+	g_GL.DrawPolygone(drawX - dfInfo.OffsetX, drawY - dfInfo.OffsetY, dfInfo.Width, dfInfo.Height);
+	CurrentShader->Resume();*/
+
 	if (goi != NULL) //Draw mount
 	{
+		Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
+
 		m_Sitting = 0;
 		lightOffset += 20;
 		WORD mountID = goi->GetMountAnimation();
@@ -1813,12 +1879,11 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 			
 			FixSittingDirection(layerDir, mirror, drawX, drawY);
 		}
+		else
+			Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
 	}
 	
 	m_AnimGroup = animGroup;
-	
-	if (!m_Sitting)
-		Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
 
 	Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
 
@@ -2046,11 +2111,21 @@ bool TAnimationManager::CharacterPixelsInXY( __in TGameCharacter *obj, __in int 
 
 	if (obj->IsHuman()) //Check layred objects
 	{
-		IFOR(l, 0, USED_LAYER_COUNT && !result)
+		if (!obj->Dead())
 		{
-			goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
+			IFOR(l, 0, USED_LAYER_COUNT && !result)
+			{
+				goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
 
-			if (goi != NULL && goi->GetAnimID())
+				if (goi != NULL && goi->GetAnimID())
+					result = TestPixels(goi, drawX, drawY, mirror, animIndex, goi->GetAnimID());
+			}
+		}
+		else if (!result)
+		{
+			goi = obj->FindLayer(OL_ROBE);
+
+			if (goi != NULL && goi->AnimID)
 				result = TestPixels(goi, drawX, drawY, mirror, animIndex, goi->GetAnimID());
 		}
 	}
@@ -2207,35 +2282,38 @@ void TAnimationManager::GetBodyGraphic( __inout WORD &graphic)
 		graphic = m_DataIndex[graphic].Graphic;
 }
 //----------------------------------------------------------------------------
-ANIMATION_DIMENSIONS TAnimationManager::GetAnimationDimensions(TGameObject *obj, BYTE frameIndex)
+ANIMATION_DIMENSIONS TAnimationManager::GetAnimationDimensions(TGameObject *obj, BYTE frameIndex, const BYTE &defaultDirection, const BYTE &defaultGroup)
 {
 	ANIMATION_DIMENSIONS result = { 0 };
 
-	BYTE dir = 0;
-	BYTE animGroup = 0;
+	BYTE dir = defaultDirection;
+	BYTE animGroup = defaultGroup;
+	WORD id = obj->GetMountAnimation();
+	bool mirror = false;
+
+	if (dir & 0x80)
+		dir &= 0x7F;
 
 	if (obj->NPC)
 	{
 		TGameCharacter *gc = obj->GameCharacterPtr();
 		gc->UpdateAnimationInfo(dir);
 		animGroup = gc->GetAnimationGroup();
+		GetAnimDirection(dir, mirror);
 	}
-	else
+	else if (obj->IsCorpse())
 	{
 		dir = ((TGameItem*)obj)->Layer;
-		animGroup = GetDieGroupIndex(obj->GetMountAnimation(), ((TGameItem*)obj)->UsedLayer);
+		animGroup = GetDieGroupIndex(id, ((TGameItem*)obj)->UsedLayer);
+		GetAnimDirection(dir, mirror);
 	}
-
-	if (dir & 0x80)
-		dir &= 0x7F;
-
-	bool mirror = false;
-	GetAnimDirection(dir, mirror);
+	else if (((TGameItem*)obj)->Layer != OL_MOUNT) //TGameItem
+		id = ((TGameItem*)obj)->GetAnimID();
 
 	if (frameIndex == 0xFF)
 		frameIndex = (BYTE)obj->AnimIndex;
 
-	TTextureAnimation *anim = GetAnimation(obj->GetMountAnimation());
+	TTextureAnimation *anim = GetAnimation(id);
 
 	bool found = false;
 
@@ -2249,6 +2327,16 @@ ANIMATION_DIMENSIONS TAnimationManager::GetAnimationDimensions(TGameObject *obj,
 
 			if (direction != NULL && direction->Address != NULL)
 			{
+				int fc = direction->FrameCount;
+
+				if (fc > 0 && frameIndex >= fc)
+				{
+					if (obj->IsCorpse())
+						frameIndex = fc - 1;
+					else
+						frameIndex = 0;
+				}
+
 				TTextureAnimationFrame *frame = direction->FindFrame(frameIndex);
 
 				if (frame != NULL)
@@ -2266,7 +2354,7 @@ ANIMATION_DIMENSIONS TAnimationManager::GetAnimationDimensions(TGameObject *obj,
 	
 	if (!found)
 	{
-		WORD graphic = obj->GetMountAnimation();
+		WORD graphic = id; // obj->GetMountAnimation();
 
 		if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_DataIndex[graphic].Address != 0)
 		{
@@ -2297,6 +2385,14 @@ ANIMATION_DIMENSIONS TAnimationManager::GetAnimationDimensions(TGameObject *obj,
 				//if (frameIndex >= frameCount)
 				//	frameIndex = 0;
 
+				if (frameCount > 0 && frameIndex >= frameCount)
+				{
+					if (obj->IsCorpse())
+						frameIndex = frameCount - 1;
+					else
+						frameIndex = 0;
+				}
+
 				if (frameIndex < frameCount)
 				{
 					PDWORD frameOffset = (PDWORD)(dataStart + sizeof(DWORD));
@@ -2313,5 +2409,139 @@ ANIMATION_DIMENSIONS TAnimationManager::GetAnimationDimensions(TGameObject *obj,
 	}
 
 	return result;
+}
+//----------------------------------------------------------------------------
+void TAnimationManager::CalculateFrameInformation(FRAME_OUTPUT_INFO &info, TGameObject *obj, const bool &mirror, const BYTE &animIndex)
+{
+	ANIMATION_DIMENSIONS dim = GetAnimationDimensions(obj, animIndex, m_Direction, m_AnimGroup);
+
+	int y = -(dim.Height + dim.CenterY + 3);
+	int x = -dim.CenterX;
+
+	if (mirror)
+		x = -(dim.Width - dim.CenterX);
+
+	if (x < info.StartX)
+		info.StartX = x;
+
+	if (y < info.StartY)
+		info.StartY = y;
+
+	if (info.EndX < x + dim.Width)
+		info.EndX = x + dim.Width;
+
+	if (info.EndY < y + dim.Height)
+		info.EndY = y + dim.Height;
+}
+//----------------------------------------------------------------------------
+void TAnimationManager::CollectFrameInformation(TGameObject *gameObject)
+{
+	m_Sitting = false;
+	m_Direction = 0;
+
+	if (gameObject->NPC)
+	{
+		TGameCharacter *obj = (TGameCharacter*)gameObject;
+		obj->UpdateAnimationInfo(m_Direction);
+
+		bool mirror = false;
+		BYTE layerDir = m_Direction;
+
+		GetAnimDirection(m_Direction, mirror);
+
+		BYTE animIndex = obj->AnimIndex;
+		BYTE animGroup = obj->GetAnimationGroup();
+
+		FRAME_OUTPUT_INFO info = { 0 };
+
+		TGameItem *goi = obj->FindLayer(OL_MOUNT);
+
+		if (goi != NULL) //Check mount
+		{
+			WORD mountID = goi->GetMountAnimation();
+
+			m_AnimGroup = obj->GetAnimationGroup(mountID);
+
+			CalculateFrameInformation(info, goi, mirror, animIndex);
+
+			switch (animGroup)
+			{
+				case PAG_FIDGET_1:
+				case PAG_FIDGET_2:
+				case PAG_FIDGET_3:
+				{
+					animGroup = PAG_ONMOUNT_STAND;
+					animIndex = 0;
+					break;
+				}
+				default:
+					break;
+			}
+		}
+
+		m_AnimGroup = animGroup;
+
+		CalculateFrameInformation(info, obj, mirror, animIndex);
+
+		if (obj->IsHuman()) //Check layred objects
+		{
+			if (!obj->Dead())
+			{
+				IFOR(l, 0, USED_LAYER_COUNT)
+				{
+					goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
+
+					if (goi != NULL && goi->GetAnimID())
+						CalculateFrameInformation(info, goi, mirror, animIndex);
+				}
+			}
+			else
+			{
+				goi = obj->FindLayer(OL_ROBE);
+
+				if (goi != NULL && goi->AnimID)
+					CalculateFrameInformation(info, goi, mirror, animIndex);
+			}
+		}
+
+		DRAW_FRAME_INFORMATION &dfInfo = gameObject->m_FrameInfo;
+		dfInfo.OffsetX = abs(info.StartX);
+		dfInfo.OffsetY = abs(info.StartY);
+		dfInfo.Width = dfInfo.OffsetX + info.EndX;
+		dfInfo.Height = dfInfo.OffsetY + info.EndY;
+	}
+	else if (gameObject->IsCorpse())
+	{
+		TGameItem *obj = (TGameItem*)gameObject;
+
+		m_Direction = obj->Layer;
+		bool mirror = false;
+
+		if (m_Direction & 0x80)
+			m_Direction &= 0x7F;
+
+		GetAnimDirection(m_Direction, mirror);
+
+		BYTE animIndex = obj->AnimIndex;
+		m_AnimGroup = GetDieGroupIndex(obj->GetMountAnimation(), obj->UsedLayer);
+
+		FRAME_OUTPUT_INFO info = { 0 };
+
+		CalculateFrameInformation(info, obj, mirror, animIndex);
+
+		IFOR(l, 0, USED_LAYER_COUNT)
+		{
+			TGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
+
+			if (goi != NULL && goi->GetAnimID())
+				CalculateFrameInformation(info, goi, mirror, animIndex);
+		}
+
+		DRAW_FRAME_INFORMATION &dfInfo = gameObject->m_FrameInfo;
+		dfInfo.OffsetX = abs(info.StartX);
+		dfInfo.OffsetY = abs(info.StartY);
+		dfInfo.Width = dfInfo.OffsetX + info.EndX;
+		dfInfo.Height = dfInfo.OffsetY + info.EndY;
+	}
 }
 //----------------------------------------------------------------------------

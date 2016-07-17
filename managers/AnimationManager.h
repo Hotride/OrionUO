@@ -20,6 +20,14 @@
 #ifndef AnimationManagerH
 #define AnimationManagerH
 //---------------------------------------------------------------------------
+struct FRAME_OUTPUT_INFO
+{
+	int StartX;
+	int StartY;
+	int EndX;
+	int EndY;
+};
+//---------------------------------------------------------------------------
 struct ANIMATION_DIMENSIONS
 {
 	int Width;
@@ -101,6 +109,8 @@ private:
 
 	//Обобщенная фукнция рисования
 	void Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id = 0);
+
+	void DrawIntoFrameBuffer(__in TGameCharacter *obj, __in int x, __in int y);
 
 public:
 	TAnimationManager();
@@ -275,7 +285,11 @@ public:
 	*/
 	void GetBodyGraphic(__inout WORD &graphic);
 
-	ANIMATION_DIMENSIONS GetAnimationDimensions(TGameObject *obj, BYTE frameIndex = 0xFF);
+	ANIMATION_DIMENSIONS GetAnimationDimensions(TGameObject *obj, BYTE frameIndex = 0xFF, const BYTE &defaultDirection = 0, const BYTE &defaultGroup = 0);
+
+	void CalculateFrameInformation(FRAME_OUTPUT_INFO &info, TGameObject *obj, const bool &mirror, const BYTE &animIndex);
+
+	void CollectFrameInformation(TGameObject *gameObject);
  };
 //---------------------------------------------------------------------------
  //!Ссылка на менеджер анимаций

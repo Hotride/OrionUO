@@ -24,7 +24,7 @@ TFrameBuffer g_CharacterBuffer;
 //---------------------------------------------------------------------------
 TFrameBuffer::TFrameBuffer()
 : m_Width(0), m_Height(0), m_Ready(false), m_OldFrameBuffer(0), m_FrameBuffer(0),
-m_Texture(0), m_ViewPortX(0), m_ViewPortY(0)
+m_Texture(0)
 {
 }
 //---------------------------------------------------------------------------
@@ -41,6 +41,8 @@ TFrameBuffer::~TFrameBuffer()
 */
 bool TFrameBuffer::Init( __in int width, __in int height)
 {
+	Free();
+
 	bool result = false;
 
 	if (g_UseFrameBuffer)
@@ -135,7 +137,7 @@ bool TFrameBuffer::Use()
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
         glBindTexture(GL_TEXTURE_2D, m_Texture);
 
-		glViewport(m_ViewPortX, m_ViewPortY, m_Width, m_Height);
+		glViewport(0, 0, m_Width, m_Height);
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -177,7 +179,21 @@ void TFrameBuffer::DrawShadow(__in int x, __in int y)
 	if (g_UseFrameBuffer && m_Ready)
 	{
 		g_GL.OldTexture = 0;
-		g_GL.Draw(m_Texture, x, y, m_Width, m_Height);
+		glBindTexture(GL_TEXTURE_2D, m_Texture);
+
+		int offsetY = m_Height / 3;
+		GLfloat translateY = (GLfloat)(y + offsetY);
+
+		glTranslatef((GLfloat)x, translateY, (GLfloat)g_ZBuffer);
+
+		glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2i(0, 1); glVertex2i(0, m_Height - offsetY);
+			glTexCoord2i(1, 1); glVertex2i(m_Width, m_Height - offsetY);
+			glTexCoord2i(0, 0); glVertex2i(m_Width, 0);
+			glTexCoord2i(1, 0); glVertex2i(m_Width * 2, 0);
+		glEnd();
+
+		glTranslatef((GLfloat)-x, -translateY, (GLfloat)-g_ZBuffer);
 	}
 }
 //---------------------------------------------------------------------------

@@ -88,9 +88,54 @@ void TGumpBook::ReleaseTextTextures()
 	m_TextBy.Clear();
 }
 //----------------------------------------------------------------------------
+void TGumpBook::ChangePage(int newPage)
+{
+	IFOR(i, 0, 2)
+	{
+		if (m_Page + i >= m_PageCount)
+			break;
+
+		if (m_ChangedPage[m_Page + i])
+		{
+			m_ChangedPage[m_Page + i] = false;
+			TPacketBookPageData(this, m_Page + i).Send();
+		}
+	}
+
+	m_Page = newPage;
+	Orion->PlaySoundEffect(0x0055);
+
+	if (EntryPointerHere())
+	{
+		if (ConfigManager.GetConsoleNeedEnter())
+			EntryPointer = NULL;
+		else
+			EntryPointer = GameConsole;
+	}
+}
+//----------------------------------------------------------------------------
 void TGumpBook::PrepareTextures()
 {
 	Orion->ExecuteGumpPart(0x01FE, 3);
+}
+//---------------------------------------------------------------------------
+void TGumpBook::CalculateGumpState()
+{
+	TGump::CalculateGumpState();
+
+	if (g_LeftMouseDown && g_LastGumpLeftMouseDown == (DWORD)this && (!g_LastObjectLeftMouseDown || g_LastObjectLeftMouseDown < ID_GB_BUTTON_PREV))
+	{
+		g_GumpMovingOffsetX = g_MouseX - g_DroppedLeftMouseX;
+		g_GumpMovingOffsetY = g_MouseY - g_DroppedLeftMouseY;
+	}
+	else
+	{
+		g_GumpMovingOffsetX = 0;
+		g_GumpMovingOffsetY = 0;
+	}
+
+	g_GumpTranslateX = (float)(m_X + g_GumpMovingOffsetX);
+	g_GumpTranslateY = (float)(m_Y + g_GumpMovingOffsetY);
 }
 //----------------------------------------------------------------------------
 bool TGumpBook::EntryPointerHere()
@@ -319,12 +364,6 @@ void TGumpBook::OnLeftMouseUp()
 		g_ClickObject.GumpID = ID;
 		g_ClickObject.GumpButtonID = newPage;
 
-		//TEST~>>
-		m_Page = newPage;
-		m_FrameCreated = false;
-		g_ClickObjectReq = false;
-		//TEST~<<
-
 		//Задаем время до выполнения
 		g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
 	}
@@ -339,7 +378,7 @@ bool TGumpBook::OnLeftMouseDoubleClick()
 	if (g_LastObjectLeftMouseDown == ID_GB_BUTTON_PREV) //Prev
 	{
 		//Был нажат уголок "Назад", при даблклике устанавливаем 1 страницу
-		m_Page = 0;
+		ChangePage(0);
 
 		//Перерисуем гамп
 		m_FrameCreated = false;
@@ -349,10 +388,12 @@ bool TGumpBook::OnLeftMouseDoubleClick()
 	else if (g_LastObjectLeftMouseDown == ID_GB_BUTTON_NEXT) //Next
 	{
 		//Был нажат уголок "Вперед", при даблклике устанавливаем последнюю страницу
+		int page = m_PageCount - 1;
+
 		if (m_PageCount % 2)
-			m_Page = m_PageCount - 2;
-		else
-			m_Page = m_PageCount - 1;
+			page--;
+
+		ChangePage(page);
 
 		//Перерисуем гамп
 		m_FrameCreated = false;
@@ -363,7 +404,7 @@ bool TGumpBook::OnLeftMouseDoubleClick()
 	return false;
 }
 //----------------------------------------------------------------------------
-void TGumpBook::InsertInContent(const WPARAM &wparam)
+void TGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 {
 	int page = m_Page;
 
@@ -382,23 +423,31 @@ void TGumpBook::InsertInContent(const WPARAM &wparam)
 				return;
 		}
 
-		if (EntryPointer->Insert(wparam))
+		if (isCharPress)
 		{
-			if (m_Unicode)
+			if (EntryPointer->Insert(wparam))
 			{
-				if (EntryPointer->GetLinesCountW(0) > 8)
-					EntryPointer->Remove(true);
+				if (m_Unicode)
+				{
+					if (EntryPointer->GetLinesCountW(0) > 8)
+						EntryPointer->Remove(true);
+					else
+						m_ChangedPage[page] = true;
+				}
 				else
-					m_ChangedPage[page] = true;
-			}
-			else
-			{
-				if (EntryPointer->GetLinesCountA(4) > 8)
-					EntryPointer->Remove(true);
-				else
-					m_ChangedPage[page] = true;
-			}
+				{
+					if (EntryPointer->GetLinesCountA(4) > 8)
+						EntryPointer->Remove(true);
+					else
+						m_ChangedPage[page] = true;
+				}
 
+				m_FrameCreated = false;
+			}
+		}
+		else
+		{
+			m_ChangedPage[page] = true;
 			m_FrameCreated = false;
 		}
 		//page
@@ -462,7 +511,7 @@ void TGumpBook::OnKeyPress(WPARAM &wparam, LPARAM &lparam)
 		case VK_DELETE:
 		{
 			EntryPointer->OnKey(this, wparam);
-			m_FrameCreated = false;
+			InsertInContent(wparam, false);
 			break;
 		}
 		default:

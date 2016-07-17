@@ -199,6 +199,12 @@ bool TGumpManager::OnLeftMouseUp( __in bool blocked)
 					g_LastObjectLeftMouseDown = 0;
 					break;
 				}
+				case GT_BOOK:
+				{
+					if (g_LastObjectLeftMouseDown < TGumpBook::ID_GB_BUTTON_PREV)
+						g_LastObjectLeftMouseDown = 0;
+					break;
+				}
 				default:
 					break;
 			}
@@ -438,6 +444,16 @@ void TGumpManager::OnRightMouseUp( __in bool blocked)
 				case GT_SPELLBOOK:
 				{
 					Orion->PlaySoundEffect(0x0055);
+					CloseGump(gump->Serial, gump->ID, gump->GumpType);
+
+					break;
+				}
+				case GT_BOOK:
+				{
+					((TGumpBook*)gump)->ChangePage(0);
+					CloseGump(gump->Serial, gump->ID, gump->GumpType);
+
+					break;
 				}
 				default:
 				{

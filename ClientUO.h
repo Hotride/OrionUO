@@ -304,6 +304,9 @@ public:
 	//Инициализация экрана
 	void InitScreen(GAME_STATE state);
 
+	//Обработка кликов мышки по истечении таймера ожидания даблклика
+	void ProcessDelayedClicks();
+
 	//Обработка мэйнлупа
 	void Process();
 

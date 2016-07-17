@@ -317,6 +317,26 @@ void TGameScreen::CalculateRenderList()
 	int objectHandlesOffsetX = g_ObjectHandlesWidth / 2;
 	bool useObjectHandles = (!g_GrayedPixels && ConfigManager.ObjectHandles && g_ShiftPressed && g_CtrlPressed);
 
+	QFOR(go, World->m_Items, TGameObject*)
+	{
+		if (go->NPC || go->IsCorpse())
+		{
+			AnimationManager->CollectFrameInformation(go);
+
+			if (go->IsPlayer())
+			{
+				int playerZOffset = (g_Player->Z * 4) - g_Player->OffsetZ;
+
+				DRAW_FRAME_INFORMATION &dfInfo = go->m_FrameInfo;
+
+				g_PlayerRect.X = m_RenderBounds.GameWindowCenterX - dfInfo.OffsetX;
+				g_PlayerRect.Y = m_RenderBounds.GameWindowCenterY - playerZOffset - dfInfo.OffsetY;
+				g_PlayerRect.Width = dfInfo.Width;
+				g_PlayerRect.Height = dfInfo.Height;
+			}
+		}
+	}
+
 	static BYTE renderIndex = 1;
 
 #if UO_CHECKERBOARD_SEQUENCE_RENDER_LIST == 1
@@ -598,31 +618,32 @@ void TGameScreen::AddOffsetCharacterTileToRenderList(TGameObject *obj, int drawX
 	int characterX = obj->X;
 	int characterY = obj->Y;
 
+	drawY -= (obj->Z * 4);
+
 	ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(obj);
 	TGameCharacter *character = obj->GameCharacterPtr();
+
+	DRAW_FRAME_INFORMATION &dfInfo = obj->m_FrameInfo;
+	int offsetY = dfInfo.Height - dfInfo.OffsetY;
 
 	if (character != NULL)
 	{
 		drawX += character->OffsetX;
-		drawY += character->OffsetY - character->OffsetZ; // (character->OffsetZ + dims.Height + dims.CenterY);
+		drawY += character->OffsetY - character->OffsetZ;
+
+		//g_GL.DrawPolygone(drawX - dfInfo.OffsetX, drawY, dfInfo.Width, dfInfo.Height - dfInfo.OffsetY);
 	}
 
 	vector<pair<int, int>> coordinates;
 
-	coordinates.push_back(pair<int, int>(characterX, characterY + 1));
-	coordinates.push_back(pair<int, int>(characterX, characterY + 2));
-
-	coordinates.push_back(pair<int, int>(characterX + 1, characterY - 2));
 	coordinates.push_back(pair<int, int>(characterX + 1, characterY - 1));
-	coordinates.push_back(pair<int, int>(characterX + 1, characterY));
-	coordinates.push_back(pair<int, int>(characterX + 1, characterY + 1));
-	coordinates.push_back(pair<int, int>(characterX + 1, characterY + 2));
-
+	coordinates.push_back(pair<int, int>(characterX + 1, characterY - 2));
 	coordinates.push_back(pair<int, int>(characterX + 2, characterY - 2));
+	coordinates.push_back(pair<int, int>(characterX - 1, characterY + 2));
+	coordinates.push_back(pair<int, int>(characterX, characterY + 1));
+	coordinates.push_back(pair<int, int>(characterX + 1, characterY));
 	coordinates.push_back(pair<int, int>(characterX + 2, characterY - 1));
-	coordinates.push_back(pair<int, int>(characterX + 2, characterY));
-	coordinates.push_back(pair<int, int>(characterX + 2, characterY + 1));
-	coordinates.push_back(pair<int, int>(characterX + 2, characterY + 2));
+	coordinates.push_back(pair<int, int>(characterX + 1, characterY + 1));
 
 	int size = coordinates.size();
 
@@ -643,8 +664,8 @@ void TGameScreen::AddOffsetCharacterTileToRenderList(TGameObject *obj, int drawX
 		int offsetX = x - m_RenderBounds.PlayerX;
 		int offsetY = y - m_RenderBounds.PlayerY;
 
-		int drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
-		int drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+		drawX = m_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
+		drawY = m_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
 
 		if (drawX < m_RenderBounds.MinPixelsX || drawX > m_RenderBounds.MaxPixelsX)
 			continue;
@@ -725,7 +746,7 @@ void TGameScreen::CalculateGameWindowBounds()
 		}
 	}
 
-	int playerZOffset = (g_Player->Z * 4) - g_Player->OffsetZ;
+	//int playerZOffset = (g_Player->Z * 4) - g_Player->OffsetZ;
 
 	m_RenderBounds.GameWindowCenterX = m_RenderBounds.GameWindowPosX + m_RenderBounds.GameWindowSizeX / 2;
 	m_RenderBounds.GameWindowCenterY = (m_RenderBounds.GameWindowPosY + m_RenderBounds.GameWindowSizeY / 2) + (g_Player->Z * 4);
@@ -741,12 +762,12 @@ void TGameScreen::CalculateGameWindowBounds()
 	m_RenderBounds.GameWindowCenterX -= (int)g_Player->OffsetX;
 	m_RenderBounds.GameWindowCenterY -= (int)(g_Player->OffsetY - g_Player->OffsetZ);
 
-	ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(g_Player);
+	/*ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(g_Player);
 
 	g_PlayerRect.X = m_RenderBounds.GameWindowCenterX - (dims.Width / 2);
 	g_PlayerRect.Y = m_RenderBounds.GameWindowCenterY - dims.Height - playerZOffset - dims.CenterY;
 	g_PlayerRect.Width = dims.Width;
-	g_PlayerRect.Height = dims.Height;
+	g_PlayerRect.Height = dims.Height;*/
 
 	int rangeX = (m_RenderBounds.GameWindowSizeX / 44) + 1;
 	int rangeY = (m_RenderBounds.GameWindowSizeY / 44) + 1;
@@ -1130,6 +1151,43 @@ void TGameScreen::DrawGameWindow( __in bool &mode)
 				obj->Draw(mode, rod.X, rod.Y, ticks);
 			}
 		}
+
+		/*glEnable(GL_BLEND);
+		glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		g_GL.Draw(g_CircleOfTransparency.Texture, g_CircleOfTransparency.X, g_CircleOfTransparency.Y, g_CircleOfTransparency.Width, g_CircleOfTransparency.Height);
+		glDisable(GL_BLEND);*/
+
+
+		//Для просмотра смещения кадров анимации ниже текущего уровня отрисовки по оси Y
+		/*UnuseShader();
+		
+		IFOR(i, 0, m_RenderListCount)
+		{
+			RENDER_OBJECT_DATA &rod = m_RenderList[i];
+			TRenderWorldObject *obj = rod.Obj;
+
+			if (obj != NULL && obj->IsGameObject())
+			{
+				TGameObject *go = (TGameObject*)obj;
+				if (go->NPC || go->IsCorpse())
+				{
+					DRAW_FRAME_INFORMATION &dfInfo = go->m_FrameInfo;
+
+					int dx = 0;
+					int dy = -(go->Z * 4);
+					TGameCharacter *cc = go->GameCharacterPtr();
+
+					if (cc != NULL)
+					{
+						dx += cc->OffsetX;
+						dy += cc->OffsetY - cc->OffsetZ;
+					}
+
+					g_GL.DrawPolygone(rod.X + dx - dfInfo.OffsetX, rod.Y + dy, dfInfo.Width, dfInfo.Height - dfInfo.OffsetY);
+				}
+			}
+		}*/
 
 		//AnimationManager->DrawShadows();
 

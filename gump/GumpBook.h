@@ -27,7 +27,6 @@ private:
 	static const int ID_GB_TEXT_AREA_TITLE = 2;
 	static const int ID_GB_TEXT_AREA_PAGE_LEFT = 3;
 	static const int ID_GB_TEXT_AREA_PAGE_RIGHT = 4;
-	static const int ID_GB_BUTTON_PREV = 5;
 	static const int ID_GB_BUTTON_NEXT = 6;
 
 	bool m_Writable;
@@ -41,11 +40,16 @@ private:
 	static TTextTexture m_TextTitle;
 	static TTextTexture m_TextBy;
 
-	void InsertInContent(const WPARAM &wparam);
+	void InsertInContent(const WPARAM &wparam, const bool &isCharPress = true);
+
+protected:
+	void CalculateGumpState();
 
 public:
 	TGumpBook(DWORD serial, short x, short y, short pageCount, bool writable, bool unicode);
 	virtual ~TGumpBook();
+
+	static const int ID_GB_BUTTON_PREV = 5;
 
 	static void InitTextTextures();
 	static void ReleaseTextTextures();
@@ -58,6 +62,8 @@ public:
 	TEntryText *TextEntryAuthor;
 	TEntryText *TextEntryTitle;
 	TEntryText *TextEntry;
+
+	void ChangePage(int newPage);
 
 	void PrepareTextures();
 

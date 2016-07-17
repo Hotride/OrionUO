@@ -19,6 +19,14 @@
 //---------------------------------------------------------------------------
 #ifndef GameObjectH
 #define GameObjectH
+//---------------------------------------------------------------------------
+struct DRAW_FRAME_INFORMATION
+{
+	int OffsetX;
+	int OffsetY;
+	int Width;
+	int Height;
+};
 //--------------------------------------------------------------------------
 //!Класс игрового объекта
 class TGameObject : public TRenderStaticObject
@@ -83,6 +91,9 @@ public:
 	SETGET(bool, YouSeeJournalPrefix);
 	SETGET(DWORD, LastAnimationChangeTime);
 	SETGET(wstring, ClilocMessage);
+
+	//!Информация о ФБ объекта (для Animation Manager)
+	DRAW_FRAME_INFORMATION m_FrameInfo;
 
 	/*!
 	Добавить текст в контейнер

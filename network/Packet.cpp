@@ -1469,3 +1469,91 @@ TPacketChangeStatLockStateRequest::TPacketChangeStatLockStateRequest(BYTE stat, 
 	WriteByte(state);
 }
 //---------------------------------------------------------------------------
+TPacketBookPageData::TPacketBookPageData(TGumpBook *gump, int page)
+: TPacket(0, true)
+{
+	int lineCount = 0;
+	TEntryText &textEntry = gump->TextEntry[page];
+	int len = textEntry.Length();
+	int size = 9 + 4 + 1;
+
+	if (len)
+	{
+		if (gump->Unicode)
+		{
+			size += len * 2;
+			const wchar_t *str = textEntry.Data();
+
+			IFOR(i, 0, len)
+			{
+				if (*(str + i) == L'\n')
+					lineCount++;
+			}
+
+			if (str[len - 1] != L'\n')
+				lineCount++;
+		}
+		else
+		{
+			size += len;
+			const char *str = textEntry.c_str();
+
+			IFOR(i, 0, len)
+			{
+				if (*(str + i) == '\n')
+					lineCount++;
+			}
+
+			if (str[len - 1] != '\n')
+				lineCount++;
+		}
+	}
+
+	Create(size);
+
+	WriteByte(0x66);
+	WriteWord((WORD)size);
+	WriteDWord(gump->Serial);
+	WriteWord(0x0001);
+
+	WriteWord(page);
+	WriteWord(lineCount);
+
+	if (len)
+	{
+		if (gump->Unicode)
+		{
+			const wchar_t *str = textEntry.Data();
+			PWORD wPtr = (PWORD)Ptr;
+
+			IFOR(i, 0, len)
+			{
+				wchar_t ch = *(str + i);
+
+				if (ch == L'\n')
+					ch = 0;
+
+				*wPtr++ = ch;
+			}
+
+			*wPtr = 0;
+		}
+		else
+		{
+			const char *str = textEntry.c_str();
+
+			IFOR(i, 0, len)
+			{
+				char ch = *(str + i);
+
+				if (ch == '\n')
+					ch = 0;
+
+				*Ptr++ = ch;
+			}
+
+			*Ptr = 0;
+		}
+	}
+}
+//---------------------------------------------------------------------------

@@ -734,6 +734,19 @@ int TGumpGeneric::Draw(bool &mode)
 							LSG = objectIndex;
 						break;
 					}
+					case GOT_TEXT:
+					case GOT_CROPPEDTEXT:
+					{
+						TTextTexture &th = ((TGumpText*)item)->m_Text;
+
+						if (Orion->PolygonePixelsInXY(item->X, item->Y, th.Width, th.Height))
+						{
+							g_LastSelectedObject = 0;
+							g_LastSelectedGump = index;
+						}
+
+						break;
+					}
 					case GOT_TEXTENTRYLIMITED:
 					case GOT_TEXTENTRY:
 					{
