@@ -24,18 +24,10 @@ TDebugScreen *DebugScreen = NULL;
 TDebugScreen::TDebugScreen()
 : TBaseScreen()
 {
-	m_BookGump = new TGumpBook(0, 0, 0, 64, true, false);
-
-	m_BookGump->TextEntryTitle->SetText("kl;l");
-	m_BookGump->TextEntryAuthor->SetText("unknown");
-	m_BookGump->TextEntry[1].SetText("ty\nery346\n\n\n6\n3");
-	m_BookGump->TextEntry[2].SetText("77343\n\n\n\n\nrtry\n\n3ty");
-	m_BookGump->TextEntry[3].SetText("56\n\n\n\n3\n3\n3\n");
 }
 //---------------------------------------------------------------------------
 TDebugScreen::~TDebugScreen()
 {
-	delete m_BookGump;
 }
 //---------------------------------------------------------------------------
 void TDebugScreen::Init()
@@ -97,7 +89,6 @@ void TDebugScreen::ProcessSmoothAction(BYTE action)
 //---------------------------------------------------------------------------
 void TDebugScreen::InitToolTip()
 {
-	m_BookGump->OnToolTip();
 }
 //---------------------------------------------------------------------------
 int TDebugScreen::Render(bool mode)
@@ -175,8 +166,6 @@ int TDebugScreen::Render(bool mode)
 
 			fb.Draw(0, 0);
 
-			m_BookGump->Draw(mode);
-
 			InitToolTip();
 
 			MouseManager.Draw(0x2073); //Main Gump mouse cursor
@@ -192,8 +181,6 @@ int TDebugScreen::Render(bool mode)
 
 		if (Orion->GumpPixelsInXY(0x15A4, 610, 445))
 			g_LastSelectedObject = ID_DS_GO_SCREEN_MAIN; //> gump
-		else
-			g_LastSelectedObject = m_BookGump->Draw(mode);
 
 		return g_LastSelectedObject;
 	}
@@ -215,9 +202,7 @@ void TDebugScreen::OnLeftMouseUp()
 		return;
 	}
 
-	if (g_LastSelectedGump == (DWORD)m_BookGump)
-		m_BookGump->OnLeftMouseUp();
-	else if (g_LastObjectLeftMouseDown == ID_DS_GO_SCREEN_MAIN) //> button
+	if (g_LastObjectLeftMouseDown == ID_DS_GO_SCREEN_MAIN) //> button
 		CreateSmoothAction(ID_SMOOTH_DS_GO_SCREEN_MAIN);
 
 	g_LastObjectLeftMouseDown = 0;
@@ -234,16 +219,11 @@ void TDebugScreen::OnCharPress(__in WPARAM wparam, __in LPARAM lparam)
 
 	if (!str.length())
 		return;
-
-	if (m_BookGump != NULL && m_BookGump->EntryPointerHere())
-		m_BookGump->OnCharPress(wparam, lparam);
 }
 //---------------------------------------------------------------------------
 void TDebugScreen::OnKeyPress(WPARAM wparam, LPARAM lparam)
 {
-	if (m_BookGump != NULL && m_BookGump->EntryPointerHere())
-		m_BookGump->OnKeyPress(wparam, lparam);
-	//if (wparam == VK_RETURN)
-	//	CreateSmoothAction(ID_SMOOTH_DS_GO_SCREEN_MAIN);
+	if (wparam == VK_RETURN)
+		CreateSmoothAction(ID_SMOOTH_DS_GO_SCREEN_MAIN);
 }
 //---------------------------------------------------------------------------
