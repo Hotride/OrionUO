@@ -1285,29 +1285,19 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		{
 			if (mirror)
 			{
+				x -= (frame->Width - frame->CenterX) + 10;
 				if (m_Direction == 1)
-				{
 					y -= (frame->Height + frame->CenterY) - 10;
-					x -= (frame->Width - frame->CenterX) + 10;
-				}
 				else
-				{
 					y -= (frame->Height + frame->CenterY) - 25;
-					x -= (frame->Width - frame->CenterX) + 10;
-				}
 			}
 			else
 			{
+				x -= frame->CenterX;
 				if (m_Direction == 1)
-				{
 					y -= (frame->Height + frame->CenterY) - 10;
-					x -= frame->CenterX;
-				}
 				else
-				{
 					y -= (frame->Height + frame->CenterY) - 30;
-					x -= frame->CenterX;
-				}
 			}				
 		}
 
