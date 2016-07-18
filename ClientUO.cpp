@@ -420,6 +420,19 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case UOMSG_SEND:
 			ConnectionManager.Send((PBYTE)wParam, lParam);
 			break;
+		case UOMSG_PROCESS:
+		{
+			g_Ticks = (DWORD)wParam;
+
+			/*if (Orion != NULL)
+			{
+				MouseManager.UpdateMouse();
+
+				Orion->Process();
+			}*/
+
+			return ConfigManager.ClientFPS;
+		}
 		default:
 			break;
 	}
@@ -886,6 +899,23 @@ DWORD Reflect(DWORD source, int c)
 	return value;
 }
 //---------------------------------------------------------------------------
+unsigned __stdcall OrionProcessThread(void *arg)
+{
+	while (true)
+	{
+		DWORD ticks = timeGetTime();
+		int delay = SendMessage(g_hWnd, UOMSG_PROCESS, ticks, 0);
+		//TPRINT("UOMSG_PROCESS = %i", delay);
+		delay = (int)((ticks + delay) - timeGetTime());
+		//TPRINT(" (%i)\n", delay);
+
+		if (delay > 0)
+			Sleep(delay);
+	}
+
+	return 0;
+};
+//---------------------------------------------------------------------------
 bool TOrion::Install()
 {
 	IFOR(i, 0, 256)
@@ -1192,6 +1222,9 @@ bool TOrion::Install()
 	}
 
 	TPRINT("mi=%i ma=%i; mi380=%i\n", mi, ma, mi380);*/
+
+	UINT tid = 0;
+	_beginthreadex(NULL, 0, OrionProcessThread, (PVOID)g_hWnd, 0, &tid);
 
 	return true;
 }

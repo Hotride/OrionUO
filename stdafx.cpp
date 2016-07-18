@@ -122,6 +122,7 @@ CHARACTER_SPEED_TYPE g_SpeedMode = CST_NORMAL;
 
 int g_ZBuffer = 0;
 bool g_UseCircleTrans = false;
+DWORD g_Ticks = 0;
 
 bool g_GumpPressed = false;
 bool g_GumpPressedScroller = 0;

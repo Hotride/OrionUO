@@ -31,7 +31,9 @@
 #define ADD_LINKED(list, item) \
 TLinkedList *nextList = list; \
 list = new TLinkedList(&item); \
-list->Next = nextList
+	list->Next = nextList
+//---------------------------------------------------------------------------
+#define UOMSG_PROCESS			WM_USER + 900
 //---------------------------------------------------------------------------
 //!Ёффекты шрифта
 #define UOFONT_SOLID			0x01 //!∆ирный

@@ -351,6 +351,8 @@ extern int g_ZBuffer;
 //!¬озможность использовани€ круга прозрачности
 extern bool g_UseCircleTrans;
 
+extern DWORD g_Ticks;
+
 extern bool g_GumpPressed;
 extern bool g_GumpPressedScroller;
 extern DWORD g_GumpSelectElement;
