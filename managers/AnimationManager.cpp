@@ -1182,7 +1182,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		ADD_LINKED(m_UsedAnimList, m_DataIndex[id]);
 	}
 	
-	if (m_Sitting && mirror)
+	if (m_Sitting && m_Direction == 3)
 		m_AnimGroup = 25;
 	TTextureAnimationGroup *group = anim->GetGroup(m_AnimGroup);
 	TTextureAnimationDirection *direction = group->GetDirection(m_Direction);
@@ -1283,12 +1283,32 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		}
 		else
 		{
-			y -= (frame->Height + frame->CenterY + 3);
-
 			if (mirror)
-				x -= (frame->Width - frame->CenterX);
+			{
+				if (m_Direction == 1)
+				{
+					y -= (frame->Height + frame->CenterY) - 10;
+					x -= (frame->Width - frame->CenterX) + 10;
+				}
+				else
+				{
+					y -= (frame->Height + frame->CenterY) - 25;
+					x -= (frame->Width - frame->CenterX) + 10;
+				}
+			}
 			else
-				x -= frame->CenterX;
+			{
+				if (m_Direction == 1)
+				{
+					y -= (frame->Height + frame->CenterY) - 10;
+					x -= frame->CenterX;
+				}
+				else
+				{
+					y -= (frame->Height + frame->CenterY) - 30;
+					x -= frame->CenterX;
+				}
+			}				
 		}
 
 #if UO_DEPTH_TEST == 1
