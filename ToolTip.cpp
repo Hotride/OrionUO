@@ -35,12 +35,12 @@ TToolTip::~TToolTip()
 //---------------------------------------------------------------------------
 void TToolTip::Set(wstring str, SELECT_OBJECT_TYPE type, DWORD seqIndex, int maxWidth, int x, int y)
 {
-	m_Use = !(m_Timer > GetTickCount());
+	m_Use = !(m_Timer > g_Ticks);
 
 	if (type == m_Type && seqIndex == m_SeqIndex) //Уже забиндено
 		return;
 
-	m_Timer = GetTickCount() + ConfigManager.ToolTipsDelay;
+	m_Timer = g_Ticks + ConfigManager.ToolTipsDelay;
 	m_Use = false;
 	m_Type = type;
 	m_SeqIndex = seqIndex;

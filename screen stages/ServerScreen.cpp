@@ -141,7 +141,7 @@ int TServerScreen::GetServerListHeight()
 */
 int TServerScreen::Render(__in bool mode)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	if (g_LastRenderTime > ticks)
 	{
@@ -412,7 +412,7 @@ void TServerScreen::OnLeftMouseUp()
 		m_SelectionServerTempValue = 0;
 		CreateSmoothAction(ID_SMOOTH_SS_SELECT_SERVER);
 	}
-	else if (m_LastScrollChangeTime < GetTickCount())
+	else if (m_LastScrollChangeTime < g_Ticks)
 	{
 		if (g_LastObjectLeftMouseDown == ID_SS_SCROLLBAR_UP)
 			ListingList(true);
@@ -430,7 +430,7 @@ void TServerScreen::OnLeftMouseUp()
 */
 void TServerScreen::OnMouseWheel( __in MOUSE_WHEEL_STATE state)
 {
-	if (!g_LeftMouseDown && !g_RightMouseDown && m_LastScrollChangeTime < GetTickCount())
+	if (!g_LeftMouseDown && !g_RightMouseDown && m_LastScrollChangeTime < g_Ticks)
 	{
 		if (g_MouseX >= 170 && g_MouseX < 516 && g_MouseY >= 100 && g_MouseY < 350)
 		{
@@ -506,6 +506,6 @@ void TServerScreen::ListingList( __in bool direction, __in int divizor)
 			m_PixelOffset = maxidx;
 	}
 
-	m_LastScrollChangeTime = GetTickCount() + (SCROLL_LISTING_DELAY / divizor);
+	m_LastScrollChangeTime = g_Ticks + (SCROLL_LISTING_DELAY / divizor);
 }
 //---------------------------------------------------------------------------

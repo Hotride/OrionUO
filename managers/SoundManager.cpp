@@ -123,7 +123,7 @@ void TSoundManager::Free()
 void TSoundManager::PauseSound()
 {
 	BASS_Pause();
-	Orion->AdjustSoundEffects(GetTickCount() + 100000);
+	Orion->AdjustSoundEffects(g_Ticks + 100000);
 }
 
 

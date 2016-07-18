@@ -463,7 +463,7 @@ int TGumpBuy::Draw(bool &mode)
 
 	CalculateSelectedListCount(); //Вычисление размеров листа выбранных объектов
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	if (!m_NoClose)
 		m_ContinueCounter = 0;
@@ -811,7 +811,7 @@ void TGumpBuy::OnLeftMouseDown()
 	if (g_LastSelectedObject >= ID_GB_BUTTON_INC && g_LastSelectedObject < ID_GB_BUTTON_END) // +/-
 	{
 		m_StartChangeCountTime = 0;
-		m_LastChangeCountTime = GetTickCount() + (CHANGE_SHOP_COUNT_DELAY * 5);
+		m_LastChangeCountTime = g_Ticks + (CHANGE_SHOP_COUNT_DELAY * 5);
 	}
 }
 //----------------------------------------------------------------------------
@@ -823,7 +823,7 @@ void TGumpBuy::OnLeftMouseUp()
 	if (g_LastObjectLeftMouseDown != g_LastSelectedObject)
 		return;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 	
 	if (g_LastObjectLeftMouseDown == ID_GB_BUTTON_UP_1) //1 gump ^
 	{
@@ -889,7 +889,7 @@ void TGumpBuy::OnLeftMouseUp()
 		}
 		else if (g_LastObjectLeftMouseDown < ID_GB_BUTTON_DEC) //+
 		{
-			if (m_LastChangeCountTime > GetTickCount())
+			if (m_LastChangeCountTime > g_Ticks)
 			{
 				ChangeItemCount(true, g_LastObjectLeftMouseDown - ID_GB_BUTTON_INC);
 				m_FrameCreated = false;
@@ -897,7 +897,7 @@ void TGumpBuy::OnLeftMouseUp()
 		}
 		else //-
 		{
-			if (m_LastChangeCountTime > GetTickCount())
+			if (m_LastChangeCountTime > g_Ticks)
 			{
 				ChangeItemCount(false, g_LastObjectLeftMouseDown - ID_GB_BUTTON_DEC);
 				m_FrameCreated = false;
@@ -1041,7 +1041,7 @@ void TGumpBuy::ListingList(bool direction, bool gumpNumber, int divizor)
 	if (NoClose)
 		return;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	if (!gumpNumber) //First gump
 	{
@@ -1104,7 +1104,7 @@ void TGumpBuy::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 
 	if (!g_LeftMouseDown && !g_RightMouseDown && state != MWS_PRESS)
 	{
-		if (m_LastChangedLineTime > GetTickCount())
+		if (m_LastChangedLineTime > g_Ticks)
 			return;
 
 		if (Orion->GumpPixelsInXY(0x0871, m_X + 170, m_Y + 214))

@@ -163,7 +163,7 @@ void TCharacterListScreen::InitToolTip()
 */
 int TCharacterListScreen::Render( __in bool mode)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	if (g_LastRenderTime > ticks)
 	{

@@ -80,7 +80,7 @@ void TMainScreen::Init()
 	SetWindowPos(g_hWnd, HWND_TOP, 0, 0, r.right, r.bottom, 0);
 
 	if (AnimationManager != NULL)
-		AnimationManager->ClearUnusedTextures(GetTickCount() + 100000);
+		AnimationManager->ClearUnusedTextures(g_Ticks + 100000);
 
 	QuestArrow.Enabled = false;
 
@@ -178,7 +178,7 @@ void TMainScreen::InitToolTip()
 */
 int TMainScreen::Render(__in bool mode)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	static DWORD lastArrowTick = 0;
 	static bool arrowLighted = false;
@@ -206,7 +206,7 @@ int TMainScreen::Render(__in bool mode)
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
-		static DWORD times = GetTickCount() + 3000;
+		static DWORD times = g_Ticks + 3000;
 
 		Orion->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
 		Orion->DrawGump(0x0E14, 0, 0, 0); //Main Gump background 2

@@ -120,7 +120,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 			MouseManager.UpdateMouse();
 			g_GeneratedMouseDown = false;
-			DWORD ticks = GetTickCount();
+			DWORD ticks = g_Ticks;
 			g_LastMouseDownTime = ticks;
 			g_CancelDoubleClick = false;
 
@@ -211,7 +211,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 			MouseManager.UpdateMouse();
 
-			DWORD ticks = GetTickCount();
+			DWORD ticks = g_Ticks;
 
 			g_SelectGumpObjects = true;
 
@@ -1833,7 +1833,7 @@ void TOrion::ProcessStaticAnimList()
 	{
 		TLinkedList *list = m_StaticAnimList;
 
-		DWORD ticks = GetTickCount();
+		DWORD ticks = g_Ticks;
 		int delay = (ConfigManager.StandartItemsAnimationDelay ? 0x50 : 50);
 
 		while (list != NULL)
@@ -1924,7 +1924,7 @@ void TOrion::ClearUnusedTextures()
 
 	static int clearMap = 0;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	if (clearMap == 1)
 	{
@@ -2730,7 +2730,7 @@ void TOrion::LoadStartupConfig()
 	SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
 
 	if (!ConfigManager.Sound)
-		Orion->AdjustSoundEffects(GetTickCount() + 100000);
+		Orion->AdjustSoundEffects(g_Ticks + 100000);
 
 	if (!ConfigManager.Music)
 		SoundManager.StopMusic();
@@ -2747,7 +2747,7 @@ void TOrion::LoadLocalConfig()
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x35, lco);
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Welcome to Ultima Online!");*/
 
-	g_CheckContainerStackTimer = GetTickCount() + 1000;
+	g_CheckContainerStackTimer = g_Ticks + 1000;
 
 	char buf[MAX_PATH] = {0};
 	sprintf(buf, "Desktop\\%s\\%s\\0x%08X", MainScreen->m_Account->c_str(), ServerList.GetServerName().c_str(), g_PlayerSerial);
@@ -2792,7 +2792,7 @@ void TOrion::LoadLocalConfig()
 	SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
 
 	if (!ConfigManager.Sound)
-		Orion->AdjustSoundEffects(GetTickCount() + 100000);
+		Orion->AdjustSoundEffects(g_Ticks + 100000);
 
 	if (!ConfigManager.Music)
 		SoundManager.StopMusic();
@@ -2839,7 +2839,7 @@ void TOrion::SaveLocalConfig()
 //---------------------------------------------------------------------------
 void TOrion::ProcessDelayedClicks()
 {
-	if (g_ClickObjectReq && g_ClickObject.Timer < GetTickCount())
+	if (g_ClickObjectReq && g_ClickObject.Timer < g_Ticks)
 	{
 		if (g_ClickObject.Type == COT_GAME_OBJECT)
 		{
@@ -2884,7 +2884,7 @@ void TOrion::ProcessDelayedClicks()
 					td->Font = 3;
 					td->Serial = 0;
 					td->Color = 0x03B5;
-					td->Timer = GetTickCount();
+					td->Timer = g_Ticks;
 					td->Type = TT_CLIENT;
 					td->DrawX = g_MouseX - gump->X;
 					td->DrawY = g_MouseY - gump->Y;
@@ -2924,13 +2924,13 @@ void TOrion::ProcessDelayedClicks()
 //---------------------------------------------------------------------------
 void TOrion::Process()
 {
-	static DWORD removeUnusedTexturesTime = GetTickCount() + CLEAR_TEXTURES_DELAY;
-	static DWORD processGameObjectsTimer = GetTickCount();
+	static DWORD removeUnusedTexturesTime = timeGetTime() + CLEAR_TEXTURES_DELAY;
+	static DWORD processGameObjectsTimer = timeGetTime();
 
 	ConnectionManager.Recv();
 	PacketManager.SendMegaClilocRequests();
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 	
 	if (g_GameState >= GS_CHARACTER && g_LastSendTime + SEND_TIMEOUT_DELAY < ticks)
 	{
@@ -3054,7 +3054,7 @@ void TOrion::Process()
 //---------------------------------------------------------------------------
 int TOrion::Send(PBYTE buf, int size)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 	g_TotalSendSize += size;
 	
 	TMessageType &type = PacketManager.GetType(*buf);
@@ -3111,7 +3111,7 @@ TTextureObject *TOrion::ExecuteGump(const WORD &id, const bool &partialHue)
 		}
 	}
 
-	io.LastAccessTime = GetTickCount();
+	io.LastAccessTime = g_Ticks;
 
 	return io.Texture;
 }
@@ -3133,7 +3133,7 @@ TTextureObject *TOrion::ExecuteLandArt(const WORD &id)
 		}
 	}
 	
-	io.LastAccessTime = GetTickCount();
+	io.LastAccessTime = g_Ticks;
 
 	return io.Texture;
 }
@@ -3164,7 +3164,7 @@ TTextureObject *TOrion::ExecuteStaticArt(const WORD &id)
 		}
 	}
 	
-	io.LastAccessTime = GetTickCount();
+	io.LastAccessTime = g_Ticks;
 
 	return io.Texture;
 }
@@ -3191,7 +3191,7 @@ TTextureObject *TOrion::ExecuteTexture(WORD id)
 		}
 	}
 	
-	io.LastAccessTime = GetTickCount();
+	io.LastAccessTime = g_Ticks;
 
 	return io.Texture;
 }
@@ -3216,7 +3216,7 @@ TTextureObject *TOrion::ExecuteLight(BYTE &id)
 		}
 	}
 	
-	io.LastAccessTime = GetTickCount();
+	io.LastAccessTime = g_Ticks;
 
 	return io.Texture;
 }
@@ -3987,7 +3987,7 @@ void TOrion::PlaySoundEffect(const WORD &id, float volume)
 		ADD_LINKED(m_UsedSoundList, m_SoundDataIndex[id]);
 	}
 	else {
-		if (is.LastAccessTime + is.Timer > GetTickCount())
+		if (is.LastAccessTime + is.Timer > g_Ticks)
 			return;
 
 		SoundManager.FreeStream(is.hStream);
@@ -4001,7 +4001,7 @@ void TOrion::PlaySoundEffect(const WORD &id, float volume)
 	if (volume > 0)
 	{
 		SoundManager.PlaySoundEffect(is.hStream, volume);
-		is.LastAccessTime = GetTickCount();
+		is.LastAccessTime = g_Ticks;
 	}
 
 	//if (is.Sound == NULL)
@@ -4015,7 +4015,7 @@ void TOrion::PlaySoundEffect(const WORD &id, float volume)
 	//}
 	//else
 	//{
-	//	if (is.LastAccessTime + is.Timer > GetTickCount())
+	//	if (is.LastAccessTime + is.Timer > g_Ticks)
 	//		return;
 
 	//	Mix_FreeChunk(is.Sound);
@@ -4028,7 +4028,7 @@ void TOrion::PlaySoundEffect(const WORD &id, float volume)
 	//if (volume > 0)
 	//{
 	//	SoundManager.PlaySoundEffect(is.Sound, volume);
-	//	is.LastAccessTime = GetTickCount();
+	//	is.LastAccessTime = g_Ticks;
 	//}
 }
 //---------------------------------------------------------------------------
@@ -4120,7 +4120,7 @@ void TOrion::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, WORD col
 	td->Font = font;
 	td->Serial = serial;
 	td->Color = color;
-	td->Timer = GetTickCount();
+	td->Timer = g_Ticks;
 	td->Type = type;
 	td->SetText(text);
 	
@@ -4245,7 +4245,7 @@ void TOrion::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD font, W
 	td->Font = font;
 	td->Serial = serial;
 	td->Color = color;
-	td->Timer = GetTickCount();
+	td->Timer = g_Ticks;
 	td->Type = type;
 	td->SetUnicodeText(text);
 	

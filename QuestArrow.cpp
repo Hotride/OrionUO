@@ -57,7 +57,7 @@ void TQuestArrow::Draw(const RENDER_VARIABLES_FOR_GAME_WINDOW &bounds)
 		else if (y > bounds.GameWindowPosY + bounds.GameWindowSizeY - p.y)
 			y = bounds.GameWindowPosY + bounds.GameWindowSizeY - p.y;
 
-		DWORD ticks = GetTickCount();
+		DWORD ticks = g_Ticks;
 
 		if (m_Timer < ticks)
 		{
