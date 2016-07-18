@@ -1181,7 +1181,9 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 		ADD_LINKED(m_UsedAnimList, m_DataIndex[id]);
 	}
-
+	
+	if (m_Sitting)
+		m_AnimGroup = 25;
 	TTextureAnimationGroup *group = anim->GetGroup(m_AnimGroup);
 	TTextureAnimationDirection *direction = group->GetDirection(m_Direction);
 
