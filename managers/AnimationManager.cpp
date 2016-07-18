@@ -1147,7 +1147,7 @@ TTextureAnimationFrame *TAnimationManager::GetFrame(TGameObject *obj, BYTE &fram
 	return frame;
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id)
+void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id, bool twistTexture)
 {
 	if (obj == NULL)
 		return;
@@ -1398,8 +1398,8 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 			glUniform1iARB(ShaderDrawMode, drawMode);
 
-			if (m_Sitting)
-				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror);
+			if (m_Sitting && twistTexture)
+				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror, twistTexture);
 			else
 				g_GL.Draw(frame->Texture, x, y, frame->Width, frame->Height, mirror);
 
@@ -1919,8 +1919,13 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 
 				if (goi != NULL)
 				{
+					bool twistTexture = true;
 					if (goi->AnimID)
-						Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
+					{
+						if (goi->GetLayer() == 11)
+							twistTexture = false;
+						Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID, twistTexture);
+					}						
 
 					if (goi->IsLightSource() && GameScreen->UseLight)
 						GameScreen->AddLight(obj, goi, drawX, drawY - lightOffset);
