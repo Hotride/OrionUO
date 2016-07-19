@@ -38,6 +38,7 @@ public:
 
 	//Загрузить карту
 	void LoadMap(TGumpMap *gump);
+	void LoadMapEx(TGumpMap *gump);
 };
 //---------------------------------------------------------------------------
 extern TMultiMap *MultiMap;

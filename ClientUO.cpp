@@ -920,8 +920,10 @@ unsigned __stdcall OrionRenderProcessThread(void *arg)
 		delay = (int)((ticks + delay) - timeGetTime());
 		//TPRINT(" (%i)\n", delay);
 
-		if (delay > 0)
-			Sleep(delay);
+		if (delay < 1)
+			delay = 1;
+
+		Sleep(delay);
 	}
 
 	return 0;
