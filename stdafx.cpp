@@ -165,6 +165,17 @@ CORPSE_LIST_MAP g_CorpseSerialList;
 
 DWORD g_LastRenderTime = 0;
 
+bool g_UseFileUOP = false;
+
+bool g_UseArtDef = false;
+bool g_UseBodyDef = false;
+bool g_UseBodyconvDef = true;
+bool g_UseCorpseDef = false;
+bool g_UseGumpDef = false;
+bool g_UseMultiDef = false;
+bool g_UseSoundDef = false;
+bool g_UseTexTerrDef = false;
+
 
 /*
 Обращение к анимации маунта под персом, индекс по арт.мул (203): 004073E7; 00406FCD; 00408B9A

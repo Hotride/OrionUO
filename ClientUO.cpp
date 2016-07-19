@@ -2191,7 +2191,7 @@ void TOrion::IndexReplaces()
 	TTextFileParser soundParser(FilePath("Sound.def").c_str(), " \t", "#;//", "{}");
 	TTextFileParser mp3Parser(FilePath("Music\\Digital\\Config.txt").c_str(), " ,", "#;", "");
 
-	while (!artParser.IsEOF())
+	while (g_UseArtDef && !artParser.IsEOF())
 	{
 		std::vector<std::string> strings = artParser.ReadTokens();
 
@@ -2236,7 +2236,7 @@ void TOrion::IndexReplaces()
 		}
 	}
 
-	while (!textureParser.IsEOF())
+	while (g_UseTexTerrDef && !textureParser.IsEOF())
 	{
 		std::vector<std::string> strings = textureParser.ReadTokens();
 
@@ -2270,7 +2270,7 @@ void TOrion::IndexReplaces()
 		}
 	}
 
-	while (!gumpParser.IsEOF())
+	while (g_UseGumpDef && !gumpParser.IsEOF())
 	{
 		std::vector<std::string> strings = gumpParser.ReadTokens();
 
@@ -2301,7 +2301,7 @@ void TOrion::IndexReplaces()
 		}
 	}
 
-	while (!multiParser.IsEOF())
+	while (g_UseMultiDef && !multiParser.IsEOF())
 	{
 		std::vector<std::string> strings = multiParser.ReadTokens();
 
@@ -2330,7 +2330,7 @@ void TOrion::IndexReplaces()
 		}
 	}
 
-	while (!soundParser.IsEOF())
+	while (g_UseSoundDef && !soundParser.IsEOF())
 	{
 		std::vector<std::string> strings = soundParser.ReadTokens();
 
@@ -2381,6 +2381,7 @@ void TOrion::IndexReplaces()
 			}
 		}
 	}
+
 	while (!mp3Parser.IsEOF())
 	{
 		std::vector<std::string> strings = mp3Parser.ReadTokens();
@@ -2594,15 +2595,34 @@ void TOrion::LoadClientConfig()
 			g_MapBlockY[i] = g_MapSizeY[i] / 8;
 		}
 
+		DWORD defFlags = DFF_BODYCONV;
+
 		if (ver >= 2)
 		{
 			CharacterList.ClientFlag = file.ReadByte();
 
 			if (ver >= 3)
+			{
 				FileManager.UseVerdata = (file.ReadByte() != 0);
+
+				if (ver >= 4)
+				{
+					defFlags = file.ReadDWord();
+					g_UseFileUOP = (file.ReadByte() != 0);
+				}
+			}
 		}
 		else
 			CharacterList.ClientFlag = 0;
+
+		g_UseArtDef = (defFlags & DFF_ART);
+		g_UseBodyDef = (defFlags & DFF_BODY);
+		g_UseBodyconvDef = (defFlags & DFF_BODYCONV);
+		g_UseCorpseDef = (defFlags & DFF_CORPSE);
+		g_UseGumpDef = (defFlags & DFF_GUMP);
+		g_UseMultiDef = (defFlags & DFF_MULTI);
+		g_UseSoundDef = (defFlags & DFF_SOUND);
+		g_UseTexTerrDef = (defFlags & DFF_TEXTERR);
 
 		FileManager.UnloadFileFromMemory(file);
 	}

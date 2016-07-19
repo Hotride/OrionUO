@@ -443,6 +443,18 @@ extern POINT g_RemoveRangeXY;
 
 typedef vector<pair<DWORD, DWORD>> CORPSE_LIST_MAP;
 extern CORPSE_LIST_MAP g_CorpseSerialList;
+
+extern bool g_UseFileUOP;
+
+//!Флаги использования *.def файлов (замены индексов)
+extern bool g_UseArtDef;
+extern bool g_UseBodyDef;
+extern bool g_UseBodyconvDef;
+extern bool g_UseCorpseDef;
+extern bool g_UseGumpDef;
+extern bool g_UseMultiDef;
+extern bool g_UseSoundDef;
+extern bool g_UseTexTerrDef;
 //---------------------------------------------------------------------------
 
 

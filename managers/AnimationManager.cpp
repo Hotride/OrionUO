@@ -365,7 +365,7 @@ void TAnimationManager::InitIndexReplaces( __in PDWORD verdata)
 	TTextFileParser corpseParser(FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
 	TTextFileParser bodyconvParser(FilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
 
-	while (!bodyconvParser.IsEOF())
+	while (g_UseBodyconvDef && !bodyconvParser.IsEOF())
 	{
 		std::vector<std::string> strings = bodyconvParser.ReadTokens();
 
@@ -494,7 +494,7 @@ void TAnimationManager::InitIndexReplaces( __in PDWORD verdata)
 		}
 	}
 
-	while (!bodyParser.IsEOF())
+	while (g_UseBodyDef && !bodyParser.IsEOF())
 	{
 		std::vector<std::string> strings = bodyParser.ReadTokens();
 
@@ -525,7 +525,7 @@ void TAnimationManager::InitIndexReplaces( __in PDWORD verdata)
 		}
 	}
 
-	while (!corpseParser.IsEOF())
+	while (g_UseCorpseDef && !corpseParser.IsEOF())
 	{
 		std::vector<std::string> strings = corpseParser.ReadTokens();
 

@@ -867,4 +867,16 @@ enum GAME_CONSOLE_TEXT_TYPE
 	GCTT_PARTY_DECLINE
 };
 //---------------------------------------------------------------------------
+enum DEF_FILE_FLAGS
+{
+	DFF_ART =			0x00000001,
+	DFF_BODY =			0x00000002,
+	DFF_BODYCONV =		0x00000004,
+	DFF_CORPSE =		0x00000008,
+	DFF_GUMP =			0x00000010,
+	DFF_MULTI =			0x00000020,
+	DFF_SOUND =			0x00000040,
+	DFF_TEXTERR =		0x00000080
+};
+//---------------------------------------------------------------------------
 #endif
