@@ -2565,6 +2565,8 @@ void TOrion::LoadClientConfig()
 	TMappedHeader file;
 	memset(&file, 0, sizeof(file));
 
+	DWORD defFlags = DFF_BODYCONV;
+
 	if (FileManager.LoadFileToMemory(file, FilePath("Client.cuo").c_str()))
 	{
 		BYTE ver = file.ReadByte();
@@ -2595,8 +2597,6 @@ void TOrion::LoadClientConfig()
 			g_MapBlockY[i] = g_MapSizeY[i] / 8;
 		}
 
-		DWORD defFlags = DFF_BODYCONV;
-
 		if (ver >= 2)
 		{
 			CharacterList.ClientFlag = file.ReadByte();
@@ -2615,15 +2615,6 @@ void TOrion::LoadClientConfig()
 		else
 			CharacterList.ClientFlag = 0;
 
-		g_UseArtDef = (defFlags & DFF_ART);
-		g_UseBodyDef = (defFlags & DFF_BODY);
-		g_UseBodyconvDef = (defFlags & DFF_BODYCONV);
-		g_UseCorpseDef = (defFlags & DFF_CORPSE);
-		g_UseGumpDef = (defFlags & DFF_GUMP);
-		g_UseMultiDef = (defFlags & DFF_MULTI);
-		g_UseSoundDef = (defFlags & DFF_SOUND);
-		g_UseTexTerrDef = (defFlags & DFF_TEXTERR);
-
 		FileManager.UnloadFileFromMemory(file);
 	}
 	else
@@ -2634,6 +2625,15 @@ void TOrion::LoadClientConfig()
 		g_SeedKey = 1357;
 		CharacterList.ClientFlag = 0;
 	}
+
+	g_UseArtDef = (defFlags & DFF_ART);
+	g_UseBodyDef = (defFlags & DFF_BODY);
+	g_UseBodyconvDef = (defFlags & DFF_BODYCONV);
+	g_UseCorpseDef = (defFlags & DFF_CORPSE);
+	g_UseGumpDef = (defFlags & DFF_GUMP);
+	g_UseMultiDef = (defFlags & DFF_MULTI);
+	g_UseSoundDef = (defFlags & DFF_SOUND);
+	g_UseTexTerrDef = (defFlags & DFF_TEXTERR);
 }
 //---------------------------------------------------------------------------
 DWORD TOrion::GetFileHashCode(DWORD address, DWORD size)
