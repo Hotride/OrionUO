@@ -34,6 +34,7 @@ private:
 	TGameItem *m_Chair;
 	TGameCharacter *m_Player;
 	TGameItem *m_Mount;
+	TGameItem *m_Cloak;
 
 public:
 	TDebugScreen();

@@ -26,7 +26,7 @@ TDebugScreen::TDebugScreen()
 {
 	//Скамейка
 	m_Chair = new TGameItem(1);
-	m_Chair->Graphic = 0x0459;
+	m_Chair->Graphic = 2909;
 	m_Chair->Color = 0x0386;
 
 	//Персонаж
@@ -66,13 +66,13 @@ TDebugScreen::TDebugScreen()
 	obj->Layer = OL_ROBE;
 	m_Player->Add(obj);
 
-	obj = new TGameItem(6);
-	obj->Graphic = 0x1515;
-	obj->OnGraphicChange();
-	obj->Color = 0x0A04;
-	obj->Count = 1;
-	obj->Layer = OL_CLOAK;
-	m_Player->Add(obj);
+	m_Cloak = new TGameItem(6);
+	m_Cloak->Graphic = 0x1515;
+	m_Cloak->OnGraphicChange();
+	m_Cloak->Color = 0x0A04;
+	m_Cloak->Count = 1;
+	m_Cloak->Layer = OL_CLOAK;
+	m_Player->Add(m_Cloak);
 }
 //---------------------------------------------------------------------------
 TDebugScreen::~TDebugScreen()
@@ -218,10 +218,8 @@ int TDebugScreen::Render(bool mode)
 			ColorizerShader->Use();
 			const WORD mountTable[4] = { 0x3EA2, 0x3EA6, 0x3EA3, 0x3EA4 }; //horse, llama, ostard, zostrich
 
-			//Для рисования 1 ряда размаунтим маунта
-			m_Mount->Layer = OL_NONE;
-
-			IFOR(j, 0, 2)
+			//Для рисования 1 ряда размаунтим маунта			
+			IFOR(j, 0, 3)
 			{
 				IFOR(i, 0, 4)
 				{
@@ -229,16 +227,27 @@ int TDebugScreen::Render(bool mode)
 					int y = 100 + (j * 100);
 
 					//Рисуем стул только в верхнем ряду, в нижнем - перс на маунте
-					if (!j)
-						m_Chair->Draw(mode, x, y, ticks);
+					if (j < 2)
+						m_Chair->Draw(mode, x, y, ticks);			
 					else
 						m_Mount->Graphic = mountTable[i];
 
-					AnimationManager->DrawCharacter(m_Player, x, y, 0);
-				}
+					if (j == 0 && i == 0)
+						m_Mount->Layer = OL_NONE;
+					else if (j == 1 && i == 0)
+					{
+						m_Cloak->Layer = OL_NONE;	
 
-				//Для рисования 2 ряда вернем маунта в слой
-				m_Mount->Layer = OL_MOUNT;
+					}					
+					else if (j == 2 && i == 0)
+					{
+						m_Cloak->Layer = OL_CLOAK;
+						m_Mount->Layer = OL_MOUNT;
+					}
+						
+
+					AnimationManager->DrawCharacter(m_Player, x, y, 0);						
+				}
 			}
 
 			UnuseShader();
