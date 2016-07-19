@@ -107,7 +107,7 @@ public:
 	void Draw(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror);
 
 	//Нарисовать текстуру сидячего персонажа
-	void DrawSitting(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror);
+	void DrawSitting(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror, bool twistTexture = true);
 
 	//Нарисовать тень
 	void DrawShadow(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror);

@@ -1147,7 +1147,7 @@ TTextureAnimationFrame *TAnimationManager::GetFrame(TGameObject *obj, BYTE &fram
 	return frame;
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id)
+void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id, bool twistTexture)
 {
 	if (obj == NULL)
 		return;
@@ -1181,7 +1181,9 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 		ADD_LINKED(m_UsedAnimList, m_DataIndex[id]);
 	}
-
+	
+	if (m_Sitting && m_Direction == 3)
+		m_AnimGroup = 25;
 	TTextureAnimationGroup *group = anim->GetGroup(m_AnimGroup);
 	TTextureAnimationDirection *direction = group->GetDirection(m_Direction);
 
@@ -1281,12 +1283,22 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		}
 		else
 		{
-			y -= (frame->Height + frame->CenterY + 3);
-
 			if (mirror)
-				x -= (frame->Width - frame->CenterX);
+			{
+				x -= (frame->Width - frame->CenterX) + 10;
+				if (m_Direction == 1)
+					y -= (frame->Height + frame->CenterY) - 10;
+				else
+					y -= (frame->Height + frame->CenterY) - 25;
+			}
 			else
+			{
 				x -= frame->CenterX;
+				if (m_Direction == 1)
+					y -= (frame->Height + frame->CenterY) - 10;
+				else
+					y -= (frame->Height + frame->CenterY) - 30;
+			}				
 		}
 
 #if UO_DEPTH_TEST == 1
@@ -1376,8 +1388,8 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 			glUniform1iARB(ShaderDrawMode, drawMode);
 
-			if (m_Sitting)
-				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror);
+			if (m_Sitting && twistTexture)
+				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror, twistTexture);
 			else
 				g_GL.Draw(frame->Texture, x, y, frame->Width, frame->Height, mirror);
 
@@ -1897,8 +1909,13 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 
 				if (goi != NULL)
 				{
+					bool twistTexture = true;
 					if (goi->AnimID)
-						Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
+					{
+						if (goi->GetLayer() == 11)
+							twistTexture = false;
+						Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID, twistTexture);
+					}						
 
 					if (goi->IsLightSource() && GameScreen->UseLight)
 						GameScreen->AddLight(obj, goi, drawX, drawY - lightOffset);
