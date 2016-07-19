@@ -1511,11 +1511,11 @@ int TGameScreen::Render(__in bool mode)
 {
 	DWORD ticks = g_Ticks;
 
-	if (g_LastRenderTime > ticks)
+	/*if (g_LastRenderTime > ticks)
 	{
 		if (mode || !g_SelectGumpObjects)
 			return 0;
-	}
+	}*/
 
 	if (!m_RenderListInitalized)
 		CalculateRenderList();
@@ -1533,7 +1533,7 @@ int TGameScreen::Render(__in bool mode)
 
 	if (mode)
 	{
-		static DWORD lastRender = timeGetTime() + 1000;
+		static DWORD lastRender = /*timeGetTime()*/ g_Ticks + 1000;
 		static int currentFPS = 0;
 		static int FPScount = 0;
 

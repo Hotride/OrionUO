@@ -183,11 +183,11 @@ int TMainScreen::Render(__in bool mode)
 	static DWORD lastArrowTick = 0;
 	static bool arrowLighted = false;
 	
-	if (g_LastRenderTime > ticks)
+	/*if (g_LastRenderTime > ticks)
 	{
 		if (mode || !g_SelectGumpObjects)
 			return 0;
-	}
+	}*/
 	
 	if (mode)
 	{

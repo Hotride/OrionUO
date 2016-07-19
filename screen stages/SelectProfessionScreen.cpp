@@ -197,11 +197,11 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 {
 	DWORD ticks = g_Ticks;
 
-	if (g_LastRenderTime > ticks)
+	/*if (g_LastRenderTime > ticks)
 	{
 		if (mode || !g_SelectGumpObjects)
 			return 0;
-	}
+	}*/
 
 	int CanSelectedButton = g_LastSelectedObject;
 
@@ -562,11 +562,11 @@ int TSelectProfessionScreen::RenderNew(bool &mode)
 {
 	DWORD ticks = g_Ticks;
 
-	if (g_LastRenderTime > ticks)
+	/*if (g_LastRenderTime > ticks)
 	{
 		if (mode || !g_SelectGumpObjects)
 			return 0;
-	}
+	}*/
 
 	int CanSelectedButton = g_LastSelectedObject;
 

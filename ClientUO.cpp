@@ -424,14 +424,14 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		{
 			g_Ticks = (DWORD)wParam;
 
-			/*if (Orion != NULL)
+			if (Orion != NULL)
 			{
 				MouseManager.UpdateMouse();
 
 				Orion->Process();
-			}*/
+			}
 
-			return ConfigManager.ClientFPS;
+			return g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]; // ConfigManager.ClientFPS;
 		}
 		default:
 			break;
@@ -546,12 +546,12 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 		else
 			Sleep(1);
 		
-		if (Orion != NULL)
+		/*if (Orion != NULL)
 		{
 			MouseManager.UpdateMouse();
 
 			Orion->Process();
-		}
+		}*/
 	}
 	
 	return (int)msg.wParam;
@@ -2952,7 +2952,7 @@ void TOrion::Process()
 		g_SelectedObject = NULL;
 		g_SelectedTextObject = NULL;
 
-		if (processGameObjectsTimer <= ticks)
+		//if (processGameObjectsTimer <= ticks)
 		{
 			TWalkData *wd = g_Player->m_WalkStack.m_Items;
 
@@ -2980,8 +2980,8 @@ void TOrion::Process()
 			processGameObjectsTimer = ticks + 30;
 		}
 
-		if (abs((int)processGameObjectsTimer - (int)ticks) > 500)
-			processGameObjectsTimer = ticks + 30;
+		//if (abs((int)processGameObjectsTimer - (int)ticks) > 500)
+		//	processGameObjectsTimer = ticks + 30;
 
 		World->ProcessAnimation();
 
@@ -3009,7 +3009,7 @@ void TOrion::Process()
 			}
 		}
 		
-		if (g_LastRenderTime <= ticks)
+		//if (g_LastRenderTime <= ticks)
 		{
 			GameScreen->CalculateGameWindowBounds();
 
@@ -3036,7 +3036,7 @@ void TOrion::Process()
 			}
 		}
 	}
-	else if (g_LastRenderTime <= ticks)
+	else //if (g_LastRenderTime <= ticks)
 	{
 		if (!IsIconic(g_hWnd))
 		{
