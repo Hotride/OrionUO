@@ -601,7 +601,7 @@ string TPacketManager::ReadString( __in int size)
 	string result(str);
 	delete str;
 
-	return result;
+	return result.c_str();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -638,7 +638,7 @@ wstring TPacketManager::ReadUnicodeString( __in int size)
 	wstring result(str);
 	delete str;
 
-	return result;
+	return result.c_str();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -683,7 +683,7 @@ wstring TPacketManager::ReadUnicodeStringLE(__in int size)
 	wstring result(str);
 	delete str;
 
-	return result;
+	return result.c_str();
 }
 //---------------------------------------------------------------------------
 /*!
