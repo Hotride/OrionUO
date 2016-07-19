@@ -108,7 +108,7 @@ private:
 	void FixSittingDirection(BYTE &layerDirection, bool &mirror, int &x, int &y);
 
 	//Обобщенная фукнция рисования
-	void Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id = 0, bool twistTexture = true);
+	void Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE &frameIndex, int id = 0);
 
 	void DrawIntoFrameBuffer(__in TGameCharacter *obj, __in int x, __in int y);
 

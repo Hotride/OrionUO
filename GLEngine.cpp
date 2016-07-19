@@ -405,7 +405,7 @@ void TGLEngine::Draw(GLuint &texture, const int &x, const int &y, const int &wid
 	glTranslatef((GLfloat)-x, (GLfloat)-y, (GLfloat)-g_ZBuffer);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror, bool twistTexture)
+void TGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror)
 {
 	if (m_OldTexture != texture)
 	{
