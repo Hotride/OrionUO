@@ -428,7 +428,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			{
 				MouseManager.UpdateMouse();
 
-				Orion->Process();
+				Orion->Process(lParam != 0);
 			}
 
 			return g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]; // ConfigManager.ClientFPS;
@@ -903,8 +903,19 @@ unsigned __stdcall OrionProcessThread(void *arg)
 {
 	while (true)
 	{
+		SendMessage(g_hWnd, UOMSG_PROCESS, timeGetTime(), 0);
+		Sleep(10);
+	}
+
+	return 0;
+};
+//---------------------------------------------------------------------------
+unsigned __stdcall OrionRenderProcessThread(void *arg)
+{
+	while (true)
+	{
 		DWORD ticks = timeGetTime();
-		int delay = SendMessage(g_hWnd, UOMSG_PROCESS, ticks, 0);
+		int delay = SendMessage(g_hWnd, UOMSG_PROCESS, ticks, 1);
 		//TPRINT("UOMSG_PROCESS = %i", delay);
 		delay = (int)((ticks + delay) - timeGetTime());
 		//TPRINT(" (%i)\n", delay);
@@ -1225,6 +1236,7 @@ bool TOrion::Install()
 
 	UINT tid = 0;
 	_beginthreadex(NULL, 0, OrionProcessThread, (PVOID)g_hWnd, 0, &tid);
+	_beginthreadex(NULL, 0, OrionRenderProcessThread, (PVOID)g_hWnd, 0, &tid);
 
 	return true;
 }
@@ -2922,7 +2934,7 @@ void TOrion::ProcessDelayedClicks()
 	}
 }
 //---------------------------------------------------------------------------
-void TOrion::Process()
+void TOrion::Process(const bool &rendering)
 {
 	static DWORD removeUnusedTexturesTime = timeGetTime() + CLEAR_TEXTURES_DELAY;
 	static DWORD processGameObjectsTimer = timeGetTime();
@@ -3010,6 +3022,7 @@ void TOrion::Process()
 		}
 		
 		//if (g_LastRenderTime <= ticks)
+		if (rendering)
 		{
 			GameScreen->CalculateGameWindowBounds();
 
@@ -3036,7 +3049,7 @@ void TOrion::Process()
 			}
 		}
 	}
-	else //if (g_LastRenderTime <= ticks)
+	else if (rendering) //if (g_LastRenderTime <= ticks)
 	{
 		if (!IsIconic(g_hWnd))
 		{
@@ -4380,7 +4393,7 @@ void TOrion::Connect()
 	InitScreen(GS_MAIN_CONNECT);
 
 	g_LastRenderTime = 0;
-	Process();
+	Process(true);
 
 	//g_ClientPaused = false;
 	//ClearPacketStream();
@@ -4436,7 +4449,7 @@ void TOrion::Disconnect()
 void TOrion::ServerSelection(int pos)
 {
 	InitScreen(GS_SERVER_CONNECT);
-	Process();
+	Process(true);
 
 	ServerList.SelectedServer = pos;
 
