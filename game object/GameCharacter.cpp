@@ -434,8 +434,8 @@ void TGameCharacter::SetAnimation( __in BYTE id, __in_opt BYTE interval, __in_op
 	m_AnimationDirection = frameDirection;
 	m_AnimationFromServer = false;
 
-	m_LastAnimationChangeTime = GetTickCount();
-	m_TimeToRandomFidget = GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY;
+	m_LastAnimationChangeTime = g_Ticks;
+	m_TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 }
 //---------------------------------------------------------------------------
 /*!
@@ -469,7 +469,7 @@ void TGameCharacter::SetRandomFidgetAnimation()
 	m_AnimationRepeat = false;
 	m_AnimationFromServer = true;
 
-	m_TimeToRandomFidget = GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY;
+	m_TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 
 	ANIMATION_GROUPS groupIndex = AnimationManager->GetGroupIndex(GetMountAnimation());
 
@@ -798,7 +798,7 @@ void TGameCharacter::UpdateAnimationInfo( __inout BYTE &dir, __in bool canChange
 
 	if (wd != NULL)
 	{
-		DWORD ticks = GetTickCount();
+		DWORD ticks = g_Ticks;
 
 		m_TimeToRandomFidget = ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 		

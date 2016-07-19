@@ -308,7 +308,7 @@ public:
 	void ProcessDelayedClicks();
 
 	//Обработка мэйнлупа
-	void Process();
+	void Process(const bool &rendering);
 
 
 

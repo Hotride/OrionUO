@@ -325,7 +325,7 @@ int TGumpBulletinBoardItem::Draw(bool &mode)
 	}
 	
 	//Проверим, вдруг необходимо изменить положение отображаемого элемента
-	if (g_GumpPressed && m_LastScrollChangeTime < GetTickCount())
+	if (g_GumpPressed && m_LastScrollChangeTime < g_Ticks)
 	{
 		if (g_LastObjectLeftMouseDown == ID_GBBI_SCROLLER_UP) //Скроллинг вверх (гампом-стрелкой)
 			ListingList(true, 10);
@@ -580,7 +580,7 @@ void TGumpBulletinBoardItem::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 {
 	if (!g_LeftMouseDown && !g_RightMouseDown)
 	{
-		if (m_LastScrollChangeTime < GetTickCount())
+		if (m_LastScrollChangeTime < g_Ticks)
 		{
 			if (state == MWS_UP)
 			{
@@ -637,6 +637,6 @@ void TGumpBulletinBoardItem::ListingList(bool direction, int divizor)
 			m_CurrentLine = maxidx;
 	}
 
-	m_LastScrollChangeTime = GetTickCount() + (SCROLL_LISTING_DELAY / divizor);
+	m_LastScrollChangeTime = g_Ticks + (SCROLL_LISTING_DELAY / divizor);
 }
 //----------------------------------------------------------------------------

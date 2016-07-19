@@ -120,7 +120,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 			MouseManager.UpdateMouse();
 			g_GeneratedMouseDown = false;
-			DWORD ticks = GetTickCount();
+			DWORD ticks = g_Ticks;
 			g_LastMouseDownTime = ticks;
 			g_CancelDoubleClick = false;
 
@@ -211,7 +211,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 			MouseManager.UpdateMouse();
 
-			DWORD ticks = GetTickCount();
+			DWORD ticks = g_Ticks;
 
 			g_SelectGumpObjects = true;
 
@@ -420,6 +420,19 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case UOMSG_SEND:
 			ConnectionManager.Send((PBYTE)wParam, lParam);
 			break;
+		case UOMSG_PROCESS:
+		{
+			g_Ticks = (DWORD)wParam;
+
+			if (Orion != NULL)
+			{
+				MouseManager.UpdateMouse();
+
+				Orion->Process(lParam != 0);
+			}
+
+			return g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]; // ConfigManager.ClientFPS;
+		}
 		default:
 			break;
 	}
@@ -533,12 +546,12 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 		else
 			Sleep(1);
 		
-		if (Orion != NULL)
+		/*if (Orion != NULL)
 		{
 			MouseManager.UpdateMouse();
 
 			Orion->Process();
-		}
+		}*/
 	}
 	
 	return (int)msg.wParam;
@@ -886,6 +899,34 @@ DWORD Reflect(DWORD source, int c)
 	return value;
 }
 //---------------------------------------------------------------------------
+unsigned __stdcall OrionProcessThread(void *arg)
+{
+	while (true)
+	{
+		SendMessage(g_hWnd, UOMSG_PROCESS, timeGetTime(), 0);
+		Sleep(10);
+	}
+
+	return 0;
+};
+//---------------------------------------------------------------------------
+unsigned __stdcall OrionRenderProcessThread(void *arg)
+{
+	while (true)
+	{
+		DWORD ticks = timeGetTime();
+		int delay = SendMessage(g_hWnd, UOMSG_PROCESS, ticks, 1);
+		//TPRINT("UOMSG_PROCESS = %i", delay);
+		delay = (int)((ticks + delay) - timeGetTime());
+		//TPRINT(" (%i)\n", delay);
+
+		if (delay > 0)
+			Sleep(delay);
+	}
+
+	return 0;
+};
+//---------------------------------------------------------------------------
 bool TOrion::Install()
 {
 	IFOR(i, 0, 256)
@@ -1192,6 +1233,10 @@ bool TOrion::Install()
 	}
 
 	TPRINT("mi=%i ma=%i; mi380=%i\n", mi, ma, mi380);*/
+
+	UINT tid = 0;
+	_beginthreadex(NULL, 0, OrionProcessThread, (PVOID)g_hWnd, 0, &tid);
+	_beginthreadex(NULL, 0, OrionRenderProcessThread, (PVOID)g_hWnd, 0, &tid);
 
 	return true;
 }
@@ -1800,7 +1845,7 @@ void TOrion::ProcessStaticAnimList()
 	{
 		TLinkedList *list = m_StaticAnimList;
 
-		DWORD ticks = GetTickCount();
+		DWORD ticks = g_Ticks;
 		int delay = (ConfigManager.StandartItemsAnimationDelay ? 0x50 : 50);
 
 		while (list != NULL)
@@ -1891,7 +1936,7 @@ void TOrion::ClearUnusedTextures()
 
 	static int clearMap = 0;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	if (clearMap == 1)
 	{
@@ -2697,7 +2742,7 @@ void TOrion::LoadStartupConfig()
 	SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
 
 	if (!ConfigManager.Sound)
-		Orion->AdjustSoundEffects(GetTickCount() + 100000);
+		Orion->AdjustSoundEffects(g_Ticks + 100000);
 
 	if (!ConfigManager.Music)
 		SoundManager.StopMusic();
@@ -2714,7 +2759,7 @@ void TOrion::LoadLocalConfig()
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x35, lco);
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Welcome to Ultima Online!");*/
 
-	g_CheckContainerStackTimer = GetTickCount() + 1000;
+	g_CheckContainerStackTimer = g_Ticks + 1000;
 
 	char buf[MAX_PATH] = {0};
 	sprintf(buf, "Desktop\\%s\\%s\\0x%08X", MainScreen->m_Account->c_str(), ServerList.GetServerName().c_str(), g_PlayerSerial);
@@ -2759,7 +2804,7 @@ void TOrion::LoadLocalConfig()
 	SoundManager.SetMusicVolume(ConfigManager.MusicVolume);
 
 	if (!ConfigManager.Sound)
-		Orion->AdjustSoundEffects(GetTickCount() + 100000);
+		Orion->AdjustSoundEffects(g_Ticks + 100000);
 
 	if (!ConfigManager.Music)
 		SoundManager.StopMusic();
@@ -2806,7 +2851,7 @@ void TOrion::SaveLocalConfig()
 //---------------------------------------------------------------------------
 void TOrion::ProcessDelayedClicks()
 {
-	if (g_ClickObjectReq && g_ClickObject.Timer < GetTickCount())
+	if (g_ClickObjectReq && g_ClickObject.Timer < g_Ticks)
 	{
 		if (g_ClickObject.Type == COT_GAME_OBJECT)
 		{
@@ -2851,7 +2896,7 @@ void TOrion::ProcessDelayedClicks()
 					td->Font = 3;
 					td->Serial = 0;
 					td->Color = 0x03B5;
-					td->Timer = GetTickCount();
+					td->Timer = g_Ticks;
 					td->Type = TT_CLIENT;
 					td->DrawX = g_MouseX - gump->X;
 					td->DrawY = g_MouseY - gump->Y;
@@ -2889,15 +2934,15 @@ void TOrion::ProcessDelayedClicks()
 	}
 }
 //---------------------------------------------------------------------------
-void TOrion::Process()
+void TOrion::Process(const bool &rendering)
 {
-	static DWORD removeUnusedTexturesTime = GetTickCount() + CLEAR_TEXTURES_DELAY;
-	static DWORD processGameObjectsTimer = GetTickCount();
+	static DWORD removeUnusedTexturesTime = timeGetTime() + CLEAR_TEXTURES_DELAY;
+	static DWORD processGameObjectsTimer = timeGetTime();
 
 	ConnectionManager.Recv();
 	PacketManager.SendMegaClilocRequests();
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 	
 	if (g_GameState >= GS_CHARACTER && g_LastSendTime + SEND_TIMEOUT_DELAY < ticks)
 	{
@@ -2919,7 +2964,7 @@ void TOrion::Process()
 		g_SelectedObject = NULL;
 		g_SelectedTextObject = NULL;
 
-		if (processGameObjectsTimer <= ticks)
+		//if (processGameObjectsTimer <= ticks)
 		{
 			TWalkData *wd = g_Player->m_WalkStack.m_Items;
 
@@ -2947,8 +2992,8 @@ void TOrion::Process()
 			processGameObjectsTimer = ticks + 30;
 		}
 
-		if (abs((int)processGameObjectsTimer - (int)ticks) > 500)
-			processGameObjectsTimer = ticks + 30;
+		//if (abs((int)processGameObjectsTimer - (int)ticks) > 500)
+		//	processGameObjectsTimer = ticks + 30;
 
 		World->ProcessAnimation();
 
@@ -2976,7 +3021,8 @@ void TOrion::Process()
 			}
 		}
 		
-		if (g_LastRenderTime <= ticks)
+		//if (g_LastRenderTime <= ticks)
+		if (rendering)
 		{
 			GameScreen->CalculateGameWindowBounds();
 
@@ -3003,7 +3049,7 @@ void TOrion::Process()
 			}
 		}
 	}
-	else if (g_LastRenderTime <= ticks)
+	else if (rendering) //if (g_LastRenderTime <= ticks)
 	{
 		if (!IsIconic(g_hWnd))
 		{
@@ -3021,7 +3067,7 @@ void TOrion::Process()
 //---------------------------------------------------------------------------
 int TOrion::Send(PBYTE buf, int size)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 	g_TotalSendSize += size;
 	
 	TMessageType &type = PacketManager.GetType(*buf);
@@ -3078,7 +3124,7 @@ TTextureObject *TOrion::ExecuteGump(const WORD &id, const bool &partialHue)
 		}
 	}
 
-	io.LastAccessTime = GetTickCount();
+	io.LastAccessTime = g_Ticks;
 
 	return io.Texture;
 }
@@ -3100,7 +3146,7 @@ TTextureObject *TOrion::ExecuteLandArt(const WORD &id)
 		}
 	}
 	
-	io.LastAccessTime = GetTickCount();
+	io.LastAccessTime = g_Ticks;
 
 	return io.Texture;
 }
@@ -3131,7 +3177,7 @@ TTextureObject *TOrion::ExecuteStaticArt(const WORD &id)
 		}
 	}
 	
-	io.LastAccessTime = GetTickCount();
+	io.LastAccessTime = g_Ticks;
 
 	return io.Texture;
 }
@@ -3158,7 +3204,7 @@ TTextureObject *TOrion::ExecuteTexture(WORD id)
 		}
 	}
 	
-	io.LastAccessTime = GetTickCount();
+	io.LastAccessTime = g_Ticks;
 
 	return io.Texture;
 }
@@ -3183,7 +3229,7 @@ TTextureObject *TOrion::ExecuteLight(BYTE &id)
 		}
 	}
 	
-	io.LastAccessTime = GetTickCount();
+	io.LastAccessTime = g_Ticks;
 
 	return io.Texture;
 }
@@ -3954,7 +4000,7 @@ void TOrion::PlaySoundEffect(const WORD &id, float volume)
 		ADD_LINKED(m_UsedSoundList, m_SoundDataIndex[id]);
 	}
 	else {
-		if (is.LastAccessTime + is.Timer > GetTickCount())
+		if (is.LastAccessTime + is.Timer > g_Ticks)
 			return;
 
 		SoundManager.FreeStream(is.hStream);
@@ -3968,7 +4014,7 @@ void TOrion::PlaySoundEffect(const WORD &id, float volume)
 	if (volume > 0)
 	{
 		SoundManager.PlaySoundEffect(is.hStream, volume);
-		is.LastAccessTime = GetTickCount();
+		is.LastAccessTime = g_Ticks;
 	}
 
 	//if (is.Sound == NULL)
@@ -3982,7 +4028,7 @@ void TOrion::PlaySoundEffect(const WORD &id, float volume)
 	//}
 	//else
 	//{
-	//	if (is.LastAccessTime + is.Timer > GetTickCount())
+	//	if (is.LastAccessTime + is.Timer > g_Ticks)
 	//		return;
 
 	//	Mix_FreeChunk(is.Sound);
@@ -3995,7 +4041,7 @@ void TOrion::PlaySoundEffect(const WORD &id, float volume)
 	//if (volume > 0)
 	//{
 	//	SoundManager.PlaySoundEffect(is.Sound, volume);
-	//	is.LastAccessTime = GetTickCount();
+	//	is.LastAccessTime = g_Ticks;
 	//}
 }
 //---------------------------------------------------------------------------
@@ -4087,7 +4133,7 @@ void TOrion::CreateTextMessage(TEXT_TYPE type, DWORD serial, WORD font, WORD col
 	td->Font = font;
 	td->Serial = serial;
 	td->Color = color;
-	td->Timer = GetTickCount();
+	td->Timer = g_Ticks;
 	td->Type = type;
 	td->SetText(text);
 	
@@ -4212,7 +4258,7 @@ void TOrion::CreateUnicodeTextMessage(TEXT_TYPE type, DWORD serial, WORD font, W
 	td->Font = font;
 	td->Serial = serial;
 	td->Color = color;
-	td->Timer = GetTickCount();
+	td->Timer = g_Ticks;
 	td->Type = type;
 	td->SetUnicodeText(text);
 	
@@ -4347,7 +4393,7 @@ void TOrion::Connect()
 	InitScreen(GS_MAIN_CONNECT);
 
 	g_LastRenderTime = 0;
-	Process();
+	Process(true);
 
 	//g_ClientPaused = false;
 	//ClearPacketStream();
@@ -4403,7 +4449,7 @@ void TOrion::Disconnect()
 void TOrion::ServerSelection(int pos)
 {
 	InitScreen(GS_SERVER_CONNECT);
-	Process();
+	Process(true);
 
 	ServerList.SelectedServer = pos;
 

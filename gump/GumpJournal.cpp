@@ -418,7 +418,7 @@ int TGumpJournal::Draw(bool &mode)
 			m_FrameCreated = false;
 	}
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	if (g_GumpPressedScroller && m_LastScrollChangeTime < ticks)
 	{
@@ -659,7 +659,7 @@ void TGumpJournal::OnLeftMouseUp()
 	if (g_LastObjectLeftMouseDown != g_LastSelectedObject)
 		return;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	if (g_LastObjectLeftMouseDown == ID_GJ_BUTTON_MINIMIZE)
 	{
@@ -735,7 +735,7 @@ void TGumpJournal::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 {
 	if (!m_Minimized && !g_LeftMouseDown && !g_RightMouseDown)
 	{
-		DWORD ticks = GetTickCount();
+		DWORD ticks = g_Ticks;
 
 		if (state == MWS_UP && m_LastScrollChangeTime < ticks)
 		{

@@ -195,13 +195,13 @@ int TSelectProfessionScreen::Render( __in bool mode)
 */
 int TSelectProfessionScreen::RenderOld(bool &mode)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
-	if (g_LastRenderTime > ticks)
+	/*if (g_LastRenderTime > ticks)
 	{
 		if (mode || !g_SelectGumpObjects)
 			return 0;
-	}
+	}*/
 
 	int CanSelectedButton = g_LastSelectedObject;
 
@@ -560,13 +560,13 @@ int TSelectProfessionScreen::RenderOld(bool &mode)
 */
 int TSelectProfessionScreen::RenderNew(bool &mode)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
-	if (g_LastRenderTime > ticks)
+	/*if (g_LastRenderTime > ticks)
 	{
 		if (mode || !g_SelectGumpObjects)
 			return 0;
-	}
+	}*/
 
 	int CanSelectedButton = g_LastSelectedObject;
 
@@ -1076,7 +1076,7 @@ void TSelectProfessionScreen::OnLeftMouseUp()
 		}
 	}
 	
-	if (m_LastScrollChangeTime < GetTickCount())
+	if (m_LastScrollChangeTime < g_Ticks)
 	{
 		if (g_LastObjectLeftMouseDown == ID_SPS_SCROLLBAR_UP)
 			ListingList(true);
@@ -1094,7 +1094,7 @@ void TSelectProfessionScreen::OnLeftMouseUp()
 */
 void TSelectProfessionScreen::OnMouseWheel( __in MOUSE_WHEEL_STATE state)
 {
-	if (!g_LeftMouseDown && !g_RightMouseDown && m_LastScrollChangeTime < GetTickCount())
+	if (!g_LeftMouseDown && !g_RightMouseDown && m_LastScrollChangeTime < g_Ticks)
 	{
 		bool condition = false;
 
@@ -1141,7 +1141,7 @@ void TSelectProfessionScreen::ListingList( __in bool direction, __in_opt int div
 			m_PixelOffset = maxidx;
 	}
 
-	m_LastScrollChangeTime = GetTickCount() + (SCROLL_LISTING_DELAY / divizor);
+	m_LastScrollChangeTime = g_Ticks + (SCROLL_LISTING_DELAY / divizor);
 }
 //----------------------------------------------------------------------------3
 /*!

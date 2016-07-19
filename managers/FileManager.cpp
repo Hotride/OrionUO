@@ -189,7 +189,7 @@ int TMappedHeader::ReadIntBE()
 @param [__in] size Размер строки, если 0 - читает до нуля
 @return 
 */
-string TMappedHeader:: ReadString( __in int size)
+string TMappedHeader::ReadString( __in int size)
 {
 	if (!size)
 	{
@@ -208,7 +208,7 @@ string TMappedHeader:: ReadString( __in int size)
 
 	Ptr += size;
 
-	return result;
+	return result.c_str();
 }
 //---------------------------------------------------------------------------
 /*!

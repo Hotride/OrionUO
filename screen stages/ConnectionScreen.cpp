@@ -127,13 +127,13 @@ void TConnectionScreen::ProcessSmoothAction( __in_opt BYTE action)
 */
 int TConnectionScreen::Render( __in bool mode)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
-	if (g_LastRenderTime > ticks)
+	/*if (g_LastRenderTime > ticks)
 	{
 		if (mode || !g_SelectGumpObjects)
 			return 0;
-	}
+	}*/
 
 	if (mode)
 	{
