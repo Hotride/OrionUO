@@ -24,6 +24,55 @@ TDebugScreen *DebugScreen = NULL;
 TDebugScreen::TDebugScreen()
 : TBaseScreen()
 {
+	//Скамейка
+	m_Chair = new TGameItem(1);
+	m_Chair->Graphic = 0x0459;
+	m_Chair->Color = 0x0386;
+
+	//Персонаж
+	m_Player = new TGameCharacter(2);
+	m_Player->Graphic = 0x0190;
+	m_Player->Color = 0x0386;
+	m_Player->Direction = 2;
+	m_Player->Hits = 1;
+	m_Player->MaxHits = 1;
+
+	//Линковка в псевдомире: стул; персонаж
+	m_Chair->m_NextXY = m_Player;
+	m_Player->m_PrevXY = m_Chair;
+
+	//Маунт
+	m_Mount = new TGameItem(3);
+	m_Mount->Graphic = 0x3EA3;
+	m_Mount->Color = 0x0386;
+	m_Mount->Count = 1;
+	m_Mount->Layer = OL_MOUNT;
+	m_Player->Add(m_Mount);
+
+	//Слои: волосы, роба, клока
+	TGameItem *obj = new TGameItem(4);
+	obj->Graphic = 0x203C;
+	obj->OnGraphicChange();
+	obj->Color = 0x0A01;
+	obj->Count = 1;
+	obj->Layer = OL_HAIR;
+	m_Player->Add(obj);
+
+	obj = new TGameItem(5);
+	obj->Graphic = 0x1F03;
+	obj->OnGraphicChange();
+	obj->Color = 0x0BB6;
+	obj->Count = 1;
+	obj->Layer = OL_ROBE;
+	m_Player->Add(obj);
+
+	obj = new TGameItem(6);
+	obj->Graphic = 0x1515;
+	obj->OnGraphicChange();
+	obj->Color = 0x0A04;
+	obj->Count = 1;
+	obj->Layer = OL_CLOAK;
+	m_Player->Add(obj);
 }
 //---------------------------------------------------------------------------
 TDebugScreen::~TDebugScreen()
@@ -165,6 +214,34 @@ int TDebugScreen::Render(bool mode)
 			g_GL.ViewPort(0, 0, 640, 480);
 
 			fb.Draw(0, 0);
+
+			ColorizerShader->Use();
+			const WORD mountTable[4] = { 0x3EA2, 0x3EA6, 0x3EA3, 0x3EA4 }; //horse, llama, ostard, zostrich
+
+			//Для рисования 1 ряда размаунтим маунта
+			m_Mount->Layer = OL_NONE;
+
+			IFOR(j, 0, 2)
+			{
+				IFOR(i, 0, 4)
+				{
+					int x = 100 + (i * 100);
+					int y = 100 + (j * 100);
+
+					//Рисуем стул только в верхнем ряду, в нижнем - перс на маунте
+					if (!j)
+						m_Chair->Draw(mode, x, y, ticks);
+					else
+						m_Mount->Graphic = mountTable[i];
+
+					AnimationManager->DrawCharacter(m_Player, x, y, 0);
+				}
+
+				//Для рисования 2 ряда вернем маунта в слой
+				m_Mount->Layer = OL_MOUNT;
+			}
+
+			UnuseShader();
 
 			InitToolTip();
 

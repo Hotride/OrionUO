@@ -31,6 +31,10 @@ private:
 
 	void ProcessSmoothAction(BYTE action = 0xFF);
 
+	TGameItem *m_Chair;
+	TGameCharacter *m_Player;
+	TGameItem *m_Mount;
+
 public:
 	TDebugScreen();
 	virtual ~TDebugScreen();
