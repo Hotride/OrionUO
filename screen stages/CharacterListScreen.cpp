@@ -163,13 +163,13 @@ void TCharacterListScreen::InitToolTip()
 */
 int TCharacterListScreen::Render( __in bool mode)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
-	if (g_LastRenderTime > ticks)
+	/*if (g_LastRenderTime > ticks)
 	{
 		if (mode || !g_SelectGumpObjects)
 			return 0;
-	}
+	}*/
 
 	int count = CharacterList.Count;
 	bool testField = (ConnectionManager.ClientVersion >= CV_305D);

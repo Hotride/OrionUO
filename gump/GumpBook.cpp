@@ -365,7 +365,7 @@ void TGumpBook::OnLeftMouseUp()
 		g_ClickObject.GumpButtonID = newPage;
 
 		//Задаем время до выполнения
-		g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
+		g_ClickObject.Timer = g_Ticks + DCLICK_DELAY;
 	}
 }
 //----------------------------------------------------------------------------

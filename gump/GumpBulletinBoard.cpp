@@ -57,7 +57,7 @@ void TGumpBulletinBoard::GenerateFrame()
 	CalculateGumpState();
 
 	//Проверим, вдруг необходимо изменить положение отображаемого элемента
-	if (g_GumpPressed && m_LastScrollChangeTime < GetTickCount())
+	if (g_GumpPressed && m_LastScrollChangeTime < g_Ticks)
 	{
 		if (g_GumpPressedElement == ID_GBB_BUTTON_UP) //Скроллинг вверх (гампом-стрелкой)
 			ListingList(true, 10);
@@ -131,7 +131,7 @@ int TGumpBulletinBoard::Draw(bool &mode)
 	CalculateGumpState();
 
 	//Проверим, вдруг необходимо изменить положение отображаемого элемента
-	if (g_GumpPressed && m_LastScrollChangeTime < GetTickCount())
+	if (g_GumpPressed && m_LastScrollChangeTime < g_Ticks)
 	{
 		if (g_GumpPressedElement == ID_GBB_BUTTON_UP) //Скроллинг вверх (гампом-стрелкой)
 			ListingList(true, 10);
@@ -255,7 +255,7 @@ void TGumpBulletinBoard::OnLeftMouseUp()
 
 		GumpManager->AddGump(gump);
 	}
-	else if (m_LastScrollChangeTime < GetTickCount())
+	else if (m_LastScrollChangeTime < g_Ticks)
 	{
 		if (g_LastObjectLeftMouseDown == ID_GBB_BUTTON_UP)
 		{
@@ -299,7 +299,7 @@ void TGumpBulletinBoard::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 {
 	if (!g_LeftMouseDown && !g_RightMouseDown)
 	{
-		DWORD ticks = GetTickCount();
+		DWORD ticks = g_Ticks;
 
 		if (m_LastScrollChangeTime < ticks)
 		{
@@ -325,7 +325,7 @@ void TGumpBulletinBoard::OnMouseWheel(MOUSE_WHEEL_STATE &state)
 */
 void TGumpBulletinBoard::ListingList(__in bool direction, __in_opt int divizor)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	if (direction) //Up
 	{

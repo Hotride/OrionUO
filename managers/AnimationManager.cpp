@@ -207,7 +207,7 @@ m_ShadowCount(0), m_Sitting(0)
 //----------------------------------------------------------------------------
 TAnimationManager::~TAnimationManager()
 {
-	ClearUnusedTextures(GetTickCount() + 100000);
+	ClearUnusedTextures(g_Ticks + 100000);
 }
 //----------------------------------------------------------------------------
 void TAnimationManager::AddShadow(GLuint texture, int drawX, int drawY, int zBuffer, int width, int height, bool mirror)

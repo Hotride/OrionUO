@@ -126,10 +126,10 @@ void TGumpContainer::GenerateFrame()
 
 			if (ID == 0x09)
 			{
-				if (m_CorpseEyesTicks < GetTickCount())
+				if (m_CorpseEyesTicks < g_Ticks)
 				{
 					m_CorpseEyesOffset = (BYTE)!m_CorpseEyesOffset;
-					m_CorpseEyesTicks = GetTickCount() + 750;
+					m_CorpseEyesTicks = g_Ticks + 750;
 				}
 
 				Orion->DrawGump(0x0045 + m_CorpseEyesOffset, 0, 45, 30);
@@ -186,7 +186,7 @@ int TGumpContainer::Draw(bool &mode)
 {
 	CalculateGumpState();
 
-	if (mode && GetTopObjDistance(g_Player, World->FindWorldObject(Serial)) < 3 && g_GumpPressed && ObjectInHand == NULL && g_LastObjectLeftMouseDown != ID_GC_MINIMIZE && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < GetTickCount())))
+	if (mode && GetTopObjDistance(g_Player, World->FindWorldObject(Serial)) < 3 && g_GumpPressed && ObjectInHand == NULL && g_LastObjectLeftMouseDown != ID_GC_MINIMIZE && ((g_MouseX != g_DroppedLeftMouseX || g_MouseY != g_DroppedLeftMouseY) || (g_LastGumpMouseDownTime + DCLICK_DELAY < g_Ticks)))
 	{
 		TGameItem *selobj = World->FindWorldItem(g_LastObjectLeftMouseDown);
 		if (selobj != NULL && selobj->IsStackable() && selobj->Count > 1)
@@ -224,7 +224,7 @@ int TGumpContainer::Draw(bool &mode)
 	//Вычисление положения, прозрачности и отрисовка текста
 	TRenderTextObject *rto = TextRenderer->m_Items;
 	
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	if (!m_Minimized)
 	{
@@ -271,7 +271,7 @@ int TGumpContainer::Draw(bool &mode)
 
 	if (mode)
 	{
-		if (!m_FrameCreated || g_GumpSelectElement || (ID == 0x09 && m_CorpseEyesTicks < GetTickCount()))
+		if (!m_FrameCreated || g_GumpSelectElement || (ID == 0x09 && m_CorpseEyesTicks < g_Ticks))
 			GenerateFrame();
 		else if (m_FrameRedraw)
 		{
@@ -540,7 +540,7 @@ void TGumpContainer::OnLeftMouseUp()
 				g_ClickObjectReq = true;
 				g_ClickObject.Init(COT_GAME_OBJECT);
 				g_ClickObject.Serial = g_LastObjectLeftMouseDown;
-				g_ClickObject.Timer = GetTickCount() + DCLICK_DELAY;
+				g_ClickObject.Timer = g_Ticks + DCLICK_DELAY;
 				g_ClickObject.X = x;
 				g_ClickObject.Y = y;
 			}

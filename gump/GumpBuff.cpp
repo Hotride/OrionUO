@@ -43,7 +43,7 @@ void TGumpBuff::PrepareTextures()
 //----------------------------------------------------------------------------
 void TGumpBuff::UpdateBuffIcons()
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = g_Ticks;
 
 	for (TGumpBuffObject *item = (TGumpBuffObject*)m_Items; item != NULL;)
 	{
@@ -96,7 +96,7 @@ void TGumpBuff::AddBuff(const WORD &id, const WORD &timer, const wstring &text)
 	DWORD ticks = 0xFFFFFFFF;
 
 	if (timer)
-		ticks = GetTickCount() + (timer * 1000);
+		ticks = g_Ticks + (timer * 1000);
 
 	QFOR(item, m_Items, TGumpBuffObject*)
 	{
@@ -138,7 +138,7 @@ void TGumpBuff::OnToolTip()
 		}
 		else if (g_LastSelectedObject)
 		{
-			DWORD ticks = GetTickCount();
+			DWORD ticks = g_Ticks;
 			int index = 0;
 
 			QFOR(item, m_Items, TGumpBuffObject*)
@@ -323,7 +323,7 @@ void TGumpBuff::GenerateFrame()
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		DWORD ticks = GetTickCount();
+		DWORD ticks = g_Ticks;
 
 		int ii = 0;
 

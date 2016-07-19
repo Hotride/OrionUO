@@ -147,7 +147,7 @@ int TGumpMap::Draw(__in bool &mode)
 			posX += ofsX;
 			posY += ofsY;
 		}
-		else if (PinOnCursor == NULL && (ofsX || ofsY) && g_LastObjectLeftMouseDown > ID_GM_PIN_LIST && g_LastObjectLeftMouseDown < ID_GM_PIN_LIST_INSERT && m_PinTimer > GetTickCount())
+		else if (PinOnCursor == NULL && (ofsX || ofsY) && g_LastObjectLeftMouseDown > ID_GM_PIN_LIST && g_LastObjectLeftMouseDown < ID_GM_PIN_LIST_INSERT && m_PinTimer > g_Ticks)
 		{
 			int objIndex = g_LastObjectLeftMouseDown - ID_GM_PIN_LIST;
 
@@ -313,7 +313,7 @@ int TGumpMap::Draw(__in bool &mode)
 //----------------------------------------------------------------------------
 void TGumpMap::OnLeftMouseDown()
 {
-	m_PinTimer = GetTickCount() + 300;
+	m_PinTimer = g_Ticks + 300;
 }
 //----------------------------------------------------------------------------
 void TGumpMap::OnLeftMouseUp()
@@ -338,7 +338,7 @@ void TGumpMap::OnLeftMouseUp()
 		}
 		else if (m_PlotState && PinOnCursor == NULL)
 		{
-			if (m_PinTimer > GetTickCount())
+			if (m_PinTimer > g_Ticks)
 			{
 				if (g_LastObjectLeftMouseDown >= ID_GM_PIN_LIST_INSERT)
 				{

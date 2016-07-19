@@ -252,7 +252,7 @@ public:
 	@return true - в движении, false - нет
 	*/
 	bool Walking() {
-		return (m_LastStepTime > (DWORD)(GetTickCount() - WALKING_DELAY));
+		return (m_LastStepTime > (DWORD)(g_Ticks - WALKING_DELAY));
 	}
 
 	/*!
