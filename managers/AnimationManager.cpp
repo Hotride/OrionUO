@@ -1283,21 +1283,14 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		}
 		else
 		{
+			y -= (frame->Height + frame->CenterY);
 			if (mirror)
 			{
-				x -= (frame->Width - frame->CenterX) + 10;
-				if (m_Direction == 1)
-					y -= (frame->Height + frame->CenterY) - 10;
-				else
-					y -= (frame->Height + frame->CenterY) - 25;
+				x -= (frame->Width - frame->CenterX);
 			}
 			else
 			{
 				x -= frame->CenterX;
-				if (m_Direction == 1)
-					y -= (frame->Height + frame->CenterY) - 10;
-				else
-					y -= (frame->Height + frame->CenterY) - 30;
 			}				
 		}
 
@@ -1487,6 +1480,22 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 	{
 		x -= offsX;
 		y += data.OffsetY;
+	}
+
+	if (mirror)
+	{
+		x -= 10;
+		if (m_Direction == 1)
+			y += 10;
+		else
+			y += 25;
+	}
+	else
+	{
+		if (m_Direction == 1)
+			y += 10;
+		else
+			y += 30;
 	}
 }
 //----------------------------------------------------------------------------
