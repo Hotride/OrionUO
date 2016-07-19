@@ -1381,7 +1381,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 			glUniform1iARB(ShaderDrawMode, drawMode);
 
-			if (m_Sitting)
+			if (m_Sitting && m_Direction == 1)
 				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror);
 			else
 				g_GL.Draw(frame->Texture, x, y, frame->Width, frame->Height, mirror);
