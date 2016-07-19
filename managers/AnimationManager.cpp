@@ -1382,9 +1382,13 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			glUniform1iARB(ShaderDrawMode, drawMode);
 
 			if (m_Sitting && m_Direction == 1)
+			{
 				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror);
+			}
 			else
+			{
 				g_GL.Draw(frame->Texture, x, y, frame->Width, frame->Height, mirror);
+			}
 
 			if (spectralColor)
 				glDisable(GL_BLEND);
@@ -1482,25 +1486,21 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 		y += data.OffsetY;
 	}
 
+	y += 10;
 	if (mirror)
 	{
 		x -= 10;
-		if (m_Direction == 1)
-			y += 10;
-		else
+		if (m_Direction == 3)
 		{
 			x += 5;
-			y += 25;
-		}
-			
+			y += 15;
+		}			
 	}
 	else
-	{
-		if (m_Direction == 1)
-			y += 10;
-		else
+	{		
+		if (m_Direction == 3)
 		{
-			y += 30;
+			y += 20;
 			x += 5;
 		}
 			
@@ -1934,6 +1934,18 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 					if (goi->IsLightSource() && GameScreen->UseLight)
 						GameScreen->AddLight(obj, goi, drawX, drawY - lightOffset);
 				}
+			}
+			if (m_Sitting && m_Direction == 3)
+			{
+				WORD graphic = SITTING_INFO[m_Sitting - 1].Graphic;			
+				for (TRenderWorldObject *ro = obj->m_PrevXY; ro != NULL; ro = (TRenderWorldObject*)ro->m_PrevXY)
+				{
+					if (ro->Graphic == graphic)
+					{
+						Orion->DrawStaticArt(graphic, ro->Color, ro->X, ro->Y, ro->Z);
+						break;
+					}
+				}					
 			}
 		}
 		else
