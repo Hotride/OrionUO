@@ -85,7 +85,7 @@ void TContainerRect::Calculate( __in WORD gumpID)
 		if (!ConfigManager.OffsetInterfaceWindows)
 		{
 			m_X = g_ClientWidth - tex->Width;
-			m_Y = g_ClientHeight - tex->Height;
+			m_Y = 0;
 		}
 		else //!Или вычисляем смещение и открываем в результируемых координатах
 		{

@@ -2290,7 +2290,7 @@ PACKET_HANDLER(OpenContainer)
 		if (graphic == 0xFFFF)
 			return;
 
-		ContainerRect.Calculate(graphic);
+		ContainerRect.Calculate(gumpid);
 
 		gump = new TGumpContainer(serial, ContainerRect.X, ContainerRect.Y);
 		gump->Graphic = graphic;
