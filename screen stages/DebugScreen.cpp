@@ -262,6 +262,7 @@ int TDebugScreen::Render(bool mode)
 				{
 					IFOR(i, 0, 4)
 					{
+						g_GL.Scissor(100, 100, 250, 250);
 						m_Player->Direction = i + 1;
 						m_Chair->Graphic = 2906 + i;
 						int x = 100 + (i * 100);
@@ -290,6 +291,7 @@ int TDebugScreen::Render(bool mode)
 						AnimationManager->DrawCharacter(m_Player, x, y, 0);
 					}
 				}
+				glDisable(GL_SCISSOR_TEST);
 
 				UnuseShader();
 			}

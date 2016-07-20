@@ -29,7 +29,7 @@ private:
 	static const int ID_DS_QUIT = 1;
 	static const int ID_DS_GO_SCREEN_MAIN = 2;
 
-	static const bool DISPLAY_MAP_TEST = true;
+	static const bool DISPLAY_MAP_TEST = false;
 
 	void ProcessSmoothAction(BYTE action = 0xFF);
 
