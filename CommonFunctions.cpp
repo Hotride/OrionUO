@@ -124,6 +124,19 @@ string FilePath(const string &fName)
 	return g_DirectoryPath + "\\" + fName;
 }
 //---------------------------------------------------------------------------
+string FilePathF(const char *str, ...)
+{
+	va_list arg;
+	va_start(arg, str);
+
+	char out[MAX_PATH] = { 0 };
+	vsprintf(out, str, arg);
+
+	va_end(arg);
+
+	return g_DirectoryPath + "\\" + out;
+}
+//---------------------------------------------------------------------------
 string EncodeUTF8(const wstring &wstr)
 {
 	int size = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);

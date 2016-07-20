@@ -168,3 +168,8 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 	delete map;
 }
 //----------------------------------------------------------------------------
+bool TMultiMap::LoadFacet(TGumpMap *gump, int facet)
+{
+	return false;
+}
+//----------------------------------------------------------------------------

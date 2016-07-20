@@ -3807,6 +3807,7 @@ PACKET_HANDLER(DisplayMap)
 
 	TGumpMap *gump = new TGumpMap(serial, 0, 0);
 
+	gump->Graphic = gumpid;
 	gump->StartX = startX;
 	gump->StartY = startY;
 	gump->EndX = endX;
@@ -3814,7 +3815,10 @@ PACKET_HANDLER(DisplayMap)
 	gump->Width = width;
 	gump->Height = height;
 
-	MultiMap->LoadMap(gump);
+	if (*buf == 0xF5)
+		MultiMap->LoadFacet(gump, facet);
+	else
+		MultiMap->LoadMap(gump);
 
 	//TPRINT("GumpX=%d GumpY=%d\n", startX, startY);
 	//TPRINT("GumpTX=%d GumpTY=%d\n", endX, endY);

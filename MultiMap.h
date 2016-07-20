@@ -29,6 +29,7 @@ private:
 	//Габариты карты
 	int m_Width;
 	int m_Height;
+
 public:
 	TMultiMap();
 	~TMultiMap();
@@ -38,6 +39,8 @@ public:
 
 	//Загрузить карту
 	void LoadMap(TGumpMap *gump);
+
+	bool LoadFacet(TGumpMap *gump, int facet);
 };
 //---------------------------------------------------------------------------
 extern TMultiMap *MultiMap;
