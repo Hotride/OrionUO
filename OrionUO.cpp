@@ -446,8 +446,8 @@ BOOL InitInstance(int nCmdShow)
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;
 	wcex.lpszClassName = L"Orion UO Client";
-	wcex.hIcon = LoadIcon(g_Hinstance, MAKEINTRESOURCE(IDI_CLIENTUO));
-	wcex.hIconSm = LoadIcon(g_Hinstance, MAKEINTRESOURCE(IDI_CLIENTUO));
+	wcex.hIcon = LoadIcon(g_Hinstance, MAKEINTRESOURCE(IDI_ORIONUO));
+	wcex.hIconSm = LoadIcon(g_Hinstance, MAKEINTRESOURCE(IDI_ORIONUO));
 
 	RegisterClassEx(&wcex);
 
