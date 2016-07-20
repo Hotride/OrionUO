@@ -168,10 +168,14 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (g_PopupMenu != NULL && g_LastSelectedGump != (DWORD)g_PopupMenu)
 				GumpManager->RemoveGump(g_PopupMenu);
 
+			SetCapture(g_hWnd);
+
 			break;
 		}
 		case WM_LBUTTONUP:
 		{
+			ReleaseCapture();
+			
 			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
