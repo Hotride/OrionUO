@@ -1819,7 +1819,9 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 {
 	//DrawCharacterAAA(obj, x, y, z);
 	//return;
-
+	int originalX = x;
+	int originalY = y;
+	int originalZ = z;
 	WORD targetColor = 0;
 	bool needHPLine = false;
 	DWORD serial = obj->Serial;
@@ -1942,10 +1944,12 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 				{
 					if (ro->Graphic == graphic)
 					{
-						Orion->DrawStaticArt(graphic, ro->Color, ro->X, ro->Y, ro->Z);
+						g_GL.Scissor(originalX, originalY, 25, 25);
+						Orion->DrawStaticArt(graphic, ro->Color, originalX, originalY, originalZ*4);
+						glDisable(GL_SCISSOR_TEST);
 						break;
 					}
-				}					
+				}			
 			}
 		}
 		else
