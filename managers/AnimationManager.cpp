@@ -1482,8 +1482,7 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 		if (m_Direction == 3)
 		{
 			y += data.MirrorOffsetY;
-			x += offsX;
-			x -= 4;
+			x += offsX - 4;
 			y += 23;
 		}	
 		else

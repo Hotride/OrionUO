@@ -122,7 +122,8 @@ int TGameCharacter::IsSitting()
 					case 0x0A2B:
 					case 0x0B2C:
 					case 0x0B2D:
-					case 0x0B2F:
+					case 0x0B2E:
+					case 0x0B2F:				
 					case 0x0B30:
 					case 0x0B31:
 					case 0x0B32:
