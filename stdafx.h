@@ -226,10 +226,6 @@ extern GLuint g_MapTexture[6];
 //!Индекс текущей карты
 extern BYTE g_CurrentMap;
 
-//!Габариты игрового окна
-extern int g_GameWindowWidth;
-extern int g_GameWindowHeight;
-
 //!Позиция игрового окна
 extern int g_GameWindowPosX;
 extern int g_GameWindowPosY;

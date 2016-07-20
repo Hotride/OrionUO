@@ -385,8 +385,8 @@ void TConnectionManager::Recv()
 				string str = "Disconnected from " + ServerList.GetServerName();
 				Orion->CreateTextMessage(TT_SYSTEM, 0, 3, 0x21, str);
 
-				int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 100;
-				int y = g_GameWindowPosY + (g_GameWindowHeight / 2) - 62;
+				int x = g_GameWindowPosX + (ConfigManager.GameWindowWidth / 2) - 100;
+				int y = g_GameWindowPosY + (ConfigManager.GameWindowHeight / 2) - 62;
 
 				TGumpNotify *gump = new TGumpNotify(0, x, y, 1, 200, 125, "Connection lost");
 

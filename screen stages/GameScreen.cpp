@@ -702,8 +702,8 @@ void TGameScreen::CalculateGameWindowBounds()
 	m_RenderBounds.GameWindowPosX = g_GameWindowPosX;
 	m_RenderBounds.GameWindowPosY = g_GameWindowPosY;
 
-	m_RenderBounds.GameWindowSizeX = g_GameWindowWidth;
-	m_RenderBounds.GameWindowSizeY = g_GameWindowHeight;
+	m_RenderBounds.GameWindowSizeX = ConfigManager.GameWindowWidth;
+	m_RenderBounds.GameWindowSizeY = ConfigManager.GameWindowHeight;
 
 	if (g_LastObjectType == SOT_GAME_GUMP_SCOPE && g_LeftMouseDown && !g_LastGumpLeftMouseDown && !g_LastGumpRightMouseDown)
 	{
@@ -1942,11 +1942,11 @@ void TGameScreen::OnLeftMouseUp()
 			if (g_GameWindowPosY < 1)
 				g_GameWindowPosY = 0;
 
-			if (g_GameWindowPosX + g_GameWindowWidth > g_ClientWidth)
-				g_GameWindowPosX = g_ClientWidth - g_GameWindowWidth;
+			if (g_GameWindowPosX + ConfigManager.GameWindowWidth > g_ClientWidth)
+				g_GameWindowPosX = g_ClientWidth - ConfigManager.GameWindowWidth;
 
-			if (g_GameWindowPosY + g_GameWindowHeight > g_ClientHeight)
-				g_GameWindowPosY = g_ClientHeight - g_GameWindowHeight;
+			if (g_GameWindowPosY + ConfigManager.GameWindowHeight > g_ClientHeight)
+				g_GameWindowPosY = g_ClientHeight - ConfigManager.GameWindowHeight;
 
 			m_GameWindowMoving = false;
 
@@ -1954,14 +1954,14 @@ void TGameScreen::OnLeftMouseUp()
 		}
 		else if (m_GameWindowResizing && g_LastObjectLeftMouseDown == 2)
 		{
-			g_GameWindowWidth = g_GameWindowWidth + (g_MouseX - g_DroppedLeftMouseX);
-			g_GameWindowHeight = g_GameWindowHeight + (g_MouseY - g_DroppedLeftMouseY);
+			ConfigManager.GameWindowWidth = ConfigManager.GameWindowWidth + (g_MouseX - g_DroppedLeftMouseX);
+			ConfigManager.GameWindowHeight = ConfigManager.GameWindowHeight + (g_MouseY - g_DroppedLeftMouseY);
 			
-			if (g_GameWindowWidth < 640)
-				g_GameWindowWidth = 640;
+			if (ConfigManager.GameWindowWidth < 640)
+				ConfigManager.GameWindowWidth = 640;
 			
-			if (g_GameWindowHeight < 480)
-				g_GameWindowHeight = 480;
+			if (ConfigManager.GameWindowHeight < 480)
+				ConfigManager.GameWindowHeight = 480;
 
 			if (PacketManager.GetClientVersion() >= CV_200)
 			{
@@ -1984,7 +1984,7 @@ void TGameScreen::OnLeftMouseUp()
 	int GameWindowPosX = g_GameWindowPosX - 4;
 	int GameWindowPosY = g_GameWindowPosY - 4;
 
-	if (g_MouseX < GameWindowPosX || g_MouseY < GameWindowPosY || g_MouseX > (GameWindowPosX + g_GameWindowWidth) || g_MouseY > (GameWindowPosY + g_GameWindowHeight))
+	if (g_MouseX < GameWindowPosX || g_MouseY < GameWindowPosY || g_MouseX > (GameWindowPosX + ConfigManager.GameWindowWidth) || g_MouseY > (GameWindowPosY + ConfigManager.GameWindowHeight))
 		return;
 
 	if (Target.IsTargeting())

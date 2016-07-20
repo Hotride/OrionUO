@@ -121,8 +121,8 @@ void TConfigManager::DefaultPage6()
 //---------------------------------------------------------------------------
 void TConfigManager::DefaultPage7()
 {
-	g_GameWindowWidth = 800;
-	g_GameWindowHeight = 600;
+	m_GameWindowWidth = 800;
+	m_GameWindowHeight = 600;
 	m_SpeechDelay = 500;
 	m_ScaleSpeechDelay = true;
 	m_SpeechColor = 0x02B2;
@@ -388,8 +388,10 @@ bool TConfigManager::Load( __in string path)
 
 		if (file.ReadByte() == 7)
 		{
-			g_GameWindowWidth = file.ReadWord();
-			g_GameWindowHeight = file.ReadWord();
+			m_GameWindowWidth = file.ReadWord();
+			ConfigManager.GameWindowWidth = m_GameWindowWidth;
+			m_GameWindowHeight = file.ReadWord();
+			ConfigManager.GameWindowHeight = m_GameWindowHeight;
 			m_SpeechDelay = file.ReadWord();
 			m_ScaleSpeechDelay = file.ReadWord();
 			m_SpeechColor = file.ReadWord();
@@ -595,8 +597,8 @@ void TConfigManager::Save( __in string path)
 	//Page 7
 	writer->WriteByte(28); //size of block
 	writer->WriteByte(7); //page index
-	writer->WriteWord(g_GameWindowWidth);
-	writer->WriteWord(g_GameWindowHeight);
+	writer->WriteWord(m_GameWindowWidth);
+	writer->WriteWord(m_GameWindowHeight);
 	writer->WriteWord(m_SpeechDelay);
 	writer->WriteWord(m_ScaleSpeechDelay);
 	writer->WriteWord(m_SpeechColor);

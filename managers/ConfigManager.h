@@ -71,7 +71,9 @@ private:
 	bool m_ReduceFPSUnactiveWindow;
 	bool m_HoldShiftForContextMenus;
 	bool m_HoldShiftForEnablePathfind;
-	
+
+	int m_GameWindowWidth;
+	int m_GameWindowHeight;
 	WORD m_SpeechDelay;
 	bool m_ScaleSpeechDelay;
 	WORD m_SpeechColor;
@@ -181,7 +183,9 @@ public:
 	bool GetReduceFPSUnactiveWindow() const { return m_ReduceFPSUnactiveWindow; }
 	SETGET(bool, HoldShiftForContextMenus);
 	SETGET(bool, HoldShiftForEnablePathfind);
-	
+
+	SETGET(int, GameWindowWidth);
+	SETGET(int, GameWindowHeight);
 	SETGET(WORD, SpeechDelay);
 	SETGET(bool, ScaleSpeechDelay);
 	SETGET(WORD, SpeechColor);

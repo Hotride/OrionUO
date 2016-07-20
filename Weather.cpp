@@ -86,8 +86,8 @@ void TWeather::Generate()
 	{
 		TWeatherEffect *we = new TWeatherEffect();
 
-		we->X = (float)(drawX + RandomInt(g_GameWindowWidth));
-		we->Y = (float)(drawY + RandomInt(g_GameWindowHeight));
+		we->X = (float)(drawX + RandomInt(ConfigManager.GameWindowWidth));
+		we->Y = (float)(drawY + RandomInt(ConfigManager.GameWindowHeight));
 
 		we->m_Prev = NULL;
 		we->m_Next = m_Items;
@@ -175,7 +175,7 @@ void TWeather::Draw(int &drawX, int &drawY)
 
 	while (effect != NULL)
 	{
-		if ((effect->X < drawX || effect->X > (drawX + g_GameWindowWidth)) || (effect->Y < drawY || effect->Y > (drawY + g_GameWindowHeight)))
+		if ((effect->X < drawX || effect->X > (drawX + ConfigManager.GameWindowWidth)) || (effect->Y < drawY || effect->Y > (drawY + ConfigManager.GameWindowHeight)))
 		{
 			if (removeEffects)
 			{
@@ -202,8 +202,8 @@ void TWeather::Draw(int &drawX, int &drawY)
 			}
 			else
 			{
-				effect->X = (float)(drawX + RandomInt(g_GameWindowWidth));
-				effect->Y = (float)(drawY + RandomInt(g_GameWindowHeight));
+				effect->X = (float)(drawX + RandomInt(ConfigManager.GameWindowWidth));
+				effect->Y = (float)(drawY + RandomInt(ConfigManager.GameWindowHeight));
 			}
 		}        
 

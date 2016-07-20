@@ -2443,8 +2443,8 @@ void TGumpOptions::OnLeftMouseUp()
 	{
 		m_Page = 6;
 
-		TextEntryGameSizeX->SetText(std::to_string(g_GameWindowWidth));
-		TextEntryGameSizeY->SetText(std::to_string(g_GameWindowHeight));
+		TextEntryGameSizeX->SetText(std::to_string(g_OptionsConfig.GameWindowWidth));
+		TextEntryGameSizeY->SetText(std::to_string(g_OptionsConfig.GameWindowHeight));
 	}
 	else if (g_LastObjectLeftMouseDown == ID_GO_PAGE_7)
 		m_Page = 7;
@@ -2492,6 +2492,9 @@ void TGumpOptions::OnLeftMouseUp()
 			case 6:
 			{
 				g_OptionsConfig.DefaultPage7();
+		
+				TextEntryGameSizeX->SetText(std::to_string(g_OptionsConfig.GameWindowWidth));
+				TextEntryGameSizeY->SetText(std::to_string(g_OptionsConfig.GameWindowHeight));
 				break;
 			}
 			case 7:
@@ -3048,7 +3051,8 @@ void TGumpOptions::ApplyPageChanges()
 			else if (curX > (g_ClientWidth - 20))
 				curX = g_ClientWidth - 20;
 
-			g_GameWindowWidth = curX;
+			g_OptionsConfig.GameWindowWidth = curX;
+			ConfigManager.GameWindowWidth = curX;
 			
 			int curY = 0;
 			
@@ -3060,7 +3064,8 @@ void TGumpOptions::ApplyPageChanges()
 			else if (curY > (g_ClientHeight - 40))
 				curY = (g_ClientHeight - 40);
 
-			g_GameWindowHeight = curY;
+			g_OptionsConfig.GameWindowHeight = curY;
+			ConfigManager.GameWindowHeight = curY;
 
 			if (PacketManager.GetClientVersion() >= CV_200)
 			{

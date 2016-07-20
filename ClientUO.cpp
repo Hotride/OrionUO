@@ -63,8 +63,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				else
 				{
 					RECT r = {0, 0, 0, 0};
-					r.right = g_GameWindowWidth;
-					r.bottom = g_GameWindowWidth;
+					r.right = ConfigManager.GameWindowWidth;
+					r.bottom = ConfigManager.GameWindowWidth;
 					AdjustWindowRectEx(&r, GetWindowLongA(g_hWnd, GWL_STYLE), FALSE, GetWindowLongA(g_hWnd, GWL_EXSTYLE));
 
 					if (r.left < 0)
@@ -73,7 +73,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 					if (r.top < 0)
 						r.bottom += (r.top * (-1));
 						
-					POINT min = { g_GameWindowWidth, g_GameWindowHeight };
+					POINT min = { ConfigManager.GameWindowWidth, ConfigManager.GameWindowHeight };
 					pInfo->ptMinTrackSize = min;
 					POINT max = {GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)};
 					g_GL.UpdateRect();
@@ -237,8 +237,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			CurrentScreen->OnRightMouseDown();
 			
 			if (!g_LastSelectedGump &&
-				!(g_MouseX < g_GameWindowPosX || g_MouseY < g_GameWindowPosY || g_MouseX > (g_GameWindowPosX + g_GameWindowWidth) ||
-				g_MouseY > (g_GameWindowPosY + g_GameWindowHeight)))
+				!(g_MouseX < g_GameWindowPosX || g_MouseY < g_GameWindowPosY || g_MouseX > (g_GameWindowPosX + ConfigManager.GameWindowWidth) ||
+				g_MouseY > (g_GameWindowPosY + ConfigManager.GameWindowHeight)))
 			{
 				g_MovingFromMouse = true;
 				g_AutoMoving = false;
@@ -4727,8 +4727,8 @@ void TOrion::Attack(DWORD serial)
 
 		if (target != NULL && (NOTORIETY_TYPE)g_Player->Notoriety == NT_INNOCENT && (NOTORIETY_TYPE)target->Notoriety == NT_INNOCENT)
 		{
-			int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 40;
-			int y = g_GameWindowPosY + (g_GameWindowHeight / 2) - 20;
+			int x = g_GameWindowPosX + (ConfigManager.GameWindowWidth / 2) - 40;
+			int y = g_GameWindowPosY + (ConfigManager.GameWindowHeight / 2) - 20;
 
 			TGumpQuestion *newgump = new TGumpQuestion(g_PlayerSerial, x, y, 2);
 			newgump->SetID(serial);
@@ -4972,8 +4972,8 @@ void TOrion::OpenMinimap()
 //---------------------------------------------------------------------------
 void TOrion::OpenWorldMap()
 {
-	int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 200;
-	int y = g_GameWindowPosY + (g_GameWindowHeight / 2) - 150;
+	int x = g_GameWindowPosX + (ConfigManager.GameWindowWidth / 2) - 200;
+	int y = g_GameWindowPosY + (ConfigManager.GameWindowHeight / 2) - 150;
 	TGumpWorldMap *gump = new TGumpWorldMap(g_PlayerSerial, x, y);
 	gump->Called = true;
 	GumpManager->AddGump(gump);
@@ -5005,8 +5005,8 @@ void TOrion::OpenBackpack()
 //---------------------------------------------------------------------------
 void TOrion::OpenLogOut()
 {
-	int x = g_GameWindowPosX + (g_GameWindowWidth / 2) - 40;
-	int y = g_GameWindowPosY + (g_GameWindowHeight / 2) - 20;
+	int x = g_GameWindowPosX + (ConfigManager.GameWindowWidth / 2) - 40;
+	int y = g_GameWindowPosY + (ConfigManager.GameWindowHeight / 2) - 20;
 	TGumpQuestion *gump = new TGumpQuestion(g_PlayerSerial, x, y, 1);
 	
 	GumpManager->AddGump(gump);

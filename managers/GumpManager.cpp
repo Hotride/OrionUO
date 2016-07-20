@@ -1221,8 +1221,8 @@ void TGumpManager::Load( __in string path)
 	}
 	else
 	{
-		GumpManager->AddGump(new TGumpPaperdoll(g_PlayerSerial, g_GameWindowPosX + g_GameWindowWidth, g_GameWindowPosY, false));
-		GumpManager->AddGump(new TGumpStatusbar(g_PlayerSerial, g_GameWindowPosX + g_GameWindowWidth, g_GameWindowPosY + g_GameWindowHeight - 50, false));
+		GumpManager->AddGump(new TGumpPaperdoll(g_PlayerSerial, g_GameWindowPosX + ConfigManager.GameWindowWidth, g_GameWindowPosY, false));
+		GumpManager->AddGump(new TGumpStatusbar(g_PlayerSerial, g_GameWindowPosX + ConfigManager.GameWindowWidth, g_GameWindowPosY + ConfigManager.GameWindowHeight - 50, false));
 		GumpManager->AddGump(new TGumpMinimap(g_PlayerSerial, g_GameWindowPosX, g_GameWindowPosY, true));
 
 		if (g_Player != NULL)
@@ -1254,7 +1254,7 @@ void TGumpManager::Load( __in string path)
 	}
 
 	if (!bufficonWindowFound)
-		GumpManager->AddGump(new TGumpBuff(g_PlayerSerial, g_GameWindowPosX, g_GameWindowPosY + g_GameWindowHeight));
+		GumpManager->AddGump(new TGumpBuff(g_PlayerSerial, g_GameWindowPosX, g_GameWindowPosY + ConfigManager.GameWindowHeight));
 
 	if (!paperdollRequested)
 		Orion->PaperdollReq(g_PlayerSerial);

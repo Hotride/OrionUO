@@ -1088,8 +1088,8 @@ TPacketGameWindowSize::TPacketGameWindowSize()
 	WriteWord(0x000D);
 	WriteWord(0x0005);
 	WriteWord(0);
-	WriteWord(g_GameWindowWidth);
-	WriteWord(g_GameWindowHeight);
+	WriteWord(ConfigManager.GameWindowWidth);
+	WriteWord(ConfigManager.GameWindowHeight);
 	WriteWord(0);
 }
 //---------------------------------------------------------------------------

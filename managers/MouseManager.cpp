@@ -156,15 +156,15 @@ WORD TMouseManager::GetGameCursor()
 	if (Target.IsTargeting())
 		return g_CursorData[war][12]; //Targetting cursor
 
-	bool mouseInWindow = !(g_MouseX < g_GameWindowPosX || g_MouseY < g_GameWindowPosY || g_MouseX > (g_GameWindowPosX + g_GameWindowWidth) || g_MouseY > (g_GameWindowPosY + g_GameWindowHeight));
+	bool mouseInWindow = !(g_MouseX < g_GameWindowPosX || g_MouseY < g_GameWindowPosY || g_MouseX > (g_GameWindowPosX + ConfigManager.GameWindowWidth) || g_MouseY > (g_GameWindowPosY + ConfigManager.GameWindowHeight));
 
 	bool gumpChecked = (g_LastSelectedGump || (g_LastSelectedObject && g_LastObjectType != SOT_GAME_OBJECT && g_LastObjectType != SOT_STATIC_OBJECT && g_LastObjectType != SOT_LAND_OBJECT && g_LastObjectType != SOT_TEXT_OBJECT));
 
 	if (!mouseInWindow || gumpChecked || (g_LeftMouseDown && g_LastGumpLeftMouseDown))
 		return result;
 
-	int gameWindowCenterX = g_GameWindowPosX + (g_GameWindowWidth / 2);
-	int gameWindowCenterY = g_GameWindowPosY + (g_GameWindowHeight / 2);
+	int gameWindowCenterX = g_GameWindowPosX + (ConfigManager.GameWindowWidth / 2);
+	int gameWindowCenterY = g_GameWindowPosY + (ConfigManager.GameWindowHeight / 2);
 
 	return g_CursorData[war][GetFacing(gameWindowCenterX, gameWindowCenterY, g_MouseX, g_MouseY, 1)];
 }
@@ -177,14 +177,14 @@ void TMouseManager::ProcessWalking()
 {
 	bool mouseInWindow = true;
 
-	if (g_MouseX < g_GameWindowPosX || g_MouseY < g_GameWindowPosY || g_MouseX > (g_GameWindowPosX + g_GameWindowWidth) ||
-		g_MouseY > (g_GameWindowPosY + g_GameWindowHeight))
+	if (g_MouseX < g_GameWindowPosX || g_MouseY < g_GameWindowPosY || g_MouseX > (g_GameWindowPosX + ConfigManager.GameWindowWidth) ||
+		g_MouseY > (g_GameWindowPosY + ConfigManager.GameWindowHeight))
 		mouseInWindow = false;
 
 	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && !g_LastGumpRightMouseDown && !((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && ConfigManager.HoldShiftForEnablePathfind && ConfigManager.EnablePathfind))
 	{
-		int gameWindowCenterX = g_GameWindowPosX + (g_GameWindowWidth / 2);
-		int gameWindowCenterY = g_GameWindowPosY + (g_GameWindowHeight / 2);
+		int gameWindowCenterX = g_GameWindowPosX + (ConfigManager.GameWindowWidth / 2);
+		int gameWindowCenterY = g_GameWindowPosY + (ConfigManager.GameWindowHeight / 2);
 
 		int facing = GetFacing(gameWindowCenterX, gameWindowCenterY, g_MouseX, g_MouseY, 1);
 

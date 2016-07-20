@@ -2253,8 +2253,8 @@ PACKET_HANDLER(OpenContainer)
 
 	if (gumpid == 0xFFFF) //Spellbook
 	{
-		int GameWindowCenterX = (g_GameWindowPosX - 4) + g_GameWindowWidth / 2;
-		int GameWindowCenterY = (g_GameWindowPosY - 4) + g_GameWindowHeight / 2;
+		int GameWindowCenterX = (g_GameWindowPosX - 4) + ConfigManager.GameWindowWidth / 2;
+		int GameWindowCenterY = (g_GameWindowPosY - 4) + ConfigManager.GameWindowHeight / 2;
 
 		int x = GameWindowCenterX - 200;
 		int y = GameWindowCenterY - 100;
