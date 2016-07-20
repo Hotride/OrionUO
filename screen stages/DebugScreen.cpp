@@ -102,6 +102,16 @@ void TDebugScreen::Init()
 
 	MultiMap->LoadMap(m_Map2);
 
+	m_Map3 = new TGumpMap(0, 0, 300);
+	m_Map3->StartX = 1219;
+	m_Map3->StartY = 1477;
+	m_Map3->EndX = 1619;
+	m_Map3->EndY = 1877;
+	m_Map3->Width = 200;
+	m_Map3->Height = 200;
+
+	MultiMap->LoadMap(m_Map3);
+
 	g_ConfigLoaded = false;
 
 	SetWindowTextA(g_hWnd, "Ultima Online");
@@ -240,6 +250,7 @@ int TDebugScreen::Render(bool mode)
 			{
 				m_Map1->Draw(mode);
 				m_Map2->Draw(mode);
+				m_Map3->Draw(mode);
 			}
 			else
 			{

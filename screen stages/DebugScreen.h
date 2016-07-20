@@ -40,6 +40,7 @@ private:
 
 	TGumpMap *m_Map1;
 	TGumpMap *m_Map2;
+	TGumpMap *m_Map3;
 
 public:
 	TDebugScreen();

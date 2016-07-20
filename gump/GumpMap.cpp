@@ -122,10 +122,6 @@ int TGumpMap::Draw(__in bool &mode)
 {
 	DWORD index = (DWORD)this;
 
-	/*TGameItem *selobj = World->FindWorldItem(Serial);
-	if (selobj == NULL)
-		return 0; //Объект, к которому привязан ползунок - исчез*/
-	
 	//Для быстрого доступа
 	int posX = X;
 	int posY = Y;

@@ -61,7 +61,6 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 
 	int startX = m_Width * gump->StartX;
 	int calcStartX = startX / 5120;
-	int calcStartX2 = calcStartX;
 
 	int endX = m_Width * gump->EndX;
 	int calcEndX = endX / 5120;
@@ -78,67 +77,58 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 	if (calcEndY == startY)
 		calcEndY2 = 1;
 
-	int width2 = m_Width;
-
 	int gumpWidth = (gump->Width << 8) / calcEndX2;
 	int gumpHeight = (gump->Height << 8) / calcEndY2;
 
 	int x = 0;
 	int y = 0;
 
-	int v17 = 1;
-	int v44 = 1;
+	int maxPixelValue = 1;
 
 	while (address < end)
 	{
 		BYTE pic = *address++;
-
 		BYTE size = pic & 0x7F;
-		BYTE size2 = pic & 0x7F;
 
 		if (pic & 0x80)
 		{
 			if (size > 0)
 			{
-				BYTE size3 = pic & 0x7F;
+				int totalHeight = y * gumpHeight;
 
-				int v20 = y * gumpHeight;
-				int v21 = startY * gumpHeight;
-
-				for (int i = startY * gumpHeight;; v21 = i)
+				for (int i = startY * gumpHeight, j = size; j > 0; j--)
 				{
 					if (x >= calcStartX && x < calcEndX && y >= startY && y < calcEndY)
 					{
-						int v22 = gump->Width * ((v20 - v21) >> 8) + (gumpWidth * (x - calcStartX) >> 8);
-						BYTE v23 = *(map + v22);
-						if (v23 < 255)
+						int offset = gump->Width * ((totalHeight - i) >> 8) + (gumpWidth * (x - calcStartX) >> 8);
+
+						PBYTE data = (map + offset);
+						BYTE pixel = *data;
+
+						if (pixel < 0xFF)
 						{
-							++*(map + v22);
-							if (v23 == v44)
-								++v44;
-							calcStartX = calcStartX2;
+							*data = pixel + 1;
+
+							if (pixel == maxPixelValue)
+								maxPixelValue++;
 						}
 					}
+
 					++x;
-					if (x == width2)
+
+					if (x >= m_Width)
 					{
 						x = 0;
 						++y;
-						v20 += gumpHeight;
+						totalHeight += gumpHeight;
 					}
-					--size3;
-					if (!size3)
-						break;
 				}
-
-				m_Width = width2;
-				v17 = v44;
-				size = size2;
 			}
 		}
 		else
 		{
 			x += size;
+
 			if (x >= m_Width)
 			{
 				x -= m_Width;
@@ -147,20 +137,43 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 		}
 	}
 
-	PWORD huesData = (PWORD)ColorManager->GetHuesRangePointer() + 30592;
-
 	PWORD mapw = new WORD[gump->Width * gump->Height];
 	PWORD mapwPtr = mapw;
 
 	PBYTE mapEnd = map + (gump->Width * gump->Height);
 	PBYTE mapPtr = map;
 
+	PWORD huesData = (PWORD)((PBYTE)ColorManager->GetHuesRangePointer() + 30708);
+	PWORD colorTable = NULL;
+
+	if (maxPixelValue >= 1)
+	{
+		colorTable = new WORD[maxPixelValue];
+		PWORD colorPtr = colorTable;
+
+		int count = maxPixelValue;
+		int colorOffset = 31 * maxPixelValue - 31;
+
+		do
+		{
+			*colorPtr++ = (unsigned __int16)huesData[colorOffset / maxPixelValue];
+			colorOffset -= 31;
+			--count;
+		} while (count);
+	}
+	else
+	{
+		colorTable = new WORD[1];
+		*colorTable = huesData[1];
+	}
+
 	while (mapPtr < mapEnd)
 	{
 		BYTE pic = *mapPtr++;
 		WORD val = 0;
 		if (pic)
-			val = 0x8000 | ColorManager->GetColor16(/*pic & 0x1F*/8, 0x015B);
+			val = 0x8000 | (pic > 1 ? colorTable[pic] : 0);
+
 		*mapwPtr++ = val;
 	}
 
@@ -170,6 +183,7 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 
 	delete map;
 	delete mapw;
+	delete colorTable;
 /*
     if ( v17 >= 1 )
     {
