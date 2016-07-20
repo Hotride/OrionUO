@@ -1474,7 +1474,8 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 	GetSittingAnimDirection(m_Direction, mirror, x, y);
 
 	int offsX = Orion->m_StaticData[data.Graphic / 32].Tiles[data.Graphic % 32].SittingOffset;
-
+	if (offsX > 10)
+		offsX = 8;
 
 	if (mirror)
 	{		
