@@ -263,7 +263,7 @@ int TDebugScreen::Render(bool mode)
 					IFOR(i, 0, 4)
 					{
 						m_Player->Direction = i + 1;
-						m_Chair->Graphic = 2906 + i;
+						m_Chair->Graphic = 2894 + i;
 						int x = 100 + (i * 100);
 						int y = 100 + (j * 100);
 
