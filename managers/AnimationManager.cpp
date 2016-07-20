@@ -1486,24 +1486,28 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 		y += data.OffsetY;
 	}
 
-	y += 10;
 	if (mirror)
 	{
-		x -= 10;
 		if (m_Direction == 3)
 		{
-			x += 5;
-			y += 15;
+			x -= 4;
+			y += 23;
+		}	
+		else
+		{
+			y += 9;
+			x -= 8;
 		}			
 	}
 	else
 	{		
 		if (m_Direction == 3)
 		{
-			y += 20;
-			x += 5;
+			y += 31 + data.OffsetY;
+			x += 4;
 		}
-			
+		else
+			y += 10;
 	}
 }
 //----------------------------------------------------------------------------
@@ -1944,8 +1948,10 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 				{
 					if (ro->Graphic == graphic)
 					{
-						g_GL.Scissor(originalX, originalY, 25, 25);
-						Orion->DrawStaticArt(graphic, ro->Color, originalX, originalY, originalZ*4);
+						int xOffset = mirror ? -10 : -3;
+						int yOffset = -20;
+						g_GL.Scissor(originalX + xOffset, originalY + yOffset, 10, 10);
+						Orion->DrawStaticArt(graphic, ro->Color, originalX, originalY, ro->Z);
 						glDisable(GL_SCISSOR_TEST);
 						break;
 					}
