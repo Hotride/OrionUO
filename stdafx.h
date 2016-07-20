@@ -312,7 +312,7 @@ extern bool g_NPCPopupEnabled;
 extern bool g_ChatEnabled;
 
 //!Текущий сезон года
-extern BYTE g_Season;
+extern SEASON_TYPE g_Season;
 
 //!Модификатор расчета анимации персонажа
 extern float g_AnimCharactersDelayValue;

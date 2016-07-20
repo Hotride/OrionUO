@@ -1035,7 +1035,7 @@ PACKET_HANDLER(EnterWorld)
 		g_SkillsTotal = 0.0f;
 		g_ConsolePrompt = PT_NONE;
 		MacroPointer = NULL;
-		g_Season = 0;
+		g_Season = ST_SPRING;
 	}
 
 	Move(4);
@@ -3975,9 +3975,16 @@ PACKET_HANDLER(AttackCharacter)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(Season)
 {
-	g_Season = ReadByte();
+	BYTE season = ReadByte();
 
-	if (ReadByte()) //Play sound
+	if (season >= ST_DESOLATION)
+		season = 0; //season % (ST_DESOLATION + 1)
+
+	g_Season = (SEASON_TYPE)season;
+
+	int music = ReadByte();
+
+	if (music) //Play sound
 	{
 	}
 }
