@@ -1940,10 +1940,10 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 						GameScreen->AddLight(obj, goi, drawX, drawY - lightOffset);
 				}
 			}
-			
-			if (m_Sitting && m_Direction == 3)
+			SITTING_INFO_DATA sittingData = SITTING_INFO[m_Sitting - 1];
+			if (m_Sitting && m_Direction == 3 && sittingData.DrawBack)
 			{
-				WORD graphic = SITTING_INFO[m_Sitting - 1].Graphic;
+				WORD graphic = sittingData.Graphic;
 				for (TRenderWorldObject *ro = obj->m_PrevXY; ro != NULL; ro = (TRenderWorldObject*)ro->m_PrevXY)
 				{
 					WORD roGraphic = ro->Graphic;
