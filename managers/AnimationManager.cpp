@@ -1944,8 +1944,10 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 				{
 					if (ro->Graphic == graphic)
 					{
-						g_GL.Scissor(originalX, originalY, 25, 25);
-						Orion->DrawStaticArt(graphic, ro->Color, originalX, originalY, originalZ*4);
+						int xOffset = mirror ? -10 : -3;
+						int yOffset = -20;
+						g_GL.Scissor(originalX + xOffset, originalY + yOffset, 10, 10);
+						Orion->DrawStaticArt(graphic, ro->Color, originalX, originalY, ro->Z);
 						glDisable(GL_SCISSOR_TEST);
 						break;
 					}
