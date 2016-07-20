@@ -1475,39 +1475,35 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 
 	int offsX = Orion->m_StaticData[data.Graphic / 32].Tiles[data.Graphic % 32].SittingOffset;
 
-	if (mirror)
-	{
-		x += offsX;
-		y += data.MirrorOffsetY;
-	}
-	else
-	{
-		x -= offsX;
-		y += data.OffsetY;
-	}
 
 	if (mirror)
-	{
+	{		
+		y += data.MirrorOffsetY;
 		if (m_Direction == 3)
 		{
+			x += offsX;
 			x -= 4;
 			y += 23;
 		}	
 		else
 		{
 			y += 9;
-			x -= 8;
 		}			
 	}
 	else
-	{		
+	{				 
 		if (m_Direction == 3)
 		{
-			y += 31 + data.OffsetY;
-			x += 4;
+			y += 23 + data.MirrorOffsetY;
+			x -= 3;
 		}
 		else
-			y += 10;
+		{
+			y += data.OffsetY;
+			y += 9;
+			x -= offsX + 1;
+		}
+			
 	}
 }
 //----------------------------------------------------------------------------
@@ -1949,10 +1945,13 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 					if (ro->Graphic == graphic)
 					{
 						int xOffset = mirror ? -10 : -3;
-						int yOffset = -20;
-						g_GL.Scissor(originalX + xOffset, originalY + yOffset, 10, 10);
+						int yOffset = -38;
+						g_GL.Scissor(originalX + xOffset, originalY + yOffset, 12, 25);
 						Orion->DrawStaticArt(graphic, ro->Color, originalX, originalY, ro->Z);
 						glDisable(GL_SCISSOR_TEST);
+						//ColorizerShader->Pause();
+						//g_GL.DrawPolygone(originalX + xOffset, originalY + yOffset, 10, 25);
+						//ColorizerShader->Resume();
 						break;
 					}
 				}			
