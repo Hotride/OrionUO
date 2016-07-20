@@ -1035,7 +1035,7 @@ PACKET_HANDLER(EnterWorld)
 		g_SkillsTotal = 0.0f;
 		g_ConsolePrompt = PT_NONE;
 		MacroPointer = NULL;
-		g_Season = 0;
+		g_Season = ST_SPRING;
 	}
 
 	Move(4);
@@ -3807,6 +3807,7 @@ PACKET_HANDLER(DisplayMap)
 
 	TGumpMap *gump = new TGumpMap(serial, 0, 0);
 
+	gump->Graphic = gumpid;
 	gump->StartX = startX;
 	gump->StartY = startY;
 	gump->EndX = endX;
@@ -3814,7 +3815,10 @@ PACKET_HANDLER(DisplayMap)
 	gump->Width = width;
 	gump->Height = height;
 
-	MultiMap->LoadMap(gump);
+	if (*buf == 0xF5)
+		MultiMap->LoadFacet(gump, facet);
+	else
+		MultiMap->LoadMap(gump);
 
 	//TPRINT("GumpX=%d GumpY=%d\n", startX, startY);
 	//TPRINT("GumpTX=%d GumpTY=%d\n", endX, endY);
@@ -3971,9 +3975,16 @@ PACKET_HANDLER(AttackCharacter)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(Season)
 {
-	g_Season = ReadByte();
+	BYTE season = ReadByte();
 
-	if (ReadByte()) //Play sound
+	if (season >= ST_DESOLATION)
+		season = 0; //season % (ST_DESOLATION + 1)
+
+	g_Season = (SEASON_TYPE)season;
+
+	int music = ReadByte();
+
+	if (music) //Play sound
 	{
 	}
 }

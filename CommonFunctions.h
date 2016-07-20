@@ -30,6 +30,7 @@ void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y);
 void UnuseShader();
 //---------------------------------------------------------------------------
 string FilePath(const string &fName);
+string FilePathF(const char *fName, ...);
 string EncodeUTF8(const wstring &str);
 wstring DecodeUTF8(const string &str);
 string ToString(const wstring &wstr);

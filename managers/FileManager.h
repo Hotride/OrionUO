@@ -184,6 +184,7 @@ public:
 	TMappedHeader TiledataMul;
 	TMappedHeader UnifontMul[20];
 	TMappedHeader VerdataMul;
+	TMappedHeader FacetMul[6];
 	
 	TMappedHeader MultiMap;
 	TMappedHeader SpeechMul;

@@ -271,11 +271,7 @@ bool TFileManager::Load()
 		return false;
 
 	IFOR(i, 1, 6)
-	{
-		char buf[50] = {0};
-		sprintf(buf, "anim%d.idx", i);
-		LoadFileToMemory(AnimIdx[i], FilePath(buf).c_str());
-	}
+		LoadFileToMemory(AnimIdx[i], FilePathF("anim%i.idx", i).c_str());
 
 	if (!LoadFileToMemory(ArtIdx, FilePath("artidx.mul").c_str()))
 		return false;
@@ -300,11 +296,7 @@ bool TFileManager::Load()
 		return false;
 	
 	IFOR(i, 0, 6)
-	{
-		char buf[50] = {0};
-		sprintf(buf, "staidx%d.mul", i);
-		LoadFileToMemory(StaticIdx[i], FilePath(buf).c_str());
-	}
+		LoadFileToMemory(StaticIdx[i], FilePathF("staidx%i.mul", i).c_str());
 
 	if (!LoadFileToMemory(TextureIdx, FilePath("texidx.mul").c_str()))
 		return false;
@@ -315,11 +307,7 @@ bool TFileManager::Load()
 		return false;
 
 	IFOR(i, 1, 6)
-	{
-		char buf[50] = {0};
-		sprintf(buf, "anim%d.mul", i);
-		LoadFileToMemory(AnimMul[i], FilePath(buf).c_str());
-	}
+		LoadFileToMemory(AnimMul[i], FilePathF("anim%i.mul", i).c_str());
 
 	if (!LoadFileToMemory(AnimdataMul, FilePath("animdata.mul").c_str()))
 		return false;
@@ -335,11 +323,7 @@ bool TFileManager::Load()
 		return false;
 
 	IFOR(i, 0, 6)
-	{
-		char buf[50] = {0};
-		sprintf(buf, "map%d.mul", i);
-		LoadFileToMemory(MapMul[i], FilePath(buf).c_str());
-	}
+		LoadFileToMemory(MapMul[i], FilePathF("map%i.mul", i).c_str());
 
 	if (!LoadFileToMemory(MultiMul, FilePath("multi.mul").c_str()))
 		return false;
@@ -353,11 +337,7 @@ bool TFileManager::Load()
 		return false;
 
 	IFOR(i, 0, 6)
-	{
-		char buf[50] = {0};
-		sprintf(buf, "statics%d.mul", i);
-		LoadFileToMemory(StaticMul[i], FilePath(buf).c_str());
-	}
+		LoadFileToMemory(StaticMul[i], FilePathF("statics%i.mul", i).c_str());
 
 	if (!LoadFileToMemory(TextureMul, FilePath("texmaps.mul").c_str()))
 		return false;
@@ -366,17 +346,16 @@ bool TFileManager::Load()
 
 	IFOR(i, 0, 20)
 	{
-		char buf[50] = {0};
-		if (i)
-			sprintf(buf, "unifont%d.mul", i);
-		else
-			sprintf(buf, "unifont.mul");
-
-		if (!LoadFileToMemory(UnifontMul[i], FilePath(buf).c_str()))
+		string s = (i ? FilePathF("unifont%i.mul", i) : FilePath("unifont.mul"));
+		
+		if (!LoadFileToMemory(UnifontMul[i], s.c_str()))
 			break;
 
 		m_UnicodeFontCount++;
 	}
+
+	IFOR(i, 0, 6)
+		LoadFileToMemory(FacetMul[i], FilePathF("facet0%i.mul", i).c_str());
 
 	if (m_UseVerdata && !LoadFileToMemory(VerdataMul, FilePath("verdata.mul").c_str()))
 		m_UseVerdata = false;
@@ -428,6 +407,8 @@ void TFileManager::Unload()
 	IFOR(i, 0, UnicodeFontCount)
 		UnloadFileFromMemory(UnifontMul[i]);
 	UnloadFileFromMemory(VerdataMul);
+	IFOR(i, 0, 6)
+		UnloadFileFromMemory(FacetMul[i]);
 }
 //---------------------------------------------------------------------------
 /*!
