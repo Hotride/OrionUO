@@ -51,366 +51,66 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 		return;
 	}
 
-	PBYTE address = (PBYTE)FileManager.MultiMap.Address;
-	PBYTE end = address + FileManager.MultiMap.Size;
+	int mapSize = gump->Width * gump->Height;
+	PBYTE map = new BYTE[mapSize];
+	memset(&map[0], 0, mapSize);
 
-	address += 8;
+	int startX = gump->StartX / 2;
+	int endX = gump->EndX / 2;
 
-	PBYTE map = new BYTE[gump->Width * gump->Height];
-	memset(&map[0], 0, gump->Width * gump->Height);
+	int widthDivizor = endX - startX;
 
-	int startX = m_Width * gump->StartX;
-	int calcStartX = startX / 5120;
+	if (!widthDivizor)
+		widthDivizor++;
 
-	int endX = m_Width * gump->EndX;
-	int calcEndX = endX / 5120;
-	int calcEndX2 = endX / 5120 - calcStartX;
+	int startY = gump->StartY / 2;
+	int endY = gump->EndY / 2;
 
-	if (endX / 5120 == calcStartX)
-		calcEndX2 = 1;
+	int heightDivizor = endY - startY;
 
-	int startY = m_Height * gump->StartY / 4096;
-	int endY = m_Height * gump->EndY;
-	int calcEndY = endY / 4096;
-	int calcEndY2 = calcEndY - startY;
+	if (!heightDivizor)
+		heightDivizor++;
 
-	if (calcEndY == startY)
-		calcEndY2 = 1;
-
-	int gumpWidth = (gump->Width << 8) / calcEndX2;
-	int gumpHeight = (gump->Height << 8) / calcEndY2;
+	int width = (gump->Width << 8) / widthDivizor;
+	int height = (gump->Height << 8) / heightDivizor;
 
 	int x = 0;
 	int y = 0;
 
 	int maxPixelValue = 1;
 
+	PBYTE address = (PBYTE)FileManager.MultiMap.Address;
+	PBYTE end = address + FileManager.MultiMap.Size;
+
+	address += 8;
+
 	while (address < end)
 	{
 		BYTE pic = *address++;
 		BYTE size = pic & 0x7F;
 
-		if (pic & 0x80)
-		{
-			if (size > 0)
-			{
-				int totalHeight = y * gumpHeight;
+		bool colored = (pic & 0x80);
 
-				for (int i = startY * gumpHeight, j = size; j > 0; j--)
-				{
-					if (x >= calcStartX && x < calcEndX && y >= startY && y < calcEndY)
-					{
-						int offset = gump->Width * ((totalHeight - i) >> 8) + (gumpWidth * (x - calcStartX) >> 8);
-
-						PBYTE data = (map + offset);
-						BYTE pixel = *data;
-
-						if (pixel < 0xFF)
-						{
-							*data = pixel + 1;
-
-							if (pixel == maxPixelValue)
-								maxPixelValue++;
-						}
-					}
-
-					++x;
-
-					if (x >= m_Width)
-					{
-						x = 0;
-						++y;
-						totalHeight += gumpHeight;
-					}
-				}
-			}
-		}
-		else
-		{
-			x += size;
-
-			if (x >= m_Width)
-			{
-				x -= m_Width;
-				++y;
-			}
-		}
-	}
-
-	PWORD mapw = new WORD[gump->Width * gump->Height];
-	PWORD mapwPtr = mapw;
-
-	PBYTE mapEnd = map + (gump->Width * gump->Height);
-	PBYTE mapPtr = map;
-
-	PWORD huesData = (PWORD)((PBYTE)ColorManager->GetHuesRangePointer() + 30708);
-	PWORD colorTable = NULL;
-
-	if (maxPixelValue >= 1)
-	{
-		colorTable = new WORD[maxPixelValue];
-		PWORD colorPtr = colorTable;
-
-		int count = maxPixelValue;
-		int colorOffset = 31 * maxPixelValue - 31;
-
-		do
-		{
-			*colorPtr++ = (unsigned __int16)huesData[colorOffset / maxPixelValue];
-			colorOffset -= 31;
-			--count;
-		} while (count);
-	}
-	else
-	{
-		colorTable = new WORD[1];
-		*colorTable = huesData[1];
-	}
-
-	while (mapPtr < mapEnd)
-	{
-		BYTE pic = *mapPtr++;
-		WORD val = 0;
-		if (pic)
-			val = 0x8000 | (pic > 1 ? colorTable[pic] : 0);
-
-		*mapwPtr++ = val;
-	}
-
-	GLuint tex = 0;
-	g_GL.BindTexture16(tex, gump->Width, gump->Height, mapw);
-	gump->Texture = tex;
-
-	delete map;
-	delete mapw;
-	delete colorTable;
-/*
-    if ( v17 >= 1 )
-    {
-      v24 = &v71;
-      v25 = v17;
-      v26 = 31 * v17 - 31;
-      do
-      {
-        v27 = v26;
-        v26 -= 31;
-        v24 += 4;
-        --v25;
-        *((_DWORD *)v24 - 1) = (unsigned __int16)word_C87110[v27 / v44];
-      }
-      while ( v25 );
-    }
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-  v1 = this;
-  v2 = *(_DWORD *)(this + 84);
-  *(_DWORD *)(this + 200) = 0;
-  if ( v2 == 5021 )
-  {
-    sub_42C700(5170, *(_DWORD *)(*(_DWORD *)(this + 60) + 4), 0);
-    v3 = malloc(*(_DWORD *)(v1 + 300) * *(_DWORD *)(v1 + 296));
-    v4 = *(_DWORD *)(v1 + 300) * *(_DWORD *)(v1 + 296);
-    lpMem = v3;
-    v47 = v3;
-    memset(v3, 0, v4);
-    v5 = operator new(0x14u);
-    size2? = v5;
-    v72 = 0;
-    if ( v5 )
-    {
-      v6 = sub_47F9D0(aMultimap_rle);
-      v50 = sub_4D2AD0(v5, v6);
-    }
-    else
-    {
-      v50 = 0;
-    }
-    v72 = -1;
-    file = sub_4D2C10((int)v50);
-    m_Height = *(_DWORD *)(file + 4);
-    m_Width = *(_DWORD *)file;
-    mapSize = *(_DWORD *)file * *(_DWORD *)(file + 4);
-    StartX = m_Width * *(_DWORD *)(v1 + 280);
-    dataPtr = file + 8;
-    filePosition = 0;
-    y = 0;
-    calcStartX = StartX / 5120;
-    x = 0;
-    EndX = m_Width * *(_DWORD *)(v1 + 288);
-    StartY = m_Height * *(_DWORD *)(v1 + 284) / 4096;
-    m_Width2 = m_Width;
-    EndY = m_Height * *(_DWORD *)(v1 + 292);
-    calcEndX = EndX / 5120;
-    calcStartX2 = calcStartX;
-    calcEndX2 = EndX / 5120 - calcStartX;
-    calcEndY = EndY / 4096;
-    if ( EndX / 5120 == calcStartX )
-      calcEndX2 = 1;
-    gumpWidth? = (*(_DWORD *)(v1 + 296) << 8) / calcEndX2;
-    calcEndY2 = calcEndY - StartY;
-    if ( calcEndY == StartY )
-      calcEndY2 = 1;
-    v17 = 1;
-    v44 = 1;
-    gumpHeight = (*(_DWORD *)(v1 + 300) << 8) / calcEndY2;
-    if ( mapSize > 0 )
-    {
-      do
-      {
-        pic = *(_BYTE *)dataPtr++;
-        size = pic & 0x7F;
-        size2? = (void *)(pic & 0x7F);
-        if ( pic & 0x80 )
-        {
-          if ( size > 0 )
-          {
-            size3? = pic & 0x7F;
-            v20 = y * gumpHeight;
-            v21 = StartY * gumpHeight;
-            for ( i = StartY * gumpHeight; ; v21 = i )
-            {
-              if ( x >= calcStartX && x < calcEndX && y >= StartY && y < calcEndY )
-              {
-                v22 = *(_DWORD *)(v1 + 296) * ((v20 - v21) >> 8) + (gumpWidth? * (x - calcStartX) >> 8);
-                v23 = *((_BYTE *)lpMem + v22);
-                if ( v23 < 255 )
-                {
-                  ++*((_BYTE *)lpMem + v22);
-                  if ( v23 == v44 )
-                    ++v44;
-                  calcStartX = calcStartX2;
-                }
-              }
-              ++x;
-              if ( x == m_Width2 )
-              {
-                x = 0;
-                ++y;
-                v20 += gumpHeight;
-              }
-              --size3?;
-              if ( !size3? )
-                break;
-            }
-            m_Width = m_Width2;
-            v17 = v44;
-            size = (int)size2?;
-          }
-        }
-        else
-        {
-          x += size;
-          if ( x >= m_Width )
-          {
-            x -= m_Width;
-            ++y;
-          }
-        }
-        filePosition += size;
-      }
-      while ( filePosition < mapSize );
-    }
-    if ( v17 >= 1 )
-    {
-      v24 = &v71;
-      v25 = v17;
-      v26 = 31 * v17 - 31;
-      do
-      {
-        v27 = v26;
-        v26 -= 31;
-        v24 += 4;
-        --v25;
-        *((_DWORD *)v24 - 1) = (unsigned __int16)word_C87110[v27 / v44];
-      }
-      while ( v25 );
-    }
-*/
-}
-//----------------------------------------------------------------------------
-void TMultiMap::LoadMapEx(TGumpMap *gump)
-{
-	if (m_Width < 1 || m_Height < 1)
-	{
-		TPRINT("Failed to load bounds from MultiMap.rle\n");
-		return;
-	}
-
-	PBYTE address = (PBYTE)FileManager.MultiMap.Address;
-	PBYTE end = address + FileManager.MultiMap.Size;
-	
-	address += 8;
-	
-	int sx = gump->StartX / 2;
-	int sy = gump->StartY / 2;
-
-	int ex = gump->EndX / 2;
-	int ey = gump->EndY / 2;
-
-	int width = ex - sx;
-	int height = ey - sy;
-
-	PWORD map = new WORD[width * height];
-	
-	int x = 0;
-	int y = 0;
-
-	//WORD color = 0x1461;
-	WORD color = 0x1881;
-
-	WORD data_color = 0x8000; //ColorManager->Color16To32(color);
-
-	if (width > 200 || height > 200)
-	{
-		data_color = 0x9881; // 0x00295A73; //0x004284A5; //ColorManager->Color16To32(color);
-		//data_color = (color & 0x1F) | (2 * (color & 0x7FE0));
-		gump->DoubleImage = true;
-	}
-
-	//data_color = (0xFF << 24) | (GetBValue(data_color) << 16) | (GetGValue(data_color) << 8) | GetRValue(data_color);
-
-	while (address < end)
-	{
-		BYTE pic = *address;
-		address++;
-
-		BYTE size = pic & 0x7F;
-
-		WORD color = 0;
-		if (pic & 0x80)
-			color = data_color;
+		int startHeight = startY * height;
+		int currentHeight = y * height;
+		int posY = gump->Width * ((currentHeight - startHeight) >> 8);
 
 		IFOR(i, 0, size)
 		{
-			if ((x >= sx && x < ex) && (y >= sy && y < ey))
-				map[((y - sy) * width) + (x - sx)] = color;
+			if (colored && x >= startX && x < endX && y >= startY && y < endY)
+			{
+				int position = posY + ((width * (x - startX)) >> 8);
+
+				BYTE &pixel = map[position];
+
+				if (pixel < 0xFF)
+				{
+					if (pixel == maxPixelValue)
+						maxPixelValue++;
+
+					pixel++;
+				}
+			}
 
 			x++;
 
@@ -418,19 +118,52 @@ void TMultiMap::LoadMapEx(TGumpMap *gump)
 			{
 				x = 0;
 				y++;
+				currentHeight += height;
+				posY = gump->Width * ((currentHeight - startHeight) >> 8);
 			}
 
-			if (y >= m_Height)
-				break;
+			//if (y >= m_Height)
+			//	break;
 		}
 
-		if (y >= m_Height)
-			break;
+		//if (y >= m_Height)
+		//	break;
 	}
 
-	GLuint tex = 0;
-	g_GL.BindTexture16(tex, width, height, map);
-	gump->Texture = tex;
+	if (maxPixelValue >= 1)
+	{
+		PWORD huesData = (PWORD)((PBYTE)ColorManager->GetHuesRangePointer() + 30800); // color = 0x015C
+
+		PWORD colorTable = new WORD[maxPixelValue];
+		int colorOffset = 31 * maxPixelValue;
+
+		IFOR(i, 0, maxPixelValue)
+		{
+			colorOffset -= 31;
+			colorTable[i] = huesData[colorOffset / maxPixelValue];
+		}
+
+		PWORD mapw = new WORD[mapSize];
+		PWORD mapwPtr = mapw;
+
+		IFOR(i, 0, mapSize)
+		{
+			BYTE &pic = map[i];
+			WORD val = 0;
+
+			if (pic)
+				val = 0x8000 | colorTable[pic - 1];
+
+			*mapwPtr++ = val;
+		}
+
+		GLuint tex = 0;
+		g_GL.BindTexture16(tex, gump->Width, gump->Height, mapw);
+		gump->Texture = tex;
+
+		delete mapw;
+		delete colorTable;
+	}
 
 	delete map;
 }

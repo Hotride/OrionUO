@@ -92,7 +92,7 @@ void TDebugScreen::Init()
 
 	MultiMap->LoadMap(m_Map1);
 
-	m_Map2 = new TGumpMap(0, 300, 0);
+	m_Map2 = new TGumpMap(0, 260, 0);
 	m_Map2->StartX = 0;
 	m_Map2->StartY = 200;
 	m_Map2->EndX = 1347;
@@ -102,7 +102,7 @@ void TDebugScreen::Init()
 
 	MultiMap->LoadMap(m_Map2);
 
-	m_Map3 = new TGumpMap(0, 0, 300);
+	m_Map3 = new TGumpMap(0, 0, 260);
 	m_Map3->StartX = 1219;
 	m_Map3->StartY = 1477;
 	m_Map3->EndX = 1619;
