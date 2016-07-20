@@ -52,8 +52,8 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 	}
 
 	int mapSize = gump->Width * gump->Height;
-	PBYTE map = new BYTE[mapSize];
-	memset(&map[0], 0, mapSize);
+	PBYTE byteMap = new BYTE[mapSize];
+	memset(&byteMap[0], 0, mapSize);
 
 	int startX = gump->StartX / 2;
 	int endX = gump->EndX / 2;
@@ -101,7 +101,7 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 			{
 				int position = posY + ((width * (x - startX)) >> 8);
 
-				BYTE &pixel = map[position];
+				BYTE &pixel = byteMap[position];
 
 				if (pixel < 0xFF)
 				{
@@ -140,32 +140,27 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 		IFOR(i, 0, maxPixelValue)
 		{
 			colorOffset -= 31;
-			colorTable[i] = huesData[colorOffset / maxPixelValue];
+			colorTable[i] = 0x8000 | huesData[colorOffset / maxPixelValue];
 		}
 
-		PWORD mapw = new WORD[mapSize];
-		PWORD mapwPtr = mapw;
+		PWORD wordMap = new WORD[mapSize];
 
 		IFOR(i, 0, mapSize)
 		{
-			BYTE &pic = map[i];
-			WORD val = 0;
+			BYTE &pic = byteMap[i];
 
-			if (pic)
-				val = 0x8000 | colorTable[pic - 1];
-
-			*mapwPtr++ = val;
+			wordMap[i] = (pic ? colorTable[pic - 1] : 0);
 		}
 
 		GLuint tex = 0;
-		g_GL.BindTexture16(tex, gump->Width, gump->Height, mapw);
+		g_GL.BindTexture16(tex, gump->Width, gump->Height, wordMap);
 		gump->Texture = tex;
 
-		delete mapw;
+		delete wordMap;
 		delete colorTable;
 	}
 
-	delete map;
+	delete byteMap;
 }
 //----------------------------------------------------------------------------
 bool TMultiMap::LoadFacet(TGumpMap *gump, int facet)

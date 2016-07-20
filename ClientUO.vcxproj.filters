@@ -54,9 +54,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="ClientUO.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="EnumList.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
@@ -459,12 +456,12 @@
     <ClInclude Include="gump\GumpBuff.h">
       <Filter>Заголовочные файлы\gump</Filter>
     </ClInclude>
+    <ClInclude Include="OrionUO.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="ClientUO.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
@@ -847,6 +844,9 @@
     </ClCompile>
     <ClCompile Include="gump\GumpBuff.cpp">
       <Filter>Файлы исходного кода\gump</Filter>
+    </ClCompile>
+    <ClCompile Include="OrionUO.cpp">
+      <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

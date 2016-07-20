@@ -110,7 +110,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="BaseQueue.h" />
     <ClInclude Include="CharacterList.h" />
     <ClInclude Include="CityList.h" />
-    <ClInclude Include="ClientUO.h" />
+    <ClInclude Include="OrionUO.h" />
     <ClInclude Include="CommonFunctions.h" />
     <ClInclude Include="CommonInterfaces.h" />
     <ClInclude Include="Constants.h" />
@@ -250,7 +250,7 @@ xcopy /y /d  "$(ProjectDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="BaseQueue.cpp" />
     <ClCompile Include="CharacterList.cpp" />
     <ClCompile Include="CityList.cpp" />
-    <ClCompile Include="ClientUO.cpp" />
+    <ClCompile Include="OrionUO.cpp" />
     <ClCompile Include="CommonFunctions.cpp" />
     <ClCompile Include="CommonInterfaces.cpp" />
     <ClCompile Include="Container.cpp" />
