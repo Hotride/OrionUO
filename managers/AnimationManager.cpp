@@ -1474,7 +1474,7 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 	GetSittingAnimDirection(m_Direction, mirror, x, y);
 
 	int offsX = Orion->m_StaticData[data.Graphic / 32].Tiles[data.Graphic % 32].SittingOffset;
-	if (offsX > 10)
+	if (offsX > 10 || offsX == 0)
 		offsX = 8;
 
 	if (mirror)
@@ -1946,19 +1946,19 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 				WORD graphic = SITTING_INFO[m_Sitting - 1].Graphic;
 				for (TRenderWorldObject *ro = obj->m_PrevXY; ro != NULL; ro = (TRenderWorldObject*)ro->m_PrevXY)
 				{
-					if (ro->Graphic == graphic)
-					{Fi
-						int yOffset = -70;
+					WORD roGraphic = ro->Graphic;
+					if (roGraphic >= 0x4000)
+						roGraphic -= 0x4000;
+					if (roGraphic == graphic)
+					{
+					    int xOffset = mirror ? -20 : 0;
+					    int yOffset = -70;
 						g_GL.Scissor(drawX + xOffset, drawY + yOffset, 20, 40);
 						Orion->DrawStaticArt(graphic, ro->Color, originalX, originalY, ro->Z);
-						
-						//ColorizerShader->Pause();
-						//g_GL.DrawPolygone(originalX + xOffset, originalY + yOffset, 20, 35);
-						//ColorizerShader->Resume();
 						glDisable(GL_SCISSOR_TEST);
 						break;
 					}
-				}			
+				}
 			}
 		}
 		else
