@@ -1820,9 +1820,11 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 {
 	//DrawCharacterAAA(obj, x, y, z);
 	//return;
+
 	int originalX = x;
 	int originalY = y;
 	int originalZ = z;
+
 	WORD targetColor = 0;
 	bool needHPLine = false;
 	DWORD serial = obj->Serial;
@@ -1938,21 +1940,22 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 						GameScreen->AddLight(obj, goi, drawX, drawY - lightOffset);
 				}
 			}
+			
 			if (m_Sitting && m_Direction == 3)
 			{
-				WORD graphic = SITTING_INFO[m_Sitting - 1].Graphic;			
+				WORD graphic = SITTING_INFO[m_Sitting - 1].Graphic;
 				for (TRenderWorldObject *ro = obj->m_PrevXY; ro != NULL; ro = (TRenderWorldObject*)ro->m_PrevXY)
 				{
 					if (ro->Graphic == graphic)
-					{
-						int xOffset = mirror ? -10 : -3;
-						int yOffset = -38;
-						g_GL.Scissor(originalX + xOffset, originalY + yOffset, 12, 25);
+					{Fi
+						int yOffset = -70;
+						g_GL.Scissor(drawX + xOffset, drawY + yOffset, 20, 40);
 						Orion->DrawStaticArt(graphic, ro->Color, originalX, originalY, ro->Z);
-						glDisable(GL_SCISSOR_TEST);
+						
 						//ColorizerShader->Pause();
-						//g_GL.DrawPolygone(originalX + xOffset, originalY + yOffset, 10, 25);
+						//g_GL.DrawPolygone(originalX + xOffset, originalY + yOffset, 20, 35);
 						//ColorizerShader->Resume();
+						glDisable(GL_SCISSOR_TEST);
 						break;
 					}
 				}			
