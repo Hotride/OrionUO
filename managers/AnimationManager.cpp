@@ -1492,7 +1492,7 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 		x -= 10;
 		if (m_Direction == 3)
 		{
-			x += 5;
+			x += 7;
 			y += 15;
 		}			
 	}
