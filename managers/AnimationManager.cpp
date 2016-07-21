@@ -1079,13 +1079,10 @@ bool TAnimationManager::TestPixels(TGameObject *obj, int x, int y, bool &mirror,
 
 	if (frame != NULL)
 	{
-		if (id == 0x23D) //FWUO genie
-			y += 40;
-
-		y -= (frame->Height + frame->CenterY + 3);
+		y -= frame->Height + frame->CenterY;
 		
 		if (mirror)
-			x -= (frame->Width - frame->CenterX);
+			x -= frame->Width - frame->CenterX;
 		else
 			x -= frame->CenterX;
 
@@ -1095,7 +1092,7 @@ bool TAnimationManager::TestPixels(TGameObject *obj, int x, int y, bool &mirror,
 		if (mirror)
 			x = frame->Width - x;
 
-		if (x > 0 && x < frame->Width && y > 0 && y < frame->Height)
+		if (x >= 0 && x < frame->Width && y >= 0 && y < frame->Height)
 			return TestImagePixels(direction, frameIndex, id, x, y);
 	}
 
@@ -1916,9 +1913,7 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 				if (goi != NULL)
 				{
 					if (goi->AnimID)
-					{
 						Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
-					}						
 
 					if (goi->IsLightSource() && GameScreen->UseLight)
 						GameScreen->AddLight(obj, goi, drawX, drawY - lightOffset);
@@ -2127,7 +2122,7 @@ bool TAnimationManager::CharacterPixelsInXY( __in TGameCharacter *obj, __in int 
 
 		m_AnimGroup = obj->GetAnimationGroup(mountID);
 
-		if (TestPixels(goi, drawX - 3, drawY, mirror, animIndex, mountID))
+		if (TestPixels(goi, drawX, drawY + goi->GetStaticData()->Quality * 2, mirror, animIndex, mountID))
 			return true;
 
 		switch (animGroup)
@@ -2157,8 +2152,8 @@ bool TAnimationManager::CharacterPixelsInXY( __in TGameCharacter *obj, __in int 
 			{
 				goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
 
-				if (goi != NULL && goi->GetAnimID())
-					result = TestPixels(goi, drawX, drawY, mirror, animIndex, goi->GetAnimID());
+				if (goi != NULL && goi->AnimID)
+					result = TestPixels(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
 			}
 		}
 		else if (!result)
@@ -2166,7 +2161,7 @@ bool TAnimationManager::CharacterPixelsInXY( __in TGameCharacter *obj, __in int 
 			goi = obj->FindLayer(OL_ROBE);
 
 			if (goi != NULL && goi->AnimID)
-				result = TestPixels(goi, drawX, drawY, mirror, animIndex, goi->GetAnimID());
+				result = TestPixels(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
 		}
 	}
 
@@ -2250,8 +2245,8 @@ bool TAnimationManager::CorpsePixelsInXY( __in TGameItem *obj, __in int x, __in 
 	{
 		TGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
 
-		if (goi != NULL && goi->GetAnimID())
-			result = TestPixels(goi, x, y, mirror, animIndex, goi->GetAnimID());
+		if (goi != NULL && goi->AnimID)
+			result = TestPixels(goi, x, y, mirror, animIndex, goi->AnimID);
 	}
 
 	return result;
