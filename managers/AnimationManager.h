@@ -112,6 +112,12 @@ private:
 
 	void DrawIntoFrameBuffer(__in TGameCharacter *obj, __in int x, __in int y);
 
+	//!Рисуем слои одетой одежды на чаре, вычисляем исключающие друг-друга слои.
+	void DrawEquippedLayers(TGameCharacter* obj, int drawX, int drawY, bool mirror, BYTE layerDir, BYTE animIndex, int lightOffset);
+
+	//!Находится-ли данный слой под робой
+	bool IsUnderRobe(int layer);
+
 public:
 	TAnimationManager();
 	~TAnimationManager();

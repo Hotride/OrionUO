@@ -1912,19 +1912,7 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 	{
 		if (!obj->Dead())
 		{
-			IFOR(l, 0, USED_LAYER_COUNT)
-			{
-				goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
-
-				if (goi != NULL)
-				{
-					if (goi->AnimID)
-						Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
-
-					if (goi->IsLightSource() && GameScreen->UseLight)
-						GameScreen->AddLight(obj, goi, drawX, drawY - lightOffset);
-				}
-			}
+			DrawEquippedLayers(obj, drawX, drawY, mirror, layerDir, animIndex, lightOffset);
 			SITTING_INFO_DATA sittingData = SITTING_INFO[m_Sitting - 1];
 			if (m_Sitting && m_Direction == 3 && sittingData.DrawBack)
 			{
@@ -2601,5 +2589,48 @@ DRAW_FRAME_INFORMATION TAnimationManager::CollectFrameInformation(TGameObject *g
 	}
 
 	return dfInfo;
+}
+//----------------------------------------------------------------------------
+void TAnimationManager::DrawEquippedLayers(TGameCharacter* obj, int drawX, int drawY, bool mirror, BYTE layerDir, BYTE animIndex, int lightOffset)
+{
+	TGameItem *robe = obj->FindLayer(OL_ROBE);
+	TGameItem *goi = {0};
+	IFOR(l, 0, USED_LAYER_COUNT)
+	{
+		goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
+
+		if (goi == NULL || (robe != NULL && IsUnderRobe(goi->GetLayer())))
+			continue;
+
+		if (goi->AnimID)
+			Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
+
+		if (goi->IsLightSource() && GameScreen->UseLight)
+			GameScreen->AddLight(obj, goi, drawX, drawY - lightOffset);
+	}
+}
+//----------------------------------------------------------------------------
+bool TAnimationManager::IsUnderRobe(int layer)
+{
+	switch (layer)
+	{
+	case OL_PANTS:
+		return true;
+	case OL_SHIRT:
+		return true;
+	case OL_TORSO:
+		return true;
+	case OL_BRACELET:
+		return true;
+	case OL_TUNIC:
+		return true;
+	case OL_ARMS:
+		return true;
+	case OL_SKIRT:
+		return true;
+	case OL_LEGS:
+		return true;
+	}
+	return false;
 }
 //----------------------------------------------------------------------------
