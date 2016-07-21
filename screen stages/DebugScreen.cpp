@@ -35,11 +35,13 @@ void TDebugScreen::Init()
 	//Скамейка
 	m_Chair = new TGameItem(1);
 	m_Chair->Graphic = 2909;
+	m_Chair->OnGraphicChange();
 	m_Chair->Color = 0x0386;
 
 	//Персонаж
 	m_Player = new TGameCharacter(2);
 	m_Player->Graphic = 0x0190;
+	m_Chair->OnGraphicChange();
 	m_Player->Color = 0x0386;
 	m_Player->Direction = 2;
 	m_Player->Hits = 1;
@@ -53,6 +55,7 @@ void TDebugScreen::Init()
 	//Маунт
 	m_Mount = new TGameItem(3);
 	m_Mount->Graphic = 0x3EA3;
+	m_Mount->OnGraphicChange();
 	m_Mount->Color = 0x0386;
 	m_Mount->Count = 1;
 	m_Mount->Layer = OL_MOUNT;
@@ -268,7 +271,8 @@ int TDebugScreen::Render(bool mode)
 					ColorizerShader->Use();
 					const WORD mountTable[5] = { 0x3EA2, 0x3EA6, 0x3EA3, 0x3EA4, 0x2F05 }; //horse, llama, ostard, zostrich, genie(FW_Verdata)
 
-					m_Mount->Graphic = mountTable[0];
+					m_Mount->Graphic = mountTable[4];
+					m_Mount->OnGraphicChange();
 					m_Mount->Layer = OL_MOUNT;
 
 					IFOR(j, 0, 2)
@@ -297,6 +301,7 @@ int TDebugScreen::Render(bool mode)
 						{
 							m_Player->Direction = i + 1;
 							m_Chair->Graphic = 2894 + i;
+							m_Chair->OnGraphicChange();
 							int x = 100 + (i * 100);
 							int y = 100;// +(j * 100);
 

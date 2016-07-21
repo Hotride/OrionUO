@@ -97,8 +97,6 @@ private:
 	//!Список используемых анимаций
 	TLinkedList *m_UsedAnimList;
 
-	TGameObject *m_MountOwner;
-
 	//Добавление тени в список
 	void AddShadow(GLuint texture, int drawX, int drawY, int zBuffer, int width, int height, bool mirror);
 
