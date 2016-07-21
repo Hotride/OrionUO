@@ -1424,16 +1424,15 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 
 	int offsX = Orion->m_StaticData[data.Graphic / 32].Tiles[data.Graphic % 32].SittingOffset;
 	if (offsX > 10 || offsX == 0)
-		offsX = 8;
+		offsX = SITTING_OFFSET_X;
 
 	if (mirror)
 	{		
 		
 		if (m_Direction == 3)
 		{
-			y += data.MirrorOffsetY;
+			y += 23 + data.MirrorOffsetY;
 			x += offsX - 4;
-			y += 23;
 		}	
 		else
 		{
@@ -1449,8 +1448,7 @@ void TAnimationManager::FixSittingDirection(BYTE &layerDirection, bool &mirror, 
 		}
 		else
 		{
-			y += data.OffsetY;
-			y += 9;
+			y += 9 + data.OffsetY;
 			x -= offsX + 1;
 		}
 			
@@ -1772,7 +1770,6 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 
 	int originalX = x;
 	int originalY = y;
-	int originalZ = z;
 
 	WORD targetColor = 0;
 	bool needHPLine = false;
@@ -1939,8 +1936,10 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 						roGraphic -= 0x4000;
 					if (roGraphic == graphic)
 					{
+						//оффсеты для ножниц
 					    int xOffset = mirror ? -20 : 0;
 					    int yOffset = -70;
+
 						g_GL.Scissor(drawX + xOffset, drawY + yOffset, 20, 40);
 						Orion->DrawStaticArt(graphic, ro->Color, originalX, originalY, ro->Z);
 						glDisable(GL_SCISSOR_TEST);
