@@ -97,6 +97,8 @@ private:
 	//!Список используемых анимаций
 	TLinkedList *m_UsedAnimList;
 
+	TGameObject *m_MountOwner;
+
 	//Добавление тени в список
 	void AddShadow(GLuint texture, int drawX, int drawY, int zBuffer, int width, int height, bool mirror);
 
@@ -289,7 +291,7 @@ public:
 
 	void CalculateFrameInformation(FRAME_OUTPUT_INFO &info, TGameObject *obj, const bool &mirror, const BYTE &animIndex);
 
-	void CollectFrameInformation(TGameObject *gameObject);
+	DRAW_FRAME_INFORMATION CollectFrameInformation(TGameObject *gameObject, const bool &checkLayers = true);
  };
 //---------------------------------------------------------------------------
  //!Ссылка на менеджер анимаций

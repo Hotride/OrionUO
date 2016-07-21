@@ -195,7 +195,7 @@ int TAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 //----------------------------------------------------------------------------
 TAnimationManager::TAnimationManager()
 : m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0), m_Direction(0),
-m_ShadowCount(0), m_Sitting(0)
+m_ShadowCount(0), m_Sitting(0), m_MountOwner(NULL)
 {
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
@@ -1219,23 +1219,48 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 	
 	if (frame->Texture != 0)
 	{
-		if (id == 0x23D) //FWUO genie
-			y += 40;
+		//if (id == 0x23D) //FWUO genie
+		//	y += 40;
 
-		TGameObject *owner = NULL;
+		if (mirror)
+			x -= frame->Width - frame->CenterX;
+		else
+			x -= frame->CenterX;
 
-		if (false && !obj->NPC && ((TGameItem*)obj)->Layer == OL_MOUNT)
-			owner = World->FindWorldObject(obj->Container);
-
-		if (owner != NULL)
+		if (m_MountOwner != NULL /*&& false*/) //Не нуль толко если рисуем маунта
 		{
-			ANIMATION_DIMENSIONS dims = GetAnimationDimensions(owner);
+			ANIMATION_DIMENSIONS dims = GetAnimationDimensions(m_MountOwner);
 
-			int charX = 0;
-			int charY = y - dims.Height - dims.CenterY;// +3;
+			//int charY = dims.CenterY + dims.Height;
+			//int mountY = frame->CenterY + frame->Height;
+
+			//y -= (frame->CenterY - dims.CenterY) + (/*frame->Height -*/ dims.Height);
+			//y -= mountY - (mountY - charY);
+			//y -= (dims.Height - frame->Height) + frame->CenterY;
+			//y -= mountY;
+			
+			//y -= frame->Height - frame->CenterY;
+
+
+			int charY = dims.CenterY + dims.Height;
+			int mountY = frame->CenterY + frame->Height;
+			y -= mountY; // -frame->Height / 2;
+
+			//y -= (charY - mountY) - (dims.Height - frame->Height) + frame->Height / 2;
+			//y -= (charY + mountY) + (dims.Height - frame->Height);
+			
+
+
+
+
+			//y = y + (int)(charY + dims.Height - (mountY + frame->Height));
+			//y = mountY;// +(int)(charY + dims.Height - mountY - frame->Height);
+
+			/*int charX = 0;
+			int charY = y + (dims.CenterY - dims.Height);// +3;
 
 			int mountX = 0;
-			int mountY = y - frame->Height - frame->CenterY;// +3;
+			int mountY = y + (frame->CenterY - frame->Height);// +3;
 
 			if (mirror)
 			{
@@ -1248,9 +1273,19 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 				mountX = x - frame->CenterX;
 			}
 
-			y = mountY + (int)(charY + dims.Height - mountY - frame->Height);
+			y = y + (int)(charY + dims.Height - (mountY + frame->Height));
+			//y = mountY;// +(int)(charY + dims.Height - mountY - frame->Height);
 
-			x = mountX + (int)((charX - mountX) / 2);
+			x = mountX;*/
+
+
+
+
+
+
+
+
+
 
 			/*ANIMATION_DIMENSIONS dims = GetAnimationDimensions(owner);
 
@@ -1283,15 +1318,9 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		}
 		else
 		{
-			y -= (frame->Height + frame->CenterY);
-			if (mirror)
-			{
-				x -= (frame->Width - frame->CenterX);
-			}
-			else
-			{
-				x -= frame->CenterX;
-			}				
+			//TPRINT("x = %i y = %i\n", x, y);
+
+			y -= (frame->Height + frame->CenterY);			
 		}
 
 #if UO_DEPTH_TEST == 1
@@ -1329,14 +1358,38 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 					ANIMATION_DIMENSIONS dim = GetAnimationDimensions(mount, frameIndex, m_Direction, ((TGameCharacter*)obj)->GetAnimationGroup(mountID));
 
-					//y += (frame->Height + frame->CenterY + 3);
-					//y -= (dim.Height + dim.CenterY + 3);
-					y += 10;
+					/*y += (frame->Height + frame->CenterY);
 
 					if (mirror)
-						x += (dim.Width - dim.CenterX);
+						x += (frame->Width - frame->CenterX);
 					else
-						x += dim.CenterX;
+						x += frame->CenterX;*/
+
+					//y += (frame->Height + frame->CenterY + 3);
+					//y -= (dim.Height + dim.CenterY + 3);
+					//y += 10;
+					/*y -= (dim.Height + dim.CenterY + 3);
+
+					if (mirror)
+						x -= (dim.Width - dim.CenterX);
+					else
+						x -= dim.CenterX;*/
+
+					//y += (frame->CenterY + dim.CenterY);
+					//y -= frame->Height - frame->CenterY;
+
+					if (mirror)
+						x += frame->Width - frame->CenterX;
+					else
+						x += frame->CenterX;
+					
+					/*if (mirror)
+						x -= (dim.CenterX - frame->CenterX);
+					else
+						x -=  (frame->CenterX - dim.CenterX);*/
+
+					//TPRINT("Character: %i %i, %i %i\n", frame->Width, frame->Height, frame->CenterX, frame->CenterY);
+					//TPRINT("Mount: %i %i, %i %i\n", dim.Width, dim.Height, dim.CenterX, dim.CenterY);
 				}
 			}
 
@@ -1382,13 +1435,9 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			glUniform1iARB(ShaderDrawMode, drawMode);
 
 			if (m_Sitting && m_Direction == 1)
-			{
 				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror);
-			}
 			else
-			{
 				g_GL.Draw(frame->Texture, x, y, frame->Width, frame->Height, mirror);
-			}
 
 			if (spectralColor)
 				glDisable(GL_BLEND);
@@ -1657,7 +1706,7 @@ void TAnimationManager::DrawCharacterAAA(__in TGameCharacter *obj, __in int x, _
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ZERO, GL_DST_COLOR);
 
-			g_CharacterBuffer.DrawShadow(drawX - dfInfo.OffsetX, drawY - dfInfo.OffsetY);
+			g_CharacterBuffer.DrawShadow(drawX - dfInfo.OffsetX, drawY - dfInfo.OffsetY, dfInfo);
 
 			glDisable(GL_BLEND);
 
@@ -1863,6 +1912,7 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 	m_AnimGroup = animGroup;
 
 	TGameItem *goi = obj->FindLayer(OL_MOUNT);
+	m_MountOwner = NULL;
 	
 	int lightOffset = 20;
 	int drawX = (int)(x + obj->OffsetX);
@@ -1875,16 +1925,50 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 
 	if (goi != NULL) //Draw mount
 	{
-		Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
-
 		m_Sitting = 0;
 		lightOffset += 20;
+
 		WORD mountID = goi->GetMountAnimation();
 
+		if (g_UseFrameBuffer && false)
+		{
+			DRAW_FRAME_INFORMATION dfInfo = CollectFrameInformation(obj, false);
+
+			if (g_CharacterBuffer.Ready() && g_CharacterBuffer.Use())
+			{
+				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+				Draw(obj, dfInfo.OffsetX, dfInfo.OffsetY, mirror, animIndex);
+				m_AnimGroup = obj->GetAnimationGroup(mountID);
+				m_MountOwner = obj;
+				Draw(goi, dfInfo.OffsetX, dfInfo.OffsetY, mirror, animIndex, mountID);
+
+				g_CharacterBuffer.Release();
+
+				g_GL.RestorePort();
+
+				//g_GL.ViewPort(g_RenderBounds->GameWindowPosX, g_RenderBounds->GameWindowPosY, g_RenderBounds->GameWindowSizeX, g_RenderBounds->GameWindowSizeY);
+
+				glUniform1iARB(ShaderDrawMode, 0);
+
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_ZERO, GL_DST_COLOR);
+
+				g_CharacterBuffer.DrawShadow(drawX - dfInfo.OffsetX, drawY - dfInfo.OffsetY, dfInfo);
+
+				glDisable(GL_BLEND);
+			}
+		}
+
+		Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
+
 		m_AnimGroup = obj->GetAnimationGroup(mountID);
-		
+
+		m_MountOwner = obj;
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID + 0x10000);
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID);
+		m_MountOwner = NULL;
 
 		switch (animGroup)
 		{
@@ -2199,6 +2283,7 @@ bool TAnimationManager::CharacterPixelsInXY( __in TGameCharacter *obj, __in int 
 */
 void TAnimationManager::DrawCorpse( __in TGameItem *obj, __in int x, __in int y, __in int z)
 {
+	m_MountOwner = NULL;
 	m_Sitting = 0;
 	m_Direction = obj->Layer;
 
@@ -2490,10 +2575,12 @@ void TAnimationManager::CalculateFrameInformation(FRAME_OUTPUT_INFO &info, TGame
 		info.EndY = y + dim.Height;
 }
 //----------------------------------------------------------------------------
-void TAnimationManager::CollectFrameInformation(TGameObject *gameObject)
+DRAW_FRAME_INFORMATION TAnimationManager::CollectFrameInformation(TGameObject *gameObject, const bool &checkLayers)
 {
 	m_Sitting = false;
 	m_Direction = 0;
+
+	DRAW_FRAME_INFORMATION dfInfo = { 0 };
 
 	if (gameObject->NPC)
 	{
@@ -2539,7 +2626,7 @@ void TAnimationManager::CollectFrameInformation(TGameObject *gameObject)
 
 		CalculateFrameInformation(info, obj, mirror, animIndex);
 
-		if (obj->IsHuman()) //Check layred objects
+		if (obj->IsHuman() && checkLayers) //Check layred objects
 		{
 			if (!obj->Dead())
 			{
@@ -2560,7 +2647,6 @@ void TAnimationManager::CollectFrameInformation(TGameObject *gameObject)
 			}
 		}
 
-		DRAW_FRAME_INFORMATION &dfInfo = gameObject->m_FrameInfo;
 		dfInfo.OffsetX = abs(info.StartX);
 		dfInfo.OffsetY = abs(info.StartY);
 		dfInfo.Width = dfInfo.OffsetX + info.EndX;
@@ -2585,19 +2671,23 @@ void TAnimationManager::CollectFrameInformation(TGameObject *gameObject)
 
 		CalculateFrameInformation(info, obj, mirror, animIndex);
 
-		IFOR(l, 0, USED_LAYER_COUNT)
+		if (checkLayers)
 		{
-			TGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
+			IFOR(l, 0, USED_LAYER_COUNT)
+			{
+				TGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
 
-			if (goi != NULL && goi->GetAnimID())
-				CalculateFrameInformation(info, goi, mirror, animIndex);
+				if (goi != NULL && goi->GetAnimID())
+					CalculateFrameInformation(info, goi, mirror, animIndex);
+			}
 		}
 
-		DRAW_FRAME_INFORMATION &dfInfo = gameObject->m_FrameInfo;
 		dfInfo.OffsetX = abs(info.StartX);
 		dfInfo.OffsetY = abs(info.StartY);
 		dfInfo.Width = dfInfo.OffsetX + info.EndX;
 		dfInfo.Height = dfInfo.OffsetY + info.EndY;
 	}
+
+	return dfInfo;
 }
 //----------------------------------------------------------------------------

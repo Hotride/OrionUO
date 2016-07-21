@@ -44,6 +44,7 @@ void TDebugScreen::Init()
 	m_Player->Direction = 2;
 	m_Player->Hits = 1;
 	m_Player->MaxHits = 1;
+	m_Player->NPC = true;
 
 	//Линковка в псевдомире: стул; персонаж
 	m_Chair->m_NextXY = m_Player;
@@ -61,7 +62,7 @@ void TDebugScreen::Init()
 	TGameItem *obj = new TGameItem(4);
 	obj->Graphic = 0x203C;
 	obj->OnGraphicChange();
-	obj->Color = 0x0A01;
+	obj->Color = 0x0386; //0x0A01;
 	obj->Count = 1;
 	obj->Layer = OL_HAIR;
 	m_Player->Add(obj);
@@ -69,7 +70,7 @@ void TDebugScreen::Init()
 	obj = new TGameItem(5);
 	obj->Graphic = 0x1F03;
 	obj->OnGraphicChange();
-	obj->Color = 0x0BB6;
+	obj->Color = 0x0386; //0x0BB6;
 	obj->Count = 1;
 	obj->Layer = OL_ROBE;
 	m_Player->Add(obj);
@@ -77,7 +78,7 @@ void TDebugScreen::Init()
 	m_Cloak = new TGameItem(6);
 	m_Cloak->Graphic = 0x1515;
 	m_Cloak->OnGraphicChange();
-	m_Cloak->Color = 0x0A04;
+	m_Cloak->Color = 0x0386; //0x0A04;
 	m_Cloak->Count = 1;
 	m_Cloak->Layer = OL_CLOAK;
 	m_Player->Add(m_Cloak);
@@ -257,43 +258,73 @@ int TDebugScreen::Render(bool mode)
 			}
 			else
 			{
-				ColorizerShader->Use();
-				const WORD mountTable[4] = { 0x3EA2, 0x3EA6, 0x3EA3, 0x3EA4 }; //horse, llama, ostard, zostrich
-
-				//Для рисования 1 ряда размаунтим маунта			
-				IFOR(j, 0, 3)
+				if (DISPLAY_SHADOW_TEST)
 				{
-					IFOR(i, 0, 4)
+					float cl = 0.1f;
+					glColor4f(cl + 0.01f, cl, cl, 1.0f);
+					g_GL.DrawPolygone(0, 0, 640, 480);
+					glColor4f(1.f, 1.0f, 1.0f, 1.0f);
+
+					ColorizerShader->Use();
+					const WORD mountTable[5] = { 0x3EA2, 0x3EA6, 0x3EA3, 0x3EA4, 0x2F05 }; //horse, llama, ostard, zostrich, genie(FW_Verdata)
+
+					m_Mount->Graphic = mountTable[0];
+					m_Mount->Layer = OL_MOUNT;
+
+					IFOR(j, 0, 2)
 					{
-						m_Player->Direction = i + 1;
-						m_Chair->Graphic = 2894 + i;
-						int x = 100 + (i * 100);
-						int y = 100 + (j * 100);
-
-						//Рисуем стул только в верхнем ряду, в нижнем - перс на маунте
-						if (j < 2)
-							m_Chair->Draw(mode, x, y, ticks);
-						else
-							m_Mount->Graphic = mountTable[i];
-
-						if (j == 0 && i == 0)
-							m_Mount->Layer = OL_NONE;
-						else if (j == 1 && i == 0)
+						IFOR(i, 0, 4)
 						{
-							m_Cloak->Layer = OL_NONE;
+							m_Player->Direction = i + (j * 4);
+							int x = 100 + (i * 100);
+							int y = 100 +(j * 100);
 
+							AnimationManager->DrawCharacter(m_Player, x, y, 0);
 						}
-						else if (j == 2 && i == 0)
-						{
-							m_Cloak->Layer = OL_CLOAK;
-							m_Mount->Layer = OL_MOUNT;
-						}
-
-
-						AnimationManager->DrawCharacter(m_Player, x, y, 0);
 					}
+
+					UnuseShader();
 				}
-				UnuseShader();
+				else
+				{
+					ColorizerShader->Use();
+					const WORD mountTable[4] = { 0x3EA2, 0x3EA6, 0x3EA3, 0x3EA4 }; //horse, llama, ostard, zostrich
+
+					//Для рисования 1 ряда размаунтим маунта			
+					IFOR(j, 0, 3)
+					{
+						IFOR(i, 0, 4)
+						{
+							m_Player->Direction = i + 1;
+							m_Chair->Graphic = 2894 + i;
+							int x = 100 + (i * 100);
+							int y = 100;// +(j * 100);
+
+							//Рисуем стул только в верхнем ряду, в нижнем - перс на маунте
+							if (j < 2 && false)
+								m_Chair->Draw(mode, x, y, ticks);
+							else
+								m_Mount->Graphic = mountTable[i];
+
+							if (j == 0 && i == 0)
+								m_Mount->Layer = OL_NONE;
+							else if (j == 1 && i == 0)
+							{
+								m_Cloak->Layer = OL_NONE;
+
+							}
+							else if (j == 2 && i == 0)
+							{
+								m_Cloak->Layer = OL_CLOAK;
+								m_Mount->Layer = OL_MOUNT;
+							}
+
+							if (j == 2)
+								AnimationManager->DrawCharacter(m_Player, x, y, 0);
+						}
+					}
+					UnuseShader();
+				}
 			}
 
 			InitToolTip();

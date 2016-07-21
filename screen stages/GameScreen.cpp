@@ -321,7 +321,7 @@ void TGameScreen::CalculateRenderList()
 	{
 		if (go->NPC || go->IsCorpse())
 		{
-			AnimationManager->CollectFrameInformation(go);
+			go->m_FrameInfo = AnimationManager->CollectFrameInformation(go);
 
 			if (go->IsPlayer())
 			{

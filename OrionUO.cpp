@@ -259,10 +259,14 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (g_PopupMenu != NULL && g_LastSelectedGump != (DWORD)g_PopupMenu)
 				GumpManager->RemoveGump(g_PopupMenu);
 
+			SetCapture(g_hWnd);
+
 			break;
 		}
 		case WM_RBUTTONUP:
 		{
+			ReleaseCapture();
+
 			if (SmoothMonitor.Type != SMT_NONE)
 				break;
 
@@ -1136,7 +1140,7 @@ bool TOrion::Install()
 	g_GL.BindTexture16(g_TextureGumpState[0], 10, 14, pdwult);
 
 	g_LightBuffer.Init(GetSystemMetrics(SM_CXMAXIMIZED), GetSystemMetrics(SM_CYMAXIMIZED));
-	g_CharacterBuffer.Init(GetSystemMetrics(SM_CXMAXIMIZED), GetSystemMetrics(SM_CYMAXIMIZED));
+	g_CharacterBuffer.Init(800, 600);
 
 	g_CircleOfTransparency.Create(200);
 

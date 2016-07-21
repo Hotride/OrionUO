@@ -174,23 +174,26 @@ void TFrameBuffer::Draw( __in int x, __in int y)
 @param [__in] y Ёкранна€ координата Y
 @return
 */
-void TFrameBuffer::DrawShadow(__in int x, __in int y)
+void TFrameBuffer::DrawShadow(__in int x, __in int y, const DRAW_FRAME_INFORMATION &dfInfo)
 {
 	if (g_UseFrameBuffer && m_Ready)
 	{
 		g_GL.OldTexture = 0;
 		glBindTexture(GL_TEXTURE_2D, m_Texture);
 
-		int offsetY = m_Height / 3;
+		int offsetY = dfInfo.Height / 2;
 		GLfloat translateY = (GLfloat)(y + offsetY);
+
+		float texX = dfInfo.Width / (float)m_Width;
+		float texY = dfInfo.Height / (float)m_Height;
 
 		glTranslatef((GLfloat)x, translateY, (GLfloat)g_ZBuffer);
 
 		glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2i(0, 1); glVertex2i(0, m_Height - offsetY);
-			glTexCoord2i(1, 1); glVertex2i(m_Width, m_Height - offsetY);
-			glTexCoord2i(0, 0); glVertex2i(m_Width, 0);
-			glTexCoord2i(1, 0); glVertex2i(m_Width * 2, 0);
+			glTexCoord2f(0.0f, texY); glVertex2i(0, dfInfo.Height - offsetY);
+			glTexCoord2f(texX, texY); glVertex2i(dfInfo.Width, dfInfo.Height - offsetY);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(dfInfo.Width, 0);
+			glTexCoord2f(texX, 0.0f); glVertex2i(dfInfo.Width * 2, 0);
 		glEnd();
 
 		glTranslatef((GLfloat)-x, -translateY, (GLfloat)-g_ZBuffer);

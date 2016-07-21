@@ -92,7 +92,7 @@ public:
 	*/
 	void Draw(__in int x, __in int y);
 
-	void DrawShadow(__in int x, __in int y);
+	void DrawShadow(__in int x, __in int y, const DRAW_FRAME_INFORMATION &dfInfo);
 
 	//! Ўирина отрисовки буффера.
 	SETGET(int, Width);
