@@ -90,7 +90,8 @@ void TDebugScreen::Init()
 	m_Map1->Width = 200;
 	m_Map1->Height = 200;
 
-	MultiMap->LoadMap(m_Map1);
+	//MultiMap->LoadMap(m_Map1);
+	MultiMap->LoadFacet(m_Map1, 0);
 
 	m_Map2 = new TGumpMap(0, 260, 0);
 	m_Map2->StartX = 0;
@@ -100,7 +101,8 @@ void TDebugScreen::Init()
 	m_Map2->Width = 200;
 	m_Map2->Height = 200;
 
-	MultiMap->LoadMap(m_Map2);
+	//MultiMap->LoadMap(m_Map2);
+	MultiMap->LoadFacet(m_Map2, 0);
 
 	m_Map3 = new TGumpMap(0, 0, 260);
 	m_Map3->StartX = 1219;
@@ -110,7 +112,8 @@ void TDebugScreen::Init()
 	m_Map3->Width = 200;
 	m_Map3->Height = 200;
 
-	MultiMap->LoadMap(m_Map3);
+	//MultiMap->LoadMap(m_Map3);
+	MultiMap->LoadFacet(m_Map3, 0);
 
 	g_ConfigLoaded = false;
 

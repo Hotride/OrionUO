@@ -165,6 +165,86 @@ void TMultiMap::LoadMap(TGumpMap *gump)
 //----------------------------------------------------------------------------
 bool TMultiMap::LoadFacet(TGumpMap *gump, int facet)
 {
-	return false;
+	if (facet < 0 || facet > 5)
+	{
+		TPRINT("Invalid facet index: %i\n", facet);
+
+		return false;
+	}
+
+	TMappedHeader &file = FileManager.FacetMul[facet];
+	file.Ptr = (PBYTE)file.Address;
+
+	if (!file.Size)
+	{
+		TPRINT("Facet %i is not loaded!\n", facet);
+
+		return false;
+	}
+
+	WORD mapWidth = file.ReadWord();
+	WORD mapHeight = file.ReadWord();
+
+	//TPRINT("Facet w:%i h:%i\n", mapWidth, mapHeight);
+
+	int startX = gump->StartX / 2;
+	int endX = gump->EndX / 2;
+
+	int startY = gump->StartY / 2;
+	int endY = gump->EndY / 2;
+
+	int width = endX - startX;
+	int height = endY - startY;
+
+	PWORD map = new WORD[width * height];
+
+	IFOR(y, 0, m_Height)
+	{
+		int x = 0;
+		int colorCount = file.ReadInt() / 3;
+
+		IFOR(i, 0, colorCount)
+		{
+			int size = file.ReadByte();
+			WORD color = 0x8000 | file.ReadWord();
+
+			IFOR(j, 0, size)
+			{
+				if ((x >= startX && x < endX) && (y >= startY && y < endY))
+					map[((y - startY) * width) + (x - startX)] = color;
+
+				x++;
+			}
+		}
+	}
+
+	GLuint tex = 0;
+	g_GL.BindTexture16(tex, width, height, map);
+	gump->Texture = tex;
+
+
+
+	/*int mapSize = width * height;
+	PWORD map = new WORD[mapSize];
+	PWORD ptr = map;
+
+	IFOR(y, 0, height)
+	{
+		int colorCount = file.ReadInt() / 3;
+
+		IFOR(i, 0, colorCount)
+		{
+			int size = file.ReadByte();
+			WORD color = 0x8000 | file.ReadWord();
+
+			IFOR(j, 0, size)
+				*ptr++ = color;
+		}
+	}
+
+	GLuint facetTexture = 0;
+	g_GL.BindTexture16(facetTexture, width, height, map);*/
+
+	return true;
 }
 //----------------------------------------------------------------------------
