@@ -1863,7 +1863,16 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 
 		m_AnimGroup = obj->GetAnimationGroup(mountID);
 
-		int mountDrawY = drawY + goi->GetStaticData()->Quality * 2;
+		int mountDrawY = drawY;
+
+		if (goi->GetStaticData()->Quality == 25)
+		{
+			if (goi->GetStaticData()->Weight == 0xFF)
+				mountDrawY -= 40;
+			else
+				mountDrawY += 40;
+		}
+
 		Draw(goi, drawX, mountDrawY, mirror, animIndex, mountID + 0x10000);
 		Draw(goi, drawX, mountDrawY, mirror, animIndex, mountID);
 
@@ -2122,7 +2131,17 @@ bool TAnimationManager::CharacterPixelsInXY( __in TGameCharacter *obj, __in int 
 
 		m_AnimGroup = obj->GetAnimationGroup(mountID);
 
-		if (TestPixels(goi, drawX, drawY + goi->GetStaticData()->Quality * 2, mirror, animIndex, mountID))
+		int mountDrawY = drawY;
+
+		if (goi->GetStaticData()->Quality == 25)
+		{
+			if (goi->GetStaticData()->Weight == 0xFF)
+				mountDrawY -= 40;
+			else
+				mountDrawY += 40;
+		}
+
+		if (TestPixels(goi, drawX, mountDrawY, mirror, animIndex, mountID))
 			return true;
 
 		switch (animGroup)
