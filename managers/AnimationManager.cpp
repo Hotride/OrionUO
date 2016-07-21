@@ -1897,14 +1897,14 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 			obj->UpdateAnimationInfo(m_Direction);
 			
 			FixSittingDirection(layerDir, mirror, drawX, drawY);
+			if (m_Direction == 3)
+				animGroup = 25;
 		}
 		else
 			Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
 	}
 	
 	m_AnimGroup = animGroup;
-	if (m_Sitting && m_Direction == 3)
-		m_AnimGroup = 25;
 
 	Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
 
