@@ -1914,7 +1914,7 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 		{
 			DrawEquippedLayers(obj, drawX, drawY, mirror, layerDir, animIndex, lightOffset);
 			SITTING_INFO_DATA sittingData = SITTING_INFO[m_Sitting - 1];
-			if (m_Sitting && m_Direction == 3 && sittingData.DrawBack)
+			if (m_Sitting && m_Direction == 3 && sittingData.DrawBack && obj->FindLayer(OL_CLOAK) == NULL)
 			{
 				WORD graphic = sittingData.Graphic;
 				for (TRenderWorldObject *ro = obj->m_PrevXY; ro != NULL; ro = (TRenderWorldObject*)ro->m_PrevXY)
