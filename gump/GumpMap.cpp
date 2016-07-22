@@ -21,8 +21,8 @@
 //---------------------------------------------------------------------------
 TGumpMap::TGumpMap(DWORD serial, short x, short y)
 : TGump(GT_MAP, serial, x, y), m_PlotState(0), m_StartX(0), m_StartY(0),
-m_EndX(0), m_EndY(0), m_Width(0), m_Height(0), Texture(0), m_DoubleImage(false),
-m_PinTimer(0), PinOnCursor(NULL)
+m_EndX(0), m_EndY(0), m_Width(0), m_Height(0), Texture(0), m_PinTimer(0),
+PinOnCursor(NULL)
 {
 }
 //---------------------------------------------------------------------------
@@ -174,18 +174,7 @@ int TGumpMap::Draw(__in bool &mode)
 			Orion->DrawGump(0x139A, 0, posX + ((m_Width - 66) / 2), posY + m_Height + 37); //Clear Course
 		}
 		
-		int tempX = posX + 24;
-		int tempY = posY + 31;
-		g_GL.Draw(Texture, tempX, tempY, m_Width, m_Height);
-
-		if (m_DoubleImage)
-		{
-			tempX++;
-			g_GL.Draw(Texture, tempX, tempY, m_Width, m_Height);
-			tempX--;
-			tempY++;
-			g_GL.Draw(Texture, tempX, tempY, m_Width, m_Height);
-		}
+		g_GL.Draw(Texture, posX + 24, posY + 31, m_Width, m_Height);
 
 		Orion->DrawGump(0x139D, 0, posX + 174, posY + 177); //N
 

@@ -38,7 +38,6 @@ private:
 	int m_Width;
 	int m_Height;
 
-	bool m_DoubleImage;
 	DWORD m_PinTimer;
 	TGumpObject *PinOnCursor;
 
@@ -54,7 +53,6 @@ public:
 	SETGET(int, EndY);
 	SETGET(int, Width);
 	SETGET(int, Height);
-	SETGET(bool, DoubleImage);
 
 	GLuint Texture;
 
