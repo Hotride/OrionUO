@@ -63,7 +63,7 @@ void TGumpMinimap::GenerateMap()
 	int gumpWidth = io->Width;
 	int gumpHeight = io->Height;
 
-	PWORD data = MulReader.GetGumpPixels(*io);
+	PWORD data = MulReader->GetGumpPixels(*io);
 	
 	if (data == NULL)
 		return;

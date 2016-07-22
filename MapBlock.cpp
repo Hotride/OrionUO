@@ -245,25 +245,32 @@ bool TMapBlock::TestStretched(int x, int y, char &z, int &map, bool recurse)
 //---------------------------------------------------------------------------
 char TMapBlock::GetLandZ(int x, int y, int &map)
 {
-	//Проверки актуальности данных
-	if (!FileManager.MapMul[map].Address || !FileManager.StaticIdx[map].Address || !FileManager.StaticMul[map].Address)
-		return -125;
-	else if (x < 0 || y < 0 || x >= g_MapSizeX[map] || y >= g_MapSizeY[map])
-		return -125;
+	if (g_UseFileUOP)
+	{
+		return 0;
+	}
+	else
+	{
+		//Проверки актуальности данных
+		if (!FileManager.MapMul[map].Address || !FileManager.StaticIdx[map].Address || !FileManager.StaticMul[map].Address)
+			return -125;
+		else if (x < 0 || y < 0 || x >= g_MapSizeX[map] || y >= g_MapSizeY[map])
+			return -125;
 
-	//Смщение блока
-	int blockX = x / 8;
-	int blockY = y / 8;
+		//Смщение блока
+		int blockX = x / 8;
+		int blockY = y / 8;
 
-	int offset = ((blockX * g_MapBlockY[map]) + blockY) * sizeof(MAP_BLOCK);
+		int offset = ((blockX * g_MapBlockY[map]) + blockY) * sizeof(MAP_BLOCK);
 
-	//Блок
-	PMAP_BLOCK mb = (PMAP_BLOCK)((DWORD)FileManager.MapMul[map].Address + offset);
+		//Блок
+		PMAP_BLOCK mb = (PMAP_BLOCK)((DWORD)FileManager.MapMul[map].Address + offset);
 
-	int mX = x % 8;
-	int mY = y % 8;
+		int mX = x % 8;
+		int mY = y % 8;
 
-	return mb->Cells[mY * 8 + mX].Z;
+		return mb->Cells[mY * 8 + mX].Z;
+	}
 }
 //---------------------------------------------------------------------------
 TLandObject *TMapBlock::GetLand(int &x, int &y)

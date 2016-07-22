@@ -118,11 +118,6 @@ int TMapManager::GetWorldMapBlock( __in int &map, __in int &blockX, __in int &bl
 */
 void TMapManager::GetRadarMapBlock( __in int blockX, __in int blockY, __out MAP_BLOCK &mb)
 {
-
-/*!
-Получить индекс текущей карты
-@return 
-*/
 	int map = GetActualMap();
 	
 	if (!FileManager.MapMul[map].Address || !FileManager.StaticIdx[map].Address || !FileManager.StaticMul[map].Address)
@@ -487,5 +482,59 @@ void TMapManager::DeleteBlock( __in DWORD index)
 
 		block = (TMapBlock*)block->m_Next;
 	}
+}
+//---------------------------------------------------------------------------
+TUopMapManager::TUopMapManager()
+: TMapManager()
+{
+}
+//---------------------------------------------------------------------------
+TUopMapManager::~TUopMapManager()
+{
+}
+//---------------------------------------------------------------------------
+/*!
+Получить индекс текущей карты
+@return
+*/
+int TUopMapManager::GetActualMap()
+{
+	//if (g_CurrentMap == 1 && (!FileManager.MapMul[1].Address || !FileManager.StaticIdx[1].Address || !FileManager.StaticMul[1].Address))
+	//	return 0;
+
+	return g_CurrentMap;
+}
+//---------------------------------------------------------------------------
+/*!
+Загрузить блок
+@param [__inout] block Ссылка на блок для загрузки
+@return
+*/
+void TUopMapManager::LoadBlock(__inout TMapBlock *block)
+{
+}
+//---------------------------------------------------------------------------
+/*!
+Получить блок карты напрямую из мулов
+@param [__in] map Индекс карты
+@param [__in] blockX Координата X блока
+@param [__in] blockY Координата Y блока
+@param [__out] mb Ссылка на блок
+@return Код ошибки (0 - успешно)
+*/
+int TUopMapManager::GetWorldMapBlock(__in int &map, __in int &blockX, __in int &blockY, __out MAP_BLOCK &mb)
+{
+	return 0;
+}
+//---------------------------------------------------------------------------
+/*!
+Получить блок для радара из муллов
+@param [__in] blockX Координата X блока
+@param [__in] blockY Координата Y блока
+@param [__out] mb Ссылка на блок
+@return
+*/
+void TUopMapManager::GetRadarMapBlock(__in int blockX, __in int blockY, __out MAP_BLOCK &mb)
+{
 }
 //---------------------------------------------------------------------------

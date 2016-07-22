@@ -20,6 +20,7 @@
 *.ini
 *.sc
 *.iff
+*.uop
 !ConfigurationEditor.exe
 /Makefile*
 /ipch

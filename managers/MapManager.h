@@ -43,14 +43,14 @@ public:
 	Получить индекс текущей карты
 	@return 
 	*/
-	int GetActualMap();
+	virtual int GetActualMap();
 
 	/*!
 	Загрузить блок
 	@param [__inout] block Ссылка на блок для загрузки
 	@return 
 	*/
-	void LoadBlock(__inout TMapBlock *block);
+	virtual void LoadBlock(__inout TMapBlock *block);
 
 	/*!
 	Получить блок для радара из муллов
@@ -59,7 +59,7 @@ public:
 	@param [__out] mb Ссылка на блок
 	@return 
 	*/
-	void GetRadarMapBlock(__in int blockX, __in int blockY, __out MAP_BLOCK &mb);
+	virtual void GetRadarMapBlock(__in int blockX, __in int blockY, __out MAP_BLOCK &mb);
 
 	/*!
 	Получить блок карты напрямую из мулов
@@ -69,7 +69,7 @@ public:
 	@param [__out] mb Ссылка на блок
 	@return Код ошибки (0 - успешно)
 	*/
-	int GetWorldMapBlock(__in int &map, __in int &blockX, __in int &blockY, __out MAP_BLOCK &mb);
+	virtual int GetWorldMapBlock(__in int &map, __in int &blockX, __in int &blockY, __out MAP_BLOCK &mb);
 
 	/*!
 	Получить значение Z координаты для указанной точки в мире
@@ -122,6 +122,46 @@ public:
 	*/
 	void AddRender(__in TRenderWorldObject *item);
 
+};
+//--------------------------------------------------------------------------
+//!Класс менеджера карт
+class TUopMapManager : public TMapManager
+{
+public:
+	TUopMapManager();
+	virtual ~TUopMapManager();
+
+	/*!
+	Получить индекс текущей карты
+	@return
+	*/
+	virtual int GetActualMap();
+
+	/*!
+	Загрузить блок
+	@param [__inout] block Ссылка на блок для загрузки
+	@return
+	*/
+	virtual void LoadBlock(__inout TMapBlock *block);
+
+	/*!
+	Получить блок карты напрямую из мулов
+	@param [__in] map Индекс карты
+	@param [__in] blockX Координата X блока
+	@param [__in] blockY Координата Y блока
+	@param [__out] mb Ссылка на блок
+	@return Код ошибки (0 - успешно)
+	*/
+	virtual int GetWorldMapBlock(__in int &map, __in int &blockX, __in int &blockY, __out MAP_BLOCK &mb);
+
+	/*!
+	Получить блок для радара из муллов
+	@param [__in] blockX Координата X блока
+	@param [__in] blockY Координата Y блока
+	@param [__out] mb Ссылка на блок
+	@return
+	*/
+	virtual void GetRadarMapBlock(__in int blockX, __in int blockY, __out MAP_BLOCK &mb);
 };
 //--------------------------------------------------------------------------
 extern TMapManager *MapManager;

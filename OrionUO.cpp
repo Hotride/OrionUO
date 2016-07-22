@@ -529,11 +529,13 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 {
 	g_Hinstance = hInstance;
 
+	timeBeginPeriod(1);
+
 	if (!InitInstance(nCmdShow))
 		return FALSE;
 
 	MSG msg = { 0 };
-	timeBeginPeriod(1);
+
 	while (msg.message != WM_QUIT)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -577,229 +579,51 @@ TOrion::~TOrion()
 
 	UnloadIndexFiles();
 
-	if (SpeechManager != NULL)
-	{
-		delete SpeechManager;
-		SpeechManager = NULL;
-	}
-
-	if (FontManager != NULL)
-	{
-		delete FontManager;
-		FontManager = NULL;
-	}
-
-	if (DebugScreen != NULL)
-	{
-		delete DebugScreen;
-		DebugScreen = NULL;
-	}
-
-	if (MainScreen != NULL)
-	{
-		delete MainScreen;
-		MainScreen = NULL;
-	}
-
-	if (ConnectionScreen != NULL)
-	{
-		delete ConnectionScreen;
-		ConnectionScreen = NULL;
-	}
-
-	if (ServerScreen != NULL)
-	{
-		delete ServerScreen;
-		ServerScreen = NULL;
-	}
-
-	if (CharacterListScreen != NULL)
-	{
-		delete CharacterListScreen;
-		CharacterListScreen = NULL;
-	}
-
-	if (CreateCharacterScreen != NULL)
-	{
-		delete CreateCharacterScreen;
-		CreateCharacterScreen = NULL;
-	}
-	
-	if (SelectProfessionScreen != NULL)
-	{
-		delete SelectProfessionScreen;
-		SelectProfessionScreen = NULL;
-	}
-
-	if (SelectTownScreen != NULL)
-	{
-		delete SelectTownScreen;
-		SelectTownScreen = NULL;
-	}
-	
-	if (GameScreen != NULL)
-	{
-		delete GameScreen;
-		GameScreen = NULL;
-	}
-
-	if (GameBlockedScreen != NULL)
-	{
-		delete GameBlockedScreen;
-		GameBlockedScreen = NULL;
-	}
-
+	RELEASE_POINTER(SpeechManager);
+	RELEASE_POINTER(FontManager);
+	RELEASE_POINTER(DebugScreen);
+	RELEASE_POINTER(MainScreen);
+	RELEASE_POINTER(ConnectionScreen);
+	RELEASE_POINTER(ServerScreen);
+	RELEASE_POINTER(CharacterListScreen);
+	RELEASE_POINTER(CreateCharacterScreen);
+	RELEASE_POINTER(SelectProfessionScreen);
+	RELEASE_POINTER(SelectTownScreen);
+	RELEASE_POINTER(GameScreen);
+	RELEASE_POINTER(GameBlockedScreen);
 	CurrentScreen = NULL;
-
-	if (SystemChat != NULL)
-	{
-		delete SystemChat;
-		SystemChat = NULL;
-	}
-	
-	if (Journal != NULL)
-	{
-		delete Journal;
-		Journal = NULL;
-	}
-
-	if (WorldTextRenderer != NULL)
-	{
-		delete WorldTextRenderer;
-		WorldTextRenderer = NULL;
-	}
-
-	if (ColorManager != NULL)
-	{
-		delete ColorManager;
-		ColorManager = NULL;
-	}
-
-	if (AnimationManager != NULL)
-	{
-		delete AnimationManager;
-		AnimationManager = NULL;
-	}
-
-	if (m_StaticAnimList != NULL)
-	{
-		delete m_StaticAnimList;
-		m_StaticAnimList = NULL;
-	}
-
-	if (m_UsedLandList != NULL)
-	{
-		delete m_UsedLandList;
-		m_UsedLandList = NULL;
-	}
-
-	if (m_UsedStaticList != NULL)
-	{
-		delete m_UsedStaticList;
-		m_UsedStaticList = NULL;
-	}
-
-	if (m_UsedGumpList != NULL)
-	{
-		delete m_UsedGumpList;
-		m_UsedGumpList = NULL;
-	}
-	
-	if (m_UsedTextureList != NULL)
-	{
-		delete m_UsedTextureList;
-		m_UsedTextureList = NULL;
-	}
-
-	if (m_UsedSoundList != NULL)
-	{
-		delete m_UsedSoundList;
-		m_UsedSoundList = NULL;
-	}
-
-	if (MapManager != NULL)
-	{
-		delete MapManager;
-		MapManager = NULL;
-	}
-
-	if (World != NULL)
-	{
-		delete World;
-		World = NULL;
-	}
-
-	if (EffectManager != NULL)
-	{
-		delete EffectManager;
-		EffectManager = NULL;
-	}
-	
-	if (GumpManager != NULL)
-	{
-		delete GumpManager;
-		GumpManager = NULL;
-	}
-	
-	if (MultiMap != NULL)
-	{
-		delete MultiMap;
-		MultiMap = NULL;
-	}
-
-	if (m_AnimData != NULL)
-	{
-		delete m_AnimData;
-		m_AnimData = NULL;
-	}
-
-	if (PathFinder != NULL)
-	{
-		delete PathFinder;
-		PathFinder = NULL;
-	}
-
-	if (ProfessionManager != NULL)
-	{
-		delete ProfessionManager;
-		ProfessionManager = NULL;
-	}
-
-	if (OptionsMacroManager != NULL)
-	{
-		delete OptionsMacroManager;
-		OptionsMacroManager = NULL;
-	}
-
-	if (MacroManager != NULL)
-	{
-		delete MacroManager;
-		MacroManager = NULL;
-	}
-
-	if (CityManager != NULL)
-	{
-		delete CityManager;
-		CityManager = NULL;
-	}
-
-	if (CityList != NULL)
-	{
-		delete CityList;
-		CityList = NULL;
-	}
-	
-	if (GameConsole != NULL)
-	{
-		delete GameConsole;
-		GameConsole = NULL;
-	}
-
-	if (PluginManager != NULL)
-	{
-		delete PluginManager;
-		PluginManager = NULL;
-	}
+	RELEASE_POINTER(SystemChat);
+	RELEASE_POINTER(Journal);
+	RELEASE_POINTER(WorldTextRenderer);
+	RELEASE_POINTER(ColorManager);
+	RELEASE_POINTER(AnimationManager);
+	RELEASE_POINTER(m_StaticAnimList);
+	RELEASE_POINTER(m_UsedLandList);
+	RELEASE_POINTER(m_UsedStaticList);
+	RELEASE_POINTER(m_UsedGumpList);
+	RELEASE_POINTER(m_UsedTextureList);
+	RELEASE_POINTER(m_UsedSoundList);
+	RELEASE_POINTER(MapManager);
+	RELEASE_POINTER(World);
+	RELEASE_POINTER(EffectManager);
+	RELEASE_POINTER(GumpManager);
+	RELEASE_POINTER(MultiMap);
+	RELEASE_POINTER(m_AnimData);
+	RELEASE_POINTER(PathFinder);
+	RELEASE_POINTER(ProfessionManager);
+	RELEASE_POINTER(OptionsMacroManager);
+	RELEASE_POINTER(MacroManager);
+	RELEASE_POINTER(CityManager);
+	RELEASE_POINTER(CityList);
+	RELEASE_POINTER(GameConsole);
+	RELEASE_POINTER(PluginManager);
+	RELEASE_POINTER(ClilocManager);
+	RELEASE_POINTER(DeathShader);
+	RELEASE_POINTER(ColorizerShader);
+	RELEASE_POINTER(FontColorizerShader);
+	RELEASE_POINTER(LightColorizerShader);
+	CurrentShader = NULL;
+	RELEASE_POINTER(MulReader);
 
 	IFOR(i, 0, 6)
 	{
@@ -821,12 +645,6 @@ TOrion::~TOrion()
 	TGumpWorldMap::ReleaseTextTextures();
 	TGumpBook::ReleaseTextTextures();
 	
-	if (ClilocManager != NULL)
-	{
-		delete ClilocManager;
-		ClilocManager = NULL;
-	}
-	
 	IFOR(i, 0, 2)
 	{
 		if (g_TextureGumpState[i] != 0)
@@ -835,32 +653,6 @@ TOrion::~TOrion()
 			g_TextureGumpState[i] = 0;
 		}
 	}
-
-	if (DeathShader != NULL)
-	{
-		delete DeathShader;
-		DeathShader = NULL;
-	}
-
-	if (ColorizerShader != NULL)
-	{
-		delete ColorizerShader;
-		ColorizerShader = NULL;
-	}
-
-	if (FontColorizerShader != NULL)
-	{
-		delete FontColorizerShader;
-		FontColorizerShader = NULL;
-	}
-
-	if (LightColorizerShader != NULL)
-	{
-		delete LightColorizerShader;
-		LightColorizerShader = NULL;
-	}
-
-	CurrentShader = NULL;
 
 	SoundManager.Free();
 
@@ -877,6 +669,7 @@ TOrion::~TOrion()
 		delete g_Logger;
 		g_Logger = NULL;
 	}
+
 	timeEndPeriod(1);
 }
 //---------------------------------------------------------------------------
@@ -962,7 +755,12 @@ bool TOrion::Install()
 	memcpy(&m_AnimData[0], FileManager.AnimdataMul.Address, FileManager.AnimdataMul.Size);
 
 	ColorManager = new TColorManager();
-	
+
+	if (g_UseFileUOP)
+		MulReader = new TUopReader();
+	else
+		MulReader = new TMulReader();
+
 	LoadTiledata();
 	LoadIndexFiles();
 	InitStaticAnimList();
@@ -1055,7 +853,12 @@ bool TOrion::Install()
 	GameBlockedScreen = new TGameBlockedScreen();
 
 	GumpManager = new TGumpManager();
-	MapManager = new TMapManager();
+
+	if (g_UseFileUOP)
+		MapManager = new TUopMapManager();
+	else
+		MapManager = new TMapManager();
+
 	EffectManager = new TEffectManager();
 	CityManager = new TCityManager();
 
@@ -1366,7 +1169,7 @@ void TOrion::CreateObjectHandlesBackground()
 		if (drawHeight > g_ObjectHandlesHeight)
 			drawHeight = g_ObjectHandlesHeight - drawY;
 
-		PWORD pixels = MulReader.GetGumpPixels(io);
+		PWORD pixels = MulReader->GetGumpPixels(io);
 
 		if (pixels != NULL)
 		{
@@ -3134,7 +2937,7 @@ TTextureObject *TOrion::ExecuteGump(const WORD &id, const bool &partialHue)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = MulReader.ReadGump(io);
+		io.Texture = MulReader->ReadGump(io);
 
 		if (io.Texture != NULL)
 		{
@@ -3156,7 +2959,7 @@ TTextureObject *TOrion::ExecuteLandArt(const WORD &id)
 		if (!io.Address || id == 0x02) //nodraw tiles banned
 			return NULL;
 
-		io.Texture = MulReader.ReadArt(id, io);
+		io.Texture = MulReader->ReadArt(id, io);
 
 		if (io.Texture != NULL)
 		{
@@ -3183,7 +2986,7 @@ TTextureObject *TOrion::ExecuteStaticArt(const WORD &id)
 		if (!io.Address || id == 0x01) //nodraw tiles banned
 			return NULL;
 
-		io.Texture = MulReader.ReadArt(id + 0x4000, io);
+		io.Texture = MulReader->ReadArt(id + 0x4000, io);
 
 		if (io.Texture != NULL)
 		{
@@ -3214,7 +3017,7 @@ TTextureObject *TOrion::ExecuteTexture(WORD id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = MulReader.ReadTexture(io);
+		io.Texture = MulReader->ReadTexture(io);
 
 		if (io.Texture != NULL)
 		{
@@ -3239,7 +3042,7 @@ TTextureObject *TOrion::ExecuteLight(BYTE &id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = MulReader.ReadLight(io);
+		io.Texture = MulReader->ReadLight(io);
 
 		if (io.Texture != NULL)
 		{
@@ -3589,7 +3392,7 @@ bool TOrion::GumpPixelsInXY(const WORD &id, int x, int y, const bool &noSubMouse
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.GumpPixelsInXY(io, x, y);
+		result = MulReader->GumpPixelsInXY(io, x, y);
 #endif
 	}
 
@@ -3640,7 +3443,7 @@ bool TOrion::GumpPixelsInXY(const WORD &id, int x, int y, int width, int height,
 	if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 		result = th->Data[(y * th->Width) + x] != 0;
 #else
-	result = MulReader.GumpPixelsInXY(io, x, y);
+	result = MulReader->GumpPixelsInXY(io, x, y);
 #endif
 
 	return result;
@@ -3787,7 +3590,7 @@ bool TOrion::StaticPixelsInXY(const WORD &id, int x, int y, const int &z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(false, io, x, y);
+		result = MulReader->ArtPixelsInXY(false, io, x, y);
 #endif
 	}
 
@@ -3831,7 +3634,7 @@ bool TOrion::StaticPixelsInXYInContainer(const WORD &id, int x, int y)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(false, io, x, y);
+		result = MulReader->ArtPixelsInXY(false, io, x, y);
 #endif
 	}
 
@@ -3854,7 +3657,7 @@ bool TOrion::LandPixelsInXY(const WORD &id, int x, int  y, const int &z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->Data[(y * th->Width) + x] != 0;
 #else
-		result = MulReader.ArtPixelsInXY(true, io, x, y);
+		result = MulReader->ArtPixelsInXY(true, io, x, y);
 #endif
 	}
 
@@ -3928,7 +3731,7 @@ void TOrion::GetArtDimension(const WORD &id, POINT &p)
 //---------------------------------------------------------------------------
 void TOrion::GetStaticArtRealPixelDimension(const WORD &id, RECT &r)
 {
-	MulReader.ReadStaticArtPixelDimension(m_StaticDataIndex[id], r);
+	MulReader->ReadStaticArtPixelDimension(m_StaticDataIndex[id], r);
 }
 //---------------------------------------------------------------------------
 void TOrion::GetGumpDimension(const WORD &id, POINT &p)

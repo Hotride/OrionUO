@@ -33,6 +33,13 @@ TLinkedList *nextList = list; \
 list = new TLinkedList(&item); \
 	list->Next = nextList
 //---------------------------------------------------------------------------
+#define RELEASE_POINTER(ptr) \
+if (ptr != NULL) \
+{ \
+	delete ptr; \
+	ptr = NULL; \
+}
+//---------------------------------------------------------------------------
 #define UOMSG_PROCESS			WM_USER + 900
 //---------------------------------------------------------------------------
 //!Ёффекты шрифта
