@@ -303,10 +303,10 @@ int TDebugScreen::Render(bool mode)
 							m_Chair->Graphic = 2894 + i;
 							m_Chair->OnGraphicChange();
 							int x = 100 + (i * 100);
-							int y = 100;// +(j * 100);
+							int y = 100 + (j * 100);
 
 							//Рисуем стул только в верхнем ряду, в нижнем - перс на маунте
-							if (j < 2 && false)
+							if (j < 2)
 								m_Chair->Draw(mode, x, y, ticks);
 							else
 								m_Mount->Graphic = mountTable[i];
@@ -314,18 +314,14 @@ int TDebugScreen::Render(bool mode)
 							if (j == 0 && i == 0)
 								m_Mount->Layer = OL_NONE;
 							else if (j == 1 && i == 0)
-							{
 								m_Cloak->Layer = OL_NONE;
-
-							}
 							else if (j == 2 && i == 0)
 							{
 								m_Cloak->Layer = OL_CLOAK;
 								m_Mount->Layer = OL_MOUNT;
 							}
 
-							if (j == 2)
-								AnimationManager->DrawCharacter(m_Player, x, y, 0);
+							AnimationManager->DrawCharacter(m_Player, x, y, 0);
 						}
 					}
 					UnuseShader();
