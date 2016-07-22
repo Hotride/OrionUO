@@ -36,17 +36,6 @@ void TGumpMap::PrepareTextures()
 	Orion->ExecuteGumpPart(0x1398, 4);
 	Orion->ExecuteGump(0x139D);
 }
-//---------------------------------------------------------------------------
-void TGumpMap::GenerateFrame()
-{
-	if (!g_DrawMode)
-	{
-		m_FrameRedraw = false;
-		m_FrameCreated = false;
-
-		return;
-	}
-}
 //----------------------------------------------------------------------------
 int TGumpMap::LineUnderMouse(__inout int &x1, __inout int &y1, __in int x2, __in int y2)
 {
@@ -117,66 +106,32 @@ int TGumpMap::LineUnderMouse(__inout int &x1, __inout int &y1, __in int x2, __in
 
 	return result;
 }
-//----------------------------------------------------------------------------
-int TGumpMap::Draw(__in bool &mode)
+//---------------------------------------------------------------------------
+void TGumpMap::GenerateFrame()
 {
-	DWORD index = (DWORD)this;
-
-	//Для быстрого доступа
-	int posX = X;
-	int posY = Y;
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-	
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Если окошко захвачено для перемещения - вычислим оффсеты
-	if (mode && g_LeftMouseDown && g_LastGumpLeftMouseDown == index)
+	if (!g_DrawMode)
 	{
-		int ofsX = (g_MouseX - g_DroppedLeftMouseX);
-		int ofsY = (g_MouseY - g_DroppedLeftMouseY);
+		m_FrameRedraw = false;
+		m_FrameCreated = false;
 
-		if (!g_LastObjectLeftMouseDown)
-		{
-			posX += ofsX;
-			posY += ofsY;
-		}
-		else if (PinOnCursor == NULL && (ofsX || ofsY) && g_LastObjectLeftMouseDown > ID_GM_PIN_LIST && g_LastObjectLeftMouseDown < ID_GM_PIN_LIST_INSERT && m_PinTimer > g_Ticks)
-		{
-			int objIndex = g_LastObjectLeftMouseDown - ID_GM_PIN_LIST;
-
-			TGumpObject *go = (TGumpObject*)m_Items;
-			int idx = 1;
-
-			for (; go != NULL && idx != objIndex; go = (TGumpObject*)go->m_Next, idx++);
-
-			if (go != NULL)
-				PinOnCursor = go;
-		}
-		else if (PinOnCursor != NULL)
-		{
-			PinOnCursor->X = g_MouseX - (X + 20);
-			PinOnCursor->Y = g_MouseY - (Y + 30);
-		}
+		return;
 	}
 
-	if (mode) //Отрисовка
-	{
-		Orion->DrawResizepicGump(0x1432, posX, posY, m_Width + 44, m_Height + 61); //Map Gump
+	glNewList((GLuint)this, GL_COMPILE);
+
+		Orion->DrawResizepicGump(0x1432, 0, 0, m_Width + 44, m_Height + 61); //Map Gump
 
 		if (m_PlotState == 0)
-			Orion->DrawGump(0x1398, 0, posX + ((m_Width - 100) / 2), posY + 5); //Plot Course
+			Orion->DrawGump(0x1398, 0, (m_Width - 100) / 2, 5); //Plot Course
 		else if (m_PlotState == 1)
 		{
-			Orion->DrawGump(0x1399, 0, posX + ((m_Width - 70) / 2), posY + 5); //Stop Plotting
-			Orion->DrawGump(0x139A, 0, posX + ((m_Width - 66) / 2), posY + m_Height + 37); //Clear Course
+			Orion->DrawGump(0x1399, 0, (m_Width - 70) / 2, 5); //Stop Plotting
+			Orion->DrawGump(0x139A, 0, (m_Width - 66) / 2, m_Height + 37); //Clear Course
 		}
-		
-		g_GL.Draw(Texture, posX + 24, posY + 31, m_Width, m_Height);
 
-		Orion->DrawGump(0x139D, 0, posX + 174, posY + 177); //N
+		g_GL.Draw(Texture, 24, 31, m_Width, m_Height);
+
+		Orion->DrawGump(0x139D, 0, 174, 177); //N
 
 		//Отрисовка кнопок
 		TGumpObject *go = (TGumpObject*)m_Items;
@@ -184,15 +139,15 @@ int TGumpMap::Draw(__in bool &mode)
 
 		while (go != NULL)
 		{
-			int drawX = posX + go->X + 18;
-			int drawY = posY + go->Y + 21;
+			int drawX = go->X + 18;
+			int drawY = go->Y + 21;
 
 			TGumpObject *next = (TGumpObject*)go->m_Next;
 
 			if (next != NULL)
 			{
-				int nextDrawX = posX + next->X + 20;
-				int nextDrawY = posY + next->Y + 30;
+				int nextDrawX = next->X + 20;
+				int nextDrawY = next->Y + 30;
 
 				if (next == PinOnCursor || go == PinOnCursor)
 					glColor4f(0.87f, 0.87f, 0.87f, 1.0f);
@@ -202,8 +157,8 @@ int TGumpMap::Draw(__in bool &mode)
 				g_GL.DrawLine(drawX + 2, drawY + 8, nextDrawX, nextDrawY);
 
 				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-				
-				if (PinOnCursor == NULL && CanSelectedButton >= ID_GM_PIN_LIST_INSERT && (CanSelectedButton - ID_GM_PIN_LIST_INSERT) == idx)
+
+				if (PinOnCursor == NULL && g_GumpSelectElement >= ID_GM_PIN_LIST_INSERT && (g_GumpSelectElement - ID_GM_PIN_LIST_INSERT) == idx)
 				{
 					int checkX = drawX + 2;
 					int checkY = drawY + 8;
@@ -217,7 +172,7 @@ int TGumpMap::Draw(__in bool &mode)
 			{
 				Orion->DrawGump(0x139B, 0, drawX, drawY);
 
-				char text[10] = {0};
+				char text[5] = { 0 };
 				sprintf(text, "%d", idx);
 				FontManager->DrawA(3, text, 0, drawX - 10, drawY - 12);
 			}
@@ -227,13 +182,71 @@ int TGumpMap::Draw(__in bool &mode)
 			go = (TGumpObject*)go->m_Next;
 			idx++;
 		}
+
+	glEndList();
+
+	m_FrameRedraw = true;
+	m_FrameCreated = true;
+}
+//----------------------------------------------------------------------------
+int TGumpMap::Draw(__in bool &mode)
+{
+	CalculateGumpState();
+
+	DWORD index = (DWORD)this;
+
+	//Если окошко захвачено для перемещения - вычислим оффсеты
+	if (g_LastGumpLeftMouseDown == index && g_LastObjectLeftMouseDown)
+	{
+		if (PinOnCursor == NULL)
+		{
+			if ((g_MouseX - g_DroppedLeftMouseX || g_MouseY - g_DroppedLeftMouseY) && g_LastObjectLeftMouseDown > ID_GM_PIN_LIST && g_LastObjectLeftMouseDown < ID_GM_PIN_LIST_INSERT && m_PinTimer > g_Ticks)
+			{
+				int objIndex = g_LastObjectLeftMouseDown - ID_GM_PIN_LIST;
+
+				TGumpObject *go = (TGumpObject*)m_Items;
+				int idx = 1;
+
+				for (; go != NULL && idx != objIndex; go = (TGumpObject*)go->m_Next, idx++);
+
+				if (go != NULL)
+					PinOnCursor = go;
+			}
+		}
+		else if (PinOnCursor != NULL)
+		{
+			PinOnCursor->X = g_MouseX - (m_X + 20);
+			PinOnCursor->Y = g_MouseY - (m_Y + 30);
+		}
+	}
+
+	if (mode) //Отрисовка
+	{
+		if (!m_FrameCreated || g_GumpSelectElement || g_GumpTranslateX || g_GumpTranslateY)
+			GenerateFrame();
+		else if (m_FrameRedraw)
+		{
+			GenerateFrame();
+			m_FrameRedraw = false;
+		}
+
+		glTranslatef(g_GumpTranslateX, g_GumpTranslateY, 0.0f);
+
+		glCallList((GLuint)index);
+
+		glTranslatef(-g_GumpTranslateX, -g_GumpTranslateY, 0.0f);
 	}
 	else //Выбор объектов
 	{
+		int oldMouseX = g_MouseX;
+		int oldMouseY = g_MouseY;
+		g_MouseX -= (int)g_GumpTranslateX;
+		g_MouseY -= (int)g_GumpTranslateY;
+
 		int LSG = 0;
 
 		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (Orion->ResizepicPixelsInXY(0x1432, posX, posY, m_Width + 44, m_Height + 61))
+		if (Orion->ResizepicPixelsInXY(0x1432, 0, 0, m_Width + 44, m_Height + 61))
 		{
 			g_LastSelectedObject = 0;
 			g_LastSelectedGump = index;
@@ -241,14 +254,14 @@ int TGumpMap::Draw(__in bool &mode)
 
 		if (m_PlotState == 0)
 		{
-			if (Orion->GumpPixelsInXY(0x1398, posX + ((m_Width - 99) / 2), posY + 5)) //Plot Course
+			if (Orion->GumpPixelsInXY(0x1398, (m_Width - 99) / 2, 5)) //Plot Course
 				LSG = ID_GM_PLOT_COURSE;
 		}
 		else if (m_PlotState == 1)
 		{
-			if (Orion->GumpPixelsInXY(0x1398, posX + ((m_Width - 69) / 2), posY + 5)) //Stop Plotting
+			if (Orion->GumpPixelsInXY(0x1398, (m_Width - 69) / 2, 5)) //Stop Plotting
 				LSG = ID_GM_STOP_PLOTTING;
-			else if (Orion->GumpPixelsInXY(0x1398, posX + ((m_Width - 66) / 2), posY + m_Height + 37)) //Clear Course
+			else if (Orion->GumpPixelsInXY(0x1398, (m_Width - 66) / 2, m_Height + 37)) //Clear Course
 				LSG = ID_GM_CLEAR_COURSE;
 
 			TGumpObject *go = (TGumpObject*)m_Items;
@@ -256,8 +269,8 @@ int TGumpMap::Draw(__in bool &mode)
 
 			for (; go != NULL; go = (TGumpObject*)go->m_Next, idx++)
 			{
-				int drawX = posX + go->X + 18;
-				int drawY = posY + go->Y + 21;
+				int drawX = go->X + 18;
+				int drawY = go->Y + 21;
 
 				if (Orion->PolygonePixelsInXY(drawX, drawY, 10, 10))
 					LSG = ID_GM_PIN_LIST + idx;
@@ -270,15 +283,15 @@ int TGumpMap::Draw(__in bool &mode)
 
 				for (; go != NULL; go = (TGumpObject*)go->m_Next, idx++)
 				{
-					int drawX = posX + go->X + 18;
-					int drawY = posY + go->Y + 21;
+					int drawX = go->X + 18;
+					int drawY = go->Y + 21;
 					
 					TGumpObject *next = (TGumpObject*)go->m_Next;
 
 					if (next != NULL)
 					{
-						int nextDrawX = posX + next->X + 20;
-						int nextDrawY = posY + next->Y + 30;
+						int nextDrawX = next->X + 20;
+						int nextDrawY = next->Y + 30;
 						
 						int checkX = drawX + 2;
 						int checkY = drawY + 8;
@@ -289,6 +302,9 @@ int TGumpMap::Draw(__in bool &mode)
 				}
 			}
 		}
+
+		g_MouseX = oldMouseX;
+		g_MouseY = oldMouseY;
 		
 		return LSG;
 	}
