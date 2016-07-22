@@ -876,7 +876,8 @@ enum DEF_FILE_FLAGS
 	DFF_GUMP =			0x00000010,
 	DFF_MULTI =			0x00000020,
 	DFF_SOUND =			0x00000040,
-	DFF_TEXTERR =		0x00000080
+	DFF_TEXTERR =		0x00000080,
+	DFF_EQUIPCONV =		0x00000100
 };
 //---------------------------------------------------------------------------
 enum SEASON_TYPE

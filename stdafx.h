@@ -451,6 +451,7 @@ extern bool g_UseGumpDef;
 extern bool g_UseMultiDef;
 extern bool g_UseSoundDef;
 extern bool g_UseTexTerrDef;
+extern bool g_UseEquipconvDef;
 //---------------------------------------------------------------------------
 
 

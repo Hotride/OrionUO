@@ -173,6 +173,7 @@ bool g_UseGumpDef = false;
 bool g_UseMultiDef = false;
 bool g_UseSoundDef = false;
 bool g_UseTexTerrDef = false;
+bool g_UseEquipconvDef = false;
 
 
 /*

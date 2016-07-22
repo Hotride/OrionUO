@@ -2416,6 +2416,9 @@ void TOrion::LoadClientConfig()
 		else
 			CharacterList.ClientFlag = 0;
 
+		if (g_UseFileUOP)
+			FileManager.UseVerdata = false;
+
 		FileManager.UnloadFileFromMemory(file);
 	}
 	else
@@ -2435,6 +2438,7 @@ void TOrion::LoadClientConfig()
 	g_UseMultiDef = (defFlags & DFF_MULTI);
 	g_UseSoundDef = (defFlags & DFF_SOUND);
 	g_UseTexTerrDef = (defFlags & DFF_TEXTERR);
+	g_UseEquipconvDef = (defFlags & DFF_EQUIPCONV);
 }
 //---------------------------------------------------------------------------
 DWORD TOrion::GetFileHashCode(DWORD address, DWORD size)
