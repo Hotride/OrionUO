@@ -195,7 +195,7 @@ int TAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 //----------------------------------------------------------------------------
 TAnimationManager::TAnimationManager()
 : m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0), m_Direction(0),
-m_ShadowCount(0), m_Sitting(0)
+m_ShadowCount(0), m_Sitting(0), m_Transform(false)
 {
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
@@ -1332,8 +1332,23 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 			glUniform1iARB(ShaderDrawMode, drawMode);
 
-			if (m_Sitting && m_Direction == 1)
-				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror);
+			if (m_Transform && !obj->NPC && obj->Container)
+			{
+				TGameCharacter* owner = World->FindWorldCharacter(obj->Container);
+				if (owner)
+				{
+					DRAW_FRAME_INFORMATION frameInfo = owner->m_FrameInfo;
+					
+				}
+			}
+
+			if (m_Transform)
+			{
+				float h3mod = 1.0f;
+				float h6mod = 1.0f;
+				float h9mod = 1.0f;
+				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror, h3mod, h6mod, h9mod);
+			}			
 			else
 				g_GL.Draw(frame->Texture, x, y, frame->Width, frame->Height, mirror);
 
@@ -1763,6 +1778,7 @@ void TAnimationManager::DrawCharacterAAA(__in TGameCharacter *obj, __in int x, _
 */
 void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __in int y, __in int z)
 {
+	m_Transform = false;
 	//DrawCharacterAAA(obj, x, y, z);
 	//return;
 
@@ -1899,6 +1915,8 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 			FixSittingDirection(layerDir, mirror, drawX, drawY);
 			if (m_Direction == 3)
 				animGroup = 25;
+			else
+				m_Transform = true;
 		}
 		else
 			Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
@@ -2601,7 +2619,6 @@ void TAnimationManager::DrawEquippedLayers(TGameCharacter* obj, int drawX, int d
 
 		if (goi == NULL || (robe != NULL && IsUnderRobe(goi->GetLayer())))
 			continue;
-
 		if (goi->AnimID)
 			Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
 

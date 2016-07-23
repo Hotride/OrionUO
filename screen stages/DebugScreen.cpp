@@ -47,6 +47,7 @@ void TDebugScreen::Init()
 	m_Player->Hits = 1;
 	m_Player->MaxHits = 1;
 	m_Player->NPC = true;
+	m_Player->Serial = 0;
 
 	//Линковка в псевдомире: стул; персонаж
 	m_Chair->m_NextXY = m_Player;
@@ -252,7 +253,6 @@ int TDebugScreen::Render(bool mode)
 			g_GL.ViewPort(0, 0, 640, 480);
 
 			fb.Draw(0, 0);
-
 			if (DISPLAY_MAP_TEST)
 			{
 				m_Map1->Draw(mode);

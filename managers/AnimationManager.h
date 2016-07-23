@@ -118,6 +118,8 @@ private:
 	//!Находится-ли данный слой под робой
 	bool IsUnderRobe(int layer);
 
+	bool m_Transform;
+
 public:
 	TAnimationManager();
 	~TAnimationManager();
