@@ -432,12 +432,22 @@ void TGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const i
 			
 			if (h6mod)
 			{
+				if (!h3mod)
+				{
+					glTexCoord2f(0.0f, 0.0f); glVertex2i(widthOffset, 0);
+					glTexCoord2f(1.0f, 0.0f); glVertex2i(0, 0);
+				}
 				glTexCoord2f(0.0f, 0.65f); glVertex2i(widthOffset, h06);
 				glTexCoord2f(1.0f, 0.65f); glVertex2i(SITTING_OFFSET_X, h06);
 			}
 			
 			if (h9mod)
 			{
+				if (!h6mod)
+				{
+					glTexCoord2f(0.0f, 0.0f); glVertex2i(widthOffset, 0);
+					glTexCoord2f(1.0f, 0.0f); glVertex2i(0, 0);
+				}
 				glTexCoord2f(0.0f, 1.0f); glVertex2i(widthOffset, h09);
 				glTexCoord2f(1.0f, 1.0f); glVertex2i(SITTING_OFFSET_X, h09);
 			}
@@ -451,6 +461,11 @@ void TGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const i
 			
 			if (h6mod)
 			{
+				if (!h3mod)
+				{
+					glTexCoord2f(0.0f, 0.0f); glVertex2i(widthOffset, 0);
+					glTexCoord2f(1.0f, 0.0f); glVertex2i(0, 0);
+				}
 				glTexCoord2f(0.0f, 0.65f); glVertex2i(0, h06);
 				glTexCoord2f(1.0f, 0.65f); glVertex2i(width, h06);
 			}
@@ -458,6 +473,11 @@ void TGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const i
 			
 			if (h9mod)
 			{
+				if (!h6mod)
+				{
+					glTexCoord2f(0.0f, 0.0f); glVertex2i(widthOffset, 0);
+					glTexCoord2f(1.0f, 0.0f); glVertex2i(0, 0);
+				}
 				glTexCoord2f(0.0f, 1.0f); glVertex2i(0, h09);
 				glTexCoord2f(1.0f, 1.0f); glVertex2i(width, h09);
 			}

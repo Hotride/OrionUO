@@ -1332,21 +1332,26 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 			glUniform1iARB(ShaderDrawMode, drawMode);
 
+			float h3mod = 1.0f;
+			float h6mod = 1.0f;
+			float h9mod = 1.0f;
+
 			if (m_Transform && !obj->NPC && obj->Container)
 			{
 				TGameCharacter* owner = World->FindWorldCharacter(obj->Container);
 				if (owner)
 				{
 					DRAW_FRAME_INFORMATION frameInfo = owner->m_FrameInfo;
+					int startWaist = frameInfo.Height / 0.35f;
+					int startKnees = frameInfo.Height / 0.60f;
+					int feet = frameInfo.Height / 0.94f;
 					
 				}
 			}
 
 			if (m_Transform)
 			{
-				float h3mod = 1.0f;
-				float h6mod = 1.0f;
-				float h9mod = 1.0f;
+
 				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror, h3mod, h6mod, h9mod);
 			}			
 			else
