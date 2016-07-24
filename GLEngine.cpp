@@ -415,9 +415,9 @@ void TGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const i
 	
 	glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)g_ZBuffer);
 	
-	int h03 = (int)(height * h3mod);
-	int h06 = (int)(height * h6mod);
-	int h09 = (int)(height * h9mod);
+	float h03 = height * h3mod;
+	float h06 = height * h6mod;
+	float h09 = height * h9mod;
 
 	//Константы соотношений SITTING_OFFSET_X и высот при полной фрейме( например персонажа ).
 	float h3modSittingOffsetX = 22.86f * h3mod;
