@@ -1220,6 +1220,8 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			x -= frame->CenterX;
 
 		y -= frame->Height + frame->CenterY;
+		if (obj->NPC)
+			m_CharacterY = y;
 
 #if UO_DEPTH_TEST == 1
 		glEnable(GL_DEPTH_TEST);
@@ -1332,26 +1334,45 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 			glUniform1iARB(ShaderDrawMode, drawMode);
 
-			float h3mod = 1.0f;
-			float h6mod = 1.0f;
+			float h3mod = 0.35f;
+			float h6mod = 0.6f;
 			float h9mod = 1.0f;
-
+			int startWaist = 0;
+			int startKnees = 0;
+			int feet = 0;
+			int frameHeight = 0;
 			if (m_Transform && !obj->NPC && obj->Container)
 			{
 				TGameCharacter* owner = World->FindWorldCharacter(obj->Container);
 				if (owner)
 				{
 					DRAW_FRAME_INFORMATION frameInfo = owner->m_FrameInfo;
-					int startWaist = frameInfo.Height / 0.35f;
-					int startKnees = frameInfo.Height / 0.60f;
-					int feet = frameInfo.Height / 0.94f;
+					frameHeight = frameInfo.Height;
+					startWaist = m_CharacterY + frameInfo.Height * h3mod;
+					startKnees = m_CharacterY + frameInfo.Height * h6mod;
+					feet = m_CharacterY + frameInfo.Height * h9mod;
 					
 				}
 			}
-
 			if (m_Transform)
 			{
-
+				if (!obj->NPC)
+				{
+					/*int endY = y + frame->Height;
+					int startY = y;
+					if (startY < startWaist && endY < startWaist)
+					{
+						h6mod = 0;
+						h9mod = 0;
+						h3mod = 1.0f;
+					}
+					else if (startY > startKnees)
+					{
+						h3mod = 0;
+						h6mod = 0;
+						h9mod = 1.0f;
+					}*/
+				}
 				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror, h3mod, h6mod, h9mod);
 			}			
 			else

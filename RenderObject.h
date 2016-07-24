@@ -39,7 +39,7 @@ protected:
 	//Цвет
 	WORD m_Color;
 
-	//Координаты
+	//Координаты В МИРЕ
 	short m_X;
 	short m_Y;
 public:
