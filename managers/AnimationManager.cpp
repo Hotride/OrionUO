@@ -1358,6 +1358,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			{
 				if (!obj->NPC)
 				{
+					/*h3mod = 
 					int endY = y + frame->Height;
 					int startY = y;
 					if (startY < startWaist && endY < startWaist)
@@ -1370,7 +1371,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 					{
 						h3mod = 0;
 						h6mod = 0;
-					}
+					}*/
 				}
 				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror, h3mod, h6mod, h9mod);
 			}			
