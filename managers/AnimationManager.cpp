@@ -1358,20 +1358,22 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			{
 				if (!obj->NPC)
 				{
-					/*h3mod = 
-					int endY = y + frame->Height;
-					int startY = y;
-					if (startY < startWaist && endY < startWaist)
-					{
-						h6mod = 0;
-						h9mod = 0;
-						h3mod = 1.0f;
-					}
-					else if (startY > startKnees)
-					{
+					int ownersUpperBodyHeight = startWaist - m_CharacterY;					
+					int ownersMidBodyHeight = startKnees - startWaist;
+					int ownersLowerBodyHeight = feet - startKnees;
+
+					int itemsEndY = y + frame->Height;
+
+
+					h3mod = startWaist <= itemsEndY ? h3mod / (ownersUpperBodyHeight / (startWaist - y == 0 ? 1 : startWaist - y)) : 1.0f;
+					if (h3mod < 0)
 						h3mod = 0;
+					h6mod = startKnees <= itemsEndY ? h6mod / (ownersMidBodyHeight / (startKnees - (y <= startWaist ? startWaist : y))) : startWaist <= itemsEndY ? 1.0f : 0.0f;
+					if (h6mod < 0)
 						h6mod = 0;
-					}*/
+					h9mod = feet <= itemsEndY ? h9mod / (ownersLowerBodyHeight / (feet - (y <= startKnees ? startKnees : y))) : startKnees <= itemsEndY ? 1.0f : 0.0f;
+					if (h9mod < 0)
+						h9mod = 0;
 				}
 				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror, h3mod, h6mod, h9mod);
 			}			
