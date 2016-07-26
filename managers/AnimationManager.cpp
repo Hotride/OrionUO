@@ -1358,22 +1358,57 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			{
 				if (!obj->NPC)
 				{
-					int ownersUpperBodyHeight = startWaist - m_CharacterY;					
-					int ownersMidBodyHeight = startKnees - startWaist;
-					int ownersLowerBodyHeight = feet - startKnees;
+					float ownersUpperBodyHeight = startWaist - m_CharacterY;					
+					float ownersMidBodyHeight = startKnees - startWaist;
+					float ownersLowerBodyHeight = feet - startKnees;
 
-					int itemsEndY = y + frame->Height;
+					float itemsEndY = y + frame->Height;
 
-
-					h3mod = startWaist <= itemsEndY ? h3mod / (ownersUpperBodyHeight / (startWaist - y == 0 ? 1 : startWaist - y)) : 1.0f;
-					if (h3mod < 0)
+					//Определяем соотношение верхней части текстуры, до перелома.
+					if (y >= startWaist)
 						h3mod = 0;
-					h6mod = startKnees <= itemsEndY ? h6mod / (ownersMidBodyHeight / (startKnees - (y <= startWaist ? startWaist : y))) : startWaist <= itemsEndY ? 1.0f : 0.0f;
-					if (h6mod < 0)
+					else if (itemsEndY <= startWaist)
+						h3mod = 1.0f;
+					else
+					{
+						float upperBodyDiff = startWaist - y;
+						h3mod = upperBodyDiff / frame->Height;
+						if (h3mod < 0)
+							h3mod = 0;
+					}
+					
+					//Определяем соотношение средней части, где идет деформация с растягиванием по Х.
+					if (startWaist >= itemsEndY || y >= startKnees)
 						h6mod = 0;
-					h9mod = feet <= itemsEndY ? h9mod / (ownersLowerBodyHeight / (feet - (y <= startKnees ? startKnees : y))) : startKnees <= itemsEndY ? 1.0f : 0.0f;
-					if (h9mod < 0)
+					else if (startWaist <= y && itemsEndY <= startKnees)
+						h6mod = 1.0f;
+					else
+					{
+						float midBodyDiff = 0.0f;
+						if (y >= startWaist)
+							midBodyDiff = startKnees - y;
+						else if (itemsEndY <= startKnees)
+							midBodyDiff = itemsEndY - startWaist;
+						else
+							midBodyDiff = startKnees - startWaist;
+
+						h6mod = h3mod + midBodyDiff / frame->Height;
+						if (h6mod < 0)
+							h6mod = 0;
+					}
+						
+					//Определяем соотношение нижней части, она смещена на 8 Х.
+					if (itemsEndY <= startKnees)
 						h9mod = 0;
+					else if (y >= startKnees)
+						h9mod = 1.0f;
+					else
+					{
+						float lowerBodyDiff = itemsEndY - startKnees;
+						h9mod = h6mod + lowerBodyDiff / frame->Height;
+						if (h9mod < 0)
+							h9mod = 0;
+					}
 				}
 				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror, h3mod, h6mod, h9mod);
 			}			
