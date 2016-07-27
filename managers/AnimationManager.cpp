@@ -1220,8 +1220,15 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			x -= frame->CenterX;
 
 		y -= frame->Height + frame->CenterY;
-		if (obj->NPC)
-			m_CharacterY = y;
+		if (obj->IsHuman())
+		{
+			short frameHeight = frame->Height;
+			m_CharacterFrameStartY = y;
+			m_CharacterFrameHeight = frame->Height;
+			m_StartCharacterWaistY = frameHeight * UPPER_BODY_RATIO + m_CharacterFrameStartY;
+			m_StartCharacterKneesY = frameHeight * MID_BODY_RATIO + m_CharacterFrameStartY;
+			m_StartCharacterFeetY = frameHeight * LOWER_BODY_RATIO + m_CharacterFrameStartY;
+		}
 
 #if UO_DEPTH_TEST == 1
 		glEnable(GL_DEPTH_TEST);
@@ -1334,63 +1341,44 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 
 			glUniform1iARB(ShaderDrawMode, drawMode);
 
-			float h3mod = 0.35f;
-			float h6mod = 0.6f;
-			float h9mod = 0.94f;
-			int startWaist = 0;
-			int startKnees = 0;
-			int feet = 0;
-			int frameHeight = 0;
-			if (m_Transform && !obj->NPC && obj->Container)
-			{
-				TGameCharacter* owner = World->FindWorldCharacter(obj->Container);
-				if (owner)
-				{
-					DRAW_FRAME_INFORMATION frameInfo = owner->m_FrameInfo;
-					frameHeight = frameInfo.Height;
-					startWaist = m_CharacterY + frameInfo.Height * h3mod;
-					startKnees = m_CharacterY + frameInfo.Height * h6mod;
-					feet = m_CharacterY + frameInfo.Height * h9mod;
-					
-				}
-			}
+
 			if (m_Transform)
 			{
+				float h3mod = UPPER_BODY_RATIO;
+				float h6mod = MID_BODY_RATIO;
+				float h9mod = LOWER_BODY_RATIO;
+
 				if (!obj->NPC)
 				{
-					float ownersUpperBodyHeight = startWaist - m_CharacterY;					
-					float ownersMidBodyHeight = startKnees - startWaist;
-					float ownersLowerBodyHeight = feet - startKnees;
-
 					float itemsEndY = y + frame->Height;
 
 					//Определяем соотношение верхней части текстуры, до перелома.
-					if (y >= startWaist)
+					if (y >= m_StartCharacterWaistY)
 						h3mod = 0;
-					else if (itemsEndY <= startWaist)
+					else if (itemsEndY <= m_StartCharacterWaistY)
 						h3mod = 1.0f;
 					else
 					{
-						float upperBodyDiff = startWaist - y;
+						float upperBodyDiff = m_StartCharacterWaistY - y;
 						h3mod = upperBodyDiff / frame->Height;
 						if (h3mod < 0)
 							h3mod = 0;
 					}
 					
 					//Определяем соотношение средней части, где идет деформация с растягиванием по Х.
-					if (startWaist >= itemsEndY || y >= startKnees)
+					if (m_StartCharacterWaistY >= itemsEndY || y >= m_StartCharacterKneesY)
 						h6mod = 0;
-					else if (startWaist <= y && itemsEndY <= startKnees)
+					else if (m_StartCharacterWaistY <= y && itemsEndY <= m_StartCharacterKneesY)
 						h6mod = 1.0f;
 					else
 					{
 						float midBodyDiff = 0.0f;
-						if (y >= startWaist)
-							midBodyDiff = startKnees - y;
-						else if (itemsEndY <= startKnees)
-							midBodyDiff = itemsEndY - startWaist;
+						if (y >= m_StartCharacterWaistY)
+							midBodyDiff = m_StartCharacterKneesY - y;
+						else if (itemsEndY <= m_StartCharacterKneesY)
+							midBodyDiff = itemsEndY - m_StartCharacterWaistY;
 						else
-							midBodyDiff = startKnees - startWaist;
+							midBodyDiff = m_StartCharacterKneesY - m_StartCharacterWaistY;
 
 						h6mod = h3mod + midBodyDiff / frame->Height;
 						if (h6mod < 0)
@@ -1398,13 +1386,13 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 					}
 						
 					//Определяем соотношение нижней части, она смещена на 8 Х.
-					if (itemsEndY <= startKnees)
+					if (itemsEndY <= m_StartCharacterKneesY)
 						h9mod = 0;
-					else if (y >= startKnees)
+					else if (y >= m_StartCharacterKneesY)
 						h9mod = 1.0f;
 					else
 					{
-						float lowerBodyDiff = itemsEndY - startKnees;
+						float lowerBodyDiff = itemsEndY - m_StartCharacterKneesY;
 						h9mod = h6mod + lowerBodyDiff / frame->Height;
 						if (h9mod < 0)
 							h9mod = 0;

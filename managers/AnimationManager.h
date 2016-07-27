@@ -69,8 +69,24 @@ private:
 	//!Цвет текущего кадра
 	WORD m_Color;
 
+	const float UPPER_BODY_RATIO = 0.35f;
+	const float MID_BODY_RATIO = 0.60f;
+	const float LOWER_BODY_RATIO = 0.94f;
+
+	//!Высота текстуры персонажа.
+	int m_CharacterFrameHeight;
+
 	//!Начало текстуры персонажа ( экранная координата )
-	int m_CharacterY;
+	int m_CharacterFrameStartY;
+
+	//!Начало пояса в текстуре персонажа ( сверху-вниз )
+	int m_StartCharacterWaistY;
+
+	//!Начало колен в текстуре персонажа ( сверху-вниз )
+	int m_StartCharacterKneesY;
+
+	//!Начало стоп в текстуре персонажа ( сверху-вниз )
+	int m_StartCharacterFeetY;
 
 	//!Группа анимаций текущего кадра
 	int m_AnimGroup;
