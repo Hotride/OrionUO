@@ -841,17 +841,6 @@ bool TOrion::Install()
 
 	CreateDirectoryA(FilePath("snapshots").c_str(), NULL);
 
-	DebugScreen = new TDebugScreen();
-	MainScreen = new TMainScreen();
-	ConnectionScreen = new TConnectionScreen();
-	ServerScreen = new TServerScreen();
-	CharacterListScreen = new TCharacterListScreen();
-	CreateCharacterScreen = new TCreateCharacterScreen();
-	SelectProfessionScreen = new TSelectProfessionScreen();
-	SelectTownScreen = new TSelectTownScreen();
-	GameScreen = new TGameScreen();
-	GameBlockedScreen = new TGameBlockedScreen();
-
 	GumpManager = new TGumpManager();
 
 	if (g_UseFileUOP)
@@ -948,6 +937,17 @@ bool TOrion::Install()
 	g_CircleOfTransparency.Create(200);
 
 	CreateObjectHandlesBackground();
+
+	DebugScreen = new TDebugScreen();
+	MainScreen = new TMainScreen();
+	ConnectionScreen = new TConnectionScreen();
+	ServerScreen = new TServerScreen();
+	CharacterListScreen = new TCharacterListScreen();
+	CreateCharacterScreen = new TCreateCharacterScreen();
+	SelectProfessionScreen = new TSelectProfessionScreen();
+	SelectTownScreen = new TSelectTownScreen();
+	GameScreen = new TGameScreen();
+	GameBlockedScreen = new TGameBlockedScreen();
 
 	MainScreen->LoadGlobalConfig();
 
@@ -2846,7 +2846,6 @@ void TOrion::Process(const bool &rendering)
 			}
 		}
 		
-		//if (g_LastRenderTime <= ticks)
 		if (rendering)
 		{
 			GameScreen->CalculateGameWindowBounds();
@@ -2874,7 +2873,7 @@ void TOrion::Process(const bool &rendering)
 			}
 		}
 	}
-	else if (rendering) //if (g_LastRenderTime <= ticks)
+	else if (rendering)
 	{
 		if (!IsIconic(g_hWnd))
 		{
@@ -4217,7 +4216,6 @@ void TOrion::Connect()
 {
 	InitScreen(GS_MAIN_CONNECT);
 
-	g_LastRenderTime = 0;
 	Process(true);
 
 	//g_ClientPaused = false;

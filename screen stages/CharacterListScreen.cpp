@@ -163,14 +163,6 @@ void TCharacterListScreen::InitToolTip()
 */
 int TCharacterListScreen::Render( __in bool mode)
 {
-	DWORD ticks = g_Ticks;
-
-	/*if (g_LastRenderTime > ticks)
-	{
-		if (mode || !g_SelectGumpObjects)
-			return 0;
-	}*/
-
 	int count = CharacterList.Count;
 	bool testField = (ConnectionManager.ClientVersion >= CV_305D);
 	int posInList = 0;
@@ -193,8 +185,6 @@ int TCharacterListScreen::Render( __in bool mode)
 		if (g_LeftMouseDown && g_LastObjectLeftMouseDown == g_LastSelectedObject)
 			CanPressedButton = g_LastObjectLeftMouseDown;
 	
-		g_LastRenderTime = ticks + (g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]);
-
 		g_GL.BeginDraw();
 
 		if (DrawSmoothMonitor())

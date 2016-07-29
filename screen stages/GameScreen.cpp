@@ -1509,18 +1509,10 @@ void TGameScreen::DrawGameWindowText( __in bool &mode)
 */
 int TGameScreen::Render(__in bool mode)
 {
-	DWORD ticks = g_Ticks;
-
-	/*if (g_LastRenderTime > ticks)
-	{
-		if (mode || !g_SelectGumpObjects)
-			return 0;
-	}*/
-
 	if (!m_RenderListInitalized)
 		CalculateRenderList();
 
-	if (g_DeathScreenTimer < ticks)
+	if (g_DeathScreenTimer < g_Ticks)
 	{
 		if (g_DeathScreenTimer && SmoothMonitor.UseSunrise())
 			m_SmoothScreenAction = 0;
@@ -1537,16 +1529,14 @@ int TGameScreen::Render(__in bool mode)
 		static int currentFPS = 0;
 		static int FPScount = 0;
 
-		if (lastRender < ticks)
+		if (lastRender < g_Ticks)
 		{
 			FPScount = currentFPS;
 			currentFPS = 0;
-			lastRender = ticks + 1000;
+			lastRender = g_Ticks + 1000;
 		}
 		else
 			currentFPS++;
-
-		g_LastRenderTime = ticks + g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)];
 
 		bool RMD = false;
 		bool LMD = false;

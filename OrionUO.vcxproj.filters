@@ -459,6 +459,9 @@
     <ClInclude Include="OrionUO.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="gump\GumpInterfaceObject.h">
+      <Filter>Заголовочные файлы\gump</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -847,6 +850,9 @@
     </ClCompile>
     <ClCompile Include="OrionUO.cpp">
       <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="gump\GumpInterfaceObject.cpp">
+      <Filter>Файлы исходного кода\gump</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

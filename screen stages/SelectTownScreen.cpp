@@ -136,14 +136,6 @@ void TSelectTownScreen::DrawTownInfo( __in int x, __in int y)
 */
 int TSelectTownScreen::Render(__in bool mode)
 {
-	DWORD ticks = g_Ticks;
-
-	/*if (g_LastRenderTime > ticks)
-	{
-		if (mode || !g_SelectGumpObjects)
-			return 0;
-	}*/
-	
 	int CanSelectedButton = g_LastSelectedObject;
 
 	int CanPressedButton = 0;
@@ -151,7 +143,7 @@ int TSelectTownScreen::Render(__in bool mode)
 		CanPressedButton = g_LastObjectLeftMouseDown;
 	
 	//Проверим, вдруг необходимо изменить положение отображаемого элемента
-	if (g_LeftMouseDown && m_LastScrollChangeTime < ticks)
+	if (g_LeftMouseDown && m_LastScrollChangeTime < g_Ticks)
 	{
 		if (g_LastObjectLeftMouseDown == ID_STS_SCROLLBAR_UP) //Скроллинг вверх (гампом-стрелкой)
 			ListingList(true, 10);
@@ -187,8 +179,6 @@ int TSelectTownScreen::Render(__in bool mode)
 
 	if (mode)
 	{
-		g_LastRenderTime = ticks + (g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]);
-
 		g_GL.BeginDraw();
 
 		if (DrawSmoothMonitor())

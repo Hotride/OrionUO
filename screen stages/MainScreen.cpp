@@ -22,30 +22,47 @@
 TMainScreen *MainScreen = NULL;
 //---------------------------------------------------------------------------
 TMainScreen::TMainScreen()
-: TBaseScreen(), m_SavePassword(false), m_AutoLogin(false)
+: TBaseScreen()
 {
-	m_Account = new TEntryText(32, 0, 300);
 	m_Password = new TEntryText(32, 0, 300);
-	m_PasswordFake = new TEntryText(32, 0, 300);
 
-	FontManager->GenerateA(2, m_Text[0], "Log in to Ultima Online", 0x0386);
-	FontManager->GenerateA(2, m_Text[1], "Account Name", 0x0386);
-	FontManager->GenerateA(2, m_Text[2], "Password", 0x0386);
-	FontManager->GenerateA(9, m_Text[3], "Save Password", 0x0386);
-	FontManager->GenerateA(9, m_Text[4], "Auto Login", 0x0386);
+	Add(new TGumpInterfaceGumppicTiled(0x0588, 0, 0, 0, 640, 480, 0xFFFFFFFF));
+	Add(new TGumpInterfaceGumppic(0x0E14, 0, 0, 0, 0xFFFFFFFF));
+	Add(new TGumpInterfaceGumppic(0x157C, 0, 0, 0, 0xFFFFFFFF));
+	Add(new TGumpInterfaceGumppic(0x15A0, 0, 0, 4, 0xFFFFFFFF));
+	Add(new TGumpInterfaceResizepic(0x13BE, 128, 288, 451, 157, 0xFFFFFFFF));
+	Add(new TGumpInterfaceGumppic(0x058A, 0, 286, 45, 0xFFFFFFFF));
+	Add(new TGumpInterfaceButton(0x1589, 0x158A, 0x158B, 555, 4, ID_MS_QUIT));
+	m_Arrow = new TGumpInterfaceButton(0x15A4, 0x15A5, 0x15A6, 610, 445, ID_MS_ARROW_NEXT);
+	Add(m_Arrow);
+	Add(new TGumpInterfaceResizepic(0x0BB8, 328, 343, 210, 30, ID_MS_ACCOUNT));
+	Add(new TGumpInterfaceResizepic(0x0BB8, 328, 383, 210, 30, ID_MS_PASSWORD));
+	m_SavePassword = new TGumpInterfaceCheckbox(0x00D2, 0x00D2, 0x00D3, false, 328, 417, ID_MS_SAVEPASSWORD);
+	Add(m_SavePassword);
+	m_AutoLogin = new TGumpInterfaceCheckbox(0x00D2, 0x00D2, 0x00D3, false, 183, 417, ID_MS_AUTOLOGIN);
+	Add(m_AutoLogin);
+	TGumpInterfaceText *obj = (TGumpInterfaceText*)Add(new TGumpInterfaceText(0x0386, 253, 305, 0xFFFFFFFF));
+	obj->CreateTextTextureA(2, "Log in to Ultima Online");
+	obj = (TGumpInterfaceText*)Add(new TGumpInterfaceText(0x0386, 183, 345, 0xFFFFFFFF));
+	obj->CreateTextTextureA(2, "Account Name");
+	obj = (TGumpInterfaceText*)Add(new TGumpInterfaceText(0x0386, 183, 385, 0xFFFFFFFF));
+	obj->CreateTextTextureA(2, "Password");
+	obj = (TGumpInterfaceText*)Add(new TGumpInterfaceText(0x0386, 351, 421, 0xFFFFFFFF));
+	obj->CreateTextTextureA(9, "Save Password");
+	obj = (TGumpInterfaceText*)Add(new TGumpInterfaceText(0x0386, 206, 421, 0xFFFFFFFF));
+	obj->CreateTextTextureA(9, "Auto Login");
+	obj = (TGumpInterfaceText*)Add(new TGumpInterfaceText(0x034E, 286, 455, 0xFFFFFFFF));
+	obj->CreateTextTextureA(9, string("UO Version " + g_ClientVersionText + "."));
 
-	string cver("UO Version " + g_ClientVersionText + ".");
-	FontManager->GenerateA(9, m_Text[5], cver.c_str(), 0x034E);
+	TGumpInterfaceTextEntryLimited *entry = (TGumpInterfaceTextEntryLimited*)Add(new TGumpInterfaceTextEntryLimited(0x034F, 0x03E3, 0x0021, 335, 343, 300, 32, false, 5, TS_LEFT, 0, ID_MS_ACCOUNT));
+	m_Account = entry->TextEntry;
+	entry = (TGumpInterfaceTextEntryLimited*)Add(new TGumpInterfaceTextEntryLimited(0x034F, 0x03E3, 0x0021, 335, 385, 300, 32, false, 5, TS_LEFT, 0, ID_MS_PASSWORD));
+	m_PasswordFake = entry->TextEntry;
 }
 //---------------------------------------------------------------------------
 TMainScreen::~TMainScreen()
 {
-	IFOR(i, 0, 6)
-		m_Text[i].Clear();
-	
-	delete m_Account;
 	delete m_Password;
-	delete m_PasswordFake;
 }
 //---------------------------------------------------------------------------
 /*!
@@ -64,12 +81,12 @@ void TMainScreen::Init()
 	AdjustWindowRectEx(&r, GetWindowLongA(g_hWnd, GWL_STYLE),FALSE, GetWindowLongA(g_hWnd, GWL_EXSTYLE));
 
 	if (r.left < 0)
-		r.right += (r.left * (-1));
+		r.right += -r.left;
 
 	if (r.top < 0)
-		r.bottom += (r.top * (-1));
+		r.bottom += -r.top;
 
-	if (!m_SavePassword)
+	if (!m_SavePassword->IsChecked)
 	{
 		m_Password->SetText(L"");
 		m_PasswordFake->SetText(L"");
@@ -98,15 +115,8 @@ void TMainScreen::Init()
 	ToolTip.SeqIndex = 0;
 
 	//Prepare textures on Main Screen:
-	Orion->ExecuteGump(0x0588); //Main Screen background
-	Orion->ExecuteGump(0x157C); //Main Screen
-	Orion->ExecuteGump(0x15A0); //Main Screen Notes
-	Orion->ExecuteResizepic(0x13BE); //ActPwd Container
-	Orion->ExecuteGump(0x058A); //Main Screen Castle?
-	Orion->ExecuteGumpPart(0x1589, 3); //X gump
-	Orion->ExecuteGumpPart(0x15A4, 3); //> gump
-	Orion->ExecuteResizepic(0x0BB8); //Account/Password text field
-	Orion->ExecuteGumpPart(0x00D2, 2); //Checkbox on / off
+	QFOR(item, m_Items, TGumpInterfaceObject*)
+		item->PrepareTextures();
 }
 //---------------------------------------------------------------------------
 /*!
@@ -178,84 +188,34 @@ void TMainScreen::InitToolTip()
 */
 int TMainScreen::Render(__in bool mode)
 {
-	DWORD ticks = g_Ticks;
-
 	static DWORD lastArrowTick = 0;
 	static bool arrowLighted = false;
 	
-	/*if (g_LastRenderTime > ticks)
-	{
-		if (mode || !g_SelectGumpObjects)
-			return 0;
-	}*/
-	
+	CalculateGumpState();
+
 	if (mode)
 	{
-		int CanSelectedButton = g_LastSelectedObject;
-
-		int CanPressedButton = 0;
-		if (g_LeftMouseDown && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-			CanPressedButton = g_LastObjectLeftMouseDown;
-	
-		g_LastRenderTime = ticks + (g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]);
-
 		g_GL.BeginDraw();
 
 		if (DrawSmoothMonitor())
 			return 0;
 
-		glColor3f(1.0f, 1.0f, 1.0f);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-		static DWORD times = g_Ticks + 3000;
-
-		Orion->DrawGump(0x0588, 0, 0, 0, 640, 480); //Main Gump background
-		Orion->DrawGump(0x0E14, 0, 0, 0); //Main Gump background 2
-		Orion->DrawGump(0x157C, 0, 0, 0); //Main Gump
-		Orion->DrawGump(0x15A0, 0, 0, 4); //Main Gump Notes
-		Orion->DrawResizepicGump(0x13BE, 128, 288, 451, 157); //ActPwd Container
-		Orion->DrawGump(0x058A, 0, 286, 45); //Main Gump Castle?
-
-		WORD GumpID = 0x1589 + (int)(CanSelectedButton == ID_MS_QUIT); //X gump /lighted
-		if (CanPressedButton == ID_MS_QUIT)
-			GumpID = 0x158B; //X gump (pressed)
-		Orion->DrawGump(GumpID, 0, 555, 4);
-		
-		GumpID = 0x15A4 + (int)(arrowLighted || (CanSelectedButton == ID_MS_ARROW_NEXT)); //> gump / lighted
-		if (CanPressedButton == ID_MS_ARROW_NEXT)
-			GumpID = 0x15A6; //> gump pressed
-		Orion->DrawGump(GumpID, 0, 610, 445);
-
-		if (lastArrowTick < ticks)
+		if (lastArrowTick < g_Ticks)
 		{
 			arrowLighted = !arrowLighted;
-			lastArrowTick = ticks + 500;
+
+			if (arrowLighted)
+				m_Arrow->Graphic = 0x15A5;
+			else
+				m_Arrow->Graphic = 0x15A4;
+
+			lastArrowTick = g_Ticks + 500;
 		}
 
-		Orion->DrawResizepicGump(0x0BB8, 328, 343, 210, 30); //Account text field
-		Orion->DrawResizepicGump(0x0BB8, 328, 383, 210, 30); //Password text field
-		Orion->DrawGump(0x00D3 - (int)(m_SavePassword == false), 0, 328, 417); //Checkbox on / off
-		Orion->DrawGump(0x00D3 - (int)(m_AutoLogin == false), 0, 183, 417); //Checkbox on / off
-		
-		m_Text[0].Draw(253, 305);
-		m_Text[1].Draw(183, 345);
-		m_Text[2].Draw(183, 385);
-		m_Text[3].Draw(351, 421);
-		m_Text[4].Draw(206, 421);
-		m_Text[5].Draw(286, 455);
-
-		WORD TextColor = 0x034F;
-		if (EntryPointer == m_Account)
-			TextColor = 0x0021;
-		else if (g_LastSelectedObject == ID_MS_ACCOUNT)
-			TextColor = 0x03E3;
-		m_Account->DrawA(5, TextColor, 335, 343);
-
-		TextColor = 0x034F;
-		if (EntryPointer == m_PasswordFake)
-			TextColor = 0x0021;
-		else if (g_LastSelectedObject == ID_MS_PASSWORD)
-			TextColor = 0x03E3;
-		m_PasswordFake->DrawMaskA(5, TextColor, 335, 385);
+		QFOR(item, m_Items, TGumpInterfaceObject*)
+			item->Draw(false);
 
 		InitToolTip();
 
@@ -269,18 +229,13 @@ int TMainScreen::Render(__in bool mode)
 	{
 		g_LastSelectedObject = 0;
 
-		if (Orion->GumpPixelsInXY(0x1589, 555, 4))
-			g_LastSelectedObject = ID_MS_QUIT; //X gump
-		else if (Orion->GumpPixelsInXY(0x15A4, 610, 445))
-			g_LastSelectedObject = ID_MS_ARROW_NEXT; //> gump
-		else if (Orion->ResizepicPixelsInXY(0xBB8, 328, 343, 210, 30))
-			g_LastSelectedObject = ID_MS_ACCOUNT; //Account text field
-		else if (Orion->ResizepicPixelsInXY(0xBB8, 328, 383, 210, 30))
-			g_LastSelectedObject = ID_MS_PASSWORD; //Password text field
-		else if (Orion->GumpPixelsInXY(0x00D3, 328, 417))
-			g_LastSelectedObject = ID_MS_SAVEPASSWORD; //Save password checkbox
-		else if (Orion->GumpPixelsInXY(0x00D3, 183, 417))
-			g_LastSelectedObject = ID_MS_AUTOLOGIN; //Auto Login checkbox
+		QFOR(item, m_Items, TGumpInterfaceObject*)
+		{
+			int sel = item->Draw(false);
+
+			if (sel && sel != 0xFFFFFFFF)
+				g_LastSelectedObject = sel;
+		}
 
 		return g_LastSelectedObject;
 	}
@@ -342,11 +297,11 @@ void TMainScreen::OnLeftMouseUp()
 	if (g_LastObjectLeftMouseDown == ID_MS_QUIT) //x button
 		CreateSmoothAction(ID_SMOOTH_MS_QUIT);
 	else if (g_LastObjectLeftMouseDown == ID_MS_ARROW_NEXT) //> button
-	CreateSmoothAction(ID_SMOOTH_MS_CONNECT);
+		CreateSmoothAction(ID_SMOOTH_MS_CONNECT);
 	else if (g_LastObjectLeftMouseDown == ID_MS_SAVEPASSWORD) //Save password checkbox
-		m_SavePassword = !m_SavePassword;
+		m_SavePassword->IsChecked = !m_SavePassword->IsChecked;
 	else if (g_LastObjectLeftMouseDown == ID_MS_AUTOLOGIN) //Auto Login checkbox
-		m_AutoLogin = !m_AutoLogin;
+		m_AutoLogin->IsChecked = !m_AutoLogin->IsChecked;
 
 	g_LastObjectLeftMouseDown = 0;
 }
@@ -462,7 +417,7 @@ int TMainScreen::GetConfigKeyCode( __in string &key)
 */
 void TMainScreen::LoadGlobalConfig()
 {
-	m_AutoLogin = false;
+	m_AutoLogin->IsChecked = false;
 	SmoothMonitor.Enabled = false;
 	SmoothMonitor.Scale = 1;
 
@@ -528,9 +483,9 @@ void TMainScreen::LoadGlobalConfig()
 				}
 				case MSCC_REMEMBERPWD:
 				{
-					m_SavePassword = ToBool(strings[1]);
+					m_SavePassword->IsChecked = ToBool(strings[1]);
 					
-					if (!m_SavePassword)
+					if (!m_SavePassword->IsChecked)
 					{
 						m_PasswordFake->SetText("");
 						m_PasswordFake->SetPos(0);
@@ -542,7 +497,7 @@ void TMainScreen::LoadGlobalConfig()
 				}
 				case MSCC_AUTOLOGIN:
 				{
-					m_AutoLogin = ToBool(strings[1]);
+					m_AutoLogin->IsChecked = ToBool(strings[1]);
 
 					break;
 				}
@@ -581,7 +536,7 @@ void TMainScreen::SaveGlobalConfig()
 	sprintf(buf, "AcctID=%s\n", m_Account->c_str());
 	fputs(buf, uo_cfg);
 
-	if (m_SavePassword)
+	if (m_SavePassword->IsChecked)
 	{
 		sprintf(buf, "AcctPassword=%s\n", CryptPW(m_Password->c_str(), m_Password->Length()).c_str());
 		fputs(buf, uo_cfg);
@@ -595,7 +550,7 @@ void TMainScreen::SaveGlobalConfig()
 		fputs(buf, uo_cfg);
 	}
 
-	sprintf(buf, "AutoLogin=%s\n", (m_AutoLogin ? "yes" : "no"));
+	sprintf(buf, "AutoLogin=%s\n", (m_AutoLogin->IsChecked ? "yes" : "no"));
 	fputs(buf, uo_cfg);
 
 	sprintf(buf, "SmoothMonitor=%s\n", (SmoothMonitor.Enabled ? "yes" : "no"));

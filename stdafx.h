@@ -428,9 +428,6 @@ extern DWORD g_LastTargetObject;
 //!Последний атакованный объект
 extern DWORD g_LastAttackObject;
 
-//!Время последней отрисовки
-extern DWORD g_LastRenderTime;
-
 //!Дистанция для обновления предметов
 extern int g_UpdateRange;
 
@@ -567,6 +564,7 @@ typedef std::vector<BYTE> WaveFile;
 #include "ScreenshotBuilder.h"
 #include "VideoRecorder.h"
 #include "gump\\GumpObject.h"
+#include "gump\\GumpInterfaceObject.h"
 #include "gump\\Gump.h"
 #include "gump\\GumpPaperdoll.h"
 #include "gump\\GumpMinimap.h"

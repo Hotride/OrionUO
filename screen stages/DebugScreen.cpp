@@ -181,14 +181,6 @@ void TDebugScreen::InitToolTip()
 //---------------------------------------------------------------------------
 int TDebugScreen::Render(bool mode)
 {
-	DWORD ticks = g_Ticks;
-
-	/*if (g_LastRenderTime > ticks)
-	{
-		if (mode || !g_SelectGumpObjects)
-			return 0;
-	}*/
-
 	if (mode)
 	{
 		int CanSelectedButton = g_LastSelectedObject;
@@ -196,8 +188,6 @@ int TDebugScreen::Render(bool mode)
 		int CanPressedButton = 0;
 		if (g_LeftMouseDown && g_LastObjectLeftMouseDown == g_LastSelectedObject)
 			CanPressedButton = g_LastObjectLeftMouseDown;
-
-		g_LastRenderTime = ticks + (g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]);
 
 		g_GL.BeginDraw();
 
@@ -307,7 +297,7 @@ int TDebugScreen::Render(bool mode)
 
 							//Рисуем стул только в верхнем ряду, в нижнем - перс на маунте
 							if (j < 2)
-								m_Chair->Draw(mode, x, y, ticks);
+								m_Chair->Draw(mode, x, y, g_Ticks);
 							else
 								m_Mount->Graphic = mountTable[i];
 

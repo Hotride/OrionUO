@@ -130,14 +130,6 @@ void TCreateCharacterScreen::InitToolTip()
 */
 int TCreateCharacterScreen::Render( __in bool mode)
 {
-	DWORD ticks = g_Ticks;
-
-	/*if (g_LastRenderTime > ticks)
-	{
-		if (mode || !g_SelectGumpObjects)
-			return 0;
-	}*/
-
 	if (mode)
 	{
 		WORD cell = 10;
@@ -148,8 +140,6 @@ int TCreateCharacterScreen::Render( __in bool mode)
 		if (g_LeftMouseDown && g_LastObjectLeftMouseDown == g_LastSelectedObject)
 			CanPressedButton = g_LastObjectLeftMouseDown;
 	
-		g_LastRenderTime = ticks + (g_FrameDelay[(int)(GetForegroundWindow() == g_hWnd)]);
-
 		g_GL.BeginDraw();
 
 		if (DrawSmoothMonitor())

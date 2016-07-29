@@ -834,7 +834,7 @@ PACKET_HANDLER(ServerList)
 		Move(40);
 	}
 
-	if (numServers && MainScreen->AutoLogin)
+	if (numServers && MainScreen->m_AutoLogin->IsChecked)
 		Orion->ServerSelection(0);
 	else
 		Orion->InitScreen(GS_SERVER);
@@ -866,7 +866,7 @@ PACKET_HANDLER(CharacterList)
 	CharacterList.Count = numSlots;
 
 	int AutoPos = -1;
-	bool autoLogin = MainScreen->AutoLogin;
+	bool autoLogin = MainScreen->m_AutoLogin->IsChecked;
 
 	if (numSlots == 0)
 		WPRINT("no slots in character list\n");
@@ -961,7 +961,7 @@ PACKET_HANDLER(ResendCharacterList)
 	CharacterList.Count = numSlots;
 
 	int AutoPos = -1;
-	bool autoLogin = MainScreen->AutoLogin;
+	bool autoLogin = MainScreen->m_AutoLogin->IsChecked;
 
 	if (numSlots == 0)
 		WPRINT("no slots in character list\n");

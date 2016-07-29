@@ -56,7 +56,7 @@ public:
 	virtual void PrepareTextures() {}
 
 	//Отрисовка
-	virtual int Draw(bool &mode) {return 0;}
+	//virtual int Draw(bool &mode) {return 0;}
 };
 //---------------------------------------------------------------------------
 //Класс для работы с объектами рендера в мире

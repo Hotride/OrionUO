@@ -23,12 +23,6 @@
 class TMainScreen : public TBaseScreen
 {
 private:
-	//!Флаг сохранения пароля
-	bool m_SavePassword;
-
-	//!Флаг автологина
-	bool m_AutoLogin;
-
 	//!Идентификаторы событий для плавного перехода
 	static const BYTE ID_SMOOTH_MS_QUIT = 1;
 	static const BYTE ID_SMOOTH_MS_CONNECT = 2;
@@ -40,9 +34,6 @@ private:
 	static const int ID_MS_PASSWORD = 4;
 	static const int ID_MS_SAVEPASSWORD = 5;
 	static const int ID_MS_AUTOLOGIN = 6;
-
-	//!Объекты текста
-	TTextTexture m_Text[6];
 
 	enum
 	{
@@ -85,9 +76,9 @@ public:
 	TEntryText *m_Account;
 	TEntryText *m_Password;
 	TEntryText *m_PasswordFake;
-
-	SETGET(bool, SavePassword);
-	SETGET(bool, AutoLogin);
+	TGumpInterfaceButton *m_Arrow;
+	TGumpInterfaceCheckbox *m_SavePassword;
+	TGumpInterfaceCheckbox *m_AutoLogin;
 
 	/*!
 	Обработка события после плавного затемнения экрана

@@ -21,14 +21,20 @@
 #define BaseScreenH
 //---------------------------------------------------------------------------
 //Базовый класс стадий окна клиента
-class TBaseScreen
+class TBaseScreen : public TBaseQueue
 {
 protected:
 	//!Индекс действия, которое необходимо совершить после окончания плавного перехода затемненного состояния экрана
 	BYTE m_SmoothScreenAction;
 
+	/*!
+	Вычислить состояние гампа и его элементов для отрисовки
+	@return
+	*/
+	virtual void CalculateGumpState();
+
 public:
-	TBaseScreen() :m_SmoothScreenAction(0) {}
+	TBaseScreen() : TBaseQueue(), m_SmoothScreenAction(0) {}
 	virtual ~TBaseScreen() {}
 
 	/*!

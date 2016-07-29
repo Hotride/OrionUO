@@ -161,8 +161,6 @@ DWORD g_LastAttackObject = 0;
 int g_UpdateRange = 18;
 CORPSE_LIST_MAP g_CorpseSerialList;
 
-DWORD g_LastRenderTime = 0;
-
 bool g_UseFileUOP = false;
 
 bool g_UseArtDef = false;

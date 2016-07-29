@@ -62,6 +62,18 @@ void TBaseScreen::CreateSmoothAction( __in BYTE action)
 }
 //---------------------------------------------------------------------------
 /*!
+Вычислить состояние гампа и его элементов для отрисовки
+@return
+*/
+void TBaseScreen::CalculateGumpState()
+{
+	g_GumpPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == 0 && g_LastSelectedGump == 0 && ObjectInHand == NULL);
+	g_GumpPressedScroller = (g_LeftMouseDown && g_LastGumpLeftMouseDown == 0 && ObjectInHand == NULL);
+	g_GumpSelectElement = ((g_LastSelectedGump == 0) ? g_LastSelectedObject : 0);
+	g_GumpPressedElement = ((g_GumpPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject) ? g_LastObjectLeftMouseDown : 0);
+}
+//---------------------------------------------------------------------------
+/*!
 Вычисление смещения объектов в окне скроллбокса
 @param [__out] currentLine Текущая строка
 @param [__in] visibleLines Количество видимых строк
