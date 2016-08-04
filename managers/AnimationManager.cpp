@@ -1300,7 +1300,7 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 				}
 			}
 
-			g_GL.DrawShadow(frame->Texture, x, y, fWidth, fHeight / 2, mirror);
+			g_GL.DrawShadow(frame->Texture, x, y, fWidth, fHeight / 1.75, mirror);
 
 			glDisable(GL_BLEND);
 		}

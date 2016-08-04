@@ -506,7 +506,7 @@ void TGLEngine::DrawShadow(GLuint &texture, const int &x, const int &y, const in
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 
-	GLfloat translateY = (GLfloat)(y + height);
+	GLfloat translateY = (GLfloat)(y + height * 0.75);
 
 	glTranslatef((GLfloat)x, translateY, (GLfloat)g_ZBuffer);
 
@@ -514,17 +514,17 @@ void TGLEngine::DrawShadow(GLuint &texture, const int &x, const int &y, const in
 
 		if (mirror)
 		{
-			glTexCoord2i(0, 1); glVertex2i(width, height);
-			glTexCoord2i(1, 1); glVertex2i(0, height);
-			glTexCoord2i(0, 0); glVertex2i(width * 2, 0);
-			glTexCoord2i(1, 0); glVertex2i(width, 0);
+			glTexCoord2f(0, 1); glVertex2f(width, height);
+			glTexCoord2f(1, 1); glVertex2f(0, height);
+			glTexCoord2f(0, 0); glVertex2f(width * 1.75, 0);
+			glTexCoord2f(1, 0); glVertex2f(width, 0);
 		}
 		else
 		{
-			glTexCoord2i(0, 1); glVertex2i(0, height);
-			glTexCoord2i(1, 1); glVertex2i(width, height);
-			glTexCoord2i(0, 0); glVertex2i(width, 0);
-			glTexCoord2i(1, 0); glVertex2i(width * 2, 0);
+			glTexCoord2f(0, 1); glVertex2f(0, height);
+			glTexCoord2f(1, 1); glVertex2f(width, height);
+			glTexCoord2f(0, 0); glVertex2f(width, 0);
+			glTexCoord2f(1, 0); glVertex2f(width * 1.75, 0);
 		}
 
 	glEnd();
