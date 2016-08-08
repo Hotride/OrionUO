@@ -1251,9 +1251,9 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 			int fWidth = frame->Width;
 			int fHeight = frame->Height;
 
-			TTextureAnimationFrame *frame0 = direction->GetFrame(0);
+			/*TTextureAnimationFrame *frame0 = direction->GetFrame(0);
 
-			/*if (frame0 != NULL && frame0->Texture != 0)
+			if (frame0 != NULL && frame0->Texture != 0)
 			{
 				fWidth = frame0->Width;
 				fHeight = frame0->Height;
