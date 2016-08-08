@@ -268,6 +268,10 @@ void TAnimationManager::Load( __in PDWORD verdata)
 {
 	IFOR(i, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
 	{
+		m_DataIndex[i].Address = 0;
+		m_DataIndex[i].Offset = 0;
+		m_DataIndex[i].Graphic = 0;
+
 		WORD animID = 0;
 		DWORD findID = 0;
 
@@ -289,7 +293,7 @@ void TAnimationManager::Load( __in PDWORD verdata)
 			animID = i;
 			findID = (animID * 110) * sizeof(ANIM_IDX_BLOCK);
 		}
-			
+		
 		if (findID < m_SizeIdx[0])
 		{
 			PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_AddressIdx[0] + findID);
