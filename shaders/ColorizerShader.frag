@@ -24,7 +24,12 @@ void main(void)
 				float red = textureColor.r;
 
 				if (drawMode > 10)
-					red *= 0.5;
+				{
+					if (drawMode > 11)
+						red = 0.6;
+					else
+						red *= 0.5;
+				}
 				else
 					red *= 1.5;
 

@@ -1242,11 +1242,10 @@ void TAnimationManager::Draw(TGameObject *obj, int x, int y, bool &mirror, BYTE 
 		{
 			//AddShadow(frame->Texture, x, y, g_ZBuffer, frame->Width, frame->Height, mirror);
 
-			ColorManager->SendColorsToShader(0x0386);
-			glUniform1iARB(ShaderDrawMode, 1);
+			glUniform1iARB(ShaderDrawMode, 12);
 
 			glEnable(GL_BLEND);
-			glBlendFunc(GL_ZERO, GL_DST_COLOR);
+			glBlendFunc(GL_DST_COLOR, GL_ZERO);
 
 			int fWidth = frame->Width;
 			int fHeight = frame->Height;
