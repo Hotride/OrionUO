@@ -1979,7 +1979,7 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 			else
 				m_Transform = true;
 		}
-		else
+		else if (!obj->Dead())
 			Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
 	}
 	
