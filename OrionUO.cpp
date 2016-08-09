@@ -2430,15 +2430,15 @@ void TOrion::LoadClientConfig()
 		CharacterList.ClientFlag = 0;
 	}
 
-	g_UseArtDef = (defFlags & DFF_ART);
-	g_UseBodyDef = (defFlags & DFF_BODY);
-	g_UseBodyconvDef = (defFlags & DFF_BODYCONV);
-	g_UseCorpseDef = (defFlags & DFF_CORPSE);
-	g_UseGumpDef = (defFlags & DFF_GUMP);
-	g_UseMultiDef = (defFlags & DFF_MULTI);
-	g_UseSoundDef = (defFlags & DFF_SOUND);
-	g_UseTexTerrDef = (defFlags & DFF_TEXTERR);
-	g_UseEquipconvDef = (defFlags & DFF_EQUIPCONV);
+	//g_UseArtDef = (defFlags & DFF_ART);
+	//g_UseBodyDef = (defFlags & DFF_BODY);
+	//g_UseBodyconvDef = (defFlags & DFF_BODYCONV);
+	//g_UseCorpseDef = (defFlags & DFF_CORPSE);
+	//g_UseGumpDef = (defFlags & DFF_GUMP);
+	//g_UseMultiDef = (defFlags & DFF_MULTI);
+	//g_UseSoundDef = (defFlags & DFF_SOUND);
+	//g_UseTexTerrDef = (defFlags & DFF_TEXTERR);
+	//g_UseEquipconvDef = (defFlags & DFF_EQUIPCONV);
 }
 //---------------------------------------------------------------------------
 DWORD TOrion::GetFileHashCode(DWORD address, DWORD size)

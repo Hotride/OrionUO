@@ -163,15 +163,15 @@ CORPSE_LIST_MAP g_CorpseSerialList;
 
 bool g_UseFileUOP = false;
 
-bool g_UseArtDef = false;
-bool g_UseBodyDef = false;
+bool g_UseArtDef = true;
+bool g_UseBodyDef = true;
 bool g_UseBodyconvDef = true;
-bool g_UseCorpseDef = false;
-bool g_UseGumpDef = false;
-bool g_UseMultiDef = false;
-bool g_UseSoundDef = false;
-bool g_UseTexTerrDef = false;
-bool g_UseEquipconvDef = false;
+bool g_UseCorpseDef = true;
+bool g_UseGumpDef = true;
+bool g_UseMultiDef = true;
+bool g_UseSoundDef = true;
+bool g_UseTexTerrDef = true;
+bool g_UseEquipconvDef = true;
 
 
 /*
