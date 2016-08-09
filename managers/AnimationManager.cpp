@@ -1925,18 +1925,25 @@ void TAnimationManager::DrawCharacter( __in TGameCharacter *obj, __in int x, __i
 			}
 		}
 
-		Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
 
+		Draw(obj, drawX, drawY + 10, mirror, animIndex, 0x10000);
 		m_AnimGroup = obj->GetAnimationGroup(mountID);
 
 		int mountDrawY = drawY;
-
+		int mountedDrawY = drawY;
 		if (goi->GetStaticData()->Quality == 25)
 		{
 			if (goi->GetStaticData()->Weight == 0xFF)
+			{
 				mountDrawY -= 40;
+				mountedDrawY -= 20;
+			}			
 			else
+			{
+				mountedDrawY += 20;
 				mountDrawY += 40;
+			}
+				
 		}
 
 		Draw(goi, drawX, mountDrawY, mirror, animIndex, mountID + 0x10000);
