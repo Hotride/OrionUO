@@ -498,7 +498,7 @@ void TGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const i
 	glTranslatef((GLfloat)-x, (GLfloat)-y, (GLfloat)-g_ZBuffer);
 }
 //---------------------------------------------------------------------------
-void TGLEngine::DrawShadow(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror)
+void TGLEngine::DrawShadow(GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror)
 {
 	if (m_OldTexture != texture)
 	{
@@ -511,20 +511,20 @@ void TGLEngine::DrawShadow(GLuint &texture, const int &x, const int &y, const in
 	glTranslatef((GLfloat)x, translateY, (GLfloat)g_ZBuffer);
 
 	glBegin(GL_TRIANGLE_STRIP);
-
+	float ratio = height / width;
 		if (mirror)
 		{
 			glTexCoord2f(0, 1); glVertex2f(width, height);
 			glTexCoord2f(1, 1); glVertex2f(0, height);
-			glTexCoord2f(0, 0); glVertex2f(width * 1.75, 0);
-			glTexCoord2f(1, 0); glVertex2f(width, 0);
+			glTexCoord2f(0, 0); glVertex2f(width * (ratio + 1.0f), 0);
+			glTexCoord2f(1, 0); glVertex2f(width * ratio, 0);
 		}
 		else
 		{
 			glTexCoord2f(0, 1); glVertex2f(0, height);
 			glTexCoord2f(1, 1); glVertex2f(width, height);
-			glTexCoord2f(0, 0); glVertex2f(width, 0);
-			glTexCoord2f(1, 0); glVertex2f(width * 1.75, 0);
+			glTexCoord2f(0, 0); glVertex2f(width * ratio, 0);
+			glTexCoord2f(1, 0); glVertex2f(width * (ratio + 1.0f), 0);
 		}
 
 	glEnd();

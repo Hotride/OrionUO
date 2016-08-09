@@ -110,7 +110,7 @@ public:
 	void DrawSitting(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror, float h3mod, float h6mod, float h9mod);
 
 	//Нарисовать тень
-	void DrawShadow(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror);
+	void DrawShadow(GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror);
 
 	//Замостить текстуру на заданные габариты
 	void Draw(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const int &drawWidth, const int &drawHeight);
