@@ -369,6 +369,37 @@ void TAnimationManager::InitIndexReplaces( __in PDWORD verdata)
 	TTextFileParser corpseParser(FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
 	TTextFileParser bodyconvParser(FilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
 
+	while (g_UseBodyDef && !bodyParser.IsEOF())
+	{
+		std::vector<std::string> strings = bodyParser.ReadTokens();
+
+		if (strings.size() >= 3)
+		{
+			WORD index = atoi(strings[0].c_str());
+
+			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				continue;
+
+			std::vector<std::string> newBody = newBodyParser.GetTokens(strings[1].c_str());
+
+			int size = (int)newBody.size();
+
+			IFOR(i, 0, size)
+			{
+				WORD checkIndex = atoi(newBody[i].c_str());
+
+				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
+					continue;
+
+				memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(TIndexAnimation));
+				m_DataIndex[index].Group = NULL;
+				m_DataIndex[index].Color = atoi(strings[2].c_str());
+
+				break;
+			}
+		}
+	}
+
 	while (g_UseBodyconvDef && !bodyconvParser.IsEOF())
 	{
 		std::vector<std::string> strings = bodyconvParser.ReadTokens();
@@ -494,37 +525,6 @@ void TAnimationManager::InitIndexReplaces( __in PDWORD verdata)
 						m_DataIndex[index].Graphic = realAnimID;// convertedAnimID;
 					}
 				}
-			}
-		}
-	}
-
-	while (g_UseBodyDef && !bodyParser.IsEOF())
-	{
-		std::vector<std::string> strings = bodyParser.ReadTokens();
-
-		if (strings.size() >= 3)
-		{
-			WORD index = atoi(strings[0].c_str());
-
-			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
-				continue;
-
-			std::vector<std::string> newBody = newBodyParser.GetTokens(strings[1].c_str());
-
-			int size = (int)newBody.size();
-
-			IFOR(i, 0, size)
-			{
-				WORD checkIndex = atoi(newBody[i].c_str());
-
-				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
-					continue;
-
-				memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(TIndexAnimation));
-				m_DataIndex[index].Group = NULL;
-				m_DataIndex[index].Color = atoi(strings[2].c_str());
-
-				break;
 			}
 		}
 	}
