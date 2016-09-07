@@ -30,6 +30,6 @@
 /OrionUO/Debug
 /OrionUO/Release
 /Desktop
-/music
+/OrionUO/music
 !/dll/*.dll
 !/OrionUO/ConfigurationEditor.exe
