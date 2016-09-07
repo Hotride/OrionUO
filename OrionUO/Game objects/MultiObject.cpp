@@ -1,0 +1,86 @@
+/***********************************************************************************
+**
+** MultiObject.h
+**
+** Copyright (C) August 2016 Hotride
+**
+************************************************************************************
+*/
+//----------------------------------------------------------------------------------
+#include "MultiObject.h"
+#include "../OrionUO.h"
+#include "../SelectedObject.h"
+#include "../Screen stages/GameScreen.h"
+//----------------------------------------------------------------------------------
+CMultiObject::CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags)
+: CRenderStaticObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_MultiFlags(flags)
+{
+	m_Graphic += 0x4000;
+
+	if (IsWet())
+		m_RenderQueueIndex = 1;
+	else if (IsBackground())
+		m_RenderQueueIndex = 3 - (int)IsSurface();
+	else if (IsSurface())
+		m_RenderQueueIndex = 4;
+	else
+		m_RenderQueueIndex = 6;
+
+#if UO_DEBUG_INFO!=0
+	g_MultiObjectsCount++;
+#endif //UO_DEBUG_INFO!=0
+}
+//----------------------------------------------------------------------------
+CMultiObject::~CMultiObject()
+{
+#if UO_DEBUG_INFO!=0
+	g_MultiObjectsCount--;
+#endif //UO_DEBUG_INFO!=0
+}
+//---------------------------------------------------------------------------
+void CMultiObject::Draw(const int &x, const int &y)
+{
+	if (g_NoDrawRoof && IsRoof())
+		return;
+
+	ushort objGraphic = m_Graphic - 0x4000;
+
+#if UO_DEBUG_INFO!=0
+	g_RenderedObjectsCountInGameWindow++;
+#endif
+
+	ushort objColor = m_Color;
+
+	if (g_SelectedObject.Object() == this)
+		objColor = SELECT_MULTI_COLOR;
+
+	if (m_MultiFlags == 2) //Мульти на таргете
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+
+		g_Orion.DrawStaticArt(objGraphic, objColor, x, y, m_Z);
+
+		glDisable(GL_BLEND);
+	}
+	else
+	{
+		if (g_UseCircleTrans)
+			g_Orion.DrawStaticArtTransparent(objGraphic, objColor, x, y, m_Z);
+		else
+			g_Orion.DrawStaticArt(objGraphic, objColor, x, y, m_Z);
+
+		if (IsLightSource() && g_GameScreen.UseLight)
+			g_GameScreen.AddLight(this, this, x, y - (m_Z * 4));
+	}
+}
+//---------------------------------------------------------------------------
+void CMultiObject::Select(const int &x, const int &y)
+{
+	if (g_NoDrawRoof && IsRoof())
+		return;
+
+	if (!g_UseCircleTrans && g_Orion.StaticPixelsInXY(m_Graphic - 0x4000, x, y, m_Z))
+		g_SelectedObject.Init(this);
+}
+//----------------------------------------------------------------------------------

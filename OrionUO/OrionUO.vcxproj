@@ -1,0 +1,546 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{909473C7-8499-4614-92F1-43E370383AE6}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>OrionUO</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d  "$(SolutionDir)dll\bass.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)dll\glew32.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)dll\zlib1.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy dlls to bin directory</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d  "$(SolutionDir)dll\bass.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)dll\glew32.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)dll\zlib1.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy dlls to bin directory</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BaseQueue.h" />
+    <ClInclude Include="CharacterList.h" />
+    <ClInclude Include="CityList.h" />
+    <ClInclude Include="ClickObject.h" />
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="Container.h" />
+    <ClInclude Include="DefinitionMacro.h" />
+    <ClInclude Include="EnumList.h" />
+    <ClInclude Include="Game objects\GameCharacter.h" />
+    <ClInclude Include="Game objects\GameEffect.h" />
+    <ClInclude Include="Game objects\GameEffectDrag.h" />
+    <ClInclude Include="Game objects\GameEffectMoving.h" />
+    <ClInclude Include="Game objects\GameItem.h" />
+    <ClInclude Include="Game objects\GameObject.h" />
+    <ClInclude Include="Game objects\GamePlayer.h" />
+    <ClInclude Include="Game objects\GameWorld.h" />
+    <ClInclude Include="Game objects\LandObject.h" />
+    <ClInclude Include="Game objects\MapBlock.h" />
+    <ClInclude Include="Game objects\MapObject.h" />
+    <ClInclude Include="Game objects\MultiObject.h" />
+    <ClInclude Include="Game objects\ObjectOnCursor.h" />
+    <ClInclude Include="Game objects\RenderStaticObject.h" />
+    <ClInclude Include="Game objects\ShopItem.h" />
+    <ClInclude Include="Game objects\StaticObject.h" />
+    <ClInclude Include="GLEngine\GLEngine.h" />
+    <ClInclude Include="GLEngine\GLFrameBuffer.h" />
+    <ClInclude Include="GLEngine\GLHTMLTextTexture.h" />
+    <ClInclude Include="GLEngine\GLShader.h" />
+    <ClInclude Include="GLEngine\GLTextTexture.h" />
+    <ClInclude Include="GLEngine\GLTexture.h" />
+    <ClInclude Include="GLEngine\GLTextureCircleOfTransparency.h" />
+    <ClInclude Include="GLEngine\GLVector.h" />
+    <ClInclude Include="GUI\BaseGUI.h" />
+    <ClInclude Include="GUI\GUI.h" />
+    <ClInclude Include="GUI\GUIAlphaBlending.h" />
+    <ClInclude Include="GUI\GUIBlending.h" />
+    <ClInclude Include="GUI\GUIBuff.h" />
+    <ClInclude Include="GUI\GUIButton.h" />
+    <ClInclude Include="GUI\GUIComboBox.h" />
+    <ClInclude Include="GUI\GUIComboboxText.h" />
+    <ClInclude Include="GUI\GUIDataBox.h" />
+    <ClInclude Include="GUI\GUIExternalTexture.h" />
+    <ClInclude Include="GUI\GUIGenericText.h" />
+    <ClInclude Include="GUI\GUIGenericTextEntry.h" />
+    <ClInclude Include="GUI\GUIGumppicHightlighted.h" />
+    <ClInclude Include="GUI\GUIHitBox.h" />
+    <ClInclude Include="GUI\GUIHTMLButton.h" />
+    <ClInclude Include="GUI\GUIButtonTileart.h" />
+    <ClInclude Include="GUI\GUICheckbox.h" />
+    <ClInclude Include="GUI\GUIChecktrans.h" />
+    <ClInclude Include="GUI\GUIDrawObject.h" />
+    <ClInclude Include="GUI\GUIGroup.h" />
+    <ClInclude Include="GUI\GUIGumppic.h" />
+    <ClInclude Include="GUI\GUIGumppicTiled.h" />
+    <ClInclude Include="GUI\GUIHTMLGump.h" />
+    <ClInclude Include="GUI\GUIHTMLHitBox.h" />
+    <ClInclude Include="GUI\GUIHTMLResizepic.h" />
+    <ClInclude Include="GUI\GUIHTMLSlider.h" />
+    <ClInclude Include="GUI\GUIHTMLText.h" />
+    <ClInclude Include="GUI\GUILine.h" />
+    <ClInclude Include="GUI\GUIMenuObject.h" />
+    <ClInclude Include="GUI\GUIMinMaxButtons.h" />
+    <ClInclude Include="GUI\GUIPage.h" />
+    <ClInclude Include="GUI\GUIPolygonal.h" />
+    <ClInclude Include="GUI\GUIColoredPolygone.h" />
+    <ClInclude Include="GUI\GUIRadio.h" />
+    <ClInclude Include="GUI\GUIResizeButton.h" />
+    <ClInclude Include="GUI\GUIResizepic.h" />
+    <ClInclude Include="GUI\GUIScissor.h" />
+    <ClInclude Include="GUI\GUIScrollBackground.h" />
+    <ClInclude Include="GUI\GUIShader.h" />
+    <ClInclude Include="GUI\GUIShopItem.h" />
+    <ClInclude Include="GUI\GUIShopResult.h" />
+    <ClInclude Include="GUI\GUISlider.h" />
+    <ClInclude Include="GUI\GUIText.h" />
+    <ClInclude Include="GUI\GUITextEntry.h" />
+    <ClInclude Include="GUI\GUITilepic.h" />
+    <ClInclude Include="GUI\GUITilepicHightlighted.h" />
+    <ClInclude Include="Gumps\Gump.h" />
+    <ClInclude Include="Gumps\GumpBaseScroll.h" />
+    <ClInclude Include="Gumps\GumpBook.h" />
+    <ClInclude Include="Gumps\GumpBuff.h" />
+    <ClInclude Include="Gumps\GumpBulletinBoard.h" />
+    <ClInclude Include="Gumps\GumpBulletinBoardItem.h" />
+    <ClInclude Include="Gumps\GumpShop.h" />
+    <ClInclude Include="Gumps\GumpConsoleType.h" />
+    <ClInclude Include="Gumps\GumpContainer.h" />
+    <ClInclude Include="Gumps\GumpDrag.h" />
+    <ClInclude Include="Gumps\GumpDye.h" />
+    <ClInclude Include="Gumps\GumpGeneric.h" />
+    <ClInclude Include="Gumps\GumpGrayMenu.h" />
+    <ClInclude Include="Gumps\GumpJournal.h" />
+    <ClInclude Include="Gumps\GumpMap.h" />
+    <ClInclude Include="Gumps\GumpMenu.h" />
+    <ClInclude Include="Gumps\GumpMenubar.h" />
+    <ClInclude Include="Gumps\GumpMinimap.h" />
+    <ClInclude Include="Gumps\GumpNotify.h" />
+    <ClInclude Include="Gumps\GumpOptions.h" />
+    <ClInclude Include="Gumps\GumpPaperdoll.h" />
+    <ClInclude Include="Gumps\GumpPartyManifest.h" />
+    <ClInclude Include="Gumps\GumpPopupMenu.h" />
+    <ClInclude Include="Gumps\GumpProfile.h" />
+    <ClInclude Include="Gumps\GumpQuestion.h" />
+    <ClInclude Include="Gumps\GumpScreenCharacterList.h" />
+    <ClInclude Include="Gumps\GumpScreenConnection.h" />
+    <ClInclude Include="Gumps\GumpScreenCreateCharacter.h" />
+    <ClInclude Include="Gumps\GumpScreenGame.h" />
+    <ClInclude Include="Gumps\GumpScreenMain.h" />
+    <ClInclude Include="Gumps\GumpScreenSelectProfession.h" />
+    <ClInclude Include="Gumps\GumpScreenSelectTown.h" />
+    <ClInclude Include="Gumps\GumpScreenServer.h" />
+    <ClInclude Include="Gumps\GumpSecureTrading.h" />
+    <ClInclude Include="Gumps\GumpSelectColor.h" />
+    <ClInclude Include="Gumps\GumpSelectFont.h" />
+    <ClInclude Include="Gumps\GumpSkills.h" />
+    <ClInclude Include="Gumps\GumpSpell.h" />
+    <ClInclude Include="Gumps\GumpStatusbar.h" />
+    <ClInclude Include="Gumps\GumpTargetSystem.h" />
+    <ClInclude Include="Gumps\GumpTextEntryDialog.h" />
+    <ClInclude Include="Gumps\GumpTip.h" />
+    <ClInclude Include="Gumps\GumpWorldMap.h" />
+    <ClInclude Include="ImageBounds.h" />
+    <ClInclude Include="IndexObject.h" />
+    <ClInclude Include="Macro.h" />
+    <ClInclude Include="Managers\AnimationManager.h" />
+    <ClInclude Include="Managers\CityManager.h" />
+    <ClInclude Include="Managers\ClilocManager.h" />
+    <ClInclude Include="Managers\ColorManager.h" />
+    <ClInclude Include="Managers\ConfigManager.h" />
+    <ClInclude Include="Managers\ConnectionManager.h" />
+    <ClInclude Include="Managers\CreateCharacterManager.h" />
+    <ClInclude Include="Managers\EffectManager.h" />
+    <ClInclude Include="Managers\FileManager.h" />
+    <ClInclude Include="Managers\FontsManager.h" />
+    <ClInclude Include="Managers\GumpManager.h" />
+    <ClInclude Include="Managers\MacroManager.h" />
+    <ClInclude Include="Managers\MapManager.h" />
+    <ClInclude Include="Managers\MouseManager.h" />
+    <ClInclude Include="Managers\MulReader.h" />
+    <ClInclude Include="Managers\OptionsMacroManager.h" />
+    <ClInclude Include="Managers\PacketManager.h" />
+    <ClInclude Include="Managers\ProfessionManager.h" />
+    <ClInclude Include="Managers\SkillGroupManager.h" />
+    <ClInclude Include="Managers\SoundManager.h" />
+    <ClInclude Include="Managers\SpeechManager.h" />
+    <ClInclude Include="MulStruct.h" />
+    <ClInclude Include="Multi.h" />
+    <ClInclude Include="MultiMap.h" />
+    <ClInclude Include="Network\AES.H" />
+    <ClInclude Include="Network\Connection.h" />
+    <ClInclude Include="Network\GameCrypt.h" />
+    <ClInclude Include="Network\LoginCrypt.h" />
+    <ClInclude Include="Network\md5.h" />
+    <ClInclude Include="Network\Packets.h" />
+    <ClInclude Include="Network\platform.H" />
+    <ClInclude Include="Network\TABLE.H" />
+    <ClInclude Include="Network\UOHuffman.h" />
+    <ClInclude Include="OrionApplication.h" />
+    <ClInclude Include="OrionUO.h" />
+    <ClInclude Include="OrionWindow.h" />
+    <ClInclude Include="Party.h" />
+    <ClInclude Include="PartyObject.h" />
+    <ClInclude Include="PressedObject.h" />
+    <ClInclude Include="Profession.h" />
+    <ClInclude Include="QuestArrow.h" />
+    <ClInclude Include="RenderObject.h" />
+    <ClInclude Include="RenderWorldObject.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Globals.h" />
+    <ClInclude Include="Screen stages\BaseScreen.h" />
+    <ClInclude Include="Screen stages\CharacterListScreen.h" />
+    <ClInclude Include="Screen stages\ConnectionScreen.h" />
+    <ClInclude Include="Screen stages\CreateCharacterScreen.h" />
+    <ClInclude Include="Screen stages\DebugScreen.h" />
+    <ClInclude Include="Screen stages\GameBlockedScreen.h" />
+    <ClInclude Include="Screen stages\GameScreen.h" />
+    <ClInclude Include="Screen stages\MainScreen.h" />
+    <ClInclude Include="Screen stages\SelectProfessionScreen.h" />
+    <ClInclude Include="Screen stages\SelectTownScreen.h" />
+    <ClInclude Include="Screen stages\ServerScreen.h" />
+    <ClInclude Include="ScreenshotBuilder.h" />
+    <ClInclude Include="SelectedObject.h" />
+    <ClInclude Include="ServerList.h" />
+    <ClInclude Include="ShaderData.h" />
+    <ClInclude Include="SkillGroup.h" />
+    <ClInclude Include="Skills.h" />
+    <ClInclude Include="SmoothMonitor.h" />
+    <ClInclude Include="Target.h" />
+    <ClInclude Include="TargetGump.h" />
+    <ClInclude Include="TextEngine\EntryText.h" />
+    <ClInclude Include="TextEngine\GameConsole.h" />
+    <ClInclude Include="TextEngine\Journal.h" />
+    <ClInclude Include="TextEngine\RenderTextObject.h" />
+    <ClInclude Include="TextEngine\TextContainer.h" />
+    <ClInclude Include="TextEngine\TextData.h" />
+    <ClInclude Include="TextEngine\TextRenderer.h" />
+    <ClInclude Include="TextureObject.h" />
+    <ClInclude Include="ToolTip.h" />
+    <ClInclude Include="Walker\FastWalk.h" />
+    <ClInclude Include="Walker\PathFinder.h" />
+    <ClInclude Include="Walker\PathNode.h" />
+    <ClInclude Include="Walker\WalkData.h" />
+    <ClInclude Include="Walker\Walker.h" />
+    <ClInclude Include="Walker\WalkStack.h" />
+    <ClInclude Include="Weather.h" />
+    <ClInclude Include="WeatherEffect.h" />
+    <ClInclude Include="Wisp\WispApplication.h" />
+    <ClInclude Include="Wisp\WispBinaryFileWritter.h" />
+    <ClInclude Include="Wisp\WispConnection.h" />
+    <ClInclude Include="Wisp\WispDataStream.h" />
+    <ClInclude Include="Wisp\WispGeometry.h" />
+    <ClInclude Include="Wisp\WispGlobal.h" />
+    <ClInclude Include="Wisp\WispLogger.h" />
+    <ClInclude Include="Wisp\WispMappedFile.h" />
+    <ClInclude Include="Wisp\WispMouse.h" />
+    <ClInclude Include="Wisp\WispPacketMessage.h" />
+    <ClInclude Include="Wisp\WispPacketReader.h" />
+    <ClInclude Include="Wisp\WispTextFileParser.h" />
+    <ClInclude Include="Wisp\WispThread.h" />
+    <ClInclude Include="Wisp\WispThreadedTimer.h" />
+    <ClInclude Include="Wisp\WispWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BaseQueue.cpp" />
+    <ClCompile Include="CharacterList.cpp" />
+    <ClCompile Include="CityList.cpp" />
+    <ClCompile Include="ClickObject.cpp" />
+    <ClCompile Include="Container.cpp" />
+    <ClCompile Include="Game objects\GameCharacter.cpp" />
+    <ClCompile Include="Game objects\GameEffect.cpp" />
+    <ClCompile Include="Game objects\GameEffectDrag.cpp" />
+    <ClCompile Include="Game objects\GameEffectMoving.cpp" />
+    <ClCompile Include="Game objects\GameItem.cpp" />
+    <ClCompile Include="Game objects\GameObject.cpp" />
+    <ClCompile Include="Game objects\GamePlayer.cpp" />
+    <ClCompile Include="Game objects\GameWorld.cpp" />
+    <ClCompile Include="Game objects\LandObject.cpp" />
+    <ClCompile Include="Game objects\MapBlock.cpp" />
+    <ClCompile Include="Game objects\MapObject.cpp" />
+    <ClCompile Include="Game objects\MultiObject.cpp" />
+    <ClCompile Include="Game objects\ObjectOnCursor.cpp" />
+    <ClCompile Include="Game objects\RenderStaticObject.cpp" />
+    <ClCompile Include="Game objects\ShopItem.cpp" />
+    <ClCompile Include="Game objects\StaticObject.cpp" />
+    <ClCompile Include="GLEngine\GLEngine.cpp" />
+    <ClCompile Include="GLEngine\GLFrameBuffer.cpp" />
+    <ClCompile Include="GLEngine\GLHTMLTextTexture.cpp" />
+    <ClCompile Include="GLEngine\GLShader.cpp" />
+    <ClCompile Include="GLEngine\GLTextTexture.cpp" />
+    <ClCompile Include="GLEngine\GLTexture.cpp" />
+    <ClCompile Include="GLEngine\GLTextureCircleOfTransparency.cpp" />
+    <ClCompile Include="GLEngine\GLVector.cpp" />
+    <ClCompile Include="GUI\BaseGUI.cpp" />
+    <ClCompile Include="GUI\GUIAlphaBlending.cpp" />
+    <ClCompile Include="GUI\GUIBlending.cpp" />
+    <ClCompile Include="GUI\GUIBuff.cpp" />
+    <ClCompile Include="GUI\GUIBulletinBoardObject.cpp" />
+    <ClCompile Include="GUI\GUIButton.cpp" />
+    <ClCompile Include="GUI\GUIComboBox.cpp" />
+    <ClCompile Include="GUI\GUIComboboxText.cpp" />
+    <ClCompile Include="GUI\GUIDataBox.cpp" />
+    <ClCompile Include="GUI\GUIExternalTexture.cpp" />
+    <ClCompile Include="GUI\GUIGenericText.cpp" />
+    <ClCompile Include="GUI\GUIGenericTextEntry.cpp" />
+    <ClCompile Include="GUI\GUIGumppicHightlighted.cpp" />
+    <ClCompile Include="GUI\GUIHitBox.cpp" />
+    <ClCompile Include="GUI\GUIHTMLButton.cpp" />
+    <ClCompile Include="GUI\GUIButtonTileart.cpp" />
+    <ClCompile Include="GUI\GUICheckbox.cpp" />
+    <ClCompile Include="GUI\GUIChecktrans.cpp" />
+    <ClCompile Include="GUI\GUIDrawObject.cpp" />
+    <ClCompile Include="GUI\GUIGroup.cpp" />
+    <ClCompile Include="GUI\GUIGumppic.cpp" />
+    <ClCompile Include="GUI\GUIGumppicTiled.cpp" />
+    <ClCompile Include="GUI\GUIHTMLGump.cpp" />
+    <ClCompile Include="GUI\GUIHTMLHitBox.cpp" />
+    <ClCompile Include="GUI\GUIHTMLResizepic.cpp" />
+    <ClCompile Include="GUI\GUIHTMLSlider.cpp" />
+    <ClCompile Include="GUI\GUIHTMLText.cpp" />
+    <ClCompile Include="GUI\GUILine.cpp" />
+    <ClCompile Include="GUI\GUIMenuObject.cpp" />
+    <ClCompile Include="GUI\GUIMinMaxButtons.cpp" />
+    <ClCompile Include="GUI\GUIPage.cpp" />
+    <ClCompile Include="GUI\GUIPolygonal.cpp" />
+    <ClCompile Include="GUI\GUIColoredPolygone.cpp" />
+    <ClCompile Include="GUI\GUIRadio.cpp" />
+    <ClCompile Include="GUI\GUIResizeButton.cpp" />
+    <ClCompile Include="GUI\GUIResizepic.cpp" />
+    <ClCompile Include="GUI\GUIScissor.cpp" />
+    <ClCompile Include="GUI\GUIScrollBackground.cpp" />
+    <ClCompile Include="GUI\GUIShader.cpp" />
+    <ClCompile Include="GUI\GUIShopItem.cpp" />
+    <ClCompile Include="GUI\GUIShopResult.cpp" />
+    <ClCompile Include="GUI\GUISlider.cpp" />
+    <ClCompile Include="GUI\GUIText.cpp" />
+    <ClCompile Include="GUI\GUITextEntry.cpp" />
+    <ClCompile Include="GUI\GUITilepic.cpp" />
+    <ClCompile Include="GUI\GUITilepicHightlighted.cpp" />
+    <ClCompile Include="Gumps\Gump.cpp" />
+    <ClCompile Include="Gumps\GumpBaseScroll.cpp" />
+    <ClCompile Include="Gumps\GumpBook.cpp" />
+    <ClCompile Include="Gumps\GumpBuff.cpp" />
+    <ClCompile Include="Gumps\GumpBulletinBoard.cpp" />
+    <ClCompile Include="Gumps\GumpBulletinBoardItem.cpp" />
+    <ClCompile Include="Gumps\GumpShop.cpp" />
+    <ClCompile Include="Gumps\GumpConsoleType.cpp" />
+    <ClCompile Include="Gumps\GumpContainer.cpp" />
+    <ClCompile Include="Gumps\GumpDrag.cpp" />
+    <ClCompile Include="Gumps\GumpDye.cpp" />
+    <ClCompile Include="Gumps\GumpGeneric.cpp" />
+    <ClCompile Include="Gumps\GumpGrayMenu.cpp" />
+    <ClCompile Include="Gumps\GumpJournal.cpp" />
+    <ClCompile Include="Gumps\GumpMap.cpp" />
+    <ClCompile Include="Gumps\GumpMenu.cpp" />
+    <ClCompile Include="Gumps\GumpMenubar.cpp" />
+    <ClCompile Include="Gumps\GumpMinimap.cpp" />
+    <ClCompile Include="Gumps\GumpNotify.cpp" />
+    <ClCompile Include="Gumps\GumpOptions.cpp" />
+    <ClCompile Include="Gumps\GumpPaperdoll.cpp" />
+    <ClCompile Include="Gumps\GumpPartyManifest.cpp" />
+    <ClCompile Include="Gumps\GumpPopupMenu.cpp" />
+    <ClCompile Include="Gumps\GumpProfile.cpp" />
+    <ClCompile Include="Gumps\GumpQuestion.cpp" />
+    <ClCompile Include="Gumps\GumpScreenCharacterList.cpp" />
+    <ClCompile Include="Gumps\GumpScreenConnection.cpp" />
+    <ClCompile Include="Gumps\GumpScreenCreateCharacter.cpp" />
+    <ClCompile Include="Gumps\GumpScreenGame.cpp" />
+    <ClCompile Include="Gumps\GumpScreenMain.cpp" />
+    <ClCompile Include="Gumps\GumpScreenSelectProfession.cpp" />
+    <ClCompile Include="Gumps\GumpScreenSelectTown.cpp" />
+    <ClCompile Include="Gumps\GumpScreenServer.cpp" />
+    <ClCompile Include="Gumps\GumpSecureTrading.cpp" />
+    <ClCompile Include="Gumps\GumpSelectColor.cpp" />
+    <ClCompile Include="Gumps\GumpSelectFont.cpp" />
+    <ClCompile Include="Gumps\GumpSkills.cpp" />
+    <ClCompile Include="Gumps\GumpSpell.cpp" />
+    <ClCompile Include="Gumps\GumpStatusbar.cpp" />
+    <ClCompile Include="Gumps\GumpTargetSystem.cpp" />
+    <ClCompile Include="Gumps\GumpTextEntryDialog.cpp" />
+    <ClCompile Include="Gumps\GumpTip.cpp" />
+    <ClCompile Include="Gumps\GumpWorldMap.cpp" />
+    <ClCompile Include="ImageBounds.cpp" />
+    <ClCompile Include="IndexObject.cpp" />
+    <ClCompile Include="Macro.cpp" />
+    <ClCompile Include="Managers\AnimationManager.cpp" />
+    <ClCompile Include="Managers\CityManager.cpp" />
+    <ClCompile Include="Managers\ClilocManager.cpp" />
+    <ClCompile Include="Managers\ColorManager.cpp" />
+    <ClCompile Include="Managers\ConfigManager.cpp" />
+    <ClCompile Include="Managers\ConnectionManager.cpp" />
+    <ClCompile Include="Managers\CreateCharacterManager.cpp" />
+    <ClCompile Include="Managers\EffectManager.cpp" />
+    <ClCompile Include="Managers\FileManager.cpp" />
+    <ClCompile Include="Managers\FontsManager.cpp" />
+    <ClCompile Include="Managers\GumpManager.cpp" />
+    <ClCompile Include="Managers\MacroManager.cpp" />
+    <ClCompile Include="Managers\MapManager.cpp" />
+    <ClCompile Include="Managers\MouseManager.cpp" />
+    <ClCompile Include="Managers\MulReader.cpp" />
+    <ClCompile Include="Managers\OptionsMacroManager.cpp" />
+    <ClCompile Include="Managers\PacketManager.cpp" />
+    <ClCompile Include="Managers\ProfessionManager.cpp" />
+    <ClCompile Include="Managers\SkillGroupManager.cpp" />
+    <ClCompile Include="Managers\SoundManager.cpp" />
+    <ClCompile Include="Managers\SpeechManager.cpp" />
+    <ClCompile Include="Multi.cpp" />
+    <ClCompile Include="MultiMap.cpp" />
+    <ClCompile Include="Network\Connection.cpp" />
+    <ClCompile Include="Network\GameCrypt.cpp" />
+    <ClCompile Include="Network\LoginCrypt.cpp" />
+    <ClCompile Include="Network\md5.cpp" />
+    <ClCompile Include="Network\Packets.cpp" />
+    <ClCompile Include="Network\twofish.cpp" />
+    <ClCompile Include="Network\UOHuffman.cpp" />
+    <ClCompile Include="OrionApplication.cpp" />
+    <ClCompile Include="OrionUO.cpp" />
+    <ClCompile Include="OrionWindow.cpp" />
+    <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="Party.cpp" />
+    <ClCompile Include="PartyObject.cpp" />
+    <ClCompile Include="PressedObject.cpp" />
+    <ClCompile Include="Profession.cpp" />
+    <ClCompile Include="QuestArrow.cpp" />
+    <ClCompile Include="RenderObject.cpp" />
+    <ClCompile Include="RenderWorldObject.cpp" />
+    <ClCompile Include="Screen stages\BaseScreen.cpp" />
+    <ClCompile Include="Screen stages\CharacterListScreen.cpp" />
+    <ClCompile Include="Screen stages\ConnectionScreen.cpp" />
+    <ClCompile Include="Screen stages\CreateCharacterScreen.cpp" />
+    <ClCompile Include="Screen stages\DebugScreen.cpp" />
+    <ClCompile Include="Screen stages\GameBlockedScreen.cpp" />
+    <ClCompile Include="Screen stages\GameScreen.cpp" />
+    <ClCompile Include="Screen stages\MainScreen.cpp" />
+    <ClCompile Include="Screen stages\SelectProfessionScreen.cpp" />
+    <ClCompile Include="Screen stages\SelectTownScreen.cpp" />
+    <ClCompile Include="Screen stages\ServerScreen.cpp" />
+    <ClCompile Include="ScreenshotBuilder.cpp" />
+    <ClCompile Include="SelectedObject.cpp" />
+    <ClCompile Include="ServerList.cpp" />
+    <ClCompile Include="SkillGroup.cpp" />
+    <ClCompile Include="Skills.cpp" />
+    <ClCompile Include="SmoothMonitor.cpp" />
+    <ClCompile Include="Target.cpp" />
+    <ClCompile Include="TargetGump.cpp" />
+    <ClCompile Include="TextEngine\EntryText.cpp" />
+    <ClCompile Include="TextEngine\GameConsole.cpp" />
+    <ClCompile Include="TextEngine\Journal.cpp" />
+    <ClCompile Include="TextEngine\RenderTextObject.cpp" />
+    <ClCompile Include="TextEngine\TextContainer.cpp" />
+    <ClCompile Include="TextEngine\TextData.cpp" />
+    <ClCompile Include="TextEngine\TextRenderer.cpp" />
+    <ClCompile Include="TextureObject.cpp" />
+    <ClCompile Include="ToolTip.cpp" />
+    <ClCompile Include="Walker\FastWalk.cpp" />
+    <ClCompile Include="Walker\PathFinder.cpp" />
+    <ClCompile Include="Walker\PathNode.cpp" />
+    <ClCompile Include="Walker\WalkData.cpp" />
+    <ClCompile Include="Walker\Walker.cpp" />
+    <ClCompile Include="Walker\WalkStack.cpp" />
+    <ClCompile Include="Weather.cpp" />
+    <ClCompile Include="WeatherEffeect.cpp" />
+    <ClCompile Include="Wisp\WispApplication.cpp" />
+    <ClCompile Include="Wisp\WispBinaryFileWritter.cpp" />
+    <ClCompile Include="Wisp\WispConnection.cpp" />
+    <ClCompile Include="Wisp\WispDataStream.cpp" />
+    <ClCompile Include="Wisp\WispGeometry.cpp" />
+    <ClCompile Include="Wisp\WispGlobal.cpp" />
+    <ClCompile Include="Wisp\WispLogger.cpp" />
+    <ClCompile Include="Wisp\WispMappedFile.cpp" />
+    <ClCompile Include="Wisp\WispMouse.cpp" />
+    <ClCompile Include="Wisp\WispPacketMessage.cpp" />
+    <ClCompile Include="Wisp\WispPacketReader.cpp" />
+    <ClCompile Include="Wisp\WispTextFileParser.cpp" />
+    <ClCompile Include="Wisp\WispThread.cpp" />
+    <ClCompile Include="Wisp\WispThreadedTimer.cpp" />
+    <ClCompile Include="Wisp\WispWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OrionUO.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="OrionUO.ico" />
+    <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cursor1.cur" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

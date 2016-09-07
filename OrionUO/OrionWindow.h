@@ -1,0 +1,55 @@
+/***********************************************************************************
+**
+** OrionWindow.h
+**
+** Copyright (C) August 2016 Hotride
+**
+************************************************************************************
+*/
+//----------------------------------------------------------------------------------
+#ifndef ORIONWINDOW_H
+#define ORIONWINDOW_H
+//----------------------------------------------------------------------------------
+#include "Wisp/WispWindow.h"
+//----------------------------------------------------------------------------------
+class COrionWindow : public WISP_WINDOW::CWindow
+{
+public:
+	COrionWindow();
+	virtual ~COrionWindow();
+
+	static const int RENDER_TIMER_ID = 1;
+	static const int UPDATE_TIMER_ID = 2;
+
+	void EmulateOnLeftMouseButtonDown() { OnLeftMouseButtonDown(); }
+
+protected:
+	virtual bool OnCreate();
+	virtual void OnDestroy();
+	virtual void OnResize(WISP_GEOMETRY::CSize &newSize);
+	virtual void OnLeftMouseButtonDown();
+	virtual void OnLeftMouseButtonUp();
+	virtual bool OnLeftMouseButtonDoubleClick();
+	virtual void OnRightMouseButtonDown();
+	virtual void OnRightMouseButtonUp();
+	virtual bool OnRightMouseButtonDoubleClick();
+	virtual void OnMidMouseButtonDown();
+	virtual void OnMidMouseButtonUp();
+	virtual bool OnMidMouseButtonDoubleClick();
+	virtual void OnMidMouseButtonScroll(const bool &up);
+	virtual void OnDragging();
+	virtual void OnActivate();
+	virtual void OnDeactivate();
+	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
+	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
+	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam);
+	virtual void OnRepaint();
+	virtual void OnTimer(uint id);
+	virtual void OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedTimer *timer);
+	virtual LRESULT OnUserMessages(const UINT &message, const WPARAM &wParam, const LPARAM &lParam);
+};
+//----------------------------------------------------------------------------------
+extern COrionWindow g_OrionWindow;
+//----------------------------------------------------------------------------------
+#endif
+//----------------------------------------------------------------------------------

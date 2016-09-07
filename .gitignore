@@ -21,13 +21,15 @@
 *.sc
 *.iff
 *.uop
-!ConfigurationEditor.exe
 /Makefile*
 /ipch
-/snapshots
+/OrionUO/snapshots
 /OrionAssistConfig
 /Release
 /Debug
+/OrionUO/Debug
+/OrionUO/Release
 /Desktop
 /music
 !/dll/*.dll
+!/OrionUO/ConfigurationEditor.exe
