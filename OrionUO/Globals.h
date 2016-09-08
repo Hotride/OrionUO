@@ -69,6 +69,8 @@ extern int g_RenderedObjectsCountInGameWindow;
 //----------------------------------------------------------------------------------
 extern GLdouble g_GlobalScale;
 
+extern CGLTexture g_MapTexture[6];
+
 //!Значения задержек в массиве
 extern int g_FrameDelay[2];
 

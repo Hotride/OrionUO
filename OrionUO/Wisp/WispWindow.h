@@ -35,6 +35,8 @@ public:
 
 	void Update() { ::UpdateWindow(m_Handle); }
 
+	bool IsActive() { return (::GetForegroundWindow() == m_Handle); }
+
 	void ShowCursor(const bool &show = true) { ::ShowCursor(show ? TRUE : FALSE); }
 	void ShowWindow(bool show) { ::ShowWindow(m_Handle, show ? TRUE : FALSE); }
 

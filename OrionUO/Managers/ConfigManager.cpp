@@ -179,6 +179,8 @@ void CConfigManager::OnChangeClientFPS(const uchar &val)
 
 		if (!m_ReduceFPSUnactiveWindow)
 			g_FrameDelay[0] = g_FrameDelay[1];
+
+		g_OrionWindow.SetRenderTimerDelay(g_FrameDelay[g_OrionWindow.IsActive()]);
 	}
 }
 //---------------------------------------------------------------------------
@@ -190,6 +192,8 @@ void CConfigManager::OnChangeReduceFPSUnactiveWindow(const bool &val)
 			g_FrameDelay[0] = FRAME_DELAY_UNACTIVE_WINDOW;
 		else
 			g_FrameDelay[0] = g_FrameDelay[1];
+
+		g_OrionWindow.SetRenderTimerDelay(g_FrameDelay[g_OrionWindow.IsActive()]);
 	}
 }
 //---------------------------------------------------------------------------

@@ -330,13 +330,8 @@ void COrion::Uninstall()
 	RELEASE_POINTER(g_MulReader);
 	RELEASE_POINTER(g_MapManager);
 
-	/*IFOR(i, 0, 6)
-	{
-		if (g_MapTexture[i] != 0)
-			glDeleteTextures(1, &g_MapTexture[i]);
-
-		g_MapTexture[i] = 0;
-	}*/
+	IFOR(i, 0, 6)
+		g_MapTexture[i].Clear();
 
 	IFOR(i, 0, 2)
 		g_TextureGumpState[i].Clear();

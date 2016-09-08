@@ -21,6 +21,8 @@ public:
 	static const int RENDER_TIMER_ID = 1;
 	static const int UPDATE_TIMER_ID = 2;
 
+	void SetRenderTimerDelay(const int &delay);
+
 	void EmulateOnLeftMouseButtonDown() { OnLeftMouseButtonDown(); }
 
 protected:

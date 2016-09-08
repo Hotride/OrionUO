@@ -47,6 +47,14 @@ COrionWindow::~COrionWindow()
 {
 }
 //----------------------------------------------------------------------------------
+void COrionWindow::SetRenderTimerDelay(const int &delay)
+{
+	WISP_THREADED_TIMER::CThreadedTimer *timer = GetThreadedTimer(RENDER_TIMER_ID);
+
+	if (timer != NULL)
+		timer->ChangeDelay(delay);
+}
+//----------------------------------------------------------------------------------
 bool COrionWindow::OnCreate()
 {
 	if (!g_GL.Install())
@@ -224,10 +232,13 @@ void COrionWindow::OnDragging()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnActivate()
 {
+	SetRenderTimerDelay(g_FrameDelay[1]);
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnDeactivate()
 {
+	if (g_ConfigManager.ReduceFPSUnactiveWindow)
+		SetRenderTimerDelay(g_FrameDelay[0]);
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)

@@ -158,7 +158,7 @@ if (ptr != NULL) \
 	protected: \
 	type m_##name; \
 	public: \
-	inline void Set##name(const type &val) { m_##name = val; } \
+	inline void __fastcall Set##name(const type &val) { m_##name = val; } \
 	inline type Get##name() const { return m_##name; } \
 	__declspec(property(get = Get##name, put = Set##name)) type name
 //----------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ if (ptr != NULL) \
 	type m_##name; \
 	public: \
 	void event(const type &val); \
-	inline void Set##name(const type &val) { event(val); m_##name = val; } \
+	inline void __fastcall Set##name(const type &val) { event(val); m_##name = val; } \
 	inline type Get##name() const { return m_##name; } \
 	__declspec(property(get = Get##name, put = Set##name)) type name
 //----------------------------------------------------------------------------------
