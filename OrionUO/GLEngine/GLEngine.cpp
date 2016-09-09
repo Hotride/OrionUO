@@ -248,9 +248,6 @@ void CGLEngine::ViewPortScaled(const int &x, const int &y, const int &width, con
 	GLdouble newRight = right * g_GlobalScale;
 	GLdouble newBottom = bottom * g_GlobalScale;
 
-	//left = (left * g_GlobalScale) - ((newRight - right) / 2.0);
-	//top = (top * g_GlobalScale) - ((newBottom - bottom) / 2.0);
-
 	left = (left * g_GlobalScale) - (newRight - right);
 	top = (top * g_GlobalScale) - (newBottom - bottom);
 

@@ -796,6 +796,7 @@ PACKET_HANDLER(EnterWorld)
 		g_ConsolePrompt = PT_NONE;
 		//g_MacroPointer = NULL;
 		g_Season = ST_SPRING;
+		g_GlobalScale = 1.0;
 	}
 
 	Move(4);

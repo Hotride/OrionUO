@@ -287,7 +287,7 @@ bool COrion::Install()
 		g_GL.BindTexture16(g_TextureGumpState[i].Texture, 10, 14, &pdwlt[i][0]);
 	}
 
-	g_LightBuffer.Init(GetSystemMetrics(SM_CXMAXIMIZED), GetSystemMetrics(SM_CYMAXIMIZED));
+	g_LightBuffer.Init(640, 480);
 
 	CreateObjectHandlesBackground();
 

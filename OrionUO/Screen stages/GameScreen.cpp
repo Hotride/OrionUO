@@ -1164,6 +1164,23 @@ void CGameScreen::DrawGameWindowLight()
 
 	if (g_GL.CanUseFrameBuffer)
 	{
+		GLdouble left = (GLdouble)g_RenderBounds.GameWindowPosX;
+		GLdouble right = (GLdouble)(g_RenderBounds.GameWindowSizeX + left);
+		GLdouble top = (GLdouble)g_RenderBounds.GameWindowPosY;
+		GLdouble bottom = (GLdouble)(g_RenderBounds.GameWindowSizeY + top);
+
+		GLdouble newRight = right * g_GlobalScale;
+		GLdouble newBottom = bottom * g_GlobalScale;
+
+		GLfloat offsetX = (GLfloat)((left * g_GlobalScale) - (newRight - right));
+		GLfloat offsetY = (GLfloat)((top * g_GlobalScale) - (newBottom - bottom));
+
+		int ligthFrameWidth = (int)(newRight - offsetX);
+		int ligthFrameHeight = (int)(newBottom - offsetY);
+
+		if (!g_LightBuffer.Ready(ligthFrameWidth, ligthFrameHeight))
+			g_LightBuffer.Init(ligthFrameWidth, ligthFrameHeight);
+
 		if (g_LightBuffer.Ready() && g_LightBuffer.Use())
 		{
 			float newLightColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f);
@@ -1178,8 +1195,15 @@ void CGameScreen::DrawGameWindowLight()
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE);
 
+			GLfloat translateOffsetX = (GLfloat)(g_RenderBounds.GameWindowPosX - offsetX);
+			GLfloat translateOffsetY = (GLfloat)(g_RenderBounds.GameWindowPosY - offsetY);
+
+			glTranslatef(translateOffsetX, translateOffsetY, 0.0f);
+
 			IFOR(i, 0, m_LightCount)
 				g_Orion.DrawLight(m_Light[i]);
+
+			glTranslatef(-translateOffsetX, -translateOffsetY, 0.0f);
 
 			UnuseShader();
 
@@ -1191,7 +1215,7 @@ void CGameScreen::DrawGameWindowLight()
 
 			glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 
-			g_LightBuffer.Draw(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY);
+			g_LightBuffer.Draw((int)offsetX, (int)offsetY);
 
 			glDisable(GL_BLEND);
 		}

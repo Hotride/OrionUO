@@ -42,6 +42,7 @@ CMainScreen::~CMainScreen()
 void CMainScreen::Init()
 {
 	g_ConfigLoaded = false;
+	g_GlobalScale = 1.0;
 
 	g_OrionWindow.Size = WISP_GEOMETRY::CSize(640, 480);
 	g_OrionWindow.NoResize = true;

@@ -13,7 +13,7 @@
 CGumpMenubar::CGumpMenubar(uint serial, short x, short y)
 : CGump(GT_MENUBAR, serial, x, y), m_Opened(true)
 {
-	m_Page = 1 + (int)m_Opened;
+	m_Page = 2;
 
 	Add(new CGUIPage(1));
 	Add(new CGUIResizepic(0, 0x13BE, 0, 0, 30, 27));
@@ -73,6 +73,16 @@ CGumpMenubar::CGumpMenubar(uint serial, short x, short y)
 CGumpMenubar::~CGumpMenubar()
 {
 }
+//---------------------------------------------------------------------------
+void CGumpMenubar::OnChangeOpened(const bool &val)
+{
+	if (val)
+		m_Page = 2;
+	else
+		m_Page = 1;
+
+	m_WantRedraw = true;
+}
 //----------------------------------------------------------------------------------
 void CGumpMenubar::OnButton(const uint &serial)
 {
@@ -122,12 +132,12 @@ void CGumpMenubar::OnButton(const uint &serial)
 
 			break;
 		}
-		/*case ID_GMB_WORLD_MAP:
+		case ID_GMB_WORLD_MAP:
 		{
 			g_Orion.OpenWorldMap();
 
 			break;
-		}*/
+		}
 		case ID_GMB_INFO:
 		{
 			break;
