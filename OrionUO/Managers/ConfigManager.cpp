@@ -72,6 +72,7 @@ void CConfigManager::DefaultPage1()
 void CConfigManager::DefaultPage2()
 {
 	m_ClientFPS = 32;
+	m_UseScaling = false;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -182,6 +183,12 @@ void CConfigManager::OnChangeClientFPS(const uchar &val)
 
 		g_OrionWindow.SetRenderTimerDelay(g_FrameDelay[g_OrionWindow.IsActive()]);
 	}
+}
+//---------------------------------------------------------------------------
+void CConfigManager::OnChangeUseScaling(const bool &val)
+{
+	if (!val)
+		g_GlobalScale = 1.0;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeReduceFPSUnactiveWindow(const bool &val)
@@ -295,7 +302,12 @@ bool CConfigManager::Load(string path)
 		if (file.ReadInt8() == 2)
 		{
 			if (blockSize > 2)
+			{
 				ClientFPS = file.ReadUInt8();
+
+				if (blockSize > 3)
+					m_UseScaling = file.ReadUInt8();
+			}
 			else
 				ClientFPS = 32;
 		}
@@ -547,9 +559,10 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(3); //size of block
+	writter.WriteInt8(4); //size of block
 	writter.WriteInt8(2); //page index
-	writter.WriteUInt8(m_ClientFPS); //page index
+	writter.WriteUInt8(m_ClientFPS);
+	writter.WriteUInt8(m_UseScaling);
 	writter.WriteBuffer();
 
 	//Page 3

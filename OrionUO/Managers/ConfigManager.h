@@ -24,7 +24,7 @@ class CConfigManager
 
 	//page 2 setget
 	SETGETE(uchar, ClientFPS, OnChangeClientFPS);
-	//void UpdateClientFPS();
+	SETGETE(bool, UseScaling, OnChangeUseScaling);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

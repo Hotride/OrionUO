@@ -243,7 +243,7 @@ void CGumpConsoleType::CalculateGumpState()
 	g_GumpMovingOffset.Y = 0;
 
 	g_GumpTranslate.X = (float)(g_RenderBounds.GameWindowPosX + 2);
-	g_GumpTranslate.Y = (float)(g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY + 2);
+	g_GumpTranslate.Y = (float)(g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight + 2);
 }
 //----------------------------------------------------------------------------------
 void CGumpConsoleType::OnButton(const uint &serial)

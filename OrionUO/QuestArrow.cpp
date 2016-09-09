@@ -43,13 +43,13 @@ void CQuestArrow::Draw()
 
 		if (x < g_RenderBounds.GameWindowPosX)
 			x = g_RenderBounds.GameWindowPosX;
-		else if (x > g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowSizeX - size.Width)
-			x = g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowSizeX - size.Width;
+		else if (x > g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth - size.Width)
+			x = g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth - size.Width;
 
 		if (y < g_RenderBounds.GameWindowPosY)
 			y = g_RenderBounds.GameWindowPosY;
-		else if (y > g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY - size.Height)
-			y = g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY - size.Height;
+		else if (y > g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - size.Height)
+			y = g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - size.Height;
 
 		if (m_Timer < g_Ticks)
 		{

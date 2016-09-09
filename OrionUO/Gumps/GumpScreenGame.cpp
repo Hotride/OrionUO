@@ -40,21 +40,21 @@ void CGumpScreenGame::UpdateContent()
 
 		if (g_PressedObject.LeftObject() == m_Items) //resizer
 		{
-			g_RenderBounds.GameWindowSizeX += offset.X;
-			g_RenderBounds.GameWindowSizeY += offset.Y;
+			g_RenderBounds.GameWindowWidth += offset.X;
+			g_RenderBounds.GameWindowHeight += offset.Y;
 
-			if (g_RenderBounds.GameWindowSizeX < 640)
-				g_RenderBounds.GameWindowSizeX = 640;
+			if (g_RenderBounds.GameWindowWidth < 640)
+				g_RenderBounds.GameWindowWidth = 640;
 
-			if (g_RenderBounds.GameWindowSizeY < 480)
-				g_RenderBounds.GameWindowSizeY = 480;
+			if (g_RenderBounds.GameWindowHeight < 480)
+				g_RenderBounds.GameWindowHeight = 480;
 
 			CGumpOptions *opt = (CGumpOptions*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_OPTIONS);
 
 			if (opt != NULL)
 			{
-				opt->m_GameWindowWidth->m_Entry.SetText(std::to_wstring(g_RenderBounds.GameWindowSizeX));
-				opt->m_GameWindowHeight->m_Entry.SetText(std::to_wstring(g_RenderBounds.GameWindowSizeY));
+				opt->m_GameWindowWidth->m_Entry.SetText(std::to_wstring(g_RenderBounds.GameWindowWidth));
+				opt->m_GameWindowHeight->m_Entry.SetText(std::to_wstring(g_RenderBounds.GameWindowHeight));
 			}
 		}
 		else //scope
@@ -68,11 +68,11 @@ void CGumpScreenGame::UpdateContent()
 			if (g_RenderBounds.GameWindowPosY < 0)
 				g_RenderBounds.GameWindowPosY = 0;
 
-			if (g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowSizeX > g_OrionWindow.Size.Width)
-				g_RenderBounds.GameWindowPosX = g_OrionWindow.Size.Width - g_RenderBounds.GameWindowSizeX;
+			if (g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth > g_OrionWindow.Size.Width)
+				g_RenderBounds.GameWindowPosX = g_OrionWindow.Size.Width - g_RenderBounds.GameWindowWidth;
 
-			if (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY > g_OrionWindow.Size.Height)
-				g_RenderBounds.GameWindowPosY = g_OrionWindow.Size.Height - g_RenderBounds.GameWindowSizeY;
+			if (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight > g_OrionWindow.Size.Height)
+				g_RenderBounds.GameWindowPosY = g_OrionWindow.Size.Height - g_RenderBounds.GameWindowHeight;
 		}
 	}
 }
@@ -89,11 +89,11 @@ void CGumpScreenGame::InitToolTip()
 void CGumpScreenGame::Draw()
 {
 	//Рамка игрового окна
-	g_Orion.DrawGump(0x0A8D, 0, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowSizeY + 8);
-	g_Orion.DrawGump(0x0A8D, 0, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowSizeX, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowSizeY + 8);
+	g_Orion.DrawGump(0x0A8D, 0, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8);
+	g_Orion.DrawGump(0x0A8D, 0, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8);
 
-	g_Orion.DrawGump(0x0A8C, 0, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, g_RenderBounds.GameWindowSizeX + 4, 0);
-	g_Orion.DrawGump(0x0A8C, 0, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY, g_RenderBounds.GameWindowSizeX + 8, 0);
+	g_Orion.DrawGump(0x0A8C, 0, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, g_RenderBounds.GameWindowWidth + 4, 0);
+	g_Orion.DrawGump(0x0A8C, 0, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight, g_RenderBounds.GameWindowWidth + 8, 0);
 
 	ushort resizeGumpID = 0x0837; //button
 	if (g_ConfigManager.LockResizingGameWindow)
@@ -101,7 +101,7 @@ void CGumpScreenGame::Draw()
 	else if (g_SelectedObject.Object() == m_Items)
 		resizeGumpID++; //lighted button
 
-	g_Orion.DrawGump(resizeGumpID, 0, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowSizeX - 3, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY - 3);
+	g_Orion.DrawGump(resizeGumpID, 0, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth - 3, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - 3);
 }
 //----------------------------------------------------------------------------------
 CRenderObject *CGumpScreenGame::Select()
@@ -109,18 +109,18 @@ CRenderObject *CGumpScreenGame::Select()
 	CRenderObject *selected = NULL;
 
 	//Если ничего не выбралось - пройдемся по рамке
-	if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowSizeY + 8))
+	if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))
 		selected = (CRenderObject*)m_Items->m_Next;
-	else if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowSizeX, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowSizeY + 8))
+	else if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))
 		selected = (CRenderObject*)m_Items->m_Next;
-	else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, g_RenderBounds.GameWindowSizeX + 8, 0))
+	else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, g_RenderBounds.GameWindowWidth + 8, 0))
 		selected = (CRenderObject*)m_Items->m_Next;
-	else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY, g_RenderBounds.GameWindowSizeX + 8, 0))
+	else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight, g_RenderBounds.GameWindowWidth + 8, 0))
 		selected = (CRenderObject*)m_Items->m_Next;
 
 	if (!g_ConfigManager.LockResizingGameWindow)
 	{
-		if (g_Orion.GumpPixelsInXY(0x0837, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowSizeX - 3, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY - 3))
+		if (g_Orion.GumpPixelsInXY(0x0837, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth - 3, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - 3))
 			selected = (CRenderObject*)m_Items;
 	}
 

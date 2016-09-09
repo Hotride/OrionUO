@@ -706,15 +706,15 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_RenderBounds.GameWindowPosX = g_ConfigManager.GameWindowX;
 	g_RenderBounds.GameWindowPosY = g_ConfigManager.GameWindowY;
 
-	g_RenderBounds.GameWindowSizeX = g_ConfigManager.GameWindowWidth;
-	g_RenderBounds.GameWindowSizeY = g_ConfigManager.GameWindowHeight;
+	g_RenderBounds.GameWindowWidth = g_ConfigManager.GameWindowWidth;
+	g_RenderBounds.GameWindowHeight = g_ConfigManager.GameWindowHeight;
 
 	m_GameScreenGump.UpdateContent();
 
 	//int playerZOffset = (g_Player->Z * 4) - g_Player->OffsetZ;
 
-	g_RenderBounds.GameWindowCenterX = g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowSizeX / 2;
-	g_RenderBounds.GameWindowCenterY = (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY / 2) + (g_Player->Z * 4);
+	g_RenderBounds.GameWindowCenterX = g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth / 2;
+	g_RenderBounds.GameWindowCenterY = (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight / 2) + (g_Player->Z * 4);
 
 	/*int earthquakeMagnitude = RandomInt(11);
 
@@ -734,8 +734,37 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_PlayerRect.Width = dims.Width;
 	g_PlayerRect.Height = dims.Height;*/
 
-	int rangeX = (int)(((g_RenderBounds.GameWindowSizeX / 44) + 1) * g_GlobalScale);
-	int rangeY = (int)(((g_RenderBounds.GameWindowSizeY / 44) + 1) * g_GlobalScale);
+	GLdouble scale = 1.0;
+
+	if (g_ConfigManager.UseScaling)
+	{
+		scale = g_GlobalScale;
+
+		GLdouble left = (GLdouble)g_RenderBounds.GameWindowPosX;
+		GLdouble right = (GLdouble)(g_RenderBounds.GameWindowWidth + left);
+		GLdouble top = (GLdouble)g_RenderBounds.GameWindowPosY;
+		GLdouble bottom = (GLdouble)(g_RenderBounds.GameWindowHeight + top);
+
+		GLdouble newRight = right * scale;
+		GLdouble newBottom = bottom * scale;
+
+		g_RenderBounds.GameWindowScaledOffsetX = (int)((left * scale) - (newRight - right));
+		g_RenderBounds.GameWindowScaledOffsetY = (int)((top * scale) - (newBottom - bottom));
+
+		g_RenderBounds.GameWindowScaledWidth = (int)(newRight - g_RenderBounds.GameWindowScaledOffsetX);
+		g_RenderBounds.GameWindowScaledHeight = (int)(newBottom - g_RenderBounds.GameWindowScaledOffsetY);
+	}
+	else
+	{
+		g_RenderBounds.GameWindowScaledOffsetX = 0;
+		g_RenderBounds.GameWindowScaledOffsetY = 0;
+
+		g_RenderBounds.GameWindowScaledWidth = 0;
+		g_RenderBounds.GameWindowScaledHeight = 0;
+	}
+
+	int rangeX = (int)(((g_RenderBounds.GameWindowWidth / 44) + 1) * scale);
+	int rangeY = (int)(((g_RenderBounds.GameWindowHeight / 44) + 1) * scale);
 
 	if (rangeX < rangeY)
 		rangeX = rangeY;
@@ -779,17 +808,17 @@ void CGameScreen::CalculateGameWindowBounds()
 	if (g_RenderBounds.MaxBlockY >= g_MapBlockSize[g_CurrentMap].Height)
 		g_RenderBounds.MaxBlockY = g_MapBlockSize[g_CurrentMap].Height - 1;
 
-	int drawOffset = (int)(g_GlobalScale * 40.0);
+	int drawOffset = (int)(scale * 40.0);
 
-	GLdouble maxX = g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowSizeX + drawOffset;
-	GLdouble maxY = g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY + drawOffset;
-	GLdouble newMaxX = maxX * g_GlobalScale;
-	GLdouble newMaxY = maxY * g_GlobalScale;
+	GLdouble maxX = g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth + drawOffset;
+	GLdouble maxY = g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight + drawOffset;
+	GLdouble newMaxX = maxX * scale;
+	GLdouble newMaxY = maxY * scale;
 
-	g_RenderBounds.MinPixelsX = (int)(((g_RenderBounds.GameWindowPosX - drawOffset) * g_GlobalScale) - (newMaxX - maxX));
+	g_RenderBounds.MinPixelsX = (int)(((g_RenderBounds.GameWindowPosX - drawOffset) * scale) - (newMaxX - maxX));
 	g_RenderBounds.MaxPixelsX = (int)newMaxX;
 
-	g_RenderBounds.MinPixelsY = (int)(((g_RenderBounds.GameWindowPosY - drawOffset) * g_GlobalScale) - (newMaxY - maxY)); // -playerZOffset;
+	g_RenderBounds.MinPixelsY = (int)(((g_RenderBounds.GameWindowPosY - drawOffset) * scale) - (newMaxY - maxY)); // -playerZOffset;
 	g_RenderBounds.MaxPixelsY = (int)newMaxY; // + playerZOffset;
 
 	g_NoDrawRoof = false;
@@ -1164,22 +1193,8 @@ void CGameScreen::DrawGameWindowLight()
 
 	if (g_GL.CanUseFrameBuffer)
 	{
-		GLdouble left = (GLdouble)g_RenderBounds.GameWindowPosX;
-		GLdouble right = (GLdouble)(g_RenderBounds.GameWindowSizeX + left);
-		GLdouble top = (GLdouble)g_RenderBounds.GameWindowPosY;
-		GLdouble bottom = (GLdouble)(g_RenderBounds.GameWindowSizeY + top);
-
-		GLdouble newRight = right * g_GlobalScale;
-		GLdouble newBottom = bottom * g_GlobalScale;
-
-		GLfloat offsetX = (GLfloat)((left * g_GlobalScale) - (newRight - right));
-		GLfloat offsetY = (GLfloat)((top * g_GlobalScale) - (newBottom - bottom));
-
-		int ligthFrameWidth = (int)(newRight - offsetX);
-		int ligthFrameHeight = (int)(newBottom - offsetY);
-
-		if (!g_LightBuffer.Ready(ligthFrameWidth, ligthFrameHeight))
-			g_LightBuffer.Init(ligthFrameWidth, ligthFrameHeight);
+		if (!g_LightBuffer.Ready(g_RenderBounds.GameWindowScaledWidth, g_RenderBounds.GameWindowScaledHeight))
+			g_LightBuffer.Init(g_RenderBounds.GameWindowScaledWidth, g_RenderBounds.GameWindowScaledHeight);
 
 		if (g_LightBuffer.Ready() && g_LightBuffer.Use())
 		{
@@ -1195,8 +1210,8 @@ void CGameScreen::DrawGameWindowLight()
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE);
 
-			GLfloat translateOffsetX = (GLfloat)(g_RenderBounds.GameWindowPosX - offsetX);
-			GLfloat translateOffsetY = (GLfloat)(g_RenderBounds.GameWindowPosY - offsetY);
+			GLfloat translateOffsetX = (GLfloat)(g_RenderBounds.GameWindowPosX - g_RenderBounds.GameWindowScaledOffsetX);
+			GLfloat translateOffsetY = (GLfloat)(g_RenderBounds.GameWindowPosY - g_RenderBounds.GameWindowScaledOffsetY);
 
 			glTranslatef(translateOffsetX, translateOffsetY, 0.0f);
 
@@ -1211,11 +1226,11 @@ void CGameScreen::DrawGameWindowLight()
 
 			g_GL.RestorePort();
 
-			g_GL.ViewPortScaled(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowSizeX, g_RenderBounds.GameWindowSizeY);
+			g_GL.ViewPortScaled(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowHeight);
 
 			glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 
-			g_LightBuffer.Draw((int)offsetX, (int)offsetY);
+			g_LightBuffer.Draw(g_RenderBounds.GameWindowScaledOffsetX, g_RenderBounds.GameWindowScaledOffsetY);
 
 			glDisable(GL_BLEND);
 		}
@@ -1485,7 +1500,7 @@ void CGameScreen::Render(const bool &mode)
 		if (DrawSmoothMonitor())
 			return;
 
-		g_GL.ViewPortScaled(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowSizeX, g_RenderBounds.GameWindowSizeY);
+		g_GL.ViewPortScaled(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowHeight);
 		
 		g_DrawColor = 1.0f;
 
@@ -1533,7 +1548,7 @@ void CGameScreen::Render(const bool &mode)
 		else
 		{
 			glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-			g_GL.DrawPolygone(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowSizeX, g_RenderBounds.GameWindowSizeY);
+			g_GL.DrawPolygone(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowHeight);
 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 			g_FontManager.DrawA(3, "You are dead.", 0, g_RenderBounds.GameWindowCenterX - 50, g_RenderBounds.GameWindowCenterY - 20);
@@ -1550,7 +1565,7 @@ void CGameScreen::Render(const bool &mode)
 
 		if (!g_DeathScreenTimer)
 		{
-			g_SystemChat.DrawSystemChat(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowSizeY);
+			g_SystemChat.DrawSystemChat(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowHeight);
 
 			g_QuestArrow.Draw();
 		}
@@ -1620,7 +1635,7 @@ void CGameScreen::Render(const bool &mode)
 		g_GumpManager.Draw(false);
 		
 		// отрисовка ввода игрока
-		g_GameConsole.DrawW((uchar)g_ConfigManager.SpeechFont, g_ConfigManager.SpeechColor, g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY - 18, TS_LEFT, UOFONT_BLACK_BORDER | UOFONT_FIXED);
+		g_GameConsole.DrawW((uchar)g_ConfigManager.SpeechFont, g_ConfigManager.SpeechColor, g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - 18, TS_LEFT, UOFONT_BLACK_BORDER | UOFONT_FIXED);
 		
 		if (multiOnTarget)
 			g_Target.UnloadMulti();
@@ -1672,8 +1687,8 @@ void CGameScreen::Render(const bool &mode)
 			{
 				//≈сли курсор мыши в игровом окне - просканируем его
 				if (g_MouseManager.Position.X < g_RenderBounds.GameWindowPosX || g_MouseManager.Position.Y < g_RenderBounds.GameWindowPosY ||
-					g_MouseManager.Position.X > (g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowSizeX) ||
-					g_MouseManager.Position.Y > (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowSizeY))
+					g_MouseManager.Position.X > (g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth) ||
+					g_MouseManager.Position.Y > (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight))
 				{}
 				else
 					DrawGameWindow(mode);
@@ -2019,8 +2034,15 @@ void CGameScreen::OnMidMouseButtonScroll(const bool &up)
 {
 	if (g_SelectedObject.Gump() != NULL)
 		g_GumpManager.OnMidMouseButtonScroll(up, false);
-	else if (g_SelectedObject.Object() != NULL)
+	else if (g_ConfigManager.UseScaling)
 	{
+		int gameWindowPosX = g_ConfigManager.GameWindowX - 4;
+		int gameWindowPosY = g_ConfigManager.GameWindowY - 4;
+
+		if (g_MouseManager.Position.X < gameWindowPosX || g_MouseManager.Position.Y < gameWindowPosY || g_MouseManager.Position.X >(gameWindowPosX + g_ConfigManager.GameWindowWidth) ||
+			g_MouseManager.Position.Y >(gameWindowPosY + g_ConfigManager.GameWindowHeight))
+			return;
+
 		if (up)
 			g_GlobalScale += 0.1;
 		else

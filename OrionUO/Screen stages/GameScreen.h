@@ -21,8 +21,16 @@ struct RENDER_VARIABLES_FOR_GAME_WINDOW
 	int GameWindowPosY;
 
 	//!Габариты окна
-	int GameWindowSizeX;
-	int GameWindowSizeY;
+	int GameWindowWidth;
+	int GameWindowHeight;
+
+	//!Габариты масштабированного окна
+	int GameWindowScaledWidth;
+	int GameWindowScaledHeight;
+
+	//!Габариты окна
+	int GameWindowScaledOffsetX;
+	int GameWindowScaledOffsetY;
 
 	//!Центр окна
 	int GameWindowCenterX;
