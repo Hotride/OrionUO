@@ -727,35 +727,26 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_RenderBounds.GameWindowCenterX -= (int)g_Player->OffsetX;
 	g_RenderBounds.GameWindowCenterY -= (int)(g_Player->OffsetY - g_Player->OffsetZ);
 
-	/*ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(g_Player);
-
-	g_PlayerRect.X = m_RenderBounds.GameWindowCenterX - (dims.Width / 2);
-	g_PlayerRect.Y = m_RenderBounds.GameWindowCenterY - dims.Height - playerZOffset - dims.CenterY;
-	g_PlayerRect.Width = dims.Width;
-	g_PlayerRect.Height = dims.Height;*/
-
-	GLdouble scale = 1.0;
-
 	if (g_ConfigManager.UseScaling)
 	{
-		scale = g_GlobalScale;
-
 		GLdouble left = (GLdouble)g_RenderBounds.GameWindowPosX;
 		GLdouble right = (GLdouble)(g_RenderBounds.GameWindowWidth + left);
 		GLdouble top = (GLdouble)g_RenderBounds.GameWindowPosY;
 		GLdouble bottom = (GLdouble)(g_RenderBounds.GameWindowHeight + top);
 
-		GLdouble newRight = right * scale;
-		GLdouble newBottom = bottom * scale;
+		GLdouble newRight = right * g_GlobalScale;
+		GLdouble newBottom = bottom * g_GlobalScale;
 
-		g_RenderBounds.GameWindowScaledOffsetX = (int)((left * scale) - (newRight - right));
-		g_RenderBounds.GameWindowScaledOffsetY = (int)((top * scale) - (newBottom - bottom));
+		g_RenderBounds.GameWindowScaledOffsetX = (int)((left * g_GlobalScale) - (newRight - right));
+		g_RenderBounds.GameWindowScaledOffsetY = (int)((top * g_GlobalScale) - (newBottom - bottom));
 
 		g_RenderBounds.GameWindowScaledWidth = (int)(newRight - g_RenderBounds.GameWindowScaledOffsetX);
 		g_RenderBounds.GameWindowScaledHeight = (int)(newBottom - g_RenderBounds.GameWindowScaledOffsetY);
 	}
 	else
 	{
+		g_GlobalScale = 1.0;
+
 		g_RenderBounds.GameWindowScaledOffsetX = 0;
 		g_RenderBounds.GameWindowScaledOffsetY = 0;
 
@@ -763,8 +754,8 @@ void CGameScreen::CalculateGameWindowBounds()
 		g_RenderBounds.GameWindowScaledHeight = 0;
 	}
 
-	int rangeX = (int)(((g_RenderBounds.GameWindowWidth / 44) + 1) * scale);
-	int rangeY = (int)(((g_RenderBounds.GameWindowHeight / 44) + 1) * scale);
+	int rangeX = (int)(((g_RenderBounds.GameWindowWidth / 44) + 1) * g_GlobalScale);
+	int rangeY = (int)(((g_RenderBounds.GameWindowHeight / 44) + 1) * g_GlobalScale);
 
 	if (rangeX < rangeY)
 		rangeX = rangeY;
@@ -808,17 +799,17 @@ void CGameScreen::CalculateGameWindowBounds()
 	if (g_RenderBounds.MaxBlockY >= g_MapBlockSize[g_CurrentMap].Height)
 		g_RenderBounds.MaxBlockY = g_MapBlockSize[g_CurrentMap].Height - 1;
 
-	int drawOffset = (int)(scale * 40.0);
+	int drawOffset = (int)(g_GlobalScale * 40.0);
 
 	GLdouble maxX = g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth + drawOffset;
 	GLdouble maxY = g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight + drawOffset;
-	GLdouble newMaxX = maxX * scale;
-	GLdouble newMaxY = maxY * scale;
+	GLdouble newMaxX = maxX * g_GlobalScale;
+	GLdouble newMaxY = maxY * g_GlobalScale;
 
-	g_RenderBounds.MinPixelsX = (int)(((g_RenderBounds.GameWindowPosX - drawOffset) * scale) - (newMaxX - maxX));
+	g_RenderBounds.MinPixelsX = (int)(((g_RenderBounds.GameWindowPosX - drawOffset) * g_GlobalScale) - (newMaxX - maxX));
 	g_RenderBounds.MaxPixelsX = (int)newMaxX;
 
-	g_RenderBounds.MinPixelsY = (int)(((g_RenderBounds.GameWindowPosY - drawOffset) * scale) - (newMaxY - maxY)); // -playerZOffset;
+	g_RenderBounds.MinPixelsY = (int)(((g_RenderBounds.GameWindowPosY - drawOffset) * g_GlobalScale) - (newMaxY - maxY)); // -playerZOffset;
 	g_RenderBounds.MaxPixelsY = (int)newMaxY; // + playerZOffset;
 
 	g_NoDrawRoof = false;
@@ -1662,6 +1653,9 @@ void CGameScreen::Render(const bool &mode)
 	}
 	else //ֲûבמנ מבתוךעמג
 	{
+		GLdouble oldScale = g_GlobalScale;
+		g_GlobalScale = 1.0;
+
 		g_SelectedObject.Clear();
 		g_StatusbarUnderMouse = 0;
 		
@@ -1691,9 +1685,24 @@ void CGameScreen::Render(const bool &mode)
 					g_MouseManager.Position.Y > (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight))
 				{}
 				else
+				{
+					g_GlobalScale = oldScale;
+					WISP_GEOMETRY::CPoint2Di oldMouse = g_MouseManager.Position;
+
+					//g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di((int)(oldMouse.X * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetX, (int)(oldMouse.Y * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetY);
+
+					//g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di((int)((oldMouse.X - (g_RenderBounds.GameWindowScaledOffsetX / g_GlobalScale)) * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetX, (int)((oldMouse.Y - (g_RenderBounds.GameWindowScaledOffsetY / g_GlobalScale)) * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetY);
+
+					//g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di((int)(oldMouse.X * g_GlobalScale), (int)(oldMouse.Y * g_GlobalScale));
+
 					DrawGameWindow(mode);
+
+					g_MouseManager.Position = oldMouse;
+				}
 			}
 		}
+
+		g_GlobalScale = oldScale;
 
 		if (g_SelectedObject.Object() != g_LastSelectedObject.Object())
 		{

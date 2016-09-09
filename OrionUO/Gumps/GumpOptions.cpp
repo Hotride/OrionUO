@@ -480,7 +480,149 @@ void CGumpOptions::RedrawMacroData()
 	m_MacroCheckboxAlt->Checked = alt;
 	m_MacroCheckboxCtrl->Checked = ctrl;
 
+	CMacroObject *obj = m_MacroObjectPointer;
 
+	if (obj != NULL)
+	{
+		int captionY = 22;
+		int posY = 60;
+		int posX = 164;
+
+		//Macro Options
+		int boxPosY = posY + 127;
+		int arrowPosY = posY + 133;
+		bool drawEmptyBox = true;
+
+		if (obj->m_Prev != NULL)
+			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_UP, 0x0983, 0x0984, 0x0984, 292, 113));
+
+		/*int macroCount = 0;
+
+		while (obj != NULL && macroCount < maxMacroDraw)
+		{
+			Orion->DrawGump(0x098D, 0, posX, boxPosY);
+			FontManager->DrawA(1, TMacro::GetActionName(obj->Code), 0x0386, posX + 4, boxPosY + 5, 98, TS_CENTER, UOFONT_FIXED);
+			Orion->DrawGump(0x0985, 0, posX + 94, arrowPosY);
+
+			char hasMenu = obj->HasSubMenu;
+			if (hasMenu)
+			{
+				Orion->DrawGump(0x098E, 0, posX + 112, boxPosY);
+
+				if (hasMenu == 1) //Нужна стрелочка вниз
+				{
+					Orion->DrawGump(0x0985, 0, posX + 274, arrowPosY);
+
+					FontManager->DrawA(1, TMacro::GetAction(obj->SubCode), 0x0386, posX + 118, boxPosY + 5, 150, TS_LEFT, UOFONT_FIXED);
+				}
+				else
+				{
+					g_GL.Scissor((int)g_GumpTranslateX + posX + 118, (int)g_GumpTranslateY + boxPosY + 5, 150, 20);
+
+					((TMacroObjectEntry*)obj)->TextEntry->DrawA(1, 0x0386, posX + 118, boxPosY + 5, TS_LEFT, UOFONT_FIXED);
+
+					glDisable(GL_SCISSOR_TEST);
+				}
+			}
+
+			boxPosY += 26;
+			arrowPosY += 26;
+			macroCount++;
+
+			if (obj->m_Next == NULL)
+				break;
+
+			obj = (TMacroObject*)obj->m_Next;
+		}
+
+		if (macroCount >= maxMacroDraw)
+		{
+			drawEmptyBox = false;
+			Orion->DrawGump(0x0985 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_DOWN), 0, posX + 292, boxPosY);
+		}
+		else if (obj->Code == MC_NONE)
+			drawEmptyBox = false;
+	}
+
+	if (drawEmptyBox)
+	{
+		Orion->DrawGump(0x098D, 0, posX, boxPosY);
+		Orion->DrawGump(0x0985, 0, posX + 94, arrowPosY);
+	}
+
+	if (m_MacroSelection)
+	{
+		bool isAction = false;
+		if (m_MacroSelection == 0x20000000) //Action
+		{
+			posX += 116;
+			isAction = true;
+		}
+
+		int textIndex = m_MacroListOffset;
+
+		posY -= 60;
+		posY += m_MacroListOffsetYStart;
+
+		//Top
+		Orion->DrawGump(0x09B5, 0, posX - 5, posY - 11);
+
+		if (textIndex > 0)
+			Orion->DrawGump(0x0983, 0, posX + 85, posY - 8);
+
+		int ofs = 0;
+
+		int count = m_MacroListMaxCount;
+
+		if (count > m_MacroListCount)
+			count = m_MacroListCount;
+
+		IFOR(i, 0, count)
+		{
+			gumpID = 0x09B6 + ofs;
+			ofs = (ofs + 1) % 3;
+
+			int itemPosY = posY + (i * 15);
+
+			Orion->DrawGump(gumpID, 0, posX, itemPosY);
+
+			int textNameIndex = textIndex + m_MacroListNameOffset;
+
+			if (textIndex < m_MacroListCount)
+			{
+				if (g_GumpSelectElement >= ID_GO_P5_SELECTION)
+				{
+					if (textNameIndex == (g_GumpSelectElement - ID_GO_P5_SELECTION))
+						g_GL.DrawPolygone(posX + 4, itemPosY, 150, 14);
+				}
+
+				if (isAction) //Action
+				{
+					if (textNameIndex < 210)
+					{
+						FontManager->DrawA(1, TMacro::GetAction(textNameIndex), 0x0386, posX + 4, itemPosY);
+						textIndex++;
+					}
+				}
+				else //Action name
+				{
+					if (textNameIndex < 60)
+					{
+						FontManager->DrawA(1, TMacro::GetActionName(textNameIndex), 0x0386, posX + 4, itemPosY);
+						textIndex++;
+					}
+				}
+			}
+		}
+
+		int offsBottomY = (m_MacroListOffsetYEnd - m_MacroListOffsetYStart);
+
+		//Bottom
+		Orion->DrawGump(0x09B9, 0, posX - 5, posY + offsBottomY);
+
+		if (m_MacroListOffset + m_MacroListMaxCount < m_MacroListCount)
+			Orion->DrawGump(0x0985, 0, posX + 85, posY + offsBottomY - 2);*/
+	}
 	
 	/*const int maxMacroDraw = 7;
 
