@@ -56,6 +56,7 @@
 #include "GUITextEntry.h"
 #include "GUITilepic.h"
 #include "GUITilepicHightlighted.h"
+#include "GUIWorldMapTexture.h"
 //----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

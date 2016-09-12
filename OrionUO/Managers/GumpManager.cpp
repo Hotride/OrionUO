@@ -38,6 +38,7 @@
 #include "../Gumps/GumpSkills.h"
 #include "../Gumps/GumpBook.h"
 #include "../Gumps/GumpSecureTrading.h"
+#include "../Gumps/GumpWorldMap.h"
 //----------------------------------------------------------------------------------
 CGumpManager g_GumpManager;
 //----------------------------------------------------------------------------------
@@ -122,8 +123,8 @@ void CGumpManager::AddGump(CGump *obj)
 					obj->m_Next = NULL;
 					delete obj;
 
-					/*if (gumpType == GT_WORLD_MAP && !((CGumpWorldMap*)gump)->Called)
-						((CGumpWorldMap*)gump)->Called = ((CGumpWorldMap*)obj)->Called;*/
+					if (gumpType == GT_WORLD_MAP && !((CGumpWorldMap*)gump)->Called)
+						((CGumpWorldMap*)gump)->Called = ((CGumpWorldMap*)obj)->Called;
 
 					if (gump->GumpType == GT_POPUP_MENU)
 						g_PopupMenu = (CGumpPopupMenu*)gump;
@@ -1082,12 +1083,17 @@ void CGumpManager::Load(const string &path)
 					
 					break;
 				}
-				/*case GT_WORLD_MAP:
+				case GT_WORLD_MAP:
 				{
 					CGumpWorldMap *wmg = new CGumpWorldMap(g_PlayerSerial, gumpX, gumpY);
 					gump = wmg;
 
 					wmg->Minimized = gumpMinimized;
+
+					if (gumpMinimized)
+						wmg->Page = 1;
+					else
+						wmg->Page = 2;
 
 					wmg->Map = file.ReadUInt8();
 					wmg->Scale = file.ReadUInt8();
@@ -1100,7 +1106,7 @@ void CGumpManager::Load(const string &path)
 					wmg->OffsetY = file.ReadInt16LE();
 
 					break;
-				}*/
+				}
 				case GT_MENUBAR:
 				case GT_BUFF:
 				{
@@ -1280,7 +1286,7 @@ void CGumpManager::Save(const string &path)
 					writter.WriteUInt16LE(((CGumpJournal*)gump)->Height);
 				else if (gump->GumpType == GT_SKILLS)
 					writter.WriteUInt16LE(((CGumpSkills*)gump)->Height);
-				/*else if (gump->GumpType == GT_WORLD_MAP)
+				else if (gump->GumpType == GT_WORLD_MAP)
 				{
 					CGumpWorldMap *wmg = (CGumpWorldMap*)gump;
 					
@@ -1293,7 +1299,7 @@ void CGumpManager::Save(const string &path)
 
 					writter.WriteInt16LE(wmg->OffsetX);
 					writter.WriteInt16LE(wmg->OffsetY);
-				}*/
+				}
 
 				writter.WriteBuffer();
 				count++;

@@ -17,8 +17,9 @@ CGUIComboBox::CGUIComboBox(const uint &serial, const ushort &graphic, const bool
 m_CompositeBackground(compositeBackground), m_ShowItemsCount(showItemsCount),
 m_Width(width), m_SelectedIndex(-1), m_ListingDirection(0), m_ListingTimer(0),
 m_StartIndex(0), m_ShowMaximizedCenter(showMaximizedCenter), m_OpenedWidth(width),
-m_Text(NULL)
+m_Text(NULL), m_TextOffsetY(0)
 {
+	m_MoveOnDrag = false;
 	m_ArrowX = 0;
 	m_OffsetY = 0;
 	m_StepY = 0;
@@ -142,7 +143,7 @@ CBaseGUI *CGUIComboBox::SkipToStart()
 void CGUIComboBox::Draw(const bool &checktrans)
 {
 	if (m_Text != NULL)
-		m_Text->m_Texture.Draw(m_X + m_Text->X, m_Y + m_Text->Y, checktrans);
+		m_Text->m_Texture.Draw(m_X + m_Text->X, m_Y + m_Text->Y + m_TextOffsetY, checktrans);
 
 	if (g_PressedObject.LeftObject() == this) //maximized
 	{
@@ -186,7 +187,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 		else
 			g_Orion.DrawResizepicGump(m_OpenGraphic, m_X, m_Y, m_OpenedWidth, m_WorkHeight + 6);
 
-		g_GL.PushScissor(currentX, currentY, m_WorkWidth, m_WorkHeight);
+		g_GL.PushScissor(currentX + (int)g_GumpTranslate.X, currentY + (int)g_GumpTranslate.Y, m_WorkWidth, m_WorkHeight);
 
 		CBaseGUI *start = SkipToStart();
 		int count = 0;
@@ -204,7 +205,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 
 				CGUIText *text = (CGUIText*)item;
 
-				text->m_Texture.Draw(currentX, currentY);
+				text->m_Texture.Draw(currentX, currentY + m_TextOffsetY);
 				currentY += 15;
 
 				count++;
@@ -241,8 +242,8 @@ void CGUIComboBox::Draw(const bool &checktrans)
 
 			if (selected != NULL)
 			{
-				g_GL.PushScissor(m_X + 6, m_Y, 90, 20);
-				selected->m_Texture.Draw(m_X + 6, m_Y + 6);
+				g_GL.PushScissor(m_X + 6 + (int)g_GumpTranslate.X, m_Y + (int)g_GumpTranslate.Y, 90, 20);
+				selected->m_Texture.Draw(m_X + 6, m_Y + 6 + m_TextOffsetY);
 				g_GL.PopScissor();
 			}
 
@@ -254,8 +255,8 @@ void CGUIComboBox::Draw(const bool &checktrans)
 
 			if (selected != NULL)
 			{
-				g_GL.PushScissor(m_X + 3, m_Y, m_Width - 6, 20);
-				selected->m_Texture.Draw(m_X + 3, m_Y + 4);
+				g_GL.PushScissor(m_X + 3 + (int)g_GumpTranslate.X, m_Y + (int)g_GumpTranslate.Y, m_Width - 6, 20);
+				selected->m_Texture.Draw(m_X + 3, m_Y + 4 + m_TextOffsetY);
 				g_GL.PopScissor();
 			}
 

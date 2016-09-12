@@ -741,6 +741,9 @@
     <ClInclude Include="Gumps\GumpWorldMap.h">
       <Filter>Header Files\Gumps</Filter>
     </ClInclude>
+    <ClInclude Include="GUI\GUIWorldMapTexture.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1381,6 +1384,9 @@
     </ClCompile>
     <ClCompile Include="Gumps\GumpWorldMap.cpp">
       <Filter>Source Files\Gumps</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\GUIWorldMapTexture.cpp">
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

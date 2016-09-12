@@ -22,6 +22,8 @@ class CGumpWorldMap : public CGump
 	SETGET(int, OffsetX);
 	SETGET(int, OffsetY);
 	SETGET(bool, Called);
+	SETGET(int, CurrentOffsetX);
+	SETGET(int, CurrentOffsetY);
 
 private:
 	static const int ID_GWM_MINIMIZE = 1;
@@ -47,9 +49,23 @@ private:
 
 	void UpdateSize();
 
+	CGUIResizepic *m_Background;
+	CGUIResizeButton *m_Resizer;
+	CGUIText *m_Text;
+	CGUICheckbox *m_Checkbox;
+	CGUIScissor *m_Scissor;
+	CGUIWorldMapTexture *m_MapData;
+
+protected:
+	virtual void CalculateGumpState();
+
 public:
 	CGumpWorldMap(uint serial, short x, short y);
 	virtual ~CGumpWorldMap();
+
+	virtual bool CanBeDisplayed() { return m_Called; }
+
+	virtual void PrepareContent();
 
 	GUMP_BUTTON_EVENT_H;
 	GUMP_CHECKBOX_EVENT_H;

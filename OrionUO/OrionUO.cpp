@@ -81,6 +81,7 @@
 #include "Gumps/GumpJournal.h"
 #include "Gumps/GumpOptions.h"
 #include "Gumps/GumpSkills.h"
+#include "Gumps/GumpWorldMap.h"
 //----------------------------------------------------------------------------------
 COrion g_Orion;
 //----------------------------------------------------------------------------------
@@ -3745,10 +3746,10 @@ void COrion::OpenWorldMap()
 	int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 200;
 	int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 150;
 
-	/*CGumpWorldMap *gump = new CGumpWorldMap(g_PlayerSerial, x, y);
+	CGumpWorldMap *gump = new CGumpWorldMap(g_PlayerSerial, x, y);
 	gump->Called = true;
 
-	g_GumpManager.AddGump(gump);*/
+	g_GumpManager.AddGump(gump);
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenJournal()

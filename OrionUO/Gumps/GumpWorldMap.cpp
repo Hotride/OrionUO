@@ -15,45 +15,123 @@
 #include "../OrionUO.h"
 #include "../PressedObject.h"
 #include "../Wisp/WispMappedFile.h"
+#include "../Game objects/GamePlayer.h"
 //----------------------------------------------------------------------------------
 const int m_Scales[7] = { 1, 1, 1, 2, 4, 6, 10 };
 //----------------------------------------------------------------------------------
 CGumpWorldMap::CGumpWorldMap(uint serial, short x, short y)
 : CGump(GT_WORLD_MAP, serial, x, y), m_Width(400), m_Height(300), m_Scale(2),
 m_Map(0), m_OffsetX(0), m_OffsetY(0), m_MapMoving(false), m_LinkWithPlayer(true),
-m_Called(false)
+m_Called(false), m_CurrentOffsetX(0), m_CurrentOffsetY(0)
 {
+	m_Page = 2;
+
+	Add(new CGUIPage(1));
+	Add(new CGUIGumppic(0x15E8, 0, 0)); //Earth button
+
+	Add(new CGUIPage(2));
+
+	Add(new CGUIButton(ID_GWM_MINIMIZE, 0x082D, 0x082D, 0x082D, (m_Width / 2) - 10, 0)); //Minimize
+	m_Background = (CGUIResizepic*)Add(new CGUIResizepic(0, 0x0A3C, 0, 23, m_Width, m_Height));
+	m_Resizer = (CGUIResizeButton*)Add(new CGUIResizeButton(ID_GWM_RESIZE, 0x0837, 0x0838, 0x0838, m_Width - 8, m_Height + 13));
+
+	//Map settings
+	static const string mapNames[7] =
+	{
+		"Current map",
+		"Britannia",
+		"Trammel",
+		"Illshenar",
+		"Malas",
+		"Tokuno",
+		"TerMur"
+	};
+
+	CGUIComboBox *combo = (CGUIComboBox*)Add(new CGUIComboBox(ID_GWM_MAP_LIST, 0x098D, true, 0x09B5, 0, 0, 200, 7, false));
+	combo->TextOffsetY = -4;
+
+	IFOR(i, 0, 7)
+		combo->Add(new CGUIComboboxText(0, 6, mapNames[i], 98, TS_CENTER, UOFONT_FIXED));
+
+	//Scale settings
+	static const string scaleNames[7] =
+	{
+		"4:1",
+		"2:1",
+		"1:1",
+		"1:2",
+		"1:4",
+		"1:6",
+		"1:10"
+	};
+
+	combo = (CGUIComboBox*)Add(new CGUIComboBox(ID_GWM_SCALE_LIST, 0x098D, true, 0x09B5, 110, 0, 200, 7, false));
+	combo->TextOffsetY = -4;
+
+	IFOR(i, 0, 7)
+		combo->Add(new CGUIComboboxText(0, 6, scaleNames[i], 36, TS_CENTER, UOFONT_FIXED));
+
+	//Link with player checkbox settings
+	m_Text = (CGUIText*)Add(new CGUIText(0x03B2, 0, 0));
+	m_Text->CreateTextureA(3, "Link with player");
+	m_Text->X = m_Width - m_Text->m_Texture.Width;
+
+	m_Checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GWM_LINK_WITH_PLAYER, 0x00D2, 0x00D3, 0x00D2, m_Text->X - 26, 2));
+	
+	m_Scissor = (CGUIScissor*)Add(new CGUIScissor(true, 0, 0, 8, 32, m_Width - 16, m_Height - 16));
+
+	m_MapData = (CGUIWorldMapTexture*)Add(new CGUIWorldMapTexture(0, 0));
+	m_MapData->Index = m_Map;
+
+	int width = 0;
+	int height = 0;
+	int playerX = g_Player->X;
+	int playerY = g_Player->Y;
+
+	GetScaledDimensions(width, height, playerX, playerY);
+
+	m_MapData->Width = width;
+	m_MapData->Height = height;
+
+	Add(new CGUIScissor(false));
+
+	/*//Player drawing
+	if (g_CurrentMap == map)
+	{
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		g_GL.DrawPolygone(posX + offsetX + playerX + 0, posY + offsetY + playerY + 30, 16, 2);
+		g_GL.DrawPolygone(posX + offsetX + playerX + 7, posY + offsetY + playerY + 23, 2, 16);
+		g_GL.DrawCircle(posX + offsetX + 8.0f + playerX, posY + offsetY + 31.0f + playerY, 3.0f);
+	}*/
 }
 //----------------------------------------------------------------------------------
 CGumpWorldMap::~CGumpWorldMap()
 {
 }
-//----------------------------------------------------------------------------------
-/*void CGumpWorldMap::InitTextTextures()
+//---------------------------------------------------------------------------
+void CGumpWorldMap::CalculateGumpState()
 {
-	const int font = 6;
-	const WORD color = 0;
+	CGump::CalculateGumpState();
 
-	FontManager->GenerateA(3, m_Text, "Link with player", 0x03B2);
+	if (g_GumpPressed)
+	{
+		if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX)
+		{
+			g_GumpMovingOffset.Reset();
 
-	int width = 98;
-	FontManager->GenerateA(font, m_TextMap[0], "Current map", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextMap[1], "Britannia", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextMap[2], "Trammel", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextMap[3], "Illshenar", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextMap[4], "Malas", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextMap[5], "Tokuno", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextMap[6], "TerMur", color, width, TS_CENTER, UOFONT_FIXED);
-	
-	width = 36;
-	FontManager->GenerateA(font, m_TextScale[0], "4:1", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextScale[1], "2:1", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextScale[2], "1:1", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextScale[3], "1:2", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextScale[4], "1:4", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextScale[5], "1:6", color, width, TS_CENTER, UOFONT_FIXED);
-	FontManager->GenerateA(font, m_TextScale[6], "1:10", color, width, TS_CENTER, UOFONT_FIXED);
-}*/
+			if (m_Minimized)
+			{
+				g_GumpTranslate.X = (float)m_MinimizedX;
+				g_GumpTranslate.Y = (float)m_MinimizedY;
+			}
+			else
+			{
+				g_GumpTranslate.X = (float)m_X;
+				g_GumpTranslate.Y = (float)m_Y;
+			}
+		}
+	}
+}
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::GetCurrentCenter(int &x, int &y, int &mouseX, int &mouseY)
 {
@@ -284,6 +362,73 @@ void CGumpWorldMap::LoadMap(int map)
 			}
 
 			delete data;
+		}
+	}
+}
+//----------------------------------------------------------------------------------
+void CGumpWorldMap::PrepareContent()
+{
+	m_CurrentOffsetX = m_OffsetX;
+	m_CurrentOffsetY = m_OffsetY;
+
+	int map = m_Map;
+
+	if (!map)
+		map = g_CurrentMap;
+	else
+		map--;
+
+	LoadMap(map);
+
+	if (m_LinkWithPlayer && g_CurrentMap == map && g_Player != NULL)
+	{
+		m_CurrentOffsetX = (m_Width / 2) - g_Player->X;
+
+		if (m_CurrentOffsetX > 0)
+			m_CurrentOffsetX = 0;
+
+		m_CurrentOffsetY = ((m_Height - 30) / 2) - g_Player->Y;
+
+		if (m_CurrentOffsetY > 0)
+			m_CurrentOffsetY = 0;
+
+		FixOffsets(m_CurrentOffsetY, m_CurrentOffsetY, m_Width, m_Height);
+
+		if (m_OffsetX != m_CurrentOffsetX || m_OffsetY != m_CurrentOffsetY)
+		{
+			m_OffsetX = m_CurrentOffsetX;
+			m_OffsetY = m_CurrentOffsetY;
+
+			m_WantRedraw = true;
+
+			m_MapData->OffsetX = m_CurrentOffsetX;
+			m_MapData->OffsetY = m_CurrentOffsetY;
+		}
+	}
+	else if (m_MapMoving && (!m_LinkWithPlayer || g_CurrentMap != map)) //Если активировано изменение положения карты
+	{
+		int oldX = m_CurrentOffsetX;
+		int oldY = m_CurrentOffsetY;
+
+		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
+
+		m_CurrentOffsetX += offset.X;
+		m_CurrentOffsetY += offset.Y;
+
+		if (m_CurrentOffsetX > 0)
+			m_CurrentOffsetX = 0;
+
+		if (m_CurrentOffsetY > 0)
+			m_CurrentOffsetY = 0;
+
+		FixOffsets(m_CurrentOffsetX, m_CurrentOffsetY, m_Width, m_Height);
+
+		if (oldX != m_CurrentOffsetX || oldY != m_CurrentOffsetY)
+		{
+			m_WantRedraw = true;
+
+			m_MapData->OffsetX = m_CurrentOffsetX;
+			m_MapData->OffsetY = m_CurrentOffsetY;
 		}
 	}
 }
@@ -568,7 +713,17 @@ void CGumpWorldMap::OnLeftMouseButtonDown()
 	CGump::OnLeftMouseButtonDown();
 
 	if (g_PressedObject.LeftSerial == ID_GWM_MAP) //Карта
-		m_MapMoving = true;
+	{
+		int map = m_Map;
+
+		if (!map)
+			map = g_CurrentMap;
+		else
+			map--;
+
+		if (!m_LinkWithPlayer || g_CurrentMap != map)
+			m_MapMoving = true;
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::GUMP_BUTTON_EVENT_C
@@ -638,6 +793,16 @@ void CGumpWorldMap::GUMP_COMBOBOX_SELECTION_EVENT_C
 			m_Map = index;
 		}
 	}
+
+	int width = 0;
+	int height = 0;
+	int playerX = g_Player->X;
+	int playerY = g_Player->Y;
+
+	GetScaledDimensions(width, height, playerX, playerY);
+
+	m_MapData->Width = width;
+	m_MapData->Height = height;
 }
 //----------------------------------------------------------------------------------
 bool CGumpWorldMap::OnLeftMouseButtonDoubleClick()
@@ -684,7 +849,7 @@ void CGumpWorldMap::UpdateSize()
 	//Событие изменения габаритов гампа с вложенной корректировкой
 	WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
-	m_Height = m_StartResizeHeight + offset.Y;
+	m_Width = m_StartResizeWidth + offset.X;
 	m_Height = m_StartResizeHeight + offset.Y;
 
 	//Подкорректируем временное значение высоты
@@ -703,6 +868,15 @@ void CGumpWorldMap::UpdateSize()
 
 	if (m_Width >= bw)
 		m_Width = bw;
+
+	m_Background->Width = m_Width;
+	m_Background->Height = m_Height;
+	m_Resizer->X = m_Width - 8;
+	m_Resizer->Y = m_Height + 13;
+	m_Text->X = m_Width - m_Text->m_Texture.Width;
+	m_Checkbox->X = m_Text->X - 26;
+	m_Scissor->Width = m_Width - 16;
+	m_Scissor->Height = m_Height - 16;
 }
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::GUMP_RESIZE_START_EVENT_C

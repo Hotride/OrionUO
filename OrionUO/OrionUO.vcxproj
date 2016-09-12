@@ -172,6 +172,7 @@ xcopy /y /d  "$(SolutionDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="GUI\GUITextEntry.h" />
     <ClInclude Include="GUI\GUITilepic.h" />
     <ClInclude Include="GUI\GUITilepicHightlighted.h" />
+    <ClInclude Include="GUI\GUIWorldMapTexture.h" />
     <ClInclude Include="Gumps\Gump.h" />
     <ClInclude Include="Gumps\GumpBaseScroll.h" />
     <ClInclude Include="Gumps\GumpBook.h" />
@@ -392,6 +393,7 @@ xcopy /y /d  "$(SolutionDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="GUI\GUITextEntry.cpp" />
     <ClCompile Include="GUI\GUITilepic.cpp" />
     <ClCompile Include="GUI\GUITilepicHightlighted.cpp" />
+    <ClCompile Include="GUI\GUIWorldMapTexture.cpp" />
     <ClCompile Include="Gumps\Gump.cpp" />
     <ClCompile Include="Gumps\GumpBaseScroll.cpp" />
     <ClCompile Include="Gumps\GumpBook.cpp" />

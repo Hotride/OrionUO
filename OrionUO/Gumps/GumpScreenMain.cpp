@@ -133,9 +133,8 @@ void CGumpScreenMain::UpdateContent()
 
 	//Add(new CGUIScrollBackground(0, 0x0820, 0, 0, 300)); //Journal
 	//Add(new CGUIScrollBackground(0, 0x1F40, 200, 0, 300)); //Skills
-
-
-	CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)Add(new CGUIHTMLGump(0111, 0x0BB8, 20, 60, 260, 260, true, true));
+	
+	/*CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)Add(new CGUIHTMLGump(0111, 0x0BB8, 20, 60, 260, 260, true, true));
 	CGUIHTMLGump *htmlGump2 = (CGUIHTMLGump*)Add(new CGUIHTMLGump(0112, 0x0BB8, 320, 60, 260, 260, true, true));
 
 	htmlGump->Add(new CGUIShader(g_ColorizerShader, true));
@@ -152,7 +151,7 @@ void CGumpScreenMain::UpdateContent()
 	}
 	htmlGump->Add(new CGUIShader(g_ColorizerShader, false));
 	htmlGump->CalculateDataSize();
-	htmlGump2->CalculateDataSize();
+	htmlGump2->CalculateDataSize();*/
 
 	/*CGUISlider *slider = new CGUISlider(0, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 100, 100, 295, -40, 40, 20);
 	slider->SetTextParameters(true, STP_RIGHT_CENTER, 3, 0x0021, false);

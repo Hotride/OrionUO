@@ -24,6 +24,7 @@ class CGUIComboBox : public CBaseGUI
 	SETGET(int, ListingDirection);
 	SETGET(uint, ListingTimer);
 	SETGET(bool, ShowMaximizedCenter);
+	SETGET(int, TextOffsetY);
 
 private:
 	CBaseGUI *SkipToStart();

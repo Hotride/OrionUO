@@ -54,7 +54,7 @@ int CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &
 		return 3;
 
 	int block = (blockX * g_MapBlockSize[map].Height) + blockY;
-	PMAP_BLOCK pmb = (PMAP_BLOCK)((uint)g_FileManager.m_MapMul[map].Size + (block * sizeof(MAP_BLOCK)));
+	PMAP_BLOCK pmb = (PMAP_BLOCK)((uint)g_FileManager.m_MapMul[map].Start + (block * sizeof(MAP_BLOCK)));
 	
 	if ((uint)pmb  > (uint)g_FileManager.m_MapMul[map].Start + g_FileManager.m_MapMul[map].Size)
 		return 4;
