@@ -16,9 +16,9 @@ class CGumpWorldMap : public CGump
 {
 	SETGET(int, Width);
 	SETGET(int, Height);
-	SETGET(int, Scale);
-	SETGET(int, Map);
-	SETGET(bool, LinkWithPlayer);
+	SETGETE(int, Scale, OnChangeScale);
+	SETGETE(int, Map, OnChangeMap);
+	SETGETE(bool, LinkWithPlayer, OnChangeLinkWithPlayer);
 	SETGET(int, OffsetX);
 	SETGET(int, OffsetY);
 	SETGET(bool, Called);
@@ -49,12 +49,16 @@ private:
 
 	void UpdateSize();
 
+	int GetCurrentMap();
+
 	CGUIResizepic *m_Background;
 	CGUIResizeButton *m_Resizer;
 	CGUIText *m_Text;
 	CGUICheckbox *m_Checkbox;
 	CGUIScissor *m_Scissor;
 	CGUIWorldMapTexture *m_MapData;
+	CGUIComboBox *m_ComboboxScale;
+	CGUIComboBox *m_ComboboxMap;
 
 protected:
 	virtual void CalculateGumpState();

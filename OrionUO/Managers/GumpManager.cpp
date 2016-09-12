@@ -130,7 +130,10 @@ void CGumpManager::AddGump(CGump *obj)
 						g_PopupMenu = (CGumpPopupMenu*)gump;
 
 					if (gumpType == GT_CONTAINER || gumpType == GT_JOURNAL || gumpType == GT_SKILLS)
+					{
 						gump->Minimized = false;
+						gump->Page = 2;
+					}
 					else if (gumpType == GT_MINIMAP)
 					{
 						gump->Minimized = !gump->Minimized;
@@ -1264,7 +1267,7 @@ void CGumpManager::Save(const string &path)
 			case GT_MINIMAP:
 			case GT_SKILLS:
 			case GT_JOURNAL:
-			//case GT_WORLD_MAP:
+			case GT_WORLD_MAP:
 			{
 				uint serial = gump->Serial;
 

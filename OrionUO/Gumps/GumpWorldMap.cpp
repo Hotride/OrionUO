@@ -47,12 +47,6 @@ m_Called(false), m_CurrentOffsetX(0), m_CurrentOffsetY(0)
 		"TerMur"
 	};
 
-	CGUIComboBox *combo = (CGUIComboBox*)Add(new CGUIComboBox(ID_GWM_MAP_LIST, 0x098D, true, 0x09B5, 0, 0, 200, 7, false));
-	combo->TextOffsetY = -4;
-
-	IFOR(i, 0, 7)
-		combo->Add(new CGUIComboboxText(0, 6, mapNames[i], 98, TS_CENTER, UOFONT_FIXED));
-
 	//Scale settings
 	static const string scaleNames[7] =
 	{
@@ -65,23 +59,21 @@ m_Called(false), m_CurrentOffsetX(0), m_CurrentOffsetY(0)
 		"1:10"
 	};
 
-	combo = (CGUIComboBox*)Add(new CGUIComboBox(ID_GWM_SCALE_LIST, 0x098D, true, 0x09B5, 110, 0, 200, 7, false));
-	combo->TextOffsetY = -4;
-
-	IFOR(i, 0, 7)
-		combo->Add(new CGUIComboboxText(0, 6, scaleNames[i], 36, TS_CENTER, UOFONT_FIXED));
-
 	//Link with player checkbox settings
 	m_Text = (CGUIText*)Add(new CGUIText(0x03B2, 0, 0));
 	m_Text->CreateTextureA(3, "Link with player");
 	m_Text->X = m_Width - m_Text->m_Texture.Width;
 
 	m_Checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GWM_LINK_WITH_PLAYER, 0x00D2, 0x00D3, 0x00D2, m_Text->X - 26, 2));
+	m_Checkbox->Checked = m_LinkWithPlayer;
 	
 	m_Scissor = (CGUIScissor*)Add(new CGUIScissor(true, 0, 0, 8, 32, m_Width - 16, m_Height - 16));
 
 	m_MapData = (CGUIWorldMapTexture*)Add(new CGUIWorldMapTexture(0, 0));
+	m_MapData->Serial = ID_GWM_MAP;
 	m_MapData->Index = m_Map;
+
+	m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == GetCurrentMap());
 
 	int width = 0;
 	int height = 0;
@@ -94,6 +86,20 @@ m_Called(false), m_CurrentOffsetX(0), m_CurrentOffsetY(0)
 	m_MapData->Height = height;
 
 	Add(new CGUIScissor(false));
+
+	m_ComboboxScale = (CGUIComboBox*)Add(new CGUIComboBox(ID_GWM_SCALE_LIST, 0x098D, true, 0x09B5, 110, 0, 200, 7, false));
+	m_ComboboxScale->TextOffsetY = -5;
+	m_ComboboxScale->SelectedIndex = m_Scale;
+
+	IFOR(i, 0, 7)
+		m_ComboboxScale->Add(new CGUIComboboxText(0, 6, scaleNames[i], 36, TS_CENTER, UOFONT_FIXED));
+
+	m_ComboboxMap = (CGUIComboBox*)Add(new CGUIComboBox(ID_GWM_MAP_LIST, 0x098D, true, 0x09B5, 0, 0, 200, 7, false));
+	m_ComboboxMap->TextOffsetY = -5;
+	m_ComboboxMap->SelectedIndex = m_Map;
+
+	IFOR(i, 0, 7)
+		m_ComboboxMap->Add(new CGUIComboboxText(0, 6, mapNames[i], 98, TS_CENTER, UOFONT_FIXED));
 
 	/*//Player drawing
 	if (g_CurrentMap == map)
@@ -108,7 +114,38 @@ m_Called(false), m_CurrentOffsetX(0), m_CurrentOffsetY(0)
 CGumpWorldMap::~CGumpWorldMap()
 {
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
+int CGumpWorldMap::GetCurrentMap()
+{
+	int map = m_Map;
+
+	if (!map)
+		map = g_CurrentMap;
+	else
+		map--;
+
+	return map;
+}
+//----------------------------------------------------------------------------------
+void CGumpWorldMap::OnChangeLinkWithPlayer(const bool &val)
+{
+	m_Checkbox->Checked = val;
+	m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == GetCurrentMap());
+	m_WantRedraw = true;
+}
+//----------------------------------------------------------------------------------
+void CGumpWorldMap::OnChangeScale(const int &val)
+{
+	m_ComboboxScale->SelectedIndex = val;
+	m_WantRedraw = true;
+}
+//----------------------------------------------------------------------------------
+void CGumpWorldMap::OnChangeMap(const int &val)
+{
+	m_ComboboxMap->SelectedIndex = val;
+	m_WantRedraw = true;
+}
+//----------------------------------------------------------------------------------
 void CGumpWorldMap::CalculateGumpState()
 {
 	CGump::CalculateGumpState();
@@ -130,6 +167,8 @@ void CGumpWorldMap::CalculateGumpState()
 				g_GumpTranslate.Y = (float)m_Y;
 			}
 		}
+		else
+			m_WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -189,12 +228,7 @@ void CGumpWorldMap::ScaleOffsets(int newScale, int mouseX, int mouseY)
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::GetScaledDimensions(int &width, int &height, int &playerX, int &playerY)
 {
-	int map = m_Map;
-
-	if (!map)
-		map = g_CurrentMap;
-	else
-		map--;
+	int map = GetCurrentMap();
 	
 	width = g_MapSize[map].Width;
 	height = g_MapSize[map].Height;
@@ -294,6 +328,8 @@ void CGumpWorldMap::LoadMap(int map)
 					{
 						data = (pushort)mapFile.Start;
 						g_GL.BindTexture16(g_MapTexture[map].Texture, g_MapSize[map].Width, g_MapSize[map].Height, data);
+						g_MapTexture[map].Width = g_MapSize[map].Width;
+						g_MapTexture[map].Height = g_MapSize[map].Height;
 
 						foundInTable = true;
 					}
@@ -344,6 +380,8 @@ void CGumpWorldMap::LoadMap(int map)
 			}
 
 			g_GL.BindTexture16(g_MapTexture[map].Texture, g_MapSize[map].Width, g_MapSize[map].Height, data);
+			g_MapTexture[map].Width = g_MapSize[map].Width;
+			g_MapTexture[map].Height = g_MapSize[map].Height;
 
 			FILE *mapDataFile = fopen(g_App.FilePath(pathBuf).c_str(), "wb");
 
@@ -371,23 +409,28 @@ void CGumpWorldMap::PrepareContent()
 	m_CurrentOffsetX = m_OffsetX;
 	m_CurrentOffsetY = m_OffsetY;
 
-	int map = m_Map;
-
-	if (!map)
-		map = g_CurrentMap;
-	else
-		map--;
+	int map = GetCurrentMap();
 
 	LoadMap(map);
 
+	int mapWidth = 0;
+	int mapHeight = 0;
+	int playerX = g_Player->X;
+	int playerY = g_Player->Y;
+
+	GetScaledDimensions(mapWidth, mapHeight, playerX, playerY);
+
+	m_MapData->Width = mapWidth;
+	m_MapData->Height = mapHeight;
+
 	if (m_LinkWithPlayer && g_CurrentMap == map && g_Player != NULL)
 	{
-		m_CurrentOffsetX = (m_Width / 2) - g_Player->X;
+		m_CurrentOffsetX = (m_Width / 2) - playerX;
 
 		if (m_CurrentOffsetX > 0)
 			m_CurrentOffsetX = 0;
 
-		m_CurrentOffsetY = ((m_Height - 30) / 2) - g_Player->Y;
+		m_CurrentOffsetY = ((m_Height - 30) / 2) - playerY;
 
 		if (m_CurrentOffsetY > 0)
 			m_CurrentOffsetY = 0;
@@ -714,14 +757,7 @@ void CGumpWorldMap::OnLeftMouseButtonDown()
 
 	if (g_PressedObject.LeftSerial == ID_GWM_MAP) //Карта
 	{
-		int map = m_Map;
-
-		if (!map)
-			map = g_CurrentMap;
-		else
-			map--;
-
-		if (!m_LinkWithPlayer || g_CurrentMap != map)
+		if (!m_LinkWithPlayer || g_CurrentMap != GetCurrentMap())
 			m_MapMoving = true;
 	}
 }
@@ -730,14 +766,7 @@ void CGumpWorldMap::GUMP_BUTTON_EVENT_C
 {
 	if (serial == ID_GWM_MAP && m_MapMoving) //Карта
 	{
-		int map = m_Map;
-
-		if (!map)
-			map = g_CurrentMap;
-		else
-			map--;
-
-		if (!m_LinkWithPlayer || g_CurrentMap != map)
+		if (!m_LinkWithPlayer || g_CurrentMap != GetCurrentMap())
 		{
 			WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 			m_OffsetX += offset.X;
@@ -757,7 +786,10 @@ void CGumpWorldMap::GUMP_BUTTON_EVENT_C
 void CGumpWorldMap::GUMP_CHECKBOX_EVENT_C
 {
 	if (serial == ID_GWM_LINK_WITH_PLAYER) //Привязка к координатам игрока
+	{
 		m_LinkWithPlayer = state;
+		m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == GetCurrentMap());
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::GUMP_COMBOBOX_SELECTION_EVENT_C
@@ -791,6 +823,8 @@ void CGumpWorldMap::GUMP_COMBOBOX_SELECTION_EVENT_C
 			}
 
 			m_Map = index;
+
+			m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == GetCurrentMap());
 		}
 	}
 
@@ -840,6 +874,16 @@ void CGumpWorldMap::OnMidMouseButtonScroll(const bool &up)
 
 			ScaleOffsets(m_Scale + ofs, mouseX, mouseY);
 			m_WantRedraw = true;
+
+			int width = 0;
+			int height = 0;
+			int playerX = g_Player->X;
+			int playerY = g_Player->Y;
+
+			GetScaledDimensions(width, height, playerX, playerY);
+
+			m_MapData->Width = width;
+			m_MapData->Height = height;
 		}
 	}
 }

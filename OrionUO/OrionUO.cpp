@@ -547,6 +547,7 @@ void COrion::Process(const bool &rendering)
 	static uint removeUnusedTexturesTime = 0;
 
 	g_ConnectionManager.Recv();
+	g_PacketManager.SendMegaClilocRequests();
 	g_MouseManager.Update();
 
 	if (g_GameState >= GS_CHARACTER && g_LastSendTime + SEND_TIMEOUT_DELAY < g_Ticks)

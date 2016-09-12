@@ -1400,8 +1400,8 @@ PACKET_HANDLER(UpdateObject)
 
 			obj2->Color = ReadUInt16BE();
 		}
-		else if (m_ClientVersion >= CV_7090)
-			obj2->Color = ReadUInt16BE();
+		//else if (m_ClientVersion >= CV_7090)
+		//	obj2->Color = ReadUInt16BE();
 
 		obj2->Graphic = graphic;
 
@@ -3981,6 +3981,7 @@ PACKET_HANDLER(OpenCompressedGump)
 
 	m_Size = newsize;
 	m_Start = newbuf;
+	m_End = m_Start + m_Size;
 
 	OnPacket();
 }

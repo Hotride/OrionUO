@@ -116,10 +116,10 @@ void CGumpScreenMain::UpdateContent()
 	entry->CheckOnSerial = true;
 	m_PasswordFake = &entry->m_Entry;
 
-	CGUIMinMaxButtons *minmax = (CGUIMinMaxButtons*)Add(new CGUIMinMaxButtons(123320, 0x0037, 100, 10, 0, 1735, 0));
+	/*CGUIMinMaxButtons *minmax = (CGUIMinMaxButtons*)Add(new CGUIMinMaxButtons(123320, 0x0037, 100, 10, 0, 1735, 0));
 	minmax->SetTextParameters(true, STP_TOP_CENTER, 3, 0x0021, false);
 
-	Add(new CGUIShopItem(123320, 0x0324, 0x0021, 1735, 164, "WTH bro?!?17171 what is it?!?!? really, what is it???777", 100, 150));
+	Add(new CGUIShopItem(123320, 0x0324, 0x0021, 1735, 164, "WTH bro?!?17171 what is it?!?!? really, what is it???777", 100, 150));*/
 
 	/*CGUIComboBox *combo = NULL;
 
