@@ -37,6 +37,8 @@ private:
 	CGUIText *m_SkillSum;
 	CGUIDataBox *m_DataBox;
 
+	void UpdateGroupPositions();
+
 protected:
 	virtual void UpdateHeight();
 
@@ -44,18 +46,26 @@ public:
 	CGumpSkills(uint serial, short x, short y, bool minimized, int height = 250);
 	virtual ~CGumpSkills();
 
+	CGUISkillGroup *GetSkillGroup(const int &index);
+	CGUISkillItem *GetSkill(const int &index);
+
+	void UpdateSkillValue(const int &index);
+	void UpdateSkillValues();
+
 	void UpdateSkillsSum();
 	
 	void Init();
 
 	virtual void PrepareContent();
 	virtual void UpdateContent();
+
+	GUMP_BUTTON_EVENT_H;
+	GUMP_CHECKBOX_EVENT_H;
 	
 	void OnLeftMouseDown();
-	void OnLeftMouseUp();
-	bool OnLeftMouseDoubleClick();
-	void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
-	void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
+	virtual bool OnLeftMouseButtonDoubleClick();
+	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
+	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
 };
 //----------------------------------------------------------------------------------
 #endif

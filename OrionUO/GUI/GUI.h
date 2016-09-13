@@ -51,6 +51,8 @@
 #include "GUIShader.h"
 #include "GUIShopItem.h"
 #include "GUIShopResult.h"
+#include "GUISkillGroup.h"
+#include "GUISkillItem.h"
 #include "GUISlider.h"
 #include "GUIText.h"
 #include "GUITextEntry.h"

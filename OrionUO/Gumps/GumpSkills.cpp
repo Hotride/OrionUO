@@ -13,6 +13,8 @@
 #include "../Managers/ConfigManager.h"
 #include "../Managers/MouseManager.h"
 #include "../TextEngine/GameConsole.h"
+#include "../Game objects/GamePlayer.h"
+#include "../OrionUO.h"
 //----------------------------------------------------------------------------------
 CGumpSkills::CGumpSkills(uint serial, short x, short y, bool minimized, int height)
 : CGumpBaseScroll(GT_SKILLS, serial, 0x1F40, height, x, y, true, 0, true, 15),
@@ -36,13 +38,13 @@ m_ShowReal(false), m_ShowCap(false)
 	Add(new CGUIPage(2));
 	Add(new CGUIGumppic(0x0834, 82, 34)); //Skills text gump
 
+	CGUIText *text = (CGUIText*)Add(new CGUIText(0x0386, 180, 33));
+	text->CreateTextureA(1, "Show:   Real    Cap");
+
 	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GS_SHOW_REAL, 0x0938, 0x0939, 0x0938, 226, 34));
 	checkbox->Checked = m_ShowReal;
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GS_SHOW_CAP, 0x0938, 0x0939, 0x0938, 280, 34));
 	checkbox->Checked = m_ShowCap;
-
-	CGUIText *text = (CGUIText*)Add(new CGUIText(0x0386, 180, 33));
-	text->CreateTextureA(1, "Show:   Real    Cap");
 
 	Add(new CGUIGumppic(0x082B, 30, 60)); //Top line
 	m_BottomLine = (CGUIGumppic*)Add(new CGUIGumppic(0x082B, 31, m_Height - 48)); //Bottom line
@@ -69,6 +71,93 @@ void CGumpSkills::UpdateHeight()
 	m_SkillSum->Y = m_Height - 6;
 }
 //----------------------------------------------------------------------------------
+void CGumpSkills::UpdateGroupPositions()
+{
+	int currentY = 0;
+
+	QFOR(group, m_DataBox->m_Items, CBaseGUI*)
+	{
+		if (group->Type == GOT_SKILLGROUP)
+		{
+			CGUISkillGroup *skillGroup = (CGUISkillGroup*)group;
+			skillGroup->Y = currentY;
+
+			currentY += 19;
+
+			if (!skillGroup->Minimized)
+				currentY += group->GetItemsCount() * 17;
+		}
+	}
+}
+//----------------------------------------------------------------------------------
+CGUISkillGroup *CGumpSkills::GetSkillGroup(const int &index)
+{
+	int currentIndex = 0;
+
+	QFOR(group, m_DataBox->m_Items, CBaseGUI*)
+	{
+		if (group->Type == GOT_SKILLGROUP)
+		{
+			if (currentIndex == index)
+				return (CGUISkillGroup*)group;
+
+			currentIndex++;
+		}
+	}
+
+	return NULL;
+}
+//----------------------------------------------------------------------------------
+CGUISkillItem *CGumpSkills::GetSkill(const int &index)
+{
+	QFOR(group, m_DataBox->m_Items, CBaseGUI*)
+	{
+		if (group->Type == GOT_SKILLGROUP)
+		{
+			QFOR(item, group->m_Items, CBaseGUI*)
+			{
+				if (item->Type == GOT_SKILLITEM && ((CGUISkillItem*)item)->Index == index)
+					return (CGUISkillItem*)item;
+			}
+		}
+	}
+
+	return NULL;
+}
+//----------------------------------------------------------------------------------
+void CGumpSkills::UpdateSkillValue(const int &index)
+{
+	QFOR(group, m_DataBox->m_Items, CBaseGUI*)
+	{
+		if (group->Type == GOT_SKILLGROUP)
+		{
+			QFOR(item, group->m_Items, CBaseGUI*)
+			{
+				if (item->Type == GOT_SKILLITEM && ((CGUISkillItem*)item)->Index == index)
+				{
+					((CGUISkillItem*)item)->CreateValueText(m_ShowReal, m_ShowCap);
+					return;
+				}
+			}
+		}
+	}
+}
+//----------------------------------------------------------------------------------
+void CGumpSkills::UpdateSkillValues()
+{
+	QFOR(group, m_DataBox->m_Items, CBaseGUI*)
+	{
+		if (group->Type == GOT_SKILLGROUP)
+		{
+			QFOR(item, group->m_Items, CBaseGUI*)
+			{
+				if (item->Type == GOT_SKILLITEM)
+					((CGUISkillItem*)item)->CreateValueText(m_ShowReal, m_ShowCap);
+			}
+		}
+	}
+}
+//----------------------------------------------------------------------------------
 void CGumpSkills::UpdateSkillsSum()
 {
 	char str[20] = { 0 };
@@ -91,216 +180,37 @@ void CGumpSkills::UpdateContent()
 {
 	m_DataBox->Clear();
 
-	/*//Индекс строки для начала отображения
-	int startIndex = m_CurrentLine;
-	int currentIndex = 0; //Буффер индексов
-
-	int drawX = 30;
-	int drawY = 72;
-
-	//Стандартный цвет выделенной группы/скилла
-	DWORD selectedPolygoneColor = 0x007F7F7F;
-
-	//Установим видимую область
-	g_GL.Scissor((int)g_GumpTranslateX + drawX, (int)g_GumpTranslateY + drawY, 264, height - 74);
-
-	//Расстояние между строками
-	const int drawStep = 17;
-
-	//Стартовые координаты начала отображения
-	drawX -= 2;
-	drawY += 3;
-
-	//Максимальная координата отображения по оси Y
-	int boundsY = height;
-
-	int si = -1; //Индекс выбранного скилла
-
-	CSkillGroupObject *selectedGroup = NULL; //Указатель на группу, в которой выбран скилл
-	bool removeIndexOnExit = false; //Флаг удаления скилла при выходе из процедуры
-
-									//Если захвачен скилл
-	if (g_LastObjectLeftMouseDown >= ID_GS_SKILL && g_LastObjectLeftMouseDown < 14000)
-	{
-		//Вычислим индекс скилла
-		si = g_LastObjectLeftMouseDown - ID_GS_SKILL;
-
-		//Получим выбранную группу
-		selectedGroup = GetGroupUnderCursor(m_CurrentLine);
-
-		//Если группа нашлась и в ней нет текущего выбранного скилла
-		//то добавим его туда (отсортировав) и установим флаг удаления при выходе
-		if (selectedGroup != NULL && !selectedGroup->Contains(si))
-		{
-			selectedGroup->AddSorted(si);
-			removeIndexOnExit = true;
-		}
-	}
-
 	//Если игрок присутствует
 	if (g_Player != NULL)
 	{
-		PSKILLS_DATA Skills = g_Skills; //Получаем указатель на доступные навыки
+		int currentIndex = 0;
+		int currentY = 0;
 
-		TSkillGroupObject *group = SkillGroupManager.m_Groups; //Указатель на группы
-
-		while (group != NULL)
+		QFOR(group, g_SkillGroupManager.m_Groups, CSkillGroupObject*)
 		{
-			if (drawY + 10 >= boundsY)
-				break; //Если вышле за возможные пределы отрисовки
+			CGUISkillGroup *skillGroup = (CGUISkillGroup*)m_DataBox->Add(new CGUISkillGroup(ID_GS_GROUP + currentIndex, ID_GS_GROUP_MINIMIZE + currentIndex, group, 0, currentY));
+			skillGroup->Minimized = !group->Maximized;
 
-					   //Возможно ли отрисовать элемент?
-			bool canDraw = (currentIndex >= startIndex);
+			int count = group->GetCount();
+
+			IFOR(i, 0, count)
+			{
+				uchar index = group->GetItem(i); //Получаем индекс скилла по порядковому номеру
+
+				if (index < g_SkillsCount) //Он валиден
+					skillGroup->Add(new CGUISkillItem(ID_GS_SKILL + index, ID_GS_SKILL_BUTTON + index, ID_GS_SKILL_STATE + index, index, 0, i * 17));
+			}
+
+			currentY += 19;
+
+			if (!skillGroup->Minimized)
+				currentY += count * 17;
+
 			currentIndex++;
-
-			if (canDraw) //Разрешено рисовать
-			{
-				//Получаем указатель на текстуру названия группы
-				TTextTexture &th = group->m_Texture;
-
-				//Текстура есть
-				if (!th.Empty())
-				{
-					//Стэйт выбора имени группы
-					BYTE selname = group->GetSelected();
-
-					if (selname == 2) //Изменение имени группы
-					{
-						//Отобразим цветной фон
-						g_GL.DrawPolygone(drawX + 16, drawY, 200, 14);
-
-						//Текущее название
-						TextEntry->DrawA(6, 0, drawX + 16, drawY - 5);
-					}
-					else //Другое
-					{
-						//Необходимо ли подсвечивать фон (для перетаскиваемого скилла)
-						bool hightlightGroup = false;
-						if (group == selectedGroup && !group->Maximized && si != -1)
-							hightlightGroup = true;
-
-						//Если выбрана группа или перетаскиваем скилл на текущую группу - подсветим ее
-						if (selname == 1)
-							g_GL.DrawPolygone(drawX + 16, drawY, th.Width - 10, 14);
-						else if (hightlightGroup)
-							g_GL.DrawPolygone(drawX + 16, drawY, 200, 14);
-
-						//Отобразим имя группы (из заранее заготовленной текстуры)
-						th.Draw(drawX + 16, drawY - 5);
-
-						//И "косу" до конца строки
-						int fw = 11 + th.Width;
-						int lw = 215 - fw;
-						if (lw > 0)
-							Orion->DrawGump(0x0835, 0, drawX + fw, drawY + 5, lw, 0);
-					}
-				}
-			}
-
-			if (group->GetMaximized()) //Если группа развернута - отображаем её содержимое
-			{
-				if (canDraw) //Можем рисовать
-				{
-					//Если в группе что-то есть - отобразим стрелку
-					if (group->GetCount())
-						Orion->DrawGump(0x0826, 0, drawX, drawY);
-
-					//Смещаем указатель на стандартный шаг + 2 (только для группы)
-					drawY += (drawStep + 2);
-				}
-
-				//Если это группа, содержащая изначально перетаскиваемый скилл
-				//и скилл этот отображается в другой группе на данный момент
-				//то не отображаем его здесь
-				bool dontDrawSI = false;
-				if (group != selectedGroup && removeIndexOnExit)
-					dontDrawSI = true;
-
-				int cnt = group->GetCount();
-
-				IFOR(i, 0, cnt) //Цикл по все элементам группы
-				{
-					if (drawY + 10 >= boundsY)
-						break; //Вышли за пределы области
-
-							   //Доступно для отображения?
-					canDraw = (currentIndex >= startIndex);
-					currentIndex++;
-
-					if (canDraw) //Можно рисовать
-					{
-						BYTE idx = group->GetItem(i); //Получаем индекс скилла по порядковому номеру
-						if (idx < g_SkillsCount) //Он валиден
-						{
-							//Если это перетаскиваемый скилл и его не нужно отображать - ничего не делаем
-							if (idx == si && dontDrawSI)
-							{
-							}
-							else //В ином случае - рисуем
-							{
-								WORD gumpID = 0x0837; //Button
-								if (Skills[idx].m_Button) //Если у скилла есть кнопка - отобразим её
-								{
-									if (g_GumpSelectElement == ID_GS_SKILL_BUTTON + idx)
-										gumpID = 0x0838; //Selected button
-
-									Orion->DrawGump(gumpID, 0, drawX + 8, drawY); //Button
-								}
-
-								TTextTexture &th = Skills[idx].m_Texture; //Name
-								if (!th.Empty())
-								{
-									if (si == idx)
-										g_GL.DrawPolygone(drawX + 20, drawY - 1, 250, 14);
-
-									th.Draw(drawX + 22, drawY - 1);
-								}
-
-								BYTE status = g_Player->GetSkillStatus(idx); //Статус (вниз/вверх/замок)
-
-								gumpID = 0x0984; //Up
-								if (status == 1)
-									gumpID = 0x0986; //Down
-								else if (status == 2)
-									gumpID = 0x082C; //Lock
-								Orion->DrawGump(gumpID, 0, drawX + 251, drawY - 1);
-
-								//Значение скилла (учитывая выбранный флаг отображения)
-								float val = g_Player->GetSkillBaseValue(idx);
-								if (m_ShowReal)
-									val = g_Player->GetSkillValue(idx);
-								else if (m_ShowCap)
-									val = g_Player->GetSkillCap(idx);
-
-								char sbf[20] = { 0 };
-								sprintf(sbf, "%.1f", val);
-
-								//Выравниваем его к правому краю
-								int fw = FontManager->GetWidthA(9, sbf, strlen(sbf));
-								FontManager->DrawA(9, sbf, 0x0288, drawX + 250 - fw, drawY - 1); //Value
-
-								drawY += drawStep; //Переходим на следующую позицию по оси Y
-							}
-						}
-					}
-				}
-			}
-			else if (canDraw) //Группа свернута
-			{
-				//Если в группе что-то есть - нарисуем стрелку
-				if (group->GetCount())
-					Orion->DrawGump(0x0827, 0, drawX, drawY);
-
-				drawY += drawStep; //Переходим на следующую позицию координат
-			}
-
-			group = group->m_Next; //Следующая кгруппа
 		}
 	}
 
-	//Если есть необходимость удалить элемент - удаляем
-	if (removeIndexOnExit)
-		selectedGroup->Remove(si);*/
+	m_HTMLGump->CalculateDataSize();
 }
 //----------------------------------------------------------------------------------
 /*int TGumpSkills::Draw(bool &mode)
@@ -814,107 +724,54 @@ CSkillGroupObject *CGumpSkills::GetGroupUnderCursor(int startIndex)
 	}
 }*/
 //----------------------------------------------------------------------------------
-/*void TGumpSkills::OnLeftMouseUp()
+void CGumpSkills::GUMP_BUTTON_EVENT_C
 {
-	if (m_Minimized)
-		return; //Не обрабатываем при свернутом гампе
-	else if (g_LastObjectLeftMouseDown != g_LastSelectedObject)
-	{
-		//Если скилл перетаскивается - можно выполнить действие
-		if (g_LastObjectLeftMouseDown < ID_GS_SKILL || g_LastObjectLeftMouseDown >= ID_GS_SKILL_STATE)
-			return;
-	}
-
-	//Текущее количество тиков
-	DWORD ticks = g_Ticks;
-
-	if (g_LastObjectLeftMouseDown == ID_GS_BUTTON_MINIMIZE) //Сворачиваем гамп
+	if (serial == ID_GBS_BUTTON_MINIMIZE) //Сворачиваем гамп
 	{
 		m_Minimized = true;
-		m_FrameCreated = false;
+		m_Page = 1;
+		m_WantRedraw = true;
 	}
-	else if (g_LastObjectLeftMouseDown == ID_GS_LOCK_MOVING)
+	else if (serial == ID_GS_LOCK_MOVING)
+		m_LockMoving = !m_LockMoving;
+	else if (serial == ID_GS_BUTTON_NEW_GROUP) //Создание новой группы
 	{
-		LockMoving = !LockMoving;
-		g_CancelDoubleClick = true;
+		CSkillGroupObject *group = new CSkillGroupObject();
+		group->Name = "New Group";
+		g_SkillGroupManager.Add(group);
 	}
-	else if (g_LastObjectLeftMouseDown == ID_GS_BUTTON_RESIZE) //Ресайзинг
+	else if (serial >= ID_GS_GROUP_MINIMIZE) //Операции со скиллами
 	{
-		if (!m_LastResizeY)
+		if (serial >= ID_GS_SKILL_STATE) //Изменение статуса
 		{
-			m_LastResizeY = g_DroppedLeftMouseY;
-			g_ResizedGump = this;
-		}
-		else
-		{
-			SetHeight(m_Height + (g_MouseY - m_LastResizeY));
+			int index = serial - ID_GS_SKILL_STATE;
 
-			m_LastResizeY = 0;
-			g_ResizedGump = NULL;
-		}
-	}
-	else if (g_LastObjectLeftMouseDown == ID_GS_SHOW_REAL) //Показать реальное значение
-	{
-		m_ShowReal = !m_ShowReal;
-		m_ShowCap = false;
-	}
-	else if (g_LastObjectLeftMouseDown == ID_GS_SHOW_CAP) //Показать доступный предел прокачки
-	{
-		m_ShowCap = !m_ShowCap;
-		m_ShowReal = false;
-	}
-	else if (g_LastObjectLeftMouseDown == ID_GS_BUTTON_NEW_GROUP) //Создание новой группы
-	{
-		TSkillGroupObject *group = new TSkillGroupObject();
-		group->SetName("New Group");
-		SkillGroupManager.Add(group);
-	}
-	else if (g_LastObjectLeftMouseDown == ID_GS_BUTTON_UP && m_LastChangedLineTime < ticks) //Скроллинг вверх
-	{
-		if (m_CurrentLine > 0)
-			m_CurrentLine--;
-		else
-			m_CurrentLine = 0;
-
-		m_LastChangedLineTime = ticks + SCROLL_LISTING_DELAY;
-		m_FrameCreated = false;
-	}
-	else if (g_LastObjectLeftMouseDown == ID_GS_BUTTON_DOWN && m_LastChangedLineTime < ticks) //Скроллинг вниз
-	{
-		int visibleLines = SkillGroupManager.GetVisibleLinesCount();
-
-		if (m_CurrentLine < visibleLines)
-			m_CurrentLine++;
-		else
-			m_CurrentLine = visibleLines;
-
-		m_LastChangedLineTime = ticks + SCROLL_LISTING_DELAY;
-		m_FrameCreated = false;
-	}
-	else if (g_LastObjectLeftMouseDown >= ID_GS_GROUP_MINIMIZE) //Операции со скиллами
-	{
-		if (g_LastObjectLeftMouseDown >= ID_GS_SKILL_STATE) //Изменение статуса
-		{
-			int idx = g_LastObjectLeftMouseDown - ID_GS_SKILL_STATE;
-			if (idx < 0 || idx >= g_SkillsCount)
+			if (index < 0 || index >= g_SkillsCount)
 				return;
 
 			if (g_Player == NULL)
 				return;
 
-			BYTE status = g_Player->GetSkillStatus(idx);
+			uchar status = g_Player->GetSkillStatus(index);
+
 			if (status < 2)
 				status++;
 			else
 				status = 0;
 
-			Orion->SkillStatusChange(idx, status);
-			g_Player->SetSkillStatus(idx, status);
+			g_Orion.SkillStatusChange(index, status);
+			g_Player->SetSkillStatus(index, status);
+
+			CGUISkillItem *skill = GetSkill(index);
+
+			if (skill != NULL)
+				skill->Status = status;
 		}
-		else if (g_LastObjectLeftMouseDown >= ID_GS_SKILL) //Выбор названия скилла
+		/*else if (g_LastObjectLeftMouseDown >= ID_GS_SKILL) //Выбор названия скилла
 		{
-			int idx = g_LastObjectLeftMouseDown - ID_GS_SKILL;
-			if (idx < 0 || idx >= g_SkillsCount)
+			int index = g_LastObjectLeftMouseDown - ID_GS_SKILL;
+
+			if (index < 0 || index >= g_SkillsCount)
 				return;
 
 			TSkillGroupObject *group = GetGroupUnderCursor(m_CurrentLine);
@@ -924,24 +781,25 @@ CSkillGroupObject *CGumpSkills::GetGroupUnderCursor(int startIndex)
 				TSkillGroupObject *groups = SkillGroupManager.m_Groups;
 				while (groups != NULL)
 				{
-					groups->Remove(idx);
+					groups->Remove(index);
 					groups = groups->m_Next;
 				}
 
-				group->AddSorted(idx);
+				group->AddSorted(index);
 
 				return;
 			}
-		}
-		else if (g_LastObjectLeftMouseDown >= ID_GS_SKILL_BUTTON) //Выбор кнопки для использования скилла
+		}*/
+		else if (serial >= ID_GS_SKILL_BUTTON) //Выбор кнопки для использования скилла
 		{
-			int idx = g_LastObjectLeftMouseDown - ID_GS_SKILL_BUTTON;
-			if (idx < 0 || idx >= g_SkillsCount)
+			int index = serial - ID_GS_SKILL_BUTTON;
+
+			if (index < 0 || index >= g_SkillsCount)
 				return;
 
-			Orion->UseSkill(idx);
+			g_Orion.UseSkill(index);
 		}
-		else if (g_LastObjectLeftMouseDown >= ID_GS_GROUP) //Выбор названия группы
+		/*else if (g_LastObjectLeftMouseDown >= ID_GS_GROUP) //Выбор названия группы
 		{
 			int idx = g_LastObjectLeftMouseDown - ID_GS_GROUP;
 			int cidx = 0;
@@ -985,40 +843,66 @@ CSkillGroupObject *CGumpSkills::GetGroupUnderCursor(int startIndex)
 				cidx++;
 				group = group->m_Next;
 			}
-		}
-		else if (g_LastObjectLeftMouseDown >= ID_GS_GROUP_MINIMIZE) //Скрыть/раскрыть группу
+		}*/
+		else if (serial >= ID_GS_GROUP_MINIMIZE) //Скрыть/раскрыть группу
 		{
-			int idx = g_LastObjectLeftMouseDown - ID_GS_GROUP_MINIMIZE;
-			int cidx = 0;
+			int index = serial - ID_GS_GROUP_MINIMIZE;
+			int currentIndex = 0;
 
-			TSkillGroupObject *group = SkillGroupManager.m_Groups;
-			while (group != NULL)
+			QFOR(group, g_SkillGroupManager.m_Groups, CSkillGroupObject*)
 			{
-				if (idx == cidx)
+				if (index == currentIndex)
 				{
-					group->SetMaximized(!group->GetMaximized());
+					group->Maximized = !group->Maximized;
+
+					CGUISkillGroup *skillGroup = GetSkillGroup(index);
+
+					if (skillGroup != NULL)
+					{
+						skillGroup->Minimized = !group->Maximized;
+						UpdateGroupPositions();
+
+						m_HTMLGump->CalculateDataSize();
+					}
+
 					break;
 				}
 
-				cidx++;
-				group = group->m_Next;
+				currentIndex++;
 			}
 		}
 	}
 }
 //----------------------------------------------------------------------------------
-bool TGumpSkills::OnLeftMouseDoubleClick()
+void CGumpSkills::GUMP_CHECKBOX_EVENT_C
+{
+	if (serial == ID_GS_SHOW_REAL) //Показать реальное значение
+	{
+		m_ShowReal = state;
+		m_ShowCap = false;
+		UpdateSkillValues();
+	}
+	else if (serial == ID_GS_SHOW_CAP) //Показать доступный предел прокачки
+	{
+		m_ShowCap = state;
+		m_ShowReal = false;
+		UpdateSkillValues();
+	}
+}
+//----------------------------------------------------------------------------------
+bool CGumpSkills::OnLeftMouseButtonDoubleClick()
 {
 	if (m_Minimized) //При даблклике по мини-гампу - раскрываем его
 	{
 		m_Minimized = false;
-		m_FrameCreated = false;
+		m_Page = 2;
+		m_WantRedraw = true;
 
 		return true;
 	}
 
 	return false;
-}*/
+}
 //----------------------------------------------------------------------------------
 void CGumpSkills::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
@@ -1034,7 +918,7 @@ void CGumpSkills::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
-	/*if (g_EntryPointer != TextEntry)
+	if (!EntryPointerHere())
 	{
 		if (wParam == VK_DELETE)
 		{
@@ -1045,7 +929,7 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 				if (item->Selected == 1)
 				{
 					g_SkillGroupManager.Remove(item);
-					m_FrameCreated = false;
+					m_WantRedraw = true;
 
 					break;
 				}
@@ -1068,8 +952,8 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			{
 				if (item->Selected == 2)
 				{
-					if (TextEntry->Length() > 0)
-						item->Name = TextEntry->c_str();
+					if (g_EntryPointer->Length() > 0)
+						item->Name = g_EntryPointer->c_str();
 				}
 
 				item->Selected = 0;
@@ -1102,6 +986,6 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		}
 		default:
 			break;
-	}*/
+	}
 }
 //----------------------------------------------------------------------------------

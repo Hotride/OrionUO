@@ -288,7 +288,7 @@ void CMouseManager::Draw(ushort id)
 		ushort ohGraphic = g_ObjectInHand->GetDrawGraphic(doubleDraw);
 
 		ushort ohColor = g_ObjectInHand->Color;
-		uint ohCount = g_ObjectInHand->DragCount;
+		doubleDraw = (g_ObjectInHand->DragCount > 1);
 
 		if (ohColor != 0)
 			g_ColorizerShader->Use();

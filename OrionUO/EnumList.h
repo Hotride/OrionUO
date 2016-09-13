@@ -285,6 +285,8 @@ enum GUMP_OBJECT_TYPE
 	GOT_BUFF,				//!Иконка баффа\дебаффа
 	GOT_SHOPITEM,			//!Предмет магазина
 	GOT_SHOPRESULT,			//!Предмет магазина (результат)
+	GOT_SKILLITEM,			//!Объект скиллов
+	GOT_SKILLGROUP,			//!Объект группы скиллов
 	GOT_BB_OBJECT,			//!Объект доски объявлений (Bulletin Board)
 	GOT_SCROLLBACKGROUND,	//!Фон в виде скролла
 	GOT_MENUOBJECT,			//!Объект меню

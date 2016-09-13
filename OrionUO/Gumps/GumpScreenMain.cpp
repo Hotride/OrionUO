@@ -75,6 +75,9 @@ void CGumpScreenMain::GUMP_SCROLL_BUTTON_EVENT_C
 		}
 	}
 }
+/*#include "../Game objects/GamePlayer.h"
+#include "../Managers/SkillGroupManager.h"
+CGUISkillGroup *g_Grp;*/
 //----------------------------------------------------------------------------------
 void CGumpScreenMain::UpdateContent()
 {
@@ -115,6 +118,16 @@ void CGumpScreenMain::UpdateContent()
 	entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_MS_PASSWORD, 0x034F, 0x03E3, 0x0021, 335, 385, 300, false, 5, TS_LEFT, 0, 32));
 	entry->CheckOnSerial = true;
 	m_PasswordFake = &entry->m_Entry;
+
+	/*g_Player = new CPlayer(1);
+	CSkillGroupObject *gobj = new CSkillGroupObject();
+	gobj->Name = "SomeGroup";
+
+	g_Grp = (CGUISkillGroup*)Add(new CGUISkillGroup(2999, 2988, gobj, 100, 100));
+
+	g_Grp->Add(new CGUISkillItem(3000, 4000, 5000, 3, 0, 00));
+	g_Grp->Add(new CGUISkillItem(3001, 4001, 5001, 7, 0, 17));
+	g_Grp->Add(new CGUISkillItem(3002, 4002, 5002, 14, 0, 34));*/
 
 	/*CGUIMinMaxButtons *minmax = (CGUIMinMaxButtons*)Add(new CGUIMinMaxButtons(123320, 0x0037, 100, 10, 0, 1735, 0));
 	minmax->SetTextParameters(true, STP_TOP_CENTER, 3, 0x0021, false);
@@ -214,6 +227,28 @@ void CGumpScreenMain::OnButton(const uint &serial)
 		g_MainScreen.CreateSmoothAction(CMainScreen::ID_SMOOTH_MS_QUIT);
 	else if (serial == ID_MS_ARROW_NEXT) //> button
 		g_MainScreen.CreateSmoothAction(CMainScreen::ID_SMOOTH_MS_CONNECT);
+	/*else if (serial == 2988)
+		g_Grp->Minimized = !g_Grp->Minimized;
+	else
+	{
+		switch (serial)
+		{
+			case 4000:
+			case 4001:
+			case 4002:
+			{
+						 DebugMsg("Skill button pressed: %i\n", serial - 4000);
+						 break;
+			}
+			case 5000:
+			case 5001:
+			case 5002:
+			{
+						 DebugMsg("Skill locker pressed: %i\n", serial - 4000);
+						 break;
+			}
+		}
+	}*/
 }
 //----------------------------------------------------------------------------------
 void CGumpScreenMain::OnTextEntry(const uint &serial)

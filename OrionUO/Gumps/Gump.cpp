@@ -477,6 +477,18 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 
 					break;
 				}
+				case GOT_SKILLITEM:
+				{
+					selected = ((CGUISkillItem*)item)->SelectedItem();
+
+					break;
+				}
+				case GOT_SKILLGROUP:
+				{
+					selected = ((CGUISkillGroup*)item)->SelectedItem();
+
+					break;
+				}
 				default:
 				{
 					selected = item;
@@ -576,9 +588,11 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 
 						g_MouseManager.Position = oldPos;
 					}
-				}
 
-				continue;
+					continue;
+				}
+				else if (item->Type != GOT_SKILLGROUP)
+					continue;
 			}
 
 			switch (item->Type)
@@ -603,6 +617,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 					if (((CGUIPolygonal*)item)->CallOnMouseUp)
 						break;
 				}
+				case GOT_SKILLGROUP:
 				case GOT_RESIZEPIC:
 				{
 					uint serial = item->Serial;
@@ -804,18 +819,15 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 			}
 			else if (!item->IsHTMLGump())
 			{
-				if (item->Type != GOT_DATABOX)
+				if (item->Type != GOT_DATABOX && item->Type != GOT_COMBOBOX && item->Type != GOT_SKILLITEM && item->Type != GOT_SKILLGROUP)
 				{
-					if (item->Type != GOT_COMBOBOX)
+					if (g_PressedObject.LeftObject() == item)
 					{
-						if (g_PressedObject.LeftObject() == item)
-						{
-							if (g_SelectedObject.Object() != g_PressedObject.LeftObject() && !item->IsPressedOuthit())
-								continue;
-						}
-						else
+						if (g_SelectedObject.Object() != g_PressedObject.LeftObject() && !item->IsPressedOuthit())
 							continue;
 					}
+					else
+						continue;
 				}
 			}
 
@@ -964,6 +976,32 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 						gump->OnComboboxSelection(item->Serial + selectedCombo);
 						gump->WantRedraw = true;
 					}
+
+					break;
+				}
+				case GOT_SKILLITEM:
+				{
+					CGUISkillItem *skillItem = (CGUISkillItem*)item;
+
+					if ((g_PressedObject.LeftObject() == skillItem->m_ButtonUse && skillItem->m_ButtonUse != NULL) || g_PressedObject.LeftObject() == skillItem->m_ButtonStatus)
+					{
+						gump->OnButton(g_PressedObject.LeftSerial);
+						gump->WantRedraw = true;
+					}
+
+					break;
+				}
+				case GOT_SKILLGROUP:
+				{
+					CGUISkillGroup *skillGroup = (CGUISkillGroup*)item;
+
+					if (g_PressedObject.LeftObject() == skillGroup->m_Minimizer)
+					{
+						gump->OnButton(g_PressedObject.LeftSerial);
+						gump->WantRedraw = true;
+					}
+					else
+						TestItemsLeftMouseUp(gump, (CBaseGUI*)skillGroup->m_Items, currentPage, draw2Page);
 
 					break;
 				}

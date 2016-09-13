@@ -167,6 +167,8 @@ xcopy /y /d  "$(SolutionDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="GUI\GUIShader.h" />
     <ClInclude Include="GUI\GUIShopItem.h" />
     <ClInclude Include="GUI\GUIShopResult.h" />
+    <ClInclude Include="GUI\GUISkillGroup.h" />
+    <ClInclude Include="GUI\GUISkillItem.h" />
     <ClInclude Include="GUI\GUISlider.h" />
     <ClInclude Include="GUI\GUIText.h" />
     <ClInclude Include="GUI\GUITextEntry.h" />
@@ -388,6 +390,8 @@ xcopy /y /d  "$(SolutionDir)dll\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="GUI\GUIShader.cpp" />
     <ClCompile Include="GUI\GUIShopItem.cpp" />
     <ClCompile Include="GUI\GUIShopResult.cpp" />
+    <ClCompile Include="GUI\GUISkillGroup.cpp" />
+    <ClCompile Include="GUI\GUISkillItem.cpp" />
     <ClCompile Include="GUI\GUISlider.cpp" />
     <ClCompile Include="GUI\GUIText.cpp" />
     <ClCompile Include="GUI\GUITextEntry.cpp" />

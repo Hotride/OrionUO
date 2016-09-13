@@ -744,6 +744,12 @@
     <ClInclude Include="GUI\GUIWorldMapTexture.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="GUI\GUISkillItem.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUISkillGroup.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1386,6 +1392,12 @@
       <Filter>Source Files\Gumps</Filter>
     </ClCompile>
     <ClCompile Include="GUI\GUIWorldMapTexture.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\GUISkillItem.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\GUISkillGroup.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
   </ItemGroup>
