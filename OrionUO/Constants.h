@@ -26,6 +26,8 @@ const int DAMAGE_TEXT_STEP = 2;
 
 const int DAMAGE_TEXT_ALPHA_STEP = (DAMAGE_TEXT_TRANSPARENT_DELAY / FRAME_DELAY_ACTIVE_WINDOW);
 
+const int DRAG_PIXEL_RANGE = 1; //3;
+
 //!Максимальное количество теней на экране
 static const int MAX_SHADOWS_COUNT = 100;
 

@@ -838,11 +838,12 @@ void CGameScreen::CheckMouseEvents()
 			g_StatusbarUnderMouse = 0;
 	}
 
-	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && g_PressedObject.LeftObject() == g_SelectedObject.Object())
+	//if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && g_PressedObject.LeftObject() == g_SelectedObject.Object())
+	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGameObject())
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
-		if ((abs(offset.X) >= 3 || abs(offset.Y) >= 3) || (g_MouseManager.LastLeftButtonClickTimer + g_MouseManager.DoubleClickDelay < g_Ticks))
+		if ((abs(offset.X) >= DRAG_PIXEL_RANGE || abs(offset.Y) >= DRAG_PIXEL_RANGE) || (g_MouseManager.LastLeftButtonClickTimer + g_MouseManager.DoubleClickDelay < g_Ticks))
 		{
 			CGameItem *selobj = g_World->FindWorldItem(g_PressedObject.LeftSerial);
 

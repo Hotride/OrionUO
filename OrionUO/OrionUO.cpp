@@ -3344,6 +3344,12 @@ void COrion::DropItem(uint container, ushort x, ushort y, char z)
 				CPacketDropRequestNew(g_ObjectInHand->Serial, x, y, z, 0, container).Send();
 			else
 				CPacketDropRequestOld(g_ObjectInHand->Serial, x, y, z, container).Send();
+
+			if (g_ObjectInHand->Deleted)
+			{
+				delete g_ObjectInHand;
+				g_ObjectInHand = NULL;
+			}
 		}
 	}
 }
