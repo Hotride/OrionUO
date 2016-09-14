@@ -47,14 +47,11 @@ public:
 class CSkillData
 {
 	SETGET(uchar, Button);
-	SETGETE(string, Name, OnChangeName);
+	SETGET(string, Name);
 
 public:
 	CSkillData() :m_Button(0), m_Name("") {}
-	~CSkillData() {m_Texture.Clear();};
-
-	//Текстура названия
-	CGLTextTexture m_Texture;
+	~CSkillData() {};
 };
 //----------------------------------------------------------------------------------
 extern CSkillSort g_SkillSort; //Указатель на скилл сортер

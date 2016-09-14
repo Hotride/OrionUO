@@ -26,9 +26,13 @@ public:
 	CGUIButton *m_Minimizer;
 	CGUITextEntry *m_Name;
 
+	void UpdateDataPositions();
+
 	virtual WISP_GEOMETRY::CSize GetSize();
 
 	virtual void PrepareTextures();
+
+	virtual bool EntryPointerHere();
 
 	virtual void Draw(const bool &checktrans = false);
 	virtual bool Select();

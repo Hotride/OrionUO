@@ -1671,16 +1671,9 @@ void COrion::PatchFiles()
 			memcpy(&namebuf[0], (char*)(vAddr + vh->Position + 1), vh->Size - 1);
 
 			if (strlen(namebuf) > 0)
-			{
 				g_Skills[index].Name = namebuf;
-				g_Skills[index].m_Texture.Clear();
-				g_FontManager.GenerateA(9, g_Skills[index].m_Texture, namebuf, 0x0288);
-			}
 			else
-			{
-				g_Skills[index].m_Texture.Clear();
 				g_Skills[i].Name = "";
-			}
 		}
 		else if (vh->FileID == 30) //Tiledata
 		{

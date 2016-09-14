@@ -96,7 +96,7 @@ void COrionWindow::OnLeftMouseButtonDown()
 
 		g_PressedObject.InitLeft(g_SelectedObject);
 
-		if (g_SelectedObject.Object() != NULL)
+		if (g_SelectedObject.Object() != NULL || g_GameState == GS_GAME)
 			g_CurrentScreen->OnLeftMouseButtonDown();
 	}
 }

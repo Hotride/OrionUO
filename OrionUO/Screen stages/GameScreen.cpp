@@ -41,6 +41,7 @@
 #include "../Gumps/GumpDrag.h"
 #include "../ClickObject.h"
 #include "../Macro.h"
+#include "../Gumps/GumpSkills.h"
 //----------------------------------------------------------------------------------
 CGameScreen g_GameScreen;
 RENDER_VARIABLES_FOR_GAME_WINDOW g_RenderBounds;
@@ -1723,6 +1724,11 @@ void CGameScreen::Render(const bool &mode)
 */
 void CGameScreen::OnLeftMouseButtonDown()
 {
+	CGumpSkills *skillGump = (CGumpSkills*)g_GumpManager.GetGump(g_PlayerSerial, 0, GT_SKILLS);
+
+	if (skillGump != NULL)
+		skillGump->UpdateGroupText();
+
 	if (g_SelectedObject.Gump() == &m_GameScreenGump)
 		m_GameScreenGump.OnLeftMouseButtonDown();
 	else if (g_SelectedObject.Gump() != NULL)

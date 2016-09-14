@@ -617,7 +617,6 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 					if (((CGUIPolygonal*)item)->CallOnMouseUp)
 						break;
 				}
-				case GOT_SKILLGROUP:
 				case GOT_RESIZEPIC:
 				{
 					uint serial = item->Serial;
@@ -647,6 +646,20 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 					gump->WantRedraw = true;
 
 					return;
+				}
+				case GOT_SKILLGROUP:
+				{
+					CGUISkillGroup *skillGroup = (CGUISkillGroup*)item;
+
+					if (g_SelectedObject.Object() == skillGroup->m_Name)
+					{
+						gump->OnTextEntry(g_SelectedObject.Object()->Serial);
+						gump->WantRedraw = true;
+
+						return;
+					}
+
+					break;
 				}
 				case GOT_RESIZEBUTTON:
 				{

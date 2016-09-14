@@ -41,10 +41,26 @@ void CGUISkillGroup::OnChangeMinimized(const bool &val)
 	m_Minimizer->GraphicPressed = graphic;
 }
 //----------------------------------------------------------------------------------
+void CGUISkillGroup::UpdateDataPositions()
+{
+	int y = 0;
+
+	QFOR(item, m_Items, CBaseGUI*)
+	{
+		item->Y = y;
+		y += 17;
+	}
+}
+//----------------------------------------------------------------------------------
 void CGUISkillGroup::PrepareTextures()
 {
 	m_Minimizer->PrepareTextures();
 	g_Orion.ExecuteGump(0x0835);
+}
+//----------------------------------------------------------------------------------
+bool CGUISkillGroup::EntryPointerHere()
+{
+	return (g_EntryPointer == &m_Name->m_Entry);
 }
 //----------------------------------------------------------------------------------
 CBaseGUI *CGUISkillGroup::SelectedItem()
@@ -79,7 +95,7 @@ CBaseGUI *CGUISkillGroup::SelectedItem()
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize CGUISkillGroup::GetSize()
 {
-	WISP_GEOMETRY::CSize size(255, 19);
+	WISP_GEOMETRY::CSize size(220, 19);
 
 	if (!m_Minimized && m_Items != NULL)
 		size.Height += GetItemsCount() * 17;
@@ -95,11 +111,13 @@ void CGUISkillGroup::Draw(const bool &checktrans)
 
 	bool drawOrnament = true;
 
-	if (/*m_Name->Focused &&*/ g_EntryPointer == &m_Name->m_Entry)
+	if (m_Name->Focused && g_EntryPointer == &m_Name->m_Entry)
 	{
 		drawOrnament = false;
 		g_GL.DrawPolygone(16, 0, 200, 14);
 	}
+	else if (m_Name->Focused)
+		g_GL.DrawPolygone(16, 0, m_Name->m_Entry.m_Texture.Width, 14);
 
 	m_Name->Draw(checktrans);
 
@@ -130,7 +148,7 @@ bool CGUISkillGroup::Select()
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 
-	bool result = (x >= 0 && y >= 0 && x < 255 && y < 19);
+	bool result = (x >= 0 && y >= 0 && x < 220 && y < 19);
 
 	if (!m_Minimized && !result)
 	{

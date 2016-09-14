@@ -56,6 +56,7 @@
 #include "../Gumps/GumpBulletinBoardItem.h"
 #include "../Gumps/GumpBook.h"
 #include "../Gumps/GumpShop.h"
+#include "../Gumps/GumpSkills.h"
 #include "../zlib.h"
 
 #pragma comment(lib, "zdll.lib")
@@ -2141,9 +2142,9 @@ PACKET_HANDLER(UpdateSkills)
 	bool IsSingleUpdate = (type == 0xFF || type == 0xDF);
 	LOG("Skill update type %i (Cap=%d)\n", type, HaveCap);
 
-	puchar end = m_Start + m_Size;
+	CGumpSkills *gump = (CGumpSkills*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_SKILLS);
 
-	while (Ptr < end)
+	while (m_Ptr < m_End)
 	{
 		ushort id = ReadUInt16BE();
 
@@ -2180,6 +2181,9 @@ PACKET_HANDLER(UpdateSkills)
 			g_Player->SetSkillCap(id, (float)(Cap / 10.0f));
 			g_Player->SetSkillStatus(id, lock);
 
+			if (gump != NULL)
+				gump->UpdateSkillValue(id);
+
 			if (HaveCap)
 				LOG("Skill %i is %i|%i|%i\n", id, BaseVal, RealVal, Cap);
 			else
@@ -2194,7 +2198,8 @@ PACKET_HANDLER(UpdateSkills)
 	IFOR(i, 0, g_SkillsCount)
 		g_SkillsTotal += g_Player->GetSkillValue(i);
 
-	g_GumpManager.UpdateContent(g_PlayerSerial, 0, GT_SKILLS);
+	if (gump != NULL)
+		gump->UpdateSkillsSum();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ExtendedCommand)

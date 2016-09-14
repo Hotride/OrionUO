@@ -29,22 +29,29 @@ private:
 	bool m_ShowCap;
 
 	//Получить группу над курсором
-	class CSkillGroupObject *GetGroupUnderCursor(int startIndex);
+	class CSkillGroupObject *GetGroupUnderCursor(int &index);
 
 	CGUIGumppic *m_BottomLine;
 	CGUIGumppic *m_Comment;
 	CGUIButton *m_CreateGroup;
 	CGUIText *m_SkillSum;
-	CGUIDataBox *m_DataBox;
+	CGUICheckbox *m_CheckboxShowReal;
+	CGUICheckbox *m_CheckboxShowCap;
 
 	void UpdateGroupPositions();
 
+	void SetGroupTextFromEntry();
+
 protected:
+	virtual void CalculateGumpState();
+
 	virtual void UpdateHeight();
 
 public:
 	CGumpSkills(uint serial, short x, short y, bool minimized, int height = 250);
 	virtual ~CGumpSkills();
+
+	void UpdateGroupText();
 
 	CGUISkillGroup *GetSkillGroup(const int &index);
 	CGUISkillItem *GetSkill(const int &index);
@@ -57,12 +64,12 @@ public:
 	void Init();
 
 	virtual void PrepareContent();
-	virtual void UpdateContent();
 
 	GUMP_BUTTON_EVENT_H;
 	GUMP_CHECKBOX_EVENT_H;
+	GUMP_TEXT_ENTRY_EVENT_H;
 	
-	void OnLeftMouseDown();
+	virtual void OnLeftMouseButtonUp();
 	virtual bool OnLeftMouseButtonDoubleClick();
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);

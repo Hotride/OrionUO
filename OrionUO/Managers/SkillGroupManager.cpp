@@ -229,7 +229,7 @@ void CSkillGroupManager::Add(CSkillGroupObject *group)
 @param [__in] group Ссылка на группу
 @return 
 */
-void CSkillGroupManager::Remove(CSkillGroupObject *group)
+bool CSkillGroupManager::Remove(CSkillGroupObject *group)
 {
 	if (group->m_Prev == NULL) //Miscellaneous
 	{
@@ -242,10 +242,13 @@ void CSkillGroupManager::Remove(CSkillGroupObject *group)
 		
 		g_Orion.InitScreen(GS_GAME_BLOCKED);
 		g_GameBlockedScreen.Code = 4;
+
+		return false;
 	}
 	else
 	{
 		m_Count--;
+
 		if (m_Count < 0)
 			m_Count = 0;
 
@@ -257,31 +260,8 @@ void CSkillGroupManager::Remove(CSkillGroupObject *group)
 		group->TransferTo(m_Groups);
 		delete group;
 	}
-}
-//----------------------------------------------------------------------------------
-/*!
-Получить список видимых строк
-@return Количество видимых строк
-*/
-int CSkillGroupManager::GetVisibleLinesCount()
-{
-	int count = 0;
 
-	CSkillGroupObject *group = m_Groups;
-
-	while (group != NULL)
-	{
-		count++;
-		if (group->Maximized)
-			count += group->Count;
-
-		group = group->m_Next;
-	}
-
-	if (count)
-		count--;
-
-	return count;
+	return true;
 }
 //----------------------------------------------------------------------------------
 /*!

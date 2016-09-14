@@ -103,11 +103,6 @@ void CSkillSort::Init()
 		m_Skills[i] = skillBuf[j];
 }
 //----------------------------------------------------------------------------------
-void CSkillData::OnChangeName(const string &val)
-{
-	g_FontManager.GenerateA(9, m_Texture, val.c_str(), 0x0288);
-}
-//----------------------------------------------------------------------------------
 string g_SkillName[54] =
 {
 	"Alchemy",

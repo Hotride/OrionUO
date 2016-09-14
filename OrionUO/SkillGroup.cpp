@@ -12,7 +12,7 @@
 #include "Managers/FontsManager.h"
 //----------------------------------------------------------------------------------
 CSkillGroupObject::CSkillGroupObject()
-: m_Count(0), m_Maximized(false), m_Selected(0), m_Next(NULL), m_Prev(NULL)
+: m_Count(0), m_Maximized(false), m_Next(NULL), m_Prev(NULL)
 {
 	memset(m_Items, 0xFF, sizeof(m_Items));
 	m_Name = "No Name";
@@ -20,15 +20,6 @@ CSkillGroupObject::CSkillGroupObject()
 //----------------------------------------------------------------------------------
 CSkillGroupObject::~CSkillGroupObject()
 {
-	m_Texture.Clear();
-}
-//----------------------------------------------------------------------------------
-void CSkillGroupObject::OnChangeName(const string &val)
-{
-	m_Texture.Clear();
-
-	if (val.length())
-		g_FontManager.GenerateA(6, m_Texture, val.c_str(), 0);
 }
 //----------------------------------------------------------------------------------
 uchar CSkillGroupObject::GetItem(int index)

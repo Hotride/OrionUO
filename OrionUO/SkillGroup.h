@@ -18,8 +18,7 @@ class CSkillGroupObject
 {
 	SETGET(int, Count);
 	SETGET(bool, Maximized);
-	SETGET(uchar, Selected);
-	SETGETE(string, Name, OnChangeName);
+	SETGET(string, Name);
 
 private:
 	//Номера навыков
@@ -32,9 +31,6 @@ public:
 
 	CSkillGroupObject();
 	~CSkillGroupObject();
-
-	//Текстура текста группы
-	CGLTextTexture m_Texture;
 
 	uchar GetItem(int index);
 

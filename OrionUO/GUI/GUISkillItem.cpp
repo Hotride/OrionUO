@@ -26,7 +26,7 @@ CGUISkillItem::CGUISkillItem(const uint &serial, const uint &useSerial, const ui
 	m_Status = g_Player->GetSkillStatus(m_Index);
 
 	ushort graphic = GetStatusButtonGraphic();
-	m_ButtonStatus = new CGUIButton(statusSerial, graphic, graphic, graphic, 251, -1);
+	m_ButtonStatus = new CGUIButton(statusSerial, graphic, graphic, graphic, 251, 0);
 	m_ButtonStatus->CheckPolygone = true;
 
 	g_FontManager.GenerateA(9, m_NameText, g_Skills[m_Index].Name.c_str(), 0x0288);
@@ -112,13 +112,13 @@ void CGUISkillItem::Draw(const bool &checktrans)
 		m_ButtonUse->Draw(checktrans);
 
 	if (g_PressedObject.LeftObject() == this)
-		g_GL.DrawPolygone(20, -1, 250, 14);
+		g_GL.DrawPolygone(20, 0, 250, 14);
 
-	m_NameText.Draw(22, -1, checktrans);
+	m_NameText.Draw(22, 0, checktrans);
 
 	m_ButtonStatus->Draw(checktrans);
 
-	m_ValueText.Draw(250 - m_ValueText.Width, -1);
+	m_ValueText.Draw(250 - m_ValueText.Width, 0);
 
 	glTranslatef((GLfloat)-m_X, (GLfloat)-m_Y, 0.0f);
 }

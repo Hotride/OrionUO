@@ -60,13 +60,7 @@ public:
 	@param [__in] group Ссылка на группу
 	@return 
 	*/
-	void Remove(CSkillGroupObject *group);
-
-	/*!
-	Получить список видимых строк
-	@return Количество видимых строк
-	*/
-	int GetVisibleLinesCount();
+	bool Remove(CSkillGroupObject *group);
 
 	/*!
 	Загрузка групп из файла конфига
