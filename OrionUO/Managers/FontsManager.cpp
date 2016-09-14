@@ -1736,7 +1736,7 @@ HTML_char *CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &len, 
 							//	charcolor |= 0xFF;
 
 							puchar clrBuf = (puchar)&charcolor;
-							charcolor = (clrBuf[3] << 24) | (clrBuf[2] << 16) | (clrBuf[1] << 8) | 0xFF;
+							charcolor = (clrBuf[0] << 24) | (clrBuf[1] << 16) | (clrBuf[2] << 8) | 0xFF;
 
 							current_charcolor = charcolor;
 						}
@@ -1799,6 +1799,11 @@ HTML_char *CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &len, 
 			else if (!memcmp(lstr, L"<br>", 8))
 			{
 				i += 3;
+				si = L'\n';
+			}
+			else if (!memcmp(lstr, L"<br />", 12))
+			{
+				i += 5;
 				si = L'\n';
 			}
 			else if (!memcmp(lstr, L"<i>", 6))

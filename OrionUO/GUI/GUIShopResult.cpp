@@ -20,7 +20,7 @@ m_Price(shopItem->Price), m_Name(shopItem->Name)
 	m_MoveOnDrag = true;
 
 	string name = m_Name + "\n" + "at " + std::to_string(m_Price) + " g.p.";
-	g_FontManager.GenerateA(9, m_NameText, m_Name.c_str(), 0x021F, 100);
+	g_FontManager.GenerateA(9, m_NameText, name.c_str(), 0x021F, 100);
 	
 	m_MinMaxButtons = new CGUIMinMaxButtons(m_Serial, 0x0037, 156, m_NameText.Height / 2, 0, shopItem->Count, 1);
 	m_MinMaxButtons->DefaultTextOffset = -122;

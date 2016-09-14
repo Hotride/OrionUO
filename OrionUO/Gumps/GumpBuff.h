@@ -31,6 +31,8 @@ public:
 	CGumpBuff(uint serial, short x, short y);
 	virtual ~CGumpBuff();
 
+	virtual bool CanBeDisplayed();
+
 	void AddBuff(const ushort &id, const ushort &timer, const wstring &text);
 
 	void DeleteBuff(const ushort &id);

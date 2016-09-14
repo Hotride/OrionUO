@@ -12,6 +12,7 @@
 #include "../ToolTip.h"
 #include "../OrionUO.h"
 #include "../Managers/FontsManager.h"
+#include "../Managers/ConfigManager.h"
 //----------------------------------------------------------------------------------
 CGumpBuff::CGumpBuff(uint serial, short x, short y)
 : CGump(GT_BUFF, serial, x, y)
@@ -28,6 +29,11 @@ CGumpBuff::CGumpBuff(uint serial, short x, short y)
 //----------------------------------------------------------------------------------
 CGumpBuff::~CGumpBuff()
 {
+}
+//----------------------------------------------------------------------------------
+bool CGumpBuff::CanBeDisplayed()
+{
+	return g_ConfigManager.ToggleBufficonWindow;
 }
 //----------------------------------------------------------------------------------
 void CGumpBuff::UpdateBuffIcons()
@@ -113,6 +119,7 @@ void CGumpBuff::AddBuff(const ushort &id, const ushort &timer, const wstring &te
 	}
 
 	Add(new CGUIBuff(id, ticks, text));
+	m_WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpBuff::DeleteBuff(const ushort &id)

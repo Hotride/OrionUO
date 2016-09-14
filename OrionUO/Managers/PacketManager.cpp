@@ -3545,10 +3545,54 @@ PACKET_HANDLER(OpenMenuGump)
 	}
 }
 //----------------------------------------------------------------------------------
+void CPacketManager::AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &list)
+{
+	IFOR(i, 0, (int)list.size())
+	{
+		HTMLGumpDataInfo &data = list[i];
+
+		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)gump->Add(new CGUIHTMLGump(data.TextID, 0x0BB8, data.X, data.Y, data.Width, data.Height, data.HaveBackground, data.HaveScrollbar));
+		htmlGump->DrawOnly = (data.HaveScrollbar == 0);
+
+		int width = htmlGump->Width;
+
+		if (data.HaveScrollbar)
+			width -= 16;
+
+		uint htmlColor = 0xFFFFFFFF;
+
+		if (!data.HaveBackground)
+		{
+			data.Color = 0xFFFF;
+
+			if (!data.HaveScrollbar)
+				htmlColor = 0x010101FF;
+		}
+		else
+		{
+			width -= 9;
+			htmlColor = 0x010101FF;
+		}
+
+		CGUIHTMLText *htmlText = (CGUIHTMLText*)htmlGump->Add(new CGUIHTMLText(data.TextID, 0, data.Color, 0, 0, width, TS_LEFT, /*UOFONT_BLACK_BORDER*/0, htmlColor));
+
+		if (data.IsXMF)
+		{
+			htmlText->Text = g_ClilocManager.Cliloc(g_Language)->GetW(data.TextID);
+			htmlText->CreateTexture();
+			htmlGump->CalculateDataSize();
+		}
+	}
+
+	list.clear();
+}
+//----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenGump)
 {
 	if (g_World == NULL)
 		return;
+
+	vector<HTMLGumpDataInfo> htmlGumlList;
 
 	//TPRINT("Gump dump::\n");
 	//TDUMP(buf, size);
@@ -3604,6 +3648,8 @@ PACKET_HANDLER(OpenGump)
 			e += 5;
 			int page = 0;
 			sscanf((char*)e, "%d", &page);
+
+			AddHTMLGumps(gump, htmlGumlList);
 
 			go = new CGUIPage(page);
 		}
@@ -3694,6 +3740,7 @@ PACKET_HANDLER(OpenGump)
 				color++;
 
 			go = new CGUIGenericText(number, color, x, y, w);
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "textentrylimited", 16))
 		{
@@ -3727,6 +3774,7 @@ PACKET_HANDLER(OpenGump)
 				color++;
 
 			go = new CGUIGenericText(n, color, x, y);
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "tilepichue", 10))
 		{
@@ -3773,77 +3821,32 @@ PACKET_HANDLER(OpenGump)
 		}
 		else if (!memcmp(lowc, "xmfhtmlgump", 11))
 		{
-			int x = 0, y = 0, w = 0, h = 0, background = 0, scrollbar = 0, clilocID = 0, color = 0;
+			HTMLGumpDataInfo htmlInfo = { 0 };
+			htmlInfo.IsXMF = true;
 
 			if (!memcmp(lowc, "xmfhtmlgumpcolor", 16))
 			{
 				e += 17;
-				sscanf((char*)e, "%d %d %d %d %d %d %d %d", &x, &y, &w, &h, &clilocID, &background, &scrollbar, &color);
+				sscanf((char*)e, "%d %d %d %d %d %d %d %d", &htmlInfo.X, &htmlInfo.Y, &htmlInfo.Width, &htmlInfo.Height, &htmlInfo.TextID, &htmlInfo.HaveBackground, &htmlInfo.HaveScrollbar, &htmlInfo.Color);
 			}
 			else
 			{
 				e += 12;
-				sscanf((char*)e, "%d %d %d %d %d %d %d", &x, &y, &w, &h, &clilocID, &background, &scrollbar);
+				sscanf((char*)e, "%d %d %d %d %d %d %d", &htmlInfo.X, &htmlInfo.Y, &htmlInfo.Width, &htmlInfo.Height, &htmlInfo.TextID, &htmlInfo.HaveBackground, &htmlInfo.HaveScrollbar);
+				htmlInfo.Color = 0;
 			}
 
-			CGUIHTMLGump *htmlGump = new CGUIHTMLGump(clilocID, 0x0BB8, x, y, w, h, background, scrollbar);
-			go = htmlGump;
-
-			w = htmlGump->Width;
-
-			if (scrollbar)
-				w -= 16;
-
-			uint htmlColor = 0xFFFFFFFF;
-
-			if (!background)
-			{
-				color = 0xFFFF;
-
-				if (!scrollbar)
-					htmlColor = 0x010101FF;
-			}
-			else
-			{
-				w -= 9;
-				htmlColor = 0x010101FF;
-			}
-
-			CGUIHTMLText *htmlText = (CGUIHTMLText*)htmlGump->Add(new CGUIHTMLText(clilocID, 0, color, 3, 3, w, TS_LEFT, UOFONT_BLACK_BORDER, htmlColor));
-			htmlText->Text = g_ClilocManager.Cliloc(g_Language)->GetW(clilocID);
-			htmlText->CreateTexture();
+			htmlGumlList.push_back(htmlInfo);
 		}
 		else if (!memcmp(lowc, "htmlgump", 8))
 		{
 			e += 9;
-			int x = 0, y = 0, w = 0, h = 0, background = 0, scrollbar = 0, textID = 0;
-			sscanf((char*)e, "%d %d %d %d %d %d %d", &x, &y, &w, &h, &textID, &background, &scrollbar);
 
-			CGUIHTMLGump *htmlGump = new CGUIHTMLGump(textID, 0x0BB8, x, y, w, h, background, scrollbar);
-			go = htmlGump;
+			HTMLGumpDataInfo htmlInfo = { 0 };
 
-			w = htmlGump->Width;
+			sscanf((char*)e, "%d %d %d %d %d %d %d", &htmlInfo.X, &htmlInfo.Y, &htmlInfo.Width, &htmlInfo.Height, &htmlInfo.TextID, &htmlInfo.HaveBackground, &htmlInfo.HaveScrollbar);
 
-			if (scrollbar)
-				w -= 16;
-
-			ushort color = 0;
-			uint htmlColor = 0xFFFFFFFF;
-
-			if (!background)
-			{
-				color = 0xFFFF;
-
-				if (!scrollbar)
-					htmlColor = 0x010101FF;
-			}
-			else
-			{
-				w -= 9;
-				htmlColor = 0x010101FF;
-			}
-
-			htmlGump->Add(new CGUIHTMLText(textID, 0, color, 3, 3, w, TS_LEFT, UOFONT_BLACK_BORDER, htmlColor));
+			htmlGumlList.push_back(htmlInfo);
 		}
 		/*else if (!memcmp(lowc, "xfmhtmltok", 10))
 		{
@@ -3878,6 +3881,8 @@ PACKET_HANDLER(OpenGump)
 
 		p = e + 1;
 	}
+
+	AddHTMLGumps(gump, htmlGumlList);
 
 	m_Ptr = m_Start + 21 + commandsLen;
 
@@ -4545,6 +4550,8 @@ PACKET_HANDLER(SellList)
 
 		currentY += shopItem->GetSize().Height;
 	}
+
+	htmlGump->CalculateDataSize();
 
 	g_GumpManager.AddGump(gump);
 }

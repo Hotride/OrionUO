@@ -368,7 +368,7 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 	int page = 0;
 	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
 	vector<bool> scissorList;
-	bool currentScissirState = true;
+	bool currentScissorState = true;
 
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 
@@ -389,22 +389,22 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 			{
 				if (item->Enabled)
 				{
-					currentScissirState = item->Select();
-					scissorList.push_back(currentScissirState);
+					currentScissorState = item->Select();
+					scissorList.push_back(currentScissorState);
 				}
 				else
 				{
 					scissorList.pop_back();
 
 					if (scissorList.size())
-						currentScissirState = scissorList.back();
+						currentScissorState = scissorList.back();
 					else
-						currentScissirState = true;
+						currentScissorState = true;
 				}
 
 				continue;
 			}
-			else if (!currentScissirState || !item->Enabled || !item->Select())
+			else if (!currentScissorState || !item->Enabled || (item->DrawOnly && selected != NULL) || !item->Select())
 				continue;
 
 			switch (item->Type)

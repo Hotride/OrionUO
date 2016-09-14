@@ -145,7 +145,7 @@ private:
 	CGUISlider *m_SliderMusic;
 	CGUISlider *m_SliderClientFPS;
 	CGUISlider *m_SliderTooltipDelay;
-	CGUISlider *m_SliderSpeeckDuration;
+	CGUISlider *m_SliderSpeechDuration;
 	CGUISlider *m_SliderCircleTransparency;
 	CGUISlider *m_SliderInformSkills;
 

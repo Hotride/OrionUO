@@ -291,6 +291,7 @@ bool CGumpShop::OnLeftMouseButtonDoubleClick()
 				m_WantRedraw = true;
 				result = true;
 				UpdateTotalPrice();
+				m_ItemList[1]->CalculateDataSize();
 			}
 		}
 	}

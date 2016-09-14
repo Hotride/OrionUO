@@ -1069,8 +1069,8 @@ void CGumpOptions::DrawPage7()
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 140));
 	text->CreateTextureW(0, L"Adjust how long speech remains on screen");
 
-	m_SliderSpeeckDuration = (CGUISlider*)Add(new CGUISlider(ID_GO_P7_AJUST_LONG_SPEECH, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 64, 160, 90, 0, 999, g_OptionsConfig.SpeechDelay));
-	m_SliderSpeeckDuration->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
+	m_SliderSpeechDuration = (CGUISlider*)Add(new CGUISlider(ID_GO_P7_AJUST_LONG_SPEECH, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 64, 160, 90, 0, 999, g_OptionsConfig.SpeechDelay));
+	m_SliderSpeechDuration->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
 
 
@@ -2072,7 +2072,6 @@ void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 		}
 		case 4: //Chat
 		{
-
 			break;
 		}
 		case 5: //Macro Options
@@ -2085,6 +2084,9 @@ void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 		}
 		case 7: //Display
 		{
+			if (serial == ID_GO_P7_AJUST_LONG_SPEECH)
+				g_OptionsConfig.SpeechDelay = m_SliderSpeechDuration->Value;
+					
 			break;
 		}
 		case 8: //Reputation System
@@ -2093,6 +2095,10 @@ void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 		}
 		case 9: //Miscellaneous
 		{
+			if (serial == ID_GO_P9_TRANSPARENCY_RADIUS)
+				g_OptionsConfig.CircleTransRadius = m_SliderCircleTransparency->Value;
+			else if (serial == ID_GO_P9_INFORM_SKILLS)
+				g_OptionsConfig.SkillReport = m_SliderInformSkills->Value;
 			break;
 		}
 		case 10: //Filter Options

@@ -23,6 +23,7 @@ class CBaseGUI : public CRenderObject
 	SETGET(bool, Enabled);
 	SETGET(bool, Visible);
 	SETGET(bool, SelectOnly);
+	SETGET(bool, DrawOnly);
 
 public:
 	CBaseGUI(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y);

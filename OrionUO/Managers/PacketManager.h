@@ -41,6 +41,19 @@ public:
 	PACKET_FUNCTION Handler;
 };
 //----------------------------------------------------------------------------------
+struct HTMLGumpDataInfo
+{
+	int X;
+	int Y;
+	int Width;
+	int Height;
+	int TextID;
+	int HaveBackground;
+	int HaveScrollbar;
+	int Color;
+	bool IsXMF;
+};
+//----------------------------------------------------------------------------------
 #define HANDLER_PACKET(name)void Handle ##name ()
 //----------------------------------------------------------------------------------
 class CPacketManager : public WISP_NETWORK::CPacketReader
@@ -52,6 +65,8 @@ private:
 	static CPacketInfo m_Packets[0x100];
 
 	bool AutoLoginNameExists(const string &name);
+
+	void AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &list);
 
 	UINT_LIST m_MegaClilocRequests;
 
