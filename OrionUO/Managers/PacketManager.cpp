@@ -1072,15 +1072,8 @@ PACKET_HANDLER(CharacterStatus)
 		}
 	}
 
-	CGump *gump = g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
-
-	if (gump != NULL)
-	{
-		/*CGumpStatusbar *sbg = (CGumpStatusbar*)gump;
-
-		if (sbg->TextEntry != NULL && sbg->TextEntry != g_EntryPointer)
-			sbg->TextEntry->SetText(name);*/
-	}
+	g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
+	g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateItem)
@@ -1316,14 +1309,7 @@ PACKET_HANDLER(UpdateObject)
 	uchar dir = ReadUInt8();
 
 	if (character != NULL)
-	{
 		obj->OnGraphicChange(1000);
-
-		CGump *statusGump = g_GumpManager.UpdateContent(character->Serial, 0, GT_STATUSBAR);
-
-		if (statusGump != NULL)
-			g_Orion.StatusReq(character->Serial);
-	}
 	else
 		obj->OnGraphicChange(dir);
 
@@ -1832,6 +1818,15 @@ PACKET_HANDLER(UpdateCharacter)
 	if (obj == NULL)
 		return;
 
+	if (!obj->Graphic)
+	{
+		if (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL)
+			g_Orion.StatusReq(serial);
+
+		if (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL)
+			g_Orion.StatusReq(serial);
+	}
+
 	obj->MapIndex = g_CurrentMap;
 	obj->Graphic = ReadUInt16BE();
 	obj->OnGraphicChange();
@@ -1871,8 +1866,6 @@ PACKET_HANDLER(UpdateCharacter)
 	obj->Color = ReadUInt16BE();
 	obj->Flags = ReadUInt8();
 
-	g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
-
 	g_World->MoveToTop(obj);
 }
 //----------------------------------------------------------------------------------
@@ -1883,7 +1876,7 @@ PACKET_HANDLER(Warmode)
 
 	g_Player->Warmode = ReadUInt8();
 
-	g_GumpManager.GetGump(g_PlayerSerial, 0, GT_STATUSBAR);
+	g_GumpManager.UpdateContent(g_PlayerSerial, 0, GT_STATUSBAR);
 
 	CGumpPaperdoll *gump = (CGumpPaperdoll*)g_GumpManager.GetGump(g_PlayerSerial, 0, GT_PAPERDOLL);
 
@@ -2401,7 +2394,7 @@ PACKET_HANDLER(ExtendedCommand)
 				CGump *statusbar = g_GumpManager.GetGump(g_PlayerSerial, 0, GT_STATUSBAR);
 
 				if (statusbar != NULL && !statusbar->Minimized)
-					statusbar->FrameCreated = false;
+					statusbar->WantUpdateContent = true;
 			}
 
 			break;
@@ -3104,7 +3097,7 @@ PACKET_HANDLER(DisplayClilocString)
 				obj->Name = name;
 
 				if (obj->NPC)
-					g_GumpManager.UpdateGump(serial, 0, GT_STATUSBAR);
+					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 			}
 		}
 

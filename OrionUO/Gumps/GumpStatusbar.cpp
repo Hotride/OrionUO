@@ -188,7 +188,7 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 //----------------------------------------------------------------------------------
 bool CGumpStatusbar::GetStatusbarGroupOffset(int &x, int &y)
 {
-	if (InGroup() && m_Minimized && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftObject() == NULL)
+	if (InGroup() && m_Minimized && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->MoveOnDrag)
 	{
 		CGumpStatusbar *gump = GetTopStatusbar();
 
@@ -227,7 +227,7 @@ void CGumpStatusbar::UpdateGroup(int x, int y)
 			gump->MinimizedY += y;
 
 			g_GumpManager.MoveToBack(gump);
-			gump->FrameCreated = false;
+			gump->WantRedraw = true;
 		}
 
 		gump = gump->m_GroupNext;
@@ -256,19 +256,34 @@ void CGumpStatusbar::AddStatusbar(CGumpStatusbar *bar)
 		bar->m_GroupNext = NULL;
 	}
 
-	m_WantRedraw = false;
+	bar->WantRedraw = true;
+
+	if (bar->m_StatusbarUnlocker != NULL)
+		bar->m_StatusbarUnlocker->Visible = bar->InGroup();
+
+	m_StatusbarUnlocker->Visible = InGroup();
+	m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::RemoveFromGroup()
 {
 	if (m_GroupNext != NULL)
+	{
+		m_GroupNext->WantRedraw = true;
 		m_GroupNext->m_GroupPrev = m_GroupPrev;
+	}
 	
 	if (m_GroupPrev != NULL)
+	{
+		m_GroupPrev->WantRedraw = true;
 		m_GroupPrev->m_GroupNext = m_GroupNext;
+	}
 
 	m_GroupNext = NULL;
 	m_GroupPrev = NULL;
+
+	m_WantRedraw = true;
+	m_StatusbarUnlocker->Visible = InGroup();
 }
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::CalculateGumpState()
@@ -688,6 +703,7 @@ void CGumpStatusbar::UpdateContent()
 			}
 
 			m_StatusbarUnlocker = (CGUIButton*)Add(new CGUIButton(ID_GSB_BUTTON_REMOVE_FROM_GROUP, 0x082C, 0x082C, 0x082C, 136, 24));
+			m_StatusbarUnlocker->CheckPolygone = true;
 			m_StatusbarUnlocker->Visible = InGroup();
 		}
 	}
@@ -829,6 +845,7 @@ void CGumpStatusbar::UpdateContent()
 		}
 
 		m_StatusbarUnlocker = (CGUIButton*)Add(new CGUIButton(ID_GSB_BUTTON_REMOVE_FROM_GROUP, 0x082C, 0x082C, 0x082C, 136, 24));
+		m_StatusbarUnlocker->CheckPolygone = true;
 		m_StatusbarUnlocker->Visible = InGroup();
 	}
 

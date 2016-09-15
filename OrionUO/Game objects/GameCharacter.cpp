@@ -60,10 +60,10 @@ CGameCharacter::~CGameCharacter()
 	}
 
 	//!Если стянут статусбар - обновим его
-	g_GumpManager.UpdateGump(m_Serial, 0, GT_STATUSBAR);
+	g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR);
 	
 	//!Если стянут статусбар таргет системы - обновим его
-	g_GumpManager.UpdateGump(m_Serial, 0, GT_TARGET_SYSTEM);
+	g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -293,7 +293,12 @@ void CGameCharacter::OnGraphicChange(int direction)
 		}
 	
 		g_GumpManager.UpdateContent(m_Serial, 0, GT_PAPERDOLL);
-		g_GumpManager.UpdateGump(m_Serial, 0, GT_STATUSBAR);
+
+		if (g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR) != NULL)
+			g_Orion.StatusReq(m_Serial);
+
+		if (g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM) != NULL)
+			g_Orion.StatusReq(m_Serial);
 	}
 }
 //----------------------------------------------------------------------------------

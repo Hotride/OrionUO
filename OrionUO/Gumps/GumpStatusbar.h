@@ -48,7 +48,7 @@ private:
 protected:
 	void SendRenameRequest();
 
-	void CalculateGumpState();
+	virtual void CalculateGumpState();
 
 	bool m_WantFullUpdateContent;
 
