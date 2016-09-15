@@ -289,6 +289,7 @@ void CMacro::Save(WISP_FILE::CBinaryFileWritter &writter)
 CMacro *CMacro::GetCopy()
 {
 	CMacro *macro = new CMacro(m_Key, m_Alt, m_Ctrl, m_Shift);
+	MACRO_CODE oldCode = MC_NONE;
 
 	QFOR(obj, m_Items, CMacroObject*)
 	{
@@ -296,7 +297,12 @@ CMacro *CMacro::GetCopy()
 			macro->Add(new CMacroObjectString(obj->Code, obj->SubCode, ((CMacroObjectString*)obj)->String));
 		else
 			macro->Add(new CMacroObject(obj->Code, obj->SubCode));
+
+		oldCode = obj->Code;
 	}
+
+	if (oldCode != MC_NONE)
+		macro->Add(new CMacroObject(MC_NONE, MSC_NONE));
 
 	return macro;
 }

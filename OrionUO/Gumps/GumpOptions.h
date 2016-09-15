@@ -88,7 +88,8 @@ private:
 	static const int ID_GO_P5_RIGHT_BOX = 520;
 	static const int ID_GO_P5_EMPTY_BOX = 530;
 	///////////////////////////////////////////
-	static const int ID_GO_P5_SELECTION = 5000;
+	static const int ID_GO_P5_MACRO_SELECTION = 2000;
+	static const int ID_GO_P5_ACTION_SELECTION = 10000;
 
 	static const int ID_GO_P6_ENABLE_PATHFINDING = 600;
 	static const int ID_GO_P6_HOLD_TAB_FOR_COMBAT = 601;
@@ -187,6 +188,9 @@ private:
 	CGUICheckbox *m_MacroCheckboxCtrl;
 
 	void RedrawMacroData();
+
+protected:
+	virtual void CalculateGumpState();
 
 public:
 	CGumpOptions(uint serial, short x, short y);

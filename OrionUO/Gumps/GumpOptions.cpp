@@ -25,6 +25,7 @@
 #include "../OrionUO.h"
 #include "../Macro.h"
 #include "../TextEngine/GameConsole.h"
+#include "../PressedObject.h"
 //----------------------------------------------------------------------------------
 const ushort g_OptionsTextColor = 0;
 //----------------------------------------------------------------------------------
@@ -103,6 +104,32 @@ m_MacroPointer(NULL), m_MacroObjectPointer(NULL)
 CGumpOptions::~CGumpOptions()
 {
 }
+//----------------------------------------------------------------------------------
+void CGumpOptions::CalculateGumpState()
+{
+	CGump::CalculateGumpState();
+
+	if (g_GumpPressed)
+	{
+		if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX)
+		{
+			g_GumpMovingOffset.Reset();
+
+			if (m_Minimized)
+			{
+				g_GumpTranslate.X = (float)m_MinimizedX;
+				g_GumpTranslate.Y = (float)m_MinimizedY;
+			}
+			else
+			{
+				g_GumpTranslate.X = (float)m_X;
+				g_GumpTranslate.Y = (float)m_Y;
+			}
+		}
+		else
+			m_WantRedraw = true;
+	}
+}
 //----------------------------------------------------------------------------
 void CGumpOptions::Init()
 {
@@ -111,9 +138,8 @@ void CGumpOptions::Init()
 	m_MacroPointer = (CMacro*)g_OptionsMacroManager.m_Items;
 	m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
 
-	m_MacroKey->m_Entry.SetText(m_HotkeyText[m_MacroPointer->Key & 0xFF]);
-
 	RedrawMacroData();
+	m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage1()
@@ -480,21 +506,71 @@ void CGumpOptions::RedrawMacroData()
 	m_MacroCheckboxAlt->Checked = alt;
 	m_MacroCheckboxCtrl->Checked = ctrl;
 
+	m_MacroKey->m_Entry.SetText(m_HotkeyText[m_MacroPointer->Key & 0xFF]);
+
 	CMacroObject *obj = m_MacroObjectPointer;
 
 	if (obj != NULL)
 	{
-		int captionY = 22;
-		int posY = 60;
-		int posX = 164;
-
-		//Macro Options
-		int boxPosY = posY + 127;
-		int arrowPosY = posY + 133;
-		bool drawEmptyBox = true;
-
 		if (obj->m_Prev != NULL)
 			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_UP, 0x0983, 0x0984, 0x0984, 292, 113));
+
+		const int maxMacroDraw = 7;
+		int macroCount = 0;
+
+		int x = 164;
+		int y = 187;
+
+		while (obj != NULL && macroCount < maxMacroDraw)
+		{
+			macroCount++;
+
+			if (obj->m_Next == NULL)
+				break;
+
+			y += 26;
+
+			obj = (CMacroObject*)obj->m_Next;
+		}
+
+		if (macroCount >= maxMacroDraw)
+			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_DOWN, 0x0985, 0x0986, 0x0986, 292, y + 26 /*295 /*269*/));
+
+		while (macroCount > 0 && obj != NULL)
+		{
+			macroCount--;
+			CGUIComboBox *combobox = NULL;
+
+			char hasSubMenu = obj->HasSubMenu;
+
+			if (hasSubMenu == 1)
+			{
+				combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 0x098E, true, 0x09B5, 286, y + 5, 200, 7, false));
+				combobox->SelectedIndex = 0;
+
+				IFOR(i, 0, 7)
+					combobox->Add(new CGUIComboboxText(0x0386, 1, CMacro::GetAction(obj->SubCode), 150, TS_LEFT, UOFONT_FIXED));
+			}
+			else if (hasSubMenu == 2)
+			{
+				/*g_GL.Scissor((int)g_GumpTranslateX + posX + 118, (int)g_GumpTranslateY + boxPosY + 5, 150, 20);
+
+				((TMacroObjectEntry*)obj)->TextEntry->DrawA(1, 0x0386, posX + 118, boxPosY + 5, TS_LEFT, UOFONT_FIXED);
+
+				glDisable(GL_SCISSOR_TEST);*/
+			}
+
+			combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_MACRO_SELECTION + (macroCount * 1000), 0x098D, true, 0x09B5, 168, y + 5, 200, 7, false));
+			combobox->SelectedIndex = 0;
+
+			IFOR(i, 0, 7)
+				combobox->Add(new CGUIComboboxText(0x0386, 1, CMacro::GetActionName(obj->Code), 98, TS_CENTER, UOFONT_FIXED));
+
+			y -= 26;
+
+			obj = (CMacroObject*)obj->m_Prev;
+		}
+	}
 
 		/*int macroCount = 0;
 
@@ -548,80 +624,6 @@ void CGumpOptions::RedrawMacroData()
 	{
 		Orion->DrawGump(0x098D, 0, posX, boxPosY);
 		Orion->DrawGump(0x0985, 0, posX + 94, arrowPosY);
-	}
-
-	if (m_MacroSelection)
-	{
-		bool isAction = false;
-		if (m_MacroSelection == 0x20000000) //Action
-		{
-			posX += 116;
-			isAction = true;
-		}
-
-		int textIndex = m_MacroListOffset;
-
-		posY -= 60;
-		posY += m_MacroListOffsetYStart;
-
-		//Top
-		Orion->DrawGump(0x09B5, 0, posX - 5, posY - 11);
-
-		if (textIndex > 0)
-			Orion->DrawGump(0x0983, 0, posX + 85, posY - 8);
-
-		int ofs = 0;
-
-		int count = m_MacroListMaxCount;
-
-		if (count > m_MacroListCount)
-			count = m_MacroListCount;
-
-		IFOR(i, 0, count)
-		{
-			gumpID = 0x09B6 + ofs;
-			ofs = (ofs + 1) % 3;
-
-			int itemPosY = posY + (i * 15);
-
-			Orion->DrawGump(gumpID, 0, posX, itemPosY);
-
-			int textNameIndex = textIndex + m_MacroListNameOffset;
-
-			if (textIndex < m_MacroListCount)
-			{
-				if (g_GumpSelectElement >= ID_GO_P5_SELECTION)
-				{
-					if (textNameIndex == (g_GumpSelectElement - ID_GO_P5_SELECTION))
-						g_GL.DrawPolygone(posX + 4, itemPosY, 150, 14);
-				}
-
-				if (isAction) //Action
-				{
-					if (textNameIndex < 210)
-					{
-						FontManager->DrawA(1, TMacro::GetAction(textNameIndex), 0x0386, posX + 4, itemPosY);
-						textIndex++;
-					}
-				}
-				else //Action name
-				{
-					if (textNameIndex < 60)
-					{
-						FontManager->DrawA(1, TMacro::GetActionName(textNameIndex), 0x0386, posX + 4, itemPosY);
-						textIndex++;
-					}
-				}
-			}
-		}
-
-		int offsBottomY = (m_MacroListOffsetYEnd - m_MacroListOffsetYStart);
-
-		//Bottom
-		Orion->DrawGump(0x09B9, 0, posX - 5, posY + offsBottomY);
-
-		if (m_MacroListOffset + m_MacroListMaxCount < m_MacroListCount)
-			Orion->DrawGump(0x0985, 0, posX + 85, posY + offsBottomY - 2);*/
 	}
 	
 	/*const int maxMacroDraw = 7;
@@ -1544,31 +1546,7 @@ void CGumpOptions::UpdateColor(const SELECT_COLOR_GUMP_STATE &state, const ushor
 //----------------------------------------------------------------------------
 void CGumpOptions::OnLeftMouseDown()
 {
-	/*if (g_LastSelectedObject == ID_GO_P5_BUTTON_PREVEOUS) //Preveous button
-	{
-		if (m_MacroPointer->m_Prev != NULL)
-		{
-			m_MacroPointer = (TMacro*)m_MacroPointer->m_Prev;
-			m_MacroObjectPointer = (TMacroObject*)m_MacroPointer->m_Items;
-
-			TextEntryMacro->SetText(m_HotkeyText[m_MacroPointer->Key & 0xFF]);
-		}
-
-		m_LastChangeMacroTime = g_Ticks + CHANGE_MACRO_DELAY;
-	}
-	else if (g_LastSelectedObject == ID_GO_P5_BUTTON_NEXT) //Next button
-	{
-		if (m_MacroPointer->m_Next != NULL)
-		{
-			m_MacroPointer = (TMacro*)m_MacroPointer->m_Next;
-			m_MacroObjectPointer = (TMacroObject*)m_MacroPointer->m_Items;
-
-			TextEntryMacro->SetText(m_HotkeyText[m_MacroPointer->Key & 0xFF]);
-		}
-
-		m_LastChangeMacroTime = g_Ticks + CHANGE_MACRO_DELAY;
-	}
-	else if (g_LastSelectedObject >= ID_GO_P5_LEFT_BOX && g_LastSelectedObject < ID_GO_P5_RIGHT_BOX) //Left action box
+	/*if (g_LastSelectedObject >= ID_GO_P5_LEFT_BOX && g_LastSelectedObject < ID_GO_P5_RIGHT_BOX) //Left action box
 	{
 		m_MacroElement = g_LastSelectedObject - ID_GO_P5_LEFT_BOX;
 		m_MacroSelection = 0x10000000;
@@ -1773,25 +1751,54 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 				}
 				else if (serial == ID_GO_P5_BUTTON_DELETE) //Delete button
 				{
-					CMacro *newpointer = (CMacro*)m_MacroPointer->m_Next;
-
-					if (newpointer == NULL)
-						newpointer = (CMacro*)m_MacroPointer->m_Prev;
-
-					g_OptionsMacroManager.Delete(m_MacroPointer);
-
-					if (newpointer == NULL)
+					if (m_LastChangeMacroTime < g_Ticks)
 					{
-						newpointer = CMacro::CreateBlankMacro();
-						g_OptionsMacroManager.Add(newpointer);
+						CMacro *newpointer = (CMacro*)m_MacroPointer->m_Next;
+
+						if (newpointer == NULL)
+							newpointer = (CMacro*)m_MacroPointer->m_Prev;
+
+						g_OptionsMacroManager.Delete(m_MacroPointer);
+
+						if (newpointer == NULL)
+						{
+							newpointer = CMacro::CreateBlankMacro();
+							g_OptionsMacroManager.Add(newpointer);
+						}
+
+						m_MacroPointer = newpointer;
+						m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
+
+						m_MacroKey->m_Entry.SetText(m_HotkeyText[m_MacroPointer->Key & 0xFF]);
+
+						RedrawMacroData();
+
+						m_LastChangeMacroTime = g_Ticks + CHANGE_MACRO_DELAY;
 					}
+				}
+				else if (serial == ID_GO_P5_BUTTON_PREVEOUS) //Preveous button
+				{
+					if (m_MacroPointer->m_Prev != NULL && m_LastChangeMacroTime < g_Ticks)
+					{
+						m_MacroPointer = (CMacro*)m_MacroPointer->m_Prev;
+						m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
 
-					m_MacroPointer = newpointer;
-					m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
+						RedrawMacroData();
 
-					m_MacroKey->m_Entry.SetText(m_HotkeyText[m_MacroPointer->Key & 0xFF]);
+						m_LastChangeMacroTime = g_Ticks + CHANGE_MACRO_DELAY;
+					}
+				}
+				else if (serial == ID_GO_P5_BUTTON_NEXT && m_LastChangeMacroTime < g_Ticks) //Next button
+				{
+					if (m_MacroPointer->m_Next != NULL)
+					{
+						m_MacroPointer = (CMacro*)m_MacroPointer->m_Next;
+						m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
 
-					RedrawMacroData();
+						RedrawMacroData();
+
+						m_LastChangeMacroTime = g_Ticks + CHANGE_MACRO_DELAY;
+					}
 				}
 				else if (serial == ID_GO_P5_BUTTON_UP) //Prev button
 				{
