@@ -273,16 +273,14 @@ void CGumpSkills::PrepareContent()
 								if (item->Serial == serial)
 								{
 									currentGroup = (CGUISkillGroup*)group;
+									currentGroupObject = groupPtr;
 									break;
 								}
 							}
 						}
 
 						if (index == currentIndex)
-						{
 							groupUnderCursor = (CGUISkillGroup*)group;
-							currentGroupObject = groupPtr;
-						}
 
 						if (groupPtr != NULL)
 							groupPtr = groupPtr->m_Next;
@@ -293,7 +291,7 @@ void CGumpSkills::PrepareContent()
 
 				int skillIndex = serial - ID_GS_SKILL;
 
-				if (groupUnderCursor != NULL && currentGroup != NULL && currentGroupObject != NULL && currentGroup != groupUnderCursor && !groupObject->Contains(skillIndex))
+				if (groupUnderCursor != NULL && currentGroup != NULL && currentGroupObject != NULL && currentGroup != groupUnderCursor && currentGroupObject != groupObject && !groupObject->Contains(skillIndex))
 				{
 					currentGroupObject->Remove(skillIndex);
 					groupObject->AddSorted(skillIndex);
@@ -301,7 +299,26 @@ void CGumpSkills::PrepareContent()
 					CGUISkillItem *skillItem = (CGUISkillItem*)g_PressedObject.LeftObject();
 
 					currentGroup->Unlink(skillItem);
-					groupUnderCursor->Insert(NULL, skillItem);
+
+					if (groupObject->GetItem(0) == skillIndex)
+						groupUnderCursor->Insert(NULL, skillItem);
+					else
+					{
+						CGUISkillGroup *skillInsertElement = (CGUISkillGroup*)groupUnderCursor->m_Items;
+						int itemsCount = groupObject->GetCount();
+
+						IFOR(i, 1, itemsCount)
+						{
+							if (groupObject->GetItem(i) == skillIndex)
+							{
+								groupUnderCursor->Insert(skillInsertElement, skillItem);
+								break;
+							}
+
+							if (skillInsertElement != NULL)
+								skillInsertElement = (CGUISkillGroup*)skillInsertElement->m_Next;
+						}
+					}
 
 					currentGroup->UpdateDataPositions();
 					groupUnderCursor->UpdateDataPositions();
