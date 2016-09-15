@@ -1883,8 +1883,23 @@ PACKET_HANDLER(Warmode)
 
 	g_Player->Warmode = ReadUInt8();
 
-	g_GumpManager.UpdateContent(g_PlayerSerial, 0, GT_STATUSBAR);
-	g_GumpManager.UpdateContent(g_PlayerSerial, 0, GT_PAPERDOLL);
+	g_GumpManager.GetGump(g_PlayerSerial, 0, GT_STATUSBAR);
+
+	CGumpPaperdoll *gump = (CGumpPaperdoll*)g_GumpManager.GetGump(g_PlayerSerial, 0, GT_PAPERDOLL);
+
+	if (gump != NULL && gump->m_ButtonWarmode != NULL)
+	{
+		ushort graphic = 0x07E5;
+
+		if (g_Player->Warmode)
+			graphic += 3;
+
+		gump->m_ButtonWarmode->Graphic = graphic;
+		gump->m_ButtonWarmode->GraphicSelected = graphic + 2;
+		gump->m_ButtonWarmode->GraphicPressed = graphic + 1;
+
+		gump->WantRedraw = true;
+	}
 
 	g_World->MoveToTop(g_Player);
 }
@@ -2084,6 +2099,7 @@ PACKET_HANDLER(OpenContainer)
 
 		gump = new CGumpContainer(serial, g_ContainerRect.X, g_ContainerRect.Y);
 		gump->Graphic = graphic;
+		((CGumpContainer*)gump)->m_BodyGump->Graphic = gumpid;
 		((CGumpContainer*)gump)->IsGameBoard = (gumpid == 0x091A || gumpid == 0x092E);
 		g_Orion.ExecuteGump(gumpid);
 	}
@@ -2107,6 +2123,11 @@ PACKET_HANDLER(OpenContainer)
 					gump->MinimizedX = cont->MinimizedX;
 					gump->MinimizedY = cont->MinimizedY;
 					gump->LockMoving = cont->LockMoving;
+
+					if (cont->Minimized)
+						gump->Page = 1;
+					else
+						gump->Page = 2;
 
 					g_ContainerStack.erase(cont);
 

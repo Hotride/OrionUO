@@ -614,6 +614,7 @@ CPacketTextEntryDialogResponse::CPacketTextEntryDialogResponse(CGumpTextEntryDia
 {
 	int len = entry->Length();
 	int size = 12 + len + 1;
+	Resize(size, true);
 
 	WriteUInt8(0xAC);
 	WriteUInt16BE(size);
@@ -624,7 +625,7 @@ CPacketTextEntryDialogResponse::CPacketTextEntryDialogResponse(CGumpTextEntryDia
 
 	WriteUInt16BE(len);
 
-	WriteString(entry->c_str(), len, true);
+	WriteString(entry->c_str(), len);
 }
 //---------------------------------------------------------------------------
 CPacketRenameRequest::CPacketRenameRequest(uint serial, string newName)

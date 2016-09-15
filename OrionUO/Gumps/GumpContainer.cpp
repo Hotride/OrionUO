@@ -29,6 +29,35 @@ m_IsGameBoard(false), m_TextRenderer(), m_CorpseEyes(NULL), m_DataBox(NULL)
 {
 	m_Page = 1;
 	m_Locker.Serial = ID_GC_LOCK_MOVING;
+
+	Add(new CGUIPage(1));
+	Add(new CGUIGumppic(0x0050, 0, 0));
+
+	Add(new CGUIPage(2));
+	m_BodyGump = (CGUIGumppic*)Add(new CGUIGumppic((ushort)m_ID, 0, 0));
+
+	if (m_ID == 0x09)
+	{
+		if (m_CorpseEyesTicks < g_Ticks)
+		{
+			m_CorpseEyesOffset = (BYTE)!m_CorpseEyesOffset;
+			m_CorpseEyesTicks = g_Ticks + 750;
+		}
+
+		m_CorpseEyes = (CGUIGumppic*)Add(new CGUIGumppic(0x0045, 45, 30));
+	}
+
+	if (m_ID == 0x003C)
+	{
+		CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GC_MINIMIZE, 106, 162, 16, 16, true));
+		box->ToPage = 1;
+	}
+
+	Add(new CGUIShader(g_ColorizerShader, true));
+
+	m_DataBox = (CGUIDataBox*)Add(new CGUIDataBox());
+
+	Add(new CGUIShader(g_ColorizerShader, false));
 }
 //----------------------------------------------------------------------------------
 CGumpContainer::~CGumpContainer()
@@ -107,7 +136,7 @@ void CGumpContainer::PrepareContent()
 
 				g_PressedObject.ClearLeft();
 
-				m_WantRedraw = false;
+				m_WantRedraw = true;
 			}
 		}
 	}
@@ -149,42 +178,12 @@ void CGumpContainer::UpdateContent()
 	if (container == NULL)
 		return;
 
-	if (m_Items == NULL)
-	{
-		Add(new CGUIPage(1));
-		Add(new CGUIGumppic(0x0050, 0, 0));
-
-		Add(new CGUIPage(2));
-		Add(new CGUIGumppic((ushort)m_ID, 0, 0));
-
-		if (m_ID == 0x09)
-		{
-			if (m_CorpseEyesTicks < g_Ticks)
-			{
-				m_CorpseEyesOffset = (BYTE)!m_CorpseEyesOffset;
-				m_CorpseEyesTicks = g_Ticks + 750;
-			}
-
-			m_CorpseEyes = (CGUIGumppic*)Add(new CGUIGumppic(0x0045, 45, 30));
-		}
-
-		if (m_ID == 0x003C)
-		{
-			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GC_MINIMIZE, 106, 162, 16, 16, true));
-			box->ToPage = 1;
-		}
-
-		m_DataBox = (CGUIDataBox*)Add(new CGUIDataBox());
-	}
-	else
-		m_DataBox->Clear();
+	m_DataBox->Clear();
 
 	uint ignoreSerial = 0;
 
 	if (g_ObjectInHand != NULL)
 		ignoreSerial = g_ObjectInHand->Serial;
-
-	m_DataBox->Add(new CGUIShader(g_ColorizerShader, true));
 
 	QFOR(obj, container->m_Items, CGameItem*)
 	{
@@ -208,8 +207,6 @@ void CGumpContainer::UpdateContent()
 			}
 		}
 	}
-
-	m_DataBox->Add(new CGUIShader(g_ColorizerShader, false));
 }
 //----------------------------------------------------------------------------------
 void CGumpContainer::Draw()

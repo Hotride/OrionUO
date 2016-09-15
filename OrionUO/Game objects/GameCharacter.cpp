@@ -292,7 +292,7 @@ void CGameCharacter::OnGraphicChange(int direction)
 				g_Orion.NameReq(m_Serial);
 		}
 	
-		g_GumpManager.UpdateGump(m_Serial, 0, GT_PAPERDOLL);
+		g_GumpManager.UpdateContent(m_Serial, 0, GT_PAPERDOLL);
 		g_GumpManager.UpdateGump(m_Serial, 0, GT_STATUSBAR);
 	}
 }

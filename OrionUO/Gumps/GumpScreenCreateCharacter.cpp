@@ -399,6 +399,8 @@ void CGumpScreenCreateCharacter::OnTextEntry(const uint &serial)
 			g_CreateCharacterScreen.ColorSelection = CCSID_HAIR_COLOR;
 		else if (!g_CreateCharacterManager.Sex && serial == ID_CCS_FACIAL_HAIR_COLOR)
 			g_CreateCharacterScreen.ColorSelection = CCSID_FACIAL_HAIR_COLOR;
+
+		m_WantUpdateContent = true;
 	}
 	else
 	{
@@ -432,6 +434,7 @@ void CGumpScreenCreateCharacter::OnTextEntry(const uint &serial)
 			}
 
 			g_CreateCharacterScreen.ColorSelection = 0;
+			m_WantUpdateContent = true;
 		}
 	}
 }
@@ -446,6 +449,8 @@ void CGumpScreenCreateCharacter::GUMP_COMBOBOX_SELECTION_EVENT_C
 
 			if (index < 8)
 				g_CreateCharacterManager.BeardStyle = (uchar)index;
+
+			m_WantUpdateContent = true;
 		}
 		else
 		{
@@ -455,6 +460,8 @@ void CGumpScreenCreateCharacter::GUMP_COMBOBOX_SELECTION_EVENT_C
 
 			if (index < count)
 				g_CreateCharacterManager.HairStyle = index;
+
+			m_WantUpdateContent = true;
 		}
 	}
 }

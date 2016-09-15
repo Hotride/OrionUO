@@ -70,6 +70,7 @@ void CSkillGroupObject::Remove(uchar index)
 	if (removed)
 	{
 		m_Count--;
+
 		if (m_Count < 0)
 			m_Count = 0;
 

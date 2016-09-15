@@ -17,16 +17,12 @@ CGumpSpell::CGumpSpell(uint serial, short x, short y, ushort graphic)
 {
 	m_Graphic = graphic;
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
+
+	Add(new CGUIGumppic(m_Graphic, 0, 0));
 }
 //----------------------------------------------------------------------------------
 CGumpSpell::~CGumpSpell()
 {
-}
-//----------------------------------------------------------------------------------
-void CGumpSpell::UpdateContent()
-{
-	if (m_Items == NULL)
-		Add(new CGUIGumppic(m_Graphic, 0, 0));
 }
 //----------------------------------------------------------------------------------
 void CGumpSpell::OnButton(const uint &serial)

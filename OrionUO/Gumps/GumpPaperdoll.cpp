@@ -62,6 +62,68 @@ m_DataBox(NULL), m_Description(NULL), m_WantTransparentContent(false)
 	}
 	else
 		m_Page = 2;
+
+	Add(new CGUIPage(1));
+	Add(new CGUIGumppic(0x07EE, 0, 0));
+
+	Add(new CGUIPage(2));
+
+	if (m_Serial == g_PlayerSerial)
+	{
+		Add(new CGUIGumppic(0x07D0, 0, 0));
+
+		Add(new CGUIButton(ID_GP_BUTTON_HELP, 0x07EF, 0x07F1, 0x07F0, 185, 44));
+		Add(new CGUIButton(ID_GP_BUTTON_OPTIONS, 0x07D6, 0x07D8, 0x07D7, 185, 71));
+		Add(new CGUIButton(ID_GP_BUTTON_LOGOUT, 0x07D9, 0x07DB, 0x07DA, 185, 98));
+
+		if (g_ConnectionManager.ClientVersion >= CV_500A)
+			Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x57B5, 0x57B6, 0x57B7, 185, 125));
+		else
+			Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x07DC, 0x07DE, 0x07DD, 185, 125));
+
+		Add(new CGUIButton(ID_GP_BUTTON_SKILLS, 0x07DF, 0x07E1, 0x07E0, 185, 152));
+
+		if (g_ConnectionManager.ClientVersion >= CV_500A)
+			Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x57B2, 0x57B3, 0x57B4, 185, 179));
+		else
+		{
+			if (!g_ChatEnabled)
+			{
+				Add(new CGUIShader(g_DeathShader, true));
+				Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x07E2, 0x07E2, 0x07E2, 185, 179));
+				Add(new CGUIShader(g_DeathShader, false));
+			}
+			else
+				Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x07E2, 0x07E4, 0x07E3, 185, 179));
+		}
+
+		if (g_Player->Warmode)
+			m_ButtonWarmode = (CGUIButton*)Add(new CGUIButton(ID_GP_BUTTON_WARMODE, 0x07E8, 0x07EA, 0x07E9, 185, 206));
+		else
+			m_ButtonWarmode = (CGUIButton*)Add(new CGUIButton(ID_GP_BUTTON_WARMODE, 0x07E5, 0x07E7, 0x07E6, 185, 206));
+
+		//UO->DrawGump(0x0FA1, 0, posX + 80, posY + 4); //Paperdoll mail bag
+		Add(new CGUIButton(ID_GP_BUTTON_VIRTURE, 0x0071, 0x0071, 0x0071, 80, 4));
+
+		Add(new CGUIButton(ID_GP_PARTY_MANIFEST_SCROLL, 0x07D2, 0x07D2, 0x07D2, 37, 196));
+
+		CGUIHitBox *minimizeButton = (CGUIHitBox*)Add(new CGUIHitBox(ID_GP_BUTTON_MINIMIZE, 226, 258, 16, 16, true));
+		minimizeButton->ToPage = 1;
+	}
+	else
+	{
+		m_ButtonWarmode = NULL;
+		Add(new CGUIGumppic(0x07D1, 0, 0));
+	}
+
+	Add(new CGUIButton(ID_GP_BUTTON_STATUS, 0x07EB, 0x07ED, 0x07EC, 185, 233));
+
+	Add(new CGUIButton(ID_GP_PROFILE_SCROLL, 0x07D2, 0x07D2, 0x07D2, 23, 196));
+
+	//if (ConnectionManager.ClientVersion >= CV_60142)
+	//	UO->DrawGump(0x2B34, 0, 156, 200);
+
+	m_DataBox = (CGUIDataBox*)Add(new CGUIDataBox());
 }
 //----------------------------------------------------------------------------------
 CGumpPaperdoll::~CGumpPaperdoll()
@@ -207,81 +269,6 @@ void CGumpPaperdoll::PrepareContent()
 void CGumpPaperdoll::UpdateContent()
 {
 	//Clear();
-
-	CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
-
-	if (obj == NULL)
-		return;
-
-	if (m_Items == NULL)
-	{
-		Add(new CGUIPage(1));
-		Add(new CGUIGumppic(0x07EE, 0, 0));
-
-		Add(new CGUIPage(2));
-
-		if (m_Serial == g_PlayerSerial)
-		{
-			Add(new CGUIGumppic(0x07D0, 0, 0));
-
-			Add(new CGUIButton(ID_GP_BUTTON_HELP, 0x07EF, 0x07F1, 0x07F0, 185, 44));
-			Add(new CGUIButton(ID_GP_BUTTON_OPTIONS, 0x07D6, 0x07D8, 0x07D7, 185, 71));
-			Add(new CGUIButton(ID_GP_BUTTON_LOGOUT, 0x07D9, 0x07DB, 0x07DA, 185, 98));
-
-			if (g_ConnectionManager.ClientVersion >= CV_500A)
-				Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x57B5, 0x57B6, 0x57B7, 185, 125));
-			else
-				Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x07DC, 0x07DE, 0x07DD, 185, 125));
-
-			Add(new CGUIButton(ID_GP_BUTTON_SKILLS, 0x07DF, 0x07E1, 0x07E0, 185, 152));
-
-			if (g_ConnectionManager.ClientVersion >= CV_500A)
-				Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x57B2, 0x57B3, 0x57B4, 185, 179));
-			else
-			{
-				if (!g_ChatEnabled)
-				{
-					Add(new CGUIShader(g_DeathShader, true));
-					Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x07E2, 0x07E2, 0x07E2, 185, 179));
-					Add(new CGUIShader(g_DeathShader, false));
-				}
-				else
-					Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x07E2, 0x07E4, 0x07E3, 185, 179));
-			}
-
-			if (g_Player->Warmode)
-				Add(new CGUIButton(ID_GP_BUTTON_WARMODE, 0x07E8, 0x07EA, 0x07E9, 185, 206));
-			else
-				Add(new CGUIButton(ID_GP_BUTTON_WARMODE, 0x07E5, 0x07E7, 0x07E6, 185, 206));
-
-			//UO->DrawGump(0x0FA1, 0, posX + 80, posY + 4); //Paperdoll mail bag
-			Add(new CGUIButton(ID_GP_BUTTON_VIRTURE, 0x0071, 0x0071, 0x0071, 80, 4));
-
-			Add(new CGUIButton(ID_GP_PARTY_MANIFEST_SCROLL, 0x07D2, 0x07D2, 0x07D2, 37, 196));
-
-			CGUIHitBox *minimizeButton = (CGUIHitBox*)Add(new CGUIHitBox(ID_GP_BUTTON_MINIMIZE, 226, 258, 16, 16, true));
-			minimizeButton->ToPage = 1;
-		}
-		else
-			Add(new CGUIGumppic(0x07D1, 0, 0));
-
-		Add(new CGUIButton(ID_GP_BUTTON_STATUS, 0x07EB, 0x07ED, 0x07EC, 185, 233));
-
-		Add(new CGUIButton(ID_GP_PROFILE_SCROLL, 0x07D2, 0x07D2, 0x07D2, 23, 196));
-
-		//if (ConnectionManager.ClientVersion >= CV_60142)
-		//	UO->DrawGump(0x2B34, 0, 156, 200);
-
-		m_DataBox = (CGUIDataBox*)Add(new CGUIDataBox());
-	}
-
-	UpdateVariableContent();
-}
-//----------------------------------------------------------------------------------
-void CGumpPaperdoll::UpdateVariableContent()
-{
-	if (m_DataBox == NULL)
-		return;
 
 	CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
 

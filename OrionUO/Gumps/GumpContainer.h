@@ -35,6 +35,8 @@ protected:
 public:
 	CGumpContainer(uint serial, short x, short y);
 	virtual ~CGumpContainer();
+
+	CGUIGumppic *m_BodyGump;
 	
 	CTextRenderer *GetTextRenderer() { return &m_TextRenderer; }
 

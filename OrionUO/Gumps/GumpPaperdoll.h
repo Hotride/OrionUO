@@ -42,13 +42,13 @@ protected:
 
 	bool m_WantTransparentContent;
 
-	void UpdateVariableContent();
-
 	virtual void CalculateGumpState();
 
 public:
 	CGumpPaperdoll(uint serial, short x, short y, bool minimized);
 	virtual ~CGumpPaperdoll();
+
+	CGUIButton *m_ButtonWarmode;
 	
 	CTextContainer m_TextContainer;
 
