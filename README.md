@@ -10,3 +10,7 @@ WIP(on README itself):
 -Don't forget dll's
 
 -Enjoy( or cry )
+
+Forum: http://forum.orion-client.online
+
+Bugtracker: http://bt.orion-client.online
