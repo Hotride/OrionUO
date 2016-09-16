@@ -31,7 +31,7 @@ m_Called(false), m_CurrentOffsetX(0), m_CurrentOffsetY(0)
 
 	Add(new CGUIPage(2));
 
-	m_Minimizer = (CGUIButton*)Add(new CGUIButton(ID_GWM_MINIMIZE, 0x082D, 0x082D, 0x082D, (m_Width / 2) + 4, 0));
+	m_Minimizer = (CGUIButton*)Add(new CGUIButton(ID_GWM_MINIMIZE, 0x082D, 0x082D, 0x082D, (m_Width / 2) - 10, 0));
 	m_Background = (CGUIResizepic*)Add(new CGUIResizepic(0, 0x0A3C, 0, 23, m_Width, m_Height));
 	m_Resizer = (CGUIResizeButton*)Add(new CGUIResizeButton(ID_GWM_RESIZE, 0x0837, 0x0838, 0x0838, m_Width - 8, m_Height + 13));
 
@@ -71,9 +71,12 @@ m_Called(false), m_CurrentOffsetX(0), m_CurrentOffsetY(0)
 
 	m_MapData = (CGUIWorldMapTexture*)Add(new CGUIWorldMapTexture(0, 0));
 	m_MapData->Serial = ID_GWM_MAP;
-	m_MapData->Index = m_Map;
+	int map = GetCurrentMap();
+	m_MapData->Index = map;
 
-	m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == GetCurrentMap());
+	m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == map);
+
+	LoadMap(map);
 
 	int width = 0;
 	int height = 0;
@@ -87,28 +90,19 @@ m_Called(false), m_CurrentOffsetX(0), m_CurrentOffsetY(0)
 
 	Add(new CGUIScissor(false));
 
-	m_ComboboxScale = (CGUIComboBox*)Add(new CGUIComboBox(ID_GWM_SCALE_LIST, 0x098D, true, 0x09B5, 110, 0, 200, 7, false));
+	m_ComboboxScale = (CGUIComboBox*)Add(new CGUIComboBox(ID_GWM_SCALE_LIST, 0x098D, true, 0x09B5, 110, 0, 46, 7, false));
 	m_ComboboxScale->TextOffsetY = -5;
 	m_ComboboxScale->SelectedIndex = m_Scale;
 
 	IFOR(i, 0, 7)
 		m_ComboboxScale->Add(new CGUIComboboxText(0, 6, scaleNames[i], 36, TS_CENTER, UOFONT_FIXED));
 
-	m_ComboboxMap = (CGUIComboBox*)Add(new CGUIComboBox(ID_GWM_MAP_LIST, 0x098D, true, 0x09B5, 0, 0, 200, 7, false));
+	m_ComboboxMap = (CGUIComboBox*)Add(new CGUIComboBox(ID_GWM_MAP_LIST, 0x098D, true, 0x09B5, 0, 0, 0, 7, false));
 	m_ComboboxMap->TextOffsetY = -5;
 	m_ComboboxMap->SelectedIndex = m_Map;
 
 	IFOR(i, 0, 7)
 		m_ComboboxMap->Add(new CGUIComboboxText(0, 6, mapNames[i], 98, TS_CENTER, UOFONT_FIXED));
-
-	/*//Player drawing
-	if (g_CurrentMap == map)
-	{
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		g_GL.DrawPolygone(posX + offsetX + playerX + 0, posY + offsetY + playerY + 30, 16, 2);
-		g_GL.DrawPolygone(posX + offsetX + playerX + 7, posY + offsetY + playerY + 23, 2, 16);
-		g_GL.DrawCircle(posX + offsetX + 8.0f + playerX, posY + offsetY + 31.0f + playerY, 3.0f);
-	}*/
 }
 //----------------------------------------------------------------------------------
 CGumpWorldMap::~CGumpWorldMap()
@@ -424,7 +418,7 @@ void CGumpWorldMap::GenerateFrame(bool stop)
 
 		g_GL.DrawPolygone(m_MapData->OffsetX + playerX + 0, m_MapData->OffsetY + playerY + 30, 16, 2);
 		g_GL.DrawPolygone(m_MapData->OffsetX + playerX + 7, m_MapData->OffsetY + playerY + 23, 2, 16);
-		g_GL.DrawCircle(m_MapData->OffsetX + 8.0f + playerX, m_MapData->OffsetY + 31.0f + playerY, 3.0f);
+		g_GL.DrawCircle(m_MapData->OffsetX + playerX + 8.0f, m_MapData->OffsetY + playerY + 31.0f, 3.0f);
 
 		g_GL.PopScissor();
 	}
@@ -545,7 +539,7 @@ void CGumpWorldMap::GUMP_CHECKBOX_EVENT_C
 	if (serial == ID_GWM_LINK_WITH_PLAYER) //Привязка к координатам игрока
 	{
 		m_LinkWithPlayer = state;
-		m_MapData->MoveOnDrag = (m_LinkWithPlayer && g_CurrentMap == GetCurrentMap());
+		m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == GetCurrentMap());
 	}
 }
 //----------------------------------------------------------------------------------
@@ -568,6 +562,7 @@ void CGumpWorldMap::GUMP_COMBOBOX_SELECTION_EVENT_C
 		else
 			mapTest--;
 
+		DebugMsg("g_MapTexture[mapTest].Texture = %i\n", g_MapTexture[mapTest].Texture);
 		if (g_MapTexture[mapTest].Texture == 0)
 			LoadMap(mapTest);
 
@@ -580,9 +575,12 @@ void CGumpWorldMap::GUMP_COMBOBOX_SELECTION_EVENT_C
 			}
 
 			m_Map = index;
+			m_MapData->Index = GetCurrentMap();
 		}
+		else
+			m_ComboboxMap->SelectedIndex = m_Map;
 
-		m_MapData->MoveOnDrag = (m_LinkWithPlayer && g_CurrentMap == GetCurrentMap());
+		m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == GetCurrentMap());
 	}
 
 	int width = 0;
@@ -619,13 +617,14 @@ void CGumpWorldMap::OnMidMouseButtonScroll(const bool &up)
 	{
 		int ofs = 0;
 
-		if (up && m_Scale > 0) //Увеличение
+		if (!up && m_Scale > 0) //Увеличение
 			ofs = -1;
-		else if (!up && m_Scale < 6) //Уменьшение
+		else if (up && m_Scale < 6) //Уменьшение
 			ofs = 1;
 
 		if (ofs)
 		{
+			m_ComboboxScale->SelectedIndex += ofs;
 			int mouseX = (m_Width / 2); //g_MouseX - X + 8;
 			int mouseY = ((m_Height - 30) / 2); //g_MouseY - Y + 31;
 

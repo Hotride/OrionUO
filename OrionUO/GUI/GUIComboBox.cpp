@@ -238,7 +238,10 @@ void CGUIComboBox::Draw(const bool &checktrans)
 
 		if (m_CompositeBackground)
 		{
-			g_Orion.DrawGump(m_Graphic, 0, m_X, m_Y);
+			if (m_Width)
+				g_Orion.DrawGump(m_Graphic, 0, m_X, m_Y, m_Width, 0);
+			else
+				g_Orion.DrawGump(m_Graphic, 0, m_X, m_Y);
 
 			if (selected != NULL)
 			{
@@ -247,7 +250,10 @@ void CGUIComboBox::Draw(const bool &checktrans)
 				g_GL.PopScissor();
 			}
 
-			g_Orion.DrawGump(0x0985, 0, m_X + 94, m_Y + 6);
+			if (m_Width)
+				g_Orion.DrawGump(0x0985, 0, m_X + m_Width - 10, m_Y + 6);
+			else
+				g_Orion.DrawGump(0x0985, 0, m_X + 94, m_Y + 6);
 		}
 		else
 		{
@@ -297,7 +303,12 @@ bool CGUIComboBox::Select()
 	else
 	{
 		if (m_CompositeBackground)
-			select = g_Orion.GumpPixelsInXY(m_Graphic, m_X, m_Y);
+		{
+			if (m_Width)
+				select = g_Orion.GumpPixelsInXY(m_Graphic, m_X, m_Y, m_Width, 0);
+			else
+				select = g_Orion.GumpPixelsInXY(m_Graphic, m_X, m_Y);
+		}
 		else
 			select = g_Orion.ResizepicPixelsInXY(m_Graphic, m_X, m_Y, m_Width, 20);
 	}

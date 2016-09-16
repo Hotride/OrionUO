@@ -140,7 +140,7 @@ void CGumpScreenMain::UpdateContent()
 	IFOR(i, 0, 30)
 		combo->Add(new CGUIComboboxText(0x0386, 9, "Some text data chars: " + std::to_string(i + 1)));
 
-	combo = (CGUIComboBox*)Add(new CGUIComboBox(300, 0x098D, true, 0x09B5, 210, 110, 200, 6, true));
+	combo = (CGUIComboBox*)Add(new CGUIComboBox(300, 0x098D, true, 0x09B5, 210, 110, 0, 6, true));
 	IFOR(i, 0, 30)
 		combo->Add(new CGUIComboboxText(0x0386, 9, "Any text data chars: " + std::to_string(i + 1)));*/
 

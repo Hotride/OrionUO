@@ -553,7 +553,7 @@ void CGumpOptions::RedrawMacroData()
 
 			if (hasSubMenu == 1)
 			{
-				combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 0x098E, true, 0x09B5, 286, y + 5, 200, 7, false));
+				combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 0x098E, true, 0x09B5, 286, y + 5, 0, 7, false));
 				combobox->SelectedIndex = 0;
 
 				IFOR(i, 0, 7)
@@ -568,7 +568,7 @@ void CGumpOptions::RedrawMacroData()
 				glDisable(GL_SCISSOR_TEST);*/
 			}
 
-			combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_MACRO_SELECTION + (macroCount * 1000), 0x098D, true, 0x09B5, 168, y + 5, 200, 7, false));
+			combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_MACRO_SELECTION + (macroCount * 1000), 0x098D, true, 0x09B5, 168, y + 5, 0, 7, false));
 			combobox->SelectedIndex = 0;
 
 			IFOR(i, 0, 7)
