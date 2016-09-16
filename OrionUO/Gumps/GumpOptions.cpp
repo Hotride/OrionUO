@@ -147,6 +147,8 @@ void CGumpOptions::DrawPage1()
 	//Sound and Music
 	Add(new CGUIPage(1));
 
+	Add(new CGUIGumppic(0x00D9, 0, 45));
+
 	CGUIText *text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 84, 22));
 	text->CreateTextureW(0, L"Sound and Music", 30, 460, TS_CENTER);
 
@@ -200,6 +202,8 @@ void CGumpOptions::DrawPage2()
 	//Orion's configuration
 	Add(new CGUIPage(2));
 
+	Add(new CGUIGumppic(0x00DB, 0, 111));
+
 	CGUIText *text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 84, 22));
 	text->CreateTextureW(0, L"Orion's configuration", 30, 460, TS_CENTER);
 
@@ -217,6 +221,8 @@ void CGumpOptions::DrawPage3()
 {
 	//Language
 	Add(new CGUIPage(3));
+
+	Add(new CGUIGumppic(0x00DD, 0, 177));
 
 	CGUIText *text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 84, 22));
 	text->CreateTextureW(0, L"Language", 30, 460, TS_CENTER);
@@ -259,6 +265,8 @@ void CGumpOptions::DrawPage4()
 {
 	//Chat
 	Add(new CGUIPage(4));
+
+	Add(new CGUIGumppic(0x00DF, 0, 243));
 
 	CGUIText *text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 84, 22));
 	text->CreateTextureW(0, L"Chat", 30, 460, TS_CENTER);
@@ -893,6 +901,8 @@ void CGumpOptions::DrawPage5()
 {
 	Add(new CGUIPage(5));
 
+	Add(new CGUIGumppic(0x00EC, 0, 309));
+
 	CGUIText *text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 84, 22));
 	text->CreateTextureW(0, L"Macro Options", 30, 460, TS_CENTER);
 
@@ -947,6 +957,8 @@ void CGumpOptions::DrawPage6()
 {
 	//Interface
 	Add(new CGUIPage(6));
+
+	Add(new CGUIGumppic(0x00E1, 576, 45));
 
 	CGUIText *text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 84, 22));
 	text->CreateTextureW(0, L"Interface", 30, 460, TS_CENTER);
@@ -1037,6 +1049,8 @@ void CGumpOptions::DrawPage7()
 {
 	//Display
 	Add(new CGUIPage(7));
+
+	Add(new CGUIGumppic(0x00E3, 576, 111));
 
 	CGUIText *text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 84, 22));
 	text->CreateTextureW(0, L"Display", 30, 460, TS_CENTER);
@@ -1208,6 +1222,8 @@ void CGumpOptions::DrawPage8()
 	//Reputation System
 	Add(new CGUIPage(8));
 
+	Add(new CGUIGumppic(0x00E5, 576, 177));
+
 	CGUIText *text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 84, 22));
 	text->CreateTextureW(0, L"Reputation System", 30, 460, TS_CENTER);
 
@@ -1308,6 +1324,8 @@ void CGumpOptions::DrawPage9()
 	//Miscellaneous
 	Add(new CGUIPage(9));
 
+	Add(new CGUIGumppic(0x00E7, 576, 243));
+
 	CGUIText *text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 84, 22));
 	text->CreateTextureW(0, L"Miscellaneous", 30, 460, TS_CENTER);
 
@@ -1365,6 +1383,9 @@ void CGumpOptions::DrawPage9()
 void CGumpOptions::DrawPage10()
 {
 	//Filter Options
+	Add(new CGUIPage(10));
+
+	Add(new CGUIGumppic(0x00EA, 576, 309));
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::UpdateColor(const SELECT_COLOR_GUMP_STATE &state, const ushort &color)
