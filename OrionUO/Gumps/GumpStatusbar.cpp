@@ -195,7 +195,7 @@ bool CGumpStatusbar::GetStatusbarGroupOffset(int &x, int &y)
 		while (gump != NULL)
 		{
 			//Если гамп захватили и (может быть) двигают
-			if (gump != this && g_PressedObject.LeftGump() == gump)
+			if (gump != this && g_PressedObject.LeftGump() == gump && gump->CanBeMoved())
 			{
 				WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -256,15 +256,18 @@ void CGumpStatusbar::AddStatusbar(CGumpStatusbar *bar)
 		bar->m_GroupNext = NULL;
 	}
 
-	bar->WantRedraw = true;
-
 	if (bar->m_StatusbarUnlocker != NULL)
+	{
 		bar->m_StatusbarUnlocker->Visible = bar->InGroup();
+		bar->WantRedraw = true;
+	}
 
 	if (m_StatusbarUnlocker != NULL)
+	{
 		m_StatusbarUnlocker->Visible = InGroup();
 
-	m_WantRedraw = true;
+		m_WantRedraw = true;
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::RemoveFromGroup()
@@ -273,21 +276,28 @@ void CGumpStatusbar::RemoveFromGroup()
 	{
 		m_GroupNext->WantRedraw = true;
 		m_GroupNext->m_GroupPrev = m_GroupPrev;
+
+		if (m_GroupNext->m_StatusbarUnlocker != NULL)
+			m_GroupNext->m_StatusbarUnlocker->Visible = m_GroupNext->InGroup();
 	}
 	
 	if (m_GroupPrev != NULL)
 	{
 		m_GroupPrev->WantRedraw = true;
 		m_GroupPrev->m_GroupNext = m_GroupNext;
+
+		if (m_GroupPrev->m_StatusbarUnlocker != NULL)
+			m_GroupPrev->m_StatusbarUnlocker->Visible = m_GroupPrev->InGroup();
 	}
 
 	m_GroupNext = NULL;
 	m_GroupPrev = NULL;
 
 	if (m_StatusbarUnlocker != NULL)
+	{
 		m_StatusbarUnlocker->Visible = InGroup();
-
-	m_WantRedraw = true;
+		m_WantRedraw = true;
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::CalculateGumpState()
