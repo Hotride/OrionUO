@@ -1,5 +1,5 @@
 # OrionUO
-Orion - Ultima Online graphic client, using OpenGL for rendering
+OrionUO - Ultima Online graphic client, using OpenGL for rendering
 
 WIP(on README itself):
 
