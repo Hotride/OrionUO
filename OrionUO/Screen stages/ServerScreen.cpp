@@ -40,6 +40,7 @@ void CServerScreen::Init()
 	g_ConfigManager.UpdateRange = 18;
 
 	m_Gump.PrepareTextures();
+	m_Gump.WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
 /*!

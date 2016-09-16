@@ -42,6 +42,7 @@
 #include "../ClickObject.h"
 #include "../Macro.h"
 #include "../Gumps/GumpSkills.h"
+#include "../Gumps/GumpTargetSystem.h"
 //----------------------------------------------------------------------------------
 CGameScreen g_GameScreen;
 RENDER_VARIABLES_FOR_GAME_WINDOW g_RenderBounds;
@@ -1973,7 +1974,7 @@ bool CGameScreen::OnLeftMouseButtonDoubleClick()
 			{
 				CPacketStatusRequest(charUnderMouse).Send();
 
-				//g_GumpManager.AddGump(new CGumpTargetSystem(charUnderMouse, g_NewTargetSystem.GumpX, g_NewTargetSystem.GumpY));
+				g_GumpManager.AddGump(new CGumpTargetSystem(charUnderMouse, g_NewTargetSystem.GumpX, g_NewTargetSystem.GumpY));
 			}
 		}
 
