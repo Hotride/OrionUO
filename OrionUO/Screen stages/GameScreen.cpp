@@ -43,6 +43,7 @@
 #include "../Macro.h"
 #include "../Gumps/GumpSkills.h"
 #include "../Gumps/GumpTargetSystem.h"
+#include "../Gumps/GumpPopupMenu.h"
 //----------------------------------------------------------------------------------
 CGameScreen g_GameScreen;
 RENDER_VARIABLES_FOR_GAME_WINDOW g_RenderBounds;
@@ -1741,6 +1742,9 @@ void CGameScreen::OnLeftMouseButtonDown()
 
 		//g_SelectGumpObjects = false;
 	}
+
+	if (g_PopupMenu != NULL && g_SelectedObject.Gump() != g_PopupMenu)
+		g_GumpManager.RemoveGump(g_PopupMenu);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -1996,6 +2000,9 @@ void CGameScreen::OnRightMouseButtonDown()
 {
 	if (g_PressedObject.RightGump() != NULL)
 		g_GumpManager.OnRightMouseButtonDown(false);
+
+	if (g_PopupMenu != NULL && g_SelectedObject.Gump() != g_PopupMenu)
+		g_GumpManager.RemoveGump(g_PopupMenu);
 }
 //----------------------------------------------------------------------------------
 /*!

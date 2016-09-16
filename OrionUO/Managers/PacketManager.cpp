@@ -2298,8 +2298,10 @@ PACKET_HANDLER(ExtendedCommand)
 
 			IFOR(i, 0, count)
 			{
-				uint cliloc = ReadUInt32BE();
+				/*uint cliloc = ReadUInt32BE();
+				ushort index = ReadUInt16BE() + 1;*/
 				ushort index = ReadUInt16BE() + 1;
+				uint cliloc = ReadUInt16BE() + 3000000;
 				ushort flags = ReadUInt16BE();
 				ushort color = 0xFFFF;
 
@@ -2310,6 +2312,7 @@ PACKET_HANDLER(ExtendedCommand)
 
 				CGUIText *item = (CGUIText*)menu->Add(new CGUIText(color, 10, offsetY));
 				item->CreateTextureW(0, str);
+				item->DrawOnly = true;
 
 				menu->Add(new CGUIHitBox(index, 10, offsetY, item->m_Texture.Width, item->m_Texture.Height, true));
 
@@ -2332,7 +2335,7 @@ PACKET_HANDLER(ExtendedCommand)
 				QFOR(item, menu->m_Items, CBaseGUI*)
 				{
 					if (item->Type == GOT_HITBOX)
-						((CGUIHitBox*)item)->Width = width;
+						((CGUIHitBox*)item)->Width = width - 20;
 				}
 
 				g_GumpManager.AddGump(menu);

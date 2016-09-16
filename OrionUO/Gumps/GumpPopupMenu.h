@@ -17,9 +17,14 @@ class CGumpPopupMenu : public CGump
 	SETGET(int, Width);
 	SETGET(int, Height);
 
+private:
+	CGUIColoredPolygone *m_Polygone;
+
 public:
 	CGumpPopupMenu(uint serial, short x, short y);
 	virtual ~CGumpPopupMenu();
+
+	virtual void PrepareContent();
 
 	GUMP_BUTTON_EVENT_H;
 };
