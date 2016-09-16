@@ -2,6 +2,8 @@
 **
 ** GUIDrawObject.h
 **
+** Компонента для отображения рисуемых гампов (общая реализация).
+**
 ** Copyright (C) August 2016 Hotride
 **
 ************************************************************************************
@@ -14,7 +16,6 @@
 //----------------------------------------------------------------------------------
 class CGUIDrawObject : public CBaseGUI
 {
-
 public:
 	CGUIDrawObject(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y);
 	virtual ~CGUIDrawObject();

@@ -10,8 +10,9 @@
 #include "GUIShader.h"
 //----------------------------------------------------------------------------------
 CGUIShader::CGUIShader(CGLShader *shader, const bool &enabled)
-: CBaseGUI(GOT_SHADER, 0, 0, 0, 0, 0), m_Enabled(enabled), m_Shader(shader)
+: CBaseGUI(GOT_SHADER, 0, 0, 0, 0, 0), m_Shader(shader)
 {
+	m_Enabled = enabled;
 }
 //----------------------------------------------------------------------------------
 CGUIShader::~CGUIShader()

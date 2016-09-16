@@ -2,6 +2,8 @@
 **
 ** GUIWorldMapTexture.h
 **
+** Компонента для отображения текстуры карты мира
+**
 ** Copyright (C) September 2016 Hotride
 **
 ************************************************************************************
@@ -14,10 +16,19 @@
 //----------------------------------------------------------------------------------
 class CGUIWorldMapTexture : public CBaseGUI
 {
+	//!Индекс карты мира
 	SETGET(int, Index);
+
+	//!Ширина
 	SETGET(int, Width);
+
+	//!Высота
 	SETGET(int, Height);
+
+	//!Смещение по оси X
 	SETGET(int, OffsetX);
+
+	//!Смещение по оси Y
 	SETGET(int, OffsetY);
 
 public:

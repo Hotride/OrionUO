@@ -2,6 +2,8 @@
 **
 ** GUITilepic.h
 **
+** Компонента для отображения картинки статики
+**
 ** Copyright (C) August 2016 Hotride
 **
 ************************************************************************************
@@ -14,7 +16,6 @@
 //----------------------------------------------------------------------------------
 class CGUITilepic : public CGUIDrawObject
 {
-
 public:
 	CGUITilepic(const ushort &graphic, const ushort &color, const int &x, const int &y);
 	virtual ~CGUITilepic();

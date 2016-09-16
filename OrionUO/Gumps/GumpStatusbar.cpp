@@ -261,7 +261,9 @@ void CGumpStatusbar::AddStatusbar(CGumpStatusbar *bar)
 	if (bar->m_StatusbarUnlocker != NULL)
 		bar->m_StatusbarUnlocker->Visible = bar->InGroup();
 
-	m_StatusbarUnlocker->Visible = InGroup();
+	if (m_StatusbarUnlocker != NULL)
+		m_StatusbarUnlocker->Visible = InGroup();
+
 	m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
@@ -282,8 +284,10 @@ void CGumpStatusbar::RemoveFromGroup()
 	m_GroupNext = NULL;
 	m_GroupPrev = NULL;
 
+	if (m_StatusbarUnlocker != NULL)
+		m_StatusbarUnlocker->Visible = InGroup();
+
 	m_WantRedraw = true;
-	m_StatusbarUnlocker->Visible = InGroup();
 }
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::CalculateGumpState()

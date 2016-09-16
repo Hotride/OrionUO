@@ -2,6 +2,8 @@
 **
 ** GUISkillGroup.h
 **
+** Компонента для группы скиллов
+**
 ** Copyright (C) August 2016 Hotride
 **
 ************************************************************************************
@@ -17,12 +19,14 @@
 //----------------------------------------------------------------------------------
 class CGUISkillGroup : public CBaseGUI
 {
+	//!Свернута или развернута группа
 	SETGETE(bool, Minimized, OnChangeMinimized);
 
 public:
 	CGUISkillGroup(const uint &serial, const uint &minimizeSerial, class CSkillGroupObject *group, const int &x, const int &y);
 	virtual ~CGUISkillGroup();
 
+	//!Компоненты управления
 	CGUIButton *m_Minimizer;
 	CGUITextEntry *m_Name;
 
@@ -37,6 +41,7 @@ public:
 	virtual void Draw(const bool &checktrans = false);
 	virtual bool Select();
 
+	//!Получить ссылку на выбранную компоненту или на себя
 	CBaseGUI *SelectedItem();
 };
 //----------------------------------------------------------------------------------

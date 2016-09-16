@@ -2,6 +2,8 @@
 **
 ** GUICheckbox.h
 **
+** Компонента для отображения чекбокса
+**
 ** Copyright (C) August 2016 Hotride
 **
 ************************************************************************************
@@ -14,8 +16,13 @@
 //----------------------------------------------------------------------------------
 class CGUICheckbox : public CGUIDrawObject
 {
+	//!ИД картинки в нажатом состоянии
 	SETGET(ushort, GraphicChecked);
+
+	//!ИД картинки в выбранном состоянии
 	SETGET(ushort, GraphicSelected);
+
+	//!ИД картинки в отключенном состоянии
 	SETGET(ushort, GraphicDisabled);
 	SETGET(bool, Checked);
 
