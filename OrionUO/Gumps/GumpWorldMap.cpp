@@ -69,7 +69,7 @@ m_Called(false), m_CurrentOffsetX(0), m_CurrentOffsetY(0)
 	
 	m_Scissor = (CGUIScissor*)Add(new CGUIScissor(true, 0, 0, 8, 32, m_Width - 16, m_Height - 16));
 
-	m_MapData = (CGUIWorldMapTexture*)Add(new CGUIWorldMapTexture(0, 0));
+	m_MapData = (CGUIWorldMapTexture*)Add(new CGUIWorldMapTexture(8, 31));
 	m_MapData->Serial = ID_GWM_MAP;
 	int map = GetCurrentMap();
 	m_MapData->Index = map;
