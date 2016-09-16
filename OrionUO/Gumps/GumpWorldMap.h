@@ -47,10 +47,9 @@ private:
 	void ScaleOffsets(int newScale, int mouseX, int mouseY);
 	void LoadMap(int map);
 
-	void UpdateSize();
-
 	int GetCurrentMap();
 
+	CGUIButton *m_Minimizer;
 	CGUIResizepic *m_Background;
 	CGUIResizeButton *m_Resizer;
 	CGUIText *m_Text;
@@ -67,7 +66,11 @@ public:
 	CGumpWorldMap(uint serial, short x, short y);
 	virtual ~CGumpWorldMap();
 
+	void UpdateSize();
+
 	virtual bool CanBeDisplayed() { return m_Called; }
+
+	virtual void GenerateFrame(bool stop);
 
 	virtual void PrepareContent();
 
@@ -78,9 +81,10 @@ public:
 	GUMP_RESIZE_EVENT_H;
 	GUMP_RESIZE_END_EVENT_H;
 
-	void OnLeftMouseButtonDown();
-	bool OnLeftMouseButtonDoubleClick();
-	void OnMidMouseButtonScroll(const bool &up);
+	virtual void OnLeftMouseButtonDown();
+	virtual void OnLeftMouseButtonUp();
+	virtual bool OnLeftMouseButtonDoubleClick();
+	virtual void OnMidMouseButtonScroll(const bool &up);
 };
 //----------------------------------------------------------------------------------
 #endif

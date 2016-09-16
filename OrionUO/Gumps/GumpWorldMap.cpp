@@ -31,7 +31,7 @@ m_Called(false), m_CurrentOffsetX(0), m_CurrentOffsetY(0)
 
 	Add(new CGUIPage(2));
 
-	Add(new CGUIButton(ID_GWM_MINIMIZE, 0x082D, 0x082D, 0x082D, (m_Width / 2) - 10, 0)); //Minimize
+	m_Minimizer = (CGUIButton*)Add(new CGUIButton(ID_GWM_MINIMIZE, 0x082D, 0x082D, 0x082D, (m_Width / 2) + 4, 0));
 	m_Background = (CGUIResizepic*)Add(new CGUIResizepic(0, 0x0A3C, 0, 23, m_Width, m_Height));
 	m_Resizer = (CGUIResizeButton*)Add(new CGUIResizeButton(ID_GWM_RESIZE, 0x0837, 0x0838, 0x0838, m_Width - 8, m_Height + 13));
 
@@ -404,6 +404,34 @@ void CGumpWorldMap::LoadMap(int map)
 	}
 }
 //----------------------------------------------------------------------------------
+void CGumpWorldMap::GenerateFrame(bool stop)
+{
+	CGump::GenerateFrame(false);
+
+	//Player drawing
+	if (!m_Minimized && g_CurrentMap == GetCurrentMap())
+	{
+		int width = 0;
+		int height = 0;
+		int playerX = g_Player->X;
+		int playerY = g_Player->Y;
+
+		GetScaledDimensions(width, height, playerX, playerY);
+
+		m_Scissor->Draw(false);
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+		g_GL.DrawPolygone(m_MapData->OffsetX + playerX + 0, m_MapData->OffsetY + playerY + 30, 16, 2);
+		g_GL.DrawPolygone(m_MapData->OffsetX + playerX + 7, m_MapData->OffsetY + playerY + 23, 2, 16);
+		g_GL.DrawCircle(m_MapData->OffsetX + 8.0f + playerX, m_MapData->OffsetY + 31.0f + playerY, 3.0f);
+
+		g_GL.PopScissor();
+	}
+
+	glEndList();
+}
+//----------------------------------------------------------------------------------
 void CGumpWorldMap::PrepareContent()
 {
 	m_CurrentOffsetX = m_OffsetX;
@@ -422,6 +450,9 @@ void CGumpWorldMap::PrepareContent()
 
 	m_MapData->Width = mapWidth;
 	m_MapData->Height = mapHeight;
+
+	int oldX = m_CurrentOffsetX;
+	int oldY = m_CurrentOffsetY;
 
 	if (m_LinkWithPlayer && g_CurrentMap == map && g_Player != NULL)
 	{
@@ -443,16 +474,10 @@ void CGumpWorldMap::PrepareContent()
 			m_OffsetY = m_CurrentOffsetY;
 
 			m_WantRedraw = true;
-
-			m_MapData->OffsetX = m_CurrentOffsetX;
-			m_MapData->OffsetY = m_CurrentOffsetY;
 		}
 	}
-	else if (m_MapMoving && (!m_LinkWithPlayer || g_CurrentMap != map)) //Если активировано изменение положения карты
+	else if (m_MapMoving) //Если активировано изменение положения карты
 	{
-		int oldX = m_CurrentOffsetX;
-		int oldY = m_CurrentOffsetY;
-
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
 		m_CurrentOffsetX += offset.X;
@@ -465,308 +490,36 @@ void CGumpWorldMap::PrepareContent()
 			m_CurrentOffsetY = 0;
 
 		FixOffsets(m_CurrentOffsetX, m_CurrentOffsetY, m_Width, m_Height);
-
-		if (oldX != m_CurrentOffsetX || oldY != m_CurrentOffsetY)
-		{
-			m_WantRedraw = true;
-
-			m_MapData->OffsetX = m_CurrentOffsetX;
-			m_MapData->OffsetY = m_CurrentOffsetY;
-		}
 	}
+
+	m_MapData->OffsetX = m_CurrentOffsetX;
+	m_MapData->OffsetY = m_CurrentOffsetY;
+
+	if (oldX != m_CurrentOffsetX || oldY != m_CurrentOffsetY)
+		m_WantRedraw = true;
 }
-//----------------------------------------------------------------------------------
-/*int CGumpWorldMap::Draw(bool &mode)
-{
-	if (!m_Called)
-		return 0;
-
-	DWORD index = (DWORD)this;
-
-	//Для быстрого доступа
-	int posX = X;
-	int posY = Y;
-
-	if (Minimized)
-	{
-		posX = MinimizedX;
-		posY = MinimizedY;
-	}
-
-	//Нажата ли кнопка в окне?
-	bool IsPressed = (g_LeftMouseDown && g_LastGumpLeftMouseDown == index && g_LastSelectedGump == index);
-
-	//Может ли быть подсвечен элемент?
-	int CanSelectedButton = ((g_LastSelectedGump == index) ? g_LastSelectedObject : 0);
-
-	//Может ли быть нажат элемент?
-	int CanPressedButton = 0;
-	if (IsPressed && g_LastObjectLeftMouseDown == g_LastSelectedObject)
-		CanPressedButton = g_LastObjectLeftMouseDown;
-	
-	int height = m_Height; //Высота для быстрого доступа и безобезненной временной корректировки
-	int width = m_Width; //Ширина для быстрого доступа и безобезненной временной корректировки
-
-	if (m_Resizing) //Если активировано изменение габаритов гампа
-	{
-		width += (g_MouseX - g_DroppedLeftMouseX);
-		height += (g_MouseY - g_DroppedLeftMouseY);
-
-		//Подкорректируем временное значение высоты
-		if (height < MIN_WORLD_MAP_HEIGHT)
-			height = MIN_WORLD_MAP_HEIGHT;
-
-		int bh = (GetSystemMetrics(SM_CYSCREEN) - 50);
-		if (height >= bh)
-			height = bh;
-
-		//Подкорректируем временное значение ширины
-		if (width < MIN_WORLD_MAP_WIDTH)
-			width = MIN_WORLD_MAP_WIDTH;
-
-		int bw = (GetSystemMetrics(SM_CXSCREEN) - 50);
-		if (width >= bw)
-			width = bw;
-	}
-
-	int offsetX = m_OffsetX;
-	int offsetY = m_OffsetY;
-	
-	int map = m_Map;
-
-	if (!map)
-		map = g_CurrentMap;
-	else
-		map--;
-
-	LoadMap(map);
-
-	if (m_MapMoving && (!m_LinkWithPlayer || g_CurrentMap != map)) //Если активировано изменение положения карты
-	{
-		offsetX += (g_MouseX - g_DroppedLeftMouseX);
-		offsetY += (g_MouseY - g_DroppedLeftMouseY);
-		
-		if (offsetX > 0)
-			offsetX = 0;
-		
-		if (offsetY > 0)
-			offsetY = 0;
-
-		FixOffsets(offsetX, offsetY, width, height);
-	}
-
-	//Если окошко захвачено для перемещения - вычислим оффсеты
-	if (mode && g_LeftMouseDown && g_LastGumpLeftMouseDown == index && !g_LastObjectLeftMouseDown)
-	{
-		posX += (g_MouseX - g_DroppedLeftMouseX);
-		posY += (g_MouseY - g_DroppedLeftMouseY);
-	}
-
-	int mapViewWidth = width - 16;
-	int mapViewHeight = height - 16;
-
-	int mapWidth = 0;
-	int mapHeight = 0;
-
-	int playerX = g_Player->X;
-	int playerY = g_Player->Y;
-
-	GetScaledDimensions(mapWidth, mapHeight, playerX, playerY);
-	
-	if (mode) //Отрисовка
-	{
-		if (Minimized)
-		{
-			Orion->DrawGump(0x15E8, 0, posX, posY); //Earth button
-
-			return 0;
-		}
-
-		if (m_LinkWithPlayer && g_CurrentMap == map)
-		{
-			offsetX = (width / 2) - playerX;
-			if (offsetX > 0)
-				offsetX = 0;
-
-			offsetY = ((height - 30) / 2) - playerY;
-			if (offsetY > 0)
-				offsetY = 0;
-
-			FixOffsets(offsetX, offsetY, width, height);
-			
-			m_OffsetX = offsetX;
-			m_OffsetY = offsetY;
-		}
-
-		Orion->DrawGump(0x082D, 0, posX + (width / 2) - 10, posY); //Minimize
-
-		Orion->DrawResizepicGump(0x0A3C, posX, posY + 23, width, height);
-
-		//Ресайзер
-		WORD resizeGumpID = 0x0837 + (int)(CanPressedButton == 2);
-
-		Orion->DrawGump(resizeGumpID, 0, posX + width - 8, posY + 23 + height - 10);
-		
-		//Map settings
-		Orion->DrawGump(0x098D, 0, posX, posY);
-		m_TextMap[m_Map].Draw(posX + 4, posY);
-		Orion->DrawGump(0x0985, 0, posX + 94, posY + 7);
-
-		//Scale settings
-		TTextureObject *g = Orion->ExecuteGump(0x098B);
-		if (g != NULL)
-		{
-			int tmpX = posX + 110;
-			g_GL.Draw(g->Texture, tmpX, posY, 46, g->Height);
-		}
-		else
-			Orion->DrawGump(0x098B, 0, posX + 110, posY);
-
-		m_TextScale[m_Scale].Draw(posX + 114, posY);
-		Orion->DrawGump(0x0985, 0, posX + 142, posY + 7);
-
-		//Link with player checkbox settings
-		int drawX = posX + width - m_Text.Width;
-		m_Text.Draw(drawX, posY);
-
-		drawX -= 26;
-		Orion->DrawGump(0x00D2 + (int)m_LinkWithPlayer, 0, drawX, posY + 2);
-
-		//Map drawing
-		g_GL.ViewPort(posX + 8, posY + 31, mapViewWidth, mapViewHeight);
-
-		int drawMapX = posX + offsetX + 8;
-		int drawMapY = posY + offsetY + 31;
-		g_GL.Draw(g_MapTexture[map], drawMapX, drawMapY, mapWidth, mapHeight);
-		
-		//Player drawing
-		if (g_CurrentMap == map)
-		{
-			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-			g_GL.DrawPolygone(posX + offsetX + playerX + 0, posY + offsetY + playerY + 30, 16, 2);
-			g_GL.DrawPolygone(posX + offsetX + playerX + 7, posY + offsetY + playerY + 23, 2, 16);
-			g_GL.DrawCircle(posX + offsetX + 8.0f + playerX, posY + offsetY + 31.0f + playerY, 3.0f);
-		}
-
-		g_GL.RestorePort();
-
-		/*int cx = 0, cy = 0, mx = (m_Width / 2), my = ((m_Height - 30) / 2);
-		GetCurrentCenter(cx, cy, mx, my);
-		char buff[50] = {0};
-		sprintf(buff, "X=%i Y=%i", cx, cy);
-		FontManager->DrawA(3, buff, 0x44, posX + 10, posY + 30);*/
-
-		/*if (m_OpenedList)
-		{
-			posY += 12;
-			//Top
-			Orion->DrawGump(0x09B5, 0, posX - 5, posY - 11);
-
-			int ofs = 0;
-
-			IFOR(i, 0, 7)
-			{
-				WORD gumpID = 0x09B6 + ofs;
-				ofs = (ofs + 1) % 3;
-
-				Orion->DrawGump(gumpID, 0, posX, posY);
-				
-				if (CanSelectedButton >= ID_GWM_LIST)
-				{
-					if (i + 1 == (CanSelectedButton - ID_GWM_LIST))
-						g_GL.DrawPolygone(posX + 4, posY, 150, 14);
-				}
-
-				if (m_OpenedList == 1)
-					m_TextMap[i].Draw(posX + 4, posY - 5);
-				else
-					m_TextScale[i].Draw(posX + 4, posY - 5);
-
-				posY += 15;
-			}
-
-			//Bottom
-			Orion->DrawGump(0x09B9, 0, posX - 5, posY);
-		}
-	}
-	else //Выбор объектов
-	{
-		if (m_Minimized)
-		{
-			if (Orion->GumpPixelsInXY(0x15E8, posX, posY)) //Earth button
-			{
-				g_LastSelectedObject = 0;
-				g_LastSelectedGump = index;
-			}
-
-			return 0;
-		}
-
-		int LSG = 0;
-
-		//Если выбран основной гамп - меняем глобальный указатель на выбранный гамп на него
-		if (Orion->ResizepicPixelsInXY(0x0A3C, posX, posY + 23, width, height))
-		{
-			g_LastSelectedObject = 0;
-			g_LastSelectedGump = index;
-		}
-
-		if (Orion->GumpPixelsInXY(0x082D, posX + (width / 2) - 10, posY)) //Minimize
-			LSG = ID_GWM_MINIMIZE;
-		else if (Orion->GumpPixelsInXY(0x0837, posX + width - 8, posY + 23 + height - 10)) //Ресайзер
-			LSG = ID_GWM_RESIZE;
-		else if ((!m_LinkWithPlayer || g_CurrentMap != map) && Orion->PolygonePixelsInXY(posX + 8, posY + 31, mapViewWidth, mapViewHeight)) //Карта
-			LSG = ID_GWM_MAP;
-		else if (Orion->PolygonePixelsInXY(posX, posY, 110, 22)) //Настройки карты
-			LSG = ID_GWM_MAP_LIST;
-		else if (Orion->PolygonePixelsInXY(posX + 110, posY, 46, 22)) //Настройки масштаба
-			LSG = ID_GWM_SCALE_LIST;
-		else if (Orion->PolygonePixelsInXY(posX + width - (m_Text.Width + 26), posY, m_Text.Width + 26, 22)) //Настройки привязки к координатам игрока
-			LSG = ID_GWM_LINK_WITH_PLAYER;
-		
-		if (m_OpenedList)
-		{
-			posY += 12;
-			//Top
-			Orion->DrawGump(0x09B5, 0, posX - 5, posY - 11);
-
-			int ofs = 0;
-
-			IFOR(i, 0, 7)
-			{
-				if (Orion->GumpPixelsInXY(0x09B6 + ofs, posX, posY))
-					LSG = ID_GWM_LIST + i + 1;
-				
-				ofs = (ofs + 1) % 3;
-				posY += 15;
-			}
-
-			//Bottom
-			Orion->DrawGump(0x09B9, 0, posX - 5, posY);
-		}
-
-		return LSG;
-	}
-
-	return 0;
-}*/
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::OnLeftMouseButtonDown()
 {
 	CGump::OnLeftMouseButtonDown();
 
-	if (g_PressedObject.LeftSerial == ID_GWM_MAP) //Карта
+	if (g_PressedObject.LeftObject() == m_MapData) //Карта
 	{
 		if (!m_LinkWithPlayer || g_CurrentMap != GetCurrentMap())
+		{
+			m_MapData->MoveOnDrag = false;
 			m_MapMoving = true;
+		}
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::GUMP_BUTTON_EVENT_C
+void CGumpWorldMap::OnLeftMouseButtonUp()
 {
-	if (serial == ID_GWM_MAP && m_MapMoving) //Карта
+	CGump::OnLeftMouseButtonUp();
+
+	if (g_PressedObject.LeftObject() == m_MapData) //Карта
 	{
-		if (!m_LinkWithPlayer || g_CurrentMap != GetCurrentMap())
+		if (m_MapMoving)
 		{
 			WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 			m_OffsetX += offset.X;
@@ -776,7 +529,11 @@ void CGumpWorldMap::GUMP_BUTTON_EVENT_C
 
 		m_MapMoving = false;
 	}
-	else if (serial == ID_GWM_MINIMIZE) //Сворачивание
+}
+//----------------------------------------------------------------------------------
+void CGumpWorldMap::GUMP_BUTTON_EVENT_C
+{
+	if (serial == ID_GWM_MINIMIZE) //Сворачивание
 	{
 		m_Minimized = true;
 		m_Page = 1;
@@ -788,7 +545,7 @@ void CGumpWorldMap::GUMP_CHECKBOX_EVENT_C
 	if (serial == ID_GWM_LINK_WITH_PLAYER) //Привязка к координатам игрока
 	{
 		m_LinkWithPlayer = state;
-		m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == GetCurrentMap());
+		m_MapData->MoveOnDrag = (m_LinkWithPlayer && g_CurrentMap == GetCurrentMap());
 	}
 }
 //----------------------------------------------------------------------------------
@@ -823,9 +580,9 @@ void CGumpWorldMap::GUMP_COMBOBOX_SELECTION_EVENT_C
 			}
 
 			m_Map = index;
-
-			m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == GetCurrentMap());
 		}
+
+		m_MapData->MoveOnDrag = (m_LinkWithPlayer && g_CurrentMap == GetCurrentMap());
 	}
 
 	int width = 0;
@@ -843,7 +600,7 @@ bool CGumpWorldMap::OnLeftMouseButtonDoubleClick()
 {
 	bool result = false;
 
-	if (m_Minimized) //При даблклике по мини-гампу - раскрываем его
+	if (m_Page == 1) //При даблклике по мини-гампу - раскрываем его
 	{
 		m_Minimized = false;
 		m_Page = 2;
@@ -913,6 +670,7 @@ void CGumpWorldMap::UpdateSize()
 	if (m_Width >= bw)
 		m_Width = bw;
 
+	m_Minimizer->X = (m_Width / 2) - 10;
 	m_Background->Width = m_Width;
 	m_Background->Height = m_Height;
 	m_Resizer->X = m_Width - 8;
@@ -921,6 +679,7 @@ void CGumpWorldMap::UpdateSize()
 	m_Checkbox->X = m_Text->X - 26;
 	m_Scissor->Width = m_Width - 16;
 	m_Scissor->Height = m_Height - 16;
+	m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::GUMP_RESIZE_START_EVENT_C

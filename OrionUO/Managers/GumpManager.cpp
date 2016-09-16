@@ -1108,6 +1108,8 @@ void CGumpManager::Load(const string &path)
 					wmg->OffsetX = file.ReadInt16LE();
 					wmg->OffsetY = file.ReadInt16LE();
 
+					wmg->UpdateSize();
+
 					break;
 				}
 				case GT_MENUBAR:
