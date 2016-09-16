@@ -7,4 +7,6 @@ WIP(on README itself):
 
 -Build it in MVS 2013(v120)
 
+-Don't forget dll's
+
 -Enjoy( or cry )
