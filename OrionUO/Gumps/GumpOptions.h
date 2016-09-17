@@ -19,13 +19,6 @@ private:
 	static const char *m_HotkeyText[0x100];
 
 	uint m_LastChangeMacroTime;
-	uint m_MacroElement;
-	uint m_MacroSelection;
-	int m_MacroListOffset;
-	int m_MacroListNameOffset;
-	int m_MacroListCount;
-	int m_MacroListOffsetYStart;
-	int m_MacroListOffsetYEnd;
 
 	static const int m_MacroListMaxCount = 20;
 
@@ -187,6 +180,7 @@ private:
 	CGUICheckbox *m_MacroCheckboxAlt;
 	CGUICheckbox *m_MacroCheckboxCtrl;
 
+	bool m_WantRedrawMacroData;
 	void RedrawMacroData();
 
 protected:
@@ -201,15 +195,17 @@ public:
 	CGUITextEntry *m_GameWindowWidth;
 	CGUITextEntry *m_GameWindowHeight;
 	CGUITextEntry *m_MacroKey;
+
+	virtual void PrepareContent();
 	
 	void Init();
 
 	GUMP_BUTTON_EVENT_H;
 	GUMP_CHECKBOX_EVENT_H;
+	GUMP_COMBOBOX_SELECTION_EVENT_H;
 	GUMP_SLIDER_CLICK_EVENT_H;
 	GUMP_SLIDER_MOVE_EVENT_H;
 	
-	void OnLeftMouseDown();
 	void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
 	void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
 };

@@ -30,10 +30,8 @@
 const ushort g_OptionsTextColor = 0;
 //----------------------------------------------------------------------------------
 CGumpOptions::CGumpOptions(uint serial, short x, short y)
-: CGump(GT_OPTIONS, serial, x, y), m_LastChangeMacroTime(0),
-m_MacroSelection(0), m_MacroElement(0), m_MacroListOffset(0), m_MacroListCount(0),
-m_MacroListOffsetYStart(0), m_MacroListOffsetYEnd(0), m_MacroListNameOffset(0),
-m_MacroPointer(NULL), m_MacroObjectPointer(NULL)
+: CGump(GT_OPTIONS, serial, x, y), m_LastChangeMacroTime(0), m_MacroPointer(NULL),
+m_MacroObjectPointer(NULL), m_WantRedrawMacroData(true)
 {
 	m_Page = 1;
 
@@ -128,6 +126,15 @@ void CGumpOptions::CalculateGumpState()
 		}
 		else
 			m_WantRedraw = true;
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpOptions::PrepareContent()
+{
+	if (m_WantRedrawMacroData)
+	{
+		RedrawMacroData();
+		m_WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------
@@ -495,6 +502,7 @@ void CGumpOptions::DrawPage4()
 //----------------------------------------------------------------------------
 void CGumpOptions::RedrawMacroData()
 {
+	m_WantRedrawMacroData = false;
 	m_MacroDataBox->Clear();
 
 	bool alt = false;
@@ -521,7 +529,7 @@ void CGumpOptions::RedrawMacroData()
 	if (obj != NULL)
 	{
 		if (obj->m_Prev != NULL)
-			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_UP, 0x0983, 0x0984, 0x0984, 292, 113));
+			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_UP, 0x0983, 0x0984, 0x0984, 456, 173));
 
 		const int maxMacroDraw = 7;
 		int macroCount = 0;
@@ -531,370 +539,48 @@ void CGumpOptions::RedrawMacroData()
 
 		while (obj != NULL && macroCount < maxMacroDraw)
 		{
+			CGUIComboBox *combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_MACRO_SELECTION + (macroCount * 1000), 0x098D, true, 0x09B5, 168, y, 0, 20, true));
+			combobox->SelectedIndex = obj->Code;
+
+			IFOR(i, 0, CMacro::MACRO_ACTION_NAME_COUNT)
+				combobox->Add(new CGUIComboboxText(0x0386, 1, CMacro::GetActionName(i)));
+
+			if (obj->HasSubMenu == 1)
+			{
+				int macroListOffset = 0;
+				int macroListCount = 0;
+				CMacro::GetBoundByCode(obj->Code, macroListCount, macroListOffset);
+
+				combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 0x098E, true, 0x09B5, 286, y, 0, 20, true));
+				combobox->SelectedIndex = obj->SubCode - macroListOffset;
+
+				IFOR(i, 0, macroListCount)
+					combobox->Add(new CGUIComboboxText(0x0386, 1, CMacro::GetAction(macroListOffset + i), 150, TS_LEFT, UOFONT_FIXED));
+			}
+			else if (obj->HasSubMenu == 2)
+			{
+				m_MacroDataBox->Add(new CGUIGumppic(0x098E, 286, y));
+
+				m_MacroDataBox->Add(new CGUIScissor(true, 0, 0, 292, y + 5, 150, 20));
+
+				CGUITextEntry *entry = (CGUITextEntry*)m_MacroDataBox->Add(new CGUITextEntry(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 0x0386, 0x0386, 0x0386, 292, y + 5, 0, false, 1));
+				entry->CheckOnSerial = true;
+				entry->m_Entry.SetText(((CMacroObjectString*)obj)->String);
+
+				m_MacroDataBox->Add(new CGUIHitBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 292, y + 5, 150, 20));
+
+				m_MacroDataBox->Add(new CGUIScissor(false));
+			}
+
 			macroCount++;
-
-			if (obj->m_Next == NULL)
-				break;
-
 			y += 26;
 
 			obj = (CMacroObject*)obj->m_Next;
 		}
 
 		if (macroCount >= maxMacroDraw)
-			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_DOWN, 0x0985, 0x0986, 0x0986, 292, y + 26 /*295 /*269*/));
-
-		while (macroCount > 0 && obj != NULL)
-		{
-			macroCount--;
-			CGUIComboBox *combobox = NULL;
-
-			char hasSubMenu = obj->HasSubMenu;
-
-			if (hasSubMenu == 1)
-			{
-				combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 0x098E, true, 0x09B5, 286, y + 5, 0, 7, false));
-				combobox->SelectedIndex = 0;
-
-				IFOR(i, 0, 7)
-					combobox->Add(new CGUIComboboxText(0x0386, 1, CMacro::GetAction(obj->SubCode), 150, TS_LEFT, UOFONT_FIXED));
-			}
-			else if (hasSubMenu == 2)
-			{
-				/*g_GL.Scissor((int)g_GumpTranslateX + posX + 118, (int)g_GumpTranslateY + boxPosY + 5, 150, 20);
-
-				((TMacroObjectEntry*)obj)->TextEntry->DrawA(1, 0x0386, posX + 118, boxPosY + 5, TS_LEFT, UOFONT_FIXED);
-
-				glDisable(GL_SCISSOR_TEST);*/
-			}
-
-			combobox = (CGUIComboBox*)m_MacroDataBox->Add(new CGUIComboBox(ID_GO_P5_MACRO_SELECTION + (macroCount * 1000), 0x098D, true, 0x09B5, 168, y + 5, 0, 7, false));
-			combobox->SelectedIndex = 0;
-
-			IFOR(i, 0, 7)
-				combobox->Add(new CGUIComboboxText(0x0386, 1, CMacro::GetActionName(obj->Code), 98, TS_CENTER, UOFONT_FIXED));
-
-			y -= 26;
-
-			obj = (CMacroObject*)obj->m_Prev;
-		}
+			m_MacroDataBox->Add(new CGUIButton(ID_GO_P5_BUTTON_DOWN, 0x0985, 0x0986, 0x0986, 456, y /*295 /*269*/));
 	}
-
-		/*int macroCount = 0;
-
-		while (obj != NULL && macroCount < maxMacroDraw)
-		{
-			Orion->DrawGump(0x098D, 0, posX, boxPosY);
-			FontManager->DrawA(1, TMacro::GetActionName(obj->Code), 0x0386, posX + 4, boxPosY + 5, 98, TS_CENTER, UOFONT_FIXED);
-			Orion->DrawGump(0x0985, 0, posX + 94, arrowPosY);
-
-			char hasMenu = obj->HasSubMenu;
-			if (hasMenu)
-			{
-				Orion->DrawGump(0x098E, 0, posX + 112, boxPosY);
-
-				if (hasMenu == 1) //Нужна стрелочка вниз
-				{
-					Orion->DrawGump(0x0985, 0, posX + 274, arrowPosY);
-
-					FontManager->DrawA(1, TMacro::GetAction(obj->SubCode), 0x0386, posX + 118, boxPosY + 5, 150, TS_LEFT, UOFONT_FIXED);
-				}
-				else
-				{
-					g_GL.Scissor((int)g_GumpTranslateX + posX + 118, (int)g_GumpTranslateY + boxPosY + 5, 150, 20);
-
-					((TMacroObjectEntry*)obj)->TextEntry->DrawA(1, 0x0386, posX + 118, boxPosY + 5, TS_LEFT, UOFONT_FIXED);
-
-					glDisable(GL_SCISSOR_TEST);
-				}
-			}
-
-			boxPosY += 26;
-			arrowPosY += 26;
-			macroCount++;
-
-			if (obj->m_Next == NULL)
-				break;
-
-			obj = (TMacroObject*)obj->m_Next;
-		}
-
-		if (macroCount >= maxMacroDraw)
-		{
-			drawEmptyBox = false;
-			Orion->DrawGump(0x0985 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_DOWN), 0, posX + 292, boxPosY);
-		}
-		else if (obj->Code == MC_NONE)
-			drawEmptyBox = false;
-	}
-
-	if (drawEmptyBox)
-	{
-		Orion->DrawGump(0x098D, 0, posX, boxPosY);
-		Orion->DrawGump(0x0985, 0, posX + 94, arrowPosY);
-	}
-	
-	/*const int maxMacroDraw = 7;
-
-	int captionY = 22;
-	int posY = captionY + 38;
-	int posX = 30;
-
-	//Macro Options
-	if (mode)
-	{
-		posX += 134;
-
-		int boxPosY = posY + 127;
-		int arrowPosY = posY + 133;
-		bool drawEmptyBox = true;
-		
-		TMacroObject *obj = m_MacroObjectPointer;
-		if (obj != NULL)
-		{
-			if (obj->m_Prev != NULL)
-				Orion->DrawGump(0x0983 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_UP), 0, posX + 292, posY + 113);
-			
-			int macroCount = 0;
-
-			while (obj != NULL && macroCount < maxMacroDraw)
-			{
-				Orion->DrawGump(0x098D, 0, posX, boxPosY);
-				FontManager->DrawA(1, TMacro::GetActionName(obj->Code), 0x0386, posX + 4, boxPosY + 5, 98, TS_CENTER, UOFONT_FIXED);
-				Orion->DrawGump(0x0985, 0, posX + 94, arrowPosY);
-
-				char hasMenu = obj->HasSubMenu;
-				if (hasMenu)
-				{
-					Orion->DrawGump(0x098E, 0, posX + 112, boxPosY);
-
-					if (hasMenu == 1) //Нужна стрелочка вниз
-					{
-						Orion->DrawGump(0x0985, 0, posX + 274, arrowPosY);
-						
-						FontManager->DrawA(1, TMacro::GetAction(obj->SubCode), 0x0386, posX + 118, boxPosY + 5, 150, TS_LEFT, UOFONT_FIXED);
-					}
-					else
-					{
-						g_GL.Scissor((int)g_GumpTranslateX + posX + 118, (int)g_GumpTranslateY + boxPosY + 5, 150, 20);
-
-						((TMacroObjectEntry*)obj)->TextEntry->DrawA(1, 0x0386, posX + 118, boxPosY + 5, TS_LEFT, UOFONT_FIXED);
-
-						glDisable(GL_SCISSOR_TEST);
-					}
-				}
-
-				boxPosY += 26;
-				arrowPosY += 26;
-				macroCount++;
-
-				if (obj->m_Next == NULL)
-					break;
-
-				obj = (TMacroObject*)obj->m_Next;
-			}
-			
-			if (macroCount >= maxMacroDraw)
-			{
-				drawEmptyBox = false;
-				Orion->DrawGump(0x0985 + (int)(g_GumpSelectElement == ID_GO_P5_BUTTON_DOWN), 0, posX + 292, boxPosY);
-			}
-			else if (obj->Code == MC_NONE)
-				drawEmptyBox = false;
-		}
-
-		if (drawEmptyBox)
-		{
-			Orion->DrawGump(0x098D, 0, posX, boxPosY);
-			Orion->DrawGump(0x0985, 0, posX + 94, arrowPosY);
-		}
-
-		if (m_MacroSelection)
-		{
-			bool isAction = false;
-			if (m_MacroSelection == 0x20000000) //Action
-			{
-				posX += 116;
-				isAction = true;
-			}
-
-			int textIndex = m_MacroListOffset;
-
-			posY -= 60;
-			posY += m_MacroListOffsetYStart;
-				
-			//Top
-			Orion->DrawGump(0x09B5, 0, posX - 5, posY - 11);
-
-			if (textIndex > 0)
-				Orion->DrawGump(0x0983, 0, posX + 85, posY - 8);
-				
-			int ofs = 0;
-
-			int count = m_MacroListMaxCount;
-
-			if (count > m_MacroListCount)
-				count = m_MacroListCount;
-
-			IFOR(i, 0, count)
-			{
-				gumpID = 0x09B6 + ofs;
-				ofs = (ofs + 1) % 3;
-
-				int itemPosY = posY + (i * 15);
-
-				Orion->DrawGump(gumpID, 0, posX, itemPosY);
-				
-				int textNameIndex = textIndex + m_MacroListNameOffset;
-
-				if (textIndex < m_MacroListCount)
-				{
-					if (g_GumpSelectElement >= ID_GO_P5_SELECTION)
-					{
-						if (textNameIndex == (g_GumpSelectElement - ID_GO_P5_SELECTION))
-							g_GL.DrawPolygone(posX + 4, itemPosY, 150, 14);
-					}
-
-					if (isAction) //Action
-					{
-						if (textNameIndex < 210)
-						{
-							FontManager->DrawA(1, TMacro::GetAction(textNameIndex), 0x0386, posX + 4, itemPosY);
-							textIndex++;
-						}
-					}
-					else //Action name
-					{
-						if (textNameIndex < 60)
-						{
-							FontManager->DrawA(1, TMacro::GetActionName(textNameIndex), 0x0386, posX + 4, itemPosY);
-							textIndex++;
-						}
-					}
-				}
-			}
-
-			int offsBottomY = (m_MacroListOffsetYEnd - m_MacroListOffsetYStart);
-
-			//Bottom
-			Orion->DrawGump(0x09B9, 0, posX - 5, posY + offsBottomY);
-
-			if (m_MacroListOffset + m_MacroListMaxCount < m_MacroListCount)
-				Orion->DrawGump(0x0985, 0, posX + 85, posY + offsBottomY - 2);
-		}
-	}
-	else
-	{
-		int LSG = 0;
-		
-		if (Orion->GumpPixelsInXY(0x099C, posX + 152, posY))
-			LSG = ID_GO_P5_BUTTON_ADD; //Add
-		else if (Orion->GumpPixelsInXY(0x099F, posX + 205, posY))
-			LSG = ID_GO_P5_BUTTON_DELETE; //Delete
-		else if (Orion->GumpPixelsInXY(0x09A2, posX + 273, posY))
-			LSG = ID_GO_P5_BUTTON_PREVEOUS; //Preveous
-		else if (Orion->GumpPixelsInXY(0x09A5, posX + 357, posY))
-			LSG = ID_GO_P5_BUTTON_NEXT; //Next
-		else if (Orion->GumpPixelsInXY(0x098B, posX + 133, posY + 52))
-			LSG = ID_GO_P5_KEY_BOX; //Key box
-		else if (Orion->GumpPixelsInXY(0x0867, posX + 248, posY + 19))
-			LSG = ID_GO_P5_BUTTON_SHIFT; //Shift
-		else if (Orion->GumpPixelsInXY(0x0867, posX + 248, posY + 47))
-			LSG = ID_GO_P5_BUTTON_ALT; //Shift
-		else if (Orion->GumpPixelsInXY(0x0867, posX + 248, posY + 75))
-			LSG = ID_GO_P5_BUTTON_CTRL; //Shift
-
-		posX += 134;
-
-		int boxPosY = posY + 127;
-		int arrowPosY = posY + 133;
-		bool drawEmptyBox = true;
-		
-		TMacroObject *obj = m_MacroObjectPointer;
-		if (obj != NULL)
-		{
-			if (obj->m_Prev != NULL && Orion->GumpPixelsInXY(0x0983, posX + 292, posY + 113))
-				LSG = ID_GO_P5_BUTTON_UP; //UP arrow
-			
-			int macroCount = 0;
-
-			while (obj != NULL && macroCount < maxMacroDraw)
-			{
-				if (Orion->GumpPixelsInXY(0x098D, posX, boxPosY))
-					LSG = ID_GO_P5_LEFT_BOX + macroCount; //Left macro box
-
-				char hasMenu = obj->HasSubMenu;
-				if (hasMenu)
-				{
-					if (Orion->GumpPixelsInXY(0x098E, posX + 112, boxPosY))
-						LSG = ID_GO_P5_RIGHT_BOX + macroCount; //Right macro box
-				}
-
-				boxPosY += 26;
-				arrowPosY += 26;
-				macroCount++;
-					
-				if (obj->m_Next == NULL)
-					break;
-
-				obj = (TMacroObject*)obj->m_Next;
-			}
-			
-			if (macroCount >= maxMacroDraw)
-			{
-				drawEmptyBox = false;
-
-				if (Orion->GumpPixelsInXY(0x0985, posX + 292, boxPosY))
-					LSG = ID_GO_P5_BUTTON_DOWN; //Down arrow
-			}
-			else if (obj->Code == MC_NONE)
-				drawEmptyBox = false;
-
-			if (macroCount >= maxMacroDraw || obj->Code == MC_NONE)
-				drawEmptyBox = false;
-		}
-
-		if (drawEmptyBox)
-		{
-			if (Orion->GumpPixelsInXY(0x098D, posX, boxPosY))
-				LSG = ID_GO_P5_EMPTY_BOX; //Empty macro box
-		}
-
-		if (m_MacroSelection)
-		{
-			bool isAction = false;
-			if (m_MacroSelection == 0x20000000) //Action
-			{
-				posX += 116;
-				isAction = true;
-			}
-
-			int textIndex = m_MacroListOffset;
-
-			posY -= 60;
-			posY += m_MacroListOffsetYStart;
-				
-			int ofs = 0;
-
-			int count = m_MacroListMaxCount;
-
-			if (count > m_MacroListCount)
-				count = m_MacroListCount;
-
-			IFOR(i, 0, count)
-			{
-				if (Orion->GumpPixelsInXY(0x09B6 + ofs, posX, posY + (i * 15)))
-					LSG = ID_GO_P5_SELECTION + textIndex + m_MacroListNameOffset;
-					
-				ofs = (ofs + 1) % 3;
-				textIndex++;
-			}
-		}
-
-		return LSG;
-	}
-
-	return 0;*/
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage5()
@@ -1565,91 +1251,6 @@ void CGumpOptions::UpdateColor(const SELECT_COLOR_GUMP_STATE &state, const ushor
 	}
 }
 //----------------------------------------------------------------------------
-void CGumpOptions::OnLeftMouseDown()
-{
-	/*if (g_LastSelectedObject >= ID_GO_P5_LEFT_BOX && g_LastSelectedObject < ID_GO_P5_RIGHT_BOX) //Left action box
-	{
-		m_MacroElement = g_LastSelectedObject - ID_GO_P5_LEFT_BOX;
-		m_MacroSelection = 0x10000000;
-		m_MacroListOffset = 0;
-		m_MacroListCount = 60;
-		m_MacroListNameOffset = 0;
-		m_MacroListOffsetYStart = 92;
-		m_MacroListOffsetYEnd = 392;
-	}
-	else if (g_LastSelectedObject >= ID_GO_P5_RIGHT_BOX && g_LastSelectedObject < ID_GO_P5_EMPTY_BOX) //Right action box
-	{
-		m_MacroElement = g_LastSelectedObject - ID_GO_P5_RIGHT_BOX;
-		
-		TMacroObject *obj = m_MacroObjectPointer;
-					
-		IFOR(i, 0, (int)m_MacroElement)
-		{
-			if (obj->m_Next == NULL)
-				break;
-
-			obj = (TMacroObject*)obj->m_Next;
-		}
-		
-		m_MacroListCount = 0;
-		m_MacroListOffset = 0;
-		m_MacroListNameOffset = 0;
-
-		TMacro::GetBoundByCode(obj->Code, m_MacroListCount, m_MacroListNameOffset);
-
-		if (m_MacroListCount)
-		{
-			m_MacroSelection = 0x20000000;
-
-			if (m_MacroListCount >= m_MacroListMaxCount)
-			{
-				m_MacroListOffsetYStart = 92;
-				m_MacroListOffsetYEnd = 392;
-			}
-			else
-			{
-				int startY = 187 + (m_MacroElement * 26) + 26;
-
-				int heightWindow = m_MacroListCount * 15;
-
-				if (heightWindow + startY > 392)
-				{
-					m_MacroListOffsetYStart = 392 - heightWindow;
-					m_MacroListOffsetYEnd = 392;
-				}
-				else
-				{
-					m_MacroListOffsetYStart = startY;
-					m_MacroListOffsetYEnd = startY + heightWindow;
-				}
-			}
-		}
-		else
-		{
-			m_MacroSelection = 0;
-			m_MacroListOffsetYStart = 0;
-			m_MacroListOffsetYEnd = 0;
-
-			if (obj->HasSubMenu == 2)
-			{
-				int x = g_MouseX - (X + 110);
-				int y = 0; //g_MouseY - (Y + 57);
-
-				((TMacroObjectEntry*)obj)->TextEntry->OnClick(this, 1, false, x, y, TS_LEFT, UOFONT_FIXED);
-			}
-		}
-	}
-	else if (g_LastSelectedObject == ID_GO_P5_EMPTY_BOX) //Empty left action box
-	{
-		m_MacroSelection = 0x40000000;
-		m_MacroListOffset = 0;
-		m_MacroListCount = 60;
-		m_MacroListNameOffset = 0;
-		m_MacroListOffsetYStart = 92;
-		m_MacroListOffsetYEnd = 392;
-	}*/
-}
-//----------------------------------------------------------------------------
 void CGumpOptions::GUMP_BUTTON_EVENT_C
 {
 	if (serial == ID_GO_PAGE_7)
@@ -1837,70 +1438,6 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 						RedrawMacroData();
 					}
 				}
-				/*else if (serial >= ID_GO_P5_SELECTION) //Action selection
-				{
-					DWORD index = g_LastSelectedObject - ID_GO_P5_SELECTION;
-
-					switch (m_MacroSelection)
-					{
-						case 0x10000000:
-						case 0x40000000:
-						{
-							TMacroObject *obj = m_MacroObjectPointer;
-
-							if (m_MacroSelection == 0x40000000)
-							{
-								obj = TMacro::CreateMacro((MACRO_CODE)index);
-								m_MacroPointer->Add(obj);
-							}
-							else
-							{
-								IFOR(i, 0, (int)m_MacroElement)
-								{
-									if (obj->m_Next == NULL)
-									{
-										obj = TMacro::CreateMacro((MACRO_CODE)index);
-										m_MacroPointer->Add(obj);
-
-										break;
-									}
-
-									obj = (TMacroObject*)obj->m_Next;
-								}
-							}
-							
-							if (obj->Code != (MACRO_CODE)index)
-							{
-								TMacroObject *newobj = TMacro::CreateMacro((MACRO_CODE)index);
-
-								if (obj == m_MacroObjectPointer)
-									m_MacroObjectPointer = newobj;
-								
-								m_MacroPointer->ChangeObject(obj, newobj);
-							}
-
-							break;
-						}
-						case 0x20000000:
-						{
-							TMacroObject *obj = m_MacroObjectPointer;
-							
-							IFOR(i, 0, (int)m_MacroElement)
-							{
-								if (obj->m_Next == NULL)
-									break;
-
-								obj = (TMacroObject*)obj->m_Next;
-							}
-
-							obj->SubCode = (MACRO_SUB_CODE)index;
-
-							break;
-						}
-						default:
-							break;
-					}
-				}*/
 
 				break;
 			}
@@ -2138,6 +1675,85 @@ void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 	}
 }
 //----------------------------------------------------------------------------
+void CGumpOptions::GUMP_COMBOBOX_SELECTION_EVENT_C
+{
+	bool isAction = false;
+	int index = serial - ID_GO_P5_MACRO_SELECTION;
+
+	if (serial >= ID_GO_P5_ACTION_SELECTION)
+	{
+		isAction = true;
+		index = serial - ID_GO_P5_ACTION_SELECTION;
+	}
+
+	int macroIndex = 0;
+
+	while (index >= 1000)
+	{
+		index -= 1000;
+		macroIndex++;
+	}
+
+	CMacroObject *obj = m_MacroObjectPointer;
+
+	if (obj != NULL)
+	{
+		const int maxMacroDraw = 7;
+		int macroCount = 0;
+
+		while (obj != NULL && macroCount < maxMacroDraw)
+		{
+			if (macroCount == macroIndex)
+				break;
+
+			macroCount++;
+			obj = (CMacroObject*)obj->m_Next;
+		}
+	}
+
+	if (obj != NULL)
+	{
+		if (!isAction)
+		{
+			MACRO_CODE code = (MACRO_CODE)index;
+
+			if (obj->Code != code)
+			{
+				CMacroObject *newobj = CMacro::CreateMacro(code);
+
+				if (obj == m_MacroObjectPointer)
+					m_MacroObjectPointer = newobj;
+
+				m_MacroPointer->ChangeObject(obj, newobj);
+				obj = newobj;
+			}
+
+			if (code != MC_NONE)
+			{
+				if (obj->m_Next == NULL)
+					m_MacroPointer->Add(new CMacroObject(MC_NONE, MSC_NONE));
+			}
+			else if (obj->m_Next != NULL && obj->m_Next->m_Next == NULL && ((CMacroObject*)obj->m_Next)->Code == MC_NONE)
+			{
+				if (obj == m_MacroObjectPointer)
+					m_MacroObjectPointer = (CMacroObject*)obj->m_Next;
+
+				m_MacroPointer->Delete(obj);
+			}
+		}
+		else
+		{
+			int macroListOffset = 0;
+			int macroListCount = 0;
+			CMacro::GetBoundByCode(obj->Code, macroListCount, macroListOffset);
+
+			obj->SubCode = (MACRO_SUB_CODE)(macroListOffset + index);
+		}
+
+		m_WantRedrawMacroData = true;
+	}
+}
+//----------------------------------------------------------------------------
 void CGumpOptions::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
 	if (g_EntryPointer == &m_GameWindowWidth->m_Entry || g_EntryPointer == &m_GameWindowHeight->m_Entry)
@@ -2154,9 +1770,38 @@ void CGumpOptions::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 				m_WantRedraw = true;
 		}
 	}
-	/*else if (g_EntryPointer != &m_MacroKey->m_Entry)
+	else if (g_EntryPointer != &m_MacroKey->m_Entry)
 	{
-		CMacroObject *obj = m_MacroPointer->EntryPointerHere();
+		CMacroObject *obj = m_MacroObjectPointer;
+
+		if (obj != NULL)
+		{
+			CGUITextEntry *entry = NULL;
+
+			QFOR(item, m_MacroDataBox->m_Items, CBaseGUI*)
+			{
+				if (item->Type == GOT_TEXTENTRY && g_EntryPointer == &((CGUITextEntry*)item)->m_Entry)
+				{
+					entry = (CGUITextEntry*)item;
+					break;
+				}
+			}
+
+			if (entry != NULL)
+			{
+				const int maxMacroDraw = 7;
+				int macroCount = 0;
+
+				while (obj != NULL && macroCount < maxMacroDraw)
+				{
+					if (obj->HasSubMenu == 2 && entry->Serial == ID_GO_P5_ACTION_SELECTION + (macroCount * 1000))
+						break;
+
+					macroCount++;
+					obj = (CMacroObject*)obj->m_Next;
+				}
+			}
+		}
 
 		if (obj != NULL)
 		{
@@ -2189,10 +1834,11 @@ void CGumpOptions::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 			if (canAdd)
 			{
 				g_EntryPointer->Insert(wParam);
+				((CMacroObjectString*)obj)->String = g_EntryPointer->c_str();
 				m_WantRedraw = true;
 			}
 		}
-	}*/
+	}
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
@@ -2217,7 +1863,46 @@ void CGumpOptions::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			m_WantRedraw = true;
 		}
 		else
+		{
 			g_EntryPointer->OnKey(this, wParam);
+
+			if (g_EntryPointer != &m_GameWindowWidth->m_Entry && g_EntryPointer != &m_GameWindowHeight->m_Entry)
+			{
+				CMacroObject *obj = m_MacroObjectPointer;
+
+				if (obj != NULL)
+				{
+					CGUITextEntry *entry = NULL;
+
+					QFOR(item, m_MacroDataBox->m_Items, CBaseGUI*)
+					{
+						if (item->Type == GOT_TEXTENTRY && g_EntryPointer == &((CGUITextEntry*)item)->m_Entry)
+						{
+							entry = (CGUITextEntry*)item;
+							break;
+						}
+					}
+
+					if (entry != NULL)
+					{
+						const int maxMacroDraw = 7;
+						int macroCount = 0;
+
+						while (obj != NULL && macroCount < maxMacroDraw)
+						{
+							if (obj->HasSubMenu == 2 && entry->Serial == ID_GO_P5_ACTION_SELECTION + (macroCount * 1000))
+								break;
+
+							macroCount++;
+							obj = (CMacroObject*)obj->m_Next;
+						}
+					}
+				}
+
+				if (obj != NULL)
+					((CMacroObjectString*)obj)->String = g_EntryPointer->c_str();
+			}
+		}
 	}
 }
 //----------------------------------------------------------------------------

@@ -251,7 +251,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 
 			if (selected != NULL)
 			{
-				g_GL.PushScissor(m_X + 6 + (int)g_GumpTranslate.X, m_Y + (int)g_GumpTranslate.Y, 90, 20);
+				g_GL.PushScissor(m_X + 6 + (int)g_GumpTranslate.X, m_Y + (int)g_GumpTranslate.Y, m_MinimizedArrowX, 20);
 				selected->m_Texture.Draw(m_X + 6, m_Y + 6 + m_TextOffsetY);
 				g_GL.PopScissor();
 			}
