@@ -14,6 +14,7 @@
 #include "../MulStruct.h"
 #include <fstream>
 #include <string>
+#include "../OrionUO.h"
 //----------------------------------------------------------------------------------
 CSoundManager g_SoundManager;
 //----------------------------------------------------------------------------------
@@ -116,7 +117,7 @@ void CSoundManager::Free()
 void CSoundManager::PauseSound()
 {
 	BASS_Pause();
-	//g_Orion->AdjustSoundEffects(g_Ticks + 100000);
+	g_Orion.AdjustSoundEffects(g_Ticks + 100000);
 }
 //----------------------------------------------------------------------------------
 void CSoundManager::ResumeSound()
