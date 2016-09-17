@@ -1179,6 +1179,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar
 			x -= frame->CenterX;
 
 		y -= frame->Height + frame->CenterY;
+
 		if (obj->IsHuman())
 		{
 			short frameHeight = frame->Height;
@@ -1533,20 +1534,20 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 
 		int mountDrawY = drawY;
 		int mountedDrawY = drawY;
-		if (goi->GetStaticData()->Quality == 25)
+
+		/*if (goi->GetStaticData()->Quality == 25)
 		{
 			if (goi->GetStaticData()->Weight == 0xFF)
 			{
 				mountDrawY -= 40;
 				mountedDrawY -= 20;
-			}			
+			}
 			else
 			{
 				mountedDrawY += 20;
 				mountDrawY += 40;
 			}
-				
-		}
+		}*/
 
 		Draw(goi, drawX, mountDrawY, mirror, animIndex, mountID + 0x10000);
 		Draw(goi, drawX, mountDrawY, mirror, animIndex, mountID);
@@ -1950,7 +1951,7 @@ bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
 {
 	bool result = false;
 
-	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_DataIndex[graphic].Address != NULL)
 	{
 		int offset = group * 5;
 		puchar dataStart = NULL;
