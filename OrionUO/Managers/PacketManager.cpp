@@ -3041,10 +3041,7 @@ PACKET_HANDLER(DisplayDeath)
 	if (obj != NULL)
 		obj->AnimIndex = 0;
 	else
-	{
-		pair<uint, uint> p(corpseSerial, g_Ticks + 1000);
-		g_CorpseSerialList.push_back(p);
-	}
+		g_CorpseSerialList.push_back(pair<uint, uint>(corpseSerial, g_Ticks + 1000));
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenChat)

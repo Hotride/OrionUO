@@ -639,10 +639,12 @@ void COrion::Process(const bool &rendering)
 
 			g_MapManager->Init(true);
 
-			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); i++)
+			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); )
 			{
 				if (i->second < g_Ticks)
 					i = g_CorpseSerialList.erase(i);
+				else
+					i++;
 			}
 		}
 	}
