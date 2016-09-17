@@ -57,9 +57,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(SolutionDir)dll\bass.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)dll\glew32.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)dll\zlib1.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d  "$(SolutionDir)bin\bass.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dlls to bin directory</Message>
@@ -82,9 +82,9 @@ xcopy /y /d  "$(SolutionDir)dll\zlib1.dll" "$(OutDir)"</Command>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(SolutionDir)dll\bass.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)dll\glew32.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)dll\zlib1.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d  "$(SolutionDir)bin\bass.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dlls to bin directory</Message>

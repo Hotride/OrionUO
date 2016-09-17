@@ -31,5 +31,5 @@
 /OrionUO/Release
 /Desktop
 /OrionUO/music
-!/dll/*.dll
-!/OrionUO/ConfigurationEditor.exe
+!/bin/*.dll
+!/bin/*.exe
