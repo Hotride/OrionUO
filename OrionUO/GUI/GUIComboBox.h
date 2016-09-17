@@ -52,6 +52,9 @@ class CGUIComboBox : public CBaseGUI
 private:
 	//!Получить указатель на первый объект отображения
 	CBaseGUI *SkipToStart();
+
+	//!Позиция стрелки вниз (в свернутом состоянии)
+	int m_MinimizedArrowX;
 	
 	//!Позиция стрелки вниз
 	int m_ArrowX;

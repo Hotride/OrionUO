@@ -248,6 +248,7 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 {
 	float alpha[2] = { 1.0f, 0.5f };
 	//deque<CBaseGUI*> htmlGumps;
+	CGUIComboBox *combo = NULL;
 
 	bool transparent = ApplyTransparent(start, 0, currentPage, draw2Page);
 
@@ -317,6 +318,14 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 
 					break;
 				}
+				case GOT_COMBOBOX:
+				{
+					if (g_PressedObject.LeftObject() == item)
+					{
+						combo = (CGUIComboBox*)item;
+						break;
+					}
+				}
 				default:
 				{
 					item->Draw(transparent);
@@ -326,6 +335,9 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 			}
 		}
 	}
+
+	if (combo != NULL)
+		combo->Draw(false);
 
 	/*for (deque<CBaseGUI*>::iterator i = htmlGumps.begin(); i != htmlGumps.end(); i++)
 	{
@@ -369,6 +381,7 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
 	vector<bool> scissorList;
 	bool currentScissorState = true;
+	CGUIComboBox *combo = NULL;
 
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 
@@ -467,7 +480,12 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 				}
 				case GOT_COMBOBOX:
 				{
-					selected = ((CGUIComboBox*)item)->SelectedItem();
+					//selected = ((CGUIComboBox*)item)->SelectedItem();
+
+					if (g_PressedObject.LeftObject() == item)
+						combo = (CGUIComboBox*)item;
+					else
+						selected = item;
 
 					break;
 				}
@@ -498,6 +516,9 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 			}
 		}
 	}
+
+	if (combo != NULL)
+		selected = combo->SelectedItem();
 
 	/*for (deque<CBaseGUI*>::iterator i = htmlGumps.begin(); i != htmlGumps.end(); i++)
 	{

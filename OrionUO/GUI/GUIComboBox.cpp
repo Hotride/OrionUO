@@ -23,6 +23,7 @@ m_Text(NULL), m_TextOffsetY(0)
 	m_ArrowX = 0;
 	m_OffsetY = 0;
 	m_StepY = 0;
+	m_MinimizedArrowX = m_Width - 16;
 	m_WorkWidth = m_Width - 6;
 	m_WorkHeight = m_ShowItemsCount * 15;
 
@@ -43,6 +44,11 @@ m_Text(NULL), m_TextOffsetY(0)
 			m_StepY = th->Height;
 			m_WorkWidth = th->Width - 12;
 		}
+
+		th = g_Orion.ExecuteGump(m_Graphic);
+
+		if (th != NULL && !m_Width)
+			m_MinimizedArrowX = th->Width - 16;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -250,10 +256,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 				g_GL.PopScissor();
 			}
 
-			if (m_Width)
-				g_Orion.DrawGump(0x0985, 0, m_X + m_Width - 10, m_Y + 6);
-			else
-				g_Orion.DrawGump(0x0985, 0, m_X + 94, m_Y + 6);
+			g_Orion.DrawGump(0x0985, 0, m_X + m_MinimizedArrowX, m_Y + 6);
 		}
 		else
 		{
@@ -266,7 +269,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 				g_GL.PopScissor();
 			}
 
-			g_Orion.DrawGump(0x00FC, 0, m_X + m_Width - 16, m_Y - 1);
+			g_Orion.DrawGump(0x00FC, 0, m_X + m_MinimizedArrowX, m_Y - 1);
 		}
 	}
 }
