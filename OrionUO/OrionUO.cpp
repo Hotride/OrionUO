@@ -446,6 +446,7 @@ void COrion::LoadClientConfig()
 
 		m_InverseBuylist = (file.ReadUInt8() != 0);
 
+		//Must implement some sort of map file detection and use a real number, instead of hardcoded 6.
 		IFOR(i, 0, 6)
 		{
 			g_MapSize[i].Width = file.ReadUInt16LE();
