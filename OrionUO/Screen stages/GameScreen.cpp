@@ -490,9 +490,6 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 			grayColor = 0x0386;
 	}
 
-	//if (maxZ != 150)
-	//	grayColor = 0x0021;
-
 	for (; obj != NULL; obj = obj->m_NextXY)
 	{
 #if UO_RENDER_LIST_SORT == 1
@@ -1098,8 +1095,6 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 		m_UseLight = (g_PersonalLightLevel < g_LightLevel);
 
 		glColor4f(g_DrawColor, g_DrawColor, g_DrawColor, 1.0f);
-
-		//bool useGrayObjects = ConfigManager.GrayOutOfRangeObjects;
 
 		if (g_ConfigManager.UseCircleTrans)
 		{

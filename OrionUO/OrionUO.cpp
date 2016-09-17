@@ -322,7 +322,6 @@ void COrion::Uninstall()
 	g_EntryPointer = NULL;
 	g_CurrentScreen = NULL;
 	RELEASE_POINTER(g_World);
-	//RELEASE_POINTER(PluginManager);
 	RELEASE_POINTER(g_DeathShader);
 	RELEASE_POINTER(g_ColorizerShader);
 	RELEASE_POINTER(g_FontColorizerShader);
@@ -1416,9 +1415,9 @@ void COrion::InitStaticAnimList()
 		{
 			m_StaticDataIndex[i].Index = i;
 
-			DWORD flags = m_StaticData[i / 32].Tiles[i % 32].Flags;
+			uint flags = m_StaticData[i / 32].Tiles[i % 32].Flags;
 
-			m_StaticDataIndex[i].LightColor = CalculateLightColor((WORD)i);
+			m_StaticDataIndex[i].LightColor = CalculateLightColor((ushort)i);
 
 			if (IsAnimated(flags))
 				m_StaticAnimList.push_back(&m_StaticDataIndex[i]);
@@ -3683,7 +3682,7 @@ WISP_GEOMETRY::CSize COrion::GetArtDimension(const ushort &id)
 
 	if (id >= 0x4000) //run
 	{
-		CGLTexture *th = ExecuteStaticArt(id - 0x4000); // m_StaticDataIndex[id - 0x4000].Texture;
+		CGLTexture *th = ExecuteStaticArt(id - 0x4000);
 
 		if (th != NULL)
 		{
@@ -3693,7 +3692,7 @@ WISP_GEOMETRY::CSize COrion::GetArtDimension(const ushort &id)
 	}
 	else //raw
 	{
-		CGLTexture *th = ExecuteLandArt(id); // m_LandDataIndex[id].Texture;
+		CGLTexture *th = ExecuteLandArt(id);
 
 		if (th != NULL)
 		{
@@ -3713,7 +3712,7 @@ WISP_GEOMETRY::CRect COrion::GetStaticArtRealPixelDimension(const ushort &id)
 WISP_GEOMETRY::CSize COrion::GetGumpDimension(const ushort &id)
 {
 	WISP_GEOMETRY::CSize size;
-	CGLTexture *th = ExecuteGump(id); // m_GumpDataIndex[id].Texture;
+	CGLTexture *th = ExecuteGump(id);
 
 	if (th != NULL)
 	{

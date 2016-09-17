@@ -10,14 +10,6 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 //----------------------------------------------------------------------------------
-//Имеются закомментированные фрагменты кода в:
-//GameCharacter.cpp     PluginManager
-//ClientUO.cpp
-//Packets.cpp
-//PacketManager.cpp
-//GameObject.cpp		PluginManager
-//GameScreen.cpp
-//----------------------------------------------------------------------------------
 //!Глобальные состояния нажатия дополнительных клавишь
 extern bool g_AltPressed;
 extern bool g_CtrlPressed;
