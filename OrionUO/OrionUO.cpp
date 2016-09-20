@@ -2143,42 +2143,42 @@ void COrion::LoadShaders()
 	g_CurrentShader = NULL;
 
 #if UO_USE_SHADER_FILES == 1
-	TMappedHeader frag;
-	memset(&frag, 0, sizeof(TMappedHeader));
-	TMappedHeader vert;
-	memset(&vert, 0, sizeof(TMappedHeader));
+	WISP_FILE::CMappedFile frag;
+	WISP_FILE::CMappedFile vert;
 
-	FileManager.LoadFileToMemory(vert, FilePath("shaders\\Shader.vert").c_str());
-	FileManager.LoadFileToMemory(frag, FilePath("shaders\\DeathShader.frag").c_str());
+	if (vert.Load(g_App.FilePath("shaders\\Shader.vert")))
+	{
+		frag.Load(g_App.FilePath("shaders\\DeathShader.frag"));
 
-	DeathShader = new TDeathShader((char*)vert.Address, (char*)frag.Address);
+		g_DeathShader = new CDeathShader((char*)vert.Start, (char*)frag.Start);
 
-	FileManager.UnloadFileFromMemory(frag);
-
-
-
-	FileManager.LoadFileToMemory(frag, FilePath("shaders\\ColorizerShader.frag").c_str());
-
-	ColorizerShader = new TColorizerShader((char*)vert.Address, (char*)frag.Address);
-
-	FileManager.UnloadFileFromMemory(frag);
+		frag.Unload();
 
 
 
-	FileManager.LoadFileToMemory(frag, FilePath("shaders\\FontColorizerShader.frag").c_str());
+		frag.Load(g_App.FilePath("shaders\\ColorizerShader.frag"));
 
-	FontColorizerShader = new TColorizerShader((char*)vert.Address, (char*)frag.Address);
+		g_ColorizerShader = new CColorizerShader((char*)vert.Start, (char*)frag.Start);
 
-	FileManager.UnloadFileFromMemory(frag);
+		frag.Unload();
 
 
 
-	FileManager.LoadFileToMemory(frag, FilePath("shaders\\LightColorizerShader.frag").c_str());
+		frag.Load(g_App.FilePath("shaders\\FontColorizerShader.frag"));
 
-	LightColorizerShader = new TColorizerShader((char*)vert.Address, (char*)frag.Address);
+		g_FontColorizerShader = new CColorizerShader((char*)vert.Start, (char*)frag.Start);
 
-	FileManager.UnloadFileFromMemory(frag);
-	FileManager.UnloadFileFromMemory(vert);
+		frag.Unload();
+
+
+
+		frag.Load(g_App.FilePath("shaders\\LightColorizerShader.frag"));
+
+		g_LightColorizerShader = new CColorizerShader((char*)vert.Start, (char*)frag.Start);
+
+		frag.Unload();
+		vert.Unload();
+	}
 #else
 	g_DeathShader = new CDeathShader(g_Vert_ShaderData, g_Frag_DeathShaderData);
 	g_ColorizerShader = new CColorizerShader(g_Vert_ShaderData, g_Frag_ColorizerShaderData);

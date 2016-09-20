@@ -27,14 +27,26 @@ static const char *g_Vert_ShaderData =
 "}";
 //---------------------------------------------------------------------------
 static const char *g_Frag_DeathShaderData =
+"varying vec3 l;\r\n"
+"varying vec3 n;\r\n"
 "uniform sampler2D usedTexture;\r\n"
+"uniform int drawMode;\r\n"
 "void main(void)\r\n"
 "{\r\n"
 "	vec4 textureColor = texture2D(usedTexture, gl_TexCoord[0].xy);\r\n"
-"	float red = textureColor.r * 0.85;\r\n"
-"	if (red == 0.0)\r\n"
-"		red = textureColor.g * 0.85;\r\n"
-"	gl_FragColor = vec4(red, red, red, textureColor.a) * gl_Color;\r\n"
+"	if (textureColor.a != 0.0)\r\n"
+"	{\r\n"
+"		if (drawMode > 5)\r\n"
+"		{\r\n"
+"			vec3 n2 = normalize(n);\r\n"
+"			vec3 l2 = normalize(l);\r\n"
+"			vec4 normal = vec4(max(dot(n2, l2) + 0.5, 0.0));\r\n"
+"			textureColor = textureColor * normal;\r\n"
+"		}\r\n"
+"		float red = (textureColor.r * 0.6 + textureColor.g * 0.05);\r\n"
+"		textureColor = vec4(red, red, red, textureColor.a);\r\n"
+"	}\r\n"
+"	gl_FragColor = textureColor;\r\n"
 "}";
 //---------------------------------------------------------------------------
 static const char *g_Frag_LightShaderData =

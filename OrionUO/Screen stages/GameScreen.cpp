@@ -487,7 +487,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 	if (g_ConfigManager.GrayOutOfRangeObjects)
 	{
 		if (GetDistance(g_Player, WISP_GEOMETRY::CPoint2Di(worldX, worldY)) > g_ConfigManager.UpdateRange)
-			grayColor = 0x0386;
+			grayColor = 0x038E;
 	}
 
 	for (; obj != NULL; obj = obj->m_NextXY)
