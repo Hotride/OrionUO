@@ -235,33 +235,6 @@ typedef struct ANIM_IDX_BLOCK
 	uint Unknown;
 } *PANIM_IDX_BLOCK;
 //----------------------------------------------------------------------------------
-typedef struct ANIM_FRAME
-{
-	short ImageCenterX;
-	short ImageCenterY;
-	ushort Width;
-	ushort Height;
-	GLuint Texture;
-	puchar Data;
-
-	void Reset();
-	void Clear();
-} *PANIM_FRAME;
-//----------------------------------------------------------------------------------
-typedef struct ANIM_GROUP
-{
-	ushort Palette[256];
-	uint FrameCount;
-	uint *FrameOffset;
-	PANIM_FRAME Frames;
-} *PANIM_GROUP;
-//----------------------------------------------------------------------------------
-typedef struct ANIMATION_DATA
-{
-	uint FrameCount[5];
-	PANIM_FRAME Frames[5];
-} *PANIMATION_DATA;
-//----------------------------------------------------------------------------------
 typedef struct TEXTURE_IDX_BLOCK
 {
 	uint Position;

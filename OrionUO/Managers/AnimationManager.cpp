@@ -825,6 +825,8 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 
 		pushort p = (pushort)((uint)dataStart + frameOffset[i]);
 
+		//LOG("Load anim: 0x%04X[%i]: 0x%08X: ", id, i, p);
+
 		short imageCenterX = (short)*p;
 		frame->CenterX = imageCenterX;
 		p++;
@@ -840,6 +842,8 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 		short imageHeight = (short)*p;
 		frame->Height = imageHeight;
 		p++;
+
+		//LOG("%i %i, %i %i\n", imageCenterX, imageCenterY, imageWidth, imageHeight);
 
 		int x = 0;
 		int y = 0;
@@ -888,8 +892,8 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 				{
 					ushort val = palette[*b];
 
-					if (color)
-						val = g_ColorManager.GetColor16(val, color);
+					//if (color)
+					//	val = g_ColorManager.GetColor16(val, color);
 
 					ushort a = val ? 0x8000 : 0;
 					int block = y * imageWidth + (x + j);
@@ -1180,6 +1184,14 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar
 
 		y -= frame->Height + frame->CenterY;
 
+		/*if (!isShadow)
+		{
+			if (!obj->NPC && ((CGameItem*)obj)->Layer == OL_MOUNT)
+				LOG("mount frame: 0x%04X %i %i ; %i %i\n", id, frame->CenterX, frame->CenterY, frame->Width, frame->Height);
+			else
+				LOG("NPC frame: 0x%04X %i %i ; %i %i\n", id, frame->CenterX, frame->CenterY, frame->Width, frame->Height);
+		}*/
+
 		if (obj->IsHuman())
 		{
 			short frameHeight = frame->Height;
@@ -1261,7 +1273,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar
 			int drawMode = (!g_GrayedPixels && color);
 			bool spectralColor = (color & SPECTRAL_COLOR);
 			
-			if (spectralColor)
+			if (!g_GrayedPixels && spectralColor)
 			{
 				glEnable(GL_BLEND);
 
@@ -1471,6 +1483,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 {
 	m_Transform = false;
 
+	y -= 3;
 	int originalX = x;
 	int originalY = y;
 
@@ -1479,7 +1492,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	uint serial = obj->Serial;
 
 	if (obj->Hidden())
-		m_Color = 0x038A;
+		m_Color = 0x038D;
 	else if (g_StatusbarUnderMouse == serial)
 		m_Color = g_ConfigManager.GetColorByNotoriety(obj->Notoriety);
 	else
@@ -1867,6 +1880,7 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 */
 void CAnimationManager::DrawCorpse(CGameItem *obj, int x, int y, int z)
 {
+	y -= 3;
 	m_Sitting = 0;
 	m_Direction = obj->Layer;
 
@@ -1878,7 +1892,7 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, int x, int y, int z)
 	GetAnimDirection(m_Direction, mirror);
 
 	if (obj->Hidden())
-		m_Color = 0x038A;
+		m_Color = 0x038D;
 	else
 		m_Color = 0;
 
