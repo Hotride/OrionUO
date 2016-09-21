@@ -38,7 +38,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		g_OrionWindow.NoResize = true;
 	}
 	catch (std::exception& ex) {
-		LOG("ex.what()\n", ex.what());
+		LOG(ex.what());
 	}
 	catch (...) {
 		LOG("Caught unknown exception.\n");
