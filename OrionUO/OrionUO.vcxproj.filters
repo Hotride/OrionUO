@@ -750,6 +750,9 @@
     <ClInclude Include="GUI\GUISkillGroup.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Gumps\GumpSpellbook.h">
+      <Filter>Header Files\Gumps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1399,6 +1402,9 @@
     </ClCompile>
     <ClCompile Include="GUI\GUISkillGroup.cpp">
       <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Gumps\GumpSpellbook.cpp">
+      <Filter>Source Files\Gumps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

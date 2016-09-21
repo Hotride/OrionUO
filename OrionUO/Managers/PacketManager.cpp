@@ -57,6 +57,7 @@
 #include "../Gumps/GumpBook.h"
 #include "../Gumps/GumpShop.h"
 #include "../Gumps/GumpSkills.h"
+#include "../Gumps/GumpSpellbook.h"
 #include "../zlib.h"
 
 #pragma comment(lib, "zdll.lib")
@@ -1521,6 +1522,7 @@ PACKET_HANDLER(UpdateContainedItem)
 	if (container != NULL)
 	{
 		CGump *gump = g_GumpManager.UpdateContent(cserial, 0, GT_SPELLBOOK);
+
 		if (gump == NULL)
 			gump = g_GumpManager.UpdateContent(cserial, 0, GT_CONTAINER);
 
@@ -2050,7 +2052,7 @@ PACKET_HANDLER(OpenContainer)
 		if (y < 0)
 			y = 0;
 
-		//gump = new CGumpSpellbook(serial, x, y);
+		gump = new CGumpSpellbook(serial, x, y);
 		g_Orion.PlaySoundEffect(0x0055);
 	}
 	else if (gumpid == 0x0030) //Buylist
@@ -2117,10 +2119,13 @@ PACKET_HANDLER(OpenContainer)
 					gump->MinimizedY = cont->MinimizedY;
 					gump->LockMoving = cont->LockMoving;
 
-					if (cont->Minimized)
-						gump->Page = 1;
-					else
-						gump->Page = 2;
+					if (gumpid != 0xFFFF)
+					{
+						if (cont->Minimized)
+							gump->Page = 1;
+						else
+							gump->Page = 2;
+					}
 
 					g_ContainerStack.erase(cont);
 

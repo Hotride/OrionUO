@@ -213,6 +213,7 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="Gumps\GumpSelectFont.h" />
     <ClInclude Include="Gumps\GumpSkills.h" />
     <ClInclude Include="Gumps\GumpSpell.h" />
+    <ClInclude Include="Gumps\GumpSpellbook.h" />
     <ClInclude Include="Gumps\GumpStatusbar.h" />
     <ClInclude Include="Gumps\GumpTargetSystem.h" />
     <ClInclude Include="Gumps\GumpTextEntryDialog.h" />
@@ -436,6 +437,7 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="Gumps\GumpSelectFont.cpp" />
     <ClCompile Include="Gumps\GumpSkills.cpp" />
     <ClCompile Include="Gumps\GumpSpell.cpp" />
+    <ClCompile Include="Gumps\GumpSpellbook.cpp" />
     <ClCompile Include="Gumps\GumpStatusbar.cpp" />
     <ClCompile Include="Gumps\GumpTargetSystem.cpp" />
     <ClCompile Include="Gumps\GumpTextEntryDialog.cpp" />
