@@ -45,6 +45,7 @@ void CGumpScreenMain::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpScreenMain::GUMP_SCROLL_BUTTON_EVENT_C
 {
+	return;
 	CGUIMinMaxButtons *minmax = (CGUIMinMaxButtons*)g_PressedObject.LeftObject();
 
 	if (minmax == NULL)

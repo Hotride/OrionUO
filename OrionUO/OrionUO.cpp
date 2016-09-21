@@ -297,6 +297,7 @@ bool COrion::Install()
 	g_MainScreen.UpdateContent();
 	g_MainScreen.LoadGlobalConfig();
 
+	LOG("Init screen...\n");
 #ifdef _DEBUG
 	g_CurrentScreen = &g_DebugScreen;
 	g_DebugScreen.Init();
@@ -304,6 +305,8 @@ bool COrion::Install()
 #else
 	InitScreen(GS_MAIN);
 #endif
+
+	LOG("Installation completed!\n");
 
 	return true;
 }
@@ -520,20 +523,7 @@ void COrion::ProcessDelayedClicks()
 			}
 		}
 		else
-		{
 			g_ClickObject.Gump()->DelayedClick(g_ClickObject.Object());
-
-			/*if (g_ClickObject.GumpType == GT_SPELLBOOK)
-			{
-				TGumpSpellbook *gump = (TGumpSpellbook*)GumpManager->UpdateGump(g_ClickObject.Serial, g_ClickObject.GumpID, g_ClickObject.GumpType);
-
-				if (gump != NULL)
-				{
-					gump->Page = g_ClickObject.GumpButtonID;
-					Orion->PlaySoundEffect(0x0055);
-				}
-			}*/
-		}
 
 		g_ClickObject.Clear();
 	}
