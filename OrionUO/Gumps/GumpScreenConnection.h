@@ -27,7 +27,7 @@ public:
 
 
 
-	virtual void OnButton(const uint &serial);
+	GUMP_BUTTON_EVENT_H;
  };
  //----------------------------------------------------------------------------------
 #endif

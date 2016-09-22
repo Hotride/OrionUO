@@ -44,9 +44,9 @@ public:
 	void DeleteConsolePrefix();
 	void SetConsolePrefix();
 
-	virtual void OnButton(const uint &serial);
-	virtual void OnCheckbox(const uint &serial, const bool &state);
-	virtual void OnTextEntry(const uint &serial);
+	GUMP_BUTTON_EVENT_H;
+	GUMP_CHECKBOX_EVENT_H;
+	GUMP_TEXT_ENTRY_EVENT_H;
 };
 //----------------------------------------------------------------------------------
 extern CGumpConsoleType *g_GumpConsoleType;

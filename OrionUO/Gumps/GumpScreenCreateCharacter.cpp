@@ -360,7 +360,7 @@ void CGumpScreenCreateCharacter::InitToolTip()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenCreateCharacter::OnButton(const uint &serial)
+void CGumpScreenCreateCharacter::GUMP_BUTTON_EVENT_C
 {
 	if (serial == ID_CCS_QUIT) //x button
 		g_CreateCharacterScreen.CreateSmoothAction(CCreateCharacterScreen::ID_SMOOTH_CCS_QUIT);
@@ -385,7 +385,7 @@ void CGumpScreenCreateCharacter::OnButton(const uint &serial)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenCreateCharacter::OnTextEntry(const uint &serial)
+void CGumpScreenCreateCharacter::GUMP_TEXT_ENTRY_EVENT_C
 {
 	if (g_CreateCharacterScreen.ColorSelection == 0)
 	{

@@ -36,9 +36,8 @@ public:
 
 
 
-	virtual void OnButton(const uint &serial);
-
-	virtual void OnTextEntry(const uint &serial);
+	GUMP_BUTTON_EVENT_H;
+	GUMP_TEXT_ENTRY_EVENT_H;
  };
  //----------------------------------------------------------------------------------
 #endif

@@ -102,7 +102,7 @@ void CGumpScreenSelectTown::UpdateContent()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenSelectTown::OnButton(const uint &serial)
+void CGumpScreenSelectTown::GUMP_BUTTON_EVENT_C
 {
 	if (serial == ID_STS_QUIT) //x button
 		g_SelectTownScreen.CreateSmoothAction(CSelectTownScreen::ID_SMOOTH_STS_QUIT);
@@ -112,7 +112,7 @@ void CGumpScreenSelectTown::OnButton(const uint &serial)
 		g_SelectTownScreen.CreateSmoothAction(CSelectTownScreen::ID_SMOOTH_STS_GO_SCREEN_GAME_CONNECT);
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenSelectTown::OnTextEntry(const uint &serial)
+void CGumpScreenSelectTown::GUMP_TEXT_ENTRY_EVENT_C
 {
 	QFOR(item, m_Items, CBaseGUI*)
 	{

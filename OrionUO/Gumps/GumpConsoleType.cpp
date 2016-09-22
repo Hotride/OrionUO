@@ -246,7 +246,7 @@ void CGumpConsoleType::CalculateGumpState()
 	g_GumpTranslate.Y = (float)(g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight + 2);
 }
 //----------------------------------------------------------------------------------
-void CGumpConsoleType::OnButton(const uint &serial)
+void CGumpConsoleType::GUMP_BUTTON_EVENT_C
 {
 	if (serial == ID_GCT_MINIMIZE)
 	{
@@ -260,7 +260,7 @@ void CGumpConsoleType::OnButton(const uint &serial)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpConsoleType::OnCheckbox(const uint &serial, const bool &state)
+void CGumpConsoleType::GUMP_CHECKBOX_EVENT_C
 {
 	if (serial == ID_GCT_SHOW_FULL_TEXT && m_ShowFullText != state)
 	{
@@ -269,7 +269,7 @@ void CGumpConsoleType::OnCheckbox(const uint &serial, const bool &state)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpConsoleType::OnTextEntry(const uint &serial)
+void CGumpConsoleType::GUMP_TEXT_ENTRY_EVENT_C
 {
 	DeleteConsolePrefix();
 

@@ -402,7 +402,7 @@ void CGumpScreenSelectProfession::InitToolTip()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenSelectProfession::OnButton(const uint &serial)
+void CGumpScreenSelectProfession::GUMP_BUTTON_EVENT_C
 {
 	CBaseProfession *obj = g_ProfessionManager.Selected;
 	CProfession *profession = (CProfession*)obj;
@@ -506,12 +506,12 @@ void CGumpScreenSelectProfession::OnButton(const uint &serial)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenSelectProfession::OnSliderClick(const uint &serial)
+void CGumpScreenSelectProfession::GUMP_SLIDER_CLICK_EVENT_C
 {
 	OnSliderMove(serial);
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenSelectProfession::OnSliderMove(const uint &serial)
+void CGumpScreenSelectProfession::GUMP_SLIDER_MOVE_EVENT_C
 {
 	//Stats
 	if (serial >= ID_SPS_STATS_SPHERE && serial <= ID_SPS_STATS_SPHERE + 2)

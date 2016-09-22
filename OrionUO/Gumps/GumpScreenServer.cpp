@@ -124,7 +124,7 @@ void CGumpScreenServer::InitToolTip()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenServer::OnButton(const uint &serial)
+void CGumpScreenServer::GUMP_BUTTON_EVENT_C
 {
 	if (serial == ID_SS_QUIT) //x button
 		g_ServerScreen.CreateSmoothAction(CServerScreen::ID_SMOOTH_SS_QUIT);
@@ -137,7 +137,7 @@ void CGumpScreenServer::OnButton(const uint &serial)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenServer::OnTextEntry(const uint &serial)
+void CGumpScreenServer::GUMP_TEXT_ENTRY_EVENT_C
 {
 	if (serial >= ID_SS_SERVER_LIST) //Server selection
 	{

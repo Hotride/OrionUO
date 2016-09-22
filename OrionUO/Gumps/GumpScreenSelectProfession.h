@@ -47,10 +47,10 @@ public:
 
 
 
-	virtual void OnButton(const uint &serial);
-	virtual void OnTextEntry(const uint &serial) { OnButton(serial); }
-	virtual void OnSliderClick(const uint &serial);
-	virtual void OnSliderMove(const uint &serial);
+	GUMP_BUTTON_EVENT_H;
+	GUMP_TEXT_ENTRY_EVENT_H { OnButton(serial); }
+	GUMP_SLIDER_CLICK_EVENT_H;
+	GUMP_SLIDER_MOVE_EVENT_H;
  };
  //----------------------------------------------------------------------------------
 #endif

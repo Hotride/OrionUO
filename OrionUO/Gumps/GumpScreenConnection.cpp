@@ -178,7 +178,7 @@ void CGumpScreenConnection::UpdateContent()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenConnection::OnButton(const uint &serial)
+void CGumpScreenConnection::GUMP_BUTTON_EVENT_C
 {
 	if (serial == ID_CS_OK) //v button
 	{

@@ -222,7 +222,7 @@ void CGumpScreenMain::InitToolTip()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenMain::OnButton(const uint &serial)
+void CGumpScreenMain::GUMP_BUTTON_EVENT_C
 {
 	if (serial == ID_MS_QUIT) //x button
 		g_MainScreen.CreateSmoothAction(CMainScreen::ID_SMOOTH_MS_QUIT);
@@ -252,7 +252,7 @@ void CGumpScreenMain::OnButton(const uint &serial)
 	}*/
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenMain::OnTextEntry(const uint &serial)
+void CGumpScreenMain::GUMP_TEXT_ENTRY_EVENT_C
 {
 	if (serial == ID_MS_PASSWORD)
 		g_MainScreen.m_Password->SetPos(m_PasswordFake->Pos());

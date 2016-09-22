@@ -140,7 +140,7 @@ void CGumpScreenCharacterList::InitToolTip()
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenCharacterList::OnButton(const uint &serial)
+void CGumpScreenCharacterList::GUMP_BUTTON_EVENT_C
 {
 	if (serial == ID_CS_QUIT) //x button
 		g_CharacterListScreen.CreateSmoothAction(CCharacterListScreen::ID_SMOOTH_CLS_QUIT);
@@ -154,7 +154,7 @@ void CGumpScreenCharacterList::OnButton(const uint &serial)
 		g_CharacterListScreen.CreateSmoothAction(CCharacterListScreen::ID_SMOOTH_CLS_GO_SCREEN_DELETE);
 }
 //----------------------------------------------------------------------------------
-void CGumpScreenCharacterList::OnTextEntry(const uint &serial)
+void CGumpScreenCharacterList::GUMP_TEXT_ENTRY_EVENT_C
 {
 	IFOR(i, 0, g_CharacterList.Count)
 	{

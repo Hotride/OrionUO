@@ -84,7 +84,7 @@ void CGumpMenubar::OnChangeOpened(const bool &val)
 	m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
-void CGumpMenubar::OnButton(const uint &serial)
+void CGumpMenubar::GUMP_BUTTON_EVENT_C
 {
 	switch (serial)
 	{
@@ -147,7 +147,7 @@ void CGumpMenubar::OnButton(const uint &serial)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpMenubar::OnTextEntry(const uint &serial)
+void CGumpMenubar::GUMP_TEXT_ENTRY_EVENT_C
 {
 	QFOR(item, m_Items, CBaseGUI*)
 	{

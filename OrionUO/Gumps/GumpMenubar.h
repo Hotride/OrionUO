@@ -33,8 +33,8 @@ public:
 	
 	bool CanBeDisplayed() { return false; }
 
-	void OnButton(const uint &serial);
-	void OnTextEntry(const uint &serial);
+	GUMP_BUTTON_EVENT_H;
+	GUMP_TEXT_ENTRY_EVENT_H;
 
 	virtual void OnLeftMouseButtonUp();
 };
