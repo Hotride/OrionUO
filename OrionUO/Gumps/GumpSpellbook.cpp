@@ -24,7 +24,8 @@ ushort CGumpSpellbook::m_ReagentsIndex[8] =
 };
 //----------------------------------------------------------------------------------
 CGumpSpellbook::CGumpSpellbook(uint serial, int x, int y)
-: CGump(GT_SPELLBOOK, serial, x, y), m_PageCount(8), m_SpellCount(0)
+: CGump(GT_SPELLBOOK, serial, x, y), m_PageCount(8), m_SpellCount(0),
+m_LastSpellPointer(NULL), m_LastSpellBookmark(NULL)
 {
 	m_Draw2Page = true;
 	memset(&m_Spells[0], 0, sizeof(m_Spells));
@@ -79,6 +80,96 @@ void CGumpSpellbook::PrepareContent()
 			g_GumpManager.AddGump(new CGumpSpell(index + 1, g_MouseManager.Position.X - 20, g_MouseManager.Position.Y - 20, 0x08C0 + index));
 
 			g_OrionWindow.EmulateOnLeftMouseButtonDown();
+		}
+	}
+
+	if (!m_Minimized && m_LastSpellPointer != NULL)
+	{
+		bool wantVisible = false;
+		ushort graphicBookmark = 0x08AD;
+		ushort graphicPointer = 0x08AF;
+		int wantX = m_LastSpellPointer->X;
+		int wantY = m_LastSpellPointer->Y;
+
+		if (m_Page < 8)
+		{
+			IFOR(j, 0, 2)
+			{
+				int y = 0;
+
+				IFOR(i, 0, 8)
+				{
+					int offs = i + (8 * (m_Page + j));
+
+					if (m_Spells[offs])
+					{
+						if (offs == g_LastSpellIndex - 1)
+						{
+							wantVisible = true;
+							wantY = 52 + y;
+
+							if ((m_Page + j) % 2)
+							{
+								graphicBookmark = 0x08AE;
+								graphicPointer = 0x08B0;
+								wantX = 203;
+							}
+							else
+								wantX = 184;
+
+							break;
+						}
+
+						y += 15;
+					}
+				}
+			}
+		}
+		else
+		{
+			int page = 8;
+
+			IFOR(i, 0, 64)
+			{
+				if (!m_Spells[i])
+					continue;
+
+				if (page == m_Page || page == (m_Page + 1))
+				{
+					if (i == g_LastSpellIndex - 1)
+					{
+						wantVisible = true;
+						wantY = 40;
+
+						if (page % 2)
+						{
+							graphicBookmark = 0x08AE;
+							graphicPointer = 0x08B0;
+							wantX = 203;
+						}
+						else
+							wantX = 184;
+
+						break;
+					}
+				}
+
+				page++;
+			}
+		}
+
+		if (wantVisible != m_LastSpellPointer->Visible || wantX != m_LastSpellPointer->X || wantY != m_LastSpellPointer->Y)
+		{
+			m_LastSpellPointer->Visible = wantVisible;
+			m_LastSpellPointer->Graphic = graphicPointer;
+			m_LastSpellPointer->X = wantX;
+			m_LastSpellPointer->Y = wantY;
+
+			m_LastSpellBookmark->Visible = wantVisible;
+			m_LastSpellBookmark->Graphic = graphicBookmark;
+			m_LastSpellBookmark->X = wantX;
+
+			m_WantRedraw = true;
 		}
 	}
 }
@@ -248,6 +339,9 @@ void CGumpSpellbook::UpdateContent()
 	m_PrevPage->Visible = (m_Page != 0);
 	m_NextPage = (CGUIButton*)Add(new CGUIButton(ID_GSB_BUTTON_NEXT, 0x08BC, 0x08BC, 0x08BC, 321, 8));
 	m_NextPage->Visible = (m_Page + 2 < m_PageCount);
+
+	m_LastSpellBookmark = (CGUIGumppic*)Add(new CGUIGumppic(0x08AD, 184, 2));
+	m_LastSpellPointer = (CGUIGumppic*)Add(new CGUIGumppic(0x08AF, 184, 52));
 }
 //----------------------------------------------------------------------------
 void CGumpSpellbook::GUMP_BUTTON_EVENT_C

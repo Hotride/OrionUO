@@ -37,6 +37,9 @@ private:
 	CGUIButton *m_PrevPage;
 	CGUIButton *m_NextPage;
 
+	CGUIGumppic *m_LastSpellPointer;
+	CGUIGumppic *m_LastSpellBookmark;
+
 public:
 	CGumpSpellbook(uint serial, int x, int y);
 	virtual ~CGumpSpellbook();

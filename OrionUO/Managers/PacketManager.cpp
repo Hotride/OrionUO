@@ -832,7 +832,7 @@ PACKET_HANDLER(EnterWorld)
 
 	g_Orion.LoadStartupConfig();
 
-	g_LastSpellIndex = 0;
+	g_LastSpellIndex = 1;
 	g_LastSkillIndex = 1;
 
 	g_Orion.Click(g_PlayerSerial);
