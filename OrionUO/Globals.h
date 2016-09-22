@@ -37,6 +37,14 @@ extern bool g_AbyssPacket03First;
 #include "DefinitionMacro.h"
 #include "Constants.h"
 //----------------------------------------------------------------------------------
+#define CWISPDEBUGLOGGER 1
+
+#if CWISPDEBUGLOGGER != 0
+	#define DEBUGLOG LOG
+#else //CWISPDEBUGLOGGER == 0
+	#define DEBUGLOG(...)
+#endif //CWISPDEBUGLOGGER!=0
+//----------------------------------------------------------------------------------
 #pragma warning(disable: 4800) //forcing value to bool 'true' or 'false' (performance warning)
 //----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y);

@@ -421,8 +421,9 @@ void CProfessionManager::LoadProfessionDescription()
 				IFOR(i, 0, (int)list.size())
 				{
 					if (!((CBaseProfession*)m_Items)->AddDescription(i - 1, list[i], ptr))
-						LOG("Failed to add description! (%s)\n", list[i].c_str());
-
+					{
+						//LOG("Failed to add description! (%s)\n", list[i].c_str());
+					}
 					ptr += strlen(ptr) + 1;
 				}
 

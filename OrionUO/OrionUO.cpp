@@ -536,15 +536,18 @@ void COrion::Process(const bool &rendering)
 
 	static uint removeUnusedTexturesTime = 0;
 
+	DEBUGLOG("Receive network data...\n");
 	g_ConnectionManager.Recv();
+	DEBUGLOG("Send clilocks\n");
 	g_PacketManager.SendMegaClilocRequests();
+	DEBUGLOG("Updating mouse\n");
 	g_MouseManager.Update();
 
 	if (g_GameState >= GS_CHARACTER && g_LastSendTime + SEND_TIMEOUT_DELAY < g_Ticks)
 	{
 		g_PingCount++;
 
-		BYTE ping[2] = { 0x73, g_PingSequence };
+		uchar ping[2] = { 0x73, g_PingSequence };
 
 		Send(ping, 2);
 	}
@@ -642,21 +645,27 @@ void COrion::Process(const bool &rendering)
 	{
 		if (!IsIconic(g_OrionWindow.Handle))
 		{
+			DEBUGLOG("Render selection\n");
 			g_CurrentScreen->Render(false);
 
+			DEBUGLOG("Prepare content\n");
 			g_CurrentScreen->PrepareContent();
 
+			DEBUGLOG("Listing gumps\n");
 			CGump::ProcessListing();
 
+			DEBUGLOG("Rendering graphics\n");
 			g_CurrentScreen->Render(true);
 		}
 	}
 
 	if (removeUnusedTexturesTime < g_Ticks)
 	{
+		DEBUGLOG("Remove textures\n");
 		ClearUnusedTextures();
 		removeUnusedTexturesTime = g_Ticks + CLEAR_TEXTURES_DELAY;
 	}
+	DEBUGLOG("Process rendering end.\n");
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadStartupConfig()
