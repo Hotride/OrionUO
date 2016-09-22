@@ -375,9 +375,13 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 			ushort convertedAnimID = 0;
 			ushort realAnimID = 0;
 
-			if (anim[0] != -1 && m_AddressIdx[2] != NULL && m_AddressMul[2] != NULL)
+			if (anim[0] != -1 && m_AddressIdx[2] != 0 && m_AddressMul[2] != 0)
 			{
 				animFile = 2;
+
+				if (anim[0] == 68)
+					anim[0] = 122;
+
 				realAnimID = anim[0];
 
 				if (anim[0] >= 200) //Low
@@ -391,7 +395,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					convertedAnimID = anim[0];
 				}
 			}
-			else if (anim[1] != -1 && m_AddressIdx[3] != NULL && m_AddressMul[3] != NULL)
+			else if (anim[1] != -1 && m_AddressIdx[3] != 0 && m_AddressMul[3] != 0)
 			{
 				animFile = 3;
 				realAnimID = anim[1];
@@ -415,7 +419,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					startAnimID = (anim[1] * 65) + 9000;
 				}
 			}
-			else if (anim[2] != -1 && m_AddressIdx[4] != NULL && m_AddressMul[4] != NULL)
+			else if (anim[2] != -1 && m_AddressIdx[4] != 0 && m_AddressMul[4] != 0)
 			{
 				animFile = 4;
 				realAnimID = anim[2];
@@ -439,7 +443,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					startAnimID = anim[2] * 110;
 				}
 			}
-			else if (anim[3] != -1 && m_AddressIdx[5] != NULL && m_AddressMul[5] != NULL)
+			else if (anim[3] != -1 && m_AddressIdx[5] != 0 && m_AddressMul[5] != 0)
 			{
 				animFile = 5;
 				realAnimID = anim[3];
@@ -470,7 +474,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 				if ((uint)startAnimID < m_SizeIdx[animFile])
 				{
-					PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_AddressIdx[animFile] + (startAnimID));
+					PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_AddressIdx[animFile] + startAnimID);
 
 					if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
 					{
@@ -483,7 +487,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		}
 	}
 
-	while (!corpseParser.IsEOF())
+	while (!corpseParser.IsEOF() && false)
 	{
 		STRING_LIST strings = corpseParser.ReadTokens();
 
@@ -510,8 +514,6 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 				break;
 			}
-			//Прийдется сбросить кривой индекс, который портит жуку айди трупа.
-			m_CorpseReplaces[330] = 0;
 		}
 	}
 }
@@ -814,7 +816,7 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 	puint frameOffset = (puint)ptr;
 	ptr += (frameCount * sizeof(uint));
 
-	ushort color = m_DataIndex[id].Color;
+	//ushort color = m_DataIndex[id].Color;
 
 	IFOR(i, 0, frameCount)
 	{
@@ -1112,15 +1114,6 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar
 	if (obj == NULL)
 		return;
 
-	ushort objColor = obj->Color;
-	bool partialHue = obj->IsPartialHue();
-
-	if (objColor & 0x8000)
-	{
-		partialHue = true;
-		objColor &= 0x7FFF;
-	}
-
 	bool isShadow = (id >= 0x10000);
 
 	if (isShadow)
@@ -1131,6 +1124,21 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar
 
 	if (id >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		return;
+
+	ushort objColor = obj->Color;
+	bool partialHue = obj->IsPartialHue();
+
+	if (objColor & 0x8000)
+	{
+		partialHue = true;
+		objColor &= 0x7FFF;
+	}
+
+	if (!objColor)
+	{
+		objColor = m_DataIndex[id].Color;
+		partialHue = true;
+	}
 
 	CTextureAnimation *anim = m_DataIndex[id].Group;
 
@@ -1896,7 +1904,7 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, int x, int y, int z)
 	else
 		m_Color = 0;
 
-	BYTE animIndex = obj->AnimIndex;
+	uchar animIndex = obj->AnimIndex;
 	m_AnimGroup = GetDieGroupIndex(obj->GetMountAnimation(), obj->UsedLayer);
 	
 	y -= (z * 4);
@@ -2005,8 +2013,8 @@ bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
 */
 void CAnimationManager::GetCorpseGraphic(ushort &graphic)
 {
-	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_CorpseReplaces[graphic])
-		graphic = m_CorpseReplaces[graphic];
+	//if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_CorpseReplaces[graphic])
+	//	graphic = m_CorpseReplaces[graphic];
 }
 //----------------------------------------------------------------------------------
 /*!
