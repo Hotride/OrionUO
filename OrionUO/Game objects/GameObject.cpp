@@ -231,7 +231,7 @@ void CGameObject::AddText(CTextData *msg)
 {
 	m_TextControl->Add(msg);
 
-	string msgname = "You see:";
+	string msgname = "You see: ";
 
 	if (!m_YouSeeJournalPrefix)
 		msgname = m_Name + ": ";
