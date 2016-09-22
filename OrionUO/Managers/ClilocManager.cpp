@@ -133,7 +133,7 @@ string CCliloc::GetA(uint id, string result)
 */
 wstring CCliloc::GetW(uint id, string result)
 {
-	return ToWString(GetA(id, result));
+	return DecodeUTF8(GetA(id, result));
 }
 //----------------------------------------------------------------------------------
 //-----------------------------------CClilocManager---------------------------------
