@@ -247,7 +247,6 @@ bool CGump::ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, c
 void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Page)
 {
 	float alpha[2] = { 1.0f, 0.5f };
-	//deque<CBaseGUI*> htmlGumps;
 	CGUIComboBox *combo = NULL;
 
 	bool transparent = ApplyTransparent(start, 0, currentPage, draw2Page);
@@ -279,8 +278,6 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 				case GOT_XFMHTMLGUMP:
 				case GOT_XFMHTMLTOKEN:
 				{
-					//htmlGumps.push_back(item);
-										 
 					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
 
 					GLfloat x = (GLfloat)htmlGump->X;
@@ -339,43 +336,12 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 	if (combo != NULL)
 		combo->Draw(false);
 
-	/*for (deque<CBaseGUI*>::iterator i = htmlGumps.begin(); i != htmlGumps.end(); i++)
-	{
-		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)(*i);
-
-		GLfloat x = (GLfloat)htmlGump->X;
-		GLfloat y = (GLfloat)htmlGump->Y;
-
-		glTranslatef(x, y, 0.0f);
-
-		CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
-
-		IFOR(j, 0, 5)
-		{
-			if (item->Visible && !item->SelectOnly)
-				item->Draw(false);
-
-			item = (CBaseGUI*)item->m_Next;
-		}
-
-		GLfloat offsetX = (GLfloat)(htmlGump->DataOffset.X - htmlGump->CurrentOffset.X);
-		GLfloat offsetY = (GLfloat)(htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y);
-
-		glTranslatef(offsetX, offsetY, 0.0f);
-
-		CGump::DrawItems(item, currentPage, draw2Page);
-		g_GL.PopScissor();
-
-		glTranslatef(-(x + offsetX), -(y + offsetY), 0.0f);
-	}*/
-
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //----------------------------------------------------------------------------------
 CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const int draw2Page)
 {
 	CRenderObject *selected = NULL;
-	//deque<CBaseGUI*> htmlGumps;
 
 	int page = 0;
 	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
@@ -426,8 +392,6 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 				case GOT_XFMHTMLGUMP:
 				case GOT_XFMHTMLTOKEN:
 				{
-					//htmlGumps.push_back(item);
-										 
 					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
 
 					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->X, oldPos.Y - htmlGump->Y);
@@ -520,55 +484,11 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 	if (combo != NULL)
 		selected = combo->SelectedItem();
 
-	/*for (deque<CBaseGUI*>::iterator i = htmlGumps.begin(); i != htmlGumps.end(); i++)
-	{
-		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)(*i);
-
-		g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->X, oldPos.Y - htmlGump->Y);
-
-		CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
-
-		CRenderObject *selectedHTML = NULL;
-
-		IFOR(j, 0, 4)
-		{
-			if (item->Select())
-				selectedHTML = item;
-
-			item = (CBaseGUI*)item->m_Next;
-		}
-
-		//Scissor
-		if (item->Select())
-		{
-			int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
-			int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
-
-			g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
-
-			selected = CGump::SelectItems((CBaseGUI*)item->m_Next, currentPage, draw2Page);
-		}
-		else
-			selected = NULL;
-
-		if (selected == NULL)
-		{
-			selected = selectedHTML;
-
-			if (selected == NULL)
-				selected = item;
-		}
-
-		g_MouseManager.Position = oldPos;
-	}*/
-
 	return selected;
 }
 //----------------------------------------------------------------------------------
 void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page, int count)
 {
-	//deque<CBaseGUI*> htmlGumps;
-
 	int page = 0;
 	int group = 0;
 	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
@@ -769,8 +689,6 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 				case GOT_XFMHTMLGUMP:
 				case GOT_XFMHTMLTOKEN:
 				{
-					//htmlGumps.push_back(item);
-										 
 					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
 
 					WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
@@ -799,36 +717,10 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 			}
 		}
 	}
-
-	/*for (deque<CBaseGUI*>::iterator i = htmlGumps.begin(); i != htmlGumps.end(); i++)
-	{
-		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)(*i);
-
-		WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-		g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->X, oldPos.Y - htmlGump->Y);
-
-		CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
-
-		TestItemsLeftMouseDown(gump, item, currentPage, draw2Page, 5);
-
-		IFOR(j, 0, 5)
-			item = (CBaseGUI*)item->m_Next;
-
-		int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
-		int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
-
-		g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
-
-		TestItemsLeftMouseDown(gump, item, currentPage, draw2Page);
-
-		g_MouseManager.Position = oldPos;
-	}*/
 }
 //----------------------------------------------------------------------------------
 void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page)
 {
-	//deque<CBaseGUI*> htmlGumps;
-
 	int page = 0;
 	int group = 0;
 	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
@@ -1043,8 +935,6 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 				case GOT_XFMHTMLGUMP:
 				case GOT_XFMHTMLTOKEN:
 				{
-					//htmlGumps.push_back(item);
-
 					TestItemsLeftMouseUp(gump, (CBaseGUI*)item->m_Items, currentPage, draw2Page);
 
 					break;
@@ -1054,18 +944,10 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 			}
 		}
 	}
-
-	/*for (deque<CBaseGUI*>::iterator i = htmlGumps.begin(); i != htmlGumps.end(); i++)
-	{
-		CBaseGUI *item = *i;
-
-		TestItemsLeftMouseUp(gump, (CBaseGUI*)item->m_Items, currentPage, draw2Page);
-	}*/
 }
 //----------------------------------------------------------------------------------
 void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, const int &currentPage, const int draw2Page)
 {
-	//deque<CBaseGUI*> htmlGumps;
 	const int delay = SCROLL_LISTING_DELAY / 7;
 
 	int page = 0;
@@ -1128,8 +1010,6 @@ void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, con
 				{
 					if (item->Select())
 					{
-						//htmlGumps.push_back(item);
-
 						CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
 
 						WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
@@ -1168,45 +1048,10 @@ void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, con
 			}
 		}
 	}
-
-	/*for (deque<CBaseGUI*>::iterator i = htmlGumps.begin(); i != htmlGumps.end(); i++)
-	{
-		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)(*i);
-
-		WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-		g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->X, oldPos.Y - htmlGump->Y);
-
-		CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
-
-		IFOR(j, 0, 5)
-		{
-			if (item->Type == GOT_SLIDER)
-			{
-				((CGUISlider*)item)->OnScroll(up, delay);
-
-				gump->OnSliderMove(item->Serial);
-			}
-
-			item = (CBaseGUI*)item->m_Next;
-		}
-
-		int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
-		int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
-
-		g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
-
-		TestItemsScrolling(gump, (CBaseGUI*)item, up, currentPage, draw2Page);
-
-		g_MouseManager.Position = oldPos;
-
-		gump->WantRedraw = true;
-	}*/
 }
 //----------------------------------------------------------------------------------
 void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page, int count)
 {
-	//deque<CBaseGUI*> htmlGumps;
-
 	int page = 0;
 	int group = 0;
 	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
@@ -1267,8 +1112,6 @@ void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPa
 				case GOT_XFMHTMLGUMP:
 				case GOT_XFMHTMLTOKEN:
 				{
-					//htmlGumps.push_back(item);
-
 					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
 
 					WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
@@ -1298,32 +1141,6 @@ void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPa
 			}
 		}
 	}
-
-	/*for (deque<CBaseGUI*>::iterator i = htmlGumps.begin(); i != htmlGumps.end(); i++)
-	{
-		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)(*i);
-
-		WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
-		g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->X, oldPos.Y - htmlGump->Y);
-
-		CBaseGUI *item = (CBaseGUI*)htmlGump->m_Items;
-
-		TestItemsDragging(gump, item, currentPage, draw2Page, 5);
-
-		IFOR(j, 0, 5)
-			item = (CBaseGUI*)item->m_Next;
-
-		int offsetX = htmlGump->DataOffset.X - htmlGump->CurrentOffset.X;
-		int offsetY = htmlGump->DataOffset.Y - htmlGump->CurrentOffset.Y;
-
-		g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - offsetX, g_MouseManager.Position.Y - offsetY);
-
-		TestItemsDragging(gump, item, currentPage, draw2Page);
-
-		g_MouseManager.Position = oldPos;
-
-		gump->WantRedraw = true;
-	}*/
 }
 //----------------------------------------------------------------------------------
 void CGump::PrepareTextures()
