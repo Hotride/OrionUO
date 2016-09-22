@@ -66,7 +66,7 @@ void CGumpSelectFont::UpdateContent()
 		radio->Checked = (i == selected);
 
 		text = (CGUIText*)Add(new CGUIText(0, 74, drawY));
-		text->CreateTextureW(0, L"This font");
+		text->CreateTextureW(i, L"This font");
 	}
 
 	Add(new CGUIGroup(0));
