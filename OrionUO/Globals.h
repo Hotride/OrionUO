@@ -37,7 +37,7 @@ extern bool g_AbyssPacket03First;
 #include "DefinitionMacro.h"
 #include "Constants.h"
 //----------------------------------------------------------------------------------
-#define CWISPDEBUGLOGGER 1
+#define CWISPDEBUGLOGGER 0
 
 #if CWISPDEBUGLOGGER != 0
 	#define DEBUGLOG LOG

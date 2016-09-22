@@ -30,21 +30,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 {
 	INITLOGGER("uolog.txt");
 
-	try {
-		if (!g_OrionWindow.Create(hInstance, L"Orion UO Client", L"Ultima Online", true, 640, 480, LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ORIONUO)), LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR1))))
+	if (!g_OrionWindow.Create(hInstance, L"Orion UO Client", L"Ultima Online", true, 640, 480, LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ORIONUO)), LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR1))))
 			return 0;
 
-		g_OrionWindow.ShowWindow(true);
-		g_OrionWindow.NoResize = true;
-	}
-	catch (std::exception& ex) {
-		LOG(ex.what());
-	}
-	catch (...) {
-		LOG("Caught unknown exception.\n");
-	}
-
-
+	g_OrionWindow.ShowWindow(true);
+	g_OrionWindow.NoResize = true;
 
 	return g_App.Run(hInstance);
 }
