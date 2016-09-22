@@ -617,11 +617,9 @@ void COrion::Process(const bool &rendering)
 			if (!IsIconic(g_OrionWindow.Handle))
 			{
 				if (canRenderSelect)
-				{
 					g_GameScreen.Render(false);
 
-					CGump::ProcessListing();
-				}
+				CGump::ProcessListing();
 
 				g_GameScreen.PrepareContent();
 

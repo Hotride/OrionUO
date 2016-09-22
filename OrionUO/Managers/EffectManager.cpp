@@ -72,7 +72,7 @@ void CEffectManager::AddEffect(CGameEffect *effect)
 
 			g_MapManager->AddRender(effect);
 
-			effect->Update();
+			effect->Update(NULL);
 
 			break;
 		}
@@ -148,7 +148,7 @@ void CEffectManager::UpdateEffects()
 	{
 		CGameEffect *next = (CGameEffect*)effect->m_Next;
 
-		effect->Update();
+		effect->Update(NULL);
 
 		effect = next;
 	}

@@ -34,6 +34,7 @@
 #include "../Managers/ClilocManager.h"
 #include "../Managers/FontsManager.h"
 #include "../Managers/GumpManager.h"
+#include "../Managers/FileManager.h"
 #include "../Gumps/GumpPaperdoll.h"
 #include "../Gumps/GumpContainer.h"
 #include "../Gumps/GumpPopupMenu.h"
@@ -2770,16 +2771,16 @@ PACKET_HANDLER(GraphicEffect)
 	effect->DestY = destY;
 	effect->DestZ = destZ;
 
-	/*DWORD addressAnimData = (DWORD)FileManager.AnimdataMul.Address;
+	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
 
 	if (addressAnimData)
 	{
 		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + ((graphic * 68) + 4 * ((graphic / 8) + 1)));
 
-		effect->Speed = (pad->FrameInterval - effect->Speed) * 50;
+		effect->Speed = (pad->FrameInterval - effect->Speed) * 45;
 	}
-	else*/
-	effect->Speed = speed + 6;
+	else
+		effect->Speed = speed + 6;
 
 	effect->Duration = g_Ticks + duration;
 	effect->FixedDirection = (fixedDirection != 0);

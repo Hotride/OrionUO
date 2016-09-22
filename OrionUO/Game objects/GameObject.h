@@ -114,6 +114,8 @@ public:
 	*/
 	void DrawEffects(int x, int y);
 
+	void UpdateEffects();
+
 	/*!
 	Добавить эффект
 	@param [__in] effect Ссылка на эффект

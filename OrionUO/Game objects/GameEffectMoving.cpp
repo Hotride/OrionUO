@@ -27,7 +27,7 @@ CGameEffectMoving::~CGameEffectMoving()
 Обновить эффект
 @return
 */
-void CGameEffectMoving::Update()
+void CGameEffectMoving::Update(CGameObject *parent)
 {
 	CGameObject *obj = g_World->FindWorldObject(m_DestSerial);
 
@@ -80,9 +80,10 @@ void CGameEffectMoving::Update()
 
 	int delta = deltaXY[0];
 	int stepXY = 0;
-	int tempXY[2] = { m_Speed, 0 };
+	static const int effectSpeed = 5;
+	int tempXY[2] = { effectSpeed/*m_Speed*/, 0 };
 
-	for (int j = 0; j < m_Speed; j++)
+	for (int j = 0; j < effectSpeed/*m_Speed*/; j++)
 	{
 		stepXY += deltaXY[1];
 

@@ -310,7 +310,7 @@ ushort CGameObject::GetDrawGraphic(bool &doubleDraw)
 	int index = IsGold();
 	ushort result = m_Graphic;
 
-	const ushort graphicAccociateTable[3][3] =
+	const ushort graphicAssociateTable[3][3] =
 	{
 		{0x0EED, 0x0EEE, 0x0EEF},
 		{0x0EEA, 0x0EEB, 0x0EEC},
@@ -320,7 +320,7 @@ ushort CGameObject::GetDrawGraphic(bool &doubleDraw)
 	if (index)
 	{
 		int graphicIndex = (int)(m_Count > 1) + (int)(m_Count > 5);
-		result = graphicAccociateTable[index - 1][graphicIndex];
+		result = graphicAssociateTable[index - 1][graphicIndex];
 	}
 	else
 		doubleDraw = IsStackable() && (m_Count > 1);
@@ -337,76 +337,42 @@ ushort CGameObject::GetDrawGraphic(bool &doubleDraw)
 */
 void CGameObject::DrawEffects(int x, int y)
 {
-	CGameEffect *effect = m_Effects;
-	char z = m_Z * 4;
-
 	if (m_NPC)
 	{
 		CGameCharacter *gc = GameCharacterPtr();
 
 		x += gc->OffsetX;
 		y += gc->OffsetY;
-
-		//ANIMATION_DIMENSIONS dims = AnimationManager->GetAnimationDimensions(this);
-
-		//x += dims.Width / 2;
-		//y -= dims.Height / 2;
 	}
+
+	QFOR(effect, m_Effects, CGameEffect*)
+	{
+		effect->ApplyRenderMode();
+
+		if (effect->EffectType == EF_LIGHTING)
+		{
+			ushort graphic = 0x4E20 + effect->AnimIndex;
+
+			WISP_GEOMETRY::CSize size = g_Orion.GetGumpDimension(graphic);
+
+			g_Orion.DrawGump(graphic, effect->Color, x - (size.Width / 2), y - (size.Height + (m_Z * 4)));
+		}
+		else
+			g_Orion.DrawStaticArt(effect->GetCurrentGraphic(), effect->Color, x, y, m_Z);
+
+		effect->RemoveRenderMode();
+	}
+}
+//----------------------------------------------------------------------------------
+void CGameObject::UpdateEffects()
+{
+	CGameEffect *effect = m_Effects;
 
 	while (effect != NULL)
 	{
 		CGameEffect *next = (CGameEffect*)effect->m_Next;
-		
-		ushort eGraphic = 0;
-		ushort gGraphic = 0;
 
-		if (effect->Duration < g_Ticks)
-			RemoveEffect(effect);
-		else if (effect->LastChangeFrameTime < g_Ticks)
-		{
-			effect->LastChangeFrameTime = g_Ticks + effect->Speed;
-
-			if (effect->EffectType == EF_LIGHTING) //lighting
-			{
-				int animIndex = effect->AnimIndex;
-				
-				gGraphic = 0x4E20 + animIndex;
-
-				animIndex++;
-				if (animIndex >= 10)
-					RemoveEffect(effect);
-				else
-					effect->AnimIndex = animIndex;
-			}
-			else if (effect->EffectType == EF_STAY_AT_SOURCE)
-				eGraphic = effect->CalculateCurrentGraphic();
-		}
-		else
-		{
-			if (effect->EffectType == EF_LIGHTING) //lighting
-				gGraphic = 0x4E20 + effect->AnimIndex;
-			else if (effect->EffectType == EF_STAY_AT_SOURCE)
-				eGraphic = effect->GetCurrentGraphic();
-		}
-		
-		if (gGraphic != 0)
-		{
-			WISP_GEOMETRY::CSize size = g_Orion.GetGumpDimension(gGraphic);
-
-			effect->ApplyRenderMode();
-
-			g_Orion.DrawGump(gGraphic, effect->Color, x - (size.Width / 2), (y - size.Height) - z);
-
-			effect->RemoveRenderMode();
-		}
-		else if (eGraphic != 0)
-		{
-			effect->ApplyRenderMode();
-
-			g_Orion.DrawStaticArt(eGraphic, effect->Color, x, y, m_Z);
-
-			effect->RemoveRenderMode();
-		}
+		effect->Update(this);
 
 		effect = next;
 	}

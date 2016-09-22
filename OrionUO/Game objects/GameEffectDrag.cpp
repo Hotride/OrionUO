@@ -8,6 +8,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "GameEffectDrag.h"
+#include "../Managers/EffectManager.h"
 //----------------------------------------------------------------------------------
 CGameEffectDrag::CGameEffectDrag()
 : CGameEffect(), m_OffsetX(0), m_OffsetY(0)
@@ -22,9 +23,12 @@ CGameEffectDrag::~CGameEffectDrag()
 Обновить эффект
 @return
 */
-void CGameEffectDrag::Update()
+void CGameEffectDrag::Update(CGameObject *parent)
 {
-	m_OffsetX += 10;
-	m_OffsetY += 10;
+	m_OffsetX += 4;
+	m_OffsetY += 4;
+
+	if (m_Duration < g_Ticks)
+		g_EffectManager.RemoveEffect(this);
 }
 //----------------------------------------------------------------------------------

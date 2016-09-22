@@ -277,6 +277,8 @@ void CGameWorld::ProcessAnimation()
 				obj->LastAnimationChangeTime = g_Ticks + delay;
 			}
 		}
+
+		obj->UpdateEffects();
 	}
 }
 //---------------------------------------------------------------------------

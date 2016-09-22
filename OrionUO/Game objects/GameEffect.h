@@ -91,7 +91,7 @@ public:
 	Обновить эффект
 	@return 
 	*/
-	virtual void Update() {}
+	virtual void Update(class CGameObject *parent);
 };
 //----------------------------------------------------------------------------------
 #endif

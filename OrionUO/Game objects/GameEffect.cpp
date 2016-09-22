@@ -13,6 +13,7 @@
 #include "GameEffectMoving.h"
 #include "../Managers/EffectManager.h"
 #include "../Managers/FileManager.h"
+#include "../Game objects/GameObject.h"
 //----------------------------------------------------------------------------------
 CGameEffect::CGameEffect()
 : CRenderWorldObject(ROT_EFFECT, 0, 0, 0, 0, 0, 0), m_EffectType(EF_MOVING),
@@ -41,50 +42,70 @@ void CGameEffect::Draw(const int &x, const int &y)
 	g_RenderedObjectsCountInGameWindow++;
 #endif
 
-	ushort objGraphic = 0;
+	ushort objGraphic = GetCurrentGraphic();
 
-	if (m_EffectType == EF_STAY_AT_POS && m_Duration < g_Ticks)
-		g_EffectManager.RemoveEffect(this);
+	ApplyRenderMode();
+
+	if (m_EffectType == EF_MOVING)
+	{
+		CGameEffectMoving *moving = (CGameEffectMoving*)this;
+
+		int drawEffectX = x + moving->OffsetX;
+		int drawEffectY = y + moving->OffsetY + moving->OffsetZ;
+
+		if (moving->FixedDirection)
+			g_Orion.DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);
+		else
+			g_Orion.DrawStaticArtRotated(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z, moving->Angle);
+	}
 	else if (m_EffectType == EF_DRAG)
 	{
-		if (m_Duration < g_Ticks)
-			g_EffectManager.RemoveEffect(this);
-		else
-		{
-			CGameEffectDrag *dragEffect = (CGameEffectDrag*)this;
+		CGameEffectDrag *dragEffect = (CGameEffectDrag*)this;
 
-			g_Orion.DrawStaticArt(m_Graphic, m_Color, x - dragEffect->OffsetX, y - dragEffect->OffsetY, m_Z);
-		}
-	}
-	else if (LastChangeFrameTime < g_Ticks)
-	{
-		LastChangeFrameTime = g_Ticks + 50;
-
-		objGraphic = CalculateCurrentGraphic();
+		g_Orion.DrawStaticArt(m_Graphic, m_Color, x - dragEffect->OffsetX, y - dragEffect->OffsetY, m_Z);
 	}
 	else
-		objGraphic = GetCurrentGraphic();
+		g_Orion.DrawStaticArt(objGraphic, m_Color, x, y, m_Z);
 
-	if (objGraphic)
+	RemoveRenderMode();
+}
+//----------------------------------------------------------------------------------
+void CGameEffect::Update(CGameObject *parent)
+{
+	if (m_EffectType != EF_MOVING)
 	{
-		ApplyRenderMode();
-
-		if (m_EffectType == EF_MOVING)
+		if (m_Duration < g_Ticks)
 		{
-			CGameEffectMoving *moving = (CGameEffectMoving*)this;
-
-			int drawEffectX = x + moving->OffsetX;
-			int drawEffectY = y + moving->OffsetY + moving->OffsetZ;
-
-			if (moving->FixedDirection)
-				g_Orion.DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);
+			if (parent != NULL)
+				parent->RemoveEffect(this);
 			else
-				g_Orion.DrawStaticArtRotated(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z, moving->Angle);
+				g_EffectManager.RemoveEffect(this);
 		}
-		else
-			g_Orion.DrawStaticArt(objGraphic, m_Color, x, y, m_Z);
+		else if (m_LastChangeFrameTime < g_Ticks)
+		{
+			m_LastChangeFrameTime = g_Ticks + m_Speed;
 
-		RemoveRenderMode();
+			if (m_EffectType == EF_LIGHTING)
+			{
+				m_AnimIndex++;
+
+				if (m_AnimIndex >= 10)
+				{
+					if (parent != NULL)
+						parent->RemoveEffect(this);
+					else
+						g_EffectManager.RemoveEffect(this);
+				}
+			}
+			else
+				CalculateCurrentGraphic();
+		}
+	}
+	else if (m_LastChangeFrameTime < g_Ticks)
+	{
+		m_LastChangeFrameTime = g_Ticks + 50;
+
+		CalculateCurrentGraphic();
 	}
 }
 //----------------------------------------------------------------------------------
