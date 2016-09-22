@@ -537,7 +537,10 @@ void CGumpManager::Select(const bool &blocked)
 //----------------------------------------------------------------------------------
 void CGumpManager::InitToolTip()
 {
-	QFOR(gump, m_Items, CGump*)
+	if (g_SelectedObject.Gump() != NULL)
+		g_SelectedObject.Gump()->InitToolTip();
+
+	/*QFOR(gump, m_Items, CGump*)
 	{
 		if (g_SelectedObject.Gump() == gump)
 		{
@@ -545,7 +548,7 @@ void CGumpManager::InitToolTip()
 
 			break;
 		}
-	}
+	}*/
 }
 //----------------------------------------------------------------------------------
 /*!
