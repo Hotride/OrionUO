@@ -15,7 +15,9 @@
 #include "../OrionUO.h"
 #include "../Managers/MouseManager.h"
 #include "../Managers/GumpManager.h"
+#include "../Managers/ClilocManager.h"
 #include "../OrionWindow.h"
+#include "../ToolTip.h"
 //----------------------------------------------------------------------------------
 ushort CGumpSpellbook::m_ReagentsIndex[8] = 
 {
@@ -33,6 +35,24 @@ m_LastSpellPointer(NULL), m_LastSpellBookmark(NULL)
 //----------------------------------------------------------------------------------
 CGumpSpellbook::~CGumpSpellbook()
 {
+}
+//----------------------------------------------------------------------------------
+void CGumpSpellbook::InitToolTip()
+{
+	if (m_Page >= 8)
+	{
+		uint serial = g_SelectedObject.Serial;
+
+		if (serial >= ID_GSB_SPELL_ICON_LEFT)
+		{
+			if (serial >= ID_GSB_SPELL_ICON_RIGHT)
+				serial -= ID_GSB_SPELL_ICON_RIGHT;
+			else
+				serial -= ID_GSB_SPELL_ICON_LEFT;
+
+			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1061290 + serial), g_SelectedObject.Object(), 150);
+		}
+	}
 }
 //----------------------------------------------------------------------------------
 int CGumpSpellbook::GetReagentIndex(const ushort &id)

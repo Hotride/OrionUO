@@ -48,6 +48,8 @@ public:
 
 	void ChangePage(int newPage);
 
+	virtual void InitToolTip();
+
 	virtual void PrepareContent();
 
 	virtual void UpdateContent();

@@ -21,7 +21,10 @@ public:
 	CGumpSpell(uint serial, short x, short y, ushort graphic);
 	virtual ~CGumpSpell();
 
-	virtual void OnButton(const uint &serial);
+	virtual void InitToolTip();
+
+	GUMP_BUTTON_EVENT_H;
+
 	virtual bool OnLeftMouseButtonDoubleClick();
 };
 //----------------------------------------------------------------------------------
