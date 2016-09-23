@@ -507,8 +507,6 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 	pack32(textptr, textLinesCount);
 	textptr += 4;
 
-	int entryTextIndex = 0;
-
 	QFOR(item, gump->m_Items, CBaseGUI*)
 	{
 		switch (item->Type)
@@ -525,7 +523,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 			{
 				CGUITextEntry *gte = (CGUITextEntry*)item;
 
-				pack16(textptr, entryTextIndex/*gte->TextIndex*/);
+				pack16(textptr, gte->Serial);
 				textptr += 2;
 				int tlen = gte->m_Entry.Length();
 				pack16(textptr, tlen);
@@ -539,8 +537,6 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 					*textptr = gteText[i];
 					textptr++;
 				}
-
-				entryTextIndex++;
 
 				break;
 			}
