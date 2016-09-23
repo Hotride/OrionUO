@@ -77,6 +77,8 @@ public:
 
 	bool InGroup() { return (m_GroupNext != NULL || m_GroupPrev != NULL); }
 
+	virtual void InitToolTip();
+
 	virtual void PrepareContent();
 
 	virtual void UpdateContent();

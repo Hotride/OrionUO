@@ -23,6 +23,7 @@
 #include "../Party.h"
 #include "../OrionUO.h"
 #include "../TextEngine/GameConsole.h"
+#include "../ToolTip.h"
 //----------------------------------------------------------------------------------
 CGumpStatusbar::CGumpStatusbar(uint serial, short x, short y, bool minimized)
 : CGump(GT_STATUSBAR, serial, x, y), m_GroupNext(NULL), m_GroupPrev(NULL),
@@ -48,6 +49,53 @@ CGumpStatusbar::~CGumpStatusbar()
 		CPacketCloseStatusbarGump(m_Serial).Send();
 
 	RemoveFromGroup();
+}
+//----------------------------------------------------------------------------------
+void CGumpStatusbar::InitToolTip()
+{
+	uint serial = g_SelectedObject.Serial;
+
+	if (serial)
+	{
+		static const wstring tooltip[ID_GSB_TEXT_TITHING_POINTS] =
+		{
+			L"Minimize the gump", //ID_GSB_MINIMIZE
+			L"", //ID_GSB_TEXT_FIELD
+			L"", //ID_GSB_BUTTON_HEAL_1
+			L"", //ID_GSB_BUTTON_HEAL_2
+			L"Remove bar from group", //ID_GSB_BUTTON_REMOVE_FROM_GROUP
+			L"Open buff window", //ID_GSB_BUFF_GUMP
+			L"Change strength state", //ID_GSB_BUFF_LOCKER_STR
+			L"Change dexterity state", //ID_GSB_BUFF_LOCKER_DEX
+			L"Change intelligence state", //ID_GSB_BUFF_LOCKER_INT
+			L"", //
+			L"Strength", //ID_GSB_TEXT_STR
+			L"Dexterity", //ID_GSB_TEXT_DEX
+			L"Intelligence", //ID_GSB_TEXT_INT
+			L"Sex", //ID_GSB_TEXT_SEX
+			L"Armor", //ID_GSB_TEXT_ARMOR
+			L"Hit Points", //ID_GSB_TEXT_HITS
+			L"Stamina", //ID_GSB_TEXT_STAM
+			L"Mana", //ID_GSB_TEXT_MANA
+			L"Maximum stats", //ID_GSB_TEXT_MAX_STATS
+			L"Luck", //ID_GSB_TEXT_LUCK
+			L"Weight", //ID_GSB_TEXT_WEIGHT
+			L"Damage", //ID_GSB_TEXT_DAMAGE
+			L"Gold", //ID_GSB_TEXT_GOLD
+			L"Followers", //ID_GSB_TEXT_FOLLOWERS
+			L"Physical Resistance", //ID_GSB_TEXT_RESISTANCE_PHYSICAL
+			L"Fire Resistance", //ID_GSB_TEXT_RESISTANCE_FIRE
+			L"Energy Resistance", //ID_GSB_TEXT_RESISTANCE_COLD
+			L"Necro Resistance", //ID_GSB_TEXT_RESISTANCE_POISON
+			L"Holy Resistance", //ID_GSB_TEXT_RESISTANCE_ENERGY
+			L"Tithing Points" //ID_GSB_TEXT_TITHING_POINTS
+		};
+
+		const wstring &text = tooltip[serial - 1];
+
+		if (text.length())
+			g_ToolTip.Set(text, g_SelectedObject.Object(), 80);
+	}
 }
 //----------------------------------------------------------------------------------
 CGumpStatusbar *CGumpStatusbar::GetTopStatusbar()
