@@ -320,8 +320,9 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 	WISP_FILE::CTextFileParser newBodyParser("", " \t,{}", "#;//", "");
 	WISP_FILE::CTextFileParser bodyParser(g_App.FilePath("Body.def").c_str(), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser corpseParser(g_App.FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser bodyconvParser(g_App.FilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
+	WISP_FILE::CTextFileParser corpseParser(g_App.FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
+	bool noLoadCorpseDef = true;
 
 	while (!bodyParser.IsEOF())
 	{
@@ -487,7 +488,10 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		}
 	}
 
-	while (!corpseParser.IsEOF() && false)
+	if (noLoadCorpseDef)
+		return;
+
+	while (!corpseParser.IsEOF())
 	{
 		STRING_LIST strings = corpseParser.ReadTokens();
 
@@ -547,6 +551,8 @@ ANIMATION_GROUPS CAnimationManager::GetGroupIndex(ushort id)
 uchar CAnimationManager::GetDieGroupIndex(ushort id, bool second)
 {
 	uchar group = 0;
+
+	GetBodyGraphic(id);
 
 	if (id >= 200)
 	{
@@ -700,29 +706,26 @@ CTextureAnimation *CAnimationManager::GetAnimation(ushort id)
 */
 void CAnimationManager::ClearUnusedTextures(uint ticks)
 {
-	/*TLinkedList *list = m_UsedAnimList;
-	TLinkedList *prev = list;
-
 	ticks -= CLEAR_TEXTURES_DELAY;
 
-	while (list != NULL)
+	for (deque<CIndexAnimation*>::iterator it = m_UsedAnimList.begin(); it != m_UsedAnimList.end();)
 	{
-		TIndexAnimation *obj = (TIndexAnimation*)list->Data;
-		TTextureAnimation *anim = obj->Group;
+		CIndexAnimation *obj = *it;
+		CTextureAnimation *anim = obj->Group;
 
 		if (anim != NULL)
 		{
-			TTextureAnimationGroup *group = (TTextureAnimationGroup*)anim->m_Items;
+			CTextureAnimationGroup *group = (CTextureAnimationGroup*)anim->m_Items;
 
 			while (group != NULL)
 			{
-				TTextureAnimationGroup *nextGroup = (TTextureAnimationGroup*)group->m_Next;
+				CTextureAnimationGroup *nextGroup = (CTextureAnimationGroup*)group->m_Next;
 
-				TTextureAnimationDirection *direction = (TTextureAnimationDirection*)group->m_Items;
+				CTextureAnimationDirection *direction = (CTextureAnimationDirection*)group->m_Items;
 
 				while (direction != NULL)
 				{
-					TTextureAnimationDirection *nextDirection = (TTextureAnimationDirection*)direction->m_Next;
+					CTextureAnimationDirection *nextDirection = (CTextureAnimationDirection*)direction->m_Next;
 
 					if (direction->LastAccessTime < ticks)
 						group->Delete(direction);
@@ -736,32 +739,18 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 				group = nextGroup;
 			}
 
-			TLinkedList *next = list->Next;
-
 			if (anim->m_Items == NULL)
 			{
 				obj->Group = NULL;
 
-				if (list == m_UsedAnimList)
-				{
-					m_UsedAnimList = next;
-					prev = next;
-				}
-				else
-					prev->Next = next;
-
-				list->Next = NULL;
-				delete list;
+				it = m_UsedAnimList.erase(it);
 			}
-
-			list = next;
+			else
+				it++;
 		}
 		else
-		{
-			prev = list;
-			list = list->Next;
-		}
-	}*/
+			it++;
+	}
 }
 //----------------------------------------------------------------------------------
 /*!
