@@ -18,6 +18,12 @@ CGUIDataBox::~CGUIDataBox()
 {
 }
 //----------------------------------------------------------------------------------
+void CGUIDataBox::PrepareTextures()
+{
+	QFOR(item, m_Items, CBaseGUI*)
+		item->PrepareTextures();
+}
+//----------------------------------------------------------------------------------
 bool CGUIDataBox::EntryPointerHere()
 {
 	QFOR(item, m_Items, CBaseGUI*)

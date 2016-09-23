@@ -941,8 +941,6 @@ void COrion::ClearUnusedTextures()
 				else
 					it++;
 			}
-
-			list->clear();
 		}
 		else
 		{
@@ -962,8 +960,6 @@ void COrion::ClearUnusedTextures()
 				else
 					it++;
 			}
-
-			list->clear();
 		}
 	}
 
