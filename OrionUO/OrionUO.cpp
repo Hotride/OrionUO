@@ -143,9 +143,11 @@ bool COrion::Install()
 
 	CreateDirectoryA(g_App.FilePath("snapshots").c_str(), NULL);
 
+	DEBUGLOG("Load client config.\n");
 	LoadClientConfig();
 	LoadAutoLoginNames();
 
+	DEBUGLOG("Load files\n");
 	if (!g_FileManager.Load())
 	{
 		string tmp = string("Error loading file:\n") + WISP_FILE::g_WispMappedFileError;
@@ -165,10 +167,13 @@ bool COrion::Install()
 	else
 		g_MulReader = new CMulReader();
 
+	DEBUGLOG("Load tiledata\n");
 	LoadTiledata(512, 512);
+	DEBUGLOG("Load indexes\n");
 	LoadIndexFiles();
 	InitStaticAnimList();
 
+	DEBUGLOG("Load fonts.\n");
 	if (!g_FontManager.LoadFonts())
 	{
 		LOG("Error loading fonts\n");
@@ -177,6 +182,7 @@ bool COrion::Install()
 		return false;
 	}
 
+	DEBUGLOG("Load skills.\n");
 	if (!LoadSkills())
 	{
 		LOG("Error loading skills\n");
@@ -193,11 +199,14 @@ bool COrion::Install()
 		return false;
 	}
 
+	DEBUGLOG("Patch files\n");
 	PatchFiles();
+	DEBUGLOG("Replaces.\n");
 	IndexReplaces();
 
 	g_SkillSort.Init();
 
+	DEBUGLOG("Load cursors.\n");
 	if (!g_MouseManager.LoadCursorTextures())
 	{
 		LOG("Error loading cursors\n");
@@ -218,6 +227,7 @@ bool COrion::Install()
 
 	g_EntryPointer = NULL;
 
+	DEBUGLOG("Load prof.\n");
 	g_ProfessionManager.Load();
 	g_ProfessionManager.Selected = (CBaseProfession*)g_ProfessionManager.m_Items;
 
@@ -241,6 +251,7 @@ bool COrion::Install()
 	g_PluginManager = new CPluginManager();
 */
 
+	DEBUGLOG("Load client startup.\n");
 	LoadClientStartupConfig();
 
 	ushort b = 0x0000;
@@ -290,12 +301,16 @@ bool COrion::Install()
 		g_GL.BindTexture16(g_TextureGumpState[i].Texture, 10, 14, &pdwlt[i][0]);
 	}
 
+	DEBUGLOG("Init light buffer.\n");
 	g_LightBuffer.Init(640, 480);
 
+	DEBUGLOG("Create object handles.\n");
 	CreateObjectHandlesBackground();
 
+	DEBUGLOG("Load shaders.\n");
 	LoadShaders();
 
+	DEBUGLOG("Load shaders.\n");
 	g_MainScreen.UpdateContent();
 	g_MainScreen.LoadGlobalConfig();
 
@@ -1196,7 +1211,9 @@ void COrion::LoadIndexFiles()
 	if (g_MultiIndexCount > 0x2000)
 		g_MultiIndexCount = 0x2000;
 
-	IFOR(i, 0, MAX_GUMP_DATA_INDEX_COUNT)
+	int maxCount = (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK);
+
+	IFOR(i, 0, maxCount)
 	{
 		if (i < MAX_LAND_DATA_INDEX_COUNT)
 		{
