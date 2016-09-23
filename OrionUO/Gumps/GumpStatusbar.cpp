@@ -786,17 +786,15 @@ void CGumpStatusbar::UpdateContent()
 					if (member.CanChangeName)
 						textColor = 0x000E;
 
-					CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GSB_TEXT_FIELD, textColor, textColor, textColor, 16, -2, 150, false, 1, TS_LEFT, UOFONT_FIXED));
-					entry->m_Entry.SetText(memberName);
-					entry->CheckOnSerial = true;
+					m_Entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GSB_TEXT_FIELD, textColor, textColor, textColor, 16, -2, 150, false, 1, TS_LEFT, UOFONT_FIXED));
+					m_Entry->m_Entry.SetText(memberName);
+					m_Entry->CheckOnSerial = true;
+					Add(new CGUIHitBox(ID_GSB_TEXT_FIELD, 16, -2, 109, 16));
 
 					if (member.CanChangeName)
-					{
-						entry->ReadOnly = false;
-						Add(new CGUIHitBox(ID_GSB_TEXT_FIELD, 16, -2, 109, 16));
-					}
+						m_Entry->ReadOnly = false;
 					else
-						entry->ReadOnly = true;
+						m_Entry->ReadOnly = true;
 
 					Add(new CGUIButton(ID_GSB_BUTTON_HEAL_1, 0x0938, 0x093A, 0x093A, 16, 20));
 					Add(new CGUIButton(ID_GSB_BUTTON_HEAL_2, 0x0939, 0x093A, 0x093A, 16, 33));
@@ -895,13 +893,10 @@ void CGumpStatusbar::UpdateContent()
 			m_Entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GSB_TEXT_FIELD, textColor, textColor, textColor, 16, 14, 150, false, 1, TS_LEFT, UOFONT_FIXED));
 			m_Entry->m_Entry.SetText(objName);
 			m_Entry->CheckOnSerial = true;
+			Add(new CGUIHitBox(ID_GSB_TEXT_FIELD, 16, 14, 109, 16));
 
 			if (canChangeName)
-			{
 				m_Entry->ReadOnly = false;
-
-				Add(new CGUIHitBox(ID_GSB_TEXT_FIELD, 16, 14, 109, 16));
-			}
 			else
 				m_Entry->ReadOnly = true;
 		}
@@ -913,7 +908,7 @@ void CGumpStatusbar::UpdateContent()
 
 	QFOR(item, m_Items, CBaseGUI*)
 	{
-		if (item->Serial != ID_GSB_TEXT_FIELD && item->Serial != ID_GSB_MINIMIZE)
+		if (item->Serial != ID_GSB_MINIMIZE)
 			item->MoveOnDrag = true;
 	}
 }
@@ -922,6 +917,8 @@ void CGumpStatusbar::OnLeftMouseButtonDown()
 {
 	if (g_GeneratedMouseDown)
 		return;
+
+	CGump::OnLeftMouseButtonDown();
 
 	if (!g_PressedObject.LeftSerial || g_PressedObject.LeftSerial > ID_GSB_LOCK_MOVING)
 	{
@@ -1059,7 +1056,7 @@ void CGumpStatusbar::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	}
 }
 //----------------------------------------------------------------------------------
-void CGumpStatusbar::OnKeyUp(const WPARAM &wParam, const LPARAM &lParam)
+void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
 	switch (wParam)
 	{

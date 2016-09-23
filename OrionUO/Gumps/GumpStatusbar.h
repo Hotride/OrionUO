@@ -88,7 +88,7 @@ public:
 	virtual void OnLeftMouseButtonDown();
 	virtual bool OnLeftMouseButtonDoubleClick();
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
-	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam);
+	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
 };
 //----------------------------------------------------------------------------------
 #endif
