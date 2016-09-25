@@ -18,14 +18,21 @@ class CLandObject : public CMapObject
 {
 	//Координаты привязки вершин
 	SETGET(RECT, Rect);
+
 	//Минимальныя Z координата
 	SETGET(char, MinZ);
+
 	//Флаг отображения (true - картинка из texmaps, false - из art.mul)
 	SETGET(bool, IsStretched);
+
+	//Оригинальный индекс картинки
+	SETGET(ushort, OriginalGraphic);
 
 public:
 	CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z);
 	virtual ~CLandObject() {}
+
+	virtual void UpdateGraphicBySeason();
 
 	//Векторы нормали
 	CVector m_Normals[4];

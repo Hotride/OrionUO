@@ -229,6 +229,7 @@ extern float g_DrawColor;
 extern float g_SkillsTotal;
 extern SEASON_TYPE g_Season;
 extern SEASON_TYPE g_OldSeason;
+extern int g_OldSeasonMusic;
 
 extern uint g_LockedClientFeatures;
 

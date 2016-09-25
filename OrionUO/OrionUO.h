@@ -117,6 +117,8 @@ public:
 	CIndexMulti m_MultiDataIndex[MAX_MULTI_DATA_INDEX_COUNT];
 	CIndexObject m_LightDataIndex[MAX_LIGHTS_DATA_INDEX_COUNT];
 
+	ushort m_WinterTile[MAX_LAND_DATA_INDEX_COUNT];
+
 
 	
 	//Подключиться к логин сокету
@@ -146,6 +148,7 @@ public:
 	//!Изменить сезон
 	void ChangeSeason(const SEASON_TYPE &season, const int &music);
 
+	ushort GetLandSeasonGraphic(ushort graphic);
 	ushort GetSeasonGraphic(const ushort &graphic);
 	ushort GetSpringGraphic(ushort graphic);
 	ushort GetSummerGraphic(ushort graphic);

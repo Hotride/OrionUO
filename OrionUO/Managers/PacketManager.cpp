@@ -944,7 +944,7 @@ PACKET_HANDLER(UpdatePlayer)
 		if (g_Player->Dead())
 			g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
 		else
-			g_Orion.ChangeSeason(g_OldSeason, 0);
+			g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
 	}
 
 	Move(1);
@@ -1378,7 +1378,7 @@ PACKET_HANDLER(UpdateObject)
 		if (g_Player->Dead())
 			g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
 		else
-			g_Orion.ChangeSeason(g_OldSeason, 0);
+			g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
 	}
 
 	serial = ReadUInt32BE();
@@ -3049,14 +3049,17 @@ PACKET_HANDLER(AttackCharacter)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(Season)
 {
+	return;
 	uchar season = ReadUInt8();
 
 	if (season > ST_DESOLATION)
-		season = 0; //season % (ST_DESOLATION + 1)
+		season = 0;
 
 	g_OldSeason = (SEASON_TYPE)season;
+	g_OldSeasonMusic = ReadUInt8();
 
-	g_Orion.ChangeSeason((SEASON_TYPE)season, ReadUInt8());
+	if (g_Season != ST_DESOLATION)
+		g_Orion.ChangeSeason((SEASON_TYPE)season, g_OldSeasonMusic);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DisplayDeath)

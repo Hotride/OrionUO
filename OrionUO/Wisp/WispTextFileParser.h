@@ -72,6 +72,9 @@ public:
 	CTextFileParser(const wstring &path, const char *delimiters = "", const char *comentaries = "", const char *quotes = "");
 	~CTextFileParser();
 
+	//Сбросить указатель на старт
+	void Restart();
+
 	//Проверка на конец файла
 	bool IsEOF();
 

@@ -301,6 +301,40 @@ bool COrion::Install()
 		g_GL.BindTexture16(g_TextureGumpState[i].Texture, 10, 14, &pdwlt[i][0]);
 	}
 
+	memset(&m_WinterTile[0], 0, sizeof(m_WinterTile));
+
+	m_WinterTile[196] = 0x011A;
+	m_WinterTile[197] = 0x011B;
+	m_WinterTile[198] = 0x011C;
+	m_WinterTile[199] = 0x011D;
+	m_WinterTile[206] = 0x05C0;
+	m_WinterTile[248] = 0x011A;
+	m_WinterTile[249] = 0x011B;
+	m_WinterTile[250] = 0x011C;
+	m_WinterTile[251] = 0x011D;
+	m_WinterTile[804] = 0x0391;
+	m_WinterTile[805] = 0x0392;
+	m_WinterTile[806] = 0x0393;
+	m_WinterTile[807] = 0x0394;
+	m_WinterTile[808] = 0x0395;
+	m_WinterTile[809] = 0x0396;
+	m_WinterTile[1521] = 0x011A;
+	m_WinterTile[1522] = 0x011B;
+	m_WinterTile[1523] = 0x011C;
+	m_WinterTile[1524] = 0x011D;
+	m_WinterTile[1529] = 0x011A;
+	m_WinterTile[1530] = 0x011B;
+	m_WinterTile[1531] = 0x011C;
+	m_WinterTile[1532] = 0x011D;
+	m_WinterTile[1533] = 0x011B;
+	m_WinterTile[1534] = 0x011C;
+	m_WinterTile[1535] = 0x011D;
+	m_WinterTile[1536] = 0x011B;
+	m_WinterTile[1537] = 0x011C;
+	m_WinterTile[1538] = 0x011D;
+	m_WinterTile[1539] = 0x011C;
+	m_WinterTile[1540] = 0x011D;
+
 	DEBUGLOG("Init light buffer.\n");
 	g_LightBuffer.Init(640, 480);
 
@@ -1187,6 +1221,19 @@ void COrion::ChangeSeason(const SEASON_TYPE &season, const int &music)
 	}
 }
 //----------------------------------------------------------------------------------
+ushort COrion::GetLandSeasonGraphic(ushort graphic)
+{
+	if (g_Season == ST_WINTER)
+	{
+		ushort buf = m_WinterTile[graphic];
+
+		if (buf != 0)
+			graphic = buf;
+	}
+
+	return graphic;
+}
+//----------------------------------------------------------------------------------
 ushort COrion::GetSeasonGraphic(const ushort &graphic)
 {
 	switch (g_Season)
@@ -1212,50 +1259,50 @@ ushort COrion::GetSpringGraphic(ushort graphic)
 {
 	switch (graphic)
 	{
-		case 3239:
-			graphic = 3204;
+		case 0x0CA7:
+			graphic = 0x0C84;
 			break;
-		case 3244:
-			graphic = 3142;
+		case 0x0CAC:
+			graphic = 0x0C46;
 			break;
-		case 3245:
-			graphic = 3144;
+		case 0x0CAD:
+			graphic = 0x0C48;
 			break;
-		case 3246:
-		case 3253:
-			graphic = 3146;
+		case 0x0CAE:
+		case 0x0CB5:
+			graphic = 0x0C4A;
 			break;
-		case 3247:
-			graphic = 3150;
+		case 0x0CAF:
+			graphic = 0x0C4E;
 			break;
-		case 3248:
-			graphic = 3149;
+		case 0x0CB0:
+			graphic = 0x0C4D;
 			break;
-		case 3254:
-		case 3341:
-		case 3348:
-			graphic = 3371;
+		case 0x0CB6:
+		case 0x0D0D:
+		case 0x0D14:
+			graphic = 0x0D2B;
 			break;
-		case 3340:
-			graphic = 3369;
+		case 0x0D0C:
+			graphic = 0x0D29;
 			break;
-		case 3342:
-			graphic = 3262;
+		case 0x0D0E:
+			graphic = 0x0CBE;
 			break;
-		case 3343:
-			graphic = 3263;
+		case 0x0D0F:
+			graphic = 0x0CBF;
 			break;
-		case 3344:
-			graphic = 3264;
+		case 0x0D10:
+			graphic = 0x0CC0;
 			break;
-		case 3345:
-			graphic = 3207;
+		case 0x0D11:
+			graphic = 0x0C87;
 			break;
-		case 3346:
-			graphic = 3128;
+		case 0x0D12:
+			graphic = 0x0C38;
 			break;
-		case 3347:
-			graphic = 3375;
+		case 0x0D13:
+			graphic = 0x0D2F;
 			break;
 		default:
 			break;
@@ -1273,76 +1320,76 @@ ushort COrion::GetFallGraphic(ushort graphic)
 {
 	switch (graphic)
 	{
-		case 3281:
-			graphic = 3282;
+		case 0x0CD1:
+			graphic = 0x0CD2;
 			break;
-		case 3284:
-			graphic = 3285;
+		case 0x0CD4:
+			graphic = 0x0CD5;
 			break;
-		case 3291:
-			graphic = 3292;
+		case 0x0CDB:
+			graphic = 0x0CDC;
 			break;
-		case 3294:
-			graphic = 3295;
+		case 0x0CDE:
+			graphic = 0x0CDF;
 			break;
-		case 3297:
-			graphic = 3298;
+		case 0x0CE1:
+			graphic = 0x0CE2;
 			break;
-		case 3300:
-			graphic = 3301;
+		case 0x0CE4:
+			graphic = 0x0CE5;
 			break;
-		case 3303:
-			graphic = 3304;
+		case 0x0CE7:
+			graphic = 0x0CE8;
 			break;
-		case 3477:
-			graphic = 3479;
+		case 0x0D95:
+			graphic = 0x0D97;
 			break;
-		case 3481:
-			graphic = 3483;
+		case 0x0D99:
+			graphic = 0x0D9B;
 			break;
-		case 3278:
-			graphic = 3279;
+		case 0x0CCE:
+			graphic = 0x0CCF;
 			break;
-		case 3305:
-		case 3230:
-			graphic = 3391;
+		case 0x0CE9:
+		case 0x0C9E:
+			graphic = 0x0D3F;
 			break;
-		case 3306:
-			graphic = 3392;
+		case 0x0CEA:
+			graphic = 0x0D40;
 			break;
-		case 3204:
-		case 3248:
-			graphic = 6946;
+		case 0x0C84:
+		case 0x0CB0:
+			graphic = 0x1B22;
 			break;
-		case 3211:
-		case 3212:
-		case 3213:
-		case 3214:
-			graphic = 3270;
+		case 0x0C8B:
+		case 0x0C8C:
+		case 0x0C8D:
+		case 0x0C8E:
+			graphic = 0x0CC6;
 			break;
-		case 3239:
-			graphic = 3144;
+		case 0x0CA7:
+			graphic = 0x0C48;
 			break;
-		case 3244:
-			graphic = 6943;
+		case 0x0CAC:
+			graphic = 0x1B1F;
 			break;
-		case 3245:
-			graphic = 6944;
+		case 0x0CAD:
+			graphic = 0x1B20;
 			break;
-		case 3246:
-			graphic = 6945;
+		case 0x0CAE:
+			graphic = 0x1B21;
 			break;
-		case 3247:
-			graphic = 3341;
+		case 0x0CAF:
+			graphic = 0x0D0D;
 			break;
-		case 3253:
-			graphic = 3344;
+		case 0x0CB5:
+			graphic = 0x0D10;
 			break;
-		case 3254:
-			graphic = 3371;
+		case 0x0CB6:
+			graphic = 0x0D2B;
 			break;
-		case 3271:
-			graphic = 3150;
+		case 0x0CC7:
+			graphic = 0x0C4E;
 			break;
 		default:
 			break;
@@ -1360,97 +1407,112 @@ ushort COrion::GetDesolationGraphic(ushort graphic)
 {
 	switch (graphic)
 	{
-		case 3350:
-			graphic = 7053;
-		case 7038:
-			graphic = 7732;
-		case 3371:
-			graphic = 6933;
-		case 3345:
-		case 3348:
-		case 3351:
-			graphic = 4651;
-		case 3257:
-		case 3258:
-		case 3259:
-		case 3260:
-		case 3261:
-		case 3262:
-			graphic = 7053;
-		case 3254:
-			graphic = 7069;
-		case 3271:
-			graphic = 6925;
-		case 3305:
-			graphic = 3799;
-		case 3306:
-			graphic = 3391;
-		case 3343:
-			graphic = 6940;
-		case 3256:
-			graphic = 7402;
-		case 3204:
-		case 3211:
-			graphic = 7044;
-		case 3230:
-			graphic = 4482;
-		case 3245:
-			graphic = 6881;
-		case 3148:
-			graphic = 6934;
-		case 3214:
-		case 3225:
-		case 3244:
-			graphic = 7053;
-		case 3142:
-		case 3145:
-			graphic = 7069;
-		case 3141:
-		case 3144:
-		case 3150:
-		case 3205:
-		case 3239:
-		case 3246:
-		case 3247:
-		case 3253:
-		case 3349:
-			graphic = 7068;
-		case 3127:
-		case 3128:
-		case 3143:
-		case 3146:
-		case 3147:
-		case 3248:
-		case 3149:
-		case 3212:
-		case 3213:
-		case 3219:
-		case 3220:
-		case 3224:
-		case 3231:
-		case 3232:
-		case 3233:
-		case 3234:
-		case 3235:
-		case 3236:
-		case 3249:
-		case 3250:
-		case 3251:
-		case 3252:
-		case 3255:
-		case 3269:
-		case 3340:
-		case 3341:
-		case 3342:
-		case 3344:
-		case 3346:
-		case 3347:
-		case 3352:
-		case 3353:
-		case 3369:
-		case 3375:
-		case 3373:
-			graphic = 7086;
+		case 0x1B7E:
+			graphic = 0x1E34;
+			break;
+		case 0x0D2B:
+			graphic = 0x1B15;
+			break;
+		case 0x0D11:
+		case 0x0D14:
+		case 0x0D17:
+			graphic = 0x122B;
+			break;
+		case 0x0D16:
+		case 0x0CB9:
+		case 0x0CBA:
+		case 0x0CBB:
+		case 0x0CBC:
+		case 0x0CBD:
+		case 0x0CBE:
+			graphic = 0x1B8D;
+			break;
+		case 0x0CC7:
+			graphic = 0x1B0D;
+			break;
+		case 0x0CE9:
+			graphic = 0x0ED7;
+			break;
+		case 0x0CEA:
+			graphic = 0x0D3F;
+			break;
+		case 0x0D0F:
+			graphic = 0x1B1C;
+			break;
+		case 0x0CB8:
+			graphic = 0x1CEA;
+			break;
+		case 0x0C84:
+		case 0x0C8B:
+			graphic = 0x1B84;
+			break;
+		case 0x0C9E:
+			graphic = 0x1182;
+			break;
+		case 0x0CAD:
+			graphic = 0x1AE1;
+			break;
+		case 0x0C4C:
+			graphic = 0x1B16;
+			break;
+		case 0x0C8E:
+		case 0x0C99:
+		case 0x0CAC:
+			graphic = 0x1B8D;
+			break;
+		case 0x0C46:
+		case 0x0C49:
+		case 0x0CB6:
+			graphic = 0x1B9D;
+			break;
+		case 0x0C45:
+		case 0x0C48:
+		case 0x0C4E:
+		case 0x0C85:
+		case 0x0CA7:
+		case 0x0CAE:
+		case 0x0CAF:
+		case 0x0CB5:
+		case 0x0D15:
+		case 0x0D29:
+			graphic = 0x1B9C;
+			break;
+		case 0x0C37:
+		case 0x0C38:
+		case 0x0C47:
+		case 0x0C4A:
+		case 0x0C4B:
+		case 0x0C4D:
+		case 0x0C8C:
+		case 0x0C8D:
+		case 0x0C93:
+		case 0x0C94:
+		case 0x0C98:
+		case 0x0C9F:
+		case 0x0CA0:
+		case 0x0CA1:
+		case 0x0CA2:
+		case 0x0CA3:
+		case 0x0CA4:
+		case 0x0CB0:
+		case 0x0CB1:
+		case 0x0CB2:
+		case 0x0CB3:
+		case 0x0CB4:
+		case 0x0CB7:
+		case 0x0CC5:
+		case 0x0D0C:
+		case 0x0D0D:
+		case 0x0D0E:
+		case 0x0D10:
+		case 0x0D12:
+		case 0x0D13:
+		case 0x0D18:
+		case 0x0D19:
+		case 0x0D2D:
+		case 0x0D2F:
+			graphic = 0x1BAE;
+			break;
 		default:
 			break;
 	}

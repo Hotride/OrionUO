@@ -55,6 +55,12 @@ void CTextFileParser::StartupInitalize(const char *delimiters, const char *comen
 }
 //----------------------------------------------------------------------------------
 //Ïğîâåğêà íà êîíåö ôàéëà
+void CTextFileParser::Restart()
+{
+	m_File.ResetPtr();
+}
+//----------------------------------------------------------------------------------
+//Ïğîâåğêà íà êîíåö ôàéëà
 bool CTextFileParser::IsEOF()
 {
 	return (m_File.Ptr >= m_End);
