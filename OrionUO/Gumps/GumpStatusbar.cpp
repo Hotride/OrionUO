@@ -870,7 +870,7 @@ void CGumpStatusbar::UpdateContent()
 			m_Body->Color = color;
 
 			m_HitsBody = (CGUIGumppic*)Add(new CGUIGumppic(0x0805, 34, 38));
-			m_Body->Color = hitsColor;
+			m_HitsBody->Color = hitsColor;
 
 			Add(new CGUIShader(g_ColorizerShader, false));
 
