@@ -143,6 +143,16 @@ public:
 	//Подтверждение о завершении логина (приходит от сервера)
 	void LoginComplete();
 
+	//!Изменить сезон
+	void ChangeSeason(const SEASON_TYPE &season, const int &music);
+
+	ushort GetSeasonGraphic(const ushort &graphic);
+	ushort GetSpringGraphic(ushort graphic);
+	ushort GetSummerGraphic(ushort graphic);
+	ushort GetFallGraphic(ushort graphic);
+	ushort GetWinterGraphic(ushort graphic);
+	ushort GetDesolationGraphic(ushort graphic);
+
 
 
 	//Получить флаги ландшафта

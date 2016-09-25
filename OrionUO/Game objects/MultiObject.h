@@ -18,9 +18,14 @@ class CMultiObject : public CRenderStaticObject
 	//Фгали объекта (2 - мульти с таргета)
 	SETGET(uint, MultiFlags);
 
+	//Оригинальный индекс картинки
+	SETGET(ushort, OriginalGraphic);
+
 public:
 	CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags);
 	virtual ~CMultiObject();
+
+	virtual void UpdateGraphicBySeason();
 
 	//Отрисовать объект
 	virtual void Draw(const int &x, const int &y);

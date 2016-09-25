@@ -60,6 +60,8 @@ public:
 	//Выбрать объект
 	virtual void Select(const int &x, const int &y) { }
 
+	virtual void UpdateGraphicBySeason() {}
+
 	//Удалить объект из очереди рендера
 	void RemoveRender();
 

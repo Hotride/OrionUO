@@ -40,9 +40,6 @@ public:
 	//Данные блока
 	CMapObject *Block[8][8];
 
-	//Ссылка на текущие элементы в очереди подготовки рендер листа
-	CRenderWorldObject *PointerXY[8][8];
-
 	//Добавить объект
 	CMapObject *AddObject(CMapObject *obj, const int &x, const int &y);
 

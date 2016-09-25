@@ -15,9 +15,14 @@
 //Класс объекта статики
 class CStaticObject : public CRenderStaticObject
 {
+	//Оригинальный индекс картинки
+	SETGET(ushort, OriginalGraphic);
+
 public:
 	CStaticObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z);
 	virtual ~CStaticObject() {}
+
+	virtual void UpdateGraphicBySeason();
 
 	//Отрисовать объект
 	virtual void Draw(const int &x, const int &y);

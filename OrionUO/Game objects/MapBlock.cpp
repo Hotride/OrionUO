@@ -19,10 +19,7 @@ CMapBlock::CMapBlock(const uint &index)
 	IFOR(i, 0, 8)
 	{
 		IFOR(j, 0, 8)
-		{
 			Block[i][j] = NULL;
-			PointerXY[i][j] = NULL;
-		}
 	}
 }
 //----------------------------------------------------------------------------------

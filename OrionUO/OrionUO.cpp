@@ -1155,6 +1155,309 @@ void COrion::LoginComplete()
 	}
 }
 //----------------------------------------------------------------------------------
+void COrion::ChangeSeason(const SEASON_TYPE &season, const int &music)
+{
+	bool updateGraphics = (g_Season != season);
+
+	g_Season = season;
+
+	if (updateGraphics)
+	{
+		QFOR(item, g_MapManager->m_Items, CMapBlock*)
+		{
+			IFOR(x, 0, 8)
+			{
+				IFOR(y, 0, 8)
+				{
+					CRenderWorldObject *obj = item->GetRender(x, y);
+
+					while (obj != NULL)
+					{
+						obj->UpdateGraphicBySeason();
+
+						obj = (CRenderWorldObject*)obj->m_Next;
+					}
+				}
+			}
+		}
+	}
+
+	if (music)
+	{
+	}
+}
+//----------------------------------------------------------------------------------
+ushort COrion::GetSeasonGraphic(const ushort &graphic)
+{
+	switch (g_Season)
+	{
+		case ST_SPRING:
+			return GetSpringGraphic(graphic);
+		//case ST_SUMMER:
+		//	return GetSummerGraphic(graphic);
+		case ST_FALL:
+			return GetFallGraphic(graphic);
+		//case ST_WINTER:
+		//	return GetWinterGraphic(graphic);
+		case ST_DESOLATION:
+			return GetDesolationGraphic(graphic);
+		default:
+			break;
+	}
+
+	return graphic;
+}
+//----------------------------------------------------------------------------------
+ushort COrion::GetSpringGraphic(ushort graphic)
+{
+	switch (graphic)
+	{
+		case 3239:
+			graphic = 3204;
+			break;
+		case 3244:
+			graphic = 3142;
+			break;
+		case 3245:
+			graphic = 3144;
+			break;
+		case 3246:
+		case 3253:
+			graphic = 3146;
+			break;
+		case 3247:
+			graphic = 3150;
+			break;
+		case 3248:
+			graphic = 3149;
+			break;
+		case 3254:
+		case 3341:
+		case 3348:
+			graphic = 3371;
+			break;
+		case 3340:
+			graphic = 3369;
+			break;
+		case 3342:
+			graphic = 3262;
+			break;
+		case 3343:
+			graphic = 3263;
+			break;
+		case 3344:
+			graphic = 3264;
+			break;
+		case 3345:
+			graphic = 3207;
+			break;
+		case 3346:
+			graphic = 3128;
+			break;
+		case 3347:
+			graphic = 3375;
+			break;
+		default:
+			break;
+	}
+
+	return graphic;
+}
+//----------------------------------------------------------------------------------
+ushort COrion::GetSummerGraphic(ushort graphic)
+{
+	return graphic;
+}
+//----------------------------------------------------------------------------------
+ushort COrion::GetFallGraphic(ushort graphic)
+{
+	switch (graphic)
+	{
+		case 3281:
+			graphic = 3282;
+			break;
+		case 3284:
+			graphic = 3285;
+			break;
+		case 3291:
+			graphic = 3292;
+			break;
+		case 3294:
+			graphic = 3295;
+			break;
+		case 3297:
+			graphic = 3298;
+			break;
+		case 3300:
+			graphic = 3301;
+			break;
+		case 3303:
+			graphic = 3304;
+			break;
+		case 3477:
+			graphic = 3479;
+			break;
+		case 3481:
+			graphic = 3483;
+			break;
+		case 3278:
+			graphic = 3279;
+			break;
+		case 3305:
+		case 3230:
+			graphic = 3391;
+			break;
+		case 3306:
+			graphic = 3392;
+			break;
+		case 3204:
+		case 3248:
+			graphic = 6946;
+			break;
+		case 3211:
+		case 3212:
+		case 3213:
+		case 3214:
+			graphic = 3270;
+			break;
+		case 3239:
+			graphic = 3144;
+			break;
+		case 3244:
+			graphic = 6943;
+			break;
+		case 3245:
+			graphic = 6944;
+			break;
+		case 3246:
+			graphic = 6945;
+			break;
+		case 3247:
+			graphic = 3341;
+			break;
+		case 3253:
+			graphic = 3344;
+			break;
+		case 3254:
+			graphic = 3371;
+			break;
+		case 3271:
+			graphic = 3150;
+			break;
+		default:
+			break;
+	}
+
+	return graphic;
+}
+//----------------------------------------------------------------------------------
+ushort COrion::GetWinterGraphic(ushort graphic)
+{
+	return graphic;
+}
+//----------------------------------------------------------------------------------
+ushort COrion::GetDesolationGraphic(ushort graphic)
+{
+	switch (graphic)
+	{
+		case 3350:
+			graphic = 7053;
+		case 7038:
+			graphic = 7732;
+		case 3371:
+			graphic = 6933;
+		case 3345:
+		case 3348:
+		case 3351:
+			graphic = 4651;
+		case 3257:
+		case 3258:
+		case 3259:
+		case 3260:
+		case 3261:
+		case 3262:
+			graphic = 7053;
+		case 3254:
+			graphic = 7069;
+		case 3271:
+			graphic = 6925;
+		case 3305:
+			graphic = 3799;
+		case 3306:
+			graphic = 3391;
+		case 3343:
+			graphic = 6940;
+		case 3256:
+			graphic = 7402;
+		case 3204:
+		case 3211:
+			graphic = 7044;
+		case 3230:
+			graphic = 4482;
+		case 3245:
+			graphic = 6881;
+		case 3148:
+			graphic = 6934;
+		case 3214:
+		case 3225:
+		case 3244:
+			graphic = 7053;
+		case 3142:
+		case 3145:
+			graphic = 7069;
+		case 3141:
+		case 3144:
+		case 3150:
+		case 3205:
+		case 3239:
+		case 3246:
+		case 3247:
+		case 3253:
+		case 3349:
+			graphic = 7068;
+		case 3127:
+		case 3128:
+		case 3143:
+		case 3146:
+		case 3147:
+		case 3248:
+		case 3149:
+		case 3212:
+		case 3213:
+		case 3219:
+		case 3220:
+		case 3224:
+		case 3231:
+		case 3232:
+		case 3233:
+		case 3234:
+		case 3235:
+		case 3236:
+		case 3249:
+		case 3250:
+		case 3251:
+		case 3252:
+		case 3255:
+		case 3269:
+		case 3340:
+		case 3341:
+		case 3342:
+		case 3344:
+		case 3346:
+		case 3347:
+		case 3352:
+		case 3353:
+		case 3369:
+		case 3375:
+		case 3373:
+			graphic = 7086;
+		default:
+			break;
+	}
+
+	return graphic;
+}
+//----------------------------------------------------------------------------------
 void COrion::LoadLogin(string &login, int &port)
 {
 	WISP_FILE::CTextFileParser file(g_App.FilePath("login.cfg"), "=,", "#;", "");

@@ -825,6 +825,9 @@ void CGameScreen::CheckMouseEvents()
 {
 	g_GrayedPixels = g_Player->Dead();
 
+	if (g_GrayedPixels)
+		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
+
 	if (g_StatusbarUnderMouse != (uint)g_SelectedObject.Gump())
 		g_StatusbarUnderMouse = 0;
 	else
@@ -1541,7 +1544,7 @@ void CGameScreen::Render(const bool &mode)
 			g_GL.DrawPolygone(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowHeight);
 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-			g_FontManager.DrawA(3, "You are dead.", 0, g_RenderBounds.GameWindowCenterX - 50, g_RenderBounds.GameWindowCenterY - 20);
+			g_FontManager.DrawA(3, "You are dead.", 0, g_RenderBounds.GameWindowPosX + (g_RenderBounds.GameWindowWidth / 2) - 50, g_RenderBounds.GameWindowPosY + (g_RenderBounds.GameWindowHeight / 2) - 20);
 		}
 		
 		g_OutOfRangeColor = 0;

@@ -1527,11 +1527,6 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	int drawX = (int)(x + obj->OffsetX);
 	int drawY = (int)(y + obj->OffsetY) - (z * 4) - (int)obj->OffsetZ;
 	
-	/*DRAW_FRAME_INFORMATION &dfInfo = obj->m_FrameInfo;
-	CurrentShader->Pause();
-	g_GL.DrawPolygone(drawX - dfInfo.OffsetX, drawY - dfInfo.OffsetY, dfInfo.Width, dfInfo.Height);
-	CurrentShader->Resume();*/
-
 	if (goi != NULL) //Draw mount
 	{
 		m_Sitting = 0;
@@ -1542,25 +1537,8 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 		Draw(obj, drawX, drawY + 10, mirror, animIndex, 0x10000);
 		m_AnimGroup = obj->GetAnimationGroup(mountID);
 
-		int mountDrawY = drawY;
-		int mountedDrawY = drawY;
-
-		/*if (goi->GetStaticData()->Quality == 25)
-		{
-			if (goi->GetStaticData()->Weight == 0xFF)
-			{
-				mountDrawY -= 40;
-				mountedDrawY -= 20;
-			}
-			else
-			{
-				mountedDrawY += 20;
-				mountDrawY += 40;
-			}
-		}*/
-
-		Draw(goi, drawX, mountDrawY, mirror, animIndex, mountID + 0x10000);
-		Draw(goi, drawX, mountDrawY, mirror, animIndex, mountID);
+		Draw(goi, drawX, drawY, mirror, animIndex, mountID + 0x10000);
+		Draw(goi, drawX, drawY, mirror, animIndex, mountID);
 
 		switch (animGroup)
 		{
@@ -1811,17 +1789,7 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 
 		m_AnimGroup = obj->GetAnimationGroup(mountID);
 
-		int mountDrawY = drawY;
-
-		if (goi->GetStaticData()->Quality == 25)
-		{
-			if (goi->GetStaticData()->Weight == 0xFF)
-				mountDrawY -= 40;
-			else
-				mountDrawY += 40;
-		}
-
-		if (TestPixels(goi, drawX, mountDrawY, mirror, animIndex, mountID))
+		if (TestPixels(goi, drawX, drawY, mirror, animIndex, mountID))
 			return true;
 
 		switch (animGroup)

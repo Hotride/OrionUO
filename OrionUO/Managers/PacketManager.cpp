@@ -798,7 +798,8 @@ PACKET_HANDLER(EnterWorld)
 		g_SkillsTotal = 0.0f;
 		g_ConsolePrompt = PT_NONE;
 		//g_MacroPointer = NULL;
-		g_Season = ST_SPRING;
+		g_Season = ST_SUMMER;
+		g_OldSeason = ST_SUMMER;
 		g_GlobalScale = 1.0;
 	}
 
@@ -841,6 +842,9 @@ PACKET_HANDLER(EnterWorld)
 
 	if (m_ClientVersion >= CV_200)
 		CPacketGameWindowSize().Send();
+
+	if (g_Player->Dead())
+		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
 
 	/*BYTE wbuf[4] = {0x65, 0x01, 0x46, 0};
 	Ptr = wbuf + 1;
@@ -912,7 +916,8 @@ PACKET_HANDLER(UpdatePlayer)
 		g_World->SetPlayer(serial);
 	}
 
-	WORD oldGraphic = g_Player->Graphic;
+	bool oldDead = g_Player->Dead();
+	ushort oldGraphic = g_Player->Graphic;
 	g_Player->Graphic = ReadUInt16BE();
 	g_Player->OnGraphicChange();
 
@@ -932,6 +937,14 @@ PACKET_HANDLER(UpdatePlayer)
 
 			g_DeathScreenTimer = g_Ticks + DEATH_SCREEN_DELAY;
 		}
+	}
+
+	if (oldDead != g_Player->Dead())
+	{
+		if (g_Player->Dead())
+			g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
+		else
+			g_Orion.ChangeSeason(g_OldSeason, 0);
 	}
 
 	Move(1);
@@ -988,7 +1001,7 @@ PACKET_HANDLER(CharacterStatus)
 
 	obj->CanChangeName = (ReadUInt8() != 0);
 
-	BYTE flag = ReadUInt8();
+	uchar flag = ReadUInt8();
 
 	if (flag > 0)
 	{
@@ -1293,6 +1306,7 @@ PACKET_HANDLER(UpdateObject)
 		//Move(2);
 	}
 
+	bool oldDead = g_Player->Dead();
 	obj->Graphic = graphic;
 
 	ushort x = ReadUInt16BE();
@@ -1358,6 +1372,14 @@ PACKET_HANDLER(UpdateObject)
 
 	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
 		m_MegaClilocRequests.push_back(obj->Serial);
+
+	if (serial == g_PlayerSerial && oldDead != g_Player->Dead())
+	{
+		if (g_Player->Dead())
+			g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
+		else
+			g_Orion.ChangeSeason(g_OldSeason, 0);
+	}
 
 	serial = ReadUInt32BE();
 
@@ -1864,6 +1886,13 @@ PACKET_HANDLER(UpdateCharacter)
 			obj->Z = z;
 			obj->Direction = dir;
 		}
+	}
+	else
+	{
+		obj->X = x;
+		obj->Y = y;
+		obj->Z = z;
+		obj->Direction = dir;
 	}
 
 	obj->Color = ReadUInt16BE();
@@ -2572,7 +2601,7 @@ PACKET_HANDLER(Talk)
 		str = ReadString(0);
 	}
 
-	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || name == string("System"))
+	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial /*|| name == string("System")*/)
 		g_Orion.CreateTextMessage(TT_SYSTEM, serial, (uchar)font, textColor, str);
 	else
 	{
@@ -2640,7 +2669,7 @@ PACKET_HANDLER(UnicodeTalk)
 		str = ReadWString((m_Size - 48) / 2);
 	}
 
-	if (type == ST_BROADCAST /*|| type == ST_SYSTEM*/ || serial == 0xFFFFFFFF || !serial || name == wstring(L"System"))
+	if (type == ST_BROADCAST /*|| type == ST_SYSTEM*/ || serial == 0xFFFFFFFF || !serial /*|| name == wstring(L"System")*/)
 		g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, (uchar)g_ConfigManager.SpeechFont, textColor, str);
 	else
 	{
@@ -3022,16 +3051,12 @@ PACKET_HANDLER(Season)
 {
 	uchar season = ReadUInt8();
 
-	if (season >= ST_DESOLATION)
+	if (season > ST_DESOLATION)
 		season = 0; //season % (ST_DESOLATION + 1)
 
-	g_Season = (SEASON_TYPE)season;
+	g_OldSeason = (SEASON_TYPE)season;
 
-	int music = ReadUInt8();
-
-	if (music) //Play sound
-	{
-	}
+	g_Orion.ChangeSeason((SEASON_TYPE)season, ReadUInt8());
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DisplayDeath)
@@ -3806,6 +3831,7 @@ PACKET_HANDLER(OpenGump)
 			int x = 0, y = 0, graphic = 0, color = 0;
 			sscanf((char*)e, "%d %d %d %d", &x, &y, &graphic, &color);
 
+			gump->Add(new CGUIShader(g_ColorizerShader, true));
 			go = new CGUITilepic(graphic, color, x, y);
 		}
 		else if (!memcmp(lowc, "tilepic", 7))
@@ -3839,6 +3865,9 @@ PACKET_HANDLER(OpenGump)
 
 			if (e[curlen] != '}')
 				sscanf((char*)(e + strlen(bufptr) + 5), "%d", &color);
+
+			if (color)
+				gump->Add(new CGUIShader(g_ColorizerShader, true));
 
 			go = new CGUIGumppic(graphic, x, y);
 			go->Color = color;
@@ -3898,7 +3927,12 @@ PACKET_HANDLER(OpenGump)
 		}*/
 
 		if (go != NULL)
+		{
 			gump->Add(go);
+
+			if ((go->Type == GOT_TILEPIC || go->Type == GOT_GUMPPIC) && go->Color)
+				gump->Add(new CGUIShader(g_ColorizerShader, false));
+		}
 
 		while (e < end && *e && *e != '}')
 			e++;
