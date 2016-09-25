@@ -828,17 +828,10 @@ void CGameScreen::CheckMouseEvents()
 	if (g_GrayedPixels)
 		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
 
-	if (g_StatusbarUnderMouse != (uint)g_SelectedObject.Gump())
-		g_StatusbarUnderMouse = 0;
+	if (g_SelectedObject.Gump() != NULL && g_SelectedObject.Gump()->GumpType == GT_STATUSBAR && g_SelectedObject.Gump()->Serial != g_PlayerSerial)
+		g_StatusbarUnderMouse = g_SelectedObject.Gump()->Serial;
 	else
-	{
-		CGump *gsb = g_GumpManager.GumpExists(g_StatusbarUnderMouse);
-
-		if (gsb != NULL)
-			g_StatusbarUnderMouse = gsb->Serial;
-		else
-			g_StatusbarUnderMouse = 0;
-	}
+		g_StatusbarUnderMouse = 0;
 
 	//if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && g_PressedObject.LeftObject() == g_SelectedObject.Object())
 	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGameObject())
