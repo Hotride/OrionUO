@@ -1834,9 +1834,9 @@ void CGameScreen::OnLeftMouseButtonUp()
 
 					//if (drop_container != 0xFFFFFFFF)
 					{
-						dropX = target->X;
-						dropY = target->Y;
-						dropZ = target->Z;
+						dropX = 0xFFFF; //target->X;
+						dropY = 0xFFFF; //target->Y;
+						dropZ = 0; //target->Z;
 					}
 				}
 				else
