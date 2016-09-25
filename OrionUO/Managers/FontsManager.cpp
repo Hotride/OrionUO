@@ -1584,11 +1584,6 @@ HTML_char *CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &len, 
 				i += 3;
 				continue;
 			}
-			else if (!memcmp(lstr, L"<body>", 12))
-			{
-				i += 5;
-				continue;
-			}
 			else if (!memcmp(lstr, L"</body>", 14))
 			{
 				i += 6;
@@ -1688,18 +1683,27 @@ HTML_char *CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &len, 
 
 				continue;
 			}
-			else if (!memcmp(lstr, L"<basefont", 18))
+			else if (!memcmp(lstr, L"<basefont", 18) || !memcmp(lstr, L"<body", 10))
 			{
-				i += 9;
+				if (!memcmp(lstr, L"<body", 10))
+					i += 5;
+				else
+					i += 9;
 
 				while (i < len && str[i] != L'>')
 				{
 					memcpy(&lstr[0], &str[i], copylen * 2);
 					_wcslwr(lstr);
 
-					if (!memcmp(lstr, L"color=", 12))
+					if (!memcmp(lstr, L"color=", 12) || !memcmp(lstr, L"text=", 10))
 					{
-						i += 6;
+						if (!memcmp(lstr, L"text=", 10))
+							i += 5;
+						else
+							i += 6;
+
+						while (i < len && str[i] == L' ')
+							i++;
 
 						if (str[i] == L'"')
 							i++;
@@ -1805,6 +1809,26 @@ HTML_char *CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &len, 
 			{
 				i += 5;
 				si = L'\n';
+			}
+			else if (!memcmp(lstr, L"<head>", 12))
+			{
+				i += 5;
+				continue;
+			}
+			else if (!memcmp(lstr, L"</head>", 14))
+			{
+				i += 6;
+				continue;
+			}
+			else if (!memcmp(lstr, L"<html>", 12))
+			{
+				i += 5;
+				continue;
+			}
+			else if (!memcmp(lstr, L"</html>", 14))
+			{
+				i += 6;
+				continue;
 			}
 			else if (!memcmp(lstr, L"<i>", 6))
 			{
