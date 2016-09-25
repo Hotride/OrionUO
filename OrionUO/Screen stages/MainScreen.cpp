@@ -114,6 +114,8 @@ void CMainScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 		else
 			g_EntryPointer->Insert(wParam);
 	}
+
+	m_Gump.WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -154,6 +156,8 @@ void CMainScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			break;
 		}
 	}
+
+	m_Gump.WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 /*!
