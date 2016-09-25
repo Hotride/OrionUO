@@ -1214,6 +1214,11 @@ void COrion::ChangeSeason(const SEASON_TYPE &season, const int &music)
 				}
 			}
 		}
+
+		CGumpMinimap *gump = (CGumpMinimap*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_MINIMAP);
+
+		if (gump != NULL)
+			gump->LastX = 0;
 	}
 
 	if (music)

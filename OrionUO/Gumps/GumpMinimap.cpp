@@ -125,6 +125,15 @@ void CGumpMinimap::GenerateMap()
 						if (data[block] == 0x8421)
 						{
 							ushort color = (mapBlock != NULL ? mapBlock->GetRadarColor(x, y) : mb.Cells[(y * 8) + x].TileID);
+
+							if (mapBlock == NULL)
+							{
+								if (color >= 0x4000)
+									color = g_Orion.GetSeasonGraphic(color - 0x4000) + 0x4000;
+								else
+									color = g_Orion.GetLandSeasonGraphic(color);
+							}
+
 							data[block] = 0x8000 | g_ColorManager.GetRadarColorData(color);
 						}
 					}
