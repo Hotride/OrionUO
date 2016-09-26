@@ -66,7 +66,7 @@ void CGumpGeneric::AddText(const int &index, const wstring &text, CBaseGUI *star
 			{
 				CGUIHTMLGump *ghtml = (CGUIHTMLGump*)item;
 
-				if (ghtml->Serial == index)
+				if (ghtml->Serial == index + 1)
 				{
 					AddText(index, text, (CBaseGUI*)item->m_Items);
 					ghtml->CalculateDataSize();

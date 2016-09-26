@@ -3602,7 +3602,7 @@ void CPacketManager::AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &l
 	{
 		HTMLGumpDataInfo &data = list[i];
 
-		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)gump->Add(new CGUIHTMLGump(data.TextID, 0x0BB8, data.X, data.Y, data.Width, data.Height, data.HaveBackground, data.HaveScrollbar));
+		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)gump->Add(new CGUIHTMLGump(data.TextID + 1, 0x0BB8, data.X, data.Y, data.Width, data.Height, data.HaveBackground, data.HaveScrollbar));
 		htmlGump->DrawOnly = (data.HaveScrollbar == 0);
 
 		int width = htmlGump->Width;
