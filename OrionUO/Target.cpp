@@ -78,14 +78,6 @@ void CTarget::SendTargetObject(const uint &serial)
 	if (!m_Targeting)
 		return; //Если в клиенте нет таргета - выход
 
-	if (serial != g_PlayerSerial)
-	{
-		g_LastTargetObject = serial;
-
-		if (serial < 0x40000000)
-			CPacketStatusRequest(serial).Send();
-	}
-
 	//Пишем серийник объекта, на который ткнули прицелом, остальное - затираем
 	pack32(m_Data + 7, serial);
 	m_Data[1] = 0;
@@ -106,8 +98,16 @@ void CTarget::SendTargetObject(const uint &serial)
 		pack32(m_Data + 15, 0);
 	}
 
-	//Скопируем для LastTarget
-	memcpy(m_LastData, m_Data, sizeof(m_Data));
+	if (serial != g_PlayerSerial)
+	{
+		g_LastTargetObject = serial;
+
+		//Скопируем для LastTarget
+		memcpy(m_LastData, m_Data, sizeof(m_Data));
+
+		if (serial < 0x40000000)
+			CPacketStatusRequest(serial).Send();
+	}
 
 	SendTarget();
 }
