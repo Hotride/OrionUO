@@ -83,7 +83,7 @@ string ToLowerA(string str)
 	if (str.length())
 		_strlwr(&str[0]);
 
-	return str;
+	return str.c_str();
 }
 //----------------------------------------------------------------------------------
 string ToUpperA(string str)
@@ -91,7 +91,7 @@ string ToUpperA(string str)
 	if (str.length())
 		_strupr(&str[0]);
 
-	return str;
+	return str.c_str();
 }
 //----------------------------------------------------------------------------------
 wstring ToLowerW(wstring str)
@@ -99,7 +99,7 @@ wstring ToLowerW(wstring str)
 	if (str.length())
 		_wcslwr(&str[0]);
 
-	return str;
+	return str.c_str();
 }
 //----------------------------------------------------------------------------------
 wstring ToUpperW(wstring str)
@@ -107,7 +107,7 @@ wstring ToUpperW(wstring str)
 	if (str.length())
 		_wcsupr(&str[0]);
 
-	return str;
+	return str.c_str();
 }
 //----------------------------------------------------------------------------------
 bool ToBool(const string &str)
