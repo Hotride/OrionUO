@@ -3641,8 +3641,8 @@ void COrion::AddJournalMessage(CTextData *msg, string name)
 	}
 	else
 	{
-		if (msg->Type == TT_SYSTEM)
-			jmsg->Color = 0;
+		//if (msg->Type == TT_SYSTEM)
+		//	jmsg->Color = 0;
 
 		jmsg->SetUnicodeText(ToWString(name) + jmsg->UnicodeText);
 		jmsg->Font = 0;

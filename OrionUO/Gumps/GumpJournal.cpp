@@ -118,7 +118,7 @@ void CGumpJournal::AddText(CTextData *obj)
 	
 	ushort flags = UOFONT_INDENTION;
 
-	if (obj->Type == TT_OBJECT)
+	if (obj->Type == TT_OBJECT || obj->Unicode)
 		flags |= UOFONT_BLACK_BORDER;
 
 	if (obj->Unicode)
