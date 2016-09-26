@@ -81,7 +81,19 @@ struct HTML_char
 	ushort LinkID;
 };
 //----------------------------------------------------------------------------------
+struct HTML_DATA_INFO
+{
+	HTML_TAG_TYPE Tag;
+	TEXT_ALIGN_TYPE Align;
+	ushort Flags;
+	uchar Font;
+	uint Color;
+	ushort Link;
+};
+//----------------------------------------------------------------------------------
 typedef map<ushort, WEB_LINK> WEBLINK_MAP;
+typedef vector<HTML_char> HTMLCHAR_LIST;
+typedef vector<HTML_DATA_INFO> HTMLINFO_LIST;
 //----------------------------------------------------------------------------------
 //!Класс менеджера шрифтов
 class CFontsManager
@@ -113,13 +125,21 @@ private:
 	//!Цвет HTML
 	uint m_HTMLColor;
 
+	//!Возможность раскраски фона текста
+	bool m_HTMLBackgroundCanBeColored;
+
+	//!Цвет фона текста
+	uint m_BackgroundColor;
+
 	/*!
 	Получить индекс ссылки
 	@param [__in] link Ссылка
 	@param [__out] color Цвет ссылки
 	@return Индекс ссылки
 	*/
-	ushort GetWebLinkID(wchar_t *link, uint &color);
+	ushort GetWebLinkID(const string &link, uint &color);
+
+	ushort GetWebLinkID(const wstring &link, uint &color);
 
 	/*!
 	Получение HTML данных
@@ -130,7 +150,21 @@ private:
 	@param [__in] flags Эффекты текста
 	@return Массив HTML символов
 	*/
-	HTML_char *GetHTMLData(uchar font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, ushort flags);
+	HTMLCHAR_LIST GetHTMLData(uchar font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, ushort flags);
+
+	HTML_DATA_INFO GetHTMLInfoFromTag(const HTML_TAG_TYPE &tag);
+
+	HTML_DATA_INFO GetCurrentHTMLInfo(const HTMLINFO_LIST &list);
+
+	void GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &content);
+
+	void TrimHTMLString(string &str);
+
+	uint GetHTMLColorFromText(string &str);
+
+	HTML_TAG_TYPE ParseHTMLTag(const wchar_t *str, const int &len, int &i, bool &endTag, HTML_DATA_INFO &info);
+
+	HTMLCHAR_LIST GetHTMLDataOld(uchar font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Получение данных многострочного текста HTML
@@ -181,7 +215,7 @@ public:
 	@param [__in_opt] htmlStartColor Начальный цвет
 	@return
 	*/
-	void SetUseHTML(const bool &val, const uint &htmlStartColor = 0xFFFFFFFF) { m_UseHTML = val; m_HTMLColor = htmlStartColor;}
+	void SetUseHTML(const bool &val, const uint &htmlStartColor = 0xFFFFFFFF, const bool backgroundCanBeColored = false) { m_UseHTML = val; m_HTMLColor = htmlStartColor; m_HTMLBackgroundCanBeColored = backgroundCanBeColored; m_BackgroundColor = 0; }
 	bool GetUseHTML() const { return m_UseHTML; }
 	__declspec(property(get = GetUseHTML)) bool UseHTML;
 

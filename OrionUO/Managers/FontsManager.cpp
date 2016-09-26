@@ -13,12 +13,14 @@
 #include "FileManager.h"
 #include "../OrionUO.h"
 #include "ColorManager.h"
+#include "../Wisp/WispTextFileParser.h"
 //----------------------------------------------------------------------------------
 CFontsManager g_FontManager;
 //----------------------------------------------------------------------------------
 CFontsManager::CFontsManager()
 : m_SavePixels(false), m_UseHTML(false), m_Font(NULL), m_FontCount(0),
-m_HTMLColor(0xFFFFFFFF), m_RecalculateWidthByInfo(false), m_UnusePartialHue(false)
+m_HTMLColor(0xFFFFFFFF), m_RecalculateWidthByInfo(false), m_UnusePartialHue(false),
+m_HTMLBackgroundCanBeColored(false), m_BackgroundColor(0)
 {
 	memset(m_UnicodeFontAddress, 0, sizeof(m_UnicodeFontAddress));
 	memset(m_UnicodeFontSize, 0, sizeof(m_UnicodeFontSize));
@@ -1424,35 +1426,39 @@ wstring CFontsManager::GetTextByWidthW(uchar font, const wchar_t *str, int len, 
 	return result;
 }
 //----------------------------------------------------------------------------------
+ushort CFontsManager::GetWebLinkID(const wstring &link, uint &color)
+{
+	return GetWebLinkID(ToString(link), color);
+}
+//----------------------------------------------------------------------------------
 /*!
 Получить индекс ссылки
 @param [__in] link Ссылка
 @param [__out] color Цвет ссылки
 @return Индекс ссылки
 */
-ushort CFontsManager::GetWebLinkID(wchar_t *link, uint &color)
+ushort CFontsManager::GetWebLinkID(const string &link, uint &color)
 {
-	string webLink(ToString(link));
 	ushort linkID = 0;
 
 	WEBLINK_MAP::iterator it = m_WebLink.begin();
 
 	for (; it != m_WebLink.end(); it++)
 	{
-		if ((*it).second.WebLink == webLink)
+		if ((*it).second.WebLink == link)
 			break;
 	}
 
 	if (it == m_WebLink.end())
 	{
 		linkID = (ushort)m_WebLink.size() + 1;
-		WEB_LINK wl = {false, webLink};
+		WEB_LINK wl = { false, link };
 		m_WebLink[linkID] = wl;
 	}
 	else
 	{
 		if ((*it).second.Visited)
-			color = 0xFF0000FF;
+			color = 0x0000FFFF;
 
 		linkID = (*it).first;
 	}
@@ -1460,567 +1466,509 @@ ushort CFontsManager::GetWebLinkID(wchar_t *link, uint &color)
 	return linkID;
 }
 //----------------------------------------------------------------------------------
-/*!
-Получение HTML данных
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] len Длина текста
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@return Массив HTML символов
-*/
-HTML_char *CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, ushort flags)
+HTMLCHAR_LIST CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, ushort flags)
 {
-	if (len < 1)
-		return NULL;
+	HTMLCHAR_LIST data;
 
-	HTML_char *data = new HTML_char[len];
+	if (len < 1)
+		return data;
+
+	data.resize(len);
 	int newlen = 0;
 
-	TEXT_ALIGN_TYPE current_align = align;
-	ushort current_flags = flags;
-	uchar current_font = font;
-	uint charcolor = m_HTMLColor;
-	uint current_charcolor = charcolor;
-	ushort currentLink = 0;
+	HTML_DATA_INFO info = { HTT_NONE, align, flags, font, m_HTMLColor, 0 };
+
+	vector<HTML_DATA_INFO> stack;
+	stack.push_back(info);
+
+	HTML_DATA_INFO currentInfo = info;
 
 	IFOR(i, 0, len)
 	{
 		wchar_t si = str[i];
 
-		int copylen = len - i;
-
-		if (si == L'<' && copylen > 2)
+		if (si == L'<')
 		{
-			wchar_t lstr[12] = {0};
+			bool endTag = false;
+			HTML_DATA_INFO newInfo = { HTT_NONE, TS_LEFT, 0, 0xFF, 0, 0 };
 
-			if (copylen > 11)
-				copylen = 11;
+			HTML_TAG_TYPE tag = ParseHTMLTag(str, len, i, endTag, newInfo);
 
-			memcpy(&lstr[0], &str[i], copylen * 2);
-
-			_wcslwr(lstr);
-
-			if (!memcmp(lstr, L"<center>", 16))
+			if (!endTag)
 			{
-				current_align = TS_CENTER;
-
-				if (newlen)
-					si = L'\n';
+				if (tag != HTT_BODY)
+					stack.push_back(newInfo);
 				else
-					si = 0;
-
-				i += 7;
-			}
-			else if (!memcmp(lstr, L"</center>", 18))
-			{
-				current_align = align;
-				i += 8;
-				si = L'\n';
-			}
-			else if (!memcmp(lstr, L"<left>", 12))
-			{
-				current_align = TS_LEFT;
-
-				if (newlen)
-					si = L'\n';
-				else
-					si = 0;
-
-				i += 5;
-			}
-			else if (!memcmp(lstr, L"</left>", 14))
-			{
-				current_align = align;
-				i += 6;
-				si = L'\n';
-			}
-			else if (!memcmp(lstr, L"<right>", 14))
-			{
-				current_align = TS_RIGHT;
-
-				if (newlen)
-					si = L'\n';
-				else
-					si = 0;
-
-				i += 6;
-			}
-			else if (!memcmp(lstr, L"</right>", 16))
-			{
-				current_align = align;
-				i += 7;
-				si = L'\n';
-			}
-			else if (!memcmp(lstr, L"<p>", 6))
-			{
-				if (!(current_flags & UOFONT_INDENTION))
-					current_flags |= UOFONT_INDENTION;
-
-				i += 2;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</p>", 8))
-			{
-				if (current_flags & UOFONT_INDENTION)
-					current_flags ^= UOFONT_INDENTION;
-
-				i += 3;
-				si = L'\n';
-			}
-			else if (!memcmp(lstr, L"<u>", 6))
-			{
-				if (!(current_flags & UOFONT_UNDERLINE))
-					current_flags |= UOFONT_UNDERLINE;
-
-				i += 2;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</u>", 8))
-			{
-				if (current_flags & UOFONT_UNDERLINE)
-					current_flags ^= UOFONT_UNDERLINE;
-
-				i += 3;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</body>", 14))
-			{
-				i += 6;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<a", 4))
-			{
-				i += 2;
-
-				for (; i < len; i++)
 				{
-					if (str[i] != L' ')
-					{
-						if (str[i] == L'>')
-							i++;
+					stack.clear();
+					newlen = 0;
 
+					if (newInfo.Color)
+						info.Color = newInfo.Color;
+
+					stack.push_back(info);
+				}
+			}
+			else if (stack.size() > 1)
+			{
+				//stack.pop_back();
+
+				int index = -1;
+
+				DFOR(j, (int)stack.size() - 1, 1)
+				{
+					if (stack[j].Tag == tag)
+					{
+						stack.erase(stack.begin() + j);
 						break;
 					}
 				}
-
-				ushort oldFlags = current_flags;
-				uint oldColor = current_charcolor;
-
-				if (!(current_flags & UOFONT_UNDERLINE))
-					current_flags |= UOFONT_UNDERLINE;
-
-				current_charcolor = 0xFFFFCECE;
-				currentLink = 0xFFFF;
-
-				for (; i < len; i++)
-				{
-					si = str[i];
-
-					copylen = len - i;
-
-					if (copylen > 2)
-					{
-						if (copylen > 10)
-							copylen = 10;
-
-						wchar_t astr[11] = {0};
-						memcpy(&astr[0], &str[i], copylen * 2);
-
-						_wcslwr(astr);
-			
-						if (!memcmp(astr, L"</a>", 8))
-						{
-							currentLink = 0;
-							current_flags = oldFlags;
-							current_charcolor = oldColor;
-
-							i += 3;
-
-							break;
-						}
-						else if (!memcmp(astr, L"href=\"", 12))
-						{
-							i += 6;
-
-							IFOR(j, i, len)
-							{
-								if (str[j] == L'"')
-								{
-									int linkSize = j - i;
-									wchar_t *link = new wchar_t[linkSize + 1];
-									memcpy(&link[0], &str[i], linkSize * 2);
-									link[linkSize] = 0;
-
-									currentLink = GetWebLinkID(link, current_charcolor);
-
-									delete link;
-
-									for (; j < len; j++)
-									{
-										if (str[j] == L'>')
-											break;
-									}
-
-									i = j + 1;
-									si = str[i];
-
-									break;
-								}
-							}
-						}
-					}
-
-					data[newlen].Char = si;
-					data[newlen].Font = current_font;
-					data[newlen].Align = current_align;
-					data[newlen].Flags = current_flags;
-					data[newlen].Color = current_charcolor;
-					data[newlen].LinkID = currentLink;
-
-					newlen++;
-				}
-
-				continue;
 			}
-			else if (!memcmp(lstr, L"<basefont", 18) || !memcmp(lstr, L"<body", 10))
+
+			currentInfo = GetCurrentHTMLInfo(stack);
+
+			switch (tag)
 			{
-				if (!memcmp(lstr, L"<body", 10))
-					i += 5;
-				else
-					i += 9;
-
-				while (i < len && str[i] != L'>')
+				case HTT_LEFT:
+				case HTT_CENTER:
+				case HTT_RIGHT:
 				{
-					memcpy(&lstr[0], &str[i], copylen * 2);
-					_wcslwr(lstr);
-
-					if (!memcmp(lstr, L"color=", 12) || !memcmp(lstr, L"text=", 10))
-					{
-						if (!memcmp(lstr, L"text=", 10))
-							i += 5;
-						else
-							i += 6;
-
-						while (i < len && str[i] == L' ')
-							i++;
-
-						if (str[i] == L'"')
-							i++;
-
-						wchar_t colorStr[20] = {0};
-
-						IFOR(j, i, len)
-						{
-							if (str[j] == L'>')
-							{
-								int colorLen = j - i;
-								memcpy(&colorStr[0], &str[i], colorLen * 2);
-
-								i = j;
-
-								if (colorLen > 10)
-									colorLen = 10;
-
-								if (colorLen && colorStr[colorLen - 1] == L'"')
-									colorStr[colorLen - 1] = 0;
-
-								colorStr[colorLen] = 0;
-
-								break;
-							}
-						}
-
-						if (colorStr[0] == L'#')
-						{
-							char *end;
-							charcolor = strtoul(ToString(colorStr + 1).c_str(), &end, 16);
-
-							//if (!(charcolor & 0xFF))
-							//	charcolor |= 0xFF;
-
-							puchar clrBuf = (puchar)&charcolor;
-							charcolor = (clrBuf[0] << 24) | (clrBuf[1] << 16) | (clrBuf[2] << 8) | 0xFF;
-
-							current_charcolor = charcolor;
-						}
-						else
-						{
-							_wcslwr(colorStr);
-
-							if (!memcmp(colorStr, L"red", 6))
-								charcolor = 0xFF0000FF;
-							else if (!memcmp(colorStr, L"cyan", 8))
-								charcolor = 0x00FFFFFF;
-							else if (!memcmp(colorStr, L"blue", 8))
-								charcolor = 0x0000FFFF;
-							else if (!memcmp(colorStr, L"darkblue", 16))
-								charcolor = 0x0000A0FF;
-							else if (!memcmp(colorStr, L"lightblue", 18))
-								charcolor = 0xADD8E6FF;
-							else if (!memcmp(colorStr, L"purple", 12))
-								charcolor = 0x800080FF;
-							else if (!memcmp(colorStr, L"yellow", 12))
-								charcolor = 0x00FFFFFF;
-							else if (!memcmp(colorStr, L"lime", 8))
-								charcolor = 0x00FF00FF;
-							else if (!memcmp(colorStr, L"magenta", 14))
-								charcolor = 0xFF00FFFF;
-							else if (!memcmp(colorStr, L"white", 10))
-								charcolor = 0xFFFEFEFF;
-							else if (!memcmp(colorStr, L"silver", 12))
-								charcolor = 0xC0C0C0FF;
-							else if (!memcmp(colorStr, L"gray", 8) || !memcmp(colorStr, L"grey", 8))
-								charcolor = 0x808080FF;
-							else if (!memcmp(colorStr, L"black", 10))
-								charcolor = 0x010101FF;
-							else if (!memcmp(colorStr, L"orange", 12))
-								charcolor = 0xFFA500FF;
-							else if (!memcmp(colorStr, L"brown", 10))
-								charcolor = 0xA52A2AFF;
-							else if (!memcmp(colorStr, L"maroon", 12))
-								charcolor = 0x800000FF;
-							else if (!memcmp(colorStr, L"green", 10))
-								charcolor = 0x008000FF;
-							else if (!memcmp(colorStr, L"olive", 10))
-								charcolor = 0x808000FF;
-
-							current_charcolor = charcolor;
-						}
-					}
+					if (newlen)
+						endTag = true;
+				}
+				case HTT_P:
+				{
+					if (endTag)
+						si = L'\n';
 					else
-						i++;
+						si = 0;
+
+					break;
 				}
+				case HTT_BR:
+				case HTT_BQ:
+				{
+					si = L'\n';
 
-				continue;
-			}
-			else if (!memcmp(lstr, L"</basefont>", 22))
-			{
-				i += 10;
+					break;
+				}
+				default:
+				{
+					si = 0;
 
-				continue;
-			}
-			else if (!memcmp(lstr, L"<br>", 8))
-			{
-				i += 3;
-				si = L'\n';
-			}
-			else if (!memcmp(lstr, L"<br />", 12))
-			{
-				i += 5;
-				si = L'\n';
-			}
-			else if (!memcmp(lstr, L"<head>", 12))
-			{
-				i += 5;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</head>", 14))
-			{
-				i += 6;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<html>", 12))
-			{
-				i += 5;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</html>", 14))
-			{
-				i += 6;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<i>", 6))
-			{
-				if (!(current_flags & UOFONT_ITALIC))
-					current_flags |= UOFONT_ITALIC;
-
-				i += 2;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</i>", 8))
-			{
-				if (current_flags & UOFONT_ITALIC)
-					current_flags ^= UOFONT_ITALIC;
-
-				i += 3;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<b>", 6))
-			{
-				if (!(current_flags & UOFONT_SOLID))
-					current_flags |= UOFONT_SOLID;
-
-				i += 2;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</b>", 8))
-			{
-				if (current_flags & UOFONT_SOLID)
-					current_flags ^= UOFONT_SOLID;
-
-				i += 3;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<big>", 10))
-			{
-				if (m_UnicodeFontAddress[0])
-					current_font = 0;
-
-				i += 4;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</big>", 12))
-			{
-				current_font = font;
-
-				i += 5;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<h1>", 8))
-			{
-				if (!(current_flags & UOFONT_SOLID))
-					current_flags |= UOFONT_SOLID;
-
-				if (!(current_flags & UOFONT_UNDERLINE))
-					current_flags |= UOFONT_UNDERLINE;
-
-				if (m_UnicodeFontAddress[0])
-					current_font = 0;
-
-				i += 3;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<h2>", 8))
-			{
-				if (!(current_flags & UOFONT_SOLID))
-					current_flags |= UOFONT_SOLID;
-
-				if (m_UnicodeFontAddress[0])
-					current_font = 0;
-
-				i += 3;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<h3>", 8))
-			{
-				if (m_UnicodeFontAddress[0])
-					current_font = 0;
-
-				i += 3;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<h4>", 8))
-			{
-				if (!(current_flags & UOFONT_SOLID))
-					current_flags |= UOFONT_SOLID;
-
-				if (m_UnicodeFontAddress[1])
-					current_font = 1;
-
-				i += 3;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<h5>", 8))
-			{
-				if (!(current_flags & UOFONT_ITALIC))
-					current_flags |= UOFONT_ITALIC;
-
-				if (m_UnicodeFontAddress[1])
-					current_font = 1;
-
-				i += 3;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<h6>", 8))
-			{
-				if (m_UnicodeFontAddress[1])
-					current_font = 1;
-
-				i += 3;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</h1>", 10))
-			{
-				if (current_flags & UOFONT_SOLID)
-					current_flags ^= UOFONT_SOLID;
-
-				if (current_flags & UOFONT_UNDERLINE)
-					current_flags ^= UOFONT_UNDERLINE;
-
-				current_font = font;
-
-				i += 4;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</h2>", 10))
-			{
-				if (current_flags & UOFONT_SOLID)
-					current_flags ^= UOFONT_SOLID;
-
-				current_font = font;
-
-				i += 4;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</h3>", 10))
-			{
-				current_font = font;
-				
-				i += 4;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</h4>", 10))
-			{
-				if (current_flags & UOFONT_SOLID)
-					current_flags ^= UOFONT_SOLID;
-
-				current_font = font;
-				
-				i += 4;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</h5>", 10))
-			{
-				if (current_flags & UOFONT_ITALIC)
-					current_flags ^= UOFONT_ITALIC;
-
-				current_font = font;
-				
-				i += 4;
-				continue;
-			}
-			else if (!memcmp(lstr, L"</h6>", 10))
-			{
-				current_font = font;
-
-				i += 4;
-				continue;
-			}
-			else if (!memcmp(lstr, L"<div ", 10))
-			{
-			}
-			else if (!memcmp(lstr, L"</div ", 12))
-			{
+					break;
+				}
 			}
 		}
 
 		if (si)
 		{
 			data[newlen].Char = si;
-			data[newlen].Font = current_font;
-			data[newlen].Align = current_align;
-			data[newlen].Flags = current_flags;
-			data[newlen].Color = current_charcolor;
-			data[newlen].LinkID = currentLink;
+			data[newlen].Font = currentInfo.Font;
+			data[newlen].Align = currentInfo.Align;
+			data[newlen].Flags = currentInfo.Flags;
+			data[newlen].Color = currentInfo.Color;
+			data[newlen].LinkID = currentInfo.Link;
 
 			newlen++;
 		}
 	}
 
+	data.resize(newlen);
 	len = newlen;
 
 	return data;
+}
+//----------------------------------------------------------------------------------
+HTML_DATA_INFO CFontsManager::GetHTMLInfoFromTag(const HTML_TAG_TYPE &tag)
+{
+	HTML_DATA_INFO info = { tag, TS_LEFT, 0, 0xFF, 0, 0 };
+
+	switch (tag)
+	{
+		case HTT_B:
+			info.Flags = UOFONT_SOLID;
+			break;
+		case HTT_I:
+			info.Flags = UOFONT_ITALIC;
+			break;
+		case HTT_U:
+			info.Flags = UOFONT_UNDERLINE;
+			break;
+		case HTT_P:
+			info.Flags = UOFONT_INDENTION;
+			break;
+		case HTT_BIG:
+			info.Font = 0;
+			break;
+		case HTT_SMALL:
+			info.Font = 2;
+			break;
+		case HTT_H1:
+			info.Flags = UOFONT_SOLID | UOFONT_UNDERLINE;
+			info.Font = 0;
+			break;
+		case HTT_H2:
+			info.Flags = UOFONT_SOLID;
+			info.Font = 0;
+			break;
+		case HTT_H3:
+			info.Font = 0;
+			break;
+		case HTT_H4:
+			info.Flags = UOFONT_SOLID;
+			info.Font = 2;
+			break;
+		case HTT_H5:
+			info.Flags = UOFONT_ITALIC;
+			info.Font = 2;
+			break;
+		case HTT_H6:
+			info.Font = 2;
+			break;
+		case HTT_BQ:
+			info.Flags = UOFONT_INDENTION;
+			info.Color = 0x008000FF;
+			break;
+		case HTT_LEFT:
+			info.Align = TS_LEFT;
+			break;
+		case HTT_CENTER:
+			info.Align = TS_CENTER;
+			break;
+		case HTT_RIGHT:
+			info.Align = TS_RIGHT;
+			break;
+		default:
+			break;
+	}
+
+	return info;
+}
+//----------------------------------------------------------------------------------
+HTML_DATA_INFO CFontsManager::GetCurrentHTMLInfo(const HTMLINFO_LIST &list)
+{
+	HTML_DATA_INFO info = { HTT_NONE, TS_LEFT, 0, 0xFF, 0, 0 };
+
+	IFOR(i, 0, (int)list.size())
+	{
+		const HTML_DATA_INFO &current = list[i];
+
+		switch (current.Tag)
+		{
+			case HTT_NONE:
+				info = current;
+				break;
+			case HTT_B:
+			case HTT_I:
+			case HTT_U:
+			case HTT_P:
+				info.Flags |= current.Flags;
+				break;
+			case HTT_A:
+			{
+				info.Flags |= current.Flags;
+				info.Color = current.Color;
+				info.Link = current.Link;
+
+				break;
+			}
+			case HTT_BIG:
+			case HTT_SMALL:
+				if (m_UnicodeFontAddress[current.Font])
+					info.Font = current.Font;
+				break;
+			case HTT_BASEFONT:
+			{
+				if (current.Font != 0xFF && m_UnicodeFontAddress[current.Font])
+					info.Font = current.Font;
+
+				if (current.Color != 0)
+					info.Color = current.Color;
+
+				break;
+			}
+			case HTT_H1:
+			case HTT_H2:
+			case HTT_H4:
+			case HTT_H5:
+				info.Flags |= current.Flags;
+			case HTT_H3:
+			case HTT_H6:
+				if (m_UnicodeFontAddress[current.Font])
+					info.Font = current.Font;
+				break;
+			case HTT_BQ:
+				info.Color = current.Color;
+				info.Flags |= current.Flags;
+				break;
+			case HTT_LEFT:
+			case HTT_CENTER:
+			case HTT_RIGHT:
+				info.Align = current.Align;
+				break;
+			case HTT_DIV:
+				break;
+			default:
+				break;
+		}
+	}
+
+	return info;
+}
+//----------------------------------------------------------------------------------
+void CFontsManager::TrimHTMLString(string &str)
+{
+	if (str.length() >= 2)
+	{
+		str.resize(str.length() - 1);
+		str.erase(str.begin());
+	}
+}
+//----------------------------------------------------------------------------------
+uint CFontsManager::GetHTMLColorFromText(string &str)
+{
+	uint color = 0;
+
+	if (str.length() > 1)
+	{
+		if (str[0] == '#')
+		{
+			char *end;
+			color = strtoul(str.c_str() + 1, &end, 16);
+
+			puchar clrBuf = (puchar)&color;
+			color = (clrBuf[0] << 24) | (clrBuf[1] << 16) | (clrBuf[2] << 8) | 0xFF;
+		}
+		else
+		{
+			str = ToLowerA(str);
+
+			if (str == "red")
+				color = 0xFF0000FF;
+			else if (str == "cyan")
+				color = 0x00FFFFFF;
+			else if (str == "blue")
+				color = 0x0000FFFF;
+			else if (str == "darkblue")
+				color = 0x0000A0FF;
+			else if (str == "lightblue")
+				color = 0xADD8E6FF;
+			else if (str == "purple")
+				color = 0x800080FF;
+			else if (str == "yellow")
+				color = 0x00FFFFFF;
+			else if (str == "lime")
+				color = 0x00FF00FF;
+			else if (str == "magenta")
+				color = 0xFF00FFFF;
+			else if (str == "white")
+				color = 0xFFFEFEFF;
+			else if (str == "silver")
+				color = 0xC0C0C0FF;
+			else if (str == "gray" || str == "grey")
+				color = 0x808080FF;
+			else if (str == "black")
+				color = 0x010101FF;
+			else if (str == "orange")
+				color = 0xFFA500FF;
+			else if (str == "brown")
+				color = 0xA52A2AFF;
+			else if (str == "maroon")
+				color = 0x800000FF;
+			else if (str == "green")
+				color = 0x008000FF;
+			else if (str == "olive")
+				color = 0x808000FF;
+		}
+	}
+
+	return color;
+}
+//----------------------------------------------------------------------------------
+void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &content)
+{
+	WISP_FILE::CTextFileParser parser("", " =", "", "\"\"");
+
+	STRING_LIST strings = parser.GetTokens(content.c_str());
+	int size = (int)strings.size();
+
+	for (int i = 0; i < size; i += 2)
+	{
+		if (i + 1 >= size)
+			break;
+
+		string str = ToLowerA(strings[i]);
+
+		switch (info.Tag)
+		{
+			case HTT_BODY:
+			{
+				if (str == "text")
+					info.Color = GetHTMLColorFromText(strings[i + 1]);
+				else if (m_HTMLBackgroundCanBeColored && str == "bgcolor")
+					m_BackgroundColor = GetHTMLColorFromText(strings[i + 1]);
+
+				break;
+			}
+			case HTT_BASEFONT:
+			{
+				if (str == "color")
+					info.Color = GetHTMLColorFromText(strings[i + 1]);
+				else if (str == "size")
+				{
+					string &buf = strings[i + 1];
+
+					if (buf.length())
+					{
+						if (buf[0] == '"')
+							TrimHTMLString(buf);
+
+						if (buf.length())
+							info.Font = atoi(buf.c_str());
+					}
+				}
+
+				break;
+			}
+			case HTT_A:
+			{
+				if (str == "href")
+				{
+					info.Flags = UOFONT_UNDERLINE;
+
+					string &buf = strings[i + 1];
+
+					if (buf.length() && buf[0] == '"')
+						TrimHTMLString(buf);
+
+					info.Color = 0xFF0000FF;
+					info.Link = GetWebLinkID(buf, info.Color);
+				}
+
+				break;
+			}
+			default:
+				break;
+		}
+	}
+}
+//----------------------------------------------------------------------------------
+HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, int &i, bool &endTag, HTML_DATA_INFO &info)
+{
+	HTML_TAG_TYPE tag = HTT_NONE;
+
+	i++;
+
+	if (i < len && str[i] == L'/')
+	{
+		endTag = true;
+
+		i++;
+	}
+
+	while (str[i] == L' ' && i < len)
+		i++;
+
+	int j = i;
+
+	for (; i < len; i++)
+	{
+		if (str[i] == L' ' || str[i] == L'>')
+			break;
+	}
+
+	if (j != i && i < len)
+	{
+		int cmdLen = i - j;
+		//LOG("cmdLen = %i\n", cmdLen);
+		wstring cmd;
+		cmd.resize(cmdLen);
+		memcpy(&cmd[0], &str[j], cmdLen * 2);
+		//LOG(L"cmd[%s] = %s\n", (endTag ? L"end" : L"start"), cmd.c_str());
+		cmd = ToLowerW(cmd);
+
+		j = i;
+			
+		while (str[i] != L'>' && i < len)
+			i++;
+
+		if (cmd == L"b")
+			tag = HTT_B;
+		else if (cmd == L"i")
+			tag = HTT_I;
+		else if (cmd == L"a")
+			tag = HTT_A;
+		else if (cmd == L"u")
+			tag = HTT_U;
+		else if (cmd == L"p")
+			tag = HTT_P;
+		else if (cmd == L"big")
+			tag = HTT_BIG;
+		else if (cmd == L"small")
+			tag = HTT_SMALL;
+		else if (cmd == L"body")
+			tag = HTT_BODY;
+		else if (cmd == L"basefont")
+			tag = HTT_BASEFONT;
+		else if (cmd == L"h1")
+			tag = HTT_H1;
+		else if (cmd == L"h2")
+			tag = HTT_H2;
+		else if (cmd == L"h3")
+			tag = HTT_H3;
+		else if (cmd == L"h4")
+			tag = HTT_H4;
+		else if (cmd == L"h5")
+			tag = HTT_H5;
+		else if (cmd == L"h6")
+			tag = HTT_H6;
+		else if (cmd == L"br")
+			tag = HTT_BR;
+		else if (cmd == L"bq")
+			tag = HTT_BQ;
+		else if (cmd == L"left")
+			tag = HTT_LEFT;
+		else if (cmd == L"center")
+			tag = HTT_CENTER;
+		else if (cmd == L"right")
+			tag = HTT_RIGHT;
+		else if (cmd == L"div")
+			tag = HTT_DIV;
+
+		if (!endTag)
+		{
+			info = GetHTMLInfoFromTag(tag);
+
+			if (i < len && j != i)
+			{
+				switch (tag)
+				{
+					case HTT_BODY:
+					case HTT_BASEFONT:
+					case HTT_A:
+					case HTT_DIV:
+					{
+						wstring content = L"";
+						cmdLen = i - j;
+						//LOG("contentCmdLen = %i\n", cmdLen);
+						content.resize(cmdLen);
+						memcpy(&content[0], &str[j], cmdLen * 2);
+						//LOG(L"contentCmd = %s\n", content.c_str());
+
+						if (content.size())
+							GetHTMLInfoFromContent(info, ToString(content));
+
+						break;
+					}
+					default:
+						break;
+				}
+			}
+		}
+	}
+
+	return tag;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -2035,9 +1983,9 @@ HTML_char *CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &len, 
 */
 PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
-	HTML_char *htmlData = GetHTMLData(font, str, len, align, flags);
+	HTMLCHAR_LIST htmlData = GetHTMLData(font, str, len, align, flags);
 
-	if (htmlData == NULL)
+	if (!htmlData.size())
 		return NULL;
 
 	PMULTILINES_FONT_INFO info = new MULTILINES_FONT_INFO();
@@ -2239,8 +2187,6 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str,
 	ptr->Width += readWidth;
 	ptr->CharCount += charCount;
 	ptr->MaxHeight = MAX_HTML_TEXT_HEIGHT;
-
-	delete htmlData;
 
 	return info;
 }
@@ -2983,6 +2929,24 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 
 		info->Data.clear();
 		delete info;
+	}
+
+	if (m_UseHTML && m_HTMLBackgroundCanBeColored && m_BackgroundColor)
+	{
+		m_BackgroundColor |= 0xFF;
+
+		IFOR(y, 0, height)
+		{
+			int yPos = (y * width);
+
+			IFOR(x, 0, width)
+			{
+				uint &p = pData[yPos + x];
+
+				if (!p)
+					p = m_BackgroundColor;
+			}
+		}
 	}
 
 	th.Width = width;
