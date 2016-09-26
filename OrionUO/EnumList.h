@@ -191,7 +191,8 @@ enum LOCKED_FEATURE_FLAG
 //!Типы спеллбук для макроса
 enum SPELLBOOK_TYPE
 {
-	ST_MAGE = 1,
+	ST_NONE = 0,
+	ST_MAGE,
 	ST_NECRO,
 	ST_PALADIN,
 	ST_BUSHIDO,

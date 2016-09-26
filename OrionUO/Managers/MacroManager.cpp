@@ -568,8 +568,83 @@ void CMacroManager::ProcessSubMenu()
 					break;
 				}
 				case MSC_G2_MAGE_SPELLBOOK:
+				case MSC_G2_NECRO_SPELLBOOK:
+				case MSC_G2_PALADIN_SPELLBOOK:
+				case MSC_G2_BUSHIDO_SPELLBOOK:
+				case MSC_G2_NINJITSU_SPELLBOOK:
+				case MSC_G2_SPELL_WEAVING_SPELLBOOK:
+				case MSC_G2_MYSTICISM_SPELLBOOK:
 				{
-					gump = g_GumpManager.GetGump(0, 0, GT_SPELLBOOK);
+					//gump = g_GumpManager.GetGump(0, 0, GT_SPELLBOOK);
+
+					QFOR(item, g_GumpManager.m_Items, CGump*)
+					{
+						if (item->GumpType == GT_SPELLBOOK)
+						{
+							CGameItem *gi = g_World->FindWorldItem(item->Serial);
+
+							if (gi != NULL)
+							{
+								switch (g_MacroPointer->SubCode)
+								{
+									case MSC_G2_MAGE_SPELLBOOK:
+									{
+										if (gi->Graphic == 0x0EFA)
+											gump = item;
+
+										break;
+									}
+									case MSC_G2_NECRO_SPELLBOOK:
+									{
+										if (gi->Graphic == 0x2253)
+											gump = item;
+
+										break;
+									}
+									case MSC_G2_PALADIN_SPELLBOOK:
+									{
+										if (gi->Graphic == 0x2252)
+											gump = item;
+
+										break;
+									}
+									case MSC_G2_BUSHIDO_SPELLBOOK:
+									{
+										if (gi->Graphic == 0x238C)
+											gump = item;
+
+										break;
+									}
+									case MSC_G2_NINJITSU_SPELLBOOK:
+									{
+										if (gi->Graphic == 0x23A0)
+											gump = item;
+
+										break;
+									}
+									case MSC_G2_SPELL_WEAVING_SPELLBOOK:
+									{
+										if (gi->Graphic == 0x2D50)
+											gump = item;
+
+										break;
+									}
+									case MSC_G2_MYSTICISM_SPELLBOOK:
+									{
+										if (gi->Graphic == 0) //??????????
+											gump = item;
+
+										break;
+									}
+									default:
+										break;
+								}
+							}
+
+							if (gump != NULL)
+								break;
+						}
+					}
 
 					break;
 				}
@@ -607,15 +682,9 @@ void CMacroManager::ProcessSubMenu()
 					break;
 				}
 				case MSC_G2_PARTY_CHAT:
-				case MSC_G2_NECRO_SPELLBOOK:
-				case MSC_G2_PALADIN_SPELLBOOK:
 				case MSC_G2_COMBAT_BOOK:
-				case MSC_G2_BUSHIDO_SPELLBOOK:
-				case MSC_G2_NINJITSU_SPELLBOOK:
 				case MSC_G2_GUILD:
-				case MSC_G2_SPELL_WEAVING_SPELLBOOK:
 				case MSC_G2_QUEST_LOG:
-				case MSC_G2_MYSTICISM_SPELLBOOK:
 				case MSC_G2_RACIAL_ABILITIES_BOOK:
 				case MSC_G2_BARD_SPELLBOOK:
 				{

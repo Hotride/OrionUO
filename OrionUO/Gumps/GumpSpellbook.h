@@ -14,6 +14,8 @@
 //----------------------------------------------------------------------------------
 class CGumpSpellbook : public CGump
 {
+	SETGET(SPELLBOOK_TYPE, BookType);
+
 private:
 	static const int ID_GSB_BUTTON_PREV = 1;
 	static const int ID_GSB_BUTTON_NEXT = 2;
@@ -23,8 +25,8 @@ private:
 	static const int ID_GSB_BUTTON_CIRCLE_7_8 = 6;
 	static const int ID_GSB_BUTTON_MINIMIZE = 7;
 	static const int ID_GSB_LOCK_MOVING = 8;
-	static const int ID_GSB_SPELL_ICON_LEFT = 10;
-	static const int ID_GSB_SPELL_ICON_RIGHT = 100;
+	static const int ID_GSB_SPELL_ICON_LEFT = 100;
+	static const int ID_GSB_SPELL_ICON_RIGHT = 1000;
 
 	static ushort m_ReagentsIndex[8];
 
@@ -34,15 +36,27 @@ private:
 	uchar m_Spells[64];
 	int m_PageCount;
 
+	CGUIGumppic *m_Body;
+
 	CGUIButton *m_PrevPage;
 	CGUIButton *m_NextPage;
 
 	CGUIGumppic *m_LastSpellPointer;
 	CGUIGumppic *m_LastSpellBookmark;
 
+	virtual void UpdateContentMage();
+	virtual void UpdateContentNecro();
+	virtual void UpdateContentPaladin();
+	virtual void UpdateContentBushido();
+	virtual void UpdateContentNinjitsu();
+	virtual void UpdateContentSpellWeaving();
+	virtual void UpdateContentMysticism();
+
 public:
 	CGumpSpellbook(uint serial, int x, int y);
 	virtual ~CGumpSpellbook();
+
+	void UpdateGraphic(const ushort &parentGraphic);
 
 	virtual void DelayedClick(CRenderObject *obj);
 

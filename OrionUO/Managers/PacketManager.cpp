@@ -2174,6 +2174,9 @@ PACKET_HANDLER(OpenContainer)
 			/*if (gumpid != 0xFFFF)*/ obj->Opened = true;
 			if (!obj->IsCorpse())
 				g_World->ClearContainer(obj);
+
+			if (gumpid = 0xFFFF)
+				((CGumpSpellbook*)gump)->UpdateGraphic(obj->Graphic);
 		}
 	}
 
