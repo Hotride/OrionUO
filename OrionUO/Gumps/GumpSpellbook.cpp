@@ -173,7 +173,7 @@ void CGumpSpellbook::PrepareContent()
 	{
 		case ST_MAGE:
 		{
-			if (g_PressedObject.LeftGump() == this && m_Page > 8 && g_PressedObject.LeftSerial >= ID_GSB_SPELL_ICON_LEFT)
+			if (g_PressedObject.LeftGump() == this && m_Page >= 8 && g_PressedObject.LeftSerial >= ID_GSB_SPELL_ICON_LEFT)
 			{
 				WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
