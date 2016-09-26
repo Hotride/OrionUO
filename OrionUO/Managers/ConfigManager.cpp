@@ -486,8 +486,15 @@ bool CConfigManager::Load(string path)
 
 		if (!file.ReadInt8())
 		{
-			m_GameWindowX = file.ReadUInt16LE();
-			m_GameWindowY = file.ReadUInt16LE();
+			m_GameWindowX = file.ReadInt16LE();
+
+			if (m_GameWindowX < 0)
+				m_GameWindowX = 0;
+
+			m_GameWindowY = file.ReadInt16LE();
+
+			if (m_GameWindowY < 0)
+				m_GameWindowY = 0;
 
 			if (blockSize > 6)
 			{
