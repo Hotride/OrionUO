@@ -68,6 +68,8 @@ public:
 	//!Пересчет смещений
 	void CalculateDataSize();
 
+	virtual void PrepareTextures();
+	
 	virtual bool EntryPointerHere();
 
 	virtual bool Select();

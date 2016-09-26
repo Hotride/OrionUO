@@ -345,8 +345,6 @@ bool CGUISlider::Select()
 {
 	bool select = false;
 
-	CIndexObject &io = g_Orion.m_GumpDataIndex[m_Graphic];
-
 	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
 
 	int x = g_MouseManager.Position.X - m_X;
@@ -367,7 +365,7 @@ bool CGUISlider::Select()
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 			select = (m_CheckPolygone || th->PixelsData[(buttonY * th->Width) + buttonX] != 0);
 #else
-			select = (m_CheckPolygone || g_MulReader->GumpPixelsInXY(io, buttonX, buttonY));
+			select = (m_CheckPolygone || g_MulReader->GumpPixelsInXY(g_Orion.m_GumpDataIndex[m_Graphic], buttonX, buttonY));
 #endif
 		}
 

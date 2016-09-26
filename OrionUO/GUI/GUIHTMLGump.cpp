@@ -27,6 +27,12 @@ CGUIHTMLGump::~CGUIHTMLGump()
 {
 }
 //----------------------------------------------------------------------------------
+void CGUIHTMLGump::PrepareTextures()
+{
+	QFOR(item, m_Items, CBaseGUI*)
+		item->PrepareTextures();
+}
+//----------------------------------------------------------------------------------
 void CGUIHTMLGump::Initalize(bool menu)
 {
 	Clear();
