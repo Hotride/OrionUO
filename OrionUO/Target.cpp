@@ -162,6 +162,7 @@ void CTarget::SendLastTarget()
 
 	//Восстановим пакет последнего актуального таргета
 	memcpy(m_Data, m_LastData, sizeof(m_Data));
+	m_Data[0] = 0x6C;
 	m_Data[1] = m_Type;
 	m_Data[6] = m_CursorType;
 	pack32(m_Data + 2, m_CursorID);
