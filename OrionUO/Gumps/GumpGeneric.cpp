@@ -9,6 +9,7 @@
 //----------------------------------------------------------------------------------
 #include "GumpGeneric.h"
 #include "../Managers/ConfigManager.h"
+#include "../Managers/FontsManager.h"
 #include "../TextEngine/GameConsole.h"
 #include "../Network/Packets.h"
 //----------------------------------------------------------------------------------
@@ -96,6 +97,7 @@ void CGumpGeneric::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpGeneric::GUMP_DIRECT_HTML_LINK_EVENT_C
 {
+	g_FontManager.GoToWebLink(link);
 }
 //----------------------------------------------------------------------------------
 void CGumpGeneric::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
