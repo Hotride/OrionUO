@@ -698,7 +698,7 @@ void CGumpOptions::DrawPage6()
 	checkbox->Checked = g_OptionsConfig.DisableNewTargetSystem;
 
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 246));
-	text->CreateTextureW(0, L"Disable New Target System");
+	text->CreateTextureW(0, L"Disable New Targeting System");
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_OBJECT_HANDLES, 0x00D2, 0x00D3, 0x00D2, 64, 266));
 	checkbox->Checked = g_OptionsConfig.ObjectHandles;
