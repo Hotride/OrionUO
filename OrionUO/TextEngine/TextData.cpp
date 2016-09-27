@@ -12,14 +12,16 @@
 #include "../Managers/ConfigManager.h"
 //----------------------------------------------------------------------------------
 CTextData::CTextData()
-: CRenderTextObject(), m_Unicode(false), m_Type(TT_CLIENT), m_Font(0), m_Timer(0)
+: CRenderTextObject(), m_Unicode(false), m_Type(TT_CLIENT), m_Font(0), m_Timer(0),
+m_DrawX(0), m_DrawY(0), m_Alpha(0xFF)
 {
 	m_Text = "";
 	m_UnicodeText = L"";
 }
 //---------------------------------------------------------------------------
 CTextData::CTextData(CTextData *obj)
-: m_Unicode(obj->Unicode), m_Type(obj->Type), m_Font(obj->Font), m_Timer(obj->Timer)
+: m_Unicode(obj->Unicode), m_Type(obj->Type), m_Font(obj->Font), m_Timer(obj->Timer),
+m_DrawX(obj->DrawX), m_DrawY(obj->DrawY), m_Alpha(obj->Alpha)
 {
 	m_Color = obj->Color;
 	m_Text = obj->GetText();

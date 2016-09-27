@@ -91,6 +91,9 @@ void CGumpSecureTrading::PrepareContent()
 			m_WantRedraw = true;
 		}
 	}
+
+	if (m_TextRenderer.CalculatePositions(false))
+		m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::UpdateContent()
@@ -185,90 +188,14 @@ void CGumpSecureTrading::Draw()
 	if (selobj == NULL)
 		return; //Объект, к которому привязан гамп - исчез
 	
-	CalculateGumpState();
-
 	if (g_GumpPressed)
 		m_FrameCreated = false;
-
-	//Вычисление положения, прозрачности и отрисовка текста
-	CRenderTextObject *rto = m_TextRenderer.m_TextItems;
-	m_TextRenderer.ClearRect();
-
-	//Вычисление положения и прозрачности текста
-	for (; rto != NULL; rto = rto->m_NextDraw)
-	{
-		if (!rto->IsText())
-		{
-			if (rto->m_NextDraw == NULL)
-				break;
-
-			continue;
-		}
-
-		CTextData *td = (CTextData*)rto;
-
-		if (td->Type == TT_OBJECT && td->Timer >= g_Ticks)
-		{
-			CGameObject *go = g_World->FindWorldObject(td->Serial);
-
-			if (go != NULL && go->Graphic < 0x4000)
-			{
-				CGLTextTexture &tth = td->m_Texture;
-				int drawX = td->X - go->GetTextOffsetX(td);
-				int drawY = td->Y - go->GetTextOffsetY(td);
-
-				CTextImageBounds ib(drawX, drawY, tth.Width, tth.Height, td);
-
-				td->Transparent = m_TextRenderer.InRect(ib, go);
-
-				m_TextRenderer.AddRect(ib);
-			}
-		}
-
-		if (rto->m_NextDraw == NULL)
-			break;
-	}
 
 	CGump::Draw();
 
 	glTranslatef(g_GumpTranslate.X, g_GumpTranslate.Y, 0.0f);
 
-	//Отрисовка текста
-	for (; rto != NULL; rto = rto->m_PrevDraw)
-	{
-		if (!rto->IsText())
-			continue;
-
-		CTextData *td = (CTextData*)rto;
-
-		if (td->Type == TT_OBJECT && td->Timer >= g_Ticks)
-		{
-			CGLTextTexture &tth = td->m_Texture;
-
-			int drawX = td->X - (tth.Width / 2);
-			int drawY = td->Y;
-			bool transparent = td->Transparent;
-
-			while (td != NULL)
-			{
-				drawY -= td->m_Texture.Height;
-
-				td = (CTextData*)td->m_Next;
-			}
-
-			if (transparent)
-			{
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_ONE, GL_DST_COLOR);
-
-				tth.Draw(drawX, drawY);
-
-				glDisable(GL_BLEND);
-			}
-			else
-				tth.Draw(drawX, drawY);
-		}
-	}
+	m_TextRenderer.Draw();
 
 	glTranslatef(-g_GumpTranslate.X, -g_GumpTranslate.Y, 0.0f);
 }
@@ -280,61 +207,12 @@ CRenderObject *CGumpSecureTrading::Select()
 	if (selobj == NULL)
 		return NULL; //Объект, к которому привязан гамп - исчез
 
-	//Вычисление положения, прозрачности и отрисовка текста
-	CRenderTextObject *rto = m_TextRenderer.m_TextItems;
-
-	//Вычисление положения и прозрачности текста
-	for (; rto != NULL; rto = rto->m_NextDraw)
-	{
-		if (!rto->IsText())
-		{
-			if (rto->m_NextDraw == NULL)
-				break;
-
-			continue;
-		}
-
-		if (rto->m_NextDraw == NULL)
-			break;
-	}
-
 	CRenderObject *selected = CGump::Select();
 
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - (int)g_GumpTranslate.X, oldPos.Y - (int)g_GumpTranslate.Y);
 
-	//Проверка текста
-	for (; rto != NULL; rto = rto->m_PrevDraw)
-	{
-		if (!rto->IsText())
-			continue;
-
-		CTextData *td = (CTextData*)rto;
-
-		if (td->Type == TT_OBJECT)
-		{
-			if (td->Timer >= g_Ticks)
-			{
-				CGLTextTexture &tth = td->m_Texture;
-
-				int drawX = td->X - (tth.Width / 2);
-				int drawY = td->Y;
-
-				while (td != NULL)
-				{
-					drawY -= td->m_Texture.Height;
-
-					td = (CTextData*)td->m_Next;
-				}
-
-				if (tth.UnderMouse(drawX, drawY))
-				{
-					g_SelectedObject.Init(rto, this);
-					g_SelectedObject.Serial = rto->Serial;
-				}
-			}
-		}
-	}
+	m_TextRenderer.Select(this);
 
 	g_MouseManager.Position = oldPos;
 

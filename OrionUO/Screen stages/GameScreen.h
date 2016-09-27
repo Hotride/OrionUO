@@ -145,9 +145,6 @@ private:
 	//!ћаксимальное значение отображени€ по Z координате
 	int m_MaxDrawZ;
 
-	//!”казатель на элемент текста
-	class CRenderTextObject *m_GameWindowText;
-
 	/*!
 	¬ычисление значений Z координаты дл€ рендера
 	@param [__out] noDrawRoof Ќе рисовать крыши и верхние этажи строений
@@ -161,13 +158,6 @@ private:
 	@return 
 	*/
 	void CheckMouseEvents();
-
-	/*!
-	¬ычисление параметров отображаемого текста
-	 @param [__in] mode true - отрисовка,
-	 @return 
-	*/
-	void CalculateGameWindowText(const bool &mode);
 
 	/*!
 	–исование игрового окна

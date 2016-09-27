@@ -23,6 +23,9 @@ class CTextData : public CRenderTextObject
 	SETGET(uint, Timer);
 	SETGET(string, Text);
 	SETGET(wstring, UnicodeText);
+	SETGET(int, DrawX);
+	SETGET(int, DrawY);
+	SETGET(uchar, Alpha);
 
 public:
 	CTextData();

@@ -958,126 +958,6 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 }
 //----------------------------------------------------------------------------------
 /*!
-¬ычисление параметров отображаемого текста
-@param [__in] mode true - отрисовка, false - выбор
-@return 
-*/
-void CGameScreen::CalculateGameWindowText(const bool &mode)
-{
-	if (mode)
-		g_WorldTextRenderer.ClearRect();
-
-	CRenderTextObject *rto = g_WorldTextRenderer.m_TextItems;
-
-	//¬ычисление положени€ и прозрачности текста
-	for (; rto != NULL; rto = (CRenderTextObject*)rto->m_NextDraw)
-	{
-		if (!rto->IsText())
-		{
-			if (rto->m_NextDraw == NULL)
-				break;
-
-			continue;
-		}
-
-		CTextData *td = (CTextData*)rto;
-		CGLTextTexture &tth = td->m_Texture;
-
-		CRenderWorldObject *rwo = NULL;
-		int drawX = 0;
-		int drawY = 0;
-
-		switch (td->Type)
-		{
-			case TT_OBJECT:
-			{
-				CGameObject *go = g_World->FindWorldObject(td->Serial);
-
-				if (go != NULL && go->Graphic < 0x4000)
-				{
-					rwo = go;
-
-					int gox = go->X - g_RenderBounds.PlayerX;
-					int goy = go->Y - g_RenderBounds.PlayerY;
-
-					drawX = g_RenderBounds.GameWindowCenterX + ((gox - goy) * 22);
-					drawY = ((g_RenderBounds.GameWindowCenterY + ((gox + goy) * 22)) - (go->Z * 4));
-
-					if (go->NPC)
-					{
-						CGameCharacter *gc = go->GameCharacterPtr();
-
-						drawX += gc->OffsetX;
-						drawY += gc->OffsetY - gc->OffsetZ;
-
-						ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(go, 0);
-						drawY -= (dims.Height + dims.CenterY);
-
-						/*drawY -= 55;
-
-						if (gc->FindLayer(OL_MOUNT) != NULL)
-							drawY -= 25;*/
-					}
-					else
-						drawY -= (go->GetStaticData()->Height + 20);
-
-					drawX -= go->GetTextOffsetX(td);
-					drawY -= go->GetTextOffsetY(td);
-				}
-
-				break;
-			}
-			case TT_CLIENT:
-			{
-				rwo = (CRenderWorldObject*)td->Serial;
-
-				if (rwo != NULL)
-				{
-					int gox = rwo->X - g_RenderBounds.PlayerX;
-					int goy = rwo->Y - g_RenderBounds.PlayerY;
-
-					drawX = g_RenderBounds.GameWindowCenterX + ((gox - goy) * 22);
-					drawY = ((g_RenderBounds.GameWindowCenterY + ((gox + goy) * 22)) - (rwo->Z * 4));
-
-					ushort gID = rwo->Graphic - 0x4000;
-
-					int height = g_Orion.m_StaticData[gID / 32].Tiles[gID % 32].Height;
-
-					drawY -= (height + 20);
-
-					drawX -= rwo->GetTextOffsetX(td);
-					drawY -= rwo->GetTextOffsetY(td);
-				}
-
-				break;
-			}
-			default:
-				break;
-		}
-
-		if (rwo != NULL)
-		{
-			td->X = drawX;
-			td->Y = drawY;
-
-			if (mode)
-			{
-				CTextImageBounds ib(drawX, drawY, tth.Width, tth.Height, td);
-
-				td->Transparent = g_WorldTextRenderer.InRect(ib, rwo);
-
-				g_WorldTextRenderer.AddRect(ib);
-			}
-		}
-
-		if (rto->m_NextDraw == NULL)
-			break;
-	}
-
-	m_GameWindowText = rto;
-}
-//----------------------------------------------------------------------------------
-/*!
 –исование игрового окна
 @param [__in] mode true - отрисовка, false - выбор
 @return 
@@ -1290,61 +1170,7 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 	{
 		g_FontColorizerShader->Use();
 
-		for (; m_GameWindowText != NULL; m_GameWindowText = (CRenderTextObject*)m_GameWindowText->m_PrevDraw)
-		{
-			if (!m_GameWindowText->IsText())
-				continue;
-
-			CTextData *td = (CTextData*)m_GameWindowText;
-
-			if (td->Type != TT_SYSTEM)
-			{
-				if (td->Timer >= g_Ticks)
-				{
-					ushort textColor = td->Color;
-
-					bool isYellowed = (g_SelectedObject.Object() == m_GameWindowText);
-
-					if (isYellowed)
-					{
-						CGameObject *textOwner = g_World->FindWorldObject(td->Serial);
-
-						if (textOwner != NULL && (textOwner->NPC || textOwner->IsCorpse()))
-							textColor = 0x0035;
-					}
-
-					int drawMode = 0;
-
-					if (textColor)
-					{
-						g_ColorManager.SendColorsToShader(textColor);
-
-						if (td->Unicode)
-							drawMode = 3;
-						else if (td->Font != 5 && td->Font != 8)
-							drawMode = 2;
-						else
-							drawMode = 1;
-					}
-
-					glUniform1iARB(g_ShaderDrawMode, drawMode);
-
-					if (td->Transparent)
-					{
-						glEnable(GL_BLEND);
-						glBlendFunc(GL_SRC_COLOR, GL_SRC_ALPHA);
-						glColor4f(1.0f, 1.0f, 1.0f, 0.45f);
-
-						td->m_Texture.Draw(td->X, td->Y);
-
-						glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-						glDisable(GL_BLEND);
-					}
-					else
-						td->m_Texture.Draw(td->X, td->Y);
-				}
-			}
-		}
+		g_WorldTextRenderer.WorldDraw();
 
 		UnuseShader();
 
@@ -1370,11 +1196,6 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 
 				ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(character, 0);
 				drawY -= (dims.Height + dims.CenterY);
-
-				/*drawY -= 55;
-
-				if (character->FindLayer(OL_MOUNT) != NULL)
-					drawY -= 25;*/
 
 				for (CTextData *text = (CTextData*)textContainer->m_Items; text != NULL; )
 				{
@@ -1418,7 +1239,6 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 						text->m_Texture.Draw(drawX - text->X, drawY + text->Y);
 
 						glEnable(GL_BLEND);
-						glColor4ub(0xFF, 0xFF, 0xFF, 0xFF);
 					}
 					else
 						text->m_Texture.Draw(drawX - text->X, drawY + text->Y);
@@ -1429,27 +1249,17 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 				}
 			}
 		}
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 	else
-	{
-		for (; m_GameWindowText != NULL; m_GameWindowText = (CRenderTextObject*)m_GameWindowText->m_PrevDraw)
-		{
-			if (!m_GameWindowText->IsText())
-				continue;
-
-			CTextData *td = (CTextData*)m_GameWindowText;
-
-			if (td->Type != TT_SYSTEM)
-			{
-				if (td->Timer >= g_Ticks && td->m_Texture.UnderMouse(td->X, td->Y))
-					g_SelectedObject.Init(m_GameWindowText);
-			}
-		}
-	}
+		g_WorldTextRenderer.Select(NULL);
 }
 //----------------------------------------------------------------------------------
 void CGameScreen::PrepareContent()
 {
+	g_WorldTextRenderer.CalculateWorldPositions(false);
+
 	m_GameScreenGump.PrepareContent();
 
 	g_GumpManager.PrepareContent();
@@ -1474,9 +1284,6 @@ void CGameScreen::Render(const bool &mode)
 
 		g_DeathScreenTimer = 0;
 	}
-
-	//¬ычисление положени€ и прозрачности текста
-	CalculateGameWindowText(mode);
 
 	if (mode)
 	{

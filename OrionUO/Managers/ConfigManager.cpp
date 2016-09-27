@@ -75,7 +75,7 @@ void CConfigManager::DefaultPage2()
 {
 	m_ClientFPS = 32;
 	m_UseScaling = false;
-	m_RemoveTextBlending = true;
+	m_RemoveTextWithBlending = true;
 	m_DrawStatusState = 0;
 }
 //---------------------------------------------------------------------------
@@ -316,7 +316,7 @@ bool CConfigManager::Load(string path)
 		next += blockSize;
 
 		m_UseScaling = false;
-		m_RemoveTextBlending = true;
+		m_RemoveTextWithBlending = true;
 		m_DrawStatusState = 0;
 
 		if (file.ReadInt8() == 2)
@@ -331,7 +331,7 @@ bool CConfigManager::Load(string path)
 
 					if (blockSize > 4)
 					{
-						m_RemoveTextBlending = file.ReadUInt8();
+						m_RemoveTextWithBlending = file.ReadUInt8();
 						m_DrawStatusState = file.ReadUInt8();
 					}
 				}
@@ -610,7 +610,7 @@ void CConfigManager::Save(string path)
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
-	writter.WriteUInt8(m_RemoveTextBlending);
+	writter.WriteUInt8(m_RemoveTextWithBlending);
 	writter.WriteUInt8(m_DrawStatusState);
 	writter.WriteBuffer();
 

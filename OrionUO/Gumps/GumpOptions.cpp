@@ -228,7 +228,7 @@ void CGumpOptions::DrawPage2()
 	checkbox->SetTextParameters(0, L"Use scaling in game window", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REMOVE_TEXT_WITH_BLENDING, 0x00D2, 0x00D3, 0x00D2, 0, 58));
-	checkbox->Checked = g_OptionsConfig.RemoveTextBlending;
+	checkbox->Checked = g_OptionsConfig.RemoveTextWithBlending;
 	checkbox->SetTextParameters(0, L"Remove object's text with alpha-blending", g_OptionsTextColor);
 
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 77));
@@ -1473,7 +1473,7 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 			if (serial == ID_GO_P2_ENABLE_SCALING) //Use scaling in game window
 				g_OptionsConfig.UseScaling = state;
 			else if (serial == ID_GO_P2_REMOVE_TEXT_WITH_BLENDING) //Remove object's text with alpha-blending
-				g_OptionsConfig.RemoveTextBlending = state;
+				g_OptionsConfig.RemoveTextWithBlending = state;
 
 			break;
 		}
@@ -1991,7 +1991,7 @@ void CGumpOptions::ApplyPageChanges()
 		{
 			g_ConfigManager.ClientFPS = g_OptionsConfig.ClientFPS;
 			g_ConfigManager.UseScaling = g_OptionsConfig.UseScaling;
-			g_ConfigManager.RemoveTextBlending = g_OptionsConfig.RemoveTextBlending;
+			g_ConfigManager.RemoveTextWithBlending = g_OptionsConfig.RemoveTextWithBlending;
 			g_ConfigManager.DrawStatusState = g_OptionsConfig.DrawStatusState;
 
 			break;

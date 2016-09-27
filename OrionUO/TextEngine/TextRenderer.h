@@ -28,6 +28,8 @@ public:
 	//Список текста
 	CRenderTextObject *m_TextItems;
 
+	CRenderTextObject *m_DrawPointer;
+
 	//Добавить текст
 	CRenderTextObject *AddText(CRenderTextObject *obj);
 
@@ -42,6 +44,16 @@ public:
 
 	//Проверка, есть ли текст в координатах
 	bool InRect(CTextImageBounds &rect, CRenderWorldObject *rwo);
+
+	bool CalculatePositions(const bool &noCalculate);
+
+	void Draw();
+
+	void Select(class CGump *gump);
+
+	bool CalculateWorldPositions(const bool &noCalculate);
+
+	void WorldDraw();
 };
 //----------------------------------------------------------------------------------
 extern CTextRenderer g_WorldTextRenderer;
