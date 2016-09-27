@@ -16,6 +16,7 @@
 #include "../Managers/ConfigManager.h"
 #include "../Managers/ColorManager.h"
 #include "../Managers/PacketManager.h"
+#include "../Managers/GumpManager.h"
 #include "../SelectedObject.h"
 #include "../OrionUO.h"
 #include "../ServerList.h"
@@ -56,6 +57,20 @@ CGameObject::~CGameObject()
 #if UO_DEBUG_INFO!=0
 	g_GameObjectsCount--;
 #endif //UO_DEBUG_INFO!=0
+}
+//----------------------------------------------------------------------------------
+void CGameObject::OnChangedFlags(const uchar &val)
+{
+	bool poisoned = Poisoned();
+	bool yellowHits = YellowHits();
+
+	m_Flags = val;
+
+	if (poisoned != Poisoned() || yellowHits != YellowHits())
+	{
+		g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR);
+		g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM);
+	}
 }
 //----------------------------------------------------------------------------------
 void CGameObject::OnChangeName(const string &newName)

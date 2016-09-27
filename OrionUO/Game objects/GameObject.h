@@ -31,7 +31,7 @@ class CGameObject : public CRenderStaticObject
 	//!Количество
 	SETGET(uint, Count);
 	//!Флаги от сервера
-	SETGET(uchar, Flags);
+	SETGETE(uchar, Flags, OnChangedFlags);
 	//!Имя
 	SETGETE(string, Name, OnChangeName);
 	//!НПС или предмет
