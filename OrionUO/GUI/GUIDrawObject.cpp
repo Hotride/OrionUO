@@ -72,8 +72,6 @@ bool CGUIDrawObject::Select()
 {
 	bool select = false;
 
-	CIndexObject &io = g_Orion.m_GumpDataIndex[m_Graphic];
-
 	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
 
 	if (th != NULL)
@@ -86,7 +84,7 @@ bool CGUIDrawObject::Select()
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 			select = (m_CheckPolygone || th->PixelsData[(y * th->Width) + x] != 0);
 #else
-			select = (m_CheckPolygone || g_MulReader->GumpPixelsInXY(io, x, y));
+			select = (m_CheckPolygone || g_MulReader->GumpPixelsInXY(g_Orion.m_GumpDataIndex[m_Graphic], x, y));
 #endif
 		}
 	}
