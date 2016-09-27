@@ -407,10 +407,8 @@ WISP_GEOMETRY::CRect CMulReader::ReadStaticArtPixelDimension(CIndexObject &io)
 		}
 	}
 
-	r.Position.X = minX;
-	r.Size.Width = maxX - minX;
-	r.Position.Y = minY;
-	r.Size.Height = maxY - minY;
+	r.Position = WISP_GEOMETRY::CPoint2Di(minX, minY);
+	r.Size = WISP_GEOMETRY::CSize(maxX - minX, maxY - minY);
 
 	return r;
 }

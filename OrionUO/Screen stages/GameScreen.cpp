@@ -344,8 +344,8 @@ void CGameScreen::CalculateRenderList()
 
 				DRAW_FRAME_INFORMATION &dfInfo = go->m_FrameInfo;
 
-				g_PlayerRect.X = g_RenderBounds.GameWindowCenterX - dfInfo.OffsetX;
-				g_PlayerRect.Y = g_RenderBounds.GameWindowCenterY - playerZOffset - dfInfo.OffsetY;
+				g_PlayerRect.X = g_RenderBounds.GameWindowCenterX - dfInfo.OffsetX + g_Player->OffsetX;
+				g_PlayerRect.Y = g_RenderBounds.GameWindowCenterY + g_Player->OffsetY - playerZOffset - dfInfo.OffsetY;
 				g_PlayerRect.Width = dfInfo.Width;
 				g_PlayerRect.Height = dfInfo.Height;
 			}
