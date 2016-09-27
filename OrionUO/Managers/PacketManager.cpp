@@ -2295,14 +2295,14 @@ PACKET_HANDLER(ExtendedCommand)
 			uint id = ReadUInt32BE();
 			uint button = ReadUInt32BE();
 
-			QFOR(gump, g_GumpManager.m_Items, CGump*)
+			for (CGump *gump = (CGump*)g_GumpManager.m_Items; gump != NULL;)
 			{
+				CGump *next = (CGump*)gump->m_Next;
+
 				if (gump->GumpType == GT_GENERIC && gump->ID == id)
-				{
 					((CGumpGeneric*)gump)->SendGumpResponse(button);
 
-					break;
-				}
+				gump = next;
 			}
 
 			break;
