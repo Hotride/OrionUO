@@ -1270,8 +1270,18 @@ PACKET_HANDLER(UpdateObject)
 	}
 	else
 	{
-		character = g_World->GetWorldCharacter(serial & 0x7FFFFFFF);
+		character = g_World->GetWorldCharacter(serial);
 		obj = character;
+
+		if (!obj->Graphic)
+		{
+			bool resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL);
+
+			resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || resuestStatus || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
+
+			if (resuestStatus)
+				g_Orion.StatusReq(serial);
+		}
 	}
 
 	if (obj == NULL)
@@ -1849,10 +1859,11 @@ PACKET_HANDLER(UpdateCharacter)
 
 	if (!obj->Graphic)
 	{
-		if (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL)
-			g_Orion.StatusReq(serial);
+		bool resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL);
 
-		if (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL)
+		resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || resuestStatus || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
+
+		if (resuestStatus)
 			g_Orion.StatusReq(serial);
 	}
 

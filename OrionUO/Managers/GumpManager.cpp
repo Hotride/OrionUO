@@ -745,6 +745,8 @@ void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
 			else
 				MoveToBack(gump);
 
+			g_MouseManager.CancelDoubleClick = true;
+
 			break;
 		}
 	}
@@ -767,8 +769,6 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 		if (g_PressedObject.RightGump() == gump && !gump->NoProcess && !gump->NoClose && gump->CanBeMoved())
 		{
 			//gump->OnClose();
-			g_MouseManager.CancelDoubleClick = true;
-
 			switch (gump->GumpType)
 			{
 				case GT_CONTAINER:
