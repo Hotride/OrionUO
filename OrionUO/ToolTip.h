@@ -23,14 +23,13 @@ class CToolTip
 	SETGET(WISP_GEOMETRY::CPoint2Di, Position);
 	SETGET(bool, Use);
 
-private:
-	class CRenderObject *m_Object;
-
 public:
 	CToolTip();
 	~CToolTip();
 
 	void Reset();
+
+	class CRenderObject *m_Object;
 
 	//Текстура тулпита
 	CGLTextTexture Texture;
