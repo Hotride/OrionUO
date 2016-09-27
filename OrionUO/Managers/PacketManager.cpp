@@ -1891,7 +1891,7 @@ PACKET_HANDLER(UpdateCharacter)
 			obj->Direction = dir;
 		}
 	}
-	else
+	else if (serial != g_PlayerSerial)
 	{
 		obj->X = x;
 		obj->Y = y;
