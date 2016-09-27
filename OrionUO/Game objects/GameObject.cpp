@@ -282,7 +282,7 @@ void CGameObject::Clear()
 //----------------------------------------------------------------------------------
 bool CGameObject::Poisoned()
 {
-	if (g_PacketManager.ClientVersion >= CV_60142)
+	if (g_PacketManager.ClientVersion >= CV_7000)
 		return (m_Flags & 0x20);
 	else
 		return (m_Flags & 0x04);
@@ -290,7 +290,7 @@ bool CGameObject::Poisoned()
 //----------------------------------------------------------------------------------
 bool CGameObject::Flying()
 {
-	if (g_PacketManager.ClientVersion >= CV_60142)
+	if (g_PacketManager.ClientVersion >= CV_7000)
 		return (m_Flags & 0x04);
 	else
 		return false;
