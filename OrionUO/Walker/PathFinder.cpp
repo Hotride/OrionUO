@@ -447,7 +447,7 @@ int CPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 //----------------------------------------------------------------------------------
 bool CPathFinder::Walk(bool run, uchar direction)
 {
-	if (g_PendingDelayTime >  g_Ticks || g_WalkRequestCount > 3 || g_Player == NULL || g_DeathScreenTimer || g_GameState != GS_GAME)
+	if (g_PendingDelayTime >  g_Ticks || g_WalkRequestCount > 3 || g_Player == NULL || !g_Player->Frozen() || g_DeathScreenTimer || g_GameState != GS_GAME)
 		return false;
 
 	if (g_SpeedMode >= CST_CANT_RUN)
