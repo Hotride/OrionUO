@@ -15,6 +15,7 @@
 #include "../Managers/FontsManager.h"
 #include "../Managers/ConfigManager.h"
 #include "../Managers/ColorManager.h"
+#include "../Managers/PacketManager.h"
 #include "../SelectedObject.h"
 #include "../OrionUO.h"
 #include "../ServerList.h"
@@ -277,6 +278,22 @@ void CGameObject::Clear()
 
 		m_Items = NULL;
 	}
+}
+//----------------------------------------------------------------------------------
+bool CGameObject::Poisoned()
+{
+	if (g_PacketManager.ClientVersion >= CV_60142)
+		return (m_Flags & 0x20);
+	else
+		return (m_Flags & 0x04);
+}
+//----------------------------------------------------------------------------------
+bool CGameObject::Flying()
+{
+	if (g_PacketManager.ClientVersion >= CV_60142)
+		return (m_Flags & 0x04);
+	else
+		return false;
 }
 //----------------------------------------------------------------------------------
 /*!

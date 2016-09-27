@@ -158,16 +158,34 @@ public:
 	void Clear();
 
 	/*!
+	Заморожен ли объект
+	@return
+	*/
+	bool Frozen() { return (m_Flags & 0x01); }
+
+	/*!
 	Отравлен ли объект
 	@return
 	*/
-	bool Poisoned() { return (m_Flags & 0x04); }
+	bool Poisoned();
+
+	/*!
+	Летит ли объект
+	@return
+	*/
+	bool Flying();
 
 	/*!
 	Объект имеет желтую полоску жизней
 	@return
 	*/
 	bool YellowHits() { return (m_Flags & 0x08); }
+
+	/*!
+	Объект игнорирует персонажей при перемещении
+	@return
+	*/
+	bool IgnoreCharacters() { return (m_Flags & 0x10); }
 
 	/*!
 	Можно ли брать объект в руку

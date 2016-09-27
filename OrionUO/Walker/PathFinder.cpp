@@ -55,19 +55,19 @@ bool CPathFinder::CreateItemsList(int &x, int &y, char &z)
 
 	bool ignoreGameObjects = (g_Player->Graphic == 0x03DB);
 	bool ignoreDoors = g_Player->Dead();
-	bool ignoreGameCharacters = (g_Player->Stam >= g_Player->MaxStam || g_Player->Dead());
+	bool ignoreGameCharacters = (ignoreDoors || g_Player->IgnoreCharacters() || g_Player->Stam >= g_Player->MaxStam);
 
 	CRenderWorldObject *obj = block->GetRender(bx, by);
 
 	while (obj != NULL)
 	{
-		WORD graphic = obj->Graphic;
+		ushort graphic = obj->Graphic;
 
 		if (obj->IsLandObject())
 		{
 			if (graphic != 2)
 			{
-				DWORD flags = g_Orion.GetLandFlags(graphic);
+				uint flags = g_Orion.GetLandFlags(graphic);
 
 				char surface = 0x10 + (char)(!IsImpassable(flags));
 
@@ -101,7 +101,7 @@ bool CPathFinder::CreateItemsList(int &x, int &y, char &z)
 
 				if (impSurf)
 				{
-					BYTE height = obj->StaticGroupObjectPtr()->GetStaticHeight();
+					uchar height = obj->StaticGroupObjectPtr()->GetStaticHeight();
 
 					char surface = (char)(obj->IsSurface() && !obj->IsImpassable());
 
@@ -473,11 +473,11 @@ bool CPathFinder::Walk(bool run, uchar direction)
 		emptyStack = false;
 	}
 
-	WORD walkTime = TURN_DELAY;
+	ushort walkTime = TURN_DELAY;
 
 	if ((olddir & 7) == (direction & 7)) //Повернуты куда надо
 	{
-		BYTE newDir = direction;
+		uchar newDir = direction;
 		int newX = x;
 		int newY = y;
 		char newZ = z;
@@ -499,7 +499,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	}
 	else
 	{
-		BYTE newDir = direction;
+		uchar newDir = direction;
 		int newX = x;
 		int newY = y;
 		char newZ = z;
