@@ -43,6 +43,7 @@
 #include "../Game objects/GameEffectDrag.h"
 #include "../QuestArrow.h"
 #include "../MultiMap.h"
+#include "../TargetGump.h"
 #include "../Gumps/GumpBuff.h"
 #include "../Gumps/GumpSecureTrading.h"
 #include "../Gumps/GumpTextEntryDialog.h"
@@ -1460,6 +1461,9 @@ PACKET_HANDLER(EquipItem)
 
 	g_World->PutEquipment(obj, cserial, layer);
 	obj->OnGraphicChange();
+
+	if (g_NewTargetSystem.Serial == serial)
+		g_NewTargetSystem.Serial = 0;
 
 	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
 		m_MegaClilocRequests.push_back(obj->Serial);
