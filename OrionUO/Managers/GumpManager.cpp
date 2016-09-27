@@ -105,7 +105,7 @@ void CGumpManager::AddGump(CGump *obj)
 							}
 						
 							if (sb->InGroup())
-								sb->UpdateGroup(-(gump->MinimizedX - gx), - (gump->MinimizedY - gy));
+								sb->UpdateGroup(-(gump->MinimizedX - gx), -(gump->MinimizedY - gy));
 
 							if (gump->Minimized)
 							{

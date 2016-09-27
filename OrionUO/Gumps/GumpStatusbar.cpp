@@ -236,7 +236,7 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 //----------------------------------------------------------------------------------
 bool CGumpStatusbar::GetStatusbarGroupOffset(int &x, int &y)
 {
-	if (InGroup() && m_Minimized && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->MoveOnDrag)
+	if (InGroup() && m_Minimized && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump() != NULL && (g_PressedObject.LeftObject() == NULL || (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->MoveOnDrag)))
 	{
 		CGumpStatusbar *gump = GetTopStatusbar();
 
@@ -275,7 +275,7 @@ void CGumpStatusbar::UpdateGroup(int x, int y)
 			gump->MinimizedY += y;
 
 			g_GumpManager.MoveToBack(gump);
-			gump->WantRedraw = true;
+			//gump->WantRedraw = true;
 		}
 
 		gump = gump->m_GroupNext;
