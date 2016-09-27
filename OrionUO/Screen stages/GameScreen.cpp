@@ -1108,6 +1108,8 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 		if (g_ObjectInHand != NULL)
 			ignoreSerial = g_ObjectInHand->Serial;
 
+		vector<OBJECT_HITS_INFO> hitsStack;
+
 		IFOR(i, 0, m_RenderListCount)
 		{
 			RENDER_OBJECT_DATA &rod = m_RenderList[i];
@@ -1123,6 +1125,48 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 				g_UseCircleTrans = (g_ConfigManager.UseCircleTrans && obj->TranparentTest(playerZPlus5));
 
 				obj->Draw(rod.X, rod.Y);
+
+				if (g_ConfigManager.DrawStatusState && obj->IsGameObject() && ((CGameObject*)obj)->NPC)
+				{
+					CGameCharacter *gc = (CGameCharacter*)obj;
+
+					ushort color = g_ConfigManager.GetColorByNotoriety(gc->Notoriety);
+
+					int x = rod.X - 20 + gc->OffsetX;
+					int y = rod.Y + gc->OffsetY - (gc->Z * 4) - gc->OffsetZ;
+
+					if (g_ConfigManager.DrawStatusState == 1)
+						y -= gc->m_FrameInfo.Height + 6;
+
+					int width = gc->MaxHits;
+
+					if (width)
+					{
+						width = (gc->Hits * 100) / width;
+
+						if (width > 100)
+							width = 100;
+
+						if (width < 1)
+							width = 0;
+						else
+							width = (34 * width) / 100;
+					}
+
+					OBJECT_HITS_INFO hitsInfo = {x, y, color, width};
+					hitsStack.push_back(hitsInfo);
+				}
+			}
+		}
+
+		IFOR(i, 0, 2)
+		{
+			for (vector<OBJECT_HITS_INFO>::iterator it = hitsStack.begin(); it != hitsStack.end(); it++)
+			{
+				if (!i)
+					g_Orion.DrawGump(0x1068, it->Color, it->X, it->Y);
+				else if (it->Width)
+					g_Orion.DrawGump(0x1069, 0x0044, it->X, it->Y, it->Width, 0);
 			}
 		}
 

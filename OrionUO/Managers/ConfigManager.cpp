@@ -14,6 +14,8 @@
 #include "../OrionWindow.h"
 #include "../GLEngine/GLEngine.h"
 #include "../TextEngine/GameConsole.h"
+#include "../Game objects/GameWorld.h"
+#include "../Network/Packets.h"
 //----------------------------------------------------------------------------------
 CConfigManager g_ConfigManager;
 CConfigManager g_OptionsConfig;
@@ -189,8 +191,20 @@ void CConfigManager::OnChangeClientFPS(const uchar &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeUseScaling(const bool &val)
 {
-	if (!val)
+	if (!val && this == &g_ConfigManager)
 		g_GlobalScale = 1.0;
+}
+//---------------------------------------------------------------------------
+void CConfigManager::OnChangeDrawStatusState(const uchar &val)
+{
+	if (val && !m_DrawStatusState && this == &g_ConfigManager)
+	{
+		QFOR(item, g_World->m_Items, CGameObject*)
+		{
+			if (item->NPC)
+				CPacketStatusRequest(item->Serial).Send();
+		}
+	}
 }
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeReduceFPSUnactiveWindow(const bool &val)

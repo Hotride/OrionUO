@@ -26,7 +26,7 @@ class CConfigManager
 	SETGETE(uchar, ClientFPS, OnChangeClientFPS);
 	SETGETE(bool, UseScaling, OnChangeUseScaling);
 	SETGET(bool, RemoveTextBlending);
-	SETGET(uchar, DrawStatusState);
+	SETGETE(uchar, DrawStatusState, OnChangeDrawStatusState);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

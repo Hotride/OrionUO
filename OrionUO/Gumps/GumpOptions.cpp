@@ -132,7 +132,7 @@ void CGumpOptions::UpdateContent()
 
 
 	DrawPage1(); //Sound and Music
-	DrawPage2(); //Pop-up Help
+	DrawPage2(); //Orion's configuration
 	DrawPage3(); //Language
 	DrawPage4(); //Chat
 	DrawPage5(); //Macro Options
@@ -170,9 +170,7 @@ void CGumpOptions::DrawPage1()
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_SOUND_ON_OFF, 0x00D2, 0x00D3, 0x00D2, 64, 90));
 	checkbox->Checked = g_OptionsConfig.Sound;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 90));
-	text->CreateTextureW(0, L"Sound on/off");
+	checkbox->SetTextParameters(0, L"Sound on/off", g_OptionsTextColor);
 
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 112));
 	text->CreateTextureW(0, L"Sound volume");
@@ -184,9 +182,7 @@ void CGumpOptions::DrawPage1()
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_MUSIC_ON_OFF, 0x00D2, 0x00D3, 0x00D2, 64, 151));
 	checkbox->Checked = g_OptionsConfig.Music;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 88, 151));
-	text->CreateTextureW(0, L"Music on/off");
+	checkbox->SetTextParameters(0, L"Music on/off", g_OptionsTextColor);
 
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 173));
 	text->CreateTextureW(0, L"Music volume");
@@ -198,16 +194,11 @@ void CGumpOptions::DrawPage1()
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_PLAY_FOOTSTEP_SOUNDS, 0x00D2, 0x00D3, 0x00D2, 64, 212));
 	checkbox->Checked = g_OptionsConfig.FootstepsSound;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 212));
-	text->CreateTextureW(0, L"Play footstep sounds");
-
+	checkbox->SetTextParameters(0, L"Play footstep sounds", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P1_PLAY_COMBAT_MUSIC, 0x00D2, 0x00D3, 0x00D2, 64, 232));
 	checkbox->Checked = g_OptionsConfig.CombatMusic;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 232));
-	text->CreateTextureW(0, L"Play combat music");
+	checkbox->SetTextParameters(0, L"Play combat music", g_OptionsTextColor);
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage2()
@@ -273,9 +264,7 @@ void CGumpOptions::DrawPage3()
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P3_USE_TOOLTIP, 0x00D2, 0x00D3, 0x00D2, 64, 90));
 	checkbox->Checked = g_OptionsConfig.UseToolTips;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 90));
-	text->CreateTextureW(0, L"Use Tool-tips");
+	checkbox->SetTextParameters(0, L"Use Tool-tips", g_OptionsTextColor);
 
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 112));
 	text->CreateTextureW(0, L"Delay befor Tool-tip appears");
@@ -686,83 +675,61 @@ void CGumpOptions::DrawPage6()
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 44));
 	text->CreateTextureW(0, L"These options affect your interface.");
 
-	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 64, 90));
+	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(1, 0x0BB8, 64, 90, 500, 300, false, true));
+
+	CGUICheckbox *checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 0, 0));
 	checkbox->Checked = g_OptionsConfig.EnablePathfind;
+	checkbox->SetTextParameters(0, L"Enable pathfinding with double-right-click", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 90));
-	text->CreateTextureW(0, L"Enable pathfinding with double-right-click");
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_HOLD_TAB_FOR_COMBAT, 0x00D2, 0x00D3, 0x00D2, 64, 110));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_TAB_FOR_COMBAT, 0x00D2, 0x00D3, 0x00D2, 0, 20));
 	checkbox->Checked = g_OptionsConfig.HoldTabForCombat;
+	checkbox->SetTextParameters(0, L"Hold down TAB key for combat, instead of tapping it to toggle combat mode", g_OptionsTextColor, STP_RIGHT, 450);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 110));
-	text->CreateTextureW(0, L"Hold down TAB key for combat, instead of tapping it to toggle combat mode", 30, 450);
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_OFFSET_INTERFACE_WINDOWS, 0x00D2, 0x00D3, 0x00D2, 64, 146));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_OFFSET_INTERFACE_WINDOWS, 0x00D2, 0x00D3, 0x00D2, 0, 56));
 	checkbox->Checked = g_OptionsConfig.OffsetInterfaceWindows;
+	checkbox->SetTextParameters(0, L"Offset interface windows rather than perfectly stacking them", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 146));
-	text->CreateTextureW(0, L"Offset interface windows rather than perfectly stacking them");
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_AUTO_ARRANGE_MINIMIZED_WINDOWS, 0x00D2, 0x00D3, 0x00D2, 64, 166));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_AUTO_ARRANGE_MINIMIZED_WINDOWS, 0x00D2, 0x00D3, 0x00D2, 0, 76));
 	checkbox->Checked = g_OptionsConfig.AutoArrange;
+	checkbox->SetTextParameters(0, L"Automatically arrange minimized windows", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 166));
-	text->CreateTextureW(0, L"Automatically arrange minimized windows");
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_ALWAYS_RUN, 0x00D2, 0x00D3, 0x00D2, 64, 186));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_ALWAYS_RUN, 0x00D2, 0x00D3, 0x00D2, 0, 96));
 	checkbox->Checked = g_OptionsConfig.AlwaysRun;
+	checkbox->SetTextParameters(0, L"Your character will always run if this is checked", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 186));
-	text->CreateTextureW(0, L"Your character will always run if this is checked");
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_DISABLE_MENUBAR, 0x00D2, 0x00D3, 0x00D2, 64, 206));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISABLE_MENUBAR, 0x00D2, 0x00D3, 0x00D2, 0, 116));
 	checkbox->Checked = g_OptionsConfig.DisableMenubar;
+	checkbox->SetTextParameters(0, L"Disable the Menu Bar", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 206));
-	text->CreateTextureW(0, L"Disable the Menu Bar");
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS, 0x00D2, 0x00D3, 0x00D2, 64, 226));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS, 0x00D2, 0x00D3, 0x00D2, 0, 136));
 	checkbox->Checked = g_OptionsConfig.GrayOutOfRangeObjects;
+	checkbox->SetTextParameters(0, L"Gray out of range objects", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 226));
-	text->CreateTextureW(0, L"Gray out of range objects");
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_DISABLE_NEW_TARGET_SYSTEM, 0x00D2, 0x00D3, 0x00D2, 64, 246));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISABLE_NEW_TARGET_SYSTEM, 0x00D2, 0x00D3, 0x00D2, 0, 156));
 	checkbox->Checked = g_OptionsConfig.DisableNewTargetSystem;
+	checkbox->SetTextParameters(0, L"Disable New Targeting System", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 246));
-	text->CreateTextureW(0, L"Disable New Targeting System");
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_OBJECT_HANDLES, 0x00D2, 0x00D3, 0x00D2, 64, 266));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_OBJECT_HANDLES, 0x00D2, 0x00D3, 0x00D2, 0, 176));
 	checkbox->Checked = g_OptionsConfig.ObjectHandles;
+	checkbox->SetTextParameters(0, L"Object Handles", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 266));
-	text->CreateTextureW(0, L"Object Handles");
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_REDUCE_FPS_UNACTIVE_WINDOW, 0x00D2, 0x00D3, 0x00D2, 64, 286));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_REDUCE_FPS_UNACTIVE_WINDOW, 0x00D2, 0x00D3, 0x00D2, 0, 196));
 	checkbox->Checked = g_OptionsConfig.ReduceFPSUnactiveWindow;
+	checkbox->SetTextParameters(0, L"Reduce FPS when Window is Unactive", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 286));
-	text->CreateTextureW(0, L"Reduce FPS when Window is Unactive");
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON, 0x00D2, 0x00D3, 0x00D2, 64, 306));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON, 0x00D2, 0x00D3, 0x00D2, 0, 216));
 	checkbox->Checked = g_OptionsConfig.ItemPropertiesIcon;
+	checkbox->SetTextParameters(0, L"Display Item Properties Icon", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 306));
-	text->CreateTextureW(0, L"Display Item Properties Icon");
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS, 0x00D2, 0x00D3, 0x00D2, 64, 326));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS, 0x00D2, 0x00D3, 0x00D2, 0, 236));
 	checkbox->Checked = g_OptionsConfig.HoldShiftForContextMenus;
+	checkbox->SetTextParameters(0, L"Hold Shift For Context Menus", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 326));
-	text->CreateTextureW(0, L"Hold Shift For Context Menus");
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 64, 346));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 0, 256));
 	checkbox->Checked = g_OptionsConfig.HoldShiftForEnablePathfind;
+	checkbox->SetTextParameters(0, L"Hold Shift For Enable Pathfinding", g_OptionsTextColor);
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 346));
-	text->CreateTextureW(0, L"Hold Shift For Enable Pathfinding");
+	html->CalculateDataSize();
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage7()
@@ -812,9 +779,7 @@ void CGumpOptions::DrawPage7()
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_SCALE_SPEECH_DURATION, 0x00D2, 0x00D3, 0x00D2, 64, 182));
 	checkbox->Checked = g_OptionsConfig.ScaleSpeechDelay;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 182));
-	text->CreateTextureW(0, L"Scale speech duration based on length");
+	checkbox->SetTextParameters(0, L"Scale speech duration based on length", g_OptionsTextColor);
 
 
 
@@ -861,39 +826,27 @@ void CGumpOptions::DrawPage7()
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_DARK_NIGHTS, 0x00D2, 0x00D3, 0x00D2, 64, 264));
 	checkbox->Checked = g_OptionsConfig.DarkNights;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 264));
-	text->CreateTextureW(0, L"Dark Nights");
+	checkbox->SetTextParameters(0, L"Dark Nights", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_COLORED_LIGHTING, 0x00D2, 0x00D3, 0x00D2, 64, 284));
 	checkbox->Checked = g_OptionsConfig.ColoredLighting;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 284));
-	text->CreateTextureW(0, L"Colored Lighting");
+	checkbox->SetTextParameters(0, L"Colored Lighting", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_CHARACTERS_ANIMATION_DELAY, 0x00D2, 0x00D3, 0x00D2, 64, 304));
 	checkbox->Checked = g_OptionsConfig.StandartCharactersAnimationDelay;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 304));
-	text->CreateTextureW(0, L"Standard characters animation delay");
+	checkbox->SetTextParameters(0, L"Standard characters animation delay", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_ITEMS_ANIMATION_DELAY, 0x00D2, 0x00D3, 0x00D2, 64, 324));
 	checkbox->Checked = g_OptionsConfig.StandartItemsAnimationDelay;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 324));
-	text->CreateTextureW(0, L"Standard items animation delay");
+	checkbox->SetTextParameters(0, L"Standard items animation delay", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_LOCK_GAME_WINDOW_RESIZING, 0x00D2, 0x00D3, 0x00D2, 64, 344));
 	checkbox->Checked = g_OptionsConfig.LockResizingGameWindow;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 344));
-	text->CreateTextureW(0, L"Lock game window resizing");
+	checkbox->SetTextParameters(0, L"Lock game window resizing", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 64, 364));
 	checkbox->Checked = g_OptionsConfig.LockGumpsMoving;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 364));
-	text->CreateTextureW(0, L"Lock gumps moving");
+	checkbox->SetTextParameters(0, L"Lock gumps moving", g_OptionsTextColor);
 
 	if (g_PacketManager.ClientVersion >= CV_6000)
 	{
@@ -925,15 +878,11 @@ void CGumpOptions::DrawPage7()
 
 		checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_IGNORE_GUILD_MESSAGE, 0x00D2, 0x00D3, 0x00D2, 354, 245));
 		checkbox->Checked = g_OptionsConfig.IgnoreGuildMessage;
-
-		text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 376, 245));
-		text->CreateTextureW(0, L"Ignore Guild Messages");
+		checkbox->SetTextParameters(0, L"Ignore Guild Messages", g_OptionsTextColor);
 
 		checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_IGNORE_ALLIANCE_MESSAGE, 0x00D2, 0x00D3, 0x00D2, 354, 265));
 		checkbox->Checked = g_OptionsConfig.IgnoreAllianceMessage;
-
-		text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 376, 265));
-		text->CreateTextureW(0, L"Ignore Alliance Messages");
+		checkbox->SetTextParameters(0, L"Ignore Alliance Messages", g_OptionsTextColor);
 	}
 }
 //----------------------------------------------------------------------------
@@ -1034,9 +983,7 @@ void CGumpOptions::DrawPage8()
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P8_QUERY_CRIMINAL_ACTIONS, 0x00D2, 0x00D3, 0x00D2, 64, 204));
 	checkbox->Checked = g_OptionsConfig.CriminalActionsQuery;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 204));
-	text->CreateTextureW(0, L"Query before performing criminal actions");
+	checkbox->SetTextParameters(0, L"Query before performing criminal actions", g_OptionsTextColor);
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage9()
@@ -1054,15 +1001,11 @@ void CGumpOptions::DrawPage9()
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P9_SHOW_APPROACHING_NAMES, 0x00D2, 0x00D3, 0x00D2, 64, 90));
 	checkbox->Checked = g_OptionsConfig.ShowIncomingNames;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 90));
-	text->CreateTextureW(0, L"Show Names of Approaching Players");
+	checkbox->SetTextParameters(0, L"Show Names of Approaching Players", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P9_USE_CIRCLE_OF_TRANSPARENCY, 0x00D2, 0x00D3, 0x00D2, 64, 110));
 	checkbox->Checked = g_OptionsConfig.UseCircleTrans;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 110));
-	text->CreateTextureW(0, L"Use circle of transparency");
+	checkbox->SetTextParameters(0, L"Use circle of transparency", g_OptionsTextColor);
 
 
 
@@ -1084,15 +1027,11 @@ void CGumpOptions::DrawPage9()
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P9_INFORM_STATS, 0x00D2, 0x00D3, 0x00D2, 64, 216));
 	checkbox->Checked = g_OptionsConfig.StatReport;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 216));
-	text->CreateTextureW(0, L"Inform me of increases in strength, dexterity, and intelligence.");
+	checkbox->SetTextParameters(0, L"Inform me of increases in strength, dexterity, and intelligence.", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P9_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 64, 236));
 	checkbox->Checked = g_OptionsConfig.ConsoleNeedEnter;
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 236));
-	text->CreateTextureW(0, L"Console need press 'Enter' to activate it.");
+	checkbox->SetTextParameters(0, L"Console need press 'Enter' to activate it.", g_OptionsTextColor);
 
 	Add(new CGUIButton(ID_GO_P9_SPEECH_FONT, 0x00D0, 0x00D0, 0x00D0, 64, 262));
 

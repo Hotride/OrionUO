@@ -1277,7 +1277,7 @@ PACKET_HANDLER(UpdateObject)
 		{
 			bool resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL);
 
-			resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || resuestStatus || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
+			resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.DrawStatusState || resuestStatus || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
 
 			if (resuestStatus)
 				g_Orion.StatusReq(serial);
@@ -1861,7 +1861,7 @@ PACKET_HANDLER(UpdateCharacter)
 	{
 		bool resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL);
 
-		resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || resuestStatus || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
+		resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.DrawStatusState || resuestStatus || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
 
 		if (resuestStatus)
 			g_Orion.StatusReq(serial);
