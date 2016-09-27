@@ -3219,6 +3219,10 @@ PACKET_HANDLER(MegaCliloc)
 
 	//LOG_DUMP((PBYTE)message.c_str(), message.length() * 2);
 	obj->ClilocMessage = message;
+
+	if (g_ToolTip.m_Object == obj)
+		g_ToolTip.Reset();
+
 	//LOG("message=%s\n", ToString(message).c_str());
 }
 //----------------------------------------------------------------------------------
