@@ -58,6 +58,11 @@ private:
 	static const int ID_GO_P1_MUSIC_VOLUME = 105;
 	
 	static const int ID_GO_P2_CLIENT_FPS = 200;
+	static const int ID_GO_P2_ENABLE_SCALING = 201;
+	static const int ID_GO_P2_REMOVE_TEXT_WITH_BLENDING = 202;
+	static const int ID_GO_P2_NO_DRAW_CHARACTERS_STATUS = 203;
+	static const int ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP = 204;
+	static const int ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM = 205;
 
 	static const int ID_GO_P3_USE_TOOLTIP = 300;
 	static const int ID_GO_P3_TEXT_COLOR = 301;
@@ -197,11 +202,14 @@ public:
 	CGUITextEntry *m_MacroKey;
 
 	virtual void PrepareContent();
+
+	virtual void UpdateContent();
 	
 	void Init();
 
 	GUMP_BUTTON_EVENT_H;
 	GUMP_CHECKBOX_EVENT_H;
+	GUMP_RADIO_EVENT_H;
 	GUMP_COMBOBOX_SELECTION_EVENT_H;
 	GUMP_SLIDER_CLICK_EVENT_H;
 	GUMP_SLIDER_MOVE_EVENT_H;

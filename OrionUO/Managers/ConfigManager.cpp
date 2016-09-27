@@ -73,6 +73,8 @@ void CConfigManager::DefaultPage2()
 {
 	m_ClientFPS = 32;
 	m_UseScaling = false;
+	m_RemoveTextBlending = true;
+	m_DrawStatusState = 0;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -299,6 +301,10 @@ bool CConfigManager::Load(string path)
 		blockSize = file.ReadInt8();
 		next += blockSize;
 
+		m_UseScaling = false;
+		m_RemoveTextBlending = true;
+		m_DrawStatusState = 0;
+
 		if (file.ReadInt8() == 2)
 		{
 			if (blockSize > 2)
@@ -306,7 +312,15 @@ bool CConfigManager::Load(string path)
 				ClientFPS = file.ReadUInt8();
 
 				if (blockSize > 3)
+				{
 					m_UseScaling = file.ReadUInt8();
+
+					if (blockSize > 4)
+					{
+						m_RemoveTextBlending = file.ReadUInt8();
+						m_DrawStatusState = file.ReadUInt8();
+					}
+				}
 			}
 			else
 				ClientFPS = 32;
@@ -537,6 +551,18 @@ bool CConfigManager::Load(string path)
 		}
 	}*/
 
+	if (m_GameWindowWidth < 640)
+		m_GameWindowWidth = 640;
+
+	if (m_GameWindowWidth >= GetSystemMetrics(SM_CXSCREEN) - 20)
+		m_GameWindowWidth = GetSystemMetrics(SM_CXSCREEN) - 20;
+
+	if (m_GameWindowHeight < 480)
+		m_GameWindowHeight = 480;
+
+	if (m_GameWindowHeight >= GetSystemMetrics(SM_CYSCREEN) - 60)
+		m_GameWindowHeight = GetSystemMetrics(SM_CYSCREEN) - 60;
+
 	file.Unload();
 
 	return result;
@@ -566,10 +592,12 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(4); //size of block
+	writter.WriteInt8(6); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
+	writter.WriteUInt8(m_RemoveTextBlending);
+	writter.WriteUInt8(m_DrawStatusState);
 	writter.WriteBuffer();
 
 	//Page 3

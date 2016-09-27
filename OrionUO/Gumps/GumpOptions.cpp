@@ -34,6 +34,50 @@ CGumpOptions::CGumpOptions(uint serial, short x, short y)
 m_MacroObjectPointer(NULL), m_WantRedrawMacroData(true)
 {
 	m_Page = 1;
+}
+//----------------------------------------------------------------------------------
+CGumpOptions::~CGumpOptions()
+{
+}
+//----------------------------------------------------------------------------------
+void CGumpOptions::CalculateGumpState()
+{
+	CGump::CalculateGumpState();
+
+	if (g_GumpPressed)
+	{
+		if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX)
+		{
+			g_GumpMovingOffset.Reset();
+
+			if (m_Minimized)
+			{
+				g_GumpTranslate.X = (float)m_MinimizedX;
+				g_GumpTranslate.Y = (float)m_MinimizedY;
+			}
+			else
+			{
+				g_GumpTranslate.X = (float)m_X;
+				g_GumpTranslate.Y = (float)m_Y;
+			}
+		}
+		else
+			m_WantRedraw = true;
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpOptions::PrepareContent()
+{
+	if (m_WantRedrawMacroData)
+	{
+		RedrawMacroData();
+		m_WantRedraw = true;
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpOptions::UpdateContent()
+{
+	Clear();
 
 	//Body
 	Add(new CGUIResizepic(0, 0x0A28, 40, 0, 550, 450));
@@ -97,45 +141,8 @@ m_MacroObjectPointer(NULL), m_WantRedrawMacroData(true)
 	DrawPage8(); //Reputation System
 	DrawPage9(); //Miscellaneous
 	DrawPage10(); //Filter Options
-}
-//----------------------------------------------------------------------------------
-CGumpOptions::~CGumpOptions()
-{
-}
-//----------------------------------------------------------------------------------
-void CGumpOptions::CalculateGumpState()
-{
-	CGump::CalculateGumpState();
 
-	if (g_GumpPressed)
-	{
-		if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX)
-		{
-			g_GumpMovingOffset.Reset();
-
-			if (m_Minimized)
-			{
-				g_GumpTranslate.X = (float)m_MinimizedX;
-				g_GumpTranslate.Y = (float)m_MinimizedY;
-			}
-			else
-			{
-				g_GumpTranslate.X = (float)m_X;
-				g_GumpTranslate.Y = (float)m_Y;
-			}
-		}
-		else
-			m_WantRedraw = true;
-	}
-}
-//----------------------------------------------------------------------------
-void CGumpOptions::PrepareContent()
-{
-	if (m_WantRedrawMacroData)
-	{
-		RedrawMacroData();
-		m_WantRedraw = true;
-	}
+	RedrawMacroData();
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::Init()
@@ -145,8 +152,7 @@ void CGumpOptions::Init()
 	m_MacroPointer = (CMacro*)g_OptionsMacroManager.m_Items;
 	m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
 
-	RedrawMacroData();
-	m_WantRedraw = true;
+	m_WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage1()
@@ -217,11 +223,39 @@ void CGumpOptions::DrawPage2()
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 44));
 	text->CreateTextureW(0, L"These settings configure the Orion UO Client.");
 
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 90));
+	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(1, 0x0BB8, 64, 90, 500, 300, false, true));
+
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 0));
 	text->CreateTextureW(0, L"FPS rate:");
 
-	m_SliderClientFPS = (CGUISlider*)Add(new CGUISlider(ID_GO_P2_CLIENT_FPS, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 64, 111, 90, 16, 64, g_OptionsConfig.ClientFPS));
+	m_SliderClientFPS = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_CLIENT_FPS, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 0, 21, 90, 16, 64, g_OptionsConfig.ClientFPS));
 	m_SliderClientFPS->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
+
+
+	CGUICheckbox *checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_ENABLE_SCALING, 0x00D2, 0x00D3, 0x00D2, 0, 39));
+	checkbox->Checked = g_OptionsConfig.UseScaling;
+	checkbox->SetTextParameters(0, L"Use scaling in game window", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REMOVE_TEXT_WITH_BLENDING, 0x00D2, 0x00D3, 0x00D2, 0, 58));
+	checkbox->Checked = g_OptionsConfig.RemoveTextBlending;
+	checkbox->SetTextParameters(0, L"Remove object's text with alpha-blending", g_OptionsTextColor);
+
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 77));
+	text->CreateTextureW(0, L"Draw character's status in game window");
+
+	CGUIRadio *radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_NO_DRAW_CHARACTERS_STATUS, 0x00D0, 0x00D1, 0x00D2, 0, 96));
+	radio->Checked = (g_OptionsConfig.DrawStatusState == 0);
+	radio->SetTextParameters(0, L"No draw", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP, 0x00D0, 0x00D1, 0x00D2, 0, 115));
+	radio->Checked = (g_OptionsConfig.DrawStatusState == 1);
+	radio->SetTextParameters(0, L"Above character", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM, 0x00D0, 0x00D1, 0x00D2, 0, 134));
+	radio->Checked = (g_OptionsConfig.DrawStatusState == 2);
+	radio->SetTextParameters(0, L"Under character", g_OptionsTextColor);
+
+	html->CalculateDataSize();
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage3()
@@ -752,7 +786,7 @@ void CGumpOptions::DrawPage7()
 	Add(new CGUIResizepic(ID_GO_P7_GAME_WINDOW_WIDTH, 0x0BB8, 64, 112, 60, 22));
 	m_GameWindowWidth = (CGUITextEntry*)Add(new CGUITextEntry(ID_GO_P7_GAME_WINDOW_WIDTH, g_OptionsTextColor, g_OptionsTextColor, g_OptionsTextColor, 68, 114));
 	m_GameWindowWidth->CheckOnSerial = true;
-	m_GameWindowWidth->m_Entry.MaxLength = 3000;
+	m_GameWindowWidth->m_Entry.MaxLength = GetSystemMetrics(SM_CXSCREEN) - 20;
 	m_GameWindowWidth->m_Entry.NumberOnly = true;
 	m_GameWindowWidth->m_Entry.SetText(std::to_wstring(g_OptionsConfig.GameWindowWidth));
 
@@ -762,7 +796,7 @@ void CGumpOptions::DrawPage7()
 	Add(new CGUIResizepic(ID_GO_P7_GAME_WINDOW_HEIGHT, 0x0BB8, 139, 112, 60, 22));
 	m_GameWindowHeight = (CGUITextEntry*)Add(new CGUITextEntry(ID_GO_P7_GAME_WINDOW_HEIGHT, g_OptionsTextColor, g_OptionsTextColor, g_OptionsTextColor, 143, 114));
 	m_GameWindowHeight->CheckOnSerial = true;
-	m_GameWindowHeight->m_Entry.MaxLength = 3000;
+	m_GameWindowHeight->m_Entry.MaxLength = GetSystemMetrics(SM_CYSCREEN) - 60;
 	m_GameWindowHeight->m_Entry.NumberOnly = true;
 	m_GameWindowHeight->m_Entry.SetText(std::to_wstring(g_OptionsConfig.GameWindowHeight));
 
@@ -1315,6 +1349,8 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 			default:
 				break;
 		}
+
+		m_WantUpdateContent = true;
 	}
 	else if (serial == ID_GO_OKAY) //Okay
 	{
@@ -1495,6 +1531,11 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 		}
 		case 2: //Orion's configuration
 		{
+			if (serial == ID_GO_P2_ENABLE_SCALING) //Use scaling in game window
+				g_OptionsConfig.UseScaling = state;
+			else if (serial == ID_GO_P2_REMOVE_TEXT_WITH_BLENDING) //Remove object's text with alpha-blending
+				g_OptionsConfig.RemoveTextBlending = state;
+
 			break;
 		}
 		case 3: //Language
@@ -1592,6 +1633,66 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 			else if (serial == ID_GO_P9_CONSOLE_ENTER) //Console need press 'Enter' to activate it.
 				g_OptionsConfig.ConsoleNeedEnter = state;
 
+			break;
+		}
+		case 10: //Filter Options
+		{
+			break;
+		}
+		default:
+			break;
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpOptions::GUMP_RADIO_EVENT_C
+{
+	if (!state)
+		return;
+
+	switch (m_Page)
+	{
+		case 1: //Sound and Music
+		{
+			break;
+		}
+		case 2: //Orion's configuration
+		{
+			if (serial == ID_GO_P2_NO_DRAW_CHARACTERS_STATUS) //No draw
+				g_OptionsConfig.DrawStatusState = 0;
+			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP) //Above character
+				g_OptionsConfig.DrawStatusState = 1;
+			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM) //Under character
+				g_OptionsConfig.DrawStatusState = 2;
+
+			break;
+		}
+		case 3: //Language
+		{
+			break;
+		}
+		case 4: //Chat
+		{
+
+			break;
+		}
+		case 5: //Macro Options
+		{
+			break;
+		}
+		case 6: //Interface
+		{
+			break;
+		}
+		case 7: //Display
+		{
+			break;
+		}
+		case 8: //Reputation System
+		{
+			break;
+		}
+		case 9: //Miscellaneous
+		{
 			break;
 		}
 		case 10: //Filter Options
@@ -1950,6 +2051,9 @@ void CGumpOptions::ApplyPageChanges()
 		case 2: //Orion's configuration
 		{
 			g_ConfigManager.ClientFPS = g_OptionsConfig.ClientFPS;
+			g_ConfigManager.UseScaling = g_OptionsConfig.UseScaling;
+			g_ConfigManager.RemoveTextBlending = g_OptionsConfig.RemoveTextBlending;
+			g_ConfigManager.DrawStatusState = g_OptionsConfig.DrawStatusState;
 
 			break;
 		}

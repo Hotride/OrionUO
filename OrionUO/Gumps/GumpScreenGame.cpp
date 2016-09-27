@@ -46,8 +46,15 @@ void CGumpScreenGame::UpdateContent()
 			if (g_RenderBounds.GameWindowWidth < 640)
 				g_RenderBounds.GameWindowWidth = 640;
 
+			if (g_RenderBounds.GameWindowWidth >= GetSystemMetrics(SM_CXSCREEN) - 20)
+				g_RenderBounds.GameWindowWidth = GetSystemMetrics(SM_CXSCREEN) - 20;
+
 			if (g_RenderBounds.GameWindowHeight < 480)
 				g_RenderBounds.GameWindowHeight = 480;
+
+			if (g_RenderBounds.GameWindowHeight >= GetSystemMetrics(SM_CYSCREEN) - 60)
+				g_RenderBounds.GameWindowHeight = GetSystemMetrics(SM_CYSCREEN) - 60;
+
 
 			CGumpOptions *opt = (CGumpOptions*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_OPTIONS);
 
@@ -150,8 +157,14 @@ void CGumpScreenGame::OnLeftMouseButtonUp()
 		if (g_ConfigManager.GameWindowWidth < 640)
 			g_ConfigManager.GameWindowWidth = 640;
 
+		if (g_ConfigManager.GameWindowWidth >= GetSystemMetrics(SM_CXSCREEN) - 20)
+			g_ConfigManager.GameWindowWidth = GetSystemMetrics(SM_CXSCREEN) - 20;
+
 		if (g_ConfigManager.GameWindowHeight < 480)
 			g_ConfigManager.GameWindowHeight = 480;
+
+		if (g_ConfigManager.GameWindowHeight >= GetSystemMetrics(SM_CYSCREEN) - 60)
+			g_ConfigManager.GameWindowHeight = GetSystemMetrics(SM_CYSCREEN) - 60;
 
 		if (g_PacketManager.ClientVersion >= CV_200)
 			CPacketGameWindowSize().Send();
