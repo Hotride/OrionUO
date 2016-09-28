@@ -1222,8 +1222,7 @@ void COrion::ChangeSeason(const SEASON_TYPE &season, const int &music)
 	}
 
 	if (music)
-	{
-	}
+		g_Orion.PlayMusic(music, true);
 }
 //----------------------------------------------------------------------------------
 ushort COrion::GetLandSeasonGraphic(ushort graphic)
@@ -2580,11 +2579,11 @@ void COrion::LoadClientStartupConfig()
 //----------------------------------------------------------------------------------
 void COrion::PlayMusic(const int &index, const bool &warmode)
 {
-	//Тимур, здесь прикручивай взависимости от конфига играть мп3 или миди.
-	//Сейчас только мп3 будет играть.
-
 	if (index >= MAX_MUSIC_DATA_INDEX_COUNT)
 		return;
+
+	g_SoundManager.StopMusic();
+	g_SoundManager.StopWarMusic();
 
 	if (g_PacketManager.ClientVersion >= CV_306E)
 	{
@@ -3783,7 +3782,7 @@ void COrion::ChangeWarmode(uchar status)
 
 	//38, 39 и 40 это индексы боевой музыки.
 	if (newstatus == 1 && g_ConfigManager.Music)
-		PlayMusic(rand() % (40 - 38 + 1) + 38, true);
+		PlayMusic(rand() % 3 + 38, true);
 	else if (newstatus == 0)
 		g_SoundManager.StopWarMusic();
 

@@ -930,11 +930,7 @@ PACKET_HANDLER(UpdatePlayer)
 			g_Target.Reset();
 
 			if (g_ConfigManager.Music)
-			{
-				g_SoundManager.StopMusic();
-				g_SoundManager.StopWarMusic();
 				g_Orion.PlayMusic(42, true);
-			}
 
 			g_DeathScreenTimer = g_Ticks + DEATH_SCREEN_DELAY;
 		}
@@ -3067,17 +3063,24 @@ PACKET_HANDLER(AttackCharacter)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(Season)
 {
-	return;
+	if (g_World == NULL)
+		return;
+
 	uchar season = ReadUInt8();
 
 	if (season > ST_DESOLATION)
 		season = 0;
 
+	if ((g_Player->Dead() || g_Season == ST_DESOLATION) && (SEASON_TYPE)season != ST_DESOLATION)
+		return;
+
 	g_OldSeason = (SEASON_TYPE)season;
 	g_OldSeasonMusic = ReadUInt8();
 
-	if (g_Season != ST_DESOLATION)
-		g_Orion.ChangeSeason((SEASON_TYPE)season, g_OldSeasonMusic);
+	if (g_Season == ST_DESOLATION)
+		g_OldSeasonMusic = DEATH_MUSIC_INDEX;
+
+	g_Orion.ChangeSeason((SEASON_TYPE)season, g_OldSeasonMusic);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DisplayDeath)
