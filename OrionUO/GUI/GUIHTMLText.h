@@ -48,7 +48,7 @@ public:
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Texture.Width, m_Texture.Height); }
 
 	//!Создать текстуру текста
-	void CreateTexture();
+	void CreateTexture(const bool &backgroundCanBeColored);
 
 	virtual void Draw(const bool &checktrans = false);
 	virtual bool Select();

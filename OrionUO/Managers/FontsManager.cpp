@@ -20,7 +20,9 @@ CFontsManager g_FontManager;
 CFontsManager::CFontsManager()
 : m_SavePixels(false), m_UseHTML(false), m_Font(NULL), m_FontCount(0),
 m_HTMLColor(0xFFFFFFFF), m_RecalculateWidthByInfo(false), m_UnusePartialHue(false),
-m_HTMLBackgroundCanBeColored(false), m_BackgroundColor(0)
+m_HTMLBackgroundCanBeColored(false), m_BackgroundColor(0), m_WebLinkColor(0),
+m_VisitedWebLinkColor(0), m_LeftMargin(0), m_TopMargin(0), m_RightMargin(0),
+m_BottomMargin(0)
 {
 	memset(m_UnicodeFontAddress, 0, sizeof(m_UnicodeFontAddress));
 	memset(m_UnicodeFontSize, 0, sizeof(m_UnicodeFontSize));
@@ -1458,7 +1460,7 @@ ushort CFontsManager::GetWebLinkID(const string &link, uint &color)
 	else
 	{
 		if ((*it).second.Visited)
-			color = 0x0000FFFF;
+			color = m_VisitedWebLinkColor;
 
 		linkID = (*it).first;
 	}
@@ -1627,7 +1629,7 @@ HTML_DATA_INFO CFontsManager::GetHTMLInfoFromTag(const HTML_TAG_TYPE &tag)
 			info.Font = 2;
 			break;
 		case HTT_BQ:
-			info.Flags = UOFONT_INDENTION;
+			info.Flags = UOFONT_BQ;
 			info.Color = 0x008000FF;
 			break;
 		case HTT_LEFT:
@@ -1719,7 +1721,7 @@ HTML_DATA_INFO CFontsManager::GetCurrentHTMLInfo(const HTMLINFO_LIST &list)
 //----------------------------------------------------------------------------------
 void CFontsManager::TrimHTMLString(string &str)
 {
-	if (str.length() >= 2)
+	if (str.length() >= 2 && str[0] == '"' && str[str.length() - 1] == '"')
 	{
 		str.resize(str.length() - 1);
 		str.erase(str.begin());
@@ -1799,35 +1801,41 @@ void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &c
 			break;
 
 		string str = ToLowerA(strings[i]);
+		string &value = strings[i + 1];
+		TrimHTMLString(value);
+
+		if (!value.length())
+			continue;
 
 		switch (info.Tag)
 		{
 			case HTT_BODY:
 			{
 				if (str == "text")
-					info.Color = GetHTMLColorFromText(strings[i + 1]);
+					info.Color = GetHTMLColorFromText(value);
 				else if (m_HTMLBackgroundCanBeColored && str == "bgcolor")
-					m_BackgroundColor = GetHTMLColorFromText(strings[i + 1]);
+					m_BackgroundColor = GetHTMLColorFromText(value);
+				else if (str == "link")
+					m_WebLinkColor = GetHTMLColorFromText(value);
+				else if (str == "vlink")
+					m_VisitedWebLinkColor = GetHTMLColorFromText(value);
+				else if (str == "leftmargin")
+					m_LeftMargin = atoi(value.c_str());
+				else if (str == "topmargin")
+					m_TopMargin = atoi(value.c_str());
+				else if (str == "rightmargin")
+					m_RightMargin = atoi(value.c_str());
+				else if (str == "bottommargin")
+					m_BottomMargin = atoi(value.c_str());
 
 				break;
 			}
 			case HTT_BASEFONT:
 			{
 				if (str == "color")
-					info.Color = GetHTMLColorFromText(strings[i + 1]);
+					info.Color = GetHTMLColorFromText(value);
 				else if (str == "size")
-				{
-					string &buf = strings[i + 1];
-
-					if (buf.length())
-					{
-						if (buf[0] == '"')
-							TrimHTMLString(buf);
-
-						if (buf.length())
-							info.Font = atoi(buf.c_str());
-					}
-				}
+					info.Font = atoi(value.c_str());
 
 				break;
 			}
@@ -1836,14 +1844,8 @@ void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &c
 				if (str == "href")
 				{
 					info.Flags = UOFONT_UNDERLINE;
-
-					string &buf = strings[i + 1];
-
-					if (buf.length() && buf[0] == '"')
-						TrimHTMLString(buf);
-
-					info.Color = 0xFF0000FF;
-					info.Link = GetWebLinkID(buf, info.Color);
+					info.Color = m_WebLinkColor;
+					info.Link = GetWebLinkID(value, info.Color);
 				}
 
 				break;
@@ -2203,6 +2205,14 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str,
 */
 PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
+	m_WebLinkColor = 0xFF0000FF;
+	m_VisitedWebLinkColor = 0x0000FFFF;
+	m_BackgroundColor = 0;
+	m_LeftMargin = 0;
+	m_TopMargin = 0;
+	m_RightMargin = 0;
+	m_BottomMargin = 0;
+
 	if (font >= 20 || !m_UnicodeFontAddress[font])
 		return NULL;
 
@@ -2477,6 +2487,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 		return pData;
 
 	int len = lstrlenW(str);
+
 	if (!len)
 		return pData;
 
@@ -2491,6 +2502,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 	}
 
 	PMULTILINES_FONT_INFO info = GetInfoW(font, str, len, align, flags, width);
+
 	if (info == NULL)
 		return pData;
 

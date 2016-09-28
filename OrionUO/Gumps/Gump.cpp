@@ -493,6 +493,11 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 	int group = 0;
 	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
 
+	static bool htmlTextBackgroundCanBeColored = false;
+
+	if (!(start != NULL && start->m_Next == NULL && start->Type == GOT_HTMLTEXT))
+		htmlTextBackgroundCanBeColored = false;
+
 	QFOR(item, start, CBaseGUI*)
 	{
 		if (!count)
@@ -626,7 +631,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 						gump->WantRedraw = true;
 
 						htmlText->m_Texture.ClearWebLink();
-						htmlText->CreateTexture();
+						htmlText->CreateTexture(htmlTextBackgroundCanBeColored);
 					}
 
 					break;
@@ -690,6 +695,8 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 				case GOT_XFMHTMLTOKEN:
 				{
 					CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)item;
+
+					htmlTextBackgroundCanBeColored = !htmlGump->HaveBackground;
 
 					WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - htmlGump->X, oldPos.Y - htmlGump->Y);

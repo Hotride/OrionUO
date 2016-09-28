@@ -24,7 +24,7 @@ CGumpGeneric::~CGumpGeneric()
 {
 }
 //----------------------------------------------------------------------------------
-void CGumpGeneric::AddText(const int &index, const wstring &text, CBaseGUI *start)
+void CGumpGeneric::AddText(const int &index, const wstring &text, CBaseGUI *start, const bool &backbroundCanBeColored)
 {
 	if (start == NULL)
 		start = (CBaseGUI*)m_Items;
@@ -58,7 +58,7 @@ void CGumpGeneric::AddText(const int &index, const wstring &text, CBaseGUI *star
 				if (gt->TextID == index)
 				{
 					gt->Text = text;
-					gt->CreateTexture();
+					gt->CreateTexture(backbroundCanBeColored);
 				}
 
 				break;
@@ -69,7 +69,7 @@ void CGumpGeneric::AddText(const int &index, const wstring &text, CBaseGUI *star
 
 				if (ghtml->Serial == index + 1)
 				{
-					AddText(index, text, (CBaseGUI*)item->m_Items);
+					AddText(index, text, (CBaseGUI*)item->m_Items, !ghtml->HaveBackground);
 					ghtml->CalculateDataSize();
 				}
 

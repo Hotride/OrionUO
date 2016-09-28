@@ -25,6 +25,7 @@
 #define UOFONT_UNDERLINE		0x10 //!Подчеркнутый
 #define UOFONT_FIXED			0x20 //!Фиксированной длины
 #define UOFONT_CROPPED			0x40 //!Фиксированной длины с многоточием
+#define UOFONT_BQ				0x80 //!Отступ для тэга BQ
 //----------------------------------------------------------------------------------
 #define PLUGIN_FLAGS_PARSE_RECV			0x01
 #define PLUGIN_FLAGS_PARSE_SEND			0x02

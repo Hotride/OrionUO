@@ -22,9 +22,9 @@ CGUIHTMLText::~CGUIHTMLText()
 	m_Texture.Clear();
 }
 //----------------------------------------------------------------------------------
-void CGUIHTMLText::CreateTexture()
+void CGUIHTMLText::CreateTexture(const bool &backgroundCanBeColored)
 {
-	g_FontManager.SetUseHTML(true, m_HTMLStartColor);
+	g_FontManager.SetUseHTML(true, m_HTMLStartColor, backgroundCanBeColored);
 
 	g_FontManager.GenerateW(m_Font, m_Texture, m_Text.c_str(), m_Color, 30, m_Width, m_Align, m_TextFlags);
 

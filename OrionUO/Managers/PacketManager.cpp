@@ -3652,7 +3652,7 @@ void CPacketManager::AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &l
 		if (data.IsXMF)
 		{
 			htmlText->Text = g_ClilocManager.Cliloc(g_Language)->GetW(data.TextID);
-			htmlText->CreateTexture();
+			htmlText->CreateTexture(!data.HaveBackground);
 			htmlGump->CalculateDataSize();
 		}
 	}

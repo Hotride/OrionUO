@@ -131,6 +131,14 @@ private:
 	//!Цвет фона текста
 	uint m_BackgroundColor;
 
+	uint m_WebLinkColor;
+	uint m_VisitedWebLinkColor;
+
+	int m_LeftMargin;
+	int m_TopMargin;
+	int m_RightMargin;
+	int m_BottomMargin;
+
 	/*!
 	Получить индекс ссылки
 	@param [__in] link Ссылка
@@ -215,7 +223,7 @@ public:
 	@param [__in_opt] htmlStartColor Начальный цвет
 	@return
 	*/
-	void SetUseHTML(const bool &val, const uint &htmlStartColor = 0xFFFFFFFF, const bool backgroundCanBeColored = false) { m_UseHTML = val; m_HTMLColor = htmlStartColor; m_HTMLBackgroundCanBeColored = backgroundCanBeColored; m_BackgroundColor = 0; }
+	void SetUseHTML(const bool &val, const uint &htmlStartColor = 0xFFFFFFFF, const bool backgroundCanBeColored = false) { m_UseHTML = val; m_HTMLColor = htmlStartColor; m_HTMLBackgroundCanBeColored = backgroundCanBeColored; }
 	bool GetUseHTML() const { return m_UseHTML; }
 	__declspec(property(get = GetUseHTML)) bool UseHTML;
 
