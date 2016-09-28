@@ -2586,9 +2586,13 @@ void COrion::PlayMusic(const int &index, const bool &warmode)
 	if (index >= MAX_MUSIC_DATA_INDEX_COUNT)
 		return;
 
-	CIndexMusic &mp3Info = m_MP3Data[index];
-	g_SoundManager.PlayMP3(mp3Info.FilePath, mp3Info.Loop, warmode);
-	//SoundManager.PlayMidi(index);
+	if (g_PacketManager.ClientVersion >= CV_306E)
+	{
+		CIndexMusic &mp3Info = m_MP3Data[index];
+		g_SoundManager.PlayMP3(mp3Info.FilePath, mp3Info.Loop, warmode);
+	}
+	else
+		g_SoundManager.PlayMidi(index);
 }
 //----------------------------------------------------------------------------------
 void COrion::PlaySoundEffect(const ushort &id, float volume)
