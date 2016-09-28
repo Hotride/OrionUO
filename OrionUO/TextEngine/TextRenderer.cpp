@@ -354,16 +354,10 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 			{
 				CTextImageBounds ib(drawX, drawY, tth.Width, tth.Height, text);
 
-				bool transparent = InRect(ib, rwo);
+				text->DrawX = drawX;
+				text->DrawY = drawY;
 
-				if (text->Transparent != transparent || text->DrawX != drawX || text->DrawY != drawY)
-				{
-					text->DrawX = drawX;
-					text->DrawY = drawY;
-
-					changed = true;
-					text->Transparent = transparent;
-				}
+				text->Transparent = InRect(ib, rwo);
 
 				AddRect(ib);
 
@@ -383,7 +377,6 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 
 						delta = (255 * delta) / 100;
 
-						changed = true;
 						text->Alpha = (uchar)delta;
 						text->Transparent = true;
 					}

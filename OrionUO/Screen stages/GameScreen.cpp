@@ -535,6 +535,66 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 		if (obj->IsGameObject())
 		{
 			CGameObject *go = (CGameObject*)obj;
+			int characterOffsetY = 0;
+
+			if (go->NPC)
+			{
+				CGameCharacter *character = go->GameCharacterPtr();
+
+				ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(go);
+
+				characterOffsetY = character->OffsetY - (character->OffsetZ + dims.Height + dims.CenterY);
+
+				CTextContainer *textContainer = character->m_DamageTextControl;
+
+				if (!textContainer->Empty())
+				{
+					int textDrawX = drawX + character->OffsetX;
+					int textDrawY = drawY + characterOffsetY;
+
+					for (CTextData *text = (CTextData*)textContainer->m_Items; text != NULL;)
+					{
+						CTextData *next = (CTextData*)text->m_Next;
+
+						if (text->m_Texture.Empty())
+						{
+							text = next;
+							continue;
+						}
+
+						if (text->Timer < g_Ticks)
+						{
+							if (text->Transparent)
+							{
+								textContainer->Delete(text);
+								text = next;
+								continue;
+							}
+							else
+							{
+								text->Timer = g_Ticks + DAMAGE_TEXT_TRANSPARENT_DELAY;
+								text->Transparent = true;
+								text->Color = 0x00FF;
+							}
+						}
+
+						text->DrawX = textDrawX - text->X;
+						text->DrawY = textDrawY + text->Y;
+
+						if (text->Transparent)
+						{
+							if ((uchar)text->Color >= DAMAGE_TEXT_ALPHA_STEP)
+								text->Color -= DAMAGE_TEXT_ALPHA_STEP;
+							else
+								text->Color = 0;
+						}
+
+						text->Y -= DAMAGE_TEXT_STEP;
+
+						text = next;
+					}
+				}
+			}
 
 			if (((!go->Locked() && go->Graphic < 0x4000) || go->NPC) && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
 			{
@@ -546,12 +606,8 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 
 				if (go->NPC)
 				{
-					CGameCharacter *character = go->GameCharacterPtr();
-
-					ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(go);
-
-					m_ObjectHandlesList[index].X += character->OffsetX;
-					m_ObjectHandlesList[index].Y += character->OffsetY - (character->OffsetZ + dims.Height + dims.CenterY);
+					m_ObjectHandlesList[index].X += go->GameCharacterPtr()->OffsetX;
+					m_ObjectHandlesList[index].Y += characterOffsetY;
 				}
 				else
 					m_ObjectHandlesList[index].Y -= g_Orion.GetArtDimension(go->Graphic + 0x4000).Height;
@@ -815,65 +871,6 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_NoDrawRoof = false;
 	g_MaxGroundZ = 125;
 	m_MaxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
-}
-//----------------------------------------------------------------------------------
-/*!
-ќбработка сообщений мыши (ст€гивание статуса. драг-гампа и т.п.)
-@return 
-*/
-void CGameScreen::CheckMouseEvents()
-{
-	g_GrayedPixels = g_Player->Dead();
-
-	if (g_GrayedPixels)
-		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
-
-	if (g_SelectedObject.Gump() != NULL && g_SelectedObject.Gump()->GumpType == GT_STATUSBAR && g_SelectedObject.Gump()->Serial != g_PlayerSerial)
-		g_StatusbarUnderMouse = g_SelectedObject.Gump()->Serial;
-	else
-		g_StatusbarUnderMouse = 0;
-
-	//if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && g_PressedObject.LeftObject() == g_SelectedObject.Object())
-	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGameObject())
-	{
-		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
-
-		if ((abs(offset.X) >= DRAG_PIXEL_RANGE || abs(offset.Y) >= DRAG_PIXEL_RANGE) || (g_MouseManager.LastLeftButtonClickTimer + g_MouseManager.DoubleClickDelay < g_Ticks))
-		{
-			CGameItem *selobj = g_World->FindWorldItem(g_PressedObject.LeftSerial);
-
-			if (selobj != NULL && g_ObjectInHand == NULL && !selobj->Locked() && GetDistance(g_Player, selobj) < 3)
-			{
-				if (selobj->Serial >= 0x40000000 && !g_GrayedPixels) //Item selection
-				{
-					if (selobj->IsStackable() && selobj->Count > 1)
-					{
-						CGumpDrag *newgump = new CGumpDrag(g_PressedObject.LeftSerial, g_MouseManager.Position.X - 80, g_MouseManager.Position.Y - 34);
-
-						g_GumpManager.AddGump(newgump);
-						g_OrionWindow.EmulateOnLeftMouseButtonDown();
-						selobj->Dragged = true;
-					}
-					else if (!g_Target.IsTargeting())
-					{
-						g_Orion.PickupItem(selobj);
-						g_PressedObject.ClearLeft(); //g_LastObjectLeftMouseDown = 0;
-					}
-				}
-			}
-			else if (g_ObjectInHand == NULL)
-			{
-				CGameCharacter *selchar = g_World->FindWorldCharacter(g_PressedObject.LeftSerial);
-
-				if (selchar!= NULL) //Character selection
-				{
-					g_Orion.OpenStatus(selchar->Serial);
-					g_OrionWindow.EmulateOnLeftMouseButtonDown();
-					g_GeneratedMouseDown = true;
-				}
-			}
-		}
-	}
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -1178,74 +1175,29 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 		{
 			if (obj->NPC)
 			{
-				CGameCharacter *character = obj->GameCharacterPtr();
-
-				CTextContainer *textContainer = character->m_DamageTextControl;
+				CTextContainer *textContainer = obj->GameCharacterPtr()->m_DamageTextControl;
 
 				if (textContainer->Empty())
 					continue;
 
-				int gox = obj->X - g_RenderBounds.PlayerX;
-				int goy = obj->Y - g_RenderBounds.PlayerY;
-
-				int drawX = g_RenderBounds.GameWindowCenterX + ((gox - goy) * 22);
-				int drawY = ((g_RenderBounds.GameWindowCenterY + ((gox + goy) * 22)) - (obj->Z * 4));
-
-				drawX += character->OffsetX;
-				drawY += character->OffsetY - character->OffsetZ;
-
-				ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(character, 0);
-				drawY -= (dims.Height + dims.CenterY);
-
-				for (CTextData *text = (CTextData*)textContainer->m_Items; text != NULL; )
+				QFOR(text, textContainer->m_Items, CTextData*)
 				{
-					CTextData *next = (CTextData*)text->m_Next;
-
-					if (text->m_Texture.Empty())
-					{
-						text = next;
-						continue;
-					}
-
-					if (text->Timer < g_Ticks)
+					if (!text->m_Texture.Empty())
 					{
 						if (text->Transparent)
 						{
-							textContainer->Delete(text);
-							text = next;
-							continue;
+							glEnable(GL_BLEND);
+							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+							glColor4ub(0xFF, 0xFF, 0xFF, (uchar)text->Color);
+
+							text->m_Texture.Draw(text->DrawX, text->DrawY);
+
+							glDisable(GL_BLEND);
 						}
 						else
-						{
-							text->Timer = g_Ticks + DAMAGE_TEXT_TRANSPARENT_DELAY;
-							text->Transparent = true;
-							text->Color = 0x00FF;
-						}
+							text->m_Texture.Draw(text->DrawX, text->DrawY);
 					}
-
-					if (text->Transparent)
-					{
-						glEnable(GL_BLEND);
-						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-						uchar alpha = (uchar)text->Color;
-						if (alpha >= DAMAGE_TEXT_ALPHA_STEP)
-							text->Color -= DAMAGE_TEXT_ALPHA_STEP;
-						else
-							text->Color = 0;
-
-						glColor4ub(0xFF, 0xFF, 0xFF, alpha);
-
-						text->m_Texture.Draw(drawX - text->X, drawY + text->Y);
-
-						glEnable(GL_BLEND);
-					}
-					else
-						text->m_Texture.Draw(drawX - text->X, drawY + text->Y);
-
-					text->Y -= DAMAGE_TEXT_STEP;
-
-					text = next;
 				}
 			}
 		}
@@ -1258,13 +1210,63 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 //----------------------------------------------------------------------------------
 void CGameScreen::PrepareContent()
 {
+	g_GrayedPixels = g_Player->Dead();
+
+	if (g_GrayedPixels)
+		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
+
 	g_WorldTextRenderer.CalculateWorldPositions(false);
 
 	m_GameScreenGump.PrepareContent();
 
 	g_GumpManager.PrepareContent();
 
-	CheckMouseEvents();
+	if (g_SelectedObject.Gump() != NULL && g_SelectedObject.Gump()->GumpType == GT_STATUSBAR && g_SelectedObject.Gump()->Serial != g_PlayerSerial)
+		g_StatusbarUnderMouse = g_SelectedObject.Gump()->Serial;
+	else
+		g_StatusbarUnderMouse = 0;
+
+	//if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && g_PressedObject.LeftObject() == g_SelectedObject.Object())
+	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGameObject())
+	{
+		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
+
+		if ((abs(offset.X) >= DRAG_PIXEL_RANGE || abs(offset.Y) >= DRAG_PIXEL_RANGE) || (g_MouseManager.LastLeftButtonClickTimer + g_MouseManager.DoubleClickDelay < g_Ticks))
+		{
+			CGameItem *selobj = g_World->FindWorldItem(g_PressedObject.LeftSerial);
+
+			if (selobj != NULL && g_ObjectInHand == NULL && !selobj->Locked() && GetDistance(g_Player, selobj) < 3)
+			{
+				if (selobj->Serial >= 0x40000000 && !g_GrayedPixels) //Item selection
+				{
+					if (selobj->IsStackable() && selobj->Count > 1)
+					{
+						CGumpDrag *newgump = new CGumpDrag(g_PressedObject.LeftSerial, g_MouseManager.Position.X - 80, g_MouseManager.Position.Y - 34);
+
+						g_GumpManager.AddGump(newgump);
+						g_OrionWindow.EmulateOnLeftMouseButtonDown();
+						selobj->Dragged = true;
+					}
+					else if (!g_Target.IsTargeting())
+					{
+						g_Orion.PickupItem(selobj);
+						g_PressedObject.ClearLeft(); //g_LastObjectLeftMouseDown = 0;
+					}
+				}
+			}
+			else if (g_ObjectInHand == NULL)
+			{
+				CGameCharacter *selchar = g_World->FindWorldCharacter(g_PressedObject.LeftSerial);
+
+				if (selchar != NULL) //Character selection
+				{
+					g_Orion.OpenStatus(selchar->Serial);
+					g_OrionWindow.EmulateOnLeftMouseButtonDown();
+					g_GeneratedMouseDown = true;
+				}
+			}
+		}
+	}
 }
 //----------------------------------------------------------------------------------
 /*!

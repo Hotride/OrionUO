@@ -529,9 +529,37 @@ bool CConfigManager::Load(string path)
 				bool zoomed = file.ReadUInt8();
 
 				int windowX = file.ReadInt16LE();
+
+				if (windowX < 0)
+					windowX = 0;
+
 				int windowY = file.ReadInt16LE();
+
+				if (windowY < 0)
+					windowY = 0;
+
 				int windowWidth = file.ReadInt16LE();
 				int windowHeight = file.ReadInt16LE();
+
+				if (g_GameState >= GS_GAME)
+				{
+					if (windowWidth < 640)
+						windowWidth = 640;
+
+					if (windowWidth >= GetSystemMetrics(SM_CXSCREEN) - 20)
+						windowWidth = GetSystemMetrics(SM_CXSCREEN) - 20;
+
+					if (windowHeight < 480)
+						windowHeight = 480;
+
+					if (windowHeight >= GetSystemMetrics(SM_CYSCREEN) - 60)
+						windowHeight = GetSystemMetrics(SM_CYSCREEN) - 60;
+				}
+				else
+				{
+					windowWidth = 640;
+					windowHeight = 480;
+				}
 
 				SendMessage(g_OrionWindow.Handle, WM_SYSCOMMAND, SC_RESTORE, 0);
 
@@ -565,17 +593,25 @@ bool CConfigManager::Load(string path)
 		}
 	}*/
 
-	if (m_GameWindowWidth < 640)
+	if (g_GameState >= GS_GAME)
+	{
+		if (m_GameWindowWidth < 640)
+			m_GameWindowWidth = 640;
+
+		if (m_GameWindowWidth >= GetSystemMetrics(SM_CXSCREEN) - 20)
+			m_GameWindowWidth = GetSystemMetrics(SM_CXSCREEN) - 20;
+
+		if (m_GameWindowHeight < 480)
+			m_GameWindowHeight = 480;
+
+		if (m_GameWindowHeight >= GetSystemMetrics(SM_CYSCREEN) - 60)
+			m_GameWindowHeight = GetSystemMetrics(SM_CYSCREEN) - 60;
+	}
+	else
+	{
 		m_GameWindowWidth = 640;
-
-	if (m_GameWindowWidth >= GetSystemMetrics(SM_CXSCREEN) - 20)
-		m_GameWindowWidth = GetSystemMetrics(SM_CXSCREEN) - 20;
-
-	if (m_GameWindowHeight < 480)
 		m_GameWindowHeight = 480;
-
-	if (m_GameWindowHeight >= GetSystemMetrics(SM_CYSCREEN) - 60)
-		m_GameWindowHeight = GetSystemMetrics(SM_CYSCREEN) - 60;
+	}
 
 	file.Unload();
 

@@ -154,12 +154,6 @@ private:
 	int GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ);
 
 	/*!
-	ќбработка сообщений мыши (ст€гивание статуса. драг-гампа и т.п.)
-	@return 
-	*/
-	void CheckMouseEvents();
-
-	/*!
 	–исование игрового окна
 	@param [__in] mode true - отрисовка, false - выбор
 	@return 
