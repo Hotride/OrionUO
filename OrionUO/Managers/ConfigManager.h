@@ -15,12 +15,12 @@
 //!Класс менеджера конфига
 class CConfigManager
 {
-	SETGET(bool, Sound);
-	SETGET(bool, Music);
+	SETGETE(bool, Sound, OnChangedSound);
+	SETGETE(bool, Music, OnChangedMusic);
 	SETGET(bool, FootstepsSound);
 	SETGET(bool, CombatMusic);
-	SETGET(uchar, SoundVolume);
-	SETGET(uchar, MusicVolume);
+	SETGETE(uchar, SoundVolume, OnChangedSoundVolume);
+	SETGETE(uchar, MusicVolume, OnChangedMusicVolume);
 
 	//page 2 setget
 	SETGETE(uchar, ClientFPS, OnChangeClientFPS);

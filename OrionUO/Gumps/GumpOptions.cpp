@@ -1953,33 +1953,15 @@ void CGumpOptions::ApplyPageChanges()
 		case 1: //Sound and Music
 		{		
 			//Меняем громкость звука эффектам и текущим эффектам
-			if (g_ConfigManager.SoundVolume != g_OptionsConfig.SoundVolume)
-			{
-				g_ConfigManager.SoundVolume = g_OptionsConfig.SoundVolume;
-				g_Orion.AdjustSoundEffects(g_Ticks + 100000, g_SoundManager.GetVolumeValue());
-			}
+			g_ConfigManager.SoundVolume = g_OptionsConfig.SoundVolume;
 
 			//Меняем громкость звука музыке и текущей музыке
-			if (g_ConfigManager.MusicVolume != g_OptionsConfig.MusicVolume)
-			{
-				g_ConfigManager.MusicVolume = g_OptionsConfig.MusicVolume;
-				g_SoundManager.SetMusicVolume(g_SoundManager.GetVolumeValue(-1, true));
-			}
+			g_ConfigManager.MusicVolume = g_OptionsConfig.MusicVolume;
 			
 		    //Выключаем звук эффектов.
-			if (g_ConfigManager.Sound && !g_OptionsConfig.Sound)
-				g_Orion.AdjustSoundEffects(g_Ticks + 100000);
-
 			g_ConfigManager.Sound = g_OptionsConfig.Sound;
 
-
 			//Выключаем звук музыки.
-			if (g_ConfigManager.Music && !g_OptionsConfig.Music)
-			{
-				g_SoundManager.StopMusic();
-				g_SoundManager.StopWarMusic();
-			}
-
 			g_ConfigManager.Music = g_OptionsConfig.Music;
 
 			g_ConfigManager.FootstepsSound = g_OptionsConfig.FootstepsSound;

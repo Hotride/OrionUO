@@ -15,6 +15,7 @@
 #include <fstream>
 #include <string>
 #include "../OrionUO.h"
+#include "PacketManager.h"
 //----------------------------------------------------------------------------------
 CSoundManager g_SoundManager;
 //----------------------------------------------------------------------------------
@@ -286,26 +287,39 @@ void CSoundManager::PlayMP3(std::string fileName, bool loop, bool warmode)
 //----------------------------------------------------------------------------------
 void CSoundManager::StopWarMusic()
 {
-	//midi music stopping code via mci.
-	/*MCI_GENERIC_PARMS mciGen;
-	DWORD error = mciSendCommand(m_Music, MCI_STOP, MCI_WAIT, (DWORD)(LPMCI_GENERIC_PARMS)&mciGen);
+	if (g_PacketManager.ClientVersion >= CV_306E)
+	{
+		BASS_ChannelStop(m_WarMusic);
+		m_WarMusic = 0;
 
-	TraceMusicError(error);*/
-	BASS_ChannelStop(m_WarMusic);
-	m_WarMusic = 0;
-	if (m_Music != 0 && !BASS_ChannelIsActive(m_Music))
-		BASS_ChannelPlay(m_Music, 1);
+		if (m_Music != 0 && !BASS_ChannelIsActive(m_Music))
+			BASS_ChannelPlay(m_Music, 1);
+	}
+	else
+	{
+		//midi music stopping code via mci.
+		MCI_GENERIC_PARMS mciGen;
+		uint error = mciSendCommand(m_WarMusic, MCI_STOP, MCI_WAIT, (DWORD)(LPMCI_GENERIC_PARMS)&mciGen);
+
+		TraceMusicError(error);
+	}
 }
 //----------------------------------------------------------------------------------
 void CSoundManager::StopMusic()
 {
-	//midi music stopping code via mci.
-	/*MCI_GENERIC_PARMS mciGen;
-	DWORD error = mciSendCommand(m_Music, MCI_STOP, MCI_WAIT, (DWORD)(LPMCI_GENERIC_PARMS)&mciGen);
+	if (g_PacketManager.ClientVersion >= CV_306E)
+	{
+		BASS_ChannelStop(m_Music);
+		m_Music = 0;
+	}
+	else
+	{
+		//midi music stopping code via mci.
+		MCI_GENERIC_PARMS mciGen;
+		uint error = mciSendCommand(m_Music, MCI_STOP, MCI_WAIT, (DWORD)(LPMCI_GENERIC_PARMS)&mciGen);
 
-	TraceMusicError(error);*/
-	BASS_ChannelStop(m_Music);
-	m_Music = 0;
+		TraceMusicError(error);
+	}
 }
 //----------------------------------------------------------------------------------
 void CSoundManager::SetMusicVolume(float volume)

@@ -8,10 +8,12 @@
 */
 //----------------------------------------------------------------------------------
 #include "ConfigManager.h"
+#include "SoundManager.h"
 #include "../GLEngine/GLTextureCircleOfTransparency.h"
 #include "../Wisp/WispMappedFile.h"
 #include "../Wisp/WispBinaryFileWritter.h"
 #include "../OrionWindow.h"
+#include "../OrionUO.h"
 #include "../GLEngine/GLEngine.h"
 #include "../TextEngine/GameConsole.h"
 #include "../Game objects/GameWorld.h"
@@ -168,6 +170,36 @@ void CConfigManager::DefaultPage9()
 	m_CircleTransRadius = 64;
 	m_SkillReport = 1;
 	m_SpeechFont = 0;
+}
+//---------------------------------------------------------------------------
+void CConfigManager::OnChangedSound(const bool &val)
+{
+	if (this == &g_ConfigManager && !val)
+		g_Orion.AdjustSoundEffects(g_Ticks + 100000);
+}
+//---------------------------------------------------------------------------
+void CConfigManager::OnChangedMusic(const bool &val)
+{
+	if (this == &g_ConfigManager && !val)
+	{
+		g_SoundManager.StopMusic();
+		g_SoundManager.StopWarMusic();
+	}
+}
+//---------------------------------------------------------------------------
+void CConfigManager::OnChangedSoundVolume(const uchar &val)
+{
+	if (this == &g_ConfigManager && m_SoundVolume != val)
+		g_Orion.AdjustSoundEffects(g_Ticks + 100000, val);
+}
+//---------------------------------------------------------------------------
+void CConfigManager::OnChangedMusicVolume(const uchar &val)
+{
+	if (this == &g_ConfigManager && m_MusicVolume != val)
+	{
+		m_MusicVolume = val;
+		g_SoundManager.SetMusicVolume(g_SoundManager.GetVolumeValue(-1, true));
+	}
 }
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeClientFPS(const uchar &val)
