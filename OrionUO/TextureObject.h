@@ -42,6 +42,8 @@ class CTextureAnimationDirection : public CBaseQueueItem
 	SETGET(uchar, FrameCount);
 	//Адрес в памяти
 	SETGET(uint, Address);
+	//Размер данных в памяти
+	SETGET(uint, Size);
 	//Время последнего доступа
 	SETGET(uint, LastAccessTime);
 

@@ -86,8 +86,9 @@ void CGameWorld::ProcessSound(const uint &ticks, CGameCharacter *gc)
 */
 void CGameWorld::ProcessAnimation()
 {
-	uchar delay = (g_ConfigManager.StandartCharactersAnimationDelay ? 0x50 : 50); // 0x75 : 0x50
-	g_AnimCharactersDelayValue = delay;
+	int delay = (g_ConfigManager.StandartCharactersAnimationDelay ? 0x50 : 50);
+	int delayMuller = (g_ConfigManager.StandartCharactersAnimationDelay ? 100 : 70);
+	g_AnimCharactersDelayValue = (float)delay;
 
 	QFOR(obj, m_Items, CGameObject*)
 	{
@@ -136,19 +137,15 @@ void CGameWorld::ProcessAnimation()
 
 				g_AnimationManager.GetAnimDirection(dir, mirror);
 
+				int currentDelay = delay;
+
 				if (anim != NULL)
 				{
 					CTextureAnimationGroup *group = anim->GetGroup(animGroup);
 					CTextureAnimationDirection *direction = group->GetDirection(dir);
 
 					if (direction->Address == 0)
-					{
-						g_AnimationManager.AnimGroup = animGroup;
-						g_AnimationManager.Direction = dir;
-
-						int offset = (animGroup * 5) + dir;
-						g_AnimationManager.ExecuteDirectionGroup(direction, id, offset);
-					}
+						g_AnimationManager.ExecuteDirectionGroup(direction, id, animGroup, dir);
 
 					if (direction->Address != 0)
 					{
@@ -157,12 +154,12 @@ void CGameWorld::ProcessAnimation()
 
 						if (gc->AnimationFromServer)
 						{
-							int ai = (gc->AnimationInterval * 2) + 1;
+							currentDelay = (int)gc->AnimationInterval;
 
-							if (ai < 1)
-								ai = 1;
-
-							gc->LastAnimationChangeTime = g_Ticks + (ai * delay);
+							if (currentDelay < 1)
+								currentDelay = delay;
+							else
+								currentDelay *= delayMuller;
 
 							if (!gc->AnimationFrameCount)
 								gc->AnimationFrameCount = fc;
@@ -227,7 +224,7 @@ void CGameWorld::ProcessAnimation()
 					}
 				}
 
-				gc->LastAnimationChangeTime = g_Ticks + delay;
+				gc->LastAnimationChangeTime = g_Ticks + currentDelay;
 			}
 		}
 		else if (obj->IsCorpse())
@@ -254,13 +251,7 @@ void CGameWorld::ProcessAnimation()
 					CTextureAnimationDirection *direction = group->GetDirection(dir);
 
 					if (direction->Address == 0)
-					{
-						g_AnimationManager.AnimGroup = animGroup;
-						g_AnimationManager.Direction = dir;
-
-						int offset = (animGroup * 5) + dir;
-						g_AnimationManager.ExecuteDirectionGroup(direction, id, offset);
-					}
+						g_AnimationManager.ExecuteDirectionGroup(direction, id, animGroup, dir);
 
 					if (direction->Address != 0)
 					{

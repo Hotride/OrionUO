@@ -2103,7 +2103,7 @@ void COrion::IndexReplaces()
 	WISP_FILE::CTextFileParser soundParser(g_App.FilePath("Sound.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser mp3Parser(g_App.FilePath("Music\\Digital\\Config.txt"), " ,", "#;", "");
 
-	while (!artParser.IsEOF())
+	while (!artParser.IsEOF() && false)
 	{
 		STRING_LIST strings = artParser.ReadTokens();
 

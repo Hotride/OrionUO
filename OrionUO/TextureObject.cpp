@@ -26,7 +26,7 @@ CTextureAnimationFrame::~CTextureAnimationFrame()
 //----------------------------------------------------------------------------------
 CTextureAnimationDirection::CTextureAnimationDirection(int direction)
 : CBaseQueueItem(), m_Direction(direction), m_FrameCount(0), m_Address(0),
-m_LastAccessTime(0)
+m_Size(0), m_LastAccessTime(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ CTextureAnimationFrame *CTextureAnimationDirection::GetFrame(const uchar &frame)
 {
 	CTextureAnimationFrame *item = FindFrame(frame);
 
-	if (item == NULL)
+	if (item == NULL && frame < m_FrameCount)
 	{
 		item = new CTextureAnimationFrame(frame);
 		Add(item);

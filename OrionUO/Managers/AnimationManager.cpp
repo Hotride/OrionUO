@@ -25,6 +25,7 @@
 //----------------------------------------------------------------------------------
 CAnimationManager g_AnimationManager;
 //----------------------------------------------------------------------------------
+#pragma region layers table
 int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 {
 	{ //dir 0
@@ -196,10 +197,11 @@ int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 		OL_CLOAK
 	},
 };
+#pragma endregion
 //----------------------------------------------------------------------------------
 CAnimationManager::CAnimationManager()
-: m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0), m_Direction(0), m_Sitting(0),
-m_Transform(false)
+: WISP_DATASTREAM::CDataReader(), m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0),
+m_Direction(0), m_Sitting(0), m_Transform(false)
 {
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
@@ -527,7 +529,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 @param [__in] id Индекс картинки
 @return Группа анимаций
 */
-ANIMATION_GROUPS CAnimationManager::GetGroupIndex(ushort id)
+ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 {
 	ANIMATION_GROUPS group = AG_HIGHT;
 
@@ -548,7 +550,7 @@ ANIMATION_GROUPS CAnimationManager::GetGroupIndex(ushort id)
 @param [__in] second Группа смерти номер 2
 @return Индекс группы анимации
 */
-uchar CAnimationManager::GetDieGroupIndex(ushort id, bool second)
+uchar CAnimationManager::GetDieGroupIndex(ushort id, const bool &second)
 {
 	uchar group = 0;
 
@@ -681,19 +683,19 @@ void CAnimationManager::GetSittingAnimDirection(uchar &dir, bool &mirror, int &x
 @param [__in] id Индекс картинки
 @return Ссылка на анимацию
 */
-CTextureAnimation *CAnimationManager::GetAnimation(ushort id)
+CTextureAnimation *CAnimationManager::GetAnimation(const ushort &graphic)
 {
-	if (id >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+	if (graphic >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		return NULL;
 
-	CTextureAnimation *anim = m_DataIndex[id].Group;
+	CTextureAnimation *anim = m_DataIndex[graphic].Group;
 
 	if (anim == NULL)
 	{
 		anim = new CTextureAnimation();
-		m_DataIndex[id].Group = anim;
+		m_DataIndex[graphic].Group = anim;
 
-		m_UsedAnimList.push_back(&m_DataIndex[id]);
+		m_UsedAnimList.push_back(&m_DataIndex[graphic]);
 	}
 
 	return anim;
@@ -754,58 +756,78 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 }
 //----------------------------------------------------------------------------------
 /*!
+Существует ли анимация в файле
+@param [__in] graphic Индекс картинки
+@param [__in] group Группа анимации
+@return true в случае успеха
+*/
+puchar CAnimationManager::GetAnimationAddress(const ushort &graphic, int &size, const uchar &group, const int &direction)
+{
+	puchar result = NULL;
+	size = 0;
+
+	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_DataIndex[graphic].Address != NULL)
+	{
+		int offset = (group * 5) + direction;
+
+		if (m_DataIndex[graphic].Offset == 0xFFFFFFFF) //in verdata
+		{
+			PVERDATA_HEADER vh = (PVERDATA_HEADER)(m_DataIndex[graphic].Address + (offset * sizeof(VERDATA_HEADER)));
+
+			if (vh->Size && vh->Position != 0xFFFFFFFF && vh->Size != 0xFFFFFFFF)
+			{
+				result = g_FileManager.m_VerdataMul.Start + vh->Position;
+				size = vh->Size;
+			}
+		}
+		else //in original mulls
+		{
+			PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_DataIndex[graphic].Address + (offset * sizeof(ANIM_IDX_BLOCK)));
+
+			if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
+			{
+				result = (puchar)(m_DataIndex[graphic].Offset + aidx->Position);
+				size = aidx->Size;
+			}
+		}
+	}
+
+	return result;
+}
+//----------------------------------------------------------------------------------
+/*!
 Загрузка картинок для указанного направления персонажа
 @param [__in] direction Ссылка на направление анимации
 @param [__in] id Индекс картинки
 @param [__in] offset Смещение относительно начала анимаций
 @return true в случае успешной загрузки
 */
-bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direction, ushort &id, int &offset)
+bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direction, const ushort &graphic, const int &group, const int &dir)
 {
 	direction->Address = 0;
 
-	if (id > MAX_ANIMATIONS_DATA_INDEX_COUNT || m_DataIndex[id].Address == NULL)
+	if (graphic > MAX_ANIMATIONS_DATA_INDEX_COUNT || m_DataIndex[graphic].Address == NULL)
 		return false;
 
-	puchar dataStart = NULL;
+	int size = 0;
+	direction->Address = (uint)GetAnimationAddress(graphic, size, group, dir);
+	direction->Size = size;
 
-	if (m_DataIndex[id].Offset == 0xFFFFFFFF) //in verdata
-	{
-		PVERDATA_HEADER vh = (PVERDATA_HEADER)(m_DataIndex[id].Address + (offset * sizeof(VERDATA_HEADER)));
-
-		if (vh->Position != 0xFFFFFFFF)
-			direction->Address = (uint)g_FileManager.m_VerdataMul.Start + vh->Position;
-		
-		dataStart = (puchar)direction->Address;
-	}
-	else //in original mulls
-	{
-		PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_DataIndex[id].Address + (offset * sizeof(ANIM_IDX_BLOCK)));
-	
-		if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
-			direction->Address = (uint)aidx;
-
-		dataStart = (puchar)(m_DataIndex[id].Offset + aidx->Position);
-	}
-
-	if (!direction->Address)
+	if (direction->Address == NULL)
 		return false;
 
-	puchar ptr = dataStart;
+	SetData((puchar)direction->Address, size);
 
-	dataStart += sizeof(ushort[256]); //Palette
+	pushort palette = (pushort)m_Start;
+	Move(sizeof(ushort[256])); //Palette
+	puchar dataStart = m_Ptr;
 
-	pushort palette = (pushort)ptr;
-	ptr = dataStart;
-
-	int frameCount = *((puint)ptr);
+	int frameCount = ReadUInt32LE();
 	direction->FrameCount = frameCount;
-	ptr += sizeof(uint);
 
-	puint frameOffset = (puint)ptr;
-	ptr += (frameCount * sizeof(uint));
+	puint frameOffset = (puint)m_Ptr;
 
-	//ushort color = m_DataIndex[id].Color;
+	//ushort color = m_DataIndex[graphic].Color;
 
 	IFOR(i, 0, frameCount)
 	{
@@ -814,45 +836,32 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 		if (frame->Texture != 0)
 			continue;
 
-		pushort p = (pushort)((uint)dataStart + frameOffset[i]);
+		m_Ptr = dataStart + frameOffset[i];
 
 		//LOG("Load anim: 0x%04X[%i]: 0x%08X: ", id, i, p);
 
-		short imageCenterX = (short)*p;
+		short imageCenterX = ReadInt16LE();
 		frame->CenterX = imageCenterX;
-		p++;
 
-		short imageCenterY = (short)*p;
+		short imageCenterY = ReadInt16LE();
 		frame->CenterY = imageCenterY;
-		p++;
 
-		short imageWidth = (short)*p;
+		short imageWidth = ReadInt16LE();
 		frame->Width = imageWidth;
-		p++;
 
-		short imageHeight = (short)*p;
+		short imageHeight = ReadInt16LE();
 		frame->Height = imageHeight;
-		p++;
-
-		//LOG("%i %i, %i %i\n", imageCenterX, imageCenterY, imageWidth, imageHeight);
 
 		int x = 0;
 		int y = 0;
 
-		int blocksize = imageWidth * imageHeight;
-
-		pushort pData = new ushort[blocksize];
-		memset(&pData[0], 0, blocksize * 2);
-
+		USHORT_LIST data(imageWidth * imageHeight, 0);
 		ushort prevLineNum = 0xFF;
 
 		while (true)
 		{
-			ushort rowHeader = *p;
-			p++;
-
-			ushort rowOfs = *p;
-			p++;
+			ushort rowHeader = ReadUInt16LE();
+			ushort rowOfs = ReadUInt16LE();
 
 			if (rowHeader == 0x7FFF || rowOfs == 0x7FFF)
 				break;
@@ -877,69 +886,43 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 				if (y >= imageHeight)
 					break;
 
-				puchar b = (puchar)p;
-
 				IFOR(j, 0, runLength)
 				{
-					ushort val = palette[*b];
+					ushort val = palette[ReadUInt8()];
 
 					//if (color)
 					//	val = g_ColorManager.GetColor16(val, color);
 
 					ushort a = val ? 0x8000 : 0;
 					int block = y * imageWidth + (x + j);
-					pData[block] = a | val;
-
-					b++;
+					data[block] = a | val;
 				}
-
-				p = (pushort)b;
-
 			}
 		}
 
-		g_GL.BindTexture16(frame->Texture, imageWidth, imageHeight, pData);
-
-		delete pData;
+		g_GL.BindTexture16(frame->Texture, imageWidth, imageHeight, &data[0]);
 	}
 
 	return true;
 }
 //----------------------------------------------------------------------------------
-bool CAnimationManager::TestImagePixels(CTextureAnimationDirection *direction, uchar &frame, ushort &id, int &checkX, int &checkY)
+bool CAnimationManager::TestImagePixels(CTextureAnimationDirection *direction, const uchar &frame, const int &checkX, const int &checkY)
 {
-	puchar dataStart = NULL;
+	SetData((puchar)direction->Address, direction->Size);
 
-	if (m_DataIndex[id].Offset == 0xFFFFFFFF)
-		dataStart = (puchar)direction->Address;
-	else
-	{
-		PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)direction->Address;
-	
-		dataStart = (puchar)(m_DataIndex[id].Offset + aidx->Position);
-	}
+	pushort palette = (pushort)m_Start;
+	Move(sizeof(ushort[256])); //Palette
+	puchar dataStart = m_Ptr;
 
-	puchar ptr = dataStart;
+	int frameCount = ReadUInt32LE();
+	puint frameOffset = (puint)m_Ptr;
 
-	pushort palette = (pushort)ptr;
+	m_Ptr = dataStart + frameOffset[frame];
 
-	dataStart += sizeof(ushort[256]); //Palette
-	ptr = dataStart;
-
-	int frameCount = *((puint)ptr);
-	ptr += sizeof(uint);
-
-	puint frameOffset = (puint)ptr;
-	ptr += (frameCount * sizeof(uint));
-
-	pushort data = (pushort)((uint)dataStart + frameOffset[frame]);
-
-	short imageCenterX = (short)*data++;
-	short imageCenterY = (short)*data++;
-	short imageWidth = (short)*data++;
-	short imageHeight = (short)*data++;
-
-	pushort p = (pushort)data;
+	short imageCenterX = ReadInt16LE();
+	short imageCenterY = ReadInt16LE();
+	short imageWidth = ReadInt16LE();
+	short imageHeight = ReadInt16LE();
 
 	int x = 0;
 	int y = 0;
@@ -948,11 +931,8 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection *direction, u
 
 	while (true)
 	{
-		ushort rowHeader = *p;
-		p++;
-
-		ushort rowOfs = *p;
-		p++;
+		ushort rowHeader = ReadUInt16LE();
+		ushort rowOfs = ReadUInt16LE();
 
 		if (rowHeader == 0x7FFF || rowOfs == 0x7FFF)
 			break;
@@ -977,17 +957,13 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection *direction, u
 			if (y >= imageHeight)
 				break;
 
-			puchar b = (puchar)p;
-
 			IFOR(j, 0, runLength)
 			{
+				uchar pixel = ReadUInt8();
+
 				if ((x + j) == checkX && y == checkY)
-					return (palette[*b] != 0);
-
-				b++;
+					return (palette[pixel] != 0);
 			}
-
-			p = (pushort)b;
 		}
 	}
 
@@ -1010,23 +986,8 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, bool &mirror,
 	CTextureAnimationGroup *group = anim->GetGroup(m_AnimGroup);
 	CTextureAnimationDirection *direction = group->GetDirection(m_Direction);
 
-	if (direction->Address == 0)
-	{
-		int offset = (m_AnimGroup * 5) + m_Direction;
-
-		if (!ExecuteDirectionGroup(direction, id, offset))
-			return false;
-	}
-
-	int fc = direction->FrameCount;
-
-	if (fc > 0 && frameIndex >= fc)
-	{
-		if (obj->IsCorpse())
-			frameIndex = fc - 1;
-		else
-			frameIndex = 0;
-	}
+	if (direction->Address == 0 && !ExecuteDirectionGroup(direction, id, m_AnimGroup, m_Direction))
+		return false;
 
 	CTextureAnimationFrame *frame = direction->GetFrame(frameIndex);
 
@@ -1046,7 +1007,7 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, bool &mirror,
 			x = frame->Width - x;
 
 		if (x >= 0 && x < frame->Width && y >= 0 && y < frame->Height)
-			return TestImagePixels(direction, frameIndex, id, x, y);
+			return TestImagePixels(direction, frameIndex, x, y);
 	}
 
 	return false;
@@ -1059,18 +1020,18 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, bool &mirror,
 @param [__in_opt] id Индекс картинки
 @return Ссылка на кадр анимации
 */
-CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, uchar &frameIndex, ushort id)
+CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, const uchar &frameIndex, ushort graphic)
 {
 	CTextureAnimationFrame *frame = NULL;
 
 	if (obj != NULL)
 	{
-		if (!id)
-			id = obj->GetMountAnimation();
+		if (!graphic)
+			graphic = obj->GetMountAnimation();
 
-		if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+		if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		{
-			CTextureAnimation *anim = m_DataIndex[id].Group;
+			CTextureAnimation *anim = m_DataIndex[graphic].Group;
 
 			if (anim != NULL)
 			{
@@ -1079,7 +1040,7 @@ CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, uchar &fra
 
 				if (direction->Address != 0)
 				{
-					int fc = direction->FrameCount;
+					/*int fc = direction->FrameCount;
 
 					if (fc > 0 && frameIndex >= fc)
 					{
@@ -1087,7 +1048,7 @@ CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, uchar &fra
 							frameIndex = fc - 1;
 						else
 							frameIndex = 0;
-					}
+					}*/
 
 					frame = direction->GetFrame(frameIndex);
 				}
@@ -1142,14 +1103,8 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar
 	CTextureAnimationGroup *group = anim->GetGroup(m_AnimGroup);
 	CTextureAnimationDirection *direction = group->GetDirection(m_Direction);
 
-	if (direction->Address == 0)
-	{
-		int offset = (m_AnimGroup * 5) + m_Direction;
-
-		ushort wID = id;
-		if (!ExecuteDirectionGroup(direction, wID, offset))
-			return;
-	}
+	if (direction->Address == 0 && !ExecuteDirectionGroup(direction, id, m_AnimGroup, m_Direction))
+		return;
 
 	int fc = direction->FrameCount;
 
@@ -1163,14 +1118,8 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar
 
 	CTextureAnimationFrame *frame = direction->GetFrame(frameIndex);
 	
-	if (frame->Texture == 0)
-	{
-		int offset = (m_AnimGroup * 5) + m_Direction;
-		
-		ushort wID = id;
-		if (!ExecuteDirectionGroup(direction, wID, offset))
-			return;
-	}
+	if (frame->Texture == 0 && !ExecuteDirectionGroup(direction, id, m_AnimGroup, m_Direction))
+		return;
 	
 	if (frame->Texture != 0)
 	{
@@ -1865,7 +1814,6 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, int x, int y, int z)
 	m_AnimGroup = GetDieGroupIndex(obj->GetMountAnimation(), obj->UsedLayer);
 	
 	y -= (z * 4);
-
 	Draw(obj, x, y, mirror, animIndex); //Draw animation
 
 	IFOR(l, 0, USED_LAYER_COUNT)
@@ -1930,34 +1878,15 @@ bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
 {
 	bool result = false;
 
-	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_DataIndex[graphic].Address != NULL)
+	int size = 0;
+	puchar ptr = GetAnimationAddress(graphic, size, group);
+
+	if (ptr != NULL)
 	{
-		int offset = group * 5;
-		puchar dataStart = NULL;
+		ptr += sizeof(ushort[256]); //Palette
+		int frameCount = *((puint)ptr);
 
-		if (m_DataIndex[graphic].Offset == 0xFFFFFFFF) //in verdata
-		{
-			PVERDATA_HEADER vh = (PVERDATA_HEADER)(m_DataIndex[graphic].Address + (offset * sizeof(VERDATA_HEADER)));
-
-			if (vh->Position != 0 && vh->Position != 0xFFFFFFFF)
-				dataStart = (puchar)((uint)g_FileManager.m_VerdataMul.Start + vh->Position);
-		}
-		else //in original mulls
-		{
-			PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_DataIndex[graphic].Address + (offset * sizeof(ANIM_IDX_BLOCK)));
-
-			if (aidx->Position != 0 && aidx->Position != 0xFFFFFFFF)
-				dataStart = (puchar)(m_DataIndex[graphic].Offset + aidx->Position);
-		}
-
-		if (dataStart != NULL)
-		{
-			dataStart += sizeof(ushort[256]); //Palette
-
-			int frameCount = *((puint)dataStart);
-
-			result = (frameCount > 0);
-		}
+		result = (frameCount > 0);
 	}
 
 	return result;
@@ -2030,7 +1959,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 
 			if (direction != NULL && direction->Address != NULL)
 			{
-				int fc = direction->FrameCount;
+				/*int fc = direction->FrameCount;
 
 				if (fc > 0 && frameIndex >= fc)
 				{
@@ -2038,7 +1967,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 						frameIndex = fc - 1;
 					else
 						frameIndex = 0;
-				}
+				}*/
 
 				CTextureAnimationFrame *frame = direction->FindFrame(frameIndex);
 

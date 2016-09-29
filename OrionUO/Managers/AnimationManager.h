@@ -12,6 +12,7 @@
 //----------------------------------------------------------------------------------
 #include "../IndexObject.h"
 #include "../TextureObject.h"
+#include "../Wisp/WispDataStream.h"
 //----------------------------------------------------------------------------------
 struct FRAME_OUTPUT_INFO
 {
@@ -30,7 +31,7 @@ struct ANIMATION_DIMENSIONS
 };
 //----------------------------------------------------------------------------------
 //!Класс менеджера анимаций
-class CAnimationManager
+class CAnimationManager : public WISP_DATASTREAM::CDataReader
 {
 	//!Цвет текущего кадра
 	SETGET(ushort, Color);
@@ -80,8 +81,11 @@ private:
 	//!Список используемых анимаций
 	deque<CIndexAnimation*> m_UsedAnimList;
 
+	puchar GetAnimationAddress(const ushort &graphic, int &size, const uchar &group, const int &direction = 0);
+
 	//Проверка пикселей картинки в указанных координатах
-	bool TestImagePixels(CTextureAnimationDirection *direction, uchar &frame, ushort &id, int &checkX, int &checkY);
+	bool TestImagePixels(CTextureAnimationDirection *direction, const uchar &frame, const int &checkX, const int &checkY);
+
 	bool TestPixels(class CGameObject *obj, int x, int y, bool &mirror, uchar &frameIndex, ushort id = 0x0000);
 
 	//Корректировка направления сидячего персонажа, согласно тому. на чем он сидит
@@ -112,11 +116,11 @@ public:
 	@param [__in] SizeIdx Размер файла с таблицей адресов
 	@return 
 	*/
-	void Init(int idx, uint AddressIdx, uint AddressMul, uint SizeIdx)
+	void Init(const int &graphic, const uint &addressIdx, const uint &addressMul, const uint &sizeIdx)
 	{
-		m_AddressIdx[idx] = AddressIdx;
-		m_AddressMul[idx] = AddressMul;
-		m_SizeIdx[idx] = SizeIdx;
+		m_AddressIdx[graphic] = addressIdx;
+		m_AddressMul[graphic] = addressMul;
+		m_SizeIdx[graphic] = sizeIdx;
 	}
 
 	/*!
@@ -140,7 +144,7 @@ public:
 	@param [__in_opt] id Индекс картинки
 	@return Ссылка на кадр анимации
 	*/
-	CTextureAnimationFrame *GetFrame(class CGameObject *obj, uchar &frameIndex, ushort id = 0x0000);
+	CTextureAnimationFrame *GetFrame(class CGameObject *obj, const uchar &frameIndex, ushort graphic = 0); //????????????
 
 	/*!
 	Очистка неиспользуемых текстур
@@ -156,7 +160,7 @@ public:
 	@param [__in] offset Смещение относительно начала анимаций
 	@return true в случае успешной загрузки
 	*/
-	bool ExecuteDirectionGroup(CTextureAnimationDirection *direction, ushort &id, int &offset);
+	bool ExecuteDirectionGroup(CTextureAnimationDirection *direction, const ushort &graphic, const int &group, const int &dir);
 
 	/*!
 	Коррекция направления и режима зеркального отображения
@@ -181,7 +185,7 @@ public:
 	@param [__in] id Индекс картинки
 	@return Ссылка на анимацию
 	*/
-	CTextureAnimation *GetAnimation(ushort id);
+	CTextureAnimation *GetAnimation(const ushort &graphic);
 
 	/*!
 	Отрисовать персонажа
@@ -229,14 +233,14 @@ public:
 	@param [__in] second Группа смерти номер 2
 	@return Индекс группы анимации
 	*/
-	uchar GetDieGroupIndex(ushort id, bool second);
+	uchar GetDieGroupIndex(ushort id, const bool &second);
 
 	/*!
 	Получить индекс группы по индексу картинки
 	@param [__in] id Индекс картинки
 	@return Группа анимаций
 	*/
-	ANIMATION_GROUPS GetGroupIndex(ushort id);
+	ANIMATION_GROUPS GetGroupIndex(const ushort &id);
 
 	/*!
 	Существует ли анимация в файле
