@@ -989,6 +989,16 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, bool &mirror,
 	if (direction->Address == 0 && !ExecuteDirectionGroup(direction, id, m_AnimGroup, m_Direction))
 		return false;
 
+	int fc = direction->FrameCount;
+
+	if (fc > 0 && frameIndex >= fc)
+	{
+		if (obj->IsCorpse())
+			frameIndex = fc - 1;
+		else
+			frameIndex = 0;
+	}
+
 	CTextureAnimationFrame *frame = direction->GetFrame(frameIndex);
 
 	if (frame != NULL)
@@ -1020,7 +1030,7 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, bool &mirror,
 @param [__in_opt] id Индекс картинки
 @return Ссылка на кадр анимации
 */
-CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, const uchar &frameIndex, ushort graphic)
+CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, uchar frameIndex, ushort graphic)
 {
 	CTextureAnimationFrame *frame = NULL;
 
@@ -1040,7 +1050,7 @@ CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, const ucha
 
 				if (direction->Address != 0)
 				{
-					/*int fc = direction->FrameCount;
+					int fc = direction->FrameCount;
 
 					if (fc > 0 && frameIndex >= fc)
 					{
@@ -1048,7 +1058,7 @@ CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, const ucha
 							frameIndex = fc - 1;
 						else
 							frameIndex = 0;
-					}*/
+					}
 
 					frame = direction->GetFrame(frameIndex);
 				}
@@ -1138,16 +1148,6 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar
 				LOG("NPC frame: 0x%04X %i %i ; %i %i\n", id, frame->CenterX, frame->CenterY, frame->Width, frame->Height);
 		}*/
 
-		if (obj->IsHuman())
-		{
-			short frameHeight = frame->Height;
-			m_CharacterFrameStartY = y;
-			m_CharacterFrameHeight = frame->Height;
-			m_StartCharacterWaistY = (int)(frameHeight * UPPER_BODY_RATIO) + m_CharacterFrameStartY;
-			m_StartCharacterKneesY = (int)(frameHeight * MID_BODY_RATIO) + m_CharacterFrameStartY;
-			m_StartCharacterFeetY = (int)(frameHeight * LOWER_BODY_RATIO) + m_CharacterFrameStartY;
-		}
-
 		if (isShadow)
 		{
 			glUniform1iARB(g_ShaderDrawMode, 12);
@@ -1155,55 +1155,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_DST_COLOR, GL_ZERO);
 
-			int fWidth = frame->Width;
-			int fHeight = frame->Height;
-
-			if (obj->NPC)
-			{
-				CGameItem *mount = ((CGameCharacter*)obj)->FindLayer(OL_MOUNT);
-
-				if (mount != NULL)
-				{
-					WORD mountID = mount->GetMountAnimation();
-
-					ANIMATION_DIMENSIONS dim = GetAnimationDimensions(mount, frameIndex, m_Direction, ((CGameCharacter*)obj)->GetAnimationGroup(mountID));
-
-					/*y += (frame->Height + frame->CenterY);
-
-					if (mirror)
-						x += (frame->Width - frame->CenterX);
-					else
-						x += frame->CenterX;*/
-
-					//y += (frame->Height + frame->CenterY + 3);
-					//y -= (dim.Height + dim.CenterY + 3);
-					//y += 10;
-					/*y -= (dim.Height + dim.CenterY + 3);
-
-					if (mirror)
-						x -= (dim.Width - dim.CenterX);
-					else
-						x -= dim.CenterX;*/
-
-					//y += (frame->CenterY + dim.CenterY);
-					//y -= frame->Height - frame->CenterY;
-
-					if (mirror)
-						x += frame->Width - frame->CenterX;
-					else
-						x += frame->CenterX;
-					
-					/*if (mirror)
-						x -= (dim.CenterX - frame->CenterX);
-					else
-						x -=  (frame->CenterX - dim.CenterX);*/
-
-					//TPRINT("Character: %i %i, %i %i\n", frame->Width, frame->Height, frame->CenterX, frame->CenterY);
-					//TPRINT("Mount: %i %i, %i %i\n", dim.Width, dim.Height, dim.CenterX, dim.CenterY);
-				}
-			}
-
-			g_GL.DrawShadow(frame->Texture, x, y, (float)fWidth, fHeight / 2.0f, mirror);
+			g_GL.DrawShadow(frame->Texture, x, y, (float)frame->Width, frame->Height / 2.0f, mirror);
 
 			glDisable(GL_BLEND);
 		}
@@ -1246,6 +1198,16 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar
 
 			if (m_Transform)
 			{
+				if (obj->IsHuman())
+				{
+					short frameHeight = frame->Height;
+					m_CharacterFrameStartY = y;
+					m_CharacterFrameHeight = frame->Height;
+					m_StartCharacterWaistY = (int)(frameHeight * UPPER_BODY_RATIO) + m_CharacterFrameStartY;
+					m_StartCharacterKneesY = (int)(frameHeight * MID_BODY_RATIO) + m_CharacterFrameStartY;
+					m_StartCharacterFeetY = (int)(frameHeight * LOWER_BODY_RATIO) + m_CharacterFrameStartY;
+				}
+
 				float h3mod = UPPER_BODY_RATIO;
 				float h6mod = MID_BODY_RATIO;
 				float h9mod = LOWER_BODY_RATIO;
@@ -1300,6 +1262,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar
 							h9mod = 0;
 					}
 				}
+
 				g_GL.DrawSitting(frame->Texture, x, y, frame->Width, frame->Height, mirror, h3mod, h6mod, h9mod);
 			}			
 			else
@@ -1385,6 +1348,7 @@ void CAnimationManager::FixSittingDirection(uchar &layerDirection, bool &mirror,
 	GetSittingAnimDirection(m_Direction, mirror, x, y);
 
 	int offsX = g_Orion.m_StaticData[data.Graphic / 32].Tiles[data.Graphic % 32].SittingOffset;
+
 	if (offsX > 10 || offsX == 0)
 		offsX = SITTING_OFFSET_X;
 
@@ -1413,7 +1377,6 @@ void CAnimationManager::FixSittingDirection(uchar &layerDirection, bool &mirror,
 			y += 9 + data.OffsetY;
 			x -= offsX + 1;
 		}
-			
 	}
 }
 //----------------------------------------------------------------------------------
@@ -1429,16 +1392,19 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 {
 	m_Transform = false;
 
-	y -= 3;
-	int originalX = x;
-	int originalY = y;
+	int drawX = (int)(x + obj->OffsetX);
+	int drawY = (int)(y + obj->OffsetY) - (z * 4) - (int)obj->OffsetZ - 3;
 
 	ushort targetColor = 0;
 	bool needHPLine = false;
 	uint serial = obj->Serial;
+	bool drawShadow = !obj->Dead();
 
 	if (obj->Hidden())
+	{
 		m_Color = 0x038D;
+		drawShadow = false;
+	}
 	else if (g_StatusbarUnderMouse == serial)
 		m_Color = g_ConfigManager.GetColorByNotoriety(obj->Notoriety);
 	else
@@ -1473,8 +1439,6 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	CGameItem *goi = obj->FindLayer(OL_MOUNT);
 	
 	int lightOffset = 20;
-	int drawX = (int)(x + obj->OffsetX);
-	int drawY = (int)(y + obj->OffsetY) - (z * 4) - (int)obj->OffsetZ;
 	
 	if (goi != NULL) //Draw mount
 	{
@@ -1483,10 +1447,16 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 
 		ushort mountID = goi->GetMountAnimation();
 
-		Draw(obj, drawX, drawY + 10, mirror, animIndex, 0x10000);
-		m_AnimGroup = obj->GetAnimationGroup(mountID);
+		if (drawShadow)
+		{
+			Draw(obj, drawX, drawY + 10, mirror, animIndex, 0x10000);
+			m_AnimGroup = obj->GetAnimationGroup(mountID);
 
-		Draw(goi, drawX, drawY, mirror, animIndex, mountID + 0x10000);
+			Draw(goi, drawX, drawY, mirror, animIndex, mountID + 0x10000);
+		}
+		else
+			m_AnimGroup = obj->GetAnimationGroup(mountID);
+
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID);
 
 		switch (animGroup)
@@ -1515,12 +1485,13 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 			obj->UpdateAnimationInfo(m_Direction);
 			
 			FixSittingDirection(layerDir, mirror, drawX, drawY);
+
 			if (m_Direction == 3)
 				animGroup = 25;
 			else
 				m_Transform = true;
 		}
-		else if (!obj->Dead())
+		else if (drawShadow)
 			Draw(obj, drawX, drawY, mirror, animIndex, 0x10000);
 	}
 	
@@ -1530,38 +1501,29 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 
 	if (obj->IsHuman()) //Draw layred objects
 	{
-		if (!obj->Dead())
-		{
-			DrawEquippedLayers(obj, drawX, drawY, mirror, layerDir, animIndex, lightOffset);
-			SITTING_INFO_DATA sittingData = SITTING_INFO[m_Sitting - 1];
-			if (m_Sitting && m_Direction == 3 && sittingData.DrawBack && obj->FindLayer(OL_CLOAK) == NULL)
-			{
-				ushort graphic = sittingData.Graphic;
-				for (CRenderWorldObject *ro = obj->m_PrevXY; ro != NULL; ro = (CRenderWorldObject*)ro->m_PrevXY)
-				{
-					ushort roGraphic = ro->Graphic;
-					if (roGraphic >= 0x4000)
-						roGraphic -= 0x4000;
-					if (roGraphic == graphic)
-					{
-						//оффсеты для ножниц
-					    int xOffset = mirror ? -20 : 0;
-					    int yOffset = -70;
+		DrawEquippedLayers(obj, drawX, drawY, mirror, layerDir, animIndex, lightOffset);
 
-						g_GL.PushScissor(drawX + xOffset, drawY + yOffset, 20, 40);
-						g_Orion.DrawStaticArt(graphic, ro->Color, originalX, originalY, ro->Z);
-						g_GL.PopScissor();
-						break;
-					}
+		const SITTING_INFO_DATA &sittingData = SITTING_INFO[m_Sitting - 1];
+
+		if (m_Sitting && m_Direction == 3 && sittingData.DrawBack && obj->FindLayer(OL_CLOAK) == NULL)
+		{
+			ushort graphic = sittingData.Graphic;
+
+			for (CRenderWorldObject *ro = obj->m_PrevXY; ro != NULL; ro = (CRenderWorldObject*)ro->m_PrevXY)
+			{
+				if ((ro->Graphic & 0x3FFF) == graphic)
+				{
+					//оффсеты для ножниц
+					int xOffset = mirror ? -20 : 0;
+					int yOffset = -70;
+
+					g_GL.PushScissor(drawX + xOffset, drawY + yOffset, 20, 40);
+					g_Orion.DrawStaticArt(graphic, ro->Color, x, y, ro->Z);
+					g_GL.PopScissor();
+
+					break;
 				}
 			}
-		}
-		else
-		{
-			goi = obj->FindLayer(OL_ROBE);
-
-			if (goi != NULL && goi->AnimID)
-				Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
 		}
 	}
 	
@@ -1715,6 +1677,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 */
 bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, int z)
 {
+	y -= 3;
 	m_Sitting = obj->IsSitting();
 	m_Direction = 0;
 	obj->UpdateAnimationInfo(m_Direction);
@@ -1762,19 +1725,9 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 
 	if (obj->IsHuman()) //Check layred objects
 	{
-		if (!obj->Dead())
+		IFOR(l, 0, USED_LAYER_COUNT && !result)
 		{
-			IFOR(l, 0, USED_LAYER_COUNT && !result)
-			{
-				goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
-
-				if (goi != NULL && goi->AnimID)
-					result = TestPixels(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
-			}
-		}
-		else if (!result)
-		{
-			goi = obj->FindLayer(OL_ROBE);
+			goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
 
 			if (goi != NULL && goi->AnimID)
 				result = TestPixels(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
@@ -1794,13 +1747,9 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 */
 void CAnimationManager::DrawCorpse(CGameItem *obj, int x, int y, int z)
 {
-	y -= 3;
+	y -= (z * 4) + 3;
 	m_Sitting = 0;
-	m_Direction = obj->Layer;
-
-	if (m_Direction & 0x80)
-		m_Direction &= 0x7F;
-
+	m_Direction = obj->Layer & 0x7F;
 	bool mirror = false;
 
 	GetAnimDirection(m_Direction, mirror);
@@ -1813,7 +1762,6 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, int x, int y, int z)
 	uchar animIndex = obj->AnimIndex;
 	m_AnimGroup = GetDieGroupIndex(obj->GetMountAnimation(), obj->UsedLayer);
 	
-	y -= (z * 4);
 	Draw(obj, x, y, mirror, animIndex); //Draw animation
 
 	IFOR(l, 0, USED_LAYER_COUNT)
@@ -1841,19 +1789,15 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, int x, int y, int z)
 */
 bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, int x, int y, int z)
 {
+	y -= 3 + (z * 4);
 	m_Sitting = 0;
-	m_Direction = obj->Layer;
+	m_Direction = obj->Layer & 0x7F;
 	bool mirror = false;
-
-	if (m_Direction & 0x80)
-		m_Direction &= 0x7F;
 
 	GetAnimDirection(m_Direction, mirror);
 
 	uchar animIndex = obj->AnimIndex;
 	m_AnimGroup = GetDieGroupIndex(obj->GetMountAnimation(), obj->UsedLayer);
-
-	y -= (z * 4);
 
 	bool result = TestPixels(obj, x, y, mirror, animIndex);
 
@@ -1918,13 +1862,10 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 {
 	ANIMATION_DIMENSIONS result = { 0 };
 
-	uchar dir = defaultDirection;
+	uchar dir = defaultDirection & 0x7F;
 	uchar animGroup = defaultGroup;
 	ushort id = obj->GetMountAnimation();
 	bool mirror = false;
-
-	if (dir & 0x80)
-		dir &= 0x7F;
 
 	if (obj->NPC)
 	{
@@ -2147,11 +2088,8 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 	{
 		CGameItem *obj = (CGameItem*)gameObject;
 
-		m_Direction = obj->Layer;
+		m_Direction = obj->Layer & 0x7F;
 		bool mirror = false;
-
-		if (m_Direction & 0x80)
-			m_Direction &= 0x7F;
 
 		GetAnimDirection(m_Direction, mirror);
 

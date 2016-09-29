@@ -156,6 +156,8 @@ public:
 	ushort GetWinterGraphic(ushort graphic);
 	ushort GetDesolationGraphic(ushort graphic);
 
+	int GetConfigValue(const char *option, int value = -1);
+
 
 
 	//Получить флаги ландшафта

@@ -72,7 +72,7 @@ protected:
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam) {}
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam) {}
 	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam) {}
-	virtual void OnRepaint() {}
+	virtual HRESULT OnRepaint(const WPARAM &wParam, const LPARAM &lParam) { return DefWindowProc(m_Handle, WM_NCPAINT, wParam, lParam); }
 	virtual void OnTimer(uint id) {}
 	virtual void OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedTimer *timer) {}
 	virtual LRESULT OnUserMessages(const UINT &message, const WPARAM &wParam, const LPARAM &lParam) { return S_OK; }

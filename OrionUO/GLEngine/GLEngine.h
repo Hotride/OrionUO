@@ -95,25 +95,25 @@ public:
 
 
 	//Нарисовать текстуру ландшафта
-	void DrawLandTexture(GLuint &texture, const int &x, const int &y, const RECT &rc, CVector *normals);
+	void DrawLandTexture(const GLuint &texture, const int &x, const int &y, const RECT &rc, CVector *normals);
 
 	//Нарисовать текстуру
-	void Draw(GLuint &texture, const int &x, const int &y, const int &width, const int &height);
+	void Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height);
 
 	//Нарисовать повернутую текстуру
-	void DrawRotated(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const float &angle);
+	void DrawRotated(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const float &angle);
 
 	//Нарисовать текстуру с возможностью зеркального отражения
-	void Draw(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror);
+	void Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror);
 
 	//Нарисовать текстуру сидячего персонажа
-	void DrawSitting(GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod);
+	void DrawSitting(const GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod);
 
 	//Нарисовать тень
-	void DrawShadow(GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror);
+	void DrawShadow(const GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror);
 
 	//Замостить текстуру на заданные габариты
-	void Draw(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const int &drawWidth, const int &drawHeight);
+	void Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const int &drawWidth, const int &drawHeight);
 
 	//Нарисовать фон
 	void DrawResizepic(CGLTexture **th, const int &x, const int &y, const int &width, const int &height);

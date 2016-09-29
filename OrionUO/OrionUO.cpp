@@ -36,6 +36,7 @@
 #include "Managers/GumpManager.h"
 #include "Managers/AnimationManager.h"
 #include "Managers/MacroManager.h"
+#include "Managers/PluginManager.h"
 #include "Screen stages/DebugScreen.h"
 #include "Screen stages/MainScreen.h"
 #include "Screen stages/ConnectionScreen.h"
@@ -82,8 +83,10 @@
 #include "Gumps/GumpOptions.h"
 #include "Gumps/GumpSkills.h"
 #include "Gumps/GumpWorldMap.h"
+#include "CommonInterfaces.h"
 //----------------------------------------------------------------------------------
 COrion g_Orion;
+PLUGIN_CLIENT_INTERFACE g_PluginClientInterface = { 0 };
 //----------------------------------------------------------------------------------
 COrion::COrion()
 : m_ClientVersionText("2.0.3"), m_InverseBuylist(false), m_LandDataCount(0),
@@ -246,10 +249,6 @@ bool COrion::Install()
 		g_AnimationManager.Init(i, (uint)g_FileManager.m_AnimIdx[i].Start, (uint)g_FileManager.m_AnimMul[i].Start, (uint)g_FileManager.m_AnimIdx[i].Size);
 
 	g_AnimationManager.InitIndexReplaces((puint)g_FileManager.m_VerdataMul.Start);
-
-	/*
-	g_PluginManager = new CPluginManager();
-*/
 
 	DEBUGLOG("Load client startup.\n");
 	LoadClientStartupConfig();
@@ -725,21 +724,20 @@ void COrion::LoadStartupConfig()
 //----------------------------------------------------------------------------------
 void COrion::LoadPluginConfig()
 {
-	/*PluginClientInterface.GL = &g_Interface_GL;
-	PluginClientInterface.UO = &g_Interface_UO;
-	PluginClientInterface.ClilocManager = &g_Interface_ClilocManager;
-	PluginClientInterface.ColorManager = &g_Interface_ColorManager;
-	PluginClientInterface.PathFinder = &g_Interface_PathFinder;
+	g_PluginClientInterface.GL = &g_Interface_GL;
+	g_PluginClientInterface.UO = &g_Interface_UO;
+	g_PluginClientInterface.ClilocManager = &g_Interface_ClilocManager;
+	g_PluginClientInterface.ColorManager = &g_Interface_ColorManager;
+	g_PluginClientInterface.PathFinder = &g_Interface_PathFinder;
 
-	TMappedHeader file;
-	memset(&file, 0, sizeof(file));
+	WISP_FILE::CMappedFile file;
 
-	if (FileManager.LoadFileToMemory(file, FilePath("Client.cuo").c_str()))
+	if (file.Load(g_App.FilePath("Client.cuo")))
 	{
-		BYTE ver = file.ReadByte();
+		uchar ver = file.ReadUInt8();
 
 		file.Move(2);
-		int len = file.ReadByte();
+		int len = file.ReadUInt8();
 		file.Move(len + 39);
 
 		if (ver >= 2)
@@ -749,40 +747,39 @@ void COrion::LoadPluginConfig()
 			if (ver >= 3)
 				file.Move(1);
 
-			char count = file.ReadChar();
+			char count = file.ReadInt8();
+			DebugMsg("Plugins count=%i\n", count);
 
 			IFOR(i, 0, count)
 			{
-				short len = file.ReadShort();
+				short len = file.ReadInt16LE();
 				string name = file.ReadString(len);
 
-				DWORD password = file.ReadWord() << 16;
-				DWORD flags = file.ReadDWord();
-				password |= file.ReadWord();
+				file.Move(2);
+				uint flags = file.ReadUInt32LE();
+				file.Move(2);
 
-				len = file.ReadShort();
+				len = file.ReadInt16LE();
 				string subName = file.ReadString(len);
 
-				HMODULE dll = LoadLibraryA(FilePath(name).c_str());
+				HMODULE dll = LoadLibraryA(g_App.FilePath(name.c_str()).c_str());
+
+				DebugMsg("Plugin[%s] = 0x%08X\n", name.c_str(), dll);
 
 				if (dll != NULL)
 				{
 					typedef void __cdecl dllFunc(PPLUGIN_INTERFACE);
 
 					dllFunc *initFunc = (dllFunc*)GetProcAddress(dll, subName.c_str());
-					TPlugin *plugin = NULL;
+					CPlugin *plugin = NULL;
+
+					DebugMsg("Plugin::initFunc 0x%08X\n", initFunc);
 
 					if (initFunc != NULL)
 					{
-						plugin = new TPlugin(flags);
+						plugin = new CPlugin(flags);
 
 						initFunc(plugin->m_PPS);
-
-						if (password && (DWORD)plugin->m_PPS->Owner != password)
-						{
-							delete plugin;
-							plugin = NULL;
-						}
 					}
 
 					if (plugin == NULL)
@@ -792,7 +789,7 @@ void COrion::LoadPluginConfig()
 						plugin->m_PPS->Owner = plugin;
 
 						if (plugin->CanClientAccess())
-							plugin->m_PPS->Client = &PluginClientInterface;
+							plugin->m_PPS->Client = &g_PluginClientInterface;
 
 						if (plugin->CanParseRecv())
 							plugin->m_PPS->Recv = PluginRecvFunction;
@@ -800,16 +797,18 @@ void COrion::LoadPluginConfig()
 						if (plugin->CanParseSend())
 							plugin->m_PPS->Send = PluginSendFunction;
 
+						DebugMsg("Plugin:: 0x%08X, 0x%08X\n", plugin, plugin->m_PPS);
 						initFunc(plugin->m_PPS);
+						DebugMsg("Plugin::add\n");
 
-						PluginManager->Add(plugin);
+						g_PluginManager.Add(plugin);
 					}
 				}
 			}
 		}
 
-		FileManager.UnloadFileFromMemory(file);
-	}*/
+		file.Unload();
+	}
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadLocalConfig()
@@ -1056,8 +1055,7 @@ void COrion::Connect()
 //----------------------------------------------------------------------------------
 void COrion::Disconnect()
 {
-	/*if (g_PluginManager != NULL)
-		g_PluginManager->Disconnect();*/
+	g_PluginManager.Disconnect();
 
 	g_SystemChat.Clear();
 	g_Journal.Clear();
@@ -1099,7 +1097,7 @@ int COrion::Send(puchar buf, const int &size)
 		LOG("Warning!!! Message direction invalid: 0x%02X\n", *buf);
 	else
 	{
-		//if (g_PluginManager->PacketSend(buf, size))
+		if (g_PluginManager.PacketSend(buf, size))
 			result = g_ConnectionManager.Send(buf, size);
 	}
 
@@ -1113,8 +1111,7 @@ void COrion::ServerSelection(int pos)
 
 	CServer *server = g_ServerList.Select(pos);
 
-	//if (PluginManager != NULL)
-	//	PluginManager->WindowProc(g_hWnd, UOMSG_SET_SERVER_NAME, (WPARAM)ServerList.GetServerName().c_str(), 0);
+	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_SERVER_NAME, (WPARAM)g_ServerList.GetSelectedServer()->Name.c_str(), 0);
 
 	CPacketSelectServer((uchar)server->Index).Send();
 }
@@ -1128,8 +1125,7 @@ void COrion::RelayServer(const char *ip, int port, puchar gameSeed)
 	{
 		g_ConnectionScreen.Connected = true;
 
-		//if (g_PluginManager != NULL)
-		//	g_PluginManager->WindowProc(g_hWnd, UOMSG_SET_ACCOUNT, (WPARAM)MainScreen->m_Account->c_str(), 0);
+		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_ACCOUNT, (WPARAM)g_MainScreen.m_Account->c_str(), 0);
 
 		CPacketSecondLogin().Send();
 	}
@@ -1145,8 +1141,7 @@ void COrion::CharacterSelection(int pos)
 	InitScreen(GS_GAME_CONNECT);
 	g_ConnectionScreen.Type = CST_GAME;
 
-	//if (PluginManager != NULL)
-	//	PluginManager->WindowProc(g_hWnd, UOMSG_SET_PLAYER_NAME, (WPARAM)CharacterList.GetName(pos).c_str(), 0);
+	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_PLAYER_NAME, (WPARAM)g_CharacterList.GetName(pos).c_str(), 0);
 
 	CPacketSelectCharacter(pos, g_CharacterList.GetName(pos)).Send();
 }
@@ -1522,6 +1517,42 @@ ushort COrion::GetDesolationGraphic(ushort graphic)
 	}
 
 	return graphic;
+}
+//----------------------------------------------------------------------------------
+int COrion::GetConfigValue(const char *option, int value)
+{
+	string key = ToLowerA(option);
+
+	if (key == "alwaysrun")
+	{
+		if (value == -1)
+			value = g_ConfigManager.AlwaysRun;
+		else
+			g_ConfigManager.AlwaysRun = (value != 0);
+	}
+	else if (key == "circletransvalue")
+	{
+		if (value == -1)
+			value = g_ConfigManager.CircleTransRadius;
+		else
+		{
+			if (value < 0)
+				value = 0;
+			else if (value > 255)
+				value = 255;
+
+			g_ConfigManager.CircleTransRadius = value;
+		}
+	}
+	else if (key == "circletrans")
+	{
+		if (value == -1)
+			value = g_ConfigManager.UseCircleTrans;
+		else
+			g_ConfigManager.UseCircleTrans = (value != 0);
+	}
+
+	return value;
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadLogin(string &login, int &port)
@@ -3707,7 +3738,7 @@ void COrion::PickupItem(CGameItem *obj, int count, bool isGameFigure)
 		g_ObjectInHand->DragCount = count;
 
 		if (obj->Container != 0xFFFFFFFF)
-			g_GumpManager.UpdateGump(obj->Container, 0, GT_CONTAINER);
+			g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
 
 		CPacketPickupRequest(obj->Serial, count).Send();
 	}

@@ -44,6 +44,7 @@
 #include "../Gumps/GumpSkills.h"
 #include "../Gumps/GumpTargetSystem.h"
 #include "../Gumps/GumpPopupMenu.h"
+#include "../Managers/PluginManager.h"
 //----------------------------------------------------------------------------------
 CGameScreen g_GameScreen;
 RENDER_VARIABLES_FOR_GAME_WINDOW g_RenderBounds;
@@ -1057,8 +1058,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 			ohd.Obj->DrawObjectHandlesTexture(ohd.X, ohd.Y);
 		}
 
-		/*if (PluginManager != NULL)
-			PluginManager->WorldDraw();*/
+		g_PluginManager.WorldDraw(); 
 	}
 	else
 	{
@@ -1212,7 +1212,7 @@ void CGameScreen::PrepareContent()
 {
 	g_GrayedPixels = g_Player->Dead();
 
-	if (g_GrayedPixels)
+	if (g_GrayedPixels && g_Season != ST_DESOLATION)
 		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
 
 	g_WorldTextRenderer.CalculateWorldPositions(false);
@@ -1479,8 +1479,7 @@ void CGameScreen::Render(const bool &mode)
 		if (multiOnTarget)
 			g_Target.UnloadMulti();
 
-		/*if (PluginManager != NULL)
-			PluginManager->SceneDraw();*/
+		g_PluginManager.SceneDraw();
 
 		if (g_GameState == GS_GAME_BLOCKED)
 		{

@@ -65,6 +65,9 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <PostBuildEvent>
       <Message>Copy dlls to bin directory</Message>
     </PostBuildEvent>
+    <Manifest>
+      <AdditionalManifestFiles>$(SolutionDir)OrionUO.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -91,6 +94,9 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <PostBuildEvent>
       <Message>Copy dlls to bin directory</Message>
     </PostBuildEvent>
+    <Manifest>
+      <AdditionalManifestFiles>$(SolutionDir)OrionUO.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -100,6 +106,7 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="CharacterList.h" />
     <ClInclude Include="CityList.h" />
     <ClInclude Include="ClickObject.h" />
+    <ClInclude Include="CommonInterfaces.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="DefinitionMacro.h" />
@@ -241,6 +248,7 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="Managers\MulReader.h" />
     <ClInclude Include="Managers\OptionsMacroManager.h" />
     <ClInclude Include="Managers\PacketManager.h" />
+    <ClInclude Include="Managers\PluginManager.h" />
     <ClInclude Include="Managers\ProfessionManager.h" />
     <ClInclude Include="Managers\SkillGroupManager.h" />
     <ClInclude Include="Managers\SoundManager.h" />
@@ -262,6 +270,7 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="OrionWindow.h" />
     <ClInclude Include="Party.h" />
     <ClInclude Include="PartyObject.h" />
+    <ClInclude Include="PluginInterface.h" />
     <ClInclude Include="PressedObject.h" />
     <ClInclude Include="Profession.h" />
     <ClInclude Include="QuestArrow.h" />
@@ -310,6 +319,7 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="Wisp\WispBinaryFileWritter.h" />
     <ClInclude Include="Wisp\WispConnection.h" />
     <ClInclude Include="Wisp\WispDataStream.h" />
+    <ClInclude Include="Wisp\WispDefinitions.h" />
     <ClInclude Include="Wisp\WispGeometry.h" />
     <ClInclude Include="Wisp\WispGlobal.h" />
     <ClInclude Include="Wisp\WispLogger.h" />
@@ -327,6 +337,7 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="CharacterList.cpp" />
     <ClCompile Include="CityList.cpp" />
     <ClCompile Include="ClickObject.cpp" />
+    <ClCompile Include="CommonInterfaces.cpp" />
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="Game objects\GameCharacter.cpp" />
     <ClCompile Include="Game objects\GameEffect.cpp" />
@@ -465,6 +476,7 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="Managers\MulReader.cpp" />
     <ClCompile Include="Managers\OptionsMacroManager.cpp" />
     <ClCompile Include="Managers\PacketManager.cpp" />
+    <ClCompile Include="Managers\PluginManager.cpp" />
     <ClCompile Include="Managers\ProfessionManager.cpp" />
     <ClCompile Include="Managers\SkillGroupManager.cpp" />
     <ClCompile Include="Managers\SoundManager.cpp" />

@@ -144,7 +144,7 @@ public:
 	@param [__in_opt] id Индекс картинки
 	@return Ссылка на кадр анимации
 	*/
-	CTextureAnimationFrame *GetFrame(class CGameObject *obj, const uchar &frameIndex, ushort graphic = 0); //????????????
+	CTextureAnimationFrame *GetFrame(class CGameObject *obj, uchar frameIndex, ushort graphic = 0);
 
 	/*!
 	Очистка неиспользуемых текстур

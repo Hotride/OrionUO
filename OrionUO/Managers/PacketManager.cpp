@@ -39,6 +39,7 @@
 #include "../Gumps/GumpContainer.h"
 #include "../Gumps/GumpPopupMenu.h"
 #include "../Managers/EffectManager.h"
+#include "../Managers/PluginManager.h"
 #include "../Game objects/GameEffectMoving.h"
 #include "../Game objects/GameEffectDrag.h"
 #include "../QuestArrow.h"
@@ -583,7 +584,7 @@ void CPacketManager::OnPacket()
 		LOG("message direction invalid: 0x%02X\n", *m_Start);
 	else if (info.Handler != 0)
 	{
-		//if (PluginManager->PacketRecv(buf, size))
+		if (g_PluginManager.PacketRecv(m_Start, m_Size))
 		{
 			m_Ptr = m_Start + 1;
 
@@ -592,6 +593,33 @@ void CPacketManager::OnPacket()
 
 			(this->*(info.Handler))();
 		}
+	}
+}
+//----------------------------------------------------------------------------------
+void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
+{
+	SetData(buf, size);
+
+	uint ticks = g_Ticks;
+	g_TotalRecvSize += m_Size;
+
+	CPacketInfo &info = m_Packets[*m_Start];
+
+	LOG("--- ^(%d) r(+%d => %d) Plugin:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
+	LOG_DUMP(m_Start, m_Size);
+
+	g_LastPacketTime = ticks;
+
+	if (info.Direction != DIR_RECV && info.Direction != DIR_BOTH)
+		LOG("message direction invalid: 0x%02X\n", *buf);
+	else if (info.Handler != 0)
+	{
+		m_Ptr = m_Start + 1;
+
+		if (!info.Size)
+			m_Ptr += 2;
+
+		(this->*(info.Handler))();
 	}
 }
 //----------------------------------------------------------------------------------
@@ -2998,8 +3026,6 @@ PACKET_HANDLER(CharacterAnimation)
 
 		obj->SetAnimation((uchar)action, delay, frameCount, (uchar)repeatMode, repeat, frameDirection);
 		obj->AnimationFromServer = true;
-
-		LOG("Anim is set\n");
 	}
 }
 //----------------------------------------------------------------------------------

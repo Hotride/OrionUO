@@ -23,6 +23,9 @@
 #include "Game objects/ObjectOnCursor.h"
 #include "ClickObject.h"
 #include <iostream>
+#include "Managers/PluginManager.h"
+#include "Managers/PacketManager.h"
+#include "Managers/ConnectionManager.h"
 //----------------------------------------------------------------------------------
 COrionWindow g_OrionWindow;
 //----------------------------------------------------------------------------------
@@ -35,6 +38,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
 	g_OrionWindow.ShowWindow(true);
 	g_OrionWindow.NoResize = true;
+
+	g_Orion.LoadPluginConfig();
 
 	return g_App.Run(hInstance);
 }
@@ -79,6 +84,8 @@ bool COrionWindow::OnCreate()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnDestroy()
 {
+	g_PluginManager.WindowProc(m_Handle, WM_CLOSE, 0, 0);
+
 	g_Orion.Uninstall();
 }
 //----------------------------------------------------------------------------------
@@ -202,12 +209,18 @@ bool COrionWindow::OnRightMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnMidMouseButtonDown()
 {
+	if (g_PluginManager.WindowProc(m_Handle, WM_MBUTTONDOWN, 0, 0))
+		return;
+
 	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
 		g_CurrentScreen->OnMidMouseButtonDown();
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnMidMouseButtonUp()
 {
+	if (g_PluginManager.WindowProc(m_Handle, WM_MBUTTONUP, 0, 0))
+		return;
+
 	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
 		g_CurrentScreen->OnMidMouseButtonUp();
 }
@@ -222,6 +235,9 @@ bool COrionWindow::OnMidMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnMidMouseButtonScroll(const bool &up)
 {
+	if (g_PluginManager.WindowProc(m_Handle, WM_MOUSEWHEEL, (up ? 0 : 0x11110000), 0))
+		return;
+
 	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
 	{
 		g_CurrentScreen->Render(false);
@@ -249,24 +265,37 @@ void COrionWindow::OnDeactivate()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	if (g_PluginManager.WindowProc(m_Handle, WM_CHAR, wParam, lParam))
+		return;
+
 	if ((iswprint(wParam) || (g_GameState >= GS_GAME && wParam == 0x11)) && g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
 		g_CurrentScreen->OnCharPress(wParam, lParam);
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	if (g_PluginManager.WindowProc(m_Handle, WM_KEYDOWN, wParam, lParam))
+		return;
+
 	if (/*!iswprint(wParam) &&*/ g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
 		g_CurrentScreen->OnKeyDown(wParam, lParam);
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnKeyUp(const WPARAM &wParam, const LPARAM &lParam)
 {
+	if (g_PluginManager.WindowProc(m_Handle, WM_KEYUP, wParam, lParam))
+		return;
+
 	if (/*!iswprint(wParam) &&*/ g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
 		g_CurrentScreen->OnKeyUp(wParam, lParam);
 }
 //----------------------------------------------------------------------------------
-void COrionWindow::OnRepaint()
+HRESULT COrionWindow::OnRepaint(const WPARAM &wParam, const LPARAM &lParam)
 {
+	if (!g_PluginManager.Empty())
+		return g_PluginManager.WindowProc(m_Handle, WM_NCPAINT, wParam, lParam);
+
+	return DefWindowProc(m_Handle, WM_NCPAINT, wParam, lParam);
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnTimer(uint id)
@@ -294,6 +323,19 @@ void COrionWindow::OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedT
 //----------------------------------------------------------------------------------
 LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, const LPARAM &lParam)
 {
+	g_PluginManager.WindowProc(m_Handle, message, wParam, lParam);
+
+	switch (message)
+	{
+		case UOMSG_RECV:
+			g_PacketManager.PluginReceiveHandler((PBYTE)wParam, lParam);
+			break;
+		case UOMSG_SEND:
+			g_ConnectionManager.Send((PBYTE)wParam, lParam);
+			break;
+		default:
+			break;
+	}
 	return S_OK;
 }
 //----------------------------------------------------------------------------------

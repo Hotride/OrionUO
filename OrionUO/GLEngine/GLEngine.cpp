@@ -165,6 +165,7 @@ void CGLEngine::UpdateRect()
 //----------------------------------------------------------------------------------
 void CGLEngine::BindTexture16(GLuint &texture, const int &width, const int &height, pushort pixels)
 {
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -180,6 +181,7 @@ void CGLEngine::BindTexture16(GLuint &texture, const int &width, const int &heig
 //----------------------------------------------------------------------------------
 void CGLEngine::BindTexture32(GLuint &texture, const int &width, const int &height, puint pixels)
 {
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -384,7 +386,7 @@ void CGLEngine::DrawCircle(const float &x, const float &y, const float &radius, 
 	glEnable(GL_TEXTURE_2D);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::DrawLandTexture(GLuint &texture, const int &x, const int &y, const RECT &rc, CVector *normals)
+void CGLEngine::DrawLandTexture(const GLuint &texture, const int &x, const int &y, const RECT &rc, CVector *normals)
 {
 	if (m_OldTexture != texture)
 	{
@@ -414,7 +416,7 @@ void CGLEngine::DrawLandTexture(GLuint &texture, const int &x, const int &y, con
 	glTranslatef(-translateX, -translateY, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::Draw(GLuint &texture, const int &x, const int &y, const int &width, const int &height)
+void CGLEngine::Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height)
 {
 	if (m_OldTexture != texture)
 	{
@@ -434,7 +436,7 @@ void CGLEngine::Draw(GLuint &texture, const int &x, const int &y, const int &wid
 	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::DrawRotated(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const float &angle)
+void CGLEngine::DrawRotated(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const float &angle)
 {
 	if (m_OldTexture != texture)
 	{
@@ -459,7 +461,7 @@ void CGLEngine::DrawRotated(GLuint &texture, const int &x, const int &y, const i
 	glTranslatef((GLfloat)-x, -translateY, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::Draw(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror)
+void CGLEngine::Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror)
 {
 	if (m_OldTexture != texture)
 	{
@@ -491,7 +493,7 @@ void CGLEngine::Draw(GLuint &texture, const int &x, const int &y, const int &wid
 	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod)
+void CGLEngine::DrawSitting(const GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod)
 {
 	if (m_OldTexture != texture)
 	{
@@ -517,30 +519,31 @@ void CGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const f
 			glTexCoord2f(0.0f, h3mod); glVertex2f(width, h03);
 			glTexCoord2f(1.0f, h3mod); glVertex2f(0, h03);
 		}
-			if (h6mod)
+
+		if (h6mod)
+		{
+			if (!h3mod)
 			{
-				if (!h3mod)
-				{
-					glTexCoord2f(0.0f, 0.0f); glVertex2f(width, 0);
-					glTexCoord2f(1.0f, 0.0f); glVertex2f(0, 0);
-				}
-				glTexCoord2f(0.0f, h6mod); glVertex2f(widthOffset, h06);
-				glTexCoord2f(1.0f, h6mod); glVertex2f(m_SittingCharacterOffset, h06);
+				glTexCoord2f(0.0f, 0.0f); glVertex2f(width, 0);
+				glTexCoord2f(1.0f, 0.0f); glVertex2f(0, 0);
 			}
 
+			glTexCoord2f(0.0f, h6mod); glVertex2f(widthOffset, h06);
+			glTexCoord2f(1.0f, h6mod); glVertex2f(m_SittingCharacterOffset, h06);
+		}
 
-			if (h9mod)
+		if (h9mod)
+		{
+			if (!h6mod)
 			{
-				if (!h6mod)
-				{
-					glTexCoord2f(0.0f, 0.0f); glVertex2f(widthOffset, 0);
-					glTexCoord2f(1.0f, 0.0f); glVertex2f(m_SittingCharacterOffset, 0);
-				}
-				glTexCoord2f(0.0f, 1.0f); glVertex2f(widthOffset, h09);
-				glTexCoord2f(1.0f, 1.0f); glVertex2f(m_SittingCharacterOffset, h09);
-
+				glTexCoord2f(0.0f, 0.0f); glVertex2f(widthOffset, 0);
+				glTexCoord2f(1.0f, 0.0f); glVertex2f(m_SittingCharacterOffset, 0);
 			}
 
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(widthOffset, h09);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(m_SittingCharacterOffset, h09);
+
+		}
 	}
 	else
 	{
@@ -552,7 +555,6 @@ void CGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const f
 			glTexCoord2f(1.0f, h3mod); glVertex2f(widthOffset, h03);
 		}
 
-
 		if (h6mod)
 		{
 			if (!h3mod)
@@ -560,10 +562,10 @@ void CGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const f
 				glTexCoord2f(0.0f, 0.0f); glVertex2f(m_SittingCharacterOffset, 0);
 				glTexCoord2f(1.0f, 0.0f); glVertex2f(width + m_SittingCharacterOffset, 0);
 			}
+
 			glTexCoord2f(0.0f, h6mod); glVertex2f(0, h06);
 			glTexCoord2f(1.0f, h6mod); glVertex2f(width, h06);
 		}
-
 
 		if (h9mod)
 		{
@@ -572,6 +574,7 @@ void CGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const f
 				glTexCoord2f(0.0f, 0.0f); glVertex2f(0, 0);
 				glTexCoord2f(1.0f, 0.0f); glVertex2f(width, 0);
 			}
+
 			glTexCoord2f(0.0f, 1.0f); glVertex2f(0, h09);
 			glTexCoord2f(1.0f, 1.0f); glVertex2f(width, h09);
 		}
@@ -583,7 +586,7 @@ void CGLEngine::DrawSitting(GLuint &texture, const int &x, const int &y, const f
 	glTranslatef((GLfloat)-x, (GLfloat)-y, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::DrawShadow(GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror)
+void CGLEngine::DrawShadow(const GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror)
 {
 	if (m_OldTexture != texture)
 	{
@@ -617,7 +620,7 @@ void CGLEngine::DrawShadow(GLuint &texture, const int &x, const int &y, const fl
 	glTranslatef((GLfloat)-x, -translateY, 0.0f);
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::Draw(GLuint &texture, const int &x, const int &y, const int &width, const int &height, const int &drawWidth, const int &drawHeight)
+void CGLEngine::Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const int &drawWidth, const int &drawHeight)
 {
 	if (m_OldTexture != texture)
 	{

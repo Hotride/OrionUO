@@ -10,7 +10,7 @@
 #ifndef MULSTRUCT_H
 #define MULSTRUCT_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
+#include "Wisp/WispDefinitions.h"
 //----------------------------------------------------------------------------------
 #pragma pack (push,1)
 
@@ -205,28 +205,6 @@ typedef struct LIGHT_IDX_BLOCK
 	ushort Height;
 	ushort Width;
 } *PLIGHT_IDX_BLOCK;
-//----------------------------------------------------------------------------------
-typedef struct ANIM_FRAME_INFO
-{
-	short ImageCenterX;
-	short ImageCenterY;
-	ushort Width;
-	ushort Height;
-	uchar FrameCount;
-	pushort Palette;
-	pushort Address;
-
-	void Reset()
-	{
-		ImageCenterX = 0;
-		ImageCenterY = 0;
-		Width = 0;
-		Height = 0;
-		FrameCount = 0;
-		Palette = NULL;
-		Address = NULL;
-	}
-} *PANIM_FRAME_INFO;
 //----------------------------------------------------------------------------------
 typedef struct ANIM_IDX_BLOCK
 {

@@ -436,11 +436,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 			break;
 		}
 		case WM_NCPAINT:
-		{
-			OnRepaint();
-
-			break;
-		}
+			return OnRepaint(wParam, lParam);
 		case WM_TIMER:
 		{
 			OnTimer(wParam);

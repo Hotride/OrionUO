@@ -17,6 +17,7 @@
 #include "../Managers/ColorManager.h"
 #include "../Managers/PacketManager.h"
 #include "../Managers/GumpManager.h"
+#include "../Managers/PluginManager.h"
 #include "../SelectedObject.h"
 #include "../OrionUO.h"
 #include "../ServerList.h"
@@ -85,8 +86,7 @@ void CGameObject::OnChangeName(const string &newName)
 			g_OrionWindow.SetTitle(buf);
 		}
 
-		/*if (PluginManager != NULL)
-			PluginManager->WindowProc(g_hWnd, UOMSG_SET_PLAYER_NAME, (WPARAM)val.c_str(), 0);*/
+		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_PLAYER_NAME, (WPARAM)newName.c_str(), 0);
 	}
 }
 //----------------------------------------------------------------------------------

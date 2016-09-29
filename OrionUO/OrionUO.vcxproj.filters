@@ -753,6 +753,18 @@
     <ClInclude Include="Gumps\GumpSpellbook.h">
       <Filter>Header Files\Gumps</Filter>
     </ClInclude>
+    <ClInclude Include="Managers\PluginManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonInterfaces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PluginInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Wisp\WispDefinitions.h">
+      <Filter>Header Files\Wisp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1405,6 +1417,12 @@
     </ClCompile>
     <ClCompile Include="Gumps\GumpSpellbook.cpp">
       <Filter>Source Files\Gumps</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonInterfaces.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\PluginManager.cpp">
+      <Filter>Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
