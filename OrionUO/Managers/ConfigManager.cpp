@@ -332,8 +332,8 @@ bool CConfigManager::Load(string path)
 
 		if (file.ReadInt8() == 1)
 		{
-			m_Sound = file.ReadUInt8();
-			m_Music = file.ReadUInt8();
+			Sound = file.ReadUInt8();
+			Music = file.ReadUInt8();
 			m_FootstepsSound = file.ReadUInt8();
 			m_CombatMusic = file.ReadUInt8();
 			m_SoundVolume = file.ReadUInt8();

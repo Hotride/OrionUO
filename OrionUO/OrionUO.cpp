@@ -2579,7 +2579,7 @@ void COrion::LoadClientStartupConfig()
 //----------------------------------------------------------------------------------
 void COrion::PlayMusic(const int &index, const bool &warmode)
 {
-	if (index >= MAX_MUSIC_DATA_INDEX_COUNT)
+	if (!g_ConfigManager.Music || index >= MAX_MUSIC_DATA_INDEX_COUNT)
 		return;
 
 	g_SoundManager.StopMusic();
