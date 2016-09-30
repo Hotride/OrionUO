@@ -144,7 +144,7 @@ const int STEP_DELAY_RUN = 200;
 const int STEP_DELAY_WALK = 400;
 
 //!Задержка для смены направления
-const int TURN_DELAY = 50;
+const int TURN_DELAY = 100;
 
 //!Задержка таймера хотьбы
 const int WALKING_DELAY = 200;
