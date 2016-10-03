@@ -773,7 +773,7 @@ void COrion::LoadPluginConfig()
 					dllFunc *initFunc = (dllFunc*)GetProcAddress(dll, subName.c_str());
 					CPlugin *plugin = NULL;
 
-					DebugMsg("Plugin::initFunc 0x%08X\n", initFunc);
+					DebugMsg("Plugin::initFunc[%s] 0x%08X\n", subName.c_str(), initFunc);
 
 					if (initFunc != NULL)
 					{
