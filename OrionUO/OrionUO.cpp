@@ -1564,7 +1564,9 @@ int COrion::GetConfigValue(const char *option, int value)
 //----------------------------------------------------------------------------------
 void COrion::ClearTreesTextures()
 {
-	static const ushort hatchedTreeTiles[46] =
+	static const int treeTilesCount = 49;
+
+	static const ushort treeTiles[treeTilesCount] =
 	{
 		0x0CCA, 0x0CCB, 0x0CCD, 0x0CD0, 0x0CD3,
 		0x0CD6, 0x0CD8, 0x0CDA, 0x0CDD, 0x0CE0,
@@ -1575,11 +1577,11 @@ void COrion::ClearTreesTextures()
 		0x0D84, 0x0D85, 0x0D86, 0x0D94, 0x0D96,
 		0x0D98, 0x0D9A, 0x0D9C, 0x0DA4, 0x0DA6,
 		0x0CCC, 0x0CD9, 0x0CDB, 0x0CDC, 0x0CDE,
-		0x0CDF
+		0x0CDF, 0x0D55, 0x0D6B, 0x0D82
 	};
 
-	IFOR(i, 0, 46)
-		m_StaticDataIndex[hatchedTreeTiles[i]].LastAccessTime = 0;
+	IFOR(i, 0, treeTilesCount)
+		m_StaticDataIndex[treeTiles[i]].LastAccessTime = 0;
 
 	for (deque<CIndexObject*>::iterator it = m_UsedStaticList.begin(); it != m_UsedStaticList.end();)
 	{
@@ -1618,10 +1620,6 @@ bool COrion::IsTreeTile(const ushort &graphic, int &index)
 		case 0x0CE0:
 		case 0x0CE3:
 		case 0x0CE6:
-		case 0x0CF8:
-		case 0x0CFB:
-		case 0x0CFE:
-		case 0x0D01:
 		case 0x0D41:
 		case 0x0D42:
 		case 0x0D43:
@@ -1658,6 +1656,19 @@ bool COrion::IsTreeTile(const ushort &graphic, int &index)
 
 			break;
 		}
+		case 0x0CF8:
+		case 0x0CFB:
+		case 0x0CFE:
+		case 0x0D01:
+		case 0x0D55:
+		case 0x0D6B:
+		case 0x0D82:
+		{
+			result = true;
+			index = g_StumpID;
+
+			break;
+		}
 		default:
 			break;
 	}
@@ -1667,22 +1678,9 @@ bool COrion::IsTreeTile(const ushort &graphic, int &index)
 //----------------------------------------------------------------------------------
 void COrion::ClearCaveTextures()
 {
-	static const ushort caveTiles[9][2] =
+	IFOR(j, 0x053B, 0x0553 + 1)
 	{
-		{ 0x0268, 0x026A },
-		{ 0x053B, 0x0553 },
-		{ 0x08E0, 0x08EA },
-		{ 0x1363, 0x136D },
-		{ 0x1771, 0x177C },
-		{ 0x3341, 0x3439 },
-		{ 0x3486, 0x348F },
-		{ 0x34AC, 0x34B4 },
-		{ 0x3539, 0x353C }
-	};
-
-	IFOR(i, 0, 9)
-	{
-		IFOR(j, caveTiles[i][0], caveTiles[i][1] + 1)
+		if (j != 0x0550)
 			m_StaticDataIndex[j].LastAccessTime = 0;
 	}
 
@@ -1704,29 +1702,7 @@ void COrion::ClearCaveTextures()
 //----------------------------------------------------------------------------------
 bool COrion::IsCaveTile(const ushort &graphic)
 {
-	if (!g_ConfigManager.MarkingCaves)
-		return false;
-
-	static const ushort caveTiles[9][2] =
-	{
-		{ 0x0268, 0x026A },
-		{ 0x053B, 0x0553 },
-		{ 0x08E0, 0x08EA },
-		{ 0x1363, 0x136D },
-		{ 0x1771, 0x177C },
-		{ 0x3341, 0x3439 },
-		{ 0x3486, 0x348F },
-		{ 0x34AC, 0x34B4 },
-		{ 0x3539, 0x353C }
-	};
-
-	IFOR(i, 0, 9)
-	{
-		if (IN_RANGE(graphic, caveTiles[i][0], caveTiles[i][1]))
-			return true;
-	}
-
-	return false;
+	return (g_ConfigManager.MarkingCaves && graphic != 0x0550 && IN_RANGE(graphic, 0x053B, 0x0553));
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadLogin(string &login, int &port)
