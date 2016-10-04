@@ -19,3 +19,5 @@ Bugtracker: http://bt.orion-client.online
 Users may download files from bin folder, paste them inside  UO directory, configure ConfigurationEditor and launch.
 
 --------------
+
+If you want to support this project, you can donate to: https://www.paypal.me/Hotride
