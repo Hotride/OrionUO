@@ -46,8 +46,8 @@ public:
 	void UpdateRect();
 
 	//Загрузка текстур 16 и 32 бит
-	void BindTexture16(GLuint &texture, const int &width, const int &height, pushort pixels);
-	void BindTexture32(GLuint &texture, const int &width, const int &height, puint pixels);
+	void BindTexture16(GLuint &texture, const int &width, const int &height, const pushort pixels);
+	void BindTexture32(GLuint &texture, const int &width, const int &height, const puint pixels);
 
 	//Очистить экран и начать рисование
 	void BeginDraw();

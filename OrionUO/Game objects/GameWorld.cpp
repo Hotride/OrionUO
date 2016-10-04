@@ -86,8 +86,7 @@ void CGameWorld::ProcessSound(const uint &ticks, CGameCharacter *gc)
 */
 void CGameWorld::ProcessAnimation()
 {
-	//int delay = (g_ConfigManager.StandartCharactersAnimationDelay ? 0x50 : 50);
-	int delay = (g_ConfigManager.StandartCharactersAnimationDelay ? 100 : 70);
+	int delay = (g_ConfigManager.StandartCharactersAnimationDelay ? ORIGINAL_CHARACTERS_ANIMATION_DELAY : ORION_CHARACTERS_ANIMATION_DELAY);
 	g_AnimCharactersDelayValue = (float)delay;
 
 	QFOR(obj, m_Items, CGameObject*)

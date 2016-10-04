@@ -163,7 +163,7 @@ void CGLEngine::UpdateRect()
 	g_GumpManager.RedrawAll();
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::BindTexture16(GLuint &texture, const int &width, const int &height, pushort pixels)
+void CGLEngine::BindTexture16(GLuint &texture, const int &width, const int &height, const pushort pixels)
 {
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -179,7 +179,7 @@ void CGLEngine::BindTexture16(GLuint &texture, const int &width, const int &heig
 	DEBUGLOG("\t_bt16...end\n");
 }
 //----------------------------------------------------------------------------------
-void CGLEngine::BindTexture32(GLuint &texture, const int &width, const int &height, puint pixels)
+void CGLEngine::BindTexture32(GLuint &texture, const int &width, const int &height, const puint pixels)
 {
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

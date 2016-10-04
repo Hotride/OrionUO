@@ -30,6 +30,12 @@ const int DRAG_PIXEL_RANGE = 1; //3;
 
 static const int DEATH_MUSIC_INDEX = 42;
 
+static const int ORIGINAL_ITEMS_ANIMATION_DELAY = 80;
+static const int ORION_ITEMS_ANIMATION_DELAY = 50;
+
+static const int ORIGINAL_CHARACTERS_ANIMATION_DELAY = 100;
+static const int ORION_CHARACTERS_ANIMATION_DELAY = 70;
+
 //!Масимальное количество источников света на экране
 const int MAX_LIGHT_SOURCES = 100;
 
