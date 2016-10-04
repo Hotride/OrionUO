@@ -41,7 +41,7 @@ public:
 	@param [__in] io Ссылка на данные о арте
 	@return Ссылка на данные о текстуре
 	*/
-	virtual CGLTexture *ReadArt(const WORD &id, CIndexObject &io);
+	virtual CGLTexture *ReadArt(const ushort &id, CIndexObject &io);
 
 	/*!
 	Прочитать арт и вычислить реальные пииксельные границы картинки

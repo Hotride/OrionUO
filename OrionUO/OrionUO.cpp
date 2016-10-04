@@ -84,6 +84,7 @@
 #include "Gumps/GumpSkills.h"
 #include "Gumps/GumpWorldMap.h"
 #include "CommonInterfaces.h"
+#include "StumpsData.h"
 //----------------------------------------------------------------------------------
 COrion g_Orion;
 PLUGIN_CLIENT_INTERFACE g_PluginClientInterface = { 0 };
@@ -357,6 +358,9 @@ bool COrion::Install()
 #endif
 
 	LOG("Installation completed!\n");
+
+	ExecuteStaticArt(0x0CD3);
+	ExecuteStaticArt(0x0C9E);
 
 	return true;
 }
@@ -749,6 +753,7 @@ void COrion::LoadPluginConfig()
 
 			char count = file.ReadInt8();
 			DebugMsg("Plugins count=%i\n", count);
+			LOG("Plugins count=%i\n", count);
 
 			IFOR(i, 0, count)
 			{
@@ -763,8 +768,10 @@ void COrion::LoadPluginConfig()
 				string subName = file.ReadString(len);
 
 				HMODULE dll = LoadLibraryA(g_App.FilePath(name.c_str()).c_str());
+				LOG("GLE:%i\n", GetLastError());
 
 				DebugMsg("Plugin[%s] = 0x%08X\n", name.c_str(), dll);
+				LOG("Plugin[%s] = 0x%08X\n", name.c_str(), dll);
 
 				if (dll != NULL)
 				{
@@ -774,6 +781,7 @@ void COrion::LoadPluginConfig()
 					CPlugin *plugin = NULL;
 
 					DebugMsg("Plugin::initFunc[%s] 0x%08X\n", subName.c_str(), initFunc);
+					LOG("Plugin::initFunc[%s] 0x%08X\n", subName.c_str(), initFunc);
 
 					if (initFunc != NULL)
 					{
@@ -798,8 +806,10 @@ void COrion::LoadPluginConfig()
 							plugin->m_PPS->Send = PluginSendFunction;
 
 						DebugMsg("Plugin:: 0x%08X, 0x%08X\n", plugin, plugin->m_PPS);
+						LOG("Plugin:: 0x%08X, 0x%08X\n", plugin, plugin->m_PPS);
 						initFunc(plugin->m_PPS);
 						DebugMsg("Plugin::add\n");
+						LOG("Plugin::add\n");
 
 						g_PluginManager.Add(plugin);
 					}
@@ -1555,6 +1565,173 @@ int COrion::GetConfigValue(const char *option, int value)
 	return value;
 }
 //----------------------------------------------------------------------------------
+void COrion::ClearTreesTextures()
+{
+	static const ushort hatchedTreeTiles[46] =
+	{
+		0x0CCA, 0x0CCB, 0x0CCD, 0x0CD0, 0x0CD3,
+		0x0CD6, 0x0CD8, 0x0CDA, 0x0CDD, 0x0CE0,
+		0x0CE3, 0x0CE6, 0x0CF8, 0x0CFB, 0x0CFE,
+		0x0D01, 0x0D41, 0x0D42, 0x0D43, 0x0D44,
+		0x0D57, 0x0D58, 0x0D59, 0x0D5A, 0x0D5B,
+		0x0D6E, 0x0D6F, 0x0D70, 0x0D71, 0x0D72,
+		0x0D84, 0x0D85, 0x0D86, 0x0D94, 0x0D96,
+		0x0D98, 0x0D9A, 0x0D9C, 0x0DA4, 0x0DA6,
+		0x0CCC, 0x0CD9, 0x0CDB, 0x0CDC, 0x0CDE,
+		0x0CDF
+	};
+
+	IFOR(i, 0, 46)
+		m_StaticDataIndex[hatchedTreeTiles[i]].LastAccessTime = 0;
+
+	for (deque<CIndexObject*>::iterator it = m_UsedStaticList.begin(); it != m_UsedStaticList.end();)
+	{
+		CIndexObject *obj = *it;
+
+		if (obj->Texture != NULL && obj->LastAccessTime < g_Ticks)
+		{
+			delete obj->Texture;
+			obj->Texture = NULL;
+
+			it = m_UsedStaticList.erase(it);
+		}
+		else
+			it++;
+	}
+}
+//----------------------------------------------------------------------------------
+bool COrion::IsTreeTile(const ushort &graphic, int &index)
+{
+	if (!g_ConfigManager.DrawStumps)
+		return false;
+
+	bool result = false;
+
+	switch (graphic)
+	{
+		case 0x0CCA:
+		case 0x0CCB:
+		case 0x0CCD:
+		case 0x0CD0:
+		case 0x0CD3:
+		case 0x0CD6:
+		case 0x0CD8:
+		case 0x0CDA:
+		case 0x0CDD:
+		case 0x0CE0:
+		case 0x0CE3:
+		case 0x0CE6:
+		case 0x0CF8:
+		case 0x0CFB:
+		case 0x0CFE:
+		case 0x0D01:
+		case 0x0D41:
+		case 0x0D42:
+		case 0x0D43:
+		case 0x0D44:
+		case 0x0D57:
+		case 0x0D58:
+		case 0x0D59:
+		case 0x0D5A:
+		case 0x0D5B:
+		case 0x0D6E:
+		case 0x0D6F:
+		case 0x0D70:
+		case 0x0D71:
+		case 0x0D72:
+		case 0x0D84:
+		case 0x0D85:
+		case 0x0D86:
+		case 0x0D94:
+		case 0x0D96:
+		case 0x0D98:
+		case 0x0D9A:
+		case 0x0D9C:
+		case 0x0DA4:
+		case 0x0DA6:
+		case 0x0CCC:
+		case 0x0CD9:
+		case 0x0CDB:
+		case 0x0CDC:
+		case 0x0CDE:
+		case 0x0CDF:
+		{
+			result = true;
+			index = g_StumpHatchedID;
+
+			break;
+		}
+		default:
+			break;
+	}
+
+	return result;
+}
+//----------------------------------------------------------------------------------
+void COrion::ClearCaveTextures()
+{
+	static const ushort caveTiles[9][2] =
+	{
+		{ 0x0268, 0x026A },
+		{ 0x053B, 0x0553 },
+		{ 0x08E0, 0x08EA },
+		{ 0x1363, 0x136D },
+		{ 0x1771, 0x177C },
+		{ 0x3341, 0x3439 },
+		{ 0x3486, 0x348F },
+		{ 0x34AC, 0x34B4 },
+		{ 0x3539, 0x353C }
+	};
+
+	IFOR(i, 0, 9)
+	{
+		IFOR(j, caveTiles[i][0], caveTiles[i][1] + 1)
+			m_StaticDataIndex[j].LastAccessTime = 0;
+	}
+
+	for (deque<CIndexObject*>::iterator it = m_UsedStaticList.begin(); it != m_UsedStaticList.end();)
+	{
+		CIndexObject *obj = *it;
+
+		if (obj->Texture != NULL && obj->LastAccessTime < g_Ticks)
+		{
+			delete obj->Texture;
+			obj->Texture = NULL;
+
+			it = m_UsedStaticList.erase(it);
+		}
+		else
+			it++;
+	}
+}
+//----------------------------------------------------------------------------------
+bool COrion::IsCaveTile(const ushort &graphic)
+{
+	if (!g_ConfigManager.MarkingCaves)
+		return false;
+
+	static const ushort caveTiles[9][2] =
+	{
+		{ 0x0268, 0x026A },
+		{ 0x053B, 0x0553 },
+		{ 0x08E0, 0x08EA },
+		{ 0x1363, 0x136D },
+		{ 0x1771, 0x177C },
+		{ 0x3341, 0x3439 },
+		{ 0x3486, 0x348F },
+		{ 0x34AC, 0x34B4 },
+		{ 0x3539, 0x353C }
+	};
+
+	IFOR(i, 0, 9)
+	{
+		if (IN_RANGE(graphic, caveTiles[i][0], caveTiles[i][1]))
+			return true;
+	}
+
+	return false;
+}
+//----------------------------------------------------------------------------------
 void COrion::LoadLogin(string &login, int &port)
 {
 	WISP_FILE::CTextFileParser file(g_App.FilePath("login.cfg"), "=,", "#;", "");
@@ -1634,6 +1811,7 @@ void COrion::LoadIndexFiles()
 			land.Height = 0;
 			land.Texture = NULL;
 			land.LastAccessTime = 0;
+			land.Graphic = i;
 
 			LandArtPtr++;
 
@@ -1654,6 +1832,7 @@ void COrion::LoadIndexFiles()
 			statics.Height = 0;
 			statics.Texture = NULL;
 			statics.LastAccessTime = 0;
+			statics.Graphic = i;
 
 			StaticArtPtr++;
 
@@ -1676,6 +1855,7 @@ void COrion::LoadIndexFiles()
 				textures.Height = 0;
 				textures.Texture = NULL;
 				textures.LastAccessTime = 0;
+				textures.Graphic = i;
 
 				TexturePtr++;
 
@@ -1710,6 +1890,7 @@ void COrion::LoadIndexFiles()
 						light.Height = LightPtr->Height;
 						light.LastAccessTime = 0;
 						light.Texture = NULL;
+						light.Graphic = i;
 
 						if (light.Address == 0xFFFFFFFF || !light.DataSize || light.DataSize == 0xFFFFFFFF)
 						{
@@ -1742,6 +1923,7 @@ void COrion::LoadIndexFiles()
 		gump.Height = GumpArtPtr->Height;
 		gump.Texture = NULL;
 		gump.LastAccessTime = 0;
+		gump.Graphic = i;
 
 		GumpArtPtr++;
 
@@ -1831,7 +2013,26 @@ void COrion::InitStaticAnimList()
 			m_StaticDataIndex[i].LightColor = CalculateLightColor((ushort)i);
 
 			if (IsAnimated(flags))
+			{
+				bool isField = false;
+
+				//fire field
+				if (IN_RANGE(i, 0x398C, 0x399F))
+					isField = true;
+				//paralyze field
+				else if (IN_RANGE(i, 0x3967, 0x397A))
+					isField = true;
+				//energy field
+				else if (IN_RANGE(i, 0x3946, 0x3964))
+					isField = true;
+				//poison field
+				else if (IN_RANGE(i, 0x3914, 0x3929))
+					isField = true;
+
+				m_StaticDataIndex[i].IsFiled = isField;
+
 				m_StaticAnimList.push_back(&m_StaticDataIndex[i]);
+			}
 		}
 	}
 }
@@ -1982,11 +2183,18 @@ void COrion::ProcessStaticAnimList()
 {
 	if (m_AnimData.size())
 	{
-		int delay = (g_ConfigManager.StandartItemsAnimationDelay ? 0x50 : 50);
+		int delay = (g_ConfigManager.StandartItemsAnimationDelay ? ORIGINAL_ITEMS_ANIMATION_DELAY : ORION_ITEMS_ANIMATION_DELAY);
+		bool noAnimateFields = g_ConfigManager.NoAnimateFields;
 
 		for (deque<CIndexObjectStatic*>::iterator i = m_StaticAnimList.begin(); i != m_StaticAnimList.end(); i++)
 		{
 			CIndexObjectStatic *obj = *i;
+
+			if (noAnimateFields && obj->IsFiled)
+			{
+				obj->AnimIndex = 0;
+				continue;
+			}
 
 			if (obj->ChangeTime < g_Ticks)
 			{

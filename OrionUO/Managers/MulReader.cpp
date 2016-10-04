@@ -10,6 +10,8 @@
 #include "MulReader.h"
 #include "ColorManager.h"
 #include "../GLEngine/GLEngine.h"
+#include "../OrionUO.h"
+#include "../StumpsData.h"
 
 CMulReader *g_MulReader = NULL;
 //---------------------------------------------------------------------------
@@ -144,14 +146,14 @@ bool CMulReader::GumpPixelsInXY(CIndexObject &io, const int &checkX, const int &
 @param [__in] io —сылка на данные о арте
 @return —сылка на данные о текстуре
 */
-CGLTexture *CMulReader::ReadArt(const WORD &id, CIndexObject &io)
+CGLTexture *CMulReader::ReadArt(const ushort &id, CIndexObject &io)
 {
 	CGLTexture *th = new CGLTexture();
 	th->Texture = 0;
 
 	uint flag = *(puint)io.Address;
-	ushort h = 44;
-	ushort w = 44;
+	int h = 44;
+	int w = 44;
 	pushort P = (pushort)io.Address;
 	ushort color = io.Color;
 
@@ -166,6 +168,7 @@ CGLTexture *CMulReader::ReadArt(const WORD &id, CIndexObject &io)
 		PUSHORT_LIST &data = th->PixelsData;
 		data.resize(blocksize, 0);
 #endif
+
 		IFOR(i, 0, 22)
 		{
 			int pos = i * 44;
@@ -212,100 +215,177 @@ CGLTexture *CMulReader::ReadArt(const WORD &id, CIndexObject &io)
 	}
 	else //run tile
 	{
-		pushort ptr = (pushort)(io.Address + 4);
+		USHORT_LIST pixels;
+		int stumpIndex = 0;
 
-		w = *ptr;
-		if (!w || w >= 1024)
+		if (g_Orion.IsTreeTile(id - 0x4000, stumpIndex))
 		{
-			delete th;
-			return NULL;
-		}
+			pushort ptr = NULL;
 
-		ptr++;
+			if (stumpIndex == g_StumpHatchedID)
+			{
+				w = g_StumpHatchedWidth;
+				h = g_StumpHatchedHeight;
+				ptr = (pushort)g_StumpHatched;
+			}
+			else
+			{
+				w = g_StumpWidth;
+				h = g_StumpHeight;
+				ptr = (pushort)g_Stump;
+			}
 
-		h = *ptr;
+			int blocksize = w * h;
 
-		if (!h || (h * 2) > 5120)
-		{
-			delete th;
-			return NULL;
-		}
+			pixels.resize(blocksize);
 
-		ptr++;
-
-		pushort LineOffsets = ptr;
-		PVOID DataStart = (PVOID)((uint)ptr + (h * 2));
-
-		int X = 0;
-		int Y = 0;
-		ushort XOffs = 0;
-		ushort Run = 0;
-
-		int blocksize = w * h;
-
-		USHORT_LIST pixels(blocksize, 0);
-		
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-		USHORT_LIST &data = th->PixelsData;
-		data.resize(blocksize, 0);
+			USHORT_LIST &data = th->PixelsData;
+			data.resize(blocksize);
 #endif
 
-		ptr = (pushort)((uint)DataStart + (*LineOffsets));
+			IFOR(i, 0, blocksize)
+			{
+				ushort &pixel = ptr[i];
 
-		while (Y < h)
+				pixels[i] = pixel;
+
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+				data[i] = (pixel != 0);
+#endif
+			}
+		}
+		else
 		{
-			XOffs = *ptr;
-			ptr++;
-			Run = *ptr;
-			ptr++;
-			if (XOffs + Run >= 2048)
+			pushort ptr = (pushort)(io.Address + 4);
+
+			w = *ptr;
+			if (!w || w >= 1024)
 			{
 				delete th;
 				return NULL;
 			}
-			else if (XOffs + Run != 0)
+
+			ptr++;
+
+			h = *ptr;
+
+			if (!h || (h * 2) > 5120)
 			{
-				X += XOffs;
-				int pos = Y * w + X;
+				delete th;
+				return NULL;
+			}
 
-				IFOR(j, 0, Run)
-				{
-					ushort val = *ptr;
+			ptr++;
 
-					if (color)
-						val = g_ColorManager.GetColor16(val, color);
+			pushort LineOffsets = ptr;
+			PVOID DataStart = (PVOID)((uint)ptr + (h * 2));
 
-					val = (val ? 0x8000 : 0) | val;
-					int block = pos + j;
-					pixels[block] = val;
+			int X = 0;
+			int Y = 0;
+			ushort XOffs = 0;
+			ushort Run = 0;
+
+			int blocksize = w * h;
+
+			pixels.resize(blocksize, 0);
+
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-					data[block] = val;
+			USHORT_LIST &data = th->PixelsData;
+			data.resize(blocksize, 0);
 #endif
-					ptr++;
+
+			ptr = (pushort)((uint)DataStart + (*LineOffsets));
+
+			while (Y < h)
+			{
+				XOffs = *ptr;
+				ptr++;
+				Run = *ptr;
+				ptr++;
+				if (XOffs + Run >= 2048)
+				{
+					delete th;
+					return NULL;
+				}
+				else if (XOffs + Run != 0)
+				{
+					X += XOffs;
+					int pos = Y * w + X;
+
+					IFOR(j, 0, Run)
+					{
+						ushort val = *ptr;
+
+						if (color)
+							val = g_ColorManager.GetColor16(val, color);
+
+						val = (val ? 0x8000 : 0) | val;
+						int block = pos + j;
+						pixels[block] = val;
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+						data[block] = val;
+#endif
+						ptr++;
+					}
+
+					X += Run;
+				}
+				else
+				{
+					X = 0;
+					Y++;
+					ptr = (pushort)((uint)DataStart + (LineOffsets[Y] * 2));
+				}
+			}
+
+			if ((id >= 0x6053 && id <= 0x6062) || (id >= 0x606A && id <= 0x6079)) //”бираем рамку (если это курсор мышки)
+			{
+				IFOR(i, 0, w)
+				{
+					pixels[i] = 0;
+					pixels[(h - 1) * w + i] = 0;
 				}
 
-				X += Run;
+				IFOR(i, 0, h)
+				{
+					pixels[i * w] = 0;
+					pixels[i * w + w - 1] = 0;
+				}
 			}
-			else
+			else if (g_Orion.IsCaveTile(id - 0x4000))
 			{
-				X = 0;
-				Y++;
-				ptr = (pushort)((uint)DataStart + (LineOffsets[Y] * 2));
-			}
-		}
+				IFOR(y, 0, h)
+				{
+					int startY = (y ? -1 : 0);
+					int endY = (y + 1 < h ? 2 : 1);
 
-		if ((id >= 0x6053 && id <= 0x6062) || (id >= 0x606A && id <= 0x6079)) //”бираем рамку (если это курсор мышки)
-		{
-			IFOR(i, 0, w)
-			{
-				pixels[i] = 0;
-				pixels[(h - 1) * w + i] = 0;
-			}
+					IFOR(x, 0, w)
+					{
+						ushort &pixel = pixels[y * w + x];
 
-			IFOR(i, 0, h)
-			{
-				pixels[i * w] = 0;
-				pixels[i * w + w - 1] = 0;
+						if (pixel)
+						{
+							int startX = (x ? -1 : 0);
+							int endX = (x + 1 < w ? 2 : 1);
+
+							IFOR(i, startY, endY)
+							{
+								int currentY = y + i;
+
+								IFOR(j, startX, endX)
+								{
+									int currentX = x + j;
+
+									ushort &currentPixel = pixels[currentY * w + currentX];
+
+									if (!currentPixel)
+										pixel = 0x8000;
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -328,82 +408,108 @@ WISP_GEOMETRY::CRect CMulReader::ReadStaticArtPixelDimension(CIndexObject &io)
 {
 	WISP_GEOMETRY::CRect r;
 
-	uint flag = *(PDWORD)io.Address;
+	int stumpIndex = 0;
+
 	ushort h = 44;
 	ushort w = 44;
-	pushort P = (pushort)io.Address;
 
-	pushort ptr = (pushort)(io.Address + 4);
-
-	w = *ptr;
-	if (!w || w >= 1024)
-		return r;
-
-	ptr++;
-
-	h = *ptr;
-
-	if (!h || (h * 2) > 5120)
-		return r;
-
-	ptr++;
-
-	pushort LineOffsets = ptr;
-	PVOID DataStart = (PVOID)((uint)ptr + (h * 2));
-
-	int X = 0;
-	int Y = 0;
-	ushort XOffs = 0;
-	ushort Run = 0;
-
-	ptr = (pushort)((uint)DataStart + (*LineOffsets));
-
-	int minX = w;
-	int minY = h;
+	int minX = 0;
+	int minY = 0;
 	int maxX = 0;
 	int maxY = 0;
 
-	while (Y < h)
+	if (g_Orion.IsTreeTile(io.Graphic, stumpIndex))
 	{
-		XOffs = *ptr;
-		ptr++;
-		Run = *ptr;
-		ptr++;
-		if (XOffs + Run >= 2048)
-			return r;
-		else if (XOffs + Run != 0)
+		pushort ptr = NULL;
+
+		if (stumpIndex == g_StumpHatchedID)
 		{
-			X += XOffs;
-
-			IFOR(j, 0, Run)
-			{
-				if (*ptr)
-				{
-					int testX = X + j;
-
-					if (testX < minX)
-						minX = testX;
-
-					if (testX > maxX)
-						maxX = testX;
-
-					if (Y < minY)
-						minY = Y;
-
-					if (Y > maxY)
-						maxY = Y;
-				}
-
-				ptr++;
-			}
-
-			X += Run;
+			w = g_StumpHatchedWidth;
+			h = g_StumpHatchedHeight;
+			ptr = (pushort)g_StumpHatched;
 		}
 		else
 		{
-			X = 0;
-			Y++;
-			ptr = (pushort)((uint)DataStart + (LineOffsets[Y] * 2));
+			w = g_StumpWidth;
+			h = g_StumpHeight;
+			ptr = (pushort)g_Stump;
+		}
+	}
+	else
+	{
+		uint flag = *(PDWORD)io.Address;
+		pushort P = (pushort)io.Address;
+
+		pushort ptr = (pushort)(io.Address + 4);
+
+		w = *ptr;
+		if (!w || w >= 1024)
+			return r;
+
+		ptr++;
+
+		h = *ptr;
+
+		if (!h || (h * 2) > 5120)
+			return r;
+
+		ptr++;
+
+		pushort LineOffsets = ptr;
+		PVOID DataStart = (PVOID)((uint)ptr + (h * 2));
+
+		int X = 0;
+		int Y = 0;
+		ushort XOffs = 0;
+		ushort Run = 0;
+
+		ptr = (pushort)((uint)DataStart + (*LineOffsets));
+
+		minX = w;
+		minY = h;
+
+		while (Y < h)
+		{
+			XOffs = *ptr;
+			ptr++;
+			Run = *ptr;
+			ptr++;
+			if (XOffs + Run >= 2048)
+				return r;
+			else if (XOffs + Run != 0)
+			{
+				X += XOffs;
+
+				IFOR(j, 0, Run)
+				{
+					if (*ptr)
+					{
+						int testX = X + j;
+
+						if (testX < minX)
+							minX = testX;
+
+						if (testX > maxX)
+							maxX = testX;
+
+						if (Y < minY)
+							minY = Y;
+
+						if (Y > maxY)
+							maxY = Y;
+					}
+
+					ptr++;
+				}
+
+				X += Run;
+			}
+			else
+			{
+				X = 0;
+				Y++;
+				ptr = (pushort)((uint)DataStart + (LineOffsets[Y] * 2));
+			}
 		}
 	}
 
@@ -450,14 +556,6 @@ bool CMulReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &ch
 			{
 				P += checkX - start;
 				return ((*P) != 0);
-
-				/*IFOR(j, start, end)
-				{
-					if (j == checkX)
-						return ((*P) != 0);
-
-					P++;
-				}*/
 			}
 
 			P += end - start;
@@ -471,14 +569,6 @@ bool CMulReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &ch
 			{
 				P += checkX - i;
 				return ((*P) != 0);
-
-				/*IFOR(j, i, end)
-				{
-					if ((i + 22) == checkY && j == checkX)
-						return ((*P) != 0);
-
-					P++;
-				}*/
 			}
 
 			P += end - i;
@@ -486,67 +576,84 @@ bool CMulReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &ch
 	}
 	else //run tile
 	{
-		pushort ptr = (pushort)(io.Address + 4);
+		int stumpIndex = 0;
 
-		w = *ptr;
-		if (!w || w >= 1024)
+		if (g_Orion.IsTreeTile(io.Graphic, stumpIndex))
 		{
-			return false;
-		}
+			pushort ptr = NULL;
 
-		ptr++;
-
-		h = *ptr;
-
-		if (!h || (h * 2) > 5120)
-		{
-			return false;
-		}
-
-		ptr++;
-
-		pushort lineOffsets = ptr;
-		PVOID dataStart = (PVOID)((uint)ptr + (h * 2));
-
-		int x = 0;
-		int y = 0;
-		ushort xOffs = 0;
-		ushort run = 0;
-
-		ptr = (pushort)((uint)dataStart + (*lineOffsets));
-
-		while (y < h)
-		{
-			xOffs = *ptr++;
-			run = *ptr++;
-
-			if (xOffs + run >= 2048)
-				return false;
-			else if (xOffs + run != 0)
+			if (stumpIndex == g_StumpHatchedID)
 			{
-				x += xOffs;
-
-				if (y == checkY && checkX >= x && checkX < (x + run))
-				{
-					ptr += checkX - x;
-					return ((*ptr) != 0);
-
-					/*IFOR(j, 0, run)
-					{
-						if (y == checkY && (x + j) == checkX)
-							return ((*ptr) != 0);
-						ptr++;
-					}*/
-				}
-
-				ptr += run;
-				x += run;
+				w = g_StumpHatchedWidth;
+				h = g_StumpHatchedHeight;
+				ptr = (pushort)g_StumpHatched;
 			}
 			else
 			{
-				x = 0;
-				y++;
-				ptr = (pushort)((uint)dataStart + (lineOffsets[y] * 2));
+				w = g_StumpWidth;
+				h = g_StumpHeight;
+				ptr = (pushort)g_Stump;
+			}
+
+			return (ptr[checkY * w + checkX]);
+		}
+		else
+		{
+			pushort ptr = (pushort)(io.Address + 4);
+
+			w = *ptr;
+			if (!w || w >= 1024)
+			{
+				return false;
+			}
+
+			ptr++;
+
+			h = *ptr;
+
+			if (!h || (h * 2) > 5120)
+			{
+				return false;
+			}
+
+			ptr++;
+
+			pushort lineOffsets = ptr;
+			PVOID dataStart = (PVOID)((uint)ptr + (h * 2));
+
+			int x = 0;
+			int y = 0;
+			ushort xOffs = 0;
+			ushort run = 0;
+
+			ptr = (pushort)((uint)dataStart + (*lineOffsets));
+
+			while (y < h)
+			{
+				xOffs = *ptr++;
+				run = *ptr++;
+
+				if (xOffs + run >= 2048)
+					return false;
+				else if (xOffs + run != 0)
+				{
+					x += xOffs;
+
+					if (y == checkY && checkX >= x && checkX < (x + run))
+					{
+						ptr += checkX - x;
+						return ((*ptr) != 0);
+					}
+
+					ptr += run;
+					x += run;
+				}
+				else
+				{
+					x = 0;
+					y++;
+					ptr = (pushort)((uint)dataStart + (lineOffsets[y] * 2));
+				}
 			}
 		}
 	}

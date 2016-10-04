@@ -79,6 +79,9 @@ void CConfigManager::DefaultPage2()
 	m_UseScaling = false;
 	m_RemoveTextWithBlending = true;
 	m_DrawStatusState = 0;
+	m_DrawStumps = false;
+	m_NoAnimateFields = false;
+	m_MarkingCaves = false;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -239,6 +242,18 @@ void CConfigManager::OnChangeDrawStatusState(const uchar &val)
 	}
 }
 //---------------------------------------------------------------------------
+void CConfigManager::OnChangeDrawStumps(const bool &val)
+{
+	if (m_DrawStumps != val && this == &g_ConfigManager)
+		g_Orion.ClearTreesTextures();
+}
+//---------------------------------------------------------------------------
+void CConfigManager::OnChangeMarkingCaves(const bool &val)
+{
+	if (m_MarkingCaves != val && this == &g_ConfigManager)
+		g_Orion.ClearCaveTextures();
+}
+//---------------------------------------------------------------------------
 void CConfigManager::OnChangeReduceFPSUnactiveWindow(const bool &val)
 {
 	if (this == &g_ConfigManager)
@@ -350,6 +365,9 @@ bool CConfigManager::Load(string path)
 		m_UseScaling = false;
 		m_RemoveTextWithBlending = true;
 		m_DrawStatusState = 0;
+		bool drawStumps = false;
+		bool markingCaves;
+		m_NoAnimateFields = false;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -365,6 +383,13 @@ bool CConfigManager::Load(string path)
 					{
 						m_RemoveTextWithBlending = file.ReadUInt8();
 						m_DrawStatusState = file.ReadUInt8();
+
+						if (blockSize > 6)
+						{
+							drawStumps = file.ReadUInt8();
+							markingCaves = file.ReadUInt8();
+							m_NoAnimateFields = file.ReadUInt8();
+						}
 					}
 				}
 			}
@@ -373,6 +398,9 @@ bool CConfigManager::Load(string path)
 		}
 		else
 			ClientFPS = 32;
+
+		DrawStumps = drawStumps;
+		MarkingCaves = markingCaves;
 		
 		file.Ptr = next;
 		
@@ -674,12 +702,15 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(6); //size of block
+	writter.WriteInt8(9); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
 	writter.WriteUInt8(m_RemoveTextWithBlending);
 	writter.WriteUInt8(m_DrawStatusState);
+	writter.WriteUInt8(m_DrawStumps);
+	writter.WriteUInt8(m_MarkingCaves);
+	writter.WriteUInt8(m_NoAnimateFields);
 	writter.WriteBuffer();
 
 	//Page 3

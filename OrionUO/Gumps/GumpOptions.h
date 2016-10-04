@@ -63,6 +63,9 @@ private:
 	static const int ID_GO_P2_NO_DRAW_CHARACTERS_STATUS = 203;
 	static const int ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP = 204;
 	static const int ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM = 205;
+	static const int ID_GO_P2_DRAW_STUMPS = 206;
+	static const int ID_GO_P2_MARKING_CAVES = 207;
+	static const int ID_GO_P2_NO_ANIMATE_FIELDS = 208;
 
 	static const int ID_GO_P3_USE_TOOLTIP = 300;
 	static const int ID_GO_P3_TEXT_COLOR = 301;

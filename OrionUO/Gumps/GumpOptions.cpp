@@ -246,6 +246,18 @@ void CGumpOptions::DrawPage2()
 	radio->Checked = (g_OptionsConfig.DrawStatusState == 2);
 	radio->SetTextParameters(0, L"Under character", g_OptionsTextColor);
 
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_STUMPS, 0x00D2, 0x00D3, 0x00D2, 0, 155));
+	checkbox->Checked = g_OptionsConfig.DrawStumps;
+	checkbox->SetTextParameters(0, L"Change trees to stumps", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_MARKING_CAVES, 0x00D2, 0x00D3, 0x00D2, 0, 174));
+	checkbox->Checked = g_OptionsConfig.MarkingCaves;
+	checkbox->SetTextParameters(0, L"Marking cave tiles", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 193));
+	checkbox->Checked = g_OptionsConfig.NoAnimateFields;
+	checkbox->SetTextParameters(0, L"No animate fields", g_OptionsTextColor);
+
 	html->CalculateDataSize();
 }
 //----------------------------------------------------------------------------
@@ -1474,6 +1486,12 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.UseScaling = state;
 			else if (serial == ID_GO_P2_REMOVE_TEXT_WITH_BLENDING) //Remove object's text with alpha-blending
 				g_OptionsConfig.RemoveTextWithBlending = state;
+			else if (serial == ID_GO_P2_DRAW_STUMPS)
+				g_OptionsConfig.DrawStumps = state;
+			else if (serial == ID_GO_P2_MARKING_CAVES)
+				g_OptionsConfig.MarkingCaves = state;
+			else if (serial == ID_GO_P2_NO_ANIMATE_FIELDS)
+				g_OptionsConfig.NoAnimateFields = state;
 
 			break;
 		}
@@ -1975,6 +1993,9 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.UseScaling = g_OptionsConfig.UseScaling;
 			g_ConfigManager.RemoveTextWithBlending = g_OptionsConfig.RemoveTextWithBlending;
 			g_ConfigManager.DrawStatusState = g_OptionsConfig.DrawStatusState;
+			g_ConfigManager.DrawStumps = g_OptionsConfig.DrawStumps;
+			g_ConfigManager.MarkingCaves = g_OptionsConfig.MarkingCaves;
+			g_ConfigManager.NoAnimateFields = g_OptionsConfig.NoAnimateFields;
 
 			break;
 		}

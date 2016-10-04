@@ -10,8 +10,8 @@
 #include "IndexObject.h"
 //----------------------------------------------------------------------------------
 CIndexObject::CIndexObject()
-: m_Address(0), m_DataSize(0), m_Width(0), m_Height(0), m_Color(0), m_LastAccessTime(0),
-Texture(NULL)
+: m_Address(0), m_DataSize(0), m_Width(0), m_Height(0), m_Graphic(0), m_Color(0),
+m_LastAccessTime(0), Texture(NULL)
 {
 }
 //----------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ CIndexObject::~CIndexObject()
 //----------------------------------------------------------------------------------
 CIndexObjectStatic::CIndexObjectStatic()
 : CIndexObject(), m_Index(0), m_Offset(0), m_AnimIndex(0), m_ChangeTime(0),
-m_LightColor(0)
+m_LightColor(0), m_IsFiled(false)
 {
 }
 //----------------------------------------------------------------------------------

@@ -756,6 +756,13 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 */
 void CGameScreen::CalculateGameWindowBounds()
 {
+	g_DrawFoliage = (g_Season < ST_WINTER) && !g_ConfigManager.DrawStumps;
+
+	g_GrayedPixels = g_Player->Dead();
+
+	if (g_GrayedPixels && g_Season != ST_DESOLATION)
+		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
+
 	g_RenderBounds.PlayerX = g_Player->X;
 	g_RenderBounds.PlayerY = g_Player->Y;
 	g_RenderBounds.PlayerZ = g_Player->Z;
@@ -1210,11 +1217,6 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 //----------------------------------------------------------------------------------
 void CGameScreen::PrepareContent()
 {
-	g_GrayedPixels = g_Player->Dead();
-
-	if (g_GrayedPixels && g_Season != ST_DESOLATION)
-		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
-
 	g_WorldTextRenderer.CalculateWorldPositions(false);
 
 	m_GameScreenGump.PrepareContent();

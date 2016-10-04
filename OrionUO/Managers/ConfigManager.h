@@ -27,6 +27,9 @@ class CConfigManager
 	SETGETE(bool, UseScaling, OnChangeUseScaling);
 	SETGET(bool, RemoveTextWithBlending);
 	SETGETE(uchar, DrawStatusState, OnChangeDrawStatusState);
+	SETGETE(bool, DrawStumps, OnChangeDrawStumps);
+	SETGET(bool, NoAnimateFields);
+	SETGETE(bool, MarkingCaves, OnChangeMarkingCaves);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

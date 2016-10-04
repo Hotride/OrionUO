@@ -234,6 +234,7 @@ extern int g_OldSeasonMusic;
 extern uint g_LockedClientFeatures;
 
 extern bool g_GeneratedMouseDown;
+extern bool g_DrawFoliage;
 
 const int g_ObjectHandlesWidth = 142;
 const int g_ObjectHandlesHeight = 20;

@@ -61,7 +61,7 @@ void CStaticObject::Draw(const int &x, const int &y)
 
 	if (IsFoliage())
 	{
-		if (g_Season < ST_WINTER)
+		if (g_DrawFoliage)
 		{
 			if (m_FoliageTransparentIndex == g_FoliageIndex)
 			{
@@ -96,7 +96,7 @@ void CStaticObject::Select(const int &x, const int &y)
 
 	if (IsFoliage())
 	{
-		if (g_Season < ST_WINTER && m_FoliageTransparentIndex != g_FoliageIndex)
+		if (g_DrawFoliage && m_FoliageTransparentIndex != g_FoliageIndex)
 		{
 			if (g_Orion.StaticPixelsInXYAnimated(m_Graphic - 0x4000, x, y, m_Z))
 				g_SelectedObject.Init(this);

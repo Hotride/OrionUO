@@ -296,6 +296,7 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <ClInclude Include="SkillGroup.h" />
     <ClInclude Include="Skills.h" />
     <ClInclude Include="SmoothMonitor.h" />
+    <ClInclude Include="StumpsData.h" />
     <ClInclude Include="Target.h" />
     <ClInclude Include="TargetGump.h" />
     <ClInclude Include="TextEngine\EntryText.h" />

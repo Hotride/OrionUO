@@ -765,6 +765,9 @@
     <ClInclude Include="Wisp\WispDefinitions.h">
       <Filter>Header Files\Wisp</Filter>
     </ClInclude>
+    <ClInclude Include="StumpsData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">

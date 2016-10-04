@@ -133,6 +133,7 @@ int g_OldSeasonMusic = 0;
 uint g_LockedClientFeatures = 0;
 
 bool g_GeneratedMouseDown = false;
+bool g_DrawFoliage = true;
 
 ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight] = { 0 };
 //----------------------------------------------------------------------------------

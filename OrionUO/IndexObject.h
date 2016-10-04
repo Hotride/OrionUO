@@ -23,6 +23,7 @@ class CIndexObject
 	SETGET(int, DataSize);
 	SETGET(int, Width);
 	SETGET(int, Height);
+	SETGET(ushort, Graphic);
 	SETGET(ushort, Color);
 	SETGET(uint, LastAccessTime);
 
@@ -40,6 +41,7 @@ class CIndexObjectStatic : public CIndexObject
 	SETGET(char, AnimIndex);
 	SETGET(uint, ChangeTime);
 	SETGET(ushort, LightColor);
+	SETGET(bool, IsFiled);
 
 public:
 	CIndexObjectStatic();

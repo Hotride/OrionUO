@@ -158,6 +158,14 @@ public:
 
 	int GetConfigValue(const char *option, int value = -1);
 
+	void ClearTreesTextures();
+
+	bool IsTreeTile(const ushort &graphic, int &index);
+
+	void ClearCaveTextures();
+
+	bool IsCaveTile(const ushort &graphic);
+
 
 
 	//Получить флаги ландшафта
