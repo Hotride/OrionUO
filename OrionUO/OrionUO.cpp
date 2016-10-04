@@ -359,9 +359,6 @@ bool COrion::Install()
 
 	LOG("Installation completed!\n");
 
-	ExecuteStaticArt(0x0CD3);
-	ExecuteStaticArt(0x0C9E);
-
 	return true;
 }
 //----------------------------------------------------------------------------------
@@ -1588,7 +1585,7 @@ void COrion::ClearTreesTextures()
 	{
 		CIndexObject *obj = *it;
 
-		if (obj->Texture != NULL && obj->LastAccessTime < g_Ticks)
+		if (obj->Texture != NULL && !obj->LastAccessTime)
 		{
 			delete obj->Texture;
 			obj->Texture = NULL;
@@ -1693,7 +1690,7 @@ void COrion::ClearCaveTextures()
 	{
 		CIndexObject *obj = *it;
 
-		if (obj->Texture != NULL && obj->LastAccessTime < g_Ticks)
+		if (obj->Texture != NULL && !obj->LastAccessTime)
 		{
 			delete obj->Texture;
 			obj->Texture = NULL;
