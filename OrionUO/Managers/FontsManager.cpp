@@ -2506,6 +2506,29 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 	if (info == NULL)
 		return pData;
 
+	if (m_UseHTML && (m_LeftMargin || m_RightMargin))
+	{
+		width -= m_LeftMargin + m_RightMargin;
+
+		if (width < 10)
+			width = 10;
+
+		while (info != NULL)
+		{
+			PMULTILINES_FONT_INFO ptr = info->m_Next;
+
+			info->Data.clear();
+			delete info;
+
+			info = ptr;
+		}
+
+		info = GetInfoW(font, str, len, align, flags, width);
+
+		if (info == NULL)
+			return pData;
+	}
+
 	if (!oldWidth && m_RecalculateWidthByInfo)
 	{
 		PMULTILINES_FONT_INFO ptr = info;
@@ -2541,7 +2564,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 		return pData;
 	}
 
-	height += 4;
+	height += m_TopMargin + m_BottomMargin + 4;
 
 	int blocksize = (height + 1) * (width + 1);
 
@@ -2552,7 +2575,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 
 	puint table = (puint)m_UnicodeFontAddress[font];
 
-	int lineOffsY = 1;
+	int lineOffsY = 1 + m_TopMargin;
 
 	PMULTILINES_FONT_INFO ptr = info;
 
@@ -2579,22 +2602,23 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 
 		th.IncLinesCount();
 
-		int w = 0;
+		int w = m_LeftMargin;
+
 		if (ptr->Align == TS_CENTER)
 		{
-			w = (((width - 10) - ptr->Width) / 2);
+			w += (((width - 10) - ptr->Width) / 2);
 			if (w < 0)
 				w = 0;
 		}
 		else if (ptr->Align == TS_RIGHT)
 		{
-			w = ((width - 10) - ptr->Width);
+			w += ((width - 10) - ptr->Width);
 
 			if (w < 0)
 				w = 0;
 		}
 		else if (ptr->Align == TS_LEFT && (flags & UOFONT_INDENTION))
-			w = ptr->IndentionOffset;
+			w += ptr->IndentionOffset;
 
 		ushort oldLink = 0;
 
