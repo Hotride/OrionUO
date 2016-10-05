@@ -1934,6 +1934,12 @@ PACKET_HANDLER(UpdateCharacter)
 		obj->Direction = dir;
 	}
 
+	if (serial == g_PlayerSerial)
+	{
+		obj->PaperdollText = "";
+		m_MegaClilocRequests.push_back(serial);
+	}
+
 	obj->Color = ReadUInt16BE();
 	obj->Flags = ReadUInt8();
 
