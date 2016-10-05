@@ -215,7 +215,7 @@ public:
 	@param [__in] z Координата Z
 	@return 
 	*/
-	void DrawCorpse(class CGameItem *obj, int x, int y, int z);
+	void DrawCorpse(class CGameItem *obj, const int &x, const int &y);
 
 	/*!
 	Проверить наличие пикселя трупа в указанных координатах
@@ -225,7 +225,7 @@ public:
 	@param [__in] z Координата Z
 	@return 
 	*/
-	bool CorpsePixelsInXY(class CGameItem *obj, int x, int y, int z);
+	bool CorpsePixelsInXY(class CGameItem *obj, const int &x, const int &y);
 
 	/*!
 	Получить индекс группы смерти анимации

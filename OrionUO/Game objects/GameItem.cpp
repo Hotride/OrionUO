@@ -190,7 +190,7 @@ void CGameItem::Draw(const int &x, const int &y)
 			objColor = 0x038A;
 
 		if (IsCorpse()) //Трупик
-			g_AnimationManager.DrawCorpse(this, x, y, m_Z);
+			g_AnimationManager.DrawCorpse(this, x, y - ((m_Z * 4) + 3));
 		else
 		{
 			bool doubleDraw = false;
@@ -261,7 +261,7 @@ void CGameItem::Select(const int &x, const int &y)
 	{
 		if (IsCorpse()) //Трупик
 		{
-			if (g_AnimationManager.CorpsePixelsInXY(this, x, y, m_Z))
+			if (g_AnimationManager.CorpsePixelsInXY(this, x, y - ((m_Z * 4) + 3)))
 				g_SelectedObject.Init(this);
 		}
 		else

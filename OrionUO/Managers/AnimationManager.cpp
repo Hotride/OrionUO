@@ -1730,9 +1730,8 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 @param [__in] z Координата Z
 @return 
 */
-void CAnimationManager::DrawCorpse(CGameItem *obj, int x, int y, int z)
+void CAnimationManager::DrawCorpse(CGameItem *obj, const int &x, const int &y)
 {
-	y -= (z * 4) + 3;
 	m_Sitting = 0;
 	m_Direction = obj->Layer & 0x7F;
 	bool mirror = false;
@@ -1760,9 +1759,8 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, int x, int y, int z)
 @param [__in] z Координата Z
 @return 
 */
-bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, int x, int y, int z)
+bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, const int &x, const int &y)
 {
-	y -= 3 + (z * 4);
 	m_Sitting = 0;
 	m_Direction = obj->Layer & 0x7F;
 	bool mirror = false;
