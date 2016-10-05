@@ -2508,11 +2508,6 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 
 	if (m_UseHTML && (m_LeftMargin || m_RightMargin))
 	{
-		width -= m_LeftMargin + m_RightMargin;
-
-		if (width < 10)
-			width = 10;
-
 		while (info != NULL)
 		{
 			PMULTILINES_FONT_INFO ptr = info->m_Next;
@@ -2523,7 +2518,12 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 			info = ptr;
 		}
 
-		info = GetInfoW(font, str, len, align, flags, width);
+		int newWidth = width - (m_LeftMargin + m_RightMargin);
+
+		if (newWidth < 10)
+			newWidth = 10;
+
+		info = GetInfoW(font, str, len, align, flags, newWidth);
 
 		if (info == NULL)
 			return pData;
