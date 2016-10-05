@@ -86,21 +86,21 @@ private:
 	//Проверка пикселей картинки в указанных координатах
 	bool TestImagePixels(CTextureAnimationDirection *direction, const uchar &frame, const int &checkX, const int &checkY);
 
-	bool TestPixels(class CGameObject *obj, int x, int y, bool &mirror, uchar &frameIndex, ushort id = 0x0000);
+	bool TestPixels(class CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, ushort id = 0x0000);
 
 	//Корректировка направления сидячего персонажа, согласно тому. на чем он сидит
 	void FixSittingDirection(uchar &layerDirection, bool &mirror, int &x, int &y);
 
 	//Обобщенная фукнция рисования
-	void Draw(class CGameObject *obj, int x, int y, bool &mirror, uchar &frameIndex, int id = 0);
+	void Draw(class CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, int id = 0);
 
 	void DrawIntoFrameBuffer(class CGameCharacter *obj, int x, int y);
 
 	//!Рисуем слои одетой одежды на чаре, вычисляем исключающие друг-друга слои.
-	void DrawEquippedLayers(class CGameCharacter* obj, int drawX, int drawY, bool mirror, uchar layerDir, uchar animIndex, int lightOffset);
+	bool DrawEquippedLayers(const bool &selection, class CGameObject *obj, const int &drawX, const int &drawY, const bool &mirror, const uchar &layerDir, uchar animIndex, const int &lightOffset);
 
 	//!Находится-ли данный слой под робой
-	bool IsUnderRobe(int layer);
+	bool IsUnderRobe(const int &layer);
 
 	bool m_Transform;
 

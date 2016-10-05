@@ -970,7 +970,7 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection *direction, c
 	return false;
 }
 //----------------------------------------------------------------------------------
-bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, bool &mirror, uchar &frameIndex, ushort id)
+bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, ushort id)
 {
 	if (obj == NULL)
 		return false;
@@ -1069,7 +1069,7 @@ CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, uchar fram
 	return frame;
 }
 //----------------------------------------------------------------------------------
-void CAnimationManager::Draw(CGameObject *obj, int x, int y, bool &mirror, uchar &frameIndex, int id)
+void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, int id)
 {
 	if (obj == NULL)
 		return;
@@ -1499,26 +1499,24 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 
 	Draw(obj, drawX, drawY, mirror, animIndex); //Draw character
 
-	if (obj->IsHuman()) //Draw layred objects
+	if (obj->IsHuman()) //Draw layered objects
 	{
-		DrawEquippedLayers(obj, drawX, drawY, mirror, layerDir, animIndex, lightOffset);
+		DrawEquippedLayers(false, obj, drawX, drawY, mirror, layerDir, animIndex, lightOffset);
 
 		const SITTING_INFO_DATA &sittingData = SITTING_INFO[m_Sitting - 1];
 
 		if (m_Sitting && m_Direction == 3 && sittingData.DrawBack && obj->FindLayer(OL_CLOAK) == NULL)
 		{
-			ushort graphic = sittingData.Graphic;
-
 			for (CRenderWorldObject *ro = obj->m_PrevXY; ro != NULL; ro = (CRenderWorldObject*)ro->m_PrevXY)
 			{
-				if ((ro->Graphic & 0x3FFF) == graphic)
+				if ((ro->Graphic & 0x3FFF) == sittingData.Graphic)
 				{
 					//оффсеты для ножниц
 					int xOffset = mirror ? -20 : 0;
 					int yOffset = -70;
 
 					g_GL.PushScissor(drawX + xOffset, drawY + yOffset, 20, 40);
-					g_Orion.DrawStaticArt(graphic, ro->Color, x, y, ro->Z);
+					g_Orion.DrawStaticArt(sittingData.Graphic, ro->Color, x, y, ro->Z);
 					g_GL.PopScissor();
 
 					break;
@@ -1721,20 +1719,7 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 
 	m_AnimGroup = animGroup;
 
-	bool result = TestPixels(obj, drawX, drawY, mirror, animIndex); //Check character
-
-	if (obj->IsHuman()) //Check layred objects
-	{
-		IFOR(l, 0, USED_LAYER_COUNT && !result)
-		{
-			goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
-
-			if (goi != NULL && goi->AnimID)
-				result = TestPixels(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
-		}
-	}
-
-	return result;
+	return TestPixels(obj, drawX, drawY, mirror, animIndex) || DrawEquippedLayers(true, obj, drawX, drawY, mirror, layerDir, animIndex, 0);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -1764,19 +1749,7 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, int x, int y, int z)
 	
 	Draw(obj, x, y, mirror, animIndex); //Draw animation
 
-	IFOR(l, 0, USED_LAYER_COUNT)
-	{
-		CGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
-		
-		if (goi != NULL)
-		{
-			if (goi->AnimID)
-				Draw(goi, x, y, mirror, animIndex, goi->AnimID);
-
-			if (goi->IsLightSource() && g_GameScreen.UseLight)
-				g_GameScreen.AddLight(obj, goi, x, y - 20);
-		}
-	}
+	DrawEquippedLayers(false, obj, x, y, mirror, m_Direction, animIndex, 0);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -1799,17 +1772,7 @@ bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, int x, int y, int z)
 	uchar animIndex = obj->AnimIndex;
 	m_AnimGroup = GetDieGroupIndex(obj->GetMountAnimation(), obj->UsedLayer);
 
-	bool result = TestPixels(obj, x, y, mirror, animIndex);
-
-	IFOR(l, 0, USED_LAYER_COUNT && !result)
-	{
-		CGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
-
-		if (goi != NULL && goi->AnimID)
-			result = TestPixels(goi, x, y, mirror, animIndex, goi->AnimID);
-	}
-
-	return result;
+	return TestPixels(obj, x, y, mirror, animIndex) || DrawEquippedLayers(true, obj, x, y, mirror, m_Direction, animIndex, 0);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -1900,7 +1863,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 
 			if (direction != NULL && direction->Address != NULL)
 			{
-				/*int fc = direction->FrameCount;
+				int fc = direction->FrameCount;
 
 				if (fc > 0 && frameIndex >= fc)
 				{
@@ -1908,7 +1871,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 						frameIndex = fc - 1;
 					else
 						frameIndex = 0;
-				}*/
+				}
 
 				CTextureAnimationFrame *frame = direction->FindFrame(frameIndex);
 
@@ -2014,6 +1977,11 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 
 	DRAW_FRAME_INFORMATION dfInfo = { 0 };
 
+	vector<CGameItem*> &list = gameObject->m_DrawLayeredObjects;
+
+	if (checkLayers)
+		list.clear();
+
 	if (gameObject->NPC)
 	{
 		CGameCharacter *obj = (CGameCharacter*)gameObject;
@@ -2060,22 +2028,20 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 
 		if (obj->IsHuman() && checkLayers) //Check layred objects
 		{
-			if (!obj->Dead())
+			CGameItem *robe = obj->FindLayer(OL_ROBE);
+
+			IFOR(l, 0, USED_LAYER_COUNT)
 			{
-				IFOR(l, 0, USED_LAYER_COUNT)
+				goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
+
+				if (goi == NULL || (robe != NULL && IsUnderRobe(goi->Layer)))
+					continue;
+
+				if (goi->AnimID)
 				{
-					goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
-
-					if (goi != NULL && goi->GetAnimID())
-						CalculateFrameInformation(info, goi, mirror, animIndex);
-				}
-			}
-			else
-			{
-				goi = obj->FindLayer(OL_ROBE);
-
-				if (goi != NULL && goi->AnimID)
+					list.push_back(goi);
 					CalculateFrameInformation(info, goi, mirror, animIndex);
+				}
 			}
 		}
 
@@ -2107,7 +2073,10 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 				CGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
 
 				if (goi != NULL && goi->GetAnimID())
+				{
+					list.push_back(goi);
 					CalculateFrameInformation(info, goi, mirror, animIndex);
+				}
 			}
 		}
 
@@ -2120,45 +2089,50 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 	return dfInfo;
 }
 //----------------------------------------------------------------------------------
-void CAnimationManager::DrawEquippedLayers(CGameCharacter* obj, int drawX, int drawY, bool mirror, uchar layerDir, uchar animIndex, int lightOffset)
+bool CAnimationManager::DrawEquippedLayers(const bool &selection, CGameObject *obj, const int &drawX, const int &drawY, const bool &mirror, const uchar &layerDir, uchar animIndex, const int &lightOffset)
 {
-	CGameItem *robe = obj->FindLayer(OL_ROBE);
-	CGameItem *goi = {0};
-	IFOR(l, 0, USED_LAYER_COUNT)
+	bool result = false;
+
+	vector<CGameItem*> &list = obj->m_DrawLayeredObjects;
+
+	if (selection)
 	{
-		goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
-
-		if (goi == NULL || (robe != NULL && IsUnderRobe(goi->GetLayer())))
-			continue;
-		if (goi->AnimID)
-			Draw(goi, drawX, drawY, mirror, animIndex, goi->AnimID);
-
-		if (goi->IsLightSource() && g_GameScreen.UseLight)
-			g_GameScreen.AddLight(obj, goi, drawX, drawY - lightOffset);
+		for (vector<CGameItem*>::iterator i = list.begin(); i != list.end() && !result; i++)
+			result = TestPixels(*i, drawX, drawY, mirror, animIndex, (*i)->AnimID);
 	}
+	else
+	{
+		for (vector<CGameItem*>::iterator i = list.begin(); i != list.end(); i++)
+		{
+			CGameItem *item = *i;
+
+			Draw(item, drawX, drawY, mirror, animIndex, item->AnimID);
+
+			if (item->IsLightSource() && g_GameScreen.UseLight)
+				g_GameScreen.AddLight(obj, item, drawX, drawY - lightOffset);
+		}
+	}
+
+	return result;
 }
 //----------------------------------------------------------------------------------
-bool CAnimationManager::IsUnderRobe(int layer)
+bool CAnimationManager::IsUnderRobe(const int &layer)
 {
 	switch (layer)
 	{
-	case OL_PANTS:
-		return true;
-	case OL_SHIRT:
-		return true;
-	case OL_TORSO:
-		return true;
-	case OL_BRACELET:
-		return true;
-	case OL_TUNIC:
-		return true;
-	case OL_ARMS:
-		return true;
-	case OL_SKIRT:
-		return true;
-	case OL_LEGS:
-		return true;
+		case OL_PANTS:
+		case OL_SHIRT:
+		case OL_TORSO:
+		case OL_BRACELET:
+		case OL_TUNIC:
+		case OL_ARMS:
+		case OL_SKIRT:
+		case OL_LEGS:
+			return true;
+		default:
+			break;
 	}
+
 	return false;
 }
 //----------------------------------------------------------------------------------

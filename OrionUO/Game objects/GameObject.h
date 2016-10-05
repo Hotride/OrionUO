@@ -67,6 +67,8 @@ public:
 	//!Информация о ФБ объекта (для Animation Manager)
 	DRAW_FRAME_INFORMATION m_FrameInfo;
 
+	vector<class CGameItem*> m_DrawLayeredObjects;
+
 	/*!
 	Добавить текст в контейнер
 	@param [__in] td Ссылка на объект текста
