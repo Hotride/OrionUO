@@ -949,7 +949,7 @@ void COrion::ClearUnusedTextures()
 
 	clearMap = 1;
 
-	m_StaticDataIndex[0x0EED].LastAccessTime = g_Ticks;
+	/*m_StaticDataIndex[0x0EED].LastAccessTime = g_Ticks;
 	m_StaticDataIndex[0x0EEE].LastAccessTime = g_Ticks;
 	m_StaticDataIndex[0x0EEF].LastAccessTime = g_Ticks;
 
@@ -960,7 +960,7 @@ void COrion::ClearUnusedTextures()
 	}
 
 	IFOR(i, 0, 8)
-		m_StaticDataIndex[g_QuestArrow.m_Gump + i].LastAccessTime = g_Ticks;
+		m_StaticDataIndex[g_QuestArrow.m_Gump + i].LastAccessTime = g_Ticks;*/
 
 	g_GumpManager.PrepareTextures();
 
@@ -986,10 +986,13 @@ void COrion::ClearUnusedTextures()
 			{
 				CIndexObject *obj = *it;
 
-				if (obj->Texture != NULL && obj->LastAccessTime < g_Ticks)
+				if (obj->LastAccessTime < g_Ticks)
 				{
-					delete obj->Texture;
-					obj->Texture = NULL;
+					if (obj->Texture != NULL)
+					{
+						delete obj->Texture;
+						obj->Texture = NULL;
+					}
 
 					it = list->erase(it);
 				}
@@ -1005,10 +1008,13 @@ void COrion::ClearUnusedTextures()
 			{
 				CIndexSound *obj = *it;
 
-				if (obj->m_Stream != 0 && obj->LastAccessTime < g_Ticks)
+				if (obj->LastAccessTime < g_Ticks)
 				{
-					BASS_StreamFree(obj->m_Stream);
-					obj->m_Stream = 0;
+					if (obj->m_Stream != 0)
+					{
+						BASS_StreamFree(obj->m_Stream);
+						obj->m_Stream = 0;
+					}
 
 					it = list->erase(it);
 				}
@@ -1562,6 +1568,27 @@ int COrion::GetConfigValue(const char *option, int value)
 	return value;
 }
 //----------------------------------------------------------------------------------
+void COrion::ClearRemovedStaticsTextures()
+{
+	for (deque<CIndexObject*>::iterator it = m_UsedStaticList.begin(); it != m_UsedStaticList.end();)
+	{
+		CIndexObject *obj = *it;
+
+		if (!obj->LastAccessTime)
+		{
+			if (obj->Texture != NULL)
+			{
+				delete obj->Texture;
+				obj->Texture = NULL;
+			}
+
+			it = m_UsedStaticList.erase(it);
+		}
+		else
+			it++;
+	}
+}
+//----------------------------------------------------------------------------------
 void COrion::ClearTreesTextures()
 {
 	static const int treeTilesCount = 49;
@@ -1583,20 +1610,7 @@ void COrion::ClearTreesTextures()
 	IFOR(i, 0, treeTilesCount)
 		m_StaticDataIndex[treeTiles[i]].LastAccessTime = 0;
 
-	for (deque<CIndexObject*>::iterator it = m_UsedStaticList.begin(); it != m_UsedStaticList.end();)
-	{
-		CIndexObject *obj = *it;
-
-		if (obj->Texture != NULL && !obj->LastAccessTime)
-		{
-			delete obj->Texture;
-			obj->Texture = NULL;
-
-			it = m_UsedStaticList.erase(it);
-		}
-		else
-			it++;
-	}
+	ClearRemovedStaticsTextures();
 }
 //----------------------------------------------------------------------------------
 bool COrion::IsTreeTile(const ushort &graphic, int &index)
@@ -1684,20 +1698,7 @@ void COrion::ClearCaveTextures()
 			m_StaticDataIndex[j].LastAccessTime = 0;
 	}
 
-	for (deque<CIndexObject*>::iterator it = m_UsedStaticList.begin(); it != m_UsedStaticList.end();)
-	{
-		CIndexObject *obj = *it;
-
-		if (obj->Texture != NULL && !obj->LastAccessTime)
-		{
-			delete obj->Texture;
-			obj->Texture = NULL;
-
-			it = m_UsedStaticList.erase(it);
-		}
-		else
-			it++;
-	}
+	ClearRemovedStaticsTextures();
 }
 //----------------------------------------------------------------------------------
 bool COrion::IsCaveTile(const ushort &graphic)

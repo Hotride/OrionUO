@@ -22,7 +22,7 @@
 //----------------------------------------------------------------------------------
 CMouseManager g_MouseManager;
 //----------------------------------------------------------------------------------
-WORD g_CursorData[2][16] =
+ushort g_CursorData[2][16] =
 {
 	{
 		0x206A, 0x206B, 0x206C, 0x206D, 0x206E, 0x206F, 0x2070, 0x2071,
@@ -192,9 +192,9 @@ bool CMouseManager::LoadCursorTextures()
 	{
 		IFOR(j, 0, 16)
 		{
-			WORD ID = g_CursorData[i][j];
+			ushort id = g_CursorData[i][j];
 
-			CGLTexture *pth = g_Orion.ExecuteStaticArt(ID);
+			CGLTexture *pth = g_Orion.ExecuteStaticArt(id);
 
 			if (!i)
 			{
@@ -206,59 +206,45 @@ bool CMouseManager::LoadCursorTextures()
 					float DW = (float)pth->Width;
 					float DH = (float)pth->Height;
 
-					if (ID == 0x206A)
-					{
+					if (id == 0x206A)
 						OffsX = -4.0f;
-					}
-					else if (ID == 0x206B)
-					{
+					else if (id == 0x206B)
 						OffsX = -DW;
-					}
-					else if (ID == 0x206C)
+					else if (id == 0x206C)
 					{
 						OffsX = -DW;
 						OffsY = -(DH / 2.0f);
 					}
-					else if (ID == 0x206D)
+					else if (id == 0x206D)
 					{
 						OffsX = -DW;
 						OffsY = -DH;
 					}
-					else if (ID == 0x206E)
+					else if (id == 0x206E)
 					{
 						OffsX = -(DW * 0.66f);
 						OffsY = -DH;
 					}
-					else if (ID == 0x206F)
-					{
+					else if (id == 0x206F)
 						OffsY = ((-DH) + 4.0f);
-					}
-					else if (ID == 0x2070)
-					{
+					else if (id == 0x2070)
 						OffsY = ((-DH) + 4.0f);
-					}
-					else if (ID == 0x2075)
-					{
+					else if (id == 0x2075)
 						OffsY = -4.0f;
-					}
-					else if (ID == 0x2076)
+					else if (id == 0x2076)
 					{
 						OffsX = -12.0f;
 						OffsY = -14.0f;
 					}
-					else if (ID == 0x2077)
+					else if (id == 0x2077)
 					{
 						OffsX = -(DW / 2.0f);
 						OffsY = -(DH / 2.0f);
 					}
-					else if (ID == 0x2078)
-					{
+					else if (id == 0x2078)
 						OffsY = -(DH * 0.66f);
-					}
-					else if (ID == 0x2079)
-					{
+					else if (id == 0x2079)
 						OffsY = -(DH / 2.0f);
-					}
 
 					m_CursorOffset[0][j] = (int)OffsX; //X
 					m_CursorOffset[1][j] = (int)OffsY; //Y
@@ -327,10 +313,7 @@ void CMouseManager::Draw(ushort id)
 		{
 			g_ToolTip.Draw(th->Width, th->Height);
 
-			int x = m_Position.X + m_CursorOffset[0][id];
-			int y = m_Position.Y + m_CursorOffset[1][id];
-
-			th->Draw(x, y);
+			th->Draw(m_Position.X + m_CursorOffset[0][id], m_Position.Y + m_CursorOffset[1][id]);
 		}
 	}
 }

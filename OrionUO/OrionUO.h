@@ -158,6 +158,8 @@ public:
 
 	int GetConfigValue(const char *option, int value = -1);
 
+	void ClearRemovedStaticsTextures();
+
 	void ClearTreesTextures();
 
 	bool IsTreeTile(const ushort &graphic, int &index);
