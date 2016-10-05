@@ -14,8 +14,10 @@
 #include "Wisp/WispGeometry.h"
 #include "GLEngine/GLTexture.h"
 #include "bass.h"
+#include "bassmidi.h"
 
 #pragma comment(lib, "bass.lib")
+#pragma comment(lib, "bassmidi.lib")
 //----------------------------------------------------------------------------------
 class CIndexObject
 {

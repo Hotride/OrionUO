@@ -60,7 +60,8 @@
     <PostBuildEvent>
       <Command>xcopy /y /d  "$(SolutionDir)bin\bass.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
+xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dlls to bin directory</Message>
@@ -89,7 +90,8 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
     <PostBuildEvent>
       <Command>xcopy /y /d  "$(SolutionDir)bin\bass.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
+xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dlls to bin directory</Message>
@@ -103,6 +105,7 @@ xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseQueue.h" />
+    <ClInclude Include="bassmidi.h" />
     <ClInclude Include="CharacterList.h" />
     <ClInclude Include="CityList.h" />
     <ClInclude Include="ClickObject.h" />

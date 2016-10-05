@@ -768,6 +768,9 @@
     <ClInclude Include="StumpsData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bassmidi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
