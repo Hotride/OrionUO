@@ -13,6 +13,8 @@ Forum: http://forum.orion-client.online
 
 Bugtracker: http://bt.orion-client.online
 
+Discord: https://discord.gg/UcVKWzB
+
 
 -------------
 
