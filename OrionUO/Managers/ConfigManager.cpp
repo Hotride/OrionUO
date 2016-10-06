@@ -76,12 +76,17 @@ void CConfigManager::DefaultPage1()
 void CConfigManager::DefaultPage2()
 {
 	m_ClientFPS = 32;
+	m_ReduceFPSUnactiveWindow = true;
+	m_StandartCharactersAnimationDelay = true;
+	m_StandartItemsAnimationDelay = true;
 	m_UseScaling = false;
 	m_RemoveTextWithBlending = true;
 	m_DrawStatusState = 0;
 	m_DrawStumps = false;
 	m_NoAnimateFields = false;
 	m_MarkingCaves = false;
+	m_LockGumpsMoving = true;
+	m_ConsoleNeedEnter = false;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -127,7 +132,6 @@ void CConfigManager::DefaultPage6()
 	m_ItemPropertiesMode = 0;
 	m_ItemPropertiesIcon = false;
 	m_ObjectHandles = false;
-	m_ReduceFPSUnactiveWindow = true;
 	m_HoldShiftForContextMenus = true;
 	m_HoldShiftForEnablePathfind = false;
 }
@@ -147,10 +151,7 @@ void CConfigManager::DefaultPage7()
 	m_IgnoreAllianceMessage = false;
 	m_DarkNights = false;
 	m_ColoredLighting = true;
-	m_StandartCharactersAnimationDelay = true;
-	m_StandartItemsAnimationDelay = true;
 	m_LockResizingGameWindow = false;
-	m_LockGumpsMoving = true;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage8()
@@ -169,7 +170,6 @@ void CConfigManager::DefaultPage9()
 	m_ShowIncomingNames = true;
 	m_UseCircleTrans = false;
 	m_StatReport = true;
-	m_ConsoleNeedEnter = false;
 	m_CircleTransRadius = 64;
 	m_SkillReport = 1;
 	m_SpeechFont = 0;

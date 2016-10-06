@@ -22,7 +22,6 @@ class CConfigManager
 	SETGETE(uchar, SoundVolume, OnChangedSoundVolume);
 	SETGETE(uchar, MusicVolume, OnChangedMusicVolume);
 
-	//page 2 setget
 	SETGETE(uchar, ClientFPS, OnChangeClientFPS);
 	SETGETE(bool, UseScaling, OnChangeUseScaling);
 	SETGET(bool, RemoveTextWithBlending);
@@ -30,6 +29,11 @@ class CConfigManager
 	SETGETE(bool, DrawStumps, OnChangeDrawStumps);
 	SETGET(bool, NoAnimateFields);
 	SETGETE(bool, MarkingCaves, OnChangeMarkingCaves);
+	SETGETE(bool, ReduceFPSUnactiveWindow, OnChangeReduceFPSUnactiveWindow);
+	SETGET(bool, StandartCharactersAnimationDelay);
+	SETGET(bool, StandartItemsAnimationDelay);
+	SETGET(bool, LockGumpsMoving);
+	SETGETE(bool, ConsoleNeedEnter, OnChangeConsoleNeedEnter);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);
@@ -65,7 +69,6 @@ class CConfigManager
 	SETGET(uchar, ItemPropertiesMode);
 	SETGET(bool, ItemPropertiesIcon);
 	SETGET(bool, ObjectHandles);
-	SETGETE(bool, ReduceFPSUnactiveWindow, OnChangeReduceFPSUnactiveWindow);
 	SETGET(bool, HoldShiftForContextMenus);
 	SETGET(bool, HoldShiftForEnablePathfind);
 
@@ -82,10 +85,7 @@ class CConfigManager
 	SETGET(bool, IgnoreAllianceMessage);
 	SETGET(bool, DarkNights);
 	SETGET(bool, ColoredLighting);
-	SETGET(bool, StandartCharactersAnimationDelay);
-	SETGET(bool, StandartItemsAnimationDelay);
 	SETGET(bool, LockResizingGameWindow);
-	SETGET(bool, LockGumpsMoving);
 
 	SETGET(ushort, InnocentColor);
 	SETGET(ushort, FriendlyColor);
@@ -101,7 +101,6 @@ class CConfigManager
 	SETGET(uchar, CircleTransRadius);
 	SETGET(uchar, SkillReport);
 	SETGET(ushort, SpeechFont);
-	SETGETE(bool, ConsoleNeedEnter, OnChangeConsoleNeedEnter);
 
 	SETGET(bool, FilterPWOn);
 	SETGET(bool, ObscenityFilter);

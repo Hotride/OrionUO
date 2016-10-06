@@ -15,7 +15,6 @@
 class CGumpOptions : public CGump
 {
 private:
-
 	static const char *m_HotkeyText[0x100];
 
 	uint m_LastChangeMacroTime;
@@ -58,14 +57,19 @@ private:
 	static const int ID_GO_P1_MUSIC_VOLUME = 105;
 	
 	static const int ID_GO_P2_CLIENT_FPS = 200;
-	static const int ID_GO_P2_ENABLE_SCALING = 201;
-	static const int ID_GO_P2_REMOVE_TEXT_WITH_BLENDING = 202;
-	static const int ID_GO_P2_NO_DRAW_CHARACTERS_STATUS = 203;
-	static const int ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP = 204;
-	static const int ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM = 205;
-	static const int ID_GO_P2_DRAW_STUMPS = 206;
-	static const int ID_GO_P2_MARKING_CAVES = 207;
-	static const int ID_GO_P2_NO_ANIMATE_FIELDS = 208;
+	static const int ID_GO_P2_REDUCE_FPS_UNACTIVE_WINDOW = 201;
+	static const int ID_GO_P2_CHARACTERS_ANIMATION_DELAY = 202;
+	static const int ID_GO_P2_ITEMS_ANIMATION_DELAY = 203;
+	static const int ID_GO_P2_ENABLE_SCALING = 204;
+	static const int ID_GO_P2_REMOVE_TEXT_WITH_BLENDING = 205;
+	static const int ID_GO_P2_NO_DRAW_CHARACTERS_STATUS = 206;
+	static const int ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP = 207;
+	static const int ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM = 208;
+	static const int ID_GO_P2_DRAW_STUMPS = 209;
+	static const int ID_GO_P2_MARKING_CAVES = 210;
+	static const int ID_GO_P2_NO_ANIMATE_FIELDS = 211;
+	static const int ID_GO_P2_LOCK_GUMP_MOVING = 212;
+	static const int ID_GO_P2_CONSOLE_ENTER = 213;
 
 	static const int ID_GO_P3_USE_TOOLTIP = 300;
 	static const int ID_GO_P3_TEXT_COLOR = 301;
@@ -101,10 +105,9 @@ private:
 	static const int ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS = 606;
 	static const int ID_GO_P6_DISABLE_NEW_TARGET_SYSTEM = 607;
 	static const int ID_GO_P6_OBJECT_HANDLES = 608;
-	static const int ID_GO_P6_REDUCE_FPS_UNACTIVE_WINDOW = 609;
-	static const int ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON = 610;
-	static const int ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS = 611;
-	static const int ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING = 612;
+	static const int ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON = 609;
+	static const int ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS = 610;
+	static const int ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING = 611;
 
 	static const int ID_GO_P7_SCALE_SPEECH_DURATION = 700;
 	static const int ID_GO_P7_SPEECH_COLOR = 701;
@@ -119,10 +122,7 @@ private:
 	static const int ID_GO_P7_AJUST_LONG_SPEECH = 710;
 	static const int ID_GO_P7_GAME_WINDOW_WIDTH = 711;
 	static const int ID_GO_P7_GAME_WINDOW_HEIGHT = 712;
-	static const int ID_GO_P7_CHARACTERS_ANIMATION_DELAY = 713;
-	static const int ID_GO_P7_ITEMS_ANIMATION_DELAY = 714;
-	static const int ID_GO_P7_LOCK_GAME_WINDOW_RESIZING = 715;
-	static const int ID_GO_P7_LOCK_GUMP_MOVING = 716;
+	static const int ID_GO_P7_LOCK_GAME_WINDOW_RESIZING = 713;
 
 	static const int ID_GO_P8_INNOCENT_COLOR = 800;
 	static const int ID_GO_P8_FRIENDLY_COLOR = 801;
@@ -135,10 +135,9 @@ private:
 	static const int ID_GO_P9_SHOW_APPROACHING_NAMES = 900;
 	static const int ID_GO_P9_USE_CIRCLE_OF_TRANSPARENCY = 901;
 	static const int ID_GO_P9_INFORM_STATS = 902;
-	static const int ID_GO_P9_CONSOLE_ENTER = 903;
-	static const int ID_GO_P9_SPEECH_FONT = 904;
-	static const int ID_GO_P9_TRANSPARENCY_RADIUS = 905;
-	static const int ID_GO_P9_INFORM_SKILLS = 906;
+	static const int ID_GO_P9_SPEECH_FONT = 903;
+	static const int ID_GO_P9_TRANSPARENCY_RADIUS = 904;
+	static const int ID_GO_P9_INFORM_SKILLS = 905;
 
 	class CMacro *m_MacroPointer;
 	class CMacroObject *m_MacroObjectPointer;
