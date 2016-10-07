@@ -2788,7 +2788,7 @@ void COrion::PlayMusic(const int &index, const bool &warmode)
 		g_SoundManager.PlayMP3(mp3Info.FilePath, mp3Info.Loop, warmode);
 	}
 	else
-		g_SoundManager.PlayMidi(index);
+		g_SoundManager.PlayMidi(index, false, warmode);
 }
 //----------------------------------------------------------------------------------
 void COrion::PlaySoundEffect(const ushort &id, float volume)

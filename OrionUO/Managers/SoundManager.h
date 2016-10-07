@@ -65,7 +65,7 @@ public:
 	//void PlaySoundEffect(Mix_Chunk *mix, int volume);
 	void PlaySoundEffect(HSTREAM stream, float volume);
 
-	void PlayMidi(int index);
+	void PlayMidi(int index, bool loop, bool warmode);
 
 	void PlayMP3(std::string fileName, bool loop, bool warmode = false);
 
