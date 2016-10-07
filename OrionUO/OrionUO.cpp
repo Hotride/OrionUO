@@ -802,6 +802,8 @@ void COrion::LoadPluginConfig()
 		}
 
 		file.Unload();
+
+		BringWindowToTop(g_OrionWindow.Handle);
 	}
 }
 //----------------------------------------------------------------------------------
