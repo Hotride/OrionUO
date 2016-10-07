@@ -579,3 +579,14 @@ CGameObject *CGameObject::GetTopObject()
 	return obj;
 }
 //----------------------------------------------------------------------------------
+CGameItem *CGameObject::FindLayer(const int &layer)
+{
+	QFOR(obj, m_Items, CGameItem*)
+	{
+		if (obj->Layer == layer)
+			return obj;
+	}
+
+	return NULL;
+}
+//----------------------------------------------------------------------------------

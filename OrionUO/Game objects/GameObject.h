@@ -249,6 +249,8 @@ public:
 	@return —сылка на объект в мире
 	*/
 	CGameObject *GetTopObject();
+
+	CGameItem *FindLayer(const int &layer);
 };
 //----------------------------------------------------------------------------------
 #endif

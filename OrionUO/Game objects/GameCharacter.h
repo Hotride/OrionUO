@@ -185,13 +185,6 @@ public:
 	*/
 	bool Dead() { return ((m_Graphic == 0x0192) || (m_Graphic == 0x0193)); }
 
-	/*!
-	Найти объект на указанном слое
-	@param [__in] layer Номер слоя
-	@return Ссылка на найденный объект или NULL
-	*/
-	class CGameItem *FindLayer(const int &layer);
-
 	virtual CGameCharacter *GameCharacterPtr() { return this; }
  };
  //----------------------------------------------------------------------------------

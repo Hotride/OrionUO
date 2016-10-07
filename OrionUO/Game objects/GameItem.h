@@ -103,13 +103,6 @@ public:
 	@return Ссылка на найденный объект или NULL
 	*/
 	CGameItem *FindItem(const ushort &graphic, const ushort &color = 0xFFFF);
-
-	/*!
-	Найти объект на указанном слое (для трупов)
-	@param [__in] layer Номер слоя
-	@return Ссылка на найденный объект или NULL
-	*/
-	CGameItem *FindLayer(const int &layer);
 };
 //----------------------------------------------------------------------------------
 #endif

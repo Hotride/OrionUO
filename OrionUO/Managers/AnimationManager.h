@@ -69,7 +69,7 @@ private:
 	int m_Sitting;
 
 	//!”пор€доченный список слоев дл€ корректного пор€дка прорисовки дл€ всех направлений персонажа
-	static const int USED_LAYER_COUNT = 19;
+	static const int USED_LAYER_COUNT = 23;
 	static int m_UsedLayers[8][USED_LAYER_COUNT];
 
 	//!ƒанные анимаций
@@ -100,9 +100,12 @@ private:
 	bool DrawEquippedLayers(const bool &selection, class CGameObject *obj, const int &drawX, const int &drawY, const bool &mirror, const uchar &layerDir, uchar animIndex, const int &lightOffset);
 
 	//!Ќаходитс€-ли данный слой под робой
-	bool IsUnderRobe(const int &layer);
+	bool IsCovered(const int &layer, class CGameObject *owner);
 
 	bool m_Transform;
+
+	ushort m_CharacterLayerGraphic[25];
+	ushort m_CharacterLayerAnimID[25];
 
 public:
 	CAnimationManager();

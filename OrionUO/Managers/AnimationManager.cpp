@@ -34,20 +34,24 @@ int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 		OL_SHOES,
 		OL_LEGS,
 		OL_TORSO,
+		OL_RING,
+		OL_TALISMAN,
 		OL_BRACELET,
+		OL_15,
 		OL_ARMS,
 		OL_GLOVES,
 		OL_SKIRT,
 		OL_TUNIC,
-		OL_NECKLACE,
-		OL_HAIR,
 		OL_ROBE,
 		OL_WAIST,
+		OL_NECKLACE,
+		OL_HAIR,
 		OL_BEARD,
+		OL_EARRINGS,
 		OL_HELMET,
 		OL_1_HAND,
 		OL_2_HAND,
-		OL_CLOAK
+		OL_CLOAK,
 	},
 	{ //dir 1
 		OL_SHIRT,
@@ -55,20 +59,24 @@ int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 		OL_SHOES,
 		OL_LEGS,
 		OL_TORSO,
+		OL_RING,
+		OL_TALISMAN,
 		OL_BRACELET,
+		OL_15,
 		OL_ARMS,
 		OL_GLOVES,
 		OL_SKIRT,
 		OL_TUNIC,
-		OL_NECKLACE,
-		OL_HAIR,
 		OL_ROBE,
 		OL_WAIST,
+		OL_NECKLACE,
+		OL_HAIR,
 		OL_BEARD,
+		OL_EARRINGS,
 		OL_HELMET,
 		OL_1_HAND,
+		OL_2_HAND,
 		OL_CLOAK,
-		OL_2_HAND
 	},
 	{ //dir 2
 		OL_SHIRT,
@@ -76,20 +84,24 @@ int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 		OL_SHOES,
 		OL_LEGS,
 		OL_TORSO,
+		OL_RING,
+		OL_TALISMAN,
 		OL_BRACELET,
+		OL_15,
 		OL_ARMS,
 		OL_GLOVES,
 		OL_SKIRT,
 		OL_TUNIC,
-		OL_NECKLACE,
-		OL_HAIR,
 		OL_ROBE,
 		OL_WAIST,
+		OL_NECKLACE,
+		OL_HAIR,
 		OL_BEARD,
+		OL_EARRINGS,
 		OL_HELMET,
 		OL_1_HAND,
 		OL_CLOAK,
-		OL_2_HAND
+		OL_2_HAND,
 	},
 	{ //dir 3
 		OL_CLOAK,
@@ -98,19 +110,23 @@ int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 		OL_SHOES,
 		OL_LEGS,
 		OL_TORSO,
+		OL_RING,
+		OL_TALISMAN,
 		OL_BRACELET,
+		OL_15,
 		OL_ARMS,
 		OL_GLOVES,
 		OL_SKIRT,
 		OL_TUNIC,
-		OL_NECKLACE,
-		OL_HAIR,
 		OL_ROBE,
 		OL_WAIST,
+		OL_NECKLACE,
+		OL_HAIR,
 		OL_BEARD,
+		OL_EARRINGS,
 		OL_HELMET,
 		OL_1_HAND,
-		OL_2_HAND
+		OL_2_HAND,
 	},
 	{ //dir 4
 		OL_SHIRT,
@@ -118,20 +134,24 @@ int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 		OL_SHOES,
 		OL_LEGS,
 		OL_TORSO,
+		OL_RING,
+		OL_TALISMAN,
 		OL_BRACELET,
+		OL_15,
 		OL_ARMS,
 		OL_GLOVES,
 		OL_SKIRT,
 		OL_TUNIC,
-		OL_NECKLACE,
-		OL_HAIR,
 		OL_ROBE,
 		OL_WAIST,
+		OL_NECKLACE,
+		OL_HAIR,
 		OL_BEARD,
+		OL_EARRINGS,
 		OL_HELMET,
 		OL_1_HAND,
 		OL_CLOAK,
-		OL_2_HAND
+		OL_2_HAND,
 	},
 	{ //dir 5
 		OL_SHIRT,
@@ -139,20 +159,24 @@ int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 		OL_SHOES,
 		OL_LEGS,
 		OL_TORSO,
+		OL_RING,
+		OL_TALISMAN,
 		OL_BRACELET,
+		OL_15,
 		OL_ARMS,
 		OL_GLOVES,
 		OL_SKIRT,
 		OL_TUNIC,
-		OL_NECKLACE,
-		OL_HAIR,
 		OL_ROBE,
 		OL_WAIST,
+		OL_NECKLACE,
+		OL_HAIR,
 		OL_BEARD,
+		OL_EARRINGS,
 		OL_HELMET,
 		OL_1_HAND,
+		OL_2_HAND,
 		OL_CLOAK,
-		OL_2_HAND
 	},
 	{ //dir 6
 		OL_SHIRT,
@@ -160,20 +184,24 @@ int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 		OL_SHOES,
 		OL_LEGS,
 		OL_TORSO,
+		OL_RING,
+		OL_TALISMAN,
 		OL_BRACELET,
+		OL_15,
 		OL_ARMS,
 		OL_GLOVES,
 		OL_SKIRT,
 		OL_TUNIC,
-		OL_NECKLACE,
-		OL_HAIR,
 		OL_ROBE,
 		OL_WAIST,
+		OL_NECKLACE,
+		OL_HAIR,
 		OL_BEARD,
+		OL_EARRINGS,
 		OL_HELMET,
 		OL_1_HAND,
 		OL_2_HAND,
-		OL_CLOAK
+		OL_CLOAK,
 	},
 	{ //dir 7
 		OL_SHIRT,
@@ -181,20 +209,24 @@ int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 		OL_SHOES,
 		OL_LEGS,
 		OL_TORSO,
+		OL_RING,
+		OL_TALISMAN,
 		OL_BRACELET,
+		OL_15,
 		OL_ARMS,
 		OL_GLOVES,
 		OL_SKIRT,
 		OL_TUNIC,
-		OL_NECKLACE,
-		OL_HAIR,
 		OL_ROBE,
 		OL_WAIST,
+		OL_NECKLACE,
+		OL_HAIR,
 		OL_BEARD,
+		OL_EARRINGS,
 		OL_HELMET,
 		OL_1_HAND,
 		OL_2_HAND,
-		OL_CLOAK
+		OL_CLOAK,
 	},
 };
 #pragma endregion
@@ -1185,7 +1217,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 						drawMode = 10;
 					}
 				}
-				else
+				else if (color)
 				{
 					if (partialHue)
 						drawMode = 2;
@@ -1957,7 +1989,21 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 	vector<CGameItem*> &list = gameObject->m_DrawLayeredObjects;
 
 	if (checkLayers)
+	{
 		list.clear();
+
+		memset(&m_CharacterLayerGraphic[0], 0, sizeof(m_CharacterLayerGraphic));
+		memset(&m_CharacterLayerAnimID[0], 0, sizeof(m_CharacterLayerAnimID));
+
+		QFOR(item, gameObject->m_Items, CGameItem*)
+		{
+			if (item->Layer < OL_MOUNT)
+			{
+				m_CharacterLayerGraphic[item->Layer] = item->Graphic;
+				m_CharacterLayerAnimID[item->Layer] = item->AnimID;
+			}
+		}
+	}
 
 	if (gameObject->NPC)
 	{
@@ -2005,16 +2051,14 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 
 		if (obj->IsHuman() && checkLayers) //Check layred objects
 		{
-			CGameItem *robe = obj->FindLayer(OL_ROBE);
-
 			IFOR(l, 0, USED_LAYER_COUNT)
 			{
 				goi = obj->FindLayer(m_UsedLayers[layerDir][l]);
 
-				if (goi == NULL || (robe != NULL && IsUnderRobe(goi->Layer)))
+				if (goi == NULL || !goi->AnimID)
 					continue;
 
-				if (goi->AnimID)
+				if (!IsCovered(goi->Layer, obj))
 				{
 					list.push_back(goi);
 					CalculateFrameInformation(info, goi, mirror, animIndex);
@@ -2049,10 +2093,13 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 			{
 				CGameItem *goi = obj->FindLayer(m_UsedLayers[m_Direction][l]);
 
-				if (goi != NULL && goi->GetAnimID())
+				if (goi != NULL && goi->AnimID)
 				{
-					list.push_back(goi);
-					CalculateFrameInformation(info, goi, mirror, animIndex);
+					if (!IsCovered(goi->Layer, obj))
+					{
+						list.push_back(goi);
+						CalculateFrameInformation(info, goi, mirror, animIndex);
+					}
 				}
 			}
 		}
@@ -2093,23 +2140,118 @@ bool CAnimationManager::DrawEquippedLayers(const bool &selection, CGameObject *o
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool CAnimationManager::IsUnderRobe(const int &layer)
+bool CAnimationManager::IsCovered(const int &layer, CGameObject *owner)
 {
+	bool result = false;
+
 	switch (layer)
 	{
+		case OL_SHOES:
+		{
+			if (m_CharacterLayerGraphic[OL_LEGS] != 0 || m_CharacterLayerGraphic[OL_PANTS] == 0x1411)
+				result = true;
+			else if (m_CharacterLayerAnimID[OL_PANTS] == 0x0513 || m_CharacterLayerAnimID[OL_PANTS] == 0x0514 || m_CharacterLayerAnimID[OL_ROBE] == 0x0504)
+				result = true;
+
+			break;
+		}
 		case OL_PANTS:
-		case OL_SHIRT:
-		case OL_TORSO:
-		case OL_BRACELET:
+		{
+			const ushort &robe = m_CharacterLayerAnimID[OL_ROBE];
+			const ushort &pants = m_CharacterLayerAnimID[OL_PANTS];
+
+			if (m_CharacterLayerGraphic[OL_LEGS] != 0 || robe == 0x0504)
+				result = true;
+			if (pants == 0x01EB || pants == 0x03E5 || pants == 0x03EB)
+			{
+				const ushort &skirt = m_CharacterLayerAnimID[OL_SKIRT];
+
+				if (skirt != 0x01C7 && skirt != 0x01E4)
+					result = true;
+				else if (robe != 0x0229 && (robe <= 0x04E7 || robe <= 0x04EB))
+					result = true;
+			}
+
+			break;
+		}
 		case OL_TUNIC:
+		{
+			const ushort &robe = m_CharacterLayerGraphic[OL_ROBE];
+			
+			if (robe != 0)
+				result = true;
+			else if (m_CharacterLayerGraphic[OL_TUNIC] == 0x0238)
+				result = (robe != 0x9985 && robe != 0x9986);
+
+			break;
+		}
+		case OL_TORSO:
+		{
+			const ushort &robe = m_CharacterLayerGraphic[OL_ROBE];
+
+			if (robe != 0 && robe != 0x9985 && robe != 0x9986)
+				result = true;
+			else
+			{
+				const ushort &tunic = m_CharacterLayerGraphic[OL_TUNIC];
+				const ushort &torso = m_CharacterLayerGraphic[OL_TORSO];
+
+				if (tunic != 0 && tunic != 0x1541 && tunic != 0x1542)
+					result = true;
+				else if (torso == 0x782A || torso == 0x782B)
+					result = true;
+			}
+
+			break;
+		}
 		case OL_ARMS:
+		{
+			const ushort &robe = m_CharacterLayerGraphic[OL_ROBE];
+			result = (robe != 0 && robe != 0x9985 && robe != 0x9986);
+
+			break;
+		}
+		case OL_HAIR:
+		case OL_HELMET:
+		{
+			const ushort &robe = m_CharacterLayerGraphic[OL_ROBE];
+
+			if (robe > 0x3173)
+			{
+				if ((robe == 0x4B9D || robe == 0x7816) /*&& wat?*/)
+					result = true;
+			}
+			else
+			{
+				if (robe <= 0x2687)
+				{
+					if (robe < 0x2683)
+						result = (robe >= 0x204E && robe <= 0x204F);
+					else
+						result = true;
+				}
+				else if (robe == 0x2FB9 || robe == 0x3173)
+					result = true;
+			}
+
+			break;
+		}
 		case OL_SKIRT:
-		case OL_LEGS:
-			return true;
+		{
+			const ushort &skirt = m_CharacterLayerAnimID[OL_SKIRT];
+			const ushort &pants = m_CharacterLayerAnimID[OL_PANTS];
+
+			if (skirt != 0x01C7 && skirt != 0x01E4)
+				result = true;
+			else if (pants == 0x01E2)
+				result = true;
+
+			break;
+		}
 		default:
 			break;
 	}
 
-	return false;
+	return result;
 }
 //----------------------------------------------------------------------------------

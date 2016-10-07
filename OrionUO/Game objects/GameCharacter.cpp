@@ -874,19 +874,3 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 	}
 }
 //----------------------------------------------------------------------------------
-/*!
-Найти объект на указанном слое
-@param [__in] layer Номер слоя
-@return Ссылка на найденный объект или NULL
-*/
-CGameItem *CGameCharacter::FindLayer(const int &layer)
-{
-	QFOR(obj, m_Items, CGameItem*)
-	{
-		if (obj->Layer == layer)
-			return obj;
-	}
-
-	return NULL;
-}
-//----------------------------------------------------------------------------------

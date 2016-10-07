@@ -790,19 +790,3 @@ CGameItem *CGameItem::FindItem(const ushort &graphic, const ushort &color)
 	return item;
 }
 //----------------------------------------------------------------------------------
-/*!
-Найти объект на указанном слое (для трупов)
-@param [__in] layer Номер слоя
-@return Ссылка на найденный объект или NULL
-*/
-CGameItem *CGameItem::FindLayer(const int &layer)
-{
-	QFOR(obj, m_Items, CGameItem*)
-	{
-		if (obj->Layer == layer)
-			return obj;
-	}
-
-	return NULL;
-}
-//----------------------------------------------------------------------------------
