@@ -1263,6 +1263,8 @@ void CGumpManager::Save(const string &path)
 
 	short count = 0;
 
+	vector<CGump*> containerList;
+
 	QFOR(gump, m_Items, CGump*)
 	{
 		switch (gump->GumpType)
@@ -1338,8 +1340,6 @@ void CGumpManager::Save(const string &path)
 			case GT_SPELLBOOK:
 			case GT_SPELL:
 			{
-				int size = 16;
-
 				if (gump->GumpType != GT_SPELL)
 				{
 					CGameObject *topobj = g_World->FindWorldObject(gump->Serial);
@@ -1348,20 +1348,20 @@ void CGumpManager::Save(const string &path)
 						break;
 
 					topobj = topobj->GetTopObject();
+
 					if (topobj->Serial != g_PlayerSerial)
 						break;
-				}
-				else
-					size += 2;
 
-				saveDefaultGumpProperties(writter, gump, size);
+					containerList.push_back(gump);
+					break;
+				}
+
+				saveDefaultGumpProperties(writter, gump, 18);
 
 				writter.WriteUInt32LE(gump->Serial);
-				
-				if (gump->GumpType == GT_SPELL)
-					writter.WriteUInt16LE(gump->Graphic);
-
+				writter.WriteUInt16LE(gump->Graphic);
 				writter.WriteBuffer();
+
 				count++;
 
 				break;
@@ -1379,8 +1379,49 @@ void CGumpManager::Save(const string &path)
 				break;
 		}
 	}
+
+	UINT_LIST playerContainers;
+	playerContainers.push_back(g_PlayerSerial);
+
+	while (!playerContainers.empty() && !containerList.empty())
+	{
+		uint containerSerial = playerContainers.front();
+		playerContainers.erase(playerContainers.begin());
+
+		for (vector<CGump*>::iterator it = containerList.begin(); it != containerList.end();)
+		{
+			CGump *gump = *it;
+
+			if (gump->Serial == containerSerial)
+			{
+				saveDefaultGumpProperties(writter, gump, 16);
+
+				writter.WriteUInt32LE(gump->Serial);
+				writter.WriteBuffer();
+
+				count++;
+
+				it = containerList.erase(it);
+
+				break;
+			}
+			else
+				it++;
+		}
+
+		CGameObject *owner = g_World->FindWorldObject(containerSerial);
+
+		if (owner != NULL)
+		{
+			QFOR(item, owner->m_Items, CGameItem*)
+			{
+				if (item->Opened)
+					playerContainers.push_back(item->Serial);
+			}
+		}
+	}
 	
-	writter.WriteInt16LE(count); //EOF
+	writter.WriteInt16LE(count);
 	writter.WriteUInt32LE(0); //EOF
 	writter.WriteBuffer();
 

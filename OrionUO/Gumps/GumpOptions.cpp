@@ -223,40 +223,60 @@ void CGumpOptions::DrawPage2()
 	m_SliderClientFPS->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
 
-	CGUICheckbox *checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_ENABLE_SCALING, 0x00D2, 0x00D3, 0x00D2, 0, 39));
+	CGUICheckbox *checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REDUCE_FPS_UNACTIVE_WINDOW, 0x00D2, 0x00D3, 0x00D2, 140, 16));
+	checkbox->Checked = g_OptionsConfig.ReduceFPSUnactiveWindow;
+	checkbox->SetTextParameters(0, L"Reduce FPS when UO window is unactive", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CHARACTERS_ANIMATION_DELAY, 0x00D2, 0x00D3, 0x00D2, 0, 40));
+	checkbox->Checked = g_OptionsConfig.StandartCharactersAnimationDelay;
+	checkbox->SetTextParameters(0, L"Standard characters animation delay", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_ITEMS_ANIMATION_DELAY, 0x00D2, 0x00D3, 0x00D2, 0, 60));
+	checkbox->Checked = g_OptionsConfig.StandartItemsAnimationDelay;
+	checkbox->SetTextParameters(0, L"Standard items animation delay", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_ENABLE_SCALING, 0x00D2, 0x00D3, 0x00D2, 0, 80));
 	checkbox->Checked = g_OptionsConfig.UseScaling;
 	checkbox->SetTextParameters(0, L"Use scaling in game window", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REMOVE_TEXT_WITH_BLENDING, 0x00D2, 0x00D3, 0x00D2, 0, 58));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REMOVE_TEXT_WITH_BLENDING, 0x00D2, 0x00D3, 0x00D2, 0, 100));
 	checkbox->Checked = g_OptionsConfig.RemoveTextWithBlending;
 	checkbox->SetTextParameters(0, L"Remove object's text with alpha-blending", g_OptionsTextColor);
 
-	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 77));
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 120));
 	text->CreateTextureW(0, L"Draw character's status in game window");
 
-	CGUIRadio *radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_NO_DRAW_CHARACTERS_STATUS, 0x00D0, 0x00D1, 0x00D2, 0, 96));
+	CGUIRadio *radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_NO_DRAW_CHARACTERS_STATUS, 0x00D0, 0x00D1, 0x00D2, 10, 140));
 	radio->Checked = (g_OptionsConfig.DrawStatusState == 0);
 	radio->SetTextParameters(0, L"No draw", g_OptionsTextColor);
 
-	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP, 0x00D0, 0x00D1, 0x00D2, 0, 115));
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP, 0x00D0, 0x00D1, 0x00D2, 10, 160));
 	radio->Checked = (g_OptionsConfig.DrawStatusState == 1);
 	radio->SetTextParameters(0, L"Above character", g_OptionsTextColor);
 
-	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM, 0x00D0, 0x00D1, 0x00D2, 0, 134));
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM, 0x00D0, 0x00D1, 0x00D2, 10, 180));
 	radio->Checked = (g_OptionsConfig.DrawStatusState == 2);
 	radio->SetTextParameters(0, L"Under character", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_STUMPS, 0x00D2, 0x00D3, 0x00D2, 0, 155));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_STUMPS, 0x00D2, 0x00D3, 0x00D2, 0, 205));
 	checkbox->Checked = g_OptionsConfig.DrawStumps;
 	checkbox->SetTextParameters(0, L"Change trees to stumps", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_MARKING_CAVES, 0x00D2, 0x00D3, 0x00D2, 0, 174));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_MARKING_CAVES, 0x00D2, 0x00D3, 0x00D2, 0, 225));
 	checkbox->Checked = g_OptionsConfig.MarkingCaves;
 	checkbox->SetTextParameters(0, L"Marking cave tiles", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 193));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 245));
 	checkbox->Checked = g_OptionsConfig.NoAnimateFields;
 	checkbox->SetTextParameters(0, L"No animate fields", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 0, 265));
+	checkbox->Checked = g_OptionsConfig.LockGumpsMoving;
+	checkbox->SetTextParameters(0, L"Lock gumps moving", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 0, 285));
+	checkbox->Checked = g_OptionsConfig.ConsoleNeedEnter;
+	checkbox->SetTextParameters(0, L"Console need press 'Enter' to activate it.", g_OptionsTextColor);
 
 	html->CalculateDataSize();
 }
@@ -725,19 +745,15 @@ void CGumpOptions::DrawPage6()
 	checkbox->Checked = g_OptionsConfig.ObjectHandles;
 	checkbox->SetTextParameters(0, L"Object Handles", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_REDUCE_FPS_UNACTIVE_WINDOW, 0x00D2, 0x00D3, 0x00D2, 0, 196));
-	checkbox->Checked = g_OptionsConfig.ReduceFPSUnactiveWindow;
-	checkbox->SetTextParameters(0, L"Reduce FPS when Window is Unactive", g_OptionsTextColor);
-
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON, 0x00D2, 0x00D3, 0x00D2, 0, 216));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON, 0x00D2, 0x00D3, 0x00D2, 0, 196));
 	checkbox->Checked = g_OptionsConfig.ItemPropertiesIcon;
 	checkbox->SetTextParameters(0, L"Display Item Properties Icon", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS, 0x00D2, 0x00D3, 0x00D2, 0, 236));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS, 0x00D2, 0x00D3, 0x00D2, 0, 216));
 	checkbox->Checked = g_OptionsConfig.HoldShiftForContextMenus;
 	checkbox->SetTextParameters(0, L"Hold Shift For Context Menus", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 0, 256));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 0, 236));
 	checkbox->Checked = g_OptionsConfig.HoldShiftForEnablePathfind;
 	checkbox->SetTextParameters(0, L"Hold Shift For Enable Pathfinding", g_OptionsTextColor);
 
@@ -779,6 +795,10 @@ void CGumpOptions::DrawPage7()
 	m_GameWindowHeight->m_Entry.NumberOnly = true;
 	m_GameWindowHeight->m_Entry.SetText(std::to_wstring(g_OptionsConfig.GameWindowHeight));
 
+	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_LOCK_GAME_WINDOW_RESIZING, 0x00D2, 0x00D3, 0x00D2, 230, 114));
+	checkbox->Checked = g_OptionsConfig.LockResizingGameWindow;
+	checkbox->SetTextParameters(0, L"Lock game window resizing", g_OptionsTextColor);
+
 
 
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 140));
@@ -789,7 +809,7 @@ void CGumpOptions::DrawPage7()
 
 
 
-	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_SCALE_SPEECH_DURATION, 0x00D2, 0x00D3, 0x00D2, 64, 182));
+	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_SCALE_SPEECH_DURATION, 0x00D2, 0x00D3, 0x00D2, 64, 182));
 	checkbox->Checked = g_OptionsConfig.ScaleSpeechDelay;
 	checkbox->SetTextParameters(0, L"Scale speech duration based on length", g_OptionsTextColor);
 
@@ -843,22 +863,6 @@ void CGumpOptions::DrawPage7()
 	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_COLORED_LIGHTING, 0x00D2, 0x00D3, 0x00D2, 64, 284));
 	checkbox->Checked = g_OptionsConfig.ColoredLighting;
 	checkbox->SetTextParameters(0, L"Colored Lighting", g_OptionsTextColor);
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_CHARACTERS_ANIMATION_DELAY, 0x00D2, 0x00D3, 0x00D2, 64, 304));
-	checkbox->Checked = g_OptionsConfig.StandartCharactersAnimationDelay;
-	checkbox->SetTextParameters(0, L"Standard characters animation delay", g_OptionsTextColor);
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_ITEMS_ANIMATION_DELAY, 0x00D2, 0x00D3, 0x00D2, 64, 324));
-	checkbox->Checked = g_OptionsConfig.StandartItemsAnimationDelay;
-	checkbox->SetTextParameters(0, L"Standard items animation delay", g_OptionsTextColor);
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_LOCK_GAME_WINDOW_RESIZING, 0x00D2, 0x00D3, 0x00D2, 64, 344));
-	checkbox->Checked = g_OptionsConfig.LockResizingGameWindow;
-	checkbox->SetTextParameters(0, L"Lock game window resizing", g_OptionsTextColor);
-
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 64, 364));
-	checkbox->Checked = g_OptionsConfig.LockGumpsMoving;
-	checkbox->SetTextParameters(0, L"Lock gumps moving", g_OptionsTextColor);
 
 	if (g_PacketManager.ClientVersion >= CV_6000)
 	{
@@ -1041,13 +1045,9 @@ void CGumpOptions::DrawPage9()
 	checkbox->Checked = g_OptionsConfig.StatReport;
 	checkbox->SetTextParameters(0, L"Inform me of increases in strength, dexterity, and intelligence.", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P9_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 64, 236));
-	checkbox->Checked = g_OptionsConfig.ConsoleNeedEnter;
-	checkbox->SetTextParameters(0, L"Console need press 'Enter' to activate it.", g_OptionsTextColor);
+	Add(new CGUIButton(ID_GO_P9_SPEECH_FONT, 0x00D0, 0x00D0, 0x00D0, 64, 243));
 
-	Add(new CGUIButton(ID_GO_P9_SPEECH_FONT, 0x00D0, 0x00D0, 0x00D0, 64, 262));
-
-	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 262));
+	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 86, 243));
 	text->CreateTextureW(0, L"Set the font for speech");
 }
 //----------------------------------------------------------------------------
@@ -1492,6 +1492,16 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.MarkingCaves = state;
 			else if (serial == ID_GO_P2_NO_ANIMATE_FIELDS)
 				g_OptionsConfig.NoAnimateFields = state;
+			else if (serial == ID_GO_P2_REDUCE_FPS_UNACTIVE_WINDOW) //Reduce FPS when Window is Unactive
+				g_OptionsConfig.ReduceFPSUnactiveWindow = state;
+			else if (serial == ID_GO_P2_CHARACTERS_ANIMATION_DELAY) //Standard characters animation delay
+				g_OptionsConfig.StandartCharactersAnimationDelay = state;
+			else if (serial == ID_GO_P2_ITEMS_ANIMATION_DELAY) //Standard items animation delay
+				g_OptionsConfig.StandartItemsAnimationDelay = state;
+			else if (serial == ID_GO_P2_LOCK_GUMP_MOVING) //Lock gump moving
+				g_OptionsConfig.LockGumpsMoving = state;
+			else if (serial == ID_GO_P2_CONSOLE_ENTER) //Console need press 'Enter' to activate it.
+				g_OptionsConfig.ConsoleNeedEnter = state;
 
 			break;
 		}
@@ -1538,8 +1548,6 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.DisableNewTargetSystem = state;
 			else if (serial == ID_GO_P6_OBJECT_HANDLES) //Object Handles
 				g_OptionsConfig.ObjectHandles = state;
-			else if (serial == ID_GO_P6_REDUCE_FPS_UNACTIVE_WINDOW) //Reduce FPS when Window is Unactive
-				g_OptionsConfig.ReduceFPSUnactiveWindow = state;
 			else if (serial == ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON) //Display Item Properties Icon
 				g_OptionsConfig.ItemPropertiesIcon = state;
 			else if (serial == ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS) //Hold Shift For Context Menus
@@ -1561,14 +1569,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.DarkNights = state;
 			else if (serial == ID_GO_P7_COLORED_LIGHTING) //Colored Lighting
 				g_OptionsConfig.ColoredLighting = state;
-			else if (serial == ID_GO_P7_CHARACTERS_ANIMATION_DELAY) //Standard characters animation delay
-				g_OptionsConfig.StandartCharactersAnimationDelay = state;
-			else if (serial == ID_GO_P7_ITEMS_ANIMATION_DELAY) //Standard items animation delay
-				g_OptionsConfig.StandartItemsAnimationDelay = state;
 			else if (serial == ID_GO_P7_LOCK_GAME_WINDOW_RESIZING) //Lock game window resizing
 				g_OptionsConfig.LockResizingGameWindow = state;
-			else if (serial == ID_GO_P7_LOCK_GUMP_MOVING) //Lock gump moving
-				g_OptionsConfig.LockGumpsMoving = state;
 
 			break;
 		}
@@ -1587,8 +1589,6 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.UseCircleTrans = state;
 			else if (serial == ID_GO_P9_INFORM_STATS) //Inform me of increases in strength, dexterity, and intelligence.
 				g_OptionsConfig.StatReport = state;
-			else if (serial == ID_GO_P9_CONSOLE_ENTER) //Console need press 'Enter' to activate it.
-				g_OptionsConfig.ConsoleNeedEnter = state;
 
 			break;
 		}

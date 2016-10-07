@@ -1071,8 +1071,8 @@ CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, uchar fram
 //----------------------------------------------------------------------------------
 void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, int id)
 {
-	if (obj == NULL)
-		return;
+	//if (obj == NULL)
+	//	return;
 
 	bool isShadow = (id >= 0x10000);
 
@@ -1084,21 +1084,6 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 
 	if (id >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
 		return;
-
-	ushort objColor = obj->Color;
-	bool partialHue = obj->IsPartialHue();
-
-	if (objColor & 0x8000)
-	{
-		partialHue = true;
-		objColor &= 0x7FFF;
-	}
-
-	if (!objColor)
-	{
-		objColor = m_DataIndex[id].Color;
-		partialHue = true;
-	}
 
 	CTextureAnimation *anim = m_DataIndex[id].Group;
 
@@ -1128,10 +1113,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 
 	CTextureAnimationFrame *frame = direction->GetFrame(frameIndex);
 	
-	if (frame->Texture == 0 && !ExecuteDirectionGroup(direction, id, m_AnimGroup, m_Direction))
-		return;
-	
-	if (frame->Texture != 0)
+	if (frame != NULL && frame->Texture != 0)
 	{
 		if (mirror)
 			x -= frame->Width - frame->CenterX;
@@ -1161,37 +1143,57 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 		}
 		else
 		{
-			ushort color = m_Color;
+			int drawMode = 0;
+			bool spectralColor = false;
 
-			if (color)
-				partialHue = false;
-			else
-				color = objColor;
-
-			int drawMode = (!g_GrayedPixels && color);
-			bool spectralColor = (color & SPECTRAL_COLOR);
-			
-			if (!g_GrayedPixels && spectralColor)
+			if (!g_GrayedPixels)
 			{
-				glEnable(GL_BLEND);
+				ushort color = m_Color;
+				bool partialHue = false;
 
-				if (color == SPECTRAL_COLOR_SPECIAL)
+				if (!color)
 				{
-					glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
-					drawMode = 11;
+					color = obj->Color;
+					partialHue = obj->IsPartialHue();
+
+					if (color & 0x8000)
+					{
+						partialHue = true;
+						color &= 0x7FFF;
+					}
+
+					if (!color)
+					{
+						color = m_DataIndex[id].Color;
+						partialHue = true;
+					}
+				}
+
+				if (color & SPECTRAL_COLOR)
+				{
+					spectralColor = true;
+					glEnable(GL_BLEND);
+
+					if (color == SPECTRAL_COLOR_SPECIAL)
+					{
+						glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
+						drawMode = 11;
+					}
+					else
+					{
+						glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+						drawMode = 10;
+					}
 				}
 				else
 				{
-					glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-					drawMode = 10;
-				}
-			}
-			else if (drawMode)
-			{
-				if (partialHue)
-					drawMode = 2;
+					if (partialHue)
+						drawMode = 2;
+					else
+						drawMode = 1;
 
-				g_ColorManager.SendColorsToShader(color);
+					g_ColorManager.SendColorsToShader(color);
+				}
 			}
 
 			glUniform1iARB(g_ShaderDrawMode, drawMode);
@@ -1888,56 +1890,33 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 	
 	if (!found)
 	{
-		ushort graphic = id; // obj->GetMountAnimation();
+		int size = 0;
+		puchar ptr = GetAnimationAddress(id, size, animGroup);
 
-		if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && m_DataIndex[graphic].Address != 0)
+		if (ptr != NULL)
 		{
-			int offset = animGroup * 5;
-			puchar dataStart = NULL;
+			SetData(ptr, size);
+			Move(sizeof(ushort[256]));  //Palette
 
-			if (m_DataIndex[graphic].Offset == 0xFFFFFFFF) //in verdata
+			int frameCount = ReadUInt32LE();
+
+			if (frameCount > 0 && frameIndex >= frameCount)
 			{
-				PVERDATA_HEADER vh = (PVERDATA_HEADER)(m_DataIndex[graphic].Address + (offset * sizeof(VERDATA_HEADER)));
-
-				if (vh->Position != 0 && vh->Position != 0xFFFFFFFF)
-					dataStart = (puchar)((uint)g_FileManager.m_VerdataMul.Start + vh->Position);
-			}
-			else //in original mulls
-			{
-				PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_DataIndex[graphic].Address + (offset * sizeof(ANIM_IDX_BLOCK)));
-
-				if (aidx->Position != 0 && aidx->Position != 0xFFFFFFFF)
-					dataStart = (puchar)(m_DataIndex[graphic].Offset + aidx->Position);
+				if (obj->IsCorpse())
+					frameIndex = frameCount - 1;
+				else
+					frameIndex = 0;
 			}
 
-			if (dataStart != NULL)
+			if (frameIndex < frameCount)
 			{
-				dataStart += sizeof(ushort[256]); //Palette
+				puint frameOffset = (puint)m_Ptr;
+				Move(frameOffset[frameIndex]);
 
-				int frameCount = *((puint)dataStart);
-
-				//if (frameIndex >= frameCount)
-				//	frameIndex = 0;
-
-				if (frameCount > 0 && frameIndex >= frameCount)
-				{
-					if (obj->IsCorpse())
-						frameIndex = frameCount - 1;
-					else
-						frameIndex = 0;
-				}
-
-				if (frameIndex < frameCount)
-				{
-					puint frameOffset = (puint)(dataStart + sizeof(uint));
-
-					pushort p = (pushort)(dataStart + frameOffset[frameIndex]);
-
-					result.CenterX = (short)*p++;
-					result.CenterY = (short)*p++;
-					result.Width = (short)*p++;
-					result.Height = (short)*p++;
-				}
+				result.CenterX = ReadInt16LE();
+				result.CenterY = ReadInt16LE();
+				result.Width = ReadInt16LE();
+				result.Height = ReadInt16LE();
 			}
 		}
 	}

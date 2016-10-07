@@ -10,159 +10,157 @@
 #ifndef MULSTRUCT_H
 #define MULSTRUCT_H
 //----------------------------------------------------------------------------------
-#include "Wisp/WispDefinitions.h"
-//----------------------------------------------------------------------------------
 #pragma pack (push,1)
 
 typedef struct VERDATA_HEADER
 {
-	uint FileID;
-	uint BlockID;
-	uint Position;
-	uint Size;
-	uint GumpData;
+	unsigned int FileID;
+	unsigned int BlockID;
+	unsigned int Position;
+	unsigned int Size;
+	unsigned int GumpData;
 } *PVERDATA_HEADER;
 //----------------------------------------------------------------------------------
 typedef struct MAP_CELLS_EX
 {
-	ushort TileID;
-	ushort Color;
+	unsigned short TileID;
+	unsigned short Color;
 	char Z;
 } *PMAP_CELLS_EX;
 //----------------------------------------------------------------------------------
 typedef struct MAP_CELLS
 {
-	ushort TileID;
+	unsigned short TileID;
 	char Z;
 } *PMAP_CELLS;
 //----------------------------------------------------------------------------------
 typedef struct MAP_BLOCK
 {
-	uint Header;
+	unsigned int Header;
 	MAP_CELLS Cells[64];
 } *PMAP_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct STAIDX_BLOCK
 {
-	uint Position;
-	uint Size;
-	uint Unknown;
+	unsigned int Position;
+	unsigned int Size;
+	unsigned int Unknown;
 } *PSTAIDX_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct STATICS_BLOCK
 {
-	ushort Color;
-	uchar X;
-	uchar Y;
+	unsigned short Color;
+	unsigned char X;
+	unsigned char Y;
 	char Z;
-	ushort Hue;
+	unsigned short Hue;
 } *PSTATICS_BLOCK;
 //----------------------------------------------------------------------------------
 struct LAND_TILES
 {
-	uint Flags;
-	ushort TexID;
+	unsigned int Flags;
+	unsigned short TexID;
 	char Name[20];
 };
 //----------------------------------------------------------------------------------
 typedef struct LAND_GROUP
 {
-	uint Unknown;
+	unsigned int Unknown;
 	LAND_TILES Tiles[32];
 } *PLAND_GROUP;
 //----------------------------------------------------------------------------------
 struct STATIC_TILES
 {
-	uint Flags;
-	uchar Weight;
-	uchar Quality;
-	ushort Unknown;
-	uchar Unknown1;
-	uchar Quality1;
-	ushort AnimID;
-	uchar Unknown2;
-	uchar Hue;
-	uchar SittingOffset;
-	uchar Unknown3;
-	uchar Height;
+	unsigned int Flags;
+	unsigned char Weight;
+	unsigned char Quality;
+	unsigned short Unknown;
+	unsigned char Unknown1;
+	unsigned char Quality1;
+	unsigned short AnimID;
+	unsigned char Unknown2;
+	unsigned char Hue;
+	unsigned char SittingOffset;
+	unsigned char Unknown3;
+	unsigned char Height;
 	char Name[20];
 };
 //----------------------------------------------------------------------------------
 typedef struct STATIC_GROUP
 {
-	uint Unk;
+	unsigned int Unk;
 	STATIC_TILES Tiles[32];
 } *PSTATIC_GROUP;
 //----------------------------------------------------------------------------------
 typedef struct MULTI_IDX_BLOCK
 {
-	uint Position;
-	uint Size;
-	uint Unknown;
+	unsigned int Position;
+	unsigned int Size;
+	unsigned int Unknown;
 } *PMULTI_IDX_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct MULTI_BLOCK
 {
-	ushort ID;
+	unsigned short ID;
 	short X;
 	short Y;
 	short Z;
-	uint Flags;
+	unsigned int Flags;
 } *PMULTI_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct HUES_BLOCK
 {
-	ushort ColorTable[32];
-	ushort TableStart;
-	ushort TableEnd;
+	unsigned short ColorTable[32];
+	unsigned short TableStart;
+	unsigned short TableEnd;
 	char Name[20];
 } *PHUES_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct HUES_GROUP
 {
-	uint Header;
+	unsigned int Header;
 	HUES_BLOCK Entries[8];
 } *PHUES_GROUP;
 //----------------------------------------------------------------------------------
 typedef struct VERDATA_HUES_BLOCK
 {
-	ushort ColorTable[32];
-	ushort TableStart;
-	ushort TableEnd;
+	unsigned short ColorTable[32];
+	unsigned short TableStart;
+	unsigned short TableEnd;
 	char Name[20];
-	ushort Unk[32];
+	unsigned short Unk[32];
 } *PVERDATA_HUES_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct VERDATA_HUES_GROUP
 {
-	uint Header;
+	unsigned int Header;
 	VERDATA_HUES_BLOCK Entries[8];
 } *PVERDATA_HUES_GROUP;
 //----------------------------------------------------------------------------------
 typedef struct GUMP_IDX_BLOCK
 {
-	uint Position;
-	uint Size;
-	ushort Height;
-	ushort Width;
+	unsigned int Position;
+	unsigned int Size;
+	unsigned short Height;
+	unsigned short Width;
 } *PGUMP_IDX_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct GUMP_BLOCK
 {
-	ushort Value;
-	ushort Run;
+	unsigned short Value;
+	unsigned short Run;
 } *PGUMP_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct SKILLS_IDX_BLOCK
 {
-	uint Position;
-	uint Size;
-	uint Unknown;
+	unsigned int Position;
+	unsigned int Size;
+	unsigned int Unknown;
 } *PSKILLS_IDX_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct SKILLS_BLOCK
 {
-	uchar Button;
+	unsigned char Button;
 	char *SkillName;
 } *PSKILLS_BLOCK;
 //----------------------------------------------------------------------------------
@@ -185,106 +183,106 @@ typedef struct BODYCONV_DATA
 typedef struct ANIM_DATA
 {
 	char FrameData[64];
-	uchar Unknown;
-	uchar FrameCount;
-	uchar FrameInterval;
-	uchar FrameStart;
+	unsigned char Unknown;
+	unsigned char FrameCount;
+	unsigned char FrameInterval;
+	unsigned char FrameStart;
 } *PANIM_DATA;
 //----------------------------------------------------------------------------------
 typedef struct ART_IDX_BLOCK
 {
-	uint Position;
-	uint Size;
-	uint Unknown;
+	unsigned int Position;
+	unsigned int Size;
+	unsigned int Unknown;
 } *PART_IDX_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct LIGHT_IDX_BLOCK
 {
-	uint Position;
-	uint Size;
-	ushort Height;
-	ushort Width;
+	unsigned int Position;
+	unsigned int Size;
+	unsigned short Height;
+	unsigned short Width;
 } *PLIGHT_IDX_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct ANIM_IDX_BLOCK
 {
-	uint Position;
-	uint Size;
-	uint Unknown;
+	unsigned int Position;
+	unsigned int Size;
+	unsigned int Unknown;
 } *PANIM_IDX_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct TEXTURE_IDX_BLOCK
 {
-	uint Position;
-	uint Size;
-	uint Unknown;
+	unsigned int Position;
+	unsigned int Size;
+	unsigned int Unknown;
 } *PTEXTURE_IDX_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct PALETTE_BLOCK
 {
-	uchar R;
-	uchar G;
-	uchar B;
+	unsigned char R;
+	unsigned char G;
+	unsigned char B;
 } *PPALETTE_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct FONT_HEADER
 {
-	uchar Width;
-	uchar Height;
-	uchar Unknown;
+	unsigned char Width;
+	unsigned char Height;
+	unsigned char Unknown;
 } *PFONT_HEADER;
 //----------------------------------------------------------------------------------
 typedef struct FONT_CHARACTER
 {
-	uchar Width;
-	uchar Height;
-	uchar Unknown;
+	unsigned char Width;
+	unsigned char Height;
+	unsigned char Unknown;
 } *PFONT_CHARACTER;
 //----------------------------------------------------------------------------------
 typedef struct FONT_CHARACTER_DATA
 {
-	uchar Width;
-	uchar Height;
-	pushort Data;
+	unsigned char Width;
+	unsigned char Height;
+	unsigned short *Data;
 } *PFONT_CHARACTER_DATA;
 //----------------------------------------------------------------------------------
 typedef struct FONT_DATA
 {
-	uchar Header;
+	unsigned char Header;
 	FONT_CHARACTER_DATA Chars[224];
 } *PFONT_DATA;
 //----------------------------------------------------------------------------------
 struct FONT_OBJECT
 {
-	uchar Width;
-	uchar Height;
+	unsigned char Width;
+	unsigned char Height;
 	GLuint Texture;
-	puchar Data;
+	unsigned char *Data;
 };
 //----------------------------------------------------------------------------------
 typedef struct UNICODE_FONT_DATA
 {
-	uchar OffsetX;
-	uchar OffsetY;
-	uchar Width;
-	uchar Height;
+	unsigned char OffsetX;
+	unsigned char OffsetY;
+	unsigned char Width;
+	unsigned char Height;
 } *PUNICODE_FONT_DATA;
 //----------------------------------------------------------------------------------
 typedef struct SOUND_IDX_BLOCK
 {
-	uint Position;
-	uint Size;
-	ushort Index;
-	ushort Reserved;
+	unsigned int Position;
+	unsigned int Size;
+	unsigned short Index;
+	unsigned short Reserved;
 } *PSOUND_IDX_BLOCK;
 //----------------------------------------------------------------------------------
 typedef struct SOUND_BLOCK
 {
 	char Name[16];
-	uint Unknown1;
-	uint Unknown2;
-	uint Unknown3;
-	uint Unknown4;
+	unsigned int Unknown1;
+	unsigned int Unknown2;
+	unsigned int Unknown3;
+	unsigned int Unknown4;
 	//Data;
 } *PSOUND_BLOCK;
 

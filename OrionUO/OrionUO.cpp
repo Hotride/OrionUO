@@ -749,8 +749,6 @@ void COrion::LoadPluginConfig()
 				file.Move(1);
 
 			char count = file.ReadInt8();
-			DebugMsg("Plugins count=%i\n", count);
-			LOG("Plugins count=%i\n", count);
 
 			IFOR(i, 0, count)
 			{
@@ -765,10 +763,6 @@ void COrion::LoadPluginConfig()
 				string subName = file.ReadString(len);
 
 				HMODULE dll = LoadLibraryA(g_App.FilePath(name.c_str()).c_str());
-				LOG("GLE:%i\n", GetLastError());
-
-				DebugMsg("Plugin[%s] = 0x%08X\n", name.c_str(), dll);
-				LOG("Plugin[%s] = 0x%08X\n", name.c_str(), dll);
 
 				if (dll != NULL)
 				{
@@ -776,9 +770,6 @@ void COrion::LoadPluginConfig()
 
 					dllFunc *initFunc = (dllFunc*)GetProcAddress(dll, subName.c_str());
 					CPlugin *plugin = NULL;
-
-					DebugMsg("Plugin::initFunc[%s] 0x%08X\n", subName.c_str(), initFunc);
-					LOG("Plugin::initFunc[%s] 0x%08X\n", subName.c_str(), initFunc);
 
 					if (initFunc != NULL)
 					{
@@ -802,11 +793,7 @@ void COrion::LoadPluginConfig()
 						if (plugin->CanParseSend())
 							plugin->m_PPS->Send = PluginSendFunction;
 
-						DebugMsg("Plugin:: 0x%08X, 0x%08X\n", plugin, plugin->m_PPS);
-						LOG("Plugin:: 0x%08X, 0x%08X\n", plugin, plugin->m_PPS);
 						initFunc(plugin->m_PPS);
-						DebugMsg("Plugin::add\n");
-						LOG("Plugin::add\n");
 
 						g_PluginManager.Add(plugin);
 					}
@@ -815,6 +802,8 @@ void COrion::LoadPluginConfig()
 		}
 
 		file.Unload();
+
+		BringWindowToTop(g_OrionWindow.Handle);
 	}
 }
 //----------------------------------------------------------------------------------
