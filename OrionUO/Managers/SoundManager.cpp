@@ -219,49 +219,30 @@ bool CSoundManager::FreeStream(HSTREAM hSteam)
 	return BASS_StreamFree(hSteam);
 }
 //----------------------------------------------------------------------------------
-void CSoundManager::PlayMidi(int index)
+void CSoundManager::PlayMidi(int index, bool loop, bool warmode)
 {
-	const char *musicSubCat[3] =
-	{
-		"",
-		"\\512K",
-		"\\4MB"
-	};
-
 	if (index >= 0 && index < MIDI_MUSIC_COUNT)
 	{
-		StopMusic();
+		if (warmode && m_WarMusic != 0)
+			return;
 
-		MCI_OPEN_PARMS openParm = {0};
-		openParm.dwCallback = (uint)g_OrionWindow.Handle;
-		openParm.lpstrDeviceType = L"sequencer";
-		uint flags = MCI_OPEN_ELEMENT;
+		if (warmode)
+			BASS_ChannelStop(m_Music);
+		else
+			StopMusic();
 
 		char musicPath[100] = {0};
-		sprintf_s(musicPath, "music%s\\%s", musicSubCat[1], m_MusicName[index]);
+		sprintf_s(musicPath, "music\\%s", m_MusicName[index]);
 
 		wstring midiName = ToWString(musicPath);
-		openParm.lpstrElementName = midiName.c_str();
-
-		MCIERROR error = mciSendCommand(0, MCI_OPEN, flags, (uint)&openParm);
-
-		if (!error)
-		{
-			m_Music = openParm.wDeviceID;
-
-			SetMusicVolume(g_ConfigManager.MusicVolume);
-
-			MCI_PLAY_PARMS playParm = {0};
-			playParm.dwCallback = (uint)g_OrionWindow.Handle;
-			playParm.dwFrom = 0;
-
-			error = mciSendCommand(m_Music, MCI_PLAY, MCI_FROM | MCI_NOTIFY, (uint)&playParm);
-
-			if (error)
-				TraceMusicError(error);
-		}
+		HSTREAM streamHandle = BASS_MIDI_StreamCreateFile(FALSE, midiName.c_str(), 0, 0, BASS_MIDI_DECAYEND, 0);
+		float volume = GetVolumeValue(-1, true);
+		BASS_ChannelSetAttribute(streamHandle, BASS_ATTRIB_VOL, volume);
+		BASS_ChannelPlay(streamHandle, loop ? 1 : 0);
+		if (warmode)
+			m_WarMusic = streamHandle;
 		else
-			TraceMusicError(error);
+			m_Music = streamHandle;
 	}
 	else
 		LOG("Music ID is out of range: %i\n", index);
@@ -287,39 +268,17 @@ void CSoundManager::PlayMP3(std::string fileName, bool loop, bool warmode)
 //----------------------------------------------------------------------------------
 void CSoundManager::StopWarMusic()
 {
-	if (g_PacketManager.ClientVersion >= CV_306E)
-	{
-		BASS_ChannelStop(m_WarMusic);
-		m_WarMusic = 0;
+	BASS_ChannelStop(m_WarMusic);
+	m_WarMusic = 0;
 
-		if (m_Music != 0 && !BASS_ChannelIsActive(m_Music))
-			BASS_ChannelPlay(m_Music, 1);
-	}
-	else
-	{
-		//midi music stopping code via mci.
-		MCI_GENERIC_PARMS mciGen;
-		uint error = mciSendCommand(m_WarMusic, MCI_STOP, MCI_WAIT, (DWORD)(LPMCI_GENERIC_PARMS)&mciGen);
-
-		TraceMusicError(error);
-	}
+	if (m_Music != 0 && !BASS_ChannelIsActive(m_Music))
+		BASS_ChannelPlay(m_Music, 1);
 }
 //----------------------------------------------------------------------------------
 void CSoundManager::StopMusic()
 {
-	if (g_PacketManager.ClientVersion >= CV_306E)
-	{
-		BASS_ChannelStop(m_Music);
-		m_Music = 0;
-	}
-	else
-	{
-		//midi music stopping code via mci.
-		MCI_GENERIC_PARMS mciGen;
-		uint error = mciSendCommand(m_Music, MCI_STOP, MCI_WAIT, (DWORD)(LPMCI_GENERIC_PARMS)&mciGen);
-
-		TraceMusicError(error);
-	}
+	BASS_ChannelStop(m_Music);
+	m_Music = 0;
 }
 //----------------------------------------------------------------------------------
 void CSoundManager::SetMusicVolume(float volume)
