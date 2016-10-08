@@ -2291,7 +2291,7 @@ void COrion::PatchFiles()
 		{
 			if (vh->BlockID >= MAX_LAND_DATA_INDEX_COUNT) //Run
 			{
-				WORD ID = (WORD)vh->BlockID - MAX_LAND_DATA_INDEX_COUNT;
+				ushort ID = (WORD)vh->BlockID - MAX_LAND_DATA_INDEX_COUNT;
 				m_StaticDataIndex[ID].Address = vAddr + vh->Position;
 				m_StaticDataIndex[ID].DataSize = vh->Size;
 			}
@@ -2329,14 +2329,15 @@ void COrion::PatchFiles()
 		}
 		else if (vh->FileID == 30) //Tiledata
 		{
+			file.ResetPtr();
+			file.Move(vh->Position);
+
 			if (vh->Size == 836)
 			{
-				if ((int)vh->BlockID >= m_LandDataCount)
+				if (vh->BlockID >= (uint)m_LandData.size())
 					continue;
 
 				LAND_GROUP &group = m_LandData[vh->BlockID];
-
-				file.Ptr = (PBYTE)(vAddr + vh->Position);
 				group.Unknown = file.ReadUInt32LE();
 
 				IFOR(j, 0, 32)
@@ -2356,14 +2357,12 @@ void COrion::PatchFiles()
 			}
 			else if (vh->Size == 1188)
 			{
-				int bID = (int)vh->BlockID - 0x0200;
+				uint bID = vh->BlockID - 0x0200;
 
-				if (bID < 0 || bID >= m_StaticDataCount)
+				if (bID >= (uint)m_StaticData.size())
 					continue;
 
-				STATIC_GROUP &group = m_StaticData[i];
-
-				file.Ptr = (PBYTE)(vAddr + vh->Position);
+				STATIC_GROUP &group = m_StaticData[bID];
 				group.Unk = file.ReadUInt32LE();
 
 				IFOR(j, 0, 32)
