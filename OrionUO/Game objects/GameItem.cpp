@@ -16,18 +16,19 @@
 #include "../Managers/MapManager.h"
 #include "../Managers/AnimationManager.h"
 #include "../Managers/GumpManager.h"
+#include "../Managers/PacketManager.h"
 #include "../Screen stages/GameScreen.h"
 #include "../Gumps/GumpMinimap.h"
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
 : CGameObject(serial), m_Layer(0), m_AnimID(0), m_ImageID(0), m_UsedLayer(0),
-m_Opened(false), m_Dragged(false), ShopItem(NULL)
+m_Opened(false), m_Dragged(false), ShopItem(NULL), m_MultiBody(false)
 {
 }
 //----------------------------------------------------------------------------------
 CGameItem::~CGameItem()
 {
-	if (m_Graphic >= 0x4000 && m_Items != NULL)
+	if (m_MultiBody && m_Items != NULL)
 	{
 		CMulti *multi = (CMulti*)m_Items;
 		m_Items = NULL;
@@ -93,6 +94,7 @@ void CGameItem::Paste(CObjectOnCursor *obj)
 	m_MapIndex = obj->MapIndex;
 	m_Dragged = false;
 	m_Clicked = false;
+	m_MultiBody = obj->MultiBody;
 
 	m_Name = obj->Name;
 	OnGraphicChange();
@@ -105,7 +107,7 @@ void CGameItem::Paste(CObjectOnCursor *obj)
 */
 void CGameItem::OnGraphicChange(int direction)
 {
-	if (m_Graphic < 0x4000)
+	if (!m_MultiBody)
 	{
 		if (IsCorpse())
 		{
@@ -177,17 +179,11 @@ void CGameItem::OnGraphicChange(int direction)
 //----------------------------------------------------------------------------------
 void CGameItem::Draw(const int &x, const int &y)
 {
-	if (m_Container == 0xFFFFFFFF && m_Graphic < 0x4000 && m_Graphic != 1)
+	if (m_Container == 0xFFFFFFFF && !m_MultiBody && m_Graphic != 1)
 	{
 #if UO_DEBUG_INFO!=0
 		g_RenderedObjectsCountInGameWindow++;
 #endif
-
-		ushort objGraphic = m_Graphic;
-		ushort objColor = m_Color;
-
-		if (Hidden())
-			objColor = 0x038A;
 
 		if (IsCorpse()) //Трупик
 			g_AnimationManager.DrawCorpse(this, x, y - ((m_Z * 4) + 3));
@@ -195,7 +191,14 @@ void CGameItem::Draw(const int &x, const int &y)
 		{
 			bool doubleDraw = false;
 			bool selMode = false;
-			objGraphic = GetDrawGraphic(doubleDraw);
+			ushort objGraphic = GetDrawGraphic(doubleDraw);
+			ushort objColor = m_Color;
+
+			if (Hidden())
+			{
+				selMode = true;
+				objColor = 0x038E;
+			}
 
 			if (!Locked() && g_SelectedObject.Object() == this)
 			{
@@ -217,7 +220,7 @@ void CGameItem::Draw(const int &x, const int &y)
 
 		if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == m_Serial && !Locked())
 		{
-			WISP_GEOMETRY::CSize size = g_Orion.GetArtDimension(objGraphic + 0x4000);
+			WISP_GEOMETRY::CSize size = g_Orion.GetArtDimension(m_Graphic + 0x4000);
 
 			if (size.Width >= 80)
 			{
@@ -257,7 +260,7 @@ void CGameItem::Draw(const int &x, const int &y)
 */
 void CGameItem::Select(const int &x, const int &y)
 {
-	if (m_Container == 0xFFFFFFFF && m_Graphic < 0x4000 && m_Graphic != 1)
+	if (m_Container == 0xFFFFFFFF && !m_MultiBody && m_Graphic != 1)
 	{
 		if (IsCorpse()) //Трупик
 		{
@@ -582,7 +585,7 @@ ushort CGameItem::GetMountAnimation()
 */
 void CGameItem::LoadMulti()
 {
-	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_Graphic - 0x4000];
+	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_Graphic];
 	
 	if (index.Address != NULL)
 	{
@@ -595,9 +598,14 @@ void CGameItem::LoadMulti()
 		int maxX = 0;
 		int maxY = 0;
 
+		int itemOffset = sizeof(MULTI_BLOCK);
+
+		if (g_PacketManager.ClientVersion >= CV_7090)
+			itemOffset = sizeof(MULTI_BLOCK_NEW);
+
 		IFOR(j, 0, count)
 		{
-			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(address + (j * sizeof(MULTI_BLOCK)));
+			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(address + (j * itemOffset));
 
 			if (pmb->Flags)
 			{
@@ -668,18 +676,9 @@ void CGameItem::AddMultiObject(CMultiObject *obj)
 				if (obj->Z < multiobj->Z)
 				{
 					if (multiobj->m_Prev == NULL)
-					{
-						obj->m_Prev = NULL;
-						obj->m_Next = multiobj;
-						multiobj->m_Prev = obj;
-						multi->m_Items = obj;
-					}
+						multi->Insert(multiobj->m_Prev, obj);
 					else
-					{
-						obj->m_Next = multiobj->m_Next;
-						multiobj->m_Next = obj;
-						obj->m_Prev = multiobj;
-					}
+						multi->Insert(multiobj, obj);
 
 					return;
 				}
@@ -709,6 +708,7 @@ void CGameItem::AddMultiObject(CMultiObject *obj)
 				if (multi->m_Next == NULL)
 				{
 					multi->m_Next = newmulti;
+					newmulti->m_Prev = multi;
 					break;
 				}
 			}

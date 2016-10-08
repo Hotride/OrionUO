@@ -30,6 +30,8 @@ class CGameItem : public CGameObject
 	SETGET(bool, Opened);
 	//!Выведен ли гамп разделения количества?
 	SETGET(bool, Dragged);
+	//!Это прокси-объект мульти
+	SETGET(bool, MultiBody);
 
 protected:
 	/*!

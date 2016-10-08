@@ -12,6 +12,7 @@
 #include "Network/Packets.h"
 #include "OrionUO.h"
 #include "Managers/MapManager.h"
+#include "Managers/PacketManager.h"
 //----------------------------------------------------------------------------------
 CTarget g_Target;
 //----------------------------------------------------------------------------------
@@ -191,15 +192,22 @@ void CTarget::UnloadMulti()
 //----------------------------------------------------------------------------------
 void CTarget::LoadMulti(const int &x, const int &y, const char &z)
 {
+	UnloadMulti();
+
 	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_MultiGraphic];
 	
 	if (index.Address != NULL)
 	{
 		int count = (int)index.Count;
 
+		int itemOffset = sizeof(MULTI_BLOCK);
+
+		if (g_PacketManager.ClientVersion >= CV_7090)
+			itemOffset = sizeof(MULTI_BLOCK_NEW);
+
 		IFOR(j, 0, count)
 		{
-			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(index.Address + (j * sizeof(MULTI_BLOCK)));
+			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(index.Address + (j * itemOffset));
 			
 			CMultiObject *mo = new CMultiObject(pmb->ID, x + pmb->X, y + pmb->Y, z + (char)pmb->Z, 2);
 			g_MapManager->AddRender(mo);
@@ -214,6 +222,7 @@ void CTarget::AddMultiObject(CMultiObject *obj)
 	{
 		m_Multi = new CMulti(obj->X, obj->Y);
 		m_Multi->m_Next = NULL;
+		m_Multi->m_Prev = NULL;
 		m_Multi->m_Items = obj;
 		obj->m_Next = NULL;
 		obj->m_Prev = NULL;
@@ -229,18 +238,9 @@ void CTarget::AddMultiObject(CMultiObject *obj)
 				if (obj->Z < multiobj->Z)
 				{
 					if (multiobj->m_Prev == NULL)
-					{
-						obj->m_Prev = NULL;
-						obj->m_Next = multiobj;
-						multiobj->m_Prev = obj;
-						multi->m_Items = obj;
-					}
+						multi->Insert(multiobj->m_Prev, obj);
 					else
-					{
-						obj->m_Next = multiobj->m_Next;
-						multiobj->m_Next = obj;
-						obj->m_Prev = multiobj;
-					}
+						multi->Insert(multiobj, obj);
 
 					return;
 				}
@@ -272,6 +272,7 @@ void CTarget::AddMultiObject(CMultiObject *obj)
 				if (multi->m_Next == NULL)
 				{
 					multi->m_Next = newmulti;
+					newmulti->m_Prev = multi;
 					break;
 				}
 
@@ -288,7 +289,7 @@ CMulti *CTarget::GetMultiAtXY(const short &x, const short &y)
 	while (multi != NULL)
 	{
 		if (multi->X == x && multi->Y == y)
-			return multi;
+			break;
 
 		multi = (CMulti*)multi->m_Next;
 	}

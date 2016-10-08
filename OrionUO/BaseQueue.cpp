@@ -22,8 +22,8 @@ CBaseQueueItem::~CBaseQueueItem()
 	Clear();
 
 	CBaseQueueItem *item = m_Next;
-	while (item != NULL && item->m_Next != NULL)
-		item = item->m_Next;
+	//while (item != NULL && item->m_Next != NULL)
+	//	item = item->m_Next;
 
 	while (item != NULL && item != this)
 	{

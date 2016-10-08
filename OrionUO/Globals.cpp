@@ -232,7 +232,7 @@ int GetMultiDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
 {
 	int result = 100500;
 
-	if (target != NULL && target->Graphic >= 0x4000 && target->m_Items != NULL)
+	if (target != NULL && target->m_Items != NULL)
 	{
 		CMulti *multi = (CMulti*)target->m_Items;
 

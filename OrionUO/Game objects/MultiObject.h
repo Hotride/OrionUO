@@ -15,8 +15,8 @@
 //Объект для мульти-объекта
 class CMultiObject : public CRenderStaticObject
 {
-	//Фгали объекта (2 - мульти с таргета)
-	SETGET(uint, MultiFlags);
+	//Мульти с таргета
+	SETGET(bool, OnTarget);
 
 	//Оригинальный индекс картинки
 	SETGET(ushort, OriginalGraphic);

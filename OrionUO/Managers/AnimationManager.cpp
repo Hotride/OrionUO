@@ -1436,7 +1436,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 
 	if (obj->Hidden())
 	{
-		m_Color = 0x038D;
+		m_Color = 0x038E;
 		drawShadow = false;
 	}
 	else if (g_StatusbarUnderMouse == serial)
@@ -1773,7 +1773,7 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, const int &x, const int &y)
 	GetAnimDirection(m_Direction, mirror);
 
 	if (obj->Hidden())
-		m_Color = 0x038D;
+		m_Color = 0x038E;
 	else
 		m_Color = 0;
 

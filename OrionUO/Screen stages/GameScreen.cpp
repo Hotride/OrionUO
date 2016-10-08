@@ -323,6 +323,15 @@ void CGameScreen::IncreaseRenderList()
 */
 void CGameScreen::CalculateRenderList()
 {
+	if (g_Target.IsTargeting() && g_Target.MultiGraphic && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsWorldObject())
+	{
+		int grZ = 0;
+		int stZ = 0;
+		CRenderObject *sel = g_SelectedObject.Object();
+		g_MapManager->GetMapZ(sel->X, sel->Y, grZ, stZ);
+		g_Target.LoadMulti(sel->X, sel->Y, grZ);
+	}
+
 	g_FoliageIndex++;
 
 	if (g_FoliageIndex >= 100)
@@ -1304,6 +1313,11 @@ void CGameScreen::Render(const bool &mode)
 		else
 			currentFPS++;
 
+		g_GL.BeginDraw();
+
+		if (DrawSmoothMonitor())
+			return;
+
 		CSelectedObject tempSelected;
 		CPressedObject tempPressed;
 
@@ -1316,18 +1330,6 @@ void CGameScreen::Render(const bool &mode)
 			g_PressedObject.ClearAll();
 		}
 
-		bool multiOnTarget = false;
-
-		if (g_Target.IsTargeting() && g_Target.MultiGraphic && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsWorldObject())
-		{
-			multiOnTarget = true;
-			int grZ = 0;
-			int stZ = 0;
-			CRenderObject *sel = g_SelectedObject.Object();
-			g_MapManager->GetMapZ(sel->X, sel->Y, grZ, stZ);
-			g_Target.LoadMulti(sel->X, sel->Y, grZ);
-		}
-
 		g_RenderedObjectsCountInGameWindow = 0;
 		
 		g_TargetGump.Color = 0;
@@ -1335,11 +1337,6 @@ void CGameScreen::Render(const bool &mode)
 		g_NewTargetSystem.ColorGump = 0;
 
 		m_LightCount = 0;
-
-		g_GL.BeginDraw();
-
-		if (DrawSmoothMonitor())
-			return;
 
 		g_GL.ViewPortScaled(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY, g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowHeight);
 		
@@ -1478,9 +1475,6 @@ void CGameScreen::Render(const bool &mode)
 		// отрисовка ввода игрока
 		g_GameConsole.DrawW((uchar)g_ConfigManager.SpeechFont, g_ConfigManager.SpeechColor, g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - 18, TS_LEFT, UOFONT_BLACK_BORDER | UOFONT_FIXED);
 		
-		if (multiOnTarget)
-			g_Target.UnloadMulti();
-
 		g_PluginManager.SceneDraw();
 
 		if (g_GameState == GS_GAME_BLOCKED)

@@ -180,6 +180,16 @@ typedef struct MULTI_BLOCK
 	unsigned int Flags;
 } *PMULTI_BLOCK;
 //----------------------------------------------------------------------------------
+typedef struct MULTI_BLOCK_NEW
+{
+	unsigned short ID;
+	short X;
+	short Y;
+	short Z;
+	unsigned int Flags;
+	int Unknown;
+} *PMULTI_BLOCK_NEW;
+//----------------------------------------------------------------------------------
 typedef struct HUES_BLOCK
 {
 	unsigned short ColorTable[32];

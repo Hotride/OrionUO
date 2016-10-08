@@ -13,7 +13,7 @@
 #include "../Screen stages/GameScreen.h"
 //----------------------------------------------------------------------------------
 CMultiObject::CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags)
-: CRenderStaticObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_MultiFlags(flags)
+: CRenderStaticObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_OnTarget(flags == 2)
 {
 	m_OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
@@ -65,7 +65,7 @@ void CMultiObject::Draw(const int &x, const int &y)
 	if (g_SelectedObject.Object() == this)
 		objColor = SELECT_MULTI_COLOR;
 
-	if (m_MultiFlags == 2) //Мульти на таргете
+	if (m_OnTarget) //Мульти на таргете
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
@@ -88,7 +88,7 @@ void CMultiObject::Draw(const int &x, const int &y)
 //---------------------------------------------------------------------------
 void CMultiObject::Select(const int &x, const int &y)
 {
-	if (g_NoDrawRoof && IsRoof())
+	if (m_OnTarget || (g_NoDrawRoof && IsRoof()))
 		return;
 
 	if (!g_UseCircleTrans && g_Orion.StaticPixelsInXY(m_Graphic - 0x4000, x, y, m_Z))

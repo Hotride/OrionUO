@@ -616,8 +616,6 @@ void COrion::Process(const bool &rendering)
 	{
 		g_ShowGumpLocker = g_ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
 
-		g_SelectedObject.Clear();
-
 		CWalkData *wd = g_Player->m_WalkStack.m_Items;
 
 		if (wd != NULL)
@@ -669,6 +667,8 @@ void COrion::Process(const bool &rendering)
 			g_GameScreen.CalculateRenderList();
 			g_GameScreen.RenderListInitalized = true;
 
+			g_SelectedObject.Clear();
+
 			if (!IsIconic(g_OrionWindow.Handle))
 			{
 				if (canRenderSelect)
@@ -680,6 +680,8 @@ void COrion::Process(const bool &rendering)
 
 				g_GameScreen.Render(true);
 			}
+
+			g_Target.UnloadMulti();
 
 			g_GameScreen.RenderListInitalized = false;
 
@@ -696,6 +698,8 @@ void COrion::Process(const bool &rendering)
 	}
 	else if (rendering)
 	{
+		g_SelectedObject.Clear();
+
 		if (!IsIconic(g_OrionWindow.Handle))
 		{
 			g_CurrentScreen->Render(false);
@@ -1964,7 +1968,10 @@ void COrion::LoadIndexFiles()
 			else
 				multi.Address += (uint)g_FileManager.m_MultiMul.Start;
 
-			multi.Count = (ushort)(multi.DataSize / sizeof(MULTI_IDX_BLOCK));
+			if (g_PacketManager.ClientVersion >= CV_7090)
+				multi.Count = (ushort)(multi.DataSize / sizeof(MULTI_BLOCK_NEW));
+			else
+				multi.Count = (ushort)(multi.DataSize / sizeof(MULTI_BLOCK));
 
 			MultiPtr++;
 		}
@@ -4249,7 +4256,7 @@ void COrion::RemoveRangedObjects()
 
 			if (go->Container == 0xFFFFFFFF && !go->IsPlayer())
 			{
-				if (go->Graphic >= 0x4000)
+				if (!go->NPC && ((CGameItem*)go)->MultiBody)
 				{
 					if (GetMultiDistance(g_RemoveRangeXY, go) > objectsRange)
 						//if (GetDistance(g_RemoveRangeXY, go) > 31)

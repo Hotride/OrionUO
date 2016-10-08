@@ -1167,7 +1167,8 @@ PACKET_HANDLER(UpdateItem)
 	else
 		LOG("updated ");
 
-	obj->Graphic = graphic;
+	obj->MultiBody = (graphic & 0x4000);
+	obj->Graphic = graphic & 0x3FFF;
 	obj->Count = count;
 	ushort x = ReadUInt16BE();
 	ushort y = ReadUInt16BE();
@@ -1255,6 +1256,7 @@ PACKET_HANDLER(UpdateItemSA)
 	else
 		LOG("updated ");
 
+	obj->MultiBody = (type == 2);
 	obj->Graphic = graphic;
 	obj->Count = count;
 
@@ -1342,7 +1344,7 @@ PACKET_HANDLER(UpdateObject)
 	}
 
 	bool oldDead = g_Player->Dead();
-	obj->Graphic = graphic;
+	obj->Graphic = graphic & 0x3FFF;
 
 	ushort x = ReadUInt16BE();
 
@@ -1362,7 +1364,10 @@ PACKET_HANDLER(UpdateObject)
 	if (character != NULL)
 		obj->OnGraphicChange(1000);
 	else
+	{
+		item->MultiBody = (graphic & 0x4000);
 		obj->OnGraphicChange(dir);
+	}
 
 	obj->Color = ReadUInt16BE();
 
