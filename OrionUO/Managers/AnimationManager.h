@@ -46,9 +46,9 @@ private:
 	uint m_AddressMul[6];
 	uint m_SizeIdx[6];
 
-	const float UPPER_BODY_RATIO = 0.35f;
-	const float MID_BODY_RATIO = 0.60f;
-	const float LOWER_BODY_RATIO = 0.94f;
+	static const float UPPER_BODY_RATIO = 0.35f;
+	static const float MID_BODY_RATIO = 0.60f;
+	static const float LOWER_BODY_RATIO = 0.94f;
 
 	//!Высота текстуры персонажа.
 	int m_CharacterFrameHeight;

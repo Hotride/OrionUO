@@ -37,8 +37,8 @@ class CSoundManager
 private:
 	static const int MIDI_MUSIC_COUNT = 57;
 	static const char *m_MusicName[MIDI_MUSIC_COUNT];
-	HSTREAM m_Music = 0;
-	HSTREAM m_WarMusic = 0;
+	HSTREAM m_Music;
+	HSTREAM m_WarMusic;
 
 	void TraceMusicError(DWORD error);
 	//std::map<HSTREAM, BYTE*> streams;
