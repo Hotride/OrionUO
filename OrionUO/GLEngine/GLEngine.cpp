@@ -173,9 +173,8 @@ void CGLEngine::BindTexture16(GLuint &texture, const int &width, const int &heig
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
 	DEBUGLOG("\t_bt16...create (%ix%i) 0x%08X\n", width, height, pixels);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, width, height, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, pixels);
 	DEBUGLOG("\t_bt16...end\n");
 }
 //----------------------------------------------------------------------------------
@@ -191,7 +190,7 @@ void CGLEngine::BindTexture32(GLuint &texture, const int &width, const int &heig
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	DEBUGLOG("\t_bt32...create (%ix%i) 0x%08X\n", width, height, pixels);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8, pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8, pixels);
 	DEBUGLOG("\t_bt32...end\n");
 }
 //----------------------------------------------------------------------------------
