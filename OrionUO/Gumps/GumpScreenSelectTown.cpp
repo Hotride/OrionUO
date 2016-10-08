@@ -20,15 +20,15 @@
 WISP_GEOMETRY::CPoint2Di CGumpScreenSelectTown::m_TownButtonText[9] =
 {
 	//Button     Text
-	{ 105, 130 }, //Yew
-	{ 245, 90 }, //Minoc
-	{ 165, 200 }, //Britain
-	{ 395, 160 }, //Moonglow
-	{ 200, 305 }, //Trinsic
-	{ 335, 250 }, //Magincia
-	{ 160, 395 }, //Jhelom
-	{ 100, 250 }, //Skara Brae
-	{ 270, 130 } //Vesper
+	WISP_GEOMETRY::CPoint2Di(105, 130), //Yew
+	WISP_GEOMETRY::CPoint2Di(245, 90), //Minoc
+	WISP_GEOMETRY::CPoint2Di(165, 200), //Britain
+	WISP_GEOMETRY::CPoint2Di(395, 160), //Moonglow
+	WISP_GEOMETRY::CPoint2Di(200, 305), //Trinsic
+	WISP_GEOMETRY::CPoint2Di(335, 250), //Magincia
+	WISP_GEOMETRY::CPoint2Di(160, 395), //Jhelom
+	WISP_GEOMETRY::CPoint2Di(100, 250), //Skara Brae
+	WISP_GEOMETRY::CPoint2Di(270, 130) //Vesper
 };
 //----------------------------------------------------------------------------------
 CGumpScreenSelectTown::CGumpScreenSelectTown()

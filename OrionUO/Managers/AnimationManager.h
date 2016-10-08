@@ -14,6 +14,10 @@
 #include "../TextureObject.h"
 #include "../Wisp/WispDataStream.h"
 //----------------------------------------------------------------------------------
+static const float UPPER_BODY_RATIO = 0.35f;
+static const float MID_BODY_RATIO = 0.60f;
+static const float LOWER_BODY_RATIO = 0.94f;
+//----------------------------------------------------------------------------------
 struct FRAME_OUTPUT_INFO
 {
 	int StartX;
@@ -45,10 +49,6 @@ private:
 	uint m_AddressIdx[6];
 	uint m_AddressMul[6];
 	uint m_SizeIdx[6];
-
-	static const float UPPER_BODY_RATIO = 0.35f;
-	static const float MID_BODY_RATIO = 0.60f;
-	static const float LOWER_BODY_RATIO = 0.94f;
 
 	//!Высота текстуры персонажа.
 	int m_CharacterFrameHeight;

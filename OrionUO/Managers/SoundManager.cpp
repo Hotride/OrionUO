@@ -27,7 +27,7 @@ struct BASS_ErrorDescription
 	char desc[64];
 };
 //----------------------------------------------------------------------------------
-BASS_ErrorDescription BASS_ErrorTable[] = {
+BASS_ErrorDescription BASS_ErrorTable[38] = {
 	{ -2, "unspecified error" },
 	{ BASS_OK, "OK" },
 	{ BASS_ERROR_MEM, "memory error" },
@@ -68,14 +68,16 @@ BASS_ErrorDescription BASS_ErrorTable[] = {
 	{ BASS_ERROR_UNKNOWN, "some other mystery problem" },
 };
 //----------------------------------------------------------------------------------
-char* BASS_ErrorGetDescription()
+const char *BASS_ErrorGetDescription()
 {
-	auto currentErrorCode = BASS_ErrorGetCode();
+	int currentErrorCode = BASS_ErrorGetCode();
 
-	for (auto &bassError : BASS_ErrorTable) {
-		if (bassError.errorCode == currentErrorCode)
-			return bassError.desc;
+	IFOR(i, 0, 38)
+	{
+		if (BASS_ErrorTable[i].errorCode == currentErrorCode)
+			return BASS_ErrorTable[i].desc;
 	}
+
 	return BASS_ErrorTable[0].desc;
 }
 #pragma endregion

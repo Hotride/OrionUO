@@ -1230,6 +1230,23 @@ void CGumpManager::Load(const string &path)
 	AddGump(new CGumpConsoleType(minimizedConsoleType, showFullTextConsoleType));
 }
 //----------------------------------------------------------------------------------
+void CGumpManager::SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writer, CGump *gump, const int &size)
+{
+	writer.WriteInt8(size);
+	writer.WriteInt8(gump->GumpType);
+	writer.WriteUInt16LE(gump->X);
+	writer.WriteUInt16LE(gump->Y);
+
+	if (gump->GumpType == GT_MENUBAR)
+		writer.WriteInt8(((CGumpMenubar*)gump)->Opened);
+	else //buff
+		writer.WriteInt8(gump->Minimized);
+
+	writer.WriteUInt16LE(gump->MinimizedX);
+	writer.WriteUInt16LE(gump->MinimizedY);
+	writer.WriteInt8(gump->LockMoving);
+};
+//----------------------------------------------------------------------------------
 /*!
 Сохранить гампы в конфиг
 @param [__in] path Путь к файлу кофнига
@@ -1243,23 +1260,6 @@ void CGumpManager::Save(const string &path)
 
 	writter.WriteInt8(0); //version
 	writter.WriteBuffer();
-
-	auto saveDefaultGumpProperties = [](WISP_FILE::CBinaryFileWritter &writer, CGump *gump, const int &size)
-	{
-		writer.WriteInt8(size);
-		writer.WriteInt8(gump->GumpType);
-		writer.WriteUInt16LE(gump->X);
-		writer.WriteUInt16LE(gump->Y);
-
-		if (gump->GumpType == GT_MENUBAR)
-			writer.WriteInt8(((CGumpMenubar*)gump)->Opened);
-		else //buff
-			writer.WriteInt8(gump->Minimized);
-
-		writer.WriteUInt16LE(gump->MinimizedX);
-		writer.WriteUInt16LE(gump->MinimizedY);
-		writer.WriteInt8(gump->LockMoving);
-	};
 
 	short count = 0;
 
@@ -1290,7 +1290,7 @@ void CGumpManager::Save(const string &path)
 				else if (gump->GumpType == GT_WORLD_MAP)
 					size += 11;
 
-				saveDefaultGumpProperties(writter, gump, size);
+				SaveDefaultGumpProperties(writter, gump, size);
 
 				if (gump->GumpType == GT_JOURNAL)
 					writter.WriteUInt16LE(((CGumpJournal*)gump)->Height);
@@ -1318,7 +1318,7 @@ void CGumpManager::Save(const string &path)
 			}
 			case GT_MENUBAR:
 			{
-				saveDefaultGumpProperties(writter, gump, 12);
+				SaveDefaultGumpProperties(writter, gump, 12);
 
 				writter.WriteBuffer();
 				count++;
@@ -1327,7 +1327,7 @@ void CGumpManager::Save(const string &path)
 			}
 			case GT_BUFF:
 			{
-				saveDefaultGumpProperties(writter, gump, 14);
+				SaveDefaultGumpProperties(writter, gump, 14);
 
 				writter.WriteUInt16LE(gump->Graphic);
 
@@ -1356,7 +1356,7 @@ void CGumpManager::Save(const string &path)
 					break;
 				}
 
-				saveDefaultGumpProperties(writter, gump, 18);
+				SaveDefaultGumpProperties(writter, gump, 18);
 
 				writter.WriteUInt32LE(gump->Serial);
 				writter.WriteUInt16LE(gump->Graphic);
@@ -1368,7 +1368,7 @@ void CGumpManager::Save(const string &path)
 			}
 			case GT_CONSOLE_TYPE:
 			{
-				saveDefaultGumpProperties(writter, gump, 13);
+				SaveDefaultGumpProperties(writter, gump, 13);
 
 				writter.WriteUInt8(((CGumpConsoleType*)gump)->ShowFullText);
 
@@ -1394,7 +1394,7 @@ void CGumpManager::Save(const string &path)
 
 			if (gump->Serial == containerSerial)
 			{
-				saveDefaultGumpProperties(writter, gump, 16);
+				SaveDefaultGumpProperties(writter, gump, 16);
 
 				writter.WriteUInt32LE(gump->Serial);
 				writter.WriteBuffer();

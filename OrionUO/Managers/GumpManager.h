@@ -12,6 +12,7 @@
 //----------------------------------------------------------------------------------
 #include "../BaseQueue.h"
 #include "../Gumps/Gump.h"
+#include "../Wisp/WispBinaryFileWritter.h"
 //----------------------------------------------------------------------------------
 //!Класс менеджера гампов
 class CGumpManager : public CBaseQueue
@@ -22,6 +23,8 @@ private:
 	@return Количество non-party статусбыров
 	*/
 	int GetNonpartyStatusbarsCount();
+
+	void SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writer, CGump *gump, const int &size);
 
 public:
 	CGumpManager() : CBaseQueue() {}

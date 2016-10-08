@@ -1691,9 +1691,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 			}
 			else if ((rwo->IsLandObject() || rwo->IsStaticObject() || rwo->IsMultiObject()) && g_ObjectInHand != NULL)
 			{
-				WISP_GEOMETRY::CPoint2Di pt = { rwo->X, rwo->Y };
-
-				can_drop = (GetDistance(g_Player, pt) < 3);
+				can_drop = (GetDistance(g_Player, WISP_GEOMETRY::CPoint2Di(rwo->X, rwo->Y)) < 3);
 
 				if (can_drop)
 				{

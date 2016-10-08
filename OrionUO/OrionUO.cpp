@@ -2609,7 +2609,7 @@ void COrion::IndexReplaces()
 		int size = strings.size();
 		if (size > 0)
 		{
-			CIndexMusic &mp3 = m_MP3Data[std::stoi(strings[0])];
+			CIndexMusic &mp3 = m_MP3Data[std::atoi(strings[0].c_str())];
 
 			if (size > 1)
 				mp3.FilePath = g_App.FilePath(("Music\\Digital\\" + strings[1] + ".mp3").c_str());
