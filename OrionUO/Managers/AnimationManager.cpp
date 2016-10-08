@@ -356,6 +356,15 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 	WISP_FILE::CTextFileParser bodyParser(g_App.FilePath("Body.def").c_str(), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser bodyconvParser(g_App.FilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
 	WISP_FILE::CTextFileParser corpseParser(g_App.FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
+
+	WISP_FILE::CTextFileParser animParser[4]
+	{
+		WISP_FILE::CTextFileParser(g_App.FilePath("Anim1.def").c_str(), " \t", "#;//", "{}"),
+		WISP_FILE::CTextFileParser(g_App.FilePath("Anim2.def").c_str(), " \t", "#;//", "{}"),
+		WISP_FILE::CTextFileParser(g_App.FilePath("Anim3.def").c_str(), " \t", "#;//", "{}"),
+		WISP_FILE::CTextFileParser(g_App.FilePath("Anim4.def").c_str(), " \t", "#;//", "{}")
+	};
+
 	bool noLoadCorpseDef = true;
 
 	while (!bodyParser.IsEOF())
@@ -518,6 +527,37 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 						m_DataIndex[index].Graphic = realAnimID;// convertedAnimID;
 					}
 				}
+			}
+		}
+	}
+
+	IFOR(i, 0, 4)
+	{
+		STRING_LIST strings = animParser[i].ReadTokens();
+
+		if (strings.size() >= 3)
+		{
+			ushort index = atoi(strings[0].c_str());
+
+			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				continue;
+
+			STRING_LIST newBody = newBodyParser.GetTokens(strings[1].c_str());
+
+			int size = (int)newBody.size();
+
+			IFOR(i, 0, size)
+			{
+				ushort checkIndex = atoi(newBody[i].c_str());
+
+				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
+					continue;
+
+				memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
+				m_DataIndex[index].Group = NULL;
+				m_DataIndex[index].Color = atoi(strings[2].c_str());
+
+				break;
 			}
 		}
 	}
