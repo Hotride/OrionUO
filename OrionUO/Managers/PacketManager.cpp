@@ -1004,6 +1004,11 @@ PACKET_HANDLER(UpdatePlayer)
 	g_Player->Direction = dir;
 	g_Player->Z = ReadUInt8();
 
+	g_RemoveRangeXY.X = g_Player->X;
+	g_RemoveRangeXY.Y = g_Player->Y;
+
+	g_Orion.RemoveRangedObjects();
+
 	g_World->MoveToTop(g_Player);
 }
 //----------------------------------------------------------------------------------
@@ -1443,7 +1448,7 @@ PACKET_HANDLER(UpdateObject)
 
 		graphic = ReadUInt16BE();
 
-		BYTE layer = ReadUInt8();
+		uchar layer = ReadUInt8();
 
 		if (graphic & 0x8000)
 		{

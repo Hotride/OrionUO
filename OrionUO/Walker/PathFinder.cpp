@@ -541,14 +541,12 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	wd->Z = z;
 	wd->Direction = direction;
 
-	/*g_RemoveRangeXY.x = x;
-	g_RemoveRangeXY.y = y;
+	g_RemoveRangeXY.X = x;
+	g_RemoveRangeXY.Y = y;
 
-	g_UpdateRange--;
+	g_Orion.RemoveRangedObjects();
 
-	UO->RemoveRangedObjects();
-
-	g_UpdateRange++;*/
+	g_GumpManager.RemoveRangedGumps();
 
 	if (emptyStack)
 	{

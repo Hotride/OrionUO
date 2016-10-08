@@ -71,7 +71,7 @@ typedef struct LAND_GROUP_OLD
 //----------------------------------------------------------------------------------
 struct STATIC_TILES_OLD
 {
-	unsigned __int64 Flags;
+	unsigned int Flags;
 	unsigned char Weight;
 	unsigned char Quality;
 	unsigned short Unknown;

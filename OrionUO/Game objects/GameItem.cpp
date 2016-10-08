@@ -109,6 +109,9 @@ void CGameItem::OnGraphicChange(int direction)
 {
 	if (!m_MultiBody)
 	{
+		if (m_Graphic >= g_Orion.StaticDataCount)
+			return;
+
 		if (IsCorpse())
 		{
 			m_AnimIndex = 99;

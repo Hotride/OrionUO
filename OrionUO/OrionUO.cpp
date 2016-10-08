@@ -180,6 +180,7 @@ bool COrion::Install()
 	else
 		staticsCount = (g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_OLD))) / sizeof(STATIC_GROUP_OLD);
 
+	LOG("staticsCount=%i\n", staticsCount);
 	LoadTiledata(512, staticsCount);
 	DEBUGLOG("Load indexes\n");
 	LoadIndexFiles();
@@ -616,7 +617,7 @@ void COrion::Process(const bool &rendering)
 	{
 		g_ShowGumpLocker = g_ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
 
-		CWalkData *wd = g_Player->m_WalkStack.m_Items;
+		/*CWalkData *wd = g_Player->m_WalkStack.m_Items;
 
 		if (wd != NULL)
 		{
@@ -629,8 +630,9 @@ void COrion::Process(const bool &rendering)
 			g_RemoveRangeXY.Y = g_Player->Y;
 		}
 
+		RemoveRangedObjects();*/
+
 		ProcessStaticAnimList();
-		RemoveRangedObjects();
 
 		g_EffectManager.UpdateEffects();
 
@@ -4243,10 +4245,10 @@ void COrion::AllNames()
 //----------------------------------------------------------------------------------
 void COrion::RemoveRangedObjects()
 {
-	int objectsRange = g_ConfigManager.UpdateRange + 1;
-
 	if (g_World != NULL)
 	{
+		int objectsRange = g_ConfigManager.UpdateRange;
+
 		CGameObject *go = g_World->m_Items;
 
 		while (go != NULL)
@@ -4273,8 +4275,6 @@ void COrion::RemoveRangedObjects()
 			go = next;
 		}
 	}
-
-	g_GumpManager.RemoveRangedGumps();
 
 	g_EffectManager.RemoveRangedEffects();
 }
