@@ -73,8 +73,8 @@ void CScreenshotBuilder::SaveScreen()
 		fclose(file);
 	}
 
-	//if (g_GameState >= GS_GAME)
-	//	Orion->CreateTextMessageF(3, 0, "Screenshot saved to: %s", path.c_str());
+	if (g_GameState >= GS_GAME)
+		g_Orion.CreateTextMessageF(3, 0, "Screenshot saved to: %s", path.c_str());
 
 	/*LOG("Saving screen to:\n");
 	LOG(path.c_str());
