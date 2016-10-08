@@ -67,7 +67,7 @@ bool CPathFinder::CreateItemsList(int &x, int &y, char &z)
 		{
 			if (graphic != 2)
 			{
-				uint flags = g_Orion.GetLandFlags(graphic);
+				__int64 flags = g_Orion.GetLandFlags(graphic);
 
 				char surface = 0x10 + (char)(!IsImpassable(flags));
 

@@ -32,8 +32,8 @@ typedef void __cdecl FUNCDEF_DRAW_GUMP(int, int, unsigned short, unsigned short)
 typedef void __cdecl FUNCDEF_DRAW_GUMPPIC(int, int, unsigned short, unsigned short, int, int);
 
 //IUltimaOnline
-typedef unsigned int __cdecl FUNCDEF_GET_LAND_FLAGS(unsigned short);
-typedef unsigned int __cdecl FUNCDEF_GET_STATIC_FLAGS(unsigned short);
+typedef unsigned __int64 __cdecl FUNCDEF_GET_LAND_FLAGS(unsigned short);
+typedef unsigned __int64 __cdecl FUNCDEF_GET_STATIC_FLAGS(unsigned short);
 typedef int __cdecl FUNCDEF_GET_CONFIG_VALUE(const char*);
 typedef void __cdecl FUNCDEF_SET_CONFIG_VALUE(const char*, int);
 

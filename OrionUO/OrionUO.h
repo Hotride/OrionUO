@@ -171,10 +171,10 @@ public:
 
 
 	//Получить флаги ландшафта
-	uint GetLandFlags(const ushort &id);
+	__int64 GetLandFlags(const ushort &id);
 
 	//Получить флаги статики
-	uint GetStaticFlags(const ushort &id);
+	__int64 GetStaticFlags(const ushort &id);
 
 	//Получить цвет света
 	ushort GetLightColor(const ushort &id) { return m_StaticDataIndex[id].LightColor; }

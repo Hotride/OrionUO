@@ -56,22 +56,22 @@ typedef struct STATICS_BLOCK
 	unsigned short Hue;
 } *PSTATICS_BLOCK;
 //----------------------------------------------------------------------------------
-struct LAND_TILES
+struct LAND_TILES_OLD
 {
 	unsigned int Flags;
 	unsigned short TexID;
 	char Name[20];
 };
 //----------------------------------------------------------------------------------
-typedef struct LAND_GROUP
+typedef struct LAND_GROUP_OLD
 {
 	unsigned int Unknown;
-	LAND_TILES Tiles[32];
-} *PLAND_GROUP;
+	LAND_TILES_OLD Tiles[32];
+} *PLAND_GROUP_OLD;
 //----------------------------------------------------------------------------------
-struct STATIC_TILES
+struct STATIC_TILES_OLD
 {
-	unsigned int Flags;
+	unsigned __int64 Flags;
 	unsigned char Weight;
 	unsigned char Quality;
 	unsigned short Unknown;
@@ -84,6 +84,78 @@ struct STATIC_TILES
 	unsigned char Unknown3;
 	unsigned char Height;
 	char Name[20];
+};
+//----------------------------------------------------------------------------------
+typedef struct STATIC_GROUP_OLD
+{
+	unsigned int Unk;
+	STATIC_TILES_OLD Tiles[32];
+} *PSTATIC_GROUP_OLD;
+//----------------------------------------------------------------------------------
+struct LAND_TILES_NEW
+{
+	unsigned __int64 Flags;
+	unsigned short TexID;
+	char Name[20];
+};
+//----------------------------------------------------------------------------------
+typedef struct LAND_GROUP_NEW
+{
+	unsigned int Unknown;
+	LAND_TILES_NEW Tiles[32];
+} *PLAND_GROUP_NEW;
+//----------------------------------------------------------------------------------
+struct STATIC_TILES_NEW
+{
+	unsigned __int64 Flags;
+	unsigned char Weight;
+	unsigned char Quality;
+	unsigned short Unknown;
+	unsigned char Unknown1;
+	unsigned char Quality1;
+	unsigned short AnimID;
+	unsigned char Unknown2;
+	unsigned char Hue;
+	unsigned char SittingOffset;
+	unsigned char Unknown3;
+	unsigned char Height;
+	char Name[20];
+};
+//----------------------------------------------------------------------------------
+typedef struct STATIC_GROUP_NEW
+{
+	unsigned int Unk;
+	STATIC_TILES_NEW Tiles[32];
+} *PSTATIC_GROUP_NEW;
+//----------------------------------------------------------------------------------
+struct LAND_TILES
+{
+	unsigned __int64 Flags;
+	unsigned short TexID;
+	string Name;
+};
+//----------------------------------------------------------------------------------
+typedef struct LAND_GROUP
+{
+	unsigned int Unknown;
+	LAND_TILES Tiles[32];
+} *PLAND_GROUP;
+//----------------------------------------------------------------------------------
+struct STATIC_TILES
+{
+	unsigned __int64 Flags;
+	unsigned char Weight;
+	unsigned char Quality;
+	unsigned short Unknown;
+	unsigned char Unknown1;
+	unsigned char Quality1;
+	unsigned short AnimID;
+	unsigned char Unknown2;
+	unsigned char Hue;
+	unsigned char SittingOffset;
+	unsigned char Unknown3;
+	unsigned char Height;
+	string Name;
 };
 //----------------------------------------------------------------------------------
 typedef struct STATIC_GROUP

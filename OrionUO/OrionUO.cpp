@@ -172,7 +172,15 @@ bool COrion::Install()
 		g_MulReader = new CMulReader();
 
 	DEBUGLOG("Load tiledata\n");
-	LoadTiledata(512, 512);
+
+	int staticsCount = 512;
+
+	if (g_PacketManager.ClientVersion >= CV_7090)
+		staticsCount = (g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_NEW))) / sizeof(STATIC_GROUP_NEW);
+	else
+		staticsCount = (g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_OLD))) / sizeof(STATIC_GROUP_OLD);
+
+	LoadTiledata(512, staticsCount);
 	DEBUGLOG("Load indexes\n");
 	LoadIndexFiles();
 	InitStaticAnimList();
@@ -1719,22 +1727,75 @@ void COrion::GoToWebLink(const string &url)
 //----------------------------------------------------------------------------------
 void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 {
-	if (g_FileManager.m_TiledataMul.Size)
-	{
-		m_LandDataCount = landSize;
-		m_LandData.resize(landSize);
-		memcpy(&m_LandData[0], (PVOID)g_FileManager.m_TiledataMul.Start, landSize * sizeof(LAND_GROUP));
+	WISP_FILE::CMappedFile &file = g_FileManager.m_TiledataMul;
 
-		m_StaticDataCount = staticsSize;
+	if (file.Size)
+	{
+		bool isOldVersion = (g_PacketManager.ClientVersion < CV_7090);
+		file.ResetPtr();
+
+		m_LandDataCount = landSize * 32;
+		m_LandData.resize(landSize);
+
+		m_StaticDataCount = staticsSize * 32;
 		m_StaticData.resize(staticsSize);
-		memcpy(&m_StaticData[0], (PVOID)((uint)g_FileManager.m_TiledataMul.Start + 428032), staticsSize * sizeof(STATIC_GROUP));
+
+		IFOR(i, 0, landSize)
+		{
+			LAND_GROUP &group = m_LandData[i];
+			group.Unknown = file.ReadUInt32LE();
+
+			IFOR(j, 0, 32)
+			{
+				LAND_TILES &tile = group.Tiles[j];
+
+				if (isOldVersion)
+					tile.Flags = file.ReadUInt32LE();
+				else
+					tile.Flags = file.ReadInt64LE();
+
+				tile.TexID = file.ReadUInt16LE();
+				tile.Name = file.ReadString(20);
+			}
+		}
+
+		IFOR(i, 0, staticsSize)
+		{
+			STATIC_GROUP &group = m_StaticData[i];
+			group.Unk = file.ReadUInt32LE();
+
+			IFOR(j, 0, 32)
+			{
+				STATIC_TILES &tile = group.Tiles[j];
+
+				if (isOldVersion)
+					tile.Flags = file.ReadUInt32LE();
+				else
+					tile.Flags = file.ReadInt64LE();
+
+				tile.Weight = file.ReadInt8();
+				tile.Quality = file.ReadInt8();
+				tile.Unknown = file.ReadInt16LE();
+				tile.Unknown1 = file.ReadInt8();
+				tile.Quality1 = file.ReadInt8();
+				tile.AnimID = file.ReadInt16LE();
+				tile.Unknown2 = file.ReadInt8();
+				tile.Hue = file.ReadInt8();
+				tile.SittingOffset = file.ReadInt8();
+				tile.Unknown3 = file.ReadInt8();
+				tile.Height = file.ReadInt8();
+				tile.Name = file.ReadString(20);
+			}
+		}
+
+		file.Unload();
 	}
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadIndexFiles()
 {
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)g_FileManager.m_ArtIdx.Start;
-	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((uint)g_FileManager.m_ArtIdx.Start + (0x4000 * sizeof(ART_IDX_BLOCK)));
+	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((uint)g_FileManager.m_ArtIdx.Start + (m_LandDataCount * sizeof(ART_IDX_BLOCK)));
 	PGUMP_IDX_BLOCK GumpArtPtr = (PGUMP_IDX_BLOCK)g_FileManager.m_GumpIdx.Start;
 	PTEXTURE_IDX_BLOCK TexturePtr = (PTEXTURE_IDX_BLOCK)g_FileManager.m_TextureIdx.Start;
 	PMULTI_IDX_BLOCK MultiPtr = (PMULTI_IDX_BLOCK)g_FileManager.m_MultiIdx.Start;
@@ -1743,36 +1804,15 @@ void COrion::LoadIndexFiles()
 
 	g_MultiIndexCount = g_FileManager.m_MultiIdx.Size / sizeof(MULTI_IDX_BLOCK);
 
-	if (g_MultiIndexCount > 0x2000)
-		g_MultiIndexCount = 0x2000;
+	if (g_MultiIndexCount > MAX_MULTI_DATA_INDEX_COUNT)
+		g_MultiIndexCount = MAX_MULTI_DATA_INDEX_COUNT;
 
 	int maxCount = (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK);
 
 	IFOR(i, 0, maxCount)
 	{
-		if (i < MAX_LAND_DATA_INDEX_COUNT)
+		if (i < m_StaticDataCount)
 		{
-			CIndexObject &land = m_LandDataIndex[i];
-
-			land.Address = LandArtPtr->Position;
-			land.DataSize = LandArtPtr->Size;
-
-			if (land.Address == 0xFFFFFFFF || !land.DataSize || land.DataSize == 0xFFFFFFFF)
-			{
-				land.Address = 0;
-				land.DataSize = 0;
-			}
-			else
-				land.Address = land.Address + (uint)g_FileManager.m_ArtMul.Start;
-
-			land.Width = 0;
-			land.Height = 0;
-			land.Texture = NULL;
-			land.LastAccessTime = 0;
-			land.Graphic = i;
-
-			LandArtPtr++;
-
 			CIndexObject &statics = m_StaticDataIndex[i];
 
 			statics.Address = StaticArtPtr->Position;
@@ -1794,71 +1834,95 @@ void COrion::LoadIndexFiles()
 
 			StaticArtPtr++;
 
-			if (i < MAX_LAND_TEXTURES_DATA_INDEX_COUNT)
+			if (i < MAX_LAND_DATA_INDEX_COUNT)
 			{
-				CIndexObject &textures = m_TextureDataIndex[i];
+				CIndexObject &land = m_LandDataIndex[i];
 
-				textures.Address = TexturePtr->Position;
-				textures.DataSize = TexturePtr->Size;
+				land.Address = LandArtPtr->Position;
+				land.DataSize = LandArtPtr->Size;
 
-				if (textures.Address == 0xFFFFFFFF || !textures.DataSize || textures.DataSize == 0xFFFFFFFF)
+				if (land.Address == 0xFFFFFFFF || !land.DataSize || land.DataSize == 0xFFFFFFFF)
 				{
-					textures.Address = 0;
-					textures.DataSize = 0;
+					land.Address = 0;
+					land.DataSize = 0;
 				}
 				else
-					textures.Address = textures.Address + (uint)g_FileManager.m_TextureMul.Start;
+					land.Address = land.Address + (uint)g_FileManager.m_ArtMul.Start;
 
-				textures.Width = 0;
-				textures.Height = 0;
-				textures.Texture = NULL;
-				textures.LastAccessTime = 0;
-				textures.Graphic = i;
+				land.Width = 0;
+				land.Height = 0;
+				land.Texture = NULL;
+				land.LastAccessTime = 0;
+				land.Graphic = i;
 
-				TexturePtr++;
+				LandArtPtr++;
 
-				if (i < MAX_SOUND_DATA_INDEX_COUNT)
+				if (i < MAX_LAND_TEXTURES_DATA_INDEX_COUNT)
 				{
-					CIndexSound &sound = m_SoundDataIndex[i];
+					CIndexObject &textures = m_TextureDataIndex[i];
 
-					sound.Address = SoundPtr->Position;
-					sound.DataSize = SoundPtr->Size;
-					sound.LastAccessTime = 0;
-					sound.Delay = 0;
-					//sound.Sound = NULL;
-					sound.m_Stream = 0;
+					textures.Address = TexturePtr->Position;
+					textures.DataSize = TexturePtr->Size;
 
-					if (sound.Address == 0xFFFFFFFF || !sound.DataSize || sound.DataSize == 0xFFFFFFFF)
+					if (textures.Address == 0xFFFFFFFF || !textures.DataSize || textures.DataSize == 0xFFFFFFFF)
 					{
-						sound.Address = 0;
-						sound.DataSize = 0;
+						textures.Address = 0;
+						textures.DataSize = 0;
 					}
 					else
-						sound.Address = sound.Address + (uint)g_FileManager.m_SoundMul.Start;
+						textures.Address = textures.Address + (uint)g_FileManager.m_TextureMul.Start;
 
-					SoundPtr++;
+					textures.Width = 0;
+					textures.Height = 0;
+					textures.Texture = NULL;
+					textures.LastAccessTime = 0;
+					textures.Graphic = i;
 
-					if (i < MAX_LIGHTS_DATA_INDEX_COUNT)
+					TexturePtr++;
+
+					if (i < MAX_SOUND_DATA_INDEX_COUNT)
 					{
-						CIndexObject &light = m_LightDataIndex[i];
+						CIndexSound &sound = m_SoundDataIndex[i];
 
-						light.Address = LightPtr->Position;
-						light.DataSize = LightPtr->Size;
-						light.Width = LightPtr->Width;
-						light.Height = LightPtr->Height;
-						light.LastAccessTime = 0;
-						light.Texture = NULL;
-						light.Graphic = i;
+						sound.Address = SoundPtr->Position;
+						sound.DataSize = SoundPtr->Size;
+						sound.LastAccessTime = 0;
+						sound.Delay = 0;
+						//sound.Sound = NULL;
+						sound.m_Stream = 0;
 
-						if (light.Address == 0xFFFFFFFF || !light.DataSize || light.DataSize == 0xFFFFFFFF)
+						if (sound.Address == 0xFFFFFFFF || !sound.DataSize || sound.DataSize == 0xFFFFFFFF)
 						{
-							light.Address = 0;
-							light.DataSize = 0;
+							sound.Address = 0;
+							sound.DataSize = 0;
 						}
 						else
-							light.Address = light.Address + (uint)g_FileManager.m_LightMul.Start;
+							sound.Address = sound.Address + (uint)g_FileManager.m_SoundMul.Start;
 
-						LightPtr++;
+						SoundPtr++;
+
+						if (i < MAX_LIGHTS_DATA_INDEX_COUNT)
+						{
+							CIndexObject &light = m_LightDataIndex[i];
+
+							light.Address = LightPtr->Position;
+							light.DataSize = LightPtr->Size;
+							light.Width = LightPtr->Width;
+							light.Height = LightPtr->Height;
+							light.LastAccessTime = 0;
+							light.Texture = NULL;
+							light.Graphic = i;
+
+							if (light.Address == 0xFFFFFFFF || !light.DataSize || light.DataSize == 0xFFFFFFFF)
+							{
+								light.Address = 0;
+								light.DataSize = 0;
+							}
+							else
+								light.Address = light.Address + (uint)g_FileManager.m_LightMul.Start;
+
+							LightPtr++;
+						}
 					}
 				}
 			}
@@ -1962,11 +2026,11 @@ void COrion::InitStaticAnimList()
 {
 	if (m_AnimData.size())
 	{
-		IFOR(i, 0, MAX_STATIC_DATA_INDEX_COUNT)
+		IFOR(i, 0, m_StaticDataCount)
 		{
 			m_StaticDataIndex[i].Index = i;
 
-			uint flags = m_StaticData[i / 32].Tiles[i % 32].Flags;
+			__int64 flags = m_StaticData[i / 32].Tiles[i % 32].Flags;
 
 			m_StaticDataIndex[i].LightColor = CalculateLightColor((ushort)i);
 
@@ -2200,15 +2264,17 @@ void COrion::PatchFiles()
 	+hues = 32;
 	*/
 
-	if (!g_FileManager.UseVerdata || !g_FileManager.m_VerdataMul.Size)
+	WISP_FILE::CMappedFile &file = g_FileManager.m_VerdataMul;
+
+	if (!g_FileManager.UseVerdata || !file.Size)
 	{
 		g_ColorManager.CreateHuesPalette();
 		return;
 	}
 
-	int dataCount = *(pint)g_FileManager.m_VerdataMul.Start;
+	int dataCount = *(pint)file.Start;
 
-	uint vAddr = (uint)g_FileManager.m_VerdataMul.Start;
+	uint vAddr = (uint)file.Start;
 
 	IFOR(i, 0, dataCount)
 	{
@@ -2258,19 +2324,65 @@ void COrion::PatchFiles()
 		{
 			if (vh->Size == 836)
 			{
-				if (vh->BlockID >= 512)
+				if ((int)vh->BlockID >= m_LandDataCount)
 					continue;
 
-				memcpy(&m_LandData[vh->BlockID], (PVOID)(vAddr + vh->Position), sizeof(LAND_GROUP));
+				LAND_GROUP &group = m_LandData[vh->BlockID];
+
+				file.Ptr = (PBYTE)(vAddr + vh->Position);
+				group.Unknown = file.ReadUInt32LE();
+
+				IFOR(j, 0, 32)
+				{
+					LAND_TILES &tile = group.Tiles[j];
+
+					if (g_PacketManager.ClientVersion < CV_7090)
+						tile.Flags = file.ReadUInt32LE();
+					else
+						tile.Flags = file.ReadInt64LE();
+
+					tile.TexID = file.ReadUInt16LE();
+					tile.Name = file.ReadString(20);
+				}
+
+				//memcpy(&m_LandData[vh->BlockID], (PVOID)(vAddr + vh->Position), sizeof(LAND_GROUP));
 			}
 			else if (vh->Size == 1188)
 			{
 				int bID = (int)vh->BlockID - 0x0200;
 
-				if (bID < 0 || bID >= 512)
+				if (bID < 0 || bID >= m_StaticDataCount)
 					continue;
 
-				memcpy(&m_StaticData[bID], (PVOID)(vAddr + vh->Position), sizeof(STATIC_GROUP));
+				STATIC_GROUP &group = m_StaticData[i];
+
+				file.Ptr = (PBYTE)(vAddr + vh->Position);
+				group.Unk = file.ReadUInt32LE();
+
+				IFOR(j, 0, 32)
+				{
+					STATIC_TILES &tile = group.Tiles[j];
+
+					if (g_PacketManager.ClientVersion < CV_7090)
+						tile.Flags = file.ReadUInt32LE();
+					else
+						tile.Flags = file.ReadInt64LE();
+
+					tile.Weight = file.ReadInt8();
+					tile.Quality = file.ReadInt8();
+					tile.Unknown = file.ReadInt16LE();
+					tile.Unknown1 = file.ReadInt8();
+					tile.Quality1 = file.ReadInt8();
+					tile.AnimID = file.ReadInt16LE();
+					tile.Unknown2 = file.ReadInt8();
+					tile.Hue = file.ReadInt8();
+					tile.SittingOffset = file.ReadInt8();
+					tile.Unknown3 = file.ReadInt8();
+					tile.Height = file.ReadInt8();
+					tile.Name = file.ReadString(20);
+				}
+
+				//memcpy(&m_StaticData[bID], (PVOID)(vAddr + vh->Position), sizeof(STATIC_GROUP));
 			}
 		}
 		else if (vh->FileID == 32) //Hues
@@ -2308,7 +2420,7 @@ void COrion::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= MAX_LAND_DATA_INDEX_COUNT + MAX_STATIC_DATA_INDEX_COUNT)
+			if (index < 0 || index >= MAX_LAND_DATA_INDEX_COUNT + m_StaticDataCount)
 				continue;
 
 			STRING_LIST newArt = newDataParser.GetTokens(strings[1].c_str());
@@ -2319,7 +2431,7 @@ void COrion::IndexReplaces()
 			{
 				int checkIndex = atoi(newArt[i].c_str());
 
-				if (checkIndex < 0 || checkIndex >= MAX_LAND_DATA_INDEX_COUNT + MAX_STATIC_DATA_INDEX_COUNT)
+				if (checkIndex < 0 || checkIndex >= MAX_LAND_DATA_INDEX_COUNT + m_StaticDataCount)
 					continue;
 
 				if (index < MAX_LAND_DATA_INDEX_COUNT && checkIndex < MAX_LAND_DATA_INDEX_COUNT && m_LandDataIndex[checkIndex].Address != NULL)
@@ -4237,7 +4349,7 @@ void COrion::ConsolePromptCancel()
 	g_ConsolePrompt = PT_NONE;
 }
 //----------------------------------------------------------------------------------
-uint COrion::GetLandFlags(const ushort &id)
+__int64 COrion::GetLandFlags(const ushort &id)
 {
 	ushort divID = id / 32;
 
@@ -4247,7 +4359,7 @@ uint COrion::GetLandFlags(const ushort &id)
 	return 0;
 }
 //----------------------------------------------------------------------------------
-uint COrion::GetStaticFlags(const ushort &id)
+__int64 COrion::GetStaticFlags(const ushort &id)
 {
 	ushort divID = id / 32;
 

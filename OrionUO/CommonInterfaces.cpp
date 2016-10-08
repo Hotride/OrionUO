@@ -86,12 +86,12 @@ void __cdecl FUNCBODY_DrawGumppic(int x, int y, unsigned short graphic, unsigned
 //----------------------------------------------------------------------------------
 //IUltimaOnline
 //----------------------------------------------------------------------------------
-unsigned int __cdecl FUNCBODY_GetLandFlags(unsigned short graphic)
+unsigned __int64 __cdecl FUNCBODY_GetLandFlags(unsigned short graphic)
 {
 	return g_Orion.GetLandFlags(graphic);
 }
 //----------------------------------------------------------------------------------
-unsigned int __cdecl FUNCBODY_GetStaticFlags(unsigned short graphic)
+unsigned __int64 __cdecl FUNCBODY_GetStaticFlags(unsigned short graphic)
 {
 	return g_Orion.GetStaticFlags(graphic);
 }
