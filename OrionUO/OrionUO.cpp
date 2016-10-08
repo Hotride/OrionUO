@@ -180,7 +180,7 @@ bool COrion::Install()
 	else
 		staticsCount = (g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_OLD))) / sizeof(STATIC_GROUP_OLD);
 
-	LOG("staticsCount=%i\n", staticsCount);
+	DEBUGLOG("staticsCount=%i\n", staticsCount);
 	LoadTiledata(512, staticsCount);
 	DEBUGLOG("Load indexes\n");
 	LoadIndexFiles();
@@ -214,9 +214,10 @@ bool COrion::Install()
 
 	DEBUGLOG("Patch files\n");
 	PatchFiles();
-	DEBUGLOG("Replaces.\n");
+	DEBUGLOG("Replaces...\n");
 	IndexReplaces();
 
+	DEBUGLOG("Sort skills...\n");
 	g_SkillSort.Init();
 
 	DEBUGLOG("Load cursors.\n");
@@ -1180,11 +1181,8 @@ void COrion::LoginComplete()
 		StatusReq(g_PlayerSerial);
 		PaperdollReq(g_PlayerSerial);
 
-		/*TPacketOpenChat openChatPacket(L"");
-		openChatPacket.Send();
-
-		TPacketRazorAnswer razorPacket;
-		razorPacket.Send();*/
+		//CPacketOpenChat(L"").Send();
+		//CPacketRazorAnswer().Send();
 
 		CPacketLanguage(g_Language.c_str()).Send();
 
@@ -2420,6 +2418,7 @@ void COrion::IndexReplaces()
 	WISP_FILE::CTextFileParser soundParser(g_App.FilePath("Sound.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser mp3Parser(g_App.FilePath("Music\\Digital\\Config.txt"), " ,", "#;", "");
 
+	DEBUGLOG("Replace arts\n");
 	while (!artParser.IsEOF() && false)
 	{
 		STRING_LIST strings = artParser.ReadTokens();
@@ -2465,6 +2464,7 @@ void COrion::IndexReplaces()
 		}
 	}
 
+	DEBUGLOG("Replace textures\n");
 	while (!textureParser.IsEOF())
 	{
 		STRING_LIST strings = textureParser.ReadTokens();
@@ -2499,6 +2499,7 @@ void COrion::IndexReplaces()
 		}
 	}
 
+	DEBUGLOG("Replace gumps\n");
 	while (!gumpParser.IsEOF())
 	{
 		STRING_LIST strings = gumpParser.ReadTokens();
@@ -2530,6 +2531,7 @@ void COrion::IndexReplaces()
 		}
 	}
 
+	DEBUGLOG("Replace multi\n");
 	while (!multiParser.IsEOF())
 	{
 		STRING_LIST strings = multiParser.ReadTokens();
@@ -2559,9 +2561,10 @@ void COrion::IndexReplaces()
 		}
 	}
 
+	DEBUGLOG("Replace sounds\n");
 	while (!soundParser.IsEOF())
 	{
-		std::vector<std::string> strings = soundParser.ReadTokens();
+		STRING_LIST strings = soundParser.ReadTokens();
 
 		if (strings.size() >= 2)
 		{
@@ -2611,18 +2614,27 @@ void COrion::IndexReplaces()
 		}
 	}
 
+	DEBUGLOG("Loading mp3 config\n");
 	while (!mp3Parser.IsEOF())
 	{
-		std::vector<std::string> strings = mp3Parser.ReadTokens();
+		STRING_LIST strings = mp3Parser.ReadTokens();
+
 		int size = strings.size();
+
 		if (size > 0)
 		{
-			CIndexMusic &mp3 = m_MP3Data[std::atoi(strings[0].c_str())];
+			uint index = std::atoi(strings[0].c_str());
 
-			if (size > 1)
-				mp3.FilePath = g_App.FilePath(("Music\\Digital\\" + strings[1] + ".mp3").c_str());
-			if (size > 2)
-				mp3.Loop = true;
+			if (index < 100)
+			{
+				CIndexMusic &mp3 = m_MP3Data[index];
+
+				if (size > 1)
+					mp3.FilePath = g_App.FilePath(("Music\\Digital\\" + strings[1] + ".mp3").c_str());
+
+				if (size > 2)
+					mp3.Loop = true;
+			}
 		}
 	}
 }
