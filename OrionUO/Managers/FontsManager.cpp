@@ -862,7 +862,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const 
 		return pData;
 	}
 	
-	int blocksize = (height + 1) * (width + 1);
+	int blocksize = height * width;
 
 	if (m_SavePixels)
 		th.PixelsData.resize(blocksize, 0);
@@ -901,7 +901,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const 
 
 		IFOR(i, 0, count)
 		{
-			BYTE index = (BYTE)ptr->Data[i].item;
+			uchar index = (uchar)ptr->Data[i].item;
 			int offsY = GetFontOffsetY(font, index);
 
 			index = m_FontIndex[index];
@@ -913,7 +913,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const 
 			int dw = fcd.Width;
 			int dh = fcd.Height;
 
-			WORD charColor = color;
+			ushort charColor = color;
 
 			IFOR(y, 0, dh)
 			{
@@ -927,11 +927,11 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const 
 					if ((x + w) >= width)
 						break;
 
-					WORD pic = fcd.Data[(y * dw) + x];
+					ushort pic = fcd.Data[(y * dw) + x];
 
 					if (pic)
 					{
-						DWORD pcl = 0;
+						uint pcl = 0;
 
 						if (partialHue)
 							pcl = g_ColorManager.GetPartialHueColor(pic, charColor);
@@ -2566,7 +2566,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 
 	height += m_TopMargin + m_BottomMargin + 4;
 
-	int blocksize = (height + 1) * (width + 1);
+	int blocksize = height * width;
 
 	if (m_SavePixels)
 		th.PixelsData.resize(blocksize, 0);
@@ -2784,7 +2784,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 						{
 							int testX = cx + w + offsX + italicOffset;
 
-							if (testX >= width + italicOffset)
+							if (testX >= width/* + italicOffset*/)
 								break;
 
 							int block = (testY * width) + testX;
@@ -2831,7 +2831,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 						{
 							int testX = cx + w + offsX + italicOffset;
 
-							if (testX >= width + italicOffset)
+							if (testX >= width/* + italicOffset*/)
 								break;
 
 							int block = (testY * width) + testX;
@@ -2871,7 +2871,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 						{
 							int testX = cx + w + offsX + italicOffset;
 
-							if (testX >= width + italicOffset)
+							if (testX >= width/* + italicOffset*/)
 								break;
 
 							int block = (testY * width) + testX;
