@@ -135,6 +135,9 @@ uint g_LockedClientFeatures = 0;
 bool g_GeneratedMouseDown = false;
 bool g_DrawFoliage = true;
 
+DEVELOPER_MODE g_DeveloperMode = DM_SHOW_FPS_ONLY;
+DEVELOPER_MODE g_OptionsDeveloperMode = DM_SHOW_FPS_ONLY;
+
 ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight] = { 0 };
 //----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y)

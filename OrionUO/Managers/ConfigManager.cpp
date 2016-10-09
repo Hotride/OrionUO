@@ -333,6 +333,7 @@ ushort CConfigManager::GetColorByNotoriety(uchar notoriety)
 bool CConfigManager::Load(string path)
 {
 	bool result = false;
+	g_DeveloperMode = DM_SHOW_FPS_ONLY;
 
 	WISP_FILE::CMappedFile file;
 
@@ -631,7 +632,12 @@ bool CConfigManager::Load(string path)
 				g_GL.UpdateRect();
 
 				if (blockSize > 15)
+				{
 					m_ToggleBufficonWindow = file.ReadUInt8();
+
+					if (blockSize == 17)
+						g_DeveloperMode = (DEVELOPER_MODE)file.ReadUInt8();
+				}
 			}
 			else
 			{
@@ -815,7 +821,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//No page
-	writter.WriteInt8(6 + 9 + 1); //size of block
+	writter.WriteInt8(6 + 9 + 1 + 1); //size of block
 	writter.WriteInt8(0); //page index
 	writter.WriteUInt16LE(m_GameWindowX);
 	writter.WriteUInt16LE(m_GameWindowY);
@@ -831,6 +837,7 @@ void CConfigManager::Save(string path)
 	writter.WriteInt16LE((short)(rect.bottom - rect.top));
 
 	writter.WriteUInt8(m_ToggleBufficonWindow);
+	writter.WriteUInt8(g_DeveloperMode);
 
 	writter.WriteBuffer();
 

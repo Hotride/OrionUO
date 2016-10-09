@@ -1102,7 +1102,7 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			if (obj != NULL)
 				g_EntryPointer->SetText(obj->Name);
 
-			if (g_ConfigManager.GetConsoleNeedEnter())
+			if (g_ConfigManager.ConsoleNeedEnter)
 				g_EntryPointer = NULL;
 			else
 				g_EntryPointer = &g_GameConsole;

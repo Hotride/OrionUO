@@ -148,6 +148,7 @@ void CGumpOptions::UpdateContent()
 void CGumpOptions::Init()
 {
 	g_OptionsMacroManager.LoadFromMacro();
+	g_OptionsDeveloperMode = g_DeveloperMode;
 
 	m_MacroPointer = (CMacro*)g_OptionsMacroManager.m_Items;
 	m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
@@ -213,6 +214,22 @@ void CGumpOptions::DrawPage2()
 
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 44));
 	text->CreateTextureW(0, L"These settings configure the Orion UO Client.");
+
+
+
+	CGUIRadio *devRadio = (CGUIRadio*)Add(new CGUIRadio(ID_GO_P2_DEV_MODE_1, 0x00D0, 0x00D1, 0x00D2, 64, 64));
+	devRadio->Checked = (g_DeveloperMode == DM_NO_DEBUG);
+	devRadio->SetTextParameters(0, L"No debug", g_OptionsTextColor);
+
+	devRadio = (CGUIRadio*)Add(new CGUIRadio(ID_GO_P2_DEV_MODE_2, 0x00D0, 0x00D1, 0x00D2, 164, 64));
+	devRadio->Checked = (g_DeveloperMode == DM_SHOW_FPS_ONLY);
+	devRadio->SetTextParameters(0, L"FPS only", g_OptionsTextColor);
+
+	devRadio = (CGUIRadio*)Add(new CGUIRadio(ID_GO_P2_DEV_MODE_3, 0x00D0, 0x00D1, 0x00D2, 264, 64));
+	devRadio->Checked = (g_DeveloperMode == DM_DEBUGGING);
+	devRadio->SetTextParameters(0, L"Debugging", g_OptionsTextColor);
+
+
 
 	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(1, 0x0BB8, 64, 90, 500, 300, false, true));
 
@@ -1503,6 +1520,14 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 			else if (serial == ID_GO_P2_CONSOLE_ENTER) //Console need press 'Enter' to activate it.
 				g_OptionsConfig.ConsoleNeedEnter = state;
 
+			else if (serial == ID_GO_P2_DEV_MODE_1)
+				g_OptionsDeveloperMode = DM_NO_DEBUG;
+			else if (serial == ID_GO_P2_DEV_MODE_2)
+				g_OptionsDeveloperMode = DM_SHOW_FPS_ONLY;
+			else if (serial == ID_GO_P2_DEV_MODE_3)
+				g_OptionsDeveloperMode = DM_DEBUGGING;
+			
+
 			break;
 		}
 		case 3: //Language
@@ -1620,6 +1645,12 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 				g_OptionsConfig.DrawStatusState = 1;
 			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM) //Under character
 				g_OptionsConfig.DrawStatusState = 2;
+			else if (serial == ID_GO_P2_DEV_MODE_1)
+				g_OptionsDeveloperMode = DM_NO_DEBUG;
+			else if (serial == ID_GO_P2_DEV_MODE_2)
+				g_OptionsDeveloperMode = DM_SHOW_FPS_ONLY;
+			else if (serial == ID_GO_P2_DEV_MODE_3)
+				g_OptionsDeveloperMode = DM_DEBUGGING;
 
 			break;
 		}
@@ -1996,6 +2027,8 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.DrawStumps = g_OptionsConfig.DrawStumps;
 			g_ConfigManager.MarkingCaves = g_OptionsConfig.MarkingCaves;
 			g_ConfigManager.NoAnimateFields = g_OptionsConfig.NoAnimateFields;
+			g_ConfigManager.ConsoleNeedEnter = g_OptionsConfig.ConsoleNeedEnter;
+			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;
 		}
@@ -2128,7 +2161,6 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.ShowIncomingNames = g_OptionsConfig.ShowIncomingNames;
 			g_ConfigManager.UseCircleTrans = g_OptionsConfig.UseCircleTrans;
 			g_ConfigManager.StatReport = g_OptionsConfig.StatReport;
-			g_ConfigManager.ConsoleNeedEnter = g_OptionsConfig.ConsoleNeedEnter;
 			g_ConfigManager.CircleTransRadius = g_OptionsConfig.CircleTransRadius;
 			g_ConfigManager.SkillReport = g_OptionsConfig.SkillReport;
 			g_ConfigManager.SpeechFont = g_OptionsConfig.SpeechFont;

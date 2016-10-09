@@ -179,7 +179,7 @@ void CGumpPaperdoll::DelayedClick(CRenderObject *obj)
 		td->Unicode = false;
 		td->Font = 3;
 		td->Serial = 0;
-		td->Color = 0x03B5;
+		td->Color = 0x038F;
 		td->Timer = g_Ticks;
 		td->Type = TT_CLIENT;
 		td->X = g_MouseManager.Position.X - m_X;

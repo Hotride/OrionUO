@@ -69,7 +69,7 @@ void CLandObject::Draw(const int &x, const int &y)
 	{
 		ushort objColor = 0;
 
-		if (g_SelectedObject.Object() == this)
+		if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
 			objColor = SELECT_LAND_COLOR;
 
 #if UO_DEBUG_INFO!=0

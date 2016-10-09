@@ -1411,62 +1411,73 @@ void CGameScreen::Render(const bool &mode)
 		m_GameScreenGump.Draw();
 
 #if UO_DEBUG_INFO!=0
-		char dbf[150] = {0};
-
-		sprintf_s(dbf, "FPS=%i (%ims) Dir=%i Z=%i (MDZ=%i) scale=%.1f", FPScount, g_FrameDelay[1], g_Player->Direction, g_RenderBounds.PlayerZ, m_MaxDrawZ, g_GlobalScale);
-
-		g_FontManager.DrawA(3, dbf, 0x35, 20, 30);
-
-		sprintf_s(dbf, "Rendered %i object counts:\nLand=%i Statics=%i Game=%i Multi=%i Lights=%i",
-			g_RenderedObjectsCountInGameWindow, g_LandObjectsCount, g_StaticsObjectsCount, g_GameObjectsCount, g_MultiObjectsCount, m_LightCount);
-
-		g_FontManager.DrawA(3, dbf, 0x35, 20, 54);
-
-		if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsWorldObject())
+		if (g_DeveloperMode == DM_SHOW_FPS_ONLY)
 		{
-			CRenderWorldObject *selRwo = (CRenderWorldObject*)g_SelectedObject.Object();
-			CLandObject *land = selRwo->LandObjectPtr();
-			char soName[20] = "UnknownObject";
+			char dbf[50] = { 0 };
 
-			switch (selRwo->RenderType)
+			sprintf_s(dbf, "FPS=%i (%ims) scale=%.1f", FPScount, g_FrameDelay[1], g_GlobalScale);
+
+			g_FontManager.DrawA(3, dbf, 0x35, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth + 10, g_RenderBounds.GameWindowPosY);
+		}
+		else if (g_DeveloperMode == DM_DEBUGGING)
+		{
+			char dbf[150] = { 0 };
+
+			sprintf_s(dbf, "FPS=%i (%ims) Dir=%i Z=%i (MDZ=%i) scale=%.1f", FPScount, g_FrameDelay[1], g_Player->Direction, g_RenderBounds.PlayerZ, m_MaxDrawZ, g_GlobalScale);
+
+			g_FontManager.DrawA(3, dbf, 0x35, 20, 30);
+
+			sprintf_s(dbf, "Rendered %i object counts:\nLand=%i Statics=%i Game=%i Multi=%i Lights=%i",
+				g_RenderedObjectsCountInGameWindow, g_LandObjectsCount, g_StaticsObjectsCount, g_GameObjectsCount, g_MultiObjectsCount, m_LightCount);
+
+			g_FontManager.DrawA(3, dbf, 0x35, 20, 54);
+
+			if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsWorldObject())
 			{
-				case ROT_LAND_OBJECT:
-				{
-					if (!land->IsStretched)
-						sprintf_s(soName, "Land");
-					else
-						sprintf_s(soName, "LandTex (mz=%i)", land->MinZ);
+				CRenderWorldObject *selRwo = (CRenderWorldObject*)g_SelectedObject.Object();
+				CLandObject *land = selRwo->LandObjectPtr();
+				char soName[20] = "UnknownObject";
 
-					break;
-				}
-				case ROT_STATIC_OBJECT:
+				switch (selRwo->RenderType)
 				{
-					sprintf_s(soName, "Static");
-					break;
+					case ROT_LAND_OBJECT:
+					{
+						if (!land->IsStretched)
+							sprintf_s(soName, "Land");
+						else
+							sprintf_s(soName, "LandTex (mz=%i)", land->MinZ);
+
+						break;
+					}
+					case ROT_STATIC_OBJECT:
+					{
+						sprintf_s(soName, "Static");
+						break;
+					}
+					case ROT_GAME_OBJECT:
+					{
+						sprintf_s(soName, "GameObject");
+						break;
+					}
+					case ROT_MULTI_OBJECT:
+					{
+						sprintf_s(soName, "Multi");
+						break;
+					}
+					default:
+						break;
 				}
-				case ROT_GAME_OBJECT:
-				{
-					sprintf_s(soName, "GameObject");
-					break;
-				}
-				case ROT_MULTI_OBJECT:
-				{
-					sprintf_s(soName, "Multi");
-					break;
-				}
-				default:
-					break;
+
+				int tz = selRwo->Z;
+
+				//Если это тайл текстуры
+				if (land != NULL && land->IsStretched)
+					tz = (char)land->Serial;
+
+				sprintf_s(dbf, "Selected:\n%s: G=0x%04X X=%i Y=%i Z=%i (%i) RQI=%i (SUM=%i)", soName, selRwo->Graphic, selRwo->X, selRwo->Y, selRwo->Z, tz, selRwo->RenderQueueIndex, selRwo->Z + selRwo->RenderQueueIndex);
+
+				g_FontManager.DrawA(3, dbf, 0x35, 20, 102);
 			}
-
-			int tz = selRwo->Z;
-
-			//Если это тайл текстуры
-			if (land != NULL && land->IsStretched)
-				tz = (char)land->Serial;
-
-			sprintf_s(dbf, "Selected:\n%s: G=0x%04X X=%i Y=%i Z=%i (%i) RQI=%i (SUM=%i)", soName, selRwo->Graphic, selRwo->X, selRwo->Y, selRwo->Z, tz, selRwo->RenderQueueIndex, selRwo->Z + selRwo->RenderQueueIndex);
-
-			g_FontManager.DrawA(3, dbf, 0x35, 20, 102);
 		}
 #endif //UO_DEBUG_INFO!=0
 
@@ -1728,7 +1739,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 							string str = g_ClilocManager.Cliloc(g_Language)->GetA(102000 + id, g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name);
 
 							if (str.length())
-								g_Orion.CreateTextMessage(TT_CLIENT, (uint)rwo, 3, 0x03B5, str);
+								g_Orion.CreateTextMessage(TT_CLIENT, (uint)rwo, 3, 0x038F, str);
 						}
 					}
 					/*else if (g_LastObjectType == SOT_LAND_OBJECT)
@@ -1747,7 +1758,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 	{
 		CGump *gumpEntry = g_GumpManager.GetTextEntryOwner();
 
-		if (g_ConfigManager.GetConsoleNeedEnter())
+		if (g_ConfigManager.ConsoleNeedEnter)
 			g_EntryPointer = NULL;
 		else
 			g_EntryPointer = &g_GameConsole;
