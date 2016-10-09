@@ -3614,7 +3614,7 @@ PACKET_HANDLER(SecureTrading)
 		uint id2 = ReadUInt32BE();
 		uchar hasName = ReadUInt8();
 
-		CGumpSecureTrading *gump = new CGumpSecureTrading(serial, 0, 0, id1, id2);
+		CGumpSecureTrading *gump = new CGumpSecureTrading(id1, 0, 0, id1, id2);
 
 		if (hasName && *m_Ptr)
 			gump->Text = ReadString(0);
@@ -3632,9 +3632,8 @@ PACKET_HANDLER(SecureTrading)
 			uint id1 = ReadUInt32BE();
 			uint id2 = ReadUInt32BE();
 
-			gump->StateMy = id1 != 0;
-			gump->StateOpponent = id2 != 0;
-			gump->WantRedraw = true;
+			gump->StateMy = (id1 != 0);
+			gump->StateOpponent = (id2 != 0);
 		}
 	}
 }

@@ -273,7 +273,7 @@ CGump *CGumpManager::UpdateGump(uint serial, uint id, GUMP_TYPE type)
 	CGump *gump = GetGump(serial, id, type);
 
 	if (gump != NULL)
-		gump->FrameCreated = false;
+		gump->WantRedraw = true;
 
 	return gump;
 }
@@ -299,8 +299,8 @@ CGump *CGumpManager::GetGump(uint serial, uint id, GUMP_TYPE type)
 			{
 				if (gump->Serial == serial)
 					break;
-				/*else if (!serial && (gump->ID == id || ((CGumpSecureTrading*)gump)->ID2 == id))
-					break;*/
+				else if (!serial && (gump->ID == id || ((CGumpSecureTrading*)gump)->ID2 == id))
+					break;
 			}
 			else if (gump->Serial == serial)
 			{
