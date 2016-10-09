@@ -11,7 +11,7 @@
 #include "../OrionUO.h"
 #include "../Managers/ColorManager.h"
 #include "../Managers/MouseManager.h"
-#include "../Managers/MulReader.h"
+#include "../Managers/UOFileReader.h"
 #include "../SelectedObject.h"
 //----------------------------------------------------------------------------------
 CGUITilepicHightlighted::CGUITilepicHightlighted(const uint &serial, const ushort &graphic, const ushort &color, const ushort &selectedColor, const int &x, const int &y, const bool &doubleDraw)
@@ -85,7 +85,7 @@ bool CGUITilepicHightlighted::Select()
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 				select = (m_CheckPolygone || th->PixelsData[(y * th->Width) + x] != 0);
 #else
-				select = (m_CheckPolygone || g_MulReader->ArtPixelsInXY(false, io, x, y));
+				select = (m_CheckPolygone || g_UOFileReader->ArtPixelsInXY(false, io, x, y));
 #endif
 			}
 		}

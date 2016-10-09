@@ -213,9 +213,6 @@
     <ClInclude Include="ShaderData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Managers\MulReader.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="GLEngine\GLHTMLTextTexture.h">
       <Filter>Header Files\GLEngine</Filter>
     </ClInclude>
@@ -771,6 +768,9 @@
     <ClInclude Include="bassmidi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Managers\UOFileReader.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -886,9 +886,6 @@
     </ClCompile>
     <ClCompile Include="ScreenshotBuilder.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Managers\MulReader.cpp">
-      <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="GLEngine\GLHTMLTextTexture.cpp">
       <Filter>Source Files\GLEngine</Filter>
@@ -1428,6 +1425,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Managers\PluginManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\UOFileReader.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>

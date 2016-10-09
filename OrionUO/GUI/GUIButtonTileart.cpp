@@ -11,7 +11,7 @@
 #include "../OrionUO.h"
 #include "../Managers/ColorManager.h"
 #include "../Managers/MouseManager.h"
-#include "../Managers/MulReader.h"
+#include "../Managers/UOFileReader.h"
 //----------------------------------------------------------------------------------
 CGUIButtonTileart::CGUIButtonTileart(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y, const ushort &tileGraphic, const ushort &tileColor, const int &tileX, const int &tileY)
 : CGUIButton(serial, graphic, graphicSelected, graphicPressed, x, y),
@@ -100,7 +100,7 @@ bool CGUIButtonTileart::Select()
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 			select = (m_CheckPolygone || th->PixelsData[(y * th->Width) + x] != 0);
 #else
-			select = (m_CheckPolygone || g_MulReader->ArtPixelsInXY(false, io, x, y));
+			select = (m_CheckPolygone || g_UOFileReader->ArtPixelsInXY(false, io, x, y));
 #endif
 		}
 	}

@@ -11,7 +11,7 @@
 #include "../OrionUO.h"
 #include "../Managers/ColorManager.h"
 #include "../Managers/MouseManager.h"
-#include "../Managers/MulReader.h"
+#include "../Managers/UOFileReader.h"
 //----------------------------------------------------------------------------------
 CGUIDrawObject::CGUIDrawObject(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y)
 : CBaseGUI(type, serial, graphic, color, x, y)
@@ -84,7 +84,7 @@ bool CGUIDrawObject::Select()
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 			select = (m_CheckPolygone || th->PixelsData[(y * th->Width) + x] != 0);
 #else
-			select = (m_CheckPolygone || g_MulReader->GumpPixelsInXY(g_Orion.m_GumpDataIndex[m_Graphic], x, y));
+			select = (m_CheckPolygone || g_UOFileReader->GumpPixelsInXY(g_Orion.m_GumpDataIndex[m_Graphic], x, y));
 #endif
 		}
 	}

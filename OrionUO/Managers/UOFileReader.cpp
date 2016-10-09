@@ -1,28 +1,28 @@
 /***********************************************************************************
 **
-** MulReader.cpp
+** UOFileReader.cpp
 **
 ** Copyright (C) August 2016 Hotride
 **
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "MulReader.h"
+#include "UOFileReader.h"
 #include "ColorManager.h"
 #include "../GLEngine/GLEngine.h"
 #include "../OrionUO.h"
 #include "../StumpsData.h"
 
-CMulReader *g_MulReader = NULL;
+UOFileReader *g_UOFileReader = NULL;
 //---------------------------------------------------------------------------
-//----------------------------------CMulReader-------------------------------
+//----------------------------------CUOFileReader-------------------------------
 //---------------------------------------------------------------------------
 /*!
 Получить массив пикселей гампа
 @param [__in] io Ссылка на данные о гампе
 @return Массив пикселей или NULL
 */
-USHORT_LIST CMulReader::GetGumpPixels(CIndexObject &io)
+USHORT_LIST UOFileReader::GetGumpPixels(CIndexObject &io)
 {
 	int dataStart = io.Address;
 	puint lookupList = (puint)dataStart;
@@ -82,7 +82,7 @@ USHORT_LIST CMulReader::GetGumpPixels(CIndexObject &io)
 @param [__in] io Ссылка на данные о гампе
 @return Ссылка на данные о текстуре
 */
-CGLTexture *CMulReader::ReadGump(CIndexObject &io)
+CGLTexture *UOFileReader::ReadGump(CIndexObject &io)
 {
 	CGLTexture *th = new CGLTexture();
 	th->Width = io.Width;
@@ -104,7 +104,7 @@ CGLTexture *CMulReader::ReadGump(CIndexObject &io)
 @param [__in] checkY Координата Y
 @return true в случае успешного теста
 */
-bool CMulReader::GumpPixelsInXY(CIndexObject &io, const int &checkX, const int &checkY)
+bool UOFileReader::GumpPixelsInXY(CIndexObject &io, const int &checkX, const int &checkY)
 {
 	CGLTexture *th = io.Texture;
 
@@ -146,7 +146,7 @@ bool CMulReader::GumpPixelsInXY(CIndexObject &io, const int &checkX, const int &
 @param [__in] io Ссылка на данные о арте
 @return Ссылка на данные о текстуре
 */
-CGLTexture *CMulReader::ReadArt(const ushort &id, CIndexObject &io)
+CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io)
 {
 	CGLTexture *th = new CGLTexture();
 	th->Texture = 0;
@@ -404,7 +404,7 @@ CGLTexture *CMulReader::ReadArt(const ushort &id, CIndexObject &io)
 @param [__out] r Структура с габаритами на выходе
 @return Ссылка на данные о текстуре
 */
-WISP_GEOMETRY::CRect CMulReader::ReadStaticArtPixelDimension(CIndexObject &io)
+WISP_GEOMETRY::CRect UOFileReader::ReadStaticArtPixelDimension(CIndexObject &io)
 {
 	WISP_GEOMETRY::CRect r;
 
@@ -527,7 +527,7 @@ WISP_GEOMETRY::CRect CMulReader::ReadStaticArtPixelDimension(CIndexObject &io)
 @param [__in] checkY Координата Y
 @return true в случае успешного теста
 */
-bool CMulReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &checkX, const int &checkY)
+bool UOFileReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &checkX, const int &checkY)
 {
 	CGLTexture *th = io.Texture;
 
@@ -666,7 +666,7 @@ bool CMulReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &ch
 @param [__in] io Ссылка на данные о текстуре ландшафта
 @return Ссылка на данные о текстуре
 */
-CGLTexture *CMulReader::ReadTexture(CIndexObject &io)
+CGLTexture *UOFileReader::ReadTexture(CIndexObject &io)
 {
 	CGLTexture *th = new CGLTexture();
 	th->Texture = 0;
@@ -723,7 +723,7 @@ CGLTexture *CMulReader::ReadTexture(CIndexObject &io)
 @param [__in] io Ссылка на данные о освещении
 @return Ссылка на данные о текстуре
 */
-CGLTexture *CMulReader::ReadLight(CIndexObject &io)
+CGLTexture *UOFileReader::ReadLight(CIndexObject &io)
 {
 	CGLTexture *th = new CGLTexture();
 	th->Texture = NULL;
@@ -750,88 +750,5 @@ CGLTexture *CMulReader::ReadLight(CIndexObject &io)
 	g_GL.BindTexture16(th->Texture, io.Width, io.Height, &pixels[0]);
 
 	return th;
-}
-//---------------------------------------------------------------------------
-//----------------------------------CUopReader-------------------------------
-//---------------------------------------------------------------------------
-/*!
-Получить массив пикселей гампа
-@param [__in] io Ссылка на данные о гампе
-@return Массив пикселей или NULL
-*/
-USHORT_LIST CUopReader::GetGumpPixels(CIndexObject &io)
-{
-	USHORT_LIST result;
-
-	return result;
-}
-//---------------------------------------------------------------------------
-/*!
-Прочитать гамп и сгенерировать текстуру
-@param [__in] io Ссылка на данные о гампе
-@return Ссылка на данные о текстуре
-*/
-CGLTexture *CUopReader::ReadGump(CIndexObject &io)
-{
-	return NULL;
-}
-//---------------------------------------------------------------------------
-/*!
-Проверить нахождение пикселя гампа в указанных координатах
-@param [__in] io Ссылка на данные о гампе
-@param [__in] checkX Координата X
-@param [__in] checkY Координата Y
-@return true в случае успешного теста
-*/
-bool CUopReader::GumpPixelsInXY(CIndexObject &io, const int &checkX, const int &checkY)
-{
-	return false;
-}
-//---------------------------------------------------------------------------
-/*!
-Прочитать арт и сгенерировать текстуру
-@param [__in] ID Индекс арта
-@param [__in] io Ссылка на данные о арте
-@return Ссылка на данные о текстуре
-*/
-CGLTexture *CUopReader::ReadArt(const WORD &id, CIndexObject &io)
-{
-	return NULL;
-}
-//---------------------------------------------------------------------------
-/*!
-Прочитать арт и вычислить реальные пииксельные границы картинки
-@param [__in] io Ссылка на данные о арте
-@param [__out] r Структура с габаритами на выходе
-@return Ссылка на данные о текстуре
-*/
-WISP_GEOMETRY::CRect CUopReader::ReadStaticArtPixelDimension(CIndexObject &io)
-{
-	WISP_GEOMETRY::CRect r;
-
-	return r;
-}
-//---------------------------------------------------------------------------
-/*!
-Проверить нахождение пикселя арта в указанных координатах
-@param [__in] land Ландшафт или статика
-@param [__in] io Ссылка на данные о арте
-@param [__in] checkX Координата X
-@param [__in] checkY Координата Y
-@return true в случае успешного теста
-*/
-bool CUopReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &checkX, const int &checkY)
-{
-	return false;
-}
-//---------------------------------------------------------------------------
-/*!
-Прочитать текстуру ландшафта и сгенерировать тексруту
-@param [__in] io Ссылка на данные о текстуре ландшафта
-@return Ссылка на данные о текстуре
-*/
-CGLTexture *CUopReader::ReadTexture(CIndexObject &io)
-{
-	return NULL;
 }
 //---------------------------------------------------------------------------

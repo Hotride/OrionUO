@@ -11,7 +11,7 @@
 #include "../OrionUO.h"
 #include "../Managers/ColorManager.h"
 #include "../Managers/MouseManager.h"
-#include "../Managers/MulReader.h"
+#include "../Managers/UOFileReader.h"
 //----------------------------------------------------------------------------------
 CGUIGumppicTiled::CGUIGumppicTiled(const ushort &graphic, const int &x, const int &y, const int &width, const int &height)
 : CGUIDrawObject(GOT_GUMPPICTILED, 0, graphic, 0, x, y), m_Width(width),
@@ -80,7 +80,7 @@ bool CGUIGumppicTiled::Select()
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 			select = (m_CheckPolygone || th->PixelsData[(y * th->Width) + x] != 0);
 #else
-			select = (m_CheckPolygone || g_MulReader->GumpPixelsInXY(io, x, y));
+			select = (m_CheckPolygone || g_UOFileReader->GumpPixelsInXY(io, x, y));
 #endif
 		}
 	}

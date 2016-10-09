@@ -21,7 +21,7 @@
 #include "Managers/FileManager.h"
 #include "Managers/ColorManager.h"
 #include "Managers/MouseManager.h"
-#include "Managers/MulReader.h"
+#include "Managers/UOFileReader.h"
 #include "Managers/FontsManager.h"
 #include "Managers/SoundManager.h"
 #include "Managers/SpeechManager.h"
@@ -166,10 +166,7 @@ bool COrion::Install()
 
 	g_ColorManager.Init();
 
-	if (g_FileManager.UseUOP)
-		g_MulReader = new CUopReader();
-	else
-		g_MulReader = new CMulReader();
+	g_UOFileReader = new UOFileReader();
 
 	DEBUGLOG("Load tiledata\n");
 
@@ -391,7 +388,7 @@ void COrion::Uninstall()
 	RELEASE_POINTER(g_FontColorizerShader);
 	RELEASE_POINTER(g_LightColorizerShader);
 	g_CurrentShader = NULL;
-	RELEASE_POINTER(g_MulReader);
+	RELEASE_POINTER(g_UOFileReader);
 	RELEASE_POINTER(g_MapManager);
 
 	IFOR(i, 0, 6)
@@ -2819,7 +2816,7 @@ void COrion::CreateObjectHandlesBackground()
 		if (drawHeight > g_ObjectHandlesHeight)
 			drawHeight = g_ObjectHandlesHeight - drawY;
 
-		USHORT_LIST pixels = g_MulReader->GetGumpPixels(io);
+		USHORT_LIST pixels = g_UOFileReader->GetGumpPixels(io);
 
 		if (pixels.size())
 		{
@@ -2995,7 +2992,7 @@ CGLTexture *COrion::ExecuteGump(const ushort &id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = g_MulReader->ReadGump(io);
+		io.Texture = g_UOFileReader->ReadGump(io);
 
 		if (io.Texture != 0)
 			m_UsedGumpList.push_back(&m_GumpDataIndex[id]);
@@ -3015,7 +3012,7 @@ CGLTexture *COrion::ExecuteLandArt(const ushort &id)
 		if (!io.Address || id == 0x02) //nodraw tiles banned
 			return NULL;
 
-		io.Texture = g_MulReader->ReadArt(id, io);
+		io.Texture = g_UOFileReader->ReadArt(id, io);
 
 		if (io.Texture != 0)
 			m_UsedLandList.push_back(&m_LandDataIndex[id]);
@@ -3040,7 +3037,7 @@ CGLTexture *COrion::ExecuteStaticArt(const ushort &id)
 		if (!io.Address || id == 0x01) //nodraw tiles banned
 			return NULL;
 
-		io.Texture = g_MulReader->ReadArt(id + 0x4000, io);
+		io.Texture = g_UOFileReader->ReadArt(id + 0x4000, io);
 
 		if (io.Texture != 0)
 		{
@@ -3070,7 +3067,7 @@ CGLTexture *COrion::ExecuteTexture(ushort id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = g_MulReader->ReadTexture(io);
+		io.Texture = g_UOFileReader->ReadTexture(io);
 
 		if (io.Texture != 0)
 			m_UsedTextureList.push_back(&m_TextureDataIndex[id]);
@@ -3093,7 +3090,7 @@ CGLTexture *COrion::ExecuteLight(uchar &id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = g_MulReader->ReadLight(io);
+		io.Texture = g_UOFileReader->ReadLight(io);
 
 		if (io.Texture != 0)
 			m_UsedLightList.push_back(&m_LightDataIndex[id]);
@@ -3405,7 +3402,7 @@ bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, const bool &noSubMou
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->PixelsData[(y * th->Width) + x] != 0;
 #else
-		result = g_MulReader->GumpPixelsInXY(io, x, y);
+		result = g_UOFileReader->GumpPixelsInXY(io, x, y);
 #endif
 	}
 
@@ -3457,7 +3454,7 @@ bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, int width, int heigh
 	if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 		result = th->PixelsData[(y * th->Width) + x] != 0;
 #else
-	result = g_MulReader->GumpPixelsInXY(io, x, y);
+	result = g_UOFileReader->GumpPixelsInXY(io, x, y);
 #endif
 
 	return result;
@@ -3605,7 +3602,7 @@ bool COrion::StaticPixelsInXY(const ushort &id, int x, int y, const int &z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->PixelsData[(y * th->Width) + x] != 0;
 #else
-		result = g_MulReader->ArtPixelsInXY(false, io, x, y);
+		result = g_UOFileReader->ArtPixelsInXY(false, io, x, y);
 #endif
 	}
 
@@ -3650,7 +3647,7 @@ bool COrion::StaticPixelsInXYInContainer(const ushort &id, int x, int y)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->PixelsData[(y * th->Width) + x] != 0;
 #else
-		result = g_MulReader->ArtPixelsInXY(false, io, x, y);
+		result = g_UOFileReader->ArtPixelsInXY(false, io, x, y);
 #endif
 	}
 
@@ -3674,7 +3671,7 @@ bool COrion::LandPixelsInXY(const ushort &id, int x, int  y, const int &z)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->PixelsData[(y * th->Width) + x] != 0;
 #else
-		result = g_MulReader->ArtPixelsInXY(true, io, x, y);
+		result = g_UOFileReader->ArtPixelsInXY(true, io, x, y);
 #endif
 	}
 
@@ -4417,7 +4414,7 @@ WISP_GEOMETRY::CSize COrion::GetArtDimension(const ushort &id)
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CRect COrion::GetStaticArtRealPixelDimension(const ushort &id)
 {
-	return g_MulReader->ReadStaticArtPixelDimension(m_StaticDataIndex[id]);
+	return g_UOFileReader->ReadStaticArtPixelDimension(m_StaticDataIndex[id]);
 }
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize COrion::GetGumpDimension(const ushort &id)

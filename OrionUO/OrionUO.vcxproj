@@ -248,7 +248,7 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClInclude Include="Managers\MacroManager.h" />
     <ClInclude Include="Managers\MapManager.h" />
     <ClInclude Include="Managers\MouseManager.h" />
-    <ClInclude Include="Managers\MulReader.h" />
+    <ClInclude Include="Managers\UOFileReader.h" />
     <ClInclude Include="Managers\OptionsMacroManager.h" />
     <ClInclude Include="Managers\PacketManager.h" />
     <ClInclude Include="Managers\PluginManager.h" />
@@ -477,7 +477,7 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClCompile Include="Managers\MacroManager.cpp" />
     <ClCompile Include="Managers\MapManager.cpp" />
     <ClCompile Include="Managers\MouseManager.cpp" />
-    <ClCompile Include="Managers\MulReader.cpp" />
+    <ClCompile Include="Managers\UOFileReader.cpp" />
     <ClCompile Include="Managers\OptionsMacroManager.cpp" />
     <ClCompile Include="Managers\PacketManager.cpp" />
     <ClCompile Include="Managers\PluginManager.cpp" />

@@ -11,7 +11,7 @@
 #include "../OrionUO.h"
 #include "../Managers/ColorManager.h"
 #include "../Managers/MouseManager.h"
-#include "../Managers/MulReader.h"
+#include "../Managers/UOFileReader.h"
 #include "../SelectedObject.h"
 //----------------------------------------------------------------------------------
 CGUIBuff::CGUIBuff(const ushort &graphic, const uint &timer, const wstring &text)

@@ -11,7 +11,7 @@
 #include "../OrionUO.h"
 #include "../Game objects/GameWorld.h"
 #include "../Game objects/GamePlayer.h"
-#include "../Managers/MulReader.h"
+#include "../Managers/UOFileReader.h"
 #include "../Managers/MapManager.h"
 #include "../Managers/ColorManager.h"
 #include "../Managers/ConfigManager.h"
@@ -57,7 +57,7 @@ void CGumpMinimap::GenerateMap()
 	int gumpWidth = io.Width;
 	int gumpHeight = io.Height;
 
-	USHORT_LIST data = g_MulReader->GetGumpPixels(io);
+	USHORT_LIST data = g_UOFileReader->GetGumpPixels(io);
 	
 	if (!data.size())
 		return;
