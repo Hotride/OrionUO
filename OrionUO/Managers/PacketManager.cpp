@@ -106,7 +106,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x14*/ SMSG("Send elevation (God client)", 0x06),
 	/*0x15*/ BMSG("Follow", 0x09),
 	/*0x16*/ UMSG(0x01),
-	/*0x17*/ RMSG("Health status bar update (KR)", PACKET_VARIABLE_SIZE),
+	/*0x17*/ RMSGH("Health status bar update (KR)", PACKET_VARIABLE_SIZE, NewHealthbarUpdate),
 	/*0x18*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0x19*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0x1A*/ RMSGH("Update Item", PACKET_VARIABLE_SIZE, UpdateItem),
@@ -128,7 +128,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x2A*/ UMSG(0x05),
 	/*0x2B*/ UMSG(0x02),
 	/*0x2C*/ BMSGH("Death Screen", 0x02, DeathScreen),
-	/*0x2D*/ RMSG("Mob Attributes", 0x11),
+	/*0x2D*/ RMSGH("Mobile Attributes", 0x11, MobileAttributes),
 	/*0x2E*/ RMSGH("Server Equip Item", 0x0f, EquipItem),
 	/*0x2F*/ RMSG("Combat Notification", 0x0a),
 	/*0x30*/ RMSG("Attack ok", 0x05),
@@ -309,7 +309,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xDF*/ RMSGH("Buff/Debuff", PACKET_VARIABLE_SIZE, BuffDebuff),
 	/*0xE0*/ SMSG("Bug Report KR", PACKET_VARIABLE_SIZE),
 	/*0xE1*/ SMSG("Client Type KR/SA", 0x09),
-	/*0xE2*/ RMSG("New Character Animation", 0xa),
+	/*0xE2*/ RMSGH("New Character Animation", 0xa, NewCharacterAnimation),
 	/*0xE3*/ RMSG("KR Encryption Responce", 0x4d),
 	/*0xE4*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0xE5*/ UMSG(PACKET_VARIABLE_SIZE),
@@ -888,6 +888,7 @@ PACKET_HANDLER(UpdateHitpoints)
 	uint serial = ReadUInt32BE();
 
 	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
 	if (obj == NULL)
 		return;
 
@@ -906,6 +907,7 @@ PACKET_HANDLER(UpdateMana)
 	uint serial = ReadUInt32BE();
 
 	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
 	if (obj == NULL)
 		return;
 
@@ -923,6 +925,7 @@ PACKET_HANDLER(UpdateStamina)
 	uint serial = ReadUInt32BE();
 
 	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
 	if (obj == NULL)
 		return;
 
@@ -930,6 +933,77 @@ PACKET_HANDLER(UpdateStamina)
 	obj->Stam = ReadInt16BE();
 
 	g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(MobileAttributes)
+{
+	if (g_World == NULL)
+		return;
+
+	uint serial = ReadUInt32BE();
+
+	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
+	if (obj == NULL)
+		return;
+
+	obj->MaxHits = ReadInt16BE();
+	obj->Hits = ReadInt16BE();
+
+	if (obj->IsPlayer())
+	{
+		obj->MaxMana = ReadInt16BE();
+		obj->Mana = ReadInt16BE();
+
+		obj->MaxStam = ReadInt16BE();
+		obj->Stam = ReadInt16BE();
+	}
+
+	g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
+	g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM);
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(NewHealthbarUpdate)
+{
+	if (g_World == NULL)
+		return;
+
+	uint serial = ReadUInt32BE();
+
+	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
+	if (obj == NULL)
+		return;
+
+	Move(1);
+
+	ushort type = ReadUInt16BE();
+	uchar enable = ReadUInt8(); //enable/disable
+
+	uchar flags = obj->Flags;
+
+	if (type == 1) //Poison, enable as poisonlevel + 1
+	{
+		uchar poisonFlag = 0x04;
+
+		if (g_PacketManager.ClientVersion >= CV_7000)
+			poisonFlag = 0x20;
+
+		if (enable)
+			flags |= poisonFlag;
+		else if (flags & poisonFlag)
+			flags ^= poisonFlag;
+	}
+	else if (type == 2) //Yellow hits
+	{
+		if (enable)
+			flags |= 0x08;
+		else if (flags & 0x08)
+			flags ^= 0x08;
+	}
+	else if (type == 3) //Red?
+	{
+	}
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdatePlayer)
@@ -1450,14 +1524,14 @@ PACKET_HANDLER(UpdateObject)
 
 		uchar layer = ReadUInt8();
 
-		if (graphic & 0x8000)
+		if (m_ClientVersion >= CV_70331)
+			obj2->Color = ReadUInt16BE();
+		else if (graphic & 0x8000)
 		{
 			graphic &= 0x7FFF;
 
 			obj2->Color = ReadUInt16BE();
 		}
-		//else if (m_ClientVersion >= CV_7090)
-		//	obj2->Color = ReadUInt16BE();
 
 		obj2->Graphic = graphic;
 
@@ -2001,7 +2075,9 @@ PACKET_HANDLER(OpenPaperdoll)
 
 	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
 
-	string text = ReadString(0);
+	string text = ReadString(60);
+
+	uchar flags = ReadUInt8();
 
 	if (obj != NULL)
 		obj->PaperdollText = text;
@@ -3055,15 +3131,34 @@ PACKET_HANDLER(CharacterAnimation)
 	if (obj != NULL)
 	{
 		ushort action = ReadUInt16BE();
-		Move(1);
-		uchar frameCount = ReadUInt8();
+		ushort frameCount = ReadUInt16BE();
 		frameCount = 0;
 		ushort repeatMode = ReadUInt16BE();
 		bool frameDirection = (ReadUInt8() == 0); //true - forward, false - backward
 		bool repeat = (ReadUInt8() != 0);
 		uchar delay = ReadUInt8();
 
-		obj->SetAnimation((uchar)action, delay, frameCount, (uchar)repeatMode, repeat, frameDirection);
+		obj->SetAnimation((uchar)action, delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
+		obj->AnimationFromServer = true;
+	}
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(NewCharacterAnimation)
+{
+	if (g_World == NULL)
+		return;
+
+	uint serial = ReadUInt32BE();
+	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
+	if (obj != NULL)
+	{
+		ushort action = ReadUInt16BE();
+		ushort frameCount = ReadUInt16BE();
+		frameCount = 0;
+		uchar delay = ReadUInt8();
+
+		obj->SetAnimation((uchar)action, delay, (uchar)frameCount);
 		obj->AnimationFromServer = true;
 	}
 }
