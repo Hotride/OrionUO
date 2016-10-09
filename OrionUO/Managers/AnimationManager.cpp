@@ -912,23 +912,23 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 
 		//LOG("Load anim: 0x%04X[%i]: 0x%08X: ", id, i, p);
 
-		short imageCenterX = ReadInt16LE();
+		uint imageCenterX = ReadInt16LE();
 		frame->CenterX = imageCenterX;
 
-		short imageCenterY = ReadInt16LE();
+		uint imageCenterY = ReadInt16LE();
 		frame->CenterY = imageCenterY;
 
-		short imageWidth = ReadInt16LE();
+		uint imageWidth = ReadInt16LE();
 		frame->Width = imageWidth;
 
-		short imageHeight = ReadInt16LE();
+		uint imageHeight = ReadInt16LE();
 		frame->Height = imageHeight;
 
-		int x = 0;
-		int y = 0;
+		uint x = 0;
+		uint y = 0;
 
 		USHORT_LIST data(imageWidth * imageHeight, 0);
-		ushort prevLineNum = 0xFF;
+		ushort prevLineNum = 0xFFFF;
 
 		while (true)
 		{
@@ -938,37 +938,35 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 			if (rowHeader == 0x7FFF || rowOfs == 0x7FFF)
 				break;
 
-			ushort runLength = rowHeader & 0xFFF;
 			ushort lineNum = rowHeader >> 12;
 
-			x = (rowOfs >> 6) & 0x3FF;
-
-			if (rowOfs & 0x8000)
-				x = imageCenterX + x - 0x400;
-			else
-				x = imageCenterX + x;
-
-			if (prevLineNum != 0xFF && lineNum != prevLineNum)
+			if (prevLineNum != 0xFFFF && lineNum != prevLineNum)
+			{
 				y++;
+
+				if (y >= imageHeight)
+					break;
+			}
 
 			prevLineNum = lineNum;
 
-			if (y >= 0)
+			x = ((rowOfs >> 6) & 0x3FF) + imageCenterX;
+
+			if (rowOfs & 0x8000)
+				x -= 0x400;
+
+			ushort runLength = rowHeader & 0xFFF;
+
+			IFOR(j, 0, runLength)
 			{
-				if (y >= imageHeight)
-					break;
+				ushort val = palette[ReadUInt8()];
 
-				IFOR(j, 0, runLength)
-				{
-					ushort val = palette[ReadUInt8()];
+				//if (color)
+				//	val = g_ColorManager.GetColor16(val, color);
 
-					//if (color)
-					//	val = g_ColorManager.GetColor16(val, color);
-
-					ushort a = val ? 0x8000 : 0;
-					int block = y * imageWidth + (x + j);
-					data[block] = a | val;
-				}
+				ushort a = val ? 0x8000 : 0;
+				int block = y * imageWidth + (x + j);
+				data[block] = a | val;
 			}
 		}
 
@@ -991,15 +989,15 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection *direction, c
 
 	m_Ptr = dataStart + frameOffset[frame];
 
-	short imageCenterX = ReadInt16LE();
-	short imageCenterY = ReadInt16LE();
-	short imageWidth = ReadInt16LE();
-	short imageHeight = ReadInt16LE();
+	uint imageCenterX = ReadInt16LE();
+	uint imageCenterY = ReadInt16LE();
+	uint imageWidth = ReadInt16LE();
+	uint imageHeight = ReadInt16LE();
 
-	int x = 0;
-	int y = 0;
+	uint x = 0;
+	uint y = 0;
 
-	ushort prevLineNum = 0xFF;
+	ushort prevLineNum = 0xFFFF;
 
 	while (true)
 	{
@@ -1009,34 +1007,34 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection *direction, c
 		if (rowHeader == 0x7FFF || rowOfs == 0x7FFF)
 			break;
 
-		ushort runLength = rowHeader & 0xFFF;
 		ushort lineNum = rowHeader >> 12;
 
-		x = (rowOfs >> 6) & 0x3FF;
+		if (prevLineNum != 0xFFFF && lineNum != prevLineNum)
+		{
+			y++;
 
-		x += imageCenterX;
+			if (y >= imageHeight)
+				break;
+		}
+
+		prevLineNum = lineNum;
+
+		ushort runLength = rowHeader & 0xFFF;
+
+		if (y != checkY)
+		{
+			Move(runLength);
+			continue;
+		}
+
+		x = ((rowOfs >> 6) & 0x3FF) + imageCenterX;
 
 		if (rowOfs & 0x8000)
 			x -= 0x0400;
 
-		if (prevLineNum != 0xFF && lineNum != prevLineNum)
-			y++;
+		Move(checkX - x);
 
-		prevLineNum = lineNum;
-
-		if (y >= 0)
-		{
-			if (y >= imageHeight)
-				break;
-
-			IFOR(j, 0, runLength)
-			{
-				uchar pixel = ReadUInt8();
-
-				if ((x + j) == checkX && y == checkY)
-					return (palette[pixel] != 0);
-			}
-		}
+		return (palette[ReadUInt8()] != 0);
 	}
 
 	return false;
