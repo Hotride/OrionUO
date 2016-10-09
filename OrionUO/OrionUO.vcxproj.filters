@@ -201,9 +201,6 @@
     <ClInclude Include="ServerList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SmoothMonitor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MultiMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -771,6 +768,9 @@
     <ClInclude Include="bassmidi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Managers\ScreenEffectManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -876,9 +876,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ServerList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SmoothMonitor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MultiMap.cpp">
@@ -1428,6 +1425,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Managers\PluginManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\ScreenEffectManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>

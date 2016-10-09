@@ -69,7 +69,7 @@ void CMainScreen::Init()
 
 	g_FontManager.SavePixels = false;
 
-	g_SmoothMonitor.UseSunrise();
+	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;
 
 	m_Gump.PrepareTextures();
@@ -167,15 +167,14 @@ void CMainScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 */
 int CMainScreen::GetConfigKeyCode(const string &key)
 {
-	const int keyCount = 6;
+	const int keyCount = 5;
 
-	const string m_Keys[keyCount] =
+	static const string m_Keys[keyCount] =
 	{
 		"acctid",
 		"acctpassword",
 		"rememberacctpw",
 		"autologin",
-		"smoothmonitorscale",
 		"smoothmonitor"
 	};
 
@@ -198,8 +197,7 @@ int CMainScreen::GetConfigKeyCode(const string &key)
 void CMainScreen::LoadGlobalConfig()
 {
 	m_AutoLogin->Checked = false;
-	g_SmoothMonitor.Enabled = false;
-	g_SmoothMonitor.Scale = 1;
+	g_ScreenEffectManager.Enabled = false;
 
 	WISP_FILE::CTextFileParser file(g_App.FilePath("uo_debug.cfg"), "=", "#;", "");
 
@@ -267,18 +265,9 @@ void CMainScreen::LoadGlobalConfig()
 
 					break;
 				}
-				case MSCC_SMOOTHMONITOR_SCALE:
-				{
-					int scale = atoi(strings[1].c_str());
-
-					if (scale > 0 && scale <= 15)
-						g_SmoothMonitor.Scale = scale;
-
-					break;
-				}
 				case MSCC_SMOOTHMONITOR:
 				{
-					g_SmoothMonitor.Enabled = ToBool(strings[1]);
+					g_ScreenEffectManager.Enabled = ToBool(strings[1]);
 
 					break;
 				}
@@ -320,10 +309,7 @@ void CMainScreen::SaveGlobalConfig()
 	sprintf_s(buf, "AutoLogin=%s\n", (m_AutoLogin->Checked ? "yes" : "no"));
 	fputs(buf, uo_cfg);
 
-	sprintf_s(buf, "SmoothMonitor=%s\n", (g_SmoothMonitor.Enabled ? "yes" : "no"));
-	fputs(buf, uo_cfg);
-
-	sprintf_s(buf, "SmoothMonitorScale=%i\n", g_SmoothMonitor.Scale);
+	sprintf_s(buf, "SmoothMonitor=%s\n", (g_ScreenEffectManager.Enabled ? "yes" : "no"));
 	fputs(buf, uo_cfg);
 
 	fclose(uo_cfg);

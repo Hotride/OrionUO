@@ -32,7 +32,7 @@ void CSelectTownScreen::Init()
 {
 	m_City = g_CityList.GetCity(3);
 
-	g_SmoothMonitor.UseSunrise();
+	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;
 	
 	m_Gump.PrepareTextures();

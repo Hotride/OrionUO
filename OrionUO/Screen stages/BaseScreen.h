@@ -13,7 +13,7 @@
 #include "../Globals.h"
 #include "../BaseQueue.h"
 #include "../GUI/GUI.h"
-#include "../SmoothMonitor.h"
+#include "../Managers/ScreenEffectManager.h"
 #include "../Gumps/Gump.h"
 #include "../ToolTip.h"
 #include "../SelectedObject.h"

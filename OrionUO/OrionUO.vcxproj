@@ -253,6 +253,7 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClInclude Include="Managers\PacketManager.h" />
     <ClInclude Include="Managers\PluginManager.h" />
     <ClInclude Include="Managers\ProfessionManager.h" />
+    <ClInclude Include="Managers\ScreenEffectManager.h" />
     <ClInclude Include="Managers\SkillGroupManager.h" />
     <ClInclude Include="Managers\SoundManager.h" />
     <ClInclude Include="Managers\SpeechManager.h" />
@@ -298,7 +299,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClInclude Include="ShaderData.h" />
     <ClInclude Include="SkillGroup.h" />
     <ClInclude Include="Skills.h" />
-    <ClInclude Include="SmoothMonitor.h" />
     <ClInclude Include="StumpsData.h" />
     <ClInclude Include="Target.h" />
     <ClInclude Include="TargetGump.h" />
@@ -482,6 +482,7 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClCompile Include="Managers\PacketManager.cpp" />
     <ClCompile Include="Managers\PluginManager.cpp" />
     <ClCompile Include="Managers\ProfessionManager.cpp" />
+    <ClCompile Include="Managers\ScreenEffectManager.cpp" />
     <ClCompile Include="Managers\SkillGroupManager.cpp" />
     <ClCompile Include="Managers\SoundManager.cpp" />
     <ClCompile Include="Managers\SpeechManager.cpp" />
@@ -521,7 +522,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClCompile Include="ServerList.cpp" />
     <ClCompile Include="SkillGroup.cpp" />
     <ClCompile Include="Skills.cpp" />
-    <ClCompile Include="SmoothMonitor.cpp" />
     <ClCompile Include="Target.cpp" />
     <ClCompile Include="TargetGump.cpp" />
     <ClCompile Include="TextEngine\EntryText.cpp" />

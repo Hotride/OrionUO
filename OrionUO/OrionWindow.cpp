@@ -96,7 +96,7 @@ void COrionWindow::OnResize(WISP_GEOMETRY::CSize &newSize)
 //----------------------------------------------------------------------------------
 void COrionWindow::OnLeftMouseButtonDown()
 {
-	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_GeneratedMouseDown = false;
 
@@ -111,7 +111,7 @@ void COrionWindow::OnLeftMouseButtonDown()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnLeftMouseButtonUp()
 {
-	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_CurrentScreen->Render(false);
 
@@ -135,7 +135,7 @@ bool COrionWindow::OnLeftMouseButtonDoubleClick()
 {
 	bool result = false;
 
-	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_CurrentScreen->Render(false);
 
@@ -155,7 +155,7 @@ bool COrionWindow::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnRightMouseButtonDown()
 {
-	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_CurrentScreen->Render(false);
 
@@ -176,7 +176,7 @@ void COrionWindow::OnRightMouseButtonDown()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnRightMouseButtonUp()
 {
-	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_CurrentScreen->Render(false);
 
@@ -192,7 +192,7 @@ bool COrionWindow::OnRightMouseButtonDoubleClick()
 {
 	bool result = false;
 
-	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_CurrentScreen->Render(false);
 
@@ -212,7 +212,7 @@ void COrionWindow::OnMidMouseButtonDown()
 	if (g_PluginManager.WindowProc(m_Handle, WM_MBUTTONDOWN, 0, 0))
 		return;
 
-	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		g_CurrentScreen->OnMidMouseButtonDown();
 }
 //----------------------------------------------------------------------------------
@@ -221,13 +221,13 @@ void COrionWindow::OnMidMouseButtonUp()
 	if (g_PluginManager.WindowProc(m_Handle, WM_MBUTTONUP, 0, 0))
 		return;
 
-	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		g_CurrentScreen->OnMidMouseButtonUp();
 }
 //----------------------------------------------------------------------------------
 bool COrionWindow::OnMidMouseButtonDoubleClick()
 {
-	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		return g_CurrentScreen->OnMidMouseButtonDoubleClick();
 
 	return false;
@@ -238,7 +238,7 @@ void COrionWindow::OnMidMouseButtonScroll(const bool &up)
 	if (g_PluginManager.WindowProc(m_Handle, WM_MOUSEWHEEL, (up ? 0 : 0x11110000), 0))
 		return;
 
-	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_CurrentScreen->Render(false);
 
@@ -248,7 +248,7 @@ void COrionWindow::OnMidMouseButtonScroll(const bool &up)
 //----------------------------------------------------------------------------------
 void COrionWindow::OnDragging()
 {
-	if (g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		g_CurrentScreen->OnDragging();
 }
 //----------------------------------------------------------------------------------
@@ -268,7 +268,7 @@ void COrionWindow::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	if (g_PluginManager.WindowProc(m_Handle, WM_CHAR, wParam, lParam))
 		return;
 
-	if ((iswprint(wParam) || (g_GameState >= GS_GAME && wParam == 0x11)) && g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if ((iswprint(wParam) || (g_GameState >= GS_GAME && wParam == 0x11)) && g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		g_CurrentScreen->OnCharPress(wParam, lParam);
 }
 //----------------------------------------------------------------------------------
@@ -277,7 +277,7 @@ void COrionWindow::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 	if (g_PluginManager.WindowProc(m_Handle, WM_KEYDOWN, wParam, lParam))
 		return;
 
-	if (/*!iswprint(wParam) &&*/ g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (/*!iswprint(wParam) &&*/ g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		g_CurrentScreen->OnKeyDown(wParam, lParam);
 }
 //----------------------------------------------------------------------------------
@@ -286,7 +286,7 @@ void COrionWindow::OnKeyUp(const WPARAM &wParam, const LPARAM &lParam)
 	if (g_PluginManager.WindowProc(m_Handle, WM_KEYUP, wParam, lParam))
 		return;
 
-	if (/*!iswprint(wParam) &&*/ g_CurrentScreen != NULL && g_SmoothMonitor.Type == SMT_NONE)
+	if (/*!iswprint(wParam) &&*/ g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		g_CurrentScreen->OnKeyUp(wParam, lParam);
 }
 //----------------------------------------------------------------------------------

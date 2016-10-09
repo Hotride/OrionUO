@@ -202,11 +202,21 @@ enum SPELLBOOK_TYPE
 };
 //----------------------------------------------------------------------------------
 //!Состояния плавного переключения экранов
-enum SMOOTH_MONITOR_TYPE
+enum SCREEN_EFFECT_MODE
 {
-	SMT_NONE = 0,
-	SMT_SUNRISE,
-	SMT_SUNSET
+	SEM_NONE = 0,
+	SEM_SUNRISE,
+	SEM_SUNSET
+};
+//----------------------------------------------------------------------------------
+//!Тип плавного переключения экрана
+enum SCREEN_EFFECT_TYPE
+{
+	SET_TO_BLACK,
+	SET_TO_WHITE,
+	SET_TO_WHITE_FAST,
+	SET_TO_WHITE_THEN_BLACK,
+	SET_TO_BLACK_VERY_FAST
 };
 //----------------------------------------------------------------------------------
 //!Состояния плавного переключения экранов

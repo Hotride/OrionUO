@@ -1223,11 +1223,11 @@ PACKET_HANDLER(UpdateItemSA)
 		return;
 
 	Move(2);
-	char type = ReadUInt8(); //buf[3];
+	char type = ReadUInt8();
 	uint serial = ReadUInt32BE();
 	ushort graphic = ReadUInt16BE();
 	uchar dir = ReadUInt8();
-	WORD count = ReadUInt16BE();
+	ushort count = ReadUInt16BE();
 	Move(2);
 	ushort x = ReadUInt16BE();
 	ushort y = ReadUInt16BE();
@@ -2823,8 +2823,21 @@ PACKET_HANDLER(GraphicEffect)
 
 	uchar type = ReadUInt8();
 
-	if (type > 3) //error
+	if (type > 3)
+	{
+		if (type == 4 && *m_Start == 0x70)
+		{
+			Move(8);
+			ushort val = ReadInt16BE();
+
+			if (val > SET_TO_BLACK_VERY_FAST)
+				val = SET_TO_BLACK_VERY_FAST;
+
+			g_ScreenEffectManager.Use(SEM_SUNSET, (SCREEN_EFFECT_TYPE)val, true);
+		}
+
 		return;
+	}
 
 	uint sourceSerial = ReadUInt32BE();
 	uint destSerial = ReadUInt32BE();

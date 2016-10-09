@@ -36,7 +36,7 @@ void CConnectionScreen::Init()
 	m_ErrorCode = 0;
 	m_Type = CST_LOGIN;
 
-	g_SmoothMonitor.UseSunrise();
+	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;
 
 	m_Gump.PrepareTextures();

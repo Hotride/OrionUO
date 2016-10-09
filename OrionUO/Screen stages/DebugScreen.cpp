@@ -124,7 +124,7 @@ void CDebugScreen::Init()
 
 	g_FontManager.SetSavePixels(false);
 
-	g_SmoothMonitor.UseSunrise();
+	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;
 }
 //----------------------------------------------------------------------------------

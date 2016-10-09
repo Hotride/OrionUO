@@ -77,7 +77,7 @@ void CGameScreen::Init()
 {
 	g_OrionWindow.NoResize = false;
 
-	g_SmoothMonitor.UseSunrise();
+	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;
 }
 //----------------------------------------------------------------------------------
@@ -1292,7 +1292,7 @@ void CGameScreen::Render(const bool &mode)
 
 	if (g_DeathScreenTimer < g_Ticks)
 	{
-		if (g_DeathScreenTimer && g_SmoothMonitor.UseSunrise())
+		if (g_DeathScreenTimer && g_ScreenEffectManager.UseSunrise())
 			m_SmoothScreenAction = 0;
 
 		g_DeathScreenTimer = 0;

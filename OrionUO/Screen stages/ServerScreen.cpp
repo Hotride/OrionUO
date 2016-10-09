@@ -34,7 +34,7 @@ void CServerScreen::Init()
 {
 	g_OrionWindow.SetTitle(string("Ultima Online - ") + g_MainScreen.m_Account->c_str());
 
-	g_SmoothMonitor.UseSunrise();
+	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;
 
 	g_ConfigManager.UpdateRange = 18;
