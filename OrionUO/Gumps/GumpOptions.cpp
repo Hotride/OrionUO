@@ -2028,6 +2028,10 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.MarkingCaves = g_OptionsConfig.MarkingCaves;
 			g_ConfigManager.NoAnimateFields = g_OptionsConfig.NoAnimateFields;
 			g_ConfigManager.ConsoleNeedEnter = g_OptionsConfig.ConsoleNeedEnter;
+			g_ConfigManager.ReduceFPSUnactiveWindow = g_OptionsConfig.ReduceFPSUnactiveWindow;
+			g_ConfigManager.StandartCharactersAnimationDelay = g_OptionsConfig.StandartCharactersAnimationDelay;
+			g_ConfigManager.StandartItemsAnimationDelay = g_OptionsConfig.StandartItemsAnimationDelay;
+			g_ConfigManager.LockGumpsMoving = g_OptionsConfig.LockGumpsMoving;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;
@@ -2083,7 +2087,6 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.GrayOutOfRangeObjects = g_OptionsConfig.GrayOutOfRangeObjects;
 			g_ConfigManager.DisableNewTargetSystem = g_OptionsConfig.DisableNewTargetSystem;
 			g_ConfigManager.ObjectHandles = g_OptionsConfig.ObjectHandles;
-			g_ConfigManager.ReduceFPSUnactiveWindow = g_OptionsConfig.ReduceFPSUnactiveWindow;
 			g_ConfigManager.ItemPropertiesIcon = g_OptionsConfig.ItemPropertiesIcon;
 			g_ConfigManager.HoldShiftForContextMenus = g_OptionsConfig.HoldShiftForContextMenus;
 			g_ConfigManager.HoldShiftForEnablePathfind = g_OptionsConfig.HoldShiftForEnablePathfind;
@@ -2137,10 +2140,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.IgnoreAllianceMessage = g_OptionsConfig.IgnoreAllianceMessage;
 			g_ConfigManager.DarkNights = g_OptionsConfig.DarkNights;
 			g_ConfigManager.ColoredLighting = g_OptionsConfig.ColoredLighting;
-			g_ConfigManager.StandartCharactersAnimationDelay = g_OptionsConfig.StandartCharactersAnimationDelay;
-			g_ConfigManager.StandartItemsAnimationDelay = g_OptionsConfig.StandartItemsAnimationDelay;
 			g_ConfigManager.LockResizingGameWindow = g_OptionsConfig.LockResizingGameWindow;
-			g_ConfigManager.LockGumpsMoving = g_OptionsConfig.LockGumpsMoving;
 			
 			break;
 		}
