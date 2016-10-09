@@ -2391,10 +2391,20 @@ PACKET_HANDLER(ExtendedCommand)
 
 			IFOR(i, 0, count)
 			{
-				/*uint cliloc = ReadUInt32BE();
-				ushort index = ReadUInt16BE() + 1;*/
-				ushort index = ReadUInt16BE() + 1;
-				uint cliloc = ReadUInt16BE() + 3000000;
+				uint index = 0;
+				uint cliloc = 0;
+
+				if (mode == 2 /*|| m_ClientVersion >= CV_6000*/)
+				{
+					cliloc = ReadUInt32BE();
+					index = ReadUInt16BE() + 1;
+				}
+				else
+				{
+					index = ReadUInt16BE() + 1;
+					cliloc = ReadUInt16BE() + 3000000;
+				}
+
 				ushort flags = ReadUInt16BE();
 				ushort color = 0xFFFF;
 
@@ -3294,7 +3304,7 @@ PACKET_HANDLER(Damage)
 		text->X = text->m_Texture.Width / 2;
 		int height = text->m_Texture.Height;
 
-		CTextData *head = (CTextData*)character->m_DamageTextControl->Last();
+		CTextData *head = (CTextData*)character->m_DamageTextControl.Last();
 
 		if (head != NULL)
 		{
@@ -3309,7 +3319,7 @@ PACKET_HANDLER(Damage)
 			}
 		}
 
-		character->m_DamageTextControl->Add(text);
+		character->m_DamageTextControl.Add(text);
 		text->Timer = g_Ticks + DAMAGE_TEXT_NORMAL_DELAY;
 	}
 }

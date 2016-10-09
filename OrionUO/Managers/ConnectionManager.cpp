@@ -46,10 +46,7 @@ void CConnectionManager::Init()
 {
 	//Сокет уже открыт, ошибка
 	if (m_LoginSocket.Connected)
-	{
-		LOG("Socket's already open. Return\n");
 		return;
-	}
 
 	m_IsLoginSocket = true;
 
@@ -57,11 +54,10 @@ void CConnectionManager::Init()
 	WSAStartup(MAKEWORD(1, 1), &wsaData);
 
 	char hostName[1024] = {0};
-	LOG("Getting login crypt key\n");
+
 	//Получим ключик для логин крипта
 	if(!gethostname(hostName, 1024))
 	{
-		LOG("gethostname call\n");
 		if (LPHOSTENT lphost = gethostbyname(hostName))
 		{
 			WISP_DATASTREAM::CDataWritter stream;
@@ -72,7 +68,6 @@ void CConnectionManager::Init()
 		}
 	}
 
-	LOG("WSACleanup\n");
 	WSACleanup();
 }
 //---------------------------------------------------------------------------
@@ -116,35 +111,27 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 		if (m_LoginSocket.Connected)
 			return true; //Уже подключен куда-то
 
-		LOG("Connecting to login socket\n");
 		bool result = m_LoginSocket.Connect(address, port);
 
 		if (result) //Соединение удачно установлено
 		{
-			LOG("Successfully connected to login socket\n");
 			//Для старых клиентов посылаем сразу же 4 байта
 			g_TotalSendSize = 4;
 			g_LastPacketTime = g_Ticks;
 			g_LastSendTime = g_LastPacketTime;
 
 			if (m_ClientVersion < CV_6060)
-			{
-				LOG("Old client login, sending 4 bytes with seed\n");
 				m_LoginSocket.Send(m_LoginCrypt.m_seed, 4);
-			}
 			else //В новых клиентах изменилось приветствие логин сокета
 			{
 				BYTE buf = 0xEF;
 				m_LoginSocket.Send(&buf, 1); //0xEF - приветствие, 1 байт
-				LOG("New client login, sending 1 byte\n");
 
 				m_LoginSocket.Send(m_LoginCrypt.m_seed, 4); //Сид, 4 байта
-				LOG("New client login, sending 4 bytes seed\n");
 
 				WISP_DATASTREAM::CDataWritter stream;
 
 				string str = g_Orion.ClientVersionText;
-				LOG("Orion.CLientVersionText(str)\n", str);
 
 				if (str.length())
 				{
@@ -168,25 +155,19 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 					}
 
 					stream.WriteUInt32BE(atoi(ptr));
-					LOG("Writing client version to stream\n", str);
 				}
 
 				g_TotalSendSize = 21;
-				LOG("Sending client version, 16 byte\n", str);
 				m_LoginSocket.Send(stream.Data()); //Версия клиента, 16 байт
 			}
 		}
 		else
-		{
-			LOG("Failed to connect to login socket.\n");
 			m_LoginSocket.Disconnect();
-		}
 
 		return result;
 	}
 	else //Гейм сокет
 	{
-		LOG("Game socket?\n");
 		if (m_GameSocket.Connected)
 			return true; //Уже подключены
 
@@ -194,17 +175,11 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 		g_LastPacketTime = g_Ticks;
 		g_LastSendTime = g_LastPacketTime;
 
-		LOG("Game socket connecting...\n");
 		bool result = m_GameSocket.Connect(address, port);
 
 		if (result)
-		{
-			LOG("Game socket connected. Sending key\n");
 			m_GameSocket.Send(gameSeed, 4); //Если всё удачно - шлем ключ из пакета релея
-		}
 
-
-		LOG("Login socket disconnect\n");
 		m_LoginSocket.Disconnect(); //Отрубаем логин сокет
 
 		return result;

@@ -1035,38 +1035,26 @@ void COrion::ClearUnusedTextures()
 //----------------------------------------------------------------------------------
 void COrion::Connect()
 {
-	LOG("Init Connect screen\n");
 	InitScreen(GS_MAIN_CONNECT);
-
-	LOG("Process rendering\n");
 	Process(true);
 
-	LOG("g_ConnectionManager.Disconnect\n");
 	g_ConnectionManager.Disconnect();
-
-	LOG("g_ConnectionManager.Init()\n");
 	g_ConnectionManager.Init(); //Configure
 
 	string login = "";
 	int port;
 	
-	LOG("Loading login.cfg..\n");
 	LoadLogin(login, port);
 
-	LOG("Establishing connection to game server...\n");
 	if (g_ConnectionManager.Connect(login, port, g_GameSeed))
 	{
-		LOG("Connection established\n");
 		g_ConnectionScreen.Connected = true;
-
 		CPacketFirstLogin().Send();
-		LOG("Sending first login packet\n");
 	}
 	else
 	{
 		g_ConnectionScreen.ConnectionFailed = true;
 		g_ConnectionScreen.ErrorCode = 8;
-		LOG("Connection failed\n");
 	}
 }
 //----------------------------------------------------------------------------------

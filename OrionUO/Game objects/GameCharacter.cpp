@@ -32,12 +32,10 @@ m_AnimationRepeatMode(1), m_AnimationDirection(false), m_AnimationFromServer(fal
 m_MaxMana(0), m_MaxStam(0), m_Mana(0), m_Stam(0), m_OffsetX(0), m_OffsetY(0),
 m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(0),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
-m_StepSoundOffset(0), m_PaperdollText("")
+m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10)
 {
 	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;
-
-	m_DamageTextControl = new CTextContainer(10);
 
 	//!Инициализация счетчика шагов
 	m_WalkStack.Init();
@@ -55,17 +53,14 @@ CGameCharacter::~CGameCharacter()
 	//!Чистим память
 	m_WalkStack.Clear();
 
-	if (m_DamageTextControl != NULL)
-	{
-		delete m_DamageTextControl;
-		m_DamageTextControl = NULL;
-	}
-
 	//!Если стянут статусбар - обновим его
 	g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR);
 	
 	//!Если стянут статусбар таргет системы - обновим его
 	g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM);
+
+	if (!IsPlayer())
+		g_GumpManager.CloseGump(m_Serial, 0, GT_PAPERDOLL);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -657,27 +652,27 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 		if (isWalking)
 		{
 			if (isRun)
-				result = (BYTE)LAG_RUN;
+				result = (uchar)LAG_RUN;
 			else
-				result = (BYTE)LAG_WALK;
+				result = (uchar)LAG_WALK;
 		}
 		else if (m_AnimationGroup == 0xFF)
-			result = (BYTE)LAG_STAND;
+			result = (uchar)LAG_STAND;
 	}
 	else if (groupIndex == AG_HIGHT)
 	{
 		if (isWalking)
 		{
-			result = (BYTE)HAG_WALK;
+			result = (uchar)HAG_WALK;
 
 			if (isRun)
 			{
 				if (g_AnimationManager.AnimationExists(graphic, HAG_FLY))
-					result = (BYTE)HAG_FLY;
+					result = (uchar)HAG_FLY;
 			}
 		}
 		else if (m_AnimationGroup == 0xFF)
-			result = (BYTE)HAG_STAND;
+			result = (uchar)HAG_STAND;
 
 		//!Глюченный дельфин на всех клиентах
 		if (graphic == 151)
@@ -695,11 +690,11 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 			if (isRun)
 			{
 				if (FindLayer(OL_MOUNT) != NULL)
-					result = (BYTE)PAG_ONMOUNT_RIDE_FAST;
+					result = (uchar)PAG_ONMOUNT_RIDE_FAST;
 				else if (FindLayer(OL_1_HAND) != NULL || FindLayer(OL_2_HAND) != NULL)
-					result = (BYTE)PAG_RUN_ARMED;
+					result = (uchar)PAG_RUN_ARMED;
 				else
-					result = (BYTE)PAG_RUN_UNARMED;
+					result = (uchar)PAG_RUN_UNARMED;
 
 				if (!g_AnimationManager.AnimationExists(graphic, result))
 					goto test_walk;
@@ -708,35 +703,35 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 			{
 				test_walk:
 				if (FindLayer(OL_MOUNT) != NULL)
-					result = (BYTE)PAG_ONMOUNT_RIDE_SLOW;
+					result = (uchar)PAG_ONMOUNT_RIDE_SLOW;
 				else if (FindLayer(OL_1_HAND) != NULL || FindLayer(OL_2_HAND) != NULL)
 				{
 					if (InWar)
-						result = (BYTE)PAG_WALK_WARMODE;
+						result = (uchar)PAG_WALK_WARMODE;
 					else
-						result = (BYTE)PAG_WALK_ARMED;
+						result = (uchar)PAG_WALK_ARMED;
 				}
 				else if (InWar)
-					result = (BYTE)PAG_WALK_WARMODE;
+					result = (uchar)PAG_WALK_WARMODE;
 				else
-					result = (BYTE)PAG_WALK_UNARMED;
+					result = (uchar)PAG_WALK_UNARMED;
 			}
 		}
 		else if (m_AnimationGroup == 0xFF)
 		{
 			if (FindLayer(OL_MOUNT) != NULL)
-				result = (BYTE)PAG_ONMOUNT_STAND;
+				result = (uchar)PAG_ONMOUNT_STAND;
 			else if (InWar)
 			{
 				if (FindLayer(OL_1_HAND) != NULL)
-					result = (BYTE)PAG_STAND_ONEHANDED_ATTACK;
+					result = (uchar)PAG_STAND_ONEHANDED_ATTACK;
 				else if (FindLayer(OL_2_HAND) != NULL)
-					result = (BYTE)PAG_STAND_TWOHANDED_ATTACK;
+					result = (uchar)PAG_STAND_TWOHANDED_ATTACK;
 				else
-					result = (BYTE)PAG_STAND_ONEHANDED_ATTACK;
+					result = (uchar)PAG_STAND_ONEHANDED_ATTACK;
 			}
 			else
-				result = (BYTE)PAG_STAND;
+				result = (uchar)PAG_STAND;
 		}
 	}
 

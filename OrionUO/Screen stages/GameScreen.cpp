@@ -555,14 +555,14 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 
 				characterOffsetY = character->OffsetY - (character->OffsetZ + dims.Height + dims.CenterY);
 
-				CTextContainer *textContainer = character->m_DamageTextControl;
+				CTextContainer &textContainer = character->m_DamageTextControl;
 
-				if (!textContainer->Empty())
+				if (!textContainer.Empty())
 				{
 					int textDrawX = drawX + character->OffsetX;
 					int textDrawY = drawY + characterOffsetY;
 
-					for (CTextData *text = (CTextData*)textContainer->m_Items; text != NULL;)
+					for (CTextData *text = (CTextData*)textContainer.m_Items; text != NULL;)
 					{
 						CTextData *next = (CTextData*)text->m_Next;
 
@@ -576,7 +576,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 						{
 							if (text->Transparent)
 							{
-								textContainer->Delete(text);
+								textContainer.Delete(text);
 								text = next;
 								continue;
 							}
@@ -1191,12 +1191,12 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 		{
 			if (obj->NPC)
 			{
-				CTextContainer *textContainer = obj->GameCharacterPtr()->m_DamageTextControl;
+				CTextContainer &textContainer = obj->GameCharacterPtr()->m_DamageTextControl;
 
-				if (textContainer->Empty())
+				if (textContainer.Empty())
 					continue;
 
-				QFOR(text, textContainer->m_Items, CTextData*)
+				QFOR(text, textContainer.m_Items, CTextData*)
 				{
 					if (!text->m_Texture.Empty())
 					{
