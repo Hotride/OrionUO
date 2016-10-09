@@ -183,7 +183,7 @@ bool CTextRenderer::CalculatePositions(const bool &noCalculate)
 			{
 				int delta = text->Timer - g_Ticks;
 
-				if (delta > 0 && delta <= 1000)
+				if (delta >= 0 && delta <= 1000)
 				{
 					delta = delta / 10;
 
@@ -196,7 +196,10 @@ bool CTextRenderer::CalculatePositions(const bool &noCalculate)
 					delta = (255 * delta) / 100;
 
 					changed = true;
-					text->Alpha = (uchar)delta;
+
+					if (!text->Transparent || delta <= 0x7F)
+						text->Alpha = (uchar)delta;
+
 					text->Transparent = true;
 				}
 			}
@@ -365,7 +368,7 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 				{
 					int delta = text->Timer - g_Ticks;
 
-					if (delta > 0 && delta <= 1000)
+					if (delta >= 0 && delta <= 1000)
 					{
 						delta = delta / 10;
 
@@ -377,7 +380,9 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 
 						delta = (255 * delta) / 100;
 
-						text->Alpha = (uchar)delta;
+						if (!text->Transparent || delta <= 0x7F)
+							text->Alpha = (uchar)delta;
+
 						text->Transparent = true;
 					}
 				}
