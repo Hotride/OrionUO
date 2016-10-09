@@ -52,7 +52,7 @@ void CTarget::SetData(WISP_DATASTREAM::CDataReader &reader)
 	m_Type = reader.ReadUInt8();
 	m_CursorID = reader.ReadUInt32BE();
 	m_CursorType = reader.ReadUInt8();
-	m_Targeting = true;
+	m_Targeting = (m_CursorType < 3);
 	m_MultiGraphic = false;
 }
 //----------------------------------------------------------------------------------
