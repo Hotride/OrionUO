@@ -14,7 +14,7 @@
 #include "../PressedObject.h"
 #include "../Managers/MouseManager.h"
 #include "../ToolTip.h"
-#include "../Managers/ConnectionManager.h"
+#include "../Managers/PacketManager.h"
 #include "../Game objects/GamePlayer.h"
 #include "../Target.h"
 #include "../Network/Packets.h"
@@ -76,14 +76,14 @@ m_DataBox(NULL), m_Description(NULL), m_WantTransparentContent(false)
 		Add(new CGUIButton(ID_GP_BUTTON_OPTIONS, 0x07D6, 0x07D8, 0x07D7, 185, 71));
 		Add(new CGUIButton(ID_GP_BUTTON_LOGOUT, 0x07D9, 0x07DB, 0x07DA, 185, 98));
 
-		if (g_ConnectionManager.ClientVersion >= CV_500A)
+		if (g_PacketManager.ClientVersion >= CV_500A)
 			Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x57B5, 0x57B6, 0x57B7, 185, 125));
 		else
 			Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x07DC, 0x07DE, 0x07DD, 185, 125));
 
 		Add(new CGUIButton(ID_GP_BUTTON_SKILLS, 0x07DF, 0x07E1, 0x07E0, 185, 152));
 
-		if (g_ConnectionManager.ClientVersion >= CV_500A)
+		if (g_PacketManager.ClientVersion >= CV_500A)
 			Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x57B2, 0x57B3, 0x57B4, 185, 179));
 		else
 		{
@@ -391,7 +391,7 @@ void CGumpPaperdoll::UpdateContent()
 	{
 		int bpX = 8;
 
-		if (g_ConnectionManager.ClientVersion >= CV_60142)
+		if (g_PacketManager.ClientVersion >= CV_60142)
 			bpX = 2;
 
 		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + 50000, bpX, 19));
@@ -479,7 +479,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GP_BUTTON_JOURNAL_OR_QUESTS: //Paperdoll button Journal
 		{
-			if (g_ConnectionManager.ClientVersion >= CV_500A)
+			if (g_PacketManager.ClientVersion >= CV_500A)
 				g_Orion.RequestQuestGump();
 			else
 				g_Orion.OpenJournal();
@@ -492,7 +492,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GP_BUTTON_CHAT_OR_GUILD: //Paperdoll button Chat
 		{
-			if (g_ConnectionManager.ClientVersion >= CV_500A)
+			if (g_PacketManager.ClientVersion >= CV_500A)
 				g_Orion.RequestGuildGump();
 			else
 				g_Orion.OpenChat();

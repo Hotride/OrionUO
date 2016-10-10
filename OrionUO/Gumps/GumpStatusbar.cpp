@@ -10,6 +10,7 @@
 #include "GumpStatusbar.h"
 #include "../Game objects/GameWorld.h"
 #include "../Game objects/GamePlayer.h"
+#include "../Managers/PacketManager.h"
 #include "../Managers/ConnectionManager.h"
 #include "../Managers/GumpManager.h"
 #include "../Managers/MouseManager.h"
@@ -423,7 +424,7 @@ void CGumpStatusbar::UpdateContent()
 		{
 			POINT p = { 0, 0 };
 
-			if (g_ConnectionManager.ClientVersion >= CV_308D)
+			if (g_PacketManager.ClientVersion >= CV_308D)
 				Add(new CGUIGumppic(0x2A6C, 0, 0));
 			else
 			{
@@ -434,7 +435,7 @@ void CGumpStatusbar::UpdateContent()
 			}
 
 			//Отрисовка набора характеристик, расположение в зависимости от версии протокола, комментировать не буду...
-			if (g_ConnectionManager.ClientVersion >= CV_308Z)
+			if (g_PacketManager.ClientVersion >= CV_308Z)
 			{
 				p.x = 389;
 				p.y = 152;
@@ -446,13 +447,13 @@ void CGumpStatusbar::UpdateContent()
 					text->CreateTextureA(1, g_Player->Name, 320, TS_CENTER);
 				}
 
-				if (g_ConnectionManager.ClientVersion >= CV_5020)
+				if (g_PacketManager.ClientVersion >= CV_5020)
 				{
 					//Кнопка вызова гампа бафов
 					Add(new CGUIButton(ID_GSB_BUFF_GUMP, 0x7538, 0x7538, 0x7538, 40, 50));
 
 					//Кнопочки для изменения роста/лока статов
-					if (g_ConnectionManager.ClientVersion >= CV_60142)
+					if (g_PacketManager.ClientVersion >= CV_60142)
 					{
 						//Str
 						uchar status = g_Player->LockStr; //Статус (вниз/вверх/замок)
@@ -658,14 +659,14 @@ void CGumpStatusbar::UpdateContent()
 				Add(new CGUIHitBox(ID_GSB_TEXT_GOLD, 171, 97, 66, 12));
 				Add(new CGUIHitBox(ID_GSB_TEXT_WEIGHT, 171, 109, 66, 12));
 
-				if (g_ConnectionManager.ClientVersion == CV_308D)
+				if (g_PacketManager.ClientVersion == CV_308D)
 				{
 					text = (CGUIText*)Add(new CGUIText(0x0386, 171, 124));
 					text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
 
 					Add(new CGUIHitBox(ID_GSB_TEXT_MAX_STATS, 171, 124, 34, 12));
 				}
-				else if (g_ConnectionManager.ClientVersion == CV_308J)
+				else if (g_PacketManager.ClientVersion == CV_308J)
 				{
 					text = (CGUIText*)Add(new CGUIText(0x0386, 180, 131));
 					text->CreateTextureA(1, std::to_string(g_Player->StatsCap));

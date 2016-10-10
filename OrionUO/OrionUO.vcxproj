@@ -51,7 +51,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -59,9 +59,12 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d  "$(SolutionDir)bin\bass.dll" "$(OutDir)"
+
 xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
+
 xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
+xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
+</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dlls to bin directory</Message>
@@ -89,9 +92,14 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d  "$(SolutionDir)bin\bass.dll" "$(OutDir)"
+
 xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
+
 xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
+
+xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
+
+</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dlls to bin directory</Message>
@@ -260,14 +268,8 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClInclude Include="MulStruct.h" />
     <ClInclude Include="Multi.h" />
     <ClInclude Include="MultiMap.h" />
-    <ClInclude Include="Network\AES.H" />
     <ClInclude Include="Network\Connection.h" />
-    <ClInclude Include="Network\GameCrypt.h" />
-    <ClInclude Include="Network\LoginCrypt.h" />
-    <ClInclude Include="Network\md5.h" />
     <ClInclude Include="Network\Packets.h" />
-    <ClInclude Include="Network\platform.H" />
-    <ClInclude Include="Network\TABLE.H" />
     <ClInclude Include="Network\UOHuffman.h" />
     <ClInclude Include="OrionApplication.h" />
     <ClInclude Include="OrionUO.h" />
@@ -489,11 +491,7 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClCompile Include="Multi.cpp" />
     <ClCompile Include="MultiMap.cpp" />
     <ClCompile Include="Network\Connection.cpp" />
-    <ClCompile Include="Network\GameCrypt.cpp" />
-    <ClCompile Include="Network\LoginCrypt.cpp" />
-    <ClCompile Include="Network\md5.cpp" />
     <ClCompile Include="Network\Packets.cpp" />
-    <ClCompile Include="Network\twofish.cpp" />
     <ClCompile Include="Network\UOHuffman.cpp" />
     <ClCompile Include="OrionApplication.cpp" />
     <ClCompile Include="OrionUO.cpp" />

@@ -12,7 +12,7 @@
 #include "../OrionUO.h"
 #include "../OrionWindow.h"
 #include "../Managers/ConfigManager.h"
-#include "../Managers/ConnectionManager.h"
+#include "../Managers/PacketManager.h"
 #include "../Managers/ProfessionManager.h"
 #include "../Managers/ClilocManager.h"
 #include "../Skills.h"
@@ -46,7 +46,7 @@ void CGumpScreenSelectProfession::UpdateContent()
 		return;
 	}
 
-	if (g_ConnectionManager.ClientVersion >= CV_308Z)
+	if (g_PacketManager.ClientVersion >= CV_308Z)
 		UpdateContentNew();
 	else
 		UpdateContentOld();
@@ -411,7 +411,7 @@ void CGumpScreenSelectProfession::GUMP_BUTTON_EVENT_C
 		g_SelectProfessionScreen.CreateSmoothAction(CSelectProfessionScreen::ID_SMOOTH_SPS_QUIT);
 	else if (serial == ID_SPS_ARROW_PREV) //< button
 	{
-		if (g_ConnectionManager.ClientVersion >= CV_308Z && g_ProfessionManager.Selected->Type == PT_PROFESSION && g_ProfessionManager.Selected->DescriptionIndex == -1 /*Advanced*/)
+		if (g_PacketManager.ClientVersion >= CV_308Z && g_ProfessionManager.Selected->Type == PT_PROFESSION && g_ProfessionManager.Selected->DescriptionIndex == -1 /*Advanced*/)
 		{
 			g_ProfessionManager.Selected = g_ProfessionManager.GetParent(g_ProfessionManager.Selected);
 			g_SelectProfessionScreen.SkillSelection = 0;
@@ -470,7 +470,7 @@ void CGumpScreenSelectProfession::GUMP_BUTTON_EVENT_C
 				g_ProfessionManager.Selected = child;
 				g_SelectProfessionScreen.SkillSelection = 0;
 
-				if (g_ConnectionManager.ClientVersion >= CV_308Z && child->Type == PT_PROFESSION && child->DescriptionIndex != -1)
+				if (g_PacketManager.ClientVersion >= CV_308Z && child->Type == PT_PROFESSION && child->DescriptionIndex != -1)
 					g_SelectProfessionScreen.CreateSmoothAction(CSelectProfessionScreen::ID_SMOOTH_SPS_GO_SCREEN_CREATE);
 
 				return;
@@ -516,7 +516,7 @@ void CGumpScreenSelectProfession::GUMP_SLIDER_MOVE_EVENT_C
 	//Stats
 	if (serial >= ID_SPS_STATS_SPHERE && serial <= ID_SPS_STATS_SPHERE + 2)
 	{
-		if (g_ConnectionManager.ClientVersion >= CV_308Z)
+		if (g_PacketManager.ClientVersion >= CV_308Z)
 			ShuffleStats(serial - ID_SPS_STATS_SPHERE, 80, 60);
 		else
 			ShuffleStats(serial - ID_SPS_STATS_SPHERE, 65, 45);

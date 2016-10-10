@@ -17,14 +17,16 @@
 #include "../Screen stages/GameBlockedScreen.h"
 #include "../ServerList.h"
 #include "../Managers/GumpManager.h"
+#include "../Managers/PacketManager.h"
 #include "../Gumps/GumpNotify.h"
 //----------------------------------------------------------------------------------
 CConnectionManager g_ConnectionManager;
 //----------------------------------------------------------------------------------
+NETWORK_INIT_TYPE *g_NetworkInit = NULL;
+NETWORK_ACTION_TYPE *g_NetworkAction = NULL;
+//----------------------------------------------------------------------------------
 CConnectionManager::CConnectionManager()
-: m_EncryptionType(ET_NOCRYPT), m_ClientVersion(CV_OLD), m_IsLoginSocket(true),
-m_LoginSocket(false), m_GameSocket(true), m_CryptKey1(0), m_CryptKey2(0), m_CryptKey3(0),
-m_CryptSeed(1357)
+: m_IsLoginSocket(true), m_LoginSocket(false), m_GameSocket(true)
 {
 }
 //----------------------------------------------------------------------------------
@@ -64,7 +66,8 @@ void CConnectionManager::Init()
 			stream.WriteUInt32BE(((LPIN_ADDR)lphost->h_addr)->s_addr);
 			UCHAR_LIST &data = stream.Data();
 
-			m_LoginCrypt.Init(&data[0], m_CryptKey1, m_CryptKey2, m_CryptKey3, m_CryptSeed);
+			memcpy(&m_Seed[0], &data[0], 4);
+			g_NetworkInit(true, &data[0]);
 		}
 	}
 
@@ -84,17 +87,7 @@ void CConnectionManager::Init(puchar gameSeed)
 
 	m_IsLoginSocket = false;
 
-	//Инициализация шифрования
-	if (m_EncryptionType != ET_NOCRYPT)
-		m_BlowfishCrypt.Init();
-
-	if (m_EncryptionType == ET_203 || m_EncryptionType == ET_TFISH)
-	{
-		m_TwoFishCrypt.Init(gameSeed);
-
-		if (m_EncryptionType == ET_TFISH)
-			m_TwoFishCrypt.Init_MD5();
-	}
+	g_NetworkInit(false, &gameSeed[0]);
 }
 //---------------------------------------------------------------------------
 /*!
@@ -120,14 +113,14 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 			g_LastPacketTime = g_Ticks;
 			g_LastSendTime = g_LastPacketTime;
 
-			if (m_ClientVersion < CV_6060)
-				m_LoginSocket.Send(m_LoginCrypt.m_seed, 4);
+			if (g_PacketManager.ClientVersion < CV_6060)
+				m_LoginSocket.Send(m_Seed, 4);
 			else //В новых клиентах изменилось приветствие логин сокета
 			{
 				BYTE buf = 0xEF;
 				m_LoginSocket.Send(&buf, 1); //0xEF - приветствие, 1 байт
 
-				m_LoginSocket.Send(m_LoginCrypt.m_seed, 4); //Сид, 4 байта
+				m_LoginSocket.Send(m_Seed, 4); //Сид, 4 байта
 
 				WISP_DATASTREAM::CDataWritter stream;
 
@@ -308,15 +301,7 @@ int CConnectionManager::Send(puchar buf, int size)
 
 		UCHAR_LIST cbuf(size); //Буффер для криптованного пакета
 
-		//Шифруем, руководствуясь указанным типом шифрования
-		if (m_EncryptionType == ET_OLD_BFISH)
-			m_LoginCrypt.Encrypt_Old(buf, &cbuf[0], size);
-		else if (m_EncryptionType == ET_1_25_36)
-			m_LoginCrypt.Encrypt_1_25_36(buf, &cbuf[0], size);
-		else if (m_EncryptionType != ET_NOCRYPT)
-			m_LoginCrypt.Encrypt(buf, &cbuf[0], size);
-		else
-			memcpy(&cbuf[0], buf, size); //Или просто скопируем буффер, если шифрование отсутствует
+		g_NetworkAction(true, &buf[0], &cbuf[0], size);
 
 		return m_LoginSocket.Send(cbuf); //Отправляем зашифрованный пакет
 	}
@@ -327,21 +312,7 @@ int CConnectionManager::Send(puchar buf, int size)
 
 		UCHAR_LIST cbuf(size); //Буффер для криптованного пакета
 
-		if (m_EncryptionType == ET_NOCRYPT)
-			memcpy(&cbuf[0], buf, size); //Скопируем буффер, если шифрование отсутствует
-		else
-		{
-			//Шифруем, руководствуясь указанным типом шифрования
-			if (m_EncryptionType == ET_203)
-			{
-				m_BlowfishCrypt.Encrypt(buf, &cbuf[0], size);
-				m_TwoFishCrypt.Encrypt(&cbuf[0], &cbuf[0], size);
-			}
-			else if (m_EncryptionType == ET_TFISH)
-				m_TwoFishCrypt.Encrypt(buf, &cbuf[0], size);
-			else
-				m_BlowfishCrypt.Encrypt(buf, &cbuf[0], size);
-		}
+		g_NetworkAction(false, &buf[0], &cbuf[0], size);
 
 		return m_GameSocket.Send(cbuf); //Отправляем зашифрованный пакет
 	}

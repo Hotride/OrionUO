@@ -147,24 +147,6 @@
     <ClInclude Include="EnumList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Network\AES.H">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\GameCrypt.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\LoginCrypt.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\md5.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\platform.H">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\TABLE.H">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="Network\UOHuffman.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
@@ -832,18 +814,6 @@
     </ClCompile>
     <ClCompile Include="IndexObject.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\GameCrypt.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\LoginCrypt.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\md5.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\twofish.cpp">
-      <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="Network\UOHuffman.cpp">
       <Filter>Source Files\Network</Filter>
