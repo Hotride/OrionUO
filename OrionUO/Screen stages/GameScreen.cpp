@@ -1543,11 +1543,35 @@ void CGameScreen::Render(const bool &mode)
 					g_GlobalScale = oldScale;
 					WISP_GEOMETRY::CPoint2Di oldMouse = g_MouseManager.Position;
 
-					//g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di((int)(oldMouse.X * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetX, (int)(oldMouse.Y * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetY);
-
 					//g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di((int)((oldMouse.X - (g_RenderBounds.GameWindowScaledOffsetX / g_GlobalScale)) * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetX, (int)((oldMouse.Y - (g_RenderBounds.GameWindowScaledOffsetY / g_GlobalScale)) * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetY);
 
-					//g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di((int)(oldMouse.X * g_GlobalScale), (int)(oldMouse.Y * g_GlobalScale));
+					//g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di((int)((oldMouse.X * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetX / g_GlobalScale), (int)((oldMouse.Y * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetY / g_GlobalScale));
+
+					int mouseX = (oldMouse.X * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetX / g_GlobalScale;
+					int mouseY = (oldMouse.Y * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetY / g_GlobalScale;
+
+					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di
+					(
+						//(int)((oldMouse.X * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetX)
+						mouseX
+						,
+						//(int)((oldMouse.Y * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetY)
+						mouseY
+					);
+
+					/*GLdouble left = (GLdouble)g_RenderBounds.GameWindowPosX;
+					GLdouble right = (GLdouble)(g_RenderBounds.GameWindowWidth + left);
+					GLdouble top = (GLdouble)g_RenderBounds.GameWindowPosY;
+					GLdouble bottom = (GLdouble)(g_RenderBounds.GameWindowHeight + top);
+
+					GLdouble newRight = right * g_GlobalScale;
+					GLdouble newBottom = bottom * g_GlobalScale;
+
+					g_RenderBounds.GameWindowScaledOffsetX = (int)((left * g_GlobalScale) - (newRight - right));
+					g_RenderBounds.GameWindowScaledOffsetY = (int)((top * g_GlobalScale) - (newBottom - bottom));
+
+					g_RenderBounds.GameWindowScaledWidth = (int)(newRight - g_RenderBounds.GameWindowScaledOffsetX);
+					g_RenderBounds.GameWindowScaledHeight = (int)(newBottom - g_RenderBounds.GameWindowScaledOffsetY);*/
 
 					DrawGameWindow(mode);
 
