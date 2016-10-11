@@ -22,7 +22,7 @@
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
 : CGameObject(serial), m_Layer(0), m_AnimID(0), m_ImageID(0), m_UsedLayer(0),
-m_Opened(false), m_Dragged(false), ShopItem(NULL), m_MultiBody(false)
+m_Opened(false), m_Dragged(false), m_MultiBody(false)
 {
 }
 //----------------------------------------------------------------------------------
@@ -33,12 +33,6 @@ CGameItem::~CGameItem()
 		CMulti *multi = (CMulti*)m_Items;
 		m_Items = NULL;
 		delete multi;
-	}
-
-	if (ShopItem != NULL)
-	{
-		delete ShopItem;
-		ShopItem = NULL;
 	}
 	
 	if (m_Opened)

@@ -486,9 +486,6 @@
     <ClInclude Include="Game objects\GameWorld.h">
       <Filter>Header Files\Game objects</Filter>
     </ClInclude>
-    <ClInclude Include="Game objects\ShopItem.h">
-      <Filter>Header Files\Game objects</Filter>
-    </ClInclude>
     <ClInclude Include="Game objects\ObjectOnCursor.h">
       <Filter>Header Files\Game objects</Filter>
     </ClInclude>
@@ -1137,9 +1134,6 @@
       <Filter>Source Files\Game objects</Filter>
     </ClCompile>
     <ClCompile Include="Game objects\GameWorld.cpp">
-      <Filter>Source Files\Game objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Game objects\ShopItem.cpp">
       <Filter>Source Files\Game objects</Filter>
     </ClCompile>
     <ClCompile Include="Game objects\ObjectOnCursor.cpp">

@@ -136,7 +136,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
     <ClInclude Include="Game objects\MultiObject.h" />
     <ClInclude Include="Game objects\ObjectOnCursor.h" />
     <ClInclude Include="Game objects\RenderStaticObject.h" />
-    <ClInclude Include="Game objects\ShopItem.h" />
     <ClInclude Include="Game objects\StaticObject.h" />
     <ClInclude Include="GLEngine\GLEngine.h" />
     <ClInclude Include="GLEngine\GLFrameBuffer.h" />
@@ -358,7 +357,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
     <ClCompile Include="Game objects\MultiObject.cpp" />
     <ClCompile Include="Game objects\ObjectOnCursor.cpp" />
     <ClCompile Include="Game objects\RenderStaticObject.cpp" />
-    <ClCompile Include="Game objects\ShopItem.cpp" />
     <ClCompile Include="Game objects\StaticObject.cpp" />
     <ClCompile Include="GLEngine\GLEngine.cpp" />
     <ClCompile Include="GLEngine\GLFrameBuffer.cpp" />
