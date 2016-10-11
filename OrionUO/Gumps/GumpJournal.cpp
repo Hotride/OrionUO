@@ -10,6 +10,8 @@
 #include "GumpJournal.h"
 #include "../TextEngine/TextData.h"
 #include "../TextEngine/Journal.h"
+#include "../SelectedObject.h"
+#include "../ToolTip.h"
 //----------------------------------------------------------------------------------
 CGumpJournal::CGumpJournal(uint serial, short x, short y, bool minimized, int height)
 : CGumpBaseScroll(GT_JOURNAL, serial, 0x0820, height, x, y, true, 0, true)
@@ -58,6 +60,57 @@ CGumpJournal::CGumpJournal(uint serial, short x, short y, bool minimized, int he
 //----------------------------------------------------------------------------------
 CGumpJournal::~CGumpJournal()
 {
+}
+//---------------------------------------------------------------------------
+void CGumpJournal::InitToolTip()
+{
+	uint id = g_SelectedObject.Serial;
+
+	if (!m_Minimized)
+	{
+		switch (id)
+		{
+			case ID_GBS_BUTTON_MINIMIZE:
+			{
+				g_ToolTip.Set(L"Minimize the journal gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GBS_BUTTON_RESIZE:
+			{
+				g_ToolTip.Set(L"Start resizing for journal gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GJ_SHOW_SYSTEM:
+			{
+				g_ToolTip.Set(L"Show/hide system messages", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GJ_SHOW_OBJECTS:
+			{
+				g_ToolTip.Set(L"Show/hide objects messages", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GJ_SHOW_CLIENT:
+			{
+				g_ToolTip.Set(L"Show/hide client messages", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GJ_BUTTON_LOCK:
+			{
+				g_ToolTip.Set(L"Reset scroller position", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GJ_LOCK_MOVING:
+			{
+				g_ToolTip.Set(L"Lock moving/closing the journal gump", g_SelectedObject.Object());
+				break;
+			}
+			default:
+				break;
+		}
+	}
+	else
+		g_ToolTip.Set(L"Double click to maximize journal gump", g_SelectedObject.Object());
 }
 //----------------------------------------------------------------------------------
 void CGumpJournal::UpdateHeight()

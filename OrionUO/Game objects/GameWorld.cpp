@@ -153,7 +153,7 @@ void CGameWorld::ProcessAnimation()
 
 						if (gc->AnimationFromServer)
 						{
-							currentDelay += currentDelay * (int)gc->AnimationInterval;
+							currentDelay += currentDelay * (int)(gc->AnimationInterval + 1);
 
 							if (!gc->AnimationFrameCount)
 								gc->AnimationFrameCount = fc;

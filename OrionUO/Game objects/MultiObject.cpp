@@ -62,7 +62,7 @@ void CMultiObject::Draw(const int &x, const int &y)
 
 	ushort objColor = m_Color;
 
-	if (g_SelectedObject.Object() == this)
+	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
 		objColor = SELECT_MULTI_COLOR;
 
 	if (m_OnTarget) //Мульти на таргете

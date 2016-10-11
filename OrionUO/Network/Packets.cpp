@@ -10,11 +10,12 @@
 #include "Packets.h"
 #include "../Screen stages/MainScreen.h"
 #include "../Screen stages/SelectTownScreen.h"
-#include "../Managers/ConnectionManager.h"
+#include "../Managers/PacketManager.h"
 #include "../Managers/ProfessionManager.h"
 #include "../Managers/CreateCharacterManager.h"
 #include "../Managers/SpeechManager.h"
 #include "../Managers/ConfigManager.h"
+#include "../Managers/ConnectionManager.h"
 #include "../CharacterList.h"
 #include "../CityList.h"
 #include "../OrionUO.h"
@@ -74,7 +75,7 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	int skillsCount = 3;
 	uint packetID = 0x00;
 
-	if (g_ConnectionManager.ClientVersion >= CV_70160)
+	if (g_PacketManager.ClientVersion >= CV_70160)
 	{
 		skillsCount++;
 		Resize(106, true);

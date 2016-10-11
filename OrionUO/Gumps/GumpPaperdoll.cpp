@@ -14,7 +14,7 @@
 #include "../PressedObject.h"
 #include "../Managers/MouseManager.h"
 #include "../ToolTip.h"
-#include "../Managers/ConnectionManager.h"
+#include "../Managers/PacketManager.h"
 #include "../Game objects/GamePlayer.h"
 #include "../Target.h"
 #include "../Network/Packets.h"
@@ -76,14 +76,14 @@ m_DataBox(NULL), m_Description(NULL), m_WantTransparentContent(false)
 		Add(new CGUIButton(ID_GP_BUTTON_OPTIONS, 0x07D6, 0x07D8, 0x07D7, 185, 71));
 		Add(new CGUIButton(ID_GP_BUTTON_LOGOUT, 0x07D9, 0x07DB, 0x07DA, 185, 98));
 
-		if (g_ConnectionManager.ClientVersion >= CV_500A)
+		if (g_PacketManager.ClientVersion >= CV_500A)
 			Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x57B5, 0x57B6, 0x57B7, 185, 125));
 		else
 			Add(new CGUIButton(ID_GP_BUTTON_JOURNAL_OR_QUESTS, 0x07DC, 0x07DE, 0x07DD, 185, 125));
 
 		Add(new CGUIButton(ID_GP_BUTTON_SKILLS, 0x07DF, 0x07E1, 0x07E0, 185, 152));
 
-		if (g_ConnectionManager.ClientVersion >= CV_500A)
+		if (g_PacketManager.ClientVersion >= CV_500A)
 			Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x57B2, 0x57B3, 0x57B4, 185, 179));
 		else
 		{
@@ -155,20 +155,109 @@ void CGumpPaperdoll::InitToolTip()
 {
 	uint id = g_SelectedObject.Serial;
 
-	if (!m_Minimized && id >= ID_GP_ITEMS)
+	if (!m_Minimized)
 	{
-		int layer = id - ID_GP_ITEMS;
-
-		CGameCharacter *character = g_World->FindWorldCharacter(m_Serial);
-
-		if (character != NULL)
+		switch (id)
 		{
-			CGameObject *obj = character->FindLayer(layer);
+			case ID_GP_BUTTON_HELP:
+			{
+				g_ToolTip.Set(L"Open server's help menu gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_BUTTON_OPTIONS:
+			{
+				g_ToolTip.Set(L"Open the configuration gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_BUTTON_LOGOUT:
+			{
+				g_ToolTip.Set(L"Open the logout gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_BUTTON_JOURNAL_OR_QUESTS:
+			{
+				if (g_PacketManager.ClientVersion >= CV_500A)
+					g_ToolTip.Set(L"Open the quests gump", g_SelectedObject.Object());
+				else
+					g_ToolTip.Set(L"Open the journal gump", g_SelectedObject.Object());
 
-			if (obj != NULL && obj->ClilocMessage.length())
-				g_ToolTip.Set(obj->ClilocMessage, g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_BUTTON_SKILLS:
+			{
+				g_ToolTip.Set(L"Open the skills gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_BUTTON_CHAT_OR_GUILD:
+			{
+				if (g_PacketManager.ClientVersion >= CV_500A)
+					g_ToolTip.Set(L"Open the guild gump", g_SelectedObject.Object());
+				else
+					g_ToolTip.Set(L"Open the chat gump", g_SelectedObject.Object());
+
+				break;
+			}
+			case ID_GP_BUTTON_WARMODE:
+			{
+				g_ToolTip.Set(L"Change player's warmode", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_BUTTON_STATUS:
+			{
+				g_ToolTip.Set(L"Open player's statusbar gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_BUTTON_MINIMIZE:
+			{
+				g_ToolTip.Set(L"Minimize the paperdoll gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_PROFILE_SCROLL:
+			{
+				g_ToolTip.Set(L"Double click for open profile gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_PARTY_MANIFEST_SCROLL:
+			{
+				g_ToolTip.Set(L"Double click for open party manifest gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_BUTTON_VIRTURE:
+			{
+				g_ToolTip.Set(L"Open server's virture(?) gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_BOOK:
+			{
+				//g_ToolTip.Set(L"", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_LOCK_MOVING:
+			{
+				g_ToolTip.Set(L"Lock moving/closing the paperdoll gump", g_SelectedObject.Object());
+				break;
+			}
+			default:
+			{
+				if (id >= ID_GP_ITEMS)
+				{
+					CGameCharacter *character = g_World->FindWorldCharacter(m_Serial);
+
+					if (character != NULL)
+					{
+						CGameObject *obj = character->FindLayer(id - ID_GP_ITEMS);
+
+						if (obj != NULL && obj->ClilocMessage.length())
+							g_ToolTip.Set(obj->ClilocMessage, g_SelectedObject.Object());
+					}
+				}
+
+				break;
+			}
 		}
 	}
+	else
+		g_ToolTip.Set(L"Double click to maximize paperdoll gump", g_SelectedObject.Object());
 }
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::DelayedClick(CRenderObject *obj)
@@ -179,7 +268,7 @@ void CGumpPaperdoll::DelayedClick(CRenderObject *obj)
 		td->Unicode = false;
 		td->Font = 3;
 		td->Serial = 0;
-		td->Color = 0x03B5;
+		td->Color = 0x038F;
 		td->Timer = g_Ticks;
 		td->Type = TT_CLIENT;
 		td->X = g_MouseManager.Position.X - m_X;
@@ -391,7 +480,7 @@ void CGumpPaperdoll::UpdateContent()
 	{
 		int bpX = 8;
 
-		if (g_ConnectionManager.ClientVersion >= CV_60142)
+		if (g_PacketManager.ClientVersion >= CV_60142)
 			bpX = 2;
 
 		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + 50000, bpX, 19));
@@ -479,7 +568,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GP_BUTTON_JOURNAL_OR_QUESTS: //Paperdoll button Journal
 		{
-			if (g_ConnectionManager.ClientVersion >= CV_500A)
+			if (g_PacketManager.ClientVersion >= CV_500A)
 				g_Orion.RequestQuestGump();
 			else
 				g_Orion.OpenJournal();
@@ -492,7 +581,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GP_BUTTON_CHAT_OR_GUILD: //Paperdoll button Chat
 		{
-			if (g_ConnectionManager.ClientVersion >= CV_500A)
+			if (g_PacketManager.ClientVersion >= CV_500A)
 				g_Orion.RequestGuildGump();
 			else
 				g_Orion.OpenChat();

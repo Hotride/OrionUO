@@ -56,7 +56,7 @@ void CStaticObject::Draw(const int &x, const int &y)
 	ushort objGraphic = m_Graphic - 0x4000;
 	ushort objColor = m_Color;
 
-	if (g_SelectedObject.Object() == this)
+	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
 		objColor = SELECT_STATIC_COLOR;
 
 	if (IsFoliage())

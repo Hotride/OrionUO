@@ -22,7 +22,7 @@
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
 : CGameObject(serial), m_Layer(0), m_AnimID(0), m_ImageID(0), m_UsedLayer(0),
-m_Opened(false), m_Dragged(false), ShopItem(NULL), m_MultiBody(false)
+m_Opened(false), m_Dragged(false), m_MultiBody(false)
 {
 }
 //----------------------------------------------------------------------------------
@@ -33,12 +33,6 @@ CGameItem::~CGameItem()
 		CMulti *multi = (CMulti*)m_Items;
 		m_Items = NULL;
 		delete multi;
-	}
-
-	if (ShopItem != NULL)
-	{
-		delete ShopItem;
-		ShopItem = NULL;
 	}
 	
 	if (m_Opened)
@@ -143,7 +137,9 @@ void CGameItem::OnGraphicChange(int direction)
 			m_TiledataPtr = &g_Orion.m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32];
 			STATIC_TILES &tile = *m_TiledataPtr;
 
-			if (ToLowerA(tile.Name) == "nodraw")
+			string lowerName = ToLowerA(tile.Name);
+
+			if (m_Graphic == 0x21A3 || lowerName == "nodraw" || lowerName == "no draw")
 				m_Graphic = 1;
 
 			if (IsWearable() || m_Graphic == 0x0A28)
@@ -614,7 +610,9 @@ void CGameItem::LoadMulti()
 			{
 				CMultiObject *mo = new CMultiObject(pmb->ID, m_X + pmb->X, m_Y + pmb->Y, m_Z + (char)pmb->Z, pmb->Flags);
 
-				if (ToLowerA(mo->GetStaticData()->Name) == "nodraw")
+				string lowerName = ToLowerA(mo->GetStaticData()->Name);
+
+				if (pmb->ID == 0x21A3 || lowerName == "nodraw" || lowerName == "no draw")
 				{
 					delete mo;
 					continue;

@@ -10,6 +10,7 @@
 #include "GumpStatusbar.h"
 #include "../Game objects/GameWorld.h"
 #include "../Game objects/GamePlayer.h"
+#include "../Managers/PacketManager.h"
 #include "../Managers/ConnectionManager.h"
 #include "../Managers/GumpManager.h"
 #include "../Managers/MouseManager.h"
@@ -53,13 +54,15 @@ CGumpStatusbar::~CGumpStatusbar()
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::InitToolTip()
 {
-	uint serial = g_SelectedObject.Serial;
+	uint id = g_SelectedObject.Serial;
 
-	if (serial)
+	if (m_Minimized)
+		g_ToolTip.Set(L"Double click to maximize the statusbar gump", g_SelectedObject.Object());
+	else if (id && id < ID_GSB_TEXT_TITHING_POINTS)
 	{
 		static const wstring tooltip[ID_GSB_TEXT_TITHING_POINTS] =
 		{
-			L"Minimize the gump", //ID_GSB_MINIMIZE
+			L"Minimize the statusbar gump", //ID_GSB_MINIMIZE
 			L"", //ID_GSB_TEXT_FIELD
 			L"", //ID_GSB_BUTTON_HEAL_1
 			L"", //ID_GSB_BUTTON_HEAL_2
@@ -91,7 +94,7 @@ void CGumpStatusbar::InitToolTip()
 			L"Tithing Points" //ID_GSB_TEXT_TITHING_POINTS
 		};
 
-		const wstring &text = tooltip[serial - 1];
+		const wstring &text = tooltip[id - 1];
 
 		if (text.length())
 			g_ToolTip.Set(text, g_SelectedObject.Object(), 80);
@@ -423,7 +426,7 @@ void CGumpStatusbar::UpdateContent()
 		{
 			POINT p = { 0, 0 };
 
-			if (g_ConnectionManager.ClientVersion >= CV_308D)
+			if (g_PacketManager.ClientVersion >= CV_308D)
 				Add(new CGUIGumppic(0x2A6C, 0, 0));
 			else
 			{
@@ -434,7 +437,7 @@ void CGumpStatusbar::UpdateContent()
 			}
 
 			//Отрисовка набора характеристик, расположение в зависимости от версии протокола, комментировать не буду...
-			if (g_ConnectionManager.ClientVersion >= CV_308Z)
+			if (g_PacketManager.ClientVersion >= CV_308Z)
 			{
 				p.x = 389;
 				p.y = 152;
@@ -446,13 +449,13 @@ void CGumpStatusbar::UpdateContent()
 					text->CreateTextureA(1, g_Player->Name, 320, TS_CENTER);
 				}
 
-				if (g_ConnectionManager.ClientVersion >= CV_5020)
+				if (g_PacketManager.ClientVersion >= CV_5020)
 				{
 					//Кнопка вызова гампа бафов
 					Add(new CGUIButton(ID_GSB_BUFF_GUMP, 0x7538, 0x7538, 0x7538, 40, 50));
 
 					//Кнопочки для изменения роста/лока статов
-					if (g_ConnectionManager.ClientVersion >= CV_60142)
+					if (g_PacketManager.ClientVersion >= CV_60142)
 					{
 						//Str
 						uchar status = g_Player->LockStr; //Статус (вниз/вверх/замок)
@@ -658,14 +661,14 @@ void CGumpStatusbar::UpdateContent()
 				Add(new CGUIHitBox(ID_GSB_TEXT_GOLD, 171, 97, 66, 12));
 				Add(new CGUIHitBox(ID_GSB_TEXT_WEIGHT, 171, 109, 66, 12));
 
-				if (g_ConnectionManager.ClientVersion == CV_308D)
+				if (g_PacketManager.ClientVersion == CV_308D)
 				{
 					text = (CGUIText*)Add(new CGUIText(0x0386, 171, 124));
 					text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
 
 					Add(new CGUIHitBox(ID_GSB_TEXT_MAX_STATS, 171, 124, 34, 12));
 				}
-				else if (g_ConnectionManager.ClientVersion == CV_308J)
+				else if (g_PacketManager.ClientVersion == CV_308J)
 				{
 					text = (CGUIText*)Add(new CGUIText(0x0386, 180, 131));
 					text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
@@ -1102,7 +1105,7 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			if (obj != NULL)
 				g_EntryPointer->SetText(obj->Name);
 
-			if (g_ConfigManager.GetConsoleNeedEnter())
+			if (g_ConfigManager.ConsoleNeedEnter)
 				g_EntryPointer = NULL;
 			else
 				g_EntryPointer = &g_GameConsole;

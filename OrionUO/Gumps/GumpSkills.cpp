@@ -16,6 +16,8 @@
 #include "../Game objects/GamePlayer.h"
 #include "../OrionUO.h"
 #include "../PressedObject.h"
+#include "../SelectedObject.h"
+#include "../ToolTip.h"
 //----------------------------------------------------------------------------------
 CGumpSkills::CGumpSkills(uint serial, short x, short y, bool minimized, int height)
 : CGumpBaseScroll(GT_SKILLS, serial, 0x1F40, height, x, y, true, 0, true, 15),
@@ -90,6 +92,60 @@ m_ShowReal(false), m_ShowCap(false)
 //----------------------------------------------------------------------------------
 CGumpSkills::~CGumpSkills()
 {
+}
+//---------------------------------------------------------------------------
+void CGumpSkills::InitToolTip()
+{
+	uint id = g_SelectedObject.Serial;
+
+	if (!m_Minimized)
+	{
+		switch (id)
+		{
+			case ID_GS_SHOW_REAL:
+			{
+				g_ToolTip.Set(L"Show/hide real skill values", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GS_SHOW_CAP:
+			{
+				g_ToolTip.Set(L"Show/hide cap skill values", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GS_BUTTON_NEW_GROUP:
+			{
+				g_ToolTip.Set(L"Create the new skills group", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GBS_BUTTON_MINIMIZE:
+			{
+				g_ToolTip.Set(L"Minimize the skills gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GBS_BUTTON_RESIZE:
+			{
+				g_ToolTip.Set(L"Start resizing for skills gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GS_LOCK_MOVING:
+			{
+				g_ToolTip.Set(L"Lock moving/closing the skills gump", g_SelectedObject.Object());
+				break;
+			}
+			default:
+			{
+				if (id >= ID_GS_GROUP_MINIMIZE && id < ID_GS_GROUP)
+					g_ToolTip.Set(L"Show/hide skills in this group", g_SelectedObject.Object());
+				else if (id >= ID_GS_SKILL_BUTTON && id < ID_GS_SKILL)
+					g_ToolTip.Set(L"Use the skill", g_SelectedObject.Object());
+				else if (id >= ID_GS_SKILL_STATE)
+					g_ToolTip.Set(L"Change skill state", g_SelectedObject.Object());
+				break;
+			}
+		}
+	}
+	else
+		g_ToolTip.Set(L"Double click to maximize skills gump", g_SelectedObject.Object());
 }
 //----------------------------------------------------------------------------------
 void CGumpSkills::UpdateHeight()

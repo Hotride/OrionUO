@@ -49,6 +49,8 @@ void CGumpSecureTrading::CalculateGumpState()
 			g_GumpTranslate.X = (float)m_X;
 			g_GumpTranslate.Y = (float)m_Y;
 		}
+
+		m_WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------

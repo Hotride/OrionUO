@@ -70,6 +70,9 @@ private:
 	static const int ID_GO_P2_NO_ANIMATE_FIELDS = 211;
 	static const int ID_GO_P2_LOCK_GUMP_MOVING = 212;
 	static const int ID_GO_P2_CONSOLE_ENTER = 213;
+	static const int ID_GO_P2_DEV_MODE_1 = 290;
+	static const int ID_GO_P2_DEV_MODE_2 = 291;
+	static const int ID_GO_P2_DEV_MODE_3 = 292;
 
 	static const int ID_GO_P3_USE_TOOLTIP = 300;
 	static const int ID_GO_P3_TEXT_COLOR = 301;
@@ -202,6 +205,8 @@ public:
 	CGUITextEntry *m_GameWindowWidth;
 	CGUITextEntry *m_GameWindowHeight;
 	CGUITextEntry *m_MacroKey;
+
+	virtual void InitToolTip();
 
 	virtual void PrepareContent();
 

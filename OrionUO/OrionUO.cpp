@@ -37,7 +37,6 @@
 #include "Managers/AnimationManager.h"
 #include "Managers/MacroManager.h"
 #include "Managers/PluginManager.h"
-#include "Screen stages/DebugScreen.h"
 #include "Screen stages/MainScreen.h"
 #include "Screen stages/ConnectionScreen.h"
 #include "Screen stages/ServerScreen.h"
@@ -86,8 +85,11 @@
 #include "CommonInterfaces.h"
 #include "StumpsData.h"
 //----------------------------------------------------------------------------------
+typedef void __cdecl PLUGIN_INIT_TYPE(STRING_LIST&, STRING_LIST&, UINT_LIST&);
+//----------------------------------------------------------------------------------
 COrion g_Orion;
 PLUGIN_CLIENT_INTERFACE g_PluginClientInterface = { 0 };
+PLUGIN_INIT_TYPE *g_PluginInit = NULL;
 //----------------------------------------------------------------------------------
 COrion::COrion()
 : m_ClientVersionText("2.0.3"), m_InverseBuylist(false), m_LandDataCount(0),
@@ -356,13 +358,8 @@ bool COrion::Install()
 	g_MainScreen.LoadGlobalConfig();
 
 	LOG("Init screen...\n");
-#ifdef _DEBUG
-	g_CurrentScreen = &g_DebugScreen;
-	g_DebugScreen.Init();
+
 	InitScreen(GS_MAIN);
-#else
-	InitScreen(GS_MAIN);
-#endif
 
 	LOG("Installation completed!\n");
 
@@ -484,29 +481,56 @@ void COrion::InitScreen(const GAME_STATE &state)
 //----------------------------------------------------------------------------------
 void COrion::LoadClientConfig()
 {
-	WISP_FILE::CMappedFile file;
+	HMODULE orionDll = LoadLibrary(g_App.FilePath(L"Orion.dll").c_str());
 
-	if (file.Load(g_App.FilePath("Client.cuo")))
+	if (orionDll == 0)
 	{
+		g_OrionWindow.ShowMessage("Orion.dll not found!", "Error!");
+		ExitProcess(0);
+		return;
+	}
+
+	typedef void __cdecl installFunc(uchar*, const int&, UCHAR_LIST*);
+
+	installFunc *install = (installFunc*)GetProcAddress(orionDll, "Install");
+
+	if (install == NULL)
+	{
+		g_OrionWindow.ShowMessage("Install function in Orion.dll not found!", "Error!");
+		ExitProcess(0);
+		return;
+	}
+
+	WISP_FILE::CMappedFile config;
+
+	if (config.Load(g_App.FilePath("Client.cuo")))
+	{
+		UCHAR_LIST realData;
+		install(config.Start, config.Size, &realData);
+		config.Unload();
+
+		if (!realData.size())
+		{
+			g_OrionWindow.ShowMessage("Corrupted config data!", "Error!");
+			ExitProcess(0);
+			return;
+		}
+
+		WISP_DATASTREAM::CDataReader file(&realData[0], realData.size());
+
 		uchar version = file.ReadInt8();
 
-		g_ConnectionManager.EncryptionType = (ENCRYPTION_TYPE)file.ReadInt8();
-
-		g_ConnectionManager.ClientVersion = (CLIENT_VERSION)file.ReadInt8();
-		g_PacketManager.ClientVersion = g_ConnectionManager.ClientVersion;
+		g_PacketManager.ClientVersion = (CLIENT_VERSION)file.ReadInt8();
 
 		int len = file.ReadInt8();
 		m_ClientVersionText = file.ReadString(len);
 
-		g_ConnectionManager.CryptKey1 = file.ReadUInt32LE();
-		g_ConnectionManager.CryptKey2 = file.ReadUInt32LE();
-		g_ConnectionManager.CryptKey3 = file.ReadUInt32LE();
-
-		g_ConnectionManager.CryptSeed = file.ReadUInt16LE();
+		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
+		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
+		g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt32LE();
 
 		m_InverseBuylist = (file.ReadUInt8() != 0);
 
-		//Must implement some sort of map file detection and use a real number, instead of hardcoded 6.
 		IFOR(i, 0, 6)
 		{
 			g_MapSize[i].Width = file.ReadUInt16LE();
@@ -516,28 +540,8 @@ void COrion::LoadClientConfig()
 			g_MapBlockSize[i].Height = g_MapSize[i].Height / 8;
 		}
 
-		if (version >= 2)
-		{
-			g_CharacterList.ClientFlag = file.ReadInt8();
-
-			if (version >= 3)
-			{
-				g_FileManager.UseVerdata = (file.ReadInt8() != 0);
-
-				if (version >= 4)
-				{
-					g_FileManager.UseUOP = (file.ReadInt8() != 0);
-
-					if (g_FileManager.UseUOP)
-						g_FileManager.UseVerdata = false;
-				}
-			}
-		}
-
-		if (version < 3 && m_ClientVersionText.length())
-			g_FileManager.UseVerdata = (*m_ClientVersionText.c_str() <= '5');
-
-		file.Unload();
+		g_CharacterList.ClientFlag = file.ReadInt8();
+		g_FileManager.UseVerdata = (file.ReadInt8() != 0);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -743,80 +747,53 @@ void COrion::LoadPluginConfig()
 	g_PluginClientInterface.ColorManager = &g_Interface_ColorManager;
 	g_PluginClientInterface.PathFinder = &g_Interface_PathFinder;
 
-	WISP_FILE::CMappedFile file;
+	STRING_LIST libName;
+	STRING_LIST functions;
+	UINT_LIST flags;
 
-	if (file.Load(g_App.FilePath("Client.cuo")))
+	g_PluginInit(libName, functions, flags);
+
+	IFOR(i, 0, (int)libName.size())
 	{
-		uchar ver = file.ReadUInt8();
+		HMODULE dll = LoadLibraryA(g_App.FilePath(libName[i].c_str()).c_str());
 
-		file.Move(2);
-		int len = file.ReadUInt8();
-		file.Move(len + 39);
-
-		if (ver >= 2)
+		if (dll != NULL)
 		{
-			file.Move(1);
+			typedef void __cdecl dllFunc(PPLUGIN_INTERFACE);
 
-			if (ver >= 3)
-				file.Move(1);
+			dllFunc *initFunc = (dllFunc*)GetProcAddress(dll, functions[i].c_str());
+			CPlugin *plugin = NULL;
 
-			char count = file.ReadInt8();
-
-			IFOR(i, 0, count)
+			if (initFunc != NULL)
 			{
-				short len = file.ReadInt16LE();
-				string name = file.ReadString(len);
+				plugin = new CPlugin(flags[i]);
 
-				file.Move(2);
-				uint flags = file.ReadUInt32LE();
-				file.Move(2);
+				initFunc(plugin->m_PPS);
+			}
 
-				len = file.ReadInt16LE();
-				string subName = file.ReadString(len);
+			if (plugin == NULL)
+				FreeLibrary(dll);
+			else
+			{
+				plugin->m_PPS->Owner = plugin;
 
-				HMODULE dll = LoadLibraryA(g_App.FilePath(name.c_str()).c_str());
+				if (plugin->CanClientAccess())
+					plugin->m_PPS->Client = &g_PluginClientInterface;
 
-				if (dll != NULL)
-				{
-					typedef void __cdecl dllFunc(PPLUGIN_INTERFACE);
+				if (plugin->CanParseRecv())
+					plugin->m_PPS->Recv = PluginRecvFunction;
 
-					dllFunc *initFunc = (dllFunc*)GetProcAddress(dll, subName.c_str());
-					CPlugin *plugin = NULL;
+				if (plugin->CanParseSend())
+					plugin->m_PPS->Send = PluginSendFunction;
 
-					if (initFunc != NULL)
-					{
-						plugin = new CPlugin(flags);
+				initFunc(plugin->m_PPS);
 
-						initFunc(plugin->m_PPS);
-					}
-
-					if (plugin == NULL)
-						FreeLibrary(dll);
-					else
-					{
-						plugin->m_PPS->Owner = plugin;
-
-						if (plugin->CanClientAccess())
-							plugin->m_PPS->Client = &g_PluginClientInterface;
-
-						if (plugin->CanParseRecv())
-							plugin->m_PPS->Recv = PluginRecvFunction;
-
-						if (plugin->CanParseSend())
-							plugin->m_PPS->Send = PluginSendFunction;
-
-						initFunc(plugin->m_PPS);
-
-						g_PluginManager.Add(plugin);
-					}
-				}
+				g_PluginManager.Add(plugin);
 			}
 		}
-
-		file.Unload();
-
-		BringWindowToTop(g_OrionWindow.Handle);
 	}
+
+	BringWindowToTop(g_OrionWindow.Handle);
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadLocalConfig()
@@ -1032,38 +1009,26 @@ void COrion::ClearUnusedTextures()
 //----------------------------------------------------------------------------------
 void COrion::Connect()
 {
-	LOG("Init Connect screen\n");
 	InitScreen(GS_MAIN_CONNECT);
-
-	LOG("Process rendering\n");
 	Process(true);
 
-	LOG("g_ConnectionManager.Disconnect\n");
 	g_ConnectionManager.Disconnect();
-
-	LOG("g_ConnectionManager.Init()\n");
 	g_ConnectionManager.Init(); //Configure
 
 	string login = "";
 	int port;
 	
-	LOG("Loading login.cfg..\n");
 	LoadLogin(login, port);
 
-	LOG("Establishing connection to game server...\n");
 	if (g_ConnectionManager.Connect(login, port, g_GameSeed))
 	{
-		LOG("Connection established\n");
 		g_ConnectionScreen.Connected = true;
-
 		CPacketFirstLogin().Send();
-		LOG("Sending first login packet\n");
 	}
 	else
 	{
 		g_ConnectionScreen.ConnectionFailed = true;
 		g_ConnectionScreen.ErrorCode = 8;
-		LOG("Connection failed\n");
 	}
 }
 //----------------------------------------------------------------------------------
@@ -4052,7 +4017,7 @@ void COrion::DropItem(uint container, ushort x, ushort y, char z)
 		{
 			g_ObjectInHand->Dropped = true;
 
-			if (g_ConnectionManager.ClientVersion >= CV_6017)
+			if (g_PacketManager.ClientVersion >= CV_6017)
 				CPacketDropRequestNew(g_ObjectInHand->Serial, x, y, z, 0, container).Send();
 			else
 				CPacketDropRequestOld(g_ObjectInHand->Serial, x, y, z, container).Send();
