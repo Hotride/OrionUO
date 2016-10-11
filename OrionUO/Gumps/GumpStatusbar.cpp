@@ -54,13 +54,15 @@ CGumpStatusbar::~CGumpStatusbar()
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::InitToolTip()
 {
-	uint serial = g_SelectedObject.Serial;
+	uint id = g_SelectedObject.Serial;
 
-	if (serial)
+	if (m_Minimized)
+		g_ToolTip.Set(L"Double click to maximize the statusbar gump", g_SelectedObject.Object());
+	else if (id && id < ID_GSB_TEXT_TITHING_POINTS)
 	{
 		static const wstring tooltip[ID_GSB_TEXT_TITHING_POINTS] =
 		{
-			L"Minimize the gump", //ID_GSB_MINIMIZE
+			L"Minimize the statusbar gump", //ID_GSB_MINIMIZE
 			L"", //ID_GSB_TEXT_FIELD
 			L"", //ID_GSB_BUTTON_HEAL_1
 			L"", //ID_GSB_BUTTON_HEAL_2
@@ -92,7 +94,7 @@ void CGumpStatusbar::InitToolTip()
 			L"Tithing Points" //ID_GSB_TEXT_TITHING_POINTS
 		};
 
-		const wstring &text = tooltip[serial - 1];
+		const wstring &text = tooltip[id - 1];
 
 		if (text.length())
 			g_ToolTip.Set(text, g_SelectedObject.Object(), 80);

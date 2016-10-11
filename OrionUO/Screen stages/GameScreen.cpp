@@ -1547,8 +1547,8 @@ void CGameScreen::Render(const bool &mode)
 
 					//g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di((int)((oldMouse.X * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetX / g_GlobalScale), (int)((oldMouse.Y * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetY / g_GlobalScale));
 
-					int mouseX = (oldMouse.X * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetX / g_GlobalScale;
-					int mouseY = (oldMouse.Y * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetY / g_GlobalScale;
+					int mouseX = (int)((oldMouse.X * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetX / g_GlobalScale);
+					int mouseY = (int)((oldMouse.Y * g_GlobalScale) + g_RenderBounds.GameWindowScaledOffsetY / g_GlobalScale);
 
 					g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di
 					(

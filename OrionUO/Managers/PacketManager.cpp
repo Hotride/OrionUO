@@ -856,7 +856,7 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
 
-	if (m_ClientVersion >= CV_500A && !g_Player->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !g_Player->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(g_Player->Serial);
 
 	LOG("Player 0x%08lX entered the world.\n", serial);
@@ -1285,7 +1285,7 @@ PACKET_HANDLER(UpdateItem)
 
 	g_World->MoveToTop(obj);
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
@@ -1351,7 +1351,7 @@ PACKET_HANDLER(UpdateItemSA)
 
 	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	g_World->MoveToTop(obj);
@@ -1489,7 +1489,7 @@ PACKET_HANDLER(UpdateObject)
 	else
 		LOG("0x%08X 0x%04X %d,%d,%d C%04X F%02X\n", serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (serial == g_PlayerSerial && oldDead != g_Player->Dead())
@@ -1540,7 +1540,7 @@ PACKET_HANDLER(UpdateObject)
 
 		LOG("\t0x%08X:%04X [%d] %04X\n", obj2->Serial, obj2->Graphic, layer, obj2->Color);
 
-		if (m_ClientVersion >= CV_500A && !obj2->GetClilocMessage().length())
+		if (m_ClientVersion >= CV_500A && !obj2->ClilocMessage.length())
 			megaClilocRequestList.push_back(obj2->Serial);
 
 		g_World->MoveToTop(obj2);
@@ -1583,7 +1583,7 @@ PACKET_HANDLER(EquipItem)
 	if (g_NewTargetSystem.Serial == serial)
 		g_NewTargetSystem.Serial = 0;
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (layer < OL_MOUNT)
@@ -1651,7 +1651,7 @@ PACKET_HANDLER(UpdateContainedItem)
 
 	obj->Color = ReadUInt16BE();
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (obj->Graphic == 0x0EB0) //Message board item
@@ -1768,7 +1768,7 @@ PACKET_HANDLER(UpdateContainedItems)
 		obj->MapIndex = g_CurrentMap;
 		obj->Layer = 0;
 
-		if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+		if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 			megaClilocRequestList.push_back(obj->Serial);
 
 		g_World->PutContainer(obj, cserial);
@@ -1979,7 +1979,7 @@ PACKET_HANDLER(UpdateCharacter)
 	obj->Graphic = ReadUInt16BE();
 	obj->OnGraphicChange();
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	short x = ReadInt16BE();

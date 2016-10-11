@@ -31,7 +31,9 @@ public:
 	CGumpMenubar(uint serial, short x, short y);
 	virtual ~CGumpMenubar();
 	
-	bool CanBeDisplayed() { return false; }
+	virtual bool CanBeDisplayed() { return false; }
+
+	virtual void InitToolTip();
 
 	GUMP_BUTTON_EVENT_H;
 	GUMP_TEXT_ENTRY_EVENT_H;

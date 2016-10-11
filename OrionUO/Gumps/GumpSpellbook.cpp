@@ -119,6 +119,12 @@ int CGumpSpellbook::GetReagentIndex(const ushort &id)
 //----------------------------------------------------------------------------------
 void CGumpSpellbook::InitToolTip()
 {
+	if (m_Minimized)
+	{
+		g_ToolTip.Set(L"Double click to maximize book gump", g_SelectedObject.Object());
+		return;
+	}
+
 	switch (m_BookType)
 	{
 		case ST_MAGE:

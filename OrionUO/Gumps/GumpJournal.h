@@ -42,6 +42,8 @@ public:
 	void AddText(class CTextData *obj);
 	void DeleteText(class CTextData *obj);
 
+	virtual void InitToolTip();
+
 	GUMP_BUTTON_EVENT_H;
 	GUMP_CHECKBOX_EVENT_H;
 	GUMP_SLIDER_CLICK_EVENT_H { m_TextLocker->Visible = true; }

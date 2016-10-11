@@ -206,6 +206,8 @@ public:
 	CGUITextEntry *m_GameWindowHeight;
 	CGUITextEntry *m_MacroKey;
 
+	virtual void InitToolTip();
+
 	virtual void PrepareContent();
 
 	virtual void UpdateContent();
