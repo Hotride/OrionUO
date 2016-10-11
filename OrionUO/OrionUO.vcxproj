@@ -288,7 +288,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
     <ClInclude Include="Screen stages\CharacterListScreen.h" />
     <ClInclude Include="Screen stages\ConnectionScreen.h" />
     <ClInclude Include="Screen stages\CreateCharacterScreen.h" />
-    <ClInclude Include="Screen stages\DebugScreen.h" />
     <ClInclude Include="Screen stages\GameBlockedScreen.h" />
     <ClInclude Include="Screen stages\GameScreen.h" />
     <ClInclude Include="Screen stages\MainScreen.h" />
@@ -508,7 +507,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
     <ClCompile Include="Screen stages\CharacterListScreen.cpp" />
     <ClCompile Include="Screen stages\ConnectionScreen.cpp" />
     <ClCompile Include="Screen stages\CreateCharacterScreen.cpp" />
-    <ClCompile Include="Screen stages\DebugScreen.cpp" />
     <ClCompile Include="Screen stages\GameBlockedScreen.cpp" />
     <ClCompile Include="Screen stages\GameScreen.cpp" />
     <ClCompile Include="Screen stages\MainScreen.cpp" />

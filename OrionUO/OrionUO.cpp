@@ -37,7 +37,6 @@
 #include "Managers/AnimationManager.h"
 #include "Managers/MacroManager.h"
 #include "Managers/PluginManager.h"
-#include "Screen stages/DebugScreen.h"
 #include "Screen stages/MainScreen.h"
 #include "Screen stages/ConnectionScreen.h"
 #include "Screen stages/ServerScreen.h"
@@ -362,13 +361,8 @@ bool COrion::Install()
 	g_MainScreen.LoadGlobalConfig();
 
 	LOG("Init screen...\n");
-#ifdef _DEBUG
-	g_CurrentScreen = &g_DebugScreen;
-	g_DebugScreen.Init();
+
 	InitScreen(GS_MAIN);
-#else
-	InitScreen(GS_MAIN);
-#endif
 
 	LOG("Installation completed!\n");
 

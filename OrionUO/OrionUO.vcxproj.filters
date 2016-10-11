@@ -339,9 +339,6 @@
     <ClInclude Include="Network\Packets.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\DebugScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
-    </ClInclude>
     <ClInclude Include="Screen stages\ConnectionScreen.h">
       <Filter>Header Files\Screen stages</Filter>
     </ClInclude>
@@ -994,9 +991,6 @@
     </ClCompile>
     <ClCompile Include="Network\Packets.cpp">
       <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Screen stages\DebugScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
     </ClCompile>
     <ClCompile Include="Screen stages\ConnectionScreen.cpp">
       <Filter>Source Files\Screen stages</Filter>
