@@ -137,7 +137,9 @@ void CGameItem::OnGraphicChange(int direction)
 			m_TiledataPtr = &g_Orion.m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32];
 			STATIC_TILES &tile = *m_TiledataPtr;
 
-			if (ToLowerA(tile.Name) == "nodraw")
+			string lowerName = ToLowerA(tile.Name);
+
+			if (m_Graphic == 0x21A3 || lowerName == "nodraw" || lowerName == "no draw")
 				m_Graphic = 1;
 
 			if (IsWearable() || m_Graphic == 0x0A28)
@@ -608,7 +610,9 @@ void CGameItem::LoadMulti()
 			{
 				CMultiObject *mo = new CMultiObject(pmb->ID, m_X + pmb->X, m_Y + pmb->Y, m_Z + (char)pmb->Z, pmb->Flags);
 
-				if (ToLowerA(mo->GetStaticData()->Name) == "nodraw")
+				string lowerName = ToLowerA(mo->GetStaticData()->Name);
+
+				if (pmb->ID == 0x21A3 || lowerName == "nodraw" || lowerName == "no draw")
 				{
 					delete mo;
 					continue;
