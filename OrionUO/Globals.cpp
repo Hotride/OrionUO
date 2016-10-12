@@ -20,6 +20,7 @@ int g_RenderedObjectsCountInGameWindow = 0;
 GLdouble g_GlobalScale = 1.0;
 
 CGLTexture g_MapTexture[6];
+CGLTexture g_AuraTexture;
 
 int g_FrameDelay[2] = { FRAME_DELAY_UNACTIVE_WINDOW, FRAME_DELAY_ACTIVE_WINDOW };
 

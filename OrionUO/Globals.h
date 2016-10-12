@@ -71,6 +71,8 @@ extern GLdouble g_GlobalScale;
 
 extern CGLTexture g_MapTexture[6];
 
+extern CGLTexture g_AuraTexture;
+
 //!Значения задержек в массиве
 extern int g_FrameDelay[2];
 

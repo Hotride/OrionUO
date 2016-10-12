@@ -353,6 +353,9 @@ bool COrion::Install()
 	DEBUGLOG("Create object handles.\n");
 	CreateObjectHandlesBackground();
 
+	DEBUGLOG("Create aura.\n");
+	CreateAuraTexture();
+
 	DEBUGLOG("Load shaders.\n");
 	LoadShaders();
 
@@ -390,6 +393,8 @@ void COrion::Uninstall()
 	g_CurrentShader = NULL;
 	RELEASE_POINTER(g_MulReader);
 	RELEASE_POINTER(g_MapManager);
+
+	g_AuraTexture.Clear();
 
 	IFOR(i, 0, 6)
 		g_MapTexture[i].Clear();
@@ -3083,6 +3088,31 @@ bool COrion::LoadSkills()
 	}
 
 	return true;
+}
+//----------------------------------------------------------------------------------
+void COrion::CreateAuraTexture()
+{
+	UINT_LIST pixels;
+	int width = 0;
+	int height = 0;
+
+	CGLTextureCircleOfTransparency::CreatePixels(30, width, height, pixels);
+
+	IFOR(i, 0, (int)pixels.size())
+	{
+		uint &pixel = pixels[i];
+
+		if (pixel)
+		{
+			uchar value = (uchar)pixel;
+			pixel = (value << 24) | (value << 16) | (value << 8) | value;
+		}
+	}
+
+	g_AuraTexture.Width = width;
+	g_AuraTexture.Height = height;
+
+	g_GL.BindTexture32(g_AuraTexture.Texture, width, height, &pixels[0]);
 }
 //----------------------------------------------------------------------------------
 void COrion::CreateObjectHandlesBackground()

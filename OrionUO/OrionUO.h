@@ -70,6 +70,8 @@ private:
 	//Загрузка шейдеров
 	void LoadShaders();
 
+	void CreateAuraTexture();
+
 	void CreateObjectHandlesBackground();
 
 	//Очистка неиспользуемых текстур
