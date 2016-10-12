@@ -67,9 +67,10 @@ private:
 	static const int ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM = 208;
 	static const int ID_GO_P2_DRAW_STUMPS = 209;
 	static const int ID_GO_P2_MARKING_CAVES = 210;
-	static const int ID_GO_P2_NO_ANIMATE_FIELDS = 211;
-	static const int ID_GO_P2_LOCK_GUMP_MOVING = 212;
-	static const int ID_GO_P2_CONSOLE_ENTER = 213;
+	static const int ID_GO_P2_NO_VEGETATION = 211;
+	static const int ID_GO_P2_NO_ANIMATE_FIELDS = 212;
+	static const int ID_GO_P2_LOCK_GUMP_MOVING = 213;
+	static const int ID_GO_P2_CONSOLE_ENTER = 214;
 	static const int ID_GO_P2_DEV_MODE_1 = 290;
 	static const int ID_GO_P2_DEV_MODE_2 = 291;
 	static const int ID_GO_P2_DEV_MODE_3 = 292;

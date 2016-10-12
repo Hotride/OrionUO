@@ -83,8 +83,9 @@ void CConfigManager::DefaultPage2()
 	m_RemoveTextWithBlending = true;
 	m_DrawStatusState = 0;
 	m_DrawStumps = false;
-	m_NoAnimateFields = false;
 	m_MarkingCaves = false;
+	m_NoVegetation = false;
+	m_NoAnimateFields = false;
 	m_LockGumpsMoving = true;
 	m_ConsoleNeedEnter = false;
 }
@@ -369,6 +370,7 @@ bool CConfigManager::Load(string path)
 		bool drawStumps = false;
 		bool markingCaves;
 		m_NoAnimateFields = false;
+		m_NoVegetation = false;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -390,6 +392,9 @@ bool CConfigManager::Load(string path)
 							drawStumps = file.ReadUInt8();
 							markingCaves = file.ReadUInt8();
 							m_NoAnimateFields = file.ReadUInt8();
+
+							if (blockSize > 9)
+								m_NoVegetation = file.ReadUInt8();
 						}
 					}
 				}
@@ -708,7 +713,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(9); //size of block
+	writter.WriteInt8(10); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -717,6 +722,7 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_DrawStumps);
 	writter.WriteUInt8(m_MarkingCaves);
 	writter.WriteUInt8(m_NoAnimateFields);
+	writter.WriteUInt8(m_NoVegetation);
 	writter.WriteBuffer();
 
 	//Page 3

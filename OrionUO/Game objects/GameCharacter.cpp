@@ -770,9 +770,7 @@ ushort CGameCharacter::GetMountAnimation()
 */
 void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 {
-	dir = m_Direction;
-	if (dir & 0x80)
-		dir ^= 0x80;
+	dir = m_Direction & (~0x80);
 
 	CWalkData *wd = m_WalkStack.m_Items;
 
@@ -785,7 +783,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 		if (dir & 0x80)
 		{
-			dir ^= 0x80;
+			dir &= ~0x80;
 			run = 1;
 		}
 

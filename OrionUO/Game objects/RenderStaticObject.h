@@ -19,6 +19,7 @@ class CRenderStaticObject : public CMapObject
 {
 	SETGET(char, FoliageTransparentIndex);
 	SETGET(char, CanBeTransparent);
+	SETGET(bool, Vegetation);
 
 protected:
 	//”казатель на структуру данных тайлдаты

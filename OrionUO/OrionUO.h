@@ -168,6 +168,8 @@ public:
 
 	bool IsCaveTile(const ushort &graphic);
 
+	bool IsVegetation(const ushort &graphic);
+
 
 
 	//Получить флаги ландшафта

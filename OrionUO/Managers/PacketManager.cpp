@@ -991,15 +991,15 @@ PACKET_HANDLER(NewHealthbarUpdate)
 
 		if (enable)
 			flags |= poisonFlag;
-		else if (flags & poisonFlag)
-			flags ^= poisonFlag;
+		else
+			flags &= ~poisonFlag;
 	}
 	else if (type == 2) //Yellow hits
 	{
 		if (enable)
 			flags |= 0x08;
-		else if (flags & 0x08)
-			flags ^= 0x08;
+		else
+			flags &= ~0x08;
 	}
 	else if (type == 3) //Red?
 	{
@@ -2681,10 +2681,7 @@ PACKET_HANDLER(ConfirmWalk)
 	uchar Seq = ReadUInt8();
 	//player->SetDirection(newdir);
 
-	uchar newnoto = ReadUInt8();
-
-	if (newnoto >= 0x40)
-		newnoto ^= 0x40;
+	uchar newnoto = ReadUInt8() & (~0x40);
 
 	if (!newnoto || newnoto >= 7)
 		newnoto = 0x01;

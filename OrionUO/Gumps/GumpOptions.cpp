@@ -203,6 +203,11 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Marking cave tiles to grid", g_SelectedObject.Object());
 				break;
 			}
+			case ID_GO_P2_NO_VEGETATION:
+			{
+				g_ToolTip.Set(L"Hide vegetation static objects", g_SelectedObject.Object());
+				break;
+			}
 			case ID_GO_P2_NO_ANIMATE_FIELDS:
 			{
 				g_ToolTip.Set(L"Disable the field animation's", g_SelectedObject.Object());
@@ -751,15 +756,19 @@ void CGumpOptions::DrawPage2()
 	checkbox->Checked = g_OptionsConfig.MarkingCaves;
 	checkbox->SetTextParameters(0, L"Marking cave tiles", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 245));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_VEGETATION, 0x00D2, 0x00D3, 0x00D2, 0, 245));
+	checkbox->Checked = g_OptionsConfig.NoVegetation;
+	checkbox->SetTextParameters(0, L"Hide vegetation", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 265));
 	checkbox->Checked = g_OptionsConfig.NoAnimateFields;
 	checkbox->SetTextParameters(0, L"No animate fields", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 0, 265));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 0, 285));
 	checkbox->Checked = g_OptionsConfig.LockGumpsMoving;
 	checkbox->SetTextParameters(0, L"Lock gumps moving", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 0, 285));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 0, 305));
 	checkbox->Checked = g_OptionsConfig.ConsoleNeedEnter;
 	checkbox->SetTextParameters(0, L"Console need press 'Enter' to activate it.", g_OptionsTextColor);
 
@@ -1975,6 +1984,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.DrawStumps = state;
 			else if (serial == ID_GO_P2_MARKING_CAVES)
 				g_OptionsConfig.MarkingCaves = state;
+			else if (serial == ID_GO_P2_NO_VEGETATION)
+				g_OptionsConfig.NoVegetation = state;
 			else if (serial == ID_GO_P2_NO_ANIMATE_FIELDS)
 				g_OptionsConfig.NoAnimateFields = state;
 			else if (serial == ID_GO_P2_REDUCE_FPS_UNACTIVE_WINDOW) //Reduce FPS when Window is Unactive
@@ -2494,6 +2505,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.DrawStatusState = g_OptionsConfig.DrawStatusState;
 			g_ConfigManager.DrawStumps = g_OptionsConfig.DrawStumps;
 			g_ConfigManager.MarkingCaves = g_OptionsConfig.MarkingCaves;
+			g_ConfigManager.NoVegetation = g_OptionsConfig.NoVegetation;
 			g_ConfigManager.NoAnimateFields = g_OptionsConfig.NoAnimateFields;
 			g_ConfigManager.ConsoleNeedEnter = g_OptionsConfig.ConsoleNeedEnter;
 			g_ConfigManager.ReduceFPSUnactiveWindow = g_OptionsConfig.ReduceFPSUnactiveWindow;

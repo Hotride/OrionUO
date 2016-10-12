@@ -27,8 +27,9 @@ class CConfigManager
 	SETGET(bool, RemoveTextWithBlending);
 	SETGETE(uchar, DrawStatusState, OnChangeDrawStatusState);
 	SETGETE(bool, DrawStumps, OnChangeDrawStumps);
-	SETGET(bool, NoAnimateFields);
 	SETGETE(bool, MarkingCaves, OnChangeMarkingCaves);
+	SETGET(bool, NoVegetation);
+	SETGET(bool, NoAnimateFields);
 	SETGETE(bool, ReduceFPSUnactiveWindow, OnChangeReduceFPSUnactiveWindow);
 	SETGET(bool, StandartCharactersAnimationDelay);
 	SETGET(bool, StandartItemsAnimationDelay);
