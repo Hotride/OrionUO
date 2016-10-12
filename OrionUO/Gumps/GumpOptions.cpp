@@ -41,6 +41,122 @@ m_MacroObjectPointer(NULL), m_WantRedrawMacroData(true)
 CGumpOptions::~CGumpOptions()
 {
 }
+//----------------------------------------------------------------------------------
+void CGumpOptions::CalculateGumpState()
+{
+	CGump::CalculateGumpState();
+
+	if (g_GumpPressed)
+	{
+		if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX)
+		{
+			g_GumpMovingOffset.Reset();
+
+			if (m_Minimized)
+			{
+				g_GumpTranslate.X = (float)m_MinimizedX;
+				g_GumpTranslate.Y = (float)m_MinimizedY;
+			}
+			else
+			{
+				g_GumpTranslate.X = (float)m_X;
+				g_GumpTranslate.Y = (float)m_Y;
+			}
+		}
+		else
+			m_WantRedraw = true;
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpOptions::PrepareContent()
+{
+	if (m_WantRedrawMacroData)
+	{
+		RedrawMacroData();
+		m_WantRedraw = true;
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpOptions::UpdateContent()
+{
+	Clear();
+
+	//Body
+	Add(new CGUIResizepic(0, 0x0A28, 40, 0, 550, 450));
+
+
+
+	//Left page buttons
+
+	//Sound and Music
+	CGUIButton *button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_1, 0x00DA, 0x00DA, 0x00DA, 0, 45));
+	button->ToPage = 1;
+	//Orion's configuration
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_2, 0x00DC, 0x00DC, 0x00DC, 0, 111));
+	button->ToPage = 2;
+	//Language
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_3, 0x00DE, 0x00DE, 0x00DE, 0, 177));
+	button->ToPage = 3;
+	//Chat
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_4, 0x00E0, 0x00E0, 0x00E0, 0, 243));
+	button->ToPage = 4;
+	//Macro Options
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_5, 0x00ED, 0x00ED, 0x00ED, 0, 309));
+	button->ToPage = 5;
+
+
+
+	//Right page buttons
+
+	//Interface
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_6, 0x00E2, 0x00E2, 0x00E2, 576, 45));
+	button->ToPage = 6;
+	//Display
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_7, 0x00E4, 0x00E4, 0x00E4, 576, 111));
+	button->ToPage = 7;
+	//Reputation System
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_8, 0x00E6, 0x00E6, 0x00E6, 576, 177));
+	button->ToPage = 8;
+	//Miscellaneous
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_9, 0x00E8, 0x00E8, 0x00E8, 576, 243));
+	button->ToPage = 9;
+	//Filter Options
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_10, 0x00EB, 0x00EB, 0x00EB, 576, 309));
+	button->ToPage = 10;
+
+
+
+	Add(new CGUIButton(ID_GO_CANCEL, 0x00F3, 0x00F2, 0x00F1, 154, 405));
+	Add(new CGUIButton(ID_GO_APPLY, 0x00EF, 0x00EE, 0x00F0, 248, 405));
+	Add(new CGUIButton(ID_GO_DEFAULT, 0x00F6, 0x00F5, 0x00F4, 346, 405));
+	Add(new CGUIButton(ID_GO_OKAY, 0x00F9, 0x00F7, 0x00F8, 443, 405));
+
+
+
+	DrawPage1(); //Sound and Music
+	DrawPage2(); //Orion's configuration
+	DrawPage3(); //Language
+	DrawPage4(); //Chat
+	DrawPage5(); //Macro Options
+	DrawPage6(); //Interface
+	DrawPage7(); //Display
+	DrawPage8(); //Reputation System
+	DrawPage9(); //Miscellaneous
+	DrawPage10(); //Filter Options
+
+	RedrawMacroData();
+}
+//----------------------------------------------------------------------------
+void CGumpOptions::Init()
+{
+	g_OptionsMacroManager.LoadFromMacro();
+	g_OptionsDeveloperMode = g_DeveloperMode;
+
+	m_MacroPointer = (CMacro*)g_OptionsMacroManager.m_Items;
+	m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
+
+	m_WantUpdateContent = true;
+}
 //---------------------------------------------------------------------------
 void CGumpOptions::InitToolTip()
 {
@@ -542,122 +658,6 @@ void CGumpOptions::InitToolTip()
 				break;
 		}
 }
-//----------------------------------------------------------------------------------
-void CGumpOptions::CalculateGumpState()
-{
-	CGump::CalculateGumpState();
-
-	if (g_GumpPressed)
-	{
-		if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX)
-		{
-			g_GumpMovingOffset.Reset();
-
-			if (m_Minimized)
-			{
-				g_GumpTranslate.X = (float)m_MinimizedX;
-				g_GumpTranslate.Y = (float)m_MinimizedY;
-			}
-			else
-			{
-				g_GumpTranslate.X = (float)m_X;
-				g_GumpTranslate.Y = (float)m_Y;
-			}
-		}
-		else
-			m_WantRedraw = true;
-	}
-}
-//----------------------------------------------------------------------------
-void CGumpOptions::PrepareContent()
-{
-	if (m_WantRedrawMacroData)
-	{
-		RedrawMacroData();
-		m_WantRedraw = true;
-	}
-}
-//----------------------------------------------------------------------------
-void CGumpOptions::UpdateContent()
-{
-	Clear();
-
-	//Body
-	Add(new CGUIResizepic(0, 0x0A28, 40, 0, 550, 450));
-
-
-
-	//Left page buttons
-
-	//Sound and Music
-	CGUIButton *button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_1, 0x00DA, 0x00DA, 0x00DA, 0, 45));
-	button->ToPage = 1;
-	//Orion's configuration
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_2, 0x00DC, 0x00DC, 0x00DC, 0, 111));
-	button->ToPage = 2;
-	//Language
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_3, 0x00DE, 0x00DE, 0x00DE, 0, 177));
-	button->ToPage = 3;
-	//Chat
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_4, 0x00E0, 0x00E0, 0x00E0, 0, 243));
-	button->ToPage = 4;
-	//Macro Options
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_5, 0x00ED, 0x00ED, 0x00ED, 0, 309));
-	button->ToPage = 5;
-
-
-
-	//Right page buttons
-
-	//Interface
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_6, 0x00E2, 0x00E2, 0x00E2, 576, 45));
-	button->ToPage = 6;
-	//Display
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_7, 0x00E4, 0x00E4, 0x00E4, 576, 111));
-	button->ToPage = 7;
-	//Reputation System
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_8, 0x00E6, 0x00E6, 0x00E6, 576, 177));
-	button->ToPage = 8;
-	//Miscellaneous
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_9, 0x00E8, 0x00E8, 0x00E8, 576, 243));
-	button->ToPage = 9;
-	//Filter Options
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_10, 0x00EB, 0x00EB, 0x00EB, 576, 309));
-	button->ToPage = 10;
-
-
-
-	Add(new CGUIButton(ID_GO_CANCEL, 0x00F3, 0x00F2, 0x00F1, 154, 405));
-	Add(new CGUIButton(ID_GO_APPLY, 0x00EF, 0x00EE, 0x00F0, 248, 405));
-	Add(new CGUIButton(ID_GO_DEFAULT, 0x00F6, 0x00F5, 0x00F4, 346, 405));
-	Add(new CGUIButton(ID_GO_OKAY, 0x00F9, 0x00F7, 0x00F8, 443, 405));
-
-
-
-	DrawPage1(); //Sound and Music
-	DrawPage2(); //Orion's configuration
-	DrawPage3(); //Language
-	DrawPage4(); //Chat
-	DrawPage5(); //Macro Options
-	DrawPage6(); //Interface
-	DrawPage7(); //Display
-	DrawPage8(); //Reputation System
-	DrawPage9(); //Miscellaneous
-	DrawPage10(); //Filter Options
-
-	RedrawMacroData();
-}
-//----------------------------------------------------------------------------
-void CGumpOptions::Init()
-{
-	g_OptionsMacroManager.LoadFromMacro();
-	g_OptionsDeveloperMode = g_DeveloperMode;
-
-	m_MacroPointer = (CMacro*)g_OptionsMacroManager.m_Items;
-	m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
-
-	m_WantUpdateContent = true;
-}
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage1()
 {
@@ -766,6 +766,7 @@ void CGumpOptions::DrawPage2()
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 120));
 	text->CreateTextureW(0, L"Draw character's status in game window");
 
+	html->Add(new CGUIGroup(1));
 	CGUIRadio *radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_NO_DRAW_CHARACTERS_STATUS, 0x00D0, 0x00D1, 0x00D2, 10, 140));
 	radio->Checked = (g_OptionsConfig.DrawStatusState == 0);
 	radio->SetTextParameters(0, L"No draw", g_OptionsTextColor);
@@ -805,6 +806,7 @@ void CGumpOptions::DrawPage2()
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 325));
 	text->CreateTextureW(0, L"Hidden characters display mode:");
 
+	html->Add(new CGUIGroup(2));
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_1, 0x00D0, 0x00D1, 0x00D2, 10, 345));
 	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_ORIGINAL);
 	radio->SetTextParameters(0, L"Original", g_OptionsTextColor);
