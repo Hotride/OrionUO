@@ -35,6 +35,9 @@ class CConfigManager
 	SETGET(bool, StandartItemsAnimationDelay);
 	SETGET(bool, LockGumpsMoving);
 	SETGETE(bool, ConsoleNeedEnter, OnChangeConsoleNeedEnter);
+	SETGET(uchar, HiddenCharactersRenderMode);
+	SETGET(uchar, HiddenAlpha);
+	SETGET(bool, UseHiddenModeOnlyForSelf);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

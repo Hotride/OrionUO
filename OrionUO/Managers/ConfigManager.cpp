@@ -88,6 +88,9 @@ void CConfigManager::DefaultPage2()
 	m_NoAnimateFields = false;
 	m_LockGumpsMoving = true;
 	m_ConsoleNeedEnter = false;
+	m_HiddenCharactersRenderMode = 0;
+	m_HiddenAlpha = 0x7F;
+	m_UseHiddenModeOnlyForSelf = true;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -394,7 +397,12 @@ bool CConfigManager::Load(string path)
 							m_NoAnimateFields = file.ReadUInt8();
 
 							if (blockSize > 9)
+							{
 								m_NoVegetation = file.ReadUInt8();
+								m_HiddenCharactersRenderMode = file.ReadUInt8();
+								m_HiddenAlpha = file.ReadUInt8();
+								m_UseHiddenModeOnlyForSelf = file.ReadUInt8();
+							}
 						}
 					}
 				}
@@ -713,7 +721,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(10); //size of block
+	writter.WriteInt8(13); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -723,6 +731,9 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_MarkingCaves);
 	writter.WriteUInt8(m_NoAnimateFields);
 	writter.WriteUInt8(m_NoVegetation);
+	writter.WriteUInt8(m_HiddenCharactersRenderMode);
+	writter.WriteUInt8(m_HiddenAlpha);
+	writter.WriteUInt8(m_UseHiddenModeOnlyForSelf);
 	writter.WriteBuffer();
 
 	//Page 3

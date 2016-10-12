@@ -208,6 +208,36 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Hide vegetation static objects", g_SelectedObject.Object());
 				break;
 			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_1:
+			{
+				g_ToolTip.Set(L"Default hidden characters", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_2:
+			{
+				g_ToolTip.Set(L"Hidden characters drawn with alpha-blending", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_3:
+			{
+				g_ToolTip.Set(L"Hidden characters drawn with spectral color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_4:
+			{
+				g_ToolTip.Set(L"Hidden characters drawn with special spectral color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_ALPHA:
+			{
+				g_ToolTip.Set(L"Value of alpha channel for using in hidden mode", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF:
+			{
+				g_ToolTip.Set(L"Change hidden characters mode only for your person", g_SelectedObject.Object());
+				break;
+			}
 			case ID_GO_P2_NO_ANIMATE_FIELDS:
 			{
 				g_ToolTip.Set(L"Disable the field animation's", g_SelectedObject.Object());
@@ -771,6 +801,35 @@ void CGumpOptions::DrawPage2()
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 0, 305));
 	checkbox->Checked = g_OptionsConfig.ConsoleNeedEnter;
 	checkbox->SetTextParameters(0, L"Console need press 'Enter' to activate it.", g_OptionsTextColor);
+
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 325));
+	text->CreateTextureW(0, L"Hidden characters display mode:");
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_1, 0x00D0, 0x00D1, 0x00D2, 10, 345));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_ORIGINAL);
+	radio->SetTextParameters(0, L"Original", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_2, 0x00D0, 0x00D1, 0x00D2, 10, 365));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_ALPHA_BLENDING);
+	radio->SetTextParameters(0, L"With alpha-blending", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_3, 0x00D0, 0x00D1, 0x00D2, 10, 385));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_SPECTRAL_COLOR);
+	radio->SetTextParameters(0, L"With spectral color", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_4, 0x00D0, 0x00D1, 0x00D2, 10, 405));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_SPECIAL_SPECTRAL_COLOR);
+	radio->SetTextParameters(0, L"With special spectral color", g_OptionsTextColor);
+
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 200, 365));
+	text->CreateTextureW(0, L"Alpha:");
+
+	m_SliderHiddenAlpha = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_HIDDEN_ALPHA, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 245, 369, 90, 1, 255, g_OptionsConfig.HiddenAlpha));
+	m_SliderHiddenAlpha->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF, 0x00D2, 0x00D3, 0x00D2, 0, 430));
+	checkbox->Checked = g_OptionsConfig.UseHiddenModeOnlyForSelf;
+	checkbox->SetTextParameters(0, L"Change hidden characters mode only for your person", g_OptionsTextColor);
 
 	html->CalculateDataSize();
 }
@@ -1998,6 +2057,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.LockGumpsMoving = state;
 			else if (serial == ID_GO_P2_CONSOLE_ENTER) //Console need press 'Enter' to activate it.
 				g_OptionsConfig.ConsoleNeedEnter = state;
+			else if (serial == ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF)
+				g_OptionsConfig.UseHiddenModeOnlyForSelf = state;
 
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
@@ -2124,6 +2185,14 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 				g_OptionsConfig.DrawStatusState = 1;
 			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM) //Under character
 				g_OptionsConfig.DrawStatusState = 2;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_1)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_ORIGINAL;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_2)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_ALPHA_BLENDING;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_3)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_SPECTRAL_COLOR;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_4)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_SPECIAL_SPECTRAL_COLOR;
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
 			else if (serial == ID_GO_P2_DEV_MODE_2)
@@ -2193,6 +2262,8 @@ void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 		{
 			if (serial == ID_GO_P2_CLIENT_FPS)
 				g_OptionsConfig.ClientFPS = m_SliderClientFPS->Value;
+			else if (serial == ID_GO_P2_HIDDEN_ALPHA)
+				g_OptionsConfig.HiddenAlpha = m_SliderHiddenAlpha->Value;
 
 			break;
 		}
@@ -2512,6 +2583,9 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.StandartCharactersAnimationDelay = g_OptionsConfig.StandartCharactersAnimationDelay;
 			g_ConfigManager.StandartItemsAnimationDelay = g_OptionsConfig.StandartItemsAnimationDelay;
 			g_ConfigManager.LockGumpsMoving = g_OptionsConfig.LockGumpsMoving;
+			g_ConfigManager.HiddenCharactersRenderMode = g_OptionsConfig.HiddenCharactersRenderMode;
+			g_ConfigManager.HiddenAlpha = g_OptionsConfig.HiddenAlpha;
+			g_ConfigManager.UseHiddenModeOnlyForSelf = g_OptionsConfig.UseHiddenModeOnlyForSelf;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

@@ -492,6 +492,14 @@ enum MOUSE_WHEEL_STATE
 	MWS_SCROLL_DOWN
 };
 //----------------------------------------------------------------------------------
+enum HIDDEN_CHARACTERS_RENDER_MODE
+{
+	HCRM_ORIGINAL = 0,
+	HCRM_ALPHA_BLENDING,
+	HCRM_SPECTRAL_COLOR,
+	HCRM_SPECIAL_SPECTRAL_COLOR
+};
+//----------------------------------------------------------------------------------
 //!Направления чара
 enum DIRECTION_TYPE
 {
