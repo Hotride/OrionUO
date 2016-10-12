@@ -1421,12 +1421,19 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	bool drawShadow = !obj->Dead();
 	bool usingBlending = false;
 
-	/*g_ColorManager.SendColorsToShader(g_ConfigManager.GetColorByNotoriety(obj->Notoriety));
-	glUniform1iARB(g_ShaderDrawMode, 1);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-	g_AuraTexture.Draw(drawX - g_AuraTexture.Width / 2, drawY - g_AuraTexture.Height / 2);
-	glDisable(GL_BLEND);*/
+	if (g_CtrlPressed)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+		uint auraColor = g_ColorManager.GetPolygoneColor(16, g_ConfigManager.GetColorByNotoriety(obj->Notoriety));
+		glColor4ub(GetRValue(auraColor), GetGValue(auraColor), GetBValue(auraColor), 0xFF);
+
+		g_AuraTexture.Draw(drawX - g_AuraTexture.Width / 2, drawY - g_AuraTexture.Height / 2);
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glDisable(GL_BLEND);
+	}
 
 	if (obj->Hidden())
 	{

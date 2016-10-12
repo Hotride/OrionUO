@@ -3104,7 +3104,11 @@ void COrion::CreateAuraTexture()
 
 		if (pixel)
 		{
-			uchar value = (uchar)pixel;
+			ushort value = pixel << 2;
+
+			if (value > 0xFF)
+				value = 0xFF;
+
 			pixel = (value << 24) | (value << 16) | (value << 8) | value;
 		}
 	}
