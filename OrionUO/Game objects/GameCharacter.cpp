@@ -85,11 +85,11 @@ int CGameCharacter::IsSitting()
 		{
 			if (obj->IsStaticGroupObject() && abs(m_Z - obj->Z) <= 1) //m_Z == obj->Z
 			{
-				WORD graphic = obj->Graphic;
+				ushort graphic = obj->Graphic;
 
 				if (obj->IsGameObject())
 				{
-					if (graphic >= 0x4000 || ((CGameObject*)obj)->NPC)
+					if (((CGameObject*)obj)->NPC || ((CGameItem*)obj)->MultiBody)
 						graphic = 0;
 				}
 				else

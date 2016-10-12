@@ -620,7 +620,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 				}
 			}
 
-			if (((!go->Locked() && go->Graphic < 0x4000) || go->NPC) && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
+			if ((go->NPC || (!go->Locked() && !((CGameItem*)go)->MultiBody)) && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
 			{
 				int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
 

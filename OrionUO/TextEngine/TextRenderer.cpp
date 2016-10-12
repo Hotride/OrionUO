@@ -116,7 +116,7 @@ bool CTextRenderer::CalculatePositions(const bool &noCalculate)
 			{
 				CGameObject *go = g_World->FindWorldObject(text->Serial);
 
-				if (go != NULL && go->Graphic < 0x4000)
+				if (go != NULL && (go->NPC || !((CGameItem*)go)->MultiBody))
 				{
 					CGLTextTexture &tth = text->m_Texture;
 					int drawX = text->X - go->GetTextOffsetX(text);
@@ -300,7 +300,7 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 				{
 					CGameObject *go = g_World->FindWorldObject(text->Serial);
 
-					if (go != NULL && go->Graphic < 0x4000)
+					if (go != NULL && (go->NPC || !((CGameItem*)go)->MultiBody))
 					{
 						rwo = go;
 

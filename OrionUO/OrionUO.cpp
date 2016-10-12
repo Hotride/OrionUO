@@ -4477,7 +4477,7 @@ void COrion::EquipItem(uint container)
 
 			ushort graphic = g_ObjectInHand->Graphic;
 
-			if (graphic < 0x4000)
+			if (!g_ObjectInHand->MultiBody)
 			{
 				STATIC_TILES &st = m_StaticData[graphic / 32].Tiles[graphic % 32];
 

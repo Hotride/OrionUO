@@ -204,7 +204,7 @@ void CGumpMinimap::UpdateContent()
 	{
 		QFOR(go, g_World->m_Items, CGameObject*)
 		{
-			if (go->Container != 0xFFFFFFFF || go->Graphic >= 0x4000)
+			if (go->Container != 0xFFFFFFFF || ((CGameItem*)go)->MultiBody)
 				continue; //multi
 
 			if (go->NPC && !go->IsPlayer())
