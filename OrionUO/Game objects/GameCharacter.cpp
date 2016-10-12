@@ -789,7 +789,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 		if (canChange)
 		{
-			int maxDelay = g_PathFinder.GetWalkSpeed(run, FindLayer(OL_MOUNT) != NULL) - 15; // CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
+			int maxDelay = g_PathFinder.GetWalkSpeed(run, FindLayer(OL_MOUNT) != NULL) - 15;
 
 			int delay = (int)g_Ticks - (int)m_LastStepTime;
 			bool removeStep = (delay >= maxDelay);
@@ -801,7 +801,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 				
 				float x = delay / g_AnimCharactersDelayValue;
 				float y = x;
-				m_OffsetZ = (char)((wd->Z - m_Z) * x);
+				m_OffsetZ = (char)(((wd->Z - m_Z) * x) * (4.0f / steps));
 
 				wd->GetOffset(x, y, steps);
 
