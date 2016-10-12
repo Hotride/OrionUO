@@ -1078,10 +1078,10 @@ PACKET_HANDLER(UpdatePlayer)
 	g_Player->Direction = dir;
 	g_Player->Z = ReadUInt8();
 
-	g_RemoveRangeXY.X = g_Player->X;
+	/*g_RemoveRangeXY.X = g_Player->X;
 	g_RemoveRangeXY.Y = g_Player->Y;
 
-	g_Orion.RemoveRangedObjects();
+	g_Orion.RemoveRangedObjects();*/
 
 	g_World->MoveToTop(g_Player);
 }

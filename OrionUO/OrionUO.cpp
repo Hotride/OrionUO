@@ -627,7 +627,7 @@ void COrion::Process(const bool &rendering)
 	{
 		g_ShowGumpLocker = g_ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
 
-		/*CWalkData *wd = g_Player->m_WalkStack.m_Items;
+		CWalkData *wd = g_Player->m_WalkStack.m_Items;
 
 		if (wd != NULL)
 		{
@@ -640,7 +640,7 @@ void COrion::Process(const bool &rendering)
 			g_RemoveRangeXY.Y = g_Player->Y;
 		}
 
-		RemoveRangedObjects();*/
+		RemoveRangedObjects();
 
 		ProcessStaticAnimList();
 
@@ -3104,7 +3104,7 @@ void COrion::CreateAuraTexture()
 
 		if (pixel)
 		{
-			ushort value = pixel << 2;
+			ushort value = pixel << 3;
 
 			if (value > 0xFF)
 				value = 0xFF;
