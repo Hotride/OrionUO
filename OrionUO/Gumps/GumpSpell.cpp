@@ -50,25 +50,19 @@ void CGumpSpell::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpSpell::PrepareContent()
 {
-	if (!g_ConfigManager.TransparentSpellIcons)
+	bool wantBlender = (g_ConfigManager.TransparentSpellIcons && g_SelectedObject.Gump() != this);
+
+	if (m_Blender->Enabled != wantBlender)
 	{
-		if (m_Blender->Enabled)
-		{
-			m_Blender->Enabled = false;
-			m_WantRedraw = true;
-		}
+		m_Blender->Enabled = wantBlender;
+		m_WantRedraw = true;
 	}
-	else if (g_SelectedObject.Gump() == this)
+
+	bool wantUnlocker = (g_ShiftPressed && InGroup());
+
+	if (m_SpellUnlocker->Visible != wantUnlocker)
 	{
-		if (m_Blender->Enabled)
-		{
-			m_Blender->Enabled = false;
-			m_WantRedraw = true;
-		}
-	}
-	else if (!m_Blender->Enabled)
-	{
-		m_Blender->Enabled = true;
+		m_SpellUnlocker->Visible = wantUnlocker;
 		m_WantRedraw = true;
 	}
 }
@@ -212,7 +206,7 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 //----------------------------------------------------------------------------------
 bool CGumpSpell::GetSpellGroupOffset(int &x, int &y)
 {
-	if (InGroup() && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump() != NULL)
+	if (InGroup() && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump() != NULL && !g_PressedObject.LeftSerial)
 	{
 		CGumpSpell *gump = GetTopSpell();
 
