@@ -67,9 +67,21 @@ private:
 	static const int ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM = 208;
 	static const int ID_GO_P2_DRAW_STUMPS = 209;
 	static const int ID_GO_P2_MARKING_CAVES = 210;
-	static const int ID_GO_P2_NO_ANIMATE_FIELDS = 211;
-	static const int ID_GO_P2_LOCK_GUMP_MOVING = 212;
-	static const int ID_GO_P2_CONSOLE_ENTER = 213;
+	static const int ID_GO_P2_NO_VEGETATION = 211;
+	static const int ID_GO_P2_NO_ANIMATE_FIELDS = 212;
+	static const int ID_GO_P2_LOCK_GUMP_MOVING = 213;
+	static const int ID_GO_P2_CONSOLE_ENTER = 214;
+	static const int ID_GO_P2_HIDDEN_CHARACTES_MODE_1 = 215;
+	static const int ID_GO_P2_HIDDEN_CHARACTES_MODE_2 = 216;
+	static const int ID_GO_P2_HIDDEN_CHARACTES_MODE_3 = 217;
+	static const int ID_GO_P2_HIDDEN_CHARACTES_MODE_4 = 218;
+	static const int ID_GO_P2_HIDDEN_ALPHA = 219;
+	static const int ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF = 220;
+	static const int ID_GO_P2_TRANSPARENT_SPELL_ICONS = 221;
+	static const int ID_GO_P2_SPELL_ICONS_ALPHA = 222;
+	static const int ID_GO_P2_DEV_MODE_1 = 290;
+	static const int ID_GO_P2_DEV_MODE_2 = 291;
+	static const int ID_GO_P2_DEV_MODE_3 = 292;
 
 	static const int ID_GO_P3_USE_TOOLTIP = 300;
 	static const int ID_GO_P3_TEXT_COLOR = 301;
@@ -145,6 +157,8 @@ private:
 	CGUISlider *m_SliderSound;
 	CGUISlider *m_SliderMusic;
 	CGUISlider *m_SliderClientFPS;
+	CGUISlider *m_SliderHiddenAlpha;
+	CGUISlider *m_SliderSpellIconsAlpha;
 	CGUISlider *m_SliderTooltipDelay;
 	CGUISlider *m_SliderSpeechDuration;
 	CGUISlider *m_SliderCircleTransparency;
@@ -202,6 +216,8 @@ public:
 	CGUITextEntry *m_GameWindowWidth;
 	CGUITextEntry *m_GameWindowHeight;
 	CGUITextEntry *m_MacroKey;
+
+	virtual void InitToolTip();
 
 	virtual void PrepareContent();
 

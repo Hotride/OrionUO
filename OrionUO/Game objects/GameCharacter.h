@@ -70,7 +70,7 @@ public:
 	virtual ~CGameCharacter();
 
 	//—сылка на контейнер дл€ текста урона
-	CTextContainer *m_DamageTextControl;
+	CTextContainer m_DamageTextControl;
 
 	//!—сылка на счетчик шагов
 	CWalkStack m_WalkStack;

@@ -63,6 +63,8 @@ public:
 	
 	void Init();
 
+	virtual void InitToolTip();
+
 	virtual void PrepareContent();
 
 	GUMP_BUTTON_EVENT_H;

@@ -51,7 +51,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -59,9 +59,12 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d  "$(SolutionDir)bin\bass.dll" "$(OutDir)"
+
 xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
+
 xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
+xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
+</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dlls to bin directory</Message>
@@ -89,9 +92,14 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d  "$(SolutionDir)bin\bass.dll" "$(OutDir)"
+
 xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
+
 xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
+
+xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
+
+</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dlls to bin directory</Message>
@@ -128,7 +136,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClInclude Include="Game objects\MultiObject.h" />
     <ClInclude Include="Game objects\ObjectOnCursor.h" />
     <ClInclude Include="Game objects\RenderStaticObject.h" />
-    <ClInclude Include="Game objects\ShopItem.h" />
     <ClInclude Include="Game objects\StaticObject.h" />
     <ClInclude Include="GLEngine\GLEngine.h" />
     <ClInclude Include="GLEngine\GLFrameBuffer.h" />
@@ -253,20 +260,15 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClInclude Include="Managers\PacketManager.h" />
     <ClInclude Include="Managers\PluginManager.h" />
     <ClInclude Include="Managers\ProfessionManager.h" />
+    <ClInclude Include="Managers\ScreenEffectManager.h" />
     <ClInclude Include="Managers\SkillGroupManager.h" />
     <ClInclude Include="Managers\SoundManager.h" />
     <ClInclude Include="Managers\SpeechManager.h" />
     <ClInclude Include="MulStruct.h" />
     <ClInclude Include="Multi.h" />
     <ClInclude Include="MultiMap.h" />
-    <ClInclude Include="Network\AES.H" />
     <ClInclude Include="Network\Connection.h" />
-    <ClInclude Include="Network\GameCrypt.h" />
-    <ClInclude Include="Network\LoginCrypt.h" />
-    <ClInclude Include="Network\md5.h" />
     <ClInclude Include="Network\Packets.h" />
-    <ClInclude Include="Network\platform.H" />
-    <ClInclude Include="Network\TABLE.H" />
     <ClInclude Include="Network\UOHuffman.h" />
     <ClInclude Include="OrionApplication.h" />
     <ClInclude Include="OrionUO.h" />
@@ -285,7 +287,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClInclude Include="Screen stages\CharacterListScreen.h" />
     <ClInclude Include="Screen stages\ConnectionScreen.h" />
     <ClInclude Include="Screen stages\CreateCharacterScreen.h" />
-    <ClInclude Include="Screen stages\DebugScreen.h" />
     <ClInclude Include="Screen stages\GameBlockedScreen.h" />
     <ClInclude Include="Screen stages\GameScreen.h" />
     <ClInclude Include="Screen stages\MainScreen.h" />
@@ -298,7 +299,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClInclude Include="ShaderData.h" />
     <ClInclude Include="SkillGroup.h" />
     <ClInclude Include="Skills.h" />
-    <ClInclude Include="SmoothMonitor.h" />
     <ClInclude Include="StumpsData.h" />
     <ClInclude Include="Target.h" />
     <ClInclude Include="TargetGump.h" />
@@ -357,7 +357,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClCompile Include="Game objects\MultiObject.cpp" />
     <ClCompile Include="Game objects\ObjectOnCursor.cpp" />
     <ClCompile Include="Game objects\RenderStaticObject.cpp" />
-    <ClCompile Include="Game objects\ShopItem.cpp" />
     <ClCompile Include="Game objects\StaticObject.cpp" />
     <ClCompile Include="GLEngine\GLEngine.cpp" />
     <ClCompile Include="GLEngine\GLFrameBuffer.cpp" />
@@ -482,17 +481,14 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClCompile Include="Managers\PacketManager.cpp" />
     <ClCompile Include="Managers\PluginManager.cpp" />
     <ClCompile Include="Managers\ProfessionManager.cpp" />
+    <ClCompile Include="Managers\ScreenEffectManager.cpp" />
     <ClCompile Include="Managers\SkillGroupManager.cpp" />
     <ClCompile Include="Managers\SoundManager.cpp" />
     <ClCompile Include="Managers\SpeechManager.cpp" />
     <ClCompile Include="Multi.cpp" />
     <ClCompile Include="MultiMap.cpp" />
     <ClCompile Include="Network\Connection.cpp" />
-    <ClCompile Include="Network\GameCrypt.cpp" />
-    <ClCompile Include="Network\LoginCrypt.cpp" />
-    <ClCompile Include="Network\md5.cpp" />
     <ClCompile Include="Network\Packets.cpp" />
-    <ClCompile Include="Network\twofish.cpp" />
     <ClCompile Include="Network\UOHuffman.cpp" />
     <ClCompile Include="OrionApplication.cpp" />
     <ClCompile Include="OrionUO.cpp" />
@@ -509,7 +505,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClCompile Include="Screen stages\CharacterListScreen.cpp" />
     <ClCompile Include="Screen stages\ConnectionScreen.cpp" />
     <ClCompile Include="Screen stages\CreateCharacterScreen.cpp" />
-    <ClCompile Include="Screen stages\DebugScreen.cpp" />
     <ClCompile Include="Screen stages\GameBlockedScreen.cpp" />
     <ClCompile Include="Screen stages\GameScreen.cpp" />
     <ClCompile Include="Screen stages\MainScreen.cpp" />
@@ -521,7 +516,6 @@ xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"</Command>
     <ClCompile Include="ServerList.cpp" />
     <ClCompile Include="SkillGroup.cpp" />
     <ClCompile Include="Skills.cpp" />
-    <ClCompile Include="SmoothMonitor.cpp" />
     <ClCompile Include="Target.cpp" />
     <ClCompile Include="TargetGump.cpp" />
     <ClCompile Include="TextEngine\EntryText.cpp" />

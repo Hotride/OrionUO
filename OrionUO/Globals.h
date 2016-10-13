@@ -71,6 +71,8 @@ extern GLdouble g_GlobalScale;
 
 extern CGLTexture g_MapTexture[6];
 
+extern CGLTexture g_AuraTexture;
+
 //!Значения задержек в массиве
 extern int g_FrameDelay[2];
 
@@ -235,6 +237,10 @@ extern uint g_LockedClientFeatures;
 
 extern bool g_GeneratedMouseDown;
 extern bool g_DrawFoliage;
+
+enum DEVELOPER_MODE{DM_NO_DEBUG = 0, DM_SHOW_FPS_ONLY, DM_DEBUGGING};
+extern DEVELOPER_MODE g_DeveloperMode;
+extern DEVELOPER_MODE g_OptionsDeveloperMode;
 
 const int g_ObjectHandlesWidth = 142;
 const int g_ObjectHandlesHeight = 20;

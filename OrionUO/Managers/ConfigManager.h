@@ -27,13 +27,19 @@ class CConfigManager
 	SETGET(bool, RemoveTextWithBlending);
 	SETGETE(uchar, DrawStatusState, OnChangeDrawStatusState);
 	SETGETE(bool, DrawStumps, OnChangeDrawStumps);
-	SETGET(bool, NoAnimateFields);
 	SETGETE(bool, MarkingCaves, OnChangeMarkingCaves);
+	SETGET(bool, NoVegetation);
+	SETGET(bool, NoAnimateFields);
 	SETGETE(bool, ReduceFPSUnactiveWindow, OnChangeReduceFPSUnactiveWindow);
 	SETGET(bool, StandartCharactersAnimationDelay);
 	SETGET(bool, StandartItemsAnimationDelay);
 	SETGET(bool, LockGumpsMoving);
 	SETGETE(bool, ConsoleNeedEnter, OnChangeConsoleNeedEnter);
+	SETGET(uchar, HiddenCharactersRenderMode);
+	SETGET(uchar, HiddenAlpha);
+	SETGET(bool, UseHiddenModeOnlyForSelf);
+	SETGET(uchar, TransparentSpellIcons);
+	SETGETE(uchar, SpellIconAlpha, OnChangedSpellIconAlpha);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

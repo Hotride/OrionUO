@@ -85,6 +85,8 @@ protected:
 	HANDLER_PACKET(UpdateHitpoints);
 	HANDLER_PACKET(UpdateMana);
 	HANDLER_PACKET(UpdateStamina);
+	HANDLER_PACKET(MobileAttributes);
+	HANDLER_PACKET(NewHealthbarUpdate);
 	HANDLER_PACKET(UpdatePlayer);
 	HANDLER_PACKET(CharacterStatus);
 	HANDLER_PACKET(UpdateItem);
@@ -125,6 +127,7 @@ protected:
 	HANDLER_PACKET(ASCIIPrompt);
 	HANDLER_PACKET(UnicodePrompt);
 	HANDLER_PACKET(CharacterAnimation);
+	HANDLER_PACKET(NewCharacterAnimation);
 	HANDLER_PACKET(DisplayQuestArrow);
 	HANDLER_PACKET(ClientViewRange);
 	HANDLER_PACKET(KrriosClientSpecial);
@@ -160,7 +163,6 @@ protected:
 	//Не обработаны
 	/*
 	0x15 BMSG("Follow", 0x09),
-	0x2D RMSG("Mob Attributes", 0x11),
 	0x2F RMSG("Combat Notification", 0x0a),
 	0x97 RMSG("Move Player", 0x02),
 	0xB2 BMSG("Chat Data", SIZE_VARIABLE),
@@ -170,7 +172,6 @@ protected:
 	0xD7 BMSG("+AoS command",SIZE_VARIABLE),
 	0xD8 RMSG("+Custom house",SIZE_VARIABLE),
 	0xDC RMSG("OPL Info Packet", 9),
-	0xE2 RMSG("New Character Animation", 0xa),
 	*/
 
 public:

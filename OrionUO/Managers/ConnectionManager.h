@@ -12,24 +12,17 @@
 //----------------------------------------------------------------------------------
 #include "../Globals.h"
 #include "../Network/Connection.h"
-#include "../Network/LoginCrypt.h"
-#include "../Network/GameCrypt.h"
 #include "../EnumList.h"
+//----------------------------------------------------------------------------------
+typedef void __cdecl NETWORK_INIT_TYPE(const bool&, BYTE*);
+typedef void __cdecl NETWORK_ACTION_TYPE(const bool&, BYTE*, BYTE*, const int&);
+//----------------------------------------------------------------------------------
+extern NETWORK_INIT_TYPE *g_NetworkInit;
+extern NETWORK_ACTION_TYPE *g_NetworkAction;
 //----------------------------------------------------------------------------------
 //!Класс менеджера подключения к серверу
 class CConnectionManager
 {
-	//!Тип шифрования
-	SETGET(ENCRYPTION_TYPE, EncryptionType);
-
-	//!Версия протокола
-	SETGET(CLIENT_VERSION, ClientVersion);
-
-	SETGET(uint, CryptKey1);
-	SETGET(uint, CryptKey2);
-	SETGET(uint, CryptKey3);
-	SETGET(ushort, CryptSeed);
-
 private:
 	//!Подключение к сокету авторизации
 	CSocket m_LoginSocket;
@@ -37,15 +30,10 @@ private:
 	//!Подключение к сокету сервера
 	CSocket m_GameSocket;
 
-	//!Шифрование для сокета авторизации
-	CLoginCrypt m_LoginCrypt;
-
-	//!Рыбы
-	CBlowfishCrypt m_BlowfishCrypt;
-	CTwofishCrypt m_TwoFishCrypt;
-
 	//!Тип сокета. true - Login, false - game
 	bool m_IsLoginSocket;
+
+	uchar m_Seed[4];
 
 public:
 	CConnectionManager();
@@ -105,7 +93,7 @@ public:
 	Получить свой IP-адрес
 	@return 
 	*/
-	puchar GetClientIP() const { return (puchar)m_LoginCrypt.m_seed; }
+	puchar GetClientIP() const { return (puchar)m_Seed; }
 };
 //---------------------------------------------------------------------------
 //!Менеджер подключения

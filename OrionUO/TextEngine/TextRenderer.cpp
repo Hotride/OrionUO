@@ -116,7 +116,7 @@ bool CTextRenderer::CalculatePositions(const bool &noCalculate)
 			{
 				CGameObject *go = g_World->FindWorldObject(text->Serial);
 
-				if (go != NULL && go->Graphic < 0x4000)
+				if (go != NULL && (go->NPC || !((CGameItem*)go)->MultiBody))
 				{
 					CGLTextTexture &tth = text->m_Texture;
 					int drawX = text->X - go->GetTextOffsetX(text);
@@ -183,7 +183,7 @@ bool CTextRenderer::CalculatePositions(const bool &noCalculate)
 			{
 				int delta = text->Timer - g_Ticks;
 
-				if (delta > 0 && delta <= 1000)
+				if (delta >= 0 && delta <= 1000)
 				{
 					delta = delta / 10;
 
@@ -196,7 +196,10 @@ bool CTextRenderer::CalculatePositions(const bool &noCalculate)
 					delta = (255 * delta) / 100;
 
 					changed = true;
-					text->Alpha = (uchar)delta;
+
+					if (!text->Transparent || delta <= 0x7F)
+						text->Alpha = (uchar)delta;
+
 					text->Transparent = true;
 				}
 			}
@@ -297,7 +300,7 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 				{
 					CGameObject *go = g_World->FindWorldObject(text->Serial);
 
-					if (go != NULL && go->Graphic < 0x4000)
+					if (go != NULL && (go->NPC || !((CGameItem*)go)->MultiBody))
 					{
 						rwo = go;
 
@@ -365,7 +368,7 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 				{
 					int delta = text->Timer - g_Ticks;
 
-					if (delta > 0 && delta <= 1000)
+					if (delta >= 0 && delta <= 1000)
 					{
 						delta = delta / 10;
 
@@ -377,7 +380,9 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 
 						delta = (255 * delta) / 100;
 
-						text->Alpha = (uchar)delta;
+						if (!text->Transparent || delta <= 0x7F)
+							text->Alpha = (uchar)delta;
+
 						text->Transparent = true;
 					}
 				}

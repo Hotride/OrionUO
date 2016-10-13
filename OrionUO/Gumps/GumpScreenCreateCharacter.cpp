@@ -13,7 +13,7 @@
 #include "../Managers/ConfigManager.h"
 #include "../Managers/CreateCharacterManager.h"
 #include "../Managers/ColorManager.h"
-#include "../Managers/ConnectionManager.h"
+#include "../Managers/PacketManager.h"
 //----------------------------------------------------------------------------------
 CGumpScreenCreateCharacter::CGumpScreenCreateCharacter()
 : CGump(GT_NONE, 0, 0, 0)
@@ -319,7 +319,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 
 	Add(new CGUIShader(NULL, false));
 
-	if (g_ConnectionManager.ClientVersion < CV_4011D)
+	if (g_PacketManager.ClientVersion < CV_4011D)
 	{
 		if (g_CreateCharacterManager.Sex)
 			Add(new CGUIButton(ID_CCS_FEMALE_BUTTON, 0x070D, 0x070E, 0x070F, 310, 408));

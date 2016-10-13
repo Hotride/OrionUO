@@ -404,112 +404,83 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 		if (strings.size() >= 5)
 		{
-			int anim[4] = { -1, -1, -1, -1 };
-
 			ushort index = atoi(strings[0].c_str());
-
-			IFOR(i, 0, 4)
-				anim[i] = atoi(strings[i + 1].c_str());
 
 			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
 				continue;
 
+			int anim[4] =
+			{
+				atoi(strings[1].c_str()),
+				atoi(strings[2].c_str()),
+				atoi(strings[3].c_str()),
+				atoi(strings[4].c_str())
+			};
+
 			int startAnimID = -1;
 			int animFile = 1;
-			ushort convertedAnimID = 0;
 			ushort realAnimID = 0;
 
 			if (anim[0] != -1 && m_AddressIdx[2] != 0 && m_AddressMul[2] != 0)
 			{
 				animFile = 2;
 
-				if (anim[0] == 68)
-					anim[0] = 122;
-
 				realAnimID = anim[0];
 
-				if (anim[0] >= 200) //Low
-				{
-					convertedAnimID = anim[0] - 200;
-					startAnimID = (convertedAnimID * 65) + 22000;
-				}
+				if (realAnimID == 68)
+					realAnimID = 122;
+
+				if (realAnimID >= 200) //Low
+					startAnimID = ((realAnimID - 200) * 65) + 22000;
 				else //Hight
-				{
-					startAnimID = anim[0] * 110;
-					convertedAnimID = anim[0];
-				}
+					startAnimID = realAnimID * 110;
 			}
 			else if (anim[1] != -1 && m_AddressIdx[3] != 0 && m_AddressMul[3] != 0)
 			{
 				animFile = 3;
 				realAnimID = anim[1];
 
-				if (anim[1] >= 200)
+				if (realAnimID >= 200)
 				{
-					if (anim[1] >= 400) //People
-					{
-						convertedAnimID = anim[1] - 400;
-						startAnimID = (convertedAnimID * 175) + 35000;
-					}
+					if (realAnimID >= 400) //People
+						startAnimID = ((realAnimID - 400) * 175) + 35000;
 					else //Low
-					{
-						convertedAnimID = anim[1] - 200;
-						startAnimID = (convertedAnimID * 110) + 22000;
-					}
+						startAnimID = ((realAnimID - 200) * 110) + 22000;
 				}
 				else //Hight
-				{
-					convertedAnimID = anim[1];
-					startAnimID = (anim[1] * 65) + 9000;
-				}
+					startAnimID = (realAnimID * 65) + 9000;
 			}
 			else if (anim[2] != -1 && m_AddressIdx[4] != 0 && m_AddressMul[4] != 0)
 			{
 				animFile = 4;
 				realAnimID = anim[2];
 
-				if (anim[2] >= 200)
+				if (realAnimID >= 200)
 				{
-					if (anim[2] >= 400) //People
-					{
-						convertedAnimID = anim[2] - 400;
-						startAnimID = (convertedAnimID * 175) + 35000;
-					}
+					if (realAnimID >= 400) //People
+						startAnimID = ((realAnimID - 400) * 175) + 35000;
 					else //Low
-					{
-						convertedAnimID = anim[2] - 200;
-						startAnimID = (convertedAnimID * 65) + 22000;
-					}
+						startAnimID = ((realAnimID - 200) * 65) + 22000;
 				}
 				else //Hight
-				{
-					convertedAnimID = anim[2];
-					startAnimID = anim[2] * 110;
-				}
+					startAnimID = realAnimID * 110;
 			}
 			else if (anim[3] != -1 && m_AddressIdx[5] != 0 && m_AddressMul[5] != 0)
 			{
 				animFile = 5;
 				realAnimID = anim[3];
 
-				if (anim[3] >= 200)
+				if (realAnimID == 34)
+					startAnimID = ((realAnimID - 200) * 65) + 22000;
+				else if (realAnimID >= 200)
 				{
-					if (anim[3] >= 400) //People
-					{
-						convertedAnimID = anim[3] - 400;
-						startAnimID = (convertedAnimID * 175) + 35000;
-					}
+					if (realAnimID >= 400) //People
+						startAnimID = ((realAnimID - 400) * 175) + 35000;
 					else //Low
-					{
-						convertedAnimID = anim[3] - 200;
-						startAnimID = (convertedAnimID * 65) + 22000;
-					}
+						startAnimID = ((realAnimID - 200) * 65) + 22000;
 				}
 				else //Hight
-				{
-					convertedAnimID = anim[3];
-					startAnimID = anim[3] * 110;
-				}
+					startAnimID = realAnimID * 110;
 			}
 
 			if (animFile != 1 && startAnimID != -1)
@@ -524,7 +495,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					{
 						m_DataIndex[index].Address = (uint)aidx;
 						m_DataIndex[index].Offset = m_AddressMul[animFile];
-						m_DataIndex[index].Graphic = realAnimID;// convertedAnimID;
+						m_DataIndex[index].Graphic = realAnimID;
 					}
 				}
 			}
@@ -546,9 +517,9 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 			int size = (int)newBody.size();
 
-			IFOR(i, 0, size)
+			IFOR(j, 0, size)
 			{
-				ushort checkIndex = atoi(newBody[i].c_str());
+				ushort checkIndex = atoi(newBody[j].c_str());
 
 				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
 					continue;
@@ -605,7 +576,7 @@ ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 {
 	ANIMATION_GROUPS group = AG_HIGHT;
 
-	if (id >= 200)
+	if (id >= 200 || id == 34)
 	{
 		if (id >= 400)
 			group = AG_PEOPLE;
@@ -628,7 +599,7 @@ uchar CAnimationManager::GetDieGroupIndex(ushort id, const bool &second)
 
 	GetBodyGraphic(id);
 
-	if (id >= 200)
+	if (id >= 200 || id == 34)
 	{
 		if (id >= 400)
 			group = (uchar)(second ? PAG_DIE_2 : PAG_DIE_1);
@@ -735,19 +706,6 @@ void CAnimationManager::GetSittingAnimDirection(uchar &dir, bool &mirror, int &x
 		default:
 			break;
 	}
-
-			/*if (mirror)
-			{
-				drawX += (SITTING_OFFSET_X / 2) - 1;
-
-				drawY += 5 + sittingData.MirrorOffsetY;
-			}
-			else
-			{
-				drawX -= SITTING_OFFSET_X;
-
-				drawY += 12 + sittingData.OffsetY;
-			}*/
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -910,25 +868,23 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 
 		m_Ptr = dataStart + frameOffset[i];
 
-		//LOG("Load anim: 0x%04X[%i]: 0x%08X: ", id, i, p);
-
-		short imageCenterX = ReadInt16LE();
+		uint imageCenterX = ReadInt16LE();
 		frame->CenterX = imageCenterX;
 
-		short imageCenterY = ReadInt16LE();
+		uint imageCenterY = ReadInt16LE();
 		frame->CenterY = imageCenterY;
 
-		short imageWidth = ReadInt16LE();
+		uint imageWidth = ReadInt16LE();
 		frame->Width = imageWidth;
 
-		short imageHeight = ReadInt16LE();
+		uint imageHeight = ReadInt16LE();
 		frame->Height = imageHeight;
 
-		int x = 0;
-		int y = 0;
+		uint x = 0;
+		uint y = 0;
 
 		USHORT_LIST data(imageWidth * imageHeight, 0);
-		ushort prevLineNum = 0xFF;
+		ushort prevLineNum = 0xFFFF;
 
 		while (true)
 		{
@@ -938,37 +894,35 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 			if (rowHeader == 0x7FFF || rowOfs == 0x7FFF)
 				break;
 
-			ushort runLength = rowHeader & 0xFFF;
 			ushort lineNum = rowHeader >> 12;
 
-			x = (rowOfs >> 6) & 0x3FF;
-
-			if (rowOfs & 0x8000)
-				x = imageCenterX + x - 0x400;
-			else
-				x = imageCenterX + x;
-
-			if (prevLineNum != 0xFF && lineNum != prevLineNum)
+			if (prevLineNum != 0xFFFF && lineNum != prevLineNum)
+			{
 				y++;
+
+				if (y >= imageHeight)
+					break;
+			}
 
 			prevLineNum = lineNum;
 
-			if (y >= 0)
+			x = ((rowOfs >> 6) & 0x3FF) + imageCenterX;
+
+			if (rowOfs & 0x8000)
+				x -= 0x400;
+
+			ushort runLength = rowHeader & 0xFFF;
+
+			IFOR(j, 0, runLength)
 			{
-				if (y >= imageHeight)
-					break;
+				ushort val = palette[ReadUInt8()];
 
-				IFOR(j, 0, runLength)
-				{
-					ushort val = palette[ReadUInt8()];
+				//if (color)
+				//	val = g_ColorManager.GetColor16(val, color);
 
-					//if (color)
-					//	val = g_ColorManager.GetColor16(val, color);
-
-					ushort a = val ? 0x8000 : 0;
-					int block = y * imageWidth + (x + j);
-					data[block] = a | val;
-				}
+				ushort a = val ? 0x8000 : 0;
+				int block = y * imageWidth + (x + j);
+				data[block] = a | val;
 			}
 		}
 
@@ -991,15 +945,15 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection *direction, c
 
 	m_Ptr = dataStart + frameOffset[frame];
 
-	short imageCenterX = ReadInt16LE();
-	short imageCenterY = ReadInt16LE();
-	short imageWidth = ReadInt16LE();
-	short imageHeight = ReadInt16LE();
+	uint imageCenterX = ReadInt16LE();
+	uint imageCenterY = ReadInt16LE();
+	uint imageWidth = ReadInt16LE();
+	uint imageHeight = ReadInt16LE();
 
-	int x = 0;
-	int y = 0;
+	uint x = 0;
+	uint y = 0;
 
-	ushort prevLineNum = 0xFF;
+	ushort prevLineNum = 0xFFFF;
 
 	while (true)
 	{
@@ -1009,34 +963,34 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection *direction, c
 		if (rowHeader == 0x7FFF || rowOfs == 0x7FFF)
 			break;
 
-		ushort runLength = rowHeader & 0xFFF;
 		ushort lineNum = rowHeader >> 12;
 
-		x = (rowOfs >> 6) & 0x3FF;
+		if (prevLineNum != 0xFFFF && lineNum != prevLineNum)
+		{
+			y++;
 
-		x += imageCenterX;
+			if (y >= imageHeight)
+				break;
+		}
+
+		prevLineNum = lineNum;
+
+		ushort runLength = rowHeader & 0xFFF;
+
+		if (y != checkY)
+		{
+			Move(runLength);
+			continue;
+		}
+
+		x = ((rowOfs >> 6) & 0x3FF) + imageCenterX;
 
 		if (rowOfs & 0x8000)
 			x -= 0x0400;
 
-		if (prevLineNum != 0xFF && lineNum != prevLineNum)
-			y++;
+		Move(checkX - x);
 
-		prevLineNum = lineNum;
-
-		if (y >= 0)
-		{
-			if (y >= imageHeight)
-				break;
-
-			IFOR(j, 0, runLength)
-			{
-				uchar pixel = ReadUInt8();
-
-				if ((x + j) == checkX && y == checkY)
-					return (palette[pixel] != 0);
-			}
-		}
+		return (palette[ReadUInt8()] != 0);
 	}
 
 	return false;
@@ -1193,14 +1147,6 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 			x -= frame->CenterX;
 
 		y -= frame->Height + frame->CenterY;
-
-		/*if (!isShadow)
-		{
-			if (!obj->NPC && ((CGameItem*)obj)->Layer == OL_MOUNT)
-				LOG("mount frame: 0x%04X %i %i ; %i %i\n", id, frame->CenterX, frame->CenterY, frame->Width, frame->Height);
-			else
-				LOG("NPC frame: 0x%04X %i %i ; %i %i\n", id, frame->CenterX, frame->CenterY, frame->Width, frame->Height);
-		}*/
 
 		if (isShadow)
 		{
@@ -1473,11 +1419,57 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	bool needHPLine = false;
 	uint serial = obj->Serial;
 	bool drawShadow = !obj->Dead();
+	bool usingBlending = false;
+
+	if (g_CtrlPressed)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+		uint auraColor = g_ColorManager.GetPolygoneColor(16, g_ConfigManager.GetColorByNotoriety(obj->Notoriety));
+		glColor4ub(GetRValue(auraColor), GetGValue(auraColor), GetBValue(auraColor), 0xFF);
+
+		g_AuraTexture.Draw(drawX - g_AuraTexture.Width / 2, drawY - g_AuraTexture.Height / 2);
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glDisable(GL_BLEND);
+	}
 
 	if (obj->Hidden())
 	{
-		m_Color = 0x038E;
 		drawShadow = false;
+		m_Color = 0x038E;
+
+		if (obj->IsPlayer() || !g_ConfigManager.UseHiddenModeOnlyForSelf)
+		{
+			switch (g_ConfigManager.HiddenCharactersRenderMode)
+			{
+				case HCRM_ALPHA_BLENDING:
+				{
+					usingBlending = true;
+
+					glColor4ub(0xFF, 0xFF, 0xFF, g_ConfigManager.HiddenAlpha);
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+					m_Color = 0x038C;
+
+					break;
+				}
+				case HCRM_SPECTRAL_COLOR:
+				{
+					m_Color = 0x4001;
+					break;
+				}
+				case HCRM_SPECIAL_SPECTRAL_COLOR:
+				{
+					m_Color = 0x4666;
+					break;
+				}
+				default:
+					break;
+			}
+		}
 	}
 	else if (g_StatusbarUnderMouse == serial)
 		m_Color = g_ConfigManager.GetColorByNotoriety(obj->Notoriety);
@@ -1598,7 +1590,13 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 			}
 		}
 	}
-	
+
+	if (usingBlending)
+	{
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glDisable(GL_BLEND);
+	}
+
 	if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == obj->Serial)
 	{
 		ushort id = obj->GetMountAnimation();

@@ -48,7 +48,7 @@ void CCreateCharacterScreen::Init()
 	m_StyleSelection = 0;
 	m_ColorSelection = 0;
 
-	g_SmoothMonitor.UseSunrise();
+	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;
 
 	m_Gump.PrepareTextures();

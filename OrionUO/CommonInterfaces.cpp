@@ -96,14 +96,24 @@ unsigned __int64 __cdecl FUNCBODY_GetStaticFlags(unsigned short graphic)
 	return g_Orion.GetStaticFlags(graphic);
 }
 //----------------------------------------------------------------------------------
-int __cdecl FUNCBODY_GetConfigValue(const char *option)
+int __cdecl FUNCBODY_GetValueInt(CONFIG_VALUE_KEY key)
 {
-	return g_Orion.GetConfigValue(option);
+	return g_Orion.GetValueInt(key);
 }
 //----------------------------------------------------------------------------------
-void __cdecl FUNCBODY_SetConfigValue(const char *option, int value)
+void __cdecl FUNCBODY_SetValueInt(CONFIG_VALUE_KEY key, int value)
 {
-	g_Orion.GetConfigValue(option, value);
+	g_Orion.GetValueInt(key, value);
+}
+//----------------------------------------------------------------------------------
+std::string __cdecl FUNCBODY_GetValueString(CONFIG_VALUE_KEY key)
+{
+	return g_Orion.GetValueString(key);
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_SetValueString(CONFIG_VALUE_KEY key, std::string value)
+{
+	g_Orion.GetValueString(key, value);
 }
 //----------------------------------------------------------------------------------
 //IClilocManager
@@ -229,7 +239,11 @@ IGLEngine g_Interface_GL =
 IUltimaOnline g_Interface_UO =
 {
 	FUNCBODY_GetLandFlags,
-	FUNCBODY_GetStaticFlags
+	FUNCBODY_GetStaticFlags,
+	FUNCBODY_GetValueInt,
+	FUNCBODY_SetValueInt,
+	FUNCBODY_GetValueString,
+	FUNCBODY_SetValueString
 };
 //----------------------------------------------------------------------------------
 IClilocManager g_Interface_ClilocManager =

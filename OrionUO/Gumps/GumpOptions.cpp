@@ -26,6 +26,8 @@
 #include "../Macro.h"
 #include "../TextEngine/GameConsole.h"
 #include "../PressedObject.h"
+#include "../SelectedObject.h"
+#include "../ToolTip.h"
 //----------------------------------------------------------------------------------
 const ushort g_OptionsTextColor = 0;
 //----------------------------------------------------------------------------------
@@ -148,11 +150,523 @@ void CGumpOptions::UpdateContent()
 void CGumpOptions::Init()
 {
 	g_OptionsMacroManager.LoadFromMacro();
+	g_OptionsDeveloperMode = g_DeveloperMode;
 
 	m_MacroPointer = (CMacro*)g_OptionsMacroManager.m_Items;
 	m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
 
 	m_WantUpdateContent = true;
+}
+//---------------------------------------------------------------------------
+void CGumpOptions::InitToolTip()
+{
+	uint id = g_SelectedObject.Serial;
+
+		switch (id)
+		{
+			case ID_GO_PAGE_1:
+			{
+				g_ToolTip.Set(L"See the 'Sound and Music' configuration page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_PAGE_2:
+			{
+				g_ToolTip.Set(L"See the 'Orion' configuration page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_PAGE_3:
+			{
+				g_ToolTip.Set(L"See the 'Language' configuration page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_PAGE_4:
+			{
+				g_ToolTip.Set(L"See the 'Chat' configuration page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_PAGE_5:
+			{
+				g_ToolTip.Set(L"See the 'Macro' configuration page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_PAGE_6:
+			{
+				g_ToolTip.Set(L"See the 'Interface' configuration page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_PAGE_7:
+			{
+				g_ToolTip.Set(L"See the 'Display' configuration page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_PAGE_8:
+			{
+				g_ToolTip.Set(L"See the 'Reputation System' configuration page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_PAGE_9:
+			{
+				g_ToolTip.Set(L"See the 'Miscellaneous' configuration page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_PAGE_10:
+			{
+				g_ToolTip.Set(L"See the 'Filter' configuration page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_CANCEL:
+			{
+				g_ToolTip.Set(L"Cancel changes and close the configuration gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_APPLY:
+			{
+				g_ToolTip.Set(L"Apply changes on current page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_DEFAULT:
+			{
+				g_ToolTip.Set(L"Set default values on current page", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_OKAY:
+			{
+				g_ToolTip.Set(L"Apply changes on current page and close the configuration gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P1_SOUND_ON_OFF:
+			{
+				g_ToolTip.Set(L"On/off sound effects", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P1_MUSIC_ON_OFF:
+			{
+				g_ToolTip.Set(L"On/off music", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P1_PLAY_FOOTSTEP_SOUNDS:
+			{
+				g_ToolTip.Set(L"On/off footstep sound effects", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P1_PLAY_COMBAT_MUSIC:
+			{
+				g_ToolTip.Set(L"On/off combat music in war mode", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P1_SOUND_VOLUME:
+			{
+				g_ToolTip.Set(L"Sound effects volume value", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P1_MUSIC_VOLUME:
+			{
+				g_ToolTip.Set(L"Music volume value", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_CLIENT_FPS:
+			{
+				g_ToolTip.Set(L"Orion's FPS value", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_REDUCE_FPS_UNACTIVE_WINDOW:
+			{
+				g_ToolTip.Set(L"Reduce FPS when Orion's window is unactive", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_CHARACTERS_ANIMATION_DELAY:
+			{
+				g_ToolTip.Set(L"Original characters animation frame rate", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_ITEMS_ANIMATION_DELAY:
+			{
+				g_ToolTip.Set(L"Original items animation frame rate", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_ENABLE_SCALING:
+			{
+				g_ToolTip.Set(L"Use middle mouse for scaling the game window", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_REMOVE_TEXT_WITH_BLENDING:
+			{
+				g_ToolTip.Set(L"World/container's text removing with using alpha-blending", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_NO_DRAW_CHARACTERS_STATUS:
+			{
+				g_ToolTip.Set(L"No draw character's status in the game window", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP:
+			{
+				g_ToolTip.Set(L"Draw character's status in the game window above characters", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM:
+			{
+				g_ToolTip.Set(L"Draw character's status in the game window under characters", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_DRAW_STUMPS:
+			{
+				g_ToolTip.Set(L"Change trees to stumps and hide leaves", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_MARKING_CAVES:
+			{
+				g_ToolTip.Set(L"Marking cave tiles to grid", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_NO_VEGETATION:
+			{
+				g_ToolTip.Set(L"Hide vegetation static objects", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_1:
+			{
+				g_ToolTip.Set(L"Default hidden characters", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_2:
+			{
+				g_ToolTip.Set(L"Hidden characters drawn with alpha-blending", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_3:
+			{
+				g_ToolTip.Set(L"Hidden characters drawn with spectral color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_4:
+			{
+				g_ToolTip.Set(L"Hidden characters drawn with special spectral color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_ALPHA:
+			{
+				g_ToolTip.Set(L"Value of alpha channel for using in hidden mode", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF:
+			{
+				g_ToolTip.Set(L"Change hidden characters mode only for your person", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_NO_ANIMATE_FIELDS:
+			{
+				g_ToolTip.Set(L"Disable the field animation's", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_LOCK_GUMP_MOVING:
+			{
+				g_ToolTip.Set(L"Enable gump's locking", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_TRANSPARENT_SPELL_ICONS:
+			{
+				g_ToolTip.Set(L"Transparent spell icons", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_SPELL_ICONS_ALPHA:
+			{
+				g_ToolTip.Set(L"Value of alpha channel for spell icons", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_CONSOLE_ENTER:
+			{
+				g_ToolTip.Set(L"Activate chat after 'Enter' pressing", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_DEV_MODE_1:
+			{
+				g_ToolTip.Set(L"Original client work", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_DEV_MODE_2:
+			{
+				g_ToolTip.Set(L"Show only FPS and game window scaling on screen", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_DEV_MODE_3:
+			{
+				g_ToolTip.Set(L"Show debugging information in game window and highlight the land/static tiles", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P3_USE_TOOLTIP:
+			{
+				g_ToolTip.Set(L"Use the tooltips", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P3_TEXT_COLOR:
+			{
+				g_ToolTip.Set(L"Tooltips text color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P3_TEXT_FONT:
+			{
+				g_ToolTip.Set(L"Open the selection font gump for select tooltips font", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P3_DELAY_BEFORE_TOOLTIP:
+			{
+				g_ToolTip.Set(L"Delay before tooltip shown", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P4_TEXT_FONT:
+			{
+				g_ToolTip.Set(L"Open the selection font gump for select chat font", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P5_BUTTON_ADD:
+			{
+				g_ToolTip.Set(L"Add a new macro", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P5_BUTTON_DELETE:
+			{
+				g_ToolTip.Set(L"Delete current macro", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P5_BUTTON_PREVEOUS:
+			{
+				g_ToolTip.Set(L"Seek to previous macro", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P5_BUTTON_NEXT:
+			{
+				g_ToolTip.Set(L"Seek to next macro", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P5_KEY_BOX:
+			{
+				g_ToolTip.Set(L"Key for this macro", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P5_BUTTON_SHIFT:
+			{
+				g_ToolTip.Set(L"Macro running if only shift key pressed", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P5_BUTTON_ALT:
+			{
+				g_ToolTip.Set(L"Macro running if only alt key pressed", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P5_BUTTON_CTRL:
+			{
+				g_ToolTip.Set(L"Macro running if only ctrl key pressed", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P5_BUTTON_UP:
+			{
+				g_ToolTip.Set(L"Up in macro actions list", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P5_BUTTON_DOWN:
+			{
+				g_ToolTip.Set(L"Down in macro actions list", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_ENABLE_PATHFINDING:
+			{
+				g_ToolTip.Set(L"Enable pathfinding in client", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_HOLD_TAB_FOR_COMBAT:
+			{
+				g_ToolTip.Set(L"Hold the tab for war mode", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_OFFSET_INTERFACE_WINDOWS:
+			{
+				g_ToolTip.Set(L"Any opened gumps position calculated from previous gump or opened in right top angle of screen", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_AUTO_ARRANGE_MINIMIZED_WINDOWS:
+			{
+				g_ToolTip.Set(L"Auto arrange the gumps", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_ALWAYS_RUN:
+			{
+				g_ToolTip.Set(L"Your character is always running", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_DISABLE_MENUBAR:
+			{
+				g_ToolTip.Set(L"Hide/show the menubar gump", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS:
+			{
+				g_ToolTip.Set(L"Objects out of client's viewrane is grayed", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_DISABLE_NEW_TARGET_SYSTEM:
+			{
+				g_ToolTip.Set(L"Disable/enable the new target system", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_OBJECT_HANDLES:
+			{
+				g_ToolTip.Set(L"Use objects handles in game window (pressing Ctrl + Shift)", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON:
+			{
+				g_ToolTip.Set(L"???", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS:
+			{
+				g_ToolTip.Set(L"Shift + mouse click on characters for call context menu", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING:
+			{
+				g_ToolTip.Set(L"Shift + rights mouse click in game window for call pathfinding", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_SCALE_SPEECH_DURATION:
+			{
+				g_ToolTip.Set(L"Use timer scaling based on text lines count", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_SPEECH_COLOR:
+			{
+				g_ToolTip.Set(L"Speech text color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_EMOTE_COLOR:
+			{
+				g_ToolTip.Set(L"Emote text color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_PARTY_MESSAGE_COLOR:
+			{
+				g_ToolTip.Set(L"Party messages text color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_GUILD_MESSAGE_COLOR:
+			{
+				g_ToolTip.Set(L"Guild messages text color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_ALLIANCE_MESSAGE_COLOR:
+			{
+				g_ToolTip.Set(L"Alliance messages text color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_IGNORE_GUILD_MESSAGE:
+			{
+				g_ToolTip.Set(L"Ignore the guild messages", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_IGNORE_ALLIANCE_MESSAGE:
+			{
+				g_ToolTip.Set(L"Ignore the alliance messages", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_DARK_NIGHTS:
+			{
+				g_ToolTip.Set(L"Nights is very dark", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_COLORED_LIGHTING:
+			{
+				g_ToolTip.Set(L"Light sources has exude colored lights", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_AJUST_LONG_SPEECH:
+			{
+				g_ToolTip.Set(L"Scale for text timer", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_GAME_WINDOW_WIDTH:
+			{
+				g_ToolTip.Set(L"Width for game window", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_GAME_WINDOW_HEIGHT:
+			{
+				g_ToolTip.Set(L"Height for game window", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P7_LOCK_GAME_WINDOW_RESIZING:
+			{
+				g_ToolTip.Set(L"Disable/enable real-time window resizing", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P8_INNOCENT_COLOR:
+			{
+				g_ToolTip.Set(L"Innocent characters color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P8_FRIENDLY_COLOR:
+			{
+				g_ToolTip.Set(L"Friendly characters color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P8_SOMEONE_COLOR:
+			{
+				g_ToolTip.Set(L"Someone characters color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P8_CRIMINAL_COLOR:
+			{
+				g_ToolTip.Set(L"Criminal characters color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P8_ENEMY_COLOR:
+			{
+				g_ToolTip.Set(L"Enemy characters color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P8_MURDERER_COLOR:
+			{
+				g_ToolTip.Set(L"Murderer characters color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P8_QUERY_CRIMINAL_ACTIONS:
+			{
+				g_ToolTip.Set(L"Query a criminal actions", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P9_SHOW_APPROACHING_NAMES:
+			{
+				g_ToolTip.Set(L"Show names of approaching players and new corpses", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P9_USE_CIRCLE_OF_TRANSPARENCY:
+			{
+				g_ToolTip.Set(L"Use circle of transparency", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P9_INFORM_STATS:
+			{
+				g_ToolTip.Set(L"Stats increase/decrease information", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P9_SPEECH_FONT:
+			{
+				g_ToolTip.Set(L"Speech font", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P9_TRANSPARENCY_RADIUS:
+			{
+				g_ToolTip.Set(L"Value for circle of transparency", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P9_INFORM_SKILLS:
+			{
+				g_ToolTip.Set(L"Skills increase/decrease information", g_SelectedObject.Object());
+				break;
+			}
+			default:
+				break;
+		}
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage1()
@@ -214,7 +728,23 @@ void CGumpOptions::DrawPage2()
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 44));
 	text->CreateTextureW(0, L"These settings configure the Orion UO Client.");
 
-	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(1, 0x0BB8, 64, 90, 500, 300, false, true));
+
+
+	CGUIRadio *devRadio = (CGUIRadio*)Add(new CGUIRadio(ID_GO_P2_DEV_MODE_1, 0x00D0, 0x00D1, 0x00D2, 64, 64));
+	devRadio->Checked = (g_DeveloperMode == DM_NO_DEBUG);
+	devRadio->SetTextParameters(0, L"No debug", g_OptionsTextColor);
+
+	devRadio = (CGUIRadio*)Add(new CGUIRadio(ID_GO_P2_DEV_MODE_2, 0x00D0, 0x00D1, 0x00D2, 164, 64));
+	devRadio->Checked = (g_DeveloperMode == DM_SHOW_FPS_ONLY);
+	devRadio->SetTextParameters(0, L"FPS only", g_OptionsTextColor);
+
+	devRadio = (CGUIRadio*)Add(new CGUIRadio(ID_GO_P2_DEV_MODE_3, 0x00D0, 0x00D1, 0x00D2, 264, 64));
+	devRadio->Checked = (g_DeveloperMode == DM_DEBUGGING);
+	devRadio->SetTextParameters(0, L"Debugging", g_OptionsTextColor);
+
+
+
+	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(0xFFFFFFFF, 0x0BB8, 64, 90, 500, 300, false, true));
 
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 0));
 	text->CreateTextureW(0, L"FPS rate:");
@@ -237,7 +767,7 @@ void CGumpOptions::DrawPage2()
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_ENABLE_SCALING, 0x00D2, 0x00D3, 0x00D2, 0, 80));
 	checkbox->Checked = g_OptionsConfig.UseScaling;
-	checkbox->SetTextParameters(0, L"Use scaling in game window", g_OptionsTextColor);
+	checkbox->SetTextParameters(0, L"Use scaling in game window (BETA VERSION!!!)", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REMOVE_TEXT_WITH_BLENDING, 0x00D2, 0x00D3, 0x00D2, 0, 100));
 	checkbox->Checked = g_OptionsConfig.RemoveTextWithBlending;
@@ -246,16 +776,17 @@ void CGumpOptions::DrawPage2()
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 120));
 	text->CreateTextureW(0, L"Draw character's status in game window");
 
+	html->Add(new CGUIGroup(1));
 	CGUIRadio *radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_NO_DRAW_CHARACTERS_STATUS, 0x00D0, 0x00D1, 0x00D2, 10, 140));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == 0);
+	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_NO_DRAW);
 	radio->SetTextParameters(0, L"No draw", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP, 0x00D0, 0x00D1, 0x00D2, 10, 160));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == 1);
+	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_ABOVE);
 	radio->SetTextParameters(0, L"Above character", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM, 0x00D0, 0x00D1, 0x00D2, 10, 180));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == 2);
+	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_UNDER);
 	radio->SetTextParameters(0, L"Under character", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_STUMPS, 0x00D2, 0x00D3, 0x00D2, 0, 205));
@@ -266,17 +797,55 @@ void CGumpOptions::DrawPage2()
 	checkbox->Checked = g_OptionsConfig.MarkingCaves;
 	checkbox->SetTextParameters(0, L"Marking cave tiles", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 245));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_VEGETATION, 0x00D2, 0x00D3, 0x00D2, 0, 245));
+	checkbox->Checked = g_OptionsConfig.NoVegetation;
+	checkbox->SetTextParameters(0, L"Hide vegetation", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 265));
 	checkbox->Checked = g_OptionsConfig.NoAnimateFields;
 	checkbox->SetTextParameters(0, L"No animate fields", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 0, 265));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 0, 285));
 	checkbox->Checked = g_OptionsConfig.LockGumpsMoving;
 	checkbox->SetTextParameters(0, L"Lock gumps moving", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 0, 285));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 0, 305));
 	checkbox->Checked = g_OptionsConfig.ConsoleNeedEnter;
 	checkbox->SetTextParameters(0, L"Console need press 'Enter' to activate it.", g_OptionsTextColor);
+
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 325));
+	text->CreateTextureW(0, L"Hidden characters display mode:");
+
+	html->Add(new CGUIGroup(2));
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_1, 0x00D0, 0x00D1, 0x00D2, 10, 345));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_ORIGINAL);
+	radio->SetTextParameters(0, L"Original", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_2, 0x00D0, 0x00D1, 0x00D2, 10, 365));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_ALPHA_BLENDING);
+	radio->SetTextParameters(0, L"With alpha-blending, alpha:", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_3, 0x00D0, 0x00D1, 0x00D2, 10, 385));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_SPECTRAL_COLOR);
+	radio->SetTextParameters(0, L"With spectral color", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_4, 0x00D0, 0x00D1, 0x00D2, 10, 405));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_SPECIAL_SPECTRAL_COLOR);
+	radio->SetTextParameters(0, L"With special spectral color", g_OptionsTextColor);
+
+	m_SliderHiddenAlpha = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_HIDDEN_ALPHA, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 225, 369, 90, 20, 255, g_OptionsConfig.HiddenAlpha));
+	m_SliderHiddenAlpha->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF, 0x00D2, 0x00D3, 0x00D2, 0, 430));
+	checkbox->Checked = g_OptionsConfig.UseHiddenModeOnlyForSelf;
+	checkbox->SetTextParameters(0, L"Change hidden characters mode only for your person", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_TRANSPARENT_SPELL_ICONS, 0x00D2, 0x00D3, 0x00D2, 0, 450));
+	checkbox->Checked = g_OptionsConfig.TransparentSpellIcons;
+	checkbox->SetTextParameters(0, L"Transparent spell icons, alpha:", g_OptionsTextColor);
+
+	m_SliderSpellIconsAlpha = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_SPELL_ICONS_ALPHA, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 232, 454, 90, 30, 255, g_OptionsConfig.SpellIconAlpha));
+	m_SliderSpellIconsAlpha->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
 	html->CalculateDataSize();
 }
@@ -707,7 +1276,7 @@ void CGumpOptions::DrawPage6()
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 44));
 	text->CreateTextureW(0, L"These options affect your interface.");
 
-	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(1, 0x0BB8, 64, 90, 500, 300, false, true));
+	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(0xFFFFFFFF, 0x0BB8, 64, 90, 500, 300, false, true));
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 0, 0));
 	checkbox->Checked = g_OptionsConfig.EnablePathfind;
@@ -1490,6 +2059,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.DrawStumps = state;
 			else if (serial == ID_GO_P2_MARKING_CAVES)
 				g_OptionsConfig.MarkingCaves = state;
+			else if (serial == ID_GO_P2_NO_VEGETATION)
+				g_OptionsConfig.NoVegetation = state;
 			else if (serial == ID_GO_P2_NO_ANIMATE_FIELDS)
 				g_OptionsConfig.NoAnimateFields = state;
 			else if (serial == ID_GO_P2_REDUCE_FPS_UNACTIVE_WINDOW) //Reduce FPS when Window is Unactive
@@ -1502,6 +2073,18 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.LockGumpsMoving = state;
 			else if (serial == ID_GO_P2_CONSOLE_ENTER) //Console need press 'Enter' to activate it.
 				g_OptionsConfig.ConsoleNeedEnter = state;
+			else if (serial == ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF)
+				g_OptionsConfig.UseHiddenModeOnlyForSelf = state;
+			else if (serial == ID_GO_P2_TRANSPARENT_SPELL_ICONS)
+				g_OptionsConfig.TransparentSpellIcons = state;
+
+			else if (serial == ID_GO_P2_DEV_MODE_1)
+				g_OptionsDeveloperMode = DM_NO_DEBUG;
+			else if (serial == ID_GO_P2_DEV_MODE_2)
+				g_OptionsDeveloperMode = DM_SHOW_FPS_ONLY;
+			else if (serial == ID_GO_P2_DEV_MODE_3)
+				g_OptionsDeveloperMode = DM_DEBUGGING;
+			
 
 			break;
 		}
@@ -1615,11 +2198,25 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 		case 2: //Orion's configuration
 		{
 			if (serial == ID_GO_P2_NO_DRAW_CHARACTERS_STATUS) //No draw
-				g_OptionsConfig.DrawStatusState = 0;
+				g_OptionsConfig.DrawStatusState = DCSS_NO_DRAW;
 			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP) //Above character
-				g_OptionsConfig.DrawStatusState = 1;
+				g_OptionsConfig.DrawStatusState = DCSS_ABOVE;
 			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM) //Under character
-				g_OptionsConfig.DrawStatusState = 2;
+				g_OptionsConfig.DrawStatusState = DCSS_UNDER;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_1)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_ORIGINAL;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_2)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_ALPHA_BLENDING;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_3)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_SPECTRAL_COLOR;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_4)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_SPECIAL_SPECTRAL_COLOR;
+			else if (serial == ID_GO_P2_DEV_MODE_1)
+				g_OptionsDeveloperMode = DM_NO_DEBUG;
+			else if (serial == ID_GO_P2_DEV_MODE_2)
+				g_OptionsDeveloperMode = DM_SHOW_FPS_ONLY;
+			else if (serial == ID_GO_P2_DEV_MODE_3)
+				g_OptionsDeveloperMode = DM_DEBUGGING;
 
 			break;
 		}
@@ -1683,6 +2280,10 @@ void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 		{
 			if (serial == ID_GO_P2_CLIENT_FPS)
 				g_OptionsConfig.ClientFPS = m_SliderClientFPS->Value;
+			else if (serial == ID_GO_P2_HIDDEN_ALPHA)
+				g_OptionsConfig.HiddenAlpha = m_SliderHiddenAlpha->Value;
+			else if (serial == ID_GO_P2_SPELL_ICONS_ALPHA)
+				g_OptionsConfig.SpellIconAlpha = m_SliderSpellIconsAlpha->Value;
 
 			break;
 		}
@@ -1995,7 +2596,19 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.DrawStatusState = g_OptionsConfig.DrawStatusState;
 			g_ConfigManager.DrawStumps = g_OptionsConfig.DrawStumps;
 			g_ConfigManager.MarkingCaves = g_OptionsConfig.MarkingCaves;
+			g_ConfigManager.NoVegetation = g_OptionsConfig.NoVegetation;
 			g_ConfigManager.NoAnimateFields = g_OptionsConfig.NoAnimateFields;
+			g_ConfigManager.ConsoleNeedEnter = g_OptionsConfig.ConsoleNeedEnter;
+			g_ConfigManager.ReduceFPSUnactiveWindow = g_OptionsConfig.ReduceFPSUnactiveWindow;
+			g_ConfigManager.StandartCharactersAnimationDelay = g_OptionsConfig.StandartCharactersAnimationDelay;
+			g_ConfigManager.StandartItemsAnimationDelay = g_OptionsConfig.StandartItemsAnimationDelay;
+			g_ConfigManager.LockGumpsMoving = g_OptionsConfig.LockGumpsMoving;
+			g_ConfigManager.HiddenCharactersRenderMode = g_OptionsConfig.HiddenCharactersRenderMode;
+			g_ConfigManager.HiddenAlpha = g_OptionsConfig.HiddenAlpha;
+			g_ConfigManager.UseHiddenModeOnlyForSelf = g_OptionsConfig.UseHiddenModeOnlyForSelf;
+			g_ConfigManager.TransparentSpellIcons = g_OptionsConfig.TransparentSpellIcons;
+			g_ConfigManager.SpellIconAlpha = g_OptionsConfig.SpellIconAlpha;
+			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;
 		}
@@ -2050,7 +2663,6 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.GrayOutOfRangeObjects = g_OptionsConfig.GrayOutOfRangeObjects;
 			g_ConfigManager.DisableNewTargetSystem = g_OptionsConfig.DisableNewTargetSystem;
 			g_ConfigManager.ObjectHandles = g_OptionsConfig.ObjectHandles;
-			g_ConfigManager.ReduceFPSUnactiveWindow = g_OptionsConfig.ReduceFPSUnactiveWindow;
 			g_ConfigManager.ItemPropertiesIcon = g_OptionsConfig.ItemPropertiesIcon;
 			g_ConfigManager.HoldShiftForContextMenus = g_OptionsConfig.HoldShiftForContextMenus;
 			g_ConfigManager.HoldShiftForEnablePathfind = g_OptionsConfig.HoldShiftForEnablePathfind;
@@ -2104,10 +2716,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.IgnoreAllianceMessage = g_OptionsConfig.IgnoreAllianceMessage;
 			g_ConfigManager.DarkNights = g_OptionsConfig.DarkNights;
 			g_ConfigManager.ColoredLighting = g_OptionsConfig.ColoredLighting;
-			g_ConfigManager.StandartCharactersAnimationDelay = g_OptionsConfig.StandartCharactersAnimationDelay;
-			g_ConfigManager.StandartItemsAnimationDelay = g_OptionsConfig.StandartItemsAnimationDelay;
 			g_ConfigManager.LockResizingGameWindow = g_OptionsConfig.LockResizingGameWindow;
-			g_ConfigManager.LockGumpsMoving = g_OptionsConfig.LockGumpsMoving;
 			
 			break;
 		}
@@ -2128,7 +2737,6 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.ShowIncomingNames = g_OptionsConfig.ShowIncomingNames;
 			g_ConfigManager.UseCircleTrans = g_OptionsConfig.UseCircleTrans;
 			g_ConfigManager.StatReport = g_OptionsConfig.StatReport;
-			g_ConfigManager.ConsoleNeedEnter = g_OptionsConfig.ConsoleNeedEnter;
 			g_ConfigManager.CircleTransRadius = g_OptionsConfig.CircleTransRadius;
 			g_ConfigManager.SkillReport = g_OptionsConfig.SkillReport;
 			g_ConfigManager.SpeechFont = g_OptionsConfig.SpeechFont;

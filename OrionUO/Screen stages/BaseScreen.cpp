@@ -73,7 +73,7 @@ void CBaseScreen::Render(const bool &mode)
 */
 int CBaseScreen::DrawSmoothMonitor()
 {
-	if (g_SmoothMonitor.Process())
+	if (g_ScreenEffectManager.Process() && m_SmoothScreenAction)
 	{
 		ProcessSmoothAction();
 
@@ -91,7 +91,7 @@ int CBaseScreen::DrawSmoothMonitor()
 */
 void CBaseScreen::DrawSmoothMonitorEffect()
 {
-	g_SmoothMonitor.Draw();
+	g_ScreenEffectManager.Draw();
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -101,7 +101,7 @@ void CBaseScreen::DrawSmoothMonitorEffect()
 */
 void CBaseScreen::CreateSmoothAction(__in BYTE action)
 {
-	if (g_SmoothMonitor.UseSunset())
+	if (g_ScreenEffectManager.UseSunset())
 		m_SmoothScreenAction = action;
 	else
 		ProcessSmoothAction(action);

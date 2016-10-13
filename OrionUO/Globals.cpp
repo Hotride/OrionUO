@@ -20,6 +20,7 @@ int g_RenderedObjectsCountInGameWindow = 0;
 GLdouble g_GlobalScale = 1.0;
 
 CGLTexture g_MapTexture[6];
+CGLTexture g_AuraTexture;
 
 int g_FrameDelay[2] = { FRAME_DELAY_UNACTIVE_WINDOW, FRAME_DELAY_ACTIVE_WINDOW };
 
@@ -134,6 +135,9 @@ uint g_LockedClientFeatures = 0;
 
 bool g_GeneratedMouseDown = false;
 bool g_DrawFoliage = true;
+
+DEVELOPER_MODE g_DeveloperMode = DM_SHOW_FPS_ONLY;
+DEVELOPER_MODE g_OptionsDeveloperMode = DM_SHOW_FPS_ONLY;
 
 ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight] = { 0 };
 //----------------------------------------------------------------------------------

@@ -86,7 +86,7 @@ void CGumpManager::AddGump(CGump *obj)
 				{
 					if (gump->CanBeMoved())
 					{
-						if (gumpType == GT_SPELL || gumpType == GT_DRAG)
+						if (gumpType == GT_DRAG)
 						{
 							gump->X = obj->X;
 							gump->Y = obj->Y;
@@ -118,6 +118,19 @@ void CGumpManager::AddGump(CGump *obj)
 								gump->Y = gy;
 							}
 						}
+						else if (gumpType == GT_SPELL)
+						{
+							CGumpSpell *spell = (CGumpSpell*)gump;
+
+							int gx = obj->X;
+							int gy = obj->Y;
+
+							if (spell->InGroup())
+								spell->UpdateGroup(-(gump->X - gx), -(gump->Y - gy));
+
+							gump->X = gx;
+							gump->Y = gy;
+						}
 					}
 
 					obj->m_Next = NULL;
@@ -125,11 +138,9 @@ void CGumpManager::AddGump(CGump *obj)
 
 					if (gumpType == GT_WORLD_MAP && !((CGumpWorldMap*)gump)->Called)
 						((CGumpWorldMap*)gump)->Called = ((CGumpWorldMap*)obj)->Called;
-
-					if (gump->GumpType == GT_POPUP_MENU)
+					else if (gump->GumpType == GT_POPUP_MENU)
 						g_PopupMenu = (CGumpPopupMenu*)gump;
-
-					if (gumpType == GT_CONTAINER || gumpType == GT_JOURNAL || gumpType == GT_SKILLS)
+					else if (gumpType == GT_CONTAINER || gumpType == GT_JOURNAL || gumpType == GT_SKILLS)
 					{
 						gump->Minimized = false;
 						gump->Page = 2;
@@ -273,7 +284,7 @@ CGump *CGumpManager::UpdateGump(uint serial, uint id, GUMP_TYPE type)
 	CGump *gump = GetGump(serial, id, type);
 
 	if (gump != NULL)
-		gump->FrameCreated = false;
+		gump->WantRedraw = true;
 
 	return gump;
 }
@@ -299,8 +310,8 @@ CGump *CGumpManager::GetGump(uint serial, uint id, GUMP_TYPE type)
 			{
 				if (gump->Serial == serial)
 					break;
-				/*else if (!serial && (gump->ID == id || ((CGumpSecureTrading*)gump)->ID2 == id))
-					break;*/
+				else if (!serial && (gump->ID == id || ((CGumpSecureTrading*)gump)->ID2 == id))
+					break;
 			}
 			else if (gump->Serial == serial)
 			{
@@ -577,6 +588,8 @@ void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
 		{
 			if (gump->GumpType == GT_STATUSBAR && ((CGumpStatusbar*)gump)->InGroup())
 				((CGumpStatusbar*)gump)->UpdateGroup(0, 0);
+			else if (gump->GumpType == GT_SPELL && ((CGumpSpell*)gump)->InGroup())
+				((CGumpSpell*)gump)->UpdateGroup(0, 0);
 			else
 				MoveToBack(gump);
 
@@ -653,6 +666,31 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 
 								nearBar->AddStatusbar(sb);
 							}
+						}
+					}
+				}
+				else if (gump->GumpType == GT_SPELL)
+				{
+					CGumpSpell *spell = (CGumpSpell*)gump;
+
+					gump->X = gump->X + offset.X;
+					gump->Y = gump->Y + offset.Y;
+
+					if (spell->InGroup())
+						spell->UpdateGroup(offset.X, offset.Y);
+					else
+					{
+						int testX = g_MouseManager.Position.X;
+						int testY = g_MouseManager.Position.Y;
+
+						CGumpSpell *nearSpell = spell->GetNearSpell(testX, testY);
+
+						if (nearSpell != NULL)
+						{
+							gump->X = testX;
+							gump->Y = testY;
+
+							nearSpell->AddSpell(spell);
 						}
 					}
 				}
@@ -742,6 +780,8 @@ void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
 		{
 			if (gump->GumpType == GT_STATUSBAR && ((CGumpStatusbar*)gump)->InGroup())
 				((CGumpStatusbar*)gump)->UpdateGroup(0, 0);
+			else if (gump->GumpType == GT_SPELL && ((CGumpSpell*)gump)->InGroup())
+				((CGumpSpell*)gump)->UpdateGroup(0, 0);
 			else
 				MoveToBack(gump);
 
@@ -862,6 +902,27 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 
 					break;
 				}
+				/*case GT_SPELL:
+				{
+					CGumpSpell *spell = ((CGumpSpell*)gump)->GetTopSpell();
+
+					if (spell != NULL)
+					{
+						while (spell != NULL)
+						{
+							CGumpSpell *next = spell->m_GroupNext;
+
+							spell->RemoveFromGroup();
+							RemoveGump(spell);
+
+							spell = next;
+						}
+					}
+					else
+						RemoveGump(gump);
+
+					break;
+				}*/
 				case GT_SPELLBOOK:
 				{
 					g_Orion.PlaySoundEffect(0x0055);
@@ -1035,8 +1096,22 @@ void CGumpManager::Load(const string &path)
 		uchar version = file.ReadUInt8();
 
 		puchar oldPtr = file.Ptr;
-		file.Ptr = (puchar)file.Start + (file.Size - 6);
-		short count = file.ReadInt16LE();
+
+		short count = 0;
+		short spellGroupsCount = 0;
+
+		if (version)
+		{
+			file.Ptr = (puchar)file.Start + (file.Size - 8);
+			spellGroupsCount = file.ReadInt16LE();
+			count = file.ReadInt16LE();
+		}
+		else
+		{
+			file.Ptr = (puchar)file.Start + (file.Size - 6);
+			count = file.ReadInt16LE();
+		}
+
 		file.Ptr = oldPtr;
 		bool menubarLoaded = false;
 
@@ -1191,6 +1266,43 @@ void CGumpManager::Load(const string &path)
 			file.Ptr = next;
 		}
 
+		IFOR(i, 0, spellGroupsCount)
+		{
+			CGumpSpell *topSpell = NULL;
+
+			ushort spellsCount = file.ReadUInt16LE();
+
+			IFOR(j, 0, spellsCount)
+			{
+				puchar next = file.Ptr;
+				uchar size = file.ReadUInt8();
+				next += size;
+
+				GUMP_TYPE gumpType = (GUMP_TYPE)file.ReadUInt8();
+				ushort gumpX = file.ReadUInt16LE();
+				ushort gumpY = file.ReadUInt16LE();
+				file.Move(5); //Minimized state, x, y
+				uchar gumpLockMoving = file.ReadUInt8();
+
+				uint serial = file.ReadUInt32LE();
+				ushort graphic = file.ReadUInt16LE();
+
+				CGumpSpell *spell = new CGumpSpell(serial, gumpX, gumpY, graphic);
+				spell->LockMoving = gumpLockMoving;
+
+				AddGump(spell);
+
+				if (topSpell == NULL)
+					topSpell = spell;
+				else
+					topSpell->AddSpell(spell);
+
+				spell->WantUpdateContent = true;
+
+				file.Ptr = next;
+			}
+		}
+
 		file.Unload();
 	}
 	else
@@ -1258,12 +1370,13 @@ void CGumpManager::Save(const string &path)
 
 	writter.Open(path);
 
-	writter.WriteInt8(0); //version
+	writter.WriteInt8(1); //version
 	writter.WriteBuffer();
 
 	short count = 0;
 
 	vector<CGump*> containerList;
+	vector<CGump*> spellInGroupList;
 
 	QFOR(gump, m_Items, CGump*)
 	{
@@ -1355,6 +1468,11 @@ void CGumpManager::Save(const string &path)
 					containerList.push_back(gump);
 					break;
 				}
+				else if (((CGumpSpell*)gump)->InGroup())
+				{
+					spellInGroupList.push_back(gump);
+					break;
+				}
 
 				SaveDefaultGumpProperties(writter, gump, 18);
 
@@ -1420,7 +1538,55 @@ void CGumpManager::Save(const string &path)
 			}
 		}
 	}
+
+	int spellGroupsCount = 0;
+
+	if (spellInGroupList.size())
+	{
+		vector<CGump*> spellGroups;
+
+		while (spellInGroupList.size())
+		{
+			CGumpSpell *spell = (CGumpSpell*)spellInGroupList[0];
+			CGumpSpell *topSpell = spell->GetTopSpell();
+			spellGroups.push_back(topSpell);
+			spellGroupsCount++;
+
+			for (spell = topSpell; spell != NULL; spell = spell->m_GroupNext)
+			{
+				for (vector<CGump*>::iterator it = spellInGroupList.begin(); it != spellInGroupList.end(); it++)
+				{
+					if (*it == spell)
+					{
+						spellInGroupList.erase(it);
+						break;
+					}
+				}
+			}
+		}
+
+		IFOR(i, 0, spellGroupsCount)
+		{
+			CGumpSpell *spell = (CGumpSpell*)spellGroups[i];
+			int spellsCount = 0;
+
+			for (CGumpSpell *spell = (CGumpSpell*)spellGroups[i]; spell != NULL; spell = spell->m_GroupNext)
+				spellsCount++;
+
+			writter.WriteInt16LE(spellsCount);
+
+			for (CGumpSpell *spell = (CGumpSpell*)spellGroups[i]; spell != NULL; spell = spell->m_GroupNext)
+			{
+				SaveDefaultGumpProperties(writter, spell, 18);
+
+				writter.WriteUInt32LE(spell->Serial);
+				writter.WriteUInt16LE(spell->Graphic);
+				writter.WriteBuffer();
+			}
+		}
+	}
 	
+	writter.WriteInt16LE(spellGroupsCount);
 	writter.WriteInt16LE(count);
 	writter.WriteUInt32LE(0); //EOF
 	writter.WriteBuffer();

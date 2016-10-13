@@ -139,8 +139,7 @@ void CGumpBuff::DeleteBuff(const ushort &id)
 void CGumpBuff::InitToolTip()
 {
 	if (g_SelectedObject.Serial == ID_GB_NEXT_WINDOW_DIRECTION)
-	{
-	}
+		g_ToolTip.Set(L"Change buff window gump", g_SelectedObject.Object());
 	else if (g_SelectedObject.Object())
 	{
 		QFOR(item, m_Items, CBaseGUI*)

@@ -110,7 +110,7 @@ void CGumpGeneric::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
 	if (wParam == VK_RETURN)
 	{
-		if (g_ConfigManager.GetConsoleNeedEnter())
+		if (g_ConfigManager.ConsoleNeedEnter)
 			g_EntryPointer = NULL;
 		else
 			g_EntryPointer = &g_GameConsole;

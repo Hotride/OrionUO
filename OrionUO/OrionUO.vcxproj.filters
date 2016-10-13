@@ -147,24 +147,6 @@
     <ClInclude Include="EnumList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Network\AES.H">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\GameCrypt.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\LoginCrypt.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\md5.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\platform.H">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\TABLE.H">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="Network\UOHuffman.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
@@ -199,9 +181,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ServerList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SmoothMonitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MultiMap.h">
@@ -360,9 +339,6 @@
     <ClInclude Include="Network\Packets.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Screen stages\DebugScreen.h">
-      <Filter>Header Files\Screen stages</Filter>
-    </ClInclude>
     <ClInclude Include="Screen stages\ConnectionScreen.h">
       <Filter>Header Files\Screen stages</Filter>
     </ClInclude>
@@ -508,9 +484,6 @@
       <Filter>Header Files\Game objects</Filter>
     </ClInclude>
     <ClInclude Include="Game objects\GameWorld.h">
-      <Filter>Header Files\Game objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Game objects\ShopItem.h">
       <Filter>Header Files\Game objects</Filter>
     </ClInclude>
     <ClInclude Include="Game objects\ObjectOnCursor.h">
@@ -771,6 +744,9 @@
     <ClInclude Include="bassmidi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Managers\ScreenEffectManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -833,18 +809,6 @@
     <ClCompile Include="IndexObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Network\GameCrypt.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\LoginCrypt.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\md5.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\twofish.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="Network\UOHuffman.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
@@ -876,9 +840,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ServerList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SmoothMonitor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MultiMap.cpp">
@@ -1028,9 +989,6 @@
     <ClCompile Include="Network\Packets.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="Screen stages\DebugScreen.cpp">
-      <Filter>Source Files\Screen stages</Filter>
-    </ClCompile>
     <ClCompile Include="Screen stages\ConnectionScreen.cpp">
       <Filter>Source Files\Screen stages</Filter>
     </ClCompile>
@@ -1176,9 +1134,6 @@
       <Filter>Source Files\Game objects</Filter>
     </ClCompile>
     <ClCompile Include="Game objects\GameWorld.cpp">
-      <Filter>Source Files\Game objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Game objects\ShopItem.cpp">
       <Filter>Source Files\Game objects</Filter>
     </ClCompile>
     <ClCompile Include="Game objects\ObjectOnCursor.cpp">
@@ -1428,6 +1383,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Managers\PluginManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\ScreenEffectManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>

@@ -40,7 +40,7 @@ void CCharacterListScreen::Init()
 
 	g_ConfigManager.UpdateRange = 18;
 
-	g_SmoothMonitor.UseSunrise();
+	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;
 
 	m_Gump.PrepareTextures();

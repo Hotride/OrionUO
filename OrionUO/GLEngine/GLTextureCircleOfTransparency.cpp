@@ -23,33 +23,15 @@ CGLTextureCircleOfTransparency::~CGLTextureCircleOfTransparency()
 	Clear();
 }
 //---------------------------------------------------------------------------
-bool CGLTextureCircleOfTransparency::Create(int radius)
+void CGLTextureCircleOfTransparency::CreatePixels(const int &radius, int &width, int &height, UINT_LIST &pixels)
 {
-	if (radius <= 0)
-		return false;
-	else if (radius > 200)
-		radius = 200;
-
-	if (radius == m_Radius)
-		return true;
-
-	m_Radius = radius;
-
 	int fixRadius = radius + 1;
 	int mulRadius = fixRadius * 2;
 
-	UINT_LIST pixels(mulRadius * mulRadius);
+	pixels.resize(mulRadius * mulRadius);
 
-	m_Width = mulRadius;
-	m_Height = mulRadius;
-
-	if (Texture != NULL)
-	{
-		glDeleteTextures(1, &Texture);
-		Texture = 0;
-	}
-
-	PixelsData.resize(m_Width * m_Height);
+	width = mulRadius;
+	height = mulRadius;
 
 	IFOR(x, -fixRadius, fixRadius)
 	{
@@ -63,16 +45,38 @@ bool CGLTextureCircleOfTransparency::Create(int radius)
 			int pos = posX + y;
 
 			if (r <= radius)
-			{
 				pixels[pos] = (radius - r) & 0xFF;
-				PixelsData[pos] = 1;
-			}
 			else
-			{
 				pixels[pos] = 0;
-				PixelsData[pos] = 0;
-			}
 		}
+	}
+}
+//---------------------------------------------------------------------------
+bool CGLTextureCircleOfTransparency::Create(int radius)
+{
+	if (radius <= 0)
+		return false;
+	else if (radius > 200)
+		radius = 200;
+
+	if (radius == m_Radius)
+		return true;
+
+	UINT_LIST pixels;
+
+	CreatePixels(radius, m_Width, m_Height, pixels);
+
+	PixelsData.resize(m_Width * m_Height);
+
+	IFOR(i, 0, (int)pixels.size())
+		PixelsData[i] = (pixels[i] ? 1 : 0);
+
+	m_Radius = radius;
+
+	if (Texture != NULL)
+	{
+		glDeleteTextures(1, &Texture);
+		Texture = 0;
 	}
 
 	g_GL.BindTexture32(Texture, m_Width, m_Height, &pixels[0]);

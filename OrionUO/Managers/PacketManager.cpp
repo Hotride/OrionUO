@@ -31,6 +31,7 @@
 #include "../Managers/SoundManager.h"
 #include "../Container.h"
 #include "../Party.h"
+#include "../Macro.h"
 #include "../Managers/ClilocManager.h"
 #include "../Managers/FontsManager.h"
 #include "../Managers/GumpManager.h"
@@ -106,7 +107,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x14*/ SMSG("Send elevation (God client)", 0x06),
 	/*0x15*/ BMSG("Follow", 0x09),
 	/*0x16*/ UMSG(0x01),
-	/*0x17*/ RMSG("Health status bar update (KR)", PACKET_VARIABLE_SIZE),
+	/*0x17*/ RMSGH("Health status bar update (KR)", PACKET_VARIABLE_SIZE, NewHealthbarUpdate),
 	/*0x18*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0x19*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0x1A*/ RMSGH("Update Item", PACKET_VARIABLE_SIZE, UpdateItem),
@@ -128,7 +129,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x2A*/ UMSG(0x05),
 	/*0x2B*/ UMSG(0x02),
 	/*0x2C*/ BMSGH("Death Screen", 0x02, DeathScreen),
-	/*0x2D*/ RMSG("Mob Attributes", 0x11),
+	/*0x2D*/ RMSGH("Mobile Attributes", 0x11, MobileAttributes),
 	/*0x2E*/ RMSGH("Server Equip Item", 0x0f, EquipItem),
 	/*0x2F*/ RMSG("Combat Notification", 0x0a),
 	/*0x30*/ RMSG("Attack ok", 0x05),
@@ -309,7 +310,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xDF*/ RMSGH("Buff/Debuff", PACKET_VARIABLE_SIZE, BuffDebuff),
 	/*0xE0*/ SMSG("Bug Report KR", PACKET_VARIABLE_SIZE),
 	/*0xE1*/ SMSG("Client Type KR/SA", 0x09),
-	/*0xE2*/ RMSG("New Character Animation", 0xa),
+	/*0xE2*/ RMSGH("New Character Animation", 0xa, NewCharacterAnimation),
 	/*0xE3*/ RMSG("KR Encryption Responce", 0x4d),
 	/*0xE4*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0xE5*/ UMSG(PACKET_VARIABLE_SIZE),
@@ -826,7 +827,7 @@ PACKET_HANDLER(EnterWorld)
 		g_Weather.Reset();
 		g_SkillsTotal = 0.0f;
 		g_ConsolePrompt = PT_NONE;
-		//g_MacroPointer = NULL;
+		g_MacroPointer = NULL;
 		g_Season = ST_SUMMER;
 		g_OldSeason = ST_SUMMER;
 		g_GlobalScale = 1.0;
@@ -856,7 +857,7 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
 
-	if (m_ClientVersion >= CV_500A && !g_Player->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !g_Player->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(g_Player->Serial);
 
 	LOG("Player 0x%08lX entered the world.\n", serial);
@@ -888,6 +889,7 @@ PACKET_HANDLER(UpdateHitpoints)
 	uint serial = ReadUInt32BE();
 
 	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
 	if (obj == NULL)
 		return;
 
@@ -906,6 +908,7 @@ PACKET_HANDLER(UpdateMana)
 	uint serial = ReadUInt32BE();
 
 	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
 	if (obj == NULL)
 		return;
 
@@ -923,6 +926,7 @@ PACKET_HANDLER(UpdateStamina)
 	uint serial = ReadUInt32BE();
 
 	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
 	if (obj == NULL)
 		return;
 
@@ -930,6 +934,79 @@ PACKET_HANDLER(UpdateStamina)
 	obj->Stam = ReadInt16BE();
 
 	g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(MobileAttributes)
+{
+	if (g_World == NULL)
+		return;
+
+	uint serial = ReadUInt32BE();
+
+	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
+	if (obj == NULL)
+		return;
+
+	obj->MaxHits = ReadInt16BE();
+	obj->Hits = ReadInt16BE();
+
+	if (obj->IsPlayer())
+	{
+		obj->MaxMana = ReadInt16BE();
+		obj->Mana = ReadInt16BE();
+
+		obj->MaxStam = ReadInt16BE();
+		obj->Stam = ReadInt16BE();
+	}
+
+	g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
+	g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM);
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(NewHealthbarUpdate)
+{
+	if (g_World == NULL)
+		return;
+
+	uint serial = ReadUInt32BE();
+
+	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
+	if (obj == NULL)
+		return;
+
+	Move(1);
+
+	ushort type = ReadUInt16BE();
+	uchar enable = ReadUInt8(); //enable/disable
+
+	uchar flags = obj->Flags;
+
+	if (type == 1) //Poison, enable as poisonlevel + 1
+	{
+		uchar poisonFlag = 0x04;
+
+		if (m_ClientVersion >= CV_7000)
+			poisonFlag = 0x20;
+
+		if (enable)
+			flags |= poisonFlag;
+		else
+			flags &= ~poisonFlag;
+	}
+	else if (type == 2) //Yellow hits
+	{
+		if (enable)
+			flags |= 0x08;
+		else
+			flags &= ~0x08;
+	}
+	else if (type == 3) //Red?
+	{
+	}
+
+	obj->Flags = flags;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdatePlayer)
@@ -1004,10 +1081,10 @@ PACKET_HANDLER(UpdatePlayer)
 	g_Player->Direction = dir;
 	g_Player->Z = ReadUInt8();
 
-	g_RemoveRangeXY.X = g_Player->X;
+	/*g_RemoveRangeXY.X = g_Player->X;
 	g_RemoveRangeXY.Y = g_Player->Y;
 
-	g_Orion.RemoveRangedObjects();
+	g_Orion.RemoveRangedObjects();*/
 
 	g_World->MoveToTop(g_Player);
 }
@@ -1211,7 +1288,7 @@ PACKET_HANDLER(UpdateItem)
 
 	g_World->MoveToTop(obj);
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
@@ -1223,11 +1300,11 @@ PACKET_HANDLER(UpdateItemSA)
 		return;
 
 	Move(2);
-	char type = ReadUInt8(); //buf[3];
+	char type = ReadUInt8();
 	uint serial = ReadUInt32BE();
 	ushort graphic = ReadUInt16BE();
 	uchar dir = ReadUInt8();
-	WORD count = ReadUInt16BE();
+	ushort count = ReadUInt16BE();
 	Move(2);
 	ushort x = ReadUInt16BE();
 	ushort y = ReadUInt16BE();
@@ -1277,7 +1354,7 @@ PACKET_HANDLER(UpdateItemSA)
 
 	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	g_World->MoveToTop(obj);
@@ -1415,7 +1492,7 @@ PACKET_HANDLER(UpdateObject)
 	else
 		LOG("0x%08X 0x%04X %d,%d,%d C%04X F%02X\n", serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (serial == g_PlayerSerial && oldDead != g_Player->Dead())
@@ -1450,14 +1527,14 @@ PACKET_HANDLER(UpdateObject)
 
 		uchar layer = ReadUInt8();
 
-		if (graphic & 0x8000)
+		if (m_ClientVersion >= CV_70331)
+			obj2->Color = ReadUInt16BE();
+		else if (graphic & 0x8000)
 		{
 			graphic &= 0x7FFF;
 
 			obj2->Color = ReadUInt16BE();
 		}
-		//else if (m_ClientVersion >= CV_7090)
-		//	obj2->Color = ReadUInt16BE();
 
 		obj2->Graphic = graphic;
 
@@ -1466,7 +1543,7 @@ PACKET_HANDLER(UpdateObject)
 
 		LOG("\t0x%08X:%04X [%d] %04X\n", obj2->Serial, obj2->Graphic, layer, obj2->Color);
 
-		if (m_ClientVersion >= CV_500A && !obj2->GetClilocMessage().length())
+		if (m_ClientVersion >= CV_500A && !obj2->ClilocMessage.length())
 			megaClilocRequestList.push_back(obj2->Serial);
 
 		g_World->MoveToTop(obj2);
@@ -1509,7 +1586,7 @@ PACKET_HANDLER(EquipItem)
 	if (g_NewTargetSystem.Serial == serial)
 		g_NewTargetSystem.Serial = 0;
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (layer < OL_MOUNT)
@@ -1577,7 +1654,7 @@ PACKET_HANDLER(UpdateContainedItem)
 
 	obj->Color = ReadUInt16BE();
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (obj->Graphic == 0x0EB0) //Message board item
@@ -1694,7 +1771,7 @@ PACKET_HANDLER(UpdateContainedItems)
 		obj->MapIndex = g_CurrentMap;
 		obj->Layer = 0;
 
-		if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+		if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 			megaClilocRequestList.push_back(obj->Serial);
 
 		g_World->PutContainer(obj, cserial);
@@ -1905,7 +1982,7 @@ PACKET_HANDLER(UpdateCharacter)
 	obj->Graphic = ReadUInt16BE();
 	obj->OnGraphicChange();
 
-	if (m_ClientVersion >= CV_500A && !obj->GetClilocMessage().length())
+	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	short x = ReadInt16BE();
@@ -2001,7 +2078,9 @@ PACKET_HANDLER(OpenPaperdoll)
 
 	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
 
-	string text = ReadString(0);
+	string text = ReadString(60);
+
+	uchar flags = ReadUInt8();
 
 	if (obj != NULL)
 		obj->PaperdollText = text;
@@ -2391,10 +2470,20 @@ PACKET_HANDLER(ExtendedCommand)
 
 			IFOR(i, 0, count)
 			{
-				/*uint cliloc = ReadUInt32BE();
-				ushort index = ReadUInt16BE() + 1;*/
-				ushort index = ReadUInt16BE() + 1;
-				uint cliloc = ReadUInt16BE() + 3000000;
+				uint index = 0;
+				uint cliloc = 0;
+
+				if (mode == 2 /*|| m_ClientVersion >= CV_6000*/)
+				{
+					cliloc = ReadUInt32BE();
+					index = ReadUInt16BE() + 1;
+				}
+				else
+				{
+					index = ReadUInt16BE() + 1;
+					cliloc = ReadUInt16BE() + 3000000;
+				}
+
 				ushort flags = ReadUInt16BE();
 				ushort color = 0xFFFF;
 
@@ -2595,10 +2684,7 @@ PACKET_HANDLER(ConfirmWalk)
 	uchar Seq = ReadUInt8();
 	//player->SetDirection(newdir);
 
-	uchar newnoto = ReadUInt8();
-
-	if (newnoto >= 0x40)
-		newnoto ^= 0x40;
+	uchar newnoto = ReadUInt8() & (~0x40);
 
 	if (!newnoto || newnoto >= 7)
 		newnoto = 0x01;
@@ -2813,8 +2899,21 @@ PACKET_HANDLER(GraphicEffect)
 
 	uchar type = ReadUInt8();
 
-	if (type > 3) //error
+	if (type > 3)
+	{
+		if (type == 4 && *m_Start == 0x70)
+		{
+			Move(8);
+			ushort val = ReadInt16BE();
+
+			if (val > SET_TO_BLACK_VERY_FAST)
+				val = SET_TO_BLACK_VERY_FAST;
+
+			g_ScreenEffectManager.Use(SEM_SUNSET, (SCREEN_EFFECT_TYPE)val, true);
+		}
+
 		return;
+	}
 
 	uint sourceSerial = ReadUInt32BE();
 	uint destSerial = ReadUInt32BE();
@@ -3032,15 +3131,34 @@ PACKET_HANDLER(CharacterAnimation)
 	if (obj != NULL)
 	{
 		ushort action = ReadUInt16BE();
-		Move(1);
-		uchar frameCount = ReadUInt8();
+		ushort frameCount = ReadUInt16BE();
 		frameCount = 0;
 		ushort repeatMode = ReadUInt16BE();
 		bool frameDirection = (ReadUInt8() == 0); //true - forward, false - backward
 		bool repeat = (ReadUInt8() != 0);
 		uchar delay = ReadUInt8();
 
-		obj->SetAnimation((uchar)action, delay, frameCount, (uchar)repeatMode, repeat, frameDirection);
+		obj->SetAnimation((uchar)action, delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
+		obj->AnimationFromServer = true;
+	}
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(NewCharacterAnimation)
+{
+	if (g_World == NULL)
+		return;
+
+	uint serial = ReadUInt32BE();
+	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
+
+	if (obj != NULL)
+	{
+		ushort action = ReadUInt16BE();
+		ushort frameCount = ReadUInt16BE();
+		frameCount = 0;
+		uchar delay = ReadUInt8();
+
+		obj->SetAnimation((uchar)action, delay, (uchar)frameCount);
 		obj->AnimationFromServer = true;
 	}
 }
@@ -3294,7 +3412,7 @@ PACKET_HANDLER(Damage)
 		text->X = text->m_Texture.Width / 2;
 		int height = text->m_Texture.Height;
 
-		CTextData *head = (CTextData*)character->m_DamageTextControl->Last();
+		CTextData *head = (CTextData*)character->m_DamageTextControl.Last();
 
 		if (head != NULL)
 		{
@@ -3309,7 +3427,7 @@ PACKET_HANDLER(Damage)
 			}
 		}
 
-		character->m_DamageTextControl->Add(text);
+		character->m_DamageTextControl.Add(text);
 		text->Timer = g_Ticks + DAMAGE_TEXT_NORMAL_DELAY;
 	}
 }
@@ -3496,7 +3614,7 @@ PACKET_HANDLER(SecureTrading)
 		uint id2 = ReadUInt32BE();
 		uchar hasName = ReadUInt8();
 
-		CGumpSecureTrading *gump = new CGumpSecureTrading(serial, 0, 0, id1, id2);
+		CGumpSecureTrading *gump = new CGumpSecureTrading(id1, 0, 0, id1, id2);
 
 		if (hasName && *m_Ptr)
 			gump->Text = ReadString(0);
@@ -3514,9 +3632,8 @@ PACKET_HANDLER(SecureTrading)
 			uint id1 = ReadUInt32BE();
 			uint id2 = ReadUInt32BE();
 
-			gump->StateMy = id1 != 0;
-			gump->StateOpponent = id2 != 0;
-			gump->WantRedraw = true;
+			gump->StateMy = (id1 != 0);
+			gump->StateOpponent = (id2 != 0);
 		}
 	}
 }

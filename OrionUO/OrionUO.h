@@ -70,6 +70,8 @@ private:
 	//Загрузка шейдеров
 	void LoadShaders();
 
+	void CreateAuraTexture();
+
 	void CreateObjectHandlesBackground();
 
 	//Очистка неиспользуемых текстур
@@ -156,7 +158,8 @@ public:
 	ushort GetWinterGraphic(ushort graphic);
 	ushort GetDesolationGraphic(ushort graphic);
 
-	int GetConfigValue(const char *option, int value = -1);
+	int GetValueInt(const CONFIG_VALUE_KEY &key, int value = -1);
+	string GetValueString(const CONFIG_VALUE_KEY &key, string value = "");
 
 	void ClearRemovedStaticsTextures();
 
@@ -167,6 +170,8 @@ public:
 	void ClearCaveTextures();
 
 	bool IsCaveTile(const ushort &graphic);
+
+	bool IsVegetation(const ushort &graphic);
 
 
 

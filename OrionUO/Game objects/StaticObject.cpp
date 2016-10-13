@@ -33,6 +33,8 @@ void CStaticObject::UpdateGraphicBySeason()
 
 	if (m_Graphic != graphic)
 	{
+		m_Vegetation = g_Orion.IsVegetation(m_Graphic);
+
 		if (IsWet())
 			m_RenderQueueIndex = 1;
 		else if (IsBackground())
@@ -46,9 +48,6 @@ void CStaticObject::UpdateGraphicBySeason()
 //----------------------------------------------------------------------------------
 void CStaticObject::Draw(const int &x, const int &y)
 {
-	if (g_NoDrawRoof && IsRoof())
-		return;
-
 #if UO_DEBUG_INFO!=0
 	g_RenderedObjectsCountInGameWindow++;
 #endif
@@ -56,26 +55,23 @@ void CStaticObject::Draw(const int &x, const int &y)
 	ushort objGraphic = m_Graphic - 0x4000;
 	ushort objColor = m_Color;
 
-	if (g_SelectedObject.Object() == this)
+	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
 		objColor = SELECT_STATIC_COLOR;
 
 	if (IsFoliage())
 	{
-		if (g_DrawFoliage)
+		if (m_FoliageTransparentIndex == g_FoliageIndex)
 		{
-			if (m_FoliageTransparentIndex == g_FoliageIndex)
-			{
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
 
-				g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z);
+			g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z);
 
-				glDisable(GL_BLEND);
-			}
-			else
-				g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z);
+			glDisable(GL_BLEND);
 		}
+		else
+			g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z);
 	}
 	else
 	{
@@ -91,12 +87,9 @@ void CStaticObject::Draw(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 void CStaticObject::Select(const int &x, const int &y)
 {
-	if (g_NoDrawRoof && IsRoof())
-		return;
-
 	if (IsFoliage())
 	{
-		if (g_DrawFoliage && m_FoliageTransparentIndex != g_FoliageIndex)
+		if (m_FoliageTransparentIndex != g_FoliageIndex)
 		{
 			if (g_Orion.StaticPixelsInXYAnimated(m_Graphic - 0x4000, x, y, m_Z))
 				g_SelectedObject.Init(this);

@@ -1,37 +1,41 @@
 /***********************************************************************************
 **
-** SmoothMonitor.h
+** ScreenEffectManager.h
 **
 ** Copyright (C) August 2016 Hotride
 **
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef SMOOTHMONITOR_H
-#define SMOOTHMONITOR_H
+#ifndef SCREENEFFECTMANAGER_H
+#define SCREENEFFECTMANAGER_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "EnumList.h"
+#include "../Globals.h"
+#include "../EnumList.h"
 //----------------------------------------------------------------------------------
 //Класс для работы с плавным переключением экрана
-class CSmoothMonitor
+class CScreenEffectManager
 {
-	SETGET(SMOOTH_MONITOR_TYPE, Type);
+	SETGET(SCREEN_EFFECT_MODE, Mode);
+	SETGET(SCREEN_EFFECT_TYPE, Type);
 	SETGET(bool, Enabled);
-	SETGET(GLfloat, Color);
+	SETGET(GLfloat, ColorR);
+	SETGET(GLfloat, ColorG);
+	SETGET(GLfloat, ColorB);
+	SETGET(GLfloat, Alpha);
 	SETGET(GLfloat, Step);
-	SETGET(int, Scale);
 
 public:
-	CSmoothMonitor();
-	virtual ~CSmoothMonitor();
+	CScreenEffectManager();
+	virtual ~CScreenEffectManager();
 
 	int Process();
 	void Draw();
+	bool Use(const SCREEN_EFFECT_MODE &mode, const SCREEN_EFFECT_TYPE &type = SET_TO_BLACK, const bool &ignoreEnabled = false);
 	bool UseSunrise();
 	bool UseSunset();
 };
 //----------------------------------------------------------------------------------
-extern CSmoothMonitor g_SmoothMonitor;
+extern CScreenEffectManager g_ScreenEffectManager;
 //----------------------------------------------------------------------------------
 #endif
