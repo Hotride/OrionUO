@@ -21,6 +21,12 @@ typedef struct VERDATA_HEADER
 	unsigned int GumpData;
 } *PVERDATA_HEADER;
 //----------------------------------------------------------------------------------
+typedef struct BASE_IDX_BLOCK
+{
+	unsigned int Position;
+	unsigned int Size;
+} *PBASE_IDX_BLOCK;
+//----------------------------------------------------------------------------------
 typedef struct MAP_CELLS_EX
 {
 	unsigned short TileID;
@@ -40,10 +46,8 @@ typedef struct MAP_BLOCK
 	MAP_CELLS Cells[64];
 } *PMAP_BLOCK;
 //----------------------------------------------------------------------------------
-typedef struct STAIDX_BLOCK
+typedef struct STAIDX_BLOCK : public BASE_IDX_BLOCK
 {
-	unsigned int Position;
-	unsigned int Size;
 	unsigned int Unknown;
 } *PSTAIDX_BLOCK;
 //----------------------------------------------------------------------------------
@@ -164,10 +168,8 @@ typedef struct STATIC_GROUP
 	STATIC_TILES Tiles[32];
 } *PSTATIC_GROUP;
 //----------------------------------------------------------------------------------
-typedef struct MULTI_IDX_BLOCK
+typedef struct MULTI_IDX_BLOCK : public BASE_IDX_BLOCK
 {
-	unsigned int Position;
-	unsigned int Size;
 	unsigned int Unknown;
 } *PMULTI_IDX_BLOCK;
 //----------------------------------------------------------------------------------
@@ -219,10 +221,8 @@ typedef struct VERDATA_HUES_GROUP
 	VERDATA_HUES_BLOCK Entries[8];
 } *PVERDATA_HUES_GROUP;
 //----------------------------------------------------------------------------------
-typedef struct GUMP_IDX_BLOCK
+typedef struct GUMP_IDX_BLOCK : public BASE_IDX_BLOCK
 {
-	unsigned int Position;
-	unsigned int Size;
 	unsigned short Height;
 	unsigned short Width;
 } *PGUMP_IDX_BLOCK;
@@ -233,10 +233,8 @@ typedef struct GUMP_BLOCK
 	unsigned short Run;
 } *PGUMP_BLOCK;
 //----------------------------------------------------------------------------------
-typedef struct SKILLS_IDX_BLOCK
+typedef struct SKILLS_IDX_BLOCK : public BASE_IDX_BLOCK
 {
-	unsigned int Position;
-	unsigned int Size;
 	unsigned int Unknown;
 } *PSKILLS_IDX_BLOCK;
 //----------------------------------------------------------------------------------
@@ -271,32 +269,24 @@ typedef struct ANIM_DATA
 	unsigned char FrameStart;
 } *PANIM_DATA;
 //----------------------------------------------------------------------------------
-typedef struct ART_IDX_BLOCK
+typedef struct ART_IDX_BLOCK : public BASE_IDX_BLOCK
 {
-	unsigned int Position;
-	unsigned int Size;
 	unsigned int Unknown;
 } *PART_IDX_BLOCK;
 //----------------------------------------------------------------------------------
-typedef struct LIGHT_IDX_BLOCK
+typedef struct LIGHT_IDX_BLOCK : public BASE_IDX_BLOCK
 {
-	unsigned int Position;
-	unsigned int Size;
 	unsigned short Height;
 	unsigned short Width;
 } *PLIGHT_IDX_BLOCK;
 //----------------------------------------------------------------------------------
-typedef struct ANIM_IDX_BLOCK
+typedef struct ANIM_IDX_BLOCK : public BASE_IDX_BLOCK
 {
-	unsigned int Position;
-	unsigned int Size;
 	unsigned int Unknown;
 } *PANIM_IDX_BLOCK;
 //----------------------------------------------------------------------------------
-typedef struct TEXTURE_IDX_BLOCK
+typedef struct TEXTURE_IDX_BLOCK : public BASE_IDX_BLOCK
 {
-	unsigned int Position;
-	unsigned int Size;
 	unsigned int Unknown;
 } *PTEXTURE_IDX_BLOCK;
 //----------------------------------------------------------------------------------

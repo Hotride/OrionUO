@@ -2549,6 +2549,26 @@ void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 	}
 }
 //----------------------------------------------------------------------------------
+void TestData(CIndexObject &index, const uint &address, PBASE_IDX_BLOCK ptr, const ushort &graphic)
+{
+	index.Address = ptr->Position;
+	index.DataSize = ptr->Size;
+
+	if (index.Address == 0xFFFFFFFF || !index.DataSize || index.DataSize == 0xFFFFFFFF)
+	{
+		index.Address = 0;
+		index.DataSize = 0;
+	}
+	else
+		index.Address = index.Address + address;
+
+	index.Width = 0;
+	index.Height = 0;
+	index.Texture = NULL;
+	index.LastAccessTime = 0;
+	index.Graphic = graphic;
+}
+//----------------------------------------------------------------------------------
 void COrion::LoadIndexFiles()
 {
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)g_FileManager.m_ArtIdx.Start;
@@ -2570,71 +2590,17 @@ void COrion::LoadIndexFiles()
 	{
 		if (i < m_StaticDataCount)
 		{
-			CIndexObject &statics = m_StaticDataIndex[i];
-
-			statics.Address = StaticArtPtr->Position;
-			statics.DataSize = StaticArtPtr->Size;
-
-			if (statics.Address == 0xFFFFFFFF || !statics.DataSize || statics.DataSize == 0xFFFFFFFF)
-			{
-				statics.Address = 0;
-				statics.DataSize = 0;
-			}
-			else
-				statics.Address = statics.Address + (uint)g_FileManager.m_ArtMul.Start;
-
-			statics.Width = 0;
-			statics.Height = 0;
-			statics.Texture = NULL;
-			statics.LastAccessTime = 0;
-			statics.Graphic = i;
-
+			TestData(m_StaticDataIndex[i], (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, i);
 			StaticArtPtr++;
 
 			if (i < MAX_LAND_DATA_INDEX_COUNT)
 			{
-				CIndexObject &land = m_LandDataIndex[i];
-
-				land.Address = LandArtPtr->Position;
-				land.DataSize = LandArtPtr->Size;
-
-				if (land.Address == 0xFFFFFFFF || !land.DataSize || land.DataSize == 0xFFFFFFFF)
-				{
-					land.Address = 0;
-					land.DataSize = 0;
-				}
-				else
-					land.Address = land.Address + (uint)g_FileManager.m_ArtMul.Start;
-
-				land.Width = 0;
-				land.Height = 0;
-				land.Texture = NULL;
-				land.LastAccessTime = 0;
-				land.Graphic = i;
-
+				TestData(m_LandDataIndex[i], (uint)g_FileManager.m_ArtMul.Start, LandArtPtr, i);
 				LandArtPtr++;
 
 				if (i < MAX_LAND_TEXTURES_DATA_INDEX_COUNT)
 				{
-					CIndexObject &textures = m_TextureDataIndex[i];
-
-					textures.Address = TexturePtr->Position;
-					textures.DataSize = TexturePtr->Size;
-
-					if (textures.Address == 0xFFFFFFFF || !textures.DataSize || textures.DataSize == 0xFFFFFFFF)
-					{
-						textures.Address = 0;
-						textures.DataSize = 0;
-					}
-					else
-						textures.Address = textures.Address + (uint)g_FileManager.m_TextureMul.Start;
-
-					textures.Width = 0;
-					textures.Height = 0;
-					textures.Texture = NULL;
-					textures.LastAccessTime = 0;
-					textures.Graphic = i;
-
+					TestData(m_TextureDataIndex[i], (uint)g_FileManager.m_TextureMul.Start, TexturePtr, i);
 					TexturePtr++;
 
 					if (i < MAX_SOUND_DATA_INDEX_COUNT)
@@ -2662,21 +2628,10 @@ void COrion::LoadIndexFiles()
 						{
 							CIndexObject &light = m_LightDataIndex[i];
 
-							light.Address = LightPtr->Position;
-							light.DataSize = LightPtr->Size;
+							TestData(light, (uint)g_FileManager.m_LightMul.Start, LightPtr, i);
+
 							light.Width = LightPtr->Width;
 							light.Height = LightPtr->Height;
-							light.LastAccessTime = 0;
-							light.Texture = NULL;
-							light.Graphic = i;
-
-							if (light.Address == 0xFFFFFFFF || !light.DataSize || light.DataSize == 0xFFFFFFFF)
-							{
-								light.Address = 0;
-								light.DataSize = 0;
-							}
-							else
-								light.Address = light.Address + (uint)g_FileManager.m_LightMul.Start;
 
 							LightPtr++;
 						}
@@ -2687,22 +2642,10 @@ void COrion::LoadIndexFiles()
 
 		CIndexObject &gump = m_GumpDataIndex[i];
 
-		gump.Address = GumpArtPtr->Position;
-		gump.DataSize = GumpArtPtr->Size;
-
-		if (gump.Address == 0xFFFFFFFF || !gump.DataSize || gump.DataSize == 0xFFFFFFFF)
-		{
-			gump.Address = 0;
-			gump.DataSize = 0;
-		}
-		else
-			gump.Address = gump.Address + (uint)g_FileManager.m_GumpMul.Start;
+		TestData(gump, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, i);
 
 		gump.Width = GumpArtPtr->Width;
 		gump.Height = GumpArtPtr->Height;
-		gump.Texture = NULL;
-		gump.LastAccessTime = 0;
-		gump.Graphic = i;
 
 		GumpArtPtr++;
 
