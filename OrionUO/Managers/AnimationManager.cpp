@@ -1419,11 +1419,57 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	bool needHPLine = false;
 	uint serial = obj->Serial;
 	bool drawShadow = !obj->Dead();
+	bool usingBlending = false;
+
+	if (g_CtrlPressed)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+		uint auraColor = g_ColorManager.GetPolygoneColor(16, g_ConfigManager.GetColorByNotoriety(obj->Notoriety));
+		glColor4ub(GetRValue(auraColor), GetGValue(auraColor), GetBValue(auraColor), 0xFF);
+
+		g_AuraTexture.Draw(drawX - g_AuraTexture.Width / 2, drawY - g_AuraTexture.Height / 2);
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glDisable(GL_BLEND);
+	}
 
 	if (obj->Hidden())
 	{
-		m_Color = 0x038E;
 		drawShadow = false;
+		m_Color = 0x038E;
+
+		if (obj->IsPlayer() || !g_ConfigManager.UseHiddenModeOnlyForSelf)
+		{
+			switch (g_ConfigManager.HiddenCharactersRenderMode)
+			{
+				case HCRM_ALPHA_BLENDING:
+				{
+					usingBlending = true;
+
+					glColor4ub(0xFF, 0xFF, 0xFF, g_ConfigManager.HiddenAlpha);
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+					m_Color = 0x038C;
+
+					break;
+				}
+				case HCRM_SPECTRAL_COLOR:
+				{
+					m_Color = 0x4001;
+					break;
+				}
+				case HCRM_SPECIAL_SPECTRAL_COLOR:
+				{
+					m_Color = 0x4666;
+					break;
+				}
+				default:
+					break;
+			}
+		}
 	}
 	else if (g_StatusbarUnderMouse == serial)
 		m_Color = g_ConfigManager.GetColorByNotoriety(obj->Notoriety);
@@ -1544,7 +1590,13 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 			}
 		}
 	}
-	
+
+	if (usingBlending)
+	{
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glDisable(GL_BLEND);
+	}
+
 	if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == obj->Serial)
 	{
 		ushort id = obj->GetMountAnimation();

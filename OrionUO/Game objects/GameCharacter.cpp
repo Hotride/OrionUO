@@ -85,11 +85,11 @@ int CGameCharacter::IsSitting()
 		{
 			if (obj->IsStaticGroupObject() && abs(m_Z - obj->Z) <= 1) //m_Z == obj->Z
 			{
-				WORD graphic = obj->Graphic;
+				ushort graphic = obj->Graphic;
 
 				if (obj->IsGameObject())
 				{
-					if (graphic >= 0x4000 || ((CGameObject*)obj)->NPC)
+					if (((CGameObject*)obj)->NPC || ((CGameItem*)obj)->MultiBody)
 						graphic = 0;
 				}
 				else
@@ -770,9 +770,7 @@ ushort CGameCharacter::GetMountAnimation()
 */
 void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 {
-	dir = m_Direction;
-	if (dir & 0x80)
-		dir ^= 0x80;
+	dir = m_Direction & (~0x80);
 
 	CWalkData *wd = m_WalkStack.m_Items;
 
@@ -785,13 +783,13 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 		if (dir & 0x80)
 		{
-			dir ^= 0x80;
+			dir &= ~0x80;
 			run = 1;
 		}
 
 		if (canChange)
 		{
-			int maxDelay = g_PathFinder.GetWalkSpeed(run, FindLayer(OL_MOUNT) != NULL) - 15; // CHARACTER_ANIMATION_DELAY_TABLE[onMount][run];
+			int maxDelay = g_PathFinder.GetWalkSpeed(run, FindLayer(OL_MOUNT) != NULL) - 15;
 
 			int delay = (int)g_Ticks - (int)m_LastStepTime;
 			bool removeStep = (delay >= maxDelay);
@@ -803,7 +801,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 				
 				float x = delay / g_AnimCharactersDelayValue;
 				float y = x;
-				m_OffsetZ = (char)((wd->Z - m_Z) * x);
+				m_OffsetZ = (char)(((wd->Z - m_Z) * x) * (4.0f / steps));
 
 				wd->GetOffset(x, y, steps);
 

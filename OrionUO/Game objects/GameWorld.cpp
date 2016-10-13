@@ -692,7 +692,7 @@ CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &s
 					bool condition = false;
 
 					if (scanType == STO_OBJECTS)
-						condition = (!obj->NPC && obj->Graphic < 0x4000);
+						condition = (!obj->NPC && !((CGameItem*)obj)->MultiBody);
 					else if (obj->NPC && !obj->IsPlayer())
 					{
 						if (scanType == STO_HOSTLE)

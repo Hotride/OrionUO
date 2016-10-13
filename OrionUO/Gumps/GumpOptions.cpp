@@ -41,6 +41,122 @@ m_MacroObjectPointer(NULL), m_WantRedrawMacroData(true)
 CGumpOptions::~CGumpOptions()
 {
 }
+//----------------------------------------------------------------------------------
+void CGumpOptions::CalculateGumpState()
+{
+	CGump::CalculateGumpState();
+
+	if (g_GumpPressed)
+	{
+		if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX)
+		{
+			g_GumpMovingOffset.Reset();
+
+			if (m_Minimized)
+			{
+				g_GumpTranslate.X = (float)m_MinimizedX;
+				g_GumpTranslate.Y = (float)m_MinimizedY;
+			}
+			else
+			{
+				g_GumpTranslate.X = (float)m_X;
+				g_GumpTranslate.Y = (float)m_Y;
+			}
+		}
+		else
+			m_WantRedraw = true;
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpOptions::PrepareContent()
+{
+	if (m_WantRedrawMacroData)
+	{
+		RedrawMacroData();
+		m_WantRedraw = true;
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpOptions::UpdateContent()
+{
+	Clear();
+
+	//Body
+	Add(new CGUIResizepic(0, 0x0A28, 40, 0, 550, 450));
+
+
+
+	//Left page buttons
+
+	//Sound and Music
+	CGUIButton *button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_1, 0x00DA, 0x00DA, 0x00DA, 0, 45));
+	button->ToPage = 1;
+	//Orion's configuration
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_2, 0x00DC, 0x00DC, 0x00DC, 0, 111));
+	button->ToPage = 2;
+	//Language
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_3, 0x00DE, 0x00DE, 0x00DE, 0, 177));
+	button->ToPage = 3;
+	//Chat
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_4, 0x00E0, 0x00E0, 0x00E0, 0, 243));
+	button->ToPage = 4;
+	//Macro Options
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_5, 0x00ED, 0x00ED, 0x00ED, 0, 309));
+	button->ToPage = 5;
+
+
+
+	//Right page buttons
+
+	//Interface
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_6, 0x00E2, 0x00E2, 0x00E2, 576, 45));
+	button->ToPage = 6;
+	//Display
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_7, 0x00E4, 0x00E4, 0x00E4, 576, 111));
+	button->ToPage = 7;
+	//Reputation System
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_8, 0x00E6, 0x00E6, 0x00E6, 576, 177));
+	button->ToPage = 8;
+	//Miscellaneous
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_9, 0x00E8, 0x00E8, 0x00E8, 576, 243));
+	button->ToPage = 9;
+	//Filter Options
+	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_10, 0x00EB, 0x00EB, 0x00EB, 576, 309));
+	button->ToPage = 10;
+
+
+
+	Add(new CGUIButton(ID_GO_CANCEL, 0x00F3, 0x00F2, 0x00F1, 154, 405));
+	Add(new CGUIButton(ID_GO_APPLY, 0x00EF, 0x00EE, 0x00F0, 248, 405));
+	Add(new CGUIButton(ID_GO_DEFAULT, 0x00F6, 0x00F5, 0x00F4, 346, 405));
+	Add(new CGUIButton(ID_GO_OKAY, 0x00F9, 0x00F7, 0x00F8, 443, 405));
+
+
+
+	DrawPage1(); //Sound and Music
+	DrawPage2(); //Orion's configuration
+	DrawPage3(); //Language
+	DrawPage4(); //Chat
+	DrawPage5(); //Macro Options
+	DrawPage6(); //Interface
+	DrawPage7(); //Display
+	DrawPage8(); //Reputation System
+	DrawPage9(); //Miscellaneous
+	DrawPage10(); //Filter Options
+
+	RedrawMacroData();
+}
+//----------------------------------------------------------------------------
+void CGumpOptions::Init()
+{
+	g_OptionsMacroManager.LoadFromMacro();
+	g_OptionsDeveloperMode = g_DeveloperMode;
+
+	m_MacroPointer = (CMacro*)g_OptionsMacroManager.m_Items;
+	m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
+
+	m_WantUpdateContent = true;
+}
 //---------------------------------------------------------------------------
 void CGumpOptions::InitToolTip()
 {
@@ -203,6 +319,41 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Marking cave tiles to grid", g_SelectedObject.Object());
 				break;
 			}
+			case ID_GO_P2_NO_VEGETATION:
+			{
+				g_ToolTip.Set(L"Hide vegetation static objects", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_1:
+			{
+				g_ToolTip.Set(L"Default hidden characters", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_2:
+			{
+				g_ToolTip.Set(L"Hidden characters drawn with alpha-blending", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_3:
+			{
+				g_ToolTip.Set(L"Hidden characters drawn with spectral color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_CHARACTES_MODE_4:
+			{
+				g_ToolTip.Set(L"Hidden characters drawn with special spectral color", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_HIDDEN_ALPHA:
+			{
+				g_ToolTip.Set(L"Value of alpha channel for using in hidden mode", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF:
+			{
+				g_ToolTip.Set(L"Change hidden characters mode only for your person", g_SelectedObject.Object());
+				break;
+			}
 			case ID_GO_P2_NO_ANIMATE_FIELDS:
 			{
 				g_ToolTip.Set(L"Disable the field animation's", g_SelectedObject.Object());
@@ -211,6 +362,16 @@ void CGumpOptions::InitToolTip()
 			case ID_GO_P2_LOCK_GUMP_MOVING:
 			{
 				g_ToolTip.Set(L"Enable gump's locking", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_TRANSPARENT_SPELL_ICONS:
+			{
+				g_ToolTip.Set(L"Transparent spell icons", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_SPELL_ICONS_ALPHA:
+			{
+				g_ToolTip.Set(L"Value of alpha channel for spell icons", g_SelectedObject.Object());
 				break;
 			}
 			case ID_GO_P2_CONSOLE_ENTER:
@@ -507,122 +668,6 @@ void CGumpOptions::InitToolTip()
 				break;
 		}
 }
-//----------------------------------------------------------------------------------
-void CGumpOptions::CalculateGumpState()
-{
-	CGump::CalculateGumpState();
-
-	if (g_GumpPressed)
-	{
-		if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX)
-		{
-			g_GumpMovingOffset.Reset();
-
-			if (m_Minimized)
-			{
-				g_GumpTranslate.X = (float)m_MinimizedX;
-				g_GumpTranslate.Y = (float)m_MinimizedY;
-			}
-			else
-			{
-				g_GumpTranslate.X = (float)m_X;
-				g_GumpTranslate.Y = (float)m_Y;
-			}
-		}
-		else
-			m_WantRedraw = true;
-	}
-}
-//----------------------------------------------------------------------------
-void CGumpOptions::PrepareContent()
-{
-	if (m_WantRedrawMacroData)
-	{
-		RedrawMacroData();
-		m_WantRedraw = true;
-	}
-}
-//----------------------------------------------------------------------------
-void CGumpOptions::UpdateContent()
-{
-	Clear();
-
-	//Body
-	Add(new CGUIResizepic(0, 0x0A28, 40, 0, 550, 450));
-
-
-
-	//Left page buttons
-
-	//Sound and Music
-	CGUIButton *button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_1, 0x00DA, 0x00DA, 0x00DA, 0, 45));
-	button->ToPage = 1;
-	//Orion's configuration
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_2, 0x00DC, 0x00DC, 0x00DC, 0, 111));
-	button->ToPage = 2;
-	//Language
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_3, 0x00DE, 0x00DE, 0x00DE, 0, 177));
-	button->ToPage = 3;
-	//Chat
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_4, 0x00E0, 0x00E0, 0x00E0, 0, 243));
-	button->ToPage = 4;
-	//Macro Options
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_5, 0x00ED, 0x00ED, 0x00ED, 0, 309));
-	button->ToPage = 5;
-
-
-
-	//Right page buttons
-
-	//Interface
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_6, 0x00E2, 0x00E2, 0x00E2, 576, 45));
-	button->ToPage = 6;
-	//Display
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_7, 0x00E4, 0x00E4, 0x00E4, 576, 111));
-	button->ToPage = 7;
-	//Reputation System
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_8, 0x00E6, 0x00E6, 0x00E6, 576, 177));
-	button->ToPage = 8;
-	//Miscellaneous
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_9, 0x00E8, 0x00E8, 0x00E8, 576, 243));
-	button->ToPage = 9;
-	//Filter Options
-	button = (CGUIButton*)Add(new CGUIButton(ID_GO_PAGE_10, 0x00EB, 0x00EB, 0x00EB, 576, 309));
-	button->ToPage = 10;
-
-
-
-	Add(new CGUIButton(ID_GO_CANCEL, 0x00F3, 0x00F2, 0x00F1, 154, 405));
-	Add(new CGUIButton(ID_GO_APPLY, 0x00EF, 0x00EE, 0x00F0, 248, 405));
-	Add(new CGUIButton(ID_GO_DEFAULT, 0x00F6, 0x00F5, 0x00F4, 346, 405));
-	Add(new CGUIButton(ID_GO_OKAY, 0x00F9, 0x00F7, 0x00F8, 443, 405));
-
-
-
-	DrawPage1(); //Sound and Music
-	DrawPage2(); //Orion's configuration
-	DrawPage3(); //Language
-	DrawPage4(); //Chat
-	DrawPage5(); //Macro Options
-	DrawPage6(); //Interface
-	DrawPage7(); //Display
-	DrawPage8(); //Reputation System
-	DrawPage9(); //Miscellaneous
-	DrawPage10(); //Filter Options
-
-	RedrawMacroData();
-}
-//----------------------------------------------------------------------------
-void CGumpOptions::Init()
-{
-	g_OptionsMacroManager.LoadFromMacro();
-	g_OptionsDeveloperMode = g_DeveloperMode;
-
-	m_MacroPointer = (CMacro*)g_OptionsMacroManager.m_Items;
-	m_MacroObjectPointer = (CMacroObject*)m_MacroPointer->m_Items;
-
-	m_WantUpdateContent = true;
-}
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage1()
 {
@@ -699,7 +744,7 @@ void CGumpOptions::DrawPage2()
 
 
 
-	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(1, 0x0BB8, 64, 90, 500, 300, false, true));
+	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(0xFFFFFFFF, 0x0BB8, 64, 90, 500, 300, false, true));
 
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 0));
 	text->CreateTextureW(0, L"FPS rate:");
@@ -731,16 +776,17 @@ void CGumpOptions::DrawPage2()
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 120));
 	text->CreateTextureW(0, L"Draw character's status in game window");
 
+	html->Add(new CGUIGroup(1));
 	CGUIRadio *radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_NO_DRAW_CHARACTERS_STATUS, 0x00D0, 0x00D1, 0x00D2, 10, 140));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == 0);
+	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_NO_DRAW);
 	radio->SetTextParameters(0, L"No draw", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP, 0x00D0, 0x00D1, 0x00D2, 10, 160));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == 1);
+	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_ABOVE);
 	radio->SetTextParameters(0, L"Above character", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM, 0x00D0, 0x00D1, 0x00D2, 10, 180));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == 2);
+	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_UNDER);
 	radio->SetTextParameters(0, L"Under character", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_STUMPS, 0x00D2, 0x00D3, 0x00D2, 0, 205));
@@ -751,17 +797,55 @@ void CGumpOptions::DrawPage2()
 	checkbox->Checked = g_OptionsConfig.MarkingCaves;
 	checkbox->SetTextParameters(0, L"Marking cave tiles", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 245));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_VEGETATION, 0x00D2, 0x00D3, 0x00D2, 0, 245));
+	checkbox->Checked = g_OptionsConfig.NoVegetation;
+	checkbox->SetTextParameters(0, L"Hide vegetation", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 265));
 	checkbox->Checked = g_OptionsConfig.NoAnimateFields;
 	checkbox->SetTextParameters(0, L"No animate fields", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 0, 265));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 0, 285));
 	checkbox->Checked = g_OptionsConfig.LockGumpsMoving;
 	checkbox->SetTextParameters(0, L"Lock gumps moving", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 0, 285));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 0, 305));
 	checkbox->Checked = g_OptionsConfig.ConsoleNeedEnter;
 	checkbox->SetTextParameters(0, L"Console need press 'Enter' to activate it.", g_OptionsTextColor);
+
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 325));
+	text->CreateTextureW(0, L"Hidden characters display mode:");
+
+	html->Add(new CGUIGroup(2));
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_1, 0x00D0, 0x00D1, 0x00D2, 10, 345));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_ORIGINAL);
+	radio->SetTextParameters(0, L"Original", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_2, 0x00D0, 0x00D1, 0x00D2, 10, 365));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_ALPHA_BLENDING);
+	radio->SetTextParameters(0, L"With alpha-blending, alpha:", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_3, 0x00D0, 0x00D1, 0x00D2, 10, 385));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_SPECTRAL_COLOR);
+	radio->SetTextParameters(0, L"With spectral color", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_4, 0x00D0, 0x00D1, 0x00D2, 10, 405));
+	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_SPECIAL_SPECTRAL_COLOR);
+	radio->SetTextParameters(0, L"With special spectral color", g_OptionsTextColor);
+
+	m_SliderHiddenAlpha = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_HIDDEN_ALPHA, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 225, 369, 90, 20, 255, g_OptionsConfig.HiddenAlpha));
+	m_SliderHiddenAlpha->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF, 0x00D2, 0x00D3, 0x00D2, 0, 430));
+	checkbox->Checked = g_OptionsConfig.UseHiddenModeOnlyForSelf;
+	checkbox->SetTextParameters(0, L"Change hidden characters mode only for your person", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_TRANSPARENT_SPELL_ICONS, 0x00D2, 0x00D3, 0x00D2, 0, 450));
+	checkbox->Checked = g_OptionsConfig.TransparentSpellIcons;
+	checkbox->SetTextParameters(0, L"Transparent spell icons, alpha:", g_OptionsTextColor);
+
+	m_SliderSpellIconsAlpha = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_SPELL_ICONS_ALPHA, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 232, 454, 90, 30, 255, g_OptionsConfig.SpellIconAlpha));
+	m_SliderSpellIconsAlpha->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
 	html->CalculateDataSize();
 }
@@ -1192,7 +1276,7 @@ void CGumpOptions::DrawPage6()
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 44));
 	text->CreateTextureW(0, L"These options affect your interface.");
 
-	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(1, 0x0BB8, 64, 90, 500, 300, false, true));
+	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(0xFFFFFFFF, 0x0BB8, 64, 90, 500, 300, false, true));
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 0, 0));
 	checkbox->Checked = g_OptionsConfig.EnablePathfind;
@@ -1975,6 +2059,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.DrawStumps = state;
 			else if (serial == ID_GO_P2_MARKING_CAVES)
 				g_OptionsConfig.MarkingCaves = state;
+			else if (serial == ID_GO_P2_NO_VEGETATION)
+				g_OptionsConfig.NoVegetation = state;
 			else if (serial == ID_GO_P2_NO_ANIMATE_FIELDS)
 				g_OptionsConfig.NoAnimateFields = state;
 			else if (serial == ID_GO_P2_REDUCE_FPS_UNACTIVE_WINDOW) //Reduce FPS when Window is Unactive
@@ -1987,6 +2073,10 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.LockGumpsMoving = state;
 			else if (serial == ID_GO_P2_CONSOLE_ENTER) //Console need press 'Enter' to activate it.
 				g_OptionsConfig.ConsoleNeedEnter = state;
+			else if (serial == ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF)
+				g_OptionsConfig.UseHiddenModeOnlyForSelf = state;
+			else if (serial == ID_GO_P2_TRANSPARENT_SPELL_ICONS)
+				g_OptionsConfig.TransparentSpellIcons = state;
 
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
@@ -2108,11 +2198,19 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 		case 2: //Orion's configuration
 		{
 			if (serial == ID_GO_P2_NO_DRAW_CHARACTERS_STATUS) //No draw
-				g_OptionsConfig.DrawStatusState = 0;
+				g_OptionsConfig.DrawStatusState = DCSS_NO_DRAW;
 			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP) //Above character
-				g_OptionsConfig.DrawStatusState = 1;
+				g_OptionsConfig.DrawStatusState = DCSS_ABOVE;
 			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM) //Under character
-				g_OptionsConfig.DrawStatusState = 2;
+				g_OptionsConfig.DrawStatusState = DCSS_UNDER;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_1)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_ORIGINAL;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_2)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_ALPHA_BLENDING;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_3)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_SPECTRAL_COLOR;
+			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_4)
+				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_SPECIAL_SPECTRAL_COLOR;
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
 			else if (serial == ID_GO_P2_DEV_MODE_2)
@@ -2182,6 +2280,10 @@ void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 		{
 			if (serial == ID_GO_P2_CLIENT_FPS)
 				g_OptionsConfig.ClientFPS = m_SliderClientFPS->Value;
+			else if (serial == ID_GO_P2_HIDDEN_ALPHA)
+				g_OptionsConfig.HiddenAlpha = m_SliderHiddenAlpha->Value;
+			else if (serial == ID_GO_P2_SPELL_ICONS_ALPHA)
+				g_OptionsConfig.SpellIconAlpha = m_SliderSpellIconsAlpha->Value;
 
 			break;
 		}
@@ -2494,12 +2596,18 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.DrawStatusState = g_OptionsConfig.DrawStatusState;
 			g_ConfigManager.DrawStumps = g_OptionsConfig.DrawStumps;
 			g_ConfigManager.MarkingCaves = g_OptionsConfig.MarkingCaves;
+			g_ConfigManager.NoVegetation = g_OptionsConfig.NoVegetation;
 			g_ConfigManager.NoAnimateFields = g_OptionsConfig.NoAnimateFields;
 			g_ConfigManager.ConsoleNeedEnter = g_OptionsConfig.ConsoleNeedEnter;
 			g_ConfigManager.ReduceFPSUnactiveWindow = g_OptionsConfig.ReduceFPSUnactiveWindow;
 			g_ConfigManager.StandartCharactersAnimationDelay = g_OptionsConfig.StandartCharactersAnimationDelay;
 			g_ConfigManager.StandartItemsAnimationDelay = g_OptionsConfig.StandartItemsAnimationDelay;
 			g_ConfigManager.LockGumpsMoving = g_OptionsConfig.LockGumpsMoving;
+			g_ConfigManager.HiddenCharactersRenderMode = g_OptionsConfig.HiddenCharactersRenderMode;
+			g_ConfigManager.HiddenAlpha = g_OptionsConfig.HiddenAlpha;
+			g_ConfigManager.UseHiddenModeOnlyForSelf = g_OptionsConfig.UseHiddenModeOnlyForSelf;
+			g_ConfigManager.TransparentSpellIcons = g_OptionsConfig.TransparentSpellIcons;
+			g_ConfigManager.SpellIconAlpha = g_OptionsConfig.SpellIconAlpha;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

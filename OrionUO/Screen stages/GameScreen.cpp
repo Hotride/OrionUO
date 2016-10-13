@@ -512,10 +512,24 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 
 		if (rso != NULL)
 		{
-			if (rso->IsGameObject() && ((CGameObject*)rso)->NPC)
-				maxObjectZ += DEFAULT_CHARACTER_HEIGHT;
+			if (rso->IsGameObject())
+			{
+				if (((CGameObject*)rso)->NPC)
+					maxObjectZ += DEFAULT_CHARACTER_HEIGHT;
+				else
+					maxObjectZ += rso->GetStaticHeight();
+			}
 			else
+			{
+				if (!g_DrawFoliage && rso->IsFoliage())
+					continue;
+				else if (g_NoDrawRoof && rso->IsRoof())
+					continue;
+				else if (g_ConfigManager.NoVegetation && rso->Vegetation)
+					continue;
+
 				maxObjectZ += rso->GetStaticHeight();
+			}
 		}
 
 		if (maxObjectZ >= maxZ)
@@ -606,7 +620,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 				}
 			}
 
-			if (((!go->Locked() && go->Graphic < 0x4000) || go->NPC) && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
+			if ((go->NPC || (!go->Locked() && !((CGameItem*)go)->MultiBody)) && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
 			{
 				int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
 

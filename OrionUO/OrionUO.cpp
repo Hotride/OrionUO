@@ -350,6 +350,9 @@ bool COrion::Install()
 	DEBUGLOG("Create object handles.\n");
 	CreateObjectHandlesBackground();
 
+	DEBUGLOG("Create aura.\n");
+	CreateAuraTexture();
+
 	DEBUGLOG("Load shaders.\n");
 	LoadShaders();
 
@@ -387,6 +390,8 @@ void COrion::Uninstall()
 	g_CurrentShader = NULL;
 	RELEASE_POINTER(g_UOFileReader);
 	RELEASE_POINTER(g_MapManager);
+
+	g_AuraTexture.Clear();
 
 	IFOR(i, 0, 6)
 		g_MapTexture[i].Clear();
@@ -619,7 +624,7 @@ void COrion::Process(const bool &rendering)
 	{
 		g_ShowGumpLocker = g_ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
 
-		/*CWalkData *wd = g_Player->m_WalkStack.m_Items;
+		CWalkData *wd = g_Player->m_WalkStack.m_Items;
 
 		if (wd != NULL)
 		{
@@ -632,7 +637,7 @@ void COrion::Process(const bool &rendering)
 			g_RemoveRangeXY.Y = g_Player->Y;
 		}
 
-		RemoveRangedObjects();*/
+		RemoveRangedObjects();
 
 		ProcessStaticAnimList();
 
@@ -1495,38 +1500,393 @@ ushort COrion::GetDesolationGraphic(ushort graphic)
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-int COrion::GetConfigValue(const char *option, int value)
+int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 {
-	string key = ToLowerA(option);
-
-	if (key == "alwaysrun")
+	switch (key)
 	{
-		if (value == -1)
-			value = g_ConfigManager.AlwaysRun;
-		else
-			g_ConfigManager.AlwaysRun = (value != 0);
-	}
-	else if (key == "circletransvalue")
-	{
-		if (value == -1)
-			value = g_ConfigManager.CircleTransRadius;
-		else
+		case CVK_SOUND:
 		{
-			if (value < 0)
-				value = 0;
-			else if (value > 255)
-				value = 255;
+			if (value == -1)
+				value = g_ConfigManager.Sound;
+			else
+				g_ConfigManager.Sound = (value != 0);
 
-			g_ConfigManager.CircleTransRadius = value;
+			break;
 		}
+		case CVK_SOUND_VALUE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.SoundVolume;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > 255)
+					value = 255;
+
+				g_ConfigManager.SoundVolume = value;
+			}
+
+			break;
+		}
+		case CVK_MUSIC:
+		{
+			if (value == -1)
+				value = g_ConfigManager.Music;
+			else
+				g_ConfigManager.Music = (value != 0);
+
+			break;
+		}
+		case CVK_MUSIC_VALUE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.MusicVolume;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > 255)
+					value = 255;
+
+				g_ConfigManager.MusicVolume = value;
+			}
+
+			break;
+		}
+		case CVK_USE_TOOLTIPS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.UseToolTips;
+			else
+				g_ConfigManager.UseToolTips = (value != 0);
+
+			break;
+		}
+		case CFK_ALWAYS_RUN:
+		{
+			if (value == -1)
+				value = g_ConfigManager.AlwaysRun;
+			else
+				g_ConfigManager.AlwaysRun = (value != 0);
+
+			break;
+		}
+		case CVK_NEW_TARGET_SYSTEM:
+		{
+			if (value == -1)
+				value = g_ConfigManager.DisableNewTargetSystem;
+			else
+				g_ConfigManager.DisableNewTargetSystem = (value == 0); //Именно == 0!!! Т.к. в плагине это Target System enable/disable
+
+			break;
+		}
+		case CVK_OBJECT_HANDLES:
+		{
+			if (value == -1)
+				value = g_ConfigManager.ObjectHandles;
+			else
+				g_ConfigManager.ObjectHandles = (value != 0);
+
+			break;
+		}
+		case CVK_SCALE_SPEECH_DELAY:
+		{
+			if (value == -1)
+				value = g_ConfigManager.ScaleSpeechDelay;
+			else
+				g_ConfigManager.ScaleSpeechDelay = (value != 0);
+
+			break;
+		}
+		case CVK_SPEECH_DELAY:
+		{
+			if (value == -1)
+				value = g_ConfigManager.SpeechDelay;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > 999)
+					value = 999;
+
+				g_ConfigManager.SpeechDelay = value;
+			}
+
+			break;
+		}
+		case CVK_IGNORE_GUILD_MESSAGES:
+		{
+			if (value == -1)
+				value = g_ConfigManager.IgnoreGuildMessage;
+			else
+				g_ConfigManager.IgnoreGuildMessage = (value != 0);
+
+			break;
+		}
+		case CVK_IGNORE_ALLIANCE_MESSAGES:
+		{
+			if (value == -1)
+				value = g_ConfigManager.IgnoreAllianceMessage;
+			else
+				g_ConfigManager.IgnoreAllianceMessage = (value != 0);
+
+			break;
+		}
+		case CVK_DARK_NIGHTS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.DarkNights;
+			else
+				g_ConfigManager.DarkNights = (value != 0);
+
+			break;
+		}
+		case CVK_COLORED_LIGHTING:
+		{
+			if (value == -1)
+				value = g_ConfigManager.ColoredLighting;
+			else
+				g_ConfigManager.ColoredLighting = (value != 0);
+
+			break;
+		}
+		case CVK_CRIMINAL_ACTIONS_QUERY:
+		{
+			if (value == -1)
+				value = g_ConfigManager.CriminalActionsQuery;
+			else
+				g_ConfigManager.CriminalActionsQuery = (value != 0);
+
+			break;
+		}
+		case CVK_CIRCLETRANS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.UseCircleTrans;
+			else
+				g_ConfigManager.UseCircleTrans = (value != 0);
+
+			break;
+		}
+		case CVK_CIRCLETRANS_VALUE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.CircleTransRadius;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > 255)
+					value = 255;
+
+				g_ConfigManager.CircleTransRadius = value;
+			}
+
+			break;
+		}
+		case CVK_LOCK_RESIZING_GAME_WINDOW:
+		{
+			if (value == -1)
+				value = g_ConfigManager.LockResizingGameWindow;
+			else
+				g_ConfigManager.LockResizingGameWindow = (value != 0);
+
+			break;
+		}
+		case CVK_CLIENT_FPS_VALUE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.ClientFPS;
+			else
+			{
+				if (value < 16)
+					value = 16;
+				else if (value > 64)
+					value = 64;
+
+				g_ConfigManager.ClientFPS = value;
+			}
+
+			break;
+		}
+		case CVK_USE_SCALING_GAME_WINDOW:
+		{
+			if (value == -1)
+				value = g_ConfigManager.UseScaling;
+			else
+				g_ConfigManager.UseScaling = (value != 0);
+
+			break;
+		}
+		case CVK_DRAW_STATUS_STATE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.DrawStatusState;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > DCSS_UNDER)
+					value = DCSS_UNDER;
+
+				g_ConfigManager.DrawStatusState = value;
+			}
+
+			break;
+		}
+		case CVK_DRAW_STUMPS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.DrawStumps;
+			else
+				g_ConfigManager.DrawStumps = (value != 0);
+
+			break;
+		}
+		case CVK_MARKING_CAVES:
+		{
+			if (value == -1)
+				value = g_ConfigManager.MarkingCaves;
+			else
+				g_ConfigManager.MarkingCaves = (value != 0);
+
+			break;
+		}
+		case CVK_NO_VEGETATION:
+		{
+			if (value == -1)
+				value = g_ConfigManager.NoVegetation;
+			else
+				g_ConfigManager.NoVegetation = (value != 0);
+
+			break;
+		}
+		case CVK_NO_ANIMATE_FIELDS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.NoAnimateFields;
+			else
+				g_ConfigManager.NoAnimateFields = (value != 0);
+
+			break;
+		}
+		case CVK_STANDARD_CHARACTERS_DELAY:
+		{
+			if (value == -1)
+				value = g_ConfigManager.StandartCharactersAnimationDelay;
+			else
+				g_ConfigManager.StandartCharactersAnimationDelay = (value != 0);
+
+			break;
+		}
+		case CVK_STANDARD_ITEMS_DELAY:
+		{
+			if (value == -1)
+				value = g_ConfigManager.StandartItemsAnimationDelay;
+			else
+				g_ConfigManager.StandartItemsAnimationDelay = (value != 0);
+
+			break;
+		}
+		case CVK_LOCK_GUMPS_MOVING:
+		{
+			if (value == -1)
+				value = g_ConfigManager.LockGumpsMoving;
+			else
+				g_ConfigManager.LockGumpsMoving = (value != 0);
+
+			break;
+		}
+		case CVK_CONSOLE_NEED_ENTER:
+		{
+			if (value == -1)
+				value = g_ConfigManager.ConsoleNeedEnter;
+			else
+				g_ConfigManager.ConsoleNeedEnter = (value != 0);
+
+			break;
+		}
+		case CVK_HIDDEN_CHARACTERS_MODE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.HiddenCharactersRenderMode;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > HCRM_SPECIAL_SPECTRAL_COLOR)
+					value = HCRM_SPECIAL_SPECTRAL_COLOR;
+
+				g_ConfigManager.HiddenCharactersRenderMode = value;
+			}
+
+			break;
+		}
+		case CVK_HIDDEN_CHARACTERS_ALPHA:
+		{
+			if (value == -1)
+				value = g_ConfigManager.HiddenAlpha;
+			else
+			{
+				if (value < 20)
+					value = 20;
+				else if (value > 255)
+					value = 255;
+
+				g_ConfigManager.HiddenAlpha = value;
+			}
+
+			break;
+		}
+		case CVK_HIDDEN_CHARACTERS_MODE_ONLY_FOR_SELF:
+		{
+			if (value == -1)
+				value = g_ConfigManager.UseHiddenModeOnlyForSelf;
+			else
+				g_ConfigManager.UseHiddenModeOnlyForSelf = (value != 0);
+
+			break;
+		}
+		case CFK_TRANSPARENT_SPELL_ICONS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.TransparentSpellIcons;
+			else
+				g_ConfigManager.TransparentSpellIcons = (value != 0);
+
+			break;
+		}
+		case CFK_SPELL_ICONS_ALPHA:
+		{
+			if (value == -1)
+				value = g_ConfigManager.SpellIconAlpha;
+			else
+			{
+				if (value < 30)
+					value = 30;
+				else if (value > 255)
+					value = 255;
+
+				g_ConfigManager.SpellIconAlpha = value;
+			}
+
+			break;
+		}
+		default:
+			break;
 	}
-	else if (key == "circletrans")
+
+	return value;
+}
+//----------------------------------------------------------------------------------
+string COrion::GetValueString(const CONFIG_VALUE_KEY &key, string value)
+{
+	/*switch (key)
 	{
-		if (value == -1)
-			value = g_ConfigManager.UseCircleTrans;
-		else
-			g_ConfigManager.UseCircleTrans = (value != 0);
-	}
+		default:
+			break;
+	}*/
 
 	return value;
 }
@@ -1662,6 +2022,434 @@ void COrion::ClearCaveTextures()
 bool COrion::IsCaveTile(const ushort &graphic)
 {
 	return (g_ConfigManager.MarkingCaves && graphic != 0x0550 && IN_RANGE(graphic, 0x053B, 0x0553));
+}
+//----------------------------------------------------------------------------------
+bool COrion::IsVegetation(const ushort &graphic)
+{
+	bool result = false;
+
+	switch (graphic)
+	{
+		case 0x4D45:
+		case 0x4D46:
+		case 0x4D47:
+		case 0x4D48:
+		case 0x4D49:
+		case 0x4D4A:
+		case 0x4D4B:
+		case 0x4D4C:
+		case 0x4D4D:
+		case 0x4D4E:
+		case 0x4D4F:
+		case 0x4D50:
+		case 0x4D51:
+		case 0x4D52:
+		case 0x4D53:
+		case 0x4D54:
+		case 0x4D5C:
+		case 0x4D5D:
+		case 0x4D5E:
+		case 0x4D5F:
+		case 0x4D60:
+		case 0x4D61:
+		case 0x4D62:
+		case 0x4D63:
+		case 0x4D64:
+		case 0x4D65:
+		case 0x4D66:
+		case 0x4D67:
+		case 0x4D68:
+		case 0x4D69:
+		case 0x4D6D:
+		case 0x4D73:
+		case 0x4D74:
+		case 0x4D75:
+		case 0x4D76:
+		case 0x4D77:
+		case 0x4D78:
+		case 0x4D79:
+		case 0x4D7A:
+		case 0x4D7B:
+		case 0x4D7C:
+		case 0x4D7D:
+		case 0x4D7E:
+		case 0x4D7F:
+		case 0x4D80:
+		case 0x4D83:
+		case 0x4D87:
+		case 0x4D88:
+		case 0x4D89:
+		case 0x4D8A:
+		case 0x4D8B:
+		case 0x4D8C:
+		case 0x4D8D:
+		case 0x4D8E:
+		case 0x4D8F:
+		case 0x4D90:
+		case 0x4D91:
+		case 0x4D93:
+		case 0x52B6:
+		case 0x52B7:
+		case 0x52BC:
+		case 0x52BD:
+		case 0x52BE:
+		case 0x52BF:
+		case 0x52C0:
+		case 0x52C1:
+		case 0x52C2:
+		case 0x52C3:
+		case 0x52C4:
+		case 0x52C5:
+		case 0x52C6:
+		case 0x52C7:
+		case 0x4CB9:
+		case 0x4CBC:
+		case 0x4CBD:
+		case 0x4CBE:
+		case 0x4CBF:
+		case 0x4CC0:
+		case 0x4CC1:
+		case 0x4CC3:
+		case 0x4CC5:
+		case 0x4CC6:
+		case 0x4CC7:
+		case 0x4CF3:
+		case 0x4CF4:
+		case 0x4CF5:
+		case 0x4CF6:
+		case 0x4CF7:
+		case 0x4D04:
+		case 0x4D06:
+		case 0x4D07:
+		case 0x4D08:
+		case 0x4D09:
+		case 0x4D0A:
+		case 0x4D0B:
+		case 0x4D0C:
+		case 0x4D0D:
+		case 0x4D0E:
+		case 0x4D0F:
+		case 0x4D10:
+		case 0x4D11:
+		case 0x4D12:
+		case 0x4D13:
+		case 0x4D14:
+		case 0x4D15:
+		case 0x4D16:
+		case 0x4D17:
+		case 0x4D18:
+		case 0x4D19:
+		case 0x4D28:
+		case 0x4D29:
+		case 0x4D2A:
+		case 0x4D2B:
+		case 0x4D2D:
+		case 0x4D34:
+		case 0x4D36:
+		case 0x4DAE:
+		case 0x4DAF:
+		case 0x4DBA:
+		case 0x4DBB:
+		case 0x4DBC:
+		case 0x4DBD:
+		case 0x4DBE:
+		case 0x4DC1:
+		case 0x4DC2:
+		case 0x4DC3:
+		case 0x4C83:
+		case 0x4C84:
+		case 0x4C85:
+		case 0x4C86:
+		case 0x4C87:
+		case 0x4C88:
+		case 0x4C89:
+		case 0x4C8A:
+		case 0x4C8B:
+		case 0x4C8C:
+		case 0x4C8D:
+		case 0x4C8E:
+		case 0x4C93:
+		case 0x4C94:
+		case 0x4C98:
+		case 0x4C9F:
+		case 0x4CA0:
+		case 0x4CA1:
+		case 0x4CA2:
+		case 0x4CA3:
+		case 0x4CA4:
+		case 0x4CA7:
+		case 0x4CAC:
+		case 0x4CAD:
+		case 0x4CAE:
+		case 0x4CAF:
+		case 0x4CB0:
+		case 0x4CB1:
+		case 0x4CB2:
+		case 0x4CB3:
+		case 0x4CB4:
+		case 0x4CB5:
+		case 0x4CB6:
+		case 0x4C45:
+		case 0x4C46:
+		case 0x4C49:
+		case 0x4C47:
+		case 0x4C48:
+		case 0x4C4A:
+		case 0x4C4B:
+		case 0x4C4C:
+		case 0x4C4D:
+		case 0x4C4E:
+		case 0x4C37:
+		case 0x4C38:
+		case 0x4CBA:
+		case 0x4D2F:
+		case 0x4D32:
+		case 0x4D33:
+		{
+			result = true;
+			break;
+		}
+		default:
+			break;
+	}
+
+	//raw vegetation data
+	/*case 0x4CE7:
+	case 0x4CE8:
+	case 0x4D45:
+	case 0x4D46:
+	case 0x4D47:
+	case 0x4D48:
+	case 0x4D49:
+	case 0x4D4A:
+	case 0x4D4B:
+	case 0x4D4C:
+	case 0x4D4D:
+	case 0x4D4E:
+	case 0x4D4F:
+	case 0x4D50:
+	case 0x4D51:
+	case 0x4D52:
+	case 0x4D53:
+	case 0x4D54:
+	case 0x4D56:
+	case 0x4D55:
+	case 0x4D5C:
+	case 0x4D5D:
+	case 0x4D5E:
+	case 0x4D5F:
+	case 0x4D60:
+	case 0x4D61:
+	case 0x4D62:
+	case 0x4D63:
+	case 0x4D64:
+	case 0x4D65:
+	case 0x4D66:
+	case 0x4D67:
+	case 0x4D68:
+	case 0x4D69:
+	case 0x4D6A:
+	case 0x4D6C:
+	case 0x4D6D:
+	case 0x4D6B:
+	case 0x4D73:
+	case 0x4D74:
+	case 0x4D75:
+	case 0x4D76:
+	case 0x4D77:
+	case 0x4D78:
+	case 0x4D79:
+	case 0x4D7A:
+	case 0x4D7B:
+	case 0x4D7C:
+	case 0x4D7D:
+	case 0x4D7E:
+	case 0x4D7F:
+	case 0x4D80:
+	case 0x4D81:
+	case 0x4D83:
+	case 0x4D82:
+	case 0x4D87:
+	case 0x4D88:
+	case 0x4D89:
+	case 0x4D8A:
+	case 0x4D8B:
+	case 0x4D8C:
+	case 0x4D8D:
+	case 0x4D8E:
+	case 0x4D8F:
+	case 0x4D90:
+	case 0x4D91:
+	case 0x4D92:
+	case 0x4D93:
+	case 0x52B8:
+	case 0x52B9:
+	case 0x52BA:
+	case 0x52BB:
+	case 0x52B6:
+	case 0x52B7:
+	case 0x52BC:
+	case 0x52BD:
+	case 0x52BE:
+	case 0x52BF:
+	case 0x52C0:
+	case 0x52C1:
+	case 0x52C2:
+	case 0x52C3:
+	case 0x52C4:
+	case 0x52C5:
+	case 0x52C6:
+	case 0x52C7:
+	case 0x4CCE:
+	case 0x4CCF:
+	case 0x4CD1:
+	case 0x4CD2:
+	case 0x4CD4:
+	case 0x4CD5:
+	case 0x4CD7:
+	case 0x4CD9:
+	case 0x4CDB:
+	case 0x4CDC:
+	case 0x4CDE:
+	case 0x4CDF:
+	case 0x4CE1:
+	case 0x4CE2:
+	case 0x4CE4:
+	case 0x4CE5:
+	case 0x4C95:
+	case 0x4C96:
+	case 0x4CF9:
+	case 0x4CFA:
+	case 0x4CFC:
+	case 0x4CFD:
+	case 0x4CFF:
+	case 0x4D00:
+	case 0x4D02:
+	case 0x4D03:
+	case 0x4CB9:
+	case 0x4CBC:
+	case 0x4CBD:
+	case 0x4CBE:
+	case 0x4CBF:
+	case 0x4CC0:
+	case 0x4CC1:
+	case 0x4CC3:
+	case 0x4CC5:
+	case 0x4CC6:
+	case 0x4CC7:
+	case 0x4CF3:
+	case 0x4CF4:
+	case 0x4CF5:
+	case 0x4CF6:
+	case 0x4CF7:
+	case 0x4D04:
+	case 0x4D06:
+	case 0x4D07:
+	case 0x4D08:
+	case 0x4D09:
+	case 0x4D0A:
+	case 0x4D0B:
+	case 0x4D0C:
+	case 0x4D0D:
+	case 0x4D0E:
+	case 0x4D0F:
+	case 0x4D10:
+	case 0x4D11:
+	case 0x4D12:
+	case 0x4D13:
+	case 0x4D14:
+	case 0x4D15:
+	case 0x4D16:
+	case 0x4D17:
+	case 0x4D18:
+	case 0x4D19:
+	case 0x4D28:
+	case 0x4D29:
+	case 0x4D2A:
+	case 0x4D2B:
+	case 0x4D2D:
+	case 0x4D34:
+	case 0x4D36:
+	case 0x4DAE:
+	case 0x4DAF:
+	case 0x4DBA:
+	case 0x4DBB:
+	case 0x4DBC:
+	case 0x4DBD:
+	case 0x4DBE:
+	case 0x4DC1:
+	case 0x4DC2:
+	case 0x4DC3:
+	case 0x4C83:
+	case 0x4C84:
+	case 0x4C85:
+	case 0x4C86:
+	case 0x4C87:
+	case 0x4C88:
+	case 0x4C89:
+	case 0x4C8A:
+	case 0x4C8B:
+	case 0x4C8C:
+	case 0x4C8D:
+	case 0x4C8E:
+	case 0x4C93:
+	case 0x4C94:
+	case 0x4C98:
+	case 0x4C9F:
+	case 0x4CA0:
+	case 0x4CA1:
+	case 0x4CA2:
+	case 0x4CA3:
+	case 0x4CA4:
+	case 0x4CA7:
+	case 0x4CAC:
+	case 0x4CAD:
+	case 0x4CAE:
+	case 0x4CAF:
+	case 0x4CB0:
+	case 0x4CB1:
+	case 0x4CB2:
+	case 0x4CB3:
+	case 0x4CB4:
+	case 0x4CB5:
+	case 0x4CB6:
+	case 0x4C45:
+	case 0x4C46:
+	case 0x4C49:
+	case 0x4C47:
+	case 0x4C48:
+	case 0x4C4A:
+	case 0x4C4B:
+	case 0x4C4C:
+	case 0x4C4D:
+	case 0x4C4E:
+	case 0x4C37:
+	case 0x4C38:
+	case 0x4CBA:
+	case 0x4D2F:
+	case 0x4D32:
+	case 0x4D33:
+	case 0x4C9A:
+	case 0x4CB7:
+	case 0x4CB8:
+	case 0x4C97:
+	case 0x4C99:
+	case 0x4C9B:
+	case 0x4C9C:
+	case 0x4C9D:
+	case 0x4CA5:
+	case 0x4CA6:
+	case 0x4CA9:
+	case 0x4CC4:
+	case 0x4CBB:
+	case 0x4CC8:
+	case 0x4CE9:
+	case 0x4D2E:
+	case 0x4D35:
+	case 0x4D3F:
+	case 0x4D40:*/
+
+	return result;
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadLogin(string &login, int &port)
@@ -2253,7 +3041,7 @@ void COrion::PatchFiles()
 		{
 			if (vh->BlockID >= MAX_LAND_DATA_INDEX_COUNT) //Run
 			{
-				ushort ID = (WORD)vh->BlockID - MAX_LAND_DATA_INDEX_COUNT;
+				ushort ID = (ushort)vh->BlockID - MAX_LAND_DATA_INDEX_COUNT;
 				m_StaticDataIndex[ID].Address = vAddr + vh->Position;
 				m_StaticDataIndex[ID].DataSize = vh->Size;
 			}
@@ -2652,6 +3440,35 @@ bool COrion::LoadSkills()
 	}
 
 	return true;
+}
+//----------------------------------------------------------------------------------
+void COrion::CreateAuraTexture()
+{
+	UINT_LIST pixels;
+	int width = 0;
+	int height = 0;
+
+	CGLTextureCircleOfTransparency::CreatePixels(30, width, height, pixels);
+
+	IFOR(i, 0, (int)pixels.size())
+	{
+		uint &pixel = pixels[i];
+
+		if (pixel)
+		{
+			ushort value = pixel << 3;
+
+			if (value > 0xFF)
+				value = 0xFF;
+
+			pixel = (value << 24) | (value << 16) | (value << 8) | value;
+		}
+	}
+
+	g_AuraTexture.Width = width;
+	g_AuraTexture.Height = height;
+
+	g_GL.BindTexture32(g_AuraTexture.Texture, width, height, &pixels[0]);
 }
 //----------------------------------------------------------------------------------
 void COrion::CreateObjectHandlesBackground()
@@ -4046,7 +4863,7 @@ void COrion::EquipItem(uint container)
 
 			ushort graphic = g_ObjectInHand->Graphic;
 
-			if (graphic < 0x4000)
+			if (!g_ObjectInHand->MultiBody)
 			{
 				STATIC_TILES &st = m_StaticData[graphic / 32].Tiles[graphic % 32];
 

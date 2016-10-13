@@ -31,6 +31,7 @@
 #include "../Managers/SoundManager.h"
 #include "../Container.h"
 #include "../Party.h"
+#include "../Macro.h"
 #include "../Managers/ClilocManager.h"
 #include "../Managers/FontsManager.h"
 #include "../Managers/GumpManager.h"
@@ -826,7 +827,7 @@ PACKET_HANDLER(EnterWorld)
 		g_Weather.Reset();
 		g_SkillsTotal = 0.0f;
 		g_ConsolePrompt = PT_NONE;
-		//g_MacroPointer = NULL;
+		g_MacroPointer = NULL;
 		g_Season = ST_SUMMER;
 		g_OldSeason = ST_SUMMER;
 		g_GlobalScale = 1.0;
@@ -986,24 +987,26 @@ PACKET_HANDLER(NewHealthbarUpdate)
 	{
 		uchar poisonFlag = 0x04;
 
-		if (g_PacketManager.ClientVersion >= CV_7000)
+		if (m_ClientVersion >= CV_7000)
 			poisonFlag = 0x20;
 
 		if (enable)
 			flags |= poisonFlag;
-		else if (flags & poisonFlag)
-			flags ^= poisonFlag;
+		else
+			flags &= ~poisonFlag;
 	}
 	else if (type == 2) //Yellow hits
 	{
 		if (enable)
 			flags |= 0x08;
-		else if (flags & 0x08)
-			flags ^= 0x08;
+		else
+			flags &= ~0x08;
 	}
 	else if (type == 3) //Red?
 	{
 	}
+
+	obj->Flags = flags;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdatePlayer)
@@ -1078,10 +1081,10 @@ PACKET_HANDLER(UpdatePlayer)
 	g_Player->Direction = dir;
 	g_Player->Z = ReadUInt8();
 
-	g_RemoveRangeXY.X = g_Player->X;
+	/*g_RemoveRangeXY.X = g_Player->X;
 	g_RemoveRangeXY.Y = g_Player->Y;
 
-	g_Orion.RemoveRangedObjects();
+	g_Orion.RemoveRangedObjects();*/
 
 	g_World->MoveToTop(g_Player);
 }
@@ -2681,10 +2684,7 @@ PACKET_HANDLER(ConfirmWalk)
 	uchar Seq = ReadUInt8();
 	//player->SetDirection(newdir);
 
-	uchar newnoto = ReadUInt8();
-
-	if (newnoto >= 0x40)
-		newnoto ^= 0x40;
+	uchar newnoto = ReadUInt8() & (~0x40);
 
 	if (!newnoto || newnoto >= 7)
 		newnoto = 0x01;

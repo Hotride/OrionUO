@@ -22,6 +22,9 @@ class CGUIHitBox : public CGUIPolygonal
 public:
 	CGUIHitBox(const uint &serial, const int &x, const int &y, const int &width, const int &height, const bool &callOnMouseUp = false);
 	virtual ~CGUIHitBox();
+
+	virtual void OnMouseEnter();
+	virtual void OnMouseExit();
 };
 //----------------------------------------------------------------------------------
 #endif

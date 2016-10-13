@@ -392,8 +392,10 @@ void CGumpSpellbook::UpdateContentMage()
 			{
 				ushort id = 0x2080 + offs;
 
-				text = (CGUIText*)Add(new CGUIText(0x0288, dataX, 52 + y));
-				text->CreateTextureA(9, g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name);
+				CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(spellSerial + offs, 0x0288, 0, 0, dataX, 52 + y, 0, false, 9));
+				entry->m_Entry.SetText(g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name);
+				entry->CheckOnSerial = true;
+				entry->ReadOnly = true;
 
 				CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(spellSerial + offs, dataX, 52 + y, 100, 16, true));
 				box->MoveOnDrag = true;

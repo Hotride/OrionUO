@@ -80,7 +80,7 @@ bool CPathFinder::CreateItemsList(int &x, int &y, char &z)
 
 			if (obj->IsGameObject())
 			{
-				if (ignoreGameObjects || graphic >= 0x4000 || (ignoreDoors && obj->IsDoor()) || obj->IsInternal()) //GM || isMulti || (ghost && isDoor) || InternalItem
+				if (ignoreGameObjects || (!((CGameObject*)obj)->NPC && ((CGameItem*)obj)->MultiBody) || (ignoreDoors && obj->IsDoor()) || obj->IsInternal()) //GM || isMulti || (ghost && isDoor) || InternalItem
 					canBeAdd = false;
 				else if (((CGameObject*)obj)->NPC)
 				{
@@ -541,10 +541,10 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	wd->Z = z;
 	wd->Direction = direction;
 
-	g_RemoveRangeXY.X = x;
+	/*g_RemoveRangeXY.X = x;
 	g_RemoveRangeXY.Y = y;
 
-	g_Orion.RemoveRangedObjects();
+	g_Orion.RemoveRangedObjects();*/
 
 	g_GumpManager.RemoveRangedGumps();
 

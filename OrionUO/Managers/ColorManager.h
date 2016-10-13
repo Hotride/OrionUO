@@ -85,21 +85,21 @@ public:
 	@param [__in] c 32-битный цвет
 	@return 16-битный цвет
 	*/
-	ushort Color32To16(uint &c);
+	ushort Color32To16(const uint &c);
 
 	/*!
 	Конвертирование цвета из 16 бит в 32 бит
 	@param [__in] c 16-битный цвет
 	@return 32-битный цвет
 	*/
-	uint Color16To32(ushort &c);
+	uint Color16To32(const ushort &c);
 
 	/*!
 	Перевод в серый
 	@param [__in] c 16-битный цвет
 	@return 16-битный цвет
 	*/
-	ushort ConvertToGray(ushort &c);
+	ushort ConvertToGray(const ushort &c);
 
 
 

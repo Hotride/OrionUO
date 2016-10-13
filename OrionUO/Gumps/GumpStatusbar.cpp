@@ -56,9 +56,9 @@ void CGumpStatusbar::InitToolTip()
 {
 	uint id = g_SelectedObject.Serial;
 
-	if (m_Minimized)
-		g_ToolTip.Set(L"Double click to maximize the statusbar gump", g_SelectedObject.Object());
-	else if (id && id < ID_GSB_TEXT_TITHING_POINTS)
+	//if (m_Minimized && m_Serial == g_PlayerSerial)
+	//	g_ToolTip.Set(L"Double click to maximize the statusbar gump", g_SelectedObject.Object());
+	if (id && id < ID_GSB_TEXT_TITHING_POINTS)
 	{
 		static const wstring tooltip[ID_GSB_TEXT_TITHING_POINTS] =
 		{
@@ -123,7 +123,10 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 		return NULL;
 
 	//154x59 mini-gump
-	
+
+	static const int gumpWidth = 154;
+	static const int gumpHeight = 59;
+
 	const int rangeX = 77;
 	const int rangeY = 29;
 	const int rangeOffsetX = 60;
@@ -139,17 +142,17 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 			int offsetX = abs(x - gumpX);
 			int passed = 0;
 			
-			if (x >= gumpX && x <= (gumpX + 154))
+			if (x >= gumpX && x <= (gumpX + gumpWidth))
 				passed = 2;
 			else if (offsetX < rangeOffsetX) //left part of gump
 				passed = 1;
 			else
 			{
-				offsetX = abs(x - (gumpX + 154));
+				offsetX = abs(x - (gumpX + gumpWidth));
 
 				if (offsetX < rangeOffsetX) //right part of gump
 					passed = -1;
-				else if (x >= (gumpX - rangeX) && x <= (gumpX + 154 + rangeX))
+				else if (x >= (gumpX - rangeX) && x <= (gumpX + gumpWidth + rangeX))
 					passed = 2;
 			}
 
@@ -157,7 +160,7 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 
 			if (abs(passed) == 1)
 			{
-				if (y < (gumpY - rangeY) || y > (gumpY + 59 + rangeY))
+				if (y < (gumpY - rangeY) || y >(gumpY + gumpHeight + rangeY))
 					passed = 0;
 			}
 			else if (passed == 2) //in gump range X
@@ -168,7 +171,7 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 					passed = 2;
 				else
 				{
-					offsetY = abs(y - (gumpY + 59));
+					offsetY = abs(y - (gumpY + gumpHeight));
 
 					if (offsetY < rangeOffsetY) //bottom part of gump
 						passed = -2;
@@ -186,22 +189,22 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 				{
 					case -2: //gump bottom
 					{
-						testY += 59;
+						testY += gumpHeight;
 						break;
 					}
 					case -1: //gump right
 					{
-						testX += 154;
+						testX += gumpWidth;
 						break;
 					}
 					case 1: //gump left
 					{
-						testX -= 154;
+						testX -= gumpWidth;
 						break;
 					}
 					case 2: //gump top
 					{
-						testY -= 59;
+						testY -= gumpHeight;
 						break;
 					}
 					default:

@@ -38,6 +38,8 @@ void CMultiObject::UpdateGraphicBySeason()
 
 	if (m_Graphic != graphic)
 	{
+		m_Vegetation = g_Orion.IsVegetation(m_Graphic);
+
 		if (IsWet())
 			m_RenderQueueIndex = 1;
 		else if (IsBackground())
@@ -51,15 +53,11 @@ void CMultiObject::UpdateGraphicBySeason()
 //---------------------------------------------------------------------------
 void CMultiObject::Draw(const int &x, const int &y)
 {
-	if (g_NoDrawRoof && IsRoof())
-		return;
-
-	ushort objGraphic = m_Graphic - 0x4000;
-
 #if UO_DEBUG_INFO!=0
 	g_RenderedObjectsCountInGameWindow++;
 #endif
 
+	ushort objGraphic = m_Graphic - 0x4000;
 	ushort objColor = m_Color;
 
 	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
@@ -88,10 +86,7 @@ void CMultiObject::Draw(const int &x, const int &y)
 //---------------------------------------------------------------------------
 void CMultiObject::Select(const int &x, const int &y)
 {
-	if (m_OnTarget || (g_NoDrawRoof && IsRoof()))
-		return;
-
-	if (!g_UseCircleTrans && g_Orion.StaticPixelsInXY(m_Graphic - 0x4000, x, y, m_Z))
+	if (!m_OnTarget && !g_UseCircleTrans && g_Orion.StaticPixelsInXY(m_Graphic - 0x4000, x, y, m_Z))
 		g_SelectedObject.Init(this);
 }
 //----------------------------------------------------------------------------------

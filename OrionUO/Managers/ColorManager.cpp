@@ -128,7 +128,7 @@ void CColorManager::SendColorsToShader(ushort color)
 @param [__in] c 16-битный цвет
 @return 32-битный цвет
 */
-uint CColorManager::Color16To32(ushort &c)
+uint CColorManager::Color16To32(const ushort &c)
 {
 	return
 	(
@@ -143,7 +143,7 @@ uint CColorManager::Color16To32(ushort &c)
 @param [__in] c 32-битный цвет
 @return 16-битный цвет
 */
-ushort CColorManager::Color32To16(uint &c)
+ushort CColorManager::Color32To16(const uint &c)
 {
 	return
 	(
@@ -158,7 +158,7 @@ ushort CColorManager::Color32To16(uint &c)
 @param [__in] c 16-битный цвет
 @return 16-битный цвет
 */
-ushort CColorManager::ConvertToGray(ushort &c)
+ushort CColorManager::ConvertToGray(const ushort &c)
 {
 	return ((c & 0x1F) * 299 + ((c >> 5) & 0x1F) * 587 + ((c >> 10) & 0x1F) * 114) / 1000;
 }
