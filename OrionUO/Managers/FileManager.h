@@ -58,6 +58,19 @@ public:
 	WISP_FILE::CMappedFile m_SpeechMul;
 	WISP_FILE::CMappedFile m_LangcodeIff;
 
+	//UOP
+	WISP_FILE::CMappedFile m_artLegacyMUL;
+	WISP_FILE::CMappedFile m_gumpartLegacyMUL;
+	WISP_FILE::CMappedFile m_soundLegacyMUL;
+	WISP_FILE::CMappedFile m_tileart;
+	WISP_FILE::CMappedFile m_MainMisc;
+	WISP_FILE::CMappedFile m_MapUOP[6];
+	WISP_FILE::CMappedFile m_MapXUOP[6];
+	WISP_FILE::CMappedFile m_AnimationSequence;
+	WISP_FILE::CMappedFile m_AnimationFrame[4];
+	WISP_FILE::CMappedFile m_MultiCollection;
+	WISP_FILE::CMappedFile m_string_dictionary;
+
 	bool Load();
 	void Unload();
 };
