@@ -1503,7 +1503,7 @@ ushort COrion::GetDesolationGraphic(ushort graphic)
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-int COrion::GetConfigValue(const CONFIG_VALUE_KEY &key, int value)
+int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 {
 	switch (key)
 	{
@@ -1879,6 +1879,17 @@ int COrion::GetConfigValue(const CONFIG_VALUE_KEY &key, int value)
 		default:
 			break;
 	}
+
+	return value;
+}
+//----------------------------------------------------------------------------------
+string COrion::GetValueString(const CONFIG_VALUE_KEY &key, string value)
+{
+	/*switch (key)
+	{
+		default:
+			break;
+	}*/
 
 	return value;
 }

@@ -31,6 +31,7 @@
 #include "../Managers/SoundManager.h"
 #include "../Container.h"
 #include "../Party.h"
+#include "../Macro.h"
 #include "../Managers/ClilocManager.h"
 #include "../Managers/FontsManager.h"
 #include "../Managers/GumpManager.h"
@@ -826,7 +827,7 @@ PACKET_HANDLER(EnterWorld)
 		g_Weather.Reset();
 		g_SkillsTotal = 0.0f;
 		g_ConsolePrompt = PT_NONE;
-		//g_MacroPointer = NULL;
+		g_MacroPointer = NULL;
 		g_Season = ST_SUMMER;
 		g_OldSeason = ST_SUMMER;
 		g_GlobalScale = 1.0;
@@ -986,7 +987,7 @@ PACKET_HANDLER(NewHealthbarUpdate)
 	{
 		uchar poisonFlag = 0x04;
 
-		if (g_PacketManager.ClientVersion >= CV_7000)
+		if (m_ClientVersion >= CV_7000)
 			poisonFlag = 0x20;
 
 		if (enable)
@@ -1004,6 +1005,8 @@ PACKET_HANDLER(NewHealthbarUpdate)
 	else if (type == 3) //Red?
 	{
 	}
+
+	obj->Flags = flags;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdatePlayer)

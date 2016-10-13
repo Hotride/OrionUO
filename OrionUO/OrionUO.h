@@ -158,7 +158,8 @@ public:
 	ushort GetWinterGraphic(ushort graphic);
 	ushort GetDesolationGraphic(ushort graphic);
 
-	int GetConfigValue(const CONFIG_VALUE_KEY &key, int value = -1);
+	int GetValueInt(const CONFIG_VALUE_KEY &key, int value = -1);
+	string GetValueString(const CONFIG_VALUE_KEY &key, string value = "");
 
 	void ClearRemovedStaticsTextures();
 
