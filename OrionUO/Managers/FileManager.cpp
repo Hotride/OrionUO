@@ -44,6 +44,8 @@ bool CFileManager::Load()
 			return false;
 		if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
 			return false;
+		if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
+			return false;
 		if (!m_tileart.Load(g_App.FilePath("tileart.uop")))
 			return false;
 		if (!m_string_dictionary.Load(g_App.FilePath("string_dictionary.uop")))
@@ -52,6 +54,15 @@ bool CFileManager::Load()
 			return false;
 		if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
 			return false;
+		if (!m_MainMisc.Load(g_App.FilePath("MainMisc.uop")))
+			return false;
+		if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
+			return false;
+		IFOR(i, 1, 5)
+		{
+			if (!m_AnimationFrame[i].Load(g_App.FilePath("AnimationFrame%i.uop", i)))
+				return false;
+		}
 	}
 	if (!m_AnimIdx[0].Load(g_App.FilePath("anim.idx")))
 		return false;
@@ -85,7 +96,6 @@ bool CFileManager::Load()
 		return false;
 	else if (!m_SkillsMul.Load(g_App.FilePath("skills.mul")))
 		return false;
-
 	else if (!m_TextureMul.Load(g_App.FilePath("texmaps.mul")))
 		return false;
 	else if (!m_TiledataMul.Load(g_App.FilePath("tiledata.mul")))
