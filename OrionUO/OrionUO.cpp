@@ -2546,6 +2546,26 @@ void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 	}
 }
 //----------------------------------------------------------------------------------
+void ReadFileBlock(CIndexObject &indexObject, uint start, PIDX_BLOCK ptr, int i)
+{
+	indexObject.Address = ptr->Position;
+	indexObject.DataSize = ptr->Size;
+
+	if (indexObject.Address == 0xFFFFFFFF || !indexObject.DataSize || indexObject.DataSize == 0xFFFFFFFF)
+	{
+		indexObject.Address = 0;
+		indexObject.DataSize = 0;
+	}
+	else
+		indexObject.Address = indexObject.Address + start;
+
+	indexObject.Width = 0;
+	indexObject.Height = 0;
+	indexObject.Texture = NULL;
+	indexObject.LastAccessTime = 0;
+	indexObject.Graphic = i;
+}
+//----------------------------------------------------------------------------------
 void COrion::LoadIndexFiles()
 {
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)g_FileManager.m_ArtIdx.Start;
@@ -2563,75 +2583,22 @@ void COrion::LoadIndexFiles()
 
 	int maxCount = (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK);
 
+	bool useUOP = !g_FileManager.UseVerdata;
+
 	IFOR(i, 0, maxCount)
 	{
 		if (i < m_StaticDataCount)
 		{
-			CIndexObject &statics = m_StaticDataIndex[i];
-
-			statics.Address = StaticArtPtr->Position;
-			statics.DataSize = StaticArtPtr->Size;
-
-			if (statics.Address == 0xFFFFFFFF || !statics.DataSize || statics.DataSize == 0xFFFFFFFF)
-			{
-				statics.Address = 0;
-				statics.DataSize = 0;
-			}
-			else
-				statics.Address = statics.Address + (uint)g_FileManager.m_ArtMul.Start;
-
-			statics.Width = 0;
-			statics.Height = 0;
-			statics.Texture = NULL;
-			statics.LastAccessTime = 0;
-			statics.Graphic = i;
-
+			ReadFileBlock(m_StaticDataIndex[i], (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, i);
 			StaticArtPtr++;
 
 			if (i < MAX_LAND_DATA_INDEX_COUNT)
 			{
-				CIndexObject &land = m_LandDataIndex[i];
-
-				land.Address = LandArtPtr->Position;
-				land.DataSize = LandArtPtr->Size;
-
-				if (land.Address == 0xFFFFFFFF || !land.DataSize || land.DataSize == 0xFFFFFFFF)
-				{
-					land.Address = 0;
-					land.DataSize = 0;
-				}
-				else
-					land.Address = land.Address + (uint)g_FileManager.m_ArtMul.Start;
-
-				land.Width = 0;
-				land.Height = 0;
-				land.Texture = NULL;
-				land.LastAccessTime = 0;
-				land.Graphic = i;
-
+				ReadFileBlock(m_LandDataIndex[i], (uint)g_FileManager.m_ArtMul.Start, LandArtPtr, i);
 				LandArtPtr++;
-
 				if (i < MAX_LAND_TEXTURES_DATA_INDEX_COUNT)
 				{
-					CIndexObject &textures = m_TextureDataIndex[i];
-
-					textures.Address = TexturePtr->Position;
-					textures.DataSize = TexturePtr->Size;
-
-					if (textures.Address == 0xFFFFFFFF || !textures.DataSize || textures.DataSize == 0xFFFFFFFF)
-					{
-						textures.Address = 0;
-						textures.DataSize = 0;
-					}
-					else
-						textures.Address = textures.Address + (uint)g_FileManager.m_TextureMul.Start;
-
-					textures.Width = 0;
-					textures.Height = 0;
-					textures.Texture = NULL;
-					textures.LastAccessTime = 0;
-					textures.Graphic = i;
-
+					ReadFileBlock(m_TextureDataIndex[i], (uint)g_FileManager.m_TextureMul.Start, TexturePtr, i);
 					TexturePtr++;
 
 					if (i < MAX_SOUND_DATA_INDEX_COUNT)
@@ -2655,26 +2622,10 @@ void COrion::LoadIndexFiles()
 
 						SoundPtr++;
 
+
 						if (i < MAX_LIGHTS_DATA_INDEX_COUNT)
 						{
-							CIndexObject &light = m_LightDataIndex[i];
-
-							light.Address = LightPtr->Position;
-							light.DataSize = LightPtr->Size;
-							light.Width = LightPtr->Width;
-							light.Height = LightPtr->Height;
-							light.LastAccessTime = 0;
-							light.Texture = NULL;
-							light.Graphic = i;
-
-							if (light.Address == 0xFFFFFFFF || !light.DataSize || light.DataSize == 0xFFFFFFFF)
-							{
-								light.Address = 0;
-								light.DataSize = 0;
-							}
-							else
-								light.Address = light.Address + (uint)g_FileManager.m_LightMul.Start;
-
+							ReadFileBlock(m_LightDataIndex[i], (uint)g_FileManager.m_LightMul.Start, LightPtr, i);
 							LightPtr++;
 						}
 					}
@@ -2682,25 +2633,7 @@ void COrion::LoadIndexFiles()
 			}
 		}
 
-		CIndexObject &gump = m_GumpDataIndex[i];
-
-		gump.Address = GumpArtPtr->Position;
-		gump.DataSize = GumpArtPtr->Size;
-
-		if (gump.Address == 0xFFFFFFFF || !gump.DataSize || gump.DataSize == 0xFFFFFFFF)
-		{
-			gump.Address = 0;
-			gump.DataSize = 0;
-		}
-		else
-			gump.Address = gump.Address + (uint)g_FileManager.m_GumpMul.Start;
-
-		gump.Width = GumpArtPtr->Width;
-		gump.Height = GumpArtPtr->Height;
-		gump.Texture = NULL;
-		gump.LastAccessTime = 0;
-		gump.Graphic = i;
-
+		ReadFileBlock(m_GumpDataIndex[i], (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, i);
 		GumpArtPtr++;
 
 		if (i < g_MultiIndexCount)
