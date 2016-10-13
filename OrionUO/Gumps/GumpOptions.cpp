@@ -364,6 +364,16 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Enable gump's locking", g_SelectedObject.Object());
 				break;
 			}
+			case ID_GO_P2_TRANSPARENT_SPELL_ICONS:
+			{
+				g_ToolTip.Set(L"Transparent spell icons", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_SPELL_ICONS_ALPHA:
+			{
+				g_ToolTip.Set(L"Value of alpha channel for spell icons", g_SelectedObject.Object());
+				break;
+			}
 			case ID_GO_P2_CONSOLE_ENTER:
 			{
 				g_ToolTip.Set(L"Activate chat after 'Enter' pressing", g_SelectedObject.Object());
@@ -734,7 +744,7 @@ void CGumpOptions::DrawPage2()
 
 
 
-	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(1, 0x0BB8, 64, 90, 500, 300, false, true));
+	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(0xFFFFFFFF, 0x0BB8, 64, 90, 500, 300, false, true));
 
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 0));
 	text->CreateTextureW(0, L"FPS rate:");
@@ -768,15 +778,15 @@ void CGumpOptions::DrawPage2()
 
 	html->Add(new CGUIGroup(1));
 	CGUIRadio *radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_NO_DRAW_CHARACTERS_STATUS, 0x00D0, 0x00D1, 0x00D2, 10, 140));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == 0);
+	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_NO_DRAW);
 	radio->SetTextParameters(0, L"No draw", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP, 0x00D0, 0x00D1, 0x00D2, 10, 160));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == 1);
+	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_ABOVE);
 	radio->SetTextParameters(0, L"Above character", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM, 0x00D0, 0x00D1, 0x00D2, 10, 180));
-	radio->Checked = (g_OptionsConfig.DrawStatusState == 2);
+	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_UNDER);
 	radio->SetTextParameters(0, L"Under character", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_STUMPS, 0x00D2, 0x00D3, 0x00D2, 0, 205));
@@ -813,7 +823,7 @@ void CGumpOptions::DrawPage2()
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_2, 0x00D0, 0x00D1, 0x00D2, 10, 365));
 	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_ALPHA_BLENDING);
-	radio->SetTextParameters(0, L"With alpha-blending", g_OptionsTextColor);
+	radio->SetTextParameters(0, L"With alpha-blending, alpha:", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_3, 0x00D0, 0x00D1, 0x00D2, 10, 385));
 	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_SPECTRAL_COLOR);
@@ -823,15 +833,19 @@ void CGumpOptions::DrawPage2()
 	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_SPECIAL_SPECTRAL_COLOR);
 	radio->SetTextParameters(0, L"With special spectral color", g_OptionsTextColor);
 
-	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 200, 365));
-	text->CreateTextureW(0, L"Alpha:");
-
-	m_SliderHiddenAlpha = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_HIDDEN_ALPHA, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 245, 369, 90, 1, 255, g_OptionsConfig.HiddenAlpha));
+	m_SliderHiddenAlpha = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_HIDDEN_ALPHA, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 225, 369, 90, 20, 255, g_OptionsConfig.HiddenAlpha));
 	m_SliderHiddenAlpha->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF, 0x00D2, 0x00D3, 0x00D2, 0, 430));
 	checkbox->Checked = g_OptionsConfig.UseHiddenModeOnlyForSelf;
 	checkbox->SetTextParameters(0, L"Change hidden characters mode only for your person", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_TRANSPARENT_SPELL_ICONS, 0x00D2, 0x00D3, 0x00D2, 0, 450));
+	checkbox->Checked = g_OptionsConfig.TransparentSpellIcons;
+	checkbox->SetTextParameters(0, L"Transparent spell icons, alpha:", g_OptionsTextColor);
+
+	m_SliderSpellIconsAlpha = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_SPELL_ICONS_ALPHA, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 232, 454, 90, 30, 255, g_OptionsConfig.SpellIconAlpha));
+	m_SliderSpellIconsAlpha->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
 
 	html->CalculateDataSize();
 }
@@ -1262,7 +1276,7 @@ void CGumpOptions::DrawPage6()
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 64, 44));
 	text->CreateTextureW(0, L"These options affect your interface.");
 
-	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(1, 0x0BB8, 64, 90, 500, 300, false, true));
+	CGUIHTMLGump *html = (CGUIHTMLGump*)Add(new CGUIHTMLGump(0xFFFFFFFF, 0x0BB8, 64, 90, 500, 300, false, true));
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 0, 0));
 	checkbox->Checked = g_OptionsConfig.EnablePathfind;
@@ -2061,6 +2075,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.ConsoleNeedEnter = state;
 			else if (serial == ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF)
 				g_OptionsConfig.UseHiddenModeOnlyForSelf = state;
+			else if (serial == ID_GO_P2_TRANSPARENT_SPELL_ICONS)
+				g_OptionsConfig.TransparentSpellIcons = state;
 
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
@@ -2182,11 +2198,11 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 		case 2: //Orion's configuration
 		{
 			if (serial == ID_GO_P2_NO_DRAW_CHARACTERS_STATUS) //No draw
-				g_OptionsConfig.DrawStatusState = 0;
+				g_OptionsConfig.DrawStatusState = DCSS_NO_DRAW;
 			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP) //Above character
-				g_OptionsConfig.DrawStatusState = 1;
+				g_OptionsConfig.DrawStatusState = DCSS_ABOVE;
 			else if (serial == ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM) //Under character
-				g_OptionsConfig.DrawStatusState = 2;
+				g_OptionsConfig.DrawStatusState = DCSS_UNDER;
 			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_1)
 				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_ORIGINAL;
 			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_2)
@@ -2266,6 +2282,8 @@ void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 				g_OptionsConfig.ClientFPS = m_SliderClientFPS->Value;
 			else if (serial == ID_GO_P2_HIDDEN_ALPHA)
 				g_OptionsConfig.HiddenAlpha = m_SliderHiddenAlpha->Value;
+			else if (serial == ID_GO_P2_SPELL_ICONS_ALPHA)
+				g_OptionsConfig.SpellIconAlpha = m_SliderSpellIconsAlpha->Value;
 
 			break;
 		}
@@ -2588,6 +2606,8 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.HiddenCharactersRenderMode = g_OptionsConfig.HiddenCharactersRenderMode;
 			g_ConfigManager.HiddenAlpha = g_OptionsConfig.HiddenAlpha;
 			g_ConfigManager.UseHiddenModeOnlyForSelf = g_OptionsConfig.UseHiddenModeOnlyForSelf;
+			g_ConfigManager.TransparentSpellIcons = g_OptionsConfig.TransparentSpellIcons;
+			g_ConfigManager.SpellIconAlpha = g_OptionsConfig.SpellIconAlpha;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

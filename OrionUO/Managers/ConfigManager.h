@@ -38,6 +38,8 @@ class CConfigManager
 	SETGET(uchar, HiddenCharactersRenderMode);
 	SETGET(uchar, HiddenAlpha);
 	SETGET(bool, UseHiddenModeOnlyForSelf);
+	SETGET(uchar, TransparentSpellIcons);
+	SETGETE(uchar, SpellIconAlpha, OnChangedSpellIconAlpha);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

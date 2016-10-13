@@ -27,6 +27,8 @@ public:
 	CGumpSpell(uint serial, short x, short y, ushort graphic);
 	virtual ~CGumpSpell();
 
+	CGUIAlphaBlending *m_Blender;
+
 	CGumpSpell *m_GroupNext;
 	CGumpSpell *m_GroupPrev;
 
@@ -40,6 +42,8 @@ public:
 	bool InGroup() { return (m_GroupNext != NULL || m_GroupPrev != NULL); }
 
 	virtual void InitToolTip();
+
+	virtual void PrepareContent();
 
 	GUMP_BUTTON_EVENT_H;
 

@@ -34,8 +34,8 @@ typedef void __cdecl FUNCDEF_DRAW_GUMPPIC(int, int, unsigned short, unsigned sho
 //IUltimaOnline
 typedef unsigned __int64 __cdecl FUNCDEF_GET_LAND_FLAGS(unsigned short);
 typedef unsigned __int64 __cdecl FUNCDEF_GET_STATIC_FLAGS(unsigned short);
-typedef int __cdecl FUNCDEF_GET_CONFIG_VALUE(const char*);
-typedef void __cdecl FUNCDEF_SET_CONFIG_VALUE(const char*, int);
+typedef int __cdecl FUNCDEF_GET_CONFIG_VALUE(CONFIG_VALUE_KEY);
+typedef void __cdecl FUNCDEF_SET_CONFIG_VALUE(CONFIG_VALUE_KEY, int);
 
 //IClilocManager
 typedef std::string __cdecl FUNCDEF_GET_CLILOC_A(unsigned int, std::string);

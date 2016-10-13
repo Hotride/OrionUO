@@ -96,14 +96,14 @@ unsigned __int64 __cdecl FUNCBODY_GetStaticFlags(unsigned short graphic)
 	return g_Orion.GetStaticFlags(graphic);
 }
 //----------------------------------------------------------------------------------
-int __cdecl FUNCBODY_GetConfigValue(const char *option)
+int __cdecl FUNCBODY_GetConfigValue(CONFIG_VALUE_KEY key)
 {
-	return g_Orion.GetConfigValue(option);
+	return g_Orion.GetConfigValue(key);
 }
 //----------------------------------------------------------------------------------
-void __cdecl FUNCBODY_SetConfigValue(const char *option, int value)
+void __cdecl FUNCBODY_SetConfigValue(CONFIG_VALUE_KEY key, int value)
 {
-	g_Orion.GetConfigValue(option, value);
+	g_Orion.GetConfigValue(key, value);
 }
 //----------------------------------------------------------------------------------
 //IClilocManager

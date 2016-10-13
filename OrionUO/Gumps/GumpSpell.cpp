@@ -13,6 +13,7 @@
 #include "../Managers/MouseManager.h"
 #include "../Managers/ClilocManager.h"
 #include "../Managers/GumpManager.h"
+#include "../Managers/ConfigManager.h"
 #include "../ToolTip.h"
 #include "../PressedObject.h"
 //----------------------------------------------------------------------------------
@@ -22,16 +23,54 @@ CGumpSpell::CGumpSpell(uint serial, short x, short y, ushort graphic)
 	m_Graphic = graphic;
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
 
+	m_Blender = (CGUIAlphaBlending*)Add(new CGUIAlphaBlending(g_ConfigManager.TransparentSpellIcons, g_ConfigManager.SpellIconAlpha / 255.0f));
 	Add(new CGUIGumppic(m_Graphic, 0, 0));
 
 	m_SpellUnlocker = (CGUIButton*)Add(new CGUIButton(ID_GS_BUTTON_REMOVE_FROM_GROUP, 0x082C, 0x082C, 0x082C, 30, 16));
 	m_SpellUnlocker->CheckPolygone = true;
 	m_SpellUnlocker->Visible = false;
+
+	Add(new CGUIAlphaBlending(false, 0.0f));
 }
 //----------------------------------------------------------------------------------
 CGumpSpell::~CGumpSpell()
 {
 	RemoveFromGroup();
+}
+//----------------------------------------------------------------------------------
+void CGumpSpell::InitToolTip()
+{
+	uint id = g_SelectedObject.Serial;
+
+	if (id == ID_GS_BUTTON_REMOVE_FROM_GROUP)
+		g_ToolTip.Set(L"Remove spell from group", g_SelectedObject.Object(), 80);
+	else
+		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(3002010 + m_Serial), g_SelectedObject.Object(), 80);
+}
+//----------------------------------------------------------------------------------
+void CGumpSpell::PrepareContent()
+{
+	if (!g_ConfigManager.TransparentSpellIcons)
+	{
+		if (m_Blender->Enabled)
+		{
+			m_Blender->Enabled = false;
+			m_WantRedraw = true;
+		}
+	}
+	else if (g_SelectedObject.Gump() == this)
+	{
+		if (m_Blender->Enabled)
+		{
+			m_Blender->Enabled = false;
+			m_WantRedraw = true;
+		}
+	}
+	else if (!m_Blender->Enabled)
+	{
+		m_Blender->Enabled = true;
+		m_WantRedraw = true;
+	}
 }
 //----------------------------------------------------------------------------------
 CGumpSpell *CGumpSpell::GetTopSpell()
@@ -314,11 +353,6 @@ void CGumpSpell::CalculateGumpState()
 		g_GumpTranslate.X = (float)x;
 		g_GumpTranslate.Y = (float)y;
 	}
-}
-//----------------------------------------------------------------------------------
-void CGumpSpell::InitToolTip()
-{
-	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(3002010 + m_Serial), g_SelectedObject.Object(), 80);
 }
 //----------------------------------------------------------------------------------
 void CGumpSpell::GUMP_BUTTON_EVENT_C

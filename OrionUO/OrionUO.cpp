@@ -1503,37 +1503,381 @@ ushort COrion::GetDesolationGraphic(ushort graphic)
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-int COrion::GetConfigValue(const char *option, int value)
+int COrion::GetConfigValue(const CONFIG_VALUE_KEY &key, int value)
 {
-	string key = ToLowerA(option);
-
-	if (key == "alwaysrun")
+	switch (key)
 	{
-		if (value == -1)
-			value = g_ConfigManager.AlwaysRun;
-		else
-			g_ConfigManager.AlwaysRun = (value != 0);
-	}
-	else if (key == "circletransvalue")
-	{
-		if (value == -1)
-			value = g_ConfigManager.CircleTransRadius;
-		else
+		case CVK_SOUND:
 		{
-			if (value < 0)
-				value = 0;
-			else if (value > 255)
-				value = 255;
+			if (value == -1)
+				value = g_ConfigManager.Sound;
+			else
+				g_ConfigManager.Sound = (value != 0);
 
-			g_ConfigManager.CircleTransRadius = value;
+			break;
 		}
-	}
-	else if (key == "circletrans")
-	{
-		if (value == -1)
-			value = g_ConfigManager.UseCircleTrans;
-		else
-			g_ConfigManager.UseCircleTrans = (value != 0);
+		case CVK_SOUND_VALUE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.SoundVolume;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > 255)
+					value = 255;
+
+				g_ConfigManager.SoundVolume = value;
+			}
+
+			break;
+		}
+		case CVK_MUSIC:
+		{
+			if (value == -1)
+				value = g_ConfigManager.Music;
+			else
+				g_ConfigManager.Music = (value != 0);
+
+			break;
+		}
+		case CVK_MUSIC_VALUE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.MusicVolume;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > 255)
+					value = 255;
+
+				g_ConfigManager.MusicVolume = value;
+			}
+
+			break;
+		}
+		case CVK_USE_TOOLTIPS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.UseToolTips;
+			else
+				g_ConfigManager.UseToolTips = (value != 0);
+
+			break;
+		}
+		case CFK_ALWAYS_RUN:
+		{
+			if (value == -1)
+				value = g_ConfigManager.AlwaysRun;
+			else
+				g_ConfigManager.AlwaysRun = (value != 0);
+
+			break;
+		}
+		case CVK_NEW_TARGET_SYSTEM:
+		{
+			if (value == -1)
+				value = g_ConfigManager.DisableNewTargetSystem;
+			else
+				g_ConfigManager.DisableNewTargetSystem = (value == 0); //Именно == 0!!! Т.к. в плагине это Target System enable/disable
+
+			break;
+		}
+		case CVK_OBJECT_HANDLES:
+		{
+			if (value == -1)
+				value = g_ConfigManager.ObjectHandles;
+			else
+				g_ConfigManager.ObjectHandles = (value != 0);
+
+			break;
+		}
+		case CVK_SCALE_SPEECH_DELAY:
+		{
+			if (value == -1)
+				value = g_ConfigManager.ScaleSpeechDelay;
+			else
+				g_ConfigManager.ScaleSpeechDelay = (value != 0);
+
+			break;
+		}
+		case CVK_SPEECH_DELAY:
+		{
+			if (value == -1)
+				value = g_ConfigManager.SpeechDelay;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > 999)
+					value = 999;
+
+				g_ConfigManager.SpeechDelay = value;
+			}
+
+			break;
+		}
+		case CVK_IGNORE_GUILD_MESSAGES:
+		{
+			if (value == -1)
+				value = g_ConfigManager.IgnoreGuildMessage;
+			else
+				g_ConfigManager.IgnoreGuildMessage = (value != 0);
+
+			break;
+		}
+		case CVK_IGNORE_ALLIANCE_MESSAGES:
+		{
+			if (value == -1)
+				value = g_ConfigManager.IgnoreAllianceMessage;
+			else
+				g_ConfigManager.IgnoreAllianceMessage = (value != 0);
+
+			break;
+		}
+		case CVK_DARK_NIGHTS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.DarkNights;
+			else
+				g_ConfigManager.DarkNights = (value != 0);
+
+			break;
+		}
+		case CVK_COLORED_LIGHTING:
+		{
+			if (value == -1)
+				value = g_ConfigManager.ColoredLighting;
+			else
+				g_ConfigManager.ColoredLighting = (value != 0);
+
+			break;
+		}
+		case CVK_CRIMINAL_ACTIONS_QUERY:
+		{
+			if (value == -1)
+				value = g_ConfigManager.CriminalActionsQuery;
+			else
+				g_ConfigManager.CriminalActionsQuery = (value != 0);
+
+			break;
+		}
+		case CVK_CIRCLETRANS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.UseCircleTrans;
+			else
+				g_ConfigManager.UseCircleTrans = (value != 0);
+
+			break;
+		}
+		case CVK_CIRCLETRANS_VALUE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.CircleTransRadius;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > 255)
+					value = 255;
+
+				g_ConfigManager.CircleTransRadius = value;
+			}
+
+			break;
+		}
+		case CVK_LOCK_RESIZING_GAME_WINDOW:
+		{
+			if (value == -1)
+				value = g_ConfigManager.LockResizingGameWindow;
+			else
+				g_ConfigManager.LockResizingGameWindow = (value != 0);
+
+			break;
+		}
+		case CVK_CLIENT_FPS_VALUE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.ClientFPS;
+			else
+			{
+				if (value < 16)
+					value = 16;
+				else if (value > 64)
+					value = 64;
+
+				g_ConfigManager.ClientFPS = value;
+			}
+
+			break;
+		}
+		case CVK_USE_SCALING_GAME_WINDOW:
+		{
+			if (value == -1)
+				value = g_ConfigManager.UseScaling;
+			else
+				g_ConfigManager.UseScaling = (value != 0);
+
+			break;
+		}
+		case CVK_DRAW_STATUS_STATE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.DrawStatusState;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > DCSS_UNDER)
+					value = DCSS_UNDER;
+
+				g_ConfigManager.DrawStatusState = value;
+			}
+
+			break;
+		}
+		case CVK_DRAW_STUMPS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.DrawStumps;
+			else
+				g_ConfigManager.DrawStumps = (value != 0);
+
+			break;
+		}
+		case CVK_MARKING_CAVES:
+		{
+			if (value == -1)
+				value = g_ConfigManager.MarkingCaves;
+			else
+				g_ConfigManager.MarkingCaves = (value != 0);
+
+			break;
+		}
+		case CVK_NO_VEGETATION:
+		{
+			if (value == -1)
+				value = g_ConfigManager.NoVegetation;
+			else
+				g_ConfigManager.NoVegetation = (value != 0);
+
+			break;
+		}
+		case CVK_NO_ANIMATE_FIELDS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.NoAnimateFields;
+			else
+				g_ConfigManager.NoAnimateFields = (value != 0);
+
+			break;
+		}
+		case CVK_STANDARD_CHARACTERS_DELAY:
+		{
+			if (value == -1)
+				value = g_ConfigManager.StandartCharactersAnimationDelay;
+			else
+				g_ConfigManager.StandartCharactersAnimationDelay = (value != 0);
+
+			break;
+		}
+		case CVK_STANDARD_ITEMS_DELAY:
+		{
+			if (value == -1)
+				value = g_ConfigManager.StandartItemsAnimationDelay;
+			else
+				g_ConfigManager.StandartItemsAnimationDelay = (value != 0);
+
+			break;
+		}
+		case CVK_LOCK_GUMPS_MOVING:
+		{
+			if (value == -1)
+				value = g_ConfigManager.LockGumpsMoving;
+			else
+				g_ConfigManager.LockGumpsMoving = (value != 0);
+
+			break;
+		}
+		case CVK_CONSOLE_NEED_ENTER:
+		{
+			if (value == -1)
+				value = g_ConfigManager.ConsoleNeedEnter;
+			else
+				g_ConfigManager.ConsoleNeedEnter = (value != 0);
+
+			break;
+		}
+		case CVK_HIDDEN_CHARACTERS_MODE:
+		{
+			if (value == -1)
+				value = g_ConfigManager.HiddenCharactersRenderMode;
+			else
+			{
+				if (value < 0)
+					value = 0;
+				else if (value > HCRM_SPECIAL_SPECTRAL_COLOR)
+					value = HCRM_SPECIAL_SPECTRAL_COLOR;
+
+				g_ConfigManager.HiddenCharactersRenderMode = value;
+			}
+
+			break;
+		}
+		case CVK_HIDDEN_CHARACTERS_ALPHA:
+		{
+			if (value == -1)
+				value = g_ConfigManager.HiddenAlpha;
+			else
+			{
+				if (value < 20)
+					value = 20;
+				else if (value > 255)
+					value = 255;
+
+				g_ConfigManager.HiddenAlpha = value;
+			}
+
+			break;
+		}
+		case CVK_HIDDEN_CHARACTERS_MODE_ONLY_FOR_SELF:
+		{
+			if (value == -1)
+				value = g_ConfigManager.UseHiddenModeOnlyForSelf;
+			else
+				g_ConfigManager.UseHiddenModeOnlyForSelf = (value != 0);
+
+			break;
+		}
+		case CFK_TRANSPARENT_SPELL_ICONS:
+		{
+			if (value == -1)
+				value = g_ConfigManager.TransparentSpellIcons;
+			else
+				g_ConfigManager.TransparentSpellIcons = (value != 0);
+
+			break;
+		}
+		case CFK_SPELL_ICONS_ALPHA:
+		{
+			if (value == -1)
+				value = g_ConfigManager.SpellIconAlpha;
+			else
+			{
+				if (value < 30)
+					value = 30;
+				else if (value > 255)
+					value = 255;
+
+				g_ConfigManager.SpellIconAlpha = value;
+			}
+
+			break;
+		}
+		default:
+			break;
 	}
 
 	return value;

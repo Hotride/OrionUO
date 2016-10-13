@@ -77,6 +77,8 @@ private:
 	static const int ID_GO_P2_HIDDEN_CHARACTES_MODE_4 = 218;
 	static const int ID_GO_P2_HIDDEN_ALPHA = 219;
 	static const int ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF = 220;
+	static const int ID_GO_P2_TRANSPARENT_SPELL_ICONS = 221;
+	static const int ID_GO_P2_SPELL_ICONS_ALPHA = 222;
 	static const int ID_GO_P2_DEV_MODE_1 = 290;
 	static const int ID_GO_P2_DEV_MODE_2 = 291;
 	static const int ID_GO_P2_DEV_MODE_3 = 292;
@@ -156,6 +158,7 @@ private:
 	CGUISlider *m_SliderMusic;
 	CGUISlider *m_SliderClientFPS;
 	CGUISlider *m_SliderHiddenAlpha;
+	CGUISlider *m_SliderSpellIconsAlpha;
 	CGUISlider *m_SliderTooltipDelay;
 	CGUISlider *m_SliderSpeechDuration;
 	CGUISlider *m_SliderCircleTransparency;

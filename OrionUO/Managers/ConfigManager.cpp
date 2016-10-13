@@ -9,6 +9,7 @@
 //----------------------------------------------------------------------------------
 #include "ConfigManager.h"
 #include "SoundManager.h"
+#include "GumpManager.h"
 #include "../GLEngine/GLTextureCircleOfTransparency.h"
 #include "../Wisp/WispMappedFile.h"
 #include "../Wisp/WispBinaryFileWritter.h"
@@ -18,6 +19,7 @@
 #include "../TextEngine/GameConsole.h"
 #include "../Game objects/GameWorld.h"
 #include "../Network/Packets.h"
+#include "../Gumps/GumpSpell.h"
 //----------------------------------------------------------------------------------
 CConfigManager g_ConfigManager;
 CConfigManager g_OptionsConfig;
@@ -91,6 +93,8 @@ void CConfigManager::DefaultPage2()
 	m_HiddenCharactersRenderMode = 0;
 	m_HiddenAlpha = 0x7F;
 	m_UseHiddenModeOnlyForSelf = true;
+	m_TransparentSpellIcons = true;
+	m_SpellIconAlpha = 0x7F;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -277,6 +281,26 @@ void CConfigManager::OnChangeConsoleNeedEnter(const bool &val)
 		g_EntryPointer = NULL;
 }
 //---------------------------------------------------------------------------
+void CConfigManager::OnChangedSpellIconAlpha(const uchar &val)
+{
+	if (this == &g_ConfigManager && val != m_SpellIconAlpha)
+	{
+		float alpha = val / 255.0f;
+		bool redraw = g_ConfigManager.TransparentSpellIcons;
+
+		QFOR(gump, g_GumpManager.m_Items, CGump*)
+		{
+			if (gump->GumpType == GT_SPELL)
+			{
+				((CGumpSpell*)gump)->m_Blender->Alpha = alpha;
+
+				if (redraw)
+					gump->WantRedraw = true;
+			}
+		}
+	}
+}
+//---------------------------------------------------------------------------
 /*!
 Получить цвет исходя из "злобности"
 @param [__in] notoriety Злобность
@@ -374,6 +398,8 @@ bool CConfigManager::Load(string path)
 		bool markingCaves;
 		m_NoAnimateFields = false;
 		m_NoVegetation = false;
+		m_TransparentSpellIcons = true;
+		m_SpellIconAlpha = 0x7F;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -402,6 +428,12 @@ bool CConfigManager::Load(string path)
 								m_HiddenCharactersRenderMode = file.ReadUInt8();
 								m_HiddenAlpha = file.ReadUInt8();
 								m_UseHiddenModeOnlyForSelf = file.ReadUInt8();
+
+								if (blockSize > 13)
+								{
+									m_TransparentSpellIcons = file.ReadUInt8();
+									m_SpellIconAlpha = file.ReadUInt8();
+								}
 							}
 						}
 					}
@@ -721,7 +753,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(13); //size of block
+	writter.WriteInt8(15); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -734,6 +766,8 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_HiddenCharactersRenderMode);
 	writter.WriteUInt8(m_HiddenAlpha);
 	writter.WriteUInt8(m_UseHiddenModeOnlyForSelf);
+	writter.WriteUInt8(m_TransparentSpellIcons);
+	writter.WriteUInt8(m_SpellIconAlpha);
 	writter.WriteBuffer();
 
 	//Page 3
