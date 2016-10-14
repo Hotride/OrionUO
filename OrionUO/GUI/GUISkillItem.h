@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUISkillItem.h
 **
-** Компонента для отображения навыка
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР°РІС‹РєР°
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -18,29 +18,29 @@
 //----------------------------------------------------------------------------------
 class CGUISkillItem : public CBaseGUI
 {
-	//!Индекс навыка
+	//!РРЅРґРµРєСЃ РЅР°РІС‹РєР°
 	SETGET(int, Index);
 
-	//!Статус навыка
+	//!РЎС‚Р°С‚СѓСЃ РЅР°РІС‹РєР°
 	SETGETE(uchar, Status, OnChangeStatus);
 
 private:
-	//!Текустуры текста
+	//!РўРµРєСѓСЃС‚СѓСЂС‹ С‚РµРєСЃС‚Р°
 	CGLTextTexture m_NameText;
 	CGLTextTexture m_ValueText;
 
-	//!Получить ИД картинки кнопки статуса
+	//!РџРѕР»СѓС‡РёС‚СЊ РР” РєР°СЂС‚РёРЅРєРё РєРЅРѕРїРєРё СЃС‚Р°С‚СѓСЃР°
 	ushort GetStatusButtonGraphic();
 
 public:
 	CGUISkillItem(const uint &serial, const uint &useSerial, const uint &statusSerial, const int &index, const int &x, const int &y);
 	virtual ~CGUISkillItem();
 
-	//!Компоненты управления
+	//!РљРѕРјРїРѕРЅРµРЅС‚С‹ СѓРїСЂР°РІР»РµРЅРёСЏ
 	CGUIButton *m_ButtonUse;
 	CGUIButton *m_ButtonStatus;
 
-	//!Создать текстуру значения навыка
+	//!РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ Р·РЅР°С‡РµРЅРёСЏ РЅР°РІС‹РєР°
 	void CreateValueText(const bool &showReal = false, const bool &showCap = false);
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(255, 17); }
@@ -50,7 +50,7 @@ public:
 	virtual void Draw(const bool &checktrans = false);
 	virtual bool Select();
 
-	//!Получить ссылку на выбранную компоненту или на себя
+	//!РџРѕР»СѓС‡РёС‚СЊ СЃСЃС‹Р»РєСѓ РЅР° РІС‹Р±СЂР°РЅРЅСѓСЋ РєРѕРјРїРѕРЅРµРЅС‚Сѓ РёР»Рё РЅР° СЃРµР±СЏ
 	CBaseGUI *SelectedItem();
 };
 //----------------------------------------------------------------------------------

@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIColoredPolygone.h
 **
-** Компонента для отображения цветного прямоугольника
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С†РІРµС‚РЅРѕРіРѕ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -16,29 +16,29 @@
 //----------------------------------------------------------------------------------
 class CGUIColoredPolygone : public CGUIPolygonal
 {
-	//!R-компонента цвета
+	//!R-РєРѕРјРїРѕРЅРµРЅС‚Р° С†РІРµС‚Р°
 	SETGET(uchar, ColorR);
 
-	//!G-компонента цвета
+	//!G-РєРѕРјРїРѕРЅРµРЅС‚Р° С†РІРµС‚Р°
 	SETGET(uchar, ColorG);
 
-	//!B-компонента цвета
+	//!B-РєРѕРјРїРѕРЅРµРЅС‚Р° С†РІРµС‚Р°
 	SETGET(uchar, ColorB);
 
-	//!Значение альфа-канала
+	//!Р—РЅР°С‡РµРЅРёРµ Р°Р»СЊС„Р°-РєР°РЅР°Р»Р°
 	SETGET(uchar, ColorA);
 
-	//!Отрисовывать ли белую точку
+	//!РћС‚СЂРёСЃРѕРІС‹РІР°С‚СЊ Р»Рё Р±РµР»СѓСЋ С‚РѕС‡РєСѓ
 	SETGET(bool, DrawDot);
 
-	//!Флаг выбора текущей компоненты
+	//!Р¤Р»Р°Рі РІС‹Р±РѕСЂР° С‚РµРєСѓС‰РµР№ РєРѕРјРїРѕРЅРµРЅС‚С‹
 	SETGET(bool, Focused);
 
 public:
 	CGUIColoredPolygone(const uint &serial, const ushort &color, const int &x, const int &y, const int &width, const int &height, const uint &polygoneColor);
 	virtual ~CGUIColoredPolygone();
 
-	//!Обновить цвет
+	//!РћР±РЅРѕРІРёС‚СЊ С†РІРµС‚
 	void UpdateColor(const ushort &color, const uint &polygoneColor);
 
 	virtual void Draw(const bool &checktrans = false);

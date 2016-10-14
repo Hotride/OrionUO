@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** MapManager.cpp
 **
@@ -37,12 +37,12 @@ CMapManager::~CMapManager()
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить блок карты напрямую из мулов
-@param [__in] map Индекс карты
-@param [__in] blockX Координата X блока
-@param [__in] blockY Координата Y блока
-@param [__out] mb Ссылка на блок
-@return Код ошибки (0 - успешно)
+РџРѕР»СѓС‡РёС‚СЊ Р±Р»РѕРє РєР°СЂС‚С‹ РЅР°РїСЂСЏРјСѓСЋ РёР· РјСѓР»РѕРІ
+@param [__in] map РРЅРґРµРєСЃ РєР°СЂС‚С‹
+@param [__in] blockX РљРѕРѕСЂРґРёРЅР°С‚Р° X Р±Р»РѕРєР°
+@param [__in] blockY РљРѕРѕСЂРґРёРЅР°С‚Р° Y Р±Р»РѕРєР°
+@param [__out] mb РЎСЃС‹Р»РєР° РЅР° Р±Р»РѕРє
+@return РљРѕРґ РѕС€РёР±РєРё (0 - СѓСЃРїРµС€РЅРѕ)
 */
 int CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb)
 {
@@ -104,10 +104,10 @@ int CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить блок для радара из муллов
-@param [__in] blockX Координата X блока
-@param [__in] blockY Координата Y блока
-@param [__out] mb Ссылка на блок
+РџРѕР»СѓС‡РёС‚СЊ Р±Р»РѕРє РґР»СЏ СЂР°РґР°СЂР° РёР· РјСѓР»Р»РѕРІ
+@param [__in] blockX РљРѕРѕСЂРґРёРЅР°С‚Р° X Р±Р»РѕРєР°
+@param [__in] blockY РљРѕРѕСЂРґРёРЅР°С‚Р° Y Р±Р»РѕРєР°
+@param [__out] mb РЎСЃС‹Р»РєР° РЅР° Р±Р»РѕРє
 @return 
 */
 void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLOCK &mb)
@@ -168,11 +168,11 @@ void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLO
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить значение Z координаты для указанной точки в мире
-@param [__in] x Координата X
-@param [__in] y Координата Y
-@param [__out] groundZ Значение Z коррдинаты земли
-@param [__out] staticZ Значение Z коррдинаты статики
+РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ Z РєРѕРѕСЂРґРёРЅР°С‚С‹ РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕР№ С‚РѕС‡РєРё РІ РјРёСЂРµ
+@param [__in] x РљРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__in] y РљРѕРѕСЂРґРёРЅР°С‚Р° Y
+@param [__out] groundZ Р—РЅР°С‡РµРЅРёРµ Z РєРѕСЂСЂРґРёРЅР°С‚С‹ Р·РµРјР»Рё
+@param [__out] staticZ Р—РЅР°С‡РµРЅРёРµ Z РєРѕСЂСЂРґРёРЅР°С‚С‹ СЃС‚Р°С‚РёРєРё
 @return 
 */
 void CMapManager::GetMapZ(const int &x, const int &y, int &groundZ, int &staticZ)
@@ -205,7 +205,7 @@ void CMapManager::GetMapZ(const int &x, const int &y, int &groundZ, int &staticZ
 }
 //----------------------------------------------------------------------------------
 /*!
-Удалить неиспользуемые блоки
+РЈРґР°Р»РёС‚СЊ РЅРµРёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ Р±Р»РѕРєРё
 @return 
 */
 void CMapManager::ClearUnusedBlocks()
@@ -232,8 +232,8 @@ void CMapManager::ClearUnusedBlocks()
 }
 //----------------------------------------------------------------------------------
 /*!
-Инициализация
-@param [__in_opt] delayed По истечении времени на загрузку выходить из цикла
+РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
+@param [__in_opt] delayed РџРѕ РёСЃС‚РµС‡РµРЅРёРё РІСЂРµРјРµРЅРё РЅР° Р·Р°РіСЂСѓР·РєСѓ РІС‹С…РѕРґРёС‚СЊ РёР· С†РёРєР»Р°
 @return 
 */
 void CMapManager::Init(const bool &delayed)
@@ -296,8 +296,8 @@ void CMapManager::Init(const bool &delayed)
 }
 //----------------------------------------------------------------------------------
 /*!
-Загрузить блок
-@param [__inout] block Ссылка на блок для загрузки
+Р—Р°РіСЂСѓР·РёС‚СЊ Р±Р»РѕРє
+@param [__inout] block РЎСЃС‹Р»РєР° РЅР° Р±Р»РѕРє РґР»СЏ Р·Р°РіСЂСѓР·РєРё
 @return 
 */
 void CMapManager::LoadBlock(CMapBlock *block)
@@ -360,7 +360,7 @@ void CMapManager::LoadBlock(CMapBlock *block)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить индекс текущей карты
+РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ С‚РµРєСѓС‰РµР№ РєР°СЂС‚С‹
 @return
 */
 int CMapManager::GetActualMap()
@@ -372,8 +372,8 @@ int CMapManager::GetActualMap()
 }
 //----------------------------------------------------------------------------------
 /*!
-Добавить объект рендера
-@param [__in] item Ссылка на объект
+Р”РѕР±Р°РІРёС‚СЊ РѕР±СЉРµРєС‚ СЂРµРЅРґРµСЂР°
+@param [__in] item РЎСЃС‹Р»РєР° РЅР° РѕР±СЉРµРєС‚
 @return 
 */
 void CMapManager::AddRender(CRenderWorldObject *item)
@@ -403,9 +403,9 @@ void CMapManager::AddRender(CRenderWorldObject *item)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить ссылку на блок
-@param [__in] index Индекс блока
-@return Ссылка на блок или NULL
+РџРѕР»СѓС‡РёС‚СЊ СЃСЃС‹Р»РєСѓ РЅР° Р±Р»РѕРє
+@param [__in] index РРЅРґРµРєСЃ Р±Р»РѕРєР°
+@return РЎСЃС‹Р»РєР° РЅР° Р±Р»РѕРє РёР»Рё NULL
 */
 CMapBlock *CMapManager::GetBlock(const uint &index)
 {
@@ -437,9 +437,9 @@ CMapBlock *CMapManager::GetBlock(const uint &index)
 }
 //----------------------------------------------------------------------------------
 /*!
-Добавить блок
-@param [__in] index Индекс блока
-@return Ссылка на блок или NULL
+Р”РѕР±Р°РІРёС‚СЊ Р±Р»РѕРє
+@param [__in] index РРЅРґРµРєСЃ Р±Р»РѕРєР°
+@return РЎСЃС‹Р»РєР° РЅР° Р±Р»РѕРє РёР»Рё NULL
 */
 CMapBlock *CMapManager::AddBlock(const uint &index)
 {
@@ -453,8 +453,8 @@ CMapBlock *CMapManager::AddBlock(const uint &index)
 }
 //----------------------------------------------------------------------------------
 /*!
-Удалить блок
-@param [__in] index Индекс блока
+РЈРґР°Р»РёС‚СЊ Р±Р»РѕРє
+@param [__in] index РРЅРґРµРєСЃ Р±Р»РѕРєР°
 @return 
 */
 void CMapManager::DeleteBlock(const uint &index)
@@ -487,7 +487,7 @@ CUopMapManager::~CUopMapManager()
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить индекс текущей карты
+РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ С‚РµРєСѓС‰РµР№ РєР°СЂС‚С‹
 @return
 */
 int CUopMapManager::GetActualMap()
@@ -499,8 +499,8 @@ int CUopMapManager::GetActualMap()
 }
 //----------------------------------------------------------------------------------
 /*!
-Загрузить блок
-@param [__inout] block Ссылка на блок для загрузки
+Р—Р°РіСЂСѓР·РёС‚СЊ Р±Р»РѕРє
+@param [__inout] block РЎСЃС‹Р»РєР° РЅР° Р±Р»РѕРє РґР»СЏ Р·Р°РіСЂСѓР·РєРё
 @return
 */
 void CUopMapManager::LoadBlock(CMapBlock *block)
@@ -508,12 +508,12 @@ void CUopMapManager::LoadBlock(CMapBlock *block)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить блок карты напрямую из мулов
-@param [__in] map Индекс карты
-@param [__in] blockX Координата X блока
-@param [__in] blockY Координата Y блока
-@param [__out] mb Ссылка на блок
-@return Код ошибки (0 - успешно)
+РџРѕР»СѓС‡РёС‚СЊ Р±Р»РѕРє РєР°СЂС‚С‹ РЅР°РїСЂСЏРјСѓСЋ РёР· РјСѓР»РѕРІ
+@param [__in] map РРЅРґРµРєСЃ РєР°СЂС‚С‹
+@param [__in] blockX РљРѕРѕСЂРґРёРЅР°С‚Р° X Р±Р»РѕРєР°
+@param [__in] blockY РљРѕРѕСЂРґРёРЅР°С‚Р° Y Р±Р»РѕРєР°
+@param [__out] mb РЎСЃС‹Р»РєР° РЅР° Р±Р»РѕРє
+@return РљРѕРґ РѕС€РёР±РєРё (0 - СѓСЃРїРµС€РЅРѕ)
 */
 int CUopMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb)
 {
@@ -521,10 +521,10 @@ int CUopMapManager::GetWorldMapBlock(const int &map, const int &blockX, const in
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить блок для радара из муллов
-@param [__in] blockX Координата X блока
-@param [__in] blockY Координата Y блока
-@param [__out] mb Ссылка на блок
+РџРѕР»СѓС‡РёС‚СЊ Р±Р»РѕРє РґР»СЏ СЂР°РґР°СЂР° РёР· РјСѓР»Р»РѕРІ
+@param [__in] blockX РљРѕРѕСЂРґРёРЅР°С‚Р° X Р±Р»РѕРєР°
+@param [__in] blockY РљРѕРѕСЂРґРёРЅР°С‚Р° Y Р±Р»РѕРєР°
+@param [__out] mb РЎСЃС‹Р»РєР° РЅР° Р±Р»РѕРє
 @return
 */
 void CUopMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLOCK &mb)

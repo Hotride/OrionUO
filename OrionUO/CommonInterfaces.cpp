@@ -1,4 +1,4 @@
-/***********************************************************************************
+﻿/***********************************************************************************
 **
 ** CommonInterfaces.cpp
 **
@@ -15,6 +15,49 @@
 #include "Managers/ColorManager.h"
 #include "Walker/PathFinder.h"
 #include "Game objects/GamePlayer.h"
+//----------------------------------------------------------------------------------
+IOrionString g_OrionString;
+//----------------------------------------------------------------------------------
+IOrionString::IOrionString()
+: m_Unicode(false), m_DataA(NULL), m_DataW(NULL)
+{
+}
+//----------------------------------------------------------------------------------
+IOrionString::~IOrionString()
+{
+	RELEASE_POINTER(m_DataA);
+	RELEASE_POINTER(m_DataW);
+}
+//----------------------------------------------------------------------------------
+IOrionString &IOrionString::operator()(const std::string &str)
+{
+	RELEASE_POINTER(m_DataA);
+
+	m_Unicode = false;
+	if (str.length())
+	{
+		m_DataA = new char[str.length() + 1];
+		memcpy(&m_DataA[0], &str[0], str.length());
+		m_DataA[str.length()] = 0;
+	}
+
+	return *this;
+}
+//----------------------------------------------------------------------------------
+IOrionString &IOrionString::operator()(const std::wstring &str)
+{
+	RELEASE_POINTER(m_DataW);
+
+	m_Unicode = true;
+	if (str.length())
+	{
+		m_DataW = new wchar_t[str.length() + 1];
+		memcpy(&m_DataW[0], &str[0], str.length() * 2);
+		m_DataA[str.length()] = 0;
+	}
+
+	return *this;
+}
 //----------------------------------------------------------------------------------
 //IGLEngine
 //----------------------------------------------------------------------------------
@@ -96,41 +139,41 @@ unsigned __int64 __cdecl FUNCBODY_GetStaticFlags(unsigned short graphic)
 	return g_Orion.GetStaticFlags(graphic);
 }
 //----------------------------------------------------------------------------------
-int __cdecl FUNCBODY_GetValueInt(CONFIG_VALUE_KEY key)
+int __cdecl FUNCBODY_GetValueInt(VALUE_KEY_INT key, int value)
 {
-	return g_Orion.GetValueInt(key);
+	return g_Orion.ValueInt(key, value);
 }
 //----------------------------------------------------------------------------------
-void __cdecl FUNCBODY_SetValueInt(CONFIG_VALUE_KEY key, int value)
+void __cdecl FUNCBODY_SetValueInt(VALUE_KEY_INT key, int value)
 {
-	g_Orion.GetValueInt(key, value);
+	g_Orion.ValueInt(key, value);
 }
 //----------------------------------------------------------------------------------
-std::string __cdecl FUNCBODY_GetValueString(CONFIG_VALUE_KEY key)
+IOrionString *__cdecl FUNCBODY_GetValueString(VALUE_KEY_STRING key, const char* value)
 {
-	return g_Orion.GetValueString(key);
+	return &g_OrionString(g_Orion.ValueString(key, value));
 }
 //----------------------------------------------------------------------------------
-void __cdecl FUNCBODY_SetValueString(CONFIG_VALUE_KEY key, std::string value)
+void __cdecl FUNCBODY_SetValueString(VALUE_KEY_STRING key, const char *value)
 {
-	g_Orion.GetValueString(key, value);
+	g_Orion.ValueString(key, value);
 }
 //----------------------------------------------------------------------------------
 //IClilocManager
 //----------------------------------------------------------------------------------
-std::string __cdecl FUNCBODY_GetClilocA(unsigned int clilocID, std::string defaultText)
+IOrionString *__cdecl FUNCBODY_GetClilocA(unsigned int clilocID, const char *defaultText)
 {
-	return g_ClilocManager.Cliloc(g_Language)->GetA(clilocID, defaultText);
+	return &g_OrionString(g_ClilocManager.Cliloc(g_Language)->GetA(clilocID, defaultText));
 }
 //----------------------------------------------------------------------------------
-std::wstring __cdecl FUNCBODY_GetClilocW(unsigned int clilocID, std::string defaultText)
+IOrionString *__cdecl FUNCBODY_GetClilocW(unsigned int clilocID, const char *defaultText)
 {
-	return g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, defaultText);
+	return &g_OrionString(g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, defaultText));
 }
 //----------------------------------------------------------------------------------
-std::wstring __cdecl FUNCBODY_GetClilocArguments(unsigned int clilocID, std::wstring args)
+IOrionString *__cdecl FUNCBODY_GetClilocArguments(unsigned int clilocID, const wchar_t *args)
 {
-	return g_ClilocManager.ParseArgumentsToClilocString(clilocID, args);
+	return &g_OrionString(g_ClilocManager.ParseArgumentsToClilocString(clilocID, args));
 }
 //----------------------------------------------------------------------------------
 //IColorManager

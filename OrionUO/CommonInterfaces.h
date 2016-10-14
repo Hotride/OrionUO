@@ -1,4 +1,4 @@
-/***********************************************************************************
+﻿/***********************************************************************************
 **
 ** CommonInterfaces.h
 **
@@ -17,6 +17,22 @@
 #define UOInterface struct
 #endif
 //----------------------------------------------------------------------------------
+class IOrionString
+{
+public:
+	IOrionString();
+	~IOrionString();
+
+	IOrionString &operator()(const std::string &str);
+	IOrionString &operator()(const std::wstring &str);
+
+	bool m_Unicode;
+	char *m_DataA;
+	wchar_t *m_DataW;
+};
+//----------------------------------------------------------------------------------
+#pragma pack (push,1)
+//----------------------------------------------------------------------------------
 //IGLEngine
 typedef void __cdecl FUNCDEF_PUSH_SCISSOR(int, int, int, int);
 typedef void __cdecl FUNCDEF_POP_SCISSOR();
@@ -34,15 +50,15 @@ typedef void __cdecl FUNCDEF_DRAW_GUMPPIC(int, int, unsigned short, unsigned sho
 //IUltimaOnline
 typedef unsigned __int64 __cdecl FUNCDEF_GET_LAND_FLAGS(unsigned short);
 typedef unsigned __int64 __cdecl FUNCDEF_GET_STATIC_FLAGS(unsigned short);
-typedef int __cdecl FUNCDEF_GET_VALUE_INT(CONFIG_VALUE_KEY);
-typedef void __cdecl FUNCDEF_SET_VALUE_INT(CONFIG_VALUE_KEY, int);
-typedef std::string __cdecl FUNCDEF_GET_VALUE_STRING(CONFIG_VALUE_KEY);
-typedef void __cdecl FUNCDEF_SET_VALUE_STRING(CONFIG_VALUE_KEY, std::string);
+typedef int __cdecl FUNCDEF_GET_VALUE_INT(VALUE_KEY_INT, int);
+typedef void __cdecl FUNCDEF_SET_VALUE_INT(VALUE_KEY_INT, int);
+typedef IOrionString *__cdecl FUNCDEF_GET_VALUE_STRING(VALUE_KEY_STRING, const char*);
+typedef void __cdecl FUNCDEF_SET_VALUE_STRING(VALUE_KEY_STRING, const char*);
 
 //IClilocManager
-typedef std::string __cdecl FUNCDEF_GET_CLILOC_A(unsigned int, std::string);
-typedef std::wstring __cdecl FUNCDEF_GET_CLILOC_W(unsigned int, std::string);
-typedef std::wstring __cdecl FUNCDEF_GET_CLILOC_ARGUMENTS(unsigned int, std::wstring);
+typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_A(unsigned int, const char*);
+typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_W(unsigned int, const char*);
+typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_ARGUMENTS(unsigned int, const wchar_t*);
 
 //IColorManager
 typedef int __cdecl FUNCDEF_GET_HUES_COUNT();
@@ -130,6 +146,8 @@ typedef struct PLUGIN_CLIENT_INTERFACE
 	IColorManager *ColorManager;
 	IPathFinder *PathFinder;
 } *PPLUGIN_CLIENT_INTERFACE;
+//----------------------------------------------------------------------------------
+#pragma pack (pop)
 //----------------------------------------------------------------------------------
 extern PLUGIN_CLIENT_INTERFACE g_PluginClientInterface;
 //----------------------------------------------------------------------------------

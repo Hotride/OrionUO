@@ -1,4 +1,4 @@
-//----------------------------------------------------------------------------------
+п»ї//----------------------------------------------------------------------------------
 #include "Globals.h"
 #include "Multi.h"
 #include "Game objects/GameWorld.h"
@@ -66,10 +66,10 @@ uchar g_PersonalLightLevel = 0;
 
 char g_SelectedCharName[30] = { 0 };
 
-//!Индекс текущей карты
+//!РРЅРґРµРєСЃ С‚РµРєСѓС‰РµР№ РєР°СЂС‚С‹
 uchar g_CurrentMap = 0;
 
-//!Время сервера
+//!Р’СЂРµРјСЏ СЃРµСЂРІРµСЂР°
 uchar g_ServerTimeHour = 0;
 uchar g_ServerTimeMinute = 0;
 uchar g_ServerTimeSecond = 0;

@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIHTMLText.h
 **
-** Компонента текста с возможностью перехода по HTML-ссылкам для HTMLGump'а
+** РљРѕРјРїРѕРЅРµРЅС‚Р° С‚РµРєСЃС‚Р° СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ РїРµСЂРµС…РѕРґР° РїРѕ HTML-СЃСЃС‹Р»РєР°Рј РґР»СЏ HTMLGump'Р°
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -17,37 +17,37 @@
 //----------------------------------------------------------------------------------
 class CGUIHTMLText : public CBaseGUI
 {
-	//!Индекс текста
+	//!РРЅРґРµРєСЃ С‚РµРєСЃС‚Р°
 	SETGET(uint, TextID);
 
-	//!Начальный цвет текста
+	//!РќР°С‡Р°Р»СЊРЅС‹Р№ С†РІРµС‚ С‚РµРєСЃС‚Р°
 	SETGET(uint, HTMLStartColor);
 
-	//!Текст
+	//!РўРµРєСЃС‚
 	SETGET(wstring, Text);
 
-	//!Шрифт
+	//!РЁСЂРёС„С‚
 	SETGET(uchar, Font);
 
-	//!Ориентация текста
+	//!РћСЂРёРµРЅС‚Р°С†РёСЏ С‚РµРєСЃС‚Р°
 	SETGET(TEXT_ALIGN_TYPE, Align);
 
-	//!Флаги текста
+	//!Р¤Р»Р°РіРё С‚РµРєСЃС‚Р°
 	SETGET(ushort, TextFlags);
 
-	//!Ширина текста
+	//!РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р°
 	SETGET(int, Width);
 
 public:
 	CGUIHTMLText(const uint &index, const uchar &font, const ushort &color, const int &x, const int &y, const int &width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &textFlags = 0, const uint &htmlStartColor = 0xFFFFFFFF);
 	virtual ~CGUIHTMLText();
 
-	//!Текстура текста
+	//!РўРµРєСЃС‚СѓСЂР° С‚РµРєСЃС‚Р°
 	CGLHTMLTextTexture m_Texture;
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Texture.Width, m_Texture.Height); }
 
-	//!Создать текстуру текста
+	//!РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ С‚РµРєСЃС‚Р°
 	void CreateTexture(const bool &backgroundCanBeColored);
 
 	virtual void Draw(const bool &checktrans = false);

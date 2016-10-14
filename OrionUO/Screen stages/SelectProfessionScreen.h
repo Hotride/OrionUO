@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** SelectProfessionScreen.h
 **
@@ -15,7 +15,7 @@
 //----------------------------------------------------------------------------------
 class CSelectProfessionScreen : public CBaseScreen
 {
-	//!Выбранный навык
+	//!Р’С‹Р±СЂР°РЅРЅС‹Р№ РЅР°РІС‹Рє
 	SETGETEXE(int, SkillSelection, OnChangeSkillSelection);
 
 private:
@@ -25,21 +25,21 @@ public:
 	CSelectProfessionScreen();
 	virtual ~CSelectProfessionScreen();
 
-	//!Идентификаторы событий для плавного перехода
+	//!РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ СЃРѕР±С‹С‚РёР№ РґР»СЏ РїР»Р°РІРЅРѕРіРѕ РїРµСЂРµС…РѕРґР°
 	static const uchar ID_SMOOTH_SPS_QUIT = 1;
 	static const uchar ID_SMOOTH_SPS_GO_SCREEN_CHARACTER = 2;
 	static const uchar ID_SMOOTH_SPS_GO_SCREEN_GAME_CONNECT = 3;
 	static const uchar ID_SMOOTH_SPS_GO_SCREEN_CREATE = 4;
 
 	/*!
-	Инициализация
+	РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 	@return 
 	*/
 	void Init();
 
 	/*!
-	Обработка события после плавного затемнения экрана
-	@param [__in_opt] action Идентификатор действия
+	РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёСЏ РїРѕСЃР»Рµ РїР»Р°РІРЅРѕРіРѕ Р·Р°С‚РµРјРЅРµРЅРёСЏ СЌРєСЂР°РЅР°
+	@param [__in_opt] action РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРµР№СЃС‚РІРёСЏ
 	@return 
 	*/
 	void ProcessSmoothAction(uchar action = 0xFF);

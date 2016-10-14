@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIScrollBackground.h
 **
-** Компонента для отображения фона для свиткоподобных гампов
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С„РѕРЅР° РґР»СЏ СЃРІРёС‚РєРѕРїРѕРґРѕР±РЅС‹С… РіР°РјРїРѕРІ
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -16,23 +16,23 @@
 //----------------------------------------------------------------------------------
 class CGUIScrollBackground : public CBaseGUI
 {
-	//!Высота
+	//!Р’С‹СЃРѕС‚Р°
 	SETGET(int, Height);
 
-	//!Смещение по оси X
+	//!РЎРјРµС‰РµРЅРёРµ РїРѕ РѕСЃРё X
 	SETGET(int, OffsetX);
 
-	//!Ширина
+	//!РЁРёСЂРёРЅР°
 	SETGET(int, Width);
 
-	//!Рабочая область
+	//!Р Р°Р±РѕС‡Р°СЏ РѕР±Р»Р°СЃС‚СЊ
 	SETGET(WISP_GEOMETRY::CRect, WorkSpace);
 
 public:
 	CGUIScrollBackground(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &height);
 	virtual ~CGUIScrollBackground();
 
-	//!Обновить высоту
+	//!РћР±РЅРѕРІРёС‚СЊ РІС‹СЃРѕС‚Сѓ
 	void UpdateHeight(const int &height);
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Width, m_Height); }

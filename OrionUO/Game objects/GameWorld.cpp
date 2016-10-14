@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GameWorld.cpp
 **
@@ -81,7 +81,7 @@ void CGameWorld::ProcessSound(const uint &ticks, CGameCharacter *gc)
 }
 //---------------------------------------------------------------------------
 /*!
-Обработка анимации всех персонажей
+РћР±СЂР°Р±РѕС‚РєР° Р°РЅРёРјР°С†РёРё РІСЃРµС… РїРµСЂСЃРѕРЅР°Р¶РµР№
 @return 
 */
 void CGameWorld::ProcessAnimation()
@@ -268,8 +268,8 @@ void CGameWorld::ProcessAnimation()
 }
 //---------------------------------------------------------------------------
 /*!
-Создать игрока
-@param [__in] serial Серийник игрока
+РЎРѕР·РґР°С‚СЊ РёРіСЂРѕРєР°
+@param [__in] serial РЎРµСЂРёР№РЅРёРє РёРіСЂРѕРєР°
 @return 
 */
 void CGameWorld::CreatePlayer(const uint &serial)
@@ -292,7 +292,7 @@ void CGameWorld::CreatePlayer(const uint &serial)
 }
 //---------------------------------------------------------------------------
 /*!
-Удалить игрока
+РЈРґР°Р»РёС‚СЊ РёРіСЂРѕРєР°
 @return 
 */
 void CGameWorld::RemovePlayer()
@@ -309,8 +309,8 @@ void CGameWorld::RemovePlayer()
 }
 //---------------------------------------------------------------------------
 /*!
-Установить текущего чара с указанным серийником как основного
-@param [__in] serial Серийник нового игрока
+РЈСЃС‚Р°РЅРѕРІРёС‚СЊ С‚РµРєСѓС‰РµРіРѕ С‡Р°СЂР° СЃ СѓРєР°Р·Р°РЅРЅС‹Рј СЃРµСЂРёР№РЅРёРєРѕРј РєР°Рє РѕСЃРЅРѕРІРЅРѕРіРѕ
+@param [__in] serial РЎРµСЂРёР№РЅРёРє РЅРѕРІРѕРіРѕ РёРіСЂРѕРєР°
 @return 
 */
 void CGameWorld::SetPlayer(const uint &serial)
@@ -320,9 +320,9 @@ void CGameWorld::SetPlayer(const uint &serial)
 }
 //---------------------------------------------------------------------------
 /*!
-Создать (или взять, если уже существует) игровой предмет
-@param [__in] serial Серийник предмета
-@return Ссылка на предмет
+РЎРѕР·РґР°С‚СЊ (РёР»Рё РІР·СЏС‚СЊ, РµСЃР»Рё СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚) РёРіСЂРѕРІРѕР№ РїСЂРµРґРјРµС‚
+@param [__in] serial РЎРµСЂРёР№РЅРёРє РїСЂРµРґРјРµС‚Р°
+@return РЎСЃС‹Р»РєР° РЅР° РїСЂРµРґРјРµС‚
 */
 CGameItem *CGameWorld::GetWorldItem(const uint &serial)
 {
@@ -350,9 +350,9 @@ CGameItem *CGameWorld::GetWorldItem(const uint &serial)
 }
 //---------------------------------------------------------------------------
 /*!
-Создать (или взять, если уже существует) игрового персонажа
-@param [__in] serial Серийник персонажа
-@return Ссылка на персонажа
+РЎРѕР·РґР°С‚СЊ (РёР»Рё РІР·СЏС‚СЊ, РµСЃР»Рё СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚) РёРіСЂРѕРІРѕРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
+@param [__in] serial РЎРµСЂРёР№РЅРёРє РїРµСЂСЃРѕРЅР°Р¶Р°
+@return РЎСЃС‹Р»РєР° РЅР° РїРµСЂСЃРѕРЅР°Р¶Р°
 */
 CGameCharacter *CGameWorld::GetWorldCharacter(const uint &serial)
 {
@@ -380,9 +380,9 @@ CGameCharacter *CGameWorld::GetWorldCharacter(const uint &serial)
 }
 //---------------------------------------------------------------------------
 /*!
-Найти игровой объект в памяти
-@param [__in] serial Серийник объекта
-@return Ссылка на объект или NULL
+РќР°Р№С‚Рё РёРіСЂРѕРІРѕР№ РѕР±СЉРµРєС‚ РІ РїР°РјСЏС‚Рё
+@param [__in] serial РЎРµСЂРёР№РЅРёРє РѕР±СЉРµРєС‚Р°
+@return РЎСЃС‹Р»РєР° РЅР° РѕР±СЉРµРєС‚ РёР»Рё NULL
 */
 CGameObject *CGameWorld::FindWorldObject(const uint &serial)
 {
@@ -396,9 +396,9 @@ CGameObject *CGameWorld::FindWorldObject(const uint &serial)
 }
 //---------------------------------------------------------------------------
 /*!
-Найти игровой предмет в памяти
-@param [__in] serial Серийник предмета
-@return Ссылка на предмет или NULL
+РќР°Р№С‚Рё РёРіСЂРѕРІРѕР№ РїСЂРµРґРјРµС‚ РІ РїР°РјСЏС‚Рё
+@param [__in] serial РЎРµСЂРёР№РЅРёРє РїСЂРµРґРјРµС‚Р°
+@return РЎСЃС‹Р»РєР° РЅР° РїСЂРµРґРјРµС‚ РёР»Рё NULL
 */
 CGameItem *CGameWorld::FindWorldItem(const uint &serial)
 {
@@ -412,9 +412,9 @@ CGameItem *CGameWorld::FindWorldItem(const uint &serial)
 }
 //---------------------------------------------------------------------------
 /*!
-Найти игрового персонажа в памяти
-@param [__in] serial Серийник персонажа
-@return Ссылка а персонажа или NULL
+РќР°Р№С‚Рё РёРіСЂРѕРІРѕРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р° РІ РїР°РјСЏС‚Рё
+@param [__in] serial РЎРµСЂРёР№РЅРёРє РїРµСЂСЃРѕРЅР°Р¶Р°
+@return РЎСЃС‹Р»РєР° Р° РїРµСЂСЃРѕРЅР°Р¶Р° РёР»Рё NULL
 */
 CGameCharacter *CGameWorld::FindWorldCharacter(const uint &serial)
 {
@@ -428,8 +428,8 @@ CGameCharacter *CGameWorld::FindWorldCharacter(const uint &serial)
 }
 //---------------------------------------------------------------------------
 /*!
-Удалить объект из памяти
-@param [__in] obj Ссылка на объект
+РЈРґР°Р»РёС‚СЊ РѕР±СЉРµРєС‚ РёР· РїР°РјСЏС‚Рё
+@param [__in] obj РЎСЃС‹Р»РєР° РЅР° РѕР±СЉРµРєС‚
 @return 
 */
 void CGameWorld::RemoveObject(CGameObject *obj)
@@ -443,8 +443,8 @@ void CGameWorld::RemoveObject(CGameObject *obj)
 }
 //---------------------------------------------------------------------------
 /*!
-Вынуть объект из контейнера
-@param [__in] obj Ссылка на объект
+Р’С‹РЅСѓС‚СЊ РѕР±СЉРµРєС‚ РёР· РєРѕРЅС‚РµР№РЅРµСЂР°
+@param [__in] obj РЎСЃС‹Р»РєР° РЅР° РѕР±СЉРµРєС‚
 @return 
 */
 void CGameWorld::RemoveFromContainer(CGameObject *obj)
@@ -491,8 +491,8 @@ void CGameWorld::RemoveFromContainer(CGameObject *obj)
 }
 //---------------------------------------------------------------------------
 /*!
-Очистить указанный контейнер
-@param [__in] obj Ссылка на объект (контейнер)
+РћС‡РёСЃС‚РёС‚СЊ СѓРєР°Р·Р°РЅРЅС‹Р№ РєРѕРЅС‚РµР№РЅРµСЂ
+@param [__in] obj РЎСЃС‹Р»РєР° РЅР° РѕР±СЉРµРєС‚ (РєРѕРЅС‚РµР№РЅРµСЂ)
 @return 
 */
 void CGameWorld::ClearContainer(CGameObject *obj)
@@ -502,9 +502,9 @@ void CGameWorld::ClearContainer(CGameObject *obj)
 }
 //---------------------------------------------------------------------------
 /*!
-Положить в контейнер
-@param [__in] obj Ссылка на объект
-@param [__in] container Ссылка на контейнер
+РџРѕР»РѕР¶РёС‚СЊ РІ РєРѕРЅС‚РµР№РЅРµСЂ
+@param [__in] obj РЎСЃС‹Р»РєР° РЅР° РѕР±СЉРµРєС‚
+@param [__in] container РЎСЃС‹Р»РєР° РЅР° РєРѕРЅС‚РµР№РЅРµСЂ
 @return 
 */
 void CGameWorld::PutContainer(CGameObject *obj, CGameObject *container)
@@ -514,8 +514,8 @@ void CGameWorld::PutContainer(CGameObject *obj, CGameObject *container)
 }
 //---------------------------------------------------------------------------
 /*!
-Поднять объект вверх в очереди
-@param [__in] obj Ссылка на объект
+РџРѕРґРЅСЏС‚СЊ РѕР±СЉРµРєС‚ РІРІРµСЂС… РІ РѕС‡РµСЂРµРґРё
+@param [__in] obj РЎСЃС‹Р»РєР° РЅР° РѕР±СЉРµРєС‚
 @return 
 */
 void CGameWorld::MoveToTop(CGameObject *obj)
@@ -627,12 +627,12 @@ void CGameWorld::MoveToTop(CGameObject *obj)
 }
 //---------------------------------------------------------------------------
 /*!
-Поиск объекта
-@param [__in] serialStart Начальный серийник для поиска
-@param [__in] scanDistance Дистанция поиска
-@param [__in] scanType Тип объектов поиска
-@param [__in] scanMode Режим поиска
-@return Ссылка на найденный объект или NULL
+РџРѕРёСЃРє РѕР±СЉРµРєС‚Р°
+@param [__in] serialStart РќР°С‡Р°Р»СЊРЅС‹Р№ СЃРµСЂРёР№РЅРёРє РґР»СЏ РїРѕРёСЃРєР°
+@param [__in] scanDistance Р”РёСЃС‚Р°РЅС†РёСЏ РїРѕРёСЃРєР°
+@param [__in] scanType РўРёРї РѕР±СЉРµРєС‚РѕРІ РїРѕРёСЃРєР°
+@param [__in] scanMode Р РµР¶РёРј РїРѕРёСЃРєР°
+@return РЎСЃС‹Р»РєР° РЅР° РЅР°Р№РґРµРЅРЅС‹Р№ РѕР±СЉРµРєС‚ РёР»Рё NULL
 */
 CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &scanDistance, const SCAN_TYPE_OBJECT &scanType, const SCAN_MODE_OBJECT &scanMode)
 {
@@ -743,9 +743,9 @@ CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &s
 }
 //---------------------------------------------------------------------------
 /*!
-Дамп предметов, хранящихся в памяти
-@param [__in] nCount Количество отступов
-@param [__in_opt] serial Серийник родителя
+Р”Р°РјРї РїСЂРµРґРјРµС‚РѕРІ, С…СЂР°РЅСЏС‰РёС…СЃСЏ РІ РїР°РјСЏС‚Рё
+@param [__in] nCount РљРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚СЃС‚СѓРїРѕРІ
+@param [__in_opt] serial РЎРµСЂРёР№РЅРёРє СЂРѕРґРёС‚РµР»СЏ
 @return
 */
 void CGameWorld::Dump(uchar tCount, uint serial)

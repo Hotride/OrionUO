@@ -1,4 +1,4 @@
-/***********************************************************************************
+ï»¿/***********************************************************************************
 **
 ** Packets.h
 **
@@ -363,11 +363,11 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 
 		wstring ws(text);
 		WriteString(EncodeUTF8(ws).data(), len * 2, false); //len * 2 ?????
-		// â äàííîì ñëó÷àå íàäî ïîñûëàòü êàê utf8, òàê ÷èòàåò ñåðâåð.
+		// Ð² Ð´Ð°Ð½Ð½Ð¾Ð¼ ÑÐ»ÑƒÑ‡Ð°Ðµ Ð½Ð°Ð´Ð¾ Ð¿Ð¾ÑÑ‹Ð»Ð°Ñ‚ÑŒ ÐºÐ°Ðº utf8, Ñ‚Ð°Ðº Ñ‡Ð¸Ñ‚Ð°ÐµÑ‚ ÑÐµÑ€Ð²ÐµÑ€.
 	}
 	else
 	{
-		//â ýòîì ñëó÷àå ïîñûëàåì êàê þíèêîä!?
+		//Ð² ÑÑ‚Ð¾Ð¼ ÑÐ»ÑƒÑ‡Ð°Ðµ Ð¿Ð¾ÑÑ‹Ð»Ð°ÐµÐ¼ ÐºÐ°Ðº ÑŽÐ½Ð¸ÐºÐ¾Ð´!?
 
 		WriteWString(text, len, true, false);
 		/*puchar str = (puchar)text;
@@ -586,12 +586,12 @@ CPacketTradeResponse::CPacketTradeResponse(CGumpSecureTrading *gump, int code)
 	WriteUInt8(0x6F);
 	WriteUInt16BE(17);
 
-	if (code == 1) //Çàêðûâàåì îêíî
+	if (code == 1) //Ð—Ð°ÐºÑ€Ñ‹Ð²Ð°ÐµÐ¼ Ð¾ÐºÐ½Ð¾
 	{
 		WriteUInt8(0x01);
 		WriteUInt32BE(gump->ID);
 	}
-	else if (code == 2) //Òêíóëè íà ÷åêáîêñ
+	else if (code == 2) //Ð¢ÐºÐ½ÑƒÐ»Ð¸ Ð½Ð° Ñ‡ÐµÐºÐ±Ð¾ÐºÑ
 	{
 		WriteUInt8(0x02);
 		WriteUInt32BE(gump->ID);

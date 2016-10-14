@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIHTMLResizepic.h
 **
-** Компонента для отображения фона HTMLGump'а
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С„РѕРЅР° HTMLGump'Р°
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -17,14 +17,14 @@
 class CGUIHTMLResizepic : public CGUIResizepic
 {
 private:
-	//!Гамп-родитель
+	//!Р“Р°РјРї-СЂРѕРґРёС‚РµР»СЊ
 	class CGUIHTMLGump *m_HTMLGump;
 
 public:
 	CGUIHTMLResizepic(class CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height);
 	virtual ~CGUIHTMLResizepic();
 
-	//!Функция прокрутки
+	//!Р¤СѓРЅРєС†РёСЏ РїСЂРѕРєСЂСѓС‚РєРё
 	void Scroll(const bool &up, const uint &delay);
 
 	virtual bool IsControlHTML() { return true; }

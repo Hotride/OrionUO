@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** PathFinder.cpp
 **
@@ -475,7 +475,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 
 	ushort walkTime = TURN_DELAY;
 
-	if ((olddir & 7) == (direction & 7)) //Повернуты куда надо
+	if ((olddir & 7) == (direction & 7)) //РџРѕРІРµСЂРЅСѓС‚С‹ РєСѓРґР° РЅР°РґРѕ
 	{
 		uchar newDir = direction;
 		int newX = x;
@@ -589,7 +589,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	else
 		trace_printf("Walk");*/
 
-	//Высчитываем актуальную дельту с помощью разници во времени между прошлым и текущим шагом.
+	//Р’С‹СЃС‡РёС‚С‹РІР°РµРј Р°РєС‚СѓР°Р»СЊРЅСѓСЋ РґРµР»СЊС‚Сѓ СЃ РїРѕРјРѕС‰СЊСЋ СЂР°Р·РЅРёС†Рё РІРѕ РІСЂРµРјРµРЅРё РјРµР¶РґСѓ РїСЂРѕС€Р»С‹Рј Рё С‚РµРєСѓС‰РёРј С€Р°РіРѕРј.
 	int nowDelta = 0;
 	
 	if (lastDir == direction && lastMount == onMount && lastRun == run)

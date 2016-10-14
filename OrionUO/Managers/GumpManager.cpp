@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpManager.cpp
 **
@@ -43,8 +43,8 @@
 CGumpManager g_GumpManager;
 //----------------------------------------------------------------------------------
 /*!
-Вычислить количество статусбаров без пати
-@return Количество non-party статусбыров
+Р’С‹С‡РёСЃР»РёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚Р°С‚СѓСЃР±Р°СЂРѕРІ Р±РµР· РїР°С‚Рё
+@return РљРѕР»РёС‡РµСЃС‚РІРѕ non-party СЃС‚Р°С‚СѓСЃР±С‹СЂРѕРІ
 */
 int CGumpManager::GetNonpartyStatusbarsCount()
 {
@@ -60,8 +60,8 @@ int CGumpManager::GetNonpartyStatusbarsCount()
 }
 //----------------------------------------------------------------------------------
 /*!
-Добавить гамп
-@param [__in] obj Ссылка на гамп
+Р”РѕР±Р°РІРёС‚СЊ РіР°РјРї
+@param [__in] obj РЎСЃС‹Р»РєР° РЅР° РіР°РјРї
 @return 
 */
 void CGumpManager::AddGump(CGump *obj)
@@ -225,8 +225,8 @@ void CGumpManager::AddGump(CGump *obj)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить гамп-владелец текущей активной TEntryText
-@return Ссылку на гамп или NULL
+РџРѕР»СѓС‡РёС‚СЊ РіР°РјРї-РІР»Р°РґРµР»РµС† С‚РµРєСѓС‰РµР№ Р°РєС‚РёРІРЅРѕР№ TEntryText
+@return РЎСЃС‹Р»РєСѓ РЅР° РіР°РјРї РёР»Рё NULL
 */
 CGump *CGumpManager::GetTextEntryOwner()
 {
@@ -240,8 +240,8 @@ CGump *CGumpManager::GetTextEntryOwner()
 }
 //----------------------------------------------------------------------------------
 /*!
-Проверить, существует ли гамп
-@param [__in] gumpID ID гампа (в памяти)
+РџСЂРѕРІРµСЂРёС‚СЊ, СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё РіР°РјРї
+@param [__in] gumpID ID РіР°РјРїР° (РІ РїР°РјСЏС‚Рё)
 @return
 */
 CGump *CGumpManager::GumpExists(uint gumpID)
@@ -256,11 +256,11 @@ CGump *CGumpManager::GumpExists(uint gumpID)
 }
 //----------------------------------------------------------------------------------
 /*!
-Обновить содержимое гампа
-@param [__in] serial Серийник гампа
-@param [__in] ID ID гампа
-@param [__in] Type Тип гампа
-@return Ссылку на обновленный гамп или NULL
+РћР±РЅРѕРІРёС‚СЊ СЃРѕРґРµСЂР¶РёРјРѕРµ РіР°РјРїР°
+@param [__in] serial РЎРµСЂРёР№РЅРёРє РіР°РјРїР°
+@param [__in] ID ID РіР°РјРїР°
+@param [__in] Type РўРёРї РіР°РјРїР°
+@return РЎСЃС‹Р»РєСѓ РЅР° РѕР±РЅРѕРІР»РµРЅРЅС‹Р№ РіР°РјРї РёР»Рё NULL
 */
 CGump *CGumpManager::UpdateContent(uint serial, uint id, GUMP_TYPE type)
 {
@@ -273,11 +273,11 @@ CGump *CGumpManager::UpdateContent(uint serial, uint id, GUMP_TYPE type)
 }
 //----------------------------------------------------------------------------------
 /*!
-Обновить гамп
-@param [__in] serial Серийник гампа
-@param [__in] ID ID гампа
-@param [__in] Type Тип гампа
-@return Ссылку на обновленный гамп или NULL
+РћР±РЅРѕРІРёС‚СЊ РіР°РјРї
+@param [__in] serial РЎРµСЂРёР№РЅРёРє РіР°РјРїР°
+@param [__in] ID ID РіР°РјРїР°
+@param [__in] Type РўРёРї РіР°РјРїР°
+@return РЎСЃС‹Р»РєСѓ РЅР° РѕР±РЅРѕРІР»РµРЅРЅС‹Р№ РіР°РјРї РёР»Рё NULL
 */
 CGump *CGumpManager::UpdateGump(uint serial, uint id, GUMP_TYPE type)
 {
@@ -290,11 +290,11 @@ CGump *CGumpManager::UpdateGump(uint serial, uint id, GUMP_TYPE type)
 }
 //----------------------------------------------------------------------------------
 /*!
-Найти гамп
-@param [__in] serial Серийник гампа
-@param [__in] ID ID гампа
-@param [__in] Type Тип гампа
-@return Ссылку на гамп или NULL
+РќР°Р№С‚Рё РіР°РјРї
+@param [__in] serial РЎРµСЂРёР№РЅРёРє РіР°РјРїР°
+@param [__in] ID ID РіР°РјРїР°
+@param [__in] Type РўРёРї РіР°РјРїР°
+@return РЎСЃС‹Р»РєСѓ РЅР° РіР°РјРї РёР»Рё NULL
 */
 CGump *CGumpManager::GetGump(uint serial, uint id, GUMP_TYPE type)
 {
@@ -329,10 +329,10 @@ CGump *CGumpManager::GetGump(uint serial, uint id, GUMP_TYPE type)
 }
 //----------------------------------------------------------------------------------
 /*!
-Закрыть все гампы с указанными параметрами
-@param [__in] serial Серийник гампа
-@param [__in] ID ID гампа
-@param [__in] Type Тип гампа
+Р—Р°РєСЂС‹С‚СЊ РІСЃРµ РіР°РјРїС‹ СЃ СѓРєР°Р·Р°РЅРЅС‹РјРё РїР°СЂР°РјРµС‚СЂР°РјРё
+@param [__in] serial РЎРµСЂРёР№РЅРёРє РіР°РјРїР°
+@param [__in] ID ID РіР°РјРїР°
+@param [__in] Type РўРёРї РіР°РјРїР°
 @return
 */
 void CGumpManager::CloseGump(uint serial, uint id, GUMP_TYPE type)
@@ -371,8 +371,8 @@ void CGumpManager::CloseGump(uint serial, uint id, GUMP_TYPE type)
 }
 //----------------------------------------------------------------------------------
 /*!
-Удалить гамп
-@param [__in] obj Ссылка на гамп
+РЈРґР°Р»РёС‚СЊ РіР°РјРї
+@param [__in] obj РЎСЃС‹Р»РєР° РЅР° РіР°РјРї
 @return
 */
 void CGumpManager::RemoveGump(CGump *obj)
@@ -396,7 +396,7 @@ void CGumpManager::RemoveGump(CGump *obj)
 }
 //----------------------------------------------------------------------------------
 /*!
-Событие удаления менеджера (вызывается перед удалением)
+РЎРѕР±С‹С‚РёРµ СѓРґР°Р»РµРЅРёСЏ РјРµРЅРµРґР¶РµСЂР° (РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРµРґ СѓРґР°Р»РµРЅРёРµРј)
 @return 
 */
 void CGumpManager::OnDelete()
@@ -415,7 +415,7 @@ void CGumpManager::OnDelete()
 }
 //----------------------------------------------------------------------------------
 /*!
-Удалить гампы, которые не могут быть досягаемы из-за изменения дистанции до объекта
+РЈРґР°Р»РёС‚СЊ РіР°РјРїС‹, РєРѕС‚РѕСЂС‹Рµ РЅРµ РјРѕРіСѓС‚ Р±С‹С‚СЊ РґРѕСЃСЏРіР°РµРјС‹ РёР·-Р·Р° РёР·РјРµРЅРµРЅРёСЏ РґРёСЃС‚Р°РЅС†РёРё РґРѕ РѕР±СЉРµРєС‚Р°
 @return 
 */
 void CGumpManager::RemoveRangedGumps()
@@ -439,7 +439,7 @@ void CGumpManager::RemoveRangedGumps()
 				case GT_SHOP:
 				{
 					if (g_World->FindWorldObject(gump->Serial) == NULL)
-						RemoveGump(gump); //Или CloseGump() ?
+						RemoveGump(gump); //РР»Рё CloseGump() ?
 					break;
 				}
 				case GT_CONTAINER:
@@ -487,7 +487,7 @@ void CGumpManager::RemoveMarked()
 }
 //----------------------------------------------------------------------------------
 /*!
-Подготовка текстур
+РџРѕРґРіРѕС‚РѕРІРєР° С‚РµРєСЃС‚СѓСЂ
 @return 
 */
 void CGumpManager::PrepareTextures()
@@ -563,7 +563,7 @@ void CGumpManager::InitToolTip()
 }
 //----------------------------------------------------------------------------------
 /*!
-Перерисовать все гампы
+РџРµСЂРµСЂРёСЃРѕРІР°С‚СЊ РІСЃРµ РіР°РјРїС‹
 @return 
 */
 void CGumpManager::RedrawAll()
@@ -573,8 +573,8 @@ void CGumpManager::RedrawAll()
 }
 //----------------------------------------------------------------------------------
 /*!
-Нажатие левой кнопки мыши
-@param [__in] blocked Состояние экрана
+РќР°Р¶Р°С‚РёРµ Р»РµРІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё
+@param [__in] blocked РЎРѕСЃС‚РѕСЏРЅРёРµ СЌРєСЂР°РЅР°
 @return 
 */
 void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
@@ -603,8 +603,8 @@ void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Отпускание левой кнопки мыши
-@param [__in] blocked Состояние экрана
+РћС‚РїСѓСЃРєР°РЅРёРµ Р»РµРІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё
+@param [__in] blocked РЎРѕСЃС‚РѕСЏРЅРёРµ СЌРєСЂР°РЅР°
 @return 
 */
 bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
@@ -736,9 +736,9 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Двойной клик левой кнопкой мыши
-@param [__in] blocked Состояние экрана
-@return true при успешной обработке
+Р”РІРѕР№РЅРѕР№ РєР»РёРє Р»РµРІРѕР№ РєРЅРѕРїРєРѕР№ РјС‹С€Рё
+@param [__in] blocked РЎРѕСЃС‚РѕСЏРЅРёРµ СЌРєСЂР°РЅР°
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРµ
 */
 bool CGumpManager::OnLeftMouseButtonDoubleClick(const bool &blocked)
 {
@@ -765,8 +765,8 @@ bool CGumpManager::OnLeftMouseButtonDoubleClick(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Нажатие правой кнопки мыши
-@param [__in] blocked Состояние экрана
+РќР°Р¶Р°С‚РёРµ РїСЂР°РІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё
+@param [__in] blocked РЎРѕСЃС‚РѕСЏРЅРёРµ СЌРєСЂР°РЅР°
 @return 
 */
 void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
@@ -795,8 +795,8 @@ void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Отпускание правой кнопки мыши
-@param [__in] blocked Состояние экрана
+РћС‚РїСѓСЃРєР°РЅРёРµ РїСЂР°РІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё
+@param [__in] blocked РЎРѕСЃС‚РѕСЏРЅРёРµ СЌРєСЂР°РЅР°
 @return 
 */
 void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
@@ -953,9 +953,9 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Обработка средней кнопки (колесика) мыши
-@param [__in] state Состояние колесика
-@param [__in] blocked Состояние экрана
+РћР±СЂР°Р±РѕС‚РєР° СЃСЂРµРґРЅРµР№ РєРЅРѕРїРєРё (РєРѕР»РµСЃРёРєР°) РјС‹С€Рё
+@param [__in] state РЎРѕСЃС‚РѕСЏРЅРёРµ РєРѕР»РµСЃРёРєР°
+@param [__in] blocked РЎРѕСЃС‚РѕСЏРЅРёРµ СЌРєСЂР°РЅР°
 @return 
 */
 void CGumpManager::OnMidMouseButtonScroll(const bool &up, const bool &blocked)
@@ -985,11 +985,11 @@ void CGumpManager::OnDragging(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Обработка нажатия клавиши
-@param [__in] wparam не подписанный параметр
-@param [__in] lparam не подписанный параметр
-@param [__in] blocked Состояние экрана
-@return true при успешной обработке
+РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёСЏ РєР»Р°РІРёС€Рё
+@param [__in] wparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
+@param [__in] lparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
+@param [__in] blocked РЎРѕСЃС‚РѕСЏРЅРёРµ СЌРєСЂР°РЅР°
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРµ
 */
 bool CGumpManager::OnCharPress(const WPARAM &wParam, const LPARAM &lParam, const bool &blocked)
 {
@@ -1021,11 +1021,11 @@ bool CGumpManager::OnCharPress(const WPARAM &wParam, const LPARAM &lParam, const
 }
 //----------------------------------------------------------------------------------
 /*!
-Обработка нажатия клавиши
-@param [__in] wparam не подписанный параметр
-@param [__in] lparam не подписанный параметр
-@param [__in] blocked Состояние экрана
-@return true при успешной обработке
+РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёСЏ РєР»Р°РІРёС€Рё
+@param [__in] wparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
+@param [__in] lparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
+@param [__in] blocked РЎРѕСЃС‚РѕСЏРЅРёРµ СЌРєСЂР°РЅР°
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРµ
 */
 bool CGumpManager::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, const bool &blocked)
 {
@@ -1077,8 +1077,8 @@ bool CGumpManager::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, const b
 }
 //----------------------------------------------------------------------------------
 /*!
-Загрузка гампов из конфига
-@param [__in] path Путь к файлу конфига
+Р—Р°РіСЂСѓР·РєР° РіР°РјРїРѕРІ РёР· РєРѕРЅС„РёРіР°
+@param [__in] path РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ РєРѕРЅС„РёРіР°
 @return 
 */
 void CGumpManager::Load(const string &path)
@@ -1360,8 +1360,8 @@ void CGumpManager::SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writ
 };
 //----------------------------------------------------------------------------------
 /*!
-Сохранить гампы в конфиг
-@param [__in] path Путь к файлу кофнига
+РЎРѕС…СЂР°РЅРёС‚СЊ РіР°РјРїС‹ РІ РєРѕРЅС„РёРі
+@param [__in] path РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ РєРѕС„РЅРёРіР°
 @return 
 */
 void CGumpManager::Save(const string &path)

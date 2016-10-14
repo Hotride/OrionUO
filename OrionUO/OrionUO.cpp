@@ -1,4 +1,4 @@
-/***********************************************************************************
+ï»¿/***********************************************************************************
 **
 ** OrionUO.cpp
 **
@@ -755,6 +755,8 @@ void COrion::LoadPluginConfig()
 	g_PluginClientInterface.ColorManager = &g_Interface_ColorManager;
 	g_PluginClientInterface.PathFinder = &g_Interface_PathFinder;
 
+	DebugMsg("testUO: 0x%08X\n", g_Interface_UO.GetValueInt);
+
 	STRING_LIST libName;
 	STRING_LIST functions;
 	UINT_LIST flags;
@@ -843,7 +845,7 @@ void COrion::LoadLocalConfig()
 	{
 		if (!g_MacroManager.Load(g_App.FilePath("\\macros_debug.cuo"), g_App.FilePath("\\macros.txt")))
 		{
-			//Ñîçäàòü ñòàíäàðòíûå ìàêðîñû
+			//Ð¡Ð¾Ð·Ð´Ð°Ñ‚ÑŒ ÑÑ‚Ð°Ð½Ð´Ð°Ñ€Ñ‚Ð½Ñ‹Ðµ Ð¼Ð°ÐºÑ€Ð¾ÑÑ‹
 		}
 	}
 
@@ -1503,11 +1505,11 @@ ushort COrion::GetDesolationGraphic(ushort graphic)
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
+int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 {
 	switch (key)
 	{
-		case CVK_SOUND:
+		case VKI_SOUND:
 		{
 			if (value == -1)
 				value = g_ConfigManager.Sound;
@@ -1516,7 +1518,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_SOUND_VALUE:
+		case VKI_SOUND_VALUE:
 		{
 			if (value == -1)
 				value = g_ConfigManager.SoundVolume;
@@ -1532,7 +1534,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_MUSIC:
+		case VKI_MUSIC:
 		{
 			if (value == -1)
 				value = g_ConfigManager.Music;
@@ -1541,7 +1543,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_MUSIC_VALUE:
+		case VKI_MUSIC_VALUE:
 		{
 			if (value == -1)
 				value = g_ConfigManager.MusicVolume;
@@ -1557,7 +1559,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_USE_TOOLTIPS:
+		case VKI_USE_TOOLTIPS:
 		{
 			if (value == -1)
 				value = g_ConfigManager.UseToolTips;
@@ -1566,7 +1568,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CFK_ALWAYS_RUN:
+		case VKI_ALWAYS_RUN:
 		{
 			if (value == -1)
 				value = g_ConfigManager.AlwaysRun;
@@ -1575,16 +1577,16 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_NEW_TARGET_SYSTEM:
+		case VKI_NEW_TARGET_SYSTEM:
 		{
 			if (value == -1)
 				value = g_ConfigManager.DisableNewTargetSystem;
 			else
-				g_ConfigManager.DisableNewTargetSystem = (value == 0); //Èìåííî == 0!!! Ò.ê. â ïëàãèíå ýòî Target System enable/disable
+				g_ConfigManager.DisableNewTargetSystem = (value == 0); //Ð˜Ð¼ÐµÐ½Ð½Ð¾ == 0!!! Ð¢.Ðº. Ð² Ð¿Ð»Ð°Ð³Ð¸Ð½Ðµ ÑÑ‚Ð¾ Target System enable/disable
 
 			break;
 		}
-		case CVK_OBJECT_HANDLES:
+		case VKI_OBJECT_HANDLES:
 		{
 			if (value == -1)
 				value = g_ConfigManager.ObjectHandles;
@@ -1593,7 +1595,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_SCALE_SPEECH_DELAY:
+		case VKI_SCALE_SPEECH_DELAY:
 		{
 			if (value == -1)
 				value = g_ConfigManager.ScaleSpeechDelay;
@@ -1602,7 +1604,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_SPEECH_DELAY:
+		case VKI_SPEECH_DELAY:
 		{
 			if (value == -1)
 				value = g_ConfigManager.SpeechDelay;
@@ -1618,7 +1620,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_IGNORE_GUILD_MESSAGES:
+		case VKI_IGNORE_GUILD_MESSAGES:
 		{
 			if (value == -1)
 				value = g_ConfigManager.IgnoreGuildMessage;
@@ -1627,7 +1629,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_IGNORE_ALLIANCE_MESSAGES:
+		case VKI_IGNORE_ALLIANCE_MESSAGES:
 		{
 			if (value == -1)
 				value = g_ConfigManager.IgnoreAllianceMessage;
@@ -1636,7 +1638,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_DARK_NIGHTS:
+		case VKI_DARK_NIGHTS:
 		{
 			if (value == -1)
 				value = g_ConfigManager.DarkNights;
@@ -1645,7 +1647,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_COLORED_LIGHTING:
+		case VKI_COLORED_LIGHTING:
 		{
 			if (value == -1)
 				value = g_ConfigManager.ColoredLighting;
@@ -1654,7 +1656,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_CRIMINAL_ACTIONS_QUERY:
+		case VKI_CRIMINAL_ACTIONS_QUERY:
 		{
 			if (value == -1)
 				value = g_ConfigManager.CriminalActionsQuery;
@@ -1663,7 +1665,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_CIRCLETRANS:
+		case VKI_CIRCLETRANS:
 		{
 			if (value == -1)
 				value = g_ConfigManager.UseCircleTrans;
@@ -1672,7 +1674,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_CIRCLETRANS_VALUE:
+		case VKI_CIRCLETRANS_VALUE:
 		{
 			if (value == -1)
 				value = g_ConfigManager.CircleTransRadius;
@@ -1688,7 +1690,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_LOCK_RESIZING_GAME_WINDOW:
+		case VKI_LOCK_RESIZING_GAME_WINDOW:
 		{
 			if (value == -1)
 				value = g_ConfigManager.LockResizingGameWindow;
@@ -1697,7 +1699,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_CLIENT_FPS_VALUE:
+		case VKI_CLIENT_FPS_VALUE:
 		{
 			if (value == -1)
 				value = g_ConfigManager.ClientFPS;
@@ -1713,7 +1715,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_USE_SCALING_GAME_WINDOW:
+		case VKI_USE_SCALING_GAME_WINDOW:
 		{
 			if (value == -1)
 				value = g_ConfigManager.UseScaling;
@@ -1722,7 +1724,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_DRAW_STATUS_STATE:
+		case VKI_DRAW_STATUS_STATE:
 		{
 			if (value == -1)
 				value = g_ConfigManager.DrawStatusState;
@@ -1738,7 +1740,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_DRAW_STUMPS:
+		case VKI_DRAW_STUMPS:
 		{
 			if (value == -1)
 				value = g_ConfigManager.DrawStumps;
@@ -1747,7 +1749,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_MARKING_CAVES:
+		case VKI_MARKING_CAVES:
 		{
 			if (value == -1)
 				value = g_ConfigManager.MarkingCaves;
@@ -1756,7 +1758,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_NO_VEGETATION:
+		case VKI_NO_VEGETATION:
 		{
 			if (value == -1)
 				value = g_ConfigManager.NoVegetation;
@@ -1765,7 +1767,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_NO_ANIMATE_FIELDS:
+		case VKI_NO_ANIMATE_FIELDS:
 		{
 			if (value == -1)
 				value = g_ConfigManager.NoAnimateFields;
@@ -1774,7 +1776,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_STANDARD_CHARACTERS_DELAY:
+		case VKI_STANDARD_CHARACTERS_DELAY:
 		{
 			if (value == -1)
 				value = g_ConfigManager.StandartCharactersAnimationDelay;
@@ -1783,7 +1785,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_STANDARD_ITEMS_DELAY:
+		case VKI_STANDARD_ITEMS_DELAY:
 		{
 			if (value == -1)
 				value = g_ConfigManager.StandartItemsAnimationDelay;
@@ -1792,7 +1794,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_LOCK_GUMPS_MOVING:
+		case VKI_LOCK_GUMPS_MOVING:
 		{
 			if (value == -1)
 				value = g_ConfigManager.LockGumpsMoving;
@@ -1801,7 +1803,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_CONSOLE_NEED_ENTER:
+		case VKI_CONSOLE_NEED_ENTER:
 		{
 			if (value == -1)
 				value = g_ConfigManager.ConsoleNeedEnter;
@@ -1810,7 +1812,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_HIDDEN_CHARACTERS_MODE:
+		case VKI_HIDDEN_CHARACTERS_MODE:
 		{
 			if (value == -1)
 				value = g_ConfigManager.HiddenCharactersRenderMode;
@@ -1826,7 +1828,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_HIDDEN_CHARACTERS_ALPHA:
+		case VKI_HIDDEN_CHARACTERS_ALPHA:
 		{
 			if (value == -1)
 				value = g_ConfigManager.HiddenAlpha;
@@ -1842,7 +1844,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CVK_HIDDEN_CHARACTERS_MODE_ONLY_FOR_SELF:
+		case VKI_HIDDEN_CHARACTERS_MODE_ONLY_FOR_SELF:
 		{
 			if (value == -1)
 				value = g_ConfigManager.UseHiddenModeOnlyForSelf;
@@ -1851,7 +1853,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CFK_TRANSPARENT_SPELL_ICONS:
+		case VKI_TRANSPARENT_SPELL_ICONS:
 		{
 			if (value == -1)
 				value = g_ConfigManager.TransparentSpellIcons;
@@ -1860,7 +1862,7 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
-		case CFK_SPELL_ICONS_ALPHA:
+		case VKI_SPELL_ICONS_ALPHA:
 		{
 			if (value == -1)
 				value = g_ConfigManager.SpellIconAlpha;
@@ -1876,6 +1878,18 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 
 			break;
 		}
+		case VKI_SKILLS_COUNT:
+		{
+			value = g_SkillsCount;
+			break;
+		}
+		case VKI_SKILL_CAN_BE_USED:
+		{
+			if (value >= 0 && value < g_SkillsCount)
+				value = g_Skills[value].Button;
+
+			break;
+		}
 		default:
 			break;
 	}
@@ -1883,13 +1897,20 @@ int COrion::GetValueInt(const CONFIG_VALUE_KEY &key, int value)
 	return value;
 }
 //----------------------------------------------------------------------------------
-string COrion::GetValueString(const CONFIG_VALUE_KEY &key, string value)
+string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 {
-	/*switch (key)
+	switch (key)
 	{
+		case VKS_SKILL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < g_SkillsCount)
+				value = g_Skills[index].Name;
+		}
 		default:
 			break;
-	}*/
+	}
 
 	return value;
 }
@@ -4834,7 +4855,7 @@ void COrion::ChangeWarmode(uchar status)
 		newstatus = status;
 	}
 
-	//38, 39 è 40 ýòî èíäåêñû áîåâîé ìóçûêè.
+	//38, 39 Ð¸ 40 ÑÑ‚Ð¾ Ð¸Ð½Ð´ÐµÐºÑÑ‹ Ð±Ð¾ÐµÐ²Ð¾Ð¹ Ð¼ÑƒÐ·Ñ‹ÐºÐ¸.
 	if (newstatus == 1 && g_ConfigManager.Music)
 		PlayMusic(rand() % 3 + 38, true);
 	else if (newstatus == 0)

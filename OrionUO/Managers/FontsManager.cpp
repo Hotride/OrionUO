@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** FontsManager.cpp
 **
@@ -36,8 +36,8 @@ CFontsManager::~CFontsManager()
 }
 //----------------------------------------------------------------------------------
 /*!
-Загрузка ASCII шрифтов
-@return true при успешной загрузке
+Р—Р°РіСЂСѓР·РєР° ASCII С€СЂРёС„С‚РѕРІ
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ Р·Р°РіСЂСѓР·РєРµ
 */
 bool CFontsManager::LoadFonts()
 {
@@ -126,8 +126,8 @@ BYTE CFontsManager::UnicodeFontExists(const uchar &font)
 }
 //----------------------------------------------------------------------------------
 /*!
-Переход по ссылке по индексу
-@param [__in] link Индекс ссылки
+РџРµСЂРµС…РѕРґ РїРѕ СЃСЃС‹Р»РєРµ РїРѕ РёРЅРґРµРєСЃСѓ
+@param [__in] link РРЅРґРµРєСЃ СЃСЃС‹Р»РєРё
 @return 
 */
 void CFontsManager::GoToWebLink(ushort link)
@@ -144,10 +144,10 @@ void CFontsManager::GoToWebLink(ushort link)
 //----------------------------------------ASCII-------------------------------------
 //----------------------------------------------------------------------------------
 /*!
-Получить смещение символа ширифта
-@param [__in] font Шрифт
-@param [__in] index Индекс символа
-@return Смещение в пикселях
+РџРѕР»СѓС‡РёС‚СЊ СЃРјРµС‰РµРЅРёРµ СЃРёРјРІРѕР»Р° С€РёСЂРёС„С‚Р°
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] index РРЅРґРµРєСЃ СЃРёРјРІРѕР»Р°
+@return РЎРјРµС‰РµРЅРёРµ РІ РїРёРєСЃРµР»СЏС…
 */
 int CFontsManager::GetFontOffsetY(uchar font, uchar index)
 {
@@ -175,14 +175,14 @@ int CFontsManager::GetFontOffsetY(uchar font, uchar index)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить позицию каретки в тексте
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] pos Текущая позиция в тексте
-@param [__in] width Ширина текстуры
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@return Координаты каретки
+РџРѕР»СѓС‡РёС‚СЊ РїРѕР·РёС†РёСЋ РєР°СЂРµС‚РєРё РІ С‚РµРєСЃС‚Рµ
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] pos РўРµРєСѓС‰Р°СЏ РїРѕР·РёС†РёСЏ РІ С‚РµРєСЃС‚Рµ
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return РљРѕРѕСЂРґРёРЅР°С‚С‹ РєР°СЂРµС‚РєРё
 */
 POINT CFontsManager::GetCaretPosA(uchar font, const char *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
@@ -260,15 +260,15 @@ POINT CFontsManager::GetCaretPosA(uchar font, const char *str, int pos, int widt
 }
 //----------------------------------------------------------------------------------
 /*!
-Вычислить положение каретки
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] x Координата каретки по оси X
-@param [__in] y Координата каретки по оси Y
-@param [__in] width Ширина текстуры
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@return Позиция каретки в строке
+Р’С‹С‡РёСЃР»РёС‚СЊ РїРѕР»РѕР¶РµРЅРёРµ РєР°СЂРµС‚РєРё
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] x РљРѕРѕСЂРґРёРЅР°С‚Р° РєР°СЂРµС‚РєРё РїРѕ РѕСЃРё X
+@param [__in] y РљРѕРѕСЂРґРёРЅР°С‚Р° РєР°СЂРµС‚РєРё РїРѕ РѕСЃРё Y
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return РџРѕР·РёС†РёСЏ РєР°СЂРµС‚РєРё РІ СЃС‚СЂРѕРєРµ
 */
 int CFontsManager::CalculateCaretPosA(uchar font, const char *str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
@@ -362,11 +362,11 @@ int CFontsManager::CalculateCaretPosA(uchar font, const char *str, int x, int y,
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить ширину текста
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in_opt] len Длина текста
-@return Ширина текста в пикселях
+РџРѕР»СѓС‡РёС‚СЊ С€РёСЂРёРЅСѓ С‚РµРєСЃС‚Р°
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in_opt] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+@return РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 */
 int CFontsManager::GetWidthA(uchar font, const char *str, int len)
 {
@@ -398,14 +398,14 @@ int CFontsManager::GetWidthA(uchar font, const char *str, int len)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить ширину текста (с учетом параметров отрисовки)
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] len Длина текста
-@param [__in] maxWidth Максимальная ширина текстуры
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@return Ширина текста в пикселях
+РџРѕР»СѓС‡РёС‚СЊ С€РёСЂРёРЅСѓ С‚РµРєСЃС‚Р° (СЃ СѓС‡РµС‚РѕРј РїР°СЂР°РјРµС‚СЂРѕРІ РѕС‚СЂРёСЃРѕРІРєРё)
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+@param [__in] maxWidth РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 */
 int CFontsManager::GetWidthExA(uchar font, const char *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags)
 {
@@ -442,13 +442,13 @@ int CFontsManager::GetWidthExA(uchar font, const char *str, int len, int maxWidt
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить высоту текста
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in_opt] width Ширина текстуры
-@param [__in_opt] align Расположение текста
-@param [__in_opt] flags Эффекты текста
-@return Высота текста в пикселях
+РџРѕР»СѓС‡РёС‚СЊ РІС‹СЃРѕС‚Сѓ С‚РµРєСЃС‚Р°
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return Р’С‹СЃРѕС‚Р° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 */
 int CFontsManager::GetHeightA(uchar font, const char *str, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
@@ -484,9 +484,9 @@ int CFontsManager::GetHeightA(uchar font, const char *str, int width, TEXT_ALIGN
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить высоту текста по списку строк
-@param [__in] info Ссылка на мультистрочный текст
-@return Высота текста в пикселях
+РџРѕР»СѓС‡РёС‚СЊ РІС‹СЃРѕС‚Сѓ С‚РµРєСЃС‚Р° РїРѕ СЃРїРёСЃРєСѓ СЃС‚СЂРѕРє
+@param [__in] info РЎСЃС‹Р»РєР° РЅР° РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅС‹Р№ С‚РµРєСЃС‚
+@return Р’С‹СЃРѕС‚Р° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 */
 int CFontsManager::GetHeightA(PMULTILINES_FONT_INFO info)
 {
@@ -503,13 +503,13 @@ int CFontsManager::GetHeightA(PMULTILINES_FONT_INFO info)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить текст указанной ширины
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] len Длина текста
-@param [__in] width Ширина текстуры
-@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
-@return Результирующий текст
+РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚ СѓРєР°Р·Р°РЅРЅРѕР№ С€РёСЂРёРЅС‹
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] IsCropped РћРіСЂР°РЅРёС‡РµРЅРЅС‹Р№ С‚РµРєСЃС‚, РІС‹С€РµРґС€Р°СЏ Р·Р° РґРѕСЃС‚СѓРїРЅС‹Рµ РїСЂРµРґРµР»С‹ С‡Р°СЃС‚СЊ РѕР±СЂРµР·Р°РµС‚СЃСЏ Рё Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° РјРЅРѕРіРѕС‚РѕС‡РёРµ
+@return Р РµР·СѓР»СЊС‚РёСЂСѓСЋС‰РёР№ С‚РµРєСЃС‚
 */
 string CFontsManager::GetTextByWidthA(uchar font, const char *str, int len, int width, bool IsCropped)
 {
@@ -552,14 +552,14 @@ string CFontsManager::GetTextByWidthA(uchar font, const char *str, int len, int 
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить информацию о тексте (в мультистрочном виде)
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] len Длина текста
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@param [__in] width Ширина текстуры
-@return Ссылка на мультистрочный текст или NULL
+РџРѕР»СѓС‡РёС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С‚РµРєСЃС‚Рµ (РІ РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅРѕРј РІРёРґРµ)
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@return РЎСЃС‹Р»РєР° РЅР° РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅС‹Р№ С‚РµРєСЃС‚ РёР»Рё NULL
 */
 PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
@@ -770,15 +770,15 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int l
 }
 //----------------------------------------------------------------------------------
 /*!
-Сгенерировать текстуру текста
-@param [__in] font Шрифт
-@param [__inout] th Данные о текстуре текста
-@param [__in] str Текст
-@param [__in_opt] color Цвет
-@param [__in_opt] width Ширина текстуры
-@param [__in_opt] align Расположение текста
-@param [__in_opt] flags Эффекты текста
-@return true при успешной генерации
+РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ С‚РµРєСЃС‚Р°
+@param [__in] font РЁСЂРёС„С‚
+@param [__inout] th Р”Р°РЅРЅС‹Рµ Рѕ С‚РµРєСЃС‚СѓСЂРµ С‚РµРєСЃС‚Р°
+@param [__in] str РўРµРєСЃС‚
+@param [__in_opt] color Р¦РІРµС‚
+@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РіРµРЅРµСЂР°С†РёРё
 */
 bool CFontsManager::GenerateA(uchar font, CGLTextTexture &th, const char *str, ushort color, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
@@ -806,15 +806,15 @@ bool CFontsManager::GenerateA(uchar font, CGLTextTexture &th, const char *str, u
 }
 //----------------------------------------------------------------------------------
 /*!
-Сгенерировать пиксели текстуры текста
-@param [__in] font Шрифт
-@param [__inout] th Данные о текстуре текста
-@param [__in] str Текст
-@param [__in] color Цвет текста
-@param [__in] width Ширина текстуры
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@return Ссылка на массив пикселей
+РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РїРёРєСЃРµР»Рё С‚РµРєСЃС‚СѓСЂС‹ С‚РµРєСЃС‚Р°
+@param [__in] font РЁСЂРёС„С‚
+@param [__inout] th Р”Р°РЅРЅС‹Рµ Рѕ С‚РµРєСЃС‚СѓСЂРµ С‚РµРєСЃС‚Р°
+@param [__in] str РўРµРєСЃС‚
+@param [__in] color Р¦РІРµС‚ С‚РµРєСЃС‚Р°
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return РЎСЃС‹Р»РєР° РЅР° РјР°СЃСЃРёРІ РїРёРєСЃРµР»РµР№
 */
 UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const char *str, ushort &color, int &width, TEXT_ALIGN_TYPE &align, ushort &flags)
 {
@@ -966,15 +966,15 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const 
 }
 //----------------------------------------------------------------------------------
 /*!
-Создание ASCII текстуры
-@param [__in] font Шрифт
-@param [__out] th Данные текстуры
-@param [__in] str Текст
-@param [__in] color Цвет
-@param [__in] width Ширина текстуры
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@return true при успешной генерации
+РЎРѕР·РґР°РЅРёРµ ASCII С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] font РЁСЂРёС„С‚
+@param [__out] th Р”Р°РЅРЅС‹Рµ С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] str РўРµРєСЃС‚
+@param [__in] color Р¦РІРµС‚
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РіРµРЅРµСЂР°С†РёРё
 */
 bool CFontsManager::GenerateABase(uchar &font, CGLTextTexture &th, const char *str, ushort &color, int &width, TEXT_ALIGN_TYPE &align, ushort &flags)
 {
@@ -992,15 +992,15 @@ bool CFontsManager::GenerateABase(uchar &font, CGLTextTexture &th, const char *s
 }
 //----------------------------------------------------------------------------------
 /*!
-Отрисовать текст
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] color Цвет
-@param [__in] x Экранная координата X
-@param [__in] y Экранная координата Y
-@param [__in_opt] width Ширина текстуры
-@param [__in_opt] align Расположение текста
-@param [__in_opt] flags Эффекты текста
+РћС‚СЂРёСЃРѕРІР°С‚СЊ С‚РµРєСЃС‚
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] color Р¦РІРµС‚
+@param [__in] x Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__in] y Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
+@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
 @return 
 */
 void CFontsManager::DrawA(uchar font, const char *str, ushort color, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags)
@@ -1023,14 +1023,14 @@ void CFontsManager::DrawA(uchar font, const char *str, ushort color, int x, int 
 //--------------------------------------Unicode-------------------------------------
 //----------------------------------------------------------------------------------
 /*!
-Получить позицию каретки в тексте
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] pos Текущая позиция в тексте
-@param [__in] width Ширина текстуры
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@return Координаты каретки
+РџРѕР»СѓС‡РёС‚СЊ РїРѕР·РёС†РёСЋ РєР°СЂРµС‚РєРё РІ С‚РµРєСЃС‚Рµ
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] pos РўРµРєСѓС‰Р°СЏ РїРѕР·РёС†РёСЏ РІ С‚РµРєСЃС‚Рµ
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return РљРѕРѕСЂРґРёРЅР°С‚С‹ РєР°СЂРµС‚РєРё
 */
 POINT CFontsManager::GetCaretPosW(uchar font, const wchar_t *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
@@ -1114,15 +1114,15 @@ POINT CFontsManager::GetCaretPosW(uchar font, const wchar_t *str, int pos, int w
 }
 //----------------------------------------------------------------------------------
 /*!
-Вычислить положение каретки
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] x Координата каретки по оси X
-@param [__in] y Координата каретки по оси Y
-@param [__in] width Ширина текстуры
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@return Позиция каретки в строке
+Р’С‹С‡РёСЃР»РёС‚СЊ РїРѕР»РѕР¶РµРЅРёРµ РєР°СЂРµС‚РєРё
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] x РљРѕРѕСЂРґРёРЅР°С‚Р° РєР°СЂРµС‚РєРё РїРѕ РѕСЃРё X
+@param [__in] y РљРѕРѕСЂРґРёРЅР°С‚Р° РєР°СЂРµС‚РєРё РїРѕ РѕСЃРё Y
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return РџРѕР·РёС†РёСЏ РєР°СЂРµС‚РєРё РІ СЃС‚СЂРѕРєРµ
 */
 int CFontsManager::CalculateCaretPosW(uchar font, const wchar_t *str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
@@ -1219,11 +1219,11 @@ int CFontsManager::CalculateCaretPosW(uchar font, const wchar_t *str, int x, int
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить ширину текста
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in_opt] len Длина текста
-@return Ширина текста в пикселях
+РџРѕР»СѓС‡РёС‚СЊ С€РёСЂРёРЅСѓ С‚РµРєСЃС‚Р°
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in_opt] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+@return РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 */
 int CFontsManager::GetWidthW(uchar font, const wchar_t *str, int len)
 {
@@ -1256,14 +1256,14 @@ int CFontsManager::GetWidthW(uchar font, const wchar_t *str, int len)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить ширину текста (с учетом параметров отрисовки)
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] len Длина текста
-@param [__in] maxWidth Максимальная ширина текстуры
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@return Ширина текста в пикселях
+РџРѕР»СѓС‡РёС‚СЊ С€РёСЂРёРЅСѓ С‚РµРєСЃС‚Р° (СЃ СѓС‡РµС‚РѕРј РїР°СЂР°РјРµС‚СЂРѕРІ РѕС‚СЂРёСЃРѕРІРєРё)
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+@param [__in] maxWidth РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 */
 int CFontsManager::GetWidthExW(uchar font, const wchar_t *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags)
 {
@@ -1300,13 +1300,13 @@ int CFontsManager::GetWidthExW(uchar font, const wchar_t *str, int len, int maxW
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить высоту текста
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in_opt] width Ширина текстуры
-@param [__in_opt] align Расположение текста
-@param [__in_opt] flags Эффекты текста
-@return Высота текста в пикселях
+РџРѕР»СѓС‡РёС‚СЊ РІС‹СЃРѕС‚Сѓ С‚РµРєСЃС‚Р°
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return Р’С‹СЃРѕС‚Р° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 */
 int CFontsManager::GetHeightW(uchar font, const wchar_t *str, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
@@ -1347,9 +1347,9 @@ int CFontsManager::GetHeightW(uchar font, const wchar_t *str, int width, TEXT_AL
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить высоту текста по списку строк
-@param [__in] info Ссылка на мультистрочный текст
-@return Высота текста в пикселях
+РџРѕР»СѓС‡РёС‚СЊ РІС‹СЃРѕС‚Сѓ С‚РµРєСЃС‚Р° РїРѕ СЃРїРёСЃРєСѓ СЃС‚СЂРѕРє
+@param [__in] info РЎСЃС‹Р»РєР° РЅР° РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅС‹Р№ С‚РµРєСЃС‚
+@return Р’С‹СЃРѕС‚Р° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 */
 int CFontsManager::GetHeightW(PMULTILINES_FONT_INFO info)
 {
@@ -1372,13 +1372,13 @@ int CFontsManager::GetHeightW(PMULTILINES_FONT_INFO info)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить текст указанной ширины
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] len Длина текста
-@param [__in] width Ширина текстуры
-@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
-@return Результирующий текст
+РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚ СѓРєР°Р·Р°РЅРЅРѕР№ С€РёСЂРёРЅС‹
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] IsCropped РћРіСЂР°РЅРёС‡РµРЅРЅС‹Р№ С‚РµРєСЃС‚, РІС‹С€РµРґС€Р°СЏ Р·Р° РґРѕСЃС‚СѓРїРЅС‹Рµ РїСЂРµРґРµР»С‹ С‡Р°СЃС‚СЊ РѕР±СЂРµР·Р°РµС‚СЃСЏ Рё Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° РјРЅРѕРіРѕС‚РѕС‡РёРµ
+@return Р РµР·СѓР»СЊС‚РёСЂСѓСЋС‰РёР№ С‚РµРєСЃС‚
 */
 wstring CFontsManager::GetTextByWidthW(uchar font, const wchar_t *str, int len, int width, bool IsCropped)
 {
@@ -1434,10 +1434,10 @@ ushort CFontsManager::GetWebLinkID(const wstring &link, uint &color)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить индекс ссылки
-@param [__in] link Ссылка
-@param [__out] color Цвет ссылки
-@return Индекс ссылки
+РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ СЃСЃС‹Р»РєРё
+@param [__in] link РЎСЃС‹Р»РєР°
+@param [__out] color Р¦РІРµС‚ СЃСЃС‹Р»РєРё
+@return РРЅРґРµРєСЃ СЃСЃС‹Р»РєРё
 */
 ushort CFontsManager::GetWebLinkID(const string &link, uint &color)
 {
@@ -1974,14 +1974,14 @@ HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, in
 }
 //----------------------------------------------------------------------------------
 /*!
-Получение данных многострочного текста HTML
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] len Длина текста
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@param [__in] width Ширина текста
-@return Ссылка на данные
+РџРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… РјРЅРѕРіРѕСЃС‚СЂРѕС‡РЅРѕРіРѕ С‚РµРєСЃС‚Р° HTML
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р°
+@return РЎСЃС‹Р»РєР° РЅР° РґР°РЅРЅС‹Рµ
 */
 PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
@@ -2194,14 +2194,14 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str,
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить информацию о тексте (в мультистрочном виде)
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] len Длина текста
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@param [__in] width Ширина текстуры
-@return Ссылка на мультистрочный текст или NULL
+РџРѕР»СѓС‡РёС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С‚РµРєСЃС‚Рµ (РІ РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅРѕРј РІРёРґРµ)
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@return РЎСЃС‹Р»РєР° РЅР° РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅС‹Р№ С‚РµРєСЃС‚ РёР»Рё NULL
 */
 PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
@@ -2431,16 +2431,16 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, in
 }
 //----------------------------------------------------------------------------------
 /*!
-Сгенерировать текстуру текста
-@param [__in] font Шрифт
-@param [__inout] th Данные о текстуре текста
-@param [__in] str Текст
-@param [__in_opt] color Цвет
-@param [__in_opt] cell Ячейка в палитре цветов
-@param [__in_opt] width Ширина текстуры
-@param [__in_opt] align Расположение текста
-@param [__in_opt] flags Эффекты текста
-@return true при успешной генерации
+РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ С‚РµРєСЃС‚Р°
+@param [__in] font РЁСЂРёС„С‚
+@param [__inout] th Р”Р°РЅРЅС‹Рµ Рѕ С‚РµРєСЃС‚СѓСЂРµ С‚РµРєСЃС‚Р°
+@param [__in] str РўРµРєСЃС‚
+@param [__in_opt] color Р¦РІРµС‚
+@param [__in_opt] cell РЇС‡РµР№РєР° РІ РїР°Р»РёС‚СЂРµ С†РІРµС‚РѕРІ
+@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РіРµРЅРµСЂР°С†РёРё
 */
 bool CFontsManager::GenerateW(uchar font, CGLTextTexture &th, const wchar_t *str, ushort color, uchar cell, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
@@ -2468,16 +2468,16 @@ bool CFontsManager::GenerateW(uchar font, CGLTextTexture &th, const wchar_t *str
 }
 //----------------------------------------------------------------------------------
 /*!
-Сгенерировать пиксели текстуры текста
-@param [__in] font Шрифт
-@param [__inout] th Данные о текстуре текста
-@param [__in] str Текст
-@param [__in] color Цвет текста
-@param [__in] cell Ячейка в палитре цветов
-@param [__in] width Ширина текстуры
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@return Ссылка на массив пикселей
+РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РїРёРєСЃРµР»Рё С‚РµРєСЃС‚СѓСЂС‹ С‚РµРєСЃС‚Р°
+@param [__in] font РЁСЂРёС„С‚
+@param [__inout] th Р”Р°РЅРЅС‹Рµ Рѕ С‚РµРєСЃС‚СѓСЂРµ С‚РµРєСЃС‚Р°
+@param [__in] str РўРµРєСЃС‚
+@param [__in] color Р¦РІРµС‚ С‚РµРєСЃС‚Р°
+@param [__in] cell РЇС‡РµР№РєР° РІ РїР°Р»РёС‚СЂРµ С†РІРµС‚РѕРІ
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return РЎСЃС‹Р»РєР° РЅР° РјР°СЃСЃРёРІ РїРёРєСЃРµР»РµР№
 */
 UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const wchar_t *str, ushort &color, uchar &cell, int &width, TEXT_ALIGN_TYPE &align, ushort &flags)
 {
@@ -2992,16 +2992,16 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 }
 //----------------------------------------------------------------------------------
 /*!
-Создание Unicode текстуры
-@param [__in] font Шрифт
-@param [__out] th Данные текстуры
-@param [__in] str Текст
-@param [__in] color Цвет
-@param [__in] cell Номер ячейки в палитре цветов
-@param [__in] width Ширина текстуры
-@param [__in] align Расположение текста
-@param [__in] flags Эффекты текста
-@return true при успешной генерации
+РЎРѕР·РґР°РЅРёРµ Unicode С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] font РЁСЂРёС„С‚
+@param [__out] th Р”Р°РЅРЅС‹Рµ С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] str РўРµРєСЃС‚
+@param [__in] color Р¦РІРµС‚
+@param [__in] cell РќРѕРјРµСЂ СЏС‡РµР№РєРё РІ РїР°Р»РёС‚СЂРµ С†РІРµС‚РѕРІ
+@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РіРµРЅРµСЂР°С†РёРё
 */
 bool CFontsManager::GenerateWBase(uchar &font, CGLTextTexture &th, const wchar_t *str, ushort &color, uchar &cell, int &width, TEXT_ALIGN_TYPE &align, ushort &flags)
 {
@@ -3019,16 +3019,16 @@ bool CFontsManager::GenerateWBase(uchar &font, CGLTextTexture &th, const wchar_t
 }
 //----------------------------------------------------------------------------------
 /*!
-Отрисовать текст
-@param [__in] font Шрифт
-@param [__in] str Текст
-@param [__in] color Цвет
-@param [__in] x Экранная координата X
-@param [__in] y Экранная координата Y
-@param [__in_opt] cell Ячейка в палитре цветов
-@param [__in_opt] width Ширина текстуры
-@param [__in_opt] align Расположение текста
-@param [__in_opt] flags Эффекты текста
+РћС‚СЂРёСЃРѕРІР°С‚СЊ С‚РµРєСЃС‚
+@param [__in] font РЁСЂРёС„С‚
+@param [__in] str РўРµРєСЃС‚
+@param [__in] color Р¦РІРµС‚
+@param [__in] x Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__in] y Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
+@param [__in_opt] cell РЇС‡РµР№РєР° РІ РїР°Р»РёС‚СЂРµ С†РІРµС‚РѕРІ
+@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
 @return
 */
 void CFontsManager::DrawW(uchar font, const wchar_t *str, ushort color, int x, int y, uchar cell, int width, TEXT_ALIGN_TYPE align, ushort flags)
@@ -3039,7 +3039,7 @@ void CFontsManager::DrawW(uchar font, const wchar_t *str, ushort color, int x, i
 		th.Draw(x, y);
 }
 //----------------------------------------------------------------------------------
-//!Таблица ассоциации ASCII шрифтов
+//!РўР°Р±Р»РёС†Р° Р°СЃСЃРѕС†РёР°С†РёРё ASCII С€СЂРёС„С‚РѕРІ
 const uchar CFontsManager::m_FontIndex[256] =
 {
 	0xFF, //0

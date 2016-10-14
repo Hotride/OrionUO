@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** OrionUO.h
 **
@@ -43,71 +43,71 @@ private:
 
 	void LoadIndexFiles();
 
-	//Выгрузка индексных файлов
+	//Р’С‹РіСЂСѓР·РєР° РёРЅРґРµРєСЃРЅС‹С… С„Р°Р№Р»РѕРІ
 	void UnloadIndexFiles();
 
-	//Создание списка анимированных предметов
+	//РЎРѕР·РґР°РЅРёРµ СЃРїРёСЃРєР° Р°РЅРёРјРёСЂРѕРІР°РЅРЅС‹С… РїСЂРµРґРјРµС‚РѕРІ
 	void InitStaticAnimList();
 
-	//Вычисление цвета света
+	//Р’С‹С‡РёСЃР»РµРЅРёРµ С†РІРµС‚Р° СЃРІРµС‚Р°
 	ushort CalculateLightColor(const ushort &id);
 
-	//Обработка списка анимированных предметов
+	//РћР±СЂР°Р±РѕС‚РєР° СЃРїРёСЃРєР° Р°РЅРёРјРёСЂРѕРІР°РЅРЅС‹С… РїСЂРµРґРјРµС‚РѕРІ
 	void ProcessStaticAnimList();
 
-	//Патч файлов
+	//РџР°С‚С‡ С„Р°Р№Р»РѕРІ
 	void PatchFiles();
 
-	//Подмена индексов (согласно текстовым файлам)
+	//РџРѕРґРјРµРЅР° РёРЅРґРµРєСЃРѕРІ (СЃРѕРіР»Р°СЃРЅРѕ С‚РµРєСЃС‚РѕРІС‹Рј С„Р°Р№Р»Р°Рј)
 	void IndexReplaces();
 
-	//Загрузка данных о навыках
+	//Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… Рѕ РЅР°РІС‹РєР°С…
 	bool LoadSkills();
 
-	//Загрузка стартового конфига
+	//Р—Р°РіСЂСѓР·РєР° СЃС‚Р°СЂС‚РѕРІРѕРіРѕ РєРѕРЅС„РёРіР°
 	void LoadClientStartupConfig();
 
-	//Загрузка шейдеров
+	//Р—Р°РіСЂСѓР·РєР° С€РµР№РґРµСЂРѕРІ
 	void LoadShaders();
 
 	void CreateAuraTexture();
 
 	void CreateObjectHandlesBackground();
 
-	//Очистка неиспользуемых текстур
+	//РћС‡РёСЃС‚РєР° РЅРµРёСЃРїРѕР»СЊР·СѓРµРјС‹С… С‚РµРєСЃС‚СѓСЂ
 	void ClearUnusedTextures();
 
 public:
 	COrion();
 	~COrion();
 
-	//Данные из тайлдаты по ландшафту
+	//Р”Р°РЅРЅС‹Рµ РёР· С‚Р°Р№Р»РґР°С‚С‹ РїРѕ Р»Р°РЅРґС€Р°С„С‚Сѓ
 	vector<LAND_GROUP> m_LandData;
 
-	//Данные из тайлдаты по статике
+	//Р”Р°РЅРЅС‹Рµ РёР· С‚Р°Р№Р»РґР°С‚С‹ РїРѕ СЃС‚Р°С‚РёРєРµ
 	vector<STATIC_GROUP> m_StaticData;
 
 	bool Install();
 	void Uninstall();
 
-	//Инициализация экрана
+	//РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЌРєСЂР°РЅР°
 	void InitScreen(const GAME_STATE &state);
 
-	//Обработка кликов мышки по истечении таймера ожидания даблклика
+	//РћР±СЂР°Р±РѕС‚РєР° РєР»РёРєРѕРІ РјС‹С€РєРё РїРѕ РёСЃС‚РµС‡РµРЅРёРё С‚Р°Р№РјРµСЂР° РѕР¶РёРґР°РЅРёСЏ РґР°Р±Р»РєР»РёРєР°
 	void ProcessDelayedClicks();
 
 	void Process(const bool &rendering = false);
 
-	//Загрузка стартового конфига
+	//Р—Р°РіСЂСѓР·РєР° СЃС‚Р°СЂС‚РѕРІРѕРіРѕ РєРѕРЅС„РёРіР°
 	void LoadStartupConfig();
 
-	//Загрузка плагинов
+	//Р—Р°РіСЂСѓР·РєР° РїР»Р°РіРёРЅРѕРІ
 	void LoadPluginConfig();
 
-	//Загрузка конфига персонажа
+	//Р—Р°РіСЂСѓР·РєР° РєРѕРЅС„РёРіР° РїРµСЂСЃРѕРЅР°Р¶Р°
 	void LoadLocalConfig();
 
-	//Сохранение конфига персонажа
+	//РЎРѕС…СЂР°РЅРµРЅРёРµ РєРѕРЅС„РёРіР° РїРµСЂСЃРѕРЅР°Р¶Р°
 	void SaveLocalConfig();
 
 	CIndexObject m_LandDataIndex[MAX_LAND_DATA_INDEX_COUNT];
@@ -123,31 +123,31 @@ public:
 
 
 	
-	//Подключиться к логин сокету
+	//РџРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ Рє Р»РѕРіРёРЅ СЃРѕРєРµС‚Сѓ
 	void Connect();
 
-	//Оборвать соединение
+	//РћР±РѕСЂРІР°С‚СЊ СЃРѕРµРґРёРЅРµРЅРёРµ
 	void Disconnect();
 
-	//Отправить пакет на сервер
+	//РћС‚РїСЂР°РІРёС‚СЊ РїР°РєРµС‚ РЅР° СЃРµСЂРІРµСЂ
 	int Send(puchar buf, const int &size);
 
-	//Отправить пакет на сервер
+	//РћС‚РїСЂР°РІРёС‚СЊ РїР°РєРµС‚ РЅР° СЃРµСЂРІРµСЂ
 	int Send(const UCHAR_LIST &buf) { return Send((puchar)&buf[0], (int)buf.size()); }
 
-	//Выбор сервера
+	//Р’С‹Р±РѕСЂ СЃРµСЂРІРµСЂР°
 	void ServerSelection(int pos);
 
-	//Подключение к игровому сокету
+	//РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє РёРіСЂРѕРІРѕРјСѓ СЃРѕРєРµС‚Сѓ
 	void RelayServer(const char *ip, int port, puchar gameSeed);
 
-	//Выбор персонажа
+	//Р’С‹Р±РѕСЂ РїРµСЂСЃРѕРЅР°Р¶Р°
 	void CharacterSelection(int pos);
 
-	//Подтверждение о завершении логина (приходит от сервера)
+	//РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ Рѕ Р·Р°РІРµСЂС€РµРЅРёРё Р»РѕРіРёРЅР° (РїСЂРёС…РѕРґРёС‚ РѕС‚ СЃРµСЂРІРµСЂР°)
 	void LoginComplete();
 
-	//!Изменить сезон
+	//!РР·РјРµРЅРёС‚СЊ СЃРµР·РѕРЅ
 	void ChangeSeason(const SEASON_TYPE &season, const int &music);
 
 	ushort GetLandSeasonGraphic(ushort graphic);
@@ -158,8 +158,8 @@ public:
 	ushort GetWinterGraphic(ushort graphic);
 	ushort GetDesolationGraphic(ushort graphic);
 
-	int GetValueInt(const CONFIG_VALUE_KEY &key, int value = -1);
-	string GetValueString(const CONFIG_VALUE_KEY &key, string value = "");
+	int ValueInt(const VALUE_KEY_INT &key, int value = -1);
+	string ValueString(const VALUE_KEY_STRING &key, string value = "");
 
 	void ClearRemovedStaticsTextures();
 
@@ -175,307 +175,307 @@ public:
 
 
 
-	//Получить флаги ландшафта
+	//РџРѕР»СѓС‡РёС‚СЊ С„Р»Р°РіРё Р»Р°РЅРґС€Р°С„С‚Р°
 	__int64 GetLandFlags(const ushort &id);
 
-	//Получить флаги статики
+	//РџРѕР»СѓС‡РёС‚СЊ С„Р»Р°РіРё СЃС‚Р°С‚РёРєРё
 	__int64 GetStaticFlags(const ushort &id);
 
-	//Получить цвет света
+	//РџРѕР»СѓС‡РёС‚СЊ С†РІРµС‚ СЃРІРµС‚Р°
 	ushort GetLightColor(const ushort &id) { return m_StaticDataIndex[id].LightColor; }
 
 
 
-	//Получить габариты картинки статики
+	//РџРѕР»СѓС‡РёС‚СЊ РіР°Р±Р°СЂРёС‚С‹ РєР°СЂС‚РёРЅРєРё СЃС‚Р°С‚РёРєРё
 	WISP_GEOMETRY::CSize GetArtDimension(const ushort &id);
 
-	//Получить габариты картинки статики (реальные пиксельные границы)
+	//РџРѕР»СѓС‡РёС‚СЊ РіР°Р±Р°СЂРёС‚С‹ РєР°СЂС‚РёРЅРєРё СЃС‚Р°С‚РёРєРё (СЂРµР°Р»СЊРЅС‹Рµ РїРёРєСЃРµР»СЊРЅС‹Рµ РіСЂР°РЅРёС†С‹)
 	WISP_GEOMETRY::CRect GetStaticArtRealPixelDimension(const ushort &id);
 
-	//Получить габариты картинки гампа
+	//РџРѕР»СѓС‡РёС‚СЊ РіР°Р±Р°СЂРёС‚С‹ РєР°СЂС‚РёРЅРєРё РіР°РјРїР°
 	WISP_GEOMETRY::CSize GetGumpDimension(const ushort &id);
 
 
 
-	//Загрузка текстуры гампа
+	//Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂС‹ РіР°РјРїР°
 	CGLTexture *ExecuteGump(const ushort &id);
 
-	//Загрузка текстуры ландшафта из art.mul
+	//Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂС‹ Р»Р°РЅРґС€Р°С„С‚Р° РёР· art.mul
 	CGLTexture *ExecuteLandArt(const ushort &id);
 
-	//Загрузка текстуры статики
+	//Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂС‹ СЃС‚Р°С‚РёРєРё
 	CGLTexture *ExecuteStaticArt(const ushort &id);
 
-	//Загрузка текстуры анимированной статики
+	//Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂС‹ Р°РЅРёРјРёСЂРѕРІР°РЅРЅРѕР№ СЃС‚Р°С‚РёРєРё
 	CGLTexture *ExecuteStaticArtAnimated(const ushort &id);
 
-	//Загрузка текстуры ландшафта (из texmaps.mul)
+	//Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂС‹ Р»Р°РЅРґС€Р°С„С‚Р° (РёР· texmaps.mul)
 	CGLTexture *ExecuteTexture(ushort id);
 
-	//Загрузка текстуры света
+	//Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂС‹ СЃРІРµС‚Р°
 	CGLTexture *ExecuteLight(uchar &id);
 
 
 
-	//Загрузка элементов гампов
+	//Р—Р°РіСЂСѓР·РєР° СЌР»РµРјРµРЅС‚РѕРІ РіР°РјРїРѕРІ
 	bool ExecuteGumpPart(const ushort &id, const int &count);
 
-	//Загрузка элементов фона гампа
+	//Р—Р°РіСЂСѓР·РєР° СЌР»РµРјРµРЅС‚РѕРІ С„РѕРЅР° РіР°РјРїР°
 	bool ExecuteResizepic(const ushort &id) { return ExecuteGumpPart(id, 9); }
 
-	//Загрузка элементов кнопки гампа
+	//Р—Р°РіСЂСѓР·РєР° СЌР»РµРјРµРЅС‚РѕРІ РєРЅРѕРїРєРё РіР°РјРїР°
 	bool ExecuteButton(const ushort &id) { return ExecuteGumpPart(id, 3); }
 
 
 
-	//Нарисовать гамп
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ РіР°РјРї
 	void DrawGump(const ushort &id, const ushort &color, const int &x, const int &y, const bool &partialHue = false);
 
-	//Нарисовать замощенный гамп
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ Р·Р°РјРѕС‰РµРЅРЅС‹Р№ РіР°РјРї
 	void DrawGump(const ushort &id, const ushort &color, const int &x, const int &y, const int &width, const int &height, const bool &partialHue = false);
 
-	//Нарисовать фон гампа
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ С„РѕРЅ РіР°РјРїР°
 	void DrawResizepicGump(const ushort &id, const int &x, const int &y, const int &width, const int &height);
 
-	//Нарисовать ландшафт (из texmaps.mul)
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ Р»Р°РЅРґС€Р°С„С‚ (РёР· texmaps.mul)
 	void DrawLandTexture(class CLandObject *land, ushort color, const int &x, const int &y);
 
-	//Нарисовать ландшафт (из art.mul)
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ Р»Р°РЅРґС€Р°С„С‚ (РёР· art.mul)
 	void DrawLandArt(const ushort &id, ushort color, const int &x, const int &y, const int &z);
 
-	//Нарисовать статику
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ СЃС‚Р°С‚РёРєСѓ
 	void DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const int &z, const bool &selection = false);
 
-	//Нарисовать анимированную статику
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ Р°РЅРёРјРёСЂРѕРІР°РЅРЅСѓСЋ СЃС‚Р°С‚РёРєСѓ
 	void DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection = false);
 
-	//Нарисовать повернутую статику
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ РїРѕРІРµСЂРЅСѓС‚СѓСЋ СЃС‚Р°С‚РёРєСѓ
 	void DrawStaticArtRotated(const ushort &id, ushort color, const int &x, const int &y, const int &z, const float &angle);
 
-	//Нарисовать повернутую анимированную статику
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ РїРѕРІРµСЂРЅСѓС‚СѓСЋ Р°РЅРёРјРёСЂРѕРІР°РЅРЅСѓСЋ СЃС‚Р°С‚РёРєСѓ
 	void DrawStaticArtAnimatedRotated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const float &angle);
 
-	//Нарисовать прозрачную статику
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ РїСЂРѕР·СЂР°С‡РЅСѓСЋ СЃС‚Р°С‚РёРєСѓ
 	void DrawStaticArtTransparent(const ushort &id, ushort color, int x, int y, const int &z, const bool &selection = false);
 
-	//Нарисовать прозрачную анимированную статику
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ РїСЂРѕР·СЂР°С‡РЅСѓСЋ Р°РЅРёРјРёСЂРѕРІР°РЅРЅСѓСЋ СЃС‚Р°С‚РёРєСѓ
 	void DrawStaticArtAnimatedTransparent(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection = false);
 
-	//Нарисовать статику в контейнере
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ СЃС‚Р°С‚РёРєСѓ РІ РєРѕРЅС‚РµР№РЅРµСЂРµ
 	void DrawStaticArtInContainer(const ushort &id, ushort color, int x, int y, const bool &selection = false, const bool &onMouse = false);
 
-	//Нарисовать свет
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ СЃРІРµС‚
 	void DrawLight(struct LIGHT_DATA &light);
 
 
 
-	//Проверка прямоугольника под курсором мышки
+	//РџСЂРѕРІРµСЂРєР° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР° РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј РјС‹С€РєРё
 	bool PolygonePixelsInXY(int x, int y, const int &width, const int &height);
 
-	//Проверка гампа под курсором мышки
+	//РџСЂРѕРІРµСЂРєР° РіР°РјРїР° РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј РјС‹С€РєРё
 	bool GumpPixelsInXY(const ushort &id, int x, int y, const bool &noSubMouse = false);
 
-	//Проверка замощенного гампа под курсором мышки
+	//РџСЂРѕРІРµСЂРєР° Р·Р°РјРѕС‰РµРЅРЅРѕРіРѕ РіР°РјРїР° РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј РјС‹С€РєРё
 	bool GumpPixelsInXY(const ushort &id, int x, int y, int width, int height, const bool &noSubMouse = false);
 
-	//Проверка фона под курсором мышки
+	//РџСЂРѕРІРµСЂРєР° С„РѕРЅР° РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј РјС‹С€РєРё
 	bool ResizepicPixelsInXY(const ushort &id, int x, int y, const int &width, const int &height);
 
-	//Проверка статики под курсором мышки
+	//РџСЂРѕРІРµСЂРєР° СЃС‚Р°С‚РёРєРё РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј РјС‹С€РєРё
 	bool StaticPixelsInXY(const ushort &id, int x, int y, const int &z);
 
-	//Проверка анимированной статики под курсором мышки
+	//РџСЂРѕРІРµСЂРєР° Р°РЅРёРјРёСЂРѕРІР°РЅРЅРѕР№ СЃС‚Р°С‚РёРєРё РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј РјС‹С€РєРё
 	bool StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y, const int &z);
 
-	//Проверка круга прозрачности под курсором мышки
+	//РџСЂРѕРІРµСЂРєР° РєСЂСѓРіР° РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚Рё РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј РјС‹С€РєРё
 	bool CircleTransPixelsInXY();
 
-	//Проверка статики в контейнере под курсором мышки
+	//РџСЂРѕРІРµСЂРєР° СЃС‚Р°С‚РёРєРё РІ РєРѕРЅС‚РµР№РЅРµСЂРµ РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј РјС‹С€РєРё
 	bool StaticPixelsInXYInContainer(const ushort &id, int x, int y);
 
-	//Проверка ландшафта (из art.mul) под курсором мышки
+	//РџСЂРѕРІРµСЂРєР° Р»Р°РЅРґС€Р°С„С‚Р° (РёР· art.mul) РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј РјС‹С€РєРё
 	bool LandPixelsInXY(const ushort &id, int x, int y, const int &z);
 
-	//Проверка растянутого ландшафта (из texmaps.mul) под курсором мышки
+	//РџСЂРѕРІРµСЂРєР° СЂР°СЃС‚СЏРЅСѓС‚РѕРіРѕ Р»Р°РЅРґС€Р°С„С‚Р° (РёР· texmaps.mul) РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј РјС‹С€РєРё
 	bool LandTexturePixelsInXY(int x, int  y, RECT &r);
 
 
 
-	//Создать текстовое сообщение с форматированным вводом
+	//РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ СЃ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅС‹Рј РІРІРѕРґРѕРј
 	void CreateTextMessageF(uchar font, ushort color, const char *format, ...);
 
-	//Создать текстовое сообщение с форматированным вводом (Unicode)
+	//РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ СЃ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅС‹Рј РІРІРѕРґРѕРј (Unicode)
 	void CreateUnicodeTextMessageF(uchar font, ushort color, const char *format, ...);
 
-	//Создать текстовое сообщение (ASCII)
+	//РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ (ASCII)
 	void CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort color, string text);
 
-	//Создать текстовое сообщение (Unicode)
+	//РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ (Unicode)
 	void CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort color, wstring text);
 
-	//Добавить сообщение в систем чат
+	//Р”РѕР±Р°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РІ СЃРёСЃС‚РµРј С‡Р°С‚
 	void AddSystemMessage(class CTextData *msg);
 
-	//Добавить сообщение в журнал
+	//Р”РѕР±Р°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РІ Р¶СѓСЂРЅР°Р»
 	void AddJournalMessage(class CTextData *msg, string name);
 
 
 
-	//Изменение индекса карты
+	//РР·РјРµРЅРµРЅРёРµ РёРЅРґРµРєСЃР° РєР°СЂС‚С‹
 	void ChangeMap(uchar newmap);
 
 
 
-	//Поднять предмет
+	//РџРѕРґРЅСЏС‚СЊ РїСЂРµРґРјРµС‚
 	void PickupItem(class CGameItem *obj, int count = 0, bool isGameFigure = false);
 
-	//Бросить предмет
+	//Р‘СЂРѕСЃРёС‚СЊ РїСЂРµРґРјРµС‚
 	void DropItem(uint container, ushort x, ushort y, char z);
 
-	//Одеть предмет
+	//РћРґРµС‚СЊ РїСЂРµРґРјРµС‚
 	void EquipItem(uint container = 0);
 
 
 
-	//Изменить вармод
+	//РР·РјРµРЅРёС‚СЊ РІР°СЂРјРѕРґ
 	void ChangeWarmode(uchar status = 0xFF);
 
-	//Запрос хэлп-меню
+	//Р—Р°РїСЂРѕСЃ С…СЌР»Рї-РјРµРЅСЋ
 	void HelpRequest();
 
-	//Запрос статуса
+	//Р—Р°РїСЂРѕСЃ СЃС‚Р°С‚СѓСЃР°
 	void StatusReq(uint serial);
 
-	//Запрос навыков
+	//Р—Р°РїСЂРѕСЃ РЅР°РІС‹РєРѕРІ
 	void SkillsReq(uint serial);
 
-	//Изменения состояния навыка
+	//РР·РјРµРЅРµРЅРёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ РЅР°РІС‹РєР°
 	void SkillStatusChange(uchar skill, uchar state);
 
-	//Кликнуть по объекту
+	//РљР»РёРєРЅСѓС‚СЊ РїРѕ РѕР±СЉРµРєС‚Сѓ
 	void Click(uint serial);
 
-	//Запрос имени объекта (клик)
+	//Р—Р°РїСЂРѕСЃ РёРјРµРЅРё РѕР±СЉРµРєС‚Р° (РєР»РёРє)
 	void NameReq(uint serial) { Click(serial); };
 
-	//Двойное нажатие на объект
+	//Р”РІРѕР№РЅРѕРµ РЅР°Р¶Р°С‚РёРµ РЅР° РѕР±СЉРµРєС‚
 	void DoubleClick(uint serial);
 
-	//Запрос папердолла
+	//Р—Р°РїСЂРѕСЃ РїР°РїРµСЂРґРѕР»Р»Р°
 	void PaperdollReq(uint serial);
 
-	//Обработка атаки в клиенте
+	//РћР±СЂР°Р±РѕС‚РєР° Р°С‚Р°РєРё РІ РєР»РёРµРЅС‚Рµ
 	void Attack(uint serial);
 
-	//Отправка пакета на сервер
+	//РћС‚РїСЂР°РІРєР° РїР°РєРµС‚Р° РЅР° СЃРµСЂРІРµСЂ
 	void AttackReq(uint serial);
 
-	//Отправка ASCII текста
+	//РћС‚РїСЂР°РІРєР° ASCII С‚РµРєСЃС‚Р°
 	void SendASCIIText(const char *str, SPEECH_TYPE type);
 
-	//Начать каст заклинания
+	//РќР°С‡Р°С‚СЊ РєР°СЃС‚ Р·Р°РєР»РёРЅР°РЅРёСЏ
 	void CastSpell(int index);
 
-	//Начать каст заклинания с книги
+	//РќР°С‡Р°С‚СЊ РєР°СЃС‚ Р·Р°РєР»РёРЅР°РЅРёСЏ СЃ РєРЅРёРіРё
 	void CastSpellFromBook(int index, uint serial);
 
-	//Использовать навык
+	//РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РЅР°РІС‹Рє
 	void UseSkill(int index);
 
-	//Открыть дверь
+	//РћС‚РєСЂС‹С‚СЊ РґРІРµСЂСЊ
 	void OpenDoor();
 
-	//Запрос анимации эмоции
+	//Р—Р°РїСЂРѕСЃ Р°РЅРёРјР°С†РёРё СЌРјРѕС†РёРё
 	void EmoteAction(const char *action);
 
-	//Клик на всех персонажей в зоне видимости
+	//РљР»РёРє РЅР° РІСЃРµС… РїРµСЂСЃРѕРЅР°Р¶РµР№ РІ Р·РѕРЅРµ РІРёРґРёРјРѕСЃС‚Рё
 	void AllNames();
 
-	//Получить хэш-код файла
+	//РџРѕР»СѓС‡РёС‚СЊ С…СЌС€-РєРѕРґ С„Р°Р№Р»Р°
 	uint GetFileHashCode(uint address, uint size);
 
-	//Загрузка логинсервера
+	//Р—Р°РіСЂСѓР·РєР° Р»РѕРіРёРЅСЃРµСЂРІРµСЂР°
 	void LoadLogin(string &login, int &port);
 
-	//Переход по веб-ссылке
+	//РџРµСЂРµС…РѕРґ РїРѕ РІРµР±-СЃСЃС‹Р»РєРµ
 	void GoToWebLink(const string &url);
 
 
 
-	//Проиграть музыку mp3 либо midi
+	//РџСЂРѕРёРіСЂР°С‚СЊ РјСѓР·С‹РєСѓ mp3 Р»РёР±Рѕ midi
 	void PlayMusic(const int &index, const bool &warmode = false);
 
-	//Проиграть звуковой эффект
+	//РџСЂРѕРёРіСЂР°С‚СЊ Р·РІСѓРєРѕРІРѕР№ СЌС„С„РµРєС‚
 	void PlaySoundEffect(const ushort &index, float volume = -1);
 
-	//Удалить неиспользуемые звуковые эффекты
+	//РЈРґР°Р»РёС‚СЊ РЅРµРёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ Р·РІСѓРєРѕРІС‹Рµ СЌС„С„РµРєС‚С‹
 	void AdjustSoundEffects(const uint &ticks, const float &volume = -1);
 
 
 
-	//Удаление объектов, вышедших за пределы g_UpdateRange
+	//РЈРґР°Р»РµРЅРёРµ РѕР±СЉРµРєС‚РѕРІ, РІС‹С€РµРґС€РёС… Р·Р° РїСЂРµРґРµР»С‹ g_UpdateRange
 	void RemoveRangedObjects();
 
-	//Выход из игры на основной экран
+	//Р’С‹С…РѕРґ РёР· РёРіСЂС‹ РЅР° РѕСЃРЅРѕРІРЅРѕР№ СЌРєСЂР°РЅ
 	void LogOut();
 
 
 
-	//Отправить промпт
+	//РћС‚РїСЂР°РІРёС‚СЊ РїСЂРѕРјРїС‚
 	void ConsolePromptSend();
 
-	//Отправить отмену промпта
+	//РћС‚РїСЂР°РІРёС‚СЊ РѕС‚РјРµРЅСѓ РїСЂРѕРјРїС‚Р°
 	void ConsolePromptCancel();
 
 
 
 	//--------------------------------------------
-	//---Обработка кнопок папердолла и менюбара---
+	//---РћР±СЂР°Р±РѕС‚РєР° РєРЅРѕРїРѕРє РїР°РїРµСЂРґРѕР»Р»Р° Рё РјРµРЅСЋР±Р°СЂР°---
 	//--------------------------------------------
 
-	//Открыть гамп папердолла
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї РїР°РїРµСЂРґРѕР»Р»Р°
 	void OpenPaperdoll();
 
-	//Открыть гамп статуса
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї СЃС‚Р°С‚СѓСЃР°
 	void OpenStatus(uint serial);
 
-	//Открыть гамп мини-карты
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї РјРёРЅРё-РєР°СЂС‚С‹
 	void OpenMinimap();
 
-	//Открыть гамп карты мира
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї РєР°СЂС‚С‹ РјРёСЂР°
 	void OpenWorldMap();
 
-	//Открыть гамп журнала
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї Р¶СѓСЂРЅР°Р»Р°
 	void OpenJournal();
 
-	//Открыть гамп навыков
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї РЅР°РІС‹РєРѕРІ
 	void OpenSkills();
 
-	//Открыть рюкзак
+	//РћС‚РєСЂС‹С‚СЊ СЂСЋРєР·Р°Рє
 	void OpenBackpack();
 
-	//Открыть гамп логаута
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї Р»РѕРіР°СѓС‚Р°
 	void OpenLogOut();
 
-	//Открыть гамп чата
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї С‡Р°С‚Р°
 	void OpenChat();
 
-	//Открыть гамп опций
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї РѕРїС†РёР№
 	void OpenConfiguration();
 
-	//Открыть гамп почти
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї РїРѕС‡С‚Рё
 	void OpenMail();
 
-	//Открыть гамп пати-манифеста
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї РїР°С‚Рё-РјР°РЅРёС„РµСЃС‚Р°
 	void OpenPartyManifest();
 
-	//Открыть гамп профиля
+	//РћС‚РєСЂС‹С‚СЊ РіР°РјРї РїСЂРѕС„РёР»СЏ
 	void OpenProfile(uint serial = 0);
 
-	//Запросить гамп гильдии
+	//Р—Р°РїСЂРѕСЃРёС‚СЊ РіР°РјРї РіРёР»СЊРґРёРё
 	void RequestGuildGump();
 
-	//Запросить гамп квестов
+	//Р—Р°РїСЂРѕСЃРёС‚СЊ РіР°РјРї РєРІРµСЃС‚РѕРІ
 	void RequestQuestGump();
 };
 //----------------------------------------------------------------------------------

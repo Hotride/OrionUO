@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIText.h
 **
-** Компонента для отображения текста
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С‚РµРєСЃС‚Р°
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -21,15 +21,15 @@ public:
 	CGUIText(const ushort &color, const int &x, const int &y);
 	virtual ~CGUIText();
 
-	//!Текстура текста
+	//!РўРµРєСЃС‚СѓСЂР° С‚РµРєСЃС‚Р°
 	CGLTextTexture m_Texture;
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Texture.Width, m_Texture.Height); }
 
-	//!Создать обычную текстуру текста
+	//!РЎРѕР·РґР°С‚СЊ РѕР±С‹С‡РЅСѓСЋ С‚РµРєСЃС‚СѓСЂСѓ С‚РµРєСЃС‚Р°
 	void CreateTextureA(const uchar &font, const string &str, int width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
 
-	//!Создать юникодовскую текстуру текста
+	//!РЎРѕР·РґР°С‚СЊ СЋРЅРёРєРѕРґРѕРІСЃРєСѓСЋ С‚РµРєСЃС‚СѓСЂСѓ С‚РµРєСЃС‚Р°
 	void CreateTextureW(const uchar &font, const wstring &str, const uchar &cell = 30, int width = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &flags = 0);
 
 	virtual void Draw(const bool &checktrans = false);

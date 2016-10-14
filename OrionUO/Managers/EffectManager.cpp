@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** EffectManager.cpp
 **
@@ -21,8 +21,8 @@ CEffectManager::CEffectManager()
 }
 //----------------------------------------------------------------------------------
 /*!
-Добавить эффект
-@param [__in] effect Ссылка на эффект
+Р”РѕР±Р°РІРёС‚СЊ СЌС„С„РµРєС‚
+@param [__in] effect РЎСЃС‹Р»РєР° РЅР° СЌС„С„РµРєС‚
 @return 
 */
 void CEffectManager::AddEffect(CGameEffect *effect)
@@ -103,8 +103,8 @@ void CEffectManager::AddEffect(CGameEffect *effect)
 }
 //----------------------------------------------------------------------------------
 /*!
-Удалить эффект
-@param [__in] effect Ссылка на эффект
+РЈРґР°Р»РёС‚СЊ СЌС„С„РµРєС‚
+@param [__in] effect РЎСЃС‹Р»РєР° РЅР° СЌС„С„РµРєС‚
 @return 
 */
 void CEffectManager::RemoveEffect(CGameEffect *effect)
@@ -117,8 +117,8 @@ void CEffectManager::RemoveEffect(CGameEffect *effect)
 }
 //----------------------------------------------------------------------------------
 /*!
-Создать эффект взрыва
-@param [__in] effect Ссылка на эффект
+РЎРѕР·РґР°С‚СЊ СЌС„С„РµРєС‚ РІР·СЂС‹РІР°
+@param [__in] effect РЎСЃС‹Р»РєР° РЅР° СЌС„С„РµРєС‚
 @return 
 */
 void CEffectManager::CreateExplodeEffect(CGameEffect *effect)
@@ -139,7 +139,7 @@ void CEffectManager::CreateExplodeEffect(CGameEffect *effect)
 }
 //----------------------------------------------------------------------------------
 /*!
-Обновление эффектов
+РћР±РЅРѕРІР»РµРЅРёРµ СЌС„С„РµРєС‚РѕРІ
 @return 
 */
 void CEffectManager::UpdateEffects()
@@ -155,7 +155,7 @@ void CEffectManager::UpdateEffects()
 }
 //----------------------------------------------------------------------------------
 /*!
-Удаление эффектов, вышедших за пределы экрана
+РЈРґР°Р»РµРЅРёРµ СЌС„С„РµРєС‚РѕРІ, РІС‹С€РµРґС€РёС… Р·Р° РїСЂРµРґРµР»С‹ СЌРєСЂР°РЅР°
 @return 
 */
 void CEffectManager::RemoveRangedEffects()

@@ -1,4 +1,4 @@
-/***********************************************************************************
+ï»¿/***********************************************************************************
 **
 ** LandObject.h
 **
@@ -13,19 +13,19 @@
 #include "MapObject.h"
 #include "../GLEngine/GLVector.h"
 //----------------------------------------------------------------------------------
-//Êëàññ ëàíäøàôòà
+//ÐšÐ»Ð°ÑÑ Ð»Ð°Ð½Ð´ÑˆÐ°Ñ„Ñ‚Ð°
 class CLandObject : public CMapObject
 {
-	//Êîîðäèíàòû ïðèâÿçêè âåðøèí
+	//ÐšÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ð¿Ñ€Ð¸Ð²ÑÐ·ÐºÐ¸ Ð²ÐµÑ€ÑˆÐ¸Ð½
 	SETGET(RECT, Rect);
 
-	//Ìèíèìàëüíûÿ Z êîîðäèíàòà
+	//ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ñ‹Ñ Z ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ð°
 	SETGET(char, MinZ);
 
-	//Ôëàã îòîáðàæåíèÿ (true - êàðòèíêà èç texmaps, false - èç art.mul)
+	//Ð¤Ð»Ð°Ð³ Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ (true - ÐºÐ°Ñ€Ñ‚Ð¸Ð½ÐºÐ° Ð¸Ð· texmaps, false - Ð¸Ð· art.mul)
 	SETGET(bool, IsStretched);
 
-	//Îðèãèíàëüíûé èíäåêñ êàðòèíêè
+	//ÐžÑ€Ð¸Ð³Ð¸Ð½Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¸Ð½Ð´ÐµÐºÑ ÐºÐ°Ñ€Ñ‚Ð¸Ð½ÐºÐ¸
 	SETGET(ushort, OriginalGraphic);
 
 public:
@@ -34,21 +34,21 @@ public:
 
 	virtual void UpdateGraphicBySeason();
 
-	//Âåêòîðû íîðìàëè
+	//Ð’ÐµÐºÑ‚Ð¾Ñ€Ñ‹ Ð½Ð¾Ñ€Ð¼Ð°Ð»Ð¸
 	CVector m_Normals[4];
 
-	//Îòðèñîâàòü îáúåêò
+	//ÐžÑ‚Ñ€Ð¸ÑÐ¾Ð²Ð°Ñ‚ÑŒ Ð¾Ð±ÑŠÐµÐºÑ‚
 	virtual void Draw(const int &x, const int &y);
 
-	//Âûáðàòü îáúåêò
+	//Ð’Ñ‹Ð±Ñ€Ð°Ñ‚ÑŒ Ð¾Ð±ÑŠÐµÐºÑ‚
 	virtual void Select(const int &x, const int &y);
 
-	//Ýòî îáúåêò ëàíäøàôòà
+	//Ð­Ñ‚Ð¾ Ð¾Ð±ÑŠÐµÐºÑ‚ Ð»Ð°Ð½Ð´ÑˆÐ°Ñ„Ñ‚Ð°
 	bool IsLandObject() {return true;}
 
 	void UpdateZ(const char &zTop, const char &zRight, const char &zBottom);
 
-	//Èãíîðèðîâàíèå ïðè íåêîòîðûõ ðàñ÷åòàõ
+	//Ð˜Ð³Ð½Ð¾Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð¿Ñ€Ð¸ Ð½ÐµÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ñ… Ñ€Ð°ÑÑ‡ÐµÑ‚Ð°Ñ…
 	bool Ignored() {return (Graphic == 2 || Graphic == 0x1DB || (Graphic >= 0x1AE && Graphic <= 0x1B5));}
 
 	virtual CLandObject *LandObjectPtr() { return this; }

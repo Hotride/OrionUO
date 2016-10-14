@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** SpeechManager.cpp
 **
@@ -47,12 +47,12 @@ CSpeechManager::~CSpeechManager()
 }
 //----------------------------------------------------------------------------------
 /*!
-Загрузка данных из Speech.mul
-@return true при успешной загрузке
+Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РёР· Speech.mul
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ Р·Р°РіСЂСѓР·РєРµ
 */
 bool CSpeechManager::LoadSpeech()
 {
-	//Временно вырублено.
+	//Р’СЂРµРјРµРЅРЅРѕ РІС‹СЂСѓР±Р»РµРЅРѕ.
 	//if (!LoadLangCodes())
 	//	return false;
 
@@ -64,7 +64,7 @@ bool CSpeechManager::LoadSpeech()
 		item.Code = file.ReadUInt16BE();
 		WORD len = file.ReadUInt16BE();
 		wstring str = DecodeUTF8(file.ReadString(len));
-		//срезаем двойной нуль терминал.
+		//СЃСЂРµР·Р°РµРј РґРІРѕР№РЅРѕР№ РЅСѓР»СЊ С‚РµСЂРјРёРЅР°Р».
 		str = str.substr(0, str.length() - 2);
 		const WCHAR *data = str.c_str();
 
@@ -99,14 +99,14 @@ bool CSpeechManager::LoadSpeech()
 }
 //----------------------------------------------------------------------------------
 /*!
-Загрузка данных из Langcode.iff
-@return true при успешной загрузке
+Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РёР· Langcode.iff
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ Р·Р°РіСЂСѓР·РєРµ
 */
 bool CSpeechManager::LoadLangCodes()
 {
 	WISP_FILE::CMappedFile &file = g_FileManager.m_LangcodeIff;
 
-	//скипаем заголовок файла
+	//СЃРєРёРїР°РµРј Р·Р°РіРѕР»РѕРІРѕРє С„Р°Р№Р»Р°
 	file.ReadString(36);
 
 	while (!file.IsEOF())
@@ -121,7 +121,7 @@ bool CSpeechManager::LoadLangCodes()
 		langCodeData.LangName = file.ReadString(0);
 		langCodeData.LangCountry = file.ReadString(0);
 
-		//длинна LangName и LangCountry + null terminator всегда являются четным количеством в файле.
+		//РґР»РёРЅРЅР° LangName Рё LangCountry + null terminator РІСЃРµРіРґР° СЏРІР»СЏСЋС‚СЃСЏ С‡РµС‚РЅС‹Рј РєРѕР»РёС‡РµСЃС‚РІРѕРј РІ С„Р°Р№Р»Рµ.
 		if ((langCodeData.LangName.length() + langCodeData.LangCountry.length() + 2) % 2)
 		{
 			int nullTerminator = file.ReadUInt8();

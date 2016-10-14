@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** ConnectionManager.cpp
 **
@@ -32,7 +32,7 @@ CConnectionManager::CConnectionManager()
 //----------------------------------------------------------------------------------
 CConnectionManager::~CConnectionManager()
 {
-	//Дисконнектим всё подключенное
+	//Р”РёСЃРєРѕРЅРЅРµРєС‚РёРј РІСЃС‘ РїРѕРґРєР»СЋС‡РµРЅРЅРѕРµ
 	if (m_LoginSocket.Connected)
 		m_LoginSocket.Disconnect();
 
@@ -41,12 +41,12 @@ CConnectionManager::~CConnectionManager()
 }
 //----------------------------------------------------------------------------------
 /*!
-Инициализаци логин сокета
-@return Код ошибки
+РРЅРёС†РёР°Р»РёР·Р°С†Рё Р»РѕРіРёРЅ СЃРѕРєРµС‚Р°
+@return РљРѕРґ РѕС€РёР±РєРё
 */
 void CConnectionManager::Init()
 {
-	//Сокет уже открыт, ошибка
+	//РЎРѕРєРµС‚ СѓР¶Рµ РѕС‚РєСЂС‹С‚, РѕС€РёР±РєР°
 	if (m_LoginSocket.Connected)
 		return;
 
@@ -57,7 +57,7 @@ void CConnectionManager::Init()
 
 	char hostName[1024] = {0};
 
-	//Получим ключик для логин крипта
+	//РџРѕР»СѓС‡РёРј РєР»СЋС‡РёРє РґР»СЏ Р»РѕРіРёРЅ РєСЂРёРїС‚Р°
 	if(!gethostname(hostName, 1024))
 	{
 		if (LPHOSTENT lphost = gethostbyname(hostName))
@@ -75,13 +75,13 @@ void CConnectionManager::Init()
 }
 //---------------------------------------------------------------------------
 /*!
-Инициализация игрового сокета
-@param [__in] GameSeed Ключ для игрового шифрования
-@return Код ошибки
+РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РёРіСЂРѕРІРѕРіРѕ СЃРѕРєРµС‚Р°
+@param [__in] GameSeed РљР»СЋС‡ РґР»СЏ РёРіСЂРѕРІРѕРіРѕ С€РёС„СЂРѕРІР°РЅРёСЏ
+@return РљРѕРґ РѕС€РёР±РєРё
 */
 void CConnectionManager::Init(puchar gameSeed)
 {
-	//Гейм сокет уже открыт, ошибка
+	//Р“РµР№Рј СЃРѕРєРµС‚ СѓР¶Рµ РѕС‚РєСЂС‹С‚, РѕС€РёР±РєР°
 	if (m_GameSocket.Connected)
 		return;
 
@@ -91,36 +91,36 @@ void CConnectionManager::Init(puchar gameSeed)
 }
 //---------------------------------------------------------------------------
 /*!
-Подключение к серверу
-@param [__in] IP IP адрес сервера
-@param [__in] Port Порт сервера
-@param [__in] GameSeed Ключ для шифрования
-@return Код ошибки
+РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє СЃРµСЂРІРµСЂСѓ
+@param [__in] IP IP Р°РґСЂРµСЃ СЃРµСЂРІРµСЂР°
+@param [__in] Port РџРѕСЂС‚ СЃРµСЂРІРµСЂР°
+@param [__in] GameSeed РљР»СЋС‡ РґР»СЏ С€РёС„СЂРѕРІР°РЅРёСЏ
+@return РљРѕРґ РѕС€РёР±РєРё
 */
 bool CConnectionManager::Connect(const string &address, int port, puchar gameSeed)
 {
-	if (m_IsLoginSocket) //Логин сокет
+	if (m_IsLoginSocket) //Р›РѕРіРёРЅ СЃРѕРєРµС‚
 	{
 		if (m_LoginSocket.Connected)
-			return true; //Уже подключен куда-то
+			return true; //РЈР¶Рµ РїРѕРґРєР»СЋС‡РµРЅ РєСѓРґР°-С‚Рѕ
 
 		bool result = m_LoginSocket.Connect(address, port);
 
-		if (result) //Соединение удачно установлено
+		if (result) //РЎРѕРµРґРёРЅРµРЅРёРµ СѓРґР°С‡РЅРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ
 		{
-			//Для старых клиентов посылаем сразу же 4 байта
+			//Р”Р»СЏ СЃС‚Р°СЂС‹С… РєР»РёРµРЅС‚РѕРІ РїРѕСЃС‹Р»Р°РµРј СЃСЂР°Р·Сѓ Р¶Рµ 4 Р±Р°Р№С‚Р°
 			g_TotalSendSize = 4;
 			g_LastPacketTime = g_Ticks;
 			g_LastSendTime = g_LastPacketTime;
 
 			if (g_PacketManager.ClientVersion < CV_6060)
 				m_LoginSocket.Send(m_Seed, 4);
-			else //В новых клиентах изменилось приветствие логин сокета
+			else //Р’ РЅРѕРІС‹С… РєР»РёРµРЅС‚Р°С… РёР·РјРµРЅРёР»РѕСЃСЊ РїСЂРёРІРµС‚СЃС‚РІРёРµ Р»РѕРіРёРЅ СЃРѕРєРµС‚Р°
 			{
 				BYTE buf = 0xEF;
-				m_LoginSocket.Send(&buf, 1); //0xEF - приветствие, 1 байт
+				m_LoginSocket.Send(&buf, 1); //0xEF - РїСЂРёРІРµС‚СЃС‚РІРёРµ, 1 Р±Р°Р№С‚
 
-				m_LoginSocket.Send(m_Seed, 4); //Сид, 4 байта
+				m_LoginSocket.Send(m_Seed, 4); //РЎРёРґ, 4 Р±Р°Р№С‚Р°
 
 				WISP_DATASTREAM::CDataWritter stream;
 
@@ -151,7 +151,7 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 				}
 
 				g_TotalSendSize = 21;
-				m_LoginSocket.Send(stream.Data()); //Версия клиента, 16 байт
+				m_LoginSocket.Send(stream.Data()); //Р’РµСЂСЃРёСЏ РєР»РёРµРЅС‚Р°, 16 Р±Р°Р№С‚
 			}
 		}
 		else
@@ -159,10 +159,10 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 
 		return result;
 	}
-	else //Гейм сокет
+	else //Р“РµР№Рј СЃРѕРєРµС‚
 	{
 		if (m_GameSocket.Connected)
-			return true; //Уже подключены
+			return true; //РЈР¶Рµ РїРѕРґРєР»СЋС‡РµРЅС‹
 
 		g_TotalSendSize = 4;
 		g_LastPacketTime = g_Ticks;
@@ -171,9 +171,9 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 		bool result = m_GameSocket.Connect(address, port);
 
 		if (result)
-			m_GameSocket.Send(gameSeed, 4); //Если всё удачно - шлем ключ из пакета релея
+			m_GameSocket.Send(gameSeed, 4); //Р•СЃР»Рё РІСЃС‘ СѓРґР°С‡РЅРѕ - С€Р»РµРј РєР»СЋС‡ РёР· РїР°РєРµС‚Р° СЂРµР»РµСЏ
 
-		m_LoginSocket.Disconnect(); //Отрубаем логин сокет
+		m_LoginSocket.Disconnect(); //РћС‚СЂСѓР±Р°РµРј Р»РѕРіРёРЅ СЃРѕРєРµС‚
 
 		return result;
 	}
@@ -182,12 +182,12 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 }
 //---------------------------------------------------------------------------
 /*!
-Разорвать подключение
+Р Р°Р·РѕСЂРІР°С‚СЊ РїРѕРґРєР»СЋС‡РµРЅРёРµ
 @return
 */
 void CConnectionManager::Disconnect()
 {
-	//!Дисконнект всего, что подключено
+	//!Р”РёСЃРєРѕРЅРЅРµРєС‚ РІСЃРµРіРѕ, С‡С‚Рѕ РїРѕРґРєР»СЋС‡РµРЅРѕ
 	if (m_LoginSocket.Connected)
 		m_LoginSocket.Disconnect();
 
@@ -196,15 +196,15 @@ void CConnectionManager::Disconnect()
 }
 //---------------------------------------------------------------------------
 /*!
-Получить данные с сервера
+РџРѕР»СѓС‡РёС‚СЊ РґР°РЅРЅС‹Рµ СЃ СЃРµСЂРІРµСЂР°
 @return 
 */
 void CConnectionManager::Recv()
 {
-	if (m_IsLoginSocket) //Логин сокет
+	if (m_IsLoginSocket) //Р›РѕРіРёРЅ СЃРѕРєРµС‚
 	{
 		if (!m_LoginSocket.Connected)
-			return; //Не подключены
+			return; //РќРµ РїРѕРґРєР»СЋС‡РµРЅС‹
 
 		if (!m_LoginSocket.ReadyRead())
 		{
@@ -215,15 +215,15 @@ void CConnectionManager::Recv()
 				g_Orion.InitScreen(GS_MAIN_CONNECT);
 				g_ConnectionScreen.Type = CST_CONLOST;
 			}
-			return; //На сокете в данный момент пусто
+			return; //РќР° СЃРѕРєРµС‚Рµ РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РїСѓСЃС‚Рѕ
 		}
 
 		g_PacketManager.Read(&m_LoginSocket);
 	}
-	else //Гейм сокет
+	else //Р“РµР№Рј СЃРѕРєРµС‚
 	{
 		if (!m_GameSocket.Connected)
-			return; //Не подключены
+			return; //РќРµ РїРѕРґРєР»СЋС‡РµРЅС‹
 
 		if (!m_GameSocket.ReadyRead())
 		{
@@ -253,7 +253,7 @@ void CConnectionManager::Recv()
 				}
 			}
 
-			return; //На сокете в данный момент пусто
+			return; //РќР° СЃРѕРєРµС‚Рµ РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РїСѓСЃС‚Рѕ
 		}
 
 		g_PacketManager.Read(&m_GameSocket);
@@ -261,10 +261,10 @@ void CConnectionManager::Recv()
 }
 //---------------------------------------------------------------------------
 /*!
-Отправить сообщение серверу
-@param [__in] buf Буфер с данными
-@param [__in] size Размер данных
-@return Размер отправленных данных или код ошибки
+РћС‚РїСЂР°РІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ СЃРµСЂРІРµСЂСѓ
+@param [__in] buf Р‘СѓС„РµСЂ СЃ РґР°РЅРЅС‹РјРё
+@param [__in] size Р Р°Р·РјРµСЂ РґР°РЅРЅС‹С…
+@return Р Р°Р·РјРµСЂ РѕС‚РїСЂР°РІР»РµРЅРЅС‹С… РґР°РЅРЅС‹С… РёР»Рё РєРѕРґ РѕС€РёР±РєРё
 */
 int CConnectionManager::Send(puchar buf, int size)
 {
@@ -294,27 +294,27 @@ int CConnectionManager::Send(puchar buf, int size)
 	}
 #endif
 
-	if (m_IsLoginSocket) //Логин сокет
+	if (m_IsLoginSocket) //Р›РѕРіРёРЅ СЃРѕРєРµС‚
 	{
 		if (!m_LoginSocket.Connected)
-			return 0; //Нет подключения
+			return 0; //РќРµС‚ РїРѕРґРєР»СЋС‡РµРЅРёСЏ
 
-		UCHAR_LIST cbuf(size); //Буффер для криптованного пакета
+		UCHAR_LIST cbuf(size); //Р‘СѓС„С„РµСЂ РґР»СЏ РєСЂРёРїС‚РѕРІР°РЅРЅРѕРіРѕ РїР°РєРµС‚Р°
 
 		g_NetworkAction(true, &buf[0], &cbuf[0], size);
 
-		return m_LoginSocket.Send(cbuf); //Отправляем зашифрованный пакет
+		return m_LoginSocket.Send(cbuf); //РћС‚РїСЂР°РІР»СЏРµРј Р·Р°С€РёС„СЂРѕРІР°РЅРЅС‹Р№ РїР°РєРµС‚
 	}
 	else
 	{
 		if (!m_GameSocket.Connected)
-			return 0; //Нет подключения
+			return 0; //РќРµС‚ РїРѕРґРєР»СЋС‡РµРЅРёСЏ
 
-		UCHAR_LIST cbuf(size); //Буффер для криптованного пакета
+		UCHAR_LIST cbuf(size); //Р‘СѓС„С„РµСЂ РґР»СЏ РєСЂРёРїС‚РѕРІР°РЅРЅРѕРіРѕ РїР°РєРµС‚Р°
 
 		g_NetworkAction(false, &buf[0], &cbuf[0], size);
 
-		return m_GameSocket.Send(cbuf); //Отправляем зашифрованный пакет
+		return m_GameSocket.Send(cbuf); //РћС‚РїСЂР°РІР»СЏРµРј Р·Р°С€РёС„СЂРѕРІР°РЅРЅС‹Р№ РїР°РєРµС‚
 	}
 
 	return 0;

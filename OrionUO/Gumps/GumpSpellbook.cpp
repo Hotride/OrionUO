@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpSpellbook.cpp
 **
@@ -797,13 +797,13 @@ bool CGumpSpellbook::OnLeftMouseButtonDoubleClick()
 				{
 					if (g_PressedObject.LeftSerial >= ID_GSB_SPELL_ICON_LEFT)
 					{
-						//Было использовано заклинание
+						//Р‘С‹Р»Рѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ Р·Р°РєР»РёРЅР°РЅРёРµ
 						if (g_PressedObject.LeftSerial < ID_GSB_SPELL_ICON_RIGHT)
 							g_Orion.CastSpellFromBook(g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_LEFT + 1, m_Serial);
 						else
 							g_Orion.CastSpellFromBook(g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_RIGHT + 1, m_Serial);
 
-						//Сворачиваем книгу
+						//РЎРІРѕСЂР°С‡РёРІР°РµРј РєРЅРёРіСѓ
 						m_Minimized = true;
 						m_WantUpdateContent = true;
 

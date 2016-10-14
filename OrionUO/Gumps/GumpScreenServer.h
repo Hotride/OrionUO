@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpScreenServer.h
 **
@@ -15,7 +15,7 @@
 class CGumpScreenServer : public CGump
 {
 private:
-	//!Идентификаторы кнопок
+	//!РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РєРЅРѕРїРѕРє
 	static const int ID_SS_QUIT = 1;
 	static const int ID_SS_ARROW_PREV = 2;
 	static const int ID_SS_ARROW_NEXT = 3;

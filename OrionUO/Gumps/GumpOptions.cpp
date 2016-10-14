@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpOptions.cpp
 **
@@ -2571,16 +2571,16 @@ void CGumpOptions::ApplyPageChanges()
 	{
 		case 1: //Sound and Music
 		{		
-			//Меняем громкость звука эффектам и текущим эффектам
+			//РњРµРЅСЏРµРј РіСЂРѕРјРєРѕСЃС‚СЊ Р·РІСѓРєР° СЌС„С„РµРєС‚Р°Рј Рё С‚РµРєСѓС‰РёРј СЌС„С„РµРєС‚Р°Рј
 			g_ConfigManager.SoundVolume = g_OptionsConfig.SoundVolume;
 
-			//Меняем громкость звука музыке и текущей музыке
+			//РњРµРЅСЏРµРј РіСЂРѕРјРєРѕСЃС‚СЊ Р·РІСѓРєР° РјСѓР·С‹РєРµ Рё С‚РµРєСѓС‰РµР№ РјСѓР·С‹РєРµ
 			g_ConfigManager.MusicVolume = g_OptionsConfig.MusicVolume;
 			
-		    //Выключаем звук эффектов.
+		    //Р’С‹РєР»СЋС‡Р°РµРј Р·РІСѓРє СЌС„С„РµРєС‚РѕРІ.
 			g_ConfigManager.Sound = g_OptionsConfig.Sound;
 
-			//Выключаем звук музыки.
+			//Р’С‹РєР»СЋС‡Р°РµРј Р·РІСѓРє РјСѓР·С‹РєРё.
 			g_ConfigManager.Music = g_OptionsConfig.Music;
 
 			g_ConfigManager.FootstepsSound = g_OptionsConfig.FootstepsSound;

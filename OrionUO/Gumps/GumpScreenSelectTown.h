@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpScreeSelectTown.h
 **
@@ -15,14 +15,14 @@
 class CGumpScreenSelectTown : public CGump
 {
 private:
-	//!Идентификаторы кнопок
+	//!РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РєРЅРѕРїРѕРє
 	static const int ID_STS_QUIT = 1;
 	static const int ID_STS_ARROW_PREV = 2;
 	static const int ID_STS_ARROW_NEXT = 3;
 	static const int ID_STS_HTML_GUMP = 4;
 	static const int ID_STS_TOWN = 10;
 
-	//!Список точек для отображения кнопок городов
+	//!РЎРїРёСЃРѕРє С‚РѕС‡РµРє РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РєРЅРѕРїРѕРє РіРѕСЂРѕРґРѕРІ
 	static WISP_GEOMETRY::CPoint2Di m_TownButtonText[9];
 
 	CGUIHTMLGump *m_HTMLGump;

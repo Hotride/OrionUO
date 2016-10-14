@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** TextRenderer.h
 **
@@ -14,35 +14,35 @@
 #include "../ImageBounds.h"
 #include "../RenderWorldObject.h"
 //----------------------------------------------------------------------------------
-//Класс для обработки вывода текста на экран
+//РљР»Р°СЃСЃ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё РІС‹РІРѕРґР° С‚РµРєСЃС‚Р° РЅР° СЌРєСЂР°РЅ
 class CTextRenderer : public CRenderTextObject
 {
 private:
-	//Список координат, занятых текстом
+	//РЎРїРёСЃРѕРє РєРѕРѕСЂРґРёРЅР°С‚, Р·Р°РЅСЏС‚С‹С… С‚РµРєСЃС‚РѕРј
 	deque<CTextImageBounds> m_TextRect;
 
 public:
 	CTextRenderer();
 	virtual ~CTextRenderer();
 
-	//Список текста
+	//РЎРїРёСЃРѕРє С‚РµРєСЃС‚Р°
 	CRenderTextObject *m_TextItems;
 
 	CRenderTextObject *m_DrawPointer;
 
-	//Добавить текст
+	//Р”РѕР±Р°РІРёС‚СЊ С‚РµРєСЃС‚
 	CRenderTextObject *AddText(CRenderTextObject *obj);
 
-	//Переместить текст наверх очереди
+	//РџРµСЂРµРјРµСЃС‚РёС‚СЊ С‚РµРєСЃС‚ РЅР°РІРµСЂС… РѕС‡РµСЂРµРґРё
 	void ToTop(CRenderTextObject *obj);
 
-	//Добавить координаты текста
+	//Р”РѕР±Р°РІРёС‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РµРєСЃС‚Р°
 	void AddRect(CTextImageBounds &rect) { m_TextRect.push_back(rect); }
 
-	//Очистить список координат текста
+	//РћС‡РёСЃС‚РёС‚СЊ СЃРїРёСЃРѕРє РєРѕРѕСЂРґРёРЅР°С‚ С‚РµРєСЃС‚Р°
 	void ClearRect() { m_TextRect.clear(); }
 
-	//Проверка, есть ли текст в координатах
+	//РџСЂРѕРІРµСЂРєР°, РµСЃС‚СЊ Р»Рё С‚РµРєСЃС‚ РІ РєРѕРѕСЂРґРёРЅР°С‚Р°С…
 	bool InRect(CTextImageBounds &rect, CRenderWorldObject *rwo);
 
 	bool CalculatePositions(const bool &noCalculate);

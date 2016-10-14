@@ -1,4 +1,4 @@
-/***********************************************************************************
+Ôªø/***********************************************************************************
 **
 ** PacketManager.cpp
 **
@@ -68,7 +68,7 @@
 //----------------------------------------------------------------------------------
 CPacketManager g_PacketManager;
 //----------------------------------------------------------------------------------
-// ‡Ú‡ Ô‡ÍÂÚÓ‚ ”Œ ‰Îˇ ‡Ì‡ÎËÁ‡
+//–ö–∞—Ä—Ç–∞ –ø–∞–∫–µ—Ç–æ–≤ –£–û –¥–ª—è –∞–Ω–∞–ª–∏–∑–∞
 #define UMSG(size) { "?", size, DIR_BOTH, 0 }
 // A message type sent to the server
 #define SMSG(name, size) { name, size, DIR_SEND, 0 }
@@ -515,7 +515,7 @@ void CPacketManager::OnClientVersionChange(const CLIENT_VERSION &newClientVersio
 		CVPRINT("Set new length for packet 0xF3 (>= 7.0.9.0)\n");
 		m_Packets[0xF3].Size = 0x1A;
 
-		//¬ ÍÎËÂÌÚÂ 7.0.8.2 ÛÊÂ ËÁÏÂÌÂÌÓ
+		//–í –∫–ª–∏–µ–Ω—Ç–µ 7.0.8.2 —É–∂–µ –∏–∑–º–µ–Ω–µ–Ω–æ
 		CVPRINT("Set new length for packet 0xF1 (>= 7.0.9.0)\n");
 		m_Packets[0xF1].Size = 0x09;
 		CVPRINT("Set new length for packet 0xF2 (>= 7.0.9.0)\n");
@@ -532,7 +532,7 @@ void CPacketManager::OnClientVersionChange(const CLIENT_VERSION &newClientVersio
 		CVPRINT("Set standart length for packet 0xF3 (<= 7.0.9.0)\n");
 		m_Packets[0xF3].Size = 0x18;
 
-		//¬ ÍÎËÂÌÚÂ 7.0.8.2 ÛÊÂ ËÁÏÂÌÂÌÓ
+		//–í –∫–ª–∏–µ–Ω—Ç–µ 7.0.8.2 —É–∂–µ –∏–∑–º–µ–Ω–µ–Ω–æ
 		CVPRINT("Set standart length for packet 0xF1 (<= 7.0.9.0)\n");
 		m_Packets[0xF1].Size = PACKET_VARIABLE_SIZE;
 		CVPRINT("Set standart length for packet 0xF2 (<= 7.0.9.0)\n");
@@ -1260,7 +1260,7 @@ PACKET_HANDLER(UpdateItem)
 	{
 		x &= 0x7FFF;
 
-		//obj->Direction = *Ptr; //Õ‡Ô‡‚ÎÂÌËÂ ÔÂ‰ÏÂÚ‡?
+		//obj->Direction = *Ptr; //–ù–∞–ø—Ä–∞–≤–ª–µ–Ω–∏–µ –ø—Ä–µ–¥–º–µ—Ç–∞?
 		dir = ReadUInt8();
 	}
 
@@ -3039,12 +3039,12 @@ PACKET_HANDLER(DragAnimation)
 
 	CGameEffect *effect = NULL;
 
-	if (sourceSerial < 0x40000000) //»„ÓÍ/Õœ— ÍÎ‡‰ÂÚ ÔÂ‰ÏÂÚ ‚ ÍÓÌÚÂÈÌÂ
+	if (sourceSerial < 0x40000000) //–ò–≥—Ä–æ–∫/–ù–ü–° –∫–ª–∞–¥–µ—Ç –ø—Ä–µ–¥–º–µ—Ç –≤ –∫–æ–Ω—Ç–µ–π–Ω–µ—Ä
 	{
 		effect = new CGameEffectMoving();
 		effect->FixedDirection = true;
 	}
-	else //œÂ‰ÏÂÚ ‚ÁˇÎË ËÁ ÍÓÌÚÂÈÌÂ‡
+	else //–ü—Ä–µ–¥–º–µ—Ç –≤–∑—è–ª–∏ –∏–∑ –∫–æ–Ω—Ç–µ–π–Ω–µ—Ä–∞
 	{
 		effect = new CGameEffectDrag();
 	}
@@ -3303,7 +3303,7 @@ PACKET_HANDLER(DisplayClilocString)
 			str = L"*" + str + L"*";
 		}*/
 
-		//if (serial >= 0x40000000) //“ÓÎ¸ÍÓ ‰Îˇ ÔÂ‰ÏÂÚÓ‚
+		//if (serial >= 0x40000000) //–¢–æ–ª—å–∫–æ –¥–ª—è –ø—Ä–µ–¥–º–µ—Ç–æ–≤
 		{
 			CGameObject *obj = g_World->FindWorldObject(serial);
 
@@ -3608,7 +3608,7 @@ PACKET_HANDLER(SecureTrading)
 	uchar type = ReadUInt8();
 	uint serial = ReadUInt32BE();
 
-	if (type == 0) //ÕÓ‚ÓÂ Ú˝È‰ ÓÍÌÓ
+	if (type == 0) //–ù–æ–≤–æ–µ —Ç—Ä—ç–π–¥ –æ–∫–Ω–æ
 	{
 		uint id1 = ReadUInt32BE();
 		uint id2 = ReadUInt32BE();
@@ -3621,9 +3621,9 @@ PACKET_HANDLER(SecureTrading)
 
 		g_GumpManager.AddGump(gump);
 	}
-	else if (type == 1) //ŒÚÏÂÌ‡
+	else if (type == 1) //–û—Ç–º–µ–Ω–∞
 		g_GumpManager.CloseGump(serial, 0, GT_TRADE);
-	else if (type == 2) //Œ·ÌÓ‚ÎÂÌËÂ
+	else if (type == 2) //–û–±–Ω–æ–≤–ª–µ–Ω–∏–µ
 	{
 		CGumpSecureTrading *gump = (CGumpSecureTrading*)g_GumpManager.UpdateGump(serial, 0, GT_TRADE);
 
@@ -3724,7 +3724,7 @@ PACKET_HANDLER(OpenMenuGump)
 		htmlGump->CalculateDataSize();
 
 		gump->m_TextObject = (CGUIText*)gump->Add(new CGUIText(0x0386, 42, 105));
-		//gump->m_TextObject->CreateTextureA(1, name, 200, TS_LEFT, UOFONT_FIXED); //Õ‡ ‰‡ÌÌ˚È ÏÓÏÌÚ ÒÓÁ‰‡‚‡Ú¸ ÌÂ˜Â„Ó
+		//gump->m_TextObject->CreateTextureA(1, name, 200, TS_LEFT, UOFONT_FIXED); //–ù–∞ –¥–∞–Ω–Ω—ã–π –º–æ–º–Ω—Ç —Å–æ–∑–¥–∞–≤–∞—Ç—å –Ω–µ—á–µ–≥–æ
 
 		g_GumpManager.AddGump(gump);
 	}

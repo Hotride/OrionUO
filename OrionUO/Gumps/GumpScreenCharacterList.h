@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpScreenCharacterList.h
 **
@@ -15,7 +15,7 @@
 class CGumpScreenCharacterList : public CGump
 {
 private:
-	//!Идентификаторы кнопок
+	//!РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РєРЅРѕРїРѕРє
 	static const int ID_CS_QUIT = 1;
 	static const int ID_CS_ARROW_PREV = 2;
 	static const int ID_CS_ARROW_NEXT = 3;

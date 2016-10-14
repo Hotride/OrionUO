@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** Macro.h
 **
@@ -15,16 +15,16 @@
 #include "Wisp/WispMappedFile.h"
 #include "Wisp/WispBinaryFileWritter.h"
 //----------------------------------------------------------------------------------
-//Класс объекта макроса
+//РљР»Р°СЃСЃ РѕР±СЉРµРєС‚Р° РјР°РєСЂРѕСЃР°
 class CMacroObject : public CBaseQueueItem
 {
-	//Код действия
+	//РљРѕРґ РґРµР№СЃС‚РІРёСЏ
 	SETGET(MACRO_CODE, Code);
 
-	//Подкод действия
+	//РџРѕРґРєРѕРґ РґРµР№СЃС‚РІРёСЏ
 	SETGET(MACRO_SUB_CODE, SubCode);
 
-	//Имеет подменю
+	//РРјРµРµС‚ РїРѕРґРјРµРЅСЋ
 	SETGET(char, HasSubMenu);
 
 public:
@@ -34,10 +34,10 @@ public:
 	virtual bool HaveString() { return false; }
 };
 //----------------------------------------------------------------------------------
-//Класс объекта макроса, содержащий строку
+//РљР»Р°СЃСЃ РѕР±СЉРµРєС‚Р° РјР°РєСЂРѕСЃР°, СЃРѕРґРµСЂР¶Р°С‰РёР№ СЃС‚СЂРѕРєСѓ
 class CMacroObjectString : public CMacroObject
 {
-	//Строка действия
+	//РЎС‚СЂРѕРєР° РґРµР№СЃС‚РІРёСЏ
 	SETGET(string, String);
 
 public:
@@ -47,13 +47,13 @@ public:
 	virtual bool HaveString() { return true; }
 };
 //----------------------------------------------------------------------------------
-//Класс макроса
+//РљР»Р°СЃСЃ РјР°РєСЂРѕСЃР°
 class CMacro : public CBaseQueueItem
 {
-	//Код клавиши для срабатывания макроса
+	//РљРѕРґ РєР»Р°РІРёС€Рё РґР»СЏ СЃСЂР°Р±Р°С‚С‹РІР°РЅРёСЏ РјР°РєСЂРѕСЃР°
 	SETGET(ushort, Key);
 
-	//Флаги дополнительных клавиш
+	//Р¤Р»Р°РіРё РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… РєР»Р°РІРёС€
 	SETGET(bool, Alt);
 	SETGET(bool, Ctrl);
 	SETGET(bool, Shift);
@@ -65,34 +65,34 @@ public:
 	static const int MACRO_ACTION_NAME_COUNT = 60;
 	static const int MACRO_ACTION_COUNT = 210;
 
-	//Названия макросов
+	//РќР°Р·РІР°РЅРёСЏ РјР°РєСЂРѕСЃРѕРІ
 	static const char *m_MacroActionName[MACRO_ACTION_NAME_COUNT];
 
-	//Названия действий
+	//РќР°Р·РІР°РЅРёСЏ РґРµР№СЃС‚РІРёР№
 	static const char *m_MacroAction[MACRO_ACTION_COUNT];
 
 	static const char *GetActionName(int index) { return m_MacroActionName[index]; }
 	static const char *GetAction(int index) { return m_MacroAction[index]; }
 
-	//Заменить макрос
+	//Р—Р°РјРµРЅРёС‚СЊ РјР°РєСЂРѕСЃ
 	void ChangeObject(CMacroObject *source, CMacroObject *obj);
 
-	//Загрузить макросы из файла
+	//Р—Р°РіСЂСѓР·РёС‚СЊ РјР°РєСЂРѕСЃС‹ РёР· С„Р°Р№Р»Р°
 	static CMacro *Load(WISP_FILE::CMappedFile &file);
 
-	//Сохранить макросы в файл
+	//РЎРѕС…СЂР°РЅРёС‚СЊ РјР°РєСЂРѕСЃС‹ РІ С„Р°Р№Р»
 	void Save(WISP_FILE::CBinaryFileWritter &writter);
 
-	//Создать пустой макрос
+	//РЎРѕР·РґР°С‚СЊ РїСѓСЃС‚РѕР№ РјР°РєСЂРѕСЃ
 	static CMacro *CreateBlankMacro();
 
-	//Создать макрос по коду
+	//РЎРѕР·РґР°С‚СЊ РјР°РєСЂРѕСЃ РїРѕ РєРѕРґСѓ
 	static CMacroObject *CreateMacro(const MACRO_CODE &code);
 
-	//Получить смещение индекса названия относительно начала списка и количество в группе
+	//РџРѕР»СѓС‡РёС‚СЊ СЃРјРµС‰РµРЅРёРµ РёРЅРґРµРєСЃР° РЅР°Р·РІР°РЅРёСЏ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РЅР°С‡Р°Р»Р° СЃРїРёСЃРєР° Рё РєРѕР»РёС‡РµСЃС‚РІРѕ РІ РіСЂСѓРїРїРµ
 	static void GetBoundByCode(const MACRO_CODE &code, int &count, int &offset);
 
-	//Получить копию макросов
+	//РџРѕР»СѓС‡РёС‚СЊ РєРѕРїРёСЋ РјР°РєСЂРѕСЃРѕРІ
 	CMacro *GetCopy();
 };
 //----------------------------------------------------------------------------------

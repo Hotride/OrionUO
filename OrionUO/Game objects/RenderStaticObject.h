@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** RenderStaticObject.h
 **
@@ -14,7 +14,7 @@
 #include "../MulStruct.h"
 #include "../TextEngine/TextContainer.h"
 //----------------------------------------------------------------------------------
-//Класс обобщенного объекта группы статики
+//РљР»Р°СЃСЃ РѕР±РѕР±С‰РµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РіСЂСѓРїРїС‹ СЃС‚Р°С‚РёРєРё
 class CRenderStaticObject : public CMapObject
 {
 	SETGET(char, FoliageTransparentIndex);
@@ -22,39 +22,39 @@ class CRenderStaticObject : public CMapObject
 	SETGET(bool, Vegetation);
 
 protected:
-	//Указатель на структуру данных тайлдаты
+	//РЈРєР°Р·Р°С‚РµР»СЊ РЅР° СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР°РЅРЅС‹С… С‚Р°Р№Р»РґР°С‚С‹
 	STATIC_TILES *m_TiledataPtr;
 
 public:
 	CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z);
 	virtual ~CRenderStaticObject();
 	
-	CTextContainer *m_TextControl; //Ссылка на контейнер для текста
+	CTextContainer *m_TextControl; //РЎСЃС‹Р»РєР° РЅР° РєРѕРЅС‚РµР№РЅРµСЂ РґР»СЏ С‚РµРєСЃС‚Р°
 
-	//Добавить текст в контейнер
+	//Р”РѕР±Р°РІРёС‚СЊ С‚РµРєСЃС‚ РІ РєРѕРЅС‚РµР№РЅРµСЂ
 	virtual void AddText(CTextData *td);
 
-	//Проверка прозрачности (для круга прозрачности)
+	//РџСЂРѕРІРµСЂРєР° РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚Рё (РґР»СЏ РєСЂСѓРіР° РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚Рё)
 	virtual bool TranparentTest(int &playerZPlus5);
 
-	//Получить смещение текста по оси X
+	//РџРѕР»СѓС‡РёС‚СЊ СЃРјРµС‰РµРЅРёРµ С‚РµРєСЃС‚Р° РїРѕ РѕСЃРё X
 	int GetTextOffsetX(CTextData *text);
 
-	//Получить смещение текста по оси Y
+	//РџРѕР»СѓС‡РёС‚СЊ СЃРјРµС‰РµРЅРёРµ С‚РµРєСЃС‚Р° РїРѕ РѕСЃРё Y
 	int GetTextOffsetY(CTextData *text);
 
-	//Проверка, может ли текст быть прозрачным
+	//РџСЂРѕРІРµСЂРєР°, РјРѕР¶РµС‚ Р»Рё С‚РµРєСЃС‚ Р±С‹С‚СЊ РїСЂРѕР·СЂР°С‡РЅС‹Рј
 	bool TextCanBeTransparent(CRenderTextObject *text);
 
 	STATIC_TILES *GetStaticData() { return m_TiledataPtr; }
 
-	//Получить высоту объекта (по данным из тайлдаты)
+	//РџРѕР»СѓС‡РёС‚СЊ РІС‹СЃРѕС‚Сѓ РѕР±СЉРµРєС‚Р° (РїРѕ РґР°РЅРЅС‹Рј РёР· С‚Р°Р№Р»РґР°С‚С‹)
 	uchar GetStaticHeight() { return m_TiledataPtr->Height; }
 
-	//Получить индекс света
+	//РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ СЃРІРµС‚Р°
 	uchar GetLightID() {return m_TiledataPtr->Quality;}
 	
-	//Стандартные состояния по флагам из тайлдаты (вердаты)
+	//РЎС‚Р°РЅРґР°СЂС‚РЅС‹Рµ СЃРѕСЃС‚РѕСЏРЅРёСЏ РїРѕ С„Р»Р°РіР°Рј РёР· С‚Р°Р№Р»РґР°С‚С‹ (РІРµСЂРґР°С‚С‹)
 	bool IsBackground() {return (m_TiledataPtr->Flags & 0x00000001);}
 	bool IsWeapon() {return (m_TiledataPtr->Flags & 0x00000002);}
 	bool IsTransparent() {return (m_TiledataPtr->Flags & 0x00000004);}
@@ -88,7 +88,7 @@ public:
 	bool IsStairBack() {return (m_TiledataPtr->Flags & 0x40000000);}
 	bool IsStairRight() {return (m_TiledataPtr->Flags & 0x80000000);}
 
-	//Это объект группы объектов статики
+	//Р­С‚Рѕ РѕР±СЉРµРєС‚ РіСЂСѓРїРїС‹ РѕР±СЉРµРєС‚РѕРІ СЃС‚Р°С‚РёРєРё
 	bool IsStaticGroupObject() {return true;}
 
 	virtual CRenderStaticObject *StaticGroupObjectPtr() { return this; }

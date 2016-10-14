@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIHTMLGump.h
 **
-** Компонента гампа с кнопками, скроллером прокрутки, фоном, служит контейнером для объектов
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РіР°РјРїР° СЃ РєРЅРѕРїРєР°РјРё, СЃРєСЂРѕР»Р»РµСЂРѕРј РїСЂРѕРєСЂСѓС‚РєРё, С„РѕРЅРѕРј, СЃР»СѓР¶РёС‚ РєРѕРЅС‚РµР№РЅРµСЂРѕРј РґР»СЏ РѕР±СЉРµРєС‚РѕРІ
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -21,22 +21,22 @@
 //----------------------------------------------------------------------------------
 class CGUIHTMLGump : public CGUIPolygonal
 {
-	//!Имеет фон
+	//!РРјРµРµС‚ С„РѕРЅ
 	SETGET(bool, HaveBackground);
 
-	//!Имеет скроллер с кнопками
+	//!РРјРµРµС‚ СЃРєСЂРѕР»Р»РµСЂ СЃ РєРЅРѕРїРєР°РјРё
 	SETGET(bool, HaveScrollbar);
 
-	//!Размер данных, хранимых внутри компоненты
+	//!Р Р°Р·РјРµСЂ РґР°РЅРЅС‹С…, С…СЂР°РЅРёРјС‹С… РІРЅСѓС‚СЂРё РєРѕРјРїРѕРЅРµРЅС‚С‹
 	SETGET(WISP_GEOMETRY::CSize, DataSize);
 
-	//!Смещение к данным
+	//!РЎРјРµС‰РµРЅРёРµ Рє РґР°РЅРЅС‹Рј
 	SETGET(WISP_GEOMETRY::CPoint2Di, DataOffset);
 
-	//!Текущее смещение к данным
+	//!РўРµРєСѓС‰РµРµ СЃРјРµС‰РµРЅРёРµ Рє РґР°РЅРЅС‹Рј
 	SETGET(WISP_GEOMETRY::CPoint2Di, CurrentOffset);
 
-	//!Доступное смещение для скроллинга
+	//!Р”РѕСЃС‚СѓРїРЅРѕРµ СЃРјРµС‰РµРЅРёРµ РґР»СЏ СЃРєСЂРѕР»Р»РёРЅРіР°
 	SETGET(WISP_GEOMETRY::CPoint2Di, AvailableOffset);
 
 private:
@@ -46,7 +46,7 @@ public:
 	CGUIHTMLGump(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height, const bool &haveBackground, const bool &haveScrollbar);
 	virtual ~CGUIHTMLGump();
 
-	//!Ссылки на компоненты
+	//!РЎСЃС‹Р»РєРё РЅР° РєРѕРјРїРѕРЅРµРЅС‚С‹
 	CGUIHTMLResizepic *m_Background;
 	CGUIHTMLButton *m_ButtonUp;
 	CGUIHTMLButton *m_ButtonDown;
@@ -55,17 +55,17 @@ public:
 	CGUIHTMLSlider *m_Slider;
 	CGUIScissor *m_Scissor;
 
-	//!Инициализация
-	//!			menu - флаг инициализации для гампа CGumpMenu
+	//!РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
+	//!			menu - С„Р»Р°Рі РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РґР»СЏ РіР°РјРїР° CGumpMenu
 	void Initalize(bool menu = false);
 
-	//!Обновление высота гампа
+	//!РћР±РЅРѕРІР»РµРЅРёРµ РІС‹СЃРѕС‚Р° РіР°РјРїР°
 	void UpdateHeight(const int &height);
 
-	//!Сброс смещений
+	//!РЎР±СЂРѕСЃ СЃРјРµС‰РµРЅРёР№
 	void ResetDataOffset();
 
-	//!Пересчет смещений
+	//!РџРµСЂРµСЃС‡РµС‚ СЃРјРµС‰РµРЅРёР№
 	void CalculateDataSize();
 
 	virtual void PrepareTextures();
@@ -74,7 +74,7 @@ public:
 
 	virtual bool Select();
 
-	//!Функция прокрутки
+	//!Р¤СѓРЅРєС†РёСЏ РїСЂРѕРєСЂСѓС‚РєРё
 	virtual void Scroll(const bool &up, const uint &delay);
 
 	virtual bool IsHTMLGump() { return true; }

@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpSkills.cpp
 **
@@ -57,7 +57,7 @@ m_ShowReal(false), m_ShowCap(false)
 	m_SkillSum = (CGUIText*)Add(new CGUIText(0x0065, 235, m_Height - 6));
 	UpdateSkillsSum();
 
-	//Если игрок присутствует
+	//Р•СЃР»Рё РёРіСЂРѕРє РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚
 	if (g_Player != NULL)
 	{
 		int currentIndex = 0;
@@ -72,9 +72,9 @@ m_ShowReal(false), m_ShowCap(false)
 
 			IFOR(i, 0, count)
 			{
-				uchar index = group->GetItem(i); //Получаем индекс скилла по порядковому номеру
+				uchar index = group->GetItem(i); //РџРѕР»СѓС‡Р°РµРј РёРЅРґРµРєСЃ СЃРєРёР»Р»Р° РїРѕ РїРѕСЂСЏРґРєРѕРІРѕРјСѓ РЅРѕРјРµСЂСѓ
 
-				if (index < g_SkillsCount) //Он валиден
+				if (index < g_SkillsCount) //РћРЅ РІР°Р»РёРґРµРЅ
 					skillGroup->Add(new CGUISkillItem(ID_GS_SKILL + index, ID_GS_SKILL_BUTTON + index, ID_GS_SKILL_STATE + index, index, 0, i * 17));
 			}
 
@@ -260,7 +260,7 @@ void CGumpSkills::UpdateSkillsSum()
 //----------------------------------------------------------------------------------
 void CGumpSkills::Init()
 {
-	//Свернем все доступные группы
+	//РЎРІРµСЂРЅРµРј РІСЃРµ РґРѕСЃС‚СѓРїРЅС‹Рµ РіСЂСѓРїРїС‹
 	QFOR(group, g_SkillGroupManager.m_Groups, CSkillGroupObject*)
 		group->Maximized = false;
 }
@@ -392,17 +392,17 @@ CSkillGroupObject *CGumpSkills::GetGroupUnderCursor(int &index)
 {
 	index = 0;
 
-	//Получить группу под курсором
+	//РџРѕР»СѓС‡РёС‚СЊ РіСЂСѓРїРїСѓ РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј
 	int mouseY = g_MouseManager.Position.Y;
 
 	//mouse.X -= m_X + m_HTMLGump->X;
 	mouseY -= m_Y + m_HTMLGump->Y;
 
-	//Если вышли за пределы гампа по оси X
+	//Р•СЃР»Рё РІС‹С€Р»Рё Р·Р° РїСЂРµРґРµР»С‹ РіР°РјРїР° РїРѕ РѕСЃРё X
 	//if (mouse.X < 0 || mouse.X > m_HTMLGump->Width)
 	//	return NULL; //Exit from bounds on X
 
-	//Если назодимся в пределах гампа по оси Y
+	//Р•СЃР»Рё РЅР°Р·РѕРґРёРјСЃСЏ РІ РїСЂРµРґРµР»Р°С… РіР°РјРїР° РїРѕ РѕСЃРё Y
 	if (mouseY >= 0 && mouseY < m_HTMLGump->Height) //Bounds of Y
 	{
 		int drawY = m_HTMLGump->DataOffset.Y - m_HTMLGump->CurrentOffset.Y;
@@ -427,7 +427,7 @@ CSkillGroupObject *CGumpSkills::GetGroupUnderCursor(int &index)
 		}
 	}
 
-	//Ничего не нашлось
+	//РќРёС‡РµРіРѕ РЅРµ РЅР°С€Р»РѕСЃСЊ
 	return NULL;
 }
 //----------------------------------------------------------------------------------
@@ -502,7 +502,7 @@ void CGumpSkills::OnLeftMouseButtonUp()
 //----------------------------------------------------------------------------------
 void CGumpSkills::GUMP_BUTTON_EVENT_C
 {
-	if (serial == ID_GBS_BUTTON_MINIMIZE) //Сворачиваем гамп
+	if (serial == ID_GBS_BUTTON_MINIMIZE) //РЎРІРѕСЂР°С‡РёРІР°РµРј РіР°РјРї
 	{
 		m_Minimized = true;
 		m_Page = 1;
@@ -510,7 +510,7 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 	}
 	else if (serial == ID_GS_LOCK_MOVING)
 		m_LockMoving = !m_LockMoving;
-	else if (serial == ID_GS_BUTTON_NEW_GROUP) //Создание новой группы
+	else if (serial == ID_GS_BUTTON_NEW_GROUP) //РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕР№ РіСЂСѓРїРїС‹
 	{
 		CSkillGroupObject *group = new CSkillGroupObject();
 		group->Name = "New Group";
@@ -521,9 +521,9 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 
 		UpdateGroupPositions();
 	}
-	else if (serial >= ID_GS_GROUP_MINIMIZE) //Операции со скиллами
+	else if (serial >= ID_GS_GROUP_MINIMIZE) //РћРїРµСЂР°С†РёРё СЃРѕ СЃРєРёР»Р»Р°РјРё
 	{
-		if (serial >= ID_GS_SKILL_STATE) //Изменение статуса
+		if (serial >= ID_GS_SKILL_STATE) //РР·РјРµРЅРµРЅРёРµ СЃС‚Р°С‚СѓСЃР°
 		{
 			int index = serial - ID_GS_SKILL_STATE;
 
@@ -548,7 +548,7 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 			if (skill != NULL)
 				skill->Status = status;
 		}
-		else if (serial >= ID_GS_SKILL_BUTTON) //Выбор кнопки для использования скилла
+		else if (serial >= ID_GS_SKILL_BUTTON) //Р’С‹Р±РѕСЂ РєРЅРѕРїРєРё РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ СЃРєРёР»Р»Р°
 		{
 			int index = serial - ID_GS_SKILL_BUTTON;
 
@@ -557,7 +557,7 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 
 			g_Orion.UseSkill(index);
 		}
-		else if (serial >= ID_GS_GROUP_MINIMIZE) //Скрыть/раскрыть группу
+		else if (serial >= ID_GS_GROUP_MINIMIZE) //РЎРєСЂС‹С‚СЊ/СЂР°СЃРєСЂС‹С‚СЊ РіСЂСѓРїРїСѓ
 		{
 			int index = serial - ID_GS_GROUP_MINIMIZE;
 			int currentIndex = 0;
@@ -589,14 +589,14 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpSkills::GUMP_CHECKBOX_EVENT_C
 {
-	if (serial == ID_GS_SHOW_REAL) //Показать реальное значение
+	if (serial == ID_GS_SHOW_REAL) //РџРѕРєР°Р·Р°С‚СЊ СЂРµР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
 	{
 		m_ShowReal = state;
 		m_ShowCap = false;
 		m_CheckboxShowCap->Checked = false;
 		UpdateSkillValues();
 	}
-	else if (serial == ID_GS_SHOW_CAP) //Показать доступный предел прокачки
+	else if (serial == ID_GS_SHOW_CAP) //РџРѕРєР°Р·Р°С‚СЊ РґРѕСЃС‚СѓРїРЅС‹Р№ РїСЂРµРґРµР» РїСЂРѕРєР°С‡РєРё
 	{
 		m_ShowCap = state;
 		m_ShowReal = false;
@@ -625,7 +625,7 @@ void CGumpSkills::GUMP_TEXT_ENTRY_EVENT_C
 //----------------------------------------------------------------------------------
 bool CGumpSkills::OnLeftMouseButtonDoubleClick()
 {
-	if (m_Minimized) //При даблклике по мини-гампу - раскрываем его
+	if (m_Minimized) //РџСЂРё РґР°Р±Р»РєР»РёРєРµ РїРѕ РјРёРЅРё-РіР°РјРїСѓ - СЂР°СЃРєСЂС‹РІР°РµРј РµРіРѕ
 	{
 		m_Minimized = false;
 		m_Page = 2;
@@ -683,9 +683,9 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 
 								IFOR(i, 0, count)
 								{
-									uchar index = groupItem->GetItem(i); //Получаем индекс скилла по порядковому номеру
+									uchar index = groupItem->GetItem(i); //РџРѕР»СѓС‡Р°РµРј РёРЅРґРµРєСЃ СЃРєРёР»Р»Р° РїРѕ РїРѕСЂСЏРґРєРѕРІРѕРјСѓ РЅРѕРјРµСЂСѓ
 
-									if (index < g_SkillsCount) //Он валиден
+									if (index < g_SkillsCount) //РћРЅ РІР°Р»РёРґРµРЅ
 										first->Add(new CGUISkillItem(ID_GS_SKILL + index, ID_GS_SKILL_BUTTON + index, ID_GS_SKILL_STATE + index, index, 0, i * 17));
 								}
 							}
@@ -714,7 +714,7 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		return;
 	}
 
-	//Обработчик нажатия клавишь
+	//РћР±СЂР°Р±РѕС‚С‡РёРє РЅР°Р¶Р°С‚РёСЏ РєР»Р°РІРёС€СЊ
 	switch (wParam)
 	{
 		case VK_RETURN:

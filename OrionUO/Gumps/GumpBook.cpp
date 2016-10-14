@@ -1,4 +1,4 @@
-/***********************************************************************************
+Ôªø/***********************************************************************************
 **
 ** GumpBook.cpp
 **
@@ -187,7 +187,7 @@ void CGumpBook::GUMP_BUTTON_EVENT_C
 
 		if (serial == ID_GB_BUTTON_PREV) //Prev
 		{
-			if (m_Page > 0) //≈ÒÎË ÌÂ ·˚ÎÓ Á‡ÔÓÒ‡ Ì‡ ÍÎËÍ
+			if (m_Page > 0) //–ï—Å–ª–∏ –Ω–µ –±—ã–ª–æ –∑–∞–ø—Ä–æ—Å–∞ –Ω–∞ –∫–ª–∏–∫
 			{
 				newPage = m_Page - 2;
 
@@ -197,7 +197,7 @@ void CGumpBook::GUMP_BUTTON_EVENT_C
 		}
 		else if (serial == ID_GB_BUTTON_NEXT) //Next
 		{
-			if (m_Page < m_PageCount) //≈ÒÎË ÌÂ ·˚ÎÓ Á‡ÔÓÒ‡ Ì‡ ÍÎËÍ
+			if (m_Page < m_PageCount) //–ï—Å–ª–∏ –Ω–µ –±—ã–ª–æ –∑–∞–ø—Ä–æ—Å–∞ –Ω–∞ –∫–ª–∏–∫
 			{
 				newPage = m_Page + 2;
 
@@ -219,17 +219,17 @@ bool CGumpBook::OnLeftMouseButtonDoubleClick()
 {
 	if (g_PressedObject.LeftSerial == ID_GB_BUTTON_PREV) //Prev
 	{
-		//¡˚Î Ì‡Ê‡Ú Û„ÓÎÓÍ "Õ‡Á‡‰", ÔË ‰‡·ÎÍÎËÍÂ ÛÒÚ‡Ì‡‚ÎË‚‡ÂÏ 1 ÒÚ‡ÌËˆÛ
+		//–ë—ã–ª –Ω–∞–∂–∞—Ç —É–≥–æ–ª–æ–∫ "–ù–∞–∑–∞–¥", –ø—Ä–∏ –¥–∞–±–ª–∫–ª–∏–∫–µ —É—Å—Ç–∞–Ω–∞–≤–ª–∏–≤–∞–µ–º 1 —Å—Ç—Ä–∞–Ω–∏—Ü—É
 		ChangePage(0);
 
-		//œÂÂËÒÛÂÏ „‡ÏÔ
+		//–ü–µ—Ä–µ—Ä–∏—Å—É–µ–º –≥–∞–º–ø
 		m_WantRedraw = true;
 
 		return true;
 	}
 	else if (g_PressedObject.LeftSerial == ID_GB_BUTTON_NEXT) //Next
 	{
-		//¡˚Î Ì‡Ê‡Ú Û„ÓÎÓÍ "¬ÔÂÂ‰", ÔË ‰‡·ÎÍÎËÍÂ ÛÒÚ‡Ì‡‚ÎË‚‡ÂÏ ÔÓÒÎÂ‰Ì˛˛ ÒÚ‡ÌËˆÛ
+		//–ë—ã–ª –Ω–∞–∂–∞—Ç —É–≥–æ–ª–æ–∫ "–í–ø–µ—Ä–µ–¥", –ø—Ä–∏ –¥–∞–±–ª–∫–ª–∏–∫–µ —É—Å—Ç–∞–Ω–∞–≤–ª–∏–≤–∞–µ–º –ø–æ—Å–ª–µ–¥–Ω—é—é —Å—Ç—Ä–∞–Ω–∏—Ü—É
 		int page = m_PageCount;
 
 		if (m_PageCount % 2)
@@ -237,7 +237,7 @@ bool CGumpBook::OnLeftMouseButtonDoubleClick()
 
 		ChangePage(page);
 
-		//œÂÂËÒÛÂÏ „‡ÏÔ
+		//–ü–µ—Ä–µ—Ä–∏—Å—É–µ–º –≥–∞–º–ø
 		m_WantRedraw = true;
 
 		return true;

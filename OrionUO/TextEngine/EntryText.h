@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** EntryText.h
 **
@@ -15,7 +15,7 @@
 //----------------------------------------------------------------------------------
 class CGump;
 //----------------------------------------------------------------------------------
-//!Класс для работы с полем для ввода текста
+//!РљР»Р°СЃСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїРѕР»РµРј РґР»СЏ РІРІРѕРґР° С‚РµРєСЃС‚Р°
 class CEntryText
 {
 	SETGET(int, MaxLength);
@@ -28,96 +28,96 @@ class CEntryText
 	SETGET(bool, NumberOnly);
 
 private:
-	//!Unicode строка
+	//!Unicode СЃС‚СЂРѕРєР°
 	wstring m_Text;
 
-	//!ASCII строка
+	//!ASCII СЃС‚СЂРѕРєР°
 	string m_CText;
 
-	//!Позиция каретки в строке
+	//!РџРѕР·РёС†РёСЏ РєР°СЂРµС‚РєРё РІ СЃС‚СЂРѕРєРµ
 	int m_Position;
 
 public:
 	CEntryText(int maxLength = 0, int width = 0, int maxWidth = 0, bool numberOnly = false);
 	virtual ~CEntryText();
 
-	//!Текстура текста
+	//!РўРµРєСЃС‚СѓСЂР° С‚РµРєСЃС‚Р°
 	CGLTextTexture m_Texture;
 
 	/*!
-	Очистить данные
+	РћС‡РёСЃС‚РёС‚СЊ РґР°РЅРЅС‹Рµ
 	@return 
 	*/
 	void Clear();
 
-	//Получить количество строк
+	//РџРѕР»СѓС‡РёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє
 	int GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0, int width = 0);
 
-	//Получить количество строк
+	//РџРѕР»СѓС‡РёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє
 	int GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0, int width = 0);
 
-	//Вставить символ
+	//Р’СЃС‚Р°РІРёС‚СЊ СЃРёРјРІРѕР»
 	bool Insert(wchar_t ch, CGump *gump = NULL);
 
-	//Удалить символ
+	//РЈРґР°Р»РёС‚СЊ СЃРёРјРІРѕР»
 	void Remove(bool left, CGump *gump = NULL);
 
-	//Сместить позицию каретки в тексте
+	//РЎРјРµСЃС‚РёС‚СЊ РїРѕР·РёС†РёСЋ РєР°СЂРµС‚РєРё РІ С‚РµРєСЃС‚Рµ
 	void AddPos(int val, CGump *gump = NULL);
 
-	//Установить позицию каретки в тексте
+	//РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїРѕР·РёС†РёСЋ РєР°СЂРµС‚РєРё РІ С‚РµРєСЃС‚Рµ
 	void SetPos(int val, CGump *gump = NULL);
 
-	//Unicode данные строки
+	//Unicode РґР°РЅРЅС‹Рµ СЃС‚СЂРѕРєРё
 	const wchar_t *Data() const {return m_Text.c_str();}
 
-	//ASCII данные стоки
+	//ASCII РґР°РЅРЅС‹Рµ СЃС‚РѕРєРё
 	const char *c_str();
 
-	//Установить ASCII текст
+	//РЈСЃС‚Р°РЅРѕРІРёС‚СЊ ASCII С‚РµРєСЃС‚
 	void SetText(const string &text);
 
-	//Установить Unicode текст
+	//РЈСЃС‚Р°РЅРѕРІРёС‚СЊ Unicode С‚РµРєСЃС‚
 	void SetText(const wstring &text);
 
-	//Событие нажатия мышкой на текст
+	//РЎРѕР±С‹С‚РёРµ РЅР°Р¶Р°С‚РёСЏ РјС‹С€РєРѕР№ РЅР° С‚РµРєСЃС‚
 	void OnClick(CGump *gump, uchar font, bool unicode, int x, int y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
-	//Нажатие клавиши в активном текстовом поле
+	//РќР°Р¶Р°С‚РёРµ РєР»Р°РІРёС€Рё РІ Р°РєС‚РёРІРЅРѕРј С‚РµРєСЃС‚РѕРІРѕРј РїРѕР»Рµ
 	void OnKey(CGump *gump, WPARAM wParam);
 
 	int Pos() const {return m_Position;}
 
 	int Length() const {return m_Text.length();}
 
-	//Вычислить ASCII строку по ширине
+	//Р’С‹С‡РёСЃР»РёС‚СЊ ASCII СЃС‚СЂРѕРєСѓ РїРѕ С€РёСЂРёРЅРµ
 	string CheckMaxWidthA(uchar font, string str);
 
-	//Вычислить Unicode строку по ширине
+	//Р’С‹С‡РёСЃР»РёС‚СЊ Unicode СЃС‚СЂРѕРєСѓ РїРѕ С€РёСЂРёРЅРµ
 	wstring CheckMaxWidthW(uchar font, wstring str);
 
-	//Отформатировать ASCII текст по ширине
+	//РћС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°С‚СЊ ASCII С‚РµРєСЃС‚ РїРѕ С€РёСЂРёРЅРµ
 	void FixMaxWidthA(uchar font);
 
-	//Отформатировать Unicode текст по ширине
+	//РћС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°С‚СЊ Unicode С‚РµРєСЃС‚ РїРѕ С€РёСЂРёРЅРµ
 	void FixMaxWidthW(uchar font);
 
-	//Создать текстуру ASCII текста
+	//РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ ASCII С‚РµРєСЃС‚Р°
 	void CreateTextureA(uchar font, string str, ushort color, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
-	//Создать текстуру Unicode текста
+	//РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ Unicode С‚РµРєСЃС‚Р°
 	void CreateTextureW(uchar font, wstring str, ushort color, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
-	//Отрисовать ASCII текст
+	//РћС‚СЂРёСЃРѕРІР°С‚СЊ ASCII С‚РµРєСЃС‚
 	virtual void DrawA(uchar font, ushort color, int X, int Y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
-	//Отрисовать Unicode текст
+	//РћС‚СЂРёСЃРѕРІР°С‚СЊ Unicode С‚РµРєСЃС‚
 	virtual void DrawW(uchar font, ushort color, int X, int Y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
-	//Отрисовать ASCII текст замаскированный звездочками
+	//РћС‚СЂРёСЃРѕРІР°С‚СЊ ASCII С‚РµРєСЃС‚ Р·Р°РјР°СЃРєРёСЂРѕРІР°РЅРЅС‹Р№ Р·РІРµР·РґРѕС‡РєР°РјРё
 	void DrawMaskA(uchar font, ushort color, int X, int Y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
-	//Отрисовать Unicode текст замаскированный звездочками
+	//РћС‚СЂРёСЃРѕРІР°С‚СЊ Unicode С‚РµРєСЃС‚ Р·Р°РјР°СЃРєРёСЂРѕРІР°РЅРЅС‹Р№ Р·РІРµР·РґРѕС‡РєР°РјРё
 	void DrawMaskW(uchar font, ushort color, int X, int Y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 };
 //----------------------------------------------------------------------------------

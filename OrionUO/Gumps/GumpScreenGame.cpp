@@ -1,4 +1,4 @@
-/***********************************************************************************
+ï»¿/***********************************************************************************
 **
 ** GumpScreenGame.cpp
 **
@@ -95,7 +95,7 @@ void CGumpScreenGame::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpScreenGame::Draw()
 {
-	//Ðàìêà èãðîâîãî îêíà
+	//Ð Ð°Ð¼ÐºÐ° Ð¸Ð³Ñ€Ð¾Ð²Ð¾Ð³Ð¾ Ð¾ÐºÐ½Ð°
 	g_Orion.DrawGump(0x0A8D, 0, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8);
 	g_Orion.DrawGump(0x0A8D, 0, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8);
 
@@ -115,7 +115,7 @@ CRenderObject *CGumpScreenGame::Select()
 {
 	CRenderObject *selected = NULL;
 
-	//Åñëè íè÷åãî íå âûáðàëîñü - ïðîéäåìñÿ ïî ðàìêå
+	//Ð•ÑÐ»Ð¸ Ð½Ð¸Ñ‡ÐµÐ³Ð¾ Ð½Ðµ Ð²Ñ‹Ð±Ñ€Ð°Ð»Ð¾ÑÑŒ - Ð¿Ñ€Ð¾Ð¹Ð´ÐµÐ¼ÑÑ Ð¿Ð¾ Ñ€Ð°Ð¼ÐºÐµ
 	if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))
 		selected = (CRenderObject*)m_Items->m_Next;
 	else if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))

@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GLEngine.h
 **
@@ -36,41 +36,41 @@ public:
 	CGLEngine();
 	virtual ~CGLEngine();
 	
-	//Инициализация OpenGL
+	//РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ OpenGL
 	bool Install();
 
-	//Завершение работы с OpenGL
+	//Р—Р°РІРµСЂС€РµРЅРёРµ СЂР°Р±РѕС‚С‹ СЃ OpenGL
 	void Uninstall();
 
-	//Обновление области вывода
+	//РћР±РЅРѕРІР»РµРЅРёРµ РѕР±Р»Р°СЃС‚Рё РІС‹РІРѕРґР°
 	void UpdateRect();
 
-	//Загрузка текстур 16 и 32 бит
+	//Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂ 16 Рё 32 Р±РёС‚
 	void BindTexture16(GLuint &texture, const int &width, const int &height, const pushort pixels);
 	void BindTexture32(GLuint &texture, const int &width, const int &height, const puint pixels);
 
-	//Очистить экран и начать рисование
+	//РћС‡РёСЃС‚РёС‚СЊ СЌРєСЂР°РЅ Рё РЅР°С‡Р°С‚СЊ СЂРёСЃРѕРІР°РЅРёРµ
 	void BeginDraw();
 
-	//Завершить рисование и вывести все нарисованное на экран
+	//Р—Р°РІРµСЂС€РёС‚СЊ СЂРёСЃРѕРІР°РЅРёРµ Рё РІС‹РІРµСЃС‚Рё РІСЃРµ РЅР°СЂРёСЃРѕРІР°РЅРЅРѕРµ РЅР° СЌРєСЂР°РЅ
 	void EndDraw();
 
-	//Включить буфер трафарета
+	//Р’РєР»СЋС‡РёС‚СЊ Р±СѓС„РµСЂ С‚СЂР°С„Р°СЂРµС‚Р°
 	void BeginStencil();
 
-	//Выключить буфер трафарета
+	//Р’С‹РєР»СЋС‡РёС‚СЊ Р±СѓС„РµСЂ С‚СЂР°С„Р°СЂРµС‚Р°
 	void EndStencil();
 
-	//Указать область рисования
+	//РЈРєР°Р·Р°С‚СЊ РѕР±Р»Р°СЃС‚СЊ СЂРёСЃРѕРІР°РЅРёСЏ
 	void ViewPortScaled(const int &x, const int &y, const int &width, const int &height);
 
-	//Указать область рисования
+	//РЈРєР°Р·Р°С‚СЊ РѕР±Р»Р°СЃС‚СЊ СЂРёСЃРѕРІР°РЅРёСЏ
 	void ViewPort(const int &x, const int &y, const int &width, const int &height);
 
-	//Восстановить стандартную область рисования
+	//Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ СЃС‚Р°РЅРґР°СЂС‚РЅСѓСЋ РѕР±Р»Р°СЃС‚СЊ СЂРёСЃРѕРІР°РЅРёСЏ
 	void RestorePort();
 
-	//Указать область рисования (ножницами, сохраняет мартицу)
+	//РЈРєР°Р·Р°С‚СЊ РѕР±Р»Р°СЃС‚СЊ СЂРёСЃРѕРІР°РЅРёСЏ (РЅРѕР¶РЅРёС†Р°РјРё, СЃРѕС…СЂР°РЅСЏРµС‚ РјР°СЂС‚РёС†Сѓ)
 	void PushScissor(const int &x, const int &y, const int &width, const int &height);
 	void PushScissor(const WISP_GEOMETRY::CPoint2Di &position, const int &width, const int &height);
 	void PushScissor(const int &x, const int &y, const WISP_GEOMETRY::CSize &size);
@@ -83,39 +83,39 @@ public:
 
 
 
-	//Нарисовать линию
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ Р»РёРЅРёСЋ
 	void DrawLine(const int &x, const int &y, const int &targetX, const int &targetY);
 
-	//Нарисовать прямоугольник
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє
 	void DrawPolygone(const int &x, const int &y, const int &width, const int &height);
 
-	//Нарисовать круг
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ РєСЂСѓРі
 	void DrawCircle(const float &x, const float &y, const float &radius, const int &gradientMode = 0);
 
 
 
-	//Нарисовать текстуру ландшафта
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ Р»Р°РЅРґС€Р°С„С‚Р°
 	void DrawLandTexture(const GLuint &texture, const int &x, const int &y, const RECT &rc, CVector *normals);
 
-	//Нарисовать текстуру
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ
 	void Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height);
 
-	//Нарисовать повернутую текстуру
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ РїРѕРІРµСЂРЅСѓС‚СѓСЋ С‚РµРєСЃС‚СѓСЂСѓ
 	void DrawRotated(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const float &angle);
 
-	//Нарисовать текстуру с возможностью зеркального отражения
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ Р·РµСЂРєР°Р»СЊРЅРѕРіРѕ РѕС‚СЂР°Р¶РµРЅРёСЏ
 	void Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror);
 
-	//Нарисовать текстуру сидячего персонажа
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ СЃРёРґСЏС‡РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
 	void DrawSitting(const GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod);
 
-	//Нарисовать тень
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ С‚РµРЅСЊ
 	void DrawShadow(const GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror);
 
-	//Замостить текстуру на заданные габариты
+	//Р—Р°РјРѕСЃС‚РёС‚СЊ С‚РµРєСЃС‚СѓСЂСѓ РЅР° Р·Р°РґР°РЅРЅС‹Рµ РіР°Р±Р°СЂРёС‚С‹
 	void Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const int &drawWidth, const int &drawHeight);
 
-	//Нарисовать фон
+	//РќР°СЂРёСЃРѕРІР°С‚СЊ С„РѕРЅ
 	void DrawResizepic(CGLTexture **th, const int &x, const int &y, const int &width, const int &height);
 };
 //---------------------------------------------------------------------------

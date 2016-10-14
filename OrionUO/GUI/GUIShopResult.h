@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIShopResult.h
 **
-** Компонента для отображения выбранного товара
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІС‹Р±СЂР°РЅРЅРѕРіРѕ С‚РѕРІР°СЂР°
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -17,24 +17,24 @@
 //----------------------------------------------------------------------------------
 class CGUIShopResult : public CBaseGUI
 {
-	//!Стоимость
+	//!РЎС‚РѕРёРјРѕСЃС‚СЊ
 	SETGET(uint, Price);
 
-	//!Название
+	//!РќР°Р·РІР°РЅРёРµ
 	SETGET(string, Name);
 
 private:
-	//!Текстура названия
+	//!РўРµРєСЃС‚СѓСЂР° РЅР°Р·РІР°РЅРёСЏ
 	CGLTextTexture m_NameText;
 
 public:
 	CGUIShopResult(class CGUIShopItem *shopItem, const int &x, const int &y);
 	virtual ~CGUIShopResult();
 
-	//!Компонента кнопок MinMax
+	//!РљРѕРјРїРѕРЅРµРЅС‚Р° РєРЅРѕРїРѕРє MinMax
 	class CGUIMinMaxButtons *m_MinMaxButtons;
 
-	//!Получить ссылку на выбранную компоненту или ссылку на себя
+	//!РџРѕР»СѓС‡РёС‚СЊ СЃСЃС‹Р»РєСѓ РЅР° РІС‹Р±СЂР°РЅРЅСѓСЋ РєРѕРјРїРѕРЅРµРЅС‚Сѓ РёР»Рё СЃСЃС‹Р»РєСѓ РЅР° СЃРµР±СЏ
 	CBaseGUI *SelectedItem();
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(200, m_NameText.Height); }
