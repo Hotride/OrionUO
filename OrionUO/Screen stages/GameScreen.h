@@ -98,7 +98,7 @@ struct OBJECT_HITS_INFO
 	//!Цвет в зависимости от злобности персонажа
 	ushort Color;
 
-	//!Ширина линии
+	//!Ширина линии/Ссылка на текстуру
 	int Width;
 };
 //----------------------------------------------------------------------------------
@@ -204,6 +204,8 @@ private:
 	void AddOffsetCharacterTileToRenderList(class CGameObject *obj, int drawX, int drawY, const uchar &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX);
 
 	class CGumpScreenGame m_GameScreenGump;
+
+	vector<OBJECT_HITS_INFO> m_HitsStack;
 
 public:
 	CGameScreen();

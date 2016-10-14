@@ -301,12 +301,12 @@ void CGumpOptions::InitToolTip()
 			}
 			case ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP:
 			{
-				g_ToolTip.Set(L"Draw character's status in the game window above characters", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Draw character's status (text) in the game window above characters", g_SelectedObject.Object());
 				break;
 			}
 			case ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM:
 			{
-				g_ToolTip.Set(L"Draw character's status in the game window under characters", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Draw character's status (line) in the game window under characters", g_SelectedObject.Object());
 				break;
 			}
 			case ID_GO_P2_DRAW_STUMPS:
@@ -783,11 +783,11 @@ void CGumpOptions::DrawPage2()
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_TOP, 0x00D0, 0x00D1, 0x00D2, 10, 160));
 	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_ABOVE);
-	radio->SetTextParameters(0, L"Above character", g_OptionsTextColor);
+	radio->SetTextParameters(0, L"Above character (Text)", g_OptionsTextColor);
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTERS_STATUS_BOTTOM, 0x00D0, 0x00D1, 0x00D2, 10, 180));
 	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_UNDER);
-	radio->SetTextParameters(0, L"Under character", g_OptionsTextColor);
+	radio->SetTextParameters(0, L"Under character (Line)", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_STUMPS, 0x00D2, 0x00D3, 0x00D2, 0, 205));
 	checkbox->Checked = g_OptionsConfig.DrawStumps;

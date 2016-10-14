@@ -1016,7 +1016,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 		if (g_ObjectInHand != NULL)
 			ignoreSerial = g_ObjectInHand->Serial;
 
-		vector<OBJECT_HITS_INFO> hitsStack;
+		m_HitsStack.clear();
 
 		IFOR(i, 0, m_RenderListCount)
 		{
@@ -1040,11 +1040,8 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 					ushort color = g_ConfigManager.GetColorByNotoriety(gc->Notoriety);
 
-					int x = rod.X - 20 + gc->OffsetX;
+					int x = rod.X + gc->OffsetX;
 					int y = rod.Y + gc->OffsetY - (gc->Z * 4) - gc->OffsetZ;
-
-					if (g_ConfigManager.DrawStatusState == 1)
-						y -= gc->m_FrameInfo.Height + 6;
 
 					int width = gc->MaxHits;
 
@@ -1057,24 +1054,26 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 						if (width < 1)
 							width = 0;
-						else
+						else if (g_ConfigManager.DrawStatusState == DCSS_UNDER)
 							width = (34 * width) / 100;
 					}
 
-					OBJECT_HITS_INFO hitsInfo = {x, y, color, width};
-					hitsStack.push_back(hitsInfo);
-				}
-			}
-		}
+					if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+					{
+						ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(gc, 0);
+						y -= (dims.Height + dims.CenterY) + 24;
 
-		IFOR(i, 0, 2)
-		{
-			for (vector<OBJECT_HITS_INFO>::iterator it = hitsStack.begin(); it != hitsStack.end(); it++)
-			{
-				if (!i)
-					g_Orion.DrawGump(0x1068, it->Color, it->X, it->Y);
-				else if (it->Width)
-					g_Orion.DrawGump(0x1069, 0x0044, it->X, it->Y, it->Width, 0);
+						gc->UpdateHitsTexture(width, 0x0044);
+						width = (int)&gc->m_HitsTexture;
+
+						x -= (gc->m_HitsTexture.Width / 2) - 3;
+					}
+					else
+						x -= 20;
+
+					OBJECT_HITS_INFO hitsInfo = {x, y, color, width};
+					m_HitsStack.push_back(hitsInfo);
+				}
 			}
 		}
 
@@ -1200,6 +1199,35 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 		g_WorldTextRenderer.WorldDraw();
 
 		UnuseShader();
+
+		if (g_ConfigManager.DrawStatusState && m_HitsStack.size())
+		{
+			if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+			{
+				for (vector<OBJECT_HITS_INFO>::iterator it = m_HitsStack.begin(); it != m_HitsStack.end(); it++)
+				{
+					CGLTextTexture *texture = (CGLTextTexture*)it->Width;
+					texture->Draw(it->X, it->Y);
+				}
+			}
+			else
+			{
+				g_ColorizerShader->Use();
+
+				IFOR(i, 0, 2)
+				{
+					for (vector<OBJECT_HITS_INFO>::iterator it = m_HitsStack.begin(); it != m_HitsStack.end(); it++)
+					{
+						if (!i)
+							g_Orion.DrawGump(0x1068, it->Color, it->X, it->Y);
+						else if (it->Width)
+							g_Orion.DrawGump(0x1069, 0x0044, it->X, it->Y, it->Width, 0);
+					}
+				}
+
+				UnuseShader();
+			}
+		}
 
 		QFOR(obj, g_World->m_Items, CGameObject*)
 		{

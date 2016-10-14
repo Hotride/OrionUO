@@ -318,7 +318,7 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 							drawY += gc->OffsetY - gc->OffsetZ;
 
 							ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(go, 0);
-							drawY -= (dims.Height + dims.CenterY);
+							drawY -= (dims.Height + dims.CenterY) + 8;
 						}
 						else
 							drawY -= (go->GetStaticData()->Height + 20);

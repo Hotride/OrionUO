@@ -12,6 +12,7 @@
 //----------------------------------------------------------------------------------
 #include "GameObject.h"
 #include "../Walker/WalkStack.h"
+#include "../GLEngine/GLTextTexture.h"
 //----------------------------------------------------------------------------------
 //!Игровой персонаж
 class CGameCharacter: public CGameObject
@@ -43,6 +44,7 @@ class CGameCharacter: public CGameObject
 	SETGETEX(int, OffsetZ);
 	SETGET(uint, LastStepTime);
 	SETGET(string, PaperdollText);
+	SETGET(uchar, HitsPercent);
 
 protected:
 	/*!
@@ -74,6 +76,10 @@ public:
 
 	//!Ссылка на счетчик шагов
 	CWalkStack m_WalkStack;
+
+	CGLTextTexture m_HitsTexture;
+
+	void UpdateHitsTexture(const uchar &hits, const ushort &color);
 
 	/*!
 	Сидит ли персонаж

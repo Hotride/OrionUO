@@ -32,7 +32,7 @@ m_AnimationRepeatMode(1), m_AnimationDirection(false), m_AnimationFromServer(fal
 m_MaxMana(0), m_MaxStam(0), m_Mana(0), m_Stam(0), m_OffsetX(0), m_OffsetY(0),
 m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(0),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
-m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10)
+m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10), m_HitsPercent(0)
 {
 	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;
@@ -53,6 +53,8 @@ CGameCharacter::~CGameCharacter()
 	//!Чистим память
 	m_WalkStack.Clear();
 
+	m_HitsTexture.Clear();
+
 	//!Если стянут статусбар - обновим его
 	g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR);
 	
@@ -61,6 +63,19 @@ CGameCharacter::~CGameCharacter()
 
 	if (!IsPlayer())
 		g_GumpManager.CloseGump(m_Serial, 0, GT_PAPERDOLL);
+}
+//----------------------------------------------------------------------------------
+void CGameCharacter::UpdateHitsTexture(const uchar &hits, const ushort &color)
+{
+	if (m_HitsPercent != hits || m_HitsTexture.Empty())
+	{
+		m_HitsPercent = hits;
+
+		char hitsText[10] = { 0 };
+		sprintf_s(hitsText, "[%i%%]", hits);
+
+		g_FontManager.GenerateA(3, m_HitsTexture, hitsText, color);
+	}
 }
 //----------------------------------------------------------------------------------
 /*!
