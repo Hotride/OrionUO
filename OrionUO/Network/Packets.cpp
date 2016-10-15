@@ -778,7 +778,7 @@ CPacketPartyMessage::CPacketPartyMessage(const wchar_t *text, int len, uint seri
 	else //Message to full party
 		WriteUInt8(0x04);
 
-	WriteWString(text, len, false);
+	WriteWString(text, len, true, false);
 }
 //---------------------------------------------------------------------------
 CPacketGameWindowSize::CPacketGameWindowSize()

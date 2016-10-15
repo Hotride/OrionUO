@@ -1474,7 +1474,17 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	else if (g_StatusbarUnderMouse == serial)
 		m_Color = g_ConfigManager.GetColorByNotoriety(obj->Notoriety);
 	else
+	{
 		m_Color = 0;
+
+		if (g_ConfigManager.ApplyStateColorOnCharacters)
+		{
+			if (obj->Poisoned())
+				m_Color = 0x0044;
+			else if (obj->Notoriety != NT_INVULNERABLE && obj->YellowHits())
+				m_Color = 0x0030;
+		}
+	}
 
 	bool isAttack = (serial == g_LastAttackObject);
 	bool underMouseTarget = (g_SelectedObject.Object() == obj && g_Target.IsTargeting());

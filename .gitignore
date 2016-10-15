@@ -1,6 +1,7 @@
 *.user
 *.obj
 *.o
+*.a
 *.suo
 *.opensdf
 *.sdf

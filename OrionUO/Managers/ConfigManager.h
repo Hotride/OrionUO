@@ -40,6 +40,9 @@ class CConfigManager
 	SETGET(bool, UseHiddenModeOnlyForSelf);
 	SETGET(uchar, TransparentSpellIcons);
 	SETGETE(uchar, SpellIconAlpha, OnChangedSpellIconAlpha);
+	SETGETE(bool, OldStyleStatusbar, OnChangeOldStyleStatusbar);
+	SETGETE(bool, OriginalPartyStatusbar, OnChangeOriginalPartyStatusbar);
+	SETGET(bool, ApplyStateColorOnCharacters);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

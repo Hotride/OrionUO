@@ -62,10 +62,9 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 		{
 			Clear();
 
-			uchar flag1 = reader.ReadUInt8();
 			uchar count = reader.ReadUInt8();
 
-			if (flag1 == 1)
+			if (code == 1)
 			{
 				if (m_Leader == 0)
 				{
@@ -92,12 +91,13 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 				uint serial = reader.ReadUInt32BE();
 				Member[i].Serial = serial;
 
-				CGumpStatusbar *gump = (CGumpStatusbar*)g_GumpManager.GetGump(serial, 0, GT_STATUSBAR);
+				CGumpStatusbar *gump = (CGumpStatusbar*)g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
+
 				if (gump == NULL)
 				{
 					g_Orion.OpenStatus(serial);
 					
-					gump = (CGumpStatusbar*)g_GumpManager.GetGump(serial, 0, GT_STATUSBAR);
+					gump = (CGumpStatusbar*)g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 
 					if (serial == g_PlayerSerial)
 						gump->Minimized = false;
@@ -127,7 +127,7 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 		case 4: //Party message
 		{
 			uint serial = reader.ReadUInt32BE();
-			wstring name = reader.ReadWString(0, false);
+			wstring name = reader.ReadWString(0, true);
 
 			IFOR(i, 0, 10)
 			{

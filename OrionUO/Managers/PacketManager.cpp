@@ -976,7 +976,7 @@ PACKET_HANDLER(NewHealthbarUpdate)
 	if (obj == NULL)
 		return;
 
-	Move(1);
+	Move(2);
 
 	ushort type = ReadUInt16BE();
 	uchar enable = ReadUInt8(); //enable/disable

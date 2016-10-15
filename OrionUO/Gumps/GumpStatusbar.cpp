@@ -429,7 +429,7 @@ void CGumpStatusbar::UpdateContent()
 		{
 			POINT p = { 0, 0 };
 
-			if (g_PacketManager.ClientVersion >= CV_308D)
+			if (g_PacketManager.ClientVersion >= CV_308D && !g_ConfigManager.OldStyleStatusbar)
 				Add(new CGUIGumppic(0x2A6C, 0, 0));
 			else
 			{
@@ -440,7 +440,7 @@ void CGumpStatusbar::UpdateContent()
 			}
 
 			//Отрисовка набора характеристик, расположение в зависимости от версии протокола, комментировать не буду...
-			if (g_PacketManager.ClientVersion >= CV_308Z)
+			if (g_PacketManager.ClientVersion >= CV_308Z && !g_ConfigManager.OldStyleStatusbar)
 			{
 				p.x = 389;
 				p.y = 152;
@@ -664,23 +664,26 @@ void CGumpStatusbar::UpdateContent()
 				Add(new CGUIHitBox(ID_GSB_TEXT_GOLD, 171, 97, 66, 12));
 				Add(new CGUIHitBox(ID_GSB_TEXT_WEIGHT, 171, 109, 66, 12));
 
-				if (g_PacketManager.ClientVersion == CV_308D)
+				if (!g_ConfigManager.OldStyleStatusbar)
 				{
-					text = (CGUIText*)Add(new CGUIText(0x0386, 171, 124));
-					text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
+					if (g_PacketManager.ClientVersion == CV_308D)
+					{
+						text = (CGUIText*)Add(new CGUIText(0x0386, 171, 124));
+						text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
 
-					Add(new CGUIHitBox(ID_GSB_TEXT_MAX_STATS, 171, 124, 34, 12));
-				}
-				else if (g_PacketManager.ClientVersion == CV_308J)
-				{
-					text = (CGUIText*)Add(new CGUIText(0x0386, 180, 131));
-					text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
+						Add(new CGUIHitBox(ID_GSB_TEXT_MAX_STATS, 171, 124, 34, 12));
+					}
+					else if (g_PacketManager.ClientVersion == CV_308J)
+					{
+						text = (CGUIText*)Add(new CGUIText(0x0386, 180, 131));
+						text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
 
-					text = (CGUIText*)Add(new CGUIText(0x0386, 180, 144));
-					text->CreateTextureA(1, std::to_string(g_Player->Followers) + "/" + std::to_string(g_Player->MaxFollowers));
+						text = (CGUIText*)Add(new CGUIText(0x0386, 180, 144));
+						text->CreateTextureA(1, std::to_string(g_Player->Followers) + "/" + std::to_string(g_Player->MaxFollowers));
 
-					Add(new CGUIHitBox(ID_GSB_TEXT_MAX_STATS, 180, 131, 34, 12));
-					Add(new CGUIHitBox(ID_GSB_TEXT_FOLLOWERS, 171, 144, 34, 12));
+						Add(new CGUIHitBox(ID_GSB_TEXT_MAX_STATS, 180, 131, 34, 12));
+						Add(new CGUIHitBox(ID_GSB_TEXT_FOLLOWERS, 171, 144, 34, 12));
+					}
 				}
 			}
 
@@ -688,8 +691,11 @@ void CGumpStatusbar::UpdateContent()
 		}
 		else //Это уменьшенная врсия статусбара (с полосками)
 		{
-			if (g_Party.Leader != 0) //inParty
+			if (g_Party.Leader != 0 && !g_ConfigManager.OriginalPartyStatusbar) //inParty
 			{
+				CGUIGumppic *bodyGump = (CGUIGumppic*)Add(new CGUIGumppic(0x0803, 0, 0));
+				bodyGump->SelectOnly = true;
+
 				text = (CGUIText*)Add(new CGUIText(0x0386, 16, -2));
 				text->CreateTextureA(3, "[* SELF *]");
 
@@ -777,12 +783,15 @@ void CGumpStatusbar::UpdateContent()
 	}
 	else //Чужой статусбар
 	{
-		if (g_Party.Contains(m_Serial))
+		if (g_Party.Contains(m_Serial) && !g_ConfigManager.OriginalPartyStatusbar)
 		{
 			IFOR(i, 0, 10)
 			{
 				if (g_Party.Member[i].Serial == m_Serial)
 				{
+					CGUIGumppic *bodyGump = (CGUIGumppic*)Add(new CGUIGumppic(0x0803, 0, 0));
+					bodyGump->SelectOnly = true;
+
 					CPartyObject &member = g_Party.Member[i];
 
 					string memberName = member.GetName(i);

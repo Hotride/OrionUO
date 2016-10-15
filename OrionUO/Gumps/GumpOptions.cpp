@@ -369,6 +369,21 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Transparent spell icons", g_SelectedObject.Object());
 				break;
 			}
+			case ID_GO_P2_OLD_STYLE_STATUSBAR:
+			{
+				g_ToolTip.Set(L"Draw your maximized statusbar gump in old-style (low info gump, for clients >= 3.0.8d)", g_SelectedObject.Object(), 160);
+				break;
+			}
+			case ID_GO_P2_ORIGINAL_PARTY_STATUSBAR:
+			{
+				g_ToolTip.Set(L"Draw original minimized statusbar gump instead a party statusbar gump", g_SelectedObject.Object(), 160);
+				break;
+			}
+			case ID_GO_P2_APPLY_STATE_COLOR_ON_CHARACTERS:
+			{
+				g_ToolTip.Set(L"Colorize poisoned or paralyzed characters in the world", g_SelectedObject.Object(), 160);
+				break;
+			}
 			case ID_GO_P2_SPELL_ICONS_ALPHA:
 			{
 				g_ToolTip.Set(L"Value of alpha channel for spell icons", g_SelectedObject.Object());
@@ -846,6 +861,18 @@ void CGumpOptions::DrawPage2()
 
 	m_SliderSpellIconsAlpha = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_SPELL_ICONS_ALPHA, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 232, 454, 90, 30, 255, g_OptionsConfig.SpellIconAlpha));
 	m_SliderSpellIconsAlpha->SetTextParameters(true, STP_RIGHT, 0, g_OptionsTextColor, true);
+	
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_OLD_STYLE_STATUSBAR, 0x00D2, 0x00D3, 0x00D2, 0, 470));
+	checkbox->Checked = g_OptionsConfig.OldStyleStatusbar;
+	checkbox->SetTextParameters(0, L"Old style maximized statusbar", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_ORIGINAL_PARTY_STATUSBAR, 0x00D2, 0x00D3, 0x00D2, 0, 490));
+	checkbox->Checked = g_OptionsConfig.OriginalPartyStatusbar;
+	checkbox->SetTextParameters(0, L"Original party statusbar gump", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_APPLY_STATE_COLOR_ON_CHARACTERS, 0x00D2, 0x00D3, 0x00D2, 0, 510));
+	checkbox->Checked = g_OptionsConfig.ApplyStateColorOnCharacters;
+	checkbox->SetTextParameters(0, L"Colorize characters by state", g_OptionsTextColor);
 
 	html->CalculateDataSize();
 }
@@ -2077,6 +2104,13 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.UseHiddenModeOnlyForSelf = state;
 			else if (serial == ID_GO_P2_TRANSPARENT_SPELL_ICONS)
 				g_OptionsConfig.TransparentSpellIcons = state;
+			else if (serial == ID_GO_P2_OLD_STYLE_STATUSBAR)
+				g_OptionsConfig.OldStyleStatusbar = state;
+			else if (serial == ID_GO_P2_ORIGINAL_PARTY_STATUSBAR)
+				g_OptionsConfig.OriginalPartyStatusbar = state;
+			else if (serial == ID_GO_P2_APPLY_STATE_COLOR_ON_CHARACTERS)
+				g_OptionsConfig.ApplyStateColorOnCharacters = state;
+			
 
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
@@ -2608,6 +2642,9 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.UseHiddenModeOnlyForSelf = g_OptionsConfig.UseHiddenModeOnlyForSelf;
 			g_ConfigManager.TransparentSpellIcons = g_OptionsConfig.TransparentSpellIcons;
 			g_ConfigManager.SpellIconAlpha = g_OptionsConfig.SpellIconAlpha;
+			g_ConfigManager.OldStyleStatusbar = g_OptionsConfig.OldStyleStatusbar;
+			g_ConfigManager.OriginalPartyStatusbar = g_OptionsConfig.OriginalPartyStatusbar;
+			g_ConfigManager.ApplyStateColorOnCharacters = g_OptionsConfig.ApplyStateColorOnCharacters;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

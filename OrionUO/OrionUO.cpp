@@ -2605,7 +2605,12 @@ void COrion::LoadIndexFiles()
 	if (g_MultiIndexCount > MAX_MULTI_DATA_INDEX_COUNT)
 		g_MultiIndexCount = MAX_MULTI_DATA_INDEX_COUNT;
 
-	int maxCount = (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK);
+	int maxGumpsCount = (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK);
+
+	int maxCount = maxGumpsCount;
+
+	if (m_StaticDataCount > maxCount)
+		maxCount = m_StaticDataCount;
 
 	IFOR(i, 0, maxCount)
 	{
@@ -2661,14 +2666,17 @@ void COrion::LoadIndexFiles()
 			}
 		}
 
-		CIndexObject &gump = m_GumpDataIndex[i];
+		if (i < maxGumpsCount)
+		{
+			CIndexObject &gump = m_GumpDataIndex[i];
 
-		TestData(gump, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, i);
+			TestData(gump, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, i);
 
-		gump.Width = GumpArtPtr->Width;
-		gump.Height = GumpArtPtr->Height;
+			gump.Width = GumpArtPtr->Width;
+			gump.Height = GumpArtPtr->Height;
 
-		GumpArtPtr++;
+			GumpArtPtr++;
+		}
 
 		if (i < g_MultiIndexCount)
 		{
