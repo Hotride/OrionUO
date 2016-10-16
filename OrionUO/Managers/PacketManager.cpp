@@ -343,7 +343,8 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 };
 //----------------------------------------------------------------------------------
 CPacketManager::CPacketManager()
-: WISP_NETWORK::CPacketReader(), m_ClientVersion(CV_OLD), m_AutoLoginNames("")
+: WISP_NETWORK::CPacketReader(), m_ClientVersion(CV_OLD), m_AutoLoginNames(""),
+m_LastGumpID(0), m_LastGumpX(0), m_LastGumpY(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -3833,6 +3834,12 @@ PACKET_HANDLER(OpenGump)
 	uint id = ReadUInt32BE();
 	int x = ReadInt32BE();
 	int y = ReadInt32BE();
+
+	if (m_LastGumpID == id)
+	{
+		x = m_LastGumpX;
+		y = m_LastGumpY;
+	}
 
 	CGumpGeneric *gump = new CGumpGeneric(serial, x, y, id);
 

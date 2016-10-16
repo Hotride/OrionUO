@@ -60,6 +60,9 @@ class CPacketManager : public WISP_NETWORK::CPacketReader
 {
 	SETGETE(CLIENT_VERSION, ClientVersion, OnClientVersionChange);
 	SETGET(string, AutoLoginNames);
+	SETGET(uint, LastGumpID);
+	SETGET(uint, LastGumpX);
+	SETGET(uint, LastGumpY);
 
 private:
 	static CPacketInfo m_Packets[0x100];

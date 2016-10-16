@@ -497,6 +497,10 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 	int size = 19 + (switchesCount * 4) + 4 + ((textLinesCount * 4) + textLinesLength);
 	Resize(size, true);
 
+	g_PacketManager.LastGumpID = gump->ID;
+	g_PacketManager.LastGumpX = gump->X;
+	g_PacketManager.LastGumpY = gump->Y;
+
 	WriteUInt8(0xB1);
 	WriteUInt16BE(size);
 	WriteUInt32BE(gump->Serial);
