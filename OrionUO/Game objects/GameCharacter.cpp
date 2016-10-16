@@ -65,7 +65,7 @@ CGameCharacter::~CGameCharacter()
 		g_GumpManager.CloseGump(m_Serial, 0, GT_PAPERDOLL);
 }
 //----------------------------------------------------------------------------------
-void CGameCharacter::UpdateHitsTexture(const uchar &hits, const ushort &color)
+void CGameCharacter::UpdateHitsTexture(const uchar &hits)
 {
 	if (m_HitsPercent != hits || m_HitsTexture.Empty())
 	{
@@ -73,6 +73,15 @@ void CGameCharacter::UpdateHitsTexture(const uchar &hits, const ushort &color)
 
 		char hitsText[10] = { 0 };
 		sprintf_s(hitsText, "[%i%%]", hits);
+
+		ushort color = 0x0044;
+
+		if (hits < 30)
+			color = 0x0021;
+		else if (hits < 50)
+			color = 0x0030;
+		else if (hits < 80)
+			color = 0x0006;
 
 		g_FontManager.GenerateA(3, m_HitsTexture, hitsText, color);
 	}

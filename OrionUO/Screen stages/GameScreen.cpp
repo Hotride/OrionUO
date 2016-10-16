@@ -1077,7 +1077,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 						ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(gc, 0);
 						y -= (dims.Height + dims.CenterY) + 24;
 
-						gc->UpdateHitsTexture(width, 0x0044);
+						gc->UpdateHitsTexture(width);
 						width = (int)&gc->m_HitsTexture;
 
 						x -= (gc->m_HitsTexture.Width / 2) - 3;

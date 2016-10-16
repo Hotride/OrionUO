@@ -343,7 +343,7 @@ void CGumpBook::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			if (g_EntryPointer != &m_EntryTitle->m_Entry && g_EntryPointer != &m_EntryAuthor->m_Entry)
 			{
 				InsertInContent(L'\n');
-				m_FrameCreated = false;
+				m_WantRedraw = true;
 			}
 
 			break;

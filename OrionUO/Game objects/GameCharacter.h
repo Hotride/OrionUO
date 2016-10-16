@@ -79,7 +79,7 @@ public:
 
 	CGLTextTexture m_HitsTexture;
 
-	void UpdateHitsTexture(const uchar &hits, const ushort &color);
+	void UpdateHitsTexture(const uchar &hits);
 
 	/*!
 	Сидит ли персонаж
