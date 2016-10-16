@@ -179,28 +179,31 @@ void CMapManager::GetMapZ(const int &x, const int &y, int &groundZ, int &staticZ
 {
 	int blockX = x / 8;
 	int blockY = y / 8;
-	int index = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
+	uint index = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
 
-	CMapBlock *block = GetBlock(index);
-
-	if (block == NULL)
+	if (index < m_MaxBlockIndex)
 	{
-		block = AddBlock(index);
-		block->X = blockX;
-		block->Y = blockY;
-		LoadBlock(block);
-	}
-	
-	CMapObject *item = block->Block[x % 8][y % 8];
+		CMapBlock *block = GetBlock(index);
 
-	while (item != NULL)
-	{
-		if (item->IsLandObject())
-			groundZ = item->Z;
-		else if (staticZ < item->Z)
-			staticZ = item->Z;
+		if (block == NULL)
+		{
+			block = AddBlock(index);
+			block->X = blockX;
+			block->Y = blockY;
+			LoadBlock(block);
+		}
 
-		item = (CMapObject*)item->m_Next;
+		CMapObject *item = block->Block[x % 8][y % 8];
+
+		while (item != NULL)
+		{
+			if (item->IsLandObject())
+				groundZ = item->Z;
+			else if (staticZ < item->Z)
+				staticZ = item->Z;
+
+			item = (CMapObject*)item->m_Next;
+		}
 	}
 }
 //----------------------------------------------------------------------------------
@@ -278,18 +281,22 @@ void CMapManager::Init(const bool &delayed)
 			if (j < 0 || j >= g_MapBlockSize[map].Height)
 				continue;
 
-			int index = (i * g_MapBlockSize[map].Height) + j;
-			CMapBlock *block = GetBlock(index);
+			uint index = (i * g_MapBlockSize[map].Height) + j;
 
-			if (block == NULL)
+			if (index < m_MaxBlockIndex)
 			{
-				if (delayed && g_Ticks - ticks >= maxDelay)
-					return;
+				CMapBlock *block = GetBlock(index);
 
-				block = AddBlock(index);
-				block->X = i;
-				block->Y = j;
-				LoadBlock(block);
+				if (block == NULL)
+				{
+					if (delayed && g_Ticks - ticks >= maxDelay)
+						return;
+
+					block = AddBlock(index);
+					block->X = i;
+					block->Y = j;
+					LoadBlock(block);
+				}
 			}
 		}
 	}
@@ -318,7 +325,7 @@ void CMapManager::LoadBlock(CMapBlock *block)
 		IFOR(y, 0, 8)
 		{
 			int pos = y * 8 + x;
-			CMapObject *obj = new CLandObject(pos, pmb->Cells[pos].TileID, 0, bx + x, by + y, pmb->Cells[pos].Z);
+			CMapObject *obj = new CLandObject(pos, pmb->Cells[pos].TileID & 0x3FFF, 0, bx + x, by + y, pmb->Cells[pos].Z);
 			block->AddObject(obj, x, y);
 		}
 	}
@@ -384,22 +391,25 @@ void CMapManager::AddRender(CRenderWorldObject *item)
 	int x = itemX / 8;
 	int y = itemY / 8;
 	
-	int index = (x * g_MapBlockSize[g_CurrentMap].Height) + y;
+	uint index = (x * g_MapBlockSize[g_CurrentMap].Height) + y;
 	
-	CMapBlock *block = GetBlock(index);
-	
-	if (block == NULL)
+	if (index < m_MaxBlockIndex)
 	{
-		block = AddBlock(index);
-		block->X = x;
-		block->Y = y;
-		LoadBlock(block);
-	}
+		CMapBlock *block = GetBlock(index);
 
-	x = itemX % 8;
-	y = itemY % 8;
-		
-	block->AddRender(item, x, y);
+		if (block == NULL)
+		{
+			block = AddBlock(index);
+			block->X = x;
+			block->Y = y;
+			LoadBlock(block);
+		}
+
+		x = itemX % 8;
+		y = itemY % 8;
+
+		block->AddRender(item, x, y);
+	}
 }
 //----------------------------------------------------------------------------------
 /*!

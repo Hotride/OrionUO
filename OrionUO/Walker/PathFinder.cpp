@@ -37,7 +37,10 @@ bool CPathFinder::CreateItemsList(int &x, int &y, char &z)
 	int blockX = x / 8;
 	int blockY = y / 8;
 
-	int blockIndex = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
+	uint blockIndex = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
+
+	if (blockIndex >= g_MapManager->MaxBlockIndex)
+		return false;
 
 	CMapBlock *block = g_MapManager->GetBlock(blockIndex);
 

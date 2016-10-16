@@ -150,6 +150,11 @@ void CGumpManager::AddGump(CGump *obj)
 						gump->Minimized = !gump->Minimized;
 						((CGumpMinimap*)gump)->LastX = 0;
 					}
+					else if (gumpType == GT_SPELLBOOK && gump->Minimized)
+					{
+						gump->Minimized = false;
+						gump->WantUpdateContent = true;
+					}
 
 					MoveToBack(gump);
 
@@ -1389,9 +1394,7 @@ void CGumpManager::Save(const string &path)
 			case GT_JOURNAL:
 			case GT_WORLD_MAP:
 			{
-				uint serial = gump->Serial;
-
-				if (serial != g_PlayerSerial)
+				if (gump->Serial != g_PlayerSerial)
 					break;
 				
 				uchar size = 12;

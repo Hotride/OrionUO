@@ -42,7 +42,7 @@ CPlugin::CPlugin(uint flags)
 
 	m_PPS->hWnd = g_OrionWindow.Handle;
 	m_PPS->ClientVersion = g_PacketManager.ClientVersion;
-	m_PPS->InverseBuylist = g_Orion.InverseBuylist;
+	m_PPS->InverseBuylist = false;
 	m_PPS->UseVerdata = g_FileManager.UseVerdata;
 }
 //----------------------------------------------------------------------------------

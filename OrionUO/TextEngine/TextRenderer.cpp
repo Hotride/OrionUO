@@ -319,6 +319,9 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 
 							ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(go, 0);
 							drawY -= (dims.Height + dims.CenterY) + 8;
+
+							if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+								drawY -= 14;
 						}
 						else
 							drawY -= (go->GetStaticData()->Height + 20);

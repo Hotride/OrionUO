@@ -87,12 +87,17 @@ void CGumpMinimap::GenerateMap()
 		minBlockY = 0;
 
 	int map = g_MapManager->GetActualMap();
+	uint maxBlockIndex = g_MapManager->MaxBlockIndex;
+	int mapBlockHeight = g_MapBlockSize[map].Height;
 
 	for (int i = minBlockX; i <= maxBlockX; i++)
 	{
 		for (int j = minBlockY; j <= maxBlockY; j++)
 		{
-			int blockIndex = (i * g_MapBlockSize[map].Height) + j;
+			uint blockIndex = (i * mapBlockHeight) + j;
+
+			if (blockIndex >= maxBlockIndex)
+				continue;
 
 			CMapBlock *mapBlock = g_MapManager->GetBlock(blockIndex);
 			MAP_BLOCK mb = { 0 };

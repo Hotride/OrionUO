@@ -20,14 +20,14 @@
 //!Класс менеджера карт
 class CMapManager : public CBaseQueue
 {
+	//!Максимальный индекс блока для текущей карты
+	SETGET(uint, MaxBlockIndex);
+
 private:
 #if USE_BLOCK_MAP == 1
 	//!Вектор ссылок на блоки карты
 	CMapBlock **m_Blocks;
 #endif
-
-	//!Максимальный индекс блока для текущей карты
-	uint m_MaxBlockIndex;
 
 public:
 	CMapManager();

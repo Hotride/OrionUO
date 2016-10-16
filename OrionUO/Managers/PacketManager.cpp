@@ -4690,13 +4690,15 @@ PACKET_HANDLER(BuyList)
 	{
 		uchar count = ReadUInt8();
 
-		int i = (g_Orion.InverseBuylist ? count - 1 : 0);
-		int end = (g_Orion.InverseBuylist ? -1 : count);
-		int add = (g_Orion.InverseBuylist ? -1 : 1);
+		bool inverseBuylist = (container->Graphic != 0x2AF8);
+
+		int i = (inverseBuylist ? count - 1 : 0);
+		int end = (inverseBuylist ? -1 : count);
+		int add = (inverseBuylist ? -1 : 1);
 
 		CGameItem *item = (CGameItem*)container->m_Items;
 
-		if (g_Orion.InverseBuylist)
+		if (inverseBuylist)
 		{
 			while (item != NULL && item->m_Next != NULL)
 				item = (CGameItem*)item->m_Next;
@@ -4735,7 +4737,7 @@ PACKET_HANDLER(BuyList)
 
 			currentY += shopItem->GetSize().Height;
 
-			if (g_Orion.InverseBuylist)
+			if (inverseBuylist)
 				item = (CGameItem*)item->m_Prev;
 			else
 				item = (CGameItem*)item->m_Next;

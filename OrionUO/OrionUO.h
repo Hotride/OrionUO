@@ -18,7 +18,6 @@
 class COrion
 {
 	SETGET(string, ClientVersionText);
-	SETGET(bool, InverseBuylist);
 	SETGET(int, LandDataCount);
 	SETGET(int, StaticDataCount);
 

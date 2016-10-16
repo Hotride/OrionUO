@@ -92,8 +92,7 @@ PLUGIN_CLIENT_INTERFACE g_PluginClientInterface = { 0 };
 PLUGIN_INIT_TYPE *g_PluginInit = NULL;
 //----------------------------------------------------------------------------------
 COrion::COrion()
-: m_ClientVersionText("2.0.3"), m_InverseBuylist(false), m_LandDataCount(0),
-m_StaticDataCount(0)
+: m_ClientVersionText("2.0.3"), m_LandDataCount(0), m_StaticDataCount(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -537,7 +536,7 @@ void COrion::LoadClientConfig()
 		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
 		g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt32LE();
 
-		m_InverseBuylist = (file.ReadUInt8() != 0);
+		file.Move(1);
 
 		IFOR(i, 0, 6)
 		{

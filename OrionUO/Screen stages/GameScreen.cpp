@@ -371,6 +371,9 @@ void CGameScreen::CalculateRenderList()
 	int maxX = g_RenderBounds.RealMaxRangeX;
 	int maxY = g_RenderBounds.RealMaxRangeY;
 
+	int mapBlockHeight = g_MapBlockSize[g_MapManager->GetActualMap()].Height;
+	uint maxBlockIndex = g_MapManager->MaxBlockIndex;
+
 	IFOR(i, 0, 2)
 	{
 		int minValue = minY;
@@ -410,19 +413,24 @@ void CGameScreen::CalculateRenderList()
 						int blockX = x / 8;
 						int blockY = y / 8;
 
-						int blockIndex = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
+						uint blockIndex = (blockX * mapBlockHeight) + blockY;
 
-						CMapBlock *block = g_MapManager->GetBlock(blockIndex);
-
-						if (block == NULL)
+						if (blockIndex < maxBlockIndex)
 						{
-							block = g_MapManager->AddBlock(blockIndex);
-							block->X = blockX;
-							block->Y = blockY;
-							g_MapManager->LoadBlock(block);
-						}
+							CMapBlock *block = g_MapManager->GetBlock(blockIndex);
 
-						AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX);
+							if (block == NULL)
+							{
+								block = g_MapManager->AddBlock(blockIndex);
+								block->X = blockX;
+								block->Y = blockY;
+								g_MapManager->LoadBlock(block);
+							}
+
+							AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX);
+						}
+						else
+							LOG("Expected: %i %i\n", blockIndex, g_MapManager->MaxBlockIndex);
 					}
 				}
 
@@ -733,6 +741,9 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 
 	int maxZ = obj->Z + obj->RenderQueueIndex;
 
+	int mapBlockHeight = g_MapBlockSize[g_CurrentMap].Height;
+	uint maxBlockIndex = g_MapManager->MaxBlockIndex;
+
 	IFOR(i, 0, size)
 	{
 		int x = coordinates[i].first;
@@ -757,19 +768,22 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 		int blockX = x / 8;
 		int blockY = y / 8;
 
-		int blockIndex = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
+		uint blockIndex = (blockX * mapBlockHeight) + blockY;
 
-		CMapBlock *block = g_MapManager->GetBlock(blockIndex);
-
-		if (block == NULL)
+		if (blockIndex < maxBlockIndex)
 		{
-			block = g_MapManager->AddBlock(blockIndex);
-			block->X = blockX;
-			block->Y = blockY;
-			g_MapManager->LoadBlock(block);
-		}
+			CMapBlock *block = g_MapManager->GetBlock(blockIndex);
 
-		AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX, maxZ);
+			if (block == NULL)
+			{
+				block = g_MapManager->AddBlock(blockIndex);
+				block->X = blockX;
+				block->Y = blockY;
+				g_MapManager->LoadBlock(block);
+			}
+
+			AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX, maxZ);
+		}
 	}
 }
 //----------------------------------------------------------------------------------
