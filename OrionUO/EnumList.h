@@ -188,17 +188,28 @@ enum LOCKED_FEATURE_FLAG
 	LFF_RUSTIC_HOUSING = 0x80000
 };
 //----------------------------------------------------------------------------------
-//!Типы спеллбук для макроса
+//!Типы спеллбук
 enum SPELLBOOK_TYPE
 {
-	ST_NONE = 0,
-	ST_MAGE,
+	ST_MAGE = 0,
 	ST_NECRO,
 	ST_PALADIN,
 	ST_BUSHIDO,
 	ST_NINJITSU,
 	ST_SPELL_WEAVING,
 	ST_MYSTICISM
+};
+//----------------------------------------------------------------------------------
+//!Смещение для книг заклинаний
+enum SPELLBOOK_OFFSET
+{
+	SO_MAGE = 1,
+	SO_NECRO = 101,
+	SO_PALADIN = 201,
+	SO_BUSHIDO = 301,
+	SO_NINJITSU = 401,
+	SO_SPELL_WEAVING = 501,
+	SO_MYSTICISM = 601
 };
 //----------------------------------------------------------------------------------
 //!Состояния плавного переключения экранов

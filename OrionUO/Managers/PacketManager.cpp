@@ -2603,37 +2603,24 @@ PACKET_HANDLER(ExtendedCommand)
 			ushort graphic = ReadUInt16BE();
 			SPELLBOOK_TYPE bookType = (SPELLBOOK_TYPE)ReadUInt16BE();
 
-			uint spells[2] = { 0 };
-
 			IFOR(j, 0, 2)
 			{
+				uint spells = 0;
+
 				IFOR(i, 0, 4)
-					spells[j] |= (ReadUInt8() << (i * 8));
-			}
+					spells |= (ReadUInt8() << (i * 8));
 
-			switch (bookType)
-			{
-				case ST_MAGE:
+				IFOR(i, 0, 32)
 				{
-					IFOR(j, 0, 2)
+					if (spells & (1 << i))
 					{
-						IFOR(i, 0, 32)
-						{
-							if (spells[j] & (1 << i))
-							{
-								CGameItem *spellItem = new CGameItem();
-								spellItem->Graphic = 0x1F2E;
-								spellItem->Count = (j * 32) + i + 1;
+						CGameItem *spellItem = new CGameItem();
+						spellItem->Graphic = 0x1F2E;
+						spellItem->Count = (j * 32) + i + 1;
 
-								spellbook->AddItem(spellItem);
-							}
-						}
+						spellbook->AddItem(spellItem);
 					}
-
-					break;
 				}
-				default:
-					break;
 			}
 		}
 		case 0x26:
