@@ -44,7 +44,6 @@ public:
 
 	virtual void DelayedClick(CRenderObject *obj);
 
-	void SetPageData(const int &page, const string &data);
 	void SetPageData(const int &page, const wstring &data);
 
 	void ChangePage(int newPage);

@@ -4562,36 +4562,13 @@ PACKET_HANDLER(OpenBookNew)
 
 	int authorLen = ReadUInt16BE();
 
-	puchar ptr = m_Start + 13;
-
 	if (authorLen > 0)
-	{
-		wchar_t *author = new wchar_t[authorLen];
-		*author = 0;
-		puchar aptr = (puchar)author;
-		//
-		ptr += (authorLen * 2);
-		//
-		gump->m_EntryAuthor->m_Entry.SetText(author);
+		gump->m_EntryAuthor->m_Entry.SetText(ReadString(authorLen));
 
-		delete author;
-	}
-	else
-		ptr += 2;
-
-	int titleLen = unpack16(ptr);
-	ptr += 2;
+	int titleLen = ReadUInt16BE();
 
 	if (titleLen > 0)
-	{
-		wchar_t *title = new wchar_t[titleLen];
-		*title = 0;
-		puchar tptr = (puchar)title;
-		//
-		gump->m_EntryTitle->m_Entry.SetText(title);
-
-		delete title;
-	}
+		gump->m_EntryTitle->m_Entry.SetText(ReadString(authorLen));
 
 	g_GumpManager.AddGump(gump);
 }
@@ -4618,36 +4595,17 @@ PACKET_HANDLER(BookData)
 
 			ushort lineCount = ReadUInt16BE();
 
-			if (!gump->Unicode)
+			wstring str = L"";
+
+			IFOR(j, 0, lineCount)
 			{
-				string str = "";
+				if (j)
+					str += L'\n';
 
-				IFOR(j, 0, lineCount)
-				{
-					if (j)
-						str += '\n';
-
-					str += ReadString(0);
-				}
-
-				gump->SetPageData(page, str);
-
-				//TPRINT("BookPageData[%i] = %s\n", page, str.c_str());
+				str += DecodeUTF8(ReadString(0));
 			}
-			else
-			{
-				wstring str = L"";
 
-				IFOR(j, 0, lineCount)
-				{
-					if (j)
-						str += L'\n';
-
-					str += ReadWString(0);
-				}
-
-				gump->SetPageData(page, str);
-			}
+			gump->SetPageData(page, str);
 		}
 	}
 }

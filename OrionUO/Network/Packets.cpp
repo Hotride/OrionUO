@@ -1094,39 +1094,23 @@ CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 	if (entry != NULL)
 	{
 		CEntryText &textEntry = entry->m_Entry;
-		int len = textEntry.Length();
+		string data = EncodeUTF8(textEntry.Data());
+		int len = data.length();
 		int size = 9 + 4 + 1;
 
 		if (len)
 		{
-			if (gump->Unicode)
+			size += len;
+			const char *str = data.c_str();
+
+			IFOR(i, 0, len)
 			{
-				size += len * 2;
-				const wchar_t *str = textEntry.Data();
-
-				IFOR(i, 0, len)
-				{
-					if (*(str + i) == L'\n')
-						lineCount++;
-				}
-
-				if (str[len - 1] != L'\n')
+				if (*(str + i) == '\n')
 					lineCount++;
 			}
-			else
-			{
-				size += len;
-				const char *str = textEntry.c_str();
 
-				IFOR(i, 0, len)
-				{
-					if (*(str + i) == '\n')
-						lineCount++;
-				}
-
-				if (str[len - 1] != '\n')
-					lineCount++;
-			}
+			if (str[len - 1] != '\n')
+				lineCount++;
 		}
 
 		Resize(size, true);
@@ -1141,39 +1125,19 @@ CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 
 		if (len)
 		{
-			if (gump->Unicode)
+			const char *str = data.c_str();
+
+			IFOR(i, 0, len)
 			{
-				const wchar_t *str = textEntry.Data();
-				pushort wPtr = (pushort)m_Ptr;
+				char ch = *(str + i);
 
-				IFOR(i, 0, len)
-				{
-					wchar_t ch = *(str + i);
+				if (ch == '\n')
+					ch = 0;
 
-					if (ch == L'\n')
-						ch = 0;
-
-					*wPtr++ = ch;
-				}
-
-				*wPtr = 0;
+				*m_Ptr++ = ch;
 			}
-			else
-			{
-				const char *str = textEntry.c_str();
 
-				IFOR(i, 0, len)
-				{
-					char ch = *(str + i);
-
-					if (ch == '\n')
-						ch = 0;
-
-					*m_Ptr++ = ch;
-				}
-
-				*m_Ptr = 0;
-			}
+			*m_Ptr = 0;
 		}
 	}
 }
