@@ -10,6 +10,7 @@
 #include "GumpSpellbook.h"
 #include "GumpSpell.h"
 #include "../Game objects/GameWorld.h"
+#include "../Game objects/GamePlayer.h"
 #include "../PressedObject.h"
 #include "../ClickObject.h"
 #include "../OrionUO.h"
@@ -461,7 +462,7 @@ void CGumpSpellbook::UpdateContentNecro(const int &maxSpellsCount, const int &di
 		if (page % 2)
 		{
 			iconX = 225;
-			textNameX = 244;
+			textNameX = 225;
 			abbreviatureX = 275;
 			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
 		}
@@ -469,7 +470,7 @@ void CGumpSpellbook::UpdateContentNecro(const int &maxSpellsCount, const int &di
 		Add(new CGUIPage(page));
 		page++;
 
-		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 10));
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 6));
 		text->CreateTextureA(6, m_SpellName2[i], 100);
 
 		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5000 + i, iconX, 40));
@@ -508,7 +509,7 @@ void CGumpSpellbook::UpdateContentPaladin(const int &maxSpellsCount, const int &
 		if (page % 2)
 		{
 			iconX = 225;
-			textNameX = 244;
+			textNameX = 225;
 			abbreviatureX = 275;
 			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
 		}
@@ -516,7 +517,7 @@ void CGumpSpellbook::UpdateContentPaladin(const int &maxSpellsCount, const int &
 		Add(new CGUIPage(page));
 		page++;
 
-		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 10));
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 6));
 		text->CreateTextureA(6, m_SpellName3[i], 100);
 
 		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5100 + i, iconX, 40));
@@ -546,17 +547,17 @@ void CGumpSpellbook::UpdateContentBushido(const int &maxSpellsCount, const int &
 		if (page % 2)
 		{
 			iconX = 225;
-			textNameX = 244;
+			textNameX = 225;
 			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
 		}
 
 		Add(new CGUIPage(page));
 		page++;
 
-		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 10));
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 6));
 		text->CreateTextureA(6, m_SpellName4[i], 100);
 
-		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5200 + i, iconX, 40));
+		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5400 + i, iconX, 40));
 		icon->Serial = iconSerial;
 
 		text = (CGUIText*)Add(new CGUIText(0x0288, iconX, 162));
@@ -580,14 +581,14 @@ void CGumpSpellbook::UpdateContentNinjitsu(const int &maxSpellsCount, const int 
 		if (page % 2)
 		{
 			iconX = 225;
-			textNameX = 244;
+			textNameX = 225;
 			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
 		}
 
 		Add(new CGUIPage(page));
 		page++;
 
-		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 10));
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 6));
 		text->CreateTextureA(6, m_SpellName5[i], 100);
 
 		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5300 + i, iconX, 40));
@@ -614,17 +615,17 @@ void CGumpSpellbook::UpdateContentSpellWeaving(const int &maxSpellsCount, const 
 		if (page % 2)
 		{
 			iconX = 225;
-			textNameX = 244;
+			textNameX = 225;
 			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
 		}
 
 		Add(new CGUIPage(page));
 		page++;
 
-		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 10));
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 6));
 		text->CreateTextureA(6, m_SpellName6[i], 100);
 
-		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5400 + i, iconX, 40));
+		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x59D8 + i, iconX, 40));
 		icon->Serial = iconSerial;
 
 		text = (CGUIText*)Add(new CGUIText(0x0288, iconX, 162));
@@ -715,6 +716,13 @@ void CGumpSpellbook::UpdateContent()
 	IFOR(page, 0, dictionaryPagesCount)
 	{
 		Add(new CGUIPage(page));
+
+		if (!page && m_BookType == ST_PALADIN)
+		{
+			CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, 62, 162));
+			string textData = "Tithing points\nAvailable: " + std::to_string(g_Player->TithingPoints);
+			text->CreateTextureA(6, textData);
+		}
 
 		int indexX = 106;
 		int dataX = 62;
