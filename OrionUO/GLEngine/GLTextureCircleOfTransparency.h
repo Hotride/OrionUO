@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GLTextureCircleOfTransparency.h
 **
@@ -22,16 +22,16 @@ public:
 	CGLTextureCircleOfTransparency();
 	virtual ~CGLTextureCircleOfTransparency();
 
-	//Создать текстуру
+	//РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ
 	static void CreatePixels(const int &radius, int &width, int &height, UINT_LIST &pixels);
 
-	//Создать текстуру
+	//РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ
 	bool Create(int radius);
 
-	//Отрисовать текстуру
+	//РћС‚СЂРёСЃРѕРІР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ
 	virtual void Draw(const int &x, const int &y, const bool &checktrans = false);
 
-	//Отрисовать текстуру
+	//РћС‚СЂРёСЃРѕРІР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ
 	void Redraw();
 
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 0

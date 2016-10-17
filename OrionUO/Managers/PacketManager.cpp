@@ -1,4 +1,4 @@
-/***********************************************************************************
+Ôªø/***********************************************************************************
 **
 ** PacketManager.cpp
 **
@@ -68,7 +68,7 @@
 //----------------------------------------------------------------------------------
 CPacketManager g_PacketManager;
 //----------------------------------------------------------------------------------
-// ‡Ú‡ Ô‡ÍÂÚÓ‚ ”Œ ‰Îˇ ‡Ì‡ÎËÁ‡
+//–ö–∞—Ä—Ç–∞ –ø–∞–∫–µ—Ç–æ–≤ –£–û –¥–ª—è –∞–Ω–∞–ª–∏–∑–∞
 #define UMSG(size) { "?", size, DIR_BOTH, 0 }
 // A message type sent to the server
 #define SMSG(name, size) { name, size, DIR_SEND, 0 }
@@ -343,7 +343,8 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 };
 //----------------------------------------------------------------------------------
 CPacketManager::CPacketManager()
-: WISP_NETWORK::CPacketReader(), m_ClientVersion(CV_OLD), m_AutoLoginNames("")
+: WISP_NETWORK::CPacketReader(), m_ClientVersion(CV_OLD), m_AutoLoginNames(""),
+m_LastGumpID(0), m_LastGumpX(0), m_LastGumpY(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -515,7 +516,7 @@ void CPacketManager::OnClientVersionChange(const CLIENT_VERSION &newClientVersio
 		CVPRINT("Set new length for packet 0xF3 (>= 7.0.9.0)\n");
 		m_Packets[0xF3].Size = 0x1A;
 
-		//¬ ÍÎËÂÌÚÂ 7.0.8.2 ÛÊÂ ËÁÏÂÌÂÌÓ
+		//–í –∫–ª–∏–µ–Ω—Ç–µ 7.0.8.2 —É–∂–µ –∏–∑–º–µ–Ω–µ–Ω–æ
 		CVPRINT("Set new length for packet 0xF1 (>= 7.0.9.0)\n");
 		m_Packets[0xF1].Size = 0x09;
 		CVPRINT("Set new length for packet 0xF2 (>= 7.0.9.0)\n");
@@ -532,7 +533,7 @@ void CPacketManager::OnClientVersionChange(const CLIENT_VERSION &newClientVersio
 		CVPRINT("Set standart length for packet 0xF3 (<= 7.0.9.0)\n");
 		m_Packets[0xF3].Size = 0x18;
 
-		//¬ ÍÎËÂÌÚÂ 7.0.8.2 ÛÊÂ ËÁÏÂÌÂÌÓ
+		//–í –∫–ª–∏–µ–Ω—Ç–µ 7.0.8.2 —É–∂–µ –∏–∑–º–µ–Ω–µ–Ω–æ
 		CVPRINT("Set standart length for packet 0xF1 (<= 7.0.9.0)\n");
 		m_Packets[0xF1].Size = PACKET_VARIABLE_SIZE;
 		CVPRINT("Set standart length for packet 0xF2 (<= 7.0.9.0)\n");
@@ -976,7 +977,7 @@ PACKET_HANDLER(NewHealthbarUpdate)
 	if (obj == NULL)
 		return;
 
-	Move(1);
+	Move(2);
 
 	ushort type = ReadUInt16BE();
 	uchar enable = ReadUInt8(); //enable/disable
@@ -1260,7 +1261,7 @@ PACKET_HANDLER(UpdateItem)
 	{
 		x &= 0x7FFF;
 
-		//obj->Direction = *Ptr; //Õ‡Ô‡‚ÎÂÌËÂ ÔÂ‰ÏÂÚ‡?
+		//obj->Direction = *Ptr; //–ù–∞–ø—Ä–∞–≤–ª–µ–Ω–∏–µ –ø—Ä–µ–¥–º–µ—Ç–∞?
 		dir = ReadUInt8();
 	}
 
@@ -2602,37 +2603,24 @@ PACKET_HANDLER(ExtendedCommand)
 			ushort graphic = ReadUInt16BE();
 			SPELLBOOK_TYPE bookType = (SPELLBOOK_TYPE)ReadUInt16BE();
 
-			uint spells[2] = { 0 };
-
 			IFOR(j, 0, 2)
 			{
+				uint spells = 0;
+
 				IFOR(i, 0, 4)
-					spells[j] |= (ReadUInt8() << (i * 8));
-			}
+					spells |= (ReadUInt8() << (i * 8));
 
-			switch (bookType)
-			{
-				case ST_MAGE:
+				IFOR(i, 0, 32)
 				{
-					IFOR(j, 0, 2)
+					if (spells & (1 << i))
 					{
-						IFOR(i, 0, 32)
-						{
-							if (spells[j] & (1 << i))
-							{
-								CGameItem *spellItem = new CGameItem();
-								spellItem->Graphic = 0x1F2E;
-								spellItem->Count = (j * 32) + i + 1;
+						CGameItem *spellItem = new CGameItem();
+						spellItem->Graphic = 0x1F2E;
+						spellItem->Count = (j * 32) + i + 1;
 
-								spellbook->AddItem(spellItem);
-							}
-						}
+						spellbook->AddItem(spellItem);
 					}
-
-					break;
 				}
-				default:
-					break;
 			}
 		}
 		case 0x26:
@@ -3039,12 +3027,12 @@ PACKET_HANDLER(DragAnimation)
 
 	CGameEffect *effect = NULL;
 
-	if (sourceSerial < 0x40000000) //»„ÓÍ/Õœ— ÍÎ‡‰ÂÚ ÔÂ‰ÏÂÚ ‚ ÍÓÌÚÂÈÌÂ
+	if (sourceSerial < 0x40000000) //–ò–≥—Ä–æ–∫/–ù–ü–° –∫–ª–∞–¥–µ—Ç –ø—Ä–µ–¥–º–µ—Ç –≤ –∫–æ–Ω—Ç–µ–π–Ω–µ—Ä
 	{
 		effect = new CGameEffectMoving();
 		effect->FixedDirection = true;
 	}
-	else //œÂ‰ÏÂÚ ‚ÁˇÎË ËÁ ÍÓÌÚÂÈÌÂ‡
+	else //–ü—Ä–µ–¥–º–µ—Ç –≤–∑—è–ª–∏ –∏–∑ –∫–æ–Ω—Ç–µ–π–Ω–µ—Ä–∞
 	{
 		effect = new CGameEffectDrag();
 	}
@@ -3303,7 +3291,7 @@ PACKET_HANDLER(DisplayClilocString)
 			str = L"*" + str + L"*";
 		}*/
 
-		//if (serial >= 0x40000000) //“ÓÎ¸ÍÓ ‰Îˇ ÔÂ‰ÏÂÚÓ‚
+		//if (serial >= 0x40000000) //–¢–æ–ª—å–∫–æ –¥–ª—è –ø—Ä–µ–¥–º–µ—Ç–æ–≤
 		{
 			CGameObject *obj = g_World->FindWorldObject(serial);
 
@@ -3608,7 +3596,7 @@ PACKET_HANDLER(SecureTrading)
 	uchar type = ReadUInt8();
 	uint serial = ReadUInt32BE();
 
-	if (type == 0) //ÕÓ‚ÓÂ Ú˝È‰ ÓÍÌÓ
+	if (type == 0) //–ù–æ–≤–æ–µ —Ç—Ä—ç–π–¥ –æ–∫–Ω–æ
 	{
 		uint id1 = ReadUInt32BE();
 		uint id2 = ReadUInt32BE();
@@ -3621,9 +3609,9 @@ PACKET_HANDLER(SecureTrading)
 
 		g_GumpManager.AddGump(gump);
 	}
-	else if (type == 1) //ŒÚÏÂÌ‡
+	else if (type == 1) //–û—Ç–º–µ–Ω–∞
 		g_GumpManager.CloseGump(serial, 0, GT_TRADE);
-	else if (type == 2) //Œ·ÌÓ‚ÎÂÌËÂ
+	else if (type == 2) //–û–±–Ω–æ–≤–ª–µ–Ω–∏–µ
 	{
 		CGumpSecureTrading *gump = (CGumpSecureTrading*)g_GumpManager.UpdateGump(serial, 0, GT_TRADE);
 
@@ -3724,7 +3712,7 @@ PACKET_HANDLER(OpenMenuGump)
 		htmlGump->CalculateDataSize();
 
 		gump->m_TextObject = (CGUIText*)gump->Add(new CGUIText(0x0386, 42, 105));
-		//gump->m_TextObject->CreateTextureA(1, name, 200, TS_LEFT, UOFONT_FIXED); //Õ‡ ‰‡ÌÌ˚È ÏÓÏÌÚ ÒÓÁ‰‡‚‡Ú¸ ÌÂ˜Â„Ó
+		//gump->m_TextObject->CreateTextureA(1, name, 200, TS_LEFT, UOFONT_FIXED); //–ù–∞ –¥–∞–Ω–Ω—ã–π –º–æ–º–Ω—Ç —Å–æ–∑–¥–∞–≤–∞—Ç—å –Ω–µ—á–µ–≥–æ
 
 		g_GumpManager.AddGump(gump);
 	}
@@ -3833,6 +3821,12 @@ PACKET_HANDLER(OpenGump)
 	uint id = ReadUInt32BE();
 	int x = ReadInt32BE();
 	int y = ReadInt32BE();
+
+	if (m_LastGumpID == id)
+	{
+		x = m_LastGumpX;
+		y = m_LastGumpY;
+	}
 
 	CGumpGeneric *gump = new CGumpGeneric(serial, x, y, id);
 
@@ -4555,36 +4549,13 @@ PACKET_HANDLER(OpenBookNew)
 
 	int authorLen = ReadUInt16BE();
 
-	puchar ptr = m_Start + 13;
-
 	if (authorLen > 0)
-	{
-		wchar_t *author = new wchar_t[authorLen];
-		*author = 0;
-		puchar aptr = (puchar)author;
-		//
-		ptr += (authorLen * 2);
-		//
-		gump->m_EntryAuthor->m_Entry.SetText(author);
+		gump->m_EntryAuthor->m_Entry.SetText(ReadString(authorLen));
 
-		delete author;
-	}
-	else
-		ptr += 2;
-
-	int titleLen = unpack16(ptr);
-	ptr += 2;
+	int titleLen = ReadUInt16BE();
 
 	if (titleLen > 0)
-	{
-		wchar_t *title = new wchar_t[titleLen];
-		*title = 0;
-		puchar tptr = (puchar)title;
-		//
-		gump->m_EntryTitle->m_Entry.SetText(title);
-
-		delete title;
-	}
+		gump->m_EntryTitle->m_Entry.SetText(ReadString(authorLen));
 
 	g_GumpManager.AddGump(gump);
 }
@@ -4611,36 +4582,17 @@ PACKET_HANDLER(BookData)
 
 			ushort lineCount = ReadUInt16BE();
 
-			if (!gump->Unicode)
+			wstring str = L"";
+
+			IFOR(j, 0, lineCount)
 			{
-				string str = "";
+				if (j)
+					str += L'\n';
 
-				IFOR(j, 0, lineCount)
-				{
-					if (j)
-						str += '\n';
-
-					str += ReadString(0);
-				}
-
-				gump->SetPageData(page, str);
-
-				//TPRINT("BookPageData[%i] = %s\n", page, str.c_str());
+				str += DecodeUTF8(ReadString(0));
 			}
-			else
-			{
-				wstring str = L"";
 
-				IFOR(j, 0, lineCount)
-				{
-					if (j)
-						str += L'\n';
-
-					str += ReadWString(0);
-				}
-
-				gump->SetPageData(page, str);
-			}
+			gump->SetPageData(page, str);
 		}
 	}
 }
@@ -4690,13 +4642,15 @@ PACKET_HANDLER(BuyList)
 	{
 		uchar count = ReadUInt8();
 
-		int i = (g_Orion.InverseBuylist ? count - 1 : 0);
-		int end = (g_Orion.InverseBuylist ? -1 : count);
-		int add = (g_Orion.InverseBuylist ? -1 : 1);
+		bool inverseBuylist = (container->Graphic != 0x2AF8);
+
+		int i = (inverseBuylist ? count - 1 : 0);
+		int end = (inverseBuylist ? -1 : count);
+		int add = (inverseBuylist ? -1 : 1);
 
 		CGameItem *item = (CGameItem*)container->m_Items;
 
-		if (g_Orion.InverseBuylist)
+		if (inverseBuylist)
 		{
 			while (item != NULL && item->m_Next != NULL)
 				item = (CGameItem*)item->m_Next;
@@ -4735,7 +4689,7 @@ PACKET_HANDLER(BuyList)
 
 			currentY += shopItem->GetSize().Height;
 
-			if (g_Orion.InverseBuylist)
+			if (inverseBuylist)
 				item = (CGameItem*)item->m_Prev;
 			else
 				item = (CGameItem*)item->m_Next;

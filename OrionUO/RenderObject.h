@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** RenderObject.h
 **
@@ -13,7 +13,7 @@
 #include "Globals.h"
 #include "BaseQueue.h"
 //----------------------------------------------------------------------------------
-//Класс для работы с объектами рендера
+//РљР»Р°СЃСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕР±СЉРµРєС‚Р°РјРё СЂРµРЅРґРµСЂР°
 class CRenderObject : public CBaseQueueItem
 {
 	SETGET(uint, Serial);
@@ -26,10 +26,10 @@ public:
 	CRenderObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y);
 	virtual ~CRenderObject();
 
-	//Подготовка текстур
+	//РџРѕРґРіРѕС‚РѕРІРєР° С‚РµРєСЃС‚СѓСЂ
 	virtual void PrepareTextures() {}
 
-	//Отрисовка
+	//РћС‚СЂРёСЃРѕРІРєР°
 	//virtual int Draw(bool &mode) {return 0;}
 
 	virtual void OnMouseEnter() {}

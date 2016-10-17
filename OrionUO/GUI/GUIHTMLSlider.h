@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIHTMLSlider.h
 **
-** Компонента скроллер для HTMLGump'а
+** РљРѕРјРїРѕРЅРµРЅС‚Р° СЃРєСЂРѕР»Р»РµСЂ РґР»СЏ HTMLGump'Р°
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -17,14 +17,14 @@
 class CGUIHTMLSlider : public CGUISlider
 {
 private:
-	//!Гамп-родитель
+	//!Р“Р°РјРї-СЂРѕРґРёС‚РµР»СЊ
 	class CGUIHTMLGump *m_HTMLGump;
 
 public:
 	CGUIHTMLSlider(class CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const ushort &backgroundGraphic, const bool &compositeBackground, const bool &vertical, const int &x, const int &y, const int &lenght, const int &minValue, const int &maxValue, const int &value);
 	virtual ~CGUIHTMLSlider();
 
-	//!Пересчитать смещения
+	//!РџРµСЂРµСЃС‡РёС‚Р°С‚СЊ СЃРјРµС‰РµРЅРёСЏ
 	virtual void CalculateOffset();
 
 	virtual bool IsControlHTML() { return true; }

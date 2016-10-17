@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpScreenSelectProfession.h
 **
@@ -15,7 +15,7 @@
 class CGumpScreenSelectProfession : public CGump
 {
 private:
-	//!Идентификаторы кнопок
+	//!РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РєРЅРѕРїРѕРє
 	static const int ID_SPS_QUIT = 1;
 	static const int ID_SPS_ARROW_PREV = 2;
 	static const int ID_SPS_ARROW_NEXT = 3;

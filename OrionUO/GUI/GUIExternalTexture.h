@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIExternalTexture.h
 **
-** Компонента для отображения внешней текстуры
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІРЅРµС€РЅРµР№ С‚РµРєСЃС‚СѓСЂС‹
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -16,14 +16,14 @@
 //----------------------------------------------------------------------------------
 class CGUIExternalTexture : public CBaseGUI
 {
-	//!Удалять ли текстуру при удалении объекта
+	//!РЈРґР°Р»СЏС‚СЊ Р»Рё С‚РµРєСЃС‚СѓСЂСѓ РїСЂРё СѓРґР°Р»РµРЅРёРё РѕР±СЉРµРєС‚Р°
 	SETGET(bool, DeleteTextureOnDestroy);
 
 public:
 	CGUIExternalTexture(CGLTexture *texture, const bool &deleteTextureOnDestroy, const int &x, const int &y);
 	virtual ~CGUIExternalTexture();
 
-	//!Ссылка на текстуру
+	//!РЎСЃС‹Р»РєР° РЅР° С‚РµРєСЃС‚СѓСЂСѓ
 	CGLTexture *m_Texture;
 
 	virtual WISP_GEOMETRY::CSize GetSize();

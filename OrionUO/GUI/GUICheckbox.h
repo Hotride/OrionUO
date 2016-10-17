@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUICheckbox.h
 **
-** Компонента для отображения чекбокса
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С‡РµРєР±РѕРєСЃР°
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -17,28 +17,28 @@
 //----------------------------------------------------------------------------------
 class CGUICheckbox : public CGUIDrawObject
 {
-	//!ИД картинки в нажатом состоянии
+	//!РР” РєР°СЂС‚РёРЅРєРё РІ РЅР°Р¶Р°С‚РѕРј СЃРѕСЃС‚РѕСЏРЅРёРё
 	SETGET(ushort, GraphicChecked);
 
-	//!ИД картинки в выбранном состоянии
+	//!РР” РєР°СЂС‚РёРЅРєРё РІ РІС‹Р±СЂР°РЅРЅРѕРј СЃРѕСЃС‚РѕСЏРЅРёРё
 	SETGET(ushort, GraphicSelected);
 
-	//!ИД картинки в отключенном состоянии
+	//!РР” РєР°СЂС‚РёРЅРєРё РІ РѕС‚РєР»СЋС‡РµРЅРЅРѕРј СЃРѕСЃС‚РѕСЏРЅРёРё
 	SETGET(ushort, GraphicDisabled);
 
-	//!Состояние компоненты
+	//!РЎРѕСЃС‚РѕСЏРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚С‹
 	SETGET(bool, Checked);
 
-	//!Позиция текста
+	//!РџРѕР·РёС†РёСЏ С‚РµРєСЃС‚Р°
 	SETGET(SLIDER_TEXT_POSITION, TextPosition);
 
-	//!Координата текста по оси X
+	//!РљРѕРѕСЂРґРёРЅР°С‚Р° С‚РµРєСЃС‚Р° РїРѕ РѕСЃРё X
 	SETGET(int, TextX);
 
-	//!Координата текста по оси Y
+	//!РљРѕРѕСЂРґРёРЅР°С‚Р° С‚РµРєСЃС‚Р° РїРѕ РѕСЃРё Y
 	SETGET(int, TextY);
 
-	//!Стандартное смещение текста
+	//!РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ СЃРјРµС‰РµРЅРёРµ С‚РµРєСЃС‚Р°
 	SETGET(int, DefaultTextOffset);
 
 protected:
@@ -50,7 +50,7 @@ public:
 	CGUICheckbox(const uint &serial, const ushort &graphic, const ushort &graphicChecked, const ushort &graphicDisabled, const int &x, const int &y);
 	virtual ~CGUICheckbox();
 
-	//!Установить текст
+	//!РЈСЃС‚Р°РЅРѕРІРёС‚СЊ С‚РµРєСЃС‚
 	void SetTextParameters(const uchar &font, const wstring &text, const ushort &color, const SLIDER_TEXT_POSITION &textPosition = STP_RIGHT, const int &textWidth = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &textFlags = 0);
 	void SetTextParameters(const uchar &font, const string &text, const ushort &color, const SLIDER_TEXT_POSITION &textPosition = STP_RIGHT, const int &textWidth = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &textFlags = 0);
 

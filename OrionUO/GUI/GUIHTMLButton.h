@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIHTMLButton.h
 **
-** Компонента для кнопок HTMLGump'а
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РґР»СЏ РєРЅРѕРїРѕРє HTMLGump'Р°
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -17,7 +17,7 @@
 class CGUIHTMLButton : public CGUIButton
 {
 private:
-	//!Ссылка на гамп-родитель
+	//!РЎСЃС‹Р»РєР° РЅР° РіР°РјРї-СЂРѕРґРёС‚РµР»СЊ
 	class CGUIHTMLGump *m_HTMLGump;
 
 public:
@@ -26,7 +26,7 @@ public:
 
 	virtual void SetShaderMode();
 
-	//!Обработка прокрутки
+	//!РћР±СЂР°Р±РѕС‚РєР° РїСЂРѕРєСЂСѓС‚РєРё
 	void Scroll(const bool &up, const uint &delay);
 
 	virtual bool IsControlHTML() { return true; }

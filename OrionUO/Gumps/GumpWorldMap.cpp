@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpWorldMap.cpp
 **
@@ -470,7 +470,7 @@ void CGumpWorldMap::PrepareContent()
 			m_WantRedraw = true;
 		}
 	}
-	else if (m_MapMoving) //Если активировано изменение положения карты
+	else if (m_MapMoving) //Р•СЃР»Рё Р°РєС‚РёРІРёСЂРѕРІР°РЅРѕ РёР·РјРµРЅРµРЅРёРµ РїРѕР»РѕР¶РµРЅРёСЏ РєР°СЂС‚С‹
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -497,7 +497,7 @@ void CGumpWorldMap::OnLeftMouseButtonDown()
 {
 	CGump::OnLeftMouseButtonDown();
 
-	if (g_PressedObject.LeftObject() == m_MapData) //Карта
+	if (g_PressedObject.LeftObject() == m_MapData) //РљР°СЂС‚Р°
 	{
 		if (!m_LinkWithPlayer || g_CurrentMap != GetCurrentMap())
 		{
@@ -511,7 +511,7 @@ void CGumpWorldMap::OnLeftMouseButtonUp()
 {
 	CGump::OnLeftMouseButtonUp();
 
-	if (g_PressedObject.LeftObject() == m_MapData) //Карта
+	if (g_PressedObject.LeftObject() == m_MapData) //РљР°СЂС‚Р°
 	{
 		if (m_MapMoving)
 		{
@@ -527,7 +527,7 @@ void CGumpWorldMap::OnLeftMouseButtonUp()
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::GUMP_BUTTON_EVENT_C
 {
-	if (serial == ID_GWM_MINIMIZE) //Сворачивание
+	if (serial == ID_GWM_MINIMIZE) //РЎРІРѕСЂР°С‡РёРІР°РЅРёРµ
 	{
 		m_Minimized = true;
 		m_Page = 1;
@@ -536,7 +536,7 @@ void CGumpWorldMap::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::GUMP_CHECKBOX_EVENT_C
 {
-	if (serial == ID_GWM_LINK_WITH_PLAYER) //Привязка к координатам игрока
+	if (serial == ID_GWM_LINK_WITH_PLAYER) //РџСЂРёРІСЏР·РєР° Рє РєРѕРѕСЂРґРёРЅР°С‚Р°Рј РёРіСЂРѕРєР°
 	{
 		m_LinkWithPlayer = state;
 		m_MapData->MoveOnDrag = (m_LinkWithPlayer || g_CurrentMap == GetCurrentMap());
@@ -598,7 +598,7 @@ bool CGumpWorldMap::OnLeftMouseButtonDoubleClick()
 {
 	bool result = false;
 
-	if (m_Page == 1) //При даблклике по мини-гампу - раскрываем его
+	if (m_Page == 1) //РџСЂРё РґР°Р±Р»РєР»РёРєРµ РїРѕ РјРёРЅРё-РіР°РјРїСѓ - СЂР°СЃРєСЂС‹РІР°РµРј РµРіРѕ
 	{
 		m_Minimized = false;
 		m_Page = 2;
@@ -612,14 +612,14 @@ bool CGumpWorldMap::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::OnMidMouseButtonScroll(const bool &up)
 {
-	//Если доступно для изменения масштаба
+	//Р•СЃР»Рё РґРѕСЃС‚СѓРїРЅРѕ РґР»СЏ РёР·РјРµРЅРµРЅРёСЏ РјР°СЃС€С‚Р°Р±Р°
 	if (!m_Minimized && !g_MouseManager.LeftButtonPressed && !g_MouseManager.RightButtonPressed && g_Orion.PolygonePixelsInXY(m_X + 8, m_Y + 31, m_Width - 16, m_Height - 16))
 	{
 		int ofs = 0;
 
-		if (!up && m_Scale > 0) //Увеличение
+		if (!up && m_Scale > 0) //РЈРІРµР»РёС‡РµРЅРёРµ
 			ofs = -1;
-		else if (up && m_Scale < 6) //Уменьшение
+		else if (up && m_Scale < 6) //РЈРјРµРЅСЊС€РµРЅРёРµ
 			ofs = 1;
 
 		if (ofs)
@@ -646,13 +646,13 @@ void CGumpWorldMap::OnMidMouseButtonScroll(const bool &up)
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::UpdateSize()
 {
-	//Событие изменения габаритов гампа с вложенной корректировкой
+	//РЎРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ РіР°Р±Р°СЂРёС‚РѕРІ РіР°РјРїР° СЃ РІР»РѕР¶РµРЅРЅРѕР№ РєРѕСЂСЂРµРєС‚РёСЂРѕРІРєРѕР№
 	WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
 	m_Width = m_StartResizeWidth + offset.X;
 	m_Height = m_StartResizeHeight + offset.Y;
 
-	//Подкорректируем временное значение высоты
+	//РџРѕРґРєРѕСЂСЂРµРєС‚РёСЂСѓРµРј РІСЂРµРјРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РІС‹СЃРѕС‚С‹
 	if (m_Height < MIN_WORLD_MAP_HEIGHT)
 		m_Height = MIN_WORLD_MAP_HEIGHT;
 
@@ -660,7 +660,7 @@ void CGumpWorldMap::UpdateSize()
 	if (m_Height >= bh)
 		m_Height = bh;
 
-	//Подкорректируем временное значение ширины
+	//РџРѕРґРєРѕСЂСЂРµРєС‚РёСЂСѓРµРј РІСЂРµРјРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С€РёСЂРёРЅС‹
 	if (m_Width < MIN_WORLD_MAP_WIDTH)
 		m_Width = MIN_WORLD_MAP_WIDTH;
 

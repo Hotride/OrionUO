@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** CreateCharacterScreen.cpp
 **
@@ -37,7 +37,7 @@ void CCreateCharacterScreen::OnChangeColorSelection(const int &val)
 }
 //----------------------------------------------------------------------------------
 /*!
-Инициализация
+РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 @return 
 */
 void CCreateCharacterScreen::Init()
@@ -56,8 +56,8 @@ void CCreateCharacterScreen::Init()
 }
 //----------------------------------------------------------------------------------
 /*!
-Обработка события после плавного затемнения экрана
-@param [__in_opt] action Идентификатор действия
+РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёСЏ РїРѕСЃР»Рµ РїР»Р°РІРЅРѕРіРѕ Р·Р°С‚РµРјРЅРµРЅРёСЏ СЌРєСЂР°РЅР°
+@param [__in_opt] action РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРµР№СЃС‚РІРёСЏ
 @return 
 */
 void CCreateCharacterScreen::ProcessSmoothAction(uchar action)
@@ -81,7 +81,7 @@ void CCreateCharacterScreen::ProcessSmoothAction(uchar action)
 }
 //----------------------------------------------------------------------------------
 /*!
-Нажатие левой кнопки мыши
+РќР°Р¶Р°С‚РёРµ Р»РµРІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё
 @return 
 */
 void CCreateCharacterScreen::OnLeftMouseButtonDown()
@@ -99,9 +99,9 @@ void CCreateCharacterScreen::OnLeftMouseButtonDown()
 }
 //----------------------------------------------------------------------------------
 /*!
-Обработка нажатия клавиши
-@param [__in] wparam не подписанный параметр
-@param [__in] lparam не подписанный параметр
+РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёСЏ РєР»Р°РІРёС€Рё
+@param [__in] wparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
+@param [__in] lparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
 @return 
 */
 void CCreateCharacterScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
@@ -118,9 +118,9 @@ void CCreateCharacterScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lPa
 }
 //----------------------------------------------------------------------------------
 /*!
-Обработка нажатия клавиши
-@param [__in] wparam не подписанный параметр
-@param [__in] lparam не подписанный параметр
+РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёСЏ РєР»Р°РІРёС€Рё
+@param [__in] wparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
+@param [__in] lparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
 @return 
 */
 void CCreateCharacterScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)

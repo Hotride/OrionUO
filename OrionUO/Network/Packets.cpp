@@ -1,4 +1,4 @@
-/***********************************************************************************
+ï»¿/***********************************************************************************
 **
 ** Packets.h
 **
@@ -363,11 +363,11 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 
 		wstring ws(text);
 		WriteString(EncodeUTF8(ws).data(), len * 2, false); //len * 2 ?????
-		// â äàííîì ñëó÷àå íàäî ïîñûëàòü êàê utf8, òàê ÷èòàåò ñåðâåð.
+		// Ð² Ð´Ð°Ð½Ð½Ð¾Ð¼ ÑÐ»ÑƒÑ‡Ð°Ðµ Ð½Ð°Ð´Ð¾ Ð¿Ð¾ÑÑ‹Ð»Ð°Ñ‚ÑŒ ÐºÐ°Ðº utf8, Ñ‚Ð°Ðº Ñ‡Ð¸Ñ‚Ð°ÐµÑ‚ ÑÐµÑ€Ð²ÐµÑ€.
 	}
 	else
 	{
-		//â ýòîì ñëó÷àå ïîñûëàåì êàê þíèêîä!?
+		//Ð² ÑÑ‚Ð¾Ð¼ ÑÐ»ÑƒÑ‡Ð°Ðµ Ð¿Ð¾ÑÑ‹Ð»Ð°ÐµÐ¼ ÐºÐ°Ðº ÑŽÐ½Ð¸ÐºÐ¾Ð´!?
 
 		WriteWString(text, len, true, false);
 		/*puchar str = (puchar)text;
@@ -497,6 +497,10 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 	int size = 19 + (switchesCount * 4) + 4 + ((textLinesCount * 4) + textLinesLength);
 	Resize(size, true);
 
+	g_PacketManager.LastGumpID = gump->ID;
+	g_PacketManager.LastGumpX = gump->X;
+	g_PacketManager.LastGumpY = gump->Y;
+
 	WriteUInt8(0xB1);
 	WriteUInt16BE(size);
 	WriteUInt32BE(gump->Serial);
@@ -586,12 +590,12 @@ CPacketTradeResponse::CPacketTradeResponse(CGumpSecureTrading *gump, int code)
 	WriteUInt8(0x6F);
 	WriteUInt16BE(17);
 
-	if (code == 1) //Çàêðûâàåì îêíî
+	if (code == 1) //Ð—Ð°ÐºÑ€Ñ‹Ð²Ð°ÐµÐ¼ Ð¾ÐºÐ½Ð¾
 	{
 		WriteUInt8(0x01);
 		WriteUInt32BE(gump->ID);
 	}
-	else if (code == 2) //Òêíóëè íà ÷åêáîêñ
+	else if (code == 2) //Ð¢ÐºÐ½ÑƒÐ»Ð¸ Ð½Ð° Ñ‡ÐµÐºÐ±Ð¾ÐºÑ
 	{
 		WriteUInt8(0x02);
 		WriteUInt32BE(gump->ID);
@@ -778,7 +782,7 @@ CPacketPartyMessage::CPacketPartyMessage(const wchar_t *text, int len, uint seri
 	else //Message to full party
 		WriteUInt8(0x04);
 
-	WriteWString(text, len, false);
+	WriteWString(text, len, true, false);
 }
 //---------------------------------------------------------------------------
 CPacketGameWindowSize::CPacketGameWindowSize()
@@ -1090,39 +1094,23 @@ CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 	if (entry != NULL)
 	{
 		CEntryText &textEntry = entry->m_Entry;
-		int len = textEntry.Length();
+		string data = EncodeUTF8(textEntry.Data());
+		int len = data.length();
 		int size = 9 + 4 + 1;
 
 		if (len)
 		{
-			if (gump->Unicode)
+			size += len;
+			const char *str = data.c_str();
+
+			IFOR(i, 0, len)
 			{
-				size += len * 2;
-				const wchar_t *str = textEntry.Data();
-
-				IFOR(i, 0, len)
-				{
-					if (*(str + i) == L'\n')
-						lineCount++;
-				}
-
-				if (str[len - 1] != L'\n')
+				if (*(str + i) == '\n')
 					lineCount++;
 			}
-			else
-			{
-				size += len;
-				const char *str = textEntry.c_str();
 
-				IFOR(i, 0, len)
-				{
-					if (*(str + i) == '\n')
-						lineCount++;
-				}
-
-				if (str[len - 1] != '\n')
-					lineCount++;
-			}
+			if (str[len - 1] != '\n')
+				lineCount++;
 		}
 
 		Resize(size, true);
@@ -1137,39 +1125,19 @@ CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 
 		if (len)
 		{
-			if (gump->Unicode)
+			const char *str = data.c_str();
+
+			IFOR(i, 0, len)
 			{
-				const wchar_t *str = textEntry.Data();
-				pushort wPtr = (pushort)m_Ptr;
+				char ch = *(str + i);
 
-				IFOR(i, 0, len)
-				{
-					wchar_t ch = *(str + i);
+				if (ch == '\n')
+					ch = 0;
 
-					if (ch == L'\n')
-						ch = 0;
-
-					*wPtr++ = ch;
-				}
-
-				*wPtr = 0;
+				*m_Ptr++ = ch;
 			}
-			else
-			{
-				const char *str = textEntry.c_str();
 
-				IFOR(i, 0, len)
-				{
-					char ch = *(str + i);
-
-					if (ch == '\n')
-						ch = 0;
-
-					*m_Ptr++ = ch;
-				}
-
-				*m_Ptr = 0;
-			}
+			*m_Ptr = 0;
 		}
 	}
 }

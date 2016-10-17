@@ -1,4 +1,4 @@
-/***********************************************************************************
+﻿/***********************************************************************************
 **
 ** PluginInterface.h
 **
@@ -35,7 +35,6 @@ typedef struct PLUGIN_INTERFACE
 
 	HWND hWnd;
 	CLIENT_VERSION ClientVersion;
-	bool InverseBuylist;
 	bool UseVerdata;
 
 	PACKET_PROC *Recv;

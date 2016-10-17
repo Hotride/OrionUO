@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GameCharacter.cpp
 **
@@ -32,12 +32,12 @@ m_AnimationRepeatMode(1), m_AnimationDirection(false), m_AnimationFromServer(fal
 m_MaxMana(0), m_MaxStam(0), m_Mana(0), m_Stam(0), m_OffsetX(0), m_OffsetY(0),
 m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(0),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
-m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10)
+m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10), m_HitsPercent(0)
 {
-	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
+	//!Р’С‹СЃРѕРєРёР№ РїСЂРёРѕСЂРёС‚РµС‚ РїСЂРѕСЂРёСЃРѕРІРєРё (Р±СѓРґРµС‚ РІС‹С€Рµ РѕСЃС‚Р°Р»СЊРЅРѕРіРѕ РЅР° С‚Р°Р№Р»Рµ СЃ РѕРґРёРЅР°РєРѕРІРѕР№ Z РєРѕРѕСЂРёРґРЅР°С‚РѕР№)
 	m_RenderQueueIndex = 7;
 
-	//!Инициализация счетчика шагов
+	//!РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃС‡РµС‚С‡РёРєР° С€Р°РіРѕРІ
 	m_WalkStack.Init();
 
 	if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == serial && g_GumpManager.GetGump(serial, 0, GT_TARGET_SYSTEM) == NULL)
@@ -50,22 +50,46 @@ m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10)
 //----------------------------------------------------------------------------------
 CGameCharacter::~CGameCharacter()
 {
-	//!Чистим память
+	//!Р§РёСЃС‚РёРј РїР°РјСЏС‚СЊ
 	m_WalkStack.Clear();
 
-	//!Если стянут статусбар - обновим его
+	m_HitsTexture.Clear();
+
+	//!Р•СЃР»Рё СЃС‚СЏРЅСѓС‚ СЃС‚Р°С‚СѓСЃР±Р°СЂ - РѕР±РЅРѕРІРёРј РµРіРѕ
 	g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR);
 	
-	//!Если стянут статусбар таргет системы - обновим его
+	//!Р•СЃР»Рё СЃС‚СЏРЅСѓС‚ СЃС‚Р°С‚СѓСЃР±Р°СЂ С‚Р°СЂРіРµС‚ СЃРёСЃС‚РµРјС‹ - РѕР±РЅРѕРІРёРј РµРіРѕ
 	g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM);
 
 	if (!IsPlayer())
 		g_GumpManager.CloseGump(m_Serial, 0, GT_PAPERDOLL);
 }
 //----------------------------------------------------------------------------------
+void CGameCharacter::UpdateHitsTexture(const uchar &hits)
+{
+	if (m_HitsPercent != hits || m_HitsTexture.Empty())
+	{
+		m_HitsPercent = hits;
+
+		char hitsText[10] = { 0 };
+		sprintf_s(hitsText, "[%i%%]", hits);
+
+		ushort color = 0x0044;
+
+		if (hits < 30)
+			color = 0x0021;
+		else if (hits < 50)
+			color = 0x0030;
+		else if (hits < 80)
+			color = 0x0006;
+
+		g_FontManager.GenerateA(3, m_HitsTexture, hitsText, color);
+	}
+}
+//----------------------------------------------------------------------------------
 /*!
-Сидит ли персонаж
-@return Индекс объекта из таблицы, на котором он восседает
+РЎРёРґРёС‚ Р»Рё РїРµСЂСЃРѕРЅР°Р¶
+@return РРЅРґРµРєСЃ РѕР±СЉРµРєС‚Р° РёР· С‚Р°Р±Р»РёС†С‹, РЅР° РєРѕС‚РѕСЂРѕРј РѕРЅ РІРѕСЃСЃРµРґР°РµС‚
 */
 int CGameCharacter::IsSitting()
 {
@@ -219,12 +243,12 @@ int CGameCharacter::IsSitting()
 }
 //----------------------------------------------------------------------------------
 /*!
-Отрисовать персонажа
-@param [__in] mode Режим рисования. true - рисование, false - выбор объектов
-@param [__in] drawX Экранная координата X объекта
-@param [__in] drawY Экранная координата Y объекта
-@param [__in] ticks Таймер рендера
-@return При выборе объектов возвращает выбранный элемент
+РћС‚СЂРёСЃРѕРІР°С‚СЊ РїРµСЂСЃРѕРЅР°Р¶Р°
+@param [__in] mode Р РµР¶РёРј СЂРёСЃРѕРІР°РЅРёСЏ. true - СЂРёСЃРѕРІР°РЅРёРµ, false - РІС‹Р±РѕСЂ РѕР±СЉРµРєС‚РѕРІ
+@param [__in] drawX Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X РѕР±СЉРµРєС‚Р°
+@param [__in] drawY Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y РѕР±СЉРµРєС‚Р°
+@param [__in] ticks РўР°Р№РјРµСЂ СЂРµРЅРґРµСЂР°
+@return РџСЂРё РІС‹Р±РѕСЂРµ РѕР±СЉРµРєС‚РѕРІ РІРѕР·РІСЂР°С‰Р°РµС‚ РІС‹Р±СЂР°РЅРЅС‹Р№ СЌР»РµРјРµРЅС‚
 */
 void CGameCharacter::Draw(const int &x, const int &y)
 {
@@ -254,13 +278,13 @@ void CGameCharacter::Select(const int &x, const int &y)
 }
 //----------------------------------------------------------------------------------
 /*!
-Обновить информацию о поле персонажа, обновление гампов
-@param [__in_opt] direction Направление персонажа
+РћР±РЅРѕРІРёС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РїРѕР»Рµ РїРµСЂСЃРѕРЅР°Р¶Р°, РѕР±РЅРѕРІР»РµРЅРёРµ РіР°РјРїРѕРІ
+@param [__in_opt] direction РќР°РїСЂР°РІР»РµРЅРёРµ РїРµСЂСЃРѕРЅР°Р¶Р°
 @return 
 */
 void CGameCharacter::OnGraphicChange(int direction)
 {
-	//!Обновления пола в зависимости от индекса картинки персонажа
+	//!РћР±РЅРѕРІР»РµРЅРёСЏ РїРѕР»Р° РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РёРЅРґРµРєСЃР° РєР°СЂС‚РёРЅРєРё РїРµСЂСЃРѕРЅР°Р¶Р°
 	switch (m_Graphic)
 	{
 		case 0x0190:
@@ -300,13 +324,13 @@ void CGameCharacter::OnGraphicChange(int direction)
 }
 //----------------------------------------------------------------------------------
 /*!
-Проверка, шаг ли это или телепорт (определяет телепорт на 1 тайл по направлению движения как шаг)
-@param [__inout] cx Текущая координата X
-@param [__inout] cy Текущая координата Y
-@param [__in] x Новая координата X
-@param [__in] y Новая координата Y
-@param [__in] dir Направление персонажа
-@return Результат выполнения шаг/телепорт
+РџСЂРѕРІРµСЂРєР°, С€Р°Рі Р»Рё СЌС‚Рѕ РёР»Рё С‚РµР»РµРїРѕСЂС‚ (РѕРїСЂРµРґРµР»СЏРµС‚ С‚РµР»РµРїРѕСЂС‚ РЅР° 1 С‚Р°Р№Р» РїРѕ РЅР°РїСЂР°РІР»РµРЅРёСЋ РґРІРёР¶РµРЅРёСЏ РєР°Рє С€Р°Рі)
+@param [__inout] cx РўРµРєСѓС‰Р°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__inout] cy РўРµРєСѓС‰Р°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
+@param [__in] x РќРѕРІР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__in] y РќРѕРІР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
+@param [__in] dir РќР°РїСЂР°РІР»РµРЅРёРµ РїРµСЂСЃРѕРЅР°Р¶Р°
+@return Р РµР·СѓР»СЊС‚Р°С‚ РІС‹РїРѕР»РЅРµРЅРёСЏ С€Р°Рі/С‚РµР»РµРїРѕСЂС‚
 */
 bool CGameCharacter::IsCorrectStep(short &cx, short &cy, short &x, short &y, const uchar &dir)
 {
@@ -362,11 +386,11 @@ bool CGameCharacter::IsCorrectStep(short &cx, short &cy, short &x, short &y, con
 }
 //----------------------------------------------------------------------------------
 /*!
-Проверка изменения координат, телепорт ли это
-@param [__in] x Новая координата X
-@param [__in] y Новая координата Y
-@param [__in] dir Новое направление персонажа
-@return true - телепорт, false - шаг
+РџСЂРѕРІРµСЂРєР° РёР·РјРµРЅРµРЅРёСЏ РєРѕРѕСЂРґРёРЅР°С‚, С‚РµР»РµРїРѕСЂС‚ Р»Рё СЌС‚Рѕ
+@param [__in] x РќРѕРІР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__in] y РќРѕРІР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
+@param [__in] dir РќРѕРІРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ РїРµСЂСЃРѕРЅР°Р¶Р°
+@return true - С‚РµР»РµРїРѕСЂС‚, false - С€Р°Рі
 */
 bool CGameCharacter::IsTeleportAction(short &x, short &y, const uchar &dir)
 {
@@ -395,13 +419,13 @@ bool CGameCharacter::IsTeleportAction(short &x, short &y, const uchar &dir)
 }
 //----------------------------------------------------------------------------------
 /*!
-Установка анимации от сервера
-@param [__in] id Группа анимаци
-@param [__in_opt] interval Задержка между кадрами
-@param [__in_opt] frameCount Количество кадлов анимации
-@param [__in_opt] repeatCount Количество повторов анимации
-@param [__in_opt] repeat Зациклено или нет
-@param [__out_opt] frameDirection Направление прокрутки кадров (вперед/назад)
+РЈСЃС‚Р°РЅРѕРІРєР° Р°РЅРёРјР°С†РёРё РѕС‚ СЃРµСЂРІРµСЂР°
+@param [__in] id Р“СЂСѓРїРїР° Р°РЅРёРјР°С†Рё
+@param [__in_opt] interval Р—Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ РєР°РґСЂР°РјРё
+@param [__in_opt] frameCount РљРѕР»РёС‡РµСЃС‚РІРѕ РєР°РґР»РѕРІ Р°РЅРёРјР°С†РёРё
+@param [__in_opt] repeatCount РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРІС‚РѕСЂРѕРІ Р°РЅРёРјР°С†РёРё
+@param [__in_opt] repeat Р—Р°С†РёРєР»РµРЅРѕ РёР»Рё РЅРµС‚
+@param [__out_opt] frameDirection РќР°РїСЂР°РІР»РµРЅРёРµ РїСЂРѕРєСЂСѓС‚РєРё РєР°РґСЂРѕРІ (РІРїРµСЂРµРґ/РЅР°Р·Р°Рґ)
 @return 
 */
 void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const uchar &frameCount, const uchar &repeatCount, const bool &repeat, const bool &frameDirection)
@@ -420,8 +444,8 @@ void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const 
 }
 //----------------------------------------------------------------------------------
 /*!
-Установка группы анимации
-@param [__in] val Новое значение группы анимации
+РЈСЃС‚Р°РЅРѕРІРєР° РіСЂСѓРїРїС‹ Р°РЅРёРјР°С†РёРё
+@param [__in] val РќРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РіСЂСѓРїРїС‹ Р°РЅРёРјР°С†РёРё
 @return
 */
 void CGameCharacter::ResetAnimationGroup(const uchar &val)
@@ -437,7 +461,7 @@ void CGameCharacter::ResetAnimationGroup(const uchar &val)
 }
 //----------------------------------------------------------------------------------
 /*!
-Установка случайной анимации (при длительном простое)
+РЈСЃС‚Р°РЅРѕРІРєР° СЃР»СѓС‡Р°Р№РЅРѕР№ Р°РЅРёРјР°С†РёРё (РїСЂРё РґР»РёС‚РµР»СЊРЅРѕРј РїСЂРѕСЃС‚РѕРµ)
 @return 
 */
 void CGameCharacter::SetRandomFidgetAnimation()
@@ -465,9 +489,9 @@ void CGameCharacter::SetRandomFidgetAnimation()
 }
 //----------------------------------------------------------------------------------
 /*!
-Скорректировать отношение анимаций
-@param [__in] group Группа анимации
-@param [__inout] animation Индекс группы анимации
+РЎРєРѕСЂСЂРµРєС‚РёСЂРѕРІР°С‚СЊ РѕС‚РЅРѕС€РµРЅРёРµ Р°РЅРёРјР°С†РёР№
+@param [__in] group Р“СЂСѓРїРїР° Р°РЅРёРјР°С†РёРё
+@param [__inout] animation РРЅРґРµРєСЃ РіСЂСѓРїРїС‹ Р°РЅРёРјР°С†РёРё
 @return
 */
 void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, BYTE &animation)
@@ -516,10 +540,10 @@ void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, BYTE &anim
 }
 //----------------------------------------------------------------------------------
 /*!
-Скорректировать отношение индексов групп анимаций
-@param [__in] graphic Индекс картинки
-@param [__in] group Группа анимаций
-@param [__inout] animation Индекс анимации в группе
+РЎРєРѕСЂСЂРµРєС‚РёСЂРѕРІР°С‚СЊ РѕС‚РЅРѕС€РµРЅРёРµ РёРЅРґРµРєСЃРѕРІ РіСЂСѓРїРї Р°РЅРёРјР°С†РёР№
+@param [__in] graphic РРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё
+@param [__in] group Р“СЂСѓРїРїР° Р°РЅРёРјР°С†РёР№
+@param [__inout] animation РРЅРґРµРєСЃ Р°РЅРёРјР°С†РёРё РІ РіСЂСѓРїРїРµ
 @return 
 */
 void CGameCharacter::CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, uchar &animation)
@@ -580,9 +604,9 @@ void CGameCharacter::CorrectAnimationGroup(const ushort &graphic, const ANIMATIO
 }
 //----------------------------------------------------------------------------------
 /*!
-Проверка на возможность изменения направления персонажа при движении в сидячем положении
-@param [__in] group Индекс группы анимации
-@return Можно изменять направление или нет
+РџСЂРѕРІРµСЂРєР° РЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РёР·РјРµРЅРµРЅРёСЏ РЅР°РїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶Р° РїСЂРё РґРІРёР¶РµРЅРёРё РІ СЃРёРґСЏС‡РµРј РїРѕР»РѕР¶РµРЅРёРё
+@param [__in] group РРЅРґРµРєСЃ РіСЂСѓРїРїС‹ Р°РЅРёРјР°С†РёРё
+@return РњРѕР¶РЅРѕ РёР·РјРµРЅСЏС‚СЊ РЅР°РїСЂР°РІР»РµРЅРёРµ РёР»Рё РЅРµС‚
 */
 bool CGameCharacter::TestStepNoChangeDirection(const uchar &group)
 {
@@ -616,9 +640,9 @@ bool CGameCharacter::TestStepNoChangeDirection(const uchar &group)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить текущую группу анимации
-@param [__in_opt] graphic Индекс картинки персонажа
-@return Индекс группы анимации
+РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰СѓСЋ РіСЂСѓРїРїСѓ Р°РЅРёРјР°С†РёРё
+@param [__in_opt] graphic РРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё РїРµСЂСЃРѕРЅР°Р¶Р°
+@return РРЅРґРµРєСЃ РіСЂСѓРїРїС‹ Р°РЅРёРјР°С†РёРё
 */
 uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 {
@@ -674,7 +698,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 		else if (m_AnimationGroup == 0xFF)
 			result = (uchar)HAG_STAND;
 
-		//!Глюченный дельфин на всех клиентах
+		//!Р“Р»СЋС‡РµРЅРЅС‹Р№ РґРµР»СЊС„РёРЅ РЅР° РІСЃРµС… РєР»РёРµРЅС‚Р°С…
 		if (graphic == 151)
 			result++;
 	}
@@ -739,8 +763,8 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить индекс картинки для вычисления картинки анимации
-@return Индекс картинки персонажа
+РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ РєР°СЂС‚РёРЅРєРё Р°РЅРёРјР°С†РёРё
+@return РРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё РїРµСЂСЃРѕРЅР°Р¶Р°
 */
 ushort CGameCharacter::GetMountAnimation()
 {
@@ -763,9 +787,9 @@ ushort CGameCharacter::GetMountAnimation()
 }
 //----------------------------------------------------------------------------------
 /*!
-не подписанная функция
-@param [__inout] dir не подписанный параметр
-@param [__in] canChange Можно ли изменять состояние стека хотьбы или нет
+РЅРµ РїРѕРґРїРёСЃР°РЅРЅР°СЏ С„СѓРЅРєС†РёСЏ
+@param [__inout] dir РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
+@param [__in] canChange РњРѕР¶РЅРѕ Р»Рё РёР·РјРµРЅСЏС‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ СЃС‚РµРєР° С…РѕС‚СЊР±С‹ РёР»Рё РЅРµС‚
 @return 
 */
 void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)

@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** MultiObject.h
 **
@@ -63,7 +63,7 @@ void CMultiObject::Draw(const int &x, const int &y)
 	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
 		objColor = SELECT_MULTI_COLOR;
 
-	if (m_OnTarget) //Мульти на таргете
+	if (m_OnTarget) //РњСѓР»СЊС‚Рё РЅР° С‚Р°СЂРіРµС‚Рµ
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);

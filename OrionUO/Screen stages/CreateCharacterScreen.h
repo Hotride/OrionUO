@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** CreateCharacterScreen.h
 **
@@ -15,10 +15,10 @@
 //----------------------------------------------------------------------------------
 class CCreateCharacterScreen : public CBaseScreen
 {
-	//!Выбранный стиль прически/бороды
+	//!Р’С‹Р±СЂР°РЅРЅС‹Р№ СЃС‚РёР»СЊ РїСЂРёС‡РµСЃРєРё/Р±РѕСЂРѕРґС‹
 	SETGETE(int, StyleSelection, OnChangeStyleSelection);
 
-	//!Выбранный цвет тела/одежды/волосеного покрова
+	//!Р’С‹Р±СЂР°РЅРЅС‹Р№ С†РІРµС‚ С‚РµР»Р°/РѕРґРµР¶РґС‹/РІРѕР»РѕСЃРµРЅРѕРіРѕ РїРѕРєСЂРѕРІР°
 	SETGETE(int, ColorSelection, OnChangeColorSelection);
 	SETGET(string, Name);
 
@@ -29,21 +29,21 @@ public:
 	CCreateCharacterScreen();
 	virtual ~CCreateCharacterScreen();
 
-	//!Идентификаторы событий для плавного перехода
+	//!РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ СЃРѕР±С‹С‚РёР№ РґР»СЏ РїР»Р°РІРЅРѕРіРѕ РїРµСЂРµС…РѕРґР°
 	static const uchar ID_SMOOTH_CCS_QUIT = 1;
 	static const uchar ID_SMOOTH_CCS_GO_SCREEN_CHARACTER = 2;
 	static const uchar ID_SMOOTH_CCS_GO_SCREEN_CONNECT = 3;
 	static const uchar ID_SMOOTH_CCS_GO_SCREEN_SELECT_TOWN = 4;
 
 	/*!
-	Инициализация
+	РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 	@return 
 	*/
 	void Init();
 
 	/*!
-	Обработка события после плавного затемнения экрана
-	@param [__in_opt] action Идентификатор действия
+	РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёСЏ РїРѕСЃР»Рµ РїР»Р°РІРЅРѕРіРѕ Р·Р°С‚РµРјРЅРµРЅРёСЏ СЌРєСЂР°РЅР°
+	@param [__in_opt] action РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРµР№СЃС‚РІРёСЏ
 	@return 
 	*/
 	void ProcessSmoothAction(uchar action = 0xFF);
@@ -53,17 +53,17 @@ public:
 	virtual void OnLeftMouseButtonDown();
 
 	/*!
-	Обработка нажатия клавиши
-	@param [__in] wparam не подписанный параметр
-	@param [__in] lparam не подписанный параметр
+	РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёСЏ РєР»Р°РІРёС€Рё
+	@param [__in] wparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
+	@param [__in] lparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
 	@return 
 	*/
 	void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
 
 	/*!
-	Обработка нажатия клавиши
-	@param [__in] wparam не подписанный параметр
-	@param [__in] lparam не подписанный параметр
+	РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёСЏ РєР»Р°РІРёС€Рё
+	@param [__in] wparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
+	@param [__in] lparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
 	@return 
 	*/
 	void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);

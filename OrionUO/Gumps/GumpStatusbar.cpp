@@ -1,4 +1,4 @@
-/***********************************************************************************
+ï»¿/***********************************************************************************
 **
 ** GumpStatusbar.cpp
 **
@@ -248,7 +248,7 @@ bool CGumpStatusbar::GetStatusbarGroupOffset(int &x, int &y)
 
 		while (gump != NULL)
 		{
-			//Åñëè ãàìï çàõâàòèëè è (ìîæåò áûòü) äâèãàþò
+			//Ð•ÑÐ»Ð¸ Ð³Ð°Ð¼Ð¿ Ð·Ð°Ñ…Ð²Ð°Ñ‚Ð¸Ð»Ð¸ Ð¸ (Ð¼Ð¾Ð¶ÐµÑ‚ Ð±Ñ‹Ñ‚ÑŒ) Ð´Ð²Ð¸Ð³Ð°ÑŽÑ‚
 			if (gump != this && g_PressedObject.LeftGump() == gump && gump->CanBeMoved())
 			{
 				WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
@@ -358,7 +358,7 @@ void CGumpStatusbar::CalculateGumpState()
 {
 	CGump::CalculateGumpState();
 
-	//Åñëè ãàìï çàõâàòèëè è (ìîæåò áûòü) äâèãàþò
+	//Ð•ÑÐ»Ð¸ Ð³Ð°Ð¼Ð¿ Ð·Ð°Ñ…Ð²Ð°Ñ‚Ð¸Ð»Ð¸ Ð¸ (Ð¼Ð¾Ð¶ÐµÑ‚ Ð±Ñ‹Ñ‚ÑŒ) Ð´Ð²Ð¸Ð³Ð°ÑŽÑ‚
 	if (g_GumpMovingOffset.X || g_GumpMovingOffset.Y)
 	{
 		if (g_Target.IsTargeting())
@@ -423,13 +423,13 @@ void CGumpStatusbar::UpdateContent()
 
 	CGUIText *text = NULL;
 
-	if (m_Serial == g_PlayerSerial) //Åñëè ýòî ñòàòóñáàð èãðîêà
+	if (m_Serial == g_PlayerSerial) //Ð•ÑÐ»Ð¸ ÑÑ‚Ð¾ ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ð°Ñ€ Ð¸Ð³Ñ€Ð¾ÐºÐ°
 	{
-		if (!m_Minimized) //Åñëè ýòî "ïîëíàÿ" âåðñèÿ ñòàòóñáàðà
+		if (!m_Minimized) //Ð•ÑÐ»Ð¸ ÑÑ‚Ð¾ "Ð¿Ð¾Ð»Ð½Ð°Ñ" Ð²ÐµÑ€ÑÐ¸Ñ ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ð°Ñ€Ð°
 		{
 			POINT p = { 0, 0 };
 
-			if (g_PacketManager.ClientVersion >= CV_308D)
+			if (g_PacketManager.ClientVersion >= CV_308D && !g_ConfigManager.OldStyleStatusbar)
 				Add(new CGUIGumppic(0x2A6C, 0, 0));
 			else
 			{
@@ -439,13 +439,13 @@ void CGumpStatusbar::UpdateContent()
 				Add(new CGUIGumppic(0x0802, 0, 0));
 			}
 
-			//Îòðèñîâêà íàáîðà õàðàêòåðèñòèê, ðàñïîëîæåíèå â çàâèñèìîñòè îò âåðñèè ïðîòîêîëà, êîììåíòèðîâàòü íå áóäó...
-			if (g_PacketManager.ClientVersion >= CV_308Z)
+			//ÐžÑ‚Ñ€Ð¸ÑÐ¾Ð²ÐºÐ° Ð½Ð°Ð±Ð¾Ñ€Ð° Ñ…Ð°Ñ€Ð°ÐºÑ‚ÐµÑ€Ð¸ÑÑ‚Ð¸Ðº, Ñ€Ð°ÑÐ¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ Ð² Ð·Ð°Ð²Ð¸ÑÐ¸Ð¼Ð¾ÑÑ‚Ð¸ Ð¾Ñ‚ Ð²ÐµÑ€ÑÐ¸Ð¸ Ð¿Ñ€Ð¾Ñ‚Ð¾ÐºÐ¾Ð»Ð°, ÐºÐ¾Ð¼Ð¼ÐµÐ½Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ Ð½Ðµ Ð±ÑƒÐ´Ñƒ...
+			if (g_PacketManager.ClientVersion >= CV_308Z && !g_ConfigManager.OldStyleStatusbar)
 			{
 				p.x = 389;
 				p.y = 152;
 
-				//Îòðèñóåì èìÿ èãðîêà
+				//ÐžÑ‚Ñ€Ð¸ÑÑƒÐµÐ¼ Ð¸Ð¼Ñ Ð¸Ð³Ñ€Ð¾ÐºÐ°
 				if (g_Player->Name.length())
 				{
 					text = (CGUIText*)Add(new CGUIText(0x0386, 58, 50));
@@ -454,14 +454,14 @@ void CGumpStatusbar::UpdateContent()
 
 				if (g_PacketManager.ClientVersion >= CV_5020)
 				{
-					//Êíîïêà âûçîâà ãàìïà áàôîâ
+					//ÐšÐ½Ð¾Ð¿ÐºÐ° Ð²Ñ‹Ð·Ð¾Ð²Ð° Ð³Ð°Ð¼Ð¿Ð° Ð±Ð°Ñ„Ð¾Ð²
 					Add(new CGUIButton(ID_GSB_BUFF_GUMP, 0x7538, 0x7538, 0x7538, 40, 50));
 
-					//Êíîïî÷êè äëÿ èçìåíåíèÿ ðîñòà/ëîêà ñòàòîâ
+					//ÐšÐ½Ð¾Ð¿Ð¾Ñ‡ÐºÐ¸ Ð´Ð»Ñ Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ñ Ñ€Ð¾ÑÑ‚Ð°/Ð»Ð¾ÐºÐ° ÑÑ‚Ð°Ñ‚Ð¾Ð²
 					if (g_PacketManager.ClientVersion >= CV_60142)
 					{
 						//Str
-						uchar status = g_Player->LockStr; //Ñòàòóñ (âíèç/ââåðõ/çàìîê)
+						uchar status = g_Player->LockStr; //Ð¡Ñ‚Ð°Ñ‚ÑƒÑ (Ð²Ð½Ð¸Ð·/Ð²Ð²ÐµÑ€Ñ…/Ð·Ð°Ð¼Ð¾Ðº)
 
 						ushort gumpID = 0x0984; //Up
 						if (status == 1)
@@ -473,7 +473,7 @@ void CGumpStatusbar::UpdateContent()
 
 
 						//Dex
-						status = g_Player->LockDex; //Ñòàòóñ (âíèç/ââåðõ/çàìîê)
+						status = g_Player->LockDex; //Ð¡Ñ‚Ð°Ñ‚ÑƒÑ (Ð²Ð½Ð¸Ð·/Ð²Ð²ÐµÑ€Ñ…/Ð·Ð°Ð¼Ð¾Ðº)
 
 						gumpID = 0x0984; //Up
 						if (status == 1)
@@ -486,7 +486,7 @@ void CGumpStatusbar::UpdateContent()
 
 
 						//Int
-						status = g_Player->LockInt; //Ñòàòóñ (âíèç/ââåðõ/çàìîê)
+						status = g_Player->LockInt; //Ð¡Ñ‚Ð°Ñ‚ÑƒÑ (Ð²Ð½Ð¸Ð·/Ð²Ð²ÐµÑ€Ñ…/Ð·Ð°Ð¼Ð¾Ðº)
 
 						gumpID = 0x0984; //Up
 						if (status == 1)
@@ -615,7 +615,7 @@ void CGumpStatusbar::UpdateContent()
 					p.y = 150;
 				}
 
-				//Îòðèñóåì èìÿ èãðîêà
+				//ÐžÑ‚Ñ€Ð¸ÑÑƒÐµÐ¼ Ð¸Ð¼Ñ Ð¸Ð³Ñ€Ð¾ÐºÐ°
 				if (g_Player->Name.length())
 				{
 					text = (CGUIText*)Add(new CGUIText(0x0386, 86, 42));
@@ -664,32 +664,38 @@ void CGumpStatusbar::UpdateContent()
 				Add(new CGUIHitBox(ID_GSB_TEXT_GOLD, 171, 97, 66, 12));
 				Add(new CGUIHitBox(ID_GSB_TEXT_WEIGHT, 171, 109, 66, 12));
 
-				if (g_PacketManager.ClientVersion == CV_308D)
+				if (!g_ConfigManager.OldStyleStatusbar)
 				{
-					text = (CGUIText*)Add(new CGUIText(0x0386, 171, 124));
-					text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
+					if (g_PacketManager.ClientVersion == CV_308D)
+					{
+						text = (CGUIText*)Add(new CGUIText(0x0386, 171, 124));
+						text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
 
-					Add(new CGUIHitBox(ID_GSB_TEXT_MAX_STATS, 171, 124, 34, 12));
-				}
-				else if (g_PacketManager.ClientVersion == CV_308J)
-				{
-					text = (CGUIText*)Add(new CGUIText(0x0386, 180, 131));
-					text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
+						Add(new CGUIHitBox(ID_GSB_TEXT_MAX_STATS, 171, 124, 34, 12));
+					}
+					else if (g_PacketManager.ClientVersion == CV_308J)
+					{
+						text = (CGUIText*)Add(new CGUIText(0x0386, 180, 131));
+						text->CreateTextureA(1, std::to_string(g_Player->StatsCap));
 
-					text = (CGUIText*)Add(new CGUIText(0x0386, 180, 144));
-					text->CreateTextureA(1, std::to_string(g_Player->Followers) + "/" + std::to_string(g_Player->MaxFollowers));
+						text = (CGUIText*)Add(new CGUIText(0x0386, 180, 144));
+						text->CreateTextureA(1, std::to_string(g_Player->Followers) + "/" + std::to_string(g_Player->MaxFollowers));
 
-					Add(new CGUIHitBox(ID_GSB_TEXT_MAX_STATS, 180, 131, 34, 12));
-					Add(new CGUIHitBox(ID_GSB_TEXT_FOLLOWERS, 171, 144, 34, 12));
+						Add(new CGUIHitBox(ID_GSB_TEXT_MAX_STATS, 180, 131, 34, 12));
+						Add(new CGUIHitBox(ID_GSB_TEXT_FOLLOWERS, 171, 144, 34, 12));
+					}
 				}
 			}
 
 			Add(new CGUIHitBox(ID_GSB_MINIMIZE, p.x, p.y, 16, 16, true));
 		}
-		else //Ýòî óìåíüøåííàÿ âðñèÿ ñòàòóñáàðà (ñ ïîëîñêàìè)
+		else //Ð­Ñ‚Ð¾ ÑƒÐ¼ÐµÐ½ÑŒÑˆÐµÐ½Ð½Ð°Ñ Ð²Ñ€ÑÐ¸Ñ ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ð°Ñ€Ð° (Ñ Ð¿Ð¾Ð»Ð¾ÑÐºÐ°Ð¼Ð¸)
 		{
-			if (g_Party.Leader != 0) //inParty
+			if (g_Party.Leader != 0 && !g_ConfigManager.OriginalPartyStatusbar) //inParty
 			{
+				CGUIGumppic *bodyGump = (CGUIGumppic*)Add(new CGUIGumppic(0x0803, 0, 0));
+				bodyGump->SelectOnly = true;
+
 				text = (CGUIText*)Add(new CGUIText(0x0386, 16, -2));
 				text->CreateTextureA(3, "[* SELF *]");
 
@@ -733,9 +739,9 @@ void CGumpStatusbar::UpdateContent()
 			else
 			{
 				if (g_Player->Warmode)
-					Add(new CGUIGumppic(0x0807, 0, 0));//Âåðñèÿ ñ âêëþ÷åííûì âàðìîäîì
+					Add(new CGUIGumppic(0x0807, 0, 0));//Ð’ÐµÑ€ÑÐ¸Ñ Ñ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ‹Ð¼ Ð²Ð°Ñ€Ð¼Ð¾Ð´Ð¾Ð¼
 				else
-					Add(new CGUIGumppic(0x0803, 0, 0)); //Ãàìï ñòàòóñáàðà
+					Add(new CGUIGumppic(0x0803, 0, 0)); //Ð“Ð°Ð¼Ð¿ ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ð°Ñ€Ð°
 
 				//Hits
 				Add(new CGUIGumppic(0x0805, 34, 12));
@@ -775,14 +781,17 @@ void CGumpStatusbar::UpdateContent()
 			m_StatusbarUnlocker->Visible = InGroup();
 		}
 	}
-	else //×óæîé ñòàòóñáàð
+	else //Ð§ÑƒÐ¶Ð¾Ð¹ ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ð°Ñ€
 	{
-		if (g_Party.Contains(m_Serial))
+		if (g_Party.Contains(m_Serial) && !g_ConfigManager.OriginalPartyStatusbar)
 		{
 			IFOR(i, 0, 10)
 			{
 				if (g_Party.Member[i].Serial == m_Serial)
 				{
+					CGUIGumppic *bodyGump = (CGUIGumppic*)Add(new CGUIGumppic(0x0803, 0, 0));
+					bodyGump->SelectOnly = true;
+
 					CPartyObject &member = g_Party.Member[i];
 
 					string memberName = member.GetName(i);
@@ -857,7 +866,7 @@ void CGumpStatusbar::UpdateContent()
 			if (obj != NULL)
 			{
 				hitsColor = 0;
-				//Âû÷èñëÿåì öâåò ñòàòóñáàðà
+				//Ð’Ñ‹Ñ‡Ð¸ÑÐ»ÑÐµÐ¼ Ñ†Ð²ÐµÑ‚ ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ð°Ñ€Ð°
 				color = g_ConfigManager.GetColorByNotoriety(obj->Notoriety);
 
 				if (obj->Notoriety == NT_CRIMINAL || obj->Notoriety == NT_SOMEONE_GRAY)
@@ -928,7 +937,7 @@ void CGumpStatusbar::OnLeftMouseButtonDown()
 
 	if (!g_PressedObject.LeftSerial || g_PressedObject.LeftSerial > ID_GSB_LOCK_MOVING)
 	{
-		//Ïðîâåðèì, ìîæåò áûòü åñòü òàðãåò, êîòîðûé íóæíî ïîâåñèòü íà äàííîãî ÷àðà
+		//ÐŸÑ€Ð¾Ð²ÐµÑ€Ð¸Ð¼, Ð¼Ð¾Ð¶ÐµÑ‚ Ð±Ñ‹Ñ‚ÑŒ ÐµÑÑ‚ÑŒ Ñ‚Ð°Ñ€Ð³ÐµÑ‚, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ Ð½ÑƒÐ¶Ð½Ð¾ Ð¿Ð¾Ð²ÐµÑÐ¸Ñ‚ÑŒ Ð½Ð° Ð´Ð°Ð½Ð½Ð¾Ð³Ð¾ Ñ‡Ð°Ñ€Ð°
 		if (g_Target.IsTargeting())
 		{
 			g_Target.SendTargetObject(m_Serial);
@@ -944,7 +953,7 @@ void CGumpStatusbar::GUMP_BUTTON_EVENT_C
 
 	if (serial == ID_GSB_MINIMIZE && m_Serial == g_PlayerSerial)
 	{
-		//Êíîïêà ìèíèìèçàöèè íà ïîëíîé âåðñèè ãàìïà
+		//ÐšÐ½Ð¾Ð¿ÐºÐ° Ð¼Ð¸Ð½Ð¸Ð¼Ð¸Ð·Ð°Ñ†Ð¸Ð¸ Ð½Ð° Ð¿Ð¾Ð»Ð½Ð¾Ð¹ Ð²ÐµÑ€ÑÐ¸Ð¸ Ð³Ð°Ð¼Ð¿Ð°
 		m_Minimized = true;
 		m_WantUpdateContent = true;
 	}
@@ -1006,7 +1015,7 @@ bool CGumpStatusbar::OnLeftMouseButtonDoubleClick()
 
 	if (!g_PressedObject.LeftSerial && m_Serial == g_PlayerSerial && m_Minimized)
 	{
-		//Åñëè ýòî ñòàòóñáàð èãðîêà (ñ ïîëîñêàìè) òî ðàçâåðíåì åãî äî ïîëíîé âåðñèè
+		//Ð•ÑÐ»Ð¸ ÑÑ‚Ð¾ ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ð°Ñ€ Ð¸Ð³Ñ€Ð¾ÐºÐ° (Ñ Ð¿Ð¾Ð»Ð¾ÑÐºÐ°Ð¼Ð¸) Ñ‚Ð¾ Ñ€Ð°Ð·Ð²ÐµÑ€Ð½ÐµÐ¼ ÐµÐ³Ð¾ Ð´Ð¾ Ð¿Ð¾Ð»Ð½Ð¾Ð¹ Ð²ÐµÑ€ÑÐ¸Ð¸
 		m_Minimized = false;
 
 		if (InGroup())
@@ -1032,15 +1041,15 @@ bool CGumpStatusbar::OnLeftMouseButtonDoubleClick()
 	else if (m_Serial != g_PlayerSerial)
 	{
 		if (g_Player->Warmode)
-			g_Orion.Attack(m_Serial); //Åñëè â âàðìîäå - àòàêóåì
+			g_Orion.Attack(m_Serial); //Ð•ÑÐ»Ð¸ Ð² Ð²Ð°Ñ€Ð¼Ð¾Ð´Ðµ - Ð°Ñ‚Ð°ÐºÑƒÐµÐ¼
 		else
-			g_Orion.DoubleClick(m_Serial); //Èëè èñïîëüçóåì ïðåäìåò
+			g_Orion.DoubleClick(m_Serial); //Ð˜Ð»Ð¸ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÐ¼ Ð¿Ñ€ÐµÐ´Ð¼ÐµÑ‚
 
 		return true;
 	}
 	else if (!m_Minimized)
 	{
-		//Ïî äàáëêëèêó ïî ïîëíîé âåðñèè ñòàòóñáàðà òåïåðü îòêðûâàåòñÿ ïàïåðäîëë
+		//ÐŸÐ¾ Ð´Ð°Ð±Ð»ÐºÐ»Ð¸ÐºÑƒ Ð¿Ð¾ Ð¿Ð¾Ð»Ð½Ð¾Ð¹ Ð²ÐµÑ€ÑÐ¸Ð¸ ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ð°Ñ€Ð° Ñ‚ÐµÐ¿ÐµÑ€ÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ð²Ð°ÐµÑ‚ÑÑ Ð¿Ð°Ð¿ÐµÑ€Ð´Ð¾Ð»Ð»
 		g_Orion.PaperdollReq(m_Serial);
 
 		return true;
@@ -1051,8 +1060,8 @@ bool CGumpStatusbar::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
-	//Èçìåíåíèå èìåíè ñóùåñòâà
-	if (Serial != g_PlayerSerial) //Òîëüêî ÷óæèå ñòàòóñáàðû
+	//Ð˜Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ðµ Ð¸Ð¼ÐµÐ½Ð¸ ÑÑƒÑ‰ÐµÑÑ‚Ð²Ð°
+	if (Serial != g_PlayerSerial) //Ð¢Ð¾Ð»ÑŒÐºÐ¾ Ñ‡ÑƒÐ¶Ð¸Ðµ ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ð°Ñ€Ñ‹
 	{
 		if ((g_EntryPointer->Length() <= 15) && g_FontManager.GetWidthA(1, g_EntryPointer->c_str(), g_EntryPointer->Pos()) <= 100 && ((wParam >= 'a' && wParam <= 'z') || (wParam >= 'A' && wParam <= 'Z')))
 		{
@@ -1068,10 +1077,10 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 	{
 		case VK_RETURN:
 		{
-			//Åñëè âñ¸ âïîðÿäêå - èçìåíÿåì èìÿ
+			//Ð•ÑÐ»Ð¸ Ð²ÑÑ‘ Ð²Ð¿Ð¾Ñ€ÑÐ´ÐºÐµ - Ð¸Ð·Ð¼ÐµÐ½ÑÐµÐ¼ Ð¸Ð¼Ñ
 			if (g_EntryPointer->Length())
 				SendRenameRequest();
-			else //Íåëüçÿ èçìåíèòü èìÿ íà ïóñòîå
+			else //ÐÐµÐ»ÑŒÐ·Ñ Ð¸Ð·Ð¼ÐµÐ½Ð¸Ñ‚ÑŒ Ð¸Ð¼Ñ Ð½Ð° Ð¿ÑƒÑÑ‚Ð¾Ðµ
 			{
 				CGameObject *obj = g_World->FindWorldObject(m_Serial);
 
@@ -1084,7 +1093,7 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			else
 				g_EntryPointer = &g_GameConsole;
 
-			m_WantRedraw = true; //Ïåðåðèñóåì
+			m_WantRedraw = true; //ÐŸÐµÑ€ÐµÑ€Ð¸ÑÑƒÐµÐ¼
 
 			break;
 		}
@@ -1102,7 +1111,7 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		}
 		case VK_ESCAPE:
 		{
-			//Ïî òûêó íà Esc ìîæíî âûéòè èç ðåäàêòèðîâàíèÿ èìåíè ñóùåñòâà
+			//ÐŸÐ¾ Ñ‚Ñ‹ÐºÑƒ Ð½Ð° Esc Ð¼Ð¾Ð¶Ð½Ð¾ Ð²Ñ‹Ð¹Ñ‚Ð¸ Ð¸Ð· Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð¸Ð¼ÐµÐ½Ð¸ ÑÑƒÑ‰ÐµÑÑ‚Ð²Ð°
 
 			CGameObject *obj = g_World->FindWorldObject(m_Serial);
 			if (obj != NULL)
@@ -1113,7 +1122,7 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			else
 				g_EntryPointer = &g_GameConsole;
 
-			m_WantRedraw = true; //Ïåðåðèñóåì
+			m_WantRedraw = true; //ÐŸÐµÑ€ÐµÑ€Ð¸ÑÑƒÐµÐ¼
 
 			break;
 		}
@@ -1131,9 +1140,9 @@ void CGumpStatusbar::SendRenameRequest()
 
 		CEntryText *entry = &((CGUITextEntry*)item)->m_Entry;
 
-		if (entry->Length()) //Åñëè â ïîëå äëÿ ââîäà òåêñòà ÷òî-òî åñòü
+		if (entry->Length()) //Ð•ÑÐ»Ð¸ Ð² Ð¿Ð¾Ð»Ðµ Ð´Ð»Ñ Ð²Ð²Ð¾Ð´Ð° Ñ‚ÐµÐºÑÑ‚Ð° Ñ‡Ñ‚Ð¾-Ñ‚Ð¾ ÐµÑÑ‚ÑŒ
 		{
-			//Îòïðàâëÿåì çàïðîñ íà èçìåíåíèå èìåíè
+			//ÐžÑ‚Ð¿Ñ€Ð°Ð²Ð»ÑÐµÐ¼ Ð·Ð°Ð¿Ñ€Ð¾Ñ Ð½Ð° Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ðµ Ð¸Ð¼ÐµÐ½Ð¸
 			CPacketRenameRequest(m_Serial, entry->c_str()).Send();
 
 			UINT_LIST list;

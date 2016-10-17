@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpSpell.cpp
 **
@@ -212,7 +212,7 @@ bool CGumpSpell::GetSpellGroupOffset(int &x, int &y)
 
 		while (gump != NULL)
 		{
-			//Если гамп захватили и (может быть) двигают
+			//Р•СЃР»Рё РіР°РјРї Р·Р°С…РІР°С‚РёР»Рё Рё (РјРѕР¶РµС‚ Р±С‹С‚СЊ) РґРІРёРіР°СЋС‚
 			if (gump != this && g_PressedObject.LeftGump() == gump && gump->CanBeMoved())
 			{
 				WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
@@ -322,7 +322,7 @@ void CGumpSpell::CalculateGumpState()
 {
 	CGump::CalculateGumpState();
 
-	//Если гамп захватили и (может быть) двигают
+	//Р•СЃР»Рё РіР°РјРї Р·Р°С…РІР°С‚РёР»Рё Рё (РјРѕР¶РµС‚ Р±С‹С‚СЊ) РґРІРёРіР°СЋС‚
 	if (g_GumpMovingOffset.X || g_GumpMovingOffset.Y)
 	{
 		if (!InGroup())

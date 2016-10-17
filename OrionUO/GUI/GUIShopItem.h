@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIShopItem.h
 **
-** Компонента для отображения объекта магазина
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РѕР±СЉРµРєС‚Р° РјР°РіР°Р·РёРЅР°
 **
 ** Copyright (C) August 2016 Hotride
 **
@@ -17,43 +17,43 @@
 //----------------------------------------------------------------------------------
 class CGUIShopItem : public CBaseGUI
 {
-	//!Количество
+	//!РљРѕР»РёС‡РµСЃС‚РІРѕ
 	SETGET(uint, Count);
 
-	//!Стоимость
+	//!РЎС‚РѕРёРјРѕСЃС‚СЊ
 	SETGET(uint, Price);
 
-	//!Название товара
+	//!РќР°Р·РІР°РЅРёРµ С‚РѕРІР°СЂР°
 	SETGET(string, Name);
 
-	//!Флаг выбора
+	//!Р¤Р»Р°Рі РІС‹Р±РѕСЂР°
 	SETGET(bool, Selected);
 
 private:
-	//!Текстуры для текста
+	//!РўРµРєСЃС‚СѓСЂС‹ РґР»СЏ С‚РµРєСЃС‚Р°
 	CGLTextTexture m_NameText;
 	CGLTextTexture m_CountText;
 
-	//!Смещение картинки
+	//!РЎРјРµС‰РµРЅРёРµ РєР°СЂС‚РёРЅРєРё
 	int m_ImageOffset;
 
-	//!Смещение текста
+	//!РЎРјРµС‰РµРЅРёРµ С‚РµРєСЃС‚Р°
 	int m_TextOffset;
 
-	//!Максимальное смещение
+	//!РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ СЃРјРµС‰РµРЅРёРµ
 	int m_MaxOffset;
 
 public:
 	CGUIShopItem(const uint &serial, const ushort &graphic, const ushort &color, const uint &count, const uint &price, const string &name, const int &x, const int &y);
 	virtual ~CGUIShopItem();
 
-	//!Нажатие на компоненту
+	//!РќР°Р¶Р°С‚РёРµ РЅР° РєРѕРјРїРѕРЅРµРЅС‚Сѓ
 	void OnClick();
 
-	//!Создать текстуру названия
+	//!РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ РЅР°Р·РІР°РЅРёСЏ
 	void CreateNameText();
 
-	//!Создать текстуру количества
+	//!РЎРѕР·РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ РєРѕР»РёС‡РµСЃС‚РІР°
 	void CreateCountText(const int &lostCount);
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(200, m_MaxOffset + 20); }

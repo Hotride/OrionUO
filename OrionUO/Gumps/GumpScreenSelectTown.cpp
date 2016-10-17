@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpScreenSelectTown.cpp
 **
@@ -16,7 +16,7 @@
 #include "../Managers/FontsManager.h"
 #include "../CityList.h"
 //----------------------------------------------------------------------------------
-//!Список точек для отображения кнопок городов
+//!РЎРїРёСЃРѕРє С‚РѕС‡РµРє РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РєРЅРѕРїРѕРє РіРѕСЂРѕРґРѕРІ
 WISP_GEOMETRY::CPoint2Di CGumpScreenSelectTown::m_TownButtonText[9] =
 {
 	//Button     Text
@@ -65,17 +65,17 @@ void CGumpScreenSelectTown::UpdateContent()
 	{
 		CCityItemNew *newCity = (CCityItemNew*)&city;
 
-		//!Получаем строку клилока с описанием города
+		//!РџРѕР»СѓС‡Р°РµРј СЃС‚СЂРѕРєСѓ РєР»РёР»РѕРєР° СЃ РѕРїРёСЃР°РЅРёРµРј РіРѕСЂРѕРґР°
 		description = g_ClilocManager.Cliloc(g_Language)->GetW(newCity->Cliloc);
 	}
 
-	//!Используем обработку HTML-тэгов при создании текстуры текста
+	//!РСЃРїРѕР»СЊР·СѓРµРј РѕР±СЂР°Р±РѕС‚РєСѓ HTML-С‚СЌРіРѕРІ РїСЂРё СЃРѕР·РґР°РЅРёРё С‚РµРєСЃС‚СѓСЂС‹ С‚РµРєСЃС‚Р°
 	g_FontManager.SetUseHTML(true);
 
 	m_Description = (CGUIText*)m_HTMLGump->Add(new CGUIText(0, 3, 3));
 	m_Description->CreateTextureW(0, description, 30, 150);
 
-	//!Выключаем обработку HTML-тэгов
+	//!Р’С‹РєР»СЋС‡Р°РµРј РѕР±СЂР°Р±РѕС‚РєСѓ HTML-С‚СЌРіРѕРІ
 	g_FontManager.SetUseHTML(false);
 
 	m_HTMLGump->CalculateDataSize();
@@ -133,17 +133,17 @@ void CGumpScreenSelectTown::GUMP_TEXT_ENTRY_EVENT_C
 				{
 					CCityItemNew *newCity = (CCityItemNew*)&city;
 
-					//!Получаем строку клилока с описанием города
+					//!РџРѕР»СѓС‡Р°РµРј СЃС‚СЂРѕРєСѓ РєР»РёР»РѕРєР° СЃ РѕРїРёСЃР°РЅРёРµРј РіРѕСЂРѕРґР°
 					description = g_ClilocManager.Cliloc(g_Language)->GetW(newCity->Cliloc);
 				}
 
-				//!Используем обработку HTML-тэгов при создании текстуры текста
+				//!РСЃРїРѕР»СЊР·СѓРµРј РѕР±СЂР°Р±РѕС‚РєСѓ HTML-С‚СЌРіРѕРІ РїСЂРё СЃРѕР·РґР°РЅРёРё С‚РµРєСЃС‚СѓСЂС‹ С‚РµРєСЃС‚Р°
 				g_FontManager.SetUseHTML(true);
 
 				if (m_Description != NULL)
 					m_Description->CreateTextureW(0, description, 30, 150);
 
-				//!Выключаем обработку HTML-тэгов
+				//!Р’С‹РєР»СЋС‡Р°РµРј РѕР±СЂР°Р±РѕС‚РєСѓ HTML-С‚СЌРіРѕРІ
 				g_FontManager.SetUseHTML(false);
 
 				if (m_HTMLGump != NULL)
