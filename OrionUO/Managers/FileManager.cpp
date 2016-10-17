@@ -23,7 +23,7 @@ CFileManager::~CFileManager()
 //----------------------------------------------------------------------------------
 bool CFileManager::Load()
 {
-	if (g_FileManager.UseVerdata)
+	if (g_FileManager.UseUOP)
 	{
 		 if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
 			return false;
@@ -105,7 +105,7 @@ bool CFileManager::Load()
 
 	IFOR(i, 0, 6)
 	{
-		if (g_FileManager.UseVerdata && i > 0 || i > 1)
+		if (g_FileManager.UseUOP && i > 0 || i > 1)
 		{
 			if (!m_AnimIdx[i].Load(g_App.FilePath("anim%i.idx", i)))
 				return false;
@@ -115,7 +115,7 @@ bool CFileManager::Load()
 
 		if (!m_StaticIdx[i].Load(g_App.FilePath("staidx%i.mul", i)))
 			return false;
-		if (g_FileManager.UseVerdata)
+		if (g_FileManager.UseUOP)
 		{
 			if (!m_MapMul[i].Load(g_App.FilePath("map%i.mul", i)))
 				return false;
