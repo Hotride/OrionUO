@@ -1,4 +1,4 @@
-/***********************************************************************************
+ï»¿/***********************************************************************************
 **
 ** GumpTargetSystem.cpp
 **
@@ -37,7 +37,7 @@ bool CGumpTargetSystem::CanBeDisplayed()
 //----------------------------------------------------------------------------------
 void CGumpTargetSystem::PrepareContent()
 {
-	//Åñëè ãàìï çàõâàòèëè è (ìîæåò áûòü) äâèãàþò
+	//Ð•ÑÐ»Ð¸ Ð³Ð°Ð¼Ð¿ Ð·Ð°Ñ…Ð²Ð°Ñ‚Ð¸Ð»Ð¸ Ð¸ (Ð¼Ð¾Ð¶ÐµÑ‚ Ð±Ñ‹Ñ‚ÑŒ) Ð´Ð²Ð¸Ð³Ð°ÑŽÑ‚
 	if (g_Target.IsTargeting())
 	{
 		/*if (g_GumpMovingOffsetX &&)
@@ -63,7 +63,7 @@ void CGumpTargetSystem::UpdateContent()
 
 	if (obj != NULL)
 	{
-		//Âû÷èñëÿåì öâåò ñòàòóñáàðà
+		//Ð’Ñ‹Ñ‡Ð¸ÑÐ»ÑÐµÐ¼ Ñ†Ð²ÐµÑ‚ ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ð°Ñ€Ð°
 		ushort color = 0;
 		CGameCharacter *character = NULL;
 
@@ -81,7 +81,7 @@ void CGumpTargetSystem::UpdateContent()
 		if (color)
 			m_DataBox->Add(new CGUIShader(g_ColorizerShader, true));
 
-		//Ãàìï ñòàòóñ áàðà
+		//Ð“Ð°Ð¼Ð¿ ÑÑ‚Ð°Ñ‚ÑƒÑ Ð±Ð°Ñ€Ð°
 		CGUIGumppic *gumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x0804, 0, 0));
 		gumppic->Color = color;
 
@@ -119,11 +119,11 @@ void CGumpTargetSystem::UpdateContent()
 			}
 		}
 	}
-	else //Ñåðåíüêèé ñòàòóñ
+	else //Ð¡ÐµÑ€ÐµÐ½ÑŒÐºÐ¸Ð¹ ÑÑ‚Ð°Ñ‚ÑƒÑ
 	{
 		m_DataBox->Add(new CGUIShader(g_ColorizerShader, true));
 
-		//Ãàìï ñòàòóñ áàðà
+		//Ð“Ð°Ð¼Ð¿ ÑÑ‚Ð°Ñ‚ÑƒÑ Ð±Ð°Ñ€Ð°
 		CGUIGumppic *gumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x0804, 0, 0));
 		gumppic->Color = 0x0386;
 
@@ -145,7 +145,7 @@ void CGumpTargetSystem::OnLeftMouseDown()
 
 	if (!g_PressedObject.LeftSerial)
 	{
-		//Ïðîâåðèì, ìîæåò áûòü åñòü òàðãåò, êîòîðûé íóæíî ïîâåñèòü íà äàííîãî ÷àðà
+		//ÐŸÑ€Ð¾Ð²ÐµÑ€Ð¸Ð¼, Ð¼Ð¾Ð¶ÐµÑ‚ Ð±Ñ‹Ñ‚ÑŒ ÐµÑÑ‚ÑŒ Ñ‚Ð°Ñ€Ð³ÐµÑ‚, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ Ð½ÑƒÐ¶Ð½Ð¾ Ð¿Ð¾Ð²ÐµÑÐ¸Ñ‚ÑŒ Ð½Ð° Ð´Ð°Ð½Ð½Ð¾Ð³Ð¾ Ñ‡Ð°Ñ€Ð°
 		if (g_Target.IsTargeting())
 		{
 			g_Target.SendTargetObject(g_NewTargetSystem.Serial);
@@ -178,10 +178,10 @@ bool CGumpTargetSystem::OnLeftMouseButtonDoubleClick()
 		if (g_Player->Warmode)
 		{
 			if (serial < 0x40000000)
-				g_Orion.Attack(serial); //Åñëè â âàðìîäå - àòàêóåì
+				g_Orion.Attack(serial); //Ð•ÑÐ»Ð¸ Ð² Ð²Ð°Ñ€Ð¼Ð¾Ð´Ðµ - Ð°Ñ‚Ð°ÐºÑƒÐµÐ¼
 		}
 		else
-			g_Orion.DoubleClick(serial); //Èëè èñïîëüçóåì ïðåäìåò
+			g_Orion.DoubleClick(serial); //Ð˜Ð»Ð¸ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÐ¼ Ð¿Ñ€ÐµÐ´Ð¼ÐµÑ‚
 
 		return true;
 	}

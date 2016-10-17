@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** MapBlock.cpp
 **
@@ -15,7 +15,7 @@
 CMapBlock::CMapBlock(const uint &index)
 : CBaseQueueItem(), m_Index(index), m_LastAccessTime(GetTickCount()), m_X(0), m_Y(0)
 {
-	//Обнуляем блок
+	//РћР±РЅСѓР»СЏРµРј Р±Р»РѕРє
 	IFOR(i, 0, 8)
 	{
 		IFOR(j, 0, 8)
@@ -25,7 +25,7 @@ CMapBlock::CMapBlock(const uint &index)
 //----------------------------------------------------------------------------------
 CMapBlock::~CMapBlock()
 {
-	//При удалении блока очищаем список отрисовки блока и удаляем элементы
+	//РџСЂРё СѓРґР°Р»РµРЅРёРё Р±Р»РѕРєР° РѕС‡РёС‰Р°РµРј СЃРїРёСЃРѕРє РѕС‚СЂРёСЃРѕРІРєРё Р±Р»РѕРєР° Рё СѓРґР°Р»СЏРµРј СЌР»РµРјРµРЅС‚С‹
 	IFOR(i, 0, 8)
 	{
 		IFOR(j, 0, 8)
@@ -75,11 +75,11 @@ ushort CMapBlock::GetRadarColor(const int &x, const int &y)
 	ushort color = 0;
 	CRenderWorldObject *obj = Block[x][y];
 
-	//Получаем указатель на первый элемент списка
+	//РџРѕР»СѓС‡Р°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚ СЃРїРёСЃРєР°
 	while (obj != NULL && obj->m_PrevXY != NULL)
 		obj = obj->m_PrevXY;
 
-	//Пройдемся по всему списку и запомним последний встретившийся ИД предмета
+	//РџСЂРѕР№РґРµРјСЃСЏ РїРѕ РІСЃРµРјСѓ СЃРїРёСЃРєСѓ Рё Р·Р°РїРѕРјРЅРёРј РїРѕСЃР»РµРґРЅРёР№ РІСЃС‚СЂРµС‚РёРІС€РёР№СЃСЏ РР” РїСЂРµРґРјРµС‚Р°
 	while (obj != NULL)
 	{
 		switch (obj->RenderType)
@@ -99,21 +99,21 @@ ushort CMapBlock::GetRadarColor(const int &x, const int &y)
 		obj = obj->m_NextXY;
 	}
 
-	//Вернем последнее найденное
+	//Р’РµСЂРЅРµРј РїРѕСЃР»РµРґРЅРµРµ РЅР°Р№РґРµРЅРЅРѕРµ
 	return color;
 }
 //----------------------------------------------------------------------------------
 void CMapBlock::CreateLandTextureRect()
 {
-	//Подкорректируем индекс карты
+	//РџРѕРґРєРѕСЂСЂРµРєС‚РёСЂСѓРµРј РёРЅРґРµРєСЃ РєР°СЂС‚С‹
 	int map = g_MapManager->GetActualMap();
 
-	//И пройдемся по всем позициям ландшафта блока
+	//Р РїСЂРѕР№РґРµРјСЃСЏ РїРѕ РІСЃРµРј РїРѕР·РёС†РёСЏРј Р»Р°РЅРґС€Р°С„С‚Р° Р±Р»РѕРєР°
 	IFOR(x, 0, 8)
 	{
 		IFOR(y, 0, 8)
 		{
-			//Указатель на землю
+			//РЈРєР°Р·Р°С‚РµР»СЊ РЅР° Р·РµРјР»СЋ
 			CLandObject *obj = GetLand(x, y);
 
 			if (obj != NULL)
@@ -122,14 +122,14 @@ void CMapBlock::CreateLandTextureRect()
 				int tileY = obj->Y;
 				char tileZ1 = obj->Z;
 
-				//Если это тайл воды с отсутствующей текстурой или все Z-координаты равны - укажем что это тайл из артов
+				//Р•СЃР»Рё СЌС‚Рѕ С‚Р°Р№Р» РІРѕРґС‹ СЃ РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‰РµР№ С‚РµРєСЃС‚СѓСЂРѕР№ РёР»Рё РІСЃРµ Z-РєРѕРѕСЂРґРёРЅР°С‚С‹ СЂР°РІРЅС‹ - СѓРєР°Р¶РµРј С‡С‚Рѕ СЌС‚Рѕ С‚Р°Р№Р» РёР· Р°СЂС‚РѕРІ
 				if (obj->IsStretched || !TestStretched(tileX, tileY, tileZ1, map, true))
 				{
 					obj->IsStretched = false;
 
 					obj->MinZ = tileZ1;
 				}
-				else //Или же - текстура
+				else //РР»Рё Р¶Рµ - С‚РµРєСЃС‚СѓСЂР°
 				{
 					obj->IsStretched = true;
 
@@ -242,19 +242,19 @@ char CMapBlock::GetLandZ(const int &x, const int &y, const int &map)
 	}
 	else
 	{
-		//Проверки актуальности данных
+		//РџСЂРѕРІРµСЂРєРё Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РґР°РЅРЅС‹С…
 		if (!g_FileManager.m_MapMul[map].Start || !g_FileManager.m_StaticIdx[map].Start || !g_FileManager.m_StaticMul[map].Start)
 			return -125;
 		else if (x < 0 || y < 0 || x >= g_MapSize[map].Width || y >= g_MapSize[map].Height)
 			return -125;
 
-		//Смщение блока
+		//РЎРјС‰РµРЅРёРµ Р±Р»РѕРєР°
 		int blockX = x / 8;
 		int blockY = y / 8;
 
 		int offset = ((blockX * g_MapBlockSize[map].Height) + blockY) * sizeof(MAP_BLOCK);
 
-		//Блок
+		//Р‘Р»РѕРє
 		PMAP_BLOCK mb = (PMAP_BLOCK)((uint)g_FileManager.m_MapMul[map].Start + offset);
 
 		int mX = x % 8;
@@ -268,10 +268,10 @@ CLandObject *CMapBlock::GetLand(const int &x, const int &y)
 {
 	CMapObject *obj = Block[x][y];
 
-	//Пройдемся по MapObject'ам блока
+	//РџСЂРѕР№РґРµРјСЃСЏ РїРѕ MapObject'Р°Рј Р±Р»РѕРєР°
 	while (obj != NULL)
 	{
-		//Если земля - можно прервать поиск
+		//Р•СЃР»Рё Р·РµРјР»СЏ - РјРѕР¶РЅРѕ РїСЂРµСЂРІР°С‚СЊ РїРѕРёСЃРє
 		if (obj->IsLandObject())
 			break;
 
@@ -283,12 +283,12 @@ CLandObject *CMapBlock::GetLand(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 char CMapBlock::GetRenderZ(CRenderWorldObject *item)
 {
-	//Получаем Z-координату для рендера
+	//РџРѕР»СѓС‡Р°РµРј Z-РєРѕРѕСЂРґРёРЅР°С‚Сѓ РґР»СЏ СЂРµРЅРґРµСЂР°
 	char z = item->Z;
 
 	CLandObject *land = item->LandObjectPtr();
 
-	//Исключения для земли, если это тайл текстуры
+	//РСЃРєР»СЋС‡РµРЅРёСЏ РґР»СЏ Р·РµРјР»Рё, РµСЃР»Рё СЌС‚Рѕ С‚Р°Р№Р» С‚РµРєСЃС‚СѓСЂС‹
 	if (land != NULL && land->IsStretched)
 		z = (char)land->Serial;
 
@@ -378,7 +378,7 @@ CRenderWorldObject *CMapBlock::GetRender(const int &x, const int &y)
 {
 	CRenderWorldObject *obj = Block[x][y];
 
-	//Найдем указатель на первый элемент списка рендера
+	//РќР°Р№РґРµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚ СЃРїРёСЃРєР° СЂРµРЅРґРµСЂР°
 	while (obj != NULL && obj->m_PrevXY != NULL)
 		obj = obj->m_PrevXY;
 

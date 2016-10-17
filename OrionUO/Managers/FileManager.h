@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** FileManager.h
 **
@@ -23,7 +23,7 @@ public:
 	CFileManager();
 	virtual ~CFileManager();
 
-	//!Адреса файлов в памяти
+	//!РђРґСЂРµСЃР° С„Р°Р№Р»РѕРІ РІ РїР°РјСЏС‚Рё
 	WISP_FILE::CMappedFile m_AnimIdx[6];
 	WISP_FILE::CMappedFile m_ArtIdx;
 	WISP_FILE::CMappedFile m_GumpIdx;

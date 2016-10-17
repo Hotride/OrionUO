@@ -1,4 +1,4 @@
-/***********************************************************************************
+ï»¿/***********************************************************************************
 **
 ** GumpPaperdoll.cpp
 **
@@ -640,7 +640,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 	if (container == NULL && serial >= ID_GP_ITEMS)
 		return;
 
-	//×òî-òî â ðóêå
+	//Ð§Ñ‚Ð¾-Ñ‚Ð¾ Ð² Ñ€ÑƒÐºÐµ
 	if ((!serial || serial >= ID_GP_ITEMS) && g_ObjectInHand != NULL)
 	{
 		bool canWear = true;
@@ -652,7 +652,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 		{
 			int layer = serial - ID_GP_ITEMS;
 
-			if (layer == OL_BACKPACK) //Òêíóëè íà ïàê
+			if (layer == OL_BACKPACK) //Ð¢ÐºÐ½ÑƒÐ»Ð¸ Ð½Ð° Ð¿Ð°Ðº
 			{
 				CGameItem *equipment = container->FindLayer(layer);
 
@@ -668,11 +668,11 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 					return;
 				}
 			}
-			else if (g_ObjectInHand->IsWearable()) //Ìîæíî îäåâàòü
+			else if (g_ObjectInHand->IsWearable()) //ÐœÐ¾Ð¶Ð½Ð¾ Ð¾Ð´ÐµÐ²Ð°Ñ‚ÑŒ
 			{
 				CGameItem *equipment = container->FindLayer(g_ObjectInHand->UsedLayer);
 
-				if (equipment == NULL) //Íà ýòîì ñëîå íè÷åãî íåò
+				if (equipment == NULL) //ÐÐ° ÑÑ‚Ð¾Ð¼ ÑÐ»Ð¾Ðµ Ð½Ð¸Ñ‡ÐµÐ³Ð¾ Ð½ÐµÑ‚
 				{
 					if (m_Serial != g_PlayerSerial)
 						g_Orion.EquipItem(container->Serial);

@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** Gump.h
 **
@@ -40,13 +40,13 @@ m_Locker(0, 0, 0, 0, 0, 0)
 //----------------------------------------------------------------------------------
 CGump::~CGump()
 {
-	//Если это гамп, блокирующий игровое окно
+	//Р•СЃР»Рё СЌС‚Рѕ РіР°РјРї, Р±Р»РѕРєРёСЂСѓСЋС‰РёР№ РёРіСЂРѕРІРѕРµ РѕРєРЅРѕ
 	if (m_Blocked)
 	{
-		//Уменьшаем счетчик блокирующих гампов
+		//РЈРјРµРЅСЊС€Р°РµРј СЃС‡РµС‚С‡РёРє Р±Р»РѕРєРёСЂСѓСЋС‰РёС… РіР°РјРїРѕРІ
 		g_GrayMenuCount--;
 
-		//Если таких гампов больше нет - восстанавливаем игровой экран
+		//Р•СЃР»Рё С‚Р°РєРёС… РіР°РјРїРѕРІ Р±РѕР»СЊС€Рµ РЅРµС‚ - РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј РёРіСЂРѕРІРѕР№ СЌРєСЂР°РЅ
 		if (g_GrayMenuCount <= 0)
 		{
 			g_GrayMenuCount = 0;
@@ -85,7 +85,7 @@ bool CGump::CanBeMoved()
 }
 //---------------------------------------------------------------------------
 /*!
-Отрисовать замочек гампа
+РћС‚СЂРёСЃРѕРІР°С‚СЊ Р·Р°РјРѕС‡РµРє РіР°РјРїР°
 @return
 */
 void CGump::DrawLocker()
@@ -221,21 +221,11 @@ bool CGump::ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, c
 
 			canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
 		}
-		else if (canDraw && item->Visible)
+		else if (canDraw && item->Visible && item->Type == GOT_CHECKTRANS)
 		{
-			switch (item->Type)
-			{
-				case GOT_CHECKTRANS:
-				{
-					item->Draw(transparent);
+			item->Draw(transparent);
 
-					transparent = true;
-
-					break;
-				}
-				default:
-					break;
-			}
+			transparent = true;
 		}
 	}
 
@@ -246,10 +236,11 @@ bool CGump::ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, c
 //----------------------------------------------------------------------------------
 void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Page)
 {
-	float alpha[2] = { 1.0f, 0.5f };
+	float alpha[2] = { 1.0f, 0.4f };
 	CGUIComboBox *combo = NULL;
 
 	bool transparent = ApplyTransparent(start, 0, currentPage, draw2Page);
+	glColor4f(1.0f, 1.0f, 1.0f, alpha[transparent]);
 
 	int page = 0;
 	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
@@ -309,7 +300,7 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 				}
 				case GOT_CHECKTRANS:
 				{
-					ApplyTransparent((CBaseGUI*)item->m_Next, page/*m_Page*/, currentPage, draw2Page);
+					transparent = ApplyTransparent((CBaseGUI*)item->m_Next, page/*m_Page*/, currentPage, draw2Page);
 						
 					glColor4f(1.0f, 1.0f, 1.0f, alpha[transparent]);
 

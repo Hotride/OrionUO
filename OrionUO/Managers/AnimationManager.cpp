@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** AnimationManager.cpp
 **
@@ -248,8 +248,8 @@ CAnimationManager::~CAnimationManager()
 }
 //----------------------------------------------------------------------------------
 /*!
-Загрузка данных
-@param [__in] verdata Ссылка на адрес в памяти файла патчей (verdata.mul)
+Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С…
+@param [__in] verdata РЎСЃС‹Р»РєР° РЅР° Р°РґСЂРµСЃ РІ РїР°РјСЏС‚Рё С„Р°Р№Р»Р° РїР°С‚С‡РµР№ (verdata.mul)
 @return 
 */
 void CAnimationManager::Load(puint verdata)
@@ -344,8 +344,8 @@ void CAnimationManager::Load(puint verdata)
 }
 //----------------------------------------------------------------------------------
 /*!
-Загрузка файла корректора индексов картинок анимаций
-@param [__in] verdata Ссылка на адрес в памяти файла патчей (verdata.mul)
+Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»Р° РєРѕСЂСЂРµРєС‚РѕСЂР° РёРЅРґРµРєСЃРѕРІ РєР°СЂС‚РёРЅРѕРє Р°РЅРёРјР°С†РёР№
+@param [__in] verdata РЎСЃС‹Р»РєР° РЅР° Р°РґСЂРµСЃ РІ РїР°РјСЏС‚Рё С„Р°Р№Р»Р° РїР°С‚С‡РµР№ (verdata.mul)
 @return 
 */
 void CAnimationManager::InitIndexReplaces(puint verdata)
@@ -568,9 +568,9 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить индекс группы по индексу картинки
-@param [__in] id Индекс картинки
-@return Группа анимаций
+РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ РіСЂСѓРїРїС‹ РїРѕ РёРЅРґРµРєСЃСѓ РєР°СЂС‚РёРЅРєРё
+@param [__in] id РРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё
+@return Р“СЂСѓРїРїР° Р°РЅРёРјР°С†РёР№
 */
 ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 {
@@ -588,10 +588,10 @@ ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить индекс группы смерти анимации
+РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ РіСЂСѓРїРїС‹ СЃРјРµСЂС‚Рё Р°РЅРёРјР°С†РёРё
 @param [__in] id Byltrc rfhnbyrb
-@param [__in] second Группа смерти номер 2
-@return Индекс группы анимации
+@param [__in] second Р“СЂСѓРїРїР° СЃРјРµСЂС‚Рё РЅРѕРјРµСЂ 2
+@return РРЅРґРµРєСЃ РіСЂСѓРїРїС‹ Р°РЅРёРјР°С†РёРё
 */
 uchar CAnimationManager::GetDieGroupIndex(ushort id, const bool &second)
 {
@@ -613,9 +613,9 @@ uchar CAnimationManager::GetDieGroupIndex(ushort id, const bool &second)
 }
 //----------------------------------------------------------------------------------
 /*!
-Коррекция направления и режима зеркального отображения
-@param [__inout] dir Направление
-@param [__inout] mirror Зеркальное отображение
+РљРѕСЂСЂРµРєС†РёСЏ РЅР°РїСЂР°РІР»РµРЅРёСЏ Рё СЂРµР¶РёРјР° Р·РµСЂРєР°Р»СЊРЅРѕРіРѕ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ
+@param [__inout] dir РќР°РїСЂР°РІР»РµРЅРёРµ
+@param [__inout] mirror Р—РµСЂРєР°Р»СЊРЅРѕРµ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ
 @return 
 */
 void CAnimationManager::GetAnimDirection(uchar &dir, bool &mirror)
@@ -664,11 +664,11 @@ void CAnimationManager::GetAnimDirection(uchar &dir, bool &mirror)
 }
 //----------------------------------------------------------------------------------
 /*!
-Коррекция направления и режима зеркального отображения для сидячего персонажа
-@param [__inout] dir Направление
-@param [__inout] mirror Зеркальное отображение
-@param [__inout] x Координата X
-@param [__inout] y Координата Y
+РљРѕСЂСЂРµРєС†РёСЏ РЅР°РїСЂР°РІР»РµРЅРёСЏ Рё СЂРµР¶РёРјР° Р·РµСЂРєР°Р»СЊРЅРѕРіРѕ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґР»СЏ СЃРёРґСЏС‡РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
+@param [__inout] dir РќР°РїСЂР°РІР»РµРЅРёРµ
+@param [__inout] mirror Р—РµСЂРєР°Р»СЊРЅРѕРµ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ
+@param [__inout] x РљРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__inout] y РљРѕРѕСЂРґРёРЅР°С‚Р° Y
 @return 
 */
 void CAnimationManager::GetSittingAnimDirection(uchar &dir, bool &mirror, int &x, int &y)
@@ -709,9 +709,9 @@ void CAnimationManager::GetSittingAnimDirection(uchar &dir, bool &mirror, int &x
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить ссылку на данные анимации
-@param [__in] id Индекс картинки
-@return Ссылка на анимацию
+РџРѕР»СѓС‡РёС‚СЊ СЃСЃС‹Р»РєСѓ РЅР° РґР°РЅРЅС‹Рµ Р°РЅРёРјР°С†РёРё
+@param [__in] id РРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё
+@return РЎСЃС‹Р»РєР° РЅР° Р°РЅРёРјР°С†РёСЋ
 */
 CTextureAnimation *CAnimationManager::GetAnimation(const ushort &graphic)
 {
@@ -732,8 +732,8 @@ CTextureAnimation *CAnimationManager::GetAnimation(const ushort &graphic)
 }
 //----------------------------------------------------------------------------------
 /*!
-Очистка неиспользуемых текстур
-@param [__in] ticks Таймер удаления
+РћС‡РёСЃС‚РєР° РЅРµРёСЃРїРѕР»СЊР·СѓРµРјС‹С… С‚РµРєСЃС‚СѓСЂ
+@param [__in] ticks РўР°Р№РјРµСЂ СѓРґР°Р»РµРЅРёСЏ
 @return 
 */
 void CAnimationManager::ClearUnusedTextures(uint ticks)
@@ -786,10 +786,10 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 }
 //----------------------------------------------------------------------------------
 /*!
-Существует ли анимация в файле
-@param [__in] graphic Индекс картинки
-@param [__in] group Группа анимации
-@return true в случае успеха
+РЎСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё Р°РЅРёРјР°С†РёСЏ РІ С„Р°Р№Р»Рµ
+@param [__in] graphic РРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё
+@param [__in] group Р“СЂСѓРїРїР° Р°РЅРёРјР°С†РёРё
+@return true РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС…Р°
 */
 puchar CAnimationManager::GetAnimationAddress(const ushort &graphic, int &size, const uchar &group, const int &direction)
 {
@@ -826,11 +826,11 @@ puchar CAnimationManager::GetAnimationAddress(const ushort &graphic, int &size, 
 }
 //----------------------------------------------------------------------------------
 /*!
-Загрузка картинок для указанного направления персонажа
-@param [__in] direction Ссылка на направление анимации
-@param [__in] id Индекс картинки
-@param [__in] offset Смещение относительно начала анимаций
-@return true в случае успешной загрузки
+Р—Р°РіСЂСѓР·РєР° РєР°СЂС‚РёРЅРѕРє РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РЅР°РїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶Р°
+@param [__in] direction РЎСЃС‹Р»РєР° РЅР° РЅР°РїСЂР°РІР»РµРЅРёРµ Р°РЅРёРјР°С†РёРё
+@param [__in] id РРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё
+@param [__in] offset РЎРјРµС‰РµРЅРёРµ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РЅР°С‡Р°Р»Р° Р°РЅРёРјР°С†РёР№
+@return true РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС€РЅРѕР№ Р·Р°РіСЂСѓР·РєРё
 */
 bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direction, const ushort &graphic, const int &group, const int &dir)
 {
@@ -1050,11 +1050,11 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &m
 }
 //----------------------------------------------------------------------------------
 /*!
-Получение ссылки на указанный фрэйм
-@param [__in] obj Игровой объект
-@param [__inout] frameIndex Индекс кадра
-@param [__in_opt] id Индекс картинки
-@return Ссылка на кадр анимации
+РџРѕР»СѓС‡РµРЅРёРµ СЃСЃС‹Р»РєРё РЅР° СѓРєР°Р·Р°РЅРЅС‹Р№ С„СЂСЌР№Рј
+@param [__in] obj РРіСЂРѕРІРѕР№ РѕР±СЉРµРєС‚
+@param [__inout] frameIndex РРЅРґРµРєСЃ РєР°РґСЂР°
+@param [__in_opt] id РРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё
+@return РЎСЃС‹Р»РєР° РЅР° РєР°РґСЂ Р°РЅРёРјР°С†РёРё
 */
 CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, uchar frameIndex, ushort graphic)
 {
@@ -1236,7 +1236,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 				{
 					float itemsEndY = (float)(y + frame->Height);
 
-					//Определяем соотношение верхней части текстуры, до перелома.
+					//РћРїСЂРµРґРµР»СЏРµРј СЃРѕРѕС‚РЅРѕС€РµРЅРёРµ РІРµСЂС…РЅРµР№ С‡Р°СЃС‚Рё С‚РµРєСЃС‚СѓСЂС‹, РґРѕ РїРµСЂРµР»РѕРјР°.
 					if (y >= m_StartCharacterWaistY)
 						h3mod = 0;
 					else if (itemsEndY <= m_StartCharacterWaistY)
@@ -1249,7 +1249,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 							h3mod = 0;
 					}
 					
-					//Определяем соотношение средней части, где идет деформация с растягиванием по Х.
+					//РћРїСЂРµРґРµР»СЏРµРј СЃРѕРѕС‚РЅРѕС€РµРЅРёРµ СЃСЂРµРґРЅРµР№ С‡Р°СЃС‚Рё, РіРґРµ РёРґРµС‚ РґРµС„РѕСЂРјР°С†РёСЏ СЃ СЂР°СЃС‚СЏРіРёРІР°РЅРёРµРј РїРѕ РҐ.
 					if (m_StartCharacterWaistY >= itemsEndY || y >= m_StartCharacterKneesY)
 						h6mod = 0;
 					else if (m_StartCharacterWaistY <= y && itemsEndY <= m_StartCharacterKneesY)
@@ -1269,7 +1269,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 							h6mod = 0;
 					}
 						
-					//Определяем соотношение нижней части, она смещена на 8 Х.
+					//РћРїСЂРµРґРµР»СЏРµРј СЃРѕРѕС‚РЅРѕС€РµРЅРёРµ РЅРёР¶РЅРµР№ С‡Р°СЃС‚Рё, РѕРЅР° СЃРјРµС‰РµРЅР° РЅР° 8 РҐ.
 					if (itemsEndY <= m_StartCharacterKneesY)
 						h9mod = 0;
 					else if (y >= m_StartCharacterKneesY)
@@ -1401,11 +1401,11 @@ void CAnimationManager::FixSittingDirection(uchar &layerDirection, bool &mirror,
 }
 //----------------------------------------------------------------------------------
 /*!
-Отрисовать персонажа
-@param [__in] obj Ссылка на персонажа
-@param [__in] x Экранная координата X
-@param [__in] y Экранная координата Y
-@param [__in] z Координата Z
+РћС‚СЂРёСЃРѕРІР°С‚СЊ РїРµСЂСЃРѕРЅР°Р¶Р°
+@param [__in] obj РЎСЃС‹Р»РєР° РЅР° РїРµСЂСЃРѕРЅР°Р¶Р°
+@param [__in] x Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__in] y Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
+@param [__in] z РљРѕРѕСЂРґРёРЅР°С‚Р° Z
 @return 
 */
 void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
@@ -1474,7 +1474,17 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	else if (g_StatusbarUnderMouse == serial)
 		m_Color = g_ConfigManager.GetColorByNotoriety(obj->Notoriety);
 	else
+	{
 		m_Color = 0;
+
+		if (g_ConfigManager.ApplyStateColorOnCharacters)
+		{
+			if (obj->Poisoned())
+				m_Color = 0x0044;
+			else if (obj->Notoriety != NT_INVULNERABLE && obj->YellowHits())
+				m_Color = 0x0030;
+		}
+	}
 
 	bool isAttack = (serial == g_LastAttackObject);
 	bool underMouseTarget = (g_SelectedObject.Object() == obj && g_Target.IsTargeting());
@@ -1577,7 +1587,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 			{
 				if ((ro->Graphic & 0x3FFF) == sittingData.Graphic)
 				{
-					//оффсеты для ножниц
+					//РѕС„С„СЃРµС‚С‹ РґР»СЏ РЅРѕР¶РЅРёС†
 					int xOffset = mirror ? -20 : 0;
 					int yOffset = -70;
 
@@ -1738,12 +1748,12 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 }
 //----------------------------------------------------------------------------------
 /*!
-Проверить наличие пикселя персонажа в указанных координатах
-@param [__in] obj Ссылка на персонажа
-@param [__in] x Экранная координата X
-@param [__in] y Экранная координата Y
-@param [__in] z Координата Z
-@return true в случае, если хоть 1 пиксель находится под мышкой
+РџСЂРѕРІРµСЂРёС‚СЊ РЅР°Р»РёС‡РёРµ РїРёРєСЃРµР»СЏ РїРµСЂСЃРѕРЅР°Р¶Р° РІ СѓРєР°Р·Р°РЅРЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚Р°С…
+@param [__in] obj РЎСЃС‹Р»РєР° РЅР° РїРµСЂСЃРѕРЅР°Р¶Р°
+@param [__in] x Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__in] y Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
+@param [__in] z РљРѕРѕСЂРґРёРЅР°С‚Р° Z
+@return true РІ СЃР»СѓС‡Р°Рµ, РµСЃР»Рё С…РѕС‚СЊ 1 РїРёРєСЃРµР»СЊ РЅР°С…РѕРґРёС‚СЃСЏ РїРѕРґ РјС‹С€РєРѕР№
 */
 bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, int z)
 {
@@ -1795,11 +1805,11 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 }
 //----------------------------------------------------------------------------------
 /*!
-Отрисовать труп
-@param [__in] obj Ссылка на труп
-@param [__in] x Экранная координата X
-@param [__in] y Экранная координата Y
-@param [__in] z Координата Z
+РћС‚СЂРёСЃРѕРІР°С‚СЊ С‚СЂСѓРї
+@param [__in] obj РЎСЃС‹Р»РєР° РЅР° С‚СЂСѓРї
+@param [__in] x Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__in] y Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
+@param [__in] z РљРѕРѕСЂРґРёРЅР°С‚Р° Z
 @return 
 */
 void CAnimationManager::DrawCorpse(CGameItem *obj, const int &x, const int &y)
@@ -1824,11 +1834,11 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, const int &x, const int &y)
 }
 //----------------------------------------------------------------------------------
 /*!
-Проверить наличие пикселя трупа в указанных координатах
-@param [__in] obj Ссылка на труп
-@param [__in] x Экранная координата X
-@param [__in] y Экранная координата Y
-@param [__in] z Координата Z
+РџСЂРѕРІРµСЂРёС‚СЊ РЅР°Р»РёС‡РёРµ РїРёРєСЃРµР»СЏ С‚СЂСѓРїР° РІ СѓРєР°Р·Р°РЅРЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚Р°С…
+@param [__in] obj РЎСЃС‹Р»РєР° РЅР° С‚СЂСѓРї
+@param [__in] x Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__in] y Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
+@param [__in] z РљРѕРѕСЂРґРёРЅР°С‚Р° Z
 @return 
 */
 bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, const int &x, const int &y)
@@ -1846,10 +1856,10 @@ bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, const int &x, const int
 }
 //----------------------------------------------------------------------------------
 /*!
-Существует ли анимация в файле
-@param [__in] graphic Индекс картинки
-@param [__in] group Группа анимации
-@return true в случае успеха
+РЎСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё Р°РЅРёРјР°С†РёСЏ РІ С„Р°Р№Р»Рµ
+@param [__in] graphic РРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё
+@param [__in] group Р“СЂСѓРїРїР° Р°РЅРёРјР°С†РёРё
+@return true РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС…Р°
 */
 bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
 {
@@ -1870,8 +1880,8 @@ bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить индекс картинки трупа
-@param [__inout] graphic Индекс картинки
+РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё С‚СЂСѓРїР°
+@param [__inout] graphic РРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё
 @return 
 */
 void CAnimationManager::GetCorpseGraphic(ushort &graphic)
@@ -1881,8 +1891,8 @@ void CAnimationManager::GetCorpseGraphic(ushort &graphic)
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить индекс анимации
-@param [__inout] graphic Индекс каритнки
+РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ Р°РЅРёРјР°С†РёРё
+@param [__inout] graphic РРЅРґРµРєСЃ РєР°СЂРёС‚РЅРєРё
 @return 
 */
 void CAnimationManager::GetBodyGraphic(ushort &graphic)

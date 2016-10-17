@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpTextEntryDialog.cpp
 **
@@ -95,7 +95,7 @@ void CGumpTextEntryDialog::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpTextEntryDialog::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
-	if (m_Variant == 2) //Только числа
+	if (m_Variant == 2) //РўРѕР»СЊРєРѕ С‡РёСЃР»Р°
 	{
 		if (wParam >= '0' && wParam <= '9')
 		{
@@ -109,7 +109,7 @@ void CGumpTextEntryDialog::OnCharPress(const WPARAM &wParam, const LPARAM &lPara
 				m_WantRedraw = true;
 		}
 	}
-	else if (m_Variant == 1) //Что угодно, но с ограничением по длине
+	else if (m_Variant == 1) //Р§С‚Рѕ СѓРіРѕРґРЅРѕ, РЅРѕ СЃ РѕРіСЂР°РЅРёС‡РµРЅРёРµРј РїРѕ РґР»РёРЅРµ
 	{
 		if (g_EntryPointer->Length() < m_MaxLength)
 		{
@@ -149,13 +149,13 @@ void CGumpTextEntryDialog::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGumpTextEntryDialog::SendTextEntryDialogResponse(bool mode)
 {
-	if (!m_RemoveMark && m_Entry != NULL) //Непредвиденная ошибка при отсутствии поля ввода текста в гампе
+	if (!m_RemoveMark && m_Entry != NULL) //РќРµРїСЂРµРґРІРёРґРµРЅРЅР°СЏ РѕС€РёР±РєР° РїСЂРё РѕС‚СЃСѓС‚СЃС‚РІРёРё РїРѕР»СЏ РІРІРѕРґР° С‚РµРєСЃС‚Р° РІ РіР°РјРїРµ
 	{
-		//Отправляем ответ на ентри диалог
+		//РћС‚РїСЂР°РІР»СЏРµРј РѕС‚РІРµС‚ РЅР° РµРЅС‚СЂРё РґРёР°Р»РѕРі
 		CPacketTextEntryDialogResponse(this, &m_Entry->m_Entry, mode).Send();
 	}
 
-	//Удаляем использованный гамп
+	//РЈРґР°Р»СЏРµРј РёСЃРїРѕР»СЊР·РѕРІР°РЅРЅС‹Р№ РіР°РјРї
 	m_RemoveMark = true;
 }
 //----------------------------------------------------------------------------------

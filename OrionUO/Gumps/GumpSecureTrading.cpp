@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpSecureTrading.cpp
 **
@@ -103,7 +103,7 @@ void CGumpSecureTrading::UpdateContent()
 	CGameObject *selobj = g_World->FindWorldObject(m_Serial);
 
 	if (selobj == NULL)
-		return; //Объект, к которому привязан гамп - исчез
+		return; //РћР±СЉРµРєС‚, Рє РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёРІСЏР·Р°РЅ РіР°РјРї - РёСЃС‡РµР·
 
 	if (m_Items == NULL)
 	{
@@ -150,7 +150,7 @@ void CGumpSecureTrading::UpdateContent()
 	if (g_ObjectInHand != NULL)
 		ignoreSerial = g_ObjectInHand->Serial;
 
-	//Отрисовка нашего товара (при наличии товара)
+	//РћС‚СЂРёСЃРѕРІРєР° РЅР°С€РµРіРѕ С‚РѕРІР°СЂР° (РїСЂРё РЅР°Р»РёС‡РёРё С‚РѕРІР°СЂР°)
 	CGameObject *container = g_World->FindWorldObject(m_ID);
 
 	if (container != NULL && container->m_Items != NULL)
@@ -168,7 +168,7 @@ void CGumpSecureTrading::UpdateContent()
 		}
 	}
 
-	//Отрисовка нашего опонента (при наличии товара)
+	//РћС‚СЂРёСЃРѕРІРєР° РЅР°С€РµРіРѕ РѕРїРѕРЅРµРЅС‚Р° (РїСЂРё РЅР°Р»РёС‡РёРё С‚РѕРІР°СЂР°)
 	container = g_World->FindWorldObject(m_ID2);
 	if (container != NULL && container->m_Items != NULL)
 	{
@@ -188,7 +188,7 @@ void CGumpSecureTrading::Draw()
 	CGameObject *selobj = g_World->FindWorldObject(m_Serial);
 
 	if (selobj == NULL)
-		return; //Объект, к которому привязан гамп - исчез
+		return; //РћР±СЉРµРєС‚, Рє РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёРІСЏР·Р°РЅ РіР°РјРї - РёСЃС‡РµР·
 	
 	if (g_GumpPressed)
 		m_FrameCreated = false;
@@ -207,7 +207,7 @@ CRenderObject *CGumpSecureTrading::Select()
 	CGameObject *selobj = g_World->FindWorldObject(m_Serial);
 
 	if (selobj == NULL)
-		return NULL; //Объект, к которому привязан гамп - исчез
+		return NULL; //РћР±СЉРµРєС‚, Рє РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёРІСЏР·Р°РЅ РіР°РјРї - РёСЃС‡РµР·
 
 	CRenderObject *selected = CGump::Select();
 
@@ -223,7 +223,7 @@ CRenderObject *CGumpSecureTrading::Select()
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::GUMP_BUTTON_EVENT_C
 {
-	if (serial == ID_GST_CHECKBOX) //Изменение состояния чекбокса
+	if (serial == ID_GST_CHECKBOX) //РР·РјРµРЅРµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёСЏ С‡РµРєР±РѕРєСЃР°
 	{
 		m_StateMy = !m_StateMy;
 
@@ -295,10 +295,10 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::SendTradingResponse(int code)
 {
-	//Ответ на трэйд окно
+	//РћС‚РІРµС‚ РЅР° С‚СЂСЌР№Рґ РѕРєРЅРѕ
 	CPacketTradeResponse(this, code).Send();
 
-	if (code == 1) //Закрываем окно
+	if (code == 1) //Р—Р°РєСЂС‹РІР°РµРј РѕРєРЅРѕ
 		m_RemoveMark = true;
 }
 //----------------------------------------------------------------------------------

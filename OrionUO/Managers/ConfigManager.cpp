@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** ConfigManager.cpp
 **
@@ -20,6 +20,7 @@
 #include "../Game objects/GameWorld.h"
 #include "../Network/Packets.h"
 #include "../Gumps/GumpSpell.h"
+#include "../Party.h"
 //----------------------------------------------------------------------------------
 CConfigManager g_ConfigManager;
 CConfigManager g_OptionsConfig;
@@ -30,7 +31,7 @@ CConfigManager::CConfigManager()
 }
 //----------------------------------------------------------------------------------
 /*!
-Инициализация
+РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 @return 
 */
 void CConfigManager::Init()
@@ -95,6 +96,8 @@ void CConfigManager::DefaultPage2()
 	m_UseHiddenModeOnlyForSelf = true;
 	m_TransparentSpellIcons = true;
 	m_SpellIconAlpha = 0x7F;
+	m_OldStyleStatusbar = false;
+	m_ApplyStateColorOnCharacters = false;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -301,10 +304,43 @@ void CConfigManager::OnChangedSpellIconAlpha(const uchar &val)
 	}
 }
 //---------------------------------------------------------------------------
+void CConfigManager::OnChangeOldStyleStatusbar(const bool &val)
+{
+	if (this == &g_ConfigManager)
+	{
+		m_OldStyleStatusbar = val;
+
+		CGump *gump = g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_STATUSBAR);
+
+		if (gump != NULL && !gump->Minimized)
+			gump->UpdateContent();
+	}
+}
+//---------------------------------------------------------------------------
+void CConfigManager::OnChangeOriginalPartyStatusbar(const bool &val)
+{
+	if (this == &g_ConfigManager)
+	{
+		m_OriginalPartyStatusbar = val;
+
+		if (g_Party.Leader != 0)
+		{
+			QFOR(gump, g_GumpManager.m_Items, CGump*)
+			{
+				if (gump->GumpType == GT_STATUSBAR && (g_Party.Leader == gump->Serial || g_Party.Contains(gump->Serial)))
+				{
+					gump->WantRedraw = true;
+					gump->UpdateContent();
+				}
+			}
+		}
+	}
+}
+//---------------------------------------------------------------------------
 /*!
-Получить цвет исходя из "злобности"
-@param [__in] notoriety Злобность
-@return Индекс цвета
+РџРѕР»СѓС‡РёС‚СЊ С†РІРµС‚ РёСЃС…РѕРґСЏ РёР· "Р·Р»РѕР±РЅРѕСЃС‚Рё"
+@param [__in] notoriety Р—Р»РѕР±РЅРѕСЃС‚СЊ
+@return РРЅРґРµРєСЃ С†РІРµС‚Р°
 */
 ushort CConfigManager::GetColorByNotoriety(uchar notoriety)
 {
@@ -354,8 +390,8 @@ ushort CConfigManager::GetColorByNotoriety(uchar notoriety)
 }
 //---------------------------------------------------------------------------
 /*!
-Загрузка конфига
-@param [__in] path Путь к файлу с конфигом
+Р—Р°РіСЂСѓР·РєР° РєРѕРЅС„РёРіР°
+@param [__in] path РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ СЃ РєРѕРЅС„РёРіРѕРј
 @return 
 */
 bool CConfigManager::Load(string path)
@@ -433,6 +469,13 @@ bool CConfigManager::Load(string path)
 								{
 									m_TransparentSpellIcons = file.ReadUInt8();
 									m_SpellIconAlpha = file.ReadUInt8();
+
+									if (blockSize > 15)
+									{
+										m_OldStyleStatusbar = file.ReadUInt8();
+										m_OriginalPartyStatusbar = file.ReadUInt8();
+										m_ApplyStateColorOnCharacters = file.ReadUInt8();
+									}
 								}
 							}
 						}
@@ -730,8 +773,8 @@ bool CConfigManager::Load(string path)
 }
 //---------------------------------------------------------------------------
 /*!
-Сохранение конфига
-@param [__in] path Путь к файлу с конфигом
+РЎРѕС…СЂР°РЅРµРЅРёРµ РєРѕРЅС„РёРіР°
+@param [__in] path РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ СЃ РєРѕРЅС„РёРіРѕРј
 @return 
 */
 void CConfigManager::Save(string path)
@@ -753,7 +796,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(15); //size of block
+	writter.WriteInt8(18); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -768,6 +811,9 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_UseHiddenModeOnlyForSelf);
 	writter.WriteUInt8(m_TransparentSpellIcons);
 	writter.WriteUInt8(m_SpellIconAlpha);
+	writter.WriteUInt8(m_OldStyleStatusbar);
+	writter.WriteUInt8(m_OriginalPartyStatusbar);
+	writter.WriteUInt8(m_ApplyStateColorOnCharacters);
 	writter.WriteBuffer();
 
 	//Page 3

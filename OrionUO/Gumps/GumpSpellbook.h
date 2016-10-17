@@ -1,4 +1,4 @@
-/***********************************************************************************
+﻿/***********************************************************************************
 **
 ** GumpSpellbook.h
 **
@@ -28,12 +28,27 @@ private:
 	static const int ID_GSB_SPELL_ICON_LEFT = 100;
 	static const int ID_GSB_SPELL_ICON_RIGHT = 1000;
 
-	static ushort m_ReagentsIndex[8];
+	static const int MAX_SPELLS_COUNT = 64;
 
-	int GetReagentIndex(const ushort &id);
+	static const int SPELLBOOK_1_SPELLS_COUNT = 64;
+	static const int SPELLBOOK_2_SPELLS_COUNT = 17;
+	static const int SPELLBOOK_3_SPELLS_COUNT = 10;
+	static const int SPELLBOOK_4_SPELLS_COUNT = 6;
+	static const int SPELLBOOK_5_SPELLS_COUNT = 8;
+	static const int SPELLBOOK_6_SPELLS_COUNT = 16;
+	static const int SPELLBOOK_7_SPELLS_COUNT = 61;
+
+	static const string m_SpellName1[SPELLBOOK_1_SPELLS_COUNT];
+	static const string m_SpellReagents1[SPELLBOOK_1_SPELLS_COUNT];
+	static const string m_SpellName2[SPELLBOOK_2_SPELLS_COUNT];
+	static const string m_SpellName3[SPELLBOOK_3_SPELLS_COUNT];
+	static const string m_SpellName4[SPELLBOOK_4_SPELLS_COUNT];
+	static const string m_SpellName5[SPELLBOOK_5_SPELLS_COUNT];
+	static const string m_SpellName6[SPELLBOOK_6_SPELLS_COUNT];
+	static const string m_SpellName7[SPELLBOOK_7_SPELLS_COUNT];
 
 	int m_SpellCount;
-	uchar m_Spells[64];
+	uchar m_Spells[MAX_SPELLS_COUNT];
 	int m_PageCount;
 
 	CGUIGumppic *m_Body;
@@ -44,13 +59,17 @@ private:
 	CGUIGumppic *m_LastSpellPointer;
 	CGUIGumppic *m_LastSpellBookmark;
 
-	virtual void UpdateContentMage();
-	virtual void UpdateContentNecro();
-	virtual void UpdateContentPaladin();
-	virtual void UpdateContentBushido();
-	virtual void UpdateContentNinjitsu();
-	virtual void UpdateContentSpellWeaving();
-	virtual void UpdateContentMysticism();
+	void UpdateContentMage(const int &maxSpellsCount, const int &dictionaryPagesCount);
+	void UpdateContentNecro(const int &maxSpellsCount, const int &dictionaryPagesCount);
+	void UpdateContentPaladin(const int &maxSpellsCount, const int &dictionaryPagesCount);
+	void UpdateContentBushido(const int &maxSpellsCount, const int &dictionaryPagesCount);
+	void UpdateContentNinjitsu(const int &maxSpellsCount, const int &dictionaryPagesCount);
+	void UpdateContentSpellWeaving(const int &maxSpellsCount, const int &dictionaryPagesCount);
+	void UpdateContentMysticism(const int &maxSpellsCount, const int &dictionaryPagesCount);
+
+	void GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPagesCount, int &spellsOnPage, ushort &graphic, ushort &minimizedGraphic);
+
+	string GetSpellName(const int &offset);
 
 public:
 	CGumpSpellbook(uint serial, int x, int y);

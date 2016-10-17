@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** RenderWorldObject.h
 **
@@ -13,7 +13,7 @@
 #include "RenderObject.h"
 #include "TextEngine/TextData.h"
 //----------------------------------------------------------------------------------
-//Класс для работы с объектами рендера
+//РљР»Р°СЃСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕР±СЉРµРєС‚Р°РјРё СЂРµРЅРґРµСЂР°
 class CRenderWorldObject : public CRenderObject
 {
 	SETGETEX(char, Z);
@@ -27,45 +27,45 @@ public:
 	CRenderWorldObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const char &z);
 	virtual ~CRenderWorldObject();
 
-	//TTextContainer *m_TextControl; //Ссылка на контейнер для текста
+	//TTextContainer *m_TextControl; //РЎСЃС‹Р»РєР° РЅР° РєРѕРЅС‚РµР№РЅРµСЂ РґР»СЏ С‚РµРєСЃС‚Р°
 
-	//Добавить текст в контейнер
+	//Р”РѕР±Р°РІРёС‚СЊ С‚РµРєСЃС‚ РІ РєРѕРЅС‚РµР№РЅРµСЂ
 	virtual void AddText(CTextData *td) {}
 
-	//Получить смещение текста по оси X
+	//РџРѕР»СѓС‡РёС‚СЊ СЃРјРµС‰РµРЅРёРµ С‚РµРєСЃС‚Р° РїРѕ РѕСЃРё X
 	virtual int GetTextOffsetX(CTextData *text) { return 0; }
 
-	//Получить смещение текста по оси Y
+	//РџРѕР»СѓС‡РёС‚СЊ СЃРјРµС‰РµРЅРёРµ С‚РµРєСЃС‚Р° РїРѕ РѕСЃРё Y
 	virtual int GetTextOffsetY(CTextData *text) { return 0; }
 
-	//Проверить, может ли текст быть прозрачным
+	//РџСЂРѕРІРµСЂРёС‚СЊ, РјРѕР¶РµС‚ Р»Рё С‚РµРєСЃС‚ Р±С‹С‚СЊ РїСЂРѕР·СЂР°С‡РЅС‹Рј
 	virtual bool TextCanBeTransparent(CRenderTextObject *text) { return false; }
 
-	//Проверка прозрачности (для круга прозрачности)
+	//РџСЂРѕРІРµСЂРєР° РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚Рё (РґР»СЏ РєСЂСѓРіР° РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚Рё)
 	virtual bool TranparentTest(int &playerZ) { return false; }
 
-	//Ссылки на предыдущий и следующий элементы в очереди рендера
+	//РЎСЃС‹Р»РєРё РЅР° РїСЂРµРґС‹РґСѓС‰РёР№ Рё СЃР»РµРґСѓСЋС‰РёР№ СЌР»РµРјРµРЅС‚С‹ РІ РѕС‡РµСЂРµРґРё СЂРµРЅРґРµСЂР°
 	CRenderWorldObject *m_NextXY;
 	CRenderWorldObject *m_PrevXY;
 
-	//Получить указатель на объект ландшафта в данных координатах
+	//РџРѕР»СѓС‡РёС‚СЊ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РѕР±СЉРµРєС‚ Р»Р°РЅРґС€Р°С„С‚Р° РІ РґР°РЅРЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚Р°С…
 	class CLandObject *GetLand();
 
-	//Получить индекс света объекта
+	//РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ СЃРІРµС‚Р° РѕР±СЉРµРєС‚Р°
 	virtual uchar GetLightID() { return 0; }
 
-	//Отрисовать объект
+	//РћС‚СЂРёСЃРѕРІР°С‚СЊ РѕР±СЉРµРєС‚
 	virtual void Draw(const int &x, const int &y) { }
 
-	//Выбрать объект
+	//Р’С‹Р±СЂР°С‚СЊ РѕР±СЉРµРєС‚
 	virtual void Select(const int &x, const int &y) { }
 
 	virtual void UpdateGraphicBySeason() {}
 
-	//Удалить объект из очереди рендера
+	//РЈРґР°Р»РёС‚СЊ РѕР±СЉРµРєС‚ РёР· РѕС‡РµСЂРµРґРё СЂРµРЅРґРµСЂР°
 	void RemoveRender();
 
-	//Стандартные состояния по флагам из тайлдаты (вердаты)
+	//РЎС‚Р°РЅРґР°СЂС‚РЅС‹Рµ СЃРѕСЃС‚РѕСЏРЅРёСЏ РїРѕ С„Р»Р°РіР°Рј РёР· С‚Р°Р№Р»РґР°С‚С‹ (РІРµСЂРґР°С‚С‹)
 	virtual bool IsBackground() { return false; }
 	virtual bool IsWeapon() { return false; }
 	virtual bool IsTransparent() { return false; }
@@ -101,10 +101,10 @@ public:
 
 	virtual bool IsWorldObject() { return true; }
 
-	//Если это объект группы статики
+	//Р•СЃР»Рё СЌС‚Рѕ РѕР±СЉРµРєС‚ РіСЂСѓРїРїС‹ СЃС‚Р°С‚РёРєРё
 	virtual bool IsStaticGroupObject() { return false; }
 
-	//Идентификация объектов
+	//РРґРµРЅС‚РёС„РёРєР°С†РёСЏ РѕР±СЉРµРєС‚РѕРІ
 	virtual bool IsLandObject() { return false; }
 	virtual bool IsStaticObject() { return false; }
 	virtual bool IsMultiObject() { return false; }

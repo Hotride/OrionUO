@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** CharacterListScreen.h
 **
@@ -22,7 +22,7 @@ public:
 	CCharacterListScreen();
 	virtual ~CCharacterListScreen();
 
-	//!Идентификаторы событий для плавного перехода
+	//!РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ СЃРѕР±С‹С‚РёР№ РґР»СЏ РїР»Р°РІРЅРѕРіРѕ РїРµСЂРµС…РѕРґР°
 	static const uchar ID_SMOOTH_CLS_QUIT = 1;
 	static const uchar ID_SMOOTH_CLS_CONNECT = 2;
 	static const uchar ID_SMOOTH_CLS_SELECT_CHARACTER = 3;
@@ -30,14 +30,14 @@ public:
 	static const uchar ID_SMOOTH_CLS_GO_SCREEN_DELETE = 5;
 
 	/*!
-	Инициализация
+	РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 	@return 
 	*/
 	void Init();
 
 	/*!
-	Обработка события после перехода
-	@param [__in_opt] action Идентификатор действия
+	РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёСЏ РїРѕСЃР»Рµ РїРµСЂРµС…РѕРґР°
+	@param [__in_opt] action РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРµР№СЃС‚РІРёСЏ
 	@return 
 	*/
 	void ProcessSmoothAction(uchar action = 0xFF);

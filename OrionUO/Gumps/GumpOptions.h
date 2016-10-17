@@ -1,4 +1,4 @@
-/***********************************************************************************
+﻿/***********************************************************************************
 **
 ** GumpOptions.h
 **
@@ -79,6 +79,9 @@ private:
 	static const int ID_GO_P2_USE_HIDDEN_MODE_ONLY_FOR_SELF = 220;
 	static const int ID_GO_P2_TRANSPARENT_SPELL_ICONS = 221;
 	static const int ID_GO_P2_SPELL_ICONS_ALPHA = 222;
+	static const int ID_GO_P2_OLD_STYLE_STATUSBAR = 223;
+	static const int ID_GO_P2_ORIGINAL_PARTY_STATUSBAR = 224;
+	static const int ID_GO_P2_APPLY_STATE_COLOR_ON_CHARACTERS = 225;
 	static const int ID_GO_P2_DEV_MODE_1 = 290;
 	static const int ID_GO_P2_DEV_MODE_2 = 291;
 	static const int ID_GO_P2_DEV_MODE_3 = 292;

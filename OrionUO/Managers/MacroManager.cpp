@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** MacroManager.cpp
 **
@@ -50,9 +50,9 @@ CMacroManager::~CMacroManager()
 }
 //----------------------------------------------------------------------------------
 /*!
-Конвертирование строки в виртуальный код клавиши
-@param [__in] strings Исходные строки, при склейке получим входную строку
-@return Ключ
+РљРѕРЅРІРµСЂС‚РёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё РІ РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РєРѕРґ РєР»Р°РІРёС€Рё
+@param [__in] strings РСЃС…РѕРґРЅС‹Рµ СЃС‚СЂРѕРєРё, РїСЂРё СЃРєР»РµР№РєРµ РїРѕР»СѓС‡РёРј РІС…РѕРґРЅСѓСЋ СЃС‚СЂРѕРєСѓ
+@return РљР»СЋС‡
 */
 ushort CMacroManager::ConvertStringToKeyCode(const STRING_LIST &strings)
 {
@@ -149,15 +149,15 @@ ushort CMacroManager::ConvertStringToKeyCode(const STRING_LIST &strings)
 }
 //----------------------------------------------------------------------------------
 /*!
-Сконвертировать файл макросов оригинального клиента
-@param [__in] path Путь к файлу с макросами
-@return true при успешном конвертировании
+РЎРєРѕРЅРІРµСЂС‚РёСЂРѕРІР°С‚СЊ С„Р°Р№Р» РјР°РєСЂРѕСЃРѕРІ РѕСЂРёРіРёРЅР°Р»СЊРЅРѕРіРѕ РєР»РёРµРЅС‚Р°
+@param [__in] path РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ СЃ РјР°РєСЂРѕСЃР°РјРё
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕРј РєРѕРЅРІРµСЂС‚РёСЂРѕРІР°РЅРёРё
 */
 bool CMacroManager::Convert(const string &path)
 {
 	WISP_FILE::CTextFileParser file(path, " ", "", "");
 
-	//Позиции доп. кнопок в списке, индыксация с конца, т.е. strings.size() - position
+	//РџРѕР·РёС†РёРё РґРѕРї. РєРЅРѕРїРѕРє РІ СЃРїРёСЃРєРµ, РёРЅРґС‹РєСЃР°С†РёСЏ СЃ РєРѕРЅС†Р°, С‚.Рµ. strings.size() - position
 	const int MACRO_POSITION_ALT = 2;
 	const int MACRO_POSITION_CTRL = 3;
 	const int MACRO_POSITION_SHIFT = 1;
@@ -188,7 +188,7 @@ bool CMacroManager::Convert(const string &path)
 			if (!data.size())
 				continue;
 
-			//Конец секции макросов
+			//РљРѕРЅРµС† СЃРµРєС†РёРё РјР°РєСЂРѕСЃРѕРІ
 			if (*data[0].c_str() == '#')
 			{
 				macroAdded = true;
@@ -217,14 +217,14 @@ bool CMacroManager::Convert(const string &path)
 			{
 				CMacroObject *obj = CMacro::CreateMacro(code);
 
-				if (obj->HaveString()) //Аргументы - строка
+				if (obj->HaveString()) //РђСЂРіСѓРјРµРЅС‚С‹ - СЃС‚СЂРѕРєР°
 				{
 					string args = file.RawLine.c_str() + data[0].length() + 1;
 					//TPRINT("\tSub action string is: %s\n", args.c_str());
 
 					((CMacroObjectString*)obj)->String = args;
 				}
-				else if (data.size() > 1) //Аргументы - код (значение), либо просто код макроса
+				else if (data.size() > 1) //РђСЂРіСѓРјРµРЅС‚С‹ - РєРѕРґ (Р·РЅР°С‡РµРЅРёРµ), Р»РёР±Рѕ РїСЂРѕСЃС‚Рѕ РєРѕРґ РјР°РєСЂРѕСЃР°
 				{
 					upData = data[1];
 
@@ -258,8 +258,8 @@ bool CMacroManager::Convert(const string &path)
 }
 //----------------------------------------------------------------------------------
 /*!
-Загрузить макросы из конфига
-@param [__in] path Путь к файлу конфига
+Р—Р°РіСЂСѓР·РёС‚СЊ РјР°РєСЂРѕСЃС‹ РёР· РєРѕРЅС„РёРіР°
+@param [__in] path РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ РєРѕРЅС„РёРіР°
 @return 
 */
 bool CMacroManager::Load(const string &path, const string &originalPath)
@@ -289,8 +289,8 @@ bool CMacroManager::Load(const string &path, const string &originalPath)
 }
 //----------------------------------------------------------------------------------
 /*!
-Сохранить макросы в конфиг
-@param [__in] path Путь к файлу конфига
+РЎРѕС…СЂР°РЅРёС‚СЊ РјР°РєСЂРѕСЃС‹ РІ РєРѕРЅС„РёРі
+@param [__in] path РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ РєРѕРЅС„РёРіР°
 @return 
 */
 void CMacroManager::Save(const string &path)
@@ -315,12 +315,12 @@ void CMacroManager::Save(const string &path)
 }
 //----------------------------------------------------------------------------------
 /*!
-Поиск макроса
-@param [__in] key Индекс кнопки
-@param [__in] alt Зажатый альт
-@param [__in] ctrl Зажатый контрол
-@param [__in] shift Зажатый шифт
-@return Ссылку на макрос или NULL
+РџРѕРёСЃРє РјР°РєСЂРѕСЃР°
+@param [__in] key РРЅРґРµРєСЃ РєРЅРѕРїРєРё
+@param [__in] alt Р—Р°Р¶Р°С‚С‹Р№ Р°Р»СЊС‚
+@param [__in] ctrl Р—Р°Р¶Р°С‚С‹Р№ РєРѕРЅС‚СЂРѕР»
+@param [__in] shift Р—Р°Р¶Р°С‚С‹Р№ С€РёС„С‚
+@return РЎСЃС‹Р»РєСѓ РЅР° РјР°РєСЂРѕСЃ РёР»Рё NULL
 */
 CMacro *CMacroManager::FindMacro(const ushort &key, const bool &alt, const bool &ctrl, const bool &shift)
 {
@@ -338,7 +338,7 @@ CMacro *CMacroManager::FindMacro(const ushort &key, const bool &alt, const bool 
 }
 //----------------------------------------------------------------------------------
 /*!
-Загрузить макросы из опций
+Р—Р°РіСЂСѓР·РёС‚СЊ РјР°РєСЂРѕСЃС‹ РёР· РѕРїС†РёР№
 @return 
 */
 void CMacroManager::LoadFromOptions()
@@ -351,7 +351,7 @@ void CMacroManager::LoadFromOptions()
 }
 //----------------------------------------------------------------------------------
 /*!
-Начать выполнение макроса
+РќР°С‡Р°С‚СЊ РІС‹РїРѕР»РЅРµРЅРёРµ РјР°РєСЂРѕСЃР°
 @return 
 */
 void CMacroManager::Execute()
@@ -379,7 +379,7 @@ void CMacroManager::Execute()
 }
 //----------------------------------------------------------------------------------
 /*!
-Выполнить команды подменю
+Р’С‹РїРѕР»РЅРёС‚СЊ РєРѕРјР°РЅРґС‹ РїРѕРґРјРµРЅСЋ
 @return 
 */
 void CMacroManager::ProcessSubMenu()
@@ -714,8 +714,8 @@ void CMacroManager::ProcessSubMenu()
 }
 //---------------------------------------------------------------------------
 /*!
-Выполнить действие макроса (или набор действий)
-@return Код выполнения
+Р’С‹РїРѕР»РЅРёС‚СЊ РґРµР№СЃС‚РІРёРµ РјР°РєСЂРѕСЃР° (РёР»Рё РЅР°Р±РѕСЂ РґРµР№СЃС‚РІРёР№)
+@return РљРѕРґ РІС‹РїРѕР»РЅРµРЅРёСЏ
 */
 MACRO_RETURN_CODE CMacroManager::Process()
 {

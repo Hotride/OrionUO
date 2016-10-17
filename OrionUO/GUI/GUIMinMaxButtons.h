@@ -1,8 +1,8 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GUIMinMaxButtons.h
 **
-** Компонента для отображения блока кнопок MinMax
+** РљРѕРјРїРѕРЅРµРЅС‚Р° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ Р±Р»РѕРєР° РєРЅРѕРїРѕРє MinMax
 **
 ** Copyright (C) September 2016 Hotride
 **
@@ -17,62 +17,62 @@
 //----------------------------------------------------------------------------------
 class CGUIMinMaxButtons : public CBaseGUI
 {
-	//!Минимальное значение
+	//!РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
 	SETGET(int, MinValue);
 
-	//!Максимальное значение
+	//!РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
 	SETGET(int, MaxValue);
 
-	//!Текущее значение
+	//!РўРµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ
 	SETGET(int, Value);
 
-	//!Имеет текст
+	//!РРјРµРµС‚ С‚РµРєСЃС‚
 	SETGET(bool, HaveText);
 
-	//!Позиция текста
+	//!РџРѕР·РёС†РёСЏ С‚РµРєСЃС‚Р°
 	SETGET(SLIDER_TEXT_POSITION, TextPosition);
 
-	//!Шрифт текста
+	//!РЁСЂРёС„С‚ С‚РµРєСЃС‚Р°
 	SETGET(uchar, Font);
 
-	//!Цвет текста
+	//!Р¦РІРµС‚ С‚РµРєСЃС‚Р°
 	SETGET(ushort, TextColor);
 
-	//!Юникод текст
+	//!Р®РЅРёРєРѕРґ С‚РµРєСЃС‚
 	SETGET(bool, Unicode);
 
-	//!Ширина текста
+	//!РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р°
 	SETGET(int, TextWidth);
 
-	//!Ориентация текста
+	//!РћСЂРёРµРЅС‚Р°С†РёСЏ С‚РµРєСЃС‚Р°
 	SETGET(TEXT_ALIGN_TYPE, Align);
 
-	//!Флаги текста
+	//!Р¤Р»Р°РіРё С‚РµРєСЃС‚Р°
 	SETGET(ushort, TextFlags);
 
-	//!Координата текста по оси X
+	//!РљРѕРѕСЂРґРёРЅР°С‚Р° С‚РµРєСЃС‚Р° РїРѕ РѕСЃРё X
 	SETGET(int, TextX);
 
-	//!Координата текста по оси Y
+	//!РљРѕРѕСЂРґРёРЅР°С‚Р° С‚РµРєСЃС‚Р° РїРѕ РѕСЃРё Y
 	SETGET(int, TextY);
 
-	//!Базовый шаг смещения
+	//!Р‘Р°Р·РѕРІС‹Р№ С€Р°Рі СЃРјРµС‰РµРЅРёСЏ
 	SETGET(int, BaseScrollStep);
 
-	//!Текущий шаг смещения
+	//!РўРµРєСѓС‰РёР№ С€Р°Рі СЃРјРµС‰РµРЅРёСЏ
 	SETGET(int, ScrollStep);
 
-	//!Время последней итерации прокрутки
+	//!Р’СЂРµРјСЏ РїРѕСЃР»РµРґРЅРµР№ РёС‚РµСЂР°С†РёРё РїСЂРѕРєСЂСѓС‚РєРё
 	SETGET(uint, LastScrollTime);
 
-	//!Стандартное смещение текста
+	//!РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ СЃРјРµС‰РµРЅРёРµ С‚РµРєСЃС‚Р°
 	SETGET(int, DefaultTextOffset);
 
 private:
-	//!Текстура текста
+	//!РўРµРєСЃС‚СѓСЂР° С‚РµРєСЃС‚Р°
 	CGLTextTexture m_Text;
 
-	//!Метод прокрутки (NoScroll/Max/Min)
+	//!РњРµС‚РѕРґ РїСЂРѕРєСЂСѓС‚РєРё (NoScroll/Max/Min)
 	int m_ScrollMode;
 
 public:
@@ -83,16 +83,16 @@ public:
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(36, 18); }
 
-	//Прокрутка
+	//РџСЂРѕРєСЂСѓС‚РєР°
 	virtual void Scroll(const uint &delay);
 
-	//Нажатие
+	//РќР°Р¶Р°С‚РёРµ
 	virtual void OnClick();
 
-	//!Обновить текст
+	//!РћР±РЅРѕРІРёС‚СЊ С‚РµРєСЃС‚
 	void UpdateText();
 
-	//!Установить параметры текста
+	//!РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїР°СЂР°РјРµС‚СЂС‹ С‚РµРєСЃС‚Р°
 	void SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSITION &textPosition, const uchar &font, const ushort &color, const bool &unicode, const int &textWidth = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &textFlags = 0);
 
 	virtual void PrepareTextures();

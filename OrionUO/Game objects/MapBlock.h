@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** MapBlock.h
 **
@@ -15,7 +15,7 @@
 #include "../RenderWorldObject.h"
 #include "../Game objects/LandObject.h"
 //----------------------------------------------------------------------------------
-//Класс для работы с блоками карты 8х8
+//РљР»Р°СЃСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ Р±Р»РѕРєР°РјРё РєР°СЂС‚С‹ 8С…8
 class CMapBlock : public CBaseQueueItem
 {
 	SETGET(uint, Index);
@@ -24,38 +24,38 @@ class CMapBlock : public CBaseQueueItem
 	SETGET(short, Y);
 
 private:
-	//Получить Z координату ландшафта
+	//РџРѕР»СѓС‡РёС‚СЊ Z РєРѕРѕСЂРґРёРЅР°С‚Сѓ Р»Р°РЅРґС€Р°С„С‚Р°
 	char GetLandZ(const int &x, const int &y, const int &map);
 
-	//Получить Z координату объекта рендера
+	//РџРѕР»СѓС‡РёС‚СЊ Z РєРѕРѕСЂРґРёРЅР°С‚Сѓ РѕР±СЉРµРєС‚Р° СЂРµРЅРґРµСЂР°
 	char GetRenderZ(CRenderWorldObject *item);
 
-	//Проверить объект ландшафта на "растягиваемость" при рендере
+	//РџСЂРѕРІРµСЂРёС‚СЊ РѕР±СЉРµРєС‚ Р»Р°РЅРґС€Р°С„С‚Р° РЅР° "СЂР°СЃС‚СЏРіРёРІР°РµРјРѕСЃС‚СЊ" РїСЂРё СЂРµРЅРґРµСЂРµ
 	bool TestStretched(const int &x, const int &y, const char &z, const int &map, const bool &recurse);
 
 public:
 	CMapBlock(const uint &index);
 	virtual ~CMapBlock();
 
-	//Данные блока
+	//Р”Р°РЅРЅС‹Рµ Р±Р»РѕРєР°
 	CMapObject *Block[8][8];
 
-	//Добавить объект
+	//Р”РѕР±Р°РІРёС‚СЊ РѕР±СЉРµРєС‚
 	CMapObject *AddObject(CMapObject *obj, const int &x, const int &y);
 
-	//Получить указатель на объект ландшафта
+	//РџРѕР»СѓС‡РёС‚СЊ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РѕР±СЉРµРєС‚ Р»Р°РЅРґС€Р°С„С‚Р°
 	CLandObject *GetLand(const int &x, const int &y);
 
-	//Добавить объект в очередь рендера
+	//Р”РѕР±Р°РІРёС‚СЊ РѕР±СЉРµРєС‚ РІ РѕС‡РµСЂРµРґСЊ СЂРµРЅРґРµСЂР°
 	void AddRender(CRenderWorldObject *item, const int &x, const int &y);
 
-	//Получить начало очереди рендера
+	//РџРѕР»СѓС‡РёС‚СЊ РЅР°С‡Р°Р»Рѕ РѕС‡РµСЂРµРґРё СЂРµРЅРґРµСЂР°
 	CRenderWorldObject *GetRender(const int &x, const int &y);
 
-	//Получить цвет точки для радара
+	//РџРѕР»СѓС‡РёС‚СЊ С†РІРµС‚ С‚РѕС‡РєРё РґР»СЏ СЂР°РґР°СЂР°
 	ushort GetRadarColor(const int &x, const int &y);
 
-	//Сконструировать вершины текстур ландшафта
+	//РЎРєРѕРЅСЃС‚СЂСѓРёСЂРѕРІР°С‚СЊ РІРµСЂС€РёРЅС‹ С‚РµРєСЃС‚СѓСЂ Р»Р°РЅРґС€Р°С„С‚Р°
 	void CreateLandTextureRect();
 
 	bool HasNoExternalData();

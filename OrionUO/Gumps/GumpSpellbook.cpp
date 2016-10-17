@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpSpellbook.cpp
 **
@@ -10,6 +10,7 @@
 #include "GumpSpellbook.h"
 #include "GumpSpell.h"
 #include "../Game objects/GameWorld.h"
+#include "../Game objects/GamePlayer.h"
 #include "../PressedObject.h"
 #include "../ClickObject.h"
 #include "../OrionUO.h"
@@ -19,16 +20,10 @@
 #include "../OrionWindow.h"
 #include "../ToolTip.h"
 //----------------------------------------------------------------------------------
-ushort CGumpSpellbook::m_ReagentsIndex[8] = 
-{
-	0x0F7A, 0x0F7B, 0x0F84, 0x0F85,
-	0x0F86, 0x0F88, 0x0F8C, 0x0F8D
-};
-//----------------------------------------------------------------------------------
 CGumpSpellbook::CGumpSpellbook(uint serial, int x, int y)
 : CGump(GT_SPELLBOOK, serial, x, y), m_PageCount(8), m_SpellCount(0), m_Body(NULL),
 m_PrevPage(NULL), m_NextPage(NULL), m_LastSpellPointer(NULL), m_LastSpellBookmark(NULL),
-m_BookType(ST_NONE)
+m_BookType(ST_MAGE)
 {
 	m_Draw2Page = true;
 	memset(&m_Spells[0], 0, sizeof(m_Spells));
@@ -81,40 +76,13 @@ void CGumpSpellbook::UpdateGraphic(const ushort &parentGraphic)
 		}*/
 		default:
 		{
-			m_BookType = ST_NONE;
+			m_BookType = ST_MAGE;
 			break;
 		}
 	}
 
 	if (bookType != m_BookType)
 		m_WantUpdateContent = true;
-}
-//----------------------------------------------------------------------------------
-int CGumpSpellbook::GetReagentIndex(const ushort &id)
-{
-	switch (id)
-	{
-		case 0x0F7A:
-			return 0;
-		case 0x0F7B:
-			return 1;
-		case 0x0F84:
-			return 2;
-		case 0x0F85:
-			return 3;
-		case 0x0F86:
-			return 4;
-		case 0x0F88:
-			return 5;
-		case 0x0F8C:
-			return 6;
-		case 0x0F8D:
-			return 7;
-		default:
-			break;
-	}
-
-	return 0;
 }
 //----------------------------------------------------------------------------------
 void CGumpSpellbook::InitToolTip()
@@ -244,7 +212,7 @@ void CGumpSpellbook::PrepareContent()
 				{
 					int page = 8;
 
-					IFOR(i, 0, 64)
+					IFOR(i, 0, SPELLBOOK_1_SPELLS_COUNT)
 					{
 						if (!m_Spells[i])
 							continue;
@@ -317,16 +285,390 @@ void CGumpSpellbook::PrepareContent()
 	}
 }
 //----------------------------------------------------------------------------
-void CGumpSpellbook::UpdateContentMage()
+void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPagesCount, int &spellsOnPage, ushort &graphic, ushort &minimizedGraphic)
 {
+	switch (m_BookType)
+	{
+		case ST_MAGE:
+		{
+			maxSpellsCount = SPELLBOOK_1_SPELLS_COUNT;
+			dictionaryPagesCount = 8;
+			spellsOnPage = 8;
+			graphic = 0x08AC;
+			minimizedGraphic = 0x08BA;
+
+			break;
+		}
+		case ST_NECRO:
+		{
+			maxSpellsCount = SPELLBOOK_2_SPELLS_COUNT;
+			dictionaryPagesCount = 4;
+			spellsOnPage = 8;
+			graphic = 0x2B00;
+			minimizedGraphic = 0x2B03;
+
+			break;
+		}
+		case ST_PALADIN:
+		{
+			maxSpellsCount = SPELLBOOK_3_SPELLS_COUNT;
+			dictionaryPagesCount = 2;
+			spellsOnPage = 5;
+			graphic = 0x2B01;
+			minimizedGraphic = 0x2B04;
+
+			break;
+		}
+		case ST_BUSHIDO:
+		{
+			maxSpellsCount = SPELLBOOK_4_SPELLS_COUNT;
+			dictionaryPagesCount = 2;
+			spellsOnPage = 3;
+			graphic = 0x2B07;
+			minimizedGraphic = 0x2B09;
+
+			break;
+		}
+		case ST_NINJITSU:
+		{
+			maxSpellsCount = SPELLBOOK_5_SPELLS_COUNT;
+			dictionaryPagesCount = 2;
+			spellsOnPage = 4;
+			graphic = 0x2B06;
+			minimizedGraphic = 0x2B08;
+
+			break;
+		}
+		case ST_SPELL_WEAVING:
+		{
+			maxSpellsCount = SPELLBOOK_6_SPELLS_COUNT;
+			dictionaryPagesCount = 2;
+			spellsOnPage = 8;
+			graphic = 0x2B2F;
+			minimizedGraphic = 0x2B2D;
+
+			break;
+		}
+		case ST_MYSTICISM: //?
+		{
+			maxSpellsCount = SPELLBOOK_7_SPELLS_COUNT;
+			dictionaryPagesCount = 2;
+			spellsOnPage = 8;
+			graphic = 0;
+			minimizedGraphic = 0;
+
+			break;
+		}
+		default:
+			break;
+	}
+}
+//----------------------------------------------------------------------------
+string CGumpSpellbook::GetSpellName(const int &offset)
+{
+	switch (m_BookType)
+	{
+		case ST_MAGE:
+			return m_SpellName1[offset];
+		case ST_NECRO:
+			return m_SpellName2[offset];
+		case ST_PALADIN:
+			return m_SpellName3[offset];
+		case ST_BUSHIDO:
+			return m_SpellName4[offset];
+		case ST_NINJITSU:
+			return m_SpellName5[offset];
+		case ST_SPELL_WEAVING:
+			return m_SpellName6[offset];
+		case ST_MYSTICISM:
+			return m_SpellName7[offset];
+		default:
+			break;
+	}
+
+	return "";
+}
+//----------------------------------------------------------------------------
+void CGumpSpellbook::UpdateContentMage(const int &maxSpellsCount, const int &dictionaryPagesCount)
+{
+	int page = dictionaryPagesCount;
+
+	IFOR(i, 0, maxSpellsCount)
+	{
+		if (!m_Spells[i])
+			continue;
+
+		int iconX = 62;
+		int textCircleX = 87;
+		int textNameX = 112;
+		int abbreviatureX = 112;
+		uint iconSerial = ID_GSB_SPELL_ICON_LEFT + i;
+
+		if (page % 2)
+		{
+			iconX = 225;
+			textCircleX = 244;
+			textNameX = 275;
+			abbreviatureX = 275;
+			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
+		}
+
+		Add(new CGUIPage(page));
+		page++;
+
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textCircleX, 10));
+		text->CreateTextureA(6, SPELL_CIRCLES_NAMES[i / 8]);
+
+		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x08C0 + i, iconX, 40));
+		icon->Serial = iconSerial;
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 34));
+		text->CreateTextureA(6, m_SpellName1[i], 80);
+
+		int abbreviatureY = 26;
+
+		if (text->m_Texture.Height < 24)
+			abbreviatureY = 31;
+
+		abbreviatureY += text->m_Texture.Height;
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, abbreviatureX, abbreviatureY));
+		text->CreateTextureA(8, SPELL_CAST_ABBREVIATURE[i]);
+
+		Add(new CGUIGumppicTiled(0x0835, iconX, 88, 120, 0));
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, iconX, 92));
+		text->CreateTextureA(6, "Reagents:");
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, iconX, 114));
+		text->CreateTextureA(9, m_SpellReagents1[i]);
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpSpellbook::UpdateContentNecro(const int &maxSpellsCount, const int &dictionaryPagesCount)
+{
+	int page = dictionaryPagesCount;
+
+	IFOR(i, 0, maxSpellsCount)
+	{
+		if (!m_Spells[i])
+			continue;
+
+		int iconX = 62;
+		int textNameX = 87;
+		int abbreviatureX = 112;
+		uint iconSerial = ID_GSB_SPELL_ICON_LEFT + i;
+
+		if (page % 2)
+		{
+			iconX = 225;
+			textNameX = 225;
+			abbreviatureX = 275;
+			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
+		}
+
+		Add(new CGUIPage(page));
+		page++;
+
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 6));
+		text->CreateTextureA(6, m_SpellName2[i], 100);
+
+		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5000 + i, iconX, 40));
+		icon->Serial = iconSerial;
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, abbreviatureX, 34));
+		text->CreateTextureA(8, SPELL_CAST_ABBREVIATURE[i]);
+
+		Add(new CGUIGumppicTiled(0x0835, iconX, 88, 120, 0));
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, iconX, 92));
+		text->CreateTextureA(6, "Reagents:");
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, iconX, 114));
+		text->CreateTextureA(9, m_SpellReagents1[i]);
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, iconX, 162));
+		text->CreateTextureA(6, "Mana Cost: 0\nMin. Skill: 0");
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpSpellbook::UpdateContentPaladin(const int &maxSpellsCount, const int &dictionaryPagesCount)
+{
+	int page = dictionaryPagesCount;
+
+	IFOR(i, 0, maxSpellsCount)
+	{
+		if (!m_Spells[i])
+			continue;
+
+		int iconX = 62;
+		int textNameX = 87;
+		int abbreviatureX = 112;
+		uint iconSerial = ID_GSB_SPELL_ICON_LEFT + i;
+
+		if (page % 2)
+		{
+			iconX = 225;
+			textNameX = 225;
+			abbreviatureX = 275;
+			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
+		}
+
+		Add(new CGUIPage(page));
+		page++;
+
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 6));
+		text->CreateTextureA(6, m_SpellName3[i], 100);
+
+		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5100 + i, iconX, 40));
+		icon->Serial = iconSerial;
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, abbreviatureX, 34));
+		text->CreateTextureA(8, SPELL_CAST_ABBREVIATURE[i]);
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, iconX, 148));
+		text->CreateTextureA(6, "Tithing Cost: 0\nMana Cost: 0\nMin. Skill: 0");
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpSpellbook::UpdateContentBushido(const int &maxSpellsCount, const int &dictionaryPagesCount)
+{
+	int page = dictionaryPagesCount;
+
+	IFOR(i, 0, maxSpellsCount)
+	{
+		if (!m_Spells[i])
+			continue;
+
+		int iconX = 62;
+		int textNameX = 87;
+		uint iconSerial = ID_GSB_SPELL_ICON_LEFT + i;
+
+		if (page % 2)
+		{
+			iconX = 225;
+			textNameX = 225;
+			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
+		}
+
+		Add(new CGUIPage(page));
+		page++;
+
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 6));
+		text->CreateTextureA(6, m_SpellName4[i], 100);
+
+		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5400 + i, iconX, 40));
+		icon->Serial = iconSerial;
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, iconX, 162));
+		text->CreateTextureA(6, "Mana Cost: 0\nMin. Skill: 0");
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpSpellbook::UpdateContentNinjitsu(const int &maxSpellsCount, const int &dictionaryPagesCount)
+{
+	int page = dictionaryPagesCount;
+
+	IFOR(i, 0, maxSpellsCount)
+	{
+		if (!m_Spells[i])
+			continue;
+
+		int iconX = 62;
+		int textNameX = 87;
+		uint iconSerial = ID_GSB_SPELL_ICON_LEFT + i;
+
+		if (page % 2)
+		{
+			iconX = 225;
+			textNameX = 225;
+			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
+		}
+
+		Add(new CGUIPage(page));
+		page++;
+
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 6));
+		text->CreateTextureA(6, m_SpellName5[i], 100);
+
+		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5300 + i, iconX, 40));
+		icon->Serial = iconSerial;
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, iconX, 162));
+		text->CreateTextureA(6, "Mana Cost: 0\nMin. Skill: 0");
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpSpellbook::UpdateContentSpellWeaving(const int &maxSpellsCount, const int &dictionaryPagesCount)
+{
+	int page = dictionaryPagesCount;
+
+	IFOR(i, 0, maxSpellsCount)
+	{
+		if (!m_Spells[i])
+			continue;
+
+		int iconX = 62;
+		int textNameX = 87;
+		uint iconSerial = ID_GSB_SPELL_ICON_LEFT + i;
+
+		if (page % 2)
+		{
+			iconX = 225;
+			textNameX = 225;
+			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
+		}
+
+		Add(new CGUIPage(page));
+		page++;
+
+		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 6));
+		text->CreateTextureA(6, m_SpellName6[i], 100);
+
+		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x59D8 + i, iconX, 40));
+		icon->Serial = iconSerial;
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, iconX, 162));
+		text->CreateTextureA(6, "Mana Cost: 0\nMin. Skill: 0");
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpSpellbook::UpdateContentMysticism(const int &maxSpellsCount, const int &dictionaryPagesCount)
+{
+}
+//----------------------------------------------------------------------------
+void CGumpSpellbook::UpdateContent()
+{
+	m_Body = NULL;
+	m_PrevPage = NULL;
+	m_NextPage = NULL;
+	m_LastSpellPointer = NULL;
+	m_LastSpellBookmark = NULL;
+
+	Clear();
+
+	Add(new CGUIPage(-1));
+
+	ushort graphic = 0;
+	ushort minimizedGraphic = 0;
+	int maxSpellsCount = 0;
+	int dictionaryPagesCount = 0;
+	int spellsOnPage = 0;
+
+	GetSummaryBookInfo(maxSpellsCount, dictionaryPagesCount, spellsOnPage, graphic, minimizedGraphic);
+
 	if (m_Minimized)
 	{
-		m_Body->Graphic = 0x08BA;
+		m_Body = (CGUIGumppic*)Add(new CGUIGumppic(minimizedGraphic, 0, 0));
 
 		return;
 	}
 	else
-		m_Body->Graphic = 0x08AC;
+	{
+		m_Body = (CGUIGumppic*)Add(new CGUIGumppic(graphic, 0, 0));
+
+		Add(new CGUIHitBox(ID_GSB_BUTTON_MINIMIZE, 6, 100, 16, 16, true));
+	}
 
 	CGameItem *spellbook = g_World->FindWorldItem(m_Serial);
 
@@ -340,31 +682,47 @@ void CGumpSpellbook::UpdateContentMage()
 	{
 		int currentCount = item->Count;
 
-		if (currentCount > 0 && currentCount <= 64)
+		if (currentCount > 0 && currentCount <= maxSpellsCount)
 		{
 			m_Spells[currentCount - 1] = 1;
 			m_SpellCount++;
 		}
 	}
 
-	m_PageCount = 8 + m_SpellCount;
+	m_PageCount = dictionaryPagesCount + m_SpellCount;
 
 	//if (m_SpellCount % 2)
 	//	m_PageCount--;
 
-	Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_1_2, 0x08B1, 0x08B1, 0x08B1, 58, 175));
-	Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_1_2, 0x08B2, 0x08B2, 0x08B2, 93, 175));
-	Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_3_4, 0x08B3, 0x08B3, 0x08B3, 130, 175));
-	Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_3_4, 0x08B4, 0x08B4, 0x08B4, 164, 175));
+	int offs = 0;
 
-	Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_5_6, 0x08B5, 0x08B5, 0x08B5, 227, 175));
-	Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_5_6, 0x08B6, 0x08B6, 0x08B6, 260, 175));
-	Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_7_8, 0x08B7, 0x08B7, 0x08B7, 297, 175));
-	Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_7_8, 0x08B8, 0x08B8, 0x08B8, 332, 175));
+	bool isMageSpellbook = false;
 
-	IFOR(page, 0, 8)
+	if (m_BookType == ST_MAGE)
+	{
+		isMageSpellbook = true;
+
+		Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_1_2, 0x08B1, 0x08B1, 0x08B1, 58, 175));
+		Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_1_2, 0x08B2, 0x08B2, 0x08B2, 93, 175));
+		Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_3_4, 0x08B3, 0x08B3, 0x08B3, 130, 175));
+		Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_3_4, 0x08B4, 0x08B4, 0x08B4, 164, 175));
+
+		Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_5_6, 0x08B5, 0x08B5, 0x08B5, 227, 175));
+		Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_5_6, 0x08B6, 0x08B6, 0x08B6, 260, 175));
+		Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_7_8, 0x08B7, 0x08B7, 0x08B7, 297, 175));
+		Add(new CGUIButton(ID_GSB_BUTTON_CIRCLE_7_8, 0x08B8, 0x08B8, 0x08B8, 332, 175));
+	}
+
+	IFOR(page, 0, dictionaryPagesCount)
 	{
 		Add(new CGUIPage(page));
+
+		if (!page && m_BookType == ST_PALADIN)
+		{
+			CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, 62, 162));
+			string textData = "Tithing points\nAvailable: " + std::to_string(g_Player->TithingPoints);
+			text->CreateTextureA(6, textData);
+		}
 
 		int indexX = 106;
 		int dataX = 62;
@@ -381,19 +739,18 @@ void CGumpSpellbook::UpdateContentMage()
 		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, indexX, 10));
 		text->CreateTextureA(6, "INDEX");
 
-		text = (CGUIText*)Add(new CGUIText(0x0288, dataX, 30));
-		text->CreateTextureA(6, SPELL_CIRCLES_NAMES[page]);
-
-		IFOR(i, 0, 8)
+		if (isMageSpellbook)
 		{
-			int offs = i + (8 * page);
+			text = (CGUIText*)Add(new CGUIText(0x0288, dataX, 30));
+			text->CreateTextureA(6, SPELL_CIRCLES_NAMES[page]);
+		}
 
+		IFOR(i, 0, spellsOnPage)
+		{
 			if (m_Spells[offs])
 			{
-				ushort id = 0x2080 + offs;
-
 				CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(spellSerial + offs, 0x0288, 0, 0, dataX, 52 + y, 0, false, 9));
-				entry->m_Entry.SetText(g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name);
+				entry->m_Entry.SetText(GetSpellName(offs));
 				entry->CheckOnSerial = true;
 				entry->ReadOnly = true;
 
@@ -402,238 +759,59 @@ void CGumpSpellbook::UpdateContentMage()
 
 				y += 15;
 			}
+
+			offs++;
 		}
-	}
-
-	int page = 8;
-
-	IFOR(i, 0, 64)
-	{
-		if (!m_Spells[i])
-			continue;
-
-		int iconX = 62;
-		int textCircleX = 87;
-		int textNameX = 112;
-		int abbreviatureX = 112;
-		int lineX = 62;
-		int reagentsX = 62;
-		uint iconSerial = ID_GSB_SPELL_ICON_LEFT + i;
-
-		if (page % 2)
-		{
-			iconX = 225;
-			textCircleX = 244;
-			textNameX = 275;
-			abbreviatureX = 275;
-			lineX = 225;
-			reagentsX = 225;
-			iconSerial = ID_GSB_SPELL_ICON_RIGHT + i;
-		}
-
-		Add(new CGUIPage(page));
-		page++;
-
-		CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textCircleX, 10));
-		text->CreateTextureA(6, SPELL_CIRCLES_NAMES[i / 8]);
-
-		CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x08C0 + i, iconX, 40));
-		icon->Serial = iconSerial;
-
-		ushort id = 0x2080 + i;
-
-		text = (CGUIText*)Add(new CGUIText(0x0288, textNameX, 34));
-		text->CreateTextureA(6, g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name, 80);
-
-		int abbreviatureY = 26;
-
-		if (text->m_Texture.Height < 24)
-			abbreviatureY = 31;
-
-		abbreviatureY += text->m_Texture.Height;
-
-		text = (CGUIText*)Add(new CGUIText(0x0288, abbreviatureX, abbreviatureY));
-		text->CreateTextureA(8, SPELL_CAST_ABBREVIATURE[i]);
-
-		Add(new CGUIGumppicTiled(0x0835, lineX, 88, 120, 0));
-
-		text = (CGUIText*)Add(new CGUIText(0x0288, reagentsX, 92));
-		text->CreateTextureA(6, "Reagents:");
-
-		IFOR(j, 0, 4)
-		{
-			id = SPELL_REAGENTS[i][j];
-
-			if (!id)
-				break;
-
-			text = (CGUIText*)Add(new CGUIText(0x0288, reagentsX, 114 + (j * 14)));
-			text->CreateTextureA(6, GetReagentName(m_ReagentsIndex[GetReagentIndex(id)]));
-		}
-	}
-}
-//----------------------------------------------------------------------------
-void CGumpSpellbook::UpdateContentNecro()
-{
-	if (m_Minimized)
-	{
-		m_Body->Graphic = 0x2B03;
-
-		return;
-	}
-	else
-		m_Body->Graphic = 0x2B00;
-
-	CGameItem *spellbook = g_World->FindWorldItem(m_Serial);
-
-	if (spellbook == NULL)
-		return;
-}
-//----------------------------------------------------------------------------
-void CGumpSpellbook::UpdateContentPaladin()
-{
-	if (m_Minimized)
-	{
-		m_Body->Graphic = 0x2B04;
-
-		return;
-	}
-	else
-		m_Body->Graphic = 0x2B01;
-
-	CGameItem *spellbook = g_World->FindWorldItem(m_Serial);
-
-	if (spellbook == NULL)
-		return;
-}
-//----------------------------------------------------------------------------
-void CGumpSpellbook::UpdateContentBushido()
-{
-	if (m_Minimized)
-	{
-		m_Body->Graphic = 0x2B09;
-
-		return;
-	}
-	else
-		m_Body->Graphic = 0x2B07;
-
-	CGameItem *spellbook = g_World->FindWorldItem(m_Serial);
-
-	if (spellbook == NULL)
-		return;
-}
-//----------------------------------------------------------------------------
-void CGumpSpellbook::UpdateContentNinjitsu()
-{
-	if (m_Minimized)
-	{
-		m_Body->Graphic = 0x2B08;
-
-		return;
-	}
-	else
-		m_Body->Graphic = 0x2B06;
-
-	CGameItem *spellbook = g_World->FindWorldItem(m_Serial);
-
-	if (spellbook == NULL)
-		return;
-}
-//----------------------------------------------------------------------------
-void CGumpSpellbook::UpdateContentSpellWeaving()
-{
-	if (m_Minimized)
-	{
-		m_Body->Graphic = 0x2B2D;
-
-		return;
-	}
-	else
-		m_Body->Graphic = 0x2B2F;
-
-	CGameItem *spellbook = g_World->FindWorldItem(m_Serial);
-
-	if (spellbook == NULL)
-		return;
-}
-//----------------------------------------------------------------------------
-void CGumpSpellbook::UpdateContentMysticism()
-{
-}
-//----------------------------------------------------------------------------
-void CGumpSpellbook::UpdateContent()
-{
-	m_Body = NULL;
-	m_PrevPage = NULL;
-	m_NextPage = NULL;
-	m_LastSpellPointer = NULL;
-	m_LastSpellBookmark = NULL;
-
-	Clear();
-
-	Add(new CGUIPage(-1));
-
-	if (m_Minimized)
-		m_Body = (CGUIGumppic*)Add(new CGUIGumppic(0x08BA, 0, 0));
-	else
-	{
-		m_Body = (CGUIGumppic*)Add(new CGUIGumppic(0x08AC, 0, 0));
-
-		Add(new CGUIHitBox(ID_GSB_BUTTON_MINIMIZE, 6, 100, 16, 16, true));
 	}
 
 	switch (m_BookType)
 	{
 		case ST_MAGE:
 		{
-			UpdateContentMage();
+			UpdateContentMage(maxSpellsCount, dictionaryPagesCount);
 			break;
 		}
 		case ST_NECRO:
 		{
-			UpdateContentNecro();
+			UpdateContentNecro(maxSpellsCount, dictionaryPagesCount);
 			break;
 		}
 		case ST_PALADIN:
 		{
-			UpdateContentPaladin();
+			UpdateContentPaladin(maxSpellsCount, dictionaryPagesCount);
 			break;
 		}
 		case ST_BUSHIDO:
 		{
-			UpdateContentBushido();
+			UpdateContentBushido(maxSpellsCount, dictionaryPagesCount);
 			break;
 		}
 		case ST_NINJITSU:
 		{
-			UpdateContentNinjitsu();
+			UpdateContentNinjitsu(maxSpellsCount, dictionaryPagesCount);
 			break;
 		}
 		case ST_SPELL_WEAVING:
 		{
-			UpdateContentSpellWeaving();
+			UpdateContentSpellWeaving(maxSpellsCount, dictionaryPagesCount);
 			break;
 		}
 		case ST_MYSTICISM:
 		{
-			UpdateContentMysticism();
+			UpdateContentMysticism(maxSpellsCount, dictionaryPagesCount);
 			break;
 		}
 	}
 
-	if (!m_Minimized)
-	{
-		Add(new CGUIPage(-1));
+	Add(new CGUIPage(-1));
 
-		m_PrevPage = (CGUIButton*)Add(new CGUIButton(ID_GSB_BUTTON_PREV, 0x08BB, 0x08BB, 0x08BB, 50, 8));
-		m_PrevPage->Visible = (m_Page != 0);
-		m_NextPage = (CGUIButton*)Add(new CGUIButton(ID_GSB_BUTTON_NEXT, 0x08BC, 0x08BC, 0x08BC, 321, 8));
-		m_NextPage->Visible = (m_Page + 2 < m_PageCount);
+	m_PrevPage = (CGUIButton*)Add(new CGUIButton(ID_GSB_BUTTON_PREV, 0x08BB, 0x08BB, 0x08BB, 50, 8));
+	m_PrevPage->Visible = (m_Page != 0);
+	m_NextPage = (CGUIButton*)Add(new CGUIButton(ID_GSB_BUTTON_NEXT, 0x08BC, 0x08BC, 0x08BC, 321, 8));
+	m_NextPage->Visible = (m_Page + 2 < m_PageCount);
 
-		m_LastSpellBookmark = (CGUIGumppic*)Add(new CGUIGumppic(0x08AD, 184, 2));
-		m_LastSpellPointer = (CGUIGumppic*)Add(new CGUIGumppic(0x08AF, 184, 52));
-	}
+	m_LastSpellBookmark = (CGUIGumppic*)Add(new CGUIGumppic(0x08AD, 184, 2));
+	m_LastSpellPointer = (CGUIGumppic*)Add(new CGUIGumppic(0x08AF, 184, 52));
 }
 //----------------------------------------------------------------------------
 void CGumpSpellbook::GUMP_BUTTON_EVENT_C
@@ -677,69 +855,45 @@ void CGumpSpellbook::GUMP_BUTTON_EVENT_C
 		m_LockMoving = !m_LockMoving;
 	else if (serial >= ID_GSB_SPELL_ICON_LEFT)
 	{
-		switch (m_BookType)
+		ushort graphic = 0;
+		ushort minimizedGraphic = 0;
+		int maxSpellsCount = 0;
+		int dictionaryPagesCount = 0;
+		int spellsOnPage = 0;
+
+		GetSummaryBookInfo(maxSpellsCount, dictionaryPagesCount, spellsOnPage, graphic, minimizedGraphic);
+
+		if (m_Page < dictionaryPagesCount) //List of spells
 		{
-			case ST_MAGE:
+			IFOR(j, 0, 2)
 			{
-				if (m_Page < 8) //List of spells
+				IFOR(i, 0, spellsOnPage)
 				{
-					IFOR(j, 0, 2)
+					int offs = i + (spellsOnPage * (m_Page + j));
+
+					if (!m_Spells[offs])
+						continue;
+
+					if (serial == offs + ID_GSB_SPELL_ICON_LEFT || serial == offs + ID_GSB_SPELL_ICON_RIGHT)
 					{
-						IFOR(i, 0, 8)
+						int c = dictionaryPagesCount;
+
+						IFOR(k, 0, maxSpellsCount)
 						{
-							int offs = i + (8 * (m_Page + j));
-
-							if (m_Spells[offs])
+							if (m_Spells[k])
 							{
-								if (serial == offs + ID_GSB_SPELL_ICON_LEFT || serial == offs + ID_GSB_SPELL_ICON_RIGHT)
-								{
-									int c = 8;
-
-									IFOR(j, 0, 64)
-									{
-										if (m_Spells[j])
-										{
-											if (j == offs)
-												break;
-
-											c++;
-										}
-									}
-
-									newPage = c;
-
+								if (k == offs)
 									break;
-								}
+
+								c++;
 							}
 						}
+
+						newPage = c;
+
+						break;
 					}
 				}
-
-				break;
-			}
-			case ST_NECRO:
-			{
-				break;
-			}
-			case ST_PALADIN:
-			{
-				break;
-			}
-			case ST_BUSHIDO:
-			{
-				break;
-			}
-			case ST_NINJITSU:
-			{
-				break;
-			}
-			case ST_SPELL_WEAVING:
-			{
-				break;
-			}
-			case ST_MYSTICISM:
-			{
-				break;
 			}
 		}
 	}
@@ -797,13 +951,13 @@ bool CGumpSpellbook::OnLeftMouseButtonDoubleClick()
 				{
 					if (g_PressedObject.LeftSerial >= ID_GSB_SPELL_ICON_LEFT)
 					{
-						//Было использовано заклинание
+						//Р‘С‹Р»Рѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ Р·Р°РєР»РёРЅР°РЅРёРµ
 						if (g_PressedObject.LeftSerial < ID_GSB_SPELL_ICON_RIGHT)
 							g_Orion.CastSpellFromBook(g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_LEFT + 1, m_Serial);
 						else
 							g_Orion.CastSpellFromBook(g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_RIGHT + 1, m_Serial);
 
-						//Сворачиваем книгу
+						//РЎРІРѕСЂР°С‡РёРІР°РµРј РєРЅРёРіСѓ
 						m_Minimized = true;
 						m_WantUpdateContent = true;
 
@@ -861,4 +1015,282 @@ void CGumpSpellbook::ChangePage(int newPage)
 
 	g_Orion.PlaySoundEffect(0x0055);
 }
+//----------------------------------------------------------------------------
+const string CGumpSpellbook::m_SpellName1[SPELLBOOK_1_SPELLS_COUNT] =
+{
+	"Clumsy",
+	"Create Food",
+	"Feeblemind",
+	"Heal",
+	"Magic Arrow",
+	"Night Sight",
+	"Reactive Armor",
+	"Weaken",
+	"Agility",
+	"Cunning",
+	"Cure",
+	"Harm",
+	"Magic Trap",
+	"Magic Untrap",
+	"Protection",
+	"Strength",
+	"Bless",
+	"Fireball",
+	"Magic Lock",
+	"Poison",
+	"Telekinesis",
+	"Teleport",
+	"Unlock",
+	"Wall of Stone",
+	"Arch Cure",
+	"Arch Protection",
+	"Curse",
+	"Fire Field",
+	"Greater Heal",
+	"Lightning",
+	"Mana Drain",
+	"Recall",
+	"Blade Spirits",
+	"Dispel Field",
+	"Incognito",
+	"Magic Reflection",
+	"Mind Blast",
+	"Paralyze",
+	"Poison Field",
+	"Summ. Creature",
+	"Dispel",
+	"Energy Bolt",
+	"Explosion",
+	"Invisibility",
+	"Mark",
+	"Mass Curse",
+	"Paralyze Field",
+	"Reveal",
+	"Chain Lightning",
+	"Energy Field",
+	"Flame Strike",
+	"Gate Travel",
+	"Mana Vampire",
+	"Mass Dispel",
+	"Meteor Swarm",
+	"Polymorph",
+	"Earthquake",
+	"Energy Vortex",
+	"Resurrection",
+	"Air Elemental",
+	"Summon Daemon",
+	"Earth Elemental",
+	"Fire Elemental",
+	"Water Elemental"
+};
+//----------------------------------------------------------------------------
+const string CGumpSpellbook::m_SpellReagents1[SPELLBOOK_1_SPELLS_COUNT] =
+{
+	"Bloodmoss\nNightshade",
+	"Garlic\nGinseng\nMandrake root",
+	"Ginseng\nNightshade",
+	"Garlic\nGinseng\nSpiders silk",
+	"Black pearl\nNightshade",
+	"Sulfurous ash\nSpiders silk",
+	"Garlic\nSulfurous ash\nSpiders silk",
+	"Garlic\nNightshade",
+	"Bloodmoss\nMandrake root",
+	"Mandrake root\nNightshade",
+	"Garlic\nGinseng",
+	"Nightshade\nSpiders silk",
+	"Garlic\nSulfurous ash\nSpiders silk",
+	"Bloodmoss\nSulfurous ash",
+	"Garlic\nGinseng\nSulfurous ash",
+	"Mandrake root\nNightshade",
+	"Garlic\nMandrake root",
+	"Black pearl\nSulfurous ash",
+	"Sulfurous ash\nBloodmoss\nGarlic",
+	"Nightshade",
+	"Bloodmoss\nMandrake root",
+	"Bloodmoss\nMandrake root",
+	"Bloodmoss\nSulfurous ash",
+	"Bloodmoss\nGarlic",
+	"Garlic\nGinseng\nMandrake root",
+	"Garlic\nGinseng\nMandrake root\nSulfurous ash",
+	"Garlic\nNightshade\nSulfurous ash",
+	"Black pearl\nSpiders silk\nSulfurous ash",
+	"Garlic\nGinseng\nMandrake root\nSpiders silk",
+	"Black pearl\nMandrake root\nSulfurous ash",
+	"Black pearl\nMandrake root\nSpiders silk",
+	"Black pearl\nBloodmoss\nMandrake root",
+	"Black pearl\nMandrake root\nNightshade",
+	"Garlic\nBlack pearl\nSpiders silk\nSulfurous ash",
+	"Bloodmoss\nGarlic\nNightshade",
+	"Garlic\nMandrake root\nSpiders silk",
+	"Black pearl\nMandrake root\nNightshade\nSulfurous ash",
+	"Garlic\nMandrake root\nSpiders silk",
+	"Black pearl\nNightshade\nSpiders silk",
+	"Bloodmoss\nMandrake root\nSpiders silk",
+	"Garlic\nMandrake root\nSulfurous ash",
+	"Black pearl\nNightshade",
+	"Black pearl\nMandrake root\nSulfurous ash",
+	"Bloodmoss\nNightshade",
+	"Black pearl\nBloodmoss\nMandrake root",
+	"Garlic\nMandrake root\nNightshade\nSulfurous ash",
+	"Black pearl\nGinseng\nSpiders silk",
+	"Bloodmoss\nSulfurous ash",
+	"Black pearl\nMandrake root\nBloodmoss\nSulfurous ash",
+	"Black pearl\nMandrake root\nSpiders silk\nSulfurous ash",
+	"Spiders silk\nSulfurous ash",
+	"Black pearl\nMandrake root\nSulfurous ash",
+	"Black pearl\nBloodmoss\nMandrake root\nSpiders silk",
+	"Black pearl\nGarlic\nMandrake root\nSulfurous ash",
+	"Bloodmoss\nSpiders silk\nMandrake root\nSulfurous ash",
+	"Bloodmoss\nMandrake root\nSpiders silk",
+	"Bloodmoss\nGinseng\nMandrake root\nSulfurous ash",
+	"Black pearl\nBloodmoss\nMandrake root\nNightshade",
+	"Bloodmoss\nGarlic\nGinseng",
+	"Bloodmoss\nMandrake root\nSpiders silk",
+	"Bloodmoss\nMandrake root\nSpiders silk\nSulfurous ash",
+	"Bloodmoss\nMandrake root\nSpiders silk",
+	"Bloodmoss\nMandrake root\nSpiders silk\nSulfurous ash",
+	"Bloodmoss\nMandrake root\nSpiders silk"
+};
+//----------------------------------------------------------------------------
+const string CGumpSpellbook::m_SpellName2[SPELLBOOK_2_SPELLS_COUNT]
+{
+	"Animate Dead",
+	"Blood Oath",
+	"Corpse Skin",
+	"Curse Weapon",
+	"Evil Omen",
+	"Horrific Beast",
+	"Lich Form",
+	"Mind Rot",
+	"Pain Spike",
+	"Poison Strike",
+	"Strangle",
+	"Summon Familiar",
+	"Vampiric Embrace",
+	"Vengeful Spirit",
+	"Wither",
+	"Wraith Form",
+	"Exorcism"
+};
+//----------------------------------------------------------------------------
+const string CGumpSpellbook::m_SpellName3[SPELLBOOK_3_SPELLS_COUNT]
+{
+	"Cleanse by Fire",
+	"Close Wounds",
+	"Consecrate Weapon",
+	"Dispel Evil",
+	"Divine Fury",
+	"Enemy of One",
+	"Holy Light",
+	"Noble Sacrifice",
+	"Remove Curse",
+	"Sacred Journey"
+};
+//----------------------------------------------------------------------------
+const string CGumpSpellbook::m_SpellName4[SPELLBOOK_4_SPELLS_COUNT]
+{
+	"Honorable Execution",
+	"Confidence",
+	"Evasion",
+	"Counter Attack",
+	"Lightning Strike",
+	"Momentum Strike"
+};
+//----------------------------------------------------------------------------
+const string CGumpSpellbook::m_SpellName5[SPELLBOOK_5_SPELLS_COUNT]
+{
+	"Focus Attack",
+	"Death Strike",
+	"Animal Form",
+	"Ki Attack",
+	"Surprise Attack",
+	"Backstab",
+	"Shadowjump",
+	"Mirror Image"
+};
+//----------------------------------------------------------------------------
+const string CGumpSpellbook::m_SpellName6[SPELLBOOK_6_SPELLS_COUNT]
+{
+	"Arcane Circle",
+	"Gift of Renewal",
+	"Immolating Weapon",
+	"Attunement",
+	"Thunderstorm",
+	"Nature's Fury",
+	"Summon Fey",
+	"Summon Fiend",
+	"Reaper Form",
+	"Wildfire",
+	"Essence of Wind",
+	"Dryad Allure",
+	"Ethereal Voyage",
+	"Word of Death",
+	"Gift of Life",
+	"Arcane Empowerment"
+};
+//----------------------------------------------------------------------------
+const string CGumpSpellbook::m_SpellName7[SPELLBOOK_7_SPELLS_COUNT]
+{
+	"Nether Bolt",
+	"Healing Stone",
+	"Purge Magic",
+	"Enchant",
+	"Sleep",
+	"Eagle Strike",
+	"Animated Weapon",
+	"Stone Form",
+	"Spell Trigger",
+	"Mass Sleep",
+	"Cleansing Winds",
+	"Bombard",
+	"Spell Plague",
+	"Hail Storm",
+	"Nether Cyclone",
+	"Rising Colossus",
+	"Inspire",
+	"Invigorate",
+	"Resilience",
+	"Perseverance",
+	"Tribulation",
+	"Despair",
+	"Death Ray",
+	"Ethereal Burst",
+	"Nether Blast",
+	"Mystic Weapon",
+	"Command Undead",
+	"Conduit",
+	"Mana Shield",
+	"Summon Reaper",
+	"Enchanted Summoning",
+	"Anticipate Hit",
+	"Warcry",
+	"Intuition",
+	"Rejuvenate",
+	"Holy Fist",
+	"Shadow",
+	"White Tiger Form",
+	"Thrust",
+	"Pierce",
+	"Stagger",
+	"Toughness",
+	"Onslaught",
+	"Focused Eye",
+	"Elemental Fury",
+	"Called Shot",
+	"Saving Throw",
+	"Shield Bash",
+	"Bodyguard",
+	"Heighten Senses",
+	"Tolerance",
+	"Injected Strike",
+	"Potency",
+	"Rampage",
+	"Fists of Fury",
+	"Knockout",
+	"Whispering",
+	"Combat Training",
+	"Boarding",
+	"Flaming Shot",
+	"Playing The Odds"
+};
 //----------------------------------------------------------------------------

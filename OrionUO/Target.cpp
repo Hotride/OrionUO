@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** Target.cpp
 **
@@ -19,14 +19,14 @@ CTarget g_Target;
 CTarget::CTarget()
 : m_Type(0), m_Targeting(false), m_MultiGraphic(0), m_Multi(NULL), m_CursorID(0)
 {
-	//Чистимся
+	//Р§РёСЃС‚РёРјСЃСЏ
 	memset(m_Data, 0, sizeof(m_Data));
 	memset(m_LastData, 0, sizeof(m_LastData));
 }
 //----------------------------------------------------------------------------------
 void CTarget::Reset()
 {
-	//Чистимся
+	//Р§РёСЃС‚РёРјСЃСЏ
 	memset(m_Data, 0, sizeof(m_Data));
 	memset(m_LastData, 0, sizeof(m_LastData));
 
@@ -45,10 +45,10 @@ void CTarget::Reset()
 //----------------------------------------------------------------------------------
 void CTarget::SetData(WISP_DATASTREAM::CDataReader &reader)
 {
-	//Копируем буффер
+	//РљРѕРїРёСЂСѓРµРј Р±СѓС„С„РµСЂ
 	memcpy(&m_Data[0], reader.Start, reader.Size);
 
-	//И устанавливаем соответствующие значения
+	//Р СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ Р·РЅР°С‡РµРЅРёСЏ
 	m_Type = reader.ReadUInt8();
 	m_CursorID = reader.ReadUInt32BE();
 	m_CursorType = reader.ReadUInt8();
@@ -58,17 +58,17 @@ void CTarget::SetData(WISP_DATASTREAM::CDataReader &reader)
 //----------------------------------------------------------------------------------
 void CTarget::SetMultiData(WISP_DATASTREAM::CDataReader &reader)
 {
-	//Устанавливаем соответствующие значения
+	//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ Р·РЅР°С‡РµРЅРёСЏ
 	m_Type = 1;
 	m_CursorType = 0;
 	m_Targeting = true;
 	m_CursorID = reader.ReadUInt32BE(1);
 
-	//Копируем буффер
+	//РљРѕРїРёСЂСѓРµРј Р±СѓС„С„РµСЂ
 	memset(&m_Data[0], 0, 19);
 	m_Data[0] = 0x6C;
-	m_Data[1] = 1; //Таргет на ландшафт
-	memcpy(m_Data + 2, reader.Start + 2, 4); //Копируем ID курсора (ID дида)
+	m_Data[1] = 1; //РўР°СЂРіРµС‚ РЅР° Р»Р°РЅРґС€Р°С„С‚
+	memcpy(m_Data + 2, reader.Start + 2, 4); //РљРѕРїРёСЂСѓРµРј ID РєСѓСЂСЃРѕСЂР° (ID РґРёРґР°)
 
 	reader.ResetPtr();
 	m_MultiGraphic = reader.ReadUInt16BE(18);
@@ -77,9 +77,9 @@ void CTarget::SetMultiData(WISP_DATASTREAM::CDataReader &reader)
 void CTarget::SendTargetObject(const uint &serial)
 {
 	if (!m_Targeting)
-		return; //Если в клиенте нет таргета - выход
+		return; //Р•СЃР»Рё РІ РєР»РёРµРЅС‚Рµ РЅРµС‚ С‚Р°СЂРіРµС‚Р° - РІС‹С…РѕРґ
 
-	//Пишем серийник объекта, на который ткнули прицелом, остальное - затираем
+	//РџРёС€РµРј СЃРµСЂРёР№РЅРёРє РѕР±СЉРµРєС‚Р°, РЅР° РєРѕС‚РѕСЂС‹Р№ С‚РєРЅСѓР»Рё РїСЂРёС†РµР»РѕРј, РѕСЃС‚Р°Р»СЊРЅРѕРµ - Р·Р°С‚РёСЂР°РµРј
 	pack32(m_Data + 7, serial);
 	m_Data[1] = 0;
 
@@ -103,7 +103,7 @@ void CTarget::SendTargetObject(const uint &serial)
 	{
 		g_LastTargetObject = serial;
 
-		//Скопируем для LastTarget
+		//РЎРєРѕРїРёСЂСѓРµРј РґР»СЏ LastTarget
 		memcpy(m_LastData, m_Data, sizeof(m_Data));
 
 		if (serial < 0x40000000)
@@ -116,11 +116,11 @@ void CTarget::SendTargetObject(const uint &serial)
 void CTarget::SendTargetTile(const ushort &tileID, const short &x, const short &y, char z)
 {
 	if (!m_Targeting)
-		return; //Если в клиенте нет таргета - выход
+		return; //Р•СЃР»Рё РІ РєР»РёРµРЅС‚Рµ РЅРµС‚ С‚Р°СЂРіРµС‚Р° - РІС‹С…РѕРґ
 
 	m_Data[1] = 1;
 
-	//Пишем координаты и индекс тайла, на который ткнули, остальное трем
+	//РџРёС€РµРј РєРѕРѕСЂРґРёРЅР°С‚С‹ Рё РёРЅРґРµРєСЃ С‚Р°Р№Р»Р°, РЅР° РєРѕС‚РѕСЂС‹Р№ С‚РєРЅСѓР»Рё, РѕСЃС‚Р°Р»СЊРЅРѕРµ С‚СЂРµРј
 	pack32(m_Data + 7, 0);
 	pack16(m_Data + 11, x);
 	pack16(m_Data + 13, y);
@@ -137,7 +137,7 @@ void CTarget::SendTargetTile(const ushort &tileID, const short &x, const short &
 	m_Data[16] = z;
 	pack16(m_Data + 17, tileID);
 
-	//Скопируем для LastTarget
+	//РЎРєРѕРїРёСЂСѓРµРј РґР»СЏ LastTarget
 	memcpy(m_LastData, m_Data, sizeof(m_Data));
 
 	SendTarget();
@@ -146,9 +146,9 @@ void CTarget::SendTargetTile(const ushort &tileID, const short &x, const short &
 void CTarget::SendCancelTarget()
 {
 	if (!m_Targeting)
-		return; //Если в клиенте нет таргета - выход
+		return; //Р•СЃР»Рё РІ РєР»РёРµРЅС‚Рµ РЅРµС‚ С‚Р°СЂРіРµС‚Р° - РІС‹С…РѕРґ
 
-	//Уходят только нули
+	//РЈС…РѕРґСЏС‚ С‚РѕР»СЊРєРѕ РЅСѓР»Рё
 	pack32(m_Data + 7, 0);
 	pack32(m_Data + 11, 0xFFFFFFFF);
 	pack32(m_Data + 15, 0);
@@ -159,9 +159,9 @@ void CTarget::SendCancelTarget()
 void CTarget::SendLastTarget()
 {
 	if (!m_Targeting)
-		return; //Если в клиенте нет таргета - выход
+		return; //Р•СЃР»Рё РІ РєР»РёРµРЅС‚Рµ РЅРµС‚ С‚Р°СЂРіРµС‚Р° - РІС‹С…РѕРґ
 
-	//Восстановим пакет последнего актуального таргета
+	//Р’РѕСЃСЃС‚Р°РЅРѕРІРёРј РїР°РєРµС‚ РїРѕСЃР»РµРґРЅРµРіРѕ Р°РєС‚СѓР°Р»СЊРЅРѕРіРѕ С‚Р°СЂРіРµС‚Р°
 	memcpy(m_Data, m_LastData, sizeof(m_Data));
 	m_Data[0] = 0x6C;
 	m_Data[1] = m_Type;
@@ -175,7 +175,7 @@ void CTarget::SendTarget()
 {
 	g_Orion.Send(m_Data, sizeof(m_Data));
 
-	//Чистим данные
+	//Р§РёСЃС‚РёРј РґР°РЅРЅС‹Рµ
 	memset(m_Data, 0, sizeof(m_Data));
 	m_Targeting = false;
 	m_MultiGraphic = 0;
@@ -255,7 +255,7 @@ void CTarget::AddMultiObject(CMultiObject *obj)
 				}
 			}
 
-			//Если пришли сюда - что-то пошло не так
+			//Р•СЃР»Рё РїСЂРёС€Р»Рё СЃСЋРґР° - С‡С‚Рѕ-С‚Рѕ РїРѕС€Р»Рѕ РЅРµ С‚Р°Рє
 		}
 		else
 		{

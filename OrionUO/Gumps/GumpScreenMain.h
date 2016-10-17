@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GumpScreenMain.h
 **
@@ -15,7 +15,7 @@
 class CGumpScreenMain : public CGump
 {
 private:
-	//!Идентификаторы кнопок
+	//!РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РєРЅРѕРїРѕРє
 	static const int ID_MS_QUIT = 1;
 	static const int ID_MS_ARROW_NEXT = 2;
 	static const int ID_MS_ACCOUNT = 3;

@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** ToolTip.cpp
 **
@@ -38,7 +38,7 @@ void CToolTip::Set(wstring str, CRenderObject *object, int maxWidth, int x, int 
 {
 	m_Use = !(m_Timer > g_Ticks);
 
-	if (object == m_Object || object == NULL) //Уже забиндено или нет объекта для бинда
+	if (object == m_Object || object == NULL) //РЈР¶Рµ Р·Р°Р±РёРЅРґРµРЅРѕ РёР»Рё РЅРµС‚ РѕР±СЉРµРєС‚Р° РґР»СЏ Р±РёРЅРґР°
 		return;
 
 	m_Timer = g_Ticks + g_ConfigManager.ToolTipsDelay;

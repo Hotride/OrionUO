@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** Walker.h
 **
@@ -12,25 +12,25 @@
 //----------------------------------------------------------------------------------
 #include "FastWalk.h"
 //----------------------------------------------------------------------------------
-//Класс для обработки шагов игрока
+//РљР»Р°СЃСЃ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё С€Р°РіРѕРІ РёРіСЂРѕРєР°
 class CWalker
 {
 private:
-	uchar m_Sequence; //Текущий шаг
+	uchar m_Sequence; //РўРµРєСѓС‰РёР№ С€Р°Рі
 
-	uchar m_Direction[256]; //Направления
+	uchar m_Direction[256]; //РќР°РїСЂР°РІР»РµРЅРёСЏ
 
 public:
 	CWalker();
 	~CWalker() {}
 
-	CFastWalkStack m_FastWalkStack; //Указатель на Fast Walk Stack
+	CFastWalkStack m_FastWalkStack; //РЈРєР°Р·Р°С‚РµР»СЊ РЅР° Fast Walk Stack
 	
-	void IncSequence(); //Инкремент счетчика шагов
-	void SetSequence(const uchar &seq, const uchar &dir); //Установить значение Direction для указанного шага
+	void IncSequence(); //РРЅРєСЂРµРјРµРЅС‚ СЃС‡РµС‚С‡РёРєР° С€Р°РіРѕРІ
+	void SetSequence(const uchar &seq, const uchar &dir); //РЈСЃС‚Р°РЅРѕРІРёС‚СЊ Р·РЅР°С‡РµРЅРёРµ Direction РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С€Р°РіР°
 
-	uchar GetSequence() const { return m_Sequence; } //Получить номер шага
-	uchar GetDirection(const uchar &seq) const { return m_Direction[seq]; } //Получить значение Direction для указанного шага
+	uchar GetSequence() const { return m_Sequence; } //РџРѕР»СѓС‡РёС‚СЊ РЅРѕРјРµСЂ С€Р°РіР°
+	uchar GetDirection(const uchar &seq) const { return m_Direction[seq]; } //РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ Direction РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С€Р°РіР°
 };
 //----------------------------------------------------------------------------------
 extern CWalker *g_Walker;

@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** FontsManager.h
 **
@@ -49,35 +49,35 @@ typedef struct MULTILINES_FONT_INFO
 	}
 } *PMULTILINES_FONT_INFO;
 //----------------------------------------------------------------------------------
-//!Структура с данными о ссылке
+//!РЎС‚СЂСѓРєС‚СѓСЂР° СЃ РґР°РЅРЅС‹РјРё Рѕ СЃСЃС‹Р»РєРµ
 struct WEB_LINK
 {
-	//!Была посещена
+	//!Р‘С‹Р»Р° РїРѕСЃРµС‰РµРЅР°
 	bool Visited;
 
-	//!Ссылка
+	//!РЎСЃС‹Р»РєР°
 	string WebLink;
 };
 //----------------------------------------------------------------------------------
-//!Структура с данными о HTML-символе
+//!РЎС‚СЂСѓРєС‚СѓСЂР° СЃ РґР°РЅРЅС‹РјРё Рѕ HTML-СЃРёРјРІРѕР»Рµ
 struct HTML_char
 {
-	//!Индекс символа
+	//!РРЅРґРµРєСЃ СЃРёРјРІРѕР»Р°
 	wchar_t Char;
 
-	//!Индекс шрифта
+	//!РРЅРґРµРєСЃ С€СЂРёС„С‚Р°
 	uchar Font;
 
-	//!Выравнивание
+	//!Р’С‹СЂР°РІРЅРёРІР°РЅРёРµ
 	TEXT_ALIGN_TYPE Align;
 
-	//!Набор флагов
+	//!РќР°Р±РѕСЂ С„Р»Р°РіРѕРІ
 	ushort Flags;
 
-	//!Цвет символа
+	//!Р¦РІРµС‚ СЃРёРјРІРѕР»Р°
 	uint Color;
 
-	//!Индекс ссылки
+	//!РРЅРґРµРєСЃ СЃСЃС‹Р»РєРё
 	ushort LinkID;
 };
 //----------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ typedef map<ushort, WEB_LINK> WEBLINK_MAP;
 typedef vector<HTML_char> HTMLCHAR_LIST;
 typedef vector<HTML_DATA_INFO> HTMLINFO_LIST;
 //----------------------------------------------------------------------------------
-//!Класс менеджера шрифтов
+//!РљР»Р°СЃСЃ РјРµРЅРµРґР¶РµСЂР° С€СЂРёС„С‚РѕРІ
 class CFontsManager
 {
 	SETGET(bool, SavePixels);
@@ -103,32 +103,32 @@ class CFontsManager
 	SETGET(bool, UnusePartialHue);
 
 private:
-	//!Список ASCII шрифтов
+	//!РЎРїРёСЃРѕРє ASCII С€СЂРёС„С‚РѕРІ
 	FONT_DATA *m_Font;
 
-	//!Количество ASCII ширфтов
+	//!РљРѕР»РёС‡РµСЃС‚РІРѕ ASCII С€РёСЂС„С‚РѕРІ
 	int m_FontCount;
 
-	//!Список ссылок
+	//!РЎРїРёСЃРѕРє СЃСЃС‹Р»РѕРє
 	WEBLINK_MAP m_WebLink;
 
-	//!Таблица ассоциации ASCII шрифтов
+	//!РўР°Р±Р»РёС†Р° Р°СЃСЃРѕС†РёР°С†РёРё ASCII С€СЂРёС„С‚РѕРІ
 	static const uchar m_FontIndex[256];
 
-	//!Данные о юникод шрифтах: адрес, размер
+	//!Р”Р°РЅРЅС‹Рµ Рѕ СЋРЅРёРєРѕРґ С€СЂРёС„С‚Р°С…: Р°РґСЂРµСЃ, СЂР°Р·РјРµСЂ
 	uint m_UnicodeFontAddress[20];
 	uint m_UnicodeFontSize[20];
 
-	//!Использование HTML расширений
+	//!РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ HTML СЂР°СЃС€РёСЂРµРЅРёР№
 	bool m_UseHTML;
 
-	//!Цвет HTML
+	//!Р¦РІРµС‚ HTML
 	uint m_HTMLColor;
 
-	//!Возможность раскраски фона текста
+	//!Р’РѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЂР°СЃРєСЂР°СЃРєРё С„РѕРЅР° С‚РµРєСЃС‚Р°
 	bool m_HTMLBackgroundCanBeColored;
 
-	//!Цвет фона текста
+	//!Р¦РІРµС‚ С„РѕРЅР° С‚РµРєСЃС‚Р°
 	uint m_BackgroundColor;
 
 	uint m_WebLinkColor;
@@ -140,23 +140,23 @@ private:
 	int m_BottomMargin;
 
 	/*!
-	Получить индекс ссылки
-	@param [__in] link Ссылка
-	@param [__out] color Цвет ссылки
-	@return Индекс ссылки
+	РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ СЃСЃС‹Р»РєРё
+	@param [__in] link РЎСЃС‹Р»РєР°
+	@param [__out] color Р¦РІРµС‚ СЃСЃС‹Р»РєРё
+	@return РРЅРґРµРєСЃ СЃСЃС‹Р»РєРё
 	*/
 	ushort GetWebLinkID(const string &link, uint &color);
 
 	ushort GetWebLinkID(const wstring &link, uint &color);
 
 	/*!
-	Получение HTML данных
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] len Длина текста
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return Массив HTML символов
+	РџРѕР»СѓС‡РµРЅРёРµ HTML РґР°РЅРЅС‹С…
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return РњР°СЃСЃРёРІ HTML СЃРёРјРІРѕР»РѕРІ
 	*/
 	HTMLCHAR_LIST GetHTMLData(uchar font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, ushort flags);
 
@@ -175,41 +175,41 @@ private:
 	HTMLCHAR_LIST GetHTMLDataOld(uchar font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
-	Получение данных многострочного текста HTML
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] len Длина текста
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@param [__in] width Ширина текста
-	@return Ссылка на данные
+	РџРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… РјРЅРѕРіРѕСЃС‚СЂРѕС‡РЅРѕРіРѕ С‚РµРєСЃС‚Р° HTML
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р°
+	@return РЎСЃС‹Р»РєР° РЅР° РґР°РЅРЅС‹Рµ
 	*/
 	PMULTILINES_FONT_INFO GetInfoHTML(uchar font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width);
 
 	/*!
-	Создание ASCII текстуры
-	@param [__in] font Шрифт
-	@param [__out] th Данные текстуры
-	@param [__in] str Текст
-	@param [__in] color Цвет
-	@param [__in] width Ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return true при успешной генерации
+	РЎРѕР·РґР°РЅРёРµ ASCII С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__out] th Р”Р°РЅРЅС‹Рµ С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] color Р¦РІРµС‚
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РіРµРЅРµСЂР°С†РёРё
 	*/
 	bool GenerateABase(uchar &font, CGLTextTexture &th, const char *str, ushort &color, int &width, TEXT_ALIGN_TYPE &align, ushort &flags);
 
 	/*!
-	Создание Unicode текстуры
-	@param [__in] font Шрифт
-	@param [__out] th Данные текстуры
-	@param [__in] str Текст
-	@param [__in] color Цвет
-	@param [__in] cell Номер ячейки в палитре цветов
-	@param [__in] width Ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return true при успешной генерации
+	РЎРѕР·РґР°РЅРёРµ Unicode С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__out] th Р”Р°РЅРЅС‹Рµ С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] color Р¦РІРµС‚
+	@param [__in] cell РќРѕРјРµСЂ СЏС‡РµР№РєРё РІ РїР°Р»РёС‚СЂРµ С†РІРµС‚РѕРІ
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РіРµРЅРµСЂР°С†РёРё
 	*/
 	bool GenerateWBase(uchar &font, CGLTextTexture &th, const wchar_t *str, ushort &color, uchar &cell, int &width, TEXT_ALIGN_TYPE &align, ushort &flags);
 
@@ -218,9 +218,9 @@ public:
 	~CFontsManager();
 
 	/*!
-	Установить использование HTML-тэгов
-	@param [__in] val Состояние использования
-	@param [__in_opt] htmlStartColor Начальный цвет
+	РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ HTML-С‚СЌРіРѕРІ
+	@param [__in] val РЎРѕСЃС‚РѕСЏРЅРёРµ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ
+	@param [__in_opt] htmlStartColor РќР°С‡Р°Р»СЊРЅС‹Р№ С†РІРµС‚
 	@return
 	*/
 	void SetUseHTML(const bool &val, const uint &htmlStartColor = 0xFFFFFFFF, const bool backgroundCanBeColored = false) { m_UseHTML = val; m_HTMLColor = htmlStartColor; m_HTMLBackgroundCanBeColored = backgroundCanBeColored; }
@@ -228,16 +228,16 @@ public:
 	__declspec(property(get = GetUseHTML)) bool UseHTML;
 
 	/*!
-	Загрузка ASCII шрифтов
-	@return true при успешной загрузке
+	Р—Р°РіСЂСѓР·РєР° ASCII С€СЂРёС„С‚РѕРІ
+	@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ Р·Р°РіСЂСѓР·РєРµ
 	*/
 	bool LoadFonts();
 
 	uchar UnicodeFontExists(const uchar &font);
 
 	/*!
-	Переход по ссылке по индексу
-	@param [__in] link Индекс ссылки
+	РџРµСЂРµС…РѕРґ РїРѕ СЃСЃС‹Р»РєРµ РїРѕ РёРЅРґРµРєСЃСѓ
+	@param [__in] link РРЅРґРµРєСЃ СЃСЃС‹Р»РєРё
 	@return 
 	*/
 	void GoToWebLink(ushort link);
@@ -245,147 +245,147 @@ public:
 
 
 	//-----------------------------
-	//---Работа с ASCII шрифтами---
+	//---Р Р°Р±РѕС‚Р° СЃ ASCII С€СЂРёС„С‚Р°РјРё---
 	//-----------------------------
 
 	/*!
-	Проверка, печатаемый ли символ
-	@param [__in] index Индекс символа
-	@return true если это печатаемый символ
+	РџСЂРѕРІРµСЂРєР°, РїРµС‡Р°С‚Р°РµРјС‹Р№ Р»Рё СЃРёРјРІРѕР»
+	@param [__in] index РРЅРґРµРєСЃ СЃРёРјРІРѕР»Р°
+	@return true РµСЃР»Рё СЌС‚Рѕ РїРµС‡Р°С‚Р°РµРјС‹Р№ СЃРёРјРІРѕР»
 	*/
 	bool IsPrintASCII(uchar index) { return (m_FontIndex[index] != 0xFF); }
 
 	/*!
-	Получить смещение символа ширифта
-	@param [__in] font Шрифт
-	@param [__in] index Индекс символа
-	@return Смещение в пикселях
+	РџРѕР»СѓС‡РёС‚СЊ СЃРјРµС‰РµРЅРёРµ СЃРёРјРІРѕР»Р° С€РёСЂРёС„С‚Р°
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] index РРЅРґРµРєСЃ СЃРёРјРІРѕР»Р°
+	@return РЎРјРµС‰РµРЅРёРµ РІ РїРёРєСЃРµР»СЏС…
 	*/
 	int GetFontOffsetY(uchar font, uchar index);
 
 	/*!
-	Получить позицию каретки в тексте
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] pos Текущая позиция в тексте
-	@param [__in] width Ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return Координаты каретки
+	РџРѕР»СѓС‡РёС‚СЊ РїРѕР·РёС†РёСЋ РєР°СЂРµС‚РєРё РІ С‚РµРєСЃС‚Рµ
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] pos РўРµРєСѓС‰Р°СЏ РїРѕР·РёС†РёСЏ РІ С‚РµРєСЃС‚Рµ
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return РљРѕРѕСЂРґРёРЅР°С‚С‹ РєР°СЂРµС‚РєРё
 	*/
 	POINT GetCaretPosA(uchar font, const char *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
-	Вычислить положение каретки
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] x Координата каретки по оси X
-	@param [__in] y Координата каретки по оси Y
-	@param [__in] width Ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return Позиция каретки в строке
+	Р’С‹С‡РёСЃР»РёС‚СЊ РїРѕР»РѕР¶РµРЅРёРµ РєР°СЂРµС‚РєРё
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] x РљРѕРѕСЂРґРёРЅР°С‚Р° РєР°СЂРµС‚РєРё РїРѕ РѕСЃРё X
+	@param [__in] y РљРѕРѕСЂРґРёРЅР°С‚Р° РєР°СЂРµС‚РєРё РїРѕ РѕСЃРё Y
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return РџРѕР·РёС†РёСЏ РєР°СЂРµС‚РєРё РІ СЃС‚СЂРѕРєРµ
 	*/
 	int CalculateCaretPosA(uchar font, const char *str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
-	Получить ширину текста
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in_opt] len Длина текста
-	@return Ширина текста в пикселях
+	РџРѕР»СѓС‡РёС‚СЊ С€РёСЂРёРЅСѓ С‚РµРєСЃС‚Р°
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in_opt] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+	@return РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 	*/
 	int GetWidthA(uchar font, const char *str, int len = 0);
 
 	/*!
-	Получить ширину текста (с учетом параметров отрисовки)
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] len Длина текста
-	@param [__in] maxWidth Максимальная ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return Ширина текста в пикселях
+	РџРѕР»СѓС‡РёС‚СЊ С€РёСЂРёРЅСѓ С‚РµРєСЃС‚Р° (СЃ СѓС‡РµС‚РѕРј РїР°СЂР°РјРµС‚СЂРѕРІ РѕС‚СЂРёСЃРѕРІРєРё)
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+	@param [__in] maxWidth РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 	*/
 	int GetWidthExA(uchar font, const char *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
-	Получить высоту текста
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in_opt] width Ширина текстуры
-	@param [__in_opt] align Расположение текста
-	@param [__in_opt] flags Эффекты текста
-	@return Высота текста в пикселях
+	РџРѕР»СѓС‡РёС‚СЊ РІС‹СЃРѕС‚Сѓ С‚РµРєСЃС‚Р°
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return Р’С‹СЃРѕС‚Р° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 	*/
 	int GetHeightA(uchar font, const char *str, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 	/*!
-	Получить высоту текста по списку строк
-	@param [__in] info Ссылка на мультистрочный текст
-	@return Высота текста в пикселях
+	РџРѕР»СѓС‡РёС‚СЊ РІС‹СЃРѕС‚Сѓ С‚РµРєСЃС‚Р° РїРѕ СЃРїРёСЃРєСѓ СЃС‚СЂРѕРє
+	@param [__in] info РЎСЃС‹Р»РєР° РЅР° РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅС‹Р№ С‚РµРєСЃС‚
+	@return Р’С‹СЃРѕС‚Р° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 	*/
 	int GetHeightA(PMULTILINES_FONT_INFO info);
 
 	/*!
-	Получить текст указанной ширины
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] len Длина текста
-	@param [__in] width Ширина текстуры
-	@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
-	@return Результирующий текст
+	РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚ СѓРєР°Р·Р°РЅРЅРѕР№ С€РёСЂРёРЅС‹
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] IsCropped РћРіСЂР°РЅРёС‡РµРЅРЅС‹Р№ С‚РµРєСЃС‚, РІС‹С€РµРґС€Р°СЏ Р·Р° РґРѕСЃС‚СѓРїРЅС‹Рµ РїСЂРµРґРµР»С‹ С‡Р°СЃС‚СЊ РѕР±СЂРµР·Р°РµС‚СЃСЏ Рё Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° РјРЅРѕРіРѕС‚РѕС‡РёРµ
+	@return Р РµР·СѓР»СЊС‚РёСЂСѓСЋС‰РёР№ С‚РµРєСЃС‚
 	*/
 	string GetTextByWidthA(uchar font, const char *str, int len, int width, bool IsCropped);
 
 	/*!
-	Получить информацию о тексте (в мультистрочном виде)
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] len Длина текста
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@param [__in] width Ширина текстуры
-	@return Ссылка на мультистрочный текст или NULL
+	РџРѕР»СѓС‡РёС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С‚РµРєСЃС‚Рµ (РІ РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅРѕРј РІРёРґРµ)
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@return РЎСЃС‹Р»РєР° РЅР° РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅС‹Р№ С‚РµРєСЃС‚ РёР»Рё NULL
 	*/
 	PMULTILINES_FONT_INFO GetInfoA(uchar font, const char *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width);
 
 	/*!
-	Сгенерировать пиксели текстуры текста
-	@param [__in] font Шрифт
-	@param [__inout] th Данные о текстуре текста
-	@param [__in] str Текст
-	@param [__in] color Цвет текста
-	@param [__in] width Ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return Ссылка на массив пикселей
+	РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РїРёРєСЃРµР»Рё С‚РµРєСЃС‚СѓСЂС‹ С‚РµРєСЃС‚Р°
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__inout] th Р”Р°РЅРЅС‹Рµ Рѕ С‚РµРєСЃС‚СѓСЂРµ С‚РµРєСЃС‚Р°
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] color Р¦РІРµС‚ С‚РµРєСЃС‚Р°
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return РЎСЃС‹Р»РєР° РЅР° РјР°СЃСЃРёРІ РїРёРєСЃРµР»РµР№
 	*/
 	UINT_LIST GeneratePixelsA(uchar &font, CGLTextTexture &th, const char *str, ushort &color, int &width, TEXT_ALIGN_TYPE &align, ushort &flags);
 
 	/*!
-	Сгенерировать текстуру текста
-	@param [__in] font Шрифт
-	@param [__inout] th Данные о текстуре текста
-	@param [__in] str Текст
-	@param [__in_opt] color Цвет
-	@param [__in_opt] width Ширина текстуры
-	@param [__in_opt] align Расположение текста
-	@param [__in_opt] flags Эффекты текста
-	@return true при успешной генерации
+	РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ С‚РµРєСЃС‚Р°
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__inout] th Р”Р°РЅРЅС‹Рµ Рѕ С‚РµРєСЃС‚СѓСЂРµ С‚РµРєСЃС‚Р°
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in_opt] color Р¦РІРµС‚
+	@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РіРµРЅРµСЂР°С†РёРё
 	*/
 	bool GenerateA(uchar font, CGLTextTexture &th, const char *str, ushort color = 0, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 	/*!
-	Отрисовать текст
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] color Цвет
-	@param [__in] x Экранная координата X
-	@param [__in] y Экранная координата Y
-	@param [__in_opt] width Ширина текстуры
-	@param [__in_opt] align Расположение текста
-	@param [__in_opt] flags Эффекты текста
+	РћС‚СЂРёСЃРѕРІР°С‚СЊ С‚РµРєСЃС‚
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] color Р¦РІРµС‚
+	@param [__in] x Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+	@param [__in] y Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
+	@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
 	@return 
 	*/
 	void DrawA(uchar font, const char *str, ushort color, int x, int y, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
@@ -393,141 +393,141 @@ public:
 
 
 	//-------------------------------
-	//---Работа с Unicode шрифтами---
+	//---Р Р°Р±РѕС‚Р° СЃ Unicode С€СЂРёС„С‚Р°РјРё---
 	//-------------------------------
 
 	/*!
-	Получить позицию каретки в тексте
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] pos Текущая позиция в тексте
-	@param [__in] width Ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return Координаты каретки
+	РџРѕР»СѓС‡РёС‚СЊ РїРѕР·РёС†РёСЋ РєР°СЂРµС‚РєРё РІ С‚РµРєСЃС‚Рµ
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] pos РўРµРєСѓС‰Р°СЏ РїРѕР·РёС†РёСЏ РІ С‚РµРєСЃС‚Рµ
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return РљРѕРѕСЂРґРёРЅР°С‚С‹ РєР°СЂРµС‚РєРё
 	*/
 	POINT GetCaretPosW(uchar font, const wchar_t *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
-	Вычислить положение каретки
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] x Координата каретки по оси X
-	@param [__in] y Координата каретки по оси Y
-	@param [__in] width Ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return Позиция каретки в строке
+	Р’С‹С‡РёСЃР»РёС‚СЊ РїРѕР»РѕР¶РµРЅРёРµ РєР°СЂРµС‚РєРё
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] x РљРѕРѕСЂРґРёРЅР°С‚Р° РєР°СЂРµС‚РєРё РїРѕ РѕСЃРё X
+	@param [__in] y РљРѕРѕСЂРґРёРЅР°С‚Р° РєР°СЂРµС‚РєРё РїРѕ РѕСЃРё Y
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return РџРѕР·РёС†РёСЏ РєР°СЂРµС‚РєРё РІ СЃС‚СЂРѕРєРµ
 	*/
 	int CalculateCaretPosW(uchar font, const wchar_t *str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
-	Получить ширину текста
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in_opt] len Длина текста
-	@return Ширина текста в пикселях
+	РџРѕР»СѓС‡РёС‚СЊ С€РёСЂРёРЅСѓ С‚РµРєСЃС‚Р°
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in_opt] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+	@return РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 	*/
 	int GetWidthW(uchar font, const wchar_t *str, int len = 0);
 
 	/*!
-	Получить ширину текста (с учетом параметров отрисовки)
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] len Длина текста
-	@param [__in] maxWidth Максимальная ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return Ширина текста в пикселях
+	РџРѕР»СѓС‡РёС‚СЊ С€РёСЂРёРЅСѓ С‚РµРєСЃС‚Р° (СЃ СѓС‡РµС‚РѕРј РїР°СЂР°РјРµС‚СЂРѕРІ РѕС‚СЂРёСЃРѕРІРєРё)
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+	@param [__in] maxWidth РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return РЁРёСЂРёРЅР° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 	*/
 	int GetWidthExW(uchar font, const wchar_t *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
-	Получить высоту текста
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in_opt] width Ширина текстуры
-	@param [__in_opt] align Расположение текста
-	@param [__in_opt] flags Эффекты текста
-	@return Высота текста в пикселях
+	РџРѕР»СѓС‡РёС‚СЊ РІС‹СЃРѕС‚Сѓ С‚РµРєСЃС‚Р°
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return Р’С‹СЃРѕС‚Р° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 	*/
 	int GetHeightW(uchar font, const wchar_t *str, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 	/*!
-	Получить высоту текста по списку строк
-	@param [__in] info Ссылка на мультистрочный текст
-	@return Высота текста в пикселях
+	РџРѕР»СѓС‡РёС‚СЊ РІС‹СЃРѕС‚Сѓ С‚РµРєСЃС‚Р° РїРѕ СЃРїРёСЃРєСѓ СЃС‚СЂРѕРє
+	@param [__in] info РЎСЃС‹Р»РєР° РЅР° РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅС‹Р№ С‚РµРєСЃС‚
+	@return Р’С‹СЃРѕС‚Р° С‚РµРєСЃС‚Р° РІ РїРёРєСЃРµР»СЏС…
 	*/
 	int GetHeightW(PMULTILINES_FONT_INFO info);
 
 	/*!
-	Получить текст указанной ширины
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] len Длина текста
-	@param [__in] width Ширина текстуры
-	@param [__in] IsCropped Ограниченный текст, вышедшая за доступные пределы часть обрезается и заменяется на многоточие
-	@return Результирующий текст
+	РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚ СѓРєР°Р·Р°РЅРЅРѕР№ С€РёСЂРёРЅС‹
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] IsCropped РћРіСЂР°РЅРёС‡РµРЅРЅС‹Р№ С‚РµРєСЃС‚, РІС‹С€РµРґС€Р°СЏ Р·Р° РґРѕСЃС‚СѓРїРЅС‹Рµ РїСЂРµРґРµР»С‹ С‡Р°СЃС‚СЊ РѕР±СЂРµР·Р°РµС‚СЃСЏ Рё Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° РјРЅРѕРіРѕС‚РѕС‡РёРµ
+	@return Р РµР·СѓР»СЊС‚РёСЂСѓСЋС‰РёР№ С‚РµРєСЃС‚
 	*/
 	wstring GetTextByWidthW(uchar font, const wchar_t *str, int len, int width, bool IsCropped);
 
 	/*!
-	Получить информацию о тексте (в мультистрочном виде)
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] len Длина текста
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@param [__in] width Ширина текстуры
-	@return Ссылка на мультистрочный текст или NULL
+	РџРѕР»СѓС‡РёС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С‚РµРєСЃС‚Рµ (РІ РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅРѕРј РІРёРґРµ)
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] len Р”Р»РёРЅР° С‚РµРєСЃС‚Р°
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@return РЎСЃС‹Р»РєР° РЅР° РјСѓР»СЊС‚РёСЃС‚СЂРѕС‡РЅС‹Р№ С‚РµРєСЃС‚ РёР»Рё NULL
 	*/
 	PMULTILINES_FONT_INFO GetInfoW(uchar font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width);
 
 	/*!
-	Сгенерировать пиксели текстуры текста
-	@param [__in] font Шрифт
-	@param [__inout] th Данные о текстуре текста
-	@param [__in] str Текст
-	@param [__in] color Цвет текста
-	@param [__in] cell Ячейка в палитре цветов
-	@param [__in] width Ширина текстуры
-	@param [__in] align Расположение текста
-	@param [__in] flags Эффекты текста
-	@return Ссылка на массив пикселей
+	РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РїРёРєСЃРµР»Рё С‚РµРєСЃС‚СѓСЂС‹ С‚РµРєСЃС‚Р°
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__inout] th Р”Р°РЅРЅС‹Рµ Рѕ С‚РµРєСЃС‚СѓСЂРµ С‚РµРєСЃС‚Р°
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] color Р¦РІРµС‚ С‚РµРєСЃС‚Р°
+	@param [__in] cell РЇС‡РµР№РєР° РІ РїР°Р»РёС‚СЂРµ С†РІРµС‚РѕРІ
+	@param [__in] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return РЎСЃС‹Р»РєР° РЅР° РјР°СЃСЃРёРІ РїРёРєСЃРµР»РµР№
 	*/
 	UINT_LIST GeneratePixelsW(uchar &font, CGLTextTexture &th, const wchar_t *str, ushort &color, uchar &cell, int &width, TEXT_ALIGN_TYPE &align, ushort &flags);
 
 	/*!
-	Сгенерировать текстуру текста
-	@param [__in] font Шрифт
-	@param [__inout] th Данные о текстуре текста
-	@param [__in] str Текст
-	@param [__in_opt] color Цвет
-	@param [__in_opt] cell Ячейка в палитре цветов
-	@param [__in_opt] width Ширина текстуры
-	@param [__in_opt] align Расположение текста
-	@param [__in_opt] flags Эффекты текста
-	@return true при успешной генерации
+	РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ С‚РµРєСЃС‚Р°
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__inout] th Р”Р°РЅРЅС‹Рµ Рѕ С‚РµРєСЃС‚СѓСЂРµ С‚РµРєСЃС‚Р°
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in_opt] color Р¦РІРµС‚
+	@param [__in_opt] cell РЇС‡РµР№РєР° РІ РїР°Р»РёС‚СЂРµ С†РІРµС‚РѕРІ
+	@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
+	@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РіРµРЅРµСЂР°С†РёРё
 	*/
 	bool GenerateW(uchar font, CGLTextTexture &th, const wchar_t *str, ushort color = 0, uchar cell = 30, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 	/*!
-	Отрисовать текст
-	@param [__in] font Шрифт
-	@param [__in] str Текст
-	@param [__in] color Цвет
-	@param [__in] x Экранная координата X
-	@param [__in] y Экранная координата Y
-	@param [__in_opt] cell Ячейка в палитре цветов
-	@param [__in_opt] width Ширина текстуры
-	@param [__in_opt] align Расположение текста
-	@param [__in_opt] flags Эффекты текста
+	РћС‚СЂРёСЃРѕРІР°С‚СЊ С‚РµРєСЃС‚
+	@param [__in] font РЁСЂРёС„С‚
+	@param [__in] str РўРµРєСЃС‚
+	@param [__in] color Р¦РІРµС‚
+	@param [__in] x Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+	@param [__in] y Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
+	@param [__in_opt] cell РЇС‡РµР№РєР° РІ РїР°Р»РёС‚СЂРµ С†РІРµС‚РѕРІ
+	@param [__in_opt] width РЁРёСЂРёРЅР° С‚РµРєСЃС‚СѓСЂС‹
+	@param [__in_opt] align Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµРєСЃС‚Р°
+	@param [__in_opt] flags Р­С„С„РµРєС‚С‹ С‚РµРєСЃС‚Р°
 	@return
 	*/
 	void DrawW(uchar font, const wchar_t *str, ushort color, int x, int y, uchar cell = 30, int width = 0, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 };
 //--------------------------------------------------------------------------
-//!Ссылка на менеджер шрифтов
+//!РЎСЃС‹Р»РєР° РЅР° РјРµРЅРµРґР¶РµСЂ С€СЂРёС„С‚РѕРІ
 extern CFontsManager g_FontManager;
 //--------------------------------------------------------------------------
 #endif

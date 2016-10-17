@@ -1,4 +1,4 @@
-//----------------------------------------------------------------------------------
+ï»¿//----------------------------------------------------------------------------------
 #include "WispWindow.h"
 #include "WispMouse.h"
 #include <time.h>
@@ -353,7 +353,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 
 			break;
 		}
-		//Íàæàòèå íà êîëåñèêî ìûøêè
+		//ÐÐ°Ð¶Ð°Ñ‚Ð¸Ðµ Ð½Ð° ÐºÐ¾Ð»ÐµÑÐ¸ÐºÐ¾ Ð¼Ñ‹ÑˆÐºÐ¸
 		case WM_MBUTTONDOWN:
 		{
 			SetCapture(m_Handle);
@@ -384,7 +384,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 
 			break;
 		}
-		//Îòïóñêàíèå êîëåñèêà ìûøêè
+		//ÐžÑ‚Ð¿ÑƒÑÐºÐ°Ð½Ð¸Ðµ ÐºÐ¾Ð»ÐµÑÐ¸ÐºÐ° Ð¼Ñ‹ÑˆÐºÐ¸
 		case WM_MBUTTONUP:
 		{
 			WISP_MOUSE::g_WispMouse->Update();
@@ -395,7 +395,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 
 			break;
 		}
-		//Êîëåñèêî ìûøêè ââåðõ/âíèç
+		//ÐšÐ¾Ð»ÐµÑÐ¸ÐºÐ¾ Ð¼Ñ‹ÑˆÐºÐ¸ Ð²Ð²ÐµÑ€Ñ…/Ð²Ð½Ð¸Ð·
 		case WM_MOUSEWHEEL:
 		{
 			WISP_MOUSE::g_WispMouse->Update();

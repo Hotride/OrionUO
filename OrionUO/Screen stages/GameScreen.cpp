@@ -1,4 +1,4 @@
-/***********************************************************************************
+п»ї/***********************************************************************************
 **
 ** GameScreen.cpp
 **
@@ -70,7 +70,7 @@ CGameScreen::~CGameScreen()
 }
 //----------------------------------------------------------------------------------
 /*!
-Инициализация
+РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 @return 
 */
 void CGameScreen::Init()
@@ -82,8 +82,8 @@ void CGameScreen::Init()
 }
 //----------------------------------------------------------------------------------
 /*!
-Обработка события после плавного затемнения экрана
-@param [__in_opt] action Идентификатор действия
+РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёСЏ РїРѕСЃР»Рµ РїР»Р°РІРЅРѕРіРѕ Р·Р°С‚РµРјРЅРµРЅРёСЏ СЌРєСЂР°РЅР°
+@param [__in_opt] action РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРµР№СЃС‚РІРёСЏ
 @return 
 */
 void CGameScreen::ProcessSmoothAction(uchar action)
@@ -96,7 +96,7 @@ void CGameScreen::ProcessSmoothAction(uchar action)
 }
 //----------------------------------------------------------------------------------
 /*!
-Инициализация всплывающих подсказок
+РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІСЃРїР»С‹РІР°СЋС‰РёС… РїРѕРґСЃРєР°Р·РѕРє
 @return 
 */
 void CGameScreen::InitToolTip()
@@ -127,10 +127,10 @@ void CGameScreen::InitToolTip()
 }
 //----------------------------------------------------------------------------------
 /*!
-Вычисление значений Z координаты для рендера
-@param [__out] noDrawRoof Не рисовать крыши и верхние этажи строений
-@param [__out] maxGroundZ Максимальная Z координата ландшафта
-@return Максимальная Z координата отрисовки
+Р’С‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёР№ Z РєРѕРѕСЂРґРёРЅР°С‚С‹ РґР»СЏ СЂРµРЅРґРµСЂР°
+@param [__out] noDrawRoof РќРµ СЂРёСЃРѕРІР°С‚СЊ РєСЂС‹С€Рё Рё РІРµСЂС…РЅРёРµ СЌС‚Р°Р¶Рё СЃС‚СЂРѕРµРЅРёР№
+@param [__out] maxGroundZ РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ Z РєРѕРѕСЂРґРёРЅР°С‚Р° Р»Р°РЅРґС€Р°С„С‚Р°
+@return РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ Z РєРѕРѕСЂРґРёРЅР°С‚Р° РѕС‚СЂРёСЃРѕРІРєРё
 */
 int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 {
@@ -237,11 +237,11 @@ int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 }
 //----------------------------------------------------------------------------------
 /*!
-Применение прозрачности крон деревьев в указанных координатах
-@param [__in] graphic ндекс картинки дерева
-@param [__in] x Координата X дерева
-@param [__in] y Координата Y дерева
-@param [__in] z Координата Z дерева
+РџСЂРёРјРµРЅРµРЅРёРµ РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚Рё РєСЂРѕРЅ РґРµСЂРµРІСЊРµРІ РІ СѓРєР°Р·Р°РЅРЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚Р°С…
+@param [__in] graphic РЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё РґРµСЂРµРІР°
+@param [__in] x РљРѕРѕСЂРґРёРЅР°С‚Р° X РґРµСЂРµРІР°
+@param [__in] y РљРѕРѕСЂРґРёРЅР°С‚Р° Y РґРµСЂРµРІР°
+@param [__in] z РљРѕРѕСЂРґРёРЅР°С‚Р° Z РґРµСЂРµРІР°
 @return 
 */
 void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const int &x, const int &y, const int &z)
@@ -266,11 +266,11 @@ void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const in
 }
 //----------------------------------------------------------------------------------
 /*!
-Проверка принадлежности кроны к группе крон (с последующим применением прозрачности всей группе)
-@param [__in] graphic Индекс картинки дерева
-@param [__in] x Координата X дерева
-@param [__in] y Координата Y дерева
-@param [__in] z Координата Z дерева
+РџСЂРѕРІРµСЂРєР° РїСЂРёРЅР°РґР»РµР¶РЅРѕСЃС‚Рё РєСЂРѕРЅС‹ Рє РіСЂСѓРїРїРµ РєСЂРѕРЅ (СЃ РїРѕСЃР»РµРґСѓСЋС‰РёРј РїСЂРёРјРµРЅРµРЅРёРµРј РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚Рё РІСЃРµР№ РіСЂСѓРїРїРµ)
+@param [__in] graphic РРЅРґРµРєСЃ РєР°СЂС‚РёРЅРєРё РґРµСЂРµРІР°
+@param [__in] x РљРѕРѕСЂРґРёРЅР°С‚Р° X РґРµСЂРµРІР°
+@param [__in] y РљРѕРѕСЂРґРёРЅР°С‚Р° Y РґРµСЂРµРІР°
+@param [__in] z РљРѕРѕСЂРґРёРЅР°С‚Р° Z РґРµСЂРµРІР°
 @return 
 */
 void CGameScreen::CheckFoliageUnion(ushort graphic, int x, int y, int z)
@@ -299,7 +299,7 @@ void CGameScreen::CheckFoliageUnion(ushort graphic, int x, int y, int z)
 }
 //----------------------------------------------------------------------------------
 /*!
-Функция увеличения размера списка рендера
+Р¤СѓРЅРєС†РёСЏ СѓРІРµР»РёС‡РµРЅРёСЏ СЂР°Р·РјРµСЂР° СЃРїРёСЃРєР° СЂРµРЅРґРµСЂР°
 @return 
 */
 void CGameScreen::IncreaseRenderList()
@@ -318,7 +318,7 @@ void CGameScreen::IncreaseRenderList()
 }
 //----------------------------------------------------------------------------------
 /*!
-Расчет списка объектов рендера, вычисление прозрачности крон деревьев (в т.ч. составных)
+Р Р°СЃС‡РµС‚ СЃРїРёСЃРєР° РѕР±СЉРµРєС‚РѕРІ СЂРµРЅРґРµСЂР°, РІС‹С‡РёСЃР»РµРЅРёРµ РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚Рё РєСЂРѕРЅ РґРµСЂРµРІСЊРµРІ (РІ С‚.С‡. СЃРѕСЃС‚Р°РІРЅС‹С…)
 @return 
 */
 void CGameScreen::CalculateRenderList()
@@ -371,6 +371,9 @@ void CGameScreen::CalculateRenderList()
 	int maxX = g_RenderBounds.RealMaxRangeX;
 	int maxY = g_RenderBounds.RealMaxRangeY;
 
+	int mapBlockHeight = g_MapBlockSize[g_MapManager->GetActualMap()].Height;
+	uint maxBlockIndex = g_MapManager->MaxBlockIndex;
+
 	IFOR(i, 0, 2)
 	{
 		int minValue = minY;
@@ -410,19 +413,24 @@ void CGameScreen::CalculateRenderList()
 						int blockX = x / 8;
 						int blockY = y / 8;
 
-						int blockIndex = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
+						uint blockIndex = (blockX * mapBlockHeight) + blockY;
 
-						CMapBlock *block = g_MapManager->GetBlock(blockIndex);
-
-						if (block == NULL)
+						if (blockIndex < maxBlockIndex)
 						{
-							block = g_MapManager->AddBlock(blockIndex);
-							block->X = blockX;
-							block->Y = blockY;
-							g_MapManager->LoadBlock(block);
-						}
+							CMapBlock *block = g_MapManager->GetBlock(blockIndex);
 
-						AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX);
+							if (block == NULL)
+							{
+								block = g_MapManager->AddBlock(blockIndex);
+								block->X = blockX;
+								block->Y = blockY;
+								g_MapManager->LoadBlock(block);
+							}
+
+							AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX);
+						}
+						else
+							LOG("Expected: %i %i\n", blockIndex, g_MapManager->MaxBlockIndex);
 					}
 				}
 
@@ -733,6 +741,9 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 
 	int maxZ = obj->Z + obj->RenderQueueIndex;
 
+	int mapBlockHeight = g_MapBlockSize[g_CurrentMap].Height;
+	uint maxBlockIndex = g_MapManager->MaxBlockIndex;
+
 	IFOR(i, 0, size)
 	{
 		int x = coordinates[i].first;
@@ -757,24 +768,27 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 		int blockX = x / 8;
 		int blockY = y / 8;
 
-		int blockIndex = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
+		uint blockIndex = (blockX * mapBlockHeight) + blockY;
 
-		CMapBlock *block = g_MapManager->GetBlock(blockIndex);
-
-		if (block == NULL)
+		if (blockIndex < maxBlockIndex)
 		{
-			block = g_MapManager->AddBlock(blockIndex);
-			block->X = blockX;
-			block->Y = blockY;
-			g_MapManager->LoadBlock(block);
-		}
+			CMapBlock *block = g_MapManager->GetBlock(blockIndex);
 
-		AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX, maxZ);
+			if (block == NULL)
+			{
+				block = g_MapManager->AddBlock(blockIndex);
+				block->X = blockX;
+				block->Y = blockY;
+				g_MapManager->LoadBlock(block);
+			}
+
+			AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX, maxZ);
+		}
 	}
 }
 //----------------------------------------------------------------------------------
 /*!
-Вычисление параметров игрового окна
+Р’С‹С‡РёСЃР»РµРЅРёРµ РїР°СЂР°РјРµС‚СЂРѕРІ РёРіСЂРѕРІРѕРіРѕ РѕРєРЅР°
 @return 
 */
 void CGameScreen::CalculateGameWindowBounds()
@@ -905,11 +919,11 @@ void CGameScreen::CalculateGameWindowBounds()
 }
 //----------------------------------------------------------------------------------
 /*!
-Функция добавления источника света
-@param [__in] rwo Верхний объект, источающий свет
-@param [__in] lightObject Объект, источающий свет
-@param [__in] x Экранная координата X
-@param [__in] y Экранная координата Y
+Р¤СѓРЅРєС†РёСЏ РґРѕР±Р°РІР»РµРЅРёСЏ РёСЃС‚РѕС‡РЅРёРєР° СЃРІРµС‚Р°
+@param [__in] rwo Р’РµСЂС…РЅРёР№ РѕР±СЉРµРєС‚, РёСЃС‚РѕС‡Р°СЋС‰РёР№ СЃРІРµС‚
+@param [__in] lightObject РћР±СЉРµРєС‚, РёСЃС‚РѕС‡Р°СЋС‰РёР№ СЃРІРµС‚
+@param [__in] x Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° X
+@param [__in] y Р­РєСЂР°РЅРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° Y
 @return 
 */
 void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObject, const int &x, const int &y)
@@ -986,8 +1000,8 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 }
 //----------------------------------------------------------------------------------
 /*!
-Рисование игрового окна
-@param [__in] mode true - отрисовка, false - выбор
+Р РёСЃРѕРІР°РЅРёРµ РёРіСЂРѕРІРѕРіРѕ РѕРєРЅР°
+@param [__in] mode true - РѕС‚СЂРёСЃРѕРІРєР°, false - РІС‹Р±РѕСЂ
 @return 
 */
 void CGameScreen::DrawGameWindow(const bool &mode)
@@ -1016,7 +1030,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 		if (g_ObjectInHand != NULL)
 			ignoreSerial = g_ObjectInHand->Serial;
 
-		vector<OBJECT_HITS_INFO> hitsStack;
+		m_HitsStack.clear();
 
 		IFOR(i, 0, m_RenderListCount)
 		{
@@ -1040,11 +1054,8 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 					ushort color = g_ConfigManager.GetColorByNotoriety(gc->Notoriety);
 
-					int x = rod.X - 20 + gc->OffsetX;
+					int x = rod.X + gc->OffsetX;
 					int y = rod.Y + gc->OffsetY - (gc->Z * 4) - gc->OffsetZ;
-
-					if (g_ConfigManager.DrawStatusState == 1)
-						y -= gc->m_FrameInfo.Height + 6;
 
 					int width = gc->MaxHits;
 
@@ -1057,24 +1068,26 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 						if (width < 1)
 							width = 0;
-						else
+						else if (g_ConfigManager.DrawStatusState == DCSS_UNDER)
 							width = (34 * width) / 100;
 					}
 
-					OBJECT_HITS_INFO hitsInfo = {x, y, color, width};
-					hitsStack.push_back(hitsInfo);
-				}
-			}
-		}
+					if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+					{
+						ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(gc, 0);
+						y -= (dims.Height + dims.CenterY) + 24;
 
-		IFOR(i, 0, 2)
-		{
-			for (vector<OBJECT_HITS_INFO>::iterator it = hitsStack.begin(); it != hitsStack.end(); it++)
-			{
-				if (!i)
-					g_Orion.DrawGump(0x1068, it->Color, it->X, it->Y);
-				else if (it->Width)
-					g_Orion.DrawGump(0x1069, 0x0044, it->X, it->Y, it->Width, 0);
+						gc->UpdateHitsTexture(width);
+						width = (int)&gc->m_HitsTexture;
+
+						x -= (gc->m_HitsTexture.Width / 2) - 3;
+					}
+					else
+						x -= 20;
+
+					OBJECT_HITS_INFO hitsInfo = {x, y, color, width};
+					m_HitsStack.push_back(hitsInfo);
+				}
 			}
 		}
 
@@ -1116,7 +1129,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 }
 //----------------------------------------------------------------------------------
 /*!
-Отображение источников света
+РћС‚РѕР±СЂР°Р¶РµРЅРёРµ РёСЃС‚РѕС‡РЅРёРєРѕРІ СЃРІРµС‚Р°
 @return 
 */
 void CGameScreen::DrawGameWindowLight()
@@ -1187,8 +1200,8 @@ void CGameScreen::DrawGameWindowLight()
 }
 //----------------------------------------------------------------------------------
 /*!
-Отображение текста над объектами мира
-@param [__in] mode true - отрисовка, false - выбор
+РћС‚РѕР±СЂР°Р¶РµРЅРёРµ С‚РµРєСЃС‚Р° РЅР°Рґ РѕР±СЉРµРєС‚Р°РјРё РјРёСЂР°
+@param [__in] mode true - РѕС‚СЂРёСЃРѕРІРєР°, false - РІС‹Р±РѕСЂ
 @return 
 */
 void CGameScreen::DrawGameWindowText(const bool &mode)
@@ -1200,6 +1213,35 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 		g_WorldTextRenderer.WorldDraw();
 
 		UnuseShader();
+
+		if (g_ConfigManager.DrawStatusState && m_HitsStack.size())
+		{
+			if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+			{
+				for (vector<OBJECT_HITS_INFO>::iterator it = m_HitsStack.begin(); it != m_HitsStack.end(); it++)
+				{
+					CGLTextTexture *texture = (CGLTextTexture*)it->Width;
+					texture->Draw(it->X, it->Y);
+				}
+			}
+			else
+			{
+				g_ColorizerShader->Use();
+
+				IFOR(i, 0, 2)
+				{
+					for (vector<OBJECT_HITS_INFO>::iterator it = m_HitsStack.begin(); it != m_HitsStack.end(); it++)
+					{
+						if (!i)
+							g_Orion.DrawGump(0x1068, it->Color, it->X, it->Y);
+						else if (it->Width)
+							g_Orion.DrawGump(0x1069, 0x0044, it->X, it->Y, it->Width, 0);
+					}
+				}
+
+				UnuseShader();
+			}
+		}
 
 		QFOR(obj, g_World->m_Items, CGameObject*)
 		{
@@ -1295,9 +1337,9 @@ void CGameScreen::PrepareContent()
 }
 //----------------------------------------------------------------------------------
 /*!
-Отрисовка/выбор объектов
-@param [__in] mode true - отрисовка, false - выбор
-@return При выборе объектов - идентификатор выбранного объекта
+РћС‚СЂРёСЃРѕРІРєР°/РІС‹Р±РѕСЂ РѕР±СЉРµРєС‚РѕРІ
+@param [__in] mode true - РѕС‚СЂРёСЃРѕРІРєР°, false - РІС‹Р±РѕСЂ
+@return РџСЂРё РІС‹Р±РѕСЂРµ РѕР±СЉРµРєС‚РѕРІ - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
 */
 void CGameScreen::Render(const bool &mode)
 {
@@ -1392,7 +1434,7 @@ void CGameScreen::Render(const bool &mode)
 				g_Weather.Draw(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY);
 			}
 
-			//Отрисовка текста
+			//РћС‚СЂРёСЃРѕРІРєР° С‚РµРєСЃС‚Р°
 			DrawGameWindowText(mode);
 
 			DrawSmoothMonitorEffect();
@@ -1412,7 +1454,7 @@ void CGameScreen::Render(const bool &mode)
 
 		UnuseShader();
 
-		//Восстанавливаем размеры рисуемой области
+		//Р’РѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°Р·РјРµСЂС‹ СЂРёСЃСѓРµРјРѕР№ РѕР±Р»Р°СЃС‚Рё
 		g_GL.RestorePort();
 
 		if (!g_DeathScreenTimer)
@@ -1484,7 +1526,7 @@ void CGameScreen::Render(const bool &mode)
 
 				int tz = selRwo->Z;
 
-				//Если это тайл текстуры
+				//Р•СЃР»Рё СЌС‚Рѕ С‚Р°Р№Р» С‚РµРєСЃС‚СѓСЂС‹
 				if (land != NULL && land->IsStretched)
 					tz = (char)land->Serial;
 
@@ -1497,7 +1539,7 @@ void CGameScreen::Render(const bool &mode)
 
 		g_GumpManager.Draw(false);
 		
-		// отрисовка ввода игрока
+		// РѕС‚СЂРёСЃРѕРІРєР° РІРІРѕРґР° РёРіСЂРѕРєР°
 		g_GameConsole.DrawW((uchar)g_ConfigManager.SpeechFont, g_ConfigManager.SpeechColor, g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - 18, TS_LEFT, UOFONT_BLACK_BORDER | UOFONT_FIXED);
 		
 		g_PluginManager.SceneDraw();
@@ -1519,7 +1561,7 @@ void CGameScreen::Render(const bool &mode)
 
 		g_GL.EndDraw();
 	}
-	else //Выбор объектов
+	else //Р’С‹Р±РѕСЂ РѕР±СЉРµРєС‚РѕРІ
 	{
 		GLdouble oldScale = g_GlobalScale;
 		g_GlobalScale = 1.0;
@@ -1538,16 +1580,16 @@ void CGameScreen::Render(const bool &mode)
 		{
 			if (!g_DeathScreenTimer)
 			{
-				//Проверка текста
+				//РџСЂРѕРІРµСЂРєР° С‚РµРєСЃС‚Р°
 				DrawGameWindowText(mode);
 
 				if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
 					g_WorldTextRenderer.ToTop((CRenderTextObject*)g_SelectedObject.Object());
 			}
 		
-			if (g_SelectedObject.Object() == NULL) //Если ничего не выбралось - пройдемся по объектам
+			if (g_SelectedObject.Object() == NULL) //Р•СЃР»Рё РЅРёС‡РµРіРѕ РЅРµ РІС‹Р±СЂР°Р»РѕСЃСЊ - РїСЂРѕР№РґРµРјСЃСЏ РїРѕ РѕР±СЉРµРєС‚Р°Рј
 			{
-				//Если курсор мыши в игровом окне - просканируем его
+				//Р•СЃР»Рё РєСѓСЂСЃРѕСЂ РјС‹С€Рё РІ РёРіСЂРѕРІРѕРј РѕРєРЅРµ - РїСЂРѕСЃРєР°РЅРёСЂСѓРµРј РµРіРѕ
 				if (g_MouseManager.Position.X < g_RenderBounds.GameWindowPosX || g_MouseManager.Position.Y < g_RenderBounds.GameWindowPosY ||
 					g_MouseManager.Position.X > (g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth) ||
 					g_MouseManager.Position.Y > (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight))
@@ -1610,7 +1652,7 @@ void CGameScreen::Render(const bool &mode)
 }
 //----------------------------------------------------------------------------------
 /*!
-Нажатие левой кнопки мыши
+РќР°Р¶Р°С‚РёРµ Р»РµРІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё
 @return
 */
 void CGameScreen::OnLeftMouseButtonDown()
@@ -1636,7 +1678,7 @@ void CGameScreen::OnLeftMouseButtonDown()
 }
 //----------------------------------------------------------------------------------
 /*!
-Отпускание левой кнопки мыши
+РћС‚РїСѓСЃРєР°РЅРёРµ Р»РµРІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё
 @return 
 */
 void CGameScreen::OnLeftMouseButtonUp()
@@ -1807,8 +1849,8 @@ void CGameScreen::OnLeftMouseButtonUp()
 }
 //----------------------------------------------------------------------------------
 /*!
-Двойной клик левой кнопкой мыши
-@return true при успешной обработке
+Р”РІРѕР№РЅРѕР№ РєР»РёРє Р»РµРІРѕР№ РєРЅРѕРїРєРѕР№ РјС‹С€Рё
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРµ
 */
 bool CGameScreen::OnLeftMouseButtonDoubleClick()
 {
@@ -1879,7 +1921,7 @@ bool CGameScreen::OnLeftMouseButtonDoubleClick()
 }
 //----------------------------------------------------------------------------------
 /*!
-Нажатие правой кнопки мыши
+РќР°Р¶Р°С‚РёРµ РїСЂР°РІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё
 @return
 */
 void CGameScreen::OnRightMouseButtonDown()
@@ -1892,7 +1934,7 @@ void CGameScreen::OnRightMouseButtonDown()
 }
 //----------------------------------------------------------------------------------
 /*!
-Отпускание правой кнопки мыши
+РћС‚РїСѓСЃРєР°РЅРёРµ РїСЂР°РІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё
 @return 
 */
 void CGameScreen::OnRightMouseButtonUp()
@@ -1913,8 +1955,8 @@ void CGameScreen::OnRightMouseButtonUp()
 }
 //----------------------------------------------------------------------------------
 /*!
-Двойной клик правой кнопкой мыши
-@return true при успешной обработке
+Р”РІРѕР№РЅРѕР№ РєР»РёРє РїСЂР°РІРѕР№ РєРЅРѕРїРєРѕР№ РјС‹С€Рё
+@return true РїСЂРё СѓСЃРїРµС€РЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРµ
 */
 bool CGameScreen::OnRightMouseButtonDoubleClick()
 {
@@ -1936,8 +1978,8 @@ bool CGameScreen::OnRightMouseButtonDoubleClick()
 }
 //----------------------------------------------------------------------------------
 /*!
-Обработка средней кнопки (колесика) мыши
-@param [__in] state Состояние колесика
+РћР±СЂР°Р±РѕС‚РєР° СЃСЂРµРґРЅРµР№ РєРЅРѕРїРєРё (РєРѕР»РµСЃРёРєР°) РјС‹С€Рё
+@param [__in] state РЎРѕСЃС‚РѕСЏРЅРёРµ РєРѕР»РµСЃРёРєР°
 @return 
 */
 void CGameScreen::OnMidMouseButtonScroll(const bool &up)
@@ -1972,9 +2014,9 @@ void CGameScreen::OnDragging()
 }
 //----------------------------------------------------------------------------------
 /*!
-Обработка нажатия клавиши
-@param [__in] wparam не подписанный параметр
-@param [__in] lparam не подписанный параметр
+РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёСЏ РєР»Р°РІРёС€Рё
+@param [__in] wparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
+@param [__in] lparam РЅРµ РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ
 @return 
 */
 void CGameScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)

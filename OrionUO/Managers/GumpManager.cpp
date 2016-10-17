@@ -1,4 +1,4 @@
-/***********************************************************************************
+ï»¿/***********************************************************************************
 **
 ** GumpManager.cpp
 **
@@ -43,8 +43,8 @@
 CGumpManager g_GumpManager;
 //----------------------------------------------------------------------------------
 /*!
-Âû÷èñëèòü êîëè÷åñòâî ñòàòóñáàðîâ áåç ïàòè
-@return Êîëè÷åñòâî non-party ñòàòóñáûðîâ
+Ð’Ñ‹Ñ‡Ð¸ÑÐ»Ð¸Ñ‚ÑŒ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ð°Ñ€Ð¾Ð² Ð±ÐµÐ· Ð¿Ð°Ñ‚Ð¸
+@return ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ non-party ÑÑ‚Ð°Ñ‚ÑƒÑÐ±Ñ‹Ñ€Ð¾Ð²
 */
 int CGumpManager::GetNonpartyStatusbarsCount()
 {
@@ -60,8 +60,8 @@ int CGumpManager::GetNonpartyStatusbarsCount()
 }
 //----------------------------------------------------------------------------------
 /*!
-Äîáàâèòü ãàìï
-@param [__in] obj Ññûëêà íà ãàìï
+Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð³Ð°Ð¼Ð¿
+@param [__in] obj Ð¡ÑÑ‹Ð»ÐºÐ° Ð½Ð° Ð³Ð°Ð¼Ð¿
 @return 
 */
 void CGumpManager::AddGump(CGump *obj)
@@ -150,6 +150,11 @@ void CGumpManager::AddGump(CGump *obj)
 						gump->Minimized = !gump->Minimized;
 						((CGumpMinimap*)gump)->LastX = 0;
 					}
+					else if (gumpType == GT_SPELLBOOK && gump->Minimized)
+					{
+						gump->Minimized = false;
+						gump->WantUpdateContent = true;
+					}
 
 					MoveToBack(gump);
 
@@ -225,8 +230,8 @@ void CGumpManager::AddGump(CGump *obj)
 }
 //----------------------------------------------------------------------------------
 /*!
-Ïîëó÷èòü ãàìï-âëàäåëåö òåêóùåé àêòèâíîé TEntryText
-@return Ññûëêó íà ãàìï èëè NULL
+ÐŸÐ¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑŒ Ð³Ð°Ð¼Ð¿-Ð²Ð»Ð°Ð´ÐµÐ»ÐµÑ† Ñ‚ÐµÐºÑƒÑ‰ÐµÐ¹ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾Ð¹ TEntryText
+@return Ð¡ÑÑ‹Ð»ÐºÑƒ Ð½Ð° Ð³Ð°Ð¼Ð¿ Ð¸Ð»Ð¸ NULL
 */
 CGump *CGumpManager::GetTextEntryOwner()
 {
@@ -240,8 +245,8 @@ CGump *CGumpManager::GetTextEntryOwner()
 }
 //----------------------------------------------------------------------------------
 /*!
-Ïðîâåðèòü, ñóùåñòâóåò ëè ãàìï
-@param [__in] gumpID ID ãàìïà (â ïàìÿòè)
+ÐŸÑ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚ÑŒ, ÑÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÐµÑ‚ Ð»Ð¸ Ð³Ð°Ð¼Ð¿
+@param [__in] gumpID ID Ð³Ð°Ð¼Ð¿Ð° (Ð² Ð¿Ð°Ð¼ÑÑ‚Ð¸)
 @return
 */
 CGump *CGumpManager::GumpExists(uint gumpID)
@@ -256,11 +261,11 @@ CGump *CGumpManager::GumpExists(uint gumpID)
 }
 //----------------------------------------------------------------------------------
 /*!
-Îáíîâèòü ñîäåðæèìîå ãàìïà
-@param [__in] serial Ñåðèéíèê ãàìïà
-@param [__in] ID ID ãàìïà
-@param [__in] Type Òèï ãàìïà
-@return Ññûëêó íà îáíîâëåííûé ãàìï èëè NULL
+ÐžÐ±Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ð¼Ð¾Ðµ Ð³Ð°Ð¼Ð¿Ð°
+@param [__in] serial Ð¡ÐµÑ€Ð¸Ð¹Ð½Ð¸Ðº Ð³Ð°Ð¼Ð¿Ð°
+@param [__in] ID ID Ð³Ð°Ð¼Ð¿Ð°
+@param [__in] Type Ð¢Ð¸Ð¿ Ð³Ð°Ð¼Ð¿Ð°
+@return Ð¡ÑÑ‹Ð»ÐºÑƒ Ð½Ð° Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ‹Ð¹ Ð³Ð°Ð¼Ð¿ Ð¸Ð»Ð¸ NULL
 */
 CGump *CGumpManager::UpdateContent(uint serial, uint id, GUMP_TYPE type)
 {
@@ -273,11 +278,11 @@ CGump *CGumpManager::UpdateContent(uint serial, uint id, GUMP_TYPE type)
 }
 //----------------------------------------------------------------------------------
 /*!
-Îáíîâèòü ãàìï
-@param [__in] serial Ñåðèéíèê ãàìïà
-@param [__in] ID ID ãàìïà
-@param [__in] Type Òèï ãàìïà
-@return Ññûëêó íà îáíîâëåííûé ãàìï èëè NULL
+ÐžÐ±Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ Ð³Ð°Ð¼Ð¿
+@param [__in] serial Ð¡ÐµÑ€Ð¸Ð¹Ð½Ð¸Ðº Ð³Ð°Ð¼Ð¿Ð°
+@param [__in] ID ID Ð³Ð°Ð¼Ð¿Ð°
+@param [__in] Type Ð¢Ð¸Ð¿ Ð³Ð°Ð¼Ð¿Ð°
+@return Ð¡ÑÑ‹Ð»ÐºÑƒ Ð½Ð° Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ‹Ð¹ Ð³Ð°Ð¼Ð¿ Ð¸Ð»Ð¸ NULL
 */
 CGump *CGumpManager::UpdateGump(uint serial, uint id, GUMP_TYPE type)
 {
@@ -290,11 +295,11 @@ CGump *CGumpManager::UpdateGump(uint serial, uint id, GUMP_TYPE type)
 }
 //----------------------------------------------------------------------------------
 /*!
-Íàéòè ãàìï
-@param [__in] serial Ñåðèéíèê ãàìïà
-@param [__in] ID ID ãàìïà
-@param [__in] Type Òèï ãàìïà
-@return Ññûëêó íà ãàìï èëè NULL
+ÐÐ°Ð¹Ñ‚Ð¸ Ð³Ð°Ð¼Ð¿
+@param [__in] serial Ð¡ÐµÑ€Ð¸Ð¹Ð½Ð¸Ðº Ð³Ð°Ð¼Ð¿Ð°
+@param [__in] ID ID Ð³Ð°Ð¼Ð¿Ð°
+@param [__in] Type Ð¢Ð¸Ð¿ Ð³Ð°Ð¼Ð¿Ð°
+@return Ð¡ÑÑ‹Ð»ÐºÑƒ Ð½Ð° Ð³Ð°Ð¼Ð¿ Ð¸Ð»Ð¸ NULL
 */
 CGump *CGumpManager::GetGump(uint serial, uint id, GUMP_TYPE type)
 {
@@ -329,10 +334,10 @@ CGump *CGumpManager::GetGump(uint serial, uint id, GUMP_TYPE type)
 }
 //----------------------------------------------------------------------------------
 /*!
-Çàêðûòü âñå ãàìïû ñ óêàçàííûìè ïàðàìåòðàìè
-@param [__in] serial Ñåðèéíèê ãàìïà
-@param [__in] ID ID ãàìïà
-@param [__in] Type Òèï ãàìïà
+Ð—Ð°ÐºÑ€Ñ‹Ñ‚ÑŒ Ð²ÑÐµ Ð³Ð°Ð¼Ð¿Ñ‹ Ñ ÑƒÐºÐ°Ð·Ð°Ð½Ð½Ñ‹Ð¼Ð¸ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð°Ð¼Ð¸
+@param [__in] serial Ð¡ÐµÑ€Ð¸Ð¹Ð½Ð¸Ðº Ð³Ð°Ð¼Ð¿Ð°
+@param [__in] ID ID Ð³Ð°Ð¼Ð¿Ð°
+@param [__in] Type Ð¢Ð¸Ð¿ Ð³Ð°Ð¼Ð¿Ð°
 @return
 */
 void CGumpManager::CloseGump(uint serial, uint id, GUMP_TYPE type)
@@ -371,8 +376,8 @@ void CGumpManager::CloseGump(uint serial, uint id, GUMP_TYPE type)
 }
 //----------------------------------------------------------------------------------
 /*!
-Óäàëèòü ãàìï
-@param [__in] obj Ññûëêà íà ãàìï
+Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ Ð³Ð°Ð¼Ð¿
+@param [__in] obj Ð¡ÑÑ‹Ð»ÐºÐ° Ð½Ð° Ð³Ð°Ð¼Ð¿
 @return
 */
 void CGumpManager::RemoveGump(CGump *obj)
@@ -396,7 +401,7 @@ void CGumpManager::RemoveGump(CGump *obj)
 }
 //----------------------------------------------------------------------------------
 /*!
-Ñîáûòèå óäàëåíèÿ ìåíåäæåðà (âûçûâàåòñÿ ïåðåä óäàëåíèåì)
+Ð¡Ð¾Ð±Ñ‹Ñ‚Ð¸Ðµ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ Ð¼ÐµÐ½ÐµÐ´Ð¶ÐµÑ€Ð° (Ð²Ñ‹Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ Ð¿ÐµÑ€ÐµÐ´ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸ÐµÐ¼)
 @return 
 */
 void CGumpManager::OnDelete()
@@ -415,7 +420,7 @@ void CGumpManager::OnDelete()
 }
 //----------------------------------------------------------------------------------
 /*!
-Óäàëèòü ãàìïû, êîòîðûå íå ìîãóò áûòü äîñÿãàåìû èç-çà èçìåíåíèÿ äèñòàíöèè äî îáúåêòà
+Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ Ð³Ð°Ð¼Ð¿Ñ‹, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Ð½Ðµ Ð¼Ð¾Ð³ÑƒÑ‚ Ð±Ñ‹Ñ‚ÑŒ Ð´Ð¾ÑÑÐ³Ð°ÐµÐ¼Ñ‹ Ð¸Ð·-Ð·Ð° Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ñ Ð´Ð¸ÑÑ‚Ð°Ð½Ñ†Ð¸Ð¸ Ð´Ð¾ Ð¾Ð±ÑŠÐµÐºÑ‚Ð°
 @return 
 */
 void CGumpManager::RemoveRangedGumps()
@@ -439,7 +444,7 @@ void CGumpManager::RemoveRangedGumps()
 				case GT_SHOP:
 				{
 					if (g_World->FindWorldObject(gump->Serial) == NULL)
-						RemoveGump(gump); //Èëè CloseGump() ?
+						RemoveGump(gump); //Ð˜Ð»Ð¸ CloseGump() ?
 					break;
 				}
 				case GT_CONTAINER:
@@ -487,7 +492,7 @@ void CGumpManager::RemoveMarked()
 }
 //----------------------------------------------------------------------------------
 /*!
-Ïîäãîòîâêà òåêñòóð
+ÐŸÐ¾Ð´Ð³Ð¾Ñ‚Ð¾Ð²ÐºÐ° Ñ‚ÐµÐºÑÑ‚ÑƒÑ€
 @return 
 */
 void CGumpManager::PrepareTextures()
@@ -563,7 +568,7 @@ void CGumpManager::InitToolTip()
 }
 //----------------------------------------------------------------------------------
 /*!
-Ïåðåðèñîâàòü âñå ãàìïû
+ÐŸÐµÑ€ÐµÑ€Ð¸ÑÐ¾Ð²Ð°Ñ‚ÑŒ Ð²ÑÐµ Ð³Ð°Ð¼Ð¿Ñ‹
 @return 
 */
 void CGumpManager::RedrawAll()
@@ -573,8 +578,8 @@ void CGumpManager::RedrawAll()
 }
 //----------------------------------------------------------------------------------
 /*!
-Íàæàòèå ëåâîé êíîïêè ìûøè
-@param [__in] blocked Ñîñòîÿíèå ýêðàíà
+ÐÐ°Ð¶Ð°Ñ‚Ð¸Ðµ Ð»ÐµÐ²Ð¾Ð¹ ÐºÐ½Ð¾Ð¿ÐºÐ¸ Ð¼Ñ‹ÑˆÐ¸
+@param [__in] blocked Ð¡Ð¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ ÑÐºÑ€Ð°Ð½Ð°
 @return 
 */
 void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
@@ -603,8 +608,8 @@ void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Îòïóñêàíèå ëåâîé êíîïêè ìûøè
-@param [__in] blocked Ñîñòîÿíèå ýêðàíà
+ÐžÑ‚Ð¿ÑƒÑÐºÐ°Ð½Ð¸Ðµ Ð»ÐµÐ²Ð¾Ð¹ ÐºÐ½Ð¾Ð¿ÐºÐ¸ Ð¼Ñ‹ÑˆÐ¸
+@param [__in] blocked Ð¡Ð¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ ÑÐºÑ€Ð°Ð½Ð°
 @return 
 */
 bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
@@ -736,9 +741,9 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Äâîéíîé êëèê ëåâîé êíîïêîé ìûøè
-@param [__in] blocked Ñîñòîÿíèå ýêðàíà
-@return true ïðè óñïåøíîé îáðàáîòêå
+Ð”Ð²Ð¾Ð¹Ð½Ð¾Ð¹ ÐºÐ»Ð¸Ðº Ð»ÐµÐ²Ð¾Ð¹ ÐºÐ½Ð¾Ð¿ÐºÐ¾Ð¹ Ð¼Ñ‹ÑˆÐ¸
+@param [__in] blocked Ð¡Ð¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ ÑÐºÑ€Ð°Ð½Ð°
+@return true Ð¿Ñ€Ð¸ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾Ð¹ Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐµ
 */
 bool CGumpManager::OnLeftMouseButtonDoubleClick(const bool &blocked)
 {
@@ -765,8 +770,8 @@ bool CGumpManager::OnLeftMouseButtonDoubleClick(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Íàæàòèå ïðàâîé êíîïêè ìûøè
-@param [__in] blocked Ñîñòîÿíèå ýêðàíà
+ÐÐ°Ð¶Ð°Ñ‚Ð¸Ðµ Ð¿Ñ€Ð°Ð²Ð¾Ð¹ ÐºÐ½Ð¾Ð¿ÐºÐ¸ Ð¼Ñ‹ÑˆÐ¸
+@param [__in] blocked Ð¡Ð¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ ÑÐºÑ€Ð°Ð½Ð°
 @return 
 */
 void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
@@ -795,8 +800,8 @@ void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Îòïóñêàíèå ïðàâîé êíîïêè ìûøè
-@param [__in] blocked Ñîñòîÿíèå ýêðàíà
+ÐžÑ‚Ð¿ÑƒÑÐºÐ°Ð½Ð¸Ðµ Ð¿Ñ€Ð°Ð²Ð¾Ð¹ ÐºÐ½Ð¾Ð¿ÐºÐ¸ Ð¼Ñ‹ÑˆÐ¸
+@param [__in] blocked Ð¡Ð¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ ÑÐºÑ€Ð°Ð½Ð°
 @return 
 */
 void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
@@ -953,9 +958,9 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Îáðàáîòêà ñðåäíåé êíîïêè (êîëåñèêà) ìûøè
-@param [__in] state Ñîñòîÿíèå êîëåñèêà
-@param [__in] blocked Ñîñòîÿíèå ýêðàíà
+ÐžÐ±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐ° ÑÑ€ÐµÐ´Ð½ÐµÐ¹ ÐºÐ½Ð¾Ð¿ÐºÐ¸ (ÐºÐ¾Ð»ÐµÑÐ¸ÐºÐ°) Ð¼Ñ‹ÑˆÐ¸
+@param [__in] state Ð¡Ð¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ ÐºÐ¾Ð»ÐµÑÐ¸ÐºÐ°
+@param [__in] blocked Ð¡Ð¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ ÑÐºÑ€Ð°Ð½Ð°
 @return 
 */
 void CGumpManager::OnMidMouseButtonScroll(const bool &up, const bool &blocked)
@@ -985,11 +990,11 @@ void CGumpManager::OnDragging(const bool &blocked)
 }
 //----------------------------------------------------------------------------------
 /*!
-Îáðàáîòêà íàæàòèÿ êëàâèøè
-@param [__in] wparam íå ïîäïèñàííûé ïàðàìåòð
-@param [__in] lparam íå ïîäïèñàííûé ïàðàìåòð
-@param [__in] blocked Ñîñòîÿíèå ýêðàíà
-@return true ïðè óñïåøíîé îáðàáîòêå
+ÐžÐ±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐ° Ð½Ð°Ð¶Ð°Ñ‚Ð¸Ñ ÐºÐ»Ð°Ð²Ð¸ÑˆÐ¸
+@param [__in] wparam Ð½Ðµ Ð¿Ð¾Ð´Ð¿Ð¸ÑÐ°Ð½Ð½Ñ‹Ð¹ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€
+@param [__in] lparam Ð½Ðµ Ð¿Ð¾Ð´Ð¿Ð¸ÑÐ°Ð½Ð½Ñ‹Ð¹ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€
+@param [__in] blocked Ð¡Ð¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ ÑÐºÑ€Ð°Ð½Ð°
+@return true Ð¿Ñ€Ð¸ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾Ð¹ Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐµ
 */
 bool CGumpManager::OnCharPress(const WPARAM &wParam, const LPARAM &lParam, const bool &blocked)
 {
@@ -1021,11 +1026,11 @@ bool CGumpManager::OnCharPress(const WPARAM &wParam, const LPARAM &lParam, const
 }
 //----------------------------------------------------------------------------------
 /*!
-Îáðàáîòêà íàæàòèÿ êëàâèøè
-@param [__in] wparam íå ïîäïèñàííûé ïàðàìåòð
-@param [__in] lparam íå ïîäïèñàííûé ïàðàìåòð
-@param [__in] blocked Ñîñòîÿíèå ýêðàíà
-@return true ïðè óñïåøíîé îáðàáîòêå
+ÐžÐ±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐ° Ð½Ð°Ð¶Ð°Ñ‚Ð¸Ñ ÐºÐ»Ð°Ð²Ð¸ÑˆÐ¸
+@param [__in] wparam Ð½Ðµ Ð¿Ð¾Ð´Ð¿Ð¸ÑÐ°Ð½Ð½Ñ‹Ð¹ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€
+@param [__in] lparam Ð½Ðµ Ð¿Ð¾Ð´Ð¿Ð¸ÑÐ°Ð½Ð½Ñ‹Ð¹ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€
+@param [__in] blocked Ð¡Ð¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ ÑÐºÑ€Ð°Ð½Ð°
+@return true Ð¿Ñ€Ð¸ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾Ð¹ Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐµ
 */
 bool CGumpManager::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, const bool &blocked)
 {
@@ -1077,8 +1082,8 @@ bool CGumpManager::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, const b
 }
 //----------------------------------------------------------------------------------
 /*!
-Çàãðóçêà ãàìïîâ èç êîíôèãà
-@param [__in] path Ïóòü ê ôàéëó êîíôèãà
+Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ° Ð³Ð°Ð¼Ð¿Ð¾Ð² Ð¸Ð· ÐºÐ¾Ð½Ñ„Ð¸Ð³Ð°
+@param [__in] path ÐŸÑƒÑ‚ÑŒ Ðº Ñ„Ð°Ð¹Ð»Ñƒ ÐºÐ¾Ð½Ñ„Ð¸Ð³Ð°
 @return 
 */
 void CGumpManager::Load(const string &path)
@@ -1360,8 +1365,8 @@ void CGumpManager::SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writ
 };
 //----------------------------------------------------------------------------------
 /*!
-Ñîõðàíèòü ãàìïû â êîíôèã
-@param [__in] path Ïóòü ê ôàéëó êîôíèãà
+Ð¡Ð¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ Ð³Ð°Ð¼Ð¿Ñ‹ Ð² ÐºÐ¾Ð½Ñ„Ð¸Ð³
+@param [__in] path ÐŸÑƒÑ‚ÑŒ Ðº Ñ„Ð°Ð¹Ð»Ñƒ ÐºÐ¾Ñ„Ð½Ð¸Ð³Ð°
 @return 
 */
 void CGumpManager::Save(const string &path)
@@ -1389,9 +1394,7 @@ void CGumpManager::Save(const string &path)
 			case GT_JOURNAL:
 			case GT_WORLD_MAP:
 			{
-				uint serial = gump->Serial;
-
-				if (serial != g_PlayerSerial)
+				if (gump->Serial != g_PlayerSerial)
 					break;
 				
 				uchar size = 12;
