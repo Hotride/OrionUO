@@ -460,6 +460,8 @@ void CGumpSpellbook::UpdateContentMage()
 		text = (CGUIText*)Add(new CGUIText(0x0288, reagentsX, 92));
 		text->CreateTextureA(6, "Reagents:");
 
+		string reagentsData = "";
+
 		IFOR(j, 0, 4)
 		{
 			id = SPELL_REAGENTS[i][j];
@@ -467,9 +469,12 @@ void CGumpSpellbook::UpdateContentMage()
 			if (!id)
 				break;
 
-			text = (CGUIText*)Add(new CGUIText(0x0288, reagentsX, 114 + (j * 14)));
-			text->CreateTextureA(6, GetReagentName(m_ReagentsIndex[GetReagentIndex(id)]));
+			reagentsData += GetReagentName(m_ReagentsIndex[GetReagentIndex(id)]);
+			reagentsData += "\n";
 		}
+
+		text = (CGUIText*)Add(new CGUIText(0x0288, reagentsX, 114));
+		text->CreateTextureA(9, reagentsData);
 	}
 }
 //----------------------------------------------------------------------------
