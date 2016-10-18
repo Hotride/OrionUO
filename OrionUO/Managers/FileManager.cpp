@@ -23,7 +23,7 @@ CFileManager::~CFileManager()
 //----------------------------------------------------------------------------------
 bool CFileManager::Load()
 {
-	if (g_FileManager.UseUOP)
+	if (!g_FileManager.UseUOP)
 	{
 		 if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
 			return false;
@@ -55,9 +55,6 @@ bool CFileManager::Load()
 		if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
 			return false;
 		if (!m_MainMisc.Load(g_App.FilePath("MainMisc.uop")))
-			return false;
-		if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
-			return false;
 		IFOR(i, 1, 5)
 		{
 			if (!m_AnimationFrame[i].Load(g_App.FilePath("AnimationFrame%i.uop", i)))
@@ -105,7 +102,7 @@ bool CFileManager::Load()
 
 	IFOR(i, 0, 6)
 	{
-		if (g_FileManager.UseUOP && i > 0 || i > 1)
+		if (g_FileManager.UseUOP && i > 1 || i > 0)
 		{
 			if (!m_AnimIdx[i].Load(g_App.FilePath("anim%i.idx", i)))
 				return false;
@@ -117,11 +114,6 @@ bool CFileManager::Load()
 			return false;
 		if (g_FileManager.UseUOP)
 		{
-			if (!m_MapMul[i].Load(g_App.FilePath("map%i.mul", i)))
-				return false;
-		}
-		else
-		{
 			if (!m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i)))
 				return false;
 			if (i == 0 || i == 1 || i == 2 || i == 5)
@@ -129,6 +121,11 @@ bool CFileManager::Load()
 				if (!m_MapXUOP[i].Load(g_App.FilePath("map%ixLegacyMUL.uop", i)))
 					return false;
 			}
+		}
+		else
+		{
+			if (!m_MapMul[i].Load(g_App.FilePath("map%i.mul", i)))
+				return false;
 		}
 
 		if (!m_StaticMul[i].Load(g_App.FilePath("statics%i.mul", i)))
@@ -160,26 +157,50 @@ bool CFileManager::Load()
 //----------------------------------------------------------------------------------
 void CFileManager::Unload()
 {
-	m_ArtIdx.Unload();
-	m_GumpIdx.Unload();
+
+	if (!g_FileManager.UseUOP)
+	{
+		m_ArtIdx.Unload();
+		m_GumpIdx.Unload();
+		m_SoundIdx.Unload();
+		m_ArtMul.Unload();
+		m_GumpMul.Unload();
+		m_SoundMul.Unload();
+	}
+	else
+	{
+		m_artLegacyMUL.Unload();
+		m_gumpartLegacyMUL.Unload();
+		m_soundLegacyMUL.Unload();
+		m_tileart.Unload();
+		m_string_dictionary.Unload();
+		m_MultiCollection.Unload();
+		m_AnimationSequence.Unload();
+		m_MainMisc.Unload();
+
+		IFOR(i, 1, 5)
+		{
+			m_AnimationFrame[i].Unload();
+		}
+	}
 	m_LightIdx.Unload();
 	m_MultiIdx.Unload();
 	m_SkillsIdx.Unload();
-	m_SoundIdx.Unload();
+
 	m_MultiMap.Unload();
 	m_TextureIdx.Unload();
 	m_SpeechMul.Unload();
 	m_AnimdataMul.Unload();
-	m_ArtMul.Unload();
+
 	m_HuesMul.Unload();
 	m_FontsMul.Unload();
-	m_GumpMul.Unload();
+
 	m_LightMul.Unload();
 	m_MultiMul.Unload();
 	m_PaletteMul.Unload();
 	m_RadarcolMul.Unload();
 	m_SkillsMul.Unload();
-	m_SoundMul.Unload();
+
 	m_TextureMul.Unload();
 	m_TiledataMul.Unload();
 
@@ -187,10 +208,23 @@ void CFileManager::Unload()
 
 	IFOR(i, 0, 6)
 	{
-		m_AnimIdx[i].Unload();
+		if (!g_FileManager.UseUOP || (g_FileManager.UseUOP && i != 1))
+		{
+			m_AnimIdx[i].Unload();
+			m_AnimMul[i].Unload();
+		}
+
+
+		if (g_FileManager.UseUOP)
+		{
+			m_MapUOP[i].Unload();
+			if (i == 0 || i == 1 || i == 2 || i == 5)
+				m_MapXUOP[i].Unload();
+		}
+		else
+			m_MapMul[i].Unload();
+
 		m_StaticIdx[i].Unload();
-		m_AnimMul[i].Unload();
-		m_MapMul[i].Unload();
 		m_StaticMul[i].Unload();
 		m_FacetMul[i].Unload();
 	}
