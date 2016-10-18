@@ -90,12 +90,26 @@ void CCityManager::Init()
 	}
 	else
 	{
+		//!Названия городов
+		static const string cityNames[9] =
+		{
+			"Yew",
+			"Minoc",
+			"Britain",
+			"Moonglow",
+			"Trinsic",
+			"Magincia",
+			"Jhelom",
+			"Skara Brae",
+			"Vesper"
+		};
+
 		CCliloc *cliloc = g_ClilocManager.Cliloc(g_Language);
 
 		if (cliloc != NULL)
 		{
 			IFOR(i, 0, 9)
-				m_CityList.push_back(CCity(CITY_NAMES[i], cliloc->GetW(1075072 + i)));
+				m_CityList.push_back(CCity(cityNames[i], cliloc->GetW(1075072 + i)));
 		}
 	}
 }
