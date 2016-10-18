@@ -22,6 +22,7 @@ CGumpSpell::CGumpSpell(uint serial, short x, short y, ushort graphic)
 {
 	m_Graphic = graphic;
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
+	m_BigIcon = (graphic >= 0x5300 && graphic >= 0x5500);
 
 	m_Blender = (CGUIAlphaBlending*)Add(new CGUIAlphaBlending(g_ConfigManager.TransparentSpellIcons, g_ConfigManager.SpellIconAlpha / 255.0f));
 	Add(new CGUIGumppic(m_Graphic, 0, 0));
@@ -40,9 +41,7 @@ CGumpSpell::~CGumpSpell()
 //----------------------------------------------------------------------------------
 void CGumpSpell::InitToolTip()
 {
-	uint id = g_SelectedObject.Serial;
-
-	if (id == ID_GS_BUTTON_REMOVE_FROM_GROUP)
+	if (g_SelectedObject.Serial == ID_GS_BUTTON_REMOVE_FROM_GROUP)
 		g_ToolTip.Set(L"Remove spell from group", g_SelectedObject.Object(), 80);
 	else
 		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(3002010 + m_Serial), g_SelectedObject.Object(), 80);
@@ -88,19 +87,30 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 	if (InGroup())
 		return NULL;
 
-	static const int gumpWidth = 44;
-	static const int gumpHeight = 44;
+	int gumpWidth = 44;
+	int gumpHeight = 44;
 
-	const int rangeX = 22;
-	const int rangeY = 22;
-	const int rangeOffsetX = 30;
-	const int rangeOffsetY = 30;
+	int rangeX = 22;
+	int rangeY = 22;
+	int rangeOffsetX = 30;
+	int rangeOffsetY = 30;
+
+	if (m_BigIcon)
+	{
+		gumpWidth = 88;
+		gumpHeight = 88;
+
+		rangeX = 44;
+		rangeY = 44;
+		rangeOffsetX = 60;
+		rangeOffsetY = 60;
+	}
 
 	CGump *gump = (CGump*)g_GumpManager.m_Items;
 
 	while (gump != NULL)
 	{
-		if (gump != this && gump->GumpType == GT_SPELL)
+		if (gump != this && gump->GumpType == GT_SPELL && ((CGumpSpell*)gump)->BigIcon == m_BigIcon)
 		{
 			int gumpX = gump->X;
 			int offsetX = abs(x - gumpX);
@@ -179,7 +189,7 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 
 				while (testGump != NULL)
 				{
-					if (testGump != this && testGump->GumpType == GT_SPELL)
+					if (testGump != this && testGump->GumpType == GT_SPELL && ((CGumpSpell*)testGump)->BigIcon == m_BigIcon)
 					{
 						if (testGump->X == testX && testGump->Y == testY)
 							break;

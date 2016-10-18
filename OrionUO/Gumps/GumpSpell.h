@@ -14,6 +14,8 @@
 //----------------------------------------------------------------------------------
 class CGumpSpell : public CGump
 {
+	SETGET(bool, BigIcon);
+
 private:
 	static const int ID_GS_LOCK_MOVING = 1;
 	static const int ID_GS_BUTTON_REMOVE_FROM_GROUP = 2;

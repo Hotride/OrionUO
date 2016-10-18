@@ -84,7 +84,7 @@ private:
 	CGUIGumppic *m_LastSpellPointer;
 	CGUIGumppic *m_LastSpellBookmark;
 
-	void GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPagesCount, int &spellsOnPage, ushort &graphic, ushort &minimizedGraphic, ushort &iconStartGraphic);
+	void GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPagesCount, int &spellsOnPage, int &spellIndexOffset, ushort &graphic, ushort &minimizedGraphic, ushort &iconStartGraphic);
 
 	string GetSpellName(const int &offset, string &abbreviature, string &reagents);
 

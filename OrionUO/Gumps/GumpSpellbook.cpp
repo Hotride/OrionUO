@@ -156,149 +156,130 @@ void CGumpSpellbook::InitToolTip()
 //----------------------------------------------------------------------------
 void CGumpSpellbook::PrepareContent()
 {
-	switch (m_BookType)
+	int maxSpellsCount = 0;
+	int spellsOnPage = 0;
+	int dictionaryPagesCount = 0;
+	int spellIndexOffset = 0;
+	ushort graphic = 0;
+	ushort minimizedGraphic = 0;
+	ushort iconStartGraphic = 0;
+
+	GetSummaryBookInfo(maxSpellsCount, dictionaryPagesCount, spellsOnPage, spellIndexOffset, graphic, minimizedGraphic, iconStartGraphic);
+
+	if (g_PressedObject.LeftGump() == this && m_Page >= dictionaryPagesCount && g_PressedObject.LeftSerial >= ID_GSB_SPELL_ICON_LEFT)
 	{
-		case ST_MAGE:
+		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
+
+		if ((abs(offset.X) >= DRAG_PIXEL_RANGE || abs(offset.Y) >= DRAG_PIXEL_RANGE) || (g_MouseManager.LastLeftButtonClickTimer + g_MouseManager.DoubleClickDelay < g_Ticks))
 		{
-			if (g_PressedObject.LeftGump() == this && m_Page >= 8 && g_PressedObject.LeftSerial >= ID_GSB_SPELL_ICON_LEFT)
+			int index = g_PressedObject.LeftSerial;
+
+			if (index < ID_GSB_SPELL_ICON_RIGHT)
+				index -= ID_GSB_SPELL_ICON_LEFT;
+			else
+				index -= ID_GSB_SPELL_ICON_RIGHT;
+
+			g_GumpManager.AddGump(new CGumpSpell(index + spellIndexOffset + 1, g_MouseManager.Position.X - 20, g_MouseManager.Position.Y - 20, iconStartGraphic + index));
+
+			g_OrionWindow.EmulateOnLeftMouseButtonDown();
+		}
+	}
+
+	if (!m_Minimized && m_LastSpellPointer != NULL)
+	{
+		bool wantVisible = false;
+		ushort graphicBookmark = 0x08AD;
+		ushort graphicPointer = 0x08AF;
+		int wantX = m_LastSpellPointer->X;
+		int wantY = m_LastSpellPointer->Y;
+
+		if (m_Page < dictionaryPagesCount)
+		{
+			int offs = spellsOnPage * m_Page;
+
+			IFOR(j, 0, 2)
 			{
-				WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
+				int y = 0;
 
-				if ((abs(offset.X) >= DRAG_PIXEL_RANGE || abs(offset.Y) >= DRAG_PIXEL_RANGE) || (g_MouseManager.LastLeftButtonClickTimer + g_MouseManager.DoubleClickDelay < g_Ticks))
+				IFOR(i, 0, spellsOnPage)
 				{
-					int index = g_PressedObject.LeftSerial;
+					if (m_Spells[offs])
+					{
+						if (offs == g_LastSpellIndex - 1)
+						{
+							wantVisible = true;
+							wantY = 52 + y;
 
-					if (index < ID_GSB_SPELL_ICON_RIGHT)
-						index -= ID_GSB_SPELL_ICON_LEFT;
-					else
-						index -= ID_GSB_SPELL_ICON_RIGHT;
+							if ((m_Page + j) % 2)
+							{
+								graphicBookmark = 0x08AE;
+								graphicPointer = 0x08B0;
+								wantX = 203;
+							}
+							else
+								wantX = 184;
 
-					g_GumpManager.AddGump(new CGumpSpell(index + 1, g_MouseManager.Position.X - 20, g_MouseManager.Position.Y - 20, 0x08C0 + index));
+							offs++;
+							break;
+						}
 
-					g_OrionWindow.EmulateOnLeftMouseButtonDown();
+						y += 15;
+					}
+
+					offs++;
 				}
 			}
+		}
+		else
+		{
+			int page = dictionaryPagesCount;
 
-			if (!m_Minimized && m_LastSpellPointer != NULL)
+			IFOR(i, 0, maxSpellsCount)
 			{
-				bool wantVisible = false;
-				ushort graphicBookmark = 0x08AD;
-				ushort graphicPointer = 0x08AF;
-				int wantX = m_LastSpellPointer->X;
-				int wantY = m_LastSpellPointer->Y;
+				if (!m_Spells[i])
+					continue;
 
-				if (m_Page < 8)
+				if (page == m_Page || page == (m_Page + 1))
 				{
-					IFOR(j, 0, 2)
+					if (i == g_LastSpellIndex - 1)
 					{
-						int y = 0;
+						wantVisible = true;
+						wantY = 40;
 
-						IFOR(i, 0, 8)
+						if (page % 2)
 						{
-							int offs = i + (8 * (m_Page + j));
-
-							if (m_Spells[offs])
-							{
-								if (offs == g_LastSpellIndex - 1)
-								{
-									wantVisible = true;
-									wantY = 52 + y;
-
-									if ((m_Page + j) % 2)
-									{
-										graphicBookmark = 0x08AE;
-										graphicPointer = 0x08B0;
-										wantX = 203;
-									}
-									else
-										wantX = 184;
-
-									break;
-								}
-
-								y += 15;
-							}
+							graphicBookmark = 0x08AE;
+							graphicPointer = 0x08B0;
+							wantX = 203;
 						}
-					}
-				}
-				else
-				{
-					int page = 8;
+						else
+							wantX = 184;
 
-					IFOR(i, 0, SPELLBOOK_1_SPELLS_COUNT)
-					{
-						if (!m_Spells[i])
-							continue;
-
-						if (page == m_Page || page == (m_Page + 1))
-						{
-							if (i == g_LastSpellIndex - 1)
-							{
-								wantVisible = true;
-								wantY = 40;
-
-								if (page % 2)
-								{
-									graphicBookmark = 0x08AE;
-									graphicPointer = 0x08B0;
-									wantX = 203;
-								}
-								else
-									wantX = 184;
-
-								break;
-							}
-						}
-
-						page++;
+						break;
 					}
 				}
 
-				if (wantVisible != m_LastSpellPointer->Visible || wantX != m_LastSpellPointer->X || wantY != m_LastSpellPointer->Y)
-				{
-					m_LastSpellPointer->Visible = wantVisible;
-					m_LastSpellPointer->Graphic = graphicPointer;
-					m_LastSpellPointer->X = wantX;
-					m_LastSpellPointer->Y = wantY;
-
-					m_LastSpellBookmark->Visible = wantVisible;
-					m_LastSpellBookmark->Graphic = graphicBookmark;
-					m_LastSpellBookmark->X = wantX;
-
-					m_WantRedraw = true;
-				}
+				page++;
 			}
+		}
 
-			break;
-		}
-		case ST_NECRO:
+		if (wantVisible != m_LastSpellPointer->Visible || wantX != m_LastSpellPointer->X || wantY != m_LastSpellPointer->Y)
 		{
-			break;
-		}
-		case ST_PALADIN:
-		{
-			break;
-		}
-		case ST_BUSHIDO:
-		{
-			break;
-		}
-		case ST_NINJITSU:
-		{
-			break;
-		}
-		case ST_SPELL_WEAVING:
-		{
-			break;
-		}
-		case ST_MYSTICISM:
-		{
-			break;
+			m_LastSpellPointer->Visible = wantVisible;
+			m_LastSpellPointer->Graphic = graphicPointer;
+			m_LastSpellPointer->X = wantX;
+			m_LastSpellPointer->Y = wantY;
+
+			m_LastSpellBookmark->Visible = wantVisible;
+			m_LastSpellBookmark->Graphic = graphicBookmark;
+			m_LastSpellBookmark->X = wantX;
+
+			m_WantRedraw = true;
 		}
 	}
 }
 //----------------------------------------------------------------------------
-void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPagesCount, int &spellsOnPage, ushort &graphic, ushort &minimizedGraphic, ushort &iconStartGraphic)
+void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPagesCount, int &spellsOnPage, int &spellIndexOffset, ushort &graphic, ushort &minimizedGraphic, ushort &iconStartGraphic)
 {
 	switch (m_BookType)
 	{
@@ -308,6 +289,7 @@ void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPage
 			graphic = 0x08AC;
 			minimizedGraphic = 0x08BA;
 			iconStartGraphic = 0x08C0;
+			spellIndexOffset = 0;
 
 			break;
 		}
@@ -317,6 +299,7 @@ void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPage
 			graphic = 0x2B00;
 			minimizedGraphic = 0x2B03;
 			iconStartGraphic = 0x5000;
+			spellIndexOffset = 64;
 
 			break;
 		}
@@ -326,6 +309,7 @@ void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPage
 			graphic = 0x2B01;
 			minimizedGraphic = 0x2B04;
 			iconStartGraphic = 0x5100;
+			spellIndexOffset = 81;
 
 			break;
 		}
@@ -335,6 +319,7 @@ void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPage
 			graphic = 0x2B07;
 			minimizedGraphic = 0x2B09;
 			iconStartGraphic = 0x5400;
+			spellIndexOffset = 91;
 
 			break;
 		}
@@ -344,6 +329,7 @@ void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPage
 			graphic = 0x2B06;
 			minimizedGraphic = 0x2B08;
 			iconStartGraphic = 0x5300;
+			spellIndexOffset = 97;
 
 			break;
 		}
@@ -353,6 +339,7 @@ void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPage
 			graphic = 0x2B2F;
 			minimizedGraphic = 0x2B2D;
 			iconStartGraphic = 0x59D8;
+			spellIndexOffset = 105;
 
 			break;
 		}
@@ -362,6 +349,7 @@ void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPage
 			graphic = 0;
 			minimizedGraphic = 0;
 			iconStartGraphic = 0;
+			spellIndexOffset = 0;
 
 			break;
 		}
@@ -486,11 +474,12 @@ void CGumpSpellbook::UpdateContent()
 	int maxSpellsCount = 0;
 	int spellsOnPage = 0;
 	int dictionaryPagesCount = 0;
+	int spellIndexOffset = 0;
 	ushort graphic = 0;
 	ushort minimizedGraphic = 0;
 	ushort iconStartGraphic = 0;
 
-	GetSummaryBookInfo(maxSpellsCount, dictionaryPagesCount, spellsOnPage, graphic, minimizedGraphic, iconStartGraphic);
+	GetSummaryBookInfo(maxSpellsCount, dictionaryPagesCount, spellsOnPage, spellIndexOffset, graphic, minimizedGraphic, iconStartGraphic);
 
 	if (m_Minimized)
 	{
@@ -498,20 +487,18 @@ void CGumpSpellbook::UpdateContent()
 
 		return;
 	}
-	else
-	{
-		m_Body = (CGUIGumppic*)Add(new CGUIGumppic(graphic, 0, 0));
 
-		Add(new CGUIHitBox(ID_GSB_BUTTON_MINIMIZE, 6, 100, 16, 16, true));
-	}
+	m_Body = (CGUIGumppic*)Add(new CGUIGumppic(graphic, 0, 0));
+
+	Add(new CGUIHitBox(ID_GSB_BUTTON_MINIMIZE, 6, 100, 16, 16, true));
+
+	m_SpellCount = 0;
+	memset(&m_Spells[0], 0, sizeof(m_Spells));
 
 	CGameItem *spellbook = g_World->FindWorldItem(m_Serial);
 
 	if (spellbook == NULL)
 		return;
-
-	m_SpellCount = 0;
-	memset(&m_Spells[0], 0, sizeof(m_Spells));
 
 	QFOR(item, spellbook->m_Items, CGameItem*)
 	{
@@ -741,11 +728,12 @@ void CGumpSpellbook::GUMP_BUTTON_EVENT_C
 		int maxSpellsCount = 0;
 		int dictionaryPagesCount = 0;
 		int spellsOnPage = 0;
+		int spellIndexOffset = 0;
 		ushort graphic = 0;
 		ushort minimizedGraphic = 0;
 		ushort iconStartGraphic = 0;
 
-		GetSummaryBookInfo(maxSpellsCount, dictionaryPagesCount, spellsOnPage, graphic, minimizedGraphic, iconStartGraphic);
+		GetSummaryBookInfo(maxSpellsCount, dictionaryPagesCount, spellsOnPage, spellIndexOffset, graphic, minimizedGraphic, iconStartGraphic);
 
 		if (m_Page < dictionaryPagesCount) //List of spells
 		{
