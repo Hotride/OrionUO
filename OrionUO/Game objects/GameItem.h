@@ -31,6 +31,8 @@ class CGameItem : public CGameObject
 	SETGET(bool, Dragged);
 	//!Это прокси-объект мульти
 	SETGET(bool, MultiBody);
+	//!Цвет тайла для замены филдов (если 0 - не филд)
+	SETGET(ushort, FieldColor);
 
 protected:
 	/*!
@@ -43,6 +45,8 @@ protected:
 public:
 	CGameItem(const uint &serial = 0);
 	virtual ~CGameItem();
+
+	void CalculateFieldColor();
 
 	/*!
 	Вставка данных из объекта в руке (на курсоре)

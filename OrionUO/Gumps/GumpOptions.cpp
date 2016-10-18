@@ -356,7 +356,7 @@ void CGumpOptions::InitToolTip()
 			}
 			case ID_GO_P2_NO_ANIMATE_FIELDS:
 			{
-				g_ToolTip.Set(L"Disable the field animation's", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Disable the field animation", g_SelectedObject.Object());
 				break;
 			}
 			case ID_GO_P2_LOCK_GUMP_MOVING:
@@ -392,6 +392,11 @@ void CGumpOptions::InitToolTip()
 			case ID_GO_P2_CONSOLE_ENTER:
 			{
 				g_ToolTip.Set(L"Activate chat after 'Enter' pressing", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_CHANGE_FIELDS_GRAPHIC:
+			{
+				g_ToolTip.Set(L"Replace animated fields images to tiles", g_SelectedObject.Object());
 				break;
 			}
 			case ID_GO_P2_DEV_MODE_1:
@@ -818,7 +823,7 @@ void CGumpOptions::DrawPage2()
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 265));
 	checkbox->Checked = g_OptionsConfig.NoAnimateFields;
-	checkbox->SetTextParameters(0, L"No animate fields", g_OptionsTextColor);
+	checkbox->SetTextParameters(0, L"No fields animation", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 0, 285));
 	checkbox->Checked = g_OptionsConfig.LockGumpsMoving;
@@ -874,6 +879,10 @@ void CGumpOptions::DrawPage2()
 	checkbox->Checked = g_OptionsConfig.ApplyStateColorOnCharacters;
 	checkbox->SetTextParameters(0, L"Colorize characters by state", g_OptionsTextColor);
 
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CHANGE_FIELDS_GRAPHIC, 0x00D2, 0x00D3, 0x00D2, 0, 530));
+	checkbox->Checked = g_OptionsConfig.ChangeFieldsGraphic;
+	checkbox->SetTextParameters(0, L"Change animated fields to tiles", g_OptionsTextColor);
+	
 	html->CalculateDataSize();
 }
 //----------------------------------------------------------------------------
@@ -2110,6 +2119,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.OriginalPartyStatusbar = state;
 			else if (serial == ID_GO_P2_APPLY_STATE_COLOR_ON_CHARACTERS)
 				g_OptionsConfig.ApplyStateColorOnCharacters = state;
+			else if (serial == ID_GO_P2_CHANGE_FIELDS_GRAPHIC)
+				g_OptionsConfig.ChangeFieldsGraphic = state;
 			
 
 			else if (serial == ID_GO_P2_DEV_MODE_1)
@@ -2645,6 +2656,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.OldStyleStatusbar = g_OptionsConfig.OldStyleStatusbar;
 			g_ConfigManager.OriginalPartyStatusbar = g_OptionsConfig.OriginalPartyStatusbar;
 			g_ConfigManager.ApplyStateColorOnCharacters = g_OptionsConfig.ApplyStateColorOnCharacters;
+			g_ConfigManager.ChangeFieldsGraphic = g_OptionsConfig.ChangeFieldsGraphic;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

@@ -13,6 +13,11 @@
 #include "../IndexObject.h"
 //----------------------------------------------------------------------------------
 #pragma pack (push,1)
+struct MidiInfoStruct
+{
+	const char* musicName;
+	bool loop;
+};
 struct WaveHeader
 {
 	char chunkId[4];
@@ -36,7 +41,7 @@ class CSoundManager
 {
 private:
 	static const int MIDI_MUSIC_COUNT = 57;
-	static const char *m_MusicName[MIDI_MUSIC_COUNT];
+	static const MidiInfoStruct MidiInfo[MIDI_MUSIC_COUNT];
 	HSTREAM m_Music;
 	HSTREAM m_WarMusic;
 
