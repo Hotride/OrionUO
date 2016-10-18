@@ -237,13 +237,14 @@ void CSoundManager::PlayMidi(int index, bool loop, bool warmode)
 			StopMusic();
 
 		char musicPath[100] = {0};
-		sprintf_s(musicPath, "music\\%s", m_MusicName[index]);
+		MidiInfoStruct midiInfo = MidiInfo[index];
+		sprintf_s(musicPath, "music\\%s", midiInfo.musicName);
 
 		wstring midiName = ToWString(musicPath);
 		HSTREAM streamHandle = BASS_MIDI_StreamCreateFile(FALSE, midiName.c_str(), 0, 0, BASS_MIDI_DECAYEND, 0);
 		float volume = GetVolumeValue(-1, true);
 		BASS_ChannelSetAttribute(streamHandle, BASS_ATTRIB_VOL, volume);
-		BASS_ChannelPlay(streamHandle, loop ? 1 : 0);
+		BASS_ChannelPlay(streamHandle, midiInfo.loop);
 		if (warmode)
 			m_WarMusic = streamHandle;
 		else
@@ -308,64 +309,64 @@ void CSoundManager::TraceMusicError(DWORD error)
 	}
 }
 //----------------------------------------------------------------------------------
-const char *CSoundManager::m_MusicName[MIDI_MUSIC_COUNT] =
+const MidiInfoStruct CSoundManager::MidiInfo[MIDI_MUSIC_COUNT] = 
 {
-	"oldult01.mid",
-	"create1.mid",
-	"dragflit.mid",
-	"oldult02.mid",
-	"oldult03.mid",
-	"oldult04.mid",
-	"oldult05.mid",
-	"oldult06.mid",
-	"stones2.mid",
-	"britain1.mid",
-	"britain2.mid",
-	"bucsden.mid",
-	"jhelom.mid",
-	"lbcastle.mid",
-	"linelle.mid",
-	"magincia.mid",
-	"minoc.mid",
-	"ocllo.mid",
-	"samlethe.mid",
-	"serpents.mid",
-	"skarabra.mid",
-	"trinsic.mid",
-	"vesper.mid",
-	"wind.mid",
-	"yew.mid",
-	"cave01.mid",
-	"dungeon9.mid",
-	"forest_a.mid",
-	"intown01.mid",
-	"jungle_a.mid",
-	"mountn_a.mid",
-	"plains_a.mid",
-	"sailing.mid",
-	"swamp_a.mid",
-	"tavern01.mid",
-	"tavern02.mid",
-	"tavern03.mid",
-	"tavern04.mid",
-	"combat1.mid",
-	"combat2.mid",
-	"combat3.mid",
-	"approach.mid",
-	"death.mid",
-	"victory.mid",
-	"btcastle.mid",
-	"nujelm.mid",
-	"dungeon2.mid",
-	"cove.mid",
-	"moonglow.mid",
-	"oldult02.mid",
-	"serpents.mid",
-	"oldult04.mid",
-	"dragflit.mid",
-	"create1.mid",
-	"approach.mid",
-	"combat3.mid",
-	"jungle_a.mid"
+	{ "oldult01.mid", true },
+	{ "create1.mid", false },
+	{ "dragflit.mid", false },
+	{ "oldult02.mid", true },
+	{ "oldult03.mid", true },
+	{ "oldult04.mid", true },
+	{ "oldult05.mid", true },
+	{ "oldult06.mid", true },
+	{ "stones2.mid", true },
+	{ "britain1.mid", true },
+	{ "britain2.mid", true },
+	{ "bucsden.mid", true },
+	{ "jhelom.mid", false },
+	{ "lbcastle.mid", false },
+	{ "linelle.mid", false },
+	{ "magincia.mid", true },
+	{ "minoc.mid", true },
+	{ "ocllo.mid", true },
+	{ "samlethe.mid", false },
+	{ "serpents.mid", true },
+	{ "skarabra.mid", true },
+	{ "trinsic.mid", true },
+	{ "vesper.mid", true },
+	{ "wind.mid", true },
+	{ "yew.mid", true },
+	{ "cave01.mid", false },
+	{ "dungeon9.mid", false },
+	{ "forest_a.mid", false },
+	{ "intown01.mid", false },
+	{ "jungle_a.mid", false },
+	{ "mountn_a.mid", false },
+	{ "plains_a.mid", false },
+	{ "sailing.mid", false },
+	{ "swamp_a.mid", false },
+	{ "tavern01.mid", false },
+	{ "tavern02.mid", false },
+	{ "tavern03.mid", false },
+	{ "tavern04.mid", false },
+	{ "combat1.mid", false },
+	{ "combat2.mid", false },
+	{ "combat3.mid", false },
+	{ "approach.mid", false },
+	{ "death.mid", false },
+	{ "victory.mid", false },
+	{ "btcastle.mid", false },
+	{ "nujelm.mid", true },
+	{ "dungeon2.mid", false },
+	{ "cove.mid", true },
+	{ "moonglow.mid", true },
+	{ "oldult02.mid", false },
+	{ "serpents.mid", true },
+	{ "oldult04.mid", false },
+	{ "dragflit.mid", false },
+	{ "create1.mid", false },
+	{ "approach.mid", false },
+	{ "combat3.mid", false },
+	{ "jungle_a.mid", false }
 };
 //----------------------------------------------------------------------------------
