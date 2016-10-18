@@ -17,20 +17,21 @@
 #include "../ToolTip.h"
 #include "../PressedObject.h"
 //----------------------------------------------------------------------------------
-CGumpSpell::CGumpSpell(uint serial, short x, short y, ushort graphic)
-: CGump(GT_SPELL, serial, x, y), m_GroupNext(NULL), m_GroupPrev(NULL)
+CGumpSpell::CGumpSpell(uint serial, short x, short y, ushort graphic, SPELLBOOK_TYPE spellType)
+: CGump(GT_SPELL, serial, x, y), m_GroupNext(NULL), m_GroupPrev(NULL),
+m_SpellType(spellType)
 {
 	m_Graphic = graphic;
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
-	m_BigIcon = (graphic >= 0x5300 && graphic < 0x5500);
+	m_BigIcon = false; // (graphic >= 0x5300 && graphic < 0x5500);
 
 	m_Blender = (CGUIAlphaBlending*)Add(new CGUIAlphaBlending(g_ConfigManager.TransparentSpellIcons, g_ConfigManager.SpellIconAlpha / 255.0f));
 	Add(new CGUIGumppic(m_Graphic, 0, 0));
 
-	if (m_BigIcon)
+	/*if (m_BigIcon)
 		m_SpellUnlocker = (CGUIButton*)Add(new CGUIButton(ID_GS_BUTTON_REMOVE_FROM_GROUP, 0x082C, 0x082C, 0x082C, 56, 30));
-	else
-		m_SpellUnlocker = (CGUIButton*)Add(new CGUIButton(ID_GS_BUTTON_REMOVE_FROM_GROUP, 0x082C, 0x082C, 0x082C, 30, 16));
+	else*/
+	m_SpellUnlocker = (CGUIButton*)Add(new CGUIButton(ID_GS_BUTTON_REMOVE_FROM_GROUP, 0x082C, 0x082C, 0x082C, 30, 16));
 
 	m_SpellUnlocker->CheckPolygone = true;
 	m_SpellUnlocker->Visible = false;
@@ -48,7 +49,72 @@ void CGumpSpell::InitToolTip()
 	if (g_SelectedObject.Serial == ID_GS_BUTTON_REMOVE_FROM_GROUP)
 		g_ToolTip.Set(L"Remove spell from group", g_SelectedObject.Object(), 80);
 	else
-		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(3002010 + m_Serial), g_SelectedObject.Object(), 80);
+	{
+		int tooltipOffset = 0;
+		int spellIndexOffset = 0;
+
+		GetTooltipSpellInfo(tooltipOffset, spellIndexOffset);
+
+		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset - spellIndexOffset + m_Serial), g_SelectedObject.Object(), 80);
+	}
+}
+//----------------------------------------------------------------------------
+void CGumpSpell::GetTooltipSpellInfo(int &tooltipOffset, int &spellIndexOffset)
+{
+	switch (m_SpellType)
+	{
+		case ST_MAGE:
+		{
+			tooltipOffset = 3002010;
+			spellIndexOffset = 0;
+
+			break;
+		}
+		case ST_NECRO:
+		{
+			tooltipOffset = 1060508;
+			spellIndexOffset = 64;
+
+			break;
+		}
+		case ST_PALADIN:
+		{
+			tooltipOffset = 1060584;
+			spellIndexOffset = 81;
+
+			break;
+		}
+		case ST_BUSHIDO:
+		{
+			tooltipOffset = 1060594;
+			spellIndexOffset = 91;
+
+			break;
+		}
+		case ST_NINJITSU:
+		{
+			tooltipOffset = 1060609;
+			spellIndexOffset = 97;
+
+			break;
+		}
+		case ST_SPELL_WEAVING:
+		{
+			tooltipOffset = 1071025;
+			spellIndexOffset = 105;
+
+			break;
+		}
+		case ST_MYSTICISM: //?
+		{
+			tooltipOffset = 0;
+			spellIndexOffset = 0;
+
+			break;
+		}
+		default:
+			break;
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpSpell::PrepareContent()

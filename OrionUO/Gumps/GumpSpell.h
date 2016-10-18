@@ -15,10 +15,13 @@
 class CGumpSpell : public CGump
 {
 	SETGET(bool, BigIcon);
+	SETGET(SPELLBOOK_TYPE, SpellType);
 
 private:
 	static const int ID_GS_LOCK_MOVING = 1;
 	static const int ID_GS_BUTTON_REMOVE_FROM_GROUP = 2;
+
+	void GetTooltipSpellInfo(int &tooltipOffset, int &spellIndexOffset);
 
 protected:
 	virtual void CalculateGumpState();
@@ -26,7 +29,7 @@ protected:
 	CGUIButton *m_SpellUnlocker;
 
 public:
-	CGumpSpell(uint serial, short x, short y, ushort graphic);
+	CGumpSpell(uint serial, short x, short y, ushort graphic, SPELLBOOK_TYPE spellType);
 	virtual ~CGumpSpell();
 
 	CGUIAlphaBlending *m_Blender;
