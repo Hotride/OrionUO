@@ -22,12 +22,16 @@ CGumpSpell::CGumpSpell(uint serial, short x, short y, ushort graphic)
 {
 	m_Graphic = graphic;
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
-	m_BigIcon = (graphic >= 0x5300 && graphic >= 0x5500);
+	m_BigIcon = (graphic >= 0x5300 && graphic < 0x5500);
 
 	m_Blender = (CGUIAlphaBlending*)Add(new CGUIAlphaBlending(g_ConfigManager.TransparentSpellIcons, g_ConfigManager.SpellIconAlpha / 255.0f));
 	Add(new CGUIGumppic(m_Graphic, 0, 0));
 
-	m_SpellUnlocker = (CGUIButton*)Add(new CGUIButton(ID_GS_BUTTON_REMOVE_FROM_GROUP, 0x082C, 0x082C, 0x082C, 30, 16));
+	if (m_BigIcon)
+		m_SpellUnlocker = (CGUIButton*)Add(new CGUIButton(ID_GS_BUTTON_REMOVE_FROM_GROUP, 0x082C, 0x082C, 0x082C, 56, 30));
+	else
+		m_SpellUnlocker = (CGUIButton*)Add(new CGUIButton(ID_GS_BUTTON_REMOVE_FROM_GROUP, 0x082C, 0x082C, 0x082C, 30, 16));
+
 	m_SpellUnlocker->CheckPolygone = true;
 	m_SpellUnlocker->Visible = false;
 
@@ -97,13 +101,13 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 
 	if (m_BigIcon)
 	{
-		gumpWidth = 88;
-		gumpHeight = 88;
+		gumpWidth = 70;
+		gumpHeight = 70;
 
-		rangeX = 44;
-		rangeY = 44;
-		rangeOffsetX = 60;
-		rangeOffsetY = 60;
+		rangeX = 35;
+		rangeY = 35;
+		rangeOffsetX = 42;
+		rangeOffsetY = 42;
 	}
 
 	CGump *gump = (CGump*)g_GumpManager.m_Items;
