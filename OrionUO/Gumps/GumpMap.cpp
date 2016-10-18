@@ -135,7 +135,7 @@ void CGumpMap::PrepareContent()
 		}
 
 		//Если окошко захвачено для перемещения - вычислим оффсеты
-		if (g_PressedObject.LeftGump() == this && g_PressedObject.LeftObject() != NULL)
+		if (g_PressedObject.LeftGump() == this && g_PressedObject.LeftObject() != NULL && m_PlotState)
 		{
 			if (m_PinOnCursor == NULL)
 			{
@@ -156,6 +156,8 @@ void CGumpMap::PrepareContent()
 				m_PinOnCursor->Y = newY;
 			}
 		}
+
+		m_NoMove = (m_PinOnCursor != NULL);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -227,29 +229,27 @@ CRenderObject *CGumpMap::Select()
 			int drawX = item->X + 18;
 			int drawY = item->Y + 21;
 
+			CBaseGUI *next = (CBaseGUI*)item->m_Next;
+
+			if (next != NULL)
+			{
+				int nextDrawX = next->X + 20;
+				int nextDrawY = next->Y + 30;
+
+				int checkX = drawX + 2;
+				int checkY = drawY + 8;
+
+				if (LineUnderMouse(checkX, checkY, nextDrawX, nextDrawY))
+				{
+					g_SelectedObject.Init(item, this);
+					g_SelectedObject.Serial = item->Serial + ID_GM_PIN_LIST_INSERT;
+				}
+			}
+
 			if (g_Orion.PolygonePixelsInXY(drawX, drawY, 10, 10))
 			{
 				g_SelectedObject.Init(item, this);
 				g_SelectedObject.Serial = item->Serial + ID_GM_PIN_LIST;
-			}
-			else
-			{
-				CBaseGUI *next = (CBaseGUI*)item->m_Next;
-
-				if (next != NULL)
-				{
-					int nextDrawX = next->X + 20;
-					int nextDrawY = next->Y + 30;
-
-					int checkX = drawX + 2;
-					int checkY = drawY + 8;
-
-					if (LineUnderMouse(checkX, checkY, nextDrawX, nextDrawY))
-					{
-						g_SelectedObject.Init(item, this);
-						g_SelectedObject.Serial = item->Serial + ID_GM_PIN_LIST_INSERT;
-					}
-				}
 			}
 		}
 

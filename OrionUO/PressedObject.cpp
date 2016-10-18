@@ -82,7 +82,7 @@ void CPressedObject::InitLeft(const CSelectedObject &obj)
 {
 	m_LeftObject = obj.Object();
 	m_LeftGump = obj.Gump();
-	m_LeftSerial = (obj.Object() != NULL ? obj.Object()->Serial : 0);
+	m_LeftSerial = (m_LeftObject != NULL ? obj.Serial : 0);
 }
 //----------------------------------------------------------------------------------
 void CPressedObject::ClearRight()
@@ -103,7 +103,7 @@ void CPressedObject::InitRight(const CSelectedObject &obj)
 {
 	m_RightObject = obj.Object();
 	m_RightGump = obj.Gump();
-	m_RightSerial = (obj.Object() != NULL ? obj.Object()->Serial : 0);
+	m_RightSerial = (m_RightObject != NULL ? obj.Serial : 0);
 }
 //----------------------------------------------------------------------------------
 void CPressedObject::ClearMid()
@@ -124,7 +124,7 @@ void CPressedObject::InitMid(const CSelectedObject &obj)
 {
 	m_MidObject = obj.Object();
 	m_MidGump = obj.Gump();
-	m_MidSerial = (obj.Object() != NULL ? obj.Object()->Serial : 0);
+	m_MidSerial = (m_MidObject != NULL ? obj.Serial : 0);
 }
 //----------------------------------------------------------------------------------
 bool CPressedObject::TestMoveOnDrag()
