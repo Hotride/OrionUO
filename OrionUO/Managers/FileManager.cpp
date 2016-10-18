@@ -102,7 +102,7 @@ bool CFileManager::Load()
 
 	IFOR(i, 0, 6)
 	{
-		if (g_FileManager.UseUOP && i > 1 || i > 0)
+		if (g_FileManager.UseUOP && i > 1 || !g_FileManager.UseUOP && i > 0)
 		{
 			if (!m_AnimIdx[i].Load(g_App.FilePath("anim%i.idx", i)))
 				return false;

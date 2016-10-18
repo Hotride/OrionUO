@@ -546,6 +546,7 @@ void COrion::LoadClientConfig()
 
 		g_CharacterList.ClientFlag = file.ReadInt8();
 		g_FileManager.UseVerdata = (file.ReadInt8() != 0);
+		g_FileManager.UseUOP = g_PacketManager.ClientVersion >= CV_70240;
 	}
 }
 //----------------------------------------------------------------------------------
