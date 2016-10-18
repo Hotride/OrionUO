@@ -356,7 +356,7 @@ void CGumpOptions::InitToolTip()
 			}
 			case ID_GO_P2_NO_ANIMATE_FIELDS:
 			{
-				g_ToolTip.Set(L"Disable the field animation's", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Disable the field animation", g_SelectedObject.Object());
 				break;
 			}
 			case ID_GO_P2_LOCK_GUMP_MOVING:
@@ -818,7 +818,7 @@ void CGumpOptions::DrawPage2()
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_ANIMATE_FIELDS, 0x00D2, 0x00D3, 0x00D2, 0, 265));
 	checkbox->Checked = g_OptionsConfig.NoAnimateFields;
-	checkbox->SetTextParameters(0, L"No animate fields", g_OptionsTextColor);
+	checkbox->SetTextParameters(0, L"No fields animation", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_LOCK_GUMP_MOVING, 0x00D2, 0x00D3, 0x00D2, 0, 285));
 	checkbox->Checked = g_OptionsConfig.LockGumpsMoving;
