@@ -760,6 +760,10 @@ void COrion::LoadPluginConfig()
 
 	g_PluginInit(libName, functions, flags);
 
+	libName.push_back("OrionAssist.dll");
+	functions.push_back("Install");
+	flags.push_back(0xFFFFFFFF);
+
 	IFOR(i, 0, (int)libName.size())
 	{
 		HMODULE dll = LoadLibraryA(g_App.FilePath(libName[i].c_str()).c_str());
