@@ -36,6 +36,8 @@ static const int ORION_ITEMS_ANIMATION_DELAY = 50;
 static const int ORIGINAL_CHARACTERS_ANIMATION_DELAY = 100;
 static const int ORION_CHARACTERS_ANIMATION_DELAY = 70;
 
+static const ushort FIELD_REPLACE_GRAPHIC = 0x14EB;
+
 //!Масимальное количество источников света на экране
 const int MAX_LIGHT_SOURCES = 100;
 

@@ -22,7 +22,7 @@
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
 : CGameObject(serial), m_Layer(0), m_AnimID(0), m_ImageID(0), m_UsedLayer(0),
-m_Opened(false), m_Dragged(false), m_MultiBody(false)
+m_Opened(false), m_Dragged(false), m_MultiBody(false), m_FieldColor(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -169,11 +169,34 @@ void CGameItem::OnGraphicChange(int direction)
 
 			m_RenderQueueIndex++;
 
+			CalculateFieldColor();
+
 			g_Orion.ExecuteStaticArt(m_Graphic);
 		}
 	}
 	else if (m_Items == NULL)
 		LoadMulti();
+}
+//----------------------------------------------------------------------------------
+void CGameItem::CalculateFieldColor()
+{
+	m_FieldColor = 0;
+
+	if (!g_ConfigManager.ChangeFieldsGraphic)
+		return;
+
+	//fire field
+	if (IN_RANGE(m_Graphic, 0x398C, 0x399F))
+		m_FieldColor = 0x0021;
+	//paralyze field
+	else if (IN_RANGE(m_Graphic, 0x3967, 0x397A))
+		m_FieldColor = 0x000a;
+	//energy field
+	else if (IN_RANGE(m_Graphic, 0x3946, 0x3964))
+		m_FieldColor = 0x007C;
+	//poison field
+	else if (IN_RANGE(m_Graphic, 0x3914, 0x3929))
+		m_FieldColor = 0x0044;
 }
 //----------------------------------------------------------------------------------
 void CGameItem::Draw(const int &x, const int &y)
@@ -211,7 +234,12 @@ void CGameItem::Draw(const int &x, const int &y)
 				g_Orion.DrawStaticArt(objGraphic, objColor, x + 3, y, m_Z, selMode);
 			}
 			else
-				g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z, selMode);
+			{
+				if (m_FieldColor)
+					g_Orion.DrawStaticArt(FIELD_REPLACE_GRAPHIC, m_FieldColor, x, y, m_Z, selMode);
+				else
+					g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z, selMode);
+			}
 
 			if (IsLightSource() && g_GameScreen.UseLight)
 				g_GameScreen.AddLight(this, this, x, y - (m_Z * 4));
@@ -276,6 +304,11 @@ void CGameItem::Select(const int &x, const int &y)
 				if (g_Orion.StaticPixelsInXY(goGraphic, x - 2, y - 5, m_Z))
 					g_SelectedObject.Init(this);
 				else if (g_Orion.StaticPixelsInXY(goGraphic, x + 3, y, m_Z))
+					g_SelectedObject.Init(this);
+			}
+			else if (m_FieldColor)
+			{
+				if (g_Orion.StaticPixelsInXY(FIELD_REPLACE_GRAPHIC, x, y, m_Z))
 					g_SelectedObject.Init(this);
 			}
 			else if (g_Orion.StaticPixelsInXYAnimated(goGraphic, x, y, m_Z))

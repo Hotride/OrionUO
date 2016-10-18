@@ -754,8 +754,6 @@ void COrion::LoadPluginConfig()
 	g_PluginClientInterface.ColorManager = &g_Interface_ColorManager;
 	g_PluginClientInterface.PathFinder = &g_Interface_PathFinder;
 
-	DebugMsg("testUO: 0x%08X\n", g_Interface_UO.GetValueInt);
-
 	STRING_LIST libName;
 	STRING_LIST functions;
 	UINT_LIST flags;

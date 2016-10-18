@@ -98,6 +98,8 @@ void CConfigManager::DefaultPage2()
 	m_SpellIconAlpha = 0x7F;
 	m_OldStyleStatusbar = false;
 	m_ApplyStateColorOnCharacters = false;
+	m_OriginalPartyStatusbar = false;
+	m_ChangeFieldsGraphic = false;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -337,6 +339,20 @@ void CConfigManager::OnChangeOriginalPartyStatusbar(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
+void CConfigManager::OnChangeChangeFieldsGraphic(const bool &val)
+{
+	if (this == &g_ConfigManager && g_World != NULL)
+	{
+		m_ChangeFieldsGraphic = val;
+
+		QFOR(item, g_World->m_Items, CGameObject*)
+		{
+			if (!item->NPC)
+				((CGameItem*)item)->CalculateFieldColor();
+		}
+	}
+}
+//---------------------------------------------------------------------------
 /*!
 Получить цвет исходя из "злобности"
 @param [__in] notoriety Злобность
@@ -431,11 +447,15 @@ bool CConfigManager::Load(string path)
 		m_RemoveTextWithBlending = true;
 		m_DrawStatusState = 0;
 		bool drawStumps = false;
-		bool markingCaves;
+		bool markingCaves = false;
 		m_NoAnimateFields = false;
 		m_NoVegetation = false;
 		m_TransparentSpellIcons = true;
 		m_SpellIconAlpha = 0x7F;
+		m_OldStyleStatusbar = false;
+		m_OriginalPartyStatusbar = false;
+		m_ApplyStateColorOnCharacters = false;
+		bool changeFieldsGraphic = false;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -475,6 +495,9 @@ bool CConfigManager::Load(string path)
 										m_OldStyleStatusbar = file.ReadUInt8();
 										m_OriginalPartyStatusbar = file.ReadUInt8();
 										m_ApplyStateColorOnCharacters = file.ReadUInt8();
+
+										if (blockSize > 18)
+											changeFieldsGraphic = file.ReadUInt8();
 									}
 								}
 							}
@@ -490,6 +513,7 @@ bool CConfigManager::Load(string path)
 
 		DrawStumps = drawStumps;
 		MarkingCaves = markingCaves;
+		ChangeFieldsGraphic = changeFieldsGraphic;
 		
 		file.Ptr = next;
 		
@@ -796,7 +820,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(18); //size of block
+	writter.WriteInt8(19); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -814,6 +838,7 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_OldStyleStatusbar);
 	writter.WriteUInt8(m_OriginalPartyStatusbar);
 	writter.WriteUInt8(m_ApplyStateColorOnCharacters);
+	writter.WriteUInt8(m_ChangeFieldsGraphic);
 	writter.WriteBuffer();
 
 	//Page 3

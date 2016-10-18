@@ -82,6 +82,7 @@ private:
 	static const int ID_GO_P2_OLD_STYLE_STATUSBAR = 223;
 	static const int ID_GO_P2_ORIGINAL_PARTY_STATUSBAR = 224;
 	static const int ID_GO_P2_APPLY_STATE_COLOR_ON_CHARACTERS = 225;
+	static const int ID_GO_P2_CHANGE_FIELDS_GRAPHIC = 226;
 	static const int ID_GO_P2_DEV_MODE_1 = 290;
 	static const int ID_GO_P2_DEV_MODE_2 = 291;
 	static const int ID_GO_P2_DEV_MODE_3 = 292;
