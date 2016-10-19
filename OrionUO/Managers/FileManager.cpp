@@ -46,18 +46,18 @@ bool CFileManager::Load()
 			return false;
 		if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
 			return false;
+		/* Эти файлы не используются самой последней версией клиента 7.0.52.2
 		if (!m_tileart.Load(g_App.FilePath("tileart.uop")))
 			return false;
 		if (!m_string_dictionary.Load(g_App.FilePath("string_dictionary.uop")))
 			return false;
-		//По сути пустой файл?
-		//if (!m_MultiCollection.Load(g_App.FilePath("MultiCollection.uop")))
-		//	return false;
+		if (!m_MultiCollection.Load(g_App.FilePath("MultiCollection.uop")))
+			return false;
 		if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
 			return false;
 		if (!m_MainMisc.Load(g_App.FilePath("MainMisc.uop")))
 			return false;
-		/*IFOR(i, 1, 5)
+		IFOR(i, 1, 5)
 		{
 			if (!m_AnimationFrame[i].Load(g_App.FilePath("AnimationFrame%i.uop", i)))
 				return false;
@@ -106,8 +106,8 @@ bool CFileManager::Load()
 	{
 		if (g_FileManager.UseUOP && i > 1 || !g_FileManager.UseUOP && i > 0)
 		{
-			if (!m_AnimIdx[i].Load(g_App.FilePath("anim%i.idx", i)))
-			if (!m_AnimMul[i].Load(g_App.FilePath("anim%i.mul", i)))
+			m_AnimIdx[i].Load(g_App.FilePath("anim%i.idx", i));
+			m_AnimMul[i].Load(g_App.FilePath("anim%i.mul", i));
 		}
 
 		if (g_FileManager.UseUOP)
