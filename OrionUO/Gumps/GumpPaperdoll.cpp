@@ -376,25 +376,6 @@ void CGumpPaperdoll::UpdateContent()
 
 	CGUIGumppic *bodyGumppic = NULL;
 
-	if (obj->Graphic == 0x0190 || obj->Graphic == 0x0192)
-	{
-		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000C, 8, 19)); //Male gump
-		bodyGumppic->PartialHue = true;
-	}
-	else if (obj->Graphic == 0x0191 || obj->Graphic == 0x0193)
-	{
-		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000D, 8, 19)); //Female gump
-		bodyGumppic->PartialHue = true;
-	}
-	else if (obj->Graphic == 0x03DB)
-	{
-		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000C, 8, 19)); //Male gump
-		bodyGumppic->Color = 0x03EA;
-		bodyGumppic->PartialHue = true;
-
-		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0xC72B, 8, 19)); //GM robe gump
-	}
-
 	ushort color = obj->Color;
 
 	if (color & 0x8000)
@@ -403,7 +384,27 @@ void CGumpPaperdoll::UpdateContent()
 	if (color & 0x4000)
 		color &= 0x3FFF;
 
-	bodyGumppic->Color = color;
+	if (obj->Graphic == 0x0190 || obj->Graphic == 0x0192)
+	{
+		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000C, 8, 19)); //Male gump
+		bodyGumppic->PartialHue = true;
+		bodyGumppic->Color = color;
+	}
+	else if (obj->Graphic == 0x0191 || obj->Graphic == 0x0193)
+	{
+		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000D, 8, 19)); //Female gump
+		bodyGumppic->PartialHue = true;
+		bodyGumppic->Color = color;
+	}
+	else if (obj->Graphic == 0x03DB)
+	{
+		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000C, 8, 19)); //Male gump
+		bodyGumppic->Color = 0x03EA;
+		bodyGumppic->PartialHue = true;
+
+		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0xC72B, 8, 19)); //GM robe gump
+		bodyGumppic->Color = color;
+	}
 
 	int gumpOffset = (obj->Sex ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET);
 	uint ignoreSerial = 0;

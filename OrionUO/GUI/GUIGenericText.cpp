@@ -8,6 +8,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "GUIGenericText.h"
+#include "../Managers/PacketManager.h"
 //----------------------------------------------------------------------------------
 CGUIGenericText::CGUIGenericText(const uint &index, const ushort &color, const int &x, const int &y, const int &maxWidth)
 : CGUIText(color, x, y), m_TextID(index), m_MaxWidth(maxWidth)
@@ -25,6 +26,6 @@ void CGUIGenericText::CreateTexture(const wstring &str)
 	if (m_MaxWidth)
 		flags |= UOFONT_CROPPED;
 
-	CreateTextureW(0, str, 30, m_MaxWidth, TS_LEFT, flags);
+	CreateTextureW((uchar)(g_PacketManager.ClientVersion >= CV_308Z), str, 30, m_MaxWidth, TS_LEFT, flags);
 }
 //----------------------------------------------------------------------------------

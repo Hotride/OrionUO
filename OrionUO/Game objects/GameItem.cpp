@@ -187,13 +187,13 @@ void CGameItem::CalculateFieldColor()
 
 	//fire field
 	if (IN_RANGE(m_Graphic, 0x398C, 0x399F))
-		m_FieldColor = 0x0021;
+		m_FieldColor = 0x0020;
 	//paralyze field
 	else if (IN_RANGE(m_Graphic, 0x3967, 0x397A))
-		m_FieldColor = 0x000a;
+		m_FieldColor = 0x0058;
 	//energy field
 	else if (IN_RANGE(m_Graphic, 0x3946, 0x3964))
-		m_FieldColor = 0x007C;
+		m_FieldColor = 0x0070;
 	//poison field
 	else if (IN_RANGE(m_Graphic, 0x3914, 0x3929))
 		m_FieldColor = 0x0044;

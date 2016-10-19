@@ -106,50 +106,23 @@ void CGumpSpellbook::InitToolTip()
 		return;
 	}
 
-	switch (m_BookType)
+	int dictionaryPagesCount = 0;
+	int tooltipOffset = 0;
+
+	GetTooltipBookInfo(dictionaryPagesCount, tooltipOffset);
+
+	if (m_Page >= dictionaryPagesCount)
 	{
-		case ST_MAGE:
-		{
-			if (m_Page >= 8)
-			{
-				uint serial = g_SelectedObject.Serial;
+		uint serial = g_SelectedObject.Serial;
 
-				if (serial >= ID_GSB_SPELL_ICON_LEFT)
-				{
-					if (serial >= ID_GSB_SPELL_ICON_RIGHT)
-						serial -= ID_GSB_SPELL_ICON_RIGHT;
-					else
-						serial -= ID_GSB_SPELL_ICON_LEFT;
+		if (serial >= ID_GSB_SPELL_ICON_LEFT)
+		{
+			if (serial >= ID_GSB_SPELL_ICON_RIGHT)
+				serial -= ID_GSB_SPELL_ICON_RIGHT;
+			else
+				serial -= ID_GSB_SPELL_ICON_LEFT;
 
-					g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1061290 + serial), g_SelectedObject.Object(), 150);
-				}
-			}
-
-			break;
-		}
-		case ST_NECRO:
-		{
-			break;
-		}
-		case ST_PALADIN:
-		{
-			break;
-		}
-		case ST_BUSHIDO:
-		{
-			break;
-		}
-		case ST_NINJITSU:
-		{
-			break;
-		}
-		case ST_SPELL_WEAVING:
-		{
-			break;
-		}
-		case ST_MYSTICISM:
-		{
-			break;
+			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset + serial), g_SelectedObject.Object(), 150);
 		}
 	}
 }
@@ -179,7 +152,10 @@ void CGumpSpellbook::PrepareContent()
 			else
 				index -= ID_GSB_SPELL_ICON_RIGHT;
 
-			g_GumpManager.AddGump(new CGumpSpell(index + spellIndexOffset + 1, g_MouseManager.Position.X - 20, g_MouseManager.Position.Y - 20, iconStartGraphic + index));
+			if (iconStartGraphic >= 0x5300 && iconStartGraphic < 0x5500)
+				iconStartGraphic += 0x0020;
+
+			g_GumpManager.AddGump(new CGumpSpell(index + spellIndexOffset + 1, g_MouseManager.Position.X - 20, g_MouseManager.Position.Y - 20, iconStartGraphic + index, m_BookType));
 
 			g_OrionWindow.EmulateOnLeftMouseButtonDown();
 		}
@@ -195,7 +171,7 @@ void CGumpSpellbook::PrepareContent()
 
 		if (m_Page < dictionaryPagesCount)
 		{
-			int offs = spellsOnPage * m_Page;
+			int offs = (spellsOnPage * m_Page);
 
 			IFOR(j, 0, 2)
 			{
@@ -205,7 +181,7 @@ void CGumpSpellbook::PrepareContent()
 				{
 					if (m_Spells[offs])
 					{
-						if (offs == g_LastSpellIndex - 1)
+						if (offs + spellIndexOffset == g_LastSpellIndex - 1)
 						{
 							wantVisible = true;
 							wantY = 52 + y;
@@ -241,7 +217,7 @@ void CGumpSpellbook::PrepareContent()
 
 				if (page == m_Page || page == (m_Page + 1))
 				{
-					if (i == g_LastSpellIndex - 1)
+					if (i + spellIndexOffset == g_LastSpellIndex - 1)
 					{
 						wantVisible = true;
 						wantY = 40;
@@ -277,6 +253,71 @@ void CGumpSpellbook::PrepareContent()
 			m_WantRedraw = true;
 		}
 	}
+}
+//----------------------------------------------------------------------------
+void CGumpSpellbook::GetTooltipBookInfo(int &dictionaryPagesCount, int &tooltipOffset)
+{
+	int maxSpellsCount = 0;
+
+	switch (m_BookType)
+	{
+		case ST_MAGE:
+		{
+			maxSpellsCount = SPELLBOOK_1_SPELLS_COUNT;
+			tooltipOffset = 1061290;
+
+			break;
+		}
+		case ST_NECRO:
+		{
+			maxSpellsCount = SPELLBOOK_2_SPELLS_COUNT;
+			tooltipOffset = 1061390;
+
+			break;
+		}
+		case ST_PALADIN:
+		{
+			maxSpellsCount = SPELLBOOK_3_SPELLS_COUNT;
+			tooltipOffset = 1061490;
+
+			break;
+		}
+		case ST_BUSHIDO:
+		{
+			maxSpellsCount = SPELLBOOK_4_SPELLS_COUNT;
+			tooltipOffset = 1063263;
+
+			break;
+		}
+		case ST_NINJITSU:
+		{
+			maxSpellsCount = SPELLBOOK_5_SPELLS_COUNT;
+			tooltipOffset = 1063279;
+
+			break;
+		}
+		case ST_SPELL_WEAVING:
+		{
+			maxSpellsCount = SPELLBOOK_6_SPELLS_COUNT;
+			tooltipOffset = 1072042;
+
+			break;
+		}
+		case ST_MYSTICISM: //?
+		{
+			maxSpellsCount = SPELLBOOK_7_SPELLS_COUNT;
+			tooltipOffset = 0;
+
+			break;
+		}
+		default:
+			break;
+	}
+
+	dictionaryPagesCount = (int)ceilf(maxSpellsCount / 8.0f);
+
+	if (dictionaryPagesCount % 2)
+		dictionaryPagesCount++;
 }
 //----------------------------------------------------------------------------
 void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPagesCount, int &spellsOnPage, int &spellIndexOffset, ushort &graphic, ushort &minimizedGraphic, ushort &iconStartGraphic)

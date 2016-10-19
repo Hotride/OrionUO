@@ -387,8 +387,6 @@ void CGumpScreenSelectProfession::InitToolTip()
 
 		QFOR(child, obj->m_Items, CBaseProfession*)
 		{
-			LOG("%i %i child->DescriptionClilocID = %i\n", id, ID_SPS_LABEL + index, child->DescriptionClilocID);
-
 			if (id == ID_SPS_LABEL + index)
 			{
 				if (child->DescriptionClilocID)

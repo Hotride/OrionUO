@@ -81,7 +81,7 @@ void CGameCharacter::UpdateHitsTexture(const uchar &hits)
 		else if (hits < 50)
 			color = 0x0030;
 		else if (hits < 80)
-			color = 0x0006;
+			color = 0x0058;
 
 		g_FontManager.GenerateA(3, m_HitsTexture, hitsText, color);
 	}

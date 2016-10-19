@@ -2791,8 +2791,7 @@ PACKET_HANDLER(UnicodeTalk)
 		return;
 	}
 
-	wstring name((wchar_t*)m_Ptr);
-	//wstring name = ReadUnicodeStringLE(0);
+	string name(ReadString(0));
 	wstring str = L"";
 
 	if (m_Size > 48)
@@ -2819,7 +2818,7 @@ PACKET_HANDLER(UnicodeTalk)
 
 			if (!obj->Name.length())
 			{
-				obj->Name = ToString(name);
+				obj->Name = name;
 
 				if (obj->NPC)
 					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
@@ -3794,7 +3793,7 @@ void CPacketManager::AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &l
 			htmlColor = 0x010101FF;
 		}
 
-		CGUIHTMLText *htmlText = (CGUIHTMLText*)htmlGump->Add(new CGUIHTMLText(data.TextID, 0, data.Color, 0, 0, width, TS_LEFT, /*UOFONT_BLACK_BORDER*/0, htmlColor));
+		CGUIHTMLText *htmlText = (CGUIHTMLText*)htmlGump->Add(new CGUIHTMLText(data.TextID, (uchar)(m_ClientVersion >= CV_308Z), data.Color, 0, 0, width, TS_LEFT, /*UOFONT_BLACK_BORDER*/0, htmlColor));
 
 		if (data.IsXMF)
 		{

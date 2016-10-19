@@ -64,7 +64,7 @@ CGumpMenubar::CGumpMenubar(uint serial, short x, short y)
 	{
 		Add(new CGUIButton(textPosTable[i][4], textPosTable[i][0], textPosTable[i][0], textPosTable[i][0], textPosTable[i][1], 1));
 
-		CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(textPosTable[i][4], 0, 0x0036, 0x0036, textPosTable[i][2], 2, textPosTable[i][3], true, 0, TS_CENTER));
+		CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(textPosTable[i][4], 0, 0x0036, 0x0036, textPosTable[i][2], 2, textPosTable[i][3], true, 1, TS_CENTER));
 		entry->m_Entry.SetText(text[i]);
 		entry->CheckOnSerial = true;
 		entry->ReadOnly = true;

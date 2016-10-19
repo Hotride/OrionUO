@@ -936,79 +936,58 @@ void COrion::ClearUnusedTextures()
 
 	clearMap = 1;
 
-	/*m_StaticDataIndex[0x0EED].LastAccessTime = g_Ticks;
-	m_StaticDataIndex[0x0EEE].LastAccessTime = g_Ticks;
-	m_StaticDataIndex[0x0EEF].LastAccessTime = g_Ticks;
-
-	IFOR(i, 0, 2)
-	{
-		IFOR(j, 0, 16)
-			m_StaticDataIndex[g_CursorData[i][j]].LastAccessTime = g_Ticks;
-	}
-
-	IFOR(i, 0, 8)
-		m_StaticDataIndex[g_QuestArrow.m_Gump + i].LastAccessTime = g_Ticks;*/
-
 	g_GumpManager.PrepareTextures();
 
 	g_Ticks -= CLEAR_TEXTURES_DELAY;
 	
-	PVOID lists[6] =
+	PVOID lists[5] =
 	{
 		&m_UsedLandList,
 		&m_UsedStaticList,
 		&m_UsedGumpList,
 		&m_UsedTextureList,
-		&m_UsedLightList,
-		&m_UsedSoundList
+		&m_UsedLightList
 	};
 
-	IFOR(i, 0, 6)
+	IFOR(i, 0, 5)
 	{
-		if (i < 5)
+		deque<CIndexObject*> *list = (deque<CIndexObject*>*)lists[i];
+
+		for (deque<CIndexObject*>::iterator it = list->begin(); it != list->end();)
 		{
-			deque<CIndexObject*> *list = (deque<CIndexObject*>*)lists[i];
+			CIndexObject *obj = *it;
 
-			for (deque<CIndexObject*>::iterator it = list->begin(); it != list->end();)
+			if (obj->LastAccessTime < g_Ticks)
 			{
-				CIndexObject *obj = *it;
-
-				if (obj->LastAccessTime < g_Ticks)
+				if (obj->Texture != NULL)
 				{
-					if (obj->Texture != NULL)
-					{
-						delete obj->Texture;
-						obj->Texture = NULL;
-					}
-
-					it = list->erase(it);
+					delete obj->Texture;
+					obj->Texture = NULL;
 				}
-				else
-					it++;
+
+				it = list->erase(it);
 			}
+			else
+				it++;
+		}
+	}
+
+	for (deque<CIndexSound*>::iterator it = m_UsedSoundList.begin(); it != m_UsedSoundList.end();)
+	{
+		CIndexSound *obj = *it;
+
+		if (obj->LastAccessTime < g_Ticks)
+		{
+			if (obj->m_Stream != 0)
+			{
+				BASS_StreamFree(obj->m_Stream);
+				obj->m_Stream = 0;
+			}
+
+			it = m_UsedSoundList.erase(it);
 		}
 		else
-		{
-			deque<CIndexSound*> *list = (deque<CIndexSound*>*)lists[i];
-
-			for (deque<CIndexSound*>::iterator it = list->begin(); it != list->end();)
-			{
-				CIndexSound *obj = *it;
-
-				if (obj->LastAccessTime < g_Ticks)
-				{
-					if (obj->m_Stream != 0)
-					{
-						BASS_StreamFree(obj->m_Stream);
-						obj->m_Stream = 0;
-					}
-
-					it = list->erase(it);
-				}
-				else
-					it++;
-			}
-		}
+			it++;
 	}
 
 	AdjustSoundEffects(g_Ticks);
