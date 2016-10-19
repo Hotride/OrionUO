@@ -110,8 +110,6 @@ bool CFileManager::Load()
 				return false;
 		}
 
-		if (!m_StaticIdx[i].Load(g_App.FilePath("staidx%i.mul", i)))
-			return false;
 		if (g_FileManager.UseUOP)
 		{
 			if (!m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i)))
@@ -124,14 +122,12 @@ bool CFileManager::Load()
 		}
 		else
 		{
-			if (!m_MapMul[i].Load(g_App.FilePath("map%i.mul", i)))
-				return false;
+			m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
 		}
 
-		if (!m_StaticMul[i].Load(g_App.FilePath("statics%i.mul", i)))
-			return false;
-		if (!m_FacetMul[i].Load(g_App.FilePath("facet0%i.mul", i)))
-			return false;
+		m_StaticIdx[i].Load(g_App.FilePath("staidx%i.mul", i));
+		m_StaticMul[i].Load(g_App.FilePath("statics%i.mul", i));
+		m_FacetMul[i].Load(g_App.FilePath("facet0%i.mul", i));
 	}
 
 	IFOR(i, 0, 20)
