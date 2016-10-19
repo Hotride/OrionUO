@@ -208,22 +208,16 @@ void CFileManager::Unload()
 
 	IFOR(i, 0, 6)
 	{
-		if (!g_FileManager.UseUOP || (g_FileManager.UseUOP && i != 1))
-		{
-			m_AnimIdx[i].Unload();
-			m_AnimMul[i].Unload();
-		}
-
-
+		m_AnimIdx[i].Unload();
+		m_AnimMul[i].Unload();
 		if (g_FileManager.UseUOP)
 		{
 			m_MapUOP[i].Unload();
-			if (i == 0 || i == 1 || i == 2 || i == 5)
-				m_MapXUOP[i].Unload();
+			m_MapXUOP[i].Unload();
+
 		}
 		else
 			m_MapMul[i].Unload();
-
 		m_StaticIdx[i].Unload();
 		m_StaticMul[i].Unload();
 		m_FacetMul[i].Unload();
