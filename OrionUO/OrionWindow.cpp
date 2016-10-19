@@ -255,12 +255,18 @@ void COrionWindow::OnDragging()
 void COrionWindow::OnActivate()
 {
 	SetRenderTimerDelay(g_FrameDelay[1]);
+
+	if (!g_PluginManager.Empty())
+		g_PluginManager.WindowProc(m_Handle, WM_NCACTIVATE, 1, 0);
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnDeactivate()
 {
 	if (g_ConfigManager.ReduceFPSUnactiveWindow)
 		SetRenderTimerDelay(g_FrameDelay[0]);
+
+	if (!g_PluginManager.Empty())
+		g_PluginManager.WindowProc(m_Handle, WM_NCACTIVATE, 0, 0);
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
