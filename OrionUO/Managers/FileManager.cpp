@@ -201,7 +201,7 @@ void CFileManager::Unload()
 	m_TextureMul.Unload();
 	m_TiledataMul.Unload();
 
-	m_LangcodeIff.Load(g_App.FilePath("Langcode.iff"));
+	m_LangcodeIff.Unload();
 
 	IFOR(i, 0, 6)
 	{
