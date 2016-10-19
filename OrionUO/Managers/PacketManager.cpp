@@ -2030,6 +2030,7 @@ PACKET_HANDLER(UpdateCharacter)
 
 	obj->Color = ReadUInt16BE();
 	obj->Flags = ReadUInt8();
+	obj->Notoriety = ReadUInt8();
 
 	g_World->MoveToTop(obj);
 }
