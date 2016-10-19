@@ -1983,9 +1983,6 @@ PACKET_HANDLER(UpdateCharacter)
 	obj->Graphic = ReadUInt16BE();
 	obj->OnGraphicChange();
 
-	if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
-		m_MegaClilocRequests.push_back(obj->Serial);
-
 	short x = ReadInt16BE();
 	short y = ReadInt16BE();
 	char z = ReadInt8();
@@ -2016,10 +2013,15 @@ PACKET_HANDLER(UpdateCharacter)
 	}
 	else if (serial != g_PlayerSerial)
 	{
-		obj->X = x;
-		obj->Y = y;
-		obj->Z = z;
-		obj->Direction = dir;
+		CWalkData *wd = obj->m_WalkStack.m_Items;
+
+		if (wd == NULL || (wd->X != x || wd->Y != y || wd->Z != z || wd->Direction != dir))
+		{
+			obj->X = x;
+			obj->Y = y;
+			obj->Z = z;
+			obj->Direction = dir;
+		}
 	}
 
 	if (serial == g_PlayerSerial)
@@ -2027,6 +2029,8 @@ PACKET_HANDLER(UpdateCharacter)
 		obj->PaperdollText = "";
 		m_MegaClilocRequests.push_back(serial);
 	}
+	else if (m_ClientVersion >= CV_500A && !obj->ClilocMessage.length())
+		m_MegaClilocRequests.push_back(obj->Serial);
 
 	obj->Color = ReadUInt16BE();
 	obj->Flags = ReadUInt8();
