@@ -50,8 +50,9 @@ bool CFileManager::Load()
 			return false;
 		if (!m_string_dictionary.Load(g_App.FilePath("string_dictionary.uop")))
 			return false;
-		if (!m_MultiCollection.Load(g_App.FilePath("MultiCollection.uop")))
-			return false;
+		//По сути пустой файл?
+		//if (!m_MultiCollection.Load(g_App.FilePath("MultiCollection.uop")))
+		//	return false;
 		if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
 			return false;
 		if (!m_MainMisc.Load(g_App.FilePath("MainMisc.uop")))
@@ -106,9 +107,7 @@ bool CFileManager::Load()
 		if (g_FileManager.UseUOP && i > 1 || !g_FileManager.UseUOP && i > 0)
 		{
 			if (!m_AnimIdx[i].Load(g_App.FilePath("anim%i.idx", i)))
-				return false;
 			if (!m_AnimMul[i].Load(g_App.FilePath("anim%i.mul", i)))
-				return false;
 		}
 
 		if (g_FileManager.UseUOP)
