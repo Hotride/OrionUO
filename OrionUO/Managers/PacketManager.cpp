@@ -2791,8 +2791,7 @@ PACKET_HANDLER(UnicodeTalk)
 		return;
 	}
 
-	wstring name((wchar_t*)m_Ptr);
-	//wstring name = ReadUnicodeStringLE(0);
+	string name(ReadString(0));
 	wstring str = L"";
 
 	if (m_Size > 48)
@@ -2819,7 +2818,7 @@ PACKET_HANDLER(UnicodeTalk)
 
 			if (!obj->Name.length())
 			{
-				obj->Name = ToString(name);
+				obj->Name = name;
 
 				if (obj->NPC)
 					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
