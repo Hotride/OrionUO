@@ -183,7 +183,7 @@ public:
 	Проверка на человекоподобного персонажа
 	@return Человекоподобное или нет
 	*/
-	bool IsHuman() { return (((m_Graphic >= 0x0190) && (m_Graphic <= 0x0193)) || (m_Graphic == 0x03DB) || (m_Graphic == 0x03DF) || (m_Graphic == 0x03E2)); }
+	bool IsHuman() { return (IN_RANGE(m_Graphic, 0x0190, 0x0193) || IN_RANGE(m_Graphic, 0x025D, 0x025E) || IN_RANGE(m_Graphic, 0x029A, 0x029B) || (m_Graphic == 0x03DB) || (m_Graphic == 0x03DF) || (m_Graphic == 0x03E2)); }
 
 	/*!
 	Жив или мертв объект

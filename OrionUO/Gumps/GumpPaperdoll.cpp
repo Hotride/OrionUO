@@ -396,6 +396,30 @@ void CGumpPaperdoll::UpdateContent()
 		bodyGumppic->PartialHue = true;
 		bodyGumppic->Color = color;
 	}
+	if (obj->Graphic == 0x025D)
+	{
+		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000E, 8, 19)); //Elf Male gump
+		bodyGumppic->PartialHue = true;
+		bodyGumppic->Color = color;
+	}
+	else if (obj->Graphic == 0x025E)
+	{
+		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000F, 8, 19)); //Elf Female gump
+		bodyGumppic->PartialHue = true;
+		bodyGumppic->Color = color;
+	}
+	if (obj->Graphic == 0x029A)
+	{
+		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x0079, 8, 19)); //Gargoly Male gump
+		bodyGumppic->PartialHue = true;
+		bodyGumppic->Color = color;
+	}
+	else if (obj->Graphic == 0x029B)
+	{
+		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x0078, 8, 19)); //Gargoly Female gump
+		bodyGumppic->PartialHue = true;
+		bodyGumppic->Color = color;
+	}
 	else if (obj->Graphic == 0x03DB)
 	{
 		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000C, 8, 19)); //Male gump
