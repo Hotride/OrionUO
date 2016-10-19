@@ -55,6 +55,7 @@ bool CFileManager::Load()
 		if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
 			return false;
 		if (!m_MainMisc.Load(g_App.FilePath("MainMisc.uop")))
+			return false;
 		IFOR(i, 1, 5)
 		{
 			if (!m_AnimationFrame[i].Load(g_App.FilePath("AnimationFrame%i.uop", i)))
