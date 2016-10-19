@@ -56,11 +56,11 @@ bool CFileManager::Load()
 			return false;
 		if (!m_MainMisc.Load(g_App.FilePath("MainMisc.uop")))
 			return false;
-		IFOR(i, 1, 5)
+		/*IFOR(i, 1, 5)
 		{
 			if (!m_AnimationFrame[i].Load(g_App.FilePath("AnimationFrame%i.uop", i)))
 				return false;
-		}
+		}*/
 	}
 	if (!m_AnimIdx[0].Load(g_App.FilePath("anim.idx")))
 		return false;
