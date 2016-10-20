@@ -100,6 +100,7 @@ void CConfigManager::DefaultPage2()
 	m_ApplyStateColorOnCharacters = false;
 	m_OriginalPartyStatusbar = false;
 	m_ChangeFieldsGraphic = false;
+	m_PaperdollSlots = true;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -353,6 +354,23 @@ void CConfigManager::OnChangeChangeFieldsGraphic(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
+void CConfigManager::OnChangePaperdollSlots(const bool &val)
+{
+	if (this == &g_ConfigManager && g_World != NULL)
+	{
+		m_PaperdollSlots = val;
+
+		QFOR(gump, g_GumpManager.m_Items, CGump*)
+		{
+			if (gump->GumpType == GT_PAPERDOLL)
+			{
+				gump->UpdateContent();
+				gump->WantRedraw = true;
+			}
+		}
+	}
+}
+//---------------------------------------------------------------------------
 /*!
 Получить цвет исходя из "злобности"
 @param [__in] notoriety Злобность
@@ -456,6 +474,7 @@ bool CConfigManager::Load(string path)
 		m_OriginalPartyStatusbar = false;
 		m_ApplyStateColorOnCharacters = false;
 		bool changeFieldsGraphic = false;
+		bool paperdollSlots = true;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -497,7 +516,12 @@ bool CConfigManager::Load(string path)
 										m_ApplyStateColorOnCharacters = file.ReadUInt8();
 
 										if (blockSize > 18)
+										{
 											changeFieldsGraphic = file.ReadUInt8();
+
+											if (blockSize > 19)
+												paperdollSlots = file.ReadUInt8();
+										}
 									}
 								}
 							}
@@ -514,6 +538,7 @@ bool CConfigManager::Load(string path)
 		DrawStumps = drawStumps;
 		MarkingCaves = markingCaves;
 		ChangeFieldsGraphic = changeFieldsGraphic;
+		PaperdollSlots = paperdollSlots;
 		
 		file.Ptr = next;
 		
@@ -820,7 +845,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(19); //size of block
+	writter.WriteInt8(20); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -839,6 +864,7 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_OriginalPartyStatusbar);
 	writter.WriteUInt8(m_ApplyStateColorOnCharacters);
 	writter.WriteUInt8(m_ChangeFieldsGraphic);
+	writter.WriteUInt8(m_PaperdollSlots);
 	writter.WriteBuffer();
 
 	//Page 3

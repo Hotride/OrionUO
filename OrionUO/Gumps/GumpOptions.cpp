@@ -399,6 +399,11 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Replace animated fields images to tiles", g_SelectedObject.Object());
 				break;
 			}
+			case ID_GO_P2_PAPERDOLL_SLOTS:
+			{
+				g_ToolTip.Set(L"Add slots in paperdoll gump for:\nHelmet\nEarrings\nNecklace\nRing\nBracelet", g_SelectedObject.Object());
+				break;
+			}
 			case ID_GO_P2_DEV_MODE_1:
 			{
 				g_ToolTip.Set(L"Original client work", g_SelectedObject.Object());
@@ -882,7 +887,11 @@ void CGumpOptions::DrawPage2()
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CHANGE_FIELDS_GRAPHIC, 0x00D2, 0x00D3, 0x00D2, 0, 530));
 	checkbox->Checked = g_OptionsConfig.ChangeFieldsGraphic;
 	checkbox->SetTextParameters(0, L"Change animated fields to tiles", g_OptionsTextColor);
-	
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_PAPERDOLL_SLOTS, 0x00D2, 0x00D3, 0x00D2, 0, 550));
+	checkbox->Checked = g_OptionsConfig.PaperdollSlots;
+	checkbox->SetTextParameters(0, L"Add paperdoll slots", g_OptionsTextColor);
+
 	html->CalculateDataSize();
 }
 //----------------------------------------------------------------------------
@@ -2121,6 +2130,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.ApplyStateColorOnCharacters = state;
 			else if (serial == ID_GO_P2_CHANGE_FIELDS_GRAPHIC)
 				g_OptionsConfig.ChangeFieldsGraphic = state;
+			else if (serial == ID_GO_P2_PAPERDOLL_SLOTS)
+				g_OptionsConfig.PaperdollSlots = state;
 			
 
 			else if (serial == ID_GO_P2_DEV_MODE_1)
@@ -2657,6 +2668,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.OriginalPartyStatusbar = g_OptionsConfig.OriginalPartyStatusbar;
 			g_ConfigManager.ApplyStateColorOnCharacters = g_OptionsConfig.ApplyStateColorOnCharacters;
 			g_ConfigManager.ChangeFieldsGraphic = g_OptionsConfig.ChangeFieldsGraphic;
+			g_ConfigManager.PaperdollSlots = g_OptionsConfig.PaperdollSlots;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

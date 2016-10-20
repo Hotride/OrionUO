@@ -20,6 +20,7 @@
 #include "../Network/Packets.h"
 #include "../ClickObject.h"
 #include "../Managers/FontsManager.h"
+#include "../Managers/ConfigManager.h"
 //----------------------------------------------------------------------------------
 int CGumpPaperdoll::UsedLayers[m_LayerCount] =
 {
@@ -441,14 +442,50 @@ void CGumpPaperdoll::UpdateContent()
 
 	g_ColorizerShader->Use();
 
-	if (obj->IsHuman() && !obj->Dead())
+	if (obj->IsHuman())
 	{
+		CGameItem *slotObjects[5] = { 0 };
+
 		IFOR(i, 0, m_LayerCount)
 		{
 			equipment = obj->FindLayer(UsedLayers[i]);
 
 			if (equipment != NULL && equipment->AnimID && equipment->Serial != ignoreSerial)
 			{
+				if (g_ConfigManager.PaperdollSlots)
+				{
+					switch (UsedLayers[i])
+					{
+						case OL_HELMET:
+						{
+							slotObjects[0] = equipment;
+							break;
+						}
+						case OL_EARRINGS:
+						{
+							slotObjects[1] = equipment;
+							break;
+						}
+						case OL_NECKLACE:
+						{
+							slotObjects[2] = equipment;
+							break;
+						}
+						case OL_RING:
+						{
+							slotObjects[3] = equipment;
+							break;
+						}
+						case OL_BRACELET:
+						{
+							slotObjects[4] = equipment;
+							break;
+						}
+						default:
+							break;
+					}
+				}
+
 				int cOfs = gumpOffset;
 
 				if (obj->Sex && g_Orion.ExecuteGump(equipment->AnimID + cOfs) == NULL)
@@ -480,22 +517,39 @@ void CGumpPaperdoll::UpdateContent()
 				}
 			}
 		}
-	}
-	else if (obj->IsHuman())
-	{
-		equipment = obj->FindLayer(OL_ROBE);
 
-		if (equipment != NULL && equipment->AnimID)
+		if (g_ConfigManager.PaperdollSlots)
 		{
-			int cOfs = gumpOffset;
+			int yPtr = 75;
 
-			if (obj->Sex && !g_Orion.ExecuteGump(equipment->AnimID + cOfs))
-				cOfs = MALE_GUMP_OFFSET;
+			IFOR(i, 0, 5)
+			{
+				CGUIGumppicTiled *backgroundSlot = (CGUIGumppicTiled*)m_DataBox->Add(new CGUIGumppicTiled(0x243A, 1, yPtr, 19, 20));
+				CGUIGumppic *scopeSlot = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x2344, 1, yPtr));
 
-			bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + cOfs, 8, 19));
-			bodyGumppic->Color = equipment->Color;
-			bodyGumppic->PartialHue = equipment->IsPartialHue();
-			bodyGumppic->Serial = ID_GP_ITEMS + OL_ROBE;
+				CGameItem *equipment = slotObjects[i];
+
+				if (equipment != NULL)
+				{
+					uint slotSerial = ID_GP_ITEMS + equipment->Layer;
+
+					WISP_GEOMETRY::CRect rect = g_Orion.GetStaticArtRealPixelDimension(equipment->Graphic);
+
+					int tileOffsetX = (13 - rect.Size.Width) / 2;
+					int tileOffsetY = (14 - rect.Size.Height) / 2;
+
+					int tileX = 4 - rect.Position.X + tileOffsetX;
+					int tileY = 3 + yPtr - rect.Position.Y + tileOffsetY;
+
+					CGUITilepic *tilepic = (CGUITilepic*)m_DataBox->Add(new CGUITilepic(equipment->Graphic, equipment->Color, tileX, tileY));
+					tilepic->Serial = slotSerial;
+
+					backgroundSlot->Serial = slotSerial;
+					scopeSlot->Serial = slotSerial;
+				}
+
+				yPtr += 21;
+			}
 		}
 	}
 
