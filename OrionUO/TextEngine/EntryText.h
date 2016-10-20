@@ -44,6 +44,9 @@ public:
 	//!Текстура текста
 	CGLTextTexture m_Texture;
 
+	//!Текстура каретки
+	CGLTextTexture m_CaretTexture;
+
 	/*!
 	Очистить данные
 	@return 
@@ -108,11 +111,17 @@ public:
 	//Создать текстуру Unicode текста
 	void CreateTextureW(uchar font, wstring str, ushort color, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
+	//Подготовить ASCII текст
+	virtual void PrepareToDrawA(uchar font, ushort color, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
+
+	//Подготовить Unicode текст
+	virtual void PrepareToDrawW(uchar font, ushort color, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
+
 	//Отрисовать ASCII текст
-	virtual void DrawA(uchar font, ushort color, int X, int Y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
+	virtual void DrawA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 	//Отрисовать Unicode текст
-	virtual void DrawW(uchar font, ushort color, int X, int Y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
+	virtual void DrawW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 	//Отрисовать ASCII текст замаскированный звездочками
 	void DrawMaskA(uchar font, ushort color, int X, int Y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);

@@ -79,6 +79,32 @@ void CGUITextEntry::OnMouseExit()
 		g_LastSelectedObject.Gump()->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
+void CGUITextEntry::PrepareTextures()
+{
+	ushort color = m_Color;
+
+	if (!m_UseGlobalColor)
+	{
+		if (m_Focused || &m_Entry == g_EntryPointer)
+			color = m_ColorFocused;
+		else if (m_CheckOnSerial)
+		{
+			if (m_Serial == g_SelectedObject.Serial && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGUI())
+				color = m_ColorSelected;
+		}
+		else if (g_GumpSelectedElement == this)
+			color = m_ColorSelected;
+	}
+
+	if (color && m_Unicode)
+		color++;
+
+	if (m_Unicode)
+		m_Entry.PrepareToDrawW(m_Font, color, m_Align, m_TextFlags);
+	else
+		m_Entry.PrepareToDrawA(m_Font, color, m_Align, m_TextFlags);
+}
+//----------------------------------------------------------------------------------
 void CGUITextEntry::Draw(const bool &checktrans)
 {
 	int y = m_Y;

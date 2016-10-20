@@ -82,6 +82,8 @@ public:
 	//!Объект класса для ввода текста
 	class CEntryText m_Entry;
 
+	virtual void PrepareTextures();
+
 	virtual bool EntryPointerHere();
 
 	virtual WISP_GEOMETRY::CSize GetSize();

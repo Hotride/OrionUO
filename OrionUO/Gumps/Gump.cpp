@@ -1170,6 +1170,8 @@ void CGump::GenerateFrame(bool stop)
 
 	CalculateGumpState();
 
+	PrepareTextures();
+
 	glNewList((GLuint)this, GL_COMPILE);
 
 		DrawItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
