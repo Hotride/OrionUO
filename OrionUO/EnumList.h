@@ -437,6 +437,8 @@ enum VALUE_KEY_INT
 enum VALUE_KEY_STRING
 {
 	VKS_SKILL_NAME = 0,
+	VKS_SERVER_NAME,
+	VKS_CHARACTER_NAME
 };
 //----------------------------------------------------------------------------------
 //!Типы текстовых сообщений

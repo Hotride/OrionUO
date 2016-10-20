@@ -532,7 +532,7 @@ void CEntryText::CreateTextureW(uchar font, wstring str, ushort color, int width
 	}
 }
 //----------------------------------------------------------------------------------
-void CEntryText::DrawA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE align, ushort flags)
+void CEntryText::PrepareToDrawA(uchar font, ushort color, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	//Если изменился текст или цвет
 	if (m_Changed || m_Color != color)
@@ -546,24 +546,14 @@ void CEntryText::DrawA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE a
 		//Регистрируем изменения
 		m_Changed = false;
 		m_Color = color;
-	}
 
-	//Отрисовка текстуры
-	m_Texture.Draw(x + m_DrawOffset, y);
-
-	//Если это поле для ввода - отобразим каретку
-	if (this == g_EntryPointer)
-	{
-		//Таблица смещений по оси Y
-		const int offsetTable[] = {1, 2, 1, 1, 1, 2, 1, 1, 2, 2};
-		int offsY = offsetTable[font % 10];
-
-		//Отрисуем каретку
-		g_FontManager.DrawA(font, "_", color, x + m_DrawOffset + m_CaretPos.x, y + offsY + m_CaretPos.y);
+		//Если это поле для ввода - сгенерируем каретку
+		if (this == g_EntryPointer)
+			g_FontManager.GenerateA(font, m_CaretTexture, "_", color);
 	}
 }
 //----------------------------------------------------------------------------------
-void CEntryText::DrawW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE align, ushort flags)
+void CEntryText::PrepareToDrawW(uchar font, ushort color, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	//Если изменился текст или цвет
 	if (m_Changed || m_Color != color)
@@ -577,14 +567,42 @@ void CEntryText::DrawW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE a
 		//Регистрируем изменения
 		m_Changed = false;
 		m_Color = color;
+
+		//Если это поле для ввода - сгенерируем каретку
+		if (this == g_EntryPointer)
+			g_FontManager.GenerateW(font, m_CaretTexture, L"_", color, 30);
 	}
+}
+//----------------------------------------------------------------------------------
+void CEntryText::DrawA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE align, ushort flags)
+{
+	PrepareToDrawA(font, color, align, flags);
 
 	//Отрисовка текстуры
 	m_Texture.Draw(x + m_DrawOffset, y);
 
 	//Если это поле для ввода - отобразим каретку
 	if (this == g_EntryPointer)
-		g_FontManager.DrawW(font, L"_", color, x + m_DrawOffset + m_CaretPos.x, y + m_CaretPos.y, 30);
+	{
+		//Таблица смещений по оси Y
+		const int offsetTable[] = {1, 2, 1, 1, 1, 2, 1, 1, 2, 2};
+		int offsY = offsetTable[font % 10];
+
+		//Отрисуем каретку
+		m_CaretTexture.Draw(x + m_DrawOffset + m_CaretPos.x, y + offsY + m_CaretPos.y);
+	}
+}
+//----------------------------------------------------------------------------------
+void CEntryText::DrawW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE align, ushort flags)
+{
+	PrepareToDrawW(font, color, align, flags);
+
+	//Отрисовка текстуры
+	m_Texture.Draw(x + m_DrawOffset, y);
+
+	//Если это поле для ввода - отобразим каретку
+	if (this == g_EntryPointer)
+		m_CaretTexture.Draw(x + m_DrawOffset + m_CaretPos.x, y + m_CaretPos.y);
 }
 //----------------------------------------------------------------------------------
 void CEntryText::DrawMaskA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE align, ushort flags)

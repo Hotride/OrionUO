@@ -758,7 +758,7 @@ void COrion::LoadPluginConfig()
 
 	g_PluginInit(libName, functions, flags);
 
-	libName.push_back("OrionAssist.dll");
+	libName.push_back("OA/OrionAssist.dll");
 	functions.push_back("Install");
 	flags.push_back(0xFFFFFFFF);
 
@@ -1885,6 +1885,18 @@ string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 
 			if (index >= 0 && index < g_SkillsCount)
 				value = g_Skills[index].Name;
+		}
+		case VKS_SERVER_NAME:
+		{
+			CServer *server = g_ServerList.GetSelectedServer();
+
+			if (server != NULL)
+				value = server->Name;
+		}
+		case VKS_CHARACTER_NAME:
+		{
+			if (g_Player != NULL)
+				value = g_Player->Name;
 		}
 		default:
 			break;
