@@ -1172,8 +1172,8 @@ void CGump::GenerateFrame(bool stop)
 
 	//Remove use of display list fix ATI crash - DarkLotus
 	//glNewList((GLuint)this, GL_COMPILE);
-
-	DrawItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
+	//Fixes gump being drawn at 0,0 as well as current location on a redraw.
+	//DrawItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
 
 	//if (stop)
 	//	glEndList();
