@@ -76,7 +76,7 @@ void CGameObject::OnChangedFlags(const uchar &val)
 //----------------------------------------------------------------------------------
 void CGameObject::OnChangeName(const string &newName)
 {
-	if (IsPlayer())
+	if (IsPlayer() && m_Name != newName)
 	{
 		if (g_GameState >= GS_GAME)
 		{

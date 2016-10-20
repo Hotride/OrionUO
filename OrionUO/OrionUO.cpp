@@ -1888,6 +1888,18 @@ string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 			if (index >= 0 && index < g_SkillsCount)
 				value = g_Skills[index].Name;
 		}
+		case VKS_SERVER_NAME:
+		{
+			CServer *server = g_ServerList.GetSelectedServer();
+
+			if (server != NULL)
+				value = server->Name;
+		}
+		case VKS_CHARACTER_NAME:
+		{
+			if (g_Player != NULL)
+				value = g_Player->Name;
+		}
 		default:
 			break;
 	}
