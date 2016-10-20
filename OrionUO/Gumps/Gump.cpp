@@ -1170,12 +1170,13 @@ void CGump::GenerateFrame(bool stop)
 
 	CalculateGumpState();
 
-	glNewList((GLuint)this, GL_COMPILE);
+	//Remove use of display list fix ATI crash - DarkLotus
+	//glNewList((GLuint)this, GL_COMPILE);
 
-		DrawItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
+	DrawItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
 
-	if (stop)
-		glEndList();
+	//if (stop)
+	//	glEndList();
 
 	m_WantRedraw = true;
 	m_FrameCreated = true;
@@ -1202,7 +1203,8 @@ void CGump::Draw()
 
 	glTranslatef(g_GumpTranslate.X, g_GumpTranslate.Y, 0.0f);
 
-	glCallList((GLuint)this);
+	DrawItems((CBaseGUI*)m_Items, m_Page, m_Draw2Page);
+	//glCallList((GLuint)this);
 
 	g_GL.OldTexture = 0;
 
