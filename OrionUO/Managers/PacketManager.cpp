@@ -196,7 +196,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x6D*/ RMSGH("Play Music", 0x03, PlayMusic),
 	/*0x6E*/ RMSGH("Character Animation", 0x0e, CharacterAnimation),
 	/*0x6F*/ BMSGH("Secure Trading", PACKET_VARIABLE_SIZE, SecureTrading),
-	/*0x70*/ RMSGH("Index Effect", 0x1c, GraphicEffect),
+	/*0x70*/ RMSGH("Graphic Effect", 0x1c, GraphicEffect),
 	/*0x71*/ BMSGH("Bulletin Board Data", PACKET_VARIABLE_SIZE, BulletinBoardData),
 	/*0x72*/ BMSGH("War Mode", 0x05, Warmode),
 	/*0x73*/ BMSGH("Ping", 0x02, Ping),

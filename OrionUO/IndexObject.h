@@ -11,8 +11,10 @@
 #define INDEXOBJECT_H
 //----------------------------------------------------------------------------------
 #include "Wisp/WispGlobal.h"
+#include "Wisp/WispGeometry.h"
 #include "GLEngine/GLTexture.h"
 #include "bass.h"
+#include "bassmidi.h"
 #include "Gumps/GumpBulletinBoardItem.h"
 #include "Managers/PacketManager.h"
 
