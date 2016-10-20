@@ -11,10 +11,10 @@
 #define INDEXOBJECT_H
 //----------------------------------------------------------------------------------
 #include "Wisp/WispGlobal.h"
-#include "Wisp/WispGeometry.h"
 #include "GLEngine/GLTexture.h"
 #include "bass.h"
-#include "bassmidi.h"
+#include "Gumps/GumpBulletinBoardItem.h"
+#include "Managers/PacketManager.h"
 
 #pragma comment(lib, "bass.lib")
 #pragma comment(lib, "bassmidi.lib")
@@ -25,14 +25,14 @@ class CIndexObject
 	SETGET(int, DataSize);
 	SETGET(int, Width);
 	SETGET(int, Height);
-	SETGET(ushort, Graphic);
+	SETGET(ushort, ID);
 	SETGET(ushort, Color);
 	SETGET(uint, LastAccessTime);
 
 public:
 	CIndexObject();
 	virtual ~CIndexObject();
-
+	virtual void ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id);
 	CGLTexture *Texture;
 };
 //----------------------------------------------------------------------------------
@@ -50,12 +50,9 @@ public:
 	virtual ~CIndexObjectStatic();
 };
 //----------------------------------------------------------------------------------
-class CIndexSound
+class CIndexSound : public CIndexObject
 {
-	SETGET(uint, Address);
-	SETGET(int, DataSize);
 	SETGET(uint, Delay);
-	SETGET(uint, LastAccessTime);
 
 public:
 	CIndexSound();
@@ -65,15 +62,14 @@ public:
 	HSTREAM m_Stream;
 };
 //----------------------------------------------------------------------------------
-class CIndexMulti
+class CIndexMulti : public CIndexObject
 {
-	SETGET(uint, Address);
-	SETGET(int, DataSize);
 	SETGET(uint, Count);
 
 public:
 	CIndexMulti();
 	virtual ~CIndexMulti();
+	virtual void ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id) override;
 };
 //---------------------------------------------------------------------------
 class CIndexAnimation

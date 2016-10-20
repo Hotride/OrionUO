@@ -1731,7 +1731,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 				if (rwo->IsGameObject())
 					g_Target.SendTargetObject(rwo->Serial);
 				else if (rwo->IsLandObject())
-					g_Target.SendTargetTile(0/*g_SelectedObject->Graphic*/, rwo->X, rwo->Y, rwo->Z);
+					g_Target.SendTargetTile(0/*g_SelectedObject->Index*/, rwo->X, rwo->Y, rwo->Z);
 				else if (rwo->IsStaticObject() || rwo->IsMultiObject())
 					g_Target.SendTargetTile(rwo->Graphic - 0x4000, rwo->X, rwo->Y, rwo->Z);
 
@@ -1824,7 +1824,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 					}
 					/*else if (g_LastObjectType == SOT_LAND_OBJECT)
 					{
-						WORD ID = g_SelectedObject->Graphic;
+						WORD ID = g_SelectedObject->Index;
 						string str(UO->m_LandData[ID / 32].Tiles[ID % 32].Name);
 						if (str.length())
 							UO->CreateTextMessage(TT_CLIENT, 0, 3, 0x03B5, str);

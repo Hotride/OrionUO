@@ -418,7 +418,7 @@ WISP_GEOMETRY::CRect UOFileReader::ReadStaticArtPixelDimension(CIndexObject &io)
 	int maxX = 0;
 	int maxY = 0;
 
-	if (g_Orion.IsTreeTile(io.Graphic, stumpIndex))
+	if (g_Orion.IsTreeTile(io.ID, stumpIndex))
 	{
 		pushort ptr = NULL;
 
@@ -578,7 +578,7 @@ bool UOFileReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &
 	{
 		int stumpIndex = 0;
 
-		if (g_Orion.IsTreeTile(io.Graphic, stumpIndex))
+		if (g_Orion.IsTreeTile(io.ID, stumpIndex))
 		{
 			pushort ptr = NULL;
 

@@ -340,10 +340,8 @@ typedef struct UNICODE_FONT_DATA
 	unsigned char Height;
 } *PUNICODE_FONT_DATA;
 //----------------------------------------------------------------------------------
-typedef struct SOUND_IDX_BLOCK
+typedef struct SOUND_IDX_BLOCK : public BASE_IDX_BLOCK
 {
-	unsigned int Position;
-	unsigned int Size;
 	unsigned short Index;
 	unsigned short Reserved;
 } *PSOUND_IDX_BLOCK;

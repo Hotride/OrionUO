@@ -10,7 +10,7 @@
 #include "IndexObject.h"
 //----------------------------------------------------------------------------------
 CIndexObject::CIndexObject()
-: m_Address(0), m_DataSize(0), m_Width(0), m_Height(0), m_Graphic(0), m_Color(0),
+: m_Address(0), m_DataSize(0), m_Width(0), m_Height(0), m_ID(0), m_Color(0),
 m_LastAccessTime(0), Texture(NULL)
 {
 }
@@ -35,7 +35,7 @@ CIndexObjectStatic::~CIndexObjectStatic()
 }
 //----------------------------------------------------------------------------------
 CIndexSound::CIndexSound()
-: m_Address(0), m_DataSize(0), m_Delay(0), m_LastAccessTime(0), m_Stream(0)
+: m_Delay(0), m_Stream(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ CIndexSound::~CIndexSound()
 }
 //----------------------------------------------------------------------------------
 CIndexMulti::CIndexMulti()
-: m_Address(0), m_DataSize(0), m_Count(0)
+: m_Count(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -70,3 +70,26 @@ CIndexMusic::~CIndexMusic()
 {
 }
 //----------------------------------------------------------------------------------
+void CIndexObject::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id)
+{
+	m_Address = ptr->Position;
+	m_DataSize = ptr->Size;
+
+	if (m_Address == 0xFFFFFFFF || !m_DataSize || m_DataSize == 0xFFFFFFFF)
+	{
+		m_Address = 0;
+		m_DataSize = 0;
+	}
+	else
+		m_Address = m_Address + address;
+	m_ID = id;
+};
+//----------------------------------------------------------------------------------
+void CIndexMulti::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id)
+{
+	CIndexObject::ReadIndexFile(address, ptr, id);
+	if (g_PacketManager.ClientVersion >= CV_7090)
+		m_Count = (ushort)(DataSize / sizeof(MULTI_BLOCK_NEW));
+	else
+		m_Count = (ushort)(DataSize / sizeof(MULTI_BLOCK));
+};
