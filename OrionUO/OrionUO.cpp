@@ -760,7 +760,7 @@ void COrion::LoadPluginConfig()
 
 	g_PluginInit(libName, functions, flags);
 
-	libName.push_back("OrionAssist.dll");
+	libName.push_back("OA/OrionAssist.dll");
 	functions.push_back("Install");
 	flags.push_back(0xFFFFFFFF);
 
