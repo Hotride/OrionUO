@@ -111,12 +111,12 @@ public:
 
 	CIndexObject m_LandDataIndex[MAX_LAND_DATA_INDEX_COUNT];
 	CIndexObjectStatic m_StaticDataIndex[MAX_STATIC_DATA_INDEX_COUNT];
-	CIndexObject m_GumpDataIndex[MAX_GUMP_DATA_INDEX_COUNT];
+	CIndexGump m_GumpDataIndex[MAX_GUMP_DATA_INDEX_COUNT];
 	CIndexObject m_TextureDataIndex[MAX_LAND_TEXTURES_DATA_INDEX_COUNT];
 	CIndexSound m_SoundDataIndex[MAX_SOUND_DATA_INDEX_COUNT];
 	CIndexMusic m_MP3Data[MAX_MUSIC_DATA_INDEX_COUNT];
 	CIndexMulti m_MultiDataIndex[MAX_MULTI_DATA_INDEX_COUNT];
-	CIndexObject m_LightDataIndex[MAX_LIGHTS_DATA_INDEX_COUNT];
+	CIndexLight m_LightDataIndex[MAX_LIGHTS_DATA_INDEX_COUNT];
 
 	ushort m_WinterTile[MAX_LAND_DATA_INDEX_COUNT];
 

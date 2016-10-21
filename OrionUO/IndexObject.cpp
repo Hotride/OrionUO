@@ -52,6 +52,22 @@ CIndexMulti::~CIndexMulti()
 {
 }
 //----------------------------------------------------------------------------------
+CIndexLight::CIndexLight()
+{
+}
+//----------------------------------------------------------------------------------
+CIndexLight::~CIndexLight()
+{
+}
+//----------------------------------------------------------------------------------
+CIndexGump::CIndexGump()
+{
+}
+//----------------------------------------------------------------------------------
+CIndexGump::~CIndexGump()
+{
+}
+//----------------------------------------------------------------------------------
 CIndexAnimation::CIndexAnimation()
 : m_Address(0), m_Offset(0), m_Graphic(0), m_Color(0), Group(NULL)
 {
@@ -92,4 +108,18 @@ void CIndexMulti::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const 
 		m_Count = (ushort)(DataSize / sizeof(MULTI_BLOCK_NEW));
 	else
 		m_Count = (ushort)(DataSize / sizeof(MULTI_BLOCK));
+};
+//----------------------------------------------------------------------------------
+void CIndexLight::ReadIndexFile(const uint &address, PLIGHT_IDX_BLOCK ptr, const ushort id)
+{
+	CIndexObject::ReadIndexFile(address, ptr, id);
+	m_Width = ptr->Width;
+	m_Height = ptr->Height;
+};
+//----------------------------------------------------------------------------------
+void CIndexGump::ReadIndexFile(const uint &address, PGUMP_IDX_BLOCK ptr, const ushort id)
+{
+	CIndexObject::ReadIndexFile(address, ptr, id);
+	m_Width = ptr->Width;
+	m_Height = ptr->Height;
 };

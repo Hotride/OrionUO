@@ -2560,6 +2560,14 @@ void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 	}
 }
 //----------------------------------------------------------------------------------
+void ReadMulIndexFile(int indexMaxCount, CIndexObject indexObjectsArray[])
+{
+	IFOR(i, 0, indexMaxCount)
+	{
+	}
+
+}
+//----------------------------------------------------------------------------------
 void COrion::LoadIndexFiles()
 {
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)g_FileManager.m_ArtIdx.Start;
@@ -2602,10 +2610,8 @@ void COrion::LoadIndexFiles()
 						SoundPtr++;
 						if (i < MAX_LIGHTS_DATA_INDEX_COUNT)
 						{
-							CIndexObject &light = m_LightDataIndex[i];
+							CIndexLight &light = m_LightDataIndex[i];
 							light.ReadIndexFile((uint)g_FileManager.m_LightMul.Start, LightPtr, i);
-							light.Width = LightPtr->Width;
-							light.Height = LightPtr->Height;
 							LightPtr++;
 						}
 					}
@@ -2615,10 +2621,8 @@ void COrion::LoadIndexFiles()
 
 		if (i < maxGumpsCount)
 		{
-			CIndexObject &gump = m_GumpDataIndex[i];
+			CIndexGump &gump = m_GumpDataIndex[i];
 			gump.ReadIndexFile((uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, i);
-			gump.Width = GumpArtPtr->Width;
-			gump.Height = GumpArtPtr->Height;
 			GumpArtPtr++;
 		}
 
