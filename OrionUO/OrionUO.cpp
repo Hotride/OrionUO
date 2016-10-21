@@ -84,6 +84,7 @@
 #include "Gumps/GumpWorldMap.h"
 #include "CommonInterfaces.h"
 #include "StumpsData.h"
+#include <functional>
 //----------------------------------------------------------------------------------
 typedef void __cdecl PLUGIN_INIT_TYPE(STRING_LIST&, STRING_LIST&, UINT_LIST&);
 //----------------------------------------------------------------------------------
@@ -2560,10 +2561,13 @@ void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 	}
 }
 //----------------------------------------------------------------------------------
-void ReadMulIndexFile(int indexMaxCount, CIndexObject indexObjectsArray[])
+void ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue)
 {
 	IFOR(i, 0, indexMaxCount)
 	{
+		CIndexObject *obj = getIdxObj(i);
+		obj->ReadIndexFile(address, ptr, i);
+		ptr = getNewPtrValue();
 	}
 
 }
@@ -2585,54 +2589,13 @@ void COrion::LoadIndexFiles()
 
 	int maxGumpsCount = (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK);
 
-	int maxCount = maxGumpsCount;
-
-	if (m_StaticDataCount > maxCount)
-		maxCount = m_StaticDataCount;
-
-	IFOR(i, 0, maxCount)
-	{
-		if (i < m_StaticDataCount)
-		{
-			m_StaticDataIndex[i].ReadIndexFile((uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, i);
-			StaticArtPtr++;
-			if (i < MAX_LAND_DATA_INDEX_COUNT)
-			{
-				m_LandDataIndex[i].ReadIndexFile((uint)g_FileManager.m_ArtMul.Start, LandArtPtr, i);
-				LandArtPtr++;
-				if (i < MAX_LAND_TEXTURES_DATA_INDEX_COUNT)
-				{
-					m_TextureDataIndex[i].ReadIndexFile((uint)g_FileManager.m_TextureMul.Start, TexturePtr, i);
-					TexturePtr++;
-					if (i < MAX_SOUND_DATA_INDEX_COUNT)
-					{
-						m_SoundDataIndex[i].ReadIndexFile((uint)g_FileManager.m_SoundMul.Start, SoundPtr, i);
-						SoundPtr++;
-						if (i < MAX_LIGHTS_DATA_INDEX_COUNT)
-						{
-							CIndexLight &light = m_LightDataIndex[i];
-							light.ReadIndexFile((uint)g_FileManager.m_LightMul.Start, LightPtr, i);
-							LightPtr++;
-						}
-					}
-				}
-			}
-		}
-
-		if (i < maxGumpsCount)
-		{
-			CIndexGump &gump = m_GumpDataIndex[i];
-			gump.ReadIndexFile((uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, i);
-			GumpArtPtr++;
-		}
-
-		if (i < g_MultiIndexCount)
-		{
-			CIndexMulti &multi = m_MultiDataIndex[i];
-			multi.ReadIndexFile((uint)g_FileManager.m_MultiMul.Start, MultiPtr, i);
-			MultiPtr++;
-		}
-	}
+	ReadMulIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i];}, (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, [&StaticArtPtr]() { return ++StaticArtPtr; });
+	ReadMulIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, LandArtPtr, [&LandArtPtr]() { return ++LandArtPtr; });
+	ReadMulIndexFile(MAX_LAND_TEXTURES_DATA_INDEX_COUNT, [&](int i){ return &m_TextureDataIndex[i]; }, (uint)g_FileManager.m_TextureMul.Start, TexturePtr, [&TexturePtr]() { return ++TexturePtr; });
+	ReadMulIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, (uint)g_FileManager.m_SoundMul.Start, SoundPtr, [&SoundPtr]() { return ++SoundPtr; });
+	ReadMulIndexFile(MAX_LIGHTS_DATA_INDEX_COUNT, [&](int i){ return &m_LightDataIndex[i]; }, (uint)g_FileManager.m_LightMul.Start, LightPtr, [&LightPtr]() { return ++LightPtr; });
+	ReadMulIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, [&GumpArtPtr]() { return ++GumpArtPtr; });
+	ReadMulIndexFile(g_MultiIndexCount, [&](int i){ return &m_MultiDataIndex[i]; }, (uint)g_FileManager.m_MultiMul.Start, MultiPtr, [&MultiPtr]() { return ++MultiPtr; });
 }
 //----------------------------------------------------------------------------------
 void COrion::UnloadIndexFiles()

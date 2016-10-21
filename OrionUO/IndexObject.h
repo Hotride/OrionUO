@@ -79,7 +79,7 @@ class CIndexGump : public CIndexObject
 public:
 	CIndexGump();
 	virtual ~CIndexGump();
-	virtual void ReadIndexFile(const uint &address, PGUMP_IDX_BLOCK ptr, const ushort id);
+	virtual void ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id) override;
 };
 //----------------------------------------------------------------------------------
 class CIndexLight : public CIndexObject
@@ -87,7 +87,7 @@ class CIndexLight : public CIndexObject
 public:
 	CIndexLight();
 	virtual ~CIndexLight();
-	void ReadIndexFile(const uint &address, PLIGHT_IDX_BLOCK ptr, const ushort id);
+	void ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id) override;
 };
 //---------------------------------------------------------------------------
 class CIndexAnimation

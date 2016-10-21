@@ -110,16 +110,18 @@ void CIndexMulti::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const 
 		m_Count = (ushort)(DataSize / sizeof(MULTI_BLOCK));
 };
 //----------------------------------------------------------------------------------
-void CIndexLight::ReadIndexFile(const uint &address, PLIGHT_IDX_BLOCK ptr, const ushort id)
+void CIndexLight::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id)
 {
 	CIndexObject::ReadIndexFile(address, ptr, id);
-	m_Width = ptr->Width;
-	m_Height = ptr->Height;
+	PLIGHT_IDX_BLOCK realPtr = (PLIGHT_IDX_BLOCK)ptr;
+	m_Width = realPtr->Width;
+	m_Height = realPtr->Height;
 };
 //----------------------------------------------------------------------------------
-void CIndexGump::ReadIndexFile(const uint &address, PGUMP_IDX_BLOCK ptr, const ushort id)
+void CIndexGump::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const ushort id)
 {
 	CIndexObject::ReadIndexFile(address, ptr, id);
-	m_Width = ptr->Width;
-	m_Height = ptr->Height;
+	PGUMP_IDX_BLOCK realPtr = (PGUMP_IDX_BLOCK)ptr;
+	m_Width = realPtr->Width;
+	m_Height = realPtr->Height;
 };
