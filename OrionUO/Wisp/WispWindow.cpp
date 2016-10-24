@@ -428,12 +428,14 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		}
 		case WM_NCACTIVATE:
 		{
+			HRESULT res = DefWindowProc(m_Handle, WM_NCACTIVATE, wParam, lParam);
+
 			if (wParam == 0)
 				OnDeactivate();
 			else
 				OnActivate();
 
-			break;
+			return res;
 		}
 		case WM_NCPAINT:
 			return OnRepaint(wParam, lParam);

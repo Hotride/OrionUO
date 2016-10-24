@@ -1870,6 +1870,13 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_STATIC_ART_ADDRESS:
+		{
+			if (value >= 0 && value < m_StaticDataCount)
+				value = m_StaticDataIndex[value].Address;
+
+			break;
+		}
 		default:
 			break;
 	}
