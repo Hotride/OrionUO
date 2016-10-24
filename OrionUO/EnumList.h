@@ -431,7 +431,8 @@ enum VALUE_KEY_INT
 	VKI_TRANSPARENT_SPELL_ICONS,
 	VKI_SPELL_ICONS_ALPHA,
 	VKI_SKILLS_COUNT,
-	VKI_SKILL_CAN_BE_USED
+	VKI_SKILL_CAN_BE_USED,
+	VKI_STATIC_ART_ADDRESS
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_STRING
