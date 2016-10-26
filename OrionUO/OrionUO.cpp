@@ -1094,8 +1094,6 @@ void COrion::RelayServer(const char *ip, int port, puchar gameSeed)
 	{
 		g_ConnectionScreen.Connected = true;
 
-		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_ACCOUNT, (WPARAM)g_MainScreen.m_Account->c_str(), 0);
-
 		CPacketSecondLogin().Send();
 	}
 	else

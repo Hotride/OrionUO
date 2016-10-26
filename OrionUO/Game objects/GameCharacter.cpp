@@ -847,14 +847,11 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 			{
 				if (IsPlayer())
 				{
-					if (m_X != wd->X)
-						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_X, (WPARAM)wd->X, 0);
-
-					if (m_Y != wd->Y)
-						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_Y, (WPARAM)wd->Y, 0);
-
-					if (m_Z != wd->Z)
-						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_Z, (WPARAM)wd->Z, 0);
+					if (m_X != wd->X || m_Y != wd->Y || m_Z != wd->Z)
+					{
+						PLAYER_XYZ_DATA xyzData = { wd->X, wd->Y, wd->Z };
+						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_XYZ, (WPARAM)&xyzData, 0);
+					}
 
 					if (m_Direction != wd->Direction)
 						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_DIR, (WPARAM)wd->Direction, 0);
