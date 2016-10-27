@@ -598,6 +598,28 @@ void CPacketManager::OnPacket()
 	}
 }
 //----------------------------------------------------------------------------------
+void CPacketManager::SavePluginReceivePacket(puchar buf, const int &size)
+{
+	UCHAR_LIST packet(size);
+
+	memcpy(&packet[0], &buf[0], size);
+
+	m_PluginData.push_front(packet);
+}
+//----------------------------------------------------------------------------------
+void CPacketManager::ProcessPluginPackets()
+{
+	while (!m_PluginData.empty())
+	{
+		UCHAR_LIST &packet = m_PluginData.back();
+
+		PluginReceiveHandler(&packet[0], packet.size());
+		packet.clear();
+
+		m_PluginData.pop_back();
+	}
+}
+//----------------------------------------------------------------------------------
 void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
 {
 	SetData(buf, size);

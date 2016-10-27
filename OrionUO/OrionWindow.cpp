@@ -329,19 +329,21 @@ void COrionWindow::OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedT
 //----------------------------------------------------------------------------------
 LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, const LPARAM &lParam)
 {
-	g_PluginManager.WindowProc(m_Handle, message, wParam, lParam);
-
 	switch (message)
 	{
 		case UOMSG_RECV:
-			g_PacketManager.PluginReceiveHandler((PBYTE)wParam, lParam);
-			break;
+			g_PacketManager.SavePluginReceivePacket((PBYTE)wParam, lParam);
+			//g_PacketManager.PluginReceiveHandler((PBYTE)wParam, lParam);
+			return S_OK;
 		case UOMSG_SEND:
 			g_ConnectionManager.Send((PBYTE)wParam, lParam);
-			break;
+			return S_OK;
 		default:
 			break;
 	}
+
+	g_PluginManager.WindowProc(m_Handle, message, wParam, lParam);
+
 	return S_OK;
 }
 //----------------------------------------------------------------------------------

@@ -73,6 +73,8 @@ private:
 
 	UINT_LIST m_MegaClilocRequests;
 
+	deque<UCHAR_LIST> m_PluginData;
+
 protected:
 	virtual void OnPacket();
 
@@ -186,6 +188,10 @@ public:
 	CPacketInfo GetInfo(const uchar &buf) const { return m_Packets[buf]; }
 
 	void SendMegaClilocRequests();
+
+	void SavePluginReceivePacket(puchar buf, const int &size);
+
+	void ProcessPluginPackets();
 
 	void PluginReceiveHandler(puchar buf, const int &size);
 };
