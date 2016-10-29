@@ -115,6 +115,7 @@ void CCreateCharacterScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lPa
 		g_EntryPointer->Insert(wParam);
 
 	m_Name = g_EntryPointer->c_str();
+	m_Gump.WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -130,6 +131,7 @@ void CCreateCharacterScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lPara
 		g_EntryPointer->OnKey(&m_Gump, wParam);
 
 		m_Name = g_EntryPointer->c_str();
+		m_Gump.WantRedraw = true;
 	}
 }
 //----------------------------------------------------------------------------------
