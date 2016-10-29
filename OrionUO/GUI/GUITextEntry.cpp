@@ -16,7 +16,8 @@ CGUITextEntry::CGUITextEntry(const uint &serial, const ushort &color, const usho
 : CBaseGUI(GOT_TEXTENTRY, serial, 0, color, x, y), m_ColorSelected(colorSelected),
 m_ColorFocused(colorFocused), m_Unicode(unicode), m_Font(font), m_Align(align),
 m_TextFlags(textFlags), m_CheckOnSerial(false), m_ReadOnly(false), m_Focused(false),
-m_UseGlobalColor(false), m_GlobalColorSelectedR(0), m_GlobalColorSelectedG(0),
+m_UseGlobalColor(false), m_GlobalColorR(0), m_GlobalColorG(0), m_GlobalColorB(0),
+m_GlobalColorA(0), m_GlobalColorSelectedR(0), m_GlobalColorSelectedG(0),
 m_GlobalColorSelectedB(0), m_GlobalColorSelectedA(0), m_GlobalColorFocusedR(0),
 m_GlobalColorFocusedG(0), m_GlobalColorFocusedB(0), m_GlobalColorFocusedA(0),
 m_FocusedOffsetY(0), m_Entry(maxLength, maxWidth, maxWidth)
@@ -38,12 +39,20 @@ WISP_GEOMETRY::CSize CGUITextEntry::GetSize()
 	return WISP_GEOMETRY::CSize(m_Entry.m_Texture.Width, m_Entry.m_Texture.Height);
 }
 //----------------------------------------------------------------------------------
-void CGUITextEntry::SetGlobalColor(const bool &use, const uint &selected, const uint &focused)
+void CGUITextEntry::SetGlobalColor(const bool &use, const uint &color, const uint &selected, const uint &focused)
 {
 	m_UseGlobalColor = use;
 
 	if (use)
 	{
+		m_GlobalColorR = GetRValue(color);
+		m_GlobalColorG = GetGValue(color);
+		m_GlobalColorB = GetBValue(color);
+		m_GlobalColorA = color >> 24;
+
+		if (!m_GlobalColorA)
+			m_GlobalColorA = 0xFF;
+
 		m_GlobalColorSelectedR = GetRValue(selected);
 		m_GlobalColorSelectedG = GetGValue(selected);
 		m_GlobalColorSelectedB = GetBValue(selected);
@@ -136,6 +145,8 @@ void CGUITextEntry::Draw(const bool &checktrans)
 		else
 			color = m_ColorSelected;
 	}
+	else if (m_UseGlobalColor)
+		glColor4ub(m_GlobalColorR, m_GlobalColorG, m_GlobalColorB, m_GlobalColorA);
 
 	if (color && m_Unicode)
 		color++;

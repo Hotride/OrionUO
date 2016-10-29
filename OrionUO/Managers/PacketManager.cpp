@@ -41,6 +41,7 @@
 #include "../Gumps/GumpPopupMenu.h"
 #include "../Managers/EffectManager.h"
 #include "../Managers/PluginManager.h"
+#include "../Managers/ColorManager.h"
 #include "../Game objects/GameEffectMoving.h"
 #include "../Game objects/GameEffectDrag.h"
 #include "../QuestArrow.h"
@@ -2487,6 +2488,7 @@ PACKET_HANDLER(ExtendedCommand)
 			uchar count = ReadUInt8();
 
 			CGumpPopupMenu *menu = new CGumpPopupMenu(serial, g_MouseManager.Position.X, g_MouseManager.Position.Y);
+			menu->Add(new CGUIPage(0));
 			int width = 0;
 			int height = 20;
 
@@ -2495,6 +2497,7 @@ PACKET_HANDLER(ExtendedCommand)
 			menu->Add(new CGUIAlphaBlending(false, 0.5f));
 
 			int offsetY = 10;
+			bool arrowAdded = false;
 
 			IFOR(i, 0, count)
 			{
@@ -2512,30 +2515,60 @@ PACKET_HANDLER(ExtendedCommand)
 					cliloc = ReadUInt16BE() + 3000000;
 				}
 
-				ushort flags = ReadUInt16BE();
-				ushort color = 0xFFFF;
-
-				if (flags == 0x20)
-					color = ReadUInt16BE();
-
 				wstring str = g_ClilocManager.Cliloc(g_Language)->GetW(cliloc);
 
-				CGUIText *item = (CGUIText*)menu->Add(new CGUIText(color, 10, offsetY));
-				item->CreateTextureW(0, str);
-				item->DrawOnly = true;
+				ushort flags = ReadUInt16BE();
+				ushort color = 0xFFFE;
 
-				menu->Add(new CGUIHitBox(index, 10, offsetY, item->m_Texture.Width, item->m_Texture.Height, true));
+				if (flags == 0x01)
+					color = 0x0386;
 
-				height += item->m_Texture.Height;
-				offsetY += item->m_Texture.Height;
+				CGUITextEntry *item = new CGUITextEntry(index, color, color, color, 10, offsetY);
 
-				if (width < item->m_Texture.Width)
-					width = item->m_Texture.Width;
+				if (flags == 0x04)
+					Move(2);
+				else if (flags == 0x20)
+				{
+					ushort newColor = ReadUInt16BE() & 0x3FFF;
+					item->SetGlobalColor(true, g_ColorManager.Color16To32(newColor), 0xFFFFFFFE, 0xFFFFFFFE);
+				}
+				else if (flags == 0x02)
+				{
+					if (!arrowAdded)
+					{
+						arrowAdded = true;
+						menu->Add(new CGUIPage(1));
+						menu->Add(new CGUIButton(CGumpPopupMenu::ID_GPM_MAXIMIZE, 0x15E6, 0x15E2, 0x15E2, 20, offsetY));
+						menu->Add(new CGUIPage(2));
+
+						height += 20;
+					}
+				}
+
+				menu->Add(item);
+
+				CEntryText &entry = item->m_Entry;
+				entry.SetText(str);
+				entry.PrepareToDrawW(0, color);
+
+				CGLTextTexture &texture = entry.m_Texture;
+
+				menu->Add(new CGUIHitBox(index, 10, offsetY, texture.Width, texture.Height, true));
+
+				offsetY += texture.Height;
+
+				if (!arrowAdded)
+				{
+					height += texture.Height;
+
+					if (width < texture.Width)
+						width = texture.Width;
+				}
 			}
 
 			width += 20;
 
-			if (height <= 20 || width <= 20)
+			if (height <= 10 || width <= 20)
 				delete menu;
 			else
 			{
@@ -2544,7 +2577,9 @@ PACKET_HANDLER(ExtendedCommand)
 
 				QFOR(item, menu->m_Items, CBaseGUI*)
 				{
-					if (item->Type == GOT_HITBOX)
+					if (item->Type == GOT_PAGE && ((CGUIPage*)item)->Index)
+						break;
+					else if (item->Type == GOT_HITBOX)
 						((CGUIHitBox*)item)->Width = width - 20;
 				}
 
