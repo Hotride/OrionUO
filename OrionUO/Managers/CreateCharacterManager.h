@@ -29,8 +29,8 @@ struct CC_HAIR_STYLE
 //!Класс менеджера создания персонажей
 class CCreateCharacterManager
 {
-	SETGET(bool, Female);
-	SETGET(char, Race);
+	SETGETE(bool, Female, OnSexChanged);
+	SETGETE(RACE_TYPE, Race, OnChangeRace);
 	SETGET(uchar, HairStyle);
 	SETGET(uchar, BeardStyle);
 	SETGET(ushort, SkinTone);
@@ -39,16 +39,30 @@ class CCreateCharacterManager
 	SETGET(ushort, HairColor);
 	SETGET(ushort, BeardColor);
 
+public:
+	static const int HUMAN_MALE_HAIR_COUNT = 10;
+	static const int HUMAN_FEMALE_HAIR_COUNT = 11;
+	static const int HUMAN_MALE_FACIAL_HAIR_COUNT = 8;
+
+	static const int ELF_MALE_HAIR_COUNT = 9;
+	static const int ELF_FEMALE_HAIR_COUNT = 9;
+
+	static const int GARGOYLE_MALE_HAIR_COUNT = 0;
+	static const int GARGOYLE_FEMALE_HAIR_COUNT = 0;
+	static const int GARGOYLE_MALE_FACIAL_HAIR_COUNT = 0;
+
 private:
 	//!Перечень стилей причесок и бороды
-	static CC_HAIR_STYLE m_MaleHairStyleTable[10];
-	static CC_HAIR_STYLE m_FemaleHairStyleTable[11];
-	static CC_HAIR_STYLE m_BeardStyleTable[8];
+	static CC_HAIR_STYLE m_HumanMaleHairStyleTable[HUMAN_MALE_HAIR_COUNT];
+	static CC_HAIR_STYLE m_HumanFemaleHairStyleTable[HUMAN_FEMALE_HAIR_COUNT];
+	static CC_HAIR_STYLE m_HumanBeardStyleTable[HUMAN_MALE_FACIAL_HAIR_COUNT];
+
+	static CC_HAIR_STYLE m_ElfMaleHairStyleTable[ELF_MALE_HAIR_COUNT];
+	static CC_HAIR_STYLE m_ElfFemaleHairStyleTable[ELF_FEMALE_HAIR_COUNT];
 
 public:
 	CCreateCharacterManager();
 	~CCreateCharacterManager();
-
 
 	/*!
 	Инициализация
@@ -62,19 +76,31 @@ public:
 	*/
 	void Clear();
 
+	int GetCurrentHairCount();
+
+	int GetCurrentFacialHairCount();
+
+	ushort GetBodyGump();
+
+	ushort GetShirtGump();
+
+	ushort GetPantsGump();
+
+	ushort GetBootsGump();
+
 	/*!
 	Получить стиль волос
 	@param [__in] pos Индекс волос
 	@return Структура с данными о волосах
 	*/
-	CC_HAIR_STYLE GetHair(uchar pos) const;
+	CC_HAIR_STYLE GetHair(const uchar &pos) const;
 
 	/*!
 	Получить стиль бороды
 	@param [__in] pos Индекс бороды
 	@return Структура с данными о бороде
 	*/
-	CC_HAIR_STYLE GetBeard(uchar pos) const;
+	CC_HAIR_STYLE GetBeard(const uchar &pos) const;
 
 };
 //----------------------------------------------------------------------------------

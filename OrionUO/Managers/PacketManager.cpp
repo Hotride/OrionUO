@@ -1136,7 +1136,7 @@ PACKET_HANDLER(CharacterStatus)
 
 	if (flag > 0)
 	{
-		obj->Female = ReadUInt8(); //buf[43];
+		obj->Female = (ReadUInt8() != 0); //buf[43];
 
 		if (serial == g_PlayerSerial)
 		{
@@ -1189,7 +1189,12 @@ PACKET_HANDLER(CharacterStatus)
 			if (flag >= 5)
 			{
 				g_Player->MaxWeight = ReadInt16BE(); //unpack16(buf + 66);
-				g_Player->Race = (CHARACTER_RACE_TYPE)ReadUInt8();
+				uint race = ReadUInt8();
+
+				if (!race)
+					race = 1;
+
+				g_Player->Race = (RACE_TYPE)race;
 			}
 			else
 				g_Player->MaxWeight = (g_Player->Str * 4) + 25;

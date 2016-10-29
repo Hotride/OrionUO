@@ -96,7 +96,12 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	uchar val = (uchar)profession->DescriptionIndex;
 	WriteUInt8(val); //profession
 	Move(15); //?
-	val = (uchar)g_CreateCharacterManager.Female;
+
+	if (g_PacketManager.ClientVersion < CV_4011D)
+		val = (uchar)g_CreateCharacterManager.Female;
+	else
+		val = (uchar)(((int)g_CreateCharacterManager.Race * 2) + (int)g_CreateCharacterManager.Female);
+
 	WriteUInt8(val);
 	val = profession->Str;
 	WriteUInt8(val);
