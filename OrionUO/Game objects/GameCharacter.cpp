@@ -25,7 +25,7 @@
 #include "../OrionWindow.h"
 //----------------------------------------------------------------------------------
 CGameCharacter::CGameCharacter(const uint &serial)
-: CGameObject(serial), m_Hits(0), m_MaxHits(0), m_Sex(false), m_Direction(0),
+: CGameObject(serial), m_Hits(0), m_MaxHits(0), m_Female(false), m_Direction(0),
 m_Notoriety(0), m_CanChangeName(false), m_AnimationGroup(0xFF),
 m_AnimationInterval(0), m_AnimationFrameCount(0), m_AnimationRepeat(false),
 m_AnimationRepeatMode(1), m_AnimationDirection(false), m_AnimationFromServer(false),
@@ -290,13 +290,13 @@ void CGameCharacter::OnGraphicChange(int direction)
 		case 0x0190:
 		case 0x0192:
 		{
-			m_Sex = false;
+			m_Female = false;
 			break;
 		}
 		case 0x0191:
 		case 0x0193:
 		{
-			m_Sex = true;
+			m_Female = true;
 			break;
 		}
 		default:

@@ -23,7 +23,7 @@ class CGameCharacter: public CGameObject
 	SETGETEX(short, MaxStam);
 	SETGETEX(short, Mana);
 	SETGETEX(short, Stam);
-	SETGET(bool, Sex);
+	SETGET(bool, Female);
 	SETGET(uchar, Race);
 	SETGET(uchar, Direction);
 	SETGET(uchar, Notoriety);

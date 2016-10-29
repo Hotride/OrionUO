@@ -431,7 +431,7 @@ void CGumpPaperdoll::UpdateContent()
 		bodyGumppic->Color = color;
 	}
 
-	int gumpOffset = (obj->Sex ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET);
+	int gumpOffset = (obj->Female ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET);
 	uint ignoreSerial = 0;
 
 	if (g_ObjectInHand != NULL)
@@ -488,7 +488,7 @@ void CGumpPaperdoll::UpdateContent()
 
 				int cOfs = gumpOffset;
 
-				if (obj->Sex && g_Orion.ExecuteGump(equipment->AnimID + cOfs) == NULL)
+				if (obj->Female && g_Orion.ExecuteGump(equipment->AnimID + cOfs) == NULL)
 					cOfs = MALE_GUMP_OFFSET;
 
 				bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + cOfs, 8, 19));
@@ -504,7 +504,7 @@ void CGumpPaperdoll::UpdateContent()
 				{
 					int cOfs = gumpOffset;
 
-					if (obj->Sex && !g_Orion.ExecuteGump(g_ObjectInHand->AnimID + cOfs))
+					if (obj->Female && !g_Orion.ExecuteGump(g_ObjectInHand->AnimID + cOfs))
 						cOfs = MALE_GUMP_OFFSET;
 
 					m_DataBox->Add(new CGUIAlphaBlending(true, 0.7f));

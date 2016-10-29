@@ -1136,7 +1136,7 @@ PACKET_HANDLER(CharacterStatus)
 
 	if (flag > 0)
 	{
-		obj->Sex = ReadUInt8(); //buf[43];
+		obj->Female = ReadUInt8(); //buf[43];
 
 		if (serial == g_PlayerSerial)
 		{

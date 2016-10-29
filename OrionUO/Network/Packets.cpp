@@ -96,7 +96,7 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	uchar val = (uchar)profession->DescriptionIndex;
 	WriteUInt8(val); //profession
 	Move(15); //?
-	val = (uchar)g_CreateCharacterManager.Sex;
+	val = (uchar)g_CreateCharacterManager.Female;
 	WriteUInt8(val);
 	val = profession->Str;
 	WriteUInt8(val);

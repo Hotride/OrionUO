@@ -56,7 +56,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 
 	CGUIComboBox *combo = (CGUIComboBox*)Add(new CGUIComboBox(ID_CCS_FACIAL_HAIR_STYLE, 0x0BB8, false, 0x0BB8, 97, 199, 120, 8, false));
 	combo->SelectedIndex = g_CreateCharacterManager.BeardStyle;
-	combo->Visible = !g_CreateCharacterManager.Sex;
+	combo->Visible = !g_CreateCharacterManager.Female;
 
 	CGUIText *text = new CGUIText(0x0481, 3, -12);
 	text->CreateTextureA(9, "Facial Hair Style");
@@ -69,7 +69,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 
 
 
-	int hairCount = 10 + (int)g_CreateCharacterManager.Sex;
+	int hairCount = 10 + (int)g_CreateCharacterManager.Female;
 
 	combo = (CGUIComboBox*)Add(new CGUIComboBox(ID_CCS_HAIR_STYLE, 0x0BB8, false, 0x0BB8, 97, 154, 120, hairCount, false));
 	combo->SelectedIndex = g_CreateCharacterManager.HairStyle;
@@ -135,7 +135,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 		entry->CheckOnSerial = true;
 		entry->ReadOnly = true;
 
-		if (g_CreateCharacterManager.Sex)
+		if (g_CreateCharacterManager.Female)
 			entry->m_Entry.SetText("Skirt Color");
 		else
 			entry->m_Entry.SetText("Pants Color");
@@ -176,7 +176,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 
 
 
-		if (!g_CreateCharacterManager.Sex)
+		if (!g_CreateCharacterManager.Female)
 		{
 			entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_CCS_FACIAL_HAIR_COLOR, toneTextColorRange[0], toneTextColorRange[1], toneTextColorRange[1], 490, 320, 0, false, 9));
 			entry->m_Entry.SetText("Facial Hair Color");
@@ -274,7 +274,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 
 	Add(new CGUIShader(g_ColorizerShader, true));
 
-	if (g_CreateCharacterManager.Sex)
+	if (g_CreateCharacterManager.Female)
 	{
 		CGUIGumppic *gumppic = (CGUIGumppic*)Add(new CGUIGumppic(0x0760, 238, 98));
 		gumppic->Color = g_CreateCharacterManager.SkinTone;
@@ -321,10 +321,10 @@ void CGumpScreenCreateCharacter::UpdateContent()
 
 	if (g_PacketManager.ClientVersion < CV_4011D)
 	{
-		if (g_CreateCharacterManager.Sex)
-			Add(new CGUIButton(ID_CCS_FEMALE_BUTTON, 0x070D, 0x070E, 0x070F, 310, 408));
+		if (g_CreateCharacterManager.Female)
+			Add(new CGUIButton(ID_CCS_MALE_BUTTON, 0x070D, 0x070E, 0x070F, 310, 408));
 		else
-			Add(new CGUIButton(ID_CCS_MALE_BUTTON, 0x0710, 0x0711, 0x0712, 310, 408));
+			Add(new CGUIButton(ID_CCS_FEMALE_BUTTON, 0x0710, 0x0711, 0x0712, 310, 408));
 	}
 	else
 	{
@@ -375,12 +375,46 @@ void CGumpScreenCreateCharacter::GUMP_BUTTON_EVENT_C
 	}
 	else if (serial == ID_CCS_FEMALE_BUTTON)
 	{
-		g_CreateCharacterManager.Sex = false;
+		g_CreateCharacterManager.Female = false;
 		m_WantUpdateContent = true;
 	}
 	else if (serial == ID_CCS_MALE_BUTTON)
 	{
-		g_CreateCharacterManager.Sex = true;
+		g_CreateCharacterManager.Female = true;
+		m_WantUpdateContent = true;
+	}
+	else if (serial == ID_CCS_HUMAN_RACE_BUTTON)
+	{
+		g_CreateCharacterManager.Race = 1;
+		m_WantUpdateContent = true;
+	}
+	else if (serial == ID_CCS_ELVEN_RACE_BUTTON)
+	{
+		g_CreateCharacterManager.Race = 2;
+		m_WantUpdateContent = true;
+	}
+	else if (serial == ID_CCS_GARGOYLE_RACE_BUTTON)
+	{
+		g_CreateCharacterManager.Race = 3;
+		m_WantUpdateContent = true;
+	}
+}
+//----------------------------------------------------------------------------------
+void CGumpScreenCreateCharacter::GUMP_RADIO_EVENT_C
+{
+	if (state)
+	{
+		if (serial == ID_CCS_MALE_BUTTON)
+			g_CreateCharacterManager.Female = true;
+		else if (serial == ID_CCS_FEMALE_BUTTON)
+			g_CreateCharacterManager.Female = false;
+		else if (serial == ID_CCS_HUMAN_RACE_BUTTON)
+			g_CreateCharacterManager.Race = 1;
+		else if (serial == ID_CCS_ELVEN_RACE_BUTTON)
+			g_CreateCharacterManager.Race = 2;
+		else if (serial == ID_CCS_GARGOYLE_RACE_BUTTON)
+			g_CreateCharacterManager.Race = 3;
+
 		m_WantUpdateContent = true;
 	}
 }
@@ -397,7 +431,7 @@ void CGumpScreenCreateCharacter::GUMP_TEXT_ENTRY_EVENT_C
 			g_CreateCharacterScreen.ColorSelection = CCSID_SKIRT_OR_PANTS_COLOR;
 		else if (serial == ID_CCS_HAIR_COLOR)
 			g_CreateCharacterScreen.ColorSelection = CCSID_HAIR_COLOR;
-		else if (!g_CreateCharacterManager.Sex && serial == ID_CCS_FACIAL_HAIR_COLOR)
+		else if (!g_CreateCharacterManager.Female && serial == ID_CCS_FACIAL_HAIR_COLOR)
 			g_CreateCharacterScreen.ColorSelection = CCSID_FACIAL_HAIR_COLOR;
 
 		m_WantUpdateContent = true;
@@ -454,7 +488,7 @@ void CGumpScreenCreateCharacter::GUMP_COMBOBOX_SELECTION_EVENT_C
 		}
 		else
 		{
-			int count = 10 + (int)g_CreateCharacterManager.Sex;
+			int count = 10 + (int)g_CreateCharacterManager.Female;
 
 			uchar index = serial - ID_CCS_HAIR_STYLE;
 

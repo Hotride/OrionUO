@@ -54,9 +54,9 @@ CC_HAIR_STYLE CCreateCharacterManager::m_BeardStyleTable[8] =
 };
 //----------------------------------------------------------------------------------
 CCreateCharacterManager::CCreateCharacterManager()
-:m_Sex(false), m_HairStyle(1), m_BeardStyle(0), m_SkinTone(0x03EA),
+:m_Female(false), m_HairStyle(1), m_BeardStyle(0), m_SkinTone(0x03EA),
 m_ShirtColor(0x0084), m_PantsColor(0x035F), m_HairColor(0x044E),
-m_BeardColor(0x044E), m_Rase(0)
+m_BeardColor(0x044E), m_Race(1)
 {
 }
 //----------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ void CCreateCharacterManager::Init()
 */
 void CCreateCharacterManager::Clear()
 {
-	m_Sex = false;
+	m_Female = false;
 	m_HairStyle = 1;
 	m_BeardStyle = 0;
 
@@ -102,10 +102,10 @@ void CCreateCharacterManager::Clear()
 */
 CC_HAIR_STYLE CCreateCharacterManager::GetHair(uchar pos) const
 {
-	if (pos < 0  || pos >= (10 + (int)m_Sex))
+	if (pos < 0  || pos >= (10 + (int)m_Female))
 		return m_MaleHairStyleTable[0];
 
-	if (m_Sex)
+	if (m_Female)
 		return m_FemaleHairStyleTable[pos];
 
 	return m_MaleHairStyleTable[pos];

@@ -29,8 +29,8 @@ struct CC_HAIR_STYLE
 //!Класс менеджера создания персонажей
 class CCreateCharacterManager
 {
-	SETGET(bool, Sex);
-	SETGET(char, Rase);
+	SETGET(bool, Female);
+	SETGET(char, Race);
 	SETGET(uchar, HairStyle);
 	SETGET(uchar, BeardStyle);
 	SETGET(ushort, SkinTone);
