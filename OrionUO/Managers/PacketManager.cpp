@@ -721,18 +721,18 @@ PACKET_HANDLER(CharacterList)
 	{
 		IFOR(i, 0, locCount)
 		{
-			CCityItemNew city;
+			CCityItemNew *city = new CCityItemNew();
 
-			city.LocationIndex = ReadUInt8();
+			city->LocationIndex = ReadUInt8();
 
-			city.SetName(ReadString(32));
-			city.SetArea(ReadString(32));
+			city->SetName(ReadString(32));
+			city->SetArea(ReadString(32));
 
-			city.X = ReadUInt32BE();
-			city.Y = ReadUInt32BE();
-			city.Z = ReadUInt32BE();
-			city.MapIndex = ReadUInt32BE();
-			city.Cliloc = ReadUInt32BE();
+			city->X = ReadUInt32BE();
+			city->Y = ReadUInt32BE();
+			city->Z = ReadUInt32BE();
+			city->MapIndex = ReadUInt32BE();
+			city->Cliloc = ReadUInt32BE();
 
 			Move(4);
 
@@ -743,14 +743,14 @@ PACKET_HANDLER(CharacterList)
 	{
 		IFOR(i, 0, locCount)
 		{
-			CCityItem city;
+			CCityItem *city = new CCityItem();
 
-			city.LocationIndex = ReadUInt8();
+			city->LocationIndex = ReadUInt8();
 
-			city.SetName(ReadString(31));
-			city.SetArea(ReadString(31));
+			city->Name = ReadString(31);
+			city->Area = ReadString(31);
 
-			city.InitCity();
+			city->InitCity();
 
 			g_CityList.AddCity(city);
 		}

@@ -131,7 +131,10 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	WriteUInt16BE(g_CreateCharacterManager.BeardStyle);
 	WriteUInt16BE(g_CreateCharacterManager.BeardColor);
 
-	ushort location = g_SelectTownScreen.m_City.LocationIndex - 1;
+	ushort location = g_SelectTownScreen.m_City->LocationIndex;
+
+	if (g_PacketManager.ClientVersion < CV_70130)
+		location--;
 
 	WriteUInt16BE(location); //location
 	WriteUInt16BE(0x0000); //?
