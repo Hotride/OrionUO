@@ -1876,6 +1876,13 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_USED_LAYER:
+		{
+			if (value >= 0 && value < m_StaticDataCount)
+				value = m_StaticData[value / 32].Tiles[value % 32].Quality;
+
+			break;
+		}
 		default:
 			break;
 	}
