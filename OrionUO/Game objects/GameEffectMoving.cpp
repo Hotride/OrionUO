@@ -29,6 +29,13 @@ CGameEffectMoving::~CGameEffectMoving()
 */
 void CGameEffectMoving::Update(CGameObject *parent)
 {
+	if (m_LastMoveTime > g_Ticks)
+		return;
+
+	m_LastMoveTime = g_Ticks + m_MoveDelay;
+
+	CGameEffect::Update(parent);
+
 	CGameObject *obj = g_World->FindWorldObject(m_DestSerial);
 
 	if (obj != NULL)

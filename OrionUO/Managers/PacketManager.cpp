@@ -3011,13 +3011,22 @@ PACKET_HANDLER(GraphicEffect)
 	effect->DestY = destY;
 	effect->DestZ = destZ;
 
+	if (!type)
+	{
+		if (!speed)
+			speed++;
+
+		((CGameEffectMoving*)effect)->MoveDelay = 20 / speed;
+	}
+
 	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
 
 	if (addressAnimData)
 	{
 		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + ((graphic * 68) + 4 * ((graphic / 8) + 1)));
 
-		effect->Speed = (pad->FrameInterval - effect->Speed) * 45;
+		effect->Speed = pad->FrameInterval * 45;
+		//effect->Speed = (pad->FrameInterval - effect->Speed) * 45;
 	}
 	else
 		effect->Speed = speed + 6;
