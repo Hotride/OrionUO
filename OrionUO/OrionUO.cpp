@@ -358,7 +358,7 @@ bool COrion::Install()
 	DEBUGLOG("Load shaders.\n");
 	LoadShaders();
 
-	DEBUGLOG("Load shaders.\n");
+	DEBUGLOG("Update main screen content\n");
 	g_MainScreen.UpdateContent();
 	g_MainScreen.LoadGlobalConfig();
 
