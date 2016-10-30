@@ -936,6 +936,9 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 		uint imageHeight = ReadInt16LE();
 		frame->Height = imageHeight;
 
+		if (!imageWidth || !imageHeight)
+			continue;
+
 		uint x = 0;
 		uint y = 0;
 
