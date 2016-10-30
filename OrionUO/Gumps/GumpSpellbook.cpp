@@ -17,6 +17,7 @@
 #include "../Managers/MouseManager.h"
 #include "../Managers/GumpManager.h"
 #include "../Managers/ClilocManager.h"
+#include "../Managers/PacketManager.h"
 #include "../OrionWindow.h"
 #include "../ToolTip.h"
 //----------------------------------------------------------------------------------
@@ -163,6 +164,8 @@ void CGumpSpellbook::PrepareContent()
 
 	if (!m_Minimized && m_LastSpellPointer != NULL)
 	{
+		spellIndexOffset = (int)m_BookType * 100;
+
 		bool wantVisible = false;
 		ushort graphicBookmark = 0x08AD;
 		ushort graphicPointer = 0x08AF;
@@ -864,11 +867,18 @@ bool CGumpSpellbook::OnLeftMouseButtonDoubleClick()
 				{
 					if (g_PressedObject.LeftSerial >= ID_GSB_SPELL_ICON_LEFT)
 					{
+						int spellIndex = g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_RIGHT + 1;
+
 						//Было использовано заклинание
 						if (g_PressedObject.LeftSerial < ID_GSB_SPELL_ICON_RIGHT)
-							g_Orion.CastSpellFromBook(g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_LEFT + 1, m_Serial);
+							spellIndex = g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_LEFT + 1;
+
+						spellIndex += ((int)m_BookType * 100);
+
+						if (g_PacketManager.ClientVersion < CV_308Z)
+							g_Orion.CastSpellFromBook(spellIndex, m_Serial);
 						else
-							g_Orion.CastSpellFromBook(g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_RIGHT + 1, m_Serial);
+							g_Orion.CastSpell(spellIndex);
 
 						//Сворачиваем книгу
 						m_Minimized = true;

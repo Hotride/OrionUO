@@ -394,17 +394,30 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 CPacketCastSpell::CPacketCastSpell(int index)
 : CPacket(1)
 {
-	char spell[5] = { 0 };
-	sprintf_s(spell, "%i", index);
+	if (g_PacketManager.ClientVersion >= CV_60142)
+	{
+		Resize(9, true);
 
-	int len = strlen(spell);
-	int size = 5 + len;
-	Resize(size, true);
+		WriteUInt8(0xBF);
+		WriteUInt16BE(0x0009);
+		WriteUInt16BE(0x001C);
+		WriteUInt16BE(0x0002);
+		WriteUInt16BE(index);
+	}
+	else
+	{
+		char spell[10] = { 0 };
+		sprintf_s(spell, "%i", index);
 
-	WriteUInt8(0x12);
-	WriteUInt16BE(size);
-	WriteUInt8(0x56);
-	WriteString(spell, len, false);
+		int len = strlen(spell);
+		int size = 5 + len;
+		Resize(size, true);
+
+		WriteUInt8(0x12);
+		WriteUInt16BE(size);
+		WriteUInt8(0x56);
+		WriteString(spell, len, false);
+	}
 }
 //----------------------------------------------------------------------------------
 CPacketCastSpellFromBook::CPacketCastSpellFromBook(int index, uint serial)
