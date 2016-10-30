@@ -627,21 +627,6 @@ void COrion::Process(const bool &rendering)
 	{
 		g_ShowGumpLocker = g_ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
 
-		CWalkData *wd = g_Player->m_WalkStack.m_Items;
-
-		if (wd != NULL)
-		{
-			g_RemoveRangeXY.X = wd->X;
-			g_RemoveRangeXY.Y = wd->Y;
-		}
-		else
-		{
-			g_RemoveRangeXY.X = g_Player->X;
-			g_RemoveRangeXY.Y = g_Player->Y;
-		}
-
-		RemoveRangedObjects();
-
 		ProcessStaticAnimList();
 
 		g_EffectManager.UpdateEffects();
@@ -671,6 +656,21 @@ void COrion::Process(const bool &rendering)
 			if (g_PressedObject.LeftGump() == NULL && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI())
 				canRenderSelect = false;
 		}
+
+		CWalkData *wd = g_Player->m_WalkStack.m_Items;
+
+		if (wd != NULL)
+		{
+			g_RemoveRangeXY.X = wd->X;
+			g_RemoveRangeXY.Y = wd->Y;
+		}
+		else
+		{
+			g_RemoveRangeXY.X = g_Player->X;
+			g_RemoveRangeXY.Y = g_Player->Y;
+		}
+
+		RemoveRangedObjects();
 
 		if (rendering)
 		{
