@@ -580,6 +580,15 @@ enum DIRECTION_TYPE
 	DT_NW
 };
 //----------------------------------------------------------------------------------
+enum ANIMATION_GROUPS_TYPE
+{
+	AGT_ANIMAL = 0,
+	AGT_MONSTER,
+	AGT_SEA_MONSTER,
+	AGT_HUMAN,
+	AGT_EQUIPMENT
+};
+//----------------------------------------------------------------------------------
 enum ANIMATION_GROUPS
 {
 	AG_NONE = 0,

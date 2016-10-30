@@ -15,6 +15,7 @@
 #include "GLEngine/GLTexture.h"
 #include "bass.h"
 #include "bassmidi.h"
+#include "EnumList.h"
 
 #pragma comment(lib, "bass.lib")
 #pragma comment(lib, "bassmidi.lib")
@@ -82,6 +83,7 @@ class CIndexAnimation
 	SETGET(uint, Offset);
 	SETGET(ushort, Graphic);
 	SETGET(ushort, Color);
+	SETGET(ANIMATION_GROUPS_TYPE, Type);
 
 public:
 	CIndexAnimation();

@@ -70,7 +70,7 @@ private:
 
 	//!Упорядоченный список слоев для корректного порядка прорисовки для всех направлений персонажа
 	static const int USED_LAYER_COUNT = 23;
-	static int m_UsedLayers[8][USED_LAYER_COUNT];
+	static const int m_UsedLayers[8][USED_LAYER_COUNT];
 
 	//!Данные анимаций
 	CIndexAnimation m_DataIndex[MAX_ANIMATIONS_DATA_INDEX_COUNT];

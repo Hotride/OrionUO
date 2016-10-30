@@ -22,11 +22,12 @@
 #include "ConfigManager.h"
 #include "../SelectedObject.h"
 #include "../Screen stages/GameScreen.h"
+#include "PacketManager.h"
 //----------------------------------------------------------------------------------
 CAnimationManager g_AnimationManager;
 //----------------------------------------------------------------------------------
 #pragma region layers table
-int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
+const int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 {
 	{ //dir 0
 		OL_SHIRT,
@@ -256,31 +257,29 @@ void CAnimationManager::Load(puint verdata)
 {
 	IFOR(i, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
 	{
-		m_DataIndex[i].Address = 0;
-		m_DataIndex[i].Offset = 0;
-		m_DataIndex[i].Graphic = 0;
+		CIndexAnimation &index = m_DataIndex[i];
+		index.Address = 0;
+		index.Offset = 0;
+		index.Graphic = 0;
 
-		ushort animID = 0;
+		ANIMATION_GROUPS_TYPE groupType = AGT_MONSTER;
 		uint findID = 0;
 
 		if (i >= 200)
 		{
 			if (i >= 400) //People
 			{
-				animID = i - 400;
-				findID = ((animID * 175) + 35000) * sizeof(ANIM_IDX_BLOCK);
+				groupType = AGT_HUMAN;
+				findID = (((i - 400) * 175) + 35000) * sizeof(ANIM_IDX_BLOCK);
 			}
 			else //Low
 			{
-				animID = i - 200;
-				findID = ((animID * 65) + 22000) * sizeof(ANIM_IDX_BLOCK);
+				groupType = AGT_ANIMAL;
+				findID = (((i - 200) * 65) + 22000) * sizeof(ANIM_IDX_BLOCK);
 			}
 		}
 		else //Hight
-		{
-			animID = i;
-			findID = (animID * 110) * sizeof(ANIM_IDX_BLOCK);
-		}
+			findID = (i * 110) * sizeof(ANIM_IDX_BLOCK);
 		
 		if (findID < m_SizeIdx[0])
 		{
@@ -288,9 +287,10 @@ void CAnimationManager::Load(puint verdata)
 			
 			if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
 			{
-				m_DataIndex[i].Address = (uint)aidx;
-				m_DataIndex[i].Offset = m_AddressMul[0];
-				m_DataIndex[i].Graphic = i;// animID;
+				index.Address = (uint)aidx;
+				index.Offset = m_AddressMul[0];
+				index.Graphic = i;
+				index.Type = groupType;
 			}
 		}
 	}
@@ -309,33 +309,34 @@ void CAnimationManager::Load(puint verdata)
 
 				//TPRINT("vh->ID = 0x%02X vh->BlockID = 0x%08X\n", vh->FileID, graphic);
 				
-				IFOR(i, 0, 0x0800)
+				IFOR(i, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
 				{
-					ushort animID = i;
+					ANIMATION_GROUPS_TYPE groupType = AGT_MONSTER;
 					uint findID = 0;
 
 					if (i >= 200)
 					{
 						if (i >= 400) //People
 						{
-							animID -= 400;
-							findID = (animID * 175) + 35000;
+							groupType = AGT_HUMAN;
+							findID = ((i - 400) * 175) + 35000;
 						}
 						else //Low
 						{
-							animID -= 200;
-							findID = (animID * 65) + 22000;
+							groupType = AGT_ANIMAL;
+							findID = ((i - 200) * 65) + 22000;
 						}
 					}
 					else //Hight
-						findID = animID * 110;
+						findID = i * 110;
 
 					if (graphic == findID)
 					{
-						m_DataIndex[i].Address = (uint)vh;
-						m_DataIndex[i].Offset = 0xFFFFFFFF;
-						m_DataIndex[i].Graphic = i; // animID;
-						//TPRINT("\tLoad verdata anim ID = 0x%04X\n", animID);
+						CIndexAnimation &index = m_DataIndex[i];
+						index.Address = (uint)vh;
+						index.Offset = 0xFFFFFFFF;
+						index.Graphic = i;
+						index.Type = groupType;
 					}
 				}
 			}
@@ -364,6 +365,34 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		WISP_FILE::CTextFileParser(g_App.FilePath("Anim3.def").c_str(), " \t", "#;//", "{}"),
 		WISP_FILE::CTextFileParser(g_App.FilePath("Anim4.def").c_str(), " \t", "#;//", "{}")
 	};
+
+	if (g_PacketManager.ClientVersion >= CV_500A)
+	{
+		static const string typeNames[5] = { "animal", "monster", "sea_monster", "human", "equipment" };
+
+		WISP_FILE::CTextFileParser mobtypesParser(g_App.FilePath("mobtypes.txt").c_str(), " \t", "#;//", "");
+
+		while (!mobtypesParser.IsEOF())
+		{
+			STRING_LIST strings = mobtypesParser.ReadTokens();
+
+			if (strings.size() >= 3)
+			{
+				ushort index = atoi(strings[0].c_str());
+
+				if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+					continue;
+
+				string testType = ToLowerA(strings[1]);
+
+				IFOR(i, 0, 5)
+				{
+					if (testType == typeNames[i])
+						m_DataIndex[index].Type = (ANIMATION_GROUPS_TYPE)i;
+				}
+			}
+		}
+	}
 
 	bool noLoadCorpseDef = true;
 
@@ -515,9 +544,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 			STRING_LIST newBody = newBodyParser.GetTokens(strings[1].c_str());
 
-			int size = (int)newBody.size();
-
-			IFOR(j, 0, size)
+			IFOR(j, 0, (int)newBody.size())
 			{
 				ushort checkIndex = atoi(newBody[j].c_str());
 
@@ -574,6 +601,21 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 */
 ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 {
+	switch (m_DataIndex[id].Type)
+	{
+		case AGT_ANIMAL:
+			return AG_LOW;
+		case AGT_MONSTER:
+		case AGT_SEA_MONSTER:
+			return AG_HIGHT;
+		case AGT_HUMAN:
+		case AGT_EQUIPMENT:
+			return AG_PEOPLE;
+	}
+
+	return AG_HIGHT;
+
+	/*
 	ANIMATION_GROUPS group = AG_HIGHT;
 
 	if (id >= 200 || id == 34)
@@ -584,7 +626,7 @@ ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 			group = AG_LOW;
 	}
 	
-	return group;
+	return group;*/
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -595,7 +637,21 @@ ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 */
 uchar CAnimationManager::GetDieGroupIndex(ushort id, const bool &second)
 {
-	uchar group = 0;
+	switch (m_DataIndex[id].Type)
+	{
+		case AGT_ANIMAL:
+			return (uchar)(second ? LAG_DIE_2 : LAG_DIE_1);
+		case AGT_MONSTER:
+		case AGT_SEA_MONSTER:
+			return (uchar)(second ? HAG_DIE_2 : HAG_DIE_1);
+		case AGT_HUMAN:
+		case AGT_EQUIPMENT:
+			return (uchar)(second ? PAG_DIE_2 : PAG_DIE_1);
+	}
+
+	return 0;
+
+	/*uchar group = 0;
 
 	GetBodyGraphic(id);
 
@@ -609,7 +665,7 @@ uchar CAnimationManager::GetDieGroupIndex(ushort id, const bool &second)
 	else
 		group = (uchar)(second ? HAG_DIE_2 : HAG_DIE_1);
 	
-	return group;
+	return group;*/
 }
 //----------------------------------------------------------------------------------
 /*!
