@@ -78,7 +78,7 @@ void CGumpScreenSelectTown::UpdateContent()
 	g_FontManager.SetUseHTML(true);
 
 	m_Description = (CGUIText*)m_HTMLGump->Add(new CGUIText(0, 3, 3));
-	m_Description->CreateTextureW(0, description, 30, 150);
+	m_Description->CreateTextureW(1, description, 30, 150);
 
 	//!Выключаем обработку HTML-тэгов
 	g_FontManager.SetUseHTML(false);
@@ -168,7 +168,7 @@ void CGumpScreenSelectTown::GUMP_TEXT_ENTRY_EVENT_C
 				g_FontManager.SetUseHTML(true);
 
 				if (m_Description != NULL)
-					m_Description->CreateTextureW(0, description, 30, 150);
+					m_Description->CreateTextureW(1, description, 30, 150);
 
 				//!Выключаем обработку HTML-тэгов
 				g_FontManager.SetUseHTML(false);

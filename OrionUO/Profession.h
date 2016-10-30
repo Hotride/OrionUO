@@ -30,8 +30,6 @@ public:
 	CBaseProfession();
 	virtual ~CBaseProfession();
 
-	void OnChangeName(const string &name);
-
 	//Добавить описание профессии
 	bool AddDescription(int desc, string name, const char *val);
 };

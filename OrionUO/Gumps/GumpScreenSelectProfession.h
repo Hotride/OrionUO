@@ -23,10 +23,10 @@ private:
 	static const int ID_SPS_LABEL_BACK_PROFESSION = 5;
 	static const int ID_SPS_HTMLGUMP = 6;
 	static const int ID_SPS_STATS_SPHERE = 10;
-	static const int ID_SPS_SKILLS_SPHERE = 13;
-	static const int ID_SPS_SKILLS_FILED = 16;
-	static const int ID_SPS_LABEL = 20;
-	static const int ID_SPS_SKILLS_LIST = 50;
+	static const int ID_SPS_SKILLS_SPHERE = 20;
+	static const int ID_SPS_SKILLS_FILED = 30;
+	static const int ID_SPS_LABEL = 50;
+	static const int ID_SPS_SKILLS_LIST = 100;
 
 	void UpdateContentOld();
 	void UpdateContentNew();
