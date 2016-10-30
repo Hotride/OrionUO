@@ -3831,7 +3831,7 @@ PACKET_HANDLER(OpenMenuGump)
 	}
 }
 //----------------------------------------------------------------------------------
-void CPacketManager::AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &list)
+void CPacketManager::AddHTMLGumps(CGump *gump, vector<HTMLGumpDataInfo> &list)
 {
 	IFOR(i, 0, (int)list.size())
 	{
@@ -3846,10 +3846,18 @@ void CPacketManager::AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &l
 			width -= 16;
 
 		uint htmlColor = 0xFFFFFFFF;
+		ushort color = 0;
 
-		if (!data.HaveBackground)
+		if (data.Color)
 		{
-			data.Color = 0xFFFF;
+			if (data.Color == 0x00FFFFFF)
+				htmlColor = 0xFFFFFFFE;
+			else
+				htmlColor = (g_ColorManager.Color16To32((ushort)data.Color) << 8) | 0xFF;
+		}
+		else if (!data.HaveBackground)
+		{
+			color = 0xFFFF;
 
 			if (!data.HaveScrollbar)
 				htmlColor = 0x010101FF;
@@ -3860,7 +3868,7 @@ void CPacketManager::AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &l
 			htmlColor = 0x010101FF;
 		}
 
-		CGUIHTMLText *htmlText = (CGUIHTMLText*)htmlGump->Add(new CGUIHTMLText(data.TextID, (uchar)(m_ClientVersion >= CV_308Z), data.Color, 0, 0, width, TS_LEFT, /*UOFONT_BLACK_BORDER*/0, htmlColor));
+		CGUIHTMLText *htmlText = (CGUIHTMLText*)htmlGump->Add(new CGUIHTMLText(data.TextID, (uchar)(m_ClientVersion >= CV_308Z), color, 0, 0, width, TS_LEFT, /*UOFONT_BLACK_BORDER*/0, htmlColor));
 
 		if (data.IsXMF)
 		{
