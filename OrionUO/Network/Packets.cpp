@@ -88,8 +88,16 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	WriteUInt8(0x00); //pattern 3
 	WriteString(name.c_str(), 30, false);
 	WriteUInt16BE(0x0000); //?
-	WriteUInt32BE(0x00000000); //clientflag
-	WriteUInt32BE(0x00000000); //?
+
+	uint clientFlag = 0;
+	
+	IFOR(i, 0, g_CharacterList.ClientFlag)
+		clientFlag |= (1 << i);
+
+	DebugMsg("clientFlag=0x%08X\n", clientFlag);
+
+	WriteUInt32BE(clientFlag); //clientflag
+	WriteUInt32BE(0x00000001); //?
 	WriteUInt32BE(0x00000000); //logincount
 
 	CProfession *profession = (CProfession*)g_ProfessionManager.Selected;
@@ -126,9 +134,9 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	}
 
 	WriteUInt16BE(g_CreateCharacterManager.SkinTone);
-	WriteUInt16BE(g_CreateCharacterManager.HairStyle);
+	WriteUInt16BE(g_CreateCharacterManager.GetHair(g_CreateCharacterManager.HairStyle).GraphicID);
 	WriteUInt16BE(g_CreateCharacterManager.HairColor);
-	WriteUInt16BE(g_CreateCharacterManager.BeardStyle);
+	WriteUInt16BE(g_CreateCharacterManager.GetBeard(g_CreateCharacterManager.BeardStyle).GraphicID);
 	WriteUInt16BE(g_CreateCharacterManager.BeardColor);
 
 	ushort location = g_SelectTownScreen.m_City->LocationIndex;

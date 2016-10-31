@@ -97,7 +97,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 		entry->CheckOnSerial = true;
 		entry->ReadOnly = true;
 
-		ushort color = g_CreateCharacterManager.SkinTone;
+		ushort color = g_CreateCharacterManager.SkinTone - 1;
 
 		int colorIndex = (color + ((color + (color << 2)) << 1)) << 3;
 		colorIndex += (colorIndex / colorOffsetDivider) << 2;
@@ -119,7 +119,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 		entry->CheckOnSerial = true;
 		entry->ReadOnly = true;
 
-		color = g_CreateCharacterManager.GetShirtColor();
+		color = g_CreateCharacterManager.ShirtColor - 1;
 
 		colorIndex = (color + ((color + (color << 2)) << 1)) << 3;
 		colorIndex += (colorIndex / colorOffsetDivider) << 2;
@@ -142,7 +142,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 			else
 				entry->m_Entry.SetText("Pants Color");
 
-			color = g_CreateCharacterManager.PantsColor;
+			color = g_CreateCharacterManager.PantsColor - 1;
 
 			colorIndex = (color + ((color + (color << 2)) << 1)) << 3;
 			colorIndex += (colorIndex / colorOffsetDivider) << 2;
@@ -160,7 +160,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 		entry->CheckOnSerial = true;
 		entry->ReadOnly = true;
 
-		color = g_CreateCharacterManager.HairColor;
+		color = g_CreateCharacterManager.HairColor - 1;
 
 		colorIndex = (color + ((color + (color << 2)) << 1)) << 3;
 		colorIndex += (colorIndex / colorOffsetDivider) << 2;
@@ -179,7 +179,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 			entry->CheckOnSerial = true;
 			entry->ReadOnly = true;
 
-			color = g_CreateCharacterManager.BeardColor;
+			color = g_CreateCharacterManager.BeardColor - 1;
 
 			colorIndex = (color + ((color + (color << 2)) << 1)) << 3;
 			colorIndex += (colorIndex / colorOffsetDivider) << 2;
@@ -421,26 +421,31 @@ void CGumpScreenCreateCharacter::GUMP_BUTTON_EVENT_C
 	{
 		g_CreateCharacterManager.Female = true;
 		m_WantUpdateContent = true;
+		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 	else if (serial == ID_CCS_MALE_BUTTON)
 	{
 		g_CreateCharacterManager.Female = false;
 		m_WantUpdateContent = true;
+		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 	else if (serial == ID_CCS_HUMAN_RACE_BUTTON)
 	{
 		g_CreateCharacterManager.Race = RT_HUMAN;
 		m_WantUpdateContent = true;
+		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 	else if (serial == ID_CCS_ELF_RACE_BUTTON)
 	{
 		g_CreateCharacterManager.Race = RT_ELF;
 		m_WantUpdateContent = true;
+		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 	else if (serial == ID_CCS_GARGOYLE_RACE_BUTTON)
 	{
 		g_CreateCharacterManager.Race = RT_GARGOYLE;
 		m_WantUpdateContent = true;
+		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -460,6 +465,7 @@ void CGumpScreenCreateCharacter::GUMP_RADIO_EVENT_C
 			g_CreateCharacterManager.Race = RT_GARGOYLE;
 
 		m_WantUpdateContent = true;
+		g_CreateCharacterScreen.ColorSelection = 0;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -484,18 +490,16 @@ void CGumpScreenCreateCharacter::GUMP_TEXT_ENTRY_EVENT_C
 	{
 		if (serial >= ID_CCS_COLOR_RANGE)
 		{
-			ushort color = g_SelectedObject.Object()->Color;
+			ushort color = g_SelectedObject.Object()->Color + 1;
 
 			if (g_CreateCharacterScreen.ColorSelection == CCSID_SKIN_TONE)
 			{
-				color++;
-
 				if (g_CreateCharacterManager.Race == RT_HUMAN)
 				{
 					if (color < 0x03EA)
 						color = 0x03EA;
-					else if (color > 0x0421)
-						color = 0x0421;
+					else if (color > 0x0422)
+						color = 0x0422;
 				}
 
 				g_CreateCharacterManager.SkinTone = color;
@@ -509,8 +513,6 @@ void CGumpScreenCreateCharacter::GUMP_TEXT_ENTRY_EVENT_C
 			}
 			else if (g_CreateCharacterScreen.ColorSelection == CCSID_HAIR_COLOR || g_CreateCharacterScreen.ColorSelection == CCSID_FACIAL_HAIR_COLOR)
 			{
-				color++;
-
 				if (g_CreateCharacterManager.Race == RT_HUMAN)
 				{
 					if (color < 0x044E)
