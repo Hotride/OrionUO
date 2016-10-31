@@ -24,18 +24,14 @@ CBaseProfession::~CBaseProfession()
 {
 }
 //----------------------------------------------------------------------------------
-void CBaseProfession::OnChangeName(const string &name)
-{
-	m_Name = g_ClilocManager.Cliloc(g_Language)->GetA(m_NameClilocID, name);
-}
-//----------------------------------------------------------------------------------
 bool CBaseProfession::AddDescription(int desc, string name, const char *val)
 {
-	bool result = m_DescriptionIndex == desc;
+	bool result = (m_DescriptionIndex == desc);
 
 	if (result)
 	{
-		SetName(name);
+		if (!m_NameClilocID)
+			m_Name = name;
 
 		g_FontManager.SetUseHTML(true);
 

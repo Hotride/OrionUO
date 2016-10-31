@@ -64,6 +64,9 @@ xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
+if exist "$(ProjectDir)Orion.dll" (del "$(ProjectDir)Orion.dll")
+xcopy /y /d  "$(SolutionDir)debug_bin\Orion.dll" "$(ProjectDir)"
+
 </Command>
     </PostBuildEvent>
     <PostBuildEvent>
@@ -98,6 +101,9 @@ xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
+
+if exist "$(ProjectDir)Orion.dll" (del "$(ProjectDir)Orion.dll")
+xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
 
 </Command>
     </PostBuildEvent>

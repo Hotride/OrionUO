@@ -452,7 +452,14 @@ void CGumpSpell::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 bool CGumpSpell::OnLeftMouseButtonDoubleClick()
 {
-	g_Orion.CastSpell(m_Serial);
+	int tooltipOffset = 0;
+	int spellIndexOffset = 0;
+
+	GetTooltipSpellInfo(tooltipOffset, spellIndexOffset);
+
+	int spellIndex = m_Serial - spellIndexOffset + ((int)m_SpellType * 100);
+
+	g_Orion.CastSpell(spellIndex);
 
 	return true;
 }

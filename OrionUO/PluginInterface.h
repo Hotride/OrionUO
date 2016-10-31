@@ -16,15 +16,21 @@ typedef LRESULT WINDOW_PROC(HWND, UINT, WPARAM, LPARAM);
 typedef bool __cdecl PACKET_PROC(unsigned char *, const int&);
 typedef void __cdecl VOID_PROC();
 //----------------------------------------------------------------------------------
-#define UOMSG_SET_ACCOUNT			WM_USER + 660
-#define UOMSG_SET_SERVER_NAME		WM_USER + 661
-#define UOMSG_SET_PLAYER_NAME		WM_USER + 662
-#define UOMSG_UPDATE_PLAYER_X		WM_USER + 663
-#define UOMSG_UPDATE_PLAYER_Y		WM_USER + 664
-#define UOMSG_UPDATE_PLAYER_Z		WM_USER + 665
-#define UOMSG_UPDATE_PLAYER_DIR		WM_USER + 666
-#define UOMSG_RECV					WM_USER + 667
-#define UOMSG_SEND					WM_USER + 668
+#define UOMSG_SET_SERVER_NAME		WM_USER + 660
+#define UOMSG_SET_PLAYER_NAME		WM_USER + 661
+#define UOMSG_UPDATE_PLAYER_XYZ		WM_USER + 662
+#define UOMSG_UPDATE_PLAYER_DIR		WM_USER + 663
+#define UOMSG_RECV					WM_USER + 664
+#define UOMSG_SEND					WM_USER + 665
+//----------------------------------------------------------------------------------
+#pragma pack (push,1)
+typedef struct PLAYER_XYZ_DATA
+{
+	int X;
+	int Y;
+	int Z;
+} *PPLAYER_XYZ_DATA;
+#pragma pack (pop)
 //----------------------------------------------------------------------------------
 bool __cdecl PluginRecvFunction(unsigned char *buf, const int &size);
 bool __cdecl PluginSendFunction(unsigned char *buf, const int &size);

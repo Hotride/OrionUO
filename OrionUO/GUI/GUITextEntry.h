@@ -48,6 +48,18 @@ class CGUITextEntry : public CBaseGUI
 	//!Флаг использования глобального цвета
 	SETGET(bool, UseGlobalColor);
 
+	//!R-компонента глобального OGL цвета
+	SETGET(uchar, GlobalColorR);
+
+	//!G-компонента глобального OGL цвета
+	SETGET(uchar, GlobalColorG);
+
+	//!B-компонента глобального OGL цвета
+	SETGET(uchar, GlobalColorB);
+
+	//!Альфа-канал глобального OGL цвета
+	SETGET(uchar, GlobalColorA);
+
 	//!R-компонента глобального OGL цвета когда компонента выбрана
 	SETGET(uchar, GlobalColorSelectedR);
 
@@ -89,7 +101,7 @@ public:
 	virtual WISP_GEOMETRY::CSize GetSize();
 
 	//!Установить глобальный OGL цвет перед отрисовкой текста
-	void SetGlobalColor(const bool &use, const uint &selected = 0, const uint &focused = 0);
+	void SetGlobalColor(const bool &use, const uint &color, const uint &selected, const uint &focused);
 
 	//!Нажатие на компоненту
 	void OnClick(CGump *gump, const int &x, const int &y);

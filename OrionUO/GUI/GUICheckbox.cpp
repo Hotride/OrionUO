@@ -26,12 +26,14 @@ CGUICheckbox::~CGUICheckbox()
 //----------------------------------------------------------------------------------
 void CGUICheckbox::SetTextParameters(const uchar &font, const wstring &text, const ushort &color, const SLIDER_TEXT_POSITION &textPosition, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
 {
+	m_TextPosition = textPosition;
 	g_FontManager.GenerateW(font, m_Text, text.c_str(), color, 30, textWidth, align, textFlags);
 	UpdateTextPosition();
 }
 //----------------------------------------------------------------------------------
 void CGUICheckbox::SetTextParameters(const uchar &font, const string &text, const ushort &color, const SLIDER_TEXT_POSITION &textPosition, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
 {
+	m_TextPosition = textPosition;
 	g_FontManager.GenerateA(font, m_Text, text.c_str(), color, textWidth, align, textFlags);
 	UpdateTextPosition();
 }

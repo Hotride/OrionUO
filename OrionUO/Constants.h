@@ -74,7 +74,7 @@ const int MAX_MULTI_DATA_INDEX_COUNT = 0x2200;
 const int MAX_MUSIC_DATA_INDEX_COUNT = 100;
 
 //!Размер таблицы индексов анимаций
-const int MAX_ANIMATIONS_DATA_INDEX_COUNT = 1000;
+const int MAX_ANIMATIONS_DATA_INDEX_COUNT = 1250;
 
 //!Размер таблицы индексов анимаций
 const int MAX_LIGHTS_DATA_INDEX_COUNT = 100;

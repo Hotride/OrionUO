@@ -28,7 +28,7 @@ void CGumpScreenMain::PrepareContent()
 	static uint lastArrowTick = 0;
 	static bool arrowLighted = false;
 
-	if (lastArrowTick < g_Ticks)
+	if (lastArrowTick < g_Ticks && m_Arrow != NULL)
 	{
 		arrowLighted = !arrowLighted;
 
@@ -62,7 +62,10 @@ void CGumpScreenMain::UpdateContent()
 	Add(new CGUIResizepic(ID_MS_PASSWORD, 0x0BB8, 328, 383, 210, 30));
 
 	g_MainScreen.m_SavePassword = (CGUICheckbox*)Add(new CGUICheckbox(ID_MS_SAVEPASSWORD, 0x00D2, 0x00D3, 0x00D2, 328, 417));
+	g_MainScreen.m_SavePassword->SetTextParameters(9, "Save Password", 0x0386, STP_RIGHT_CENTER);
+
 	g_MainScreen.m_AutoLogin = (CGUICheckbox*)Add(new CGUICheckbox(ID_MS_AUTOLOGIN, 0x00D2, 0x00D3, 0x00D2, 183, 417));
+	g_MainScreen.m_AutoLogin->SetTextParameters(9, "Auto Login", 0x0386, STP_RIGHT_CENTER);
 
 	CGUIText *text = (CGUIText*)Add(new CGUIText(0x0386, 253, 305));
 	text->CreateTextureA(2, "Log in to Ultima Online");
@@ -72,12 +75,6 @@ void CGumpScreenMain::UpdateContent()
 
 	text = (CGUIText*)Add(new CGUIText(0x0386, 183, 385));
 	text->CreateTextureA(2, "Password");
-
-	text = (CGUIText*)Add(new CGUIText(0x0386, 351, 421));
-	text->CreateTextureA(9, "Save Password");
-
-	text = (CGUIText*)Add(new CGUIText(0x0386, 206, 421));
-	text->CreateTextureA(9, "Auto Login");
 
 	text = (CGUIText*)Add(new CGUIText(0x034E, 286, 455));
 	text->CreateTextureA(9, string("UO Version " + g_Orion.ClientVersionText + "."));

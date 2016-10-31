@@ -103,7 +103,7 @@ void CGameEffect::Update(CGameObject *parent)
 	}
 	else if (m_LastChangeFrameTime < g_Ticks)
 	{
-		m_LastChangeFrameTime = g_Ticks + 50;
+		m_LastChangeFrameTime = g_Ticks + m_Speed;
 
 		CalculateCurrentGraphic();
 	}

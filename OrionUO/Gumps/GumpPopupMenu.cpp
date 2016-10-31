@@ -18,6 +18,7 @@ CGumpPopupMenu::CGumpPopupMenu(uint serial, short x, short y)
 {
 	m_NoMove = true;
 	g_PopupMenu = this;
+	m_Page = 1;
 
 	m_Polygone = (CGUIColoredPolygone*)Add(new CGUIColoredPolygone(0, 0, 0, 0, 0, 0, 0x7F7F7F7F));
 	m_Polygone->DrawOnly = true;
@@ -56,8 +57,50 @@ void CGumpPopupMenu::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpPopupMenu::GUMP_BUTTON_EVENT_C
 {
-	CPacketPopupMenuSelection(m_Serial, serial - 1).Send();
+	if (serial == ID_GPM_MAXIMIZE)
+	{
+		m_Page = 2;
+		CGUIResizepic *resizepic = NULL;
+		int width = 0;
+		int height = 20;
 
-	m_RemoveMark = true;
+		QFOR(item, m_Items, CBaseGUI*)
+		{
+			if (item->Type == GOT_RESIZEPIC)
+				resizepic = (CGUIResizepic*)item;
+			else if (item->Type == GOT_TEXTENTRY)
+			{
+				CGLTextTexture &texture = ((CGUITextEntry*)item)->m_Entry.m_Texture;
+
+				if (width < texture.Width)
+					width = texture.Width;
+
+				height += texture.Height;
+			}
+		}
+
+		width += 20;
+
+		QFOR(item, m_Items, CBaseGUI*)
+		{
+			if (item->Type == GOT_HITBOX)
+				((CGUIHitBox*)item)->Width = width - 20;
+		}
+
+		if (resizepic != NULL)
+		{
+			resizepic->Width = width;
+			resizepic->Height = height;
+		}
+
+		m_WantRedraw = true;
+		m_Polygone->Visible = false;
+	}
+	else
+	{
+		CPacketPopupMenuSelection(m_Serial, serial - 1).Send();
+
+		m_RemoveMark = true;
+	}
 }
 //----------------------------------------------------------------------------------

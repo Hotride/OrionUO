@@ -12,11 +12,12 @@
 #include "../OrionUO.h"
 #include "../OrionWindow.h"
 #include "../Network/Packets.h"
+#include "../Managers/PacketManager.h"
 //----------------------------------------------------------------------------------
 CSelectTownScreen g_SelectTownScreen;
 //----------------------------------------------------------------------------------
 CSelectTownScreen::CSelectTownScreen()
-: CBaseScreen(m_SelectTownGump), m_City()
+: CBaseScreen(m_SelectTownGump), m_City(NULL)
 {
 }
 //----------------------------------------------------------------------------------
@@ -30,7 +31,10 @@ CSelectTownScreen::~CSelectTownScreen()
 */
 void CSelectTownScreen::Init()
 {
-	m_City = g_CityList.GetCity(3);
+	if (g_PacketManager.ClientVersion >= CV_70130)
+		m_City = g_CityList.GetCity(0);
+	else
+		m_City = g_CityList.GetCity(3);
 
 	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;

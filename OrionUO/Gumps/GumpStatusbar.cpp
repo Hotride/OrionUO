@@ -632,7 +632,7 @@ void CGumpStatusbar::UpdateContent()
 				text->CreateTextureA(1, std::to_string(g_Player->Int));
 
 				text = (CGUIText*)Add(new CGUIText(0x0386, 86, 97));
-				text->CreateTextureA(1, (g_Player->Sex ? "F" : "M"));
+				text->CreateTextureA(1, (g_Player->Female ? "F" : "M"));
 
 				text = (CGUIText*)Add(new CGUIText(0x0386, 86, 109));
 				text->CreateTextureA(1, std::to_string(g_Player->Armor));

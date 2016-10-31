@@ -29,7 +29,7 @@ public:
 	static const uchar ID_SMOOTH_STS_GO_SCREEN_GAME_CONNECT = 3;
 
 	//!Указатель на выбранный город
-	CCityItem m_City;
+	CCityItem *m_City;
 
 	/*!
 	Инициализация

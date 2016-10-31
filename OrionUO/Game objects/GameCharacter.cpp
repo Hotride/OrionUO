@@ -25,12 +25,12 @@
 #include "../OrionWindow.h"
 //----------------------------------------------------------------------------------
 CGameCharacter::CGameCharacter(const uint &serial)
-: CGameObject(serial), m_Hits(0), m_MaxHits(0), m_Sex(false), m_Direction(0),
+: CGameObject(serial), m_Hits(0), m_MaxHits(0), m_Female(false), m_Direction(0),
 m_Notoriety(0), m_CanChangeName(false), m_AnimationGroup(0xFF),
 m_AnimationInterval(0), m_AnimationFrameCount(0), m_AnimationRepeat(false),
 m_AnimationRepeatMode(1), m_AnimationDirection(false), m_AnimationFromServer(false),
 m_MaxMana(0), m_MaxStam(0), m_Mana(0), m_Stam(0), m_OffsetX(0), m_OffsetY(0),
-m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(0),
+m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(RT_HUMAN),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
 m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10), m_HitsPercent(0)
 {
@@ -290,13 +290,13 @@ void CGameCharacter::OnGraphicChange(int direction)
 		case 0x0190:
 		case 0x0192:
 		{
-			m_Sex = false;
+			m_Female = false;
 			break;
 		}
 		case 0x0191:
 		case 0x0193:
 		{
-			m_Sex = true;
+			m_Female = true;
 			break;
 		}
 		default:
@@ -847,14 +847,11 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 			{
 				if (IsPlayer())
 				{
-					if (m_X != wd->X)
-						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_X, (WPARAM)wd->X, 0);
-
-					if (m_Y != wd->Y)
-						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_Y, (WPARAM)wd->Y, 0);
-
-					if (m_Z != wd->Z)
-						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_Z, (WPARAM)wd->Z, 0);
+					if (m_X != wd->X || m_Y != wd->Y || m_Z != wd->Z)
+					{
+						PLAYER_XYZ_DATA xyzData = { wd->X, wd->Y, wd->Z };
+						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_XYZ, (WPARAM)&xyzData, 0);
+					}
 
 					if (m_Direction != wd->Direction)
 						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_DIR, (WPARAM)wd->Direction, 0);

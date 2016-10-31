@@ -23,7 +23,7 @@ private:
 	static const int ID_CCS_MALE_BUTTON = 5;
 	static const int ID_CCS_FEMALE_BUTTON = 6;
 	static const int ID_CCS_HUMAN_RACE_BUTTON = 7;
-	static const int ID_CCS_ELVEN_RACE_BUTTON = 8;
+	static const int ID_CCS_ELF_RACE_BUTTON = 8;
 	static const int ID_CCS_GARGOYLE_RACE_BUTTON = 9;
 
 	static const int ID_CCS_SKIN_TONE = 10;
@@ -61,6 +61,7 @@ public:
 
 
 	GUMP_BUTTON_EVENT_H;
+	GUMP_RADIO_EVENT_H;
 	GUMP_TEXT_ENTRY_EVENT_H;
 	GUMP_COMBOBOX_SELECTION_EVENT_H;
  };

@@ -66,7 +66,7 @@ public:
 class CCityList
 {
 private:
-	deque<CCityItem> m_CityList;
+	deque<CCityItem*> m_CityList;
 
 public:
 	CCityList();
@@ -74,9 +74,9 @@ public:
 
 	int CityCount() { return m_CityList.size(); }
 
-	void AddCity(CCityItem city) { m_CityList.push_back(city); }
+	void AddCity(CCityItem *city) { m_CityList.push_back(city); }
 
-	CCityItem GetCity(const int &index);
+	CCityItem *GetCity(const int &index);
 
 	void Clear();
 };

@@ -88,15 +88,28 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	WriteUInt8(0x00); //pattern 3
 	WriteString(name.c_str(), 30, false);
 	WriteUInt16BE(0x0000); //?
-	WriteUInt32BE(0x00000000); //clientflag
-	WriteUInt32BE(0x00000000); //?
+
+	uint clientFlag = 0;
+	
+	IFOR(i, 0, g_CharacterList.ClientFlag)
+		clientFlag |= (1 << i);
+
+	DebugMsg("clientFlag=0x%08X\n", clientFlag);
+
+	WriteUInt32BE(clientFlag); //clientflag
+	WriteUInt32BE(0x00000001); //?
 	WriteUInt32BE(0x00000000); //logincount
 
 	CProfession *profession = (CProfession*)g_ProfessionManager.Selected;
 	uchar val = (uchar)profession->DescriptionIndex;
 	WriteUInt8(val); //profession
 	Move(15); //?
-	val = (uchar)g_CreateCharacterManager.Sex;
+
+	if (g_PacketManager.ClientVersion < CV_4011D)
+		val = (uchar)g_CreateCharacterManager.Female;
+	else
+		val = (uchar)(((int)g_CreateCharacterManager.Race * 2) + (int)g_CreateCharacterManager.Female);
+
 	WriteUInt8(val);
 	val = profession->Str;
 	WriteUInt8(val);
@@ -121,12 +134,15 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	}
 
 	WriteUInt16BE(g_CreateCharacterManager.SkinTone);
-	WriteUInt16BE(g_CreateCharacterManager.HairStyle);
+	WriteUInt16BE(g_CreateCharacterManager.GetHair(g_CreateCharacterManager.HairStyle).GraphicID);
 	WriteUInt16BE(g_CreateCharacterManager.HairColor);
-	WriteUInt16BE(g_CreateCharacterManager.BeardStyle);
+	WriteUInt16BE(g_CreateCharacterManager.GetBeard(g_CreateCharacterManager.BeardStyle).GraphicID);
 	WriteUInt16BE(g_CreateCharacterManager.BeardColor);
 
-	ushort location = g_SelectTownScreen.m_City.LocationIndex - 1;
+	ushort location = g_SelectTownScreen.m_City->LocationIndex;
+
+	if (g_PacketManager.ClientVersion < CV_70130)
+		location--;
 
 	WriteUInt16BE(location); //location
 	WriteUInt16BE(0x0000); //?
@@ -386,17 +402,30 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 CPacketCastSpell::CPacketCastSpell(int index)
 : CPacket(1)
 {
-	char spell[5] = { 0 };
-	sprintf_s(spell, "%i", index);
+	if (g_PacketManager.ClientVersion >= CV_60142)
+	{
+		Resize(9, true);
 
-	int len = strlen(spell);
-	int size = 5 + len;
-	Resize(size, true);
+		WriteUInt8(0xBF);
+		WriteUInt16BE(0x0009);
+		WriteUInt16BE(0x001C);
+		WriteUInt16BE(0x0002);
+		WriteUInt16BE(index);
+	}
+	else
+	{
+		char spell[10] = { 0 };
+		sprintf_s(spell, "%i", index);
 
-	WriteUInt8(0x12);
-	WriteUInt16BE(size);
-	WriteUInt8(0x56);
-	WriteString(spell, len, false);
+		int len = strlen(spell);
+		int size = 5 + len;
+		Resize(size, true);
+
+		WriteUInt8(0x12);
+		WriteUInt16BE(size);
+		WriteUInt8(0x56);
+		WriteString(spell, len, false);
+	}
 }
 //----------------------------------------------------------------------------------
 CPacketCastSpellFromBook::CPacketCastSpellFromBook(int index, uint serial)
