@@ -15,6 +15,8 @@
 #include "../Wisp/WispApplication.h"
 #include "../Wisp/WispTextFileParser.h"
 #include "../Wisp/WispMappedFile.h"
+#include "ClilocManager.h"
+#include "PacketManager.h"
 //----------------------------------------------------------------------------------
 CProfessionManager g_ProfessionManager;
 //----------------------------------------------------------------------------------
@@ -192,6 +194,7 @@ bool CProfessionManager::ParseFilePart(WISP_FILE::CTextFileParser &file)
 			case PM_CODE_NAME_CLILOC_ID:
 			{
 				nameClilocID = atoi(strings[1].c_str());
+				name = ToUpperA(g_ClilocManager.Cliloc(g_Language)->GetA(nameClilocID, name));
 				break;
 			}
 			case PM_CODE_DESCRIPTION_CLILOC_ID:
@@ -237,7 +240,7 @@ bool CProfessionManager::ParseFilePart(WISP_FILE::CTextFileParser &file)
 	if (obj != NULL)
 	{
 		obj->NameClilocID = nameClilocID;
-		obj->SetName(name);
+		obj->Name = name;
 		obj->TrueName = trueName;
 		obj->DescriptionClilocID = descriptionClilocID;
 		obj->DescriptionIndex = descriptionIndex;
@@ -283,7 +286,7 @@ bool CProfessionManager::AddChild(CBaseProfession *parent, CBaseProfession *chil
 	{
 		CProfessionCategory *cat = (CProfessionCategory*)parent;
 
-		string check = string("|") + child->GetName() + "|";
+		string check = string("|") + child->Name + "|";
 
 		if (cat->Childrens.find(check) != string::npos)
 		{
@@ -318,8 +321,8 @@ bool CProfessionManager::Load()
 	bool result = false;
 
 	CProfessionCategory *head = new CProfessionCategory();
-	head->SetTrueName("parent");
-	head->SetName("Parent");
+	head->TrueName = "parent";
+	head->Name = "Parent";
 	head->DescriptionIndex = -2;
 	head->Type = PT_CATEGORY;
 	head->Gump = 0x15A9;
@@ -351,22 +354,38 @@ bool CProfessionManager::Load()
 		g_Orion.ExecuteGump(0x15AA);
 
 		CProfession *apc = new CProfession();
-		apc->SetTrueName("advanced");
-		apc->OnChangeName("Advanced");
+		apc->TrueName = "advanced";
+		apc->Name = "Advanced";
 		apc->Type = PT_PROFESSION;
 		apc->Gump = 0x15A9;
 		apc->DescriptionIndex = -1;
-		apc->Str = 44;
-		apc->Int = 10;
-		apc->Dex = 11;
 		apc->SetSkillIndex(0, 0xFF);
 		apc->SetSkillIndex(1, 0xFF);
 		apc->SetSkillIndex(2, 0xFF);
 		apc->SetSkillIndex(3, 0xFF);
-		apc->SetSkillValue(0, 50);
-		apc->SetSkillValue(1, 50);
-		apc->SetSkillValue(2, 0);
-		apc->SetSkillValue(3, 0);
+
+		if (g_PacketManager.ClientVersion >= CV_70160)
+		{
+			apc->Str = 45;
+			apc->Int = 35;
+			apc->Dex = 10;
+
+			apc->SetSkillValue(0, 30);
+			apc->SetSkillValue(1, 30);
+			apc->SetSkillValue(2, 30);
+			apc->SetSkillValue(3, 30);
+		}
+		else
+		{
+			apc->Str = 44;
+			apc->Int = 10;
+			apc->Dex = 11;
+
+			apc->SetSkillValue(0, 50);
+			apc->SetSkillValue(1, 50);
+			apc->SetSkillValue(2, 0);
+			apc->SetSkillValue(3, 0);
+		}
 
 		head->Add(apc);
 

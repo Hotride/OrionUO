@@ -1322,6 +1322,12 @@ void CGumpManager::Load(const string &path)
 	}
 	else
 	{
+		if (!g_ConfigManager.DisableMenubar && !g_ConfigManager.GameWindowX && !g_ConfigManager.GameWindowY)
+		{
+			g_ConfigManager.GameWindowX = 40;
+			g_ConfigManager.GameWindowY = 40;
+		}
+
 		AddGump(new CGumpPaperdoll(g_PlayerSerial, g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth, g_ConfigManager.GameWindowY, false));
 		AddGump(new CGumpStatusbar(g_PlayerSerial, g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth, g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight - 50, false));
 		AddGump(new CGumpMinimap(g_PlayerSerial, g_ConfigManager.GameWindowX, g_ConfigManager.GameWindowY, true));
@@ -1349,7 +1355,7 @@ void CGumpManager::Load(const string &path)
 	}
 
 	if (!bufficonWindowFound)
-		AddGump(new CGumpBuff(g_PlayerSerial, g_ConfigManager.GameWindowX, g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight));
+		AddGump(new CGumpBuff(g_PlayerSerial, g_ConfigManager.GameWindowX + (int)(g_ConfigManager.GameWindowWidth * 0.7f), g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight));
 
 	if (!paperdollRequested)
 		g_Orion.PaperdollReq(g_PlayerSerial);

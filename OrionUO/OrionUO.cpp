@@ -358,7 +358,7 @@ bool COrion::Install()
 	DEBUGLOG("Load shaders.\n");
 	LoadShaders();
 
-	DEBUGLOG("Load shaders.\n");
+	DEBUGLOG("Update main screen content\n");
 	g_MainScreen.UpdateContent();
 	g_MainScreen.LoadGlobalConfig();
 
@@ -584,7 +584,7 @@ void COrion::ProcessDelayedClicks()
 			{
 				NameReq(serial);
 
-				if (serial < 0x40000000)
+				//if (serial < 0x40000000)
 				{
 					if (!g_ConfigManager.HoldShiftForContextMenus || g_ShiftPressed)
 						CPacketRequestPopupMenu(serial).Send();
@@ -606,6 +606,7 @@ void COrion::Process(const bool &rendering)
 	static uint removeUnusedTexturesTime = 0;
 
 	g_ConnectionManager.Recv();
+	g_PacketManager.ProcessPluginPackets();
 	g_PacketManager.SendMegaClilocRequests();
 	g_MouseManager.Update();
 
@@ -625,21 +626,6 @@ void COrion::Process(const bool &rendering)
 	if (g_GameState >= GS_GAME) // || g_GameState == GS_GAME_BLOCKED)
 	{
 		g_ShowGumpLocker = g_ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
-
-		CWalkData *wd = g_Player->m_WalkStack.m_Items;
-
-		if (wd != NULL)
-		{
-			g_RemoveRangeXY.X = wd->X;
-			g_RemoveRangeXY.Y = wd->Y;
-		}
-		else
-		{
-			g_RemoveRangeXY.X = g_Player->X;
-			g_RemoveRangeXY.Y = g_Player->Y;
-		}
-
-		RemoveRangedObjects();
 
 		ProcessStaticAnimList();
 
@@ -670,6 +656,21 @@ void COrion::Process(const bool &rendering)
 			if (g_PressedObject.LeftGump() == NULL && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI())
 				canRenderSelect = false;
 		}
+
+		CWalkData *wd = g_Player->m_WalkStack.m_Items;
+
+		if (wd != NULL)
+		{
+			g_RemoveRangeXY.X = wd->X;
+			g_RemoveRangeXY.Y = wd->Y;
+		}
+		else
+		{
+			g_RemoveRangeXY.X = g_Player->X;
+			g_RemoveRangeXY.Y = g_Player->Y;
+		}
+
+		RemoveRangedObjects();
 
 		if (rendering)
 		{
@@ -1093,8 +1094,6 @@ void COrion::RelayServer(const char *ip, int port, puchar gameSeed)
 	if (g_ConnectionManager.Connect(ip, port, gameSeed))
 	{
 		g_ConnectionScreen.Connected = true;
-
-		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_ACCOUNT, (WPARAM)g_MainScreen.m_Account->c_str(), 0);
 
 		CPacketSecondLogin().Send();
 	}
@@ -1874,6 +1873,13 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		{
 			if (value >= 0 && value < m_StaticDataCount)
 				value = m_StaticDataIndex[value].Address;
+
+			break;
+		}
+		case VKI_USED_LAYER:
+		{
+			if (value >= 0 && value < m_StaticDataCount)
+				value = m_StaticData[value / 32].Tiles[value % 32].Quality;
 
 			break;
 		}

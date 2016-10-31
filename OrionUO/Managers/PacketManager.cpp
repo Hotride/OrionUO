@@ -41,6 +41,7 @@
 #include "../Gumps/GumpPopupMenu.h"
 #include "../Managers/EffectManager.h"
 #include "../Managers/PluginManager.h"
+#include "../Managers/ColorManager.h"
 #include "../Game objects/GameEffectMoving.h"
 #include "../Game objects/GameEffectDrag.h"
 #include "../QuestArrow.h"
@@ -598,6 +599,28 @@ void CPacketManager::OnPacket()
 	}
 }
 //----------------------------------------------------------------------------------
+void CPacketManager::SavePluginReceivePacket(puchar buf, const int &size)
+{
+	UCHAR_LIST packet(size);
+
+	memcpy(&packet[0], &buf[0], size);
+
+	m_PluginData.push_front(packet);
+}
+//----------------------------------------------------------------------------------
+void CPacketManager::ProcessPluginPackets()
+{
+	while (!m_PluginData.empty())
+	{
+		UCHAR_LIST &packet = m_PluginData.back();
+
+		PluginReceiveHandler(&packet[0], packet.size());
+		packet.clear();
+
+		m_PluginData.pop_back();
+	}
+}
+//----------------------------------------------------------------------------------
 void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
 {
 	SetData(buf, size);
@@ -698,18 +721,18 @@ PACKET_HANDLER(CharacterList)
 	{
 		IFOR(i, 0, locCount)
 		{
-			CCityItemNew city;
+			CCityItemNew *city = new CCityItemNew();
 
-			city.LocationIndex = ReadUInt8();
+			city->LocationIndex = ReadUInt8();
 
-			city.SetName(ReadString(32));
-			city.SetArea(ReadString(32));
+			city->SetName(ReadString(32));
+			city->SetArea(ReadString(32));
 
-			city.X = ReadUInt32BE();
-			city.Y = ReadUInt32BE();
-			city.Z = ReadUInt32BE();
-			city.MapIndex = ReadUInt32BE();
-			city.Cliloc = ReadUInt32BE();
+			city->X = ReadUInt32BE();
+			city->Y = ReadUInt32BE();
+			city->Z = ReadUInt32BE();
+			city->MapIndex = ReadUInt32BE();
+			city->Cliloc = ReadUInt32BE();
 
 			Move(4);
 
@@ -720,14 +743,14 @@ PACKET_HANDLER(CharacterList)
 	{
 		IFOR(i, 0, locCount)
 		{
-			CCityItem city;
+			CCityItem *city = new CCityItem();
 
-			city.LocationIndex = ReadUInt8();
+			city->LocationIndex = ReadUInt8();
 
-			city.SetName(ReadString(31));
-			city.SetArea(ReadString(31));
+			city->Name = ReadString(31);
+			city->Area = ReadString(31);
 
-			city.InitCity();
+			city->InitCity();
 
 			g_CityList.AddCity(city);
 		}
@@ -1113,7 +1136,7 @@ PACKET_HANDLER(CharacterStatus)
 
 	if (flag > 0)
 	{
-		obj->Sex = ReadUInt8(); //buf[43];
+		obj->Female = (ReadUInt8() != 0); //buf[43];
 
 		if (serial == g_PlayerSerial)
 		{
@@ -1166,7 +1189,12 @@ PACKET_HANDLER(CharacterStatus)
 			if (flag >= 5)
 			{
 				g_Player->MaxWeight = ReadInt16BE(); //unpack16(buf + 66);
-				g_Player->Race = (CHARACTER_RACE_TYPE)ReadUInt8();
+				uint race = ReadUInt8();
+
+				if (!race)
+					race = 1;
+
+				g_Player->Race = (RACE_TYPE)race;
 			}
 			else
 				g_Player->MaxWeight = (g_Player->Str * 4) + 25;
@@ -2465,6 +2493,7 @@ PACKET_HANDLER(ExtendedCommand)
 			uchar count = ReadUInt8();
 
 			CGumpPopupMenu *menu = new CGumpPopupMenu(serial, g_MouseManager.Position.X, g_MouseManager.Position.Y);
+			menu->Add(new CGUIPage(0));
 			int width = 0;
 			int height = 20;
 
@@ -2473,6 +2502,7 @@ PACKET_HANDLER(ExtendedCommand)
 			menu->Add(new CGUIAlphaBlending(false, 0.5f));
 
 			int offsetY = 10;
+			bool arrowAdded = false;
 
 			IFOR(i, 0, count)
 			{
@@ -2490,30 +2520,60 @@ PACKET_HANDLER(ExtendedCommand)
 					cliloc = ReadUInt16BE() + 3000000;
 				}
 
-				ushort flags = ReadUInt16BE();
-				ushort color = 0xFFFF;
-
-				if (flags == 0x20)
-					color = ReadUInt16BE();
-
 				wstring str = g_ClilocManager.Cliloc(g_Language)->GetW(cliloc);
 
-				CGUIText *item = (CGUIText*)menu->Add(new CGUIText(color, 10, offsetY));
-				item->CreateTextureW(0, str);
-				item->DrawOnly = true;
+				ushort flags = ReadUInt16BE();
+				ushort color = 0xFFFE;
 
-				menu->Add(new CGUIHitBox(index, 10, offsetY, item->m_Texture.Width, item->m_Texture.Height, true));
+				if (flags == 0x01)
+					color = 0x0386;
 
-				height += item->m_Texture.Height;
-				offsetY += item->m_Texture.Height;
+				CGUITextEntry *item = new CGUITextEntry(index, color, color, color, 10, offsetY);
 
-				if (width < item->m_Texture.Width)
-					width = item->m_Texture.Width;
+				if (flags == 0x04)
+					Move(2);
+				else if (flags == 0x20)
+				{
+					ushort newColor = ReadUInt16BE() & 0x3FFF;
+					item->SetGlobalColor(true, g_ColorManager.Color16To32(newColor), 0xFFFFFFFE, 0xFFFFFFFE);
+				}
+				else if (flags == 0x02)
+				{
+					if (!arrowAdded)
+					{
+						arrowAdded = true;
+						menu->Add(new CGUIPage(1));
+						menu->Add(new CGUIButton(CGumpPopupMenu::ID_GPM_MAXIMIZE, 0x15E6, 0x15E2, 0x15E2, 20, offsetY));
+						menu->Add(new CGUIPage(2));
+
+						height += 20;
+					}
+				}
+
+				menu->Add(item);
+
+				CEntryText &entry = item->m_Entry;
+				entry.SetText(str);
+				entry.PrepareToDrawW(0, color);
+
+				CGLTextTexture &texture = entry.m_Texture;
+
+				menu->Add(new CGUIHitBox(index, 10, offsetY, texture.Width, texture.Height, true));
+
+				offsetY += texture.Height;
+
+				if (!arrowAdded)
+				{
+					height += texture.Height;
+
+					if (width < texture.Width)
+						width = texture.Width;
+				}
 			}
 
 			width += 20;
 
-			if (height <= 20 || width <= 20)
+			if (height <= 10 || width <= 20)
 				delete menu;
 			else
 			{
@@ -2522,7 +2582,9 @@ PACKET_HANDLER(ExtendedCommand)
 
 				QFOR(item, menu->m_Items, CBaseGUI*)
 				{
-					if (item->Type == GOT_HITBOX)
+					if (item->Type == GOT_PAGE && ((CGUIPage*)item)->Index)
+						break;
+					else if (item->Type == GOT_HITBOX)
 						((CGUIHitBox*)item)->Width = width - 20;
 				}
 
@@ -2949,13 +3011,22 @@ PACKET_HANDLER(GraphicEffect)
 	effect->DestY = destY;
 	effect->DestZ = destZ;
 
+	if (!type)
+	{
+		if (!speed)
+			speed++;
+
+		((CGameEffectMoving*)effect)->MoveDelay = 20 / speed;
+	}
+
 	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
 
 	if (addressAnimData)
 	{
 		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + ((graphic * 68) + 4 * ((graphic / 8) + 1)));
 
-		effect->Speed = (pad->FrameInterval - effect->Speed) * 45;
+		effect->Speed = pad->FrameInterval * 45;
+		//effect->Speed = (pad->FrameInterval - effect->Speed) * 45;
 	}
 	else
 		effect->Speed = speed + 6;
@@ -3769,7 +3840,7 @@ PACKET_HANDLER(OpenMenuGump)
 	}
 }
 //----------------------------------------------------------------------------------
-void CPacketManager::AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &list)
+void CPacketManager::AddHTMLGumps(CGump *gump, vector<HTMLGumpDataInfo> &list)
 {
 	IFOR(i, 0, (int)list.size())
 	{
@@ -3784,10 +3855,18 @@ void CPacketManager::AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &l
 			width -= 16;
 
 		uint htmlColor = 0xFFFFFFFF;
+		ushort color = 0;
 
-		if (!data.HaveBackground)
+		if (data.Color)
 		{
-			data.Color = 0xFFFF;
+			if (data.Color == 0x00FFFFFF)
+				htmlColor = 0xFFFFFFFE;
+			else
+				htmlColor = (g_ColorManager.Color16To32((ushort)data.Color) << 8) | 0xFF;
+		}
+		else if (!data.HaveBackground)
+		{
+			color = 0xFFFF;
 
 			if (!data.HaveScrollbar)
 				htmlColor = 0x010101FF;
@@ -3798,7 +3877,7 @@ void CPacketManager::AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &l
 			htmlColor = 0x010101FF;
 		}
 
-		CGUIHTMLText *htmlText = (CGUIHTMLText*)htmlGump->Add(new CGUIHTMLText(data.TextID, (uchar)(m_ClientVersion >= CV_308Z), data.Color, 0, 0, width, TS_LEFT, /*UOFONT_BLACK_BORDER*/0, htmlColor));
+		CGUIHTMLText *htmlText = (CGUIHTMLText*)htmlGump->Add(new CGUIHTMLText(data.TextID, (uchar)(m_ClientVersion >= CV_308Z), color, 0, 0, width, TS_LEFT, /*UOFONT_BLACK_BORDER*/0, htmlColor));
 
 		if (data.IsXMF)
 		{
