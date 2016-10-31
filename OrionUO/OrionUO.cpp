@@ -2579,9 +2579,15 @@ void ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)>
 
 }
 //----------------------------------------------------------------------------------
-void ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue)
+void ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue, string uopFileName, string extension, Wisp::CMappedFile uopFile)
 {
-	
+	if (uopFile.ReadInt32LE() != 0x50594D)
+	{
+		LOG("Bad Uop file %s", uopFileName);
+		return;
+	}
+	uopFile.ReadInt64LE(); // version + signature
+	long long nextBlock = uopFile.ReadInt64LE();
 }
 //----------------------------------------------------------------------------------
 //Code from UltimaXNA
