@@ -1498,6 +1498,9 @@ HTMLCHAR_LIST CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &le
 
 			if (!endTag)
 			{
+				if (newInfo.Font == 0xFF)
+					newInfo.Font = stack.back().Font;
+
 				if (tag != HTT_BODY)
 					stack.push_back(newInfo);
 				else
@@ -1677,7 +1680,7 @@ HTML_DATA_INFO CFontsManager::GetCurrentHTMLInfo(const HTMLINFO_LIST &list)
 			}
 			case HTT_BIG:
 			case HTT_SMALL:
-				if (m_UnicodeFontAddress[current.Font])
+				if (current.Font != 0xFF && m_UnicodeFontAddress[current.Font])
 					info.Font = current.Font;
 				break;
 			case HTT_BASEFONT:
@@ -1697,7 +1700,7 @@ HTML_DATA_INFO CFontsManager::GetCurrentHTMLInfo(const HTMLINFO_LIST &list)
 				info.Flags |= current.Flags;
 			case HTT_H3:
 			case HTT_H6:
-				if (m_UnicodeFontAddress[current.Font])
+				if (current.Font != 0xFF && m_UnicodeFontAddress[current.Font])
 					info.Font = current.Font;
 				break;
 			case HTT_BQ:
