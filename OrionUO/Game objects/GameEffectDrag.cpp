@@ -11,7 +11,7 @@
 #include "../Managers/EffectManager.h"
 //----------------------------------------------------------------------------------
 CGameEffectDrag::CGameEffectDrag()
-: CGameEffect(), m_OffsetX(0), m_OffsetY(0)
+: CGameEffect(), m_OffsetX(0), m_OffsetY(0), m_LastMoveTime(0), m_MoveDelay(20)
 {
 }
 //----------------------------------------------------------------------------------
@@ -25,8 +25,13 @@ CGameEffectDrag::~CGameEffectDrag()
 */
 void CGameEffectDrag::Update(CGameObject *parent)
 {
+	if (m_LastMoveTime > g_Ticks)
+		return;
+
 	m_OffsetX += 4;
 	m_OffsetY += 4;
+
+	m_LastMoveTime = g_Ticks + m_MoveDelay;
 
 	if (m_Duration < g_Ticks)
 		g_EffectManager.RemoveEffect(this);

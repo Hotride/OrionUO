@@ -24,6 +24,8 @@ public:
 	CGumpPopupMenu(uint serial, short x, short y);
 	virtual ~CGumpPopupMenu();
 
+	static const int ID_GPM_MAXIMIZE = 0xDEADBEEF;
+
 	virtual void PrepareContent();
 
 	GUMP_BUTTON_EVENT_H;

@@ -132,20 +132,20 @@ enum CONNECTION_SCREEN_TYPE
 	CST_GAME
 };
 //----------------------------------------------------------------------------------
+//!Рассы
+enum RACE_TYPE
+{
+	RT_HUMAN = 1,
+	RT_ELF,
+	RT_GARGOYLE
+};
+//----------------------------------------------------------------------------------
 //!Типы профессий
 enum PROFESSION_TYPE
 {
 	PT_NO_PROF = 0,
 	PT_CATEGORY,
 	PT_PROFESSION
-};
-//----------------------------------------------------------------------------------
-//!Возможные рассы
-enum CHARACTER_RACE_TYPE
-{
-	CRT_HUMAN = 0,
-	CRT_ELVEN,
-	CRT_GARGOYLE
 };
 //----------------------------------------------------------------------------------
 //!Состояния ClientFlag для отправки при создании персонажа
@@ -432,7 +432,8 @@ enum VALUE_KEY_INT
 	VKI_SPELL_ICONS_ALPHA,
 	VKI_SKILLS_COUNT,
 	VKI_SKILL_CAN_BE_USED,
-	VKI_STATIC_ART_ADDRESS
+	VKI_STATIC_ART_ADDRESS,
+	VKI_USED_LAYER
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_STRING
@@ -577,6 +578,15 @@ enum DIRECTION_TYPE
 	DT_SW,
 	DT_W,
 	DT_NW
+};
+//----------------------------------------------------------------------------------
+enum ANIMATION_GROUPS_TYPE
+{
+	AGT_ANIMAL = 0,
+	AGT_MONSTER,
+	AGT_SEA_MONSTER,
+	AGT_HUMAN,
+	AGT_EQUIPMENT
 };
 //----------------------------------------------------------------------------------
 enum ANIMATION_GROUPS

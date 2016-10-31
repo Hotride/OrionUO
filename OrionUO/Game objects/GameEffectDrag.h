@@ -18,6 +18,9 @@ class CGameEffectDrag : public CGameEffect
 	SETGET(int, OffsetX);
 	SETGET(int, OffsetY);
 
+	SETGET(uint, LastMoveTime);
+	SETGET(uchar, MoveDelay);
+
 public:
 	CGameEffectDrag();
 	virtual ~CGameEffectDrag();

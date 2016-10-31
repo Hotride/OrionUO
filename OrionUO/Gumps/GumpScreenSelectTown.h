@@ -23,7 +23,7 @@ private:
 	static const int ID_STS_TOWN = 10;
 
 	//!Список точек для отображения кнопок городов
-	static WISP_GEOMETRY::CPoint2Di m_TownButtonText[9];
+	vector<WISP_GEOMETRY::CPoint2Di> m_TownButtonText;
 
 	CGUIHTMLGump *m_HTMLGump;
 	CGUIText *m_Description;

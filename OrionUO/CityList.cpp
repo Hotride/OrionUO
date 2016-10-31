@@ -46,29 +46,6 @@ CCityItemNew::~CCityItemNew()
 {
 }
 //----------------------------------------------------------------------------------
-/*!
-Генерация текстуры по ИД клилока
-@param [__in] clilocID Индекс клилока
-@return 
-*/
-/*void CCityItemNew::CreateTextTexture(uint clilocID)
-{
-	//!Очистим текстуру
-	m_Texture.Clear();
-
-	//!Используем обработку HTML-тэгов при создании текстуры текста
-	g_FontManager.SetUseHTML(true);
-
-	//!Получаем строку клилока с описанием города
-	wstring wtext = g_ClilocManager.Cliloc(g_Language)->GetW(clilocID);
-
-	//!Создаем текстуру текста
-	g_FontManager.GenerateW(0, m_Texture, wtext.c_str(), 0, 30, 150);
-
-	//!Выключаем обработку HTML-тэгов
-	g_FontManager.SetUseHTML(false);
-}*/
-//----------------------------------------------------------------------------------
 //--------------------------------------CCityList-----------------------------------
 //----------------------------------------------------------------------------------
 CCityList::CCityList()
@@ -85,15 +62,15 @@ CCityList::~CCityList()
 @param [__in] index Индекс города
 @return
 */
-CCityItem CCityList::GetCity(const int &index)
+CCityItem *CCityList::GetCity(const int &index)
 {
-	for (deque<CCityItem>::iterator i = m_CityList.begin(); i != m_CityList.end(); i++)
+	for (deque<CCityItem*>::iterator i = m_CityList.begin(); i != m_CityList.end(); i++)
 	{
-		if (i->LocationIndex == index)
+		if ((*i)->LocationIndex == index)
 			return *i;
 	}
 
-	return CCityItem();
+	return NULL;
 }
 //---------------------------------------------------------------------------
 /*!
@@ -103,6 +80,9 @@ CCityItem CCityList::GetCity(const int &index)
 */
 void CCityList::Clear()
 {
+	for (deque<CCityItem*>::iterator i = m_CityList.begin(); i != m_CityList.end(); i++)
+		delete *i;
+
 	m_CityList.clear();
 }
 //---------------------------------------------------------------------------

@@ -196,7 +196,7 @@ void CGumpConsoleType::UpdateContent()
 			CGUITextEntry *entry = new CGUITextEntry(i + 1, 0, 0, 0, offsetX, offsetY, 0, false, 3);
 			entry->CheckOnSerial = true;
 			entry->ReadOnly = true;
-			entry->SetGlobalColor(true, 0xFF267FFF, 0xFF00FF00);
+			entry->SetGlobalColor(true, 0xFFFFFFFF, 0xFF267FFF, 0xFF00FF00);
 			entry->Focused = (i == m_SelectedType);
 
 			if (m_ShowFullText || !i)
