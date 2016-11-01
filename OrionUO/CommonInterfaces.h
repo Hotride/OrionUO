@@ -54,6 +54,10 @@ typedef int __cdecl FUNCDEF_GET_VALUE_INT(VALUE_KEY_INT, int);
 typedef void __cdecl FUNCDEF_SET_VALUE_INT(VALUE_KEY_INT, int);
 typedef IOrionString *__cdecl FUNCDEF_GET_VALUE_STRING(VALUE_KEY_STRING, const char*);
 typedef void __cdecl FUNCDEF_SET_VALUE_STRING(VALUE_KEY_STRING, const char*);
+typedef void __cdecl FUNCDEF_SEND_TARGET_OBJECT(unsigned int);
+typedef void __cdecl FUNCDEF_SEND_TARGET_TILE(unsigned short, short, short, char);
+typedef void __cdecl FUNCDEF_SEND_CAST_SPELL(int);
+typedef void __cdecl FUNCDEF_SEND_USE_SKILL(int);
 
 //IClilocManager
 typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_A(unsigned int, const char*);
@@ -78,6 +82,8 @@ typedef bool __cdecl FUNCDEF_GET_AUTOWALKING();
 //----------------------------------------------------------------------------------
 UOInterface IGLEngine
 {
+	int Version;
+	int Size;
 	FUNCDEF_PUSH_SCISSOR *PushScissor;
 	FUNCDEF_POP_SCISSOR *PopScissor;
 	FUNCDEF_DRAW_LINE *DrawLine;
@@ -94,16 +100,24 @@ UOInterface IGLEngine
 //----------------------------------------------------------------------------------
 UOInterface IUltimaOnline
 {
+	int Version;
+	int Size;
 	FUNCDEF_GET_LAND_FLAGS *GetLandFlags;
 	FUNCDEF_GET_STATIC_FLAGS *GetStaticFlags;
 	FUNCDEF_GET_VALUE_INT *GetValueInt;
 	FUNCDEF_SET_VALUE_INT *SetValueInt;
 	FUNCDEF_GET_VALUE_STRING *GetValueString;
 	FUNCDEF_SET_VALUE_STRING *SetValueString;
+	FUNCDEF_SEND_TARGET_OBJECT *SendTargetObject;
+	FUNCDEF_SEND_TARGET_TILE *SendTargetTile;
+	FUNCDEF_SEND_CAST_SPELL *SendCastSpell;
+	FUNCDEF_SEND_USE_SKILL *SendUseSkill;
 };
 //----------------------------------------------------------------------------------
 UOInterface IClilocManager
 {
+	int Version;
+	int Size;
 	FUNCDEF_GET_CLILOC_A *GetClilocA;
 	FUNCDEF_GET_CLILOC_W *GetClilocW;
 
@@ -112,6 +126,8 @@ UOInterface IClilocManager
 //----------------------------------------------------------------------------------
 UOInterface IColorManager
 {
+	int Version;
+	int Size;
 	FUNCDEF_GET_HUES_COUNT *GetHuesCount;
 
 	FUNCDEF_GET_COLOR32TO16 *Color32To16;
@@ -125,6 +141,8 @@ UOInterface IColorManager
 //----------------------------------------------------------------------------------
 UOInterface IPathFinder
 {
+	int Version;
+	int Size;
 	FUNCDEF_GET_CAN_WALK *CanWalk;
 	FUNCDEF_GET_WALK *Walk;
 	FUNCDEF_GET_WALK_TO *WalkTo;
@@ -140,6 +158,8 @@ extern IPathFinder g_Interface_PathFinder;
 //----------------------------------------------------------------------------------
 typedef struct PLUGIN_CLIENT_INTERFACE
 {
+	int Version;
+	int Size;
 	IGLEngine *GL;
 	IUltimaOnline *UO;
 	IClilocManager *ClilocManager;

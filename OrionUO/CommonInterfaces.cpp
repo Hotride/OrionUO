@@ -15,6 +15,7 @@
 #include "Managers/ColorManager.h"
 #include "Walker/PathFinder.h"
 #include "Game objects/GamePlayer.h"
+#include "Target.h"
 //----------------------------------------------------------------------------------
 IOrionString g_OrionString;
 //----------------------------------------------------------------------------------
@@ -159,6 +160,26 @@ void __cdecl FUNCBODY_SetValueString(VALUE_KEY_STRING key, const char *value)
 	g_Orion.ValueString(key, value);
 }
 //----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_SendTargetObject(unsigned int serial)
+{
+	g_Target.SendTargetObject(serial);
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_SendTargeTile(unsigned short graphic, short x, short y, char z)
+{
+	g_Target.SendTargetTile(graphic, x, y, z);
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_SendCastSpell(int index)
+{
+	g_Orion.CastSpell(index);
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_SendUseSkill(int index)
+{
+	g_Orion.UseSkill(index);
+}
+//----------------------------------------------------------------------------------
 //IClilocManager
 //----------------------------------------------------------------------------------
 IOrionString *__cdecl FUNCBODY_GetClilocA(unsigned int clilocID, const char *defaultText)
@@ -265,6 +286,8 @@ bool __cdecl FUNCBODY_GetAutowalking()
 //----------------------------------------------------------------------------------
 IGLEngine g_Interface_GL =
 {
+	0,
+	sizeof(IGLEngine),
 	FUNCBODY_PushScissor,
 	FUNCBODY_PopScissor,
 	FUNCBODY_DrawLine,
@@ -281,16 +304,24 @@ IGLEngine g_Interface_GL =
 //----------------------------------------------------------------------------------
 IUltimaOnline g_Interface_UO =
 {
+	0,
+	sizeof(IUltimaOnline),
 	FUNCBODY_GetLandFlags,
 	FUNCBODY_GetStaticFlags,
 	FUNCBODY_GetValueInt,
 	FUNCBODY_SetValueInt,
 	FUNCBODY_GetValueString,
-	FUNCBODY_SetValueString
+	FUNCBODY_SetValueString,
+	FUNCBODY_SendTargetObject,
+	FUNCBODY_SendTargeTile,
+	FUNCBODY_SendCastSpell,
+	FUNCBODY_SendUseSkill
 };
 //----------------------------------------------------------------------------------
 IClilocManager g_Interface_ClilocManager =
 {
+	0,
+	sizeof(IClilocManager),
 	FUNCBODY_GetClilocA,
 	FUNCBODY_GetClilocW,
 	FUNCBODY_GetClilocArguments
@@ -298,6 +329,8 @@ IClilocManager g_Interface_ClilocManager =
 //----------------------------------------------------------------------------------
 IColorManager g_Interface_ColorManager =
 {
+	0,
+	sizeof(IColorManager),
 	FUNCBODY_GetHuesCount,
 	FUNCBODY_GetColor32To16,
 	FUNCBODY_GetColor16To32,
@@ -309,6 +342,8 @@ IColorManager g_Interface_ColorManager =
 //----------------------------------------------------------------------------------
 IPathFinder g_Interface_PathFinder =
 {
+	0,
+	sizeof(IPathFinder),
 	FUNCBODY_GetCanWalk,
 	FUNCBODY_GetWalk,
 	FUNCBODY_GetWalkTo,

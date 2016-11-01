@@ -749,6 +749,8 @@ void COrion::LoadStartupConfig()
 //----------------------------------------------------------------------------------
 void COrion::LoadPluginConfig()
 {
+	g_PluginClientInterface.Version = 0;
+	g_PluginClientInterface.Size = sizeof(g_PluginClientInterface);
 	g_PluginClientInterface.GL = &g_Interface_GL;
 	g_PluginClientInterface.UO = &g_Interface_UO;
 	g_PluginClientInterface.ClilocManager = &g_Interface_ClilocManager;
