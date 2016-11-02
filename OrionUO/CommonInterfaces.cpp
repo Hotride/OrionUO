@@ -160,14 +160,30 @@ void __cdecl FUNCBODY_SetValueString(VALUE_KEY_STRING key, const char *value)
 	g_Orion.ValueString(key, value);
 }
 //----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_SetTargetData(unsigned char *buf, int size)
+{
+	WISP_DATASTREAM::CDataReader reader(buf, size);
+	reader.Move(1);
+
+	if (*buf == 0x6C)
+		g_Target.SetData(reader);
+	else
+		g_Target.SetMultiData(reader);
+}
+//----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendTargetObject(unsigned int serial)
 {
 	g_Target.SendTargetObject(serial);
 }
 //----------------------------------------------------------------------------------
-void __cdecl FUNCBODY_SendTargeTile(unsigned short graphic, short x, short y, char z)
+void __cdecl FUNCBODY_SendTargetTile(unsigned short graphic, short x, short y, char z)
 {
 	g_Target.SendTargetTile(graphic, x, y, z);
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_SendTargetCancel()
+{
+	g_Target.SendCancelTarget();
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendCastSpell(int index)
@@ -312,8 +328,10 @@ IUltimaOnline g_Interface_UO =
 	FUNCBODY_SetValueInt,
 	FUNCBODY_GetValueString,
 	FUNCBODY_SetValueString,
+	FUNCBODY_SetTargetData,
 	FUNCBODY_SendTargetObject,
-	FUNCBODY_SendTargeTile,
+	FUNCBODY_SendTargetTile,
+	FUNCBODY_SendTargetCancel,
 	FUNCBODY_SendCastSpell,
 	FUNCBODY_SendUseSkill
 };

@@ -15,6 +15,7 @@
 typedef LRESULT WINDOW_PROC(HWND, UINT, WPARAM, LPARAM);
 typedef bool __cdecl PACKET_PROC(unsigned char *, const int&);
 typedef void __cdecl VOID_PROC();
+typedef bool __cdecl WORLD_MAP_DRAW_PROC();
 //----------------------------------------------------------------------------------
 #define UOMSG_SET_SERVER_NAME		WM_USER + 660
 #define UOMSG_SET_PLAYER_NAME		WM_USER + 661
@@ -54,6 +55,7 @@ typedef struct PLUGIN_INTERFACE
 	VOID_PROC *OnDisconnect;
 	VOID_PROC *OnWorldDraw;
 	VOID_PROC *OnSceneDraw;
+	WORLD_MAP_DRAW_PROC *OnWorldMapDraw;
 } *PPLUGIN_INTERFACE;
 //----------------------------------------------------------------------------------
 #endif

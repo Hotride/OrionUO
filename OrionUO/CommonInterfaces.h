@@ -54,8 +54,10 @@ typedef int __cdecl FUNCDEF_GET_VALUE_INT(VALUE_KEY_INT, int);
 typedef void __cdecl FUNCDEF_SET_VALUE_INT(VALUE_KEY_INT, int);
 typedef IOrionString *__cdecl FUNCDEF_GET_VALUE_STRING(VALUE_KEY_STRING, const char*);
 typedef void __cdecl FUNCDEF_SET_VALUE_STRING(VALUE_KEY_STRING, const char*);
+typedef void __cdecl FUNCDEF_SET_TARGET_DATA(unsigned char*, int);
 typedef void __cdecl FUNCDEF_SEND_TARGET_OBJECT(unsigned int);
 typedef void __cdecl FUNCDEF_SEND_TARGET_TILE(unsigned short, short, short, char);
+typedef void __cdecl FUNCDEF_SEND_TARGET_CANCEL();
 typedef void __cdecl FUNCDEF_SEND_CAST_SPELL(int);
 typedef void __cdecl FUNCDEF_SEND_USE_SKILL(int);
 
@@ -108,8 +110,10 @@ UOInterface IUltimaOnline
 	FUNCDEF_SET_VALUE_INT *SetValueInt;
 	FUNCDEF_GET_VALUE_STRING *GetValueString;
 	FUNCDEF_SET_VALUE_STRING *SetValueString;
+	FUNCDEF_SET_TARGET_DATA *SetTargetData;
 	FUNCDEF_SEND_TARGET_OBJECT *SendTargetObject;
 	FUNCDEF_SEND_TARGET_TILE *SendTargetTile;
+	FUNCDEF_SEND_TARGET_CANCEL *SendTargetCancel;
 	FUNCDEF_SEND_CAST_SPELL *SendCastSpell;
 	FUNCDEF_SEND_USE_SKILL *SendUseSkill;
 };
