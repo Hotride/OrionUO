@@ -164,6 +164,7 @@ protected:
 	HANDLER_PACKET(BuyList);
 	HANDLER_PACKET(SellList);
 	HANDLER_PACKET(BuyReply);
+	HANDLER_PACKET(Logout);
 
 	//Не обработаны
 	/*

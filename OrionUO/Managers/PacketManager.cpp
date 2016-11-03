@@ -294,7 +294,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xCE*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0xCF*/ UMSG(0x4e),
 	/*0xD0*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xD1*/ UMSG(0x02),
+	/*0xD1*/ RMSGH("Logout", 0x02, Logout),
 	/*0xD2*/ RMSGH("Update Player (New)", 0x19, UpdatePlayer),
 	/*0xD3*/ RMSGH("Update Object (New)", PACKET_VARIABLE_SIZE, UpdateObject),
 	/*0xD4*/ BMSGH("Open Book (New)", PACKET_VARIABLE_SIZE, OpenBookNew),
@@ -4847,5 +4847,10 @@ PACKET_HANDLER(BuyReply)
 
 	if (!flag) //Close shop gump
 		g_GumpManager.CloseGump(serial, 0, GT_SHOP);
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(Logout)
+{
+	g_Orion.LogOut();
 }
 //----------------------------------------------------------------------------------
