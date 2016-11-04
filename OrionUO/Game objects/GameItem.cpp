@@ -162,8 +162,8 @@ void CGameItem::OnGraphicChange(int direction)
 				m_RenderQueueIndex = 3 - (int)IsSurface();
 			else if (IsSurface())
 				m_RenderQueueIndex = 4;
-			else if (IsAnimated())
-				m_RenderQueueIndex = 6;
+			else if (IsAnimated() || IsImpassable())
+				m_RenderQueueIndex = 6 - (int)IsLightSource();
 			else
 				m_RenderQueueIndex = 5;
 
