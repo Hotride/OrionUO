@@ -862,7 +862,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const 
 		return pData;
 	}
 	
-	int blocksize = height * width;
+	int blocksize = (height + 1) * (width + 1);
 
 	if (m_SavePixels)
 		th.PixelsData.resize(blocksize, 0);
@@ -2569,7 +2569,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 
 	height += m_TopMargin + m_BottomMargin + 4;
 
-	int blocksize = height * width;
+	int blocksize = (height + 1) * (width + 1);
 
 	if (m_SavePixels)
 		th.PixelsData.resize(blocksize, 0);
