@@ -284,7 +284,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xC4*/ UMSG(0x06),
 	/*0xC5*/ UMSG(0xcb),
 	/*0xC6*/ UMSG(0x01),
-	/*0xC7*/ UMSG(0x31),
+	/*0xC7*/ RMSGH("Graphical Effect", 0x31, GraphicEffect),
 	/*0xC8*/ BMSGH("Client View Range", 0x02, ClientViewRange),
 	/*0xC9*/ UMSG(0x06),
 	/*0xCA*/ UMSG(0x06),
@@ -2988,10 +2988,15 @@ PACKET_HANDLER(GraphicEffect)
 	uint color = 0;
 	uint renderMode = 0;
 
-	if (*m_Start == 0xC0)
+	if (*m_Start != 0x70)
 	{
+		//0xC0
 		color = ReadUInt32BE();
 		renderMode = ReadUInt32BE() % 7;
+
+		if (*m_Start == 0xC7)
+		{
+		}
 	}
 
 	CGameEffect *effect = NULL;
@@ -4355,8 +4360,15 @@ PACKET_HANDLER(DisplayMap)
 
 	CGumpMap *gump = new CGumpMap(serial, gumpid, startX, startY, endX, endY, width, height);
 
-	if (*m_Start == 0xF5)
-		g_MultiMap.LoadFacet(gump, gump->m_Texture, ReadUInt16BE());
+	if (*m_Start == 0xF5 || m_ClientVersion >= CV_308Z) //308z или выше?
+	{
+		ushort facet = 0;
+
+		if (*m_Start == 0xF5)
+			facet = ReadUInt16BE();
+
+		g_MultiMap.LoadFacet(gump, gump->m_Texture, facet);
+	}
 	else
 		g_MultiMap.LoadMap(gump, gump->m_Texture);
 

@@ -148,7 +148,7 @@ void CMultiMap::LoadMap(CGumpMap *gump, CGUIExternalTexture *mapObject)
 	}
 }
 //----------------------------------------------------------------------------------
-bool CMultiMap::LoadFacet(class CGumpMap *gump, class CGUIExternalTexture *mapObject, int facet)
+bool CMultiMap::LoadFacet(CGumpMap *gump, CGUIExternalTexture *mapObject, int facet)
 {
 	if (facet < 0 || facet > 5)
 	{
@@ -170,13 +170,13 @@ bool CMultiMap::LoadFacet(class CGumpMap *gump, class CGUIExternalTexture *mapOb
 	int mapWidth = file.ReadInt16LE();
 	int mapHeight = file.ReadInt16LE();
 
-	//LOG("Facet w:%i h:%i\n", mapWidth, mapHeight);
+	//DebugMsg("Facet w:%i h:%i\n", mapWidth, mapHeight);
 
-	int startX = gump->StartX / 2;
-	int endX = gump->EndX / 2;
+	int startX = gump->StartX;
+	int endX = gump->EndX;
 
-	int startY = gump->StartY / 2;
-	int endY = gump->EndY / 2;
+	int startY = gump->StartY;
+	int endY = gump->EndY;
 
 	int width = endX - startX;
 	int height = endY - startY;
@@ -186,7 +186,7 @@ bool CMultiMap::LoadFacet(class CGumpMap *gump, class CGUIExternalTexture *mapOb
 	IFOR(y, 0, mapHeight)
 	{
 		int x = 0;
-		int colorCount = file.ReadInt32LE() / 3; //LE? BE?
+		int colorCount = file.ReadInt32LE() / 3;
 
 		IFOR(i, 0, colorCount)
 		{
@@ -204,33 +204,10 @@ bool CMultiMap::LoadFacet(class CGumpMap *gump, class CGUIExternalTexture *mapOb
 	}
 
 	GLuint tex = 0;
-	mapObject->m_Texture->Width = width;
-	mapObject->m_Texture->Height = height;
+	mapObject->m_Texture->Width = gump->Width;
+	mapObject->m_Texture->Height = gump->Height;
 	g_GL.BindTexture16(tex, width, height, &map[0]);
 	mapObject->m_Texture->Texture = tex;
-
-
-
-	/*int mapSize = width * height;
-	PWORD map = new WORD[mapSize];
-	PWORD ptr = map;
-
-	IFOR(y, 0, height)
-	{
-		int colorCount = file.ReadInt() / 3;
-
-		IFOR(i, 0, colorCount)
-		{
-			int size = file.ReadByte();
-			WORD color = 0x8000 | file.ReadWord();
-
-			IFOR(j, 0, size)
-				*ptr++ = color;
-		}
-	}
-
-	GLuint facetTexture = 0;
-	g_GL.BindTexture16(facetTexture, width, height, map);*/
 
 	return true;
 }
