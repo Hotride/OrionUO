@@ -916,6 +916,23 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_NoDrawRoof = false;
 	g_MaxGroundZ = 125;
 	m_MaxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
+
+	m_UseLight = (g_PersonalLightLevel < g_LightLevel);
+
+	if (m_UseLight && g_GL.CanUseFrameBuffer)
+	{
+		int testWidth = g_RenderBounds.GameWindowWidth;
+		int testHeight = g_RenderBounds.GameWindowHeight;
+
+		if (g_ConfigManager.UseScaling)
+		{
+			testWidth = g_RenderBounds.GameWindowScaledWidth;
+			testHeight = g_RenderBounds.GameWindowScaledHeight;
+		}
+
+		if (!g_LightBuffer.Ready(testWidth, testHeight))
+			g_LightBuffer.Init(testWidth, testHeight);
+	}
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -1010,8 +1027,6 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 	if (mode)
 	{
-		m_UseLight = (g_PersonalLightLevel < g_LightLevel);
-
 		glColor4f(g_DrawColor, g_DrawColor, g_DrawColor, 1.0f);
 
 		if (g_ConfigManager.UseCircleTrans)
@@ -1143,9 +1158,6 @@ void CGameScreen::DrawGameWindowLight()
 
 	if (g_GL.CanUseFrameBuffer)
 	{
-		if (!g_LightBuffer.Ready(g_RenderBounds.GameWindowScaledWidth, g_RenderBounds.GameWindowScaledHeight))
-			g_LightBuffer.Init(g_RenderBounds.GameWindowScaledWidth, g_RenderBounds.GameWindowScaledHeight);
-
 		if (g_LightBuffer.Ready() && g_LightBuffer.Use())
 		{
 			float newLightColor = ((32 - g_LightLevel + g_PersonalLightLevel) / 32.0f);
@@ -1160,8 +1172,17 @@ void CGameScreen::DrawGameWindowLight()
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE);
 
-			GLfloat translateOffsetX = (GLfloat)(g_RenderBounds.GameWindowPosX - g_RenderBounds.GameWindowScaledOffsetX);
-			GLfloat translateOffsetY = (GLfloat)(g_RenderBounds.GameWindowPosY - g_RenderBounds.GameWindowScaledOffsetY);
+			int offsetX = 0;
+			int offsetY = 0;
+
+			if (g_ConfigManager.UseScaling)
+			{
+				offsetX = g_RenderBounds.GameWindowPosX - g_RenderBounds.GameWindowScaledOffsetX;
+				offsetY = g_RenderBounds.GameWindowPosY - g_RenderBounds.GameWindowScaledOffsetY;
+			}
+
+			GLfloat translateOffsetX = (GLfloat)offsetX;
+			GLfloat translateOffsetY = (GLfloat)offsetY;
 
 			glTranslatef(translateOffsetX, translateOffsetY, 0.0f);
 
@@ -1180,7 +1201,10 @@ void CGameScreen::DrawGameWindowLight()
 
 			glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 
-			g_LightBuffer.Draw(g_RenderBounds.GameWindowScaledOffsetX, g_RenderBounds.GameWindowScaledOffsetY);
+			if (g_ConfigManager.UseScaling)
+				g_LightBuffer.Draw(g_RenderBounds.GameWindowScaledOffsetX, g_RenderBounds.GameWindowScaledOffsetY);
+			else
+				g_LightBuffer.Draw(g_RenderBounds.GameWindowPosX, g_RenderBounds.GameWindowPosY);
 
 			glDisable(GL_BLEND);
 		}
