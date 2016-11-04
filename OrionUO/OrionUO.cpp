@@ -213,6 +213,11 @@ bool COrion::Install()
 		return false;
 	}
 
+	if (g_FileManager.UseUOP)
+		g_MapManager = new CUopMapManager();
+	else
+		g_MapManager = new CMapManager();
+
 	DEBUGLOG("Patch files\n");
 	PatchFiles();
 	DEBUGLOG("Replaces...\n");
@@ -251,11 +256,6 @@ bool COrion::Install()
 	ExecuteStaticArt(0x0EEF); //gp 6+
 
 	g_CreateCharacterManager.Init();
-
-	if (g_FileManager.UseUOP)
-		g_MapManager = new CUopMapManager();
-	else
-		g_MapManager = new CMapManager();
 
 	IFOR(i, 0, 6)
 		g_AnimationManager.Init(i, (uint)g_FileManager.m_AnimIdx[i].Start, (uint)g_FileManager.m_AnimMul[i].Start, (uint)g_FileManager.m_AnimIdx[i].Size);
@@ -3019,7 +3019,11 @@ void COrion::PatchFiles()
 	{
 		PVERDATA_HEADER vh = (PVERDATA_HEADER)(vAddr + 4 + (i * sizeof(VERDATA_HEADER)));
 
-		if (vh->FileID == 4) //Art
+		if (vh->FileID == 0) //Map0
+		{
+			g_MapManager->SetPatchedMapBlock(vh->BlockID, (PMAP_BLOCK)(vAddr + vh->Position));
+		}
+		else if (vh->FileID == 4) //Art
 		{
 			if (vh->BlockID >= MAX_LAND_DATA_INDEX_COUNT) //Run
 			{

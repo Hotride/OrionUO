@@ -59,6 +59,11 @@ int CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &
 	if ((uint)pmb  > (uint)g_FileManager.m_MapMul[map].Start + g_FileManager.m_MapMul[map].Size)
 		return 4;
 
+	MAP_PATCH_LIST::iterator it = m_Patches.find((uint)block);
+
+	if (it != m_Patches.end())
+		pmb = it->second;
+
 	IFOR(x, 0, 8)
 	{
 		IFOR(y, 0, 8)
@@ -125,6 +130,11 @@ void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLO
 	
 	if ((uint)pmb  > (uint)g_FileManager.m_MapMul[map].Start + g_FileManager.m_MapMul[map].Size)
 		return;
+
+	MAP_PATCH_LIST::iterator it = m_Patches.find((uint)block);
+
+	if (it != m_Patches.end())
+		pmb = it->second;
 
 	IFOR(x, 0, 8)
 	{
@@ -302,6 +312,11 @@ void CMapManager::Init(const bool &delayed)
 	}
 }
 //----------------------------------------------------------------------------------
+void CMapManager::SetPatchedMapBlock(const uint &block, PMAP_BLOCK address)
+{
+	m_Patches[block] = address;
+}
+//----------------------------------------------------------------------------------
 /*!
 Загрузить блок
 @param [__inout] block Ссылка на блок для загрузки
@@ -316,6 +331,11 @@ void CMapManager::LoadBlock(CMapBlock *block)
 
 	int index = block->Index;
 	PMAP_BLOCK pmb = (PMAP_BLOCK)((uint)g_FileManager.m_MapMul[map].Start + (index * sizeof(MAP_BLOCK)));
+
+	MAP_PATCH_LIST::iterator it = m_Patches.find((uint)index);
+
+	if (it != m_Patches.end())
+		pmb = it->second;
 	
 	int bx = block->X * 8;
 	int by = block->Y * 8;
