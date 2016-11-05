@@ -3304,7 +3304,7 @@ PACKET_HANDLER(Season)
 	if (season > ST_DESOLATION)
 		season = 0;
 
-	if ((g_Player->Dead() || g_Season == ST_DESOLATION) && (SEASON_TYPE)season != ST_DESOLATION)
+	if ((g_Player->Dead() /*|| g_Season == ST_DESOLATION*/) && (SEASON_TYPE)season != ST_DESOLATION)
 		return;
 
 	g_OldSeason = (SEASON_TYPE)season;
