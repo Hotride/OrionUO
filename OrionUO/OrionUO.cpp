@@ -84,6 +84,7 @@
 #include "Gumps/GumpWorldMap.h"
 #include "CommonInterfaces.h"
 #include "StumpsData.h"
+#include "Gumps/GumpSpellbook.h"
 //----------------------------------------------------------------------------------
 typedef void __cdecl PLUGIN_INIT_TYPE(STRING_LIST&, STRING_LIST&, UINT_LIST&);
 //----------------------------------------------------------------------------------
@@ -1885,6 +1886,54 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_SPELLBOOK_COUNT:
+		{
+			if (value >= 0 && value < 7)
+			{
+				switch (value)
+				{
+					case 1:
+					{
+						value = CGumpSpellbook::SPELLBOOK_1_SPELLS_COUNT;
+						break;
+					}
+					case 2:
+					{
+						value = CGumpSpellbook::SPELLBOOK_2_SPELLS_COUNT;
+						break;
+					}
+					case 3:
+					{
+						value = CGumpSpellbook::SPELLBOOK_3_SPELLS_COUNT;
+						break;
+					}
+					case 4:
+					{
+						value = CGumpSpellbook::SPELLBOOK_4_SPELLS_COUNT;
+						break;
+					}
+					case 5:
+					{
+						value = CGumpSpellbook::SPELLBOOK_5_SPELLS_COUNT;
+						break;
+					}
+					case 6:
+					{
+						value = CGumpSpellbook::SPELLBOOK_6_SPELLS_COUNT;
+						break;
+					}
+					case 7:
+					{
+						value = CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT;
+						break;
+					}
+					default:
+						break;
+				}
+			}
+
+			break;
+		}
 		default:
 			break;
 	}
@@ -1902,6 +1951,8 @@ string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 
 			if (index >= 0 && index < g_SkillsCount)
 				value = g_Skills[index].Name;
+
+			break;
 		}
 		case VKS_SERVER_NAME:
 		{
@@ -1909,11 +1960,78 @@ string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 
 			if (server != NULL)
 				value = server->Name;
+
+			break;
 		}
 		case VKS_CHARACTER_NAME:
 		{
 			if (g_Player != NULL)
 				value = g_Player->Name;
+
+			break;
+		}
+		case VKS_SPELLBOOK_1_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_1_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName1[index][0];
+
+			break;
+		}
+		case VKS_SPELLBOOK_2_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_2_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName2[index][0];
+
+			break;
+		}
+		case VKS_SPELLBOOK_3_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_3_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName3[index][0];
+
+			break;
+		}
+		case VKS_SPELLBOOK_4_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_4_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName4[index];
+
+			break;
+		}
+		case VKS_SPELLBOOK_5_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_5_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName5[index];
+
+			break;
+		}
+		case VKS_SPELLBOOK_6_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_6_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName6[index][0];
+
+			break;
+		}
+		case VKS_SPELLBOOK_7_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName7[index][0];
+
+			break;
 		}
 		default:
 			break;

@@ -29,6 +29,23 @@ class CGumpSpellbook : public CGump
 {
 	SETGET(SPELLBOOK_TYPE, BookType);
 
+public:
+	static const int SPELLBOOK_1_SPELLS_COUNT = 64;
+	static const int SPELLBOOK_2_SPELLS_COUNT = 17;
+	static const int SPELLBOOK_3_SPELLS_COUNT = 10;
+	static const int SPELLBOOK_4_SPELLS_COUNT = 6;
+	static const int SPELLBOOK_5_SPELLS_COUNT = 8;
+	static const int SPELLBOOK_6_SPELLS_COUNT = 16;
+	static const int SPELLBOOK_7_SPELLS_COUNT = 30;
+
+	static const string m_SpellName1[SPELLBOOK_1_SPELLS_COUNT][2];
+	static const string m_SpellName2[SPELLBOOK_2_SPELLS_COUNT][2];
+	static const string m_SpellName3[SPELLBOOK_3_SPELLS_COUNT][2];
+	static const string m_SpellName4[SPELLBOOK_4_SPELLS_COUNT];
+	static const string m_SpellName5[SPELLBOOK_5_SPELLS_COUNT];
+	static const string m_SpellName6[SPELLBOOK_6_SPELLS_COUNT][2];
+	static const string m_SpellName7[SPELLBOOK_7_SPELLS_COUNT][2];
+
 private:
 	static const int ID_GSB_BUTTON_PREV = 1;
 	static const int ID_GSB_BUTTON_NEXT = 2;
@@ -43,26 +60,10 @@ private:
 
 	static const int MAX_SPELLS_COUNT = 64;
 
-	static const int SPELLBOOK_1_SPELLS_COUNT = 64;
-	static const int SPELLBOOK_2_SPELLS_COUNT = 17;
-	static const int SPELLBOOK_3_SPELLS_COUNT = 10;
-	static const int SPELLBOOK_4_SPELLS_COUNT = 6;
-	static const int SPELLBOOK_5_SPELLS_COUNT = 8;
-	static const int SPELLBOOK_6_SPELLS_COUNT = 16;
-	static const int SPELLBOOK_7_SPELLS_COUNT = 30;
-
 	static const string m_SpellCircleName[8];
 
 	static const string m_SpellReagents1[SPELLBOOK_1_SPELLS_COUNT];
 	static const string m_SpellReagents2[SPELLBOOK_2_SPELLS_COUNT];
-
-	static const string m_SpellName1[SPELLBOOK_1_SPELLS_COUNT][2];
-	static const string m_SpellName2[SPELLBOOK_2_SPELLS_COUNT][2];
-	static const string m_SpellName3[SPELLBOOK_3_SPELLS_COUNT][2];
-	static const string m_SpellName4[SPELLBOOK_4_SPELLS_COUNT];
-	static const string m_SpellName5[SPELLBOOK_5_SPELLS_COUNT];
-	static const string m_SpellName6[SPELLBOOK_6_SPELLS_COUNT][2];
-	static const string m_SpellName7[SPELLBOOK_7_SPELLS_COUNT][2];
 
 	static const SPELL_REQURIES m_SpellRequries2[SPELLBOOK_2_SPELLS_COUNT];
 	static const PALADIN_SPELL_REQURIES m_SpellRequries3[SPELLBOOK_3_SPELLS_COUNT];

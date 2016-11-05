@@ -433,14 +433,22 @@ enum VALUE_KEY_INT
 	VKI_SKILLS_COUNT,
 	VKI_SKILL_CAN_BE_USED,
 	VKI_STATIC_ART_ADDRESS,
-	VKI_USED_LAYER
+	VKI_USED_LAYER,
+	VKI_SPELLBOOK_COUNT
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_STRING
 {
 	VKS_SKILL_NAME = 0,
 	VKS_SERVER_NAME,
-	VKS_CHARACTER_NAME
+	VKS_CHARACTER_NAME,
+	VKS_SPELLBOOK_1_SPELL_NAME,
+	VKS_SPELLBOOK_2_SPELL_NAME,
+	VKS_SPELLBOOK_3_SPELL_NAME,
+	VKS_SPELLBOOK_4_SPELL_NAME,
+	VKS_SPELLBOOK_5_SPELL_NAME,
+	VKS_SPELLBOOK_6_SPELL_NAME,
+	VKS_SPELLBOOK_7_SPELL_NAME
 };
 //----------------------------------------------------------------------------------
 //!Типы текстовых сообщений
