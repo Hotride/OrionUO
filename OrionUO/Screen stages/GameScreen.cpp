@@ -1352,8 +1352,8 @@ void CGameScreen::PrepareContent()
 				if (selchar != NULL) //Character selection
 				{
 					g_Orion.OpenStatus(selchar->Serial);
-					g_OrionWindow.EmulateOnLeftMouseButtonDown();
 					g_GeneratedMouseDown = true;
+					g_OrionWindow.EmulateOnLeftMouseButtonDown();
 				}
 			}
 		}
