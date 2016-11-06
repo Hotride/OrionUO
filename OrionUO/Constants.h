@@ -60,7 +60,7 @@ const int MAX_LAND_DATA_INDEX_COUNT = 0x4000;
 const int MAX_STATIC_DATA_INDEX_COUNT = 0x10000;
 
 //!Размер таблицы индексов текстур ландшафта
-const int MAX_LAND_TEXTURES_DATA_INDEX_COUNT = 0x1000;
+const int MAX_LAND_TEXTURES_DATA_INDEX_COUNT = 0x4000;
 
 //!Размер таблицы индексов гампов
 const int MAX_GUMP_DATA_INDEX_COUNT = 0x10000;

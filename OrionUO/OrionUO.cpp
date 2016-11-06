@@ -93,7 +93,8 @@ PLUGIN_CLIENT_INTERFACE g_PluginClientInterface = { 0 };
 PLUGIN_INIT_TYPE *g_PluginInit = NULL;
 //----------------------------------------------------------------------------------
 COrion::COrion()
-: m_ClientVersionText("2.0.3"), m_LandDataCount(0), m_StaticDataCount(0)
+: m_ClientVersionText("2.0.3"), m_LandDataCount(0), m_StaticDataCount(0),
+m_TexturesDataCount(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -2732,6 +2733,8 @@ void COrion::LoadIndexFiles()
 	PSOUND_IDX_BLOCK SoundPtr = (PSOUND_IDX_BLOCK)g_FileManager.m_SoundIdx.Start;
 	PLIGHT_IDX_BLOCK LightPtr = (PLIGHT_IDX_BLOCK)g_FileManager.m_LightIdx.Start;
 
+	m_TexturesDataCount = g_FileManager.m_TextureIdx.Size / sizeof(TEXTURE_IDX_BLOCK);
+
 	g_MultiIndexCount = g_FileManager.m_MultiIdx.Size / sizeof(MULTI_IDX_BLOCK);
 
 	if (g_MultiIndexCount > MAX_MULTI_DATA_INDEX_COUNT)
@@ -2756,7 +2759,7 @@ void COrion::LoadIndexFiles()
 				TestData(m_LandDataIndex[i], (uint)g_FileManager.m_ArtMul.Start, LandArtPtr, i);
 				LandArtPtr++;
 
-				if (i < MAX_LAND_TEXTURES_DATA_INDEX_COUNT)
+				if (i < m_TexturesDataCount)
 				{
 					TestData(m_TextureDataIndex[i], (uint)g_FileManager.m_TextureMul.Start, TexturePtr, i);
 					TexturePtr++;
@@ -3348,7 +3351,7 @@ void COrion::IndexReplaces()
 				if (checkIndex < 0)
 					continue;
 
-				if (index < MAX_LAND_TEXTURES_DATA_INDEX_COUNT && checkIndex < MAX_LAND_TEXTURES_DATA_INDEX_COUNT && m_TextureDataIndex[checkIndex].Address != NULL)
+				if (index < m_TexturesDataCount && checkIndex < m_TexturesDataCount && m_TextureDataIndex[checkIndex].Address != NULL)
 				{
 					memcpy(&m_TextureDataIndex[index], &m_TextureDataIndex[checkIndex], sizeof(CIndexObject));
 					m_TextureDataIndex[index].Texture = NULL;
