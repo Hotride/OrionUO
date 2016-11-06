@@ -92,7 +92,7 @@ void CGameScreen::ProcessSmoothAction(uchar action)
 		action = m_SmoothScreenAction;
 
 	if (action == ID_SMOOTH_GS_LOGOUT)
-		g_Orion.LogOut();
+		g_LogoutAfterClick = true;
 }
 //----------------------------------------------------------------------------------
 /*!

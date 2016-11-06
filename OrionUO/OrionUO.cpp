@@ -626,6 +626,13 @@ void COrion::Process(const bool &rendering)
 
 	if (g_GameState >= GS_GAME) // || g_GameState == GS_GAME_BLOCKED)
 	{
+		if (g_LogoutAfterClick)
+		{
+			g_LogoutAfterClick = false;
+			LogOut();
+			return;
+		}
+
 		g_ShowGumpLocker = g_ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
 
 		ProcessStaticAnimList();
