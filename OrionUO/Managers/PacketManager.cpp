@@ -3006,7 +3006,14 @@ PACKET_HANDLER(GraphicEffect)
 
 	CGameEffect *effect = NULL;
 	if (!type) //Moving
+	{
 		effect = new CGameEffectMoving();
+
+		if (!speed)
+			speed++;
+
+		((CGameEffectMoving*)effect)->MoveDelay = 20 / speed;
+	}
 	else
 		effect = new CGameEffect();
 
@@ -3020,14 +3027,6 @@ PACKET_HANDLER(GraphicEffect)
 	effect->DestX = destX;
 	effect->DestY = destY;
 	effect->DestZ = destZ;
-
-	if (!type)
-	{
-		if (!speed)
-			speed++;
-
-		((CGameEffectMoving*)effect)->MoveDelay = 20 / speed;
-	}
 
 	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
 
@@ -3098,7 +3097,8 @@ PACKET_HANDLER(DragAnimation)
 	else if (graphic == 0x0EF0)
 		graphic = 0x0EF2;
 
-	Move(3);
+	Move(1);
+	ushort color = ReadUInt16BE();
 	ushort count = ReadUInt16BE();
 
 	uint sourceSerial = ReadUInt32BE();
@@ -3110,18 +3110,48 @@ PACKET_HANDLER(DragAnimation)
 	short destY = ReadInt16BE();
 	char destZ = ReadInt8();
 
+	uchar speed = 5;
+
 	CGameEffect *effect = NULL;
 
 	if (sourceSerial < 0x40000000) //Игрок/НПС кладет предмет в контейнер
 	{
+		return;
+
 		effect = new CGameEffectMoving();
 		effect->FixedDirection = true;
+
+		((CGameEffectMoving*)effect)->MoveDelay = 20 / speed;
+
+		/*
+		23 
+		0E 85 
+		00 
+		00 00 
+		00 00 
+		01 87 53 C5 
+		00 00 
+		04 6F 
+		A4 
+		00 00 00 00 
+		17 8B 
+		04 6F 
+		00
+
+
+
+		--- ^(1900) r(+26 => 109303) Server:: Drag Animation
+		0000: 23 0E 85 00 00 00 00 00 01 87 53 C5 00 00 04 6F : #.........S....o
+		0010: A4 00 00 00 00 17 8B 04 6F 00 -- -- -- -- -- -- : ........o.
+		*/
 	}
 	else //Предмет взяли из контейнера
 	{
 		effect = new CGameEffectDrag();
 	}
 
+	effect->Graphic = graphic;
+	effect->Color = color;
 	effect->EffectType = EF_DRAG;
 	effect->Serial = sourceSerial;
 	effect->DestSerial = destSerial;
@@ -3131,10 +3161,18 @@ PACKET_HANDLER(DragAnimation)
 	effect->DestX = destX;
 	effect->DestY = destY;
 	effect->DestZ = destZ;
-	effect->Speed = 5;
 	effect->Duration = g_Ticks + 5000;
 
-	effect->Graphic = graphic;
+	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
+
+	if (addressAnimData)
+	{
+		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + ((graphic * 68) + 4 * ((graphic / 8) + 1)));
+
+		effect->Speed = pad->FrameInterval * 45;
+	}
+	else
+		effect->Speed = speed + 6;
 
 	g_EffectManager.AddEffect(effect);
 }
