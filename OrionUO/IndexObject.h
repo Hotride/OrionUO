@@ -96,7 +96,7 @@ class CIndexAnimation
 	SETGET(uint, Offset);
 	SETGET(ushort, Graphic);
 	SETGET(ushort, Color);
-
+	SETGET(ANIMATION_GROUPS_TYPE, Type);
 public:
 	CIndexAnimation();
 	virtual ~CIndexAnimation();

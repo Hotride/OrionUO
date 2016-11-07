@@ -2574,7 +2574,7 @@ void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 	}
 }
 //----------------------------------------------------------------------------------
-void ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue)
+void COrion::ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue)
 {
 	IFOR(i, 0, indexMaxCount)
 	{
@@ -2585,19 +2585,28 @@ void ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)>
 
 }
 //----------------------------------------------------------------------------------
-void ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue, string uopFileName, string extension, Wisp::CMappedFile uopFile)
+void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue, string uopFileName, string extesion, Wisp::CMappedFile* uopFile)
 {
-	if (uopFile.ReadInt32LE() != 0x50594D)
+	if (uopFile->ReadInt32LE() != 0x50594D)
 	{
-		LOG("Bad Uop file %s", uopFileName);
+		LOG("Bad Uop file %s", uopFile);
 		return;
 	}
-	uopFile.ReadInt64LE(); // version + signature
-	long long nextBlock = uopFile.ReadInt64LE();
+	uopFile->ReadInt64LE(); // version + signature
+	long long nextBlock = uopFile->ReadInt64LE();
+	uopFile->ReadInt32LE(); // block capacity
+	IFOR(i, 0, indexMaxCount)
+	{
+		char x[150];
+		sprintf(x, "build/%s/%i%s", uopFileName.c_str(), i, extesion.c_str());
+		auto h = CreateHash(x);
+		CIndexObject *obj = getIdxObj(i);
+		obj->ReadIndexFile(address, ptr, i);
+		ptr = getNewPtrValue();
+	}
 }
 //----------------------------------------------------------------------------------
-//Code from UltimaXNA
-unsigned long long CreateHash(string s)
+unsigned long long COrion::CreateHash(string s)
 {
 	unsigned long eax, ecx, edx, ebx, esi, edi;
 
