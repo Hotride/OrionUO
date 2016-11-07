@@ -2722,19 +2722,78 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 	uopFile->ReadInt64LE(); // version + signature
 	long long nextBlock = uopFile->ReadInt64LE();
 	uopFile->ReadInt32LE(); // block capacity
+
+	std::map<unsigned long long, int> hashes;
+
 	IFOR(i, 0, indexMaxCount)
-		{
-		char x[150];
+	{
+		char x[200];
 		sprintf(x, "build/%s/%i%s", uopFileName.c_str(), i, extesion.c_str());
 		auto h = CreateHash(x);
-		CIndexObject *obj = getIdxObj(i);
-		obj->ReadIndexFile(address, ptr, i);
-		ptr = getNewPtrValue();
+		hashes[h] = i;
 	}
+
+	uopFile->ResetPtr();
+	uopFile->Move(nextBlock);
+
+	do
+	{ 
+		int fileCount = uopFile->ReadInt32LE();
+		nextBlock = uopFile->ReadInt64LE();
+		IFOR(i, 0, fileCount)
+		{
+		}
+
+		auto offset = uopFile->ReadInt64LE();
+		auto headerLength = uopFile->ReadInt32LE();
+		auto compressedLength = uopFile->ReadInt32LE();
+		auto decompressedLength = uopFile->ReadInt32LE();
+		auto hash = uopFile->ReadInt64LE();
+		uopFile->ReadInt32LE();
+		auto flag = uopFile->ReadInt16LE();
+
+		int entryLength = flag == 1 ? compressedLength : decompressedLength;
+
+		if (offset == 0)
+		{
+			continue;
+		}
+
+		int idx;
+		if (hashes.find(hash) != hashes.end())
+		{
+			idx = hashes.at(hash);
+
+			CIndexObject *obj = getIdxObj(idx);
+			obj->
+			entries[idx].lookup = (int)(offset + headerLength);
+			entries[idx].length = entryLength;
+
+			if (m_HasExtra)
+			{
+				long curPos = br.BaseStream.Position;
+
+				br.BaseStream.Seek(offset + headerLength, SeekOrigin.Begin);
+
+				byte[] extra = br.ReadBytes(8);
+
+				ushort extra1 = (ushort)((extra[3] << 24) | (extra[2] << 16) | (extra[1] << 8) | extra[0]);
+				ushort extra2 = (ushort)((extra[7] << 24) | (extra[6] << 16) | (extra[5] << 8) | extra[4]);
+
+				entries[idx].lookup += 8;
+				entries[idx].extra = extra1 << 16 | extra2;
+
+				br.BaseStream.Seek(curPos, SeekOrigin.Begin);
+			}
+		}
+
+		uopFile->ResetPtr();
+		uopFile->Move(nextBlock);
+	} while (uopFile->Ptr != nullptr);
 }
 //----------------------------------------------------------------------------------
 unsigned long long COrion::CreateHash(string s)
-			{
+{
 	unsigned long eax, ecx, edx, ebx, esi, edi;
 
 	eax = ecx = edx = ebx = esi = edi = 0;
@@ -2743,7 +2802,7 @@ unsigned long long COrion::CreateHash(string s)
 	long i = 0;
 
 	for (i = 0; i + 12 < s.length(); i += 12)
-					{
+	{
 		edi = static_cast<unsigned long>((s[i + 7] << 24) | (s[i + 6] << 16) | (s[i + 5] << 8) | s[i + 4]) + edi;
 		esi = static_cast<unsigned long>((s[i + 11] << 24) | (s[i + 10] << 16) | (s[i + 9] << 8) | s[i + 8]) + esi;
 		edx = static_cast<unsigned long>((s[i + 3] << 24) | (s[i + 2] << 16) | (s[i + 1] << 8) | s[i]) - esi;
@@ -2763,7 +2822,7 @@ unsigned long long COrion::CreateHash(string s)
 	}
 
 	if (s.length() - i > 0)
-						{
+	{
 		switch (s.length() - i)
 		{
 		case 12:
@@ -2823,7 +2882,7 @@ unsigned long long COrion::CreateHash(string s)
 		case_1:
 			ebx += s[i];
 			  break;
-						}
+		}
 
 		esi = (esi ^ edi) - ((edi >> 18) ^ (edi << 14));
 		ecx = (esi ^ ebx) - ((esi >> 21) ^ (esi << 11));
@@ -2834,13 +2893,13 @@ unsigned long long COrion::CreateHash(string s)
 		eax = (esi ^ edi) - ((edi >> 8) ^ (edi << 24));
 
 		return (static_cast<unsigned long long>(edi) << 32) | eax;
-		}
+	}
 
 	return (static_cast<unsigned long long>(esi) << 32) | eax;
-		}
+}
 //----------------------------------------------------------------------------------
 void COrion::LoadIndexFiles()
-		{
+{
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)g_FileManager.m_ArtIdx.Start;
 	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((uint)g_FileManager.m_ArtIdx.Start + (m_LandDataCount * sizeof(ART_IDX_BLOCK)));
 	PGUMP_IDX_BLOCK GumpArtPtr = (PGUMP_IDX_BLOCK)g_FileManager.m_GumpIdx.Start;
