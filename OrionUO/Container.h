@@ -97,7 +97,7 @@ public:
 };
 //----------------------------------------------------------------------------------
 //!Количество контейнеров
-const int CONTAINERS_COUNT = 20;
+const int CONTAINERS_COUNT = 21;
 
 //!Данные о контейнерах
 extern CONTAINER_OFFSET g_ContainerOffset[CONTAINERS_COUNT];
