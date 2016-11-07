@@ -107,8 +107,10 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 
 	if (g_PacketManager.ClientVersion < CV_4011D)
 		val = (uchar)g_CreateCharacterManager.Female;
-	else
+	else if (g_PacketManager.ClientVersion >= CV_60144)
 		val = (uchar)(((int)g_CreateCharacterManager.Race * 2) + (int)g_CreateCharacterManager.Female);
+	else
+		val = (uchar)((int)g_CreateCharacterManager.Race + (int)g_CreateCharacterManager.Female);
 
 	WriteUInt8(val);
 	val = profession->Str;

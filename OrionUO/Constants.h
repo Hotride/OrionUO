@@ -42,7 +42,7 @@ static const ushort FIELD_REPLACE_GRAPHIC = 0x1826;
 const int MAX_LIGHT_SOURCES = 100;
 
 //!Максимальное количество гампов для вывода Object Handles
-const int MAX_OBJECT_HANDLES = 30;
+const int MAX_OBJECT_HANDLES = 200;
 
 //!Максимальный размер fastwalk стека
 const int MAX_FAST_WALK_STACK_SIZE = 255;
@@ -60,7 +60,7 @@ const int MAX_LAND_DATA_INDEX_COUNT = 0x4000;
 const int MAX_STATIC_DATA_INDEX_COUNT = 0x10000;
 
 //!Размер таблицы индексов текстур ландшафта
-const int MAX_LAND_TEXTURES_DATA_INDEX_COUNT = 0x1000;
+const int MAX_LAND_TEXTURES_DATA_INDEX_COUNT = 0x4000;
 
 //!Размер таблицы индексов гампов
 const int MAX_GUMP_DATA_INDEX_COUNT = 0x10000;

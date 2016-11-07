@@ -193,7 +193,7 @@ public:
 	Можно ли брать объект в руку
 	@return
 	*/
-	bool Locked() { return !(m_Flags & 0x20); }
+	bool Locked() { return (!(m_Flags & 0x20) && !IsContainer()); }
 
 	/*!
 	Объект в режиме боя

@@ -32,7 +32,7 @@ m_PinOnCursor(NULL), m_FakeInsertionPin(NULL)
 
 	m_Texture = (CGUIExternalTexture*)Add(new CGUIExternalTexture(new CGLTexture(), true, 24, 31));
 
-	Add(new CGUIGumppic(0x139D, 174, 177)); //N
+	Add(new CGUIGumppic(0x139D, m_Width - 20, m_Height - 20)); //N
 
 	m_DataBox = (CGUIDataBox*)Add(new CGUIDataBox());
 	m_DataBox->Visible = false;

@@ -89,110 +89,110 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x01*/ SMSG("Disconnect", 0x05),
 	/*0x02*/ SMSG("Walk Request", 0x07),
 	/*0x03*/ BMSGH("Client Talk", PACKET_VARIABLE_SIZE, ClientTalk),
-	/*0x04*/ SMSG("Request God mode (God client)", 0x02),
+	/*0x04*/ BMSG("Request God mode (God client)", 0x02),
 	/*0x05*/ SMSG("Attack", 0x05),
 	/*0x06*/ SMSG("Double Click", 0x05),
 	/*0x07*/ SMSG("Pick Up Item", 0x07),
 	/*0x08*/ SMSG("Drop Item", 0x0e),
 	/*0x09*/ SMSG("Single Click", 0x05),
-	/*0x0A*/ SMSG("Edit (God client)", 0x0b),
+	/*0x0A*/ BMSG("Edit (God client)", 0x0b),
 	/*0x0B*/ RMSGH("Damage Visualization", 0x07, Damage),
 	/*0x0C*/ BMSG("Edit tiledata (God client)", PACKET_VARIABLE_SIZE),
-	/*0x0D*/ UMSG(0x03),
-	/*0x0E*/ UMSG(0x01),
+	/*0x0D*/ BMSG("Edit NPC data (God client)", 0x03),
+	/*0x0E*/ BMSG("Edit template data (God client)", 0x01),
 	/*0x0F*/ UMSG(0x3d),
-	/*0x10*/ UMSG(0xd7),
+	/*0x10*/ BMSG("Edit hue data (God client)", 0xd7),
 	/*0x11*/ RMSGH("Character Status", PACKET_VARIABLE_SIZE, CharacterStatus),
 	/*0x12*/ SMSG("Perform Action", PACKET_VARIABLE_SIZE),
 	/*0x13*/ SMSG("Client Equip Item", 0x0a),
-	/*0x14*/ SMSG("Send elevation (God client)", 0x06),
+	/*0x14*/ BMSG("Change tile Z (God client)", 0x06),
 	/*0x15*/ BMSG("Follow", 0x09),
 	/*0x16*/ UMSG(0x01),
 	/*0x17*/ RMSGH("Health status bar update (KR)", PACKET_VARIABLE_SIZE, NewHealthbarUpdate),
-	/*0x18*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x19*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x18*/ BMSG("Add script (God client)", PACKET_VARIABLE_SIZE),
+	/*0x19*/ BMSG("Edit NPC speech (God client)", PACKET_VARIABLE_SIZE),
 	/*0x1A*/ RMSGH("Update Item", PACKET_VARIABLE_SIZE, UpdateItem),
 	/*0x1B*/ RMSGH("Enter World", 0x25, EnterWorld),
 	/*0x1C*/ RMSGH("Server Talk", PACKET_VARIABLE_SIZE, Talk),
 	/*0x1D*/ RMSGH("Delete Object", 0x05, DeleteObject),
-	/*0x1E*/ UMSG(0x04),
-	/*0x1F*/ UMSG(0x08),
+	/*0x1E*/ BMSG("Animate?", 0x04),
+	/*0x1F*/ BMSG("Explode?", 0x08),
 	/*0x20*/ RMSGH("Update Player", 0x13, UpdatePlayer),
 	/*0x21*/ RMSGH("Deny Walk", 0x08, DenyWalk),
 	/*0x22*/ BMSGH("Confirm Walk", 0x03, ConfirmWalk),
 	/*0x23*/ RMSGH("Drag Animation", 0x1a, DragAnimation),
 	/*0x24*/ RMSGH("Open Container", 0x07, OpenContainer),
 	/*0x25*/ RMSGH("Update Contained Item", 0x14, UpdateContainedItem),
-	/*0x26*/ UMSG(0x05),
+	/*0x26*/ BMSG("Kick client (God client)", 0x05),
 	/*0x27*/ RMSGH("Deny Move Item", 0x02, DenyMoveItem),
-	/*0x28*/ UMSG(0x05),
-	/*0x29*/ RMSG("Drop Item Approved", 0x01),
-	/*0x2A*/ UMSG(0x05),
-	/*0x2B*/ UMSG(0x02),
+	/*0x28*/ RMSG("Deny move item?", 0x05),
+	/*0x29*/ RMSG("Drop Item Acceptem", 0x01),
+	/*0x2A*/ RMSG("Blood mode", 0x05),
+	/*0x2B*/ BMSG("Toggle God mode (God client)", 0x02),
 	/*0x2C*/ BMSGH("Death Screen", 0x02, DeathScreen),
 	/*0x2D*/ RMSGH("Mobile Attributes", 0x11, MobileAttributes),
 	/*0x2E*/ RMSGH("Server Equip Item", 0x0f, EquipItem),
 	/*0x2F*/ RMSG("Combat Notification", 0x0a),
 	/*0x30*/ RMSG("Attack ok", 0x05),
 	/*0x31*/ RMSG("Attack end", 0x01),
-	/*0x32*/ UMSG(0x02),
+	/*0x32*/ BMSG("Toggle hack mover (God client)", 0x02),
 	/*0x33*/ RMSGH("Pause Control", 0x02, PauseControl),
 	/*0x34*/ SMSG("Status Request", 0x0a),
-	/*0x35*/ UMSG(0x28d),
-	/*0x36*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x37*/ UMSG(0x08),
+	/*0x35*/ BMSG("Resource type (God client)", 0x28d),
+	/*0x36*/ BMSG("Resource tile data (God client)", PACKET_VARIABLE_SIZE),
+	/*0x37*/ BMSG("Move object (God client)", 0x08),
 	/*0x38*/ BMSG("Pathfinding in Client", 0x07),
-	/*0x39*/ RMSG("Remove (Group)", 0x09),
+	/*0x39*/ BMSG("Remove group (God client)", 0x09),
 	/*0x3A*/ BMSGH("Update Skills", PACKET_VARIABLE_SIZE, UpdateSkills),
 	/*0x3B*/ BMSGH("Vendor Buy Reply", PACKET_VARIABLE_SIZE, BuyReply),
 	/*0x3C*/ RMSGH("Update Contained Items", PACKET_VARIABLE_SIZE, UpdateContainedItems),
-	/*0x3D*/ UMSG(0x02),
-	/*0x3E*/ UMSG(0x25),
-	/*0x3F*/ RMSG("Update Statics (God Client)", PACKET_VARIABLE_SIZE),
-	/*0x40*/ UMSG(0xc9),
-	/*0x41*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x42*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x43*/ UMSG(0x229),
-	/*0x44*/ UMSG(0x2c9),
-	/*0x45*/ BMSG("Version OK", 0x05),
-	/*0x46*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x47*/ UMSG(0x0b),
-	/*0x48*/ UMSG(0x49),
-	/*0x49*/ UMSG(0x5d),
-	/*0x4A*/ UMSG(0x05),
-	/*0x4B*/ UMSG(0x09),
-	/*0x4C*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x4D*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x3D*/ BMSG("Ship (God client)", 0x02),
+	/*0x3E*/ BMSG("Versions (God client)", 0x25),
+	/*0x3F*/ BMSG("Update Statics (God Client)", PACKET_VARIABLE_SIZE),
+	/*0x40*/ BMSG("Update terrains (God client)", 0xc9),
+	/*0x41*/ BMSG("Update terrains (God client)", PACKET_VARIABLE_SIZE),
+	/*0x42*/ BMSG("Update art (God client)", PACKET_VARIABLE_SIZE),
+	/*0x43*/ BMSG("Update animation (God client)", 0x229),
+	/*0x44*/ BMSG("Update hues (God client)", 0x2c9),
+	/*0x45*/ BMSG("Version OK (God client)", 0x05),
+	/*0x46*/ BMSG("New art (God client)", PACKET_VARIABLE_SIZE),
+	/*0x47*/ BMSG("New terrain (God client)", 0x0b),
+	/*0x48*/ BMSG("New animation (God client)", 0x49),
+	/*0x49*/ BMSG("New hues (God client)", 0x5d),
+	/*0x4A*/ BMSG("Destroy art (God client)", 0x05),
+	/*0x4B*/ BMSG("Check version (God client)", 0x09),
+	/*0x4C*/ BMSG("Script names (God client)", PACKET_VARIABLE_SIZE),
+	/*0x4D*/ BMSG("Edit script (God client)", PACKET_VARIABLE_SIZE),
 	/*0x4E*/ RMSGH("Personal Light Level", 0x06, PersonalLightLevel),
 	/*0x4F*/ RMSGH("Global Light Level", 0x02, LightLevel),
-	/*0x50*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x51*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x52*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x50*/ BMSG("Board header", PACKET_VARIABLE_SIZE),
+	/*0x51*/ BMSG("Boars message", PACKET_VARIABLE_SIZE),
+	/*0x52*/ BMSG("Post board message", PACKET_VARIABLE_SIZE),
 	/*0x53*/ RMSGH("Error Code", 0x02, ErrorCode),
 	/*0x54*/ RMSGH("Sound Effect", 0x0c, PlaySoundEffect),
 	/*0x55*/ RMSGH("Login Complete", 0x01, LoginComplete),
 	/*0x56*/ BMSGH("Map Data", 0x0b, MapData),
-	/*0x57*/ BMSG("Update Regions", 0x6e),
-	/*0x58*/ UMSG(0x6a),
-	/*0x59*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x5A*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x57*/ BMSG("Update regions (God client)", 0x6e),
+	/*0x58*/ BMSG("New region (God client)", 0x6a),
+	/*0x59*/ BMSG("New content FX (God client)", PACKET_VARIABLE_SIZE),
+	/*0x5A*/ BMSG("Update content FX (God client)", PACKET_VARIABLE_SIZE),
 	/*0x5B*/ RMSGH("Set Time", 0x04, SetTime),
 	/*0x5C*/ BMSG("Restart Version", 0x02),
 	/*0x5D*/ SMSG("Select Character", 0x49),
-	/*0x5E*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x5F*/ UMSG(0x31),
-	/*0x60*/ UMSG(0x05),
-	/*0x61*/ UMSG(0x09),
-	/*0x62*/ UMSG(0x0f),
-	/*0x63*/ UMSG(0x0d),
-	/*0x64*/ UMSG(0x01),
+	/*0x5E*/ BMSG("Server list (God client)", PACKET_VARIABLE_SIZE),
+	/*0x5F*/ BMSG("Add server (God client)", 0x31),
+	/*0x60*/ BMSG("Remove server (God client)", 0x05),
+	/*0x61*/ BMSG("Destroy static (God client)", 0x09),
+	/*0x62*/ BMSG("Move static (God client)", 0x0f),
+	/*0x63*/ BMSG("Area load (God client)", 0x0d),
+	/*0x64*/ BMSG("Area load request (God client)", 0x01),
 	/*0x65*/ RMSGH("Set Weather", 0x04, SetWeather),
 	/*0x66*/ BMSGH("Book Page Data", PACKET_VARIABLE_SIZE, BookData),
-	/*0x67*/ UMSG(0x15),
-	/*0x68*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x69*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x6A*/ UMSG(0x03),
-	/*0x6B*/ UMSG(0x09),
+	/*0x67*/ BMSG("Simped? (God client)", 0x15),
+	/*0x68*/ BMSG("Script attach (God client)", PACKET_VARIABLE_SIZE),
+	/*0x69*/ BMSG("Friends (God client)", PACKET_VARIABLE_SIZE),
+	/*0x6A*/ BMSG("Notify friend (God client)", 0x03),
+	/*0x6B*/ BMSG("Key use (God client)", 0x09),
 	/*0x6C*/ BMSGH("Target Data", 0x13, Target),
 	/*0x6D*/ RMSGH("Play Music", 0x03, PlayMusic),
 	/*0x6E*/ RMSGH("Character Animation", 0x0e, CharacterAnimation),
@@ -206,43 +206,43 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x76*/ RMSG("New Subserver", 0x10),
 	/*0x77*/ RMSGH("Update Character", 0x11, UpdateCharacter),
 	/*0x78*/ RMSGH("Update Object", PACKET_VARIABLE_SIZE, UpdateObject),
-	/*0x79*/ UMSG(0x09),
-	/*0x7A*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x7B*/ UMSG(0x02),
+	/*0x79*/ BMSG("Resource query (God client)", 0x09),
+	/*0x7A*/ BMSG("Resource data (God client)", PACKET_VARIABLE_SIZE),
+	/*0x7B*/ RMSG("Sequence?", 0x02),
 	/*0x7C*/ RMSGH("Open Menu Gump", PACKET_VARIABLE_SIZE, OpenMenuGump),
 	/*0x7D*/ SMSG("Menu Choice", 0x0d),
-	/*0x7E*/ UMSG(0x02),
-	/*0x7F*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x7E*/ BMSG("God view query (God client)", 0x02),
+	/*0x7F*/ BMSG("God view data (God client)", PACKET_VARIABLE_SIZE),
 	/*0x80*/ SMSG("First Login", 0x3e),
-	/*0x81*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x81*/ RMSG("Change character", PACKET_VARIABLE_SIZE),
 	/*0x82*/ RMSGH("Login Error", 0x02, LoginError),
 	/*0x83*/ SMSG("Delete Character", 0x27),
-	/*0x84*/ UMSG(0x45),
+	/*0x84*/ BMSG("Change password", 0x45),
 	/*0x85*/ RMSGH("Character List Notification", 0x02, CharacterListNotification),
 	/*0x86*/ RMSGH("Resend Character List", PACKET_VARIABLE_SIZE, ResendCharacterList),
-	/*0x87*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x87*/ BMSG("Send resources (God client)", PACKET_VARIABLE_SIZE),
 	/*0x88*/ RMSGH("Open Paperdoll", 0x42, OpenPaperdoll),
 	/*0x89*/ RMSGH("Corpse Equipment", PACKET_VARIABLE_SIZE, CorpseEquipment),
-	/*0x8A*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x8B*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x8A*/ BMSG("Trigger edit (God client)", PACKET_VARIABLE_SIZE),
+	/*0x8B*/ RMSG("Display sign gump", PACKET_VARIABLE_SIZE),
 	/*0x8C*/ RMSGH("Relay Server", 0x0b, RelayServer),
-	/*0x8D*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x8E*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x8D*/ SMSG("UO3D create character", PACKET_VARIABLE_SIZE),
+	/*0x8E*/ BMSG("Move character (God client)", PACKET_VARIABLE_SIZE),
 	/*0x8F*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0x90*/ RMSGH("Display Map", 0x13, DisplayMap),
 	/*0x91*/ SMSG("Second Login", 0x41),
-	/*0x92*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x92*/ BMSG("Update multi data (God client)", PACKET_VARIABLE_SIZE),
 	/*0x93*/ RMSGH("Open Book", 0x63, OpenBook),
-	/*0x94*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x94*/ BMSG("Update skills data (God client)", PACKET_VARIABLE_SIZE),
 	/*0x95*/ BMSGH("Dye Data", 0x09, DyeData),
-	/*0x96*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0x96*/ BMSG("Game central monitor (God client)", PACKET_VARIABLE_SIZE),
 	/*0x97*/ RMSG("Move Player", 0x02),
 	/*0x98*/ BMSG("All Names (3D Client Only)", PACKET_VARIABLE_SIZE),
 	/*0x99*/ BMSGH("Multi Placement", 0x1a, MultiPlacement),
 	/*0x9A*/ BMSGH("ASCII Prompt", PACKET_VARIABLE_SIZE, ASCIIPrompt),
 	/*0x9B*/ SMSG("Help Request", 0x102),
-	/*0x9C*/ UMSG(0x135),
-	/*0x9D*/ UMSG(0x33),
+	/*0x9C*/ BMSG("Assistant request (God client)", 0x135),
+	/*0x9D*/ BMSG("GM single (God client)", 0x33),
 	/*0x9E*/ RMSGH("Vendor Sell List", PACKET_VARIABLE_SIZE, SellList),
 	/*0x9F*/ SMSG("Vendor Sell Reply", PACKET_VARIABLE_SIZE),
 	/*0xA0*/ SMSG("Select Server", 0x03),
@@ -265,7 +265,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xB1*/ SMSG("Dialog Choice", PACKET_VARIABLE_SIZE),
 	/*0xB2*/ BMSG("Chat Data", PACKET_VARIABLE_SIZE),
 	/*0xB3*/ RMSG("Chat Text ?", PACKET_VARIABLE_SIZE),
-	/*0xB4*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0xB4*/ BMSG("Target object list (God client)", PACKET_VARIABLE_SIZE),
 	/*0xB5*/ BMSGH("Open Chat Window", 0x40, OpenChat),
 	/*0xB6*/ SMSG("Popup Help Request", 0x09),
 	/*0xB7*/ RMSG("Popup Help Data", PACKET_VARIABLE_SIZE),
@@ -282,19 +282,19 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xC2*/ BMSGH("Unicode prompt", PACKET_VARIABLE_SIZE, UnicodePrompt),
 	/*0xC3*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0xC4*/ UMSG(0x06),
-	/*0xC5*/ UMSG(0xcb),
-	/*0xC6*/ UMSG(0x01),
-	/*0xC7*/ UMSG(0x31),
+	/*0xC5*/ BMSG("Invalid map (God client)", 0xcb),
+	/*0xC6*/ RMSG("Invalid map enable", 0x01),
+	/*0xC7*/ RMSGH("Graphical Effect", 0x31, GraphicEffect),
 	/*0xC8*/ BMSGH("Client View Range", 0x02, ClientViewRange),
-	/*0xC9*/ UMSG(0x06),
-	/*0xCA*/ UMSG(0x06),
+	/*0xC9*/ BMSG("Trip time", 0x06),
+	/*0xCA*/ BMSG("UTrip time", 0x06),
 	/*0xCB*/ UMSG(0x07),
 	/*0xCC*/ RMSGH("Localized Text Plus String", PACKET_VARIABLE_SIZE, DisplayClilocString),
 	/*0xCD*/ UMSG(0x01),
 	/*0xCE*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0xCF*/ UMSG(0x4e),
 	/*0xD0*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xD1*/ UMSG(0x02),
+	/*0xD1*/ RMSGH("Logout", 0x02, Logout),
 	/*0xD2*/ RMSGH("Update Player (New)", 0x19, UpdatePlayer),
 	/*0xD3*/ RMSGH("Update Object (New)", PACKET_VARIABLE_SIZE, UpdateObject),
 	/*0xD4*/ BMSGH("Open Book (New)", PACKET_VARIABLE_SIZE, OpenBookNew),
@@ -303,11 +303,11 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xD7*/ BMSG("+AoS command", PACKET_VARIABLE_SIZE),
 	/*0xD8*/ RMSG("+Custom house", PACKET_VARIABLE_SIZE),
 	/*0xD9*/ SMSG("+Metrics", 0x10c),
-	/*0xDA*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xDB*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0xDA*/ BMSG("Mahjong game command", PACKET_VARIABLE_SIZE),
+	/*0xDB*/ RMSG("Character transfer log", PACKET_VARIABLE_SIZE),
 	/*0xDC*/ RMSG("OPL Info Packet", 9),
 	/*0xDD*/ RMSGH("Compressed Gump", PACKET_VARIABLE_SIZE, OpenCompressedGump),
-	/*0xDE*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0xDE*/ RMSG("Update characters combatants", PACKET_VARIABLE_SIZE),
 	/*0xDF*/ RMSGH("Buff/Debuff", PACKET_VARIABLE_SIZE, BuffDebuff),
 	/*0xE0*/ SMSG("Bug Report KR", PACKET_VARIABLE_SIZE),
 	/*0xE1*/ SMSG("Client Type KR/SA", 0x09),
@@ -326,20 +326,20 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xEE*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0xEF*/ SMSG("KR/2D Client Login/Seed", 0x15),
 	/*0xF0*/ BMSGH("Krrios client special", PACKET_VARIABLE_SIZE, KrriosClientSpecial),
-	/*0xF1*/ BMSG("Freeshard List", PACKET_VARIABLE_SIZE),
-	/*0xF2*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0xF1*/ SMSG("Client-Server Time Synchronization Request", PACKET_VARIABLE_SIZE),
+	/*0xF2*/ RMSG("Client-Server Time Synchronization Response", PACKET_VARIABLE_SIZE),
 	/*0xF3*/ RMSGH("Update Item (SA)", 0x18, UpdateItemSA),
 	/*0xF4*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0xF5*/ RMSGH("Display New Map", 0x15, DisplayMap),
-	/*0xF6*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xF7*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0xF6*/ RMSG("Boat moving", PACKET_VARIABLE_SIZE),
+	/*0xF7*/ RMSG("Packets (0xF3) list", PACKET_VARIABLE_SIZE),
 	/*0xF8*/ SMSG("Character Creation (7.0.16.0)", 0x6a),
 	/*0xF9*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0xFA*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0xFB*/ UMSG(PACKET_VARIABLE_SIZE),
 	/*0xFC*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xFE*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xFD*/ RMSG("Razor Handshake", 0x8),
+	/*0xFD*/ UMSG(PACKET_VARIABLE_SIZE),
+	/*0xFE*/ RMSG("Razor Handshake", 0x8),
 	/*0xFF*/ UMSG(PACKET_VARIABLE_SIZE)
 };
 //----------------------------------------------------------------------------------
@@ -899,10 +899,6 @@ PACKET_HANDLER(EnterWorld)
 
 	if (g_Player->Dead())
 		g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
-
-	/*BYTE wbuf[4] = {0x65, 0x01, 0x46, 0};
-	Ptr = wbuf + 1;
-	HandleSetWeather(wbuf, 4);*/
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateHitpoints)
@@ -1890,6 +1886,8 @@ PACKET_HANDLER(DenyMoveItem)
 			}
 		}
 
+		g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
+
 		delete g_ObjectInHand;
 		g_ObjectInHand = NULL;
 	}
@@ -2148,6 +2146,7 @@ PACKET_HANDLER(Ping)
 PACKET_HANDLER(SetWeather)
 {
 	g_Weather.Reset();
+
 	uchar type = ReadUInt8();
 	g_Weather.Type = type;
 	g_Weather.Count = ReadUInt8();
@@ -2907,12 +2906,12 @@ PACKET_HANDLER(ClientTalk)
 
 		if (m_Start[4] == 0x78)
 		{
-			m_Size = ReadInt16BE();
+			m_Size = ReadInt16BE(2);
 			m_Start += 4;
 		}
 		else if (m_Start[4] == 0x3C)
 		{
-			m_Size = ReadInt16BE();
+			m_Size = ReadInt16BE(2);
 			m_Start += 4;
 		}
 		else if (m_Start[4] == 0x25)
@@ -2988,15 +2987,33 @@ PACKET_HANDLER(GraphicEffect)
 	uint color = 0;
 	uint renderMode = 0;
 
-	if (*m_Start == 0xC0)
+	if (*m_Start != 0x70)
 	{
+		//0xC0
 		color = ReadUInt32BE();
 		renderMode = ReadUInt32BE() % 7;
+
+		if (*m_Start == 0xC7)
+		{
+			/*
+			0000: c7 03 00 13 82 2f 00 00 00 00 37 6a 05 d6 06 47 : ...../....7j...G
+			0010: 15 05 d6 06 47 15 09 20 00 00 01 00 00 00 00 00 : ....G.. ........
+			0020: 00 00 00 00 13 8d 00 01 00 00 00 13 82 2f 03 00 : ............./..
+			0030: 00 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- : .
+			*/
+		}
 	}
 
 	CGameEffect *effect = NULL;
 	if (!type) //Moving
+	{
 		effect = new CGameEffectMoving();
+
+		if (!speed)
+			speed++;
+
+		((CGameEffectMoving*)effect)->MoveDelay = 20 / speed;
+	}
 	else
 		effect = new CGameEffect();
 
@@ -3010,14 +3027,6 @@ PACKET_HANDLER(GraphicEffect)
 	effect->DestX = destX;
 	effect->DestY = destY;
 	effect->DestZ = destZ;
-
-	if (!type)
-	{
-		if (!speed)
-			speed++;
-
-		((CGameEffectMoving*)effect)->MoveDelay = 20 / speed;
-	}
 
 	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
 
@@ -3088,7 +3097,8 @@ PACKET_HANDLER(DragAnimation)
 	else if (graphic == 0x0EF0)
 		graphic = 0x0EF2;
 
-	Move(3);
+	Move(1);
+	ushort color = ReadUInt16BE();
 	ushort count = ReadUInt16BE();
 
 	uint sourceSerial = ReadUInt32BE();
@@ -3100,18 +3110,48 @@ PACKET_HANDLER(DragAnimation)
 	short destY = ReadInt16BE();
 	char destZ = ReadInt8();
 
+	uchar speed = 5;
+
 	CGameEffect *effect = NULL;
 
 	if (sourceSerial < 0x40000000) //Игрок/НПС кладет предмет в контейнер
 	{
+		return;
+
 		effect = new CGameEffectMoving();
 		effect->FixedDirection = true;
+
+		((CGameEffectMoving*)effect)->MoveDelay = 20 / speed;
+
+		/*
+		23 
+		0E 85 
+		00 
+		00 00 
+		00 00 
+		01 87 53 C5 
+		00 00 
+		04 6F 
+		A4 
+		00 00 00 00 
+		17 8B 
+		04 6F 
+		00
+
+
+
+		--- ^(1900) r(+26 => 109303) Server:: Drag Animation
+		0000: 23 0E 85 00 00 00 00 00 01 87 53 C5 00 00 04 6F : #.........S....o
+		0010: A4 00 00 00 00 17 8B 04 6F 00 -- -- -- -- -- -- : ........o.
+		*/
 	}
 	else //Предмет взяли из контейнера
 	{
 		effect = new CGameEffectDrag();
 	}
 
+	effect->Graphic = graphic;
+	effect->Color = color;
 	effect->EffectType = EF_DRAG;
 	effect->Serial = sourceSerial;
 	effect->DestSerial = destSerial;
@@ -3121,10 +3161,18 @@ PACKET_HANDLER(DragAnimation)
 	effect->DestX = destX;
 	effect->DestY = destY;
 	effect->DestZ = destZ;
-	effect->Speed = 5;
 	effect->Duration = g_Ticks + 5000;
 
-	effect->Graphic = graphic;
+	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
+
+	if (addressAnimData)
+	{
+		PANIM_DATA pad = (PANIM_DATA)(addressAnimData + ((graphic * 68) + 4 * ((graphic / 8) + 1)));
+
+		effect->Speed = pad->FrameInterval * 45;
+	}
+	else
+		effect->Speed = speed + 6;
 
 	g_EffectManager.AddEffect(effect);
 }
@@ -3294,7 +3342,7 @@ PACKET_HANDLER(Season)
 	if (season > ST_DESOLATION)
 		season = 0;
 
-	if ((g_Player->Dead() || g_Season == ST_DESOLATION) && (SEASON_TYPE)season != ST_DESOLATION)
+	if ((g_Player->Dead() /*|| g_Season == ST_DESOLATION*/) && (SEASON_TYPE)season != ST_DESOLATION)
 		return;
 
 	g_OldSeason = (SEASON_TYPE)season;
@@ -4355,8 +4403,15 @@ PACKET_HANDLER(DisplayMap)
 
 	CGumpMap *gump = new CGumpMap(serial, gumpid, startX, startY, endX, endY, width, height);
 
-	if (*m_Start == 0xF5)
-		g_MultiMap.LoadFacet(gump, gump->m_Texture, ReadUInt16BE());
+	if (*m_Start == 0xF5 || m_ClientVersion >= CV_308Z) //308z или выше?
+	{
+		ushort facet = 0;
+
+		if (*m_Start == 0xF5)
+			facet = ReadUInt16BE();
+
+		g_MultiMap.LoadFacet(gump, gump->m_Texture, facet);
+	}
 	else
 		g_MultiMap.LoadMap(gump, gump->m_Texture);
 
@@ -4847,5 +4902,10 @@ PACKET_HANDLER(BuyReply)
 
 	if (!flag) //Close shop gump
 		g_GumpManager.CloseGump(serial, 0, GT_SHOP);
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(Logout)
+{
+	g_Orion.LogOut();
 }
 //----------------------------------------------------------------------------------

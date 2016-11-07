@@ -84,7 +84,7 @@
 #include "Gumps/GumpWorldMap.h"
 #include "CommonInterfaces.h"
 #include "StumpsData.h"
-#include <functional>
+#include "Gumps/GumpSpellbook.h"
 //----------------------------------------------------------------------------------
 typedef void __cdecl PLUGIN_INIT_TYPE(STRING_LIST&, STRING_LIST&, UINT_LIST&);
 //----------------------------------------------------------------------------------
@@ -93,7 +93,8 @@ PLUGIN_CLIENT_INTERFACE g_PluginClientInterface = { 0 };
 PLUGIN_INIT_TYPE *g_PluginInit = NULL;
 //----------------------------------------------------------------------------------
 COrion::COrion()
-: m_ClientVersionText("2.0.3"), m_LandDataCount(0), m_StaticDataCount(0)
+: m_ClientVersionText("2.0.3"), m_LandDataCount(0), m_StaticDataCount(0),
+m_TexturesDataCount(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -211,6 +212,11 @@ bool COrion::Install()
 		return false;
 	}
 
+	if (g_FileManager.UseUOP)
+		g_MapManager = new CUopMapManager();
+	else
+		g_MapManager = new CMapManager();
+
 	DEBUGLOG("Patch files\n");
 	PatchFiles();
 	DEBUGLOG("Replaces...\n");
@@ -249,11 +255,6 @@ bool COrion::Install()
 	ExecuteStaticArt(0x0EEF); //gp 6+
 
 	g_CreateCharacterManager.Init();
-
-	if (g_FileManager.UseUOP)
-		g_MapManager = new CUopMapManager();
-	else
-		g_MapManager = new CMapManager();
 
 	IFOR(i, 0, 6)
 		g_AnimationManager.Init(i, (uint)g_FileManager.m_AnimIdx[i].Start, (uint)g_FileManager.m_AnimMul[i].Start, (uint)g_FileManager.m_AnimIdx[i].Size);
@@ -624,6 +625,13 @@ void COrion::Process(const bool &rendering)
 
 	if (g_GameState >= GS_GAME) // || g_GameState == GS_GAME_BLOCKED)
 	{
+		if (g_LogoutAfterClick)
+		{
+			g_LogoutAfterClick = false;
+			LogOut();
+			return;
+		}
+
 		g_ShowGumpLocker = g_ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
 
 		ProcessStaticAnimList();
@@ -748,6 +756,8 @@ void COrion::LoadStartupConfig()
 //----------------------------------------------------------------------------------
 void COrion::LoadPluginConfig()
 {
+	g_PluginClientInterface.Version = 0;
+	g_PluginClientInterface.Size = sizeof(g_PluginClientInterface);
 	g_PluginClientInterface.GL = &g_Interface_GL;
 	g_PluginClientInterface.UO = &g_Interface_UO;
 	g_PluginClientInterface.ClilocManager = &g_Interface_ClilocManager;
@@ -1882,6 +1892,54 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_SPELLBOOK_COUNT:
+		{
+			if (value >= 0 && value < 7)
+			{
+				switch (value)
+				{
+					case 1:
+					{
+						value = CGumpSpellbook::SPELLBOOK_1_SPELLS_COUNT;
+						break;
+					}
+					case 2:
+					{
+						value = CGumpSpellbook::SPELLBOOK_2_SPELLS_COUNT;
+						break;
+					}
+					case 3:
+					{
+						value = CGumpSpellbook::SPELLBOOK_3_SPELLS_COUNT;
+						break;
+					}
+					case 4:
+					{
+						value = CGumpSpellbook::SPELLBOOK_4_SPELLS_COUNT;
+						break;
+					}
+					case 5:
+					{
+						value = CGumpSpellbook::SPELLBOOK_5_SPELLS_COUNT;
+						break;
+					}
+					case 6:
+					{
+						value = CGumpSpellbook::SPELLBOOK_6_SPELLS_COUNT;
+						break;
+					}
+					case 7:
+					{
+						value = CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT;
+						break;
+					}
+		default:
+			break;
+	}
+			}
+
+			break;
+		}
 		default:
 			break;
 	}
@@ -1899,6 +1957,8 @@ string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 
 			if (index >= 0 && index < g_SkillsCount)
 				value = g_Skills[index].Name;
+
+			break;
 		}
 		case VKS_SERVER_NAME:
 		{
@@ -1906,11 +1966,78 @@ string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 
 			if (server != NULL)
 				value = server->Name;
+
+			break;
 		}
 		case VKS_CHARACTER_NAME:
 		{
 			if (g_Player != NULL)
 				value = g_Player->Name;
+
+			break;
+		}
+		case VKS_SPELLBOOK_1_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_1_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName1[index][0];
+
+			break;
+		}
+		case VKS_SPELLBOOK_2_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_2_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName2[index][0];
+
+			break;
+		}
+		case VKS_SPELLBOOK_3_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_3_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName3[index][0];
+
+			break;
+		}
+		case VKS_SPELLBOOK_4_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_4_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName4[index];
+
+			break;
+		}
+		case VKS_SPELLBOOK_5_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_5_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName5[index];
+
+			break;
+		}
+		case VKS_SPELLBOOK_6_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_6_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName6[index][0];
+
+			break;
+		}
+		case VKS_SPELLBOOK_7_SPELL_NAME:
+		{
+			int index = atoi(value.c_str());
+
+			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT)
+				value = CGumpSpellbook::m_SpellName7[index][0];
+
+			break;
 		}
 		default:
 			break;
@@ -2596,7 +2723,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 	long long nextBlock = uopFile->ReadInt64LE();
 	uopFile->ReadInt32LE(); // block capacity
 	IFOR(i, 0, indexMaxCount)
-	{
+		{
 		char x[150];
 		sprintf(x, "build/%s/%i%s", uopFileName.c_str(), i, extesion.c_str());
 		auto h = CreateHash(x);
@@ -2607,7 +2734,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 }
 //----------------------------------------------------------------------------------
 unsigned long long COrion::CreateHash(string s)
-{
+			{
 	unsigned long eax, ecx, edx, ebx, esi, edi;
 
 	eax = ecx = edx = ebx = esi = edi = 0;
@@ -2616,7 +2743,7 @@ unsigned long long COrion::CreateHash(string s)
 	long i = 0;
 
 	for (i = 0; i + 12 < s.length(); i += 12)
-	{
+					{
 		edi = static_cast<unsigned long>((s[i + 7] << 24) | (s[i + 6] << 16) | (s[i + 5] << 8) | s[i + 4]) + edi;
 		esi = static_cast<unsigned long>((s[i + 11] << 24) | (s[i + 10] << 16) | (s[i + 9] << 8) | s[i + 8]) + esi;
 		edx = static_cast<unsigned long>((s[i + 3] << 24) | (s[i + 2] << 16) | (s[i + 1] << 8) | s[i]) - esi;
@@ -2636,7 +2763,7 @@ unsigned long long COrion::CreateHash(string s)
 	}
 
 	if (s.length() - i > 0)
-	{
+						{
 		switch (s.length() - i)
 		{
 		case 12:
@@ -2696,7 +2823,7 @@ unsigned long long COrion::CreateHash(string s)
 		case_1:
 			ebx += s[i];
 			  break;
-		}
+						}
 
 		esi = (esi ^ edi) - ((edi >> 18) ^ (edi << 14));
 		ecx = (esi ^ ebx) - ((esi >> 21) ^ (esi << 11));
@@ -2707,13 +2834,13 @@ unsigned long long COrion::CreateHash(string s)
 		eax = (esi ^ edi) - ((edi >> 8) ^ (edi << 24));
 
 		return (static_cast<unsigned long long>(edi) << 32) | eax;
-	}
+		}
 
 	return (static_cast<unsigned long long>(esi) << 32) | eax;
-}
+		}
 //----------------------------------------------------------------------------------
 void COrion::LoadIndexFiles()
-{
+		{
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)g_FileManager.m_ArtIdx.Start;
 	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((uint)g_FileManager.m_ArtIdx.Start + (m_LandDataCount * sizeof(ART_IDX_BLOCK)));
 	PGUMP_IDX_BLOCK GumpArtPtr = (PGUMP_IDX_BLOCK)g_FileManager.m_GumpIdx.Start;
@@ -3047,7 +3174,11 @@ void COrion::PatchFiles()
 	{
 		PVERDATA_HEADER vh = (PVERDATA_HEADER)(vAddr + 4 + (i * sizeof(VERDATA_HEADER)));
 
-		if (vh->FileID == 4) //Art
+		if (vh->FileID == 0) //Map0
+		{
+			g_MapManager->SetPatchedMapBlock(vh->BlockID, (PMAP_BLOCK)(vAddr + vh->Position));
+		}
+		else if (vh->FileID == 4) //Art
 		{
 			if (vh->BlockID >= MAX_LAND_DATA_INDEX_COUNT) //Run
 			{
@@ -3247,7 +3378,7 @@ void COrion::IndexReplaces()
 				if (checkIndex < 0)
 					continue;
 
-				if (index < MAX_LAND_TEXTURES_DATA_INDEX_COUNT && checkIndex < MAX_LAND_TEXTURES_DATA_INDEX_COUNT && m_TextureDataIndex[checkIndex].Address != NULL)
+				if (index < m_TexturesDataCount && checkIndex < m_TexturesDataCount && m_TextureDataIndex[checkIndex].Address != NULL)
 				{
 					memcpy(&m_TextureDataIndex[index], &m_TextureDataIndex[checkIndex], sizeof(CIndexObject));
 					m_TextureDataIndex[index].Texture = NULL;

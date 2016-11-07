@@ -23,7 +23,7 @@ public:
 
 	void SetRenderTimerDelay(const int &delay);
 
-	void EmulateOnLeftMouseButtonDown() { OnLeftMouseButtonDown(); }
+	void EmulateOnLeftMouseButtonDown();
 
 protected:
 	virtual bool OnCreate();

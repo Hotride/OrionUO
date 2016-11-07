@@ -26,6 +26,7 @@ class COrion
 	SETGET(string, ClientVersionText);
 	SETGET(int, LandDataCount);
 	SETGET(int, StaticDataCount);
+	SETGET(int, TexturesDataCount);
 
 private:
 	uint m_CRC_Table[256];

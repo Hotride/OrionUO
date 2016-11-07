@@ -33,19 +33,20 @@ bool CGLFrameBuffer::Init(int width, int height)
 
 	bool result = false;
 
-	if (g_GL.CanUseFrameBuffer)
+	if (g_GL.CanUseFrameBuffer && width && height)
 	{
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glGenTextures(1, &m_Texture);
 		glBindTexture(GL_TEXTURE_2D, m_Texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, width, height, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, NULL);
 
 		GLint currentFrameBuffer = 0;
-		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFrameBuffer); 
+		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFrameBuffer);
 
 		glGenFramebuffers(1, &m_FrameBuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_Texture, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Texture, 0);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
 		{
@@ -123,7 +124,7 @@ bool CGLFrameBuffer::Use()
 		
 		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_OldFrameBuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
-        glBindTexture(GL_TEXTURE_2D, m_Texture);
+		glBindTexture(GL_TEXTURE_2D, m_Texture);
 
 		glViewport(0, 0, m_Width, m_Height);
 

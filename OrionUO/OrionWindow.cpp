@@ -94,6 +94,19 @@ void COrionWindow::OnResize(WISP_GEOMETRY::CSize &newSize)
 	g_GL.UpdateRect();
 }
 //----------------------------------------------------------------------------------
+void COrionWindow::EmulateOnLeftMouseButtonDown()
+{
+	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
+	{
+		g_CurrentScreen->Render(false);
+
+		g_PressedObject.InitLeft(g_SelectedObject);
+
+		if (g_SelectedObject.Object() != NULL || g_GameState == GS_GAME)
+			g_CurrentScreen->OnLeftMouseButtonDown();
+	}
+}
+//----------------------------------------------------------------------------------
 void COrionWindow::OnLeftMouseButtonDown()
 {
 	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)

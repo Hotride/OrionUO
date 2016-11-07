@@ -46,7 +46,7 @@ m_HitsBody(NULL), m_Entry(NULL), m_Name("")
 //----------------------------------------------------------------------------------
 CGumpStatusbar::~CGumpStatusbar()
 {
-	if (g_ConnectionManager.Connected() && g_World != NULL && g_World->FindWorldObject(m_Serial) != NULL)
+	if (g_ConnectionManager.Connected() && g_PacketManager.ClientVersion >= CV_200 && g_World != NULL && g_World->FindWorldObject(m_Serial) != NULL)
 		CPacketCloseStatusbarGump(m_Serial).Send();
 
 	RemoveFromGroup();

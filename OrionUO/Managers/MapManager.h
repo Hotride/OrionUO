@@ -17,6 +17,8 @@
 #include "../Game objects/MapBlock.h"
 #include "../MulStruct.h"
 //----------------------------------------------------------------------------------
+typedef map<uint, PMAP_BLOCK> MAP_PATCH_LIST;
+//----------------------------------------------------------------------------------
 //!Класс менеджера карт
 class CMapManager : public CBaseQueue
 {
@@ -29,6 +31,8 @@ private:
 	CMapBlock **m_Blocks;
 #endif
 
+	MAP_PATCH_LIST m_Patches;
+
 public:
 	CMapManager();
 	virtual ~CMapManager();
@@ -38,6 +42,8 @@ public:
 	@return 
 	*/
 	virtual int GetActualMap();
+
+	void SetPatchedMapBlock(const uint &block, PMAP_BLOCK address);
 
 	/*!
 	Загрузить блок

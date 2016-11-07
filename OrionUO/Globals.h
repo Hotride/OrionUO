@@ -36,6 +36,7 @@ extern bool g_AbyssPacket03First;
 #include "EnumList.h"
 #include "DefinitionMacro.h"
 #include "Constants.h"
+
 //----------------------------------------------------------------------------------
 #define CWISPDEBUGLOGGER 0
 
@@ -72,6 +73,8 @@ extern GLdouble g_GlobalScale;
 extern CGLTexture g_MapTexture[6];
 
 extern CGLTexture g_AuraTexture;
+
+extern bool g_LogoutAfterClick;
 
 //!Значения задержек в массиве
 extern int g_FrameDelay[2];

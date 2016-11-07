@@ -22,6 +22,8 @@ GLdouble g_GlobalScale = 1.0;
 CGLTexture g_MapTexture[6];
 CGLTexture g_AuraTexture;
 
+bool g_LogoutAfterClick = false;
+
 int g_FrameDelay[2] = { FRAME_DELAY_UNACTIVE_WINDOW, FRAME_DELAY_ACTIVE_WINDOW };
 
 uchar g_PingCount = 0;
@@ -37,7 +39,11 @@ uint g_Ticks = 0;
 GLuint ShaderColorTable = 0;
 GLuint g_ShaderDrawMode = 0;
 
+#if UO_ABYSS_SHARD == 1
+string g_Language = "RUS";
+#else
 string g_Language = "ENU";
+#endif
 
 GAME_STATE g_GameState = GS_MAIN;
 

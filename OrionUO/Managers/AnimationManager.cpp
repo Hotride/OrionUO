@@ -1983,7 +1983,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 		GetAnimDirection(dir, mirror);
 	}
 	else if (((CGameItem*)obj)->Layer != OL_MOUNT) //TGameItem
-		id = ((CGameItem*)obj)->GetAnimID();
+		id = ((CGameItem*)obj)->AnimID;
 
 	if (frameIndex == 0xFF)
 		frameIndex = (uchar)obj->AnimIndex;
