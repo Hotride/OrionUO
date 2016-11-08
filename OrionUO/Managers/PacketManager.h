@@ -188,6 +188,8 @@ public:
 
 	CPacketInfo GetInfo(const uchar &buf) const { return m_Packets[buf]; }
 
+	void SendMegaClilocRequests(UINT_LIST &list);
+
 	void SendMegaClilocRequests();
 
 	void SavePluginReceivePacket(puchar buf, const int &size);

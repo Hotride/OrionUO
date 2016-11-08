@@ -188,7 +188,16 @@ CPacketSelectCharacter::CPacketSelectCharacter(const uint &index, const string &
 	WriteUInt8(0x5D);
 	WriteUInt32BE(0xEDEDEDED);
 	WriteString(name.c_str(), 30, false);
-	Move(30); //character password
+	Move(2);
+
+	uint clientFlag = 0;
+
+	IFOR(i, 0, g_CharacterList.ClientFlag)
+		clientFlag |= (1 << i);
+
+	WriteUInt32BE(clientFlag);
+
+	Move(24);
 	WriteUInt32BE(index);
 	WriteDataLE(g_ConnectionManager.GetClientIP(), 4);
 }
@@ -993,14 +1002,20 @@ CPacketLanguage::CPacketLanguage(const string &lang)
 	WriteString(lang, lang.length(), false);
 }
 //---------------------------------------------------------------------------
-CPacketClientType::CPacketClientType(uint type)
+CPacketClientType::CPacketClientType()
 : CPacket(10)
 {
 	WriteUInt8(0xBF);
 	WriteUInt16BE(0x000A);
 	WriteUInt16BE(0x000F);
 	WriteUInt8(0x0A);
-	WriteUInt32BE(type);
+
+	uint clientFlag = 0;
+
+	IFOR(i, 0, g_CharacterList.ClientFlag)
+		clientFlag |= (1 << i);
+
+	WriteUInt32BE(clientFlag);
 }
 //---------------------------------------------------------------------------
 CPacketRequestPopupMenu::CPacketRequestPopupMenu(uint serial)
@@ -1089,6 +1104,15 @@ CPacketInvokeVirtureRequest::CPacketInvokeVirtureRequest(uchar id)
 	WriteUInt8(0xF4);
 	WriteUInt8(id);
 	WriteUInt8(0x00);
+}
+//---------------------------------------------------------------------------
+CPacketMegaClilocRequestOld::CPacketMegaClilocRequestOld(const uint &serial)
+: CPacket(9)
+{
+	WriteUInt8(0xBF);
+	WriteUInt16BE(9); //size
+	WriteUInt16BE(0x0010);
+	WriteUInt32BE(serial);
 }
 //---------------------------------------------------------------------------
 CPacketMegaClilocRequest::CPacketMegaClilocRequest(const UINT_LIST &list)

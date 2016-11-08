@@ -1149,7 +1149,7 @@ void COrion::LoginComplete()
 		CPacketLanguage(g_Language.c_str()).Send();
 
 		if (g_PacketManager.ClientVersion >= CV_306E)
-			CPacketClientType(g_ClientFlag).Send();
+			CPacketClientType().Send();
 
 		if (g_PacketManager.ClientVersion >= CV_305D)
 			CPacketClientViewRange(g_ConfigManager.UpdateRange).Send();

@@ -372,7 +372,7 @@ public:
 class CPacketClientType : public CPacket
 {
 public:
-	CPacketClientType(uint type);
+	CPacketClientType();
 };
 //----------------------------------------------------------------------------------
 class CPacketRequestPopupMenu : public CPacket
@@ -421,6 +421,12 @@ class CPacketInvokeVirtureRequest : public CPacket
 {
 public:
 	CPacketInvokeVirtureRequest(uchar id);
+};
+//----------------------------------------------------------------------------------
+class CPacketMegaClilocRequestOld : public CPacket
+{
+public:
+	CPacketMegaClilocRequestOld(const uint &serial);
 };
 //----------------------------------------------------------------------------------
 class CPacketMegaClilocRequest : public CPacket
