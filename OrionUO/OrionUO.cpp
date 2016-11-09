@@ -85,6 +85,7 @@
 #include "CommonInterfaces.h"
 #include "StumpsData.h"
 #include "Gumps/GumpSpellbook.h"
+#include <unordered_map>
 //----------------------------------------------------------------------------------
 typedef void __cdecl PLUGIN_INIT_TYPE(STRING_LIST&, STRING_LIST&, UINT_LIST&);
 //----------------------------------------------------------------------------------
@@ -2724,14 +2725,17 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 	int capacity = uopFile->ReadInt32LE(); // block capacity
 	int count = uopFile->ReadInt32LE();
 
-	std::map<unsigned long long, int> hashes;
+	std::unordered_map<unsigned long long, int> hashes;
+
+	char basePath[200];
+	sprintf(basePath, "build/%s/%%08i%s", uopFileName.c_str(), extesion.c_str());
 
 	IFOR(i, 0, indexMaxCount)
 	{
 		char x[200];
-		sprintf(x, "build/%s/%08i%s", uopFileName.c_str(), i, extesion.c_str());
+		sprintf(x, basePath, i);
 		auto h = CreateHash(x);
-		hashes.insert(std::pair<unsigned long long, int>(h, i));
+		hashes[h] = i;
 	}
 
 	uopFile->ResetPtr();
@@ -2784,7 +2788,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 
 		uopFile->ResetPtr();
 		uopFile->Move(nextBlock);
-	} while (uopFile->Ptr != nullptr);
+	} while (uopFile->Ptr != 0);
 }
 //----------------------------------------------------------------------------------
 unsigned long long COrion::CreateHash(string s)
