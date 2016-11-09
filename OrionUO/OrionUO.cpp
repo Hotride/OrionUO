@@ -2721,16 +2721,17 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 	}
 	uopFile->ReadInt64LE(); // version + signature
 	long long nextBlock = uopFile->ReadInt64LE();
-	uopFile->ReadInt32LE(); // block capacity
+	int capacity = uopFile->ReadInt32LE(); // block capacity
+	int count = uopFile->ReadInt32LE();
 
 	std::map<unsigned long long, int> hashes;
 
 	IFOR(i, 0, indexMaxCount)
 	{
 		char x[200];
-		sprintf(x, "build/%s/%i%s", uopFileName.c_str(), i, extesion.c_str());
+		sprintf(x, "build/%s/%08i%s", uopFileName.c_str(), i, extesion.c_str());
 		auto h = CreateHash(x);
-		hashes[h] = i;
+		hashes.insert(std::pair<unsigned long long, int>(h, i));
 	}
 
 	uopFile->ResetPtr();
@@ -2742,43 +2743,42 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 		nextBlock = uopFile->ReadInt64LE();
 		IFOR(i, 0, fileCount)
 		{
-		}
+			auto offset = uopFile->ReadInt64LE();
+			auto headerLength = uopFile->ReadInt32LE();
+			auto compressedLength = uopFile->ReadInt32LE();
+			auto decompressedLength = uopFile->ReadInt32LE();
+			auto hash = uopFile->ReadInt64LE();
+			uopFile->ReadInt32LE();
+			auto flag = uopFile->ReadInt16LE();
 
-		auto offset = uopFile->ReadInt64LE();
-		auto headerLength = uopFile->ReadInt32LE();
-		auto compressedLength = uopFile->ReadInt32LE();
-		auto decompressedLength = uopFile->ReadInt32LE();
-		auto hash = uopFile->ReadInt64LE();
-		uopFile->ReadInt32LE();
-		auto flag = uopFile->ReadInt16LE();
+			int entryLength = flag == 1 ? compressedLength : decompressedLength;
 
-		int entryLength = flag == 1 ? compressedLength : decompressedLength;
-
-		if (offset == 0)
-		{
-			continue;
-		}
-
-		int idx;
-		if (hashes.find(hash) != hashes.end())
-		{
-			idx = hashes.at(hash);
-
-			CIndexObject *obj = getIdxObj(idx);
-			obj->Address = offset + headerLength;
-			obj->DataSize = entryLength;
-
-			if (uopFileName == "gumpartLegacyMUL")
+			if (offset == 0)
 			{
+				continue;
+			}
 
-				auto extra1 = uopFile->ReadInt32LE();
-				auto extra2 = uopFile->ReadInt32LE();
+			int idx;
+			if (hashes.find(hash) != hashes.end())
+			{
+				idx = hashes.at(hash);
 
-				obj->Address += 8;
-				obj->Width = extra1;
-				obj->Height = extra2;
+				CIndexObject *obj = getIdxObj(idx);
+				obj->Address = offset + headerLength;
+				obj->DataSize = entryLength;
 
-				uopFile->Move(-8);
+				if (uopFileName == "gumpartLegacyMUL")
+				{
+
+					auto extra1 = uopFile->ReadInt32LE();
+					auto extra2 = uopFile->ReadInt32LE();
+
+					obj->Address += 8;
+					obj->Width = extra1;
+					obj->Height = extra2;
+
+					uopFile->Move(-8);
+				}
 			}
 		}
 
