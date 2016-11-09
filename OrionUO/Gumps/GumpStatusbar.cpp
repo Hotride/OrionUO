@@ -1145,9 +1145,12 @@ void CGumpStatusbar::SendRenameRequest()
 			//Отправляем запрос на изменение имени
 			CPacketRenameRequest(m_Serial, entry->c_str()).Send();
 
-			UINT_LIST list;
-			list.push_back(m_Serial);
-			CPacketMegaClilocRequest(list).Send();
+			if (g_PacketManager.ClientVersion >= CV_308Z)
+			{
+				UINT_LIST list;
+				list.push_back(m_Serial);
+				g_PacketManager.SendMegaClilocRequests(list);
+			}
 		}
 	}
 }

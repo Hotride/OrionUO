@@ -1750,15 +1750,15 @@ uint CFontsManager::GetHTMLColorFromText(string &str)
 			str = ToLowerA(str);
 
 			if (str == "red")
-				color = 0xFF0000FF;
-			else if (str == "cyan")
-				color = 0x00FFFFFF;
-			else if (str == "blue")
 				color = 0x0000FFFF;
+			else if (str == "cyan")
+				color = 0xFFFF00FF;
+			else if (str == "blue")
+				color = 0xFF0000FF;
 			else if (str == "darkblue")
-				color = 0x0000A0FF;
+				color = 0xA00000FF;
 			else if (str == "lightblue")
-				color = 0xADD8E6FF;
+				color = 0xE6D8ADFF;
 			else if (str == "purple")
 				color = 0x800080FF;
 			else if (str == "yellow")
@@ -1776,15 +1776,15 @@ uint CFontsManager::GetHTMLColorFromText(string &str)
 			else if (str == "black")
 				color = 0x010101FF;
 			else if (str == "orange")
-				color = 0xFFA500FF;
+				color = 0x00A5FFFF;
 			else if (str == "brown")
-				color = 0xA52A2AFF;
+				color = 0x2A2AA5FF;
 			else if (str == "maroon")
-				color = 0x800000FF;
+				color = 0x000080FF;
 			else if (str == "green")
 				color = 0x008000FF;
 			else if (str == "olive")
-				color = 0x808000FF;
+				color = 0x008080FF;
 		}
 	}
 
