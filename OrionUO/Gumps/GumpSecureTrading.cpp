@@ -39,19 +39,12 @@ void CGumpSecureTrading::CalculateGumpState()
 	{
 		g_GumpMovingOffset.Reset();
 
-		if (m_Minimized)
-		{
-			g_GumpTranslate.X = (float)m_MinimizedX;
-			g_GumpTranslate.Y = (float)m_MinimizedY;
-		}
-		else
-		{
-			g_GumpTranslate.X = (float)m_X;
-			g_GumpTranslate.Y = (float)m_Y;
-		}
-
-		m_WantRedraw = true;
+		g_GumpTranslate.X = (float)m_X;
+		g_GumpTranslate.Y = (float)m_Y;
 	}
+
+	if (g_GumpTranslate.X || g_GumpTranslate.Y)
+		m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::PrepareContent()
@@ -191,7 +184,7 @@ void CGumpSecureTrading::Draw()
 		return; //Объект, к которому привязан гамп - исчез
 	
 	if (g_GumpPressed)
-		m_FrameCreated = false;
+		m_WantRedraw = true;
 
 	CGump::Draw();
 

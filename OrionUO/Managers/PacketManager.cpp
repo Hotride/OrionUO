@@ -1605,6 +1605,10 @@ PACKET_HANDLER(EquipItem)
 
 	CGameItem *obj = g_World->GetWorldItem(serial);
 	obj->MapIndex = g_CurrentMap;
+
+	if (obj->Graphic)
+		obj->Clear();
+
 	obj->Graphic = ReadUInt16BE();
 	Move(1);
 	int layer = ReadUInt8();
