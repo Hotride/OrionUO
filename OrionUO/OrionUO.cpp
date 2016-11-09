@@ -2798,9 +2798,9 @@ unsigned long long COrion::CreateHash(string s)
 
 	for (i = 0; i + 12 < s.length(); i += 12)
 	{
-		edi = static_cast<unsigned long>((s[i + 7] << 24) | (s[i + 6] << 16) | (s[i + 5] << 8) | s[i + 4]) + edi;
-		esi = static_cast<unsigned long>((s[i + 11] << 24) | (s[i + 10] << 16) | (s[i + 9] << 8) | s[i + 8]) + esi;
-		edx = static_cast<unsigned long>((s[i + 3] << 24) | (s[i + 2] << 16) | (s[i + 1] << 8) | s[i]) - esi;
+		edi = (uint)((s[i + 7] << 24) | (s[i + 6] << 16) | (s[i + 5] << 8) | s[i + 4]) + edi;
+		esi = (uint)((s[i + 11] << 24) | (s[i + 10] << 16) | (s[i + 9] << 8) | s[i + 8]) + esi;
+		edx = (uint)((s[i + 3] << 24) | (s[i + 2] << 16) | (s[i + 1] << 8) | s[i]) - esi;
 
 		edx = (edx + ebx) ^ (esi >> 28) ^ (esi << 4);
 		esi += edi;
@@ -2919,12 +2919,12 @@ void COrion::LoadIndexFiles()
 	}
 	else
 	{
-		ReadUOPIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, "artLegacyMUL", ".tga", &g_FileManager.m_artLegacyMUL);
+		ReadUOPIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL);
 		g_FileManager.m_artLegacyMUL.ResetPtr();
 		g_FileManager.m_artLegacyMUL.Move(m_LandDataCount * sizeof(ART_IDX_BLOCK));
-		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artLegacyMUL", ".tga", &g_FileManager.m_artLegacyMUL);
-		ReadUOPIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, "soundLegacyMUL", ".dat", &g_FileManager.m_soundLegacyMUL);
-		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartLegacyMUL", ".tga", &g_FileManager.m_gumpartLegacyMUL);
+		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL);
+		ReadUOPIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, "soundlegacymul", ".dat", &g_FileManager.m_soundLegacyMUL);
+		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartlegacymul", ".tga", &g_FileManager.m_gumpartLegacyMUL);
 	}
 
 	ReadMulIndexFile(MAX_LAND_TEXTURES_DATA_INDEX_COUNT, [&](int i){ return &m_TextureDataIndex[i]; }, (uint)g_FileManager.m_TextureMul.Start, TexturePtr, [&TexturePtr]() { return ++TexturePtr; });
