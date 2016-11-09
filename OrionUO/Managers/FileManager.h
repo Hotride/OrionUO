@@ -16,7 +16,7 @@
 class CFileManager
 {
 	SETGET(bool, UseVerdata);
-	SETGET(bool, UseUOP);
+	SETGET(bool, UseUOPMap);
 	SETGET(int, UnicodeFontsCount);
 
 public:

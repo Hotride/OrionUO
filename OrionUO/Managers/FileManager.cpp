@@ -13,7 +13,7 @@
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
 CFileManager::CFileManager()
-: m_UseVerdata(false), m_UseUOP(false), m_UnicodeFontsCount(0)
+: m_UseVerdata(false), m_UseUOPMap(false), m_UnicodeFontsCount(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -23,46 +23,48 @@ CFileManager::~CFileManager()
 //----------------------------------------------------------------------------------
 bool CFileManager::Load()
 {
-	if (!g_FileManager.UseUOP)
+	//Try to use map uop files first, if we can, we will use them.
+	if (!m_artLegacyMUL.Load(g_App.FilePath("artLegacyMUL.uop")))
 	{
-		 if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
+		if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
 			return false;
-		else if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul")))
-			return false;
-		else if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul")))
-			return false;
-		else if (!m_ArtMul.Load(g_App.FilePath("art.mul")))
-			return false;
-		else if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul")))
-			return false;
-		else if (!m_SoundMul.Load(g_App.FilePath("sound.mul")))
+		if (!m_ArtMul.Load(g_App.FilePath("art.mul")))
 			return false;
 	}
-	else
+
+	if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
 	{
-		if (!m_artLegacyMUL.Load(g_App.FilePath("artLegacyMUL.uop")))
+		if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul")))
 			return false;
-		if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
+		if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul")))
 			return false;
-		if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
-			return false;
-		/* Эти файлы не используются самой последней версией клиента 7.0.52.2
-		if (!m_tileart.Load(g_App.FilePath("tileart.uop")))
-			return false;
-		if (!m_string_dictionary.Load(g_App.FilePath("string_dictionary.uop")))
-			return false;
-		if (!m_MultiCollection.Load(g_App.FilePath("MultiCollection.uop")))
-			return false;
-		if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
-			return false;
-		if (!m_MainMisc.Load(g_App.FilePath("MainMisc.uop")))
-			return false;
-		IFOR(i, 1, 5)
-		{
-			if (!m_AnimationFrame[i].Load(g_App.FilePath("AnimationFrame%i.uop", i)))
-				return false;
-		}*/
 	}
+
+	if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
+	{
+		if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul")))
+			return false;
+		if (!m_SoundMul.Load(g_App.FilePath("sound.mul")))
+			return false;
+	}
+
+	/* Эти файлы не используются самой последней версией клиента 7.0.52.2
+	if (!m_tileart.Load(g_App.FilePath("tileart.uop")))
+	return false;
+	if (!m_string_dictionary.Load(g_App.FilePath("string_dictionary.uop")))
+	return false;
+	if (!m_MultiCollection.Load(g_App.FilePath("MultiCollection.uop")))
+	return false;
+	if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
+	return false;
+	if (!m_MainMisc.Load(g_App.FilePath("MainMisc.uop")))
+	return false;
+	IFOR(i, 1, 5)
+	{
+	if (!m_AnimationFrame[i].Load(g_App.FilePath("AnimationFrame%i.uop", i)))
+	return false;
+	}*/
+
 	if (!m_AnimIdx[0].Load(g_App.FilePath("anim.idx")))
 		return false;
 	if (!m_LightIdx.Load(g_App.FilePath("lightidx.mul")))
@@ -104,25 +106,25 @@ bool CFileManager::Load()
 
 	IFOR(i, 0, 6)
 	{
-		if (g_FileManager.UseUOP && i > 1 || !g_FileManager.UseUOP && i > 0)
+		if (i > 0)
 		{
 			m_AnimIdx[i].Load(g_App.FilePath("anim%i.idx", i));
 			m_AnimMul[i].Load(g_App.FilePath("anim%i.mul", i));
 		}
 
-		if (g_FileManager.UseUOP)
+		if (!m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i)))
 		{
-			if (!m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i)))
-				return false;
+			m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
+			UseUOPMap = false;
+		}
+		else
+		{
 			if (i == 0 || i == 1 || i == 2 || i == 5)
 			{
 				if (!m_MapXUOP[i].Load(g_App.FilePath("map%ixLegacyMUL.uop", i)))
 					return false;
 			}
-		}
-		else
-		{
-			m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
+			UseUOPMap = true;
 		}
 
 		m_StaticIdx[i].Load(g_App.FilePath("staidx%i.mul", i));
@@ -153,31 +155,24 @@ bool CFileManager::Load()
 //----------------------------------------------------------------------------------
 void CFileManager::Unload()
 {
+	m_ArtIdx.Unload();
+	m_GumpIdx.Unload();
+	m_SoundIdx.Unload();
+	m_ArtMul.Unload();
+	m_GumpMul.Unload();
+	m_SoundMul.Unload();
+	m_artLegacyMUL.Unload();
+	m_gumpartLegacyMUL.Unload();
+	m_soundLegacyMUL.Unload();
+	m_tileart.Unload();
+	m_string_dictionary.Unload();
+	m_MultiCollection.Unload();
+	m_AnimationSequence.Unload();
+	m_MainMisc.Unload();
 
-	if (!g_FileManager.UseUOP)
+	IFOR(i, 1, 5)
 	{
-		m_ArtIdx.Unload();
-		m_GumpIdx.Unload();
-		m_SoundIdx.Unload();
-		m_ArtMul.Unload();
-		m_GumpMul.Unload();
-		m_SoundMul.Unload();
-	}
-	else
-	{
-		m_artLegacyMUL.Unload();
-		m_gumpartLegacyMUL.Unload();
-		m_soundLegacyMUL.Unload();
-		m_tileart.Unload();
-		m_string_dictionary.Unload();
-		m_MultiCollection.Unload();
-		m_AnimationSequence.Unload();
-		m_MainMisc.Unload();
-
-		IFOR(i, 1, 5)
-		{
-			m_AnimationFrame[i].Unload();
-		}
+		m_AnimationFrame[i].Unload();
 	}
 	m_LightIdx.Unload();
 	m_MultiIdx.Unload();
@@ -206,14 +201,9 @@ void CFileManager::Unload()
 	{
 		m_AnimIdx[i].Unload();
 		m_AnimMul[i].Unload();
-		if (g_FileManager.UseUOP)
-		{
-			m_MapUOP[i].Unload();
-			m_MapXUOP[i].Unload();
-
-		}
-		else
-			m_MapMul[i].Unload();
+		m_MapUOP[i].Unload();
+		m_MapXUOP[i].Unload();
+		m_MapMul[i].Unload();
 		m_StaticIdx[i].Unload();
 		m_StaticMul[i].Unload();
 		m_FacetMul[i].Unload();
