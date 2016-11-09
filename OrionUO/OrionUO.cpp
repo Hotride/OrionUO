@@ -2784,6 +2784,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 					obj->Address += 8;
 					obj->Height = ((extra[7] << 24) | (extra[6] << 16) | (extra[5] << 8) | extra[4]);
 					obj->Width = ((extra[3] << 24) | (extra[2] << 16) | (extra[1] << 8) | extra[0]);
+					obj->DataSize -= 8;
 
 					uopFile->Ptr = currentPos;
 				}
