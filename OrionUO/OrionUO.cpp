@@ -2770,6 +2770,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 				CIndexObject *obj = getIdxObj(idx);
 				obj->Address = reinterpret_cast<uint>(uopFile->Start) + offset + headerLength;
 				obj->DataSize = entryLength;
+				obj->ID = idx;
 
 				if (uopFileName == "gumpartlegacymul")
 				{
