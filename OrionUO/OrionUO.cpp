@@ -2788,7 +2788,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 
 		uopFile->ResetPtr();
 		uopFile->Move(nextBlock);
-	} while (uopFile->Ptr != 0);
+	} while (nextBlock != 0);
 }
 //----------------------------------------------------------------------------------
 unsigned long long COrion::CreateHash(string s)
