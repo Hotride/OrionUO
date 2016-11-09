@@ -2773,15 +2773,21 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 
 				if (uopFileName == "gumpartlegacymul")
 				{
+					auto currentPos = uopFile->Ptr;
+					uopFile->ResetPtr();
+					uopFile->Move(offset + headerLength);
 
-					auto extra1 = uopFile->ReadInt32LE();
-					auto extra2 = uopFile->ReadInt32LE();
+					uchar extra[8] = { 0 };
+					uopFile->ReadDataLE(&extra[0], 8);
+
+					auto extra1 = ((extra[3] << 24) | (extra[2] << 16) | (extra[1] << 8) | extra[0]);
+					auto extra2 = ((extra[7] << 24) | (extra[6] << 16) | (extra[5] << 8) | extra[4]);
 
 					obj->Address += 8;
 					obj->Width = extra1;
 					obj->Height = extra2;
 
-					uopFile->Move(-8);
+					uopFile->Ptr = currentPos;
 				}
 			}
 		}
@@ -2912,7 +2918,7 @@ void COrion::LoadIndexFiles()
 	if (g_MultiIndexCount > MAX_MULTI_DATA_INDEX_COUNT)
 		g_MultiIndexCount = MAX_MULTI_DATA_INDEX_COUNT;
 
-	int maxGumpsCount = (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK);
+	int maxGumpsCount = !g_FileManager.UseUOP ? (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK) : 0xFFFF;
 
 	if (!g_FileManager.UseUOP)
 	{
