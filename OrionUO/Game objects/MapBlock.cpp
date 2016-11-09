@@ -247,7 +247,7 @@ char CMapBlock::GetLandZ(const int &x, const int &y, const int &map)
 			return -125;
 		else if (x < 0 || y < 0 || x >= g_MapSize[map].Width || y >= g_MapSize[map].Height)
 			return -125;
-		e
+		
 		//Смщение блока
 		int blockX = x / 8;
 		int blockY = y / 8;
