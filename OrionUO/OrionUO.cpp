@@ -2713,7 +2713,7 @@ void COrion::ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 
 }
 //----------------------------------------------------------------------------------
-void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, string uopFileName, string extesion, Wisp::CMappedFile* uopFile)
+void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, string uopFileName, string extesion, Wisp::CMappedFile* uopFile, int startIndex)
 {
 	if (uopFile->ReadInt32LE() != 0x50594D)
 	{
@@ -2730,7 +2730,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 	char basePath[200];
 	sprintf(basePath, "build/%s/%%08i%s", uopFileName.c_str(), extesion.c_str());
 
-	IFOR(i, 0, indexMaxCount)
+	IFOR(i, startIndex, indexMaxCount)
 	{
 		char x[200];
 		sprintf(x, basePath, i);
@@ -2771,7 +2771,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 				obj->Address = offset + headerLength;
 				obj->DataSize = entryLength;
 
-				if (uopFileName == "gumpartLegacyMUL")
+				if (uopFileName == "gumpartlegacymul")
 				{
 
 					auto extra1 = uopFile->ReadInt32LE();
@@ -2916,17 +2916,16 @@ void COrion::LoadIndexFiles()
 
 	if (!g_FileManager.UseUOP)
 	{
-		ReadMulIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, [&StaticArtPtr]() { return ++StaticArtPtr; });
 		ReadMulIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, LandArtPtr, [&LandArtPtr]() { return ++LandArtPtr; });
+		ReadMulIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, [&StaticArtPtr]() { return ++StaticArtPtr; });
 		ReadMulIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, (uint)g_FileManager.m_SoundMul.Start, SoundPtr, [&SoundPtr]() { return ++SoundPtr; });
 		ReadMulIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, [&GumpArtPtr]() { return ++GumpArtPtr; });
 	}
 	else
 	{
-		ReadUOPIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL);
-		g_FileManager.m_artLegacyMUL.ResetPtr();
-		g_FileManager.m_artLegacyMUL.Move(m_LandDataCount * sizeof(ART_IDX_BLOCK));
 		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL);
+		g_FileManager.m_artLegacyMUL.ResetPtr();
+		ReadUOPIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL, MAX_LAND_DATA_INDEX_COUNT);
 		ReadUOPIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, "soundlegacymul", ".dat", &g_FileManager.m_soundLegacyMUL);
 		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartlegacymul", ".tga", &g_FileManager.m_gumpartLegacyMUL);
 	}
