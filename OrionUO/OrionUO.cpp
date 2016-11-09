@@ -2712,7 +2712,7 @@ void COrion::ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 
 }
 //----------------------------------------------------------------------------------
-void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue, string uopFileName, string extesion, Wisp::CMappedFile* uopFile)
+void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, string uopFileName, string extesion, Wisp::CMappedFile* uopFile)
 {
 	if (uopFile->ReadInt32LE() != 0x50594D)
 	{
@@ -2765,25 +2765,20 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 			idx = hashes.at(hash);
 
 			CIndexObject *obj = getIdxObj(idx);
-			obj->
-			entries[idx].lookup = (int)(offset + headerLength);
-			entries[idx].length = entryLength;
+			obj->Address = offset + headerLength;
+			obj->DataSize = entryLength;
 
-			if (m_HasExtra)
+			if (uopFileName == "gumpartLegacyMUL")
 			{
-				long curPos = br.BaseStream.Position;
 
-				br.BaseStream.Seek(offset + headerLength, SeekOrigin.Begin);
+				auto extra1 = uopFile->ReadInt32LE();
+				auto extra2 = uopFile->ReadInt32LE();
 
-				byte[] extra = br.ReadBytes(8);
+				obj->Address += 8;
+				obj->Width = extra1;
+				obj->Height = extra2;
 
-				ushort extra1 = (ushort)((extra[3] << 24) | (extra[2] << 16) | (extra[1] << 8) | extra[0]);
-				ushort extra2 = (ushort)((extra[7] << 24) | (extra[6] << 16) | (extra[5] << 8) | extra[4]);
-
-				entries[idx].lookup += 8;
-				entries[idx].extra = extra1 << 16 | extra2;
-
-				br.BaseStream.Seek(curPos, SeekOrigin.Begin);
+				uopFile->Move(-8);
 			}
 		}
 
@@ -2915,12 +2910,25 @@ void COrion::LoadIndexFiles()
 
 	int maxGumpsCount = (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK);
 
-	ReadMulIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i];}, (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, [&StaticArtPtr]() { return ++StaticArtPtr; });
-	ReadMulIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, LandArtPtr, [&LandArtPtr]() { return ++LandArtPtr; });
+	if (!g_FileManager.UseUOP)
+	{
+		ReadMulIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, [&StaticArtPtr]() { return ++StaticArtPtr; });
+		ReadMulIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, LandArtPtr, [&LandArtPtr]() { return ++LandArtPtr; });
+		ReadMulIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, (uint)g_FileManager.m_SoundMul.Start, SoundPtr, [&SoundPtr]() { return ++SoundPtr; });
+		ReadMulIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, [&GumpArtPtr]() { return ++GumpArtPtr; });
+	}
+	else
+	{
+		ReadUOPIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, "artLegacyMUL", ".tga", &g_FileManager.m_artLegacyMUL);
+		g_FileManager.m_artLegacyMUL.ResetPtr();
+		g_FileManager.m_artLegacyMUL.Move(m_LandDataCount * sizeof(ART_IDX_BLOCK));
+		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artLegacyMUL", ".tga", &g_FileManager.m_artLegacyMUL);
+		ReadUOPIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, "soundLegacyMUL", ".dat", &g_FileManager.m_soundLegacyMUL);
+		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartLegacyMUL", ".tga", &g_FileManager.m_gumpartLegacyMUL);
+	}
+
 	ReadMulIndexFile(MAX_LAND_TEXTURES_DATA_INDEX_COUNT, [&](int i){ return &m_TextureDataIndex[i]; }, (uint)g_FileManager.m_TextureMul.Start, TexturePtr, [&TexturePtr]() { return ++TexturePtr; });
-	ReadMulIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, (uint)g_FileManager.m_SoundMul.Start, SoundPtr, [&SoundPtr]() { return ++SoundPtr; });
 	ReadMulIndexFile(MAX_LIGHTS_DATA_INDEX_COUNT, [&](int i){ return &m_LightDataIndex[i]; }, (uint)g_FileManager.m_LightMul.Start, LightPtr, [&LightPtr]() { return ++LightPtr; });
-	ReadMulIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, [&GumpArtPtr]() { return ++GumpArtPtr; });
 	ReadMulIndexFile(g_MultiIndexCount, [&](int i){ return &m_MultiDataIndex[i]; }, (uint)g_FileManager.m_MultiMul.Start, MultiPtr, [&MultiPtr]() { return ++MultiPtr; });
 }
 //----------------------------------------------------------------------------------
