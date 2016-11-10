@@ -1177,10 +1177,10 @@ MACRO_RETURN_CODE CMacroManager::Process()
 				{
 					g_ConfigManager.UpdateRange = std::atoi(str.c_str());
 
-					if (g_ConfigManager.UpdateRange < 5)
-						g_ConfigManager.UpdateRange = 5;
-					else if (g_ConfigManager.UpdateRange > 18)
-						g_ConfigManager.UpdateRange = 18;
+					if (g_ConfigManager.UpdateRange < MIN_VIEW_RANGE)
+						g_ConfigManager.UpdateRange = MIN_VIEW_RANGE;
+					else if (g_ConfigManager.UpdateRange > MAX_VIEW_RANGE)
+						g_ConfigManager.UpdateRange = MAX_VIEW_RANGE;
 				}
 
 				break;
@@ -1189,8 +1189,8 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			{
 				g_ConfigManager.UpdateRange += 1;
 
-				if (g_ConfigManager.UpdateRange > 18)
-					g_ConfigManager.UpdateRange = 18;
+				if (g_ConfigManager.UpdateRange > MAX_VIEW_RANGE)
+					g_ConfigManager.UpdateRange = MAX_VIEW_RANGE;
 
 				break;
 			}
@@ -1198,26 +1198,26 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			{
 				g_ConfigManager.UpdateRange -= 1;
 
-				if (g_ConfigManager.UpdateRange < 5)
-					g_ConfigManager.UpdateRange = 5;
+				if (g_ConfigManager.UpdateRange < MIN_VIEW_RANGE)
+					g_ConfigManager.UpdateRange = MIN_VIEW_RANGE;
 
 				break;
 			}
 			case MC_MAX_UPDATE_RANGE:
 			{
-				g_ConfigManager.UpdateRange = 18;
+				g_ConfigManager.UpdateRange = MAX_VIEW_RANGE;
 
 				break;
 			}
 			case MC_MIN_UPDATE_RANGE:
 			{
-				g_ConfigManager.UpdateRange = 5;
+				g_ConfigManager.UpdateRange = MIN_VIEW_RANGE;
 
 				break;
 			}
 			case MC_DEFAULT_UPDATE_RANGE:
 			{
-				g_ConfigManager.UpdateRange = 18;
+				g_ConfigManager.UpdateRange = MAX_VIEW_RANGE;
 
 				break;
 			}

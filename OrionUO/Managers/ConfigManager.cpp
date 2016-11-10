@@ -63,7 +63,7 @@ void CConfigManager::Init()
 	GameWindowX = 0;
 	GameWindowY = 0;
 
-	m_UpdateRange = 18;
+	m_UpdateRange = MAX_VIEW_RANGE;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage1()
