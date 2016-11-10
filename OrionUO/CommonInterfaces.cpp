@@ -14,6 +14,7 @@
 #include "Managers/FontsManager.h"
 #include "Managers/ColorManager.h"
 #include "Managers/ConfigManager.h"
+#include "Managers/PacketManager.h"
 #include "Walker/PathFinder.h"
 #include "Game objects/GamePlayer.h"
 #include "Target.h"
@@ -208,6 +209,18 @@ void __cdecl FUNCBODY_SendUnicodeSpeech(const wchar_t *text)
 	CPacketUnicodeSpeechRequest(text, ST_NORMAL, 3, g_ConfigManager.SpeechColor, (puchar)g_Language.c_str()).Send();
 }
 //----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_SendRenameMount(uint serial, const char *text)
+{
+	CPacketRenameRequest(serial, text).Send();
+
+	if (g_PacketManager.ClientVersion >= CV_308Z)
+	{
+		UINT_LIST list;
+		list.push_back(serial);
+		g_PacketManager.SendMegaClilocRequests(list);
+	}
+}
+//----------------------------------------------------------------------------------
 //IClilocManager
 //----------------------------------------------------------------------------------
 IOrionString *__cdecl FUNCBODY_GetClilocA(unsigned int clilocID, const char *defaultText)
@@ -347,7 +360,8 @@ IUltimaOnline g_Interface_UO =
 	FUNCBODY_SendCastSpell,
 	FUNCBODY_SendUseSkill,
 	FUNCBODY_SendAsciiSpeech,
-	FUNCBODY_SendUnicodeSpeech
+	FUNCBODY_SendUnicodeSpeech,
+	FUNCBODY_SendRenameMount
 };
 //----------------------------------------------------------------------------------
 IClilocManager g_Interface_ClilocManager =
