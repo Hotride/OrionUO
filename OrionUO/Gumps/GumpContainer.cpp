@@ -384,6 +384,7 @@ bool CGumpContainer::OnLeftMouseButtonDoubleClick()
 	else if (g_PressedObject.LeftSerial && g_PressedObject.LeftSerial != ID_GC_MINIMIZE)
 	{
 		g_Orion.DoubleClick(g_PressedObject.LeftSerial);
+		m_FrameCreated = false;
 
 		result = true;
 	}
