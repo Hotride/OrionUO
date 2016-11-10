@@ -23,12 +23,13 @@
 #include "../Gumps/GumpDrag.h"
 #include "../Managers/GumpManager.h"
 //----------------------------------------------------------------------------------
-CGumpContainer::CGumpContainer(uint serial, short x, short y)
+CGumpContainer::CGumpContainer(uint serial, uint id, short x, short y)
 : CGump(GT_CONTAINER, serial, x, y), m_CorpseEyesTicks(0), m_CorpseEyesOffset(0),
-m_IsGameBoard(false), m_TextRenderer(), m_CorpseEyes(NULL), m_DataBox(NULL)
+m_IsGameBoard(id == 0x091A || id == 0x092E), m_TextRenderer(), m_CorpseEyes(NULL), m_DataBox(NULL)
 {
 	m_Page = 1;
 	m_Locker.Serial = ID_GC_LOCK_MOVING;
+	m_ID = id;
 
 	Add(new CGUIPage(1));
 	Add(new CGUIGumppic(0x0050, 0, 0));
@@ -198,6 +199,8 @@ void CGumpContainer::UpdateContent()
 
 	if (g_ObjectInHand != NULL)
 		ignoreSerial = g_ObjectInHand->Serial;
+
+	m_IsGameBoard = (m_ID == 0x091A || m_ID == 0x092E);
 
 	QFOR(obj, container->m_Items, CGameItem*)
 	{

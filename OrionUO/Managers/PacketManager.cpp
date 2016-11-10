@@ -1727,7 +1727,7 @@ PACKET_HANDLER(UpdateContainedItems)
 	ushort count = ReadUInt16BE();
 	uint cupd = 0;
 	CGameItem *contobj = NULL;
-	bool isContGameBoard = false;
+	//bool isContGameBoard = false;
 	bool bbUpdated = false;
 	vector<CORPSE_EQUIPMENT_DATA> vced;
 	bool containerIsCorpse = false;
@@ -1791,13 +1791,13 @@ PACKET_HANDLER(UpdateContainedItems)
 
 				objA->Clear();
 
-				if (contobj->Opened)
+				/*if (contobj->Opened)
 				{
 					CGump *gameGump = g_GumpManager.GetGump(contobj->Serial, 0, GT_CONTAINER);
 
 					if (gameGump != NULL)
 						isContGameBoard = ((CGumpContainer*)gameGump)->IsGameBoard;
-				}
+				}*/
 			}
 		}
 
@@ -2294,10 +2294,8 @@ PACKET_HANDLER(OpenContainer)
 
 		g_ContainerRect.Calculate(gumpid);
 
-		gump = new CGumpContainer(serial, g_ContainerRect.X, g_ContainerRect.Y);
+		gump = new CGumpContainer(serial, gumpid, g_ContainerRect.X, g_ContainerRect.Y);
 		gump->Graphic = graphic;
-		((CGumpContainer*)gump)->m_BodyGump->Graphic = gumpid;
-		((CGumpContainer*)gump)->IsGameBoard = (gumpid == 0x091A || gumpid == 0x092E);
 		g_Orion.ExecuteGump(gumpid);
 	}
 
