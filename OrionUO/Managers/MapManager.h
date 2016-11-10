@@ -10,9 +10,6 @@
 #ifndef MAPMANAGER_H
 #define MAPMANAGER_H
 //----------------------------------------------------------------------------------
-//Использовать вектор блоков или очередь
-#define USE_BLOCK_MAP 1
-//----------------------------------------------------------------------------------
 #include "../BaseQueue.h"
 #include "../Game objects/MapBlock.h"
 #include "../MulStruct.h"
@@ -39,18 +36,16 @@ class CMapManager : public CBaseQueue
 	SETGET(uint, MaxBlockIndex);
 
 private:
-#if USE_BLOCK_MAP == 1
 	//!Вектор ссылок на блоки карты
 	CMapBlock **m_Blocks;
-#endif
 
 	MAP_INDEX_LIST m_BlockData[MAX_MAPS_COUNT];
-
-	CIndexMap *GetIndex(const int &map, const int &blockX, const int &blockY);
 
 public:
 	CMapManager();
 	virtual ~CMapManager();
+
+	CIndexMap *GetIndex(const int &map, const int &blockX, const int &blockY);
 
 	void CreateBlockTable(int map);
 

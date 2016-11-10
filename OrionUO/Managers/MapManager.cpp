@@ -26,22 +26,17 @@ CIndexMap::~CIndexMap()
 }
 //----------------------------------------------------------------------------------
 CMapManager::CMapManager()
-: CBaseQueue(), m_MaxBlockIndex(0)
-#if USE_BLOCK_MAP == 1
-, m_Blocks(NULL)
-#endif
+: CBaseQueue(), m_MaxBlockIndex(0), m_Blocks(NULL)
 {
 }
 //----------------------------------------------------------------------------------
 CMapManager::~CMapManager()
 {
-#if USE_BLOCK_MAP == 1
 	if (m_Blocks != NULL)
 	{
 		delete[] m_Blocks;
 		m_Blocks = NULL;
 	}
-#endif
 
 	m_MaxBlockIndex = 0;
 }
@@ -309,12 +304,10 @@ void CMapManager::ClearUnusedBlocks()
 
 		if (block->LastAccessTime < ticks && block->HasNoExternalData())
 		{
-			DWORD index = block->Index;
+			uint index = block->Index;
 			Delete(block);
 
-#if USE_BLOCK_MAP == 1
 			m_Blocks[index] = NULL;
-#endif
 		}
 
 		block = next;
@@ -333,7 +326,6 @@ void CMapManager::Init(const bool &delayed)
 
 	int map = GetActualMap();
 
-#if USE_BLOCK_MAP == 1
 	if (!delayed)
 	{
 		if (m_Blocks != NULL)
@@ -346,7 +338,6 @@ void CMapManager::Init(const bool &delayed)
 		m_Blocks = new CMapBlock*[m_MaxBlockIndex];
 		memset(&m_Blocks[0], 0, sizeof(CMapBlock*) * m_MaxBlockIndex);
 	}
-#endif
 	
 	const int XY_Offset = 30; //70;
 
@@ -504,29 +495,15 @@ void CMapManager::AddRender(CRenderWorldObject *item)
 */
 CMapBlock *CMapManager::GetBlock(const uint &index)
 {
-#if USE_BLOCK_MAP == 0
-	TMapBlock *block = (TMapBlock*)m_Items;
-
-	while (block != NULL)
-	{
-		if (block->Index == index)
-		{
-			block->LastAccessTime = g_Ticks;
-
-			break;
-		}
-
-		block = (TMapBlock*)block->m_Next;
-	}
-#else
 	CMapBlock *block = NULL;
 
 	if (index < m_MaxBlockIndex)
+	{
 		block = m_Blocks[index];
 
-	if (block != NULL)
-		block->LastAccessTime = g_Ticks;
-#endif
+		if (block != NULL)
+			block->LastAccessTime = g_Ticks;
+	}
 
 	return block;
 }
@@ -540,9 +517,7 @@ CMapBlock *CMapManager::AddBlock(const uint &index)
 {
 	CMapBlock *block = (CMapBlock*)Add(new CMapBlock(index));
 
-#if USE_BLOCK_MAP == 1
 	m_Blocks[index] = block;
-#endif
 
 	return block;
 }
@@ -561,9 +536,7 @@ void CMapManager::DeleteBlock(const uint &index)
 		if (block->Index == index)
 		{
 			Delete(block);
-#if USE_BLOCK_MAP == 1
 			m_Blocks[index] = NULL;
-#endif
 
 			break;
 		}
