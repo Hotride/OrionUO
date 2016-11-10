@@ -236,32 +236,16 @@ bool CMapBlock::TestStretched(const int &x, const int &y, const char &z, const i
 //----------------------------------------------------------------------------------
 char CMapBlock::GetLandZ(const int &x, const int &y, const int &map)
 {
-	if (g_FileManager.UseUOP)
-	{
-		return 0;
-	}
-	else
-	{
-		//Проверки актуальности данных
-		if (!g_FileManager.m_MapMul[map].Start || !g_FileManager.m_StaticIdx[map].Start || !g_FileManager.m_StaticMul[map].Start)
-			return -125;
-		else if (x < 0 || y < 0 || x >= g_MapSize[map].Width || y >= g_MapSize[map].Height)
-			return -125;
+	CIndexMap *blockIndex = g_MapManager->GetIndex(map, x / 8, y / 8);
 
-		//Смщение блока
-		int blockX = x / 8;
-		int blockY = y / 8;
+	//Проверки актуальности данных
+	if (blockIndex == NULL || blockIndex->MapAddress == 0)
+		return -125;
 
-		int offset = ((blockX * g_MapBlockSize[map].Height) + blockY) * sizeof(MAP_BLOCK);
+	int mX = x % 8;
+	int mY = y % 8;
 
-		//Блок
-		PMAP_BLOCK mb = (PMAP_BLOCK)((uint)g_FileManager.m_MapMul[map].Start + offset);
-
-		int mX = x % 8;
-		int mY = y % 8;
-
-		return mb->Cells[mY * 8 + mX].Z;
-	}
+	return ((PMAP_BLOCK)blockIndex->MapAddress)->Cells[mY * 8 + mX].Z;
 }
 //----------------------------------------------------------------------------------
 CLandObject *CMapBlock::GetLand(const int &x, const int &y)
