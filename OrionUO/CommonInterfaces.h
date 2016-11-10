@@ -62,7 +62,7 @@ typedef void __cdecl FUNCDEF_SEND_CAST_SPELL(int);
 typedef void __cdecl FUNCDEF_SEND_USE_SKILL(int);
 typedef void __cdecl FUNCDEF_SEND_ASCII_SPEECH(const char*);
 typedef void __cdecl FUNCDEF_SEND_UNICODE_SPEECH(const wchar_t*);
-typedef void __cdecl FUNCDEF_SEND_RENAME_MOUNT(uint, const char*);
+typedef void __cdecl FUNCDEF_SEND_RENAME_MOUNT(unsigned int, const char*);
 
 //IClilocManager
 typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_A(unsigned int, const char*);
