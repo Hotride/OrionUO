@@ -1944,6 +1944,12 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_BLOCK_MOVING:
+		{
+			g_BlockMoving = (value != 0);
+
+			break;
+		}
 		default:
 			break;
 	}

@@ -142,6 +142,8 @@ uint g_LockedClientFeatures = 0;
 bool g_GeneratedMouseDown = false;
 bool g_DrawFoliage = true;
 
+bool g_BlockMoving = false;
+
 DEVELOPER_MODE g_DeveloperMode = DM_SHOW_FPS_ONLY;
 DEVELOPER_MODE g_OptionsDeveloperMode = DM_SHOW_FPS_ONLY;
 
