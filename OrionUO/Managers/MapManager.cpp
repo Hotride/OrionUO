@@ -17,13 +17,12 @@ CMapManager *g_MapManager = NULL;
 //----------------------------------------------------------------------------------
 CIndexMap::CIndexMap()
 : m_MapAddress(0), m_StaticAddress(0), m_StaticCount(0), m_MapPatched(false),
-m_StaticPatched(false), Block(NULL)
+m_StaticPatched(false)
 {
 }
 //----------------------------------------------------------------------------------
 CIndexMap::~CIndexMap()
 {
-	RELEASE_POINTER(Block);
 }
 //----------------------------------------------------------------------------------
 CMapManager::CMapManager()
@@ -113,12 +112,14 @@ void CMapManager::CreateBlockTable(int map)
 			}
 		}
 
+		if (!realStaticCount)
+			realStaticCount = 0;
+
 		index.MapAddress = realMapAddress;
 		index.StaticAddress = realStaticAddress;
 		index.StaticCount = realStaticCount;
 		index.MapPatched = false;
 		index.StaticPatched = false;
-		index.Block = NULL;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -139,6 +140,17 @@ void CMapManager::ApplyMapPatches()
 {
 }
 //----------------------------------------------------------------------------------
+CIndexMap *CMapManager::GetIndex(const int &map, const int &blockX, const int &blockY)
+{
+	int block = (blockX * g_MapBlockSize[map].Height) + blockY;
+	MAP_INDEX_LIST &list = m_BlockData[map];
+
+	if (block >= (int)list.size())
+		return NULL;
+
+	return &list[block];
+}
+//----------------------------------------------------------------------------------
 /*!
 Получить блок карты напрямую из мулов
 @param [__in] map Индекс карты
@@ -147,25 +159,14 @@ void CMapManager::ApplyMapPatches()
 @param [__out] mb Ссылка на блок
 @return Код ошибки (0 - успешно)
 */
-int CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb)
+void CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb)
 {
-	if (!g_FileManager.m_MapMul[map].Start || !g_FileManager.m_StaticIdx[map].Start || !g_FileManager.m_StaticMul[map].Start)
-		return 1;
-	else if (blockX < 0 || blockX >= g_MapBlockSize[map].Width)
-		return 2;
-	else if ( blockY < 0 || blockY >= g_MapBlockSize[map].Height)
-		return 3;
+	CIndexMap *indexMap = GetIndex(map, blockX, blockY);
 
-	int block = (blockX * g_MapBlockSize[map].Height) + blockY;
-	PMAP_BLOCK pmb = (PMAP_BLOCK)((uint)g_FileManager.m_MapMul[map].Start + (block * sizeof(MAP_BLOCK)));
-	
-	if ((uint)pmb  > (uint)g_FileManager.m_MapMul[map].Start + g_FileManager.m_MapMul[map].Size)
-		return 4;
+	if (indexMap == NULL || indexMap->MapAddress == 0)
+		return;
 
-	MAP_PATCH_LIST::iterator it = m_Patches.find((uint)block);
-
-	if (it != m_Patches.end())
-		pmb = it->second;
+	PMAP_BLOCK pmb = (PMAP_BLOCK)indexMap->MapAddress;
 
 	IFOR(x, 0, 8)
 	{
@@ -177,38 +178,29 @@ int CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &
 		}
 	}
 
-	PSTAIDX_BLOCK sidx = (PSTAIDX_BLOCK)((uint)g_FileManager.m_StaticIdx[map].Start + (block * sizeof(STAIDX_BLOCK)));
-	if (sidx->Size > 0 && sidx->Position != 0xFFFFFFFF && (uint)sidx < (uint)g_FileManager.m_StaticIdx[map].Start + g_FileManager.m_StaticIdx[map].Size)
+	PSTATICS_BLOCK sb = (PSTATICS_BLOCK)indexMap->StaticAddress;
+
+	if (sb != NULL)
 	{
-		PSTATICS_BLOCK sb = (PSTATICS_BLOCK)((uint)g_FileManager.m_StaticMul[map].Start + sidx->Position);
+		int count = indexMap->StaticCount;
 
-		int scnt = sidx->Size / sizeof(STATICS_BLOCK);
-
-		if (scnt > 0)
+		IFOR(c, 0, count)
 		{
-			if (scnt > 1024)
-				scnt = 1024;
-
-			IFOR(c, 0, scnt)
+			if (sb->Color && sb->Color != 0xFFFF)
 			{
-				if (sb->Color && sb->Color != 0xFFFF)
+				int pos = (sb->Y * 8) + sb->X;
+				//if (pos > 64) continue;
+
+				if (mb.Cells[pos].Z <= sb->Z)
 				{
-					int pos = (sb->Y * 8) + sb->X;
-					//if (pos > 64) continue;
-
-					if (mb.Cells[pos].Z <= sb->Z)
-					{
-						mb.Cells[pos].TileID = sb->Color + 0x4000;
-						mb.Cells[pos].Z = sb->Z;
-					}
+					mb.Cells[pos].TileID = sb->Color + 0x4000;
+					mb.Cells[pos].Z = sb->Z;
 				}
-
-				sb++;
 			}
+
+			sb++;
 		}
 	}
-
-	return 0;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -220,25 +212,13 @@ int CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &
 */
 void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLOCK &mb)
 {
-	int map = GetActualMap();
+	CIndexMap *indexMap = GetIndex(GetActualMap(), blockX, blockY);
+
+	if (indexMap == NULL || indexMap->MapAddress == 0)
+		return;
+
+	PMAP_BLOCK pmb = (PMAP_BLOCK)indexMap->MapAddress;
 	
-	if (!g_FileManager.m_MapMul[map].Start || !g_FileManager.m_StaticIdx[map].Start || !g_FileManager.m_StaticMul[map].Start)
-		return;
-
-	if (blockX < 0 || blockY < 0 || blockX >= g_MapBlockSize[map].Width || blockY >= g_MapBlockSize[map].Height)
-		return;
-
-	int block = (blockX * g_MapBlockSize[map].Height) + blockY;
-	PMAP_BLOCK pmb = (PMAP_BLOCK)((uint)g_FileManager.m_MapMul[map].Start + (block * sizeof(MAP_BLOCK)));
-	
-	if ((uint)pmb  > (uint)g_FileManager.m_MapMul[map].Start + g_FileManager.m_MapMul[map].Size)
-		return;
-
-	MAP_PATCH_LIST::iterator it = m_Patches.find((uint)block);
-
-	if (it != m_Patches.end())
-		pmb = it->second;
-
 	IFOR(x, 0, 8)
 	{
 		IFOR(y, 0, 8)
@@ -249,19 +229,13 @@ void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLO
 		}
 	}
 
-	PSTAIDX_BLOCK sidx = (PSTAIDX_BLOCK)((uint)g_FileManager.m_StaticIdx[map].Start + (block * sizeof(STAIDX_BLOCK)));
-	if (sidx->Size > 0 && sidx->Position != 0xFFFFFFFF && (uint)sidx < (uint)g_FileManager.m_StaticIdx[map].Start + g_FileManager.m_StaticIdx[map].Size)
+	PSTATICS_BLOCK sb = (PSTATICS_BLOCK)indexMap->StaticAddress;
+
+	if (sb != NULL)
 	{
-		PSTATICS_BLOCK sb = (PSTATICS_BLOCK)((uint)g_FileManager.m_StaticMul[map].Start + sidx->Position);
+		int count = indexMap->StaticCount;
 
-		int scnt = sidx->Size / sizeof(STATICS_BLOCK);
-		if (scnt < 1)
-			return;
-
-		if (scnt > 1024)
-			scnt = 1024;
-
-		IFOR(c, 0, scnt)
+		IFOR(c, 0, count)
 		{
 			if (sb->Color && sb->Color != 0xFFFF)
 			{
@@ -423,18 +397,14 @@ void CMapManager::Init(const bool &delayed)
 void CMapManager::LoadBlock(CMapBlock *block)
 {
 	int map = GetActualMap();
-	
-	if (!g_FileManager.m_MapMul[map].Start || !g_FileManager.m_StaticIdx[map].Start || !g_FileManager.m_StaticMul[map].Start)
+
+	CIndexMap *indexMap = GetIndex(GetActualMap(), block->X, block->Y);
+
+	if (indexMap == NULL || indexMap->MapAddress == 0)
 		return;
 
-	int index = block->Index;
-	PMAP_BLOCK pmb = (PMAP_BLOCK)((uint)g_FileManager.m_MapMul[map].Start + (index * sizeof(MAP_BLOCK)));
+	PMAP_BLOCK pmb = (PMAP_BLOCK)indexMap->MapAddress;
 
-	MAP_PATCH_LIST::iterator it = m_Patches.find((uint)index);
-
-	if (it != m_Patches.end())
-		pmb = it->second;
-	
 	int bx = block->X * 8;
 	int by = block->Y * 8;
 
@@ -448,17 +418,13 @@ void CMapManager::LoadBlock(CMapBlock *block)
 		}
 	}
 
-	PSTAIDX_BLOCK sidx = (PSTAIDX_BLOCK)((uint)g_FileManager.m_StaticIdx[map].Start + (index * sizeof(STAIDX_BLOCK)));
-	if (sidx->Size > 0 && sidx->Position != 0xFFFFFFFF && (uint)sidx < (uint)g_FileManager.m_StaticIdx[map].Start + g_FileManager.m_StaticIdx[map].Size)
+	PSTATICS_BLOCK sb = (PSTATICS_BLOCK)indexMap->StaticAddress;
+
+	if (sb != NULL)
 	{
-		PSTATICS_BLOCK sb = (PSTATICS_BLOCK)((uint)g_FileManager.m_StaticMul[map].Start + sidx->Position);
+		int count = indexMap->StaticCount;
 
-		int scnt = sidx->Size / sizeof(STATICS_BLOCK);
-
-		if (scnt > 1024)
-			scnt = 1024;
-
-		for (int c = 0; c < scnt; c++, sb++)
+		for (int c = 0; c < count; c++, sb++)
 		{
 			if (sb->Color && sb->Color != 0xFFFF)
 			{
@@ -466,6 +432,7 @@ void CMapManager::LoadBlock(CMapBlock *block)
 				int y = sb->Y;
 
 				int pos = (y * 8) + x;
+
 				if (pos >= 64)
 					continue;
 
@@ -643,9 +610,8 @@ void CUopMapManager::LoadBlock(CMapBlock *block)
 @param [__out] mb Ссылка на блок
 @return Код ошибки (0 - успешно)
 */
-int CUopMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb)
+void CUopMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb)
 {
-	return 0;
 }
 //----------------------------------------------------------------------------------
 /*!

@@ -17,8 +17,6 @@
 #include "../Game objects/MapBlock.h"
 #include "../MulStruct.h"
 //----------------------------------------------------------------------------------
-typedef map<uint, PMAP_BLOCK> MAP_PATCH_LIST;
-//----------------------------------------------------------------------------------
 class CIndexMap
 {
 	SETGET(uint, MapAddress);
@@ -30,8 +28,6 @@ class CIndexMap
 public:
 	CIndexMap();
 	virtual ~CIndexMap();
-
-	CMapBlock *Block;
 };
 //----------------------------------------------------------------------------------
 typedef vector<CIndexMap> MAP_INDEX_LIST;
@@ -48,9 +44,9 @@ private:
 	CMapBlock **m_Blocks;
 #endif
 
-	MAP_PATCH_LIST m_Patches;
-
 	MAP_INDEX_LIST m_BlockData[MAX_MAPS_COUNT];
+
+	CIndexMap *GetIndex(const int &map, const int &blockX, const int &blockY);
 
 public:
 	CMapManager();
@@ -94,7 +90,7 @@ public:
 	@param [__out] mb Ссылка на блок
 	@return Код ошибки (0 - успешно)
 	*/
-	virtual int GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
+	virtual void GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
 
 	/*!
 	Получить значение Z координаты для указанной точки в мире
@@ -177,7 +173,7 @@ public:
 	@param [__out] mb Ссылка на блок
 	@return Код ошибки (0 - успешно)
 	*/
-	virtual int GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
+	virtual void GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
 
 	/*!
 	Получить блок для радара из муллов
