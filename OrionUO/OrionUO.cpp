@@ -220,6 +220,8 @@ bool COrion::Install()
 	else
 		g_MapManager = new CMapManager();
 
+	g_MapManager->CreateBlocksTable();
+
 	DEBUGLOG("Patch files\n");
 	PatchFiles();
 	DEBUGLOG("Replaces...\n");
@@ -540,7 +542,7 @@ void COrion::LoadClientConfig()
 
 		file.Move(1);
 
-		IFOR(i, 0, 6)
+		IFOR(i, 0, MAX_MAPS_COUNT)
 		{
 			g_MapSize[i].Width = file.ReadUInt16LE();
 			g_MapSize[i].Height = file.ReadUInt16LE();
@@ -3149,7 +3151,7 @@ void COrion::PatchFiles()
 
 		if (vh->FileID == 0) //Map0
 		{
-			g_MapManager->SetPatchedMapBlock(vh->BlockID, (PMAP_BLOCK)(vAddr + vh->Position));
+			g_MapManager->SetPatchedMapBlock(vh->BlockID, vAddr + vh->Position);
 		}
 		else if (vh->FileID == 4) //Art
 		{

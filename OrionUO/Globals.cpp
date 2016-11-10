@@ -19,7 +19,7 @@ int g_RenderedObjectsCountInGameWindow = 0;
 //----------------------------------------------------------------------------------
 GLdouble g_GlobalScale = 1.0;
 
-CGLTexture g_MapTexture[6];
+CGLTexture g_MapTexture[MAX_MAPS_COUNT];
 CGLTexture g_AuraTexture;
 
 bool g_LogoutAfterClick = false;
@@ -49,8 +49,8 @@ GAME_STATE g_GameState = GS_MAIN;
 
 CGLTexture g_TextureGumpState[2];
 
-WISP_GEOMETRY::CSize g_MapSize[6];
-WISP_GEOMETRY::CSize g_MapBlockSize[6];
+WISP_GEOMETRY::CSize g_MapSize[MAX_MAPS_COUNT];
+WISP_GEOMETRY::CSize g_MapBlockSize[MAX_MAPS_COUNT];
 
 int g_MultiIndexCount = 0;
 

@@ -15,6 +15,17 @@
 //----------------------------------------------------------------------------------
 CMapManager *g_MapManager = NULL;
 //----------------------------------------------------------------------------------
+CIndexMap::CIndexMap()
+: m_MapAddress(0), m_StaticAddress(0), m_StaticCount(0), m_MapPatched(false),
+m_StaticPatched(false), Block(NULL)
+{
+}
+//----------------------------------------------------------------------------------
+CIndexMap::~CIndexMap()
+{
+	RELEASE_POINTER(Block);
+}
+//----------------------------------------------------------------------------------
 CMapManager::CMapManager()
 : CBaseQueue(), m_MaxBlockIndex(0)
 #if USE_BLOCK_MAP == 1
@@ -34,6 +45,98 @@ CMapManager::~CMapManager()
 #endif
 
 	m_MaxBlockIndex = 0;
+}
+//----------------------------------------------------------------------------------
+void CMapManager::CreateBlocksTable()
+{
+	IFOR(map, 0, MAX_MAPS_COUNT)
+		CreateBlockTable(map);
+}
+//----------------------------------------------------------------------------------
+void CMapManager::CreateBlockTable(int map)
+{
+	MAP_INDEX_LIST &list = m_BlockData[map];
+	WISP_GEOMETRY::CSize &size = g_MapBlockSize[map];
+
+	int maxBlockCount = size.Width * size.Height;
+
+	//Return and error notification?
+	if (maxBlockCount < 1)
+		return;
+
+	list.resize(maxBlockCount);
+
+	uint mapAddress = (uint)g_FileManager.m_MapMul[map].Start;
+	uint endMapAddress = mapAddress + g_FileManager.m_MapMul[map].Size;
+
+	uint staticIdxAddress = (uint)g_FileManager.m_StaticIdx[map].Start;
+	uint endStaticIdxAddress = staticIdxAddress + g_FileManager.m_StaticIdx[map].Size;
+
+	uint staticAddress = (uint)g_FileManager.m_StaticMul[map].Start;
+	uint endStaticAddress = staticAddress + g_FileManager.m_StaticMul[map].Size;
+
+	IFOR(block, 0, maxBlockCount)
+	{
+		CIndexMap &index = list[block];
+
+		uint realMapAddress = 0;
+		uint realStaticAddress = 0;
+		int realStaticCount = 0;
+
+		if (mapAddress != 0)
+		{
+			uint address = mapAddress + (block * sizeof(MAP_BLOCK));
+
+			if (address < endMapAddress)
+				realMapAddress = address;
+		}
+
+		if (staticIdxAddress != 0 && staticAddress != 0)
+		{
+			PSTAIDX_BLOCK sidx = (PSTAIDX_BLOCK)(staticIdxAddress + (block * sizeof(STAIDX_BLOCK)));
+
+			if (sidx->Size > 0 && sidx->Position != 0xFFFFFFFF && (uint)sidx < endStaticIdxAddress)
+			{
+				uint address = staticAddress + sidx->Position;
+
+				if (address < endStaticAddress)
+				{
+					realStaticAddress = address;
+					realStaticCount = sidx->Size / sizeof(STATICS_BLOCK);
+
+					if (realStaticCount > 0)
+					{
+						if (realStaticCount > 1024)
+							realStaticCount = 1024;
+					}
+				}
+			}
+		}
+
+		index.MapAddress = realMapAddress;
+		index.StaticAddress = realStaticAddress;
+		index.StaticCount = realStaticCount;
+		index.MapPatched = false;
+		index.StaticPatched = false;
+		index.Block = NULL;
+	}
+}
+//----------------------------------------------------------------------------------
+void CMapManager::SetPatchedMapBlock(const uint &block, const uint &address)
+{
+	MAP_INDEX_LIST &list = m_BlockData[0];
+	WISP_GEOMETRY::CSize &size = g_MapBlockSize[0];
+
+	int maxBlockCount = size.Width * size.Height;
+
+	if (maxBlockCount < 1)
+		return;
+
+	list[block].MapAddress = address;
+}
+//----------------------------------------------------------------------------------
+void CMapManager::ApplyMapPatches()
+{
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -310,11 +413,6 @@ void CMapManager::Init(const bool &delayed)
 			}
 		}
 	}
-}
-//----------------------------------------------------------------------------------
-void CMapManager::SetPatchedMapBlock(const uint &block, PMAP_BLOCK address)
-{
-	m_Patches[block] = address;
 }
 //----------------------------------------------------------------------------------
 /*!

@@ -19,6 +19,23 @@
 //----------------------------------------------------------------------------------
 typedef map<uint, PMAP_BLOCK> MAP_PATCH_LIST;
 //----------------------------------------------------------------------------------
+class CIndexMap
+{
+	SETGET(uint, MapAddress);
+	SETGET(uint, StaticAddress);
+	SETGET(uint, StaticCount);
+	SETGET(bool, MapPatched);
+	SETGET(bool, StaticPatched);
+
+public:
+	CIndexMap();
+	virtual ~CIndexMap();
+
+	CMapBlock *Block;
+};
+//----------------------------------------------------------------------------------
+typedef vector<CIndexMap> MAP_INDEX_LIST;
+//----------------------------------------------------------------------------------
 //!Класс менеджера карт
 class CMapManager : public CBaseQueue
 {
@@ -33,9 +50,17 @@ private:
 
 	MAP_PATCH_LIST m_Patches;
 
+	MAP_INDEX_LIST m_BlockData[MAX_MAPS_COUNT];
+
 public:
 	CMapManager();
 	virtual ~CMapManager();
+
+	void CreateBlockTable(int map);
+
+	void CreateBlocksTable();
+
+	void ApplyMapPatches();
 
 	/*!
 	Получить индекс текущей карты
@@ -43,7 +68,7 @@ public:
 	*/
 	virtual int GetActualMap();
 
-	void SetPatchedMapBlock(const uint &block, PMAP_BLOCK address);
+	void SetPatchedMapBlock(const uint &block, const uint &address);
 
 	/*!
 	Загрузить блок

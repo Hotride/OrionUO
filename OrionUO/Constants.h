@@ -22,6 +22,8 @@ const int MIN_VIEW_RANGE = 5;
 
 const int MAX_VIEW_RANGE = 18;
 
+const int MAX_MAPS_COUNT = 6;
+
 const int DAMAGE_TEXT_NORMAL_DELAY = 800;
 
 const int DAMAGE_TEXT_TRANSPARENT_DELAY = 400;
