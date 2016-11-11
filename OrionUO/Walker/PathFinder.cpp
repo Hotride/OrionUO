@@ -21,7 +21,7 @@ CPathFinder g_PathFinder;
 CPathFinder::CPathFinder()
 : CBaseQueue(), m_OnLongStair(false), m_AutoWalking(false), m_PointIndex(0),
 m_PathSize(0), /*m_StartX(0), m_StartY(0), m_EndX(0), m_EndY(0),*/ m_GoalNode(0),
-m_GoalFound(false), m_ActiveOpenNodes(0), m_ActiveClosedNodes(0),
+m_GoalFound(false), m_ActiveOpenNodes(0), m_ActiveClosedNodes(0), m_BlockMoving(false),
 m_PathFindDistance(0), m_PathFindidngCanBeCancelled(false), m_StartPoint(), m_EndPoint()
 {
 }
@@ -450,7 +450,7 @@ int CPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 //----------------------------------------------------------------------------------
 bool CPathFinder::Walk(bool run, uchar direction)
 {
-	if (g_BlockMoving || g_PendingDelayTime >  g_Ticks || g_WalkRequestCount > 3 || g_Player == NULL || /*!g_Player->Frozen() ||*/ g_DeathScreenTimer || g_GameState != GS_GAME)
+	if (m_BlockMoving || g_PendingDelayTime >  g_Ticks || g_WalkRequestCount > 3 || g_Player == NULL || /*!g_Player->Frozen() ||*/ g_DeathScreenTimer || g_GameState != GS_GAME)
 		return false;
 
 	if (g_SpeedMode >= CST_CANT_RUN)

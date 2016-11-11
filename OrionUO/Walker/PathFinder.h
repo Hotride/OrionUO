@@ -20,6 +20,7 @@ class CPathFinder : public CBaseQueue
 	//Автоматической передвижение (не сложными махинациями с мышкой)
 	SETGET(bool, AutoWalking);
 	SETGET(bool, PathFindidngCanBeCancelled);
+	SETGET(bool, BlockMoving);
 
 private:
 	//Вычисление новой Z координаты

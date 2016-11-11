@@ -435,7 +435,8 @@ enum VALUE_KEY_INT
 	VKI_STATIC_ART_ADDRESS,
 	VKI_USED_LAYER,
 	VKI_SPELLBOOK_COUNT,
-	VKI_BLOCK_MOVING
+	VKI_BLOCK_MOVING,
+	VKI_SET_PLAYER_GRAPHIC
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_STRING

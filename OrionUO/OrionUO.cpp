@@ -1946,7 +1946,17 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		}
 		case VKI_BLOCK_MOVING:
 		{
-			g_BlockMoving = (value != 0);
+			g_PathFinder.BlockMoving = (value != 0);
+
+			break;
+		}
+		case VKI_SET_PLAYER_GRAPHIC:
+		{
+			if (g_Player != NULL && g_Player->Graphic != value)
+			{
+				g_Player->Graphic = value;
+				g_Player->OnGraphicChange(1000);
+			}
 
 			break;
 		}

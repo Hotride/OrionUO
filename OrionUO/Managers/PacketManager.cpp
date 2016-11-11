@@ -47,6 +47,7 @@
 #include "../QuestArrow.h"
 #include "../MultiMap.h"
 #include "../TargetGump.h"
+#include "../Walker/PathFinder.h"
 #include "../Gumps/GumpBuff.h"
 #include "../Gumps/GumpSecureTrading.h"
 #include "../Gumps/GumpTextEntryDialog.h"
@@ -866,6 +867,7 @@ PACKET_HANDLER(EnterWorld)
 		g_Season = ST_SUMMER;
 		g_OldSeason = ST_SUMMER;
 		g_GlobalScale = 1.0;
+		g_PathFinder.BlockMoving = false;
 	}
 
 	Move(4);
