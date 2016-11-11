@@ -16,8 +16,11 @@
 #include "../Game objects/ObjectOnCursor.h"
 #include "../Managers/FontsManager.h"
 #include "../Managers/MouseManager.h"
+#include "../Managers/ConfigManager.h"
+#include "../Managers/PacketManager.h"
 #include "../Network/Packets.h"
 #include "../PressedObject.h"
+#include "../ToolTip.h"
 //----------------------------------------------------------------------------------
 CGumpSecureTrading::CGumpSecureTrading(uint serial, short x, short y, uint id, uint id2)
 : CGump(GT_TRADE, serial, x, y), m_ID2(id2), m_StateMy(false), m_StateOpponent(false),
@@ -45,6 +48,19 @@ void CGumpSecureTrading::CalculateGumpState()
 
 	if (g_GumpTranslate.X || g_GumpTranslate.Y)
 		m_WantRedraw = true;
+}
+//----------------------------------------------------------------------------------
+void CGumpSecureTrading::InitToolTip()
+{
+	if (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z)
+	{
+		uint id = g_SelectedObject.Serial;
+
+		CGameObject *obj = g_World->FindWorldObject(id);
+
+		if (obj != NULL && obj->ClilocMessage.length())
+			g_ToolTip.Set(obj->ClilocMessage, g_SelectedObject.Object());
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::PrepareContent()
@@ -224,7 +240,7 @@ void CGumpSecureTrading::GUMP_BUTTON_EVENT_C
 	}
 	else
 	{
-		if (!g_ClickObject.Enabled)
+		if (!g_ClickObject.Enabled && g_PacketManager.ClientVersion < CV_308Z)
 		{
 			CGameObject *clickTarget = g_World->FindWorldObject(serial);
 

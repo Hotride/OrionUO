@@ -158,6 +158,9 @@ void CGumpPaperdoll::InitToolTip()
 
 	if (!m_Minimized)
 	{
+		if (!g_ConfigManager.UseToolTips)
+			id = 0;
+
 		switch (id)
 		{
 			case ID_GP_BUTTON_HELP:
@@ -240,6 +243,9 @@ void CGumpPaperdoll::InitToolTip()
 			}
 			default:
 			{
+				if (g_PacketManager.ClientVersion >= CV_308Z)
+					id = g_SelectedObject.Serial;
+
 				if (id >= ID_GP_ITEMS)
 				{
 					CGameCharacter *character = g_World->FindWorldCharacter(m_Serial);
@@ -257,7 +263,7 @@ void CGumpPaperdoll::InitToolTip()
 			}
 		}
 	}
-	else
+	else if (g_ConfigManager.UseToolTips)
 		g_ToolTip.Set(L"Double click to maximize paperdoll gump", g_SelectedObject.Object());
 }
 //----------------------------------------------------------------------------------
@@ -744,6 +750,8 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 
 					g_MouseManager.LeftDropPosition = g_MouseManager.Position;
 
+					m_FrameCreated = false;
+
 					return;
 				}
 			}
@@ -760,6 +768,8 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 
 					g_MouseManager.LeftDropPosition = g_MouseManager.Position;
 
+					m_FrameCreated = false;
+
 					return;
 				}
 			}
@@ -768,10 +778,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 			g_Orion.PlaySoundEffect(0x0051);
 	}
 	
-	if (g_PressedObject.LeftSerial != serial)
-		return;
-
-	if (serial >= ID_GP_ITEMS)
+	if (g_PressedObject.LeftSerial == serial && serial >= ID_GP_ITEMS)
 	{
 		int layer = serial - ID_GP_ITEMS;
 		CGameItem *equipment = container->FindLayer(layer);
@@ -782,7 +789,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 				g_Target.SendTargetObject(equipment->Serial);
 			else if (g_ObjectInHand == NULL) //Click on object
 			{
-				if (!g_ClickObject.Enabled)
+				if (!g_ClickObject.Enabled && g_PacketManager.ClientVersion < CV_308Z)
 				{
 					g_ClickObject.Init(equipment);
 					g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
@@ -791,8 +798,6 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 				}
 			}
 		}
-
-		return;
 	}
 }
 //----------------------------------------------------------------------------------

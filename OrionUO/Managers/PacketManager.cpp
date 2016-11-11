@@ -1626,11 +1626,10 @@ PACKET_HANDLER(EquipItem)
 	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
 
-	if (layer < OL_MOUNT)
-		g_GumpManager.UpdateContent(cserial, 0, GT_PAPERDOLL);
-
 	if (layer >= OL_BUY_RESTOCK && layer <= OL_SELL)
 		obj->Clear();
+	else if (layer < OL_MOUNT)
+		g_GumpManager.UpdateContent(cserial, 0, GT_PAPERDOLL);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateContainedItem)
@@ -3546,7 +3545,7 @@ PACKET_HANDLER(MegaCliloc)
 
 		if (first)
 		{
-			if (!obj->NPC)
+			if (coloredStartFont)
 				message += L"<basefont color=\"#FFFFFFFF\">";
 
 			first = false;

@@ -20,6 +20,7 @@
 #include "../Managers/AnimationManager.h"
 #include "../Managers/GumpManager.h"
 #include "../Managers/MacroManager.h"
+#include "../Managers/PacketManager.h"
 #include "../SelectedObject.h"
 #include "../PressedObject.h"
 #include "../Game objects/GameWorld.h"
@@ -101,20 +102,20 @@ void CGameScreen::ProcessSmoothAction(uchar action)
 */
 void CGameScreen::InitToolTip()
 {
-	if (!g_ConfigManager.UseToolTips)
-		return;
-
 	g_FontManager.SetUseHTML(true);
 	g_FontManager.RecalculateWidthByInfo = true;
 
 	if (g_SelectedObject.Gump())
 	{
 		if (g_SelectedObject.Gump() == &m_GameScreenGump)
-			m_GameScreenGump.InitToolTip();
-		else
+		{
+			if (g_ConfigManager.UseToolTips)
+				m_GameScreenGump.InitToolTip();
+		}
+		else if (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z)
 			g_GumpManager.InitToolTip();
 	}
-	else if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject())
+	else if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z))
 	{
 		CGameObject *obj = g_World->FindWorldObject(g_SelectedObject.Serial);
 
@@ -1824,7 +1825,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 			{
 				if (rwo->IsGameObject())
 				{
-					if (!g_ClickObject.Enabled)
+					if (!g_ClickObject.Enabled && g_PacketManager.ClientVersion < CV_308Z)
 					{
 						g_ClickObject.Init(rwo);
 						g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
