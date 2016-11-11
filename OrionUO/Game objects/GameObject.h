@@ -251,6 +251,8 @@ public:
 	CGameObject *GetTopObject();
 
 	CGameItem *FindLayer(const int &layer);
+
+	CGameItem *FindSecureTradeBox();
 };
 //----------------------------------------------------------------------------------
 #endif

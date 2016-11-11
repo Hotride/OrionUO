@@ -1717,7 +1717,12 @@ PACKET_HANDLER(UpdateContainedItem)
 		CGameObject *top = container->GetTopObject();
 
 		if (top != NULL)
-			g_GumpManager.UpdateContent(top->Serial, 0, GT_TRADE);
+		{
+			top = top->FindSecureTradeBox();
+
+			if (top != NULL)
+				g_GumpManager.UpdateContent(0, top->Serial, GT_TRADE);
+		}
 	}
 }
 //----------------------------------------------------------------------------------
@@ -1863,7 +1868,12 @@ PACKET_HANDLER(UpdateContainedItems)
 		CGameObject *top = contobj->GetTopObject();
 
 		if (top != NULL)
-			g_GumpManager.UpdateContent(top->Serial, 0, GT_TRADE);
+		{
+			top = top->FindSecureTradeBox();
+
+			if (top != NULL)
+				g_GumpManager.UpdateContent(0, top->Serial, GT_TRADE);
+		}
 	}
 }
 //----------------------------------------------------------------------------------
@@ -1943,7 +1953,12 @@ PACKET_HANDLER(DeleteObject)
 			CGameObject *top = obj->GetTopObject();
 
 			if (top != NULL)
-				g_GumpManager.UpdateContent(top->Serial, 0, GT_TRADE);
+			{
+				CGameObject *tradeBox = top->FindSecureTradeBox();
+
+				if (tradeBox != NULL)
+					g_GumpManager.UpdateContent(0, tradeBox->Serial, GT_TRADE);
+			}
 
 			if (!obj->NPC && ((CGameItem*)obj)->Layer != OL_NONE)
 				g_GumpManager.UpdateContent(cont, 0, GT_PAPERDOLL);
