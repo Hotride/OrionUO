@@ -2349,8 +2349,10 @@ bool CAnimationManager::IsCovered(const int &layer, CGameObject *owner)
 			const ushort &pants = m_CharacterLayerAnimID[OL_PANTS];
 
 			if (skirt != 0x01C7 && skirt != 0x01E4)
+				result = false;
+			else if (pants == 0x0200)
 				result = true;
-			else if (pants == 0x01E2)
+			else
 				result = true;
 
 			break;
