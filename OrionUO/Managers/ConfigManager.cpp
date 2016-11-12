@@ -84,7 +84,9 @@ void CConfigManager::DefaultPage2()
 	m_StandartItemsAnimationDelay = true;
 	m_UseScaling = false;
 	m_RemoveTextWithBlending = true;
-	m_DrawStatusState = 0;
+	m_DrawStatusState = DCSS_NO_DRAW;
+	m_DrawStatusConditionState = DCSCS_LOWER;
+	m_DrawStatusConditionValue = 70;
 	m_DrawStumps = false;
 	m_MarkingCaves = false;
 	m_NoVegetation = false;
@@ -463,7 +465,9 @@ bool CConfigManager::Load(string path)
 
 		m_UseScaling = false;
 		m_RemoveTextWithBlending = true;
-		m_DrawStatusState = 0;
+		m_DrawStatusState = DCSS_NO_DRAW;
+		m_DrawStatusConditionState = DCSCS_LOWER;
+		m_DrawStatusConditionValue = 70;
 		bool drawStumps = false;
 		bool markingCaves = false;
 		m_NoAnimateFields = false;
@@ -520,7 +524,15 @@ bool CConfigManager::Load(string path)
 											changeFieldsGraphic = file.ReadUInt8();
 
 											if (blockSize > 19)
+											{
 												paperdollSlots = file.ReadUInt8();
+
+												if (blockSize > 21)
+												{
+													m_DrawStatusConditionState = file.ReadUInt8();
+													m_DrawStatusConditionValue = file.ReadUInt8();
+												}
+											}
 										}
 									}
 								}
@@ -845,7 +857,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(20); //size of block
+	writter.WriteInt8(22); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -865,6 +877,8 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_ApplyStateColorOnCharacters);
 	writter.WriteUInt8(m_ChangeFieldsGraphic);
 	writter.WriteUInt8(m_PaperdollSlots);
+	writter.WriteUInt8(m_DrawStatusConditionState);
+	writter.WriteUInt8(m_DrawStatusConditionValue);
 	writter.WriteBuffer();
 
 	//Page 3

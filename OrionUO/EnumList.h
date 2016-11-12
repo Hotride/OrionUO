@@ -569,6 +569,13 @@ enum DRAW_CHARACTERS_STATUS_STATE
 	DCSS_UNDER
 };
 //----------------------------------------------------------------------------------
+enum DRAW_CHARACTERS_STATUS_CONDITION_STATE
+{
+	DCSCS_ALWAYS = 0,
+	DCSCS_NOT_MAX,
+	DCSCS_LOWER
+};
+//----------------------------------------------------------------------------------
 enum HIDDEN_CHARACTERS_RENDER_MODE
 {
 	HCRM_ORIGINAL = 0,

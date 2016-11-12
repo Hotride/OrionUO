@@ -136,6 +136,8 @@ uint COrion::GetFileHashCode(uint address, uint size)
 //----------------------------------------------------------------------------------
 void COrion::GetCurrentLocale()
 {
+	//https://msdn.microsoft.com/en-us/library/cc233982.aspx
+
 	wchar_t localeName[LOCALE_NAME_MAX_LENGTH] = { 0 };
 
 	if (GetSystemDefaultLocaleName(&localeName[0], LOCALE_NAME_MAX_LENGTH))

@@ -1070,9 +1070,6 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 					ushort color = g_ConfigManager.GetColorByNotoriety(gc->Notoriety);
 
-					int x = rod.X + gc->OffsetX;
-					int y = rod.Y + gc->OffsetY - (gc->Z * 4) - gc->OffsetZ;
-
 					int width = gc->MaxHits;
 
 					if (width)
@@ -1084,25 +1081,36 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 						if (width < 1)
 							width = 0;
-						else if (g_ConfigManager.DrawStatusState == DCSS_UNDER)
-							width = (34 * width) / 100;
 					}
 
-					if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+					if (g_ConfigManager.DrawStatusConditionState == DCSCS_ALWAYS ||
+						(g_ConfigManager.DrawStatusConditionState == DCSCS_NOT_MAX && gc->Hits != gc->MaxHits) ||
+						(g_ConfigManager.DrawStatusConditionState == DCSCS_LOWER && width < g_ConfigManager.DrawStatusConditionValue))
 					{
-						ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(gc, 0);
-						y -= (dims.Height + dims.CenterY) + 24;
+						int x = rod.X + gc->OffsetX;
+						int y = rod.Y + gc->OffsetY - (gc->Z * 4) - gc->OffsetZ;
 
-						gc->UpdateHitsTexture(width);
-						width = (int)&gc->m_HitsTexture;
+						if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+						{
+							ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(gc, 0);
+							y -= (dims.Height + dims.CenterY) + 24;
 
-						x -= (gc->m_HitsTexture.Width / 2) - 3;
+							gc->UpdateHitsTexture(width);
+							width = (int)&gc->m_HitsTexture;
+
+							x -= (gc->m_HitsTexture.Width / 2) - 3;
+						}
+						else
+						{
+							x -= 20;
+
+							if (g_ConfigManager.DrawStatusState == DCSS_UNDER)
+								width = (34 * width) / 100;
+						}
+
+						OBJECT_HITS_INFO hitsInfo = { x, y, color, width };
+						m_HitsStack.push_back(hitsInfo);
 					}
-					else
-						x -= 20;
-
-					OBJECT_HITS_INFO hitsInfo = {x, y, color, width};
-					m_HitsStack.push_back(hitsInfo);
 				}
 			}
 		}
