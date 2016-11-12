@@ -394,39 +394,6 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		}
 	}
 
-	bool noLoadCorpseDef = true;
-
-	while (!bodyParser.IsEOF())
-	{
-		STRING_LIST strings = bodyParser.ReadTokens();
-
-		if (strings.size() >= 3)
-		{
-			ushort index = atoi(strings[0].c_str());
-
-			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
-				continue;
-
-			STRING_LIST newBody = newBodyParser.GetTokens(strings[1].c_str());
-
-			int size = (int)newBody.size();
-
-			IFOR(i, 0, size)
-			{
-				ushort checkIndex = atoi(newBody[i].c_str());
-
-				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
-					continue;
-
-				memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
-				m_DataIndex[index].Group = NULL;
-				m_DataIndex[index].Color = atoi(strings[2].c_str());
-
-				break;
-			}
-		}
-	}
-
 	while (!bodyconvParser.IsEOF())
 	{
 		STRING_LIST strings = bodyconvParser.ReadTokens();
@@ -531,6 +498,38 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		}
 	}
 
+	while (!bodyParser.IsEOF())
+	{
+		STRING_LIST strings = bodyParser.ReadTokens();
+
+		if (strings.size() >= 3)
+		{
+			ushort index = atoi(strings[0].c_str());
+
+			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				continue;
+
+			STRING_LIST newBody = newBodyParser.GetTokens(strings[1].c_str());
+
+			int size = (int)newBody.size();
+
+			IFOR(i, 0, size)
+			{
+				ushort checkIndex = atoi(newBody[i].c_str());
+
+				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
+					continue;
+
+				//memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
+				m_DataIndex[index].Graphic = checkIndex;
+				m_DataIndex[index].Group = NULL;
+				m_DataIndex[index].Color = atoi(strings[2].c_str());
+
+				break;
+			}
+		}
+	}
+
 	IFOR(i, 0, 4)
 	{
 		STRING_LIST strings = animParser[i].ReadTokens();
@@ -551,7 +550,8 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
 					continue;
 
-				memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
+				//memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
+				m_DataIndex[index].Graphic = checkIndex;
 				m_DataIndex[index].Group = NULL;
 				m_DataIndex[index].Color = atoi(strings[2].c_str());
 
@@ -560,10 +560,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		}
 	}
 
-	if (noLoadCorpseDef)
-		return;
-
-	while (!corpseParser.IsEOF())
+	/*while (!corpseParser.IsEOF())
 	{
 		STRING_LIST strings = corpseParser.ReadTokens();
 
@@ -591,7 +588,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 				break;
 			}
 		}
-	}
+	}*/
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -614,24 +611,11 @@ ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 	}
 
 	return AG_HIGHT;
-
-	/*
-	ANIMATION_GROUPS group = AG_HIGHT;
-
-	if (id >= 200 || id == 34)
-	{
-		if (id >= 400)
-			group = AG_PEOPLE;
-		else
-			group = AG_LOW;
-	}
-	
-	return group;*/
 }
 //----------------------------------------------------------------------------------
 /*!
 Получить индекс группы смерти анимации
-@param [__in] id Byltrc rfhnbyrb
+@param [__in] id BИндекс картинки
 @param [__in] second Группа смерти номер 2
 @return Индекс группы анимации
 */
@@ -650,22 +634,6 @@ uchar CAnimationManager::GetDieGroupIndex(ushort id, const bool &second)
 	}
 
 	return 0;
-
-	/*uchar group = 0;
-
-	GetBodyGraphic(id);
-
-	if (id >= 200 || id == 34)
-	{
-		if (id >= 400)
-			group = (uchar)(second ? PAG_DIE_2 : PAG_DIE_1);
-		else
-			group = (uchar)(second ? LAG_DIE_2 : LAG_DIE_1);
-	}
-	else
-		group = (uchar)(second ? HAG_DIE_2 : HAG_DIE_1);
-	
-	return group;*/
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -1956,8 +1924,8 @@ void CAnimationManager::GetCorpseGraphic(ushort &graphic)
 */
 void CAnimationManager::GetBodyGraphic(ushort &graphic)
 {
-	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
-		graphic = m_DataIndex[graphic].Graphic;
+	//if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+	//	graphic = m_DataIndex[graphic].Graphic;
 }
 //----------------------------------------------------------------------------------
 ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj, uchar frameIndex, const uchar &defaultDirection, const uchar &defaultGroup)
