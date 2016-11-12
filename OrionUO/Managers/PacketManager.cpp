@@ -1617,6 +1617,12 @@ PACKET_HANDLER(EquipItem)
 	uint cserial = ReadUInt32BE();
 	obj->Color = ReadUInt16BE();
 
+	if (obj->Container != 0xFFFFFFFF)
+		g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
+
+	if (obj->Container != 0xFFFFFFFF)
+		g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
+
 	g_World->PutEquipment(obj, cserial, layer);
 	obj->OnGraphicChange();
 
