@@ -256,6 +256,7 @@ bool COrion::Install()
 	else
 		g_MapManager = new CMapManager();
 
+	DEBUGLOG("Create map blocksTable\n");
 	g_MapManager->CreateBlocksTable();
 
 	DEBUGLOG("Patch files\n");
@@ -622,7 +623,8 @@ void COrion::ProcessDelayedClicks()
 		{
 			if (serial)
 			{
-				NameReq(serial);
+				if (g_PacketManager.ClientVersion < CV_308Z)
+					NameReq(serial);
 
 				//if (serial < 0x40000000)
 				{

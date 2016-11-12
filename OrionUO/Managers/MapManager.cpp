@@ -69,6 +69,9 @@ void CMapManager::CreateBlockTable(int map)
 	uint staticAddress = (uint)g_FileManager.m_StaticMul[map].Start;
 	uint endStaticAddress = staticAddress + g_FileManager.m_StaticMul[map].Size;
 
+	if (!mapAddress || !staticIdxAddress || !staticAddress)
+		return;
+
 	IFOR(block, 0, maxBlockCount)
 	{
 		CIndexMap &index = list[block];

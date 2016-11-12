@@ -1833,7 +1833,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 			{
 				if (rwo->IsGameObject())
 				{
-					if (!g_ClickObject.Enabled && g_PacketManager.ClientVersion < CV_308Z)
+					if (!g_ClickObject.Enabled) // && g_PacketManager.ClientVersion < CV_308Z)
 					{
 						g_ClickObject.Init(rwo);
 						g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
