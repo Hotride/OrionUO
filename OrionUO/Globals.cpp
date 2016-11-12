@@ -39,11 +39,7 @@ uint g_Ticks = 0;
 GLuint ShaderColorTable = 0;
 GLuint g_ShaderDrawMode = 0;
 
-#if UO_ABYSS_SHARD == 1
-string g_Language = "RUS";
-#else
 string g_Language = "ENU";
-#endif
 
 GAME_STATE g_GameState = GS_MAIN;
 

@@ -77,6 +77,8 @@ private:
 	//Очистка неиспользуемых текстур
 	void ClearUnusedTextures();
 
+	void GetCurrentLocale();
+
 public:
 	COrion();
 	~COrion();
