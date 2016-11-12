@@ -110,6 +110,12 @@ bool CFontsManager::LoadFonts()
 	{
 		m_UnicodeFontAddress[i] = (uint)g_FileManager.m_UnifontMul[i].Start;
 		m_UnicodeFontSize[i] = g_FileManager.m_UnifontMul[i].Size;
+
+		if (!m_UnicodeFontAddress[i] && i == 1)
+		{
+			m_UnicodeFontAddress[i] = m_UnicodeFontAddress[0];
+			m_UnicodeFontSize[i] = m_UnicodeFontSize[0];
+		}
 	}
 
 	return true;

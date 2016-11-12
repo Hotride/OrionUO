@@ -97,7 +97,7 @@ bool CFileManager::Load()
 		else
 			s = g_App.FilePath("unifont.mul");
 
-		if (!m_UnifontMul[i].Load(s))
+		if (!m_UnifontMul[i].Load(s) && i > 1)
 			break;
 
 		m_UnicodeFontsCount++;
