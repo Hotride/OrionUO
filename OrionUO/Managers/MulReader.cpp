@@ -162,6 +162,7 @@ CGLTexture *CMulReader::ReadArt(const ushort &id, CIndexObject &io)
 	{
 		const int blocksize = 44 * 44;
 
+		bool allBlack = true;
 		ushort pixels[blocksize] = { 0 };
 		
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
@@ -181,7 +182,12 @@ CGLTexture *CMulReader::ReadArt(const ushort &id, CIndexObject &io)
 				if (color)
 					val = g_ColorManager.GetColor16(val, color);
 
-				val = (val ? 0x8000 : 0) | val;
+				if (val)
+				{
+					allBlack = false;
+					val = 0x8000 | val;
+				}
+
 				int block = pos + j;
 				pixels[block] = val;
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
@@ -202,12 +208,52 @@ CGLTexture *CMulReader::ReadArt(const ushort &id, CIndexObject &io)
 				if (color)
 					val = g_ColorManager.GetColor16(val, color);
 
-				val = (val ? 0x8000 : 0) | val;
+				if (val)
+				{
+					allBlack = false;
+					val = 0x8000 | val;
+				}
+
 				int block = pos + j;
 				pixels[block] = val;
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 				data[block] = val;
 #endif
+			}
+		}
+
+		((CIndexObjectLand*)&io)->AllBlack = allBlack;
+
+		if (allBlack)
+		{
+			IFOR(i, 0, 22)
+			{
+				int pos = i * 44;
+				int end = (22 - (i + 1)) + (i + 1) * 2;
+
+				IFOR(j, 22 - (i + 1), end)
+				{
+					int block = pos + j;
+					pixels[block] = 0x8000;
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+					data[block] = 0x8000;
+#endif
+				}
+			}
+
+			IFOR(i, 0, 22)
+			{
+				int pos = (i + 22) * 44;
+				int end = i + (22 - i) * 2;
+
+				IFOR(j, i, end)
+				{
+					int block = pos + j;
+					pixels[block] = 0x8000;
+#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
+					data[block] = 0x8000;
+#endif
+				}
 			}
 		}
 
@@ -547,31 +593,53 @@ bool CMulReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &ch
 
 	if (land) //raw tile
 	{
-		IFOR(i, 0, 22)
+		if (((CIndexObjectLand*)&io)->AllBlack)
 		{
-			int start = 22 - (i + 1);
-			int end = (22 - (i + 1)) + (i + 1) * 2;
-
-			if (i == checkY && checkX >= start && checkX < end)
+			IFOR(i, 0, 22)
 			{
-				P += checkX - start;
-				return ((*P) != 0);
+				int start = 22 - (i + 1);
+				int end = (22 - (i + 1)) + (i + 1) * 2;
+
+				if (i == checkY && checkX >= start && checkX < end)
+					return true;
 			}
 
-			P += end - start;
+			IFOR(i, 0, 22)
+			{
+				int end = i + (22 - i) * 2;
+
+				if ((i + 22) == checkY && checkX >= i && checkX < end)
+					return true;
+			}
 		}
-
-		IFOR(i, 0, 22)
+		else
 		{
-			int end = i + (22 - i) * 2;
-
-			if ((i + 22) == checkY && checkX >= i && checkX < end)
+			IFOR(i, 0, 22)
 			{
-				P += checkX - i;
-				return ((*P) != 0);
+				int start = 22 - (i + 1);
+				int end = (22 - (i + 1)) + (i + 1) * 2;
+
+				if (i == checkY && checkX >= start && checkX < end)
+				{
+					P += checkX - start;
+					return ((*P) != 0);
+				}
+
+				P += end - start;
 			}
 
-			P += end - i;
+			IFOR(i, 0, 22)
+			{
+				int end = i + (22 - i) * 2;
+
+				if ((i + 22) == checkY && checkX >= i && checkX < end)
+				{
+					P += checkX - i;
+					return ((*P) != 0);
+				}
+
+				P += end - i;
+			}
 		}
 	}
 	else //run tile
@@ -706,7 +774,7 @@ CGLTexture *CMulReader::ReadTexture(CIndexObject &io)
 			if (color)
 				val = g_ColorManager.GetColor16(val, color);
 
-			pixels[pos + j] = (val ? 0x8000 : 0) | val;
+			pixels[pos + j] = 0x8000 | val;
 		}
 	}
 

@@ -24,6 +24,15 @@ CIndexObject::~CIndexObject()
 	}
 }
 //----------------------------------------------------------------------------------
+CIndexObjectLand::CIndexObjectLand()
+: CIndexObject(), m_AllBlack(false)
+{
+}
+//----------------------------------------------------------------------------------
+CIndexObjectLand::~CIndexObjectLand()
+{
+}
+//----------------------------------------------------------------------------------
 CIndexObjectStatic::CIndexObjectStatic()
 : CIndexObject(), m_Index(0), m_Offset(0), m_AnimIndex(0), m_ChangeTime(0),
 m_LightColor(0), m_IsFiled(false)
@@ -53,7 +62,8 @@ CIndexMulti::~CIndexMulti()
 }
 //----------------------------------------------------------------------------------
 CIndexAnimation::CIndexAnimation()
-: m_Address(0), m_Offset(0), m_Graphic(0), m_Color(0), Group(NULL), m_Type(AGT_MONSTER)
+: m_Address(0), m_Offset(0), m_Graphic(0), m_Color(0), Group(NULL), m_Type(AGT_MONSTER),
+m_MountedHeightOffset(0)
 {
 }
 //----------------------------------------------------------------------------------

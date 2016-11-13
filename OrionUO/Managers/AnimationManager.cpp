@@ -416,6 +416,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 			int startAnimID = -1;
 			int animFile = 1;
 			ushort realAnimID = 0;
+			char mountedHeightOffset = 0;
 
 			if (anim[0] != -1 && m_AddressIdx[2] != 0 && m_AddressMul[2] != 0)
 			{
@@ -465,6 +466,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 			{
 				animFile = 5;
 				realAnimID = anim[3];
+				mountedHeightOffset = -9;
 
 				if (realAnimID == 34)
 					startAnimID = ((realAnimID - 200) * 65) + 22000;
@@ -492,6 +494,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 						m_DataIndex[index].Address = (uint)aidx;
 						m_DataIndex[index].Offset = m_AddressMul[animFile];
 						m_DataIndex[index].Graphic = realAnimID;
+						m_DataIndex[index].MountedHeightOffset = mountedHeightOffset;
 					}
 				}
 			}
@@ -1549,10 +1552,14 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 		lightOffset += 20;
 
 		ushort mountID = goi->GetMountAnimation();
+		int mountedHeightOffset = 0;
+
+		if (mountID < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+			mountedHeightOffset = m_DataIndex[mountID].MountedHeightOffset;
 
 		if (drawShadow)
 		{
-			Draw(obj, drawX, drawY + 10, mirror, animIndex, 0x10000);
+			Draw(obj, drawX, drawY + 10 + mountedHeightOffset, mirror, animIndex, 0x10000);
 			m_AnimGroup = obj->GetAnimationGroup(mountID);
 
 			Draw(goi, drawX, drawY, mirror, animIndex, mountID + 0x10000);
@@ -1561,6 +1568,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 			m_AnimGroup = obj->GetAnimationGroup(mountID);
 
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID);
+		drawY += mountedHeightOffset;
 
 		switch (animGroup)
 		{
@@ -1810,6 +1818,9 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 
 		if (TestPixels(goi, drawX, drawY, mirror, animIndex, mountID))
 			return true;
+
+		if (mountID < MAX_ANIMATIONS_DATA_INDEX_COUNT)
+			drawY += m_DataIndex[mountID].MountedHeightOffset;
 
 		switch (animGroup)
 		{

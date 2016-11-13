@@ -37,6 +37,15 @@ public:
 	CGLTexture *Texture;
 };
 //----------------------------------------------------------------------------------
+class CIndexObjectLand : public CIndexObject
+{
+	SETGET(bool, AllBlack);
+
+public:
+	CIndexObjectLand();
+	virtual ~CIndexObjectLand();
+};
+//----------------------------------------------------------------------------------
 class CIndexObjectStatic : public CIndexObject
 {
 	SETGET(ushort, Index);
@@ -84,6 +93,7 @@ class CIndexAnimation
 	SETGET(ushort, Graphic);
 	SETGET(ushort, Color);
 	SETGET(ANIMATION_GROUPS_TYPE, Type);
+	SETGET(char, MountedHeightOffset);
 
 public:
 	CIndexAnimation();

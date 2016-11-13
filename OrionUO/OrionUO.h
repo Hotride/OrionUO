@@ -112,7 +112,7 @@ public:
 	//Сохранение конфига персонажа
 	void SaveLocalConfig();
 
-	CIndexObject m_LandDataIndex[MAX_LAND_DATA_INDEX_COUNT];
+	CIndexObjectLand m_LandDataIndex[MAX_LAND_DATA_INDEX_COUNT];
 	CIndexObjectStatic m_StaticDataIndex[MAX_STATIC_DATA_INDEX_COUNT];
 	CIndexObject m_GumpDataIndex[MAX_GUMP_DATA_INDEX_COUNT];
 	CIndexObject m_TextureDataIndex[MAX_LAND_TEXTURES_DATA_INDEX_COUNT];
