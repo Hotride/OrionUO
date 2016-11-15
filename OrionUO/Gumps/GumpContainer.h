@@ -33,7 +33,7 @@ protected:
 	virtual void CalculateGumpState();
 
 public:
-	CGumpContainer(uint serial, short x, short y);
+	CGumpContainer(uint serial, uint id, short x, short y);
 	virtual ~CGumpContainer();
 
 	CGUIGumppic *m_BodyGump;

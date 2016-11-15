@@ -84,6 +84,10 @@ private:
 	static const int ID_GO_P2_APPLY_STATE_COLOR_ON_CHARACTERS = 225;
 	static const int ID_GO_P2_CHANGE_FIELDS_GRAPHIC = 226;
 	static const int ID_GO_P2_PAPERDOLL_SLOTS = 227;
+	static const int ID_GO_P2_DRAW_CHARACTER_BARS_ALWAYS = 228;
+	static const int ID_GO_P2_DRAW_CHARACTER_BARS_NOT_MAX = 229;
+	static const int ID_GO_P2_DRAW_CHARACTER_BARS_LOWER = 230;
+	static const int ID_GO_P2_DRAW_CHARACTER_BARS_LOWER_VALUE = 231;
 	static const int ID_GO_P2_DEV_MODE_1 = 290;
 	static const int ID_GO_P2_DEV_MODE_2 = 291;
 	static const int ID_GO_P2_DEV_MODE_3 = 292;
@@ -164,6 +168,7 @@ private:
 	CGUISlider *m_SliderClientFPS;
 	CGUISlider *m_SliderHiddenAlpha;
 	CGUISlider *m_SliderSpellIconsAlpha;
+	CGUISlider *m_SliderDrawStatusConditionValue;
 	CGUISlider *m_SliderTooltipDelay;
 	CGUISlider *m_SliderSpeechDuration;
 	CGUISlider *m_SliderCircleTransparency;

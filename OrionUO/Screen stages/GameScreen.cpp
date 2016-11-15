@@ -20,6 +20,7 @@
 #include "../Managers/AnimationManager.h"
 #include "../Managers/GumpManager.h"
 #include "../Managers/MacroManager.h"
+#include "../Managers/PacketManager.h"
 #include "../SelectedObject.h"
 #include "../PressedObject.h"
 #include "../Game objects/GameWorld.h"
@@ -101,20 +102,20 @@ void CGameScreen::ProcessSmoothAction(uchar action)
 */
 void CGameScreen::InitToolTip()
 {
-	if (!g_ConfigManager.UseToolTips)
-		return;
-
 	g_FontManager.SetUseHTML(true);
 	g_FontManager.RecalculateWidthByInfo = true;
 
 	if (g_SelectedObject.Gump())
 	{
 		if (g_SelectedObject.Gump() == &m_GameScreenGump)
-			m_GameScreenGump.InitToolTip();
-		else
+		{
+			if (g_ConfigManager.UseToolTips)
+				m_GameScreenGump.InitToolTip();
+		}
+		else if (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z)
 			g_GumpManager.InitToolTip();
 	}
-	else if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject())
+	else if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z))
 	{
 		CGameObject *obj = g_World->FindWorldObject(g_SelectedObject.Serial);
 
@@ -1069,9 +1070,6 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 					ushort color = g_ConfigManager.GetColorByNotoriety(gc->Notoriety);
 
-					int x = rod.X + gc->OffsetX;
-					int y = rod.Y + gc->OffsetY - (gc->Z * 4) - gc->OffsetZ;
-
 					int width = gc->MaxHits;
 
 					if (width)
@@ -1083,25 +1081,36 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 						if (width < 1)
 							width = 0;
-						else if (g_ConfigManager.DrawStatusState == DCSS_UNDER)
-							width = (34 * width) / 100;
 					}
 
-					if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+					if (g_ConfigManager.DrawStatusConditionState == DCSCS_ALWAYS ||
+						(g_ConfigManager.DrawStatusConditionState == DCSCS_NOT_MAX && gc->Hits != gc->MaxHits) ||
+						(g_ConfigManager.DrawStatusConditionState == DCSCS_LOWER && width < g_ConfigManager.DrawStatusConditionValue))
 					{
-						ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(gc, 0);
-						y -= (dims.Height + dims.CenterY) + 24;
+						int x = rod.X + gc->OffsetX;
+						int y = rod.Y + gc->OffsetY - (gc->Z * 4) - gc->OffsetZ;
 
-						gc->UpdateHitsTexture(width);
-						width = (int)&gc->m_HitsTexture;
+						if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
+						{
+							ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(gc, 0);
+							y -= (dims.Height + dims.CenterY) + 24;
 
-						x -= (gc->m_HitsTexture.Width / 2) - 3;
+							gc->UpdateHitsTexture(width);
+							width = (int)&gc->m_HitsTexture;
+
+							x -= (gc->m_HitsTexture.Width / 2) - 3;
+						}
+						else
+						{
+							x -= 20;
+
+							if (g_ConfigManager.DrawStatusState == DCSS_UNDER)
+								width = (34 * width) / 100;
+						}
+
+						OBJECT_HITS_INFO hitsInfo = { x, y, color, width };
+						m_HitsStack.push_back(hitsInfo);
 					}
-					else
-						x -= 20;
-
-					OBJECT_HITS_INFO hitsInfo = {x, y, color, width};
-					m_HitsStack.push_back(hitsInfo);
 				}
 			}
 		}
@@ -1824,7 +1833,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 			{
 				if (rwo->IsGameObject())
 				{
-					if (!g_ClickObject.Enabled)
+					if (!g_ClickObject.Enabled) // && g_PacketManager.ClientVersion < CV_308Z)
 					{
 						g_ClickObject.Init(rwo);
 						g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;

@@ -87,6 +87,8 @@ private:
 	void ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue);
 	void ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, string uopFileName, string extesion, Wisp::CMappedFile* uopFile, int startIndex = 0);
 
+	void GetCurrentLocale();
+
 public:
 	COrion();
 	~COrion();
@@ -120,7 +122,7 @@ public:
 	//Сохранение конфига персонажа
 	void SaveLocalConfig();
 
-	CIndexObject m_LandDataIndex[MAX_LAND_DATA_INDEX_COUNT];
+	CIndexObjectLand m_LandDataIndex[MAX_LAND_DATA_INDEX_COUNT];
 	CIndexObjectStatic m_StaticDataIndex[MAX_STATIC_DATA_INDEX_COUNT];
 	CIndexGump m_GumpDataIndex[MAX_GUMP_DATA_INDEX_COUNT];
 	CIndexObject m_TextureDataIndex[MAX_LAND_TEXTURES_DATA_INDEX_COUNT];

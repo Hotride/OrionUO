@@ -43,14 +43,34 @@ void CGumpScreenSelectTown::UpdateContent()
 {
 	Clear();
 
+	CCityItem *city = g_SelectTownScreen.m_City;
+
+	if (city == NULL)
+		return;
+
+	wstring description = city->m_City.Description;
+	int map = 0;
+
+	if (city->IsNewCity())
+	{
+		//!Получаем строку клилока с описанием города
+		description = g_ClilocManager.Cliloc(g_Language)->GetW(((CCityItemNew*)city)->Cliloc);
+		map = ((CCityItemNew*)city)->MapIndex;
+	}
+
 	Add(new CGUIGumppicTiled(0x0588, 0, 0, 640, 480));
 	Add(new CGUIGumppic(0x157C, 0, 0));
 	Add(new CGUIGumppic(0x15A0, 0, 4));
 
 	if (g_PacketManager.ClientVersion >= CV_70130)
 	{
-		Add(new CGUIGumppic(0x15D9 + 1, 62, 54));
+		Add(new CGUIGumppic(0x15D9 + map, 62, 54));
 		Add(new CGUIGumppic(0x15DF, 57, 49));
+
+		static const wstring townNames[6] = { L"Felucca", L"Trammel", L"Ilshenar", L"Malas", L"Tokuno", L"Ter Mur" };
+
+		CGUIText *mapName = (CGUIText*)Add(new CGUIText(0x0481, 240, 440));
+		mapName->CreateTextureW(0, townNames[map], 24, 0, TS_LEFT, UOFONT_BLACK_BORDER);
 	}
 	else
 		Add(new CGUIGumppic(0x1598, 57, 49));
@@ -60,19 +80,6 @@ void CGumpScreenSelectTown::UpdateContent()
 	Add(new CGUIButton(ID_STS_ARROW_NEXT, 0x15A4, 0x15A5, 0x15A6, 610, 445));
 
 	m_HTMLGump = (CGUIHTMLGump*)Add(new CGUIHTMLGump(ID_STS_HTML_GUMP, 0x0BB8, 452, 60, 175, 367, true, true));
-
-	CCityItem *city = g_SelectTownScreen.m_City;
-
-	if (city == NULL)
-		return;
-
-	wstring description = city->m_City.Description;
-
-	if (city->IsNewCity())
-	{
-		//!Получаем строку клилока с описанием города
-		description = g_ClilocManager.Cliloc(g_Language)->GetW(((CCityItemNew*)city)->Cliloc);
-	}
 
 	//!Используем обработку HTML-тэгов при создании текстуры текста
 	g_FontManager.SetUseHTML(true);
@@ -102,7 +109,7 @@ void CGumpScreenSelectTown::UpdateContent()
 		{
 			CCityItemNew *newCity = (CCityItemNew*)city;
 
-			uint map = newCity->LocationIndex;
+			uint map = newCity->MapIndex;
 
 			if (map > 5)
 				map = 5;

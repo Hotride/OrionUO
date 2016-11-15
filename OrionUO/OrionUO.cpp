@@ -135,6 +135,40 @@ uint COrion::GetFileHashCode(uint address, uint size)
 	return (crc & 0xFFFFFFFF);
 }
 //----------------------------------------------------------------------------------
+void COrion::GetCurrentLocale()
+{
+	//https://msdn.microsoft.com/en-us/library/cc233982.aspx
+
+	wchar_t localeName[LOCALE_NAME_MAX_LENGTH] = { 0 };
+
+	if (GetSystemDefaultLocaleName(&localeName[0], LOCALE_NAME_MAX_LENGTH))
+	{
+		IFOR(i, 0, 10)
+		{
+			if (!localeName[i])
+				break;
+			else if (localeName[i] == L'-')
+			{
+				localeName[i] = 0;
+				break;
+			}
+		}
+
+		wstring locale = ToLowerW(localeName);
+
+		if (locale == L"ru")
+			g_Language = "RUS";
+		else if (locale == L"fr")
+			g_Language = "FRA";
+		else if (locale == L"de")
+			g_Language = "DEU";
+
+		LOG("Locale set to: %s\n", g_Language.c_str());
+	}
+	else
+		LOG("Locale set to default value: ENU\n");
+}
+//----------------------------------------------------------------------------------
 bool COrion::Install()
 {
 	LOG("COrion::Install()\n");
@@ -148,6 +182,8 @@ bool COrion::Install()
 
 		m_CRC_Table[i] = Reflect(m_CRC_Table[i], 32);
 	}
+
+	GetCurrentLocale();
 
 	CreateDirectoryA(g_App.FilePath("snapshots").c_str(), NULL);
 
@@ -217,6 +253,9 @@ bool COrion::Install()
 		g_MapManager = new CUopMapManager();
 	else
 		g_MapManager = new CMapManager();
+
+	DEBUGLOG("Create map blocksTable\n");
+	g_MapManager->CreateBlocksTable();
 
 	DEBUGLOG("Patch files\n");
 	PatchFiles();
@@ -538,7 +577,7 @@ void COrion::LoadClientConfig()
 
 		file.Move(1);
 
-		IFOR(i, 0, 6)
+		IFOR(i, 0, MAX_MAPS_COUNT)
 		{
 			g_MapSize[i].Width = file.ReadUInt16LE();
 			g_MapSize[i].Height = file.ReadUInt16LE();
@@ -582,7 +621,10 @@ void COrion::ProcessDelayedClicks()
 		{
 			if (serial)
 			{
-				NameReq(serial);
+				CGameObject *go = (CGameObject*)g_ClickObject.Object();
+
+				if (g_PacketManager.ClientVersion < CV_308Z || (!go->NPC && go->Locked()))
+					NameReq(serial);
 
 				//if (serial < 0x40000000)
 				{
@@ -1940,6 +1982,22 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_BLOCK_MOVING:
+		{
+			g_PathFinder.BlockMoving = (value != 0);
+
+			break;
+		}
+		case VKI_SET_PLAYER_GRAPHIC:
+		{
+			if (g_Player != NULL && g_Player->Graphic != value)
+			{
+				g_Player->Graphic = value;
+				g_Player->OnGraphicChange(1000);
+			}
+
+			break;
+		}
 		default:
 			break;
 	}
@@ -3256,7 +3314,7 @@ void COrion::PatchFiles()
 
 		if (vh->FileID == 0) //Map0
 		{
-			g_MapManager->SetPatchedMapBlock(vh->BlockID, (PMAP_BLOCK)(vAddr + vh->Position));
+			g_MapManager->SetPatchedMapBlock(vh->BlockID, vAddr + vh->Position);
 		}
 		else if (vh->FileID == 4) //Art
 		{

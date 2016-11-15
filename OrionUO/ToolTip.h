@@ -41,7 +41,7 @@ public:
 	void Set(uint clilocID, string str, class CRenderObject *object, int maxWidth = 0, int x = 0, int y = 0);
 
 	//Отрисовать тултип
-	void Draw(int cursorWidth = 0, int cursorHeight = 0);
+	void Draw(const int &cursorWidth = 0, const int &cursorHeight = 0);
 };
 //----------------------------------------------------------------------------------
 extern CToolTip g_ToolTip;

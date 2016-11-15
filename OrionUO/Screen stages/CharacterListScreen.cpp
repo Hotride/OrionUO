@@ -38,7 +38,7 @@ void CCharacterListScreen::Init()
 
 	g_CharacterList.Selected = 0;
 
-	g_ConfigManager.UpdateRange = 18;
+	g_ConfigManager.UpdateRange = MAX_VIEW_RANGE;
 
 	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;

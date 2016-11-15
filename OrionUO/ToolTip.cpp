@@ -62,9 +62,9 @@ void CToolTip::Set(uint clilocID, string str, CRenderObject *object, int maxWidt
 	m_ClilocID = clilocID;
 }
 //----------------------------------------------------------------------------------
-void CToolTip::Draw(int cursorWidth, int cursorHeight)
+void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
 {
-	if (!m_Use || !g_ConfigManager.UseToolTips)
+	if (!m_Use /*|| !g_ConfigManager.UseToolTips*/)
 		return;
 
 	if (!m_MaxWidth)

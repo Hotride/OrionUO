@@ -309,6 +309,21 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Draw character's status (line) in the game window under characters", g_SelectedObject.Object());
 				break;
 			}
+			case ID_GO_P2_DRAW_CHARACTER_BARS_ALWAYS:
+			{
+				g_ToolTip.Set(L"Always draw character's status in the game window", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_DRAW_CHARACTER_BARS_NOT_MAX:
+			{
+				g_ToolTip.Set(L"Draw character's status in the game window if hits is not equals max hits", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_DRAW_CHARACTER_BARS_LOWER:
+			{
+				g_ToolTip.Set(L"Draw character's status in the game window if hits lower value", g_SelectedObject.Object());
+				break;
+			}
 			case ID_GO_P2_DRAW_STUMPS:
 			{
 				g_ToolTip.Set(L"Change trees to stumps and hide leaves", g_SelectedObject.Object());
@@ -814,6 +829,22 @@ void CGumpOptions::DrawPage2()
 	radio->Checked = (g_OptionsConfig.DrawStatusState == DCSS_UNDER);
 	radio->SetTextParameters(0, L"Under character (Line)", g_OptionsTextColor);
 
+	html->Add(new CGUIGroup(2));
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTER_BARS_ALWAYS, 0x00D0, 0x00D1, 0x00D2, 230, 140));
+	radio->Checked = (g_OptionsConfig.DrawStatusConditionState == DCSCS_ALWAYS);
+	radio->SetTextParameters(0, L"Always", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTER_BARS_NOT_MAX, 0x00D0, 0x00D1, 0x00D2, 230, 160));
+	radio->Checked = (g_OptionsConfig.DrawStatusConditionState == DCSCS_NOT_MAX);
+	radio->SetTextParameters(0, L"HP <> MaxHP", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_CHARACTER_BARS_LOWER, 0x00D0, 0x00D1, 0x00D2, 230, 180));
+	radio->Checked = (g_OptionsConfig.DrawStatusConditionState == DCSCS_LOWER);
+	radio->SetTextParameters(0, L"HP lower %", g_OptionsTextColor);
+
+	m_SliderDrawStatusConditionValue = (CGUISlider*)html->Add(new CGUISlider(ID_GO_P2_DRAW_CHARACTER_BARS_LOWER_VALUE, 0x00D8, 0x00D8, 0x00D8, 0x00D5, true, false, 342, 182, 90, 10, 100, g_OptionsConfig.DrawStatusConditionValue));
+	m_SliderDrawStatusConditionValue->SetTextParameters(true, STP_RIGHT_CENTER, 0, g_OptionsTextColor, true);
+	
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_STUMPS, 0x00D2, 0x00D3, 0x00D2, 0, 205));
 	checkbox->Checked = g_OptionsConfig.DrawStumps;
 	checkbox->SetTextParameters(0, L"Change trees to stumps", g_OptionsTextColor);
@@ -836,12 +867,12 @@ void CGumpOptions::DrawPage2()
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_CONSOLE_ENTER, 0x00D2, 0x00D3, 0x00D2, 0, 305));
 	checkbox->Checked = g_OptionsConfig.ConsoleNeedEnter;
-	checkbox->SetTextParameters(0, L"Console need press 'Enter' to activate it.", g_OptionsTextColor);
+	checkbox->SetTextParameters(0, L"Chat need press 'Enter' to activate it.", g_OptionsTextColor);
 
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 325));
 	text->CreateTextureW(0, L"Hidden characters display mode:");
 
-	html->Add(new CGUIGroup(2));
+	html->Add(new CGUIGroup(3));
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_HIDDEN_CHARACTES_MODE_1, 0x00D0, 0x00D1, 0x00D2, 10, 345));
 	radio->Checked = (g_OptionsConfig.HiddenCharactersRenderMode == HCRM_ORIGINAL);
 	radio->SetTextParameters(0, L"Original", g_OptionsTextColor);
@@ -2267,6 +2298,12 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_SPECTRAL_COLOR;
 			else if (serial == ID_GO_P2_HIDDEN_CHARACTES_MODE_4)
 				g_OptionsConfig.HiddenCharactersRenderMode = HCRM_SPECIAL_SPECTRAL_COLOR;
+			else if (serial == ID_GO_P2_DRAW_CHARACTER_BARS_ALWAYS)
+				g_OptionsConfig.DrawStatusConditionState = DCSCS_ALWAYS;
+			else if (serial == ID_GO_P2_DRAW_CHARACTER_BARS_NOT_MAX)
+				g_OptionsConfig.DrawStatusConditionState = DCSCS_NOT_MAX;
+			else if (serial == ID_GO_P2_DRAW_CHARACTER_BARS_LOWER)
+				g_OptionsConfig.DrawStatusConditionState = DCSCS_LOWER;
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
 			else if (serial == ID_GO_P2_DEV_MODE_2)
@@ -2340,6 +2377,8 @@ void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 				g_OptionsConfig.HiddenAlpha = m_SliderHiddenAlpha->Value;
 			else if (serial == ID_GO_P2_SPELL_ICONS_ALPHA)
 				g_OptionsConfig.SpellIconAlpha = m_SliderSpellIconsAlpha->Value;
+			else if (serial == ID_GO_P2_DRAW_CHARACTER_BARS_LOWER_VALUE)
+				g_OptionsConfig.DrawStatusConditionValue = m_SliderDrawStatusConditionValue->Value;
 
 			break;
 		}
@@ -2669,6 +2708,8 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.ApplyStateColorOnCharacters = g_OptionsConfig.ApplyStateColorOnCharacters;
 			g_ConfigManager.ChangeFieldsGraphic = g_OptionsConfig.ChangeFieldsGraphic;
 			g_ConfigManager.PaperdollSlots = g_OptionsConfig.PaperdollSlots;
+			g_ConfigManager.DrawStatusConditionState = g_OptionsConfig.DrawStatusConditionState;
+			g_ConfigManager.DrawStatusConditionValue = g_OptionsConfig.DrawStatusConditionValue;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

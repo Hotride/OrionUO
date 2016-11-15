@@ -590,3 +590,14 @@ CGameItem *CGameObject::FindLayer(const int &layer)
 	return NULL;
 }
 //----------------------------------------------------------------------------------
+CGameItem *CGameObject::FindSecureTradeBox()
+{
+	QFOR(obj, m_Items, CGameItem*)
+	{
+		if (!obj->Layer && obj->Graphic == 0x1E5E)
+			return obj;
+	}
+
+	return NULL;
+}
+//----------------------------------------------------------------------------------

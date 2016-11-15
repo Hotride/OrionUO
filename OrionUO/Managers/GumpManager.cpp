@@ -17,9 +17,10 @@
 #include "../Game objects/GameWorld.h"
 #include "../Game objects/GamePlayer.h"
 #include "../Game objects/ObjectOnCursor.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/OptionsMacroManager.h"
+#include "MouseManager.h"
+#include "ConfigManager.h"
+#include "OptionsMacroManager.h"
+#include "PacketManager.h"
 #include "../Wisp/WispMappedFile.h"
 #include "../Wisp/WispBinaryFileWritter.h"
 #include "../Container.h"
@@ -553,18 +554,20 @@ void CGumpManager::Select(const bool &blocked)
 //----------------------------------------------------------------------------------
 void CGumpManager::InitToolTip()
 {
-	if (g_SelectedObject.Gump() != NULL)
-		g_SelectedObject.Gump()->InitToolTip();
+	CGump *gump = g_SelectedObject.Gump();
 
-	/*QFOR(gump, m_Items, CGump*)
+	if (gump != NULL)
 	{
-		if (g_SelectedObject.Gump() == gump)
+		if (!g_ConfigManager.UseToolTips)
 		{
-			gump->InitToolTip();
-
-			break;
+			if (g_PacketManager.ClientVersion < CV_308Z)
+				return;
+			else if (gump->GumpType != GT_CONTAINER && gump->GumpType != GT_PAPERDOLL && gump->GumpType != GT_TRADE)
+				return;
 		}
-	}*/
+
+		gump->InitToolTip();
+	}
 }
 //----------------------------------------------------------------------------------
 /*!

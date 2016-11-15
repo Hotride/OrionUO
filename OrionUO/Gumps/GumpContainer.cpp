@@ -22,13 +22,16 @@
 #include "../PressedObject.h"
 #include "../Gumps/GumpDrag.h"
 #include "../Managers/GumpManager.h"
+#include "../Managers/ConfigManager.h"
+#include "../Managers/PacketManager.h"
 //----------------------------------------------------------------------------------
-CGumpContainer::CGumpContainer(uint serial, short x, short y)
+CGumpContainer::CGumpContainer(uint serial, uint id, short x, short y)
 : CGump(GT_CONTAINER, serial, x, y), m_CorpseEyesTicks(0), m_CorpseEyesOffset(0),
-m_IsGameBoard(false), m_TextRenderer(), m_CorpseEyes(NULL), m_DataBox(NULL)
+m_IsGameBoard(id == 0x091A || id == 0x092E), m_TextRenderer(), m_CorpseEyes(NULL), m_DataBox(NULL)
 {
 	m_Page = 1;
 	m_Locker.Serial = ID_GC_LOCK_MOVING;
+	m_ID = id;
 
 	Add(new CGUIPage(1));
 	Add(new CGUIGumppic(0x0050, 0, 0));
@@ -104,11 +107,11 @@ void CGumpContainer::InitToolTip()
 	{
 		uint id = g_SelectedObject.Serial;
 
-		if (id == ID_GC_MINIMIZE)
+		if (id == ID_GC_MINIMIZE && g_ConfigManager.UseToolTips)
 			g_ToolTip.Set(L"Minimize the container gump", g_SelectedObject.Object());
-		else if (id == ID_GC_LOCK_MOVING)
+		else if (id == ID_GC_LOCK_MOVING && g_ConfigManager.UseToolTips)
 			g_ToolTip.Set(L"Lock moving/closing the container gump", g_SelectedObject.Object());
-		else
+		else if (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z)
 		{
 			CGameObject *obj = g_World->FindWorldObject(id);
 
@@ -116,7 +119,7 @@ void CGumpContainer::InitToolTip()
 				g_ToolTip.Set(obj->ClilocMessage, g_SelectedObject.Object());
 		}
 	}
-	else
+	else if (g_ConfigManager.UseToolTips)
 		g_ToolTip.Set(L"Double click to maximize container gump", g_SelectedObject.Object());
 }
 //----------------------------------------------------------------------------------
@@ -198,6 +201,8 @@ void CGumpContainer::UpdateContent()
 
 	if (g_ObjectInHand != NULL)
 		ignoreSerial = g_ObjectInHand->Serial;
+
+	m_IsGameBoard = (m_ID == 0x091A || m_ID == 0x092E);
 
 	QFOR(obj, container->m_Items, CGameItem*)
 	{
@@ -354,7 +359,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 	}
 	else if (g_ObjectInHand == NULL)
 	{
-		if (!g_ClickObject.Enabled)
+		if (!g_ClickObject.Enabled && g_PacketManager.ClientVersion < CV_308Z)
 		{
 			CGameObject *clickTarget = g_World->FindWorldObject(selectedSerial);
 
@@ -384,6 +389,7 @@ bool CGumpContainer::OnLeftMouseButtonDoubleClick()
 	else if (g_PressedObject.LeftSerial && g_PressedObject.LeftSerial != ID_GC_MINIMIZE)
 	{
 		g_Orion.DoubleClick(g_PressedObject.LeftSerial);
+		m_FrameCreated = false;
 
 		result = true;
 	}

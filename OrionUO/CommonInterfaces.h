@@ -60,6 +60,9 @@ typedef void __cdecl FUNCDEF_SEND_TARGET_TILE(unsigned short, short, short, char
 typedef void __cdecl FUNCDEF_SEND_TARGET_CANCEL();
 typedef void __cdecl FUNCDEF_SEND_CAST_SPELL(int);
 typedef void __cdecl FUNCDEF_SEND_USE_SKILL(int);
+typedef void __cdecl FUNCDEF_SEND_ASCII_SPEECH(const char*);
+typedef void __cdecl FUNCDEF_SEND_UNICODE_SPEECH(const wchar_t*);
+typedef void __cdecl FUNCDEF_SEND_RENAME_MOUNT(unsigned int, const char*);
 
 //IClilocManager
 typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_A(unsigned int, const char*);
@@ -116,6 +119,9 @@ UOInterface IUltimaOnline
 	FUNCDEF_SEND_TARGET_CANCEL *SendTargetCancel;
 	FUNCDEF_SEND_CAST_SPELL *SendCastSpell;
 	FUNCDEF_SEND_USE_SKILL *SendUseSkill;
+	FUNCDEF_SEND_ASCII_SPEECH *SendAsciiSpeech;
+	FUNCDEF_SEND_UNICODE_SPEECH *SendUnicodeSpeech;
+	FUNCDEF_SEND_RENAME_MOUNT *SendRenameMount;
 };
 //----------------------------------------------------------------------------------
 UOInterface IClilocManager

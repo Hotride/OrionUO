@@ -12,8 +12,13 @@
 //----------------------------------------------------------------------------------
 CRenderStaticObject::CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
 : CMapObject(renderType, serial, graphic, color, x, y, z), m_FoliageTransparentIndex(-1),
-m_TiledataPtr(&g_Orion.m_StaticData[graphic / 32].Tiles[graphic % 32]), m_Vegetation(false)
+m_Vegetation(false)
 {
+	if (graphic >= g_Orion.StaticDataCount)
+		m_TiledataPtr = &g_Orion.m_StaticData[(graphic - 0x4000) / 32].Tiles[(graphic - 0x4000) % 32];
+	else
+		m_TiledataPtr = &g_Orion.m_StaticData[graphic / 32].Tiles[graphic % 32];
+
 	if (m_TiledataPtr->Height > 5)
 		m_CanBeTransparent = 1;
 	else if (IsRoof() || (IsSurface() && IsBackground()) || IsWall())

@@ -434,7 +434,9 @@ enum VALUE_KEY_INT
 	VKI_SKILL_CAN_BE_USED,
 	VKI_STATIC_ART_ADDRESS,
 	VKI_USED_LAYER,
-	VKI_SPELLBOOK_COUNT
+	VKI_SPELLBOOK_COUNT,
+	VKI_BLOCK_MOVING,
+	VKI_SET_PLAYER_GRAPHIC
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_STRING
@@ -565,6 +567,13 @@ enum DRAW_CHARACTERS_STATUS_STATE
 	DCSS_NO_DRAW = 0,
 	DCSS_ABOVE,
 	DCSS_UNDER
+};
+//----------------------------------------------------------------------------------
+enum DRAW_CHARACTERS_STATUS_CONDITION_STATE
+{
+	DCSCS_ALWAYS = 0,
+	DCSCS_NOT_MAX,
+	DCSCS_LOWER
 };
 //----------------------------------------------------------------------------------
 enum HIDDEN_CHARACTERS_RENDER_MODE

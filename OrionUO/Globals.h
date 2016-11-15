@@ -70,7 +70,7 @@ extern int g_RenderedObjectsCountInGameWindow;
 //----------------------------------------------------------------------------------
 extern GLdouble g_GlobalScale;
 
-extern CGLTexture g_MapTexture[6];
+extern CGLTexture g_MapTexture[MAX_MAPS_COUNT];
 
 extern CGLTexture g_AuraTexture;
 
@@ -106,8 +106,8 @@ extern GAME_STATE g_GameState;
 
 extern CGLTexture g_TextureGumpState[2];
 
-extern WISP_GEOMETRY::CSize g_MapSize[6];
-extern WISP_GEOMETRY::CSize g_MapBlockSize[6];
+extern WISP_GEOMETRY::CSize g_MapSize[MAX_MAPS_COUNT];
+extern WISP_GEOMETRY::CSize g_MapBlockSize[MAX_MAPS_COUNT];
 
 extern int g_MultiIndexCount;
 

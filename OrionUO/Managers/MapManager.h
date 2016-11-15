@@ -10,14 +10,24 @@
 #ifndef MAPMANAGER_H
 #define MAPMANAGER_H
 //----------------------------------------------------------------------------------
-//Использовать вектор блоков или очередь
-#define USE_BLOCK_MAP 1
-//----------------------------------------------------------------------------------
 #include "../BaseQueue.h"
 #include "../Game objects/MapBlock.h"
 #include "../MulStruct.h"
 //----------------------------------------------------------------------------------
-typedef map<uint, PMAP_BLOCK> MAP_PATCH_LIST;
+class CIndexMap
+{
+	SETGET(uint, MapAddress);
+	SETGET(uint, StaticAddress);
+	SETGET(uint, StaticCount);
+	SETGET(bool, MapPatched);
+	SETGET(bool, StaticPatched);
+
+public:
+	CIndexMap();
+	virtual ~CIndexMap();
+};
+//----------------------------------------------------------------------------------
+typedef vector<CIndexMap> MAP_INDEX_LIST;
 //----------------------------------------------------------------------------------
 //!Класс менеджера карт
 class CMapManager : public CBaseQueue
@@ -26,16 +36,22 @@ class CMapManager : public CBaseQueue
 	SETGET(uint, MaxBlockIndex);
 
 private:
-#if USE_BLOCK_MAP == 1
 	//!Вектор ссылок на блоки карты
 	CMapBlock **m_Blocks;
-#endif
 
-	MAP_PATCH_LIST m_Patches;
+	MAP_INDEX_LIST m_BlockData[MAX_MAPS_COUNT];
 
 public:
 	CMapManager();
 	virtual ~CMapManager();
+
+	CIndexMap *GetIndex(const int &map, const int &blockX, const int &blockY);
+
+	void CreateBlockTable(int map);
+
+	void CreateBlocksTable();
+
+	void ApplyMapPatches();
 
 	/*!
 	Получить индекс текущей карты
@@ -43,7 +59,7 @@ public:
 	*/
 	virtual int GetActualMap();
 
-	void SetPatchedMapBlock(const uint &block, PMAP_BLOCK address);
+	void SetPatchedMapBlock(const uint &block, const uint &address);
 
 	/*!
 	Загрузить блок
@@ -69,7 +85,7 @@ public:
 	@param [__out] mb Ссылка на блок
 	@return Код ошибки (0 - успешно)
 	*/
-	virtual int GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
+	virtual void GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
 
 	/*!
 	Получить значение Z координаты для указанной точки в мире
@@ -152,7 +168,7 @@ public:
 	@param [__out] mb Ссылка на блок
 	@return Код ошибки (0 - успешно)
 	*/
-	virtual int GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
+	virtual void GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
 
 	/*!
 	Получить блок для радара из муллов
