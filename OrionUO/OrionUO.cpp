@@ -2985,7 +2985,7 @@ void COrion::LoadIndexFiles()
 	{
 		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL);
 		g_FileManager.m_artLegacyMUL.ResetPtr();
-		ReadUOPIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL, MAX_LAND_DATA_INDEX_COUNT);
+		ReadUOPIndexFile(m_StaticDataCount - MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_StaticDataIndex[i - MAX_LAND_DATA_INDEX_COUNT]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL, MAX_LAND_DATA_INDEX_COUNT);
 	}
 
 	if (g_FileManager.m_SoundMul.Start != nullptr)
