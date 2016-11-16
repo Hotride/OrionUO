@@ -2070,6 +2070,7 @@ PACKET_HANDLER(UpdateCharacter)
 
 		if (wd == NULL || (wd->X != x || wd->Y != y || wd->Z != z || wd->Direction != dir))
 		{
+			obj->m_WalkStack.Clear();
 			obj->X = x;
 			obj->Y = y;
 			obj->Z = z;
@@ -2717,6 +2718,49 @@ PACKET_HANDLER(ExtendedCommand)
 						spellbook->AddItem(spellItem);
 					}
 				}
+			}
+		}
+		case 0x22:
+		{
+			if (g_World == NULL)
+				return;
+
+			Move(2);
+			uint serial = ReadUInt32BE();
+			CGameCharacter *character = g_World->FindWorldCharacter(serial);
+
+			if (character != NULL)
+			{
+				int damage = ReadUInt8();
+
+				CTextData *text = new CTextData();
+				text->Unicode = false;
+				text->Font = 3;
+				text->Serial = serial;
+				text->Color = 0x0035;
+				text->Type = TT_OBJECT;
+				text->SetText(std::to_string(damage));
+				text->GenerateTexture(0);
+				text->X = text->m_Texture.Width / 2;
+				int height = text->m_Texture.Height;
+
+				CTextData *head = (CTextData*)character->m_DamageTextControl.Last();
+
+				if (head != NULL)
+				{
+					height += head->Y;
+
+					if (height > 0)
+					{
+						if (height > 100)
+							height = 0;
+
+						text->Y = height;
+					}
+				}
+
+				character->m_DamageTextControl.Add(text);
+				text->Timer = g_Ticks + DAMAGE_TEXT_NORMAL_DELAY;
 			}
 		}
 		case 0x26:
