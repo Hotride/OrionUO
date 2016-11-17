@@ -1943,7 +1943,7 @@ PACKET_HANDLER(DeleteObject)
 		{
 			if (obj != NULL && sep)
 			{
-				if (obj->Count != g_ObjectInHand->Count)
+				if (obj->Count != g_ObjectInHand->DragCount)
 					g_ObjectInHand->Deleted = true;
 				else
 					g_ObjectInHand->Separated = true;
