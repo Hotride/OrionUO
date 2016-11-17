@@ -2873,7 +2873,9 @@ PACKET_HANDLER(Talk)
 		str = ReadString(0);
 	}
 
-	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial /*|| name == string("System")*/)
+	CGameObject *obj = g_World->FindWorldObject(serial);
+
+	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (name == "System" && obj == NULL))
 		g_Orion.CreateTextMessage(TT_SYSTEM, serial, (uchar)font, textColor, str);
 	else
 	{
@@ -2882,8 +2884,6 @@ PACKET_HANDLER(Talk)
 			textColor = g_ConfigManager.EmoteColor;
 			str = "*" + str + "*";
 		}
-
-		CGameObject *obj = g_World->FindWorldObject(serial);
 
 		if (obj != NULL)
 		{
@@ -2940,7 +2940,9 @@ PACKET_HANDLER(UnicodeTalk)
 		str = ReadWString((m_Size - 48) / 2);
 	}
 
-	if (type == ST_BROADCAST /*|| type == ST_SYSTEM*/ || serial == 0xFFFFFFFF || !serial /*|| name == wstring(L"System")*/)
+	CGameObject *obj = g_World->FindWorldObject(serial);
+
+	if (type == ST_BROADCAST /*|| type == ST_SYSTEM*/ || serial == 0xFFFFFFFF || !serial || (name == "System" && obj == NULL))
 		g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, (uchar)g_ConfigManager.SpeechFont, textColor, str);
 	else
 	{
@@ -2949,8 +2951,6 @@ PACKET_HANDLER(UnicodeTalk)
 			textColor = g_ConfigManager.EmoteColor;
 			str = L"*" + str + L"*";
 		}
-
-		CGameObject *obj = g_World->FindWorldObject(serial);
 
 		if (obj != NULL)
 		{
@@ -3478,7 +3478,9 @@ PACKET_HANDLER(DisplayClilocString)
 	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, args);
 	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
 
-	if (/*type == ST_BROADCAST || type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || name == string("System"))
+	CGameObject *obj = g_World->FindWorldObject(serial);
+
+	if (/*type == ST_BROADCAST || type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (name == "System" && obj == NULL))
 		g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, (uchar)font, color, message);
 	else
 	{
@@ -3490,8 +3492,6 @@ PACKET_HANDLER(DisplayClilocString)
 
 		//if (serial >= 0x40000000) //Только для предметов
 		{
-			CGameObject *obj = g_World->FindWorldObject(serial);
-
 			if (obj != NULL && !obj->Name.length())
 			{
 				obj->Name = name;

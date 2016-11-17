@@ -32,7 +32,7 @@ CGumpJournal::CGumpJournal(uint serial, short x, short y, bool minimized, int he
 	Add(new CGUIGumppic(0x0830, 0, 0));
 
 	Add(new CGUIPage(2));
-	Add(new CGUIGumppic(0x082A, 111, 34)); //Journal text gump
+	Add(new CGUIGumppic(0x082A, 111, 32)); //Journal text gump
 	Add(new CGUIGumppic(0x082B, 30, 58)); //Top line
 	m_BottomLine = (CGUIGumppic*)Add(new CGUIGumppic(0x082B, 31, m_Height - 26)); //Bottom line
 
