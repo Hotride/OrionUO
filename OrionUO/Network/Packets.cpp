@@ -660,11 +660,11 @@ CPacketTextEntryDialogResponse::CPacketTextEntryDialogResponse(CGumpTextEntryDia
 	WriteUInt8(0xAC);
 	WriteUInt16BE(size);
 	WriteUInt32BE(gump->Serial);
-	WriteUInt8(gump->Variant);
 	WriteUInt8(gump->ButtonID);
+	WriteUInt8(0);
 	WriteUInt8(code ? 0x01 : 0x00);
 
-	WriteUInt16BE(len);
+	WriteUInt16BE(len + 1);
 
 	WriteString(entry->c_str(), len);
 }
