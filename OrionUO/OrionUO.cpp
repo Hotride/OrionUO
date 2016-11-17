@@ -625,7 +625,7 @@ void COrion::ProcessDelayedClicks()
 			{
 				CGameObject *go = (CGameObject*)g_ClickObject.Object();
 
-				if (g_PacketManager.ClientVersion < CV_308Z || (!go->NPC && go->Locked()))
+				if (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled || (!go->NPC && go->Locked()))
 					NameReq(serial);
 
 				//if (serial < 0x40000000)

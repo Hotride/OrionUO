@@ -789,7 +789,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 				g_Target.SendTargetObject(equipment->Serial);
 			else if (g_ObjectInHand == NULL) //Click on object
 			{
-				if (!g_ClickObject.Enabled && g_PacketManager.ClientVersion < CV_308Z)
+				if (!g_ClickObject.Enabled && (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled))
 				{
 					g_ClickObject.Init(equipment);
 					g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
