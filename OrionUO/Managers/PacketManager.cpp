@@ -2725,7 +2725,7 @@ PACKET_HANDLER(ExtendedCommand)
 			if (g_World == NULL)
 				return;
 
-			Move(2);
+			Move(1);
 			uint serial = ReadUInt32BE();
 			CGameCharacter *character = g_World->FindWorldCharacter(serial);
 
