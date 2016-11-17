@@ -14,7 +14,7 @@ CClilocManager g_ClilocManager;
 //----------------------------------------------------------------------------------
 //--------------------------------------CCliloc-------------------------------------
 //----------------------------------------------------------------------------------
-CCliloc::CCliloc(string lang)
+CCliloc::CCliloc(const string &lang)
 : CBaseQueueItem()
 {
 	m_Loaded = false;
@@ -89,7 +89,7 @@ string CCliloc::Load(uint &id)
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-string CCliloc::GetA(uint id, string result)
+string CCliloc::GetA(const uint &id, string result)
 {
 	if (id >= 3000000)
 	{
@@ -112,14 +112,21 @@ string CCliloc::GetA(uint id, string result)
 
 	uint tmpID = id;
 	string loadStr = Load(tmpID);
+
 	if (!tmpID && loadStr.length())
 		return loadStr;
-	else if (!result.length())
+	else
 	{
-		char str[50] = {0};
-		sprintf_s(str, "Unknown Cliloc #%i", id);
+		if (m_Language != "enu")
+			return g_ClilocManager.Cliloc("enu")->GetA(id, result);
+		else if (!result.length())
+		{
 
-		result = str;
+			char str[50] = { 0 };
+			sprintf_s(str, "Unknown Cliloc #%i", id);
+
+			result = str;
+		}
 	}
 
 	return result;
@@ -131,7 +138,7 @@ string CCliloc::GetA(uint id, string result)
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-wstring CCliloc::GetW(uint id, string result)
+wstring CCliloc::GetW(const uint &id, string result)
 {
 	return DecodeUTF8(GetA(id, result));
 }
@@ -139,12 +146,14 @@ wstring CCliloc::GetW(uint id, string result)
 //-----------------------------------CClilocManager---------------------------------
 //----------------------------------------------------------------------------------
 CClilocManager::CClilocManager()
-: CBaseQueue(), m_LastCliloc(NULL)
+: CBaseQueue(), m_LastCliloc(NULL), m_ENUCliloc(NULL)
 {
 }
 //----------------------------------------------------------------------------------
 CClilocManager::~CClilocManager()
 {
+	m_ENUCliloc = NULL;
+	m_LastCliloc = NULL;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -152,56 +161,49 @@ CClilocManager::~CClilocManager()
 @param [__in] lang Расширение клилока
 @return Ссылка на клилок
 */
-CCliloc *CClilocManager::Cliloc(string lang)
+CCliloc *CClilocManager::Cliloc(const string &lang)
 {
 	string language = ToLowerA(lang);
 
-	if (m_LastCliloc != NULL && m_LastCliloc->GetLanguage() == language)
-		return m_LastCliloc;
-
-	CCliloc *obj = (CCliloc*)m_Items;
-
-	while (obj != NULL)
+	if (language == "enu")
 	{
-		if (obj->GetLanguage() == language)
+		if (m_ENUCliloc == NULL)
+			m_ENUCliloc = (CCliloc*)Add(new CCliloc(language));
+
+		return m_ENUCliloc;
+	}
+
+	if (m_LastCliloc != NULL && m_LastCliloc->Language == language)
+	{
+		if (!m_LastCliloc->Loaded)
+			return m_ENUCliloc;
+
+		return m_LastCliloc;
+	}
+
+	QFOR(obj, m_Items, CCliloc*)
+	{
+		if (obj->Language == language)
 		{
+			if (!obj->Loaded)
+				return m_ENUCliloc;
+
 			m_LastCliloc = obj;
 			return obj;
 		}
-
-		obj = (CCliloc*)obj->m_Next;
 	}
 
-	obj = new CCliloc(language);
+	CCliloc *obj = (CCliloc*)Add(new CCliloc(language));
 
 	if (!obj->Loaded)
-	{
-		const string enu("enu");
-		delete obj;
-
-		obj = (CCliloc*)m_Items;
-
-		while (obj != NULL)
-		{
-			if (obj->GetLanguage() == enu)
-			{
-				m_LastCliloc = obj;
-				return obj;
-			}
-
-			obj = (CCliloc*)obj->m_Next;
-		}
-
-		obj = new CCliloc(enu);
-	}
-
-	Add(obj);
+		return Cliloc("enu");
 
 	m_LastCliloc = obj;
+
 	return obj;
 }
 //----------------------------------------------------------------------------------
-wstring CClilocManager::ParseArgumentsToClilocString(uint cliloc, wstring args)
+wstring CClilocManager::ParseArgumentsToClilocString(const uint &cliloc, wstring args)
 {
 	while (args.length() && args[0] == L'\t')
 		args.erase(args.begin());
