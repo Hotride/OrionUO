@@ -310,7 +310,7 @@ CGump *CGumpManager::GetGump(uint serial, uint id, GUMP_TYPE type)
 	{
 		if (gump->GumpType == type)
 		{
-			if (type == GT_SHOP)
+			if (type == GT_SHOP || type == GT_TARGET_SYSTEM)
 				break;
 			else if (type == GT_TRADE)
 			{
@@ -349,7 +349,9 @@ void CGumpManager::CloseGump(uint serial, uint id, GUMP_TYPE type)
 
 		if (gump->GumpType == type)
 		{
-			if (type == GT_GENERIC && gump->Serial == serial && gump->ID == id)
+			if (type == GT_TARGET_SYSTEM)
+				RemoveGump(gump);
+			else if (type == GT_GENERIC && gump->Serial == serial && gump->ID == id)
 				RemoveGump(gump);
 			else if (type == GT_TRADE && gump->ID == serial)
 				RemoveGump(gump);

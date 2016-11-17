@@ -1930,12 +1930,12 @@ bool CGameScreen::OnLeftMouseButtonDoubleClick()
 
 	if (charUnderMouse != 0)
 	{
-		if (charUnderMouse != g_PlayerSerial && !g_ConfigManager.DisableNewTargetSystem && charUnderMouse < 0x40000000)
+		if (!g_ConfigManager.DisableNewTargetSystem && (charUnderMouse != g_PlayerSerial || g_Player->FindLayer(OL_MOUNT) == NULL))
 		{
 			g_GumpManager.CloseGump(g_NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM);
 			g_NewTargetSystem.Serial = charUnderMouse;
 
-			if (g_GumpManager.GetGump(charUnderMouse, 0, GT_TARGET_SYSTEM) == NULL)
+			if (g_GumpManager.UpdateContent(charUnderMouse, 0, GT_TARGET_SYSTEM) == NULL)
 			{
 				CPacketStatusRequest(charUnderMouse).Send();
 
