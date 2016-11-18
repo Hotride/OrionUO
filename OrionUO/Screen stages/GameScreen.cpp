@@ -1339,7 +1339,7 @@ void CGameScreen::PrepareContent()
 			{
 				if (selobj->Serial >= 0x40000000 && !g_GrayedPixels) //Item selection
 				{
-					if (selobj->IsStackable() && selobj->Count > 1)
+					if (selobj->IsStackable() && selobj->Count > 1 && !g_ShiftPressed)
 					{
 						CGumpDrag *newgump = new CGumpDrag(g_PressedObject.LeftSerial, g_MouseManager.Position.X - 80, g_MouseManager.Position.Y - 34);
 
