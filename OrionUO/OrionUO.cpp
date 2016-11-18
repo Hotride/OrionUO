@@ -85,6 +85,8 @@
 #include "CommonInterfaces.h"
 #include "StumpsData.h"
 #include "Gumps/GumpSpellbook.h"
+#include "ServerList.h"
+#include "Gumps/GumpNotify.h"
 //----------------------------------------------------------------------------------
 typedef void __cdecl PLUGIN_INIT_TYPE(STRING_LIST&, STRING_LIST&, UINT_LIST&);
 //----------------------------------------------------------------------------------
@@ -5490,5 +5492,22 @@ void COrion::RequestGuildGump()
 void COrion::RequestQuestGump()
 {
 	CPacketQuestMenuRequest().Send();
+}
+//----------------------------------------------------------------------------------
+void COrion::DisconnectGump()
+{
+	CServer *server = g_ServerList.GetSelectedServer();
+	string str = "Disconnected from " + (server != NULL ? server->Name : "server name...");
+	g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x21, str);
+
+	int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 100;
+	int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 62;
+
+	CGumpNotify *gump = new CGumpNotify(0, x, y, CGumpNotify::ID_GN_STATE_LOGOUT, 200, 125, "Connection lost");
+
+	g_GumpManager.AddGump(gump);
+
+	g_Orion.InitScreen(GS_GAME_BLOCKED);
+	g_GameBlockedScreen.Code = 0;
 }
 //----------------------------------------------------------------------------------

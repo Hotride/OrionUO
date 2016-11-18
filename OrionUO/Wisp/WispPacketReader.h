@@ -20,6 +20,8 @@ public:
 
 protected:
 	virtual void OnPacket() {}
+
+	virtual void OnReadFailed() {}
 };
 //----------------------------------------------------------------------------------
 }; //namespace

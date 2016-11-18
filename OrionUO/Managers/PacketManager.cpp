@@ -586,6 +586,12 @@ void CPacketManager::SendMegaClilocRequests()
 	SendMegaClilocRequests(m_MegaClilocRequests);
 }
 //----------------------------------------------------------------------------------
+void CPacketManager::OnReadFailed()
+{
+	g_Orion.DisconnectGump();
+	g_Orion.Disconnect();
+}
+//----------------------------------------------------------------------------------
 void CPacketManager::OnPacket()
 {
 	uint ticks = g_Ticks;
@@ -1929,6 +1935,14 @@ PACKET_HANDLER(DeleteObject)
 		return;
 
 	uint serial = ReadUInt32BE();
+
+	if (serial == g_PlayerSerial)
+	{
+		g_Orion.DisconnectGump();
+		g_Orion.Disconnect();
+		return;
+	}
+
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
 	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == serial)
@@ -1957,7 +1971,7 @@ PACKET_HANDLER(DeleteObject)
 		}
 	}
 
-	if (obj != NULL && obj->Serial != g_PlayerSerial)
+	if (obj != NULL)
 	{
 		uint cont = obj->Container;
 

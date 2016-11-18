@@ -17,7 +17,11 @@ void CPacketReader::Read(class CConnection *connection)
 {
 	if (connection->ReadyRead())
 	{
-		connection->Read();
+		if (!connection->Read())
+		{
+			OnReadFailed();
+			return;
+		}
 
 		WISP_NETWORK::CPacketMessage *parser = connection->m_MessageParser;
 

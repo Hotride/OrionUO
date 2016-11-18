@@ -1,5 +1,6 @@
 ﻿//----------------------------------------------------------------------------------
 #include "WispConnection.h"
+#include "WispLogger.h"
 
 namespace WISP_NETWORK
 {
@@ -106,7 +107,7 @@ bool CConnection::ReadyRead()
 	return (m_DataReady != 0);
 }
 //----------------------------------------------------------------------------------
-void CConnection::Read(const int &maxSize)
+bool CConnection::Read(const int &maxSize)
 {
 	if (m_DataReady == SOCKET_ERROR)
 		Disconnect();
@@ -122,8 +123,12 @@ void CConnection::Read(const int &maxSize)
 			data = Decompression(data);
 
 			m_MessageParser->Append(data);
+
+			return true;
 		}
 	}
+
+	return false;
 }
 //----------------------------------------------------------------------------------
 int CConnection::Send(puchar data, const int &size)
