@@ -137,7 +137,7 @@ void CEffectManager::CreateExplodeEffect(CGameEffect *effect, const EFFECT_TYPE 
 	newEffect->X = effect->DestX;
 	newEffect->Y = effect->DestY;
 	newEffect->Z = effect->DestZ;
-	newEffect->Graphic = 0x36CA;
+	newEffect->Graphic = 0x36CB;
 	newEffect->Speed = 50;
 	newEffect->Duration = g_Ticks + 400;
 	newEffect->FixedDirection = effect->FixedDirection;

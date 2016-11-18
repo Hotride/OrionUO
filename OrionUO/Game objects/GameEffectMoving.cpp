@@ -201,7 +201,7 @@ void CGameEffectMoving::Update(CGameObject *parent)
 
 			if (m_OffsetZ >= 4)
 			{
-				int countZ = m_OffsetZ / 4;
+				int countZ = 1; // m_OffsetZ / 4;
 
 				if (incZ)
 					m_Z += countZ;
@@ -211,7 +211,8 @@ void CGameEffectMoving::Update(CGameObject *parent)
 				if (m_Z == m_DestZ)
 					m_OffsetZ = 0;
 				else
-					m_OffsetZ -= countZ * 4;
+					m_OffsetZ %= 8;
+					//m_OffsetZ -= countZ * 4;
 
 				wantUpdateInRenderList = true;
 			}
