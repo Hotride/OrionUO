@@ -2741,6 +2741,8 @@ PACKET_HANDLER(ExtendedCommand)
 					}
 				}
 			}
+
+			break;
 		}
 		case 0x22:
 		{
@@ -2784,6 +2786,8 @@ PACKET_HANDLER(ExtendedCommand)
 				character->m_DamageTextControl.Add(text);
 				text->Timer = g_Ticks + DAMAGE_TEXT_NORMAL_DELAY;
 			}
+
+			break;
 		}
 		case 0x26:
 		{
