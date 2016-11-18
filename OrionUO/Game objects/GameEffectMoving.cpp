@@ -143,17 +143,17 @@ void CGameEffectMoving::Update(CGameObject *parent)
 	int newX = playerX + newCoordX;
 	int newY = playerY + newCoordY;
 
-	if (newX == m_DestX && newY == m_DestY)
+	if (newX == m_DestX && newY == m_DestY && m_Z == m_DestZ)
 	{
 		if (m_Explode)
 		{
-			CGameObject *obj = g_World->FindWorldObject(m_Serial);
+			EFFECT_TYPE type = EF_STAY_AT_POS;
 
-			if (obj != NULL && obj->GetTopObject() != NULL)
-			{
-				m_Z = m_DestZ;
-				g_EffectManager.CreateExplodeEffect(this);
-			}
+			if (g_World->FindWorldObject(m_Serial) != NULL)
+				type = EF_STAY_AT_SOURCE;
+
+			m_Z = m_DestZ;
+			g_EffectManager.CreateExplodeEffect(this, type);
 		}
 
 		g_EffectManager.RemoveEffect(this);

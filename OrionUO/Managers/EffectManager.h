@@ -38,7 +38,7 @@ public:
 	@param [__in] effect Ссылка на эффект
 	@return 
 	*/
-	void CreateExplodeEffect(CGameEffect *effect);
+	void CreateExplodeEffect(CGameEffect *effect, const EFFECT_TYPE &type);
 
 	/*!
 	Обновление эффектов
