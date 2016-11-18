@@ -65,14 +65,14 @@ void CGumpPartyManifest::UpdateContent()
 
 	if (m_CanLoot)
 	{
-		Add(new CGUIButton(ID_GPM_BUTTON_LEAVE, 0x0FA2, 0x0FA2, 0x0FA2, 70, 334));
+		Add(new CGUIButton(ID_GPM_BUTTON_LOOT_TYPE, 0x0FA2, 0x0FA2, 0x0FA2, 70, 334));
 
 		text = (CGUIText*)Add(new CGUIText(0x0386, 110, 334));
 		text->CreateTextureA(2, "Party can loot me");
 	}
 	else
 	{
-		Add(new CGUIButton(ID_GPM_BUTTON_LEAVE, 0x0FA9, 0x0FA9, 0x0FA9, 70, 334));
+		Add(new CGUIButton(ID_GPM_BUTTON_LOOT_TYPE, 0x0FA9, 0x0FA9, 0x0FA9, 70, 334));
 
 		text = (CGUIText*)Add(new CGUIText(0x0386, 110, 334));
 		text->CreateTextureA(2, "Party CANNOT loot me");
