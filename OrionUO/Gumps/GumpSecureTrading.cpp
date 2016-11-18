@@ -240,7 +240,7 @@ void CGumpSecureTrading::GUMP_BUTTON_EVENT_C
 	}
 	else
 	{
-		if (!g_ClickObject.Enabled && g_PacketManager.ClientVersion < CV_308Z)
+		if (!g_ClickObject.Enabled && (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled))
 		{
 			CGameObject *clickTarget = g_World->FindWorldObject(serial);
 

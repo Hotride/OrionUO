@@ -22,6 +22,9 @@ class CGUIScrollBackground : public CBaseGUI
 	//!Смещение по оси X
 	SETGET(int, OffsetX);
 
+	//!Смещение нижней части по оси X
+	SETGET(int, BottomOffsetX);
+
 	//!Ширина
 	SETGET(int, Width);
 

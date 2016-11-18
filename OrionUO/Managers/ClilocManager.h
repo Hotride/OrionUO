@@ -43,7 +43,7 @@ private:
 	string Load(uint &id);
 
 public:
-	CCliloc(string lang);
+	CCliloc(const string &lang);
 	virtual ~CCliloc();
 
 	/*!
@@ -52,7 +52,7 @@ public:
 	@param [__in] result Стандартное сообщение, если клилок не был найден
 	@return Полученный результат, замена или сообщение с ошибкой
 	*/
-	string GetA(uint id, string result = "");
+	string GetA(const uint &id, string result = "");
 
 	/*!
 	Получить Unicode строку по id (и загрузить при необходимости)
@@ -60,7 +60,7 @@ public:
 	@param [__in] result Стандартное сообщение, если клилок не был найден
 	@return Полученный результат, замена или сообщение с ошибкой
 	*/
-	wstring GetW(uint id, string result = "");
+	wstring GetW(const uint &id, string result = "");
 };
 //----------------------------------------------------------------------------------
 //!Класс менеджера клилоков
@@ -69,6 +69,9 @@ class CClilocManager : public CBaseQueue
 private:
 	//!Ссылка на последний использованный клилок (для более быстрого доступа)
 	CCliloc *m_LastCliloc;
+
+	//!Ссылка на дефолтный клилок (для более быстрого доступа)
+	CCliloc *m_ENUCliloc;
 
 public:
 	CClilocManager();
@@ -79,9 +82,9 @@ public:
 	@param [__in] lang Расширение клилока
 	@return Ссылка на клилок
 	*/
-	CCliloc *Cliloc(string lang);
+	CCliloc *Cliloc(const string &lang);
 
-	wstring ParseArgumentsToClilocString(uint cliloc, wstring args);
+	wstring ParseArgumentsToClilocString(const uint &cliloc, wstring args);
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер клилоков

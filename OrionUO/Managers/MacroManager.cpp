@@ -1244,7 +1244,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 
 					g_NewTargetSystem.Serial = obj->Serial;
 
-					if (g_GumpManager.GetGump(g_NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM) == NULL)
+					if (g_GumpManager.UpdateContent(g_NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM) == NULL)
 					{
 						if (g_NewTargetSystem.Serial < 0x40000000)
 							CPacketStatusRequest(g_NewTargetSystem.Serial).Send();

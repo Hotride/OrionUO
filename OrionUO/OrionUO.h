@@ -489,6 +489,8 @@ public:
 
 	//Запросить гамп квестов
 	void RequestQuestGump();
+
+	void DisconnectGump();
 };
 //----------------------------------------------------------------------------------
 extern COrion g_Orion;

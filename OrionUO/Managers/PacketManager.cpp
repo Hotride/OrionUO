@@ -566,12 +566,15 @@ void CPacketManager::SendMegaClilocRequests(UINT_LIST &list)
 {
 	if (list.size())
 	{
-		if (m_ClientVersion >= CV_500A)
-			CPacketMegaClilocRequest(list).Send();
-		else
+		if (g_TooltipsEnabled)
 		{
-			//IFOR(i, 0, (int)list.size())
-			//	CPacketMegaClilocRequestOld(list[i]).Send();
+			if (m_ClientVersion >= CV_500A)
+				CPacketMegaClilocRequest(list).Send();
+			else
+			{
+				//IFOR(i, 0, (int)list.size())
+				//	CPacketMegaClilocRequestOld(list[i]).Send();
+			}
 		}
 
 		list.clear();
@@ -581,6 +584,12 @@ void CPacketManager::SendMegaClilocRequests(UINT_LIST &list)
 void CPacketManager::SendMegaClilocRequests()
 {
 	SendMegaClilocRequests(m_MegaClilocRequests);
+}
+//----------------------------------------------------------------------------------
+void CPacketManager::OnReadFailed()
+{
+	g_Orion.DisconnectGump();
+	g_Orion.Disconnect();
 }
 //----------------------------------------------------------------------------------
 void CPacketManager::OnPacket()
@@ -770,10 +779,11 @@ PACKET_HANDLER(CharacterList)
 
 	g_ClientFlag = ReadUInt32BE();
 
-	g_CharacterList.OnePerson = (bool)(g_ClientFlag & LFF_TD);
-	g_SendLogoutNotification = (bool)(g_ClientFlag & LFF_RE);
-	g_NPCPopupEnabled = (bool)(g_ClientFlag & LFF_LBR);
-	g_ChatEnabled = (bool)(g_ClientFlag & LFF_T2A);
+	g_CharacterList.OnePerson = (bool)(g_ClientFlag & CLF_ONE_CHARACTER_SLOT);
+	//g_SendLogoutNotification = (bool)(g_ClientFlag & LFF_RE);
+	g_NPCPopupEnabled = (bool)(g_ClientFlag & CLF_CONTEXT_MENU);
+	g_ChatEnabled = (bool)(g_ClientFlag & CLF_ENABLE_CHAT);
+	g_TooltipsEnabled = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
 
 	g_CharacterListScreen.UpdateContent();
 }
@@ -1289,6 +1299,10 @@ PACKET_HANDLER(UpdateItem)
 
 	obj->MultiBody = (graphic & 0x4000);
 	obj->Graphic = graphic & 0x3FFF;
+
+	if (graphic == 0x2006 && !count)
+		count = 1;
+
 	obj->Count = count;
 	ushort x = ReadUInt16BE();
 	ushort y = ReadUInt16BE();
@@ -1921,6 +1935,14 @@ PACKET_HANDLER(DeleteObject)
 		return;
 
 	uint serial = ReadUInt32BE();
+
+	if (serial == g_PlayerSerial)
+	{
+		g_Orion.DisconnectGump();
+		g_Orion.Disconnect();
+		return;
+	}
+
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
 	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == serial)
@@ -1939,7 +1961,7 @@ PACKET_HANDLER(DeleteObject)
 		{
 			if (obj != NULL && sep)
 			{
-				if (obj->Count != g_ObjectInHand->Count)
+				if (obj->Count != g_ObjectInHand->DragCount)
 					g_ObjectInHand->Deleted = true;
 				else
 					g_ObjectInHand->Separated = true;
@@ -1949,7 +1971,7 @@ PACKET_HANDLER(DeleteObject)
 		}
 	}
 
-	if (obj != NULL && obj->Serial != g_PlayerSerial)
+	if (obj != NULL)
 	{
 		uint cont = obj->Container;
 
@@ -2070,6 +2092,7 @@ PACKET_HANDLER(UpdateCharacter)
 
 		if (wd == NULL || (wd->X != x || wd->Y != y || wd->Z != z || wd->Direction != dir))
 		{
+			obj->m_WalkStack.Clear();
 			obj->X = x;
 			obj->Y = y;
 			obj->Z = z;
@@ -2718,6 +2741,53 @@ PACKET_HANDLER(ExtendedCommand)
 					}
 				}
 			}
+
+			break;
+		}
+		case 0x22:
+		{
+			if (g_World == NULL)
+				return;
+
+			Move(1);
+			uint serial = ReadUInt32BE();
+			CGameCharacter *character = g_World->FindWorldCharacter(serial);
+
+			if (character != NULL)
+			{
+				int damage = ReadUInt8();
+
+				CTextData *text = new CTextData();
+				text->Unicode = false;
+				text->Font = 3;
+				text->Serial = serial;
+				text->Color = 0x0035;
+				text->Type = TT_OBJECT;
+				text->SetText(std::to_string(damage));
+				text->GenerateTexture(0);
+				text->X = text->m_Texture.Width / 2;
+				int height = text->m_Texture.Height;
+
+				CTextData *head = (CTextData*)character->m_DamageTextControl.Last();
+
+				if (head != NULL)
+				{
+					height += head->Y;
+
+					if (height > 0)
+					{
+						if (height > 100)
+							height = 0;
+
+						text->Y = height;
+					}
+				}
+
+				character->m_DamageTextControl.Add(text);
+				text->Timer = g_Ticks + DAMAGE_TEXT_NORMAL_DELAY;
+			}
+
+			break;
 		}
 		case 0x26:
 		{
@@ -2829,7 +2899,9 @@ PACKET_HANDLER(Talk)
 		str = ReadString(0);
 	}
 
-	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial /*|| name == string("System")*/)
+	CGameObject *obj = g_World->FindWorldObject(serial);
+
+	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (name == "System" && obj == NULL))
 		g_Orion.CreateTextMessage(TT_SYSTEM, serial, (uchar)font, textColor, str);
 	else
 	{
@@ -2838,8 +2910,6 @@ PACKET_HANDLER(Talk)
 			textColor = g_ConfigManager.EmoteColor;
 			str = "*" + str + "*";
 		}
-
-		CGameObject *obj = g_World->FindWorldObject(serial);
 
 		if (obj != NULL)
 		{
@@ -2896,7 +2966,9 @@ PACKET_HANDLER(UnicodeTalk)
 		str = ReadWString((m_Size - 48) / 2);
 	}
 
-	if (type == ST_BROADCAST /*|| type == ST_SYSTEM*/ || serial == 0xFFFFFFFF || !serial /*|| name == wstring(L"System")*/)
+	CGameObject *obj = g_World->FindWorldObject(serial);
+
+	if (type == ST_BROADCAST /*|| type == ST_SYSTEM*/ || serial == 0xFFFFFFFF || !serial || (name == "System" && obj == NULL))
 		g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, (uchar)g_ConfigManager.SpeechFont, textColor, str);
 	else
 	{
@@ -2905,8 +2977,6 @@ PACKET_HANDLER(UnicodeTalk)
 			textColor = g_ConfigManager.EmoteColor;
 			str = L"*" + str + L"*";
 		}
-
-		CGameObject *obj = g_World->FindWorldObject(serial);
 
 		if (obj != NULL)
 		{
@@ -3434,7 +3504,9 @@ PACKET_HANDLER(DisplayClilocString)
 	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, args);
 	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
 
-	if (/*type == ST_BROADCAST || type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || name == string("System"))
+	CGameObject *obj = g_World->FindWorldObject(serial);
+
+	if (/*type == ST_BROADCAST || type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (name == "System" && obj == NULL))
 		g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, (uchar)font, color, message);
 	else
 	{
@@ -3446,8 +3518,6 @@ PACKET_HANDLER(DisplayClilocString)
 
 		//if (serial >= 0x40000000) //Только для предметов
 		{
-			CGameObject *obj = g_World->FindWorldObject(serial);
-
 			if (obj != NULL && !obj->Name.length())
 			{
 				obj->Name = name;

@@ -17,6 +17,7 @@ CGUIScrollBackground::CGUIScrollBackground(const uint &serial, const ushort &gra
 : CBaseGUI(GOT_SCROLLBACKGROUND, serial, graphic, 0, x, y), m_Height(height)
 {
 	m_OffsetX = 0;
+	m_BottomOffsetX = 0;
 	m_Width = 0;
 	int width = 0;
 
@@ -39,6 +40,7 @@ CGUIScrollBackground::CGUIScrollBackground(const uint &serial, const ushort &gra
 	if (isValid)
 	{
 		m_OffsetX = (width - th[1]->Width) / 2;
+		m_BottomOffsetX = m_OffsetX; // th[0]->Width - th[3]->Width;
 		m_Width = m_OffsetX + th[3]->Width;
 	}
 
@@ -113,7 +115,7 @@ void CGUIScrollBackground::Draw(const bool &checktrans)
 		}
 	}
 
-	th[3]->Draw(bodyX, m_Y + m_Height - th[3]->Height, checktrans); //Bottom scroll
+	th[3]->Draw(m_X + m_BottomOffsetX, m_Y + m_Height - th[3]->Height, checktrans); //Bottom scroll
 }
 //----------------------------------------------------------------------------------
 bool CGUIScrollBackground::Select()
@@ -139,10 +141,11 @@ bool CGUIScrollBackground::Select()
 			return false;
 	}
 
-	x = m_X + m_OffsetX;
 	y = m_Y;
 
-	select = g_Orion.GumpPixelsInXY(m_Graphic, m_X, y) || g_Orion.GumpPixelsInXY(m_Graphic + 3, x, y + m_Height - th[3]->Height); //Top/Bottom scrolls
+	select = g_Orion.GumpPixelsInXY(m_Graphic, m_X, y) || g_Orion.GumpPixelsInXY(m_Graphic + 3, m_X + m_BottomOffsetX, y + m_Height - th[3]->Height); //Top/Bottom scrolls
+
+	x = m_X + m_OffsetX;
 
 	int currentY = th[0]->Height;
 	int height = m_Height - th[3]->Height;

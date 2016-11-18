@@ -50,10 +50,17 @@ void CEffectManager::AddEffect(CGameEffect *effect)
 
 				CGameEffectMoving *moving = (CGameEffectMoving*)effect;
 
-				if (moving->X == moving->DestX && moving->Y == moving->DestY)
+				if (moving->X == moving->DestX && moving->Y == moving->DestY && moving->Z == moving->DestZ)
 				{
-					if (moving->Explode && obj != NULL)
-						CreateExplodeEffect(moving);
+					if (moving->Explode)
+					{
+						EFFECT_TYPE type = EF_STAY_AT_POS;
+
+						if (obj != NULL)
+							type = EF_STAY_AT_SOURCE;
+
+						CreateExplodeEffect(moving, type);
+					}
 
 					delete effect;
 
@@ -121,16 +128,19 @@ void CEffectManager::RemoveEffect(CGameEffect *effect)
 @param [__in] effect Ссылка на эффект
 @return 
 */
-void CEffectManager::CreateExplodeEffect(CGameEffect *effect)
+void CEffectManager::CreateExplodeEffect(CGameEffect *effect, const EFFECT_TYPE &type)
 {
 	CGameEffect *newEffect = new CGameEffect();
 
-	newEffect->EffectType = EF_STAY_AT_SOURCE;
+	newEffect->EffectType = type;
 	newEffect->Serial = effect->DestSerial;
+	newEffect->X = effect->DestX;
+	newEffect->Y = effect->DestY;
+	newEffect->Z = effect->DestZ;
 	newEffect->Graphic = 0x36CB;
 	newEffect->Speed = 50;
 	newEffect->Duration = g_Ticks + 400;
-	//newEffect->FixedDirection = (fixedDirection != 0);
+	newEffect->FixedDirection = effect->FixedDirection;
 	
 	newEffect->Color = effect->Color;
 	newEffect->RenderMode = effect->RenderMode;

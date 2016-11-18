@@ -36,7 +36,7 @@ public:
 
 	virtual UCHAR_LIST Decompression(UCHAR_LIST data) { return data; }
 
-	void Read(const int &maxSize = 0x1000);
+	bool Read(const int &maxSize = 0x1000);
 
 	int Send(puchar data, const int &size);
 	int Send(const UCHAR_LIST &data);

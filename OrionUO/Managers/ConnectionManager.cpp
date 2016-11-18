@@ -15,10 +15,8 @@
 #include "PacketManager.h"
 #include "../Screen stages/ConnectionScreen.h"
 #include "../Screen stages/GameBlockedScreen.h"
-#include "../ServerList.h"
 #include "../Managers/GumpManager.h"
 #include "../Managers/PacketManager.h"
-#include "../Gumps/GumpNotify.h"
 //----------------------------------------------------------------------------------
 CConnectionManager g_ConnectionManager;
 //----------------------------------------------------------------------------------
@@ -232,20 +230,7 @@ void CConnectionManager::Recv()
 				LOG("Failed to Recv()...Disconnecting...\n");
 
 				if (g_GameState == GS_GAME || (g_GameState == GS_GAME_BLOCKED && g_GameBlockedScreen.Code))
-				{
-					string str = "Disconnected from " + g_ServerList.GetSelectedServer()->Name;
-					g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x21, str);
-
-					int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 100;
-					int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 62;
-
-					CGumpNotify *gump = new CGumpNotify(0, x, y, CGumpNotify::ID_GN_STATE_LOGOUT, 200, 125, "Connection lost");
-
-					g_GumpManager.AddGump(gump);
-
-					g_Orion.InitScreen(GS_GAME_BLOCKED);
-					g_GameBlockedScreen.Code = 0;
-				}
+					g_Orion.DisconnectGump();
 				else
 				{
 					g_Orion.InitScreen(GS_MAIN_CONNECT);

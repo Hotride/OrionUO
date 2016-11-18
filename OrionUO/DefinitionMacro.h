@@ -36,7 +36,7 @@
 #define PLUGIN_FLAGS_GAME_WORLD_DRAW	0x40
 #define PLUGIN_FLAGS_SCENE_DRAW			0x80
 //----------------------------------------------------------------------------------
-#define RANDOM_FIDGET_ANIMATION_DELAY		(30000 + (rand() % 5000))
+#define RANDOM_FIDGET_ANIMATION_DELAY		(30000 + (rand() % 30000))
 //----------------------------------------------------------------------------------
 #define MODKEY_ALT					0x0100
 #define MODKEY_CTRL					0x0200

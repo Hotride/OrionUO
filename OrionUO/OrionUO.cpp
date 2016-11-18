@@ -85,6 +85,8 @@
 #include "CommonInterfaces.h"
 #include "StumpsData.h"
 #include "Gumps/GumpSpellbook.h"
+#include "ServerList.h"
+#include "Gumps/GumpNotify.h"
 #include <unordered_map>
 //----------------------------------------------------------------------------------
 typedef void __cdecl PLUGIN_INIT_TYPE(STRING_LIST&, STRING_LIST&, UINT_LIST&);
@@ -623,7 +625,7 @@ void COrion::ProcessDelayedClicks()
 			{
 				CGameObject *go = (CGameObject*)g_ClickObject.Object();
 
-				if (g_PacketManager.ClientVersion < CV_308Z || (!go->NPC && go->Locked()))
+				if (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled || (!go->NPC && go->Locked()))
 					NameReq(serial);
 
 				//if (serial < 0x40000000)
@@ -1975,9 +1977,9 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 						value = CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT;
 						break;
 					}
-		default:
-			break;
-	}
+					default:
+						break;
+				}
 			}
 
 			break;
@@ -2799,7 +2801,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 	uopFile->Move(nextBlock);
 
 	do
-	{ 
+	{
 		int fileCount = uopFile->ReadInt32LE();
 		nextBlock = uopFile->ReadInt64LE();
 		IFOR(i, 0, fileCount)
@@ -2815,13 +2817,13 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 			int entryLength = flag == 1 ? compressedLength : decompressedLength;
 
 			if (offset == 0)
-			{
+				{
 				continue;
 			}
 
 			int idx;
 			if (hashes.find(hash) != hashes.end())
-			{
+					{
 				idx = hashes.at(hash);
 
 				CIndexObject *obj = getIdxObj(idx);
@@ -2830,7 +2832,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 				obj->ID = idx;
 
 				if (uopFileName == "gumpartlegacymul")
-				{
+						{
 					auto currentPos = uopFile->Ptr;
 					uopFile->ResetPtr();
 					uopFile->Move(offset + headerLength);
@@ -2844,14 +2846,14 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 					obj->DataSize -= 8;
 
 					uopFile->Ptr = currentPos;
+						}
+					}
 				}
-			}
-		}
 
 		uopFile->ResetPtr();
 		uopFile->Move(nextBlock);
 	} while (nextBlock != 0);
-}
+			}
 //----------------------------------------------------------------------------------
 unsigned long long COrion::CreateHash(string s)
 {
@@ -2880,7 +2882,7 @@ unsigned long long COrion::CreateHash(string s)
 		ebx += esi;
 		esi = (esi - edi) ^ (edi >> 28) ^ (edi << 4);
 		edi += ebx;
-	}
+		}
 
 	if (s.length() - i > 0)
 	{
@@ -2954,13 +2956,13 @@ unsigned long long COrion::CreateHash(string s)
 		eax = (esi ^ edi) - ((edi >> 8) ^ (edi << 24));
 
 		return (static_cast<unsigned long long>(edi) << 32) | eax;
-	}
+		}
 
 	return (static_cast<unsigned long long>(esi) << 32) | eax;
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadIndexFiles()
-{
+		{
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)g_FileManager.m_ArtIdx.Start;
 	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((uint)g_FileManager.m_ArtIdx.Start + (m_LandDataCount * sizeof(ART_IDX_BLOCK)));
 	PGUMP_IDX_BLOCK GumpArtPtr = (PGUMP_IDX_BLOCK)g_FileManager.m_GumpIdx.Start;
@@ -2982,20 +2984,20 @@ void COrion::LoadIndexFiles()
 		ReadMulIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, [&StaticArtPtr]() { return ++StaticArtPtr; });
 	}
 	else
-	{
+			{
 		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL);
 		g_FileManager.m_artLegacyMUL.ResetPtr();
 		ReadUOPIndexFile(m_StaticDataCount - MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_StaticDataIndex[i - MAX_LAND_DATA_INDEX_COUNT]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL, MAX_LAND_DATA_INDEX_COUNT);
-	}
+			}
 
 	if (g_FileManager.m_SoundMul.Start != nullptr)
 		ReadMulIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, (uint)g_FileManager.m_SoundMul.Start, SoundPtr, [&SoundPtr]() { return ++SoundPtr; });
-	else
+			else
 		ReadUOPIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, "soundlegacymul", ".dat", &g_FileManager.m_soundLegacyMUL);
 
 	if (g_FileManager.m_GumpMul.Start != nullptr)
 		ReadMulIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, [&GumpArtPtr]() { return ++GumpArtPtr; });
-	else
+			else
 		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartlegacymul", ".tga", &g_FileManager.m_gumpartLegacyMUL);
 
 	ReadMulIndexFile(MAX_LAND_TEXTURES_DATA_INDEX_COUNT, [&](int i){ return &m_TextureDataIndex[i]; }, (uint)g_FileManager.m_TextureMul.Start, TexturePtr, [&TexturePtr]() { return ++TexturePtr; });
@@ -5597,5 +5599,22 @@ void COrion::RequestGuildGump()
 void COrion::RequestQuestGump()
 {
 	CPacketQuestMenuRequest().Send();
+}
+//----------------------------------------------------------------------------------
+void COrion::DisconnectGump()
+{
+	CServer *server = g_ServerList.GetSelectedServer();
+	string str = "Disconnected from " + (server != NULL ? server->Name : "server name...");
+	g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x21, str);
+
+	int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 100;
+	int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 62;
+
+	CGumpNotify *gump = new CGumpNotify(0, x, y, CGumpNotify::ID_GN_STATE_LOGOUT, 200, 125, "Connection lost");
+
+	g_GumpManager.AddGump(gump);
+
+	g_Orion.InitScreen(GS_GAME_BLOCKED);
+	g_GameBlockedScreen.Code = 0;
 }
 //----------------------------------------------------------------------------------

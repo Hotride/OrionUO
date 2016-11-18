@@ -133,7 +133,7 @@ void CGumpContainer::PrepareContent()
 		{
 			CGameItem *selobj = g_World->FindWorldItem(g_PressedObject.LeftSerial);
 
-			if (selobj != NULL && selobj->IsStackable() && selobj->Count > 1)
+			if (selobj != NULL && selobj->IsStackable() && selobj->Count > 1 && !g_ShiftPressed)
 			{
 				CGumpDrag *newgump = new CGumpDrag(g_PressedObject.LeftSerial, g_MouseManager.Position.X - 80, g_MouseManager.Position.Y - 34);
 
@@ -359,7 +359,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 	}
 	else if (g_ObjectInHand == NULL)
 	{
-		if (!g_ClickObject.Enabled && g_PacketManager.ClientVersion < CV_308Z)
+		if (!g_ClickObject.Enabled && (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled))
 		{
 			CGameObject *clickTarget = g_World->FindWorldObject(selectedSerial);
 

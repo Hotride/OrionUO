@@ -264,17 +264,27 @@ void CGameConsole::SaveConsoleMessage()
 	m_ConsoleSelectedIndex = (m_ConsoleStackCount - 1) % MAX_CONSOLE_STACK_SIZE;
 }
 //----------------------------------------------------------------------------------
-void CGameConsole::ChangeConsoleMessage()
+void CGameConsole::ChangeConsoleMessage(const bool &next)
 {
 	if (m_ConsoleStackCount)
 	{
+		if (next)
+		{
+			m_ConsoleSelectedIndex = (m_ConsoleSelectedIndex + 1) % MAX_CONSOLE_STACK_SIZE;
+
+			if (m_ConsoleSelectedIndex >= m_ConsoleStackCount)
+				m_ConsoleSelectedIndex = 0;
+		}
+		else
+		{
+			m_ConsoleSelectedIndex--;
+
+			if (m_ConsoleSelectedIndex < 0)
+				m_ConsoleSelectedIndex = (m_ConsoleStackCount - 1) % MAX_CONSOLE_STACK_SIZE;
+		}
+
 		SetText(m_ConsoleStack[m_ConsoleSelectedIndex]);
 		SetPos(m_ConsoleStack[m_ConsoleSelectedIndex].length());
-
-		m_ConsoleSelectedIndex--;
-
-		if (m_ConsoleSelectedIndex < 0)
-			m_ConsoleSelectedIndex = (m_ConsoleStackCount - 1) % MAX_CONSOLE_STACK_SIZE;
 	}
 }
 //----------------------------------------------------------------------------------

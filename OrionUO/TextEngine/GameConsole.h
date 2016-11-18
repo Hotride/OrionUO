@@ -44,7 +44,7 @@ public:
 
 	void SaveConsoleMessage();
 
-	void ChangeConsoleMessage();
+	void ChangeConsoleMessage(const bool &next);
 
 	void ClearStack();
 };

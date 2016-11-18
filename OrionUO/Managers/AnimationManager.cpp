@@ -491,9 +491,22 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 					if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
 					{
+						if (g_PacketManager.ClientVersion < CV_500A)
+						{
+							if (realAnimID >= 200)
+							{
+								if (realAnimID >= 400) //People
+									m_DataIndex[index].Type = AGT_HUMAN;
+								else //Low
+									m_DataIndex[index].Type = AGT_ANIMAL;
+							}
+							else
+								m_DataIndex[index].Type = AGT_MONSTER;
+						}
+
 						m_DataIndex[index].Address = (uint)aidx;
 						m_DataIndex[index].Offset = m_AddressMul[animFile];
-						m_DataIndex[index].Graphic = realAnimID;
+						//m_DataIndex[index].Graphic = realAnimID;
 						m_DataIndex[index].MountedHeightOffset = mountedHeightOffset;
 					}
 				}
@@ -524,6 +537,20 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					continue;
 
 				//memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
+
+				if (g_PacketManager.ClientVersion < CV_500A)
+				{
+					if (checkIndex >= 200)
+					{
+						if (checkIndex >= 400) //People
+							m_DataIndex[index].Type = AGT_HUMAN;
+						else //Low
+							m_DataIndex[index].Type = AGT_ANIMAL;
+					}
+					else
+						m_DataIndex[index].Type = AGT_MONSTER;
+				}
+
 				m_DataIndex[index].Graphic = checkIndex;
 				m_DataIndex[index].Group = NULL;
 				m_DataIndex[index].Color = atoi(strings[2].c_str());

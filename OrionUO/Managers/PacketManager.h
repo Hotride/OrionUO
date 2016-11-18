@@ -78,6 +78,8 @@ private:
 protected:
 	virtual void OnPacket();
 
+	virtual void OnReadFailed();
+
 	//!Обработчики пакетов
 	HANDLER_PACKET(LoginError);
 	HANDLER_PACKET(ServerList);

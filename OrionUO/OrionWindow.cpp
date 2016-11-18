@@ -287,7 +287,7 @@ void COrionWindow::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	if (g_PluginManager.WindowProc(m_Handle, WM_CHAR, wParam, lParam))
 		return;
 
-	if ((iswprint(wParam) || (g_GameState >= GS_GAME && wParam == 0x11)) && g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
+	if ((iswprint(wParam) || (g_GameState >= GS_GAME && (wParam == 0x11 || wParam == 0x17))) && g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		g_CurrentScreen->OnCharPress(wParam, lParam);
 }
 //----------------------------------------------------------------------------------

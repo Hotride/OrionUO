@@ -1339,7 +1339,7 @@ void CGameScreen::PrepareContent()
 			{
 				if (selobj->Serial >= 0x40000000 && !g_GrayedPixels) //Item selection
 				{
-					if (selobj->IsStackable() && selobj->Count > 1)
+					if (selobj->IsStackable() && selobj->Count > 1 && !g_ShiftPressed)
 					{
 						CGumpDrag *newgump = new CGumpDrag(g_PressedObject.LeftSerial, g_MouseManager.Position.X - 80, g_MouseManager.Position.Y - 34);
 
@@ -1930,12 +1930,12 @@ bool CGameScreen::OnLeftMouseButtonDoubleClick()
 
 	if (charUnderMouse != 0)
 	{
-		if (charUnderMouse != g_PlayerSerial && !g_ConfigManager.DisableNewTargetSystem && charUnderMouse < 0x40000000)
+		if (!g_ConfigManager.DisableNewTargetSystem && (charUnderMouse != g_PlayerSerial || g_Player->FindLayer(OL_MOUNT) == NULL))
 		{
 			g_GumpManager.CloseGump(g_NewTargetSystem.Serial, 0, GT_TARGET_SYSTEM);
 			g_NewTargetSystem.Serial = charUnderMouse;
 
-			if (g_GumpManager.GetGump(charUnderMouse, 0, GT_TARGET_SYSTEM) == NULL)
+			if (g_GumpManager.UpdateContent(charUnderMouse, 0, GT_TARGET_SYSTEM) == NULL)
 			{
 				CPacketStatusRequest(charUnderMouse).Send();
 
@@ -2057,7 +2057,7 @@ void CGameScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	if (g_EntryPointer == NULL)
 		return; //Ignore no print keys
 
-	if (g_EntryPointer != &g_GameConsole && wParam != 0x11)
+	if (g_EntryPointer != &g_GameConsole && wParam != 0x11 && wParam != 0x17)
 	{
 		if (g_GumpManager.OnCharPress(wParam, lParam, false))
 			return;
@@ -2067,8 +2067,8 @@ void CGameScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 	bool ctrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
 	//bool shiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
 
-	if (g_EntryPointer == &g_GameConsole && lParam == 0x100001 && ctrlPressed)
-		g_GameConsole.ChangeConsoleMessage();
+	if (g_EntryPointer == &g_GameConsole && (wParam == 0x00000011 || wParam == 0x00000017) && ctrlPressed)
+		g_GameConsole.ChangeConsoleMessage(wParam == 0x00000017);
 	else if (!altPressed && !ctrlPressed && g_EntryPointer->Length() < 60)
 		g_EntryPointer->Insert(wParam);
 }
