@@ -2900,53 +2900,45 @@ void COrion::LoadIndexFiles()
 //----------------------------------------------------------------------------------
 void COrion::UnloadIndexFiles()
 {
-	PVOID lists[6] =
+	deque<CIndexObject*> *lists[5] =
 	{
 		&m_UsedLandList,
 		&m_UsedStaticList,
 		&m_UsedGumpList,
 		&m_UsedTextureList,
-		&m_UsedLightList,
-		&m_UsedSoundList
+		&m_UsedLightList
 	};
 
-	IFOR(i, 0, 6)
+	IFOR(i, 0, 5)
 	{
-		if (i < 5)
+		deque<CIndexObject*> &list = *lists[i];
+
+		for (deque<CIndexObject*>::iterator it = list.begin(); it != list.end(); it++)
 		{
-			deque<CIndexObject*> *list = (deque<CIndexObject*>*)lists[i];
+			CIndexObject *obj = *it;
 
-			for (deque<CIndexObject*>::iterator it = list->begin(); it != list->end(); it++)
+			if (obj->Texture != NULL)
 			{
-				CIndexObject *obj = *it;
-
-				if (obj->Texture != NULL)
-				{
-					delete obj->Texture;
-					obj->Texture = NULL;
-				}
+				delete obj->Texture;
+				obj->Texture = NULL;
 			}
-
-			list->clear();
 		}
-		else
+
+		list.clear();
+	}
+
+	for (deque<CIndexSound*>::iterator it = m_UsedSoundList.begin(); it != m_UsedSoundList.end(); it++)
+	{
+		CIndexSound *obj = *it;
+
+		if (obj->m_Stream != 0)
 		{
-			deque<CIndexSound*> *list = (deque<CIndexSound*>*)lists[i];
-
-			for (deque<CIndexSound*>::iterator it = list->begin(); it != list->end(); it++)
-			{
-				CIndexSound *obj = *it;
-
-				if (obj->m_Stream != 0)
-				{
-					BASS_StreamFree(obj->m_Stream);
-					obj->m_Stream = 0;
-				}
-			}
-
-			list->clear();
+			BASS_StreamFree(obj->m_Stream);
+			obj->m_Stream = 0;
 		}
 	}
+
+	m_UsedSoundList.clear();
 }
 //----------------------------------------------------------------------------------
 void COrion::InitStaticAnimList()
