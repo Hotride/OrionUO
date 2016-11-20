@@ -32,6 +32,8 @@ private:
 	//!Указатель на текущий элемент стека
 	int m_ConsoleSelectedIndex;
 
+	bool m_PositionChanged;
+
 public:
 	CGameConsole();
 	virtual ~CGameConsole();
