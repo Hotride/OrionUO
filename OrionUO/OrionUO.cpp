@@ -689,7 +689,8 @@ void COrion::Process(const bool &rendering)
 		if (gumpBuff != NULL)
 			gumpBuff->UpdateBuffIcons();
 
-		g_World->ProcessAnimation();
+		if (g_World != NULL)
+			g_World->ProcessAnimation();
 
 		g_PathFinder.ProcessAutowalk();
 
@@ -710,20 +711,23 @@ void COrion::Process(const bool &rendering)
 				canRenderSelect = false;
 		}
 
-		CWalkData *wd = g_Player->m_WalkStack.m_Items;
-
-		if (wd != NULL)
+		/*if (g_World != NULL)
 		{
-			g_RemoveRangeXY.X = wd->X;
-			g_RemoveRangeXY.Y = wd->Y;
-		}
-		else
-		{
-			g_RemoveRangeXY.X = g_Player->X;
-			g_RemoveRangeXY.Y = g_Player->Y;
-		}
+			CWalkData *wd = g_Player->m_WalkStack.m_Items;
 
-		RemoveRangedObjects();
+			if (wd != NULL)
+			{
+				g_RemoveRangeXY.X = wd->X;
+				g_RemoveRangeXY.Y = wd->Y;
+			}
+			else
+			{
+				g_RemoveRangeXY.X = g_Player->X;
+				g_RemoveRangeXY.Y = g_Player->Y;
+			}
+
+			RemoveRangedObjects();
+		}*/
 
 		if (rendering)
 		{
