@@ -88,6 +88,7 @@ private:
 	static const int ID_GO_P2_DRAW_CHARACTER_BARS_NOT_MAX = 229;
 	static const int ID_GO_P2_DRAW_CHARACTER_BARS_LOWER = 230;
 	static const int ID_GO_P2_DRAW_CHARACTER_BARS_LOWER_VALUE = 231;
+	static const int ID_GO_P2_REMOVE_STATUSBARS_WITHOUT_OBJECTS = 232;
 	static const int ID_GO_P2_DEV_MODE_1 = 290;
 	static const int ID_GO_P2_DEV_MODE_2 = 291;
 	static const int ID_GO_P2_DEV_MODE_3 = 292;
