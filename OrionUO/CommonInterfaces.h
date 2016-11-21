@@ -63,6 +63,7 @@ typedef void __cdecl FUNCDEF_SEND_USE_SKILL(int);
 typedef void __cdecl FUNCDEF_SEND_ASCII_SPEECH(const char*);
 typedef void __cdecl FUNCDEF_SEND_UNICODE_SPEECH(const wchar_t*);
 typedef void __cdecl FUNCDEF_SEND_RENAME_MOUNT(unsigned int, const char*);
+typedef void __cdecl FUNCDEF_SEND_MENU_RESPONSE(unsigned int, unsigned int, int);
 
 //IClilocManager
 typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_A(unsigned int, const char*);
@@ -122,6 +123,7 @@ UOInterface IUltimaOnline
 	FUNCDEF_SEND_ASCII_SPEECH *SendAsciiSpeech;
 	FUNCDEF_SEND_UNICODE_SPEECH *SendUnicodeSpeech;
 	FUNCDEF_SEND_RENAME_MOUNT *SendRenameMount;
+	FUNCDEF_SEND_MENU_RESPONSE *SendMenuResponse;
 };
 //----------------------------------------------------------------------------------
 UOInterface IClilocManager

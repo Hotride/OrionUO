@@ -47,6 +47,7 @@ class CConfigManager
 	SETGET(bool, ApplyStateColorOnCharacters);
 	SETGETE(bool, ChangeFieldsGraphic, OnChangeChangeFieldsGraphic);
 	SETGETE(bool, PaperdollSlots, OnChangePaperdollSlots);
+	SETGET(bool, RemoveStatusbarsWithoutObjects);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

@@ -103,6 +103,7 @@ void CConfigManager::DefaultPage2()
 	m_OriginalPartyStatusbar = false;
 	m_ChangeFieldsGraphic = false;
 	m_PaperdollSlots = true;
+	m_RemoveStatusbarsWithoutObjects = false;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -479,6 +480,7 @@ bool CConfigManager::Load(string path)
 		m_ApplyStateColorOnCharacters = false;
 		bool changeFieldsGraphic = false;
 		bool paperdollSlots = true;
+		m_RemoveStatusbarsWithoutObjects = false;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -531,6 +533,9 @@ bool CConfigManager::Load(string path)
 												{
 													m_DrawStatusConditionState = file.ReadUInt8();
 													m_DrawStatusConditionValue = file.ReadUInt8();
+
+													if (blockSize > 22)
+														m_RemoveStatusbarsWithoutObjects = file.ReadUInt8();
 												}
 											}
 										}
@@ -857,7 +862,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(22); //size of block
+	writter.WriteInt8(23); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -879,6 +884,7 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_PaperdollSlots);
 	writter.WriteUInt8(m_DrawStatusConditionState);
 	writter.WriteUInt8(m_DrawStatusConditionValue);
+	writter.WriteUInt8(m_RemoveStatusbarsWithoutObjects);
 	writter.WriteBuffer();
 
 	//Page 3

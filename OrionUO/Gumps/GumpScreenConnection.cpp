@@ -22,6 +22,16 @@ CGumpScreenConnection::~CGumpScreenConnection()
 {
 }
 //----------------------------------------------------------------------------------
+void CGumpScreenConnection::CreateText(const int &x, const int &y, string str, const uchar &font)
+{
+	if (g_ConnectionScreen.Message.length())
+		str = g_ConnectionScreen.Message;
+
+	CGUIText *obj = new CGUIText(0x0386, x, y);
+	obj->CreateTextureA(font, str, 260, TS_CENTER);
+	Add(obj);
+}
+//----------------------------------------------------------------------------------
 void CGumpScreenConnection::UpdateContent()
 {
 	Clear();
@@ -50,9 +60,7 @@ void CGumpScreenConnection::UpdateContent()
 				"Couldn't carry out your request."
 			};
 
-			CGUIText *obj = new CGUIText(0x0386, 189, 178);
-			obj->CreateTextureA(2, text[g_ConnectionScreen.ErrorCode], 260, TS_CENTER);
-			Add(obj);
+			CreateText(189, 178, text[g_ConnectionScreen.ErrorCode], 2);
 
 			Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 306, 304));
 		}
@@ -61,10 +69,7 @@ void CGumpScreenConnection::UpdateContent()
 			char buf[80] = { 0 };
 			sprintf_s(buf, "Permanently delete %s?", g_CharacterList.GetSelectedName().c_str());
 
-			CGUIText *obj = new CGUIText(0x0386, 193, 184);
-			obj->CreateTextureA(2, buf, 260, TS_CENTER);
-			Add(obj);
-
+			CreateText(193, 184, buf, 2);
 
 			Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 264, 304));
 			Add(new CGUIButton(ID_CS_CANCEL, 0x047E, 0x047F, 0x0480, 348, 304));
@@ -81,17 +86,13 @@ void CGumpScreenConnection::UpdateContent()
 				"No character to login with."
 			};
 
-			CGUIText *obj = new CGUIText(0x0386, 189, 178);
-			obj->CreateTextureA(2, text[g_ConnectionScreen.ErrorCode], 260, TS_CENTER);
-			Add(obj);
+			CreateText(189, 178, text[g_ConnectionScreen.ErrorCode], 2);
 
 			Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 306, 304));
 		}
 		else
 		{
-			CGUIText *obj = new CGUIText(0x0386, 189, 178);
-			obj->CreateTextureA(2, "Entering Britannia...", 260, TS_CENTER);
-			Add(obj);
+			CreateText(189, 178, "Entering Britannia...", 2);
 
 			g_ConnectionScreen.CursorGraphic = 0x2077; //Waiting mouse cursor
 		}
@@ -112,17 +113,13 @@ void CGumpScreenConnection::UpdateContent()
 			""
 		};
 
-		CGUIText *obj = new CGUIText(0x0386, 189, 178);
-		obj->CreateTextureA(2, text[g_ConnectionScreen.ErrorCode], 260, TS_CENTER);
-		Add(obj);
+		CreateText(189, 178, text[g_ConnectionScreen.ErrorCode], 2);
 
 		Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 306, 304));
 	}
 	else if (g_ConnectionScreen.Type == CST_SELECT_PROFESSOIN)
 	{
-		CGUIText *obj = new CGUIText(0x0386, 189, 178);
-		obj->CreateTextureA(2, "You must have three unique skills choosen!", 260, TS_CENTER);
-		Add(obj);
+		CreateText(189, 178, "You must have three unique skills choosen!", 2);
 
 		Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 306, 304));
 	}
@@ -130,9 +127,7 @@ void CGumpScreenConnection::UpdateContent()
 	{
 		Add(new CGUIResizepic(0, 0x0A28, 210, 178, 203, 121));
 
-		CGUIText *obj = new CGUIText(0x0386, 215, 222);
-		obj->CreateTextureA(1, "Connection lost", 260, TS_CENTER);
-		Add(obj);
+		CreateText(215, 222, "Connection lost", 1);
 
 		Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 297, 257));
 
@@ -155,9 +150,7 @@ void CGumpScreenConnection::UpdateContent()
 				"Couldn't connect to Ultima Online.  Please try again in a few moments."
 			};
 
-			CGUIText *obj = new CGUIText(0x0386, 189, 178);
-			obj->CreateTextureA(2, text[g_ConnectionScreen.ErrorCode], 260, TS_CENTER);
-			Add(obj);
+			CreateText(189, 178, text[g_ConnectionScreen.ErrorCode], 2);
 
 			Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 306, 304));
 		}
@@ -169,9 +162,7 @@ void CGumpScreenConnection::UpdateContent()
 				"Verifying Account..."
 			};
 
-			CGUIText *obj = new CGUIText(0x0386, 189, 178);
-			obj->CreateTextureA(2, text[g_ConnectionScreen.Connected], 260, TS_CENTER);
-			Add(obj);
+			CreateText(189, 178, text[g_ConnectionScreen.Connected], 2);
 
 			g_ConnectionScreen.CursorGraphic = 0x2077; //Waiting mouse cursor
 		}

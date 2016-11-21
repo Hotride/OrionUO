@@ -20,6 +20,7 @@ class CConnectionScreen : public CBaseScreen
 	SETGETE(bool, Completed, OnChangeCompleted);
 	SETGETE(int, ErrorCode, OnChangeErrorCode);
 	SETGETE(CONNECTION_SCREEN_TYPE, Type, OnChangeType);
+	SETGETE(string, Message, OnChangeMessage);
 
 private:
 	CGumpScreenConnection m_ConnectionGump;

@@ -1689,6 +1689,7 @@ PACKET_HANDLER(UpdateContainedItem)
 	if (m_ClientVersion >= CV_6017)
 		Move(1);
 
+	uint oldContainer = obj->Container;
 	uint cserial = ReadUInt32BE();
 	bool canPut = true;
 
@@ -1722,10 +1723,12 @@ PACKET_HANDLER(UpdateContainedItem)
 
 	g_World->MoveToTop(obj);
 
+	g_GumpManager.UpdateContent(oldContainer, 0, GT_PAPERDOLL);
+
 	CGameItem *container = g_World->FindWorldItem(cserial);
 	if (container != NULL)
 	{
-		CGump *gump = g_GumpManager.UpdateContent(cserial, 0, GT_SPELLBOOK);
+		CGump *gump = gump = g_GumpManager.UpdateContent(cserial, 0, GT_SPELLBOOK);
 
 		if (gump == NULL)
 			gump = g_GumpManager.UpdateContent(cserial, 0, GT_CONTAINER);
@@ -2102,7 +2105,7 @@ PACKET_HANDLER(UpdateCharacter)
 
 	if (serial == g_PlayerSerial)
 	{
-		obj->PaperdollText = "";
+		//obj->PaperdollText = "";
 		m_MegaClilocRequests.push_back(serial);
 	}
 	else if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
@@ -2868,7 +2871,28 @@ PACKET_HANDLER(Target)
 PACKET_HANDLER(Talk)
 {
 	if (g_World == NULL)
+	{
+		if (g_GameState == GS_GAME_CONNECT)
+		{
+			uint serial = ReadUInt32BE();
+			ushort graphic = ReadUInt16BE();
+			SPEECH_TYPE type = (SPEECH_TYPE)ReadUInt8();
+			ushort textColor = ReadUInt16BE();
+			ushort font = ReadUInt16BE();
+
+			string name(ReadString(0));
+			string str = "";
+
+			if (m_Size > 44)
+			{
+				m_Ptr = m_Start + 44;
+				g_ConnectionScreen.ConnectionFailed = true;
+				g_ConnectionScreen.Message = ReadString(0);
+			}
+		}
+
 		return;
+	}
 
 	uint serial = ReadUInt32BE();
 	ushort graphic = ReadUInt16BE();
@@ -2901,7 +2925,7 @@ PACKET_HANDLER(Talk)
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
-	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (name == "System" && obj == NULL))
+	if (type == ST_BROADCAST || /*type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (ToLowerA(name) == "system" && obj == NULL))
 		g_Orion.CreateTextMessage(TT_SYSTEM, serial, (uchar)font, textColor, str);
 	else
 	{
@@ -2934,7 +2958,28 @@ PACKET_HANDLER(Talk)
 PACKET_HANDLER(UnicodeTalk)
 {
 	if (g_World == NULL)
+	{
+		if (g_GameState == GS_GAME_CONNECT)
+		{
+			uint serial = ReadUInt32BE();
+			ushort graphic = ReadUInt16BE();
+			SPEECH_TYPE type = (SPEECH_TYPE)ReadUInt8();
+			ushort textColor = ReadUInt16BE();
+			ushort font = ReadUInt16BE();
+			uint language = ReadUInt32BE();
+
+			string name(ReadString(0));
+
+			if (m_Size > 48)
+			{
+				m_Ptr = m_Start + 48;
+				g_ConnectionScreen.ConnectionFailed = true;
+				g_ConnectionScreen.Message = ToString(ReadWString((m_Size - 48) / 2));
+			}
+		}
+
 		return;
+	}
 
 	uint serial = ReadUInt32BE();
 	ushort graphic = ReadUInt16BE();
@@ -2968,7 +3013,7 @@ PACKET_HANDLER(UnicodeTalk)
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
-	if (type == ST_BROADCAST /*|| type == ST_SYSTEM*/ || serial == 0xFFFFFFFF || !serial || (name == "System" && obj == NULL))
+	if (type == ST_BROADCAST /*|| type == ST_SYSTEM*/ || serial == 0xFFFFFFFF || !serial || (ToLowerA(name) == "system" && obj == NULL))
 		g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, (uchar)g_ConfigManager.SpeechFont, textColor, str);
 	else
 	{
@@ -3506,7 +3551,7 @@ PACKET_HANDLER(DisplayClilocString)
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
-	if (/*type == ST_BROADCAST || type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (name == "System" && obj == NULL))
+	if (/*type == ST_BROADCAST || type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (ToLowerA(name) == "system" && obj == NULL))
 		g_Orion.CreateUnicodeTextMessage(TT_SYSTEM, serial, (uchar)font, color, message);
 	else
 	{

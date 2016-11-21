@@ -18,7 +18,8 @@
 CGameConsole g_GameConsole;
 //----------------------------------------------------------------------------------
 CGameConsole::CGameConsole()
-: CEntryText(64, 600, 600), m_ConsoleStackCount(0), m_ConsoleSelectedIndex(0)
+: CEntryText(64, 600, 600), m_ConsoleStackCount(0), m_ConsoleSelectedIndex(0),
+m_PositionChanged(false)
 {
 }
 //----------------------------------------------------------------------------------
@@ -262,29 +263,36 @@ void CGameConsole::SaveConsoleMessage()
 		m_ConsoleStackCount -= 1000;
 
 	m_ConsoleSelectedIndex = (m_ConsoleStackCount - 1) % MAX_CONSOLE_STACK_SIZE;
+	m_PositionChanged = false;
 }
 //----------------------------------------------------------------------------------
 void CGameConsole::ChangeConsoleMessage(const bool &next)
 {
 	if (m_ConsoleStackCount)
 	{
-		if (next)
+		if (m_PositionChanged)
 		{
-			m_ConsoleSelectedIndex = (m_ConsoleSelectedIndex + 1) % MAX_CONSOLE_STACK_SIZE;
+			if (next)
+			{
+				m_ConsoleSelectedIndex = (m_ConsoleSelectedIndex + 1) % MAX_CONSOLE_STACK_SIZE;
 
-			if (m_ConsoleSelectedIndex >= m_ConsoleStackCount)
-				m_ConsoleSelectedIndex = 0;
-		}
-		else
-		{
-			m_ConsoleSelectedIndex--;
+				if (m_ConsoleSelectedIndex >= m_ConsoleStackCount)
+					m_ConsoleSelectedIndex = 0;
+			}
+			else
+			{
+				m_ConsoleSelectedIndex--;
 
-			if (m_ConsoleSelectedIndex < 0)
-				m_ConsoleSelectedIndex = (m_ConsoleStackCount - 1) % MAX_CONSOLE_STACK_SIZE;
+				if (m_ConsoleSelectedIndex < 0)
+					m_ConsoleSelectedIndex = (m_ConsoleStackCount - 1) % MAX_CONSOLE_STACK_SIZE;
+			}
 		}
+		else if (next)
+			m_ConsoleSelectedIndex = 0;
 
 		SetText(m_ConsoleStack[m_ConsoleSelectedIndex]);
 		SetPos(m_ConsoleStack[m_ConsoleSelectedIndex].length());
+		m_PositionChanged = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -293,5 +301,6 @@ void CGameConsole::ClearStack()
 	m_ConsoleStack[0] = L"";
 	m_ConsoleStackCount = 0;
 	m_ConsoleSelectedIndex = 0;
+	m_PositionChanged = false;
 }
 //----------------------------------------------------------------------------------

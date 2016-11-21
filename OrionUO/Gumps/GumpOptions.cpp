@@ -419,6 +419,11 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Add slots in paperdoll gump for:\nHelmet\nEarrings\nNecklace\nRing\nBracelet", g_SelectedObject.Object());
 				break;
 			}
+			case ID_GO_P2_REMOVE_STATUSBARS_WITHOUT_OBJECTS:
+			{
+				g_ToolTip.Set(L"Remove statusbars, whose objects have been removed", g_SelectedObject.Object());
+				break;
+			}
 			case ID_GO_P2_DEV_MODE_1:
 			{
 				g_ToolTip.Set(L"Original client work", g_SelectedObject.Object());
@@ -922,6 +927,10 @@ void CGumpOptions::DrawPage2()
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_PAPERDOLL_SLOTS, 0x00D2, 0x00D3, 0x00D2, 0, 550));
 	checkbox->Checked = g_OptionsConfig.PaperdollSlots;
 	checkbox->SetTextParameters(0, L"Add paperdoll slots", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REMOVE_STATUSBARS_WITHOUT_OBJECTS, 0x00D2, 0x00D3, 0x00D2, 0, 570));
+	checkbox->Checked = g_OptionsConfig.RemoveStatusbarsWithoutObjects;
+	checkbox->SetTextParameters(0, L"Remove statusbars without objects", g_OptionsTextColor);
 
 	html->CalculateDataSize();
 }
@@ -2163,6 +2172,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.ChangeFieldsGraphic = state;
 			else if (serial == ID_GO_P2_PAPERDOLL_SLOTS)
 				g_OptionsConfig.PaperdollSlots = state;
+			else if (serial == ID_GO_P2_REMOVE_STATUSBARS_WITHOUT_OBJECTS)
+				g_OptionsConfig.RemoveStatusbarsWithoutObjects = state;
 			
 
 			else if (serial == ID_GO_P2_DEV_MODE_1)
@@ -2710,6 +2721,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.PaperdollSlots = g_OptionsConfig.PaperdollSlots;
 			g_ConfigManager.DrawStatusConditionState = g_OptionsConfig.DrawStatusConditionState;
 			g_ConfigManager.DrawStatusConditionValue = g_OptionsConfig.DrawStatusConditionValue;
+			g_ConfigManager.RemoveStatusbarsWithoutObjects = g_OptionsConfig.RemoveStatusbarsWithoutObjects;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

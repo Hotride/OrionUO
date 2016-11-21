@@ -16,7 +16,7 @@ CConnectionScreen g_ConnectionScreen;
 //----------------------------------------------------------------------------------
 CConnectionScreen::CConnectionScreen()
 : CBaseScreen(m_ConnectionGump), m_ConnectionFailed(false), m_Connected(false),
-m_Completed(false), m_ErrorCode(0)
+m_Completed(false), m_ErrorCode(0), m_Message("")
 {
 }
 //----------------------------------------------------------------------------------
@@ -30,6 +30,7 @@ CConnectionScreen::~CConnectionScreen()
 */
 void CConnectionScreen::Init()
 {
+	m_Message = "";
 	m_ConnectionFailed = false;
 	m_Connected = false;
 	m_Completed= false;
@@ -64,6 +65,11 @@ void CConnectionScreen::OnChangeErrorCode(const int &val)
 }
 //----------------------------------------------------------------------------------
 void CConnectionScreen::OnChangeType(const CONNECTION_SCREEN_TYPE &val)
+{
+	m_Gump.WantUpdateContent = true;
+}
+//----------------------------------------------------------------------------------
+void CConnectionScreen::OnChangeMessage(const string &val)
 {
 	m_Gump.WantUpdateContent = true;
 }
