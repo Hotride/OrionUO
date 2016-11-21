@@ -19,6 +19,8 @@ private:
 	static const int ID_CS_OK = 1;
 	static const int ID_CS_CANCEL = 2;
 
+	void CreateText(const int &x, const int &y, string str, const uchar &font);
+
 public:
 	CGumpScreenConnection();
 	virtual ~CGumpScreenConnection();
