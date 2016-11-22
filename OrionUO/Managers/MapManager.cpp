@@ -12,6 +12,7 @@
 #include "../Constants.h"
 #include "../Game objects/StaticObject.h"
 #include "../Game objects/GamePlayer.h"
+#include <unordered_map>
 #include "../OrionUO.h"
 //----------------------------------------------------------------------------------
 CMapManager *g_MapManager = NULL;
@@ -583,6 +584,7 @@ void CUopMapManager::CreateBlockTable(int map)
 
 	list.resize(maxBlockCount);
 
+	auto uopFile = g_FileManager.m_MapUOP[map];
 	uint mapAddress = reinterpret_cast<uint>(g_FileManager.m_MapUOP[map].Start);
 	uint endMapAddress = mapAddress + g_FileManager.m_MapUOP[map].Size;
 
@@ -595,9 +597,69 @@ void CUopMapManager::CreateBlockTable(int map)
 	if (!mapAddress || !staticIdxAddress || !staticAddress)
 		return;
 
+	if (uopFile.ReadInt32LE() != 0x50594D)
+	{
+		LOG("Bad Uop file %s", uopFile);
+		return;
+	}
+	uopFile.ReadInt64LE(); // version + signature
+	long long nextBlock = uopFile.ReadInt64LE();
+
+
+	std::unordered_map<unsigned long long, UOPMapaDataStruct> hashes;
+
+	uopFile.ResetPtr();
+	uopFile.Move(nextBlock);
+
+	do
+	{
+		int fileCount = uopFile.ReadInt32LE();
+		nextBlock = uopFile.ReadInt64LE();
+		IFOR(i, 0, fileCount)
+		{
+			auto offset = uopFile.ReadInt64LE();
+			auto headerLength = uopFile.ReadInt32LE();
+			auto compressedLength = uopFile.ReadInt32LE();
+			auto decompressedLength = uopFile.ReadInt32LE();
+			auto hash = uopFile.ReadInt64LE();
+			uopFile.ReadInt32LE();
+			auto flag = uopFile.ReadInt16LE();
+
+			if (offset == 0)
+			{
+				continue;
+			}
+			UOPMapaDataStruct dataStruct;
+			dataStruct.offset = offset + headerLength;
+			dataStruct.length = compressedLength;
+			hashes[hash] = dataStruct;
+		}
+
+		uopFile.ResetPtr();
+		uopFile.Move(nextBlock);
+	} while (nextBlock != 0);
+
+
+
+	unsigned long long hash;
+	int fileNumber = -1;
+	UOPMapaDataStruct uopDataStruct;
 	IFOR(block, 0, maxBlockCount)
 	{
 		CIndexMap &index = list[block];
+		int shifted = block >> 12;
+		if (fileNumber != shifted)
+		{
+			fileNumber = shifted;
+			char mapFilePath[200];
+			sprintf(mapFilePath, "build/map%ilegacymul/%08i.dat", map, shifted);
+			hash = COrion::CreateHash(mapFilePath);
+			if (hashes.find(hash) != hashes.end())
+			{
+				uopDataStruct = hashes.at(hash);
+			}
+		}
+
 
 		uint realMapAddress = 0;
 		uint realStaticAddress = 0;
@@ -605,7 +667,7 @@ void CUopMapManager::CreateBlockTable(int map)
 
 		if (mapAddress != 0)
 		{
-			uint address = mapAddress + (block * sizeof(MAP_BLOCK));
+			uint address = ((mapAddress + uopDataStruct.offset + uopDataStruct.length) + block & 4095) * 196;
 
 			if (address < endMapAddress)
 				realMapAddress = address;
@@ -642,4 +704,5 @@ void CUopMapManager::CreateBlockTable(int map)
 		index.MapPatched = false;
 		index.StaticPatched = false;
 	}
+
 }

@@ -459,68 +459,68 @@ void COrion::InitScreen(const GAME_STATE &state)
 
 	switch (state)
 	{
-		case GS_MAIN:
-		{
-			g_CurrentScreen = &g_MainScreen;
-			break;
-		}
-		case GS_MAIN_CONNECT:
-		{
-			g_CurrentScreen = &g_ConnectionScreen;
-			break;
-		}
-		case GS_SERVER:
-		{
-			g_CurrentScreen = &g_ServerScreen;
-			break;
-		}
-		case GS_SERVER_CONNECT:
-		{
-			g_CurrentScreen = &g_ConnectionScreen;
-			break;
-		}
-		case GS_CHARACTER:
-		{
-			g_CurrentScreen = &g_CharacterListScreen;
-			break;
-		}
-		case GS_DELETE:
-		{
-			g_CurrentScreen = &g_ConnectionScreen;
-			break;
-		}
-		case GS_PROFESSION_SELECT:
-		{
-			g_CurrentScreen = &g_SelectProfessionScreen;
-			break;
-		}
-		case GS_CREATE:
-		{
-			g_CurrentScreen = &g_CreateCharacterScreen;
-			break;
-		}
-		case GS_SELECT_TOWN:
-		{
-			g_CurrentScreen = &g_SelectTownScreen;
-			break;
-		}
-		case GS_GAME_CONNECT:
-		{
-			g_CurrentScreen = &g_ConnectionScreen;
-			break;
-		}
-		case GS_GAME:
-		{
-			g_CurrentScreen = &g_GameScreen;
-			break;
-		}
-		case GS_GAME_BLOCKED:
-		{
-			g_CurrentScreen = &g_GameBlockedScreen;
-			break;
-		}
-		default:
-			break;
+	case GS_MAIN:
+	{
+					g_CurrentScreen = &g_MainScreen;
+					break;
+	}
+	case GS_MAIN_CONNECT:
+	{
+							g_CurrentScreen = &g_ConnectionScreen;
+							break;
+	}
+	case GS_SERVER:
+	{
+					  g_CurrentScreen = &g_ServerScreen;
+					  break;
+	}
+	case GS_SERVER_CONNECT:
+	{
+							  g_CurrentScreen = &g_ConnectionScreen;
+							  break;
+	}
+	case GS_CHARACTER:
+	{
+						 g_CurrentScreen = &g_CharacterListScreen;
+						 break;
+	}
+	case GS_DELETE:
+	{
+					  g_CurrentScreen = &g_ConnectionScreen;
+					  break;
+	}
+	case GS_PROFESSION_SELECT:
+	{
+								 g_CurrentScreen = &g_SelectProfessionScreen;
+								 break;
+	}
+	case GS_CREATE:
+	{
+					  g_CurrentScreen = &g_CreateCharacterScreen;
+					  break;
+	}
+	case GS_SELECT_TOWN:
+	{
+						   g_CurrentScreen = &g_SelectTownScreen;
+						   break;
+	}
+	case GS_GAME_CONNECT:
+	{
+							g_CurrentScreen = &g_ConnectionScreen;
+							break;
+	}
+	case GS_GAME:
+	{
+					g_CurrentScreen = &g_GameScreen;
+					break;
+	}
+	case GS_GAME_BLOCKED:
+	{
+							g_CurrentScreen = &g_GameBlockedScreen;
+							break;
+	}
+	default:
+		break;
 	}
 
 	if (g_CurrentScreen != NULL)
@@ -711,20 +711,20 @@ void COrion::Process(const bool &rendering)
 
 		/*if (g_World != NULL)
 		{
-			CWalkData *wd = g_Player->m_WalkStack.m_Items;
+		CWalkData *wd = g_Player->m_WalkStack.m_Items;
 
-			if (wd != NULL)
-			{
-				g_RemoveRangeXY.X = wd->X;
-				g_RemoveRangeXY.Y = wd->Y;
-			}
-			else
-			{
-				g_RemoveRangeXY.X = g_Player->X;
-				g_RemoveRangeXY.Y = g_Player->Y;
-			}
+		if (wd != NULL)
+		{
+		g_RemoveRangeXY.X = wd->X;
+		g_RemoveRangeXY.Y = wd->Y;
+		}
+		else
+		{
+		g_RemoveRangeXY.X = g_Player->X;
+		g_RemoveRangeXY.Y = g_Player->Y;
+		}
 
-			RemoveRangedObjects();
+		RemoveRangedObjects();
 		}*/
 
 		if (rendering)
@@ -754,7 +754,7 @@ void COrion::Process(const bool &rendering)
 
 			g_MapManager->Init(true);
 
-			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); )
+			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end();)
 			{
 				if (i->second < g_Ticks)
 					i = g_CorpseSerialList.erase(i);
@@ -988,7 +988,7 @@ void COrion::ClearUnusedTextures()
 	else if (clearMap == 2)
 	{
 		g_AnimationManager.ClearUnusedTextures(g_Ticks);
-		
+
 		clearMap = 0;
 
 		return;
@@ -999,7 +999,7 @@ void COrion::ClearUnusedTextures()
 	g_GumpManager.PrepareTextures();
 
 	g_Ticks -= CLEAR_TEXTURES_DELAY;
-	
+
 	PVOID lists[5] =
 	{
 		&m_UsedLandList,
@@ -1065,7 +1065,7 @@ void COrion::Connect()
 
 	string login = "";
 	int port;
-	
+
 	LoadLogin(login, port);
 
 	if (g_ConnectionManager.Connect(login, port, g_GameSeed))
@@ -1092,7 +1092,7 @@ void COrion::Disconnect()
 	g_Party.Leader = 0;
 	g_Party.Inviter = 0;
 	g_Party.Clear();
-	
+
 	g_GameConsole.ClearStack();
 
 	g_ResizedGump = NULL;
@@ -1259,18 +1259,18 @@ ushort COrion::GetSeasonGraphic(const ushort &graphic)
 {
 	switch (g_Season)
 	{
-		case ST_SPRING:
-			return GetSpringGraphic(graphic);
+	case ST_SPRING:
+		return GetSpringGraphic(graphic);
 		//case ST_SUMMER:
 		//	return GetSummerGraphic(graphic);
-		case ST_FALL:
-			return GetFallGraphic(graphic);
+	case ST_FALL:
+		return GetFallGraphic(graphic);
 		//case ST_WINTER:
 		//	return GetWinterGraphic(graphic);
-		case ST_DESOLATION:
-			return GetDesolationGraphic(graphic);
-		default:
-			break;
+	case ST_DESOLATION:
+		return GetDesolationGraphic(graphic);
+	default:
+		break;
 	}
 
 	return graphic;
@@ -1280,53 +1280,53 @@ ushort COrion::GetSpringGraphic(ushort graphic)
 {
 	switch (graphic)
 	{
-		case 0x0CA7:
-			graphic = 0x0C84;
-			break;
-		case 0x0CAC:
-			graphic = 0x0C46;
-			break;
-		case 0x0CAD:
-			graphic = 0x0C48;
-			break;
-		case 0x0CAE:
-		case 0x0CB5:
-			graphic = 0x0C4A;
-			break;
-		case 0x0CAF:
-			graphic = 0x0C4E;
-			break;
-		case 0x0CB0:
-			graphic = 0x0C4D;
-			break;
-		case 0x0CB6:
-		case 0x0D0D:
-		case 0x0D14:
-			graphic = 0x0D2B;
-			break;
-		case 0x0D0C:
-			graphic = 0x0D29;
-			break;
-		case 0x0D0E:
-			graphic = 0x0CBE;
-			break;
-		case 0x0D0F:
-			graphic = 0x0CBF;
-			break;
-		case 0x0D10:
-			graphic = 0x0CC0;
-			break;
-		case 0x0D11:
-			graphic = 0x0C87;
-			break;
-		case 0x0D12:
-			graphic = 0x0C38;
-			break;
-		case 0x0D13:
-			graphic = 0x0D2F;
-			break;
-		default:
-			break;
+	case 0x0CA7:
+		graphic = 0x0C84;
+		break;
+	case 0x0CAC:
+		graphic = 0x0C46;
+		break;
+	case 0x0CAD:
+		graphic = 0x0C48;
+		break;
+	case 0x0CAE:
+	case 0x0CB5:
+		graphic = 0x0C4A;
+		break;
+	case 0x0CAF:
+		graphic = 0x0C4E;
+		break;
+	case 0x0CB0:
+		graphic = 0x0C4D;
+		break;
+	case 0x0CB6:
+	case 0x0D0D:
+	case 0x0D14:
+		graphic = 0x0D2B;
+		break;
+	case 0x0D0C:
+		graphic = 0x0D29;
+		break;
+	case 0x0D0E:
+		graphic = 0x0CBE;
+		break;
+	case 0x0D0F:
+		graphic = 0x0CBF;
+		break;
+	case 0x0D10:
+		graphic = 0x0CC0;
+		break;
+	case 0x0D11:
+		graphic = 0x0C87;
+		break;
+	case 0x0D12:
+		graphic = 0x0C38;
+		break;
+	case 0x0D13:
+		graphic = 0x0D2F;
+		break;
+	default:
+		break;
 	}
 
 	return graphic;
@@ -1341,79 +1341,79 @@ ushort COrion::GetFallGraphic(ushort graphic)
 {
 	switch (graphic)
 	{
-		case 0x0CD1:
-			graphic = 0x0CD2;
-			break;
-		case 0x0CD4:
-			graphic = 0x0CD5;
-			break;
-		case 0x0CDB:
-			graphic = 0x0CDC;
-			break;
-		case 0x0CDE:
-			graphic = 0x0CDF;
-			break;
-		case 0x0CE1:
-			graphic = 0x0CE2;
-			break;
-		case 0x0CE4:
-			graphic = 0x0CE5;
-			break;
-		case 0x0CE7:
-			graphic = 0x0CE8;
-			break;
-		case 0x0D95:
-			graphic = 0x0D97;
-			break;
-		case 0x0D99:
-			graphic = 0x0D9B;
-			break;
-		case 0x0CCE:
-			graphic = 0x0CCF;
-			break;
-		case 0x0CE9:
-		case 0x0C9E:
-			graphic = 0x0D3F;
-			break;
-		case 0x0CEA:
-			graphic = 0x0D40;
-			break;
-		case 0x0C84:
-		case 0x0CB0:
-			graphic = 0x1B22;
-			break;
-		case 0x0C8B:
-		case 0x0C8C:
-		case 0x0C8D:
-		case 0x0C8E:
-			graphic = 0x0CC6;
-			break;
-		case 0x0CA7:
-			graphic = 0x0C48;
-			break;
-		case 0x0CAC:
-			graphic = 0x1B1F;
-			break;
-		case 0x0CAD:
-			graphic = 0x1B20;
-			break;
-		case 0x0CAE:
-			graphic = 0x1B21;
-			break;
-		case 0x0CAF:
-			graphic = 0x0D0D;
-			break;
-		case 0x0CB5:
-			graphic = 0x0D10;
-			break;
-		case 0x0CB6:
-			graphic = 0x0D2B;
-			break;
-		case 0x0CC7:
-			graphic = 0x0C4E;
-			break;
-		default:
-			break;
+	case 0x0CD1:
+		graphic = 0x0CD2;
+		break;
+	case 0x0CD4:
+		graphic = 0x0CD5;
+		break;
+	case 0x0CDB:
+		graphic = 0x0CDC;
+		break;
+	case 0x0CDE:
+		graphic = 0x0CDF;
+		break;
+	case 0x0CE1:
+		graphic = 0x0CE2;
+		break;
+	case 0x0CE4:
+		graphic = 0x0CE5;
+		break;
+	case 0x0CE7:
+		graphic = 0x0CE8;
+		break;
+	case 0x0D95:
+		graphic = 0x0D97;
+		break;
+	case 0x0D99:
+		graphic = 0x0D9B;
+		break;
+	case 0x0CCE:
+		graphic = 0x0CCF;
+		break;
+	case 0x0CE9:
+	case 0x0C9E:
+		graphic = 0x0D3F;
+		break;
+	case 0x0CEA:
+		graphic = 0x0D40;
+		break;
+	case 0x0C84:
+	case 0x0CB0:
+		graphic = 0x1B22;
+		break;
+	case 0x0C8B:
+	case 0x0C8C:
+	case 0x0C8D:
+	case 0x0C8E:
+		graphic = 0x0CC6;
+		break;
+	case 0x0CA7:
+		graphic = 0x0C48;
+		break;
+	case 0x0CAC:
+		graphic = 0x1B1F;
+		break;
+	case 0x0CAD:
+		graphic = 0x1B20;
+		break;
+	case 0x0CAE:
+		graphic = 0x1B21;
+		break;
+	case 0x0CAF:
+		graphic = 0x0D0D;
+		break;
+	case 0x0CB5:
+		graphic = 0x0D10;
+		break;
+	case 0x0CB6:
+		graphic = 0x0D2B;
+		break;
+	case 0x0CC7:
+		graphic = 0x0C4E;
+		break;
+	default:
+		break;
 	}
 
 	return graphic;
@@ -1428,114 +1428,114 @@ ushort COrion::GetDesolationGraphic(ushort graphic)
 {
 	switch (graphic)
 	{
-		case 0x1B7E:
-			graphic = 0x1E34;
-			break;
-		case 0x0D2B:
-			graphic = 0x1B15;
-			break;
-		case 0x0D11:
-		case 0x0D14:
-		case 0x0D17:
-			graphic = 0x122B;
-			break;
-		case 0x0D16:
-		case 0x0CB9:
-		case 0x0CBA:
-		case 0x0CBB:
-		case 0x0CBC:
-		case 0x0CBD:
-		case 0x0CBE:
-			graphic = 0x1B8D;
-			break;
-		case 0x0CC7:
-			graphic = 0x1B0D;
-			break;
-		case 0x0CE9:
-			graphic = 0x0ED7;
-			break;
-		case 0x0CEA:
-			graphic = 0x0D3F;
-			break;
-		case 0x0D0F:
-			graphic = 0x1B1C;
-			break;
-		case 0x0CB8:
-			graphic = 0x1CEA;
-			break;
-		case 0x0C84:
-		case 0x0C8B:
-			graphic = 0x1B84;
-			break;
-		case 0x0C9E:
-			graphic = 0x1182;
-			break;
-		case 0x0CAD:
-			graphic = 0x1AE1;
-			break;
-		case 0x0C4C:
-			graphic = 0x1B16;
-			break;
-		case 0x0C8E:
-		case 0x0C99:
-		case 0x0CAC:
-			graphic = 0x1B8D;
-			break;
-		case 0x0C46:
-		case 0x0C49:
-		case 0x0CB6:
-			graphic = 0x1B9D;
-			break;
-		case 0x0C45:
-		case 0x0C48:
-		case 0x0C4E:
-		case 0x0C85:
-		case 0x0CA7:
-		case 0x0CAE:
-		case 0x0CAF:
-		case 0x0CB5:
-		case 0x0D15:
-		case 0x0D29:
-			graphic = 0x1B9C;
-			break;
-		case 0x0C37:
-		case 0x0C38:
-		case 0x0C47:
-		case 0x0C4A:
-		case 0x0C4B:
-		case 0x0C4D:
-		case 0x0C8C:
-		case 0x0C8D:
-		case 0x0C93:
-		case 0x0C94:
-		case 0x0C98:
-		case 0x0C9F:
-		case 0x0CA0:
-		case 0x0CA1:
-		case 0x0CA2:
-		case 0x0CA3:
-		case 0x0CA4:
-		case 0x0CB0:
-		case 0x0CB1:
-		case 0x0CB2:
-		case 0x0CB3:
-		case 0x0CB4:
-		case 0x0CB7:
-		case 0x0CC5:
-		case 0x0D0C:
-		case 0x0D0D:
-		case 0x0D0E:
-		case 0x0D10:
-		case 0x0D12:
-		case 0x0D13:
-		case 0x0D18:
-		case 0x0D19:
-		case 0x0D2D:
-		case 0x0D2F:
-			graphic = 0x1BAE;
-			break;
-		default:
-			break;
+	case 0x1B7E:
+		graphic = 0x1E34;
+		break;
+	case 0x0D2B:
+		graphic = 0x1B15;
+		break;
+	case 0x0D11:
+	case 0x0D14:
+	case 0x0D17:
+		graphic = 0x122B;
+		break;
+	case 0x0D16:
+	case 0x0CB9:
+	case 0x0CBA:
+	case 0x0CBB:
+	case 0x0CBC:
+	case 0x0CBD:
+	case 0x0CBE:
+		graphic = 0x1B8D;
+		break;
+	case 0x0CC7:
+		graphic = 0x1B0D;
+		break;
+	case 0x0CE9:
+		graphic = 0x0ED7;
+		break;
+	case 0x0CEA:
+		graphic = 0x0D3F;
+		break;
+	case 0x0D0F:
+		graphic = 0x1B1C;
+		break;
+	case 0x0CB8:
+		graphic = 0x1CEA;
+		break;
+	case 0x0C84:
+	case 0x0C8B:
+		graphic = 0x1B84;
+		break;
+	case 0x0C9E:
+		graphic = 0x1182;
+		break;
+	case 0x0CAD:
+		graphic = 0x1AE1;
+		break;
+	case 0x0C4C:
+		graphic = 0x1B16;
+		break;
+	case 0x0C8E:
+	case 0x0C99:
+	case 0x0CAC:
+		graphic = 0x1B8D;
+		break;
+	case 0x0C46:
+	case 0x0C49:
+	case 0x0CB6:
+		graphic = 0x1B9D;
+		break;
+	case 0x0C45:
+	case 0x0C48:
+	case 0x0C4E:
+	case 0x0C85:
+	case 0x0CA7:
+	case 0x0CAE:
+	case 0x0CAF:
+	case 0x0CB5:
+	case 0x0D15:
+	case 0x0D29:
+		graphic = 0x1B9C;
+		break;
+	case 0x0C37:
+	case 0x0C38:
+	case 0x0C47:
+	case 0x0C4A:
+	case 0x0C4B:
+	case 0x0C4D:
+	case 0x0C8C:
+	case 0x0C8D:
+	case 0x0C93:
+	case 0x0C94:
+	case 0x0C98:
+	case 0x0C9F:
+	case 0x0CA0:
+	case 0x0CA1:
+	case 0x0CA2:
+	case 0x0CA3:
+	case 0x0CA4:
+	case 0x0CB0:
+	case 0x0CB1:
+	case 0x0CB2:
+	case 0x0CB3:
+	case 0x0CB4:
+	case 0x0CB7:
+	case 0x0CC5:
+	case 0x0D0C:
+	case 0x0D0D:
+	case 0x0D0E:
+	case 0x0D10:
+	case 0x0D12:
+	case 0x0D13:
+	case 0x0D18:
+	case 0x0D19:
+	case 0x0D2D:
+	case 0x0D2F:
+		graphic = 0x1BAE;
+		break;
+	default:
+		break;
 	}
 
 	return graphic;
@@ -1545,467 +1545,467 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 {
 	switch (key)
 	{
-		case VKI_SOUND:
-		{
-			if (value == -1)
-				value = g_ConfigManager.Sound;
-			else
-				g_ConfigManager.Sound = (value != 0);
+	case VKI_SOUND:
+	{
+					  if (value == -1)
+						  value = g_ConfigManager.Sound;
+					  else
+						  g_ConfigManager.Sound = (value != 0);
 
-			break;
-		}
-		case VKI_SOUND_VALUE:
-		{
-			if (value == -1)
-				value = g_ConfigManager.SoundVolume;
-			else
-			{
-				if (value < 0)
-					value = 0;
-				else if (value > 255)
-					value = 255;
+					  break;
+	}
+	case VKI_SOUND_VALUE:
+	{
+							if (value == -1)
+								value = g_ConfigManager.SoundVolume;
+							else
+							{
+								if (value < 0)
+									value = 0;
+								else if (value > 255)
+									value = 255;
 
-				g_ConfigManager.SoundVolume = value;
-			}
+								g_ConfigManager.SoundVolume = value;
+							}
 
-			break;
-		}
-		case VKI_MUSIC:
-		{
-			if (value == -1)
-				value = g_ConfigManager.Music;
-			else
-				g_ConfigManager.Music = (value != 0);
+							break;
+	}
+	case VKI_MUSIC:
+	{
+					  if (value == -1)
+						  value = g_ConfigManager.Music;
+					  else
+						  g_ConfigManager.Music = (value != 0);
 
-			break;
-		}
-		case VKI_MUSIC_VALUE:
-		{
-			if (value == -1)
-				value = g_ConfigManager.MusicVolume;
-			else
-			{
-				if (value < 0)
-					value = 0;
-				else if (value > 255)
-					value = 255;
+					  break;
+	}
+	case VKI_MUSIC_VALUE:
+	{
+							if (value == -1)
+								value = g_ConfigManager.MusicVolume;
+							else
+							{
+								if (value < 0)
+									value = 0;
+								else if (value > 255)
+									value = 255;
 
-				g_ConfigManager.MusicVolume = value;
-			}
+								g_ConfigManager.MusicVolume = value;
+							}
 
-			break;
-		}
-		case VKI_USE_TOOLTIPS:
-		{
-			if (value == -1)
-				value = g_ConfigManager.UseToolTips;
-			else
-				g_ConfigManager.UseToolTips = (value != 0);
+							break;
+	}
+	case VKI_USE_TOOLTIPS:
+	{
+							 if (value == -1)
+								 value = g_ConfigManager.UseToolTips;
+							 else
+								 g_ConfigManager.UseToolTips = (value != 0);
 
-			break;
-		}
-		case VKI_ALWAYS_RUN:
-		{
-			if (value == -1)
-				value = g_ConfigManager.AlwaysRun;
-			else
-				g_ConfigManager.AlwaysRun = (value != 0);
+							 break;
+	}
+	case VKI_ALWAYS_RUN:
+	{
+						   if (value == -1)
+							   value = g_ConfigManager.AlwaysRun;
+						   else
+							   g_ConfigManager.AlwaysRun = (value != 0);
 
-			break;
-		}
-		case VKI_NEW_TARGET_SYSTEM:
-		{
-			if (value == -1)
-				value = g_ConfigManager.DisableNewTargetSystem;
-			else
-				g_ConfigManager.DisableNewTargetSystem = (value == 0); //Именно == 0!!! Т.к. в плагине это Target System enable/disable
+						   break;
+	}
+	case VKI_NEW_TARGET_SYSTEM:
+	{
+								  if (value == -1)
+									  value = g_ConfigManager.DisableNewTargetSystem;
+								  else
+									  g_ConfigManager.DisableNewTargetSystem = (value == 0); //Именно == 0!!! Т.к. в плагине это Target System enable/disable
 
-			break;
-		}
-		case VKI_OBJECT_HANDLES:
-		{
-			if (value == -1)
-				value = g_ConfigManager.ObjectHandles;
-			else
-				g_ConfigManager.ObjectHandles = (value != 0);
+								  break;
+	}
+	case VKI_OBJECT_HANDLES:
+	{
+							   if (value == -1)
+								   value = g_ConfigManager.ObjectHandles;
+							   else
+								   g_ConfigManager.ObjectHandles = (value != 0);
 
-			break;
-		}
-		case VKI_SCALE_SPEECH_DELAY:
-		{
-			if (value == -1)
-				value = g_ConfigManager.ScaleSpeechDelay;
-			else
-				g_ConfigManager.ScaleSpeechDelay = (value != 0);
+							   break;
+	}
+	case VKI_SCALE_SPEECH_DELAY:
+	{
+								   if (value == -1)
+									   value = g_ConfigManager.ScaleSpeechDelay;
+								   else
+									   g_ConfigManager.ScaleSpeechDelay = (value != 0);
 
-			break;
-		}
-		case VKI_SPEECH_DELAY:
-		{
-			if (value == -1)
-				value = g_ConfigManager.SpeechDelay;
-			else
-			{
-				if (value < 0)
-					value = 0;
-				else if (value > 999)
-					value = 999;
+								   break;
+	}
+	case VKI_SPEECH_DELAY:
+	{
+							 if (value == -1)
+								 value = g_ConfigManager.SpeechDelay;
+							 else
+							 {
+								 if (value < 0)
+									 value = 0;
+								 else if (value > 999)
+									 value = 999;
 
-				g_ConfigManager.SpeechDelay = value;
-			}
+								 g_ConfigManager.SpeechDelay = value;
+							 }
 
-			break;
-		}
-		case VKI_IGNORE_GUILD_MESSAGES:
-		{
-			if (value == -1)
-				value = g_ConfigManager.IgnoreGuildMessage;
-			else
-				g_ConfigManager.IgnoreGuildMessage = (value != 0);
+							 break;
+	}
+	case VKI_IGNORE_GUILD_MESSAGES:
+	{
+									  if (value == -1)
+										  value = g_ConfigManager.IgnoreGuildMessage;
+									  else
+										  g_ConfigManager.IgnoreGuildMessage = (value != 0);
 
-			break;
-		}
-		case VKI_IGNORE_ALLIANCE_MESSAGES:
-		{
-			if (value == -1)
-				value = g_ConfigManager.IgnoreAllianceMessage;
-			else
-				g_ConfigManager.IgnoreAllianceMessage = (value != 0);
+									  break;
+	}
+	case VKI_IGNORE_ALLIANCE_MESSAGES:
+	{
+										 if (value == -1)
+											 value = g_ConfigManager.IgnoreAllianceMessage;
+										 else
+											 g_ConfigManager.IgnoreAllianceMessage = (value != 0);
 
-			break;
-		}
-		case VKI_DARK_NIGHTS:
-		{
-			if (value == -1)
-				value = g_ConfigManager.DarkNights;
-			else
-				g_ConfigManager.DarkNights = (value != 0);
+										 break;
+	}
+	case VKI_DARK_NIGHTS:
+	{
+							if (value == -1)
+								value = g_ConfigManager.DarkNights;
+							else
+								g_ConfigManager.DarkNights = (value != 0);
 
-			break;
-		}
-		case VKI_COLORED_LIGHTING:
-		{
-			if (value == -1)
-				value = g_ConfigManager.ColoredLighting;
-			else
-				g_ConfigManager.ColoredLighting = (value != 0);
+							break;
+	}
+	case VKI_COLORED_LIGHTING:
+	{
+								 if (value == -1)
+									 value = g_ConfigManager.ColoredLighting;
+								 else
+									 g_ConfigManager.ColoredLighting = (value != 0);
 
-			break;
-		}
-		case VKI_CRIMINAL_ACTIONS_QUERY:
-		{
-			if (value == -1)
-				value = g_ConfigManager.CriminalActionsQuery;
-			else
-				g_ConfigManager.CriminalActionsQuery = (value != 0);
+								 break;
+	}
+	case VKI_CRIMINAL_ACTIONS_QUERY:
+	{
+									   if (value == -1)
+										   value = g_ConfigManager.CriminalActionsQuery;
+									   else
+										   g_ConfigManager.CriminalActionsQuery = (value != 0);
 
-			break;
-		}
-		case VKI_CIRCLETRANS:
-		{
-			if (value == -1)
-				value = g_ConfigManager.UseCircleTrans;
-			else
-				g_ConfigManager.UseCircleTrans = (value != 0);
+									   break;
+	}
+	case VKI_CIRCLETRANS:
+	{
+							if (value == -1)
+								value = g_ConfigManager.UseCircleTrans;
+							else
+								g_ConfigManager.UseCircleTrans = (value != 0);
 
-			break;
-		}
-		case VKI_CIRCLETRANS_VALUE:
-		{
-			if (value == -1)
-				value = g_ConfigManager.CircleTransRadius;
-			else
-			{
-				if (value < 0)
-					value = 0;
-				else if (value > 255)
-					value = 255;
+							break;
+	}
+	case VKI_CIRCLETRANS_VALUE:
+	{
+								  if (value == -1)
+									  value = g_ConfigManager.CircleTransRadius;
+								  else
+								  {
+									  if (value < 0)
+										  value = 0;
+									  else if (value > 255)
+										  value = 255;
 
-				g_ConfigManager.CircleTransRadius = value;
-			}
+									  g_ConfigManager.CircleTransRadius = value;
+								  }
 
-			break;
-		}
-		case VKI_LOCK_RESIZING_GAME_WINDOW:
-		{
-			if (value == -1)
-				value = g_ConfigManager.LockResizingGameWindow;
-			else
-				g_ConfigManager.LockResizingGameWindow = (value != 0);
+								  break;
+	}
+	case VKI_LOCK_RESIZING_GAME_WINDOW:
+	{
+										  if (value == -1)
+											  value = g_ConfigManager.LockResizingGameWindow;
+										  else
+											  g_ConfigManager.LockResizingGameWindow = (value != 0);
 
-			break;
-		}
-		case VKI_CLIENT_FPS_VALUE:
-		{
-			if (value == -1)
-				value = g_ConfigManager.ClientFPS;
-			else
-			{
-				if (value < 16)
-					value = 16;
-				else if (value > 64)
-					value = 64;
+										  break;
+	}
+	case VKI_CLIENT_FPS_VALUE:
+	{
+								 if (value == -1)
+									 value = g_ConfigManager.ClientFPS;
+								 else
+								 {
+									 if (value < 16)
+										 value = 16;
+									 else if (value > 64)
+										 value = 64;
 
-				g_ConfigManager.ClientFPS = value;
-			}
+									 g_ConfigManager.ClientFPS = value;
+								 }
 
-			break;
-		}
-		case VKI_USE_SCALING_GAME_WINDOW:
-		{
-			if (value == -1)
-				value = g_ConfigManager.UseScaling;
-			else
-				g_ConfigManager.UseScaling = (value != 0);
+								 break;
+	}
+	case VKI_USE_SCALING_GAME_WINDOW:
+	{
+										if (value == -1)
+											value = g_ConfigManager.UseScaling;
+										else
+											g_ConfigManager.UseScaling = (value != 0);
 
-			break;
-		}
-		case VKI_DRAW_STATUS_STATE:
-		{
-			if (value == -1)
-				value = g_ConfigManager.DrawStatusState;
-			else
-			{
-				if (value < 0)
-					value = 0;
-				else if (value > DCSS_UNDER)
-					value = DCSS_UNDER;
+										break;
+	}
+	case VKI_DRAW_STATUS_STATE:
+	{
+								  if (value == -1)
+									  value = g_ConfigManager.DrawStatusState;
+								  else
+								  {
+									  if (value < 0)
+										  value = 0;
+									  else if (value > DCSS_UNDER)
+										  value = DCSS_UNDER;
 
-				g_ConfigManager.DrawStatusState = value;
-			}
+									  g_ConfigManager.DrawStatusState = value;
+								  }
 
-			break;
-		}
-		case VKI_DRAW_STUMPS:
-		{
-			if (value == -1)
-				value = g_ConfigManager.DrawStumps;
-			else
-				g_ConfigManager.DrawStumps = (value != 0);
+								  break;
+	}
+	case VKI_DRAW_STUMPS:
+	{
+							if (value == -1)
+								value = g_ConfigManager.DrawStumps;
+							else
+								g_ConfigManager.DrawStumps = (value != 0);
 
-			break;
-		}
-		case VKI_MARKING_CAVES:
-		{
-			if (value == -1)
-				value = g_ConfigManager.MarkingCaves;
-			else
-				g_ConfigManager.MarkingCaves = (value != 0);
+							break;
+	}
+	case VKI_MARKING_CAVES:
+	{
+							  if (value == -1)
+								  value = g_ConfigManager.MarkingCaves;
+							  else
+								  g_ConfigManager.MarkingCaves = (value != 0);
 
-			break;
-		}
-		case VKI_NO_VEGETATION:
-		{
-			if (value == -1)
-				value = g_ConfigManager.NoVegetation;
-			else
-				g_ConfigManager.NoVegetation = (value != 0);
+							  break;
+	}
+	case VKI_NO_VEGETATION:
+	{
+							  if (value == -1)
+								  value = g_ConfigManager.NoVegetation;
+							  else
+								  g_ConfigManager.NoVegetation = (value != 0);
 
-			break;
-		}
-		case VKI_NO_ANIMATE_FIELDS:
-		{
-			if (value == -1)
-				value = g_ConfigManager.NoAnimateFields;
-			else
-				g_ConfigManager.NoAnimateFields = (value != 0);
+							  break;
+	}
+	case VKI_NO_ANIMATE_FIELDS:
+	{
+								  if (value == -1)
+									  value = g_ConfigManager.NoAnimateFields;
+								  else
+									  g_ConfigManager.NoAnimateFields = (value != 0);
 
-			break;
-		}
-		case VKI_STANDARD_CHARACTERS_DELAY:
-		{
-			if (value == -1)
-				value = g_ConfigManager.StandartCharactersAnimationDelay;
-			else
-				g_ConfigManager.StandartCharactersAnimationDelay = (value != 0);
+								  break;
+	}
+	case VKI_STANDARD_CHARACTERS_DELAY:
+	{
+										  if (value == -1)
+											  value = g_ConfigManager.StandartCharactersAnimationDelay;
+										  else
+											  g_ConfigManager.StandartCharactersAnimationDelay = (value != 0);
 
-			break;
-		}
-		case VKI_STANDARD_ITEMS_DELAY:
-		{
-			if (value == -1)
-				value = g_ConfigManager.StandartItemsAnimationDelay;
-			else
-				g_ConfigManager.StandartItemsAnimationDelay = (value != 0);
+										  break;
+	}
+	case VKI_STANDARD_ITEMS_DELAY:
+	{
+									 if (value == -1)
+										 value = g_ConfigManager.StandartItemsAnimationDelay;
+									 else
+										 g_ConfigManager.StandartItemsAnimationDelay = (value != 0);
 
-			break;
-		}
-		case VKI_LOCK_GUMPS_MOVING:
-		{
-			if (value == -1)
-				value = g_ConfigManager.LockGumpsMoving;
-			else
-				g_ConfigManager.LockGumpsMoving = (value != 0);
+									 break;
+	}
+	case VKI_LOCK_GUMPS_MOVING:
+	{
+								  if (value == -1)
+									  value = g_ConfigManager.LockGumpsMoving;
+								  else
+									  g_ConfigManager.LockGumpsMoving = (value != 0);
 
-			break;
-		}
-		case VKI_CONSOLE_NEED_ENTER:
-		{
-			if (value == -1)
-				value = g_ConfigManager.ConsoleNeedEnter;
-			else
-				g_ConfigManager.ConsoleNeedEnter = (value != 0);
+								  break;
+	}
+	case VKI_CONSOLE_NEED_ENTER:
+	{
+								   if (value == -1)
+									   value = g_ConfigManager.ConsoleNeedEnter;
+								   else
+									   g_ConfigManager.ConsoleNeedEnter = (value != 0);
 
-			break;
-		}
-		case VKI_HIDDEN_CHARACTERS_MODE:
-		{
-			if (value == -1)
-				value = g_ConfigManager.HiddenCharactersRenderMode;
-			else
-			{
-				if (value < 0)
-					value = 0;
-				else if (value > HCRM_SPECIAL_SPECTRAL_COLOR)
-					value = HCRM_SPECIAL_SPECTRAL_COLOR;
+								   break;
+	}
+	case VKI_HIDDEN_CHARACTERS_MODE:
+	{
+									   if (value == -1)
+										   value = g_ConfigManager.HiddenCharactersRenderMode;
+									   else
+									   {
+										   if (value < 0)
+											   value = 0;
+										   else if (value > HCRM_SPECIAL_SPECTRAL_COLOR)
+											   value = HCRM_SPECIAL_SPECTRAL_COLOR;
 
-				g_ConfigManager.HiddenCharactersRenderMode = value;
-			}
+										   g_ConfigManager.HiddenCharactersRenderMode = value;
+									   }
 
-			break;
-		}
-		case VKI_HIDDEN_CHARACTERS_ALPHA:
-		{
-			if (value == -1)
-				value = g_ConfigManager.HiddenAlpha;
-			else
-			{
-				if (value < 20)
-					value = 20;
-				else if (value > 255)
-					value = 255;
+									   break;
+	}
+	case VKI_HIDDEN_CHARACTERS_ALPHA:
+	{
+										if (value == -1)
+											value = g_ConfigManager.HiddenAlpha;
+										else
+										{
+											if (value < 20)
+												value = 20;
+											else if (value > 255)
+												value = 255;
 
-				g_ConfigManager.HiddenAlpha = value;
-			}
+											g_ConfigManager.HiddenAlpha = value;
+										}
 
-			break;
-		}
-		case VKI_HIDDEN_CHARACTERS_MODE_ONLY_FOR_SELF:
-		{
-			if (value == -1)
-				value = g_ConfigManager.UseHiddenModeOnlyForSelf;
-			else
-				g_ConfigManager.UseHiddenModeOnlyForSelf = (value != 0);
+										break;
+	}
+	case VKI_HIDDEN_CHARACTERS_MODE_ONLY_FOR_SELF:
+	{
+													 if (value == -1)
+														 value = g_ConfigManager.UseHiddenModeOnlyForSelf;
+													 else
+														 g_ConfigManager.UseHiddenModeOnlyForSelf = (value != 0);
 
-			break;
-		}
-		case VKI_TRANSPARENT_SPELL_ICONS:
-		{
-			if (value == -1)
-				value = g_ConfigManager.TransparentSpellIcons;
-			else
-				g_ConfigManager.TransparentSpellIcons = (value != 0);
+													 break;
+	}
+	case VKI_TRANSPARENT_SPELL_ICONS:
+	{
+										if (value == -1)
+											value = g_ConfigManager.TransparentSpellIcons;
+										else
+											g_ConfigManager.TransparentSpellIcons = (value != 0);
 
-			break;
-		}
-		case VKI_SPELL_ICONS_ALPHA:
-		{
-			if (value == -1)
-				value = g_ConfigManager.SpellIconAlpha;
-			else
-			{
-				if (value < 30)
-					value = 30;
-				else if (value > 255)
-					value = 255;
+										break;
+	}
+	case VKI_SPELL_ICONS_ALPHA:
+	{
+								  if (value == -1)
+									  value = g_ConfigManager.SpellIconAlpha;
+								  else
+								  {
+									  if (value < 30)
+										  value = 30;
+									  else if (value > 255)
+										  value = 255;
 
-				g_ConfigManager.SpellIconAlpha = value;
-			}
+									  g_ConfigManager.SpellIconAlpha = value;
+								  }
 
-			break;
-		}
-		case VKI_SKILLS_COUNT:
-		{
-			value = g_SkillsCount;
-			break;
-		}
-		case VKI_SKILL_CAN_BE_USED:
-		{
-			if (value >= 0 && value < g_SkillsCount)
-				value = g_Skills[value].Button;
+								  break;
+	}
+	case VKI_SKILLS_COUNT:
+	{
+							 value = g_SkillsCount;
+							 break;
+	}
+	case VKI_SKILL_CAN_BE_USED:
+	{
+								  if (value >= 0 && value < g_SkillsCount)
+									  value = g_Skills[value].Button;
 
-			break;
-		}
-		case VKI_STATIC_ART_ADDRESS:
-		{
-			if (value >= 0 && value < m_StaticDataCount)
-				value = m_StaticDataIndex[value].Address;
+								  break;
+	}
+	case VKI_STATIC_ART_ADDRESS:
+	{
+								   if (value >= 0 && value < m_StaticDataCount)
+									   value = m_StaticDataIndex[value].Address;
 
-			break;
-		}
-		case VKI_USED_LAYER:
-		{
-			if (value >= 0 && value < m_StaticDataCount)
-				value = m_StaticData[value / 32].Tiles[value % 32].Quality;
+								   break;
+	}
+	case VKI_USED_LAYER:
+	{
+						   if (value >= 0 && value < m_StaticDataCount)
+							   value = m_StaticData[value / 32].Tiles[value % 32].Quality;
 
-			break;
-		}
-		case VKI_SPELLBOOK_COUNT:
-		{
-			if (value >= 0 && value < 7)
-			{
-				switch (value)
-				{
-					case 1:
-					{
-						value = CGumpSpellbook::SPELLBOOK_1_SPELLS_COUNT;
-						break;
-					}
-					case 2:
-					{
-						value = CGumpSpellbook::SPELLBOOK_2_SPELLS_COUNT;
-						break;
-					}
-					case 3:
-					{
-						value = CGumpSpellbook::SPELLBOOK_3_SPELLS_COUNT;
-						break;
-					}
-					case 4:
-					{
-						value = CGumpSpellbook::SPELLBOOK_4_SPELLS_COUNT;
-						break;
-					}
-					case 5:
-					{
-						value = CGumpSpellbook::SPELLBOOK_5_SPELLS_COUNT;
-						break;
-					}
-					case 6:
-					{
-						value = CGumpSpellbook::SPELLBOOK_6_SPELLS_COUNT;
-						break;
-					}
-					case 7:
-					{
-						value = CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT;
-						break;
-					}
-					default:
-						break;
-				}
-			}
+						   break;
+	}
+	case VKI_SPELLBOOK_COUNT:
+	{
+								if (value >= 0 && value < 7)
+								{
+									switch (value)
+									{
+									case 1:
+									{
+											  value = CGumpSpellbook::SPELLBOOK_1_SPELLS_COUNT;
+											  break;
+									}
+									case 2:
+									{
+											  value = CGumpSpellbook::SPELLBOOK_2_SPELLS_COUNT;
+											  break;
+									}
+									case 3:
+									{
+											  value = CGumpSpellbook::SPELLBOOK_3_SPELLS_COUNT;
+											  break;
+									}
+									case 4:
+									{
+											  value = CGumpSpellbook::SPELLBOOK_4_SPELLS_COUNT;
+											  break;
+									}
+									case 5:
+									{
+											  value = CGumpSpellbook::SPELLBOOK_5_SPELLS_COUNT;
+											  break;
+									}
+									case 6:
+									{
+											  value = CGumpSpellbook::SPELLBOOK_6_SPELLS_COUNT;
+											  break;
+									}
+									case 7:
+									{
+											  value = CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT;
+											  break;
+									}
+									default:
+										break;
+									}
+								}
 
-			break;
-		}
-		case VKI_BLOCK_MOVING:
-		{
-			g_PathFinder.BlockMoving = (value != 0);
+								break;
+	}
+	case VKI_BLOCK_MOVING:
+	{
+							 g_PathFinder.BlockMoving = (value != 0);
 
-			break;
-		}
-		case VKI_SET_PLAYER_GRAPHIC:
-		{
-			if (g_Player != NULL && g_Player->Graphic != value)
-			{
-				g_Player->Graphic = value;
-				g_Player->OnGraphicChange(1000);
-			}
+							 break;
+	}
+	case VKI_SET_PLAYER_GRAPHIC:
+	{
+								   if (g_Player != NULL && g_Player->Graphic != value)
+								   {
+									   g_Player->Graphic = value;
+									   g_Player->OnGraphicChange(1000);
+								   }
 
-			break;
-		}
-		default:
-			break;
+								   break;
+	}
+	default:
+		break;
 	}
 
 	return value;
@@ -2015,96 +2015,96 @@ string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 {
 	switch (key)
 	{
-		case VKS_SKILL_NAME:
-		{
-			int index = atoi(value.c_str());
+	case VKS_SKILL_NAME:
+	{
+						   int index = atoi(value.c_str());
 
-			if (index >= 0 && index < g_SkillsCount)
-				value = g_Skills[index].Name;
+						   if (index >= 0 && index < g_SkillsCount)
+							   value = g_Skills[index].Name;
 
-			break;
-		}
-		case VKS_SERVER_NAME:
-		{
-			CServer *server = g_ServerList.GetSelectedServer();
+						   break;
+	}
+	case VKS_SERVER_NAME:
+	{
+							CServer *server = g_ServerList.GetSelectedServer();
 
-			if (server != NULL)
-				value = server->Name;
+							if (server != NULL)
+								value = server->Name;
 
-			break;
-		}
-		case VKS_CHARACTER_NAME:
-		{
-			if (g_Player != NULL)
-				value = g_Player->Name;
+							break;
+	}
+	case VKS_CHARACTER_NAME:
+	{
+							   if (g_Player != NULL)
+								   value = g_Player->Name;
 
-			break;
-		}
-		case VKS_SPELLBOOK_1_SPELL_NAME:
-		{
-			int index = atoi(value.c_str());
+							   break;
+	}
+	case VKS_SPELLBOOK_1_SPELL_NAME:
+	{
+									   int index = atoi(value.c_str());
 
-			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_1_SPELLS_COUNT)
-				value = CGumpSpellbook::m_SpellName1[index][0];
+									   if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_1_SPELLS_COUNT)
+										   value = CGumpSpellbook::m_SpellName1[index][0];
 
-			break;
-		}
-		case VKS_SPELLBOOK_2_SPELL_NAME:
-		{
-			int index = atoi(value.c_str());
+									   break;
+	}
+	case VKS_SPELLBOOK_2_SPELL_NAME:
+	{
+									   int index = atoi(value.c_str());
 
-			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_2_SPELLS_COUNT)
-				value = CGumpSpellbook::m_SpellName2[index][0];
+									   if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_2_SPELLS_COUNT)
+										   value = CGumpSpellbook::m_SpellName2[index][0];
 
-			break;
-		}
-		case VKS_SPELLBOOK_3_SPELL_NAME:
-		{
-			int index = atoi(value.c_str());
+									   break;
+	}
+	case VKS_SPELLBOOK_3_SPELL_NAME:
+	{
+									   int index = atoi(value.c_str());
 
-			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_3_SPELLS_COUNT)
-				value = CGumpSpellbook::m_SpellName3[index][0];
+									   if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_3_SPELLS_COUNT)
+										   value = CGumpSpellbook::m_SpellName3[index][0];
 
-			break;
-		}
-		case VKS_SPELLBOOK_4_SPELL_NAME:
-		{
-			int index = atoi(value.c_str());
+									   break;
+	}
+	case VKS_SPELLBOOK_4_SPELL_NAME:
+	{
+									   int index = atoi(value.c_str());
 
-			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_4_SPELLS_COUNT)
-				value = CGumpSpellbook::m_SpellName4[index];
+									   if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_4_SPELLS_COUNT)
+										   value = CGumpSpellbook::m_SpellName4[index];
 
-			break;
-		}
-		case VKS_SPELLBOOK_5_SPELL_NAME:
-		{
-			int index = atoi(value.c_str());
+									   break;
+	}
+	case VKS_SPELLBOOK_5_SPELL_NAME:
+	{
+									   int index = atoi(value.c_str());
 
-			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_5_SPELLS_COUNT)
-				value = CGumpSpellbook::m_SpellName5[index];
+									   if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_5_SPELLS_COUNT)
+										   value = CGumpSpellbook::m_SpellName5[index];
 
-			break;
-		}
-		case VKS_SPELLBOOK_6_SPELL_NAME:
-		{
-			int index = atoi(value.c_str());
+									   break;
+	}
+	case VKS_SPELLBOOK_6_SPELL_NAME:
+	{
+									   int index = atoi(value.c_str());
 
-			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_6_SPELLS_COUNT)
-				value = CGumpSpellbook::m_SpellName6[index][0];
+									   if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_6_SPELLS_COUNT)
+										   value = CGumpSpellbook::m_SpellName6[index][0];
 
-			break;
-		}
-		case VKS_SPELLBOOK_7_SPELL_NAME:
-		{
-			int index = atoi(value.c_str());
+									   break;
+	}
+	case VKS_SPELLBOOK_7_SPELL_NAME:
+	{
+									   int index = atoi(value.c_str());
 
-			if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT)
-				value = CGumpSpellbook::m_SpellName7[index][0];
+									   if (index >= 0 && index < CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT)
+										   value = CGumpSpellbook::m_SpellName7[index][0];
 
-			break;
-		}
-		default:
-			break;
+									   break;
+	}
+	default:
+		break;
 	}
 
 	return value;
@@ -2163,65 +2163,65 @@ bool COrion::IsTreeTile(const ushort &graphic, int &index)
 
 	switch (graphic)
 	{
-		case 0x0CCA:
-		case 0x0CCB:
-		case 0x0CCC:
-		case 0x0CCD:
-		case 0x0CD0:
-		case 0x0CD3:
-		case 0x0CD6:
-		case 0x0CD8:
-		case 0x0CDA:
-		case 0x0CDD:
-		case 0x0CE0:
-		case 0x0CE3:
-		case 0x0CE6:
-		case 0x0D41:
-		case 0x0D42:
-		case 0x0D43:
-		case 0x0D44:
-		case 0x0D57:
-		case 0x0D58:
-		case 0x0D59:
-		case 0x0D5A:
-		case 0x0D5B:
-		case 0x0D6E:
-		case 0x0D6F:
-		case 0x0D70:
-		case 0x0D71:
-		case 0x0D72:
-		case 0x0D84:
-		case 0x0D85:
-		case 0x0D86:
-		case 0x0D94: //apple tree
-		case 0x0D98: //apple tree
-		case 0x0D9C:
-		case 0x0DA0:
-		case 0x0DA4:
-		case 0x0DA8:
-		{
-			result = true;
-			index = g_StumpHatchedID;
+	case 0x0CCA:
+	case 0x0CCB:
+	case 0x0CCC:
+	case 0x0CCD:
+	case 0x0CD0:
+	case 0x0CD3:
+	case 0x0CD6:
+	case 0x0CD8:
+	case 0x0CDA:
+	case 0x0CDD:
+	case 0x0CE0:
+	case 0x0CE3:
+	case 0x0CE6:
+	case 0x0D41:
+	case 0x0D42:
+	case 0x0D43:
+	case 0x0D44:
+	case 0x0D57:
+	case 0x0D58:
+	case 0x0D59:
+	case 0x0D5A:
+	case 0x0D5B:
+	case 0x0D6E:
+	case 0x0D6F:
+	case 0x0D70:
+	case 0x0D71:
+	case 0x0D72:
+	case 0x0D84:
+	case 0x0D85:
+	case 0x0D86:
+	case 0x0D94: //apple tree
+	case 0x0D98: //apple tree
+	case 0x0D9C:
+	case 0x0DA0:
+	case 0x0DA4:
+	case 0x0DA8:
+	{
+				   result = true;
+				   index = g_StumpHatchedID;
 
-			break;
-		}
-		case 0x0C9E:
-		case 0x0CA8:
-		case 0x0CAA:
-		case 0x0CAB:
-		case 0x0CC9:
-		case 0x0CF8:
-		case 0x0CFB:
-		case 0x0CFE:
-		case 0x0D01:
-		{
-			result = true;
-			index = g_StumpID;
+				   break;
+	}
+	case 0x0C9E:
+	case 0x0CA8:
+	case 0x0CAA:
+	case 0x0CAB:
+	case 0x0CC9:
+	case 0x0CF8:
+	case 0x0CFB:
+	case 0x0CFE:
+	case 0x0D01:
+	{
+				   result = true;
+				   index = g_StumpID;
 
-			break;
-		}
-		default:
-			break;
+				   break;
+	}
+	default:
+		break;
 	}
 
 	return result;
@@ -2249,187 +2249,187 @@ bool COrion::IsVegetation(const ushort &graphic)
 
 	switch (graphic)
 	{
-		case 0x4D45:
-		case 0x4D46:
-		case 0x4D47:
-		case 0x4D48:
-		case 0x4D49:
-		case 0x4D4A:
-		case 0x4D4B:
-		case 0x4D4C:
-		case 0x4D4D:
-		case 0x4D4E:
-		case 0x4D4F:
-		case 0x4D50:
-		case 0x4D51:
-		case 0x4D52:
-		case 0x4D53:
-		case 0x4D54:
-		case 0x4D5C:
-		case 0x4D5D:
-		case 0x4D5E:
-		case 0x4D5F:
-		case 0x4D60:
-		case 0x4D61:
-		case 0x4D62:
-		case 0x4D63:
-		case 0x4D64:
-		case 0x4D65:
-		case 0x4D66:
-		case 0x4D67:
-		case 0x4D68:
-		case 0x4D69:
-		case 0x4D6D:
-		case 0x4D73:
-		case 0x4D74:
-		case 0x4D75:
-		case 0x4D76:
-		case 0x4D77:
-		case 0x4D78:
-		case 0x4D79:
-		case 0x4D7A:
-		case 0x4D7B:
-		case 0x4D7C:
-		case 0x4D7D:
-		case 0x4D7E:
-		case 0x4D7F:
-		case 0x4D80:
-		case 0x4D83:
-		case 0x4D87:
-		case 0x4D88:
-		case 0x4D89:
-		case 0x4D8A:
-		case 0x4D8B:
-		case 0x4D8C:
-		case 0x4D8D:
-		case 0x4D8E:
-		case 0x4D8F:
-		case 0x4D90:
-		case 0x4D91:
-		case 0x4D93:
-		case 0x52B6:
-		case 0x52B7:
-		case 0x52BC:
-		case 0x52BD:
-		case 0x52BE:
-		case 0x52BF:
-		case 0x52C0:
-		case 0x52C1:
-		case 0x52C2:
-		case 0x52C3:
-		case 0x52C4:
-		case 0x52C5:
-		case 0x52C6:
-		case 0x52C7:
-		case 0x4CB9:
-		case 0x4CBC:
-		case 0x4CBD:
-		case 0x4CBE:
-		case 0x4CBF:
-		case 0x4CC0:
-		case 0x4CC1:
-		case 0x4CC3:
-		case 0x4CC5:
-		case 0x4CC6:
-		case 0x4CC7:
-		case 0x4CF3:
-		case 0x4CF4:
-		case 0x4CF5:
-		case 0x4CF6:
-		case 0x4CF7:
-		case 0x4D04:
-		case 0x4D06:
-		case 0x4D07:
-		case 0x4D08:
-		case 0x4D09:
-		case 0x4D0A:
-		case 0x4D0B:
-		case 0x4D0C:
-		case 0x4D0D:
-		case 0x4D0E:
-		case 0x4D0F:
-		case 0x4D10:
-		case 0x4D11:
-		case 0x4D12:
-		case 0x4D13:
-		case 0x4D14:
-		case 0x4D15:
-		case 0x4D16:
-		case 0x4D17:
-		case 0x4D18:
-		case 0x4D19:
-		case 0x4D28:
-		case 0x4D29:
-		case 0x4D2A:
-		case 0x4D2B:
-		case 0x4D2D:
-		case 0x4D34:
-		case 0x4D36:
-		case 0x4DAE:
-		case 0x4DAF:
-		case 0x4DBA:
-		case 0x4DBB:
-		case 0x4DBC:
-		case 0x4DBD:
-		case 0x4DBE:
-		case 0x4DC1:
-		case 0x4DC2:
-		case 0x4DC3:
-		case 0x4C83:
-		case 0x4C84:
-		case 0x4C85:
-		case 0x4C86:
-		case 0x4C87:
-		case 0x4C88:
-		case 0x4C89:
-		case 0x4C8A:
-		case 0x4C8B:
-		case 0x4C8C:
-		case 0x4C8D:
-		case 0x4C8E:
-		case 0x4C93:
-		case 0x4C94:
-		case 0x4C98:
-		case 0x4C9F:
-		case 0x4CA0:
-		case 0x4CA1:
-		case 0x4CA2:
-		case 0x4CA3:
-		case 0x4CA4:
-		case 0x4CA7:
-		case 0x4CAC:
-		case 0x4CAD:
-		case 0x4CAE:
-		case 0x4CAF:
-		case 0x4CB0:
-		case 0x4CB1:
-		case 0x4CB2:
-		case 0x4CB3:
-		case 0x4CB4:
-		case 0x4CB5:
-		case 0x4CB6:
-		case 0x4C45:
-		case 0x4C46:
-		case 0x4C49:
-		case 0x4C47:
-		case 0x4C48:
-		case 0x4C4A:
-		case 0x4C4B:
-		case 0x4C4C:
-		case 0x4C4D:
-		case 0x4C4E:
-		case 0x4C37:
-		case 0x4C38:
-		case 0x4CBA:
-		case 0x4D2F:
-		case 0x4D32:
-		case 0x4D33:
-		{
-			result = true;
-			break;
-		}
-		default:
-			break;
+	case 0x4D45:
+	case 0x4D46:
+	case 0x4D47:
+	case 0x4D48:
+	case 0x4D49:
+	case 0x4D4A:
+	case 0x4D4B:
+	case 0x4D4C:
+	case 0x4D4D:
+	case 0x4D4E:
+	case 0x4D4F:
+	case 0x4D50:
+	case 0x4D51:
+	case 0x4D52:
+	case 0x4D53:
+	case 0x4D54:
+	case 0x4D5C:
+	case 0x4D5D:
+	case 0x4D5E:
+	case 0x4D5F:
+	case 0x4D60:
+	case 0x4D61:
+	case 0x4D62:
+	case 0x4D63:
+	case 0x4D64:
+	case 0x4D65:
+	case 0x4D66:
+	case 0x4D67:
+	case 0x4D68:
+	case 0x4D69:
+	case 0x4D6D:
+	case 0x4D73:
+	case 0x4D74:
+	case 0x4D75:
+	case 0x4D76:
+	case 0x4D77:
+	case 0x4D78:
+	case 0x4D79:
+	case 0x4D7A:
+	case 0x4D7B:
+	case 0x4D7C:
+	case 0x4D7D:
+	case 0x4D7E:
+	case 0x4D7F:
+	case 0x4D80:
+	case 0x4D83:
+	case 0x4D87:
+	case 0x4D88:
+	case 0x4D89:
+	case 0x4D8A:
+	case 0x4D8B:
+	case 0x4D8C:
+	case 0x4D8D:
+	case 0x4D8E:
+	case 0x4D8F:
+	case 0x4D90:
+	case 0x4D91:
+	case 0x4D93:
+	case 0x52B6:
+	case 0x52B7:
+	case 0x52BC:
+	case 0x52BD:
+	case 0x52BE:
+	case 0x52BF:
+	case 0x52C0:
+	case 0x52C1:
+	case 0x52C2:
+	case 0x52C3:
+	case 0x52C4:
+	case 0x52C5:
+	case 0x52C6:
+	case 0x52C7:
+	case 0x4CB9:
+	case 0x4CBC:
+	case 0x4CBD:
+	case 0x4CBE:
+	case 0x4CBF:
+	case 0x4CC0:
+	case 0x4CC1:
+	case 0x4CC3:
+	case 0x4CC5:
+	case 0x4CC6:
+	case 0x4CC7:
+	case 0x4CF3:
+	case 0x4CF4:
+	case 0x4CF5:
+	case 0x4CF6:
+	case 0x4CF7:
+	case 0x4D04:
+	case 0x4D06:
+	case 0x4D07:
+	case 0x4D08:
+	case 0x4D09:
+	case 0x4D0A:
+	case 0x4D0B:
+	case 0x4D0C:
+	case 0x4D0D:
+	case 0x4D0E:
+	case 0x4D0F:
+	case 0x4D10:
+	case 0x4D11:
+	case 0x4D12:
+	case 0x4D13:
+	case 0x4D14:
+	case 0x4D15:
+	case 0x4D16:
+	case 0x4D17:
+	case 0x4D18:
+	case 0x4D19:
+	case 0x4D28:
+	case 0x4D29:
+	case 0x4D2A:
+	case 0x4D2B:
+	case 0x4D2D:
+	case 0x4D34:
+	case 0x4D36:
+	case 0x4DAE:
+	case 0x4DAF:
+	case 0x4DBA:
+	case 0x4DBB:
+	case 0x4DBC:
+	case 0x4DBD:
+	case 0x4DBE:
+	case 0x4DC1:
+	case 0x4DC2:
+	case 0x4DC3:
+	case 0x4C83:
+	case 0x4C84:
+	case 0x4C85:
+	case 0x4C86:
+	case 0x4C87:
+	case 0x4C88:
+	case 0x4C89:
+	case 0x4C8A:
+	case 0x4C8B:
+	case 0x4C8C:
+	case 0x4C8D:
+	case 0x4C8E:
+	case 0x4C93:
+	case 0x4C94:
+	case 0x4C98:
+	case 0x4C9F:
+	case 0x4CA0:
+	case 0x4CA1:
+	case 0x4CA2:
+	case 0x4CA3:
+	case 0x4CA4:
+	case 0x4CA7:
+	case 0x4CAC:
+	case 0x4CAD:
+	case 0x4CAE:
+	case 0x4CAF:
+	case 0x4CB0:
+	case 0x4CB1:
+	case 0x4CB2:
+	case 0x4CB3:
+	case 0x4CB4:
+	case 0x4CB5:
+	case 0x4CB6:
+	case 0x4C45:
+	case 0x4C46:
+	case 0x4C49:
+	case 0x4C47:
+	case 0x4C48:
+	case 0x4C4A:
+	case 0x4C4B:
+	case 0x4C4C:
+	case 0x4C4D:
+	case 0x4C4E:
+	case 0x4C37:
+	case 0x4C38:
+	case 0x4CBA:
+	case 0x4D2F:
+	case 0x4D32:
+	case 0x4D33:
+	{
+				   result = true;
+				   break;
+	}
+	default:
+		break;
 	}
 
 	//raw vegetation data
@@ -2821,13 +2821,13 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 			int entryLength = flag == 1 ? compressedLength : decompressedLength;
 
 			if (offset == 0)
-				{
+			{
 				continue;
 			}
 
 			int idx;
 			if (hashes.find(hash) != hashes.end())
-					{
+			{
 				idx = hashes.at(hash);
 
 				CIndexObject *obj = getIdxObj(idx);
@@ -2836,7 +2836,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 				obj->ID = idx;
 
 				if (uopFileName == "gumpartlegacymul")
-						{
+				{
 					auto currentPos = uopFile->Ptr;
 					uopFile->ResetPtr();
 					uopFile->Move(offset + headerLength);
@@ -2850,14 +2850,14 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 					obj->DataSize -= 8;
 
 					uopFile->Ptr = currentPos;
-						}
-					}
 				}
+			}
+		}
 
 		uopFile->ResetPtr();
 		uopFile->Move(nextBlock);
 	} while (nextBlock != 0);
-			}
+}
 //----------------------------------------------------------------------------------
 unsigned long long COrion::CreateHash(string s)
 {
@@ -2886,7 +2886,7 @@ unsigned long long COrion::CreateHash(string s)
 		ebx += esi;
 		esi = (esi - edi) ^ (edi >> 28) ^ (edi << 4);
 		edi += ebx;
-		}
+	}
 
 	if (s.length() - i > 0)
 	{
@@ -2895,7 +2895,7 @@ unsigned long long COrion::CreateHash(string s)
 		case 12:
 			esi += static_cast<unsigned long>(s[i + 11]) << 24;
 			goto  case_11;
-				break;
+			break;
 		case 11:
 		case_11 :
 			esi += static_cast<unsigned long>(s[i + 10]) << 16;
@@ -2922,33 +2922,33 @@ unsigned long long COrion::CreateHash(string s)
 			   goto case_6;
 			   break;
 		case 6:
-		case_6:
+		case_6 :
 			edi += static_cast<unsigned long>(s[i + 5]) << 8;
-			  goto case_5;
-			  break;
+			   goto case_5;
+			   break;
 		case 5:
-		case_5:
+		case_5 :
 			edi += s[i + 4];
-			  goto case_4;
-			  break;
+			   goto case_4;
+			   break;
 		case 4:
-		case_4:
+		case_4 :
 			ebx += static_cast<unsigned long>(s[i + 3]) << 24;
-			  goto case_3;
-			  break;
+			   goto case_3;
+			   break;
 		case 3:
-		case_3:
+		case_3 :
 			ebx += static_cast<unsigned long>(s[i + 2]) << 16;
-			  goto case_2;
-			  break;
+			   goto case_2;
+			   break;
 		case 2:
-		case_2:
+		case_2 :
 			ebx += static_cast<unsigned long>(s[i + 1]) << 8;
-			  goto case_1;
+			   goto case_1;
 		case 1:
-		case_1:
+		case_1 :
 			ebx += s[i];
-			  break;
+			   break;
 		}
 
 		esi = (esi ^ edi) - ((edi >> 18) ^ (edi << 14));
@@ -2960,13 +2960,13 @@ unsigned long long COrion::CreateHash(string s)
 		eax = (esi ^ edi) - ((edi >> 8) ^ (edi << 24));
 
 		return (static_cast<unsigned long long>(edi) << 32) | eax;
-		}
+	}
 
 	return (static_cast<unsigned long long>(esi) << 32) | eax;
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadIndexFiles()
-		{
+{
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)g_FileManager.m_ArtIdx.Start;
 	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((uint)g_FileManager.m_ArtIdx.Start + (m_LandDataCount * sizeof(ART_IDX_BLOCK)));
 	PGUMP_IDX_BLOCK GumpArtPtr = (PGUMP_IDX_BLOCK)g_FileManager.m_GumpIdx.Start;
@@ -2988,20 +2988,20 @@ void COrion::LoadIndexFiles()
 		ReadMulIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, [&StaticArtPtr]() { return ++StaticArtPtr; });
 	}
 	else
-			{
+	{
 		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL);
 		g_FileManager.m_artLegacyMUL.ResetPtr();
 		ReadUOPIndexFile(m_StaticDataCount - MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_StaticDataIndex[i - MAX_LAND_DATA_INDEX_COUNT]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL, MAX_LAND_DATA_INDEX_COUNT);
-			}
+	}
 
 	if (g_FileManager.m_SoundMul.Start != nullptr)
 		ReadMulIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, (uint)g_FileManager.m_SoundMul.Start, SoundPtr, [&SoundPtr]() { return ++SoundPtr; });
-			else
+	else
 		ReadUOPIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, "soundlegacymul", ".dat", &g_FileManager.m_soundLegacyMUL);
 
 	if (g_FileManager.m_GumpMul.Start != nullptr)
 		ReadMulIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, [&GumpArtPtr]() { return ++GumpArtPtr; });
-			else
+	else
 		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartlegacymul", ".tga", &g_FileManager.m_gumpartLegacyMUL);
 
 	ReadMulIndexFile(MAX_LAND_TEXTURES_DATA_INDEX_COUNT, [&](int i){ return &m_TextureDataIndex[i]; }, (uint)g_FileManager.m_TextureMul.Start, TexturePtr, [&TexturePtr]() { return ++TexturePtr; });
@@ -3097,86 +3097,86 @@ ushort COrion::CalculateLightColor(const ushort &id)
 	{
 		switch (id)
 		{
-			case 0x0B1A:
-			case 0x0B1B:
-			case 0x0B1C:
-			case 0x0B1D:
-			case 0x0B1E:
-			case 0x0B1F:
-			case 0x0B20:
-			case 0x0B21:
-			case 0x0B22:
-			case 0x0B23:
-			case 0x0B24:
-			case 0x0B25:
-			case 0x0B26:
-			case 0x0B27:
-			case 0x0B28:
-			{
-				color = 0x029A;
-				break;
-			}
-			case 0x0E2D:
-			case 0x0E2E:
-			case 0x0E2F:
-			case 0x0E30:
-			{
-				color = 0x003E;
-				break;
-			}
-			case 0x088C:
-			{
-				color = 0x001F;
-				break;
-			}
+		case 0x0B1A:
+		case 0x0B1B:
+		case 0x0B1C:
+		case 0x0B1D:
+		case 0x0B1E:
+		case 0x0B1F:
+		case 0x0B20:
+		case 0x0B21:
+		case 0x0B22:
+		case 0x0B23:
+		case 0x0B24:
+		case 0x0B25:
+		case 0x0B26:
+		case 0x0B27:
+		case 0x0B28:
+		{
+					   color = 0x029A;
+					   break;
+		}
+		case 0x0E2D:
+		case 0x0E2E:
+		case 0x0E2F:
+		case 0x0E30:
+		{
+					   color = 0x003E;
+					   break;
+		}
+		case 0x088C:
+		{
+					   color = 0x001F;
+					   break;
+		}
 			//fire pit
-			case 0x0FAC:
-			{
-				color = 0x001E;
-				break;
-			}
+		case 0x0FAC:
+		{
+					   color = 0x001E;
+					   break;
+		}
 			//forge
-			case 0x0FB1:
-			{
-				color = 0x003C;
-				break;
-			}
-			case 0x1647:
-			{
-				color = 0x003D;
-				break;
-			}
+		case 0x0FB1:
+		{
+					   color = 0x003C;
+					   break;
+		}
+		case 0x1647:
+		{
+					   color = 0x003D;
+					   break;
+		}
 			//blue moongate
-			case 0x0F6C:
+		case 0x0F6C:
 			//moongate
-			case 0x1FD4:
-			{
-				color = 0x0002;
-				break;
-			}
+		case 0x1FD4:
+		{
+					   color = 0x0002;
+					   break;
+		}
 			//brazier
-			case 0x0E31:
-			case 0x0E32:
-			case 0x0E33:
-			case 0x19BB:
-			case 0x1F2B:
-			{
-				color = 0x0028;
-				break;
-			}
+		case 0x0E31:
+		case 0x0E32:
+		case 0x0E33:
+		case 0x19BB:
+		case 0x1F2B:
+		{
+					   color = 0x0028;
+					   break;
+		}
 			//lava
-			case 0x3547:
-			case 0x3548:
-			case 0x3549:
-			case 0x354A:
-			case 0x354B:
-			case 0x354C:
-			{
-				color = 0x001F;
-				break;
-			}
-			default:
-				break;
+		case 0x3547:
+		case 0x3548:
+		case 0x3549:
+		case 0x354A:
+		case 0x354B:
+		case 0x354C:
+		{
+					   color = 0x001F;
+					   break;
+		}
+		default:
+			break;
 		}
 
 		if (!color)
@@ -3700,7 +3700,7 @@ bool COrion::LoadSkills()
 
 	g_Skills.resize(g_SkillsCount);
 
-	for (int i = 0; ; i++, start++)
+	for (int i = 0;; i++, start++)
 	{
 		g_Skills[i].Button = *(puchar)((uint)g_FileManager.m_SkillsMul.Start + start->Position);
 
@@ -3794,71 +3794,71 @@ void COrion::CreateObjectHandlesBackground()
 
 		switch (i)
 		{
-			case 1:
-			{
-				drawX = th[0]->Width;
+		case 1:
+		{
+				  drawX = th[0]->Width;
 
-				drawWidth = g_ObjectHandlesWidth - th[0]->Width - th[2]->Width;
+				  drawWidth = g_ObjectHandlesWidth - th[0]->Width - th[2]->Width;
 
-				break;
-			}
-			case 2:
-			{
-				drawX = g_ObjectHandlesWidth - drawWidth;
+				  break;
+		}
+		case 2:
+		{
+				  drawX = g_ObjectHandlesWidth - drawWidth;
 
-				break;
-			}
-			case 3:
-			{
-				drawY = th[0]->Height;
+				  break;
+		}
+		case 3:
+		{
+				  drawY = th[0]->Height;
 
-				drawHeight = g_ObjectHandlesHeight - th[0]->Height - th[5]->Height;
+				  drawHeight = g_ObjectHandlesHeight - th[0]->Height - th[5]->Height;
 
-				break;
-			}
-			case 4:
-			{
-				drawX = g_ObjectHandlesWidth - drawWidth;
-				drawY = th[2]->Height;
+				  break;
+		}
+		case 4:
+		{
+				  drawX = g_ObjectHandlesWidth - drawWidth;
+				  drawY = th[2]->Height;
 
-				drawHeight = g_ObjectHandlesHeight - th[2]->Height - th[7]->Height;
+				  drawHeight = g_ObjectHandlesHeight - th[2]->Height - th[7]->Height;
 
-				break;
-			}
-			case 5:
-			{
-				drawY = g_ObjectHandlesHeight - drawHeight;
+				  break;
+		}
+		case 5:
+		{
+				  drawY = g_ObjectHandlesHeight - drawHeight;
 
-				break;
-			}
-			case 6:
-			{
-				drawX = th[5]->Width;
-				drawY = g_ObjectHandlesHeight - drawHeight;
+				  break;
+		}
+		case 6:
+		{
+				  drawX = th[5]->Width;
+				  drawY = g_ObjectHandlesHeight - drawHeight;
 
-				drawWidth = g_ObjectHandlesWidth - th[5]->Width - th[7]->Width;
+				  drawWidth = g_ObjectHandlesWidth - th[5]->Width - th[7]->Width;
 
-				break;
-			}
-			case 7:
-			{
-				drawX = g_ObjectHandlesWidth - drawWidth;
-				drawY = g_ObjectHandlesHeight - drawHeight;
+				  break;
+		}
+		case 7:
+		{
+				  drawX = g_ObjectHandlesWidth - drawWidth;
+				  drawY = g_ObjectHandlesHeight - drawHeight;
 
-				break;
-			}
-			case 8:
-			{
-				drawX = th[0]->Width;
-				drawY = th[0]->Height;
+				  break;
+		}
+		case 8:
+		{
+				  drawX = th[0]->Width;
+				  drawY = th[0]->Height;
 
-				drawWidth = g_ObjectHandlesWidth - th[0]->Width - th[2]->Width;
-				drawHeight = g_ObjectHandlesHeight - th[2]->Height - th[7]->Height;
+				  drawWidth = g_ObjectHandlesWidth - th[0]->Width - th[2]->Width;
+				  drawHeight = g_ObjectHandlesHeight - th[2]->Height - th[7]->Height;
 
-				break;
-			}
-			default:
-				break;
+				  break;
+		}
+		default:
+			break;
 		}
 
 		if (drawX < 0)
@@ -4550,91 +4550,91 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 		{
 		case 0:
 		{
-			if (GumpPixelsInXY(id, x, y, true))
-				return true;
-			break;
+				  if (GumpPixelsInXY(id, x, y, true))
+					  return true;
+				  break;
 		}
 		case 1:
 		{
-			int DW = width - th[0]->Width - th[2]->Width;
-			if (DW < 1)
-				break;
+				  int DW = width - th[0]->Width - th[2]->Width;
+				  if (DW < 1)
+					  break;
 
-			if (GumpPixelsInXY(id + 1, x - th[0]->Width, y, DW, 0, true))
-				return true;
+				  if (GumpPixelsInXY(id + 1, x - th[0]->Width, y, DW, 0, true))
+					  return true;
 
-			break;
+				  break;
 		}
 		case 2:
 		{
-			if (GumpPixelsInXY(id + 2, x - width + th[i]->Width, y, true))
-				return true;
+				  if (GumpPixelsInXY(id + 2, x - width + th[i]->Width, y, true))
+					  return true;
 
-			break;
+				  break;
 		}
 		case 3:
 		{
-			int DH = height - th[0]->Height - th[5]->Height;
-			if (DH < 1)
-				break;
+				  int DH = height - th[0]->Height - th[5]->Height;
+				  if (DH < 1)
+					  break;
 
-			if (GumpPixelsInXY(id + 3, x, y - th[0]->Height, 0, DH, true))
-				return true;
+				  if (GumpPixelsInXY(id + 3, x, y - th[0]->Height, 0, DH, true))
+					  return true;
 
-			break;
+				  break;
 		}
 		case 4:
 		{
-			int DH = height - th[2]->Height - th[7]->Height;
-			if (DH < 1)
-				break;
+				  int DH = height - th[2]->Height - th[7]->Height;
+				  if (DH < 1)
+					  break;
 
-			if (GumpPixelsInXY(id + 5, x - width + th[i]->Width, y - th[2]->Height, 0, DH, true))
-				return true;
+				  if (GumpPixelsInXY(id + 5, x - width + th[i]->Width, y - th[2]->Height, 0, DH, true))
+					  return true;
 
-			break;
+				  break;
 		}
 		case 5:
 		{
-			if (GumpPixelsInXY(id + 6, x, y - height + th[i]->Height, true))
-				return true;
+				  if (GumpPixelsInXY(id + 6, x, y - height + th[i]->Height, true))
+					  return true;
 
-			break;
+				  break;
 		}
 		case 6:
 		{
-			int DW = width - th[5]->Width - th[7]->Width;
-			if (DW < 1)
-				break;
+				  int DW = width - th[5]->Width - th[7]->Width;
+				  if (DW < 1)
+					  break;
 
-			if (GumpPixelsInXY(id + 7, x - th[5]->Width, y - height + th[i]->Height, DW, 0, true))
-				return true;
+				  if (GumpPixelsInXY(id + 7, x - th[5]->Width, y - height + th[i]->Height, DW, 0, true))
+					  return true;
 
-			break;
+				  break;
 		}
 		case 7:
 		{
-			if (GumpPixelsInXY(id + 8, x - width + th[i]->Width, y - height + th[i]->Height, true))
-				return true;
+				  if (GumpPixelsInXY(id + 8, x - width + th[i]->Width, y - height + th[i]->Height, true))
+					  return true;
 
-			break;
+				  break;
 		}
 		case 8:
 		{
-			int DW = width - th[0]->Width - th[2]->Width;
+				  int DW = width - th[0]->Width - th[2]->Width;
 
-			if (DW < 1)
-				break;
+				  if (DW < 1)
+					  break;
 
-			int DH = height - th[2]->Height - th[7]->Height;
+				  int DH = height - th[2]->Height - th[7]->Height;
 
-			if (DH < 1)
-				break;
+				  if (DH < 1)
+					  break;
 
-			if (GumpPixelsInXY(id + 4, x - th[0]->Width, y - th[0]->Height, DW, DH, true))
-				return true;
+				  if (GumpPixelsInXY(id + 4, x - th[0]->Width, y - th[0]->Height, DW, DH, true))
+					  return true;
 
-			break;
+				  break;
 		}
 		default:
 			break;
@@ -4750,10 +4750,10 @@ bool COrion::LandTexturePixelsInXY(int x, int  y, RECT &r)
 
 	bool result =
 		(
-			(testY >= testX * (y1 - y0) / -22 + y + y0) &&
-			(testY >= testX * (y3 - y0) / 22 + y + y0) &&
-			(testY <= testX * (y3 - y2) / 22 + y + y2) &&
-			(testY <= testX * (y1 - y2) / -22 + y + y2)
+		(testY >= testX * (y1 - y0) / -22 + y + y0) &&
+		(testY >= testX * (y3 - y0) / 22 + y + y0) &&
+		(testY <= testX * (y3 - y2) / 22 + y + y2) &&
+		(testY <= testX * (y1 - y2) / -22 + y + y2)
 		);
 
 	return result;
@@ -4795,117 +4795,117 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 	td->Timer = g_Ticks;
 	td->Type = type;
 	td->SetText(text);
-	
+
 	switch (type)
 	{
-		case TT_SYSTEM:
-		{
-			td->GenerateTexture(300);
-			AddSystemMessage(td);
+	case TT_SYSTEM:
+	{
+					  td->GenerateTexture(300);
+					  AddSystemMessage(td);
 
-			break;
-		}
-		case TT_OBJECT:
-		{
-			CGameObject *obj = g_World->FindWorldObject(serial);
+					  break;
+	}
+	case TT_OBJECT:
+	{
+					  CGameObject *obj = g_World->FindWorldObject(serial);
 
-			if (obj != NULL)
-			{
-				int width = g_FontManager.GetWidthA(font, text.c_str(), text.length());
+					  if (obj != NULL)
+					  {
+						  int width = g_FontManager.GetWidthA(font, text.c_str(), text.length());
 
-				g_FontManager.SavePixels = true;
+						  g_FontManager.SavePixels = true;
 
-				td->Color = 0;
+						  td->Color = 0;
 
-				if (width > TEXT_MESSAGE_MAX_WIDTH)
-				{
-					width = g_FontManager.GetWidthExA((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
-					td->GenerateTexture(width, 0, TS_LEFT);
-					//td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_LEFT);
-				}
-				else
-					td->GenerateTexture(0, 0, TS_CENTER);
+						  if (width > TEXT_MESSAGE_MAX_WIDTH)
+						  {
+							  width = g_FontManager.GetWidthExA((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
+							  td->GenerateTexture(width, 0, TS_LEFT);
+							  //td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_LEFT);
+						  }
+						  else
+							  td->GenerateTexture(0, 0, TS_CENTER);
 
-				td->Color = color;
+						  td->Color = color;
 
-				g_FontManager.SavePixels = false;
+						  g_FontManager.SavePixels = false;
 
-				obj->AddText(td);
+						  obj->AddText(td);
 
-				uint container = obj->Container;
+						  uint container = obj->Container;
 
-				if (container == 0xFFFFFFFF)
-					g_WorldTextRenderer.AddText(td);
-				else if (!obj->NPC)
-				{
-					td->X = g_ClickObject.X;
-					td->Y = g_ClickObject.Y;
+						  if (container == 0xFFFFFFFF)
+							  g_WorldTextRenderer.AddText(td);
+						  else if (!obj->NPC)
+						  {
+							  td->X = g_ClickObject.X;
+							  td->Y = g_ClickObject.Y;
 
-					CGump *gump = g_GumpManager.GetGump(container, 0, GT_CONTAINER);
-					
-					if (gump == NULL)
-					{
-						CGameObject *topobj = obj->GetTopObject();
+							  CGump *gump = g_GumpManager.GetGump(container, 0, GT_CONTAINER);
 
-						if (((CGameItem*)obj)->Layer != OL_NONE)
-							gump = g_GumpManager.GetGump(topobj->Serial, 0, GT_PAPERDOLL);
+							  if (gump == NULL)
+							  {
+								  CGameObject *topobj = obj->GetTopObject();
 
-						if (gump == NULL)
-						{
-							gump = g_GumpManager.GetGump(topobj->Serial, 0, GT_TRADE);
+								  if (((CGameItem*)obj)->Layer != OL_NONE)
+									  gump = g_GumpManager.GetGump(topobj->Serial, 0, GT_PAPERDOLL);
 
-							if (gump == NULL)
-							{
-								topobj = (CGameObject*)topobj->m_Items;
+								  if (gump == NULL)
+								  {
+									  gump = g_GumpManager.GetGump(topobj->Serial, 0, GT_TRADE);
 
-								while (topobj != NULL && topobj->Graphic != 0x1E5E)
-									topobj = (CGameObject*)topobj->m_Next;
+									  if (gump == NULL)
+									  {
+										  topobj = (CGameObject*)topobj->m_Items;
 
-								if (topobj != NULL)
-									gump = g_GumpManager.GetGump(0, topobj->Serial, GT_TRADE);
-							}
-						}
-					}
+										  while (topobj != NULL && topobj->Graphic != 0x1E5E)
+											  topobj = (CGameObject*)topobj->m_Next;
 
-					if (gump != NULL)
-					{
-						CTextRenderer *tr = gump->GetTextRenderer();
+										  if (topobj != NULL)
+											  gump = g_GumpManager.GetGump(0, topobj->Serial, GT_TRADE);
+									  }
+								  }
+							  }
 
-						if (tr != NULL)
-							tr->AddText(td);
-					}
-				}
-			}
-			else
-			{
-				td->GenerateTexture(300);
-				AddSystemMessage(td);
-			}
+							  if (gump != NULL)
+							  {
+								  CTextRenderer *tr = gump->GetTextRenderer();
 
-			break;
-		}
-		case TT_CLIENT:
-		{
-			int width = g_FontManager.GetWidthA((BYTE)font, text.c_str(), text.length());
-			
-			g_FontManager.SavePixels = true;
+								  if (tr != NULL)
+									  tr->AddText(td);
+							  }
+						  }
+					  }
+					  else
+					  {
+						  td->GenerateTexture(300);
+						  AddSystemMessage(td);
+					  }
 
-			if (width > TEXT_MESSAGE_MAX_WIDTH)
-			{
-				width = g_FontManager.GetWidthExA((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
-				td->GenerateTexture(width, 0, TS_LEFT);
-				//td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);
-			}
-			else
-				td->GenerateTexture(0, 0, TS_CENTER);
+					  break;
+	}
+	case TT_CLIENT:
+	{
+					  int width = g_FontManager.GetWidthA((BYTE)font, text.c_str(), text.length());
 
-			g_FontManager.SavePixels = false;
+					  g_FontManager.SavePixels = true;
 
-			((CRenderWorldObject*)serial)->AddText(td);
-			g_WorldTextRenderer.AddText(td);
+					  if (width > TEXT_MESSAGE_MAX_WIDTH)
+					  {
+						  width = g_FontManager.GetWidthExA((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
+						  td->GenerateTexture(width, 0, TS_LEFT);
+						  //td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);
+					  }
+					  else
+						  td->GenerateTexture(0, 0, TS_CENTER);
 
-			break;
-		}
+					  g_FontManager.SavePixels = false;
+
+					  ((CRenderWorldObject*)serial)->AddText(td);
+					  g_WorldTextRenderer.AddText(td);
+
+					  break;
+	}
 	}
 }
 //----------------------------------------------------------------------------------
@@ -4919,96 +4919,96 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 	td->Timer = g_Ticks;
 	td->Type = type;
 	td->SetUnicodeText(text);
-	
+
 	switch (type)
 	{
-		case TT_SYSTEM:
-		{
-			td->GenerateTexture(300, UOFONT_BLACK_BORDER);
-			AddSystemMessage(td);
+	case TT_SYSTEM:
+	{
+					  td->GenerateTexture(300, UOFONT_BLACK_BORDER);
+					  AddSystemMessage(td);
 
-			break;
-		}
-		case TT_OBJECT:
-		{
-			CGameObject *obj = g_World->FindWorldObject(serial);
+					  break;
+	}
+	case TT_OBJECT:
+	{
+					  CGameObject *obj = g_World->FindWorldObject(serial);
 
-			if (obj != NULL)
-			{
-				int width = g_FontManager.GetWidthW((BYTE)font, text.c_str(), text.length());
+					  if (obj != NULL)
+					  {
+						  int width = g_FontManager.GetWidthW((BYTE)font, text.c_str(), text.length());
 
-				g_FontManager.SavePixels = true;
+						  g_FontManager.SavePixels = true;
 
-				if (width > TEXT_MESSAGE_MAX_WIDTH)
-				{
-					width = g_FontManager.GetWidthExW((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, UOFONT_BLACK_BORDER);
-					td->GenerateTexture(width, UOFONT_BLACK_BORDER, TS_LEFT);
-					//td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, UOFONT_BLACK_BORDER, TS_LEFT);
-				}
-				else
-					td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_CENTER);
-				
-				g_FontManager.SavePixels = false;
+						  if (width > TEXT_MESSAGE_MAX_WIDTH)
+						  {
+							  width = g_FontManager.GetWidthExW((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, UOFONT_BLACK_BORDER);
+							  td->GenerateTexture(width, UOFONT_BLACK_BORDER, TS_LEFT);
+							  //td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, UOFONT_BLACK_BORDER, TS_LEFT);
+						  }
+						  else
+							  td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_CENTER);
 
-				obj->AddText(td);
+						  g_FontManager.SavePixels = false;
 
-				uint container = obj->Container;
+						  obj->AddText(td);
 
-				if (container == 0xFFFFFFFF)
-					g_WorldTextRenderer.AddText(td);
-				else if (!obj->NPC)
-				{
-					td->X = g_ClickObject.X;
-					td->Y = g_ClickObject.Y;
+						  uint container = obj->Container;
 
-					CGump *gump = g_GumpManager.GetGump(container, 0, GT_CONTAINER);
+						  if (container == 0xFFFFFFFF)
+							  g_WorldTextRenderer.AddText(td);
+						  else if (!obj->NPC)
+						  {
+							  td->X = g_ClickObject.X;
+							  td->Y = g_ClickObject.Y;
 
-					if (gump == NULL)
-					{
-						CGameObject *topobj = obj->GetTopObject();
+							  CGump *gump = g_GumpManager.GetGump(container, 0, GT_CONTAINER);
 
-						if (((CGameItem*)obj)->Layer != OL_NONE)
-							gump = g_GumpManager.GetGump(topobj->Serial, 0, GT_PAPERDOLL);
+							  if (gump == NULL)
+							  {
+								  CGameObject *topobj = obj->GetTopObject();
 
-						if (gump == NULL)
-						{
-							gump = g_GumpManager.GetGump(topobj->Serial, 0, GT_TRADE);
+								  if (((CGameItem*)obj)->Layer != OL_NONE)
+									  gump = g_GumpManager.GetGump(topobj->Serial, 0, GT_PAPERDOLL);
 
-							if (gump == NULL)
-							{
-								topobj = (CGameObject*)topobj->m_Items;
+								  if (gump == NULL)
+								  {
+									  gump = g_GumpManager.GetGump(topobj->Serial, 0, GT_TRADE);
 
-								while (topobj != NULL && topobj->Graphic != 0x1E5E)
-									topobj = (CGameObject*)topobj->m_Next;
+									  if (gump == NULL)
+									  {
+										  topobj = (CGameObject*)topobj->m_Items;
 
-								if (topobj != NULL)
-									gump = g_GumpManager.GetGump(0, topobj->Serial, GT_TRADE);
-							}
-						}
-					}
+										  while (topobj != NULL && topobj->Graphic != 0x1E5E)
+											  topobj = (CGameObject*)topobj->m_Next;
 
-					if (gump != NULL)
-					{
-						CTextRenderer *tr = gump->GetTextRenderer();
+										  if (topobj != NULL)
+											  gump = g_GumpManager.GetGump(0, topobj->Serial, GT_TRADE);
+									  }
+								  }
+							  }
 
-						if (tr != NULL)
-							tr->AddText(td);
-					}
-				}
-			}
-			else
-			{
-				td->GenerateTexture(300, UOFONT_BLACK_BORDER);
-				AddSystemMessage(td);
-			}
+							  if (gump != NULL)
+							  {
+								  CTextRenderer *tr = gump->GetTextRenderer();
 
-			break;
-		}
-		default:
-		{
-			delete td;
-			break;
-		}
+								  if (tr != NULL)
+									  tr->AddText(td);
+							  }
+						  }
+					  }
+					  else
+					  {
+						  td->GenerateTexture(300, UOFONT_BLACK_BORDER);
+						  AddSystemMessage(td);
+					  }
+
+					  break;
+	}
+	default:
+	{
+			   delete td;
+			   break;
+	}
 	}
 }
 //----------------------------------------------------------------------------------
@@ -5038,7 +5038,7 @@ void COrion::AddJournalMessage(CTextData *msg, string name)
 
 	/*if (msg->Type == TT_OBJECT)
 		jmsg->GenerateTexture(214, UOFONT_INDENTION | UOFONT_BLACK_BORDER);
-	else
+		else
 		jmsg->GenerateTexture(214, UOFONT_INDENTION);*/
 
 	g_Journal.Add(jmsg);
@@ -5366,7 +5366,7 @@ void COrion::LogOut()
 	LOG("\tObjectInHand removed?\n");
 
 	RELEASE_POINTER(g_World)
-	LOG("\tWorld removed?\n");
+		LOG("\tWorld removed?\n");
 
 	g_PopupMenu = NULL;
 
@@ -5484,7 +5484,7 @@ WISP_GEOMETRY::CSize COrion::GetGumpDimension(const ushort &id)
 	if (th != NULL)
 	{
 		size.Width = th->Width;
-		size .Height = th->Height;
+		size.Height = th->Height;
 	}
 
 	return size;
