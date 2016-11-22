@@ -12,6 +12,7 @@
 #include "../Constants.h"
 #include "../Game objects/StaticObject.h"
 #include "../Game objects/GamePlayer.h"
+#include "../OrionUO.h"
 //----------------------------------------------------------------------------------
 CMapManager *g_MapManager = NULL;
 //----------------------------------------------------------------------------------
@@ -563,41 +564,82 @@ CUopMapManager::~CUopMapManager()
 */
 int CUopMapManager::GetActualMap()
 {
-	//if (g_CurrentMap == 1 && (!FileManager.MapMul[1].Address || !FileManager.StaticIdx[1].Address || !FileManager.StaticMul[1].Address))
-	//	return 0;
+	if (g_CurrentMap == 1 && (!g_FileManager.m_MapUOP[1].Start || !g_FileManager.m_StaticIdx[1].Start || !g_FileManager.m_StaticMul[1].Start))
+		return 0;
 
 	return g_CurrentMap;
 }
 //----------------------------------------------------------------------------------
-/*!
-Загрузить блок
-@param [__inout] block Ссылка на блок для загрузки
-@return
-*/
-void CUopMapManager::LoadBlock(CMapBlock *block)
+void CUopMapManager::CreateBlockTable(int map)
 {
+	MAP_INDEX_LIST &list = m_BlockData[map];
+	WISP_GEOMETRY::CSize &size = g_MapBlockSize[map];
+
+	int maxBlockCount = size.Width * size.Height;
+
+	//Return and error notification?
+	if (maxBlockCount < 1)
+		return;
+
+	list.resize(maxBlockCount);
+
+	uint mapAddress = reinterpret_cast<uint>(g_FileManager.m_MapUOP[map].Start);
+	uint endMapAddress = mapAddress + g_FileManager.m_MapUOP[map].Size;
+
+	uint staticIdxAddress = reinterpret_cast<uint>(g_FileManager.m_StaticIdx[map].Start);
+	uint endStaticIdxAddress = staticIdxAddress + g_FileManager.m_StaticIdx[map].Size;
+
+	uint staticAddress = reinterpret_cast<uint>(g_FileManager.m_StaticMul[map].Start);
+	uint endStaticAddress = staticAddress + g_FileManager.m_StaticMul[map].Size;
+
+	if (!mapAddress || !staticIdxAddress || !staticAddress)
+		return;
+
+	IFOR(block, 0, maxBlockCount)
+	{
+		CIndexMap &index = list[block];
+
+		uint realMapAddress = 0;
+		uint realStaticAddress = 0;
+		int realStaticCount = 0;
+
+		if (mapAddress != 0)
+		{
+			uint address = mapAddress + (block * sizeof(MAP_BLOCK));
+
+			if (address < endMapAddress)
+				realMapAddress = address;
+		}
+
+		if (staticIdxAddress != 0 && staticAddress != 0)
+		{
+			PSTAIDX_BLOCK sidx = (PSTAIDX_BLOCK)(staticIdxAddress + (block * sizeof(STAIDX_BLOCK)));
+
+			if (sidx->Size > 0 && sidx->Position != 0xFFFFFFFF && (uint)sidx < endStaticIdxAddress)
+			{
+				uint address = staticAddress + sidx->Position;
+
+				if (address < endStaticAddress)
+				{
+					realStaticAddress = address;
+					realStaticCount = sidx->Size / sizeof(STATICS_BLOCK);
+
+					if (realStaticCount > 0)
+					{
+						if (realStaticCount > 1024)
+							realStaticCount = 1024;
+					}
+				}
+			}
+		}
+
+		if (!realStaticCount)
+			realStaticCount = 0;
+
+		index.MapAddress = realMapAddress;
+		index.StaticAddress = realStaticAddress;
+		index.StaticCount = realStaticCount;
+		index.MapPatched = false;
+		index.StaticPatched = false;
+	}
 }
-//----------------------------------------------------------------------------------
-/*!
-Получить блок карты напрямую из мулов
-@param [__in] map Индекс карты
-@param [__in] blockX Координата X блока
-@param [__in] blockY Координата Y блока
-@param [__out] mb Ссылка на блок
-@return Код ошибки (0 - успешно)
-*/
-void CUopMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb)
-{
-}
-//----------------------------------------------------------------------------------
-/*!
-Получить блок для радара из муллов
-@param [__in] blockX Координата X блока
-@param [__in] blockY Координата Y блока
-@param [__out] mb Ссылка на блок
-@return
-*/
-void CUopMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLOCK &mb)
-{
-}
-//----------------------------------------------------------------------------------

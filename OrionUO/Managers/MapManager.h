@@ -35,7 +35,7 @@ class CMapManager : public CBaseQueue
 	//!Максимальный индекс блока для текущей карты
 	SETGET(uint, MaxBlockIndex);
 
-private:
+protected:
 	//!Вектор ссылок на блоки карты
 	CMapBlock **m_Blocks;
 
@@ -47,7 +47,7 @@ public:
 
 	CIndexMap *GetIndex(const int &map, const int &blockX, const int &blockY);
 
-	void CreateBlockTable(int map);
+	virtual void CreateBlockTable(int map);
 
 	void CreateBlocksTable();
 
@@ -151,33 +151,10 @@ public:
 	Получить индекс текущей карты
 	@return
 	*/
-	virtual int GetActualMap();
+	virtual int GetActualMap() override;
 
-	/*!
-	Загрузить блок
-	@param [__inout] block Ссылка на блок для загрузки
-	@return
-	*/
-	virtual void LoadBlock(CMapBlock *block);
+	void CreateBlockTable(int map) override;
 
-	/*!
-	Получить блок карты напрямую из мулов
-	@param [__in] map Индекс карты
-	@param [__in] blockX Координата X блока
-	@param [__in] blockY Координата Y блока
-	@param [__out] mb Ссылка на блок
-	@return Код ошибки (0 - успешно)
-	*/
-	virtual void GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
-
-	/*!
-	Получить блок для радара из муллов
-	@param [__in] blockX Координата X блока
-	@param [__in] blockY Координата Y блока
-	@param [__out] mb Ссылка на блок
-	@return
-	*/
-	virtual void GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLOCK &mb);
 };
 //----------------------------------------------------------------------------------
 extern CMapManager *g_MapManager;

@@ -83,7 +83,6 @@ private:
 	//Очистка неиспользуемых текстур
 	void ClearUnusedTextures();
 
-	static unsigned long long CreateHash(string s);
 	void ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue);
 	void ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, string uopFileName, string extesion, Wisp::CMappedFile* uopFile, int startIndex = 0);
 
@@ -92,6 +91,8 @@ private:
 public:
 	COrion();
 	~COrion();
+
+	static unsigned long long CreateHash(string s);
 
 	//Данные из тайлдаты по ландшафту
 	vector<LAND_GROUP> m_LandData;
