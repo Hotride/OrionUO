@@ -597,11 +597,13 @@ void CUopMapManager::CreateBlockTable(int map)
 	if (!mapAddress || !staticIdxAddress || !staticAddress)
 		return;
 
+	//Начинаем читать УОП
 	if (uopFile.ReadInt32LE() != 0x50594D)
 	{
 		LOG("Bad Uop file %s", uopFile);
 		return;
 	}
+
 	uopFile.ReadInt64LE(); // version + signature
 	long long nextBlock = uopFile.ReadInt64LE();
 
@@ -630,7 +632,7 @@ void CUopMapManager::CreateBlockTable(int map)
 				continue;
 			}
 			UOPMapaDataStruct dataStruct;
-			dataStruct.offset = offset + headerLength;
+			dataStruct.offset = offset;
 			dataStruct.length = compressedLength;
 			hashes[hash] = dataStruct;
 		}
@@ -658,6 +660,10 @@ void CUopMapManager::CreateBlockTable(int map)
 			{
 				uopDataStruct = hashes.at(hash);
 			}
+			else
+			{
+				LOG("False hash in uop map %i file.", map);
+			}
 		}
 
 
@@ -667,7 +673,7 @@ void CUopMapManager::CreateBlockTable(int map)
 
 		if (mapAddress != 0)
 		{
-			uint address = ((mapAddress + uopDataStruct.offset + uopDataStruct.length) + block & 4095) * 196;
+			uint address = (mapAddress + uopDataStruct.offset + uopDataStruct.length) + ((block & 4095) * 196);
 
 			if (address < endMapAddress)
 				realMapAddress = address;
