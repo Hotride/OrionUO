@@ -673,7 +673,7 @@ void CUopMapManager::CreateBlockTable(int map)
 
 		if (mapAddress != 0)
 		{
-			uint address = (mapAddress + uopDataStruct.offset + uopDataStruct.length) + ((block & 4095) * 196);
+			uint address = (mapAddress + uopDataStruct.offset) + ((block & 4095) * 196) + 4;
 
 			if (address < endMapAddress)
 				realMapAddress = address;
