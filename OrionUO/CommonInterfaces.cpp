@@ -233,15 +233,13 @@ void __cdecl FUNCBODY_SendMenuResponse(unsigned int serial, unsigned int id, int
 		if (gump != NULL)
 		{
 			CPacketGrayMenuResponse(gump, code).Send();
-
-			gump->RemoveMark = true;
+			g_GumpManager.RemoveGump(gump);
 		}
 	}
 	else
 	{
 		CPacketMenuResponse(gump, code).Send();
-
-		gump->RemoveMark = true;
+		g_GumpManager.RemoveGump(gump);
 	}
 }
 //----------------------------------------------------------------------------------
