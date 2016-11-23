@@ -10,7 +10,7 @@
 #include "MapObject.h"
 //----------------------------------------------------------------------------------
 CMapObject::CMapObject(const RENDER_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
-: CRenderWorldObject(type, serial, graphic, color, x, y, z)
+: CRenderWorldObject(type, serial, graphic, color, x, y, z), m_IsWaterTile(false)
 {
 }
 //----------------------------------------------------------------------------------

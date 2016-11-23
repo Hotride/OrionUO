@@ -34,6 +34,7 @@ CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort
 void CLandObject::UpdateGraphicBySeason()
 {
 	m_Graphic = g_Orion.GetLandSeasonGraphic(m_OriginalGraphic);
+	m_IsWaterTile = ::IsWet(g_Orion.GetLandFlags(m_Graphic));
 }
 //---------------------------------------------------------------------------
 void CLandObject::UpdateZ(const char &zTop, const char &zRight, const char &zBottom)
