@@ -632,7 +632,7 @@ void CUopMapManager::CreateBlockTable(int map)
 				continue;
 			}
 			UOPMapaDataStruct dataStruct;
-			dataStruct.offset = offset;
+			dataStruct.offset = offset + headerLength;
 			dataStruct.length = compressedLength;
 			hashes[hash] = dataStruct;
 		}
@@ -670,10 +670,10 @@ void CUopMapManager::CreateBlockTable(int map)
 		uint realMapAddress = 0;
 		uint realStaticAddress = 0;
 		int realStaticCount = 0;
-
+		int blockNumber = block & 4095;
 		if (mapAddress != 0)
 		{
-			uint address = (mapAddress + uopDataStruct.offset) + ((block & 4095) * 196) + 4;
+			uint address = mapAddress + uopDataStruct.offset + (blockNumber * 196);
 
 			if (address < endMapAddress)
 				realMapAddress = address;
