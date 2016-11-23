@@ -56,6 +56,9 @@ void CGUISkillGroup::PrepareTextures()
 {
 	m_Minimizer->PrepareTextures();
 	g_Orion.ExecuteGump(0x0835);
+
+	QFOR(item, m_Items, CBaseGUI*)
+		item->PrepareTextures();
 }
 //----------------------------------------------------------------------------------
 bool CGUISkillGroup::EntryPointerHere()
