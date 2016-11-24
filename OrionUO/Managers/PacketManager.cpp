@@ -1669,7 +1669,7 @@ PACKET_HANDLER(UpdateContainedItem)
 	{
 		if (g_ObjectInHand->Separated)
 			g_ObjectInHand->Separated = false;
-		else
+		else if (g_ObjectInHand->Dropped)
 		{
 			delete g_ObjectInHand;
 			g_ObjectInHand = NULL;
