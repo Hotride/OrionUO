@@ -143,6 +143,9 @@ DEVELOPER_MODE g_DeveloperMode = DM_SHOW_FPS_ONLY;
 DEVELOPER_MODE g_OptionsDeveloperMode = DM_SHOW_FPS_ONLY;
 
 ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight] = { 0 };
+
+uint g_PingByWalk[0x100][2] = { 0 };
+uint g_Ping = 0;
 //----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y)
 {
@@ -225,6 +228,32 @@ int GetDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
 	{
 		int distx = abs(target->X - current.X);
 		int disty = abs(target->Y - current.Y);
+
+		if (disty > distx)
+			distx = disty;
+
+		return distx;
+	}
+
+	return 100500;
+}
+//----------------------------------------------------------------------------------
+int GetRemoveDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
+{
+	if (target != NULL)
+	{
+		WISP_GEOMETRY::CPoint2Di targetPoint(target->X, target->Y);
+
+		if (target->NPC)
+		{
+			CWalkData *wd = ((CGameCharacter*)target)->m_WalkStack.Top();
+
+			if (wd != NULL)
+				targetPoint = WISP_GEOMETRY::CPoint2Di(wd->X, wd->Y);
+		}
+
+		int distx = abs(targetPoint.X - current.X);
+		int disty = abs(targetPoint.Y - current.Y);
 
 		if (disty > distx)
 			distx = disty;

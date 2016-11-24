@@ -866,6 +866,7 @@ PACKET_HANDLER(EnterWorld)
 		g_Walker = new CWalker();
 		g_PendingDelayTime = 0;
 
+		g_Ping = 0;
 		g_WalkRequestCount = 0;
 		g_PingCount = 0;
 		g_PingSequence = 0;
@@ -1456,6 +1457,7 @@ PACKET_HANDLER(UpdateObject)
 		g_ObjectInHand = NULL;
 	}
 
+	obj->Clear();
 	obj->MapIndex = g_CurrentMap;
 
 	ushort graphic = ReadUInt16BE();
@@ -1554,6 +1556,8 @@ PACKET_HANDLER(UpdateObject)
 		else
 			g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
 	}
+
+	g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
 
 	serial = ReadUInt32BE();
 
@@ -2042,7 +2046,7 @@ PACKET_HANDLER(UpdateCharacter)
 		return;
 
 	uint serial = ReadUInt32BE();
-	CGameCharacter *obj = g_World->GetWorldCharacter(serial);
+	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
 
 	if (obj == NULL)
 		return;
@@ -2103,12 +2107,10 @@ PACKET_HANDLER(UpdateCharacter)
 		}
 	}
 
-	if (serial == g_PlayerSerial)
-	{
-		//obj->PaperdollText = "";
-		m_MegaClilocRequests.push_back(serial);
-	}
-	else if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+	//if (serial == g_PlayerSerial)
+	//	obj->PaperdollText = "";
+
+	if (m_ClientVersion >= CV_308Z && (serial == g_PlayerSerial || !obj->ClilocMessage.length()))
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	obj->Color = ReadUInt16BE();
@@ -2811,6 +2813,7 @@ PACKET_HANDLER(ExtendedCommand)
 PACKET_HANDLER(DenyWalk)
 {
 	g_WalkRequestCount = 0;
+	g_Ping = 0;
 
 	if (g_Player == NULL)
 		return;
@@ -2838,7 +2841,31 @@ PACKET_HANDLER(ConfirmWalk)
 	if (g_Player == NULL)
 		return;
 
-	uchar Seq = ReadUInt8();
+	uchar seq = ReadUInt8();
+
+	g_PingByWalk[seq][1] = g_Ticks;
+
+	if (seq >= 10 && !(seq % 10))
+	{
+		g_Ping = 0;
+
+		IFOR(i, 0, 10)
+		{
+			int delay = g_PingByWalk[seq - i][1] - g_PingByWalk[seq - i][0];
+
+			if (delay >= 1000)
+				delay = 0;
+			else if (delay < 10)
+				delay = 0;
+			else
+				delay -= 10;
+
+			g_Ping += delay;
+		}
+
+		g_Ping /= 10;
+	}
+
 	//player->SetDirection(newdir);
 
 	uchar newnoto = ReadUInt8() & (~0x40);

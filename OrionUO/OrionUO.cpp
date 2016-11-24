@@ -5227,7 +5227,7 @@ void COrion::RemoveRangedObjects()
 						//if (GetDistance(g_RemoveRangeXY, go) > 31)
 						g_World->RemoveObject(go);
 				}
-				else if (GetDistance(g_RemoveRangeXY, go) > objectsRange)
+				else if (GetRemoveDistance(g_RemoveRangeXY, go) > objectsRange)
 				{
 					if (g_Party.Contains(go->Serial))
 						go->RemoveRender();

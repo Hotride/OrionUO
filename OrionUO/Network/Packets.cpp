@@ -63,10 +63,12 @@ CPacketSecondLogin::CPacketSecondLogin()
 	WriteUInt8(0x91);
 	WriteDataLE(g_GameSeed, 4);
 	WriteString(g_MainScreen.m_Account->c_str(), 30, false);
+	int passLen = 30;
 #if UO_ABYSS_SHARD == 1
 	WriteUInt16BE(0xFF07);
+	passLen = 28;
 #endif
-	WriteString(g_MainScreen.m_Password->c_str(), 30, false);
+	WriteString(g_MainScreen.m_Password->c_str(), passLen, false);
 }
 //----------------------------------------------------------------------------------
 CPacketCreateCharacter::CPacketCreateCharacter(const string &name)

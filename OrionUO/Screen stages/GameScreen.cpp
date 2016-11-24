@@ -1504,7 +1504,7 @@ void CGameScreen::Render(const bool &mode)
 		{
 			char dbf[50] = { 0 };
 
-			sprintf_s(dbf, "FPS=%i (%ims) scale=%.1f", FPScount, g_FrameDelay[1], g_GlobalScale);
+			sprintf_s(dbf, "FPS=%i (%ims) ping=%i scale=%.1f", FPScount, g_FrameDelay[1], g_Ping, g_GlobalScale);
 
 			g_FontManager.DrawA(3, dbf, 0x35, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth + 10, g_RenderBounds.GameWindowPosY);
 		}
@@ -1512,7 +1512,7 @@ void CGameScreen::Render(const bool &mode)
 		{
 			char dbf[150] = { 0 };
 
-			sprintf_s(dbf, "FPS=%i (%ims) Dir=%i Z=%i (MDZ=%i) scale=%.1f", FPScount, g_FrameDelay[1], g_Player->Direction, g_RenderBounds.PlayerZ, m_MaxDrawZ, g_GlobalScale);
+			sprintf_s(dbf, "FPS=%i (%ims) ping=%i Dir=%i Z=%i (MDZ=%i) scale=%.1f", FPScount, g_FrameDelay[1], g_Ping, g_Player->Direction, g_RenderBounds.PlayerZ, m_MaxDrawZ, g_GlobalScale);
 
 			g_FontManager.DrawA(3, dbf, 0x35, 20, 30);
 

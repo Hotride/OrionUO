@@ -57,6 +57,7 @@ int GetDistance(CGameObject *current, WISP_GEOMETRY::CPoint2Di target);
 int GetMultiDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target);
 int GetDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target);
 int GetDistance(WISP_GEOMETRY::CPoint2Di current, WISP_GEOMETRY::CPoint2Di target);
+int GetRemoveDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target);
 int GetTopObjDistance(CGameObject *current, CGameObject *target);
 //----------------------------------------------------------------------------------
 const char *GetReagentName(const ushort &id);
@@ -249,6 +250,9 @@ extern DEVELOPER_MODE g_OptionsDeveloperMode;
 const int g_ObjectHandlesWidth = 142;
 const int g_ObjectHandlesHeight = 20;
 extern ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight];
+
+extern uint g_PingByWalk[0x100][2];
+extern uint g_Ping;
 //----------------------------------------------------------------------------------
 inline bool IsBackground(const __int64 &flags) { return (flags & 0x00000001); }
 inline bool IsWeapon(const __int64 &flags) { return (flags & 0x00000002); }
