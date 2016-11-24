@@ -349,8 +349,31 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 			//g_PacketManager.PluginReceiveHandler((PBYTE)wParam, lParam);
 			return S_OK;
 		case UOMSG_SEND:
+		{
+			uint ticks = g_Ticks;
+			puchar buf = (puchar)wParam;
+			int size = lParam;
+			g_TotalSendSize += size;
+
+			CPacketInfo &type = g_PacketManager.GetInfo(*buf);
+
+			LOG("--- ^(%d) s(+%d => %d) Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
+
+			g_LastPacketTime = ticks;
+			g_LastSendTime = ticks;
+
+			if (*buf == 0x80 || *buf == 0x91)
+			{
+				LOG_DUMP(buf, size / 2);
+				LOG("**** PASSWORD CENSORED ****\n");
+			}
+			else
+				LOG_DUMP(buf, size);
+
 			g_ConnectionManager.Send((PBYTE)wParam, lParam);
+
 			return S_OK;
+		}
 		default:
 			break;
 	}

@@ -1457,7 +1457,8 @@ PACKET_HANDLER(UpdateObject)
 		g_ObjectInHand = NULL;
 	}
 
-	obj->Clear();
+	obj->ClearNotOpenedItems();
+
 	obj->MapIndex = g_CurrentMap;
 
 	ushort graphic = ReadUInt16BE();

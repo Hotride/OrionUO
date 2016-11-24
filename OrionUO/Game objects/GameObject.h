@@ -159,6 +159,8 @@ public:
 	*/
 	void Clear();
 
+	void ClearNotOpenedItems();
+
 	/*!
 	Заморожен ли объект
 	@return
