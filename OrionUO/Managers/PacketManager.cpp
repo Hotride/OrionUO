@@ -3194,9 +3194,25 @@ PACKET_HANDLER(GraphicEffect)
 	effect->Serial = sourceSerial;
 	effect->DestSerial = destSerial;
 	effect->Graphic = graphic;
-	effect->X = sourceX;
-	effect->Y = sourceY;
-	effect->Z = sourceZ;
+
+	CGameObject *sourceObject = NULL;
+
+	if (!sourceX && !sourceY)
+		sourceObject = g_World->FindWorldObject(sourceSerial);
+
+	if (sourceObject != NULL)
+	{
+		effect->X = sourceObject->X;
+		effect->Y = sourceObject->Y;
+		effect->Z = sourceObject->Z;
+	}
+	else
+	{
+		effect->X = sourceX;
+		effect->Y = sourceY;
+		effect->Z = sourceZ;
+	}
+
 	effect->DestX = destX;
 	effect->DestY = destY;
 	effect->DestZ = destZ;
