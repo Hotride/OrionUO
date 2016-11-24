@@ -123,6 +123,8 @@ public:
 
 	ushort m_WinterTile[MAX_LAND_DATA_INDEX_COUNT];
 
+	static string FixServerName(string name);
+
 
 	
 	//Подключиться к логин сокету

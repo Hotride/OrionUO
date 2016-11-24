@@ -791,7 +791,7 @@ void COrion::Process(const bool &rendering)
 void COrion::LoadStartupConfig()
 {
 	char buf[MAX_PATH] = { 0 };
-	sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X\\options_debug.cuo", g_MainScreen.m_Account->c_str(), g_ServerList.GetSelectedServer()->Name.c_str(), g_PlayerSerial);
+	sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X\\options_debug.cuo", g_MainScreen.m_Account->c_str(), FixServerName(g_ServerList.GetSelectedServer()->Name).c_str(), g_PlayerSerial);
 
 	g_ConfigManager.Load(g_App.FilePath(buf));
 
@@ -867,6 +867,16 @@ void COrion::LoadPluginConfig()
 	BringWindowToTop(g_OrionWindow.Handle);
 }
 //----------------------------------------------------------------------------------
+string COrion::FixServerName(string name)
+{
+	size_t i = 0;
+
+	while ((i = name.find(":")) != string::npos)
+		name.erase(i, 1);
+
+	return name;
+}
+//----------------------------------------------------------------------------------
 void COrion::LoadLocalConfig()
 {
 	if (g_ConfigLoaded)
@@ -881,7 +891,7 @@ void COrion::LoadLocalConfig()
 	g_CheckContainerStackTimer = g_Ticks + 1000;
 
 	char buf[MAX_PATH] = { 0 };
-	sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), g_ServerList.GetSelectedServer()->Name.c_str(), g_PlayerSerial);
+	sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), FixServerName(g_ServerList.GetSelectedServer()->Name).c_str(), g_PlayerSerial);
 
 	string path = g_App.FilePath(buf);
 
@@ -942,7 +952,7 @@ void COrion::SaveLocalConfig()
 	path += string("\\") + g_MainScreen.m_Account->c_str();
 	CreateDirectoryA(path.c_str(), NULL);
 
-	path += string("\\") + g_ServerList.GetSelectedServer()->Name;
+	path += string("\\") + FixServerName(g_ServerList.GetSelectedServer()->Name);
 	CreateDirectoryA(path.c_str(), NULL);
 
 	char serbuf[20] = { 0 };
@@ -967,7 +977,7 @@ void COrion::SaveLocalConfig()
 		{
 			FILE *file = NULL;
 			fopen_s(&file, path.c_str(), "wb");
-
+			
 			if (file != NULL)
 				fclose(file);
 		}
@@ -1145,7 +1155,7 @@ void COrion::ServerSelection(int pos)
 
 	CServer *server = g_ServerList.Select(pos);
 
-	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_SERVER_NAME, (WPARAM)g_ServerList.GetSelectedServer()->Name.c_str(), 0);
+	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_SERVER_NAME, (WPARAM)FixServerName(g_ServerList.GetSelectedServer()->Name).c_str(), 0);
 
 	CPacketSelectServer((uchar)server->Index).Send();
 }
