@@ -967,7 +967,9 @@ void COrion::SaveLocalConfig()
 		{
 			FILE *file = NULL;
 			fopen_s(&file, path.c_str(), "wb");
-			fclose(file);
+
+			if (file != NULL)
+				fclose(file);
 		}
 	}
 }

@@ -96,8 +96,6 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	IFOR(i, 0, g_CharacterList.ClientFlag)
 		clientFlag |= (1 << i);
 
-	DebugMsg("clientFlag=0x%08X\n", clientFlag);
-
 	WriteUInt32BE(clientFlag); //clientflag
 	WriteUInt32BE(0x00000001); //?
 	WriteUInt32BE(0x00000000); //logincount
