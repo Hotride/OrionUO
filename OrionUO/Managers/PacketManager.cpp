@@ -4259,6 +4259,7 @@ PACKET_HANDLER(OpenGump)
 			sscanf((char*)e, "%d %d %d %d %d", &x, &y, &graphic, &w, &h);
 
 			go = new CGUIResizepic(0, graphic, x, y, w, h);
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "checkertrans", 12))
 		{
@@ -4373,6 +4374,7 @@ PACKET_HANDLER(OpenGump)
 
 			gump->Add(new CGUIShader(g_ColorizerShader, true));
 			go = new CGUITilepic(graphic, color, x, y);
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "tilepic", 7))
 		{
@@ -4381,6 +4383,7 @@ PACKET_HANDLER(OpenGump)
 			sscanf((char*)e, "%d %d %d", &x, &y, &graphic);
 
 			go = new CGUITilepic(graphic, 0, x, y);
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "gumppictiled", 12))
 		{
@@ -4389,6 +4392,7 @@ PACKET_HANDLER(OpenGump)
 			sscanf((char*)e, "%d %d %d %d %d", &x, &y, &w, &h, &graphic);
 
 			go = new CGUIGumppicTiled(graphic, x, y, w, h);
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "gumppic", 7))
 		{
@@ -4411,6 +4415,7 @@ PACKET_HANDLER(OpenGump)
 
 			go = new CGUIGumppic(graphic, x, y);
 			go->Color = color;
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "xmfhtmlgump", 11))
 		{
