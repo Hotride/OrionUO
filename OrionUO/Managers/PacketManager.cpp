@@ -4050,7 +4050,7 @@ PACKET_HANDLER(OpenMenuGump)
 			offsetY += 2;
 
 			text = (CGUIText*)gump->Add(new CGUIText(0x0386, 50, offsetY));
-			text->CreateTextureA(1, name);
+			text->CreateTextureA(1, name, 340);
 
 			int addHeight = text->m_Texture.Height;
 
