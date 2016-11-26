@@ -266,6 +266,11 @@ bool COrion::Install()
 	DEBUGLOG("Replaces...\n");
 	IndexReplaces();
 
+	WISP_GEOMETRY::CSize statusbarDims = GetGumpDimension(0x0804);
+
+	CGumpStatusbar::m_StatusbarDefaultWidth = statusbarDims.Width;
+	CGumpStatusbar::m_StatusbarDefaultHeight = statusbarDims.Height;
+
 	DEBUGLOG("Sort skills...\n");
 	g_SkillSort.Init();
 
