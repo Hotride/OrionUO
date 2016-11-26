@@ -584,7 +584,7 @@ void CUopMapManager::CreateBlockTable(int map)
 
 	list.resize(maxBlockCount);
 
-	auto uopFile = g_FileManager.m_MapUOP[map];
+	auto &uopFile = g_FileManager.m_MapUOP[map];
 	uint mapAddress = reinterpret_cast<uint>(g_FileManager.m_MapUOP[map].Start);
 	uint endMapAddress = mapAddress + g_FileManager.m_MapUOP[map].Size;
 
