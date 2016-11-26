@@ -782,7 +782,6 @@ PACKET_HANDLER(CharacterList)
 	g_CharacterList.OnePerson = (bool)(g_ClientFlag & CLF_ONE_CHARACTER_SLOT);
 	//g_SendLogoutNotification = (bool)(g_ClientFlag & LFF_RE);
 	g_NPCPopupEnabled = (bool)(g_ClientFlag & CLF_CONTEXT_MENU);
-	g_ChatEnabled = (bool)(g_ClientFlag & CLF_ENABLE_CHAT);
 	g_TooltipsEnabled = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
 
 	g_CharacterListScreen.UpdateContent();
@@ -2280,6 +2279,8 @@ PACKET_HANDLER(EnableLockedFeatures)
 		g_LockedClientFeatures = ReadUInt32BE();
 	else
 		g_LockedClientFeatures = ReadUInt16BE();
+
+	g_ChatEnabled = (bool)(g_LockedClientFeatures & LFF_T2A);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenContainer)
