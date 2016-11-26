@@ -1481,7 +1481,7 @@ void CGumpManager::Save(const string &path)
 				{
 					CGameObject *topobj = g_World->FindWorldObject(gump->Serial);
 
-					if (topobj == NULL)
+					if (topobj == NULL || ((CGameItem*)topobj)->Layer == OL_BANK)
 						break;
 
 					topobj = topobj->GetTopObject();
