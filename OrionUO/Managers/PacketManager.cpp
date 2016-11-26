@@ -1366,18 +1366,20 @@ PACKET_HANDLER(UpdateItemSA)
 	ushort color = ReadUInt16BE();
 	char flags = ReadUInt8();
 
+	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == serial)
+	{
+		return;
+
+		//delete g_ObjectInHand;
+		//g_ObjectInHand = NULL;
+	}
+
 	CGameItem *obj = g_World->GetWorldItem(serial);
 
 	if (obj == NULL)
 	{
 		LOG("no memory??");
 		return;
-	}
-
-	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == obj->Serial)
-	{
-		delete g_ObjectInHand;
-		g_ObjectInHand = NULL;
 	}
 
 	if (obj->Dragged)
