@@ -2817,6 +2817,7 @@ PACKET_HANDLER(ExtendedCommand)
 PACKET_HANDLER(DenyWalk)
 {
 	g_WalkRequestCount = 0;
+	g_PendingDelayTime = 0;
 	g_Ping = 0;
 
 	if (g_Player == NULL)
@@ -2835,6 +2836,8 @@ PACKET_HANDLER(DenyWalk)
 	g_Player->OffsetZ = 0;
 
 	g_Player->m_WalkStack.Clear();
+
+	g_World->MoveToTop(g_Player);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ConfirmWalk)
@@ -2848,6 +2851,20 @@ PACKET_HANDLER(ConfirmWalk)
 	uchar seq = ReadUInt8();
 
 	g_PingByWalk[seq][1] = g_Ticks;
+
+	/*int currentDelay = g_Ticks - g_PingByWalk[seq][0];
+
+	if (currentDelay < 10)
+		currentDelay = 0;
+	else
+	{
+		currentDelay -= 10;
+
+		if (currentDelay > 30)
+			currentDelay = 30;
+
+		g_PendingDelayTime -= currentDelay;
+	}*/
 
 	if (seq >= 10 && !(seq % 10))
 	{
