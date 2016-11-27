@@ -424,6 +424,11 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Remove statusbars, whose objects have been removed", g_SelectedObject.Object());
 				break;
 			}
+			case ID_GO_P2_SHOW_CONSOLE_ENTRY_MODE:
+			{
+				g_ToolTip.Set(L"Show console entry mopde under game window.", g_SelectedObject.Object());
+				break;
+			}
 			case ID_GO_P2_DEV_MODE_1:
 			{
 				g_ToolTip.Set(L"Original client work", g_SelectedObject.Object());
@@ -931,6 +936,10 @@ void CGumpOptions::DrawPage2()
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REMOVE_STATUSBARS_WITHOUT_OBJECTS, 0x00D2, 0x00D3, 0x00D2, 0, 570));
 	checkbox->Checked = g_OptionsConfig.RemoveStatusbarsWithoutObjects;
 	checkbox->SetTextParameters(0, L"Remove statusbars without objects", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_SHOW_CONSOLE_ENTRY_MODE, 0x00D2, 0x00D3, 0x00D2, 0, 590));
+	checkbox->Checked = g_OptionsConfig.ShowDefaultConsoleEntryMode;
+	checkbox->SetTextParameters(0, L"Show console entry mode under game window", g_OptionsTextColor);
 
 	html->CalculateDataSize();
 }
@@ -2174,6 +2183,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.PaperdollSlots = state;
 			else if (serial == ID_GO_P2_REMOVE_STATUSBARS_WITHOUT_OBJECTS)
 				g_OptionsConfig.RemoveStatusbarsWithoutObjects = state;
+			else if (serial == ID_GO_P2_SHOW_CONSOLE_ENTRY_MODE)
+				g_OptionsConfig.ShowDefaultConsoleEntryMode = state;
 			
 
 			else if (serial == ID_GO_P2_DEV_MODE_1)
@@ -2722,6 +2733,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.DrawStatusConditionState = g_OptionsConfig.DrawStatusConditionState;
 			g_ConfigManager.DrawStatusConditionValue = g_OptionsConfig.DrawStatusConditionValue;
 			g_ConfigManager.RemoveStatusbarsWithoutObjects = g_OptionsConfig.RemoveStatusbarsWithoutObjects;
+			g_ConfigManager.ShowDefaultConsoleEntryMode = g_OptionsConfig.ShowDefaultConsoleEntryMode;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

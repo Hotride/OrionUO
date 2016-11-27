@@ -21,6 +21,7 @@
 #include "../Network/Packets.h"
 #include "../Gumps/GumpSpell.h"
 #include "../Party.h"
+#include "../Gumps/GumpConsoleType.h"
 //----------------------------------------------------------------------------------
 CConfigManager g_ConfigManager;
 CConfigManager g_OptionsConfig;
@@ -104,6 +105,7 @@ void CConfigManager::DefaultPage2()
 	m_ChangeFieldsGraphic = false;
 	m_PaperdollSlots = true;
 	m_RemoveStatusbarsWithoutObjects = false;
+	m_ShowDefaultConsoleEntryMode = true;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -481,10 +483,37 @@ bool CConfigManager::Load(string path)
 		bool changeFieldsGraphic = false;
 		bool paperdollSlots = true;
 		m_RemoveStatusbarsWithoutObjects = false;
+		m_ShowDefaultConsoleEntryMode = true;
 
 		if (file.ReadInt8() == 2)
 		{
-			if (blockSize > 2)
+			if (blockSize > 23)
+			{
+				ClientFPS = file.ReadUInt8();
+				m_UseScaling = file.ReadUInt8();
+				m_RemoveTextWithBlending = file.ReadUInt8();
+				m_DrawStatusState = file.ReadUInt8();
+				drawStumps = file.ReadUInt8();
+				markingCaves = file.ReadUInt8();
+				m_NoAnimateFields = file.ReadUInt8();
+				m_NoVegetation = file.ReadUInt8();
+				m_HiddenCharactersRenderMode = file.ReadUInt8();
+				m_HiddenAlpha = file.ReadUInt8();
+				m_UseHiddenModeOnlyForSelf = file.ReadUInt8();
+				m_TransparentSpellIcons = file.ReadUInt8();
+				m_SpellIconAlpha = file.ReadUInt8();
+				m_OldStyleStatusbar = file.ReadUInt8();
+				m_OriginalPartyStatusbar = file.ReadUInt8();
+				m_ApplyStateColorOnCharacters = file.ReadUInt8();
+				changeFieldsGraphic = file.ReadUInt8();
+				paperdollSlots = file.ReadUInt8();
+				m_DrawStatusConditionState = file.ReadUInt8();
+				m_DrawStatusConditionValue = file.ReadUInt8();
+				m_RemoveStatusbarsWithoutObjects = file.ReadUInt8();
+
+				m_ShowDefaultConsoleEntryMode = file.ReadUInt8();
+			}
+			else if (blockSize > 2)
 			{
 				ClientFPS = file.ReadUInt8();
 
@@ -862,7 +891,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(23); //size of block
+	writter.WriteInt8(24); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -885,6 +914,7 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_DrawStatusConditionState);
 	writter.WriteUInt8(m_DrawStatusConditionValue);
 	writter.WriteUInt8(m_RemoveStatusbarsWithoutObjects);
+	writter.WriteUInt8(m_ShowDefaultConsoleEntryMode);
 	writter.WriteBuffer();
 
 	//Page 3

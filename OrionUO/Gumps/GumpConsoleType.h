@@ -35,6 +35,8 @@ public:
 	CGumpConsoleType(bool minimized, bool showFullText);
 	virtual ~CGumpConsoleType();
 
+	virtual bool CanBeDisplayed();
+
 	virtual void UpdateContent();
 
 	virtual void InitToolTip();

@@ -12,6 +12,7 @@
 #include "../SelectedObject.h"
 #include "../ToolTip.h"
 #include "../Screen stages/GameScreen.h"
+#include "../Managers/ConfigManager.h"
 //----------------------------------------------------------------------------------
 CGumpConsoleType *g_GumpConsoleType = NULL;
 //----------------------------------------------------------------------------------
@@ -26,6 +27,11 @@ CGumpConsoleType::CGumpConsoleType(bool minimized, bool showFullText)
 CGumpConsoleType::~CGumpConsoleType()
 {
 	g_GumpConsoleType = NULL;
+}
+//----------------------------------------------------------------------------------
+bool CGumpConsoleType::CanBeDisplayed()
+{
+	return g_ConfigManager.ShowDefaultConsoleEntryMode;
 }
 //----------------------------------------------------------------------------------
 void CGumpConsoleType::OnChanShowFullText(const bool &val)
