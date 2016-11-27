@@ -148,6 +148,7 @@ extern bool g_SendLogoutNotification;
 extern bool g_NPCPopupEnabled;
 extern bool g_ChatEnabled;
 extern bool g_TooltipsEnabled;
+extern bool g_PaperdollBooks;
 
 //!Сообщение инициализации шифрования серверу
 extern uchar g_GameSeed[4];

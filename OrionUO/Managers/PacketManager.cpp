@@ -783,6 +783,7 @@ PACKET_HANDLER(CharacterList)
 	//g_SendLogoutNotification = (bool)(g_ClientFlag & LFF_RE);
 	g_NPCPopupEnabled = (bool)(g_ClientFlag & CLF_CONTEXT_MENU);
 	g_TooltipsEnabled = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
+	g_PaperdollBooks = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
 
 	g_CharacterListScreen.UpdateContent();
 }
