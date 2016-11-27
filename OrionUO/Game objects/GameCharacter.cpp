@@ -471,26 +471,29 @@ void CGameCharacter::ResetAnimationGroup(const uchar &val)
 */
 void CGameCharacter::SetRandomFidgetAnimation()
 {
-	m_AnimIndex = 0;
-	m_AnimationFrameCount = 0;
-	m_AnimationInterval = 1;
-	m_AnimationRepeatMode = 1;
-	m_AnimationDirection = true;
-	m_AnimationRepeat = false;
-	m_AnimationFromServer = true;
-
 	m_TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 
-	ANIMATION_GROUPS groupIndex = g_AnimationManager.GetGroupIndex(GetMountAnimation());
-
-	const BYTE fidgetAnimTable[3][3] =
+	if (FindLayer(OL_MOUNT) == NULL)
 	{
-		{LAG_FIDGET_1, LAG_FIDGET_2, LAG_FIDGET_1},
-		{HAG_FIDGET_1, HAG_FIDGET_2, HAG_FIDGET_1},
-		{PAG_FIDGET_1, PAG_FIDGET_2, PAG_FIDGET_3}
-	};
+		m_AnimIndex = 0;
+		m_AnimationFrameCount = 0;
+		m_AnimationInterval = 1;
+		m_AnimationRepeatMode = 1;
+		m_AnimationDirection = true;
+		m_AnimationRepeat = false;
+		m_AnimationFromServer = true;
 
-	m_AnimationGroup = fidgetAnimTable[groupIndex - 1][RandomInt(3)];
+		ANIMATION_GROUPS groupIndex = g_AnimationManager.GetGroupIndex(GetMountAnimation());
+
+		const BYTE fidgetAnimTable[3][3] =
+		{
+			{ LAG_FIDGET_1, LAG_FIDGET_2, LAG_FIDGET_1 },
+			{ HAG_FIDGET_1, HAG_FIDGET_2, HAG_FIDGET_1 },
+			{ PAG_FIDGET_1, PAG_FIDGET_2, PAG_FIDGET_3 }
+		};
+
+		m_AnimationGroup = fidgetAnimTable[groupIndex - 1][RandomInt(3)];
+	}
 }
 //----------------------------------------------------------------------------------
 /*!

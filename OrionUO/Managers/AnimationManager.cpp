@@ -1580,7 +1580,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	
 	int lightOffset = 20;
 	
-	if (goi != NULL) //Draw mount
+	if (obj->IsHuman() && goi != NULL) //Draw mount
 	{
 		m_Sitting = 0;
 		lightOffset += 20;
@@ -1603,20 +1603,6 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 
 		Draw(goi, drawX, drawY, mirror, animIndex, mountID);
 		drawY += mountedHeightOffset;
-
-		switch (animGroup)
-		{
-			case PAG_FIDGET_1:
-			case PAG_FIDGET_2:
-			case PAG_FIDGET_3:
-			{
-				animGroup = PAG_ONMOUNT_STAND;
-				animIndex = 0;
-				break;
-			}
-			default:
-				break;
-		}
 	}
 	else
 	{
@@ -1844,7 +1830,7 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 	int drawX = (int)(x - obj->OffsetX);
 	int drawY = (int)(y - obj->OffsetY) - (z * 4) - obj->OffsetZ;
 	
-	if (goi != NULL) //Check mount
+	if (obj->IsHuman() && goi != NULL) //Check mount
 	{
 		ushort mountID = goi->GetMountAnimation();
 
@@ -1855,20 +1841,6 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 
 		if (mountID < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 			drawY += m_DataIndex[mountID].MountedHeightOffset;
-
-		switch (animGroup)
-		{
-			case PAG_FIDGET_1:
-			case PAG_FIDGET_2:
-			case PAG_FIDGET_3:
-			{
-				animGroup = PAG_ONMOUNT_STAND;
-				animIndex = 0;
-				break;
-			}
-			default:
-				break;
-		}
 	}
 
 	m_AnimGroup = animGroup;
