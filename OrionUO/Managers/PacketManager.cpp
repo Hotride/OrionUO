@@ -855,31 +855,37 @@ PACKET_HANDLER(EnterWorld)
 	uint serial = ReadUInt32BE();
 
 	if (g_World != NULL)
-		LOG("Error!!! Duplicate enter world message\n");
-	else
 	{
-		RELEASE_POINTER(g_World);
-		RELEASE_POINTER(g_Walker);
-		RELEASE_POINTER(g_ObjectInHand);
+		LOG("Error!!! Duplicate enter world message\n");
 
-		g_World = new CGameWorld(serial);
-		g_Walker = new CWalker();
-		g_PendingDelayTime = 0;
+		g_Party.Leader = 0;
+		g_Party.Inviter = 0;
+		g_Party.Clear();
 
-		g_Ping = 0;
-		g_WalkRequestCount = 0;
-		g_PingCount = 0;
-		g_PingSequence = 0;
-		g_ClickObject.Clear();
-		g_Weather.Reset();
-		g_SkillsTotal = 0.0f;
-		g_ConsolePrompt = PT_NONE;
-		g_MacroPointer = NULL;
-		g_Season = ST_SUMMER;
-		g_OldSeason = ST_SUMMER;
-		g_GlobalScale = 1.0;
-		g_PathFinder.BlockMoving = false;
+		g_ResizedGump = NULL;
 	}
+
+	RELEASE_POINTER(g_World);
+	RELEASE_POINTER(g_Walker);
+	RELEASE_POINTER(g_ObjectInHand);
+
+	g_World = new CGameWorld(serial);
+	g_Walker = new CWalker();
+	g_PendingDelayTime = 0;
+
+	g_Ping = 0;
+	g_WalkRequestCount = 0;
+	g_PingCount = 0;
+	g_PingSequence = 0;
+	g_ClickObject.Clear();
+	g_Weather.Reset();
+	g_SkillsTotal = 0.0f;
+	g_ConsolePrompt = PT_NONE;
+	g_MacroPointer = NULL;
+	g_Season = ST_SUMMER;
+	g_OldSeason = ST_SUMMER;
+	g_GlobalScale = 1.0;
+	g_PathFinder.BlockMoving = false;
 
 	Move(4);
 
