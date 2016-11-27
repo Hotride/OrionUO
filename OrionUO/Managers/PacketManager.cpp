@@ -1254,10 +1254,8 @@ PACKET_HANDLER(UpdateItem)
 	uint serial = ReadUInt32BE();
 	ushort graphic = ReadUInt16BE();
 
-#if UO_ABYSS_SHARD == 1
-	if ((graphic & 0x7FFF) == 0x0E5C)
+	if (g_TheAbyss && (graphic & 0x7FFF) == 0x0E5C)
 		return;
-#endif
 
 	ushort count = 0;
 
@@ -2851,20 +2849,6 @@ PACKET_HANDLER(ConfirmWalk)
 	uchar seq = ReadUInt8();
 
 	g_PingByWalk[seq][1] = g_Ticks;
-
-	/*int currentDelay = g_Ticks - g_PingByWalk[seq][0];
-
-	if (currentDelay < 10)
-		currentDelay = 0;
-	else
-	{
-		currentDelay -= 10;
-
-		if (currentDelay > 30)
-			currentDelay = 30;
-
-		g_PendingDelayTime -= currentDelay;
-	}*/
 
 	if (seq >= 10 && !(seq % 10))
 	{

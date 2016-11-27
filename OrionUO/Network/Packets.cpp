@@ -40,13 +40,15 @@ CPacketFirstLogin::CPacketFirstLogin()
 : CPacket(62)
 {
 	WriteUInt8(0x80);
-#if UO_ABYSS_SHARD == 1
-	m_Data[61] = 0xFF;
-#else
-	WriteString(g_MainScreen.m_Account->c_str(), 30, false);
-	WriteString(g_MainScreen.m_Password->c_str(), 30, false);
-	WriteUInt8(0xFF);
-#endif
+
+	if (g_TheAbyss)
+		m_Data[61] = 0xFF;
+	else
+	{
+		WriteString(g_MainScreen.m_Account->c_str(), 30, false);
+		WriteString(g_MainScreen.m_Password->c_str(), 30, false);
+		WriteUInt8(0xFF);
+	}
 }
 //----------------------------------------------------------------------------------
 CPacketSelectServer::CPacketSelectServer(uchar index)
@@ -63,11 +65,15 @@ CPacketSecondLogin::CPacketSecondLogin()
 	WriteUInt8(0x91);
 	WriteDataLE(g_GameSeed, 4);
 	WriteString(g_MainScreen.m_Account->c_str(), 30, false);
+
 	int passLen = 30;
-#if UO_ABYSS_SHARD == 1
-	WriteUInt16BE(0xFF07);
-	passLen = 28;
-#endif
+
+	if (g_TheAbyss)
+	{
+		WriteUInt16BE(0xFF07);
+		passLen = 28;
+	}
+
 	WriteString(g_MainScreen.m_Password->c_str(), passLen, false);
 }
 //----------------------------------------------------------------------------------

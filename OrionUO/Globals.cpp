@@ -9,6 +9,7 @@ bool g_ShiftPressed = false;
 //----------------------------------------------------------------------------------
 bool g_MovingFromMouse = false;
 bool g_AutoMoving = false;
+bool g_TheAbyss = false;
 bool g_AbyssPacket03First = true;
 //----------------------------------------------------------------------------------
 int g_LandObjectsCount = 0;

@@ -21,6 +21,7 @@ extern bool g_MovingFromMouse;
 //!Использование автоматического перемещения персонажа за курсором мышки, когда курсор находится в игровом окне
 extern bool g_AutoMoving;
 
+extern bool g_TheAbyss;
 extern bool g_AbyssPacket03First;
 //----------------------------------------------------------------------------------
 #include "Wisp/WispGlobal.h"
