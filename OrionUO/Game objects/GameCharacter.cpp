@@ -714,7 +714,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 	{
 		bool InWar = InWarMode();
 
-		if (Serial == g_PlayerSerial)
+		if (IsPlayer())
 			InWar = g_Player->Warmode;
 
 		if (isWalking)

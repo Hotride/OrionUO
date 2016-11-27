@@ -2074,14 +2074,27 @@ PACKET_HANDLER(UpdateCharacter)
 	{
 		if (serial != g_PlayerSerial)
 		{
-			CWalkData *wd = new CWalkData();
+			CWalkData *wd = obj->m_WalkStack.Top();
+
+			if (wd != NULL && obj->FindLayer(OL_MOUNT) == NULL)
+			{
+				obj->X = wd->X;
+				obj->Y = wd->Y;
+				obj->Z = wd->Z;
+				obj->Direction = wd->Direction;
+
+				obj->m_WalkStack.Clear();
+			}
+
+			if (obj->m_WalkStack.Empty())
+				obj->LastStepTime = g_Ticks;
+
+			wd = new CWalkData();
+
 			wd->X = x;
 			wd->Y = y;
 			wd->Z = z;
 			wd->Direction = dir;
-
-			if (obj->m_WalkStack.Empty())
-				obj->LastStepTime = g_Ticks;
 
 			obj->m_WalkStack.Push(wd);
 		}

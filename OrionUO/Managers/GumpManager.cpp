@@ -1328,10 +1328,7 @@ void CGumpManager::Load(const string &path)
 	else
 	{
 		if (!g_ConfigManager.DisableMenubar && !g_ConfigManager.GameWindowX && !g_ConfigManager.GameWindowY)
-		{
-			g_ConfigManager.GameWindowX = 40;
 			g_ConfigManager.GameWindowY = 40;
-		}
 
 		AddGump(new CGumpPaperdoll(g_PlayerSerial, g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth, g_ConfigManager.GameWindowY, false));
 		AddGump(new CGumpStatusbar(g_PlayerSerial, g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth, g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight - 50, false));
