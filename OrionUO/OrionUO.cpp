@@ -5324,7 +5324,7 @@ void COrion::ConsolePromptSend()
 	if (g_ConsolePrompt == PT_ASCII)
 		CPacketASCIIPromptResponse(g_GameConsole.c_str(), len, cancel).Send();
 	else if (g_ConsolePrompt == PT_UNICODE)
-		CPacketUnicodePromptResponse(g_GameConsole.Data(), len, "ENU", cancel).Send();
+		CPacketUnicodePromptResponse(g_GameConsole.Data(), len, g_Language, cancel).Send();
 
 	g_ConsolePrompt = PT_NONE;
 }

@@ -704,10 +704,10 @@ CPacketASCIIPromptResponse::CPacketASCIIPromptResponse(const char *text, int len
 	WriteString(text, len);
 }
 //---------------------------------------------------------------------------
-CPacketUnicodePromptResponse::CPacketUnicodePromptResponse(const wchar_t *text, int len, const char *lang, bool cancel)
+CPacketUnicodePromptResponse::CPacketUnicodePromptResponse(const wchar_t *text, int len, const string &lang, bool cancel)
 : CPacket(1)
 {
-	int size = 19 + (len * 2) + 2;
+	int size = 19 + (len * 2);
 	Resize(size, true);
 
 	WriteDataLE(g_LastUnicodePrompt, 11);
@@ -715,7 +715,7 @@ CPacketUnicodePromptResponse::CPacketUnicodePromptResponse(const wchar_t *text, 
 	WriteUInt32BE((int)((bool)!cancel));
 	WriteString(lang, 4, false);
 
-	WriteWString(text, len);
+	WriteWString(text, len, false, false);
 }
 //---------------------------------------------------------------------------
 CPacketDyeDataResponse::CPacketDyeDataResponse(uint serial, ushort graphic, ushort color)

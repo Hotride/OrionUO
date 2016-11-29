@@ -240,7 +240,7 @@ public:
 class CPacketUnicodePromptResponse : public CPacket
 {
 public:
-	CPacketUnicodePromptResponse(const wchar_t *text, int len, const char *lang, bool cancel);
+	CPacketUnicodePromptResponse(const wchar_t *text, int len, const string &lang, bool cancel);
 };
 //----------------------------------------------------------------------------------
 class CPacketDyeDataResponse : public CPacket
