@@ -398,7 +398,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 	{
 		STRING_LIST strings = bodyconvParser.ReadTokens();
 
-		if (strings.size() >= 5)
+		if (strings.size() >= 2)
 		{
 			ushort index = atoi(strings[0].c_str());
 
@@ -408,10 +408,23 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 			int anim[4] =
 			{
 				atoi(strings[1].c_str()),
-				atoi(strings[2].c_str()),
-				atoi(strings[3].c_str()),
-				atoi(strings[4].c_str())
+				-1,
+				-1,
+				-1
 			};
+
+			if (strings.size() >= 3)
+			{
+				anim[1] = atoi(strings[2].c_str());
+
+				if (strings.size() >= 4)
+				{
+					anim[2] = atoi(strings[3].c_str());
+
+					if (strings.size() >= 5)
+						anim[3] = atoi(strings[4].c_str());
+				}
+			}
 
 			int startAnimID = -1;
 			int animFile = 1;
