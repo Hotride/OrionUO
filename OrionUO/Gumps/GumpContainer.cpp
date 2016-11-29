@@ -74,6 +74,26 @@ CGumpContainer::~CGumpContainer()
 	}
 }
 //----------------------------------------------------------------------------------
+void CGumpContainer::UpdateItemCoordinates(CGameObject *item)
+{
+	if (m_Graphic < CONTAINERS_COUNT)
+	{
+		CONTAINER_OFFSET_RECT &rect = g_ContainerOffset[m_Graphic].rect;
+
+		if (item->X < rect.MinX)
+			item->X = rect.MinX;
+
+		if (item->Y < rect.MinY)
+			item->Y = rect.MinY;
+
+		if (item->X > rect.MinX + rect.MaxX)
+			item->X = rect.MinX + rect.MaxX;
+
+		if (item->Y > rect.MinY + rect.MaxY)
+			item->Y = rect.MinY + rect.MaxY;
+	}
+}
+//----------------------------------------------------------------------------------
 void CGumpContainer::CalculateGumpState()
 {
 	CGump::CalculateGumpState();

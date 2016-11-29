@@ -1747,7 +1747,12 @@ PACKET_HANDLER(UpdateContainedItem)
 			gump = g_GumpManager.UpdateContent(cserial, 0, GT_CONTAINER);
 
 		if (gump != NULL)
+		{
 			container->Opened = true;
+
+			if (gump->GumpType == GT_CONTAINER)
+				((CGumpContainer*)gump)->UpdateItemCoordinates(obj);
+		}
 
 		CGameObject *top = container->GetTopObject();
 
@@ -1898,7 +1903,15 @@ PACKET_HANDLER(UpdateContainedItems)
 			gump = g_GumpManager.UpdateContent(contobj->Serial, 0, GT_CONTAINER);
 
 		if (gump != NULL)
+		{
 			contobj->Opened = true;
+
+			if (gump->GumpType == GT_CONTAINER)
+			{
+				QFOR(item, contobj->m_Items, CGameObject*)
+					((CGumpContainer*)gump)->UpdateItemCoordinates(item);
+			}
+		}
 
 		CGameObject *top = contobj->GetTopObject();
 
