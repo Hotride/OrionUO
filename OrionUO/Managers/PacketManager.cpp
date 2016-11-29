@@ -2878,12 +2878,13 @@ PACKET_HANDLER(ConfirmWalk)
 		{
 			int delay = g_PingByWalk[seq - i][1] - g_PingByWalk[seq - i][0];
 
-			if (delay >= 1000)
-				delay = 0;
-			else if (delay < 10)
-				delay = 0;
-			else
-				delay -= 10;
+			if (delay > 0)
+			{
+				if (delay >= 600)
+					delay = 0;
+				else
+					delay--;
+			}
 
 			g_Ping += delay;
 		}

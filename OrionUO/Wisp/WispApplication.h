@@ -13,6 +13,9 @@ class CApplication
 	SETGET(string, ExePathA);
 	SETGET(wstring, ExePathW);
 
+protected:
+	virtual void OnIDLELoop() {}
+
 public:
 	CApplication();
 	virtual ~CApplication();

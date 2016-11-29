@@ -14,6 +14,9 @@
 //----------------------------------------------------------------------------------
 class COrionApplication : public WISP_APPLICATION::CApplication
 {
+protected:
+	virtual void OnIDLELoop();
+
 public:
 	COrionApplication() : WISP_APPLICATION::CApplication() {}
 	virtual ~COrionApplication() {}

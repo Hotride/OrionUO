@@ -656,7 +656,6 @@ void COrion::Process(const bool &rendering)
 
 	static uint removeUnusedTexturesTime = 0;
 
-	g_ConnectionManager.Recv();
 	g_PacketManager.ProcessPluginPackets();
 	g_PacketManager.SendMegaClilocRequests();
 	g_MouseManager.Update();
