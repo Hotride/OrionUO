@@ -898,7 +898,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			case MC_LAST_TARGET:
 			{
 				if (m_WaitForTargetTimer == 0)
-					m_WaitForTargetTimer = g_Ticks + 1000;
+					m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
 
 				if (g_Target.IsTargeting())
 				{
@@ -916,7 +916,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			case MC_TARGET_SELF:
 			{
 				if (m_WaitForTargetTimer == 0)
-					m_WaitForTargetTimer = g_Ticks + 1000;
+					m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
 
 				if (g_Target.IsTargeting())
 				{
@@ -991,7 +991,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			case MC_WAIT_FOR_TARGET:
 			{
 				if (m_WaitForTargetTimer == 0)
-					m_WaitForTargetTimer = g_Ticks + 1000;
+					m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
 
 				if (g_Target.IsTargeting() || m_WaitForTargetTimer < g_Ticks)
 					m_WaitForTargetTimer = 0;
@@ -1103,7 +1103,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 				if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial)
 				{
 					if (m_WaitForTargetTimer == 0)
-						m_WaitForTargetTimer = g_Ticks + 1000;
+						m_WaitForTargetTimer = g_Ticks + WAIT_FOR_TARGET_DELAY;
 
 					if (g_Target.IsTargeting())
 					{

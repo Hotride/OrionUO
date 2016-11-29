@@ -2204,7 +2204,7 @@ void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			g_Orion.ChangeWarmode();
 	}
 
-	if (g_MacroPointer == NULL)
+	//if (g_MacroPointer == NULL)
 	{
 		bool altPressed = GetAsyncKeyState(VK_MENU) & 0x80000000;
 		bool ctrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
@@ -2213,11 +2213,13 @@ void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		CMacro *macro = g_MacroManager.FindMacro(wParam, altPressed, ctrlPressed, shiftPressed);
 
 		if (macro != NULL)
+		{
 			g_MacroPointer = (CMacroObject*)macro->m_Items;
 
-		g_MacroManager.WaitingBandageTarget = false;
-		g_MacroManager.WaitForTargetTimer = 0;
-		g_MacroManager.Execute();
+			g_MacroManager.WaitingBandageTarget = false;
+			g_MacroManager.WaitForTargetTimer = 0;
+			g_MacroManager.Execute();
+		}
 	}
 }
 //----------------------------------------------------------------------------------
