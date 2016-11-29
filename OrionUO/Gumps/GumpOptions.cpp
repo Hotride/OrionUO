@@ -426,7 +426,7 @@ void CGumpOptions::InitToolTip()
 			}
 			case ID_GO_P2_SHOW_CONSOLE_ENTRY_MODE:
 			{
-				g_ToolTip.Set(L"Show console entry mopde under game window.", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Show console entry mode under game window.", g_SelectedObject.Object());
 				break;
 			}
 			case ID_GO_P2_DEV_MODE_1:
