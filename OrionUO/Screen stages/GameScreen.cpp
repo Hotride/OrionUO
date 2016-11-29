@@ -146,7 +146,12 @@ int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 
 	int blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
 	CMapBlock *mb = g_MapManager->GetBlock(blockIndex);
-	CMapBlock *mb11 = NULL;
+
+	bx = (playerX + 1) / 8;
+	by = (playerY + 1) / 8;
+
+	blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
+	CMapBlock *mb11 = g_MapManager->GetBlock(blockIndex);
 
 	if (mb != NULL)
 	{
@@ -174,10 +179,12 @@ int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 				}
 			}
 
-			if (!ro->IsStaticObject() && !ro->IsGameObject() && !ro->IsMultiObject())
-				continue;
-
-			if (ro->IsGameObject() && ((CGameObject*)ro)->NPC)
+			if (!ro->IsGameObject())
+			{
+				if (!ro->IsStaticObject() && !ro->IsMultiObject())
+					continue;
+			}
+			else if (((CGameObject*)ro)->NPC)
 				continue;
 	
 			if (ro->Z >= pz15 && maxDrawZ > ro->Z && !ro->IsRoof() && (ro->IsSurface() || ro->IsImpassable()))
@@ -190,29 +197,19 @@ int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 			{
 				bool canNoRoof = !ro->IsRoof();
 
-				if (!canNoRoof)
+				if (!canNoRoof && mb11 != NULL)
 				{
-					if (mb11 == NULL)
-					{
-						playerX++;
-						playerY++;
-
-						bx = playerX / 8;
-						by = playerY / 8;
-
-						blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
-						mb11 = g_MapManager->GetBlock(blockIndex);
-
-						x = playerX % 8;
-						y = playerY % 8;
-					}
+					x = (playerX + 1) % 8;
+					y = (playerY + 1) % 8;
 					
 					for (CRenderWorldObject *ro11 = mb11->GetRender(x, y); ro11 != NULL; ro11 = ro11->m_NextXY)
 					{
-						if (!ro11->IsStaticObject() && !ro11->IsGameObject() && !ro11->IsMultiObject())
-							continue;
-
-						if (ro11->IsGameObject() && ((CGameObject*)ro11)->NPC)
+						if (!ro11->IsGameObject())
+						{
+							if (!ro11->IsStaticObject() && !ro11->IsMultiObject())
+								continue;
+						}
+						else if (((CGameObject*)ro11)->NPC)
 							continue;
 	
 						if (ro11->Z > pz5 && ro11->IsRoof())
