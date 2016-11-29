@@ -1787,18 +1787,22 @@ void CGameScreen::OnLeftMouseButtonUp()
 
 				if (can_drop && target != NULL)
 				{
-					if (target->IsContainer())
-						drop_container = target->Serial;
-					else if (target->IsStackable() && target->Graphic == g_ObjectInHand->Graphic)
-						drop_container = target->Serial;
-					else if (target->NPC)
-						drop_container = target->Serial;
-
-					//if (drop_container != 0xFFFFFFFF)
+					if (target->IsContainer() || target->NPC)
 					{
-						dropX = 0xFFFF; //target->X;
-						dropY = 0xFFFF; //target->Y;
-						dropZ = 0; //target->Z;
+						dropX = 0xFFFF;
+						dropY = 0xFFFF;
+						dropZ = 0;
+
+						drop_container = target->Serial;
+					}
+					else if (target->IsSurface() || (target->IsStackable() && target->Graphic == g_ObjectInHand->Graphic))
+					{
+						if (!target->IsSurface())
+							drop_container = target->Serial;
+
+						dropX = target->X;
+						dropY = target->Y;
+						dropZ = target->Z;
 					}
 				}
 				else
