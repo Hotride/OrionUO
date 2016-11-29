@@ -41,10 +41,7 @@ void CMultiObject::UpdateGraphicBySeason()
 		m_Vegetation = g_Orion.IsVegetation(m_Graphic);
 
 		if (IsWet())
-		{
 			m_RenderQueueIndex = 1;
-			m_IsWaterTile = true;
-		}
 		else if (IsBackground())
 			m_RenderQueueIndex = 3 - (int)IsSurface();
 		else if (IsSurface())
