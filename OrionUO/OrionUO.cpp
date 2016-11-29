@@ -682,6 +682,8 @@ void COrion::Process(const bool &rendering)
 			return;
 		}
 
+		g_UseItemActions.Process();
+
 		g_ShowGumpLocker = g_ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
 
 		ProcessStaticAnimList();
@@ -893,7 +895,7 @@ void COrion::LoadLocalConfig()
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x35, lco);
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Welcome to Ultima Online!");*/
 
-	g_CheckContainerStackTimer = g_Ticks + 1000;
+	g_CheckContainerStackTimer = g_Ticks + 30000;
 
 	char buf[MAX_PATH] = { 0 };
 	sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), FixServerName(g_ServerList.GetSelectedServer()->Name).c_str(), g_PlayerSerial);
@@ -1209,7 +1211,8 @@ void COrion::LoginComplete()
 
 		SkillsReq(g_PlayerSerial);
 		StatusReq(g_PlayerSerial);
-		PaperdollReq(g_PlayerSerial);
+		g_UseItemActions.Add(g_PlayerSerial);
+		//PaperdollReq(g_PlayerSerial);
 
 		//CPacketOpenChat(L"").Send();
 		//CPacketRazorAnswer().Send();

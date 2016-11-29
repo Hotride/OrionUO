@@ -873,6 +873,8 @@ PACKET_HANDLER(EnterWorld)
 	g_Walker = new CWalker();
 	g_PendingDelayTime = 0;
 
+	g_UseItemActions.Clear();
+
 	g_Ping = 0;
 	g_WalkRequestCount = 0;
 	g_PingCount = 0;
