@@ -251,10 +251,13 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 
 		QFOR(child, obj->m_Items, CBaseProfession*)
 		{
-			Add(new CGUIResizepic(0, 0x0BB8, 145 + offsX, 168 + offsY, 175, 34));
+			Add(new CGUIResizepic(ID_SPS_LABEL + index, 0x0BB8, 145 + offsX, 168 + offsY, 175, 34));
 
-			text = (CGUIText*)Add(new CGUIText(0, 151 + offsX, 174 + offsY));
-			text->CreateTextureW(2, ToWString(child->Name), 30, 185, TS_LEFT, UOFONT_SOLID);
+			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_SPS_LABEL + index, 0, 0, 0, 151 + offsX, 174 + offsY, 185, true, 2, TS_LEFT, UOFONT_FIXED));
+			entry->m_Entry.SetText(child->Name);
+			entry->m_Entry.PrepareToDrawW(2, 0);
+			entry->CheckOnSerial = true;
+			entry->ReadOnly = true;
 
 			Add(new CGUIButton(ID_SPS_LABEL + index, child->Gump, child->Gump, child->Gump + 1, 265 + offsX, 155 + offsY));
 
