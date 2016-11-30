@@ -335,6 +335,25 @@ void CGameScreen::CalculateRenderList()
 	if (g_FoliageIndex >= 100)
 		g_FoliageIndex = 1;
 
+	switch (g_ConfigManager.DrawAuraState)
+	{
+		case DAS_IN_WARMODE:
+		{
+			g_DrawAura = g_Player->Warmode && (!g_ConfigManager.DrawAuraWithCtrlPressed || g_CtrlPressed);
+			break;
+		}
+		case DAS_ALWAYS:
+		{
+			g_DrawAura = (!g_ConfigManager.DrawAuraWithCtrlPressed || g_CtrlPressed);
+			break;
+		}
+		default:
+		{
+			g_DrawAura = false;
+			break;
+		}
+	}
+
 	m_ObjectHandlesCount = 0;
 	m_RenderListCount = 0;
 	int objectHandlesOffsetX = g_ObjectHandlesWidth / 2;

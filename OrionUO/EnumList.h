@@ -605,6 +605,13 @@ enum HIDDEN_CHARACTERS_RENDER_MODE
 	HCRM_SPECIAL_SPECTRAL_COLOR
 };
 //----------------------------------------------------------------------------------
+enum DRAW_AURA_STATE
+{
+	DAS_NEVER = 0,
+	DAS_IN_WARMODE,
+	DAS_ALWAYS
+};
+//----------------------------------------------------------------------------------
 //!Направления чара
 enum DIRECTION_TYPE
 {

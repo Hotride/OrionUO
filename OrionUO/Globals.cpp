@@ -148,6 +148,8 @@ ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHei
 
 uint g_PingByWalk[0x100][2] = { 0 };
 uint g_Ping = 0;
+
+bool g_DrawAura = false;
 //----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y)
 {

@@ -429,6 +429,26 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Show console entry mode under game window.", g_SelectedObject.Object());
 				break;
 			}
+			case ID_GO_P2_DRAW_AURA_NEVER:
+			{
+				g_ToolTip.Set(L"Disable the aura under characters", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_DRAW_AURA_IN_WARMODE:
+			{
+				g_ToolTip.Set(L"Draw aura under characters only if your person in war mode", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_DRAW_AURA_ALWAYS:
+			{
+				g_ToolTip.Set(L"Always draw aura under characters", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_DRAW_AURA_WITH_CTRL_PRESSED:
+			{
+				g_ToolTip.Set(L"Draw aura under characters only if Ctrl pressed", g_SelectedObject.Object());
+				break;
+			}
 			case ID_GO_P2_DEV_MODE_1:
 			{
 				g_ToolTip.Set(L"Original client work", g_SelectedObject.Object());
@@ -940,6 +960,25 @@ void CGumpOptions::DrawPage2()
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_SHOW_CONSOLE_ENTRY_MODE, 0x00D2, 0x00D3, 0x00D2, 0, 590));
 	checkbox->Checked = g_OptionsConfig.ShowDefaultConsoleEntryMode;
 	checkbox->SetTextParameters(0, L"Show console entry mode under game window", g_OptionsTextColor);
+
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 610));
+	text->CreateTextureW(0, L"Draw aura under characters mode:");
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_AURA_NEVER, 0x00D0, 0x00D1, 0x00D2, 10, 630));
+	radio->Checked = (g_OptionsConfig.DrawAuraState == DAS_NEVER);
+	radio->SetTextParameters(0, L"Never", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_AURA_IN_WARMODE, 0x00D0, 0x00D1, 0x00D2, 10, 650));
+	radio->Checked = (g_OptionsConfig.DrawAuraState == DAS_IN_WARMODE);
+	radio->SetTextParameters(0, L"Only in war mode", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_AURA_ALWAYS, 0x00D0, 0x00D1, 0x00D2, 10, 670));
+	radio->Checked = (g_OptionsConfig.DrawAuraState == DAS_ALWAYS);
+	radio->SetTextParameters(0, L"Always", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_AURA_WITH_CTRL_PRESSED, 0x00D2, 0x00D3, 0x00D2, 0, 690));
+	checkbox->Checked = g_OptionsConfig.DrawAuraWithCtrlPressed;
+	checkbox->SetTextParameters(0, L"Draw aura only if Ctrl pressed", g_OptionsTextColor);
 
 	html->CalculateDataSize();
 }
@@ -2185,6 +2224,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.RemoveStatusbarsWithoutObjects = state;
 			else if (serial == ID_GO_P2_SHOW_CONSOLE_ENTRY_MODE)
 				g_OptionsConfig.ShowDefaultConsoleEntryMode = state;
+			else if (serial == ID_GO_P2_DRAW_AURA_WITH_CTRL_PRESSED)
+				g_OptionsConfig.DrawAuraWithCtrlPressed = state;
 			
 
 			else if (serial == ID_GO_P2_DEV_MODE_1)
@@ -2326,6 +2367,12 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 				g_OptionsConfig.DrawStatusConditionState = DCSCS_NOT_MAX;
 			else if (serial == ID_GO_P2_DRAW_CHARACTER_BARS_LOWER)
 				g_OptionsConfig.DrawStatusConditionState = DCSCS_LOWER;
+			else if (serial == ID_GO_P2_DRAW_AURA_NEVER)
+				g_OptionsConfig.DrawAuraState = DAS_NEVER;
+			else if (serial == ID_GO_P2_DRAW_AURA_IN_WARMODE)
+				g_OptionsConfig.DrawAuraState = DAS_IN_WARMODE;
+			else if (serial == ID_GO_P2_DRAW_AURA_ALWAYS)
+				g_OptionsConfig.DrawAuraState = DAS_ALWAYS;
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
 			else if (serial == ID_GO_P2_DEV_MODE_2)
@@ -2734,6 +2781,8 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.DrawStatusConditionValue = g_OptionsConfig.DrawStatusConditionValue;
 			g_ConfigManager.RemoveStatusbarsWithoutObjects = g_OptionsConfig.RemoveStatusbarsWithoutObjects;
 			g_ConfigManager.ShowDefaultConsoleEntryMode = g_OptionsConfig.ShowDefaultConsoleEntryMode;
+			g_ConfigManager.DrawAuraState = g_OptionsConfig.DrawAuraState;
+			g_ConfigManager.DrawAuraWithCtrlPressed = g_OptionsConfig.DrawAuraWithCtrlPressed;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

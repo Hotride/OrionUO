@@ -1498,7 +1498,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	bool drawShadow = !obj->Dead();
 	bool usingBlending = false;
 
-	if (g_CtrlPressed)
+	if (g_DrawAura)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

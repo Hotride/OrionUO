@@ -106,6 +106,8 @@ void CConfigManager::DefaultPage2()
 	m_PaperdollSlots = true;
 	m_RemoveStatusbarsWithoutObjects = false;
 	m_ShowDefaultConsoleEntryMode = true;
+	m_DrawAuraState = DAS_ALWAYS;
+	m_DrawAuraWithCtrlPressed = true;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -484,6 +486,8 @@ bool CConfigManager::Load(string path)
 		bool paperdollSlots = true;
 		m_RemoveStatusbarsWithoutObjects = false;
 		m_ShowDefaultConsoleEntryMode = true;
+		m_DrawAuraState = DAS_ALWAYS;
+		m_DrawAuraWithCtrlPressed = true;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -512,6 +516,14 @@ bool CConfigManager::Load(string path)
 				m_RemoveStatusbarsWithoutObjects = file.ReadUInt8();
 
 				m_ShowDefaultConsoleEntryMode = file.ReadUInt8();
+
+				if (blockSize > 24)
+				{
+					uchar auraState = file.ReadUInt8();
+
+					m_DrawAuraState = auraState & 0x7F;
+					m_DrawAuraWithCtrlPressed = (auraState & 0x80);
+				}
 			}
 			else if (blockSize > 2)
 			{
@@ -891,7 +903,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(24); //size of block
+	writter.WriteInt8(25); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -915,6 +927,14 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_DrawStatusConditionValue);
 	writter.WriteUInt8(m_RemoveStatusbarsWithoutObjects);
 	writter.WriteUInt8(m_ShowDefaultConsoleEntryMode);
+
+	uchar auraState = m_DrawAuraState;
+
+	if (m_DrawAuraWithCtrlPressed)
+		auraState |= 0x80;
+
+	writter.WriteUInt8(auraState);
+
 	writter.WriteBuffer();
 
 	//Page 3

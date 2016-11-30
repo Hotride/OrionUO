@@ -255,6 +255,8 @@ extern ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHan
 
 extern uint g_PingByWalk[0x100][2];
 extern uint g_Ping;
+
+extern bool g_DrawAura;
 //----------------------------------------------------------------------------------
 inline bool IsBackground(const __int64 &flags) { return (flags & 0x00000001); }
 inline bool IsWeapon(const __int64 &flags) { return (flags & 0x00000002); }
