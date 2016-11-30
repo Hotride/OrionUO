@@ -53,6 +53,8 @@ public:
 	*/
 	void Clear();
 
+	void Paste();
+
 	//Получить количество строк
 	int GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0, int width = 0);
 
