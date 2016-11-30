@@ -15,6 +15,7 @@ Bugtracker: http://bt.orion-client.online
 
 Discord: https://discord.gg/UcVKWzB
 
+See Wiki: https://github.com/Hotride/OrionUO/wiki
 
 -------------
 
