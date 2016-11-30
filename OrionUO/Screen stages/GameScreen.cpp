@@ -734,6 +734,8 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 
 	DRAW_FRAME_INFORMATION &dfInfo = obj->m_FrameInfo;
 	int offsetY = dfInfo.Height - dfInfo.OffsetY;
+	bool fullDrawLastItem = false;
+	int dropMaxZIndex = -1;
 
 	if (character != NULL)
 	{
@@ -741,6 +743,14 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 		drawY += character->OffsetY - character->OffsetZ;
 
 		//g_GL.DrawPolygone(drawX - dfInfo.OffsetX, drawY, dfInfo.Width, dfInfo.Height - dfInfo.OffsetY);
+
+		CWalkData *wd = character->m_WalkStack.Top();
+
+		if (wd != NULL && (wd->Direction & 7) == 2)
+		{
+			fullDrawLastItem = true;
+			dropMaxZIndex = 0; //X + 1, Y - 1 : wall
+		}
 	}
 
 	vector<pair<int, int>> coordinates;
@@ -799,7 +809,12 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 				g_MapManager->LoadBlock(block);
 			}
 
-			AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX, maxZ);
+			int currentMaxZ = maxZ;
+
+			if (i == dropMaxZIndex)
+				currentMaxZ += 20;
+
+			AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX, currentMaxZ);
 		}
 	}
 }
