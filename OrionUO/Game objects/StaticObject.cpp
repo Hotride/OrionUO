@@ -58,27 +58,32 @@ void CStaticObject::Draw(const int &x, const int &y)
 	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
 		objColor = SELECT_STATIC_COLOR;
 
-	if (IsFoliage())
+	if (IsFoliage() && m_FoliageTransparentIndex == g_FoliageIndex)
 	{
-		if (m_FoliageTransparentIndex == g_FoliageIndex)
-		{
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
 
-			g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z);
+		g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z);
 
-			glDisable(GL_BLEND);
-		}
-		else
-			g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z);
+		glDisable(GL_BLEND);
 	}
 	else
 	{
+		if (IsTranslucent())
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glColor4f(1.0f, 1.0f, 1.0f, 0.7f);
+		}
+
 		if (g_UseCircleTrans)
 			g_Orion.DrawStaticArtAnimatedTransparent(objGraphic, objColor, x, y, m_Z);
 		else
 			g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z);
+
+		if (IsTranslucent())
+			glDisable(GL_BLEND);
 	}
 
 	if (IsLightSource() && g_GameScreen.UseLight)
