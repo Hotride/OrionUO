@@ -13,6 +13,15 @@
 #include "PathNode.h"
 //----------------------------------------------------------------------------------
 const int PATHFINDER_MAX_NODES = 10000;
+
+#define TEST_WALK_CHECK_ALG 0
+//----------------------------------------------------------------------------------
+enum PATH_OBJECT_FLAGS
+{
+	POF_IMPASSABLE_OR_SURFACE	= 0x00000001,
+	POF_SURFACE				= 0x00000002,
+	POF_BRIDGE				= 0x00000004
+};
 //----------------------------------------------------------------------------------
 //Класс для поиска пути и теста шага на точку
 class CPathFinder : public CBaseQueue
@@ -22,15 +31,15 @@ class CPathFinder : public CBaseQueue
 	SETGET(bool, PathFindidngCanBeCancelled);
 	SETGET(bool, BlockMoving);
 
-private:
+protected:
 	//Вычисление новой Z координаты
-	bool CalculateNewZ(int &x, int &y, char &z);
+	virtual bool CalculateNewZ(int &x, int &y, char &z);
 
 	//Вычисление новых XY координат
 	void GetNewXY(uchar &direction, int &x, int &y);
 
 	//Создание списка предметов, участвующих в поиске в указанных координатах
-	bool CreateItemsList(int &x, int &y, char &z);
+	virtual bool CreateItemsList(int &x, int &y, char &z);
 
 	//Флаг, указывающий. что персонаж стоит на длинной лестнице
 	bool m_OnLongStair;
@@ -86,10 +95,10 @@ public:
 	virtual ~CPathFinder();
 
 	//Проверка на возможность сделать шаг в указанные координаты
-	bool CanWalk(uchar &direction, int &x, int &y, char &z);
+	virtual bool CanWalk(uchar &direction, int &x, int &y, char &z);
 
 	//Пойти в указанные координаты
-	bool Walk(bool run, uchar direction);
+	virtual bool Walk(bool run, uchar direction);
 
 	//Переместиться в указанные координаты
 	bool WalkTo(int x, int y, int z, int distance);
@@ -103,7 +112,29 @@ public:
 	int GetWalkSpeed(const bool &run, const bool &onMount);
 };
 //----------------------------------------------------------------------------------
+class CPathFinderTest : public CPathFinder
+{
+protected:
+	int CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, const int &currentZ, int newDirection, const int &stepState);
+
+	bool CalculateNewZ(const int &x, const int &y, char &z, const int &direction);
+
+	bool CreateItemsList(vector<CPathObjectTest> &list, const int &x, const int &y, const int &stepState);
+
+public:
+	CPathFinderTest() : CPathFinder() {}
+	virtual ~CPathFinderTest() {}
+
+	virtual bool CanWalk(uchar &direction, int &x, int &y, char &z);
+
+	virtual bool Walk(bool run, uchar direction);
+};
+//----------------------------------------------------------------------------------
+#if TEST_WALK_CHECK_ALG == 1
+extern CPathFinderTest g_PathFinder;
+#else
 extern CPathFinder g_PathFinder;
+#endif
 //----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

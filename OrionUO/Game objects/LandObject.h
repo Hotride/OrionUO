@@ -19,8 +19,11 @@ class CLandObject : public CMapObject
 	//Координаты привязки вершин
 	SETGET(RECT, Rect);
 
-	//Минимальныя Z координата
+	//Минимальная Z координата
 	SETGET(char, MinZ);
+
+	//Средняя Z координата
+	SETGET(char, AverageZ);
 
 	//Флаг отображения (true - картинка из texmaps, false - из art.mul)
 	SETGET(bool, IsStretched);
@@ -33,6 +36,8 @@ public:
 	virtual ~CLandObject() {}
 
 	virtual void UpdateGraphicBySeason();
+
+	int CalculateCurrentAverageZ(const int &z);
 
 	//Векторы нормали
 	CVector m_Normals[4];
