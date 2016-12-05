@@ -43,9 +43,9 @@ int CLandObject::GetDirectionZ(const int &direction)
 		case 1:
 			return (m_Rect.bottom / 4);
 		case 2:
-			return (m_Rect.top / 4);
-		case 3:
 			return (m_Rect.right / 4);
+		case 3:
+			return (m_Rect.top / 4);
 		default:
 			break;
 	}
@@ -55,10 +55,10 @@ int CLandObject::GetDirectionZ(const int &direction)
 //---------------------------------------------------------------------------
 int CLandObject::CalculateCurrentAverageZ(const int &direction)
 {
-	int result = ((uchar)(direction >> 1) + 1) & 3;
+	int result = GetDirectionZ(((uchar)(direction >> 1) + 1) & 3);
 
 	if (direction & 1)
-		return GetDirectionZ(result);
+		return result;
 
 	return (result + GetDirectionZ(direction >> 1)) >> 1;
 }
@@ -76,10 +76,10 @@ void CLandObject::UpdateZ(const int &zTop, const int &zRight, const int &zBottom
 		m_Rect.right = zRight * 4;
 		m_Rect.bottom = zBottom * 4;
 
-		if (abs(m_Z - zTop) <= abs(zBottom - zRight))
-			AverageZ = (m_Z + zTop) >> 1;
+		if (abs(m_Z - zRight) <= abs(zBottom - zTop))
+			AverageZ = (m_Z + zRight) >> 1;
 		else
-			AverageZ = (zBottom + zRight) >> 1;
+			AverageZ = (zBottom + zTop) >> 1;
 
 		//Минимальная Z-координата из всех
 		m_MinZ = m_Z;

@@ -256,7 +256,6 @@ bool CPathFinderTest::CalculateNewZ(const int &x, const int &y, char &z, const i
 
 	int resultZ = -128;
 
-	DebugMsg("z=%i\n", z);
 	if (z < minZ)
 		z = (char)minZ;
 
@@ -265,13 +264,9 @@ bool CPathFinderTest::CalculateNewZ(const int &x, const int &y, char &z, const i
 
 	int listSize = (int)list.size();
 
-	DebugMsg("listSize=%i (min=%i max=%i)\n", listSize, minZ, maxZ);
-
 	IFOR(i, 0, listSize)
 	{
 		const CPathObjectTest &obj = list[i];
-
-		DebugMsg("obj; %02X %02X %02X %02X (0x%04X)\n", obj.Flags, obj.Z, obj.AverageZ, obj.Height, (obj.m_Object ? obj.m_Object->Graphic : 0));
 
 		if (obj.Flags & POF_IMPASSABLE_OR_SURFACE)
 		{
@@ -311,7 +306,6 @@ bool CPathFinderTest::CalculateNewZ(const int &x, const int &y, char &z, const i
 		}
 	}
 
-	DebugMsg("resultZ=%i\n", resultZ);
 	z = (char)resultZ;
 
 	return (resultZ != -128);
