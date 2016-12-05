@@ -91,6 +91,8 @@ bool CPathFinderTest::CreateItemsList(vector<CPathObjectTest> &list, const int &
 
 					if (!ignoreGameCharacters && !gc->Dead())
 						list.push_back(CPathObjectTest(POF_IMPASSABLE_OR_SURFACE, obj->Z, obj->Z + DEFAULT_CHARACTER_HEIGHT, DEFAULT_CHARACTER_HEIGHT, obj));
+
+					canBeAdd = false;
 				}
 				else if (stepState == 1 && (go->IsDoor() || tileInfo->Weight <= 0x5A))
 					dropFlags = true;
@@ -235,18 +237,17 @@ bool CPathFinderTest::CalculateNewZ(const int &x, const int &y, char &z, const i
 
 	auto compareFunction = [](const void *obj1, const void *obj2)
 	{
+		int result = 0;
+
 		if (obj1 != NULL && obj2 != NULL)
 		{
-			CPathObjectTest &o1 = *(CPathObjectTest*)obj1;
-			CPathObjectTest &o2 = *(CPathObjectTest*)obj2;
+			result = ((CPathObjectTest*)obj1)->Z - ((CPathObjectTest*)obj2)->Z;
 
-			if (o1.Z == o2.Z)
-				return (int)(o1.Height - o2.Height);
-
-			return (int)(o1.Z - o2.Z);
+			if (!result)
+				result = (((CPathObjectTest*)obj1)->Height - ((CPathObjectTest*)obj2)->Height);
 		}
 
-		return (int)0;
+		return result;
 	};
 
 	std::qsort(&list[0], list.size(), sizeof(CPathObjectTest), compareFunction);
@@ -258,8 +259,6 @@ bool CPathFinderTest::CalculateNewZ(const int &x, const int &y, char &z, const i
 	DebugMsg("z=%i\n", z);
 	if (z < minZ)
 		z = (char)minZ;
-
-	int minZ2 = minZ;
 
 	int currentTempObjZ = 1000000;
 	int currentZ = -128;
@@ -278,7 +277,7 @@ bool CPathFinderTest::CalculateNewZ(const int &x, const int &y, char &z, const i
 		{
 			int objZ = obj.Z;
 
-			if (objZ - minZ2 >= 16)
+			if (objZ - minZ >= 16)
 			{
 				DFOR(j, i - 1, 0)
 				{
@@ -300,17 +299,12 @@ bool CPathFinderTest::CalculateNewZ(const int &x, const int &y, char &z, const i
 						}
 					}
 				}
-
-				minZ2 = minZ;
 			}
 
 			int averageZ = obj.AverageZ;
 
-			if (minZ2 < averageZ)
-			{
-				minZ2 = averageZ;
+			if (minZ < averageZ)
 				minZ = averageZ;
-			}
 
 			if (currentZ < averageZ)
 				currentZ = averageZ;

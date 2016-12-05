@@ -36,25 +36,25 @@ void CLandObject::UpdateGraphicBySeason()
 	m_Graphic = g_Orion.GetLandSeasonGraphic(m_OriginalGraphic);
 }
 //---------------------------------------------------------------------------
+int CLandObject::GetDirectionZ(const int &direction)
+{
+	switch (direction)
+	{
+		case 1:
+			return (m_Rect.bottom / 4);
+		case 2:
+			return (m_Rect.top / 4);
+		case 3:
+			return (m_Rect.right / 4);
+		default:
+			break;
+	}
+
+	return m_Z;
+}
+//---------------------------------------------------------------------------
 int CLandObject::CalculateCurrentAverageZ(const int &direction)
 {
-	auto GetDirectionZ = [this](const int &direction)
-	{
-		switch (direction)
-		{
-			case 1:
-				return (int)(m_Rect.bottom / 4);
-			case 2:
-				return (int)(m_Rect.top / 4);
-			case 3:
-				return (int)(m_Rect.right / 4);
-			default:
-				break;
-		}
-
-		return (int)m_Z;
-	};
-
 	int result = ((uchar)(direction >> 1) + 1) & 3;
 
 	if (direction & 1)
@@ -63,7 +63,7 @@ int CLandObject::CalculateCurrentAverageZ(const int &direction)
 	return (result + GetDirectionZ(direction >> 1)) >> 1;
 }
 //---------------------------------------------------------------------------
-void CLandObject::UpdateZ(const char &zTop, const char &zRight, const char &zBottom)
+void CLandObject::UpdateZ(const int &zTop, const int &zRight, const int &zBottom)
 {
 	if (m_IsStretched)
 	{
@@ -76,15 +76,10 @@ void CLandObject::UpdateZ(const char &zTop, const char &zRight, const char &zBot
 		m_Rect.right = zRight * 4;
 		m_Rect.bottom = zBottom * 4;
 
-#define HIDWORD(l) ((uint)((((l)) >> 32) & 0xFFFFFFFF))
-
-		__int64 zTest1 = zBottom - (int)zRight;
-		__int64 zTest2 = m_Z - (int)zTop;
-
-		if ((int)((HIDWORD(zTest2) ^ zTest2) - HIDWORD(zTest2)) <= (int)((HIDWORD(zTest1) ^ zTest1) - HIDWORD(zTest1)))
-			AverageZ = (m_Z + (int)zTop) >> 1;
+		if (abs(m_Z - zTop) <= abs(zBottom - zRight))
+			AverageZ = (m_Z + zTop) >> 1;
 		else
-			AverageZ = (zBottom + (int)zRight) >> 1;
+			AverageZ = (zBottom + zRight) >> 1;
 
 		//Минимальная Z-координата из всех
 		m_MinZ = m_Z;
