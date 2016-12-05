@@ -46,7 +46,7 @@ bool CPathFinderTest::CreateItemsList(vector<CPathObjectTest> &list, const int &
 	int bx = x % 8;
 	int by = y % 8;
 
-	bool ignoreGameCharacters = ((stepState == 1) || g_Player->IgnoreCharacters() || g_Player->Stam >= g_Player->MaxStam);
+	bool ignoreGameCharacters = ((stepState == PSS_DEAD_OR_GM) || g_Player->IgnoreCharacters() || g_Player->Stam >= g_Player->MaxStam);
 
 	for (CRenderWorldObject *obj = block->GetRender(bx, by); obj != NULL; obj = obj->m_NextXY)
 	{
@@ -94,7 +94,7 @@ bool CPathFinderTest::CreateItemsList(vector<CPathObjectTest> &list, const int &
 
 					canBeAdd = false;
 				}
-				else if (stepState == 1 && (go->IsDoor() || tileInfo->Weight <= 0x5A))
+				else if (stepState == PSS_DEAD_OR_GM && (go->IsDoor() || tileInfo->Weight <= 0x5A))
 					dropFlags = true;
 			}
 			else
@@ -116,7 +116,7 @@ bool CPathFinderTest::CreateItemsList(vector<CPathObjectTest> &list, const int &
 						flags |= POF_BRIDGE;
 				}
 
-				if (stepState == 1)
+				if (stepState == PSS_DEAD_OR_GM)
 				{
 					if (graphic <= 0x0846)
 					{
@@ -208,20 +208,20 @@ int CPathFinderTest::CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, 
 //----------------------------------------------------------------------------------
 bool CPathFinderTest::CalculateNewZ(const int &x, const int &y, char &z, const int &direction)
 {
-	int stepState = 0;
+	int stepState = PSS_NORMAL;
 
 	if (g_Player->Dead() || g_Player->Graphic == 0x03DB)
-		stepState = 1;
+		stepState = PSS_DEAD_OR_GM;
 	else
 	{
 		if (g_Player->Flying())
-			stepState = 3;
+			stepState = PSS_FLYING;
 		else
 		{
 			CGameItem *mount = g_Player->FindLayer(OL_MOUNT);
 
 			if (mount != NULL && mount->Graphic == 0x3EB3) //Sea horse
-				stepState = 2;
+				stepState = PSS_ON_SEA_HORSE;
 		}
 	}
 
@@ -267,6 +267,23 @@ bool CPathFinderTest::CalculateNewZ(const int &x, const int &y, char &z, const i
 	IFOR(i, 0, listSize)
 	{
 		const CPathObjectTest &obj = list[i];
+
+		if ((obj.Flags & POF_NO_DIAGONAL) && stepState == PSS_FLYING)
+		{
+			int objAverageZ = obj.AverageZ;
+
+			int delta = abs(objAverageZ - (int)z);
+
+			if (delta <= 25)
+			{
+				if (objAverageZ != -128)
+					resultZ = objAverageZ;
+				else
+					resultZ = currentZ;
+
+				break;
+			}
+		}
 
 		if (obj.Flags & POF_IMPASSABLE_OR_SURFACE)
 		{

@@ -16,11 +16,20 @@ const int PATHFINDER_MAX_NODES = 10000;
 
 #define TEST_WALK_CHECK_ALG 1
 //----------------------------------------------------------------------------------
+enum PATH_STEP_STATE
+{
+	PSS_NORMAL = 0,
+	PSS_DEAD_OR_GM,
+	PSS_ON_SEA_HORSE,
+	PSS_FLYING
+};
+//----------------------------------------------------------------------------------
 enum PATH_OBJECT_FLAGS
 {
 	POF_IMPASSABLE_OR_SURFACE	= 0x00000001,
 	POF_SURFACE					= 0x00000002,
-	POF_BRIDGE					= 0x00000004
+	POF_BRIDGE					= 0x00000004,
+	POF_NO_DIAGONAL				= 0x00000008
 };
 //----------------------------------------------------------------------------------
 //Класс для поиска пути и теста шага на точку
