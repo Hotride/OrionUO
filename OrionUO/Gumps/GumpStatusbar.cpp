@@ -25,6 +25,9 @@
 #include "../OrionUO.h"
 #include "../TextEngine/GameConsole.h"
 #include "../ToolTip.h"
+
+int CGumpStatusbar::m_StatusbarDefaultWidth = 154;
+int CGumpStatusbar::m_StatusbarDefaultHeight = 59;
 //----------------------------------------------------------------------------------
 CGumpStatusbar::CGumpStatusbar(uint serial, short x, short y, bool minimized)
 : CGump(GT_STATUSBAR, serial, x, y), m_GroupNext(NULL), m_GroupPrev(NULL),
@@ -124,11 +127,18 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 
 	//154x59 mini-gump
 
-	static const int gumpWidth = 154;
+	/*static const int gumpWidth = 154;
 	static const int gumpHeight = 59;
 
 	const int rangeX = 77;
-	const int rangeY = 29;
+	const int rangeY = 29;*/
+
+	int gumpWidth = m_StatusbarDefaultWidth;
+	int gumpHeight = m_StatusbarDefaultHeight;
+
+	int rangeX = gumpWidth / 2;
+	int rangeY = gumpHeight / 2;
+
 	const int rangeOffsetX = 60;
 	const int rangeOffsetY = 24;
 

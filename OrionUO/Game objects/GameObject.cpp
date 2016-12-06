@@ -295,6 +295,24 @@ void CGameObject::Clear()
 	}
 }
 //----------------------------------------------------------------------------------
+void CGameObject::ClearNotOpenedItems()
+{
+	if (!Empty())
+	{
+		CGameObject *obj = (CGameObject*)m_Items;
+
+		while (obj != NULL)
+		{
+			CGameObject *next = (CGameObject*)obj->m_Next;
+
+			if (!obj->NPC && !((CGameItem*)obj)->Opened)
+				g_World->RemoveObject(obj);
+
+			obj = next;
+		}
+	}
+}
+//----------------------------------------------------------------------------------
 bool CGameObject::Poisoned()
 {
 	if (g_PacketManager.ClientVersion >= CV_7000)

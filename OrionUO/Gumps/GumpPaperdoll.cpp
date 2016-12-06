@@ -64,6 +64,10 @@ m_DataBox(NULL), m_Description(NULL), m_WantTransparentContent(false)
 	else
 		m_Page = 2;
 
+	int partyManifestX = 37;
+	int profileX = 23;
+	static const int SCROLLS_STEP = 12;
+
 	Add(new CGUIPage(1));
 	Add(new CGUIGumppic(0x07EE, 0, 0));
 
@@ -106,7 +110,16 @@ m_DataBox(NULL), m_Description(NULL), m_WantTransparentContent(false)
 		//UO->DrawGump(0x0FA1, 0, posX + 80, posY + 4); //Paperdoll mail bag
 		Add(new CGUIButton(ID_GP_BUTTON_VIRTURE, 0x0071, 0x0071, 0x0071, 80, 4));
 
-		Add(new CGUIButton(ID_GP_PARTY_MANIFEST_SCROLL, 0x07D2, 0x07D2, 0x07D2, 37, 196));
+		if (g_PaperdollBooks)
+		{
+			Add(new CGUIButton(ID_GP_COMBAT_BOOK, 0x2B34, 0x2B34, 0x2B34, 156, 200));
+			Add(new CGUIButton(ID_GP_RACIAL_ABILITIES_BOOK, 0x2B28, 0x2B34, 0x2B34, 23, 200));
+
+			partyManifestX += SCROLLS_STEP;
+			profileX += SCROLLS_STEP;
+		}
+
+		Add(new CGUIButton(ID_GP_PARTY_MANIFEST_SCROLL, 0x07D2, 0x07D2, 0x07D2, partyManifestX, 196));
 
 		CGUIHitBox *minimizeButton = (CGUIHitBox*)Add(new CGUIHitBox(ID_GP_BUTTON_MINIMIZE, 226, 258, 16, 16, true));
 		minimizeButton->ToPage = 1;
@@ -119,7 +132,7 @@ m_DataBox(NULL), m_Description(NULL), m_WantTransparentContent(false)
 
 	Add(new CGUIButton(ID_GP_BUTTON_STATUS, 0x07EB, 0x07ED, 0x07EC, 185, 233));
 
-	Add(new CGUIButton(ID_GP_PROFILE_SCROLL, 0x07D2, 0x07D2, 0x07D2, 23, 196));
+	Add(new CGUIButton(ID_GP_PROFILE_SCROLL, 0x07D2, 0x07D2, 0x07D2, profileX, 196));
 
 	//if (ConnectionManager.ClientVersion >= CV_60142)
 	//	UO->DrawGump(0x2B34, 0, 156, 200);
@@ -231,9 +244,14 @@ void CGumpPaperdoll::InitToolTip()
 				g_ToolTip.Set(L"Open server's virture(?) gump", g_SelectedObject.Object());
 				break;
 			}
-			case ID_GP_BOOK:
+			case ID_GP_COMBAT_BOOK:
 			{
-				//g_ToolTip.Set(L"", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open combat book", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GP_RACIAL_ABILITIES_BOOK:
+			{
+				g_ToolTip.Set(L"Open racial abilities book", g_SelectedObject.Object());
 				break;
 			}
 			case ID_GP_LOCK_MOVING:
@@ -565,7 +583,7 @@ void CGumpPaperdoll::UpdateContent()
 	{
 		int bpX = 8;
 
-		if (g_PacketManager.ClientVersion >= CV_60142)
+		if (g_PaperdollBooks)
 			bpX = 2;
 
 		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + 50000, bpX, 19));
@@ -705,7 +723,8 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 
 			break;
 		}
-		case ID_GP_BOOK:
+		case ID_GP_COMBAT_BOOK:
+		case ID_GP_RACIAL_ABILITIES_BOOK:
 		{
 			break;
 		}

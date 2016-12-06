@@ -19,8 +19,11 @@ class CLandObject : public CMapObject
 	//Координаты привязки вершин
 	SETGET(RECT, Rect);
 
-	//Минимальныя Z координата
+	//Минимальная Z координата
 	SETGET(char, MinZ);
+
+	//Средняя Z координата
+	SETGET(char, AverageZ);
 
 	//Флаг отображения (true - картинка из texmaps, false - из art.mul)
 	SETGET(bool, IsStretched);
@@ -28,11 +31,16 @@ class CLandObject : public CMapObject
 	//Оригинальный индекс картинки
 	SETGET(ushort, OriginalGraphic);
 
+private:
+	int GetDirectionZ(const int &direction);
+
 public:
 	CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z);
 	virtual ~CLandObject() {}
 
 	virtual void UpdateGraphicBySeason();
+
+	int CalculateCurrentAverageZ(const int &z);
 
 	//Векторы нормали
 	CVector m_Normals[4];
@@ -46,7 +54,7 @@ public:
 	//Это объект ландшафта
 	bool IsLandObject() {return true;}
 
-	void UpdateZ(const char &zTop, const char &zRight, const char &zBottom);
+	void UpdateZ(const int &zTop, const int &zRight, const int &zBottom);
 
 	//Игнорирование при некоторых расчетах
 	bool Ignored() {return (Graphic == 2 || Graphic == 0x1DB || (Graphic >= 0x1AE && Graphic <= 0x1B5));}

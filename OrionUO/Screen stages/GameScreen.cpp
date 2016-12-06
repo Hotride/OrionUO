@@ -146,7 +146,12 @@ int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 
 	int blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
 	CMapBlock *mb = g_MapManager->GetBlock(blockIndex);
-	CMapBlock *mb11 = NULL;
+
+	bx = (playerX + 1) / 8;
+	by = (playerY + 1) / 8;
+
+	blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
+	CMapBlock *mb11 = g_MapManager->GetBlock(blockIndex);
 
 	if (mb != NULL)
 	{
@@ -174,10 +179,12 @@ int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 				}
 			}
 
-			if (!ro->IsStaticObject() && !ro->IsGameObject() && !ro->IsMultiObject())
-				continue;
-
-			if (ro->IsGameObject() && ((CGameObject*)ro)->NPC)
+			if (!ro->IsGameObject())
+			{
+				if (!ro->IsStaticObject() && !ro->IsMultiObject())
+					continue;
+			}
+			else if (((CGameObject*)ro)->NPC)
 				continue;
 	
 			if (ro->Z >= pz15 && maxDrawZ > ro->Z && !ro->IsRoof() && (ro->IsSurface() || ro->IsImpassable()))
@@ -190,29 +197,19 @@ int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 			{
 				bool canNoRoof = !ro->IsRoof();
 
-				if (!canNoRoof)
+				if (!canNoRoof && mb11 != NULL)
 				{
-					if (mb11 == NULL)
-					{
-						playerX++;
-						playerY++;
-
-						bx = playerX / 8;
-						by = playerY / 8;
-
-						blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
-						mb11 = g_MapManager->GetBlock(blockIndex);
-
-						x = playerX % 8;
-						y = playerY % 8;
-					}
+					x = (playerX + 1) % 8;
+					y = (playerY + 1) % 8;
 					
 					for (CRenderWorldObject *ro11 = mb11->GetRender(x, y); ro11 != NULL; ro11 = ro11->m_NextXY)
 					{
-						if (!ro11->IsStaticObject() && !ro11->IsGameObject() && !ro11->IsMultiObject())
-							continue;
-
-						if (ro11->IsGameObject() && ((CGameObject*)ro11)->NPC)
+						if (!ro11->IsGameObject())
+						{
+							if (!ro11->IsStaticObject() && !ro11->IsMultiObject())
+								continue;
+						}
+						else if (((CGameObject*)ro11)->NPC)
 							continue;
 	
 						if (ro11->Z > pz5 && ro11->IsRoof())
@@ -330,6 +327,10 @@ void CGameScreen::CalculateRenderList()
 		int stZ = 0;
 		CRenderObject *sel = g_SelectedObject.Object();
 		g_MapManager->GetMapZ(sel->X, sel->Y, grZ, stZ);
+
+		if (((CRenderWorldObject*)sel)->IsStaticObject() && ((CRenderWorldObject*)sel)->IsWet())
+			grZ = ((CRenderWorldObject*)sel)->Z;
+
 		g_Target.LoadMulti(sel->X, sel->Y, grZ);
 	}
 
@@ -337,6 +338,25 @@ void CGameScreen::CalculateRenderList()
 
 	if (g_FoliageIndex >= 100)
 		g_FoliageIndex = 1;
+
+	switch (g_ConfigManager.DrawAuraState)
+	{
+		case DAS_IN_WARMODE:
+		{
+			g_DrawAura = g_Player->Warmode && (!g_ConfigManager.DrawAuraWithCtrlPressed || g_CtrlPressed);
+			break;
+		}
+		case DAS_ALWAYS:
+		{
+			g_DrawAura = (!g_ConfigManager.DrawAuraWithCtrlPressed || g_CtrlPressed);
+			break;
+		}
+		default:
+		{
+			g_DrawAura = false;
+			break;
+		}
+	}
 
 	m_ObjectHandlesCount = 0;
 	m_RenderListCount = 0;
@@ -718,6 +738,8 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 
 	DRAW_FRAME_INFORMATION &dfInfo = obj->m_FrameInfo;
 	int offsetY = dfInfo.Height - dfInfo.OffsetY;
+	bool fullDrawLastItem = false;
+	int dropMaxZIndex = -1;
 
 	if (character != NULL)
 	{
@@ -725,6 +747,14 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 		drawY += character->OffsetY - character->OffsetZ;
 
 		//g_GL.DrawPolygone(drawX - dfInfo.OffsetX, drawY, dfInfo.Width, dfInfo.Height - dfInfo.OffsetY);
+
+		CWalkData *wd = character->m_WalkStack.Top();
+
+		if (wd != NULL && (wd->Direction & 7) == 2)
+		{
+			fullDrawLastItem = true;
+			dropMaxZIndex = 0; //X + 1, Y - 1 : wall
+		}
 	}
 
 	vector<pair<int, int>> coordinates;
@@ -783,7 +813,12 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 				g_MapManager->LoadBlock(block);
 			}
 
-			AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX, maxZ);
+			int currentMaxZ = maxZ;
+
+			if (i == dropMaxZIndex)
+				currentMaxZ += 20;
+
+			AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX, currentMaxZ);
 		}
 	}
 }
@@ -1504,7 +1539,7 @@ void CGameScreen::Render(const bool &mode)
 		{
 			char dbf[50] = { 0 };
 
-			sprintf_s(dbf, "FPS=%i (%ims) scale=%.1f", FPScount, g_FrameDelay[1], g_GlobalScale);
+			sprintf_s(dbf, "FPS=%i (%ims) ping=%i scale=%.1f", FPScount, g_FrameDelay[1], g_Ping, g_GlobalScale);
 
 			g_FontManager.DrawA(3, dbf, 0x35, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth + 10, g_RenderBounds.GameWindowPosY);
 		}
@@ -1512,7 +1547,7 @@ void CGameScreen::Render(const bool &mode)
 		{
 			char dbf[150] = { 0 };
 
-			sprintf_s(dbf, "FPS=%i (%ims) Dir=%i Z=%i (MDZ=%i) scale=%.1f", FPScount, g_FrameDelay[1], g_Player->Direction, g_RenderBounds.PlayerZ, m_MaxDrawZ, g_GlobalScale);
+			sprintf_s(dbf, "FPS=%i (%ims) ping=%i Dir=%i Z=%i (MDZ=%i) scale=%.1f", FPScount, g_FrameDelay[1], g_Ping, g_Player->Direction, g_RenderBounds.PlayerZ, m_MaxDrawZ, g_GlobalScale);
 
 			g_FontManager.DrawA(3, dbf, 0x35, 20, 30);
 
@@ -1790,18 +1825,22 @@ void CGameScreen::OnLeftMouseButtonUp()
 
 				if (can_drop && target != NULL)
 				{
-					if (target->IsContainer())
-						drop_container = target->Serial;
-					else if (target->IsStackable() && target->Graphic == g_ObjectInHand->Graphic)
-						drop_container = target->Serial;
-					else if (target->NPC)
-						drop_container = target->Serial;
-
-					//if (drop_container != 0xFFFFFFFF)
+					if (target->IsContainer() || target->NPC)
 					{
-						dropX = 0xFFFF; //target->X;
-						dropY = 0xFFFF; //target->Y;
-						dropZ = 0; //target->Z;
+						dropX = 0xFFFF;
+						dropY = 0xFFFF;
+						dropZ = 0;
+
+						drop_container = target->Serial;
+					}
+					else if (target->IsSurface() || (target->IsStackable() && target->Graphic == g_ObjectInHand->Graphic))
+					{
+						if (!target->IsSurface())
+							drop_container = target->Serial;
+
+						dropX = target->X;
+						dropY = target->Y;
+						dropZ = target->Z;
 					}
 				}
 				else
@@ -2207,7 +2246,7 @@ void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 			g_Orion.ChangeWarmode();
 	}
 
-	if (g_MacroPointer == NULL)
+	//if (g_MacroPointer == NULL)
 	{
 		bool altPressed = GetAsyncKeyState(VK_MENU) & 0x80000000;
 		bool ctrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
@@ -2216,11 +2255,13 @@ void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		CMacro *macro = g_MacroManager.FindMacro(wParam, altPressed, ctrlPressed, shiftPressed);
 
 		if (macro != NULL)
+		{
 			g_MacroPointer = (CMacroObject*)macro->m_Items;
 
-		g_MacroManager.WaitingBandageTarget = false;
-		g_MacroManager.WaitForTargetTimer = 0;
-		g_MacroManager.Execute();
+			g_MacroManager.WaitingBandageTarget = false;
+			g_MacroManager.WaitForTargetTimer = 0;
+			g_MacroManager.Execute();
+		}
 	}
 }
 //----------------------------------------------------------------------------------

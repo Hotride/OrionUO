@@ -9,6 +9,7 @@ bool g_ShiftPressed = false;
 //----------------------------------------------------------------------------------
 bool g_MovingFromMouse = false;
 bool g_AutoMoving = false;
+bool g_TheAbyss = false;
 bool g_AbyssPacket03First = true;
 //----------------------------------------------------------------------------------
 int g_LandObjectsCount = 0;
@@ -84,6 +85,7 @@ bool g_SendLogoutNotification = false;
 bool g_NPCPopupEnabled = false;
 bool g_ChatEnabled = false;
 bool g_TooltipsEnabled = false;
+bool g_PaperdollBooks = false;
 
 uchar g_GameSeed[4] = { 0 };
 
@@ -143,6 +145,11 @@ DEVELOPER_MODE g_DeveloperMode = DM_SHOW_FPS_ONLY;
 DEVELOPER_MODE g_OptionsDeveloperMode = DM_SHOW_FPS_ONLY;
 
 ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight] = { 0 };
+
+uint g_PingByWalk[0x100][2] = { 0 };
+uint g_Ping = 0;
+
+bool g_DrawAura = false;
 //----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y)
 {
@@ -225,6 +232,32 @@ int GetDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
 	{
 		int distx = abs(target->X - current.X);
 		int disty = abs(target->Y - current.Y);
+
+		if (disty > distx)
+			distx = disty;
+
+		return distx;
+	}
+
+	return 100500;
+}
+//----------------------------------------------------------------------------------
+int GetRemoveDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
+{
+	if (target != NULL)
+	{
+		WISP_GEOMETRY::CPoint2Di targetPoint(target->X, target->Y);
+
+		if (target->NPC)
+		{
+			CWalkData *wd = ((CGameCharacter*)target)->m_WalkStack.Top();
+
+			if (wd != NULL)
+				targetPoint = WISP_GEOMETRY::CPoint2Di(wd->X, wd->Y);
+		}
+
+		int distx = abs(targetPoint.X - current.X);
+		int disty = abs(targetPoint.Y - current.Y);
 
 		if (disty > distx)
 			distx = disty;

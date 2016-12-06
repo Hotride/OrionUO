@@ -22,7 +22,8 @@
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
 : CGameObject(serial), m_Layer(0), m_AnimID(0), m_ImageID(0), m_UsedLayer(0),
-m_Opened(false), m_Dragged(false), m_MultiBody(false), m_FieldColor(0)
+m_Opened(false), m_Dragged(false), m_MultiBody(false), m_WantUpdateMulti(true),
+m_FieldColor(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -89,6 +90,7 @@ void CGameItem::Paste(CObjectOnCursor *obj)
 	m_Dragged = false;
 	m_Clicked = false;
 	m_MultiBody = obj->MultiBody;
+	m_WantUpdateMulti = obj->WantUpdateMulti;
 
 	m_Name = obj->Name;
 	OnGraphicChange();
@@ -174,7 +176,7 @@ void CGameItem::OnGraphicChange(int direction)
 			g_Orion.ExecuteStaticArt(m_Graphic);
 		}
 	}
-	else if (m_Items == NULL)
+	else if (m_Items == NULL || m_WantUpdateMulti)
 		LoadMulti();
 }
 //----------------------------------------------------------------------------------
@@ -197,12 +199,27 @@ void CGameItem::CalculateFieldColor()
 	//poison field
 	else if (IN_RANGE(m_Graphic, 0x3914, 0x3929))
 		m_FieldColor = 0x0044;
+	//wall of stone
+	else if (m_Graphic == 0x0080)
+		m_FieldColor = 0x038A;
 }
 //----------------------------------------------------------------------------------
 void CGameItem::Draw(const int &x, const int &y)
 {
-	if (m_Container == 0xFFFFFFFF && !m_MultiBody && m_Graphic != 1)
+	if (m_Container == 0xFFFFFFFF)
 	{
+		ushort objGraphic = 0;
+
+		if (m_MultiBody)
+		{
+			PMULTI_BLOCK pmb = (PMULTI_BLOCK)g_Orion.m_MultiDataIndex[m_Graphic].Address;
+
+			if (pmb != NULL)
+				objGraphic = pmb->ID;
+			else
+				return;
+		}
+
 #if UO_DEBUG_INFO!=0
 		g_RenderedObjectsCountInGameWindow++;
 #endif
@@ -213,8 +230,12 @@ void CGameItem::Draw(const int &x, const int &y)
 		{
 			bool doubleDraw = false;
 			bool selMode = false;
-			ushort objGraphic = GetDrawGraphic(doubleDraw);
+			if (!objGraphic)
+				objGraphic = GetDrawGraphic(doubleDraw);
 			ushort objColor = m_Color;
+
+			if (objGraphic == 1)
+				return;
 
 			if (Hidden())
 			{
@@ -287,8 +308,20 @@ void CGameItem::Draw(const int &x, const int &y)
 */
 void CGameItem::Select(const int &x, const int &y)
 {
-	if (m_Container == 0xFFFFFFFF && !m_MultiBody && m_Graphic != 1)
+	if (m_Container == 0xFFFFFFFF)
 	{
+		ushort objGraphic = 0;
+
+		if (m_MultiBody)
+		{
+			PMULTI_BLOCK pmb = (PMULTI_BLOCK)g_Orion.m_MultiDataIndex[m_Graphic].Address;
+
+			if (pmb != NULL)
+				objGraphic = pmb->ID;
+			else
+				return;
+		}
+
 		if (IsCorpse()) //Трупик
 		{
 			if (g_AnimationManager.CorpsePixelsInXY(this, x, y - ((m_Z * 4) + 3)))
@@ -297,13 +330,18 @@ void CGameItem::Select(const int &x, const int &y)
 		else
 		{
 			bool doubleDraw = false;
-			ushort goGraphic = GetDrawGraphic(doubleDraw);
+
+			if (!objGraphic)
+				objGraphic = GetDrawGraphic(doubleDraw);
+
+			if (objGraphic == 1)
+				return;
 
 			if (doubleDraw)
 			{
-				if (g_Orion.StaticPixelsInXY(goGraphic, x - 2, y - 5, m_Z))
+				if (g_Orion.StaticPixelsInXY(objGraphic, x - 2, y - 5, m_Z))
 					g_SelectedObject.Init(this);
-				else if (g_Orion.StaticPixelsInXY(goGraphic, x + 3, y, m_Z))
+				else if (g_Orion.StaticPixelsInXY(objGraphic, x + 3, y, m_Z))
 					g_SelectedObject.Init(this);
 			}
 			else if (m_FieldColor)
@@ -311,7 +349,7 @@ void CGameItem::Select(const int &x, const int &y)
 				if (g_Orion.StaticPixelsInXY(FIELD_REPLACE_GRAPHIC, x, y, m_Z))
 					g_SelectedObject.Init(this);
 			}
-			else if (g_Orion.StaticPixelsInXYAnimated(goGraphic, x, y, m_Z))
+			else if (g_Orion.StaticPixelsInXYAnimated(objGraphic, x, y, m_Z))
 				g_SelectedObject.Init(this);
 		}
 	}
@@ -617,6 +655,15 @@ ushort CGameItem::GetMountAnimation()
 */
 void CGameItem::LoadMulti()
 {
+	if (m_MultiBody && m_Items != NULL)
+	{
+		CMulti *multi = (CMulti*)m_Items;
+		m_Items = NULL;
+		delete multi;
+	}
+
+	m_WantUpdateMulti = false;
+
 	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_Graphic];
 	
 	if (index.Address != NULL)

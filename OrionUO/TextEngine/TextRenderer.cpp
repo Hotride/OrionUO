@@ -238,14 +238,13 @@ void CTextRenderer::Draw()
 
 				text->m_Texture.Draw(text->DrawX, text->DrawY);
 
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 				glDisable(GL_BLEND);
 			}
 			else
 				text->m_Texture.Draw(text->DrawX, text->DrawY);
 		}
 	}
-
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //----------------------------------------------------------------------------------
 void CTextRenderer::Select(CGump *gump)
@@ -451,13 +450,12 @@ void CTextRenderer::WorldDraw()
 
 				text->m_Texture.Draw(text->DrawX, text->DrawY);
 
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 				glDisable(GL_BLEND);
 			}
 			else
 				text->m_Texture.Draw(text->DrawX, text->DrawY);
 		}
 	}
-
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //----------------------------------------------------------------------------------

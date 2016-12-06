@@ -213,7 +213,7 @@ const int CLEAR_TEXTURES_DELAY = 30000;
 const int WEATHER_TIMER = (6 * 60 * 1000);
 
 //!Максимальное время ожидания для ловушки на таргет
-const int WAIT_FOR_TARGET_DELAY = 2000;
+const int WAIT_FOR_TARGET_DELAY = 5000;
 
 //!Список слоев, защищенных от дропа
 static const bool LAYER_UNSAFE[30] =

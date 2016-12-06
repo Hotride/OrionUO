@@ -40,13 +40,15 @@ CPacketFirstLogin::CPacketFirstLogin()
 : CPacket(62)
 {
 	WriteUInt8(0x80);
-#if UO_ABYSS_SHARD == 1
-	m_Data[61] = 0xFF;
-#else
-	WriteString(g_MainScreen.m_Account->c_str(), 30, false);
-	WriteString(g_MainScreen.m_Password->c_str(), 30, false);
-	WriteUInt8(0xFF);
-#endif
+
+	if (g_TheAbyss)
+		m_Data[61] = 0xFF;
+	else
+	{
+		WriteString(g_MainScreen.m_Account->c_str(), 30, false);
+		WriteString(g_MainScreen.m_Password->c_str(), 30, false);
+		WriteUInt8(0xFF);
+	}
 }
 //----------------------------------------------------------------------------------
 CPacketSelectServer::CPacketSelectServer(uchar index)
@@ -63,10 +65,16 @@ CPacketSecondLogin::CPacketSecondLogin()
 	WriteUInt8(0x91);
 	WriteDataLE(g_GameSeed, 4);
 	WriteString(g_MainScreen.m_Account->c_str(), 30, false);
-#if UO_ABYSS_SHARD == 1
-	WriteUInt16BE(0xFF07);
-#endif
-	WriteString(g_MainScreen.m_Password->c_str(), 30, false);
+
+	int passLen = 30;
+
+	if (g_TheAbyss)
+	{
+		WriteUInt16BE(0xFF07);
+		passLen = 28;
+	}
+
+	WriteString(g_MainScreen.m_Password->c_str(), passLen, false);
 }
 //----------------------------------------------------------------------------------
 CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
@@ -93,8 +101,6 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 	
 	IFOR(i, 0, g_CharacterList.ClientFlag)
 		clientFlag |= (1 << i);
-
-	DebugMsg("clientFlag=0x%08X\n", clientFlag);
 
 	WriteUInt32BE(clientFlag); //clientflag
 	WriteUInt32BE(0x00000001); //?
@@ -698,10 +704,10 @@ CPacketASCIIPromptResponse::CPacketASCIIPromptResponse(const char *text, int len
 	WriteString(text, len);
 }
 //---------------------------------------------------------------------------
-CPacketUnicodePromptResponse::CPacketUnicodePromptResponse(const wchar_t *text, int len, const char *lang, bool cancel)
+CPacketUnicodePromptResponse::CPacketUnicodePromptResponse(const wchar_t *text, int len, const string &lang, bool cancel)
 : CPacket(1)
 {
-	int size = 19 + (len * 2) + 2;
+	int size = 19 + (len * 2);
 	Resize(size, true);
 
 	WriteDataLE(g_LastUnicodePrompt, 11);
@@ -709,7 +715,7 @@ CPacketUnicodePromptResponse::CPacketUnicodePromptResponse(const wchar_t *text, 
 	WriteUInt32BE((int)((bool)!cancel));
 	WriteString(lang, 4, false);
 
-	WriteWString(text, len);
+	WriteWString(text, len, false, false);
 }
 //---------------------------------------------------------------------------
 CPacketDyeDataResponse::CPacketDyeDataResponse(uint serial, ushort graphic, ushort color)

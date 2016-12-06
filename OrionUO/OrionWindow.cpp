@@ -289,6 +289,8 @@ void COrionWindow::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 
 	if ((iswprint(wParam) || (g_GameState >= GS_GAME && (wParam == 0x11 || wParam == 0x17))) && g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		g_CurrentScreen->OnCharPress(wParam, lParam);
+	else if (wParam == 0x16 && g_EntryPointer != NULL)
+		g_EntryPointer->Paste();
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
@@ -349,8 +351,31 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 			//g_PacketManager.PluginReceiveHandler((PBYTE)wParam, lParam);
 			return S_OK;
 		case UOMSG_SEND:
+		{
+			uint ticks = g_Ticks;
+			puchar buf = (puchar)wParam;
+			int size = lParam;
+			g_TotalSendSize += size;
+
+			CPacketInfo &type = g_PacketManager.GetInfo(*buf);
+
+			LOG("--- ^(%d) s(+%d => %d) Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
+
+			g_LastPacketTime = ticks;
+			g_LastSendTime = ticks;
+
+			if (*buf == 0x80 || *buf == 0x91)
+			{
+				LOG_DUMP(buf, size / 2);
+				LOG("**** PASSWORD CENSORED ****\n");
+			}
+			else
+				LOG_DUMP(buf, size);
+
 			g_ConnectionManager.Send((PBYTE)wParam, lParam);
+
 			return S_OK;
+		}
 		default:
 			break;
 	}

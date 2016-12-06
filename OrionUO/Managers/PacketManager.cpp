@@ -782,8 +782,8 @@ PACKET_HANDLER(CharacterList)
 	g_CharacterList.OnePerson = (bool)(g_ClientFlag & CLF_ONE_CHARACTER_SLOT);
 	//g_SendLogoutNotification = (bool)(g_ClientFlag & LFF_RE);
 	g_NPCPopupEnabled = (bool)(g_ClientFlag & CLF_CONTEXT_MENU);
-	g_ChatEnabled = (bool)(g_ClientFlag & CLF_ENABLE_CHAT);
 	g_TooltipsEnabled = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
+	g_PaperdollBooks = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
 
 	g_CharacterListScreen.UpdateContent();
 }
@@ -855,30 +855,39 @@ PACKET_HANDLER(EnterWorld)
 	uint serial = ReadUInt32BE();
 
 	if (g_World != NULL)
-		LOG("Error!!! Duplicate enter world message\n");
-	else
 	{
-		RELEASE_POINTER(g_World);
-		RELEASE_POINTER(g_Walker);
-		RELEASE_POINTER(g_ObjectInHand);
+		LOG("Error!!! Duplicate enter world message\n");
 
-		g_World = new CGameWorld(serial);
-		g_Walker = new CWalker();
-		g_PendingDelayTime = 0;
+		g_Party.Leader = 0;
+		g_Party.Inviter = 0;
+		g_Party.Clear();
 
-		g_WalkRequestCount = 0;
-		g_PingCount = 0;
-		g_PingSequence = 0;
-		g_ClickObject.Clear();
-		g_Weather.Reset();
-		g_SkillsTotal = 0.0f;
-		g_ConsolePrompt = PT_NONE;
-		g_MacroPointer = NULL;
-		g_Season = ST_SUMMER;
-		g_OldSeason = ST_SUMMER;
-		g_GlobalScale = 1.0;
-		g_PathFinder.BlockMoving = false;
+		g_ResizedGump = NULL;
 	}
+
+	RELEASE_POINTER(g_World);
+	RELEASE_POINTER(g_Walker);
+	RELEASE_POINTER(g_ObjectInHand);
+
+	g_World = new CGameWorld(serial);
+	g_Walker = new CWalker();
+	g_PendingDelayTime = 0;
+
+	g_UseItemActions.Clear();
+
+	g_Ping = 0;
+	g_WalkRequestCount = 0;
+	g_PingCount = 0;
+	g_PingSequence = 0;
+	g_ClickObject.Clear();
+	g_Weather.Reset();
+	g_SkillsTotal = 0.0f;
+	g_ConsolePrompt = PT_NONE;
+	g_MacroPointer = NULL;
+	g_Season = ST_SUMMER;
+	g_OldSeason = ST_SUMMER;
+	g_GlobalScale = 1.0;
+	g_PathFinder.BlockMoving = false;
 
 	Move(4);
 
@@ -1254,10 +1263,8 @@ PACKET_HANDLER(UpdateItem)
 	uint serial = ReadUInt32BE();
 	ushort graphic = ReadUInt16BE();
 
-#if UO_ABYSS_SHARD == 1
-	if ((graphic & 0x7FFF) == 0x0E5C)
+	if (g_TheAbyss && (graphic & 0x7FFF) == 0x0E5C)
 		return;
-#endif
 
 	ushort count = 0;
 
@@ -1298,6 +1305,7 @@ PACKET_HANDLER(UpdateItem)
 		LOG("updated ");
 
 	obj->MultiBody = (graphic & 0x4000);
+	ushort oldGraphic = obj->Graphic;
 	obj->Graphic = graphic & 0x3FFF;
 
 	if (graphic == 0x2006 && !count)
@@ -1316,8 +1324,7 @@ PACKET_HANDLER(UpdateItem)
 		dir = ReadUInt8();
 	}
 
-	obj->X = x;
-	obj->Z = ReadUInt8();
+	uchar z = ReadUInt8();
 
 	if (y & 0x8000)
 	{
@@ -1334,11 +1341,16 @@ PACKET_HANDLER(UpdateItem)
 		obj->Flags = ReadUInt8();
 	}
 
-	obj->Y = y;
+	if (obj->MultiBody)
+		obj->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
 
-	obj->OnGraphicChange(dir);
+	obj->X = x;
+	obj->Y = y;
+	obj->Z = z;
 
 	g_World->MoveToTop(obj);
+
+	obj->OnGraphicChange(dir);
 
 	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
@@ -1365,18 +1377,20 @@ PACKET_HANDLER(UpdateItemSA)
 	ushort color = ReadUInt16BE();
 	char flags = ReadUInt8();
 
+	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == serial)
+	{
+		return;
+
+		//delete g_ObjectInHand;
+		//g_ObjectInHand = NULL;
+	}
+
 	CGameItem *obj = g_World->GetWorldItem(serial);
 
 	if (obj == NULL)
 	{
 		LOG("no memory??");
 		return;
-	}
-
-	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == obj->Serial)
-	{
-		delete g_ObjectInHand;
-		g_ObjectInHand = NULL;
 	}
 
 	if (obj->Dragged)
@@ -1391,16 +1405,18 @@ PACKET_HANDLER(UpdateItemSA)
 		LOG("updated ");
 
 	obj->MultiBody = (type == 2);
+	ushort oldGraphic = obj->Graphic;
 	obj->Graphic = graphic;
 	obj->Count = count;
+
+	if (obj->MultiBody)
+		obj->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
 
 	obj->X = x;
 	obj->Y = y;
 	obj->Z = z;
 
 	obj->Color = color;
-
-	obj->OnGraphicChange(dir);
 
 	obj->Flags = flags;
 
@@ -1410,6 +1426,8 @@ PACKET_HANDLER(UpdateItemSA)
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	g_World->MoveToTop(obj);
+
+	obj->OnGraphicChange(dir);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateObject)
@@ -1456,6 +1474,8 @@ PACKET_HANDLER(UpdateObject)
 		g_ObjectInHand = NULL;
 	}
 
+	obj->ClearNotOpenedItems();
+
 	obj->MapIndex = g_CurrentMap;
 
 	ushort graphic = ReadUInt16BE();
@@ -1477,6 +1497,7 @@ PACKET_HANDLER(UpdateObject)
 		//Move(2);
 	}
 
+	ushort oldGraphic = obj->Graphic;
 	bool oldDead = g_Player->Dead();
 	obj->Graphic = graphic & 0x3FFF;
 
@@ -1495,12 +1516,16 @@ PACKET_HANDLER(UpdateObject)
 
 	uchar dir = ReadUInt8();
 
+	int changeGraphicDir = dir;
+
 	if (character != NULL)
-		obj->OnGraphicChange(1000);
+		changeGraphicDir = 1000;
 	else
 	{
 		item->MultiBody = (graphic & 0x4000);
-		obj->OnGraphicChange(dir);
+
+		if (item->MultiBody)
+			item->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != newX) || (obj->Y != newY) || (obj->Z != newZ));
 	}
 
 	obj->Color = ReadUInt16BE();
@@ -1555,9 +1580,13 @@ PACKET_HANDLER(UpdateObject)
 			g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
 	}
 
+	g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
+
 	serial = ReadUInt32BE();
 
 	g_World->MoveToTop(obj);
+
+	obj->OnGraphicChange(changeGraphicDir);
 
 	puchar end = m_Start + m_Size;
 
@@ -1665,7 +1694,7 @@ PACKET_HANDLER(UpdateContainedItem)
 	{
 		if (g_ObjectInHand->Separated)
 			g_ObjectInHand->Separated = false;
-		else
+		else if (g_ObjectInHand->Dropped)
 		{
 			delete g_ObjectInHand;
 			g_ObjectInHand = NULL;
@@ -1734,7 +1763,12 @@ PACKET_HANDLER(UpdateContainedItem)
 			gump = g_GumpManager.UpdateContent(cserial, 0, GT_CONTAINER);
 
 		if (gump != NULL)
+		{
 			container->Opened = true;
+
+			if (gump->GumpType == GT_CONTAINER)
+				((CGumpContainer*)gump)->UpdateItemCoordinates(obj);
+		}
 
 		CGameObject *top = container->GetTopObject();
 
@@ -1885,7 +1919,15 @@ PACKET_HANDLER(UpdateContainedItems)
 			gump = g_GumpManager.UpdateContent(contobj->Serial, 0, GT_CONTAINER);
 
 		if (gump != NULL)
+		{
 			contobj->Opened = true;
+
+			if (gump->GumpType == GT_CONTAINER)
+			{
+				QFOR(item, contobj->m_Items, CGameObject*)
+					((CGumpContainer*)gump)->UpdateItemCoordinates(item);
+			}
+		}
 
 		CGameObject *top = contobj->GetTopObject();
 
@@ -2042,7 +2084,7 @@ PACKET_HANDLER(UpdateCharacter)
 		return;
 
 	uint serial = ReadUInt32BE();
-	CGameCharacter *obj = g_World->GetWorldCharacter(serial);
+	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
 
 	if (obj == NULL)
 		return;
@@ -2070,14 +2112,27 @@ PACKET_HANDLER(UpdateCharacter)
 	{
 		if (serial != g_PlayerSerial)
 		{
-			CWalkData *wd = new CWalkData();
+			CWalkData *wd = obj->m_WalkStack.Top();
+
+			if (wd != NULL && obj->FindLayer(OL_MOUNT) == NULL)
+			{
+				obj->X = wd->X;
+				obj->Y = wd->Y;
+				obj->Z = wd->Z;
+				obj->Direction = wd->Direction;
+
+				obj->m_WalkStack.Clear();
+			}
+
+			if (obj->m_WalkStack.Empty())
+				obj->LastStepTime = g_Ticks;
+
+			wd = new CWalkData();
+
 			wd->X = x;
 			wd->Y = y;
 			wd->Z = z;
 			wd->Direction = dir;
-
-			if (obj->m_WalkStack.Empty())
-				obj->LastStepTime = g_Ticks;
 
 			obj->m_WalkStack.Push(wd);
 		}
@@ -2103,12 +2158,10 @@ PACKET_HANDLER(UpdateCharacter)
 		}
 	}
 
-	if (serial == g_PlayerSerial)
-	{
-		//obj->PaperdollText = "";
-		m_MegaClilocRequests.push_back(serial);
-	}
-	else if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+	//if (serial == g_PlayerSerial)
+	//	obj->PaperdollText = "";
+
+	if (m_ClientVersion >= CV_308Z && (serial == g_PlayerSerial || !obj->ClilocMessage.length()))
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	obj->Color = ReadUInt16BE();
@@ -2275,6 +2328,8 @@ PACKET_HANDLER(EnableLockedFeatures)
 		g_LockedClientFeatures = ReadUInt32BE();
 	else
 		g_LockedClientFeatures = ReadUInt16BE();
+
+	g_ChatEnabled = (bool)(g_LockedClientFeatures & LFF_T2A);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenContainer)
@@ -2811,6 +2866,8 @@ PACKET_HANDLER(ExtendedCommand)
 PACKET_HANDLER(DenyWalk)
 {
 	g_WalkRequestCount = 0;
+	g_PendingDelayTime = 0;
+	g_Ping = 0;
 
 	if (g_Player == NULL)
 		return;
@@ -2828,6 +2885,8 @@ PACKET_HANDLER(DenyWalk)
 	g_Player->OffsetZ = 0;
 
 	g_Player->m_WalkStack.Clear();
+
+	g_World->MoveToTop(g_Player);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ConfirmWalk)
@@ -2838,7 +2897,32 @@ PACKET_HANDLER(ConfirmWalk)
 	if (g_Player == NULL)
 		return;
 
-	uchar Seq = ReadUInt8();
+	uchar seq = ReadUInt8();
+
+	g_PingByWalk[seq][1] = g_Ticks;
+
+	if (seq >= 10 && !(seq % 10))
+	{
+		g_Ping = 0;
+
+		IFOR(i, 0, 10)
+		{
+			int delay = g_PingByWalk[seq - i][1] - g_PingByWalk[seq - i][0];
+
+			if (delay > 0)
+			{
+				if (delay >= 600)
+					delay = 0;
+				else
+					delay--;
+			}
+
+			g_Ping += delay;
+		}
+
+		g_Ping /= 10;
+	}
+
 	//player->SetDirection(newdir);
 
 	uchar newnoto = ReadUInt8() & (~0x40);
@@ -3166,9 +3250,25 @@ PACKET_HANDLER(GraphicEffect)
 	effect->Serial = sourceSerial;
 	effect->DestSerial = destSerial;
 	effect->Graphic = graphic;
-	effect->X = sourceX;
-	effect->Y = sourceY;
-	effect->Z = sourceZ;
+
+	CGameObject *sourceObject = NULL;
+
+	if (!sourceX && !sourceY)
+		sourceObject = g_World->FindWorldObject(sourceSerial);
+
+	if (sourceObject != NULL)
+	{
+		effect->X = sourceObject->X;
+		effect->Y = sourceObject->Y;
+		effect->Z = sourceObject->Z;
+	}
+	else
+	{
+		effect->X = sourceX;
+		effect->Y = sourceY;
+		effect->Z = sourceZ;
+	}
+
 	effect->DestX = destX;
 	effect->DestY = destY;
 	effect->DestZ = destZ;
@@ -3911,6 +4011,26 @@ PACKET_HANDLER(SecureTrading)
 
 		CGumpSecureTrading *gump = new CGumpSecureTrading(id1, 0, 0, id1, id2);
 
+		CGameObject *obj = g_World->FindWorldObject(id1);
+
+		if (obj != NULL)
+		{
+			obj = obj->GetTopObject()->FindSecureTradeBox();
+
+			if (obj != NULL)
+				obj->Clear();
+		}
+
+		obj = g_World->FindWorldObject(id2);
+
+		if (obj != NULL)
+		{
+			obj = obj->GetTopObject()->FindSecureTradeBox();
+
+			if (obj != NULL)
+				obj->Clear();
+		}
+
 		if (hasName && *m_Ptr)
 			gump->Text = ReadString(0);
 
@@ -4050,7 +4170,7 @@ PACKET_HANDLER(OpenMenuGump)
 			offsetY += 2;
 
 			text = (CGUIText*)gump->Add(new CGUIText(0x0386, 50, offsetY));
-			text->CreateTextureA(1, name);
+			text->CreateTextureA(1, name, 340);
 
 			int addHeight = text->m_Texture.Height;
 
@@ -4215,6 +4335,7 @@ PACKET_HANDLER(OpenGump)
 			sscanf((char*)e, "%d %d %d %d %d", &x, &y, &graphic, &w, &h);
 
 			go = new CGUIResizepic(0, graphic, x, y, w, h);
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "checkertrans", 12))
 		{
@@ -4329,6 +4450,7 @@ PACKET_HANDLER(OpenGump)
 
 			gump->Add(new CGUIShader(g_ColorizerShader, true));
 			go = new CGUITilepic(graphic, color, x, y);
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "tilepic", 7))
 		{
@@ -4337,6 +4459,7 @@ PACKET_HANDLER(OpenGump)
 			sscanf((char*)e, "%d %d %d", &x, &y, &graphic);
 
 			go = new CGUITilepic(graphic, 0, x, y);
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "gumppictiled", 12))
 		{
@@ -4345,6 +4468,7 @@ PACKET_HANDLER(OpenGump)
 			sscanf((char*)e, "%d %d %d %d %d", &x, &y, &w, &h, &graphic);
 
 			go = new CGUIGumppicTiled(graphic, x, y, w, h);
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "gumppic", 7))
 		{
@@ -4367,6 +4491,7 @@ PACKET_HANDLER(OpenGump)
 
 			go = new CGUIGumppic(graphic, x, y);
 			go->Color = color;
+			go->DrawOnly = true;
 		}
 		else if (!memcmp(lowc, "xmfhtmlgump", 11))
 		{

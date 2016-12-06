@@ -74,10 +74,20 @@ void CMultiObject::Draw(const int &x, const int &y)
 	}
 	else
 	{
+		if (IsTranslucent())
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glColor4f(1.0f, 1.0f, 1.0f, 0.7f);
+		}
+
 		if (g_UseCircleTrans)
 			g_Orion.DrawStaticArtTransparent(objGraphic, objColor, x, y, m_Z);
 		else
 			g_Orion.DrawStaticArt(objGraphic, objColor, x, y, m_Z);
+
+		if (IsTranslucent())
+			glDisable(GL_BLEND);
 
 		if (IsLightSource() && g_GameScreen.UseLight)
 			g_GameScreen.AddLight(this, this, x, y - (m_Z * 4));

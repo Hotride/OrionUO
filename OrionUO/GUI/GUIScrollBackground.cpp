@@ -40,8 +40,9 @@ CGUIScrollBackground::CGUIScrollBackground(const uint &serial, const ushort &gra
 	if (isValid)
 	{
 		m_OffsetX = (width - th[1]->Width) / 2;
-		m_BottomOffsetX = m_OffsetX; // th[0]->Width - th[3]->Width;
-		m_Width = m_OffsetX + th[3]->Width;
+		int offset = th[0]->Width - th[3]->Width;
+		m_BottomOffsetX = (offset / 2) + (offset / 4);
+		m_Width = width; // m_OffsetX + th[3]->Width;
 	}
 
 	UpdateHeight(m_Height);

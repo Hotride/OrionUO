@@ -253,31 +253,32 @@ void CConnectionManager::Recv()
 */
 int CConnectionManager::Send(puchar buf, int size)
 {
-#if UO_ABYSS_SHARD == 1
-	switch (buf[0])
+	if (g_TheAbyss)
 	{
-		case 0x34:
-			buf[0] = 0x71;
-			break;
-		case 0x72:
-			buf[0] = 0x6C;
-			break;
-		case 0x6C:
-			buf[0] = 0x72;
-			break;
-		case 0x3B:
-			buf[0] = 0x34;
-			break;
-		case 0x6F:
-			buf[0] = 0x56;
-			break;
-		case 0x56:
-			buf[0] = 0x6F;
-			break;
-		default:
-			break;
+		switch (buf[0])
+		{
+			case 0x34:
+				buf[0] = 0x71;
+				break;
+			case 0x72:
+				buf[0] = 0x6C;
+				break;
+			case 0x6C:
+				buf[0] = 0x72;
+				break;
+			case 0x3B:
+				buf[0] = 0x34;
+				break;
+			case 0x6F:
+				buf[0] = 0x56;
+				break;
+			case 0x56:
+				buf[0] = 0x6F;
+				break;
+			default:
+				break;
+		}
 	}
-#endif
 
 	if (m_IsLoginSocket) //Логин сокет
 	{

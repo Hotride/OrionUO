@@ -31,6 +31,8 @@ class CGameItem : public CGameObject
 	SETGET(bool, Dragged);
 	//!Это прокси-объект мульти
 	SETGET(bool, MultiBody);
+	//!Это прокси-объект мульти
+	SETGET(bool, WantUpdateMulti);
 	//!Цвет тайла для замены филдов (если 0 - не филд)
 	SETGET(ushort, FieldColor);
 

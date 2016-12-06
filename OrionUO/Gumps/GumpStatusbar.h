@@ -65,6 +65,9 @@ public:
 
 	static const int ID_GSB_LOCK_MOVING = 10;
 
+	static int m_StatusbarDefaultWidth;
+	static int m_StatusbarDefaultHeight;
+
 	CGumpStatusbar *m_GroupNext;
 	CGumpStatusbar *m_GroupPrev;
 

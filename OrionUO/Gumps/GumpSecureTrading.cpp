@@ -174,6 +174,12 @@ void CGumpSecureTrading::UpdateContent()
 
 			CGUITilepicHightlighted *dataObject = (CGUITilepicHightlighted*)m_MyDataBox->Add(new CGUITilepicHightlighted(item->Serial, graphic, item->Color, 0x0035, 45 + item->X, 70 + item->Y, doubleDraw));
 			dataObject->PartialHue = IsPartialHue(g_Orion.GetStaticFlags(graphic));
+
+			if (dataObject->Y >= 150)
+				dataObject->Y = 120;
+
+			if (dataObject->X >= 155)
+				dataObject->X = 125;
 		}
 	}
 
@@ -188,6 +194,12 @@ void CGumpSecureTrading::UpdateContent()
 
 			CGUITilepicHightlighted *dataObject = (CGUITilepicHightlighted*)m_OpponentDataBox->Add(new CGUITilepicHightlighted(item->Serial, graphic, item->Color, 0x0035, 192 + item->X, 70 + item->Y, doubleDraw));
 			dataObject->PartialHue = IsPartialHue(g_Orion.GetStaticFlags(graphic));
+
+			if (dataObject->Y >= 150)
+				dataObject->Y = 120;
+
+			if (dataObject->X >= 302)
+				dataObject->X = 272;
 		}
 	}
 }

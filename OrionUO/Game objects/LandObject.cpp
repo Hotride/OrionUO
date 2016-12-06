@@ -14,7 +14,7 @@
 #include "../SelectedObject.h"
 //----------------------------------------------------------------------------------
 CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
-: CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), m_MinZ(z)
+: CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), m_MinZ(z), m_AverageZ(z)
 {
 	m_OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
@@ -36,7 +36,34 @@ void CLandObject::UpdateGraphicBySeason()
 	m_Graphic = g_Orion.GetLandSeasonGraphic(m_OriginalGraphic);
 }
 //---------------------------------------------------------------------------
-void CLandObject::UpdateZ(const char &zTop, const char &zRight, const char &zBottom)
+int CLandObject::GetDirectionZ(const int &direction)
+{
+	switch (direction)
+	{
+		case 1:
+			return (m_Rect.bottom / 4);
+		case 2:
+			return (m_Rect.right / 4);
+		case 3:
+			return (m_Rect.top / 4);
+		default:
+			break;
+	}
+
+	return m_Z;
+}
+//---------------------------------------------------------------------------
+int CLandObject::CalculateCurrentAverageZ(const int &direction)
+{
+	int result = GetDirectionZ(((uchar)(direction >> 1) + 1) & 3);
+
+	if (direction & 1)
+		return result;
+
+	return (result + GetDirectionZ(direction >> 1)) >> 1;
+}
+//---------------------------------------------------------------------------
+void CLandObject::UpdateZ(const int &zTop, const int &zRight, const int &zBottom)
 {
 	if (m_IsStretched)
 	{
@@ -48,6 +75,11 @@ void CLandObject::UpdateZ(const char &zTop, const char &zRight, const char &zBot
 		m_Rect.top = zTop * 4;
 		m_Rect.right = zRight * 4;
 		m_Rect.bottom = zBottom * 4;
+
+		if (abs(m_Z - zRight) <= abs(zBottom - zTop))
+			AverageZ = (m_Z + zRight) >> 1;
+		else
+			AverageZ = (zBottom + zTop) >> 1;
 
 		//Минимальная Z-координата из всех
 		m_MinZ = m_Z;

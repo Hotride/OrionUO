@@ -44,7 +44,10 @@ int CApplication::Run(HINSTANCE hinstance)
 			DispatchMessage(&msg);
 		}
 		else
+		{
 			Sleep(1);
+			OnIDLELoop();
+		}
 	}
 
 	timeEndPeriod(1);

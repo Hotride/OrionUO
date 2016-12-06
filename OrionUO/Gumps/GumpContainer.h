@@ -38,6 +38,8 @@ public:
 
 	CGUIGumppic *m_BodyGump;
 	
+	void UpdateItemCoordinates(class CGameObject *item);
+
 	CTextRenderer *GetTextRenderer() { return &m_TextRenderer; }
 
 	virtual void PrepareTextures();

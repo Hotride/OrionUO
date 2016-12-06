@@ -48,6 +48,9 @@ class CConfigManager
 	SETGETE(bool, ChangeFieldsGraphic, OnChangeChangeFieldsGraphic);
 	SETGETE(bool, PaperdollSlots, OnChangePaperdollSlots);
 	SETGET(bool, RemoveStatusbarsWithoutObjects);
+	SETGET(bool, ShowDefaultConsoleEntryMode);
+	SETGET(uchar, DrawAuraState);
+	SETGET(bool, DrawAuraWithCtrlPressed);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

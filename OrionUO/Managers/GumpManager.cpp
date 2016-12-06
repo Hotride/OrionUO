@@ -1237,11 +1237,10 @@ void CGumpManager::Load(const string &path)
 					}
 					else
 					{
-						CContainerStackItem cs(serial, gumpX, gumpY, gumpMinimizedX, gumpMinimizedY, gumpMinimized, gumpLockMoving);
+						g_ContainerStack.push_back(CContainerStackItem(serial, gumpX, gumpY, gumpMinimizedX, gumpMinimizedY, gumpMinimized, gumpLockMoving));
 
-						g_ContainerStack.push_back(cs);
-
-						g_Orion.DoubleClick(serial);
+						g_UseItemActions.Add(serial);
+						//g_Orion.DoubleClick(serial);
 					}
 
 					break;
@@ -1328,10 +1327,7 @@ void CGumpManager::Load(const string &path)
 	else
 	{
 		if (!g_ConfigManager.DisableMenubar && !g_ConfigManager.GameWindowX && !g_ConfigManager.GameWindowY)
-		{
-			g_ConfigManager.GameWindowX = 40;
 			g_ConfigManager.GameWindowY = 40;
-		}
 
 		AddGump(new CGumpPaperdoll(g_PlayerSerial, g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth, g_ConfigManager.GameWindowY, false));
 		AddGump(new CGumpStatusbar(g_PlayerSerial, g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth, g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight - 50, false));
@@ -1343,11 +1339,10 @@ void CGumpManager::Load(const string &path)
 
 			if (backpack != NULL)
 			{
-				CContainerStackItem cs(backpack->Serial, g_ConfigManager.GameWindowX, g_ConfigManager.GameWindowY, g_ConfigManager.GameWindowX, g_ConfigManager.GameWindowY, false, false);
+				g_ContainerStack.push_back(CContainerStackItem(backpack->Serial, g_ConfigManager.GameWindowX, g_ConfigManager.GameWindowY, g_ConfigManager.GameWindowX, g_ConfigManager.GameWindowY, false, false));
 
-				g_ContainerStack.push_back(cs);
-
-				g_Orion.DoubleClick(backpack->Serial);
+				g_UseItemActions.Add(backpack->Serial);
+				//g_Orion.DoubleClick(backpack->Serial);
 			}
 		}
 	}
@@ -1481,7 +1476,7 @@ void CGumpManager::Save(const string &path)
 				{
 					CGameObject *topobj = g_World->FindWorldObject(gump->Serial);
 
-					if (topobj == NULL)
+					if (topobj == NULL || ((CGameItem*)topobj)->Layer == OL_BANK)
 						break;
 
 					topobj = topobj->GetTopObject();

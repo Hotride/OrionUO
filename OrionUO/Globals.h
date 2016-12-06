@@ -21,6 +21,7 @@ extern bool g_MovingFromMouse;
 //!Использование автоматического перемещения персонажа за курсором мышки, когда курсор находится в игровом окне
 extern bool g_AutoMoving;
 
+extern bool g_TheAbyss;
 extern bool g_AbyssPacket03First;
 //----------------------------------------------------------------------------------
 #include "Wisp/WispGlobal.h"
@@ -57,6 +58,7 @@ int GetDistance(CGameObject *current, WISP_GEOMETRY::CPoint2Di target);
 int GetMultiDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target);
 int GetDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target);
 int GetDistance(WISP_GEOMETRY::CPoint2Di current, WISP_GEOMETRY::CPoint2Di target);
+int GetRemoveDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target);
 int GetTopObjDistance(CGameObject *current, CGameObject *target);
 //----------------------------------------------------------------------------------
 const char *GetReagentName(const ushort &id);
@@ -146,6 +148,7 @@ extern bool g_SendLogoutNotification;
 extern bool g_NPCPopupEnabled;
 extern bool g_ChatEnabled;
 extern bool g_TooltipsEnabled;
+extern bool g_PaperdollBooks;
 
 //!Сообщение инициализации шифрования серверу
 extern uchar g_GameSeed[4];
@@ -249,6 +252,11 @@ extern DEVELOPER_MODE g_OptionsDeveloperMode;
 const int g_ObjectHandlesWidth = 142;
 const int g_ObjectHandlesHeight = 20;
 extern ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight];
+
+extern uint g_PingByWalk[0x100][2];
+extern uint g_Ping;
+
+extern bool g_DrawAura;
 //----------------------------------------------------------------------------------
 inline bool IsBackground(const __int64 &flags) { return (flags & 0x00000001); }
 inline bool IsWeapon(const __int64 &flags) { return (flags & 0x00000002); }

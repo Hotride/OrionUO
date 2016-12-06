@@ -12,6 +12,7 @@
 #include "../Managers/ConfigManager.h"
 #include "../Managers/FontsManager.h"
 #include "../Managers/GumpManager.h"
+#include "../OrionWindow.h"
 //----------------------------------------------------------------------------------
 CEntryText *g_EntryPointer = NULL;
 //----------------------------------------------------------------------------------
@@ -263,6 +264,26 @@ void CEntryText::Clear()
 	m_DrawOffset = 0;
 	m_Texture.Clear();
 	memset(&m_CaretPos, 0, sizeof(m_CaretPos));
+}
+//----------------------------------------------------------------------------------
+void CEntryText::Paste()
+{
+	if (OpenClipboard(g_OrionWindow.Handle))
+	{
+		HANDLE hData = GetClipboardData(CF_UNICODETEXT);
+
+		if (hData != NULL)
+		{
+			wstring text((wchar_t*)GlobalLock(hData));
+
+			IFOR(i, 0, (int)text.length())
+				Insert(text[i]);
+
+			GlobalUnlock(hData);
+		}
+
+		CloseClipboard();
+	}
 }
 //----------------------------------------------------------------------------------
 //Изменение позиции m_Position
