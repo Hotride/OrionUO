@@ -4011,6 +4011,26 @@ PACKET_HANDLER(SecureTrading)
 
 		CGumpSecureTrading *gump = new CGumpSecureTrading(id1, 0, 0, id1, id2);
 
+		CGameObject *obj = g_World->FindWorldObject(id1);
+
+		if (obj != NULL)
+		{
+			obj = obj->GetTopObject()->FindSecureTradeBox();
+
+			if (obj != NULL)
+				obj->Clear();
+		}
+
+		obj = g_World->FindWorldObject(id2);
+
+		if (obj != NULL)
+		{
+			obj = obj->GetTopObject()->FindSecureTradeBox();
+
+			if (obj != NULL)
+				obj->Clear();
+		}
+
 		if (hasName && *m_Ptr)
 			gump->Text = ReadString(0);
 
