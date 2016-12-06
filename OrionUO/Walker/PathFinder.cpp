@@ -59,9 +59,21 @@ bool CPathFinderTest::CreateItemsList(vector<CPathObjectTest> &list, const int &
 				CLandObject *land = (CLandObject*)obj;
 
 				uint flags = POF_IMPASSABLE_OR_SURFACE;
+				uint64 tiledataFlags = g_Orion.GetLandFlags(graphic);
 
-				if (!IsImpassable(g_Orion.GetLandFlags(graphic)))
-					flags = POF_IMPASSABLE_OR_SURFACE | POF_SURFACE | POF_BRIDGE;
+				if (stepState == PSS_ON_SEA_HORSE)
+				{
+					if (IsWet(tiledataFlags))
+						flags = POF_IMPASSABLE_OR_SURFACE | POF_SURFACE | POF_BRIDGE;
+				}
+				else
+				{
+					if (!IsImpassable(tiledataFlags))
+						flags = POF_IMPASSABLE_OR_SURFACE | POF_SURFACE | POF_BRIDGE;
+
+					if (stepState == PSS_ON_SEA_HORSE && IsNoDiagonal(tiledataFlags))
+						flags |= POF_NO_DIAGONAL;
+				}
 
 				int landMinZ = land->MinZ;
 				int landAverageZ = land->AverageZ;
@@ -79,23 +91,23 @@ bool CPathFinderTest::CreateItemsList(vector<CPathObjectTest> &list, const int &
 
 			if (obj->IsGameObject())
 			{
-				dropFlags = ((graphic >= 0x3946 && graphic <= 0x3964) || graphic == 0x0082);
-
 				CGameObject *go = (CGameObject*)obj;
 
-				if ((!go->NPC && ((CGameItem*)obj)->MultiBody) || obj->IsInternal()) //isMulti || InternalItem
-					canBeAdd = false;
-				else if (go->NPC)
+				if (go->NPC)
 				{
 					CGameCharacter *gc = (CGameCharacter*)obj;
 
-					if (!ignoreGameCharacters && !gc->Dead())
+					if (!ignoreGameCharacters && !gc->Dead() && !gc->IgnoreCharacters())
 						list.push_back(CPathObjectTest(POF_IMPASSABLE_OR_SURFACE, obj->Z, obj->Z + DEFAULT_CHARACTER_HEIGHT, DEFAULT_CHARACTER_HEIGHT, obj));
 
 					canBeAdd = false;
 				}
+				else if (((CGameItem*)obj)->MultiBody || obj->IsInternal()) //isMulti || InternalItem
+					canBeAdd = false;
 				else if (stepState == PSS_DEAD_OR_GM && (go->IsDoor() || tileInfo->Weight <= 0x5A))
 					dropFlags = true;
+				else
+					dropFlags = ((graphic >= 0x3946 && graphic <= 0x3964) || graphic == 0x0082);
 			}
 			else
 				graphic -= 0x4000;
@@ -104,31 +116,42 @@ bool CPathFinderTest::CreateItemsList(vector<CPathObjectTest> &list, const int &
 			{
 				uint flags = 0;
 
-				if (obj->IsImpassable() || obj->IsSurface())
-					flags = POF_IMPASSABLE_OR_SURFACE;
-
-				if (!obj->IsImpassable())
+				if (stepState == PSS_ON_SEA_HORSE)
 				{
-					if (obj->IsSurface())
-						flags |= POF_SURFACE;
-
-					if (obj->IsBridge())
-						flags |= POF_BRIDGE;
+					if (obj->IsWet())
+						flags = POF_SURFACE | POF_BRIDGE;
 				}
-
-				if (stepState == PSS_DEAD_OR_GM)
+				else
 				{
-					if (graphic <= 0x0846)
+					if (obj->IsImpassable() || obj->IsSurface())
+						flags = POF_IMPASSABLE_OR_SURFACE;
+
+					if (!obj->IsImpassable())
 					{
-						if (!(graphic != 0x0846 && graphic != 0x0692 && (graphic <= 0x06F4 || graphic > 0x06F6)))
+						if (obj->IsSurface())
+							flags |= POF_SURFACE;
+
+						if (obj->IsBridge())
+							flags |= POF_BRIDGE;
+					}
+
+					if (stepState == PSS_DEAD_OR_GM)
+					{
+						if (graphic <= 0x0846)
+						{
+							if (!(graphic != 0x0846 && graphic != 0x0692 && (graphic <= 0x06F4 || graphic > 0x06F6)))
+								dropFlags = true;
+						}
+						else if (graphic == 0x0873)
 							dropFlags = true;
 					}
-					else if (graphic == 0x0873)
-						dropFlags = true;
-				}
 
-				if (dropFlags)
-					flags &= 0xFFFFFFFE;
+					if (dropFlags)
+						flags &= 0xFFFFFFFE;
+
+					if (stepState == PSS_FLYING && obj->IsNoDiagonal())
+						flags |= POF_NO_DIAGONAL;
+				}
 
 				if (flags)
 				{
@@ -145,7 +168,7 @@ bool CPathFinderTest::CreateItemsList(vector<CPathObjectTest> &list, const int &
 		}
 	}
 
-	return true;
+	return !list.empty();
 }
 //----------------------------------------------------------------------------------
 int CPathFinderTest::CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, const int &currentZ, int newDirection, const int &stepState)
@@ -214,7 +237,7 @@ bool CPathFinderTest::CalculateNewZ(const int &x, const int &y, char &z, const i
 		stepState = PSS_DEAD_OR_GM;
 	else
 	{
-		if (g_Player->Flying())
+		if (g_Player->Flying()) // && no mount?
 			stepState = PSS_FLYING;
 		else
 		{
