@@ -177,7 +177,10 @@ void CGameItem::OnGraphicChange(int direction)
 		}
 	}
 	else if (m_Items == NULL || m_WantUpdateMulti)
+	{
+		m_RenderQueueIndex = 10;
 		LoadMulti();
+	}
 }
 //----------------------------------------------------------------------------------
 void CGameItem::CalculateFieldColor()
