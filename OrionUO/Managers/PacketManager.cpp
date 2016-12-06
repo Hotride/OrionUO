@@ -1305,6 +1305,7 @@ PACKET_HANDLER(UpdateItem)
 		LOG("updated ");
 
 	obj->MultiBody = (graphic & 0x4000);
+	ushort oldGraphic = obj->Graphic;
 	obj->Graphic = graphic & 0x3FFF;
 
 	if (graphic == 0x2006 && !count)
@@ -1323,8 +1324,7 @@ PACKET_HANDLER(UpdateItem)
 		dir = ReadUInt8();
 	}
 
-	obj->X = x;
-	obj->Z = ReadUInt8();
+	uchar z = ReadUInt8();
 
 	if (y & 0x8000)
 	{
@@ -1341,7 +1341,12 @@ PACKET_HANDLER(UpdateItem)
 		obj->Flags = ReadUInt8();
 	}
 
+	if (obj->MultiBody)
+		obj->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
+
+	obj->X = x;
 	obj->Y = y;
+	obj->Z = z;
 
 	obj->OnGraphicChange(dir);
 
@@ -1400,8 +1405,12 @@ PACKET_HANDLER(UpdateItemSA)
 		LOG("updated ");
 
 	obj->MultiBody = (type == 2);
+	ushort oldGraphic = obj->Graphic;
 	obj->Graphic = graphic;
 	obj->Count = count;
+
+	if (obj->MultiBody)
+		obj->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
 
 	obj->X = x;
 	obj->Y = y;
@@ -1488,6 +1497,7 @@ PACKET_HANDLER(UpdateObject)
 		//Move(2);
 	}
 
+	ushort oldGraphic = obj->Graphic;
 	bool oldDead = g_Player->Dead();
 	obj->Graphic = graphic & 0x3FFF;
 
@@ -1511,6 +1521,10 @@ PACKET_HANDLER(UpdateObject)
 	else
 	{
 		item->MultiBody = (graphic & 0x4000);
+
+		if (item->MultiBody)
+			item->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != newX) || (obj->Y != newY) || (obj->Z != newZ));
+
 		obj->OnGraphicChange(dir);
 	}
 

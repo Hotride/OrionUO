@@ -22,7 +22,8 @@
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
 : CGameObject(serial), m_Layer(0), m_AnimID(0), m_ImageID(0), m_UsedLayer(0),
-m_Opened(false), m_Dragged(false), m_MultiBody(false), m_FieldColor(0)
+m_Opened(false), m_Dragged(false), m_MultiBody(false), m_WantUpdateMulti(true),
+m_FieldColor(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -89,6 +90,7 @@ void CGameItem::Paste(CObjectOnCursor *obj)
 	m_Dragged = false;
 	m_Clicked = false;
 	m_MultiBody = obj->MultiBody;
+	m_WantUpdateMulti = obj->WantUpdateMulti;
 
 	m_Name = obj->Name;
 	OnGraphicChange();
@@ -174,7 +176,7 @@ void CGameItem::OnGraphicChange(int direction)
 			g_Orion.ExecuteStaticArt(m_Graphic);
 		}
 	}
-	else if (m_Items == NULL)
+	else if (m_Items == NULL || m_WantUpdateMulti)
 		LoadMulti();
 }
 //----------------------------------------------------------------------------------
@@ -620,6 +622,9 @@ ushort CGameItem::GetMountAnimation()
 */
 void CGameItem::LoadMulti()
 {
+	Clear();
+	m_WantUpdateMulti = false;
+
 	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_Graphic];
 	
 	if (index.Address != NULL)
