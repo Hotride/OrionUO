@@ -327,6 +327,10 @@ void CGameScreen::CalculateRenderList()
 		int stZ = 0;
 		CRenderObject *sel = g_SelectedObject.Object();
 		g_MapManager->GetMapZ(sel->X, sel->Y, grZ, stZ);
+
+		if (((CRenderWorldObject*)sel)->IsStaticObject() && ((CRenderWorldObject*)sel)->IsWet())
+			grZ = ((CRenderWorldObject*)sel)->Z;
+
 		g_Target.LoadMulti(sel->X, sel->Y, grZ);
 	}
 

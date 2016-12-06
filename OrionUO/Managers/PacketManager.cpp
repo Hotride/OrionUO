@@ -1348,9 +1348,9 @@ PACKET_HANDLER(UpdateItem)
 	obj->Y = y;
 	obj->Z = z;
 
-	obj->OnGraphicChange(dir);
-
 	g_World->MoveToTop(obj);
+
+	obj->OnGraphicChange(dir);
 
 	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
@@ -1418,8 +1418,6 @@ PACKET_HANDLER(UpdateItemSA)
 
 	obj->Color = color;
 
-	obj->OnGraphicChange(dir);
-
 	obj->Flags = flags;
 
 	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
@@ -1428,6 +1426,8 @@ PACKET_HANDLER(UpdateItemSA)
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	g_World->MoveToTop(obj);
+
+	obj->OnGraphicChange(dir);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateObject)
@@ -1516,16 +1516,16 @@ PACKET_HANDLER(UpdateObject)
 
 	uchar dir = ReadUInt8();
 
+	int changeGraphicDir = dir;
+
 	if (character != NULL)
-		obj->OnGraphicChange(1000);
+		changeGraphicDir = 1000;
 	else
 	{
 		item->MultiBody = (graphic & 0x4000);
 
 		if (item->MultiBody)
 			item->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != newX) || (obj->Y != newY) || (obj->Z != newZ));
-
-		obj->OnGraphicChange(dir);
 	}
 
 	obj->Color = ReadUInt16BE();
@@ -1585,6 +1585,8 @@ PACKET_HANDLER(UpdateObject)
 	serial = ReadUInt32BE();
 
 	g_World->MoveToTop(obj);
+
+	obj->OnGraphicChange(changeGraphicDir);
 
 	puchar end = m_Start + m_Size;
 

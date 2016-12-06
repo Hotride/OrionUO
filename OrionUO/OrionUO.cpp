@@ -5343,7 +5343,7 @@ __int64 COrion::GetLandFlags(const ushort &id)
 {
 	ushort divID = id / 32;
 
-	if (divID < m_LandDataCount)
+	if (id < m_LandDataCount)
 		return m_LandData[divID].Tiles[id % 32].Flags;
 
 	return 0;
@@ -5353,7 +5353,7 @@ __int64 COrion::GetStaticFlags(const ushort &id)
 {
 	ushort divID = id / 32;
 
-	if (divID < m_StaticDataCount)
+	if (id < m_StaticDataCount)
 		return m_StaticData[divID].Tiles[id % 32].Flags;
 
 	return 0;

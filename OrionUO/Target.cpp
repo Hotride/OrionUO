@@ -53,7 +53,7 @@ void CTarget::SetData(WISP_DATASTREAM::CDataReader &reader)
 	m_CursorID = reader.ReadUInt32BE();
 	m_CursorType = reader.ReadUInt8();
 	m_Targeting = (m_CursorType < 3);
-	m_MultiGraphic = false;
+	m_MultiGraphic = 0;
 }
 //----------------------------------------------------------------------------------
 void CTarget::SetMultiData(WISP_DATASTREAM::CDataReader &reader)
@@ -71,7 +71,7 @@ void CTarget::SetMultiData(WISP_DATASTREAM::CDataReader &reader)
 	memcpy(m_Data + 2, reader.Start + 2, 4); //Копируем ID курсора (ID дида)
 
 	reader.ResetPtr();
-	m_MultiGraphic = reader.ReadUInt16BE(18);
+	m_MultiGraphic = reader.ReadUInt16BE(18) + 1;
 }
 //----------------------------------------------------------------------------------
 void CTarget::SendTargetObject(const uint &serial)
@@ -126,7 +126,7 @@ void CTarget::SendTargetTile(const ushort &tileID, const short &x, const short &
 	pack16(m_Data + 13, y);
 	m_Data[15] = 0xFF;
 
-	if (m_MultiGraphic != 0)
+	if (m_MultiGraphic)
 	{
 		int grZ = 0;
 		int stZ = 0;
@@ -196,7 +196,7 @@ void CTarget::LoadMulti(const int &x, const int &y, const char &z)
 {
 	UnloadMulti();
 
-	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_MultiGraphic];
+	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_MultiGraphic - 1];
 	
 	if (index.Address != NULL)
 	{
