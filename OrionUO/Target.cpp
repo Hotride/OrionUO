@@ -131,7 +131,9 @@ void CTarget::SendTargetTile(const ushort &tileID, const short &x, const short &
 		int grZ = 0;
 		int stZ = 0;
 		g_MapManager->GetMapZ(x, y, grZ, stZ);
-		z = grZ;
+
+		if (!tileID || !IsWet(g_Orion.GetStaticFlags(tileID)))
+			z = grZ;
 	}
 
 	m_Data[16] = z;
