@@ -1126,15 +1126,18 @@ int COrion::Send(puchar buf, const int &size)
 
 	CPacketInfo &type = g_PacketManager.GetInfo(*buf);
 
-	LOG("--- ^(%d) s(+%d => %d) Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
-
-	if (*buf == 0x80 || *buf == 0x91)
+	if (type.save)
 	{
-		LOG_DUMP(buf, size / 2);
-		LOG("**** PASSWORD CENSORED ****\n");
+		LOG("--- ^(%d) s(+%d => %d) Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
+
+		if (*buf == 0x80 || *buf == 0x91)
+		{
+			LOG_DUMP(buf, size / 2);
+			LOG("**** PASSWORD CENSORED ****\n");
+		}
+		else
+			LOG_DUMP(buf, size);
 	}
-	else
-		LOG_DUMP(buf, size);
 
 	int result = 0;
 
