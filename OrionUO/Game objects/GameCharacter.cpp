@@ -866,6 +866,12 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 					if (m_Direction != wd->Direction)
 						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_DIR, (WPARAM)wd->Direction, 0);
+
+					if (m_Z - wd->Z >= 22)
+					{
+						g_Orion.CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Ouch!");
+						//play sound (5) ?
+					}
 				}
 
 				m_X = wd->X;
