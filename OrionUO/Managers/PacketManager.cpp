@@ -2744,6 +2744,14 @@ PACKET_HANDLER(ExtendedCommand)
 
 			break;
 		}
+		case 0x18: //Enable map (diff) patches
+		{
+			int count = ReadUInt32BE();
+
+
+
+			break;
+		}
 		case 0x19: //Extended stats
 		{
 			Move(1);
