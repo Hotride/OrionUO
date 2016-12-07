@@ -9,10 +9,12 @@
 //----------------------------------------------------------------------------------
 #include "RenderStaticObject.h"
 #include "../OrionUO.h"
+#include "../SelectedObject.h"
+#include "../Screen stages/GameScreen.h"
 //----------------------------------------------------------------------------------
 CRenderStaticObject::CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
 : CMapObject(renderType, serial, graphic, color, x, y, z), m_FoliageTransparentIndex(-1),
-m_Vegetation(false)
+m_Vegetation(false), m_RenderGraphic(0), m_RenderColor(0)
 {
 	if (graphic >= g_Orion.StaticDataCount)
 		m_TiledataPtr = &g_Orion.m_StaticData[(graphic - 0x4000) / 32].Tiles[(graphic - 0x4000) % 32];
@@ -51,6 +53,58 @@ CRenderStaticObject::~CRenderStaticObject()
 		delete m_TextControl;
 		m_TextControl = NULL;
 	}
+}
+//----------------------------------------------------------------------------------
+void CRenderStaticObject::Draw(const int &x, const int &y)
+{
+#if UO_DEBUG_INFO!=0
+	g_RenderedObjectsCountInGameWindow++;
+#endif
+
+	if (IsFoliage() && m_FoliageTransparentIndex == g_FoliageIndex)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
+
+		g_Orion.DrawStaticArtAnimated(m_RenderGraphic, m_RenderColor, x, y, m_Z);
+
+		glDisable(GL_BLEND);
+	}
+	else
+	{
+		if (IsTranslucent())
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glColor4f(1.0f, 1.0f, 1.0f, 0.7f);
+		}
+
+		if (g_UseCircleTrans)
+			g_Orion.DrawStaticArtAnimatedTransparent(m_RenderGraphic, m_RenderColor, x, y, m_Z);
+		else
+			g_Orion.DrawStaticArtAnimated(m_RenderGraphic, m_RenderColor, x, y, m_Z);
+
+		if (IsTranslucent())
+			glDisable(GL_BLEND);
+	}
+
+	if (IsLightSource() && g_GameScreen.UseLight)
+		g_GameScreen.AddLight(this, this, x, y - (m_Z * 4));
+}
+//----------------------------------------------------------------------------------
+void CRenderStaticObject::Select(const int &x, const int &y)
+{
+	if (IsFoliage())
+	{
+		if (m_FoliageTransparentIndex != g_FoliageIndex)
+		{
+			if (g_Orion.StaticPixelsInXYAnimated(m_RenderGraphic, x, y, m_Z))
+				g_SelectedObject.Init(this);
+		}
+	}
+	else if (!g_UseCircleTrans && g_Orion.StaticPixelsInXYAnimated(m_RenderGraphic, x, y, m_Z))
+		g_SelectedObject.Init(this);
 }
 //---------------------------------------------------------------------------
 void CRenderStaticObject::AddText(CTextData *msg)

@@ -48,59 +48,20 @@ void CStaticObject::UpdateGraphicBySeason()
 //----------------------------------------------------------------------------------
 void CStaticObject::Draw(const int &x, const int &y)
 {
-#if UO_DEBUG_INFO!=0
-	g_RenderedObjectsCountInGameWindow++;
-#endif
-
-	ushort objGraphic = m_Graphic - 0x4000;
-	ushort objColor = m_Color;
+	m_RenderGraphic = m_Graphic - 0x4000;
 
 	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
-		objColor = SELECT_STATIC_COLOR;
-
-	if (IsFoliage() && m_FoliageTransparentIndex == g_FoliageIndex)
-	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
-
-		g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z);
-
-		glDisable(GL_BLEND);
-	}
+		m_RenderColor = SELECT_STATIC_COLOR;
 	else
-	{
-		if (IsTranslucent())
-		{
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glColor4f(1.0f, 1.0f, 1.0f, 0.7f);
-		}
+		m_RenderColor = m_Color;
 
-		if (g_UseCircleTrans)
-			g_Orion.DrawStaticArtAnimatedTransparent(objGraphic, objColor, x, y, m_Z);
-		else
-			g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z);
-
-		if (IsTranslucent())
-			glDisable(GL_BLEND);
-	}
-
-	if (IsLightSource() && g_GameScreen.UseLight)
-		g_GameScreen.AddLight(this, this, x, y - (m_Z * 4));
+	CRenderStaticObject::Draw(x, y);
 }
 //----------------------------------------------------------------------------------
 void CStaticObject::Select(const int &x, const int &y)
 {
-	if (IsFoliage())
-	{
-		if (m_FoliageTransparentIndex != g_FoliageIndex)
-		{
-			if (g_Orion.StaticPixelsInXYAnimated(m_Graphic - 0x4000, x, y, m_Z))
-				g_SelectedObject.Init(this);
-		}
-	}
-	else if (!g_UseCircleTrans && g_Orion.StaticPixelsInXYAnimated(m_Graphic - 0x4000, x, y, m_Z))
-		g_SelectedObject.Init(this);
+	m_RenderGraphic = m_Graphic - 0x4000;
+
+	CRenderStaticObject::Select(x, y);
 }
 //----------------------------------------------------------------------------------

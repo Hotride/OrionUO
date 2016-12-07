@@ -57,6 +57,8 @@ public:
 	*/
 	void Paste(class CObjectOnCursor *obj);
 
+	ushort GetFirstMultiGraphic();
+
 	virtual void Draw(const int &x, const int &y);
 
 	virtual void Select(const int &x, const int &y);

@@ -207,20 +207,40 @@ void CGameItem::CalculateFieldColor()
 		m_FieldColor = 0x038A;
 }
 //----------------------------------------------------------------------------------
+ushort CGameItem::GetFirstMultiGraphic()
+{
+	ushort graphic = 0;
+
+	if (m_MultiBody)
+	{
+		PMULTI_BLOCK pmb = (PMULTI_BLOCK)g_Orion.m_MultiDataIndex[m_Graphic].Address;
+
+		if (pmb != NULL && pmb->ID > 1)
+			graphic = pmb->ID;
+	}
+
+	return graphic;
+}
+//----------------------------------------------------------------------------------
 void CGameItem::Draw(const int &x, const int &y)
 {
 	if (m_Container == 0xFFFFFFFF)
 	{
-		ushort objGraphic = 0;
-
 		if (m_MultiBody)
 		{
-			PMULTI_BLOCK pmb = (PMULTI_BLOCK)g_Orion.m_MultiDataIndex[m_Graphic].Address;
+			m_RenderGraphic = GetFirstMultiGraphic();
 
-			if (pmb != NULL)
-				objGraphic = pmb->ID;
-			else
-				return;
+			if (m_RenderGraphic)
+			{
+				if (!Locked() && g_SelectedObject.Object() == this)
+					m_RenderColor = 0x0035;
+				else
+					m_RenderColor = m_Color;
+
+				CRenderStaticObject::Draw(x, y);
+			}
+
+			return;
 		}
 
 #if UO_DEBUG_INFO!=0
@@ -233,12 +253,8 @@ void CGameItem::Draw(const int &x, const int &y)
 		{
 			bool doubleDraw = false;
 			bool selMode = false;
-			if (!objGraphic)
-				objGraphic = GetDrawGraphic(doubleDraw);
+			ushort objGraphic = GetDrawGraphic(doubleDraw);
 			ushort objColor = m_Color;
-
-			if (objGraphic == 1)
-				return;
 
 			if (Hidden())
 			{
@@ -313,16 +329,14 @@ void CGameItem::Select(const int &x, const int &y)
 {
 	if (m_Container == 0xFFFFFFFF)
 	{
-		ushort objGraphic = 0;
-
 		if (m_MultiBody)
 		{
-			PMULTI_BLOCK pmb = (PMULTI_BLOCK)g_Orion.m_MultiDataIndex[m_Graphic].Address;
+			m_RenderGraphic = GetFirstMultiGraphic();
 
-			if (pmb != NULL)
-				objGraphic = pmb->ID;
-			else
-				return;
+			if (m_RenderGraphic)
+				CRenderStaticObject::Select(x, y);
+
+			return;
 		}
 
 		if (IsCorpse()) //Трупик
@@ -333,12 +347,7 @@ void CGameItem::Select(const int &x, const int &y)
 		else
 		{
 			bool doubleDraw = false;
-
-			if (!objGraphic)
-				objGraphic = GetDrawGraphic(doubleDraw);
-
-			if (objGraphic == 1)
-				return;
+			ushort objGraphic = GetDrawGraphic(doubleDraw);
 
 			if (doubleDraw)
 			{
