@@ -86,6 +86,13 @@ bool CFileManager::Load()
 		m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
 		m_StaticMul[i].Load(g_App.FilePath("statics%i.mul", i));
 		m_FacetMul[i].Load(g_App.FilePath("facet0%i.mul", i));
+
+		m_MapDifl[i].Load(g_App.FilePath("mapdifl%i.mul", i));
+		m_MapDif[i].Load(g_App.FilePath("mapdif%i.mul", i));
+
+		m_StaDifl[i].Load(g_App.FilePath("stadifl%i.mul", i));
+		m_StaDifi[i].Load(g_App.FilePath("stadifi%i.mul", i));
+		m_StaDif[i].Load(g_App.FilePath("stadif%i.mul", i));
 	}
 
 	IFOR(i, 0, 20)
@@ -144,6 +151,13 @@ void CFileManager::Unload()
 		m_MapMul[i].Unload();
 		m_StaticMul[i].Unload();
 		m_FacetMul[i].Unload();
+
+		m_MapDifl[i].Unload();
+		m_MapDif[i].Unload();
+
+		m_StaDifl[i].Unload();
+		m_StaDifi[i].Unload();
+		m_StaDif[i].Unload();
 	}
 
 	IFOR(i, 0, 20)

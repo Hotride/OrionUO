@@ -16,8 +16,7 @@
 CMapManager *g_MapManager = NULL;
 //----------------------------------------------------------------------------------
 CIndexMap::CIndexMap()
-: m_MapAddress(0), m_StaticAddress(0), m_StaticCount(0), m_MapPatched(false),
-m_StaticPatched(false)
+: m_MapAddress(0), m_StaticAddress(0), m_StaticCount(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -116,8 +115,6 @@ void CMapManager::CreateBlockTable(int map)
 		index.MapAddress = realMapAddress;
 		index.StaticAddress = realStaticAddress;
 		index.StaticCount = realStaticCount;
-		index.MapPatched = false;
-		index.StaticPatched = false;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -134,8 +131,91 @@ void CMapManager::SetPatchedMapBlock(const uint &block, const uint &address)
 	list[block].MapAddress = address;
 }
 //----------------------------------------------------------------------------------
-void CMapManager::ApplyMapPatches()
+void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 {
+	CreateBlocksTable();
+
+	int count = stream.ReadUInt32BE();
+
+	if (count < 0)
+		count = 0;
+
+	if (count > 5)
+		count = 5;
+
+	IFOR(i, 0, count)
+	{
+		int mapPatchesCount = stream.ReadUInt32BE();
+		int staticsPatchesCount = stream.ReadUInt32BE();
+
+		MAP_INDEX_LIST &list = m_BlockData[i];
+		WISP_GEOMETRY::CSize &size = g_MapBlockSize[i];
+
+		uint maxBlockCount = size.Height * size.Width;
+
+		if (mapPatchesCount)
+		{
+			WISP_FILE::CMappedFile &difl = g_FileManager.m_MapDifl[i];
+			WISP_FILE::CMappedFile &dif = g_FileManager.m_MapDif[i];
+
+			mapPatchesCount = min(mapPatchesCount, difl.Size / 4);
+
+			difl.ResetPtr();
+			dif.ResetPtr();
+
+			IFOR(j, 0, mapPatchesCount)
+			{
+				uint blockIndex = difl.ReadUInt32LE();
+
+				if (blockIndex < maxBlockCount)
+					list[blockIndex].MapAddress = (uint)dif.Ptr;
+
+				dif.Move(sizeof(MAP_BLOCK));
+			}
+		}
+
+		if (staticsPatchesCount)
+		{
+			WISP_FILE::CMappedFile &difl = g_FileManager.m_StaDifl[i];
+			WISP_FILE::CMappedFile &difi = g_FileManager.m_StaDifi[i];
+			uint startAddress = (uint)g_FileManager.m_StaDif[i].Start;
+
+			staticsPatchesCount = min(staticsPatchesCount, difl.Size / 4);
+
+			difl.ResetPtr();
+			difi.ResetPtr();
+
+			IFOR(j, 0, staticsPatchesCount)
+			{
+				uint blockIndex = difl.ReadUInt32LE();
+
+				PSTAIDX_BLOCK sidx = (PSTAIDX_BLOCK)difi.Ptr;
+
+				difi.Move(sizeof(STAIDX_BLOCK));
+
+				if (blockIndex < maxBlockCount)
+				{
+					uint realStaticAddress = 0;
+					int realStaticCount = 0;
+
+					if (sidx->Size > 0 && sidx->Position != 0xFFFFFFFF)
+					{
+						realStaticAddress = startAddress + sidx->Position;
+						realStaticCount = sidx->Size / sizeof(STATICS_BLOCK);
+
+						if (realStaticCount > 0)
+						{
+							if (realStaticCount > 1024)
+								realStaticCount = 1024;
+						}
+					}
+
+					list[blockIndex].StaticAddress = realStaticAddress;
+					list[blockIndex].StaticCount = realStaticCount;
+				}
+			}
+		}
+	}
 }
 //----------------------------------------------------------------------------------
 CIndexMap *CMapManager::GetIndex(const int &map, const int &blockX, const int &blockY)

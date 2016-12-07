@@ -13,14 +13,13 @@
 #include "../BaseQueue.h"
 #include "../Game objects/MapBlock.h"
 #include "../MulStruct.h"
+#include "../Wisp/WispDataStream.h"
 //----------------------------------------------------------------------------------
 class CIndexMap
 {
 	SETGET(uint, MapAddress);
 	SETGET(uint, StaticAddress);
 	SETGET(uint, StaticCount);
-	SETGET(bool, MapPatched);
-	SETGET(bool, StaticPatched);
 
 public:
 	CIndexMap();
@@ -51,7 +50,7 @@ public:
 
 	void CreateBlocksTable();
 
-	void ApplyMapPatches();
+	void ApplyPatches(WISP_DATASTREAM::CDataReader &stream);
 
 	/*!
 	Получить индекс текущей карты

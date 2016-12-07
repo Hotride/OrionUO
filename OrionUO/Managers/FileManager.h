@@ -58,6 +58,13 @@ public:
 	WISP_FILE::CMappedFile m_SpeechMul;
 	WISP_FILE::CMappedFile m_LangcodeIff;
 
+	WISP_FILE::CMappedFile m_MapDifl[6];
+	WISP_FILE::CMappedFile m_MapDif[6];
+
+	WISP_FILE::CMappedFile m_StaDifl[6];
+	WISP_FILE::CMappedFile m_StaDifi[6];
+	WISP_FILE::CMappedFile m_StaDif[6];
+
 	bool Load();
 	void Unload();
 };

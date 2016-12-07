@@ -843,6 +843,9 @@ PACKET_HANDLER(LoginComplete)
 {
 	g_PacketLoginComplete = true;
 
+	g_MapManager->Init();
+	g_MapManager->AddRender(g_Player);
+
 	g_Orion.LoginComplete();
 }
 //----------------------------------------------------------------------------------
@@ -907,9 +910,6 @@ PACKET_HANDLER(EnterWorld)
 	uchar dir = ReadUInt8();
 	g_Player->Direction = dir;
 	g_Player->Flags = m_Start[28];
-
-	g_MapManager->Init();
-	g_MapManager->AddRender(g_Player);
 
 	g_Walker->SetSequence(0, dir);
 	g_Player->OffsetX = 0;
@@ -2746,9 +2746,7 @@ PACKET_HANDLER(ExtendedCommand)
 		}
 		case 0x18: //Enable map (diff) patches
 		{
-			int count = ReadUInt32BE();
-
-
+			g_MapManager->ApplyPatches(*this);
 
 			break;
 		}
