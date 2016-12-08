@@ -12,6 +12,8 @@
 #include "../Constants.h"
 #include "../Game objects/StaticObject.h"
 #include "../Game objects/GamePlayer.h"
+#include "GumpManager.h"
+#include "../Gumps/GumpMinimap.h"
 //----------------------------------------------------------------------------------
 CMapManager *g_MapManager = NULL;
 //----------------------------------------------------------------------------------
@@ -251,6 +253,8 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 			}
 		}
 	}
+
+	UpdatePatched();
 }
 //----------------------------------------------------------------------------------
 void CMapManager::UpdatePatched()
@@ -282,6 +286,11 @@ void CMapManager::UpdatePatched()
 
 	for (CRenderWorldObject *item : objectsList)
 		AddRender(item);
+
+	CGumpMinimap *gump = (CGumpMinimap*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_MINIMAP);
+
+	if (gump != NULL)
+		gump->LastX = 0;
 }
 //----------------------------------------------------------------------------------
 CIndexMap *CMapManager::GetIndex(const int &map, const int &blockX, const int &blockY)
