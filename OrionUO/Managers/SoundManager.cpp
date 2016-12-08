@@ -266,7 +266,7 @@ void CSoundManager::PlayMP3(std::string fileName, int index, bool loop, bool war
 	if (warmode && m_WarMusic != 0)
 		return;
 
-	if (warmode)
+	if (warmode)1
 		BASS_ChannelStop(m_Music);
 	else
 		StopMusic();

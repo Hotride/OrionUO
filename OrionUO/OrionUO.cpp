@@ -3888,12 +3888,10 @@ void COrion::PlayMusic(const int &index, const bool &warmode)
 	if (!warmode && g_SoundManager.CurrentMusicIndex == index && g_SoundManager.IsPlayingNormalMusic())
 		return;
 
-	g_SoundManager.StopMusic();
-
 	if (g_PacketManager.ClientVersion >= CV_306E)
 	{
 		CIndexMusic &mp3Info = m_MP3Data[index];
-		g_SoundManager.PlayMP3(mp3Info.FilePath, mp3Info.Loop, warmode, index);
+		g_SoundManager.PlayMP3(mp3Info.FilePath, index, mp3Info.Loop, warmode);
 	}
 	else
 		g_SoundManager.PlayMidi(index, warmode);
