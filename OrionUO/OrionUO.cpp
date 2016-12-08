@@ -251,7 +251,7 @@ bool COrion::Install()
 		return false;
 	}
 
-	if (g_FileManager.UseUOPMap)
+	if (g_FileManager.UseUOP)
 		g_MapManager = new CUopMapManager();
 	else
 		g_MapManager = new CMapManager();
@@ -574,6 +574,8 @@ void COrion::LoadClientConfig()
 		uchar version = file.ReadInt8();
 
 		g_PacketManager.ClientVersion = (CLIENT_VERSION)file.ReadInt8();
+		if (g_PacketManager.ClientVersion >= CV_7000)
+			g_FileManager.UseUOP = true;
 
 		int len = file.ReadInt8();
 		m_ClientVersionText = file.ReadString(len);

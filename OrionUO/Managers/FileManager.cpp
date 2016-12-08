@@ -13,7 +13,7 @@
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
 CFileManager::CFileManager()
-: m_UseVerdata(false), m_UseUOPMap(false), m_UnicodeFontsCount(0)
+: m_UseVerdata(false), m_UseUOP(false), m_UnicodeFontsCount(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -24,24 +24,40 @@ CFileManager::~CFileManager()
 bool CFileManager::Load()
 {
 	//Try to use map uop files first, if we can, we will use them.
-	if (!m_artLegacyMUL.Load(g_App.FilePath("artLegacyMUL.uop")))
+	if (UseUOP)
+	{
+		if (!m_artLegacyMUL.Load(g_App.FilePath("artLegacyMUL.uop")))
+		{
+			if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
+				return false;
+			if (!m_ArtMul.Load(g_App.FilePath("art.mul")))
+				return false;
+		}
+		if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
+		{
+			if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul")))
+				return false;
+			if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul")))
+				return false;
+		}
+		if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
+		{
+			if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul")))
+				return false;
+			if (!m_SoundMul.Load(g_App.FilePath("sound.mul")))
+				return false;
+		}
+	}
+	else
 	{
 		if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
 			return false;
 		if (!m_ArtMul.Load(g_App.FilePath("art.mul")))
 			return false;
-	}
-
-	if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
-	{
 		if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul")))
 			return false;
 		if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul")))
 			return false;
-	}
-
-	if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
-	{
 		if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul")))
 			return false;
 		if (!m_SoundMul.Load(g_App.FilePath("sound.mul")))
@@ -112,20 +128,18 @@ bool CFileManager::Load()
 			m_AnimMul[i].Load(g_App.FilePath("anim%i.mul", i));
 		}
 
-		if (!m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i)))
+		if (UseUOP && !m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i)))
 		{
 			m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
-			UseUOPMap = false;
 		}
-		else
+		/*else
 		{
-			if (i == 0 || i == 1 || i == 2 || i == 5)
+			/if (i == 0 || i == 1 || i == 2 || i == 5)
 			{
 				if (!m_MapXUOP[i].Load(g_App.FilePath("map%ixLegacyMUL.uop", i)))
 					return false;
 			}
-			UseUOPMap = true;
-		}
+		}*/
 
 		m_StaticIdx[i].Load(g_App.FilePath("staidx%i.mul", i));
 		m_StaticMul[i].Load(g_App.FilePath("statics%i.mul", i));
