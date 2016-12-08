@@ -34,6 +34,8 @@ CMapManager::~CMapManager()
 {
 	if (m_Blocks != NULL)
 	{
+		ClearUsedBlocks();
+
 		delete[] m_Blocks;
 		m_Blocks = NULL;
 	}
@@ -260,13 +262,8 @@ void CMapManager::UpdatePatched()
 
 	if (m_Blocks != NULL)
 	{
-		IFOR(i, 0, (int)m_MaxBlockIndex)
+		QFOR(block, m_Items, CMapBlock*)
 		{
-			CMapBlock *block = m_Blocks[i];
-
-			if (block == NULL)
-				continue;
-
 			IFOR(x, 0, 8)
 			{
 				IFOR(y, 0, 8)
@@ -279,57 +276,9 @@ void CMapManager::UpdatePatched()
 				}
 			}
 		}
-
-		delete[] m_Blocks;
-		m_Blocks = NULL;
 	}
 
-	int map = GetActualMap();
-
-	WISP_GEOMETRY::CSize &size = g_MapBlockSize[map];
-
-	uint maxBlockCount = size.Height * size.Width;
-
-	m_MaxBlockIndex = g_MapBlockSize[map].Width * g_MapBlockSize[map].Height;
-	m_Blocks = new CMapBlock*[m_MaxBlockIndex];
-	memset(&m_Blocks[0], 0, sizeof(CMapBlock*)* m_MaxBlockIndex);
-
-	const int XY_Offset = 30; //70;
-
-	int minBlockX = (g_Player->X - XY_Offset) / 8 - 1;
-	int minBlockY = (g_Player->Y - XY_Offset) / 8 - 1;
-	int maxBlockX = ((g_Player->X + XY_Offset) / 8) + 1;
-	int maxBlockY = ((g_Player->Y + XY_Offset) / 8) + 1;
-
-	uint ticks = g_Ticks;
-	uint maxDelay = g_FrameDelay[1] / 2;
-
-	for (int i = minBlockX; i <= maxBlockX; i++)
-	{
-		if (i < 0 || i >= g_MapBlockSize[map].Width)
-			continue;
-
-		for (int j = minBlockY; j <= maxBlockY; j++)
-		{
-			if (j < 0 || j >= g_MapBlockSize[map].Height)
-				continue;
-
-			uint index = (i * g_MapBlockSize[map].Height) + j;
-
-			if (index < m_MaxBlockIndex)
-			{
-				CMapBlock *block = GetBlock(index);
-
-				if (block == NULL)
-				{
-					block = AddBlock(index);
-					block->X = i;
-					block->Y = j;
-					LoadBlock(block);
-				}
-			}
-		}
-	}
+	Init(false);
 
 	for (CRenderWorldObject *item : objectsList)
 		AddRender(item);
@@ -514,6 +463,23 @@ void CMapManager::ClearUnusedBlocks()
 	}
 }
 //----------------------------------------------------------------------------------
+void CMapManager::ClearUsedBlocks()
+{
+	CMapBlock *block = (CMapBlock*)m_Items;
+
+	while (block != NULL)
+	{
+		CMapBlock *next = (CMapBlock*)block->m_Next;
+
+		uint index = block->Index;
+		Delete(block);
+
+		m_Blocks[index] = NULL;
+
+		block = next;
+	}
+}
+//----------------------------------------------------------------------------------
 /*!
 Инициализация
 @param [__in_opt] delayed По истечении времени на загрузку выходить из цикла
@@ -530,6 +496,8 @@ void CMapManager::Init(const bool &delayed)
 	{
 		if (m_Blocks != NULL)
 		{
+			ClearUsedBlocks();
+
 			delete[] m_Blocks;
 			m_Blocks = NULL;
 		}

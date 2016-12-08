@@ -46,8 +46,6 @@ private:
 
 	void ResetPatchesInBlockTable();
 
-	void UpdatePatched();
-
 public:
 	CMapManager();
 	virtual ~CMapManager();
@@ -59,6 +57,8 @@ public:
 	void CreateBlocksTable();
 
 	void ApplyPatches(WISP_DATASTREAM::CDataReader &stream);
+
+	void UpdatePatched();
 
 	/*!
 	Получить индекс текущей карты
@@ -137,6 +137,8 @@ public:
 	@return 
 	*/
 	void ClearUnusedBlocks();
+
+	void ClearUsedBlocks();
 
 	/*!
 	Добавить объект рендера
