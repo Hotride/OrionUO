@@ -3899,6 +3899,16 @@ void COrion::PlayMusic(const int &index, const bool &warmode)
 		g_SoundManager.PlayMidi(index, warmode);
 }
 //----------------------------------------------------------------------------------
+void COrion::PauseSound()
+{
+	g_SoundManager.PauseSound();
+}
+//----------------------------------------------------------------------------------
+void COrion::ResumeSound()
+{
+	g_SoundManager.ResumeSound();
+}
+//----------------------------------------------------------------------------------
 void COrion::PlaySoundEffect(const ushort &id, float volume)
 {
 	if (id >= 0x0800 || !g_ConfigManager.Sound)

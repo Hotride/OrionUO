@@ -267,6 +267,7 @@ void COrionWindow::OnDragging()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnActivate()
 {
+	g_Orion.ResumeSound();
 	SetRenderTimerDelay(g_FrameDelay[1]);
 
 	if (!g_PluginManager.Empty())
@@ -275,6 +276,7 @@ void COrionWindow::OnActivate()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnDeactivate()
 {
+	g_Orion.PauseSound();
 	if (g_ConfigManager.ReduceFPSUnactiveWindow)
 		SetRenderTimerDelay(g_FrameDelay[0]);
 
