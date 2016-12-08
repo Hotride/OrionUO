@@ -843,9 +843,6 @@ PACKET_HANDLER(LoginComplete)
 {
 	g_PacketLoginComplete = true;
 
-	g_MapManager->Init();
-	g_MapManager->AddRender(g_Player);
-
 	g_Orion.LoginComplete();
 }
 //----------------------------------------------------------------------------------
@@ -920,6 +917,9 @@ PACKET_HANDLER(EnterWorld)
 		m_MegaClilocRequests.push_back(g_Player->Serial);
 
 	LOG("Player 0x%08lX entered the world.\n", serial);
+
+	g_MapManager->Init();
+	g_MapManager->AddRender(g_Player);
 
 	g_Orion.LoadStartupConfig();
 

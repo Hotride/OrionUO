@@ -16,7 +16,8 @@
 CMapManager *g_MapManager = NULL;
 //----------------------------------------------------------------------------------
 CIndexMap::CIndexMap()
-: m_MapAddress(0), m_StaticAddress(0), m_StaticCount(0)
+: m_OriginalMapAddress(0), m_OriginalStaticAddress(0), m_OriginalStaticCount(0),
+m_MapAddress(0), m_StaticAddress(0), m_StaticCount(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -112,6 +113,10 @@ void CMapManager::CreateBlockTable(int map)
 		if (!realStaticCount)
 			realStaticCount = 0;
 
+		index.OriginalMapAddress = realMapAddress;
+		index.OriginalStaticAddress = realStaticAddress;
+		index.OriginalStaticCount = realStaticCount;
+
 		index.MapAddress = realMapAddress;
 		index.StaticAddress = realStaticAddress;
 		index.StaticCount = realStaticCount;
@@ -128,20 +133,48 @@ void CMapManager::SetPatchedMapBlock(const uint &block, const uint &address)
 	if (maxBlockCount < 1)
 		return;
 
+	list[block].OriginalMapAddress = address;
 	list[block].MapAddress = address;
+}
+//----------------------------------------------------------------------------------
+void CMapManager::ResetPatchesInBlockTable()
+{
+	IFOR(map, 0, MAX_MAPS_COUNT)
+	{
+		MAP_INDEX_LIST &list = m_BlockData[map];
+		WISP_GEOMETRY::CSize &size = g_MapBlockSize[map];
+
+		int maxBlockCount = size.Width * size.Height;
+
+		//Return and error notification?
+		if (maxBlockCount < 1)
+			return;
+
+		if (g_FileManager.m_MapMul[map].Start == NULL || g_FileManager.m_StaticIdx[map].Start == NULL || g_FileManager.m_StaticMul[map].Start == NULL)
+			return;
+
+		IFOR(block, 0, maxBlockCount)
+		{
+			CIndexMap &index = list[block];
+
+			index.MapAddress = index.OriginalMapAddress;
+			index.StaticAddress = index.OriginalStaticAddress;
+			index.StaticCount = index.OriginalStaticCount;
+		}
+	}
 }
 //----------------------------------------------------------------------------------
 void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 {
-	CreateBlocksTable();
+	ResetPatchesInBlockTable();
 
 	int count = stream.ReadUInt32BE();
 
 	if (count < 0)
 		count = 0;
 
-	if (count > 5)
-		count = 5;
+	if (count > MAX_MAPS_COUNT)
+		count = MAX_MAPS_COUNT;
 
 	IFOR(i, 0, count)
 	{
@@ -216,6 +249,90 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 			}
 		}
 	}
+}
+//----------------------------------------------------------------------------------
+void CMapManager::UpdatePatched()
+{
+	if (g_Player == NULL)
+		return;
+
+	deque<CRenderWorldObject*> objectsList;
+
+	if (m_Blocks != NULL)
+	{
+		IFOR(i, 0, (int)m_MaxBlockIndex)
+		{
+			CMapBlock *block = m_Blocks[i];
+
+			if (block == NULL)
+				continue;
+
+			IFOR(x, 0, 8)
+			{
+				IFOR(y, 0, 8)
+				{
+					for (CRenderWorldObject *item = block->GetRender(x, y); item != NULL; item = item->m_NextXY)
+					{
+						if (!item->IsLandObject() && !item->IsStaticObject())
+							objectsList.push_back(item);
+					}
+				}
+			}
+		}
+
+		delete[] m_Blocks;
+		m_Blocks = NULL;
+	}
+
+	int map = GetActualMap();
+
+	WISP_GEOMETRY::CSize &size = g_MapBlockSize[map];
+
+	uint maxBlockCount = size.Height * size.Width;
+
+	m_MaxBlockIndex = g_MapBlockSize[map].Width * g_MapBlockSize[map].Height;
+	m_Blocks = new CMapBlock*[m_MaxBlockIndex];
+	memset(&m_Blocks[0], 0, sizeof(CMapBlock*)* m_MaxBlockIndex);
+
+	const int XY_Offset = 30; //70;
+
+	int minBlockX = (g_Player->X - XY_Offset) / 8 - 1;
+	int minBlockY = (g_Player->Y - XY_Offset) / 8 - 1;
+	int maxBlockX = ((g_Player->X + XY_Offset) / 8) + 1;
+	int maxBlockY = ((g_Player->Y + XY_Offset) / 8) + 1;
+
+	uint ticks = g_Ticks;
+	uint maxDelay = g_FrameDelay[1] / 2;
+
+	for (int i = minBlockX; i <= maxBlockX; i++)
+	{
+		if (i < 0 || i >= g_MapBlockSize[map].Width)
+			continue;
+
+		for (int j = minBlockY; j <= maxBlockY; j++)
+		{
+			if (j < 0 || j >= g_MapBlockSize[map].Height)
+				continue;
+
+			uint index = (i * g_MapBlockSize[map].Height) + j;
+
+			if (index < m_MaxBlockIndex)
+			{
+				CMapBlock *block = GetBlock(index);
+
+				if (block == NULL)
+				{
+					block = AddBlock(index);
+					block->X = i;
+					block->Y = j;
+					LoadBlock(block);
+				}
+			}
+		}
+	}
+
+	for (CRenderWorldObject *item : objectsList)
+		AddRender(item);
 }
 //----------------------------------------------------------------------------------
 CIndexMap *CMapManager::GetIndex(const int &map, const int &blockX, const int &blockY)

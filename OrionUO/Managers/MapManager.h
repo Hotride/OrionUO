@@ -17,6 +17,10 @@
 //----------------------------------------------------------------------------------
 class CIndexMap
 {
+	SETGET(uint, OriginalMapAddress);
+	SETGET(uint, OriginalStaticAddress);
+	SETGET(uint, OriginalStaticCount);
+
 	SETGET(uint, MapAddress);
 	SETGET(uint, StaticAddress);
 	SETGET(uint, StaticCount);
@@ -39,6 +43,10 @@ private:
 	CMapBlock **m_Blocks;
 
 	MAP_INDEX_LIST m_BlockData[MAX_MAPS_COUNT];
+
+	void ResetPatchesInBlockTable();
+
+	void UpdatePatched();
 
 public:
 	CMapManager();
