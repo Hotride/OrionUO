@@ -83,7 +83,7 @@ const char *BASS_ErrorGetDescription()
 #pragma endregion
 //----------------------------------------------------------------------------------
 CSoundManager::CSoundManager()
-: m_Music(0), m_WarMusic(0)
+: m_Music(0), m_WarMusic(0), m_CurrentMusicIndex(-1)
 {
 }
 //----------------------------------------------------------------------------------
@@ -223,12 +223,16 @@ bool CSoundManager::FreeStream(HSTREAM hSteam)
 {
 	return BASS_StreamFree(hSteam);
 }
+bool CSoundManager::IsPlaying(HSTREAM hSteam)
+{
+	return BASS_ChannelIsActive(hSteam);
+}
 //----------------------------------------------------------------------------------
 void CSoundManager::PlayMidi(int index, bool loop, bool warmode)
 {
 	if (index >= 0 && index < MIDI_MUSIC_COUNT)
 	{
-		if (warmode && m_WarMusic != 0)
+		if (warmode && IsPlaying(m_WarMusic))
 			return;
 
 		if (warmode)
@@ -256,9 +260,6 @@ void CSoundManager::PlayMidi(int index, bool loop, bool warmode)
 //----------------------------------------------------------------------------------
 void CSoundManager::PlayMP3(std::string fileName, bool loop, bool warmode)
 {
-	if (warmode && m_WarMusic != 0)
-		return;
-
 	if (warmode)
 		BASS_ChannelStop(m_Music);
 	else
@@ -285,6 +286,8 @@ void CSoundManager::StopMusic()
 {
 	BASS_ChannelStop(m_Music);
 	m_Music = 0;
+	BASS_ChannelStop(m_WarMusic);
+	m_WarMusic = 0;
 }
 //----------------------------------------------------------------------------------
 void CSoundManager::SetMusicVolume(float volume)

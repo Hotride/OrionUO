@@ -3883,11 +3883,10 @@ void COrion::LoadClientStartupConfig()
 //----------------------------------------------------------------------------------
 void COrion::PlayMusic(const int &index, const bool &warmode)
 {
-	if (!g_ConfigManager.Music || index >= MAX_MUSIC_DATA_INDEX_COUNT)
+	if (!g_ConfigManager.Music || index >= MAX_MUSIC_DATA_INDEX_COUNT || (g_SoundManager.CurrentMusicIndex == index))
 		return;
 
 	g_SoundManager.StopMusic();
-	g_SoundManager.StopWarMusic();
 
 	if (g_PacketManager.ClientVersion >= CV_306E)
 	{

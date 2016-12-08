@@ -39,6 +39,7 @@ struct WaveHeader
 //----------------------------------------------------------------------------------
 class CSoundManager
 {
+	SETGET(int, CurrentMusicIndex);
 private:
 	static const int MIDI_MUSIC_COUNT = 57;
 	static const MidiInfoStruct MidiInfo[MIDI_MUSIC_COUNT];
@@ -59,6 +60,8 @@ public:
 	//Mix_Chunk *LoadSoundEffect(TIndexSound &is);
 
 	bool FreeStream(HSTREAM hSteam);
+
+	bool IsPlaying(HSTREAM hSteam);
 
 	//Метод расчета звука. При расчете учитываются: звук клиента, дистанция для эффектов.
 	float GetVolumeValue(int distance = -1, bool music = false);

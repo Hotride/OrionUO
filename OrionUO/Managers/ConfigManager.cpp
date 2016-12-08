@@ -207,7 +207,6 @@ void CConfigManager::OnChangedMusic(const bool &val)
 	if (this == &g_ConfigManager && !val)
 	{
 		g_SoundManager.StopMusic();
-		g_SoundManager.StopWarMusic();
 	}
 }
 //---------------------------------------------------------------------------
