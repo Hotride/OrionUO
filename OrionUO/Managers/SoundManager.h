@@ -61,7 +61,7 @@ public:
 
 	bool FreeStream(HSTREAM hSteam);
 
-	bool IsPlaying(HSTREAM hSteam);
+	bool IsPlayingNormalMusic();
 
 	//Метод расчета звука. При расчете учитываются: звук клиента, дистанция для эффектов.
 	float GetVolumeValue(int distance = -1, bool music = false);
@@ -73,9 +73,9 @@ public:
 	//void PlaySoundEffect(Mix_Chunk *mix, int volume);
 	void PlaySoundEffect(HSTREAM stream, float volume);
 
-	void PlayMidi(int index, bool loop, bool warmode);
+	void PlayMidi(int index, bool warmode);
 
-	void PlayMP3(std::string fileName, bool loop, bool warmode = false);
+	void PlayMP3(std::string fileName, int index, bool loop, bool warmode = false);
 
 	void StopMusic();
 

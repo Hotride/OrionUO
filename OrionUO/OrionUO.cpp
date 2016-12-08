@@ -3883,7 +3883,9 @@ void COrion::LoadClientStartupConfig()
 //----------------------------------------------------------------------------------
 void COrion::PlayMusic(const int &index, const bool &warmode)
 {
-	if (!g_ConfigManager.Music || index >= MAX_MUSIC_DATA_INDEX_COUNT || (g_SoundManager.CurrentMusicIndex == index))
+	if (!g_ConfigManager.Music || index >= MAX_MUSIC_DATA_INDEX_COUNT)
+		return;
+	if (!warmode && g_SoundManager.CurrentMusicIndex == index && g_SoundManager.IsPlayingNormalMusic())
 		return;
 
 	g_SoundManager.StopMusic();
@@ -3891,10 +3893,10 @@ void COrion::PlayMusic(const int &index, const bool &warmode)
 	if (g_PacketManager.ClientVersion >= CV_306E)
 	{
 		CIndexMusic &mp3Info = m_MP3Data[index];
-		g_SoundManager.PlayMP3(mp3Info.FilePath, mp3Info.Loop, warmode);
+		g_SoundManager.PlayMP3(mp3Info.FilePath, mp3Info.Loop, warmode, index);
 	}
 	else
-		g_SoundManager.PlayMidi(index, false, warmode);
+		g_SoundManager.PlayMidi(index, warmode);
 }
 //----------------------------------------------------------------------------------
 void COrion::PlaySoundEffect(const ushort &id, float volume)
