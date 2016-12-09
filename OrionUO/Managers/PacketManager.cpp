@@ -1985,11 +1985,7 @@ PACKET_HANDLER(DeleteObject)
 	uint serial = ReadUInt32BE();
 
 	if (serial == g_PlayerSerial)
-	{
-		g_Orion.DisconnectGump();
-		g_Orion.Disconnect();
 		return;
-	}
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
