@@ -35,6 +35,8 @@ class CGameItem : public CGameObject
 	SETGET(bool, WantUpdateMulti);
 	//!Цвет тайла для замены филдов (если 0 - не филд)
 	SETGET(ushort, FieldColor);
+	//!Бонус дистанции для мульти-объекта
+	SETGET(short, MultiDistanceBonus);
 
 protected:
 	/*!
@@ -56,6 +58,8 @@ public:
 	@return 
 	*/
 	void Paste(class CObjectOnCursor *obj);
+
+	void ClearMultiItems();
 
 	ushort GetFirstMultiGraphic();
 

@@ -5253,19 +5253,24 @@ void COrion::RemoveRangedObjects()
 
 			if (go->Container == 0xFFFFFFFF && !go->IsPlayer())
 			{
-				if (!go->NPC && ((CGameItem*)go)->MultiBody)
+				if (go->NPC)
 				{
-					if (GetMultiDistance(g_RemoveRangeXY, go) > objectsRange)
-						//if (GetDistance(g_RemoveRangeXY, go) > 31)
-						g_World->RemoveObject(go);
+					if (GetRemoveDistance(g_RemoveRangeXY, go) > objectsRange)
+					{
+						if (g_Party.Contains(go->Serial))
+							go->RemoveRender();
+						else
+							g_World->RemoveObject(go);
+					}
+				}
+				else if (((CGameItem*)go)->MultiBody)
+				{
+					if (!CheckMultiDistance(g_RemoveRangeXY, go, objectsRange))
+						((CGameItem*)go)->ClearMultiItems();
+						//g_World->RemoveObject(go);
 				}
 				else if (GetRemoveDistance(g_RemoveRangeXY, go) > objectsRange)
-				{
-					if (g_Party.Contains(go->Serial))
-						go->RemoveRender();
-					else
-						g_World->RemoveObject(go);
-				}
+					g_World->RemoveObject(go);
 			}
 
 			go = next;

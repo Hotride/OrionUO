@@ -1345,7 +1345,7 @@ PACKET_HANDLER(UpdateItem)
 	}
 
 	if (obj->MultiBody)
-		obj->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
+		obj->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
 
 	obj->X = x;
 	obj->Y = y;
@@ -1413,7 +1413,7 @@ PACKET_HANDLER(UpdateItemSA)
 	obj->Count = count;
 
 	if (obj->MultiBody)
-		obj->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
+		obj->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
 
 	obj->X = x;
 	obj->Y = y;
@@ -1528,7 +1528,7 @@ PACKET_HANDLER(UpdateObject)
 		item->MultiBody = (graphic & 0x4000);
 
 		if (item->MultiBody)
-			item->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != newX) || (obj->Y != newY) || (obj->Z != newZ));
+			item->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != newX) || (obj->Y != newY) || (obj->Z != newZ));
 
 		obj->OnGraphicChange(changeGraphicDir);
 	}
