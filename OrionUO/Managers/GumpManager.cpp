@@ -816,7 +816,7 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (g_PressedObject.RightGump() == gump && !gump->NoProcess && !gump->NoClose && gump->CanBeMoved())
+		if (g_PressedObject.RightGump() == gump && !gump->NoProcess && !gump->NoClose && (gump->CanBeMoved() || gump->GumpType == GT_GENERIC))
 		{
 			//gump->OnClose();
 			switch (gump->GumpType)
