@@ -41,8 +41,6 @@ bool CFileManager::Load()
 		return false;
 	else if (!m_TextureIdx.Load(g_App.FilePath("texidx.mul")))
 		return false;
-	else if (!m_SpeechMul.Load(g_App.FilePath("speech.mul")))
-		return false;
 	else if (!m_AnimMul[0].Load(g_App.FilePath("anim.mul")))
 		return false;
 	else if (!m_AnimdataMul.Load(g_App.FilePath("animdata.mul")))
@@ -71,8 +69,8 @@ bool CFileManager::Load()
 		return false;
 	else if (!m_TiledataMul.Load(g_App.FilePath("tiledata.mul")))
 		return false;
-
-	m_LangcodeIff.Load(g_App.FilePath("Langcode.iff"));
+	m_SpeechMul.Load(g_App.FilePath("speech.mul");
+	//m_LangcodeIff.Load(g_App.FilePath("Langcode.iff"));
 
 	IFOR(i, 0, 6)
 	{
