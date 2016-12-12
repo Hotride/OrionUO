@@ -55,6 +55,7 @@ class CSpeechManager
 private:
 	vector<CSpeechItem> m_SpeechEntries;
 	vector<CLangCode> m_LangCodes;
+	bool m_Loaded;
 	
 public:
 	CSpeechManager();

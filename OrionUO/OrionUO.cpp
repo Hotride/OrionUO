@@ -245,13 +245,7 @@ bool COrion::Install()
 		return false;
 	}
 
-	if (!g_SpeechManager.LoadSpeech())
-	{
-		LOG("Error loading speech.mul\n");
-		g_OrionWindow.ShowMessage("Error loading speech.mul", "Error loading speech.mul!");
-
-		return false;
-	}
+	g_SpeechManager.LoadSpeech();
 
 	if (g_FileManager.UseUOP)
 		g_MapManager = new CUopMapManager();
