@@ -71,6 +71,7 @@ public:
 	WISP_FILE::CMappedFile m_MultiCollection;
 	WISP_FILE::CMappedFile m_string_dictionary;
 
+	//Map patches
 	WISP_FILE::CMappedFile m_MapDifl[6];
 	WISP_FILE::CMappedFile m_MapDif[6];
 

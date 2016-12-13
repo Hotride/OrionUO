@@ -878,11 +878,13 @@ void CUopMapManager::CreateBlockTable(int map)
 		if (!realStaticCount)
 			realStaticCount = 0;
 
+		index.OriginalMapAddress = realMapAddress;
+		index.OriginalStaticAddress = realStaticAddress;
+		index.OriginalStaticCount = realStaticCount;
+
 		index.MapAddress = realMapAddress;
 		index.StaticAddress = realStaticAddress;
 		index.StaticCount = realStaticCount;
-		index.MapPatched = false;
-		index.StaticPatched = false;
 	}
 
 }
