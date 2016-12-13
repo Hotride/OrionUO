@@ -70,7 +70,7 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 
 	m_SkillsSliders[3] = NULL;
 
-	Add(new CGUIGumppicTiled(0x0588, 0, 0, 640, 480));
+	Add(new CGUIGumppicTiled(0x0E14, 0, 0, 640, 480));
 	Add(new CGUIGumppic(0x157C, 0, 0));
 	Add(new CGUIGumppic(0x15A0, 0, 4));
 	Add(new CGUIButton(ID_SPS_QUIT, 0x1589, 0x158A, 0x158B, 555, 4));
@@ -227,7 +227,7 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 {
 	CBaseProfession *obj = g_ProfessionManager.Selected;
 
-	Add(new CGUIGumppicTiled(0x0588, 0, 0, 640, 480));
+	Add(new CGUIGumppicTiled(0x0E14, 0, 0, 640, 480));
 	Add(new CGUIGumppic(0x157C, 0, 0));
 	Add(new CGUIGumppic(0x15A0, 0, 4));
 	Add(new CGUIButton(ID_SPS_QUIT, 0x1589, 0x158A, 0x158B, 555, 4));
