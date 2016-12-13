@@ -22,14 +22,14 @@ CMultiObject::CMultiObject(const ushort &graphic, const short &x, const short &y
 	g_MultiObjectsCount++;
 #endif //UO_DEBUG_INFO!=0
 }
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 CMultiObject::~CMultiObject()
 {
 #if UO_DEBUG_INFO!=0
 	g_MultiObjectsCount--;
 #endif //UO_DEBUG_INFO!=0
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 void CMultiObject::UpdateGraphicBySeason()
 {
 	ushort graphic = m_Graphic;
@@ -50,53 +50,42 @@ void CMultiObject::UpdateGraphicBySeason()
 			m_RenderQueueIndex = 6;
 	}
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 void CMultiObject::Draw(const int &x, const int &y)
 {
-#if UO_DEBUG_INFO!=0
-	g_RenderedObjectsCountInGameWindow++;
-#endif
-
-	ushort objGraphic = m_Graphic - 0x4000;
-	ushort objColor = m_Color;
-
-	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
-		objColor = SELECT_MULTI_COLOR;
-
 	if (m_OnTarget) //Мульти на таргете
 	{
+#if UO_DEBUG_INFO!=0
+		g_RenderedObjectsCountInGameWindow++;
+#endif
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 
-		g_Orion.DrawStaticArt(objGraphic, objColor, x, y, m_Z);
+		g_Orion.DrawStaticArt(m_Graphic - 0x4000, m_Color, x, y, m_Z);
 
 		glDisable(GL_BLEND);
 	}
 	else
 	{
-		if (IsTranslucent())
-		{
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glColor4f(1.0f, 1.0f, 1.0f, 0.7f);
-		}
+		m_RenderGraphic = m_Graphic - 0x4000;
 
-		if (g_UseCircleTrans)
-			g_Orion.DrawStaticArtTransparent(objGraphic, objColor, x, y, m_Z);
+		if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
+			m_RenderColor = SELECT_MULTI_COLOR;
 		else
-			g_Orion.DrawStaticArt(objGraphic, objColor, x, y, m_Z);
+			m_RenderColor = m_Color;
 
-		if (IsTranslucent())
-			glDisable(GL_BLEND);
-
-		if (IsLightSource() && g_GameScreen.UseLight)
-			g_GameScreen.AddLight(this, this, x, y - (m_Z * 4));
+		CRenderStaticObject::Draw(x, y);
 	}
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 void CMultiObject::Select(const int &x, const int &y)
 {
-	if (!m_OnTarget && !g_UseCircleTrans && g_Orion.StaticPixelsInXY(m_Graphic - 0x4000, x, y, m_Z))
-		g_SelectedObject.Init(this);
+	if (!m_OnTarget)
+	{
+		m_RenderGraphic = m_Graphic - 0x4000;
+
+		CRenderStaticObject::Select(x, y);
+	}
 }
 //----------------------------------------------------------------------------------

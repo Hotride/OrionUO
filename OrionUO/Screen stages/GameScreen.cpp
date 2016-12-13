@@ -257,7 +257,12 @@ void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const in
 
 		for (CRenderWorldObject *obj = mb->GetRender(tx, ty); obj != NULL; obj = obj->m_NextXY)
 		{
-			if (obj->Graphic == graphic && obj->Z == z)
+			ushort testGraphic = obj->Graphic;
+
+			if (obj->IsGameObject() && !((CGameObject*)obj)->NPC && ((CGameItem*)obj)->MultiBody)
+				testGraphic = ((CGameItem*)obj)->GetFirstMultiGraphic() + 0x4000;
+
+			if (testGraphic == graphic && obj->Z == z)
 				obj->StaticGroupObjectPtr()->FoliageTransparentIndex = g_FoliageIndex;
 		}
 	}

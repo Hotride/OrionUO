@@ -19,22 +19,18 @@
 #include "../Managers/PacketManager.h"
 #include "../Screen stages/GameScreen.h"
 #include "../Gumps/GumpMinimap.h"
+#include "GamePlayer.h"
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
 : CGameObject(serial), m_Layer(0), m_AnimID(0), m_ImageID(0), m_UsedLayer(0),
 m_Opened(false), m_Dragged(false), m_MultiBody(false), m_WantUpdateMulti(true),
-m_FieldColor(0)
+m_FieldColor(0), m_MultiDistanceBonus(0)
 {
 }
 //----------------------------------------------------------------------------------
 CGameItem::~CGameItem()
 {
-	if (m_MultiBody && m_Items != NULL)
-	{
-		CMulti *multi = (CMulti*)m_Items;
-		m_Items = NULL;
-		delete multi;
-	}
+	ClearMultiItems();
 	
 	if (m_Opened)
 	{
@@ -55,6 +51,18 @@ CGameItem::~CGameItem()
 
 		m_Dragged = false;
 	}
+}
+//----------------------------------------------------------------------------------
+void CGameItem::ClearMultiItems()
+{
+	if (m_MultiBody && m_Items != NULL)
+	{
+		CMulti *multi = (CMulti*)m_Items;
+		m_Items = NULL;
+		delete multi;
+	}
+
+	m_WantUpdateMulti = true;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -177,7 +185,25 @@ void CGameItem::OnGraphicChange(int direction)
 		}
 	}
 	else if (m_Items == NULL || m_WantUpdateMulti)
-		LoadMulti();
+	{
+		m_RenderQueueIndex = 10;
+
+		CWalkData *wd = g_Player->m_WalkStack.m_Items;
+
+		if (wd != NULL)
+		{
+			g_RemoveRangeXY.X = wd->X;
+			g_RemoveRangeXY.Y = wd->Y;
+		}
+		else
+		{
+			g_RemoveRangeXY.X = g_Player->X;
+			g_RemoveRangeXY.Y = g_Player->Y;
+		}
+
+		if (!m_MultiDistanceBonus || CheckMultiDistance(g_RemoveRangeXY, this, g_ConfigManager.UpdateRange))
+			LoadMulti();
+	}
 }
 //----------------------------------------------------------------------------------
 void CGameItem::CalculateFieldColor()
@@ -204,20 +230,40 @@ void CGameItem::CalculateFieldColor()
 		m_FieldColor = 0x038A;
 }
 //----------------------------------------------------------------------------------
+ushort CGameItem::GetFirstMultiGraphic()
+{
+	ushort graphic = 0;
+
+	if (m_MultiBody)
+	{
+		PMULTI_BLOCK pmb = (PMULTI_BLOCK)g_Orion.m_MultiDataIndex[m_Graphic].Address;
+
+		if (pmb != NULL && pmb->ID > 1)
+			graphic = pmb->ID;
+	}
+
+	return graphic;
+}
+//----------------------------------------------------------------------------------
 void CGameItem::Draw(const int &x, const int &y)
 {
 	if (m_Container == 0xFFFFFFFF)
 	{
-		ushort objGraphic = 0;
-
 		if (m_MultiBody)
 		{
-			PMULTI_BLOCK pmb = (PMULTI_BLOCK)g_Orion.m_MultiDataIndex[m_Graphic].Address;
+			m_RenderGraphic = GetFirstMultiGraphic();
 
-			if (pmb != NULL)
-				objGraphic = pmb->ID;
-			else
-				return;
+			if (m_RenderGraphic)
+			{
+				if (!Locked() && g_SelectedObject.Object() == this)
+					m_RenderColor = 0x0035;
+				else
+					m_RenderColor = m_Color;
+
+				CRenderStaticObject::Draw(x, y);
+			}
+
+			return;
 		}
 
 #if UO_DEBUG_INFO!=0
@@ -230,12 +276,8 @@ void CGameItem::Draw(const int &x, const int &y)
 		{
 			bool doubleDraw = false;
 			bool selMode = false;
-			if (!objGraphic)
-				objGraphic = GetDrawGraphic(doubleDraw);
+			ushort objGraphic = GetDrawGraphic(doubleDraw);
 			ushort objColor = m_Color;
-
-			if (objGraphic == 1)
-				return;
 
 			if (Hidden())
 			{
@@ -310,16 +352,14 @@ void CGameItem::Select(const int &x, const int &y)
 {
 	if (m_Container == 0xFFFFFFFF)
 	{
-		ushort objGraphic = 0;
-
 		if (m_MultiBody)
 		{
-			PMULTI_BLOCK pmb = (PMULTI_BLOCK)g_Orion.m_MultiDataIndex[m_Graphic].Address;
+			m_RenderGraphic = GetFirstMultiGraphic();
 
-			if (pmb != NULL)
-				objGraphic = pmb->ID;
-			else
-				return;
+			if (m_RenderGraphic)
+				CRenderStaticObject::Select(x, y);
+
+			return;
 		}
 
 		if (IsCorpse()) //Трупик
@@ -330,12 +370,7 @@ void CGameItem::Select(const int &x, const int &y)
 		else
 		{
 			bool doubleDraw = false;
-
-			if (!objGraphic)
-				objGraphic = GetDrawGraphic(doubleDraw);
-
-			if (objGraphic == 1)
-				return;
+			ushort objGraphic = GetDrawGraphic(doubleDraw);
 
 			if (doubleDraw)
 			{
@@ -655,12 +690,7 @@ ushort CGameItem::GetMountAnimation()
 */
 void CGameItem::LoadMulti()
 {
-	if (m_MultiBody && m_Items != NULL)
-	{
-		CMulti *multi = (CMulti*)m_Items;
-		m_Items = NULL;
-		delete multi;
-	}
+	ClearMultiItems();
 
 	m_WantUpdateMulti = false;
 
@@ -722,6 +752,8 @@ void CGameItem::LoadMulti()
 
 			multi->MaxX = maxX;
 			multi->MaxY = maxY;
+
+			m_MultiDistanceBonus = max(max(abs(minX), maxX), max(abs(minY), maxY));
 		}
 
 		CGumpMinimap *minimap = (CGumpMinimap*)g_GumpManager.GetGump(g_PlayerSerial, 0, GT_MINIMAP);

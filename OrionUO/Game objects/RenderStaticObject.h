@@ -21,6 +21,9 @@ class CRenderStaticObject : public CMapObject
 	SETGET(char, CanBeTransparent);
 	SETGET(bool, Vegetation);
 
+	SETGET(ushort, RenderGraphic);
+	SETGET(ushort, RenderColor);
+
 protected:
 	//Указатель на структуру данных тайлдаты
 	STATIC_TILES *m_TiledataPtr;
@@ -30,6 +33,12 @@ public:
 	virtual ~CRenderStaticObject();
 	
 	CTextContainer *m_TextControl; //Ссылка на контейнер для текста
+
+	//Отрисовать объект
+	virtual void Draw(const int &x, const int &y);
+
+	//Выбрать объект
+	virtual void Select(const int &x, const int &y);
 
 	//Добавить текст в контейнер
 	virtual void AddText(CTextData *td);

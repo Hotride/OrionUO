@@ -37,6 +37,7 @@ CSpeechItem::~CSpeechItem()
 //-----------------------------------CSpeechManager---------------------------------
 //----------------------------------------------------------------------------------
 CSpeechManager::CSpeechManager()
+: m_Loaded(false)
 {
 }
 //----------------------------------------------------------------------------------
@@ -95,6 +96,7 @@ bool CSpeechManager::LoadSpeech()
 		//TPRINT("[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, ToString(str).c_str());
 	}
 
+	m_Loaded = true;
 	return true;
 }
 //----------------------------------------------------------------------------------
@@ -143,6 +145,8 @@ bool CSpeechManager::LoadLangCodes()
 //----------------------------------------------------------------------------------
 void CSpeechManager::GetKeywords(const wchar_t *text, UINT_LIST &codes)
 {
+	if (!m_Loaded) return;
+
 	int size = m_SpeechEntries.size();
 	wstring input = ToLowerW(text);
 	//to lower, case insensitive approach.

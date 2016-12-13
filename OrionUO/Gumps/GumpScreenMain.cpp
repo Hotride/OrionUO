@@ -11,6 +11,7 @@
 #include "../Screen stages/MainScreen.h"
 #include "../OrionUO.h"
 #include "../Managers/ConfigManager.h"
+#include "../Managers/PacketManager.h"
 //----------------------------------------------------------------------------------
 CGumpScreenMain::CGumpScreenMain()
 : CGump(GT_NONE, 0, 0, 0), m_Arrow(NULL), m_PasswordFake(NULL)
@@ -50,13 +51,21 @@ void CGumpScreenMain::UpdateContent()
 
 	//Clear();
 
-	Add(new CGUIGumppicTiled(0x0588, 0, 0, 640, 480));
-	Add(new CGUIGumppic(0x0E14, 0, 0));
+	Add(new CGUIGumppicTiled(0x0E14, 0, 0, 640, 480));
+
 	Add(new CGUIGumppic(0x157C, 0, 0));
+
+	if (g_PacketManager.ClientVersion >= CV_6000)
+		Add(new CGUIGumppic(0x2329, 0, 0));
+
 	Add(new CGUIGumppic(0x15A0, 0, 4));
 	Add(new CGUIResizepic(0, 0x13BE, 128, 288, 451, 157));
-	Add(new CGUIGumppic(0x058A, 286, 45));
+
+	if (g_PacketManager.ClientVersion < CV_6000)
+		Add(new CGUIGumppic(0x058A, 286, 45));
+
 	Add(new CGUIButton(ID_MS_QUIT, 0x1589, 0x158A, 0x158B, 555, 4));
+
 	m_Arrow = (CGUIButton*)Add(new CGUIButton(ID_MS_ARROW_NEXT, 0x15A4, 0x15A5, 0x15A6, 610, 445));
 	Add(new CGUIResizepic(ID_MS_ACCOUNT, 0x0BB8, 328, 343, 210, 30));
 	Add(new CGUIResizepic(ID_MS_PASSWORD, 0x0BB8, 328, 383, 210, 30));

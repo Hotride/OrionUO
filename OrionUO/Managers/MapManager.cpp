@@ -14,12 +14,14 @@
 #include "../Game objects/GamePlayer.h"
 #include <unordered_map>
 #include "../OrionUO.h"
+#include "GumpManager.h"
+#include "../Gumps/GumpMinimap.h"
 //----------------------------------------------------------------------------------
 CMapManager *g_MapManager = NULL;
 //----------------------------------------------------------------------------------
 CIndexMap::CIndexMap()
-: m_MapAddress(0), m_StaticAddress(0), m_StaticCount(0), m_MapPatched(false),
-m_StaticPatched(false)
+: m_OriginalMapAddress(0), m_OriginalStaticAddress(0), m_OriginalStaticCount(0),
+m_MapAddress(0), m_StaticAddress(0), m_StaticCount(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -36,6 +38,8 @@ CMapManager::~CMapManager()
 {
 	if (m_Blocks != NULL)
 	{
+		ClearUsedBlocks();
+
 		delete[] m_Blocks;
 		m_Blocks = NULL;
 	}
@@ -115,11 +119,13 @@ void CMapManager::CreateBlockTable(int map)
 		if (!realStaticCount)
 			realStaticCount = 0;
 
+		index.OriginalMapAddress = realMapAddress;
+		index.OriginalStaticAddress = realStaticAddress;
+		index.OriginalStaticCount = realStaticCount;
+
 		index.MapAddress = realMapAddress;
 		index.StaticAddress = realStaticAddress;
 		index.StaticCount = realStaticCount;
-		index.MapPatched = false;
-		index.StaticPatched = false;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -133,11 +139,160 @@ void CMapManager::SetPatchedMapBlock(const uint &block, const uint &address)
 	if (maxBlockCount < 1)
 		return;
 
+	list[block].OriginalMapAddress = address;
 	list[block].MapAddress = address;
 }
 //----------------------------------------------------------------------------------
-void CMapManager::ApplyMapPatches()
+void CMapManager::ResetPatchesInBlockTable()
 {
+	IFOR(map, 0, MAX_MAPS_COUNT)
+	{
+		MAP_INDEX_LIST &list = m_BlockData[map];
+		WISP_GEOMETRY::CSize &size = g_MapBlockSize[map];
+
+		int maxBlockCount = size.Width * size.Height;
+
+		//Return and error notification?
+		if (maxBlockCount < 1)
+			return;
+
+		if (g_FileManager.m_MapMul[map].Start == NULL || g_FileManager.m_StaticIdx[map].Start == NULL || g_FileManager.m_StaticMul[map].Start == NULL)
+			return;
+
+		IFOR(block, 0, maxBlockCount)
+		{
+			CIndexMap &index = list[block];
+
+			index.MapAddress = index.OriginalMapAddress;
+			index.StaticAddress = index.OriginalStaticAddress;
+			index.StaticCount = index.OriginalStaticCount;
+		}
+	}
+}
+//----------------------------------------------------------------------------------
+void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
+{
+	ResetPatchesInBlockTable();
+
+	int count = stream.ReadUInt32BE();
+
+	if (count < 0)
+		count = 0;
+
+	if (count > MAX_MAPS_COUNT)
+		count = MAX_MAPS_COUNT;
+
+	IFOR(i, 0, count)
+	{
+		int mapPatchesCount = stream.ReadUInt32BE();
+		int staticsPatchesCount = stream.ReadUInt32BE();
+
+		MAP_INDEX_LIST &list = m_BlockData[i];
+		WISP_GEOMETRY::CSize &size = g_MapBlockSize[i];
+
+		uint maxBlockCount = size.Height * size.Width;
+
+		if (mapPatchesCount)
+		{
+			WISP_FILE::CMappedFile &difl = g_FileManager.m_MapDifl[i];
+			WISP_FILE::CMappedFile &dif = g_FileManager.m_MapDif[i];
+
+			mapPatchesCount = min(mapPatchesCount, difl.Size / 4);
+
+			difl.ResetPtr();
+			dif.ResetPtr();
+
+			IFOR(j, 0, mapPatchesCount)
+			{
+				uint blockIndex = difl.ReadUInt32LE();
+
+				if (blockIndex < maxBlockCount)
+					list[blockIndex].MapAddress = (uint)dif.Ptr;
+
+				dif.Move(sizeof(MAP_BLOCK));
+			}
+		}
+
+		if (staticsPatchesCount)
+		{
+			WISP_FILE::CMappedFile &difl = g_FileManager.m_StaDifl[i];
+			WISP_FILE::CMappedFile &difi = g_FileManager.m_StaDifi[i];
+			uint startAddress = (uint)g_FileManager.m_StaDif[i].Start;
+
+			staticsPatchesCount = min(staticsPatchesCount, difl.Size / 4);
+
+			difl.ResetPtr();
+			difi.ResetPtr();
+
+			IFOR(j, 0, staticsPatchesCount)
+			{
+				uint blockIndex = difl.ReadUInt32LE();
+
+				PSTAIDX_BLOCK sidx = (PSTAIDX_BLOCK)difi.Ptr;
+
+				difi.Move(sizeof(STAIDX_BLOCK));
+
+				if (blockIndex < maxBlockCount)
+				{
+					uint realStaticAddress = 0;
+					int realStaticCount = 0;
+
+					if (sidx->Size > 0 && sidx->Position != 0xFFFFFFFF)
+					{
+						realStaticAddress = startAddress + sidx->Position;
+						realStaticCount = sidx->Size / sizeof(STATICS_BLOCK);
+
+						if (realStaticCount > 0)
+						{
+							if (realStaticCount > 1024)
+								realStaticCount = 1024;
+						}
+					}
+
+					list[blockIndex].StaticAddress = realStaticAddress;
+					list[blockIndex].StaticCount = realStaticCount;
+				}
+			}
+		}
+	}
+
+	UpdatePatched();
+}
+//----------------------------------------------------------------------------------
+void CMapManager::UpdatePatched()
+{
+	if (g_Player == NULL)
+		return;
+
+	deque<CRenderWorldObject*> objectsList;
+
+	if (m_Blocks != NULL)
+	{
+		QFOR(block, m_Items, CMapBlock*)
+		{
+			IFOR(x, 0, 8)
+			{
+				IFOR(y, 0, 8)
+				{
+					for (CRenderWorldObject *item = block->GetRender(x, y); item != NULL; item = item->m_NextXY)
+{
+						if (!item->IsLandObject() && !item->IsStaticObject())
+							objectsList.push_back(item);
+					}
+				}
+			}
+		}
+	}
+
+	Init(false);
+
+	for (CRenderWorldObject *item : objectsList)
+		AddRender(item);
+
+	CGumpMinimap *gump = (CGumpMinimap*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_MINIMAP);
+
+	if (gump != NULL)
+		gump->LastX = 0;
 }
 //----------------------------------------------------------------------------------
 CIndexMap *CMapManager::GetIndex(const int &map, const int &blockX, const int &blockY)
@@ -319,6 +474,23 @@ void CMapManager::ClearUnusedBlocks()
 	}
 }
 //----------------------------------------------------------------------------------
+void CMapManager::ClearUsedBlocks()
+{
+	CMapBlock *block = (CMapBlock*)m_Items;
+
+	while (block != NULL)
+	{
+		CMapBlock *next = (CMapBlock*)block->m_Next;
+
+		uint index = block->Index;
+		Delete(block);
+
+		m_Blocks[index] = NULL;
+
+		block = next;
+	}
+}
+//----------------------------------------------------------------------------------
 /*!
 Инициализация
 @param [__in_opt] delayed По истечении времени на загрузку выходить из цикла
@@ -335,6 +507,8 @@ void CMapManager::Init(const bool &delayed)
 	{
 		if (m_Blocks != NULL)
 		{
+			ClearUsedBlocks();
+
 			delete[] m_Blocks;
 			m_Blocks = NULL;
 		}
@@ -661,10 +835,10 @@ void CUopMapManager::CreateBlockTable(int map)
 				uopDataStruct = hashes.at(hash);
 			}
 			else
-			{
+{
 				LOG("False hash in uop map %i file.", map);
 			}
-		}
+}
 
 
 		uint realMapAddress = 0;
@@ -672,12 +846,12 @@ void CUopMapManager::CreateBlockTable(int map)
 		int realStaticCount = 0;
 		int blockNumber = block & 4095;
 		if (mapAddress != 0)
-		{
+{
 			uint address = mapAddress + uopDataStruct.offset + (blockNumber * 196);
 
 			if (address < endMapAddress)
 				realMapAddress = address;
-		}
+}
 
 		if (staticIdxAddress != 0 && staticAddress != 0)
 		{
@@ -693,7 +867,7 @@ void CUopMapManager::CreateBlockTable(int map)
 					realStaticCount = sidx->Size / sizeof(STATICS_BLOCK);
 
 					if (realStaticCount > 0)
-					{
+{
 						if (realStaticCount > 1024)
 							realStaticCount = 1024;
 					}

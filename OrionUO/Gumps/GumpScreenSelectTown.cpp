@@ -58,7 +58,7 @@ void CGumpScreenSelectTown::UpdateContent()
 		map = ((CCityItemNew*)city)->MapIndex;
 	}
 
-	Add(new CGUIGumppicTiled(0x0588, 0, 0, 640, 480));
+	Add(new CGUIGumppicTiled(0x0E14, 0, 0, 640, 480));
 	Add(new CGUIGumppic(0x157C, 0, 0));
 	Add(new CGUIGumppic(0x15A0, 0, 4));
 

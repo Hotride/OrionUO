@@ -415,7 +415,9 @@ public:
 	//Переход по веб-ссылке
 	void GoToWebLink(const string &url);
 
+	void ResumeSound();
 
+	void PauseSound();
 
 	//Проиграть музыку mp3 либо midi
 	void PlayMusic(const int &index, const bool &warmode = false);

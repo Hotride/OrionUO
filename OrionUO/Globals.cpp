@@ -268,40 +268,15 @@ int GetRemoveDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
 	return 100500;
 }
 //----------------------------------------------------------------------------------
-int GetMultiDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
+bool CheckMultiDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target, int maxDistance)
 {
-	int result = 100500;
+	bool result = false;
 
-	if (target != NULL && target->m_Items != NULL)
+	if (target != NULL)
 	{
-		CMulti *multi = (CMulti*)target->m_Items;
+		maxDistance += ((CGameItem*)target)->MultiDistanceBonus;
 
-		int multiDistance = abs(multi->MinX);
-		int testDistance = abs(multi->MinY);
-
-		if (multiDistance < testDistance)
-			multiDistance = testDistance;
-
-		testDistance = abs(multi->MaxX);
-
-		if (multiDistance < testDistance)
-			multiDistance = testDistance;
-
-		testDistance = abs(multi->MaxY);
-
-		if (multiDistance < testDistance)
-			multiDistance = testDistance;
-
-		multiDistance--;
-
-		int distX = abs(target->X - current.X) - multiDistance;
-		int distY = abs(target->Y - current.Y) - multiDistance;
-
-		if (distY > distX)
-			distX = distY;
-
-		if (distX < result)
-			result = distX;
+		result = ((abs(target->X - current.X) <= maxDistance) && (abs(target->Y - current.Y) <= maxDistance));
 	}
 
 	return result;

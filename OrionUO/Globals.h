@@ -55,7 +55,7 @@ void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y);
 class CGameObject;
 int GetDistance(CGameObject *current, CGameObject *target);
 int GetDistance(CGameObject *current, WISP_GEOMETRY::CPoint2Di target);
-int GetMultiDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target);
+bool CheckMultiDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target, int maxDistance);
 int GetDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target);
 int GetDistance(WISP_GEOMETRY::CPoint2Di current, WISP_GEOMETRY::CPoint2Di target);
 int GetRemoveDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target);

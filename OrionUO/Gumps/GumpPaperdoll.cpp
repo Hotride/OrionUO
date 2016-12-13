@@ -113,10 +113,13 @@ m_DataBox(NULL), m_Description(NULL), m_WantTransparentContent(false)
 		if (g_PaperdollBooks)
 		{
 			Add(new CGUIButton(ID_GP_COMBAT_BOOK, 0x2B34, 0x2B34, 0x2B34, 156, 200));
-			Add(new CGUIButton(ID_GP_RACIAL_ABILITIES_BOOK, 0x2B28, 0x2B34, 0x2B34, 23, 200));
 
-			partyManifestX += SCROLLS_STEP;
-			profileX += SCROLLS_STEP;
+			if (g_PacketManager.ClientVersion >= CV_7000)
+			{
+				Add(new CGUIButton(ID_GP_RACIAL_ABILITIES_BOOK, 0x2B28, 0x2B34, 0x2B34, 23, 200));
+				profileX += SCROLLS_STEP;
+				partyManifestX += SCROLLS_STEP;
+			}
 		}
 
 		Add(new CGUIButton(ID_GP_PARTY_MANIFEST_SCROLL, 0x07D2, 0x07D2, 0x07D2, partyManifestX, 196));

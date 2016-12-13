@@ -80,7 +80,7 @@ const int MAX_MULTI_DATA_INDEX_COUNT = 0x2200;
 const int MAX_MUSIC_DATA_INDEX_COUNT = 100;
 
 //!Размер таблицы индексов анимаций
-const int MAX_ANIMATIONS_DATA_INDEX_COUNT = 1250;
+const int MAX_ANIMATIONS_DATA_INDEX_COUNT = 2047;
 
 //!Размер таблицы индексов анимаций
 const int MAX_LIGHTS_DATA_INDEX_COUNT = 100;
@@ -126,18 +126,6 @@ const int FEMALE_GUMP_OFFSET = 60000;
 
 //!Дистанция до объектов-контейнеров, выше которой гамп должен закрыться
 const int REMOVE_CONTAINER_GUMP_RANGE = 3;
-
-//!Максимальная блокирующая высота объекта
-const int g_MaxBlockZ = 15;
-
-//!Максимальная высота, на которую можно забраться
-const int g_MaxClimbZ = 9;
-
-//!Максимальная высота, на которую можно упасть
-const int g_MaxFallZ = 19;
-
-//!Максимальная высота прыжка
-const int g_MaxClimbMapZ = 19;
 
 //!Высота персонажа
 const int DEFAULT_CHARACTER_HEIGHT = 16;

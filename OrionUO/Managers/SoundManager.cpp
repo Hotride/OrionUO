@@ -83,7 +83,7 @@ const char *BASS_ErrorGetDescription()
 #pragma endregion
 //----------------------------------------------------------------------------------
 CSoundManager::CSoundManager()
-: m_Music(0), m_WarMusic(0)
+: m_Music(0), m_WarMusic(0), m_CurrentMusicIndex(-1)
 {
 }
 //----------------------------------------------------------------------------------
@@ -223,8 +223,12 @@ bool CSoundManager::FreeStream(HSTREAM hSteam)
 {
 	return BASS_StreamFree(hSteam);
 }
+bool CSoundManager::IsPlayingNormalMusic()
+{
+	return BASS_ChannelIsActive(m_Music);
+}
 //----------------------------------------------------------------------------------
-void CSoundManager::PlayMidi(int index, bool loop, bool warmode)
+void CSoundManager::PlayMidi(int index, bool warmode)
 {
 	if (index >= 0 && index < MIDI_MUSIC_COUNT)
 	{
@@ -248,13 +252,16 @@ void CSoundManager::PlayMidi(int index, bool loop, bool warmode)
 		if (warmode)
 			m_WarMusic = streamHandle;
 		else
+		{
+			m_CurrentMusicIndex = index;
 			m_Music = streamHandle;
+		}
 	}
 	else
 		LOG("Music ID is out of range: %i\n", index);
 }
 //----------------------------------------------------------------------------------
-void CSoundManager::PlayMP3(std::string fileName, bool loop, bool warmode)
+void CSoundManager::PlayMP3(std::string fileName, int index, bool loop, bool warmode)
 {
 	if (warmode && m_WarMusic != 0)
 		return;
@@ -269,7 +276,11 @@ void CSoundManager::PlayMP3(std::string fileName, bool loop, bool warmode)
 	if (warmode)
 		m_WarMusic = streamHandle;
 	else
+	{
 		m_Music = streamHandle;
+		m_CurrentMusicIndex = index;
+	}
+
 }
 //----------------------------------------------------------------------------------
 void CSoundManager::StopWarMusic()
@@ -285,6 +296,8 @@ void CSoundManager::StopMusic()
 {
 	BASS_ChannelStop(m_Music);
 	m_Music = 0;
+	BASS_ChannelStop(m_WarMusic);
+	m_WarMusic = 0;
 }
 //----------------------------------------------------------------------------------
 void CSoundManager::SetMusicVolume(float volume)

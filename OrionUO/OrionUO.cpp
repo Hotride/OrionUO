@@ -243,13 +243,7 @@ bool COrion::Install()
 		return false;
 	}
 
-	if (!g_SpeechManager.LoadSpeech())
-	{
-		LOG("Error loading speech.mul\n");
-		g_OrionWindow.ShowMessage("Error loading speech.mul", "Error loading speech.mul!");
-
-		return false;
-	}
+	g_SpeechManager.LoadSpeech();
 
 	if (g_FileManager.UseUOP)
 		g_MapManager = new CUopMapManager();
@@ -1126,15 +1120,18 @@ int COrion::Send(puchar buf, const int &size)
 
 	CPacketInfo &type = g_PacketManager.GetInfo(*buf);
 
-	LOG("--- ^(%d) s(+%d => %d) Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
-
-	if (*buf == 0x80 || *buf == 0x91)
+	if (type.save)
 	{
-		LOG_DUMP(buf, size / 2);
-		LOG("**** PASSWORD CENSORED ****\n");
+		LOG("--- ^(%d) s(+%d => %d) Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
+
+		if (*buf == 0x80 || *buf == 0x91)
+		{
+			LOG_DUMP(buf, size / 2);
+			LOG("**** PASSWORD CENSORED ****\n");
+		}
+		else
+			LOG_DUMP(buf, size);
 	}
-	else
-		LOG_DUMP(buf, size);
 
 	int result = 0;
 
@@ -3991,17 +3988,26 @@ void COrion::PlayMusic(const int &index, const bool &warmode)
 {
 	if (!g_ConfigManager.Music || index >= MAX_MUSIC_DATA_INDEX_COUNT)
 		return;
-
-	g_SoundManager.StopMusic();
-	g_SoundManager.StopWarMusic();
+	if (!warmode && g_SoundManager.CurrentMusicIndex == index && g_SoundManager.IsPlayingNormalMusic())
+		return;
 
 	if (g_PacketManager.ClientVersion >= CV_306E)
 	{
 		CIndexMusic &mp3Info = m_MP3Data[index];
-		g_SoundManager.PlayMP3(mp3Info.FilePath, mp3Info.Loop, warmode);
+		g_SoundManager.PlayMP3(mp3Info.FilePath, index, mp3Info.Loop, warmode);
 	}
 	else
-		g_SoundManager.PlayMidi(index, false, warmode);
+		g_SoundManager.PlayMidi(index, warmode);
+}
+//----------------------------------------------------------------------------------
+void COrion::PauseSound()
+{
+	g_SoundManager.PauseSound();
+}
+//----------------------------------------------------------------------------------
+void COrion::ResumeSound()
+{
+	g_SoundManager.ResumeSound();
 }
 //----------------------------------------------------------------------------------
 void COrion::PlaySoundEffect(const ushort &id, float volume)
@@ -5350,19 +5356,24 @@ void COrion::RemoveRangedObjects()
 
 			if (go->Container == 0xFFFFFFFF && !go->IsPlayer())
 			{
-				if (!go->NPC && ((CGameItem*)go)->MultiBody)
+				if (go->NPC)
 				{
-					if (GetMultiDistance(g_RemoveRangeXY, go) > objectsRange)
-						//if (GetDistance(g_RemoveRangeXY, go) > 31)
-						g_World->RemoveObject(go);
+					if (GetRemoveDistance(g_RemoveRangeXY, go) > objectsRange)
+					{
+						if (g_Party.Contains(go->Serial))
+							go->RemoveRender();
+						else
+							g_World->RemoveObject(go);
+					}
+				}
+				else if (((CGameItem*)go)->MultiBody)
+				{
+					if (!CheckMultiDistance(g_RemoveRangeXY, go, objectsRange))
+						((CGameItem*)go)->ClearMultiItems();
+						//g_World->RemoveObject(go);
 				}
 				else if (GetRemoveDistance(g_RemoveRangeXY, go) > objectsRange)
-				{
-					if (g_Party.Contains(go->Serial))
-						go->RemoveRender();
-					else
-						g_World->RemoveObject(go);
-				}
+					g_World->RemoveObject(go);
 			}
 
 			go = next;

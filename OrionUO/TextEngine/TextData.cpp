@@ -68,6 +68,14 @@ void CTextData::GenerateTexture(const int &maxWidth, const ushort &flags, const 
 		g_FontManager.GenerateA((uchar)m_Font, m_Texture, m_Text.c_str(), m_Color, maxWidth, align, flags);
 
 	if (!m_Texture.Empty())
-		m_Timer += (m_Texture.LinesCount * (g_ConfigManager.SpeechDelay * 20));
+	{
+		if (g_ConfigManager.ScaleSpeechDelay)
+			m_Timer += (((4000 * m_Texture.LinesCount) * g_ConfigManager.SpeechDelay) / 100);
+		else
+		{
+			uint delay = ((__int64)((__int64)5497558140000 * g_ConfigManager.SpeechDelay) >> 32) >> 5;
+			m_Timer += (uint)((delay >> 31) + delay);
+		}
+	}
 }
 //----------------------------------------------------------------------------------

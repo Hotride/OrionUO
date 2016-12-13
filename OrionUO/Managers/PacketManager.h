@@ -16,6 +16,16 @@
 class CPacketManager;
 typedef void (CPacketManager::*PACKET_FUNCTION)();
 //----------------------------------------------------------------------------------
+#define ORION_SAVE_ALL_PACKETS 0
+
+#define ORION_SAVE_PACKET 1
+
+#if ORION_SAVE_ALL_PACKETS == 1
+#define ORION_IGNORE_PACKET 1
+#else
+#define ORION_IGNORE_PACKET 0
+#endif
+//----------------------------------------------------------------------------------
 //!Направление пакета
 enum PACKET_DIRECTION
 {
@@ -28,6 +38,9 @@ enum PACKET_DIRECTION
 class CPacketInfo
 {
 public:
+	//!Записывать ли пакет в лог
+	bool save;
+
 	//!Название пакета
 	const char *Name;
 

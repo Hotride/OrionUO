@@ -13,8 +13,6 @@
 #include "PathNode.h"
 //----------------------------------------------------------------------------------
 const int PATHFINDER_MAX_NODES = 10000;
-
-#define TEST_WALK_CHECK_ALG 1
 //----------------------------------------------------------------------------------
 enum PATH_STEP_STATE
 {
@@ -33,7 +31,7 @@ enum PATH_OBJECT_FLAGS
 };
 //----------------------------------------------------------------------------------
 //Класс для поиска пути и теста шага на точку
-class CPathFinder : public CBaseQueue
+class CPathFinder
 {
 	//Автоматической передвижение (не сложными махинациями с мышкой)
 	SETGET(bool, AutoWalking);
@@ -42,28 +40,19 @@ class CPathFinder : public CBaseQueue
 
 protected:
 	//Вычисление новой Z координаты
-	virtual bool CalculateNewZ(int &x, int &y, char &z);
+	bool CalculateNewZ(const int &x, const int &y, char &z, const int &direction);
+
+	//Вычисление минимальной и максимальной Z координат
+	int CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, const int &currentZ, int newDirection, const int &stepState);
 
 	//Вычисление новых XY координат
 	void GetNewXY(uchar &direction, int &x, int &y);
 
 	//Создание списка предметов, участвующих в поиске в указанных координатах
-	virtual bool CreateItemsList(int &x, int &y, char &z);
-
-	//Флаг, указывающий. что персонаж стоит на длинной лестнице
-	bool m_OnLongStair;
-
-	//Проверка на лестницу под ногами
-	void CheckLongStairUnderfoot(int &x, int &y, char &z);
+	bool CreateItemsList(vector<CPathObjectTest> &list, const int &x, const int &y, const int &stepState);
 
 	WISP_GEOMETRY::CPoint2Di m_StartPoint;
 	WISP_GEOMETRY::CPoint2Di m_EndPoint;
-
-	/*int m_StartX;
-	int m_StartY;
-
-	int m_EndX;
-	int m_EndY;*/
 
 	int m_GoalNode;
 	bool m_GoalFound;
@@ -104,10 +93,10 @@ public:
 	virtual ~CPathFinder();
 
 	//Проверка на возможность сделать шаг в указанные координаты
-	virtual bool CanWalk(uchar &direction, int &x, int &y, char &z);
+	bool CanWalk(uchar &direction, int &x, int &y, char &z);
 
 	//Пойти в указанные координаты
-	virtual bool Walk(bool run, uchar direction);
+	bool Walk(bool run, uchar direction);
 
 	//Переместиться в указанные координаты
 	bool WalkTo(int x, int y, int z, int distance);
@@ -121,29 +110,7 @@ public:
 	int GetWalkSpeed(const bool &run, const bool &onMount);
 };
 //----------------------------------------------------------------------------------
-class CPathFinderTest : public CPathFinder
-{
-protected:
-	int CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, const int &currentZ, int newDirection, const int &stepState);
-
-	bool CalculateNewZ(const int &x, const int &y, char &z, const int &direction);
-
-	bool CreateItemsList(vector<CPathObjectTest> &list, const int &x, const int &y, const int &stepState);
-
-public:
-	CPathFinderTest() : CPathFinder() {}
-	virtual ~CPathFinderTest() {}
-
-	virtual bool CanWalk(uchar &direction, int &x, int &y, char &z);
-
-	virtual bool Walk(bool run, uchar direction);
-};
-//----------------------------------------------------------------------------------
-#if TEST_WALK_CHECK_ALG == 1
-extern CPathFinderTest g_PathFinder;
-#else
 extern CPathFinder g_PathFinder;
-#endif
 //----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

@@ -93,8 +93,6 @@ bool CFileManager::Load()
 		return false;
 	else if (!m_TextureIdx.Load(g_App.FilePath("texidx.mul")))
 		return false;
-	else if (!m_SpeechMul.Load(g_App.FilePath("speech.mul")))
-		return false;
 	else if (!m_AnimMul[0].Load(g_App.FilePath("anim.mul")))
 		return false;
 	else if (!m_AnimdataMul.Load(g_App.FilePath("animdata.mul")))
@@ -117,8 +115,8 @@ bool CFileManager::Load()
 		return false;
 	else if (!m_TiledataMul.Load(g_App.FilePath("tiledata.mul")))
 		return false;
-
-	m_LangcodeIff.Load(g_App.FilePath("Langcode.iff"));
+	m_SpeechMul.Load(g_App.FilePath("speech.mul"));
+	//m_LangcodeIff.Load(g_App.FilePath("Langcode.iff"));
 
 	IFOR(i, 0, 6)
 	{
@@ -144,6 +142,13 @@ bool CFileManager::Load()
 		m_StaticIdx[i].Load(g_App.FilePath("staidx%i.mul", i));
 		m_StaticMul[i].Load(g_App.FilePath("statics%i.mul", i));
 		m_FacetMul[i].Load(g_App.FilePath("facet0%i.mul", i));
+
+		m_MapDifl[i].Load(g_App.FilePath("mapdifl%i.mul", i));
+		m_MapDif[i].Load(g_App.FilePath("mapdif%i.mul", i));
+
+		m_StaDifl[i].Load(g_App.FilePath("stadifl%i.mul", i));
+		m_StaDifi[i].Load(g_App.FilePath("stadifi%i.mul", i));
+		m_StaDif[i].Load(g_App.FilePath("stadif%i.mul", i));
 	}
 
 	IFOR(i, 0, 20)
@@ -221,6 +226,13 @@ void CFileManager::Unload()
 		m_StaticIdx[i].Unload();
 		m_StaticMul[i].Unload();
 		m_FacetMul[i].Unload();
+
+		m_MapDifl[i].Unload();
+		m_MapDif[i].Unload();
+
+		m_StaDifl[i].Unload();
+		m_StaDifi[i].Unload();
+		m_StaDif[i].Unload();
 	}
 
 	IFOR(i, 0, 20)

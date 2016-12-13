@@ -71,277 +71,277 @@
 CPacketManager g_PacketManager;
 //----------------------------------------------------------------------------------
 //Карта пакетов УО для анализа
-#define UMSG(size) { "?", size, DIR_BOTH, 0 }
+#define UMSG(save, size) { save, "?", size, DIR_BOTH, 0 }
 // A message type sent to the server
-#define SMSG(name, size) { name, size, DIR_SEND, 0 }
+#define SMSG(save, name, size) { save, name, size, DIR_SEND, 0 }
 // A message type received from the server
-#define RMSG(name, size) { name, size, DIR_RECV, 0 }
+#define RMSG(save, name, size) { save, name, size, DIR_RECV, 0 }
 // A message type transmitted in both directions
-#define BMSG(name, size) { name, size, DIR_BOTH, 0 }
+#define BMSG(save, name, size) { save, name, size, DIR_BOTH, 0 }
 // Message types that have handler methods
-#define RMSGH(name, size, rmethod) \
-{ name, size, DIR_RECV, &CPacketManager::Handle ##rmethod }
-#define BMSGH(name, size, rmethod) \
-{ name, size, DIR_BOTH, &CPacketManager::Handle ##rmethod }
+#define RMSGH(save, name, size, rmethod) \
+{ save, name, size, DIR_RECV, &CPacketManager::Handle ##rmethod }
+#define BMSGH(save, name, size, rmethod) \
+{ save, name, size, DIR_BOTH, &CPacketManager::Handle ##rmethod }
 //----------------------------------------------------------------------------------
 CPacketInfo CPacketManager::m_Packets[0x100] =
 {
-	/*0x00*/ SMSG("Create Character", 0x68),
-	/*0x01*/ SMSG("Disconnect", 0x05),
-	/*0x02*/ SMSG("Walk Request", 0x07),
-	/*0x03*/ BMSGH("Client Talk", PACKET_VARIABLE_SIZE, ClientTalk),
-	/*0x04*/ BMSG("Request God mode (God client)", 0x02),
-	/*0x05*/ SMSG("Attack", 0x05),
-	/*0x06*/ SMSG("Double Click", 0x05),
-	/*0x07*/ SMSG("Pick Up Item", 0x07),
-	/*0x08*/ SMSG("Drop Item", 0x0e),
-	/*0x09*/ SMSG("Single Click", 0x05),
-	/*0x0A*/ BMSG("Edit (God client)", 0x0b),
-	/*0x0B*/ RMSGH("Damage Visualization", 0x07, Damage),
-	/*0x0C*/ BMSG("Edit tiledata (God client)", PACKET_VARIABLE_SIZE),
-	/*0x0D*/ BMSG("Edit NPC data (God client)", 0x03),
-	/*0x0E*/ BMSG("Edit template data (God client)", 0x01),
-	/*0x0F*/ UMSG(0x3d),
-	/*0x10*/ BMSG("Edit hue data (God client)", 0xd7),
-	/*0x11*/ RMSGH("Character Status", PACKET_VARIABLE_SIZE, CharacterStatus),
-	/*0x12*/ SMSG("Perform Action", PACKET_VARIABLE_SIZE),
-	/*0x13*/ SMSG("Client Equip Item", 0x0a),
-	/*0x14*/ BMSG("Change tile Z (God client)", 0x06),
-	/*0x15*/ BMSG("Follow", 0x09),
-	/*0x16*/ UMSG(0x01),
-	/*0x17*/ RMSGH("Health status bar update (KR)", PACKET_VARIABLE_SIZE, NewHealthbarUpdate),
-	/*0x18*/ BMSG("Add script (God client)", PACKET_VARIABLE_SIZE),
-	/*0x19*/ BMSG("Edit NPC speech (God client)", PACKET_VARIABLE_SIZE),
-	/*0x1A*/ RMSGH("Update Item", PACKET_VARIABLE_SIZE, UpdateItem),
-	/*0x1B*/ RMSGH("Enter World", 0x25, EnterWorld),
-	/*0x1C*/ RMSGH("Server Talk", PACKET_VARIABLE_SIZE, Talk),
-	/*0x1D*/ RMSGH("Delete Object", 0x05, DeleteObject),
-	/*0x1E*/ BMSG("Animate?", 0x04),
-	/*0x1F*/ BMSG("Explode?", 0x08),
-	/*0x20*/ RMSGH("Update Player", 0x13, UpdatePlayer),
-	/*0x21*/ RMSGH("Deny Walk", 0x08, DenyWalk),
-	/*0x22*/ BMSGH("Confirm Walk", 0x03, ConfirmWalk),
-	/*0x23*/ RMSGH("Drag Animation", 0x1a, DragAnimation),
-	/*0x24*/ RMSGH("Open Container", 0x07, OpenContainer),
-	/*0x25*/ RMSGH("Update Contained Item", 0x14, UpdateContainedItem),
-	/*0x26*/ BMSG("Kick client (God client)", 0x05),
-	/*0x27*/ RMSGH("Deny Move Item", 0x02, DenyMoveItem),
-	/*0x28*/ RMSG("Deny move item?", 0x05),
-	/*0x29*/ RMSG("Drop Item Acceptem", 0x01),
-	/*0x2A*/ RMSG("Blood mode", 0x05),
-	/*0x2B*/ BMSG("Toggle God mode (God client)", 0x02),
-	/*0x2C*/ BMSGH("Death Screen", 0x02, DeathScreen),
-	/*0x2D*/ RMSGH("Mobile Attributes", 0x11, MobileAttributes),
-	/*0x2E*/ RMSGH("Server Equip Item", 0x0f, EquipItem),
-	/*0x2F*/ RMSG("Combat Notification", 0x0a),
-	/*0x30*/ RMSG("Attack ok", 0x05),
-	/*0x31*/ RMSG("Attack end", 0x01),
-	/*0x32*/ BMSG("Toggle hack mover (God client)", 0x02),
-	/*0x33*/ RMSGH("Pause Control", 0x02, PauseControl),
-	/*0x34*/ SMSG("Status Request", 0x0a),
-	/*0x35*/ BMSG("Resource type (God client)", 0x28d),
-	/*0x36*/ BMSG("Resource tile data (God client)", PACKET_VARIABLE_SIZE),
-	/*0x37*/ BMSG("Move object (God client)", 0x08),
-	/*0x38*/ BMSG("Pathfinding in Client", 0x07),
-	/*0x39*/ BMSG("Remove group (God client)", 0x09),
-	/*0x3A*/ BMSGH("Update Skills", PACKET_VARIABLE_SIZE, UpdateSkills),
-	/*0x3B*/ BMSGH("Vendor Buy Reply", PACKET_VARIABLE_SIZE, BuyReply),
-	/*0x3C*/ RMSGH("Update Contained Items", PACKET_VARIABLE_SIZE, UpdateContainedItems),
-	/*0x3D*/ BMSG("Ship (God client)", 0x02),
-	/*0x3E*/ BMSG("Versions (God client)", 0x25),
-	/*0x3F*/ BMSG("Update Statics (God Client)", PACKET_VARIABLE_SIZE),
-	/*0x40*/ BMSG("Update terrains (God client)", 0xc9),
-	/*0x41*/ BMSG("Update terrains (God client)", PACKET_VARIABLE_SIZE),
-	/*0x42*/ BMSG("Update art (God client)", PACKET_VARIABLE_SIZE),
-	/*0x43*/ BMSG("Update animation (God client)", 0x229),
-	/*0x44*/ BMSG("Update hues (God client)", 0x2c9),
-	/*0x45*/ BMSG("Version OK (God client)", 0x05),
-	/*0x46*/ BMSG("New art (God client)", PACKET_VARIABLE_SIZE),
-	/*0x47*/ BMSG("New terrain (God client)", 0x0b),
-	/*0x48*/ BMSG("New animation (God client)", 0x49),
-	/*0x49*/ BMSG("New hues (God client)", 0x5d),
-	/*0x4A*/ BMSG("Destroy art (God client)", 0x05),
-	/*0x4B*/ BMSG("Check version (God client)", 0x09),
-	/*0x4C*/ BMSG("Script names (God client)", PACKET_VARIABLE_SIZE),
-	/*0x4D*/ BMSG("Edit script (God client)", PACKET_VARIABLE_SIZE),
-	/*0x4E*/ RMSGH("Personal Light Level", 0x06, PersonalLightLevel),
-	/*0x4F*/ RMSGH("Global Light Level", 0x02, LightLevel),
-	/*0x50*/ BMSG("Board header", PACKET_VARIABLE_SIZE),
-	/*0x51*/ BMSG("Boars message", PACKET_VARIABLE_SIZE),
-	/*0x52*/ BMSG("Post board message", PACKET_VARIABLE_SIZE),
-	/*0x53*/ RMSGH("Error Code", 0x02, ErrorCode),
-	/*0x54*/ RMSGH("Sound Effect", 0x0c, PlaySoundEffect),
-	/*0x55*/ RMSGH("Login Complete", 0x01, LoginComplete),
-	/*0x56*/ BMSGH("Map Data", 0x0b, MapData),
-	/*0x57*/ BMSG("Update regions (God client)", 0x6e),
-	/*0x58*/ BMSG("New region (God client)", 0x6a),
-	/*0x59*/ BMSG("New content FX (God client)", PACKET_VARIABLE_SIZE),
-	/*0x5A*/ BMSG("Update content FX (God client)", PACKET_VARIABLE_SIZE),
-	/*0x5B*/ RMSGH("Set Time", 0x04, SetTime),
-	/*0x5C*/ BMSG("Restart Version", 0x02),
-	/*0x5D*/ SMSG("Select Character", 0x49),
-	/*0x5E*/ BMSG("Server list (God client)", PACKET_VARIABLE_SIZE),
-	/*0x5F*/ BMSG("Add server (God client)", 0x31),
-	/*0x60*/ BMSG("Remove server (God client)", 0x05),
-	/*0x61*/ BMSG("Destroy static (God client)", 0x09),
-	/*0x62*/ BMSG("Move static (God client)", 0x0f),
-	/*0x63*/ BMSG("Area load (God client)", 0x0d),
-	/*0x64*/ BMSG("Area load request (God client)", 0x01),
-	/*0x65*/ RMSGH("Set Weather", 0x04, SetWeather),
-	/*0x66*/ BMSGH("Book Page Data", PACKET_VARIABLE_SIZE, BookData),
-	/*0x67*/ BMSG("Simped? (God client)", 0x15),
-	/*0x68*/ BMSG("Script attach (God client)", PACKET_VARIABLE_SIZE),
-	/*0x69*/ BMSG("Friends (God client)", PACKET_VARIABLE_SIZE),
-	/*0x6A*/ BMSG("Notify friend (God client)", 0x03),
-	/*0x6B*/ BMSG("Key use (God client)", 0x09),
-	/*0x6C*/ BMSGH("Target Data", 0x13, Target),
-	/*0x6D*/ RMSGH("Play Music", 0x03, PlayMusic),
-	/*0x6E*/ RMSGH("Character Animation", 0x0e, CharacterAnimation),
-	/*0x6F*/ BMSGH("Secure Trading", PACKET_VARIABLE_SIZE, SecureTrading),
-	/*0x70*/ RMSGH("Graphic Effect", 0x1c, GraphicEffect),
-	/*0x71*/ BMSGH("Bulletin Board Data", PACKET_VARIABLE_SIZE, BulletinBoardData),
-	/*0x72*/ BMSGH("War Mode", 0x05, Warmode),
-	/*0x73*/ BMSGH("Ping", 0x02, Ping),
-	/*0x74*/ RMSGH("Vendor Buy List", PACKET_VARIABLE_SIZE, BuyList),
-	/*0x75*/ SMSG("Rename Character", 0x23),
-	/*0x76*/ RMSG("New Subserver", 0x10),
-	/*0x77*/ RMSGH("Update Character", 0x11, UpdateCharacter),
-	/*0x78*/ RMSGH("Update Object", PACKET_VARIABLE_SIZE, UpdateObject),
-	/*0x79*/ BMSG("Resource query (God client)", 0x09),
-	/*0x7A*/ BMSG("Resource data (God client)", PACKET_VARIABLE_SIZE),
-	/*0x7B*/ RMSG("Sequence?", 0x02),
-	/*0x7C*/ RMSGH("Open Menu Gump", PACKET_VARIABLE_SIZE, OpenMenuGump),
-	/*0x7D*/ SMSG("Menu Choice", 0x0d),
-	/*0x7E*/ BMSG("God view query (God client)", 0x02),
-	/*0x7F*/ BMSG("God view data (God client)", PACKET_VARIABLE_SIZE),
-	/*0x80*/ SMSG("First Login", 0x3e),
-	/*0x81*/ RMSG("Change character", PACKET_VARIABLE_SIZE),
-	/*0x82*/ RMSGH("Login Error", 0x02, LoginError),
-	/*0x83*/ SMSG("Delete Character", 0x27),
-	/*0x84*/ BMSG("Change password", 0x45),
-	/*0x85*/ RMSGH("Character List Notification", 0x02, CharacterListNotification),
-	/*0x86*/ RMSGH("Resend Character List", PACKET_VARIABLE_SIZE, ResendCharacterList),
-	/*0x87*/ BMSG("Send resources (God client)", PACKET_VARIABLE_SIZE),
-	/*0x88*/ RMSGH("Open Paperdoll", 0x42, OpenPaperdoll),
-	/*0x89*/ RMSGH("Corpse Equipment", PACKET_VARIABLE_SIZE, CorpseEquipment),
-	/*0x8A*/ BMSG("Trigger edit (God client)", PACKET_VARIABLE_SIZE),
-	/*0x8B*/ RMSG("Display sign gump", PACKET_VARIABLE_SIZE),
-	/*0x8C*/ RMSGH("Relay Server", 0x0b, RelayServer),
-	/*0x8D*/ SMSG("UO3D create character", PACKET_VARIABLE_SIZE),
-	/*0x8E*/ BMSG("Move character (God client)", PACKET_VARIABLE_SIZE),
-	/*0x8F*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0x90*/ RMSGH("Display Map", 0x13, DisplayMap),
-	/*0x91*/ SMSG("Second Login", 0x41),
-	/*0x92*/ BMSG("Update multi data (God client)", PACKET_VARIABLE_SIZE),
-	/*0x93*/ RMSGH("Open Book", 0x63, OpenBook),
-	/*0x94*/ BMSG("Update skills data (God client)", PACKET_VARIABLE_SIZE),
-	/*0x95*/ BMSGH("Dye Data", 0x09, DyeData),
-	/*0x96*/ BMSG("Game central monitor (God client)", PACKET_VARIABLE_SIZE),
-	/*0x97*/ RMSG("Move Player", 0x02),
-	/*0x98*/ BMSG("All Names (3D Client Only)", PACKET_VARIABLE_SIZE),
-	/*0x99*/ BMSGH("Multi Placement", 0x1a, MultiPlacement),
-	/*0x9A*/ BMSGH("ASCII Prompt", PACKET_VARIABLE_SIZE, ASCIIPrompt),
-	/*0x9B*/ SMSG("Help Request", 0x102),
-	/*0x9C*/ BMSG("Assistant request (God client)", 0x135),
-	/*0x9D*/ BMSG("GM single (God client)", 0x33),
-	/*0x9E*/ RMSGH("Vendor Sell List", PACKET_VARIABLE_SIZE, SellList),
-	/*0x9F*/ SMSG("Vendor Sell Reply", PACKET_VARIABLE_SIZE),
-	/*0xA0*/ SMSG("Select Server", 0x03),
-	/*0xA1*/ RMSGH("Update Hitpoints", 0x09, UpdateHitpoints),
-	/*0xA2*/ RMSGH("Update Mana", 0x09, UpdateMana),
-	/*0xA3*/ RMSGH("Update Stamina", 0x09, UpdateStamina),
-	/*0xA4*/ SMSG("System Information", 0x95),
-	/*0xA5*/ RMSGH("Open URL", PACKET_VARIABLE_SIZE, OpenUrl),
-	/*0xA6*/ RMSGH("Tip Window", PACKET_VARIABLE_SIZE, TipWindow),
-	/*0xA7*/ SMSG("Request Tip", 0x04),
-	/*0xA8*/ RMSGH("Server List", PACKET_VARIABLE_SIZE, ServerList),
-	/*0xA9*/ RMSGH("Character List", PACKET_VARIABLE_SIZE, CharacterList),
-	/*0xAA*/ RMSGH("Attack Reply", 0x05, AttackCharacter),
-	/*0xAB*/ RMSGH("Text Entry Dialog", PACKET_VARIABLE_SIZE, TextEntryDialog),
-	/*0xAC*/ SMSG("Text Entry Dialog Reply", PACKET_VARIABLE_SIZE),
-	/*0xAD*/ SMSG("Unicode Client Talk", PACKET_VARIABLE_SIZE),
-	/*0xAE*/ RMSGH("Unicode Server Talk", PACKET_VARIABLE_SIZE, UnicodeTalk),
-	/*0xAF*/ RMSGH("Display Death", 0x0d, DisplayDeath),
-	/*0xB0*/ RMSGH("Open Dialog Gump", PACKET_VARIABLE_SIZE, OpenGump),
-	/*0xB1*/ SMSG("Dialog Choice", PACKET_VARIABLE_SIZE),
-	/*0xB2*/ BMSG("Chat Data", PACKET_VARIABLE_SIZE),
-	/*0xB3*/ RMSG("Chat Text ?", PACKET_VARIABLE_SIZE),
-	/*0xB4*/ BMSG("Target object list (God client)", PACKET_VARIABLE_SIZE),
-	/*0xB5*/ BMSGH("Open Chat Window", 0x40, OpenChat),
-	/*0xB6*/ SMSG("Popup Help Request", 0x09),
-	/*0xB7*/ RMSG("Popup Help Data", PACKET_VARIABLE_SIZE),
-	/*0xB8*/ BMSGH("Character Profile", PACKET_VARIABLE_SIZE, CharacterProfile),
-	/*0xB9*/ RMSGH("Enable locked client features", 0x03, EnableLockedFeatures),
-	/*0xBA*/ RMSGH("Display Quest Arrow", 0x06, DisplayQuestArrow),
-	/*0xBB*/ SMSG("Account ID ?", 0x09),
-	/*0xBC*/ RMSGH("Season", 0x03, Season),
-	/*0xBD*/ BMSGH("Client Version", PACKET_VARIABLE_SIZE, ClientVersion),
-	/*0xBE*/ BMSGH("Assist Version", PACKET_VARIABLE_SIZE, AssistVersion),
-	/*0xBF*/ BMSGH("Extended Command", PACKET_VARIABLE_SIZE, ExtendedCommand),
-	/*0xC0*/ RMSGH("Graphical Effect", 0x24, GraphicEffect),
-	/*0xC1*/ RMSGH("Display cliloc String", PACKET_VARIABLE_SIZE, DisplayClilocString),
-	/*0xC2*/ BMSGH("Unicode prompt", PACKET_VARIABLE_SIZE, UnicodePrompt),
-	/*0xC3*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xC4*/ UMSG(0x06),
-	/*0xC5*/ BMSG("Invalid map (God client)", 0xcb),
-	/*0xC6*/ RMSG("Invalid map enable", 0x01),
-	/*0xC7*/ RMSGH("Graphical Effect", 0x31, GraphicEffect),
-	/*0xC8*/ BMSGH("Client View Range", 0x02, ClientViewRange),
-	/*0xC9*/ BMSG("Trip time", 0x06),
-	/*0xCA*/ BMSG("UTrip time", 0x06),
-	/*0xCB*/ UMSG(0x07),
-	/*0xCC*/ RMSGH("Localized Text Plus String", PACKET_VARIABLE_SIZE, DisplayClilocString),
-	/*0xCD*/ UMSG(0x01),
-	/*0xCE*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xCF*/ UMSG(0x4e),
-	/*0xD0*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xD1*/ RMSGH("Logout", 0x02, Logout),
-	/*0xD2*/ RMSGH("Update Player (New)", 0x19, UpdatePlayer),
-	/*0xD3*/ RMSGH("Update Object (New)", PACKET_VARIABLE_SIZE, UpdateObject),
-	/*0xD4*/ BMSGH("Open Book (New)", PACKET_VARIABLE_SIZE, OpenBookNew),
-	/*0xD5*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xD6*/ BMSGH("Mega cliloc", PACKET_VARIABLE_SIZE, MegaCliloc),
-	/*0xD7*/ BMSG("+AoS command", PACKET_VARIABLE_SIZE),
-	/*0xD8*/ RMSG("+Custom house", PACKET_VARIABLE_SIZE),
-	/*0xD9*/ SMSG("+Metrics", 0x10c),
-	/*0xDA*/ BMSG("Mahjong game command", PACKET_VARIABLE_SIZE),
-	/*0xDB*/ RMSG("Character transfer log", PACKET_VARIABLE_SIZE),
-	/*0xDC*/ RMSG("OPL Info Packet", 9),
-	/*0xDD*/ RMSGH("Compressed Gump", PACKET_VARIABLE_SIZE, OpenCompressedGump),
-	/*0xDE*/ RMSG("Update characters combatants", PACKET_VARIABLE_SIZE),
-	/*0xDF*/ RMSGH("Buff/Debuff", PACKET_VARIABLE_SIZE, BuffDebuff),
-	/*0xE0*/ SMSG("Bug Report KR", PACKET_VARIABLE_SIZE),
-	/*0xE1*/ SMSG("Client Type KR/SA", 0x09),
-	/*0xE2*/ RMSGH("New Character Animation", 0xa, NewCharacterAnimation),
-	/*0xE3*/ RMSG("KR Encryption Responce", 0x4d),
-	/*0xE4*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xE5*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xE6*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xE7*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xE8*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xE9*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xEA*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xEB*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xEC*/ SMSG("Equip Macro", PACKET_VARIABLE_SIZE),
-	/*0xED*/ SMSG("Unequip item macro", PACKET_VARIABLE_SIZE),
-	/*0xEE*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xEF*/ SMSG("KR/2D Client Login/Seed", 0x15),
-	/*0xF0*/ BMSGH("Krrios client special", PACKET_VARIABLE_SIZE, KrriosClientSpecial),
-	/*0xF1*/ SMSG("Client-Server Time Synchronization Request", PACKET_VARIABLE_SIZE),
-	/*0xF2*/ RMSG("Client-Server Time Synchronization Response", PACKET_VARIABLE_SIZE),
-	/*0xF3*/ RMSGH("Update Item (SA)", 0x18, UpdateItemSA),
-	/*0xF4*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xF5*/ RMSGH("Display New Map", 0x15, DisplayMap),
-	/*0xF6*/ RMSG("Boat moving", PACKET_VARIABLE_SIZE),
-	/*0xF7*/ RMSG("Packets (0xF3) list", PACKET_VARIABLE_SIZE),
-	/*0xF8*/ SMSG("Character Creation (7.0.16.0)", 0x6a),
-	/*0xF9*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xFA*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xFB*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xFC*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xFD*/ UMSG(PACKET_VARIABLE_SIZE),
-	/*0xFE*/ RMSG("Razor Handshake", 0x8),
-	/*0xFF*/ UMSG(PACKET_VARIABLE_SIZE)
+	/*0x00*/ SMSG(ORION_SAVE_PACKET, "Create Character", 0x68),
+	/*0x01*/ SMSG(ORION_SAVE_PACKET, "Disconnect", 0x05),
+	/*0x02*/ SMSG(ORION_IGNORE_PACKET, "Walk Request", 0x07),
+	/*0x03*/ BMSGH(ORION_SAVE_PACKET, "Client Talk", PACKET_VARIABLE_SIZE, ClientTalk),
+	/*0x04*/ BMSG(ORION_SAVE_PACKET, "Request God mode (God client)", 0x02),
+	/*0x05*/ SMSG(ORION_IGNORE_PACKET, "Attack", 0x05),
+	/*0x06*/ SMSG(ORION_IGNORE_PACKET, "Double Click", 0x05),
+	/*0x07*/ SMSG(ORION_IGNORE_PACKET, "Pick Up Item", 0x07),
+	/*0x08*/ SMSG(ORION_IGNORE_PACKET, "Drop Item", 0x0e),
+	/*0x09*/ SMSG(ORION_IGNORE_PACKET, "Single Click", 0x05),
+	/*0x0A*/ BMSG(ORION_SAVE_PACKET, "Edit (God client)", 0x0b),
+	/*0x0B*/ RMSGH(ORION_IGNORE_PACKET, "Damage Visualization", 0x07, Damage),
+	/*0x0C*/ BMSG(ORION_SAVE_PACKET, "Edit tiledata (God client)", PACKET_VARIABLE_SIZE),
+	/*0x0D*/ BMSG(ORION_SAVE_PACKET, "Edit NPC data (God client)", 0x03),
+	/*0x0E*/ BMSG(ORION_SAVE_PACKET, "Edit template data (God client)", 0x01),
+	/*0x0F*/ UMSG(ORION_SAVE_PACKET, 0x3d),
+	/*0x10*/ BMSG(ORION_SAVE_PACKET, "Edit hue data (God client)", 0xd7),
+	/*0x11*/ RMSGH(ORION_IGNORE_PACKET, "Character Status", PACKET_VARIABLE_SIZE, CharacterStatus),
+	/*0x12*/ SMSG(ORION_IGNORE_PACKET, "Perform Action", PACKET_VARIABLE_SIZE),
+	/*0x13*/ SMSG(ORION_IGNORE_PACKET, "Client Equip Item", 0x0a),
+	/*0x14*/ BMSG(ORION_SAVE_PACKET, "Change tile Z (God client)", 0x06),
+	/*0x15*/ BMSG(ORION_SAVE_PACKET, "Follow", 0x09),
+	/*0x16*/ UMSG(ORION_SAVE_PACKET, 0x01),
+	/*0x17*/ RMSGH(ORION_IGNORE_PACKET, "Health status bar update (KR)", PACKET_VARIABLE_SIZE, NewHealthbarUpdate),
+	/*0x18*/ BMSG(ORION_SAVE_PACKET, "Add script (God client)", PACKET_VARIABLE_SIZE),
+	/*0x19*/ BMSG(ORION_SAVE_PACKET, "Edit NPC speech (God client)", PACKET_VARIABLE_SIZE),
+	/*0x1A*/ RMSGH(ORION_IGNORE_PACKET, "Update Item", PACKET_VARIABLE_SIZE, UpdateItem),
+	/*0x1B*/ RMSGH(ORION_IGNORE_PACKET, "Enter World", 0x25, EnterWorld),
+	/*0x1C*/ RMSGH(ORION_IGNORE_PACKET, "Server Talk", PACKET_VARIABLE_SIZE, Talk),
+	/*0x1D*/ RMSGH(ORION_IGNORE_PACKET, "Delete Object", 0x05, DeleteObject),
+	/*0x1E*/ BMSG(ORION_SAVE_PACKET, "Animate?", 0x04),
+	/*0x1F*/ BMSG(ORION_SAVE_PACKET, "Explode?", 0x08),
+	/*0x20*/ RMSGH(ORION_IGNORE_PACKET, "Update Player", 0x13, UpdatePlayer),
+	/*0x21*/ RMSGH(ORION_IGNORE_PACKET, "Deny Walk", 0x08, DenyWalk),
+	/*0x22*/ BMSGH(ORION_IGNORE_PACKET, "Confirm Walk", 0x03, ConfirmWalk),
+	/*0x23*/ RMSGH(ORION_SAVE_PACKET, "Drag Animation", 0x1a, DragAnimation),
+	/*0x24*/ RMSGH(ORION_SAVE_PACKET, "Open Container", 0x07, OpenContainer),
+	/*0x25*/ RMSGH(ORION_IGNORE_PACKET, "Update Contained Item", 0x14, UpdateContainedItem),
+	/*0x26*/ BMSG(ORION_SAVE_PACKET, "Kick client (God client)", 0x05),
+	/*0x27*/ RMSGH(ORION_IGNORE_PACKET, "Deny Move Item", 0x02, DenyMoveItem),
+	/*0x28*/ RMSG(ORION_SAVE_PACKET, "Deny move item?", 0x05),
+	/*0x29*/ RMSG(ORION_SAVE_PACKET, "Drop Item Acceptem", 0x01),
+	/*0x2A*/ RMSG(ORION_SAVE_PACKET, "Blood mode", 0x05),
+	/*0x2B*/ BMSG(ORION_SAVE_PACKET, "Toggle God mode (God client)", 0x02),
+	/*0x2C*/ BMSGH(ORION_IGNORE_PACKET, "Death Screen", 0x02, DeathScreen),
+	/*0x2D*/ RMSGH(ORION_SAVE_PACKET, "Mobile Attributes", 0x11, MobileAttributes),
+	/*0x2E*/ RMSGH(ORION_IGNORE_PACKET, "Server Equip Item", 0x0f, EquipItem),
+	/*0x2F*/ RMSG(ORION_SAVE_PACKET, "Combat Notification", 0x0a),
+	/*0x30*/ RMSG(ORION_SAVE_PACKET, "Attack ok", 0x05),
+	/*0x31*/ RMSG(ORION_SAVE_PACKET, "Attack end", 0x01),
+	/*0x32*/ BMSG(ORION_SAVE_PACKET, "Toggle hack mover (God client)", 0x02),
+	/*0x33*/ RMSGH(ORION_IGNORE_PACKET, "Pause Control", 0x02, PauseControl),
+	/*0x34*/ SMSG(ORION_IGNORE_PACKET, "Status Request", 0x0a),
+	/*0x35*/ BMSG(ORION_SAVE_PACKET, "Resource type (God client)", 0x28d),
+	/*0x36*/ BMSG(ORION_SAVE_PACKET, "Resource tile data (God client)", PACKET_VARIABLE_SIZE),
+	/*0x37*/ BMSG(ORION_SAVE_PACKET, "Move object (God client)", 0x08),
+	/*0x38*/ BMSG(ORION_SAVE_PACKET, "Pathfinding in Client", 0x07),
+	/*0x39*/ BMSG(ORION_SAVE_PACKET, "Remove group (God client)", 0x09),
+	/*0x3A*/ BMSGH(ORION_IGNORE_PACKET, "Update Skills", PACKET_VARIABLE_SIZE, UpdateSkills),
+	/*0x3B*/ BMSGH(ORION_IGNORE_PACKET, "Vendor Buy Reply", PACKET_VARIABLE_SIZE, BuyReply),
+	/*0x3C*/ RMSGH(ORION_IGNORE_PACKET, "Update Contained Items", PACKET_VARIABLE_SIZE, UpdateContainedItems),
+	/*0x3D*/ BMSG(ORION_SAVE_PACKET, "Ship (God client)", 0x02),
+	/*0x3E*/ BMSG(ORION_SAVE_PACKET, "Versions (God client)", 0x25),
+	/*0x3F*/ BMSG(ORION_SAVE_PACKET, "Update Statics (God Client)", PACKET_VARIABLE_SIZE),
+	/*0x40*/ BMSG(ORION_SAVE_PACKET, "Update terrains (God client)", 0xc9),
+	/*0x41*/ BMSG(ORION_SAVE_PACKET, "Update terrains (God client)", PACKET_VARIABLE_SIZE),
+	/*0x42*/ BMSG(ORION_SAVE_PACKET, "Update art (God client)", PACKET_VARIABLE_SIZE),
+	/*0x43*/ BMSG(ORION_SAVE_PACKET, "Update animation (God client)", 0x229),
+	/*0x44*/ BMSG(ORION_SAVE_PACKET, "Update hues (God client)", 0x2c9),
+	/*0x45*/ BMSG(ORION_SAVE_PACKET, "Version OK (God client)", 0x05),
+	/*0x46*/ BMSG(ORION_SAVE_PACKET, "New art (God client)", PACKET_VARIABLE_SIZE),
+	/*0x47*/ BMSG(ORION_SAVE_PACKET, "New terrain (God client)", 0x0b),
+	/*0x48*/ BMSG(ORION_SAVE_PACKET, "New animation (God client)", 0x49),
+	/*0x49*/ BMSG(ORION_SAVE_PACKET, "New hues (God client)", 0x5d),
+	/*0x4A*/ BMSG(ORION_SAVE_PACKET, "Destroy art (God client)", 0x05),
+	/*0x4B*/ BMSG(ORION_SAVE_PACKET, "Check version (God client)", 0x09),
+	/*0x4C*/ BMSG(ORION_SAVE_PACKET, "Script names (God client)", PACKET_VARIABLE_SIZE),
+	/*0x4D*/ BMSG(ORION_SAVE_PACKET, "Edit script (God client)", PACKET_VARIABLE_SIZE),
+	/*0x4E*/ RMSGH(ORION_IGNORE_PACKET, "Personal Light Level", 0x06, PersonalLightLevel),
+	/*0x4F*/ RMSGH(ORION_IGNORE_PACKET, "Global Light Level", 0x02, LightLevel),
+	/*0x50*/ BMSG(ORION_IGNORE_PACKET, "Board header", PACKET_VARIABLE_SIZE),
+	/*0x51*/ BMSG(ORION_IGNORE_PACKET, "Board message", PACKET_VARIABLE_SIZE),
+	/*0x52*/ BMSG(ORION_IGNORE_PACKET, "Post board message", PACKET_VARIABLE_SIZE),
+	/*0x53*/ RMSGH(ORION_SAVE_PACKET, "Error Code", 0x02, ErrorCode),
+	/*0x54*/ RMSGH(ORION_SAVE_PACKET, "Sound Effect", 0x0c, PlaySoundEffect),
+	/*0x55*/ RMSGH(ORION_IGNORE_PACKET, "Login Complete", 0x01, LoginComplete),
+	/*0x56*/ BMSGH(ORION_IGNORE_PACKET, "Map Data", 0x0b, MapData),
+	/*0x57*/ BMSG(ORION_SAVE_PACKET, "Update regions (God client)", 0x6e),
+	/*0x58*/ BMSG(ORION_SAVE_PACKET, "New region (God client)", 0x6a),
+	/*0x59*/ BMSG(ORION_SAVE_PACKET, "New content FX (God client)", PACKET_VARIABLE_SIZE),
+	/*0x5A*/ BMSG(ORION_SAVE_PACKET, "Update content FX (God client)", PACKET_VARIABLE_SIZE),
+	/*0x5B*/ RMSGH(ORION_IGNORE_PACKET, "Set Time", 0x04, SetTime),
+	/*0x5C*/ BMSG(ORION_SAVE_PACKET, "Restart Version", 0x02),
+	/*0x5D*/ SMSG(ORION_IGNORE_PACKET, "Select Character", 0x49),
+	/*0x5E*/ BMSG(ORION_SAVE_PACKET, "Server list (God client)", PACKET_VARIABLE_SIZE),
+	/*0x5F*/ BMSG(ORION_SAVE_PACKET, "Add server (God client)", 0x31),
+	/*0x60*/ BMSG(ORION_SAVE_PACKET, "Remove server (God client)", 0x05),
+	/*0x61*/ BMSG(ORION_SAVE_PACKET, "Destroy static (God client)", 0x09),
+	/*0x62*/ BMSG(ORION_SAVE_PACKET, "Move static (God client)", 0x0f),
+	/*0x63*/ BMSG(ORION_SAVE_PACKET, "Area load (God client)", 0x0d),
+	/*0x64*/ BMSG(ORION_SAVE_PACKET, "Area load request (God client)", 0x01),
+	/*0x65*/ RMSGH(ORION_IGNORE_PACKET, "Set Weather", 0x04, SetWeather),
+	/*0x66*/ BMSGH(ORION_IGNORE_PACKET, "Book Page Data", PACKET_VARIABLE_SIZE, BookData),
+	/*0x67*/ BMSG(ORION_SAVE_PACKET, "Simped? (God client)", 0x15),
+	/*0x68*/ BMSG(ORION_SAVE_PACKET, "Script attach (God client)", PACKET_VARIABLE_SIZE),
+	/*0x69*/ BMSG(ORION_SAVE_PACKET, "Friends (God client)", PACKET_VARIABLE_SIZE),
+	/*0x6A*/ BMSG(ORION_SAVE_PACKET, "Notify friend (God client)", 0x03),
+	/*0x6B*/ BMSG(ORION_SAVE_PACKET, "Key use (God client)", 0x09),
+	/*0x6C*/ BMSGH(ORION_IGNORE_PACKET, "Target Data", 0x13, Target),
+	/*0x6D*/ RMSGH(ORION_SAVE_PACKET, "Play Music", 0x03, PlayMusic),
+	/*0x6E*/ RMSGH(ORION_IGNORE_PACKET, "Character Animation", 0x0e, CharacterAnimation),
+	/*0x6F*/ BMSGH(ORION_IGNORE_PACKET, "Secure Trading", PACKET_VARIABLE_SIZE, SecureTrading),
+	/*0x70*/ RMSGH(ORION_IGNORE_PACKET, "Graphic Effect", 0x1c, GraphicEffect),
+	/*0x71*/ BMSGH(ORION_IGNORE_PACKET, "Bulletin Board Data", PACKET_VARIABLE_SIZE, BulletinBoardData),
+	/*0x72*/ BMSGH(ORION_IGNORE_PACKET, "War Mode", 0x05, Warmode),
+	/*0x73*/ BMSGH(ORION_IGNORE_PACKET, "Ping", 0x02, Ping),
+	/*0x74*/ RMSGH(ORION_IGNORE_PACKET, "Vendor Buy List", PACKET_VARIABLE_SIZE, BuyList),
+	/*0x75*/ SMSG(ORION_SAVE_PACKET, "Rename Character", 0x23),
+	/*0x76*/ RMSG(ORION_SAVE_PACKET, "New Subserver", 0x10),
+	/*0x77*/ RMSGH(ORION_IGNORE_PACKET, "Update Character", 0x11, UpdateCharacter),
+	/*0x78*/ RMSGH(ORION_IGNORE_PACKET, "Update Object", PACKET_VARIABLE_SIZE, UpdateObject),
+	/*0x79*/ BMSG(ORION_SAVE_PACKET, "Resource query (God client)", 0x09),
+	/*0x7A*/ BMSG(ORION_SAVE_PACKET, "Resource data (God client)", PACKET_VARIABLE_SIZE),
+	/*0x7B*/ RMSG(ORION_SAVE_PACKET, "Sequence?", 0x02),
+	/*0x7C*/ RMSGH(ORION_IGNORE_PACKET, "Open Menu Gump", PACKET_VARIABLE_SIZE, OpenMenuGump),
+	/*0x7D*/ SMSG(ORION_IGNORE_PACKET, "Menu Choice", 0x0d),
+	/*0x7E*/ BMSG(ORION_SAVE_PACKET, "God view query (God client)", 0x02),
+	/*0x7F*/ BMSG(ORION_SAVE_PACKET, "God view data (God client)", PACKET_VARIABLE_SIZE),
+	/*0x80*/ SMSG(ORION_IGNORE_PACKET, "First Login", 0x3e),
+	/*0x81*/ RMSG(ORION_SAVE_PACKET, "Change character", PACKET_VARIABLE_SIZE),
+	/*0x82*/ RMSGH(ORION_IGNORE_PACKET, "Login Error", 0x02, LoginError),
+	/*0x83*/ SMSG(ORION_IGNORE_PACKET, "Delete Character", 0x27),
+	/*0x84*/ BMSG(ORION_SAVE_PACKET, "Change password", 0x45),
+	/*0x85*/ RMSGH(ORION_IGNORE_PACKET, "Character List Notification", 0x02, CharacterListNotification),
+	/*0x86*/ RMSGH(ORION_IGNORE_PACKET, "Resend Character List", PACKET_VARIABLE_SIZE, ResendCharacterList),
+	/*0x87*/ BMSG(ORION_SAVE_PACKET, "Send resources (God client)", PACKET_VARIABLE_SIZE),
+	/*0x88*/ RMSGH(ORION_IGNORE_PACKET, "Open Paperdoll", 0x42, OpenPaperdoll),
+	/*0x89*/ RMSGH(ORION_IGNORE_PACKET, "Corpse Equipment", PACKET_VARIABLE_SIZE, CorpseEquipment),
+	/*0x8A*/ BMSG(ORION_SAVE_PACKET, "Trigger edit (God client)", PACKET_VARIABLE_SIZE),
+	/*0x8B*/ RMSG(ORION_SAVE_PACKET, "Display sign gump", PACKET_VARIABLE_SIZE),
+	/*0x8C*/ RMSGH(ORION_IGNORE_PACKET, "Relay Server", 0x0b, RelayServer),
+	/*0x8D*/ SMSG(ORION_SAVE_PACKET, "UO3D create character", PACKET_VARIABLE_SIZE),
+	/*0x8E*/ BMSG(ORION_SAVE_PACKET, "Move character (God client)", PACKET_VARIABLE_SIZE),
+	/*0x8F*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0x90*/ RMSGH(ORION_IGNORE_PACKET, "Display Map", 0x13, DisplayMap),
+	/*0x91*/ SMSG(ORION_IGNORE_PACKET, "Second Login", 0x41),
+	/*0x92*/ BMSG(ORION_SAVE_PACKET, "Update multi data (God client)", PACKET_VARIABLE_SIZE),
+	/*0x93*/ RMSGH(ORION_IGNORE_PACKET, "Open Book", 0x63, OpenBook),
+	/*0x94*/ BMSG(ORION_SAVE_PACKET, "Update skills data (God client)", PACKET_VARIABLE_SIZE),
+	/*0x95*/ BMSGH(ORION_IGNORE_PACKET, "Dye Data", 0x09, DyeData),
+	/*0x96*/ BMSG(ORION_SAVE_PACKET, "Game central monitor (God client)", PACKET_VARIABLE_SIZE),
+	/*0x97*/ RMSG(ORION_SAVE_PACKET, "Move Player", 0x02),
+	/*0x98*/ BMSG(ORION_SAVE_PACKET, "All Names (3D Client Only)", PACKET_VARIABLE_SIZE),
+	/*0x99*/ BMSGH(ORION_SAVE_PACKET, "Multi Placement", 0x1a, MultiPlacement),
+	/*0x9A*/ BMSGH(ORION_SAVE_PACKET, "ASCII Prompt", PACKET_VARIABLE_SIZE, ASCIIPrompt),
+	/*0x9B*/ SMSG(ORION_IGNORE_PACKET, "Help Request", 0x102),
+	/*0x9C*/ BMSG(ORION_SAVE_PACKET, "Assistant request (God client)", 0x135),
+	/*0x9D*/ BMSG(ORION_SAVE_PACKET, "GM single (God client)", 0x33),
+	/*0x9E*/ RMSGH(ORION_IGNORE_PACKET, "Vendor Sell List", PACKET_VARIABLE_SIZE, SellList),
+	/*0x9F*/ SMSG(ORION_IGNORE_PACKET, "Vendor Sell Reply", PACKET_VARIABLE_SIZE),
+	/*0xA0*/ SMSG(ORION_IGNORE_PACKET, "Select Server", 0x03),
+	/*0xA1*/ RMSGH(ORION_IGNORE_PACKET, "Update Hitpoints", 0x09, UpdateHitpoints),
+	/*0xA2*/ RMSGH(ORION_IGNORE_PACKET, "Update Mana", 0x09, UpdateMana),
+	/*0xA3*/ RMSGH(ORION_IGNORE_PACKET, "Update Stamina", 0x09, UpdateStamina),
+	/*0xA4*/ SMSG(ORION_SAVE_PACKET, "System Information", 0x95),
+	/*0xA5*/ RMSGH(ORION_SAVE_PACKET, "Open URL", PACKET_VARIABLE_SIZE, OpenUrl),
+	/*0xA6*/ RMSGH(ORION_IGNORE_PACKET, "Tip Window", PACKET_VARIABLE_SIZE, TipWindow),
+	/*0xA7*/ SMSG(ORION_SAVE_PACKET, "Request Tip", 0x04),
+	/*0xA8*/ RMSGH(ORION_IGNORE_PACKET, "Server List", PACKET_VARIABLE_SIZE, ServerList),
+	/*0xA9*/ RMSGH(ORION_IGNORE_PACKET, "Character List", PACKET_VARIABLE_SIZE, CharacterList),
+	/*0xAA*/ RMSGH(ORION_IGNORE_PACKET, "Attack Reply", 0x05, AttackCharacter),
+	/*0xAB*/ RMSGH(ORION_SAVE_PACKET, "Text Entry Dialog", PACKET_VARIABLE_SIZE, TextEntryDialog),
+	/*0xAC*/ SMSG(ORION_SAVE_PACKET, "Text Entry Dialog Reply", PACKET_VARIABLE_SIZE),
+	/*0xAD*/ SMSG(ORION_IGNORE_PACKET, "Unicode Client Talk", PACKET_VARIABLE_SIZE),
+	/*0xAE*/ RMSGH(ORION_IGNORE_PACKET, "Unicode Server Talk", PACKET_VARIABLE_SIZE, UnicodeTalk),
+	/*0xAF*/ RMSGH(ORION_IGNORE_PACKET, "Display Death", 0x0d, DisplayDeath),
+	/*0xB0*/ RMSGH(ORION_IGNORE_PACKET, "Open Dialog Gump", PACKET_VARIABLE_SIZE, OpenGump),
+	/*0xB1*/ SMSG(ORION_IGNORE_PACKET, "Dialog Choice", PACKET_VARIABLE_SIZE),
+	/*0xB2*/ BMSG(ORION_SAVE_PACKET, "Chat Data", PACKET_VARIABLE_SIZE),
+	/*0xB3*/ RMSG(ORION_SAVE_PACKET, "Chat Text ?", PACKET_VARIABLE_SIZE),
+	/*0xB4*/ BMSG(ORION_SAVE_PACKET, "Target object list (God client)", PACKET_VARIABLE_SIZE),
+	/*0xB5*/ BMSGH(ORION_SAVE_PACKET, "Open Chat Window", 0x40, OpenChat),
+	/*0xB6*/ SMSG(ORION_SAVE_PACKET, "Popup Help Request", 0x09),
+	/*0xB7*/ RMSG(ORION_SAVE_PACKET, "Popup Help Data", PACKET_VARIABLE_SIZE),
+	/*0xB8*/ BMSGH(ORION_IGNORE_PACKET, "Character Profile", PACKET_VARIABLE_SIZE, CharacterProfile),
+	/*0xB9*/ RMSGH(ORION_SAVE_PACKET, "Enable locked client features", 0x03, EnableLockedFeatures),
+	/*0xBA*/ RMSGH(ORION_IGNORE_PACKET, "Display Quest Arrow", 0x06, DisplayQuestArrow),
+	/*0xBB*/ SMSG(ORION_SAVE_PACKET, "Account ID ?", 0x09),
+	/*0xBC*/ RMSGH(ORION_IGNORE_PACKET, "Season", 0x03, Season),
+	/*0xBD*/ BMSGH(ORION_SAVE_PACKET, "Client Version", PACKET_VARIABLE_SIZE, ClientVersion),
+	/*0xBE*/ BMSGH(ORION_SAVE_PACKET, "Assist Version", PACKET_VARIABLE_SIZE, AssistVersion),
+	/*0xBF*/ BMSGH(ORION_SAVE_PACKET, "Extended Command", PACKET_VARIABLE_SIZE, ExtendedCommand),
+	/*0xC0*/ RMSGH(ORION_IGNORE_PACKET, "Graphical Effect", 0x24, GraphicEffect),
+	/*0xC1*/ RMSGH(ORION_IGNORE_PACKET, "Display cliloc String", PACKET_VARIABLE_SIZE, DisplayClilocString),
+	/*0xC2*/ BMSGH(ORION_SAVE_PACKET, "Unicode prompt", PACKET_VARIABLE_SIZE, UnicodePrompt),
+	/*0xC3*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xC4*/ UMSG(ORION_SAVE_PACKET, 0x06),
+	/*0xC5*/ BMSG(ORION_SAVE_PACKET, "Invalid map (God client)", 0xcb),
+	/*0xC6*/ RMSG(ORION_SAVE_PACKET, "Invalid map enable", 0x01),
+	/*0xC7*/ RMSGH(ORION_IGNORE_PACKET, "Graphical Effect", 0x31, GraphicEffect),
+	/*0xC8*/ BMSGH(ORION_SAVE_PACKET, "Client View Range", 0x02, ClientViewRange),
+	/*0xC9*/ BMSG(ORION_SAVE_PACKET, "Trip time", 0x06),
+	/*0xCA*/ BMSG(ORION_SAVE_PACKET, "UTrip time", 0x06),
+	/*0xCB*/ UMSG(ORION_SAVE_PACKET, 0x07),
+	/*0xCC*/ RMSGH(ORION_IGNORE_PACKET, "Localized Text Plus String", PACKET_VARIABLE_SIZE, DisplayClilocString),
+	/*0xCD*/ UMSG(ORION_SAVE_PACKET, 0x01),
+	/*0xCE*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xCF*/ UMSG(ORION_SAVE_PACKET, 0x4e),
+	/*0xD0*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xD1*/ RMSGH(ORION_IGNORE_PACKET, "Logout", 0x02, Logout),
+	/*0xD2*/ RMSGH(ORION_IGNORE_PACKET, "Update Player (New)", 0x19, UpdatePlayer),
+	/*0xD3*/ RMSGH(ORION_IGNORE_PACKET, "Update Object (New)", PACKET_VARIABLE_SIZE, UpdateObject),
+	/*0xD4*/ BMSGH(ORION_IGNORE_PACKET, "Open Book (New)", PACKET_VARIABLE_SIZE, OpenBookNew),
+	/*0xD5*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xD6*/ BMSGH(ORION_IGNORE_PACKET, "Mega cliloc", PACKET_VARIABLE_SIZE, MegaCliloc),
+	/*0xD7*/ BMSG(ORION_SAVE_PACKET, "+AoS command", PACKET_VARIABLE_SIZE),
+	/*0xD8*/ RMSG(ORION_SAVE_PACKET, "+Custom house", PACKET_VARIABLE_SIZE),
+	/*0xD9*/ SMSG(ORION_SAVE_PACKET, "+Metrics", 0x10c),
+	/*0xDA*/ BMSG(ORION_SAVE_PACKET, "Mahjong game command", PACKET_VARIABLE_SIZE),
+	/*0xDB*/ RMSG(ORION_SAVE_PACKET, "Character transfer log", PACKET_VARIABLE_SIZE),
+	/*0xDC*/ RMSG(ORION_SAVE_PACKET, "OPL Info Packet", 9),
+	/*0xDD*/ RMSGH(ORION_IGNORE_PACKET, "Compressed Gump", PACKET_VARIABLE_SIZE, OpenCompressedGump),
+	/*0xDE*/ RMSG(ORION_SAVE_PACKET, "Update characters combatants", PACKET_VARIABLE_SIZE),
+	/*0xDF*/ RMSGH(ORION_SAVE_PACKET, "Buff/Debuff", PACKET_VARIABLE_SIZE, BuffDebuff),
+	/*0xE0*/ SMSG(ORION_SAVE_PACKET, "Bug Report KR", PACKET_VARIABLE_SIZE),
+	/*0xE1*/ SMSG(ORION_SAVE_PACKET, "Client Type KR/SA", 0x09),
+	/*0xE2*/ RMSGH(ORION_IGNORE_PACKET, "New Character Animation", 0xa, NewCharacterAnimation),
+	/*0xE3*/ RMSG(ORION_SAVE_PACKET, "KR Encryption Responce", 0x4d),
+	/*0xE4*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xE5*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xE6*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xE7*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xE8*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xE9*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xEA*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xEB*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xEC*/ SMSG(ORION_SAVE_PACKET, "Equip Macro", PACKET_VARIABLE_SIZE),
+	/*0xED*/ SMSG(ORION_SAVE_PACKET, "Unequip item macro", PACKET_VARIABLE_SIZE),
+	/*0xEE*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xEF*/ SMSG(ORION_SAVE_PACKET, "KR/2D Client Login/Seed", 0x15),
+	/*0xF0*/ BMSGH(ORION_SAVE_PACKET, "Krrios client special", PACKET_VARIABLE_SIZE, KrriosClientSpecial),
+	/*0xF1*/ SMSG(ORION_SAVE_PACKET, "Client-Server Time Synchronization Request", PACKET_VARIABLE_SIZE),
+	/*0xF2*/ RMSG(ORION_SAVE_PACKET, "Client-Server Time Synchronization Response", PACKET_VARIABLE_SIZE),
+	/*0xF3*/ RMSGH(ORION_IGNORE_PACKET, "Update Item (SA)", 0x18, UpdateItemSA),
+	/*0xF4*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xF5*/ RMSGH(ORION_IGNORE_PACKET, "Display New Map", 0x15, DisplayMap),
+	/*0xF6*/ RMSG(ORION_SAVE_PACKET, "Boat moving", PACKET_VARIABLE_SIZE),
+	/*0xF7*/ RMSG(ORION_SAVE_PACKET, "Packets (0xF3) list", PACKET_VARIABLE_SIZE),
+	/*0xF8*/ SMSG(ORION_SAVE_PACKET, "Character Creation (7.0.16.0)", 0x6a),
+	/*0xF9*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xFA*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xFB*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xFC*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xFD*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xFE*/ RMSG(ORION_SAVE_PACKET, "Razor Handshake", 0x8),
+	/*0xFF*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE)
 };
 //----------------------------------------------------------------------------------
 CPacketManager::CPacketManager()
@@ -599,8 +599,11 @@ void CPacketManager::OnPacket()
 
 	CPacketInfo &info = m_Packets[*m_Start];
 
-	LOG("--- ^(%d) r(+%d => %d) Server:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
-	LOG_DUMP(m_Start, m_Size);
+	if (info.save)
+	{
+		LOG("--- ^(%d) r(+%d => %d) Server:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
+		LOG_DUMP(m_Start, m_Size);
+	}
 
 	g_LastPacketTime = ticks;
 
@@ -905,9 +908,6 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->Direction = dir;
 	g_Player->Flags = m_Start[28];
 
-	g_MapManager->Init();
-	g_MapManager->AddRender(g_Player);
-
 	g_Walker->SetSequence(0, dir);
 	g_Player->OffsetX = 0;
 	g_Player->OffsetY = 0;
@@ -917,6 +917,9 @@ PACKET_HANDLER(EnterWorld)
 		m_MegaClilocRequests.push_back(g_Player->Serial);
 
 	LOG("Player 0x%08lX entered the world.\n", serial);
+
+	g_MapManager->Init();
+	g_MapManager->AddRender(g_Player);
 
 	g_Orion.LoadStartupConfig();
 
@@ -1342,15 +1345,15 @@ PACKET_HANDLER(UpdateItem)
 	}
 
 	if (obj->MultiBody)
-		obj->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
+		obj->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
 
 	obj->X = x;
 	obj->Y = y;
 	obj->Z = z;
 
-	g_World->MoveToTop(obj);
-
 	obj->OnGraphicChange(dir);
+
+	g_World->MoveToTop(obj);
 
 	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
 		m_MegaClilocRequests.push_back(obj->Serial);
@@ -1410,13 +1413,15 @@ PACKET_HANDLER(UpdateItemSA)
 	obj->Count = count;
 
 	if (obj->MultiBody)
-		obj->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
+		obj->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
 
 	obj->X = x;
 	obj->Y = y;
 	obj->Z = z;
 
 	obj->Color = color;
+
+	obj->OnGraphicChange(dir);
 
 	obj->Flags = flags;
 
@@ -1426,8 +1431,6 @@ PACKET_HANDLER(UpdateItemSA)
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	g_World->MoveToTop(obj);
-
-	obj->OnGraphicChange(dir);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateObject)
@@ -1525,7 +1528,9 @@ PACKET_HANDLER(UpdateObject)
 		item->MultiBody = (graphic & 0x4000);
 
 		if (item->MultiBody)
-			item->WantUpdateMulti = ((oldGraphic != obj->Graphic) || (obj->X != newX) || (obj->Y != newY) || (obj->Z != newZ));
+			item->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != newX) || (obj->Y != newY) || (obj->Z != newZ));
+
+		obj->OnGraphicChange(changeGraphicDir);
 	}
 
 	obj->Color = ReadUInt16BE();
@@ -1585,8 +1590,6 @@ PACKET_HANDLER(UpdateObject)
 	serial = ReadUInt32BE();
 
 	g_World->MoveToTop(obj);
-
-	obj->OnGraphicChange(changeGraphicDir);
 
 	puchar end = m_Start + m_Size;
 
@@ -1982,11 +1985,7 @@ PACKET_HANDLER(DeleteObject)
 	uint serial = ReadUInt32BE();
 
 	if (serial == g_PlayerSerial)
-	{
-		g_Orion.DisconnectGump();
-		g_Orion.Disconnect();
 		return;
-	}
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
@@ -2738,6 +2737,12 @@ PACKET_HANDLER(ExtendedCommand)
 				default:
 					break;
 			}
+
+			break;
+		}
+		case 0x18: //Enable map (diff) patches
+		{
+			g_MapManager->ApplyPatches(*this);
 
 			break;
 		}

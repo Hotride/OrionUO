@@ -13,14 +13,17 @@
 #include "../BaseQueue.h"
 #include "../Game objects/MapBlock.h"
 #include "../MulStruct.h"
+#include "../Wisp/WispDataStream.h"
 //----------------------------------------------------------------------------------
 class CIndexMap
 {
+	SETGET(uint, OriginalMapAddress);
+	SETGET(uint, OriginalStaticAddress);
+	SETGET(uint, OriginalStaticCount);
+
 	SETGET(uint, MapAddress);
 	SETGET(uint, StaticAddress);
 	SETGET(uint, StaticCount);
-	SETGET(bool, MapPatched);
-	SETGET(bool, StaticPatched);
 
 public:
 	CIndexMap();
@@ -47,6 +50,8 @@ protected:
 
 	MAP_INDEX_LIST m_BlockData[MAX_MAPS_COUNT];
 
+	void ResetPatchesInBlockTable();
+
 public:
 	CMapManager();
 	virtual ~CMapManager();
@@ -57,7 +62,9 @@ public:
 
 	void CreateBlocksTable();
 
-	void ApplyMapPatches();
+	void ApplyPatches(WISP_DATASTREAM::CDataReader &stream);
+
+	void UpdatePatched();
 
 	/*!
 	Получить индекс текущей карты
@@ -136,6 +143,8 @@ public:
 	@return 
 	*/
 	void ClearUnusedBlocks();
+
+	void ClearUsedBlocks();
 
 	/*!
 	Добавить объект рендера
