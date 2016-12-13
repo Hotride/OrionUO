@@ -91,6 +91,22 @@ void CMainScreen::ProcessSmoothAction(uchar action)
 		g_OrionWindow.Destroy();
 }
 //----------------------------------------------------------------------------------
+void CMainScreen::Paste()
+{
+	if (g_EntryPointer == m_MainGump.m_PasswordFake)
+	{
+		m_Password->Paste();
+
+		int len = m_Password->Length();
+		g_EntryPointer->Clear();
+
+		IFOR(i, 0, len)
+			g_EntryPointer->Insert(L'*');
+	}
+	else
+		g_EntryPointer->Paste();
+}
+//----------------------------------------------------------------------------------
 /*!
 Обработка нажатия клавиши
 @param [__in] wparam не подписанный параметр

@@ -65,6 +65,8 @@ public:
 	CGUICheckbox *m_SavePassword;
 	CGUICheckbox *m_AutoLogin;
 
+	void Paste();
+
 	/*!
 	Обработка события после плавного затемнения экрана
 	@param [__in_opt] action Идентификатор действия
