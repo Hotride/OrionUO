@@ -136,40 +136,6 @@ uint COrion::GetFileHashCode(uint address, uint size)
 	return (crc & 0xFFFFFFFF);
 }
 //----------------------------------------------------------------------------------
-void COrion::GetCurrentLocale()
-{
-	//https://msdn.microsoft.com/en-us/library/cc233982.aspx
-
-	wchar_t localeName[LOCALE_NAME_MAX_LENGTH] = { 0 };
-
-	if (GetSystemDefaultLocaleName(&localeName[0], LOCALE_NAME_MAX_LENGTH))
-	{
-		IFOR(i, 0, 10)
-		{
-			if (!localeName[i])
-				break;
-			else if (localeName[i] == L'-')
-			{
-				localeName[i] = 0;
-				break;
-			}
-		}
-
-		wstring locale = ToLowerW(localeName);
-
-		if (locale == L"ru")
-			g_Language = "RUS";
-		else if (locale == L"fr")
-			g_Language = "FRA";
-		else if (locale == L"de")
-			g_Language = "DEU";
-
-		LOG("Locale set to: %s\n", g_Language.c_str());
-	}
-	else
-		LOG("Locale set to default value: ENU\n");
-}
-//----------------------------------------------------------------------------------
 bool COrion::Install()
 {
 	LOG("COrion::Install()\n");
@@ -183,6 +149,8 @@ bool COrion::Install()
 
 		m_CRC_Table[i] = Reflect(m_CRC_Table[i], 32);
 	}
+
+	CheckStaticTileFilterFiles();
 
 	GetCurrentLocale();
 
@@ -526,6 +494,220 @@ void COrion::InitScreen(const GAME_STATE &state)
 
 	if (g_CurrentScreen != NULL)
 		g_CurrentScreen->Init();
+}
+//----------------------------------------------------------------------------------
+void COrion::GetCurrentLocale()
+{
+	//https://msdn.microsoft.com/en-us/library/cc233982.aspx
+
+	wchar_t localeName[LOCALE_NAME_MAX_LENGTH] = { 0 };
+
+	if (GetSystemDefaultLocaleName(&localeName[0], LOCALE_NAME_MAX_LENGTH))
+	{
+		IFOR(i, 0, 10)
+		{
+			if (!localeName[i])
+				break;
+			else if (localeName[i] == L'-')
+			{
+				localeName[i] = 0;
+				break;
+			}
+		}
+
+		wstring locale = ToLowerW(localeName);
+
+		if (locale == L"ru")
+			g_Language = "RUS";
+		else if (locale == L"fr")
+			g_Language = "FRA";
+		else if (locale == L"de")
+			g_Language = "DEU";
+
+		LOG("Locale set to: %s\n", g_Language.c_str());
+	}
+	else
+		LOG("Locale set to default value: ENU\n");
+}
+//----------------------------------------------------------------------------------
+ushort COrion::TextToGraphic(const char *text)
+{
+	if (strlen(text) > 2 && text[0] == '0' && (text[1] == 'x' || text[1] == 'X'))
+	{
+		long l = strtol(text + 2, NULL, 16);
+
+		if (l < 0 || l > 0xFFFF)
+			return 0xFFFF;
+
+		return (ushort)l;
+	}
+	else if (text[0] >= '0' && text[0] <= '9')
+		return atoi(text);
+
+	return 0;
+}
+//----------------------------------------------------------------------------------
+void COrion::CheckStaticTileFilterFiles()
+{
+	memset(&m_StaticTilesFilterFlags[0], 0, sizeof(m_StaticTilesFilterFlags));
+
+	string path = g_App.FilePath("OrionData");
+	CreateDirectoryA(path.c_str(), NULL);
+
+	string filePath = path + "\\cave.txt";
+
+	if (!PathFileExistsA(filePath.c_str()))
+	{
+		WISP_LOGGER::CLogger file;
+
+		file.Init(filePath);
+		file.Print("#Format: graphic\n");
+
+		IFOR(i, 0x053B, 0x0553 + 1)
+		{
+			if (i != 0x0550)
+				file.Print("0x%04X\n", i);
+		}
+	}
+
+	filePath = path + "\\stumps.txt";
+
+	if (!PathFileExistsA(filePath.c_str()))
+	{
+		WISP_LOGGER::CLogger file;
+
+		file.Init(filePath);
+		file.Print("#Format: graphic hatched\n");
+
+		static const int treeTilesCount = 45;
+
+		static const ushort treeTiles[treeTilesCount] =
+		{
+			0x0CCA, 0x0CCB, 0x0CCC, 0x0CCD, 0x0CD0,
+			0x0CD3, 0x0CD6, 0x0CD8, 0x0CDA, 0x0CDD,
+			0x0CE0, 0x0CE3, 0x0CE6, 0x0D41, 0x0D42,
+			0x0D43, 0x0D44, 0x0D57, 0x0D58, 0x0D59,
+			0x0D5A, 0x0D5B, 0x0D6E, 0x0D6F, 0x0D70,
+			0x0D71, 0x0D72, 0x0D84, 0x0D85, 0x0D86,
+			0x0D94, 0x0D98, 0x0D9C, 0x0DA0, 0x0DA4,
+			0x0DA8, 0x0C9E, 0x0CA8, 0x0CAA, 0x0CAB,
+			0x0CC9, 0x0CF8, 0x0CFB, 0x0CFE, 0x0D01
+		};
+
+		IFOR(i, 0, treeTilesCount)
+		{
+			ushort graphic = treeTiles[i];
+			uchar hatched = 1;
+
+			switch (graphic)
+			{
+				case 0x0C9E:
+				case 0x0CA8:
+				case 0x0CAA:
+				case 0x0CAB:
+				case 0x0CC9:
+				case 0x0CF8:
+				case 0x0CFB:
+				case 0x0CFE:
+				case 0x0D01:
+					hatched = 0;
+				default:
+					break;
+			}
+
+			file.Print("0x%04X\t%i\n", graphic, hatched);
+		}
+	}
+
+	filePath = path + "\\vegetation.txt";
+
+	if (!PathFileExistsA(filePath.c_str()))
+	{
+		WISP_LOGGER::CLogger file;
+
+		file.Init(filePath);
+		file.Print("#Format: graphic\n");
+
+		static const int vegetationTilesCount = 175;
+
+		static const ushort vegetationTiles[vegetationTilesCount] =
+		{
+			0x0D45, 0x0D46, 0x0D47, 0x0D48, 0x0D49, 0x0D4A, 0x0D4B, 0x0D4C, 0x0D4D, 0x0D4E,
+			0x0D4F, 0x0D50, 0x0D51, 0x0D52, 0x0D53, 0x0D54, 0x0D5C, 0x0D5D, 0x0D5E, 0x0D5F,
+			0x0D60, 0x0D61, 0x0D62, 0x0D63, 0x0D64, 0x0D65, 0x0D66, 0x0D67, 0x0D68, 0x0D69,
+			0x0D6D, 0x0D73, 0x0D74, 0x0D75, 0x0D76, 0x0D77, 0x0D78, 0x0D79, 0x0D7A, 0x0D7B,
+			0x0D7C, 0x0D7D, 0x0D7E, 0x0D7F, 0x0D80, 0x0D83, 0x0D87, 0x0D88, 0x0D89, 0x0D8A,
+			0x0D8B, 0x0D8C, 0x0D8D, 0x0D8E, 0x0D8F, 0x0D90, 0x0D91, 0x0D93, 0x12B6, 0x12B7,
+			0x12BC, 0x12BD, 0x12BE, 0x12BF, 0x12C0, 0x12C1, 0x12C2, 0x12C3, 0x12C4, 0x12C5,
+			0x12C6, 0x12C7, 0x0CB9, 0x0CBC, 0x0CBD, 0x0CBE, 0x0CBF, 0x0CC0, 0x0CC1, 0x0CC3,
+			0x0CC5, 0x0CC6, 0x0CC7, 0x0CF3, 0x0CF4, 0x0CF5, 0x0CF6, 0x0CF7, 0x0D04, 0x0D06,
+			0x0D07, 0x0D08, 0x0D09, 0x0D0A, 0x0D0B, 0x0D0C, 0x0D0D, 0x0D0E, 0x0D0F, 0x0D10,
+			0x0D11, 0x0D12, 0x0D13, 0x0D14, 0x0D15, 0x0D16, 0x0D17, 0x0D18, 0x0D19, 0x0D28,
+			0x0D29, 0x0D2A, 0x0D2B, 0x0D2D, 0x0D34, 0x0D36, 0x0DAE, 0x0DAF, 0x0DBA, 0x0DBB,
+			0x0DBC, 0x0DBD, 0x0DBE, 0x0DC1, 0x0DC2, 0x0DC3, 0x0C83, 0x0C84, 0x0C85, 0x0C86,
+			0x0C87, 0x0C88, 0x0C89, 0x0C8A, 0x0C8B, 0x0C8C, 0x0C8D, 0x0C8E, 0x0C93, 0x0C94,
+			0x0C98, 0x0C9F, 0x0CA0, 0x0CA1, 0x0CA2, 0x0CA3, 0x0CA4, 0x0CA7, 0x0CAC, 0x0CAD,
+			0x0CAE, 0x0CAF, 0x0CB0, 0x0CB1, 0x0CB2, 0x0CB3, 0x0CB4, 0x0CB5, 0x0CB6, 0x0C45,
+			0x0C46, 0x0C49, 0x0C47, 0x0C48, 0x0C4A, 0x0C4B, 0x0C4C, 0x0C4D, 0x0C4E, 0x0C37,
+			0x0C38, 0x0CBA, 0x0D2F, 0x0D32, 0x0D33
+		};
+
+		IFOR(i, 0, vegetationTilesCount)
+			file.Print("0x%04X\n", vegetationTiles[i]);
+	}
+
+	filePath = path + "\\cave.txt";
+
+	WISP_FILE::CTextFileParser caveParser(filePath, " \t", "#;//", "");
+
+	while (!caveParser.IsEOF())
+	{
+		STRING_LIST strings = caveParser.ReadTokens();
+
+		if (strings.size() >= 1)
+		{
+			ushort graphic = TextToGraphic(strings[0].c_str());
+
+			m_StaticTilesFilterFlags[graphic] |= STFF_CAVE;
+
+			m_CaveTiles.push_back(graphic);
+		}
+	}
+
+	filePath = path + "\\stumps.txt";
+
+	WISP_FILE::CTextFileParser stumpParser(filePath, " \t", "#;//", "");
+
+	while (!stumpParser.IsEOF())
+	{
+		STRING_LIST strings = stumpParser.ReadTokens();
+
+		if (strings.size() >= 2)
+		{
+			uchar flag = STFF_STUMP;
+
+			if (atoi(strings[1].c_str()))
+				flag |= STFF_STUMP_HATCHED;
+
+			ushort graphic = TextToGraphic(strings[0].c_str());
+
+			m_StaticTilesFilterFlags[graphic] |= flag;
+
+			m_StumpTiles.push_back(graphic);
+		}
+	}
+
+	filePath = path + "\\vegetation.txt";
+
+	WISP_FILE::CTextFileParser vegetationParser(filePath, " \t", "#;//", "");
+
+	while (!vegetationParser.IsEOF())
+	{
+		STRING_LIST strings = vegetationParser.ReadTokens();
+
+		if (strings.size() >= 1)
+			m_StaticTilesFilterFlags[TextToGraphic(strings[0].c_str())] |= STFF_VEGETATION;
+	}
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadClientConfig()
@@ -2155,23 +2337,8 @@ void COrion::ClearRemovedStaticsTextures()
 //----------------------------------------------------------------------------------
 void COrion::ClearTreesTextures()
 {
-	static const int treeTilesCount = 45;
-
-	static const ushort treeTiles[treeTilesCount] =
-	{
-		0x0CCA, 0x0CCB, 0x0CCC, 0x0CCD, 0x0CD0,
-		0x0CD3, 0x0CD6, 0x0CD8, 0x0CDA, 0x0CDD,
-		0x0CE0, 0x0CE3, 0x0CE6, 0x0D41, 0x0D42,
-		0x0D43, 0x0D44, 0x0D57, 0x0D58, 0x0D59,
-		0x0D5A, 0x0D5B, 0x0D6E, 0x0D6F, 0x0D70,
-		0x0D71, 0x0D72, 0x0D84, 0x0D85, 0x0D86,
-		0x0D94, 0x0D98, 0x0D9C, 0x0DA0, 0x0DA4,
-		0x0DA8, 0x0C9E, 0x0CA8, 0x0CAA, 0x0CAB,
-		0x0CC9, 0x0CF8, 0x0CFB, 0x0CFE, 0x0D01
-	};
-
-	IFOR(i, 0, treeTilesCount)
-		m_StaticDataIndex[treeTiles[i]].LastAccessTime = 0;
+	for (const ushort &graphic : m_StumpTiles)
+		m_StaticDataIndex[graphic].LastAccessTime = 0;
 
 	ClearRemovedStaticsTextures();
 }
@@ -2181,516 +2348,37 @@ bool COrion::IsTreeTile(const ushort &graphic, int &index)
 	if (!g_ConfigManager.DrawStumps)
 		return false;
 
-	bool result = false;
+	uchar flags = m_StaticTilesFilterFlags[graphic];
 
-	switch (graphic)
+	if (flags & STFF_STUMP)
 	{
-		case 0x0CCA:
-		case 0x0CCB:
-		case 0x0CCC:
-		case 0x0CCD:
-		case 0x0CD0:
-		case 0x0CD3:
-		case 0x0CD6:
-		case 0x0CD8:
-		case 0x0CDA:
-		case 0x0CDD:
-		case 0x0CE0:
-		case 0x0CE3:
-		case 0x0CE6:
-		case 0x0D41:
-		case 0x0D42:
-		case 0x0D43:
-		case 0x0D44:
-		case 0x0D57:
-		case 0x0D58:
-		case 0x0D59:
-		case 0x0D5A:
-		case 0x0D5B:
-		case 0x0D6E:
-		case 0x0D6F:
-		case 0x0D70:
-		case 0x0D71:
-		case 0x0D72:
-		case 0x0D84:
-		case 0x0D85:
-		case 0x0D86:
-		case 0x0D94: //apple tree
-		case 0x0D98: //apple tree
-		case 0x0D9C:
-		case 0x0DA0:
-		case 0x0DA4:
-		case 0x0DA8:
-		{
-			result = true;
+		if (flags & STFF_STUMP_HATCHED)
 			index = g_StumpHatchedID;
-
-			break;
-		}
-		case 0x0C9E:
-		case 0x0CA8:
-		case 0x0CAA:
-		case 0x0CAB:
-		case 0x0CC9:
-		case 0x0CF8:
-		case 0x0CFB:
-		case 0x0CFE:
-		case 0x0D01:
-		{
-			result = true;
+		else
 			index = g_StumpID;
 
-			break;
-		}
-		default:
-			break;
+		return true;
 	}
 
-	return result;
+	return false;
 }
 //----------------------------------------------------------------------------------
 void COrion::ClearCaveTextures()
 {
-	IFOR(j, 0x053B, 0x0553 + 1)
-	{
-		if (j != 0x0550)
-			m_StaticDataIndex[j].LastAccessTime = 0;
-	}
+	for (const ushort &graphic : m_CaveTiles)
+		m_StaticDataIndex[graphic].LastAccessTime = 0;
 
 	ClearRemovedStaticsTextures();
 }
 //----------------------------------------------------------------------------------
 bool COrion::IsCaveTile(const ushort &graphic)
 {
-	return (g_ConfigManager.MarkingCaves && graphic != 0x0550 && IN_RANGE(graphic, 0x053B, 0x0553));
+	return (g_ConfigManager.MarkingCaves && (m_StaticTilesFilterFlags[graphic] & STFF_CAVE));
 }
 //----------------------------------------------------------------------------------
 bool COrion::IsVegetation(const ushort &graphic)
 {
-	bool result = false;
-
-	switch (graphic)
-	{
-		case 0x4D45:
-		case 0x4D46:
-		case 0x4D47:
-		case 0x4D48:
-		case 0x4D49:
-		case 0x4D4A:
-		case 0x4D4B:
-		case 0x4D4C:
-		case 0x4D4D:
-		case 0x4D4E:
-		case 0x4D4F:
-		case 0x4D50:
-		case 0x4D51:
-		case 0x4D52:
-		case 0x4D53:
-		case 0x4D54:
-		case 0x4D5C:
-		case 0x4D5D:
-		case 0x4D5E:
-		case 0x4D5F:
-		case 0x4D60:
-		case 0x4D61:
-		case 0x4D62:
-		case 0x4D63:
-		case 0x4D64:
-		case 0x4D65:
-		case 0x4D66:
-		case 0x4D67:
-		case 0x4D68:
-		case 0x4D69:
-		case 0x4D6D:
-		case 0x4D73:
-		case 0x4D74:
-		case 0x4D75:
-		case 0x4D76:
-		case 0x4D77:
-		case 0x4D78:
-		case 0x4D79:
-		case 0x4D7A:
-		case 0x4D7B:
-		case 0x4D7C:
-		case 0x4D7D:
-		case 0x4D7E:
-		case 0x4D7F:
-		case 0x4D80:
-		case 0x4D83:
-		case 0x4D87:
-		case 0x4D88:
-		case 0x4D89:
-		case 0x4D8A:
-		case 0x4D8B:
-		case 0x4D8C:
-		case 0x4D8D:
-		case 0x4D8E:
-		case 0x4D8F:
-		case 0x4D90:
-		case 0x4D91:
-		case 0x4D93:
-		case 0x52B6:
-		case 0x52B7:
-		case 0x52BC:
-		case 0x52BD:
-		case 0x52BE:
-		case 0x52BF:
-		case 0x52C0:
-		case 0x52C1:
-		case 0x52C2:
-		case 0x52C3:
-		case 0x52C4:
-		case 0x52C5:
-		case 0x52C6:
-		case 0x52C7:
-		case 0x4CB9:
-		case 0x4CBC:
-		case 0x4CBD:
-		case 0x4CBE:
-		case 0x4CBF:
-		case 0x4CC0:
-		case 0x4CC1:
-		case 0x4CC3:
-		case 0x4CC5:
-		case 0x4CC6:
-		case 0x4CC7:
-		case 0x4CF3:
-		case 0x4CF4:
-		case 0x4CF5:
-		case 0x4CF6:
-		case 0x4CF7:
-		case 0x4D04:
-		case 0x4D06:
-		case 0x4D07:
-		case 0x4D08:
-		case 0x4D09:
-		case 0x4D0A:
-		case 0x4D0B:
-		case 0x4D0C:
-		case 0x4D0D:
-		case 0x4D0E:
-		case 0x4D0F:
-		case 0x4D10:
-		case 0x4D11:
-		case 0x4D12:
-		case 0x4D13:
-		case 0x4D14:
-		case 0x4D15:
-		case 0x4D16:
-		case 0x4D17:
-		case 0x4D18:
-		case 0x4D19:
-		case 0x4D28:
-		case 0x4D29:
-		case 0x4D2A:
-		case 0x4D2B:
-		case 0x4D2D:
-		case 0x4D34:
-		case 0x4D36:
-		case 0x4DAE:
-		case 0x4DAF:
-		case 0x4DBA:
-		case 0x4DBB:
-		case 0x4DBC:
-		case 0x4DBD:
-		case 0x4DBE:
-		case 0x4DC1:
-		case 0x4DC2:
-		case 0x4DC3:
-		case 0x4C83:
-		case 0x4C84:
-		case 0x4C85:
-		case 0x4C86:
-		case 0x4C87:
-		case 0x4C88:
-		case 0x4C89:
-		case 0x4C8A:
-		case 0x4C8B:
-		case 0x4C8C:
-		case 0x4C8D:
-		case 0x4C8E:
-		case 0x4C93:
-		case 0x4C94:
-		case 0x4C98:
-		case 0x4C9F:
-		case 0x4CA0:
-		case 0x4CA1:
-		case 0x4CA2:
-		case 0x4CA3:
-		case 0x4CA4:
-		case 0x4CA7:
-		case 0x4CAC:
-		case 0x4CAD:
-		case 0x4CAE:
-		case 0x4CAF:
-		case 0x4CB0:
-		case 0x4CB1:
-		case 0x4CB2:
-		case 0x4CB3:
-		case 0x4CB4:
-		case 0x4CB5:
-		case 0x4CB6:
-		case 0x4C45:
-		case 0x4C46:
-		case 0x4C49:
-		case 0x4C47:
-		case 0x4C48:
-		case 0x4C4A:
-		case 0x4C4B:
-		case 0x4C4C:
-		case 0x4C4D:
-		case 0x4C4E:
-		case 0x4C37:
-		case 0x4C38:
-		case 0x4CBA:
-		case 0x4D2F:
-		case 0x4D32:
-		case 0x4D33:
-		{
-			result = true;
-			break;
-		}
-		default:
-			break;
-	}
-
-	//raw vegetation data
-	/*case 0x4CE7:
-	case 0x4CE8:
-	case 0x4D45:
-	case 0x4D46:
-	case 0x4D47:
-	case 0x4D48:
-	case 0x4D49:
-	case 0x4D4A:
-	case 0x4D4B:
-	case 0x4D4C:
-	case 0x4D4D:
-	case 0x4D4E:
-	case 0x4D4F:
-	case 0x4D50:
-	case 0x4D51:
-	case 0x4D52:
-	case 0x4D53:
-	case 0x4D54:
-	case 0x4D56:
-	case 0x4D55:
-	case 0x4D5C:
-	case 0x4D5D:
-	case 0x4D5E:
-	case 0x4D5F:
-	case 0x4D60:
-	case 0x4D61:
-	case 0x4D62:
-	case 0x4D63:
-	case 0x4D64:
-	case 0x4D65:
-	case 0x4D66:
-	case 0x4D67:
-	case 0x4D68:
-	case 0x4D69:
-	case 0x4D6A:
-	case 0x4D6C:
-	case 0x4D6D:
-	case 0x4D6B:
-	case 0x4D73:
-	case 0x4D74:
-	case 0x4D75:
-	case 0x4D76:
-	case 0x4D77:
-	case 0x4D78:
-	case 0x4D79:
-	case 0x4D7A:
-	case 0x4D7B:
-	case 0x4D7C:
-	case 0x4D7D:
-	case 0x4D7E:
-	case 0x4D7F:
-	case 0x4D80:
-	case 0x4D81:
-	case 0x4D83:
-	case 0x4D82:
-	case 0x4D87:
-	case 0x4D88:
-	case 0x4D89:
-	case 0x4D8A:
-	case 0x4D8B:
-	case 0x4D8C:
-	case 0x4D8D:
-	case 0x4D8E:
-	case 0x4D8F:
-	case 0x4D90:
-	case 0x4D91:
-	case 0x4D92:
-	case 0x4D93:
-	case 0x52B8:
-	case 0x52B9:
-	case 0x52BA:
-	case 0x52BB:
-	case 0x52B6:
-	case 0x52B7:
-	case 0x52BC:
-	case 0x52BD:
-	case 0x52BE:
-	case 0x52BF:
-	case 0x52C0:
-	case 0x52C1:
-	case 0x52C2:
-	case 0x52C3:
-	case 0x52C4:
-	case 0x52C5:
-	case 0x52C6:
-	case 0x52C7:
-	case 0x4CCE:
-	case 0x4CCF:
-	case 0x4CD1:
-	case 0x4CD2:
-	case 0x4CD4:
-	case 0x4CD5:
-	case 0x4CD7:
-	case 0x4CD9:
-	case 0x4CDB:
-	case 0x4CDC:
-	case 0x4CDE:
-	case 0x4CDF:
-	case 0x4CE1:
-	case 0x4CE2:
-	case 0x4CE4:
-	case 0x4CE5:
-	case 0x4C95:
-	case 0x4C96:
-	case 0x4CF9:
-	case 0x4CFA:
-	case 0x4CFC:
-	case 0x4CFD:
-	case 0x4CFF:
-	case 0x4D00:
-	case 0x4D02:
-	case 0x4D03:
-	case 0x4CB9:
-	case 0x4CBC:
-	case 0x4CBD:
-	case 0x4CBE:
-	case 0x4CBF:
-	case 0x4CC0:
-	case 0x4CC1:
-	case 0x4CC3:
-	case 0x4CC5:
-	case 0x4CC6:
-	case 0x4CC7:
-	case 0x4CF3:
-	case 0x4CF4:
-	case 0x4CF5:
-	case 0x4CF6:
-	case 0x4CF7:
-	case 0x4D04:
-	case 0x4D06:
-	case 0x4D07:
-	case 0x4D08:
-	case 0x4D09:
-	case 0x4D0A:
-	case 0x4D0B:
-	case 0x4D0C:
-	case 0x4D0D:
-	case 0x4D0E:
-	case 0x4D0F:
-	case 0x4D10:
-	case 0x4D11:
-	case 0x4D12:
-	case 0x4D13:
-	case 0x4D14:
-	case 0x4D15:
-	case 0x4D16:
-	case 0x4D17:
-	case 0x4D18:
-	case 0x4D19:
-	case 0x4D28:
-	case 0x4D29:
-	case 0x4D2A:
-	case 0x4D2B:
-	case 0x4D2D:
-	case 0x4D34:
-	case 0x4D36:
-	case 0x4DAE:
-	case 0x4DAF:
-	case 0x4DBA:
-	case 0x4DBB:
-	case 0x4DBC:
-	case 0x4DBD:
-	case 0x4DBE:
-	case 0x4DC1:
-	case 0x4DC2:
-	case 0x4DC3:
-	case 0x4C83:
-	case 0x4C84:
-	case 0x4C85:
-	case 0x4C86:
-	case 0x4C87:
-	case 0x4C88:
-	case 0x4C89:
-	case 0x4C8A:
-	case 0x4C8B:
-	case 0x4C8C:
-	case 0x4C8D:
-	case 0x4C8E:
-	case 0x4C93:
-	case 0x4C94:
-	case 0x4C98:
-	case 0x4C9F:
-	case 0x4CA0:
-	case 0x4CA1:
-	case 0x4CA2:
-	case 0x4CA3:
-	case 0x4CA4:
-	case 0x4CA7:
-	case 0x4CAC:
-	case 0x4CAD:
-	case 0x4CAE:
-	case 0x4CAF:
-	case 0x4CB0:
-	case 0x4CB1:
-	case 0x4CB2:
-	case 0x4CB3:
-	case 0x4CB4:
-	case 0x4CB5:
-	case 0x4CB6:
-	case 0x4C45:
-	case 0x4C46:
-	case 0x4C49:
-	case 0x4C47:
-	case 0x4C48:
-	case 0x4C4A:
-	case 0x4C4B:
-	case 0x4C4C:
-	case 0x4C4D:
-	case 0x4C4E:
-	case 0x4C37:
-	case 0x4C38:
-	case 0x4CBA:
-	case 0x4D2F:
-	case 0x4D32:
-	case 0x4D33:
-	case 0x4C9A:
-	case 0x4CB7:
-	case 0x4CB8:
-	case 0x4C97:
-	case 0x4C99:
-	case 0x4C9B:
-	case 0x4C9C:
-	case 0x4C9D:
-	case 0x4CA5:
-	case 0x4CA6:
-	case 0x4CA9:
-	case 0x4CC4:
-	case 0x4CBB:
-	case 0x4CC8:
-	case 0x4CE9:
-	case 0x4D2E:
-	case 0x4D35:
-	case 0x4D3F:
-	case 0x4D40:*/
-
-	return result;
+	return (m_StaticTilesFilterFlags[graphic] & STFF_VEGETATION);
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadLogin(string &login, int &port)

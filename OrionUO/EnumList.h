@@ -620,6 +620,15 @@ enum SCREENSHOT_FORMAT
 	SF_JPEG
 };
 //----------------------------------------------------------------------------------
+enum STATIC_TILES_FILTER_FLAGS
+{
+	STFF_CAVE			= 0x01,
+	STFF_STUMP			= 0x02,
+	STFF_STUMP_HATCHED	= 0x04,
+	STFF_VEGETATION		= 0x08,
+	STFF_WATER			= 0x10
+};
+//----------------------------------------------------------------------------------
 //!Направления чара
 enum DIRECTION_TYPE
 {

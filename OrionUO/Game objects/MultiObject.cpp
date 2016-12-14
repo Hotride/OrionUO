@@ -38,7 +38,7 @@ void CMultiObject::UpdateGraphicBySeason()
 
 	if (m_Graphic != graphic)
 	{
-		m_Vegetation = g_Orion.IsVegetation(m_Graphic);
+		m_Vegetation = g_Orion.IsVegetation(m_Graphic - 0x4000);
 
 		if (IsWet())
 			m_RenderQueueIndex = 1;
