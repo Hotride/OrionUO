@@ -225,6 +225,24 @@ void CTextRenderer::Draw()
 
 		if (text->Timer >= g_Ticks)
 		{
+			ushort textColor = text->Color;
+
+			int drawMode = 0;
+
+			if (textColor)
+			{
+				g_ColorManager.SendColorsToShader(textColor);
+
+				if (text->Unicode)
+					drawMode = 3;
+				else if (text->Font != 5 && text->Font != 8)
+					drawMode = 2;
+				else
+					drawMode = 1;
+			}
+
+			glUniform1iARB(g_ShaderDrawMode, drawMode);
+
 			if (text->Transparent)
 			{
 				uchar alpha = text->Alpha;

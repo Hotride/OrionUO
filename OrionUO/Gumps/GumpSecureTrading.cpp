@@ -218,7 +218,11 @@ void CGumpSecureTrading::Draw()
 
 	glTranslatef(g_GumpTranslate.X, g_GumpTranslate.Y, 0.0f);
 
+	g_FontColorizerShader->Use();
+
 	m_TextRenderer.Draw();
+
+	UnuseShader();
 
 	glTranslatef(-g_GumpTranslate.X, -g_GumpTranslate.Y, 0.0f);
 }
