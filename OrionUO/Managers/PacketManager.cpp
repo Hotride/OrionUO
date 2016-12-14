@@ -4104,6 +4104,8 @@ PACKET_HANDLER(OpenMenuGump)
 
 		gump->Add(new CGUIGumppic(0x0910, 0, 0));
 
+		gump->Add(new CGUIColoredPolygone(0, 0, 40, 42, 217, 49, 0xFF000001));
+
 		CGUIText *text = (CGUIText*)gump->Add(new CGUIText(0x0386, 39, 18));
 		text->CreateTextureA(1, name, 200, TS_LEFT, UOFONT_FIXED);
 
