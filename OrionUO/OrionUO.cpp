@@ -5486,8 +5486,8 @@ void COrion::OpenChat()
 //----------------------------------------------------------------------------------
 void COrion::OpenConfiguration()
 {
-	int x = (GetSystemMetrics(SM_CXSCREEN) / 2) - 383;
-	int y = (GetSystemMetrics(SM_CYSCREEN) / 2) - 260;
+	int x = (g_OrionWindow.Size.Width / 2) - 320;
+	int y = (g_OrionWindow.Size.Height / 2) - 240;
 
 	g_OptionsConfig = g_ConfigManager;
 
