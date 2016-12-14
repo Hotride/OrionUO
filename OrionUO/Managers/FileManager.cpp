@@ -126,10 +126,10 @@ bool CFileManager::Load()
 			m_AnimMul[i].Load(g_App.FilePath("anim%i.mul", i));
 		}
 
-		if (UseUOP && !m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i)))
-		{
+		if (UseUOP)
+			m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i));
+		else
 			m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
-		}
 		/*else
 		{
 			/if (i == 0 || i == 1 || i == 2 || i == 5)
