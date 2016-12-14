@@ -35,7 +35,7 @@ protected:
 	
 	CTextRenderer m_TextRenderer;
 	
-	static const int m_LayerCount = 22;
+	static const int m_LayerCount = 23;
 	static int UsedLayers[m_LayerCount];
 
 	CGUIDataBox *m_DataBox;

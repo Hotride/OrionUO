@@ -37,6 +37,7 @@ int CGumpPaperdoll::UsedLayers[m_LayerCount] =
 	OL_GLOVES,
 	OL_TUNIC,
 	OL_SKIRT,
+	OL_TALISMAN,
 	OL_NECKLACE,
 	OL_HAIR,
 	OL_ROBE,
