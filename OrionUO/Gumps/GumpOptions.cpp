@@ -449,6 +449,26 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"Draw aura under characters only if Ctrl pressed", g_SelectedObject.Object());
 				break;
 			}
+			case ID_GO_P2_SCREENSHOT_FORMAT_BMP:
+			{
+				g_ToolTip.Set(L"Save screen shots in BMP format", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_SCREENSHOT_FORMAT_PNG:
+			{
+				g_ToolTip.Set(L"Save screen shots in PNG format", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_SCREENSHOT_FORMAT_TIFF:
+			{
+				g_ToolTip.Set(L"Save screen shots in TIFF format", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_SCREENSHOT_FORMAT_JPEG:
+			{
+				g_ToolTip.Set(L"Save screen shots in JPEG format (maybe crashes)", g_SelectedObject.Object());
+				break;
+			}
 			case ID_GO_P2_DEV_MODE_1:
 			{
 				g_ToolTip.Set(L"Original client work", g_SelectedObject.Object());
@@ -979,6 +999,25 @@ void CGumpOptions::DrawPage2()
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_DRAW_AURA_WITH_CTRL_PRESSED, 0x00D2, 0x00D3, 0x00D2, 0, 690));
 	checkbox->Checked = g_OptionsConfig.DrawAuraWithCtrlPressed;
 	checkbox->SetTextParameters(0, L"Draw aura only if Ctrl pressed", g_OptionsTextColor);
+
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 710));
+	text->CreateTextureW(0, L"Screenshots format:");
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_SCREENSHOT_FORMAT_BMP, 0x00D0, 0x00D1, 0x00D2, 10, 730));
+	radio->Checked = (g_OptionsConfig.ScreenshotFormat == SF_BMP);
+	radio->SetTextParameters(0, L"BMP", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_SCREENSHOT_FORMAT_PNG, 0x00D0, 0x00D1, 0x00D2, 100, 730));
+	radio->Checked = (g_OptionsConfig.ScreenshotFormat == SF_PNG);
+	radio->SetTextParameters(0, L"PNG", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_SCREENSHOT_FORMAT_TIFF, 0x00D0, 0x00D1, 0x00D2, 190, 730));
+	radio->Checked = (g_OptionsConfig.ScreenshotFormat == SF_TIFF);
+	radio->SetTextParameters(0, L"TIFF", g_OptionsTextColor);
+
+	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_SCREENSHOT_FORMAT_JPEG, 0x00D0, 0x00D1, 0x00D2, 280, 730));
+	radio->Checked = (g_OptionsConfig.ScreenshotFormat == SF_JPEG);
+	radio->SetTextParameters(0, L"JPEG (maybe crashes)", g_OptionsTextColor);
 
 	html->CalculateDataSize();
 }
@@ -2373,6 +2412,14 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 				g_OptionsConfig.DrawAuraState = DAS_IN_WARMODE;
 			else if (serial == ID_GO_P2_DRAW_AURA_ALWAYS)
 				g_OptionsConfig.DrawAuraState = DAS_ALWAYS;
+			else if (serial == ID_GO_P2_SCREENSHOT_FORMAT_BMP)
+				g_OptionsConfig.ScreenshotFormat = SF_BMP;
+			else if (serial == ID_GO_P2_SCREENSHOT_FORMAT_PNG)
+				g_OptionsConfig.ScreenshotFormat = SF_PNG;
+			else if (serial == ID_GO_P2_SCREENSHOT_FORMAT_TIFF)
+				g_OptionsConfig.ScreenshotFormat = SF_TIFF;
+			else if (serial == ID_GO_P2_SCREENSHOT_FORMAT_JPEG)
+				g_OptionsConfig.ScreenshotFormat = SF_JPEG;
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
 			else if (serial == ID_GO_P2_DEV_MODE_2)
@@ -2783,6 +2830,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.ShowDefaultConsoleEntryMode = g_OptionsConfig.ShowDefaultConsoleEntryMode;
 			g_ConfigManager.DrawAuraState = g_OptionsConfig.DrawAuraState;
 			g_ConfigManager.DrawAuraWithCtrlPressed = g_OptionsConfig.DrawAuraWithCtrlPressed;
+			g_ConfigManager.ScreenshotFormat = g_OptionsConfig.ScreenshotFormat;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

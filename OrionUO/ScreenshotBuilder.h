@@ -20,6 +20,8 @@ public:
 
 	void SaveScreen();
 
+	void SaveScreen(const int &x, const int &y, const int &width, const int &height);
+
 	UINT_LIST GetScenePixels(const int &x, const int &y, const int &width, const int &height);
 };
 //----------------------------------------------------------------------------------
