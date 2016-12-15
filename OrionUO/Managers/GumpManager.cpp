@@ -40,6 +40,7 @@
 #include "../Gumps/GumpBook.h"
 #include "../Gumps/GumpSecureTrading.h"
 #include "../Gumps/GumpWorldMap.h"
+#include "../Gumps/GumpSkill.h"
 //----------------------------------------------------------------------------------
 CGumpManager g_GumpManager;
 //----------------------------------------------------------------------------------
@@ -600,6 +601,8 @@ void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
 				((CGumpStatusbar*)gump)->UpdateGroup(0, 0);
 			else if (gump->GumpType == GT_SPELL && ((CGumpSpell*)gump)->InGroup())
 				((CGumpSpell*)gump)->UpdateGroup(0, 0);
+			else if (gump->GumpType == GT_GENERIC)
+				gump->OnLeftMouseButtonDown();
 			else
 				MoveToBack(gump);
 
@@ -1251,6 +1254,14 @@ void CGumpManager::Load(const string &path)
 					showFullTextConsoleType = file.ReadUInt8();
 					break;
 				}
+				case GT_SKILL:
+				{
+					uint serial = file.ReadUInt32LE();
+
+					gump = new CGumpSkill(serial, gumpX, gumpY);
+
+					break;
+				}
 				default:
 					break;
 			}
@@ -1512,6 +1523,17 @@ void CGumpManager::Save(const string &path)
 
 				writter.WriteBuffer();
 				count++;
+			}
+			case GT_SKILL:
+			{
+				SaveDefaultGumpProperties(writter, gump, 16);
+
+				writter.WriteUInt32LE(gump->Serial);
+				writter.WriteBuffer();
+
+				count++;
+
+				break;
 			}
 			default:
 				break;

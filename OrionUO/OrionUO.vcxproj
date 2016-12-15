@@ -64,6 +64,7 @@ xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)bin\Freeimage.dll" "$(OutDir)"
 if exist "$(ProjectDir)Orion.dll" (del "$(ProjectDir)Orion.dll")
 xcopy /y /d  "$(SolutionDir)debug_bin\Orion.dll" "$(ProjectDir)"
 
@@ -236,6 +237,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Gumps\GumpSecureTrading.h" />
     <ClInclude Include="Gumps\GumpSelectColor.h" />
     <ClInclude Include="Gumps\GumpSelectFont.h" />
+    <ClInclude Include="Gumps\GumpSkill.h" />
     <ClInclude Include="Gumps\GumpSkills.h" />
     <ClInclude Include="Gumps\GumpSpell.h" />
     <ClInclude Include="Gumps\GumpSpellbook.h" />
@@ -457,6 +459,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="Gumps\GumpSecureTrading.cpp" />
     <ClCompile Include="Gumps\GumpSelectColor.cpp" />
     <ClCompile Include="Gumps\GumpSelectFont.cpp" />
+    <ClCompile Include="Gumps\GumpSkill.cpp" />
     <ClCompile Include="Gumps\GumpSkills.cpp" />
     <ClCompile Include="Gumps\GumpSpell.cpp" />
     <ClCompile Include="Gumps\GumpSpellbook.cpp" />

@@ -11,6 +11,10 @@
 #include "Wisp/WispApplication.h"
 #include "OrionWindow.h"
 #include "OrionUO.h"
+#include "Managers/ConfigManager.h"
+#include "FreeImage.h"
+
+#pragma comment(lib, "FreeImage.lib")
 
 CScreenshotBuilder g_ScreenshotBuilder;
 //---------------------------------------------------------------------------
@@ -24,6 +28,11 @@ CScreenshotBuilder::~CScreenshotBuilder()
 //---------------------------------------------------------------------------
 void CScreenshotBuilder::SaveScreen()
 {
+	SaveScreen(0, 0, g_OrionWindow.Size.Width, g_OrionWindow.Size.Height);
+}
+//---------------------------------------------------------------------------
+void CScreenshotBuilder::SaveScreen(const int &x, const int &y, const int &width, const int &height)
+{
 	string path = g_App.FilePath("snapshots");
 	CreateDirectoryA(path.c_str(), NULL);
 
@@ -32,53 +41,50 @@ void CScreenshotBuilder::SaveScreen()
 
 	char buf[100] = { 0 };
 
-	sprintf_s(buf, "\\snapshot_d(%i.%i.%i)_t(%i.%i.%i_%i).bmp", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+	sprintf_s(buf, "\\snapshot_d(%i.%i.%i)_t(%i.%i.%i_%i)", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 
 	path += buf;
 
-	int width = g_OrionWindow.Size.Width;
-	int height = g_OrionWindow.Size.Height;
+	UINT_LIST pixels = GetScenePixels(x, y, width, height);
 
-	BITMAPINFO bmInfo;
-	BITMAPFILEHEADER bmFileHeader;
+	FIBITMAP *fBmp = FreeImage_ConvertFromRawBits((puchar)&pixels[0], width, height, width * 4, 32, 0, 0, 0);
 
-	bmInfo.bmiHeader.biSize = 40;
-	bmInfo.bmiHeader.biWidth = width;
-	bmInfo.bmiHeader.biHeight = height;
-	bmInfo.bmiHeader.biPlanes = 1;
-	bmInfo.bmiHeader.biBitCount = 32;
-	bmInfo.bmiHeader.biCompression = 0;
-	bmInfo.bmiHeader.biSizeImage = (width * height * 4) + 40 + 14;
-	bmInfo.bmiHeader.biXPelsPerMeter = 0;
-	bmInfo.bmiHeader.biYPelsPerMeter = 0;
-	bmInfo.bmiHeader.biClrUsed = 0;
-	bmInfo.bmiHeader.biClrImportant = 0;
+	FREE_IMAGE_FORMAT format = FIF_BMP;
 
-	bmFileHeader.bfType = 0x4d42;
-	bmFileHeader.bfSize = (width * height * 4) + 40 + 14;
-	bmFileHeader.bfReserved1 = 0;
-	bmFileHeader.bfReserved2 = 0;
-	bmFileHeader.bfOffBits = 54;
-
-	UINT_LIST pixels = GetScenePixels(0, 0, width, height);
-
-	FILE *file = NULL;
-	fopen_s(&file, path.c_str(), "wb");
-
-	if (file != NULL)
+	switch (g_ConfigManager.ScreenshotFormat)
 	{
-		fwrite(&bmFileHeader, sizeof(bmFileHeader), 1, file);
-		fwrite(&bmInfo, sizeof(bmInfo), 1, file);
-		fwrite(&pixels[0], bmInfo.bmiHeader.biSizeImage, 1, file);
-		fclose(file);
+		case SF_PNG:
+		{
+			path += ".png";
+			format = FIF_PNG;
+			break;
+		}
+		case SF_TIFF:
+		{
+			path += ".tiff";
+			format = FIF_TIFF;
+			break;
+		}
+		case SF_JPEG:
+		{
+			path += ".jpeg";
+			format = FIF_JPEG;
+			break;
+		}
+		default:
+		{
+			path += ".bmp";
+			format = FIF_BMP;
+			break;
+		}
 	}
+
+	FreeImage_Save(format, fBmp, path.c_str());
+
+	FreeImage_Unload(fBmp);
 
 	if (g_GameState >= GS_GAME)
 		g_Orion.CreateTextMessageF(3, 0, "Screenshot saved to: %s", path.c_str());
-
-	/*LOG("Saving screen to:\n");
-	LOG(path.c_str());
-	LOG("\n");*/
 }
 //---------------------------------------------------------------------------
 UINT_LIST CScreenshotBuilder::GetScenePixels(const int &x, const int &y, const int &width, const int &height)

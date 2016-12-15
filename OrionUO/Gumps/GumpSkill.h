@@ -1,31 +1,30 @@
 ﻿/***********************************************************************************
 **
-** ScreenshotBuilder.h
+** GumpSkill.h
 **
 ** Copyright (C) August 2016 Hotride
 **
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef SCREENSHOTBUILDER_H
-#define SCREENSHOTBUILDER_H
+#ifndef GUMPSKILL_H
+#define GUMPSKILL_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
+#include "Gump.h"
 //----------------------------------------------------------------------------------
-class CScreenshotBuilder
+class CGumpSkill : public CGump
 {
+private:
+	static const int ID_GS_LOCK_MOVING = 1;
+
 public:
-	CScreenshotBuilder();
-	virtual ~CScreenshotBuilder();
+	CGumpSkill(const uint &serial, const int &x, const int &y);
+	virtual ~CGumpSkill();
 
-	void SaveScreen();
+	GUMP_BUTTON_EVENT_H;
 
-	void SaveScreen(const int &x, const int &y, const int &width, const int &height);
-
-	UINT_LIST GetScenePixels(const int &x, const int &y, const int &width, const int &height);
+	virtual void OnLeftMouseButtonUp();
 };
-//----------------------------------------------------------------------------------
-extern CScreenshotBuilder g_ScreenshotBuilder;
 //----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------
