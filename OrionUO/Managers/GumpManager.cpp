@@ -880,7 +880,7 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 				}
 				case GT_GENERIC:
 				{
-					((CGumpGeneric*)gump)->SendGumpResponse(0);
+					CloseGump(gump->Serial, gump->ID, gump->GumpType);
 
 					break;
 				}
