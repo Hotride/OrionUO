@@ -601,6 +601,8 @@ void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
 				((CGumpStatusbar*)gump)->UpdateGroup(0, 0);
 			else if (gump->GumpType == GT_SPELL && ((CGumpSpell*)gump)->InGroup())
 				((CGumpSpell*)gump)->UpdateGroup(0, 0);
+			else if (gump->GumpType == GT_GENERIC)
+				gump->OnLeftMouseButtonDown();
 			else
 				MoveToBack(gump);
 
