@@ -676,7 +676,7 @@ void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(LoginError)
 {
-	if (g_GameState == GS_MAIN_CONNECT || g_GameState == GS_SERVER_CONNECT)
+	if (g_GameState == GS_MAIN_CONNECT || g_GameState == GS_SERVER_CONNECT || g_GameState == GS_GAME_CONNECT)
 	{
 		g_ConnectionScreen.ConnectionFailed = true;
 		g_ConnectionScreen.ErrorCode = ReadUInt8();
