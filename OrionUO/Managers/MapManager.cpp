@@ -92,7 +92,7 @@ void CMapManager::CreateBlockTable(int map)
 				realMapAddress = address;
 		}
 
-		if (staticIdxAddress != 0 && staticAddress != 0)
+		if (staticIdxAddress != 0 && staticAddress != 0 && staticIdxAddress + (block * sizeof(STAIDX_BLOCK)) < endStaticIdxAddress)
 		{
 			PSTAIDX_BLOCK sidx = (PSTAIDX_BLOCK)(staticIdxAddress + (block * sizeof(STAIDX_BLOCK)));
 
