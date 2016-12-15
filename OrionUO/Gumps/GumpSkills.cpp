@@ -18,6 +18,8 @@
 #include "../PressedObject.h"
 #include "../SelectedObject.h"
 #include "../ToolTip.h"
+#include "GumpSkill.h"
+#include "../Managers/GumpManager.h"
 //----------------------------------------------------------------------------------
 CGumpSkills::CGumpSkills(uint serial, short x, short y, bool minimized, int height)
 : CGumpBaseScroll(GT_SKILLS, serial, 0x1F40, height, x, y, true, 0, true, 15),
@@ -497,7 +499,16 @@ void CGumpSkills::OnLeftMouseButtonUp()
 	CGump::OnLeftMouseButtonUp();
 
 	if (g_PressedObject.LeftGump() == this && g_PressedObject.LeftSerial >= ID_GS_SKILL && g_PressedObject.LeftSerial < ID_GS_SKILL_STATE)
+	{
 		m_WantRedraw = true;
+
+		if (g_SelectedObject.Gump() != this)
+		{
+			WISP_GEOMETRY::CPoint2Di pos = g_MouseManager.Position;
+
+			g_GumpManager.AddGump(new CGumpSkill(g_PressedObject.LeftSerial - ID_GS_SKILL, pos.X - 70, pos.Y - 10));
+		}
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpSkills::GUMP_BUTTON_EVENT_C
