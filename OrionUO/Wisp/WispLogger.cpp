@@ -28,7 +28,9 @@ void CLogger::Init(const string &filePath)
 		fclose(m_File);
 
 	fopen_s(&m_File, filePath.c_str(), "w");
-	LOG("Log opened.\n");
+
+	if (this == &g_WispLogger)
+		LOG("Log opened.\n");
 }
 //----------------------------------------------------------------------------------
 void CLogger::Init(const wstring &filePath)
@@ -37,7 +39,9 @@ void CLogger::Init(const wstring &filePath)
 		fclose(m_File);
 
 	_wfopen_s(&m_File, filePath.c_str(), L"w");
-	LOG("Log opened.\n");
+
+	if (this == &g_WispLogger)
+		LOG("Log opened.\n");
 }
 //----------------------------------------------------------------------------------
 void CLogger::Print(const char *format, ...)

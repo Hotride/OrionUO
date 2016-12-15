@@ -108,6 +108,7 @@ void CConfigManager::DefaultPage2()
 	m_ShowDefaultConsoleEntryMode = true;
 	m_DrawAuraState = DAS_ALWAYS;
 	m_DrawAuraWithCtrlPressed = true;
+	m_ScreenshotFormat = SF_PNG;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -487,6 +488,7 @@ bool CConfigManager::Load(string path)
 		m_ShowDefaultConsoleEntryMode = true;
 		m_DrawAuraState = DAS_ALWAYS;
 		m_DrawAuraWithCtrlPressed = true;
+		m_ScreenshotFormat = SF_PNG;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -522,6 +524,9 @@ bool CConfigManager::Load(string path)
 
 					m_DrawAuraState = auraState & 0x7F;
 					m_DrawAuraWithCtrlPressed = (auraState & 0x80);
+
+					if (blockSize > 25)
+						m_ScreenshotFormat = file.ReadUInt8();
 				}
 			}
 			else if (blockSize > 2)
@@ -902,7 +907,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(25); //size of block
+	writter.WriteInt8(26); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -926,6 +931,7 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_DrawStatusConditionValue);
 	writter.WriteUInt8(m_RemoveStatusbarsWithoutObjects);
 	writter.WriteUInt8(m_ShowDefaultConsoleEntryMode);
+	writter.WriteUInt8(m_ScreenshotFormat);
 
 	uchar auraState = m_DrawAuraState;
 

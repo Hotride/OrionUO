@@ -527,6 +527,50 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		}
 	}
 
+	IFOR(i, 0, 4)
+	{
+		STRING_LIST strings = animParser[i].ReadTokens();
+
+		if (strings.size() >= 3)
+		{
+			ushort index = atoi(strings[0].c_str());
+
+			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT || m_DataIndex[index].Offset)
+				continue;
+
+			STRING_LIST newBody = newBodyParser.GetTokens(strings[1].c_str());
+
+			IFOR(j, 0, (int)newBody.size())
+			{
+				ushort checkIndex = atoi(newBody[j].c_str());
+
+				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
+					continue;
+
+				//memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
+
+				if (g_PacketManager.ClientVersion < CV_500A)
+				{
+					if (checkIndex >= 200)
+					{
+						if (checkIndex >= 400) //People
+							m_DataIndex[index].Type = AGT_HUMAN;
+						else //Low
+							m_DataIndex[index].Type = AGT_ANIMAL;
+					}
+					else
+						m_DataIndex[index].Type = AGT_MONSTER;
+				}
+
+				m_DataIndex[index].Graphic = checkIndex;
+				m_DataIndex[index].Group = NULL;
+				m_DataIndex[index].Color = atoi(strings[2].c_str());
+
+				break;
+			}
+		}
+	}
+
 	while (!bodyParser.IsEOF())
 	{
 		STRING_LIST strings = bodyParser.ReadTokens();
@@ -535,7 +579,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		{
 			ushort index = atoi(strings[0].c_str());
 
-			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT || m_DataIndex[index].Offset)
 				continue;
 
 			STRING_LIST newBody = newBodyParser.GetTokens(strings[1].c_str());
@@ -573,36 +617,6 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		}
 	}
 
-	IFOR(i, 0, 4)
-	{
-		STRING_LIST strings = animParser[i].ReadTokens();
-
-		if (strings.size() >= 3)
-		{
-			ushort index = atoi(strings[0].c_str());
-
-			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
-				continue;
-
-			STRING_LIST newBody = newBodyParser.GetTokens(strings[1].c_str());
-
-			IFOR(j, 0, (int)newBody.size())
-			{
-				ushort checkIndex = atoi(newBody[j].c_str());
-
-				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
-					continue;
-
-				//memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
-				m_DataIndex[index].Graphic = checkIndex;
-				m_DataIndex[index].Group = NULL;
-				m_DataIndex[index].Color = atoi(strings[2].c_str());
-
-				break;
-			}
-		}
-	}
-
 	/*while (!corpseParser.IsEOF())
 	{
 		STRING_LIST strings = corpseParser.ReadTokens();
@@ -611,7 +625,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		{
 			ushort index = atoi(strings[0].c_str());
 
-			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT || m_DataIndex[index].Offset)
 				continue;
 
 			STRING_LIST newBody = newBodyParser.GetTokens(strings[1].c_str());
@@ -625,8 +639,24 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
 					continue;
 
-				m_CorpseReplaces[index] = checkIndex;
-				//m_DataIndex[index].Color = atoi(strings[2].c_str());
+				//memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
+
+				if (g_PacketManager.ClientVersion < CV_500A)
+				{
+					if (checkIndex >= 200)
+					{
+						if (checkIndex >= 400) //People
+							m_DataIndex[index].Type = AGT_HUMAN;
+						else //Low
+							m_DataIndex[index].Type = AGT_ANIMAL;
+					}
+					else
+						m_DataIndex[index].Type = AGT_MONSTER;
+				}
+
+				m_DataIndex[index].Graphic = checkIndex;
+				m_DataIndex[index].Group = NULL;
+				m_DataIndex[index].Color = atoi(strings[2].c_str());
 
 				break;
 			}

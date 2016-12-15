@@ -37,6 +37,7 @@ int CGumpPaperdoll::UsedLayers[m_LayerCount] =
 	OL_GLOVES,
 	OL_TUNIC,
 	OL_SKIRT,
+	OL_TALISMAN,
 	OL_NECKLACE,
 	OL_HAIR,
 	OL_ROBE,
@@ -625,7 +626,11 @@ void CGumpPaperdoll::Draw()
 	{
 		glTranslatef(g_GumpTranslate.X, g_GumpTranslate.Y, 0.0f);
 
+		g_FontColorizerShader->Use();
+
 		m_TextRenderer.Draw();
+
+		UnuseShader();
 
 		glTranslatef(-g_GumpTranslate.X, -g_GumpTranslate.Y, 0.0f);
 	}
