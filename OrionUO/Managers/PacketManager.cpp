@@ -1529,9 +1529,9 @@ PACKET_HANDLER(UpdateObject)
 
 		if (item->MultiBody)
 			item->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != newX) || (obj->Y != newY) || (obj->Z != newZ));
-
-		obj->OnGraphicChange(changeGraphicDir);
 	}
+
+	obj->OnGraphicChange(changeGraphicDir);
 
 	obj->Color = ReadUInt16BE();
 

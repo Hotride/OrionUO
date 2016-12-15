@@ -908,7 +908,7 @@ void COrion::Process(const bool &rendering)
 				g_RemoveRangeXY.Y = g_Player->Y;
 			}
 
-			//RemoveRangedObjects();
+			RemoveRangedObjects();
 			g_GumpManager.RemoveRangedGumps();
 		}
 
