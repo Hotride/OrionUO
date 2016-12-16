@@ -512,7 +512,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 				group = ((CGUIGroup*)item)->Index;
 				continue;
 			}
-			if (g_SelectedObject.Object() != item && !item->IsHTMLGump())
+			else if (g_SelectedObject.Object() != item && !item->IsHTMLGump())
 			{
 				if (item->Type == GOT_SHOPRESULT)
 				{
@@ -528,7 +528,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 
 					continue;
 				}
-				if (item->Type != GOT_SKILLGROUP && item->Type != GOT_DATABOX && item->Type != GOT_TEXTENTRY)
+				else if (item->Type != GOT_SKILLGROUP && item->Type != GOT_DATABOX /*&& item->Type != GOT_TEXTENTRY*/)
 					continue;
 			}
 

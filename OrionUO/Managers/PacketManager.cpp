@@ -4420,9 +4420,9 @@ PACKET_HANDLER(OpenGump)
 			if (color)
 				color++;
 
-			go = new CGUIGenericTextEntry(index, number, color, x, y, w, length);
+			go = new CGUIGenericTextEntry(index + 1, number, color, x, y, w, length);
 			((CGUIGenericTextEntry*)go)->CheckOnSerial = true;
-			gump->Add(new CGUIHitBox(index, x, y, w, h));
+			gump->Add(new CGUIHitBox(index + 1, x, y, w, h));
 		}
 		else if (!memcmp(lowc, "textentry", 9))
 		{
@@ -4433,9 +4433,9 @@ PACKET_HANDLER(OpenGump)
 			if (color)
 				color++;
 
-			go = new CGUIGenericTextEntry(index, number, color, x, y);
+			go = new CGUIGenericTextEntry(index + 1, number, color, x, y);
 			((CGUIGenericTextEntry*)go)->CheckOnSerial = true;
-			gump->Add(new CGUIHitBox(index, x, y, w, h));
+			gump->Add(new CGUIHitBox(index + 1, x, y, w, h));
 		}
 		else if (!memcmp(lowc, "text", 4))
 		{

@@ -82,6 +82,7 @@ void CEntryText::OnClick(CGump *gump, uchar font, bool unicode, int x, int y, TE
 
 		//Изменим указатель
 		g_EntryPointer = this;
+		m_Changed = true;
 	}
 
 	//Если это ентри гампа - обновим его
