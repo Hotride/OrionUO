@@ -141,6 +141,9 @@ void CGameItem::OnGraphicChange(int direction)
 			m_Layer = direction;
 
 			m_RenderQueueIndex = 6;
+
+			if (!m_Clicked && g_ConfigManager.ShowIncomingNames && !m_Name.length())
+				g_Orion.NameReq(m_Serial);
 		}
 		else
 		{
