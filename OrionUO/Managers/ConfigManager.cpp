@@ -109,6 +109,7 @@ void CConfigManager::DefaultPage2()
 	m_DrawAuraState = DAS_ALWAYS;
 	m_DrawAuraWithCtrlPressed = true;
 	m_ScreenshotFormat = SF_PNG;
+	m_ScaleImagesInPaperdollSlots = true;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -378,6 +379,23 @@ void CConfigManager::OnChangePaperdollSlots(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
+void CConfigManager::OnChangeScaleImagesInPaperdollSlots(const bool &val)
+{
+	if (this == &g_ConfigManager && g_World != NULL)
+	{
+		m_ScaleImagesInPaperdollSlots = val;
+
+		QFOR(gump, g_GumpManager.m_Items, CGump*)
+		{
+			if (gump->GumpType == GT_PAPERDOLL)
+			{
+				gump->UpdateContent();
+				gump->WantRedraw = true;
+			}
+		}
+	}
+}
+//---------------------------------------------------------------------------
 /*!
 Получить цвет исходя из "злобности"
 @param [__in] notoriety Злобность
@@ -489,6 +507,7 @@ bool CConfigManager::Load(string path)
 		m_DrawAuraState = DAS_ALWAYS;
 		m_DrawAuraWithCtrlPressed = true;
 		m_ScreenshotFormat = SF_PNG;
+		bool scaleImagesInPaperdollSlots = true;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -526,7 +545,12 @@ bool CConfigManager::Load(string path)
 					m_DrawAuraWithCtrlPressed = (auraState & 0x80);
 
 					if (blockSize > 25)
+					{
 						m_ScreenshotFormat = file.ReadUInt8();
+
+						if (blockSize > 26)
+							scaleImagesInPaperdollSlots = file.ReadUInt8();
+					}
 				}
 			}
 			else if (blockSize > 2)
@@ -601,6 +625,7 @@ bool CConfigManager::Load(string path)
 		MarkingCaves = markingCaves;
 		ChangeFieldsGraphic = changeFieldsGraphic;
 		PaperdollSlots = paperdollSlots;
+		ScaleImagesInPaperdollSlots = scaleImagesInPaperdollSlots;
 		
 		file.Ptr = next;
 		
@@ -907,7 +932,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(26); //size of block
+	writter.WriteInt8(27); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -931,7 +956,6 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_DrawStatusConditionValue);
 	writter.WriteUInt8(m_RemoveStatusbarsWithoutObjects);
 	writter.WriteUInt8(m_ShowDefaultConsoleEntryMode);
-	writter.WriteUInt8(m_ScreenshotFormat);
 
 	uchar auraState = m_DrawAuraState;
 
@@ -939,6 +963,8 @@ void CConfigManager::Save(string path)
 		auraState |= 0x80;
 
 	writter.WriteUInt8(auraState);
+	writter.WriteUInt8(m_ScreenshotFormat);
+	writter.WriteUInt8(m_ScaleImagesInPaperdollSlots);
 
 	writter.WriteBuffer();
 

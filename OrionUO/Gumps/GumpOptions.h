@@ -98,6 +98,7 @@ private:
 	static const int ID_GO_P2_SCREENSHOT_FORMAT_PNG = 239;
 	static const int ID_GO_P2_SCREENSHOT_FORMAT_TIFF = 240;
 	static const int ID_GO_P2_SCREENSHOT_FORMAT_JPEG = 241;
+	static const int ID_GO_P2_SCALE_IMAGES_IN_PAPERDOLL_SLOTS = 242;
 	static const int ID_GO_P2_DEV_MODE_1 = 290;
 	static const int ID_GO_P2_DEV_MODE_2 = 291;
 	static const int ID_GO_P2_DEV_MODE_3 = 292;

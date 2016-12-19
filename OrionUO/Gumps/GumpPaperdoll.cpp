@@ -472,7 +472,10 @@ void CGumpPaperdoll::UpdateContent()
 
 	if (obj->IsHuman())
 	{
-		CGameItem *slotObjects[5] = { 0 };
+		bool useSlots = g_ConfigManager.PaperdollSlots;
+
+		static const int maxPaperdollSlots = 6;
+		CGameItem *slotObjects[maxPaperdollSlots] = { 0 };
 
 		IFOR(i, 0, m_LayerCount)
 		{
@@ -480,7 +483,7 @@ void CGumpPaperdoll::UpdateContent()
 
 			if (equipment != NULL && equipment->AnimID && equipment->Serial != ignoreSerial)
 			{
-				if (g_ConfigManager.PaperdollSlots)
+				if (useSlots)
 				{
 					switch (UsedLayers[i])
 					{
@@ -507,6 +510,11 @@ void CGumpPaperdoll::UpdateContent()
 						case OL_BRACELET:
 						{
 							slotObjects[4] = equipment;
+							break;
+						}
+						case OL_TUNIC:
+						{
+							slotObjects[5] = equipment;
 							break;
 						}
 						default:
@@ -546,11 +554,13 @@ void CGumpPaperdoll::UpdateContent()
 			}
 		}
 
-		if (g_ConfigManager.PaperdollSlots)
+		if (useSlots)
 		{
 			int yPtr = 75;
 
-			IFOR(i, 0, 5)
+			bool scaleImages = g_ConfigManager.ScaleImagesInPaperdollSlots;
+
+			IFOR(i, 0, maxPaperdollSlots)
 			{
 				CGUIGumppicTiled *backgroundSlot = (CGUIGumppicTiled*)m_DataBox->Add(new CGUIGumppicTiled(0x243A, 1, yPtr, 19, 20));
 				CGUIGumppic *scopeSlot = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x2344, 1, yPtr));
@@ -566,11 +576,54 @@ void CGumpPaperdoll::UpdateContent()
 					int tileOffsetX = (13 - rect.Size.Width) / 2;
 					int tileOffsetY = (14 - rect.Size.Height) / 2;
 
-					int tileX = 4 - rect.Position.X + tileOffsetX;
-					int tileY = 3 + yPtr - rect.Position.Y + tileOffsetY;
+					int tileX = 4;
+					int tileY = 3 + yPtr;
 
-					CGUITilepic *tilepic = (CGUITilepic*)m_DataBox->Add(new CGUITilepic(equipment->Graphic, equipment->Color, tileX, tileY));
-					tilepic->Serial = slotSerial;
+					bool drawed = false;
+
+					if (scaleImages && (tileOffsetX < 0 || tileOffsetY < 0))
+					{
+						CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
+
+						if (th != NULL)
+						{
+							int width = th->Width;
+							int height = th->Height;
+
+							if (tileOffsetX < 0 && width)
+							{
+								float percents = (rect.Size.Width / 13.0f) / (float)(rect.Size.Width / (float)width) / 2.0f;
+
+								tileX -= (int)(rect.Position.X / percents);
+								width = (int)(width / percents);
+							}
+							else
+								tileX -= rect.Position.X + tileOffsetX;
+
+							if (tileOffsetY < 0 && height)
+							{
+								float percents = (rect.Size.Height / 14.0f) / (float)(rect.Size.Height / (float)height) / 2.0f;
+
+								tileY -= (int)(rect.Position.Y / percents);
+								height = (int)(height / percents);
+							}
+							else
+								tileY -= rect.Position.Y + tileOffsetY;
+
+							m_DataBox->Add(new CGUITilepicScaled(equipment->Graphic, equipment->Color, tileX, tileY, width, height));
+
+							drawed = true;
+						}
+					}
+					
+					if (!drawed)
+					{
+						tileX -= rect.Position.X + tileOffsetX;
+						tileY -= rect.Position.Y + tileOffsetY;
+
+						CGUITilepic *tilepic = (CGUITilepic*)m_DataBox->Add(new CGUITilepic(equipment->Graphic, equipment->Color, tileX, tileY));
+						tilepic->Serial = slotSerial;
+					}
 
 					backgroundSlot->Serial = slotSerial;
 					scopeSlot->Serial = slotSerial;

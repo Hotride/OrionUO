@@ -52,6 +52,7 @@ class CConfigManager
 	SETGET(uchar, DrawAuraState);
 	SETGET(bool, DrawAuraWithCtrlPressed);
 	SETGET(uchar, ScreenshotFormat);
+	SETGETE(bool, ScaleImagesInPaperdollSlots, OnChangeScaleImagesInPaperdollSlots);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

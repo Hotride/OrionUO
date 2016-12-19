@@ -200,6 +200,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="GUI\GUITextEntry.h" />
     <ClInclude Include="GUI\GUITilepic.h" />
     <ClInclude Include="GUI\GUITilepicHightlighted.h" />
+    <ClInclude Include="GUI\GUITilepicScaled.h" />
     <ClInclude Include="GUI\GUIWorldMapTexture.h" />
     <ClInclude Include="Gumps\Gump.h" />
     <ClInclude Include="Gumps\GumpBaseScroll.h" />
@@ -422,6 +423,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="GUI\GUITextEntry.cpp" />
     <ClCompile Include="GUI\GUITilepic.cpp" />
     <ClCompile Include="GUI\GUITilepicHightlighted.cpp" />
+    <ClCompile Include="GUI\GUITilepicScaled.cpp" />
     <ClCompile Include="GUI\GUIWorldMapTexture.cpp" />
     <ClCompile Include="Gumps\Gump.cpp" />
     <ClCompile Include="Gumps\GumpBaseScroll.cpp" />

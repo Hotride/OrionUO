@@ -416,7 +416,7 @@ void CGumpOptions::InitToolTip()
 			}
 			case ID_GO_P2_PAPERDOLL_SLOTS:
 			{
-				g_ToolTip.Set(L"Add slots in paperdoll gump for:\nHelmet\nEarrings\nNecklace\nRing\nBracelet", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Add slots in paperdoll gump for:\nHelmet\nEarrings\nNecklace\nRing\nBracelet\nBody Sash", g_SelectedObject.Object());
 				break;
 			}
 			case ID_GO_P2_REMOVE_STATUSBARS_WITHOUT_OBJECTS:
@@ -467,6 +467,11 @@ void CGumpOptions::InitToolTip()
 			case ID_GO_P2_SCREENSHOT_FORMAT_JPEG:
 			{
 				g_ToolTip.Set(L"Save screen shots in JPEG format (maybe crashes)", g_SelectedObject.Object());
+				break;
+			}
+			case ID_GO_P2_SCALE_IMAGES_IN_PAPERDOLL_SLOTS:
+			{
+				g_ToolTip.Set(L"Scale images in paperdoll slots", g_SelectedObject.Object());
 				break;
 			}
 			case ID_GO_P2_DEV_MODE_1:
@@ -972,6 +977,10 @@ void CGumpOptions::DrawPage2()
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_PAPERDOLL_SLOTS, 0x00D2, 0x00D3, 0x00D2, 0, 550));
 	checkbox->Checked = g_OptionsConfig.PaperdollSlots;
 	checkbox->SetTextParameters(0, L"Add paperdoll slots", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_SCALE_IMAGES_IN_PAPERDOLL_SLOTS, 0x00D2, 0x00D3, 0x00D2, 200, 550));
+	checkbox->Checked = g_OptionsConfig.PaperdollSlots;
+	checkbox->SetTextParameters(0, L"Scale images in slots", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REMOVE_STATUSBARS_WITHOUT_OBJECTS, 0x00D2, 0x00D3, 0x00D2, 0, 570));
 	checkbox->Checked = g_OptionsConfig.RemoveStatusbarsWithoutObjects;
@@ -2265,6 +2274,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.ShowDefaultConsoleEntryMode = state;
 			else if (serial == ID_GO_P2_DRAW_AURA_WITH_CTRL_PRESSED)
 				g_OptionsConfig.DrawAuraWithCtrlPressed = state;
+			else if (serial == ID_GO_P2_SCALE_IMAGES_IN_PAPERDOLL_SLOTS)
+				g_OptionsConfig.ScaleImagesInPaperdollSlots = state;
 			
 
 			else if (serial == ID_GO_P2_DEV_MODE_1)
@@ -2831,6 +2842,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.DrawAuraState = g_OptionsConfig.DrawAuraState;
 			g_ConfigManager.DrawAuraWithCtrlPressed = g_OptionsConfig.DrawAuraWithCtrlPressed;
 			g_ConfigManager.ScreenshotFormat = g_OptionsConfig.ScreenshotFormat;
+			g_ConfigManager.ScaleImagesInPaperdollSlots = g_OptionsConfig.ScaleImagesInPaperdollSlots;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;
