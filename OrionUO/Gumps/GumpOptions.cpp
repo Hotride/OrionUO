@@ -979,7 +979,7 @@ void CGumpOptions::DrawPage2()
 	checkbox->SetTextParameters(0, L"Add paperdoll slots", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_SCALE_IMAGES_IN_PAPERDOLL_SLOTS, 0x00D2, 0x00D3, 0x00D2, 200, 550));
-	checkbox->Checked = g_OptionsConfig.PaperdollSlots;
+	checkbox->Checked = g_OptionsConfig.ScaleImagesInPaperdollSlots;
 	checkbox->SetTextParameters(0, L"Scale images in slots", g_OptionsTextColor);
 
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_REMOVE_STATUSBARS_WITHOUT_OBJECTS, 0x00D2, 0x00D3, 0x00D2, 0, 570));
