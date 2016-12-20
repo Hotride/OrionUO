@@ -618,8 +618,8 @@ void CGumpPaperdoll::UpdateContent()
 					
 					if (!drawed)
 					{
-						tileX -= rect.Position.X + tileOffsetX;
-						tileY -= rect.Position.Y + tileOffsetY;
+						tileX -= rect.Position.X - tileOffsetX;
+						tileY -= rect.Position.Y - tileOffsetY;
 
 						CGUITilepic *tilepic = (CGUITilepic*)m_DataBox->Add(new CGUITilepic(equipment->Graphic, equipment->Color, tileX, tileY));
 						tilepic->Serial = slotSerial;
