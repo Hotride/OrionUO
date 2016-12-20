@@ -7,18 +7,25 @@ namespace WISP_LOGGER
 {
 //----------------------------------------------------------------------------------
 CLogger g_WispLogger;
+CLogger g_WispCrashLogger;
 //----------------------------------------------------------------------------------
 CLogger::CLogger()
-: m_File(NULL)
+: m_File(NULL), m_FileName("")
 {
 }
 //----------------------------------------------------------------------------------
 CLogger::~CLogger()
 {
+	Close();
+}
+//----------------------------------------------------------------------------------
+void CLogger::Close()
+{
 	if (m_File != NULL)
 	{
 		LOG("Log closed.\n");
 		fclose(m_File);
+		m_File = NULL;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -31,6 +38,8 @@ void CLogger::Init(const string &filePath)
 
 	if (this == &g_WispLogger)
 		LOG("Log opened.\n");
+
+	m_FileName = filePath;
 }
 //----------------------------------------------------------------------------------
 void CLogger::Init(const wstring &filePath)
@@ -42,6 +51,8 @@ void CLogger::Init(const wstring &filePath)
 
 	if (this == &g_WispLogger)
 		LOG("Log opened.\n");
+
+	m_FileName = ToString(filePath);
 }
 //----------------------------------------------------------------------------------
 void CLogger::Print(const char *format, ...)
