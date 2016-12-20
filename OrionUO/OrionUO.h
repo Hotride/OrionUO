@@ -21,6 +21,8 @@ class COrion
 	SETGET(int, LandDataCount);
 	SETGET(int, StaticDataCount);
 	SETGET(int, TexturesDataCount);
+	SETGET(string, DefaultLogin);
+	SETGET(int, DefaultPort);
 
 private:
 	uint m_CRC_Table[256];
@@ -87,6 +89,8 @@ private:
 	ushort TextToGraphic(const char *text);
 
 	void CheckStaticTileFilterFiles();
+
+	void ParseCommandLine();
 
 public:
 	COrion();

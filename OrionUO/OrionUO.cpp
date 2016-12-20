@@ -97,7 +97,7 @@ PLUGIN_INIT_TYPE *g_PluginInit = NULL;
 //----------------------------------------------------------------------------------
 COrion::COrion()
 : m_ClientVersionText("2.0.3"), m_LandDataCount(0), m_StaticDataCount(0),
-m_TexturesDataCount(0)
+m_TexturesDataCount(0), m_DefaultLogin(""), m_DefaultPort(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -135,6 +135,44 @@ uint COrion::GetFileHashCode(uint address, uint size)
 	}
 
 	return (crc & 0xFFFFFFFF);
+}
+//----------------------------------------------------------------------------------
+void COrion::ParseCommandLine()
+{
+	int argc = 0;
+	LPWSTR *args = CommandLineToArgvW(GetCommandLineW(), &argc);
+
+	IFOR(i, 0, argc)
+	{
+		if (!args[i] || *args[i] != L'-')
+			continue;
+
+		string str = ToString(ToLowerW(args[i] + 1));
+
+		WISP_FILE::CTextFileParser parser("", " ,:", "", "");
+
+		STRING_LIST strings = parser.GetTokens(str.c_str());
+
+		if (str.find("login:") == 0)
+		{
+			if (strings.size() >= 3)
+			{
+				m_DefaultLogin = strings[1];
+				m_DefaultPort = atoi(strings[2].c_str());
+			}
+		}
+		else if (str.find("autologin") == 0)
+		{
+			bool enabled = true;
+
+			if (strings.size() > 1)
+				enabled = atoi(strings[1].c_str());
+
+			g_MainScreen.m_AutoLogin->Checked = enabled;
+		}
+	}
+
+	LocalFree(args);
 }
 //----------------------------------------------------------------------------------
 bool COrion::Install()
@@ -378,6 +416,8 @@ bool COrion::Install()
 	LOG("Init screen...\n");
 
 	InitScreen(GS_MAIN);
+
+	ParseCommandLine();
 
 	LOG("Installation completed!\n");
 
@@ -2388,6 +2428,14 @@ bool COrion::IsVegetation(const ushort &graphic)
 //----------------------------------------------------------------------------------
 void COrion::LoadLogin(string &login, int &port)
 {
+	if (m_DefaultPort)
+	{
+		login = m_DefaultLogin;
+		port = m_DefaultPort;
+
+		return;
+	}
+
 	WISP_FILE::CTextFileParser file(g_App.FilePath("login.cfg"), "=,", "#;", "");
 
 	while (!file.IsEOF())
