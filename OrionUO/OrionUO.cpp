@@ -1072,7 +1072,7 @@ void COrion::LoadPluginConfig()
 				FreeLibrary(dll);
 			else
 			{
-				LOG("Plugin['%s'] loaded at: 0x%08X\n", libName[i].c_str(), dll);
+				CRASHLOG("Plugin['%s'] loaded at: 0x%08X\n", libName[i].c_str(), dll);
 
 				plugin->m_PPS->Owner = plugin;
 
