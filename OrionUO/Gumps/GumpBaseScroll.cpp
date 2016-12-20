@@ -39,7 +39,7 @@ m_ScissorOffsetHeight(scissorOffsetHeight), m_MinHeight(160)
 	m_Background = (CGUIScrollBackground*)Add(new CGUIScrollBackground(0, graphic, 0, offsetY, m_Height));
 	WISP_GEOMETRY::CRect rect = m_Background->WorkSpace;
 
-	m_Minimizer->X = m_Background->Width / 2;
+	m_Minimizer->X = (m_Background->Width / 2) - (w / 2);
 
 	int heightDecBonus = m_ScissorOffsetHeight;
 

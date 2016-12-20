@@ -1,31 +1,31 @@
 ﻿/***********************************************************************************
 **
-** ScreenshotBuilder.h
+** GUITilepicScaled.h
 **
-** Copyright (C) August 2016 Hotride
+** Компонента для отображения картинки статики (масштабированная
+**
+** Copyright (C) December 2016 Hotride
 **
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef SCREENSHOTBUILDER_H
-#define SCREENSHOTBUILDER_H
+#ifndef GUITILEPICSCALED_H
+#define GUITILEPICSCALED_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
+#include "GUITilepic.h"
 //----------------------------------------------------------------------------------
-class CScreenshotBuilder
+class CGUITilepicScaled : public CGUITilepic
 {
+	SETGET(int, Width);
+	SETGET(int, Height);
+
 public:
-	CScreenshotBuilder();
-	virtual ~CScreenshotBuilder();
+	CGUITilepicScaled(const ushort &graphic, const ushort &color, const int &x, const int &y, const int &width, const int &height);
+	virtual ~CGUITilepicScaled();
 
-	void SaveScreen();
-
-	void SaveScreen(const int &x, const int &y, const int &width, const int &height);
-
-	UINT_LIST GetScenePixels(const int &x, const int &y, const int &width, const int &height);
+	virtual void Draw(const bool &checktrans = false);
+	virtual bool Select() { return false; }
 };
-//----------------------------------------------------------------------------------
-extern CScreenshotBuilder g_ScreenshotBuilder;
 //----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

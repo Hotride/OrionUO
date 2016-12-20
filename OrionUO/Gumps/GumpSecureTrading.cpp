@@ -118,6 +118,10 @@ void CGumpSecureTrading::UpdateContent()
 	{
 		Add(new CGUIGumppic(0x0866, 0, 0)); //Trade Gump
 
+		Add(new CGUIColoredPolygone(0, 0, 45, 90, 110, 60, 0xFF000001));
+
+		Add(new CGUIColoredPolygone(0, 0, 192, 70, 110, 60, 0xFF000001));
+
 		if (m_StateMy)
 			m_MyCheck = (CGUIButton*)Add(new CGUIButton(ID_GST_CHECKBOX, 0x0869, 0x086A, 0x086A, 52, 29));
 		else
@@ -218,7 +222,11 @@ void CGumpSecureTrading::Draw()
 
 	glTranslatef(g_GumpTranslate.X, g_GumpTranslate.Y, 0.0f);
 
+	g_FontColorizerShader->Use();
+
 	m_TextRenderer.Draw();
+
+	UnuseShader();
 
 	glTranslatef(-g_GumpTranslate.X, -g_GumpTranslate.Y, 0.0f);
 }

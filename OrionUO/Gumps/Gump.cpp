@@ -528,7 +528,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 
 					continue;
 				}
-				else if (item->Type != GOT_SKILLGROUP && item->Type != GOT_DATABOX)
+				else if (item->Type != GOT_SKILLGROUP && item->Type != GOT_DATABOX /*&& item->Type != GOT_TEXTENTRY*/)
 					continue;
 			}
 

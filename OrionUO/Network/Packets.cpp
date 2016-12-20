@@ -574,7 +574,7 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 			{
 				CGUITextEntry *gte = (CGUITextEntry*)item;
 
-				pack16(textptr, gte->Serial);
+				pack16(textptr, gte->Serial - 1);
 				textptr += 2;
 				int tlen = gte->m_Entry.Length();
 				pack16(textptr, tlen);

@@ -744,6 +744,15 @@
     <ClInclude Include="Managers\ScreenEffectManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Gumps\GumpSkill.h">
+      <Filter>Header Files\Gumps</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUITilepicScaled.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ExceptionFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Managers\UOFileReader.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
@@ -1381,6 +1390,18 @@
     </ClCompile>
     <ClCompile Include="Managers\PluginManager.cpp">
       <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\ScreenEffectManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Gumps\GumpSkill.cpp">
+      <Filter>Source Files\Gumps</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\GUITilepicScaled.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ExceptionFilter.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -27,9 +27,16 @@ class COrion
 	SETGET(int, LandDataCount);
 	SETGET(int, StaticDataCount);
 	SETGET(int, TexturesDataCount);
+	SETGET(string, DefaultLogin);
+	SETGET(int, DefaultPort);
 
 private:
 	uint m_CRC_Table[256];
+
+	uchar m_StaticTilesFilterFlags[0x10000];
+
+	USHORT_LIST m_StumpTiles;
+	USHORT_LIST m_CaveTiles;
 
 	deque<CIndexObjectStatic*> m_StaticAnimList;
 
@@ -87,6 +94,12 @@ private:
 	void ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, string uopFileName, string extesion, Wisp::CMappedFile* uopFile, int startIndex = 0);
 
 	void GetCurrentLocale();
+
+	ushort TextToGraphic(const char *text);
+
+	void CheckStaticTileFilterFiles();
+
+	void ParseCommandLine();
 
 public:
 	COrion();

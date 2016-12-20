@@ -64,6 +64,7 @@ xcopy /y /d  "$(SolutionDir)bin\glew32.dll" "$(OutDir)"
 
 xcopy /y /d  "$(SolutionDir)bin\zlib1.dll" "$(OutDir)"
 xcopy /y /d  "$(SolutionDir)bin\bassmidi.dll" "$(OutDir)"
+xcopy /y /d  "$(SolutionDir)bin\Freeimage.dll" "$(OutDir)"
 if exist "$(ProjectDir)Orion.dll" (del "$(ProjectDir)Orion.dll")
 xcopy /y /d  "$(SolutionDir)debug_bin\Orion.dll" "$(ProjectDir)"
 
@@ -128,6 +129,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Container.h" />
     <ClInclude Include="DefinitionMacro.h" />
     <ClInclude Include="EnumList.h" />
+    <ClInclude Include="ExceptionFilter.h" />
     <ClInclude Include="Game objects\GameCharacter.h" />
     <ClInclude Include="Game objects\GameEffect.h" />
     <ClInclude Include="Game objects\GameEffectDrag.h" />
@@ -199,6 +201,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="GUI\GUITextEntry.h" />
     <ClInclude Include="GUI\GUITilepic.h" />
     <ClInclude Include="GUI\GUITilepicHightlighted.h" />
+    <ClInclude Include="GUI\GUITilepicScaled.h" />
     <ClInclude Include="GUI\GUIWorldMapTexture.h" />
     <ClInclude Include="Gumps\Gump.h" />
     <ClInclude Include="Gumps\GumpBaseScroll.h" />
@@ -236,6 +239,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Gumps\GumpSecureTrading.h" />
     <ClInclude Include="Gumps\GumpSelectColor.h" />
     <ClInclude Include="Gumps\GumpSelectFont.h" />
+    <ClInclude Include="Gumps\GumpSkill.h" />
     <ClInclude Include="Gumps\GumpSkills.h" />
     <ClInclude Include="Gumps\GumpSpell.h" />
     <ClInclude Include="Gumps\GumpSpellbook.h" />
@@ -349,6 +353,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="ClickObject.cpp" />
     <ClCompile Include="CommonInterfaces.cpp" />
     <ClCompile Include="Container.cpp" />
+    <ClCompile Include="ExceptionFilter.cpp" />
     <ClCompile Include="Game objects\GameCharacter.cpp" />
     <ClCompile Include="Game objects\GameEffect.cpp" />
     <ClCompile Include="Game objects\GameEffectDrag.cpp" />
@@ -420,6 +425,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="GUI\GUITextEntry.cpp" />
     <ClCompile Include="GUI\GUITilepic.cpp" />
     <ClCompile Include="GUI\GUITilepicHightlighted.cpp" />
+    <ClCompile Include="GUI\GUITilepicScaled.cpp" />
     <ClCompile Include="GUI\GUIWorldMapTexture.cpp" />
     <ClCompile Include="Gumps\Gump.cpp" />
     <ClCompile Include="Gumps\GumpBaseScroll.cpp" />
@@ -457,6 +463,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="Gumps\GumpSecureTrading.cpp" />
     <ClCompile Include="Gumps\GumpSelectColor.cpp" />
     <ClCompile Include="Gumps\GumpSelectFont.cpp" />
+    <ClCompile Include="Gumps\GumpSkill.cpp" />
     <ClCompile Include="Gumps\GumpSkills.cpp" />
     <ClCompile Include="Gumps\GumpSpell.cpp" />
     <ClCompile Include="Gumps\GumpSpellbook.cpp" />
