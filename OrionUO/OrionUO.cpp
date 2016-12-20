@@ -87,6 +87,7 @@
 #include "Gumps/GumpSpellbook.h"
 #include "ServerList.h"
 #include "Gumps/GumpNotify.h"
+#include "ExceptionFilter.h"
 //----------------------------------------------------------------------------------
 typedef void __cdecl PLUGIN_INIT_TYPE(STRING_LIST&, STRING_LIST&, UINT_LIST&);
 //----------------------------------------------------------------------------------
@@ -139,6 +140,8 @@ uint COrion::GetFileHashCode(uint address, uint size)
 bool COrion::Install()
 {
 	LOG("COrion::Install()\n");
+
+	SetUnhandledExceptionFilter(OrionUnhandledExceptionFilter);
 
 	IFOR(i, 0, 256)
 	{
@@ -1029,6 +1032,8 @@ void COrion::LoadPluginConfig()
 				FreeLibrary(dll);
 			else
 			{
+				LOG("Plugin['%s'] loaded at: 0x%08X\n", libName[i].c_str(), dll);
+
 				plugin->m_PPS->Owner = plugin;
 
 				if (plugin->CanClientAccess())

@@ -129,6 +129,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Container.h" />
     <ClInclude Include="DefinitionMacro.h" />
     <ClInclude Include="EnumList.h" />
+    <ClInclude Include="ExceptionFilter.h" />
     <ClInclude Include="Game objects\GameCharacter.h" />
     <ClInclude Include="Game objects\GameEffect.h" />
     <ClInclude Include="Game objects\GameEffectDrag.h" />
@@ -352,6 +353,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="ClickObject.cpp" />
     <ClCompile Include="CommonInterfaces.cpp" />
     <ClCompile Include="Container.cpp" />
+    <ClCompile Include="ExceptionFilter.cpp" />
     <ClCompile Include="Game objects\GameCharacter.cpp" />
     <ClCompile Include="Game objects\GameEffect.cpp" />
     <ClCompile Include="Game objects\GameEffectDrag.cpp" />

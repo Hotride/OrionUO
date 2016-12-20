@@ -753,6 +753,9 @@
     <ClInclude Include="GUI\GUITilepicScaled.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="ExceptionFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1399,6 +1402,9 @@
     </ClCompile>
     <ClCompile Include="GUI\GUITilepicScaled.cpp">
       <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ExceptionFilter.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
