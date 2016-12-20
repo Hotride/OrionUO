@@ -2403,7 +2403,7 @@ bool COrion::IsTreeTile(const ushort &graphic, int &index)
 			index = g_StumpID;
 
 		return true;
-		}
+	}
 
 	return false;
 }
@@ -2427,7 +2427,7 @@ bool COrion::IsVegetation(const ushort &graphic)
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadLogin(string &login, int &port)
-	{
+{
 	if (m_DefaultPort)
 		{
 		login = m_DefaultLogin;

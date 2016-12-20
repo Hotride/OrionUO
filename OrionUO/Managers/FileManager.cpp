@@ -29,9 +29,9 @@ bool CFileManager::Load()
 		if (!m_artLegacyMUL.Load(g_App.FilePath("artLegacyMUL.uop")))
 		{
 			if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
-				return false;
+		return false;
 			if (!m_ArtMul.Load(g_App.FilePath("art.mul")))
-				return false;
+		return false;
 		}
 		if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
 		{
@@ -126,10 +126,10 @@ bool CFileManager::Load()
 			m_AnimMul[i].Load(g_App.FilePath("anim%i.mul", i));
 		}
 
-		if (UseUOP && !m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i)))
-		{
+		if (UseUOP)
+			m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i));
+		else
 			m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
-		}
 		/*else
 		{
 			/if (i == 0 || i == 1 || i == 2 || i == 5)
