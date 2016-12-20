@@ -392,7 +392,7 @@ void CGameObject::DrawEffects(int x, int y)
 		CGameCharacter *gc = GameCharacterPtr();
 
 		x += gc->OffsetX;
-		y += gc->OffsetY;
+		y += gc->OffsetY - (int)gc->OffsetZ - 3;
 	}
 
 	QFOR(effect, m_Effects, CGameEffect*)
