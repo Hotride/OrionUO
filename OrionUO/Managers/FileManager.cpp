@@ -29,9 +29,9 @@ bool CFileManager::Load()
 		if (!m_artLegacyMUL.Load(g_App.FilePath("artLegacyMUL.uop")))
 		{
 			if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
-		return false;
+				return false;
 			if (!m_ArtMul.Load(g_App.FilePath("art.mul")))
-		return false;
+				return false;
 		}
 		if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
 		{
@@ -132,11 +132,11 @@ bool CFileManager::Load()
 			m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
 		/*else
 		{
-			/if (i == 0 || i == 1 || i == 2 || i == 5)
-			{
-				if (!m_MapXUOP[i].Load(g_App.FilePath("map%ixLegacyMUL.uop", i)))
-					return false;
-			}
+		/if (i == 0 || i == 1 || i == 2 || i == 5)
+		{
+		if (!m_MapXUOP[i].Load(g_App.FilePath("map%ixLegacyMUL.uop", i)))
+		return false;
+		}
 		}*/
 
 		m_StaticIdx[i].Load(g_App.FilePath("staidx%i.mul", i));
@@ -154,7 +154,7 @@ bool CFileManager::Load()
 	IFOR(i, 0, 20)
 	{
 		string s;
-		
+
 		if (i)
 			s = g_App.FilePath("unifont%i.mul", i);
 		else
