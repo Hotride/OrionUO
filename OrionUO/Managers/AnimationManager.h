@@ -107,6 +107,8 @@ private:
 	ushort m_CharacterLayerGraphic[25];
 	ushort m_CharacterLayerAnimID[25];
 
+	void TryReadUOPAnimDimins(ANIMATION_DIMENSIONS &dimins);
+
 public:
 	CAnimationManager();
 	~CAnimationManager();

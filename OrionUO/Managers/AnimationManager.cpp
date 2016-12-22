@@ -2086,9 +2086,16 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 				result.Height = ReadInt16LE();
 			}
 		}
+		else if (g_FileManager.UseUOP)
+			TryReadUOPAnimDimins(result);
 	}
 
 	return result;
+}
+//----------------------------------------------------------------------------------
+void CAnimationManager::TryReadUOPAnimDimins(ANIMATION_DIMENSIONS &dimins)
+{
+	
 }
 //----------------------------------------------------------------------------------
 void CAnimationManager::CalculateFrameInformation(FRAME_OUTPUT_INFO &info, CGameObject *obj, const bool &mirror, const uchar &animIndex)
