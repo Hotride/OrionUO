@@ -1,19 +1,22 @@
 //----------------------------------------------------------------------------------
 #include "ExceptionFilter.h"
 //----------------------------------------------------------------------------------
+void DumpLibraryInformation()
+{
+	CRASHLOG("Library information:\n");
+}
+//----------------------------------------------------------------------------------
 void DumpCurrentRegistersInformation(CONTEXT* CR)
 {
-	CRASHLOG("EAX=%08X, EBX=%08X, ECX=%08X, EDX=%08X\n",
-		CR->Eax, CR->Ebx, CR->Ecx, CR->Edx);
-	CRASHLOG("ESI=%08X, EDI=%08X, ESP=%08X, EBP=%08X\n",
-		CR->Esi, CR->Edi, CR->Esp, CR->Ebp);
-	CRASHLOG("EIP=%08X, EFLAGS=%08X\n\n",
-		CR->Eip, CR->EFlags);
+	CRASHLOG("EAX=%08X, EBX=%08X, ECX=%08X, EDX=%08X\n", CR->Eax, CR->Ebx, CR->Ecx, CR->Edx);
+	CRASHLOG("ESI=%08X, EDI=%08X, ESP=%08X, EBP=%08X\n", CR->Esi, CR->Edi, CR->Esp, CR->Ebp);
+	CRASHLOG("EIP=%08X, EFLAGS=%08X\n\n", CR->Eip, CR->EFlags);
 
 	CRASHLOG("Bytes at EIP:\n");
-	CRASHLOG_DUMP((unsigned char*)CR->Eip, 16);
+	CRASHLOG_DUMP((puchar)CR->Eip, 16);
+
 	CRASHLOG("Bytes at ESP:\n");
-	CRASHLOG_DUMP((unsigned char*)CR->Esp, 64);
+	CRASHLOG_DUMP((puchar)CR->Esp, 64);
 }
 //----------------------------------------------------------------------------------
 LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo)
@@ -31,8 +34,10 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 
 		if (errorCount > 100 && (ticks - lastErrorTime) < 5000)
 		{
-			if (MessageBoxA(0, "UO client performed an unrecoverable invalid operation.\nTerminate?", 0, MB_ICONSTOP | MB_YESNO) == IDYES)
+			if (MessageBoxA(0, "Orion client performed an unrecoverable invalid operation.\nTerminate?", 0, MB_ICONSTOP | MB_YESNO) == IDYES)
 			{
+				DumpLibraryInformation();
+
 				DumpCurrentRegistersInformation(exceptionInfo->ContextRecord);
 
 				ExitProcess(1);
@@ -45,7 +50,7 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 			lastErrorTime = ticks;
 		}
 
-		if (errorCount < 2)
+		if (errorCount == 1)
 			DumpCurrentRegistersInformation(exceptionInfo->ContextRecord);
 	}
 
