@@ -2767,7 +2767,7 @@ void COrion::LoadIndexFiles()
 			else
 		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartlegacymul", ".tga", &g_FileManager.m_gumpartLegacyMUL);
 
-	ReadMulIndexFile(MAX_LAND_TEXTURES_DATA_INDEX_COUNT, [&](int i){ return &m_TextureDataIndex[i]; }, (uint)g_FileManager.m_TextureMul.Start, TexturePtr, [&TexturePtr]() { return ++TexturePtr; });
+	ReadMulIndexFile(g_FileManager.m_TextureIdx.Size / sizeof(TEXTURE_IDX_BLOCK), [&](int i){ return &m_TextureDataIndex[i]; }, (uint)g_FileManager.m_TextureMul.Start, TexturePtr, [&TexturePtr]() { return ++TexturePtr; });
 	ReadMulIndexFile(MAX_LIGHTS_DATA_INDEX_COUNT, [&](int i){ return &m_LightDataIndex[i]; }, (uint)g_FileManager.m_LightMul.Start, LightPtr, [&LightPtr]() { return ++LightPtr; });
 	ReadMulIndexFile(g_MultiIndexCount, [&](int i){ return &m_MultiDataIndex[i]; }, (uint)g_FileManager.m_MultiMul.Start, MultiPtr, [&MultiPtr]() { return ++MultiPtr; });
 }
