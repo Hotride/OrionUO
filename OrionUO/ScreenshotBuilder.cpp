@@ -91,7 +91,7 @@ UINT_LIST CScreenshotBuilder::GetScenePixels(const int &x, const int &y, const i
 {
 	UINT_LIST pixels(width * height);
 
-	glReadPixels(x, y, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, &pixels[0]);
+	glReadPixels(x, g_OrionWindow.Size.Height - y - height, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, &pixels[0]);
 
 	return pixels;
 }
