@@ -102,6 +102,8 @@ public:
 	//Данные из тайлдаты по статике
 	vector<STATIC_GROUP> m_StaticData;
 
+	static UINT_LIST FindPattern(puchar ptr, const int &size, const UCHAR_LIST &pattern);
+
 	bool Install();
 	void Uninstall();
 

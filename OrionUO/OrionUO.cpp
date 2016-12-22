@@ -175,6 +175,25 @@ void COrion::ParseCommandLine()
 	LocalFree(args);
 }
 //----------------------------------------------------------------------------------
+UINT_LIST COrion::FindPattern(puchar ptr, const int &size, const UCHAR_LIST &pattern)
+{
+	UINT_LIST result;
+
+	int patternSize = pattern.size();
+
+	int count = size - patternSize - 1;
+
+	IFOR(i, 0, count)
+	{
+		if (!memcmp(&ptr[0], &pattern[0], patternSize))
+			result.push_back(0x00400000 + i);
+
+		ptr++;
+	}
+
+	return result;
+}
+//----------------------------------------------------------------------------------
 bool COrion::Install()
 {
 	LOG("COrion::Install()\n");

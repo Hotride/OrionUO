@@ -1,6 +1,8 @@
 //----------------------------------------------------------------------------------
 #include "ExceptionFilter.h"
 #include "OrionWindow.h"
+#include "OrionUO.h"
+#include "Wisp/WispMappedFile.h"
 #include <psapi.h>
 #include <tlhelp32.h>
 #include "VMQuery.h"
@@ -142,6 +144,27 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 				DumpLibraryInformation();
 
 				DumpCurrentRegistersInformation(exceptionInfo->ContextRecord);
+
+				WISP_FILE::CMappedFile file;
+
+				wchar_t fileName[MAX_PATH] = { 0 };
+				GetModuleFileName(0, fileName, MAX_PATH);
+
+				if (file.Load(fileName))
+				{
+					UCHAR_LIST pattern;
+					puchar eipBytes = (puchar)exceptionInfo->ContextRecord->Eip;
+
+					IFOR(i, 0, 16)
+						pattern.push_back(eipBytes[i]);
+
+					UINT_LIST list = COrion::FindPattern(file.Start, file.Size, pattern);
+
+					for (const int &item : list)
+						CRASHLOG("Address in exe (by EIP): 0x%08X\n", item);
+
+					file.Unload();
+				}
 
 				ExitProcess(1);
 			}
