@@ -756,6 +756,9 @@
     <ClInclude Include="ExceptionFilter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="VMQuery.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1404,6 +1407,9 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="ExceptionFilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VMQuery.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
