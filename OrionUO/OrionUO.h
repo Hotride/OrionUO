@@ -90,6 +90,8 @@ private:
 
 	void CheckStaticTileFilterFiles();
 
+	string DecodeArgumentString(const char *text);
+
 	void ParseCommandLine();
 
 public:

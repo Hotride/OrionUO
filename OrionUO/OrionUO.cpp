@@ -137,6 +137,11 @@ uint COrion::GetFileHashCode(uint address, uint size)
 	return (crc & 0xFFFFFFFF);
 }
 //----------------------------------------------------------------------------------
+string COrion::DecodeArgumentString(const char *text)
+{
+	return text;
+}
+//----------------------------------------------------------------------------------
 void COrion::ParseCommandLine()
 {
 	int argc = 0;

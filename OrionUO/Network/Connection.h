@@ -17,6 +17,12 @@
 class CSocket : public WISP_NETWORK::CConnection
 {
 	SETGET(bool, GameSocket);
+	SETGET(bool, UseProxy);
+	SETGET(string, ProxyAddress);
+	SETGET(int, ProxyPort);
+	SETGET(bool, ProxySocks5);
+	SETGET(string, ProxyAccount);
+	SETGET(string, ProxyPassword);
 
 private:
 	CDecompressingCopier m_Decompressor;
@@ -24,6 +30,8 @@ private:
 public:
 	CSocket(bool gameSocket);
 	~CSocket();
+
+	virtual bool Connect(const string &address, const int &port);
 
 	virtual UCHAR_LIST Decompression(UCHAR_LIST data);
 };
