@@ -2095,7 +2095,9 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 //----------------------------------------------------------------------------------
 void CAnimationManager::TryReadUOPAnimDimins(ANIMATION_DIMENSIONS &dimins)
 {
-	
+	//We'll either read, decompress and then read mmaped uop here, which might be slow and we might get virtual memory issues later on.
+	//Or we have to implement a method to read, decompress and save temp uop files somewhere in InitIndexReplaces() and then use a file stream to read those files during the runtime in this method.
+	//Not sure what to chose yet. 2nd option has complications because of the temp files, but is more resource friendly. 1st option is a memory hit and actually might be slower.
 }
 //----------------------------------------------------------------------------------
 void CAnimationManager::CalculateFrameInformation(FRAME_OUTPUT_INFO &info, CGameObject *obj, const bool &mirror, const uchar &animIndex)
