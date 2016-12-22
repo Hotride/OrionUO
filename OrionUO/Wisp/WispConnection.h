@@ -29,7 +29,7 @@ public:
 
 	class CPacketMessage *m_MessageParser;
 
-	bool Connect(const string &address, const int &port);
+	virtual bool Connect(const string &address, const int &port);
 	void Disconnect();
 
 	bool ReadyRead();

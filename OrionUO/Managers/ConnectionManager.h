@@ -23,6 +23,13 @@ extern NETWORK_ACTION_TYPE *g_NetworkAction;
 //!Класс менеджера подключения к серверу
 class CConnectionManager
 {
+	SETGETE(bool, UseProxy, OnChangeUseProxy);
+	SETGETE(string, ProxyAddress, OnChangeProxyAddress);
+	SETGETE(int, ProxyPort, OnChangeProxyPort);
+	SETGETE(bool, ProxySocks5, OnChangeProxySocks5);
+	SETGETE(string, ProxyAccount, OnChangeProxyAccount);
+	SETGETE(string, ProxyPassword, OnChangeProxyPassword);
+
 private:
 	//!Подключение к сокету авторизации
 	CSocket m_LoginSocket;

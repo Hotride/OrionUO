@@ -78,7 +78,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObjectTest> &list, const int &x, c
 					if (!IsImpassable(tiledataFlags))
 						flags = POF_IMPASSABLE_OR_SURFACE | POF_SURFACE | POF_BRIDGE;
 
-					if (stepState == PSS_ON_SEA_HORSE && IsNoDiagonal(tiledataFlags))
+					if (stepState == PSS_FLYING && IsNoDiagonal(tiledataFlags))
 						flags |= POF_NO_DIAGONAL;
 				}
 

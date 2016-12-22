@@ -321,6 +321,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="TextEngine\TextRenderer.h" />
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="ToolTip.h" />
+    <ClInclude Include="VMQuery.h" />
     <ClInclude Include="Walker\FastWalk.h" />
     <ClInclude Include="Walker\PathFinder.h" />
     <ClInclude Include="Walker\PathNode.h" />
@@ -540,6 +541,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="TextEngine\TextRenderer.cpp" />
     <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="ToolTip.cpp" />
+    <ClCompile Include="VMQuery.cpp" />
     <ClCompile Include="Walker\FastWalk.cpp" />
     <ClCompile Include="Walker\PathFinder.cpp" />
     <ClCompile Include="Walker\PathNode.cpp" />

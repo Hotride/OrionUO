@@ -24,7 +24,9 @@ NETWORK_INIT_TYPE *g_NetworkInit = NULL;
 NETWORK_ACTION_TYPE *g_NetworkAction = NULL;
 //----------------------------------------------------------------------------------
 CConnectionManager::CConnectionManager()
-: m_IsLoginSocket(true), m_LoginSocket(false), m_GameSocket(true)
+: m_IsLoginSocket(true), m_LoginSocket(false), m_GameSocket(true), m_UseProxy(false),
+m_ProxyAddress(""), m_ProxyPort(0), m_ProxySocks5(false), m_ProxyAccount(""),
+m_ProxyPassword("")
 {
 }
 //----------------------------------------------------------------------------------
@@ -36,6 +38,42 @@ CConnectionManager::~CConnectionManager()
 
 	if (m_GameSocket.Connected)
 		m_GameSocket.Disconnect();
+}
+//----------------------------------------------------------------------------------
+void CConnectionManager::OnChangeUseProxy(const bool &val)
+{
+	m_LoginSocket.UseProxy = val;
+	m_GameSocket.UseProxy = val;
+}
+//----------------------------------------------------------------------------------
+void CConnectionManager::OnChangeProxyAddress(const string &val)
+{
+	m_LoginSocket.ProxyAddress = val;
+	m_GameSocket.ProxyAddress = val;
+}
+//----------------------------------------------------------------------------------
+void CConnectionManager::OnChangeProxyPort(const int &val)
+{
+	m_LoginSocket.ProxyPort = val;
+	m_GameSocket.ProxyPort = val;
+}
+//----------------------------------------------------------------------------------
+void CConnectionManager::OnChangeProxySocks5(const bool &val)
+{
+	m_LoginSocket.ProxySocks5 = val;
+	m_GameSocket.ProxySocks5 = val;
+}
+//----------------------------------------------------------------------------------
+void CConnectionManager::OnChangeProxyAccount(const string &val)
+{
+	m_LoginSocket.ProxyAccount = val;
+	m_GameSocket.ProxyAccount = val;
+}
+//----------------------------------------------------------------------------------
+void CConnectionManager::OnChangeProxyPassword(const string &val)
+{
+	m_LoginSocket.ProxyPassword = val;
+	m_GameSocket.ProxyPassword = val;
 }
 //----------------------------------------------------------------------------------
 /*!
