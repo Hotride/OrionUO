@@ -91,6 +91,18 @@ void CMainScreen::ProcessSmoothAction(uchar action)
 		g_OrionWindow.Destroy();
 }
 //----------------------------------------------------------------------------------
+void CMainScreen::SetAccounting(const string &account, const string &password)
+{
+	m_Account->SetText(account);
+	m_Password->SetText(password);
+
+	int len = password.length();
+	m_MainGump.m_PasswordFake->Clear();
+
+	IFOR(i, 0, len)
+		m_MainGump.m_PasswordFake->Insert(L'*');
+}
+//----------------------------------------------------------------------------------
 void CMainScreen::Paste()
 {
 	if (g_EntryPointer == m_MainGump.m_PasswordFake)

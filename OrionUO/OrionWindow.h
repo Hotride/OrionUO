@@ -20,6 +20,7 @@ public:
 
 	static const int RENDER_TIMER_ID = 1;
 	static const int UPDATE_TIMER_ID = 2;
+	static const int FASTLOGIN_TIMER_ID = 3;
 
 	void SetRenderTimerDelay(const int &delay);
 

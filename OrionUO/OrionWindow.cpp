@@ -351,6 +351,11 @@ void COrionWindow::OnTimer(uint id)
 		g_Ticks = timeGetTime();
 		g_Orion.Process(false);
 	}
+	else if (id == FASTLOGIN_TIMER_ID)
+	{
+		RemoveTimer(FASTLOGIN_TIMER_ID);
+		g_Orion.Connect();
+	}
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedTimer *timer)
