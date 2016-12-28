@@ -1608,19 +1608,21 @@ PACKET_HANDLER(UpdateObject)
 		obj2->MapIndex = g_CurrentMap;
 
 		graphic = ReadUInt16BE();
+		ushort color = 0;
 
 		uchar layer = ReadUInt8();
 
 		if (m_ClientVersion >= CV_70331)
-			obj2->Color = ReadUInt16BE();
+			color = ReadUInt16BE();
 		else if (graphic & 0x8000)
 		{
 			graphic &= 0x7FFF;
 
-			obj2->Color = ReadUInt16BE();
+			color = ReadUInt16BE();
 		}
 
 		obj2->Graphic = graphic;
+		obj2->Color = color;
 
 		g_World->PutEquipment(obj2, obj, layer);
 		obj2->OnGraphicChange();
