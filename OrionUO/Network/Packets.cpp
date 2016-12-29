@@ -1273,4 +1273,26 @@ CPacketSellRequest::CPacketSellRequest(CGumpShop *gump)
 		}
 	}
 }
+//---------------------------------------------------------------------------
+CPacketUseCombatAbility::CPacketUseCombatAbility(const uchar &index)
+: CPacket(15)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x000F);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x0019);
+	WriteUInt32BE(0x00000000);
+	WriteUInt8(index);
+	WriteUInt8(0x0A);
+}
+//---------------------------------------------------------------------------
+CPacketTargetSelectedObject::CPacketTargetSelectedObject(const uint &useObjectSerial, const uint &targetObjectSerial)
+: CPacket(13)
+{
+	WriteUInt8(0xBF);
+	WriteUInt16BE(0x000D);
+	WriteUInt16BE(0x002C);
+	WriteUInt32BE(useObjectSerial);
+	WriteUInt32BE(targetObjectSerial);
+}
 //----------------------------------------------------------------------------------

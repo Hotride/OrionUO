@@ -459,5 +459,17 @@ public:
 	CPacketSellRequest(class CGumpShop *gump);
 };
 //----------------------------------------------------------------------------------
+class CPacketUseCombatAbility : public CPacket
+{
+public:
+	CPacketUseCombatAbility(const uchar &index);
+};
+//----------------------------------------------------------------------------------
+class CPacketTargetSelectedObject : public CPacket
+{
+public:
+	CPacketTargetSelectedObject(const uint &useObjectSerial, const uint &targetObjectSerial);
+};
+//----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------
