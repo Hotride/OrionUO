@@ -938,7 +938,7 @@ void CGumpSpellbook::ChangePage(int newPage)
 
 	g_Orion.PlaySoundEffect(0x0055);
 }
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const string CGumpSpellbook::m_SpellName1[SPELLBOOK_1_SPELLS_COUNT][2] =
 {
 	{ "Clumsy", "U J" },
@@ -1006,7 +1006,7 @@ const string CGumpSpellbook::m_SpellName1[SPELLBOOK_1_SPELLS_COUNT][2] =
 	{ "Fire Elemental", "K V X F" },
 	{ "Water Elemental", "K V X A" }
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const string CGumpSpellbook::m_SpellReagents1[SPELLBOOK_1_SPELLS_COUNT] =
 {
 	"Bloodmoss\nNightshade",
@@ -1074,7 +1074,7 @@ const string CGumpSpellbook::m_SpellReagents1[SPELLBOOK_1_SPELLS_COUNT] =
 	"Bloodmoss\nMandrake root\nSpiders silk\nSulfurous ash",
 	"Bloodmoss\nMandrake root\nSpiders silk"
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const string CGumpSpellbook::m_SpellName2[SPELLBOOK_2_SPELLS_COUNT][2]
 {
 	{ "Animate Dead", "Uus Corp" },
@@ -1095,7 +1095,7 @@ const string CGumpSpellbook::m_SpellName2[SPELLBOOK_2_SPELLS_COUNT][2]
 	{ "Wraith Form", "Rel Xen Um" },
 	{ "Exorcism", "Ort Corp Grav" }
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const string CGumpSpellbook::m_SpellReagents2[SPELLBOOK_2_SPELLS_COUNT] =
 {
 	"Daemon Blood\nGrave Dust",
@@ -1116,7 +1116,7 @@ const string CGumpSpellbook::m_SpellReagents2[SPELLBOOK_2_SPELLS_COUNT] =
 	"Nox Crystal\nPig Iron",
 	"Nox Crystal\nGrave Dust"
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const string CGumpSpellbook::m_SpellName3[SPELLBOOK_3_SPELLS_COUNT][2]
 {
 	{ "Cleanse by Fire", "Expor Flamus" },
@@ -1130,7 +1130,7 @@ const string CGumpSpellbook::m_SpellName3[SPELLBOOK_3_SPELLS_COUNT][2]
 	{ "Remove Curse", "Extermo Vomica" },
 	{ "Sacred Journey", "Sanctum Viatas" }
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const string CGumpSpellbook::m_SpellName4[SPELLBOOK_4_SPELLS_COUNT]
 {
 	"Honorable Execution",
@@ -1140,7 +1140,7 @@ const string CGumpSpellbook::m_SpellName4[SPELLBOOK_4_SPELLS_COUNT]
 	"Lightning Strike",
 	"Momentum Strike"
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const string CGumpSpellbook::m_SpellName5[SPELLBOOK_5_SPELLS_COUNT]
 {
 	"Focus Attack",
@@ -1152,7 +1152,7 @@ const string CGumpSpellbook::m_SpellName5[SPELLBOOK_5_SPELLS_COUNT]
 	"Shadowjump",
 	"Mirror Image"
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const string CGumpSpellbook::m_SpellName6[SPELLBOOK_6_SPELLS_COUNT][2]
 {
 	{ "Arcane Circle", "Myrshalee" },
@@ -1172,7 +1172,7 @@ const string CGumpSpellbook::m_SpellName6[SPELLBOOK_6_SPELLS_COUNT][2]
 	{ "Gift of Life", "Illorae" },
 	{ "Arcane Empowerment", "Aslavdra" }
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const string CGumpSpellbook::m_SpellName7[SPELLBOOK_7_SPELLS_COUNT][2]
 {
 	{ "Nether Bolt", "In Corp Ylem" },
@@ -1206,7 +1206,7 @@ const string CGumpSpellbook::m_SpellName7[SPELLBOOK_7_SPELLS_COUNT][2]
 	{ "Mana Shield", "Faerkulggen" },
 	{ "Summon Reaper", "Lartarisstree" }
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const SPELL_REQURIES CGumpSpellbook::m_SpellRequries2[SPELLBOOK_2_SPELLS_COUNT] =
 {
 	{ 23, 40 },
@@ -1227,7 +1227,7 @@ const SPELL_REQURIES CGumpSpellbook::m_SpellRequries2[SPELLBOOK_2_SPELLS_COUNT] 
 	{ 17, 20 },
 	{ 40, 80 }
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const PALADIN_SPELL_REQURIES CGumpSpellbook::m_SpellRequries3[SPELLBOOK_3_SPELLS_COUNT] =
 {
 	{ 10, 5, 10 },
@@ -1241,7 +1241,7 @@ const PALADIN_SPELL_REQURIES CGumpSpellbook::m_SpellRequries3[SPELLBOOK_3_SPELLS
 	{ 20, 5, 10 },
 	{ 10, 15, 15 }
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const SPELL_REQURIES CGumpSpellbook::m_SpellRequries4[SPELLBOOK_4_SPELLS_COUNT] =
 {
 	{ 0, 25 },
@@ -1251,7 +1251,7 @@ const SPELL_REQURIES CGumpSpellbook::m_SpellRequries4[SPELLBOOK_4_SPELLS_COUNT] 
 	{ 10, 50 },
 	{ 10, 70 }
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const SPELL_REQURIES CGumpSpellbook::m_SpellRequries5[SPELLBOOK_5_SPELLS_COUNT] =
 {
 	{ 10, 30 },
@@ -1263,7 +1263,7 @@ const SPELL_REQURIES CGumpSpellbook::m_SpellRequries5[SPELLBOOK_5_SPELLS_COUNT] 
 	{ 15, 50 },
 	{ 10, 20 }
 };
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 const SPELL_REQURIES CGumpSpellbook::m_SpellRequries6[SPELLBOOK_6_SPELLS_COUNT] =
 {
 	{ 24, 0 },
@@ -1283,8 +1283,7 @@ const SPELL_REQURIES CGumpSpellbook::m_SpellRequries6[SPELLBOOK_6_SPELLS_COUNT] 
 	{ 70, 38 },
 	{ 50, 24 }
 };
-//----------------------------------------------------------------------------
-
+//----------------------------------------------------------------------------------
 //?!?!?
 /*"Enchanted Summoning",
 "Anticipate Hit",
@@ -1317,4 +1316,4 @@ const SPELL_REQURIES CGumpSpellbook::m_SpellRequries6[SPELLBOOK_6_SPELLS_COUNT] 
 "Boarding",
 "Flaming Shot",
 "Playing The Odds"*/
-//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------

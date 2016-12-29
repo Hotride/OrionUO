@@ -502,6 +502,8 @@ public:
 	void RequestQuestGump();
 
 	void DisconnectGump();
+
+	void OpenCombatBookGump();
 };
 //----------------------------------------------------------------------------------
 extern COrion g_Orion;

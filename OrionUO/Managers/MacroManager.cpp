@@ -1294,13 +1294,19 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			}
 			case MC_PRIMARY_ABILITY:
 			{
-				CPacketUseCombatAbility(0).Send();
+				uchar ability = g_AbilityList[g_Ability[0]] & 0x00FF;
+
+				if (ability)
+					CPacketUseCombatAbility(ability).Send();
 
 				break;
 			}
 			case MC_SECONDARY_ABILITY:
 			{
-				CPacketUseCombatAbility(0).Send();
+				uchar ability = g_AbilityList[g_Ability[1]] & 0x00FF;
+
+				if (ability)
+					CPacketUseCombatAbility(ability).Send();
 
 				break;
 			}

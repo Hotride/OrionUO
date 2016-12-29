@@ -9,6 +9,10 @@
 //----------------------------------------------------------------------------------
 #include "GamePlayer.h"
 #include "GameItem.h"
+#include "ObjectOnCursor.h"
+#include "../Gumps/GumpCombatBook.h"
+#include "../Managers/GumpManager.h"
+#include "../OrionUO.h"
 //----------------------------------------------------------------------------------
 CPlayer *g_Player = NULL;
 //----------------------------------------------------------------------------------
@@ -152,5 +156,116 @@ CGameItem *CPlayer::FindBandage()
 		item = item->FindItem(0x0E21);
 
 	return item;
+}
+//---------------------------------------------------------------------------
+void CPlayer::UpdateAbilities()
+{
+	ushort equippedGraphic = 0;
+	uint ignoreSerial = 0;
+
+	if (g_ObjectInHand != NULL)
+		ignoreSerial = g_ObjectInHand->Serial;
+
+	CGameItem *layerObject = g_Player->FindLayer(OL_1_HAND);
+
+	if (layerObject != NULL)
+	{
+		if (layerObject->Serial != ignoreSerial)
+			equippedGraphic = layerObject->Graphic;
+	}
+	else
+	{
+		layerObject = g_Player->FindLayer(OL_2_HAND);
+
+		if (layerObject != NULL && layerObject->Serial != ignoreSerial)
+			equippedGraphic = layerObject->Graphic;
+	}
+
+	int found[2] = { -1, -1 };
+
+	if (equippedGraphic)
+	{
+		ushort graphics[2] = { equippedGraphic, 0 };
+		ushort imageID = layerObject->GetStaticData()->AnimID;
+		int count = 1;
+
+		ushort testGraphic = equippedGraphic - 1;
+
+		if (g_Orion.m_StaticData[testGraphic / 32].Tiles[testGraphic % 32].AnimID == imageID)
+		{
+			graphics[1] = testGraphic;
+			count = 2;
+		}
+		else
+		{
+			testGraphic = equippedGraphic + 1;
+
+			if (g_Orion.m_StaticData[testGraphic / 32].Tiles[testGraphic % 32].AnimID == imageID)
+			{
+				graphics[1] = testGraphic;
+				count = 2;
+			}
+		}
+
+		IFOR(k, 0, count)
+		{
+			testGraphic = graphics[k];
+			int foundIndex = 0;
+
+			IFOR(i, 0, 2)
+			{
+				IFOR(j, 0, MAX_ABILITIES_COUNT)
+				{
+					if (i && found[0] == j)
+						continue;
+
+					USHORT_LIST list = CGumpCombatBook::GetItemsList(j);
+
+					int size = (int)list.size();
+
+					IFOR(item, 0, size)
+					{
+						if (list[item] == testGraphic)
+						{
+							if (i && item < foundIndex)
+							{
+								found[1] = found[0];
+								found[0] = j;
+
+								break;
+							}
+
+							foundIndex = item;
+							found[i] = j;
+
+							break;
+						}
+					}
+
+					if (found[i] != -1)
+						break;
+				}
+			}
+
+			if (found[0] != -1 && found[1] != -1)
+				break;
+		}
+	}
+
+	if (found[0] != -1 && found[1] != -1)
+	{
+		g_Ability[0] = found[0];
+		g_Ability[1] = found[1];
+	}
+	else
+	{
+		g_Ability[0] = 4;
+		g_Ability[1] = 10;
+	}
+
+	g_GumpManager.UpdateContent(0, 0, GT_ABILITY);
+	g_GumpManager.UpdateContent(1, 0, GT_ABILITY);
+
+	g_GumpManager.UpdateContent(0, 0, GT_COMBAT_BOOK);
 }
 //---------------------------------------------------------------------------

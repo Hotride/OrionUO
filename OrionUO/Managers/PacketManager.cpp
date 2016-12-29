@@ -865,6 +865,9 @@ PACKET_HANDLER(EnterWorld)
 		g_Party.Inviter = 0;
 		g_Party.Clear();
 
+		g_Ability[0] = 4;
+		g_Ability[1] = 10;
+
 		g_ResizedGump = NULL;
 	}
 
@@ -1637,6 +1640,9 @@ PACKET_HANDLER(UpdateObject)
 		serial = ReadUInt32BE();
 	}
 
+	if (obj->IsPlayer())
+		g_Player->UpdateAbilities();
+
 	SendMegaClilocRequests(megaClilocRequestList);
 }
 //----------------------------------------------------------------------------------
@@ -1684,6 +1690,9 @@ PACKET_HANDLER(EquipItem)
 		obj->Clear();
 	else if (layer < OL_MOUNT)
 		g_GumpManager.UpdateContent(cserial, 0, GT_PAPERDOLL);
+
+	if (cserial == g_PlayerSerial && (layer == OL_1_HAND || layer == OL_2_HAND))
+		g_Player->UpdateAbilities();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateContainedItem)
@@ -2805,6 +2814,16 @@ PACKET_HANDLER(ExtendedCommand)
 						spellbook->AddItem(spellItem);
 					}
 				}
+			}
+
+			break;
+		}
+		case 0x21:
+		{
+			IFOR(i, 0, 2)
+			{
+				g_AbilityList[g_Ability[i]] = g_AbilityList[g_Ability[i]] & 0x00FF;
+				g_GumpManager.UpdateContent(i, 0, GT_ABILITY);
 			}
 
 			break;

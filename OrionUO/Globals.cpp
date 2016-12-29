@@ -150,6 +150,15 @@ uint g_PingByWalk[0x100][2] = { 0 };
 uint g_Ping = 0;
 
 bool g_DrawAura = false;
+
+ushort g_AbilityList[MAX_ABILITIES_COUNT] =
+{
+	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+	10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+	20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+	30
+};
+uchar g_Ability[2] = { 4, 10 };
 //----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y)
 {
@@ -192,6 +201,21 @@ void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y)
 		y /= 2;
 		x += y;
 	}
+}
+//----------------------------------------------------------------------------------
+string ToCamelCase(string text)
+{
+	bool lastSpace = true;
+
+	for (char &c : text)
+	{
+		if (lastSpace && (c >= 'a' && c <= 'z'))
+			c = 'A' + (c - 'a');
+
+		lastSpace = (c == ' ');
+	}
+
+	return text;
 }
 //----------------------------------------------------------------------------------
 int GetDistance(CGameObject *current, CGameObject *target)

@@ -356,6 +356,9 @@ void CGumpPaperdoll::PrepareContent()
 					//g_LastGumpLeftMouseDown = 0;
 					g_PressedObject.ClearLeft();
 					g_MouseManager.LeftDropPosition = g_MouseManager.Position;
+
+					if (layer == OL_1_HAND || layer == OL_2_HAND)
+						g_Player->UpdateAbilities();
 				}
 			}
 		}
@@ -912,6 +915,12 @@ bool CGumpPaperdoll::OnLeftMouseButtonDoubleClick()
 		else if (serial == ID_GP_BUTTON_VIRTURE)
 		{
 			CPacketVirtureRequest(1).Send();
+
+			result = true;
+		}
+		else if (serial == ID_GP_COMBAT_BOOK)
+		{
+			g_Orion.OpenCombatBookGump();
 
 			result = true;
 		}

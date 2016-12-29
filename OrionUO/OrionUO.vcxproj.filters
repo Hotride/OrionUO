@@ -759,6 +759,15 @@
     <ClInclude Include="VMQuery.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Gumps\GumpCombatBook.h">
+      <Filter>Header Files\Gumps</Filter>
+    </ClInclude>
+    <ClInclude Include="Gumps\GumpAbility.h">
+      <Filter>Header Files\Gumps</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIGlobalColor.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1411,6 +1420,15 @@
     </ClCompile>
     <ClCompile Include="VMQuery.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Gumps\GumpCombatBook.cpp">
+      <Filter>Source Files\Gumps</Filter>
+    </ClCompile>
+    <ClCompile Include="Gumps\GumpAbility.cpp">
+      <Filter>Source Files\Gumps</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\GUIGlobalColor.cpp">
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
