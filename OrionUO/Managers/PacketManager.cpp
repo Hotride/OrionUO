@@ -2028,6 +2028,7 @@ PACKET_HANDLER(DeleteObject)
 
 	if (obj != NULL)
 	{
+		bool updateAbilities = false;
 		uint cont = obj->Container;
 
 		if (cont != 0xFFFFFFFF)
@@ -2036,6 +2037,12 @@ PACKET_HANDLER(DeleteObject)
 
 			if (top != NULL)
 			{
+				if (top->IsPlayer() && !obj->NPC)
+				{
+					CGameItem *item = (CGameItem*)obj;
+					updateAbilities = (item->Layer == OL_1_HAND || item->Layer == OL_2_HAND);
+				}
+
 				CGameObject *tradeBox = top->FindSecureTradeBox();
 
 				if (tradeBox != NULL)
@@ -2084,7 +2091,12 @@ PACKET_HANDLER(DeleteObject)
 		if (obj->NPC && g_Party.Contains(obj->Serial))
 			obj->RemoveRender();
 		else
+		{
 			g_World->RemoveObject(obj);
+
+			if (updateAbilities)
+				g_Player->UpdateAbilities();
+		}
 	}
 }
 //----------------------------------------------------------------------------------
