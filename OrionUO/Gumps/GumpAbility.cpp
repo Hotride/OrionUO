@@ -60,10 +60,8 @@ void CGumpAbility::GUMP_BUTTON_EVENT_C
 		m_LockMoving = !m_LockMoving;
 }
 //----------------------------------------------------------------------------------
-bool CGumpAbility::OnLeftMouseButtonDoubleClick()
+void CGumpAbility::OnAbilityUse(const int &index)
 {
-	int index = (m_Serial != 0 ? 1 : 0);
-
 	ushort &ability = g_AbilityList[g_Ability[index]];
 
 	CPacketUseCombatAbility(ability & 0xFF).Send();
@@ -75,13 +73,17 @@ bool CGumpAbility::OnLeftMouseButtonDoubleClick()
 			ushort &tempAbility = g_AbilityList[i];
 			tempAbility &= 0x00FF;
 		}
-
-		g_GumpManager.UpdateContent(index, 0, GT_ABILITY);
 	}
 
 	ability ^= 0x8000;
 
-	m_WantUpdateContent = true;
+	g_GumpManager.UpdateContent(0, 0, GT_ABILITY);
+	g_GumpManager.UpdateContent(1, 0, GT_ABILITY);
+}
+//----------------------------------------------------------------------------------
+bool CGumpAbility::OnLeftMouseButtonDoubleClick()
+{
+	OnAbilityUse(m_Serial != 0 ? 1 : 0);
 
 	return true;
 }

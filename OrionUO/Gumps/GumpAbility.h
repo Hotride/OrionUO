@@ -24,6 +24,8 @@ public:
 	CGumpAbility(const uint &serial, const int &x, const int &y);
 	virtual ~CGumpAbility();
 
+	static void OnAbilityUse(const int &index);
+
 	virtual void UpdateContent();
 
 	virtual void InitToolTip();

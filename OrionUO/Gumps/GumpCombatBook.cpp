@@ -8,9 +8,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "GumpCombatBook.h"
-#include "GumpSpell.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
+#include "GumpAbility.h"
 #include "../PressedObject.h"
 #include "../ClickObject.h"
 #include "../OrionUO.h"
@@ -20,7 +18,6 @@
 #include "../Managers/PacketManager.h"
 #include "../OrionWindow.h"
 #include "../ToolTip.h"
-#include "../Gumps/GumpAbility.h"
 //----------------------------------------------------------------------------------
 CGumpCombatBook::CGumpCombatBook(const int &x, const int &y)
 : CGump(GT_COMBAT_BOOK, 0, x, y), m_DictionaryPagesCount(6), m_PagesCount(37),
@@ -605,14 +602,16 @@ bool CGumpCombatBook::OnLeftMouseButtonDoubleClick()
 		}
 		else if (g_PressedObject.LeftSerial == ID_GCB_ICON_FIRST)
 		{
-			m_Minimized = true;
+			CGumpAbility::OnAbilityUse(0);
+
 			m_WantUpdateContent = true;
 
 			result = true;
 		}
 		else if (g_PressedObject.LeftSerial == ID_GCB_ICON_SECOND)
 		{
-			m_Minimized = true;
+			CGumpAbility::OnAbilityUse(1);
+
 			m_WantUpdateContent = true;
 
 			result = true;
