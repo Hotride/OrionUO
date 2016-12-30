@@ -504,6 +504,8 @@ public:
 	void DisconnectGump();
 
 	void OpenCombatBookGump();
+
+	void OpenRacialAbilitiesBookGump();
 };
 //----------------------------------------------------------------------------------
 extern COrion g_Orion;

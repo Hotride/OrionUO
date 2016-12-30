@@ -768,6 +768,9 @@
     <ClInclude Include="GUI\GUIGlobalColor.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Gumps\GumpRacialAbilitiesBook.h">
+      <Filter>Header Files\Gumps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1429,6 +1432,9 @@
     </ClCompile>
     <ClCompile Include="GUI\GUIGlobalColor.cpp">
       <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Gumps\GumpRacialAbilitiesBook.cpp">
+      <Filter>Source Files\Gumps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

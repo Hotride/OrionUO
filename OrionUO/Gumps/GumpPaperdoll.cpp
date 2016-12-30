@@ -117,7 +117,7 @@ m_DataBox(NULL), m_Description(NULL), m_WantTransparentContent(false)
 
 			if (g_PacketManager.ClientVersion >= CV_7000)
 			{
-				Add(new CGUIButton(ID_GP_RACIAL_ABILITIES_BOOK, 0x2B28, 0x2B34, 0x2B34, 23, 200));
+				Add(new CGUIButton(ID_GP_RACIAL_ABILITIES_BOOK, 0x2B28, 0x2B28, 0x2B28, 23, 200));
 				profileX += SCROLLS_STEP;
 				partyManifestX += SCROLLS_STEP;
 			}
@@ -921,6 +921,12 @@ bool CGumpPaperdoll::OnLeftMouseButtonDoubleClick()
 		else if (serial == ID_GP_COMBAT_BOOK)
 		{
 			g_Orion.OpenCombatBookGump();
+
+			result = true;
+		}
+		else if (serial == ID_GP_RACIAL_ABILITIES_BOOK)
+		{
+			g_Orion.OpenRacialAbilitiesBookGump();
 
 			result = true;
 		}
