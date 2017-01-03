@@ -91,11 +91,11 @@ void CGumpScreenMain::UpdateContent()
 	text = (CGUIText*)Add(new CGUIText(0x034E, 286, 467));
 	text->CreateTextureA(9, string("Orion Version Beta."));
 
-	CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_MS_ACCOUNT, 0x034F, 0x03E3, 0x0021, 335, 343, 300, false, 5, TS_LEFT, 0, 32));
+	CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_MS_ACCOUNT, 0x034F, 0x03E3, 0x0021, 335, 343, 190, false, 5, TS_LEFT, 0, 32));
 	entry->CheckOnSerial = true;
 	g_MainScreen.m_Account = &entry->m_Entry;
 
-	entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_MS_PASSWORD, 0x034F, 0x03E3, 0x0021, 335, 385, 300, false, 5, TS_LEFT, 0, 32));
+	entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_MS_PASSWORD, 0x034F, 0x03E3, 0x0021, 335, 385, 190, false, 5, TS_LEFT, 0, 32));
 	entry->CheckOnSerial = true;
 	m_PasswordFake = &entry->m_Entry;
 }
