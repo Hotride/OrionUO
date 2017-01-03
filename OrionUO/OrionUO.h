@@ -94,6 +94,8 @@ private:
 
 	void ParseCommandLine();
 
+	void LoadPlugin(const string &libpath, const string &function, const uint &flags);
+
 public:
 	COrion();
 	~COrion();

@@ -346,6 +346,18 @@ HRESULT COrionWindow::OnRepaint(const WPARAM &wParam, const LPARAM &lParam)
 	return DefWindowProc(m_Handle, WM_NCPAINT, wParam, lParam);
 }
 //----------------------------------------------------------------------------------
+void COrionWindow::OnShow(const bool &show)
+{
+	if (!g_PluginManager.Empty())
+		g_PluginManager.WindowProc(m_Handle, WM_SHOWWINDOW, (WPARAM)show, 0);
+}
+//----------------------------------------------------------------------------------
+void COrionWindow::OnSetText(const LPARAM &lParam)
+{
+	if (!g_PluginManager.Empty())
+		g_PluginManager.WindowProc(m_Handle, WM_SETTEXT, 0, lParam);
+}
+//----------------------------------------------------------------------------------
 void COrionWindow::OnTimer(uint id)
 {
 	if (id == UPDATE_TIMER_ID)

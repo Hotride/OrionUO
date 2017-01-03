@@ -167,7 +167,7 @@ void COrion::ParseCommandLine()
 
 		string str = ToString(args[i] + 1);
 
-		WISP_FILE::CTextFileParser parser("", " ,:", "", "");
+		WISP_FILE::CTextFileParser parser("", " ,:", "", "''");
 
 		STRING_LIST strings = parser.GetTokens(str.c_str());
 
@@ -199,6 +199,23 @@ void COrion::ParseCommandLine()
 			}
 			else if (str == "account")
 				g_MainScreen.SetAccounting(DecodeArgumentString(strings[1].c_str(), strings[1].length()), DecodeArgumentString(strings[2].c_str(), strings[2].length()));
+			else if (str == "plugin")
+			{
+				if (strings.size() > 3)
+				{
+					uint flags = 0;
+
+					if (ToLowerA(strings[3]).find("0x") == 0)
+					{
+						char *end = NULL;
+						flags = strtoul(strings[3].c_str(), &end, 16);
+					}
+					else
+						flags = atoi(strings[3].c_str());
+
+					LoadPlugin(strings[1], strings[2], flags);
+				}
+			}
 		}
 		else if (str == "autologin")
 		{
@@ -488,8 +505,6 @@ bool COrion::Install()
 	LOG("Init screen...\n");
 
 	InitScreen(GS_MAIN);
-
-	ParseCommandLine();
 
 	LOG("Installation completed!\n");
 
@@ -1102,6 +1117,48 @@ void COrion::LoadStartupConfig()
 		g_SoundManager.StopMusic();
 }
 //----------------------------------------------------------------------------------
+void COrion::LoadPlugin(const string &libpath, const string &function, const uint &flags)
+{
+	HMODULE dll = LoadLibraryA(libpath.c_str());
+
+	if (dll != NULL)
+	{
+		typedef void __cdecl dllFunc(PPLUGIN_INTERFACE);
+
+		dllFunc *initFunc = (dllFunc*)GetProcAddress(dll, function.c_str());
+		CPlugin *plugin = NULL;
+
+		if (initFunc != NULL)
+		{
+			plugin = new CPlugin(flags);
+
+			initFunc(plugin->m_PPS);
+		}
+
+		if (plugin == NULL)
+			FreeLibrary(dll);
+		else
+		{
+			CRASHLOG("Plugin['%s'] loaded at: 0x%08X\n", libpath.c_str(), dll);
+
+			plugin->m_PPS->Owner = plugin;
+
+			if (plugin->CanClientAccess())
+				plugin->m_PPS->Client = &g_PluginClientInterface;
+
+			if (plugin->CanParseRecv())
+				plugin->m_PPS->Recv = PluginRecvFunction;
+
+			if (plugin->CanParseSend())
+				plugin->m_PPS->Send = PluginSendFunction;
+
+			initFunc(plugin->m_PPS);
+
+			g_PluginManager.Add(plugin);
+		}
+	}
+}
+//----------------------------------------------------------------------------------
 void COrion::LoadPluginConfig()
 {
 	g_PluginClientInterface.Version = 0;
@@ -1118,51 +1175,12 @@ void COrion::LoadPluginConfig()
 
 	g_PluginInit(libName, functions, flags);
 
-	libName.push_back("OA/OrionAssistant.dll");
-	functions.push_back("Install");
-	flags.push_back(0xFFFFFFFF);
+	LoadPlugin(g_App.FilePath("OA/OrionAssistant.dll"), "Install", 0xFFFFFFFF);
 
 	IFOR(i, 0, (int)libName.size())
-	{
-		HMODULE dll = LoadLibraryA(g_App.FilePath(libName[i].c_str()).c_str());
+		LoadPlugin(g_App.FilePath(libName[i].c_str()), functions[i], flags[i]);
 
-		if (dll != NULL)
-		{
-			typedef void __cdecl dllFunc(PPLUGIN_INTERFACE);
-
-			dllFunc *initFunc = (dllFunc*)GetProcAddress(dll, functions[i].c_str());
-			CPlugin *plugin = NULL;
-
-			if (initFunc != NULL)
-			{
-				plugin = new CPlugin(flags[i]);
-
-				initFunc(plugin->m_PPS);
-			}
-
-			if (plugin == NULL)
-				FreeLibrary(dll);
-			else
-			{
-				CRASHLOG("Plugin['%s'] loaded at: 0x%08X\n", libName[i].c_str(), dll);
-
-				plugin->m_PPS->Owner = plugin;
-
-				if (plugin->CanClientAccess())
-					plugin->m_PPS->Client = &g_PluginClientInterface;
-
-				if (plugin->CanParseRecv())
-					plugin->m_PPS->Recv = PluginRecvFunction;
-
-				if (plugin->CanParseSend())
-					plugin->m_PPS->Send = PluginSendFunction;
-
-				initFunc(plugin->m_PPS);
-
-				g_PluginManager.Add(plugin);
-			}
-		}
-	}
+	ParseCommandLine();
 
 	BringWindowToTop(g_OrionWindow.Handle);
 }
