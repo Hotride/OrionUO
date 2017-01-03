@@ -80,3 +80,17 @@ void CCharacterListScreen::ProcessSmoothAction(uchar action)
 	}
 }
 //----------------------------------------------------------------------------------
+/*!
+Обработка нажатия клавиши
+@param [__in] wparam не подписанный параметр
+@param [__in] lparam не подписанный параметр
+@return
+*/
+void CCharacterListScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
+{
+	m_Gump.OnKeyDown(wParam, lParam);
+
+	if (wParam == VK_RETURN)
+		CreateSmoothAction(ID_SMOOTH_CLS_SELECT_CHARACTER);
+}
+//----------------------------------------------------------------------------------
