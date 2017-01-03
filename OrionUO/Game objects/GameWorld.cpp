@@ -253,7 +253,12 @@ void CGameWorld::ProcessAnimation()
 						int fc = direction->FrameCount;
 
 						if (frameIndex >= fc)
+						{
+							if (gi->FieldColor)
+								gi->FieldColor = 2;
+
 							frameIndex = fc - 1;
+						}
 						
 						obj->AnimIndex = frameIndex;
 					}
@@ -436,7 +441,7 @@ void CGameWorld::RemoveObject(CGameObject *obj)
 {
 	RemoveFromContainer(obj);
 
-	DWORD serial = obj->Serial;
+	uint serial = obj->Serial;
 	m_Map[serial] = NULL;
 	m_Map.erase(serial);
 	delete obj;
@@ -461,7 +466,7 @@ void CGameWorld::RemoveFromContainer(CGameObject *obj)
 	{
 		if (m_Items != NULL)
 		{
-			if (m_Items->Serial == obj->Serial)
+			if (m_Items == obj)
 			{
 				m_Items = (CGameObject*)m_Items->m_Next;
 				if (m_Items != NULL)

@@ -30,6 +30,9 @@ m_FieldColor(0), m_MultiDistanceBonus(0)
 //----------------------------------------------------------------------------------
 CGameItem::~CGameItem()
 {
+	if (IsCorpse() && m_FieldColor)
+		return;
+
 	ClearMultiItems();
 	
 	if (m_Opened)

@@ -5096,6 +5096,11 @@ void COrion::RemoveRangedObjects()
 				}
 				else if (GetRemoveDistance(g_RemoveRangeXY, go) > objectsRange)
 					g_World->RemoveObject(go);
+				else if (go->IsCorpse() && ((CGameItem*)go)->FieldColor == 2)
+				{
+					g_World->RemoveFromContainer(go);
+					delete go;
+				}
 			}
 
 			go = next;
