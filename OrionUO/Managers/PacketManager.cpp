@@ -1295,6 +1295,7 @@ PACKET_HANDLER(UpdateItem)
 
 	g_World->RemoveFromContainer(obj);
 	obj->Container = 0xFFFFFFFF;
+	g_World->m_Items->AddObject(obj);
 
 	if (obj->Dragged)
 		g_GumpManager.CloseGump(serial, 0, GT_DRAG);
@@ -1404,6 +1405,7 @@ PACKET_HANDLER(UpdateItemSA)
 
 	g_World->RemoveFromContainer(obj);
 	obj->Container = 0xFFFFFFFF;
+	g_World->m_Items->AddObject(obj);
 
 	if (obj->Dragged)
 		g_GumpManager.CloseGump(serial, 0, GT_DRAG);
