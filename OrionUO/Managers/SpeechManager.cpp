@@ -63,14 +63,16 @@ bool CSpeechManager::LoadSpeech()
 	{
 		CSpeechItem item;
 		item.Code = file.ReadUInt16BE();
-		WORD len = file.ReadUInt16BE();
-		wstring str = DecodeUTF8(file.ReadString(len));
-		//срезаем двойной нуль терминал.
-		str = str.substr(0, str.length() - 2);
+		int len = file.ReadUInt16BE();
+
+		if (!len)
+			continue;
+
+		wstring str = DecodeUTF8(file.ReadString(len)).c_str();
 		const WCHAR *data = str.c_str();
 
 		
-		DFOR(i, str.length(), 1)
+		DFOR(i, str.length() - 1, 1)
 		{
 			if (data[i])
 			{
@@ -93,7 +95,7 @@ bool CSpeechManager::LoadSpeech()
 		item.Data = str;
 		m_SpeechEntries.push_back(item);
 
-		//TPRINT("[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, ToString(str).c_str());
+		//LOG(L"[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, str.c_str());
 	}
 
 	m_Loaded = true;
