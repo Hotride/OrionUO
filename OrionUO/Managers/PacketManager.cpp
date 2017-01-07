@@ -1978,6 +1978,8 @@ PACKET_HANDLER(DenyMoveItem)
 
 			if (obj != NULL)
 			{
+				g_World->RemoveFromContainer(obj);
+
 				obj->Paste(g_ObjectInHand);
 
 				if (m_ClientVersion >= CV_308Z)
