@@ -110,6 +110,7 @@ void CConfigManager::DefaultPage2()
 	m_DrawAuraWithCtrlPressed = true;
 	m_ScreenshotFormat = SF_PNG;
 	m_ScaleImagesInPaperdollSlots = true;
+	m_RemoveOrCreateObjectsWithBlending = true;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -549,7 +550,12 @@ bool CConfigManager::Load(string path)
 						m_ScreenshotFormat = file.ReadUInt8();
 
 						if (blockSize > 26)
+						{
 							scaleImagesInPaperdollSlots = file.ReadUInt8();
+
+							if (blockSize > 27)
+								m_RemoveOrCreateObjectsWithBlending = file.ReadUInt8();
+						}
 					}
 				}
 			}
@@ -932,7 +938,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(27); //size of block
+	writter.WriteInt8(28); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -965,6 +971,7 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(auraState);
 	writter.WriteUInt8(m_ScreenshotFormat);
 	writter.WriteUInt8(m_ScaleImagesInPaperdollSlots);
+	writter.WriteUInt8(m_RemoveOrCreateObjectsWithBlending);
 
 	writter.WriteBuffer();
 

@@ -513,6 +513,24 @@ void CGameScreen::CalculateRenderList()
 	}
 #endif
 
+	IFOR(i, 0, m_RenderListCount)
+	{
+		CRenderWorldObject *obj = m_RenderList[i].Object;
+
+		if (obj != NULL && obj->IsStaticGroupObject())
+		{
+			CRenderStaticObject *rst = obj->StaticGroupObjectPtr();
+
+			if (rst->IsFoliage())
+			{
+				if (rst->FoliageTransparentIndex == g_FoliageIndex)
+					rst->ProcessAlpha(FOLIAGE_ALPHA);
+				else
+					rst->ProcessAlpha(0xFF);
+			}
+		}
+	}
+
 	if (m_ObjectHandlesCount > MAX_OBJECT_HANDLES)
 		m_ObjectHandlesCount = MAX_OBJECT_HANDLES;
 
@@ -536,6 +554,8 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 
 	for (; obj != NULL; obj = obj->m_NextXY)
 	{
+		bool aphaChanged = false;
+
 #if UO_RENDER_LIST_SORT == 1
 		if (obj->CurrentRenderIndex == renderIndex)
 			continue;
@@ -558,7 +578,12 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 				if (!g_DrawFoliage && rso->IsFoliage())
 					continue;
 				else if (g_NoDrawRoof && rso->IsRoof())
-					continue;
+				{
+					aphaChanged = obj->ProcessAlpha(0);
+
+					if (!aphaChanged)
+						continue;
+				}
 				else if (g_ConfigManager.NoVegetation && rso->Vegetation)
 					continue;
 
@@ -574,8 +599,18 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 
 		int z = obj->Z;
 
-		if (obj->IsInternal() || (!obj->IsLandObject() && z >= m_MaxDrawZ))
+		if (obj->IsInternal())
 			continue;
+		else if (!obj->IsLandObject() && z >= m_MaxDrawZ)
+		{
+			if (!aphaChanged)
+			{
+				aphaChanged = obj->ProcessAlpha(0);
+
+				if (!aphaChanged)
+					continue;
+			}
+		}
 
 		int testMinZ = drawY;
 		int testMaxZ = drawY - (z * 4);
@@ -717,6 +752,14 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 			}
 
 			obj->StaticGroupObjectPtr()->FoliageTransparentIndex = index;
+		}
+
+		if (!aphaChanged)
+		{
+			if (obj->IsTranslucent())
+				obj->ProcessAlpha(TRANSLUCENT_ALPHA);
+			else if (!obj->IsFoliage() && obj->m_DrawTextureColor[3] != 0xFF)
+				obj->ProcessAlpha(0xFF);
 		}
 
 		if (m_RenderListCount >= m_RenderListSize)

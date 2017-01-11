@@ -39,6 +39,9 @@ m_Vegetation(false), m_RenderGraphic(0), m_RenderColor(0)
 	}
 	else
 	{
+		if (IsTranslucent())
+			m_DrawTextureColor[3] = TRANSLUCENT_ALPHA;
+
 		m_TextControl = new CTextContainer(1);
 
 		if (IsSurface() || (IsBackground() && IsUnknown2()) || IsRoof())
@@ -61,32 +64,24 @@ void CRenderStaticObject::Draw(const int &x, const int &y)
 	g_RenderedObjectsCountInGameWindow++;
 #endif
 
-	if (IsFoliage() && m_FoliageTransparentIndex == g_FoliageIndex)
+	bool useAlpha = (m_DrawTextureColor[3] != 0xFF);
+
+	if (useAlpha)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
+		glColor4ub(m_DrawTextureColor[0], m_DrawTextureColor[1], m_DrawTextureColor[2], m_DrawTextureColor[3]);
+	}
 
+	if (g_UseCircleTrans)
+		g_Orion.DrawStaticArtAnimatedTransparent(m_RenderGraphic, m_RenderColor, x, y, m_Z);
+	else
 		g_Orion.DrawStaticArtAnimated(m_RenderGraphic, m_RenderColor, x, y, m_Z);
 
-		glDisable(GL_BLEND);
-	}
-	else
+	if (useAlpha)
 	{
-		if (IsTranslucent())
-		{
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glColor4f(1.0f, 1.0f, 1.0f, 0.7f);
-		}
-
-		if (g_UseCircleTrans)
-			g_Orion.DrawStaticArtAnimatedTransparent(m_RenderGraphic, m_RenderColor, x, y, m_Z);
-		else
-			g_Orion.DrawStaticArtAnimated(m_RenderGraphic, m_RenderColor, x, y, m_Z);
-
-		if (IsTranslucent())
-			glDisable(GL_BLEND);
+		glColor4ub(0xFF, 0xFF, 0xFF, 0xFF);
+		glDisable(GL_BLEND);
 	}
 
 	if (IsLightSource() && g_GameScreen.UseLight)
@@ -95,15 +90,13 @@ void CRenderStaticObject::Draw(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 void CRenderStaticObject::Select(const int &x, const int &y)
 {
-	if (IsFoliage())
+	if (m_DrawTextureColor[3] != 0xFF)
 	{
-		if (m_FoliageTransparentIndex != g_FoliageIndex)
-		{
-			if (g_Orion.StaticPixelsInXYAnimated(m_RenderGraphic, x, y, m_Z))
-				g_SelectedObject.Init(this);
-		}
+		if (!IsTranslucent() || m_DrawTextureColor[3] != TRANSLUCENT_ALPHA)
+			return;
 	}
-	else if (!g_UseCircleTrans && g_Orion.StaticPixelsInXYAnimated(m_RenderGraphic, x, y, m_Z))
+
+	if (!g_UseCircleTrans && g_Orion.StaticPixelsInXYAnimated(m_RenderGraphic, x, y, m_Z))
 		g_SelectedObject.Init(this);
 }
 //---------------------------------------------------------------------------

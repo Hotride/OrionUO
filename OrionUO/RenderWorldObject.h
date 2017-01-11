@@ -27,7 +27,10 @@ public:
 	CRenderWorldObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const char &z);
 	virtual ~CRenderWorldObject();
 
-	//TTextContainer *m_TextControl; //Ссылка на контейнер для текста
+	//Ссылка на компонентный состав текстуры
+	uchar m_DrawTextureColor[4];
+
+	bool ProcessAlpha(const int &maxAlpha);
 
 	//Добавить текст в контейнер
 	virtual void AddText(CTextData *td) {}
