@@ -274,7 +274,7 @@ void CMouseManager::Draw(ushort id)
 		ushort ohGraphic = g_ObjectInHand->GetDrawGraphic(doubleDraw);
 
 		ushort ohColor = g_ObjectInHand->Color;
-		doubleDraw = (!g_ObjectInHand->IsGold() && g_ObjectInHand->DragCount > 1);
+		doubleDraw = (!g_ObjectInHand->IsGold() && g_ObjectInHand->IsStackable() && g_ObjectInHand->DragCount > 1);
 
 		if (ohColor != 0)
 			g_ColorizerShader->Use();
