@@ -2102,7 +2102,7 @@ PACKET_HANDLER(DeleteObject)
 			obj->RemoveRender();
 		else
 		{
-			if (obj->IsCorpse())
+			if (obj->IsCorpse() && obj->LastAnimationChangeTime == GetTickCount())
 			{
 				CGameItem *fake = new CGameItem(1);
 
