@@ -2309,6 +2309,8 @@ PACKET_HANDLER(SetWeather)
 	g_Weather.Type = type;
 	g_Weather.Count = ReadUInt8();
 
+	bool showMessage = (g_Weather.Count > 0);
+
 	if (g_Weather.Count > 70)
 		g_Weather.Count = 70;
 
@@ -2320,22 +2322,30 @@ PACKET_HANDLER(SetWeather)
 	{
 		case 0:
 		{
-			g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to rain.");
+			if (showMessage)
+				g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to rain.");
+
 			break;
 		}
 		case 1:
 		{
-			g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A fierce storm approaches.");
+			if (showMessage)
+				g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A fierce storm approaches.");
+
 			break;
 		}
 		case 2:
 		{
-			g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to snow.");
+			if (showMessage)
+				g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to snow.");
+
 			break;
 		}
 		case 3:
 		{
-			g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A storm is brewing.");
+			if (showMessage)
+				g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A storm is brewing.");
+
 			break;
 		}
 		case 0xFE:
