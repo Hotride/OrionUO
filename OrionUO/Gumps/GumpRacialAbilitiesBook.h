@@ -22,22 +22,30 @@ class CGumpRacialAbilitiesBook : public CGump
 	SETGET(int, DictionaryPagesCount);
 	SETGET(int, AbilityCount);
 	SETGET(int, PagesCount);
+	SETGET(int, TooltipOffset);
 
 private:
-	static const int ID_GCB_BUTTON_PREV = 1;
-	static const int ID_GCB_BUTTON_NEXT = 2;
-	static const int ID_GCB_BUTTON_MINIMIZE = 3;
-	static const int ID_GCB_LOCK_MOVING = 4;
-	static const int ID_GCB_ICON = 100;
+	static const int ID_GRAB_BUTTON_PREV = 1;
+	static const int ID_GRAB_BUTTON_NEXT = 2;
+	static const int ID_GRAB_BUTTON_MINIMIZE = 3;
+	static const int ID_GRAB_LOCK_MOVING = 4;
+	static const int ID_GRAB_DICTIONARY_ICON = 100;
+	static const int ID_GRAB_ICON = 1000;
 
 	CGUIButton *m_PrevPage;
 	CGUIButton *m_NextPage;
+
+	void GetSummaryBookInfo(int &abilityOnPage, ushort &iconStartGraphic);
+
+	string GetAbilityName(const int &offset, bool &passive);
 
 public:
 	CGumpRacialAbilitiesBook(const int &x, const int &y);
 	virtual ~CGumpRacialAbilitiesBook();
 
 	virtual void DelayedClick(CRenderObject *obj);
+
+	virtual void PrepareContent();
 
 	void ChangePage(int newPage);
 

@@ -771,6 +771,9 @@
     <ClInclude Include="Gumps\GumpRacialAbilitiesBook.h">
       <Filter>Header Files\Gumps</Filter>
     </ClInclude>
+    <ClInclude Include="Gumps\GumpRacialAbility.h">
+      <Filter>Header Files\Gumps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1434,6 +1437,9 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Gumps\GumpRacialAbilitiesBook.cpp">
+      <Filter>Source Files\Gumps</Filter>
+    </ClCompile>
+    <ClCompile Include="Gumps\GumpRacialAbility.cpp">
       <Filter>Source Files\Gumps</Filter>
     </ClCompile>
   </ItemGroup>

@@ -471,5 +471,11 @@ public:
 	CPacketTargetSelectedObject(const uint &useObjectSerial, const uint &targetObjectSerial);
 };
 //----------------------------------------------------------------------------------
+class CPacketToggleGargoyleFlying : public CPacket
+{
+public:
+	CPacketToggleGargoyleFlying();
+};
+//----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

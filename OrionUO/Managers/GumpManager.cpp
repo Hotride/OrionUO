@@ -43,6 +43,8 @@
 #include "../Gumps/GumpSkill.h"
 #include "../Gumps/GumpAbility.h"
 #include "../Gumps/GumpCombatBook.h"
+#include "../Gumps/GumpRacialAbilitiesBook.h"
+#include "../Gumps/GumpRacialAbility.h"
 //----------------------------------------------------------------------------------
 CGumpManager g_GumpManager;
 //----------------------------------------------------------------------------------
@@ -90,7 +92,7 @@ void CGumpManager::AddGump(CGump *obj)
 				{
 					if (gump->CanBeMoved())
 					{
-						if (gumpType == GT_DRAG || gumpType == GT_ABILITY)
+						if (gumpType == GT_DRAG || gumpType == GT_ABILITY || gumpType == GT_RACIAL_ABILITY)
 						{
 							gump->X = obj->X;
 							gump->Y = obj->Y;
@@ -1276,6 +1278,21 @@ void CGumpManager::Load(const string &path)
 
 					break;
 				}
+				case GT_RACIAL_ABILITIES_BOOK:
+				{
+					gump = new CGumpRacialAbilitiesBook(gumpX, gumpY);
+					gump->Minimized = gumpMinimized;
+
+					break;
+				}
+				case GT_RACIAL_ABILITY:
+				{
+					uint serial = file.ReadUInt32LE();
+
+					gump = new CGumpRacialAbility(serial, gumpX, gumpY);
+
+					break;
+				}
 				default:
 					break;
 			}
@@ -1475,6 +1492,7 @@ void CGumpManager::Save(const string &path)
 			}
 			case GT_MENUBAR:
 			case GT_COMBAT_BOOK:
+			case GT_RACIAL_ABILITIES_BOOK:
 			{
 				SaveDefaultGumpProperties(writter, gump, 12);
 
@@ -1541,6 +1559,7 @@ void CGumpManager::Save(const string &path)
 			}
 			case GT_SKILL:
 			case GT_ABILITY:
+			case GT_RACIAL_ABILITY:
 			{
 				SaveDefaultGumpProperties(writter, gump, 16);
 

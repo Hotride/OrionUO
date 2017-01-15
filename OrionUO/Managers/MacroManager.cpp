@@ -1310,9 +1310,15 @@ MACRO_RETURN_CODE CMacroManager::Process()
 
 				break;
 			}
+			case MC_TOGGLE_GARGOYLE_FLYING:
+			{
+				if (g_Player->Race == RT_GARGOYLE)
+					CPacketToggleGargoyleFlying().Send();
+
+				break;
+			}
 			case MC_KILL_GUMP_OPEN:
 			case MC_EQUIP_LAST_WEAPON:
-			case MC_TOGGLE_GARGOYLE_FLYING:
 			{
 				g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x77, "That macro is not work now");
 
