@@ -416,19 +416,13 @@ void CGumpPaperdoll::UpdateContent()
 	if (color & 0x4000)
 		color &= 0x3FFF;
 
-	if (obj->Graphic == 0x0190 || obj->Graphic == 0x0192)
-	{
-		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000C, 8, 19)); //Male gump
-		bodyGumppic->PartialHue = true;
-		bodyGumppic->Color = color;
-	}
-	else if (obj->Graphic == 0x0191 || obj->Graphic == 0x0193)
+	if (obj->Graphic == 0x0191 || obj->Graphic == 0x0193)
 	{
 		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000D, 8, 19)); //Female gump
 		bodyGumppic->PartialHue = true;
 		bodyGumppic->Color = color;
 	}
-	if (obj->Graphic == 0x025D)
+	else if (obj->Graphic == 0x025D)
 	{
 		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000E, 8, 19)); //Elf Male gump
 		bodyGumppic->PartialHue = true;
@@ -459,6 +453,12 @@ void CGumpPaperdoll::UpdateContent()
 		bodyGumppic->PartialHue = true;
 
 		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0xC72B, 8, 19)); //GM robe gump
+		bodyGumppic->Color = color;
+	}
+	else //if (obj->Graphic == 0x0190 || obj->Graphic == 0x0192)
+	{
+		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x000C, 8, 19)); //Male gump
+		bodyGumppic->PartialHue = true;
 		bodyGumppic->Color = color;
 	}
 
