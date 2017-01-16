@@ -293,12 +293,15 @@ void CMapManager::UpdatePatched()
 		gump->LastX = 0;
 }
 //----------------------------------------------------------------------------------
-CIndexMap *CMapManager::GetIndex(const int &map, const int &blockX, const int &blockY)
+CIndexMap *CMapManager::GetIndex(const uint &map, const int &blockX, const int &blockY)
 {
-	int block = (blockX * g_MapBlockSize[map].Height) + blockY;
+	if (map >= MAX_MAPS_COUNT)
+		return NULL;
+
+	uint block = (blockX * g_MapBlockSize[map].Height) + blockY;
 	MAP_INDEX_LIST &list = m_BlockData[map];
 
-	if (block >= (int)list.size())
+	if (block >= list.size())
 		return NULL;
 
 	return &list[block];
