@@ -11,6 +11,7 @@
 #include "OptionsMacroManager.h"
 #include "GumpManager.h"
 #include "ConfigManager.h"
+#include "PacketManager.h"
 #include "../Network/Packets.h"
 #include "../Game objects/GameWorld.h"
 #include "../Game objects/GamePlayer.h"
@@ -1128,28 +1129,44 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			case MC_BANDAGE_SELF:
 			case MC_BANDAGE_TARGET:
 			{
-				if (m_WaitingBandageTarget)
+				//На самом деле с 5.0.4a
+				if (g_PacketManager.ClientVersion < CV_5020)
 				{
-					if (m_WaitForTargetTimer == 0)
-						m_WaitForTargetTimer = g_Ticks + 500;
-
-					if (g_Target.IsTargeting())
+					if (m_WaitingBandageTarget)
 					{
-						if (g_MacroPointer->Code == MC_BANDAGE_SELF)
-							g_Target.SendTargetObject(g_PlayerSerial);
-						else if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial)
-							g_Target.SendTargetObject(g_NewTargetSystem.Serial);
+						if (m_WaitForTargetTimer == 0)
+							m_WaitForTargetTimer = g_Ticks + 500;
 
-						m_WaitingBandageTarget = false;
-						m_WaitForTargetTimer = 0;
-					}
-					else if (m_WaitForTargetTimer < g_Ticks)
-					{
-						m_WaitingBandageTarget = false;
-						m_WaitForTargetTimer = 0;
+						if (g_Target.IsTargeting())
+						{
+							if (g_MacroPointer->Code == MC_BANDAGE_SELF)
+								g_Target.SendTargetObject(g_PlayerSerial);
+							else if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial)
+								g_Target.SendTargetObject(g_NewTargetSystem.Serial);
+
+							m_WaitingBandageTarget = false;
+							m_WaitForTargetTimer = 0;
+						}
+						else if (m_WaitForTargetTimer < g_Ticks)
+						{
+							m_WaitingBandageTarget = false;
+							m_WaitForTargetTimer = 0;
+						}
+						else
+							result = MRC_BREAK_PARSER;
 					}
 					else
-						result = MRC_BREAK_PARSER;
+					{
+						CGameItem *bandage = g_Player->FindBandage();
+
+						if (bandage != NULL)
+						{
+							m_WaitingBandageTarget = true;
+							g_Orion.DoubleClick(bandage->Serial);
+
+							result = MRC_BREAK_PARSER;
+						}
+					}
 				}
 				else
 				{
@@ -1157,10 +1174,10 @@ MACRO_RETURN_CODE CMacroManager::Process()
 
 					if (bandage != NULL)
 					{
-						m_WaitingBandageTarget = true;
-						g_Orion.DoubleClick(bandage->Serial);
-
-						result = MRC_BREAK_PARSER;
+						if (g_MacroPointer->Code == MC_BANDAGE_SELF)
+							CPacketTargetSelectedObject(bandage->Serial, g_PlayerSerial).Send();
+						else if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial && g_NewTargetSystem.Serial < 0x40000000)
+							CPacketTargetSelectedObject(bandage->Serial, g_NewTargetSystem.Serial).Send();
 					}
 				}
 
@@ -1275,11 +1292,33 @@ MACRO_RETURN_CODE CMacroManager::Process()
 
 				break;
 			}
-			case MC_KILL_GUMP_OPEN:
 			case MC_PRIMARY_ABILITY:
+			{
+				uchar ability = g_AbilityList[g_Ability[0]] & 0x00FF;
+
+				if (ability)
+					CPacketUseCombatAbility(ability).Send();
+
+				break;
+			}
 			case MC_SECONDARY_ABILITY:
-			case MC_EQUIP_LAST_WEAPON:
+			{
+				uchar ability = g_AbilityList[g_Ability[1]] & 0x00FF;
+
+				if (ability)
+					CPacketUseCombatAbility(ability).Send();
+
+				break;
+			}
 			case MC_TOGGLE_GARGOYLE_FLYING:
+			{
+				if (g_Player->Race == RT_GARGOYLE)
+					CPacketToggleGargoyleFlying().Send();
+
+				break;
+			}
+			case MC_KILL_GUMP_OPEN:
+			case MC_EQUIP_LAST_WEAPON:
 			{
 				g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0x77, "That macro is not work now");
 

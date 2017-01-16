@@ -44,7 +44,7 @@ public:
 	@param [__in] Type Тип гампа
 	@return Ссылку на обновленный гамп или NULL
 	*/
-	CGump *UpdateContent(uint serial, uint ID, GUMP_TYPE Type);
+	CGump *UpdateContent(const uint &serial, const uint &id, const GUMP_TYPE &type);
 
 	/*!
 	Обновить гамп
@@ -53,7 +53,7 @@ public:
 	@param [__in] Type Тип гампа
 	@return Ссылку на обновленный гамп или NULL
 	*/
-	CGump *UpdateGump(uint serial, uint ID, GUMP_TYPE Type);
+	CGump *UpdateGump(const uint &serial, const uint &id, const GUMP_TYPE &type);
 
 	/*!
 	Найти гамп
@@ -62,7 +62,7 @@ public:
 	@param [__in] Type Тип гампа
 	@return Ссылку на гамп или NULL
 	*/
-	CGump *GetGump(uint serial, uint ID, GUMP_TYPE Type);
+	CGump *GetGump(const uint &serial, const uint &id, const GUMP_TYPE &type);
 
 	/*!
 	Получить гамп-владелец текущей активной TEntryText

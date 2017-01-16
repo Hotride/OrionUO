@@ -12,6 +12,12 @@
 //----------------------------------------------------------------------------------
 const int MAX_CONSOLE_STACK_SIZE = 100;
 
+const int TRANSLUCENT_ALPHA = 0xB2; //0.7
+
+const int FOLIAGE_ALPHA = 0x4C; //0.3
+
+const int ALPHA_STEP = 15;
+
 //!Задержка между кадрами для активного окна приложения
 const int FRAME_DELAY_ACTIVE_WINDOW = 30;
 

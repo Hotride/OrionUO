@@ -439,6 +439,22 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 		}
 		case WM_NCPAINT:
 			return OnRepaint(wParam, lParam);
+		case WM_SHOWWINDOW:
+		{
+			HRESULT res = DefWindowProc(m_Handle, WM_SHOWWINDOW, wParam, lParam);
+
+			OnShow(wParam != 0);
+
+			return res;
+		}
+		case WM_SETTEXT:
+		{
+			HRESULT res = DefWindowProc(m_Handle, WM_SETTEXT, wParam, lParam);
+
+			OnSetText(lParam);
+
+			return res;
+		}
 		case WM_TIMER:
 		{
 			OnTimer(wParam);

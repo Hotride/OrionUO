@@ -10,6 +10,7 @@
 #include "RenderWorldObject.h"
 #include "SelectedObject.h"
 #include "PressedObject.h"
+#include "Managers/ConfigManager.h"
 //----------------------------------------------------------------------------------
 //---------------------------------RenderWorldObject--------------------------------
 //----------------------------------------------------------------------------------
@@ -20,11 +21,51 @@ m_Z(z), m_NextXY(NULL), m_PrevXY(NULL), m_RenderQueueIndex(0)
 , m_CurrentRenderIndex(0)
 #endif
 {
+	m_DrawTextureColor[0] = 0xFF;
+	m_DrawTextureColor[1] = 0xFF;
+	m_DrawTextureColor[2] = 0xFF;
+	m_DrawTextureColor[3] = 0x00;
 }
 //---------------------------------------------------------------------------
 CRenderWorldObject::~CRenderWorldObject()
 {
 	RemoveRender();
+}
+//---------------------------------------------------------------------------
+bool CRenderWorldObject::ProcessAlpha(const int &maxAlpha)
+{
+	if (!g_ConfigManager.RemoveOrCreateObjectsWithBlending)
+	{
+		m_DrawTextureColor[3] = (uchar)maxAlpha;
+
+		return true;
+	}
+
+	bool result = false;
+	int alpha = (int)m_DrawTextureColor[3];
+
+	if (alpha > maxAlpha)
+	{
+		alpha -= ALPHA_STEP;
+
+		if (alpha < maxAlpha)
+			alpha = maxAlpha;
+
+		result = true;
+	}
+	else if (alpha < maxAlpha)
+	{
+		alpha += ALPHA_STEP;
+
+		if (alpha > maxAlpha)
+			alpha = maxAlpha;
+
+		result = true;
+	}
+
+	m_DrawTextureColor[3] = (uchar)alpha;
+
+	return result;
 }
 //---------------------------------------------------------------------------
 void CRenderWorldObject::RemoveRender()

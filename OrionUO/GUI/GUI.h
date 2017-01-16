@@ -29,6 +29,7 @@
 #include "GUIExternalTexture.h"
 #include "GUIGenericText.h"
 #include "GUIGenericTextEntry.h"
+#include "GUIGlobalColor.h"
 #include "GUIGroup.h"
 #include "GUIGumppic.h"
 #include "GUIGumppicHightlighted.h"

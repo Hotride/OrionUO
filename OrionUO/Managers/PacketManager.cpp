@@ -865,6 +865,9 @@ PACKET_HANDLER(EnterWorld)
 		g_Party.Inviter = 0;
 		g_Party.Clear();
 
+		g_Ability[0] = 4;
+		g_Ability[1] = 10;
+
 		g_ResizedGump = NULL;
 	}
 
@@ -1290,6 +1293,10 @@ PACKET_HANDLER(UpdateItem)
 		g_ObjectInHand = NULL;
 	}
 
+	g_World->RemoveFromContainer(obj);
+	obj->Container = 0xFFFFFFFF;
+	g_World->m_Items->AddObject(obj);
+
 	if (obj->Dragged)
 		g_GumpManager.CloseGump(serial, 0, GT_DRAG);
 
@@ -1395,6 +1402,10 @@ PACKET_HANDLER(UpdateItemSA)
 		LOG("no memory??");
 		return;
 	}
+
+	g_World->RemoveFromContainer(obj);
+	obj->Container = 0xFFFFFFFF;
+	g_World->m_Items->AddObject(obj);
 
 	if (obj->Dragged)
 		g_GumpManager.CloseGump(serial, 0, GT_DRAG);
@@ -1608,19 +1619,21 @@ PACKET_HANDLER(UpdateObject)
 		obj2->MapIndex = g_CurrentMap;
 
 		graphic = ReadUInt16BE();
+		ushort color = 0;
 
 		uchar layer = ReadUInt8();
 
 		if (m_ClientVersion >= CV_70331)
-			obj2->Color = ReadUInt16BE();
+			color = ReadUInt16BE();
 		else if (graphic & 0x8000)
 		{
 			graphic &= 0x7FFF;
 
-			obj2->Color = ReadUInt16BE();
+			color = ReadUInt16BE();
 		}
 
 		obj2->Graphic = graphic;
+		obj2->Color = color;
 
 		g_World->PutEquipment(obj2, obj, layer);
 		obj2->OnGraphicChange();
@@ -1634,6 +1647,9 @@ PACKET_HANDLER(UpdateObject)
 
 		serial = ReadUInt32BE();
 	}
+
+	if (obj->IsPlayer())
+		g_Player->UpdateAbilities();
 
 	SendMegaClilocRequests(megaClilocRequestList);
 }
@@ -1682,6 +1698,9 @@ PACKET_HANDLER(EquipItem)
 		obj->Clear();
 	else if (layer < OL_MOUNT)
 		g_GumpManager.UpdateContent(cserial, 0, GT_PAPERDOLL);
+
+	if (cserial == g_PlayerSerial && (layer == OL_1_HAND || layer == OL_2_HAND))
+		g_Player->UpdateAbilities();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateContainedItem)
@@ -1959,6 +1978,8 @@ PACKET_HANDLER(DenyMoveItem)
 
 			if (obj != NULL)
 			{
+				g_World->RemoveFromContainer(obj);
+
 				obj->Paste(g_ObjectInHand);
 
 				if (m_ClientVersion >= CV_308Z)
@@ -2017,6 +2038,7 @@ PACKET_HANDLER(DeleteObject)
 
 	if (obj != NULL)
 	{
+		bool updateAbilities = false;
 		uint cont = obj->Container;
 
 		if (cont != 0xFFFFFFFF)
@@ -2025,6 +2047,12 @@ PACKET_HANDLER(DeleteObject)
 
 			if (top != NULL)
 			{
+				if (top->IsPlayer() && !obj->NPC)
+				{
+					CGameItem *item = (CGameItem*)obj;
+					updateAbilities = (item->Layer == OL_1_HAND || item->Layer == OL_2_HAND);
+				}
+
 				CGameObject *tradeBox = top->FindSecureTradeBox();
 
 				if (tradeBox != NULL)
@@ -2073,7 +2101,32 @@ PACKET_HANDLER(DeleteObject)
 		if (obj->NPC && g_Party.Contains(obj->Serial))
 			obj->RemoveRender();
 		else
+		{
+			if (obj->IsCorpse() && obj->LastAnimationChangeTime == GetTickCount())
+			{
+				CGameItem *fake = new CGameItem(1);
+
+				fake->Graphic = 0x2006;
+				fake->Color = obj->Color;
+				fake->Count = obj->Count;
+				fake->X = obj->X;
+				fake->Y = obj->Y;
+				fake->Z = obj->Z;
+				fake->Layer = ((CGameItem*)obj)->Layer;
+				fake->RenderQueueIndex = 6;
+				fake->UsedLayer = ((CGameItem*)obj)->UsedLayer;
+				fake->AnimIndex = 0;
+				fake->FieldColor = 1;
+
+				g_World->m_Items->AddObject(fake);
+				g_MapManager->AddRender(fake);
+			}
+
 			g_World->RemoveObject(obj);
+
+			if (updateAbilities)
+				g_Player->UpdateAbilities();
+		}
 	}
 }
 //----------------------------------------------------------------------------------
@@ -2256,6 +2309,8 @@ PACKET_HANDLER(SetWeather)
 	g_Weather.Type = type;
 	g_Weather.Count = ReadUInt8();
 
+	bool showMessage = (g_Weather.Count > 0);
+
 	if (g_Weather.Count > 70)
 		g_Weather.Count = 70;
 
@@ -2267,22 +2322,30 @@ PACKET_HANDLER(SetWeather)
 	{
 		case 0:
 		{
-			g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to rain.");
+			if (showMessage)
+				g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to rain.");
+
 			break;
 		}
 		case 1:
 		{
-			g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A fierce storm approaches.");
+			if (showMessage)
+				g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A fierce storm approaches.");
+
 			break;
 		}
 		case 2:
 		{
-			g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to snow.");
+			if (showMessage)
+				g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "It begins to snow.");
+
 			break;
 		}
 		case 3:
 		{
-			g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A storm is brewing.");
+			if (showMessage)
+				g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "A storm is brewing.");
+
 			break;
 		}
 		case 0xFE:
@@ -2803,6 +2866,16 @@ PACKET_HANDLER(ExtendedCommand)
 						spellbook->AddItem(spellItem);
 					}
 				}
+			}
+
+			break;
+		}
+		case 0x21:
+		{
+			IFOR(i, 0, 2)
+			{
+				g_AbilityList[g_Ability[i]] = g_AbilityList[g_Ability[i]] & 0x00FF;
+				g_GumpManager.UpdateContent(i, 0, GT_ABILITY);
 			}
 
 			break;
@@ -3612,12 +3685,42 @@ PACKET_HANDLER(DisplayDeath)
 	uint serial = ReadUInt32BE();
 	uint corpseSerial = ReadUInt32BE();
 
-	CGameItem *obj = g_World->FindWorldItem(corpseSerial);
+	if (!corpseSerial)
+	{
+		if (serial < 0x40000000)
+		{
+			CGameCharacter *owner = g_World->FindWorldCharacter(serial);
 
-	if (obj != NULL)
-		obj->AnimIndex = 0;
+			if (owner != NULL)
+			{
+				CGameItem *obj = new CGameItem(1);
+
+				obj->Graphic = 0x2006;
+				obj->Color = owner->Color;
+				obj->Count = owner->Graphic;
+				obj->X = owner->X;
+				obj->Y = owner->Y;
+				obj->Z = owner->Z;
+				obj->Layer = owner->Direction;
+				obj->RenderQueueIndex = 6;
+				obj->UsedLayer = (ReadUInt32BE() ? 1 : 0);
+				obj->AnimIndex = 0;
+				obj->FieldColor = 1;
+
+				g_World->m_Items->AddObject(obj);
+				g_MapManager->AddRender(obj);
+			}
+		}
+	}
 	else
-		g_CorpseSerialList.push_back(pair<uint, uint>(corpseSerial, g_Ticks + 1000));
+	{
+		CGameItem *obj = g_World->FindWorldItem(corpseSerial);
+
+		if (obj != NULL)
+			obj->AnimIndex = 0;
+		else
+			g_CorpseSerialList.push_back(pair<uint, uint>(corpseSerial, g_Ticks + 1000));
+	}
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenChat)

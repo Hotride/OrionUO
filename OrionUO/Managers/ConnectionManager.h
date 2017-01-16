@@ -42,6 +42,8 @@ private:
 
 	uchar m_Seed[4];
 
+	void SendIP(CSocket &socket, puchar seed);
+
 public:
 	CConnectionManager();
 	~CConnectionManager();

@@ -30,6 +30,9 @@ m_FieldColor(0), m_MultiDistanceBonus(0)
 //----------------------------------------------------------------------------------
 CGameItem::~CGameItem()
 {
+	if (IsCorpse() && m_FieldColor)
+		return;
+
 	ClearMultiItems();
 	
 	if (m_Opened)
@@ -273,6 +276,15 @@ void CGameItem::Draw(const int &x, const int &y)
 		g_RenderedObjectsCountInGameWindow++;
 #endif
 
+		bool useAlpha = (m_DrawTextureColor[3] != 0xFF);
+
+		if (useAlpha)
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glColor4ub(m_DrawTextureColor[0], m_DrawTextureColor[1], m_DrawTextureColor[2], m_DrawTextureColor[3]);
+		}
+
 		if (IsCorpse()) //Трупик
 			g_AnimationManager.DrawCorpse(this, x, y - ((m_Z * 4) + 3));
 		else
@@ -309,6 +321,12 @@ void CGameItem::Draw(const int &x, const int &y)
 
 			if (IsLightSource() && g_GameScreen.UseLight)
 				g_GameScreen.AddLight(this, this, x, y - (m_Z * 4));
+		}
+
+		if (useAlpha)
+		{
+			glColor4ub(0xFF, 0xFF, 0xFF, 0xFF);
+			glDisable(GL_BLEND);
 		}
 
 		if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == m_Serial && !Locked())

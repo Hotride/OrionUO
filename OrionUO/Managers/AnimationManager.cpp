@@ -234,7 +234,7 @@ const int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 //----------------------------------------------------------------------------------
 CAnimationManager::CAnimationManager()
 : WISP_DATASTREAM::CDataReader(), m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0),
-m_Direction(0), m_Sitting(0), m_Transform(false)
+m_Direction(0), m_Sitting(0), m_Transform(false), m_UseBlending(false)
 {
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
@@ -1264,7 +1264,10 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 
 			g_GL.DrawShadow(frame->Texture, x, y, (float)frame->Width, frame->Height / 2.0f, mirror);
 
-			glDisable(GL_BLEND);
+			if (m_UseBlending)
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			else
+				glDisable(GL_BLEND);
 		}
 		else
 		{
@@ -1396,7 +1399,12 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 				g_GL.Draw(frame->Texture, x, y, frame->Width, frame->Height, mirror);
 
 			if (spectralColor)
-				glDisable(GL_BLEND);
+			{
+				if (m_UseBlending)
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				else
+					glDisable(GL_BLEND);
+			}
 		}
 	}
 }
@@ -1526,7 +1534,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	bool needHPLine = false;
 	uint serial = obj->Serial;
 	bool drawShadow = !obj->Dead();
-	bool usingBlending = false;
+	m_UseBlending = false;
 
 	if (g_DrawAura)
 	{
@@ -1553,7 +1561,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 			{
 				case HCRM_ALPHA_BLENDING:
 				{
-					usingBlending = true;
+					m_UseBlending = true;
 
 					glColor4ub(0xFF, 0xFF, 0xFF, g_ConfigManager.HiddenAlpha);
 					glEnable(GL_BLEND);
@@ -1591,6 +1599,16 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 			else if (obj->Notoriety != NT_INVULNERABLE && obj->YellowHits())
 				m_Color = 0x0030;
 		}
+	}
+
+	puchar drawTextureColor = obj->m_DrawTextureColor;
+
+	if (!m_UseBlending && drawTextureColor[3] != 0xFF)
+	{
+		m_UseBlending = true;
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4ub(drawTextureColor[0], drawTextureColor[1], drawTextureColor[2], drawTextureColor[3]);
 	}
 
 	bool isAttack = (serial == g_LastAttackObject);
@@ -1699,8 +1717,9 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 		}
 	}
 
-	if (usingBlending)
+	if (m_UseBlending)
 	{
+		m_UseBlending = false;
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glDisable(GL_BLEND);
 	}

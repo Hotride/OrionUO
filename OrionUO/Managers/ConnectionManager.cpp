@@ -12,11 +12,13 @@
 #include "../Wisp/WispDataStream.h"
 #include "../Wisp/WispLogger.h"
 #include "../OrionUO.h"
+#include "../OrionWindow.h"
 #include "PacketManager.h"
 #include "../Screen stages/ConnectionScreen.h"
 #include "../Screen stages/GameBlockedScreen.h"
 #include "../Managers/GumpManager.h"
 #include "../Managers/PacketManager.h"
+#include "../Managers/PluginManager.h"
 //----------------------------------------------------------------------------------
 CConnectionManager g_ConnectionManager;
 //----------------------------------------------------------------------------------
@@ -126,6 +128,12 @@ void CConnectionManager::Init(puchar gameSeed)
 	g_NetworkInit(false, &gameSeed[0]);
 }
 //---------------------------------------------------------------------------
+void CConnectionManager::SendIP(CSocket &socket, puchar seed)
+{
+	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_IP_SEND, (WPARAM)seed, 4);
+	socket.Send(seed, 4);
+}
+//---------------------------------------------------------------------------
 /*!
 Подключение к серверу
 @param [__in] IP IP адрес сервера
@@ -150,13 +158,13 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 			g_LastSendTime = g_LastPacketTime;
 
 			if (g_PacketManager.ClientVersion < CV_6060)
-				m_LoginSocket.Send(m_Seed, 4);
+				SendIP(m_LoginSocket, m_Seed);
 			else //В новых клиентах изменилось приветствие логин сокета
 			{
 				BYTE buf = 0xEF;
 				m_LoginSocket.Send(&buf, 1); //0xEF - приветствие, 1 байт
 
-				m_LoginSocket.Send(m_Seed, 4); //Сид, 4 байта
+				SendIP(m_LoginSocket, m_Seed); //Сид, 4 байта
 
 				WISP_DATASTREAM::CDataWritter stream;
 
@@ -207,7 +215,7 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 		bool result = m_GameSocket.Connect(address, port);
 
 		if (result)
-			m_GameSocket.Send(gameSeed, 4); //Если всё удачно - шлем ключ из пакета релея
+			SendIP(m_GameSocket, gameSeed); //Если всё удачно - шлем ключ из пакета релея
 
 		m_LoginSocket.Disconnect(); //Отрубаем логин сокет
 

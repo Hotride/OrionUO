@@ -41,6 +41,10 @@
 #include "../Gumps/GumpSecureTrading.h"
 #include "../Gumps/GumpWorldMap.h"
 #include "../Gumps/GumpSkill.h"
+#include "../Gumps/GumpAbility.h"
+#include "../Gumps/GumpCombatBook.h"
+#include "../Gumps/GumpRacialAbilitiesBook.h"
+#include "../Gumps/GumpRacialAbility.h"
 //----------------------------------------------------------------------------------
 CGumpManager g_GumpManager;
 //----------------------------------------------------------------------------------
@@ -88,7 +92,7 @@ void CGumpManager::AddGump(CGump *obj)
 				{
 					if (gump->CanBeMoved())
 					{
-						if (gumpType == GT_DRAG)
+						if (gumpType == GT_DRAG || gumpType == GT_ABILITY || gumpType == GT_RACIAL_ABILITY)
 						{
 							gump->X = obj->X;
 							gump->Y = obj->Y;
@@ -269,7 +273,7 @@ CGump *CGumpManager::GumpExists(uint gumpID)
 @param [__in] Type Тип гампа
 @return Ссылку на обновленный гамп или NULL
 */
-CGump *CGumpManager::UpdateContent(uint serial, uint id, GUMP_TYPE type)
+CGump *CGumpManager::UpdateContent(const uint &serial, const uint &id, const GUMP_TYPE &type)
 {
 	CGump *gump = GetGump(serial, id, type);
 
@@ -286,7 +290,7 @@ CGump *CGumpManager::UpdateContent(uint serial, uint id, GUMP_TYPE type)
 @param [__in] Type Тип гампа
 @return Ссылку на обновленный гамп или NULL
 */
-CGump *CGumpManager::UpdateGump(uint serial, uint id, GUMP_TYPE type)
+CGump *CGumpManager::UpdateGump(const uint &serial, const uint &id, const GUMP_TYPE &type)
 {
 	CGump *gump = GetGump(serial, id, type);
 
@@ -303,7 +307,7 @@ CGump *CGumpManager::UpdateGump(uint serial, uint id, GUMP_TYPE type)
 @param [__in] Type Тип гампа
 @return Ссылку на гамп или NULL
 */
-CGump *CGumpManager::GetGump(uint serial, uint id, GUMP_TYPE type)
+CGump *CGumpManager::GetGump(const uint &serial, const uint &id, const GUMP_TYPE &type)
 {
 	CGump *gump = (CGump*)m_Items;
 
@@ -1202,20 +1206,34 @@ void CGumpManager::Load(const string &path)
 					break;
 				}
 				case GT_MENUBAR:
-				case GT_BUFF:
 				{
-					if (gumpType == GT_BUFF)
-					{
-						bufficonWindowFound = true;
-						gump = new CGumpBuff(g_PlayerSerial, gumpX, gumpY);
-						gump->Graphic = file.ReadUInt16LE();
-					}
-					else if (!g_ConfigManager.DisableMenubar)
+					if (!g_ConfigManager.DisableMenubar)
 					{
 						menubarFound = true;
 						gump = new CGumpMenubar(g_PlayerSerial, gumpX, gumpY);
 						((CGumpMenubar*)gump)->Opened = gumpMinimized;
 					}
+
+					break;
+				}
+				case GT_BUFF:
+				{
+					bufficonWindowFound = true;
+					gump = new CGumpBuff(g_PlayerSerial, gumpX, gumpY);
+					gump->Graphic = file.ReadUInt16LE();
+
+					break;
+				}
+				case GT_ABILITY:
+				{
+					gump = new CGumpAbility(file.ReadUInt32LE(), gumpX, gumpY);
+
+					break;
+				}
+				case GT_COMBAT_BOOK:
+				{
+					gump = new CGumpCombatBook(gumpX, gumpY);
+					gump->Minimized = gumpMinimized;
 
 					break;
 				}
@@ -1257,6 +1275,21 @@ void CGumpManager::Load(const string &path)
 					uint serial = file.ReadUInt32LE();
 
 					gump = new CGumpSkill(serial, gumpX, gumpY);
+
+					break;
+				}
+				case GT_RACIAL_ABILITIES_BOOK:
+				{
+					gump = new CGumpRacialAbilitiesBook(gumpX, gumpY);
+					gump->Minimized = gumpMinimized;
+
+					break;
+				}
+				case GT_RACIAL_ABILITY:
+				{
+					uint serial = file.ReadUInt32LE();
+
+					gump = new CGumpRacialAbility(serial, gumpX, gumpY);
 
 					break;
 				}
@@ -1458,6 +1491,8 @@ void CGumpManager::Save(const string &path)
 				break;
 			}
 			case GT_MENUBAR:
+			case GT_COMBAT_BOOK:
+			case GT_RACIAL_ABILITIES_BOOK:
 			{
 				SaveDefaultGumpProperties(writter, gump, 12);
 
@@ -1523,6 +1558,8 @@ void CGumpManager::Save(const string &path)
 				count++;
 			}
 			case GT_SKILL:
+			case GT_ABILITY:
+			case GT_RACIAL_ABILITY:
 			{
 				SaveDefaultGumpProperties(writter, gump, 16);
 

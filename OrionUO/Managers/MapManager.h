@@ -56,7 +56,7 @@ public:
 	CMapManager();
 	virtual ~CMapManager();
 
-	CIndexMap *GetIndex(const int &map, const int &blockX, const int &blockY);
+	CIndexMap *GetIndex(const uint &map, const int &blockX, const int &blockY);
 
 	virtual void CreateBlockTable(int map);
 

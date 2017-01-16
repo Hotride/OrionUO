@@ -99,9 +99,11 @@ private:
 
 	void CheckStaticTileFilterFiles();
 
-	string DecodeArgumentString(const char *text);
+	string DecodeArgumentString(const char *text, const int &length);
 
 	void ParseCommandLine();
+
+	void LoadPlugin(const string &libpath, const string &function, const uint &flags);
 
 public:
 	COrion();
@@ -513,6 +515,10 @@ public:
 	void RequestQuestGump();
 
 	void DisconnectGump();
+
+	void OpenCombatBookGump();
+
+	void OpenRacialAbilitiesBookGump();
 };
 //----------------------------------------------------------------------------------
 extern COrion g_Orion;

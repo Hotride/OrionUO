@@ -51,6 +51,8 @@ extern bool g_AbyssPacket03First;
 //----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y);
 //----------------------------------------------------------------------------------
+string ToCamelCase(string text);
+//----------------------------------------------------------------------------------
 //Функции для вычисления дистанции
 class CGameObject;
 int GetDistance(CGameObject *current, CGameObject *target);
@@ -257,6 +259,10 @@ extern uint g_PingByWalk[0x100][2];
 extern uint g_Ping;
 
 extern bool g_DrawAura;
+
+static const int MAX_ABILITIES_COUNT = 31;
+extern ushort g_AbilityList[MAX_ABILITIES_COUNT];
+extern uchar g_Ability[2];
 //----------------------------------------------------------------------------------
 inline bool IsBackground(const __int64 &flags) { return (flags & 0x00000001); }
 inline bool IsWeapon(const __int64 &flags) { return (flags & 0x00000002); }

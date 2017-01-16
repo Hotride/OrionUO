@@ -16,7 +16,7 @@
 class CPacketManager;
 typedef void (CPacketManager::*PACKET_FUNCTION)();
 //----------------------------------------------------------------------------------
-#define ORION_SAVE_ALL_PACKETS 0
+#define ORION_SAVE_ALL_PACKETS 1
 
 #define ORION_SAVE_PACKET 1
 

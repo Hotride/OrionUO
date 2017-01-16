@@ -68,6 +68,8 @@ private:
 	//!Текущий кадр сидит
 	int m_Sitting;
 
+	bool m_UseBlending;
+
 	//!Упорядоченный список слоев для корректного порядка прорисовки для всех направлений персонажа
 	static const int USED_LAYER_COUNT = 23;
 	static const int m_UsedLayers[8][USED_LAYER_COUNT];

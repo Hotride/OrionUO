@@ -41,6 +41,10 @@ public:
 	@return 
 	*/
 	void ProcessSmoothAction(uchar action = 0xFF);
+
+
+
+	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
 };
 //----------------------------------------------------------------------------------
 extern CCharacterListScreen g_CharacterListScreen;

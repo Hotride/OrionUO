@@ -20,6 +20,7 @@ public:
 
 	static const int RENDER_TIMER_ID = 1;
 	static const int UPDATE_TIMER_ID = 2;
+	static const int FASTLOGIN_TIMER_ID = 3;
 
 	void SetRenderTimerDelay(const int &delay);
 
@@ -46,6 +47,8 @@ protected:
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
 	virtual void OnKeyUp(const WPARAM &wParam, const LPARAM &lParam);
 	virtual HRESULT OnRepaint(const WPARAM &wParam, const LPARAM &lParam);
+	virtual void OnShow(const bool &show);
+	virtual void OnSetText(const LPARAM &lParam);
 	virtual void OnTimer(uint id);
 	virtual void OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedTimer *timer);
 	virtual LRESULT OnUserMessages(const UINT &message, const WPARAM &wParam, const LPARAM &lParam);

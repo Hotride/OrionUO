@@ -65,6 +65,8 @@ public:
 	CGUICheckbox *m_SavePassword;
 	CGUICheckbox *m_AutoLogin;
 
+	void SetAccounting(const string &account, const string &password);
+
 	void Paste();
 
 	/*!
