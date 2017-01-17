@@ -434,7 +434,7 @@ void CGumpPaperdoll::UpdateContent()
 		bodyGumppic->PartialHue = true;
 		bodyGumppic->Color = color;
 	}
-	if (obj->Graphic == 0x029A)
+	else if (obj->Graphic == 0x029A)
 	{
 		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x0079, 8, 19)); //Gargoly Male gump
 		bodyGumppic->PartialHue = true;
@@ -473,7 +473,7 @@ void CGumpPaperdoll::UpdateContent()
 
 	g_ColorizerShader->Use();
 
-	if (obj->IsHuman())
+	//if (obj->IsHuman())
 	{
 		bool useSlots = g_ConfigManager.PaperdollSlots;
 
