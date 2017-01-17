@@ -73,6 +73,12 @@
     <Filter Include="Header Files\Walker">
       <UniqueIdentifier>{11ed1c8a-f1fd-423d-99d5-77c5784f6a7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Utility">
+      <UniqueIdentifier>{a8e8eecb-58f9-416d-9b8d-2e18f0b0f3e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility">
+      <UniqueIdentifier>{abdb335b-8a66-473e-9096-39e63390a6de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -774,6 +780,9 @@
     <ClInclude Include="Gumps\GumpRacialAbility.h">
       <Filter>Header Files\Gumps</Filter>
     </ClInclude>
+    <ClInclude Include="AutoResetEvent.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1438,6 +1447,12 @@
     </ClCompile>
     <ClCompile Include="Gumps\GumpRacialAbility.cpp">
       <Filter>Source Files\Gumps</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\UOFileReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoResetEvent.cpp">
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
