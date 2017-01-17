@@ -268,7 +268,6 @@ UINT_LIST COrion::FindPattern(puchar ptr, const int &size, const UCHAR_LIST &pat
 bool COrion::Install()
 {
 	LOG("COrion::Install()\n");
-
 	SetUnhandledExceptionFilter(OrionUnhandledExceptionFilter);
 
 	IFOR(i, 0, 256)
@@ -292,6 +291,8 @@ bool COrion::Install()
 	LoadAutoLoginNames();
 
 	DEBUGLOG("Load files\n");
+	if (g_FileManager.UseUOP)
+		g_FileManager.TryReadUOPAnimations();
 	if (!g_FileManager.Load())
 	{
 		string tmp = string("Error loading file:\n") + WISP_FILE::g_WispMappedFileError;
@@ -505,7 +506,12 @@ bool COrion::Install()
 	InitScreen(GS_MAIN);
 
 	LOG("Installation completed!\n");
-
+	if (g_FileManager.UseUOP)
+	{
+		LOG("Waiting for FileManager to load AnimationSequence.uop\n");
+		g_FileManager.m_AutoResetEvent.WaitOne();
+		LOG("FileManager.TryReadUOPAnimations() done!\n");
+	}
 	return true;
 }
 //----------------------------------------------------------------------------------

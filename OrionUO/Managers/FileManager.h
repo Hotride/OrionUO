@@ -12,6 +12,8 @@
 //----------------------------------------------------------------------------------
 #include "../Globals.h"
 #include "../Wisp/WispMappedFile.h"
+#include "../AutoResetEvent.h"
+
 //----------------------------------------------------------------------------------
 class CFileManager
 {
@@ -22,6 +24,8 @@ class CFileManager
 public:
 	CFileManager();
 	virtual ~CFileManager();
+
+	AutoResetEvent m_AutoResetEvent;
 
 	//!Адреса файлов в памяти
 	WISP_FILE::CMappedFile m_AnimIdx[6];
@@ -81,6 +85,10 @@ public:
 
 	bool Load();
 	void Unload();
+	void TryReadUOPAnimations();
+
+private:
+	void ReadTask();
 };
 //---------------------------------------------------------------------------
 extern CFileManager g_FileManager;

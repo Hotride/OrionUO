@@ -9,11 +9,12 @@
 //----------------------------------------------------------------------------------
 #include "FileManager.h"
 #include "../Wisp/WispApplication.h"
+#include <thread>
 
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
 CFileManager::CFileManager()
-: m_UseVerdata(false), m_UseUOP(false), m_UnicodeFontsCount(0)
+: m_UseVerdata(false), m_UseUOP(false), m_UnicodeFontsCount(0), m_AutoResetEvent(false)
 {
 }
 //----------------------------------------------------------------------------------
@@ -241,3 +242,17 @@ void CFileManager::Unload()
 	m_VerdataMul.Unload();
 }
 //----------------------------------------------------------------------------------
+void CFileManager::TryReadUOPAnimations()
+{
+	std::thread readThread(&CFileManager::ReadTask, this);
+	readThread.detach();
+}
+//----------------------------------------------------------------------------------
+void CFileManager::ReadTask()
+{
+	/*	IFOR(i, 1, 5)
+	{
+	if (!m_AnimationFrame[i].Load(g_App.FilePath("AnimationFrame%i.uop", i)))
+	return false;*/
+	m_AutoResetEvent.Set();
+}
