@@ -785,7 +785,7 @@ void CUopMapManager::CreateBlockTable(int map)
 	long long nextBlock = uopFile.ReadInt64LE();
 
 
-	std::unordered_map<unsigned long long, UOPMapaDataStruct> hashes;
+	std::unordered_map<unsigned long long, UOPMapaData> hashes;
 
 	uopFile.ResetPtr();
 	uopFile.Move(nextBlock);
@@ -808,7 +808,7 @@ void CUopMapManager::CreateBlockTable(int map)
 			{
 				continue;
 			}
-			UOPMapaDataStruct dataStruct;
+			UOPMapaData dataStruct;
 			dataStruct.offset = offset + headerLength;
 			dataStruct.length = compressedLength;
 			hashes[hash] = dataStruct;
@@ -822,7 +822,7 @@ void CUopMapManager::CreateBlockTable(int map)
 
 	unsigned long long hash;
 	int fileNumber = -1;
-	UOPMapaDataStruct uopDataStruct;
+	UOPMapaData uopDataStruct;
 	IFOR(block, 0, maxBlockCount)
 	{
 		CIndexMap &index = list[block];

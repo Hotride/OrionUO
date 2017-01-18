@@ -30,7 +30,7 @@ public:
 	virtual ~CIndexMap();
 };
 //----------------------------------------------------------------------------------
-struct UOPMapaDataStruct
+struct UOPMapaData
 {
 	int offset;
 	int length;
