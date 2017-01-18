@@ -10,6 +10,8 @@
 #include "FileManager.h"
 #include "../Wisp/WispApplication.h"
 #include <thread>
+#include <fstream>
+#include "AnimationManager.h"
 
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
@@ -250,9 +252,68 @@ void CFileManager::TryReadUOPAnimations()
 //----------------------------------------------------------------------------------
 void CFileManager::ReadTask()
 {
-	/*	IFOR(i, 1, 5)
+	IFOR(i, 1, 5)
 	{
-	if (!m_AnimationFrame[i].Load(g_App.FilePath("AnimationFrame%i.uop", i)))
-	return false;*/
+		char magic[4];
+		char version[4];
+		char signature[4];
+		char nextBlock[8];
+
+		std::fstream animFile;
+		string path = g_App.FilePath("AnimationFrame%i.uop", i);
+		animFile.open(path, std::ios::binary | std::ios::in);
+
+		if (!animFile) continue;
+
+
+		animFile.read(magic, 4);
+		animFile.read(version, 4);
+		animFile.read(signature, 4);
+		animFile.read(nextBlock, 8);
+
+		animFile.seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
+
+		do
+		{
+			char fileCount[4];
+			char offset[8];
+			char headerlength[4];
+			char compressedlength[4];
+			char hash[8];
+			char decompressedlength[4];
+			char skip1[4];
+			char skip2[2];
+
+			animFile.read(fileCount, 4);
+			animFile.read(nextBlock, 8);
+			int count = *reinterpret_cast<int*>(fileCount);
+			IFOR(i, 0, count)
+			{
+				animFile.read(offset, 8);
+
+				if (*reinterpret_cast<unsigned long long*>(offset) == 0)
+				{
+					continue;
+				}
+
+				animFile.read(headerlength, 4);
+				animFile.read(compressedlength, 4);
+				animFile.read(decompressedlength, 4);
+				animFile.read(hash, 8);
+				animFile.read(skip1, 4);
+				animFile.read(skip2, 2);
+
+				UOPAnimationData dataStruct;
+				dataStruct.offset = *reinterpret_cast<unsigned long long*>(offset)+*reinterpret_cast<int*>(headerlength);
+				dataStruct.length = *reinterpret_cast<int*>(compressedlength);
+				dataStruct.fileStream = &animFile;
+				g_AnimationManager.AddUopAnimData(*reinterpret_cast<unsigned long long*>(hash), dataStruct);
+			}
+
+			animFile.seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
+		} while (nextBlock != nullptr);
+
+		animFile.close();
+	}
 	m_AutoResetEvent.Set();
 }

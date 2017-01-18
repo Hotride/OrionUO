@@ -13,6 +13,8 @@
 #include "../IndexObject.h"
 #include "../TextureObject.h"
 #include "../Wisp/WispDataStream.h"
+#include <fstream>
+#include <unordered_map>
 //----------------------------------------------------------------------------------
 static const float UPPER_BODY_RATIO = 0.35f;
 static const float MID_BODY_RATIO = 0.60f;
@@ -33,6 +35,13 @@ struct ANIMATION_DIMENSIONS
 	int CenterX;
 	int CenterY;
 };
+//Данные о местонахождении сжатого блока данных с уоп фреймами
+struct UOPAnimationData
+{
+	unsigned int offset;
+	int length;
+	std::fstream* fileStream;
+};
 //----------------------------------------------------------------------------------
 //!Класс менеджера анимаций
 class CAnimationManager : public WISP_DATASTREAM::CDataReader
@@ -49,6 +58,10 @@ private:
 	uint m_AddressIdx[6];
 	uint m_AddressMul[6];
 	uint m_SizeIdx[6];
+
+	//Ключ - хеш, созданный на основе индкекса анимации и её группы.
+	//Значение - структура указывающая на местонахождение данных.
+	std::unordered_map<unsigned long long, UOPAnimationData> uopFrameDataRefMap;
 
 	//!Высота текстуры персонажа.
 	int m_CharacterFrameHeight;
@@ -276,6 +289,10 @@ public:
 	void CalculateFrameInformation(FRAME_OUTPUT_INFO &info, class CGameObject *obj, const bool &mirror, const uchar &animIndex);
 
 	struct DRAW_FRAME_INFORMATION CollectFrameInformation(class CGameObject *gameObject, const bool &checkLayers = true);
+	/*!
+	Добавлям данные в мапу uopFrameDataRefMap
+	*/
+	void AddUopAnimData(unsigned long long hash, UOPAnimationData animData);
  };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер анимаций
