@@ -39,7 +39,7 @@ struct ANIMATION_DIMENSIONS
 struct UOPAnimationData
 {
 	unsigned int offset;
-	int length;
+	unsigned int length;
 	std::fstream* fileStream;
 };
 //----------------------------------------------------------------------------------

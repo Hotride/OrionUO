@@ -286,16 +286,10 @@ void CFileManager::ReadTask()
 
 			animFile.read(fileCount, 4);
 			animFile.read(nextBlock, 8);
-			int count = *reinterpret_cast<int*>(fileCount);
+			int count = *reinterpret_cast<unsigned int*>(fileCount);
 			IFOR(i, 0, count)
 			{
 				animFile.read(offset, 8);
-
-				if (*reinterpret_cast<unsigned long long*>(offset) == 0)
-				{
-					continue;
-				}
-
 				animFile.read(headerlength, 4);
 				animFile.read(compressedlength, 4);
 				animFile.read(decompressedlength, 4);
@@ -303,15 +297,22 @@ void CFileManager::ReadTask()
 				animFile.read(skip1, 4);
 				animFile.read(skip2, 2);
 
+				auto offsetVal = *reinterpret_cast<unsigned long long*>(offset);
+				if (offsetVal == 0)
+				{
+					continue;
+				}
+
 				UOPAnimationData dataStruct;
-				dataStruct.offset = *reinterpret_cast<unsigned long long*>(offset)+*reinterpret_cast<int*>(headerlength);
-				dataStruct.length = *reinterpret_cast<int*>(compressedlength);
+				dataStruct.offset = offsetVal + *reinterpret_cast<unsigned int*>(headerlength);
+				dataStruct.length = *reinterpret_cast<unsigned int*>(compressedlength);
+
 				dataStruct.fileStream = &animFile;
 				g_AnimationManager.AddUopAnimData(*reinterpret_cast<unsigned long long*>(hash), dataStruct);
 			}
 
 			animFile.seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
-		} while (nextBlock != nullptr);
+		} while (nextBlock != 0);
 
 		animFile.close();
 	}
