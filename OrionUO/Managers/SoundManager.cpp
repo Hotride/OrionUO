@@ -270,9 +270,9 @@ void CSoundManager::PlayMP3(std::string fileName, int index, bool loop, bool war
 		BASS_ChannelStop(m_Music);
 	else
 		StopMusic();
-	HSTREAM streamHandle = BASS_StreamCreateFile(FALSE, fileName.c_str(), 0, 0, 0);
+	HSTREAM streamHandle = BASS_StreamCreateFile(FALSE, fileName.c_str(), 0, 0, loop ? BASS_SAMPLE_LOOP : 0);
 	BASS_ChannelSetAttribute(streamHandle, BASS_ATTRIB_VOL, GetVolumeValue(-1, true));
-	BASS_ChannelPlay(streamHandle, loop ? 1 : 0);
+	BASS_ChannelPlay(streamHandle, 0);
 	if (warmode)
 		m_WarMusic = streamHandle;
 	else
