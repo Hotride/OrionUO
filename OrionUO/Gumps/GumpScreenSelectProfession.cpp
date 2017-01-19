@@ -501,7 +501,7 @@ void CGumpScreenSelectProfession::GUMP_BUTTON_EVENT_C
 	{
 		if (serial >= ID_SPS_SKILLS_LIST)
 		{
-			g_SelectProfessionScreen.DecSkillSelection();
+			g_SelectProfessionScreen.SkillSelection = g_SelectProfessionScreen.SkillSelection - 1;;
 			int index = serial - ID_SPS_SKILLS_LIST;
 			index = g_SkillSort.m_Skills[index];
 

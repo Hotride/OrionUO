@@ -321,9 +321,7 @@ void CGumpWorldMap::LoadMap(int map)
 					if (mapFile.Load(g_App.FilePath(pathBuf)) && mapFile.Size)
 					{
 						data = (pushort)mapFile.Start;
-						g_GL.BindTexture16(g_MapTexture[map].Texture, g_MapSize[map].Width, g_MapSize[map].Height, data);
-						g_MapTexture[map].Width = g_MapSize[map].Width;
-						g_MapTexture[map].Height = g_MapSize[map].Height;
+						g_GL.BindTexture16(g_MapTexture[map], g_MapSize[map].Width, g_MapSize[map].Height, data);
 
 						foundInTable = true;
 					}
@@ -373,9 +371,7 @@ void CGumpWorldMap::LoadMap(int map)
 				}
 			}
 
-			g_GL.BindTexture16(g_MapTexture[map].Texture, g_MapSize[map].Width, g_MapSize[map].Height, data);
-			g_MapTexture[map].Width = g_MapSize[map].Width;
-			g_MapTexture[map].Height = g_MapSize[map].Height;
+			g_GL.BindTexture16(g_MapTexture[map], g_MapSize[map].Width, g_MapSize[map].Height, data);
 
 			FILE *mapDataFile = fopen(g_App.FilePath(pathBuf).c_str(), "wb");
 

@@ -446,11 +446,7 @@ bool COrion::Install()
 	};
 
 	IFOR(i, 0, 2)
-	{
-		g_TextureGumpState[i].Width = 10;
-		g_TextureGumpState[i].Height = 14;
-		g_GL.BindTexture16(g_TextureGumpState[i].Texture, 10, 14, &pdwlt[i][0]);
-	}
+		g_GL.BindTexture16(g_TextureGumpState[i], 10, 14, &pdwlt[i][0]);
 
 	memset(&m_WinterTile[0], 0, sizeof(m_WinterTile));
 
@@ -3486,10 +3482,7 @@ void COrion::CreateAuraTexture()
 		}
 	}
 
-	g_AuraTexture.Width = width;
-	g_AuraTexture.Height = height;
-
-	g_GL.BindTexture32(g_AuraTexture.Texture, width, height, &pixels[0]);
+	g_GL.BindTexture32(g_AuraTexture, width, height, &pixels[0]);
 }
 //----------------------------------------------------------------------------------
 void COrion::CreateObjectHandlesBackground()

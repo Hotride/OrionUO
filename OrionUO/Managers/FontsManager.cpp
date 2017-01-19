@@ -885,7 +885,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const 
 	{
 		info = ptr;
 
-		th.IncLinesCount();
+		th.LinesCount = th.LinesCount + 1;
 		
 		int w = 0;
 		if (ptr->Align == TS_CENTER)
@@ -989,7 +989,7 @@ bool CFontsManager::GenerateABase(uchar &font, CGLTextTexture &th, const char *s
 
 	if (pixels.size())
 	{
-		g_GL.BindTexture32(th.Texture, th.Width, th.Height, &pixels[0]);
+		g_GL.BindTexture32(th, th.Width, th.Height, &pixels[0]);
 
 		result = true;
 	}
@@ -2609,7 +2609,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 	{
 		info = ptr;
 
-		th.IncLinesCount();
+		th.LinesCount = th.LinesCount + 1;
 
 		int w = m_LeftMargin;
 
@@ -3019,7 +3019,7 @@ bool CFontsManager::GenerateWBase(uchar &font, CGLTextTexture &th, const wchar_t
 
 	if (pixels.size())
 	{
-		g_GL.BindTexture32(th.Texture, th.Width, th.Height, &pixels[0]);
+		g_GL.BindTexture32(th, th.Width, th.Height, &pixels[0]);
 
 		result = true;
 	}

@@ -15,14 +15,14 @@
 //Класс эффекта погоды
 class CWeatherEffect
 {
-	SETGETEX(float, SpeedX);
-	SETGETEX(float, SpeedY);
-	SETGETEX(float, X);
-	SETGETEX(float, Y);
-	SETGETEX(uint, ID);
-	SETGETEX(float, ScaleRatio);
-	SETGETEX(float, SpeedAngle);
-	SETGETEX(float, SpeedMagnitude);
+	SETGET(float, SpeedX);
+	SETGET(float, SpeedY);
+	SETGET(float, X);
+	SETGET(float, Y);
+	SETGET(uint, ID);
+	SETGET(float, ScaleRatio);
+	SETGET(float, SpeedAngle);
+	SETGET(float, SpeedMagnitude);
 
 public:
 	CWeatherEffect();

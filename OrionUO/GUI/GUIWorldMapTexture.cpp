@@ -27,7 +27,7 @@ void CGUIWorldMapTexture::Draw(const bool &checktrans)
 {
 	if (g_MapTexture[m_Index].Texture != 0)
 	{
-		g_GL.Draw(g_MapTexture[m_Index].Texture, m_X + m_OffsetX, m_Y + m_OffsetY, m_Width, m_Height);
+		g_GL.Draw(g_MapTexture[m_Index], m_X + m_OffsetX, m_Y + m_OffsetY);
 		//g_MapTexture[m_Index].Draw(m_X + m_OffsetX, m_Y + m_OffsetY, m_Width, m_Height, checktrans);
 	}
 }

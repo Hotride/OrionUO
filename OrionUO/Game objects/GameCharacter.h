@@ -17,12 +17,12 @@
 //!Игровой персонаж
 class CGameCharacter: public CGameObject
 {
-	SETGETEX(short, Hits);
-	SETGETEX(short, MaxHits);
-	SETGETEX(short, MaxMana);
-	SETGETEX(short, MaxStam);
-	SETGETEX(short, Mana);
-	SETGETEX(short, Stam);
+	SETGET(short, Hits);
+	SETGET(short, MaxHits);
+	SETGET(short, MaxMana);
+	SETGET(short, MaxStam);
+	SETGET(short, Mana);
+	SETGET(short, Stam);
 	SETGET(bool, Female);
 	SETGET(RACE_TYPE, Race);
 	SETGET(uchar, Direction);
@@ -39,9 +39,9 @@ class CGameCharacter: public CGameObject
 	SETGET(uint, TimeToRandomFidget);
 	SETGET(uchar, StepSoundOffset);
 
-	SETGETEX(int, OffsetX);
-	SETGETEX(int, OffsetY);
-	SETGETEX(int, OffsetZ);
+	SETGET(int, OffsetX);
+	SETGET(int, OffsetY);
+	SETGET(int, OffsetZ);
 	SETGET(uint, LastStepTime);
 	SETGET(string, PaperdollText);
 	SETGET(uchar, HitsPercent);

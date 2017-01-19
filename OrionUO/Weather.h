@@ -18,11 +18,11 @@ class CWeather
 	//Тип вогоды
 	SETGET(uchar, Type);
 	//Максимальное количество эффектов на экране
-	SETGETEX(uchar, Count);
+	SETGET(uchar, Count);
 	//Текущее количество эффектов на экране
-	SETGETEX(uchar, CurrentCount);
+	SETGET(uchar, CurrentCount);
 	//Температура
-	SETGETEX(uchar, Temperature);
+	SETGET(uchar, Temperature);
 	//Время отрисовки
 	SETGET(uint, Timer);
 

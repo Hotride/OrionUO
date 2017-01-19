@@ -27,7 +27,7 @@ void CGUITilepicScaled::Draw(const bool &checktrans)
 	{
 		SetShaderMode();
 
-		g_GL.Draw(th->Texture, m_X, m_Y, m_Width, m_Height);
+		g_GL.Draw(*th, m_X, m_Y);
 	}
 }
 //----------------------------------------------------------------------------------

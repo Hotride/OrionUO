@@ -39,7 +39,7 @@ class CGameObject : public CRenderStaticObject
 	//!На предмет кликнули
 	SETGET(bool, Clicked);
 	//!Текущий индекс анимации
-	SETGETEX(char, AnimIndex);
+	SETGET(char, AnimIndex);
 	//!Префикс You see: в журнале
 	SETGET(bool, YouSeeJournalPrefix);
 	//!Время последнего изменения анимации

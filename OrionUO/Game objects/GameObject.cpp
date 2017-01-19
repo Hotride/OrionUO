@@ -232,10 +232,7 @@ void CGameObject::GenerateObjectHandlesTexture(wstring text)
 		}
 	}
 
-	m_TextureObjectHalndes.Width = g_ObjectHandlesWidth;
-	m_TextureObjectHalndes.Height = g_ObjectHandlesHeight;
-
-	g_GL.BindTexture16(m_TextureObjectHalndes.Texture, g_ObjectHandlesWidth, g_ObjectHandlesHeight, pixels);
+	g_GL.BindTexture16(m_TextureObjectHalndes, g_ObjectHandlesWidth, g_ObjectHandlesHeight, pixels);
 }
 //----------------------------------------------------------------------------------
 /*!
