@@ -3510,17 +3510,16 @@ void COrion::IndexReplaces()
 		if (size > 0)
 		{
 			uint index = std::atoi(strings[0].c_str());
+			CIndexMusic &mp3 = m_MP3Data[index];
+			string name = "Music\\Digital\\" + strings[1];
+			string extension = ".mp3";
+			if (name.find(extension) == string::npos)
+				name += extension;
+			if (size > 1)
+				mp3.FilePath = g_App.FilePath((name).c_str());
 
-			if (index < 100)
-			{
-				CIndexMusic &mp3 = m_MP3Data[index];
-
-				if (size > 1)
-					mp3.FilePath = g_App.FilePath(("Music\\Digital\\" + strings[1] + ".mp3").c_str());
-
-				if (size > 2)
-					mp3.Loop = true;
-			}
+			if (size > 2)
+				mp3.Loop = true;
 		}
 	}
 }
@@ -3818,7 +3817,13 @@ void COrion::LoadClientStartupConfig()
 	g_SoundManager.SetMusicVolume(g_ConfigManager.MusicVolume);
 
 	if (g_ConfigManager.Music)
-		PlayMusic(8);
+	{
+		if (!g_FileManager.UseUOP)
+			PlayMusic(8);
+		else
+			PlayMusic(78);
+	}
+
 }
 //----------------------------------------------------------------------------------
 void COrion::PlayMusic(const int &index, const bool &warmode)

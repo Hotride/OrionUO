@@ -83,7 +83,7 @@ const int MAX_SOUND_DATA_INDEX_COUNT = 0x0800;
 const int MAX_MULTI_DATA_INDEX_COUNT = 0x2200;
 
 //!Размер массива с мп3 файлами
-const int MAX_MUSIC_DATA_INDEX_COUNT = 100;
+const int MAX_MUSIC_DATA_INDEX_COUNT = 150;
 
 //!Размер таблицы индексов анимаций
 const int MAX_ANIMATIONS_DATA_INDEX_COUNT = 2047;
