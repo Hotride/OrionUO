@@ -94,27 +94,27 @@ void CGumpScreenCharacterList::InitToolTip()
 	{
 		case ID_CS_QUIT:
 		{
-			g_ToolTip.Set(L"Quit Ultima Online", g_SelectedObject.Object(), 80);
+			g_ToolTip.Set(L"Quit Ultima Online", 80);
 			break;
 		}
 		case ID_CS_ARROW_NEXT:
 		{
-			g_ToolTip.Set(L"Play UO with selected character", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Play UO with selected character");
 			break;
 		}
 		case ID_CS_ARROW_PREV:
 		{
-			g_ToolTip.Set(L"Back to shard selection screen", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Back to shard selection screen");
 			break;
 		}
 		case ID_CS_NEW:
 		{
-			g_ToolTip.Set(L"Create new character", g_SelectedObject.Object(), 150);
+			g_ToolTip.Set(L"Create new character", 150);
 			break;
 		}
 		case ID_CS_DELETE:
 		{
-			g_ToolTip.Set(L"Delete this character", g_SelectedObject.Object(), 150);
+			g_ToolTip.Set(L"Delete this character", 150);
 			break;
 		}
 		default:
@@ -131,7 +131,7 @@ void CGumpScreenCharacterList::InitToolTip()
 			{
 				if (id == (ID_CS_CHARACTERS + i))
 				{
-					g_ToolTip.Set(L"Click here to select this character", g_SelectedObject.Object(), 150);
+					g_ToolTip.Set(L"Click here to select this character", 150);
 
 					break;
 				}

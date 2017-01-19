@@ -371,23 +371,23 @@ void CGumpScreenSelectProfession::InitToolTip()
 	{
 		case ID_SPS_QUIT:
 		{
-			g_ToolTip.Set(L"Quit Ultima Online", g_SelectedObject.Object(), 80);
+			g_ToolTip.Set(L"Quit Ultima Online", 80);
 			break;
 		}
 		case ID_SPS_ARROW_NEXT:
 		{
-			g_ToolTip.Set(L"Next screen", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Next screen");
 			break;
 		}
 		case ID_SPS_ARROW_PREV:
 		{
-			g_ToolTip.Set(L"Preveous screen", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Preveous screen");
 			break;
 		}
 		case ID_SPS_ARROW_BACK_PROFESSION:
 		case ID_SPS_LABEL_BACK_PROFESSION:
 		{
-			g_ToolTip.Set(L"Back to select profession category", g_SelectedObject.Object(), 150);
+			g_ToolTip.Set(L"Back to select profession category", 150);
 			break;
 		}
 		default:
@@ -405,7 +405,7 @@ void CGumpScreenSelectProfession::InitToolTip()
 			if (id == ID_SPS_LABEL + index)
 			{
 				if (child->DescriptionClilocID)
-					g_ToolTip.Set(child->DescriptionClilocID, "Description", g_SelectedObject.Object(), 350);
+					g_ToolTip.Set(child->DescriptionClilocID, "Description", 350);
 
 				break;
 			}

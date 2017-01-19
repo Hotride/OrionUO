@@ -103,7 +103,7 @@ void CGumpSpellbook::InitToolTip()
 {
 	if (m_Minimized)
 	{
-		g_ToolTip.Set(L"Double click to maximize book gump", g_SelectedObject.Object());
+		g_ToolTip.Set(L"Double click to maximize book gump");
 		return;
 	}
 
@@ -123,7 +123,7 @@ void CGumpSpellbook::InitToolTip()
 			else
 				serial -= ID_GSB_SPELL_ICON_LEFT;
 
-			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset + serial), g_SelectedObject.Object(), 150);
+			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset + serial), 150);
 		}
 	}
 }

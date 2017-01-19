@@ -29,7 +29,7 @@ CGumpRacialAbility::~CGumpRacialAbility()
 //----------------------------------------------------------------------------------
 void CGumpRacialAbility::InitToolTip()
 {
-	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1112198 + (m_Serial - 0x5DD0)), g_SelectedObject.Object(), 200);
+	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1112198 + (m_Serial - 0x5DD0)), 200);
 }
 //----------------------------------------------------------------------------------
 void CGumpRacialAbility::GUMP_BUTTON_EVENT_C

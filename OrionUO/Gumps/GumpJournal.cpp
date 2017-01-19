@@ -72,37 +72,37 @@ void CGumpJournal::InitToolTip()
 		{
 			case ID_GBS_BUTTON_MINIMIZE:
 			{
-				g_ToolTip.Set(L"Minimize the journal gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Minimize the journal gump");
 				break;
 			}
 			case ID_GBS_BUTTON_RESIZE:
 			{
-				g_ToolTip.Set(L"Start resizing for journal gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Start resizing for journal gump");
 				break;
 			}
 			case ID_GJ_SHOW_SYSTEM:
 			{
-				g_ToolTip.Set(L"Show/hide system messages", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Show/hide system messages");
 				break;
 			}
 			case ID_GJ_SHOW_OBJECTS:
 			{
-				g_ToolTip.Set(L"Show/hide objects messages", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Show/hide objects messages");
 				break;
 			}
 			case ID_GJ_SHOW_CLIENT:
 			{
-				g_ToolTip.Set(L"Show/hide client messages", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Show/hide client messages");
 				break;
 			}
 			case ID_GJ_BUTTON_LOCK:
 			{
-				g_ToolTip.Set(L"Reset scroller position", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Reset scroller position");
 				break;
 			}
 			case ID_GJ_LOCK_MOVING:
 			{
-				g_ToolTip.Set(L"Lock moving/closing the journal gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Lock moving/closing the journal gump");
 				break;
 			}
 			default:
@@ -110,7 +110,7 @@ void CGumpJournal::InitToolTip()
 		}
 	}
 	else
-		g_ToolTip.Set(L"Double click to maximize journal gump", g_SelectedObject.Object());
+		g_ToolTip.Set(L"Double click to maximize journal gump");
 }
 //----------------------------------------------------------------------------------
 void CGumpJournal::UpdateHeight()

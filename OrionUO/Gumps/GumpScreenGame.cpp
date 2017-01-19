@@ -90,7 +90,7 @@ void CGumpScreenGame::InitToolTip()
 		return;
 
 	if (g_SelectedObject.Serial == ID_GS_RESIZE)
-		g_ToolTip.Set(L"Resize game window", g_SelectedObject.Object(), 100);
+		g_ToolTip.Set(L"Resize game window", 100);
 }
 //----------------------------------------------------------------------------------
 void CGumpScreenGame::Draw()

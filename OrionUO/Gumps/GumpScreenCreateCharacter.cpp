@@ -386,17 +386,17 @@ void CGumpScreenCreateCharacter::InitToolTip()
 	{
 		case ID_CCS_QUIT:
 		{
-			g_ToolTip.Set(L"Quit Ultima Online", g_SelectedObject.Object(), 80);
+			g_ToolTip.Set(L"Quit Ultima Online", 80);
 			break;
 		}
 		case ID_CCS_ARROW_NEXT:
 		{
-			g_ToolTip.Set(L"Accept this character", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Accept this character");
 			break;
 		}
 		case ID_CCS_ARROW_PREV:
 		{
-			g_ToolTip.Set(L"Back to character generation screen", g_SelectedObject.Object(), 150);
+			g_ToolTip.Set(L"Back to character generation screen", 150);
 			break;
 		}
 		default:

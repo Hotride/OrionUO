@@ -182,85 +182,85 @@ void CGumpPaperdoll::InitToolTip()
 		{
 			case ID_GP_BUTTON_HELP:
 			{
-				g_ToolTip.Set(L"Open server's help menu gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open server's help menu gump");
 				break;
 			}
 			case ID_GP_BUTTON_OPTIONS:
 			{
-				g_ToolTip.Set(L"Open the configuration gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open the configuration gump");
 				break;
 			}
 			case ID_GP_BUTTON_LOGOUT:
 			{
-				g_ToolTip.Set(L"Open the logout gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open the logout gump");
 				break;
 			}
 			case ID_GP_BUTTON_JOURNAL_OR_QUESTS:
 			{
 				if (g_PacketManager.ClientVersion >= CV_500A)
-					g_ToolTip.Set(L"Open the quests gump", g_SelectedObject.Object());
+					g_ToolTip.Set(L"Open the quests gump");
 				else
-					g_ToolTip.Set(L"Open the journal gump", g_SelectedObject.Object());
+					g_ToolTip.Set(L"Open the journal gump");
 
 				break;
 			}
 			case ID_GP_BUTTON_SKILLS:
 			{
-				g_ToolTip.Set(L"Open the skills gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open the skills gump");
 				break;
 			}
 			case ID_GP_BUTTON_CHAT_OR_GUILD:
 			{
 				if (g_PacketManager.ClientVersion >= CV_500A)
-					g_ToolTip.Set(L"Open the guild gump", g_SelectedObject.Object());
+					g_ToolTip.Set(L"Open the guild gump");
 				else
-					g_ToolTip.Set(L"Open the chat gump", g_SelectedObject.Object());
+					g_ToolTip.Set(L"Open the chat gump");
 
 				break;
 			}
 			case ID_GP_BUTTON_WARMODE:
 			{
-				g_ToolTip.Set(L"Change player's warmode", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Change player's warmode");
 				break;
 			}
 			case ID_GP_BUTTON_STATUS:
 			{
-				g_ToolTip.Set(L"Open player's statusbar gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open player's statusbar gump");
 				break;
 			}
 			case ID_GP_BUTTON_MINIMIZE:
 			{
-				g_ToolTip.Set(L"Minimize the paperdoll gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Minimize the paperdoll gump");
 				break;
 			}
 			case ID_GP_PROFILE_SCROLL:
 			{
-				g_ToolTip.Set(L"Double click for open profile gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Double click for open profile gump");
 				break;
 			}
 			case ID_GP_PARTY_MANIFEST_SCROLL:
 			{
-				g_ToolTip.Set(L"Double click for open party manifest gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Double click for open party manifest gump");
 				break;
 			}
 			case ID_GP_BUTTON_VIRTURE:
 			{
-				g_ToolTip.Set(L"Open server's virture(?) gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open server's virture(?) gump");
 				break;
 			}
 			case ID_GP_COMBAT_BOOK:
 			{
-				g_ToolTip.Set(L"Open combat book", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open combat book");
 				break;
 			}
 			case ID_GP_RACIAL_ABILITIES_BOOK:
 			{
-				g_ToolTip.Set(L"Open racial abilities book", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open racial abilities book");
 				break;
 			}
 			case ID_GP_LOCK_MOVING:
 			{
-				g_ToolTip.Set(L"Lock moving/closing the paperdoll gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Lock moving/closing the paperdoll gump");
 				break;
 			}
 			default:
@@ -277,7 +277,7 @@ void CGumpPaperdoll::InitToolTip()
 						CGameObject *obj = character->FindLayer(id - ID_GP_ITEMS);
 
 						if (obj != NULL && obj->ClilocMessage.length())
-							g_ToolTip.Set(obj->ClilocMessage, g_SelectedObject.Object());
+							g_ToolTip.Set(obj->ClilocMessage);
 					}
 				}
 
@@ -286,7 +286,7 @@ void CGumpPaperdoll::InitToolTip()
 		}
 	}
 	else if (g_ConfigManager.UseToolTips)
-		g_ToolTip.Set(L"Double click to maximize paperdoll gump", g_SelectedObject.Object());
+		g_ToolTip.Set(L"Double click to maximize paperdoll gump");
 }
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::DelayedClick(CRenderObject *obj)

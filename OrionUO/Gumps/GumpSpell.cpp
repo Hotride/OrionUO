@@ -47,7 +47,7 @@ CGumpSpell::~CGumpSpell()
 void CGumpSpell::InitToolTip()
 {
 	if (g_SelectedObject.Serial == ID_GS_BUTTON_REMOVE_FROM_GROUP)
-		g_ToolTip.Set(L"Remove spell from group", g_SelectedObject.Object(), 80);
+		g_ToolTip.Set(L"Remove spell from group", 80);
 	else
 	{
 		int tooltipOffset = 0;
@@ -55,7 +55,7 @@ void CGumpSpell::InitToolTip()
 
 		GetTooltipSpellInfo(tooltipOffset, spellIndexOffset);
 
-		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset - spellIndexOffset + m_Serial), g_SelectedObject.Object(), 80);
+		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset - spellIndexOffset + m_Serial), 80);
 	}
 }
 //----------------------------------------------------------------------------

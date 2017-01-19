@@ -94,22 +94,22 @@ void CGumpScreenServer::InitToolTip()
 	{
 		case ID_SS_QUIT:
 		{
-			g_ToolTip.Set(L"Quit Ultima Online", g_SelectedObject.Object(), 80);
+			g_ToolTip.Set(L"Quit Ultima Online", 80);
 			break;
 		}
 		case ID_SS_ARROW_PREV:
 		{
-			g_ToolTip.Set(L"Back to main menu", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Back to main menu");
 			break;
 		}
 		case ID_SS_ARROW_NEXT:
 		{
-			g_ToolTip.Set(L"Play UO on selected shard", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Play UO on selected shard");
 			break;
 		}
 		case ID_SS_EARTH:
 		{
-			g_ToolTip.Set(L"Select last visited shard", g_SelectedObject.Object(), 100);
+			g_ToolTip.Set(L"Select last visited shard", 100);
 			break;
 		}
 		default:
@@ -120,7 +120,7 @@ void CGumpScreenServer::InitToolTip()
 	{
 		string cstr("Connect to '" + g_ServerList.GetServer(id - ID_SS_SERVER_LIST)->Name + "' server");
 
-		g_ToolTip.Set(ToWString(cstr), g_SelectedObject.Object(), 100);
+		g_ToolTip.Set(ToWString(cstr), 100);
 	}
 }
 //----------------------------------------------------------------------------------

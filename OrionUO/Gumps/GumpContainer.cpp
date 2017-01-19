@@ -128,19 +128,19 @@ void CGumpContainer::InitToolTip()
 		uint id = g_SelectedObject.Serial;
 
 		if (id == ID_GC_MINIMIZE && g_ConfigManager.UseToolTips)
-			g_ToolTip.Set(L"Minimize the container gump", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Minimize the container gump");
 		else if (id == ID_GC_LOCK_MOVING && g_ConfigManager.UseToolTips)
-			g_ToolTip.Set(L"Lock moving/closing the container gump", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Lock moving/closing the container gump");
 		else if (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z)
 		{
 			CGameObject *obj = g_World->FindWorldObject(id);
 
 			if (obj != NULL && obj->ClilocMessage.length())
-				g_ToolTip.Set(obj->ClilocMessage, g_SelectedObject.Object());
+				g_ToolTip.Set(obj->ClilocMessage);
 		}
 	}
 	else if (g_ConfigManager.UseToolTips)
-		g_ToolTip.Set(L"Double click to maximize container gump", g_SelectedObject.Object());
+		g_ToolTip.Set(L"Double click to maximize container gump");
 }
 //----------------------------------------------------------------------------------
 void CGumpContainer::PrepareContent()
