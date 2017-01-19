@@ -312,7 +312,7 @@ void CFileManager::ReadTask()
 			}
 
 			animFile.seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
-		} while (nextBlock != 0);
+		} while (*reinterpret_cast<unsigned long long*>(nextBlock) != 0);
 
 		animFile.close();
 	}
