@@ -2700,7 +2700,7 @@ PACKET_HANDLER(ExtendedCommand)
 				if (flags == 0x01)
 					color = 0x0386;
 
-				CGUITextEntry *item = new CGUITextEntry(index, color, color, color, 10, offsetY);
+				CGUITextEntry *item = new CGUITextEntry(index, color, color, color, 10, offsetY, 0, true, CONTEXT_MENU_FONT);
 
 				if (flags == 0x04)
 					Move(2);
@@ -2726,7 +2726,7 @@ PACKET_HANDLER(ExtendedCommand)
 
 				CEntryText &entry = item->m_Entry;
 				entry.SetText(str);
-				entry.PrepareToDrawW(0, color);
+				entry.PrepareToDrawW(CONTEXT_MENU_FONT, color);
 
 				CGLTextTexture &texture = entry.m_Texture;
 
