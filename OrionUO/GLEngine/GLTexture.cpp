@@ -29,18 +29,18 @@ void CGLTexture::Draw(const int &x, const int &y, const bool &checktrans)
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			g_GL.Draw(Texture, x, y, m_Width, m_Height);
+			g_GL.Draw(*this, x, y);
 
 			glDisable(GL_BLEND);
 
 			glEnable(GL_STENCIL_TEST);
 
-			g_GL.Draw(Texture, x, y, m_Width, m_Height);
+			g_GL.Draw(*this, x, y);
 
 			glDisable(GL_STENCIL_TEST);
 		}
 		else
-			g_GL.Draw(Texture, x, y, m_Width, m_Height);
+			g_GL.Draw(*this, x, y);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -59,25 +59,25 @@ void CGLTexture::Draw(const int &x, const int &y, int width, int height, const b
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			g_GL.Draw(Texture, x, y, m_Width, m_Height, width, height);
+			g_GL.Draw(*this, x, y, width, height);
 
 			glDisable(GL_BLEND);
 
 			glEnable(GL_STENCIL_TEST);
 
-			g_GL.Draw(Texture, x, y, m_Width, m_Height, width, height);
+			g_GL.Draw(*this, x, y, width, height);
 
 			glDisable(GL_STENCIL_TEST);
 		}
 		else
-			g_GL.Draw(Texture, x, y, m_Width, m_Height, width, height);
+			g_GL.Draw(*this, x, y, width, height);
 	}
 }
 //----------------------------------------------------------------------------------
 void CGLTexture::DrawRotated(const int &x, const int &y, const float &angle)
 {
 	if (Texture != 0)
-		g_GL.DrawRotated(Texture, x, y, m_Width, m_Height / 2, angle);
+		g_GL.DrawRotated(*this, x, y, angle);
 }
 //----------------------------------------------------------------------------------
 void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil)
@@ -88,7 +88,7 @@ void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor4f(1.0f, 1.0f, 1.0f, 0.25f);
 
-		g_GL.Draw(Texture, x, y, m_Width, m_Height);
+		g_GL.Draw(*this, x, y);
 
 		glDisable(GL_BLEND);
 
@@ -96,7 +96,7 @@ void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil
 		{
 			glEnable(GL_STENCIL_TEST);
 
-			g_GL.Draw(Texture, x, y, m_Width, m_Height);
+			g_GL.Draw(*this, x, y);
 
 			glDisable(GL_STENCIL_TEST);
 		}

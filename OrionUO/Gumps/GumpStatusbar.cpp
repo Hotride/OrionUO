@@ -60,7 +60,7 @@ void CGumpStatusbar::InitToolTip()
 	uint id = g_SelectedObject.Serial;
 
 	//if (m_Minimized && m_Serial == g_PlayerSerial)
-	//	g_ToolTip.Set(L"Double click to maximize the statusbar gump", g_SelectedObject.Object());
+	//	g_ToolTip.Set(L"Double click to maximize the statusbar gump");
 	if (id && id < ID_GSB_TEXT_TITHING_POINTS)
 	{
 		static const wstring tooltip[ID_GSB_TEXT_TITHING_POINTS] =
@@ -100,7 +100,7 @@ void CGumpStatusbar::InitToolTip()
 		const wstring &text = tooltip[id - 1];
 
 		if (text.length())
-			g_ToolTip.Set(text, g_SelectedObject.Object(), 80);
+			g_ToolTip.Set(text, 80);
 	}
 }
 //----------------------------------------------------------------------------------

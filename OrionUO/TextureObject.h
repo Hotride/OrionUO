@@ -18,9 +18,7 @@ class CTextureAnimationFrame : public CBaseQueueItem
 {
 	//Индекс кадра
 	SETGET(uchar, Frame);
-	//Габариты текстуры
-	SETGET(short, Width);
-	SETGET(short, Height);
+
 	//Координаты центра текстуры относительно начала текстуры
 	SETGET(short, CenterX);
 	SETGET(short, CenterY);
@@ -29,8 +27,7 @@ public:
 	CTextureAnimationFrame(const int &frame);
 	virtual ~CTextureAnimationFrame();
 
-	//Индекс текстуры
-	GLuint Texture;
+	CGLTexture m_Texture;
 };
 //----------------------------------------------------------------------------------
 //Класс для работы с направлением анимации

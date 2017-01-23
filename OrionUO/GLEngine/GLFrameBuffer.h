@@ -11,14 +11,11 @@
 #define GLFRAMEBUFFER_H
 //----------------------------------------------------------------------------------
 #include "../Globals.h"
+#include "GLTexture.h"
 //----------------------------------------------------------------------------------
 //!Класс для работы с фрэймбуфером
 class CGLFrameBuffer
 {
-	//!Габариты буфера
-	SETGET(int, Width);
-	SETGET(int, Height);
-
 private:
 	//!Создан буфер и готов к использованию или нет
 	bool m_Ready;
@@ -29,12 +26,12 @@ private:
 	//!Указатель на фрэймбуфер
 	GLuint m_FrameBuffer;
 
-	//!Указатель на текстуру фрэймбуфера
-	GLuint m_Texture;
-
 public:
 	CGLFrameBuffer();
 	~CGLFrameBuffer();
+
+	//!Указатель на текстуру фрэймбуфера
+	CGLTexture Texture;
 
 	/*!
 	Инициализациия буфера

@@ -13,7 +13,7 @@
 #include "Managers/ClilocManager.h"
 #include "Managers/MouseManager.h"
 #include "Managers/FontsManager.h"
-#include "RenderObject.h"
+#include "SelectedObject.h"
 //----------------------------------------------------------------------------------
 CToolTip g_ToolTip;
 //----------------------------------------------------------------------------------
@@ -34,9 +34,11 @@ void CToolTip::Reset()
 	m_Object = NULL;
 }
 //----------------------------------------------------------------------------------
-void CToolTip::Set(wstring str, CRenderObject *object, int maxWidth, int x, int y)
+void CToolTip::Set(wstring str, int maxWidth, int x, int y)
 {
 	m_Use = !(m_Timer > g_Ticks);
+
+	CRenderObject *object = g_SelectedObject.Object();
 
 	if (object == m_Object || object == NULL) //Уже забиндено или нет объекта для бинда
 		return;
@@ -55,9 +57,9 @@ void CToolTip::Set(wstring str, CRenderObject *object, int maxWidth, int x, int 
 	g_FontManager.GenerateW((uchar)g_ConfigManager.ToolTipsTextFont, Texture, m_Data.c_str(), g_ConfigManager.ToolTipsTextColor, 5, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
 }
 //----------------------------------------------------------------------------------
-void CToolTip::Set(uint clilocID, string str, CRenderObject *object, int maxWidth, int x, int y)
+void CToolTip::Set(uint clilocID, string str, int maxWidth, int x, int y)
 {
-	Set(g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, str), object, maxWidth, x, y);
+	Set(g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, str), maxWidth, x, y);
 
 	m_ClilocID = clilocID;
 }
@@ -107,7 +109,7 @@ void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
 		
 		glDisable(GL_BLEND);
 
-		g_GL.Draw(Texture.Texture, x + 6, y + 4, Texture.Width, Texture.Height);
+		g_GL.Draw(Texture, x + 6, y + 4);
 	}
 
 	m_Use = false;

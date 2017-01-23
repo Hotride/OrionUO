@@ -35,14 +35,14 @@ void CGumpRacialAbilitiesBook::InitToolTip()
 {
 	if (m_Minimized)
 	{
-		g_ToolTip.Set(L"Double click to maximize book gump", g_SelectedObject.Object());
+		g_ToolTip.Set(L"Double click to maximize book gump");
 		return;
 	}
 
 	uint serial = g_SelectedObject.Serial;
 
 	if (m_Page >= m_DictionaryPagesCount && serial >= ID_GRAB_ICON)
-		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(m_TooltipOffset + (serial - ID_GRAB_ICON)), g_SelectedObject.Object(), 150);
+		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(m_TooltipOffset + (serial - ID_GRAB_ICON)), 150);
 }
 //----------------------------------------------------------------------------
 void CGumpRacialAbilitiesBook::PrepareContent()

@@ -16,8 +16,8 @@
 //Класс для работы с объектами рендера
 class CRenderWorldObject : public CRenderObject
 {
-	SETGETEX(char, Z);
-	SETGETEX(uchar, RenderQueueIndex);
+	SETGET(char, Z);
+	SETGET(uchar, RenderQueueIndex);
 	SETGET(RENDER_OBJECT_TYPE, RenderType);
 #if UO_RENDER_LIST_SORT == 1
 	SETGET(uchar, CurrentRenderIndex);

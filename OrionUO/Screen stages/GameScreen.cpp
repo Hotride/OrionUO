@@ -120,7 +120,7 @@ void CGameScreen::InitToolTip()
 		CGameObject *obj = g_World->FindWorldObject(g_SelectedObject.Serial);
 
 		if (obj != NULL && (obj->NPC || !obj->Locked()) && obj->ClilocMessage.length())
-			g_ToolTip.Set(obj->ClilocMessage, g_SelectedObject.Object());
+			g_ToolTip.Set(obj->ClilocMessage);
 	}
 
 	g_FontManager.RecalculateWidthByInfo = false;

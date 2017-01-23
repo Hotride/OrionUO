@@ -111,32 +111,32 @@ void CGumpScreenMain::InitToolTip()
 	{
 		case ID_MS_QUIT:
 		{
-			g_ToolTip.Set(L"Quit Ultima Online", g_SelectedObject.Object(), 80);
+			g_ToolTip.Set(L"Quit Ultima Online", 80);
 			break;
 		}
 		case ID_MS_ARROW_NEXT:
 		{
-			g_ToolTip.Set(L"Next screen", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Next screen");
 			break;
 		}
 		case ID_MS_ACCOUNT:
 		{
-			g_ToolTip.Set(L"Click here to enter your user name", g_SelectedObject.Object(), 150);
+			g_ToolTip.Set(L"Click here to enter your user name", 150);
 			break;
 		}
 		case ID_MS_PASSWORD:
 		{
-			g_ToolTip.Set(L"Click here to enter your password", g_SelectedObject.Object(), 150);
+			g_ToolTip.Set(L"Click here to enter your password", 150);
 			break;
 		}
 		case ID_MS_SAVEPASSWORD:
 		{
-			g_ToolTip.Set(L"Save your password in config file", g_SelectedObject.Object(), 150);
+			g_ToolTip.Set(L"Save your password in config file", 150);
 			break;
 		}
 		case ID_MS_AUTOLOGIN:
 		{
-			g_ToolTip.Set(L"Auto LogIn (without selection screens)", g_SelectedObject.Object(), 150);
+			g_ToolTip.Set(L"Auto LogIn (without selection screens)", 150);
 			break;
 		}
 		default:

@@ -46,8 +46,8 @@ public:
 	void UpdateRect();
 
 	//Загрузка текстур 16 и 32 бит
-	void BindTexture16(GLuint &texture, const int &width, const int &height, const pushort pixels);
-	void BindTexture32(GLuint &texture, const int &width, const int &height, const puint pixels);
+	void BindTexture16(CGLTexture &texture, const int &width, const int &height, const pushort pixels);
+	void BindTexture32(CGLTexture &texture, const int &width, const int &height, const puint pixels);
 
 	//Очистить экран и начать рисование
 	void BeginDraw();
@@ -81,6 +81,8 @@ public:
 
 	void ClearScissorList();
 
+	inline void BindTexture(const GLuint &texture);
+
 
 
 	//Нарисовать линию
@@ -98,22 +100,22 @@ public:
 	void DrawLandTexture(const GLuint &texture, const int &x, const int &y, const RECT &rc, CVector *normals);
 
 	//Нарисовать текстуру
-	void Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height);
+	void Draw(const CGLTexture &texture, const int &x, const int &y);
 
 	//Нарисовать повернутую текстуру
-	void DrawRotated(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const float &angle);
+	void DrawRotated(const CGLTexture &texture, const int &x, const int &y, const float &angle);
 
 	//Нарисовать текстуру с возможностью зеркального отражения
-	void Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const bool &mirror);
+	void Draw(const CGLTexture &texture, const int &x, const int &y, const bool &mirror);
 
 	//Нарисовать текстуру сидячего персонажа
-	void DrawSitting(const GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod);
+	void DrawSitting(const CGLTexture &texture, const int &x, const int &y, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod);
 
 	//Нарисовать тень
-	void DrawShadow(const GLuint &texture, const int &x, const int &y, const float &width, const float &height, const bool &mirror);
+	void DrawShadow(const CGLTexture &texture, const int &x, const int &y, const bool &mirror);
 
 	//Замостить текстуру на заданные габариты
-	void Draw(const GLuint &texture, const int &x, const int &y, const int &width, const int &height, const int &drawWidth, const int &drawHeight);
+	void Draw(const CGLTexture &texture, const int &x, const int &y, const int &drawWidth, const int &drawHeight);
 
 	//Нарисовать фон
 	void DrawResizepic(CGLTexture **th, const int &x, const int &y, const int &width, const int &height);

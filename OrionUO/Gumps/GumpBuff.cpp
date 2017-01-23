@@ -139,7 +139,7 @@ void CGumpBuff::DeleteBuff(const ushort &id)
 void CGumpBuff::InitToolTip()
 {
 	if (g_SelectedObject.Serial == ID_GB_NEXT_WINDOW_DIRECTION)
-		g_ToolTip.Set(L"Change buff window gump", g_SelectedObject.Object());
+		g_ToolTip.Set(L"Change buff window gump");
 	else if (g_SelectedObject.Object())
 	{
 		QFOR(item, m_Items, CBaseGUI*)
@@ -161,18 +161,18 @@ void CGumpBuff::InitToolTip()
 					wchar_t buf[512] = { 0 };
 					wsprintf(buf, L"%s\nTimeLeft: %i seconds.", buff->Text.c_str(), (buff->Timer - g_Ticks) / 1000);
 
-					g_ToolTip.Set(buf, buff);
+					g_ToolTip.Set(buf);
 
 					g_ToolTip.Timer = 0;
 					g_ToolTip.Use = true;
 				}
 				else
-					g_ToolTip.Set(buff->Text, buff);
+					g_ToolTip.Set(buff->Text);
 
 				g_FontManager.SetUseHTML(false);
 			}
 			else
-				g_ToolTip.Set(L"Buffs and Debuffs will appear here.", item, 120);
+				g_ToolTip.Set(L"Buffs and Debuffs will appear here.", 120);
 
 			break;
 		}

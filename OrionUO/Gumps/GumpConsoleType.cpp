@@ -120,47 +120,47 @@ void CGumpConsoleType::InitToolTip()
 	{
 		case ID_GCT_NORMAL:
 		{
-			g_ToolTip.Set(L"Normal entry mode\nno prefix", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Normal entry mode\nno prefix");
 			break;
 		}
 		case ID_GCT_YELL:
 		{
-			g_ToolTip.Set(L"Yell entry mode\nprefix is '! '", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Yell entry mode\nprefix is '! '");
 			break;
 		}
 		case ID_GCT_WHISPER:
 		{
-			g_ToolTip.Set(L"Whisper entry mode\nprefix is '; '", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Whisper entry mode\nprefix is '; '");
 			break;
 		}
 		case ID_GCT_EMOTE:
 		{
-			g_ToolTip.Set(L"Emote entry mode\nprefix is ': '", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Emote entry mode\nprefix is ': '");
 			break;
 		}
 		case ID_GCT_COMMAND:
 		{
-			g_ToolTip.Set(L"Command entry mode\nprefix is '. '", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Command entry mode\nprefix is '. '");
 			break;
 		}
 		case ID_GCT_BROADCAST:
 		{
-			g_ToolTip.Set(L"Broadcast entry mode\nprefix is '? '", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Broadcast entry mode\nprefix is '? '");
 			break;
 		}
 		case ID_GCT_PARTY:
 		{
-			g_ToolTip.Set(L"Party entry mode\nprefix is '/ '", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Party entry mode\nprefix is '/ '");
 			break;
 		}
 		case ID_GCT_MINIMIZE:
 		{
-			g_ToolTip.Set(L"Show/hide configuration", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Show/hide configuration");
 			break;
 		}
 		case ID_GCT_SHOW_FULL_TEXT:
 		{
-			g_ToolTip.Set(L"Show full mode names", g_SelectedObject.Object());
+			g_ToolTip.Set(L"Show full mode names");
 			break;
 		}
 		default:

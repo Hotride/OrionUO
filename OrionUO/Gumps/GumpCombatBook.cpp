@@ -359,7 +359,7 @@ void CGumpCombatBook::InitToolTip()
 {
 	if (m_Minimized)
 	{
-		g_ToolTip.Set(L"Double click to maximize book gump", g_SelectedObject.Object());
+		g_ToolTip.Set(L"Double click to maximize book gump");
 		return;
 	}
 
@@ -368,14 +368,14 @@ void CGumpCombatBook::InitToolTip()
 	if (m_Page >= m_DictionaryPagesCount)
 	{
 		if (serial >= ID_GCB_ICON)
-			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1061693 + (serial - ID_GCB_ICON)), g_SelectedObject.Object(), 150);
+			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1061693 + (serial - ID_GCB_ICON)), 150);
 	}
 	else
 	{
 		if (serial == ID_GCB_ICON_FIRST)
-			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_AbilityList[g_Ability[0]] & 0xFF)), g_SelectedObject.Object(), 80);
+			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_AbilityList[g_Ability[0]] & 0xFF)), 80);
 		else if (serial == ID_GCB_ICON_SECOND)
-			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_AbilityList[g_Ability[1]] & 0xFF)), g_SelectedObject.Object(), 80);
+			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_AbilityList[g_Ability[1]] & 0xFF)), 80);
 	}
 }
 //----------------------------------------------------------------------------

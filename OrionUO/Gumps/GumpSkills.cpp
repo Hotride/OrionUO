@@ -106,48 +106,48 @@ void CGumpSkills::InitToolTip()
 		{
 			case ID_GS_SHOW_REAL:
 			{
-				g_ToolTip.Set(L"Show/hide real skill values", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Show/hide real skill values");
 				break;
 			}
 			case ID_GS_SHOW_CAP:
 			{
-				g_ToolTip.Set(L"Show/hide cap skill values", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Show/hide cap skill values");
 				break;
 			}
 			case ID_GS_BUTTON_NEW_GROUP:
 			{
-				g_ToolTip.Set(L"Create the new skills group", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Create the new skills group");
 				break;
 			}
 			case ID_GBS_BUTTON_MINIMIZE:
 			{
-				g_ToolTip.Set(L"Minimize the skills gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Minimize the skills gump");
 				break;
 			}
 			case ID_GBS_BUTTON_RESIZE:
 			{
-				g_ToolTip.Set(L"Start resizing for skills gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Start resizing for skills gump");
 				break;
 			}
 			case ID_GS_LOCK_MOVING:
 			{
-				g_ToolTip.Set(L"Lock moving/closing the skills gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Lock moving/closing the skills gump");
 				break;
 			}
 			default:
 			{
 				if (id >= ID_GS_GROUP_MINIMIZE && id < ID_GS_GROUP)
-					g_ToolTip.Set(L"Show/hide skills in this group", g_SelectedObject.Object());
+					g_ToolTip.Set(L"Show/hide skills in this group");
 				else if (id >= ID_GS_SKILL_BUTTON && id < ID_GS_SKILL)
-					g_ToolTip.Set(L"Use the skill", g_SelectedObject.Object());
+					g_ToolTip.Set(L"Use the skill");
 				else if (id >= ID_GS_SKILL_STATE)
-					g_ToolTip.Set(L"Change skill state", g_SelectedObject.Object());
+					g_ToolTip.Set(L"Change skill state");
 				break;
 			}
 		}
 	}
 	else
-		g_ToolTip.Set(L"Double click to maximize skills gump", g_SelectedObject.Object());
+		g_ToolTip.Set(L"Double click to maximize skills gump");
 }
 //----------------------------------------------------------------------------------
 void CGumpSkills::UpdateHeight()

@@ -10,18 +10,12 @@
 #include "TextureObject.h"
 //----------------------------------------------------------------------------------
 CTextureAnimationFrame::CTextureAnimationFrame(const int &frame)
-: CBaseQueueItem(), m_Frame(frame), m_Width(0), m_Height(0), m_CenterX(0),
-m_CenterY(0), Texture(0)
+: CBaseQueueItem(), m_Frame(frame), m_CenterX(0), m_CenterY(0), m_Texture()
 {
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationFrame::~CTextureAnimationFrame()
 {
-	if (Texture)
-	{
-		glDeleteTextures(1, &Texture);
-		Texture = 0;
-	}
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationDirection::CTextureAnimationDirection(int direction)

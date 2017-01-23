@@ -59,7 +59,7 @@ void CGumpSecureTrading::InitToolTip()
 		CGameObject *obj = g_World->FindWorldObject(id);
 
 		if (obj != NULL && obj->ClilocMessage.length())
-			g_ToolTip.Set(obj->ClilocMessage, g_SelectedObject.Object());
+			g_ToolTip.Set(obj->ClilocMessage);
 	}
 }
 //----------------------------------------------------------------------------------

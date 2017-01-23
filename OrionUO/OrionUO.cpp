@@ -445,11 +445,7 @@ bool COrion::Install()
 	};
 
 	IFOR(i, 0, 2)
-	{
-		g_TextureGumpState[i].Width = 10;
-		g_TextureGumpState[i].Height = 14;
-		g_GL.BindTexture16(g_TextureGumpState[i].Texture, 10, 14, &pdwlt[i][0]);
-	}
+		g_GL.BindTexture16(g_TextureGumpState[i], 10, 14, &pdwlt[i][0]);
 
 	memset(&m_WinterTile[0], 0, sizeof(m_WinterTile));
 
@@ -632,9 +628,50 @@ void COrion::InitScreen(const GAME_STATE &state)
 //----------------------------------------------------------------------------------
 void COrion::GetCurrentLocale()
 {
+	switch (LOBYTE(GetSystemDefaultLangID()))
+	{
+		case LANG_RUSSIAN:
+		{
+			g_Language = "RUS";
+			break;
+		}
+		case LANG_FRENCH:
+		{
+			g_Language = "FRA";
+			break;
+		}
+		case LANG_GERMAN:
+		{
+			g_Language = "DEU";
+			break;
+		}
+		case LANG_SPANISH:
+		{
+			g_Language = "ESP";
+			break;
+		}
+		case LANG_JAPANESE:
+		{
+			g_Language = "JPN";
+			break;
+		}
+		case LANG_KOREAN:
+		{
+			g_Language = "KOR";
+			break;
+		}
+		default:
+		{
+			g_Language = "ENU";
+			break;
+		}
+	}
+
+	LOG("Locale set to: %s\n", g_Language.c_str());
+
 	//https://msdn.microsoft.com/en-us/library/cc233982.aspx
 
-	wchar_t localeName[LOCALE_NAME_MAX_LENGTH] = { 0 };
+	/*wchar_t localeName[LOCALE_NAME_MAX_LENGTH] = { 0 };
 
 	if (GetSystemDefaultLocaleName(&localeName[0], LOCALE_NAME_MAX_LENGTH))
 	{
@@ -661,7 +698,7 @@ void COrion::GetCurrentLocale()
 		LOG("Locale set to: %s\n", g_Language.c_str());
 	}
 	else
-		LOG("Locale set to default value: ENU\n");
+		LOG("Locale set to default value: ENU\n");*/
 }
 //----------------------------------------------------------------------------------
 ushort COrion::TextToGraphic(const char *text)
@@ -3600,10 +3637,7 @@ void COrion::CreateAuraTexture()
 		}
 	}
 
-	g_AuraTexture.Width = width;
-	g_AuraTexture.Height = height;
-
-	g_GL.BindTexture32(g_AuraTexture.Texture, width, height, &pixels[0]);
+	g_GL.BindTexture32(g_AuraTexture, width, height, &pixels[0]);
 }
 //----------------------------------------------------------------------------------
 void COrion::CreateObjectHandlesBackground()

@@ -96,47 +96,47 @@ void CGumpMenubar::InitToolTip()
 		{
 			case ID_GMB_MINIMIZE:
 			{
-				g_ToolTip.Set(L"Minimize the menubar gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Minimize the menubar gump");
 				break;
 			}
 			case ID_GMB_MAP:
 			{
-				g_ToolTip.Set(L"Open the minimap gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open the minimap gump");
 				break;
 			}
 			case ID_GMB_PAPERDOLL:
 			{
-				g_ToolTip.Set(L"Open the paperdoll gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open the paperdoll gump");
 				break;
 			}
 			case ID_GMB_INVENTORY:
 			{
-				g_ToolTip.Set(L"Open backpack", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open backpack");
 				break;
 			}
 			case ID_GMB_JOURNAL:
 			{
-				g_ToolTip.Set(L"Open the journal gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open the journal gump");
 				break;
 			}
 			case ID_GMB_CHAT:
 			{
-				g_ToolTip.Set(L"Open the chat gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open the chat gump");
 				break;
 			}
 			case ID_GMB_HELP:
 			{
-				g_ToolTip.Set(L"Open server's help menu gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open server's help menu gump");
 				break;
 			}
 			case ID_GMB_WORLD_MAP:
 			{
-				g_ToolTip.Set(L"Open Orion's world map gump", g_SelectedObject.Object());
+				g_ToolTip.Set(L"Open Orion's world map gump");
 				break;
 			}
 			case ID_GMB_INFO:
 			{
-				g_ToolTip.Set(L"This option is not work now", g_SelectedObject.Object());
+				g_ToolTip.Set(L"This option is not work now");
 				break;
 			}
 			default:
@@ -144,7 +144,7 @@ void CGumpMenubar::InitToolTip()
 		}
 	}
 	else
-		g_ToolTip.Set(L"Maximize the menubar gump", g_SelectedObject.Object());
+		g_ToolTip.Set(L"Maximize the menubar gump");
 }
 //----------------------------------------------------------------------------------
 void CGumpMenubar::GUMP_BUTTON_EVENT_C
