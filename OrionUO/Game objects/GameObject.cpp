@@ -302,7 +302,7 @@ void CGameObject::ClearNotOpenedItems()
 		{
 			CGameObject *next = (CGameObject*)obj->m_Next;
 
-			if (!obj->NPC && !((CGameItem*)obj)->Opened)
+			if (!obj->NPC && !((CGameItem*)obj)->Opened && ((CGameItem*)obj)->Layer != OL_BACKPACK)
 				g_World->RemoveObject(obj);
 
 			obj = next;
