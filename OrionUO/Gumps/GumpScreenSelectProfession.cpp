@@ -253,9 +253,9 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 		{
 			Add(new CGUIResizepic(ID_SPS_LABEL + index, 0x0BB8, 145 + offsX, 168 + offsY, 175, 34));
 
-			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_SPS_LABEL + index, 0, 0, 0, 151 + offsX, 174 + offsY, 185, true, 2, TS_LEFT, UOFONT_FIXED));
+			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_SPS_LABEL + index, 0, 0, 0, 151 + offsX, 174 + offsY, 185, true, 2, TS_LEFT, UOFONT_FIXED | UOFONT_SOLID));
 			entry->m_Entry.SetText(child->Name);
-			entry->m_Entry.PrepareToDrawW(2, 0);
+			entry->m_Entry.PrepareToDrawW(2, 0, TS_LEFT, UOFONT_FIXED | UOFONT_SOLID);
 			entry->CheckOnSerial = true;
 			entry->ReadOnly = true;
 
