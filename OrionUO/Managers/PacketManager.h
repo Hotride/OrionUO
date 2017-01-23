@@ -180,6 +180,7 @@ protected:
 	HANDLER_PACKET(SellList);
 	HANDLER_PACKET(BuyReply);
 	HANDLER_PACKET(Logout);
+	HANDLER_PACKET(OPLInfo);
 
 	//Не обработаны
 	/*
