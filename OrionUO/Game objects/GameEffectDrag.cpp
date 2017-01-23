@@ -28,8 +28,8 @@ void CGameEffectDrag::Update(CGameObject *parent)
 	if (m_LastMoveTime > g_Ticks)
 		return;
 
-	m_OffsetX += 4;
-	m_OffsetY += 4;
+	m_OffsetX += 8;
+	m_OffsetY += 8;
 
 	m_LastMoveTime = g_Ticks + m_MoveDelay;
 
