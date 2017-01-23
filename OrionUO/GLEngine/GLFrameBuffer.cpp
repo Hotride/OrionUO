@@ -70,7 +70,7 @@ void CGLFrameBuffer::Free()
 {
 	Texture.Clear();
 
-	if (m_FrameBuffer != 0)
+	if (g_GL.CanUseFrameBuffer && m_FrameBuffer != 0)
 	{
 		glDeleteFramebuffers(1, &m_FrameBuffer);
 		m_FrameBuffer = 0;

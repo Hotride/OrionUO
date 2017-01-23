@@ -85,7 +85,7 @@ bool CGLEngine::Install()
 		return false;
 	
 	int glewInitResult = glewInit();
-	LOG("glewInit() = %i rt=%i fb=%i v(%s)\n", glewInitResult, WGLEW_ARB_render_texture, GL_ARB_framebuffer_object, glGetString(GL_VERSION));
+	LOG("glewInit() = %i rt=%i fb=%i v(%s) (shader: %i)\n", glewInitResult, WGLEW_ARB_render_texture, GL_ARB_framebuffer_object, glGetString(GL_VERSION), GL_ARB_shader_objects);
 
 	if (!glewInitResult)
 	{
@@ -98,8 +98,6 @@ bool CGLEngine::Install()
 	}
 	else
 		return false;
-
-	wglSwapIntervalEXT(FALSE);
 
 	LOG("g_UseFrameBuffer = %i\n", m_CanUseFrameBuffer);
 
