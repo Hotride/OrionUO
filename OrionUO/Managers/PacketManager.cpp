@@ -586,6 +586,20 @@ void CPacketManager::SendMegaClilocRequests()
 	SendMegaClilocRequests(m_MegaClilocRequests);
 }
 //----------------------------------------------------------------------------------
+void CPacketManager::AddMegaClilocRequest(const uint &serial, const bool &existsTest)
+{
+	if (existsTest)
+	{
+		for (const uint item : m_MegaClilocRequests)
+		{
+			if (item == serial)
+				return;
+		}
+	}
+
+	m_MegaClilocRequests.push_back(serial);
+}
+//----------------------------------------------------------------------------------
 void CPacketManager::OnReadFailed()
 {
 	g_Orion.DisconnectGump();
@@ -1762,7 +1776,7 @@ PACKET_HANDLER(UpdateContainedItem)
 
 	obj->Color = ReadUInt16BE();
 
-	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+	if (m_ClientVersion >= CV_308Z && (!obj->ClilocMessage.length() || obj->IsStackable()))
 		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (obj->Graphic == 0x0EB0) //Message board item
@@ -1782,7 +1796,12 @@ PACKET_HANDLER(UpdateContainedItem)
 		CGump *gump = gump = g_GumpManager.UpdateContent(cserial, 0, GT_SPELLBOOK);
 
 		if (gump == NULL)
+		{
 			gump = g_GumpManager.UpdateContent(cserial, 0, GT_CONTAINER);
+
+			if (gump != NULL && m_ClientVersion >= CV_308Z)
+				AddMegaClilocRequest(cserial, true);
+		}
 
 		if (gump != NULL)
 		{

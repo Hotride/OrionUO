@@ -4879,7 +4879,12 @@ void COrion::PickupItem(CGameItem *obj, int count, bool isGameFigure)
 		g_ObjectInHand->DragCount = count;
 
 		if (obj->Container != 0xFFFFFFFF)
-			g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
+		{
+			CGump *gump = g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
+
+			if (gump != NULL && g_PacketManager.ClientVersion >= CV_308Z)
+				g_PacketManager.AddMegaClilocRequest(gump->Serial, true);
+		}
 
 		CPacketPickupRequest(obj->Serial, count).Send();
 	}

@@ -212,6 +212,8 @@ public:
 
 	void SendMegaClilocRequests();
 
+	void AddMegaClilocRequest(const uint &serial, const bool &existsTest);
+
 	void SavePluginReceivePacket(puchar buf, const int &size);
 
 	void ProcessPluginPackets();
