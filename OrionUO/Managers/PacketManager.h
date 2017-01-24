@@ -180,6 +180,7 @@ protected:
 	HANDLER_PACKET(SellList);
 	HANDLER_PACKET(BuyReply);
 	HANDLER_PACKET(Logout);
+	HANDLER_PACKET(OPLInfo);
 
 	//Не обработаны
 	/*
@@ -211,6 +212,8 @@ public:
 	void SendMegaClilocRequests(UINT_LIST &list);
 
 	void SendMegaClilocRequests();
+
+	void AddMegaClilocRequest(const uint &serial, const bool &existsTest);
 
 	void SavePluginReceivePacket(puchar buf, const int &size);
 

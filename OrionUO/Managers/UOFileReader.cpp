@@ -91,7 +91,7 @@ CGLTexture *UOFileReader::ReadGump(CIndexObject &io)
 	if (pixels.size())
 	{
 		th = new CGLTexture();
-		g_GL.BindTexture16(*th, io.Width, io.Height, &pixels[0]);
+		g_GL_BindTexture16(*th, io.Width, io.Height, &pixels[0]);
 	}
 
 	return th;
@@ -257,7 +257,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io)
 			}
 		}
 
-		g_GL.BindTexture16(*th, 44, 44, &pixels[0]);
+		g_GL_BindTexture16(*th, 44, 44, &pixels[0]);
 	}
 	else //run tile
 	{
@@ -435,7 +435,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io)
 			}
 		}
 
-		g_GL.BindTexture16(*th, w, h, &pixels[0]);
+		g_GL_BindTexture16(*th, w, h, &pixels[0]);
 	}
 
 	return th;
@@ -775,7 +775,7 @@ CGLTexture *UOFileReader::ReadTexture(CIndexObject &io)
 		}
 	}
 
-	g_GL.BindTexture16(*th, w, h, &pixels[0]);
+	g_GL_BindTexture16(*th, w, h, &pixels[0]);
 
 	return th;
 }
@@ -806,7 +806,7 @@ CGLTexture *UOFileReader::ReadLight(CIndexObject &io)
 		}
 	}
 
-	g_GL.BindTexture16(*th, io.Width, io.Height, &pixels[0]);
+	g_GL_BindTexture16(*th, io.Width, io.Height, &pixels[0]);
 
 	return th;
 }

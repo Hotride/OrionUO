@@ -31,12 +31,18 @@ class CLandObject : public CMapObject
 	//Оригинальный индекс картинки
 	SETGET(ushort, OriginalGraphic);
 
+	//!Буфер вершин
+	SETGET(GLuint, VertexBuffer);
+
+	//!Буфер нормалей
+	SETGET(GLuint, NormalBuffer);
+
 private:
 	int GetDirectionZ(const int &direction);
 
 public:
 	CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z);
-	virtual ~CLandObject() {}
+	virtual ~CLandObject();
 
 	virtual void UpdateGraphicBySeason();
 

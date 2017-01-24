@@ -109,7 +109,7 @@ void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
 		
 		glDisable(GL_BLEND);
 
-		g_GL.Draw(Texture, x + 6, y + 4);
+		g_GL_Draw(Texture, x + 6, y + 4);
 	}
 
 	m_Use = false;

@@ -11,7 +11,8 @@
 #include "GLEngine.h"
 //----------------------------------------------------------------------------------
 CGLTexture::CGLTexture()
-: m_Width(0), m_Height(0), Texture(0)
+: m_Width(0), m_Height(0), Texture(0), m_PositionBuffer(0), m_VertexBuffer(0),
+m_MirroredVertexBuffer(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -29,18 +30,18 @@ void CGLTexture::Draw(const int &x, const int &y, const bool &checktrans)
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			g_GL.Draw(*this, x, y);
+			g_GL_Draw(*this, x, y);
 
 			glDisable(GL_BLEND);
 
 			glEnable(GL_STENCIL_TEST);
 
-			g_GL.Draw(*this, x, y);
+			g_GL_Draw(*this, x, y);
 
 			glDisable(GL_STENCIL_TEST);
 		}
 		else
-			g_GL.Draw(*this, x, y);
+			g_GL_Draw(*this, x, y);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -59,25 +60,25 @@ void CGLTexture::Draw(const int &x, const int &y, int width, int height, const b
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			g_GL.Draw(*this, x, y, width, height);
+			g_GL_DrawStretched(*this, x, y, width, height);
 
 			glDisable(GL_BLEND);
 
 			glEnable(GL_STENCIL_TEST);
 
-			g_GL.Draw(*this, x, y, width, height);
+			g_GL_DrawStretched(*this, x, y, width, height);
 
 			glDisable(GL_STENCIL_TEST);
 		}
 		else
-			g_GL.Draw(*this, x, y, width, height);
+			g_GL_DrawStretched(*this, x, y, width, height);
 	}
 }
 //----------------------------------------------------------------------------------
 void CGLTexture::DrawRotated(const int &x, const int &y, const float &angle)
 {
 	if (Texture != 0)
-		g_GL.DrawRotated(*this, x, y, angle);
+		g_GL_DrawRotated(*this, x, y, angle);
 }
 //----------------------------------------------------------------------------------
 void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil)
@@ -88,7 +89,7 @@ void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor4f(1.0f, 1.0f, 1.0f, 0.25f);
 
-		g_GL.Draw(*this, x, y);
+		g_GL_Draw(*this, x, y);
 
 		glDisable(GL_BLEND);
 
@@ -96,7 +97,7 @@ void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil
 		{
 			glEnable(GL_STENCIL_TEST);
 
-			g_GL.Draw(*this, x, y);
+			g_GL_Draw(*this, x, y);
 
 			glDisable(GL_STENCIL_TEST);
 		}
@@ -112,6 +113,24 @@ void CGLTexture::Clear()
 	{
 		glDeleteTextures(1, &Texture);
 		Texture = 0;
+	}
+
+	if (m_PositionBuffer != 0)
+	{
+		glDeleteBuffers(1, &m_PositionBuffer);
+		m_PositionBuffer = 0;
+	}
+
+	if (m_VertexBuffer != 0)
+	{
+		glDeleteBuffers(1, &m_VertexBuffer);
+		m_VertexBuffer = 0;
+	}
+
+	if (m_MirroredVertexBuffer != 0)
+	{
+		glDeleteBuffers(1, &m_MirroredVertexBuffer);
+		m_MirroredVertexBuffer = 0;
 	}
 
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1

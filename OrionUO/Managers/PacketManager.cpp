@@ -306,7 +306,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xD9*/ SMSG(ORION_SAVE_PACKET, "+Metrics", 0x10c),
 	/*0xDA*/ BMSG(ORION_SAVE_PACKET, "Mahjong game command", PACKET_VARIABLE_SIZE),
 	/*0xDB*/ RMSG(ORION_SAVE_PACKET, "Character transfer log", PACKET_VARIABLE_SIZE),
-	/*0xDC*/ RMSG(ORION_SAVE_PACKET, "OPL Info Packet", 9),
+	/*0xDC*/ RMSGH(ORION_SAVE_PACKET, "OPL Info Packet", 9, OPLInfo),
 	/*0xDD*/ RMSGH(ORION_IGNORE_PACKET, "Compressed Gump", PACKET_VARIABLE_SIZE, OpenCompressedGump),
 	/*0xDE*/ RMSG(ORION_SAVE_PACKET, "Update characters combatants", PACKET_VARIABLE_SIZE),
 	/*0xDF*/ RMSGH(ORION_SAVE_PACKET, "Buff/Debuff", PACKET_VARIABLE_SIZE, BuffDebuff),
@@ -584,6 +584,20 @@ void CPacketManager::SendMegaClilocRequests(UINT_LIST &list)
 void CPacketManager::SendMegaClilocRequests()
 {
 	SendMegaClilocRequests(m_MegaClilocRequests);
+}
+//----------------------------------------------------------------------------------
+void CPacketManager::AddMegaClilocRequest(const uint &serial, const bool &existsTest)
+{
+	if (existsTest)
+	{
+		for (const uint item : m_MegaClilocRequests)
+		{
+			if (item == serial)
+				return;
+		}
+	}
+
+	m_MegaClilocRequests.push_back(serial);
 }
 //----------------------------------------------------------------------------------
 void CPacketManager::OnReadFailed()
@@ -916,8 +930,8 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
 
-	if (m_ClientVersion >= CV_308Z && !g_Player->ClilocMessage.length())
-		m_MegaClilocRequests.push_back(g_Player->Serial);
+	//if (m_ClientVersion >= CV_308Z && !g_Player->ClilocMessage.length())
+	//	m_MegaClilocRequests.push_back(g_Player->Serial);
 
 	LOG("Player 0x%08lX entered the world.\n", serial);
 
@@ -1362,8 +1376,8 @@ PACKET_HANDLER(UpdateItem)
 
 	g_World->MoveToTop(obj);
 
-	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-		m_MegaClilocRequests.push_back(obj->Serial);
+	//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+	//	m_MegaClilocRequests.push_back(obj->Serial);
 
 	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
 }
@@ -1438,8 +1452,8 @@ PACKET_HANDLER(UpdateItemSA)
 
 	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
 
-	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-		m_MegaClilocRequests.push_back(obj->Serial);
+	//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+	//	m_MegaClilocRequests.push_back(obj->Serial);
 
 	g_World->MoveToTop(obj);
 }
@@ -1585,8 +1599,8 @@ PACKET_HANDLER(UpdateObject)
 	else
 		LOG("0x%08X 0x%04X %d,%d,%d C%04X F%02X\n", serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
 
-	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-		m_MegaClilocRequests.push_back(obj->Serial);
+	//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+	//	m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (serial == g_PlayerSerial && oldDead != g_Player->Dead())
 	{
@@ -1607,7 +1621,7 @@ PACKET_HANDLER(UpdateObject)
 	if (*m_Start != 0x78)
 		end -= 6;
 
-	UINT_LIST megaClilocRequestList;
+	//UINT_LIST megaClilocRequestList;
 
 	while (serial != 0)
 	{
@@ -1640,8 +1654,8 @@ PACKET_HANDLER(UpdateObject)
 
 		LOG("\t0x%08X:%04X [%d] %04X\n", obj2->Serial, obj2->Graphic, layer, obj2->Color);
 
-		if (m_ClientVersion >= CV_308Z && !obj2->ClilocMessage.length())
-			megaClilocRequestList.push_back(obj2->Serial);
+		//if (m_ClientVersion >= CV_308Z && !obj2->ClilocMessage.length())
+		//	megaClilocRequestList.push_back(obj2->Serial);
 
 		g_World->MoveToTop(obj2);
 
@@ -1651,7 +1665,7 @@ PACKET_HANDLER(UpdateObject)
 	if (obj->IsPlayer())
 		g_Player->UpdateAbilities();
 
-	SendMegaClilocRequests(megaClilocRequestList);
+	//SendMegaClilocRequests(megaClilocRequestList);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(EquipItem)
@@ -1691,8 +1705,8 @@ PACKET_HANDLER(EquipItem)
 	if (g_NewTargetSystem.Serial == serial)
 		g_NewTargetSystem.Serial = 0;
 
-	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-		m_MegaClilocRequests.push_back(obj->Serial);
+	//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+	//	m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (layer >= OL_BUY_RESTOCK && layer <= OL_SELL)
 		obj->Clear();
@@ -1762,8 +1776,8 @@ PACKET_HANDLER(UpdateContainedItem)
 
 	obj->Color = ReadUInt16BE();
 
-	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-		m_MegaClilocRequests.push_back(obj->Serial);
+	//if (m_ClientVersion >= CV_308Z && (!obj->ClilocMessage.length() || obj->IsStackable()))
+	//	m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (obj->Graphic == 0x0EB0) //Message board item
 	{
@@ -1782,7 +1796,12 @@ PACKET_HANDLER(UpdateContainedItem)
 		CGump *gump = gump = g_GumpManager.UpdateContent(cserial, 0, GT_SPELLBOOK);
 
 		if (gump == NULL)
+		{
 			gump = g_GumpManager.UpdateContent(cserial, 0, GT_CONTAINER);
+
+			//if (gump != NULL && m_ClientVersion >= CV_308Z)
+			//	AddMegaClilocRequest(cserial, true);
+		}
 
 		if (gump != NULL)
 		{
@@ -1816,7 +1835,7 @@ PACKET_HANDLER(UpdateContainedItems)
 	bool bbUpdated = false;
 	vector<CORPSE_EQUIPMENT_DATA> vced;
 	bool containerIsCorpse = false;
-	UINT_LIST megaClilocRequestList;
+	//UINT_LIST megaClilocRequestList;
 
 	IFOR(i, 0, count)
 	{
@@ -1891,8 +1910,8 @@ PACKET_HANDLER(UpdateContainedItems)
 		obj->MapIndex = g_CurrentMap;
 		obj->Layer = 0;
 
-		if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-			megaClilocRequestList.push_back(obj->Serial);
+		//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+		//	megaClilocRequestList.push_back(obj->Serial);
 
 		g_World->PutContainer(obj, cserial);
 
@@ -1918,7 +1937,7 @@ PACKET_HANDLER(UpdateContainedItems)
 		LOG("\t|0x%08X<0x%08X:%04X*%d (%d,%d) %04X\n", obj->Container, obj->Serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Color);
 	}
 
-	SendMegaClilocRequests(megaClilocRequestList);
+	//SendMegaClilocRequests(megaClilocRequestList);
 
 	if (containerIsCorpse)
 	{
@@ -1982,8 +2001,8 @@ PACKET_HANDLER(DenyMoveItem)
 
 				obj->Paste(g_ObjectInHand);
 
-				if (m_ClientVersion >= CV_308Z)
-					m_MegaClilocRequests.push_back(obj->Serial);
+				//if (m_ClientVersion >= CV_308Z)
+				//	m_MegaClilocRequests.push_back(obj->Serial);
 
 				g_World->PutContainer(obj, g_ObjectInHand->Container);
 
@@ -2213,8 +2232,8 @@ PACKET_HANDLER(UpdateCharacter)
 	//if (serial == g_PlayerSerial)
 	//	obj->PaperdollText = "";
 
-	if (m_ClientVersion >= CV_308Z && (serial == g_PlayerSerial || !obj->ClilocMessage.length()))
-		m_MegaClilocRequests.push_back(obj->Serial);
+	//if (m_ClientVersion >= CV_308Z && (serial == g_PlayerSerial || !obj->ClilocMessage.length()))
+	//	m_MegaClilocRequests.push_back(obj->Serial);
 
 	obj->Color = ReadUInt16BE();
 	obj->Flags = ReadUInt8();
@@ -2700,7 +2719,7 @@ PACKET_HANDLER(ExtendedCommand)
 				if (flags == 0x01)
 					color = 0x0386;
 
-				CGUITextEntry *item = new CGUITextEntry(index, color, color, color, 10, offsetY);
+				CGUITextEntry *item = new CGUITextEntry(index, color, color, color, 10, offsetY, 0, true, CONTEXT_MENU_FONT);
 
 				if (flags == 0x04)
 					Move(2);
@@ -2726,7 +2745,7 @@ PACKET_HANDLER(ExtendedCommand)
 
 				CEntryText &entry = item->m_Entry;
 				entry.SetText(str);
-				entry.PrepareToDrawW(0, color);
+				entry.PrepareToDrawW(CONTEXT_MENU_FONT, color);
 
 				CGLTextTexture &texture = entry.m_Texture;
 
@@ -5326,5 +5345,15 @@ PACKET_HANDLER(BuyReply)
 PACKET_HANDLER(Logout)
 {
 	g_Orion.LogOut();
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(OPLInfo)
+{
+	if (m_ClientVersion >= CV_308Z)
+	{
+		uint serial = ReadUInt32BE();
+
+		AddMegaClilocRequest(serial, true);
+	}
 }
 //----------------------------------------------------------------------------------

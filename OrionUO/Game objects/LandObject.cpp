@@ -14,7 +14,8 @@
 #include "../SelectedObject.h"
 //----------------------------------------------------------------------------------
 CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
-: CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), m_MinZ(z), m_AverageZ(z)
+: CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), m_MinZ(z), m_AverageZ(z),
+m_VertexBuffer(0), m_NormalBuffer(0)
 {
 	m_OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
@@ -29,6 +30,21 @@ CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort
 #if UO_DEBUG_INFO!=0
 	g_LandObjectsCount++;
 #endif //UO_DEBUG_INFO!=0
+}
+//---------------------------------------------------------------------------
+CLandObject::~CLandObject()
+{
+	if (m_VertexBuffer != 0)
+	{
+		glDeleteBuffers(1, &m_VertexBuffer);
+		m_VertexBuffer = 0;
+	}
+
+	if (m_NormalBuffer != 0)
+	{
+		glDeleteBuffers(1, &m_NormalBuffer);
+		m_NormalBuffer = 0;
+	}
 }
 //---------------------------------------------------------------------------
 void CLandObject::UpdateGraphicBySeason()
