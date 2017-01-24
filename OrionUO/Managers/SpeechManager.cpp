@@ -9,6 +9,7 @@
 //----------------------------------------------------------------------------------
 #include "SpeechManager.h"
 #include "FileManager.h"
+#include "PacketManager.h"
 //----------------------------------------------------------------------------------
 CSpeechManager g_SpeechManager;
 //----------------------------------------------------------------------------------
@@ -147,7 +148,8 @@ bool CSpeechManager::LoadLangCodes()
 //----------------------------------------------------------------------------------
 void CSpeechManager::GetKeywords(const wchar_t *text, UINT_LIST &codes)
 {
-	if (!m_Loaded) return;
+	if (!m_Loaded || g_PacketManager.ClientVersion < CV_305D) //Но по факту с 2.0.7 версии клиента
+		return;
 
 	int size = m_SpeechEntries.size();
 	wstring input = ToLowerW(text);

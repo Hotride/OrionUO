@@ -355,7 +355,6 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 
 	Resize(size, true);
 
-
 	WriteUInt8(0xAD);
 	WriteUInt16BE(size);
 	WriteUInt8(typeValue);
