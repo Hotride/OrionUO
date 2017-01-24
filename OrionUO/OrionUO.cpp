@@ -4551,7 +4551,7 @@ void COrion::CreateTextMessageF(uchar font, ushort color, const char *format, ..
 	va_list arg;
 	va_start(arg, format);
 
-	char buf[128] = { 0 };
+	char buf[512] = { 0 };
 	vsprintf_s(buf, format, arg);
 
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, font, color, buf);
@@ -4564,7 +4564,7 @@ void COrion::CreateUnicodeTextMessageF(uchar font, ushort color, const char *for
 	va_list arg;
 	va_start(arg, format);
 
-	char buf[128] = { 0 };
+	char buf[512] = { 0 };
 	vsprintf_s(buf, format, arg);
 
 	CreateUnicodeTextMessage(TT_SYSTEM, 0xFFFFFFFF, font, color, ToWString(buf));
