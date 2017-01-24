@@ -15,8 +15,64 @@
 #include "../Wisp/WispGeometry.h"
 #include "GLTexture.h"
 #include "GLVector.h"
+#include "../Game objects/LandObject.h"
 //----------------------------------------------------------------------------------
 typedef deque<WISP_GEOMETRY::CRect> SCISSOR_LIST;
+//----------------------------------------------------------------------------------
+class CGLEngine;
+//----------------------------------------------------------------------------------
+typedef void (CGLEngine::*BIND_TEXTURE_16_FUNCTION)(CGLTexture&, const int&, const int&, pushort);
+typedef void (CGLEngine::*BIND_TEXTURE_32_FUNCTION)(CGLTexture&, const int&, const int&, puint);
+
+typedef void (CGLEngine::*DRAW_LAND_TEXTURE_FUNCTION)(const CGLTexture&, const int&, const int&, CLandObject*);
+typedef void (CGLEngine::*DRAW_TEXTURE_FUNCTION)(const CGLTexture&, const int&, const int&);
+typedef void (CGLEngine::*DRAW_TEXTURE_ROTATED_FUNCTION)(const CGLTexture&, const int&, const int&, const float&);
+typedef void (CGLEngine::*DRAW_TEXTURE_MIRRORED_FUNCTION)(const CGLTexture&, const int&, const int&, const bool&);
+typedef void (CGLEngine::*DRAW_TEXTURE_SITTING_FUNCTION)(const CGLTexture&, const int&, const int&, const bool&, const float&, const float&, const float&);
+typedef void (CGLEngine::*DRAW_TEXTURE_SHADOW_FUNCTION)(const CGLTexture&, const int&, const int&, const bool&);
+typedef void (CGLEngine::*DRAW_TEXTURE_STRETCHED_FUNCTION)(const CGLTexture&, const int&, const int&, const int&, const int&);
+typedef void (CGLEngine::*DRAW_TEXTURE_RESIZEPIC_FUNCTION)(CGLTexture**, const int&, const int&, const int&, const int&);
+//----------------------------------------------------------------------------------
+//Указатели на функции рисования, в соответствии с текущим контекстом устройства
+//Загрузка текстур 16 и 32 бит
+extern BIND_TEXTURE_16_FUNCTION g_GL_BindTexture16_Ptr;
+extern BIND_TEXTURE_32_FUNCTION g_GL_BindTexture32_Ptr;
+
+//Нарисовать текстуру ландшафта
+extern DRAW_LAND_TEXTURE_FUNCTION g_GL_DrawLandTexture_Ptr;
+
+//Нарисовать текстуру
+extern DRAW_TEXTURE_FUNCTION g_GL_Draw_Ptr;
+
+//Нарисовать повернутую текстуру
+extern DRAW_TEXTURE_ROTATED_FUNCTION g_GL_DrawRotated_Ptr;
+
+//Нарисовать текстуру с возможностью зеркального отражения
+extern DRAW_TEXTURE_MIRRORED_FUNCTION g_GL_DrawMirrored_Ptr;
+
+//Нарисовать текстуру сидячего персонажа
+extern DRAW_TEXTURE_SITTING_FUNCTION g_GL_DrawSitting_Ptr;
+
+//Нарисовать тень
+extern DRAW_TEXTURE_SHADOW_FUNCTION g_GL_DrawShadow_Ptr;
+
+//Замостить текстуру на заданные габариты
+extern DRAW_TEXTURE_STRETCHED_FUNCTION g_GL_DrawStretched_Ptr;
+
+//Нарисовать фон
+extern DRAW_TEXTURE_RESIZEPIC_FUNCTION g_GL_DrawResizepic_Ptr;
+//----------------------------------------------------------------------------------
+#define g_GL_BindTexture16 (g_GL.*(g_GL_BindTexture16_Ptr))
+#define g_GL_BindTexture32 (g_GL.*(g_GL_BindTexture32_Ptr))
+
+#define g_GL_DrawLandTexture (g_GL.*(g_GL_DrawLandTexture_Ptr))
+#define g_GL_Draw (g_GL.*(g_GL_Draw_Ptr))
+#define g_GL_DrawRotated (g_GL.*(g_GL_DrawRotated_Ptr))
+#define g_GL_DrawMirrored (g_GL.*(g_GL_DrawMirrored_Ptr))
+#define g_GL_DrawSitting (g_GL.*(g_GL_DrawSitting_Ptr))
+#define g_GL_DrawShadow (g_GL.*(g_GL_DrawShadow_Ptr))
+#define g_GL_DrawStretched (g_GL.*(g_GL_DrawStretched_Ptr))
+#define g_GL_DrawResizepic (g_GL.*(g_GL_DrawResizepic_Ptr))
 //----------------------------------------------------------------------------------
 class CGLEngine
 {
@@ -25,6 +81,7 @@ class CGLEngine
 	SETGET(GLuint, OldTexture);
 	SETGET(bool, Drawing);
 	SETGET(bool, CanUseFrameBuffer);
+	SETGET(bool, CanUseBuffer);
 	SETGET(float, SittingCharacterOffset);
 
 private:
@@ -44,10 +101,6 @@ public:
 
 	//Обновление области вывода
 	void UpdateRect();
-
-	//Загрузка текстур 16 и 32 бит
-	void BindTexture16(CGLTexture &texture, const int &width, const int &height, const pushort pixels);
-	void BindTexture32(CGLTexture &texture, const int &width, const int &height, const puint pixels);
 
 	//Очистить экран и начать рисование
 	void BeginDraw();
@@ -96,29 +149,69 @@ public:
 
 
 
+	//Функции OpenGL 1x
+
+	//Загрузка текстур 16 и 32 бит
+	void GL1_BindTexture16(CGLTexture &texture, const int &width, const int &height, pushort pixels);
+	void GL1_BindTexture32(CGLTexture &texture, const int &width, const int &height, puint pixels);
+
 	//Нарисовать текстуру ландшафта
-	void DrawLandTexture(const GLuint &texture, const int &x, const int &y, const RECT &rc, CVector *normals);
+	void GL1_DrawLandTexture(const CGLTexture &texture, const int &x, const int &y, CLandObject *land);
 
 	//Нарисовать текстуру
-	void Draw(const CGLTexture &texture, const int &x, const int &y);
+	void GL1_Draw(const CGLTexture &texture, const int &x, const int &y);
 
 	//Нарисовать повернутую текстуру
-	void DrawRotated(const CGLTexture &texture, const int &x, const int &y, const float &angle);
+	void GL1_DrawRotated(const CGLTexture &texture, const int &x, const int &y, const float &angle);
 
 	//Нарисовать текстуру с возможностью зеркального отражения
-	void Draw(const CGLTexture &texture, const int &x, const int &y, const bool &mirror);
+	void GL1_DrawMirrored(const CGLTexture &texture, const int &x, const int &y, const bool &mirror);
 
 	//Нарисовать текстуру сидячего персонажа
-	void DrawSitting(const CGLTexture &texture, const int &x, const int &y, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod);
+	void GL1_DrawSitting(const CGLTexture &texture, const int &x, const int &y, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod);
 
 	//Нарисовать тень
-	void DrawShadow(const CGLTexture &texture, const int &x, const int &y, const bool &mirror);
+	void GL1_DrawShadow(const CGLTexture &texture, const int &x, const int &y, const bool &mirror);
 
 	//Замостить текстуру на заданные габариты
-	void Draw(const CGLTexture &texture, const int &x, const int &y, const int &drawWidth, const int &drawHeight);
+	void GL1_DrawStretched(const CGLTexture &texture, const int &x, const int &y, const int &drawWidth, const int &drawHeight);
 
 	//Нарисовать фон
-	void DrawResizepic(CGLTexture **th, const int &x, const int &y, const int &width, const int &height);
+	void GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, const int &width, const int &height);
+
+
+
+	//Функции OpenGL 2x
+
+	void GL2_CreateArrays(CGLTexture &texture, const int &width, const int &height);
+
+	//Загрузка текстур 16 и 32 бит
+	void GL2_BindTexture16(CGLTexture &texture, const int &width, const int &height, pushort pixels);
+	void GL2_BindTexture32(CGLTexture &texture, const int &width, const int &height, puint pixels);
+
+	//Нарисовать текстуру ландшафта
+	void GL2_DrawLandTexture(const CGLTexture &texture, const int &x, const int &y, CLandObject *land);
+
+	//Нарисовать текстуру
+	void GL2_Draw(const CGLTexture &texture, const int &x, const int &y);
+
+	//Нарисовать повернутую текстуру
+	void GL2_DrawRotated(const CGLTexture &texture, const int &x, const int &y, const float &angle);
+
+	//Нарисовать текстуру с возможностью зеркального отражения
+	void GL2_DrawMirrored(const CGLTexture &texture, const int &x, const int &y, const bool &mirror);
+
+	//Нарисовать текстуру сидячего персонажа
+	void GL2_DrawSitting(const CGLTexture &texture, const int &x, const int &y, const bool &mirror, const float &h3mod, const float &h6mod, const float &h9mod);
+
+	//Нарисовать тень
+	void GL2_DrawShadow(const CGLTexture &texture, const int &x, const int &y, const bool &mirror);
+
+	//Замостить текстуру на заданные габариты
+	void GL2_DrawStretched(const CGLTexture &texture, const int &x, const int &y, const int &drawWidth, const int &drawHeight);
+
+	//Нарисовать фон
+	void GL2_DrawResizepic(CGLTexture **th, const int &x, const int &y, const int &width, const int &height);
 };
 //---------------------------------------------------------------------------
 extern CGLEngine g_GL;

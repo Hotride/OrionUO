@@ -1027,7 +1027,7 @@ bool CAnimationManager::ExecuteDirectionGroup(CTextureAnimationDirection *direct
 			}
 		}
 
-		g_GL.BindTexture16(frame->m_Texture, imageWidth, imageHeight, &data[0]);
+		g_GL_BindTexture16(frame->m_Texture, imageWidth, imageHeight, &data[0]);
 	}
 
 	return true;
@@ -1261,7 +1261,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_DST_COLOR, GL_ZERO);
 
-			g_GL.DrawShadow(frame->m_Texture, x, y, mirror);
+			g_GL_DrawShadow(frame->m_Texture, x, y, mirror);
 
 			if (m_UseBlending)
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1392,10 +1392,10 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 					}
 				}
 
-				g_GL.DrawSitting(frame->m_Texture, x, y, mirror, h3mod, h6mod, h9mod);
+				g_GL_DrawSitting(frame->m_Texture, x, y, mirror, h3mod, h6mod, h9mod);
 			}			
 			else
-				g_GL.Draw(frame->m_Texture, x, y, mirror);
+				g_GL_DrawMirrored(frame->m_Texture, x, y, mirror);
 
 			if (spectralColor)
 			{
