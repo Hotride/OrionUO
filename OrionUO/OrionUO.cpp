@@ -917,6 +917,16 @@ void COrion::LoadClientConfig()
 		WISP_DATASTREAM::CDataReader file(&realData[0], realData.size());
 
 		uchar version = file.ReadInt8();
+		uchar dllVersion = file.ReadInt8();
+		uchar subVersion = 0;
+
+		if (dllVersion != 0xFE)
+		{
+			g_OrionWindow.ShowMessage("Old version of Orion.dll detected!!!\nClient may be crashed in process!!!", "Warning!");
+			file.Move(-1);
+		}
+		else
+			subVersion = file.ReadInt8();
 
 		g_PacketManager.ClientVersion = (CLIENT_VERSION)file.ReadInt8();
 
@@ -925,6 +935,8 @@ void COrion::LoadClientConfig()
 
 		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
 		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
+		if (dllVersion == 0xFE)
+			g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt32LE();
 		g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt32LE();
 
 		file.Move(1);

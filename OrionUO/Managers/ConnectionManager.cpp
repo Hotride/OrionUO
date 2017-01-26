@@ -24,6 +24,7 @@ CConnectionManager g_ConnectionManager;
 //----------------------------------------------------------------------------------
 NETWORK_INIT_TYPE *g_NetworkInit = NULL;
 NETWORK_ACTION_TYPE *g_NetworkAction = NULL;
+NETWORK_POST_ACTION_TYPE *g_NetworkPostAction = NULL;
 //----------------------------------------------------------------------------------
 CConnectionManager::CConnectionManager()
 : m_IsLoginSocket(true), m_LoginSocket(false), m_GameSocket(true), m_UseProxy(false),
