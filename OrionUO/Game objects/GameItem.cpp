@@ -655,43 +655,13 @@ ushort CGameItem::GetMountAnimation()
 				graphic = 0x042D;
 				break;
 			}
-
-			//start FWUO ???
-			case 0x2F01: // 12033 Polar bear
-			{
-				graphic = 0x00D5;
-				break;
-			}
-			case 0x2F03: // 12035 Ridgeback
-			{
-				graphic = 0x00F6;
-				break;
-			}
-			case 0x2F04: // 12036 Skeletal mount
-			{
-				graphic = 0x00F3;
-				break;
-			}
-			case 0x2F05: // 12037 Genie
-			{
-				graphic = 0x023D;
-				break;
-			}
-			case 0x2F10: // 12048 Kyryn
-			{
-				graphic = 0x00EB;
-				break;
-			}
-			case 0x3001: // 12289 Beetle
-			{
-				graphic = 0x00F4;
-				break;
-			}
-			//end FWUO ???
-
 			default: //lightbrown/horse2
 			{
-				graphic = 0x00C8;
+				if (m_TiledataPtr->AnimID != 0)
+					graphic = m_TiledataPtr->AnimID;
+				else
+					graphic = 0x00C8;
+
 				break;
 			}
 		}
