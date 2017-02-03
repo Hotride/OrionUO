@@ -1156,7 +1156,7 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection &direction, c
 		int y = (header >> 12) & 0x03FF;
 
 		if (y & 0x0200)
-			y += 0xFFFFFE00;
+			y |= 0xFFFFFE00;
 
 		x += imageCenterX;
 		y += imageCenterY + imageHeight;
