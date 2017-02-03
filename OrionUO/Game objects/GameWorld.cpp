@@ -110,7 +110,6 @@ void CGameWorld::ProcessAnimation()
 
 				ushort id = gc->GetMountAnimation();
 				g_AnimationManager.GetBodyGraphic(id);
-				CTextureAnimation *anim = g_AnimationManager.GetAnimation(id);
 				int animGroup = gc->GetAnimationGroup(id);
 
 				CGameItem *mount = gc->FindLayer(OL_MOUNT);
@@ -123,7 +122,6 @@ void CGameWorld::ProcessAnimation()
 						case PAG_FIDGET_3:
 						{
 							id = mount->GetMountAnimation();
-							anim = g_AnimationManager.GetAnimation(id);
 							animGroup = gc->GetAnimationGroup(id);
 							break;
 						}
@@ -138,18 +136,17 @@ void CGameWorld::ProcessAnimation()
 
 				int currentDelay = delay;
 
-				if (anim != NULL)
+				if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT && dir < 5)
 				{
-					CTextureAnimationGroup *group = anim->GetGroup(animGroup);
-					CTextureAnimationDirection *direction = group->GetDirection(dir);
+					CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[id].m_Groups[animGroup].m_Direction[dir];
 
-					if (direction->Address == 0)
-						g_AnimationManager.ExecuteDirectionGroup(direction, id, animGroup, dir);
+					if (direction.FrameCount == 0)
+						g_AnimationManager.LoadDirectionGroup(direction);
 
-					if (direction->Address != 0)
+					if (direction.Address != 0)
 					{
-						direction->LastAccessTime = g_Ticks;
-						int fc = direction->FrameCount;
+						direction.LastAccessTime = g_Ticks;
+						int fc = direction.FrameCount;
 
 						if (gc->AnimationFromServer)
 						{
@@ -231,26 +228,24 @@ void CGameWorld::ProcessAnimation()
 				char frameIndex = obj->AnimIndex + 1;
 				
 				WORD id = obj->GetMountAnimation();
-				CTextureAnimation *anim = g_AnimationManager.GetAnimation(id);
 
 				bool mirror = false;
 
 				g_AnimationManager.GetAnimDirection(dir, mirror);
 
-				if (anim != NULL)
+				if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT && dir < 5)
 				{
 					int animGroup = g_AnimationManager.GetDieGroupIndex(id, gi->UsedLayer);
 
-					CTextureAnimationGroup *group = anim->GetGroup(animGroup);
-					CTextureAnimationDirection *direction = group->GetDirection(dir);
+					CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[id].m_Groups[animGroup].m_Direction[dir];
 
-					if (direction->Address == 0)
-						g_AnimationManager.ExecuteDirectionGroup(direction, id, animGroup, dir);
+					if (direction.FrameCount == 0)
+						g_AnimationManager.LoadDirectionGroup(direction);
 
-					if (direction->Address != 0)
+					if (direction.Address != 0)
 					{
-						direction->LastAccessTime = g_Ticks;
-						int fc = direction->FrameCount;
+						direction.LastAccessTime = g_Ticks;
+						int fc = direction.FrameCount;
 
 						if (frameIndex >= fc)
 						{

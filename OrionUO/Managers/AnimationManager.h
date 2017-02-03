@@ -74,19 +74,11 @@ private:
 	static const int USED_LAYER_COUNT = 23;
 	static const int m_UsedLayers[8][USED_LAYER_COUNT];
 
-	//!Данные анимаций
-	CIndexAnimation m_DataIndex[MAX_ANIMATIONS_DATA_INDEX_COUNT];
-
-	//!Список замен для трупов
-	ushort m_CorpseReplaces[MAX_ANIMATIONS_DATA_INDEX_COUNT];
-
 	//!Список используемых анимаций
-	deque<CIndexAnimation*> m_UsedAnimList;
-
-	puchar GetAnimationAddress(const ushort &graphic, int &size, const uchar &group, const int &direction = 0);
+	deque<CTextureAnimationDirection*> m_UsedAnimList;
 
 	//Проверка пикселей картинки в указанных координатах
-	bool TestImagePixels(CTextureAnimationDirection *direction, const uchar &frame, const int &checkX, const int &checkY);
+	bool TestImagePixels(CTextureAnimationDirection &direction, const uchar &frame, const int &checkX, const int &checkY);
 
 	bool TestPixels(class CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, ushort id = 0x0000);
 
@@ -112,6 +104,9 @@ private:
 public:
 	CAnimationManager();
 	~CAnimationManager();
+
+	//!Данные анимаций
+	CIndexAnimation m_DataIndex[MAX_ANIMATIONS_DATA_INDEX_COUNT];
 
 	/*!
 	Инициализация адресов
@@ -161,11 +156,9 @@ public:
 	/*!
 	Загрузка картинок для указанного направления персонажа
 	@param [__in] direction Ссылка на направление анимации
-	@param [__in] id Индекс картинки
-	@param [__in] offset Смещение относительно начала анимаций
 	@return true в случае успешной загрузки
 	*/
-	bool ExecuteDirectionGroup(CTextureAnimationDirection *direction, const ushort &graphic, const int &group, const int &dir);
+	bool LoadDirectionGroup(CTextureAnimationDirection &direction);
 
 	/*!
 	Коррекция направления и режима зеркального отображения
@@ -184,13 +177,6 @@ public:
 	@return 
 	*/
 	void GetSittingAnimDirection(uchar &dir, bool &mirror, int &x, int &y);
-
-	/*!
-	Получить ссылку на данные анимации
-	@param [__in] id Индекс картинки
-	@return Ссылка на анимацию
-	*/
-	CTextureAnimation *GetAnimation(const ushort &graphic);
 
 	/*!
 	Отрисовать персонажа
@@ -254,13 +240,6 @@ public:
 	@return true в случае успеха
 	*/
 	bool AnimationExists(const ushort &graphic, uchar group);
-
-	/*!
-	Получить индекс картинки трупа
-	@param [__inout] graphic Индекс картинки
-	@return 
-	*/
-	void GetCorpseGraphic(ushort &graphic);
 
 	/*!
 	Получить индекс анимации

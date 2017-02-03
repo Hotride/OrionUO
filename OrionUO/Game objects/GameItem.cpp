@@ -667,10 +667,7 @@ ushort CGameItem::GetMountAnimation()
 		}
 	}
 	else if (IsCorpse())
-	{
 		graphic = (ushort)m_Count;
-		g_AnimationManager.GetCorpseGraphic(graphic);
-	}
 
 	return graphic;
 }

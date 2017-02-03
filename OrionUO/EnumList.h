@@ -654,7 +654,8 @@ enum ANIMATION_GROUPS_TYPE
 	AGT_MONSTER,
 	AGT_SEA_MONSTER,
 	AGT_HUMAN,
-	AGT_EQUIPMENT
+	AGT_EQUIPMENT,
+	AGT_UNKNOWN
 };
 //----------------------------------------------------------------------------------
 enum ANIMATION_GROUPS

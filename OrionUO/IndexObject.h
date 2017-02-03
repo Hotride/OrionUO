@@ -16,6 +16,7 @@
 #include "bass.h"
 #include "bassmidi.h"
 #include "EnumList.h"
+#include "TextureObject.h"
 
 #pragma comment(lib, "bass.lib")
 #pragma comment(lib, "bassmidi.lib")
@@ -88,8 +89,6 @@ public:
 //---------------------------------------------------------------------------
 class CIndexAnimation
 {
-	SETGET(uint, Address);
-	SETGET(uint, Offset);
 	SETGET(ushort, Graphic);
 	SETGET(ushort, Color);
 	SETGET(ANIMATION_GROUPS_TYPE, Type);
@@ -99,8 +98,7 @@ public:
 	CIndexAnimation();
 	virtual ~CIndexAnimation();
 
-	//Указатель на группу анимаций
-	class CTextureAnimation *Group;
+	CTextureAnimationGroup m_Groups[ANIMATION_GROUPS_COUNT];
 };
 //---------------------------------------------------------------------------
 class CIndexMusic
