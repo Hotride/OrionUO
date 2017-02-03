@@ -1023,6 +1023,8 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 		if (obj->LastAccessTime < ticks)
 		{
 			obj->Clear();
+			obj->FrameCount = 0;
+			obj->LastAccessTime = 0;
 
 			it = m_UsedAnimList.erase(it);
 		}
@@ -1076,45 +1078,32 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 		if (!imageWidth || !imageHeight)
 			continue;
 
-		uint y = 0;
-
 		USHORT_LIST data(imageWidth * imageHeight, 0);
-		ushort prevLineNum = 0xFFFF;
 
-		while (true)
+		uint header = ReadUInt32LE();
+
+		while (header != 0x7FFF7FFF && !IsEOF())
 		{
-			ushort rowHeader = ReadUInt16LE();
-			ushort rowOfs = ReadUInt16LE();
+			ushort runLength = (header & 0x0FFF);
 
-			if (rowHeader == 0x7FFF || rowOfs == 0x7FFF)
-				break;
+			int x = (header >> 22) & 0x03FF;
 
-			ushort lineNum = rowHeader >> 12;
+			if (x & 0x0200)
+				x |= 0xFFFFFE00;
 
-			if (prevLineNum != 0xFFFF && lineNum != prevLineNum)
-			{
-				y++;
+			int y = (header >> 12) & 0x03FF;
 
-				if (y >= imageHeight)
-					break;
-			}
+			if (y & 0x0200)
+				y |= 0xFFFFFE00;
 
-			prevLineNum = lineNum;
+			x += imageCenterX;
+			y += imageCenterY + imageHeight;
 
-			uint x = ((rowOfs >> 6) & 0x03FF) + imageCenterX;
-
-			if (rowOfs & 0x8000)
-				x -= 0x0400;
-
-			ushort runLength = rowHeader & 0x0FFF;
 			int block = (y * imageWidth) + x;
 
-			IFOR(j, 0, runLength)
+			IFOR(k, 0, runLength)
 			{
 				ushort val = palette[ReadUInt8()];
-
-				//if (color)
-				//	val = g_ColorManager.GetColor16(val, color);
 
 				if (val)
 					data[block] = 0x8000 | val;
@@ -1123,6 +1112,8 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 
 				block++;
 			}
+
+			header = ReadUInt32LE();
 		}
 
 		g_GL_BindTexture16(frame->m_Texture, imageWidth, imageHeight, &data[0]);
@@ -1151,51 +1142,40 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection &direction, c
 	uint imageWidth = ReadInt16LE();
 	uint imageHeight = ReadInt16LE();
 
-	uint y = 0;
+	uint header = ReadUInt32LE();
 
-	ushort prevLineNum = 0xFFFF;
-
-	while (true)
+	while (header != 0x7FFF7FFF && !IsEOF())
 	{
-		ushort rowHeader = ReadUInt16LE();
-		ushort rowOfs = ReadUInt16LE();
+		ushort runLength = (header & 0x0FFF);
 
-		if (rowHeader == 0x7FFF || rowOfs == 0x7FFF)
-			break;
+		int x = (header >> 22) & 0x03FF;
 
-		ushort lineNum = rowHeader >> 12;
+		if (x & 0x0200)
+			x |= 0xFFFFFE00;
 
-		if (prevLineNum != 0xFFFF && lineNum != prevLineNum)
-		{
-			y++;
+		int y = (header >> 12) & 0x03FF;
 
-			if (y >= imageHeight)
-				break;
-		}
+		if (y & 0x0200)
+			y += 0xFFFFFE00;
 
-		prevLineNum = lineNum;
-
-		ushort runLength = rowHeader & 0x0FFF;
+		x += imageCenterX;
+		y += imageCenterY + imageHeight;
 
 		if (y != checkY)
-		{
 			Move(runLength);
-			continue;
-		}
-
-		uint x = ((rowOfs >> 6) & 0x03FF) + imageCenterX;
-
-		if (rowOfs & 0x8000)
-			x -= 0x0400;
-
-		if ((uint)checkX >= x && (uint)checkX <= x + runLength)
+		else
 		{
-			Move(checkX);
+			if (checkX >= x && checkX <= x + runLength)
+			{
+				Move(checkX);
 
-			return (palette[ReadUInt8()] != 0);
+				return (palette[ReadUInt8()] != 0);
+			}
+
+			Move(runLength);
 		}
 
-		Move(runLength);
+		header = ReadUInt32LE();
 	}
 
 	return false;
