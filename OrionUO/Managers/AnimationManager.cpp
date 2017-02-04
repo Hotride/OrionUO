@@ -338,43 +338,6 @@ void CAnimationManager::Load(puint verdata)
 				}
 			}
 		}
-
-		/*CIndexAnimation &index = m_DataIndex[i];
-		index.Address = 0;
-		index.Offset = 0;
-		index.Graphic = 0;
-
-		ANIMATION_GROUPS_TYPE groupType = AGT_MONSTER;
-		uint findID = 0;
-
-		if (i >= 200)
-		{
-			if (i >= 400) //People 0x000088B8
-			{
-				groupType = AGT_HUMAN;
-				findID = (((i - 400) * 175) + 35000) * sizeof(ANIM_IDX_BLOCK);
-			}
-			else //Low 0x000055F0
-			{
-				groupType = AGT_ANIMAL;
-				findID = (((i - 200) * 65) + 22000) * sizeof(ANIM_IDX_BLOCK);
-			}
-		}
-		else //Hight
-			findID = (i * 110) * sizeof(ANIM_IDX_BLOCK);
-		
-		if (findID < m_SizeIdx[0])
-		{
-			PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_AddressIdx[0] + findID);
-			
-			if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
-			{
-				index.Address = (uint)aidx;
-				index.Offset = m_AddressMul[0];
-				index.Graphic = i;
-				index.Type = groupType;
-			}
-		}*/
 	}
 
 	if (verdata != NULL)
@@ -447,37 +410,6 @@ void CAnimationManager::Load(puint verdata)
 
 				index.Graphic = id;
 				index.Type = groupType;
-
-				/*IFOR(i, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
-				{
-					ANIMATION_GROUPS_TYPE groupType = AGT_MONSTER;
-					uint findID = 0;
-
-					if (i >= 200)
-					{
-						if (i >= 400) //People
-						{
-							groupType = AGT_HUMAN;
-							findID = ((i - 400) * 175) + 35000;
-						}
-						else //Low
-						{
-							groupType = AGT_ANIMAL;
-							findID = ((i - 200) * 65) + 22000;
-						}
-					}
-					else //Hight
-						findID = i * 110;
-
-					if (graphic == findID)
-					{
-						CIndexAnimation &index = m_DataIndex[i];
-						index.Address = (uint)vh;
-						index.Offset = 0xFFFFFFFF;
-						index.Graphic = i;
-						index.Type = groupType;
-					}
-				}*/
 			}
 		}
 	}
@@ -703,29 +635,6 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 							}
 						}
 					}
-
-					/*PANIM_IDX_BLOCK aidx = (PANIM_IDX_BLOCK)(m_AddressIdx[animFile] + startAnimID);
-
-					if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
-					{
-						if (g_PacketManager.ClientVersion < CV_500A)
-						{
-							if (realAnimID >= 200)
-							{
-								if (realAnimID >= 400) //People
-									m_DataIndex[index].Type = AGT_HUMAN;
-								else //Low
-									m_DataIndex[index].Type = AGT_ANIMAL;
-							}
-							else
-								m_DataIndex[index].Type = AGT_MONSTER;
-						}
-
-						m_DataIndex[index].Address = (uint)aidx;
-						m_DataIndex[index].Offset = m_AddressMul[animFile];
-						//m_DataIndex[index].Graphic = realAnimID;
-						m_DataIndex[index].MountedHeightOffset = mountedHeightOffset;
-					}*/
 				}
 			}
 		}
@@ -772,7 +681,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 				break;
 			}
 		}
-	}
+	}*/
 
 	while (!bodyParser.IsEOF())
 	{
@@ -782,88 +691,153 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		{
 			ushort index = atoi(strings[0].c_str());
 
-			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT || m_DataIndex[index].Offset)
-				continue;
-
 			STRING_LIST newBody = newBodyParser.GetTokens(strings[1].c_str());
 
-			int size = (int)newBody.size();
+			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !newBody.size())
+				continue;
 
-			IFOR(i, 0, size)
+			ushort checkIndex = atoi(newBody[0].c_str());
+
+			if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				continue;
+
+			CIndexAnimation &dataIndex = m_DataIndex[index];
+			CIndexAnimation &checkDataIndex = m_DataIndex[checkIndex];
+			
+			int count = 0;
+			int ignoreGroups[2] = { -1, -1 };
+
+			switch (checkDataIndex.Type)
 			{
-				ushort checkIndex = atoi(newBody[i].c_str());
+				case AGT_MONSTER:
+				case AGT_SEA_MONSTER:
+				{
+					count = 22;
+					ignoreGroups[0] = HAG_DIE_1;
+					ignoreGroups[1] = HAG_DIE_2;
 
-				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
+					break;
+				}
+				case AGT_HUMAN:
+				case AGT_EQUIPMENT:
+				{
+					count = 35;
+					ignoreGroups[0] = PAG_DIE_1;
+					ignoreGroups[1] = PAG_DIE_2;
+
+					break;
+				}
+				case AGT_ANIMAL:
+				{
+					count = 13;
+					ignoreGroups[0] = LAG_DIE_1;
+					ignoreGroups[1] = LAG_DIE_2;
+
+					break;
+				}
+				default:
+					break;
+			}
+
+			IFOR(j, 0, count)
+			{
+				if (j == ignoreGroups[0] || j == ignoreGroups[1])
 					continue;
 
-				//memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
+				CTextureAnimationGroup &group = dataIndex.m_Groups[j];
+				CTextureAnimationGroup &newGroup = checkDataIndex.m_Groups[j];
 
-				if (g_PacketManager.ClientVersion < CV_500A)
+				IFOR(d, 0, 5)
 				{
-					if (checkIndex >= 200)
-					{
-						if (checkIndex >= 400) //People
-							m_DataIndex[index].Type = AGT_HUMAN;
-						else //Low
-							m_DataIndex[index].Type = AGT_ANIMAL;
-					}
-					else
-						m_DataIndex[index].Type = AGT_MONSTER;
+					CTextureAnimationDirection &direction = group.m_Direction[d];
+					CTextureAnimationDirection &newDirection = newGroup.m_Direction[d];
+
+					direction.Address = newDirection.Address;
+					direction.Size = newDirection.Size;
 				}
-
-				m_DataIndex[index].Graphic = checkIndex;
-				m_DataIndex[index].Color = atoi(strings[2].c_str());
-
-				break;
 			}
-		}
-	}*/
 
-	/*while (!corpseParser.IsEOF())
+			dataIndex.Type = checkDataIndex.Type;
+			dataIndex.Graphic = checkIndex;
+			dataIndex.Color = atoi(strings[2].c_str());
+		}
+	}
+
+	while (!corpseParser.IsEOF())
 	{
 		STRING_LIST strings = corpseParser.ReadTokens();
-
+		
 		if (strings.size() >= 3)
 		{
 			ushort index = atoi(strings[0].c_str());
 
-			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT || m_DataIndex[index].Offset)
-				continue;
-
 			STRING_LIST newBody = newBodyParser.GetTokens(strings[1].c_str());
 
-			int size = (int)newBody.size();
+			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !newBody.size())
+				continue;
 
-			IFOR(i, 0, size)
+			ushort checkIndex = atoi(newBody[0].c_str());
+
+			if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				continue;
+
+			CIndexAnimation &dataIndex = m_DataIndex[index];
+			CIndexAnimation &checkDataIndex = m_DataIndex[checkIndex];
+			
+			int ignoreGroups[2] = { -1, -1 };
+
+			switch (checkDataIndex.Type)
 			{
-				ushort checkIndex = atoi(newBody[i].c_str());
-
-				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
-					continue;
-
-				//memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
-
-				if (g_PacketManager.ClientVersion < CV_500A)
+				case AGT_MONSTER:
+				case AGT_SEA_MONSTER:
 				{
-					if (checkIndex >= 200)
-					{
-						if (checkIndex >= 400) //People
-							m_DataIndex[index].Type = AGT_HUMAN;
-						else //Low
-							m_DataIndex[index].Type = AGT_ANIMAL;
-					}
-					else
-						m_DataIndex[index].Type = AGT_MONSTER;
+					ignoreGroups[0] = HAG_DIE_1;
+					ignoreGroups[1] = HAG_DIE_2;
+
+					break;
 				}
+				case AGT_HUMAN:
+				case AGT_EQUIPMENT:
+				{
+					ignoreGroups[0] = PAG_DIE_1;
+					ignoreGroups[1] = PAG_DIE_2;
 
-				m_DataIndex[index].Graphic = checkIndex;
-				m_DataIndex[index].Group = NULL;
-				m_DataIndex[index].Color = atoi(strings[2].c_str());
+					break;
+				}
+				case AGT_ANIMAL:
+				{
+					ignoreGroups[0] = LAG_DIE_1;
+					ignoreGroups[1] = LAG_DIE_2;
 
-				break;
+					break;
+				}
+				default:
+					break;
 			}
+
+			if (ignoreGroups[0] == -1)
+				continue;
+
+			IFOR(j, 0, 2)
+			{
+				CTextureAnimationGroup &group = dataIndex.m_Groups[ignoreGroups[j]];
+				CTextureAnimationGroup &newGroup = checkDataIndex.m_Groups[ignoreGroups[j]];
+
+				IFOR(d, 0, 5)
+				{
+					CTextureAnimationDirection &direction = group.m_Direction[d];
+					CTextureAnimationDirection &newDirection = newGroup.m_Direction[d];
+
+					direction.Address = newDirection.Address;
+					direction.Size = newDirection.Size;
+				}
+			}
+
+			dataIndex.Type = checkDataIndex.Type;
+			dataIndex.Graphic = checkIndex;
+			dataIndex.Color = atoi(strings[2].c_str());
 		}
-	}*/
+	}
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -1352,7 +1326,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 					if (!color)
 					{
 						color = m_DataIndex[id].Color;
-						partialHue = true;
+						partialHue = false;
 					}
 				}
 
