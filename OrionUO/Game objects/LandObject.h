@@ -31,6 +31,9 @@ class CLandObject : public CMapObject
 	//Оригинальный индекс картинки
 	SETGET(ushort, OriginalGraphic);
 
+	//!Буфер текстурных координат
+	SETGET(GLuint, PositionBuffer);
+
 	//!Буфер вершин
 	SETGET(GLuint, VertexBuffer);
 

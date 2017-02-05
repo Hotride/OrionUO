@@ -483,8 +483,8 @@ void CGLEngine::GL1_DrawLandTexture(const CGLTexture &texture, const int &x, con
 {
 	BindTexture(texture.Texture);
 
-	float translateX = x - 23.0f;
-	float translateY = y - 23.0f;
+	float translateX = x - 22.0f;
+	float translateY = y - 22.0f;
 
 	const RECT &rc = land->Rect;
 	CVector *normals = land->m_Normals;
@@ -752,9 +752,6 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 
 				drawWidth = width - th[0]->Width - th[2]->Width;
 
-				if (drawWidth < 1)
-					break;
-
 				drawCountX = drawWidth / (float)th[i]->Width;
 
 				break;
@@ -771,9 +768,6 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 
 				drawHeight = height - th[0]->Height - th[5]->Height;
 
-				if (drawHeight < 1)
-					break;
-
 				drawCountY = drawHeight / (float)th[i]->Height;
 
 				break;
@@ -784,9 +778,6 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 				drawY += th[2]->Height;
 
 				drawHeight = height - th[2]->Height - th[7]->Height;
-
-				if (drawHeight < 1)
-					break;
 
 				drawCountY = drawHeight / (float)th[i]->Height;
 
@@ -804,9 +795,6 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 				drawY += height - drawHeight;
 
 				drawWidth = width - th[5]->Width - th[7]->Width;
-
-				if (drawWidth < 1)
-					break;
 
 				drawCountX = drawWidth / (float)th[i]->Width;
 
@@ -826,13 +814,7 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 
 				drawWidth = width - th[0]->Width - th[2]->Width;
 
-				if (drawWidth < 1)
-					break;
-
 				drawHeight = height - th[2]->Height - th[7]->Height;
-
-				if (drawHeight < 1)
-					break;
 
 				drawCountX = drawWidth / (float)th[i]->Width;
 				drawCountY = drawHeight / (float)th[i]->Height;
@@ -842,6 +824,9 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 			default:
 				break;
 		}
+
+		if (drawWidth < 1 || drawHeight < 1)
+			continue;
 
 		glTranslatef((GLfloat)drawX, (GLfloat)drawY, 0.0f);
 
@@ -885,15 +870,15 @@ void CGLEngine::GL2_DrawLandTexture(const CGLTexture &texture, const int &x, con
 {
 	BindTexture(texture.Texture);
 
-	float translateX = x - 23.0f;
-	float translateY = y - 23.0f;
+	float translateX = x - 22.0f;
+	float translateY = y - 22.0f;
 
 	glTranslatef(translateX, translateY, 0.0f);
 
 	glBindBuffer(GL_ARRAY_BUFFER, land->VertexBuffer);
 	glVertexPointer(2, GL_INT, 0, (PVOID)0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, texture.PositionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, land->PositionBuffer);
 	glTexCoordPointer(2, GL_INT, 0, (PVOID)0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, land->NormalBuffer);

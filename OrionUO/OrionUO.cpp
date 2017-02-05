@@ -4086,7 +4086,7 @@ void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int
 
 		glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-		th->Draw(x - 23, y - (23 + (z * 4)));
+		th->Draw(x - 22, y - (22 + (z * 4)));
 	}
 }
 //----------------------------------------------------------------------------------
@@ -4522,8 +4522,8 @@ bool COrion::LandPixelsInXY(const ushort &id, int x, int  y, const int &z)
 
 	if (th != NULL)
 	{
-		x = (g_MouseManager.Position.X - x) + 23;
-		y = (g_MouseManager.Position.Y - y) + 23 + (z * 4);
+		x = (g_MouseManager.Position.X - x) + 22;
+		y = (g_MouseManager.Position.Y - y) + 22 + (z * 4);
 
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
@@ -4538,7 +4538,7 @@ bool COrion::LandPixelsInXY(const ushort &id, int x, int  y, const int &z)
 //----------------------------------------------------------------------------------
 bool COrion::LandTexturePixelsInXY(int x, int  y, RECT &r)
 {
-	y -= 23;
+	y -= 22;
 	int testX = g_MouseManager.Position.X - x;
 	int testY = g_MouseManager.Position.Y;
 
