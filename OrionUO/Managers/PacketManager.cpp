@@ -1286,7 +1286,7 @@ PACKET_HANDLER(UpdateItem)
 	if (g_TheAbyss && (graphic & 0x7FFF) == 0x0E5C)
 		return;
 
-	ushort count = 0;
+	ushort count = 1;
 
 	if (serial & 0x80000000)
 	{
@@ -1364,6 +1364,8 @@ PACKET_HANDLER(UpdateItem)
 		y &= 0x3FFF;
 		obj->Flags = ReadUInt8();
 	}
+	else
+		obj->Flags = 0;
 
 	if (obj->MultiBody)
 		obj->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
