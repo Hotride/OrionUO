@@ -29,7 +29,12 @@ USHORT_LIST CMulReader::GetGumpPixels(CIndexObject &io)
 
 	int blocksize = io.Width * io.Height;
 
-	USHORT_LIST pixels(blocksize);
+	USHORT_LIST pixels;
+
+	if (!blocksize)
+		return pixels;
+
+	pixels.resize(blocksize);
 
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 	USHORT_LIST &data = io.Texture.PixelsData;
