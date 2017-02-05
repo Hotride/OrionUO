@@ -484,7 +484,7 @@ void CGumpPaperdoll::UpdateContent()
 		{
 			equipment = obj->FindLayer(UsedLayers[i]);
 
-			if (equipment != NULL && equipment->AnimID && equipment->Serial != ignoreSerial)
+			if (equipment != NULL && equipment->Serial != ignoreSerial)
 			{
 				if (useSlots)
 				{
@@ -525,15 +525,18 @@ void CGumpPaperdoll::UpdateContent()
 					}
 				}
 
-				int cOfs = gumpOffset;
+				if (equipment->AnimID)
+				{
+					int cOfs = gumpOffset;
 
-				if (obj->Female && g_Orion.ExecuteGump(equipment->AnimID + cOfs) == NULL)
-					cOfs = MALE_GUMP_OFFSET;
+					if (obj->Female && g_Orion.ExecuteGump(equipment->AnimID + cOfs) == NULL)
+						cOfs = MALE_GUMP_OFFSET;
 
-				bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + cOfs, 8, 19));
-				bodyGumppic->Color = equipment->Color;
-				bodyGumppic->PartialHue = equipment->IsPartialHue();
-				bodyGumppic->Serial = ID_GP_ITEMS + UsedLayers[i];
+					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + cOfs, 8, 19));
+					bodyGumppic->Color = equipment->Color;
+					bodyGumppic->PartialHue = equipment->IsPartialHue();
+					bodyGumppic->Serial = ID_GP_ITEMS + UsedLayers[i];
+				}
 			}
 			else if (m_WantTransparentContent && g_ObjectInHand != NULL && UsedLayers[i] == g_ObjectInHand->UsedLayer && g_ObjectInHand->AnimID)
 			{

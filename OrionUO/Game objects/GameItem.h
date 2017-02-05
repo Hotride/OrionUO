@@ -21,8 +21,6 @@ class CGameItem : public CGameObject
 	SETGET(uchar, Layer);
 	//!Индекс картинки анимации
 	SETGET(ushort, AnimID);
-	//!Индекс картинки гампа для папердолла
-	SETGET(ushort, ImageID);
 	//!Используемый предметом слой (из tiledata.mul/verdata)
 	SETGET(uchar, UsedLayer);
 	//!Открыт ли контейнер/спеллбук

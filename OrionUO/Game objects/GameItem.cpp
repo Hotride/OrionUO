@@ -22,9 +22,9 @@
 #include "GamePlayer.h"
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
-: CGameObject(serial), m_Layer(0), m_AnimID(0), m_ImageID(0), m_UsedLayer(0),
-m_Opened(false), m_Dragged(false), m_MultiBody(false), m_WantUpdateMulti(true),
-m_FieldColor(0), m_MultiDistanceBonus(0)
+: CGameObject(serial), m_Layer(0), m_AnimID(0), m_UsedLayer(0), m_Opened(false),
+m_Dragged(false), m_MultiBody(false), m_WantUpdateMulti(true), m_FieldColor(0),
+m_MultiDistanceBonus(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -92,7 +92,6 @@ void CGameItem::Paste(CObjectOnCursor *obj)
 	m_Layer = obj->Layer;
 	m_Flags = obj->Flags;
 	m_NPC = obj->NPC;
-	m_ImageID = obj->ImageID;
 	m_Container = obj->Container;
 	m_UsedLayer = obj->UsedLayer;
 	m_Opened = false;
@@ -160,7 +159,6 @@ void CGameItem::OnGraphicChange(int direction)
 
 			if (IsWearable() || m_Graphic == 0x0A28)
 			{
-				m_ImageID = tile.AnimID + 0xC350;
 				m_AnimID = tile.AnimID;
 				
 				g_Orion.ExecuteGump(tile.AnimID + MALE_GUMP_OFFSET);

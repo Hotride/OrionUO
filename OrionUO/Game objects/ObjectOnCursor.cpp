@@ -32,7 +32,6 @@ m_IsGameFigure(false), m_DragCount(obj->Count), m_NoDraw(false)
 	m_Layer = obj->Layer;
 	m_Flags = obj->Flags;
 	m_NPC = obj->NPC;
-	m_ImageID = obj->ImageID;
 	m_Container = obj->Container;
 	m_UsedLayer = obj->UsedLayer;
 	m_AnimID = obj->AnimID;
