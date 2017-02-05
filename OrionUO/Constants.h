@@ -16,7 +16,7 @@ const int TRANSLUCENT_ALPHA = 0xB2; //0.7
 
 const int FOLIAGE_ALPHA = 0x4C; //0.3
 
-const int ALPHA_STEP = 15;
+const int ALPHA_STEP = 25;
 
 const int ANIMATION_GROUPS_COUNT = 35;
 

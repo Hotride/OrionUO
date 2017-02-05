@@ -145,6 +145,10 @@ private:
 	//!Максимальное значение отображения по Z координате
 	int m_MaxDrawZ;
 
+	uint  m_ProcessAlphaTimer;
+
+	bool m_CanProcessAlpha;
+
 	/*!
 	Вычисление значений Z координаты для рендера
 	@param [__out] noDrawRoof Не рисовать крыши и верхние этажи строений

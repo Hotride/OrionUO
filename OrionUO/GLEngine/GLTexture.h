@@ -22,9 +22,6 @@ class CGLTexture
 	SETGET(int, Width);
 	SETGET(int, Height);
 
-	//!Буфер текстурных координат
-	SETGET(GLuint, PositionBuffer);
-
 	//!Буфер вершин
 	SETGET(GLuint, VertexBuffer);
 

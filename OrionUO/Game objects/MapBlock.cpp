@@ -12,6 +12,7 @@
 #include "../Managers/MapManager.h"
 #include "../MulStruct.h"
 #include "../OrionUO.h"
+#include "../GLEngine/GLEngine.h"
 //----------------------------------------------------------------------------------
 CMapBlock::CMapBlock(const uint &index)
 : CBaseQueueItem(), m_Index(index), m_LastAccessTime(GetTickCount()), m_X(0), m_Y(0)
@@ -208,13 +209,11 @@ void CMapBlock::CreateLandTextureRect()
 					obj->m_Normals[3].Add(vec[i][j + 1][0]);
 					obj->m_Normals[3].Normalize();
 
-					GLuint positionBuffer = th->PositionBuffer;
-					GLuint vertexBuffer = obj->VertexBuffer;
-					GLuint normalBuffer = obj->NormalBuffer;
-
-					if (positionBuffer)
+					if (g_GL.CanUseBuffer)
 					{
-						positionBuffer = obj->PositionBuffer;
+						GLuint positionBuffer = obj->PositionBuffer;
+						GLuint vertexBuffer = obj->VertexBuffer;
+						GLuint normalBuffer = obj->NormalBuffer;
 
 						if (!positionBuffer || !vertexBuffer || !normalBuffer)
 						{
