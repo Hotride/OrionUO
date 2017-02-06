@@ -452,6 +452,9 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 	Load(verdata);
 
+	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
+		return;
+
 	WISP_FILE::CTextFileParser newBodyParser("", " \t,{}", "#;//", "");
 	WISP_FILE::CTextFileParser bodyParser(g_App.FilePath("Body.def").c_str(), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser bodyconvParser(g_App.FilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
