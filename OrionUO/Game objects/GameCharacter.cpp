@@ -689,7 +689,10 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 				result = (uchar)LAG_WALK;
 		}
 		else if (m_AnimationGroup == 0xFF)
+		{
 			result = (uchar)LAG_STAND;
+			m_AnimIndex = 0;
+		}
 	}
 	else if (groupIndex == AG_HIGHT)
 	{
@@ -704,7 +707,10 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 			}
 		}
 		else if (m_AnimationGroup == 0xFF)
+		{
 			result = (uchar)HAG_STAND;
+			m_AnimIndex = 0;
+		}
 
 		//!Глюченный дельфин на всех клиентах
 		if (graphic == 151)
@@ -764,6 +770,8 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 			}
 			else
 				result = (uchar)PAG_STAND;
+
+			m_AnimIndex = 0;
 		}
 	}
 
