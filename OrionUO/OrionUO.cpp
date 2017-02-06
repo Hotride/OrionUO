@@ -2392,6 +2392,12 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_FAST_ROTATION:
+		{
+			g_PathFinder.FastRotation = (value != 0);
+
+			break;
+		}
 		default:
 			break;
 	}
