@@ -655,14 +655,14 @@ ushort CGameItem::GetMountAnimation()
 			}
 			default: //lightbrown/horse2
 			{
-				if (m_TiledataPtr->AnimID != 0)
-					graphic = m_TiledataPtr->AnimID;
-				else
-					graphic = 0x00C8;
+				graphic = 0x00C8;
 
 				break;
 			}
 		}
+
+		if (m_TiledataPtr->AnimID != 0)
+			graphic = m_TiledataPtr->AnimID;
 	}
 	else if (IsCorpse())
 		graphic = (ushort)m_Count;
