@@ -998,6 +998,8 @@ void CGumpOptions::DrawPage2()
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 610));
 	text->CreateTextureW(0, L"Draw aura under characters mode:");
 
+	html->Add(new CGUIGroup(4));
+
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_DRAW_AURA_NEVER, 0x00D0, 0x00D1, 0x00D2, 10, 630));
 	radio->Checked = (g_OptionsConfig.DrawAuraState == DAS_NEVER);
 	radio->SetTextParameters(0, L"Never", g_OptionsTextColor);
@@ -1016,6 +1018,8 @@ void CGumpOptions::DrawPage2()
 
 	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 710));
 	text->CreateTextureW(0, L"Screenshots format:");
+
+	html->Add(new CGUIGroup(5));
 
 	radio = (CGUIRadio*)html->Add(new CGUIRadio(ID_GO_P2_SCREENSHOT_FORMAT_BMP, 0x00D0, 0x00D1, 0x00D2, 10, 730));
 	radio->Checked = (g_OptionsConfig.ScreenshotFormat == SF_BMP);
