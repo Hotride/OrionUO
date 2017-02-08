@@ -1479,6 +1479,7 @@ PACKET_HANDLER(UpdateObject)
 	else
 	{
 		character = g_World->GetWorldCharacter(serial);
+		character->Deleted = false;
 		obj = character;
 
 		if (!obj->Graphic)
@@ -2119,8 +2120,32 @@ PACKET_HANDLER(DeleteObject)
 			}
 		}
 
-		if (obj->NPC && g_Party.Contains(obj->Serial))
+		if (obj->NPC)
+		{
+			if (!g_Party.Contains(serial))
+			{
+				bool inList = false;
+
+				for (UINTS_PAIR_LIST::iterator i = g_DeletedCharactersStack.begin(); i != g_DeletedCharactersStack.end(); i++)
+				{
+					if (i->first == serial)
+					{
+						inList = true;
+						i->second = g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY;
+
+						break;
+					}
+				}
+
+				if (!inList)
+				{
+					((CGameCharacter*)obj)->Deleted = true;
+					g_DeletedCharactersStack.push_back(pair<uint, uint>(serial, g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY));
+				}
+			}
+
 			obj->RemoveRender();
+		}
 		else
 		{
 			if (obj->IsCorpse() && obj->LastAnimationChangeTime == GetTickCount())
@@ -2172,6 +2197,7 @@ PACKET_HANDLER(UpdateCharacter)
 			g_Orion.StatusReq(serial);
 	}
 
+	obj->Deleted = false;
 	obj->MapIndex = g_CurrentMap;
 	obj->Graphic = ReadUInt16BE();
 	obj->OnGraphicChange();

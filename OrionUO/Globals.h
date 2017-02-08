@@ -211,8 +211,11 @@ extern uint g_PendingDelayTime;
 //!Модификатор расчета анимации персонажа
 extern float g_AnimCharactersDelayValue;
 
-typedef vector<pair<uint, uint>> CORPSE_LIST_MAP;
-extern CORPSE_LIST_MAP g_CorpseSerialList;
+typedef vector<pair<uint, uint>> UINTS_PAIR_LIST;
+
+extern UINTS_PAIR_LIST g_CorpseSerialList;
+
+extern UINTS_PAIR_LIST g_DeletedCharactersStack;
 
 //!Координаты, с которых следует начинать расчет удаления объектов
 extern WISP_GEOMETRY::CPoint2Di g_RemoveRangeXY;

@@ -122,7 +122,7 @@ void CGameItem::OnGraphicChange(int direction)
 		{
 			m_AnimIndex = 99;
 
-			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); i++)
+			for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); i++)
 			{
 				if (i->first == m_Serial)
 				{

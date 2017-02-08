@@ -32,7 +32,8 @@ m_AnimationRepeatMode(1), m_AnimationDirection(false), m_AnimationFromServer(fal
 m_MaxMana(0), m_MaxStam(0), m_Mana(0), m_Stam(0), m_OffsetX(0), m_OffsetY(0),
 m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(RT_HUMAN),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
-m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10), m_HitsPercent(0)
+m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10), m_HitsPercent(0),
+m_Deleted(false)
 {
 	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;

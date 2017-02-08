@@ -91,7 +91,7 @@ void CGameWorld::ProcessAnimation()
 
 	QFOR(obj, m_Items, CGameObject*)
 	{
-		if (obj->NPC)
+		if (obj->NPC && !((CGameCharacter*)obj)->Deleted)
 		{
 			CGameCharacter *gc = obj->GameCharacterPtr();
 			uchar dir = 0;

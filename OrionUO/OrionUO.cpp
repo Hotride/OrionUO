@@ -1059,6 +1059,21 @@ void COrion::Process(const bool &rendering)
 
 		if (g_GameState == GS_GAME)
 		{
+			for (UINTS_PAIR_LIST::iterator i = g_DeletedCharactersStack.begin(); i != g_DeletedCharactersStack.end();)
+			{
+				if (i->second < g_Ticks)
+				{
+					CGameCharacter *obj = g_World->FindWorldCharacter(i->first);
+
+					if (obj != NULL && obj->Deleted)
+						g_World->RemoveObject(obj);
+
+					i = g_DeletedCharactersStack.erase(i);
+				}
+				else
+					i++;
+			}
+
 			g_MouseManager.ProcessWalking();
 
 			g_MacroManager.Execute();
@@ -1118,7 +1133,7 @@ void COrion::Process(const bool &rendering)
 
 			g_MapManager->Init(true);
 
-			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); )
+			for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); )
 			{
 				if (i->second < g_Ticks)
 					i = g_CorpseSerialList.erase(i);
@@ -1475,6 +1490,8 @@ void COrion::Disconnect()
 	g_Party.Clear();
 	
 	g_GameConsole.ClearStack();
+
+	g_DeletedCharactersStack.clear();
 
 	g_ResizedGump = NULL;
 }
@@ -3243,6 +3260,9 @@ void COrion::IndexReplaces()
 	WISP_FILE::CTextFileParser multiParser(g_App.FilePath("Multi.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser soundParser(g_App.FilePath("Sound.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser mp3Parser(g_App.FilePath("Music\\Digital\\Config.txt"), " ,", "#;", "");
+
+	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
+		return;
 
 	DEBUGLOG("Replace arts\n");
 	while (!artParser.IsEOF() && false)

@@ -22,6 +22,8 @@ const int ANIMATION_GROUPS_COUNT = 35;
 
 const int CONTEXT_MENU_FONT = 1;
 
+const int KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY = 100;
+
 //!Задержка между кадрами для активного окна приложения
 const int FRAME_DELAY_ACTIVE_WINDOW = 30;
 

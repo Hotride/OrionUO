@@ -116,7 +116,8 @@ uint g_PendingDelayTime = 0;
 
 float g_AnimCharactersDelayValue = 80.0f; //0x50
 
-CORPSE_LIST_MAP g_CorpseSerialList;
+UINTS_PAIR_LIST g_CorpseSerialList;
+UINTS_PAIR_LIST g_DeletedCharactersStack;
 
 WISP_GEOMETRY::CPoint2Di g_RemoveRangeXY;
 
