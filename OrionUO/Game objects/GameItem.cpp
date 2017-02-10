@@ -206,7 +206,7 @@ void CGameItem::OnGraphicChange(int direction)
 		}
 
 		if (!m_MultiDistanceBonus || CheckMultiDistance(g_RemoveRangeXY, this, g_ConfigManager.UpdateRange))
-			LoadMulti();
+			LoadMulti(m_Items == NULL);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -674,7 +674,7 @@ ushort CGameItem::GetMountAnimation()
 Загрузка мульти в текущий объект
 @return 
 */
-void CGameItem::LoadMulti()
+void CGameItem::LoadMulti(const bool &dropAlpha)
 {
 	ClearMultiItems();
 
@@ -698,6 +698,11 @@ void CGameItem::LoadMulti()
 		if (g_PacketManager.ClientVersion >= CV_7090)
 			itemOffset = sizeof(MULTI_BLOCK_NEW);
 
+		uchar alpha = 0;
+
+		if (!dropAlpha)
+			alpha = 0xFF;
+
 		IFOR(j, 0, count)
 		{
 			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(address + (j * itemOffset));
@@ -713,6 +718,8 @@ void CGameItem::LoadMulti()
 					delete mo;
 					continue;
 				}
+
+				mo->m_DrawTextureColor[3] = alpha;
 
 				g_MapManager->AddRender(mo);
 				AddMultiObject(mo);

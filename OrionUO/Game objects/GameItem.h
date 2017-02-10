@@ -94,7 +94,7 @@ public:
 	Загрузка мульти в текущий объект
 	@return 
 	*/
-	void LoadMulti();
+	void LoadMulti(const bool &dropAlpha);
 
 	/*!
 	Получение объекта мульти в заданных координатах
