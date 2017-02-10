@@ -1552,7 +1552,10 @@ void COrion::RelayServer(const char *ip, int port, puchar gameSeed)
 	memcpy(&g_GameSeed[0], &gameSeed[0], 4);
 	g_ConnectionManager.Init(gameSeed);
 
-	if (g_ConnectionManager.Connect(ip, port, gameSeed))
+	string login = ip;
+	LoadLogin(login, port);
+
+	if (g_ConnectionManager.Connect(login, port, gameSeed))
 	{
 		g_ConnectionScreen.Connected = true;
 

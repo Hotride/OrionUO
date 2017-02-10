@@ -24,6 +24,8 @@ CSocket::~CSocket()
 //----------------------------------------------------------------------------------
 bool CSocket::Connect(const string &address, const int &port)
 {
+	LOG("Connecting...%s:%i\n", address.c_str(), port);
+
 	if (m_UseProxy)
 	{
 		if (m_Connected)
