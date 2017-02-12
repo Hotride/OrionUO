@@ -45,6 +45,7 @@
 #include "../Gumps/GumpCombatBook.h"
 #include "../Gumps/GumpRacialAbilitiesBook.h"
 #include "../Gumps/GumpRacialAbility.h"
+#include "../OrionWindow.h"
 //----------------------------------------------------------------------------------
 CGumpManager g_GumpManager;
 //----------------------------------------------------------------------------------
@@ -1371,8 +1372,29 @@ void CGumpManager::Load(const string &path)
 		if (!g_ConfigManager.DisableMenubar && !g_ConfigManager.GameWindowX && !g_ConfigManager.GameWindowY)
 			g_ConfigManager.GameWindowY = 40;
 
-		AddGump(new CGumpPaperdoll(g_PlayerSerial, g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth, g_ConfigManager.GameWindowY, false));
-		AddGump(new CGumpStatusbar(g_PlayerSerial, g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth, g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight - 50, false));
+		WISP_GEOMETRY::CSize windowSize = g_OrionWindow.Size;
+
+		int x = g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth;
+		int y = g_ConfigManager.GameWindowY;
+
+		if (x + 260 >= windowSize.Width)
+			x = windowSize.Width - 260;
+
+		if (y + 320 >= windowSize.Height)
+			y = windowSize.Height - 320;
+
+		AddGump(new CGumpPaperdoll(g_PlayerSerial, x, y, false));
+
+		x = g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth;
+		y = g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight - 50;
+
+		if (x + 150 >= windowSize.Width)
+			x = windowSize.Width - 150;
+
+		if (y + 60 >= windowSize.Height)
+			y = windowSize.Height - 60;
+
+		AddGump(new CGumpStatusbar(g_PlayerSerial, x, y, false));
 		AddGump(new CGumpMinimap(g_PlayerSerial, g_ConfigManager.GameWindowX, g_ConfigManager.GameWindowY, true));
 
 		if (g_Player != NULL)
@@ -1397,7 +1419,20 @@ void CGumpManager::Load(const string &path)
 	}
 
 	if (!bufficonWindowFound)
-		AddGump(new CGumpBuff(g_PlayerSerial, g_ConfigManager.GameWindowX + (int)(g_ConfigManager.GameWindowWidth * 0.7f), g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight));
+	{
+		WISP_GEOMETRY::CSize windowSize = g_OrionWindow.Size;
+
+		int x = g_ConfigManager.GameWindowX + (int)(g_ConfigManager.GameWindowWidth * 0.7f);
+		int y = g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight;
+
+		if (x + 100 >= windowSize.Width)
+			x = windowSize.Width - 100;
+
+		if (y + 60 >= windowSize.Height)
+			y = windowSize.Height - 60;
+
+		AddGump(new CGumpBuff(g_PlayerSerial, x, y));
+	}
 
 	if (!paperdollRequested)
 		g_Orion.PaperdollReq(g_PlayerSerial);

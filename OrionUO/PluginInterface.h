@@ -24,6 +24,7 @@ typedef bool __cdecl WORLD_MAP_DRAW_PROC();
 #define UOMSG_RECV					WM_USER + 664
 #define UOMSG_SEND					WM_USER + 665
 #define UOMSG_IP_SEND				WM_USER + 666
+#define UOMSG_PATHFINDING			WM_USER + 667
 //----------------------------------------------------------------------------------
 #pragma pack (push,1)
 typedef struct PLAYER_XYZ_DATA

@@ -1478,6 +1478,7 @@ void COrion::Connect()
 //----------------------------------------------------------------------------------
 void COrion::Disconnect()
 {
+	g_AbyssPacket03First = true;
 	g_PluginManager.Disconnect();
 
 	g_SystemChat.Clear();

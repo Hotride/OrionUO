@@ -27,6 +27,7 @@
 #include "Managers/PluginManager.h"
 #include "Managers/PacketManager.h"
 #include "Managers/ConnectionManager.h"
+#include "Walker/PathFinder.h"
 //----------------------------------------------------------------------------------
 COrionWindow g_OrionWindow;
 //----------------------------------------------------------------------------------
@@ -420,6 +421,8 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 
 			return S_OK;
 		}
+		case UOMSG_PATHFINDING:
+			return (g_PathFinder.WalkTo((wParam >> 16) & 0xFFFF, wParam & 0xFFFF, (lParam >> 16) & 0xFFFF, lParam & 0xFFFF) ? 1 : S_OK);
 		default:
 			break;
 	}
