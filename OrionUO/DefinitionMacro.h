@@ -35,6 +35,7 @@
 #define PLUGIN_FLAGS_CLIENT_ACCESS		0x20
 #define PLUGIN_FLAGS_GAME_WORLD_DRAW	0x40
 #define PLUGIN_FLAGS_SCENE_DRAW			0x80
+#define PLUGIN_FLAGS_WORLD_MAP_DRAW		0x100
 //----------------------------------------------------------------------------------
 #define RANDOM_FIDGET_ANIMATION_DELAY		(30000 + (rand() % 30000))
 //----------------------------------------------------------------------------------

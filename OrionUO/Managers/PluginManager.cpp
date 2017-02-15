@@ -143,3 +143,12 @@ void CPluginManager::SceneDraw()
 	}
 }
 //----------------------------------------------------------------------------------
+void CPluginManager::WorldMapDraw()
+{
+	QFOR(plugin, m_Items, CPlugin*)
+	{
+		if (plugin->CanEnterWorldMapRender() && plugin->m_PPS->OnWorldMapDraw != NULL)
+			plugin->m_PPS->OnWorldMapDraw();
+	}
+}
+//----------------------------------------------------------------------------------
