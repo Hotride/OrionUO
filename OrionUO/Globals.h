@@ -49,6 +49,8 @@ extern bool g_AbyssPacket03First;
 //----------------------------------------------------------------------------------
 #pragma warning(disable: 4800) //forcing value to bool 'true' or 'false' (performance warning)
 //----------------------------------------------------------------------------------
+bool CanBeDraggedByOffset(const WISP_GEOMETRY::CPoint2Di &point);
+//----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y);
 //----------------------------------------------------------------------------------
 string ToCamelCase(string text);
