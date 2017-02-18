@@ -991,7 +991,7 @@ void CAnimationManager::GetSittingAnimDirection(uchar &dir, bool &mirror, int &x
 */
 void CAnimationManager::ClearUnusedTextures(uint ticks)
 {
-	ticks -= CLEAR_TEXTURES_DELAY;
+	ticks -= CLEAR_ANIMATION_TEXTURES_DELAY;
 
 	for (deque<CTextureAnimationDirection*>::iterator it = m_UsedAnimList.begin(); it != m_UsedAnimList.end();)
 	{

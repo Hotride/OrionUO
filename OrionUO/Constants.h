@@ -209,7 +209,10 @@ const int GUMP_MENU_PIXEL_STEP = 5;
 const int GUMP_SCROLLING_PIXEL_STEP = 10;
 
 //!Время, через которое производить удаление текстур
-const int CLEAR_TEXTURES_DELAY = 30000;
+const int CLEAR_TEXTURES_DELAY = 3000;
+
+//!Время, через которое производить удаление текстур
+const int CLEAR_ANIMATION_TEXTURES_DELAY = 10000;
 
 //!Таймер погоды
 const int WEATHER_TIMER = (6 * 60 * 1000);
