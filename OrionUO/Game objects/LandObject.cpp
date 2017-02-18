@@ -93,7 +93,7 @@ void CLandObject::UpdateZ(const int &zTop, const int &zRight, const int &zBottom
 		m_Serial = ((m_Z + zTop + zRight + zBottom) / 4);
 
 		//Значения для рендера
-		m_Rect.left = m_Z * 4;
+		m_Rect.left = m_Z * 4 + 1;
 		m_Rect.top = zTop * 4;
 		m_Rect.right = zRight * 4;
 		m_Rect.bottom = zBottom * 4 + 1;
