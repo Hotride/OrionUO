@@ -992,6 +992,7 @@ void CAnimationManager::GetSittingAnimDirection(uchar &dir, bool &mirror, int &x
 void CAnimationManager::ClearUnusedTextures(uint ticks)
 {
 	ticks -= CLEAR_ANIMATION_TEXTURES_DELAY;
+	int count = 0;
 
 	for (deque<CTextureAnimationDirection*>::iterator it = m_UsedAnimList.begin(); it != m_UsedAnimList.end();)
 	{
@@ -1002,12 +1003,15 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 			obj->Clear();
 			obj->FrameCount = 0;
 			obj->LastAccessTime = 0;
+			count++;
 
 			it = m_UsedAnimList.erase(it);
 		}
 		else
 			it++;
 	}
+
+	LOG("CAnimationManager::ClearUnusedTextures::removed %i\n", count);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -2048,66 +2052,71 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 
 	bool found = false;
 
-	if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT && dir < 5)
+	if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 	{
-		CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[dir];
-
-		if (direction.Address != NULL)
+		if (dir < 5)
 		{
-			int fc = direction.FrameCount;
+			CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[dir];
 
-			if (fc > 0 && frameIndex >= fc)
+			if (direction.Address != NULL)
 			{
-				if (obj->IsCorpse())
-					frameIndex = fc - 1;
-				else
-					frameIndex = 0;
-			}
+				int fc = direction.FrameCount;
 
-			CTextureAnimationFrame *frame = direction.FindFrame(frameIndex);
+				if (fc > 0 && frameIndex >= fc)
+				{
+					if (obj->IsCorpse())
+						frameIndex = fc - 1;
+					else
+						frameIndex = 0;
+				}
 
-			if (frame != NULL)
-			{
-				result.Width = frame->m_Texture.Width;
-				result.Height = frame->m_Texture.Height;
-				result.CenterX = frame->CenterX;
-				result.CenterY = frame->CenterY;
+				CTextureAnimationFrame *frame = direction.FindFrame(frameIndex);
 
-				found = true;
+				if (frame != NULL)
+				{
+					result.Width = frame->m_Texture.Width;
+					result.Height = frame->m_Texture.Height;
+					result.CenterX = frame->CenterX;
+					result.CenterY = frame->CenterY;
+
+					found = true;
+				}
 			}
 		}
-	}
-	
-	if (!found && id < MAX_ANIMATIONS_DATA_INDEX_COUNT && animGroup < ANIMATION_GROUPS_COUNT)
-	{
-		CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[0];
 
-		puchar ptr = (puchar)direction.Address;
-
-		if (ptr != NULL)
+		if (!found)
 		{
-			SetData(ptr, direction.Size);
-			Move(sizeof(ushort[256]));  //Palette
+			CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[0];
 
-			int frameCount = ReadUInt32LE();
+			puchar ptr = (puchar)direction.Address;
 
-			if (frameCount > 0 && frameIndex >= frameCount)
+			if (ptr != NULL)
 			{
-				if (obj->IsCorpse())
-					frameIndex = frameCount - 1;
-				else
-					frameIndex = 0;
-			}
+				SetData(ptr, direction.Size);
+				Move(sizeof(ushort[256]));  //Palette
+				puchar dataStart = m_Ptr;
 
-			if (frameIndex < frameCount)
-			{
-				puint frameOffset = (puint)m_Ptr;
-				Move(frameOffset[frameIndex]);
+				int frameCount = ReadUInt32LE();
 
-				result.CenterX = ReadInt16LE();
-				result.CenterY = ReadInt16LE();
-				result.Width = ReadInt16LE();
-				result.Height = ReadInt16LE();
+				if (frameCount > 0 && frameIndex >= frameCount)
+				{
+					if (obj->IsCorpse())
+						frameIndex = frameCount - 1;
+					else
+						frameIndex = 0;
+				}
+
+				if (frameIndex < frameCount)
+				{
+					puint frameOffset = (puint)m_Ptr;
+					//Move(frameOffset[frameIndex]);
+					m_Ptr = dataStart + frameOffset[frameIndex];
+
+					result.CenterX = ReadInt16LE();
+					result.CenterY = ReadInt16LE();
+					result.Width = ReadInt16LE();
+					result.Height = ReadInt16LE();
+				}
 			}
 		}
 	}
