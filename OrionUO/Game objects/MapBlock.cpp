@@ -12,6 +12,7 @@
 #include "../Managers/MapManager.h"
 #include "../MulStruct.h"
 #include "../OrionUO.h"
+#include "../GLEngine/GLEngine.h"
 //----------------------------------------------------------------------------------
 CMapBlock::CMapBlock(const uint &index)
 : CBaseQueueItem(), m_Index(index), m_LastAccessTime(GetTickCount()), m_X(0), m_Y(0)
@@ -208,41 +209,43 @@ void CMapBlock::CreateLandTextureRect()
 					obj->m_Normals[3].Add(vec[i][j + 1][0]);
 					obj->m_Normals[3].Normalize();
 
-					GLuint positionBuffer = th->PositionBuffer;
-					GLuint vertexBuffer = obj->VertexBuffer;
-					GLuint normalBuffer = obj->NormalBuffer;
-
-					if (positionBuffer)
+					if (g_GL.CanUseBuffer)
 					{
-						if (!vertexBuffer || !normalBuffer)
+						GLuint positionBuffer = obj->PositionBuffer;
+						GLuint vertexBuffer = obj->VertexBuffer;
+						GLuint normalBuffer = obj->NormalBuffer;
+
+						if (!positionBuffer || !vertexBuffer || !normalBuffer)
 						{
-							GLuint vbo[2] = { 0 };
-							glGenBuffers(2, &vbo[0]);
+							GLuint vbo[3] = { 0 };
+							glGenBuffers(3, &vbo[0]);
 
-							vertexBuffer = vbo[0];
-							normalBuffer = vbo[1];
+							positionBuffer = vbo[0];
+							vertexBuffer = vbo[1];
+							normalBuffer = vbo[2];
 
+							obj->PositionBuffer = positionBuffer;
 							obj->VertexBuffer = vertexBuffer;
 							obj->NormalBuffer = normalBuffer;
+
+							const RECT &rc = obj->Rect;
+							CVector *normals = obj->m_Normals;
+
+							int positionArray[] = { 0, 0, 0, 1, 1, 0, 1, 1 };
+
+							glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+							glBufferData(GL_ARRAY_BUFFER, sizeof(positionArray), &positionArray[0], GL_STATIC_DRAW);
+
+							int vertexArray[] = { 22, -rc.left, 0, 22 - rc.top, 44, 22 - rc.bottom, 22, 44 - rc.right };
+
+							glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+							glBufferData(GL_ARRAY_BUFFER, sizeof(vertexArray), &vertexArray[0], GL_STATIC_DRAW);
+
+							float normalArray[] = { (float)normals[0].X, (float)normals[0].Y, (float)normals[0].Z, (float)normals[3].X, (float)normals[3].Y, (float)normals[3].Z, (float)normals[1].X, (float)normals[1].Y, (float)normals[1].Z, (float)normals[2].X, (float)normals[2].Y, (float)normals[2].Z };
+
+							glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+							glBufferData(GL_ARRAY_BUFFER, sizeof(normalArray), &normalArray[0], GL_STATIC_DRAW);
 						}
-
-						const RECT &rc = obj->Rect;
-						CVector *normals = obj->m_Normals;
-
-						int positionArray[] = { 0, 0, 0, 1, 1, 0, 1, 1 };
-
-						glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-						glBufferData(GL_ARRAY_BUFFER, sizeof(positionArray), &positionArray[0], GL_STATIC_DRAW);
-
-						int vertexArray[] = { 22, -rc.left, 0, 22 - rc.top, 44, 22 - rc.bottom, 22, 44 - rc.right };
-
-						glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-						glBufferData(GL_ARRAY_BUFFER, sizeof(vertexArray), &vertexArray[0], GL_STATIC_DRAW);
-
-						float normalArray[] = { (float)normals[0].X, (float)normals[0].Y, (float)normals[0].Z, (float)normals[3].X, (float)normals[3].Y, (float)normals[3].Z, (float)normals[1].X, (float)normals[1].Y, (float)normals[1].Z, (float)normals[2].X, (float)normals[2].Y, (float)normals[2].Z };
-
-						glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-						glBufferData(GL_ARRAY_BUFFER, sizeof(normalArray), &normalArray[0], GL_STATIC_DRAW);
 					}
 				}
 

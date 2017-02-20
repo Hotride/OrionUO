@@ -11,8 +11,7 @@
 #include "GLEngine.h"
 //----------------------------------------------------------------------------------
 CGLTexture::CGLTexture()
-: m_Width(0), m_Height(0), Texture(0), m_PositionBuffer(0), m_VertexBuffer(0),
-m_MirroredVertexBuffer(0)
+: m_Width(0), m_Height(0), Texture(0), m_VertexBuffer(0), m_MirroredVertexBuffer(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -113,12 +112,6 @@ void CGLTexture::Clear()
 	{
 		glDeleteTextures(1, &Texture);
 		Texture = 0;
-	}
-
-	if (m_PositionBuffer != 0)
-	{
-		glDeleteBuffers(1, &m_PositionBuffer);
-		m_PositionBuffer = 0;
 	}
 
 	if (m_VertexBuffer != 0)

@@ -15,6 +15,8 @@
 #include "GLEngine/GLTexture.h"
 #include "bass.h"
 #include "bassmidi.h"
+#include "EnumList.h"
+#include "TextureObject.h"
 #include "Gumps/GumpBulletinBoardItem.h"
 #include "Managers/PacketManager.h"
 
@@ -101,8 +103,6 @@ public:
 //---------------------------------------------------------------------------
 class CIndexAnimation
 {
-	SETGET(uint, Address);
-	SETGET(uint, Offset);
 	SETGET(ushort, Graphic);
 	SETGET(ushort, Color);
 	SETGET(ANIMATION_GROUPS_TYPE, Type);
@@ -112,8 +112,7 @@ public:
 	CIndexAnimation();
 	virtual ~CIndexAnimation();
 
-	//Указатель на группу анимаций
-	class CTextureAnimation *Group;
+	CTextureAnimationGroup m_Groups[ANIMATION_GROUPS_COUNT];
 };
 //---------------------------------------------------------------------------
 class CIndexMusic

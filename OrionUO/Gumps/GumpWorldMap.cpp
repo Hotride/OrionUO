@@ -12,6 +12,7 @@
 #include "../Managers/FileManager.h"
 #include "../Managers/MapManager.h"
 #include "../Managers/ColorManager.h"
+#include "../Managers/PluginManager.h"
 #include "../OrionUO.h"
 #include "../PressedObject.h"
 #include "../Wisp/WispMappedFile.h"
@@ -168,8 +169,8 @@ void CGumpWorldMap::CalculateGumpState()
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::GetCurrentCenter(int &x, int &y, int &mouseX, int &mouseY)
 {
-	x = (m_OffsetX * (-1)) + mouseX;
-	y = (m_OffsetY * (-1)) + mouseY;
+	x = -m_OffsetX + mouseX;
+	y = -m_OffsetY + mouseY;
 	
 	int scale = m_Scale;
 
@@ -421,6 +422,7 @@ void CGumpWorldMap::GenerateFrame(bool stop)
 
 	glEndList();
 }
+//g_PluginManager.WorldMapDraw();
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::PrepareContent()
 {

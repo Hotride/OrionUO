@@ -15,7 +15,7 @@
 //----------------------------------------------------------------------------------
 CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
 : CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), m_MinZ(z), m_AverageZ(z),
-m_VertexBuffer(0), m_NormalBuffer(0)
+m_PositionBuffer(0), m_VertexBuffer(0), m_NormalBuffer(0)
 {
 	m_OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
@@ -34,6 +34,12 @@ m_VertexBuffer(0), m_NormalBuffer(0)
 //---------------------------------------------------------------------------
 CLandObject::~CLandObject()
 {
+	if (m_PositionBuffer != 0)
+	{
+		glDeleteBuffers(1, &m_PositionBuffer);
+		m_PositionBuffer = 0;
+	}
+
 	if (m_VertexBuffer != 0)
 	{
 		glDeleteBuffers(1, &m_VertexBuffer);
@@ -87,10 +93,10 @@ void CLandObject::UpdateZ(const int &zTop, const int &zRight, const int &zBottom
 		m_Serial = ((m_Z + zTop + zRight + zBottom) / 4);
 
 		//Значения для рендера
-		m_Rect.left = m_Z * 4;
+		m_Rect.left = m_Z * 4 + 1;
 		m_Rect.top = zTop * 4;
 		m_Rect.right = zRight * 4;
-		m_Rect.bottom = zBottom * 4;
+		m_Rect.bottom = zBottom * 4 + 1;
 
 		if (abs(m_Z - zRight) <= abs(zBottom - zTop))
 			AverageZ = (m_Z + zRight) >> 1;

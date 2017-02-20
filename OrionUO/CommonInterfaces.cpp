@@ -20,6 +20,8 @@
 #include "Game objects/GamePlayer.h"
 #include "Target.h"
 #include "Network/Packets.h"
+#include "OrionWindow.h"
+#include "PluginInterface.h"
 //----------------------------------------------------------------------------------
 IOrionString g_OrionString;
 //----------------------------------------------------------------------------------
@@ -329,7 +331,7 @@ bool __cdecl FUNCBODY_GetWalk(bool run, unsigned char direction)
 //----------------------------------------------------------------------------------
 bool __cdecl FUNCBODY_GetWalkTo(int x, int y, int z, int distance)
 {
-	bool result = g_PathFinder.WalkTo(x, y, z, distance);
+	bool result = SendMessage(g_OrionWindow.Handle, UOMSG_PATHFINDING, ((x << 16) & 0xFFFF0000) | (y & 0xFFFF), ((x << 16) & 0xFFFF0000) | (distance & 0xFFFF));
 
 	if (result)
 	{

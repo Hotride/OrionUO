@@ -31,10 +31,8 @@ public:
 };
 //----------------------------------------------------------------------------------
 //Класс для работы с направлением анимации
-class CTextureAnimationDirection : public CBaseQueueItem
+class CTextureAnimationDirection : public CBaseQueue
 {
-	//Направление
-	SETGET(uchar, Direction);
 	//Количество кадров
 	SETGET(uchar, FrameCount);
 	//Адрес в памяти
@@ -45,7 +43,7 @@ class CTextureAnimationDirection : public CBaseQueueItem
 	SETGET(uint, LastAccessTime);
 
 public:
-	CTextureAnimationDirection(int direction);
+	CTextureAnimationDirection();
 	virtual ~CTextureAnimationDirection();
 
 	//Получить ссылку на фрэйм
@@ -56,28 +54,13 @@ public:
 };
 //----------------------------------------------------------------------------------
 //Класс для работы с группой анимаций
-class CTextureAnimationGroup : public CBaseQueueItem
+class CTextureAnimationGroup
 {
-	//Индекс группы
-	SETGET(uchar, Index);
-
 public:
-	CTextureAnimationGroup(int index);
+	CTextureAnimationGroup();
 	virtual ~CTextureAnimationGroup();
 
-	//Получить ссылку на направление
-	CTextureAnimationDirection *GetDirection(const uchar &direction);
-};
-//----------------------------------------------------------------------------------
-//Класс для работы с группами текстур анимаций
-class CTextureAnimation : public CBaseQueue
-{
-public:
-	CTextureAnimation();
-	virtual ~CTextureAnimation();
-
-	//Получить ссылку на группу
-	CTextureAnimationGroup *GetGroup(const uchar &index);
+	CTextureAnimationDirection m_Direction[5];
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -81,7 +81,7 @@ void CGumpScreenConnection::UpdateContent()
 		{
 			const char *text[3] =
 			{
-				"Entering Britannia...",
+				"Either the Account Name or Password you provided were incorrect. If this is a new account your account may not be active yet. Please try again shortly.",
 				"Your character name is too short.",
 				"No character to login with."
 			};

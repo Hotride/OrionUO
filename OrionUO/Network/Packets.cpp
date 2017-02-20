@@ -113,10 +113,15 @@ CPacketCreateCharacter::CPacketCreateCharacter(const string &name)
 
 	if (g_PacketManager.ClientVersion < CV_4011D)
 		val = (uchar)g_CreateCharacterManager.Female;
-	else if (g_PacketManager.ClientVersion >= CV_60144)
-		val = (uchar)(((int)g_CreateCharacterManager.Race * 2) + (int)g_CreateCharacterManager.Female);
 	else
-		val = (uchar)((int)g_CreateCharacterManager.Race + (int)g_CreateCharacterManager.Female);
+	{
+		val = (uchar)g_CreateCharacterManager.Race;
+
+		if (g_PacketManager.ClientVersion < CV_7000)
+			val--;
+
+		val = (val * 2) + (uchar)g_CreateCharacterManager.Female;
+	}
 
 	WriteUInt8(val);
 	val = profession->Str;
@@ -354,7 +359,6 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	}
 
 	Resize(size, true);
-
 
 	WriteUInt8(0xAD);
 	WriteUInt16BE(size);

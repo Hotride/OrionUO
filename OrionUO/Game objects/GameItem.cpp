@@ -22,9 +22,9 @@
 #include "GamePlayer.h"
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
-: CGameObject(serial), m_Layer(0), m_AnimID(0), m_ImageID(0), m_UsedLayer(0),
-m_Opened(false), m_Dragged(false), m_MultiBody(false), m_WantUpdateMulti(true),
-m_FieldColor(0), m_MultiDistanceBonus(0)
+: CGameObject(serial), m_Layer(0), m_AnimID(0), m_UsedLayer(0), m_Opened(false),
+m_Dragged(false), m_MultiBody(false), m_WantUpdateMulti(true), m_FieldColor(0),
+m_MultiDistanceBonus(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -92,7 +92,6 @@ void CGameItem::Paste(CObjectOnCursor *obj)
 	m_Layer = obj->Layer;
 	m_Flags = obj->Flags;
 	m_NPC = obj->NPC;
-	m_ImageID = obj->ImageID;
 	m_Container = obj->Container;
 	m_UsedLayer = obj->UsedLayer;
 	m_Opened = false;
@@ -123,7 +122,7 @@ void CGameItem::OnGraphicChange(int direction)
 		{
 			m_AnimIndex = 99;
 
-			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); i++)
+			for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); i++)
 			{
 				if (i->first == m_Serial)
 				{
@@ -160,7 +159,6 @@ void CGameItem::OnGraphicChange(int direction)
 
 			if (IsWearable() || m_Graphic == 0x0A28)
 			{
-				m_ImageID = tile.AnimID + 0xC350;
 				m_AnimID = tile.AnimID;
 				
 				g_Orion.ExecuteGump(tile.AnimID + MALE_GUMP_OFFSET);
@@ -208,7 +206,7 @@ void CGameItem::OnGraphicChange(int direction)
 		}
 
 		if (!m_MultiDistanceBonus || CheckMultiDistance(g_RemoveRangeXY, this, g_ConfigManager.UpdateRange))
-			LoadMulti();
+			LoadMulti(m_Items == NULL);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -655,52 +653,19 @@ ushort CGameItem::GetMountAnimation()
 				graphic = 0x042D;
 				break;
 			}
-
-			//start FWUO ???
-			case 0x2F01: // 12033 Polar bear
-			{
-				graphic = 0x00D5;
-				break;
-			}
-			case 0x2F03: // 12035 Ridgeback
-			{
-				graphic = 0x00F6;
-				break;
-			}
-			case 0x2F04: // 12036 Skeletal mount
-			{
-				graphic = 0x00F3;
-				break;
-			}
-			case 0x2F05: // 12037 Genie
-			{
-				graphic = 0x023D;
-				break;
-			}
-			case 0x2F10: // 12048 Kyryn
-			{
-				graphic = 0x00EB;
-				break;
-			}
-			case 0x3001: // 12289 Beetle
-			{
-				graphic = 0x00F4;
-				break;
-			}
-			//end FWUO ???
-
 			default: //lightbrown/horse2
 			{
 				graphic = 0x00C8;
+
 				break;
 			}
 		}
+
+		if (m_TiledataPtr->AnimID != 0)
+			graphic = m_TiledataPtr->AnimID;
 	}
 	else if (IsCorpse())
-	{
 		graphic = (ushort)m_Count;
-		g_AnimationManager.GetCorpseGraphic(graphic);
-	}
 
 	return graphic;
 }
@@ -709,7 +674,7 @@ ushort CGameItem::GetMountAnimation()
 Загрузка мульти в текущий объект
 @return 
 */
-void CGameItem::LoadMulti()
+void CGameItem::LoadMulti(const bool &dropAlpha)
 {
 	ClearMultiItems();
 
@@ -733,6 +698,11 @@ void CGameItem::LoadMulti()
 		if (g_PacketManager.ClientVersion >= CV_7090)
 			itemOffset = sizeof(MULTI_BLOCK_NEW);
 
+		uchar alpha = 0;
+
+		if (!dropAlpha)
+			alpha = 0xFF;
+
 		IFOR(j, 0, count)
 		{
 			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(address + (j * itemOffset));
@@ -748,6 +718,8 @@ void CGameItem::LoadMulti()
 					delete mo;
 					continue;
 				}
+
+				mo->m_DrawTextureColor[3] = alpha;
 
 				g_MapManager->AddRender(mo);
 				AddMultiObject(mo);

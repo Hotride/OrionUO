@@ -52,7 +52,8 @@ RENDER_VARIABLES_FOR_GAME_WINDOW g_RenderBounds;
 //----------------------------------------------------------------------------------
 CGameScreen::CGameScreen()
 : CBaseScreen(m_GameScreenGump), m_UseLight(false), m_MaxDrawZ(0), m_RenderListSize(1000),
-m_RenderListInitalized(false), m_RenderListCount(0), m_ObjectHandlesCount(0)
+m_RenderListInitalized(false), m_RenderListCount(0), m_ObjectHandlesCount(0),
+m_ProcessAlphaTimer(0), m_CanProcessAlpha(false)
 {
 	m_RenderList = new RENDER_OBJECT_DATA[1000];
 
@@ -339,6 +340,11 @@ void CGameScreen::CalculateRenderList()
 		g_Target.LoadMulti(sel->X, sel->Y, grZ);
 	}
 
+	m_CanProcessAlpha = (m_ProcessAlphaTimer < g_Ticks);
+
+	if (m_CanProcessAlpha)
+		m_ProcessAlphaTimer = g_Ticks + 50;
+
 	g_FoliageIndex++;
 
 	if (g_FoliageIndex >= 100)
@@ -513,20 +519,23 @@ void CGameScreen::CalculateRenderList()
 	}
 #endif
 
-	IFOR(i, 0, m_RenderListCount)
+	if (m_CanProcessAlpha)
 	{
-		CRenderWorldObject *obj = m_RenderList[i].Object;
-
-		if (obj != NULL && obj->IsStaticGroupObject())
+		IFOR(i, 0, m_RenderListCount)
 		{
-			CRenderStaticObject *rst = obj->StaticGroupObjectPtr();
+			CRenderWorldObject *obj = m_RenderList[i].Object;
 
-			if (rst->IsFoliage())
+			if (obj != NULL && obj->IsStaticGroupObject())
 			{
-				if (rst->FoliageTransparentIndex == g_FoliageIndex)
-					rst->ProcessAlpha(FOLIAGE_ALPHA);
-				else
-					rst->ProcessAlpha(0xFF);
+				CRenderStaticObject *rst = obj->StaticGroupObjectPtr();
+
+				if (rst->IsFoliage())
+				{
+					if (rst->FoliageTransparentIndex == g_FoliageIndex)
+						rst->ProcessAlpha(FOLIAGE_ALPHA);
+					else
+						rst->ProcessAlpha(0xFF);
+				}
 			}
 		}
 	}
@@ -579,7 +588,10 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 					continue;
 				else if (g_NoDrawRoof && rso->IsRoof())
 				{
-					aphaChanged = obj->ProcessAlpha(0);
+					if (m_CanProcessAlpha)
+						aphaChanged = obj->ProcessAlpha(0);
+					else
+						aphaChanged = (obj->m_DrawTextureColor[3] != 0);
 
 					if (!aphaChanged)
 						continue;
@@ -605,7 +617,10 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 		{
 			if (!aphaChanged)
 			{
-				aphaChanged = obj->ProcessAlpha(0);
+				if (m_CanProcessAlpha)
+					aphaChanged = obj->ProcessAlpha(0);
+				else
+					aphaChanged = (obj->m_DrawTextureColor[3] != 0);
 
 				if (!aphaChanged)
 					continue;
@@ -754,7 +769,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 			obj->StaticGroupObjectPtr()->FoliageTransparentIndex = index;
 		}
 
-		if (!aphaChanged)
+		if (m_CanProcessAlpha && !aphaChanged)
 		{
 			if (obj->IsTranslucent())
 				obj->ProcessAlpha(TRANSLUCENT_ALPHA);
@@ -1414,7 +1429,7 @@ void CGameScreen::PrepareContent()
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
-		if ((abs(offset.X) >= DRAG_PIXEL_RANGE || abs(offset.Y) >= DRAG_PIXEL_RANGE) || (g_MouseManager.LastLeftButtonClickTimer + g_MouseManager.DoubleClickDelay < g_Ticks))
+		if (CanBeDraggedByOffset(offset) || (g_MouseManager.LastLeftButtonClickTimer + g_MouseManager.DoubleClickDelay < g_Ticks))
 		{
 			CGameItem *selobj = g_World->FindWorldItem(g_PressedObject.LeftSerial);
 

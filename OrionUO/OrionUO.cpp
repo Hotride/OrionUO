@@ -150,7 +150,7 @@ string COrion::DecodeArgumentString(const char *text, const int &length)
 
 		char *end = NULL;
 		result += (char)strtoul(buf, &end, 16);
-}
+	}
 
 	return result;
 }
@@ -191,9 +191,9 @@ void COrion::ParseCommandLine()
 				g_ConnectionManager.UseProxy = true;
 				g_ConnectionManager.ProxyAddress = strings[1];
 				g_ConnectionManager.ProxyPort = atoi(strings[2].c_str());
-		}
+			}
 			else if (str == "proxyaccount")
-		{
+			{
 				g_ConnectionManager.ProxySocks5 = true;
 				g_ConnectionManager.ProxyAccount = DecodeArgumentString(strings[1].c_str(), strings[1].length());
 				g_ConnectionManager.ProxyPassword = DecodeArgumentString(strings[2].c_str(), strings[2].length());
@@ -235,7 +235,7 @@ void COrion::ParseCommandLine()
 				enabled = atoi(strings[1].c_str());
 
 			g_MainScreen.m_SavePassword->Checked = enabled;
-	}
+		}
 		else if (str == "fastlogin")
 			fastLogin = true;
 	}
@@ -750,7 +750,7 @@ void COrion::CheckStaticTileFilterFiles()
 		file.Init(filePath);
 		file.Print("#Format: graphic hatched\n");
 
-		static const int treeTilesCount = 45;
+		static const int treeTilesCount = 53;
 
 		static const ushort treeTiles[treeTilesCount] =
 		{
@@ -762,7 +762,9 @@ void COrion::CheckStaticTileFilterFiles()
 			0x0D71, 0x0D72, 0x0D84, 0x0D85, 0x0D86,
 			0x0D94, 0x0D98, 0x0D9C, 0x0DA0, 0x0DA4,
 			0x0DA8, 0x0C9E, 0x0CA8, 0x0CAA, 0x0CAB,
-			0x0CC9, 0x0CF8, 0x0CFB, 0x0CFE, 0x0D01
+			0x0CC9, 0x0CF8, 0x0CFB, 0x0CFE, 0x0D01,
+			0x12B6, 0x12B7, 0x12B8, 0x12B9, 0x12BA,
+			0x12BB, 0x12BC, 0x12BD
 		};
 
 		IFOR(i, 0, treeTilesCount)
@@ -781,6 +783,14 @@ void COrion::CheckStaticTileFilterFiles()
 				case 0x0CFB:
 				case 0x0CFE:
 				case 0x0D01:
+				case 0x12B6:
+				case 0x12B7:
+				case 0x12B8:
+				case 0x12B9:
+				case 0x12BA:
+				case 0x12BB:
+				case 0x12BC:
+				case 0x12BD:
 					hatched = 0;
 				default:
 					break;
@@ -921,6 +931,16 @@ void COrion::LoadClientConfig()
 		WISP_DATASTREAM::CDataReader file(&realData[0], realData.size());
 
 		uchar version = file.ReadInt8();
+		uchar dllVersion = file.ReadInt8();
+		uchar subVersion = 0;
+
+		if (dllVersion != 0xFE)
+		{
+			g_OrionWindow.ShowMessage("Old version of Orion.dll detected!!!\nClient may be crashed in process!!!", "Warning!");
+			file.Move(-1);
+		}
+		else
+			subVersion = file.ReadInt8();
 
 		g_PacketManager.ClientVersion = (CLIENT_VERSION)file.ReadInt8();
 		if (g_PacketManager.ClientVersion >= CV_7000)
@@ -931,6 +951,8 @@ void COrion::LoadClientConfig()
 
 		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
 		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
+		if (dllVersion == 0xFE)
+			g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt32LE();
 		g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt32LE();
 
 		file.Move(1);
@@ -1053,6 +1075,21 @@ void COrion::Process(const bool &rendering)
 
 		if (g_GameState == GS_GAME)
 		{
+			for (UINTS_PAIR_LIST::iterator i = g_DeletedCharactersStack.begin(); i != g_DeletedCharactersStack.end();)
+			{
+				if (i->second < g_Ticks)
+				{
+					CGameCharacter *obj = g_World->FindWorldCharacter(i->first);
+
+					if (obj != NULL && obj->Deleted)
+						g_World->RemoveObject(obj);
+
+					i = g_DeletedCharactersStack.erase(i);
+				}
+				else
+					i++;
+			}
+
 			g_MouseManager.ProcessWalking();
 
 			g_MacroManager.Execute();
@@ -1112,7 +1149,7 @@ void COrion::Process(const bool &rendering)
 
 			g_MapManager->Init(true);
 
-			for (CORPSE_LIST_MAP::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end();)
+			for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); )
 			{
 				if (i->second < g_Ticks)
 					i = g_CorpseSerialList.erase(i);
@@ -1164,43 +1201,43 @@ void COrion::LoadPlugin(const string &libpath, const string &function, const uin
 {
 	HMODULE dll = LoadLibraryA(libpath.c_str());
 
-		if (dll != NULL)
-		{
-			typedef void __cdecl dllFunc(PPLUGIN_INTERFACE);
+	if (dll != NULL)
+	{
+		typedef void __cdecl dllFunc(PPLUGIN_INTERFACE);
 
 		dllFunc *initFunc = (dllFunc*)GetProcAddress(dll, function.c_str());
-			CPlugin *plugin = NULL;
+		CPlugin *plugin = NULL;
 
-			if (initFunc != NULL)
-			{
+		if (initFunc != NULL)
+		{
 			plugin = new CPlugin(flags);
 
-				initFunc(plugin->m_PPS);
-			}
+			initFunc(plugin->m_PPS);
+		}
 
-			if (plugin == NULL)
-				FreeLibrary(dll);
-			else
-			{
+		if (plugin == NULL)
+			FreeLibrary(dll);
+		else
+		{
 			CRASHLOG("Plugin['%s'] loaded at: 0x%08X\n", libpath.c_str(), dll);
 
-				plugin->m_PPS->Owner = plugin;
+			plugin->m_PPS->Owner = plugin;
 
-				if (plugin->CanClientAccess())
-					plugin->m_PPS->Client = &g_PluginClientInterface;
+			if (plugin->CanClientAccess())
+				plugin->m_PPS->Client = &g_PluginClientInterface;
 
-				if (plugin->CanParseRecv())
-					plugin->m_PPS->Recv = PluginRecvFunction;
+			if (plugin->CanParseRecv())
+				plugin->m_PPS->Recv = PluginRecvFunction;
 
-				if (plugin->CanParseSend())
-					plugin->m_PPS->Send = PluginSendFunction;
+			if (plugin->CanParseSend())
+				plugin->m_PPS->Send = PluginSendFunction;
 
-				initFunc(plugin->m_PPS);
+			initFunc(plugin->m_PPS);
 
-				g_PluginManager.Add(plugin);
-			}
+			g_PluginManager.Add(plugin);
 		}
 	}
+}
 //----------------------------------------------------------------------------------
 void COrion::LoadPluginConfig()
 {
@@ -1457,6 +1494,7 @@ void COrion::Connect()
 //----------------------------------------------------------------------------------
 void COrion::Disconnect()
 {
+	g_AbyssPacket03First = true;
 	g_PluginManager.Disconnect();
 
 	g_SystemChat.Clear();
@@ -1469,6 +1507,8 @@ void COrion::Disconnect()
 	g_Party.Clear();
 	
 	g_GameConsole.ClearStack();
+
+	g_DeletedCharactersStack.clear();
 
 	g_ResizedGump = NULL;
 }
@@ -1529,7 +1569,10 @@ void COrion::RelayServer(const char *ip, int port, puchar gameSeed)
 	memcpy(&g_GameSeed[0], &gameSeed[0], 4);
 	g_ConnectionManager.Init(gameSeed);
 
-	if (g_ConnectionManager.Connect(ip, port, gameSeed))
+	string login = ip;
+	LoadLogin(login, port);
+
+	if (g_ConnectionManager.Connect(login, port, gameSeed))
 	{
 		g_ConnectionScreen.Connected = true;
 
@@ -2383,6 +2426,12 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 				g_Player->Graphic = value;
 				g_Player->OnGraphicChange(1000);
 			}
+
+			break;
+		}
+		case VKI_FAST_ROTATION:
+		{
+			g_PathFinder.FastRotation = (value != 0);
 
 			break;
 		}
@@ -3341,6 +3390,9 @@ void COrion::IndexReplaces()
 	WISP_FILE::CTextFileParser soundParser(g_App.FilePath("Sound.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser mp3Parser(g_App.FilePath("Music\\Digital\\Config.txt"), " ,", "#;", "");
 
+	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
+		return;
+
 	DEBUGLOG("Replace arts\n");
 	while (!artParser.IsEOF() && false)
 	{
@@ -3547,19 +3599,19 @@ void COrion::IndexReplaces()
 		if (size > 0)
 		{
 			uint index = std::atoi(strings[0].c_str());
-			CIndexMusic &mp3 = m_MP3Data[index];
+				CIndexMusic &mp3 = m_MP3Data[index];
 			string name = "Music\\Digital\\" + strings[1];
 			string extension = ".mp3";
 			if (name.find(extension) == string::npos)
 				name += extension;
-			if (size > 1)
+				if (size > 1)
 				mp3.FilePath = g_App.FilePath((name).c_str());
 
-			if (size > 2)
-				mp3.Loop = true;
+				if (size > 2)
+					mp3.Loop = true;
+			}
 		}
 	}
-}
 //----------------------------------------------------------------------------------
 bool COrion::LoadSkills()
 {
@@ -3853,7 +3905,7 @@ void COrion::LoadClientStartupConfig()
 	if (g_ConfigManager.Music)
 	{
 		if (!g_FileManager.UseUOP)
-			PlayMusic(8);
+		PlayMusic(8);
 		else
 			PlayMusic(78);
 	}
@@ -4194,7 +4246,7 @@ void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int
 
 		glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-		th->Draw(x - 23, y - (23 + (z * 4)));
+		th->Draw(x - 22, y - (22 + (z * 4)));
 	}
 }
 //----------------------------------------------------------------------------------
@@ -4630,8 +4682,8 @@ bool COrion::LandPixelsInXY(const ushort &id, int x, int  y, const int &z)
 
 	if (th != NULL)
 	{
-		x = (g_MouseManager.Position.X - x) + 23;
-		y = (g_MouseManager.Position.Y - y) + 23 + (z * 4);
+		x = (g_MouseManager.Position.X - x) + 22;
+		y = (g_MouseManager.Position.Y - y) + 22 + (z * 4);
 
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
@@ -4646,7 +4698,7 @@ bool COrion::LandPixelsInXY(const ushort &id, int x, int  y, const int &z)
 //----------------------------------------------------------------------------------
 bool COrion::LandTexturePixelsInXY(int x, int  y, RECT &r)
 {
-	y -= 23;
+	y -= 22;
 	int testX = g_MouseManager.Position.X - x;
 	int testY = g_MouseManager.Position.Y;
 
@@ -4671,7 +4723,7 @@ void COrion::CreateTextMessageF(uchar font, ushort color, const char *format, ..
 	va_list arg;
 	va_start(arg, format);
 
-	char buf[128] = { 0 };
+	char buf[512] = { 0 };
 	vsprintf_s(buf, format, arg);
 
 	CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, font, color, buf);
@@ -4684,7 +4736,7 @@ void COrion::CreateUnicodeTextMessageF(uchar font, ushort color, const char *for
 	va_list arg;
 	va_start(arg, format);
 
-	char buf[128] = { 0 };
+	char buf[512] = { 0 };
 	vsprintf_s(buf, format, arg);
 
 	CreateUnicodeTextMessage(TT_SYSTEM, 0xFFFFFFFF, font, color, ToWString(buf));

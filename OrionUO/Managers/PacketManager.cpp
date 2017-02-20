@@ -1286,7 +1286,7 @@ PACKET_HANDLER(UpdateItem)
 	if (g_TheAbyss && (graphic & 0x7FFF) == 0x0E5C)
 		return;
 
-	ushort count = 0;
+	ushort count = 1;
 
 	if (serial & 0x80000000)
 	{
@@ -1364,6 +1364,8 @@ PACKET_HANDLER(UpdateItem)
 		y &= 0x3FFF;
 		obj->Flags = ReadUInt8();
 	}
+	else
+		obj->Flags = 0;
 
 	if (obj->MultiBody)
 		obj->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
@@ -1477,6 +1479,7 @@ PACKET_HANDLER(UpdateObject)
 	else
 	{
 		character = g_World->GetWorldCharacter(serial);
+		character->Deleted = false;
 		obj = character;
 
 		if (!obj->Graphic)
@@ -2117,8 +2120,32 @@ PACKET_HANDLER(DeleteObject)
 			}
 		}
 
-		if (obj->NPC && g_Party.Contains(obj->Serial))
+		if (obj->NPC)
+		{
+			if (!g_Party.Contains(serial))
+			{
+				bool inList = false;
+
+				for (UINTS_PAIR_LIST::iterator i = g_DeletedCharactersStack.begin(); i != g_DeletedCharactersStack.end(); i++)
+				{
+					if (i->first == serial)
+					{
+						inList = true;
+						i->second = g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY;
+
+						break;
+					}
+				}
+
+				if (!inList)
+				{
+					((CGameCharacter*)obj)->Deleted = true;
+					g_DeletedCharactersStack.push_back(pair<uint, uint>(serial, g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY));
+				}
+			}
+
 			obj->RemoveRender();
+		}
 		else
 		{
 			if (obj->IsCorpse() && obj->LastAnimationChangeTime == GetTickCount())
@@ -2170,6 +2197,7 @@ PACKET_HANDLER(UpdateCharacter)
 			g_Orion.StatusReq(serial);
 	}
 
+	obj->Deleted = false;
 	obj->MapIndex = g_CurrentMap;
 	obj->Graphic = ReadUInt16BE();
 	obj->OnGraphicChange();

@@ -264,6 +264,7 @@ void CGumpMap::GUMP_BUTTON_EVENT_C
 	if (serial == ID_GM_PLOT_COURSE || serial == ID_GM_STOP_PLOTTING) //Plot Course /Stop Plotting
 	{
 		CPacketMapMessage(m_Serial, MM_EDIT, m_PlotState).Send();
+		PlotState = !m_PlotState;
 
 		m_WantRedraw = true;
 	}

@@ -31,12 +31,18 @@ DRAW_TEXTURE_RESIZEPIC_FUNCTION g_GL_DrawResizepic_Ptr = &CGLEngine::GL1_DrawRes
 //----------------------------------------------------------------------------------
 CGLEngine::CGLEngine()
 : m_DC(0), m_RC(0), m_OldTexture(0), m_Drawing(false), m_CanUseFrameBuffer(false),
-m_CanUseBuffer(false), m_SittingCharacterOffset(8.0f)
+m_CanUseBuffer(false), m_SittingCharacterOffset(8.0f), m_PositionBuffer(0)
 {
 }
 //----------------------------------------------------------------------------------
 CGLEngine::~CGLEngine()
 {
+	if (m_PositionBuffer != 0)
+	{
+		glDeleteBuffers(1, &m_PositionBuffer);
+		m_PositionBuffer = 0;
+	}
+
 	Uninstall();
 }
 //----------------------------------------------------------------------------------
@@ -117,6 +123,13 @@ bool CGLEngine::Install()
 
 		if (m_CanUseBuffer)
 		{
+			glGenBuffers(3, &m_PositionBuffer);
+
+			int positionArray[] = { 0, 1, 1, 1, 0, 0, 1, 0 };
+
+			glBindBuffer(GL_ARRAY_BUFFER, m_PositionBuffer);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(positionArray), &positionArray[0], GL_STATIC_DRAW);
+
 			g_GL_BindTexture16_Ptr = &CGLEngine::GL2_BindTexture16;
 			g_GL_BindTexture32_Ptr = &CGLEngine::GL2_BindTexture32;
 
@@ -232,27 +245,21 @@ void CGLEngine::GL1_BindTexture32(CGLTexture &texture, const int &width, const i
 //----------------------------------------------------------------------------------
 void CGLEngine::GL2_CreateArrays(CGLTexture &texture, const int &width, const int &height)
 {
-	GLuint vbo[3] = { 0 };
-	glGenBuffers(3, &vbo[0]);
-
-	int positionArray[] = { 0, 1, 1, 1, 0, 0, 1, 0 };
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(positionArray), &positionArray[0], GL_STATIC_DRAW);
+	GLuint vbo[2] = { 0 };
+	glGenBuffers(2, &vbo[0]);
 
 	int vertexArray[] = { 0, height, width, height, 0, 0, width, 0 };
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexArray), &vertexArray[0], GL_STATIC_DRAW);
 
 	int mirroredVertexArray[] = { width, height, 0, height, width, 0, 0, 0 };
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(mirroredVertexArray), &mirroredVertexArray[0], GL_STATIC_DRAW);
 
-	texture.PositionBuffer = vbo[0];
-	texture.VertexBuffer = vbo[1];
-	texture.MirroredVertexBuffer = vbo[2];
+	texture.VertexBuffer = vbo[0];
+	texture.MirroredVertexBuffer = vbo[1];
 }
 //----------------------------------------------------------------------------------
 void CGLEngine::GL2_BindTexture16(CGLTexture &texture, const int &width, const int &height, pushort pixels)
@@ -483,8 +490,8 @@ void CGLEngine::GL1_DrawLandTexture(const CGLTexture &texture, const int &x, con
 {
 	BindTexture(texture.Texture);
 
-	float translateX = x - 23.0f;
-	float translateY = y - 23.0f;
+	float translateX = x - 22.0f;
+	float translateY = y - 22.0f;
 
 	const RECT &rc = land->Rect;
 	CVector *normals = land->m_Normals;
@@ -752,9 +759,6 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 
 				drawWidth = width - th[0]->Width - th[2]->Width;
 
-				if (drawWidth < 1)
-					break;
-
 				drawCountX = drawWidth / (float)th[i]->Width;
 
 				break;
@@ -771,9 +775,6 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 
 				drawHeight = height - th[0]->Height - th[5]->Height;
 
-				if (drawHeight < 1)
-					break;
-
 				drawCountY = drawHeight / (float)th[i]->Height;
 
 				break;
@@ -784,9 +785,6 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 				drawY += th[2]->Height;
 
 				drawHeight = height - th[2]->Height - th[7]->Height;
-
-				if (drawHeight < 1)
-					break;
 
 				drawCountY = drawHeight / (float)th[i]->Height;
 
@@ -804,9 +802,6 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 				drawY += height - drawHeight;
 
 				drawWidth = width - th[5]->Width - th[7]->Width;
-
-				if (drawWidth < 1)
-					break;
 
 				drawCountX = drawWidth / (float)th[i]->Width;
 
@@ -826,13 +821,7 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 
 				drawWidth = width - th[0]->Width - th[2]->Width;
 
-				if (drawWidth < 1)
-					break;
-
 				drawHeight = height - th[2]->Height - th[7]->Height;
-
-				if (drawHeight < 1)
-					break;
 
 				drawCountX = drawWidth / (float)th[i]->Width;
 				drawCountY = drawHeight / (float)th[i]->Height;
@@ -842,6 +831,9 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 			default:
 				break;
 		}
+
+		if (drawWidth < 1 || drawHeight < 1)
+			continue;
 
 		glTranslatef((GLfloat)drawX, (GLfloat)drawY, 0.0f);
 
@@ -885,15 +877,15 @@ void CGLEngine::GL2_DrawLandTexture(const CGLTexture &texture, const int &x, con
 {
 	BindTexture(texture.Texture);
 
-	float translateX = x - 23.0f;
-	float translateY = y - 23.0f;
+	float translateX = x - 22.0f;
+	float translateY = y - 22.0f;
 
 	glTranslatef(translateX, translateY, 0.0f);
 
 	glBindBuffer(GL_ARRAY_BUFFER, land->VertexBuffer);
 	glVertexPointer(2, GL_INT, 0, (PVOID)0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, texture.PositionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, land->PositionBuffer);
 	glTexCoordPointer(2, GL_INT, 0, (PVOID)0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, land->NormalBuffer);
@@ -920,7 +912,7 @@ void CGLEngine::GL2_Draw(const CGLTexture &texture, const int &x, const int &y)
 	glBindBuffer(GL_ARRAY_BUFFER, texture.VertexBuffer);
 	glVertexPointer(2, GL_INT, 0, (PVOID)0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, texture.PositionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, m_PositionBuffer);
 	glTexCoordPointer(2, GL_INT, 0, (PVOID)0);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -944,7 +936,7 @@ void CGLEngine::GL2_DrawRotated(const CGLTexture &texture, const int &x, const i
 	glBindBuffer(GL_ARRAY_BUFFER, texture.VertexBuffer);
 	glVertexPointer(2, GL_INT, 0, (PVOID)0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, texture.PositionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, m_PositionBuffer);
 	glTexCoordPointer(2, GL_INT, 0, (PVOID)0);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -969,7 +961,7 @@ void CGLEngine::GL2_DrawMirrored(const CGLTexture &texture, const int &x, const 
 
 	glVertexPointer(2, GL_INT, 0, (PVOID)0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, texture.PositionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, m_PositionBuffer);
 	glTexCoordPointer(2, GL_INT, 0, (PVOID)0);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1109,7 +1101,7 @@ void CGLEngine::GL2_DrawShadow(const CGLTexture &texture, const int &x, const in
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glVertexPointer(2, GL_FLOAT, 0, &verticles[0]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, texture.PositionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, m_PositionBuffer);
 	glTexCoordPointer(2, GL_INT, 0, (PVOID)0);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1160,9 +1152,6 @@ void CGLEngine::GL2_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 
 				drawWidth = width - th[0]->Width - th[2]->Width;
 
-				if (drawWidth < 1)
-					break;
-
 				drawCountX = drawWidth / (float)th[i]->Width;
 
 				break;
@@ -1179,9 +1168,6 @@ void CGLEngine::GL2_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 
 				drawHeight = height - th[0]->Height - th[5]->Height;
 
-				if (drawHeight < 1)
-					break;
-
 				drawCountY = drawHeight / (float)th[i]->Height;
 
 				break;
@@ -1192,9 +1178,6 @@ void CGLEngine::GL2_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 				drawY += th[2]->Height;
 
 				drawHeight = height - th[2]->Height - th[7]->Height;
-
-				if (drawHeight < 1)
-					break;
 
 				drawCountY = drawHeight / (float)th[i]->Height;
 
@@ -1212,9 +1195,6 @@ void CGLEngine::GL2_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 				drawY += height - drawHeight;
 
 				drawWidth = width - th[5]->Width - th[7]->Width;
-
-				if (drawWidth < 1)
-					break;
 
 				drawCountX = drawWidth / (float)th[i]->Width;
 
@@ -1234,13 +1214,7 @@ void CGLEngine::GL2_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 
 				drawWidth = width - th[0]->Width - th[2]->Width;
 
-				if (drawWidth < 1)
-					break;
-
 				drawHeight = height - th[2]->Height - th[7]->Height;
-
-				if (drawHeight < 1)
-					break;
 
 				drawCountX = drawWidth / (float)th[i]->Width;
 				drawCountY = drawHeight / (float)th[i]->Height;
@@ -1250,6 +1224,9 @@ void CGLEngine::GL2_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 			default:
 				break;
 		}
+
+		if (drawWidth < 1 || drawHeight < 1)
+			continue;
 
 		glTranslatef((GLfloat)drawX, (GLfloat)drawY, 0.0f);
 

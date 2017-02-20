@@ -150,7 +150,7 @@ void CGump::ProcessListing()
 		{
 			if (item->Type == GOT_BUTTON)
 			{
-				((CGUIHTMLButton*)item)->Scroll(item->Color != 0, SCROLL_LISTING_DELAY);
+				((CGUIHTMLButton*)item)->Scroll(item->Color != 0, SCROLL_LISTING_DELAY / 7);
 				g_PressedObject.LeftGump()->WantRedraw = true;
 				g_PressedObject.LeftGump()->OnScrollButton();
 			}

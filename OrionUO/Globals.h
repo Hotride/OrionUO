@@ -49,6 +49,8 @@ extern bool g_AbyssPacket03First;
 //----------------------------------------------------------------------------------
 #pragma warning(disable: 4800) //forcing value to bool 'true' or 'false' (performance warning)
 //----------------------------------------------------------------------------------
+bool CanBeDraggedByOffset(const WISP_GEOMETRY::CPoint2Di &point);
+//----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y);
 //----------------------------------------------------------------------------------
 string ToCamelCase(string text);
@@ -211,8 +213,11 @@ extern uint g_PendingDelayTime;
 //!Модификатор расчета анимации персонажа
 extern float g_AnimCharactersDelayValue;
 
-typedef vector<pair<uint, uint>> CORPSE_LIST_MAP;
-extern CORPSE_LIST_MAP g_CorpseSerialList;
+typedef vector<pair<uint, uint>> UINTS_PAIR_LIST;
+
+extern UINTS_PAIR_LIST g_CorpseSerialList;
+
+extern UINTS_PAIR_LIST g_DeletedCharactersStack;
 
 //!Координаты, с которых следует начинать расчет удаления объектов
 extern WISP_GEOMETRY::CPoint2Di g_RemoveRangeXY;

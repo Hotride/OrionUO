@@ -32,7 +32,8 @@ m_AnimationRepeatMode(1), m_AnimationDirection(false), m_AnimationFromServer(fal
 m_MaxMana(0), m_MaxStam(0), m_Mana(0), m_Stam(0), m_OffsetX(0), m_OffsetY(0),
 m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(RT_HUMAN),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
-m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10), m_HitsPercent(0)
+m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10), m_HitsPercent(0),
+m_Deleted(false)
 {
 	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;
@@ -689,7 +690,10 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 				result = (uchar)LAG_WALK;
 		}
 		else if (m_AnimationGroup == 0xFF)
+		{
 			result = (uchar)LAG_STAND;
+			m_AnimIndex = 0;
+		}
 	}
 	else if (groupIndex == AG_HIGHT)
 	{
@@ -704,7 +708,10 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 			}
 		}
 		else if (m_AnimationGroup == 0xFF)
+		{
 			result = (uchar)HAG_STAND;
+			m_AnimIndex = 0;
+		}
 
 		//!Глюченный дельфин на всех клиентах
 		if (graphic == 151)
@@ -764,6 +771,8 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 			}
 			else
 				result = (uchar)PAG_STAND;
+
+			m_AnimIndex = 0;
 		}
 	}
 

@@ -21,15 +21,12 @@ m_ScissorOffsetHeight(scissorOffsetHeight), m_MinHeight(160)
 	Add(new CGUIPage(2));
 
 	int offsetY = 0;
-	int w = 0;
 
-	CGLTexture *th = g_Orion.ExecuteGump(0x082D);
-
-	if (th != NULL)
+	if (haveMinimizer)
 	{
-		w = th->Width;
+		CGLTexture *th = g_Orion.ExecuteGump(0x082D);
 
-		if (haveMinimizer)
+		if (th != NULL)
 			offsetY = th->Height - 3;
 	}
 
@@ -39,7 +36,10 @@ m_ScissorOffsetHeight(scissorOffsetHeight), m_MinHeight(160)
 	m_Background = (CGUIScrollBackground*)Add(new CGUIScrollBackground(0, graphic, 0, offsetY, m_Height));
 	WISP_GEOMETRY::CRect rect = m_Background->WorkSpace;
 
-	m_Minimizer->X = (m_Background->Width / 2) - (w / 2);
+	if (type != GT_SKILLS)
+		m_Minimizer->X = 137;
+	else
+		m_Minimizer->X = 170;
 
 	int heightDecBonus = m_ScissorOffsetHeight;
 
@@ -82,7 +82,11 @@ m_ScissorOffsetHeight(scissorOffsetHeight), m_MinHeight(160)
 	}
 
 	m_Resizer = (CGUIResizeButton*)Add(new CGUIResizeButton(ID_GBS_BUTTON_RESIZE, 0x082E, 0x082F, 0x082F, 0, offsetY + m_Height - 3));
-	m_Resizer->X = (m_Background->Width / 2) - (w / 2);
+
+	if (type != GT_SKILLS)
+		m_Resizer->X = 137;
+	else
+		m_Resizer->X = 170;
 }
 //----------------------------------------------------------------------------------
 CGumpBaseScroll::~CGumpBaseScroll()

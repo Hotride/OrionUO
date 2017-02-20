@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Multi.h"
 #include "Game objects/GameWorld.h"
+#include "Target.h"
 //----------------------------------------------------------------------------------
 bool g_AltPressed = false;
 bool g_CtrlPressed = false;
@@ -116,7 +117,8 @@ uint g_PendingDelayTime = 0;
 
 float g_AnimCharactersDelayValue = 80.0f; //0x50
 
-CORPSE_LIST_MAP g_CorpseSerialList;
+UINTS_PAIR_LIST g_CorpseSerialList;
+UINTS_PAIR_LIST g_DeletedCharactersStack;
 
 WISP_GEOMETRY::CPoint2Di g_RemoveRangeXY;
 
@@ -159,6 +161,14 @@ ushort g_AbilityList[MAX_ABILITIES_COUNT] =
 	30
 };
 uchar g_Ability[2] = { 4, 10 };
+//----------------------------------------------------------------------------------
+bool CanBeDraggedByOffset(const WISP_GEOMETRY::CPoint2Di &point)
+{
+	if (g_Target.IsTargeting())
+		return (abs(point.X) >= DRAG_PIXEL_RANGE_WITH_TARGET || abs(point.Y) >= DRAG_PIXEL_RANGE_WITH_TARGET);
+
+	return (abs(point.X) >= DRAG_PIXEL_RANGE || abs(point.Y) >= DRAG_PIXEL_RANGE);
+}
 //----------------------------------------------------------------------------------
 void TileOffsetOnMonitorToXY(int &ofsX, int &ofsY, int &x, int &y)
 {

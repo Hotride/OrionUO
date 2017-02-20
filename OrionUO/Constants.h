@@ -16,9 +16,13 @@ const int TRANSLUCENT_ALPHA = 0xB2; //0.7
 
 const int FOLIAGE_ALPHA = 0x4C; //0.3
 
-const int ALPHA_STEP = 15;
+const int ALPHA_STEP = 25;
+
+const int ANIMATION_GROUPS_COUNT = 35;
 
 const int CONTEXT_MENU_FONT = 1;
+
+const int KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY = 100;
 
 //!Задержка между кадрами для активного окна приложения
 const int FRAME_DELAY_ACTIVE_WINDOW = 30;
@@ -40,7 +44,9 @@ const int DAMAGE_TEXT_STEP = 2;
 
 const int DAMAGE_TEXT_ALPHA_STEP = (DAMAGE_TEXT_TRANSPARENT_DELAY / FRAME_DELAY_ACTIVE_WINDOW);
 
-const int DRAG_PIXEL_RANGE = 1; //3;
+const int DRAG_PIXEL_RANGE = 1;
+
+const int DRAG_PIXEL_RANGE_WITH_TARGET = 3;
 
 static const int DEATH_MUSIC_INDEX = 42;
 
@@ -203,7 +209,10 @@ const int GUMP_MENU_PIXEL_STEP = 5;
 const int GUMP_SCROLLING_PIXEL_STEP = 10;
 
 //!Время, через которое производить удаление текстур
-const int CLEAR_TEXTURES_DELAY = 30000;
+const int CLEAR_TEXTURES_DELAY = 3000;
+
+//!Время, через которое производить удаление текстур
+const int CLEAR_ANIMATION_TEXTURES_DELAY = 10000;
 
 //!Таймер погоды
 const int WEATHER_TIMER = (6 * 60 * 1000);

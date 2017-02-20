@@ -94,6 +94,7 @@ enum CLIENT_VERSION
 {
 	CV_OLD = 0,		//Предшествующие клиенту 2.0.0, Остальные по логике, исходя из названия
 	CV_200,			//Отправляется пакет с габаритами экрана
+	//CV_204C,		//Использование *.def файлов
 	CV_305D,		//Использование клилоков, количество слотов в списке персонажей равно количеству персонажей
 	CV_306E,		//Добавлен пакет с типом клиента (0xBF subcmd 0x0F), использование mp3 вместо midi
 	CV_308D,		//Добавлен параметр Maximum Stats в статусбар
@@ -463,7 +464,8 @@ enum VALUE_KEY_INT
 	VKI_USED_LAYER,
 	VKI_SPELLBOOK_COUNT,
 	VKI_BLOCK_MOVING,
-	VKI_SET_PLAYER_GRAPHIC
+	VKI_SET_PLAYER_GRAPHIC,
+	VKI_FAST_ROTATION
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_STRING
@@ -654,7 +656,8 @@ enum ANIMATION_GROUPS_TYPE
 	AGT_MONSTER,
 	AGT_SEA_MONSTER,
 	AGT_HUMAN,
-	AGT_EQUIPMENT
+	AGT_EQUIPMENT,
+	AGT_UNKNOWN
 };
 //----------------------------------------------------------------------------------
 enum ANIMATION_GROUPS

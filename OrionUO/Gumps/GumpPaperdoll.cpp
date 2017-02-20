@@ -339,7 +339,7 @@ void CGumpPaperdoll::PrepareContent()
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
-		if ((abs(offset.X) >= DRAG_PIXEL_RANGE || abs(offset.Y) >= DRAG_PIXEL_RANGE) || (g_MouseManager.LastLeftButtonClickTimer + g_MouseManager.DoubleClickDelay < g_Ticks))
+		if (CanBeDraggedByOffset(offset) || (g_MouseManager.LastLeftButtonClickTimer + g_MouseManager.DoubleClickDelay < g_Ticks))
 		{
 			int layer = g_PressedObject.LeftSerial - ID_GP_ITEMS;
 
@@ -484,7 +484,7 @@ void CGumpPaperdoll::UpdateContent()
 		{
 			equipment = obj->FindLayer(UsedLayers[i]);
 
-			if (equipment != NULL && equipment->AnimID && equipment->Serial != ignoreSerial)
+			if (equipment != NULL && equipment->Serial != ignoreSerial)
 			{
 				if (useSlots)
 				{
@@ -525,15 +525,18 @@ void CGumpPaperdoll::UpdateContent()
 					}
 				}
 
-				int cOfs = gumpOffset;
+				if (equipment->AnimID)
+				{
+					int cOfs = gumpOffset;
 
-				if (obj->Female && g_Orion.ExecuteGump(equipment->AnimID + cOfs) == NULL)
-					cOfs = MALE_GUMP_OFFSET;
+					if (obj->Female && g_Orion.ExecuteGump(equipment->AnimID + cOfs) == NULL)
+						cOfs = MALE_GUMP_OFFSET;
 
-				bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + cOfs, 8, 19));
-				bodyGumppic->Color = equipment->Color;
-				bodyGumppic->PartialHue = equipment->IsPartialHue();
-				bodyGumppic->Serial = ID_GP_ITEMS + UsedLayers[i];
+					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + cOfs, 8, 19));
+					bodyGumppic->Color = equipment->Color;
+					bodyGumppic->PartialHue = equipment->IsPartialHue();
+					bodyGumppic->Serial = ID_GP_ITEMS + UsedLayers[i];
+				}
 			}
 			else if (m_WantTransparentContent && g_ObjectInHand != NULL && UsedLayers[i] == g_ObjectInHand->UsedLayer && g_ObjectInHand->AnimID)
 			{

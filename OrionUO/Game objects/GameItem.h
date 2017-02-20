@@ -21,8 +21,6 @@ class CGameItem : public CGameObject
 	SETGET(uchar, Layer);
 	//!Индекс картинки анимации
 	SETGET(ushort, AnimID);
-	//!Индекс картинки гампа для папердолла
-	SETGET(ushort, ImageID);
 	//!Используемый предметом слой (из tiledata.mul/verdata)
 	SETGET(uchar, UsedLayer);
 	//!Открыт ли контейнер/спеллбук
@@ -96,7 +94,7 @@ public:
 	Загрузка мульти в текущий объект
 	@return 
 	*/
-	void LoadMulti();
+	void LoadMulti(const bool &dropAlpha);
 
 	/*!
 	Получение объекта мульти в заданных координатах

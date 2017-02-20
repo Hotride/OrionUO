@@ -30,7 +30,8 @@ public:
 	bool CanWindowProc() {return (m_Flags & PLUGIN_FLAGS_WINDOW_PROC);}
 	bool CanClientAccess() {return (m_Flags & PLUGIN_FLAGS_CLIENT_ACCESS);}
 	bool CanEnterWorldRender() {return (m_Flags & PLUGIN_FLAGS_GAME_WORLD_DRAW);}
-	bool CanEnterSceneRender() {return (m_Flags & PLUGIN_FLAGS_SCENE_DRAW);}
+	bool CanEnterSceneRender() { return (m_Flags & PLUGIN_FLAGS_SCENE_DRAW); }
+	bool CanEnterWorldMapRender() { return (m_Flags & PLUGIN_FLAGS_WORLD_MAP_DRAW); }
 
 	PPLUGIN_INTERFACE m_PPS;
 };
@@ -47,6 +48,7 @@ public:
 	void Disconnect();
 	void WorldDraw();
 	void SceneDraw();
+	void WorldMapDraw();
 };
 //----------------------------------------------------------------------------------
 extern CPluginManager g_PluginManager;

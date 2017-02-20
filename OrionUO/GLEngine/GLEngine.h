@@ -83,6 +83,7 @@ class CGLEngine
 	SETGET(bool, CanUseFrameBuffer);
 	SETGET(bool, CanUseBuffer);
 	SETGET(float, SittingCharacterOffset);
+	SETGET(GLuint, PositionBuffer);
 
 private:
 	bool GLSetupPixelFormat();

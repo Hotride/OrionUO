@@ -9,6 +9,7 @@
 //----------------------------------------------------------------------------------
 #include "Connection.h"
 #include "../Wisp/WispLogger.h"
+#include "../Managers/ConnectionManager.h"
 //----------------------------------------------------------------------------------
 CSocket::CSocket(bool gameSocket)
 : WISP_NETWORK::CConnection(), m_GameSocket(gameSocket), m_UseProxy(false),
@@ -23,6 +24,8 @@ CSocket::~CSocket()
 //----------------------------------------------------------------------------------
 bool CSocket::Connect(const string &address, const int &port)
 {
+	LOG("Connecting...%s:%i\n", address.c_str(), port);
+
 	if (m_UseProxy)
 	{
 		if (m_Connected)
@@ -176,9 +179,13 @@ UCHAR_LIST CSocket::Decompression(UCHAR_LIST data)
 {
 	if (m_GameSocket)
 	{
-		UCHAR_LIST decBuf(data.size() * 4 + 2);
-
 		int inSize = data.size();
+
+		if (g_NetworkPostAction != NULL)
+			g_NetworkPostAction(&data[0], &data[0], inSize);
+
+		UCHAR_LIST decBuf(inSize * 4 + 2);
+
 		int outSize = 65536;
 
 		m_Decompressor((char*)&decBuf[0], (char*)&data[0], outSize, inSize);

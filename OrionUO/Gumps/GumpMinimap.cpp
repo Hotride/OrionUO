@@ -163,8 +163,8 @@ void CGumpMinimap::PrepareContent()
 
 	if (ticks < g_Ticks)
 	{
-		m_Count++;
-		ticks = g_Ticks + 50;
+		m_Count += 7;
+		ticks = g_Ticks + 300;
 	}
 
 	if (m_Count > 12)

@@ -37,6 +37,7 @@ class CPathFinder
 	SETGET(bool, AutoWalking);
 	SETGET(bool, PathFindidngCanBeCancelled);
 	SETGET(bool, BlockMoving);
+	SETGET(bool, FastRotation);
 
 protected:
 	//Вычисление новой Z координаты

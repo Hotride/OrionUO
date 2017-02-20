@@ -195,7 +195,7 @@ public:
 	Можно ли брать объект в руку
 	@return
 	*/
-	bool Locked() { return (!(m_Flags & 0x20) && !IsContainer()); }
+	bool Locked() { return (!(m_Flags & 0x20) && m_TiledataPtr->Weight > 90); }
 
 	/*!
 	Объект в режиме боя
