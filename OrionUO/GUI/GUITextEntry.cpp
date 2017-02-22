@@ -96,7 +96,7 @@ void CGUITextEntry::PrepareTextures()
 	{
 		if (m_Focused || &m_Entry == g_EntryPointer)
 			color = m_ColorFocused;
-		else if (g_GumpSelectedElement == this || (m_CheckOnSerial && m_Serial == g_SelectedObject.Serial && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGUI()))
+		else if (g_GumpSelectedElement == this || (m_CheckOnSerial && g_CurrentCheckGump != NULL && g_CurrentCheckGump == g_SelectedObject.Gump() && m_Serial == g_SelectedObject.Serial && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGUI()))
 			color = m_ColorSelected;
 	}
 
@@ -123,7 +123,7 @@ void CGUITextEntry::Draw(const bool &checktrans)
 
 		y += m_FocusedOffsetY;
 	}
-	else if (g_GumpSelectedElement == this || (m_CheckOnSerial && m_Serial == g_SelectedObject.Serial && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGUI()))
+	else if (g_GumpSelectedElement == this || (m_CheckOnSerial && g_CurrentCheckGump != NULL && g_CurrentCheckGump == g_SelectedObject.Gump() && m_Serial == g_SelectedObject.Serial && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGUI()))
 	{
 		if (m_UseGlobalColor)
 			glColor4ub(m_GlobalColorSelectedR, m_GlobalColorSelectedG, m_GlobalColorSelectedB, m_GlobalColorSelectedA);
