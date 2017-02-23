@@ -969,7 +969,6 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_DrawStatusConditionValue);
 	writter.WriteUInt8(m_RemoveStatusbarsWithoutObjects);
 	writter.WriteUInt8(m_ShowDefaultConsoleEntryMode);
-	writter.WriteUInt8(m_DrawHelmetsOnShroud);
 
 	uchar auraState = m_DrawAuraState;
 
@@ -980,6 +979,7 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_ScreenshotFormat);
 	writter.WriteUInt8(m_ScaleImagesInPaperdollSlots);
 	writter.WriteUInt8(m_RemoveOrCreateObjectsWithBlending);
+	writter.WriteUInt8(m_DrawHelmetsOnShroud);
 
 	writter.WriteBuffer();
 
