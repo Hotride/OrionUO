@@ -12,6 +12,7 @@ bool g_MovingFromMouse = false;
 bool g_AutoMoving = false;
 bool g_TheAbyss = false;
 bool g_AbyssPacket03First = true;
+bool g_Asmut = false;
 //----------------------------------------------------------------------------------
 int g_LandObjectsCount = 0;
 int g_StaticsObjectsCount = 0;

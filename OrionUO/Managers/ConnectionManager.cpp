@@ -326,6 +326,13 @@ int CConnectionManager::Send(puchar buf, int size)
 				break;
 		}
 	}
+	else if (g_Asmut)
+	{
+		if (buf[0] == 0x02)
+			buf[0] = 0x04;
+		else if (buf[0] == 0x07)
+			buf[0] = 0x0A;
+	}
 
 	if (m_IsLoginSocket) //Логин сокет
 	{
