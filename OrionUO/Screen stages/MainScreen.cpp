@@ -195,7 +195,7 @@ void CMainScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 */
 int CMainScreen::GetConfigKeyCode(const string &key)
 {
-	const int keyCount = 6;
+	const int keyCount = MSCC_COUNT - 1;
 
 	static const string m_Keys[keyCount] =
 	{
@@ -204,7 +204,8 @@ int CMainScreen::GetConfigKeyCode(const string &key)
 		"rememberacctpw",
 		"autologin",
 		"smoothmonitor",
-		"theabyss"
+		"theabyss",
+		"asmut"
 	};
 
 	string str = ToLowerA(key);
@@ -306,6 +307,12 @@ void CMainScreen::LoadGlobalConfig()
 
 					break;
 				}
+				case MSCC_ASMUT:
+				{
+					g_Asmut = ToBool(strings[1]);
+
+					break;
+				}
 				default:
 					break;
 			}
@@ -348,6 +355,9 @@ void CMainScreen::SaveGlobalConfig()
 	fputs(buf, uo_cfg);
 
 	sprintf_s(buf, "TheAbyss=%s\n", (g_TheAbyss ? "yes" : "no"));
+	fputs(buf, uo_cfg);
+
+	sprintf_s(buf, "Asmut=%s\n", (g_Asmut ? "yes" : "no"));
 	fputs(buf, uo_cfg);
 
 	fclose(uo_cfg);

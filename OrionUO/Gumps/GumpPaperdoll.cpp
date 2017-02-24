@@ -37,7 +37,6 @@ int CGumpPaperdoll::UsedLayers[m_LayerCount] =
 	OL_GLOVES,
 	OL_TUNIC,
 	OL_SKIRT,
-	OL_TALISMAN,
 	OL_NECKLACE,
 	OL_HAIR,
 	OL_ROBE,
@@ -46,7 +45,8 @@ int CGumpPaperdoll::UsedLayers[m_LayerCount] =
 	OL_HELMET,
 	OL_WAIST,
 	OL_1_HAND,
-	OL_2_HAND
+	OL_2_HAND,
+	OL_TALISMAN
 };
 //----------------------------------------------------------------------------------
 CGumpPaperdoll::CGumpPaperdoll(uint serial, short x, short y, bool minimized)

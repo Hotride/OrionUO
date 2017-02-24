@@ -23,6 +23,7 @@
 #include "../Game objects/ObjectOnCursor.h"
 //----------------------------------------------------------------------------------
 CGump *g_ResizedGump = NULL;
+CGump *g_CurrentCheckGump = NULL;
 //----------------------------------------------------------------------------------
 CGump::CGump()
 : CGump(GT_NONE, 0, 0, 0)
@@ -1215,6 +1216,7 @@ void CGump::Draw()
 //----------------------------------------------------------------------------------
 CRenderObject *CGump::Select()
 {
+	g_CurrentCheckGump = this;
 	CalculateGumpState();
 
 	if (m_WantUpdateContent)
@@ -1241,43 +1243,52 @@ CRenderObject *CGump::Select()
 	}
 
 	g_MouseManager.Position = oldPos;
+	g_CurrentCheckGump = NULL;
 
 	return selected;
 }
 //----------------------------------------------------------------------------------
 void CGump::OnLeftMouseButtonDown()
 {
+	g_CurrentCheckGump = this;
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
 
 	TestItemsLeftMouseDown(this, (CBaseGUI*)m_Items, m_Page, m_Draw2Page);
 
 	g_MouseManager.Position = oldPos;
+	g_CurrentCheckGump = NULL;
 }
 //----------------------------------------------------------------------------------
 void CGump::OnLeftMouseButtonUp()
 {
+	g_CurrentCheckGump = this;
 	TestItemsLeftMouseUp(this, (CBaseGUI*)m_Items, m_Page, m_Draw2Page);
 	TestLockerClick();
+	g_CurrentCheckGump = NULL;
 }
 //----------------------------------------------------------------------------------
 void CGump::OnMidMouseButtonScroll(const bool &up)
 {
+	g_CurrentCheckGump = this;
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
 
 	TestItemsScrolling(this, (CBaseGUI*)m_Items, up, m_Page, m_Draw2Page);
 
 	g_MouseManager.Position = oldPos;
+	g_CurrentCheckGump = NULL;
 }
 //----------------------------------------------------------------------------------
 void CGump::OnDragging()
 {
+	g_CurrentCheckGump = this;
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
 
 	TestItemsDragging(this, (CBaseGUI*)m_Items, m_Page, m_Draw2Page);
 
 	g_MouseManager.Position = oldPos;
+	g_CurrentCheckGump = NULL;
 }
 //----------------------------------------------------------------------------------

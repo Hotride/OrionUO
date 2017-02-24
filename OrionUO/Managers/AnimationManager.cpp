@@ -2403,7 +2403,10 @@ bool CAnimationManager::IsCovered(const int &layer, CGameObject *owner)
 				if (robe <= 0x2687)
 				{
 					if (robe < 0x2683)
-						result = (robe >= 0x204E && robe <= 0x204F);
+					{
+						if (robe >= 0x204E && robe <= 0x204F && (layer == OL_HAIR || !g_ConfigManager.DrawHelmetsOnShroud))
+							result = true;
+					}
 					else
 						result = true;
 				}

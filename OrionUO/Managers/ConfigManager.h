@@ -54,6 +54,7 @@ class CConfigManager
 	SETGET(uchar, ScreenshotFormat);
 	SETGETE(bool, ScaleImagesInPaperdollSlots, OnChangeScaleImagesInPaperdollSlots);
 	SETGET(bool, RemoveOrCreateObjectsWithBlending);
+	SETGET(bool, DrawHelmetsOnShroud);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

@@ -23,6 +23,7 @@ extern bool g_AutoMoving;
 
 extern bool g_TheAbyss;
 extern bool g_AbyssPacket03First;
+extern bool g_Asmut;
 //----------------------------------------------------------------------------------
 #include "Wisp/WispGlobal.h"
 #include "Wisp/WispGeometry.h"
