@@ -19,7 +19,7 @@ See Wiki: https://github.com/Hotride/OrionUO/wiki
 
 -------------
 
-Users may download files from bin folder, paste them inside  UO directory, configure ConfigurationEditor and launch.
+Users may download files from bin folder, paste them inside  UO directory, create config file with ConfigurationEditor.exe and launch.
 
 --------------
 
