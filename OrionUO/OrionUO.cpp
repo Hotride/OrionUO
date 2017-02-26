@@ -2429,6 +2429,12 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_IGNORE_STAMINA_CHECK:
+		{
+			g_PathFinder.IgnoreStaminaCheck = (value != 0);
+
+			break;
+		}
 		default:
 			break;
 	}

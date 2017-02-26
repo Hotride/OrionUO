@@ -465,7 +465,8 @@ enum VALUE_KEY_INT
 	VKI_SPELLBOOK_COUNT,
 	VKI_BLOCK_MOVING,
 	VKI_SET_PLAYER_GRAPHIC,
-	VKI_FAST_ROTATION
+	VKI_FAST_ROTATION,
+	VKI_IGNORE_STAMINA_CHECK
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_STRING

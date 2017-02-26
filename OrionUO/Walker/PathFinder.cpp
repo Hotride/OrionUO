@@ -53,7 +53,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObjectTest> &list, const int &x, c
 	int bx = x % 8;
 	int by = y % 8;
 
-	bool ignoreGameCharacters = ((stepState == PSS_DEAD_OR_GM) || g_Player->IgnoreCharacters() || g_Player->Stam >= g_Player->MaxStam);
+	bool ignoreGameCharacters = (m_IgnoreStaminaCheck || (stepState == PSS_DEAD_OR_GM) || g_Player->IgnoreCharacters() || g_Player->Stam >= g_Player->MaxStam);
 
 	for (CRenderWorldObject *obj = block->GetRender(bx, by); obj != NULL; obj = obj->m_NextXY)
 	{
