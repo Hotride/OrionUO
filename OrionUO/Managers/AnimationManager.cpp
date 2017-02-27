@@ -1019,16 +1019,15 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 @param [__in] direction Ссылка на направление анимации
 @return true в случае успешной загрузки
 */
-bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction, ushort id)
+bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction, CGameObject *obj)
 {
 	if (direction.Address == 0)
 	{
 		if (g_FileManager.UseUOP)
 		{
-			TryReadUOPAnimDimins(id);
+			return TryReadUOPAnimDimins(obj);
 		}
-		else
-			return false;
+		return false;
 	}
 
 	SetData((puchar)direction.Address, direction.Size);
@@ -1182,7 +1181,7 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &m
 
 	CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[m_AnimGroup].m_Direction[m_Direction];
 
-	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction, id))
+	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction, obj))
 		return false;
 
 	int fc = direction.FrameCount;
@@ -1278,7 +1277,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 
 	CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[m_AnimGroup].m_Direction[m_Direction];
 
-	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction, id))
+	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction, obj))
 		return;
 
 	int fc = direction.FrameCount;
@@ -2131,11 +2130,41 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 	return result;
 }
 //----------------------------------------------------------------------------------
-void CAnimationManager::TryReadUOPAnimDimins(ushort id)
+bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj)
 {
+	uchar dir = m_Direction;
+	uchar animGroup = m_AnimGroup;
+	ushort id = obj->GetMountAnimation();
+	bool mirror = false;
+
+	if (obj->NPC)
+	{
+		CGameCharacter *gc = obj->GameCharacterPtr();
+		gc->UpdateAnimationInfo(dir);
+		animGroup = gc->GetAnimationGroup();
+		GetAnimDirection(dir, mirror);
+	}
+	else if (obj->IsCorpse())
+	{
+		dir = ((CGameItem*)obj)->Layer;
+		animGroup = GetDieGroupIndex(id, ((CGameItem*)obj)->UsedLayer);
+		GetAnimDirection(dir, mirror);
+	}
+	else if (((CGameItem*)obj)->Layer != OL_MOUNT) //TGameItem
+		id = ((CGameItem*)obj)->AnimID;
+
+	char hashString[100];
+	sprintf(hashString, "build/animationlegacyframe/%06i/%02i.bin", id, animGroup);
+	auto hash = g_Orion.CreateHash(hashString);
+	UOPAnimationData animDataStruct;
+	if (uopFrameDataRefMap.find(hash) != uopFrameDataRefMap.end())
+	{
+		animDataStruct = uopFrameDataRefMap.at(hash);
+	}
 	//We'll either read, decompress and then read mmaped uop here, which might be slow and we might get virtual memory issues later on.
 	//Or we have to implement a method to read, decompress and save temp uop files somewhere in InitIndexReplaces() and then use a file stream to read those files during the runtime in this method.
 	//Not sure what to chose yet. 2nd option has complications because of the temp files, but is more resource friendly. 1st option is a memory hit and actually might be slower.
+	return false;
 }
 //----------------------------------------------------------------------------------
 void CAnimationManager::CalculateFrameInformation(FRAME_OUTPUT_INFO &info, CGameObject *obj, const bool &mirror, const uchar &animIndex)

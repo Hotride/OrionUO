@@ -141,7 +141,7 @@ void CGameWorld::ProcessAnimation()
 					CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[id].m_Groups[animGroup].m_Direction[dir];
 
 					if (direction.FrameCount == 0)
-						g_AnimationManager.LoadDirectionGroup(direction, id);
+						g_AnimationManager.LoadDirectionGroup(direction, obj);
 
 					if (direction.Address != 0)
 					{
@@ -240,7 +240,7 @@ void CGameWorld::ProcessAnimation()
 					CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[id].m_Groups[animGroup].m_Direction[dir];
 
 					if (direction.FrameCount == 0)
-						g_AnimationManager.LoadDirectionGroup(direction, id);
+						g_AnimationManager.LoadDirectionGroup(direction, obj);
 
 					if (direction.Address != 0)
 					{

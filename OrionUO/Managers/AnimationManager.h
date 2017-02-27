@@ -114,7 +114,7 @@ private:
 	ushort m_CharacterLayerGraphic[25];
 	ushort m_CharacterLayerAnimID[25];
 
-	void TryReadUOPAnimDimins(ushort id);
+	bool TryReadUOPAnimDimins(CGameObject *obj);
 
 public:
 	CAnimationManager();
@@ -173,7 +173,7 @@ public:
 	@param [__in] direction Ссылка на направление анимации
 	@return true в случае успешной загрузки
 	*/
-	bool LoadDirectionGroup(CTextureAnimationDirection &direction, ushort id);
+	bool LoadDirectionGroup(CTextureAnimationDirection &direction, CGameObject *obj);
 
 	/*!
 	Коррекция направления и режима зеркального отображения
