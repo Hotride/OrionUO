@@ -1019,10 +1019,17 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 @param [__in] direction Ссылка на направление анимации
 @return true в случае успешной загрузки
 */
-bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction)
+bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction, ushort id)
 {
 	if (direction.Address == 0)
-		return false;
+	{
+		if (g_FileManager.UseUOP)
+		{
+			TryReadUOPAnimDimins(id);
+		}
+		else
+			return false;
+	}
 
 	SetData((puchar)direction.Address, direction.Size);
 
@@ -1175,7 +1182,7 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &m
 
 	CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[m_AnimGroup].m_Direction[m_Direction];
 
-	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction))
+	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction, id))
 		return false;
 
 	int fc = direction.FrameCount;
@@ -1271,7 +1278,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 
 	CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[m_AnimGroup].m_Direction[m_Direction];
 
-	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction))
+	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction, id))
 		return;
 
 	int fc = direction.FrameCount;
@@ -2119,14 +2126,12 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 				}
 			}
 		}
-		else if (g_FileManager.UseUOP)
-			TryReadUOPAnimDimins(result);
 	}
 
 	return result;
 }
 //----------------------------------------------------------------------------------
-void CAnimationManager::TryReadUOPAnimDimins(ANIMATION_DIMENSIONS &dimins)
+void CAnimationManager::TryReadUOPAnimDimins(ushort id)
 {
 	//We'll either read, decompress and then read mmaped uop here, which might be slow and we might get virtual memory issues later on.
 	//Or we have to implement a method to read, decompress and save temp uop files somewhere in InitIndexReplaces() and then use a file stream to read those files during the runtime in this method.
