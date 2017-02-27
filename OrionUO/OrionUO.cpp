@@ -90,6 +90,7 @@
 #include "ExceptionFilter.h"
 #include "Gumps/GumpCombatBook.h"
 #include "Gumps/GumpRacialAbilitiesBook.h"
+#include "TargetGump.h"
 //----------------------------------------------------------------------------------
 typedef void __cdecl PLUGIN_INIT_TYPE(STRING_LIST&, STRING_LIST&, UINT_LIST&);
 //----------------------------------------------------------------------------------
@@ -2432,6 +2433,33 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_IGNORE_STAMINA_CHECK:
 		{
 			g_PathFinder.IgnoreStaminaCheck = (value != 0);
+
+			break;
+		}
+		case VKI_LAST_TARGET:
+		{
+			if (value == -1)
+				value = g_LastTargetObject;
+			else
+				g_LastTargetObject = value;
+
+			break;
+		}
+		case VKI_LAST_ATTACK:
+		{
+			if (value == -1)
+				value = g_LastAttackObject;
+			else
+				g_LastAttackObject = value;
+
+			break;
+		}
+		case VKI_NEW_TARGET_SYSTEM_SERIAL:
+		{
+			if (value == -1)
+				value = g_NewTargetSystem.Serial;
+			else
+				g_NewTargetSystem.Serial = value;
 
 			break;
 		}
