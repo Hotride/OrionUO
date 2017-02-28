@@ -2156,11 +2156,15 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj)
 	char hashString[100];
 	sprintf(hashString, "build/animationlegacyframe/%06i/%02i.bin", id, animGroup);
 	auto hash = g_Orion.CreateHash(hashString);
-	UOPAnimationData animDataStruct;
+	UOPAnimationData animDataStruct = {};
 	if (uopFrameDataRefMap.find(hash) != uopFrameDataRefMap.end())
 	{
 		animDataStruct = uopFrameDataRefMap.at(hash);
 	}
+	animDataStruct.fileStream->open(*animDataStruct.path, std::ios::binary | std::ios::in);
+	animDataStruct.fileStream->seekg(animDataStruct.offset, 0);
+	animDataStruct.fileStream->close();
+
 	//We'll either read, decompress and then read mmaped uop here, which might be slow and we might get virtual memory issues later on.
 	//Or we have to implement a method to read, decompress and save temp uop files somewhere in InitIndexReplaces() and then use a file stream to read those files during the runtime in this method.
 	//Not sure what to chose yet. 2nd option has complications because of the temp files, but is more resource friendly. 1st option is a memory hit and actually might be slower.

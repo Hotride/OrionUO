@@ -308,6 +308,7 @@ void CFileManager::ReadTask()
 				dataStruct.length = *reinterpret_cast<unsigned int*>(compressedlength);
 
 				dataStruct.fileStream = &animFile;
+				dataStruct.path = &path;
 				g_AnimationManager.AddUopAnimData(*reinterpret_cast<unsigned long long*>(hash), dataStruct);
 			}
 

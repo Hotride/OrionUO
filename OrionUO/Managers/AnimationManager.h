@@ -38,6 +38,7 @@ struct ANIMATION_DIMENSIONS
 //Данные о местонахождении сжатого блока данных с уоп фреймами
 struct UOPAnimationData
 {
+	std::string *path;
 	unsigned int offset;
 	unsigned int length;
 	std::fstream* fileStream;
