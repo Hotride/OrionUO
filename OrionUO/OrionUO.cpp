@@ -1115,41 +1115,41 @@ void COrion::Process(const bool &rendering)
 
 			RemoveRangedObjects();
 			g_GumpManager.RemoveRangedGumps();
-		}
 
-		if (rendering)
-		{
-			g_GameScreen.CalculateGameWindowBounds();
-
-			g_GameScreen.CalculateRenderList();
-			g_GameScreen.RenderListInitalized = true;
-
-			g_SelectedObject.Clear();
-
-			if (!IsIconic(g_OrionWindow.Handle))
+			if (rendering)
 			{
-				if (canRenderSelect)
-					g_GameScreen.Render(false);
+				g_GameScreen.CalculateGameWindowBounds();
 
-				CGump::ProcessListing();
+				g_GameScreen.CalculateRenderList();
+				g_GameScreen.RenderListInitalized = true;
 
-				g_GameScreen.PrepareContent();
+				g_SelectedObject.Clear();
 
-				g_GameScreen.Render(true);
-			}
+				if (!IsIconic(g_OrionWindow.Handle))
+				{
+					if (canRenderSelect)
+						g_GameScreen.Render(false);
 
-			g_Target.UnloadMulti();
+					CGump::ProcessListing();
 
-			g_GameScreen.RenderListInitalized = false;
+					g_GameScreen.PrepareContent();
 
-			g_MapManager->Init(true);
+					g_GameScreen.Render(true);
+				}
 
-			for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); )
-			{
-				if (i->second < g_Ticks)
-					i = g_CorpseSerialList.erase(i);
-				else
-					i++;
+				g_Target.UnloadMulti();
+
+				g_GameScreen.RenderListInitalized = false;
+
+				g_MapManager->Init(true);
+
+				for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end();)
+				{
+					if (i->second < g_Ticks)
+						i = g_CorpseSerialList.erase(i);
+					else
+						i++;
+				}
 			}
 		}
 	}
