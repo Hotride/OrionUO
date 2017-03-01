@@ -41,7 +41,7 @@ struct UOPAnimationData
 	std::string *path;
 	unsigned int offset;
 	unsigned int length;
-	std::fstream* fileStream;
+	std::fstream *fileStream;
 };
 //----------------------------------------------------------------------------------
 //!Класс менеджера анимаций

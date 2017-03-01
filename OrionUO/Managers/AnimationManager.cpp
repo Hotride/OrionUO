@@ -2161,9 +2161,16 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj)
 	{
 		animDataStruct = uopFrameDataRefMap.at(hash);
 	}
+	else return false;
+
 	animDataStruct.fileStream->open(*animDataStruct.path, std::ios::binary | std::ios::in);
 	animDataStruct.fileStream->seekg(animDataStruct.offset, 0);
+
+	char *buf = new char[animDataStruct.length];
+	animDataStruct.fileStream->read(buf, animDataStruct.length);
+
 	animDataStruct.fileStream->close();
+	delete buf;
 
 	//We'll either read, decompress and then read mmaped uop here, which might be slow and we might get virtual memory issues later on.
 	//Or we have to implement a method to read, decompress and save temp uop files somewhere in InitIndexReplaces() and then use a file stream to read those files during the runtime in this method.

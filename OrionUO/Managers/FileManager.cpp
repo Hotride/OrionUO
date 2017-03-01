@@ -259,19 +259,19 @@ void CFileManager::ReadTask()
 		char signature[4];
 		char nextBlock[8];
 
-		std::fstream animFile;
-		string path = g_App.FilePath("AnimationFrame%i.uop", i);
-		animFile.open(path, std::ios::binary | std::ios::in);
+		std::fstream *animFile = new std::fstream();
+		string *path = new string(g_App.FilePath("AnimationFrame%i.uop", i));
+		animFile->open(*path, std::ios::binary | std::ios::in);
 
 		if (!animFile) continue;
 
 
-		animFile.read(magic, 4);
-		animFile.read(version, 4);
-		animFile.read(signature, 4);
-		animFile.read(nextBlock, 8);
+		animFile->read(magic, 4);
+		animFile->read(version, 4);
+		animFile->read(signature, 4);
+		animFile->read(nextBlock, 8);
 
-		animFile.seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
+		animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
 
 		do
 		{
@@ -284,18 +284,18 @@ void CFileManager::ReadTask()
 			char skip1[4];
 			char skip2[2];
 
-			animFile.read(fileCount, 4);
-			animFile.read(nextBlock, 8);
+			animFile->read(fileCount, 4);
+			animFile->read(nextBlock, 8);
 			int count = *reinterpret_cast<unsigned int*>(fileCount);
 			IFOR(i, 0, count)
 			{
-				animFile.read(offset, 8);
-				animFile.read(headerlength, 4);
-				animFile.read(compressedlength, 4);
-				animFile.read(decompressedlength, 4);
-				animFile.read(hash, 8);
-				animFile.read(skip1, 4);
-				animFile.read(skip2, 2);
+				animFile->read(offset, 8);
+				animFile->read(headerlength, 4);
+				animFile->read(compressedlength, 4);
+				animFile->read(decompressedlength, 4);
+				animFile->read(hash, 8);
+				animFile->read(skip1, 4);
+				animFile->read(skip2, 2);
 
 				auto offsetVal = *reinterpret_cast<unsigned long long*>(offset);
 				if (offsetVal == 0)
@@ -307,15 +307,15 @@ void CFileManager::ReadTask()
 				dataStruct.offset = offsetVal + *reinterpret_cast<unsigned int*>(headerlength);
 				dataStruct.length = *reinterpret_cast<unsigned int*>(compressedlength);
 
-				dataStruct.fileStream = &animFile;
-				dataStruct.path = &path;
+				dataStruct.fileStream = animFile;
+				dataStruct.path = path;
 				g_AnimationManager.AddUopAnimData(*reinterpret_cast<unsigned long long*>(hash), dataStruct);
 			}
 
-			animFile.seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
+			animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
 		} while (*reinterpret_cast<unsigned long long*>(nextBlock) != 0);
 
-		animFile.close();
+		animFile->close();
 	}
 	m_AutoResetEvent.Set();
 }
