@@ -1121,7 +1121,6 @@ void COrion::Process(const bool &rendering)
 
 			RemoveRangedObjects();
 			g_GumpManager.RemoveRangedGumps();
-		}
 
 		if (rendering)
 		{
@@ -1150,7 +1149,7 @@ void COrion::Process(const bool &rendering)
 
 			g_MapManager->Init(true);
 
-			for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); )
+				for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end();)
 			{
 				if (i->second < g_Ticks)
 					i = g_CorpseSerialList.erase(i);
@@ -1158,6 +1157,7 @@ void COrion::Process(const bool &rendering)
 					i++;
 			}
 		}
+	}
 	}
 	else if (rendering)
 	{
