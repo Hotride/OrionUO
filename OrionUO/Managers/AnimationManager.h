@@ -40,7 +40,8 @@ struct UOPAnimationData
 {
 	std::string *path;
 	unsigned int offset;
-	unsigned int length;
+	unsigned int compressedLength;
+	unsigned int decompressedLength;
 	std::fstream *fileStream;
 };
 //----------------------------------------------------------------------------------

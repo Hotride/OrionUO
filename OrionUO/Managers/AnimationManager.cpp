@@ -23,6 +23,7 @@
 #include "../SelectedObject.h"
 #include "../Screen stages/GameScreen.h"
 #include "PacketManager.h"
+#include "../zlib.h"
 //----------------------------------------------------------------------------------
 CAnimationManager g_AnimationManager;
 //----------------------------------------------------------------------------------
@@ -2166,15 +2167,28 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj)
 	animDataStruct.fileStream->open(*animDataStruct.path, std::ios::binary | std::ios::in);
 	animDataStruct.fileStream->seekg(animDataStruct.offset, 0);
 
-	char *buf = new char[animDataStruct.length];
-	animDataStruct.fileStream->read(buf, animDataStruct.length);
-
+	//reading into buffer on the heap
+	char *buf = new char[animDataStruct.compressedLength];
+	animDataStruct.fileStream->read(buf, animDataStruct.compressedLength);
 	animDataStruct.fileStream->close();
+
+	//decomporessing here
+	UCHAR_LIST decLayoutData(animDataStruct.decompressedLength);
+	uLongf cLen = animDataStruct.compressedLength;
+	uLongf dLen = animDataStruct.decompressedLength;
+
+	int z_err = uncompress(&decLayoutData[0], &dLen, reinterpret_cast<unsigned char const*>(buf), cLen);
 	delete buf;
 
-	//We'll either read, decompress and then read mmaped uop here, which might be slow and we might get virtual memory issues later on.
-	//Or we have to implement a method to read, decompress and save temp uop files somewhere in InitIndexReplaces() and then use a file stream to read those files during the runtime in this method.
-	//Not sure what to chose yet. 2nd option has complications because of the temp files, but is more resource friendly. 1st option is a memory hit and actually might be slower.
+	if (z_err != Z_OK)
+	{
+		LOG("UOP anim decompression failed %d\n", z_err);
+		LOG("Anim file: %s\n", *animDataStruct.path);
+		LOG("Anim id: %d, anim grp: %d, dir: %d\n", id, animGroup, dir);
+		return false;
+	}
+
+
 	return false;
 }
 //----------------------------------------------------------------------------------

@@ -305,7 +305,8 @@ void CFileManager::ReadTask()
 
 				UOPAnimationData dataStruct;
 				dataStruct.offset = offsetVal + *reinterpret_cast<unsigned int*>(headerlength);
-				dataStruct.length = *reinterpret_cast<unsigned int*>(compressedlength);
+				dataStruct.compressedLength = *reinterpret_cast<unsigned int*>(compressedlength);
+				dataStruct.decompressedLength = *reinterpret_cast<unsigned int*>(decompressedlength);
 
 				dataStruct.fileStream = animFile;
 				dataStruct.path = path;
