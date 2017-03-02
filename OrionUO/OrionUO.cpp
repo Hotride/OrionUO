@@ -1610,7 +1610,7 @@ void COrion::LoginComplete()
 		//PaperdollReq(g_PlayerSerial);
 
 		//CPacketOpenChat(L"").Send();
-		//CPacketRazorAnswer().Send();
+		CPacketRazorAnswer().Send();
 
 		CPacketLanguage(g_Language.c_str()).Send();
 
