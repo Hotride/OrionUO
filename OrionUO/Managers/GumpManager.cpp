@@ -228,6 +228,13 @@ void CGumpManager::AddGump(CGump *obj)
 				((CGumpOptions*)obj)->Init();
 				break;
 			}
+			case GT_WORLD_MAP:
+			{
+				if (g_ConfigManager.UseGlobalMapLayer)
+					MoveToFront(obj);
+
+				break;
+			}
 			default:
 				break;
 		}
@@ -734,6 +741,8 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 			else
 				gump->OnLeftMouseButtonUp();
 
+			if (gump->GumpType == GT_WORLD_MAP && g_ConfigManager.UseGlobalMapLayer)
+				MoveToFront(gump);
 
 			RemoveMarked();
 			//MoveGumpToTop(gump);
