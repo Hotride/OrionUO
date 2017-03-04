@@ -1418,6 +1418,7 @@ void COrion::ClearUnusedTextures()
 
 	IFOR(i, 0, 5)
 	{
+		int count = 0;
 		deque<CIndexObject*> *list = (deque<CIndexObject*>*)lists[i];
 
 		for (deque<CIndexObject*>::iterator it = list->begin(); it != list->end();)
@@ -1433,11 +1434,16 @@ void COrion::ClearUnusedTextures()
 				}
 
 				it = list->erase(it);
+
+				if (++count >= MAX_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR)
+					break;
 			}
 			else
 				it++;
 		}
 	}
+
+	int count = 0;
 
 	for (deque<CIndexSound*>::iterator it = m_UsedSoundList.begin(); it != m_UsedSoundList.end();)
 	{
@@ -1452,6 +1458,9 @@ void COrion::ClearUnusedTextures()
 			}
 
 			it = m_UsedSoundList.erase(it);
+
+			if (++count >= MAX_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR)
+				break;
 		}
 		else
 			it++;

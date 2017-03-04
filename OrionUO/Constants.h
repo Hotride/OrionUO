@@ -12,6 +12,8 @@
 //----------------------------------------------------------------------------------
 const int MAX_CONSOLE_STACK_SIZE = 100;
 
+const int MAX_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR = 10;
+
 const int TRANSLUCENT_ALPHA = 0xB2; //0.7
 
 const int FOLIAGE_ALPHA = 0x4C; //0.3

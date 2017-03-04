@@ -458,6 +458,7 @@ void CMapManager::ClearUnusedBlocks()
 {
 	CMapBlock *block = (CMapBlock*)m_Items;
 	uint ticks = g_Ticks - CLEAR_TEXTURES_DELAY;
+	int count = 0;
 
 	while (block != NULL)
 	{
@@ -469,6 +470,9 @@ void CMapManager::ClearUnusedBlocks()
 			Delete(block);
 
 			m_Blocks[index] = NULL;
+
+			if (++count >= MAX_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR)
+				break;
 		}
 
 		block = next;
