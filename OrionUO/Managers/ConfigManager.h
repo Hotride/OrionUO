@@ -55,6 +55,7 @@ class CConfigManager
 	SETGETE(bool, ScaleImagesInPaperdollSlots, OnChangeScaleImagesInPaperdollSlots);
 	SETGET(bool, RemoveOrCreateObjectsWithBlending);
 	SETGET(bool, DrawHelmetsOnShroud);
+	SETGETE(bool, UseGlobalMapLayer, OnChangeUseGlobalMapLayer);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);

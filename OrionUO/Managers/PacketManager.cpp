@@ -1128,6 +1128,16 @@ PACKET_HANDLER(UpdatePlayer)
 	g_Player->Y = ReadUInt16BE();
 	Move(2);
 
+	CGameItem *bank = g_Player->FindLayer(OL_BANK);
+
+	if (bank != NULL && bank->Opened)
+	{
+		bank->Clear();
+		bank->Opened = false;
+
+		g_GumpManager.CloseGump(bank->Serial, 0, GT_CONTAINER);
+	}
+
 	g_Player->m_WalkStack.Clear();
 
 	uchar dir = ReadUInt8();

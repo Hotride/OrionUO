@@ -1027,6 +1027,7 @@ void COrion::Process(const bool &rendering)
 		return;
 
 	static uint removeUnusedTexturesTime = 0;
+	static uint removeUnusedAnimationTexturesTime = 0;
 
 	g_PacketManager.ProcessPluginPackets();
 	g_PacketManager.SendMegaClilocRequests();
@@ -1179,6 +1180,12 @@ void COrion::Process(const bool &rendering)
 	{
 		ClearUnusedTextures();
 		removeUnusedTexturesTime = g_Ticks + CLEAR_TEXTURES_DELAY;
+	}
+
+	if (removeUnusedAnimationTexturesTime < g_Ticks)
+	{
+		g_AnimationManager.ClearUnusedTextures(g_Ticks);
+		removeUnusedAnimationTexturesTime = g_Ticks + CLEAR_ANIMATION_TEXTURES_DELAY;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -1388,7 +1395,7 @@ void COrion::ClearUnusedTextures()
 	if (g_GameState < GS_GAME)
 		return;
 
-	static int clearMap = 0;
+	/*static int clearMap = 0;
 
 	if (clearMap == 1)
 	{
@@ -1407,7 +1414,9 @@ void COrion::ClearUnusedTextures()
 		return;
 	}
 
-	clearMap = 1;
+	clearMap = 1;*/
+
+	g_MapManager->ClearUnusedBlocks();
 
 	g_GumpManager.PrepareTextures();
 
@@ -1422,9 +1431,20 @@ void COrion::ClearUnusedTextures()
 		&m_UsedLightList
 	};
 
+	int counts[5] =
+	{
+		MAX_ART_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR,
+		MAX_ART_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR,
+		MAX_GUMP_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR,
+		MAX_ART_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR,
+		100
+	};
+
 	IFOR(i, 0, 5)
 	{
+		int count = 0;
 		deque<CIndexObject*> *list = (deque<CIndexObject*>*)lists[i];
+		int &maxCount = counts[i];
 
 		for (deque<CIndexObject*>::iterator it = list->begin(); it != list->end();)
 		{
@@ -1439,11 +1459,16 @@ void COrion::ClearUnusedTextures()
 				}
 
 				it = list->erase(it);
+
+				if (++count >= maxCount)
+					break;
 			}
 			else
 				it++;
 		}
 	}
+
+	int count = 0;
 
 	for (deque<CIndexSound*>::iterator it = m_UsedSoundList.begin(); it != m_UsedSoundList.end();)
 	{
@@ -1458,6 +1483,9 @@ void COrion::ClearUnusedTextures()
 			}
 
 			it = m_UsedSoundList.erase(it);
+
+			if (++count >= MAX_SOUND_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR)
+				break;
 		}
 		else
 			it++;
@@ -1616,7 +1644,7 @@ void COrion::LoginComplete()
 		//PaperdollReq(g_PlayerSerial);
 
 		//CPacketOpenChat(L"").Send();
-		CPacketRazorAnswer().Send();
+		//CPacketRazorAnswer().Send();
 
 		CPacketLanguage(g_Language.c_str()).Send();
 

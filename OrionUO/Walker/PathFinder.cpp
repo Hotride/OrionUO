@@ -556,7 +556,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 
 	CGameItem *bank = g_Player->FindLayer(OL_BANK);
 
-	if (bank != NULL)
+	if (bank != NULL && bank->Opened)
 	{
 		bank->Clear();
 		bank->Opened = false;

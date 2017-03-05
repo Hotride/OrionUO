@@ -113,6 +113,17 @@ void DumpLibraryInformation()
 //----------------------------------------------------------------------------------
 void DumpCurrentRegistersInformation(CONTEXT* CR)
 {
+#if defined(_WIN64)
+	CRASHLOG("EAX=0x%016LX, EBX=0x%016LX, ECX=0x%016LX, EDX=0x%016LX\n", CR->Rax, CR->Rbx, CR->Rcx, CR->Rdx);
+	CRASHLOG("ESI=0x%016LX, EDI=0x%016LX, ESP=0x%016LX, EBP=0x%016LX\n", CR->Rsi, CR->Rdi, CR->Rsp, CR->Rbp);
+	CRASHLOG("EIP=0x%016LX, EFLAGS=0x%016LX\n\n", CR->Rip, CR->EFlags);
+
+	CRASHLOG("Bytes at EIP:\n");
+	CRASHLOG_DUMP((puchar)CR->Rip, 16);
+
+	CRASHLOG("Bytes at ESP:\n");
+	CRASHLOG_DUMP((puchar)CR->Rsp, 64);
+#else
 	CRASHLOG("EAX=0x%08X, EBX=0x%08X, ECX=0x%08X, EDX=0x%08X\n", CR->Eax, CR->Ebx, CR->Ecx, CR->Edx);
 	CRASHLOG("ESI=0x%08X, EDI=0x%08X, ESP=0x%08X, EBP=0x%08X\n", CR->Esi, CR->Edi, CR->Esp, CR->Ebp);
 	CRASHLOG("EIP=0x%08X, EFLAGS=0x%08X\n\n", CR->Eip, CR->EFlags);
@@ -122,6 +133,7 @@ void DumpCurrentRegistersInformation(CONTEXT* CR)
 
 	CRASHLOG("Bytes at ESP:\n");
 	CRASHLOG_DUMP((puchar)CR->Esp, 64);
+#endif
 }
 //----------------------------------------------------------------------------------
 LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo)
@@ -153,7 +165,11 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 				if (file.Load(fileName))
 				{
 					UCHAR_LIST pattern;
+#if defined(_WIN64)
+					puchar eipBytes = (puchar)exceptionInfo->ContextRecord->Rip;
+#else
 					puchar eipBytes = (puchar)exceptionInfo->ContextRecord->Eip;
+#endif
 
 					IFOR(i, 0, 16)
 						pattern.push_back(eipBytes[i]);

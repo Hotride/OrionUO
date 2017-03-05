@@ -12,6 +12,16 @@
 //----------------------------------------------------------------------------------
 const int MAX_CONSOLE_STACK_SIZE = 100;
 
+const int MAX_ANIMATIONS_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR = 5;
+
+const int MAX_ART_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR = 20;
+
+const int MAX_GUMP_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR = 20;
+
+const int MAX_SOUND_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR = 20;
+
+const int MAX_MAP_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR = 50;
+
 const int TRANSLUCENT_ALPHA = 0xB2; //0.7
 
 const int FOLIAGE_ALPHA = 0x4C; //0.3

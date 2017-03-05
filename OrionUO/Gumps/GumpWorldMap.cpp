@@ -644,12 +644,6 @@ void CGumpWorldMap::OnMidMouseButtonScroll(const bool &up)
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::UpdateSize()
 {
-	//Событие изменения габаритов гампа с вложенной корректировкой
-	WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
-
-	m_Width = m_StartResizeWidth + offset.X;
-	m_Height = m_StartResizeHeight + offset.Y;
-
 	//Подкорректируем временное значение высоты
 	if (m_Height < MIN_WORLD_MAP_HEIGHT)
 		m_Height = MIN_WORLD_MAP_HEIGHT;
@@ -688,7 +682,15 @@ void CGumpWorldMap::GUMP_RESIZE_START_EVENT_C
 void CGumpWorldMap::GUMP_RESIZE_EVENT_C
 {
 	if (m_StartResizeWidth && m_StartResizeHeight)
+	{
+		//Событие изменения габаритов гампа с вложенной корректировкой
+		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
+
+		m_Width = m_StartResizeWidth + offset.X;
+		m_Height = m_StartResizeHeight + offset.Y;
+
 		UpdateSize();
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpWorldMap::GUMP_RESIZE_END_EVENT_C
