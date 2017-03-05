@@ -471,7 +471,7 @@ void CMapManager::ClearUnusedBlocks()
 
 			m_Blocks[index] = NULL;
 
-			if (++count >= MAX_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR)
+			if (++count >= MAX_MAP_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR)
 				break;
 		}
 

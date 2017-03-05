@@ -1006,7 +1006,7 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 
 			it = m_UsedAnimList.erase(it);
 
-			if (++count >= MAX_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR)
+			if (++count >= MAX_ANIMATIONS_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR)
 				break;
 		}
 		else
