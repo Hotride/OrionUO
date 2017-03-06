@@ -121,6 +121,8 @@ bool CGLEngine::Install()
 			glGenBuffers
 			);
 
+		m_CanUseBuffer = false;
+
 		if (m_CanUseBuffer)
 		{
 			glGenBuffers(3, &m_PositionBuffer);
