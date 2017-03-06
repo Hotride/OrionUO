@@ -1028,7 +1028,7 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 	{
 		if (g_FileManager.UseUOP)
 		{
-			return TryReadUOPAnimDimins(obj);
+			return TryReadUOPAnimDimins(obj, direction);
 		}
 		return false;
 	}
@@ -2133,7 +2133,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj)
+bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction)
 {
 	uchar dir = m_Direction;
 	uchar animGroup = m_AnimGroup;
@@ -2189,9 +2189,117 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj)
 		LOG("Anim id: %d, anim grp: %d, dir: %d\n", id, animGroup, dir);
 		return false;
 	}
+	direction.Address = reinterpret_cast<uint>(&decLayoutData[0]);
+	direction.Size = animDataStruct.decompressedLength;
+	SetData((puchar)direction.Address, direction.Size);
+
+	//format id?
+	ReadUInt32LE();
+	//version
+	ReadUInt32LE();
+	//decompressed data size
+	int dcsize = ReadUInt32LE();
+	//anim id
+	int animId = ReadUInt32LE();
+	//8 bytes unknown
+	ReadUInt32LE();
+	ReadUInt32LE();
+	//Anim group?
+	short animGrp = ReadInt16LE();
+	//unknown
+	ReadInt16LE();
+	//header length
+	ReadUInt32LE();
+	//framecount
+	int frameCount = ReadUInt32LE();
+	direction.FrameCount = frameCount;
+	//offset
+	ReadUInt32LE();
 
 
-	return false;
+	Move(sizeof(uint[256])); //Palette
+
+
+
+	//ushort color = m_DataIndex[graphic].Color;
+
+	IFOR(i, 0, frameCount)
+	{
+		puchar dataStart = m_Ptr;
+		//unknown
+		ReadInt16LE();
+		//frame id
+		ReadInt16LE();
+		//8 bytes unknown
+		ReadUInt32LE();
+		ReadUInt32LE();
+
+		CTextureAnimationFrame *frame = direction.GetFrame(i);
+
+		if (frame->m_Texture.Texture != 0)
+			continue;
+
+		int frameOffset = ReadUInt32LE();
+		m_Ptr = dataStart + frameOffset;
+		pushort palette = (pushort)m_Ptr;
+		Move(sizeof(ushort[256])); //Palette
+
+		uint imageCenterX = ReadInt16LE();
+		frame->CenterX = imageCenterX;
+
+		uint imageCenterY = ReadInt16LE();
+		frame->CenterY = imageCenterY;
+
+		uint imageWidth = ReadInt16LE();
+
+		uint imageHeight = ReadInt16LE();
+
+		if (!imageWidth || !imageHeight)
+			continue;
+
+		USHORT_LIST data(imageWidth * imageHeight, 0);
+
+		uint header = ReadUInt32LE();
+
+		while (header != 0x7FFF7FFF && !IsEOF())
+		{
+			ushort runLength = (header & 0x0FFF);
+
+			int x = (header >> 22) & 0x03FF;
+
+			if (x & 0x0200)
+				x |= 0xFFFFFE00;
+
+			int y = (header >> 12) & 0x03FF;
+
+			if (y & 0x0200)
+				y |= 0xFFFFFE00;
+
+			x += imageCenterX;
+			y += imageCenterY + imageHeight;
+
+			int block = (y * imageWidth) + x;
+
+			IFOR(k, 0, runLength)
+			{
+				ushort val = palette[ReadUInt8()];
+
+				if (val)
+					data[block] = 0x8000 | val;
+				else
+					data[block] = 0;
+
+				block++;
+			}
+
+			header = ReadUInt32LE();
+		}
+
+		g_GL_BindTexture16(frame->m_Texture, imageWidth, imageHeight, &data[0]);
+	}
+
+	m_UsedAnimList.push_back(&direction);
+	return true;
 }
 //----------------------------------------------------------------------------------
 void CAnimationManager::CalculateFrameInformation(FRAME_OUTPUT_INFO &info, CGameObject *obj, const bool &mirror, const uchar &animIndex)

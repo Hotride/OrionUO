@@ -116,7 +116,7 @@ private:
 	ushort m_CharacterLayerGraphic[25];
 	ushort m_CharacterLayerAnimID[25];
 
-	bool TryReadUOPAnimDimins(CGameObject *obj);
+	bool TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction);
 
 public:
 	CAnimationManager();
