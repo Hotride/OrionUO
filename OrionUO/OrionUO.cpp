@@ -202,19 +202,19 @@ void COrion::ParseCommandLine()
 				g_MainScreen.SetAccounting(DecodeArgumentString(strings[1].c_str(), strings[1].length()), DecodeArgumentString(strings[2].c_str(), strings[2].length()));
 			else if (str == "plugin")
 			{
-				if (strings.size() > 3)
+				if (strings.size() > 4)
 				{
 					uint flags = 0;
 
-					if (ToLowerA(strings[3]).find("0x") == 0)
+					if (ToLowerA(strings[4]).find("0x") == 0)
 					{
 						char *end = NULL;
-						flags = strtoul(strings[3].c_str(), &end, 16);
+						flags = strtoul(strings[4].c_str(), &end, 16);
 					}
 					else
-						flags = atoi(strings[3].c_str());
+						flags = atoi(strings[4].c_str());
 
-					LoadPlugin(strings[1], strings[2], flags);
+					LoadPlugin(strings[1] + ":" + strings[2], strings[3], flags);
 				}
 			}
 		}
