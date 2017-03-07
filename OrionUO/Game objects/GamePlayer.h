@@ -40,6 +40,10 @@ class CPlayer: public CGameCharacter
 	SETGET(uint, TithingPoints);
 	//SETGET(CHARACTER_RACE_TYPE, Race);
 
+	SETGET(short, OldX);
+	SETGET(short, OldY);
+	SETGET(char, OldZ);
+
 	//!Указатель на список умений
 	CSkill *m_Skills;
 

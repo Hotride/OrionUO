@@ -140,6 +140,13 @@ void CGameScreen::UpdateMaxDrawZ()
 	int playerY = g_Player->Y;
 	int playerZ = g_Player->Z;
 
+	if (playerX == g_Player->OldX && playerY == g_Player->OldY && playerZ == g_Player->OldZ)
+		return;
+
+	g_Player->OldX = g_Player->X;
+	g_Player->OldY = g_Player->Y;
+	g_Player->OldZ = g_Player->Z;
+
 	g_NoDrawRoof = false;
 	g_MaxGroundZ = 127;
 	m_MaxDrawZ = 127; //playerZ + 15;
