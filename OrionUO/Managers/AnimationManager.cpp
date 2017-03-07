@@ -2204,8 +2204,8 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 	//8 bytes unknown
 	ReadUInt32LE();
 	ReadUInt32LE();
-	//Anim group?
-	short animGrp = ReadInt16LE();
+	//unknown.
+	ReadInt16LE();
 	//unknown
 	ReadInt16LE();
 	//header length
@@ -2213,46 +2213,43 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 	//framecount
 	int frameCount = ReadUInt32LE();
 	direction.FrameCount = frameCount;
-	//offset
-	ReadUInt32LE();
+	//data start + offset
+	int offset = ReadUInt32LE();
+	puchar dataStart = m_Start + offset;
 
-
-	Move(sizeof(uint[256])); //Palette
-
-
-
-	//ushort color = m_DataIndex[graphic].Color;
-
+	Move(1024); //no idea
 	IFOR(i, 0, frameCount)
 	{
-		puchar dataStart = m_Ptr;
+		m_Ptr = dataStart + i * 16;
 		//unknown
-		ReadInt16LE();
+		short something = ReadInt16LE();
 		//frame id
-		ReadInt16LE();
+		short frameId = ReadInt16LE();
 		//8 bytes unknown
 		ReadUInt32LE();
 		ReadUInt32LE();
 
-		CTextureAnimationFrame *frame = direction.GetFrame(i);
+		//offset
+		int pixelDataOffset = ReadUInt32LE();
+
+		CTextureAnimationFrame *frame = direction.GetFrame(frameId);
 
 		if (frame->m_Texture.Texture != 0)
 			continue;
 
-		int frameOffset = ReadUInt32LE();
-		m_Ptr = dataStart + frameOffset;
+		m_Ptr = dataStart + pixelDataOffset;
 		pushort palette = (pushort)m_Ptr;
-		Move(sizeof(ushort[256])); //Palette
+		Move(512); //Palette
 
-		uint imageCenterX = ReadInt16LE();
+		short imageCenterX = ReadInt16LE();
 		frame->CenterX = imageCenterX;
 
-		uint imageCenterY = ReadInt16LE();
+		short imageCenterY = ReadInt16LE();
 		frame->CenterY = imageCenterY;
 
-		uint imageWidth = ReadInt16LE();
+		short imageWidth = ReadInt16LE();
 
-		uint imageHeight = ReadInt16LE();
+		short imageHeight = ReadInt16LE();
 
 		if (!imageWidth || !imageHeight)
 			continue;
