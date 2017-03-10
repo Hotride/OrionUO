@@ -263,6 +263,21 @@ void __cdecl FUNCBODY_SendMenuResponse(unsigned int serial, unsigned int id, int
 	}
 }
 //----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_DisplayStatusbarGump(unsigned int serial, int x, int y)
+{
+	g_Orion.DisplayStatusbarGump(serial, x, y);
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_CloseStatusbarGump(unsigned int serial)
+{
+	g_Orion.CloseStatusbarGump(serial);
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_Logout()
+{
+	g_Orion.LogOut();
+}
+//----------------------------------------------------------------------------------
 //IClilocManager
 //----------------------------------------------------------------------------------
 IOrionString *__cdecl FUNCBODY_GetClilocA(unsigned int clilocID, const char *defaultText)
@@ -312,7 +327,7 @@ unsigned int __cdecl FUNCBODY_GetColor(unsigned short &c, unsigned short color)
 	return g_ColorManager.GetColor(c, color);
 }
 //----------------------------------------------------------------------------------
-unsigned int __cdecl FUNCBODY_GetHartialHueColor(unsigned short &c, unsigned short color)
+unsigned int __cdecl FUNCBODY_GetPartialHueColor(unsigned short &c, unsigned short color)
 {
 	return g_ColorManager.GetPartialHueColor(c, color);
 }
@@ -405,6 +420,9 @@ IUltimaOnline g_Interface_UO =
 	FUNCBODY_SendUnicodeSpeech,
 	FUNCBODY_SendRenameMount,
 	FUNCBODY_SendMenuResponse
+	//FUNCBODY_DisplayStatusbarGump
+	//FUNCBODY_CloseStatusbarGump
+	//FUNCBODY_Logout
 };
 //----------------------------------------------------------------------------------
 IClilocManager g_Interface_ClilocManager =
@@ -426,7 +444,7 @@ IColorManager g_Interface_ColorManager =
 	FUNCBODY_GetColorToGray,
 	FUNCBODY_GetPolygoneColor,
 	FUNCBODY_GetColor,
-	FUNCBODY_GetHartialHueColor
+	FUNCBODY_GetPartialHueColor
 };
 //----------------------------------------------------------------------------------
 IPathFinder g_Interface_PathFinder =

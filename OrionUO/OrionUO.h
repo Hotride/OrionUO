@@ -464,6 +464,12 @@ public:
 	//Открыть гамп статуса
 	void OpenStatus(uint serial);
 
+	//Открыть или переместить гамп статуса
+	void DisplayStatusbarGump(const uint &serial, const int &x, const int &y);
+
+	//Закрыть гамп статуса
+	void CloseStatusbarGump(const uint &serial);
+
 	//Открыть гамп мини-карты
 	void OpenMinimap();
 

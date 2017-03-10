@@ -5421,6 +5421,34 @@ void COrion::OpenStatus(uint serial)
 	g_GumpManager.AddGump(new CGumpStatusbar(serial, x, y, true));
 }
 //----------------------------------------------------------------------------------
+void COrion::DisplayStatusbarGump(const uint &serial, const int &x, const int &y)
+{
+	StatusReq(serial);
+
+	CGump *gump = g_GumpManager.GetGump(serial, 0, GT_STATUSBAR);
+
+	if (gump != NULL)
+	{
+		if (gump->Minimized)
+		{
+			gump->MinimizedX = x;
+			gump->MinimizedY = y;
+		}
+		else
+		{
+			gump->X = x;
+			gump->Y = y;
+		}
+	}
+	else
+		g_GumpManager.AddGump(new CGumpStatusbar(serial, x, y, true));
+}
+//----------------------------------------------------------------------------------
+void COrion::CloseStatusbarGump(const uint &serial)
+{
+	g_GumpManager.CloseGump(serial, 0, GT_STATUSBAR);
+}
+//----------------------------------------------------------------------------------
 void COrion::OpenMinimap()
 {
 	g_GumpManager.AddGump(new CGumpMinimap(g_PlayerSerial, 0, 0, true));

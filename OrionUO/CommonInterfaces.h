@@ -64,6 +64,9 @@ typedef void __cdecl FUNCDEF_SEND_ASCII_SPEECH(const char*);
 typedef void __cdecl FUNCDEF_SEND_UNICODE_SPEECH(const wchar_t*);
 typedef void __cdecl FUNCDEF_SEND_RENAME_MOUNT(unsigned int, const char*);
 typedef void __cdecl FUNCDEF_SEND_MENU_RESPONSE(unsigned int, unsigned int, int);
+typedef void __cdecl FUNCDEF_DISPLAY_STATUSBAR(unsigned int, int, int);
+typedef void __cdecl FUNCDEF_CLOSE_STATUSBAR(unsigned int);
+typedef void __cdecl FUNCDEF_LOGOUT();
 
 //IClilocManager
 typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_A(unsigned int, const char*);
@@ -77,7 +80,7 @@ typedef unsigned int __cdecl FUNCDEF_GET_COLOR16TO32(unsigned short&);
 typedef unsigned short __cdecl FUNCDEF_GET_COLOR_TO_GRAY(unsigned short&);
 typedef unsigned int __cdecl FUNCDEF_GET_POLYGONE_COLOR(unsigned short, unsigned short);
 typedef unsigned int __cdecl FUNCDEF_GET_COLOR(unsigned short&, unsigned short);
-typedef unsigned int __cdecl FUNCDEF_GET_PRTIAL_HUE_COLOR(unsigned short&, unsigned short);
+typedef unsigned int __cdecl FUNCDEF_GET_PARTIAL_HUE_COLOR(unsigned short&, unsigned short);
 
 //IPathFinder
 typedef bool __cdecl FUNCDEF_GET_CAN_WALK(unsigned char&, int&, int&, char&);
@@ -124,6 +127,9 @@ UOInterface IUltimaOnline
 	FUNCDEF_SEND_UNICODE_SPEECH *SendUnicodeSpeech;
 	FUNCDEF_SEND_RENAME_MOUNT *SendRenameMount;
 	FUNCDEF_SEND_MENU_RESPONSE *SendMenuResponse;
+	//FUNCDEF_DISPLAY_STATUSBAR *DisplayStatusbar;
+	//FUNCDEF_CLOSE_STATUSBAR *CloseStatusbar;
+	//FUNCDEF_LOGOUT *Logout;
 };
 //----------------------------------------------------------------------------------
 UOInterface IClilocManager
@@ -148,7 +154,7 @@ UOInterface IColorManager
 
 	FUNCDEF_GET_POLYGONE_COLOR *GetPolygoneColor;
 	FUNCDEF_GET_COLOR *GetColor;
-	FUNCDEF_GET_PRTIAL_HUE_COLOR *GetPartialHueColor;
+	FUNCDEF_GET_PARTIAL_HUE_COLOR *GetPartialHueColor;
 };
 //----------------------------------------------------------------------------------
 UOInterface IPathFinder
