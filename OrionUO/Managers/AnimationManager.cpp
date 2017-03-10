@@ -2189,9 +2189,7 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 		LOG("Anim id: %d, anim grp: %d, dir: %d\n", id, animGroup, dir);
 		return false;
 	}
-	direction.Address = reinterpret_cast<uint>(&decLayoutData[0]);
-	direction.Size = animDataStruct.decompressedLength;
-	SetData((puchar)direction.Address, direction.Size);
+	SetData(reinterpret_cast<puchar>(&decLayoutData[0]), animDataStruct.decompressedLength);
 
 	//format id?
 	ReadUInt32LE();
@@ -2211,33 +2209,41 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 	//header length
 	ReadUInt32LE();
 	//framecount
-	int frameCount = ReadUInt32LE();
-	direction.FrameCount = frameCount;
+	int totalFrameCount = ReadUInt32LE();
 	//data start + offset
-	int offset = ReadUInt32LE();
-	puchar dataStart = m_Start + offset;
+	puchar dataStart = m_Start + ReadUInt32LE();
 
-	Move(1024); //no idea
-	IFOR(i, 0, frameCount)
+	m_Ptr = dataStart;
+	vector<int> pixelDataOffsets(totalFrameCount);
+
+	IFOR(i, 0, totalFrameCount)
 	{
-		m_Ptr = dataStart + i * 16;
 		//unknown
-		short something = ReadInt16LE();
+		short s = ReadInt16LE();
 		//frame id
-		short frameId = ReadInt16LE();
+		short frameId= ReadInt16LE();
 		//8 bytes unknown
-		ReadUInt32LE();
-		ReadUInt32LE();
-
+		uint unk1 = ReadUInt32LE();
+		uint unk2 = ReadUInt32LE();
 		//offset
-		int pixelDataOffset = ReadUInt32LE();
+		pixelDataOffsets.at(i) = ReadUInt32LE();
 
-		CTextureAnimationFrame *frame = direction.GetFrame(frameId);
+	}
+
+	int dirFrameCount = totalFrameCount / 5;
+	direction.FrameCount = totalFrameCount;
+	int dirFrameStartIdx = dirFrameCount * dir;
+	int dirFrameEndIfx = dirFrameStartIdx + dirFrameCount;
+
+	IFOR(i, 0, totalFrameCount)
+	{
+		CTextureAnimationFrame *frame = direction.GetFrame(i);
 
 		if (frame->m_Texture.Texture != 0)
 			continue;
 
-		m_Ptr = dataStart + pixelDataOffset;
+		int pixelOffset = pixelDataOffsets.at(i);
+		m_Ptr = dataStart + pixelOffset + i * 16;
 		pushort palette = (pushort)m_Ptr;
 		Move(512); //Palette
 
