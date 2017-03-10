@@ -2235,15 +2235,15 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 	int dirFrameStartIdx = dirFrameCount * dir;
 	int dirFrameEndIfx = dirFrameStartIdx + dirFrameCount;
 
-	IFOR(i, 0, totalFrameCount)
+	IFOR(i, 0, dirFrameCount)
 	{
 		CTextureAnimationFrame *frame = direction.GetFrame(i);
 
 		if (frame->m_Texture.Texture != 0)
 			continue;
 
-		int pixelOffset = pixelDataOffsets.at(i);
-		m_Ptr = dataStart + pixelOffset + i * 16;
+		int pixelOffset = pixelDataOffsets.at(i + dirFrameStartIdx);
+		m_Ptr = dataStart + pixelOffset + (i + dirFrameStartIdx) * 16;
 		pushort palette = (pushort)m_Ptr;
 		Move(512); //Palette
 
