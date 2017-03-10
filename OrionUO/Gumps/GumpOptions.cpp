@@ -1502,39 +1502,60 @@ void CGumpOptions::DrawPage6()
 	checkbox->Checked = g_OptionsConfig.OffsetInterfaceWindows;
 	checkbox->SetTextParameters(0, L"Offset interface windows rather than perfectly stacking them", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_AUTO_ARRANGE_MINIMIZED_WINDOWS, 0x00D2, 0x00D3, 0x00D2, 0, 76));
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 0, 76));
+	text->CreateTextureW(0, L"Default interface windows offset x:");
+
+	html->Add(new CGUIResizepic(ID_GO_P6_CONTAINER_OFFSET_X, 0x0BB8, 250, 76, 60, 22));
+	m_ContainerOffsetX = (CGUITextEntry*)html->Add(new CGUITextEntry(ID_GO_P6_CONTAINER_OFFSET_X, g_OptionsTextColor, g_OptionsTextColor, g_OptionsTextColor, 254, 78));
+	m_ContainerOffsetX->CheckOnSerial = true;
+	m_ContainerOffsetX->m_Entry.MaxLength = GetSystemMetrics(SM_CXSCREEN) - 20;
+	m_ContainerOffsetX->m_Entry.NumberOnly = true;
+	m_ContainerOffsetX->m_Entry.SetText(std::to_wstring(g_ContainerRect.DefaultX));
+
+	text = (CGUIText*)html->Add(new CGUIText(g_OptionsTextColor, 312, 76));
+	text->CreateTextureW(0, L"y:");
+
+	html->Add(new CGUIResizepic(ID_GO_P6_CONTAINER_OFFSET_Y, 0x0BB8, 329, 76, 60, 22));
+	m_ContainerOffsetY = (CGUITextEntry*)html->Add(new CGUITextEntry(ID_GO_P6_CONTAINER_OFFSET_Y, g_OptionsTextColor, g_OptionsTextColor, g_OptionsTextColor, 333, 77));
+	m_ContainerOffsetY->CheckOnSerial = true;
+	m_ContainerOffsetY->m_Entry.MaxLength = GetSystemMetrics(SM_CYSCREEN) - 60;
+	m_ContainerOffsetY->m_Entry.NumberOnly = true;
+	m_ContainerOffsetY->m_Entry.SetText(std::to_wstring(g_ContainerRect.DefaultY));
+
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_AUTO_ARRANGE_MINIMIZED_WINDOWS, 0x00D2, 0x00D3, 0x00D2, 0, 96));
 	checkbox->Checked = g_OptionsConfig.AutoArrange;
 	checkbox->SetTextParameters(0, L"Automatically arrange minimized windows", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_ALWAYS_RUN, 0x00D2, 0x00D3, 0x00D2, 0, 96));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_ALWAYS_RUN, 0x00D2, 0x00D3, 0x00D2, 0, 116));
 	checkbox->Checked = g_OptionsConfig.AlwaysRun;
 	checkbox->SetTextParameters(0, L"Your character will always run if this is checked", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISABLE_MENUBAR, 0x00D2, 0x00D3, 0x00D2, 0, 116));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISABLE_MENUBAR, 0x00D2, 0x00D3, 0x00D2, 0, 136));
 	checkbox->Checked = g_OptionsConfig.DisableMenubar;
 	checkbox->SetTextParameters(0, L"Disable the Menu Bar", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS, 0x00D2, 0x00D3, 0x00D2, 0, 136));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_GRAY_OUT_OF_RANGE_OBJECTS, 0x00D2, 0x00D3, 0x00D2, 0, 156));
 	checkbox->Checked = g_OptionsConfig.GrayOutOfRangeObjects;
 	checkbox->SetTextParameters(0, L"Gray out of range objects", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISABLE_NEW_TARGET_SYSTEM, 0x00D2, 0x00D3, 0x00D2, 0, 156));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISABLE_NEW_TARGET_SYSTEM, 0x00D2, 0x00D3, 0x00D2, 0, 176));
 	checkbox->Checked = g_OptionsConfig.DisableNewTargetSystem;
 	checkbox->SetTextParameters(0, L"Disable New Targeting System", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_OBJECT_HANDLES, 0x00D2, 0x00D3, 0x00D2, 0, 176));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_OBJECT_HANDLES, 0x00D2, 0x00D3, 0x00D2, 0, 196));
 	checkbox->Checked = g_OptionsConfig.ObjectHandles;
 	checkbox->SetTextParameters(0, L"Object Handles", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON, 0x00D2, 0x00D3, 0x00D2, 0, 196));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON, 0x00D2, 0x00D3, 0x00D2, 0, 216));
 	checkbox->Checked = g_OptionsConfig.ItemPropertiesIcon;
 	checkbox->SetTextParameters(0, L"Display Item Properties Icon", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS, 0x00D2, 0x00D3, 0x00D2, 0, 216));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS, 0x00D2, 0x00D3, 0x00D2, 0, 236));
 	checkbox->Checked = g_OptionsConfig.HoldShiftForContextMenus;
 	checkbox->SetTextParameters(0, L"Hold Shift For Context Menus", g_OptionsTextColor);
 
-	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 0, 236));
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING, 0x00D2, 0x00D3, 0x00D2, 0, 256));
 	checkbox->Checked = g_OptionsConfig.HoldShiftForEnablePathfind;
 	checkbox->SetTextParameters(0, L"Hold Shift For Enable Pathfinding", g_OptionsTextColor);
 
@@ -2019,7 +2040,12 @@ void CGumpOptions::UpdateColor(const SELECT_COLOR_GUMP_STATE &state, const ushor
 //----------------------------------------------------------------------------
 void CGumpOptions::GUMP_BUTTON_EVENT_C
 {
-	if (serial == ID_GO_PAGE_7)
+	if (serial == ID_GO_PAGE_6)
+	{
+		m_ContainerOffsetX->m_Entry.SetText(std::to_string(g_ContainerRect.DefaultX));
+		m_ContainerOffsetY->m_Entry.SetText(std::to_string(g_ContainerRect.DefaultY));
+	}
+	else if (serial == ID_GO_PAGE_7)
 	{
 		m_GameWindowWidth->m_Entry.SetText(std::to_string(g_OptionsConfig.GameWindowWidth));
 		m_GameWindowHeight->m_Entry.SetText(std::to_string(g_OptionsConfig.GameWindowHeight));
@@ -2058,6 +2084,10 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 			case 6:
 			{
 				g_OptionsConfig.DefaultPage6();
+
+				m_ContainerOffsetX->m_Entry.SetText(std::to_string(g_ContainerRect.DefaultX));
+				m_ContainerOffsetY->m_Entry.SetText(std::to_string(g_ContainerRect.DefaultY));
+
 				break;
 			}
 			case 7:
@@ -2066,6 +2096,7 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 
 				m_GameWindowWidth->m_Entry.SetText(std::to_string(g_OptionsConfig.GameWindowWidth));
 				m_GameWindowHeight->m_Entry.SetText(std::to_string(g_OptionsConfig.GameWindowHeight));
+
 				break;
 			}
 			case 8:
@@ -2674,7 +2705,7 @@ void CGumpOptions::GUMP_COMBOBOX_SELECTION_EVENT_C
 //----------------------------------------------------------------------------
 void CGumpOptions::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
-	if (g_EntryPointer == &m_GameWindowWidth->m_Entry || g_EntryPointer == &m_GameWindowHeight->m_Entry)
+	if (g_EntryPointer == &m_GameWindowWidth->m_Entry || g_EntryPointer == &m_GameWindowHeight->m_Entry || g_EntryPointer == &m_ContainerOffsetX->m_Entry || g_EntryPointer == &m_ContainerOffsetY->m_Entry)
 	{
 		if (wParam >= '0' && wParam <= '9')
 		{
@@ -2784,7 +2815,7 @@ void CGumpOptions::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		{
 			g_EntryPointer->OnKey(this, wParam);
 
-			if (g_EntryPointer != &m_GameWindowWidth->m_Entry && g_EntryPointer != &m_GameWindowHeight->m_Entry)
+			if (g_EntryPointer != &m_GameWindowWidth->m_Entry && g_EntryPointer != &m_GameWindowHeight->m_Entry && g_EntryPointer != &m_ContainerOffsetX->m_Entry && g_EntryPointer != &m_ContainerOffsetY->m_Entry)
 			{
 				CMacroObject *obj = m_MacroObjectPointer;
 
@@ -2941,6 +2972,19 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.ItemPropertiesIcon = g_OptionsConfig.ItemPropertiesIcon;
 			g_ConfigManager.HoldShiftForContextMenus = g_OptionsConfig.HoldShiftForContextMenus;
 			g_ConfigManager.HoldShiftForEnablePathfind = g_OptionsConfig.HoldShiftForEnablePathfind;
+
+			int curX = g_ContainerRect.DefaultX;
+
+			if (m_ContainerOffsetX->m_Entry.Length())
+				curX = atoi(m_ContainerOffsetX->m_Entry.c_str());
+
+			int curY = g_ContainerRect.DefaultY;
+
+			if (m_ContainerOffsetY->m_Entry.Length())
+				curY = atoi(m_ContainerOffsetY->m_Entry.c_str());
+
+			g_ContainerRect.DefaultX = curY;
+			g_ContainerRect.DefaultY = curY;
 
 			if (g_OptionsConfig.DisableMenubar)
 				g_GumpManager.CloseGump(g_PlayerSerial, 0, GT_MENUBAR);
