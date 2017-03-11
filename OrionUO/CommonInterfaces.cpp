@@ -331,6 +331,19 @@ bool __cdecl FUNCBODY_GetWalk(bool run, unsigned char direction)
 //----------------------------------------------------------------------------------
 bool __cdecl FUNCBODY_GetWalkTo(int x, int y, int z, int distance)
 {
+	WISP_GEOMETRY::CPoint2Di startPoint(g_Player->X, g_Player->Y);
+
+	CWalkData *wd = g_Player->m_WalkStack.Top();
+
+	if (wd != NULL)
+	{
+		startPoint.X = wd->X;
+		startPoint.Y = wd->Y;
+	}
+
+	if (GetDistance(startPoint, WISP_GEOMETRY::CPoint2Di(x, y)) <= distance)
+		return true;
+
 	bool result = SendMessage(g_OrionWindow.Handle, UOMSG_PATHFINDING, ((x << 16) & 0xFFFF0000) | (y & 0xFFFF), ((x << 16) & 0xFFFF0000) | (distance & 0xFFFF));
 
 	if (result)
