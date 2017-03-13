@@ -2214,24 +2214,25 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 	puchar dataStart = m_Start + ReadUInt32LE();
 
 	m_Ptr = dataStart;
-	vector<int> pixelDataOffsets(totalFrameCount);
+	vector<UOPFrameData> pixelDataOffsets(totalFrameCount);
 
 	IFOR(i, 0, totalFrameCount)
 	{
+		pixelDataOffsets.at(i).dataStart = m_Ptr;
 		//unknown
 		short s = ReadInt16LE();
 		//frame id
-		short frameId= ReadInt16LE();
+		pixelDataOffsets.at(i).frameId= ReadInt16LE();
 		//8 bytes unknown
 		uint unk1 = ReadUInt32LE();
 		uint unk2 = ReadUInt32LE();
 		//offset
-		pixelDataOffsets.at(i) = ReadUInt32LE();
+		pixelDataOffsets.at(i).pixelDataOffset = ReadUInt32LE();
 
 	}
 
 	int dirFrameCount = totalFrameCount / 5;
-	direction.FrameCount = totalFrameCount;
+	direction.FrameCount = dirFrameCount;
 	int dirFrameStartIdx = dirFrameCount * dir;
 	int dirFrameEndIfx = dirFrameStartIdx + dirFrameCount;
 
@@ -2242,8 +2243,8 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 		if (frame->m_Texture.Texture != 0)
 			continue;
 
-		int pixelOffset = pixelDataOffsets.at(i + dirFrameStartIdx);
-		m_Ptr = dataStart + pixelOffset + (i + dirFrameStartIdx) * 16;
+		UOPFrameData frameData = pixelDataOffsets.at(i + dirFrameStartIdx);
+		m_Ptr = frameData.dataStart + frameData.pixelDataOffset;
 		pushort palette = (pushort)m_Ptr;
 		Move(512); //Palette
 

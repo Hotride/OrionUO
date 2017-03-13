@@ -44,6 +44,12 @@ struct UOPAnimationData
 	unsigned int decompressedLength;
 	std::fstream *fileStream;
 };
+struct UOPFrameData
+{
+	puchar dataStart;
+	short frameId;
+	uint pixelDataOffset;
+};
 //----------------------------------------------------------------------------------
 //!Класс менеджера анимаций
 class CAnimationManager : public WISP_DATASTREAM::CDataReader
