@@ -5022,7 +5022,7 @@ void COrion::DropItem(uint container, ushort x, ushort y, char z)
 			else
 				CPacketDropRequestOld(g_ObjectInHand->Serial, x, y, z, container).Send();
 
-			if (g_ObjectInHand->Deleted)
+			//if (g_ObjectInHand->Deleted)
 			{
 				delete g_ObjectInHand;
 				g_ObjectInHand = NULL;
@@ -5054,6 +5054,12 @@ void COrion::EquipItem(uint container)
 					container = g_PlayerSerial;
 
 				CPacketEquipRequest(g_ObjectInHand->Serial, st.Quality, container).Send();
+			}
+
+			//if (g_ObjectInHand->Deleted)
+			{
+				delete g_ObjectInHand;
+				g_ObjectInHand = NULL;
 			}
 		}
 	}
