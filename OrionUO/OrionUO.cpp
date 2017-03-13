@@ -1101,7 +1101,7 @@ void COrion::Process(const bool &rendering)
 
 		if (g_World != NULL)
 		{
-			CWalkData *wd = g_Player->m_WalkStack.m_Items;
+			CWalkData *wd = g_Player->m_WalkStack.Top();
 
 			if (wd != NULL)
 			{
