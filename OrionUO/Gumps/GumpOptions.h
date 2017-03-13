@@ -143,6 +143,8 @@ private:
 	static const int ID_GO_P6_DISPLAY_ITEM_PROPERTIES_ICON = 609;
 	static const int ID_GO_P6_HOLD_SHIFT_FOR_CONTEXT_MENUS = 610;
 	static const int ID_GO_P6_HOLD_SHIFT_FOR_ENABLE_PATHFINDING = 611;
+	static const int ID_GO_P6_CONTAINER_OFFSET_X = 612;
+	static const int ID_GO_P6_CONTAINER_OFFSET_Y = 613;
 
 	static const int ID_GO_P7_SCALE_SPEECH_DURATION = 700;
 	static const int ID_GO_P7_SPEECH_COLOR = 701;
@@ -224,6 +226,9 @@ private:
 	CGUICheckbox *m_MacroCheckboxShift;
 	CGUICheckbox *m_MacroCheckboxAlt;
 	CGUICheckbox *m_MacroCheckboxCtrl;
+
+	CGUITextEntry *m_ContainerOffsetX;
+	CGUITextEntry *m_ContainerOffsetY;
 
 	bool m_WantRedrawMacroData;
 	void RedrawMacroData();

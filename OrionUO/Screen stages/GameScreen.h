@@ -150,14 +150,6 @@ private:
 	bool m_CanProcessAlpha;
 
 	/*!
-	Вычисление значений Z координаты для рендера
-	@param [__out] noDrawRoof Не рисовать крыши и верхние этажи строений
-	@param [__out] maxGroundZ Максимальная Z координата ландшафта
-	@return Максимальная Z координата отрисовки
-	*/
-	int GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ);
-
-	/*!
 	Рисование игрового окна
 	@param [__in] mode true - отрисовка, false - выбор
 	@return 
@@ -217,6 +209,11 @@ public:
 
 	//Идентификаторы событий для плавного перехода
 	static const uchar ID_SMOOTH_GS_LOGOUT = 1;
+
+	/*!
+	Вычисление значений Z координаты для рендера
+	*/
+	void UpdateMaxDrawZ();
 
 	/*!
 	Обработка события после плавного затемнения экрана

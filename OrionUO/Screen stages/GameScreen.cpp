@@ -134,13 +134,22 @@ void CGameScreen::InitToolTip()
 @param [__out] maxGroundZ Максимальная Z координата ландшафта
 @return Максимальная Z координата отрисовки
 */
-int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
+void CGameScreen::UpdateMaxDrawZ()
 {
 	int playerX = g_Player->X;
 	int playerY = g_Player->Y;
 	int playerZ = g_Player->Z;
 
-	int maxDrawZ = 125; //playerZ + 15;
+	if (playerX == g_Player->OldX && playerY == g_Player->OldY && playerZ == g_Player->OldZ)
+		return;
+
+	g_Player->OldX = g_Player->X;
+	g_Player->OldY = g_Player->Y;
+	g_Player->OldZ = g_Player->Z;
+
+	g_NoDrawRoof = false;
+	g_MaxGroundZ = 127;
+	m_MaxDrawZ = 127; //playerZ + 15;
 
 	int bx = playerX / 8;
 	int by = playerY / 8;
@@ -159,7 +168,6 @@ int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 		int x = playerX % 8;
 		int y = playerY % 8;
 
-		maxDrawZ = 125;
 		int pz15 = playerZ + 15;
 		int pz5 = playerZ + 5;
 
@@ -173,8 +181,8 @@ int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 
 				if (pz15 <= testZ)
 				{
-					maxGroundZ = pz15 + 1;
-					maxDrawZ = maxGroundZ;
+					g_MaxGroundZ = pz15 + 1;
+					m_MaxDrawZ = g_MaxGroundZ;
 
 					break;
 				}
@@ -188,11 +196,11 @@ int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 			else if (((CGameObject*)ro)->NPC)
 				continue;
 	
-			if (ro->Z >= pz15 && maxDrawZ > ro->Z && !ro->IsRoof() && (ro->IsSurface() || ro->IsImpassable()))
+			if (ro->Z >= pz15 && m_MaxDrawZ > ro->Z && !ro->IsRoof() && (ro->IsSurface() || ro->IsImpassable()))
 			{
-				maxDrawZ = pz15 + 1; // ro->Z;
+				m_MaxDrawZ = pz15 + 1; // ro->Z;
 
-				noDrawRoof = true;
+				g_NoDrawRoof = true;
 			}
 			else  if (ro->Z > pz5 && (ro->IsRoof() || (ro->IsBackground() && ro->IsSurface())))
 			{
@@ -223,16 +231,14 @@ int CGameScreen::GetMaxDrawZ(bool &noDrawRoof, char &maxGroundZ)
 
 				if (canNoRoof)
 				{
-					if (maxDrawZ > pz15)
-						maxDrawZ = pz15 + 1;
+					if (m_MaxDrawZ > pz15)
+						m_MaxDrawZ = pz15 + 1;
 
-					noDrawRoof = true;
+					g_NoDrawRoof = true;
 				}
 			}
 		}
 	}
-
-	return maxDrawZ;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -1012,9 +1018,7 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_RenderBounds.MinPixelsY = (int)(((g_RenderBounds.GameWindowPosY - drawOffset) * g_GlobalScale) - (newMaxY - maxY)); // -playerZOffset;
 	g_RenderBounds.MaxPixelsY = (int)newMaxY; // + playerZOffset;
 
-	g_NoDrawRoof = false;
-	g_MaxGroundZ = 125;
-	m_MaxDrawZ = GetMaxDrawZ(g_NoDrawRoof, g_MaxGroundZ);
+	UpdateMaxDrawZ();
 
 	m_UseLight = (g_PersonalLightLevel < g_LightLevel);
 

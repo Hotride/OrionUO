@@ -95,6 +95,9 @@ const int CONTAINERS_RECT_STEP = 20;
 //!Класс для вычисления смещения открытия гампов контейнеров
 class CContainerRect
 {
+	SETGET(short, DefaultX);
+	SETGET(short, DefaultY);
+
 	SETGET(short, X);
 	SETGET(short, Y);
 
@@ -113,7 +116,7 @@ public:
 	Выставим параметры по-умолчанию
 	@return 
 	*/
-	void MakeDefault() { m_X = m_Y = CONTAINERS_RECT_DEFAULT_POS; }
+	void MakeDefault() { m_X = m_DefaultX; m_Y = m_DefaultY; }
 };
 //----------------------------------------------------------------------------------
 //!Количество контейнеров

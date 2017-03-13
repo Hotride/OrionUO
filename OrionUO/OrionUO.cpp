@@ -203,19 +203,19 @@ void COrion::ParseCommandLine()
 				g_MainScreen.SetAccounting(DecodeArgumentString(strings[1].c_str(), strings[1].length()), DecodeArgumentString(strings[2].c_str(), strings[2].length()));
 			else if (str == "plugin")
 			{
-				if (strings.size() > 3)
+				if (strings.size() > 4)
 				{
 					uint flags = 0;
 
-					if (ToLowerA(strings[3]).find("0x") == 0)
+					if (ToLowerA(strings[4]).find("0x") == 0)
 					{
 						char *end = NULL;
-						flags = strtoul(strings[3].c_str(), &end, 16);
+						flags = strtoul(strings[4].c_str(), &end, 16);
 					}
 					else
-						flags = atoi(strings[3].c_str());
+						flags = atoi(strings[4].c_str());
 
-					LoadPlugin(strings[1], strings[2], flags);
+					LoadPlugin(strings[1] + ":" + strings[2], strings[3], flags);
 				}
 			}
 		}
@@ -1107,7 +1107,7 @@ void COrion::Process(const bool &rendering)
 
 		if (g_World != NULL)
 		{
-			CWalkData *wd = g_Player->m_WalkStack.m_Items;
+			CWalkData *wd = g_Player->m_WalkStack.Top();
 
 			if (wd != NULL)
 			{
@@ -5142,7 +5142,7 @@ void COrion::DropItem(uint container, ushort x, ushort y, char z)
 			else
 				CPacketDropRequestOld(g_ObjectInHand->Serial, x, y, z, container).Send();
 
-			if (g_ObjectInHand->Deleted)
+			//if (g_ObjectInHand->Deleted)
 			{
 				delete g_ObjectInHand;
 				g_ObjectInHand = NULL;
@@ -5174,6 +5174,12 @@ void COrion::EquipItem(uint container)
 					container = g_PlayerSerial;
 
 				CPacketEquipRequest(g_ObjectInHand->Serial, st.Quality, container).Send();
+			}
+
+			//if (g_ObjectInHand->Deleted)
+			{
+				delete g_ObjectInHand;
+				g_ObjectInHand = NULL;
 			}
 		}
 	}
@@ -5539,6 +5545,34 @@ void COrion::OpenStatus(uint serial)
 	StatusReq(serial);
 
 	g_GumpManager.AddGump(new CGumpStatusbar(serial, x, y, true));
+}
+//----------------------------------------------------------------------------------
+void COrion::DisplayStatusbarGump(const uint &serial, const int &x, const int &y)
+{
+	StatusReq(serial);
+
+	CGump *gump = g_GumpManager.GetGump(serial, 0, GT_STATUSBAR);
+
+	if (gump != NULL)
+	{
+		if (gump->Minimized)
+		{
+			gump->MinimizedX = x;
+			gump->MinimizedY = y;
+		}
+		else
+		{
+			gump->X = x;
+			gump->Y = y;
+		}
+	}
+	else
+		g_GumpManager.AddGump(new CGumpStatusbar(serial, x, y, true));
+}
+//----------------------------------------------------------------------------------
+void COrion::CloseStatusbarGump(const uint &serial)
+{
+	g_GumpManager.CloseGump(serial, 0, GT_STATUSBAR);
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenMinimap()

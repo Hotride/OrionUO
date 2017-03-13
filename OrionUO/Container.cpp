@@ -85,7 +85,7 @@ CONTAINER_OFFSET g_ContainerOffset[CONTAINERS_COUNT] =
 };
 //----------------------------------------------------------------------------------
 CContainerRect::CContainerRect()
-: m_X(100), m_Y(100)
+: m_X(40), m_Y(40), m_DefaultX(40), m_DefaultY(40)
 {
 }
 //----------------------------------------------------------------------------------
@@ -105,8 +105,8 @@ void CContainerRect::Calculate(ushort gumpID)
 		//!Если выключено смещение - открываем гамп в правом верхнем углу клиента
 		if (!g_ConfigManager.OffsetInterfaceWindows)
 		{
-			m_X = g_OrionWindow.Size.Width - tex->Width;
-			m_Y = 0;
+			m_X = m_DefaultX;
+			m_Y = m_DefaultY;
 		}
 		else //!Или вычисляем смещение и открываем в результируемых координатах
 		{

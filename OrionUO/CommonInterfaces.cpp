@@ -263,6 +263,21 @@ void __cdecl FUNCBODY_SendMenuResponse(unsigned int serial, unsigned int id, int
 	}
 }
 //----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_DisplayStatusbarGump(unsigned int serial, int x, int y)
+{
+	g_Orion.DisplayStatusbarGump(serial, x, y);
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_CloseStatusbarGump(unsigned int serial)
+{
+	g_Orion.CloseStatusbarGump(serial);
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_Logout()
+{
+	g_Orion.LogOut();
+}
+//----------------------------------------------------------------------------------
 //IClilocManager
 //----------------------------------------------------------------------------------
 IOrionString *__cdecl FUNCBODY_GetClilocA(unsigned int clilocID, const char *defaultText)
@@ -312,7 +327,7 @@ unsigned int __cdecl FUNCBODY_GetColor(unsigned short &c, unsigned short color)
 	return g_ColorManager.GetColor(c, color);
 }
 //----------------------------------------------------------------------------------
-unsigned int __cdecl FUNCBODY_GetHartialHueColor(unsigned short &c, unsigned short color)
+unsigned int __cdecl FUNCBODY_GetPartialHueColor(unsigned short &c, unsigned short color)
 {
 	return g_ColorManager.GetPartialHueColor(c, color);
 }
@@ -331,6 +346,19 @@ bool __cdecl FUNCBODY_GetWalk(bool run, unsigned char direction)
 //----------------------------------------------------------------------------------
 bool __cdecl FUNCBODY_GetWalkTo(int x, int y, int z, int distance)
 {
+	WISP_GEOMETRY::CPoint2Di startPoint(g_Player->X, g_Player->Y);
+
+	CWalkData *wd = g_Player->m_WalkStack.Top();
+
+	if (wd != NULL)
+	{
+		startPoint.X = wd->X;
+		startPoint.Y = wd->Y;
+	}
+
+	if (GetDistance(startPoint, WISP_GEOMETRY::CPoint2Di(x, y)) <= distance)
+		return true;
+
 	bool result = SendMessage(g_OrionWindow.Handle, UOMSG_PATHFINDING, ((x << 16) & 0xFFFF0000) | (y & 0xFFFF), ((x << 16) & 0xFFFF0000) | (distance & 0xFFFF));
 
 	if (result)
@@ -405,6 +433,9 @@ IUltimaOnline g_Interface_UO =
 	FUNCBODY_SendUnicodeSpeech,
 	FUNCBODY_SendRenameMount,
 	FUNCBODY_SendMenuResponse
+	//FUNCBODY_DisplayStatusbarGump
+	//FUNCBODY_CloseStatusbarGump
+	//FUNCBODY_Logout
 };
 //----------------------------------------------------------------------------------
 IClilocManager g_Interface_ClilocManager =
@@ -426,7 +457,7 @@ IColorManager g_Interface_ColorManager =
 	FUNCBODY_GetColorToGray,
 	FUNCBODY_GetPolygoneColor,
 	FUNCBODY_GetColor,
-	FUNCBODY_GetHartialHueColor
+	FUNCBODY_GetPartialHueColor
 };
 //----------------------------------------------------------------------------------
 IPathFinder g_Interface_PathFinder =
