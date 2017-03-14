@@ -310,6 +310,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 		if (g_Target.IsTargeting())
 		{
 			g_Target.SendTargetObject(selectedSerial);
+			g_MouseManager.CancelDoubleClick = true;
 
 			return;
 		}
@@ -380,6 +381,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 		}
 
 		g_Orion.DropItem(dropContainer, x, y, 0);
+		g_MouseManager.CancelDoubleClick = true;
 	}
 	else if (g_ObjectInHand == NULL)
 	{
