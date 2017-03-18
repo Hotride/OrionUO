@@ -129,11 +129,11 @@ UOInterface IUltimaOnline
 	FUNCDEF_SEND_UNICODE_SPEECH *SendUnicodeSpeech;
 	FUNCDEF_SEND_RENAME_MOUNT *SendRenameMount;
 	FUNCDEF_SEND_MENU_RESPONSE *SendMenuResponse;
-	//FUNCDEF_DISPLAY_STATUSBAR *DisplayStatusbar;
-	//FUNCDEF_CLOSE_STATUSBAR *CloseStatusbar;
-	//FUNCDEF_LOGOUT *Logout;
-	//FUNCDEF_SECURE_TRADING_CHECK_STATE *SecureTradingCheckState;
-	//FUNCDEF_SECURE_TRADING_CLOSE *SecureTradingClose;
+	FUNCDEF_DISPLAY_STATUSBAR *DisplayStatusbar;
+	FUNCDEF_CLOSE_STATUSBAR *CloseStatusbar;
+	FUNCDEF_LOGOUT *Logout;
+	FUNCDEF_SECURE_TRADING_CHECK_STATE *SecureTradingCheckState;
+	FUNCDEF_SECURE_TRADING_CLOSE *SecureTradingClose;
 };
 //----------------------------------------------------------------------------------
 UOInterface IClilocManager

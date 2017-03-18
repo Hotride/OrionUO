@@ -285,7 +285,7 @@ void __cdecl FUNCBODY_SecureTradingCheckState(unsigned int id1, bool state)
 
 	if (gump != NULL)
 	{
-		gump->StateMy = !gump->StateMy;
+		gump->StateMy = state;
 
 		gump->SendTradingResponse(2);
 	}
@@ -436,7 +436,7 @@ IGLEngine g_Interface_GL =
 //----------------------------------------------------------------------------------
 IUltimaOnline g_Interface_UO =
 {
-	0,
+	1,
 	sizeof(IUltimaOnline),
 	FUNCBODY_GetLandFlags,
 	FUNCBODY_GetStaticFlags,
@@ -453,12 +453,12 @@ IUltimaOnline g_Interface_UO =
 	FUNCBODY_SendAsciiSpeech,
 	FUNCBODY_SendUnicodeSpeech,
 	FUNCBODY_SendRenameMount,
-	FUNCBODY_SendMenuResponse
-	//FUNCBODY_DisplayStatusbarGump,
-	//FUNCBODY_CloseStatusbarGump,
-	//FUNCBODY_Logout,
-	//FUNCBODY_SecureTradingCheckState,
-	//FUNCBODY_SecureTradingClose
+	FUNCBODY_SendMenuResponse,
+	FUNCBODY_DisplayStatusbarGump,
+	FUNCBODY_CloseStatusbarGump,
+	FUNCBODY_Logout,
+	FUNCBODY_SecureTradingCheckState,
+	FUNCBODY_SecureTradingClose
 };
 //----------------------------------------------------------------------------------
 IClilocManager g_Interface_ClilocManager =
