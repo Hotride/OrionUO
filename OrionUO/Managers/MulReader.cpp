@@ -329,8 +329,8 @@ CGLTexture *CMulReader::ReadArt(const ushort &id, CIndexObject &io)
 
 			ptr++;
 
-			pushort LineOffsets = ptr;
-			PVOID DataStart = (PVOID)((uint)ptr + (h * 2));
+			pushort lineOffsets = ptr;
+			puchar dataStart = (puchar)ptr + (h * 2);
 
 			int X = 0;
 			int Y = 0;
@@ -346,7 +346,7 @@ CGLTexture *CMulReader::ReadArt(const ushort &id, CIndexObject &io)
 			data.resize(blocksize, 0);
 #endif
 
-			ptr = (pushort)((uint)DataStart + (*LineOffsets));
+			ptr = (pushort)(dataStart + (lineOffsets[0] * 2));
 
 			while (Y < h)
 			{
@@ -386,7 +386,7 @@ CGLTexture *CMulReader::ReadArt(const ushort &id, CIndexObject &io)
 				{
 					X = 0;
 					Y++;
-					ptr = (pushort)((uint)DataStart + (LineOffsets[Y] * 2));
+					ptr = (pushort)(dataStart + (lineOffsets[Y] * 2));
 				}
 			}
 
@@ -503,15 +503,15 @@ WISP_GEOMETRY::CRect CMulReader::ReadStaticArtPixelDimension(CIndexObject &io)
 
 		ptr++;
 
-		pushort LineOffsets = ptr;
-		PVOID DataStart = (PVOID)((uint)ptr + (h * 2));
+		pushort lineOffsets = ptr;
+		PVOID dataStart = (PVOID)((uint)ptr + (h * 2));
 
 		int X = 0;
 		int Y = 0;
 		ushort XOffs = 0;
 		ushort Run = 0;
 
-		ptr = (pushort)((uint)DataStart + (*LineOffsets));
+		ptr = (pushort)((uint)dataStart + (lineOffsets[0] * 2));
 
 		minX = w;
 		minY = h;
@@ -556,7 +556,7 @@ WISP_GEOMETRY::CRect CMulReader::ReadStaticArtPixelDimension(CIndexObject &io)
 			{
 				X = 0;
 				Y++;
-				ptr = (pushort)((uint)DataStart + (LineOffsets[Y] * 2));
+				ptr = (pushort)((uint)dataStart + (lineOffsets[Y] * 2));
 			}
 		}
 	}
@@ -696,7 +696,7 @@ bool CMulReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &ch
 			ushort xOffs = 0;
 			ushort run = 0;
 
-			ptr = (pushort)((uint)dataStart + (*lineOffsets));
+			ptr = (pushort)((uint)dataStart + (lineOffsets[0] * 2));
 
 			while (y < h)
 			{

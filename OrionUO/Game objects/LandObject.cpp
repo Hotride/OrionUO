@@ -134,10 +134,10 @@ void CLandObject::Draw(const int &x, const int &y)
 			g_Orion.DrawLandArt(m_Graphic, objColor, x, y, m_Z);
 		else
 		{
-			char minZ = m_MinZ + 3;
+			/*char minZ = m_MinZ + 3;
 
 			if (minZ > m_Z)
-				minZ = m_Z;
+				minZ = m_Z;*/
 
 			g_Orion.DrawLandTexture(this, objColor, x, y);
 		}
