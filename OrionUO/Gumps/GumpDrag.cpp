@@ -43,13 +43,13 @@ void CGumpDrag::UpdateContent()
 	if (gumpEntry != NULL)
 		gumpEntry->WantRedraw = true;
 
+	Add(new CGUIHitBox(ID_GD_TEXT_FIELD, 28, 40, 60, 16));
+
 	m_Entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GD_TEXT_FIELD, 0x0386, 0x0386, 0x0386, 29, 42, 0, false, 1, TS_LEFT, 0, count));
 	m_Entry->CheckOnSerial = true;
 	g_EntryPointer = &m_Entry->m_Entry;
 	g_EntryPointer->NumberOnly = true;
 	g_EntryPointer->SetText(std::to_wstring(count));
-
-	Add(new CGUIHitBox(ID_GD_TEXT_FIELD, 28, 40, 60, 16));
 
 	Add(new CGUIButton(ID_GD_OKAY, 0x081A, 0x081C, 0x081B, 102, 37));
 }

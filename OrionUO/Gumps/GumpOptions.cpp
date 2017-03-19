@@ -1399,11 +1399,11 @@ void CGumpOptions::RedrawMacroData()
 
 				m_MacroDataBox->Add(new CGUIScissor(true, 0, 0, 292, y + 5, 150, 20));
 
+				m_MacroDataBox->Add(new CGUIHitBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 292, y + 5, 150, 20));
+
 				CGUITextEntry *entry = (CGUITextEntry*)m_MacroDataBox->Add(new CGUITextEntry(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 0x0386, 0x0386, 0x0386, 292, y + 5, 0, false, 1));
 				entry->CheckOnSerial = true;
 				entry->m_Entry.SetText(((CMacroObjectString*)obj)->String);
-
-				m_MacroDataBox->Add(new CGUIHitBox(ID_GO_P5_ACTION_SELECTION + (macroCount * 1000), 292, y + 5, 150, 20));
 
 				m_MacroDataBox->Add(new CGUIScissor(false));
 			}
@@ -1441,9 +1441,9 @@ void CGumpOptions::DrawPage5()
 
 	//KeyBox
 	Add(new CGUIGumppic(0x098B, 133, 112));
+	Add(new CGUIHitBox(ID_GO_P5_KEY_BOX, 133, 112, 63, 23));
 	m_MacroKey = (CGUITextEntry*)Add(new CGUITextEntry(ID_GO_P5_KEY_BOX, 0x0386, 0x0386, 0x0386, 138, 117, 56, false, 1, TS_LEFT, UOFONT_FIXED));
 	m_MacroKey->CheckOnSerial = true;
-	Add(new CGUIHitBox(ID_GO_P5_KEY_BOX, 133, 112, 63, 23));
 
 	text = (CGUIText*)Add(new CGUIText(g_OptionsTextColor, 200, 111));
 	text->CreateTextureW(0, L"Key");

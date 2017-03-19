@@ -811,10 +811,10 @@ void CGumpStatusbar::UpdateContent()
 					if (member.CanChangeName)
 						textColor = 0x000E;
 
+					Add(new CGUIHitBox(ID_GSB_TEXT_FIELD, 16, -2, 109, 16));
 					m_Entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GSB_TEXT_FIELD, textColor, textColor, textColor, 16, -2, 150, false, 1, TS_LEFT, UOFONT_FIXED));
 					m_Entry->m_Entry.SetText(memberName);
 					m_Entry->CheckOnSerial = true;
-					Add(new CGUIHitBox(ID_GSB_TEXT_FIELD, 16, -2, 109, 16));
 
 					if (member.CanChangeName)
 						m_Entry->ReadOnly = false;
@@ -915,10 +915,10 @@ void CGumpStatusbar::UpdateContent()
 				}
 			}
 
+			Add(new CGUIHitBox(ID_GSB_TEXT_FIELD, 16, 14, 109, 16));
 			m_Entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GSB_TEXT_FIELD, textColor, textColor, textColor, 16, 14, 150, false, 1, TS_LEFT, UOFONT_FIXED));
 			m_Entry->m_Entry.SetText(objName);
 			m_Entry->CheckOnSerial = true;
-			Add(new CGUIHitBox(ID_GSB_TEXT_FIELD, 16, 14, 109, 16));
 
 			if (canChangeName)
 				m_Entry->ReadOnly = false;

@@ -43,22 +43,22 @@ m_Unicode(unicode)
 	if (!m_Unicode)
 		entryFont = 4;
 
+	Add(new CGUIHitBox(ID_GB_TEXT_AREA_TITLE, 41, 65, 150, (m_Unicode ? 22 : 44)));
+
 	m_EntryTitle = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_TITLE, 0, 0, 0, 41, 65, 150, m_Unicode, entryFont));
 	m_EntryTitle->ReadOnly = !m_Writable;
 	m_EntryTitle->CheckOnSerial = true;
-
-	Add(new CGUIHitBox(ID_GB_TEXT_AREA_TITLE, 41, 65, 150, (m_Unicode ? 22 : 44)));
 
 	text = (CGUIText*)Add(new CGUIText(0x0386, 88, 134));
 	g_FontManager.UnusePartialHue = true;
 	text->CreateTextureA(4, "by");
 	g_FontManager.UnusePartialHue = false;
 
+	Add(new CGUIHitBox(ID_GB_TEXT_AREA_AUTHOR, 41, 160, 150, 22));
+
 	m_EntryAuthor = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_AUTHOR, 0, 0, 0, 41, 160, 150, m_Unicode, entryFont));
 	m_EntryAuthor->ReadOnly = !m_Writable;
 	m_EntryAuthor->CheckOnSerial = true;
-
-	Add(new CGUIHitBox(ID_GB_TEXT_AREA_AUTHOR, 41, 160, 150, 22));
 
 	ushort textColor = 0x0012;
 
@@ -72,14 +72,14 @@ m_Unicode(unicode)
 		if (i)
 		{
 			Add(new CGUIPage(i));
+			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GB_TEXT_AREA_PAGE_LEFT, 38, 34, 160, 166));
+			box->MoveOnDrag = true;
+
 			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_LEFT, textColor, textColor, textColor, 38, 34, 150, m_Unicode, entryFont));
 			entry->m_Entry.Width = 166;
 			entry->ReadOnly = !m_Writable;
 			entry->CheckOnSerial = true;
 			entry->MoveOnDrag = true;
-
-			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GB_TEXT_AREA_PAGE_LEFT, 38, 34, 160, 166));
-			box->MoveOnDrag = true;
 
 			text = (CGUIText*)Add(new CGUIText(0x0386, 112, 202));
 			text->CreateTextureA(9, std::to_string(i));
@@ -90,14 +90,14 @@ m_Unicode(unicode)
 		if (i <= m_PageCount)
 		{
 			Add(new CGUIPage(i));
+			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GB_TEXT_AREA_PAGE_RIGHT, 224, 34, 160, 166));
+			box->MoveOnDrag = true;
+
 			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_RIGHT, textColor, textColor, textColor, 224, 34, 150, m_Unicode, entryFont));
 			entry->m_Entry.Width = 166;
 			entry->ReadOnly = !m_Writable;
 			entry->CheckOnSerial = true;
 			entry->MoveOnDrag = true;
-
-			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GB_TEXT_AREA_PAGE_RIGHT, 224, 34, 160, 166));
-			box->MoveOnDrag = true;
 
 			text = (CGUIText*)Add(new CGUIText(0x0386, 299, 202));
 			text->CreateTextureA(9, std::to_string(i));
