@@ -326,6 +326,24 @@ void CGumpContainer::OnLeftMouseButtonUp()
 					dropContainer = target->Serial;
 				else if (target->IsStackable() && target->Graphic == g_ObjectInHand->Graphic)
 					dropContainer = target->Serial;
+				else
+				{
+					switch (target->Graphic)
+					{
+						case 0x0EFA:
+						case 0x2253:
+						case 0x2252:
+						case 0x238C:
+						case 0x23A0:
+						case 0x2D50:
+						{
+							dropContainer = target->Serial;
+							break;
+						}
+						default:
+							break;
+					}
+				}
 			}
 		}
 	}
