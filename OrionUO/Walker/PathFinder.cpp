@@ -505,7 +505,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	ushort walkTime = TURN_DELAY;
 
 	if (m_FastRotation)
-		walkTime /= 2;
+		walkTime = TURN_DELAY_FAST;
 
 	if ((olddir & 7) == (direction & 7)) //Повернуты куда надо
 	{
@@ -635,7 +635,11 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	lastDelta = nowDelta;
 	lastRun = run;
 	lastMount = onMount;
-	lastDir = direction;
+
+	if (walkTime == TURN_DELAY_FAST)
+		lastDir = -1;
+	else
+		lastDir = direction;
 
 	g_PendingDelayTime = g_Ticks + walkTime - nowDelta;
 	g_Player->GetAnimationGroup();
