@@ -39,13 +39,14 @@ void CColorManager::Init()
 	else
 		m_HuesCount = 0;
 
-	addr = (uint)g_FileManager.m_RadarcolMul.Start;
-	if (addr > 0 && addr != 0xFFFFFFFF)
-		memcpy(m_Radarcol, (PVOID)addr, 0x10000);
-	else
-		memset(m_Radarcol, 0, 0x10000);
+	if (g_FileManager.m_RadarcolMul.Size)
+	{
+		m_Radarcol.resize(g_FileManager.m_RadarcolMul.Size);
+		memcpy(&m_Radarcol[0], (PVOID)g_FileManager.m_RadarcolMul.Start, g_FileManager.m_RadarcolMul.Size);
+	}
 
 	addr = (uint)g_FileManager.m_PaletteMul.Start;
+
 	if (addr > 0 && addr != 0xFFFFFFFF)
 		memcpy(m_Palette, (PVOID)addr, 256 * sizeof(PALETTE_BLOCK));
 	else
@@ -188,9 +189,10 @@ ushort CColorManager::GetColor16(const ushort &c, ushort color)
 @param [__in] c Исходный 16-битный цвет
 @return 16-битный цвет
 */
-ushort CColorManager::GetRadarColorData(ushort &c)
+ushort CColorManager::GetRadarColorData(const ushort &c)
 {
-	return m_Radarcol[c];
+	pushort ptr = (pushort)&m_Radarcol[0];
+	return ptr[c];
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -198,9 +200,10 @@ ushort CColorManager::GetRadarColorData(ushort &c)
 @param [__in] c Исходный 16-битный цвет
 @return 32-битный цвет
 */
-uint CColorManager::GetRadarColor(ushort &c)
+uint CColorManager::GetRadarColor(const ushort &c)
 {
-	return Color16To32(m_Radarcol[c]);
+	pushort ptr = (pushort)&m_Radarcol[0];
+	return Color16To32(ptr[c]);
 }
 //----------------------------------------------------------------------------------
 /*!

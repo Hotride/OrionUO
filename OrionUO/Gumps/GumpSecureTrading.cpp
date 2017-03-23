@@ -318,6 +318,7 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 					y = 0;
 
 				g_Orion.DropItem(m_ID, x, y, 0);
+				g_MouseManager.CancelDoubleClick = true;
 			}
 			else
 				g_Orion.PlaySoundEffect(0x0051);

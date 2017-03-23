@@ -33,13 +33,13 @@ CGumpProfile::CGumpProfile(uint serial, short x, short y, wstring topText, wstri
 
 	offsetY += 44;
 
+	m_HitBox = (CGUIHitBox*)m_HTMLGump->Add(new CGUIHitBox(ID_GP_TEXT_FIELD, 4, offsetY, 210, 14));
+
 	m_Entry = (CGUITextEntry*)m_HTMLGump->Add(new CGUITextEntry(ID_GP_TEXT_FIELD, 0, 0, 0, 4, offsetY));
 	m_Entry->m_Entry.Width = 210;
 	m_Entry->CheckOnSerial = true;
 	m_Entry->m_Entry.SetText(dataText);
 	m_Entry->m_Entry.CreateTextureW(0, dataText, 0, 210, TS_LEFT, 0);
-
-	m_HitBox = (CGUIHitBox*)m_HTMLGump->Add(new CGUIHitBox(ID_GP_TEXT_FIELD, 4, offsetY, 210, 14));
 
 	if (m_Entry->m_Entry.m_Texture.Height > 14)
 		m_HitBox->Height = m_Entry->m_Entry.m_Texture.Height;

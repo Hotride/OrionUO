@@ -22,6 +22,7 @@
 #include "Network/Packets.h"
 #include "OrionWindow.h"
 #include "PluginInterface.h"
+#include "Gumps/GumpSecureTrading.h"
 //----------------------------------------------------------------------------------
 IOrionString g_OrionString;
 //----------------------------------------------------------------------------------
@@ -278,6 +279,26 @@ void __cdecl FUNCBODY_Logout()
 	g_Orion.LogOut();
 }
 //----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_SecureTradingCheckState(unsigned int id1, bool state)
+{
+	CGumpSecureTrading *gump = (CGumpSecureTrading*)g_GumpManager.UpdateGump(id1, 0, GT_TRADE);
+
+	if (gump != NULL)
+	{
+		gump->StateMy = state;
+
+		gump->SendTradingResponse(2);
+	}
+}
+//----------------------------------------------------------------------------------
+void __cdecl FUNCBODY_SecureTradingClose(unsigned int id1)
+{
+	CGumpSecureTrading *gump = (CGumpSecureTrading*)g_GumpManager.GetGump(id1, 0, GT_TRADE);
+
+	if (gump != NULL)
+		gump->SendTradingResponse(1);
+}
+//----------------------------------------------------------------------------------
 //IClilocManager
 //----------------------------------------------------------------------------------
 IOrionString *__cdecl FUNCBODY_GetClilocA(unsigned int clilocID, const char *defaultText)
@@ -415,7 +436,7 @@ IGLEngine g_Interface_GL =
 //----------------------------------------------------------------------------------
 IUltimaOnline g_Interface_UO =
 {
-	0,
+	1,
 	sizeof(IUltimaOnline),
 	FUNCBODY_GetLandFlags,
 	FUNCBODY_GetStaticFlags,
@@ -432,10 +453,12 @@ IUltimaOnline g_Interface_UO =
 	FUNCBODY_SendAsciiSpeech,
 	FUNCBODY_SendUnicodeSpeech,
 	FUNCBODY_SendRenameMount,
-	FUNCBODY_SendMenuResponse
-	//FUNCBODY_DisplayStatusbarGump
-	//FUNCBODY_CloseStatusbarGump
-	//FUNCBODY_Logout
+	FUNCBODY_SendMenuResponse,
+	FUNCBODY_DisplayStatusbarGump,
+	FUNCBODY_CloseStatusbarGump,
+	FUNCBODY_Logout,
+	FUNCBODY_SecureTradingCheckState,
+	FUNCBODY_SecureTradingClose
 };
 //----------------------------------------------------------------------------------
 IClilocManager g_Interface_ClilocManager =

@@ -67,6 +67,8 @@ typedef void __cdecl FUNCDEF_SEND_MENU_RESPONSE(unsigned int, unsigned int, int)
 typedef void __cdecl FUNCDEF_DISPLAY_STATUSBAR(unsigned int, int, int);
 typedef void __cdecl FUNCDEF_CLOSE_STATUSBAR(unsigned int);
 typedef void __cdecl FUNCDEF_LOGOUT();
+typedef void __cdecl FUNCDEF_SECURE_TRADING_CHECK_STATE(unsigned int, bool);
+typedef void __cdecl FUNCDEF_SECURE_TRADING_CLOSE(unsigned int);
 
 //IClilocManager
 typedef IOrionString *__cdecl FUNCDEF_GET_CLILOC_A(unsigned int, const char*);
@@ -127,9 +129,11 @@ UOInterface IUltimaOnline
 	FUNCDEF_SEND_UNICODE_SPEECH *SendUnicodeSpeech;
 	FUNCDEF_SEND_RENAME_MOUNT *SendRenameMount;
 	FUNCDEF_SEND_MENU_RESPONSE *SendMenuResponse;
-	//FUNCDEF_DISPLAY_STATUSBAR *DisplayStatusbar;
-	//FUNCDEF_CLOSE_STATUSBAR *CloseStatusbar;
-	//FUNCDEF_LOGOUT *Logout;
+	FUNCDEF_DISPLAY_STATUSBAR *DisplayStatusbar;
+	FUNCDEF_CLOSE_STATUSBAR *CloseStatusbar;
+	FUNCDEF_LOGOUT *Logout;
+	FUNCDEF_SECURE_TRADING_CHECK_STATE *SecureTradingCheckState;
+	FUNCDEF_SECURE_TRADING_CLOSE *SecureTradingClose;
 };
 //----------------------------------------------------------------------------------
 UOInterface IClilocManager

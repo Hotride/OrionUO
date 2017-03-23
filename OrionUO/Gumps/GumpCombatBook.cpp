@@ -440,13 +440,13 @@ void CGumpCombatBook::UpdateContent()
 			if (offs >= m_AbilityCount)
 				break;
 
+			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GCB_ICON + offs, dataX, 42 + y, 100, 16, true));
+			box->MoveOnDrag = true;
+
 			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GCB_ICON + offs, 0x0288, 0, 0, dataX, 42 + y, 0, false, 9));
 			entry->m_Entry.SetText(m_AbilityName[offs]);
 			entry->CheckOnSerial = true;
 			entry->ReadOnly = true;
-
-			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GCB_ICON + offs, dataX, 42 + y, 100, 16, true));
-			box->MoveOnDrag = true;
 
 			y += 15;
 

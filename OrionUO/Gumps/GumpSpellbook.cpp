@@ -615,15 +615,15 @@ void CGumpSpellbook::UpdateContent()
 		{
 			if (m_Spells[offs])
 			{
+				CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(spellSerial + offs, dataX, 52 + y, 100, 16, true));
+				box->MoveOnDrag = true;
+
 				CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(spellSerial + offs, 0x0288, 0, 0, dataX, 52 + y, 0, false, 9));
 				string abbreviature;
 				string reagents;
 				entry->m_Entry.SetText(GetSpellName(offs, abbreviature, reagents));
 				entry->CheckOnSerial = true;
 				entry->ReadOnly = true;
-
-				CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(spellSerial + offs, dataX, 52 + y, 100, 16, true));
-				box->MoveOnDrag = true;
 
 				y += 15;
 			}

@@ -106,13 +106,14 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 		{
 			int skillIndex = g_SkillSort.m_Skills[i];
 
-			CGUITextEntry *entry = (CGUITextEntry*)htmlGump->Add(new CGUITextEntry(ID_SPS_SKILLS_LIST + i, 1, 0x0035, 0x0035, 3, yPtr, 0, false, 9));
+			CGUITextEntry *entry = new CGUITextEntry(ID_SPS_SKILLS_LIST + i, 1, 0x0035, 0x0035, 3, yPtr, 0, false, 9);
 			entry->m_Entry.SetText(g_Skills[skillIndex].Name);
 			entry->m_Entry.CreateTextureA(9, g_Skills[skillIndex].Name, 1, 0, TS_LEFT, 0);
 			entry->CheckOnSerial = true;
 			entry->ReadOnly = true;
 
 			htmlGump->Add(new CGUIHitBox(ID_SPS_SKILLS_LIST + i, 3, yPtr, 195, entry->m_Entry.m_Texture.Height));
+			htmlGump->Add(entry);
 
 			yPtr += entry->m_Entry.m_Texture.Height;
 		}
@@ -307,13 +308,14 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 			{
 				int skillIndex = g_SkillSort.m_Skills[i];
 
-				CGUITextEntry *entry = (CGUITextEntry*)htmlGump->Add(new CGUITextEntry(ID_SPS_SKILLS_LIST + i, 1, 0x0035, 0x0035, 2, yPtr, 0, false, 9));
+				CGUITextEntry *entry = new CGUITextEntry(ID_SPS_SKILLS_LIST + i, 1, 0x0035, 0x0035, 2, yPtr, 0, false, 9);
 				entry->m_Entry.SetText(g_Skills[skillIndex].Name);
 				entry->m_Entry.PrepareToDrawA(9, 1);
 				entry->CheckOnSerial = true;
 				entry->ReadOnly = true;
 
 				htmlGump->Add(new CGUIHitBox(ID_SPS_SKILLS_LIST + i, 2, yPtr, 190, entry->m_Entry.m_Texture.Height));
+				htmlGump->Add(entry);
 
 				yPtr += entry->m_Entry.m_Texture.Height;
 			}

@@ -64,13 +64,13 @@ void CGumpScreenServer::UpdateContent()
 	{
 		CServer *server = g_ServerList.GetServer(i);
 
+		htmlGump->Add(new CGUIHitBox(ID_SS_SERVER_LIST + i, 74, 10 + (i * 25), 280, 25));
+
 		CGUITextEntry *entry = new CGUITextEntry(ID_SS_SERVER_LIST + i, 0x034F, 0x0021, 0x0021, 74, 10 + (i * 25), 0, false, 5);
 		entry->m_Entry.SetText(server->Name);
 		entry->ReadOnly = true;
 		entry->CheckOnSerial = true;
 		htmlGump->Add(entry);
-
-		htmlGump->Add(new CGUIHitBox(ID_SS_SERVER_LIST + i, 74, 10 + (i * 25), 280, 25));
 	}
 
 	htmlGump->CalculateDataSize();

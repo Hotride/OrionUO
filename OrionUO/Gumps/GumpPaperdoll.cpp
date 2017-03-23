@@ -835,6 +835,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 						g_Orion.DropItem(equipment->Serial, 0xFFFF, 0xFFFF, 0);
 
 					g_MouseManager.LeftDropPosition = g_MouseManager.Position;
+					g_MouseManager.CancelDoubleClick = true;
 
 					m_FrameCreated = false;
 
@@ -853,6 +854,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 						g_Orion.EquipItem();
 
 					g_MouseManager.LeftDropPosition = g_MouseManager.Position;
+					g_MouseManager.CancelDoubleClick = true;
 
 					m_FrameCreated = false;
 
@@ -872,7 +874,10 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 		if (equipment != NULL)
 		{
 			if (g_Target.IsTargeting())
+			{
 				g_Target.SendTargetObject(equipment->Serial);
+				g_MouseManager.CancelDoubleClick = true;
+			}
 			else if (g_ObjectInHand == NULL) //Click on object
 			{
 				if (!g_ClickObject.Enabled && (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled))
