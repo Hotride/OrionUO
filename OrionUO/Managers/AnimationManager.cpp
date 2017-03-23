@@ -1242,7 +1242,7 @@ CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, uchar fram
 		{
 			CTextureAnimationDirection &direction = m_DataIndex[graphic].m_Groups[m_AnimGroup].m_Direction[m_Direction];
 
-			if (direction.Address != 0)
+			if (direction.Address != 0 || direction.IsUOP)
 			{
 				int fc = direction.FrameCount;
 
@@ -1292,7 +1292,10 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 		else
 			frameIndex = 0;
 	}
-
+	if (frameIndex > 0)
+	{
+		frameIndex += 0;
+	}
 	CTextureAnimationFrame *frame = direction.GetFrame(frameIndex);
 	
 	if (frame != NULL && frame->m_Texture.Texture != 0)
@@ -1782,7 +1785,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 		{
 			CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[m_AnimGroup].m_Direction[m_Direction];
 
-			if (direction.Address != 0)
+			if (direction.Address != 0 || direction.IsUOP)
 			{
 				CTextureAnimationFrame *frame = direction.GetFrame(0);
 
@@ -2013,7 +2016,10 @@ bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, const int &x, const int
 bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
 {
 	bool result = false;
-
+	if (g_FileManager.UseUOP && m_DataIndex[graphic].m_Groups[group].m_Direction[0].IsUOP)
+	{
+		return true;
+	}
 	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && group < ANIMATION_GROUPS_COUNT)
 		result = (m_DataIndex[graphic].m_Groups[group].m_Direction[0].Address != 0);
 
@@ -2301,7 +2307,7 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 
 		g_GL_BindTexture16(frame->m_Texture, imageWidth, imageHeight, &data[0]);
 	}
-
+	direction.IsUOP = true;
 	m_UsedAnimList.push_back(&direction);
 	return true;
 }

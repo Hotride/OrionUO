@@ -143,7 +143,7 @@ void CGameWorld::ProcessAnimation()
 					if (direction.FrameCount == 0)
 						g_AnimationManager.LoadDirectionGroup(direction, obj);
 
-					if (direction.Address != 0)
+					if (direction.Address != 0 || direction.IsUOP)
 					{
 						direction.LastAccessTime = g_Ticks;
 						int fc = direction.FrameCount;
@@ -242,7 +242,7 @@ void CGameWorld::ProcessAnimation()
 					if (direction.FrameCount == 0)
 						g_AnimationManager.LoadDirectionGroup(direction, obj);
 
-					if (direction.Address != 0)
+					if (direction.Address != 0 || direction.IsUOP)
 					{
 						direction.LastAccessTime = g_Ticks;
 						int fc = direction.FrameCount;

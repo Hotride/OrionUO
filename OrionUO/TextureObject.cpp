@@ -20,7 +20,7 @@ CTextureAnimationFrame::~CTextureAnimationFrame()
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationDirection::CTextureAnimationDirection()
-: CBaseQueue(), m_FrameCount(0), m_Address(0), m_Size(0), m_LastAccessTime(0)
+: CBaseQueue(), m_FrameCount(0), m_Address(0), m_Size(0), m_LastAccessTime(0), m_IsUOP(false)
 {
 }
 //----------------------------------------------------------------------------------

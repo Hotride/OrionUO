@@ -41,6 +41,8 @@ class CTextureAnimationDirection : public CBaseQueue
 	SETGET(uint, Size);
 	//Время последнего доступа
 	SETGET(uint, LastAccessTime);
+	//UOP animation indicator
+	SETGET(bool, IsUOP);
 
 public:
 	CTextureAnimationDirection();
