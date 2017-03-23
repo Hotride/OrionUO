@@ -28,7 +28,7 @@ const int FOLIAGE_ALPHA = 0x4C; //0.3
 
 const int ALPHA_STEP = 25;
 
-const int ANIMATION_GROUPS_COUNT = 35;
+const int ANIMATION_GROUPS_COUNT = 100;
 
 const int CONTEXT_MENU_FONT = 1;
 
