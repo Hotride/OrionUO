@@ -1292,10 +1292,6 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 		else
 			frameIndex = 0;
 	}
-	if (frameIndex > 0)
-	{
-		frameIndex += 0;
-	}
 	CTextureAnimationFrame *frame = direction.GetFrame(frameIndex);
 	
 	if (frame != NULL && frame->m_Texture.Texture != 0)
