@@ -825,6 +825,12 @@ void CGumpSpellbook::GUMP_BUTTON_EVENT_C
 	}
 }
 //----------------------------------------------------------------------------
+void CGumpSpellbook::GUMP_TEXT_ENTRY_EVENT_C
+{
+	if (serial >= ID_GSB_SPELL_ICON_LEFT)
+		OnButton(serial);
+}
+//----------------------------------------------------------------------------
 bool CGumpSpellbook::OnLeftMouseButtonDoubleClick()
 {
 	bool result = false;

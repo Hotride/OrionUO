@@ -110,6 +110,7 @@ public:
 	virtual void UpdateContent();
 
 	GUMP_BUTTON_EVENT_H;
+	GUMP_TEXT_ENTRY_EVENT_H;
 
 	virtual bool OnLeftMouseButtonDoubleClick();
 };
