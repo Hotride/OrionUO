@@ -514,7 +514,12 @@ void CGumpManager::RemoveMarked()
 void CGumpManager::PrepareTextures()
 {
 	QFOR(gump, m_Items, CGump*)
+	{
+		g_CurrentCheckGump = gump;
 		gump->PrepareTextures();
+	}
+
+	g_CurrentCheckGump = NULL;
 }
 //----------------------------------------------------------------------------------
 void CGumpManager::Draw(const bool &blocked)
