@@ -2983,7 +2983,7 @@ void CGumpOptions::ApplyPageChanges()
 			if (m_ContainerOffsetY->m_Entry.Length())
 				curY = atoi(m_ContainerOffsetY->m_Entry.c_str());
 
-			g_ContainerRect.DefaultX = curY;
+			g_ContainerRect.DefaultX = curX;
 			g_ContainerRect.DefaultY = curY;
 
 			if (g_OptionsConfig.DisableMenubar)
