@@ -356,6 +356,7 @@ CPacketManager::~CPacketManager()
 //---------------------------------------------------------------------------
 bool CPacketManager::AutoLoginNameExists(const string &name)
 {
+	WISPFUN_DEBUG("c150_f1");
 	if (!m_AutoLoginNames.length())
 		return false;
 
@@ -374,6 +375,7 @@ bool CPacketManager::AutoLoginNameExists(const string &name)
 //----------------------------------------------------------------------------------
 void CPacketManager::OnClientVersionChange(const CLIENT_VERSION &newClientVersion)
 {
+	WISPFUN_DEBUG("c150_f2");
 	if (newClientVersion >= CV_500A)
 	{
 		CVPRINT("Set new length for packet 0x0B (>= 5.0.0a)\n");
@@ -556,6 +558,7 @@ void CPacketManager::OnClientVersionChange(const CLIENT_VERSION &newClientVersio
 //----------------------------------------------------------------------------------
 int CPacketManager::GetPacketSize(const UCHAR_LIST &packet, int &offsetToSize)
 {
+	WISPFUN_DEBUG("c150_f3");
 	if (packet.size())
 		return m_Packets[packet[0]].Size;
 
@@ -564,6 +567,7 @@ int CPacketManager::GetPacketSize(const UCHAR_LIST &packet, int &offsetToSize)
 //---------------------------------------------------------------------------
 void CPacketManager::SendMegaClilocRequests(UINT_LIST &list)
 {
+	WISPFUN_DEBUG("c150_f4");
 	if (list.size())
 	{
 		if (g_TooltipsEnabled)
@@ -583,11 +587,13 @@ void CPacketManager::SendMegaClilocRequests(UINT_LIST &list)
 //---------------------------------------------------------------------------
 void CPacketManager::SendMegaClilocRequests()
 {
+	WISPFUN_DEBUG("c150_f5");
 	SendMegaClilocRequests(m_MegaClilocRequests);
 }
 //----------------------------------------------------------------------------------
 void CPacketManager::AddMegaClilocRequest(const uint &serial, const bool &existsTest)
 {
+	WISPFUN_DEBUG("c150_f6");
 	if (existsTest)
 	{
 		for (const uint item : m_MegaClilocRequests)
@@ -602,12 +608,14 @@ void CPacketManager::AddMegaClilocRequest(const uint &serial, const bool &exists
 //----------------------------------------------------------------------------------
 void CPacketManager::OnReadFailed()
 {
+	WISPFUN_DEBUG("c150_f7");
 	g_Orion.DisconnectGump();
 	g_Orion.Disconnect();
 }
 //----------------------------------------------------------------------------------
 void CPacketManager::OnPacket()
 {
+	WISPFUN_DEBUG("c150_f8");
 	uint ticks = g_Ticks;
 	g_TotalRecvSize += m_Size;
 
@@ -639,6 +647,7 @@ void CPacketManager::OnPacket()
 //----------------------------------------------------------------------------------
 void CPacketManager::SavePluginReceivePacket(puchar buf, const int &size)
 {
+	WISPFUN_DEBUG("c150_f9");
 	UCHAR_LIST packet(size);
 
 	memcpy(&packet[0], &buf[0], size);
@@ -648,6 +657,7 @@ void CPacketManager::SavePluginReceivePacket(puchar buf, const int &size)
 //----------------------------------------------------------------------------------
 void CPacketManager::ProcessPluginPackets()
 {
+	WISPFUN_DEBUG("c150_f10");
 	while (!m_PluginData.empty())
 	{
 		UCHAR_LIST &packet = m_PluginData.back();
@@ -661,6 +671,7 @@ void CPacketManager::ProcessPluginPackets()
 //----------------------------------------------------------------------------------
 void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
 {
+	WISPFUN_DEBUG("c150_f11");
 	SetData(buf, size);
 
 	uint ticks = g_Ticks;
@@ -690,6 +701,7 @@ void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(LoginError)
 {
+	WISPFUN_DEBUG("c150_f12");
 	if (g_GameState == GS_MAIN_CONNECT || g_GameState == GS_SERVER_CONNECT || g_GameState == GS_GAME_CONNECT)
 	{
 		g_ConnectionScreen.ConnectionFailed = true;
@@ -700,6 +712,7 @@ PACKET_HANDLER(LoginError)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ServerList)
 {
+	WISPFUN_DEBUG("c150_f13");
 	g_ServerList.Clear();
 	Move(1);
 
@@ -734,6 +747,7 @@ PACKET_HANDLER(ServerList)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(RelayServer)
 {
+	WISPFUN_DEBUG("c150_f14");
 	memset(&g_SelectedCharName[0], 0, sizeof(g_SelectedCharName));
 	in_addr addr;
 	puint paddr = (puint)m_Ptr;
@@ -749,6 +763,7 @@ PACKET_HANDLER(RelayServer)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(CharacterList)
 {
+	WISPFUN_DEBUG("c150_f15");
 	HandleResendCharacterList();
 
 	uchar locCount = ReadUInt8();
@@ -807,6 +822,7 @@ PACKET_HANDLER(CharacterList)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ResendCharacterList)
 {
+	WISPFUN_DEBUG("c150_f16");
 	g_Orion.InitScreen(GS_CHARACTER);
 
 	int numSlots = ReadInt8();
@@ -855,6 +871,7 @@ PACKET_HANDLER(ResendCharacterList)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(LoginComplete)
 {
+	WISPFUN_DEBUG("c150_f17");
 	g_PacketLoginComplete = true;
 
 	g_Orion.LoginComplete();
@@ -862,6 +879,7 @@ PACKET_HANDLER(LoginComplete)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(SetTime)
 {
+	WISPFUN_DEBUG("c150_f18");
 	g_ServerTimeHour = ReadUInt8();
 	g_ServerTimeMinute = ReadUInt8();
 	g_ServerTimeSecond = ReadUInt8();
@@ -869,6 +887,7 @@ PACKET_HANDLER(SetTime)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(EnterWorld)
 {
+	WISPFUN_DEBUG("c150_f19");
 	uint serial = ReadUInt32BE();
 
 	if (g_World != NULL)
@@ -955,6 +974,7 @@ PACKET_HANDLER(EnterWorld)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateHitpoints)
 {
+	WISPFUN_DEBUG("c150_f20");
 	if (g_World == NULL)
 		return;
 
@@ -974,6 +994,7 @@ PACKET_HANDLER(UpdateHitpoints)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateMana)
 {
+	WISPFUN_DEBUG("c150_f21");
 	if (g_World == NULL)
 		return;
 
@@ -992,6 +1013,7 @@ PACKET_HANDLER(UpdateMana)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateStamina)
 {
+	WISPFUN_DEBUG("c150_f22");
 	if (g_World == NULL)
 		return;
 
@@ -1010,6 +1032,7 @@ PACKET_HANDLER(UpdateStamina)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(MobileAttributes)
 {
+	WISPFUN_DEBUG("c150_f23");
 	if (g_World == NULL)
 		return;
 
@@ -1038,6 +1061,7 @@ PACKET_HANDLER(MobileAttributes)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(NewHealthbarUpdate)
 {
+	WISPFUN_DEBUG("c150_f24");
 	if (g_World == NULL)
 		return;
 
@@ -1083,6 +1107,7 @@ PACKET_HANDLER(NewHealthbarUpdate)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdatePlayer)
 {
+	WISPFUN_DEBUG("c150_f25");
 	if (g_World == NULL)
 		return;
 
@@ -1173,6 +1198,7 @@ PACKET_HANDLER(UpdatePlayer)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(CharacterStatus)
 {
+	WISPFUN_DEBUG("c150_f26");
 	if (g_World == NULL)
 		return;
 
@@ -1287,6 +1313,7 @@ PACKET_HANDLER(CharacterStatus)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateItem)
 {
+	WISPFUN_DEBUG("c150_f27");
 	if (g_World == NULL)
 		return;
 
@@ -1396,6 +1423,7 @@ PACKET_HANDLER(UpdateItem)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateItemSA)
 {
+	WISPFUN_DEBUG("c150_f28");
 	if (g_World == NULL)
 		return;
 
@@ -1472,6 +1500,7 @@ PACKET_HANDLER(UpdateItemSA)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateObject)
 {
+	WISPFUN_DEBUG("c150_f29");
 	if (g_World == NULL)
 		return;
 
@@ -1683,6 +1712,7 @@ PACKET_HANDLER(UpdateObject)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(EquipItem)
 {
+	WISPFUN_DEBUG("c150_f30");
 	if (g_World == NULL)
 		return;
 
@@ -1732,6 +1762,7 @@ PACKET_HANDLER(EquipItem)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateContainedItem)
 {
+	WISPFUN_DEBUG("c150_f31");
 	if (g_World == NULL)
 		return;
 
@@ -1838,6 +1869,7 @@ PACKET_HANDLER(UpdateContainedItem)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateContainedItems)
 {
+	WISPFUN_DEBUG("c150_f32");
 	if (g_World == NULL)
 		return;
 
@@ -1997,6 +2029,7 @@ PACKET_HANDLER(UpdateContainedItems)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DenyMoveItem)
 {
+	WISPFUN_DEBUG("c150_f33");
 	if (g_World == NULL)
 		return;
 
@@ -2032,6 +2065,7 @@ PACKET_HANDLER(DenyMoveItem)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DeleteObject)
 {
+	WISPFUN_DEBUG("c150_f34");
 	if (g_World == NULL)
 		return;
 
@@ -2188,6 +2222,7 @@ PACKET_HANDLER(DeleteObject)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateCharacter)
 {
+	WISPFUN_DEBUG("c150_f35");
 	if (g_World == NULL)
 		return;
 
@@ -2282,6 +2317,7 @@ PACKET_HANDLER(UpdateCharacter)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(Warmode)
 {
+	WISPFUN_DEBUG("c150_f36");
 	if (g_World == NULL)
 		return;
 
@@ -2310,6 +2346,7 @@ PACKET_HANDLER(Warmode)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(PauseControl)
 {
+	WISPFUN_DEBUG("c150_f37");
 	/*g_ClientPaused = ReadUInt8();
 
 	if (!g_ClientPaused)
@@ -2318,6 +2355,7 @@ PACKET_HANDLER(PauseControl)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenPaperdoll)
 {
+	WISPFUN_DEBUG("c150_f38");
 	if (g_World == NULL)
 		return;
 
@@ -2345,11 +2383,13 @@ PACKET_HANDLER(OpenPaperdoll)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ClientVersion)
 {
+	WISPFUN_DEBUG("c150_f39");
 	CPacketClientVersion(g_Orion.ClientVersionText).Send();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(Ping)
 {
+	WISPFUN_DEBUG("c150_f40");
 	g_PingSequence = ReadUInt8();
 
 	if (g_PingCount)
@@ -2360,6 +2400,7 @@ PACKET_HANDLER(Ping)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(SetWeather)
 {
+	WISPFUN_DEBUG("c150_f41");
 	g_Weather.Reset();
 
 	uchar type = ReadUInt8();
@@ -2418,6 +2459,7 @@ PACKET_HANDLER(SetWeather)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(PersonalLightLevel)
 {
+	WISPFUN_DEBUG("c150_f42");
 	uint serial = ReadUInt32BE();
 
 	if (serial == g_PlayerSerial)
@@ -2433,6 +2475,7 @@ PACKET_HANDLER(PersonalLightLevel)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(LightLevel)
 {
+	WISPFUN_DEBUG("c150_f43");
 	uchar level = ReadUInt8();
 
 	if (level > 0x1F)
@@ -2443,6 +2486,7 @@ PACKET_HANDLER(LightLevel)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(EnableLockedFeatures)
 {
+	WISPFUN_DEBUG("c150_f44");
 	if (m_ClientVersion >= CV_60142)
 		g_LockedClientFeatures = ReadUInt32BE();
 	else
@@ -2453,6 +2497,7 @@ PACKET_HANDLER(EnableLockedFeatures)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenContainer)
 {
+	WISPFUN_DEBUG("c150_f45");
 	if (g_World == NULL)
 		return;
 
@@ -2578,6 +2623,7 @@ PACKET_HANDLER(OpenContainer)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateSkills)
 {
+	WISPFUN_DEBUG("c150_f46");
 	if (g_World == NULL)
 		return;
 
@@ -2648,6 +2694,7 @@ PACKET_HANDLER(UpdateSkills)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ExtendedCommand)
 {
+	WISPFUN_DEBUG("c150_f47");
 	ushort cmd = ReadUInt16BE();
 
 	switch (cmd)
@@ -3000,6 +3047,7 @@ PACKET_HANDLER(ExtendedCommand)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DenyWalk)
 {
+	WISPFUN_DEBUG("c150_f48");
 	g_WalkRequestCount = 0;
 	g_PendingDelayTime = 0;
 	g_Ping = 0;
@@ -3026,6 +3074,7 @@ PACKET_HANDLER(DenyWalk)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ConfirmWalk)
 {
+	WISPFUN_DEBUG("c150_f49");
 	if (g_WalkRequestCount)
 		g_WalkRequestCount--;
 
@@ -3072,11 +3121,13 @@ PACKET_HANDLER(ConfirmWalk)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenUrl)
 {
+	WISPFUN_DEBUG("c150_f50");
 	g_Orion.GoToWebLink(ReadString(0));
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(Target)
 {
+	WISPFUN_DEBUG("c150_f51");
 	g_Target.SetData(*this);
 
 	if (g_PartyHelperTimer > g_Ticks && g_PartyHelperTarget)
@@ -3089,6 +3140,7 @@ PACKET_HANDLER(Target)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(Talk)
 {
+	WISPFUN_DEBUG("c150_f52");
 	if (g_World == NULL)
 	{
 		if (g_GameState == GS_GAME_CONNECT)
@@ -3176,6 +3228,7 @@ PACKET_HANDLER(Talk)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UnicodeTalk)
 {
+	WISPFUN_DEBUG("c150_f53");
 	if (g_World == NULL)
 	{
 		if (g_GameState == GS_GAME_CONNECT)
@@ -3264,6 +3317,7 @@ PACKET_HANDLER(UnicodeTalk)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ClientTalk)
 {
+	WISPFUN_DEBUG("c150_f54");
 	if (!g_AbyssPacket03First)
 	{
 		bool parse = true;
@@ -3300,6 +3354,7 @@ PACKET_HANDLER(ClientTalk)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(MultiPlacement)
 {
+	WISPFUN_DEBUG("c150_f55");
 	if (g_World == NULL)
 		return;
 
@@ -3311,6 +3366,7 @@ PACKET_HANDLER(MultiPlacement)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(GraphicEffect)
 {
+	WISPFUN_DEBUG("c150_f56");
 	if (g_World == NULL)
 		return;
 
@@ -3432,6 +3488,7 @@ PACKET_HANDLER(GraphicEffect)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DeathScreen)
 {
+	WISPFUN_DEBUG("c150_f57");
 	g_Weather.Reset();
 	g_Target.Reset();
 	g_DeathScreenTimer = g_Ticks + DEATH_SCREEN_DELAY;
@@ -3439,6 +3496,7 @@ PACKET_HANDLER(DeathScreen)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(PlaySoundEffect)
 {
+	WISPFUN_DEBUG("c150_f58");
 	Move(1);
 	ushort index = ReadUInt16BE();
 	ushort volume = ReadUInt16BE();
@@ -3454,6 +3512,7 @@ PACKET_HANDLER(PlaySoundEffect)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(PlayMusic)
 {
+	WISPFUN_DEBUG("c150_f59");
 	ushort index = ReadUInt16BE();
 
 	//LOG("Play midi music 0x%04X\n", index);
@@ -3465,6 +3524,7 @@ PACKET_HANDLER(PlayMusic)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DragAnimation)
 {
+	WISPFUN_DEBUG("c150_f60");
 	if (g_World == NULL)
 		return;
 
@@ -3559,6 +3619,7 @@ PACKET_HANDLER(DragAnimation)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(CorpseEquipment)
 {
+	WISPFUN_DEBUG("c150_f61");
 	if (g_World == NULL)
 		return;
 
@@ -3583,6 +3644,7 @@ PACKET_HANDLER(CorpseEquipment)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ASCIIPrompt)
 {
+	WISPFUN_DEBUG("c150_f62");
 	if (g_World == NULL)
 		return;
 
@@ -3598,6 +3660,7 @@ PACKET_HANDLER(ASCIIPrompt)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UnicodePrompt)
 {
+	WISPFUN_DEBUG("c150_f63");
 	if (g_World == NULL)
 		return;
 
@@ -3613,6 +3676,7 @@ PACKET_HANDLER(UnicodePrompt)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(CharacterAnimation)
 {
+	WISPFUN_DEBUG("c150_f64");
 	if (g_World == NULL)
 		return;
 
@@ -3636,6 +3700,7 @@ PACKET_HANDLER(CharacterAnimation)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(NewCharacterAnimation)
 {
+	WISPFUN_DEBUG("c150_f65");
 	if (g_World == NULL)
 		return;
 
@@ -3656,6 +3721,7 @@ PACKET_HANDLER(NewCharacterAnimation)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DisplayQuestArrow)
 {
+	WISPFUN_DEBUG("c150_f66");
 	g_QuestArrow.Timer = g_Ticks + 1000;
 	g_QuestArrow.Enabled = (ReadUInt8() != 0);
 	g_QuestArrow.X = ReadUInt16BE();
@@ -3664,16 +3730,19 @@ PACKET_HANDLER(DisplayQuestArrow)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ClientViewRange)
 {
+	WISPFUN_DEBUG("c150_f67");
 	g_ConfigManager.UpdateRange = ReadUInt8();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(KrriosClientSpecial)
 {
+	WISPFUN_DEBUG("c150_f68");
 	CPacketRazorAnswer().Send();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(AssistVersion)
 {
+	WISPFUN_DEBUG("c150_f69");
 	uint version = ReadUInt32BE();
 
 	CPacketAssistVersion(version, g_Orion.ClientVersionText).Send();
@@ -3681,6 +3750,7 @@ PACKET_HANDLER(AssistVersion)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(CharacterListNotification)
 {
+	WISPFUN_DEBUG("c150_f70");
 	g_Orion.InitScreen(GS_DELETE);
 	g_ConnectionScreen.Type = CST_CHARACTER_LIST;
 	g_ConnectionScreen.ConnectionFailed = true;
@@ -3689,6 +3759,7 @@ PACKET_HANDLER(CharacterListNotification)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ErrorCode)
 {
+	WISPFUN_DEBUG("c150_f71");
 	uchar code = ReadUInt8();
 
 	g_Orion.InitScreen(GS_DELETE);
@@ -3701,6 +3772,7 @@ PACKET_HANDLER(ErrorCode)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(AttackCharacter)
 {
+	WISPFUN_DEBUG("c150_f72");
 	g_LastAttackObject = ReadUInt32BE();
 
 	if (g_LastAttackObject != 0 && g_World != NULL)
@@ -3714,6 +3786,7 @@ PACKET_HANDLER(AttackCharacter)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(Season)
 {
+	WISPFUN_DEBUG("c150_f73");
 	if (g_World == NULL)
 		return;
 
@@ -3736,6 +3809,7 @@ PACKET_HANDLER(Season)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DisplayDeath)
 {
+	WISPFUN_DEBUG("c150_f74");
 	if (g_World == NULL)
 		return;
 
@@ -3782,12 +3856,14 @@ PACKET_HANDLER(DisplayDeath)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenChat)
 {
+	WISPFUN_DEBUG("c150_f75");
 	uchar newbuf[4] = { 0xf0, 0x00, 0x04, 0xff };
 	g_Orion.Send(newbuf, 4);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DisplayClilocString)
 {
+	WISPFUN_DEBUG("c150_f76");
 	if (g_World == NULL)
 		return;
 
@@ -3843,6 +3919,7 @@ PACKET_HANDLER(DisplayClilocString)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(MegaCliloc)
 {
+	WISPFUN_DEBUG("c150_f77");
 	if (g_World == NULL)
 		return;
 
@@ -3951,6 +4028,7 @@ PACKET_HANDLER(MegaCliloc)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(Damage)
 {
+	WISPFUN_DEBUG("c150_f78");
 	if (g_World == NULL)
 		return;
 
@@ -3994,6 +4072,7 @@ PACKET_HANDLER(Damage)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(BuffDebuff)
 {
+	WISPFUN_DEBUG("c150_f79");
 	if (g_World == NULL)
 		return;
 
@@ -4162,6 +4241,7 @@ PACKET_HANDLER(BuffDebuff)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(SecureTrading)
 {
+	WISPFUN_DEBUG("c150_f80");
 	if (g_World == NULL)
 		return;
 
@@ -4220,6 +4300,7 @@ PACKET_HANDLER(SecureTrading)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(TextEntryDialog)
 {
+	WISPFUN_DEBUG("c150_f81");
 	if (g_World == NULL)
 		return;
 
@@ -4247,6 +4328,7 @@ PACKET_HANDLER(TextEntryDialog)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenMenuGump)
 {
+	WISPFUN_DEBUG("c150_f82");
 	if (g_World == NULL)
 		return;
 
@@ -4361,6 +4443,7 @@ PACKET_HANDLER(OpenMenuGump)
 //----------------------------------------------------------------------------------
 void CPacketManager::AddHTMLGumps(CGump *gump, vector<HTMLGumpDataInfo> &list)
 {
+	WISPFUN_DEBUG("c150_f83");
 	IFOR(i, 0, (int)list.size())
 	{
 		HTMLGumpDataInfo &data = list[i];
@@ -4411,6 +4494,7 @@ void CPacketManager::AddHTMLGumps(CGump *gump, vector<HTMLGumpDataInfo> &list)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenGump)
 {
+	WISPFUN_DEBUG("c150_f84");
 	if (g_World == NULL)
 		return;
 
@@ -4749,6 +4833,7 @@ PACKET_HANDLER(OpenGump)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenCompressedGump)
 {
+	WISPFUN_DEBUG("c150_f85");
 	if (g_World == NULL)
 		return;
 
@@ -4846,6 +4931,7 @@ PACKET_HANDLER(OpenCompressedGump)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DyeData)
 {
+	WISPFUN_DEBUG("c150_f86");
 	uint serial = ReadUInt32BE();
 	Move(2);
 	ushort graphic = ReadUInt16BE();
@@ -4862,6 +4948,7 @@ PACKET_HANDLER(DyeData)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(DisplayMap)
 {
+	WISPFUN_DEBUG("c150_f87");
 	if (g_World == NULL)
 		return;
 
@@ -4905,6 +4992,7 @@ PACKET_HANDLER(DisplayMap)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(MapData)
 {
+	WISPFUN_DEBUG("c150_f88");
 	if (g_World == NULL)
 		return;
 
@@ -4960,6 +5048,7 @@ PACKET_HANDLER(MapData)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(TipWindow)
 {
+	WISPFUN_DEBUG("c150_f89");
 	uchar flag = ReadUInt8();
 
 	if (flag != 1) //1 - ignore
@@ -4986,6 +5075,7 @@ PACKET_HANDLER(TipWindow)
 //---------------------------------------------------------------------------
 PACKET_HANDLER(CharacterProfile)
 {
+	WISPFUN_DEBUG("c150_f90");
 	if (g_World == NULL)
 		return;
 
@@ -5003,6 +5093,7 @@ PACKET_HANDLER(CharacterProfile)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(BulletinBoardData)
 {
+	WISPFUN_DEBUG("c150_f91");
 	if (g_World == NULL)
 		return;
 
@@ -5133,6 +5224,7 @@ PACKET_HANDLER(BulletinBoardData)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenBook)
 {
+	WISPFUN_DEBUG("c150_f92");
 	if (g_World == NULL)
 		return;
 
@@ -5151,6 +5243,7 @@ PACKET_HANDLER(OpenBook)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenBookNew)
 {
+	WISPFUN_DEBUG("c150_f93");
 	if (g_World == NULL)
 		return;
 
@@ -5176,6 +5269,7 @@ PACKET_HANDLER(OpenBookNew)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(BookData)
 {
+	WISPFUN_DEBUG("c150_f94");
 	if (g_World == NULL)
 		return;
 
@@ -5213,6 +5307,7 @@ PACKET_HANDLER(BookData)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(BuyList)
 {
+	WISPFUN_DEBUG("c150_f95");
 	if (g_World == NULL)
 		return;
 
@@ -5317,6 +5412,7 @@ PACKET_HANDLER(BuyList)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(SellList)
 {
+	WISPFUN_DEBUG("c150_f96");
 	if (g_World == NULL)
 		return;
 
@@ -5373,6 +5469,7 @@ PACKET_HANDLER(SellList)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(BuyReply)
 {
+	WISPFUN_DEBUG("c150_f97");
 	uint serial = ReadUInt32BE();
 	uchar flag = ReadUInt8();
 
@@ -5382,11 +5479,13 @@ PACKET_HANDLER(BuyReply)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(Logout)
 {
+	WISPFUN_DEBUG("c150_f98");
 	g_Orion.LogOut();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OPLInfo)
 {
+	WISPFUN_DEBUG("c150_f99");
 	if (m_ClientVersion >= CV_308Z)
 	{
 		uint serial = ReadUInt32BE();

@@ -17,6 +17,7 @@ CGumpBaseScroll::CGumpBaseScroll(GUMP_TYPE type, uint serial, ushort graphic, in
 m_ScrollerOffsetY(scrollerOffsetY), m_HaveBackgroundLines(haveBackgroundLines),
 m_ScissorOffsetHeight(scissorOffsetHeight), m_MinHeight(160)
 {
+	WISPFUN_DEBUG("c86_f1");
 	m_Page = 2;
 	Add(new CGUIPage(2));
 
@@ -95,6 +96,7 @@ CGumpBaseScroll::~CGumpBaseScroll()
 //----------------------------------------------------------------------------------
 void CGumpBaseScroll::UpdateHeight()
 {
+	WISPFUN_DEBUG("c86_f2");
 	m_Height = m_StartResizeHeight + g_MouseManager.LeftDroppedOffset().Y;
 
 	if (m_Height < m_MinHeight)
@@ -126,17 +128,20 @@ void CGumpBaseScroll::UpdateHeight()
 //----------------------------------------------------------------------------------
 void CGumpBaseScroll::GUMP_RESIZE_START_EVENT_C
 {
+	WISPFUN_DEBUG("c86_f3");
 	m_StartResizeHeight = m_Height;
 }
 //----------------------------------------------------------------------------------
 void CGumpBaseScroll::GUMP_RESIZE_EVENT_C
 {
+	WISPFUN_DEBUG("c86_f4");
 	if (m_StartResizeHeight)
 		UpdateHeight();
 }
 //----------------------------------------------------------------------------------
 void CGumpBaseScroll::GUMP_RESIZE_END_EVENT_C
 {
+	WISPFUN_DEBUG("c86_f5");
 	if (m_StartResizeHeight)
 		m_StartResizeHeight = 0;
 }

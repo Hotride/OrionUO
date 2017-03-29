@@ -19,11 +19,13 @@ m_Text(L""), m_Font(font), m_Align(align), m_TextFlags(textFlags), m_Width(width
 //----------------------------------------------------------------------------------
 CGUIHTMLText::~CGUIHTMLText()
 {
+	WISPFUN_DEBUG("c64_f1");
 	m_Texture.Clear();
 }
 //----------------------------------------------------------------------------------
 void CGUIHTMLText::CreateTexture(const bool &backgroundCanBeColored)
 {
+	WISPFUN_DEBUG("c64_f2");
 	g_FontManager.SetUseHTML(true, m_HTMLStartColor, backgroundCanBeColored);
 
 	g_FontManager.GenerateW(m_Font, m_Texture, m_Text.c_str(), m_Color, 30, m_Width, m_Align, m_TextFlags);
@@ -33,11 +35,13 @@ void CGUIHTMLText::CreateTexture(const bool &backgroundCanBeColored)
 //----------------------------------------------------------------------------------
 void CGUIHTMLText::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c64_f3");
 	m_Texture.Draw(m_X, m_Y, checktrans);
 }
 //----------------------------------------------------------------------------------
 bool CGUIHTMLText::Select()
 {
+	WISPFUN_DEBUG("c64_f4");
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 

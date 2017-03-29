@@ -28,6 +28,7 @@ CGUITilepicHightlighted::~CGUITilepicHightlighted()
 //----------------------------------------------------------------------------------
 void CGUITilepicHightlighted::SetShaderMode()
 {
+	WISPFUN_DEBUG("c81_f1");
 	int drawMode = (m_Color != 0);
 
 	if (g_SelectedObject.Object() == this)
@@ -49,6 +50,7 @@ void CGUITilepicHightlighted::SetShaderMode()
 //----------------------------------------------------------------------------------
 void CGUITilepicHightlighted::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c81_f2");
 	CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
 
 	if (th != NULL)
@@ -64,6 +66,7 @@ void CGUITilepicHightlighted::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUITilepicHightlighted::Select()
 {
+	WISPFUN_DEBUG("c81_f3");
 	bool select = false;
 
 	CIndexObject &io = g_Orion.m_StaticDataIndex[m_Graphic];
@@ -96,12 +99,14 @@ bool CGUITilepicHightlighted::Select()
 //----------------------------------------------------------------------------------
 void CGUITilepicHightlighted::OnMouseEnter()
 {
+	WISPFUN_DEBUG("c81_f4");
 	if (g_SelectedObject.Gump() != NULL)
 		g_SelectedObject.Gump()->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUITilepicHightlighted::OnMouseExit()
 {
+	WISPFUN_DEBUG("c81_f5");
 	if (g_LastSelectedObject.Gump() != NULL)
 		g_LastSelectedObject.Gump()->WantRedraw = true;
 }

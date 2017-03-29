@@ -24,6 +24,7 @@ CGumpSelectColor::~CGumpSelectColor()
 //----------------------------------------------------------------------------------
 void CGumpSelectColor::UpdateContent()
 {
+	WISPFUN_DEBUG("c121_f1");
 	if (m_Items == NULL)
 	{
 		Add(new CGUIGumppic(0x0906, 0, 0));
@@ -70,6 +71,7 @@ void CGumpSelectColor::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpSelectColor::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c121_f2");
 	if (serial == ID_GSC_BUTTON_OKAY && m_DataBox != NULL)
 	{
 		ushort color = 0;
@@ -96,11 +98,13 @@ void CGumpSelectColor::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpSelectColor::GUMP_SLIDER_CLICK_EVENT_C
 {
+	WISPFUN_DEBUG("c121_f3");
 	OnSliderMove(serial);
 }
 //----------------------------------------------------------------------------------
 void CGumpSelectColor::GUMP_SLIDER_MOVE_EVENT_C
 {
+	WISPFUN_DEBUG("c121_f4");
 	if (m_Slider != NULL && m_ColorRef != m_Slider->Value)
 	{
 		m_ColorRef = m_Slider->Value;
@@ -110,6 +114,7 @@ void CGumpSelectColor::GUMP_SLIDER_MOVE_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpSelectColor::OnSelectColor(const ushort &color)
 {
+	WISPFUN_DEBUG("c121_f5");
 	CGumpOptions *gump = (CGumpOptions*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_OPTIONS);
 
 	if (gump != NULL)

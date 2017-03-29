@@ -24,6 +24,7 @@ CColorManager::~CColorManager()
 //----------------------------------------------------------------------------------
 void CColorManager::Init()
 {
+	WISPFUN_DEBUG("c137_f1");
 	uint addr = (uint)g_FileManager.m_HuesMul.Start;
 	uint size = g_FileManager.m_HuesMul.Size;
 
@@ -61,6 +62,7 @@ void CColorManager::Init()
 */
 void CColorManager::SetHuesBlock(int index, PVERDATA_HUES_GROUP group)
 {
+	WISPFUN_DEBUG("c137_f2");
 	if (index < 0 || index >= m_HuesCount)
 		return;
 
@@ -75,6 +77,7 @@ void CColorManager::SetHuesBlock(int index, PVERDATA_HUES_GROUP group)
 */
 void CColorManager::CreateHuesPalette()
 {
+	WISPFUN_DEBUG("c137_f3");
 	m_HuesFloat.resize(m_HuesCount);
 	int entryCount = m_HuesCount / 8;
 
@@ -105,6 +108,7 @@ void CColorManager::CreateHuesPalette()
 */
 void CColorManager::SendColorsToShader(ushort color)
 {
+	WISPFUN_DEBUG("c137_f4");
 	if (color != 0)
 	{
 		if (color & SPECTRAL_COLOR)
@@ -172,6 +176,7 @@ ushort CColorManager::ConvertToGray(const ushort &c)
 */
 ushort CColorManager::GetColor16(const ushort &c, ushort color)
 {
+	WISPFUN_DEBUG("c137_f5");
 	if (color != 0 && color < m_HuesCount)
 	{
 		color -= 1;
@@ -191,6 +196,7 @@ ushort CColorManager::GetColor16(const ushort &c, ushort color)
 */
 ushort CColorManager::GetRadarColorData(const ushort &c)
 {
+	WISPFUN_DEBUG("c137_f6");
 	pushort ptr = (pushort)&m_Radarcol[0];
 	return ptr[c];
 }
@@ -202,6 +208,7 @@ ushort CColorManager::GetRadarColorData(const ushort &c)
 */
 uint CColorManager::GetRadarColor(const ushort &c)
 {
+	WISPFUN_DEBUG("c137_f7");
 	pushort ptr = (pushort)&m_Radarcol[0];
 	return Color16To32(ptr[c]);
 }
@@ -214,6 +221,7 @@ uint CColorManager::GetRadarColor(const ushort &c)
 */
 uint CColorManager::GetPolygoneColor(ushort c, ushort color)
 {
+	WISPFUN_DEBUG("c137_f8");
 	if (color != 0 && color < m_HuesCount)
 	{
 		color -= 1;
@@ -234,6 +242,7 @@ uint CColorManager::GetPolygoneColor(ushort c, ushort color)
 */
 uint CColorManager::GetUnicodeFontColor(ushort &c, ushort color)
 {
+	WISPFUN_DEBUG("c137_f9");
 	if (color != 0 && color < m_HuesCount)
 	{
 		color -= 1;
@@ -254,6 +263,7 @@ uint CColorManager::GetUnicodeFontColor(ushort &c, ushort color)
 */
 uint CColorManager::GetColor(ushort &c, ushort color)
 {
+	WISPFUN_DEBUG("c137_f10");
 	if (color != 0 && color < m_HuesCount)
 	{
 		color -= 1;
@@ -274,6 +284,7 @@ uint CColorManager::GetColor(ushort &c, ushort color)
 */
 uint CColorManager::GetPartialHueColor(ushort &c, ushort color)
 {
+	WISPFUN_DEBUG("c137_f11");
 	if (color != 0 && color < m_HuesCount)
 	{
 		color -= 1;

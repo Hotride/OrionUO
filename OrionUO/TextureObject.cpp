@@ -30,6 +30,7 @@ CTextureAnimationDirection::~CTextureAnimationDirection()
 //----------------------------------------------------------------------------------
 CTextureAnimationFrame *CTextureAnimationDirection::GetFrame(const uchar &frame)
 {
+	WISPFUN_DEBUG("c212_f1");
 	CTextureAnimationFrame *item = FindFrame(frame);
 
 	if (item == NULL && frame < m_FrameCount)
@@ -43,6 +44,7 @@ CTextureAnimationFrame *CTextureAnimationDirection::GetFrame(const uchar &frame)
 //----------------------------------------------------------------------------------
 CTextureAnimationFrame *CTextureAnimationDirection::FindFrame(const uchar &frame)
 {
+	WISPFUN_DEBUG("c212_f2");
 	CTextureAnimationFrame *item = (CTextureAnimationFrame*)m_Items;
 
 	while (item != NULL)

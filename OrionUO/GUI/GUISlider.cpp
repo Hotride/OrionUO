@@ -23,16 +23,19 @@ m_HaveText(false), m_TextPosition(STP_RIGHT), m_Font(0), m_TextColor(0), m_Unico
 m_TextWidth(0), m_Align(TS_LEFT), m_TextFlags(0), m_TextX(0), m_TextY(0), m_ScrollStep(15),
 m_LastScrollTime(0), m_DefaultTextOffset(2)
 {
+	WISPFUN_DEBUG("c77_f1");
 	CalculateOffset();
 }
 //----------------------------------------------------------------------------------
 CGUISlider::~CGUISlider()
 {
+	WISPFUN_DEBUG("c77_f2");
 	m_Text.Clear();
 }
 //----------------------------------------------------------------------------------
 void CGUISlider::UpdateText()
 {
+	WISPFUN_DEBUG("c77_f3");
 	if (m_HaveText)
 	{
 		if (m_Unicode)
@@ -139,6 +142,7 @@ void CGUISlider::UpdateText()
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize CGUISlider::GetSize()
 {
+	WISPFUN_DEBUG("c77_f4");
 	WISP_GEOMETRY::CSize size;
 
 	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
@@ -167,6 +171,7 @@ WISP_GEOMETRY::CSize CGUISlider::GetSize()
 //----------------------------------------------------------------------------------
 void CGUISlider::OnScroll(const bool &up, const uint &delay)
 {
+	WISPFUN_DEBUG("c77_f5");
 	if (m_LastScrollTime < g_Ticks)
 	{
 		if (up)
@@ -188,6 +193,7 @@ void CGUISlider::OnScroll(const bool &up, const uint &delay)
 //----------------------------------------------------------------------------------
 void CGUISlider::OnClick(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c77_f6");
 	int lenght = m_Lenght;
 	int maxValue = m_MaxValue - m_MinValue;
 
@@ -206,6 +212,7 @@ void CGUISlider::OnClick(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 void CGUISlider::CalculateOffset()
 {
+	WISPFUN_DEBUG("c77_f7");
 	if (m_Value < m_MinValue)
 		m_Value = m_MinValue;
 	else if (m_Value > m_MaxValue)
@@ -230,6 +237,7 @@ void CGUISlider::CalculateOffset()
 //----------------------------------------------------------------------------------
 void CGUISlider::SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSITION &textPosition, const uchar &font, const ushort &color, const bool &unicode, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
 {
+	WISPFUN_DEBUG("c77_f8");
 	m_HaveText = haveText;
 	m_TextPosition = textPosition;
 	m_Font = font;
@@ -244,6 +252,7 @@ void CGUISlider::SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSIT
 //----------------------------------------------------------------------------------
 void CGUISlider::PrepareTextures()
 {
+	WISPFUN_DEBUG("c77_f9");
 	g_Orion.ExecuteGump(m_Graphic);
 	g_Orion.ExecuteGump(m_GraphicSelected);
 	g_Orion.ExecuteGump(m_GraphicPressed);
@@ -259,6 +268,7 @@ void CGUISlider::PrepareTextures()
 //----------------------------------------------------------------------------------
 ushort CGUISlider::GetDrawGraphic()
 {
+	WISPFUN_DEBUG("c77_f10");
 	ushort graphic = m_Graphic;
 
 	if (g_GumpPressedElement == this)
@@ -271,6 +281,7 @@ ushort CGUISlider::GetDrawGraphic()
 //----------------------------------------------------------------------------------
 void CGUISlider::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c77_f11");
 	/*m_Value++;
 	if (m_Value > m_MaxValue)
 	{
@@ -343,6 +354,7 @@ void CGUISlider::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUISlider::Select()
 {
+	WISPFUN_DEBUG("c77_f12");
 	bool select = false;
 
 	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
@@ -383,12 +395,14 @@ bool CGUISlider::Select()
 //----------------------------------------------------------------------------------
 void CGUISlider::OnMouseEnter()
 {
+	WISPFUN_DEBUG("c77_f13");
 	if (g_SelectedObject.Gump() != NULL)
 		g_SelectedObject.Gump()->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUISlider::OnMouseExit()
 {
+	WISPFUN_DEBUG("c77_f14");
 	if (g_LastSelectedObject.Gump() != NULL)
 		g_LastSelectedObject.Gump()->WantRedraw = true;
 }

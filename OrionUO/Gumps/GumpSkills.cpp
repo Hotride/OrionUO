@@ -25,6 +25,7 @@ CGumpSkills::CGumpSkills(uint serial, short x, short y, bool minimized, int heig
 : CGumpBaseScroll(GT_SKILLS, serial, 0x1F40, height, x, y, true, 0, true, 15),
 m_ShowReal(false), m_ShowCap(false)
 {
+	WISPFUN_DEBUG("c125_f1");
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
 
 	if (minimized)
@@ -98,6 +99,7 @@ CGumpSkills::~CGumpSkills()
 //---------------------------------------------------------------------------
 void CGumpSkills::InitToolTip()
 {
+	WISPFUN_DEBUG("c125_f2");
 	uint id = g_SelectedObject.Serial;
 
 	if (!m_Minimized)
@@ -152,6 +154,7 @@ void CGumpSkills::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpSkills::UpdateHeight()
 {
+	WISPFUN_DEBUG("c125_f3");
 	CGumpBaseScroll::UpdateHeight();
 
 	m_BottomLine->Y = m_Height - 48; //Bottom line
@@ -162,6 +165,7 @@ void CGumpSkills::UpdateHeight()
 //----------------------------------------------------------------------------------
 void CGumpSkills::UpdateGroupPositions()
 {
+	WISPFUN_DEBUG("c125_f4");
 	int index = 0;
 	int currentY = 0;
 
@@ -187,6 +191,7 @@ void CGumpSkills::UpdateGroupPositions()
 //----------------------------------------------------------------------------------
 CGUISkillGroup *CGumpSkills::GetSkillGroup(const int &index)
 {
+	WISPFUN_DEBUG("c125_f5");
 	int currentIndex = 0;
 
 	QFOR(group, m_HTMLGump->m_Items, CBaseGUI*)
@@ -205,6 +210,7 @@ CGUISkillGroup *CGumpSkills::GetSkillGroup(const int &index)
 //----------------------------------------------------------------------------------
 CGUISkillItem *CGumpSkills::GetSkill(const int &index)
 {
+	WISPFUN_DEBUG("c125_f6");
 	QFOR(group, m_HTMLGump->m_Items, CBaseGUI*)
 	{
 		if (group->Type == GOT_SKILLGROUP)
@@ -222,6 +228,7 @@ CGUISkillItem *CGumpSkills::GetSkill(const int &index)
 //----------------------------------------------------------------------------------
 void CGumpSkills::UpdateSkillValue(const int &index)
 {
+	WISPFUN_DEBUG("c125_f7");
 	QFOR(group, m_HTMLGump->m_Items, CBaseGUI*)
 	{
 		if (group->Type == GOT_SKILLGROUP)
@@ -240,6 +247,7 @@ void CGumpSkills::UpdateSkillValue(const int &index)
 //----------------------------------------------------------------------------------
 void CGumpSkills::UpdateSkillValues()
 {
+	WISPFUN_DEBUG("c125_f8");
 	QFOR(group, m_HTMLGump->m_Items, CBaseGUI*)
 	{
 		if (group->Type == GOT_SKILLGROUP)
@@ -255,6 +263,7 @@ void CGumpSkills::UpdateSkillValues()
 //----------------------------------------------------------------------------------
 void CGumpSkills::UpdateSkillsSum()
 {
+	WISPFUN_DEBUG("c125_f9");
 	char str[20] = { 0 };
 	sprintf(str, "%.1f", g_SkillsTotal);
 	m_SkillSum->CreateTextureA(3, str);
@@ -262,6 +271,7 @@ void CGumpSkills::UpdateSkillsSum()
 //----------------------------------------------------------------------------------
 void CGumpSkills::Init()
 {
+	WISPFUN_DEBUG("c125_f10");
 	//Свернем все доступные группы
 	QFOR(group, g_SkillGroupManager.m_Groups, CSkillGroupObject*)
 		group->Maximized = false;
@@ -269,6 +279,7 @@ void CGumpSkills::Init()
 //----------------------------------------------------------------------------------
 void CGumpSkills::CalculateGumpState()
 {
+	WISPFUN_DEBUG("c125_f11");
 	CGump::CalculateGumpState();
 
 	if (g_PressedObject.LeftGump() == this && g_PressedObject.LeftSerial >= ID_GS_SKILL && g_PressedObject.LeftSerial < ID_GS_SKILL_STATE)
@@ -290,6 +301,7 @@ void CGumpSkills::CalculateGumpState()
 //----------------------------------------------------------------------------------
 void CGumpSkills::PrepareContent()
 {
+	WISPFUN_DEBUG("c125_f12");
 	uint serial = g_PressedObject.LeftSerial;
 
 	if (g_PressedObject.LeftGump() == this && serial >= ID_GS_SKILL && serial < ID_GS_SKILL_STATE)
@@ -392,6 +404,7 @@ void CGumpSkills::PrepareContent()
 //----------------------------------------------------------------------------------
 CSkillGroupObject *CGumpSkills::GetGroupUnderCursor(int &index)
 {
+	WISPFUN_DEBUG("c125_f13");
 	index = 0;
 
 	//Получить группу под курсором
@@ -435,6 +448,7 @@ CSkillGroupObject *CGumpSkills::GetGroupUnderCursor(int &index)
 //----------------------------------------------------------------------------------
 void CGumpSkills::UpdateGroupText()
 {
+	WISPFUN_DEBUG("c125_f14");
 	QFOR(item, m_HTMLGump->m_Items, CBaseGUI*)
 	{
 		if (item->Type == GOT_SKILLGROUP)
@@ -463,6 +477,7 @@ void CGumpSkills::UpdateGroupText()
 //----------------------------------------------------------------------------------
 void CGumpSkills::SetGroupTextFromEntry()
 {
+	WISPFUN_DEBUG("c125_f15");
 	int index = 0;
 	CSkillGroupObject *groupItem = g_SkillGroupManager.m_Groups;
 
@@ -496,6 +511,7 @@ void CGumpSkills::SetGroupTextFromEntry()
 //----------------------------------------------------------------------------------
 void CGumpSkills::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c125_f16");
 	CGump::OnLeftMouseButtonUp();
 
 	if (g_PressedObject.LeftGump() == this && g_PressedObject.LeftSerial >= ID_GS_SKILL && g_PressedObject.LeftSerial < ID_GS_SKILL_STATE)
@@ -513,6 +529,7 @@ void CGumpSkills::OnLeftMouseButtonUp()
 //----------------------------------------------------------------------------------
 void CGumpSkills::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c125_f17");
 	if (serial == ID_GBS_BUTTON_MINIMIZE) //Сворачиваем гамп
 	{
 		m_Minimized = true;
@@ -600,6 +617,7 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpSkills::GUMP_CHECKBOX_EVENT_C
 {
+	WISPFUN_DEBUG("c125_f18");
 	if (serial == ID_GS_SHOW_REAL) //Показать реальное значение
 	{
 		m_ShowReal = state;
@@ -618,6 +636,7 @@ void CGumpSkills::GUMP_CHECKBOX_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpSkills::GUMP_TEXT_ENTRY_EVENT_C
 {
+	WISPFUN_DEBUG("c125_f19");
 	CGUISkillGroup * group = GetSkillGroup(serial - ID_GS_GROUP);
 
 	if (group != NULL)
@@ -636,6 +655,7 @@ void CGumpSkills::GUMP_TEXT_ENTRY_EVENT_C
 //----------------------------------------------------------------------------------
 bool CGumpSkills::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c125_f20");
 	if (m_Minimized) //При даблклике по мини-гампу - раскрываем его
 	{
 		m_Minimized = false;
@@ -650,6 +670,7 @@ bool CGumpSkills::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void CGumpSkills::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c125_f21");
 	g_EntryPointer->Insert(wParam);
 
 	int val = g_FontManager.GetWidthA(6, g_EntryPointer->c_str(), g_EntryPointer->Length());
@@ -662,6 +683,7 @@ void CGumpSkills::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c125_f22");
 	if (!EntryPointerHere())
 	{
 		if (wParam == VK_DELETE)
@@ -725,7 +747,7 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 		return;
 	}
 
-	//Обработчик нажатия клавишь
+	//Обработчик нажатия клавиш
 	switch (wParam)
 	{
 		case VK_RETURN:

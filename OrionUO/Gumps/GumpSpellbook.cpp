@@ -49,6 +49,7 @@ CGumpSpellbook::~CGumpSpellbook()
 //----------------------------------------------------------------------------------
 void CGumpSpellbook::UpdateGraphic(const ushort &parentGraphic)
 {
+	WISPFUN_DEBUG("c127_f1");
 	SPELLBOOK_TYPE bookType = m_BookType;
 
 	switch (parentGraphic)
@@ -101,6 +102,7 @@ void CGumpSpellbook::UpdateGraphic(const ushort &parentGraphic)
 //----------------------------------------------------------------------------------
 void CGumpSpellbook::InitToolTip()
 {
+	WISPFUN_DEBUG("c127_f2");
 	if (m_Minimized)
 	{
 		g_ToolTip.Set(L"Double click to maximize book gump");
@@ -130,6 +132,7 @@ void CGumpSpellbook::InitToolTip()
 //----------------------------------------------------------------------------
 void CGumpSpellbook::PrepareContent()
 {
+	WISPFUN_DEBUG("c127_f3");
 	int maxSpellsCount = 0;
 	int spellsOnPage = 0;
 	int dictionaryPagesCount = 0;
@@ -260,6 +263,7 @@ void CGumpSpellbook::PrepareContent()
 //----------------------------------------------------------------------------
 void CGumpSpellbook::GetTooltipBookInfo(int &dictionaryPagesCount, int &tooltipOffset)
 {
+	WISPFUN_DEBUG("c127_f4");
 	int maxSpellsCount = 0;
 
 	switch (m_BookType)
@@ -325,6 +329,7 @@ void CGumpSpellbook::GetTooltipBookInfo(int &dictionaryPagesCount, int &tooltipO
 //----------------------------------------------------------------------------
 void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPagesCount, int &spellsOnPage, int &spellIndexOffset, ushort &graphic, ushort &minimizedGraphic, ushort &iconStartGraphic)
 {
+	WISPFUN_DEBUG("c127_f5");
 	switch (m_BookType)
 	{
 		case ST_MAGE:
@@ -411,6 +416,7 @@ void CGumpSpellbook::GetSummaryBookInfo(int &maxSpellsCount, int &dictionaryPage
 //----------------------------------------------------------------------------
 string CGumpSpellbook::GetSpellName(const int &offset, string &abbreviature, string &reagents)
 {
+	WISPFUN_DEBUG("c127_f6");
 	switch (m_BookType)
 	{
 		case ST_MAGE:
@@ -443,6 +449,7 @@ string CGumpSpellbook::GetSpellName(const int &offset, string &abbreviature, str
 //----------------------------------------------------------------------------
 string CGumpSpellbook::GetSpellRequries(const int &offset, int &y)
 {
+	WISPFUN_DEBUG("c127_f7");
 	char buf[100] = { 0 };
 	y = 162;
 
@@ -504,6 +511,7 @@ string CGumpSpellbook::GetSpellRequries(const int &offset, int &y)
 //----------------------------------------------------------------------------
 void CGumpSpellbook::UpdateContent()
 {
+	WISPFUN_DEBUG("c127_f8");
 	m_Body = NULL;
 	m_PrevPage = NULL;
 	m_NextPage = NULL;
@@ -730,6 +738,7 @@ void CGumpSpellbook::UpdateContent()
 //----------------------------------------------------------------------------
 void CGumpSpellbook::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c127_f9");
 	int newPage = -1;
 
 	if (serial == ID_GSB_BUTTON_PREV)
@@ -827,12 +836,14 @@ void CGumpSpellbook::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------
 void CGumpSpellbook::GUMP_TEXT_ENTRY_EVENT_C
 {
+	WISPFUN_DEBUG("c127_f10");
 	if (serial >= ID_GSB_SPELL_ICON_LEFT)
 		OnButton(serial);
 }
 //----------------------------------------------------------------------------
 bool CGumpSpellbook::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c127_f11");
 	bool result = false;
 
 	if (m_Minimized)
@@ -928,6 +939,7 @@ bool CGumpSpellbook::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void CGumpSpellbook::DelayedClick(CRenderObject *obj)
 {
+	WISPFUN_DEBUG("c127_f12");
 	if (obj != NULL)
 	{
 		ChangePage(g_ClickObject.Page);
@@ -937,6 +949,7 @@ void CGumpSpellbook::DelayedClick(CRenderObject *obj)
 //----------------------------------------------------------------------------------
 void CGumpSpellbook::ChangePage(int newPage)
 {
+	WISPFUN_DEBUG("c127_f13");
 	m_Page = newPage;
 
 	m_PrevPage->Visible = (m_Page != 0);

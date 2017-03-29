@@ -15,6 +15,7 @@
 CGumpMenubar::CGumpMenubar(uint serial, short x, short y)
 : CGump(GT_MENUBAR, serial, x, y), m_Opened(true)
 {
+	WISPFUN_DEBUG("c101_f1");
 	m_Page = 2;
 
 	Add(new CGUIPage(1));
@@ -78,6 +79,7 @@ CGumpMenubar::~CGumpMenubar()
 //---------------------------------------------------------------------------
 void CGumpMenubar::OnChangeOpened(const bool &val)
 {
+	WISPFUN_DEBUG("c101_f2");
 	if (val)
 		m_Page = 2;
 	else
@@ -88,6 +90,7 @@ void CGumpMenubar::OnChangeOpened(const bool &val)
 //---------------------------------------------------------------------------
 void CGumpMenubar::InitToolTip()
 {
+	WISPFUN_DEBUG("c101_f3");
 	uint id = g_SelectedObject.Serial;
 
 	if (!m_Minimized)
@@ -149,6 +152,7 @@ void CGumpMenubar::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpMenubar::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c101_f4");
 	switch (serial)
 	{
 		case ID_GMB_MINIMIZE:
@@ -212,6 +216,7 @@ void CGumpMenubar::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpMenubar::GUMP_TEXT_ENTRY_EVENT_C
 {
+	WISPFUN_DEBUG("c101_f5");
 	QFOR(item, m_Items, CBaseGUI*)
 	{
 		if (item->Type == GOT_TEXTENTRY)
@@ -226,6 +231,7 @@ void CGumpMenubar::GUMP_TEXT_ENTRY_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpMenubar::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c101_f6");
 	CGump::OnLeftMouseButtonUp();
 
 	QFOR(item, m_Items, CBaseGUI*)

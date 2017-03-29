@@ -21,6 +21,7 @@
 CGumpScreenGame::CGumpScreenGame()
 : CGump(GT_NONE, 0, 0, 0)
 {
+	WISPFUN_DEBUG("c115_f1");
 	m_NoMove = true;
 	m_NoClose = true;
 
@@ -34,6 +35,7 @@ CGumpScreenGame::~CGumpScreenGame()
 //----------------------------------------------------------------------------------
 void CGumpScreenGame::UpdateContent()
 {
+	WISPFUN_DEBUG("c115_f2");
 	if (g_PressedObject.LeftGump() == this)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
@@ -86,6 +88,7 @@ void CGumpScreenGame::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpScreenGame::InitToolTip()
 {
+	WISPFUN_DEBUG("c115_f3");
 	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object() == NULL)
 		return;
 
@@ -95,6 +98,7 @@ void CGumpScreenGame::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpScreenGame::Draw()
 {
+	WISPFUN_DEBUG("c115_f4");
 	//Рамка игрового окна
 	g_Orion.DrawGump(0x0A8D, 0, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8);
 	g_Orion.DrawGump(0x0A8D, 0, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8);
@@ -113,6 +117,7 @@ void CGumpScreenGame::Draw()
 //----------------------------------------------------------------------------------
 CRenderObject *CGumpScreenGame::Select()
 {
+	WISPFUN_DEBUG("c115_f5");
 	CRenderObject *selected = NULL;
 
 	//Если ничего не выбралось - пройдемся по рамке
@@ -139,6 +144,7 @@ CRenderObject *CGumpScreenGame::Select()
 //----------------------------------------------------------------------------------
 void CGumpScreenGame::OnLeftMouseButtonDown()
 {
+	WISPFUN_DEBUG("c115_f6");
 	//CGump::OnLeftMouseButtonDown();
 
 	if (g_GumpConsoleType != NULL)
@@ -147,6 +153,7 @@ void CGumpScreenGame::OnLeftMouseButtonDown()
 //----------------------------------------------------------------------------------
 void CGumpScreenGame::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c115_f7");
 	WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
 	if (g_PressedObject.LeftObject() == m_Items) //resizer

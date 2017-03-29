@@ -55,6 +55,7 @@ int CMouseManager::Sgn(int val)
 */
 int CMouseManager::GetFacing(int x1, int  y1, int  to_x, int to_y, int current_facing)
 {
+	WISPFUN_DEBUG("c147_f1");
 	int shiftX = to_x - x1;
 	int shiftY = to_y - y1;
 
@@ -126,6 +127,7 @@ int CMouseManager::GetFacing(int x1, int  y1, int  to_x, int to_y, int current_f
 */
 ushort CMouseManager::GetGameCursor()
 {
+	WISPFUN_DEBUG("c147_f2");
 	int war = (int)(g_Player != NULL && g_Player->Warmode);
 	ushort result = g_CursorData[war][9]; //Main Gump mouse cursor
 
@@ -153,6 +155,7 @@ ushort CMouseManager::GetGameCursor()
 */
 void CMouseManager::ProcessWalking()
 {
+	WISPFUN_DEBUG("c147_f3");
 	bool mouseInWindow = true;
 
 	if (m_Position.X < g_ConfigManager.GameWindowX || m_Position.Y < g_ConfigManager.GameWindowY || m_Position.X >(g_ConfigManager.GameWindowX + g_ConfigManager.GameWindowWidth) ||
@@ -186,6 +189,7 @@ void CMouseManager::ProcessWalking()
 */
 bool CMouseManager::LoadCursorTextures()
 {
+	WISPFUN_DEBUG("c147_f4");
 	bool result = true;
 
 	IFOR(i, 0, 2)
@@ -268,6 +272,7 @@ bool CMouseManager::LoadCursorTextures()
 */
 void CMouseManager::Draw(ushort id)
 {
+	WISPFUN_DEBUG("c147_f5");
 	if (g_GameState >= GS_GAME && g_ObjectInHand != NULL && !g_ObjectInHand->NoDraw)
 	{
 		bool doubleDraw = false;

@@ -29,6 +29,7 @@ CGumpContainer::CGumpContainer(uint serial, uint id, short x, short y)
 : CGump(GT_CONTAINER, serial, x, y), m_CorpseEyesTicks(0), m_CorpseEyesOffset(0),
 m_IsGameBoard(id == 0x091A || id == 0x092E), m_TextRenderer(), m_CorpseEyes(NULL), m_DataBox(NULL)
 {
+	WISPFUN_DEBUG("c93_f1");
 	m_Page = 1;
 	m_Locker.Serial = ID_GC_LOCK_MOVING;
 	m_ID = id;
@@ -65,6 +66,7 @@ m_IsGameBoard(id == 0x091A || id == 0x092E), m_TextRenderer(), m_CorpseEyes(NULL
 //----------------------------------------------------------------------------------
 CGumpContainer::~CGumpContainer()
 {
+	WISPFUN_DEBUG("c93_f2");
 	if (m_Graphic < CONTAINERS_COUNT)
 	{
 		ushort sound = g_ContainerOffset[m_Graphic].CloseSound;
@@ -76,6 +78,7 @@ CGumpContainer::~CGumpContainer()
 //----------------------------------------------------------------------------------
 void CGumpContainer::UpdateItemCoordinates(CGameObject *item)
 {
+	WISPFUN_DEBUG("c93_f3");
 	if (m_Graphic < CONTAINERS_COUNT)
 	{
 		CONTAINER_OFFSET_RECT &rect = g_ContainerOffset[m_Graphic].rect;
@@ -96,6 +99,7 @@ void CGumpContainer::UpdateItemCoordinates(CGameObject *item)
 //----------------------------------------------------------------------------------
 void CGumpContainer::CalculateGumpState()
 {
+	WISPFUN_DEBUG("c93_f4");
 	CGump::CalculateGumpState();
 
 	if (g_GumpPressed && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsText())
@@ -117,12 +121,14 @@ void CGumpContainer::CalculateGumpState()
 //----------------------------------------------------------------------------------
 void CGumpContainer::PrepareTextures()
 {
+	WISPFUN_DEBUG("c93_f5");
 	CGump::PrepareTextures();
 	g_Orion.ExecuteGumpPart(0x0045, 2); //Corpse eyes
 }
 //----------------------------------------------------------------------------------
 void CGumpContainer::InitToolTip()
 {
+	WISPFUN_DEBUG("c93_f6");
 	if (!m_Minimized)
 	{
 		uint id = g_SelectedObject.Serial;
@@ -145,6 +151,7 @@ void CGumpContainer::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpContainer::PrepareContent()
 {
+	WISPFUN_DEBUG("c93_f7");
 	if (GetTopObjDistance(g_Player, g_World->FindWorldObject(Serial)) < 3 && g_PressedObject.LeftGump() == this && g_ObjectInHand == NULL && g_PressedObject.LeftSerial != ID_GC_MINIMIZE)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
@@ -210,6 +217,7 @@ void CGumpContainer::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpContainer::UpdateContent()
 {
+	WISPFUN_DEBUG("c93_f8");
 	CGameItem *container = g_World->FindWorldItem(Serial);
 
 	if (container == NULL)
@@ -250,6 +258,7 @@ void CGumpContainer::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpContainer::Draw()
 {
+	WISPFUN_DEBUG("c93_f9");
 	CGump::Draw();
 
 	if (!m_Minimized)
@@ -268,6 +277,7 @@ void CGumpContainer::Draw()
 //----------------------------------------------------------------------------------
 CRenderObject *CGumpContainer::Select()
 {
+	WISPFUN_DEBUG("c93_f10");
 	CRenderObject *selected = CGump::Select();
 
 	if (!m_Minimized)
@@ -285,6 +295,7 @@ CRenderObject *CGumpContainer::Select()
 //----------------------------------------------------------------------------------
 void CGumpContainer::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c93_f11");
 	if (!m_Minimized && serial == ID_GC_MINIMIZE && m_ID == 0x003C)
 		m_Minimized = true;
 	else if (serial == ID_GC_LOCK_MOVING)
@@ -296,6 +307,7 @@ void CGumpContainer::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpContainer::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c93_f12");
 	CGump::OnLeftMouseButtonUp();
 
 	uint dropContainer = m_Serial;
@@ -420,6 +432,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 //----------------------------------------------------------------------------------
 bool CGumpContainer::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c93_f13");
 	bool result = false;
 
 	if (!g_PressedObject.LeftSerial && m_Minimized && m_ID == 0x003C)

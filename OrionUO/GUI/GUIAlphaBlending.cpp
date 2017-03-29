@@ -20,6 +20,7 @@ CGUIAlphaBlending::~CGUIAlphaBlending()
 //----------------------------------------------------------------------------------
 void CGUIAlphaBlending::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c40_f1");
 	CGUIBlending::Draw(checktrans);
 
 	if (m_Enabled)

@@ -21,6 +21,7 @@ CGumpMinimap::CGumpMinimap(uint serial, short x, short y, bool minimized)
 : CGump(GT_MINIMAP, serial, x, y), m_Count(0), m_LastX(0), m_LastY(0), m_Body(NULL),
 m_DataBox(NULL), m_Texture()
 {
+	WISPFUN_DEBUG("c102_f1");
 	m_Minimized = minimized;
 	m_Locker.Serial = ID_GMM_LOCK_MOVING;
 	GenerateMap();
@@ -28,11 +29,13 @@ m_DataBox(NULL), m_Texture()
 //----------------------------------------------------------------------------------
 CGumpMinimap::~CGumpMinimap()
 {
+	WISPFUN_DEBUG("c102_f2");
 	m_Texture.Clear();
 }
 //----------------------------------------------------------------------------------
 void CGumpMinimap::CalculateGumpState()
 {
+	WISPFUN_DEBUG("c102_f3");
 	bool minimized = m_Minimized;
 	m_Minimized = false;
 
@@ -43,6 +46,7 @@ void CGumpMinimap::CalculateGumpState()
 //----------------------------------------------------------------------------------
 void CGumpMinimap::GenerateMap()
 {
+	WISPFUN_DEBUG("c102_f4");
 	if (g_Player != NULL)
 	{
 		m_LastX = g_Player->X;
@@ -154,6 +158,7 @@ void CGumpMinimap::GenerateMap()
 //----------------------------------------------------------------------------------
 void CGumpMinimap::PrepareContent()
 {
+	WISPFUN_DEBUG("c102_f5");
 	if (g_Player->X != m_LastX || g_Player->Y != m_LastY || m_Texture.Texture == 0)
 		GenerateMap();
 	else if (!m_Count || m_Count == 6 || m_WantRedraw)
@@ -173,6 +178,7 @@ void CGumpMinimap::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpMinimap::UpdateContent()
 {
+	WISPFUN_DEBUG("c102_f6");
 	ushort graphic = 0x1393 - (int)m_Minimized;
 
 	CGLTexture *th = g_Orion.ExecuteGump(graphic);
@@ -234,6 +240,7 @@ void CGumpMinimap::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpMinimap::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c102_f7");
 	if (serial == ID_GMM_LOCK_MOVING)
 		m_LockMoving = !m_LockMoving;
 }

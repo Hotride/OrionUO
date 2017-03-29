@@ -28,6 +28,7 @@ COptionsMacroManager::~COptionsMacroManager()
 */
 void COptionsMacroManager::LoadFromMacro()
 {
+	WISPFUN_DEBUG("c149_f1");
 	Clear();
 
 	QFOR(obj, g_MacroManager.m_Items, CMacro*)

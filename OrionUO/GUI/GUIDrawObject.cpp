@@ -24,6 +24,7 @@ CGUIDrawObject::~CGUIDrawObject()
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize CGUIDrawObject::GetSize()
 {
+	WISPFUN_DEBUG("c52_f1");
 	WISP_GEOMETRY::CSize size;
 	CGLTexture *th = g_Orion.ExecuteGump(GetDrawGraphic());
 
@@ -38,6 +39,7 @@ WISP_GEOMETRY::CSize CGUIDrawObject::GetSize()
 //----------------------------------------------------------------------------------
 void CGUIDrawObject::SetShaderMode()
 {
+	WISPFUN_DEBUG("c52_f2");
 	int drawMode = (m_Color != 0);
 
 	if (drawMode)
@@ -53,11 +55,13 @@ void CGUIDrawObject::SetShaderMode()
 //----------------------------------------------------------------------------------
 void CGUIDrawObject::PrepareTextures()
 {
+	WISPFUN_DEBUG("c52_f3");
 	g_Orion.ExecuteGump(m_Graphic);
 }
 //----------------------------------------------------------------------------------
 void CGUIDrawObject::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c52_f4");
 	CGLTexture *th = g_Orion.ExecuteGump(GetDrawGraphic());
 
 	if (th != NULL)
@@ -70,6 +74,7 @@ void CGUIDrawObject::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUIDrawObject::Select()
 {
+	WISPFUN_DEBUG("c52_f5");
 	bool select = false;
 
 	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);

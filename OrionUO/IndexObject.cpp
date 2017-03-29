@@ -17,6 +17,7 @@ m_LastAccessTime(0), Texture(NULL)
 //----------------------------------------------------------------------------------
 CIndexObject::~CIndexObject()
 {
+	WISPFUN_DEBUG("c189_f1");
 	if (Texture != NULL)
 	{
 		delete Texture;

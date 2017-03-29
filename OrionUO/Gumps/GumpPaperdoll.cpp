@@ -53,6 +53,7 @@ CGumpPaperdoll::CGumpPaperdoll(uint serial, short x, short y, bool minimized)
 : CGump(GT_PAPERDOLL, serial, x, y), m_TextRenderer(), m_TextContainer(10),
 m_DataBox(NULL), m_Description(NULL), m_WantTransparentContent(false)
 {
+	WISPFUN_DEBUG("c105_f1");
 	m_Locker.Serial = ID_GP_LOCK_MOVING;
 
 	if (minimized)
@@ -150,6 +151,7 @@ CGumpPaperdoll::~CGumpPaperdoll()
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::CalculateGumpState()
 {
+	WISPFUN_DEBUG("c105_f2");
 	CGump::CalculateGumpState();
 
 	if (g_GumpPressed && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsText())
@@ -171,6 +173,7 @@ void CGumpPaperdoll::CalculateGumpState()
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::InitToolTip()
 {
+	WISPFUN_DEBUG("c105_f3");
 	uint id = g_SelectedObject.Serial;
 
 	if (!m_Minimized)
@@ -291,6 +294,7 @@ void CGumpPaperdoll::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::DelayedClick(CRenderObject *obj)
 {
+	WISPFUN_DEBUG("c105_f4");
 	if (obj != NULL)
 	{
 		CTextData *td = new CTextData();
@@ -330,6 +334,7 @@ void CGumpPaperdoll::DelayedClick(CRenderObject *obj)
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::PrepareContent()
 {
+	WISPFUN_DEBUG("c105_f5");
 	CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
 
 	if (obj == NULL)
@@ -392,6 +397,7 @@ void CGumpPaperdoll::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::UpdateContent()
 {
+	WISPFUN_DEBUG("c105_f6");
 	//Clear();
 
 	CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
@@ -661,6 +667,7 @@ void CGumpPaperdoll::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::UpdateDescription(const string &text)
 {
+	WISPFUN_DEBUG("c105_f7");
 	if (m_Description != NULL)
 	{
 		m_Description->CreateTextureA(1, text, 185);
@@ -671,6 +678,7 @@ void CGumpPaperdoll::UpdateDescription(const string &text)
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::Draw()
 {
+	WISPFUN_DEBUG("c105_f8");
 	CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
 
 	if (obj == NULL)
@@ -697,6 +705,7 @@ void CGumpPaperdoll::Draw()
 //----------------------------------------------------------------------------------
 CRenderObject *CGumpPaperdoll::Select()
 {
+	WISPFUN_DEBUG("c105_f9");
 	CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
 
 	if (obj == NULL)
@@ -719,6 +728,7 @@ CRenderObject *CGumpPaperdoll::Select()
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c105_f10");
 	switch (serial)
 	{
 		case ID_GP_BUTTON_HELP: //Paperdoll button Help
@@ -802,6 +812,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c105_f11");
 	CGump::OnLeftMouseButtonUp();
 
 	uint serial = g_SelectedObject.Serial;
@@ -894,6 +905,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 //----------------------------------------------------------------------------------
 bool CGumpPaperdoll::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c105_f12");
 	if (m_Minimized)
 	{
 		m_Minimized = false;

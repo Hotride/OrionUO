@@ -20,6 +20,7 @@
 CGumpScreenSelectTown::CGumpScreenSelectTown()
 : CGump(GT_NONE, 0, 0, 0), m_HTMLGump(NULL), m_Description(NULL)
 {
+	WISPFUN_DEBUG("c118_f1");
 	m_NoMove = true;
 	m_NoClose = true;
 
@@ -41,6 +42,7 @@ CGumpScreenSelectTown::~CGumpScreenSelectTown()
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectTown::UpdateContent()
 {
+	WISPFUN_DEBUG("c118_f2");
 	Clear();
 
 	CCityItem *city = g_SelectTownScreen.m_City;
@@ -140,6 +142,7 @@ void CGumpScreenSelectTown::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectTown::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c118_f3");
 	if (serial == ID_STS_QUIT) //x button
 		g_SelectTownScreen.CreateSmoothAction(CSelectTownScreen::ID_SMOOTH_STS_QUIT);
 	else if (serial == ID_STS_ARROW_PREV) //< button
@@ -150,6 +153,7 @@ void CGumpScreenSelectTown::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectTown::GUMP_TEXT_ENTRY_EVENT_C
 {
+	WISPFUN_DEBUG("c118_f4");
 	QFOR(item, m_Items, CBaseGUI*)
 	{
 		if (item->Type == GOT_TEXTENTRY)

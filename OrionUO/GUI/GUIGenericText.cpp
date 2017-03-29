@@ -21,6 +21,7 @@ CGUIGenericText::~CGUIGenericText()
 //----------------------------------------------------------------------------------
 void CGUIGenericText::CreateTexture(const wstring &str)
 {
+	WISPFUN_DEBUG("c54_f1");
 	ushort flags = UOFONT_BLACK_BORDER;
 
 	if (m_MaxWidth)

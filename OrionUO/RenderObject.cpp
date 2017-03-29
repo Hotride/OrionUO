@@ -19,6 +19,7 @@ CRenderObject::CRenderObject(const uint &serial, const ushort &graphic, const us
 //----------------------------------------------------------------------------------
 CRenderObject::~CRenderObject()
 {
+	WISPFUN_DEBUG("c201_f1");
 	g_ClickObject.Clear(this);
 	g_SelectedObject.Clear(this);
 	g_LastSelectedObject.Clear(this);

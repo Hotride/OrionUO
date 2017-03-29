@@ -24,12 +24,14 @@ m_HTMLBackgroundCanBeColored(false), m_BackgroundColor(0), m_WebLinkColor(0),
 m_VisitedWebLinkColor(0), m_LeftMargin(0), m_TopMargin(0), m_RightMargin(0),
 m_BottomMargin(0)
 {
+	WISPFUN_DEBUG("c143_f1");
 	memset(m_UnicodeFontAddress, 0, sizeof(m_UnicodeFontAddress));
 	memset(m_UnicodeFontSize, 0, sizeof(m_UnicodeFontSize));
 }
 //----------------------------------------------------------------------------------
 CFontsManager::~CFontsManager()
 {
+	WISPFUN_DEBUG("c143_f2");
 	delete []m_Font;
 	m_FontCount = 0;
 	m_WebLink.clear();
@@ -41,6 +43,7 @@ CFontsManager::~CFontsManager()
 */
 bool CFontsManager::LoadFonts()
 {
+	WISPFUN_DEBUG("c143_f3");
 	WISP_FILE::CMappedFile &fontFile = g_FileManager.m_FontsMul;
 	m_FontCount = 0;
 
@@ -123,6 +126,7 @@ bool CFontsManager::LoadFonts()
 //----------------------------------------------------------------------------------
 BYTE CFontsManager::UnicodeFontExists(const uchar &font)
 {
+	WISPFUN_DEBUG("c143_f4");
 	if (font >= g_FileManager.UnicodeFontsCount)
 		return 0;
 	else if (m_UnicodeFontAddress[font] == NULL)
@@ -138,6 +142,7 @@ BYTE CFontsManager::UnicodeFontExists(const uchar &font)
 */
 void CFontsManager::GoToWebLink(ushort link)
 {
+	WISPFUN_DEBUG("c143_f5");
 	WEBLINK_MAP::iterator it = m_WebLink.find(link);
 
 	if (it != m_WebLink.end())
@@ -157,6 +162,7 @@ void CFontsManager::GoToWebLink(ushort link)
 */
 int CFontsManager::GetFontOffsetY(uchar font, uchar index)
 {
+	WISPFUN_DEBUG("c143_f6");
 	int offsY = 0;
 
 	if (index == 0xB8)
@@ -192,6 +198,7 @@ int CFontsManager::GetFontOffsetY(uchar font, uchar index)
 */
 POINT CFontsManager::GetCaretPosA(uchar font, const char *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f7");
 	POINT p = {0, 0};
 
 	if (font > m_FontCount || pos < 1)
@@ -278,6 +285,7 @@ POINT CFontsManager::GetCaretPosA(uchar font, const char *str, int pos, int widt
 */
 int CFontsManager::CalculateCaretPosA(uchar font, const char *str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f8");
 	if (font > m_FontCount || x < 0 || y < 0)
 		return 0;
 
@@ -376,6 +384,7 @@ int CFontsManager::CalculateCaretPosA(uchar font, const char *str, int x, int y,
 */
 int CFontsManager::GetWidthA(uchar font, const char *str, int len)
 {
+	WISPFUN_DEBUG("c143_f9");
 	if (font > m_FontCount)
 		return 0;
 
@@ -415,6 +424,7 @@ int CFontsManager::GetWidthA(uchar font, const char *str, int len)
 */
 int CFontsManager::GetWidthExA(uchar font, const char *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f10");
 	if (font > m_FontCount)
 		return 0;
 
@@ -458,6 +468,7 @@ int CFontsManager::GetWidthExA(uchar font, const char *str, int len, int maxWidt
 */
 int CFontsManager::GetHeightA(uchar font, const char *str, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f11");
 	if (font > m_FontCount)
 		return 0;
 
@@ -496,6 +507,7 @@ int CFontsManager::GetHeightA(uchar font, const char *str, int width, TEXT_ALIGN
 */
 int CFontsManager::GetHeightA(PMULTILINES_FONT_INFO info)
 {
+	WISPFUN_DEBUG("c143_f12");
 	int textHeight = 0;
 
 	while (info != NULL)
@@ -519,6 +531,7 @@ int CFontsManager::GetHeightA(PMULTILINES_FONT_INFO info)
 */
 string CFontsManager::GetTextByWidthA(uchar font, const char *str, int len, int width, bool IsCropped)
 {
+	WISPFUN_DEBUG("c143_f13");
 	if (!len || font > m_FontCount)
 		return string("");
 
@@ -569,6 +582,7 @@ string CFontsManager::GetTextByWidthA(uchar font, const char *str, int len, int 
 */
 PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
+	WISPFUN_DEBUG("c143_f14");
 	if (font > m_FontCount)
 		return NULL;
 
@@ -788,6 +802,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoA(uchar font, const char *str, int l
 */
 bool CFontsManager::GenerateA(uchar font, CGLTextTexture &th, const char *str, ushort color, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f15");
 	if ((flags & UOFONT_FIXED) || (flags & UOFONT_CROPPED))
 	{
 		th.Clear();
@@ -824,6 +839,7 @@ bool CFontsManager::GenerateA(uchar font, CGLTextTexture &th, const char *str, u
 */
 UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const char *str, ushort &color, int &width, TEXT_ALIGN_TYPE &align, ushort &flags)
 {
+	WISPFUN_DEBUG("c143_f16");
 	UINT_LIST pData;
 
 	th.Clear();
@@ -984,6 +1000,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const 
 */
 bool CFontsManager::GenerateABase(uchar &font, CGLTextTexture &th, const char *str, ushort &color, int &width, TEXT_ALIGN_TYPE &align, ushort &flags)
 {
+	WISPFUN_DEBUG("c143_f17");
 	UINT_LIST pixels = GeneratePixelsA(font, th, str, color, width, align, flags);
 	bool result = false;
 
@@ -1011,6 +1028,7 @@ bool CFontsManager::GenerateABase(uchar &font, CGLTextTexture &th, const char *s
 */
 void CFontsManager::DrawA(uchar font, const char *str, ushort color, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f18");
 	CGLTextTexture th;
 
 	if (GenerateA(font, th, str, color, width, align, flags))
@@ -1040,6 +1058,7 @@ void CFontsManager::DrawA(uchar font, const char *str, ushort color, int x, int 
 */
 POINT CFontsManager::GetCaretPosW(uchar font, const wchar_t *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f19");
 	POINT p = {0, 0};
 
 	if (pos < 1 || font >= 20 || !m_UnicodeFontAddress[font])
@@ -1132,6 +1151,7 @@ POINT CFontsManager::GetCaretPosW(uchar font, const wchar_t *str, int pos, int w
 */
 int CFontsManager::CalculateCaretPosW(uchar font, const wchar_t *str, int x, int y, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f20");
 	if (x < 0 || y < 0 || font >= 20 || !m_UnicodeFontAddress[font])
 		return 0;
 
@@ -1233,6 +1253,7 @@ int CFontsManager::CalculateCaretPosW(uchar font, const wchar_t *str, int x, int
 */
 int CFontsManager::GetWidthW(uchar font, const wchar_t *str, int len)
 {
+	WISPFUN_DEBUG("c143_f21");
 	if (font >= 20 || !m_UnicodeFontAddress[font])
 		return 0;
 
@@ -1273,6 +1294,7 @@ int CFontsManager::GetWidthW(uchar font, const wchar_t *str, int len)
 */
 int CFontsManager::GetWidthExW(uchar font, const wchar_t *str, int len, int maxWidth, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f22");
 	if (font >= 20 || !m_UnicodeFontAddress[font])
 		return 0;
 
@@ -1316,6 +1338,7 @@ int CFontsManager::GetWidthExW(uchar font, const wchar_t *str, int len, int maxW
 */
 int CFontsManager::GetHeightW(uchar font, const wchar_t *str, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f23");
 	if (font >= 20 || !m_UnicodeFontAddress[font])
 		return 0;
 
@@ -1359,6 +1382,7 @@ int CFontsManager::GetHeightW(uchar font, const wchar_t *str, int width, TEXT_AL
 */
 int CFontsManager::GetHeightW(PMULTILINES_FONT_INFO info)
 {
+	WISPFUN_DEBUG("c143_f24");
 	if (info == NULL)
 		return 0;
 
@@ -1388,6 +1412,7 @@ int CFontsManager::GetHeightW(PMULTILINES_FONT_INFO info)
 */
 wstring CFontsManager::GetTextByWidthW(uchar font, const wchar_t *str, int len, int width, bool IsCropped)
 {
+	WISPFUN_DEBUG("c143_f25");
 	if (font >= 20 || !m_UnicodeFontAddress[font] || !len)
 		return wstring(L"");
 
@@ -1436,6 +1461,7 @@ wstring CFontsManager::GetTextByWidthW(uchar font, const wchar_t *str, int len, 
 //----------------------------------------------------------------------------------
 ushort CFontsManager::GetWebLinkID(const wstring &link, uint &color)
 {
+	WISPFUN_DEBUG("c143_f26");
 	return GetWebLinkID(ToString(link), color);
 }
 //----------------------------------------------------------------------------------
@@ -1447,6 +1473,7 @@ ushort CFontsManager::GetWebLinkID(const wstring &link, uint &color)
 */
 ushort CFontsManager::GetWebLinkID(const string &link, uint &color)
 {
+	WISPFUN_DEBUG("c143_f27");
 	ushort linkID = 0;
 
 	WEBLINK_MAP::iterator it = m_WebLink.begin();
@@ -1476,6 +1503,7 @@ ushort CFontsManager::GetWebLinkID(const string &link, uint &color)
 //----------------------------------------------------------------------------------
 HTMLCHAR_LIST CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &len, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f28");
 	HTMLCHAR_LIST data;
 
 	if (len < 1)
@@ -1593,6 +1621,7 @@ HTMLCHAR_LIST CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &le
 //----------------------------------------------------------------------------------
 HTML_DATA_INFO CFontsManager::GetHTMLInfoFromTag(const HTML_TAG_TYPE &tag)
 {
+	WISPFUN_DEBUG("c143_f29");
 	HTML_DATA_INFO info = { tag, TS_LEFT, 0, 0xFF, 0, 0 };
 
 	switch (tag)
@@ -1659,6 +1688,7 @@ HTML_DATA_INFO CFontsManager::GetHTMLInfoFromTag(const HTML_TAG_TYPE &tag)
 //----------------------------------------------------------------------------------
 HTML_DATA_INFO CFontsManager::GetCurrentHTMLInfo(const HTMLINFO_LIST &list)
 {
+	WISPFUN_DEBUG("c143_f30");
 	HTML_DATA_INFO info = { HTT_NONE, TS_LEFT, 0, 0xFF, 0, 0 };
 
 	IFOR(i, 0, (int)list.size())
@@ -1730,6 +1760,7 @@ HTML_DATA_INFO CFontsManager::GetCurrentHTMLInfo(const HTMLINFO_LIST &list)
 //----------------------------------------------------------------------------------
 void CFontsManager::TrimHTMLString(string &str)
 {
+	WISPFUN_DEBUG("c143_f31");
 	if (str.length() >= 2 && str[0] == '"' && str[str.length() - 1] == '"')
 	{
 		str.resize(str.length() - 1);
@@ -1739,6 +1770,7 @@ void CFontsManager::TrimHTMLString(string &str)
 //----------------------------------------------------------------------------------
 uint CFontsManager::GetHTMLColorFromText(string &str)
 {
+	WISPFUN_DEBUG("c143_f32");
 	uint color = 0;
 
 	if (str.length() > 1)
@@ -1799,6 +1831,7 @@ uint CFontsManager::GetHTMLColorFromText(string &str)
 //----------------------------------------------------------------------------------
 void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &content)
 {
+	WISPFUN_DEBUG("c143_f33");
 	WISP_FILE::CTextFileParser parser("", " =", "", "\"\"");
 
 	STRING_LIST strings = parser.GetTokens(content.c_str());
@@ -1867,6 +1900,7 @@ void CFontsManager::GetHTMLInfoFromContent(HTML_DATA_INFO &info, const string &c
 //----------------------------------------------------------------------------------
 HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, int &i, bool &endTag, HTML_DATA_INFO &info)
 {
+	WISPFUN_DEBUG("c143_f34");
 	HTML_TAG_TYPE tag = HTT_NONE;
 
 	i++;
@@ -1994,6 +2028,7 @@ HTML_TAG_TYPE CFontsManager::ParseHTMLTag(const wchar_t *str, const int &len, in
 */
 PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
+	WISPFUN_DEBUG("c143_f35");
 	HTMLCHAR_LIST htmlData = GetHTMLData(font, str, len, align, flags);
 
 	if (!htmlData.size())
@@ -2214,6 +2249,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoHTML(uchar font, const wchar_t *str,
 */
 PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, int len, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
+	WISPFUN_DEBUG("c143_f36");
 	m_WebLinkColor = 0xFF0000FF;
 	m_VisitedWebLinkColor = 0x0000FFFF;
 	m_BackgroundColor = 0;
@@ -2453,6 +2489,7 @@ PMULTILINES_FONT_INFO CFontsManager::GetInfoW(uchar font, const wchar_t *str, in
 */
 bool CFontsManager::GenerateW(uchar font, CGLTextTexture &th, const wchar_t *str, ushort color, uchar cell, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f37");
 	if ((flags & UOFONT_FIXED) || (flags & UOFONT_CROPPED))
 	{
 		th.Clear();
@@ -2490,6 +2527,7 @@ bool CFontsManager::GenerateW(uchar font, CGLTextTexture &th, const wchar_t *str
 */
 UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const wchar_t *str, ushort &color, uchar &cell, int &width, TEXT_ALIGN_TYPE &align, ushort &flags)
 {
+	WISPFUN_DEBUG("c143_f38");
 	UINT_LIST pData;
 
 	if (font >= 20 || !m_UnicodeFontAddress[font])
@@ -3014,6 +3052,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 */
 bool CFontsManager::GenerateWBase(uchar &font, CGLTextTexture &th, const wchar_t *str, ushort &color, uchar &cell, int &width, TEXT_ALIGN_TYPE &align, ushort &flags)
 {
+	WISPFUN_DEBUG("c143_f39");
 	UINT_LIST pixels = GeneratePixelsW(font, th, str, color, cell, width, align, flags);
 	bool result = false;
 
@@ -3042,6 +3081,7 @@ bool CFontsManager::GenerateWBase(uchar &font, CGLTextTexture &th, const wchar_t
 */
 void CFontsManager::DrawW(uchar font, const wchar_t *str, ushort color, int x, int y, uchar cell, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
+	WISPFUN_DEBUG("c143_f40");
 	CGLTextTexture th;
 
 	if (GenerateW(font, th, str, color, cell, width, align, flags))

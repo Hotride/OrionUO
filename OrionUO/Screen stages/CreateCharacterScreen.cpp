@@ -42,6 +42,7 @@ void CCreateCharacterScreen::OnChangeColorSelection(const int &val)
 */
 void CCreateCharacterScreen::Init()
 {
+	WISPFUN_DEBUG("c162_f1");
 	g_CreateCharacterManager.Clear();
 
 	m_Name = "";
@@ -62,6 +63,7 @@ void CCreateCharacterScreen::Init()
 */
 void CCreateCharacterScreen::ProcessSmoothAction(uchar action)
 {
+	WISPFUN_DEBUG("c162_f2");
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
 
@@ -86,6 +88,7 @@ void CCreateCharacterScreen::ProcessSmoothAction(uchar action)
 */
 void CCreateCharacterScreen::OnLeftMouseButtonDown()
 {
+	WISPFUN_DEBUG("c162_f3");
 	CBaseScreen::OnLeftMouseButtonDown();
 
 	if (g_SelectedObject.Serial == 0)
@@ -106,6 +109,7 @@ void CCreateCharacterScreen::OnLeftMouseButtonDown()
 */
 void CCreateCharacterScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c162_f4");
 	if (wParam >= 0x0100 || !g_FontManager.IsPrintASCII(wParam))
 		return;
 	else if (g_EntryPointer == NULL)
@@ -126,6 +130,7 @@ void CCreateCharacterScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lPa
 */
 void CCreateCharacterScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c162_f5");
 	if (g_EntryPointer != NULL)
 	{
 		g_EntryPointer->OnKey(&m_Gump, wParam);

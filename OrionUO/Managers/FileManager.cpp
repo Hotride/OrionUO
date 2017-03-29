@@ -23,6 +23,7 @@ CFileManager::~CFileManager()
 //----------------------------------------------------------------------------------
 bool CFileManager::Load()
 {
+	WISPFUN_DEBUG("c142_f1");
 	if (!m_AnimIdx[0].Load(g_App.FilePath("anim.idx")))
 		return false;
 	else if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
@@ -116,6 +117,7 @@ bool CFileManager::Load()
 //----------------------------------------------------------------------------------
 void CFileManager::Unload()
 {
+	WISPFUN_DEBUG("c142_f2");
 	m_ArtIdx.Unload();
 	m_GumpIdx.Unload();
 	m_LightIdx.Unload();

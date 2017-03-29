@@ -23,6 +23,7 @@ CGumpCombatBook::CGumpCombatBook(const int &x, const int &y)
 : CGump(GT_COMBAT_BOOK, 0, x, y), m_DictionaryPagesCount(6), m_PagesCount(37),
 m_AbilityCount(MAX_ABILITIES_COUNT), m_PrevPage(NULL), m_NextPage(NULL)
 {
+	WISPFUN_DEBUG("c91_f1");
 	m_Draw2Page = true;
 
 	if (g_PacketManager.ClientVersion < CV_7000)
@@ -45,6 +46,7 @@ CGumpCombatBook::~CGumpCombatBook()
 //----------------------------------------------------------------------------------
 USHORT_LIST CGumpCombatBook::GetItemsList(const uchar &index)
 {
+	WISPFUN_DEBUG("c91_f2");
 	USHORT_LIST list;
 
 	switch (index)
@@ -357,6 +359,7 @@ USHORT_LIST CGumpCombatBook::GetItemsList(const uchar &index)
 //----------------------------------------------------------------------------------
 void CGumpCombatBook::InitToolTip()
 {
+	WISPFUN_DEBUG("c91_f3");
 	if (m_Minimized)
 	{
 		g_ToolTip.Set(L"Double click to maximize book gump");
@@ -381,6 +384,7 @@ void CGumpCombatBook::InitToolTip()
 //----------------------------------------------------------------------------
 void CGumpCombatBook::PrepareContent()
 {
+	WISPFUN_DEBUG("c91_f4");
 	if (g_PressedObject.LeftGump() == this && m_Page < m_DictionaryPagesCount && (g_PressedObject.LeftSerial == ID_GCB_ICON_FIRST || g_PressedObject.LeftSerial == ID_GCB_ICON_SECOND))
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
@@ -396,6 +400,7 @@ void CGumpCombatBook::PrepareContent()
 //----------------------------------------------------------------------------
 void CGumpCombatBook::UpdateContent()
 {
+	WISPFUN_DEBUG("c91_f5");
 	m_PrevPage = NULL;
 	m_NextPage = NULL;
 
@@ -520,6 +525,7 @@ void CGumpCombatBook::UpdateContent()
 //----------------------------------------------------------------------------
 void CGumpCombatBook::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c91_f6");
 	int newPage = -1;
 
 	if (serial == ID_GCB_BUTTON_PREV)
@@ -568,6 +574,7 @@ void CGumpCombatBook::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------
 bool CGumpCombatBook::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c91_f7");
 	bool result = false;
 
 	if (m_Minimized)
@@ -623,6 +630,7 @@ bool CGumpCombatBook::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void CGumpCombatBook::DelayedClick(CRenderObject *obj)
 {
+	WISPFUN_DEBUG("c91_f8");
 	if (obj != NULL)
 	{
 		ChangePage(g_ClickObject.Page);
@@ -632,6 +640,7 @@ void CGumpCombatBook::DelayedClick(CRenderObject *obj)
 //----------------------------------------------------------------------------------
 void CGumpCombatBook::ChangePage(int newPage)
 {
+	WISPFUN_DEBUG("c91_f9");
 	m_Page = newPage;
 
 	m_PrevPage->Visible = (m_Page != 0);

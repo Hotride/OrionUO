@@ -21,12 +21,14 @@ CGameWorld *g_World = NULL;
 //----------------------------------------------------------------------------------
 CGameWorld::CGameWorld(const uint &serial)
 {
+	WISPFUN_DEBUG("c22_f1");
 	m_Items = NULL;
 	CreatePlayer(serial);
 }
 //----------------------------------------------------------------------------------
 CGameWorld::~CGameWorld()
 {
+	WISPFUN_DEBUG("c22_f2");
 	RemovePlayer();
 
 	CGameObject *obj = m_Items;
@@ -45,6 +47,7 @@ CGameWorld::~CGameWorld()
 //----------------------------------------------------------------------------------
 void CGameWorld::ProcessSound(const uint &ticks, CGameCharacter *gc)
 {
+	WISPFUN_DEBUG("c22_f3");
 	if (g_ConfigManager.FootstepsSound && gc->IsHuman() && !gc->Hidden())
 	{
 		CWalkData *wd = gc->m_WalkStack.Top();
@@ -86,6 +89,7 @@ void CGameWorld::ProcessSound(const uint &ticks, CGameCharacter *gc)
 */
 void CGameWorld::ProcessAnimation()
 {
+	WISPFUN_DEBUG("c22_f4");
 	int delay = (g_ConfigManager.StandartCharactersAnimationDelay ? ORIGINAL_CHARACTERS_ANIMATION_DELAY : ORION_CHARACTERS_ANIMATION_DELAY);
 	g_AnimCharactersDelayValue = (float)delay;
 
@@ -274,6 +278,7 @@ void CGameWorld::ProcessAnimation()
 */
 void CGameWorld::CreatePlayer(const uint &serial)
 {
+	WISPFUN_DEBUG("c22_f5");
 	RemovePlayer();
 
 	g_PlayerSerial = serial;
@@ -297,6 +302,7 @@ void CGameWorld::CreatePlayer(const uint &serial)
 */
 void CGameWorld::RemovePlayer()
 {
+	WISPFUN_DEBUG("c22_f6");
 	if (g_Player != NULL)
 	{
 		RemoveFromContainer(g_Player);
@@ -315,6 +321,7 @@ void CGameWorld::RemovePlayer()
 */
 void CGameWorld::SetPlayer(const uint &serial)
 {
+	WISPFUN_DEBUG("c22_f6");
 	if (serial != g_Player->Serial)
 		CreatePlayer(serial);
 }
@@ -326,6 +333,7 @@ void CGameWorld::SetPlayer(const uint &serial)
 */
 CGameItem *CGameWorld::GetWorldItem(const uint &serial)
 {
+	WISPFUN_DEBUG("c22_f8");
 	WORLD_MAP::iterator i = m_Map.find(serial);
 
 	if (i == m_Map.end() || (*i).second == NULL)
@@ -356,6 +364,7 @@ CGameItem *CGameWorld::GetWorldItem(const uint &serial)
 */
 CGameCharacter *CGameWorld::GetWorldCharacter(const uint &serial)
 {
+	WISPFUN_DEBUG("c22_f9");
 	WORLD_MAP::iterator i = m_Map.find(serial);
 
 	if (i == m_Map.end() || (*i).second == NULL)
@@ -386,6 +395,7 @@ CGameCharacter *CGameWorld::GetWorldCharacter(const uint &serial)
 */
 CGameObject *CGameWorld::FindWorldObject(const uint &serial)
 {
+	WISPFUN_DEBUG("c22_f10");
 	CGameObject *result = NULL;
 
 	WORLD_MAP::iterator i = m_Map.find(serial);
@@ -402,6 +412,7 @@ CGameObject *CGameWorld::FindWorldObject(const uint &serial)
 */
 CGameItem *CGameWorld::FindWorldItem(const uint &serial)
 {
+	WISPFUN_DEBUG("c22_f11");
 	CGameItem *result = NULL;
 
 	WORLD_MAP::iterator i = m_Map.find(serial);
@@ -418,6 +429,7 @@ CGameItem *CGameWorld::FindWorldItem(const uint &serial)
 */
 CGameCharacter *CGameWorld::FindWorldCharacter(const uint &serial)
 {
+	WISPFUN_DEBUG("c22_f12");
 	CGameCharacter *result = NULL;
 
 	WORLD_MAP::iterator i = m_Map.find(serial);
@@ -434,6 +446,7 @@ CGameCharacter *CGameWorld::FindWorldCharacter(const uint &serial)
 */
 void CGameWorld::RemoveObject(CGameObject *obj)
 {
+	WISPFUN_DEBUG("c22_f13");
 	RemoveFromContainer(obj);
 
 	uint serial = obj->Serial;
@@ -449,6 +462,7 @@ void CGameWorld::RemoveObject(CGameObject *obj)
 */
 void CGameWorld::RemoveFromContainer(CGameObject *obj)
 {
+	WISPFUN_DEBUG("c22_f14");
 	if (obj->Container != 0xFFFFFFFF)
 	{
 		CGameObject *container = FindWorldObject(obj->Container);
@@ -497,6 +511,7 @@ void CGameWorld::RemoveFromContainer(CGameObject *obj)
 */
 void CGameWorld::ClearContainer(CGameObject *obj)
 {
+	WISPFUN_DEBUG("c22_f15");
 	if (!obj->Empty())
 		obj->Clear();
 }
@@ -509,6 +524,7 @@ void CGameWorld::ClearContainer(CGameObject *obj)
 */
 void CGameWorld::PutContainer(CGameObject *obj, CGameObject *container)
 {
+	WISPFUN_DEBUG("c22_f16");
 	RemoveFromContainer(obj);
 	container->AddItem(obj);
 }
@@ -520,6 +536,7 @@ void CGameWorld::PutContainer(CGameObject *obj, CGameObject *container)
 */
 void CGameWorld::MoveToTop(CGameObject *obj)
 {
+	WISPFUN_DEBUG("c22_f17");
 	if (obj == NULL)
 		return;
 
@@ -636,6 +653,7 @@ void CGameWorld::MoveToTop(CGameObject *obj)
 */
 CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &scanDistance, const SCAN_TYPE_OBJECT &scanType, const SCAN_MODE_OBJECT &scanMode)
 {
+	WISPFUN_DEBUG("c22_f18");
 	CGameObject *result = NULL;
 
 	CGameObject *start = FindWorldObject(serialStart);
@@ -750,6 +768,7 @@ CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &s
 */
 void CGameWorld::Dump(uchar tCount, uint serial)
 {
+	WISPFUN_DEBUG("c22_f19");
 	LOG("World Dump:\n\n");
 
 	CGameObject *obj = m_Items;

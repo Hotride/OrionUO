@@ -25,6 +25,7 @@ CGameEffectDrag::~CGameEffectDrag()
 */
 void CGameEffectDrag::Update(CGameObject *parent)
 {
+	WISPFUN_DEBUG("c17_f1");
 	if (m_LastMoveTime > g_Ticks)
 		return;
 

@@ -30,6 +30,7 @@ CConnectionScreen::~CConnectionScreen()
 */
 void CConnectionScreen::Init()
 {
+	WISPFUN_DEBUG("c161_f1");
 	m_Message = "";
 	m_ConnectionFailed = false;
 	m_Connected = false;
@@ -81,6 +82,7 @@ void CConnectionScreen::OnChangeMessage(const string &val)
 */
 void CConnectionScreen::ProcessSmoothAction(uchar action)
 {
+	WISPFUN_DEBUG("c161_f2");
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
 
@@ -102,6 +104,7 @@ void CConnectionScreen::ProcessSmoothAction(uchar action)
 */
 void CConnectionScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c161_f3");
 	switch (wParam)
 	{
 		case VK_RETURN:

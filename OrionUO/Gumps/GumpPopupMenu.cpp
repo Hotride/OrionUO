@@ -16,6 +16,7 @@ CGumpPopupMenu *g_PopupMenu = NULL;
 CGumpPopupMenu::CGumpPopupMenu(uint serial, short x, short y)
 : CGump(GT_POPUP_MENU, serial, x, y), m_Width(0), m_Height(0)
 {
+	WISPFUN_DEBUG("c107_f1");
 	m_NoMove = true;
 	g_PopupMenu = this;
 	m_Page = 1;
@@ -27,11 +28,13 @@ CGumpPopupMenu::CGumpPopupMenu(uint serial, short x, short y)
 //----------------------------------------------------------------------------------
 CGumpPopupMenu::~CGumpPopupMenu()
 {
+	WISPFUN_DEBUG("c107_f2");
 	g_PopupMenu = NULL;
 }
 //----------------------------------------------------------------------------------
 void CGumpPopupMenu::PrepareContent()
 {
+	WISPFUN_DEBUG("c107_f3");
 	if (g_SelectedObject.Gump() == this && g_SelectedObject.Object() != NULL && ((CBaseGUI*)g_SelectedObject.Object())->Type == GOT_HITBOX)
 	{
 		CGUIHitBox *box = (CGUIHitBox*)g_SelectedObject.Object();
@@ -57,6 +60,7 @@ void CGumpPopupMenu::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpPopupMenu::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c107_f4");
 	if (serial == ID_GPM_MAXIMIZE)
 	{
 		m_Page = 2;

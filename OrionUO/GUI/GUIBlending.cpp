@@ -21,6 +21,7 @@ CGUIBlending::~CGUIBlending()
 //----------------------------------------------------------------------------------
 void CGUIBlending::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c41_f1");
 	if (m_Enabled)
 	{
 		glEnable(GL_BLEND);

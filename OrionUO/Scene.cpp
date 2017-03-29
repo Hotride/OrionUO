@@ -21,6 +21,7 @@ CScene g_Scene;
 */
 int CScene::DrawSmoothMonitor()
 {
+	WISPFUN_DEBUG("c203_f1");
 	if (g_SmoothMonitor.Process())
 	{
 		ProcessSmoothAction();
@@ -43,6 +44,7 @@ void CScene::ProcessSmoothAction(uchar action)
 */
 void CScene::DrawSmoothMonitorEffect()
 {
+	WISPFUN_DEBUG("c203_f2");
 	g_SmoothMonitor.Draw();
 }
 //---------------------------------------------------------------------------
@@ -53,6 +55,7 @@ void CScene::DrawSmoothMonitorEffect()
 */
 void CScene::CreateSmoothAction(uchar action)
 {
+	WISPFUN_DEBUG("c203_f3");
 	if (g_SmoothMonitor.UseSunset())
 		m_SmoothScreenAction = action;
 	else
@@ -61,6 +64,7 @@ void CScene::CreateSmoothAction(uchar action)
 //---------------------------------------------------------------------------
 void CScene::Init(const GAME_STATE &state)
 {
+	WISPFUN_DEBUG("c203_f4");
 	g_GameState = state;
 	g_SelectedObject.Clear();
 	g_PressedObject.ClearAll();

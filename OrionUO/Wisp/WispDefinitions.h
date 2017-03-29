@@ -2,6 +2,16 @@
 #ifndef WISPDEFINITIONS_H
 #define WISPDEFINITIONS_H
 //----------------------------------------------------------------------------------
+#define USE_WISP_DEBUG_FUNCTION_NAMES 1
+
+#if USE_WISP_DEBUG_FUNCTION_NAMES == 1
+#define WISPFUN_DEBUG(name) \
+	static const std::string wispfunctiondebugname("w_" name); \
+	(void)wispfunctiondebugname
+#else
+#define WISPFUN_DEBUG(name)
+#endif
+//----------------------------------------------------------------------------------
 #define WISP_ONE_NAME 1
 
 #if WISP_ONE_NAME == 1

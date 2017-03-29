@@ -26,6 +26,7 @@ CBaseScreen::CBaseScreen(CGump &gump)
 */
 void CBaseScreen::Render(const bool &mode)
 {
+	WISPFUN_DEBUG("c159_f1");
 	if (mode)
 	{
 		g_GL.BeginDraw();
@@ -73,6 +74,7 @@ void CBaseScreen::Render(const bool &mode)
 */
 int CBaseScreen::DrawSmoothMonitor()
 {
+	WISPFUN_DEBUG("c159_f2");
 	if (g_ScreenEffectManager.Process() && m_SmoothScreenAction)
 	{
 		ProcessSmoothAction();
@@ -91,6 +93,7 @@ int CBaseScreen::DrawSmoothMonitor()
 */
 void CBaseScreen::DrawSmoothMonitorEffect()
 {
+	WISPFUN_DEBUG("c159_f3");
 	g_ScreenEffectManager.Draw();
 }
 //----------------------------------------------------------------------------------
@@ -101,6 +104,7 @@ void CBaseScreen::DrawSmoothMonitorEffect()
 */
 void CBaseScreen::CreateSmoothAction(__in BYTE action)
 {
+	WISPFUN_DEBUG("c159_f4");
 	if (g_ScreenEffectManager.UseSunset())
 		m_SmoothScreenAction = action;
 	else

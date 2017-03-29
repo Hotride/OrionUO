@@ -9,6 +9,7 @@ CWindow *g_WispWindow = NULL;
 //---------------------------------------------------------------------------
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	WISPFUN_DEBUG("c_ww_wp");
 	if (g_WispWindow != NULL)
 		return g_WispWindow->OnWindowProc(hWnd, message, wParam, lParam);
 
@@ -19,6 +20,7 @@ CWindow::CWindow()
 : m_Handle(0), m_Size(0, 0), m_NoResize(false), m_MinSize(200, 100),
 m_MaxSize(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN))
 {
+	WISPFUN_DEBUG("c14_f1");
 	g_WispWindow = this;
 }
 //----------------------------------------------------------------------------------
@@ -28,6 +30,7 @@ CWindow::~CWindow()
 //----------------------------------------------------------------------------------
 void CWindow::OnChangeSize(const WISP_GEOMETRY::CSize &size)
 {
+	WISPFUN_DEBUG("c14_f2");
 	RECT pos = { 0, 0, 0, 0 };
 	GetWindowRect(m_Handle, &pos);
 
@@ -47,6 +50,7 @@ void CWindow::OnChangeSize(const WISP_GEOMETRY::CSize &size)
 //----------------------------------------------------------------------------------
 void CWindow::OnChangeMinSize(const WISP_GEOMETRY::CSize &newMinSize)
 {
+	WISPFUN_DEBUG("c14_f3");
 	if (m_Size.Width < newMinSize.Width || m_Size.Height < newMinSize.Height)
 	{
 		int width = m_Size.Width;
@@ -78,6 +82,7 @@ void CWindow::OnChangeMinSize(const WISP_GEOMETRY::CSize &newMinSize)
 //----------------------------------------------------------------------------------
 void CWindow::OnChangeMaxSize(const WISP_GEOMETRY::CSize &newMaxSize)
 {
+	WISPFUN_DEBUG("c14_f4");
 	if (m_Size.Width > newMaxSize.Width || m_Size.Height > newMaxSize.Height)
 	{
 		int width = m_Size.Width;
@@ -109,6 +114,7 @@ void CWindow::OnChangeMaxSize(const WISP_GEOMETRY::CSize &newMaxSize)
 //----------------------------------------------------------------------------------
 bool CWindow::Create(HINSTANCE hInstance, const wchar_t *className, const wchar_t *title, bool showCursor, int width, int height, HICON icon, HCURSOR cursor)
 {
+	WISPFUN_DEBUG("c14_f5");
 	WNDCLASSEX wcex = { 0 };
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -162,21 +168,25 @@ bool CWindow::Create(HINSTANCE hInstance, const wchar_t *className, const wchar_
 //----------------------------------------------------------------------------------
 void CWindow::Destroy()
 {
+	WISPFUN_DEBUG("c14_f6");
 	PostMessage(m_Handle, WM_CLOSE, 0, 0);
 }
 //----------------------------------------------------------------------------------
 void CWindow::ShowMessage(const string &text, const string &title, const uint &buttons)
 {
+	WISPFUN_DEBUG("c14_f7");
 	MessageBoxA(m_Handle, text.c_str(), title.c_str(), buttons);
 }
 //----------------------------------------------------------------------------------
 void CWindow::ShowMessage(const wstring &text, const wstring &title, const uint &buttons)
 {
+	WISPFUN_DEBUG("c14_f8");
 	MessageBoxW(m_Handle, text.c_str(), title.c_str(), buttons);
 }
 //----------------------------------------------------------------------------------
 LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c14_f9");
 	//DebugMsg("m=0x%08X, w0x%08X l0x%08X\n", message, wParam, lParam);
 	static bool parse = true;
 
@@ -481,6 +491,7 @@ LRESULT CWindow::OnWindowProc(HWND &hWnd, UINT &message, WPARAM &wParam, LPARAM 
 //----------------------------------------------------------------------------------
 void CWindow::CreateThreadedTimer(uint id, const int &delay, const bool &oneShot, const bool &waitForProcessMessage, const bool &synchronizedDelay)
 {
+	WISPFUN_DEBUG("c14_f10");
 	for (deque<WISP_THREADED_TIMER::CThreadedTimer*>::iterator i = m_ThreadedTimersStack.begin(); i != m_ThreadedTimersStack.end(); i++)
 	{
 		if ((*i)->TimerID == id)
@@ -494,6 +505,7 @@ void CWindow::CreateThreadedTimer(uint id, const int &delay, const bool &oneShot
 //----------------------------------------------------------------------------------
 void CWindow::RemoveThreadedTimer(uint id)
 {
+	WISPFUN_DEBUG("c14_f11");
 	for (deque<WISP_THREADED_TIMER::CThreadedTimer*>::iterator i = m_ThreadedTimersStack.begin(); i != m_ThreadedTimersStack.end(); i++)
 	{
 		if ((*i)->TimerID == id)
@@ -508,6 +520,7 @@ void CWindow::RemoveThreadedTimer(uint id)
 //----------------------------------------------------------------------------------
 WISP_THREADED_TIMER::CThreadedTimer *CWindow::GetThreadedTimer(uint id)
 {
+	WISPFUN_DEBUG("c14_f12");
 	for (deque<WISP_THREADED_TIMER::CThreadedTimer*>::iterator i = m_ThreadedTimersStack.begin(); i != m_ThreadedTimersStack.end(); i++)
 	{
 		if ((*i)->TimerID == id)

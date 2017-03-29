@@ -9,6 +9,7 @@ CConnection::CConnection(int af, int type, int protocol)
 : m_DataReady(0), m_Connected(false), m_Port(0), m_Af(af), m_Type(type),
 m_Protocol(protocol)
 {
+	WISPFUN_DEBUG("c3_f1");
 	WSADATA wsaData = { 0 };
 
 	if (!WSAStartup(MAKEWORD(2, 2), &wsaData))
@@ -21,6 +22,7 @@ m_Protocol(protocol)
 //----------------------------------------------------------------------------------
 CConnection::~CConnection()
 {
+	WISPFUN_DEBUG("c3_f2");
 	Disconnect();
 
 	if (m_MessageParser != NULL)
@@ -32,6 +34,7 @@ CConnection::~CConnection()
 //----------------------------------------------------------------------------------
 bool CConnection::Connect(const string &address, const int &port)
 {
+	WISPFUN_DEBUG("c3_f3");
 	if (m_Connected)
 		return false;
 	else if (m_Socket == INVALID_SOCKET)
@@ -77,6 +80,7 @@ bool CConnection::Connect(const string &address, const int &port)
 //----------------------------------------------------------------------------------
 void CConnection::Disconnect()
 {
+	WISPFUN_DEBUG("c3_f4");
 	if (m_Connected && m_Socket != INVALID_SOCKET)
 	{
 		closesocket(m_Socket);
@@ -91,6 +95,7 @@ void CConnection::Disconnect()
 //----------------------------------------------------------------------------------
 bool CConnection::ReadyRead()
 {
+	WISPFUN_DEBUG("c3_f5");
 	if (!m_Connected || m_Socket == INVALID_SOCKET)
 		return false;
 
@@ -109,6 +114,7 @@ bool CConnection::ReadyRead()
 //----------------------------------------------------------------------------------
 bool CConnection::Read(const int &maxSize)
 {
+	WISPFUN_DEBUG("c3_f6");
 	if (m_DataReady == SOCKET_ERROR)
 		Disconnect();
 	else if (m_Connected && m_Socket != INVALID_SOCKET)
@@ -133,6 +139,7 @@ bool CConnection::Read(const int &maxSize)
 //----------------------------------------------------------------------------------
 int CConnection::Send(puchar data, const int &size)
 {
+	WISPFUN_DEBUG("c3_f7");
 	if (!m_Connected || m_Socket == INVALID_SOCKET)
 		return 0;
 
@@ -141,6 +148,7 @@ int CConnection::Send(puchar data, const int &size)
 //----------------------------------------------------------------------------------
 int CConnection::Send(const UCHAR_LIST &data)
 {
+	WISPFUN_DEBUG("c3_f8");
 	if (data.size())
 		return Send((puchar)&data[0], data.size());
 	

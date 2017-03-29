@@ -17,6 +17,7 @@ CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort
 : CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), m_MinZ(z), m_AverageZ(z),
 m_PositionBuffer(0), m_VertexBuffer(0), m_NormalBuffer(0)
 {
+	WISPFUN_DEBUG("c23_f1");
 	m_OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
 
@@ -34,6 +35,7 @@ m_PositionBuffer(0), m_VertexBuffer(0), m_NormalBuffer(0)
 //---------------------------------------------------------------------------
 CLandObject::~CLandObject()
 {
+	WISPFUN_DEBUG("c23_f2");
 	if (m_PositionBuffer != 0)
 	{
 		glDeleteBuffers(1, &m_PositionBuffer);
@@ -55,11 +57,13 @@ CLandObject::~CLandObject()
 //---------------------------------------------------------------------------
 void CLandObject::UpdateGraphicBySeason()
 {
+	WISPFUN_DEBUG("c23_f3");
 	m_Graphic = g_Orion.GetLandSeasonGraphic(m_OriginalGraphic);
 }
 //---------------------------------------------------------------------------
 int CLandObject::GetDirectionZ(const int &direction)
 {
+	WISPFUN_DEBUG("c23_f4");
 	switch (direction)
 	{
 		case 1:
@@ -77,6 +81,7 @@ int CLandObject::GetDirectionZ(const int &direction)
 //---------------------------------------------------------------------------
 int CLandObject::CalculateCurrentAverageZ(const int &direction)
 {
+	WISPFUN_DEBUG("c23_f5");
 	int result = GetDirectionZ(((uchar)(direction >> 1) + 1) & 3);
 
 	if (direction & 1)
@@ -87,6 +92,7 @@ int CLandObject::CalculateCurrentAverageZ(const int &direction)
 //---------------------------------------------------------------------------
 void CLandObject::UpdateZ(const int &zTop, const int &zRight, const int &zBottom)
 {
+	WISPFUN_DEBUG("c23_f6");
 	if (m_IsStretched)
 	{
 		//Сохраним среднее значение Z-координаты
@@ -119,6 +125,7 @@ void CLandObject::UpdateZ(const int &zTop, const int &zRight, const int &zBottom
 //---------------------------------------------------------------------------
 void CLandObject::Draw(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c23_f7");
 	if (m_Z <= g_MaxGroundZ)
 	{
 		ushort objColor = 0;
@@ -146,6 +153,7 @@ void CLandObject::Draw(const int &x, const int &y)
 //---------------------------------------------------------------------------
 void CLandObject::Select(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c23_f8");
 	if (m_Z <= g_MaxGroundZ)
 	{
 		if (!m_IsStretched)

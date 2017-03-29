@@ -17,6 +17,7 @@
 CGumpBulletinBoard::CGumpBulletinBoard(uint serial, short x, short y, string name)
 : CGump(GT_BULLETIN_BOARD, serial, x, y)
 {
+	WISPFUN_DEBUG("c89_f1");
 	Add(new CGUIGumppic(0x087A, 0, 0));
 
 	CGUIText *text = (CGUIText*)Add(new CGUIText(0x0386, 159, 36));
@@ -70,11 +71,13 @@ CGumpBulletinBoard::CGumpBulletinBoard(uint serial, short x, short y, string nam
 //----------------------------------------------------------------------------------
 CGumpBulletinBoard::~CGumpBulletinBoard()
 {
+	WISPFUN_DEBUG("c89_f2");
 	g_GumpManager.CloseGump(0xFFFFFFFF, m_Serial, GT_BULLETIN_BOARD_ITEM);
 }
 //----------------------------------------------------------------------------------
 void CGumpBulletinBoard::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c89_f3");
 	if (serial == ID_GBB_POST_MESSAGE)
 	{
 		CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, m_Serial, g_Player->Name, "", "Date/Time", "");
@@ -85,6 +88,7 @@ void CGumpBulletinBoard::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 bool CGumpBulletinBoard::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c89_f4");
 	bool result = false;
 
 	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI())

@@ -24,6 +24,7 @@ CGumpDye::~CGumpDye()
 //----------------------------------------------------------------------------------
 ushort CGumpDye::GetCurrentColor()
 {
+	WISPFUN_DEBUG("c95_f1");
 	ushort startColor = m_ColorRef + 2;
 	ushort color = 0;
 
@@ -46,6 +47,7 @@ ushort CGumpDye::GetCurrentColor()
 //----------------------------------------------------------------------------------
 void CGumpDye::UpdateContent()
 {
+	WISPFUN_DEBUG("c95_f2");
 	CGumpSelectColor::UpdateContent();
 
 	if (m_Tube == NULL)
@@ -63,12 +65,14 @@ void CGumpDye::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpDye::OnSelectColor(const ushort &color)
 {
+	WISPFUN_DEBUG("c95_f3");
 	CPacketDyeDataResponse(m_Serial, m_Graphic, color).Send();
 	m_RemoveMark = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpDye::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c95_f4");
 	CGumpSelectColor::OnButton(serial);
 
 	if (serial >= ID_GSC_COLORS && m_Tube != NULL)
@@ -77,11 +81,13 @@ void CGumpDye::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpDye::GUMP_SLIDER_CLICK_EVENT_C
 {
+	WISPFUN_DEBUG("c95_f5");
 	OnSliderMove(serial);
 }
 //----------------------------------------------------------------------------------
 void CGumpDye::GUMP_SLIDER_MOVE_EVENT_C
 {
+	WISPFUN_DEBUG("c95_f6");
 	CGumpSelectColor::OnSliderMove(serial);
 
 	if (m_Tube != NULL)

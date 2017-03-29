@@ -28,6 +28,7 @@ CConfigManager g_OptionsConfig;
 //----------------------------------------------------------------------------------
 CConfigManager::CConfigManager()
 {
+	WISPFUN_DEBUG("c138_f1");
 	Init();
 }
 //----------------------------------------------------------------------------------
@@ -37,6 +38,7 @@ CConfigManager::CConfigManager()
 */
 void CConfigManager::Init()
 {
+	WISPFUN_DEBUG("c138_f2");
 	DefaultPage1();
 
 	DefaultPage2();
@@ -69,6 +71,7 @@ void CConfigManager::Init()
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage1()
 {
+	WISPFUN_DEBUG("c138_f3");
 	m_Sound = true;
 	m_Music = true;
 	m_FootstepsSound = true;
@@ -79,6 +82,7 @@ void CConfigManager::DefaultPage1()
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage2()
 {
+	WISPFUN_DEBUG("c138_f4");
 	m_ClientFPS = 32;
 	m_ReduceFPSUnactiveWindow = true;
 	m_StandartCharactersAnimationDelay = true;
@@ -117,6 +121,7 @@ void CConfigManager::DefaultPage2()
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
 {
+	WISPFUN_DEBUG("c138_f5");
 	m_UseToolTips = true;
 	m_ToolTipsTextColor = 0xFFFF;
 	m_ToolTipsTextFont = 0;
@@ -125,6 +130,7 @@ void CConfigManager::DefaultPage3()
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage4()
 {
+	WISPFUN_DEBUG("c138_f6");
 	m_ChatColorInputText = 0xFFFF;
 	m_ChatColorMenuOption = 0xFFFF;
 	m_ChatColorPlayerInMemberList = 0xFFFF;
@@ -147,6 +153,7 @@ void CConfigManager::DefaultPage4()
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage6()
 {
+	WISPFUN_DEBUG("c138_f7");
 	m_EnablePathfind = true;
 	m_HoldTabForCombat = true;
 	m_OffsetInterfaceWindows = true;
@@ -164,6 +171,7 @@ void CConfigManager::DefaultPage6()
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage7()
 {
+	WISPFUN_DEBUG("c138_f8");
 	m_GameWindowWidth = 800;
 	m_GameWindowHeight = 600;
 	m_SpeechDelay = 500;
@@ -182,6 +190,7 @@ void CConfigManager::DefaultPage7()
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage8()
 {
+	WISPFUN_DEBUG("c138_f9");
 	m_InnocentColor = 0x005A;
 	m_FriendlyColor = 0x0044;
 	m_SomeoneColor = 0x03B2;
@@ -193,6 +202,7 @@ void CConfigManager::DefaultPage8()
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage9()
 {
+	WISPFUN_DEBUG("c138_f10");
 	m_ShowIncomingNames = true;
 	m_UseCircleTrans = false;
 	m_StatReport = true;
@@ -203,12 +213,14 @@ void CConfigManager::DefaultPage9()
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangedSound(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f11");
 	if (this == &g_ConfigManager && !val)
 		g_Orion.AdjustSoundEffects(g_Ticks + 100000);
 }
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangedMusic(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f12");
 	if (this == &g_ConfigManager && !val)
 	{
 		g_SoundManager.StopMusic();
@@ -217,12 +229,14 @@ void CConfigManager::OnChangedMusic(const bool &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangedSoundVolume(const uchar &val)
 {
+	WISPFUN_DEBUG("c138_f13");
 	if (this == &g_ConfigManager && m_SoundVolume != val)
 		g_Orion.AdjustSoundEffects(g_Ticks + 100000, val);
 }
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangedMusicVolume(const uchar &val)
 {
+	WISPFUN_DEBUG("c138_f14");
 	if (this == &g_ConfigManager && m_MusicVolume != val)
 	{
 		m_MusicVolume = val;
@@ -232,6 +246,7 @@ void CConfigManager::OnChangedMusicVolume(const uchar &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeClientFPS(const uchar &val)
 {
+	WISPFUN_DEBUG("c138_f15");
 	if (this == &g_ConfigManager)
 	{
 		uchar newVal = val;
@@ -251,12 +266,14 @@ void CConfigManager::OnChangeClientFPS(const uchar &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeUseScaling(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f16");
 	if (!val && this == &g_ConfigManager)
 		g_GlobalScale = 1.0;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeDrawStatusState(const uchar &val)
 {
+	WISPFUN_DEBUG("c138_f17");
 	if (val && !m_DrawStatusState && this == &g_ConfigManager)
 	{
 		QFOR(item, g_World->m_Items, CGameObject*)
@@ -269,18 +286,21 @@ void CConfigManager::OnChangeDrawStatusState(const uchar &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeDrawStumps(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f18");
 	if (m_DrawStumps != val && this == &g_ConfigManager)
 		g_Orion.ClearTreesTextures();
 }
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeMarkingCaves(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f19");
 	if (m_MarkingCaves != val && this == &g_ConfigManager)
 		g_Orion.ClearCaveTextures();
 }
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeReduceFPSUnactiveWindow(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f20");
 	if (this == &g_ConfigManager)
 	{
 		if (val)
@@ -294,12 +314,14 @@ void CConfigManager::OnChangeReduceFPSUnactiveWindow(const bool &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeConsoleNeedEnter(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f21");
 	if (this == &g_ConfigManager && val && g_EntryPointer == &g_GameConsole)
 		g_EntryPointer = NULL;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangedSpellIconAlpha(const uchar &val)
 {
+	WISPFUN_DEBUG("c138_f22");
 	if (this == &g_ConfigManager && val != m_SpellIconAlpha)
 	{
 		float alpha = val / 255.0f;
@@ -320,6 +342,7 @@ void CConfigManager::OnChangedSpellIconAlpha(const uchar &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeOldStyleStatusbar(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f23");
 	if (this == &g_ConfigManager)
 	{
 		m_OldStyleStatusbar = val;
@@ -333,6 +356,7 @@ void CConfigManager::OnChangeOldStyleStatusbar(const bool &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeOriginalPartyStatusbar(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f24");
 	if (this == &g_ConfigManager)
 	{
 		m_OriginalPartyStatusbar = val;
@@ -353,6 +377,7 @@ void CConfigManager::OnChangeOriginalPartyStatusbar(const bool &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeChangeFieldsGraphic(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f25");
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
 		m_ChangeFieldsGraphic = val;
@@ -367,6 +392,7 @@ void CConfigManager::OnChangeChangeFieldsGraphic(const bool &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangePaperdollSlots(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f26");
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
 		m_PaperdollSlots = val;
@@ -384,6 +410,7 @@ void CConfigManager::OnChangePaperdollSlots(const bool &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeScaleImagesInPaperdollSlots(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f27");
 	if (this == &g_ConfigManager && g_World != NULL)
 	{
 		m_ScaleImagesInPaperdollSlots = val;
@@ -401,6 +428,7 @@ void CConfigManager::OnChangeScaleImagesInPaperdollSlots(const bool &val)
 //---------------------------------------------------------------------------
 void CConfigManager::OnChangeUseGlobalMapLayer(const bool &val)
 {
+	WISPFUN_DEBUG("c138_f28");
 	if (this == &g_ConfigManager && val)
 	{
 		QFOR(gump, g_GumpManager.m_Items, CGump*)
@@ -418,6 +446,7 @@ void CConfigManager::OnChangeUseGlobalMapLayer(const bool &val)
 */
 ushort CConfigManager::GetColorByNotoriety(uchar notoriety)
 {
+	WISPFUN_DEBUG("c138_f29");
 	ushort color = 0;
 
 	switch ((NOTORIETY_TYPE)notoriety)
@@ -470,6 +499,7 @@ ushort CConfigManager::GetColorByNotoriety(uchar notoriety)
 */
 bool CConfigManager::Load(string path)
 {
+	WISPFUN_DEBUG("c138_f30");
 	bool result = false;
 	g_DeveloperMode = DM_SHOW_FPS_ONLY;
 
@@ -947,6 +977,7 @@ bool CConfigManager::Load(string path)
 */
 void CConfigManager::Save(string path)
 {
+	WISPFUN_DEBUG("c138_f31");
 	WISP_FILE::CBinaryFileWritter writter;
 	writter.Open(path);
 	

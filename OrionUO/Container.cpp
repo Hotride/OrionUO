@@ -20,6 +20,7 @@ CUseItemActions g_UseItemActions;
 //----------------------------------------------------------------------------------
 void CUseItemActions::Add(const uint &serial)
 {
+	WISPFUN_DEBUG("c186_f1");
 	for (deque<uint>::iterator i = m_List.begin(); i != m_List.end(); i++)
 	{
 		if (*i == serial)
@@ -31,6 +32,7 @@ void CUseItemActions::Add(const uint &serial)
 //----------------------------------------------------------------------------------
 void CUseItemActions::Process()
 {
+	WISPFUN_DEBUG("c186_f2");
 	if (m_List.size() && m_Timer <= g_Ticks)
 	{
 		uint serial = m_List.front();
@@ -96,6 +98,7 @@ CContainerRect::CContainerRect()
 */
 void CContainerRect::Calculate(ushort gumpID)
 {
+	WISPFUN_DEBUG("c187_f1");
 	//!Указатель на текстуру
 	CGLTexture *tex = g_Orion.ExecuteGump(gumpID);
 

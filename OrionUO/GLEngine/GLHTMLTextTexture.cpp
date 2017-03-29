@@ -17,11 +17,13 @@ CGLHTMLTextTexture::CGLHTMLTextTexture()
 //----------------------------------------------------------------------------------
 CGLHTMLTextTexture::~CGLHTMLTextTexture()
 {
+	WISPFUN_DEBUG("c31_f1");
 	m_WebLinkRect.clear();
 }
 //----------------------------------------------------------------------------------
 ushort CGLHTMLTextTexture::WebLinkUnderMouse(int x, int y)
 {
+	WISPFUN_DEBUG("c31_f2");
 	x = g_MouseManager.Position.X - x;
 	y = g_MouseManager.Position.Y - y;
 

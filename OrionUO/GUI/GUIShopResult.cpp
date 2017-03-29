@@ -17,6 +17,7 @@ CGUIShopResult::CGUIShopResult(CGUIShopItem *shopItem, const int &x, const int &
 : CBaseGUI(GOT_SHOPRESULT, shopItem->Serial, shopItem->Graphic, shopItem->Color, x, y),
 m_Price(shopItem->Price), m_Name(shopItem->Name)
 {
+	WISPFUN_DEBUG("c74_f1");
 	m_MoveOnDrag = true;
 
 	string name = m_Name + "\n" + "at " + std::to_string(m_Price) + " g.p.";
@@ -34,12 +35,14 @@ m_Price(shopItem->Price), m_Name(shopItem->Name)
 //----------------------------------------------------------------------------------
 CGUIShopResult::~CGUIShopResult()
 {
+	WISPFUN_DEBUG("c74_f2");
 	m_NameText.Clear();
 	RELEASE_POINTER(m_MinMaxButtons);
 }
 //----------------------------------------------------------------------------------
 CBaseGUI *CGUIShopResult::SelectedItem()
 {
+	WISPFUN_DEBUG("c74_f3");
 	CBaseGUI *result = this;
 	WISP_GEOMETRY::CSize size = m_MinMaxButtons->GetSize();
 
@@ -51,11 +54,13 @@ CBaseGUI *CGUIShopResult::SelectedItem()
 //----------------------------------------------------------------------------------
 void CGUIShopResult::PrepareTextures()
 {
+	WISPFUN_DEBUG("c74_f4");
 	m_MinMaxButtons->PrepareTextures();
 }
 //----------------------------------------------------------------------------------
 void CGUIShopResult::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c74_f5");
 	glTranslatef((GLfloat)m_X, (GLfloat)m_Y, 0.0f);
 
 	glUniform1iARB(g_ShaderDrawMode, 0);
@@ -68,6 +73,7 @@ void CGUIShopResult::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUIShopResult::Select()
 {
+	WISPFUN_DEBUG("c74_f6");
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 

@@ -11,6 +11,7 @@ CApplication *g_WispApplication = NULL;
 CApplication::CApplication()
 : m_Hinstance(0), m_ExePathA(""), m_ExePathW(L"")
 {
+	WISPFUN_DEBUG("c1_f1");
 	g_WispApplication = this;
 
 	m_ExePathA.resize(MAX_PATH, 0);
@@ -25,12 +26,14 @@ CApplication::CApplication()
 //----------------------------------------------------------------------------------
 CApplication::~CApplication()
 {
+	WISPFUN_DEBUG("c1_f2");
 	g_WispApplication = NULL;
 	m_Hinstance = 0;
 }
 //----------------------------------------------------------------------------------
 int CApplication::Run(HINSTANCE hinstance)
 {
+	WISPFUN_DEBUG("c1_f3");
 	timeBeginPeriod(1);
 	m_Hinstance = hinstance;
 
@@ -57,6 +60,7 @@ int CApplication::Run(HINSTANCE hinstance)
 //---------------------------------------------------------------------------
 string CApplication::FilePath(const char *str, ...)
 {
+	WISPFUN_DEBUG("c1_f4");
 	va_list arg;
 	va_start(arg, str);
 
@@ -70,6 +74,7 @@ string CApplication::FilePath(const char *str, ...)
 //---------------------------------------------------------------------------
 wstring CApplication::FilePath(const wchar_t *str, ...)
 {
+	WISPFUN_DEBUG("c1_f5");
 	va_list arg;
 	va_start(arg, str);
 

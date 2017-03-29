@@ -26,6 +26,7 @@ CMultiMap::~CMultiMap()
 //----------------------------------------------------------------------------------
 void CMultiMap::LoadMap(CGumpMap *gump, CGUIExternalTexture *mapObject)
 {
+	WISPFUN_DEBUG("c192_f1");
 	WISP_FILE::CMappedFile &file = g_FileManager.m_MultiMap;
 
 	if (!file.Size)
@@ -146,6 +147,7 @@ void CMultiMap::LoadMap(CGumpMap *gump, CGUIExternalTexture *mapObject)
 //----------------------------------------------------------------------------------
 bool CMultiMap::LoadFacet(CGumpMap *gump, CGUIExternalTexture *mapObject, int facet)
 {
+	WISPFUN_DEBUG("c192_f2");
 	if (facet < 0 || facet > 5)
 	{
 		LOG("Invalid facet index: %i\n", facet);

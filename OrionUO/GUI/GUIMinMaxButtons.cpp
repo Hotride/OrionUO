@@ -23,11 +23,13 @@ m_LastScrollTime(0), m_DefaultTextOffset(2), m_ScrollMode(0)
 //----------------------------------------------------------------------------------
 CGUIMinMaxButtons::~CGUIMinMaxButtons()
 {
+	WISPFUN_DEBUG("c67_f1");
 	m_Text.Clear();
 }
 //----------------------------------------------------------------------------------
 void CGUIMinMaxButtons::UpdateText()
 {
+	WISPFUN_DEBUG("c67_f2");
 	if (m_HaveText)
 	{
 		if (m_Unicode)
@@ -122,6 +124,7 @@ void CGUIMinMaxButtons::UpdateText()
 //----------------------------------------------------------------------------------
 void CGUIMinMaxButtons::Scroll(const uint &delay)
 {
+	WISPFUN_DEBUG("c67_f3");
 	if (m_LastScrollTime < g_Ticks && m_ScrollMode)
 	{
 		if (m_ScrollMode == 1)
@@ -143,6 +146,7 @@ void CGUIMinMaxButtons::Scroll(const uint &delay)
 //----------------------------------------------------------------------------------
 void CGUIMinMaxButtons::OnClick()
 {
+	WISPFUN_DEBUG("c67_f4");
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 
@@ -161,6 +165,7 @@ void CGUIMinMaxButtons::OnClick()
 //----------------------------------------------------------------------------------
 void CGUIMinMaxButtons::SetTextParameters(const bool &haveText, const SLIDER_TEXT_POSITION &textPosition, const uchar &font, const ushort &color, const bool &unicode, const int &textWidth, const TEXT_ALIGN_TYPE &align, const ushort &textFlags)
 {
+	WISPFUN_DEBUG("c67_f5");
 	m_HaveText = haveText;
 	m_TextPosition = textPosition;
 	m_Font = font;
@@ -175,12 +180,14 @@ void CGUIMinMaxButtons::SetTextParameters(const bool &haveText, const SLIDER_TEX
 //----------------------------------------------------------------------------------
 void CGUIMinMaxButtons::PrepareTextures()
 {
+	WISPFUN_DEBUG("c67_f6");
 	g_Orion.ExecuteGump(m_Graphic);
 	g_Orion.ExecuteGump(m_Graphic + 1);
 }
 //----------------------------------------------------------------------------------
 void CGUIMinMaxButtons::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c67_f7");
 	glUniform1iARB(g_ShaderDrawMode, 0);
 
 	IFOR(i, 0, 2)
@@ -197,6 +204,7 @@ void CGUIMinMaxButtons::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUIMinMaxButtons::Select()
 {
+	WISPFUN_DEBUG("c67_f8");
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 

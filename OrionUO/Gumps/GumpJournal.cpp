@@ -16,6 +16,7 @@
 CGumpJournal::CGumpJournal(uint serial, short x, short y, bool minimized, int height)
 : CGumpBaseScroll(GT_JOURNAL, serial, 0x0820, height, x, y, true, 0, true)
 {
+	WISPFUN_DEBUG("c98_f1");
 	m_Locker.Serial = ID_GJ_LOCK_MOVING;
 
 	if (minimized)
@@ -64,6 +65,7 @@ CGumpJournal::~CGumpJournal()
 //---------------------------------------------------------------------------
 void CGumpJournal::InitToolTip()
 {
+	WISPFUN_DEBUG("c98_f2");
 	uint id = g_SelectedObject.Serial;
 
 	if (!m_Minimized)
@@ -115,6 +117,7 @@ void CGumpJournal::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpJournal::UpdateHeight()
 {
+	WISPFUN_DEBUG("c98_f3");
 	CGumpBaseScroll::UpdateHeight();
 
 	m_BottomLine->Y = m_Height - 26; //Bottom line
@@ -135,6 +138,7 @@ void CGumpJournal::UpdateHeight()
 //----------------------------------------------------------------------------------
 int CGumpJournal::RecalculateHeight()
 {
+	WISPFUN_DEBUG("c98_f4");
 	int height = 0;
 
 	QFOR(item, m_HTMLGump->m_Items, CBaseGUI*)
@@ -164,6 +168,7 @@ int CGumpJournal::RecalculateHeight()
 //----------------------------------------------------------------------------------
 void CGumpJournal::AddText(CTextData *obj)
 {
+	WISPFUN_DEBUG("c98_f5");
 	CGUIText *text = (CGUIText*)m_HTMLGump->Add(new CGUIText(obj->Color, 4, RecalculateHeight()));
 	text->MoveOnDrag = true;
 	text->Serial = (uint)obj;
@@ -190,6 +195,7 @@ void CGumpJournal::AddText(CTextData *obj)
 //----------------------------------------------------------------------------------
 void CGumpJournal::DeleteText(CTextData *obj)
 {
+	WISPFUN_DEBUG("c98_f6");
 	QFOR(item, m_HTMLGump->m_Items, CBaseGUI*)
 	{
 		if (item->Type == GOT_TEXT && item->Serial == (uint)obj)
@@ -205,6 +211,7 @@ void CGumpJournal::DeleteText(CTextData *obj)
 //----------------------------------------------------------------------------------
 void CGumpJournal::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c98_f7");
 	if (serial == ID_GBS_BUTTON_MINIMIZE)
 	{
 		m_Minimized = true;
@@ -222,6 +229,7 @@ void CGumpJournal::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpJournal::GUMP_CHECKBOX_EVENT_C
 {
+	WISPFUN_DEBUG("c98_f8");
 	if (serial == ID_GJ_SHOW_SYSTEM)
 	{
 		g_JournalShowSystem = !g_JournalShowSystem;
@@ -262,6 +270,7 @@ void CGumpJournal::GUMP_CHECKBOX_EVENT_C
 //----------------------------------------------------------------------------------
 bool CGumpJournal::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c98_f9");
 	if (m_Minimized)
 	{
 		m_Minimized = false;

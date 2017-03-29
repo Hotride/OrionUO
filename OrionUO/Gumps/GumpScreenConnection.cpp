@@ -24,6 +24,7 @@ CGumpScreenConnection::~CGumpScreenConnection()
 //----------------------------------------------------------------------------------
 void CGumpScreenConnection::CreateText(const int &x, const int &y, string str, const uchar &font)
 {
+	WISPFUN_DEBUG("c113_f1");
 	if (g_ConnectionScreen.Message.length())
 		str = g_ConnectionScreen.Message;
 
@@ -34,6 +35,7 @@ void CGumpScreenConnection::CreateText(const int &x, const int &y, string str, c
 //----------------------------------------------------------------------------------
 void CGumpScreenConnection::UpdateContent()
 {
+	WISPFUN_DEBUG("c113_f2");
 	Clear();
 
 	Add(new CGUIGumppicTiled(0x0E14, 0, 0, 640, 480));
@@ -171,6 +173,7 @@ void CGumpScreenConnection::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpScreenConnection::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c113_f3");
 	if (serial == ID_CS_OK) //v button
 	{
 		if (g_ConnectionScreen.Type == CST_CHARACTER_LIST)

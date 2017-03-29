@@ -35,6 +35,7 @@ CCityManager::CCityManager()
 //----------------------------------------------------------------------------------
 void CCityManager::Init()
 {
+	WISPFUN_DEBUG("c134_f1");
 	WISP_FILE::CMappedFile file;
 
 	if (file.Load(g_App.FilePath("citytext.enu")))
@@ -126,6 +127,7 @@ CCityManager::~CCityManager()
 */
 CCity CCityManager::GetCity(const string &name)
 {
+	WISPFUN_DEBUG("c134_f2");
 	for (deque<CCity>::iterator i = m_CityList.begin(); i != m_CityList.end(); i++)
 	{
 		if (i->Name == name)
@@ -137,6 +139,7 @@ CCity CCityManager::GetCity(const string &name)
 //---------------------------------------------------------------------------
 void CCityManager::Clear()
 {
+	WISPFUN_DEBUG("c134_f3");
 	m_CityList.clear();
 }
 //---------------------------------------------------------------------------

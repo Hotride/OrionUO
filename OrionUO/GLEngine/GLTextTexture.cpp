@@ -22,12 +22,14 @@ CGLTextTexture::~CGLTextTexture()
 //----------------------------------------------------------------------------------
 void CGLTextTexture::Clear()
 {
+	WISPFUN_DEBUG("c35_f1");
 	CGLTexture::Clear();
 	m_LinesCount = 0;
 }
 //----------------------------------------------------------------------------------
 void CGLTextTexture::Draw(const int &x, const int &y, const bool &checktrans)
 {
+	WISPFUN_DEBUG("c35_f2");
 	if (Texture != 0)
 	{
 		if (checktrans)
@@ -52,6 +54,7 @@ void CGLTextTexture::Draw(const int &x, const int &y, const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGLTextTexture::UnderMouse(int x, int y)
 {
+	WISPFUN_DEBUG("c35_f3");
 	if (PixelsData.size())
 	{
 		x = g_MouseManager.Position.X - x;

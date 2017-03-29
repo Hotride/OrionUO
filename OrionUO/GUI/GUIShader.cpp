@@ -21,6 +21,7 @@ CGUIShader::~CGUIShader()
 //----------------------------------------------------------------------------------
 void CGUIShader::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c72_f1");
 	if (m_Enabled && m_Shader != NULL)
 		m_Shader->Use();
 	else

@@ -25,17 +25,20 @@ m_Object(NULL)
 //----------------------------------------------------------------------------------
 CToolTip::~CToolTip()
 {
+	WISPFUN_DEBUG("c213_f1");
 	Reset();
 }
 //----------------------------------------------------------------------------------
 void CToolTip::Reset()
 {
+	WISPFUN_DEBUG("c213_f2");
 	Texture.Clear();
 	m_Object = NULL;
 }
 //----------------------------------------------------------------------------------
 void CToolTip::Set(wstring str, int maxWidth, int x, int y)
 {
+	WISPFUN_DEBUG("c213_f3");
 	m_Use = !(m_Timer > g_Ticks);
 
 	CRenderObject *object = g_SelectedObject.Object();
@@ -59,6 +62,7 @@ void CToolTip::Set(wstring str, int maxWidth, int x, int y)
 //----------------------------------------------------------------------------------
 void CToolTip::Set(uint clilocID, string str, int maxWidth, int x, int y)
 {
+	WISPFUN_DEBUG("c213_f4");
 	Set(g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, str), maxWidth, x, y);
 
 	m_ClilocID = clilocID;
@@ -66,6 +70,7 @@ void CToolTip::Set(uint clilocID, string str, int maxWidth, int x, int y)
 //----------------------------------------------------------------------------------
 void CToolTip::Draw(const int &cursorWidth, const int &cursorHeight)
 {
+	WISPFUN_DEBUG("c213_f5");
 	if (!m_Use /*|| !g_ConfigManager.UseToolTips*/)
 		return;
 

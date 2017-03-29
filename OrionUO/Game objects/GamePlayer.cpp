@@ -24,11 +24,13 @@ m_EnergyResistance(0), m_Luck(0), m_MinDamage(0), m_MaxDamage(0), m_TithingPoint
 m_LockStr(0), m_LockInt(0), m_LockDex(0), m_OldX(0), m_OldY(0), m_OldZ(0)
 //, m_Race(CRT_HUMAN)
 {
+	WISPFUN_DEBUG("c21_f1");
 	m_Skills = new CSkill[g_SkillsCount];
 }
 //---------------------------------------------------------------------------
 CPlayer::~CPlayer()
 {
+	WISPFUN_DEBUG("c21_f2");
 	if (m_Skills != NULL)
 	{
 		delete []m_Skills;
@@ -44,6 +46,7 @@ CPlayer::~CPlayer()
 */
 void CPlayer::SetSkillBaseValue(const int &index, const float &val)
 {
+	WISPFUN_DEBUG("c21_f3");
 	if (index < 0 || index >= g_SkillsCount)
 		return;
 
@@ -58,6 +61,7 @@ void CPlayer::SetSkillBaseValue(const int &index, const float &val)
 */
 void CPlayer::SetSkillValue(const int &index, const float &val)
 {
+	WISPFUN_DEBUG("c21_f4");
 	if (index < 0 || index >= g_SkillsCount)
 		return;
 
@@ -72,6 +76,7 @@ void CPlayer::SetSkillValue(const int &index, const float &val)
 */
 void CPlayer::SetSkillCap(const int &index, const float &val)
 {
+	WISPFUN_DEBUG("c21_f5");
 	if (index < 0 || index >= g_SkillsCount)
 		return;
 
@@ -86,6 +91,7 @@ void CPlayer::SetSkillCap(const int &index, const float &val)
 */
 void CPlayer::SetSkillStatus(const int &index, const uchar &val)
 {
+	WISPFUN_DEBUG("c21_f6");
 	if (index < 0 || index >= g_SkillsCount)
 		return;
 
@@ -99,6 +105,7 @@ void CPlayer::SetSkillStatus(const int &index, const uchar &val)
 */
 float CPlayer::GetSkillBaseValue(const int &index) const
 {
+	WISPFUN_DEBUG("c21_f7");
 	if (index < 0 || index >= g_SkillsCount)
 		return 0.0f;
 
@@ -112,6 +119,7 @@ float CPlayer::GetSkillBaseValue(const int &index) const
 */
 float CPlayer::GetSkillValue(const int &index) const
 {
+	WISPFUN_DEBUG("c21_f8");
 	if (index < 0 || index >= g_SkillsCount)
 		return 0.0f;
 
@@ -125,6 +133,7 @@ float CPlayer::GetSkillValue(const int &index) const
 */
 float CPlayer::GetSkillCap(const int &index) const
 {
+	WISPFUN_DEBUG("c21_f9");
 	if (index < 0 || index >= g_SkillsCount)
 		return 0.0f;
 
@@ -138,6 +147,7 @@ float CPlayer::GetSkillCap(const int &index) const
 */
 uchar CPlayer::GetSkillStatus(const int &index) const
 {
+	WISPFUN_DEBUG("c21_f10");
 	if (index < 0 || index >= g_SkillsCount)
 		return 0;
 
@@ -150,6 +160,7 @@ uchar CPlayer::GetSkillStatus(const int &index) const
 */
 CGameItem *CPlayer::FindBandage()
 {
+	WISPFUN_DEBUG("c21_f11");
 	CGameItem *item = FindLayer(OL_BACKPACK);
 
 	if (item != NULL)
@@ -160,6 +171,7 @@ CGameItem *CPlayer::FindBandage()
 //---------------------------------------------------------------------------
 void CPlayer::UpdateAbilities()
 {
+	WISPFUN_DEBUG("c21_f12");
 	ushort equippedGraphic = 0;
 	uint ignoreSerial = 0;
 

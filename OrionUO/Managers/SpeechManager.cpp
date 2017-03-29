@@ -44,6 +44,7 @@ CSpeechManager::CSpeechManager()
 //----------------------------------------------------------------------------------
 CSpeechManager::~CSpeechManager()
 {
+	WISPFUN_DEBUG("c157_f1");
 	m_SpeechEntries.clear();
 	m_LangCodes.clear();
 }
@@ -54,6 +55,7 @@ CSpeechManager::~CSpeechManager()
 */
 bool CSpeechManager::LoadSpeech()
 {
+	WISPFUN_DEBUG("c157_f2");
 	//Временно вырублено.
 	//if (!LoadLangCodes())
 	//	return false;
@@ -109,6 +111,7 @@ bool CSpeechManager::LoadSpeech()
 */
 bool CSpeechManager::LoadLangCodes()
 {
+	WISPFUN_DEBUG("c157_f3");
 	WISP_FILE::CMappedFile &file = g_FileManager.m_LangcodeIff;
 
 	//скипаем заголовок файла
@@ -148,6 +151,7 @@ bool CSpeechManager::LoadLangCodes()
 //----------------------------------------------------------------------------------
 void CSpeechManager::GetKeywords(const wchar_t *text, UINT_LIST &codes)
 {
+	WISPFUN_DEBUG("c157_f4");
 	if (!m_Loaded || g_PacketManager.ClientVersion < CV_305D) //Но по факту с 2.0.7 версии клиента
 		return;
 

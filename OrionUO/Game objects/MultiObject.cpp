@@ -15,6 +15,7 @@
 CMultiObject::CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags)
 : CRenderStaticObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_OnTarget(flags == 2)
 {
+	WISPFUN_DEBUG("c25_f1");
 	m_OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
 
@@ -32,6 +33,7 @@ CMultiObject::~CMultiObject()
 //----------------------------------------------------------------------------------
 void CMultiObject::UpdateGraphicBySeason()
 {
+	WISPFUN_DEBUG("c25_f2");
 	ushort graphic = m_Graphic;
 
 	m_Graphic = g_Orion.GetSeasonGraphic(m_OriginalGraphic) + 0x4000;
@@ -53,6 +55,7 @@ void CMultiObject::UpdateGraphicBySeason()
 //----------------------------------------------------------------------------------
 void CMultiObject::Draw(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c25_f3");
 	if (m_OnTarget) //Мульти на таргете
 	{
 #if UO_DEBUG_INFO!=0
@@ -81,6 +84,7 @@ void CMultiObject::Draw(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 void CMultiObject::Select(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c25_f4");
 	if (!m_OnTarget)
 	{
 		m_RenderGraphic = m_Graphic - 0x4000;

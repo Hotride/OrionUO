@@ -21,6 +21,7 @@ CSkill::CSkill()
 //----------------------------------------------------------------------------------
 bool CSkillSort::SkillCmp(const char *str1, int len1, const char *str2, int len2)
 {
+	WISPFUN_DEBUG("c208_f1");
 	//Вычисляем минимальную длину строки для сравнения
 	int len = len1;
 	if (len > len2)
@@ -49,6 +50,7 @@ bool CSkillSort::SkillCmp(const char *str1, int len1, const char *str2, int len2
 //----------------------------------------------------------------------------------
 void CSkillSort::Init()
 {
+	WISPFUN_DEBUG("c208_f2");
 	//Заполняем все инвалидными значениями
 	memset(m_Skills, 0xFF, sizeof(m_Skills));
 

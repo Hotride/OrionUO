@@ -25,12 +25,14 @@ m_PositionChanged(false)
 //----------------------------------------------------------------------------------
 CGameConsole::~CGameConsole()
 {
+	WISPFUN_DEBUG("c170_f1");
 	if (g_EntryPointer == this)
 		g_EntryPointer = NULL;
 }
 //----------------------------------------------------------------------------------
 void CGameConsole::Send()
 {
+	WISPFUN_DEBUG("c170_f2");
 	int len = Length();
 
 	if (len)
@@ -116,6 +118,7 @@ void CGameConsole::Send()
 //----------------------------------------------------------------------------------
 wstring CGameConsole::IsSystemCommand(const wchar_t *text, int &len, int &member)
 {
+	WISPFUN_DEBUG("c170_f3");
 	m_Type = GCTT_NORMAL;
 	wstring result = L"";
 
@@ -207,6 +210,7 @@ wstring CGameConsole::IsSystemCommand(const wchar_t *text, int &len, int &member
 //----------------------------------------------------------------------------------
 void CGameConsole::DrawW(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE align, WORD flags)
 {
+	WISPFUN_DEBUG("c170_f4");
 	int posOffset = 0;
 	wstring wtext = Data();
 
@@ -256,6 +260,7 @@ void CGameConsole::DrawW(BYTE font, WORD color, int x, int y, TEXT_ALIGN_TYPE al
 //----------------------------------------------------------------------------------
 void CGameConsole::SaveConsoleMessage()
 {
+	WISPFUN_DEBUG("c170_f5");
 	m_ConsoleStack[m_ConsoleStackCount % MAX_CONSOLE_STACK_SIZE] = Data();
 	m_ConsoleStackCount++;
 
@@ -268,6 +273,7 @@ void CGameConsole::SaveConsoleMessage()
 //----------------------------------------------------------------------------------
 void CGameConsole::ChangeConsoleMessage(const bool &next)
 {
+	WISPFUN_DEBUG("c170_f6");
 	if (m_ConsoleStackCount)
 	{
 		if (m_PositionChanged)
@@ -298,6 +304,7 @@ void CGameConsole::ChangeConsoleMessage(const bool &next)
 //----------------------------------------------------------------------------------
 void CGameConsole::ClearStack()
 {
+	WISPFUN_DEBUG("c170_f7");
 	m_ConsoleStack[0] = L"";
 	m_ConsoleStackCount = 0;
 	m_ConsoleSelectedIndex = 0;

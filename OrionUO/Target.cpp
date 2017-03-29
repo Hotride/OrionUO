@@ -26,6 +26,7 @@ CTarget::CTarget()
 //----------------------------------------------------------------------------------
 void CTarget::Reset()
 {
+	WISPFUN_DEBUG("c209_f1");
 	//Чистимся
 	memset(m_Data, 0, sizeof(m_Data));
 	memset(m_LastData, 0, sizeof(m_LastData));
@@ -45,6 +46,7 @@ void CTarget::Reset()
 //----------------------------------------------------------------------------------
 void CTarget::SetData(WISP_DATASTREAM::CDataReader &reader)
 {
+	WISPFUN_DEBUG("c209_f2");
 	//Копируем буффер
 	memcpy(&m_Data[0], reader.Start, reader.Size);
 
@@ -58,6 +60,7 @@ void CTarget::SetData(WISP_DATASTREAM::CDataReader &reader)
 //----------------------------------------------------------------------------------
 void CTarget::SetMultiData(WISP_DATASTREAM::CDataReader &reader)
 {
+	WISPFUN_DEBUG("c209_f3");
 	//Устанавливаем соответствующие значения
 	m_Type = 1;
 	m_CursorType = 0;
@@ -76,6 +79,7 @@ void CTarget::SetMultiData(WISP_DATASTREAM::CDataReader &reader)
 //----------------------------------------------------------------------------------
 void CTarget::SendTargetObject(const uint &serial)
 {
+	WISPFUN_DEBUG("c209_f4");
 	if (!m_Targeting)
 		return; //Если в клиенте нет таргета - выход
 
@@ -115,6 +119,7 @@ void CTarget::SendTargetObject(const uint &serial)
 //----------------------------------------------------------------------------------
 void CTarget::SendTargetTile(const ushort &tileID, const short &x, const short &y, char z)
 {
+	WISPFUN_DEBUG("c209_f5");
 	if (!m_Targeting)
 		return; //Если в клиенте нет таргета - выход
 
@@ -147,6 +152,7 @@ void CTarget::SendTargetTile(const ushort &tileID, const short &x, const short &
 //----------------------------------------------------------------------------------
 void CTarget::SendCancelTarget()
 {
+	WISPFUN_DEBUG("c209_f6");
 	if (!m_Targeting)
 		return; //Если в клиенте нет таргета - выход
 
@@ -160,6 +166,7 @@ void CTarget::SendCancelTarget()
 //----------------------------------------------------------------------------------
 void CTarget::SendLastTarget()
 {
+	WISPFUN_DEBUG("c209_f7");
 	if (!m_Targeting)
 		return; //Если в клиенте нет таргета - выход
 
@@ -175,6 +182,7 @@ void CTarget::SendLastTarget()
 //----------------------------------------------------------------------------------
 void CTarget::SendTarget()
 {
+	WISPFUN_DEBUG("c209_f8");
 	g_Orion.Send(m_Data, sizeof(m_Data));
 
 	//Чистим данные
@@ -185,6 +193,7 @@ void CTarget::SendTarget()
 //----------------------------------------------------------------------------------
 void CTarget::UnloadMulti()
 {
+	WISPFUN_DEBUG("c209_f9");
 	if (m_Multi != NULL)
 	{
 		delete m_Multi;
@@ -194,6 +203,7 @@ void CTarget::UnloadMulti()
 //----------------------------------------------------------------------------------
 void CTarget::LoadMulti(const int &x, const int &y, const char &z)
 {
+	WISPFUN_DEBUG("c209_f10");
 	UnloadMulti();
 
 	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_MultiGraphic - 1];
@@ -220,6 +230,7 @@ void CTarget::LoadMulti(const int &x, const int &y, const char &z)
 //----------------------------------------------------------------------------------
 void CTarget::AddMultiObject(CMultiObject *obj)
 {
+	WISPFUN_DEBUG("c209_f11");
 	if (m_Multi == NULL)
 	{
 		m_Multi = new CMulti(obj->X, obj->Y);
@@ -286,6 +297,7 @@ void CTarget::AddMultiObject(CMultiObject *obj)
 //----------------------------------------------------------------------------------
 CMulti *CTarget::GetMultiAtXY(const short &x, const short &y)
 {
+	WISPFUN_DEBUG("c209_f12");
 	CMulti *multi = m_Multi;
 
 	while (multi != NULL)

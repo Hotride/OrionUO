@@ -44,6 +44,7 @@ CGumpOptions::~CGumpOptions()
 //----------------------------------------------------------------------------------
 void CGumpOptions::CalculateGumpState()
 {
+	WISPFUN_DEBUG("c104_f1");
 	CGump::CalculateGumpState();
 
 	if (g_GumpPressed)
@@ -70,6 +71,7 @@ void CGumpOptions::CalculateGumpState()
 //----------------------------------------------------------------------------
 void CGumpOptions::PrepareContent()
 {
+	WISPFUN_DEBUG("c104_f2");
 	if (m_WantRedrawMacroData)
 	{
 		RedrawMacroData();
@@ -79,6 +81,7 @@ void CGumpOptions::PrepareContent()
 //----------------------------------------------------------------------------
 void CGumpOptions::UpdateContent()
 {
+	WISPFUN_DEBUG("c104_f3");
 	Clear();
 
 	//Body
@@ -149,6 +152,7 @@ void CGumpOptions::UpdateContent()
 //----------------------------------------------------------------------------
 void CGumpOptions::Init()
 {
+	WISPFUN_DEBUG("c104_f4");
 	g_OptionsMacroManager.LoadFromMacro();
 	g_OptionsDeveloperMode = g_DeveloperMode;
 
@@ -160,6 +164,7 @@ void CGumpOptions::Init()
 //---------------------------------------------------------------------------
 void CGumpOptions::InitToolTip()
 {
+	WISPFUN_DEBUG("c104_f5");
 	uint id = g_SelectedObject.Serial;
 
 		switch (id)
@@ -781,6 +786,7 @@ void CGumpOptions::InitToolTip()
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage1()
 {
+	WISPFUN_DEBUG("c104_f6");
 	//Sound and Music
 	Add(new CGUIPage(1));
 
@@ -827,6 +833,7 @@ void CGumpOptions::DrawPage1()
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage2()
 {
+	WISPFUN_DEBUG("c104_f7");
 	//Orion's configuration
 	Add(new CGUIPage(2));
 
@@ -1064,6 +1071,7 @@ void CGumpOptions::DrawPage2()
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage3()
 {
+	WISPFUN_DEBUG("c104_f8");
 	//Language
 	Add(new CGUIPage(3));
 
@@ -1106,6 +1114,7 @@ void CGumpOptions::DrawPage3()
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage4()
 {
+	WISPFUN_DEBUG("c104_f9");
 	//Chat
 	Add(new CGUIPage(4));
 
@@ -1338,6 +1347,7 @@ void CGumpOptions::DrawPage4()
 //----------------------------------------------------------------------------
 void CGumpOptions::RedrawMacroData()
 {
+	WISPFUN_DEBUG("c104_f10");
 	m_WantRedrawMacroData = false;
 	m_MacroDataBox->Clear();
 
@@ -1421,6 +1431,7 @@ void CGumpOptions::RedrawMacroData()
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage5()
 {
+	WISPFUN_DEBUG("c104_f11");
 	Add(new CGUIPage(5));
 
 	Add(new CGUIGumppic(0x00EC, 0, 309));
@@ -1477,6 +1488,7 @@ void CGumpOptions::DrawPage5()
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage6()
 {
+	WISPFUN_DEBUG("c104_f12");
 	//Interface
 	Add(new CGUIPage(6));
 
@@ -1564,6 +1576,7 @@ void CGumpOptions::DrawPage6()
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage7()
 {
+	WISPFUN_DEBUG("c104_f13");
 	//Display
 	Add(new CGUIPage(7));
 
@@ -1706,6 +1719,7 @@ void CGumpOptions::DrawPage7()
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage8()
 {
+	WISPFUN_DEBUG("c104_f14");
 	//Reputation System
 	Add(new CGUIPage(8));
 
@@ -1806,6 +1820,7 @@ void CGumpOptions::DrawPage8()
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage9()
 {
+	WISPFUN_DEBUG("c104_f15");
 	//Miscellaneous
 	Add(new CGUIPage(9));
 
@@ -1855,6 +1870,7 @@ void CGumpOptions::DrawPage9()
 //----------------------------------------------------------------------------
 void CGumpOptions::DrawPage10()
 {
+	WISPFUN_DEBUG("c104_f16");
 	//Filter Options
 	Add(new CGUIPage(10));
 
@@ -1863,6 +1879,7 @@ void CGumpOptions::DrawPage10()
 //----------------------------------------------------------------------------
 void CGumpOptions::UpdateColor(const SELECT_COLOR_GUMP_STATE &state, const ushort &color)
 {
+	WISPFUN_DEBUG("c104_f17");
 	switch (state)
 	{
 		case SCGS_OPT_TOOLTIP_TEXT:
@@ -2040,6 +2057,7 @@ void CGumpOptions::UpdateColor(const SELECT_COLOR_GUMP_STATE &state, const ushor
 //----------------------------------------------------------------------------
 void CGumpOptions::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c104_f18");
 	if (serial == ID_GO_PAGE_6)
 	{
 		m_ContainerOffsetX->m_Entry.SetText(std::to_string(g_ContainerRect.DefaultX));
@@ -2277,6 +2295,7 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------
 void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 {
+	WISPFUN_DEBUG("c104_f19");
 	switch (m_Page)
 	{
 		case 1: //Sound and Music
@@ -2454,6 +2473,7 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 //----------------------------------------------------------------------------
 void CGumpOptions::GUMP_RADIO_EVENT_C
 {
+	WISPFUN_DEBUG("c104_f20");
 	if (!state)
 		return;
 
@@ -2548,11 +2568,13 @@ void CGumpOptions::GUMP_RADIO_EVENT_C
 //----------------------------------------------------------------------------
 void CGumpOptions::GUMP_SLIDER_CLICK_EVENT_C
 {
+	WISPFUN_DEBUG("c104_f21");
 	OnSliderMove(serial);
 }
 //----------------------------------------------------------------------------
 void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 {
+	WISPFUN_DEBUG("c104_f22");
 	switch (m_Page)
 	{
 		case 1: //Sound and Music
@@ -2626,6 +2648,7 @@ void CGumpOptions::GUMP_SLIDER_MOVE_EVENT_C
 //----------------------------------------------------------------------------
 void CGumpOptions::GUMP_COMBOBOX_SELECTION_EVENT_C
 {
+	WISPFUN_DEBUG("c104_f23");
 	bool isAction = false;
 	int index = serial - ID_GO_P5_MACRO_SELECTION;
 
@@ -2705,6 +2728,7 @@ void CGumpOptions::GUMP_COMBOBOX_SELECTION_EVENT_C
 //----------------------------------------------------------------------------
 void CGumpOptions::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c104_f24");
 	if (g_EntryPointer == &m_GameWindowWidth->m_Entry || g_EntryPointer == &m_GameWindowHeight->m_Entry || g_EntryPointer == &m_ContainerOffsetX->m_Entry || g_EntryPointer == &m_ContainerOffsetY->m_Entry)
 	{
 		if (wParam >= '0' && wParam <= '9')
@@ -2792,6 +2816,7 @@ void CGumpOptions::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------
 void CGumpOptions::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c104_f25");
 	if (g_EntryPointer == &m_MacroKey->m_Entry)
 	{
 		m_MacroPointer->Key = wParam & 0xFF;
@@ -2857,6 +2882,7 @@ void CGumpOptions::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------
 void CGumpOptions::ApplyPageChanges()
 {
+	WISPFUN_DEBUG("c104_f26");
 	switch (m_Page)
 	{
 		case 1: //Sound and Music

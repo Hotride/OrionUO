@@ -22,6 +22,7 @@ CTextContainer::~CTextContainer()
 //----------------------------------------------------------------------------------
 void CTextContainer::Clear()
 {
+	WISPFUN_DEBUG("c173_f1");
 	CBaseQueue::Clear();
 
 	m_Size = 0;
@@ -29,6 +30,7 @@ void CTextContainer::Clear()
 //----------------------------------------------------------------------------------
 void CTextContainer::Add(CTextData *obj)
 {
+	WISPFUN_DEBUG("c173_f2");
 	CBaseQueue::Add(obj);
 
 	if (m_Size >= m_MaxSize)
@@ -39,6 +41,7 @@ void CTextContainer::Add(CTextData *obj)
 //----------------------------------------------------------------------------------
 void CTextContainer::Delete(CTextData *obj)
 {
+	WISPFUN_DEBUG("c173_f3");
 	CBaseQueue::Delete(obj);
 
 	m_Size--;
@@ -46,6 +49,7 @@ void CTextContainer::Delete(CTextData *obj)
 //----------------------------------------------------------------------------------
 void CTextContainer::DrawSystemChat(const int &x, const int &y, const int &height)
 {
+	WISPFUN_DEBUG("c173_f4");
 	int offset = (y + height) - 41;
 
 	CTextData *td = (CTextData*)g_SystemChat.Last();

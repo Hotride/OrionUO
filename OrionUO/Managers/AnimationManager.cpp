@@ -236,6 +236,7 @@ CAnimationManager::CAnimationManager()
 : WISP_DATASTREAM::CDataReader(), m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0),
 m_Direction(0), m_Sitting(0), m_Transform(false), m_UseBlending(false)
 {
+	WISPFUN_DEBUG("c133_f1");
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
 	memset(m_AddressMul, 0, sizeof(m_AddressMul));
 	memset(m_SizeIdx, 0, sizeof(m_SizeIdx));
@@ -243,6 +244,7 @@ m_Direction(0), m_Sitting(0), m_Transform(false), m_UseBlending(false)
 //----------------------------------------------------------------------------------
 CAnimationManager::~CAnimationManager()
 {
+	WISPFUN_DEBUG("c133_f2");
 	ClearUnusedTextures(g_Ticks + 100000);
 }
 //----------------------------------------------------------------------------------
@@ -253,6 +255,7 @@ CAnimationManager::~CAnimationManager()
 */
 void CAnimationManager::Load(puint verdata)
 {
+	WISPFUN_DEBUG("c133_f3");
 	uint maxAddress = m_AddressIdx[0] + m_SizeIdx[0];
 
 	IFOR(i, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
@@ -422,6 +425,7 @@ void CAnimationManager::Load(puint verdata)
 */
 void CAnimationManager::InitIndexReplaces(puint verdata)
 {
+	WISPFUN_DEBUG("c133_f4");
 	if (g_PacketManager.ClientVersion >= CV_500A)
 	{
 		static const string typeNames[5] = { "animal", "monster", "sea_monster", "human", "equipment" };
@@ -850,6 +854,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 */
 ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 {
+	WISPFUN_DEBUG("c133_f5");
 	switch (m_DataIndex[id].Type)
 	{
 		case AGT_ANIMAL:
@@ -873,6 +878,7 @@ ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 */
 uchar CAnimationManager::GetDieGroupIndex(ushort id, const bool &second)
 {
+	WISPFUN_DEBUG("c133_f6");
 	switch (m_DataIndex[id].Type)
 	{
 		case AGT_ANIMAL:
@@ -896,6 +902,7 @@ uchar CAnimationManager::GetDieGroupIndex(ushort id, const bool &second)
 */
 void CAnimationManager::GetAnimDirection(uchar &dir, bool &mirror)
 {
+	WISPFUN_DEBUG("c133_f7");
 	switch (dir)
 	{
 		case 2:
@@ -949,6 +956,7 @@ void CAnimationManager::GetAnimDirection(uchar &dir, bool &mirror)
 */
 void CAnimationManager::GetSittingAnimDirection(uchar &dir, bool &mirror, int &x, int &y)
 {
+	WISPFUN_DEBUG("c133_f8");
 	switch (dir)
 	{
 		case 0:
@@ -991,6 +999,7 @@ void CAnimationManager::GetSittingAnimDirection(uchar &dir, bool &mirror, int &x
 */
 void CAnimationManager::ClearUnusedTextures(uint ticks)
 {
+	WISPFUN_DEBUG("c133_f9");
 	ticks -= CLEAR_ANIMATION_TEXTURES_DELAY;
 	int count = 0;
 
@@ -1023,6 +1032,7 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 */
 bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction)
 {
+	WISPFUN_DEBUG("c133_f10");
 	if (direction.Address == 0)
 		return false;
 
@@ -1109,6 +1119,7 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 //----------------------------------------------------------------------------------
 bool CAnimationManager::TestImagePixels(CTextureAnimationDirection &direction, const uchar &frame, const int &checkX, const int &checkY)
 {
+	WISPFUN_DEBUG("c133_f11");
 	SetData((puchar)direction.Address, direction.Size);
 
 	pushort palette = (pushort)m_Start;
@@ -1166,6 +1177,7 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection &direction, c
 //----------------------------------------------------------------------------------
 bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, ushort id)
 {
+	WISPFUN_DEBUG("c133_f12");
 	if (obj == NULL)
 		return false;
 
@@ -1224,6 +1236,7 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &m
 */
 CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, uchar frameIndex, ushort graphic)
 {
+	WISPFUN_DEBUG("c133_f13");
 	CTextureAnimationFrame *frame = NULL;
 
 	if (obj != NULL)
@@ -1257,6 +1270,7 @@ CTextureAnimationFrame *CAnimationManager::GetFrame(CGameObject *obj, uchar fram
 //----------------------------------------------------------------------------------
 void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, int id)
 {
+	WISPFUN_DEBUG("c133_f14");
 	//if (obj == NULL)
 	//	return;
 
@@ -1453,6 +1467,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 //----------------------------------------------------------------------------------
 void CAnimationManager::FixSittingDirection(uchar &layerDirection, bool &mirror, int &x, int &y)
 {
+	WISPFUN_DEBUG("c133_f15");
 	const SITTING_INFO_DATA &data = SITTING_INFO[m_Sitting - 1];
 
 	switch (m_Direction)
@@ -1567,6 +1582,7 @@ void CAnimationManager::FixSittingDirection(uchar &layerDirection, bool &mirror,
 */
 void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 {
+	WISPFUN_DEBUG("c133_f16");
 	m_Transform = false;
 
 	int drawX = (int)(x + obj->OffsetX);
@@ -1910,6 +1926,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 */
 bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, int z)
 {
+	WISPFUN_DEBUG("c133_f17");
 	y -= 3;
 	m_Sitting = obj->IsSitting();
 	m_Direction = 0;
@@ -1956,6 +1973,7 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 */
 void CAnimationManager::DrawCorpse(CGameItem *obj, const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c133_f18");
 	m_Sitting = 0;
 	m_Direction = obj->Layer & 0x7F;
 	bool mirror = false;
@@ -1985,6 +2003,7 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, const int &x, const int &y)
 */
 bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c133_f19");
 	m_Sitting = 0;
 	m_Direction = obj->Layer & 0x7F;
 	bool mirror = false;
@@ -2005,6 +2024,7 @@ bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, const int &x, const int
 */
 bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
 {
+	WISPFUN_DEBUG("c133_f20");
 	bool result = false;
 
 	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && group < ANIMATION_GROUPS_COUNT)
@@ -2020,12 +2040,14 @@ bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
 */
 void CAnimationManager::GetBodyGraphic(ushort &graphic)
 {
+	WISPFUN_DEBUG("c133_f21");
 	//if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 	//	graphic = m_DataIndex[graphic].Graphic;
 }
 //----------------------------------------------------------------------------------
 ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj, uchar frameIndex, const uchar &defaultDirection, const uchar &defaultGroup)
 {
+	WISPFUN_DEBUG("c133_f22");
 	ANIMATION_DIMENSIONS result = { 0 };
 
 	uchar dir = defaultDirection & 0x7F;
@@ -2128,6 +2150,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 //----------------------------------------------------------------------------------
 void CAnimationManager::CalculateFrameInformation(FRAME_OUTPUT_INFO &info, CGameObject *obj, const bool &mirror, const uchar &animIndex)
 {
+	WISPFUN_DEBUG("c133_f23");
 	ANIMATION_DIMENSIONS dim = GetAnimationDimensions(obj, animIndex, m_Direction, m_AnimGroup);
 
 	int y = -(dim.Height + dim.CenterY + 3);
@@ -2151,6 +2174,7 @@ void CAnimationManager::CalculateFrameInformation(FRAME_OUTPUT_INFO &info, CGame
 //----------------------------------------------------------------------------------
 DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *gameObject, const bool &checkLayers)
 {
+	WISPFUN_DEBUG("c133_f24");
 	m_Sitting = false;
 	m_Direction = 0;
 
@@ -2285,6 +2309,7 @@ DRAW_FRAME_INFORMATION CAnimationManager::CollectFrameInformation(CGameObject *g
 //----------------------------------------------------------------------------------
 bool CAnimationManager::DrawEquippedLayers(const bool &selection, CGameObject *obj, const int &drawX, const int &drawY, const bool &mirror, const uchar &layerDir, uchar animIndex, const int &lightOffset)
 {
+	WISPFUN_DEBUG("c133_f25");
 	bool result = false;
 
 	vector<CGameItem*> &list = obj->m_DrawLayeredObjects;
@@ -2312,6 +2337,7 @@ bool CAnimationManager::DrawEquippedLayers(const bool &selection, CGameObject *o
 //----------------------------------------------------------------------------------
 bool CAnimationManager::IsCovered(const int &layer, CGameObject *owner)
 {
+	WISPFUN_DEBUG("c133_f26");
 	bool result = false;
 
 	switch (layer)

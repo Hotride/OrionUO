@@ -66,6 +66,7 @@ void CVector::Merge(const double &x, const double &y, const double &z)
 //----------------------------------------------------------------------------------
 void CVector::Normalize()
 {
+	WISPFUN_DEBUG("c38_f1");
 	if (!m_X && !m_Y && !m_Z)
 			return;
 

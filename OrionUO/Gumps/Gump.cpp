@@ -41,6 +41,7 @@ m_Locker(0, 0, 0, 0, 0, 0)
 //----------------------------------------------------------------------------------
 CGump::~CGump()
 {
+	WISPFUN_DEBUG("c84_f1");
 	//Если это гамп, блокирующий игровое окно
 	if (m_Blocked)
 	{
@@ -75,6 +76,7 @@ CGump::~CGump()
 //---------------------------------------------------------------------------
 bool CGump::CanBeMoved()
 {
+	WISPFUN_DEBUG("c84_f2");
 	bool result = true;
 
 	if (m_NoMove)
@@ -91,17 +93,20 @@ bool CGump::CanBeMoved()
 */
 void CGump::DrawLocker()
 {
+	WISPFUN_DEBUG("c84_f3");
 	if (m_Locker.Serial && g_ShowGumpLocker)
 		g_TextureGumpState[m_LockMoving].Draw(m_Locker.X, m_Locker.Y);
 }
 //---------------------------------------------------------------------------
 bool CGump::SelectLocker()
 {
+	WISPFUN_DEBUG("c84_f4");
 	return (m_Locker.Serial && g_ShowGumpLocker && g_Orion.PolygonePixelsInXY(m_Locker.X, m_Locker.Y, 10, 14));
 }
 //---------------------------------------------------------------------------
 bool CGump::TestLockerClick()
 {
+	WISPFUN_DEBUG("c84_f5");
 	bool result = (m_Locker.Serial && g_ShowGumpLocker && g_PressedObject.LeftObject() == &m_Locker);
 
 	if (result)
@@ -112,6 +117,7 @@ bool CGump::TestLockerClick()
 //---------------------------------------------------------------------------
 void CGump::CalculateGumpState()
 {
+	WISPFUN_DEBUG("c84_f6");
 	g_GumpPressed = (g_ObjectInHand == NULL && g_PressedObject.LeftGump() == this /*&& g_SelectedObject.Gump() == this*/);
 	g_GumpSelectedElement = ((g_SelectedObject.Gump() == this) ? g_SelectedObject.Object() : NULL);
 	g_GumpPressedElement = NULL;
@@ -143,6 +149,7 @@ void CGump::CalculateGumpState()
 //---------------------------------------------------------------------------
 void CGump::ProcessListing()
 {
+	WISPFUN_DEBUG("c84_f7");
 	if (g_PressedObject.LeftGump() != NULL && !g_PressedObject.LeftGump()->NoProcess && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI())
 	{
 		CBaseGUI *item = (CBaseGUI*)g_PressedObject.LeftObject();
@@ -204,6 +211,7 @@ void CGump::ProcessListing()
 //---------------------------------------------------------------------------
 bool CGump::ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, const int draw2Page)
 {
+	WISPFUN_DEBUG("c84_f8");
 	bool transparent = false;
 
 	glClear(GL_STENCIL_BUFFER_BIT);
@@ -237,6 +245,7 @@ bool CGump::ApplyTransparent(CBaseGUI *item, int page, const int &currentPage, c
 //----------------------------------------------------------------------------------
 void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Page)
 {
+	WISPFUN_DEBUG("c84_f9");
 	float alpha[2] = { 1.0f, 0.4f };
 	CGUIComboBox *combo = NULL;
 
@@ -333,6 +342,7 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 //----------------------------------------------------------------------------------
 CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const int draw2Page)
 {
+	WISPFUN_DEBUG("c84_f10");
 	CRenderObject *selected = NULL;
 
 	int page = 0;
@@ -481,6 +491,7 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 //----------------------------------------------------------------------------------
 void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page, int count)
 {
+	WISPFUN_DEBUG("c84_f11");
 	int page = 0;
 	int group = 0;
 	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
@@ -720,6 +731,7 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 //----------------------------------------------------------------------------------
 void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page)
 {
+	WISPFUN_DEBUG("c84_f12");
 	int page = 0;
 	int group = 0;
 	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
@@ -947,6 +959,7 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 //----------------------------------------------------------------------------------
 void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, const int &currentPage, const int draw2Page)
 {
+	WISPFUN_DEBUG("c84_f13");
 	const int delay = SCROLL_LISTING_DELAY / 7;
 
 	int page = 0;
@@ -1051,6 +1064,7 @@ void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, con
 //----------------------------------------------------------------------------------
 void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page, int count)
 {
+	WISPFUN_DEBUG("c84_f14");
 	int page = 0;
 	int group = 0;
 	bool canDraw = ((page == -1) || ((page >= currentPage && page <= currentPage + draw2Page || (!page && !draw2Page))));
@@ -1144,12 +1158,14 @@ void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPa
 //----------------------------------------------------------------------------------
 void CGump::PrepareTextures()
 {
+	WISPFUN_DEBUG("c84_f15");
 	QFOR(item, m_Items, CBaseGUI*)
 		item->PrepareTextures();
 }
 //----------------------------------------------------------------------------------
 bool CGump::EntryPointerHere()
 {
+	WISPFUN_DEBUG("c84_f16");
 	QFOR(item, m_Items, CBaseGUI*)
 	{
 		if (item->Visible && item->EntryPointerHere())
@@ -1161,6 +1177,7 @@ bool CGump::EntryPointerHere()
 //----------------------------------------------------------------------------------
 void CGump::GenerateFrame(bool stop)
 {
+	WISPFUN_DEBUG("c84_f17");
 	if (!g_GL.Drawing)
 	{
 		m_FrameCreated = false;
@@ -1186,6 +1203,7 @@ void CGump::GenerateFrame(bool stop)
 //----------------------------------------------------------------------------------
 void CGump::Draw()
 {
+	WISPFUN_DEBUG("c84_f18");
 	CalculateGumpState();
 
 	if (m_WantUpdateContent)
@@ -1216,6 +1234,7 @@ void CGump::Draw()
 //----------------------------------------------------------------------------------
 CRenderObject *CGump::Select()
 {
+	WISPFUN_DEBUG("c84_f19");
 	g_CurrentCheckGump = this;
 	CalculateGumpState();
 
@@ -1250,6 +1269,7 @@ CRenderObject *CGump::Select()
 //----------------------------------------------------------------------------------
 void CGump::OnLeftMouseButtonDown()
 {
+	WISPFUN_DEBUG("c84_f20");
 	g_CurrentCheckGump = this;
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
@@ -1262,6 +1282,7 @@ void CGump::OnLeftMouseButtonDown()
 //----------------------------------------------------------------------------------
 void CGump::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c84_f21");
 	g_CurrentCheckGump = this;
 	TestItemsLeftMouseUp(this, (CBaseGUI*)m_Items, m_Page, m_Draw2Page);
 	TestLockerClick();
@@ -1270,6 +1291,7 @@ void CGump::OnLeftMouseButtonUp()
 //----------------------------------------------------------------------------------
 void CGump::OnMidMouseButtonScroll(const bool &up)
 {
+	WISPFUN_DEBUG("c84_f22");
 	g_CurrentCheckGump = this;
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);
@@ -1282,6 +1304,7 @@ void CGump::OnMidMouseButtonScroll(const bool &up)
 //----------------------------------------------------------------------------------
 void CGump::OnDragging()
 {
+	WISPFUN_DEBUG("c84_f23");
 	g_CurrentCheckGump = this;
 	WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 	g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(oldPos.X - m_X, oldPos.Y - m_Y);

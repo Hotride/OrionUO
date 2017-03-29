@@ -21,6 +21,7 @@ CGUIHTMLHitBox::~CGUIHTMLHitBox()
 //----------------------------------------------------------------------------------
 void CGUIHTMLHitBox::Scroll(const bool &up, const uint &delay)
 {
+	WISPFUN_DEBUG("c61_f1");
 	if (m_HTMLGump != NULL)
 		m_HTMLGump->Scroll(up, delay);
 }

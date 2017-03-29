@@ -31,6 +31,7 @@ CSelectTownScreen::~CSelectTownScreen()
 */
 void CSelectTownScreen::Init()
 {
+	WISPFUN_DEBUG("c167_f1");
 	if (g_PacketManager.ClientVersion >= CV_70130)
 		m_City = g_CityList.GetCity(0);
 	else
@@ -50,6 +51,7 @@ void CSelectTownScreen::Init()
 */
 void CSelectTownScreen::ProcessSmoothAction(uchar action)
 {
+	WISPFUN_DEBUG("c167_f2");
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
 

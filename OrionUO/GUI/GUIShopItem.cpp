@@ -18,6 +18,7 @@ CGUIShopItem::CGUIShopItem(const uint &serial, const ushort &graphic, const usho
 : CBaseGUI(GOT_SHOPITEM, serial, graphic, color, x, y), m_Count(count), m_Price(price),
 m_Name(name), m_Selected(false)
 {
+	WISPFUN_DEBUG("c73_f1");
 	m_MoveOnDrag = true;
 	CreateNameText();
 	CreateCountText(0);
@@ -44,12 +45,14 @@ m_Name(name), m_Selected(false)
 //----------------------------------------------------------------------------------
 CGUIShopItem::~CGUIShopItem()
 {
+	WISPFUN_DEBUG("c73_f2");
 	m_NameText.Clear();
 	m_CountText.Clear();
 }
 //----------------------------------------------------------------------------------
 void CGUIShopItem::OnClick()
 {
+	WISPFUN_DEBUG("c73_f3");
 	m_Selected = false;
 
 	for (CBaseGUI *item = this; item != NULL; item = (CBaseGUI*)item->m_Next)
@@ -76,6 +79,7 @@ void CGUIShopItem::OnClick()
 //----------------------------------------------------------------------------------
 void CGUIShopItem::CreateNameText()
 {
+	WISPFUN_DEBUG("c73_f4");
 	ushort textColor = 0x021F;
 
 	if (m_Selected)
@@ -87,6 +91,7 @@ void CGUIShopItem::CreateNameText()
 //----------------------------------------------------------------------------------
 void CGUIShopItem::CreateCountText(const int &lostCount)
 {
+	WISPFUN_DEBUG("c73_f5");
 	ushort textColor = 0x021F;
 
 	if (m_Selected)
@@ -97,6 +102,7 @@ void CGUIShopItem::CreateCountText(const int &lostCount)
 //----------------------------------------------------------------------------------
 void CGUIShopItem::PrepareTextures()
 {
+	WISPFUN_DEBUG("c73_f6");
 	g_Orion.ExecuteStaticArt(m_Graphic);
 	g_Orion.ExecuteGump(0x0039);
 	g_Orion.ExecuteGump(0x003A);
@@ -105,6 +111,7 @@ void CGUIShopItem::PrepareTextures()
 //----------------------------------------------------------------------------------
 void CGUIShopItem::SetShaderMode()
 {
+	WISPFUN_DEBUG("c73_f7");
 	int drawMode = (m_Color != 0);
 
 	if (drawMode)
@@ -120,6 +127,7 @@ void CGUIShopItem::SetShaderMode()
 //----------------------------------------------------------------------------------
 void CGUIShopItem::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c73_f8");
 	CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
 
 	if (th != NULL)
@@ -156,6 +164,7 @@ void CGUIShopItem::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUIShopItem::Select()
 {
+	WISPFUN_DEBUG("c73_f9");
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 

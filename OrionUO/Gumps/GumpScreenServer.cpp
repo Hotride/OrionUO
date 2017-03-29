@@ -27,6 +27,7 @@ CGumpScreenServer::~CGumpScreenServer()
 //----------------------------------------------------------------------------------
 void CGumpScreenServer::UpdateContent()
 {
+	WISPFUN_DEBUG("c119_f1");
 	Clear();
 
 	Add(new CGUIGumppicTiled(0x0E14, 0, 0, 640, 480));
@@ -85,6 +86,7 @@ void CGumpScreenServer::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpScreenServer::InitToolTip()
 {
+	WISPFUN_DEBUG("c119_f2");
 	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object() == NULL)
 		return;
 
@@ -126,6 +128,7 @@ void CGumpScreenServer::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpScreenServer::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c119_f3");
 	if (serial == ID_SS_QUIT) //x button
 		g_ServerScreen.CreateSmoothAction(CServerScreen::ID_SMOOTH_SS_QUIT);
 	else if (serial == ID_SS_ARROW_PREV) //< button
@@ -139,6 +142,7 @@ void CGumpScreenServer::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpScreenServer::GUMP_TEXT_ENTRY_EVENT_C
 {
+	WISPFUN_DEBUG("c119_f4");
 	if (serial >= ID_SS_SERVER_LIST) //Server selection
 	{
 		g_ServerScreen.SelectionServerTempValue = serial - ID_SS_SERVER_LIST;

@@ -33,6 +33,7 @@ CGumpRacialAbilitiesBook::~CGumpRacialAbilitiesBook()
 //----------------------------------------------------------------------------------
 void CGumpRacialAbilitiesBook::InitToolTip()
 {
+	WISPFUN_DEBUG("c110_f1");
 	if (m_Minimized)
 	{
 		g_ToolTip.Set(L"Double click to maximize book gump");
@@ -47,6 +48,7 @@ void CGumpRacialAbilitiesBook::InitToolTip()
 //----------------------------------------------------------------------------
 void CGumpRacialAbilitiesBook::PrepareContent()
 {
+	WISPFUN_DEBUG("c110_f2");
 	int abilityOnPage = 0;
 	ushort iconStartGraphic = 0;
 
@@ -67,6 +69,7 @@ void CGumpRacialAbilitiesBook::PrepareContent()
 //----------------------------------------------------------------------------
 void CGumpRacialAbilitiesBook::GetSummaryBookInfo(int &abilityOnPage, ushort &iconStartGraphic)
 {
+	WISPFUN_DEBUG("c110_f3");
 	m_DictionaryPagesCount = 2;
 	abilityOnPage = 3;
 	
@@ -100,6 +103,7 @@ void CGumpRacialAbilitiesBook::GetSummaryBookInfo(int &abilityOnPage, ushort &ic
 //----------------------------------------------------------------------------
 string CGumpRacialAbilitiesBook::GetAbilityName(const int &offset, bool &passive)
 {
+	WISPFUN_DEBUG("c110_f4");
 	string result = "";
 	passive = true;
 
@@ -139,6 +143,7 @@ string CGumpRacialAbilitiesBook::GetAbilityName(const int &offset, bool &passive
 //----------------------------------------------------------------------------
 void CGumpRacialAbilitiesBook::UpdateContent()
 {
+	WISPFUN_DEBUG("c110_f5");
 	m_PrevPage = NULL;
 	m_NextPage = NULL;
 
@@ -250,6 +255,7 @@ void CGumpRacialAbilitiesBook::UpdateContent()
 //----------------------------------------------------------------------------
 void CGumpRacialAbilitiesBook::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c110_f6");
 	int newPage = -1;
 
 	if (serial == ID_GRAB_BUTTON_PREV)
@@ -298,6 +304,7 @@ void CGumpRacialAbilitiesBook::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------
 bool CGumpRacialAbilitiesBook::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c110_f7");
 	bool result = false;
 
 	if (m_Minimized)
@@ -343,6 +350,7 @@ bool CGumpRacialAbilitiesBook::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void CGumpRacialAbilitiesBook::DelayedClick(CRenderObject *obj)
 {
+	WISPFUN_DEBUG("c110_f8");
 	if (obj != NULL)
 	{
 		ChangePage(g_ClickObject.Page);
@@ -352,6 +360,7 @@ void CGumpRacialAbilitiesBook::DelayedClick(CRenderObject *obj)
 //----------------------------------------------------------------------------------
 void CGumpRacialAbilitiesBook::ChangePage(int newPage)
 {
+	WISPFUN_DEBUG("c110_f9");
 	m_Page = newPage;
 
 	m_PrevPage->Visible = (m_Page != 0);

@@ -28,6 +28,7 @@ CGumpScreenCreateCharacter::~CGumpScreenCreateCharacter()
 //----------------------------------------------------------------------------------
 void CGumpScreenCreateCharacter::UpdateContent()
 {
+	WISPFUN_DEBUG("c114_f1");
 	Clear();
 
 	Add(new CGUIGumppicTiled(0x0E14, 0, 0, 640, 480));
@@ -377,6 +378,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpScreenCreateCharacter::InitToolTip()
 {
+	WISPFUN_DEBUG("c114_f2");
 	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object() == NULL)
 		return;
 
@@ -406,6 +408,7 @@ void CGumpScreenCreateCharacter::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpScreenCreateCharacter::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c114_f3");
 	if (serial == ID_CCS_QUIT) //x button
 		g_CreateCharacterScreen.CreateSmoothAction(CCreateCharacterScreen::ID_SMOOTH_CCS_QUIT);
 	else if (serial == ID_CCS_ARROW_PREV) //< button
@@ -451,6 +454,7 @@ void CGumpScreenCreateCharacter::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpScreenCreateCharacter::GUMP_RADIO_EVENT_C
 {
+	WISPFUN_DEBUG("c114_f4");
 	if (state)
 	{
 		if (serial == ID_CCS_MALE_BUTTON)
@@ -471,6 +475,7 @@ void CGumpScreenCreateCharacter::GUMP_RADIO_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpScreenCreateCharacter::GUMP_TEXT_ENTRY_EVENT_C
 {
+	WISPFUN_DEBUG("c114_f5");
 	if (g_CreateCharacterScreen.ColorSelection == 0)
 	{
 		if (serial == ID_CCS_SKIN_TONE)
@@ -535,6 +540,7 @@ void CGumpScreenCreateCharacter::GUMP_TEXT_ENTRY_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpScreenCreateCharacter::GUMP_COMBOBOX_SELECTION_EVENT_C
 {
+	WISPFUN_DEBUG("c114_f6");
 	if (serial >= ID_CCS_HAIR_STYLE)
 	{
 		if (serial >= ID_CCS_FACIAL_HAIR_STYLE)

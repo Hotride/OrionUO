@@ -17,6 +17,7 @@ CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
 : CGump(GT_SHOP, serial, x, y), m_ContinueCounter(0), m_IsBuyGump(isBuyGump),
 m_Visible(!isBuyGump)
 {
+	WISPFUN_DEBUG("c123_f1");
 	if (isBuyGump)
 		Add(new CGUIGumppic(0x0870, 0, 0));
 	else
@@ -117,6 +118,7 @@ CGumpShop::~CGumpShop()
 //----------------------------------------------------------------------------------
 void CGumpShop::SendList()
 {
+	WISPFUN_DEBUG("c123_f2");
 	CGameCharacter *vendor = g_World->FindWorldCharacter(m_Serial);
 
 	if (vendor == NULL)
@@ -130,6 +132,7 @@ void CGumpShop::SendList()
 //----------------------------------------------------------------------------------
 void CGumpShop::UpdateTotalPrice()
 {
+	WISPFUN_DEBUG("c123_f3");
 	if (m_TotalPriceText != NULL)
 	{
 		int totalPrice = 0;
@@ -150,6 +153,7 @@ void CGumpShop::UpdateTotalPrice()
 //----------------------------------------------------------------------------------
 void CGumpShop::PrepareContent()
 {
+	WISPFUN_DEBUG("c123_f4");
 	if (m_NoProcess && g_Player != NULL)
 	{
 		string name = g_Player->Name;
@@ -186,6 +190,7 @@ void CGumpShop::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpShop::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c123_f5");
 	if (serial == ID_GB_BUTTON_ACCEPT) //Accept
 	{
 		m_NoProcess = true;
@@ -197,6 +202,7 @@ void CGumpShop::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpShop::GUMP_SCROLL_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c123_f6");
 	CGUIMinMaxButtons *minmax = (CGUIMinMaxButtons*)g_PressedObject.LeftObject();
 
 	if (minmax == NULL)
@@ -245,6 +251,7 @@ void CGumpShop::GUMP_SCROLL_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 bool CGumpShop::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c123_f7");
 	bool result = false;
 
 	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI())

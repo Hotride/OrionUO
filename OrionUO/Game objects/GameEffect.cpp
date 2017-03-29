@@ -38,6 +38,7 @@ CGameEffect::~CGameEffect()
 */
 void CGameEffect::Draw(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c16_f1");
 #if UO_DEBUG_INFO!=0
 	g_RenderedObjectsCountInGameWindow++;
 #endif
@@ -72,6 +73,7 @@ void CGameEffect::Draw(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 void CGameEffect::Update(CGameObject *parent)
 {
+	WISPFUN_DEBUG("c16_f2");
 	if (m_EffectType != EF_MOVING)
 	{
 		if (m_Duration < g_Ticks)
@@ -115,6 +117,7 @@ void CGameEffect::Update(CGameObject *parent)
 */
 ushort CGameEffect::CalculateCurrentGraphic()
 {
+	WISPFUN_DEBUG("c16_f3");
 	uint addressAnimData = (uint)g_FileManager.m_AnimdataMul.Start;
 
 	if (addressAnimData)
@@ -141,6 +144,7 @@ ushort CGameEffect::CalculateCurrentGraphic()
 */
 ushort CGameEffect::GetCurrentGraphic()
 {
+	WISPFUN_DEBUG("c16_f4");
 	return m_Graphic + m_Increment;
 }
 //----------------------------------------------------------------------------------
@@ -150,6 +154,7 @@ ushort CGameEffect::GetCurrentGraphic()
 */
 void CGameEffect::ApplyRenderMode()
 {
+	WISPFUN_DEBUG("c16_f5");
 	switch (m_RenderMode)
 	{
 		case 1: //ok
@@ -195,6 +200,7 @@ void CGameEffect::ApplyRenderMode()
 */
 void CGameEffect::RemoveRenderMode()
 {
+	WISPFUN_DEBUG("c16_f6");
 	switch (m_RenderMode)
 	{
 		case 1: //ok

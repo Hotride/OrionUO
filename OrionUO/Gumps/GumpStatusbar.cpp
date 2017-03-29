@@ -34,6 +34,7 @@ CGumpStatusbar::CGumpStatusbar(uint serial, short x, short y, bool minimized)
 m_WantFullUpdateContent(false), m_StatusbarUnlocker(NULL), m_Body(NULL),
 m_HitsBody(NULL), m_Entry(NULL), m_Name("")
 {
+	WISPFUN_DEBUG("c128_f1");
 	if (minimized)
 	{
 		m_Minimized = true;
@@ -49,6 +50,7 @@ m_HitsBody(NULL), m_Entry(NULL), m_Name("")
 //----------------------------------------------------------------------------------
 CGumpStatusbar::~CGumpStatusbar()
 {
+	WISPFUN_DEBUG("c128_f2");
 	if (g_ConnectionManager.Connected() && g_PacketManager.ClientVersion >= CV_200 && g_World != NULL && g_World->FindWorldObject(m_Serial) != NULL)
 		CPacketCloseStatusbarGump(m_Serial).Send();
 
@@ -57,6 +59,7 @@ CGumpStatusbar::~CGumpStatusbar()
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::InitToolTip()
 {
+	WISPFUN_DEBUG("c128_f3");
 	uint id = g_SelectedObject.Serial;
 
 	//if (m_Minimized && m_Serial == g_PlayerSerial)
@@ -106,6 +109,7 @@ void CGumpStatusbar::InitToolTip()
 //----------------------------------------------------------------------------------
 CGumpStatusbar *CGumpStatusbar::GetTopStatusbar()
 {
+	WISPFUN_DEBUG("c128_f4");
 	if (!InGroup())
 		return NULL;
 
@@ -122,6 +126,7 @@ CGumpStatusbar *CGumpStatusbar::GetTopStatusbar()
 //----------------------------------------------------------------------------------
 CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 {
+	WISPFUN_DEBUG("c128_f5");
 	if (InGroup() || !m_Minimized)
 		return NULL;
 
@@ -252,6 +257,7 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 //----------------------------------------------------------------------------------
 bool CGumpStatusbar::GetStatusbarGroupOffset(int &x, int &y)
 {
+	WISPFUN_DEBUG("c128_f6");
 	if (InGroup() && m_Minimized && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump() != NULL && (g_PressedObject.LeftObject() == NULL || (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->MoveOnDrag)))
 	{
 		CGumpStatusbar *gump = GetTopStatusbar();
@@ -278,6 +284,7 @@ bool CGumpStatusbar::GetStatusbarGroupOffset(int &x, int &y)
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::UpdateGroup(int x, int y)
 {
+	WISPFUN_DEBUG("c128_f7");
 	if (!InGroup())
 		return;
 
@@ -302,6 +309,7 @@ void CGumpStatusbar::UpdateGroup(int x, int y)
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::AddStatusbar(CGumpStatusbar *bar)
 {
+	WISPFUN_DEBUG("c128_f8");
 	if (m_GroupNext == NULL)
 	{
 		m_GroupNext = bar;
@@ -336,6 +344,7 @@ void CGumpStatusbar::AddStatusbar(CGumpStatusbar *bar)
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::RemoveFromGroup()
 {
+	WISPFUN_DEBUG("c128_f9");
 	if (m_GroupNext != NULL)
 	{
 		m_GroupNext->WantRedraw = true;
@@ -366,6 +375,7 @@ void CGumpStatusbar::RemoveFromGroup()
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::CalculateGumpState()
 {
+	WISPFUN_DEBUG("c128_f10");
 	CGump::CalculateGumpState();
 
 	//Если гамп захватили и (может быть) двигают
@@ -400,6 +410,7 @@ void CGumpStatusbar::CalculateGumpState()
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::PrepareContent()
 {
+	WISPFUN_DEBUG("c128_f11");
 	if (m_HitsBody != NULL)
 	{
 		CGameCharacter *obj = g_World->FindWorldCharacter(m_Serial);
@@ -425,6 +436,7 @@ void CGumpStatusbar::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::UpdateContent()
 {
+	WISPFUN_DEBUG("c128_f12");
 	Clear();
 	m_StatusbarUnlocker = NULL;
 	m_Body = NULL;
@@ -940,6 +952,7 @@ void CGumpStatusbar::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::OnLeftMouseButtonDown()
 {
+	WISPFUN_DEBUG("c128_f13");
 	if (g_GeneratedMouseDown)
 		return;
 
@@ -958,6 +971,7 @@ void CGumpStatusbar::OnLeftMouseButtonDown()
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c128_f14");
 	if (g_GeneratedMouseDown)
 		return;
 
@@ -1020,6 +1034,7 @@ void CGumpStatusbar::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 bool CGumpStatusbar::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c128_f15");
 	if (g_GeneratedMouseDown)
 		return false;
 
@@ -1070,6 +1085,7 @@ bool CGumpStatusbar::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c128_f16");
 	//Изменение имени существа
 	if (Serial != g_PlayerSerial) //Только чужие статусбары
 	{
@@ -1083,6 +1099,7 @@ void CGumpStatusbar::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c128_f17");
 	switch (wParam)
 	{
 		case VK_RETURN:
@@ -1143,6 +1160,7 @@ void CGumpStatusbar::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGumpStatusbar::SendRenameRequest()
 {
+	WISPFUN_DEBUG("c128_f18");
 	QFOR(item, m_Items, CBaseGUI*)
 	{
 		if (item->Type != GOT_TEXTENTRY)

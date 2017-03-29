@@ -27,6 +27,7 @@ CEffectManager::CEffectManager()
 */
 void CEffectManager::AddEffect(CGameEffect *effect)
 {
+	WISPFUN_DEBUG("c141_f1");
 	switch (effect->EffectType)
 	{
 		case EF_MOVING:
@@ -116,6 +117,7 @@ void CEffectManager::AddEffect(CGameEffect *effect)
 */
 void CEffectManager::RemoveEffect(CGameEffect *effect)
 {
+	WISPFUN_DEBUG("c141_f2");
 	Unlink(effect);
 
 	effect->m_Next = NULL;
@@ -130,6 +132,7 @@ void CEffectManager::RemoveEffect(CGameEffect *effect)
 */
 void CEffectManager::CreateExplodeEffect(CGameEffect *effect, const EFFECT_TYPE &type)
 {
+	WISPFUN_DEBUG("c141_f3");
 	CGameEffect *newEffect = new CGameEffect();
 
 	newEffect->EffectType = type;
@@ -154,6 +157,7 @@ void CEffectManager::CreateExplodeEffect(CGameEffect *effect, const EFFECT_TYPE 
 */
 void CEffectManager::UpdateEffects()
 {
+	WISPFUN_DEBUG("c141_f3");
 	for (CGameEffect *effect = (CGameEffect*)m_Items; effect != NULL;)
 	{
 		CGameEffect *next = (CGameEffect*)effect->m_Next;
@@ -170,5 +174,6 @@ void CEffectManager::UpdateEffects()
 */
 void CEffectManager::RemoveRangedEffects()
 {
+	WISPFUN_DEBUG("c141_f4");
 }
 //----------------------------------------------------------------------------------

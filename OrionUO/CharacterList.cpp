@@ -15,6 +15,7 @@ CCharacterList::CCharacterList()
 :m_Count(5), m_Selected(0), m_OnePerson(false), m_Have6Slot(false),
 m_Have7Slot(false), m_ClientFlag(0)
 {
+	WISPFUN_DEBUG("c182_f1");
 	//!Чистим при создании
 	Clear();
 }
@@ -25,6 +26,7 @@ m_Have7Slot(false), m_ClientFlag(0)
 */
 void CCharacterList::Clear()
 {
+	WISPFUN_DEBUG("c182_f2");
 	IFOR(i, 0, 7)
 		m_Name[i] = "";
 
@@ -42,6 +44,7 @@ void CCharacterList::Clear()
 */
 void CCharacterList::SetName(__in int pos, __in string name)
 {
+	WISPFUN_DEBUG("c182_f3");
 	//!При корректной позиции записываем имя
 	if (pos >= 0 && pos < m_Count)
 		m_Name[pos] = name;
@@ -54,6 +57,7 @@ void CCharacterList::SetName(__in int pos, __in string name)
 */
 string CCharacterList::GetName(__in int pos) const
 {
+	WISPFUN_DEBUG("c182_f4");
 	string result = "";
 
 	//!При корректной позиции возвращаем имя
@@ -69,6 +73,7 @@ string CCharacterList::GetName(__in int pos) const
 */
 string CCharacterList::GetSelectedName() const
 {
+	WISPFUN_DEBUG("c182_f5");
 	string result = "";
 
 	//!При корректной позиции возвращаем имя

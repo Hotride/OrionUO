@@ -21,6 +21,7 @@ CGumpBook::CGumpBook(uint serial, short x, short y, short pageCount, bool writab
 : CGump(GT_BOOK, serial, x, y), m_PageCount(pageCount), m_Writable(writable),
 m_Unicode(unicode)
 {
+	WISPFUN_DEBUG("c87_f1");
 	m_ChangedPage = new bool[pageCount + 1];
 	m_Page = 0;
 	m_Draw2Page = true;
@@ -107,6 +108,7 @@ m_Unicode(unicode)
 //----------------------------------------------------------------------------------
 CGumpBook::~CGumpBook()
 {
+	WISPFUN_DEBUG("c87_f2");
 	if (m_ChangedPage != NULL)
 	{
 		delete m_ChangedPage;
@@ -116,6 +118,7 @@ CGumpBook::~CGumpBook()
 //----------------------------------------------------------------------------------
 CGUITextEntry *CGumpBook::GetEntry(const int &page)
 {
+	WISPFUN_DEBUG("c87_f3");
 	int currentPage = -1;
 
 	QFOR(item, m_Items, CBaseGUI*)
@@ -131,6 +134,7 @@ CGUITextEntry *CGumpBook::GetEntry(const int &page)
 //----------------------------------------------------------------------------------
 void CGumpBook::SetPageData(const int &page, const wstring &data)
 {
+	WISPFUN_DEBUG("c87_f4");
 	CGUITextEntry *entry = GetEntry(page);
 
 	if (entry != NULL)
@@ -139,6 +143,7 @@ void CGumpBook::SetPageData(const int &page, const wstring &data)
 //----------------------------------------------------------------------------------
 void CGumpBook::ChangePage(int newPage)
 {
+	WISPFUN_DEBUG("c87_f5");
 	IFOR(i, 0, 2)
 	{
 		if (m_Page + i >= m_PageCount)
@@ -169,6 +174,7 @@ void CGumpBook::ChangePage(int newPage)
 //----------------------------------------------------------------------------------
 void CGumpBook::DelayedClick(CRenderObject *obj)
 {
+	WISPFUN_DEBUG("c87_f6");
 	if (obj != NULL)
 	{
 		ChangePage(g_ClickObject.Page);
@@ -178,6 +184,7 @@ void CGumpBook::DelayedClick(CRenderObject *obj)
 //----------------------------------------------------------------------------------
 void CGumpBook::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c87_f7");
 	if (!g_ClickObject.Enabled)
 	{
 		int newPage = -1;
@@ -214,6 +221,7 @@ void CGumpBook::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 bool CGumpBook::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c87_f8");
 	if (g_PressedObject.LeftSerial == ID_GB_BUTTON_PREV) //Prev
 	{
 		//Был нажат уголок "Назад", при даблклике устанавливаем 1 страницу
@@ -245,6 +253,7 @@ bool CGumpBook::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 {
+	WISPFUN_DEBUG("c87_f9");
 	int page = m_Page;
 
 	if (page >= 0 && page < m_PageCount)
@@ -301,6 +310,7 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 //----------------------------------------------------------------------------------
 void CGumpBook::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c87_f10");
 	if (!m_Writable)
 		return;
 
@@ -333,6 +343,7 @@ void CGumpBook::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGumpBook::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c87_f11");
 	if (!m_Writable)
 		return;
 

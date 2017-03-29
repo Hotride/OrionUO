@@ -35,6 +35,7 @@ m_WindTimer(0), m_Timer(0), m_LastTick(0), m_SimulationRatio(37)
 //---------------------------------------------------------------------------
 void CWeather::Reset()
 {
+	WISPFUN_DEBUG("c214_f1");
 	m_Type = 0;
 	m_Count = 0;
 	m_CurrentCount = 0;
@@ -50,6 +51,7 @@ void CWeather::Reset()
 //---------------------------------------------------------------------------
 void CWeather::Generate()
 {
+	WISPFUN_DEBUG("c214_f2");
 	m_LastTick = g_Ticks;
 
 	if (m_Type == 0xFF || m_Type == 0xFE)
@@ -78,6 +80,7 @@ void CWeather::Generate()
 //---------------------------------------------------------------------------
 void CWeather::Draw(const int &x, const int &y)
 {    
+	WISPFUN_DEBUG("c214_f3");
 	bool removeEffects = false;
 
 	if (m_Timer < g_Ticks)

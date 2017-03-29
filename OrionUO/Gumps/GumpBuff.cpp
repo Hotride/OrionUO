@@ -17,6 +17,7 @@
 CGumpBuff::CGumpBuff(uint serial, short x, short y)
 : CGump(GT_BUFF, serial, x, y)
 {
+	WISPFUN_DEBUG("c88_f1");
 	m_Graphic = 0x7580;
 	m_Locker.Serial = ID_GB_LOCK_MOVING;
 
@@ -33,11 +34,13 @@ CGumpBuff::~CGumpBuff()
 //----------------------------------------------------------------------------------
 bool CGumpBuff::CanBeDisplayed()
 {
+	WISPFUN_DEBUG("c88_f2");
 	return g_ConfigManager.ToggleBufficonWindow;
 }
 //----------------------------------------------------------------------------------
 void CGumpBuff::UpdateBuffIcons()
 {
+	WISPFUN_DEBUG("c88_f3");
 	for (CBaseGUI *item = (CBaseGUI*)m_Items; item != NULL;)
 	{
 		CBaseGUI *next = (CBaseGUI*)item->m_Next;
@@ -94,6 +97,7 @@ void CGumpBuff::UpdateBuffIcons()
 //----------------------------------------------------------------------------------
 void CGumpBuff::AddBuff(const ushort &id, const ushort &timer, const wstring &text)
 {
+	WISPFUN_DEBUG("c88_f4");
 	DWORD ticks = 0xFFFFFFFF;
 
 	if (timer)
@@ -124,6 +128,7 @@ void CGumpBuff::AddBuff(const ushort &id, const ushort &timer, const wstring &te
 //----------------------------------------------------------------------------------
 void CGumpBuff::DeleteBuff(const ushort &id)
 {
+	WISPFUN_DEBUG("c88_f5");
 	QFOR(item, m_Items, CBaseGUI*)
 	{
 		if (item->Type == GOT_BUFF && item->Graphic == id)
@@ -138,6 +143,7 @@ void CGumpBuff::DeleteBuff(const ushort &id)
 //----------------------------------------------------------------------------------
 void CGumpBuff::InitToolTip()
 {
+	WISPFUN_DEBUG("c88_f6");
 	if (g_SelectedObject.Serial == ID_GB_NEXT_WINDOW_DIRECTION)
 		g_ToolTip.Set(L"Change buff window gump");
 	else if (g_SelectedObject.Object())
@@ -181,6 +187,7 @@ void CGumpBuff::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpBuff::GetGumpStatus(WISP_GEOMETRY::CPoint2Di &ball, WISP_GEOMETRY::CPoint2Di &items, bool &useX, bool &decX, bool &decY, WISP_GEOMETRY::CPoint2Di &startGump, WISP_GEOMETRY::CSize &endGump)
 {
+	WISPFUN_DEBUG("c88_f7");
 	startGump.X = 0;
 	startGump.Y = 0;
 
@@ -292,6 +299,7 @@ void CGumpBuff::GetGumpStatus(WISP_GEOMETRY::CPoint2Di &ball, WISP_GEOMETRY::CPo
 //----------------------------------------------------------------------------------
 void CGumpBuff::PrepareContent()
 {
+	WISPFUN_DEBUG("c88_f8");
 	if (m_Graphic < 0x757F || m_Graphic > 0x7582)
 	{
 		m_Graphic = 0x7580;
@@ -301,6 +309,7 @@ void CGumpBuff::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpBuff::UpdateContent()
 {
+	WISPFUN_DEBUG("c88_f9");
 	bool decX = false;
 	bool decY = false;
 	bool useX = true;
@@ -369,6 +378,7 @@ void CGumpBuff::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpBuff::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c88_f10");
 	if (serial == ID_GB_NEXT_WINDOW_DIRECTION)
 	{
 		switch (m_Graphic)

@@ -34,6 +34,7 @@ CMapManager::CMapManager()
 //----------------------------------------------------------------------------------
 CMapManager::~CMapManager()
 {
+	WISPFUN_DEBUG("c146_f1");
 	if (m_Blocks != NULL)
 	{
 		ClearUsedBlocks();
@@ -47,12 +48,14 @@ CMapManager::~CMapManager()
 //----------------------------------------------------------------------------------
 void CMapManager::CreateBlocksTable()
 {
+	WISPFUN_DEBUG("c146_f2");
 	IFOR(map, 0, MAX_MAPS_COUNT)
 		CreateBlockTable(map);
 }
 //----------------------------------------------------------------------------------
 void CMapManager::CreateBlockTable(int map)
 {
+	WISPFUN_DEBUG("c146_f3");
 	MAP_INDEX_LIST &list = m_BlockData[map];
 	WISP_GEOMETRY::CSize &size = g_MapBlockSize[map];
 
@@ -129,6 +132,7 @@ void CMapManager::CreateBlockTable(int map)
 //----------------------------------------------------------------------------------
 void CMapManager::SetPatchedMapBlock(const uint &block, const uint &address)
 {
+	WISPFUN_DEBUG("c146_f4");
 	MAP_INDEX_LIST &list = m_BlockData[0];
 	WISP_GEOMETRY::CSize &size = g_MapBlockSize[0];
 
@@ -143,6 +147,7 @@ void CMapManager::SetPatchedMapBlock(const uint &block, const uint &address)
 //----------------------------------------------------------------------------------
 void CMapManager::ResetPatchesInBlockTable()
 {
+	WISPFUN_DEBUG("c146_f5");
 	IFOR(map, 0, MAX_MAPS_COUNT)
 	{
 		MAP_INDEX_LIST &list = m_BlockData[map];
@@ -170,6 +175,7 @@ void CMapManager::ResetPatchesInBlockTable()
 //----------------------------------------------------------------------------------
 void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 {
+	WISPFUN_DEBUG("c146_f6");
 	ResetPatchesInBlockTable();
 
 	int count = stream.ReadUInt32BE();
@@ -259,6 +265,7 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 //----------------------------------------------------------------------------------
 void CMapManager::UpdatePatched()
 {
+	WISPFUN_DEBUG("c146_f7");
 	if (g_Player == NULL)
 		return;
 
@@ -295,6 +302,7 @@ void CMapManager::UpdatePatched()
 //----------------------------------------------------------------------------------
 CIndexMap *CMapManager::GetIndex(const uint &map, const int &blockX, const int &blockY)
 {
+	WISPFUN_DEBUG("c146_f8");
 	if (map >= MAX_MAPS_COUNT)
 		return NULL;
 
@@ -317,6 +325,7 @@ CIndexMap *CMapManager::GetIndex(const uint &map, const int &blockX, const int &
 */
 void CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb)
 {
+	WISPFUN_DEBUG("c146_f9");
 	CIndexMap *indexMap = GetIndex(map, blockX, blockY);
 
 	if (indexMap == NULL || indexMap->MapAddress == 0)
@@ -368,6 +377,7 @@ void CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int 
 */
 void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLOCK &mb)
 {
+	WISPFUN_DEBUG("c146_f10");
 	CIndexMap *indexMap = GetIndex(GetActualMap(), blockX, blockY);
 
 	if (indexMap == NULL || indexMap->MapAddress == 0)
@@ -420,6 +430,7 @@ void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLO
 */
 void CMapManager::GetMapZ(const int &x, const int &y, int &groundZ, int &staticZ)
 {
+	WISPFUN_DEBUG("c146_f11");
 	int blockX = x / 8;
 	int blockY = y / 8;
 	uint index = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
@@ -456,6 +467,7 @@ void CMapManager::GetMapZ(const int &x, const int &y, int &groundZ, int &staticZ
 */
 void CMapManager::ClearUnusedBlocks()
 {
+	WISPFUN_DEBUG("c146_f12");
 	CMapBlock *block = (CMapBlock*)m_Items;
 	uint ticks = g_Ticks - CLEAR_TEXTURES_DELAY;
 	int count = 0;
@@ -481,6 +493,7 @@ void CMapManager::ClearUnusedBlocks()
 //----------------------------------------------------------------------------------
 void CMapManager::ClearUsedBlocks()
 {
+	WISPFUN_DEBUG("c146_f13");
 	CMapBlock *block = (CMapBlock*)m_Items;
 
 	while (block != NULL)
@@ -503,6 +516,7 @@ void CMapManager::ClearUsedBlocks()
 */
 void CMapManager::Init(const bool &delayed)
 {
+	WISPFUN_DEBUG("c146_f14");
 	if (g_Player == NULL)
 		return;
 
@@ -571,6 +585,7 @@ void CMapManager::Init(const bool &delayed)
 */
 void CMapManager::LoadBlock(CMapBlock *block)
 {
+	WISPFUN_DEBUG("c146_f15");
 	int map = GetActualMap();
 
 	CIndexMap *indexMap = GetIndex(GetActualMap(), block->X, block->Y);
@@ -632,6 +647,7 @@ void CMapManager::LoadBlock(CMapBlock *block)
 */
 int CMapManager::GetActualMap()
 {
+	WISPFUN_DEBUG("c146_f16");
 	if (g_CurrentMap == 1 && (!g_FileManager.m_MapMul[1].Start || !g_FileManager.m_StaticIdx[1].Start || !g_FileManager.m_StaticMul[1].Start))
 		return 0;
 
@@ -645,6 +661,7 @@ int CMapManager::GetActualMap()
 */
 void CMapManager::AddRender(CRenderWorldObject *item)
 {
+	WISPFUN_DEBUG("c146_f17");
 	int itemX = item->X;
 	int itemY = item->Y;
 
@@ -679,6 +696,7 @@ void CMapManager::AddRender(CRenderWorldObject *item)
 */
 CMapBlock *CMapManager::GetBlock(const uint &index)
 {
+	WISPFUN_DEBUG("c146_f18");
 	CMapBlock *block = NULL;
 
 	if (index < m_MaxBlockIndex)
@@ -699,6 +717,7 @@ CMapBlock *CMapManager::GetBlock(const uint &index)
 */
 CMapBlock *CMapManager::AddBlock(const uint &index)
 {
+	WISPFUN_DEBUG("c146_f19");
 	CMapBlock *block = (CMapBlock*)Add(new CMapBlock(index));
 
 	m_Blocks[index] = block;
@@ -713,6 +732,7 @@ CMapBlock *CMapManager::AddBlock(const uint &index)
 */
 void CMapManager::DeleteBlock(const uint &index)
 {
+	WISPFUN_DEBUG("c146_f20");
 	CMapBlock *block = (CMapBlock*)m_Items;
 
 	while (block != NULL)

@@ -21,6 +21,7 @@ CGUIGlobalColor::~CGUIGlobalColor()
 //----------------------------------------------------------------------------------
 void CGUIGlobalColor::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c55_f1");
 	if (m_Enabled)
 		glColor4f(m_R, m_G, m_B, m_A);
 }

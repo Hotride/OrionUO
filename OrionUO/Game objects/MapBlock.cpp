@@ -17,6 +17,7 @@
 CMapBlock::CMapBlock(const uint &index)
 : CBaseQueueItem(), m_Index(index), m_LastAccessTime(GetTickCount()), m_X(0), m_Y(0)
 {
+	WISPFUN_DEBUG("c24_f1");
 	//Обнуляем блок
 	IFOR(i, 0, 8)
 	{
@@ -27,6 +28,7 @@ CMapBlock::CMapBlock(const uint &index)
 //----------------------------------------------------------------------------------
 CMapBlock::~CMapBlock()
 {
+	WISPFUN_DEBUG("c24_f2");
 	//При удалении блока очищаем список отрисовки блока и удаляем элементы
 	IFOR(i, 0, 8)
 	{
@@ -57,6 +59,7 @@ CMapBlock::~CMapBlock()
 //----------------------------------------------------------------------------------
 bool CMapBlock::HasNoExternalData()
 {
+	WISPFUN_DEBUG("c24_f3");
 	IFOR(x, 0, 8)
 	{
 		IFOR(y, 0, 8)
@@ -74,6 +77,7 @@ bool CMapBlock::HasNoExternalData()
 //----------------------------------------------------------------------------------
 ushort CMapBlock::GetRadarColor(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c24_f4");
 	ushort color = 0;
 	CRenderWorldObject *obj = Block[x][y];
 
@@ -107,6 +111,7 @@ ushort CMapBlock::GetRadarColor(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 void CMapBlock::CreateLandTextureRect()
 {
+	WISPFUN_DEBUG("c24_f5");
 	//Подкорректируем индекс карты
 	int map = g_MapManager->GetActualMap();
 
@@ -257,6 +262,7 @@ void CMapBlock::CreateLandTextureRect()
 //----------------------------------------------------------------------------------
 bool CMapBlock::TestStretched(const int &x, const int &y, const char &z, const int &map, const bool &recurse)
 {
+	WISPFUN_DEBUG("c24_f6");
 	bool result = false;
 
 	IFOR(i, -1, 2 && !result)
@@ -279,6 +285,7 @@ bool CMapBlock::TestStretched(const int &x, const int &y, const char &z, const i
 //----------------------------------------------------------------------------------
 char CMapBlock::GetLandZ(const int &x, const int &y, const int &map)
 {
+	WISPFUN_DEBUG("c24_f7");
 	CIndexMap *blockIndex = g_MapManager->GetIndex(map, x / 8, y / 8);
 
 	//Проверки актуальности данных
@@ -293,6 +300,7 @@ char CMapBlock::GetLandZ(const int &x, const int &y, const int &map)
 //----------------------------------------------------------------------------------
 CLandObject *CMapBlock::GetLand(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c24_f8");
 	CMapObject *obj = Block[x][y];
 
 	//Пройдемся по MapObject'ам блока
@@ -310,6 +318,7 @@ CLandObject *CMapBlock::GetLand(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 char CMapBlock::GetRenderZ(CRenderWorldObject *item)
 {
+	WISPFUN_DEBUG("c24_f9");
 	//Получаем Z-координату для рендера
 	char z = item->Z;
 
@@ -324,6 +333,7 @@ char CMapBlock::GetRenderZ(CRenderWorldObject *item)
 //----------------------------------------------------------------------------------
 void CMapBlock::AddRender(CRenderWorldObject *item, const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c24_f10");
 	item->RemoveRender();
 
 	CRenderWorldObject *obj = Block[x][y];
@@ -403,6 +413,7 @@ void CMapBlock::AddRender(CRenderWorldObject *item, const int &x, const int &y)
 //----------------------------------------------------------------------------------
 CRenderWorldObject *CMapBlock::GetRender(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c24_f11");
 	CRenderWorldObject *obj = Block[x][y];
 
 	//Найдем указатель на первый элемент списка рендера
@@ -414,6 +425,7 @@ CRenderWorldObject *CMapBlock::GetRender(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 CMapObject *CMapBlock::AddObject(CMapObject *obj, const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c24_f12");
 	if (Block[x][y] != NULL)
 	{
 		CMapObject *item = Block[x][y];

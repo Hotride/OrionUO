@@ -16,6 +16,7 @@ CGumpBulletinBoardItem::CGumpBulletinBoardItem(uint serial, short x, short y, uc
 : CGumpBaseScroll(GT_BULLETIN_BOARD_ITEM, serial, 0x0820, 250, x, y, false, 70),
 m_Variant(variant)
 {
+	WISPFUN_DEBUG("c90_f1");
 	m_ID = id;
 	m_MinHeight = 200;
 
@@ -105,6 +106,7 @@ CGumpBulletinBoardItem::~CGumpBulletinBoardItem()
 //----------------------------------------------------------------------------------
 void CGumpBulletinBoardItem::UpdateHeight()
 {
+	WISPFUN_DEBUG("c90_f2");
 	CGumpBaseScroll::UpdateHeight();
 
 	if (m_ButtonPost != NULL)
@@ -119,6 +121,7 @@ void CGumpBulletinBoardItem::UpdateHeight()
 //----------------------------------------------------------------------------------
 void CGumpBulletinBoardItem::RecalculateHeight()
 {
+	WISPFUN_DEBUG("c90_f3");
 	if (g_EntryPointer == &m_Entry->m_Entry)
 	{
 		m_Entry->m_Entry.CreateTextureA(9, m_Entry->m_Entry.c_str(), 0x0386, 220, TS_LEFT, 0);
@@ -133,6 +136,7 @@ void CGumpBulletinBoardItem::RecalculateHeight()
 //----------------------------------------------------------------------------------
 void CGumpBulletinBoardItem::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c90_f4");
 	if (m_EntrySubject != NULL)
 	{
 		if (serial == ID_GBBI_POST)
@@ -161,6 +165,7 @@ void CGumpBulletinBoardItem::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpBulletinBoardItem::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c90_f5");
 	g_EntryPointer->Insert(wParam);
 
 	RecalculateHeight();
@@ -169,6 +174,7 @@ void CGumpBulletinBoardItem::OnCharPress(const WPARAM &wParam, const LPARAM &lPa
 //----------------------------------------------------------------------------------
 void CGumpBulletinBoardItem::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c90_f6");
 	if (wParam == VK_RETURN && m_Entry != NULL && g_EntryPointer == &m_Entry->m_Entry)
 	{
 		g_EntryPointer->Insert(L'\n');

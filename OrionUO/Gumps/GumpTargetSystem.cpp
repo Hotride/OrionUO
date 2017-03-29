@@ -38,17 +38,18 @@ bool CGumpTargetSystem::CanBeDisplayed()
 void CGumpTargetSystem::PrepareContent()
 {
 	//Если гамп захватили и (может быть) двигают
-	if (g_Target.IsTargeting())
+	/*if (g_Target.IsTargeting())
 	{
-		/*if (g_GumpMovingOffsetX &&)
+		if (g_GumpMovingOffsetX &&)
 			g_GeneratedMouseDown = true;
 		else if (g_GumpMovingOffsetY && Target.IsTargeting())
-			g_GeneratedMouseDown = true;*/
-	}
+			g_GeneratedMouseDown = true;
+	}*/
 }
 //----------------------------------------------------------------------------------
 void CGumpTargetSystem::UpdateContent()
 {
+	WISPFUN_DEBUG("c129_f1");
 	if (g_ConfigManager.DisableNewTargetSystem || !g_NewTargetSystem.Serial)
 		return;
 
@@ -140,6 +141,7 @@ void CGumpTargetSystem::UpdateContent()
 //----------------------------------------------------------------------------
 void CGumpTargetSystem::OnLeftMouseDown()
 {
+	WISPFUN_DEBUG("c129_f2");
 	if (g_GeneratedMouseDown)
 		return;
 
@@ -156,6 +158,7 @@ void CGumpTargetSystem::OnLeftMouseDown()
 //----------------------------------------------------------------------------
 void CGumpTargetSystem::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c129_f3");
 	if (g_GeneratedMouseDown)
 		return;
 
@@ -168,6 +171,7 @@ void CGumpTargetSystem::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------
 bool CGumpTargetSystem::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c129_f4");
 	if (g_GeneratedMouseDown)
 		return false;
 

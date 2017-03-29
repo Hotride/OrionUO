@@ -14,18 +14,21 @@ CDataWritter::CDataWritter()
 CDataWritter::CDataWritter(const int &size, const bool &autoResize)
 : m_AutoResize(autoResize)
 {
+	WISPFUN_DEBUG("c4_f1");
 	m_Data.resize(size, 0);
 	m_Ptr = &m_Data[0];
 }
 //----------------------------------------------------------------------------------
 CDataWritter::~CDataWritter()
 {
+	WISPFUN_DEBUG("c4_f2");
 	m_Data.clear();
 	m_Ptr = NULL;
 }
 //----------------------------------------------------------------------------------
 void CDataWritter::Resize(const int &newSize, const bool &resetPtr)
 {
+	WISPFUN_DEBUG("c4_f3");
 	m_Data.resize(newSize, 0);
 
 	if (resetPtr)
@@ -34,6 +37,7 @@ void CDataWritter::Resize(const int &newSize, const bool &resetPtr)
 //----------------------------------------------------------------------------------
 void CDataWritter::Move(const int &offset)
 {
+	WISPFUN_DEBUG("c4_f4");
 	if (m_AutoResize)
 	{
 		for (int i = 0; i < offset; i++)
@@ -45,6 +49,7 @@ void CDataWritter::Move(const int &offset)
 //----------------------------------------------------------------------------------
 void CDataWritter::WriteDataBE(const puchar data, const int &size, const int offset)
 {
+	WISPFUN_DEBUG("c4_f5");
 	if (m_AutoResize)
 	{
 		for (int i = size - 1; i >= 0; i--)
@@ -63,6 +68,7 @@ void CDataWritter::WriteDataBE(const puchar data, const int &size, const int off
 //----------------------------------------------------------------------------------
 void CDataWritter::WriteDataLE(const puchar data, const int &size, const int offset)
 {
+	WISPFUN_DEBUG("c4_f6");
 	if (m_AutoResize)
 	{
 		for (int i = 0; i < size; i++)
@@ -81,6 +87,7 @@ void CDataWritter::WriteDataLE(const puchar data, const int &size, const int off
 //----------------------------------------------------------------------------------
 void CDataWritter::WriteString(const string &val, int length, const bool &nullTerminated, const int &offset)
 {
+	WISPFUN_DEBUG("c4_f7");
 	if (!length)
 		length = val.length();
 
@@ -101,6 +108,7 @@ void CDataWritter::WriteString(const string &val, int length, const bool &nullTe
 //----------------------------------------------------------------------------------
 void CDataWritter::WriteWString(const wstring &val, int length, const bool &bigEndian, const bool &nullTerminated, const int &offset)
 {
+	WISPFUN_DEBUG("c4_f8");
 	if (!length)
 		length = val.length();
 
@@ -155,11 +163,13 @@ CDataReader::CDataReader()
 CDataReader::CDataReader(puchar start, const int &size)
 : m_Start(start), m_Size(size), m_End(m_Start + size)
 {
+	WISPFUN_DEBUG("c5_f1");
 	m_Ptr = m_Start;
 }
 //----------------------------------------------------------------------------------
 CDataReader::~CDataReader()
 {
+	WISPFUN_DEBUG("c5_f2");
 	m_Start = NULL;
 	m_Size = 0;
 	m_End = NULL;
@@ -168,6 +178,7 @@ CDataReader::~CDataReader()
 //----------------------------------------------------------------------------------
 void CDataReader::SetData(puchar start, const int &size, const int &offset)
 {
+	WISPFUN_DEBUG("c5_f3");
 	m_Start = start;
 	m_Size = size;
 	m_End = m_Start + size;
@@ -176,6 +187,7 @@ void CDataReader::SetData(puchar start, const int &size, const int &offset)
 //----------------------------------------------------------------------------------
 void CDataReader::ReadDataBE(puchar data, const int &size, const int offset)
 {
+	WISPFUN_DEBUG("c5_f4");
 	if (m_Ptr != NULL)
 	{
 		puchar ptr = m_Ptr + offset + size - 1;
@@ -192,6 +204,7 @@ void CDataReader::ReadDataBE(puchar data, const int &size, const int offset)
 //----------------------------------------------------------------------------------
 void CDataReader::ReadDataLE(puchar data, const int &size, const int offset)
 {
+	WISPFUN_DEBUG("c5_f5");
 	if (m_Ptr != NULL)
 	{
 		puchar ptr = m_Ptr + offset;
@@ -208,6 +221,7 @@ void CDataReader::ReadDataLE(puchar data, const int &size, const int offset)
 //----------------------------------------------------------------------------------
 string CDataReader::ReadString(int size, const int &offset)
 {
+	WISPFUN_DEBUG("c5_f6");
 	puchar ptr = m_Ptr + offset;
 
 	if (!size)
@@ -236,6 +250,7 @@ string CDataReader::ReadString(int size, const int &offset)
 //----------------------------------------------------------------------------------
 wstring CDataReader::ReadWString(int size, const bool &bigEndian, const int &offset)
 {
+	WISPFUN_DEBUG("c5_f7");
 	puchar ptr = m_Ptr + offset;
 
 	if (!size)

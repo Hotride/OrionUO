@@ -17,6 +17,7 @@ CColorizerShader *g_LightColorizerShader = NULL;
 //----------------------------------------------------------------------------------
 void UnuseShader()
 {
+	WISPFUN_DEBUG("c_uns_sdr");
 	glUseProgramObjectARB(0);
 	ShaderColorTable = 0;
 	g_ShaderDrawMode = 0;
@@ -28,6 +29,7 @@ void UnuseShader()
 CGLShader::CGLShader(const char *vertexShaderData, const char *fragmentShaderData)
 : m_Shader(0), m_VertexShader(0), m_FragmentShader(0), m_TexturePointer(0)
 {
+	WISPFUN_DEBUG("c32_f1");
 	if (vertexShaderData != NULL && fragmentShaderData != NULL)
 	{
 		m_Shader = glCreateProgramObjectARB();
@@ -49,6 +51,7 @@ CGLShader::CGLShader(const char *vertexShaderData, const char *fragmentShaderDat
 //----------------------------------------------------------------------------------
 CGLShader::~CGLShader()
 {
+	WISPFUN_DEBUG("c32_f2");
 	if (m_Shader != 0)
 	{
 		glDeleteObjectARB(m_Shader);
@@ -72,6 +75,7 @@ CGLShader::~CGLShader()
 //----------------------------------------------------------------------------------
 bool CGLShader::Use()
 {
+	WISPFUN_DEBUG("c32_f3");
 	CGLShader *oldShader = g_CurrentShader;
 	UnuseShader();
 	g_CurrentShader = oldShader;
@@ -89,11 +93,13 @@ bool CGLShader::Use()
 //----------------------------------------------------------------------------------
 void CGLShader::Pause()
 {
+	WISPFUN_DEBUG("c32_f4");
 	glUseProgramObjectARB(0);
 }
 //----------------------------------------------------------------------------------
 void CGLShader::Resume()
 {
+	WISPFUN_DEBUG("c32_f5");
 	glUseProgramObjectARB(m_Shader);
 }
 //----------------------------------------------------------------------------------
@@ -102,6 +108,7 @@ void CGLShader::Resume()
 CDeathShader::CDeathShader(const char *vertexShaderData, const char *fragmentShaderData)
 : CGLShader(vertexShaderData, fragmentShaderData)
 {
+	WISPFUN_DEBUG("c33_f1");
 	if (m_Shader != 0)
 		m_TexturePointer = glGetUniformLocationARB(m_Shader, "usedTexture");
 	else
@@ -114,6 +121,7 @@ CColorizerShader::CColorizerShader(const char *vertexShaderData, const char *fra
 : CGLShader(vertexShaderData, fragmentShaderData), m_ColorTablePointer(0),
 m_DrawModePointer(0)
 {
+	WISPFUN_DEBUG("c34_f1");
 	if (m_Shader != 0)
 	{
 		m_TexturePointer = glGetUniformLocationARB(m_Shader, "usedTexture");
@@ -126,6 +134,7 @@ m_DrawModePointer(0)
 //----------------------------------------------------------------------------------
 bool CColorizerShader::Use()
 {
+	WISPFUN_DEBUG("c34_f2");
 	bool result = CGLShader::Use();
 
 	if (result)

@@ -19,6 +19,7 @@ m_Width(width), m_SelectedIndex(-1), m_ListingDirection(0), m_ListingTimer(0),
 m_StartIndex(0), m_ShowMaximizedCenter(showMaximizedCenter), m_OpenedWidth(width),
 m_Text(NULL), m_TextOffsetY(0)
 {
+	WISPFUN_DEBUG("c49_f1");
 	m_MoveOnDrag = false;
 	m_ArrowX = 0;
 	m_OffsetY = 0;
@@ -54,6 +55,7 @@ m_Text(NULL), m_TextOffsetY(0)
 //----------------------------------------------------------------------------------
 CGUIComboBox::~CGUIComboBox()
 {
+	WISPFUN_DEBUG("c49_f2");
 	if (m_Text != NULL)
 	{
 		delete m_Text;
@@ -63,6 +65,7 @@ CGUIComboBox::~CGUIComboBox()
 //----------------------------------------------------------------------------------
 void CGUIComboBox::RecalculateWidth()
 {
+	WISPFUN_DEBUG("c49_f3");
 	if (!m_CompositeBackground)
 	{
 		m_OpenedWidth = 0;
@@ -89,11 +92,13 @@ void CGUIComboBox::RecalculateWidth()
 //----------------------------------------------------------------------------------
 void CGUIComboBox::OnChangeShowItemsCount(const int &val)
 {
+	WISPFUN_DEBUG("c49_f4");
 	m_WorkHeight = val * 15;
 }
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize CGUIComboBox::GetSize()
 {
+	WISPFUN_DEBUG("c49_f5");
 	WISP_GEOMETRY::CSize size;
 	/*CGLTexture *th = g_Orion.ExecuteGump(GetDrawGraphic());
 
@@ -108,6 +113,7 @@ WISP_GEOMETRY::CSize CGUIComboBox::GetSize()
 //----------------------------------------------------------------------------------
 void CGUIComboBox::PrepareTextures()
 {
+	WISPFUN_DEBUG("c49_f6");
 	if (m_CompositeBackground)
 	{
 		g_Orion.ExecuteGump(m_Graphic);
@@ -125,6 +131,7 @@ void CGUIComboBox::PrepareTextures()
 //----------------------------------------------------------------------------------
 CBaseGUI *CGUIComboBox::SkipToStart()
 {
+	WISPFUN_DEBUG("c49_f7");
 	CBaseGUI *start = (CBaseGUI*)m_Items;
 
 	int index = 0;
@@ -148,6 +155,7 @@ CBaseGUI *CGUIComboBox::SkipToStart()
 //----------------------------------------------------------------------------------
 void CGUIComboBox::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c49_f8");
 	if (m_Text != NULL)
 		m_Text->m_Texture.Draw(m_X + m_Text->X, m_Y + m_Text->Y + m_TextOffsetY, checktrans);
 
@@ -276,6 +284,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUIComboBox::Select()
 {
+	WISPFUN_DEBUG("c49_f9");
 	m_ListingDirection = 0;
 	bool select = false;
 
@@ -321,6 +330,7 @@ bool CGUIComboBox::Select()
 //----------------------------------------------------------------------------------
 CBaseGUI *CGUIComboBox::SelectedItem()
 {
+	WISPFUN_DEBUG("c49_f10");
 	CBaseGUI *select = this;
 
 	if (g_PressedObject.LeftObject() == this) //maximized
@@ -365,6 +375,7 @@ CBaseGUI *CGUIComboBox::SelectedItem()
 //----------------------------------------------------------------------------------
 int CGUIComboBox::IsSelectedItem()
 {
+	WISPFUN_DEBUG("c49_f11");
 	int select = -1;
 
 	if (g_PressedObject.LeftObject() == this) //maximized

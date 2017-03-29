@@ -15,6 +15,7 @@
 CStaticObject::CStaticObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
 : CRenderStaticObject(ROT_STATIC_OBJECT, serial, graphic, color, x, y, z)
 {
+	WISPFUN_DEBUG("c28_f1");
 	m_OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
 
@@ -27,6 +28,7 @@ CStaticObject::CStaticObject(const uint &serial, const ushort &graphic, const us
 //---------------------------------------------------------------------------
 void CStaticObject::UpdateGraphicBySeason()
 {
+	WISPFUN_DEBUG("c28_f2");
 	ushort graphic = m_Graphic;
 
 	m_Graphic = g_Orion.GetSeasonGraphic(m_OriginalGraphic) + 0x4000;
@@ -48,6 +50,7 @@ void CStaticObject::UpdateGraphicBySeason()
 //----------------------------------------------------------------------------------
 void CStaticObject::Draw(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c28_f3");
 	m_RenderGraphic = m_Graphic - 0x4000;
 
 	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
@@ -60,6 +63,7 @@ void CStaticObject::Draw(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 void CStaticObject::Select(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c28_f4");
 	m_RenderGraphic = m_Graphic - 0x4000;
 
 	CRenderStaticObject::Select(x, y);

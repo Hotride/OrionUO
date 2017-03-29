@@ -17,11 +17,13 @@ CGLTexture::CGLTexture()
 //----------------------------------------------------------------------------------
 CGLTexture::~CGLTexture()
 {
+	WISPFUN_DEBUG("c36_f1");
 	Clear();
 }
 //----------------------------------------------------------------------------------
 void CGLTexture::Draw(const int &x, const int &y, const bool &checktrans)
 {
+	WISPFUN_DEBUG("c36_f2");
 	if (Texture != 0)
 	{
 		if (checktrans)
@@ -46,6 +48,7 @@ void CGLTexture::Draw(const int &x, const int &y, const bool &checktrans)
 //----------------------------------------------------------------------------------
 void CGLTexture::Draw(const int &x, const int &y, int width, int height, const bool &checktrans)
 {
+	WISPFUN_DEBUG("c36_f3");
 	if (Texture != 0)
 	{
 		if (!width)
@@ -76,12 +79,14 @@ void CGLTexture::Draw(const int &x, const int &y, int width, int height, const b
 //----------------------------------------------------------------------------------
 void CGLTexture::DrawRotated(const int &x, const int &y, const float &angle)
 {
+	WISPFUN_DEBUG("c36_f4");
 	if (Texture != 0)
 		g_GL_DrawRotated(*this, x, y, angle);
 }
 //----------------------------------------------------------------------------------
 void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil)
 {
+	WISPFUN_DEBUG("c36_f5");
 	if (Texture != 0)
 	{
 		glEnable(GL_BLEND);
@@ -105,6 +110,7 @@ void CGLTexture::DrawTransparent(const int &x, const int &y, const bool &stencil
 //----------------------------------------------------------------------------------
 void CGLTexture::Clear()
 {
+	WISPFUN_DEBUG("c36_f6");
 	m_Width = 0;
 	m_Height = 0;
 

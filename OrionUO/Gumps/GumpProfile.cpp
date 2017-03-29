@@ -15,6 +15,7 @@
 CGumpProfile::CGumpProfile(uint serial, short x, short y, wstring topText, wstring bottomText, wstring dataText)
 : CGumpBaseScroll(GT_PROFILE, serial, 0x0820, 250, x, y, true), m_Changed(false)
 {
+	WISPFUN_DEBUG("c108_f1");
 	Add(new CGUIPage(1));
 	Add(new CGUIGumppic(0x09D4, 0, 0));
 
@@ -59,12 +60,14 @@ CGumpProfile::CGumpProfile(uint serial, short x, short y, wstring topText, wstri
 //----------------------------------------------------------------------------------
 CGumpProfile::~CGumpProfile()
 {
+	WISPFUN_DEBUG("c108_f2");
 	if (m_Changed && m_Entry != NULL)
 		CPacketProfileUpdate(m_Serial, m_Entry->m_Entry.Data(), m_Entry->m_Entry.Length()).Send();
 }
 //----------------------------------------------------------------------------
 void CGumpProfile::RecalculateHeight()
 {
+	WISPFUN_DEBUG("c108_f3");
 	int offsetY = m_Entry->Y;
 	m_Entry->m_Entry.CreateTextureW(0, m_Entry->m_Entry.Data(), 0, 210, TS_LEFT, 0);
 
@@ -85,6 +88,7 @@ void CGumpProfile::RecalculateHeight()
 //----------------------------------------------------------------------------
 void CGumpProfile::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c108_f4");
 	if (serial == ID_GBS_BUTTON_MINIMIZE)
 	{
 		m_Minimized = true;
@@ -109,6 +113,7 @@ void CGumpProfile::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------
 bool CGumpProfile::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c108_f5");
 	if (m_Minimized)
 	{
 		m_Minimized = false;
@@ -123,6 +128,7 @@ bool CGumpProfile::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------
 void CGumpProfile::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c108_f6");
 	g_EntryPointer->Insert(wParam);
 
 	RecalculateHeight();
@@ -132,6 +138,7 @@ void CGumpProfile::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------
 void CGumpProfile::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c108_f7");
 	if (wParam == VK_RETURN)
 	{
 		g_EntryPointer->Insert(0x000D);

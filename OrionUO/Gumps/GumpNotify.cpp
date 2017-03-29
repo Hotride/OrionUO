@@ -17,6 +17,7 @@ CGumpNotify::CGumpNotify(uint serial, short x, short y, uchar variant, short wid
 : CGump(GT_NOTIFY, serial, x, y), m_Variant(variant), m_Width(width),
 m_Height(height), m_Text(text)
 {
+	WISPFUN_DEBUG("c103_f1");
 	Blocked = true;
 	g_GrayMenuCount++;
 
@@ -34,12 +35,14 @@ CGumpNotify::~CGumpNotify()
 //----------------------------------------------------------------------------------
 void CGumpNotify::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c103_f2");
 	if (serial == ID_GN_BUTTON_OK)
 		Process();
 }
 //----------------------------------------------------------------------------------
 void CGumpNotify::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c103_f3");
 	if (wParam == VK_RETURN)
 	{
 		if (g_ConfigManager.ConsoleNeedEnter)
@@ -53,6 +56,7 @@ void CGumpNotify::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGumpNotify::Process()
 {
+	WISPFUN_DEBUG("c103_f4");
 	if (m_Variant == ID_GN_STATE_LOGOUT)
 		g_GameScreen.CreateSmoothAction(CGameScreen::ID_SMOOTH_GS_LOGOUT);
 	else if (m_Variant == ID_GN_STATE_NOTIFICATION)

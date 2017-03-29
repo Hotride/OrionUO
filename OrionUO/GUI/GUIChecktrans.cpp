@@ -20,6 +20,7 @@ CGUIChecktrans::~CGUIChecktrans()
 //----------------------------------------------------------------------------------
 void CGUIChecktrans::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c47_f1");
 	glColorMask(false, false, false, false);
 
 	glStencilFunc(GL_ALWAYS, 1, 1);

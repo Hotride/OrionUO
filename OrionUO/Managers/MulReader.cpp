@@ -24,6 +24,7 @@ CMulReader *g_MulReader = NULL;
 */
 USHORT_LIST CMulReader::GetGumpPixels(CIndexObject &io)
 {
+	WISPFUN_DEBUG("c148_f1");
 	int dataStart = io.Address;
 	puint lookupList = (puint)dataStart;
 
@@ -89,6 +90,7 @@ USHORT_LIST CMulReader::GetGumpPixels(CIndexObject &io)
 */
 CGLTexture *CMulReader::ReadGump(CIndexObject &io)
 {
+	WISPFUN_DEBUG("c148_f2");
 	CGLTexture *th = NULL;
 
 	USHORT_LIST pixels = GetGumpPixels(io);
@@ -111,6 +113,7 @@ CGLTexture *CMulReader::ReadGump(CIndexObject &io)
 */
 bool CMulReader::GumpPixelsInXY(CIndexObject &io, const int &checkX, const int &checkY)
 {
+	WISPFUN_DEBUG("c148_f3");
 	CGLTexture *th = io.Texture;
 
 	//if (th == NULL)
@@ -153,6 +156,7 @@ bool CMulReader::GumpPixelsInXY(CIndexObject &io, const int &checkX, const int &
 */
 CGLTexture *CMulReader::ReadArt(const ushort &id, CIndexObject &io)
 {
+	WISPFUN_DEBUG("c148_f4");
 	CGLTexture *th = new CGLTexture();
 	th->Texture = 0;
 
@@ -454,6 +458,7 @@ CGLTexture *CMulReader::ReadArt(const ushort &id, CIndexObject &io)
 */
 WISP_GEOMETRY::CRect CMulReader::ReadStaticArtPixelDimension(CIndexObject &io)
 {
+	WISPFUN_DEBUG("c148_f5");
 	WISP_GEOMETRY::CRect r;
 
 	int stumpIndex = 0;
@@ -577,6 +582,7 @@ WISP_GEOMETRY::CRect CMulReader::ReadStaticArtPixelDimension(CIndexObject &io)
 */
 bool CMulReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &checkX, const int &checkY)
 {
+	WISPFUN_DEBUG("c148_f6");
 	CGLTexture *th = io.Texture;
 
 	//if (th == NULL)
@@ -738,6 +744,7 @@ bool CMulReader::ArtPixelsInXY(const bool &land, CIndexObject &io, const int &ch
 */
 CGLTexture *CMulReader::ReadTexture(CIndexObject &io)
 {
+	WISPFUN_DEBUG("c148_f7");
 	CGLTexture *th = new CGLTexture();
 	th->Texture = 0;
 	ushort color = io.Color;
@@ -792,6 +799,7 @@ CGLTexture *CMulReader::ReadTexture(CIndexObject &io)
 */
 CGLTexture *CMulReader::ReadLight(CIndexObject &io)
 {
+	WISPFUN_DEBUG("c148_f8");
 	CGLTexture *th = new CGLTexture();
 	th->Texture = NULL;
 

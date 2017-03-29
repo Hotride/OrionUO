@@ -24,6 +24,7 @@ CSocket::~CSocket()
 //----------------------------------------------------------------------------------
 bool CSocket::Connect(const string &address, const int &port)
 {
+	WISPFUN_DEBUG("c158_f1");
 	LOG("Connecting...%s:%i\n", address.c_str(), port);
 
 	if (m_UseProxy)
@@ -177,6 +178,7 @@ bool CSocket::Connect(const string &address, const int &port)
 //----------------------------------------------------------------------------------
 UCHAR_LIST CSocket::Decompression(UCHAR_LIST data)
 {
+	WISPFUN_DEBUG("c158_f2");
 	if (m_GameSocket)
 	{
 		int inSize = data.size();

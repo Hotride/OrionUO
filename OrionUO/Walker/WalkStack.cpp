@@ -11,6 +11,7 @@
 //----------------------------------------------------------------------------------
 void CWalkStack::Clear()
 {
+	WISPFUN_DEBUG("c179_f1");
 	CWalkData *top = m_Items;
 	while (top != NULL)
 	{
@@ -24,6 +25,7 @@ void CWalkStack::Clear()
 //----------------------------------------------------------------------------------
 void CWalkStack::Push(CWalkData *obj)
 {
+	WISPFUN_DEBUG("c179_f2");
 	if (Empty())
 	{
 		m_Items = obj;
@@ -44,6 +46,7 @@ void CWalkStack::Push(CWalkData *obj)
 //----------------------------------------------------------------------------------
 void CWalkStack::Pop()
 {
+	WISPFUN_DEBUG("c179_f3");
 	if (!Empty())
 	{
 		if (m_Items->m_Next != NULL)
@@ -63,6 +66,7 @@ void CWalkStack::Pop()
 //----------------------------------------------------------------------------------
 CWalkData *CWalkStack::Top()
 {
+	WISPFUN_DEBUG("c179_f4");
 	CWalkData *obj = m_Items;
 
 	if (obj != NULL)

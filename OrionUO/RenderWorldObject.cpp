@@ -21,6 +21,7 @@ m_Z(z), m_NextXY(NULL), m_PrevXY(NULL), m_RenderQueueIndex(0)
 , m_CurrentRenderIndex(0)
 #endif
 {
+	WISPFUN_DEBUG("c202_f1");
 	m_DrawTextureColor[0] = 0xFF;
 	m_DrawTextureColor[1] = 0xFF;
 	m_DrawTextureColor[2] = 0xFF;
@@ -29,11 +30,13 @@ m_Z(z), m_NextXY(NULL), m_PrevXY(NULL), m_RenderQueueIndex(0)
 //---------------------------------------------------------------------------
 CRenderWorldObject::~CRenderWorldObject()
 {
+	WISPFUN_DEBUG("c202_f2");
 	RemoveRender();
 }
 //---------------------------------------------------------------------------
 bool CRenderWorldObject::ProcessAlpha(const int &maxAlpha)
 {
+	WISPFUN_DEBUG("c202_f3");
 	if (!g_ConfigManager.RemoveOrCreateObjectsWithBlending)
 	{
 		m_DrawTextureColor[3] = (uchar)maxAlpha;
@@ -70,6 +73,7 @@ bool CRenderWorldObject::ProcessAlpha(const int &maxAlpha)
 //---------------------------------------------------------------------------
 void CRenderWorldObject::RemoveRender()
 {
+	WISPFUN_DEBUG("c202_f4");
 	if (m_PrevXY != NULL)
 		m_PrevXY->m_NextXY = m_NextXY;
 
@@ -82,6 +86,7 @@ void CRenderWorldObject::RemoveRender()
 //---------------------------------------------------------------------------
 CLandObject *CRenderWorldObject::GetLand()
 {
+	WISPFUN_DEBUG("c202_f5");
 	CRenderWorldObject *land = this;
 
 	while (land != NULL && !land->IsLandObject())

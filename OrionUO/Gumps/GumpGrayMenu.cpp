@@ -15,6 +15,7 @@
 CGumpGrayMenu::CGumpGrayMenu(uint serial, uint id, short x, short y)
 : CGump(GT_GRAY_MENU, serial, x, y)
 {
+	WISPFUN_DEBUG("c97_f1");
 	m_NoMove = true;
 	m_Blocked = true;
 
@@ -35,6 +36,7 @@ CGumpGrayMenu::~CGumpGrayMenu()
 //----------------------------------------------------------------------------------
 void CGumpGrayMenu::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c97_f2");
 	if (serial == ID_GGM_CANCEL)
 		SendMenuResponse(0);
 	else if (serial == ID_GGM_CONTINUE)
@@ -59,6 +61,7 @@ void CGumpGrayMenu::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpGrayMenu::SendMenuResponse(int index)
 {
+	WISPFUN_DEBUG("c97_f3");
 	//Ответ на меню
 	CPacketGrayMenuResponse(this, index).Send();
 

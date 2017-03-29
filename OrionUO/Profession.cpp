@@ -26,6 +26,7 @@ CBaseProfession::~CBaseProfession()
 //----------------------------------------------------------------------------------
 bool CBaseProfession::AddDescription(int desc, string name, const char *val)
 {
+	WISPFUN_DEBUG("c199_f1");
 	bool result = (m_DescriptionIndex == desc);
 
 	if (result)

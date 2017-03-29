@@ -20,6 +20,7 @@
 CGumpScreenSelectProfession::CGumpScreenSelectProfession()
 : CGump(GT_NONE, 0, 0, 0)
 {
+	WISPFUN_DEBUG("c117_f1");
 	m_NoMove = true;
 	m_NoClose = true;
 
@@ -38,6 +39,7 @@ CGumpScreenSelectProfession::~CGumpScreenSelectProfession()
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectProfession::UpdateContent()
 {
+	WISPFUN_DEBUG("c117_f2");
 	Clear();
 
 	if (g_ProfessionManager.Selected == NULL)
@@ -54,6 +56,7 @@ void CGumpScreenSelectProfession::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectProfession::UpdateContentOld()
 {
+	WISPFUN_DEBUG("c117_f3");
 	CBaseProfession *obj = g_ProfessionManager.Selected;
 
 	if (obj == NULL)
@@ -226,6 +229,7 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectProfession::UpdateContentNew()
 {
+	WISPFUN_DEBUG("c117_f4");
 	CBaseProfession *obj = g_ProfessionManager.Selected;
 
 	Add(new CGUIGumppicTiled(0x0E14, 0, 0, 640, 480));
@@ -364,6 +368,7 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectProfession::InitToolTip()
 {
+	WISPFUN_DEBUG("c117_f5");
 	if (!g_ConfigManager.UseToolTips)
 		return;
 
@@ -419,6 +424,7 @@ void CGumpScreenSelectProfession::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectProfession::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c117_f6");
 	CBaseProfession *obj = g_ProfessionManager.Selected;
 	CProfession *profession = (CProfession*)obj;
 
@@ -533,11 +539,13 @@ void CGumpScreenSelectProfession::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectProfession::GUMP_SLIDER_CLICK_EVENT_C
 {
+	WISPFUN_DEBUG("c117_f7");
 	OnSliderMove(serial);
 }
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectProfession::GUMP_SLIDER_MOVE_EVENT_C
 {
+	WISPFUN_DEBUG("c117_f8");
 	int skillsCount = 3;
 
 	if (g_PacketManager.ClientVersion >= CV_70160)
@@ -564,6 +572,7 @@ void CGumpScreenSelectProfession::GUMP_SLIDER_MOVE_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectProfession::ShuffleStats(const int &id, const int &maxSum, const int &maxVal)
 {
+	WISPFUN_DEBUG("c117_f9");
 	CProfession *profession = (CProfession*)g_ProfessionManager.Selected;
 	int stats[3] = { m_StatsSliders[0]->Value, m_StatsSliders[1]->Value, m_StatsSliders[2]->Value };
 
@@ -633,6 +642,7 @@ void CGumpScreenSelectProfession::ShuffleStats(const int &id, const int &maxSum,
 //----------------------------------------------------------------------------------
 void CGumpScreenSelectProfession::ShuffleSkills(const int &id)
 {
+	WISPFUN_DEBUG("c117_f10");
 	CProfession *profession = (CProfession*)g_ProfessionManager.Selected;
 	int skills[4] = { m_SkillsSliders[0]->Value, m_SkillsSliders[1]->Value, m_SkillsSliders[2]->Value, 0 };
 

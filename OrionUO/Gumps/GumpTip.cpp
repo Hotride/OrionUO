@@ -13,6 +13,7 @@
 CGumpTip::CGumpTip(uint serial, short x, short y, string str, bool updates)
 : CGumpBaseScroll(GT_TIP, serial, 0x0820, 250, x, y, true), m_Updates(updates)
 {
+	WISPFUN_DEBUG("c131_f1");
 	Add(new CGUIPage(1));
 	Add(new CGUIGumppic((m_Updates ? 0x09D3 : 0x09CB), 0, 0));
 
@@ -47,6 +48,7 @@ CGumpTip::~CGumpTip()
 //----------------------------------------------------------------------------------
 void CGumpTip::UpdateHeight()
 {
+	WISPFUN_DEBUG("c131_f2");
 	CGumpBaseScroll::UpdateHeight();
 
 	if (!m_Updates)
@@ -59,6 +61,7 @@ void CGumpTip::UpdateHeight()
 //----------------------------------------------------------------------------------
 void CGumpTip::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c131_f3");
 	if (serial == ID_GBS_BUTTON_MINIMIZE)
 	{
 		m_Minimized = true;
@@ -73,6 +76,7 @@ void CGumpTip::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 bool CGumpTip::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c131_f4");
 	if (m_Minimized)
 	{
 		m_Minimized = false;
@@ -87,6 +91,7 @@ bool CGumpTip::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void CGumpTip::SendTipRequest(uchar flag)
 {
+	WISPFUN_DEBUG("c131_f5");
 	//Отправляем запрос диалога Tip/Updates
 	CPacketTipRequest((ushort)Serial, flag).Send();
 
