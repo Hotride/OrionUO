@@ -27,6 +27,16 @@ using std::pair;
 
 #include "WispDefinitions.h"
 //----------------------------------------------------------------------------------
+class CWispFunDebug
+{
+public:
+	CWispFunDebug(const char *str);
+	~CWispFunDebug();
+};
+//----------------------------------------------------------------------------------
+extern DWORD g_MainThread;
+extern deque<string> g_WispDebugFunStack;
+//----------------------------------------------------------------------------------
 typedef vector<uchar> UCHAR_LIST;
 typedef vector<ushort> USHORT_LIST;
 typedef vector<uint> UINT_LIST;

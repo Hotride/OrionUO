@@ -6,8 +6,9 @@
 
 #if USE_WISP_DEBUG_FUNCTION_NAMES == 1
 #define WISPFUN_DEBUG(name) \
-	static const std::string wispfunctiondebugname("w_" name); \
+	CWispFunDebug wispfunctiondebugname("w_" __FUNCTION__ " " __FILE__); \
 	(void)wispfunctiondebugname
+//static const std::string wispfunctiondebugname("w_" name);
 #else
 #define WISPFUN_DEBUG(name)
 #endif

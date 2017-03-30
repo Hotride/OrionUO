@@ -71,6 +71,10 @@ void DumpRegionInfo(const HANDLE &snapshot, HANDLE hProcess, VMQUERY &vmq)
 //----------------------------------------------------------------------------------
 void DumpLibraryInformation()
 {
+	LOG("trace functions:\n");
+	for (const string &str : g_WispDebugFunStack)
+		LOG("%s\n", str.c_str());
+
 	CRASHLOG("Library information:\n");
 
 	DWORD processId = 0;
@@ -149,7 +153,7 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 	{
 		CRASHLOG("Unhandled exception #%i: 0x%08X at %08X\n", errorCount, exceptionInfo->ExceptionRecord->ExceptionCode, exceptionInfo->ExceptionRecord->ExceptionAddress);
 
-		if (errorCount > 100 && (ticks - lastErrorTime) < 5000)
+		if (errorCount > 10 && (ticks - lastErrorTime) < 5000)
 		{
 			if (MessageBoxA(0, "Orion client performed an unrecoverable invalid operation.\nTerminate?", 0, MB_ICONSTOP | MB_YESNO) == IDYES)
 			{

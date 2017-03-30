@@ -11,6 +11,7 @@ CApplication *g_WispApplication = NULL;
 CApplication::CApplication()
 : m_Hinstance(0), m_ExePathA(""), m_ExePathW(L"")
 {
+	g_MainThread = GetCurrentThreadId();
 	WISPFUN_DEBUG("c1_f1");
 	g_WispApplication = this;
 
