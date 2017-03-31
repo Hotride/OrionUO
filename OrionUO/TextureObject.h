@@ -14,24 +14,21 @@
 #include "Globals.h"
 //----------------------------------------------------------------------------------
 //Класс для работы с текстурой кадра анимации
-class CTextureAnimationFrame : public CBaseQueueItem
+class CTextureAnimationFrame
 {
-	//Индекс кадра
-	SETGET(uchar, Frame);
-
 	//Координаты центра текстуры относительно начала текстуры
 	SETGET(short, CenterX);
 	SETGET(short, CenterY);
 
 public:
-	CTextureAnimationFrame(const int &frame);
+	CTextureAnimationFrame();
 	virtual ~CTextureAnimationFrame();
 
 	CGLTexture m_Texture;
 };
 //----------------------------------------------------------------------------------
 //Класс для работы с направлением анимации
-class CTextureAnimationDirection : public CBaseQueue
+class CTextureAnimationDirection
 {
 	//Количество кадров
 	SETGET(uchar, FrameCount);
@@ -46,11 +43,7 @@ public:
 	CTextureAnimationDirection();
 	virtual ~CTextureAnimationDirection();
 
-	//Получить ссылку на фрэйм
-	CTextureAnimationFrame *GetFrame(const uchar &frame);
-
-	//Найти ссылку на фрэйм
-	CTextureAnimationFrame *FindFrame(const uchar &frame);
+	CTextureAnimationFrame *m_Frames;
 };
 //----------------------------------------------------------------------------------
 //Класс для работы с группой анимаций

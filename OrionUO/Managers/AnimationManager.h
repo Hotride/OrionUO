@@ -138,15 +138,6 @@ public:
 	void Load(puint verdata);
 
 	/*!
-	Получение ссылки на указанный фрэйм
-	@param [__in] obj Игровой объект
-	@param [__inout] frameIndex Индекс кадра
-	@param [__in_opt] id Индекс картинки
-	@return Ссылка на кадр анимации
-	*/
-	CTextureAnimationFrame *GetFrame(class CGameObject *obj, uchar frameIndex, ushort graphic = 0);
-
-	/*!
 	Очистка неиспользуемых текстур
 	@param [__in] ticks Таймер удаления
 	@return 

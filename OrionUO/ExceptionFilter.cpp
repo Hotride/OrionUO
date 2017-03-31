@@ -71,9 +71,9 @@ void DumpRegionInfo(const HANDLE &snapshot, HANDLE hProcess, VMQUERY &vmq)
 //----------------------------------------------------------------------------------
 void DumpLibraryInformation()
 {
-	LOG("trace functions:\n");
+	CRASHLOG("trace functions:\n");
 	for (const string &str : g_WispDebugFunStack)
-		LOG("%s\n", str.c_str());
+		CRASHLOG("%s\n", str.c_str());
 
 	CRASHLOG("Library information:\n");
 
@@ -155,39 +155,38 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 
 		if (errorCount > 10 && (ticks - lastErrorTime) < 5000)
 		{
-			if (MessageBoxA(0, "Orion client performed an unrecoverable invalid operation.\nTerminate?", 0, MB_ICONSTOP | MB_YESNO) == IDYES)
+			DumpLibraryInformation();
+
+			DumpCurrentRegistersInformation(exceptionInfo->ContextRecord);
+
+			WISP_FILE::CMappedFile file;
+
+			wchar_t fileName[MAX_PATH] = { 0 };
+			GetModuleFileName(0, fileName, MAX_PATH);
+
+			if (file.Load(fileName))
 			{
-				DumpLibraryInformation();
-
-				DumpCurrentRegistersInformation(exceptionInfo->ContextRecord);
-
-				WISP_FILE::CMappedFile file;
-
-				wchar_t fileName[MAX_PATH] = { 0 };
-				GetModuleFileName(0, fileName, MAX_PATH);
-
-				if (file.Load(fileName))
-				{
-					UCHAR_LIST pattern;
+				UCHAR_LIST pattern;
 #if defined(_WIN64)
-					puchar eipBytes = (puchar)exceptionInfo->ContextRecord->Rip;
+				puchar eipBytes = (puchar)exceptionInfo->ContextRecord->Rip;
 #else
-					puchar eipBytes = (puchar)exceptionInfo->ContextRecord->Eip;
+				puchar eipBytes = (puchar)exceptionInfo->ContextRecord->Eip;
 #endif
 
-					IFOR(i, 0, 16)
-						pattern.push_back(eipBytes[i]);
+				IFOR(i, 0, 16)
+					pattern.push_back(eipBytes[i]);
 
-					UINT_LIST list = COrion::FindPattern(file.Start, file.Size, pattern);
+				UINT_LIST list = COrion::FindPattern(file.Start, file.Size, pattern);
 
-					for (const int &item : list)
-						CRASHLOG("Address in exe (by EIP): 0x%08X\n", item);
+				for (const int &item : list)
+					CRASHLOG("Address in exe (by EIP): 0x%08X\n", item);
 
-					file.Unload();
-				}
-
-				ExitProcess(1);
+				file.Unload();
 			}
+
+			MessageBoxA(0, "Orion client performed an unrecoverable invalid operation.\nTermination...", 0, MB_ICONSTOP | MB_OK);
+
+			ExitProcess(1);
 		}
 
 		if (ticks - lastErrorTime > 5000)

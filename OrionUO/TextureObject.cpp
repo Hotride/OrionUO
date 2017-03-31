@@ -9,8 +9,8 @@
 //----------------------------------------------------------------------------------
 #include "TextureObject.h"
 //----------------------------------------------------------------------------------
-CTextureAnimationFrame::CTextureAnimationFrame(const int &frame)
-: CBaseQueueItem(), m_Frame(frame), m_CenterX(0), m_CenterY(0), m_Texture()
+CTextureAnimationFrame::CTextureAnimationFrame()
+: m_CenterX(0), m_CenterY(0), m_Texture()
 {
 }
 //----------------------------------------------------------------------------------
@@ -20,42 +20,13 @@ CTextureAnimationFrame::~CTextureAnimationFrame()
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationDirection::CTextureAnimationDirection()
-: CBaseQueue(), m_FrameCount(0), m_Address(0), m_Size(0), m_LastAccessTime(0)
+: m_FrameCount(0), m_Address(0), m_Size(0), m_LastAccessTime(0), m_Frames(NULL)
 {
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationDirection::~CTextureAnimationDirection()
 {
-}
-//----------------------------------------------------------------------------------
-CTextureAnimationFrame *CTextureAnimationDirection::GetFrame(const uchar &frame)
-{
-	WISPFUN_DEBUG("c212_f1");
-	CTextureAnimationFrame *item = FindFrame(frame);
-
-	if (item == NULL && frame < m_FrameCount)
-	{
-		item = new CTextureAnimationFrame(frame);
-		Add(item);
-	}
-
-	return item;
-}
-//----------------------------------------------------------------------------------
-CTextureAnimationFrame *CTextureAnimationDirection::FindFrame(const uchar &frame)
-{
-	WISPFUN_DEBUG("c212_f2");
-	CTextureAnimationFrame *item = (CTextureAnimationFrame*)m_Items;
-
-	while (item != NULL)
-	{
-		if (item->Frame == frame)
-			break;
-
-		item = (CTextureAnimationFrame*)item->m_Next;
-	}
-
-	return item;
+	RELEASE_POINTER(m_Frames);
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationGroup::CTextureAnimationGroup()
