@@ -7,6 +7,7 @@ namespace WISP_FILE
 CTextFileParser::CTextFileParser(const string &path, const char *delimiters, const char *comentaries, const char *quotes)
 : m_Ptr(NULL), m_EOL(NULL), m_RawLine("")
 {
+	WISPFUN_DEBUG("c11_f1");
 	m_File.Load(path);
 	
 	StartupInitalize(delimiters, comentaries, quotes);
@@ -15,6 +16,7 @@ CTextFileParser::CTextFileParser(const string &path, const char *delimiters, con
 CTextFileParser::CTextFileParser(const wstring &path, const char *delimiters, const char *comentaries, const char *quotes)
 : m_Ptr(NULL), m_EOL(NULL), m_RawLine("")
 {
+	WISPFUN_DEBUG("c11_f2");
 	m_File.Load(path);
 	
 	StartupInitalize(delimiters, comentaries, quotes);
@@ -22,6 +24,7 @@ CTextFileParser::CTextFileParser(const wstring &path, const char *delimiters, co
 //----------------------------------------------------------------------------------
 CTextFileParser::~CTextFileParser()
 {
+	WISPFUN_DEBUG("c11_f3");
 	//Выгружаем файл из памяти
 	m_File.Unload();
 }
@@ -29,6 +32,7 @@ CTextFileParser::~CTextFileParser()
 //Проверка на конец файла
 void CTextFileParser::StartupInitalize(const char *delimiters, const char *comentaries, const char *quotes)
 {
+	WISPFUN_DEBUG("c11_f4");
 	//Инициализация разделителей
 	memset(&m_Delimiters[0], 0, sizeof(m_Delimiters));
 	m_DelimitersSize = strlen(delimiters);
@@ -57,18 +61,21 @@ void CTextFileParser::StartupInitalize(const char *delimiters, const char *comen
 //Проверка на конец файла
 void CTextFileParser::Restart()
 {
+	WISPFUN_DEBUG("c11_f5");
 	m_File.ResetPtr();
 }
 //----------------------------------------------------------------------------------
 //Проверка на конец файла
 bool CTextFileParser::IsEOF()
 {
+	WISPFUN_DEBUG("c11_f6");
 	return (m_File.Ptr >= m_End);
 }
 //----------------------------------------------------------------------------------
 //Получить конец строки
 void CTextFileParser::GetEOL()
 {
+	WISPFUN_DEBUG("c11_f7");
 	//Конец строки равен текущему адресу
 	m_EOL = m_File.Ptr;
 
@@ -89,6 +96,7 @@ void CTextFileParser::GetEOL()
 //Проверка на разделитель
 bool CTextFileParser::IsDelimiter()
 {
+	WISPFUN_DEBUG("c11_f8");
 	bool result = false;
 
 	//Проход по всем разделителям
@@ -101,6 +109,7 @@ bool CTextFileParser::IsDelimiter()
 //Пропустить все до данных
 void CTextFileParser::SkipToData()
 {
+	WISPFUN_DEBUG("c11_f9");
 	//Если символ - разделитель, то проход по всем разделителям и смещение указателя
 	while (m_Ptr < m_EOL && *m_Ptr && IsDelimiter())
 		m_Ptr++;
@@ -109,6 +118,7 @@ void CTextFileParser::SkipToData()
 //Проверка на комментарий
 bool CTextFileParser::IsComment()
 {
+	WISPFUN_DEBUG("c11_f10");
 	bool result = (*m_Ptr == '\n');
 
 	//Проход по всем комментариям
@@ -129,6 +139,7 @@ bool CTextFileParser::IsComment()
 //Получить следующий токен
 string CTextFileParser::ObtainData()
 {
+	WISPFUN_DEBUG("c11_f11");
 	bool exit = false;
 	string result = "";
 
@@ -166,6 +177,7 @@ string CTextFileParser::ObtainData()
 //Получить следующий фрагмент строки или токен (если кавычки не обнаружены)
 string CTextFileParser::ObtainQuotedData()
 {
+	WISPFUN_DEBUG("c11_f12");
 	bool exit = false;
 	string result = "";
 
@@ -224,6 +236,7 @@ string CTextFileParser::ObtainQuotedData()
 //Прочитать токены из файла
 void CTextFileParser::SaveRawLine()
 {
+	WISPFUN_DEBUG("c11_f13");
 	int size = m_EOL - m_Ptr;
 
 	if (size > 0)
@@ -241,6 +254,7 @@ void CTextFileParser::SaveRawLine()
 //Прочитать токены из файла
 STRING_LIST CTextFileParser::ReadTokens(bool trim)
 {
+	WISPFUN_DEBUG("c11_f14");
 	m_Trim = trim;
 	STRING_LIST result;
 
@@ -280,6 +294,7 @@ STRING_LIST CTextFileParser::ReadTokens(bool trim)
 //Прочитать токены из строки
 STRING_LIST CTextFileParser::GetTokens(const char *str, bool trim)
 {
+	WISPFUN_DEBUG("c11_f15");
 	m_Trim = trim;
 	STRING_LIST result;
 

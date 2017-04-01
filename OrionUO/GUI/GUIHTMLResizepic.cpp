@@ -21,6 +21,7 @@ CGUIHTMLResizepic::~CGUIHTMLResizepic()
 //----------------------------------------------------------------------------------
 void CGUIHTMLResizepic::Scroll(const bool &up, const uint &delay)
 {
+	WISPFUN_DEBUG("c62_f1");
 	if (m_HTMLGump != NULL)
 		m_HTMLGump->Scroll(up, delay);
 }

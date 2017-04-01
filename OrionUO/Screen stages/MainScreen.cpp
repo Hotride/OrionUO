@@ -27,11 +27,13 @@ CMainScreen::CMainScreen()
 : CBaseScreen(m_MainGump), m_Account(NULL), m_Password(NULL), m_SavePassword(NULL),
 m_AutoLogin(NULL)
 {
+	WISPFUN_DEBUG("c165_f1");
 	m_Password = new CEntryText(32, 0, 300);
 }
 //----------------------------------------------------------------------------------
 CMainScreen::~CMainScreen()
 {
+	WISPFUN_DEBUG("c165_f2");
 	delete m_Password;
 }
 //----------------------------------------------------------------------------------
@@ -41,6 +43,7 @@ CMainScreen::~CMainScreen()
 */
 void CMainScreen::Init()
 {
+	WISPFUN_DEBUG("c165_f3");
 	g_ConfigLoaded = false;
 	g_GlobalScale = 1.0;
 
@@ -82,6 +85,7 @@ void CMainScreen::Init()
 */
 void CMainScreen::ProcessSmoothAction(uchar action)
 {
+	WISPFUN_DEBUG("c165_f4");
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
 
@@ -93,6 +97,7 @@ void CMainScreen::ProcessSmoothAction(uchar action)
 //----------------------------------------------------------------------------------
 void CMainScreen::SetAccounting(const string &account, const string &password)
 {
+	WISPFUN_DEBUG("c165_f5");
 	m_Account->SetText(account);
 	m_Password->SetText(password);
 
@@ -105,6 +110,7 @@ void CMainScreen::SetAccounting(const string &account, const string &password)
 //----------------------------------------------------------------------------------
 void CMainScreen::Paste()
 {
+	WISPFUN_DEBUG("c165_f6");
 	if (g_EntryPointer == m_MainGump.m_PasswordFake)
 	{
 		m_Password->Paste();
@@ -127,6 +133,7 @@ void CMainScreen::Paste()
 */
 void CMainScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c165_f7");
 	if (wParam >= 0x0100 || !g_FontManager.IsPrintASCII(wParam))
 		return;
 	else if (g_EntryPointer == NULL)
@@ -154,6 +161,7 @@ void CMainScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 */
 void CMainScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c165_f8");
 	if (g_EntryPointer == NULL)
 		g_EntryPointer = m_MainGump.m_PasswordFake;
 
@@ -195,6 +203,7 @@ void CMainScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 */
 int CMainScreen::GetConfigKeyCode(const string &key)
 {
+	WISPFUN_DEBUG("c165_f9");
 	const int keyCount = MSCC_COUNT - 1;
 
 	static const string m_Keys[keyCount] =
@@ -226,6 +235,7 @@ int CMainScreen::GetConfigKeyCode(const string &key)
 */
 void CMainScreen::LoadGlobalConfig()
 {
+	WISPFUN_DEBUG("c165_f10");
 	m_AutoLogin->Checked = false;
 	g_ScreenEffectManager.Enabled = false;
 
@@ -326,6 +336,7 @@ void CMainScreen::LoadGlobalConfig()
 */
 void CMainScreen::SaveGlobalConfig()
 {
+	WISPFUN_DEBUG("c165_f11");
 	FILE *uo_cfg = NULL;
 	fopen_s(&uo_cfg, g_App.FilePath("uo_debug.cfg").c_str(), "w");
 
@@ -371,6 +382,7 @@ void CMainScreen::SaveGlobalConfig()
 */
 string CMainScreen::CryptPW(const char *buf, int len)
 {
+	WISPFUN_DEBUG("c165_f12");
 	char ret[50] = {0};
 
 	IFOR(i, 0, len)
@@ -397,6 +409,7 @@ string CMainScreen::CryptPW(const char *buf, int len)
 */
 string CMainScreen::DecryptPW(const char *buf, int len)
 {
+	WISPFUN_DEBUG("c165_f13");
 	char ret[50] = {0};
 
 	IFOR(i, 0, len)

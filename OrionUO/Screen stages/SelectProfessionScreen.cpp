@@ -41,6 +41,7 @@ void CSelectProfessionScreen::OnChangeSkillSelection(const int &val)
 */
 void CSelectProfessionScreen::Init()
 {
+	WISPFUN_DEBUG("c166_f1");
 	g_ProfessionManager.Selected = (CBaseProfession*)g_ProfessionManager.m_Items;
 	m_SkillSelection = 0;
 
@@ -58,6 +59,7 @@ void CSelectProfessionScreen::Init()
 */
 void CSelectProfessionScreen::ProcessSmoothAction(uchar action)
 {
+	WISPFUN_DEBUG("c166_f2");
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
 

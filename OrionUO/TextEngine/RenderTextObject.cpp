@@ -17,11 +17,13 @@ CRenderTextObject::CRenderTextObject()
 //---------------------------------------------------------------------------
 CRenderTextObject::~CRenderTextObject()
 {
+	WISPFUN_DEBUG("c172_f1");
 	UnlinkDraw();
 }
 //---------------------------------------------------------------------------
 void CRenderTextObject::UnlinkDraw()
 {
+	WISPFUN_DEBUG("c172_f2");
 	if (m_NextDraw != NULL)
 		m_NextDraw->m_PrevDraw = m_PrevDraw;
 
@@ -34,6 +36,7 @@ void CRenderTextObject::UnlinkDraw()
 //---------------------------------------------------------------------------
 void CRenderTextObject::ToTop()
 {
+	WISPFUN_DEBUG("c172_f3");
 	CRenderTextObject *obj = this;
 
 	while (obj != NULL)

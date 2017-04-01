@@ -16,6 +16,7 @@
 CGUIScrollBackground::CGUIScrollBackground(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &height)
 : CBaseGUI(GOT_SCROLLBACKGROUND, serial, graphic, 0, x, y), m_Height(height)
 {
+	WISPFUN_DEBUG("c71_f1");
 	m_OffsetX = 0;
 	m_BottomOffsetX = 0;
 	m_Width = 0;
@@ -54,6 +55,7 @@ CGUIScrollBackground::~CGUIScrollBackground()
 //----------------------------------------------------------------------------------
 void CGUIScrollBackground::UpdateHeight(const int &height)
 {
+	WISPFUN_DEBUG("c71_f2");
 	m_Height = height;
 
 	CGLTexture *th[4] = { NULL };
@@ -71,11 +73,13 @@ void CGUIScrollBackground::UpdateHeight(const int &height)
 //----------------------------------------------------------------------------------
 void CGUIScrollBackground::PrepareTextures()
 {
+	WISPFUN_DEBUG("c71_f3");
 	g_Orion.ExecuteGumpPart(m_Graphic, 4);
 }
 //----------------------------------------------------------------------------------
 void CGUIScrollBackground::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c71_f4");
 	CGLTexture *th[4] = { NULL };
 
 	IFOR(i, 0, 4)
@@ -121,6 +125,7 @@ void CGUIScrollBackground::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUIScrollBackground::Select()
 {
+	WISPFUN_DEBUG("c71_f5");
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 

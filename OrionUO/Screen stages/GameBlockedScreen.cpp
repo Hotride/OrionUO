@@ -39,6 +39,7 @@ void CGameBlockedScreen::Init()
 */
 void CGameBlockedScreen::Render(const bool &mode)
 {
+	WISPFUN_DEBUG("c163_f1");
 	if (mode)
 	{
 		g_GumpManager.Draw(true);
@@ -72,6 +73,7 @@ void CGameBlockedScreen::Render(const bool &mode)
 */
 void CGameBlockedScreen::OnLeftMouseButtonDown()
 {
+	WISPFUN_DEBUG("c163_f2");
 	if (g_SelectedObject.Gump() != NULL)
 		g_GumpManager.OnLeftMouseButtonDown(true);
 }
@@ -82,6 +84,7 @@ void CGameBlockedScreen::OnLeftMouseButtonDown()
 */
 void CGameBlockedScreen::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c163_f3");
 	if (g_PressedObject.LeftGump() != NULL)
 		g_GumpManager.OnLeftMouseButtonUp(true);
 }
@@ -94,6 +97,7 @@ void CGameBlockedScreen::OnLeftMouseButtonUp()
 */
 void CGameBlockedScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c163_f4");
 	if (g_EntryPointer == NULL || g_EntryPointer == &g_GameConsole)
 		return;
 
@@ -108,6 +112,7 @@ void CGameBlockedScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 */
 void CGameBlockedScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c163_f5");
 	CGumpNotify *notify = (CGumpNotify*)g_GumpManager.GetGump(0,0, GT_NOTIFY);
 
 	if (g_EntryPointer == NULL || g_EntryPointer == &g_GameConsole)

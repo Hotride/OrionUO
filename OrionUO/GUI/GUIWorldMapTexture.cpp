@@ -25,6 +25,7 @@ CGUIWorldMapTexture::~CGUIWorldMapTexture()
 //----------------------------------------------------------------------------------
 void CGUIWorldMapTexture::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c83_f1");
 	if (g_MapTexture[m_Index].Texture != 0)
 	{
 		CGLTexture tex;
@@ -42,6 +43,7 @@ void CGUIWorldMapTexture::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUIWorldMapTexture::Select()
 {
+	WISPFUN_DEBUG("c83_f2");
 	bool select = false;
 
 	int x = g_MouseManager.Position.X - m_X;

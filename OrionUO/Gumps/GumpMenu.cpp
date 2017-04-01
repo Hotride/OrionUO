@@ -23,6 +23,7 @@ CGumpMenu::~CGumpMenu()
 //----------------------------------------------------------------------------------
 void CGumpMenu::CalculateGumpState()
 {
+	WISPFUN_DEBUG("c100_f1");
 	CGump::CalculateGumpState();
 
 	if (g_GumpPressed)
@@ -31,6 +32,7 @@ void CGumpMenu::CalculateGumpState()
 //----------------------------------------------------------------------------------
 void CGumpMenu::PrepareContent()
 {
+	WISPFUN_DEBUG("c100_f2");
 	if (m_TextChanged)
 	{
 		m_TextChanged = false;
@@ -49,6 +51,7 @@ void CGumpMenu::PrepareContent()
 //----------------------------------------------------------------------------------
 bool CGumpMenu::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c100_f3");
 	if (g_PressedObject.LeftSerial && g_PressedObject.LeftSerial != ID_GM_HTMLGUMP)
 	{
 		SendMenuResponse(g_PressedObject.LeftSerial);
@@ -61,6 +64,7 @@ bool CGumpMenu::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void CGumpMenu::SendMenuResponse(int index)
 {
+	WISPFUN_DEBUG("c100_f4");
 	//Ответ на меню
 	CPacketMenuResponse(this, index).Send();
 

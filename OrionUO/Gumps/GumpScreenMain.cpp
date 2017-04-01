@@ -26,6 +26,7 @@ CGumpScreenMain::~CGumpScreenMain()
 //----------------------------------------------------------------------------------
 void CGumpScreenMain::PrepareContent()
 {
+	WISPFUN_DEBUG("c116_f1");
 	static uint lastArrowTick = 0;
 	static bool arrowLighted = false;
 
@@ -46,6 +47,7 @@ void CGumpScreenMain::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpScreenMain::UpdateContent()
 {
+	WISPFUN_DEBUG("c116_f2");
 	if (m_Items != NULL)
 		return;
 
@@ -102,6 +104,7 @@ void CGumpScreenMain::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpScreenMain::InitToolTip()
 {
+	WISPFUN_DEBUG("c116_f3");
 	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object() == NULL)
 		return;
 
@@ -146,6 +149,7 @@ void CGumpScreenMain::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpScreenMain::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c116_f4");
 	if (serial == ID_MS_QUIT) //x button
 		g_MainScreen.CreateSmoothAction(CMainScreen::ID_SMOOTH_MS_QUIT);
 	else if (serial == ID_MS_ARROW_NEXT) //> button
@@ -154,6 +158,7 @@ void CGumpScreenMain::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpScreenMain::GUMP_TEXT_ENTRY_EVENT_C
 {
+	WISPFUN_DEBUG("c116_f5");
 	if (serial == ID_MS_PASSWORD)
 		g_MainScreen.m_Password->SetPos(m_PasswordFake->Pos());
 }

@@ -22,6 +22,7 @@ CGUIPolygonal::~CGUIPolygonal()
 //----------------------------------------------------------------------------------
 bool CGUIPolygonal::Select()
 {
+	WISPFUN_DEBUG("c68_f1");
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 

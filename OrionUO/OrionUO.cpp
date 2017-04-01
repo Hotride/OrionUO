@@ -111,6 +111,7 @@ COrion::~COrion()
 //----------------------------------------------------------------------------------
 uint Reflect(uint source, int c)
 {
+	WISPFUN_DEBUG("c_refl");
 	uint value = 0;
 
 	IFOR(i, 1, c + 1)
@@ -126,6 +127,7 @@ uint Reflect(uint source, int c)
 //----------------------------------------------------------------------------------
 uint COrion::GetFileHashCode(uint address, uint size)
 {
+	WISPFUN_DEBUG("c194_f1");
 	uint crc = 0xFFFFFFFF;
 
 	puchar ptr = (puchar)address;
@@ -143,6 +145,7 @@ uint COrion::GetFileHashCode(uint address, uint size)
 //----------------------------------------------------------------------------------
 string COrion::DecodeArgumentString(const char *text, const int &length)
 {
+	WISPFUN_DEBUG("c194_f2");
 	string result = "";
 
 	for (int i = 0; i < length; i += 2)
@@ -158,6 +161,7 @@ string COrion::DecodeArgumentString(const char *text, const int &length)
 //----------------------------------------------------------------------------------
 void COrion::ParseCommandLine()
 {
+	WISPFUN_DEBUG("c194_f3");
 	bool fastLogin = false;
 	int argc = 0;
 	LPWSTR *args = CommandLineToArgvW(GetCommandLineW(), &argc);
@@ -249,6 +253,7 @@ void COrion::ParseCommandLine()
 //----------------------------------------------------------------------------------
 UINT_LIST COrion::FindPattern(puchar ptr, const int &size, const UCHAR_LIST &pattern)
 {
+	WISPFUN_DEBUG("c194_f4");
 	UINT_LIST result;
 
 	int patternSize = pattern.size();
@@ -268,6 +273,7 @@ UINT_LIST COrion::FindPattern(puchar ptr, const int &size, const UCHAR_LIST &pat
 //----------------------------------------------------------------------------------
 bool COrion::Install()
 {
+	WISPFUN_DEBUG("c194_f5");
 	LOG("COrion::Install()\n");
 	SetUnhandledExceptionFilter(OrionUnhandledExceptionFilter);
 
@@ -514,6 +520,7 @@ bool COrion::Install()
 //----------------------------------------------------------------------------------
 void COrion::Uninstall()
 {
+	WISPFUN_DEBUG("c194_f6");
 	LOG("COrion::Uninstall()\n");
 	SaveLocalConfig();
 	g_MainScreen.SaveGlobalConfig();
@@ -552,6 +559,7 @@ void COrion::Uninstall()
 //----------------------------------------------------------------------------------
 void COrion::InitScreen(const GAME_STATE &state)
 {
+	WISPFUN_DEBUG("c194_f7");
 	g_GameState = state;
 	g_SelectedObject.Clear();
 	g_LastSelectedObject.Clear();
@@ -629,6 +637,7 @@ void COrion::InitScreen(const GAME_STATE &state)
 //----------------------------------------------------------------------------------
 void COrion::GetCurrentLocale()
 {
+	WISPFUN_DEBUG("c194_f8");
 	switch (LOBYTE(GetSystemDefaultLangID()))
 	{
 		case LANG_RUSSIAN:
@@ -704,6 +713,7 @@ void COrion::GetCurrentLocale()
 //----------------------------------------------------------------------------------
 ushort COrion::TextToGraphic(const char *text)
 {
+	WISPFUN_DEBUG("c194_f9");
 	if (strlen(text) > 2 && text[0] == '0' && (text[1] == 'x' || text[1] == 'X'))
 	{
 		long l = strtol(text + 2, NULL, 16);
@@ -721,6 +731,7 @@ ushort COrion::TextToGraphic(const char *text)
 //----------------------------------------------------------------------------------
 void COrion::CheckStaticTileFilterFiles()
 {
+	WISPFUN_DEBUG("c194_f10");
 	memset(&m_StaticTilesFilterFlags[0], 0, sizeof(m_StaticTilesFilterFlags));
 
 	string path = g_App.FilePath("OrionData");
@@ -894,6 +905,7 @@ void COrion::CheckStaticTileFilterFiles()
 //----------------------------------------------------------------------------------
 void COrion::LoadClientConfig()
 {
+	WISPFUN_DEBUG("c194_f11");
 	HMODULE orionDll = LoadLibrary(g_App.FilePath(L"Orion.dll").c_str());
 
 	if (orionDll == 0)
@@ -974,6 +986,7 @@ void COrion::LoadClientConfig()
 //----------------------------------------------------------------------------------
 void COrion::LoadAutoLoginNames()
 {
+	WISPFUN_DEBUG("c194_f12");
 	WISP_FILE::CTextFileParser file(g_App.FilePath("AutoLoginNames.cfg"), "", "#;", "");
 
 	string names = "|";
@@ -991,6 +1004,7 @@ void COrion::LoadAutoLoginNames()
 //---------------------------------------------------------------------------
 void COrion::ProcessDelayedClicks()
 {
+	WISPFUN_DEBUG("c194_f13");
 	if (g_ClickObject.Enabled && g_ClickObject.Timer < g_Ticks)
 	{
 		uint serial = 0;
@@ -1023,6 +1037,7 @@ void COrion::ProcessDelayedClicks()
 //----------------------------------------------------------------------------------
 void COrion::Process(const bool &rendering)
 {
+	WISPFUN_DEBUG("c194_f14");
 	if (g_CurrentScreen == NULL)
 		return;
 
@@ -1123,42 +1138,42 @@ void COrion::Process(const bool &rendering)
 			RemoveRangedObjects();
 			g_GumpManager.RemoveRangedGumps();
 
-		if (rendering)
-		{
-			g_GameScreen.CalculateGameWindowBounds();
-
-			g_GameScreen.CalculateRenderList();
-			g_GameScreen.RenderListInitalized = true;
-
-			g_SelectedObject.Clear();
-
-			if (!IsIconic(g_OrionWindow.Handle))
+			if (rendering)
 			{
-				if (canRenderSelect)
-					g_GameScreen.Render(false);
+				g_GameScreen.CalculateGameWindowBounds();
 
-				CGump::ProcessListing();
+				g_GameScreen.CalculateRenderList();
+				g_GameScreen.RenderListInitalized = true;
 
-				g_GameScreen.PrepareContent();
+				g_SelectedObject.Clear();
 
-				g_GameScreen.Render(true);
-			}
+				if (!IsIconic(g_OrionWindow.Handle))
+				{
+					if (canRenderSelect)
+						g_GameScreen.Render(false);
 
-			g_Target.UnloadMulti();
+					CGump::ProcessListing();
 
-			g_GameScreen.RenderListInitalized = false;
+					g_GameScreen.PrepareContent();
 
-			g_MapManager->Init(true);
+					g_GameScreen.Render(true);
+				}
+
+				g_Target.UnloadMulti();
+
+				g_GameScreen.RenderListInitalized = false;
+
+				g_MapManager->Init(true);
 
 				for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end();)
-			{
-				if (i->second < g_Ticks)
-					i = g_CorpseSerialList.erase(i);
-				else
-					i++;
+				{
+					if (i->second < g_Ticks)
+						i = g_CorpseSerialList.erase(i);
+					else
+						i++;
+				}
 			}
 		}
-	}
 	}
 	else if (rendering)
 	{
@@ -1191,6 +1206,7 @@ void COrion::Process(const bool &rendering)
 //----------------------------------------------------------------------------------
 void COrion::LoadStartupConfig()
 {
+	WISPFUN_DEBUG("c194_f15");
 	char buf[MAX_PATH] = { 0 };
 	sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X\\options_debug.cuo", g_MainScreen.m_Account->c_str(), FixServerName(g_ServerList.GetSelectedServer()->Name).c_str(), g_PlayerSerial);
 
@@ -1207,6 +1223,7 @@ void COrion::LoadStartupConfig()
 //----------------------------------------------------------------------------------
 void COrion::LoadPlugin(const string &libpath, const string &function, const uint &flags)
 {
+	WISPFUN_DEBUG("c194_f16");
 	HMODULE dll = LoadLibraryA(libpath.c_str());
 
 	if (dll != NULL)
@@ -1249,6 +1266,7 @@ void COrion::LoadPlugin(const string &libpath, const string &function, const uin
 //----------------------------------------------------------------------------------
 void COrion::LoadPluginConfig()
 {
+	WISPFUN_DEBUG("c194_f17");
 	g_PluginClientInterface.Version = 1;
 	g_PluginClientInterface.Size = sizeof(g_PluginClientInterface);
 	g_PluginClientInterface.GL = &g_Interface_GL;
@@ -1275,6 +1293,7 @@ void COrion::LoadPluginConfig()
 //----------------------------------------------------------------------------------
 string COrion::FixServerName(string name)
 {
+	WISPFUN_DEBUG("c194_f18");
 	size_t i = 0;
 
 	while ((i = name.find(":")) != string::npos)
@@ -1285,6 +1304,7 @@ string COrion::FixServerName(string name)
 //----------------------------------------------------------------------------------
 void COrion::LoadLocalConfig()
 {
+	WISPFUN_DEBUG("c194_f19");
 	if (g_ConfigLoaded)
 		return;
 
@@ -1349,6 +1369,7 @@ void COrion::LoadLocalConfig()
 //----------------------------------------------------------------------------------
 void COrion::SaveLocalConfig()
 {
+	WISPFUN_DEBUG("c194_f20");
 	if (!g_ConfigLoaded)
 		return;
 
@@ -1392,6 +1413,7 @@ void COrion::SaveLocalConfig()
 //----------------------------------------------------------------------------------
 void COrion::ClearUnusedTextures()
 {
+	WISPFUN_DEBUG("c194_f21");
 	if (g_GameState < GS_GAME)
 		return;
 
@@ -1498,6 +1520,7 @@ void COrion::ClearUnusedTextures()
 //----------------------------------------------------------------------------------
 void COrion::Connect()
 {
+	WISPFUN_DEBUG("c194_f22");
 	InitScreen(GS_MAIN_CONNECT);
 	Process(true);
 
@@ -1523,6 +1546,7 @@ void COrion::Connect()
 //----------------------------------------------------------------------------------
 void COrion::Disconnect()
 {
+	WISPFUN_DEBUG("c194_f23");
 	g_AbyssPacket03First = true;
 	g_PluginManager.Disconnect();
 
@@ -1544,6 +1568,7 @@ void COrion::Disconnect()
 //----------------------------------------------------------------------------------
 int COrion::Send(puchar buf, const int &size)
 {
+	WISPFUN_DEBUG("c194_f24");
 	uint ticks = g_Ticks;
 	g_TotalSendSize += size;
 
@@ -1583,6 +1608,7 @@ int COrion::Send(puchar buf, const int &size)
 //----------------------------------------------------------------------------------
 void COrion::ServerSelection(int pos)
 {
+	WISPFUN_DEBUG("c194_f25");
 	InitScreen(GS_SERVER_CONNECT);
 	Process(true);
 
@@ -1595,6 +1621,7 @@ void COrion::ServerSelection(int pos)
 //----------------------------------------------------------------------------------
 void COrion::RelayServer(const char *ip, int port, puchar gameSeed)
 {
+	WISPFUN_DEBUG("c194_f26");
 	memcpy(&g_GameSeed[0], &gameSeed[0], 4);
 	g_ConnectionManager.Init(gameSeed);
 
@@ -1616,6 +1643,7 @@ void COrion::RelayServer(const char *ip, int port, puchar gameSeed)
 //----------------------------------------------------------------------------------
 void COrion::CharacterSelection(int pos)
 {
+	WISPFUN_DEBUG("c194_f27");
 	InitScreen(GS_GAME_CONNECT);
 	g_ConnectionScreen.Type = CST_GAME;
 
@@ -1626,6 +1654,7 @@ void COrion::CharacterSelection(int pos)
 //----------------------------------------------------------------------------------
 void COrion::LoginComplete()
 {
+	WISPFUN_DEBUG("c194_f28");
 	if (!g_ConnectionScreen.Completed)
 	{
 		g_ConnectionScreen.Completed = true;
@@ -1662,6 +1691,7 @@ void COrion::LoginComplete()
 //----------------------------------------------------------------------------------
 void COrion::ChangeSeason(const SEASON_TYPE &season, const int &music)
 {
+	WISPFUN_DEBUG("c194_f29");
 	bool updateGraphics = (g_Season != season);
 
 	g_Season = season;
@@ -1698,6 +1728,7 @@ void COrion::ChangeSeason(const SEASON_TYPE &season, const int &music)
 //----------------------------------------------------------------------------------
 ushort COrion::GetLandSeasonGraphic(ushort graphic)
 {
+	WISPFUN_DEBUG("c194_f30");
 	if (g_Season == ST_WINTER)
 	{
 		ushort buf = m_WinterTile[graphic];
@@ -1711,6 +1742,7 @@ ushort COrion::GetLandSeasonGraphic(ushort graphic)
 //----------------------------------------------------------------------------------
 ushort COrion::GetSeasonGraphic(const ushort &graphic)
 {
+	WISPFUN_DEBUG("c194_f31");
 	switch (g_Season)
 	{
 		case ST_SPRING:
@@ -1732,6 +1764,7 @@ ushort COrion::GetSeasonGraphic(const ushort &graphic)
 //----------------------------------------------------------------------------------
 ushort COrion::GetSpringGraphic(ushort graphic)
 {
+	WISPFUN_DEBUG("c194_f32");
 	switch (graphic)
 	{
 		case 0x0CA7:
@@ -1788,11 +1821,13 @@ ushort COrion::GetSpringGraphic(ushort graphic)
 //----------------------------------------------------------------------------------
 ushort COrion::GetSummerGraphic(ushort graphic)
 {
+	WISPFUN_DEBUG("c194_f33");
 	return graphic;
 }
 //----------------------------------------------------------------------------------
 ushort COrion::GetFallGraphic(ushort graphic)
 {
+	WISPFUN_DEBUG("c194_f34");
 	switch (graphic)
 	{
 		case 0x0CD1:
@@ -1875,11 +1910,13 @@ ushort COrion::GetFallGraphic(ushort graphic)
 //----------------------------------------------------------------------------------
 ushort COrion::GetWinterGraphic(ushort graphic)
 {
+	WISPFUN_DEBUG("c194_f35");
 	return graphic;
 }
 //----------------------------------------------------------------------------------
 ushort COrion::GetDesolationGraphic(ushort graphic)
 {
+	WISPFUN_DEBUG("c194_f36");
 	switch (graphic)
 	{
 		case 0x1B7E:
@@ -1997,6 +2034,7 @@ ushort COrion::GetDesolationGraphic(ushort graphic)
 //----------------------------------------------------------------------------------
 int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 {
+	WISPFUN_DEBUG("c194_f37");
 	switch (key)
 	{
 		case VKI_SOUND:
@@ -2506,6 +2544,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 //----------------------------------------------------------------------------------
 string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 {
+	WISPFUN_DEBUG("c194_f38");
 	switch (key)
 	{
 		case VKS_SKILL_NAME:
@@ -2605,6 +2644,7 @@ string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 //----------------------------------------------------------------------------------
 void COrion::ClearRemovedStaticsTextures()
 {
+	WISPFUN_DEBUG("c194_f39");
 	for (deque<CIndexObject*>::iterator it = m_UsedStaticList.begin(); it != m_UsedStaticList.end();)
 	{
 		CIndexObject *obj = *it;
@@ -2626,6 +2666,7 @@ void COrion::ClearRemovedStaticsTextures()
 //----------------------------------------------------------------------------------
 void COrion::ClearTreesTextures()
 {
+	WISPFUN_DEBUG("c194_f40");
 	for (const ushort &graphic : m_StumpTiles)
 		m_StaticDataIndex[graphic].LastAccessTime = 0;
 
@@ -2634,6 +2675,7 @@ void COrion::ClearTreesTextures()
 //----------------------------------------------------------------------------------
 bool COrion::IsTreeTile(const ushort &graphic, int &index)
 {
+	WISPFUN_DEBUG("c194_f41");
 	if (!g_ConfigManager.DrawStumps)
 		return false;
 
@@ -2654,6 +2696,7 @@ bool COrion::IsTreeTile(const ushort &graphic, int &index)
 //----------------------------------------------------------------------------------
 void COrion::ClearCaveTextures()
 {
+	WISPFUN_DEBUG("c194_f42");
 	for (const ushort &graphic : m_CaveTiles)
 		m_StaticDataIndex[graphic].LastAccessTime = 0;
 
@@ -2662,16 +2705,19 @@ void COrion::ClearCaveTextures()
 //----------------------------------------------------------------------------------
 bool COrion::IsCaveTile(const ushort &graphic)
 {
+	WISPFUN_DEBUG("c194_f43");
 	return (g_ConfigManager.MarkingCaves && (m_StaticTilesFilterFlags[graphic] & STFF_CAVE));
 }
 //----------------------------------------------------------------------------------
 bool COrion::IsVegetation(const ushort &graphic)
 {
+	WISPFUN_DEBUG("c194_f44");
 	return (m_StaticTilesFilterFlags[graphic] & STFF_VEGETATION);
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadLogin(string &login, int &port)
 {
+	WISPFUN_DEBUG("c194_f45");
 	if (m_DefaultPort)
 	{
 		login = m_DefaultLogin;
@@ -2701,12 +2747,14 @@ void COrion::LoadLogin(string &login, int &port)
 //----------------------------------------------------------------------------------
 void COrion::GoToWebLink(const string &url)
 {
+	WISPFUN_DEBUG("c194_f46");
 	if (url.length())
 		ShellExecuteA(0, "Open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 {
+	WISPFUN_DEBUG("c194_f47");
 	WISP_FILE::CMappedFile &file = g_FileManager.m_TiledataMul;
 
 	if (file.Size)
@@ -3018,6 +3066,7 @@ void COrion::LoadIndexFiles()
 //----------------------------------------------------------------------------------
 void COrion::UnloadIndexFiles()
 {
+	WISPFUN_DEBUG("c194_f50");
 	deque<CIndexObject*> *lists[5] =
 	{
 		&m_UsedLandList,
@@ -3061,6 +3110,7 @@ void COrion::UnloadIndexFiles()
 //----------------------------------------------------------------------------------
 void COrion::InitStaticAnimList()
 {
+	WISPFUN_DEBUG("c194_f51");
 	if (m_AnimData.size())
 	{
 		IFOR(i, 0, m_StaticDataCount)
@@ -3098,6 +3148,7 @@ void COrion::InitStaticAnimList()
 //----------------------------------------------------------------------------------
 ushort COrion::CalculateLightColor(const ushort &id)
 {
+	WISPFUN_DEBUG("c194_f52");
 	ushort color = m_StaticData[id / 32].Tiles[id % 32].Hue;
 
 	if (!color)
@@ -3240,6 +3291,7 @@ ushort COrion::CalculateLightColor(const ushort &id)
 //----------------------------------------------------------------------------------
 void COrion::ProcessStaticAnimList()
 {
+	WISPFUN_DEBUG("c194_f53");
 	if (m_AnimData.size())
 	{
 		int delay = (g_ConfigManager.StandartItemsAnimationDelay ? ORIGINAL_ITEMS_ANIMATION_DELAY : ORION_ITEMS_ANIMATION_DELAY);
@@ -3278,6 +3330,7 @@ void COrion::ProcessStaticAnimList()
 //----------------------------------------------------------------------------------
 void COrion::PatchFiles()
 {
+	WISPFUN_DEBUG("c194_f54");
 	/*
 	-map0 = 0;
 	-staidx0 = 1;
@@ -3444,6 +3497,7 @@ void COrion::PatchFiles()
 //----------------------------------------------------------------------------------
 void COrion::IndexReplaces()
 {
+	WISPFUN_DEBUG("c194_f55");
 	WISP_FILE::CTextFileParser newDataParser("", " \t,{}", "#;//", "");
 	WISP_FILE::CTextFileParser artParser(g_App.FilePath("Art.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser textureParser(g_App.FilePath("TexTerr.def"), " \t", "#;//", "{}");
@@ -3677,6 +3731,7 @@ void COrion::IndexReplaces()
 //----------------------------------------------------------------------------------
 bool COrion::LoadSkills()
 {
+	WISPFUN_DEBUG("c194_f56");
 	if (!g_FileManager.m_SkillsIdx.Size || !g_FileManager.m_SkillsMul.Size || g_SkillsCount)
 		return false;
 
@@ -3730,6 +3785,7 @@ bool COrion::LoadSkills()
 //----------------------------------------------------------------------------------
 void COrion::CreateAuraTexture()
 {
+	WISPFUN_DEBUG("c194_f57");
 	UINT_LIST pixels;
 	int width = 0;
 	int height = 0;
@@ -3756,6 +3812,7 @@ void COrion::CreateAuraTexture()
 //----------------------------------------------------------------------------------
 void COrion::CreateObjectHandlesBackground()
 {
+	WISPFUN_DEBUG("c194_f58");
 	CGLTexture *th[9] = { NULL };
 	ushort gumpID[9] = { 0 };
 
@@ -3911,6 +3968,7 @@ void COrion::CreateObjectHandlesBackground()
 //----------------------------------------------------------------------------------
 void COrion::LoadShaders()
 {
+	WISPFUN_DEBUG("c194_f59");
 	g_CurrentShader = NULL;
 
 #if UO_USE_SHADER_FILES == 1
@@ -3960,6 +4018,7 @@ void COrion::LoadShaders()
 //----------------------------------------------------------------------------------
 void COrion::LoadClientStartupConfig()
 {
+	WISPFUN_DEBUG("c194_f60");
 	g_ConfigManager.Load(g_App.FilePath("options_debug.cuo"));
 
 	g_SoundManager.SetMusicVolume(g_ConfigManager.MusicVolume);
@@ -3976,6 +4035,7 @@ void COrion::LoadClientStartupConfig()
 //----------------------------------------------------------------------------------
 void COrion::PlayMusic(const int &index, const bool &warmode)
 {
+	WISPFUN_DEBUG("c194_f61");
 	if (!g_ConfigManager.Music || index >= MAX_MUSIC_DATA_INDEX_COUNT)
 		return;
 	if (!warmode && g_SoundManager.CurrentMusicIndex == index && g_SoundManager.IsPlayingNormalMusic())
@@ -3992,16 +4052,19 @@ void COrion::PlayMusic(const int &index, const bool &warmode)
 //----------------------------------------------------------------------------------
 void COrion::PauseSound()
 {
+	WISPFUN_DEBUG("c194_f62");
 	g_SoundManager.PauseSound();
 }
 //----------------------------------------------------------------------------------
 void COrion::ResumeSound()
 {
+	WISPFUN_DEBUG("c194_f63");
 	g_SoundManager.ResumeSound();
 }
 //----------------------------------------------------------------------------------
 void COrion::PlaySoundEffect(const ushort &id, float volume)
 {
+	WISPFUN_DEBUG("c194_f64");
 	if (id >= 0x0800 || !g_ConfigManager.Sound)
 		return;
 
@@ -4041,6 +4104,7 @@ void COrion::PlaySoundEffect(const ushort &id, float volume)
 //----------------------------------------------------------------------------------
 void COrion::AdjustSoundEffects(const uint &ticks, const float &volume)
 {
+	WISPFUN_DEBUG("c194_f65");
 	for (deque<CIndexSound*>::iterator i = m_UsedSoundList.begin(); i != m_UsedSoundList.end();)
 	{
 		CIndexSound *obj = *i;
@@ -4065,6 +4129,7 @@ void COrion::AdjustSoundEffects(const uint &ticks, const float &volume)
 //----------------------------------------------------------------------------------
 CGLTexture *COrion::ExecuteGump(const ushort &id)
 {
+	WISPFUN_DEBUG("c194_f66");
 	CIndexObject &io = m_GumpDataIndex[id];
 
 	if (io.Texture == 0)
@@ -4085,6 +4150,7 @@ CGLTexture *COrion::ExecuteGump(const ushort &id)
 //----------------------------------------------------------------------------------
 CGLTexture *COrion::ExecuteLandArt(const ushort &id)
 {
+	WISPFUN_DEBUG("c194_f67");
 	CIndexObject &io = m_LandDataIndex[id];
 
 	if (io.Texture == 0)
@@ -4105,11 +4171,13 @@ CGLTexture *COrion::ExecuteLandArt(const ushort &id)
 //----------------------------------------------------------------------------------
 CGLTexture *COrion::ExecuteStaticArtAnimated(const ushort &id)
 {
+	WISPFUN_DEBUG("c194_f68");
 	return ExecuteStaticArt(id + m_StaticDataIndex[id].Offset);
 }
 //----------------------------------------------------------------------------------
 CGLTexture *COrion::ExecuteStaticArt(const ushort &id)
 {
+	WISPFUN_DEBUG("c194_f69");
 	CIndexObject &io = m_StaticDataIndex[id];
 
 	if (io.Texture == 0)
@@ -4135,6 +4203,7 @@ CGLTexture *COrion::ExecuteStaticArt(const ushort &id)
 //----------------------------------------------------------------------------------
 CGLTexture *COrion::ExecuteTexture(ushort id)
 {
+	WISPFUN_DEBUG("c194_f70");
 	id = m_LandData[id / 32].Tiles[id % 32].TexID;
 
 	if (!id)
@@ -4160,6 +4229,7 @@ CGLTexture *COrion::ExecuteTexture(ushort id)
 //----------------------------------------------------------------------------------
 CGLTexture *COrion::ExecuteLight(uchar &id)
 {
+	WISPFUN_DEBUG("c194_f71");
 	if (id >= MAX_LIGHTS_DATA_INDEX_COUNT)
 		id = 0;
 
@@ -4183,6 +4253,7 @@ CGLTexture *COrion::ExecuteLight(uchar &id)
 //----------------------------------------------------------------------------------
 bool COrion::ExecuteGumpPart(const ushort &id, const int &count)
 {
+	WISPFUN_DEBUG("c194_f72");
 	bool result = true;
 
 	IFOR(i, 0, count)
@@ -4196,6 +4267,7 @@ bool COrion::ExecuteGumpPart(const ushort &id, const int &count)
 //----------------------------------------------------------------------------------
 void COrion::DrawGump(const ushort &id, const ushort &color, const int &x, const int &y, const bool &partialHue)
 {
+	WISPFUN_DEBUG("c194_f73");
 	CGLTexture *th = ExecuteGump(id);
 
 	if (th != NULL)
@@ -4218,6 +4290,7 @@ void COrion::DrawGump(const ushort &id, const ushort &color, const int &x, const
 //----------------------------------------------------------------------------------
 void COrion::DrawGump(const ushort &id, const ushort &color, const int &x, const int &y, const int &width, const int &height, const bool &partialHue)
 {
+	WISPFUN_DEBUG("c194_f74");
 	CGLTexture *th = ExecuteGump(id);
 
 	if (th != NULL)
@@ -4240,6 +4313,7 @@ void COrion::DrawGump(const ushort &id, const ushort &color, const int &x, const
 //----------------------------------------------------------------------------------
 void COrion::DrawResizepicGump(const ushort &id, const int &x, const int &y, const int &width, const int &height)
 {
+	WISPFUN_DEBUG("c194_f75");
 	CGLTexture *th[9] = { NULL };
 
 	IFOR(i, 0, 9)
@@ -4262,6 +4336,7 @@ void COrion::DrawResizepicGump(const ushort &id, const int &x, const int &y, con
 //----------------------------------------------------------------------------------
 void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c194_f76");
 	ushort id = land->Graphic;
 
 	if (id == 2)
@@ -4294,6 +4369,7 @@ void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, cons
 //----------------------------------------------------------------------------------
 void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int &y, const int &z)
 {
+	WISPFUN_DEBUG("c194_f77");
 	CGLTexture *th = ExecuteLandArt(id);
 
 	if (th != NULL)
@@ -4314,6 +4390,7 @@ void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int
 //----------------------------------------------------------------------------------
 void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const int &z, const bool &selection)
 {
+	WISPFUN_DEBUG("c194_f78");
 	CGLTexture *th = ExecuteStaticArt(id);
 
 	if (th != NULL && id > 1)
@@ -4341,11 +4418,13 @@ void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const i
 //----------------------------------------------------------------------------------
 void COrion::DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection)
 {
+	WISPFUN_DEBUG("c194_f79");
 	DrawStaticArt(id + m_StaticDataIndex[id].Offset, color, x, y, z, selection);
 }
 //----------------------------------------------------------------------------------
 void COrion::DrawStaticArtRotated(const ushort &id, ushort color, const int &x, const int &y, const int &z, const float &angle)
 {
+	WISPFUN_DEBUG("c194_f80");
 	CGLTexture *th = ExecuteStaticArt(id);
 
 	if (th != NULL && id > 1)
@@ -4366,11 +4445,13 @@ void COrion::DrawStaticArtRotated(const ushort &id, ushort color, const int &x, 
 //----------------------------------------------------------------------------------
 void COrion::DrawStaticArtAnimatedRotated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const float &angle)
 {
+	WISPFUN_DEBUG("c194_f81");
 	DrawStaticArtRotated(id + m_StaticDataIndex[id].Offset, color, x, y, z, angle);
 }
 //----------------------------------------------------------------------------------
 void COrion::DrawStaticArtTransparent(const ushort &id, ushort color, int x, int y, const int &z, const bool &selection)
 {
+	WISPFUN_DEBUG("c194_f82");
 	CGLTexture *th = ExecuteStaticArt(id);
 
 	if (th != NULL && id > 1)
@@ -4398,11 +4479,13 @@ void COrion::DrawStaticArtTransparent(const ushort &id, ushort color, int x, int
 //----------------------------------------------------------------------------------
 void COrion::DrawStaticArtAnimatedTransparent(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection)
 {
+	WISPFUN_DEBUG("c194_f83");
 	DrawStaticArtTransparent(id + m_StaticDataIndex[id].Offset, color, x, y, z, selection);
 }
 //----------------------------------------------------------------------------------
 void COrion::DrawStaticArtInContainer(const ushort &id, ushort color, int x, int y, const bool &selection, const bool &onMouse)
 {
+	WISPFUN_DEBUG("c194_f84");
 	CGLTexture *th = ExecuteStaticArt(id);
 
 	if (th != NULL)
@@ -4435,6 +4518,7 @@ void COrion::DrawStaticArtInContainer(const ushort &id, ushort color, int x, int
 //----------------------------------------------------------------------------------
 void COrion::DrawLight(LIGHT_DATA &light)
 {
+	WISPFUN_DEBUG("c194_f85");
 	CGLTexture *th = ExecuteLight(light.ID);
 
 	if (th != NULL)
@@ -4456,6 +4540,7 @@ void COrion::DrawLight(LIGHT_DATA &light)
 //----------------------------------------------------------------------------------
 bool COrion::PolygonePixelsInXY(int x, int y, const int &width, const int &height)
 {
+	WISPFUN_DEBUG("c194_f86");
 	x = g_MouseManager.Position.X - x;
 	y = g_MouseManager.Position.Y - y;
 
@@ -4464,6 +4549,7 @@ bool COrion::PolygonePixelsInXY(int x, int y, const int &width, const int &heigh
 //----------------------------------------------------------------------------------
 bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, const bool &noSubMouse)
 {
+	WISPFUN_DEBUG("c194_f87");
 	CIndexObject &io = m_GumpDataIndex[id];
 
 	bool result = false;
@@ -4491,6 +4577,7 @@ bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, const bool &noSubMou
 //----------------------------------------------------------------------------------
 bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, int width, int height, const bool &noSubMouse)
 {
+	WISPFUN_DEBUG("c194_f88");
 	if (!noSubMouse)
 	{
 		x = g_MouseManager.Position.X - x;
@@ -4542,6 +4629,7 @@ bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, int width, int heigh
 //----------------------------------------------------------------------------------
 bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &width, const int &height)
 {
+	WISPFUN_DEBUG("c194_f89");
 	x = g_MouseManager.Position.X - x;
 	y = g_MouseManager.Position.Y - y;
 
@@ -4667,6 +4755,7 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 //----------------------------------------------------------------------------------
 bool COrion::StaticPixelsInXY(const ushort &id, int x, int y, const int &z)
 {
+	WISPFUN_DEBUG("c194_f90");
 	CIndexObject &io = m_StaticDataIndex[id];
 
 	bool result = false;
@@ -4691,11 +4780,13 @@ bool COrion::StaticPixelsInXY(const ushort &id, int x, int y, const int &z)
 //----------------------------------------------------------------------------------
 bool COrion::StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y, const int &z)
 {
+	WISPFUN_DEBUG("c194_f91");
 	return StaticPixelsInXY(id + m_StaticDataIndex[id].Offset, x, y, z);
 }
 //----------------------------------------------------------------------------------
 bool COrion::CircleTransPixelsInXY()
 {
+	WISPFUN_DEBUG("c194_f92");
 	int x = (g_MouseManager.Position.X - g_CircleOfTransparency.X);
 	int y = (g_MouseManager.Position.Y - g_CircleOfTransparency.Y);
 
@@ -4712,6 +4803,7 @@ bool COrion::CircleTransPixelsInXY()
 //----------------------------------------------------------------------------------
 bool COrion::StaticPixelsInXYInContainer(const ushort &id, int x, int y)
 {
+	WISPFUN_DEBUG("c194_f93");
 	CIndexObject &io = m_StaticDataIndex[id];
 
 	bool result = false;
@@ -4736,6 +4828,7 @@ bool COrion::StaticPixelsInXYInContainer(const ushort &id, int x, int y)
 //----------------------------------------------------------------------------------
 bool COrion::LandPixelsInXY(const ushort &id, int x, int  y, const int &z)
 {
+	WISPFUN_DEBUG("c194_f94");
 	CIndexObject &io = m_LandDataIndex[id];
 
 	bool result = false;
@@ -4760,6 +4853,7 @@ bool COrion::LandPixelsInXY(const ushort &id, int x, int  y, const int &z)
 //----------------------------------------------------------------------------------
 bool COrion::LandTexturePixelsInXY(int x, int  y, RECT &r)
 {
+	WISPFUN_DEBUG("c194_f95");
 	y -= 22;
 	int testX = g_MouseManager.Position.X - x;
 	int testY = g_MouseManager.Position.Y;
@@ -4782,6 +4876,7 @@ bool COrion::LandTexturePixelsInXY(int x, int  y, RECT &r)
 //----------------------------------------------------------------------------------
 void COrion::CreateTextMessageF(uchar font, ushort color, const char *format, ...)
 {
+	WISPFUN_DEBUG("c194_f96");
 	va_list arg;
 	va_start(arg, format);
 
@@ -4795,6 +4890,7 @@ void COrion::CreateTextMessageF(uchar font, ushort color, const char *format, ..
 //----------------------------------------------------------------------------------
 void COrion::CreateUnicodeTextMessageF(uchar font, ushort color, const char *format, ...)
 {
+	WISPFUN_DEBUG("c194_f97");
 	va_list arg;
 	va_start(arg, format);
 
@@ -4808,6 +4904,7 @@ void COrion::CreateUnicodeTextMessageF(uchar font, ushort color, const char *for
 //----------------------------------------------------------------------------------
 void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort color, string text)
 {
+	WISPFUN_DEBUG("c194_f98");
 	CTextData *td = new CTextData();
 	td->Unicode = false;
 	td->Font = font;
@@ -4932,6 +5029,7 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 //----------------------------------------------------------------------------------
 void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort color, wstring text)
 {
+	WISPFUN_DEBUG("c194_f99");
 	CTextData *td = new CTextData();
 	td->Unicode = true;
 	td->Font = font;
@@ -5035,12 +5133,14 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 //----------------------------------------------------------------------------------
 void COrion::AddSystemMessage(CTextData *msg)
 {
+	WISPFUN_DEBUG("c194_f100");
 	g_SystemChat.Add(msg);
 	AddJournalMessage(msg, "");
 }
 //----------------------------------------------------------------------------------
 void COrion::AddJournalMessage(CTextData *msg, string name)
 {
+	WISPFUN_DEBUG("c194_f101");
 	CTextData *jmsg = new CTextData(msg);
 
 	if (!jmsg->Unicode)
@@ -5067,6 +5167,7 @@ void COrion::AddJournalMessage(CTextData *msg, string name)
 //----------------------------------------------------------------------------------
 void COrion::ChangeMap(uchar newmap)
 {
+	WISPFUN_DEBUG("c194_f102");
 	if (newmap < 0 || newmap > 5)
 		newmap = 0;
 
@@ -5101,6 +5202,7 @@ void COrion::ChangeMap(uchar newmap)
 //----------------------------------------------------------------------------------
 void COrion::PickupItem(CGameItem *obj, int count, bool isGameFigure)
 {
+	WISPFUN_DEBUG("c194_f103");
 	if (g_ObjectInHand == NULL)
 	{
 		g_ObjectInHand = new CObjectOnCursor(obj);
@@ -5126,6 +5228,7 @@ void COrion::PickupItem(CGameItem *obj, int count, bool isGameFigure)
 //----------------------------------------------------------------------------------
 void COrion::DropItem(uint container, ushort x, ushort y, char z)
 {
+	WISPFUN_DEBUG("c194_f104");
 	if (g_ObjectInHand != NULL)
 	{
 		if (g_ObjectInHand->Dropped)
@@ -5153,6 +5256,7 @@ void COrion::DropItem(uint container, ushort x, ushort y, char z)
 //----------------------------------------------------------------------------------
 void COrion::EquipItem(uint container)
 {
+	WISPFUN_DEBUG("c194_f105");
 	if (g_ObjectInHand != NULL)
 	{
 		if (g_ObjectInHand->Dropped)
@@ -5187,6 +5291,7 @@ void COrion::EquipItem(uint container)
 //----------------------------------------------------------------------------------
 void COrion::ChangeWarmode(uchar status)
 {
+	WISPFUN_DEBUG("c194_f106");
 	uchar newstatus = (uchar)(!g_Player->Warmode);
 
 	if (status != 0xFF)
@@ -5208,26 +5313,31 @@ void COrion::ChangeWarmode(uchar status)
 //----------------------------------------------------------------------------------
 void COrion::HelpRequest()
 {
+	WISPFUN_DEBUG("c194_f107");
 	CPacketHelpRequest().Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::StatusReq(uint serial)
 {
+	WISPFUN_DEBUG("c194_f108");
 	CPacketStatusRequest(serial).Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::SkillsReq(uint serial)
 {
+	WISPFUN_DEBUG("c194_f109");
 	CPacketSkillsRequest(serial).Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::SkillStatusChange(uchar skill, uchar state)
 {
+	WISPFUN_DEBUG("c194_f110");
 	CPacketSkillsStatusChangeRequest(skill, state).Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::Click(uint serial)
 {
+	WISPFUN_DEBUG("c194_f111");
 	CPacketClickRequest(serial).Send();
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
@@ -5237,6 +5347,7 @@ void COrion::Click(uint serial)
 //----------------------------------------------------------------------------------
 void COrion::DoubleClick(uint serial)
 {
+	WISPFUN_DEBUG("c194_f112");
 	if (serial >= 0x40000000)
 		g_LastUseObject = serial;
 
@@ -5245,6 +5356,7 @@ void COrion::DoubleClick(uint serial)
 //----------------------------------------------------------------------------------
 void COrion::PaperdollReq(uint serial)
 {
+	WISPFUN_DEBUG("c194_f113");
 	//g_LastUseObject = serial;
 
 	CPacketDoubleClickRequest(serial | 0x80000000).Send();
@@ -5252,6 +5364,7 @@ void COrion::PaperdollReq(uint serial)
 //----------------------------------------------------------------------------------
 void COrion::Attack(uint serial)
 {
+	WISPFUN_DEBUG("c194_f114");
 	if (g_ConfigManager.CriminalActionsQuery && g_World != NULL)
 	{
 		CGameCharacter *target = g_World->FindWorldCharacter(serial);
@@ -5278,6 +5391,7 @@ void COrion::Attack(uint serial)
 //----------------------------------------------------------------------------------
 void COrion::AttackReq(uint serial)
 {
+	WISPFUN_DEBUG("c194_f115");
 	g_LastAttackObject = serial;
 
 	CPacketStatusRequest(serial).Send();
@@ -5287,11 +5401,13 @@ void COrion::AttackReq(uint serial)
 //----------------------------------------------------------------------------------
 void COrion::SendASCIIText(const char *str, SPEECH_TYPE type)
 {
+	WISPFUN_DEBUG("c194_f116");
 	CPacketASCIISpeechRequest(str, type, 3, g_ConfigManager.SpeechColor).Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::CastSpell(int index)
 {
+	WISPFUN_DEBUG("c194_f117");
 	if (index >= 0)
 	{
 		g_LastSpellIndex = index;
@@ -5302,6 +5418,7 @@ void COrion::CastSpell(int index)
 //----------------------------------------------------------------------------------
 void COrion::CastSpellFromBook(int index, uint serial)
 {
+	WISPFUN_DEBUG("c194_f118");
 	if (index >= 0)
 	{
 		g_LastSpellIndex = index;
@@ -5312,6 +5429,7 @@ void COrion::CastSpellFromBook(int index, uint serial)
 //----------------------------------------------------------------------------------
 void COrion::UseSkill(int index)
 {
+	WISPFUN_DEBUG("c194_f119");
 	if (index >= 0)
 	{
 		g_LastSkillIndex = index;
@@ -5322,16 +5440,19 @@ void COrion::UseSkill(int index)
 //----------------------------------------------------------------------------------
 void COrion::OpenDoor()
 {
+	WISPFUN_DEBUG("c194_f120");
 	CPacketOpenDoor().Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::EmoteAction(const char *action)
 {
+	WISPFUN_DEBUG("c194_f121");
 	CPacketEmoteAction(action).Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::AllNames()
 {
+	WISPFUN_DEBUG("c194_f122");
 	CGameObject *obj = g_World->m_Items;
 
 	while (obj != NULL)
@@ -5345,9 +5466,10 @@ void COrion::AllNames()
 //----------------------------------------------------------------------------------
 void COrion::RemoveRangedObjects()
 {
+	WISPFUN_DEBUG("c194_f123");
 	if (g_World != NULL)
 	{
-		int objectsRange = g_ConfigManager.UpdateRange;
+		int objectsRange = g_ConfigManager.UpdateRange + 1;
 
 		CGameObject *go = g_World->m_Items;
 
@@ -5391,6 +5513,7 @@ void COrion::RemoveRangedObjects()
 //----------------------------------------------------------------------------------
 void COrion::LogOut()
 {
+	WISPFUN_DEBUG("c194_f124");
 	LOG("COrion::LogOut->Start\n");
 	SaveLocalConfig();
 
@@ -5444,6 +5567,7 @@ void COrion::LogOut()
 //----------------------------------------------------------------------------------
 void COrion::ConsolePromptSend()
 {
+	WISPFUN_DEBUG("c194_f125");
 	int len = g_GameConsole.Length();
 	bool cancel = (len < 1);
 
@@ -5457,6 +5581,7 @@ void COrion::ConsolePromptSend()
 //----------------------------------------------------------------------------------
 void COrion::ConsolePromptCancel()
 {
+	WISPFUN_DEBUG("c194_f126");
 	if (g_ConsolePrompt == PT_ASCII)
 		CPacketASCIIPromptResponse("", 0, true).Send();
 	else if (g_ConsolePrompt == PT_UNICODE)
@@ -5467,6 +5592,7 @@ void COrion::ConsolePromptCancel()
 //----------------------------------------------------------------------------------
 __int64 COrion::GetLandFlags(const ushort &id)
 {
+	WISPFUN_DEBUG("c194_f127");
 	ushort divID = id / 32;
 
 	if (id < m_LandDataCount)
@@ -5477,6 +5603,7 @@ __int64 COrion::GetLandFlags(const ushort &id)
 //----------------------------------------------------------------------------------
 __int64 COrion::GetStaticFlags(const ushort &id)
 {
+	WISPFUN_DEBUG("c194_f128");
 	ushort divID = id / 32;
 
 	if (id < m_StaticDataCount)
@@ -5487,6 +5614,7 @@ __int64 COrion::GetStaticFlags(const ushort &id)
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize COrion::GetArtDimension(const ushort &id)
 {
+	WISPFUN_DEBUG("c194_f129");
 	WISP_GEOMETRY::CSize size;
 
 	if (id >= 0x4000) //run
@@ -5520,6 +5648,7 @@ WISP_GEOMETRY::CRect COrion::GetStaticArtRealPixelDimension(const ushort &id)
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize COrion::GetGumpDimension(const ushort &id)
 {
+	WISPFUN_DEBUG("c194_f131");
 	WISP_GEOMETRY::CSize size;
 	CGLTexture *th = ExecuteGump(id);
 
@@ -5534,11 +5663,13 @@ WISP_GEOMETRY::CSize COrion::GetGumpDimension(const ushort &id)
 //----------------------------------------------------------------------------------
 void COrion::OpenPaperdoll()
 {
+	WISPFUN_DEBUG("c194_f132");
 	PaperdollReq(g_PlayerSerial);
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenStatus(uint serial)
 {
+	WISPFUN_DEBUG("c194_f133");
 	int x = g_MouseManager.Position.X - 76;
 	int y = g_MouseManager.Position.Y - 30;
 
@@ -5549,6 +5680,7 @@ void COrion::OpenStatus(uint serial)
 //----------------------------------------------------------------------------------
 void COrion::DisplayStatusbarGump(const uint &serial, const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c194_f134");
 	StatusReq(serial);
 
 	CGump *gump = g_GumpManager.GetGump(serial, 0, GT_STATUSBAR);
@@ -5572,16 +5704,19 @@ void COrion::DisplayStatusbarGump(const uint &serial, const int &x, const int &y
 //----------------------------------------------------------------------------------
 void COrion::CloseStatusbarGump(const uint &serial)
 {
+	WISPFUN_DEBUG("c194_f135");
 	g_GumpManager.CloseGump(serial, 0, GT_STATUSBAR);
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenMinimap()
 {
+	WISPFUN_DEBUG("c194_f136");
 	g_GumpManager.AddGump(new CGumpMinimap(g_PlayerSerial, 0, 0, true));
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenWorldMap()
 {
+	WISPFUN_DEBUG("c194_f137");
 	int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 200;
 	int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 150;
 
@@ -5593,16 +5728,19 @@ void COrion::OpenWorldMap()
 //----------------------------------------------------------------------------------
 void COrion::OpenJournal()
 {
+	WISPFUN_DEBUG("c194_f138");
 	g_GumpManager.AddGump(new CGumpJournal(g_PlayerSerial, 0, 0, false));
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenSkills()
 {
+	WISPFUN_DEBUG("c194_f139");
 	g_GumpManager.AddGump(new CGumpSkills(g_PlayerSerial, 0, 0, false));
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenBackpack()
 {
+	WISPFUN_DEBUG("c194_f140");
 	if (g_Player != NULL)
 	{
 		CGameItem *pack = g_Player->FindLayer(OL_BACKPACK);
@@ -5614,6 +5752,7 @@ void COrion::OpenBackpack()
 //----------------------------------------------------------------------------------
 void COrion::OpenLogOut()
 {
+	WISPFUN_DEBUG("c194_f141");
 	int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 40;
 	int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 20;
 
@@ -5625,10 +5764,12 @@ void COrion::OpenLogOut()
 //----------------------------------------------------------------------------------
 void COrion::OpenChat()
 {
+	WISPFUN_DEBUG("c194_f142");
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenConfiguration()
 {
+	WISPFUN_DEBUG("c194_f143");
 	int x = (g_OrionWindow.Size.Width / 2) - 320;
 	int y = (g_OrionWindow.Size.Height / 2) - 240;
 
@@ -5639,10 +5780,12 @@ void COrion::OpenConfiguration()
 //----------------------------------------------------------------------------------
 void COrion::OpenMail()
 {
+	WISPFUN_DEBUG("c194_f144");
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenPartyManifest()
 {
+	WISPFUN_DEBUG("c194_f145");
 	int x = (g_OrionWindow.Size.Width / 2) - 272;
 	int y = (g_OrionWindow.Size.Height / 2) - 240;
 
@@ -5651,6 +5794,7 @@ void COrion::OpenPartyManifest()
 //----------------------------------------------------------------------------------
 void COrion::OpenProfile(uint serial)
 {
+	WISPFUN_DEBUG("c194_f146");
 	if (!serial)
 		serial = g_PlayerSerial;
 
@@ -5659,16 +5803,19 @@ void COrion::OpenProfile(uint serial)
 //----------------------------------------------------------------------------------
 void COrion::RequestGuildGump()
 {
+	WISPFUN_DEBUG("c194_f147");
 	CPacketGuildMenuRequest().Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::RequestQuestGump()
 {
+	WISPFUN_DEBUG("c194_f148");
 	CPacketQuestMenuRequest().Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::DisconnectGump()
 {
+	WISPFUN_DEBUG("c194_f149");
 	CServer *server = g_ServerList.GetSelectedServer();
 	string str = "Disconnected from " + (server != NULL ? server->Name : "server name...");
 	g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x21, str);
@@ -5686,6 +5833,7 @@ void COrion::DisconnectGump()
 //----------------------------------------------------------------------------------
 void COrion::OpenCombatBookGump()
 {
+	WISPFUN_DEBUG("c194_f150");
 	int gameWindowCenterX = (g_ConfigManager.GameWindowX - 4) + g_ConfigManager.GameWindowWidth / 2;
 	int gameWindowCenterY = (g_ConfigManager.GameWindowY - 4) + g_ConfigManager.GameWindowHeight / 2;
 
@@ -5703,6 +5851,7 @@ void COrion::OpenCombatBookGump()
 //----------------------------------------------------------------------------------
 void COrion::OpenRacialAbilitiesBookGump()
 {
+	WISPFUN_DEBUG("c194_f151");
 	int gameWindowCenterX = (g_ConfigManager.GameWindowX - 4) + g_ConfigManager.GameWindowWidth / 2;
 	int gameWindowCenterY = (g_ConfigManager.GameWindowY - 4) + g_ConfigManager.GameWindowHeight / 2;
 

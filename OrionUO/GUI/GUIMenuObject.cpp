@@ -26,6 +26,7 @@ CGUIMenuObject::~CGUIMenuObject()
 //----------------------------------------------------------------------------------
 bool CGUIMenuObject::Select()
 {
+	WISPFUN_DEBUG("c66_f1");
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 
@@ -36,6 +37,7 @@ bool CGUIMenuObject::Select()
 //----------------------------------------------------------------------------------
 void CGUIMenuObject::OnMouseEnter()
 {
+	WISPFUN_DEBUG("c66_f2");
 	if (g_SelectedObject.Gump() != NULL && g_SelectedObject.Gump()->GumpType == GT_MENU)
 	{
 		CGumpMenu *menu = (CGumpMenu*)g_SelectedObject.Gump();
@@ -50,6 +52,7 @@ void CGUIMenuObject::OnMouseEnter()
 //----------------------------------------------------------------------------------
 void CGUIMenuObject::OnMouseExit()
 {
+	WISPFUN_DEBUG("c66_f3");
 	if (g_LastSelectedObject.Gump() != NULL && g_LastSelectedObject.Gump()->GumpType == GT_MENU)
 	{
 		CGumpMenu *menu = (CGumpMenu*)g_LastSelectedObject.Gump();

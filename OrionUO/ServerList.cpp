@@ -42,6 +42,7 @@ CServerList::~CServerList()
 //----------------------------------------------------------------------------------
 void CServerList::Clear()
 {
+	WISPFUN_DEBUG("c206_f1");
 	for (deque<CServer*>::iterator i = m_Servers.begin(); i != m_Servers.end(); i++)
 		delete *i;
 
@@ -50,11 +51,13 @@ void CServerList::Clear()
 //----------------------------------------------------------------------------------
 void CServerList::AddServer(CServer *server)
 {
+	WISPFUN_DEBUG("c206_f2");
 	m_Servers.push_back(server);
 }
 //----------------------------------------------------------------------------------
 CServer *CServerList::GetServer(int index)
 {
+	WISPFUN_DEBUG("c206_f3");
 	for (deque<CServer*>::iterator i = m_Servers.begin(); i != m_Servers.end(); i++, index--)
 	{
 		if (!index)
@@ -66,6 +69,7 @@ CServer *CServerList::GetServer(int index)
 //----------------------------------------------------------------------------------
 CServer *CServerList::GetSelectedServer()
 {
+	WISPFUN_DEBUG("c206_f4");
 	for (deque<CServer*>::iterator i = m_Servers.begin(); i != m_Servers.end(); i++)
 	{
 		if ((*i)->Selected)
@@ -77,6 +81,7 @@ CServer *CServerList::GetSelectedServer()
 //----------------------------------------------------------------------------------
 CServer *CServerList::Select(int index)
 {
+	WISPFUN_DEBUG("c206_f5");
 	CServer *server = NULL;
 
 	for (deque<CServer*>::iterator i = m_Servers.begin(); i != m_Servers.end(); i++, index--)

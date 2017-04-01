@@ -27,6 +27,7 @@ CQuestArrow::~CQuestArrow()
 //----------------------------------------------------------------------------------
 void CQuestArrow::Draw()
 {
+	WISPFUN_DEBUG("c200_f1");
 	if (m_Enabled)
 	{
 		int dir = g_MouseManager.GetFacing(g_Player->X, g_Player->Y, m_X, m_Y, 0);

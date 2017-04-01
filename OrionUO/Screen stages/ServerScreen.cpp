@@ -32,6 +32,7 @@ CServerScreen::~CServerScreen()
 */
 void CServerScreen::Init()
 {
+	WISPFUN_DEBUG("c168_f1");
 	g_OrionWindow.SetTitle(string("Ultima Online - ") + g_MainScreen.m_Account->c_str());
 
 	g_ScreenEffectManager.UseSunrise();
@@ -51,6 +52,7 @@ void CServerScreen::Init()
 */
 void CServerScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c168_f2");
 	m_Gump.OnKeyDown(wParam, lParam);
 
 	if (wParam == VK_RETURN)
@@ -67,6 +69,7 @@ void CServerScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 */
 void CServerScreen::ProcessSmoothAction(uchar action)
 {
+	WISPFUN_DEBUG("c168_f3");
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
 

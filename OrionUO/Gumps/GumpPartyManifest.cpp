@@ -24,6 +24,7 @@ CGumpPartyManifest::~CGumpPartyManifest()
 //----------------------------------------------------------------------------------
 void CGumpPartyManifest::UpdateContent()
 {
+	WISPFUN_DEBUG("c106_f1");
 	Clear();
 
 	Add(new CGUIResizepic(0, 0x0A28, 0, 0, 450, 480));
@@ -105,6 +106,7 @@ void CGumpPartyManifest::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpPartyManifest::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c106_f2");
 	if (serial == ID_GPM_BUTTON_OKAY)
 	{
 		if (g_Party.Leader != 0 && g_Party.CanLoot != m_CanLoot)

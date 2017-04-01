@@ -19,6 +19,7 @@ CGumpConsoleType *g_GumpConsoleType = NULL;
 CGumpConsoleType::CGumpConsoleType(bool minimized, bool showFullText)
 : CGump(GT_CONSOLE_TYPE, 0, 0, 0), m_SelectedType(0), m_ShowFullText(showFullText)
 {
+	WISPFUN_DEBUG("c92_f1");
 	m_Minimized = minimized;
 	m_NoMove = true;
 	g_GumpConsoleType = this;
@@ -26,21 +27,25 @@ CGumpConsoleType::CGumpConsoleType(bool minimized, bool showFullText)
 //----------------------------------------------------------------------------------
 CGumpConsoleType::~CGumpConsoleType()
 {
+	WISPFUN_DEBUG("c92_f2");
 	g_GumpConsoleType = NULL;
 }
 //----------------------------------------------------------------------------------
 bool CGumpConsoleType::CanBeDisplayed()
 {
+	WISPFUN_DEBUG("c92_f3");
 	return g_ConfigManager.ShowDefaultConsoleEntryMode;
 }
 //----------------------------------------------------------------------------------
 void CGumpConsoleType::OnChanShowFullText(const bool &val)
 {
+	WISPFUN_DEBUG("c92_f4");
 	m_WantUpdateContent = true;
 }
 //----------------------------------------------------------------------------------
 bool CGumpConsoleType::ConsoleIsEmpty()
 {
+	WISPFUN_DEBUG("c92_f5");
 	bool result = (g_GameConsole.Length() == 0);
 
 	switch (m_SelectedType)
@@ -64,6 +69,7 @@ bool CGumpConsoleType::ConsoleIsEmpty()
 //----------------------------------------------------------------------------------
 void CGumpConsoleType::DeleteConsolePrefix()
 {
+	WISPFUN_DEBUG("c92_f6");
 	static const wstring space = L" ";
 
 	switch (m_SelectedType)
@@ -92,6 +98,7 @@ void CGumpConsoleType::DeleteConsolePrefix()
 //----------------------------------------------------------------------------------
 void CGumpConsoleType::SetConsolePrefix()
 {
+	WISPFUN_DEBUG("c92_f7");
 	switch (m_SelectedType)
 	{
 		case GCTT_YELL:
@@ -114,6 +121,7 @@ void CGumpConsoleType::SetConsolePrefix()
 //----------------------------------------------------------------------------------
 void CGumpConsoleType::InitToolTip()
 {
+	WISPFUN_DEBUG("c92_f7");
 	uint selected = g_SelectedObject.Serial;
 
 	switch (selected)
@@ -170,6 +178,7 @@ void CGumpConsoleType::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpConsoleType::UpdateContent()
 {
+	WISPFUN_DEBUG("c92_f9");
 	Clear();
 
 	CGUIText *obj = (CGUIText*)Add(new CGUIText(0, 14, 0));
@@ -243,6 +252,7 @@ void CGumpConsoleType::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpConsoleType::CalculateGumpState()
 {
+	WISPFUN_DEBUG("c92_f10");
 	CGump::CalculateGumpState();
 
 	g_GumpMovingOffset.X = 0;
@@ -254,6 +264,7 @@ void CGumpConsoleType::CalculateGumpState()
 //----------------------------------------------------------------------------------
 void CGumpConsoleType::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c92_f11");
 	if (serial == ID_GCT_MINIMIZE)
 	{
 		m_Minimized = !m_Minimized;
@@ -268,6 +279,7 @@ void CGumpConsoleType::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpConsoleType::GUMP_CHECKBOX_EVENT_C
 {
+	WISPFUN_DEBUG("c92_f12");
 	if (serial == ID_GCT_SHOW_FULL_TEXT && m_ShowFullText != state)
 	{
 		m_ShowFullText = state;
@@ -277,6 +289,7 @@ void CGumpConsoleType::GUMP_CHECKBOX_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpConsoleType::GUMP_TEXT_ENTRY_EVENT_C
 {
+	WISPFUN_DEBUG("c92_f13");
 	DeleteConsolePrefix();
 
 	m_SelectedType = serial - 1;

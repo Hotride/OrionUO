@@ -18,6 +18,7 @@ CGumpMap::CGumpMap(uint serial, ushort graphic, int startX, int startY, int endX
 m_EndX(endX), m_EndY(endY), m_Width(width), m_Height(height), m_PinTimer(0),
 m_PinOnCursor(NULL), m_FakeInsertionPin(NULL)
 {
+	WISPFUN_DEBUG("c99_f1");
 	m_Graphic = graphic;
 
 	Add(new CGUIResizepic(0, 0x1432, 0, 0, m_Width + 44, m_Height + 61)); //Map Gump
@@ -44,6 +45,7 @@ CGumpMap::~CGumpMap()
 //----------------------------------------------------------------------------------
 void CGumpMap::OnChangePlotState(const int &val)
 {
+	WISPFUN_DEBUG("c99_f2");
 	m_PlotCourse->Visible = (val == 0);
 	m_StopPlotting->Visible = (val == 1);
 	m_ClearCourse->Visible = (val == 1);
@@ -53,6 +55,7 @@ void CGumpMap::OnChangePlotState(const int &val)
 //----------------------------------------------------------------------------------
 int CGumpMap::LineUnderMouse(int &x1, int &y1, int x2, int y2)
 {
+	WISPFUN_DEBUG("c99_f3");
 	int tempX = x2 - x1;
 	int tempY = y2 - y1;
 
@@ -123,6 +126,7 @@ int CGumpMap::LineUnderMouse(int &x1, int &y1, int x2, int y2)
 //----------------------------------------------------------------------------------
 void CGumpMap::PrepareContent()
 {
+	WISPFUN_DEBUG("c99_f4");
 	if (m_DataBox != NULL)
 	{
 		int serial = 1;
@@ -163,6 +167,7 @@ void CGumpMap::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpMap::GenerateFrame(bool stop)
 {
+	WISPFUN_DEBUG("c99_f5");
 	CGump::GenerateFrame(false);
 
 	if (m_DataBox != NULL)
@@ -217,6 +222,7 @@ void CGumpMap::GenerateFrame(bool stop)
 //----------------------------------------------------------------------------------
 CRenderObject *CGumpMap::Select()
 {
+	WISPFUN_DEBUG("c99_f6");
 	CRenderObject *selected = CGump::Select();
 
 	if (m_DataBox != NULL)
@@ -261,6 +267,7 @@ CRenderObject *CGumpMap::Select()
 //----------------------------------------------------------------------------
 void CGumpMap::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c99_f7");
 	if (serial == ID_GM_PLOT_COURSE || serial == ID_GM_STOP_PLOTTING) //Plot Course /Stop Plotting
 	{
 		CPacketMapMessage(m_Serial, MM_EDIT, m_PlotState).Send();
@@ -280,6 +287,7 @@ void CGumpMap::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------
 void CGumpMap::OnLeftMouseButtonDown()
 {
+	WISPFUN_DEBUG("c99_f8");
 	CGump::OnLeftMouseButtonDown();
 
 	m_PinTimer = g_Ticks + 300;
@@ -287,6 +295,7 @@ void CGumpMap::OnLeftMouseButtonDown()
 //----------------------------------------------------------------------------
 void CGumpMap::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c99_f9");
 	CGump::OnLeftMouseButtonUp();
 
 	if (m_DataBox != NULL && g_PressedObject.LeftObject() != NULL)

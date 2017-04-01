@@ -23,6 +23,7 @@ CPressedObject::~CPressedObject()
 //----------------------------------------------------------------------------------
 void CPressedObject::Init(const CPressedObject &obj)
 {
+	WISPFUN_DEBUG("c198_f1");
 	m_LeftObject = obj.LeftObject();
 	m_LeftGump = obj.LeftGump();
 	m_LeftSerial = obj.LeftSerial;
@@ -38,6 +39,7 @@ void CPressedObject::Init(const CPressedObject &obj)
 //----------------------------------------------------------------------------------
 void CPressedObject::ClearAll()
 {
+	WISPFUN_DEBUG("c198_f2");
 	ClearLeft();
 	ClearRight();
 	ClearMid();
@@ -45,6 +47,7 @@ void CPressedObject::ClearAll()
 //----------------------------------------------------------------------------------
 void CPressedObject::Clear(CRenderObject *obj)
 {
+	WISPFUN_DEBUG("c198_f3");
 	if (obj == m_LeftObject)
 	{
 		m_LeftObject = NULL;
@@ -66,6 +69,7 @@ void CPressedObject::Clear(CRenderObject *obj)
 //----------------------------------------------------------------------------------
 void CPressedObject::ClearLeft()
 {
+	WISPFUN_DEBUG("c198_f4");
 	m_LeftObject = NULL;
 	m_LeftGump = NULL;
 	m_LeftSerial = 0;
@@ -73,6 +77,7 @@ void CPressedObject::ClearLeft()
 //----------------------------------------------------------------------------------
 void CPressedObject::InitLeft(CRenderObject *obj, CGump *gump)
 {
+	WISPFUN_DEBUG("c198_f5");
 	m_LeftObject = obj;
 	m_LeftGump = gump;
 	m_LeftSerial = (obj != NULL ? obj->Serial : 0);
@@ -80,6 +85,7 @@ void CPressedObject::InitLeft(CRenderObject *obj, CGump *gump)
 //----------------------------------------------------------------------------------
 void CPressedObject::InitLeft(const CSelectedObject &obj)
 {
+	WISPFUN_DEBUG("c198_f6");
 	m_LeftObject = obj.Object();
 	m_LeftGump = obj.Gump();
 	m_LeftSerial = (m_LeftObject != NULL ? obj.Serial : 0);
@@ -87,6 +93,7 @@ void CPressedObject::InitLeft(const CSelectedObject &obj)
 //----------------------------------------------------------------------------------
 void CPressedObject::ClearRight()
 {
+	WISPFUN_DEBUG("c198_f7");
 	m_RightObject = NULL;
 	m_RightGump = NULL;
 	m_RightSerial = 0;
@@ -94,6 +101,7 @@ void CPressedObject::ClearRight()
 //----------------------------------------------------------------------------------
 void CPressedObject::InitRight(CRenderObject *obj, CGump *gump)
 {
+	WISPFUN_DEBUG("c198_f8");
 	m_RightObject = obj;
 	m_RightGump = gump;
 	m_RightSerial = (obj != NULL ? obj->Serial : 0);
@@ -101,6 +109,7 @@ void CPressedObject::InitRight(CRenderObject *obj, CGump *gump)
 //----------------------------------------------------------------------------------
 void CPressedObject::InitRight(const CSelectedObject &obj)
 {
+	WISPFUN_DEBUG("c198_f9");
 	m_RightObject = obj.Object();
 	m_RightGump = obj.Gump();
 	m_RightSerial = (m_RightObject != NULL ? obj.Serial : 0);
@@ -108,6 +117,7 @@ void CPressedObject::InitRight(const CSelectedObject &obj)
 //----------------------------------------------------------------------------------
 void CPressedObject::ClearMid()
 {
+	WISPFUN_DEBUG("c198_f10");
 	m_MidObject = NULL;
 	m_MidGump = NULL;
 	m_MidSerial = 0;
@@ -115,6 +125,7 @@ void CPressedObject::ClearMid()
 //----------------------------------------------------------------------------------
 void CPressedObject::InitMid(CRenderObject *obj, CGump *gump)
 {
+	WISPFUN_DEBUG("c198_f11");
 	m_MidObject = obj;
 	m_MidGump = gump;
 	m_MidSerial = (obj != NULL ? obj->Serial : 0);
@@ -122,6 +133,7 @@ void CPressedObject::InitMid(CRenderObject *obj, CGump *gump)
 //----------------------------------------------------------------------------------
 void CPressedObject::InitMid(const CSelectedObject &obj)
 {
+	WISPFUN_DEBUG("c198_f12");
 	m_MidObject = obj.Object();
 	m_MidGump = obj.Gump();
 	m_MidSerial = (m_MidObject != NULL ? obj.Serial : 0);
@@ -129,6 +141,7 @@ void CPressedObject::InitMid(const CSelectedObject &obj)
 //----------------------------------------------------------------------------------
 bool CPressedObject::TestMoveOnDrag()
 {
+	WISPFUN_DEBUG("c198_f13");
 	return (m_LeftObject != NULL && m_LeftObject->IsGUI() && ((CBaseGUI*)m_LeftObject)->MoveOnDrag);
 }
 //----------------------------------------------------------------------------------

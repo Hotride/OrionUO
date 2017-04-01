@@ -16,6 +16,7 @@
 CGumpSkill::CGumpSkill(const uint &serial, const int &x, const int &y)
 : CGump(GT_SKILL, serial, x, y)
 {
+	WISPFUN_DEBUG("c124_f1");
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
 
 	CGUIResizepic *resizepic = (CGUIResizepic*)Add(new CGUIResizepic(0, 0x24EA, 0, 0, 140, 20));
@@ -36,12 +37,14 @@ CGumpSkill::~CGumpSkill()
 //----------------------------------------------------------------------------------
 void CGumpSkill::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c124_f2");
 	if (serial == ID_GS_LOCK_MOVING)
 		m_LockMoving = !m_LockMoving;
 }
 //----------------------------------------------------------------------------------
 void CGumpSkill::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c124_f3");
 	CGump::OnLeftMouseButtonUp();
 
 	if (g_SelectedObject.Serial != ID_GS_LOCK_MOVING && m_Serial < g_Skills.size() && g_Skills[m_Serial].Button)

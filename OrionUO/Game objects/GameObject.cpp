@@ -29,6 +29,7 @@ m_MapIndex(0), m_Count(0), m_Flags(0), m_Name(""), m_NPC(false), m_Clicked(false
 m_Effects(NULL), m_AnimIndex(0), m_YouSeeJournalPrefix(false),
 m_LastAnimationChangeTime(GetTickCount()), m_ClilocMessage(L"")
 {
+	WISPFUN_DEBUG("c20_f1");
 	memset(&m_FrameInfo, 0, sizeof(DRAW_FRAME_INFORMATION));
 
 #if UO_DEBUG_INFO!=0
@@ -38,6 +39,7 @@ m_LastAnimationChangeTime(GetTickCount()), m_ClilocMessage(L"")
 //----------------------------------------------------------------------------------
 CGameObject::~CGameObject()
 {
+	WISPFUN_DEBUG("c20_f2");
 	if (m_Effects != NULL)
 	{
 		delete m_Effects;
@@ -62,6 +64,7 @@ CGameObject::~CGameObject()
 //----------------------------------------------------------------------------------
 void CGameObject::OnChangedFlags(const uchar &val)
 {
+	WISPFUN_DEBUG("c20_f3");
 	bool poisoned = Poisoned();
 	bool yellowHits = YellowHits();
 
@@ -76,6 +79,7 @@ void CGameObject::OnChangedFlags(const uchar &val)
 //----------------------------------------------------------------------------------
 void CGameObject::OnChangeName(const string &newName)
 {
+	WISPFUN_DEBUG("c20_f4");
 	if (IsPlayer() && m_Name != newName)
 	{
 		if (g_GameState >= GS_GAME)
@@ -98,6 +102,7 @@ void CGameObject::OnChangeName(const string &newName)
 */
 void CGameObject::DrawObjectHandlesTexture(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c20_f5");
 	if (m_TextureObjectHalndes.Texture == NULL)
 	{
 		if (m_NPC || IsCorpse())
@@ -117,6 +122,7 @@ void CGameObject::DrawObjectHandlesTexture(const int &x, const int &y)
 */
 void CGameObject::SelectObjectHandlesTexture(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c20_f6");
 	if (m_TextureObjectHalndes.Texture != NULL)
 	{
 		int testX = g_MouseManager.Position.X - x;
@@ -141,6 +147,7 @@ void CGameObject::SelectObjectHandlesTexture(const int &x, const int &y)
 */
 void CGameObject::GenerateObjectHandlesTexture(wstring text)
 {
+	WISPFUN_DEBUG("c20_f7");
 	if (m_TextureObjectHalndes.Texture != NULL)
 	{
 		glDeleteTextures(1, &m_TextureObjectHalndes.Texture);
@@ -242,6 +249,7 @@ void CGameObject::GenerateObjectHandlesTexture(wstring text)
 */
 void CGameObject::AddText(CTextData *msg)
 {
+	WISPFUN_DEBUG("c20_f8");
 	m_TextControl->Add(msg);
 
 	string msgname = "You see: ";
@@ -266,6 +274,7 @@ void CGameObject::AddText(CTextData *msg)
 */
 ushort CGameObject::GetMountAnimation()
 {
+	WISPFUN_DEBUG("c20_f9");
 	return m_Graphic; // + UO->GetStaticPointer(m_Graphic)->Increment;
 }
 //----------------------------------------------------------------------------------
@@ -275,6 +284,7 @@ ushort CGameObject::GetMountAnimation()
 */
 void CGameObject::Clear()
 {
+	WISPFUN_DEBUG("c20_f10");
 	if (!Empty())
 	{
 		CGameObject *obj = (CGameObject*)m_Items;
@@ -294,6 +304,7 @@ void CGameObject::Clear()
 //----------------------------------------------------------------------------------
 void CGameObject::ClearNotOpenedItems()
 {
+	WISPFUN_DEBUG("c20_f11");
 	if (!Empty())
 	{
 		CGameObject *obj = (CGameObject*)m_Items;
@@ -312,6 +323,7 @@ void CGameObject::ClearNotOpenedItems()
 //----------------------------------------------------------------------------------
 bool CGameObject::Poisoned()
 {
+	WISPFUN_DEBUG("c20_f12");
 	if (g_PacketManager.ClientVersion >= CV_7000)
 		return (m_Flags & 0x20);
 	else
@@ -320,6 +332,7 @@ bool CGameObject::Poisoned()
 //----------------------------------------------------------------------------------
 bool CGameObject::Flying()
 {
+	WISPFUN_DEBUG("c20_f13");
 	if (g_PacketManager.ClientVersion >= CV_7000)
 		return (m_Flags & 0x04);
 	else
@@ -332,6 +345,7 @@ bool CGameObject::Flying()
 */
 int CGameObject::IsGold()
 {
+	WISPFUN_DEBUG("c20_f14");
 	switch (m_Graphic)
 	{
 		case 0x0EED:
@@ -354,6 +368,7 @@ int CGameObject::IsGold()
 */
 ushort CGameObject::GetDrawGraphic(bool &doubleDraw)
 {
+	WISPFUN_DEBUG("c20_f15");
 	int index = IsGold();
 	ushort result = m_Graphic;
 
@@ -384,6 +399,7 @@ ushort CGameObject::GetDrawGraphic(bool &doubleDraw)
 */
 void CGameObject::DrawEffects(int x, int y)
 {
+	WISPFUN_DEBUG("c20_f16");
 	if (m_NPC)
 	{
 		CGameCharacter *gc = GameCharacterPtr();
@@ -413,6 +429,7 @@ void CGameObject::DrawEffects(int x, int y)
 //----------------------------------------------------------------------------------
 void CGameObject::UpdateEffects()
 {
+	WISPFUN_DEBUG("c20_f17");
 	CGameEffect *effect = m_Effects;
 
 	while (effect != NULL)
@@ -432,6 +449,7 @@ void CGameObject::UpdateEffects()
 */
 void CGameObject::AddEffect(CGameEffect *effect)
 {
+	WISPFUN_DEBUG("c20_f18");
 	if (m_Effects == NULL)
 	{
 		m_Effects = effect;
@@ -454,6 +472,7 @@ void CGameObject::AddEffect(CGameEffect *effect)
 */
 void CGameObject::RemoveEffect(CGameEffect *effect)
 {
+	WISPFUN_DEBUG("c20_f19");
 	if (effect->m_Prev == NULL)
 	{
 		m_Effects = (CGameEffect*)effect->m_Next;
@@ -481,6 +500,7 @@ void CGameObject::RemoveEffect(CGameEffect *effect)
 */
 void CGameObject::AddObject(CGameObject *obj)
 {
+	WISPFUN_DEBUG("c20_f20");
 	g_World->RemoveFromContainer(obj);
 
 	if (m_Next == NULL)
@@ -513,6 +533,7 @@ void CGameObject::AddObject(CGameObject *obj)
 */
 void CGameObject::AddItem(CGameObject *obj)
 {
+	WISPFUN_DEBUG("c20_f21");
 	if (obj->Container != 0xFFFFFFFF)
 		return;
 
@@ -543,6 +564,7 @@ void CGameObject::AddItem(CGameObject *obj)
 */
 void CGameObject::Reject(CGameObject *obj)
 {
+	WISPFUN_DEBUG("c20_f22");
 	if (obj->Container != m_Serial)
 		return;
 
@@ -586,6 +608,7 @@ void CGameObject::Reject(CGameObject *obj)
 */
 CGameObject *CGameObject::GetTopObject()
 {
+	WISPFUN_DEBUG("c20_f23");
 	CGameObject *obj = this;
 
 	while (obj->Container != 0xFFFFFFFF)
@@ -596,6 +619,7 @@ CGameObject *CGameObject::GetTopObject()
 //----------------------------------------------------------------------------------
 CGameItem *CGameObject::FindLayer(const int &layer)
 {
+	WISPFUN_DEBUG("c20_f24");
 	QFOR(obj, m_Items, CGameItem*)
 	{
 		if (obj->Layer == layer)
@@ -607,6 +631,7 @@ CGameItem *CGameObject::FindLayer(const int &layer)
 //----------------------------------------------------------------------------------
 CGameItem *CGameObject::FindSecureTradeBox()
 {
+	WISPFUN_DEBUG("c20_f25");
 	QFOR(obj, m_Items, CGameItem*)
 	{
 		if (!obj->Layer && obj->Graphic == 0x1E5E)

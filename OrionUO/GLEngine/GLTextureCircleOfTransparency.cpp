@@ -20,11 +20,13 @@ CGLTextureCircleOfTransparency::CGLTextureCircleOfTransparency()
 //----------------------------------------------------------------------------------
 CGLTextureCircleOfTransparency::~CGLTextureCircleOfTransparency()
 {
+	WISPFUN_DEBUG("c37_f1");
 	Clear();
 }
 //---------------------------------------------------------------------------
 void CGLTextureCircleOfTransparency::CreatePixels(const int &radius, int &width, int &height, UINT_LIST &pixels)
 {
+	WISPFUN_DEBUG("c37_f2");
 	int fixRadius = radius + 1;
 	int mulRadius = fixRadius * 2;
 
@@ -54,6 +56,7 @@ void CGLTextureCircleOfTransparency::CreatePixels(const int &radius, int &width,
 //---------------------------------------------------------------------------
 bool CGLTextureCircleOfTransparency::Create(int radius)
 {
+	WISPFUN_DEBUG("c37_f3");
 	if (radius <= 0)
 		return false;
 	else if (radius > 200)
@@ -86,6 +89,7 @@ bool CGLTextureCircleOfTransparency::Create(int radius)
 //---------------------------------------------------------------------------
 void CGLTextureCircleOfTransparency::Draw(const int &x, const int &y, const bool &checktrans)
 {
+	WISPFUN_DEBUG("c37_f4");
 	if (Texture != 0)
 	{
 		m_X = x - m_Width / 2;
@@ -111,6 +115,7 @@ void CGLTextureCircleOfTransparency::Draw(const int &x, const int &y, const bool
 //---------------------------------------------------------------------------
 void CGLTextureCircleOfTransparency::Redraw()
 {
+	WISPFUN_DEBUG("c37_f5");
 	glClear(GL_STENCIL_BUFFER_BIT);
 
 	if (g_ConfigManager.UseCircleTrans && Texture != 0)

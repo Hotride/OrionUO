@@ -21,6 +21,7 @@ CLogger::~CLogger()
 //----------------------------------------------------------------------------------
 void CLogger::Close()
 {
+	WISPFUN_DEBUG("c6_f1");
 	if (m_File != NULL)
 	{
 		LOG("Log closed.\n");
@@ -31,6 +32,7 @@ void CLogger::Close()
 //----------------------------------------------------------------------------------
 void CLogger::Init(const string &filePath)
 {
+	WISPFUN_DEBUG("c6_f2");
 	if (m_File != NULL)
 		fclose(m_File);
 
@@ -44,6 +46,7 @@ void CLogger::Init(const string &filePath)
 //----------------------------------------------------------------------------------
 void CLogger::Init(const wstring &filePath)
 {
+	WISPFUN_DEBUG("c6_f3");
 	if (m_File != NULL)
 		fclose(m_File);
 
@@ -57,6 +60,7 @@ void CLogger::Init(const wstring &filePath)
 //----------------------------------------------------------------------------------
 void CLogger::Print(const char *format, ...)
 {
+	WISPFUN_DEBUG("c6_f4");
 	if (m_File == NULL)
 		return;
 
@@ -69,6 +73,7 @@ void CLogger::Print(const char *format, ...)
 //----------------------------------------------------------------------------------
 void CLogger::VPrint(const char *format, va_list ap)
 {
+	WISPFUN_DEBUG("c6_f5");
 	if (m_File == NULL)
 		return;
 
@@ -78,6 +83,7 @@ void CLogger::VPrint(const char *format, va_list ap)
 //----------------------------------------------------------------------------------
 void CLogger::Print(const wchar_t *format, ...)
 {
+	WISPFUN_DEBUG("c6_f6");
 	if (m_File == NULL)
 		return;
 
@@ -90,6 +96,7 @@ void CLogger::Print(const wchar_t *format, ...)
 //----------------------------------------------------------------------------------
 void CLogger::VPrint(const wchar_t *format, va_list ap)
 {
+	WISPFUN_DEBUG("c6_f7");
 	if (m_File == NULL)
 		return;
 
@@ -99,6 +106,7 @@ void CLogger::VPrint(const wchar_t *format, va_list ap)
 //----------------------------------------------------------------------------------
 void CLogger::Dump(uchar *buf, int size)
 {
+	WISPFUN_DEBUG("c6_f8");
 	if (m_File == NULL)
 		return;
 

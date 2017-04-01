@@ -26,6 +26,7 @@ CGUIButtonTileart::~CGUIButtonTileart()
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize CGUIButtonTileart::GetSize()
 {
+	WISPFUN_DEBUG("c45_f1");
 	WISP_GEOMETRY::CSize gumpSize = CGUIDrawObject::GetSize();
 	WISP_GEOMETRY::CSize tileSize;
 
@@ -60,6 +61,7 @@ WISP_GEOMETRY::CSize CGUIButtonTileart::GetSize()
 //----------------------------------------------------------------------------------
 void CGUIButtonTileart::PrepareTextures()
 {
+	WISPFUN_DEBUG("c45_f2");
 	CGUIButton::PrepareTextures();
 
 	g_Orion.ExecuteStaticArt(m_TileGraphic);
@@ -67,6 +69,7 @@ void CGUIButtonTileart::PrepareTextures()
 //----------------------------------------------------------------------------------
 void CGUIButtonTileart::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c45_f3");
 	CGUIDrawObject::Draw(checktrans);
 
 	CGLTexture *th = g_Orion.ExecuteStaticArt(m_TileGraphic);
@@ -81,6 +84,7 @@ void CGUIButtonTileart::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUIButtonTileart::Select()
 {
+	WISPFUN_DEBUG("c45_f4");
 	if (CGUIDrawObject::Select())
 		return true;
 

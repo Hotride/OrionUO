@@ -20,6 +20,7 @@ CMappedFile::~CMappedFile()
 //----------------------------------------------------------------------------------
 bool CMappedFile::Load()
 {
+	WISPFUN_DEBUG("c7_f1");
 	bool result = false;
 
 	m_Size = GetFileSize(m_File, NULL);
@@ -60,6 +61,7 @@ bool CMappedFile::Load()
 //----------------------------------------------------------------------------------
 bool CMappedFile::Load(const string &path)
 {
+	WISPFUN_DEBUG("c7_f2");
 	bool result = false;
 
 	if (PathFileExistsA(path.c_str()))
@@ -80,6 +82,7 @@ bool CMappedFile::Load(const string &path)
 //----------------------------------------------------------------------------------
 bool CMappedFile::Load(const wstring &path)
 {
+	WISPFUN_DEBUG("c7_f3");
 	bool result = false;
 
 	if (PathFileExistsW(path.c_str()))
@@ -100,6 +103,7 @@ bool CMappedFile::Load(const wstring &path)
 //----------------------------------------------------------------------------------
 void CMappedFile::Unload()
 {
+	WISPFUN_DEBUG("c7_f4");
 	if (m_Start != NULL)
 		UnmapViewOfFile(m_Start);
 

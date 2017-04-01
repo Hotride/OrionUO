@@ -17,6 +17,7 @@ namespace WISP_THREAD
 //----------------------------------------------------------------------------------
 unsigned __stdcall CThreadLoop(void *arg)
 {
+	WISPFUN_DEBUG("c_trdlp");
 	CThread *parent = (CThread*)arg;
 
 	while (parent->IsActive())
@@ -51,6 +52,7 @@ unsigned __stdcall CThreadLoop(void *arg)
 //----------------------------------------------------------------------------------
 unsigned __stdcall CThreadLoopSynchronizedDelay(void *arg)
 {
+	WISPFUN_DEBUG("c_trdlpsd");
 	CThread *parent = (CThread*)arg;
 	//timeBeginPeriod(1);
 
@@ -97,12 +99,14 @@ unsigned __stdcall CThreadLoopSynchronizedDelay(void *arg)
 CThread::CThread()
 : m_Handle(0), m_ID(0), m_Paused(false), m_Cycled(false), m_Delay(1), m_Active(false)
 {
+	WISPFUN_DEBUG("c12_f1");
 	//DebugMsg("CThread\n");
 	InitializeCriticalSection(&m_CriticalSection);
 }
 //----------------------------------------------------------------------------------
 CThread::~CThread()
 {
+	WISPFUN_DEBUG("c12_f2");
 	//DebugMsg("~CThread\n");
 	DeleteCriticalSection(&m_CriticalSection);
 
@@ -117,6 +121,7 @@ CThread::~CThread()
 //----------------------------------------------------------------------------------
 void CThread::Run(bool cycled, int delay, bool synchronizedDelay)
 {
+	WISPFUN_DEBUG("c12_f3");
 	if (!m_Active && m_Handle == 0)
 	{
 		m_Cycled = cycled;
@@ -132,6 +137,7 @@ void CThread::Run(bool cycled, int delay, bool synchronizedDelay)
 //----------------------------------------------------------------------------------
 bool CThread::IsActive()
 {
+	WISPFUN_DEBUG("c12_f4");
 	EnterCriticalSection(&m_CriticalSection);
 	bool result = m_Active;
 	LeaveCriticalSection(&m_CriticalSection);
@@ -141,6 +147,7 @@ bool CThread::IsActive()
 //----------------------------------------------------------------------------------
 void CThread::Stop()
 {
+	WISPFUN_DEBUG("c12_f5");
 	EnterCriticalSection(&m_CriticalSection);
 	m_Active = false;
 	LeaveCriticalSection(&m_CriticalSection);
@@ -148,6 +155,7 @@ void CThread::Stop()
 //----------------------------------------------------------------------------------
 bool CThread::Cycled()
 {
+	WISPFUN_DEBUG("c12_f6");
 	EnterCriticalSection(&m_CriticalSection);
 	bool result = m_Cycled;
 	LeaveCriticalSection(&m_CriticalSection);
@@ -157,6 +165,7 @@ bool CThread::Cycled()
 //----------------------------------------------------------------------------------
 void CThread::Pause()
 {
+	WISPFUN_DEBUG("c12_f7");
 	EnterCriticalSection(&m_CriticalSection);
 	m_Paused = true;
 	LeaveCriticalSection(&m_CriticalSection);
@@ -164,6 +173,7 @@ void CThread::Pause()
 //----------------------------------------------------------------------------------
 void CThread::Resume()
 {
+	WISPFUN_DEBUG("c12_f8");
 	EnterCriticalSection(&m_CriticalSection);
 	m_Paused = false;
 	LeaveCriticalSection(&m_CriticalSection);
@@ -171,6 +181,7 @@ void CThread::Resume()
 //----------------------------------------------------------------------------------
 bool CThread::Paused()
 {
+	WISPFUN_DEBUG("c12_f9");
 	EnterCriticalSection(&m_CriticalSection);
 	bool result = m_Paused;
 	LeaveCriticalSection(&m_CriticalSection);
@@ -180,6 +191,7 @@ bool CThread::Paused()
 //----------------------------------------------------------------------------------
 int CThread::Delay()
 {
+	WISPFUN_DEBUG("c12_f10");
 	EnterCriticalSection(&m_CriticalSection);
 	int result = m_Delay;
 	LeaveCriticalSection(&m_CriticalSection);
@@ -189,6 +201,7 @@ int CThread::Delay()
 //----------------------------------------------------------------------------------
 void CThread::ChangeDelay(int newDelay)
 {
+	WISPFUN_DEBUG("c12_f11");
 	EnterCriticalSection(&m_CriticalSection);
 	m_Delay = newDelay;
 	LeaveCriticalSection(&m_CriticalSection);

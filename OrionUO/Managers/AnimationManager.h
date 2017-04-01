@@ -123,7 +123,6 @@ private:
 	ushort m_CharacterLayerAnimID[25];
 
 	bool TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction);
-
 public:
 	CAnimationManager();
 	~CAnimationManager();
@@ -159,15 +158,6 @@ public:
 	@return 
 	*/
 	void Load(puint verdata);
-
-	/*!
-	Получение ссылки на указанный фрэйм
-	@param [__in] obj Игровой объект
-	@param [__inout] frameIndex Индекс кадра
-	@param [__in_opt] id Индекс картинки
-	@return Ссылка на кадр анимации
-	*/
-	CTextureAnimationFrame *GetFrame(class CGameObject *obj, uchar frameIndex, ushort graphic = 0);
 
 	/*!
 	Очистка неиспользуемых текстур

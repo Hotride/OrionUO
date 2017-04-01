@@ -21,6 +21,7 @@ CGUITilepicScaled::~CGUITilepicScaled()
 //----------------------------------------------------------------------------------
 void CGUITilepicScaled::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c82_f1");
 	CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
 
 	if (th != NULL)

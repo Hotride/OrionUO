@@ -18,6 +18,7 @@ CBinaryFileWritter::~CBinaryFileWritter()
 //----------------------------------------------------------------------------------
 bool CBinaryFileWritter::Open(const string &path)
 {
+	WISPFUN_DEBUG("c2_f1");
 	bool result = false;
 
 	//if (PathFileExistsA(path.c_str()))
@@ -32,6 +33,7 @@ bool CBinaryFileWritter::Open(const string &path)
 //----------------------------------------------------------------------------------
 bool CBinaryFileWritter::Open(const wstring &path)
 {
+	WISPFUN_DEBUG("c2_f2");
 	bool result = false;
 
 	//if (PathFileExistsW(path.c_str()))
@@ -45,6 +47,7 @@ bool CBinaryFileWritter::Open(const wstring &path)
 //----------------------------------------------------------------------------------
 void CBinaryFileWritter::Close()
 {
+	WISPFUN_DEBUG("c2_f3");
 	WriteBuffer();
 
 	if (m_File != NULL)
@@ -56,6 +59,7 @@ void CBinaryFileWritter::Close()
 //----------------------------------------------------------------------------------
 void CBinaryFileWritter::WriteBuffer()
 {
+	WISPFUN_DEBUG("c2_f4");
 	if (m_File != NULL && m_Data.size() > 0)
 	{
 		fwrite(&m_Data[0], m_Data.size(), 1, m_File);

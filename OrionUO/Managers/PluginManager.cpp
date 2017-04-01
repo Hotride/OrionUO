@@ -18,6 +18,7 @@ CPluginManager g_PluginManager;
 //----------------------------------------------------------------------------------
 bool __cdecl PluginRecvFunction(puchar buf, const int &size)
 {
+	WISPFUN_DEBUG("c_plgrcvfnc");
 	SendMessage(g_OrionWindow.Handle, UOMSG_RECV, (WPARAM)buf, size);
 	//PacketManager.PluginReceiveHandler(buf, size);
 
@@ -26,6 +27,7 @@ bool __cdecl PluginRecvFunction(puchar buf, const int &size)
 //----------------------------------------------------------------------------------
 bool __cdecl PluginSendFunction(puchar buf, const int &size)
 {
+	WISPFUN_DEBUG("c_plgsndfnc");
 	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)buf, size);
 	//ConnectionManager.Send(buf, size);
 
@@ -37,6 +39,7 @@ bool __cdecl PluginSendFunction(puchar buf, const int &size)
 CPlugin::CPlugin(uint flags)
 : CBaseQueueItem(), m_Flags(flags)
 {
+	WISPFUN_DEBUG("c151_f1");
 	m_PPS = new PLUGIN_INTERFACE();
 	memset(m_PPS, 0, sizeof(PLUGIN_INTERFACE));
 
@@ -47,6 +50,7 @@ CPlugin::CPlugin(uint flags)
 //----------------------------------------------------------------------------------
 CPlugin::~CPlugin()
 {
+	WISPFUN_DEBUG("c151_f2");
 	if (m_PPS != NULL)
 	{
 		delete m_PPS;
@@ -63,6 +67,7 @@ CPluginManager::CPluginManager()
 //----------------------------------------------------------------------------------
 LRESULT CPluginManager::WindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	WISPFUN_DEBUG("c152_f1");
 	LRESULT result = 0;
 
 	QFOR(plugin, m_Items, CPlugin*)
@@ -82,6 +87,7 @@ LRESULT CPluginManager::WindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lp
 //----------------------------------------------------------------------------------
 bool CPluginManager::PacketRecv(puchar buf, const int &size)
 {
+	WISPFUN_DEBUG("c152_f2");
 	bool result = true;
 
 	QFOR(plugin, m_Items, CPlugin*)
@@ -100,6 +106,7 @@ bool CPluginManager::PacketRecv(puchar buf, const int &size)
 //----------------------------------------------------------------------------------
 bool CPluginManager::PacketSend(puchar buf, const int &size)
 {
+	WISPFUN_DEBUG("c152_f3");
 	bool result = true;
 
 	QFOR(plugin, m_Items, CPlugin*)
@@ -118,6 +125,7 @@ bool CPluginManager::PacketSend(puchar buf, const int &size)
 //----------------------------------------------------------------------------------
 void CPluginManager::Disconnect()
 {
+	WISPFUN_DEBUG("c152_f4");
 	QFOR(plugin, m_Items, CPlugin*)
 	{
 		if (plugin->m_PPS->OnDisconnect != NULL)
@@ -127,6 +135,7 @@ void CPluginManager::Disconnect()
 //----------------------------------------------------------------------------------
 void CPluginManager::WorldDraw()
 {
+	WISPFUN_DEBUG("c152_f5");
 	QFOR(plugin, m_Items, CPlugin*)
 	{
 		if (plugin->CanEnterWorldRender() && plugin->m_PPS->OnWorldDraw != NULL)
@@ -136,6 +145,7 @@ void CPluginManager::WorldDraw()
 //----------------------------------------------------------------------------------
 void CPluginManager::SceneDraw()
 {
+	WISPFUN_DEBUG("c152_f6");
 	QFOR(plugin, m_Items, CPlugin*)
 	{
 		if (plugin->CanEnterSceneRender() && plugin->m_PPS->OnSceneDraw != NULL)
@@ -145,6 +155,7 @@ void CPluginManager::SceneDraw()
 //----------------------------------------------------------------------------------
 void CPluginManager::WorldMapDraw()
 {
+	WISPFUN_DEBUG("c152_f7");
 	QFOR(plugin, m_Items, CPlugin*)
 	{
 		if (plugin->CanEnterWorldMapRender() && plugin->m_PPS->OnWorldMapDraw != NULL)

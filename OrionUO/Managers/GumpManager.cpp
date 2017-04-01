@@ -55,6 +55,7 @@ CGumpManager g_GumpManager;
 */
 int CGumpManager::GetNonpartyStatusbarsCount()
 {
+	WISPFUN_DEBUG("c144_f1");
 	int count = 0;
 
 	QFOR(gump, m_Items, CGump*)
@@ -73,6 +74,7 @@ int CGumpManager::GetNonpartyStatusbarsCount()
 */
 void CGumpManager::AddGump(CGump *obj)
 {
+	WISPFUN_DEBUG("c144_f2");
 	if (m_Items == NULL)
 	{
 		m_Items = obj;
@@ -249,6 +251,7 @@ void CGumpManager::AddGump(CGump *obj)
 */
 CGump *CGumpManager::GetTextEntryOwner()
 {
+	WISPFUN_DEBUG("c144_f3");
 	QFOR(gump, m_Items, CGump*)
 	{
 		if (gump->EntryPointerHere())
@@ -265,6 +268,7 @@ CGump *CGumpManager::GetTextEntryOwner()
 */
 CGump *CGumpManager::GumpExists(uint gumpID)
 {
+	WISPFUN_DEBUG("c144_f4");
 	QFOR(gump, m_Items, CGump*)
 	{
 		if (gumpID == (uint)gump)
@@ -283,6 +287,7 @@ CGump *CGumpManager::GumpExists(uint gumpID)
 */
 CGump *CGumpManager::UpdateContent(const uint &serial, const uint &id, const GUMP_TYPE &type)
 {
+	WISPFUN_DEBUG("c144_f5");
 	CGump *gump = GetGump(serial, id, type);
 
 	if (gump != NULL)
@@ -300,6 +305,7 @@ CGump *CGumpManager::UpdateContent(const uint &serial, const uint &id, const GUM
 */
 CGump *CGumpManager::UpdateGump(const uint &serial, const uint &id, const GUMP_TYPE &type)
 {
+	WISPFUN_DEBUG("c144_f6");
 	CGump *gump = GetGump(serial, id, type);
 
 	if (gump != NULL)
@@ -317,6 +323,7 @@ CGump *CGumpManager::UpdateGump(const uint &serial, const uint &id, const GUMP_T
 */
 CGump *CGumpManager::GetGump(const uint &serial, const uint &id, const GUMP_TYPE &type)
 {
+	WISPFUN_DEBUG("c144_f7");
 	CGump *gump = (CGump*)m_Items;
 
 	while (gump != NULL)
@@ -356,6 +363,7 @@ CGump *CGumpManager::GetGump(const uint &serial, const uint &id, const GUMP_TYPE
 */
 void CGumpManager::CloseGump(uint serial, uint id, GUMP_TYPE type)
 {
+	WISPFUN_DEBUG("c144_f8");
 	for (CGump *gump = (CGump*)m_Items; gump != NULL; )
 	{
 		CGump *next = (CGump*)gump->m_Next;
@@ -398,6 +406,7 @@ void CGumpManager::CloseGump(uint serial, uint id, GUMP_TYPE type)
 */
 void CGumpManager::RemoveGump(CGump *obj)
 {
+	WISPFUN_DEBUG("c144_f8");
 	Unlink(obj);
 
 	if (g_World != NULL)
@@ -422,6 +431,7 @@ void CGumpManager::RemoveGump(CGump *obj)
 */
 void CGumpManager::OnDelete()
 {
+	WISPFUN_DEBUG("c144_f10");
 	CGump *gump = (CGump*)m_Items;
 
 	while (gump != NULL)
@@ -441,6 +451,7 @@ void CGumpManager::OnDelete()
 */
 void CGumpManager::RemoveRangedGumps()
 {
+	WISPFUN_DEBUG("c144_f11");
 	if (g_World != NULL)
 	{
 		CGump *gump = (CGump*)m_Items;
@@ -480,6 +491,7 @@ void CGumpManager::RemoveRangedGumps()
 //----------------------------------------------------------------------------------
 void CGumpManager::PrepareContent()
 {
+	WISPFUN_DEBUG("c144_f12");
 	for (CGump* gump = (CGump*)m_Items; gump != NULL;)
 	{
 		CGump* next = (CGump*)gump->m_Next;
@@ -496,6 +508,7 @@ void CGumpManager::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpManager::RemoveMarked()
 {
+	WISPFUN_DEBUG("c144_f13");
 	for (CGump* gump = (CGump*)m_Items; gump != NULL;)
 	{
 		CGump* next = (CGump*)gump->m_Next;
@@ -513,12 +526,19 @@ void CGumpManager::RemoveMarked()
 */
 void CGumpManager::PrepareTextures()
 {
+	WISPFUN_DEBUG("c144_f14");
 	QFOR(gump, m_Items, CGump*)
+	{
+		g_CurrentCheckGump = gump;
 		gump->PrepareTextures();
+	}
+
+	g_CurrentCheckGump = NULL;
 }
 //----------------------------------------------------------------------------------
 void CGumpManager::Draw(const bool &blocked)
 {
+	WISPFUN_DEBUG("c144_f15");
 	CGump *gump = (CGump*)m_Items;
 	CGump *menuBarGump = NULL;
 
@@ -544,6 +564,7 @@ void CGumpManager::Draw(const bool &blocked)
 //----------------------------------------------------------------------------------
 void CGumpManager::Select(const bool &blocked)
 {
+	WISPFUN_DEBUG("c144_f16");
 	CGump *gump = (CGump*)m_Items;
 	CGump *menuBarGump = NULL;
 
@@ -569,6 +590,7 @@ void CGumpManager::Select(const bool &blocked)
 //----------------------------------------------------------------------------------
 void CGumpManager::InitToolTip()
 {
+	WISPFUN_DEBUG("c144_f17");
 	CGump *gump = g_SelectedObject.Gump();
 
 	if (gump != NULL)
@@ -591,6 +613,7 @@ void CGumpManager::InitToolTip()
 */
 void CGumpManager::RedrawAll()
 {
+	WISPFUN_DEBUG("c144_f18");
 	QFOR(gump, m_Items, CGump*)
 		gump->WantRedraw = true;
 }
@@ -602,6 +625,7 @@ void CGumpManager::RedrawAll()
 */
 void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
 {
+	WISPFUN_DEBUG("c144_f19");
 	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
 		return;
 
@@ -632,6 +656,7 @@ void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
 */
 bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 {
+	WISPFUN_DEBUG("c144_f20");
 	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
 		return false;
 
@@ -767,6 +792,7 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 */
 bool CGumpManager::OnLeftMouseButtonDoubleClick(const bool &blocked)
 {
+	WISPFUN_DEBUG("c144_f21");
 	bool result = false;
 
 	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
@@ -796,6 +822,7 @@ bool CGumpManager::OnLeftMouseButtonDoubleClick(const bool &blocked)
 */
 void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
 {
+	WISPFUN_DEBUG("c144_f22");
 	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
 		return;
 
@@ -826,6 +853,7 @@ void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
 */
 void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 {
+	WISPFUN_DEBUG("c144_f23");
 	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
 		return;
 
@@ -985,6 +1013,7 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 */
 void CGumpManager::OnMidMouseButtonScroll(const bool &up, const bool &blocked)
 {
+	WISPFUN_DEBUG("c144_f24");
 	QFOR(gump, m_Items, CGump*)
 	{
 		if (g_SelectedObject.Gump() == gump && !gump->NoProcess)
@@ -998,6 +1027,7 @@ void CGumpManager::OnMidMouseButtonScroll(const bool &up, const bool &blocked)
 //----------------------------------------------------------------------------------
 void CGumpManager::OnDragging(const bool &blocked)
 {
+	WISPFUN_DEBUG("c144_f25");
 	QFOR(gump, m_Items, CGump*)
 	{
 		if (g_PressedObject.LeftGump() == gump && !gump->NoProcess)
@@ -1018,6 +1048,7 @@ void CGumpManager::OnDragging(const bool &blocked)
 */
 bool CGumpManager::OnCharPress(const WPARAM &wParam, const LPARAM &lParam, const bool &blocked)
 {
+	WISPFUN_DEBUG("c144_f26");
 	CGump *gump = GetTextEntryOwner();
 	bool result = false;
 
@@ -1054,6 +1085,7 @@ bool CGumpManager::OnCharPress(const WPARAM &wParam, const LPARAM &lParam, const
 */
 bool CGumpManager::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, const bool &blocked)
 {
+	WISPFUN_DEBUG("c144_f27");
 	bool result = false;
 
 	if (g_EntryPointer != NULL && g_EntryPointer != &g_GameConsole)
@@ -1108,6 +1140,7 @@ bool CGumpManager::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, const b
 */
 void CGumpManager::Load(const string &path)
 {
+	WISPFUN_DEBUG("c144_f28");
 	WISP_FILE::CMappedFile file;
 
 	bool paperdollRequested = false;
@@ -1451,6 +1484,7 @@ void CGumpManager::Load(const string &path)
 //----------------------------------------------------------------------------------
 void CGumpManager::SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writer, CGump *gump, const int &size)
 {
+	WISPFUN_DEBUG("c144_f29");
 	writer.WriteInt8(size);
 	writer.WriteInt8(gump->GumpType);
 	writer.WriteUInt16LE(gump->X);
@@ -1473,6 +1507,7 @@ void CGumpManager::SaveDefaultGumpProperties(WISP_FILE::CBinaryFileWritter &writ
 */
 void CGumpManager::Save(const string &path)
 {
+	WISPFUN_DEBUG("c144_f30");
 	WISP_FILE::CBinaryFileWritter writter;
 
 	writter.Open(path);

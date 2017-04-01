@@ -20,6 +20,7 @@ m_MaxStam(0), m_Notoriety(NT_NONE), m_CanChangeName(false)
 #define GET_PARTY_BODY(type, name) \
 type CPartyObject::Get##name() \
 { \
+	WISPFUN_DEBUG("c197_fn"); \
 	type result = (type)0; \
 	if (m_Serial) \
 	{ \
@@ -41,6 +42,7 @@ GET_PARTY_BODY(bool, CanChangeName)
 //----------------------------------------------------------------------------------
 string CPartyObject::GetName(const int &index)
 {
+	WISPFUN_DEBUG("c197_f1");
 	if (m_Serial)
 	{
 		CGameCharacter *gc = g_World->FindWorldCharacter(m_Serial);

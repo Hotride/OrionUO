@@ -57,6 +57,7 @@ CMacroManager::~CMacroManager()
 */
 ushort CMacroManager::ConvertStringToKeyCode(const STRING_LIST &strings)
 {
+	WISPFUN_DEBUG("c145_f1");
 	string str = strings[0];
 
 	for (int i = 1; i < (int)strings.size() - 3; i++)
@@ -156,6 +157,7 @@ ushort CMacroManager::ConvertStringToKeyCode(const STRING_LIST &strings)
 */
 bool CMacroManager::Convert(const string &path)
 {
+	WISPFUN_DEBUG("c145_f2");
 	WISP_FILE::CTextFileParser file(path, " ", "", "");
 
 	//Позиции доп. кнопок в списке, индыксация с конца, т.е. strings.size() - position
@@ -265,6 +267,7 @@ bool CMacroManager::Convert(const string &path)
 */
 bool CMacroManager::Load(const string &path, const string &originalPath)
 {
+	WISPFUN_DEBUG("c145_f3");
 	bool result = false;
 	Clear();
 
@@ -296,6 +299,7 @@ bool CMacroManager::Load(const string &path, const string &originalPath)
 */
 void CMacroManager::Save(const string &path)
 {
+	WISPFUN_DEBUG("c145_f4");
 	WISP_FILE::CBinaryFileWritter writter;
 	writter.Open(path);
 
@@ -325,6 +329,7 @@ void CMacroManager::Save(const string &path)
 */
 CMacro *CMacroManager::FindMacro(const ushort &key, const bool &alt, const bool &ctrl, const bool &shift)
 {
+	WISPFUN_DEBUG("c145_f5");
 	CMacro *obj = (CMacro*)m_Items;
 
 	while (obj != NULL)
@@ -344,6 +349,7 @@ CMacro *CMacroManager::FindMacro(const ushort &key, const bool &alt, const bool 
 */
 void CMacroManager::LoadFromOptions()
 {
+	WISPFUN_DEBUG("c145_f6");
 	Clear();
 	g_MacroPointer = NULL;
 
@@ -357,6 +363,7 @@ void CMacroManager::LoadFromOptions()
 */
 void CMacroManager::Execute()
 {
+	WISPFUN_DEBUG("c145_f7");
 	while (g_MacroPointer != NULL)
 	{
 		switch (Process())
@@ -385,6 +392,7 @@ void CMacroManager::Execute()
 */
 void CMacroManager::ProcessSubMenu()
 {
+	WISPFUN_DEBUG("c145_f8");
 	switch (g_MacroPointer->Code)
 	{
 		case MC_OPEN:
@@ -720,6 +728,7 @@ void CMacroManager::ProcessSubMenu()
 */
 MACRO_RETURN_CODE CMacroManager::Process()
 {
+	WISPFUN_DEBUG("c145_f9");
 	MACRO_RETURN_CODE result = MRC_PARSE_NEXT;
 	static DWORD itemInHand[2] = { 0, 0 };
 

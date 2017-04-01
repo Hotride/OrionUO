@@ -30,6 +30,7 @@ m_MultiDistanceBonus(0)
 //----------------------------------------------------------------------------------
 CGameItem::~CGameItem()
 {
+	WISPFUN_DEBUG("c19_f1");
 	if (IsCorpse() && m_FieldColor)
 		return;
 
@@ -58,6 +59,7 @@ CGameItem::~CGameItem()
 //----------------------------------------------------------------------------------
 void CGameItem::ClearMultiItems()
 {
+	WISPFUN_DEBUG("c19_f2");
 	if (m_MultiBody && m_Items != NULL)
 	{
 		CMulti *multi = (CMulti*)m_Items;
@@ -75,6 +77,7 @@ void CGameItem::ClearMultiItems()
 */
 void CGameItem::Paste(CObjectOnCursor *obj)
 {
+	WISPFUN_DEBUG("c19_f3");
 	if (obj == NULL)
 		return;
 
@@ -113,6 +116,7 @@ void CGameItem::Paste(CObjectOnCursor *obj)
 */
 void CGameItem::OnGraphicChange(int direction)
 {
+	WISPFUN_DEBUG("c19_f4");
 	if (!m_MultiBody)
 	{
 		if (m_Graphic >= g_Orion.StaticDataCount)
@@ -212,6 +216,7 @@ void CGameItem::OnGraphicChange(int direction)
 //----------------------------------------------------------------------------------
 void CGameItem::CalculateFieldColor()
 {
+	WISPFUN_DEBUG("c19_f5");
 	m_FieldColor = 0;
 
 	if (!g_ConfigManager.ChangeFieldsGraphic)
@@ -236,6 +241,7 @@ void CGameItem::CalculateFieldColor()
 //----------------------------------------------------------------------------------
 ushort CGameItem::GetFirstMultiGraphic()
 {
+	WISPFUN_DEBUG("c19_f6");
 	ushort graphic = 0;
 
 	if (m_MultiBody)
@@ -251,6 +257,7 @@ ushort CGameItem::GetFirstMultiGraphic()
 //----------------------------------------------------------------------------------
 void CGameItem::Draw(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c19_f7");
 	if (m_Container == 0xFFFFFFFF)
 	{
 		if (m_MultiBody)
@@ -369,6 +376,7 @@ void CGameItem::Draw(const int &x, const int &y)
 */
 void CGameItem::Select(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c19_f8");
 	if (m_Container == 0xFFFFFFFF)
 	{
 		if (m_MultiBody)
@@ -415,6 +423,7 @@ void CGameItem::Select(const int &x, const int &y)
 */
 ushort CGameItem::GetMountAnimation()
 {
+	WISPFUN_DEBUG("c19_f9");
 	ushort graphic = m_Graphic;
 
 	if (m_Layer == OL_MOUNT)
@@ -676,6 +685,7 @@ ushort CGameItem::GetMountAnimation()
 */
 void CGameItem::LoadMulti(const bool &dropAlpha)
 {
+	WISPFUN_DEBUG("c19_f10");
 	ClearMultiItems();
 
 	m_WantUpdateMulti = false;
@@ -763,6 +773,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 */
 void CGameItem::AddMultiObject(CMultiObject *obj)
 {
+	WISPFUN_DEBUG("c19_f11");
 	if (m_Items == NULL)
 	{
 		m_Items = new CMulti(obj->X, obj->Y);
@@ -830,6 +841,7 @@ void CGameItem::AddMultiObject(CMultiObject *obj)
 */
 CMulti *CGameItem::GetMultiAtXY(const short &x, const short &y)
 {
+	WISPFUN_DEBUG("c19_f12");
 	QFOR(multi, m_Items, CMulti*)
 	{
 		if (multi->X == x && multi->Y == y)
@@ -847,6 +859,7 @@ CMulti *CGameItem::GetMultiAtXY(const short &x, const short &y)
 */
 CGameItem *CGameItem::FindItem(const ushort &graphic, const ushort &color)
 {
+	WISPFUN_DEBUG("c19_f13");
 	CGameItem *item = NULL;
 
 	if (color == 0xFFFF) //Поиск по минимальному цвету

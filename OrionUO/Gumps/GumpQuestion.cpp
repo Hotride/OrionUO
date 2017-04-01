@@ -15,6 +15,7 @@
 CGumpQuestion::CGumpQuestion(uint serial, short x, short y, uchar variant)
 : CGump(GT_QUESTION, serial, x, y), m_Variant(variant)
 {
+	WISPFUN_DEBUG("c109_f1");
 	m_Blocked = true;
 	g_GrayMenuCount++;
 
@@ -37,6 +38,7 @@ CGumpQuestion::~CGumpQuestion()
 //----------------------------------------------------------------------------
 void CGumpQuestion::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c109_f2");
 	if (serial == ID_GQ_BUTTON_CANCEL) //Button cancel
 		m_RemoveMark = true;
 	else if (serial == ID_GQ_BUTTON_OKAY) //Button okay

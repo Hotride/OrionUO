@@ -14,6 +14,7 @@
 CSkillGroupObject::CSkillGroupObject()
 : m_Count(0), m_Maximized(false), m_Next(NULL), m_Prev(NULL)
 {
+	WISPFUN_DEBUG("c207_f1");
 	memset(m_Items, 0xFF, sizeof(m_Items));
 	m_Name = "No Name";
 }
@@ -24,6 +25,7 @@ CSkillGroupObject::~CSkillGroupObject()
 //----------------------------------------------------------------------------------
 uchar CSkillGroupObject::GetItem(int index)
 {
+	WISPFUN_DEBUG("c207_f2");
 	if (index < 0 || index >= m_Count)
 		return 0xFF;
 
@@ -32,6 +34,7 @@ uchar CSkillGroupObject::GetItem(int index)
 //----------------------------------------------------------------------------------
 void CSkillGroupObject::Add(uchar index)
 {
+	WISPFUN_DEBUG("c207_f3");
 	if (Contains(index))
 		return;
 
@@ -41,6 +44,7 @@ void CSkillGroupObject::Add(uchar index)
 //----------------------------------------------------------------------------------
 void CSkillGroupObject::AddSorted(uchar index)
 {
+	WISPFUN_DEBUG("c207_f4");
 	if (Contains(index))
 		return;
 
@@ -52,6 +56,7 @@ void CSkillGroupObject::AddSorted(uchar index)
 //----------------------------------------------------------------------------------
 void CSkillGroupObject::Remove(uchar index)
 {
+	WISPFUN_DEBUG("c207_f5");
 	bool removed = false;
 
 	IFOR(i, 0, m_Count)
@@ -80,6 +85,7 @@ void CSkillGroupObject::Remove(uchar index)
 //----------------------------------------------------------------------------------
 bool CSkillGroupObject::Contains(uchar index)
 {
+	WISPFUN_DEBUG("c207_f6");
 	IFOR(i, 0, m_Count)
 	{
 		if (m_Items[i] == index)
@@ -91,6 +97,7 @@ bool CSkillGroupObject::Contains(uchar index)
 //----------------------------------------------------------------------------------
 void CSkillGroupObject::Sort()
 {
+	WISPFUN_DEBUG("c207_f7");
 	BYTE table[60] = {0};
 	int Ptr = 0;
 
@@ -113,6 +120,7 @@ void CSkillGroupObject::Sort()
 //----------------------------------------------------------------------------------
 void CSkillGroupObject::TransferTo(CSkillGroupObject *group)
 {
+	WISPFUN_DEBUG("c207_f8");
 	IFOR(i, 0, m_Count)
 		group->Add(m_Items[i]);
 

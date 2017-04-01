@@ -26,6 +26,7 @@ CGUIBuff::~CGUIBuff()
 //----------------------------------------------------------------------------------
 void CGUIBuff::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c42_f1");
 	CGLTexture *th = g_Orion.ExecuteGump(GetDrawGraphic());
 
 	if (th != NULL)

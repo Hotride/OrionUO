@@ -28,6 +28,7 @@ CTargetGump::~CTargetGump()
 //----------------------------------------------------------------------------------
 void CTargetGump::Draw()
 {
+	WISPFUN_DEBUG("c210_f1");
 	if (m_Color != 0)
 	{
 		g_Orion.DrawGump(0x1068, m_Color, m_X, m_Y);
@@ -51,6 +52,7 @@ CNewTargetSystem::~CNewTargetSystem()
 //----------------------------------------------------------------------------------
 void CNewTargetSystem::Draw()
 {
+	WISPFUN_DEBUG("c211_f1");
 	if (!g_ConfigManager.DisableNewTargetSystem && m_ColorGump != 0)
 	{
 		CIndexObject &top = g_Orion.m_GumpDataIndex[m_GumpTop];

@@ -22,6 +22,7 @@ CImageBounds::~CImageBounds()
 //----------------------------------------------------------------------------------
 bool CImageBounds::InRect(const CImageBounds &ib)
 {
+	WISPFUN_DEBUG("c188_f1");
 	bool inRect = false;
 
 	if (m_X < ib.X)

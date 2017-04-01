@@ -35,6 +35,7 @@ m_ProxyPassword("")
 //----------------------------------------------------------------------------------
 CConnectionManager::~CConnectionManager()
 {
+	WISPFUN_DEBUG("c139_f1");
 	//Дисконнектим всё подключенное
 	if (m_LoginSocket.Connected)
 		m_LoginSocket.Disconnect();
@@ -45,36 +46,42 @@ CConnectionManager::~CConnectionManager()
 //----------------------------------------------------------------------------------
 void CConnectionManager::OnChangeUseProxy(const bool &val)
 {
+	WISPFUN_DEBUG("c139_f2");
 	m_LoginSocket.UseProxy = val;
 	m_GameSocket.UseProxy = val;
 }
 //----------------------------------------------------------------------------------
 void CConnectionManager::OnChangeProxyAddress(const string &val)
 {
+	WISPFUN_DEBUG("c139_f3");
 	m_LoginSocket.ProxyAddress = val;
 	m_GameSocket.ProxyAddress = val;
 }
 //----------------------------------------------------------------------------------
 void CConnectionManager::OnChangeProxyPort(const int &val)
 {
+	WISPFUN_DEBUG("c139_f4");
 	m_LoginSocket.ProxyPort = val;
 	m_GameSocket.ProxyPort = val;
 }
 //----------------------------------------------------------------------------------
 void CConnectionManager::OnChangeProxySocks5(const bool &val)
 {
+	WISPFUN_DEBUG("c139_f5");
 	m_LoginSocket.ProxySocks5 = val;
 	m_GameSocket.ProxySocks5 = val;
 }
 //----------------------------------------------------------------------------------
 void CConnectionManager::OnChangeProxyAccount(const string &val)
 {
+	WISPFUN_DEBUG("c139_f6");
 	m_LoginSocket.ProxyAccount = val;
 	m_GameSocket.ProxyAccount = val;
 }
 //----------------------------------------------------------------------------------
 void CConnectionManager::OnChangeProxyPassword(const string &val)
 {
+	WISPFUN_DEBUG("c139_f7");
 	m_LoginSocket.ProxyPassword = val;
 	m_GameSocket.ProxyPassword = val;
 }
@@ -85,6 +92,7 @@ void CConnectionManager::OnChangeProxyPassword(const string &val)
 */
 void CConnectionManager::Init()
 {
+	WISPFUN_DEBUG("c139_f8");
 	//Сокет уже открыт, ошибка
 	if (m_LoginSocket.Connected)
 		return;
@@ -120,6 +128,7 @@ void CConnectionManager::Init()
 */
 void CConnectionManager::Init(puchar gameSeed)
 {
+	WISPFUN_DEBUG("c139_f9");
 	//Гейм сокет уже открыт, ошибка
 	if (m_GameSocket.Connected)
 		return;
@@ -131,6 +140,7 @@ void CConnectionManager::Init(puchar gameSeed)
 //---------------------------------------------------------------------------
 void CConnectionManager::SendIP(CSocket &socket, puchar seed)
 {
+	WISPFUN_DEBUG("c139_f10");
 	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_IP_SEND, (WPARAM)seed, 4);
 	socket.Send(seed, 4);
 }
@@ -144,6 +154,7 @@ void CConnectionManager::SendIP(CSocket &socket, puchar seed)
 */
 bool CConnectionManager::Connect(const string &address, int port, puchar gameSeed)
 {
+	WISPFUN_DEBUG("c139_f11");
 	if (m_IsLoginSocket) //Логин сокет
 	{
 		if (m_LoginSocket.Connected)
@@ -232,6 +243,7 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 */
 void CConnectionManager::Disconnect()
 {
+	WISPFUN_DEBUG("c139_f12");
 	//!Дисконнект всего, что подключено
 	if (m_LoginSocket.Connected)
 		m_LoginSocket.Disconnect();
@@ -246,6 +258,7 @@ void CConnectionManager::Disconnect()
 */
 void CConnectionManager::Recv()
 {
+	WISPFUN_DEBUG("c139_f13");
 	if (m_IsLoginSocket) //Логин сокет
 	{
 		if (!m_LoginSocket.Connected)
@@ -300,6 +313,7 @@ void CConnectionManager::Recv()
 */
 int CConnectionManager::Send(puchar buf, int size)
 {
+	WISPFUN_DEBUG("c139_f14");
 	if (g_TheAbyss)
 	{
 		switch (buf[0])
@@ -362,6 +376,7 @@ int CConnectionManager::Send(puchar buf, int size)
 //---------------------------------------------------------------------------
 int CConnectionManager::Send(const UCHAR_LIST &data)
 {
+	WISPFUN_DEBUG("c139_f15");
 	return Send((puchar)&data[0], data.size());
 }
 //---------------------------------------------------------------------------

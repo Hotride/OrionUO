@@ -26,6 +26,7 @@ CGumpGeneric::~CGumpGeneric()
 //----------------------------------------------------------------------------------
 void CGumpGeneric::AddText(const int &index, const wstring &text, CBaseGUI *start, const bool &backbroundCanBeColored)
 {
+	WISPFUN_DEBUG("c96_f1");
 	if (start == NULL)
 		start = (CBaseGUI*)m_Items;
 
@@ -83,6 +84,7 @@ void CGumpGeneric::AddText(const int &index, const wstring &text, CBaseGUI *star
 //----------------------------------------------------------------------------------
 void CGumpGeneric::SendGumpResponse(int index)
 {
+	WISPFUN_DEBUG("c96_f2");
 	//Ответ на гамп
 	CPacketGumpResponse(this, index).Send();
 
@@ -92,22 +94,26 @@ void CGumpGeneric::SendGumpResponse(int index)
 //----------------------------------------------------------------------------------
 void CGumpGeneric::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c96_f3");
 	SendGumpResponse(serial);
 }
 //----------------------------------------------------------------------------------
 void CGumpGeneric::GUMP_DIRECT_HTML_LINK_EVENT_C
 {
+	WISPFUN_DEBUG("c96_f4");
 	g_FontManager.GoToWebLink(link);
 }
 //----------------------------------------------------------------------------------
 void CGumpGeneric::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c96_f5");
 	g_EntryPointer->Insert(wParam);
 	m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpGeneric::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c96_f6");
 	if (wParam == VK_RETURN)
 	{
 		if (g_ConfigManager.ConsoleNeedEnter)

@@ -18,6 +18,7 @@
 CGumpAbility::CGumpAbility(const uint &serial, const int &x, const int &y)
 : CGump(GT_ABILITY, serial, x, y)
 {
+	WISPFUN_DEBUG("c85_f1");
 	int index = (m_Serial != 0 ? 1 : 0);
 	ushort &ability = g_AbilityList[g_Ability[index]];
 
@@ -36,6 +37,7 @@ CGumpAbility::~CGumpAbility()
 //----------------------------------------------------------------------------------
 void CGumpAbility::InitToolTip()
 {
+	WISPFUN_DEBUG("c85_f2");
 	int index = (m_Serial != 0 ? 1 : 0);
 
 	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_AbilityList[g_Ability[index]] & 0x00FF)), 80);
@@ -43,6 +45,7 @@ void CGumpAbility::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpAbility::UpdateContent()
 {
+	WISPFUN_DEBUG("c85_f3");
 	if (m_Colorizer != NULL && m_Body != NULL)
 	{
 		int index = (m_Serial != 0 ? 1 : 0);
@@ -56,12 +59,14 @@ void CGumpAbility::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpAbility::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c85_f4");
 	if (serial == ID_GS_LOCK_MOVING)
 		m_LockMoving = !m_LockMoving;
 }
 //----------------------------------------------------------------------------------
 void CGumpAbility::OnAbilityUse(const int &index)
 {
+	WISPFUN_DEBUG("c85_f5");
 	ushort &ability = g_AbilityList[g_Ability[index]];
 
 	CPacketUseCombatAbility(ability & 0xFF).Send();
@@ -83,6 +88,7 @@ void CGumpAbility::OnAbilityUse(const int &index)
 //----------------------------------------------------------------------------------
 bool CGumpAbility::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c85_f6");
 	OnAbilityUse(m_Serial != 0 ? 1 : 0);
 
 	return true;

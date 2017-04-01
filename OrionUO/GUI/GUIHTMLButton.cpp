@@ -22,11 +22,13 @@ CGUIHTMLButton::~CGUIHTMLButton()
 //----------------------------------------------------------------------------------
 void CGUIHTMLButton::SetShaderMode()
 {
+	WISPFUN_DEBUG("c59_f1");
 	glUniform1iARB(g_ShaderDrawMode, 0);
 }
 //----------------------------------------------------------------------------------
 void CGUIHTMLButton::Scroll(const bool &up, const uint &delay)
 {
+	WISPFUN_DEBUG("c59_f2");
 	if (m_HTMLGump != NULL)
 		m_HTMLGump->Scroll(up, delay);
 }

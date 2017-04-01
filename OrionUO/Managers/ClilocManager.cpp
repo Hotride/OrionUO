@@ -17,6 +17,7 @@ CClilocManager g_ClilocManager;
 CCliloc::CCliloc(const string &lang)
 : CBaseQueueItem()
 {
+	WISPFUN_DEBUG("c135_f1");
 	m_Loaded = false;
 	m_Language = lang;
 
@@ -31,6 +32,7 @@ CCliloc::CCliloc(const string &lang)
 //----------------------------------------------------------------------------------
 CCliloc::~CCliloc()
 {
+	WISPFUN_DEBUG("c135_f2");
 	m_File.Unload();
 
 	m_ClilocSystem.clear();
@@ -45,6 +47,7 @@ CCliloc::~CCliloc()
 */
 string CCliloc::Load(uint &id)
 {
+	WISPFUN_DEBUG("c135_f3");
 	string result = "";
 
 	if (m_Loaded)
@@ -91,6 +94,7 @@ string CCliloc::Load(uint &id)
 */
 string CCliloc::GetA(const uint &id, string result)
 {
+	WISPFUN_DEBUG("c135_f4");
 	if (id >= 3000000)
 	{
 		CLILOC_MAP::iterator i = m_ClilocSupport.find(id);
@@ -140,6 +144,7 @@ string CCliloc::GetA(const uint &id, string result)
 */
 wstring CCliloc::GetW(const uint &id, string result)
 {
+	WISPFUN_DEBUG("c135_f5");
 	return DecodeUTF8(GetA(id, result));
 }
 //----------------------------------------------------------------------------------
@@ -163,6 +168,7 @@ CClilocManager::~CClilocManager()
 */
 CCliloc *CClilocManager::Cliloc(const string &lang)
 {
+	WISPFUN_DEBUG("c136_f1");
 	string language = ToLowerA(lang);
 
 	if (language == "enu")
@@ -205,6 +211,7 @@ CCliloc *CClilocManager::Cliloc(const string &lang)
 //----------------------------------------------------------------------------------
 wstring CClilocManager::ParseArgumentsToClilocString(const uint &cliloc, wstring args)
 {
+	WISPFUN_DEBUG("c136_f2");
 	while (args.length() && args[0] == L'\t')
 		args.erase(args.begin());
 

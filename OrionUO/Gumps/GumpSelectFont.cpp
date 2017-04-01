@@ -22,6 +22,7 @@ CGumpSelectFont::~CGumpSelectFont()
 //----------------------------------------------------------------------------------
 void CGumpSelectFont::UpdateContent()
 {
+	WISPFUN_DEBUG("c122_f1");
 	Clear();
 
 	int unicodeFontsCount = g_FileManager.UnicodeFontsCount;
@@ -74,6 +75,7 @@ void CGumpSelectFont::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpSelectFont::GUMP_RADIO_EVENT_C
 {
+	WISPFUN_DEBUG("c122_f2");
 	if (!state)
 		return;
 

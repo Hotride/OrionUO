@@ -26,6 +26,7 @@ CGUIButton::~CGUIButton()
 //----------------------------------------------------------------------------------
 void CGUIButton::PrepareTextures()
 {
+	WISPFUN_DEBUG("c44_f1");
 	g_Orion.ExecuteGump(m_Graphic);
 	g_Orion.ExecuteGump(m_GraphicSelected);
 	g_Orion.ExecuteGump(m_GraphicPressed);
@@ -33,6 +34,7 @@ void CGUIButton::PrepareTextures()
 //----------------------------------------------------------------------------------
 ushort CGUIButton::GetDrawGraphic()
 {
+	WISPFUN_DEBUG("c44_f2");
 	ushort graphic = m_Graphic;
 
 	if (g_GumpPressedElement == this)
@@ -45,12 +47,14 @@ ushort CGUIButton::GetDrawGraphic()
 //----------------------------------------------------------------------------------
 void CGUIButton::OnMouseEnter()
 {
+	WISPFUN_DEBUG("c44_f3");
 	if (g_SelectedObject.Gump() != NULL)
 		g_SelectedObject.Gump()->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUIButton::OnMouseExit()
 {
+	WISPFUN_DEBUG("c44_f4");
 	if (g_LastSelectedObject.Gump() != NULL)
 		g_LastSelectedObject.Gump()->WantRedraw = true;
 }

@@ -36,6 +36,7 @@ CGumpSecureTrading::~CGumpSecureTrading()
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::CalculateGumpState()
 {
+	WISPFUN_DEBUG("c120_f1");
 	CGump::CalculateGumpState();
 
 	if (g_GumpPressed && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsText())
@@ -52,6 +53,7 @@ void CGumpSecureTrading::CalculateGumpState()
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::InitToolTip()
 {
+	WISPFUN_DEBUG("c120_f2");
 	if (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z)
 	{
 		uint id = g_SelectedObject.Serial;
@@ -65,6 +67,7 @@ void CGumpSecureTrading::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::PrepareContent()
 {
+	WISPFUN_DEBUG("c120_f3");
 	if (m_MyCheck != NULL)
 	{
 		if (m_StateMy)
@@ -109,6 +112,7 @@ void CGumpSecureTrading::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::UpdateContent()
 {
+	WISPFUN_DEBUG("c120_f4");
 	CGameObject *selobj = g_World->FindWorldObject(m_Serial);
 
 	if (selobj == NULL)
@@ -213,6 +217,7 @@ void CGumpSecureTrading::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::Draw()
 {
+	WISPFUN_DEBUG("c120_f5");
 	CGameObject *selobj = g_World->FindWorldObject(m_Serial);
 
 	if (selobj == NULL)
@@ -236,6 +241,7 @@ void CGumpSecureTrading::Draw()
 //----------------------------------------------------------------------------------
 CRenderObject *CGumpSecureTrading::Select()
 {
+	WISPFUN_DEBUG("c120_f6");
 	CGameObject *selobj = g_World->FindWorldObject(m_Serial);
 
 	if (selobj == NULL)
@@ -255,6 +261,7 @@ CRenderObject *CGumpSecureTrading::Select()
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c120_f7");
 	if (serial == ID_GST_CHECKBOX) //Изменение состояния чекбокса
 	{
 		m_StateMy = !m_StateMy;
@@ -280,6 +287,7 @@ void CGumpSecureTrading::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c120_f8");
 	CGump::OnLeftMouseButtonUp();
 
 	if (g_ObjectInHand != NULL)
@@ -328,6 +336,7 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 //----------------------------------------------------------------------------------
 void CGumpSecureTrading::SendTradingResponse(int code)
 {
+	WISPFUN_DEBUG("c120_f9");
 	//Ответ на трэйд окно
 	CPacketTradeResponse(this, code).Send();
 

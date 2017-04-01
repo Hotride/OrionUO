@@ -24,6 +24,7 @@ CGUITilepic::~CGUITilepic()
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize CGUITilepic::GetSize()
 {
+	WISPFUN_DEBUG("c80_f1");
 	WISP_GEOMETRY::CSize size;
 
 	CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
@@ -39,11 +40,13 @@ WISP_GEOMETRY::CSize CGUITilepic::GetSize()
 //----------------------------------------------------------------------------------
 void CGUITilepic::PrepareTextures()
 {
+	WISPFUN_DEBUG("c80_f2");
 	g_Orion.ExecuteStaticArt(m_Graphic);
 }
 //----------------------------------------------------------------------------------
 void CGUITilepic::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c80_f3");
 	CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
 
 	if (th != NULL)
@@ -56,6 +59,7 @@ void CGUITilepic::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUITilepic::Select()
 {
+	WISPFUN_DEBUG("c80_f4");
 	//if (CGUIDrawObject::Select())
 	//	return true;
 

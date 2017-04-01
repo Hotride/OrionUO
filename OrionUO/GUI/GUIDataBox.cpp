@@ -20,12 +20,14 @@ CGUIDataBox::~CGUIDataBox()
 //----------------------------------------------------------------------------------
 void CGUIDataBox::PrepareTextures()
 {
+	WISPFUN_DEBUG("c51_f1");
 	QFOR(item, m_Items, CBaseGUI*)
 		item->PrepareTextures();
 }
 //----------------------------------------------------------------------------------
 bool CGUIDataBox::EntryPointerHere()
 {
+	WISPFUN_DEBUG("c51_f2");
 	QFOR(item, m_Items, CBaseGUI*)
 	{
 		if (item->Visible && item->EntryPointerHere())

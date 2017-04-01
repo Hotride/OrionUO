@@ -15,6 +15,7 @@ CTextData::CTextData()
 : CRenderTextObject(), m_Unicode(false), m_Type(TT_CLIENT), m_Font(0), m_Timer(0),
 m_DrawX(0), m_DrawY(0), m_Alpha(0xFF)
 {
+	WISPFUN_DEBUG("c174_f1");
 	m_Text = "";
 	m_UnicodeText = L"";
 }
@@ -23,6 +24,7 @@ CTextData::CTextData(CTextData *obj)
 : m_Unicode(obj->Unicode), m_Type(obj->Type), m_Font(obj->Font), m_Timer(obj->Timer),
 m_DrawX(obj->DrawX), m_DrawY(obj->DrawY), m_Alpha(obj->Alpha)
 {
+	WISPFUN_DEBUG("c174_f2");
 	m_Color = obj->Color;
 	m_Text = obj->GetText();
 	m_UnicodeText = obj->GetUnicodeText();
@@ -30,11 +32,13 @@ m_DrawX(obj->DrawX), m_DrawY(obj->DrawY), m_Alpha(obj->Alpha)
 //---------------------------------------------------------------------------
 CTextData::~CTextData()
 {
+	WISPFUN_DEBUG("c174_f3");
 	m_Texture.Clear();
 }
 //---------------------------------------------------------------------------
 bool CTextData::CanBeDrawedInJournalGump()
 {
+	WISPFUN_DEBUG("c174_f4");
 	bool result = true;
 
 	switch (m_Type)
@@ -57,6 +61,7 @@ bool CTextData::CanBeDrawedInJournalGump()
 //---------------------------------------------------------------------------
 void CTextData::GenerateTexture(const int &maxWidth, const ushort &flags, const  TEXT_ALIGN_TYPE &align, const uchar &cell, int font)
 {
+	WISPFUN_DEBUG("c174_f5");
 	if (m_Unicode)
 	{
 		if (font == -1)

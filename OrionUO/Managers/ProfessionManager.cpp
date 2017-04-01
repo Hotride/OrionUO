@@ -59,6 +59,7 @@ CProfessionManager::~CProfessionManager()
 */
 int CProfessionManager::GetKeyCode(const string &key)
 {
+	WISPFUN_DEBUG("c153_f1");
 	string str = ToLowerA(key);
 	int result = 0;
 
@@ -78,6 +79,7 @@ int CProfessionManager::GetKeyCode(const string &key)
 */
 bool CProfessionManager::ParseFilePart(WISP_FILE::CTextFileParser &file)
 {
+	WISPFUN_DEBUG("c153_f2");
 	PROFESSION_TYPE type = PT_NO_PROF;
 	std::vector<string> childrens;
 	string name = "";
@@ -280,6 +282,7 @@ bool CProfessionManager::ParseFilePart(WISP_FILE::CTextFileParser &file)
 */
 bool CProfessionManager::AddChild(CBaseProfession *parent, CBaseProfession *child)
 {
+	WISPFUN_DEBUG("c153_f3");
 	bool result = false;
 
 	if (parent->Type == PT_CATEGORY)
@@ -318,6 +321,7 @@ bool CProfessionManager::AddChild(CBaseProfession *parent, CBaseProfession *chil
 */
 bool CProfessionManager::Load()
 {
+	WISPFUN_DEBUG("c153_f4");
 	bool result = false;
 
 	CProfessionCategory *head = new CProfessionCategory();
@@ -406,6 +410,7 @@ bool CProfessionManager::Load()
 */
 void CProfessionManager::LoadProfessionDescription()
 {
+	WISPFUN_DEBUG("c153_f5");
 	WISP_FILE::CMappedFile file;
 
 	if (file.Load(g_App.FilePath("professn.enu")))
@@ -471,6 +476,7 @@ void CProfessionManager::LoadProfessionDescription()
 */
 CBaseProfession *CProfessionManager::GetParent(CBaseProfession *obj, CBaseProfession *check)
 {
+	WISPFUN_DEBUG("c153_f6");
 	if (check == NULL)
 		check = (CBaseProfession*)m_Items;
 

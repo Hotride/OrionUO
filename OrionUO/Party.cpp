@@ -27,6 +27,7 @@ CParty::~CParty()
 //----------------------------------------------------------------------------------
 bool CParty::Contains(const uint &serial)
 {
+	WISPFUN_DEBUG("c196_f1");
 	bool result = false;
 
 	if (m_Leader != 0)
@@ -47,12 +48,14 @@ bool CParty::Contains(const uint &serial)
 //----------------------------------------------------------------------------------
 void CParty::Clear()
 {
+	WISPFUN_DEBUG("c196_f2");
 	IFOR(i, 0, 10)
 		Member[i].Serial = 0;;
 }
 //----------------------------------------------------------------------------------
 void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 {
+	WISPFUN_DEBUG("c196_f3");
 	uchar code = reader.ReadUInt8();
 
 	switch (code)

@@ -16,6 +16,7 @@ CMacroObject *g_MacroPointer = NULL;
 CMacroObject::CMacroObject(const MACRO_CODE &code, const MACRO_SUB_CODE &subCode)
 : CBaseQueueItem(), m_Code(code), m_SubCode(subCode)
 {
+	WISPFUN_DEBUG("c190_f1");
 	switch (code)
 	{
 		//With sub menu
@@ -94,6 +95,7 @@ CMacro::~CMacro()
 //----------------------------------------------------------------------------------
 CMacro *CMacro::CreateBlankMacro()
 {
+	WISPFUN_DEBUG("c191_f1");
 	CMacro *obj = new CMacro(0, false, false, false);
 
 	obj->Add(new CMacroObject(MC_NONE, MSC_NONE));
@@ -103,6 +105,7 @@ CMacro *CMacro::CreateBlankMacro()
 //----------------------------------------------------------------------------------
 CMacroObject *CMacro::CreateMacro(const MACRO_CODE &code)
 {
+	WISPFUN_DEBUG("c191_f2");
 	CMacroObject *obj = NULL;
 	
 	switch (code)
@@ -133,6 +136,7 @@ CMacroObject *CMacro::CreateMacro(const MACRO_CODE &code)
 //----------------------------------------------------------------------------------
 void CMacro::ChangeObject(CMacroObject *source, CMacroObject *obj)
 {
+	WISPFUN_DEBUG("c191_f3");
 	obj->m_Prev = source->m_Prev;
 	obj->m_Next = source->m_Next;
 
@@ -151,6 +155,7 @@ void CMacro::ChangeObject(CMacroObject *source, CMacroObject *obj)
 //----------------------------------------------------------------------------------
 CMacro *CMacro::Load(WISP_FILE::CMappedFile &file)
 {
+	WISPFUN_DEBUG("c191_f4");
 	puchar next = file.Ptr;
 	short size = file.ReadInt16LE();
 	next += size;
@@ -227,6 +232,7 @@ CMacro *CMacro::Load(WISP_FILE::CMappedFile &file)
 //----------------------------------------------------------------------------------
 void CMacro::Save(WISP_FILE::CBinaryFileWritter &writter)
 {
+	WISPFUN_DEBUG("c191_f5");
 	short size = 10;
 	short count = 0;
 
@@ -288,6 +294,7 @@ void CMacro::Save(WISP_FILE::CBinaryFileWritter &writter)
 //----------------------------------------------------------------------------------
 CMacro *CMacro::GetCopy()
 {
+	WISPFUN_DEBUG("c191_f6");
 	CMacro *macro = new CMacro(m_Key, m_Alt, m_Ctrl, m_Shift);
 	MACRO_CODE oldCode = MC_NONE;
 
@@ -309,6 +316,7 @@ CMacro *CMacro::GetCopy()
 //----------------------------------------------------------------------------------
 void CMacro::GetBoundByCode(const MACRO_CODE &code, int &count, int &offset)
 {
+	WISPFUN_DEBUG("c191_f7");
 	switch (code)
 	{
 		case MC_WALK:

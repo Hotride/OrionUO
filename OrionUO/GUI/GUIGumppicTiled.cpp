@@ -25,6 +25,7 @@ CGUIGumppicTiled::~CGUIGumppicTiled()
 //----------------------------------------------------------------------------------
 void CGUIGumppicTiled::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c57_f1");
 	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
 
 	if (th != NULL)
@@ -37,6 +38,7 @@ void CGUIGumppicTiled::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUIGumppicTiled::Select()
 {
+	WISPFUN_DEBUG("c57_f2");
 	bool select = false;
 
 	int x = g_MouseManager.Position.X - m_X;

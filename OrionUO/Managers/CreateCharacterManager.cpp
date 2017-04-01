@@ -178,6 +178,7 @@ CCreateCharacterManager::~CCreateCharacterManager()
 //----------------------------------------------------------------------------------
 void CCreateCharacterManager::OnSexChanged(const bool &female)
 {
+	WISPFUN_DEBUG("c140_f1");
 	m_Female = female;
 
 	if (m_HairStyle >= GetCurrentHairCount())
@@ -189,6 +190,7 @@ void CCreateCharacterManager::OnSexChanged(const bool &female)
 //----------------------------------------------------------------------------------
 void CCreateCharacterManager::OnChangeRace(const RACE_TYPE &newRace)
 {
+	WISPFUN_DEBUG("c140_f2");
 	m_Race = newRace;
 	OnSexChanged(m_Female);
 
@@ -204,6 +206,7 @@ void CCreateCharacterManager::OnChangeRace(const RACE_TYPE &newRace)
 */
 void CCreateCharacterManager::Init()
 {
+	WISPFUN_DEBUG("c140_f3");
 	IFOR(i, 1, HUMAN_MALE_HAIR_COUNT)
 		g_Orion.ExecuteGump(m_HumanMaleHairStyleTable[i].GumpID);
 
@@ -226,6 +229,7 @@ void CCreateCharacterManager::Init()
 */
 void CCreateCharacterManager::Clear()
 {
+	WISPFUN_DEBUG("c140_f4");
 	m_Female = false;
 	m_HairStyle = 1;
 	m_BeardStyle = 0;
@@ -240,6 +244,7 @@ void CCreateCharacterManager::Clear()
 //----------------------------------------------------------------------------------
 int CCreateCharacterManager::GetCurrentHairCount()
 {
+	WISPFUN_DEBUG("c140_f5");
 	static const int count[3][2] =
 	{
 		{ HUMAN_MALE_HAIR_COUNT, HUMAN_FEMALE_HAIR_COUNT },
@@ -252,6 +257,7 @@ int CCreateCharacterManager::GetCurrentHairCount()
 //----------------------------------------------------------------------------------
 int CCreateCharacterManager::GetCurrentFacialHairCount()
 {
+	WISPFUN_DEBUG("c140_f6");
 	static const int count[3] = { HUMAN_MALE_FACIAL_HAIR_COUNT, 0, GARGOYLE_MALE_FACIAL_HAIR_COUNT };
 
 	return count[m_Race - 1];
@@ -259,6 +265,7 @@ int CCreateCharacterManager::GetCurrentFacialHairCount()
 //----------------------------------------------------------------------------------
 ushort CCreateCharacterManager::GetBodyGump()
 {
+	WISPFUN_DEBUG("c140_f7");
 	static const ushort gump[3][2] =
 	{
 		{ 0x0761, 0x0760 },
@@ -271,6 +278,7 @@ ushort CCreateCharacterManager::GetBodyGump()
 //----------------------------------------------------------------------------------
 ushort CCreateCharacterManager::GetShirtGump()
 {
+	WISPFUN_DEBUG("c140_f8");
 	static const ushort gump[3][2] =
 	{
 		{ 0x0739, 0x0714 },
@@ -283,6 +291,7 @@ ushort CCreateCharacterManager::GetShirtGump()
 //----------------------------------------------------------------------------------
 ushort CCreateCharacterManager::GetPantsGump()
 {
+	WISPFUN_DEBUG("c140_f9");
 	static const ushort gump[3][2] =
 	{
 		{ 0x0738, 0x0764 },
@@ -295,6 +304,7 @@ ushort CCreateCharacterManager::GetPantsGump()
 //----------------------------------------------------------------------------------
 ushort CCreateCharacterManager::GetBootsGump()
 {
+	WISPFUN_DEBUG("c140_f10");
 	static const ushort gump[3][2] =
 	{
 		{ 0x0762, 0x0763 },
@@ -307,6 +317,7 @@ ushort CCreateCharacterManager::GetBootsGump()
 //----------------------------------------------------------------------------------
 pushort CCreateCharacterManager::GetSkinTonePtr()
 {
+	WISPFUN_DEBUG("c140_f11");
 	static const pushort ptr[3] =
 	{
 		(pushort)&m_HumanSkinTone[0],
@@ -319,6 +330,7 @@ pushort CCreateCharacterManager::GetSkinTonePtr()
 //----------------------------------------------------------------------------------
 pushort CCreateCharacterManager::GetHairColorPtr()
 {
+	WISPFUN_DEBUG("c140_f12");
 	static const pushort ptr[3] =
 	{
 		(pushort)&m_HumanHairColor[0],
@@ -336,6 +348,7 @@ pushort CCreateCharacterManager::GetHairColorPtr()
 */
 CC_HAIR_STYLE CCreateCharacterManager::GetHair(const uchar &pos) const
 {
+	WISPFUN_DEBUG("c140_f13");
 	if (m_Race == RT_HUMAN)
 	{
 		if (m_Female)
@@ -386,6 +399,7 @@ CC_HAIR_STYLE CCreateCharacterManager::GetHair(const uchar &pos) const
 */
 CC_HAIR_STYLE CCreateCharacterManager::GetBeard(const uchar &pos) const
 {
+	WISPFUN_DEBUG("c140_f14");
 	if (m_Race == RT_HUMAN)
 	{
 		if (pos < HUMAN_MALE_FACIAL_HAIR_COUNT)

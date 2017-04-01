@@ -31,6 +31,7 @@ CCityItem::~CCityItem()
 */
 void CCityItem::InitCity()
 {
+	WISPFUN_DEBUG("c183_f1");
 	//!Линкуем город
 	m_City = g_CityManager.GetCity(m_Name);
 }
@@ -54,6 +55,7 @@ CCityList::CCityList()
 //---------------------------------------------------------------------------
 CCityList::~CCityList()
 {
+	WISPFUN_DEBUG("c184_f1");
 	Clear();
 }
 //---------------------------------------------------------------------------
@@ -64,6 +66,7 @@ CCityList::~CCityList()
 */
 CCityItem *CCityList::GetCity(const int &index)
 {
+	WISPFUN_DEBUG("c184_f2");
 	for (deque<CCityItem*>::iterator i = m_CityList.begin(); i != m_CityList.end(); i++)
 	{
 		if ((*i)->LocationIndex == index)
@@ -80,6 +83,7 @@ CCityItem *CCityList::GetCity(const int &index)
 */
 void CCityList::Clear()
 {
+	WISPFUN_DEBUG("c184_f3");
 	for (deque<CCityItem*>::iterator i = m_CityList.begin(); i != m_CityList.end(); i++)
 		delete *i;
 

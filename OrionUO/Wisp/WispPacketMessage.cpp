@@ -12,6 +12,7 @@ CPacketMessage::CPacketMessage(const bool &bigEndian)
 CPacketMessage::CPacketMessage(puchar data, const int &dataSize, const bool &bigEndian)
 : m_BigEndian(bigEndian)
 {
+	WISPFUN_DEBUG("c9_f1");
 	m_Data.resize(dataSize);
 	memcpy(&m_Data[0], &data[0], dataSize);
 }
@@ -19,16 +20,19 @@ CPacketMessage::CPacketMessage(puchar data, const int &dataSize, const bool &big
 CPacketMessage::CPacketMessage(const UCHAR_LIST &data, const bool &bigEndian)
 : m_BigEndian(bigEndian)
 {
+	WISPFUN_DEBUG("c9_f2");
 	m_Data = data;
 }
 //----------------------------------------------------------------------------------
 CPacketMessage::~CPacketMessage()
 {
+	WISPFUN_DEBUG("c9_f3");
 	m_Data.clear();
 }
 //----------------------------------------------------------------------------------
 void CPacketMessage::Append(puchar data, const int &dataSize)
 {
+	WISPFUN_DEBUG("c9_f4");
 	UCHAR_LIST buf(dataSize);
 	memcpy(&buf[0], &data[0], dataSize);
 
@@ -37,11 +41,13 @@ void CPacketMessage::Append(puchar data, const int &dataSize)
 //----------------------------------------------------------------------------------
 void CPacketMessage::Append(const UCHAR_LIST &data)
 {
+	WISPFUN_DEBUG("c9_f5");
 	m_Data.insert(m_Data.end(), data.begin(), data.end());
 }
 //----------------------------------------------------------------------------------
 UCHAR_LIST CPacketMessage::Read(class CPacketReader *reader, int &dataOffset)
 {
+	WISPFUN_DEBUG("c9_f6");
 	UCHAR_LIST result;
 
 	if (!m_Data.size())

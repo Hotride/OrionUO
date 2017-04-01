@@ -21,6 +21,7 @@ m_DeleteTextureOnDestroy(deleteTextureOnDestroy)
 //----------------------------------------------------------------------------------
 CGUIExternalTexture::~CGUIExternalTexture()
 {
+	WISPFUN_DEBUG("c53_f1");
 	if (m_DeleteTextureOnDestroy)
 	{
 		RELEASE_POINTER(m_Texture);
@@ -29,6 +30,7 @@ CGUIExternalTexture::~CGUIExternalTexture()
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize CGUIExternalTexture::GetSize()
 {
+	WISPFUN_DEBUG("c53_f2");
 	WISP_GEOMETRY::CSize size;
 
 	if (m_Texture != NULL)
@@ -42,6 +44,7 @@ WISP_GEOMETRY::CSize CGUIExternalTexture::GetSize()
 //----------------------------------------------------------------------------------
 void CGUIExternalTexture::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c53_f3");
 	if (m_Texture != NULL)
 	{
 		SetShaderMode();
@@ -52,6 +55,7 @@ void CGUIExternalTexture::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUIExternalTexture::Select()
 {
+	WISPFUN_DEBUG("c53_f4");
 	bool select = false;
 
 	if (m_Texture != NULL)

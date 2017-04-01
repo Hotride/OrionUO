@@ -18,6 +18,7 @@
 CGUISkillItem::CGUISkillItem(const uint &serial, const uint &useSerial, const uint &statusSerial, const int &index, const int &x, const int &y)
 : CBaseGUI(GOT_SKILLITEM, serial, 0, 0, x, y), m_Index(index)
 {
+	WISPFUN_DEBUG("c76_f1");
 	if (g_Skills[m_Index].Button != 0)
 		m_ButtonUse = new CGUIButton(useSerial, 0x0837, 0x0838, 0x0838, 8, 0);
 	else
@@ -36,6 +37,7 @@ CGUISkillItem::CGUISkillItem(const uint &serial, const uint &useSerial, const ui
 //----------------------------------------------------------------------------------
 CGUISkillItem::~CGUISkillItem()
 {
+	WISPFUN_DEBUG("c76_f2");
 	m_NameText.Clear();
 	m_ValueText.Clear();
 
@@ -45,6 +47,7 @@ CGUISkillItem::~CGUISkillItem()
 //----------------------------------------------------------------------------------
 void CGUISkillItem::OnChangeStatus(const uchar &val)
 {
+	WISPFUN_DEBUG("c76_f3");
 	m_Status = val;
 
 	ushort graphic = GetStatusButtonGraphic();
@@ -56,6 +59,7 @@ void CGUISkillItem::OnChangeStatus(const uchar &val)
 //----------------------------------------------------------------------------------
 ushort CGUISkillItem::GetStatusButtonGraphic()
 {
+	WISPFUN_DEBUG("c76_f4");
 	ushort graphic = 0x0984; //Up
 
 	if (m_Status == 1)
@@ -68,6 +72,7 @@ ushort CGUISkillItem::GetStatusButtonGraphic()
 //----------------------------------------------------------------------------------
 void CGUISkillItem::CreateValueText(const bool &showReal, const bool &showCap)
 {
+	WISPFUN_DEBUG("c76_f5");
 	//Значение скилла (учитывая выбранный флаг отображения)
 	float val = g_Player->GetSkillBaseValue(m_Index);
 	if (showReal)
@@ -83,6 +88,7 @@ void CGUISkillItem::CreateValueText(const bool &showReal, const bool &showCap)
 //----------------------------------------------------------------------------------
 void CGUISkillItem::PrepareTextures()
 {
+	WISPFUN_DEBUG("c76_f6");
 	if (m_ButtonUse != NULL)
 		m_ButtonUse->PrepareTextures();
 
@@ -91,6 +97,7 @@ void CGUISkillItem::PrepareTextures()
 //----------------------------------------------------------------------------------
 CBaseGUI *CGUISkillItem::SelectedItem()
 {
+	WISPFUN_DEBUG("c76_f7");
 	CBaseGUI *selected = this;
 
 	if (g_Orion.PolygonePixelsInXY(m_X + m_ButtonStatus->X, m_Y + m_ButtonStatus->Y, 14, 14))
@@ -106,6 +113,7 @@ CBaseGUI *CGUISkillItem::SelectedItem()
 //----------------------------------------------------------------------------------
 void CGUISkillItem::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c76_f8");
 	glTranslatef((GLfloat)m_X, (GLfloat)m_Y, 0.0f);
 
 	if (m_ButtonUse != NULL)
@@ -125,6 +133,7 @@ void CGUISkillItem::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUISkillItem::Select()
 {
+	WISPFUN_DEBUG("c76_f9");
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 

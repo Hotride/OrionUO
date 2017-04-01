@@ -18,6 +18,7 @@ CGumpTextEntryDialog::CGumpTextEntryDialog(uint serial, short x, short y, uchar 
 m_Variant(variant), m_MaxLength(maxLength), m_ParentID(0), m_ButtonID(0),
 m_TextField(NULL), m_Entry(NULL)
 {
+	WISPFUN_DEBUG("c130_f1");
 	m_NoMove = true;
 	m_Blocked = true;
 
@@ -36,6 +37,7 @@ CGumpTextEntryDialog::~CGumpTextEntryDialog()
 //----------------------------------------------------------------------------------
 void CGumpTextEntryDialog::PrepareContent()
 {
+	WISPFUN_DEBUG("c130_f2");
 	if (m_TextField != NULL && m_Entry != NULL)
 	{
 		ushort newGraphic = 0x0475; //Text field
@@ -55,6 +57,7 @@ void CGumpTextEntryDialog::PrepareContent()
 //----------------------------------------------------------------------------------
 void CGumpTextEntryDialog::UpdateContent()
 {
+	WISPFUN_DEBUG("c130_f3");
 	Clear();
 
 	Add(new CGUIGumppic(0x0474, 0, 0));
@@ -87,6 +90,7 @@ void CGumpTextEntryDialog::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpTextEntryDialog::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c130_f4");
 	if (serial == ID_GTED_BUTTON_OKAY) //Button okay
 		SendTextEntryDialogResponse(true);
 	else if (serial == ID_GTED_BUTTON_CANCEL) //Button cancel
@@ -95,6 +99,7 @@ void CGumpTextEntryDialog::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpTextEntryDialog::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c130_f5");
 	if (m_Variant == 2) //Только числа
 	{
 		if (wParam >= '0' && wParam <= '9')
@@ -121,6 +126,7 @@ void CGumpTextEntryDialog::OnCharPress(const WPARAM &wParam, const LPARAM &lPara
 //----------------------------------------------------------------------------------
 void CGumpTextEntryDialog::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c130_f6");
 	switch (wParam)
 	{
 		case VK_RETURN:
@@ -149,6 +155,7 @@ void CGumpTextEntryDialog::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGumpTextEntryDialog::SendTextEntryDialogResponse(bool mode)
 {
+	WISPFUN_DEBUG("c130_f7");
 	if (!m_RemoveMark && m_Entry != NULL) //Непредвиденная ошибка при отсутствии поля ввода текста в гампе
 	{
 		//Отправляем ответ на ентри диалог

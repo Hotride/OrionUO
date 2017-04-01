@@ -24,6 +24,7 @@ CJournal::~CJournal()
 //----------------------------------------------------------------------------------
 void CJournal::Clear()
 {
+	WISPFUN_DEBUG("c171_f1");
 	CBaseQueue::Clear();
 
 	m_Size = 0;
@@ -31,6 +32,7 @@ void CJournal::Clear()
 //----------------------------------------------------------------------------------
 void CJournal::Add(CTextData *obj)
 {
+	WISPFUN_DEBUG("c171_f2");
 	CBaseQueue::Add(obj);
 
 	CGumpJournal *gump = (CGumpJournal*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_JOURNAL);

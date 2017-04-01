@@ -55,6 +55,7 @@ CGameScreen::CGameScreen()
 m_RenderListInitalized(false), m_RenderListCount(0), m_ObjectHandlesCount(0),
 m_ProcessAlphaTimer(0), m_CanProcessAlpha(false)
 {
+	WISPFUN_DEBUG("c164_f1");
 	m_RenderList = new RENDER_OBJECT_DATA[1000];
 
 	memset(&g_RenderBounds, 0, sizeof(RENDER_VARIABLES_FOR_GAME_WINDOW));
@@ -64,6 +65,7 @@ m_ProcessAlphaTimer(0), m_CanProcessAlpha(false)
 //----------------------------------------------------------------------------------
 CGameScreen::~CGameScreen()
 {
+	WISPFUN_DEBUG("c164_f2");
 	if (m_RenderList != NULL)
 	{
 		delete m_RenderList;
@@ -77,6 +79,7 @@ CGameScreen::~CGameScreen()
 */
 void CGameScreen::Init()
 {
+	WISPFUN_DEBUG("c164_f3");
 	g_OrionWindow.NoResize = false;
 
 	g_ScreenEffectManager.UseSunrise();
@@ -90,6 +93,7 @@ void CGameScreen::Init()
 */
 void CGameScreen::ProcessSmoothAction(uchar action)
 {
+	WISPFUN_DEBUG("c164_f4");
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
 
@@ -103,6 +107,7 @@ void CGameScreen::ProcessSmoothAction(uchar action)
 */
 void CGameScreen::InitToolTip()
 {
+	WISPFUN_DEBUG("c164_f5");
 	g_FontManager.SetUseHTML(true);
 	g_FontManager.RecalculateWidthByInfo = true;
 
@@ -136,6 +141,7 @@ void CGameScreen::InitToolTip()
 */
 void CGameScreen::UpdateMaxDrawZ()
 {
+	WISPFUN_DEBUG("c164_f6");
 	int playerX = g_Player->X;
 	int playerY = g_Player->Y;
 	int playerZ = g_Player->Z;
@@ -251,6 +257,7 @@ void CGameScreen::UpdateMaxDrawZ()
 */
 void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const int &x, const int &y, const int &z)
 {
+	WISPFUN_DEBUG("c164_f7");
 	int bx = x / 8;
 	int by = y / 8;
 
@@ -285,6 +292,7 @@ void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const in
 */
 void CGameScreen::CheckFoliageUnion(ushort graphic, int x, int y, int z)
 {
+	WISPFUN_DEBUG("c164_f8");
 	graphic -= 0x4000;
 
 	IFOR(i, 0, TREE_COUNT)
@@ -314,6 +322,7 @@ void CGameScreen::CheckFoliageUnion(ushort graphic, int x, int y, int z)
 */
 void CGameScreen::IncreaseRenderList()
 {
+	WISPFUN_DEBUG("c164_f9");
 	RENDER_OBJECT_DATA *list = new RENDER_OBJECT_DATA[m_RenderListSize + 1000];
 
 	if (list != NULL)
@@ -333,6 +342,7 @@ void CGameScreen::IncreaseRenderList()
 */
 void CGameScreen::CalculateRenderList()
 {
+	WISPFUN_DEBUG("c164_f10");
 	if (g_Target.IsTargeting() && g_Target.MultiGraphic && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsWorldObject())
 	{
 		int grZ = 0;
@@ -559,6 +569,7 @@ void CGameScreen::CalculateRenderList()
 //----------------------------------------------------------------------------------
 void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX, const int &drawY, const int &worldX, const int &worldY, const uchar &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX, const int &maxZ)
 {
+	WISPFUN_DEBUG("c164_f11");
 	ushort grayColor = 0;
 
 	if (g_ConfigManager.GrayOutOfRangeObjects)
@@ -797,6 +808,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 //----------------------------------------------------------------------------------
 void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX, int drawY, const uchar &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX)
 {
+	WISPFUN_DEBUG("c164_f12");
 	int characterX = obj->X;
 	int characterY = obj->Y;
 
@@ -898,6 +910,7 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 */
 void CGameScreen::CalculateGameWindowBounds()
 {
+	WISPFUN_DEBUG("c164_f13");
 	g_DrawFoliage = (g_Season < ST_WINTER) && !g_ConfigManager.DrawStumps;
 
 	g_GrayedPixels = g_Player->Dead();
@@ -1048,6 +1061,7 @@ void CGameScreen::CalculateGameWindowBounds()
 */
 void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObject, const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c164_f14");
 	if (lightObject->IsStaticGroupObject())
 	{
 		STATIC_TILES *st = lightObject->StaticGroupObjectPtr()->GetStaticData();
@@ -1126,6 +1140,7 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 */
 void CGameScreen::DrawGameWindow(const bool &mode)
 {
+	WISPFUN_DEBUG("c164_f15");
 	int playerZPlus5 = g_RenderBounds.PlayerZ + 5;
 
 	if (mode)
@@ -1260,6 +1275,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 */
 void CGameScreen::DrawGameWindowLight()
 {
+	WISPFUN_DEBUG("c164_f16");
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	if (!m_UseLight)
@@ -1341,6 +1357,7 @@ void CGameScreen::DrawGameWindowLight()
 */
 void CGameScreen::DrawGameWindowText(const bool &mode)
 {
+	WISPFUN_DEBUG("c164_f17");
 	if (mode)
 	{
 		g_FontColorizerShader->Use();
@@ -1417,6 +1434,7 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 //----------------------------------------------------------------------------------
 void CGameScreen::PrepareContent()
 {
+	WISPFUN_DEBUG("c164_f18");
 	g_WorldTextRenderer.CalculateWorldPositions(false);
 
 	m_GameScreenGump.PrepareContent();
@@ -1478,6 +1496,7 @@ void CGameScreen::PrepareContent()
 */
 void CGameScreen::Render(const bool &mode)
 {
+	WISPFUN_DEBUG("c164_f19");
 	if (!m_RenderListInitalized)
 		CalculateRenderList();
 
@@ -1792,6 +1811,7 @@ void CGameScreen::Render(const bool &mode)
 */
 void CGameScreen::OnLeftMouseButtonDown()
 {
+	WISPFUN_DEBUG("c164_f20");
 	CGumpSkills *skillGump = (CGumpSkills*)g_GumpManager.GetGump(g_PlayerSerial, 0, GT_SKILLS);
 
 	if (skillGump != NULL)
@@ -1818,6 +1838,7 @@ void CGameScreen::OnLeftMouseButtonDown()
 */
 void CGameScreen::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c164_f21");
 	if (g_PressedObject.LeftGump() == &m_GameScreenGump)
 	{
 		m_GameScreenGump.OnLeftMouseButtonUp();
@@ -1993,6 +2014,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 */
 bool CGameScreen::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c164_f22");
 	bool result = false;
 	uint charUnderMouse = 0;
 
@@ -2065,6 +2087,7 @@ bool CGameScreen::OnLeftMouseButtonDoubleClick()
 */
 void CGameScreen::OnRightMouseButtonDown()
 {
+	WISPFUN_DEBUG("c164_f23");
 	if (g_PressedObject.RightGump() != NULL)
 		g_GumpManager.OnRightMouseButtonDown(false);
 
@@ -2078,6 +2101,7 @@ void CGameScreen::OnRightMouseButtonDown()
 */
 void CGameScreen::OnRightMouseButtonUp()
 {
+	WISPFUN_DEBUG("c164_f24");
 	if (g_PressedObject.RightGump() != NULL)
 		g_GumpManager.OnRightMouseButtonUp(false);
 
@@ -2099,6 +2123,7 @@ void CGameScreen::OnRightMouseButtonUp()
 */
 bool CGameScreen::OnRightMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c164_f25");
 	if (g_ConfigManager.EnablePathfind && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsWorldObject() && !g_PathFinder.AutoWalking)
 	{
 		CRenderWorldObject *rwo = (CRenderWorldObject*)g_SelectedObject.Object();
@@ -2123,6 +2148,7 @@ bool CGameScreen::OnRightMouseButtonDoubleClick()
 */
 void CGameScreen::OnMidMouseButtonScroll(const bool &up)
 {
+	WISPFUN_DEBUG("c164_f26");
 	if (g_SelectedObject.Gump() != NULL)
 		g_GumpManager.OnMidMouseButtonScroll(up, false);
 	else if (g_ConfigManager.UseScaling)
@@ -2148,6 +2174,7 @@ void CGameScreen::OnMidMouseButtonScroll(const bool &up)
 //----------------------------------------------------------------------------------
 void CGameScreen::OnDragging()
 {
+	WISPFUN_DEBUG("c164_f27");
 	if (g_PressedObject.LeftGump() != NULL)
 		g_GumpManager.OnDragging(false);
 }
@@ -2160,6 +2187,7 @@ void CGameScreen::OnDragging()
 */
 void CGameScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c164_f28");
 	if (g_EntryPointer == NULL)
 		return; //Ignore no print keys
 
@@ -2181,6 +2209,7 @@ void CGameScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c164_f29");
 	if (wParam == VK_TAB && (lParam & 0x40000000))
 		return;
 
@@ -2334,6 +2363,7 @@ void CGameScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGameScreen::OnKeyUp(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c164_f30");
 	if (wParam == VK_TAB && g_GameState == GS_GAME)
 	{
 		if (g_ConfigManager.HoldTabForCombat)

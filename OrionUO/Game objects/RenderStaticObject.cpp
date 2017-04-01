@@ -16,6 +16,7 @@ CRenderStaticObject::CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, c
 : CMapObject(renderType, serial, graphic, color, x, y, z), m_FoliageTransparentIndex(-1),
 m_Vegetation(false), m_RenderGraphic(0), m_RenderColor(0)
 {
+	WISPFUN_DEBUG("c27_f1");
 	if (graphic >= g_Orion.StaticDataCount)
 		m_TiledataPtr = &g_Orion.m_StaticData[(graphic - 0x4000) / 32].Tiles[(graphic - 0x4000) % 32];
 	else
@@ -51,6 +52,7 @@ m_Vegetation(false), m_RenderGraphic(0), m_RenderColor(0)
 //---------------------------------------------------------------------------
 CRenderStaticObject::~CRenderStaticObject()
 {
+	WISPFUN_DEBUG("c27_f2");
 	if (m_TextControl != NULL)
 	{
 		delete m_TextControl;
@@ -60,6 +62,7 @@ CRenderStaticObject::~CRenderStaticObject()
 //----------------------------------------------------------------------------------
 void CRenderStaticObject::Draw(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c27_f3");
 #if UO_DEBUG_INFO!=0
 	g_RenderedObjectsCountInGameWindow++;
 #endif
@@ -90,6 +93,7 @@ void CRenderStaticObject::Draw(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 void CRenderStaticObject::Select(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c27_f4");
 	if (m_DrawTextureColor[3] != 0xFF)
 	{
 		if (!IsTranslucent() || m_DrawTextureColor[3] != TRANSLUCENT_ALPHA)
@@ -102,6 +106,7 @@ void CRenderStaticObject::Select(const int &x, const int &y)
 //---------------------------------------------------------------------------
 void CRenderStaticObject::AddText(CTextData *msg)
 {
+	WISPFUN_DEBUG("c27_f5");
 	if (m_TextControl != NULL)
 	{
 		m_TextControl->Add(msg);
@@ -112,11 +117,13 @@ void CRenderStaticObject::AddText(CTextData *msg)
 //---------------------------------------------------------------------------
 int CRenderStaticObject::GetTextOffsetX(CTextData *text)
 {
+	WISPFUN_DEBUG("c27_f6");
 	return text->m_Texture.Width / 2;
 }
 //---------------------------------------------------------------------------
 int CRenderStaticObject::GetTextOffsetY(CTextData *text)
 {
+	WISPFUN_DEBUG("c27_f7");
 	int offset = 0;
 
 	CTextData *td = (CTextData*)m_TextControl->Last();
@@ -136,6 +143,7 @@ int CRenderStaticObject::GetTextOffsetY(CTextData *text)
 //---------------------------------------------------------------------------
 bool CRenderStaticObject::TextCanBeTransparent(CRenderTextObject *text)
 {
+	WISPFUN_DEBUG("c27_f8");
 	bool result = true;
 
 	QFOR(item, m_TextControl->m_Items, CTextData*)
@@ -152,6 +160,7 @@ bool CRenderStaticObject::TextCanBeTransparent(CRenderTextObject *text)
 //---------------------------------------------------------------------------
 bool CRenderStaticObject::TranparentTest(int &playerZPlus5)
 {
+	WISPFUN_DEBUG("c27_f9");
 	bool result = true;
 
 	if (m_Z <= playerZPlus5 - m_TiledataPtr->Height)

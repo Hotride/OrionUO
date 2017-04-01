@@ -28,11 +28,13 @@ CScreenshotBuilder::~CScreenshotBuilder()
 //---------------------------------------------------------------------------
 void CScreenshotBuilder::SaveScreen()
 {
+	WISPFUN_DEBUG("c204_f1");
 	SaveScreen(0, 0, g_OrionWindow.Size.Width, g_OrionWindow.Size.Height);
 }
 //---------------------------------------------------------------------------
 void CScreenshotBuilder::SaveScreen(const int &x, const int &y, const int &width, const int &height)
 {
+	WISPFUN_DEBUG("c204_f2");
 	string path = g_App.FilePath("snapshots");
 	CreateDirectoryA(path.c_str(), NULL);
 
@@ -89,6 +91,7 @@ void CScreenshotBuilder::SaveScreen(const int &x, const int &y, const int &width
 //---------------------------------------------------------------------------
 UINT_LIST CScreenshotBuilder::GetScenePixels(const int &x, const int &y, const int &width, const int &height)
 {
+	WISPFUN_DEBUG("c204_f3");
 	UINT_LIST pixels(width * height);
 
 	glReadPixels(x, g_OrionWindow.Size.Height - y - height, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, &pixels[0]);

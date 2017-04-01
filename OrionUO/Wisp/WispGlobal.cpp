@@ -1,6 +1,21 @@
 ﻿//----------------------------------------------------------------------------------
 #include "WispGlobal.h"
 //----------------------------------------------------------------------------------
+DWORD g_MainThread = 0;
+deque<string> g_WispDebugFunStack;
+//----------------------------------------------------------------------------------
+CWispFunDebug::CWispFunDebug(const char *str)
+{
+	if (g_MainThread == GetCurrentThreadId())
+		g_WispDebugFunStack.push_back(str);
+}
+//----------------------------------------------------------------------------------
+CWispFunDebug::~CWispFunDebug()
+{
+	if (g_MainThread == GetCurrentThreadId())
+		g_WispDebugFunStack.pop_back();
+}
+//----------------------------------------------------------------------------------
 int CalculatePercents(int max, int current, int maxValue)
 {
 	if (max > 0)

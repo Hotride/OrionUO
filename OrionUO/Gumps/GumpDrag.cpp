@@ -26,6 +26,7 @@ CGumpDrag::~CGumpDrag()
 //----------------------------------------------------------------------------------
 void CGumpDrag::UpdateContent()
 {
+	WISPFUN_DEBUG("c94_f1");
 	Clear();
 
 	Add(new CGUIGumppic(0x085C, 0, 0));
@@ -56,17 +57,20 @@ void CGumpDrag::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpDrag::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c94_f2");
 	if (serial == ID_GD_OKAY) //Button Okay
 		OnOkayPressed();
 }
 //----------------------------------------------------------------------------------
 void CGumpDrag::GUMP_SLIDER_CLICK_EVENT_C
 {
+	WISPFUN_DEBUG("c94_f3");
 	OnSliderMove(serial);
 }
 //----------------------------------------------------------------------------------
 void CGumpDrag::GUMP_SLIDER_MOVE_EVENT_C
 {
+	WISPFUN_DEBUG("c94_f4");
 	if (m_StartText)
 		m_StartText = false;
 
@@ -76,6 +80,7 @@ void CGumpDrag::GUMP_SLIDER_MOVE_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpDrag::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c94_f5");
 	if (wParam >= '0' && wParam <= '9')
 	{
 		if (m_StartText)
@@ -100,6 +105,7 @@ void CGumpDrag::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGumpDrag::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c94_f6");
 	CGameItem *item = g_World->FindWorldItem(Serial);
 
 	if (item != NULL)
@@ -159,6 +165,7 @@ void CGumpDrag::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void CGumpDrag::OnOkayPressed()
 {
+	WISPFUN_DEBUG("c94_f7");
 	if (g_ObjectInHand == NULL)
 	{
 		if (m_Slider->Value)

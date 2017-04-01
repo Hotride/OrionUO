@@ -26,11 +26,13 @@ CTextRenderer::CTextRenderer()
 //----------------------------------------------------------------------------------
 CTextRenderer::~CTextRenderer()
 {
+	WISPFUN_DEBUG("c175_f1");
 	m_TextItems = NULL;
 }
 //---------------------------------------------------------------------------
 CRenderTextObject *CTextRenderer::AddText(CRenderTextObject *obj)
 {
+	WISPFUN_DEBUG("c175_f2");
 	if (obj != NULL)
 	{
 		CRenderTextObject *item = m_TextItems;
@@ -60,6 +62,7 @@ CRenderTextObject *CTextRenderer::AddText(CRenderTextObject *obj)
 //---------------------------------------------------------------------------
 void CTextRenderer::ToTop(CRenderTextObject *obj)
 {
+	WISPFUN_DEBUG("c175_f3");
 	obj->UnlinkDraw();
 
 	CRenderTextObject *next = m_TextItems->m_NextDraw;
@@ -74,6 +77,7 @@ void CTextRenderer::ToTop(CRenderTextObject *obj)
 //----------------------------------------------------------------------------------
 bool CTextRenderer::InRect(CTextImageBounds &rect, CRenderWorldObject *rwo)
 {
+	WISPFUN_DEBUG("c175_f4");
 	bool result = false;
 
 	for (std::deque<CTextImageBounds>::iterator it = m_TextRect.begin(); it != m_TextRect.end(); it++)
@@ -93,6 +97,7 @@ bool CTextRenderer::InRect(CTextImageBounds &rect, CRenderWorldObject *rwo)
 //----------------------------------------------------------------------------------
 bool CTextRenderer::CalculatePositions(const bool &noCalculate)
 {
+	WISPFUN_DEBUG("c175_f5");
 	bool changed = false;
 
 	if (!noCalculate)
@@ -214,6 +219,7 @@ bool CTextRenderer::CalculatePositions(const bool &noCalculate)
 //----------------------------------------------------------------------------------
 void CTextRenderer::Draw()
 {
+	WISPFUN_DEBUG("c175_f6");
 	CalculatePositions(true);
 
 	for (CRenderTextObject *item = m_DrawPointer; item != NULL; item = item->m_PrevDraw)
@@ -267,6 +273,7 @@ void CTextRenderer::Draw()
 //----------------------------------------------------------------------------------
 void CTextRenderer::Select(CGump *gump)
 {
+	WISPFUN_DEBUG("c175_f7");
 	if (gump != NULL)
 		CalculatePositions(true);
 	else
@@ -286,6 +293,7 @@ void CTextRenderer::Select(CGump *gump)
 //----------------------------------------------------------------------------------
 bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 {
+	WISPFUN_DEBUG("c175_f8");
 	bool changed = false;
 
 	if (!noCalculate)
@@ -418,6 +426,7 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 //----------------------------------------------------------------------------------
 void CTextRenderer::WorldDraw()
 {
+	WISPFUN_DEBUG("c175_f9");
 	CalculateWorldPositions(true);
 
 	for (CRenderTextObject *item = m_DrawPointer; item != NULL; item = item->m_PrevDraw)

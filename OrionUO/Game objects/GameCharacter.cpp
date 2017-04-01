@@ -35,6 +35,7 @@ m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
 m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10), m_HitsPercent(0),
 m_Deleted(false)
 {
+	WISPFUN_DEBUG("c15_f1");
 	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;
 
@@ -51,6 +52,7 @@ m_Deleted(false)
 //----------------------------------------------------------------------------------
 CGameCharacter::~CGameCharacter()
 {
+	WISPFUN_DEBUG("c15_f2");
 	//!Чистим память
 	m_WalkStack.Clear();
 
@@ -73,6 +75,7 @@ CGameCharacter::~CGameCharacter()
 //----------------------------------------------------------------------------------
 void CGameCharacter::UpdateHitsTexture(const uchar &hits)
 {
+	WISPFUN_DEBUG("c15_f3");
 	if (m_HitsPercent != hits || m_HitsTexture.Empty())
 	{
 		m_HitsPercent = hits;
@@ -99,6 +102,7 @@ void CGameCharacter::UpdateHitsTexture(const uchar &hits)
 */
 int CGameCharacter::IsSitting()
 {
+	WISPFUN_DEBUG("c15_f4");
 	int result = 0;
 	ushort testGraphic = m_Graphic;
 	g_AnimationManager.GetBodyGraphic(testGraphic);
@@ -258,6 +262,7 @@ int CGameCharacter::IsSitting()
 */
 void CGameCharacter::Draw(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c15_f5");
 	if (m_TimeToRandomFidget < g_Ticks)
 		SetRandomFidgetAnimation();
 
@@ -279,6 +284,7 @@ void CGameCharacter::Draw(const int &x, const int &y)
 //----------------------------------------------------------------------------------
 void CGameCharacter::Select(const int &x, const int &y)
 {
+	WISPFUN_DEBUG("c15_f6");
 	if (g_AnimationManager.CharacterPixelsInXY(this, x, y, m_Z))
 		g_SelectedObject.Init(this);
 }
@@ -290,6 +296,7 @@ void CGameCharacter::Select(const int &x, const int &y)
 */
 void CGameCharacter::OnGraphicChange(int direction)
 {
+	WISPFUN_DEBUG("c15_f7");
 	//!Обновления пола в зависимости от индекса картинки персонажа
 	switch (m_Graphic)
 	{
@@ -340,6 +347,7 @@ void CGameCharacter::OnGraphicChange(int direction)
 */
 bool CGameCharacter::IsCorrectStep(short &cx, short &cy, short &x, short &y, const uchar &dir)
 {
+	WISPFUN_DEBUG("c15_f8");
 	switch (dir & 7)
 	{
 		case 0:
@@ -400,6 +408,7 @@ bool CGameCharacter::IsCorrectStep(short &cx, short &cy, short &x, short &y, con
 */
 bool CGameCharacter::IsTeleportAction(short &x, short &y, const uchar &dir)
 {
+	WISPFUN_DEBUG("c15_f9");
 	bool result = false;
 
 	CWalkData *wd = m_WalkStack.m_Items;
@@ -436,6 +445,7 @@ bool CGameCharacter::IsTeleportAction(short &x, short &y, const uchar &dir)
 */
 void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const uchar &frameCount, const uchar &repeatCount, const bool &repeat, const bool &frameDirection)
 {
+	WISPFUN_DEBUG("c15_f10");
 	m_AnimationGroup = id;
 	m_AnimIndex = 0;
 	m_AnimationInterval = interval;
@@ -456,6 +466,7 @@ void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const 
 */
 void CGameCharacter::ResetAnimationGroup(const uchar &val)
 {
+	WISPFUN_DEBUG("c15_f11");
 	m_AnimationFrameCount = 0;
 	m_AnimationInterval = 0;
 	m_AnimationRepeat = false;
@@ -472,6 +483,7 @@ void CGameCharacter::ResetAnimationGroup(const uchar &val)
 */
 void CGameCharacter::SetRandomFidgetAnimation()
 {
+	WISPFUN_DEBUG("c15_f12");
 	m_TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 
 	if (FindLayer(OL_MOUNT) == NULL)
@@ -505,6 +517,7 @@ void CGameCharacter::SetRandomFidgetAnimation()
 */
 void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, BYTE &animation)
 {
+	WISPFUN_DEBUG("c15_f13");
 	const BYTE animAssociateTable[35][3] =
 	{
 		{ LAG_WALK,			HAG_WALK,			PAG_WALK_UNARMED },
@@ -557,6 +570,7 @@ void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, BYTE &anim
 */
 void CGameCharacter::CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, uchar &animation)
 {
+	WISPFUN_DEBUG("c15_f14");
 	if (group == AG_LOW)
 	{
 		switch (animation)
@@ -619,6 +633,7 @@ void CGameCharacter::CorrectAnimationGroup(const ushort &graphic, const ANIMATIO
 */
 bool CGameCharacter::TestStepNoChangeDirection(const uchar &group)
 {
+	WISPFUN_DEBUG("c15_f15");
 	bool result = false;
 
 	switch (group)
@@ -655,6 +670,7 @@ bool CGameCharacter::TestStepNoChangeDirection(const uchar &group)
 */
 uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 {
+	WISPFUN_DEBUG("c15_f16");
 	if (!graphic)
 		graphic = GetMountAnimation();
 
@@ -785,6 +801,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 */
 ushort CGameCharacter::GetMountAnimation()
 {
+	WISPFUN_DEBUG("c15_f17");
 	ushort graphic = m_Graphic;
 
 	switch (graphic)
@@ -811,6 +828,7 @@ ushort CGameCharacter::GetMountAnimation()
 */
 void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 {
+	WISPFUN_DEBUG("c15_f18");
 	dir = m_Direction & (~0x80);
 
 	CWalkData *wd = m_WalkStack.m_Items;

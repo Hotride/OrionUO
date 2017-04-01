@@ -13,10 +13,12 @@
 CGLFrameBuffer::CGLFrameBuffer()
 : m_Ready(false), m_OldFrameBuffer(0), m_FrameBuffer(0), Texture()
 {
+	WISPFUN_DEBUG("c30_f1");
 }
 //----------------------------------------------------------------------------------
 CGLFrameBuffer::~CGLFrameBuffer()
 {
+	WISPFUN_DEBUG("c30_f2");
 	Free();
 }
 //----------------------------------------------------------------------------------
@@ -28,6 +30,7 @@ CGLFrameBuffer::~CGLFrameBuffer()
 */
 bool CGLFrameBuffer::Init(int width, int height)
 {
+	WISPFUN_DEBUG("c30_f3");
 	Free();
 
 	bool result = false;
@@ -68,6 +71,7 @@ bool CGLFrameBuffer::Init(int width, int height)
 */
 void CGLFrameBuffer::Free()
 {
+	WISPFUN_DEBUG("c30_f4");
 	Texture.Clear();
 
 	if (g_GL.CanUseFrameBuffer && m_FrameBuffer != 0)
@@ -85,6 +89,7 @@ void CGLFrameBuffer::Free()
 */
 void CGLFrameBuffer::Release()
 {
+	WISPFUN_DEBUG("c30_f5");
 	if (g_GL.CanUseFrameBuffer)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_OldFrameBuffer);
@@ -102,6 +107,7 @@ void CGLFrameBuffer::Release()
 */
 bool CGLFrameBuffer::Ready( __in int &width, __in int &height)
 {
+	WISPFUN_DEBUG("c30_f6");
 	return (g_GL.CanUseFrameBuffer && m_Ready && Texture.Width == width && Texture.Height == height);
 }
 //----------------------------------------------------------------------------------
@@ -111,6 +117,7 @@ bool CGLFrameBuffer::Ready( __in int &width, __in int &height)
 */
 bool CGLFrameBuffer::Use()
 {
+	WISPFUN_DEBUG("c30_f7");
 	bool result = false;
 
 	if (g_GL.CanUseFrameBuffer && m_Ready)
@@ -144,6 +151,7 @@ bool CGLFrameBuffer::Use()
 */
 void CGLFrameBuffer::Draw( __in int x, __in int y)
 {
+	WISPFUN_DEBUG("c30_f8");
 	if (g_GL.CanUseFrameBuffer && m_Ready)
 	{
 		g_GL.OldTexture = 0;

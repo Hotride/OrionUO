@@ -24,11 +24,13 @@ CGUIResizepic::~CGUIResizepic()
 //----------------------------------------------------------------------------------
 void CGUIResizepic::PrepareTextures()
 {
+	WISPFUN_DEBUG("c69_f1");
 	g_Orion.ExecuteResizepic(m_Graphic);
 }
 //----------------------------------------------------------------------------------
 void CGUIResizepic::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c69_f2");
 	CGLTexture *th[9] = { NULL };
 
 	IFOR(i, 0, 9)
@@ -69,6 +71,7 @@ void CGUIResizepic::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 bool CGUIResizepic::Select()
 {
+	WISPFUN_DEBUG("c69_f3");
 	if (m_CheckPolygone)
 		return CGUIPolygonal::Select();
 

@@ -25,6 +25,7 @@ CScreenEffectManager::~CScreenEffectManager()
 //---------------------------------------------------------------------------
 int CScreenEffectManager::Process()
 {
+	WISPFUN_DEBUG("c154_f1");
 	if (m_Mode == SEM_SUNRISE)
 	{
 		m_Alpha -= m_Step;
@@ -88,6 +89,7 @@ int CScreenEffectManager::Process()
 //---------------------------------------------------------------------------
 void CScreenEffectManager::Draw()
 {
+	WISPFUN_DEBUG("c154_f2");
 	if (m_Mode != SEM_NONE)
 	{
 		glColor4f(m_ColorR, m_ColorG, m_ColorB, m_Alpha);
@@ -109,6 +111,7 @@ void CScreenEffectManager::Draw()
 }//---------------------------------------------------------------------------
 bool CScreenEffectManager::Use(const SCREEN_EFFECT_MODE &mode, const SCREEN_EFFECT_TYPE &type, const bool &ignoreEnabled)
 {
+	WISPFUN_DEBUG("c154_f3");
 	if (m_Enabled || ignoreEnabled)
 	{
 		m_Mode = mode;
@@ -133,6 +136,7 @@ bool CScreenEffectManager::Use(const SCREEN_EFFECT_MODE &mode, const SCREEN_EFFE
 //---------------------------------------------------------------------------
 bool CScreenEffectManager::UseSunrise()
 {
+	WISPFUN_DEBUG("c154_f4");
 	bool result = Use(SEM_SUNRISE);
 	m_Step = 0.05f;
 	return result;
@@ -140,6 +144,7 @@ bool CScreenEffectManager::UseSunrise()
 //---------------------------------------------------------------------------
 bool CScreenEffectManager::UseSunset()
 {
+	WISPFUN_DEBUG("c154_f5");
 	bool result = Use(SEM_SUNSET);
 	m_Step = 0.05f;
 	return result;

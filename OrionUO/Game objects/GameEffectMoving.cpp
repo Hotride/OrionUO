@@ -29,6 +29,7 @@ CGameEffectMoving::~CGameEffectMoving()
 */
 void CGameEffectMoving::Update(CGameObject *parent)
 {
+	WISPFUN_DEBUG("c18_f1");
 	if (m_LastMoveTime > g_Ticks)
 		return;
 

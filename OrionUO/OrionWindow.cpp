@@ -33,6 +33,7 @@ COrionWindow g_OrionWindow;
 //----------------------------------------------------------------------------------
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
+	WISPFUN_DEBUG("c_main");
 	INITLOGGER("uolog.txt");
 
 	string path = g_App.FilePath("crashlogs");
@@ -71,6 +72,7 @@ COrionWindow::~COrionWindow()
 //----------------------------------------------------------------------------------
 void COrionWindow::SetRenderTimerDelay(const int &delay)
 {
+	WISPFUN_DEBUG("c195_f1");
 	WISP_THREADED_TIMER::CThreadedTimer *timer = GetThreadedTimer(RENDER_TIMER_ID);
 
 	if (timer != NULL)
@@ -79,6 +81,7 @@ void COrionWindow::SetRenderTimerDelay(const int &delay)
 //----------------------------------------------------------------------------------
 bool COrionWindow::OnCreate()
 {
+	WISPFUN_DEBUG("c195_f2");
 	if (!g_GL.Install())
 	{
 		LOG("Error install OpenGL\n");
@@ -100,6 +103,7 @@ bool COrionWindow::OnCreate()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnDestroy()
 {
+	WISPFUN_DEBUG("c195_f3");
 	g_PluginManager.WindowProc(m_Handle, WM_CLOSE, 0, 0);
 
 	g_Orion.Uninstall();
@@ -110,11 +114,13 @@ void COrionWindow::OnDestroy()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnResize(WISP_GEOMETRY::CSize &newSize)
 {
+	WISPFUN_DEBUG("c195_f4");
 	g_GL.UpdateRect();
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::EmulateOnLeftMouseButtonDown()
 {
+	WISPFUN_DEBUG("c195_f5");
 	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_CurrentScreen->Render(false);
@@ -128,6 +134,7 @@ void COrionWindow::EmulateOnLeftMouseButtonDown()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnLeftMouseButtonDown()
 {
+	WISPFUN_DEBUG("c195_f6");
 	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_GeneratedMouseDown = false;
@@ -143,6 +150,7 @@ void COrionWindow::OnLeftMouseButtonDown()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnLeftMouseButtonUp()
 {
+	WISPFUN_DEBUG("c195_f7");
 	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_CurrentScreen->Render(false);
@@ -165,6 +173,7 @@ void COrionWindow::OnLeftMouseButtonUp()
 //----------------------------------------------------------------------------------
 bool COrionWindow::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c195_f8");
 	bool result = false;
 
 	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
@@ -187,6 +196,7 @@ bool COrionWindow::OnLeftMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnRightMouseButtonDown()
 {
+	WISPFUN_DEBUG("c195_f9");
 	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_CurrentScreen->Render(false);
@@ -208,6 +218,7 @@ void COrionWindow::OnRightMouseButtonDown()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnRightMouseButtonUp()
 {
+	WISPFUN_DEBUG("c195_f10");
 	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 	{
 		g_CurrentScreen->Render(false);
@@ -222,6 +233,7 @@ void COrionWindow::OnRightMouseButtonUp()
 //----------------------------------------------------------------------------------
 bool COrionWindow::OnRightMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c195_f11");
 	bool result = false;
 
 	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
@@ -241,6 +253,7 @@ bool COrionWindow::OnRightMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnMidMouseButtonDown()
 {
+	WISPFUN_DEBUG("c195_f12");
 	if (g_PluginManager.WindowProc(m_Handle, WM_MBUTTONDOWN, 0, 0))
 		return;
 
@@ -250,6 +263,7 @@ void COrionWindow::OnMidMouseButtonDown()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnMidMouseButtonUp()
 {
+	WISPFUN_DEBUG("c195_f13");
 	if (g_PluginManager.WindowProc(m_Handle, WM_MBUTTONUP, 0, 0))
 		return;
 
@@ -259,6 +273,7 @@ void COrionWindow::OnMidMouseButtonUp()
 //----------------------------------------------------------------------------------
 bool COrionWindow::OnMidMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c195_f14");
 	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		return g_CurrentScreen->OnMidMouseButtonDoubleClick();
 
@@ -267,6 +282,7 @@ bool COrionWindow::OnMidMouseButtonDoubleClick()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnMidMouseButtonScroll(const bool &up)
 {
+	WISPFUN_DEBUG("c195_f15");
 	if (g_PluginManager.WindowProc(m_Handle, WM_MOUSEWHEEL, (up ? 0 : 0x11110000), 0))
 		return;
 
@@ -280,12 +296,14 @@ void COrionWindow::OnMidMouseButtonScroll(const bool &up)
 //----------------------------------------------------------------------------------
 void COrionWindow::OnDragging()
 {
+	WISPFUN_DEBUG("c195_f16");
 	if (g_CurrentScreen != NULL && g_ScreenEffectManager.Mode == SEM_NONE)
 		g_CurrentScreen->OnDragging();
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnActivate()
 {
+	WISPFUN_DEBUG("c195_f17");
 	g_Orion.ResumeSound();
 	SetRenderTimerDelay(g_FrameDelay[1]);
 
@@ -295,6 +313,7 @@ void COrionWindow::OnActivate()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnDeactivate()
 {
+	WISPFUN_DEBUG("c195_f18");
 	g_Orion.PauseSound();
 	if (g_ConfigManager.ReduceFPSUnactiveWindow)
 		SetRenderTimerDelay(g_FrameDelay[0]);
@@ -305,6 +324,7 @@ void COrionWindow::OnDeactivate()
 //----------------------------------------------------------------------------------
 void COrionWindow::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c195_f19");
 	if (g_PluginManager.WindowProc(m_Handle, WM_CHAR, wParam, lParam))
 		return;
 
@@ -323,6 +343,7 @@ void COrionWindow::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void COrionWindow::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c195_f20");
 	if (g_PluginManager.WindowProc(m_Handle, WM_KEYDOWN, wParam, lParam))
 		return;
 	
@@ -332,6 +353,7 @@ void COrionWindow::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void COrionWindow::OnKeyUp(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c195_f21");
 	if (g_PluginManager.WindowProc(m_Handle, WM_KEYUP, wParam, lParam))
 		return;
 
@@ -341,6 +363,7 @@ void COrionWindow::OnKeyUp(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 HRESULT COrionWindow::OnRepaint(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c195_f22");
 	if (!g_PluginManager.Empty())
 		return g_PluginManager.WindowProc(m_Handle, WM_NCPAINT, wParam, lParam);
 
@@ -349,18 +372,21 @@ HRESULT COrionWindow::OnRepaint(const WPARAM &wParam, const LPARAM &lParam)
 //----------------------------------------------------------------------------------
 void COrionWindow::OnShow(const bool &show)
 {
+	WISPFUN_DEBUG("c195_f23");
 	if (!g_PluginManager.Empty())
 		g_PluginManager.WindowProc(m_Handle, WM_SHOWWINDOW, (WPARAM)show, 0);
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnSetText(const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c195_f24");
 	if (!g_PluginManager.Empty())
 		g_PluginManager.WindowProc(m_Handle, WM_SETTEXT, 0, lParam);
 }
 //----------------------------------------------------------------------------------
 void COrionWindow::OnTimer(uint id)
 {
+	WISPFUN_DEBUG("c195_f25");
 	if (id == UPDATE_TIMER_ID)
 	{
 		g_Ticks = timeGetTime();
@@ -375,6 +401,7 @@ void COrionWindow::OnTimer(uint id)
 //----------------------------------------------------------------------------------
 void COrionWindow::OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedTimer *timer)
 {
+	WISPFUN_DEBUG("c195_f26");
 	g_Ticks = nowTime;
 
 	if (timer->TimerID == RENDER_TIMER_ID)
@@ -389,6 +416,7 @@ void COrionWindow::OnThreadedTimer(uint nowTime, WISP_THREADED_TIMER::CThreadedT
 //----------------------------------------------------------------------------------
 LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c195_f27");
 	switch (message)
 	{
 		case UOMSG_RECV:

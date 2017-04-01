@@ -70,6 +70,7 @@ BASS_ErrorDescription BASS_ErrorTable[38] = {
 //----------------------------------------------------------------------------------
 const char *BASS_ErrorGetDescription()
 {
+	WISPFUN_DEBUG("c_errgetdesc");
 	int currentErrorCode = BASS_ErrorGetCode();
 
 	IFOR(i, 0, 38)
@@ -93,6 +94,7 @@ CSoundManager::~CSoundManager()
 //----------------------------------------------------------------------------------
 bool CSoundManager::Init()
 {
+	WISPFUN_DEBUG("c156_f1");
 	LOG("Initializing bass sound system.\n");
 	// initialize default output device	
 	if (!BASS_Init(-1, 48000, BASS_DEVICE_3D, g_OrionWindow.Handle, NULL))
@@ -116,18 +118,21 @@ bool CSoundManager::Init()
 //----------------------------------------------------------------------------------
 void CSoundManager::Free()
 {
+	WISPFUN_DEBUG("c156_f2");
 	StopMusic();
 	BASS_Free();
 }
 //----------------------------------------------------------------------------------
 void CSoundManager::PauseSound()
 {
+	WISPFUN_DEBUG("c156_f3");
 	BASS_Pause();
 	g_Orion.AdjustSoundEffects(g_Ticks + 100000);
 }
 //----------------------------------------------------------------------------------
 void CSoundManager::ResumeSound()
 {
+	WISPFUN_DEBUG("c156_f4");
 	BASS_Start();
 }
 //----------------------------------------------------------------------------------
@@ -138,6 +143,7 @@ void CSoundManager::ResumeSound()
 /// <returns>громкость для BASS библиотеки.</returns>
 float CSoundManager::GetVolumeValue(int distance, bool music)
 {
+	WISPFUN_DEBUG("c156_f5");
 	float volume = BASS_GetVolume();
 	WORD clientConfigVolume = music ? g_ConfigManager.MusicVolume : g_ConfigManager.SoundVolume;
 	if (volume == 0 || clientConfigVolume == 0) return 0;
@@ -159,6 +165,7 @@ float CSoundManager::GetVolumeValue(int distance, bool music)
 /// <returns>Wave файл в виде вектора байтов</returns>
 UCHAR_LIST CSoundManager::CreateWaveFile(CIndexSound &is)
 {
+	WISPFUN_DEBUG("c156_f6");
 	size_t dataSize = is.DataSize - sizeof(SOUND_BLOCK);
 	auto waveSound = std::vector<BYTE>(dataSize + sizeof(WaveHeader));
 	auto waveHeader = reinterpret_cast<WaveHeader*>(waveSound.data());
@@ -188,6 +195,7 @@ UCHAR_LIST CSoundManager::CreateWaveFile(CIndexSound &is)
 //----------------------------------------------------------------------------------
 HSTREAM CSoundManager::LoadSoundEffect(CIndexSound &is)
 {
+	WISPFUN_DEBUG("c156_f7");
 	if (is.m_WaveFile.empty())
 		is.m_WaveFile.swap(CreateWaveFile(is));
 
@@ -207,6 +215,7 @@ HSTREAM CSoundManager::LoadSoundEffect(CIndexSound &is)
 //----------------------------------------------------------------------------------
 void CSoundManager::PlaySoundEffect(HSTREAM hStream, float volume)
 {
+	WISPFUN_DEBUG("c156_f8");
 	if (hStream == 0 || GetForegroundWindow() != g_OrionWindow.Handle)
 		return;
 
@@ -221,15 +230,18 @@ void CSoundManager::PlaySoundEffect(HSTREAM hStream, float volume)
 /// <param name="hSteam">stream handle</param>
 bool CSoundManager::FreeStream(HSTREAM hSteam)
 {
+	WISPFUN_DEBUG("c156_f9");
 	return BASS_StreamFree(hSteam);
 }
 bool CSoundManager::IsPlayingNormalMusic()
 {
+	WISPFUN_DEBUG("c156_f10");
 	return BASS_ChannelIsActive(m_Music);
 }
 //----------------------------------------------------------------------------------
 void CSoundManager::PlayMidi(int index, bool warmode)
 {
+	WISPFUN_DEBUG("c156_f11");
 	if (index >= 0 && index < MIDI_MUSIC_COUNT)
 	{
 		if (warmode && m_WarMusic != 0)
@@ -263,6 +275,7 @@ void CSoundManager::PlayMidi(int index, bool warmode)
 //----------------------------------------------------------------------------------
 void CSoundManager::PlayMP3(std::string fileName, int index, bool loop, bool warmode)
 {
+	WISPFUN_DEBUG("c156_f12");
 	if (warmode && m_WarMusic != 0)
 		return;
 
@@ -285,6 +298,7 @@ void CSoundManager::PlayMP3(std::string fileName, int index, bool loop, bool war
 //----------------------------------------------------------------------------------
 void CSoundManager::StopWarMusic()
 {
+	WISPFUN_DEBUG("c156_f13");
 	BASS_ChannelStop(m_WarMusic);
 	m_WarMusic = 0;
 
@@ -294,6 +308,7 @@ void CSoundManager::StopWarMusic()
 //----------------------------------------------------------------------------------
 void CSoundManager::StopMusic()
 {
+	WISPFUN_DEBUG("c156_f14");
 	BASS_ChannelStop(m_Music);
 	m_Music = 0;
 	BASS_ChannelStop(m_WarMusic);
@@ -302,6 +317,7 @@ void CSoundManager::StopMusic()
 //----------------------------------------------------------------------------------
 void CSoundManager::SetMusicVolume(float volume)
 {
+	WISPFUN_DEBUG("c156_f15");
 	if (m_Music != 0 && BASS_ChannelIsActive(m_Music))
 		BASS_ChannelSetAttribute(m_Music, BASS_ATTRIB_VOL, volume);
 
@@ -311,6 +327,7 @@ void CSoundManager::SetMusicVolume(float volume)
 //----------------------------------------------------------------------------------
 void CSoundManager::TraceMusicError(DWORD error)
 {
+	WISPFUN_DEBUG("c156_f16");
 	if (error)
 	{
 		wchar_t szBuf[MAXERRORLENGTH];

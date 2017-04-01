@@ -27,6 +27,7 @@ CGumpScreenCharacterList::~CGumpScreenCharacterList()
 //----------------------------------------------------------------------------------
 void CGumpScreenCharacterList::UpdateContent()
 {
+	WISPFUN_DEBUG("c112_f1");
 	Clear();
 
 	int count = g_CharacterList.Count;
@@ -85,6 +86,7 @@ void CGumpScreenCharacterList::UpdateContent()
 //----------------------------------------------------------------------------------
 void CGumpScreenCharacterList::InitToolTip()
 {
+	WISPFUN_DEBUG("c112_f2");
 	if (!g_ConfigManager.UseToolTips)
 		return;
 
@@ -142,6 +144,7 @@ void CGumpScreenCharacterList::InitToolTip()
 //----------------------------------------------------------------------------------
 void CGumpScreenCharacterList::GUMP_BUTTON_EVENT_C
 {
+	WISPFUN_DEBUG("c112_f3");
 	if (serial == ID_CS_QUIT) //x button
 		g_CharacterListScreen.CreateSmoothAction(CCharacterListScreen::ID_SMOOTH_CLS_QUIT);
 	else if (serial == ID_CS_ARROW_PREV) //< button
@@ -156,6 +159,7 @@ void CGumpScreenCharacterList::GUMP_BUTTON_EVENT_C
 //----------------------------------------------------------------------------------
 void CGumpScreenCharacterList::GUMP_TEXT_ENTRY_EVENT_C
 {
+	WISPFUN_DEBUG("c112_f4");
 	IFOR(i, 0, g_CharacterList.Count)
 	{
 		if (serial == (ID_CS_CHARACTERS + i))
@@ -179,6 +183,7 @@ void CGumpScreenCharacterList::GUMP_TEXT_ENTRY_EVENT_C
 */
 bool CGumpScreenCharacterList::OnLeftMouseButtonDoubleClick()
 {
+	WISPFUN_DEBUG("c112_f5");
 	IFOR(i, 0, g_CharacterList.Count)
 	{
 		if (g_SelectedObject.Serial == (ID_CS_CHARACTERS + i))

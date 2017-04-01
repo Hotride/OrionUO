@@ -34,6 +34,7 @@ CSkillGroupManager::~CSkillGroupManager()
 */
 void CSkillGroupManager::MakeDefault()
 {
+	WISPFUN_DEBUG("c155_f1");
 	Clear();
 
 	MakeDefaultMiscellaneous();
@@ -56,6 +57,7 @@ void CSkillGroupManager::MakeDefault()
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultMiscellaneous()
 {
+	WISPFUN_DEBUG("c155_f2");
 	CSkillGroupObject *group = new CSkillGroupObject();
 	group->SetName("Miscellaneous");
 	group->Add(4);
@@ -71,6 +73,7 @@ void CSkillGroupManager::MakeDefaultMiscellaneous()
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultCombat()
 {
+	WISPFUN_DEBUG("c155_f3");
 	int cnt = g_SkillsCount;
 
 	CSkillGroupObject *group = new CSkillGroupObject();
@@ -97,6 +100,7 @@ void CSkillGroupManager::MakeDefaultCombat()
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultTradeSkills()
 {
+	WISPFUN_DEBUG("c155_f4");
 	CSkillGroupObject *group = new CSkillGroupObject();
 	group->SetName("Trade Skills");
 	group->Add(0);
@@ -115,6 +119,7 @@ void CSkillGroupManager::MakeDefaultTradeSkills()
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultMagic()
 {
+	WISPFUN_DEBUG("c155_f5");
 	int cnt = g_SkillsCount;
 
 	CSkillGroupObject *group = new CSkillGroupObject();
@@ -134,6 +139,7 @@ void CSkillGroupManager::MakeDefaultMagic()
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultWilderness()
 {
+	WISPFUN_DEBUG("c155_f6");
 	CSkillGroupObject *group = new CSkillGroupObject();
 	group->SetName("Wilderness");
 	group->Add(2);
@@ -148,6 +154,7 @@ void CSkillGroupManager::MakeDefaultWilderness()
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultThieving()
 {
+	WISPFUN_DEBUG("c155_f7");
 	CSkillGroupObject *group = new CSkillGroupObject();
 	group->SetName("Thieving");
 	group->Add(14);
@@ -164,6 +171,7 @@ void CSkillGroupManager::MakeDefaultThieving()
 //----------------------------------------------------------------------------------
 void CSkillGroupManager::MakeDefaultBard()
 {
+	WISPFUN_DEBUG("c155_f8");
 	CSkillGroupObject *group = new CSkillGroupObject();
 	group->SetName("Bard");
 	group->Add(15);
@@ -180,6 +188,7 @@ void CSkillGroupManager::MakeDefaultBard()
 */
 void CSkillGroupManager::Clear()
 {
+	WISPFUN_DEBUG("c155_f9");
 	CSkillGroupObject *item = m_Groups;
 
 	while (item != NULL)
@@ -202,6 +211,7 @@ void CSkillGroupManager::Clear()
 */
 void CSkillGroupManager::Add(CSkillGroupObject *group)
 {
+	WISPFUN_DEBUG("c155_f10");
 	if (m_Groups == NULL)
 	{
 		m_Groups = group;
@@ -231,6 +241,7 @@ void CSkillGroupManager::Add(CSkillGroupObject *group)
 */
 bool CSkillGroupManager::Remove(CSkillGroupObject *group)
 {
+	WISPFUN_DEBUG("c155_f11");
 	if (group->m_Prev == NULL) //Miscellaneous
 	{
 		int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 100;
@@ -271,6 +282,7 @@ bool CSkillGroupManager::Remove(CSkillGroupObject *group)
 */
 bool CSkillGroupManager::Load(string path)
 {
+	WISPFUN_DEBUG("c155_f12");
 	bool result = false;
 
 	Clear();
@@ -329,6 +341,7 @@ bool CSkillGroupManager::Load(string path)
 */
 void CSkillGroupManager::Save(string path)
 {
+	WISPFUN_DEBUG("c155_f13");
 	WISP_FILE::CBinaryFileWritter writter;
 
 	writter.Open(path);

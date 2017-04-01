@@ -22,6 +22,7 @@ CGUIHTMLSlider::~CGUIHTMLSlider()
 //----------------------------------------------------------------------------------
 void CGUIHTMLSlider::CalculateOffset()
 {
+	WISPFUN_DEBUG("c63_f1");
 	CGUISlider::CalculateOffset();
 
 	if (m_HTMLGump != NULL)

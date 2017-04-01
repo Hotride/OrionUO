@@ -8,6 +8,7 @@
 */
 //----------------------------------------------------------------------------------
 #include "BaseQueue.h"
+#include "Globals.h"
 //---------------------------------------------------------------------------
 //--------------------------------CBaseQueueItem-----------------------------
 //---------------------------------------------------------------------------
@@ -18,6 +19,7 @@ CBaseQueueItem::CBaseQueueItem()
 //---------------------------------------------------------------------------
 CBaseQueueItem::~CBaseQueueItem()
 {
+	WISPFUN_DEBUG("c180_f1");
 	//Принудительная очистка при удалении
 	Clear();
 
@@ -50,6 +52,7 @@ CBaseQueue::CBaseQueue()
 //---------------------------------------------------------------------------
 CBaseQueue::~CBaseQueue()
 {
+	WISPFUN_DEBUG("c181_f1");
 	//Принудительная очистка при удалении
 	Clear();
 }
@@ -60,6 +63,7 @@ CBaseQueue::~CBaseQueue()
 */
 void CBaseQueue::Clear()
 {
+	WISPFUN_DEBUG("c181_f2");
 	//Если в контейнере есть элементы - достаточно просто удалить первый, остальные удалятся вместе с ним
 	if (m_Items != NULL)
 	{
@@ -83,6 +87,7 @@ void CBaseQueue::Clear()
 */
 CBaseQueueItem *CBaseQueue::Add(CBaseQueueItem *item)
 {
+	WISPFUN_DEBUG("c181_f3");
 	//Если вставляемый элемент не равен нулю
 	if (item != NULL)
 	{
@@ -112,6 +117,7 @@ CBaseQueueItem *CBaseQueue::Add(CBaseQueueItem *item)
 */
 void CBaseQueue::Delete(CBaseQueueItem *item)
 {
+	WISPFUN_DEBUG("c181_f4");
 	//Если элемент не равен нулю
 	if (item != NULL)
 	{
@@ -132,6 +138,7 @@ void CBaseQueue::Delete(CBaseQueueItem *item)
 */
 void CBaseQueue::Delete(const int &index)
 {
+	WISPFUN_DEBUG("c181_f5");
 	//Получим элемент с указанным индексом и удалим его (если есть)
 	Delete(Get(index));
 }
@@ -143,6 +150,7 @@ void CBaseQueue::Delete(const int &index)
 */
 int CBaseQueue::GetItemIndex(CBaseQueueItem *item)
 {
+	WISPFUN_DEBUG("c181_f6");
 	int index = 0;
 
 	//Пройдемся по очереди
@@ -165,6 +173,7 @@ int CBaseQueue::GetItemIndex(CBaseQueueItem *item)
 */
 int CBaseQueue::GetItemsCount()
 {
+	WISPFUN_DEBUG("c181_f7");
 	int count = 0;
 
 	//Пройдемся по всем элементам очереди и запомним общее количество
@@ -182,6 +191,7 @@ int CBaseQueue::GetItemsCount()
 */
 CBaseQueueItem *CBaseQueue::Get(int index)
 {
+	WISPFUN_DEBUG("c181_f8");
 	CBaseQueueItem *item = m_Items;
 
 	//Пройдемся по всем элементам очереди до нахождения нужного или окончания списка
@@ -198,6 +208,7 @@ CBaseQueueItem *CBaseQueue::Get(int index)
 */
 void CBaseQueue::Insert(CBaseQueueItem *first, CBaseQueueItem *item)
 {
+	WISPFUN_DEBUG("c181_f9");
 	if (first == NULL)
 	{
 		item->m_Next = m_Items;
@@ -228,6 +239,7 @@ void CBaseQueue::Insert(CBaseQueueItem *first, CBaseQueueItem *item)
 */
 void CBaseQueue::Unlink(CBaseQueueItem *item)
 {
+	WISPFUN_DEBUG("c181_f10");
 	//Если элемент не равен нулю
 	if (item != NULL)
 	{
@@ -258,6 +270,7 @@ void CBaseQueue::Unlink(CBaseQueueItem *item)
 */
 void CBaseQueue::MoveToFront(CBaseQueueItem *item)
 {
+	WISPFUN_DEBUG("c181_f11");
 	//Если элемент не равен нулю и не равен началу очереди
 	if (item != NULL && item != m_Items)
 	{
@@ -283,6 +296,7 @@ void CBaseQueue::MoveToFront(CBaseQueueItem *item)
 */
 void CBaseQueue::MoveToBack(CBaseQueueItem *item)
 {
+	WISPFUN_DEBUG("c181_f12");
 	//Если элемент не равен нулю
 	if (item != NULL)
 	{
@@ -311,6 +325,7 @@ void CBaseQueue::MoveToBack(CBaseQueueItem *item)
 */
 bool CBaseQueue::Move(CBaseQueueItem *item, const bool &up)
 {
+	WISPFUN_DEBUG("c181_f13");
 	//Немедленно запишем результат (и исходные данные для первой проверки) в переменную
 	bool result = (item != NULL);
 
@@ -388,6 +403,7 @@ bool CBaseQueue::Move(CBaseQueueItem *item, const bool &up)
 */
 CBaseQueueItem *CBaseQueue::Last()
 {
+	WISPFUN_DEBUG("c181_f14");
 	//Начинаем поиск с начала очереди
 	CBaseQueueItem *last = m_Items;
 

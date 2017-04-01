@@ -34,6 +34,7 @@ CCharacterListScreen::~CCharacterListScreen()
 */
 void CCharacterListScreen::Init()
 {
+	WISPFUN_DEBUG("c160_f1");
 	g_OrionWindow.SetTitle(string("Ultima Online - ") + g_MainScreen.m_Account->c_str() + "(" + g_ServerList.GetSelectedServer()->Name + ")");
 
 	g_CharacterList.Selected = 0;
@@ -54,6 +55,7 @@ void CCharacterListScreen::Init()
 */
 void CCharacterListScreen::ProcessSmoothAction(uchar action)
 {
+	WISPFUN_DEBUG("c160_f2");
 	if (action == 0xFF)
 		action = m_SmoothScreenAction;
 
@@ -88,6 +90,7 @@ void CCharacterListScreen::ProcessSmoothAction(uchar action)
 */
 void CCharacterListScreen::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
+	WISPFUN_DEBUG("c160_f3");
 	m_Gump.OnKeyDown(wParam, lParam);
 
 	if (wParam == VK_RETURN)

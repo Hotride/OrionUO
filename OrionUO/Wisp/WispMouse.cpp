@@ -26,6 +26,7 @@ CMouse::~CMouse()
 //----------------------------------------------------------------------------------
 void CMouse::Update()
 {
+	WISPFUN_DEBUG("c8_f1");
 	POINT pos;
 	GetCursorPos(&pos);
 
@@ -42,6 +43,7 @@ void CMouse::Update()
 //----------------------------------------------------------------------------------
 void CMouse::Update(WPARAM wParam, LPARAM lParam)
 {
+	WISPFUN_DEBUG("c8_f2");
 	m_LeftButtonPressed = (bool)(wParam & MK_LBUTTON);
 	m_RightButtonPressed = (bool)(wParam & MK_RBUTTON);
 	m_MidButtonPressed = (bool)(wParam & MK_MBUTTON);
@@ -65,12 +67,14 @@ void CMouse::Update(WPARAM wParam, LPARAM lParam)
 //----------------------------------------------------------------------------------
 void CMouse::ReleaseCapture()
 {
+	WISPFUN_DEBUG("c8_f3");
 	if (!(m_LeftButtonPressed || m_RightButtonPressed || m_MidButtonPressed))
 		::ReleaseCapture();
 }
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CPoint2Di CMouse::LeftDroppedOffset()
 {
+	WISPFUN_DEBUG("c8_f4");
 	WISP_GEOMETRY::CPoint2Di position;
 
 	if (m_LeftButtonPressed)
@@ -84,6 +88,7 @@ WISP_GEOMETRY::CPoint2Di CMouse::LeftDroppedOffset()
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CPoint2Di CMouse::RightDroppedOffset()
 {
+	WISPFUN_DEBUG("c8_f5");
 	WISP_GEOMETRY::CPoint2Di position;
 
 	if (m_RightButtonPressed)
@@ -97,6 +102,7 @@ WISP_GEOMETRY::CPoint2Di CMouse::RightDroppedOffset()
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CPoint2Di CMouse::MidDroppedOffset()
 {
+	WISPFUN_DEBUG("c8_f6");
 	WISP_GEOMETRY::CPoint2Di position;
 
 	if (m_MidButtonPressed)

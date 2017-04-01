@@ -14,6 +14,7 @@ CGUIColoredPolygone::CGUIColoredPolygone(const uint &serial, const ushort &color
 : CGUIPolygonal(GOT_COLOREDPOLYGONE, x, y, width, height), m_DrawDot(false),
 m_Focused(false)
 {
+	WISPFUN_DEBUG("c48_f1");
 	m_Serial = serial;
 	UpdateColor(color, polygoneColor);
 }
@@ -24,6 +25,7 @@ CGUIColoredPolygone::~CGUIColoredPolygone()
 //----------------------------------------------------------------------------------
 void CGUIColoredPolygone::UpdateColor(const ushort &color, const uint &polygoneColor)
 {
+	WISPFUN_DEBUG("c48_f2");
 	m_Color = color;
 
 	m_ColorR = GetRValue(polygoneColor);
@@ -37,6 +39,7 @@ void CGUIColoredPolygone::UpdateColor(const ushort &color, const uint &polygoneC
 //----------------------------------------------------------------------------------
 void CGUIColoredPolygone::Draw(const bool &checktrans)
 {
+	WISPFUN_DEBUG("c48_f3");
 	glColor4ub(m_ColorR, m_ColorG, m_ColorB, m_ColorA);
 
 	if (m_ColorA < 0xFF)
@@ -59,12 +62,14 @@ void CGUIColoredPolygone::Draw(const bool &checktrans)
 //----------------------------------------------------------------------------------
 void CGUIColoredPolygone::OnMouseEnter()
 {
+	WISPFUN_DEBUG("c48_f4");
 	if (m_DrawDot && g_SelectedObject.Gump() != NULL)
 		g_SelectedObject.Gump()->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUIColoredPolygone::OnMouseExit()
 {
+	WISPFUN_DEBUG("c48_f5");
 	if (m_DrawDot && g_LastSelectedObject.Gump() != NULL)
 		g_LastSelectedObject.Gump()->WantRedraw = true;
 }
