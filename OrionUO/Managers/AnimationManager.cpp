@@ -1116,59 +1116,68 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 //----------------------------------------------------------------------------------
 bool CAnimationManager::TestImagePixels(CTextureAnimationDirection &direction, const uchar &frame, const int &checkX, const int &checkY)
 {
-	SetData((puchar)direction.Address, direction.Size);
-
-	pushort palette = (pushort)m_Start;
-	Move(sizeof(ushort[256])); //Palette
-	puchar dataStart = m_Ptr;
-
-	int frameCount = ReadUInt32LE();
-	puint frameOffset = (puint)m_Ptr;
-
-	m_Ptr = dataStart + frameOffset[frame];
-
-	uint imageCenterX = ReadInt16LE();
-	uint imageCenterY = ReadInt16LE();
-	uint imageWidth = ReadInt16LE();
-	uint imageHeight = ReadInt16LE();
-
-	uint header = ReadUInt32LE();
-
-	while (header != 0x7FFF7FFF && !IsEOF())
+	if (direction.IsUOP)
 	{
-		ushort runLength = (header & 0x0FFF);
+		CTextureAnimationFrame *actualFrame = direction.FindFrame(frame);
+		int pixelIndex = checkY * actualFrame->m_Texture.GetWidth() + checkX;
+		return actualFrame->m_PixelData[0][pixelIndex];
+	}
+	else
+	{
+		SetData((puchar)direction.Address, direction.Size);
 
-		int x = (header >> 22) & 0x03FF;
+		pushort palette = (pushort)m_Start;
+		Move(sizeof(ushort[256])); //Palette
+		puchar dataStart = m_Ptr;
 
-		if (x & 0x0200)
-			x |= 0xFFFFFE00;
+		int frameCount = ReadUInt32LE();
+		puint frameOffset = (puint)m_Ptr;
 
-		int y = (header >> 12) & 0x03FF;
+		m_Ptr = dataStart + frameOffset[frame];
 
-		if (y & 0x0200)
-			y |= 0xFFFFFE00;
+		uint imageCenterX = ReadInt16LE();
+		uint imageCenterY = ReadInt16LE();
+		uint imageWidth = ReadInt16LE();
+		uint imageHeight = ReadInt16LE();
 
-		x += imageCenterX;
-		y += imageCenterY + imageHeight;
+		uint header = ReadUInt32LE();
 
-		if (y != checkY)
-			Move(runLength);
-		else
+		while (header != 0x7FFF7FFF && !IsEOF())
 		{
-			if (checkX >= x && checkX <= x + runLength)
-			{
-				Move(checkX);
+			ushort runLength = (header & 0x0FFF);
 
-				return (palette[ReadUInt8()] != 0);
+			int x = (header >> 22) & 0x03FF;
+
+			if (x & 0x0200)
+				x |= 0xFFFFFE00;
+
+			int y = (header >> 12) & 0x03FF;
+
+			if (y & 0x0200)
+				y |= 0xFFFFFE00;
+
+			x += imageCenterX;
+			y += imageCenterY + imageHeight;
+
+			if (y != checkY)
+				Move(runLength);
+			else
+			{
+				if (checkX >= x && checkX <= x + runLength)
+				{
+					Move(checkX);
+
+					return (palette[ReadUInt8()] != 0);
+				}
+
+				Move(runLength);
 			}
 
-			Move(runLength);
+			header = ReadUInt32LE();
 		}
 
-		header = ReadUInt32LE();
+		return false;
 	}
-
-	return false;
 }
 //----------------------------------------------------------------------------------
 bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, ushort id)
@@ -2262,8 +2271,9 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 
 		if (!imageWidth || !imageHeight)
 			continue;
-
-		USHORT_LIST data(imageWidth * imageHeight, 0);
+		int textureSize = imageWidth * imageHeight;
+		USHORT_LIST data(textureSize, 0);
+		frame->m_PixelData = new vector<bool>(textureSize);
 
 		uint header = ReadUInt32LE();
 
@@ -2291,10 +2301,15 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 				ushort val = palette[ReadUInt8()];
 
 				if (val)
+				{
 					data[block] = 0x8000 | val;
+					frame->m_PixelData[0][block] = true;
+				}
 				else
+				{
 					data[block] = 0;
-
+					frame->m_PixelData[0][block] = false;
+				}
 				block++;
 			}
 

@@ -23,11 +23,13 @@ class CTextureAnimationFrame : public CBaseQueueItem
 	SETGET(short, CenterX);
 	SETGET(short, CenterY);
 
+
 public:
 	CTextureAnimationFrame(const int &frame);
 	virtual ~CTextureAnimationFrame();
 
 	CGLTexture m_Texture;
+	vector<bool> *m_PixelData;
 };
 //----------------------------------------------------------------------------------
 //Класс для работы с направлением анимации
