@@ -1036,11 +1036,7 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 	WISPFUN_DEBUG("c133_f10");
 	if (direction.Address == 0)
 	{
-		if (g_FileManager.UseUOP)
-		{
-			return TryReadUOPAnimDimins(obj, direction);
-		}
-		return false;
+		return TryReadUOPAnimDimins(obj, direction);
 	}
 
 	SetData((puchar)direction.Address, direction.Size);
@@ -2000,13 +1996,11 @@ bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
 {
 	WISPFUN_DEBUG("c133_f20");
 	bool result = false;
-	if (g_FileManager.UseUOP && m_DataIndex[graphic].m_Groups[group].m_Direction[0].IsUOP)
-	{
-		return true;
-	}
 	if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT && group < ANIMATION_GROUPS_COUNT)
-		result = (m_DataIndex[graphic].m_Groups[group].m_Direction[0].Address != 0);
-
+	{
+		auto groupDir = m_DataIndex[graphic].m_Groups[group].m_Direction[0];
+		result = groupDir.Address != 0 || groupDir.IsUOP;
+	}
 	return result;
 }
 //----------------------------------------------------------------------------------

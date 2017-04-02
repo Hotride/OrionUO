@@ -18,7 +18,7 @@
 class CFileManager
 {
 	SETGET(bool, UseVerdata);
-	SETGET(bool, UseUOP);
+	SETGET(bool, UseUOPMap);
 	SETGET(int, UnicodeFontsCount);
 
 public:
@@ -89,6 +89,7 @@ public:
 
 private:
 	void ReadTask();
+	static bool FileExists(const std::string& filename);
 };
 //---------------------------------------------------------------------------
 extern CFileManager g_FileManager;

@@ -298,8 +298,8 @@ bool COrion::Install()
 	LoadAutoLoginNames();
 
 	DEBUGLOG("Load files\n");
-	if (g_FileManager.UseUOP)
-		g_FileManager.TryReadUOPAnimations();
+
+	g_FileManager.TryReadUOPAnimations();
 	if (!g_FileManager.Load())
 	{
 		string tmp = string("Error loading file:\n") + WISP_FILE::g_WispMappedFileError;
@@ -351,7 +351,7 @@ bool COrion::Install()
 
 	g_SpeechManager.LoadSpeech();
 
-	if (g_FileManager.UseUOP)
+	if (g_FileManager.UseUOPMap)
 		g_MapManager = new CUopMapManager();
 	else
 		g_MapManager = new CMapManager();
@@ -509,12 +509,9 @@ bool COrion::Install()
 	InitScreen(GS_MAIN);
 
 	LOG("Installation completed!\n");
-	if (g_FileManager.UseUOP)
-	{
-		LOG("Waiting for FileManager to load AnimationSequence.uop\n");
-		g_FileManager.m_AutoResetEvent.WaitOne();
-		LOG("FileManager.TryReadUOPAnimations() done!\n");
-	}
+	LOG("Waiting for FileManager to try & load AnimationSequence.uop\n");
+	g_FileManager.m_AutoResetEvent.WaitOne();
+	LOG("FileManager.TryReadUOPAnimations() done!\n");
 	return true;
 }
 //----------------------------------------------------------------------------------
@@ -956,8 +953,6 @@ void COrion::LoadClientConfig()
 			subVersion = file.ReadInt8();
 
 		g_PacketManager.ClientVersion = (CLIENT_VERSION)file.ReadInt8();
-		if (g_PacketManager.ClientVersion >= CV_7000)
-			g_FileManager.UseUOP = true;
 
 		int len = file.ReadInt8();
 		m_ClientVersionText = file.ReadString(len);
@@ -4025,10 +4020,10 @@ void COrion::LoadClientStartupConfig()
 
 	if (g_ConfigManager.Music)
 	{
-		if (!g_FileManager.UseUOP)
-		PlayMusic(8);
-		else
+		if (g_PacketManager.ClientVersion >= CV_7000)
 			PlayMusic(78);
+		else
+			PlayMusic(8);
 	}
 
 }

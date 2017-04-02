@@ -12,11 +12,12 @@
 #include <thread>
 #include <fstream>
 #include "AnimationManager.h"
+#include <sys/stat.h>
 
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
 CFileManager::CFileManager()
-: m_UseVerdata(false), m_UseUOP(false), m_UnicodeFontsCount(0), m_AutoResetEvent(false)
+: m_UseVerdata(false), m_UseUOPMap(false), m_UnicodeFontsCount(0), m_AutoResetEvent(false)
 {
 }
 //----------------------------------------------------------------------------------
@@ -27,38 +28,20 @@ CFileManager::~CFileManager()
 bool CFileManager::Load()
 {
 	//Try to use map uop files first, if we can, we will use them.
-	if (UseUOP)
+	if (!m_artLegacyMUL.Load(g_App.FilePath("artLegacyMUL.uop")))
 	{
-		if (!m_artLegacyMUL.Load(g_App.FilePath("artLegacyMUL.uop")))
-		{
-			if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul"))) return false;
-			if (!m_ArtMul.Load(g_App.FilePath("art.mul"))) return false;
-		}
-		if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
-		{
-			if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul"))) return false;
-			if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul"))) return false;
-		}
-		if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
-		{
-			if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul"))) return false;
-			if (!m_SoundMul.Load(g_App.FilePath("sound.mul"))) return false;
-		}
+		if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul"))) return false;
+		if (!m_ArtMul.Load(g_App.FilePath("art.mul"))) return false;
 	}
-	else
+	if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
 	{
-		if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
-			return false;
-		if (!m_ArtMul.Load(g_App.FilePath("art.mul")))
-			return false;
-		if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul")))
-			return false;
-		if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul")))
-			return false;
-		if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul")))
-			return false;
-		if (!m_SoundMul.Load(g_App.FilePath("sound.mul")))
-			return false;
+		if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul"))) return false;
+		if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul"))) return false;
+	}
+	if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
+	{
+		if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul"))) return false;
+		if (!m_SoundMul.Load(g_App.FilePath("sound.mul"))) return false;
 	}
 
 	/* Эти файлы не используются самой последней версией клиента 7.0.52.2
@@ -123,10 +106,10 @@ bool CFileManager::Load()
 			m_AnimMul[i].Load(g_App.FilePath("anim%i.mul", i));
 		}
 
-		if (UseUOP)
-			m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i));
+		if (m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i)))
+			UseUOPMap = true;
 		else
-		m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
+			m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
 		/*else
 		{
 		/if (i == 0 || i == 1 || i == 2 || i == 5)
@@ -256,6 +239,10 @@ void CFileManager::ReadTask()
 
 		std::fstream *animFile = new std::fstream();
 		string *path = new string(g_App.FilePath("AnimationFrame%i.uop", i));
+		if (!FileExists(*path))
+		{
+			continue;
+		}
 		animFile->open(*path, std::ios::binary | std::ios::in);
 
 		if (!animFile) continue;
@@ -314,4 +301,14 @@ void CFileManager::ReadTask()
 		animFile->close();
 	}
 	m_AutoResetEvent.Set();
+}
+//----------------------------------------------------------------------------------
+bool CFileManager::FileExists(const std::string& filename)
+{
+	struct stat buf;
+	if (stat(filename.c_str(), &buf) != -1)
+	{
+		return true;
+	}
+	return false;
 }
