@@ -31,24 +31,18 @@ bool CFileManager::Load()
 	{
 		if (!m_artLegacyMUL.Load(g_App.FilePath("artLegacyMUL.uop")))
 		{
-			if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
-		return false;
-			if (!m_ArtMul.Load(g_App.FilePath("art.mul")))
-		return false;
+			if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul"))) return false;
+			if (!m_ArtMul.Load(g_App.FilePath("art.mul"))) return false;
 		}
 		if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
 		{
-			if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul")))
-		return false;
-			if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul")))
-		return false;
+			if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul"))) return false;
+			if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul"))) return false;
 		}
 		if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
 		{
-			if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul")))
-				return false;
-			if (!m_SoundMul.Load(g_App.FilePath("sound.mul")))
-				return false;
+			if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul"))) return false;
+			if (!m_SoundMul.Load(g_App.FilePath("sound.mul"))) return false;
 		}
 	}
 	else
