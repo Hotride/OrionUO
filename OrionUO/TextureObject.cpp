@@ -10,13 +10,14 @@
 #include "TextureObject.h"
 //----------------------------------------------------------------------------------
 CTextureAnimationFrame::CTextureAnimationFrame()
-: m_CenterX(0), m_CenterY(0), m_Texture()
+: m_CenterX(0), m_CenterY(0), m_Texture(), m_PixelData(NULL)
 {
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationFrame::~CTextureAnimationFrame()
 {
-	m_Texture.Clear();
+	if (m_PixelData != NULL)
+		delete m_PixelData;
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationDirection::CTextureAnimationDirection()
