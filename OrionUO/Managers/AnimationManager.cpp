@@ -1132,8 +1132,6 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection &direction, c
 		int pixelIndex = checkY * actualFrame.m_Texture.GetWidth() + checkX;
 		return actualFrame.m_PixelData[pixelIndex];
 	}
-	else
-	{
 	SetData((puchar)direction.Address, direction.Size);
 
 	pushort palette = (pushort)m_Start;
@@ -1187,7 +1185,6 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection &direction, c
 	}
 
 	return false;
-}
 }
 //----------------------------------------------------------------------------------
 bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &mirror, uchar &frameIndex, ushort id)
