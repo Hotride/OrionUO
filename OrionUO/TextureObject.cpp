@@ -16,8 +16,7 @@ CTextureAnimationFrame::CTextureAnimationFrame()
 //----------------------------------------------------------------------------------
 CTextureAnimationFrame::~CTextureAnimationFrame()
 {
-	if (m_PixelData != NULL)
-		delete m_PixelData;
+	m_PixelData.clear();
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationDirection::CTextureAnimationDirection()
@@ -27,7 +26,6 @@ CTextureAnimationDirection::CTextureAnimationDirection()
 //----------------------------------------------------------------------------------
 CTextureAnimationDirection::~CTextureAnimationDirection()
 {
-	RELEASE_POINTER(m_Frames);
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationGroup::CTextureAnimationGroup()

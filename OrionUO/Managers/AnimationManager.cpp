@@ -1010,7 +1010,8 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 
 		if (obj->LastAccessTime < ticks)
 		{
-			RELEASE_POINTER(obj->m_Frames);
+			delete [] obj->m_Frames;
+			obj->m_Frames = NULL;
 			obj->FrameCount = 0;
 			obj->LastAccessTime = 0;
 
@@ -1129,7 +1130,7 @@ bool CAnimationManager::TestImagePixels(CTextureAnimationDirection &direction, c
 	{
 		CTextureAnimationFrame &actualFrame = direction.m_Frames[frame];
 		int pixelIndex = checkY * actualFrame.m_Texture.GetWidth() + checkX;
-		return actualFrame.m_PixelData[0][pixelIndex];
+		return actualFrame.m_PixelData[pixelIndex];
 	}
 	else
 	{
@@ -2249,7 +2250,7 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 			continue;
 		int textureSize = imageWidth * imageHeight;
 		USHORT_LIST data(textureSize, 0);
-		frame.m_PixelData = new vector<bool>(textureSize);
+		frame.m_PixelData = vector<bool>(textureSize);
 
 		uint header = ReadUInt32LE();
 
@@ -2279,12 +2280,12 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 				if (val)
 				{
 					data[block] = 0x8000 | val;
-					frame.m_PixelData[0][block] = true;
+					frame.m_PixelData[block] = true;
 				}
 				else
 				{
 					data[block] = 0;
-					frame.m_PixelData[0][block] = false;
+					frame.m_PixelData[block] = false;
 				}
 				block++;
 			}
