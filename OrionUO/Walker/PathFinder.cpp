@@ -474,7 +474,7 @@ bool CPathFinder::CanWalk(uchar &direction, int &x, int &y, char &z)
 int CPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 {
 	WISPFUN_DEBUG("c177_f6");
-	bool mounted = (onMount || (g_SpeedMode == CST_FAST_UNMOUNT || g_SpeedMode == CST_FAST_UNMOUNT_AND_CANT_RUN));
+	bool mounted = (onMount || (g_SpeedMode == CST_FAST_UNMOUNT || g_SpeedMode == CST_FAST_UNMOUNT_AND_CANT_RUN) || g_Player->Flying());
 
 	return CHARACTER_ANIMATION_DELAY_TABLE[mounted][run];
 }
