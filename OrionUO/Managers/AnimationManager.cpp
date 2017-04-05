@@ -1009,7 +1009,11 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 
 		if (obj->LastAccessTime < ticks)
 		{
-			RELEASE_POINTER(obj->m_Frames);
+			if (obj->m_Frames != NULL)
+			{
+				delete[] obj->m_Frames;
+				obj->m_Frames = NULL;
+			}
 			obj->FrameCount = 0;
 			obj->LastAccessTime = 0;
 

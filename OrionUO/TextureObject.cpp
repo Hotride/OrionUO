@@ -26,7 +26,11 @@ CTextureAnimationDirection::CTextureAnimationDirection()
 //----------------------------------------------------------------------------------
 CTextureAnimationDirection::~CTextureAnimationDirection()
 {
-	RELEASE_POINTER(m_Frames);
+	if (m_Frames != NULL)
+	{
+		delete[] m_Frames;
+		m_Frames = NULL;
+	}
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationGroup::CTextureAnimationGroup()
