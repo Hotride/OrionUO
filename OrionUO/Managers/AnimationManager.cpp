@@ -1220,7 +1220,7 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &m
 	if (frameIndex < direction.FrameCount)
 	{
 		CTextureAnimationFrame &frame = direction.m_Frames[frameIndex];
-		
+
 		CGLTexture &texture = frame.m_Texture;
 		y -= texture.Height + frame.CenterY;
 		
