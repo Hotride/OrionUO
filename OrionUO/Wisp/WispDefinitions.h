@@ -2,7 +2,7 @@
 #ifndef WISPDEFINITIONS_H
 #define WISPDEFINITIONS_H
 //----------------------------------------------------------------------------------
-#define USE_WISP_DEBUG_FUNCTION_NAMES 1
+#define USE_WISP_DEBUG_FUNCTION_NAMES 0
 
 #if USE_WISP_DEBUG_FUNCTION_NAMES == 1
 #define WISPFUN_DEBUG(name) \
