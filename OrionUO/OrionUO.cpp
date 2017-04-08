@@ -5440,6 +5440,8 @@ void COrion::ClearWorld()
 	g_Ability[1] = 10;
 
 	g_ResizedGump = NULL;
+
+	g_DrawStatLockers = false;
 }
 //----------------------------------------------------------------------------------
 void COrion::LogOut()

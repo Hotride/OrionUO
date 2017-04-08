@@ -162,6 +162,8 @@ ushort g_AbilityList[MAX_ABILITIES_COUNT] =
 	30
 };
 uchar g_Ability[2] = { 4, 10 };
+
+bool g_DrawStatLockers = false;
 //----------------------------------------------------------------------------------
 bool CanBeDraggedByOffset(const WISP_GEOMETRY::CPoint2Di &point)
 {

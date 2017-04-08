@@ -2916,6 +2916,8 @@ PACKET_HANDLER(ExtendedCommand)
 				Move(1);
 				uchar state = ReadUInt8();
 
+				g_DrawStatLockers = true;
+
 				g_Player->LockStr = (state >> 4) & 3;
 				g_Player->LockDex = (state >> 2) & 3;
 				g_Player->LockInt = state & 3;

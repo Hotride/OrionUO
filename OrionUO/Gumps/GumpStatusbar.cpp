@@ -478,46 +478,46 @@ void CGumpStatusbar::UpdateContent()
 				{
 					//Кнопка вызова гампа бафов
 					Add(new CGUIButton(ID_GSB_BUFF_GUMP, 0x7538, 0x7538, 0x7538, 40, 50));
+				}
 
-					//Кнопочки для изменения роста/лока статов
-					if (g_PacketManager.ClientVersion >= CV_60142)
-					{
-						//Str
-						uchar status = g_Player->LockStr; //Статус (вниз/вверх/замок)
+				//Кнопочки для изменения роста/лока статов
+				if (g_DrawStatLockers)
+				{
+					//Str
+					uchar status = g_Player->LockStr; //Статус (вниз/вверх/замок)
 
-						ushort gumpID = 0x0984; //Up
-						if (status == 1)
-							gumpID = 0x0986; //Down
-						else if (status == 2)
-							gumpID = 0x082C; //Lock
+					ushort gumpID = 0x0984; //Up
+					if (status == 1)
+						gumpID = 0x0986; //Down
+					else if (status == 2)
+						gumpID = 0x082C; //Lock
 
-						Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, 40, 76));
-
-
-						//Dex
-						status = g_Player->LockDex; //Статус (вниз/вверх/замок)
-
-						gumpID = 0x0984; //Up
-						if (status == 1)
-							gumpID = 0x0986; //Down
-						else if (status == 2)
-							gumpID = 0x082C; //Lock
-
-						Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, 40, 102));
+					Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, 40, 76));
 
 
+					//Dex
+					status = g_Player->LockDex; //Статус (вниз/вверх/замок)
 
-						//Int
-						status = g_Player->LockInt; //Статус (вниз/вверх/замок)
+					gumpID = 0x0984; //Up
+					if (status == 1)
+						gumpID = 0x0986; //Down
+					else if (status == 2)
+						gumpID = 0x082C; //Lock
 
-						gumpID = 0x0984; //Up
-						if (status == 1)
-							gumpID = 0x0986; //Down
-						else if (status == 2)
-							gumpID = 0x082C; //Lock
+					Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, 40, 102));
 
-						Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, 40, 132));
-					}
+
+
+					//Int
+					status = g_Player->LockInt; //Статус (вниз/вверх/замок)
+
+					gumpID = 0x0984; //Up
+					if (status == 1)
+						gumpID = 0x0986; //Down
+					else if (status == 2)
+						gumpID = 0x082C; //Lock
+
+					Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, 40, 132));
 				}
 
 
