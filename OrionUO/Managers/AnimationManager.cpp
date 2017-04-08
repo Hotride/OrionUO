@@ -1038,7 +1038,8 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction, CGameObject *obj)
 {
 	WISPFUN_DEBUG("c133_f10");
-	if (direction.Address == 0)
+
+	if (direction.Address == 0 || obj->IsUOP)
 	{
 		return TryReadUOPAnimDimins(obj, direction);
 	}

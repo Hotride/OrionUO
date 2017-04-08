@@ -1672,6 +1672,8 @@ PACKET_HANDLER(UpdateObject)
 
 		CGameItem *obj2 = g_World->GetWorldItem(serial);
 
+		if (character != NULL && character->GetRace() == RT_GARGOYLE)
+			obj2->IsUOP = true;
 		obj2->MapIndex = g_CurrentMap;
 
 		graphic = ReadUInt16BE();
