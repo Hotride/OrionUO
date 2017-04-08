@@ -297,19 +297,45 @@ void CGameCharacter::Select(const int &x, const int &y)
 void CGameCharacter::OnGraphicChange(int direction)
 {
 	WISPFUN_DEBUG("c15_f7");
-	//!Обновления пола в зависимости от индекса картинки персонажа
+	//!Обновления пола и расы в зависимости от индекса картинки персонажа
 	switch (m_Graphic)
 	{
 		case 0x0190:
 		case 0x0192:
 		{
 			m_Female = false;
+			m_Race = RT_HUMAN;
 			break;
 		}
 		case 0x0191:
 		case 0x0193:
 		{
 			m_Female = true;
+			m_Race = RT_HUMAN;
+			break;
+		}
+		case 0x025D:
+		{
+			m_Female = false;
+			m_Race = RT_ELF;
+			break;
+		}
+		case 0x025E:
+		{
+			m_Female = true;
+			m_Race = RT_ELF;
+			break;
+		}
+		case 0x029A:
+		{
+			m_Female = false;
+			m_Race = RT_GARGOYLE;
+		    break;
+		}
+		case 0x029B:
+		{
+			m_Female = true;
+			m_Race = RT_GARGOYLE;
 			break;
 		}
 		default:
