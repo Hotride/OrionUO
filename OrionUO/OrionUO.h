@@ -441,6 +441,9 @@ public:
 	//Удаление объектов, вышедших за пределы g_UpdateRange
 	void RemoveRangedObjects();
 
+	//Очистить мир (удалить все объекты)
+	void ClearWorld();
+
 	//Выход из игры на основной экран
 	void LogOut();
 

@@ -5393,27 +5393,16 @@ void COrion::RemoveRangedObjects()
 	g_EffectManager.RemoveRangedEffects();
 }
 //----------------------------------------------------------------------------------
-void COrion::LogOut()
+void COrion::ClearWorld()
 {
-	WISPFUN_DEBUG("c194_f124");
-	LOG("COrion::LogOut->Start\n");
-	SaveLocalConfig();
-
-	if (g_SendLogoutNotification)
-		CPacketLogoutNotification().Send();
-
-	Disconnect();
-	LOG("\tDisconnected?\n");
-
 	RELEASE_POINTER(g_Walker);
-
 	LOG("\tWalker deleted?\n");
 
 	RELEASE_POINTER(g_ObjectInHand);
 	LOG("\tObjectInHand removed?\n");
 
 	RELEASE_POINTER(g_World)
-	LOG("\tWorld removed?\n");
+		LOG("\tWorld removed?\n");
 
 	g_PopupMenu = NULL;
 
@@ -5442,6 +5431,30 @@ void COrion::LogOut()
 		g_MapManager->Clear();
 
 	g_CurrentMap = 0;
+
+	g_Party.Leader = 0;
+	g_Party.Inviter = 0;
+	g_Party.Clear();
+
+	g_Ability[0] = 4;
+	g_Ability[1] = 10;
+
+	g_ResizedGump = NULL;
+}
+//----------------------------------------------------------------------------------
+void COrion::LogOut()
+{
+	WISPFUN_DEBUG("c194_f124");
+	LOG("COrion::LogOut->Start\n");
+	SaveLocalConfig();
+
+	if (g_SendLogoutNotification)
+		CPacketLogoutNotification().Send();
+
+	Disconnect();
+	LOG("\tDisconnected?\n");
+
+	ClearWorld();
 
 	LOG("COrion::LogOut->End\n");
 	InitScreen(GS_MAIN);

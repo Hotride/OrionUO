@@ -894,14 +894,8 @@ PACKET_HANDLER(EnterWorld)
 	{
 		LOG("Error!!! Duplicate enter world message\n");
 
-		g_Party.Leader = 0;
-		g_Party.Inviter = 0;
-		g_Party.Clear();
-
-		g_Ability[0] = 4;
-		g_Ability[1] = 10;
-
-		g_ResizedGump = NULL;
+		g_Orion.SaveLocalConfig();
+		g_Orion.ClearWorld();
 	}
 
 	RELEASE_POINTER(g_World);
