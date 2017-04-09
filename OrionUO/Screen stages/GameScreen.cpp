@@ -1889,7 +1889,17 @@ void CGameScreen::OnLeftMouseButtonUp()
 				else if (rwo->IsLandObject())
 					g_Target.SendTargetTile(0/*g_SelectedObject->Graphic*/, rwo->X, rwo->Y, rwo->Z);
 				else if (rwo->IsStaticObject() || rwo->IsMultiObject())
-					g_Target.SendTargetTile(rwo->Graphic - 0x4000, rwo->X, rwo->Y, rwo->Z);
+				{
+					STATIC_TILES *st = NULL;
+					
+					if (g_PacketManager.ClientVersion >= CV_7090 && rwo->IsSurface())
+						st = ((CRenderStaticObject*)rwo)->GetStaticData();
+
+					if (st != NULL)
+						g_Target.SendTargetTile(rwo->Graphic - 0x4000, rwo->X, rwo->Y, rwo->Z + st->Height);
+					else
+						g_Target.SendTargetTile(rwo->Graphic - 0x4000, rwo->X, rwo->Y, rwo->Z);
+				}
 
 				g_MouseManager.LastLeftButtonClickTimer = 0;
 
