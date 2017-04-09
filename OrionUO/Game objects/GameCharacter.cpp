@@ -817,7 +817,62 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 			m_AnimIndex = 0;
 		}
 	}
-
+	//62 gg flying walk
+	//63 gg flying run
+	//64 gg flying idle
+	//65 gg flying warmode on
+	//66 gg flying taking dmg?
+	//67
+	if (Flying())
+	{
+		if (result == 0)
+			result = 62;
+		else if (result == 2 || result == 3)
+			result = 63;
+		else if (result == 4)
+			result = 64;
+		else if (result == 7 || result == 8)
+			result = 65;
+		else if (result >= 9 && result <= 11)
+		{
+			result = 71;
+		}
+		else if (result >= 12 && result <= 14)
+		{
+			result = 72;
+		}
+		else if (result == 20)
+		{
+			result = 77;
+		}
+		else if (result == 31)
+		{
+			result = 71;
+		}
+		else if (result == 34)
+		{
+			result = 78;
+		}
+		else if (result >= 200 && result <= 259)
+		{
+			result = 75;
+		}
+		else if (result >= 260 && result <= 270)
+		{
+			result = 75;
+		}
+	}
+	else
+	{
+		if (result >= 200 && result <= 259)
+		{
+			result = 17;
+		}
+		else if (result >= 260 && result <= 270)
+		{
+			result = 16;
+		}
+	}
 	return result;
 }
 //----------------------------------------------------------------------------------
