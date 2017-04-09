@@ -279,8 +279,13 @@ void CGumpPaperdoll::InitToolTip()
 					{
 						CGameObject *obj = character->FindLayer(id - ID_GP_ITEMS);
 
-						if (obj != NULL && obj->ClilocMessage.length())
-							g_ToolTip.Set(obj->ClilocMessage);
+						if (obj != NULL)
+						{
+							if (obj->ClilocMessage.length())
+								g_ToolTip.Set(obj->ClilocMessage);
+							else if (g_PacketManager.ClientVersion >= CV_308Z)
+								g_PacketManager.AddMegaClilocRequest(obj->Serial, true);
+						}
 					}
 				}
 
