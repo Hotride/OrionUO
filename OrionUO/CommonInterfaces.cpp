@@ -195,27 +195,42 @@ void __cdecl FUNCBODY_SendTargetCancel()
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendCastSpell(int index)
 {
-	g_Orion.CastSpell(index);
+	if (index >= 0)
+	{
+		g_LastSpellIndex = index;
+
+		CPacketCastSpell packet(index);
+		SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
+	}
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendUseSkill(int index)
 {
-	g_Orion.UseSkill(index);
+	if (index >= 0)
+	{
+		g_LastSkillIndex = index;
+
+		CPacketUseSkill packet(index);
+		SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
+	}
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendAsciiSpeech(const char *text)
 {
-	g_Orion.SendASCIIText(text, ST_NORMAL);
+	CPacketASCIISpeechRequest packet(text, ST_NORMAL, 3, g_ConfigManager.SpeechColor);
+	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendUnicodeSpeech(const wchar_t *text)
 {
-	CPacketUnicodeSpeechRequest(text, ST_NORMAL, 3, g_ConfigManager.SpeechColor, (puchar)g_Language.c_str()).Send();
+	CPacketUnicodeSpeechRequest packet(text, ST_NORMAL, 3, g_ConfigManager.SpeechColor, (puchar)g_Language.c_str());
+	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendRenameMount(uint serial, const char *text)
 {
-	CPacketRenameRequest(serial, text).Send();
+	CPacketRenameRequest packet(serial, text);
+	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 
 	if (g_PacketManager.ClientVersion >= CV_308Z)
 	{
@@ -235,7 +250,8 @@ void __cdecl FUNCBODY_SendMenuResponse(unsigned int serial, unsigned int id, int
 
 			if (gump->GumpType == GT_MENU || gump->GumpType == GT_GRAY_MENU)
 			{
-				CPacketMenuResponse(gump, code).Send();
+				CPacketMenuResponse packet(gump, code);
+				SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 				g_GumpManager.RemoveGump(gump);
 			}
 
@@ -253,13 +269,15 @@ void __cdecl FUNCBODY_SendMenuResponse(unsigned int serial, unsigned int id, int
 
 		if (gump != NULL)
 		{
-			CPacketGrayMenuResponse(gump, code).Send();
+			CPacketGrayMenuResponse packet(gump, code);
+			SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 			g_GumpManager.RemoveGump(gump);
 		}
 	}
 	else
 	{
-		CPacketMenuResponse(gump, code).Send();
+		CPacketMenuResponse packet(gump, code);
+		SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 		g_GumpManager.RemoveGump(gump);
 	}
 }
