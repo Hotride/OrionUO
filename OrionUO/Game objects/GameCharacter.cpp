@@ -826,17 +826,16 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 
 		if (Flying())
 		{
-			if (result == 255)
-			{
-				if (InWar) result = 65;
-				else result = 62;
-			}
+			if (result == 0 || result == 1)
+				result = 62;
 			else if (result == 2 || result == 3)
 				result = 63;
 			else if (result == 4)
 				result = 64;
 			else if (result == 6)
 				result = 66;
+			else if (result == 7 || result == 8)
+				result = 65;
 			else if (result >= 9 && result <= 11)
 			{
 				result = 71;
@@ -844,6 +843,10 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 			else if (result >= 12 && result <= 14)
 			{
 				result = 72;
+			}
+			else if (result == 15)
+			{
+				result = 62;
 			}
 			else if (result == 20)
 			{
