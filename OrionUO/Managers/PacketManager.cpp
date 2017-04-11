@@ -64,6 +64,7 @@
 #include "../Gumps/GumpShop.h"
 #include "../Gumps/GumpSkills.h"
 #include "../Gumps/GumpSpellbook.h"
+#include "AnimationManager.h"
 #include "../zlib.h"
 
 #pragma comment(lib, "zdll.lib")
@@ -2487,6 +2488,8 @@ PACKET_HANDLER(EnableLockedFeatures)
 		g_LockedClientFeatures = ReadUInt16BE();
 
 	g_ChatEnabled = (bool)(g_LockedClientFeatures & LFF_T2A);
+
+	g_AnimationManager.UpdateAnimationAddressTable();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenContainer)

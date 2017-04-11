@@ -130,6 +130,8 @@ public:
 	*/
 	void InitIndexReplaces(puint verdata);
 
+	void UpdateAnimationAddressTable();
+
 	/*!
 	Загрузка данных
 	@param [__in] verdata Ссылка на адрес в памяти файла патчей (verdata.mul)

@@ -248,6 +248,45 @@ CAnimationManager::~CAnimationManager()
 	ClearUnusedTextures(g_Ticks + 100000);
 }
 //----------------------------------------------------------------------------------
+void CAnimationManager::UpdateAnimationAddressTable()
+{
+	IFOR(i, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
+	{
+		CIndexAnimation &index = m_DataIndex[i];
+
+		IFOR(g, 0, ANIMATION_GROUPS_COUNT)
+		{
+			CTextureAnimationGroup &group = index.m_Groups[g];
+
+			IFOR(d, 0, 5)
+			{
+				CTextureAnimationDirection &direction = group.m_Direction[d];
+				bool replace = (direction.FileIndex == 5);
+
+				if (direction.FileIndex == 2)
+					replace = (g_LockedClientFeatures & LFF_TD);
+				else if (direction.FileIndex == 3)
+					replace = (g_LockedClientFeatures & LFF_LBR);
+				else if (direction.FileIndex == 4)
+					replace = (g_LockedClientFeatures & LFF_AOS);
+				//else if (direction.FileIndex == 5)
+				//	replace = true; // (g_LockedClientFeatures & LFF_ML);
+
+				if (replace)
+				{
+					direction.Address = direction.PatchedAddress;
+					direction.Size = direction.PatchedSize;
+				}
+				else
+				{
+					direction.Address = direction.BaseAddress;
+					direction.Size = direction.BaseSize;
+				}
+			}
+		}
+	}
+}
+//----------------------------------------------------------------------------------
 /*!
 Загрузка данных
 @param [__in] verdata Ссылка на адрес в памяти файла патчей (verdata.mul)
@@ -336,8 +375,10 @@ void CAnimationManager::Load(puint verdata)
 
 				if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
 				{
-					direction.Address = m_AddressMul[0] + aidx->Position;
-					direction.Size = aidx->Size;
+					direction.BaseAddress = m_AddressMul[0] + aidx->Position;
+					direction.BaseSize = aidx->Size;
+					direction.Address = direction.BaseAddress;
+					direction.Size = direction.BaseSize;
 				}
 			}
 		}
@@ -408,8 +449,10 @@ void CAnimationManager::Load(puint verdata)
 
 				CTextureAnimationDirection &direction = index.m_Groups[group].m_Direction[dir];
 
-				direction.Address = (uint)g_FileManager.m_VerdataMul.Start + vh->Position;
-				direction.Size = vh->Size;
+				direction.BaseAddress = (uint)g_FileManager.m_VerdataMul.Start + vh->Position;
+				direction.BaseSize = vh->Size;
+				direction.Address = direction.BaseAddress;
+				direction.Size = direction.BaseSize;
 
 				index.Graphic = id;
 				index.Type = groupType;
@@ -637,8 +680,9 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 							if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
 							{
-								direction.Address = m_AddressMul[animFile] + aidx->Position;
-								direction.Size = aidx->Size;
+								direction.PatchedAddress = m_AddressMul[animFile] + aidx->Position;
+								direction.PatchedSize = aidx->Size;
+								direction.FileIndex = animFile;
 							}
 						}
 					}
@@ -759,8 +803,28 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					CTextureAnimationDirection &direction = group.m_Direction[d];
 					CTextureAnimationDirection &newDirection = newGroup.m_Direction[d];
 
-					direction.Address = newDirection.Address;
-					direction.Size = newDirection.Size;
+					direction.BaseAddress = newDirection.BaseAddress;
+					direction.BaseSize = newDirection.BaseSize;
+					direction.Address = direction.BaseAddress;
+					direction.Size = direction.BaseSize;
+
+					if (!direction.PatchedAddress)
+					{
+						direction.PatchedAddress = newDirection.PatchedAddress;
+						direction.PatchedSize = newDirection.PatchedSize;
+						direction.FileIndex = newDirection.FileIndex;
+					}
+
+					if (!direction.BaseAddress)
+					{
+						direction.BaseAddress = direction.PatchedAddress;
+						direction.BaseSize = direction.PatchedAddress;
+						direction.Address = direction.BaseAddress;
+						direction.Size = direction.BaseSize;
+						direction.PatchedAddress = 0;
+						direction.PatchedSize = 0;
+						direction.FileIndex = 0;
+					}
 				}
 			}
 
@@ -835,8 +899,28 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					CTextureAnimationDirection &direction = group.m_Direction[d];
 					CTextureAnimationDirection &newDirection = newGroup.m_Direction[d];
 
-					direction.Address = newDirection.Address;
-					direction.Size = newDirection.Size;
+					direction.BaseAddress = newDirection.BaseAddress;
+					direction.BaseSize = newDirection.BaseSize;
+					direction.Address = direction.BaseAddress;
+					direction.Size = direction.BaseSize;
+
+					if (!direction.PatchedAddress)
+					{
+						direction.PatchedAddress = newDirection.PatchedAddress;
+						direction.PatchedSize = newDirection.PatchedSize;
+						direction.FileIndex = newDirection.FileIndex;
+					}
+
+					if (!direction.BaseAddress)
+					{
+						direction.BaseAddress = direction.PatchedAddress;
+						direction.BaseSize = direction.PatchedAddress;
+						direction.Address = direction.BaseAddress;
+						direction.Size = direction.BaseSize;
+						direction.PatchedAddress = 0;
+						direction.PatchedSize = 0;
+						direction.FileIndex = 0;
+					}
 				}
 			}
 
@@ -1316,7 +1400,9 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 
 					if (!color)
 					{
-						color = m_DataIndex[id].Color;
+						if (direction.Address != direction.PatchedAddress)
+							color = m_DataIndex[id].Color;
+
 						partialHue = false;
 					}
 				}
