@@ -2055,7 +2055,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 		{
 			CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[dir];
 
-			if (direction.Address != NULL)
+			if (direction.Address != NULL || direction.IsUOP)
 			{
 				int fc = direction.FrameCount;
 
