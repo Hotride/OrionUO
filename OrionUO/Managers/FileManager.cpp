@@ -17,7 +17,7 @@
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
 CFileManager::CFileManager()
-: m_UseVerdata(false), m_UseUOPMap(false), m_UnicodeFontsCount(0), m_AutoResetEvent(false)
+: m_UseVerdata(false), m_UseUOPMap(false), m_UnicodeFontsCount(0), m_AutoResetEvent(false), m_UseUOPGumps(false)
 {
 }
 //----------------------------------------------------------------------------------
@@ -37,7 +37,10 @@ bool CFileManager::Load()
 	{
 		if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul"))) return false;
 		if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul"))) return false;
+		UseUOPGumps = false;
 	}
+	else
+		UseUOPGumps = true;
 	if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
 	{
 		if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul"))) return false;
