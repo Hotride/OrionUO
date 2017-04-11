@@ -872,6 +872,13 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 	}
 	return result;
 }
+void CGameCharacter::ProcessGargoyleAnims(int &delay, int &animGroup)
+{
+	if (animGroup == 63)
+		delay = delay / 2;
+	else if (animGroup == 64)
+		m_AnimationGroup = 64;
+}
 //----------------------------------------------------------------------------------
 /*!
 Получить индекс картинки для вычисления картинки анимации
