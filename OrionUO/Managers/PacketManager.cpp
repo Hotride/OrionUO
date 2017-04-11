@@ -1302,6 +1302,24 @@ PACKET_HANDLER(CharacterStatus)
 				g_Player->TithingPoints = ReadUInt32BE();
 			}
 
+			if (flag >= 6)
+			{
+				g_Player->MaxFireResistance = ReadInt16BE();
+				g_Player->MaxColdResistance = ReadInt16BE();
+				g_Player->MaxPoisonResistance = ReadInt16BE();
+				g_Player->MaxEnergyResistance = ReadInt16BE();
+				g_Player->DefenceChance = ReadInt16BE();
+				g_Player->MaxDefenceChance = ReadInt16BE();
+				g_Player->AttackChance = ReadInt16BE();
+				g_Player->WeaponSpeed = ReadInt16BE();
+				g_Player->WeaponDamage = ReadInt16BE();
+				g_Player->LowerRegCost = ReadInt16BE();
+				g_Player->SpellDamage = ReadInt16BE();
+				g_Player->CastRecovery = ReadInt16BE();
+				g_Player->CastSpeed = ReadInt16BE();
+				g_Player->LowerManaCost = ReadInt16BE();
+			}
+
 			if (!g_ConnectionScreen.Completed && g_PacketLoginComplete)
 				g_Orion.LoginComplete();
 		}

@@ -34,10 +34,24 @@ class CPlayer: public CGameCharacter
 	SETGET(short, ColdResistance);
 	SETGET(short, PoisonResistance);
 	SETGET(short, EnergyResistance);
+	SETGET(short, MaxFireResistance);
+	SETGET(short, MaxColdResistance);
+	SETGET(short, MaxPoisonResistance);
+	SETGET(short, MaxEnergyResistance);
 	SETGET(short, Luck);
 	SETGET(short, MinDamage);
 	SETGET(short, MaxDamage);
 	SETGET(uint, TithingPoints);
+	SETGET(short, DefenceChance);
+	SETGET(short, MaxDefenceChance);
+	SETGET(short, AttackChance);
+	SETGET(short, WeaponSpeed);
+	SETGET(short, WeaponDamage);
+	SETGET(short, LowerRegCost);
+	SETGET(short, SpellDamage);
+	SETGET(short, CastRecovery);
+	SETGET(short, CastSpeed);
+	SETGET(short, LowerManaCost);
 	//SETGET(CHARACTER_RACE_TYPE, Race);
 
 	SETGET(short, OldX);
