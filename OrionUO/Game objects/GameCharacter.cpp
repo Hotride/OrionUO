@@ -776,7 +776,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 				else
 					result = (uchar)PAG_RUN_UNARMED;
 
-				if (!g_AnimationManager.AnimationExists(graphic, result))
+				if (!IsHuman() && !g_AnimationManager.AnimationExists(graphic, result))
 					goto test_walk;
 			}
 			else
@@ -823,52 +823,55 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 		//67 same as 60/61
 		//68 gg flying taking dmg
 		
-
-		if (Flying())
+		if (m_Race == RT_GARGOYLE)
 		{
-			if (result == 0 || result == 1)
-				result = 62;
-			else if (result == 2 || result == 3)
-				result = 63;
-			else if (result == 4)
-				result = 64;
-			else if (result == 6)
-				result = 66;
-			else if (result == 7 || result == 8)
-				result = 65;
-			else if (result >= 9 && result <= 11)
+			if (Flying())
 			{
-				result = 71;
-			}
-			else if (result >= 12 && result <= 14)
-			{
-				result = 72;
-			}
-			else if (result == 15)
-			{
-				result = 62;
-			}
-			else if (result == 20)
-			{
-				result = 77;
-			}
-			else if (result == 31)
-			{
-				result = 71;
-			}
-			else if (result == 34)
-			{
-				result = 78;
-			}
-			else if (result >= 200 && result <= 259)
-			{
-				result = 75;
-			}
-			else if (result >= 260 && result <= 270)
-			{
-				result = 75;
+				if (result == 0 || result == 1)
+					result = 62;
+				else if (result == 2 || result == 3)
+					result = 63;
+				else if (result == 4)
+					result = 64;
+				else if (result == 6)
+					result = 66;
+				else if (result == 7 || result == 8)
+					result = 65;
+				else if (result >= 9 && result <= 11)
+				{
+					result = 71;
+				}
+				else if (result >= 12 && result <= 14)
+				{
+					result = 72;
+				}
+				else if (result == 15)
+				{
+					result = 62;
+				}
+				else if (result == 20)
+				{
+					result = 77;
+				}
+				else if (result == 31)
+				{
+					result = 71;
+				}
+				else if (result == 34)
+				{
+					result = 78;
+				}
+				else if (result >= 200 && result <= 259)
+				{
+					result = 75;
+				}
+				else if (result >= 260 && result <= 270)
+				{
+					result = 75;
+				}
 			}
 		}
+
 	}
 	return result;
 }
