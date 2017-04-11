@@ -533,10 +533,12 @@ void CGumpPaperdoll::UpdateContent()
 
 				if (equipment->AnimID)
 				{
-					ushort gumpId = obj->Female == true ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET;
-					gumpId += equipment->AnimID;
-					g_Orion.ExecuteGump(gumpId);
-					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(gumpId, 8, 19));
+					int cOfs = gumpOffset;
+
+					if (obj->Female && g_Orion.ExecuteGump(equipment->AnimID + cOfs) == NULL)
+						cOfs = MALE_GUMP_OFFSET;
+
+					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + cOfs, 8, 19));
 					bodyGumppic->Color = equipment->Color;
 					bodyGumppic->PartialHue = equipment->IsPartialHue();
 					bodyGumppic->Serial = ID_GP_ITEMS + UsedLayers[i];
