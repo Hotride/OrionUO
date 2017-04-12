@@ -1304,6 +1304,7 @@ PACKET_HANDLER(CharacterStatus)
 
 			if (flag >= 6)
 			{
+				g_Player->MaxPhysicalResistance = ReadInt16BE();
 				g_Player->MaxFireResistance = ReadInt16BE();
 				g_Player->MaxColdResistance = ReadInt16BE();
 				g_Player->MaxPoisonResistance = ReadInt16BE();
