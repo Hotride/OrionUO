@@ -3478,7 +3478,7 @@ void COrion::IndexReplaces()
 	}
 
 	DEBUGLOG("Replace gumps\n");
-	while (!gumpParser.IsEOF())
+	while (!gumpParser.IsEOF() && false)
 	{
 		STRING_LIST strings = gumpParser.ReadTokens();
 
