@@ -2142,34 +2142,19 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 	else if (((CGameItem*)obj)->Layer != OL_MOUNT) //TGameItem
 		id = ((CGameItem*)obj)->AnimID;
 
-	UOPAnimationData *animDataStruct = GetUOPAnimationData(id, animGroup);
-	if (animDataStruct->path == NULL) return false;
+	UOPAnimationData animDataStruct = GetUOPAnimationData(id, animGroup);
+	if (animDataStruct.path == NULL) return false;
 
-	animDataStruct->fileStream->open(*animDataStruct->path, std::ios::binary | std::ios::in);
-	animDataStruct->fileStream->seekg(animDataStruct->offset, 0);
-
-	//reading into buffer on the heap
-	char *buf = new char[animDataStruct->compressedLength];
-	animDataStruct->fileStream->read(buf, animDataStruct->compressedLength);
-	animDataStruct->fileStream->close();
+	//reading compressed data from uop file stream
+	auto decompressedLength = animDataStruct.decompressedLength;
+	char *buf = ReadUOPDataFromFileStream(animDataStruct);
 
 	//decompressing here
-	UCHAR_LIST decLayoutData(animDataStruct->decompressedLength);
-	uLongf cLen = animDataStruct->compressedLength;
-	uLongf dLen = animDataStruct->decompressedLength;
+	UCHAR_LIST decLayoutData(decompressedLength);
+	bool result = DecompressUOPFileData(animDataStruct, decLayoutData, buf, dir, animGroup, id);
+	if (!result) return false;//decompression failed
 
-	int z_err = uncompress(&decLayoutData[0], &dLen, reinterpret_cast<unsigned char const*>(buf), cLen);
-	delete buf;
-
-	if (z_err != Z_OK)
-	{
-		LOG("UOP anim decompression failed %d\n", z_err);
-		LOG("Anim file: %s\n", *animDataStruct->path);
-		LOG("Anim id: %d, anim grp: %d, dir: %d\n", id, animGroup, dir);
-		return false;
-	}
-	SetData(reinterpret_cast<puchar>(&decLayoutData[0]), animDataStruct->decompressedLength);
-
+	SetData(reinterpret_cast<puchar>(&decLayoutData[0]), decompressedLength);
 	//format id?
 	ReadUInt32LE();
 	//version
@@ -2605,7 +2590,7 @@ void CAnimationManager::AddUopAnimData(unsigned long long hash, UOPAnimationData
 	uopFrameDataRefMap[hash] = animData;
 }
 //----------------------------------------------------------------------------------
-UOPAnimationData *CAnimationManager::GetUOPAnimationData(ushort &id, uchar &animGroup)
+UOPAnimationData CAnimationManager::GetUOPAnimationData(ushort &id, uchar &animGroup)
 {
 	char hashString[100];
 	sprintf(hashString, "build/animationlegacyframe/%06i/%02i.bin", id, animGroup);
@@ -2615,6 +2600,36 @@ UOPAnimationData *CAnimationManager::GetUOPAnimationData(ushort &id, uchar &anim
 	{
 		animDataStruct = uopFrameDataRefMap.at(hash);
 	}
-	return &animDataStruct;
+	return animDataStruct;
+}
+//----------------------------------------------------------------------------------
+char *CAnimationManager::ReadUOPDataFromFileStream(UOPAnimationData &animData)
+{
+	animData.fileStream->open(*animData.path, std::ios::binary | std::ios::in);
+	animData.fileStream->seekg(animData.offset, 0);
+
+	//reading into buffer on the heap
+	char *buf = new char[animData.compressedLength];
+	animData.fileStream->read(buf, animData.compressedLength);
+	animData.fileStream->close();
+	return buf;
+}
+//----------------------------------------------------------------------------------
+bool CAnimationManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf, uchar &dir, uchar &animGroup, ushort &id)
+{
+	uLongf cLen = animData.compressedLength;
+	uLongf dLen = animData.decompressedLength;
+
+	int z_err = uncompress(&decLayoutData[0], &dLen, reinterpret_cast<unsigned char const*>(buf), cLen);
+	delete buf;
+
+	if (z_err != Z_OK)
+	{
+		LOG("UOP anim decompression failed %d\n", z_err);
+		LOG("Anim file: %s\n", *animData.path);
+		LOG("Anim id: %d, anim grp: %d, dir: %d\n", id, animGroup, dir);
+		return false;
+	}
+	return true;
 }
 //----------------------------------------------------------------------------------

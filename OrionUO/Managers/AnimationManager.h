@@ -124,7 +124,11 @@ private:
 
 	bool TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction);
 
-	UOPAnimationData *GetUOPAnimationData(ushort &id, uchar &animGroup);
+	UOPAnimationData GetUOPAnimationData(ushort &id, uchar &animGroup);
+
+	static char *ReadUOPDataFromFileStream(UOPAnimationData &animData);
+
+	static bool DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf, uchar &dir, uchar &animGroup, ushort &id);
 public:
 	CAnimationManager();
 	~CAnimationManager();
