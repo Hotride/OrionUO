@@ -683,6 +683,11 @@ void CGumpStatusbar::UpdateContent()
 					Add(new CGUIHitBox(ID_GSB_TEXT_SPELL_DMG, xOffset, 98, 55, 24));
 					Add(new CGUIHitBox(ID_GSB_TEXT_FASTER_CASTING, xOffset, 126, 55, 24));
 					Add(new CGUIHitBox(ID_GSB_TEXT_CAST_RECOVERY, xOffset, 154, 55, 24));
+
+					xOffset = 480;
+					text = (CGUIText*)Add(new CGUIText(0x0386, xOffset, 161));
+					text->CreateTextureA(1, std::to_string(g_Player->Gold));
+					Add(new CGUIHitBox(ID_GSB_TEXT_GOLD, 445, 154, 55, 24));
 				}
 				else
 				{
@@ -708,6 +713,10 @@ void CGumpStatusbar::UpdateContent()
 					Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_POISON, 334, 120, 40, 14));
 					Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_ENERGY, 334, 134, 40, 14));
 				}
+
+
+
+
 			}
 			else
 			{
@@ -793,7 +802,9 @@ void CGumpStatusbar::UpdateContent()
 				Add(new CGUIHitBox(ID_GSB_MINIMIZE, p.x, p.y, 16, 16, true));
 			else
 			{
-
+				p.x = 540;
+				p.y = 180;
+				Add(new CGUIHitBox(ID_GSB_MINIMIZE, p.x, p.y, 16, 16, true));
 			}
 		}
 		else //Это уменьшенная врсия статусбара (с полосками)
