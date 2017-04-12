@@ -44,6 +44,15 @@ private:
 	static const int ID_GSB_TEXT_RESISTANCE_POISON = 28;
 	static const int ID_GSB_TEXT_RESISTANCE_ENERGY = 29;
 	static const int ID_GSB_TEXT_TITHING_POINTS = 30;
+	static const int ID_GSB_TEXT_HIT_CHANCE = 31;
+	static const int ID_GSB_TEXT_DEFENCE_CHANCE = 32;
+	static const int ID_GSB_TEXT_LOWER_MANA = 33;
+	static const int ID_GSB_TEXT_SWING_SPEED = 34;
+	static const int ID_GSB_TEXT_WEAPON_DMG = 35;
+	static const int ID_GSB_TEXT_LOWER_REG_COST = 36;
+	static const int ID_GSB_TEXT_SPELL_DMG = 37;
+	static const int ID_GSB_TEXT_FASTER_CASTING = 38;
+	static const int ID_GSB_TEXT_CAST_RECOVERY = 39;
 
 protected:
 	void SendRenameRequest();
