@@ -688,6 +688,22 @@ void CGumpStatusbar::UpdateContent()
 					text = (CGUIText*)Add(new CGUIText(0x0386, xOffset, 161));
 					text->CreateTextureA(1, std::to_string(g_Player->Gold));
 					Add(new CGUIHitBox(ID_GSB_TEXT_GOLD, 445, 154, 55, 24));
+
+					xOffset = 475;
+					text = (CGUIText*)Add(new CGUIText(0x0386, xOffset, 74));
+					text->CreateTextureA(1, std::to_string(g_Player->Armor) + "/" + std::to_string(g_Player->MaxPhysicalResistance));
+
+					text = (CGUIText*)Add(new CGUIText(0x0386, xOffset, 92));
+					text->CreateTextureA(1, std::to_string(g_Player->FireResistance) + "/" + std::to_string(g_Player->MaxFireResistance));
+
+					text = (CGUIText*)Add(new CGUIText(0x0386, xOffset, 106));
+					text->CreateTextureA(1, std::to_string(g_Player->ColdResistance) + "/" + std::to_string(g_Player->MaxColdResistance));
+
+					text = (CGUIText*)Add(new CGUIText(0x0386, xOffset, 120));
+					text->CreateTextureA(1, std::to_string(g_Player->PoisonResistance) + "/" + std::to_string(g_Player->MaxPoisonResistance));
+
+					text = (CGUIText*)Add(new CGUIText(0x0386, xOffset, 134));
+					text->CreateTextureA(1, std::to_string(g_Player->EnergyResistance) + "/" + std::to_string(g_Player->MaxEnergyResistance));
 				}
 				else
 				{
@@ -706,13 +722,14 @@ void CGumpStatusbar::UpdateContent()
 
 					text = (CGUIText*)Add(new CGUIText(0x0386, xOffset, 134));
 					text->CreateTextureA(1, std::to_string(g_Player->EnergyResistance));
-
-					Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_PHYSICAL, 334, 76, 40, 14));
-					Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_FIRE, 334, 92, 40, 14));
-					Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_COLD, 334, 106, 40, 14));
-					Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_POISON, 334, 120, 40, 14));
-					Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_ENERGY, 334, 134, 40, 14));
 				}
+
+				xOffset = useUOPGumps ? 445 : 334;
+				Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_PHYSICAL, xOffset, 76, 40, 14));
+				Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_FIRE, xOffset, 92, 40, 14));
+				Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_COLD, xOffset, 106, 40, 14));
+				Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_POISON, xOffset, 120, 40, 14));
+				Add(new CGUIHitBox(ID_GSB_TEXT_RESISTANCE_ENERGY, xOffset, 134, 40, 14));
 
 
 
