@@ -65,7 +65,7 @@ void CGumpStatusbar::InitToolTip()
 
 	//if (m_Minimized && m_Serial == g_PlayerSerial)
 	//	g_ToolTip.Set(L"Double click to maximize the statusbar gump");
-	if (id && id < ID_GSB_TEXT_CAST_RECOVERY)
+	if (id && id <= ID_GSB_TEXT_CAST_RECOVERY)
 	{
 		static const wstring tooltip[ID_GSB_TEXT_CAST_RECOVERY] =
 		{
