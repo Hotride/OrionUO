@@ -123,6 +123,8 @@ private:
 	ushort m_CharacterLayerAnimID[25];
 
 	bool TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction);
+
+	UOPAnimationData *GetUOPAnimationData(ushort &id, uchar &animGroup);
 public:
 	CAnimationManager();
 	~CAnimationManager();

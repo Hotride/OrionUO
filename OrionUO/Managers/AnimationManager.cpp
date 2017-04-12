@@ -2047,8 +2047,6 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 	if (frameIndex == 0xFF)
 		frameIndex = (uchar)obj->AnimIndex;
 
-	bool found = false;
-
 	if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 	{
 		if (dir < 5)
@@ -2076,45 +2074,45 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 					result.CenterX = frame.CenterX;
 					result.CenterY = frame.CenterY;
 
-					found = true;
+					return result;
 				}
 			}
 		}
 
-		if (!found)
+		CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[0];
+
+		puchar ptr = (puchar)direction.Address;
+
+		if (ptr != NULL)
 		{
-			CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[0];
+			SetData(ptr, direction.Size);
+			Move(sizeof(ushort[256]));  //Palette
+			puchar dataStart = m_Ptr;
 
-			puchar ptr = (puchar)direction.Address;
+			int frameCount = ReadUInt32LE();
 
-			if (ptr != NULL)
+			if (frameCount > 0 && frameIndex >= frameCount)
 			{
-				SetData(ptr, direction.Size);
-				Move(sizeof(ushort[256]));  //Palette
-				puchar dataStart = m_Ptr;
-
-				int frameCount = ReadUInt32LE();
-
-				if (frameCount > 0 && frameIndex >= frameCount)
-				{
-					if (obj->IsCorpse())
-						frameIndex = frameCount - 1;
-					else
-						frameIndex = 0;
-				}
-
-				if (frameIndex < frameCount)
-				{
-					puint frameOffset = (puint)m_Ptr;
-					//Move(frameOffset[frameIndex]);
-					m_Ptr = dataStart + frameOffset[frameIndex];
-
-					result.CenterX = ReadInt16LE();
-					result.CenterY = ReadInt16LE();
-					result.Width = ReadInt16LE();
-					result.Height = ReadInt16LE();
-				}
+				if (obj->IsCorpse())
+					frameIndex = frameCount - 1;
+				else
+					frameIndex = 0;
 			}
+
+			if (frameIndex < frameCount)
+			{
+				puint frameOffset = (puint)m_Ptr;
+				//Move(frameOffset[frameIndex]);
+				m_Ptr = dataStart + frameOffset[frameIndex];
+
+				result.CenterX = ReadInt16LE();
+				result.CenterY = ReadInt16LE();
+				result.Width = ReadInt16LE();
+				result.Height = ReadInt16LE();
+			}
+		}
+		else //try reading uop anims
+		{
 		}
 	}
 
@@ -2144,28 +2142,21 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 	else if (((CGameItem*)obj)->Layer != OL_MOUNT) //TGameItem
 		id = ((CGameItem*)obj)->AnimID;
 
-	char hashString[100];
-	sprintf(hashString, "build/animationlegacyframe/%06i/%02i.bin", id, animGroup);
-	auto hash = g_Orion.CreateHash(hashString);
-	UOPAnimationData animDataStruct = {};
-	if (uopFrameDataRefMap.find(hash) != uopFrameDataRefMap.end())
-	{
-		animDataStruct = uopFrameDataRefMap.at(hash);
-	}
-	else return false;
+	UOPAnimationData *animDataStruct = GetUOPAnimationData(id, animGroup);
+	if (animDataStruct->path == NULL) return false;
 
-	animDataStruct.fileStream->open(*animDataStruct.path, std::ios::binary | std::ios::in);
-	animDataStruct.fileStream->seekg(animDataStruct.offset, 0);
+	animDataStruct->fileStream->open(*animDataStruct->path, std::ios::binary | std::ios::in);
+	animDataStruct->fileStream->seekg(animDataStruct->offset, 0);
 
 	//reading into buffer on the heap
-	char *buf = new char[animDataStruct.compressedLength];
-	animDataStruct.fileStream->read(buf, animDataStruct.compressedLength);
-	animDataStruct.fileStream->close();
+	char *buf = new char[animDataStruct->compressedLength];
+	animDataStruct->fileStream->read(buf, animDataStruct->compressedLength);
+	animDataStruct->fileStream->close();
 
-	//decomporessing here
-	UCHAR_LIST decLayoutData(animDataStruct.decompressedLength);
-	uLongf cLen = animDataStruct.compressedLength;
-	uLongf dLen = animDataStruct.decompressedLength;
+	//decompressing here
+	UCHAR_LIST decLayoutData(animDataStruct->decompressedLength);
+	uLongf cLen = animDataStruct->compressedLength;
+	uLongf dLen = animDataStruct->decompressedLength;
 
 	int z_err = uncompress(&decLayoutData[0], &dLen, reinterpret_cast<unsigned char const*>(buf), cLen);
 	delete buf;
@@ -2173,11 +2164,11 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 	if (z_err != Z_OK)
 	{
 		LOG("UOP anim decompression failed %d\n", z_err);
-		LOG("Anim file: %s\n", *animDataStruct.path);
+		LOG("Anim file: %s\n", *animDataStruct->path);
 		LOG("Anim id: %d, anim grp: %d, dir: %d\n", id, animGroup, dir);
 		return false;
 	}
-	SetData(reinterpret_cast<puchar>(&decLayoutData[0]), animDataStruct.decompressedLength);
+	SetData(reinterpret_cast<puchar>(&decLayoutData[0]), animDataStruct->decompressedLength);
 
 	//format id?
 	ReadUInt32LE();
@@ -2612,5 +2603,18 @@ bool CAnimationManager::IsCovered(const int &layer, CGameObject *owner)
 void CAnimationManager::AddUopAnimData(unsigned long long hash, UOPAnimationData animData)
 {
 	uopFrameDataRefMap[hash] = animData;
+}
+//----------------------------------------------------------------------------------
+UOPAnimationData *CAnimationManager::GetUOPAnimationData(ushort &id, uchar &animGroup)
+{
+	char hashString[100];
+	sprintf(hashString, "build/animationlegacyframe/%06i/%02i.bin", id, animGroup);
+	auto hash = g_Orion.CreateHash(hashString);
+	UOPAnimationData animDataStruct = {};
+	if (uopFrameDataRefMap.find(hash) != uopFrameDataRefMap.end())
+	{
+		animDataStruct = uopFrameDataRefMap.at(hash);
+	}
+	return &animDataStruct;
 }
 //----------------------------------------------------------------------------------
