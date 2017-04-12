@@ -20,7 +20,7 @@ CPlayer::CPlayer(const uint &serial)
 : CGameCharacter(serial), m_Str(0), m_Int(0), m_Dex(0), m_MaxWeight(0),
 m_Weight(0), m_Armor(0), m_Gold(0), m_Warmode(false), m_StatsCap(0), m_Followers(0),
 m_MaxFollowers(5), m_FireResistance(0), m_ColdResistance(0), m_PoisonResistance(0),
-m_EnergyResistance(0), m_MaxFireResistance(0), m_MaxColdResistance(0), m_MaxPoisonResistance(0),
+m_EnergyResistance(0), m_MaxPhysicalResistance(0), m_MaxFireResistance(0), m_MaxColdResistance(0), m_MaxPoisonResistance(0),
 m_MaxEnergyResistance(0), m_Luck(0), m_MinDamage(0), m_MaxDamage(0), m_TithingPoints(0),
 m_DefenceChance(0), m_MaxDefenceChance(0), m_AttackChance(0), m_WeaponSpeed(0), m_WeaponDamage(0),
 m_LowerRegCost(0), m_SpellDamage(0), m_CastRecovery(0), m_CastSpeed(0), m_LowerManaCost(0),

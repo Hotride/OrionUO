@@ -34,6 +34,7 @@ class CPlayer: public CGameCharacter
 	SETGET(short, ColdResistance);
 	SETGET(short, PoisonResistance);
 	SETGET(short, EnergyResistance);
+	SETGET(short, MaxPhysicalResistance);
 	SETGET(short, MaxFireResistance);
 	SETGET(short, MaxColdResistance);
 	SETGET(short, MaxPoisonResistance);
