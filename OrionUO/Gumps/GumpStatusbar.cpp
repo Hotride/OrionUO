@@ -25,6 +25,7 @@
 #include "../OrionUO.h"
 #include "../TextEngine/GameConsole.h"
 #include "../ToolTip.h"
+#include "../Managers/FileManager.h"
 
 int CGumpStatusbar::m_StatusbarDefaultWidth = 154;
 int CGumpStatusbar::m_StatusbarDefaultHeight = 59;
@@ -442,7 +443,7 @@ void CGumpStatusbar::UpdateContent()
 	m_Body = NULL;
 	m_HitsBody = NULL;
 	m_Entry = NULL;
-
+	bool useUOPGumps = g_FileManager.UseUOPGumps;
 	CGUIText *text = NULL;
 
 	if (m_Serial == g_PlayerSerial) //Если это статусбар игрока
@@ -470,7 +471,7 @@ void CGumpStatusbar::UpdateContent()
 				//Отрисуем имя игрока
 				if (g_Player->Name.length())
 				{
-					text = (CGUIText*)Add(new CGUIText(0x0386, 58, 50));
+					text = (CGUIText*)Add(new CGUIText(0x0386, useUOPGumps? 90 :58, 50));
 					text->CreateTextureA(1, g_Player->Name, 320, TS_CENTER);
 				}
 
@@ -491,7 +492,7 @@ void CGumpStatusbar::UpdateContent()
 						else if (status == 2)
 							gumpID = 0x082C; //Lock
 
-						Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, 40, 76));
+						Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, useUOPGumps ? 28 : 40, 76));
 
 
 						//Dex
@@ -503,7 +504,7 @@ void CGumpStatusbar::UpdateContent()
 						else if (status == 2)
 							gumpID = 0x082C; //Lock
 
-						Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, 40, 102));
+						Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, useUOPGumps ? 28 : 40, 102));
 
 
 
@@ -516,7 +517,7 @@ void CGumpStatusbar::UpdateContent()
 						else if (status == 2)
 							gumpID = 0x082C; //Lock
 
-						Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, 40, 132));
+						Add(new CGUIButton(ID_GSB_BUFF_LOCKER_STR, gumpID, gumpID, gumpID, useUOPGumps ? 28 : 40, 132));
 					}
 				}
 
