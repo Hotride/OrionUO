@@ -2155,55 +2155,15 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 	if (!result) return false;//decompression failed
 
 	SetData(reinterpret_cast<puchar>(&decLayoutData[0]), decompressedLength);
-	//format id?
-	ReadUInt32LE();
-	//version
-	ReadUInt32LE();
-	//decompressed data size
-	int dcsize = ReadUInt32LE();
-	//anim id
-	int animId = ReadUInt32LE();
-	//8 bytes unknown
-	ReadUInt32LE();
-	ReadUInt32LE();
-	//unknown.
-	ReadInt16LE();
-	//unknown
-	ReadInt16LE();
-	//header length
-	ReadUInt32LE();
-	//framecount
-	int totalFrameCount = ReadUInt32LE();
-	//data start + offset
-	puchar dataStart = m_Start + ReadUInt32LE();
 
-	m_Ptr = dataStart;
-
-	int dirFrameCount = 10;// always fucking 10
-	vector<UOPFrameData> pixelDataOffsets(50);
-
-	IFOR(i, 0, totalFrameCount)
-	{
-		UOPFrameData data;
-		data.dataStart = m_Ptr;
-		//unknown
-		ReadInt16LE();
-		//frame id 
-		data.frameId = ReadInt16LE();
-		//8 bytes unknown
-		ReadUInt32LE();
-		ReadUInt32LE();
-		//offset
-		data.pixelDataOffset = ReadUInt32LE();
-		pixelDataOffsets[data.frameId -1] = data;
-	}
+	vector<UOPFrameData> pixelDataOffsets = GetUOPFrameDataOffsets();
 
 
-	direction.FrameCount = dirFrameCount;
-	int dirFrameStartIdx = dirFrameCount * dir;
+	direction.FrameCount = UOP_ANIMATION_FRAMES_COUNT;
+	int dirFrameStartIdx = UOP_ANIMATION_FRAMES_COUNT * dir;
 	if (direction.m_Frames == NULL)
-		direction.m_Frames = new CTextureAnimationFrame[dirFrameCount];
-	IFOR(i, 0, dirFrameCount)
+		direction.m_Frames = new CTextureAnimationFrame[UOP_ANIMATION_FRAMES_COUNT];
+	IFOR(i, 0, UOP_ANIMATION_FRAMES_COUNT)
 	{
 		CTextureAnimationFrame &frame = direction.m_Frames[i];
 
@@ -2633,3 +2593,47 @@ bool CAnimationManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_
 	return true;
 }
 //----------------------------------------------------------------------------------
+vector<UOPFrameData> CAnimationManager::GetUOPFrameDataOffsets()
+{
+	//format id?
+	ReadUInt32LE();
+	//version
+	ReadUInt32LE();
+	//decompressed data size
+	int dcsize = ReadUInt32LE();
+	//anim id
+	int animId = ReadUInt32LE();
+	//8 bytes unknown
+	ReadUInt32LE();
+	ReadUInt32LE();
+	//unknown.
+	ReadInt16LE();
+	//unknown
+	ReadInt16LE();
+	//header length
+	ReadUInt32LE();
+	//framecount
+	int totalFrameCount = ReadUInt32LE();
+	//data start + offset
+	puchar dataStart = m_Start + ReadUInt32LE();
+
+	m_Ptr = dataStart;
+	vector<UOPFrameData> pixelDataOffsets(50);
+
+	IFOR(i, 0, totalFrameCount)
+	{
+		UOPFrameData data;
+		data.dataStart = m_Ptr;
+		//unknown
+		ReadInt16LE();
+		//frame id 
+		data.frameId = ReadInt16LE();
+		//8 bytes unknown
+		ReadUInt32LE();
+		ReadUInt32LE();
+		//offset
+		data.pixelDataOffset = ReadUInt32LE();
+		pixelDataOffsets[data.frameId - 1] = data;
+	}
+	return pixelDataOffsets;
+}

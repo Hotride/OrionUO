@@ -19,6 +19,7 @@
 static const float UPPER_BODY_RATIO = 0.35f;
 static const float MID_BODY_RATIO = 0.60f;
 static const float LOWER_BODY_RATIO = 0.94f;
+static const int UOP_ANIMATION_FRAMES_COUNT = 10;
 //----------------------------------------------------------------------------------
 struct FRAME_OUTPUT_INFO
 {
@@ -124,11 +125,17 @@ private:
 
 	bool TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction);
 
+	//Получить структуру с ссылкой на поток от файла ( и другими данными) от анимации с указанными id и animGroup.
 	UOPAnimationData GetUOPAnimationData(ushort &id, uchar &animGroup);
 
+	//Чтение сжатых данных с кадрами из УОП аним файла.
 	static char *ReadUOPDataFromFileStream(UOPAnimationData &animData);
 
+	//Разжатие данных с кадрами из УОП аним файла.
 	static bool DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf, uchar &dir, uchar &animGroup, ushort &id);
+
+	//Получить вектор с оффсетами пиксельных данных кадров.
+	vector<UOPFrameData> GetUOPFrameDataOffsets();
 public:
 	CAnimationManager();
 	~CAnimationManager();
