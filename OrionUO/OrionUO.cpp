@@ -3397,7 +3397,7 @@ void COrion::IndexReplaces()
 		return;
 
 	DEBUGLOG("Replace arts\n");
-	while (!artParser.IsEOF() && false)
+	while (!artParser.IsEOF())
 	{
 		STRING_LIST strings = artParser.ReadTokens();
 
@@ -3419,7 +3419,7 @@ void COrion::IndexReplaces()
 				if (checkIndex < 0 || checkIndex >= MAX_LAND_DATA_INDEX_COUNT + m_StaticDataCount)
 					continue;
 
-				if (index < MAX_LAND_DATA_INDEX_COUNT && checkIndex < MAX_LAND_DATA_INDEX_COUNT && m_LandDataIndex[checkIndex].Address != NULL)
+				if (index < MAX_LAND_DATA_INDEX_COUNT && checkIndex < MAX_LAND_DATA_INDEX_COUNT && m_LandDataIndex[checkIndex].Address != NULL && m_LandDataIndex[index].Address == NULL)
 				{
 					memcpy(&m_LandDataIndex[index], &m_LandDataIndex[checkIndex], sizeof(CIndexObject));
 					m_LandDataIndex[index].Texture = NULL;
@@ -3427,16 +3427,20 @@ void COrion::IndexReplaces()
 
 					break;
 				}
-				else if (index >= MAX_LAND_DATA_INDEX_COUNT && checkIndex >= MAX_LAND_DATA_INDEX_COUNT && m_StaticDataIndex[checkIndex - 0x4000].Address != NULL)
+				else if (index >= MAX_LAND_DATA_INDEX_COUNT && checkIndex >= MAX_LAND_DATA_INDEX_COUNT)
 				{
 					checkIndex -= MAX_LAND_DATA_INDEX_COUNT;
+					checkIndex &= 0x3FFF;
 					index -= MAX_LAND_DATA_INDEX_COUNT;
 
-					memcpy(&m_StaticDataIndex[index], &m_StaticDataIndex[checkIndex], sizeof(CIndexObjectStatic));
-					m_StaticDataIndex[index].Texture = NULL;
-					m_StaticDataIndex[index].Color = atoi(strings[2].c_str());
+					if (m_StaticDataIndex[index].Address == NULL && m_StaticDataIndex[checkIndex].Address != NULL)
+					{
+						memcpy(&m_StaticDataIndex[index], &m_StaticDataIndex[checkIndex], sizeof(CIndexObjectStatic));
+						m_StaticDataIndex[index].Texture = NULL;
+						m_StaticDataIndex[index].Color = atoi(strings[2].c_str());
 
-					break;
+						break;
+					}
 				}
 			}
 		}
@@ -3451,7 +3455,7 @@ void COrion::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0)
+			if (index < 0 || index >= MAX_LAND_TEXTURES_DATA_INDEX_COUNT || m_TextureDataIndex[index].Address != NULL)
 				continue;
 
 			STRING_LIST newTexture = newDataParser.GetTokens(strings[1].c_str());
@@ -3478,7 +3482,7 @@ void COrion::IndexReplaces()
 	}
 
 	DEBUGLOG("Replace gumps\n");
-	while (!gumpParser.IsEOF() && false)
+	while (!gumpParser.IsEOF())
 	{
 		STRING_LIST strings = gumpParser.ReadTokens();
 
@@ -3486,7 +3490,7 @@ void COrion::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= MAX_GUMP_DATA_INDEX_COUNT)
+			if (index < 0 || index >= MAX_GUMP_DATA_INDEX_COUNT || m_GumpDataIndex[index].Address != NULL)
 				continue;
 
 			STRING_LIST newGump = newDataParser.GetTokens(strings[1].c_str());
@@ -3518,7 +3522,7 @@ void COrion::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= g_MultiIndexCount)
+			if (index < 0 || index >= g_MultiIndexCount || m_MultiDataIndex[index].Address != NULL)
 				continue;
 
 			STRING_LIST newMulti = newDataParser.GetTokens(strings[1].c_str());
@@ -3548,7 +3552,7 @@ void COrion::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= MAX_SOUND_DATA_INDEX_COUNT)
+			if (index < 0 || index >= MAX_SOUND_DATA_INDEX_COUNT || m_SoundDataIndex[index].Address != NULL)
 				continue;
 
 			STRING_LIST newSound = newDataParser.GetTokens(strings[1].c_str());
