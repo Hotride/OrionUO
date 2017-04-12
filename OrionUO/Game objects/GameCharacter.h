@@ -84,7 +84,7 @@ public:
 	void UpdateHitsTexture(const uchar &hits);
 
 	//Обработка особенностей анимаций гаргулей.
-	void ProcessGargoyleAnims(int &delay, int &animGroup);
+	void ProcessGargoyleAnims(int &animGroup);
 
 	/*!
 	Сидит ли персонаж

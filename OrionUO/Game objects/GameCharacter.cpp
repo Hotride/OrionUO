@@ -875,19 +875,13 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 	}
 	return result;
 }
-void CGameCharacter::ProcessGargoyleAnims(int &delay, int &animGroup)
+void CGameCharacter::ProcessGargoyleAnims(int &animGroup)
 {
-	if (animGroup == 63)
-		delay = delay * 0.75;
-	else
+	if (animGroup == 64 || animGroup == 65)
 	{
-		if (animGroup == 64 || animGroup == 65)
-		{
-			animGroup = InWarMode() == true ? 65 : 64;
-			m_AnimationGroup = animGroup;
-		}
-		
-	}		
+		animGroup = InWarMode() == true ? 65 : 64;
+		m_AnimationGroup = animGroup;
+	}
 }
 //----------------------------------------------------------------------------------
 /*!
