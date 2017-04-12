@@ -234,7 +234,8 @@ const int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 //----------------------------------------------------------------------------------
 CAnimationManager::CAnimationManager()
 : WISP_DATASTREAM::CDataReader(), m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0),
-m_Direction(0), m_Sitting(0), m_Transform(false), m_UseBlending(false)
+m_Direction(0), m_Sitting(0), m_Transform(false), m_UseBlending(false),
+m_EquipConvItem(NULL)
 {
 	WISPFUN_DEBUG("c133_f1");
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
@@ -469,6 +470,11 @@ void CAnimationManager::Load(puint verdata)
 void CAnimationManager::InitIndexReplaces(puint verdata)
 {
 	WISPFUN_DEBUG("c133_f4");
+	Load(verdata);
+
+	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
+		return;
+
 	if (g_PacketManager.ClientVersion >= CV_500A)
 	{
 		static const string typeNames[5] = { "animal", "monster", "sea_monster", "human", "equipment" };
@@ -497,23 +503,68 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		}
 	}
 
-	Load(verdata);
-
-	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
-		return;
-
 	WISP_FILE::CTextFileParser newBodyParser("", " \t,{}", "#;//", "");
 	WISP_FILE::CTextFileParser bodyParser(g_App.FilePath("Body.def").c_str(), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser bodyconvParser(g_App.FilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
 	WISP_FILE::CTextFileParser corpseParser(g_App.FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
 
-	WISP_FILE::CTextFileParser animParser[4]
+	/*WISP_FILE::CTextFileParser animParser[4]
 	{
 		WISP_FILE::CTextFileParser(g_App.FilePath("Anim1.def").c_str(), " \t", "#;//", "{}"),
 		WISP_FILE::CTextFileParser(g_App.FilePath("Anim2.def").c_str(), " \t", "#;//", "{}"),
 		WISP_FILE::CTextFileParser(g_App.FilePath("Anim3.def").c_str(), " \t", "#;//", "{}"),
 		WISP_FILE::CTextFileParser(g_App.FilePath("Anim4.def").c_str(), " \t", "#;//", "{}")
-	};
+	};*/
+
+	WISP_FILE::CTextFileParser equipConvParser(g_App.FilePath("EquipConv.def"), " \t", "#;//", "");
+
+	while (!equipConvParser.IsEOF())
+	{
+		STRING_LIST strings = equipConvParser.ReadTokens();
+
+		if (strings.size() >= 5)
+		{
+			ushort body = (ushort)atoi(strings[0].c_str());
+
+			if (body >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				continue;
+
+			ushort graphic = (ushort)atoi(strings[1].c_str());
+
+			if (graphic >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				continue;
+
+			ushort newGraphic = (ushort)atoi(strings[2].c_str());
+
+			if (newGraphic >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				newGraphic = graphic;
+
+			ushort gump = (ushort)atoi(strings[3].c_str());
+
+			if (gump >= MAX_GUMP_DATA_INDEX_COUNT)
+				continue;
+			else if (gump == 0)
+				gump = graphic; // +50000;
+			else if (gump == 0xFFFF)
+				gump = newGraphic; // +50000;
+
+			ushort color = (ushort)atoi(strings[4].c_str());
+
+			EQUIP_CONV_BODY_MAP::iterator bodyMapIter = m_EquipConv.find(body);
+
+			if (bodyMapIter == m_EquipConv.end())
+			{
+				m_EquipConv.insert(EQUIP_CONV_BODY_MAP::value_type(body, EQUIP_CONV_DATA_MAP()));
+
+				bodyMapIter = m_EquipConv.find(body);
+
+				if (bodyMapIter == m_EquipConv.end())
+					continue; //?!?!??
+			}
+
+			bodyMapIter->second.insert(EQUIP_CONV_DATA_MAP::value_type(graphic, CEquipConvData(newGraphic, gump, color)));
+		}
+	}
 
 	while (!bodyconvParser.IsEOF())
 	{
@@ -1403,6 +1454,9 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 						if (direction.Address != direction.PatchedAddress)
 							color = m_DataIndex[id].Color;
 
+						if (!color && m_EquipConvItem != NULL)
+							color = m_EquipConvItem->Color;
+
 						partialHue = false;
 					}
 				}
@@ -1636,6 +1690,7 @@ void CAnimationManager::FixSittingDirection(uchar &layerDirection, bool &mirror,
 */
 void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 {
+	m_EquipConvItem = NULL;
 	WISPFUN_DEBUG("c133_f16");
 	m_Transform = false;
 
@@ -2362,10 +2417,29 @@ bool CAnimationManager::DrawEquippedLayers(const bool &selection, CGameObject *o
 
 	vector<CGameItem*> &list = obj->m_DrawLayeredObjects;
 
+	ushort bodyGraphic = obj->Graphic;
+
+	if (obj->IsCorpse())
+		bodyGraphic = obj->Count;
+
+	EQUIP_CONV_BODY_MAP::iterator bodyMapIter = m_EquipConv.find(bodyGraphic);
+
 	if (selection)
 	{
 		for (vector<CGameItem*>::iterator i = list.begin(); i != list.end() && !result; i++)
-			result = TestPixels(*i, drawX, drawY, mirror, animIndex, (*i)->AnimID);
+		{
+			ushort id = (*i)->AnimID;
+
+			if (bodyMapIter != m_EquipConv.end())
+			{
+				EQUIP_CONV_DATA_MAP::iterator dataIter = bodyMapIter->second.find(id);
+
+				if (dataIter != bodyMapIter->second.end())
+					id = m_EquipConvItem->Graphic;
+			}
+
+			result = TestPixels(*i, drawX, drawY, mirror, animIndex, id);
+		}
 	}
 	else
 	{
@@ -2373,7 +2447,21 @@ bool CAnimationManager::DrawEquippedLayers(const bool &selection, CGameObject *o
 		{
 			CGameItem *item = *i;
 
-			Draw(item, drawX, drawY, mirror, animIndex, item->AnimID);
+			ushort id = item->AnimID;
+
+			if (bodyMapIter != m_EquipConv.end())
+			{
+				EQUIP_CONV_DATA_MAP::iterator dataIter = bodyMapIter->second.find(id);
+
+				if (dataIter != bodyMapIter->second.end())
+				{
+					m_EquipConvItem = &dataIter->second;
+					id = m_EquipConvItem->Graphic;
+				}
+			}
+
+			Draw(item, drawX, drawY, mirror, animIndex, id);
+			m_EquipConvItem = NULL;
 
 			if (item->IsLightSource() && g_GameScreen.UseLight)
 				g_GameScreen.AddLight(obj, item, drawX, drawY - lightOffset);

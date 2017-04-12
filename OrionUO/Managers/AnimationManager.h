@@ -34,6 +34,21 @@ struct ANIMATION_DIMENSIONS
 	int CenterY;
 };
 //----------------------------------------------------------------------------------
+class CEquipConvData
+{
+	SETGET(ushort, Graphic);
+	SETGET(ushort, Gump);
+	SETGET(ushort, Color);
+
+public:
+	CEquipConvData(const ushort &graphic, const ushort &gump, const ushort &color)
+		: m_Graphic(graphic), m_Gump(gump), m_Color(color) {}
+	~CEquipConvData() {}
+};
+//----------------------------------------------------------------------------------
+typedef unordered_map<ushort, CEquipConvData> EQUIP_CONV_DATA_MAP;
+typedef unordered_map<ushort, EQUIP_CONV_DATA_MAP> EQUIP_CONV_BODY_MAP;
+//----------------------------------------------------------------------------------
 //!Класс менеджера анимаций
 class CAnimationManager : public WISP_DATASTREAM::CDataReader
 {
@@ -69,6 +84,10 @@ private:
 	int m_Sitting;
 
 	bool m_UseBlending;
+
+	EQUIP_CONV_BODY_MAP m_EquipConv;
+
+	CEquipConvData *m_EquipConvItem;
 
 	//!Упорядоченный список слоев для корректного порядка прорисовки для всех направлений персонажа
 	static const int USED_LAYER_COUNT = 23;
@@ -122,6 +141,8 @@ public:
 		m_AddressMul[graphic] = addressMul;
 		m_SizeIdx[graphic] = sizeIdx;
 	}
+
+	EQUIP_CONV_BODY_MAP &GetEquipConv() { return m_EquipConv; }
 
 	/*!
 	Загрузка файла корректора индексов картинок анимаций
