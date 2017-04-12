@@ -2435,7 +2435,7 @@ bool CAnimationManager::DrawEquippedLayers(const bool &selection, CGameObject *o
 				EQUIP_CONV_DATA_MAP::iterator dataIter = bodyMapIter->second.find(id);
 
 				if (dataIter != bodyMapIter->second.end())
-					id = m_EquipConvItem->Graphic;
+					id = dataIter->second.Graphic;
 			}
 
 			result = TestPixels(*i, drawX, drawY, mirror, animIndex, id);
