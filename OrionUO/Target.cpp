@@ -13,6 +13,8 @@
 #include "OrionUO.h"
 #include "Managers/MapManager.h"
 #include "Managers/PacketManager.h"
+#include "OrionWindow.h"
+#include "PluginInterface.h"
 //----------------------------------------------------------------------------------
 CTarget g_Target;
 //----------------------------------------------------------------------------------
@@ -165,6 +167,97 @@ void CTarget::SendCancelTarget()
 	SendTarget();
 }
 //----------------------------------------------------------------------------------
+void CTarget::Plugin_SendTargetObject(const uint &serial)
+{
+	WISPFUN_DEBUG("c209_f4");
+	if (!m_Targeting)
+		return; //Если в клиенте нет таргета - выход
+
+	//Пишем серийник объекта, на который ткнули прицелом, остальное - затираем
+	pack32(m_Data + 7, serial);
+	m_Data[1] = 0;
+
+	CGameObject *obj = (g_World != NULL ? g_World->FindWorldObject(serial) : NULL);
+
+	if (obj != NULL)
+	{
+		pack16(m_Data + 11, obj->X);
+		pack16(m_Data + 13, obj->Y);
+		m_Data[15] = 0xFF;
+		m_Data[16] = obj->Z;
+		pack16(m_Data + 17, obj->Graphic);
+	}
+	else
+	{
+		pack32(m_Data + 11, 0);
+		pack32(m_Data + 15, 0);
+	}
+
+	if (serial != g_PlayerSerial)
+	{
+		g_LastTargetObject = serial;
+
+		//Скопируем для LastTarget
+		memcpy(m_LastData, m_Data, sizeof(m_Data));
+
+		if (serial < 0x40000000)
+		{
+			CPacketStatusRequest packet(serial);
+			SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
+		}
+	}
+
+	Plugin_SendTarget();
+}
+//----------------------------------------------------------------------------------
+void CTarget::Plugin_SendTargetTile(const ushort &tileID, const short &x, const short &y, char z)
+{
+	WISPFUN_DEBUG("c209_f5");
+	if (!m_Targeting)
+		return; //Если в клиенте нет таргета - выход
+
+	m_Data[1] = 1;
+
+	//Пишем координаты и индекс тайла, на который ткнули, остальное трем
+	pack32(m_Data + 7, 0);
+	pack16(m_Data + 11, x);
+	pack16(m_Data + 13, y);
+
+	if (m_MultiGraphic)
+	{
+		int grZ = 0;
+		int stZ = 0;
+		g_MapManager->GetMapZ(x, y, grZ, stZ);
+
+		if (!tileID || !IsWet(g_Orion.GetStaticFlags(tileID)))
+			z = grZ;
+	}
+
+	//m_Data[15] = 0xFF;
+	//m_Data[16] = z;
+	pack16(m_Data + 15, (short)z);
+	pack16(m_Data + 17, tileID);
+
+	//Скопируем для LastTarget
+	memcpy(m_LastData, m_Data, sizeof(m_Data));
+
+	Plugin_SendTarget();
+}
+//----------------------------------------------------------------------------------
+void CTarget::Plugin_SendCancelTarget()
+{
+	WISPFUN_DEBUG("c209_f6");
+	if (!m_Targeting)
+		return; //Если в клиенте нет таргета - выход
+
+	//Уходят только нули
+	pack32(m_Data + 7, 0);
+	pack32(m_Data + 11, 0xFFFFFFFF);
+	pack32(m_Data + 15, 0);
+
+	Plugin_SendTarget();
+}
+//----------------------------------------------------------------------------------
 void CTarget::SendLastTarget()
 {
 	WISPFUN_DEBUG("c209_f7");
@@ -185,6 +278,17 @@ void CTarget::SendTarget()
 {
 	WISPFUN_DEBUG("c209_f8");
 	g_Orion.Send(m_Data, sizeof(m_Data));
+
+	//Чистим данные
+	memset(m_Data, 0, sizeof(m_Data));
+	m_Targeting = false;
+	m_MultiGraphic = 0;
+}
+//----------------------------------------------------------------------------------
+void CTarget::Plugin_SendTarget()
+{
+	WISPFUN_DEBUG("c209_f8");
+	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)m_Data, sizeof(m_Data));
 
 	//Чистим данные
 	memset(m_Data, 0, sizeof(m_Data));

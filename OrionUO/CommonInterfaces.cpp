@@ -180,17 +180,17 @@ void __cdecl FUNCBODY_SetTargetData(unsigned char *buf, int size)
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendTargetObject(unsigned int serial)
 {
-	g_Target.SendTargetObject(serial);
+	g_Target.Plugin_SendTargetObject(serial);
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendTargetTile(unsigned short graphic, short x, short y, char z)
 {
-	g_Target.SendTargetTile(graphic, x, y, z);
+	g_Target.Plugin_SendTargetTile(graphic, x, y, z);
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendTargetCancel()
 {
-	g_Target.SendCancelTarget();
+	g_Target.Plugin_SendCancelTarget();
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendCastSpell(int index)
@@ -305,7 +305,8 @@ void __cdecl FUNCBODY_SecureTradingCheckState(unsigned int id1, bool state)
 	{
 		gump->StateMy = state;
 
-		gump->SendTradingResponse(2);
+		CPacketTradeResponse packet(gump, 2);
+		SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 	}
 }
 //----------------------------------------------------------------------------------
@@ -314,7 +315,12 @@ void __cdecl FUNCBODY_SecureTradingClose(unsigned int id1)
 	CGumpSecureTrading *gump = (CGumpSecureTrading*)g_GumpManager.GetGump(id1, 0, GT_TRADE);
 
 	if (gump != NULL)
-		gump->SendTradingResponse(1);
+	{
+		gump->RemoveMark = true;
+
+		CPacketTradeResponse packet(gump, 1);
+		SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
+	}
 }
 //----------------------------------------------------------------------------------
 //IClilocManager
@@ -380,7 +386,7 @@ bool __cdecl FUNCBODY_GetCanWalk(unsigned char &direction, int &x, int &y, char 
 //----------------------------------------------------------------------------------
 bool __cdecl FUNCBODY_GetWalk(bool run, unsigned char direction)
 {
-	return g_PathFinder.Walk(run, direction);
+	return SendMessage(g_OrionWindow.Handle, UOMSG_WALK, run, direction);
 }
 //----------------------------------------------------------------------------------
 bool __cdecl FUNCBODY_GetWalkTo(int x, int y, int z, int distance)

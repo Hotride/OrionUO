@@ -5579,7 +5579,8 @@ void COrion::OpenStatus(uint serial)
 void COrion::DisplayStatusbarGump(const uint &serial, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c194_f134");
-	StatusReq(serial);
+	CPacketStatusRequest packet(serial);
+	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 
 	CGump *gump = g_GumpManager.GetGump(serial, 0, GT_STATUSBAR);
 
