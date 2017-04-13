@@ -2513,11 +2513,6 @@ bool CAnimationManager::IsCovered(const int &layer, CGameObject *owner)
 	return result;
 }
 //----------------------------------------------------------------------------------
-void CAnimationManager::AddUopAnimData(unsigned long long hash, UOPAnimationData animData)
-{
-	uopFrameDataRefMap[hash] = animData;
-}
-//----------------------------------------------------------------------------------
 UOPAnimationData CAnimationManager::GetUOPAnimationData(ushort &id, ushort &animGroup)
 {
 	char hashString[100];

@@ -14,8 +14,6 @@
 #include "../Wisp/WispMappedFile.h"
 #include "../AutoResetEvent.h"
 
-struct UOPAnimationData;
-
 //----------------------------------------------------------------------------------
 class CFileManager : public WISP_DATASTREAM::CDataReader
 {

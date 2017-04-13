@@ -278,10 +278,6 @@ public:
 	void CalculateFrameInformation(FRAME_OUTPUT_INFO &info, class CGameObject *obj, const bool &mirror, const uchar &animIndex);
 
 	struct DRAW_FRAME_INFORMATION CollectFrameInformation(class CGameObject *gameObject, const bool &checkLayers = true);
-	/*!
-	Добавлям данные в мапу uopFrameDataRefMap
-	*/
-	void AddUopAnimData(unsigned long long hash, UOPAnimationData animData);
  };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер анимаций
