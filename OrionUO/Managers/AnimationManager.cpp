@@ -235,7 +235,7 @@ const int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 //----------------------------------------------------------------------------------
 CAnimationManager::CAnimationManager()
 : WISP_DATASTREAM::CDataReader(), m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0),
-m_Direction(0), m_Sitting(0), m_Transform(false), m_UseBlending(false)
+m_Direction(0), m_Sitting(0), m_Transform(false), m_UseBlending(false), m_AnimID(0)
 {
 	WISPFUN_DEBUG("c133_f1");
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
@@ -1204,7 +1204,7 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &m
 		return NULL;
 
 	CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[m_AnimGroup].m_Direction[m_Direction];
-
+	m_AnimID = id;
 	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction, obj))
 		return false;
 
@@ -1261,7 +1261,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 		return;
 
 	CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[m_AnimGroup].m_Direction[m_Direction];
-
+	m_AnimID = id;
 	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction, obj))
 		return;
 
@@ -2121,28 +2121,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 //----------------------------------------------------------------------------------
 bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction)
 {
-	uchar dir = m_Direction;
-	uchar animGroup = m_AnimGroup;
-	ushort id = obj->GetMountAnimation();
-	bool mirror = false;
-
-	if (obj->NPC)
-	{
-		CGameCharacter *gc = obj->GameCharacterPtr();
-		gc->UpdateAnimationInfo(dir);
-		animGroup = gc->GetAnimationGroup();
-		GetAnimDirection(dir, mirror);
-	}
-	else if (obj->IsCorpse())
-	{
-		dir = ((CGameItem*)obj)->Layer;
-		animGroup = GetDieGroupIndex(id, ((CGameItem*)obj)->UsedLayer);
-		GetAnimDirection(dir, mirror);
-	}
-	else if (((CGameItem*)obj)->Layer != OL_MOUNT) //TGameItem
-		id = ((CGameItem*)obj)->AnimID;
-
-	UOPAnimationData animDataStruct = GetUOPAnimationData(id, animGroup);
+	UOPAnimationData animDataStruct = GetUOPAnimationData(m_AnimID, m_AnimGroup);
 	if (animDataStruct.path == NULL) return false;
 
 	//reading compressed data from uop file stream
@@ -2151,16 +2130,13 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 
 	//decompressing here
 	UCHAR_LIST decLayoutData(decompressedLength);
-	bool result = DecompressUOPFileData(animDataStruct, decLayoutData, buf, dir, animGroup, id);
+	bool result = DecompressUOPFileData(animDataStruct, decLayoutData, buf, m_Direction, m_AnimGroup, m_AnimID);
 	if (!result) return false;//decompression failed
 
 	SetData(reinterpret_cast<puchar>(&decLayoutData[0]), decompressedLength);
-
-	vector<UOPFrameData> pixelDataOffsets = GetUOPFrameDataOffsets();
-
-
+	vector<UOPFrameData> pixelDataOffsets = ReadUOPFrameDataOffsets();
 	direction.FrameCount = UOP_ANIMATION_FRAMES_COUNT;
-	int dirFrameStartIdx = UOP_ANIMATION_FRAMES_COUNT * dir;
+	int dirFrameStartIdx = UOP_ANIMATION_FRAMES_COUNT * Direction;
 	if (direction.m_Frames == NULL)
 		direction.m_Frames = new CTextureAnimationFrame[UOP_ANIMATION_FRAMES_COUNT];
 	IFOR(i, 0, UOP_ANIMATION_FRAMES_COUNT)
@@ -2543,7 +2519,7 @@ void CAnimationManager::AddUopAnimData(unsigned long long hash, UOPAnimationData
 	uopFrameDataRefMap[hash] = animData;
 }
 //----------------------------------------------------------------------------------
-UOPAnimationData CAnimationManager::GetUOPAnimationData(ushort &id, uchar &animGroup)
+UOPAnimationData CAnimationManager::GetUOPAnimationData(ushort &id, ushort &animGroup)
 {
 	char hashString[100];
 	sprintf(hashString, "build/animationlegacyframe/%06i/%02i.bin", id, animGroup);
@@ -2568,7 +2544,7 @@ char *CAnimationManager::ReadUOPDataFromFileStream(UOPAnimationData &animData)
 	return buf;
 }
 //----------------------------------------------------------------------------------
-bool CAnimationManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf, uchar &dir, uchar &animGroup, ushort &id)
+bool CAnimationManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf, uchar &dir, ushort &animGroup, ushort &id)
 {
 	uLongf cLen = animData.compressedLength;
 	uLongf dLen = animData.decompressedLength;
@@ -2586,7 +2562,7 @@ bool CAnimationManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_
 	return true;
 }
 //----------------------------------------------------------------------------------
-vector<UOPFrameData> CAnimationManager::GetUOPFrameDataOffsets()
+vector<UOPFrameData> CAnimationManager::ReadUOPFrameDataOffsets()
 {
 	//format id?
 	ReadUInt32LE();

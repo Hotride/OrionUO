@@ -144,7 +144,9 @@ void CGameWorld::ProcessAnimation()
 				if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT && dir < 5)
 				{
 					CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[id].m_Groups[animGroup].m_Direction[dir];
-
+					g_AnimationManager.AnimID = id;
+					g_AnimationManager.AnimGroup = animGroup;
+					g_AnimationManager.Direction = dir;
 					if (direction.FrameCount == 0)
 						g_AnimationManager.LoadDirectionGroup(direction, obj);
 
@@ -243,7 +245,9 @@ void CGameWorld::ProcessAnimation()
 					int animGroup = g_AnimationManager.GetDieGroupIndex(id, gi->UsedLayer);
 
 					CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[id].m_Groups[animGroup].m_Direction[dir];
-
+					g_AnimationManager.AnimID = id;
+					g_AnimationManager.AnimGroup = animGroup;
+					g_AnimationManager.Direction = dir;
 					if (direction.FrameCount == 0)
 						g_AnimationManager.LoadDirectionGroup(direction, obj);
 

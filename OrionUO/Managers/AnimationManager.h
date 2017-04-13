@@ -58,9 +58,11 @@ class CAnimationManager : public WISP_DATASTREAM::CDataReader
 	//!Цвет текущего кадра
 	SETGET(ushort, Color);
 	//!Группа анимаций текущего кадра
-	SETGET(int, AnimGroup);
+	SETGET(ushort, AnimGroup);
 	//!Направление текущего кадра
 	SETGET(uchar, Direction);
+	//!Айдишник текущей анимации
+	SETGET(ushort, AnimID);
 
 private:
 	//!Адреса файлов в памяти
@@ -126,17 +128,18 @@ private:
 	bool TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction);
 
 	//Получить структуру с ссылкой на поток от файла ( и другими данными) от анимации с указанными id и animGroup.
-	UOPAnimationData GetUOPAnimationData(ushort &id, uchar &animGroup);
+	UOPAnimationData GetUOPAnimationData(ushort &id, ushort &animGroup);
 
 	//Чтение сжатых данных с кадрами из УОП аним файла.
 	static char *ReadUOPDataFromFileStream(UOPAnimationData &animData);
 
 	//Разжатие данных с кадрами из УОП аним файла.
-	static bool DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf, uchar &dir, uchar &animGroup, ushort &id);
+	static bool DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf, uchar &dir, ushort &animGroup, ushort &id);
 
-	//Получить вектор с оффсетами пиксельных данных кадров.
-	vector<UOPFrameData> GetUOPFrameDataOffsets();
+	//Прочитать и получить вектор с оффсетами пиксельных данных кадров.
+	vector<UOPFrameData> ReadUOPFrameDataOffsets();
 
+	//Чтение указанных в аргументах данных о кадре.
 	void ReadUOPFrameData(short &imageCenterX, short &imageCenterY, short &imageWidth, short &imageHeight, pushort &palette, UOPFrameData &frameData);
 public:
 	CAnimationManager();
