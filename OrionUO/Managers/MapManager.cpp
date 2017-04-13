@@ -317,7 +317,7 @@ CIndexMap *CMapManager::GetIndex(const uint &map, const int &blockX, const int &
 //----------------------------------------------------------------------------------
 void CMapManager::ClearBlockAccess()
 {
-	m_BlockAccessList.resize(m_BlockAccessList.size(), 0);
+	memset(&m_BlockAccessList[0], 0, sizeof(m_BlockAccessList));
 }
 //----------------------------------------------------------------------------------
 char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, const int &z)
@@ -326,10 +326,12 @@ char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, cons
 	int blockY = y / 8;
 	uint index = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
 
-	if (m_BlockAccessList[index])
+	bool &accessBlock = m_BlockAccessList[(x & 0x3F) + ((y & 0x3F) << 6)];
+
+	if (accessBlock)
 		return defaultZ;
 
-	m_BlockAccessList[index] = true;
+	accessBlock = true;
 	CMapBlock *block = GetBlock(index);
 
 	if (block != NULL)
@@ -589,7 +591,7 @@ void CMapManager::Init(const bool &delayed)
 		m_MaxBlockIndex = g_MapBlockSize[map].Width * g_MapBlockSize[map].Height;
 		m_Blocks = new CMapBlock*[m_MaxBlockIndex];
 		memset(&m_Blocks[0], 0, sizeof(CMapBlock*) * m_MaxBlockIndex);
-		m_BlockAccessList.resize(m_MaxBlockIndex, false);
+		memset(&m_BlockAccessList[0], 0, sizeof(m_BlockAccessList));
 	}
 	
 	const int XY_Offset = 30; //70;

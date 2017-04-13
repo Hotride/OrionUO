@@ -44,7 +44,7 @@ private:
 
 	MAP_INDEX_LIST m_BlockData[MAX_MAPS_COUNT];
 
-	vector<bool> m_BlockAccessList;
+	bool m_BlockAccessList[0x1000];
 
 	void ResetPatchesInBlockTable();
 

@@ -158,6 +158,7 @@ void CGameScreen::UpdateMaxDrawZ()
 	int maxZ2 = m_MaxDrawZ;
 
 	g_NoDrawRoof = false;
+	char maxGroundZ = 127;
 	g_MaxGroundZ = 127;
 	m_MaxDrawZ = 127;
 
@@ -185,6 +186,7 @@ void CGameScreen::UpdateMaxDrawZ()
 				{
 					if (pz16 <= tileZ)
 					{
+						maxGroundZ = pz16;
 						g_MaxGroundZ = pz16;
 						m_MaxDrawZ = g_MaxGroundZ;
 
@@ -258,6 +260,8 @@ void CGameScreen::UpdateMaxDrawZ()
 			m_MaxDrawZ = pz16;
 			g_MaxGroundZ = pz16;
 		}
+
+		g_MaxGroundZ = maxGroundZ;
 	}
 }
 
