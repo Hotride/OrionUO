@@ -2108,8 +2108,62 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 				result.Height = ReadInt16LE();
 			}
 		}
-		else //try reading uop anims
+		else if (direction.IsUOP) //try reading uop anim frame
 		{
+			UOPAnimationData animDataStruct = m_DataIndex[m_AnimID].m_Groups[m_AnimGroup].m_UOPAnimData;
+			if (animDataStruct.path == NULL) return result;
+
+			//reading compressed data from uop file stream
+			auto decompressedLength = animDataStruct.decompressedLength;
+			char *buf = CFileManager::ReadUOPDataFromFileStream(animDataStruct);
+
+			//decompressing here
+			UCHAR_LIST decLayoutData(decompressedLength);
+			bool decompressionRes = CFileManager::DecompressUOPFileData(animDataStruct, decLayoutData, buf);
+			if (!decompressionRes) return result;//decompression failed
+
+			SetData(reinterpret_cast<puchar>(&decLayoutData[0]), decompressedLength);
+			//format id?
+			ReadUInt32LE();
+			//version
+			ReadUInt32LE();
+			//decompressed data size
+			int dcsize = ReadUInt32LE();
+			//anim id
+			int animId = ReadUInt32LE();
+			//8 bytes unknown
+			ReadUInt32LE();
+			ReadUInt32LE();
+			//unknown.
+			ReadInt16LE();
+			//unknown
+			ReadInt16LE();
+			//header length
+			ReadUInt32LE();
+			//framecount
+			int totalFrameCount = ReadUInt32LE();
+			//data start + offset
+			m_Ptr = m_Start + ReadUInt32LE();
+
+			UOPFrameData data;
+			data.dataStart = m_Ptr;
+			//anim group
+			ReadInt16LE();
+			//frame id 
+			data.frameId = ReadInt16LE();
+			//8 bytes unknown
+			ReadUInt32LE();
+			ReadUInt32LE();
+			//offset
+			data.pixelDataOffset = ReadUInt32LE();
+
+			short imageCenterX, imageCenterY, imageWidth, imageHeight;
+			pushort palette;
+			ReadUOPFrameData(imageCenterX, imageCenterY, imageWidth, imageHeight, palette, data);
+			result.CenterX = imageCenterX;
+			result.CenterY = imageCenterY;
+			result.Width = imageWidth;
+			result.Height = imageHeight;
 		}
 	}
 
@@ -2200,7 +2254,6 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 
 		g_GL_BindTexture16(frame.m_Texture, imageWidth, imageHeight, &data[0]);
 	}
-	direction.IsUOP = true;
 	m_UsedAnimList.push_back(&direction);
 	return true;
 }
