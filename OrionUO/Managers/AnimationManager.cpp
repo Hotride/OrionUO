@@ -1038,10 +1038,8 @@ bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction
 {
 	WISPFUN_DEBUG("c133_f10");
 
-	if (direction.Address == 0 || obj->IsUOP)
-	{
-		return TryReadUOPAnimDimins(obj, direction);
-	}
+	if (direction.IsUOP) return TryReadUOPAnimDimins(obj, direction);
+	if (direction.Address == 0) return false;
 
 	SetData((puchar)direction.Address, direction.Size);
 
@@ -2120,7 +2118,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 //----------------------------------------------------------------------------------
 bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction)
 {
-	UOPAnimationData animDataStruct = GetUOPAnimationData(m_AnimID, m_AnimGroup);
+	UOPAnimationData animDataStruct = m_DataIndex[m_AnimID].m_Groups[m_AnimGroup].m_UOPAnimData;
 	if (animDataStruct.path == NULL) return false;
 
 	//reading compressed data from uop file stream
@@ -2511,19 +2509,6 @@ bool CAnimationManager::IsCovered(const int &layer, CGameObject *owner)
 	}
 
 	return result;
-}
-//----------------------------------------------------------------------------------
-UOPAnimationData CAnimationManager::GetUOPAnimationData(ushort &id, ushort &animGroup)
-{
-	char hashString[100];
-	sprintf(hashString, "build/animationlegacyframe/%06i/%02i.bin", id, animGroup);
-	auto hash = g_Orion.CreateHash(hashString);
-	UOPAnimationData animDataStruct = {};
-	if (uopFrameDataRefMap.find(hash) != uopFrameDataRefMap.end())
-	{
-		animDataStruct = uopFrameDataRefMap.at(hash);
-	}
-	return animDataStruct;
 }
 //----------------------------------------------------------------------------------
 vector<UOPFrameData> CAnimationManager::ReadUOPFrameDataOffsets()

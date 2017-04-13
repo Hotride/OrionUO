@@ -288,7 +288,7 @@ void CFileManager::ReadTask()
 				{
 					continue;
 				}
-
+				auto currPos = animFile->tellg();
 				UOPAnimationData dataStruct;
 				dataStruct.offset = offsetVal + *reinterpret_cast<unsigned int*>(headerlength);
 				dataStruct.compressedLength = *reinterpret_cast<unsigned int*>(compressedlength);
@@ -297,14 +297,11 @@ void CFileManager::ReadTask()
 				dataStruct.fileStream = animFile;
 				dataStruct.path = path;
 
-				animFile->seekg(dataStruct.offset, 0);
-
 				char *buf = ReadUOPDataFromFileStream(dataStruct);
 				//let's decompress
 				UCHAR_LIST decLayoutData(dataStruct.decompressedLength);
 				bool result = DecompressUOPFileData(dataStruct, decLayoutData, buf);
 				if (!result) continue; //decompressing failed for some reason.
-				delete buf;
 				SetData(reinterpret_cast<puchar>(&decLayoutData[0]), dataStruct.decompressedLength);
 
 				//format id?
@@ -326,11 +323,20 @@ void CFileManager::ReadTask()
 				ReadUInt32LE();
 				//framecount
 				ReadUInt32LE();
-				//pixeldata offset
-				ReadUInt32LE();
+
+				//read data start offset and set reading pointer on it.
+				m_Ptr = m_Start + ReadUInt32LE();
 				//anim group
 				ushort animGroup = ReadInt16LE();
-				g_AnimationManager.m_DataIndex[animId].m_Groups[animGroup].UOPAnimData = dataStruct;
+				CTextureAnimationGroup *group = &g_AnimationManager.m_DataIndex[animId].m_Groups[animGroup];
+				group->m_UOPAnimData = dataStruct;
+				group->IsUOP = true;
+				IFOR(i, 0, 5)
+				{
+					CTextureAnimationDirection *dir = &group->m_Direction[i];
+					dir->IsUOP = true;
+				}
+				animFile->seekg(currPos, 0);
 			}
 
 			animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);

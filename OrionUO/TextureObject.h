@@ -12,8 +12,15 @@
 //----------------------------------------------------------------------------------
 #include "BaseQueue.h"
 #include "Globals.h"
-#include "Managers/AnimationManager.h"
-
+//Данные о местонахождении сжатого блока данных с уоп фреймами
+struct UOPAnimationData
+{
+	std::string *path;
+	unsigned int offset;
+	unsigned int compressedLength;
+	unsigned int decompressedLength;
+	std::fstream *fileStream;
+};
 //----------------------------------------------------------------------------------
 //Класс для работы с текстурой кадра анимации
 class CTextureAnimationFrame
@@ -62,7 +69,7 @@ public:
 	virtual ~CTextureAnimationGroup();
 
 	CTextureAnimationDirection m_Direction[5];
-	UOPAnimationData UOPAnimData;
+	UOPAnimationData m_UOPAnimData;
 };
 //----------------------------------------------------------------------------------
 #endif

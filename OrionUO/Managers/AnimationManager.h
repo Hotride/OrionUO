@@ -13,8 +13,6 @@
 #include "../IndexObject.h"
 #include "../TextureObject.h"
 #include "../Wisp/WispDataStream.h"
-#include <fstream>
-#include <unordered_map>
 //----------------------------------------------------------------------------------
 static const float UPPER_BODY_RATIO = 0.35f;
 static const float MID_BODY_RATIO = 0.60f;
@@ -35,15 +33,6 @@ struct ANIMATION_DIMENSIONS
 	int Height;
 	int CenterX;
 	int CenterY;
-};
-//Данные о местонахождении сжатого блока данных с уоп фреймами
-struct UOPAnimationData
-{
-	std::string *path;
-	unsigned int offset;
-	unsigned int compressedLength;
-	unsigned int decompressedLength;
-	std::fstream *fileStream;
 };
 struct UOPFrameData
 {
@@ -69,10 +58,6 @@ private:
 	uint m_AddressIdx[6];
 	uint m_AddressMul[6];
 	uint m_SizeIdx[6];
-
-	//Ключ - хеш, созданный на основе индкекса анимации и её группы.
-	//Значение - структура указывающая на местонахождение данных.
-	std::unordered_map<unsigned long long, UOPAnimationData> uopFrameDataRefMap;
 
 	//!Высота текстуры персонажа.
 	int m_CharacterFrameHeight;
@@ -126,9 +111,6 @@ private:
 	ushort m_CharacterLayerAnimID[25];
 
 	bool TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction);
-
-	//Получить структуру с ссылкой на поток от файла ( и другими данными) от анимации с указанными id и animGroup.
-	UOPAnimationData GetUOPAnimationData(ushort &id, ushort &animGroup);
 
 	//Прочитать и получить вектор с оффсетами пиксельных данных кадров.
 	vector<UOPFrameData> ReadUOPFrameDataOffsets();

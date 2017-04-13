@@ -12,10 +12,8 @@
 #include "../Wisp/WispLogger.h"
 #include "ConfigManager.h"
 #include "../MulStruct.h"
-#include <fstream>
 #include <string>
 #include "../OrionUO.h"
-#include "PacketManager.h"
 //----------------------------------------------------------------------------------
 CSoundManager g_SoundManager;
 //----------------------------------------------------------------------------------

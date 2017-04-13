@@ -29,7 +29,7 @@ CTextureAnimationDirection::~CTextureAnimationDirection()
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationGroup::CTextureAnimationGroup()
-: m_IsUOP(false), UOPAnimData{nullptr}
+: m_IsUOP(false)
 {
 }
 //----------------------------------------------------------------------------------
