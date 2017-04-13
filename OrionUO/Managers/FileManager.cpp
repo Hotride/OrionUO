@@ -9,15 +9,17 @@
 //----------------------------------------------------------------------------------
 #include "FileManager.h"
 #include "../Wisp/WispApplication.h"
+#include "../Wisp/WispDataStream.h"
 #include <thread>
 #include <fstream>
 #include "AnimationManager.h"
 #include <sys/stat.h>
+#include "../zlib.h"
 
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
 CFileManager::CFileManager()
-: m_UseVerdata(false), m_UseUOPMap(false), m_UnicodeFontsCount(0), m_AutoResetEvent(false), m_UseUOPGumps(false)
+: WISP_DATASTREAM::CDataReader(), m_UseVerdata(false), m_UseUOPMap(false), m_UnicodeFontsCount(0), m_AutoResetEvent(false), m_UseUOPGumps(false)
 {
 }
 //----------------------------------------------------------------------------------
@@ -295,13 +297,46 @@ void CFileManager::ReadTask()
 
 				dataStruct.fileStream = animFile;
 				dataStruct.path = path;
-				g_AnimationManager.AddUopAnimData(*reinterpret_cast<unsigned long long*>(hash), dataStruct);
+
+				animFile->seekg(dataStruct.offset, 0);
+
+				char *buf = ReadUOPDataFromFileStream(dataStruct);
+				//let's decompress
+				UCHAR_LIST decLayoutData(dataStruct.decompressedLength);
+				bool result = DecompressUOPFileData(dataStruct, decLayoutData, buf);
+				if (!result) continue; //decompressing failed for some reason.
+				delete buf;
+				SetData(reinterpret_cast<puchar>(&decLayoutData[0]), dataStruct.decompressedLength);
+
+				//format id?
+				ReadUInt32LE();
+				//version?
+				ReadUInt32LE();
+				//decompressed data size
+				ReadUInt32LE();
+				//anim id
+				uint animId = ReadUInt32LE();
+				//8 bytes unknown
+				ReadUInt32LE();
+				ReadUInt32LE();
+				//unknown.
+				ReadInt16LE();
+				//unknown
+				ReadInt16LE();
+				//header length
+				ReadUInt32LE();
+				//framecount
+				ReadUInt32LE();
+				//pixeldata offset
+				ReadUInt32LE();
+				//anim group
+				ushort animGroup = ReadInt16LE();
+				g_AnimationManager.m_DataIndex[animId].m_Groups[animGroup].UOPAnimData = dataStruct;
 			}
 
 			animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
 		} while (*reinterpret_cast<unsigned long long*>(nextBlock) != 0);
 
-		animFile->close();
 	}
 	m_AutoResetEvent.Set();
 }
@@ -314,4 +349,31 @@ bool CFileManager::FileExists(const std::string& filename)
 		return true;
 	}
 	return false;
+}
+//----------------------------------------------------------------------------------
+char *CFileManager::ReadUOPDataFromFileStream(UOPAnimationData &animData)
+{
+	animData.fileStream->seekg(animData.offset, 0);
+	//reading into buffer on the heap
+	char *buf = new char[animData.compressedLength];
+	animData.fileStream->read(buf, animData.compressedLength);
+	return buf;
+}
+//----------------------------------------------------------------------------------
+bool CFileManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf)
+{
+	uLongf cLen = animData.compressedLength;
+	uLongf dLen = animData.decompressedLength;
+
+	int z_err = uncompress(&decLayoutData[0], &dLen, reinterpret_cast<unsigned char const*>(buf), cLen);
+	delete buf;
+
+	if (z_err != Z_OK)
+	{
+		LOG("UOP anim decompression failed %d\n", z_err);
+		LOG("Anim file: %s\n", *animData.path);
+		LOG("Anim offset: %d\n", animData.offset);
+		return false;
+	}
+	return true;
 }

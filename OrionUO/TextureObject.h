@@ -12,6 +12,8 @@
 //----------------------------------------------------------------------------------
 #include "BaseQueue.h"
 #include "Globals.h"
+#include "Managers/AnimationManager.h"
+
 //----------------------------------------------------------------------------------
 //Класс для работы с текстурой кадра анимации
 class CTextureAnimationFrame
@@ -53,11 +55,14 @@ public:
 //Класс для работы с группой анимаций
 class CTextureAnimationGroup
 {
+	//UOP animation indicator
+	SETGET(bool, IsUOP);
 public:
 	CTextureAnimationGroup();
 	virtual ~CTextureAnimationGroup();
 
 	CTextureAnimationDirection m_Direction[5];
+	UOPAnimationData UOPAnimData;
 };
 //----------------------------------------------------------------------------------
 #endif

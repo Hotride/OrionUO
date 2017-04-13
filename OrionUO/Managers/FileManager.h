@@ -14,8 +14,10 @@
 #include "../Wisp/WispMappedFile.h"
 #include "../AutoResetEvent.h"
 
+struct UOPAnimationData;
+
 //----------------------------------------------------------------------------------
-class CFileManager
+class CFileManager : public WISP_DATASTREAM::CDataReader
 {
 	SETGET(bool, UseVerdata);
 	SETGET(bool, UseUOPMap);
@@ -87,6 +89,12 @@ public:
 	bool Load();
 	void Unload();
 	void TryReadUOPAnimations();
+
+	//Чтение сжатых данных с кадрами из УОП аним файла.
+	static char *ReadUOPDataFromFileStream(UOPAnimationData &animData);
+
+	//Разжатие данных с кадрами из УОП аним файла.
+	static bool DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf);
 
 private:
 	void ReadTask();

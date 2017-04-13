@@ -130,12 +130,6 @@ private:
 	//Получить структуру с ссылкой на поток от файла ( и другими данными) от анимации с указанными id и animGroup.
 	UOPAnimationData GetUOPAnimationData(ushort &id, ushort &animGroup);
 
-	//Чтение сжатых данных с кадрами из УОП аним файла.
-	static char *ReadUOPDataFromFileStream(UOPAnimationData &animData);
-
-	//Разжатие данных с кадрами из УОП аним файла.
-	static bool DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf, uchar &dir, ushort &animGroup, ushort &id);
-
 	//Прочитать и получить вектор с оффсетами пиксельных данных кадров.
 	vector<UOPFrameData> ReadUOPFrameDataOffsets();
 

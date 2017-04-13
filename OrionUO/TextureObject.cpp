@@ -29,6 +29,7 @@ CTextureAnimationDirection::~CTextureAnimationDirection()
 }
 //----------------------------------------------------------------------------------
 CTextureAnimationGroup::CTextureAnimationGroup()
+: m_IsUOP(false)
 {
 }
 //----------------------------------------------------------------------------------

@@ -23,7 +23,6 @@
 #include "../SelectedObject.h"
 #include "../Screen stages/GameScreen.h"
 #include "PacketManager.h"
-#include "../zlib.h"
 //----------------------------------------------------------------------------------
 CAnimationManager g_AnimationManager;
 //----------------------------------------------------------------------------------
@@ -2126,11 +2125,11 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 
 	//reading compressed data from uop file stream
 	auto decompressedLength = animDataStruct.decompressedLength;
-	char *buf = ReadUOPDataFromFileStream(animDataStruct);
+	char *buf = CFileManager::ReadUOPDataFromFileStream(animDataStruct);
 
 	//decompressing here
 	UCHAR_LIST decLayoutData(decompressedLength);
-	bool result = DecompressUOPFileData(animDataStruct, decLayoutData, buf, m_Direction, m_AnimGroup, m_AnimID);
+	bool result = CFileManager::DecompressUOPFileData(animDataStruct, decLayoutData, buf);
 	if (!result) return false;//decompression failed
 
 	SetData(reinterpret_cast<puchar>(&decLayoutData[0]), decompressedLength);
@@ -2532,36 +2531,6 @@ UOPAnimationData CAnimationManager::GetUOPAnimationData(ushort &id, ushort &anim
 	return animDataStruct;
 }
 //----------------------------------------------------------------------------------
-char *CAnimationManager::ReadUOPDataFromFileStream(UOPAnimationData &animData)
-{
-	animData.fileStream->open(*animData.path, std::ios::binary | std::ios::in);
-	animData.fileStream->seekg(animData.offset, 0);
-
-	//reading into buffer on the heap
-	char *buf = new char[animData.compressedLength];
-	animData.fileStream->read(buf, animData.compressedLength);
-	animData.fileStream->close();
-	return buf;
-}
-//----------------------------------------------------------------------------------
-bool CAnimationManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST &decLayoutData, char *buf, uchar &dir, ushort &animGroup, ushort &id)
-{
-	uLongf cLen = animData.compressedLength;
-	uLongf dLen = animData.decompressedLength;
-
-	int z_err = uncompress(&decLayoutData[0], &dLen, reinterpret_cast<unsigned char const*>(buf), cLen);
-	delete buf;
-
-	if (z_err != Z_OK)
-	{
-		LOG("UOP anim decompression failed %d\n", z_err);
-		LOG("Anim file: %s\n", *animData.path);
-		LOG("Anim id: %d, anim grp: %d, dir: %d\n", id, animGroup, dir);
-		return false;
-	}
-	return true;
-}
-//----------------------------------------------------------------------------------
 vector<UOPFrameData> CAnimationManager::ReadUOPFrameDataOffsets()
 {
 	//format id?
@@ -2593,7 +2562,7 @@ vector<UOPFrameData> CAnimationManager::ReadUOPFrameDataOffsets()
 	{
 		UOPFrameData data;
 		data.dataStart = m_Ptr;
-		//unknown
+		//anim group
 		ReadInt16LE();
 		//frame id 
 		data.frameId = ReadInt16LE();
