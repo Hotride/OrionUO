@@ -2171,19 +2171,12 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 
 		UOPFrameData frameData = pixelDataOffsets[i + dirFrameStartIdx];
 		if (frameData.dataStart == NULL) continue;
-		m_Ptr = frameData.dataStart + frameData.pixelDataOffset;
-		pushort palette = (pushort)m_Ptr;
-		Move(512); //Palette
 
-		short imageCenterX = ReadInt16LE();
+		short imageCenterX, imageCenterY, imageWidth, imageHeight;
+		pushort palette;
+		ReadUOPFrameData(imageCenterX, imageCenterY, imageWidth, imageHeight, palette, frameData);
 		frame.CenterX = imageCenterX;
-
-		short imageCenterY = ReadInt16LE();
 		frame.CenterY = imageCenterY;
-
-		short imageWidth = ReadInt16LE();
-
-		short imageHeight = ReadInt16LE();
 
 		if (!imageWidth || !imageHeight)
 			continue;
@@ -2637,3 +2630,16 @@ vector<UOPFrameData> CAnimationManager::GetUOPFrameDataOffsets()
 	}
 	return pixelDataOffsets;
 }
+//----------------------------------------------------------------------------------
+void CAnimationManager::ReadUOPFrameData(short &imageCenterX, short &imageCenterY, short &imageWidth, short &imageHeight, pushort &palette, UOPFrameData &frameData)
+{
+	m_Ptr = frameData.dataStart + frameData.pixelDataOffset;
+	palette = reinterpret_cast<pushort>(m_Ptr);
+	Move(512); //Palette
+
+	imageCenterX = ReadInt16LE();
+	imageCenterY = ReadInt16LE();
+	imageWidth = ReadInt16LE();
+	imageHeight = ReadInt16LE();
+}
+//----------------------------------------------------------------------------------

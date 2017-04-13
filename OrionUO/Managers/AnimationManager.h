@@ -136,6 +136,8 @@ private:
 
 	//Получить вектор с оффсетами пиксельных данных кадров.
 	vector<UOPFrameData> GetUOPFrameDataOffsets();
+
+	void ReadUOPFrameData(short &imageCenterX, short &imageCenterY, short &imageWidth, short &imageHeight, pushort &palette, UOPFrameData &frameData);
 public:
 	CAnimationManager();
 	~CAnimationManager();
