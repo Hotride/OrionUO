@@ -2186,11 +2186,13 @@ bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimation
 
 	SetData(reinterpret_cast<puchar>(&decLayoutData[0]), decompressedLength);
 	vector<UOPFrameData> pixelDataOffsets = ReadUOPFrameDataOffsets();
-	direction.FrameCount = UOP_ANIMATION_FRAMES_COUNT;
-	int dirFrameStartIdx = UOP_ANIMATION_FRAMES_COUNT * Direction;
+
+	direction.FrameCount = pixelDataOffsets.size() / 5;
+	int dirFrameStartIdx = direction.FrameCount * Direction;
 	if (direction.m_Frames == NULL)
-		direction.m_Frames = new CTextureAnimationFrame[UOP_ANIMATION_FRAMES_COUNT];
-	IFOR(i, 0, UOP_ANIMATION_FRAMES_COUNT)
+		direction.m_Frames = new CTextureAnimationFrame[direction.FrameCount];
+
+	IFOR(i, 0, direction.FrameCount)
 	{
 		CTextureAnimationFrame &frame = direction.m_Frames[i];
 
@@ -2584,26 +2586,36 @@ vector<UOPFrameData> CAnimationManager::ReadUOPFrameDataOffsets()
 	//header length
 	ReadUInt32LE();
 	//framecount
-	int totalFrameCount = ReadUInt32LE();
+	int frameCount = ReadUInt32LE();
 	//data start + offset
 	puchar dataStart = m_Start + ReadUInt32LE();
 
 	m_Ptr = dataStart;
-	vector<UOPFrameData> pixelDataOffsets(50);
+	vector<UOPFrameData> initialDataVector(frameCount);
 
-	IFOR(i, 0, totalFrameCount)
+	IFOR(i, 0, frameCount)
 	{
-		UOPFrameData data;
-		data.dataStart = m_Ptr;
+		initialDataVector[i].dataStart = m_Ptr;
 		//anim group
 		ReadInt16LE();
 		//frame id 
-		data.frameId = ReadInt16LE();
+		initialDataVector[i].frameId = ReadInt16LE();
 		//8 bytes unknown
 		ReadUInt32LE();
 		ReadUInt32LE();
 		//offset
-		data.pixelDataOffset = ReadUInt32LE();
+		initialDataVector[i].pixelDataOffset = ReadUInt32LE();
+	}
+	int highestFrameId = initialDataVector[frameCount - 1].frameId;
+	if (highestFrameId == frameCount) return initialDataVector;
+	float dirFramesCount = ceil(static_cast<float>(highestFrameId) / 5.0);
+	int totalFrameCount = dirFramesCount * 5;
+	if (totalFrameCount < 50) totalFrameCount = 50;
+
+	vector<UOPFrameData> pixelDataOffsets(totalFrameCount);
+	IFOR(i, 0, frameCount)
+	{
+		UOPFrameData data = initialDataVector[i];
 		pixelDataOffsets[data.frameId - 1] = data;
 	}
 	return pixelDataOffsets;

@@ -17,7 +17,6 @@
 static const float UPPER_BODY_RATIO = 0.35f;
 static const float MID_BODY_RATIO = 0.60f;
 static const float LOWER_BODY_RATIO = 0.94f;
-static const int UOP_ANIMATION_FRAMES_COUNT = 10;
 //----------------------------------------------------------------------------------
 struct FRAME_OUTPUT_INFO
 {
