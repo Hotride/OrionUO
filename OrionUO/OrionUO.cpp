@@ -1367,12 +1367,15 @@ void COrion::SaveLocalConfig()
 	if (!g_ConfigLoaded)
 		return;
 
+	LOG("SaveLocalConfig step 1\n");
 	string path = g_App.FilePath("Desktop");
 	CreateDirectoryA(path.c_str(), NULL);
 
+	LOG("SaveLocalConfig step 2\n");
 	path += string("\\") + g_MainScreen.m_Account->c_str();
 	CreateDirectoryA(path.c_str(), NULL);
 
+	LOG("SaveLocalConfig step 3\n");
 	path += string("\\") + FixServerName(g_ServerList.GetSelectedServer()->Name);
 	CreateDirectoryA(path.c_str(), NULL);
 
@@ -1382,27 +1385,34 @@ void COrion::SaveLocalConfig()
 	path += serbuf;
 	CreateDirectoryA(path.c_str(), NULL);
 
+	LOG("managers:saving\n");
 	g_ConfigManager.Save(path + "\\options_debug.cuo");
 	g_SkillGroupManager.Save(path + "\\skills_debug.cuo");
 	g_MacroManager.Save(path + "\\macros_debug.cuo");
 	g_GumpManager.Save(path + "\\gumps_debug.cuo");
 
+	LOG("managers:saving in to root\n");
 	g_ConfigManager.Save(g_App.FilePath("options_debug.cuo"));
 	g_MacroManager.Save(g_App.FilePath("macros_debug.cuo"));
 
 	if (g_Player != NULL)
 	{
+		LOG("player exists\n");
+		LOG("name len: %i\n", g_Player->Name.length());
 		path += string("_") + g_Player->Name + ".cuo";
 
 		if (!PathFileExistsA(path.c_str()))
 		{
+			LOG("file saving\n");
 			FILE *file = NULL;
 			fopen_s(&file, path.c_str(), "wb");
-			
+
+			LOG("file closing\n");
 			if (file != NULL)
 				fclose(file);
 		}
 	}
+	LOG("SaveLocalConfig end\n");
 }
 //----------------------------------------------------------------------------------
 void COrion::ClearUnusedTextures()

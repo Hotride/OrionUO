@@ -215,15 +215,21 @@ void __cdecl FUNCBODY_SendUseSkill(int index)
 	}
 }
 //----------------------------------------------------------------------------------
-void __cdecl FUNCBODY_SendAsciiSpeech(const char *text)
+void __cdecl FUNCBODY_SendAsciiSpeech(const char *text, unsigned short color)
 {
-	CPacketASCIISpeechRequest packet(text, ST_NORMAL, 3, g_ConfigManager.SpeechColor);
+	if (!color)
+		color = g_ConfigManager.SpeechColor;
+
+	CPacketASCIISpeechRequest packet(text, ST_NORMAL, 3, color);
 	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 }
 //----------------------------------------------------------------------------------
-void __cdecl FUNCBODY_SendUnicodeSpeech(const wchar_t *text)
+void __cdecl FUNCBODY_SendUnicodeSpeech(const wchar_t *text, unsigned short color)
 {
-	CPacketUnicodeSpeechRequest packet(text, ST_NORMAL, 3, g_ConfigManager.SpeechColor, (puchar)g_Language.c_str());
+	if (!color)
+		color = g_ConfigManager.SpeechColor;
+
+	CPacketUnicodeSpeechRequest packet(text, ST_NORMAL, 3, color, (puchar)g_Language.c_str());
 	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 }
 //----------------------------------------------------------------------------------
@@ -460,7 +466,7 @@ IGLEngine g_Interface_GL =
 //----------------------------------------------------------------------------------
 IUltimaOnline g_Interface_UO =
 {
-	1,
+	2,
 	sizeof(IUltimaOnline),
 	FUNCBODY_GetLandFlags,
 	FUNCBODY_GetStaticFlags,
