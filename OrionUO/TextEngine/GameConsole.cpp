@@ -62,6 +62,16 @@ void CGameConsole::Send()
 					speechType = ST_EMOTE;
 					offset = 2;
 				}
+				else if (m_Type == GCTT_GUILD)
+				{
+					speechType = ST_GUILD_CHAT;
+					offset = 2;
+				}
+				else if (m_Type == GCTT_ALLIANCE)
+				{
+					speechType = ST_ALLIANCE_CHAT;
+					offset = 2;
+				}
 				else if (m_Type == GCTT_PARTY)
 				{
 					DWORD serial = 0;
@@ -203,6 +213,16 @@ wstring CGameConsole::IsSystemCommand(const wchar_t *text, int &len, int &member
 	{
 		result = L"Broadcast:";
 		m_Type = GCTT_BROADCAST;
+	}
+	else if (!memcmp(&text[0], g_ConsolePrefix[GCTT_GUILD].c_str(), 4)) //Guild
+	{
+		result = L"Guild:";
+		m_Type = GCTT_GUILD;
+	}
+	else if (!memcmp(&text[0], g_ConsolePrefix[GCTT_ALLIANCE].c_str(), 4)) //Alliance
+	{
+		result = L"Alliance:";
+		m_Type = GCTT_ALLIANCE;
 	}
 
 	return result;

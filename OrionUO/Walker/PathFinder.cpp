@@ -55,6 +55,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObjectTest> &list, const int &x, c
 	int by = y % 8;
 
 	bool ignoreGameCharacters = (m_IgnoreStaminaCheck || (stepState == PSS_DEAD_OR_GM) || g_Player->IgnoreCharacters() || g_Player->Stam >= g_Player->MaxStam);
+	bool isGM = (g_Player->Graphic == 0x03DB);
 
 	for (CRenderWorldObject *obj = block->GetRender(bx, by); obj != NULL; obj = obj->m_NextXY)
 	{
@@ -112,7 +113,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObjectTest> &list, const int &x, c
 				}
 				else if (((CGameItem*)obj)->MultiBody || obj->IsInternal()) //isMulti || InternalItem
 					canBeAdd = false;
-				else if (stepState == PSS_DEAD_OR_GM && (go->IsDoor() || tileInfo->Weight <= 0x5A))
+				else if (stepState == PSS_DEAD_OR_GM && (go->IsDoor() || tileInfo->Weight <= 0x5A || (isGM && !go->Locked())))
 					dropFlags = true;
 				else
 					dropFlags = ((graphic >= 0x3946 && graphic <= 0x3964) || graphic == 0x0082);

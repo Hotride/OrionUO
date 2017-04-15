@@ -50,6 +50,8 @@ protected:
 
 	MAP_INDEX_LIST m_BlockData[MAX_MAPS_COUNT];
 
+	bool m_BlockAccessList[0x1000];
+
 	void ResetPatchesInBlockTable();
 
 public:
@@ -65,6 +67,10 @@ public:
 	void ApplyPatches(WISP_DATASTREAM::CDataReader &stream);
 
 	void UpdatePatched();
+
+	void ClearBlockAccess();
+
+	char CalculateNearZ(char defaultZ, const int &x, const int &y, const int &z);
 
 	/*!
 	Получить индекс текущей карты

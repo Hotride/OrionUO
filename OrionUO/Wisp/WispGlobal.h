@@ -23,6 +23,9 @@ using std::deque;
 #include <map>
 using std::map;
 
+#include <unordered_map>
+using std::unordered_map;
+
 using std::pair;
 
 #include "WispDefinitions.h"

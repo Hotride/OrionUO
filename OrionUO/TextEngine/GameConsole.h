@@ -51,7 +51,7 @@ public:
 	void ClearStack();
 };
 //----------------------------------------------------------------------------------
-static const wstring g_ConsolePrefix[7] =
+static const wstring g_ConsolePrefix[] =
 {
 	L"", //Normal
 	L"! ", //Yell
@@ -60,6 +60,8 @@ static const wstring g_ConsolePrefix[7] =
 	L".", //Command
 	L"? ", //Broadcast
 	L"/ ", //Party
+	L"\\ ", //Guild
+	L"| " //Alliance
 };
 //----------------------------------------------------------------------------------
 extern CGameConsole g_GameConsole;

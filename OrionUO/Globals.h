@@ -269,6 +269,8 @@ extern bool g_DrawAura;
 static const int MAX_ABILITIES_COUNT = 31;
 extern ushort g_AbilityList[MAX_ABILITIES_COUNT];
 extern uchar g_Ability[2];
+
+extern bool g_DrawStatLockers;
 //----------------------------------------------------------------------------------
 inline bool IsBackground(const __int64 &flags) { return (flags & 0x00000001); }
 inline bool IsWeapon(const __int64 &flags) { return (flags & 0x00000002); }

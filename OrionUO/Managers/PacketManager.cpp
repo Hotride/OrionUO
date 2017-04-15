@@ -64,6 +64,7 @@
 #include "../Gumps/GumpShop.h"
 #include "../Gumps/GumpSkills.h"
 #include "../Gumps/GumpSpellbook.h"
+#include "AnimationManager.h"
 #include "../zlib.h"
 
 #pragma comment(lib, "zdll.lib")
@@ -894,14 +895,8 @@ PACKET_HANDLER(EnterWorld)
 	{
 		LOG("Error!!! Duplicate enter world message\n");
 
-		g_Party.Leader = 0;
-		g_Party.Inviter = 0;
-		g_Party.Clear();
-
-		g_Ability[0] = 4;
-		g_Ability[1] = 10;
-
-		g_ResizedGump = NULL;
+		g_Orion.SaveLocalConfig();
+		g_Orion.ClearWorld();
 	}
 
 	RELEASE_POINTER(g_World);
@@ -2512,6 +2507,8 @@ PACKET_HANDLER(EnableLockedFeatures)
 		g_LockedClientFeatures = ReadUInt16BE();
 
 	g_ChatEnabled = (bool)(g_LockedClientFeatures & LFF_T2A);
+
+	g_AnimationManager.UpdateAnimationAddressTable();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenContainer)
@@ -2940,6 +2937,8 @@ PACKET_HANDLER(ExtendedCommand)
 			{
 				Move(1);
 				uchar state = ReadUInt8();
+
+				g_DrawStatLockers = true;
 
 				g_Player->LockStr = (state >> 4) & 3;
 				g_Player->LockDex = (state >> 2) & 3;

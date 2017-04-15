@@ -65,6 +65,18 @@ public:
 	//Послать отмену таргета
 	void SendCancelTarget();
 
+	//Послать таргет на объект
+	void Plugin_SendTargetObject(const uint &Serial);
+
+	//Послать таргет на тайл
+	void Plugin_SendTargetTile(const ushort &tileID, const short &x, const short &Y, char z);
+
+	//Послать отмену таргета
+	void Plugin_SendCancelTarget();
+
+	//Послать таргет
+	void Plugin_SendTarget();
+
 	//Послать таргет на последнюю цель
 	void SendLastTarget();
 

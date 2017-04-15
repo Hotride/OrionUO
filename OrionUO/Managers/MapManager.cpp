@@ -317,6 +317,62 @@ CIndexMap *CMapManager::GetIndex(const uint &map, const int &blockX, const int &
 	return &list[block];
 }
 //----------------------------------------------------------------------------------
+void CMapManager::ClearBlockAccess()
+{
+	memset(&m_BlockAccessList[0], 0, sizeof(m_BlockAccessList));
+}
+//----------------------------------------------------------------------------------
+char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, const int &z)
+{
+	int blockX = x / 8;
+	int blockY = y / 8;
+	uint index = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
+
+	bool &accessBlock = m_BlockAccessList[(x & 0x3F) + ((y & 0x3F) << 6)];
+
+	if (accessBlock)
+		return defaultZ;
+
+	accessBlock = true;
+	CMapBlock *block = GetBlock(index);
+
+	if (block != NULL)
+	{
+		CMapObject *item = block->Block[x % 8][y % 8];
+
+		for (; item != NULL; item = (CMapObject*)item->m_Next)
+		{
+			if (!item->IsGameObject())
+			{
+				if (!item->IsStaticObject() && !item->IsMultiObject())
+					continue;
+			}
+			else if (((CGameObject*)item)->NPC)
+				continue;
+
+			if (!item->IsRoof() || abs(z - item->Z) > 6)
+				continue;
+
+			break;
+		}
+
+		if (item == NULL)
+			return defaultZ;
+
+		char tileZ = item->Z;
+
+		if (tileZ < defaultZ)
+			defaultZ = tileZ;
+
+		defaultZ = CalculateNearZ(defaultZ, x - 1, y, tileZ);
+		defaultZ = CalculateNearZ(defaultZ, x + 1, y, tileZ);
+		defaultZ = CalculateNearZ(defaultZ, x, y - 1, tileZ);
+		defaultZ = CalculateNearZ(defaultZ, x, y + 1, tileZ);
+	}
+
+	return defaultZ;
+}
+//----------------------------------------------------------------------------------
 /*!
 Получить блок карты напрямую из мулов
 @param [__in] map Индекс карты
@@ -537,6 +593,7 @@ void CMapManager::Init(const bool &delayed)
 		m_MaxBlockIndex = g_MapBlockSize[map].Width * g_MapBlockSize[map].Height;
 		m_Blocks = new CMapBlock*[m_MaxBlockIndex];
 		memset(&m_Blocks[0], 0, sizeof(CMapBlock*) * m_MaxBlockIndex);
+		memset(&m_BlockAccessList[0], 0, sizeof(m_BlockAccessList));
 	}
 	
 	const int XY_Offset = 30; //70;

@@ -139,7 +139,133 @@ void CGameScreen::InitToolTip()
 @param [__out] maxGroundZ Максимальная Z координата ландшафта
 @return Максимальная Z координата отрисовки
 */
+
 void CGameScreen::UpdateMaxDrawZ()
+{
+	WISPFUN_DEBUG("c164_f6");
+	int playerX = g_Player->X;
+	int playerY = g_Player->Y;
+	int playerZ = g_Player->Z;
+
+	if (playerX == g_Player->OldX && playerY == g_Player->OldY && playerZ == g_Player->OldZ)
+		return;
+
+	g_Player->OldX = g_Player->X;
+	g_Player->OldY = g_Player->Y;
+	g_Player->OldZ = g_Player->Z;
+
+	int maxZ1 = g_MaxGroundZ;
+	int maxZ2 = m_MaxDrawZ;
+
+	g_NoDrawRoof = false;
+	char maxGroundZ = 127;
+	g_MaxGroundZ = 127;
+	m_MaxDrawZ = 127;
+
+	int bx = playerX / 8;
+	int by = playerY / 8;
+
+	int blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
+	CMapBlock *mb = g_MapManager->GetBlock(blockIndex);
+
+	if (mb != NULL)
+	{
+		int x = playerX % 8;
+		int y = playerY % 8;
+
+		int pz14 = playerZ + 14;
+		int pz16 = playerZ + 16;
+
+		for (CRenderWorldObject *ro = mb->GetRender(x, y); ro != NULL; ro = ro->m_NextXY)
+		{
+			char tileZ = ro->Z;
+
+			if (!ro->IsGameObject())
+			{
+				if (ro->IsLandObject())
+				{
+					if (pz16 <= tileZ)
+					{
+						maxGroundZ = pz16;
+						g_MaxGroundZ = pz16;
+						m_MaxDrawZ = g_MaxGroundZ;
+
+						break;
+					}
+
+					continue;
+				}
+				else if (!ro->IsStaticObject() && !ro->IsMultiObject())
+					continue;
+			}
+			else if (((CGameObject*)ro)->NPC)
+				continue;
+
+			if (tileZ > pz14 && m_MaxDrawZ > tileZ && !(((CRenderStaticObject*)ro)->GetStaticData()->Flags & 0x20004) && (!ro->IsRoof() || ro->IsSurface()))
+			{
+				m_MaxDrawZ = tileZ;
+
+				g_NoDrawRoof = true;
+			}
+		}
+
+		int tempZ = m_MaxDrawZ;
+		g_MaxGroundZ = m_MaxDrawZ;
+
+		playerX++;
+		playerY++;
+
+		bx = playerX / 8;
+		by = playerY / 8;
+
+		x = playerX % 8;
+		y = playerY % 8;
+
+		blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
+		CMapBlock *mb11 = g_MapManager->GetBlock(blockIndex);
+
+		if (mb11 != NULL)
+		{
+			for (CRenderWorldObject *ro = mb11->GetRender(x, y); ro != NULL; ro = ro->m_NextXY)
+			{
+				if (!ro->IsGameObject())
+				{
+					if (!ro->IsStaticObject() && !ro->IsMultiObject())
+						continue;
+				}
+				else if (((CGameObject*)ro)->NPC)
+					continue;
+
+				char tileZ = ro->Z;
+
+				if (tileZ > pz14 && m_MaxDrawZ > tileZ && !(((CRenderStaticObject*)ro)->GetStaticData()->Flags & 0x204) && ro->IsRoof())
+				{
+					m_MaxDrawZ = tileZ;
+					g_MapManager->ClearBlockAccess();
+					g_MaxGroundZ = g_MapManager->CalculateNearZ(tileZ, playerX, playerY, tileZ);
+
+					g_NoDrawRoof = true;
+				}
+			}
+
+			tempZ = g_MaxGroundZ;
+		}
+
+		int tempZ2 = tempZ;
+		m_MaxDrawZ = g_MaxGroundZ;
+
+		if (tempZ < pz16)
+		{
+			tempZ2 = pz16;
+			m_MaxDrawZ = pz16;
+			g_MaxGroundZ = pz16;
+		}
+
+		g_MaxGroundZ = maxGroundZ;
+	}
+}
+
+/*void CGameScreen::UpdateMaxDrawZ()
 {
 	WISPFUN_DEBUG("c164_f6");
 	int playerX = g_Player->X;
@@ -245,7 +371,7 @@ void CGameScreen::UpdateMaxDrawZ()
 			}
 		}
 	}
-}
+}*/
 //----------------------------------------------------------------------------------
 /*!
 Применение прозрачности крон деревьев в указанных координатах
@@ -1889,7 +2015,17 @@ void CGameScreen::OnLeftMouseButtonUp()
 				else if (rwo->IsLandObject())
 					g_Target.SendTargetTile(0/*g_SelectedObject->Index*/, rwo->X, rwo->Y, rwo->Z);
 				else if (rwo->IsStaticObject() || rwo->IsMultiObject())
-					g_Target.SendTargetTile(rwo->Graphic - 0x4000, rwo->X, rwo->Y, rwo->Z);
+				{
+					STATIC_TILES *st = NULL;
+					
+					if (g_PacketManager.ClientVersion >= CV_7090 && rwo->IsSurface())
+						st = ((CRenderStaticObject*)rwo)->GetStaticData();
+
+					if (st != NULL)
+						g_Target.SendTargetTile(rwo->Graphic - 0x4000, rwo->X, rwo->Y, rwo->Z + st->Height);
+					else
+						g_Target.SendTargetTile(rwo->Graphic - 0x4000, rwo->X, rwo->Y, rwo->Z);
+				}
 
 				g_MouseManager.LastLeftButtonClickTimer = 0;
 

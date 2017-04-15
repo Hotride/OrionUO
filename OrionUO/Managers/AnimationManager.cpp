@@ -234,7 +234,8 @@ const int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 //----------------------------------------------------------------------------------
 CAnimationManager::CAnimationManager()
 : WISP_DATASTREAM::CDataReader(), m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0),
-m_Direction(0), m_Sitting(0), m_Transform(false), m_UseBlending(false), m_AnimID(0)
+m_Direction(0), m_Sitting(0), m_Transform(false), m_UseBlending(false), m_AnimID(0),
+m_EquipConvItem(NULL)
 {
 	WISPFUN_DEBUG("c133_f1");
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
@@ -246,6 +247,45 @@ CAnimationManager::~CAnimationManager()
 {
 	WISPFUN_DEBUG("c133_f2");
 	ClearUnusedTextures(g_Ticks + 100000);
+}
+//----------------------------------------------------------------------------------
+void CAnimationManager::UpdateAnimationAddressTable()
+{
+	IFOR(i, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
+	{
+		CIndexAnimation &index = m_DataIndex[i];
+
+		IFOR(g, 0, ANIMATION_GROUPS_COUNT)
+		{
+			CTextureAnimationGroup &group = index.m_Groups[g];
+
+			IFOR(d, 0, 5)
+			{
+				CTextureAnimationDirection &direction = group.m_Direction[d];
+				bool replace = (direction.FileIndex == 5);
+
+				if (direction.FileIndex == 2)
+					replace = (g_LockedClientFeatures & LFF_TD);
+				else if (direction.FileIndex == 3)
+					replace = (g_LockedClientFeatures & LFF_LBR);
+				else if (direction.FileIndex == 4)
+					replace = (g_LockedClientFeatures & LFF_AOS);
+				//else if (direction.FileIndex == 5)
+				//	replace = true; // (g_LockedClientFeatures & LFF_ML);
+
+				if (replace)
+				{
+					direction.Address = direction.PatchedAddress;
+					direction.Size = direction.PatchedSize;
+				}
+				else
+				{
+					direction.Address = direction.BaseAddress;
+					direction.Size = direction.BaseSize;
+				}
+			}
+		}
+	}
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -336,8 +376,10 @@ void CAnimationManager::Load(puint verdata)
 
 				if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
 				{
-					direction.Address = m_AddressMul[0] + aidx->Position;
-					direction.Size = aidx->Size;
+					direction.BaseAddress = m_AddressMul[0] + aidx->Position;
+					direction.BaseSize = aidx->Size;
+					direction.Address = direction.BaseAddress;
+					direction.Size = direction.BaseSize;
 				}
 			}
 		}
@@ -408,8 +450,10 @@ void CAnimationManager::Load(puint verdata)
 
 				CTextureAnimationDirection &direction = index.m_Groups[group].m_Direction[dir];
 
-				direction.Address = (uint)g_FileManager.m_VerdataMul.Start + vh->Position;
-				direction.Size = vh->Size;
+				direction.BaseAddress = (uint)g_FileManager.m_VerdataMul.Start + vh->Position;
+				direction.BaseSize = vh->Size;
+				direction.Address = direction.BaseAddress;
+				direction.Size = direction.BaseSize;
 
 				index.Graphic = id;
 				index.Type = groupType;
@@ -426,6 +470,11 @@ void CAnimationManager::Load(puint verdata)
 void CAnimationManager::InitIndexReplaces(puint verdata)
 {
 	WISPFUN_DEBUG("c133_f4");
+	Load(verdata);
+
+	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
+		return;
+
 	if (g_PacketManager.ClientVersion >= CV_500A)
 	{
 		static const string typeNames[5] = { "animal", "monster", "sea_monster", "human", "equipment" };
@@ -454,23 +503,68 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		}
 	}
 
-	Load(verdata);
-
-	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
-		return;
-
 	WISP_FILE::CTextFileParser newBodyParser("", " \t,{}", "#;//", "");
 	WISP_FILE::CTextFileParser bodyParser(g_App.FilePath("Body.def").c_str(), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser bodyconvParser(g_App.FilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
 	WISP_FILE::CTextFileParser corpseParser(g_App.FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
 
-	WISP_FILE::CTextFileParser animParser[4]
+	/*WISP_FILE::CTextFileParser animParser[4]
 	{
 		WISP_FILE::CTextFileParser(g_App.FilePath("Anim1.def").c_str(), " \t", "#;//", "{}"),
 		WISP_FILE::CTextFileParser(g_App.FilePath("Anim2.def").c_str(), " \t", "#;//", "{}"),
 		WISP_FILE::CTextFileParser(g_App.FilePath("Anim3.def").c_str(), " \t", "#;//", "{}"),
 		WISP_FILE::CTextFileParser(g_App.FilePath("Anim4.def").c_str(), " \t", "#;//", "{}")
-	};
+	};*/
+
+	WISP_FILE::CTextFileParser equipConvParser(g_App.FilePath("EquipConv.def"), " \t", "#;//", "");
+
+	while (!equipConvParser.IsEOF())
+	{
+		STRING_LIST strings = equipConvParser.ReadTokens();
+
+		if (strings.size() >= 5)
+		{
+			ushort body = (ushort)atoi(strings[0].c_str());
+
+			if (body >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				continue;
+
+			ushort graphic = (ushort)atoi(strings[1].c_str());
+
+			if (graphic >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				continue;
+
+			ushort newGraphic = (ushort)atoi(strings[2].c_str());
+
+			if (newGraphic >= MAX_ANIMATIONS_DATA_INDEX_COUNT)
+				newGraphic = graphic;
+
+			ushort gump = (ushort)atoi(strings[3].c_str());
+
+			if (gump >= MAX_GUMP_DATA_INDEX_COUNT)
+				continue;
+			else if (gump == 0)
+				gump = graphic; // +50000;
+			else if (gump == 0xFFFF)
+				gump = newGraphic; // +50000;
+
+			ushort color = (ushort)atoi(strings[4].c_str());
+
+			EQUIP_CONV_BODY_MAP::iterator bodyMapIter = m_EquipConv.find(body);
+
+			if (bodyMapIter == m_EquipConv.end())
+			{
+				m_EquipConv.insert(EQUIP_CONV_BODY_MAP::value_type(body, EQUIP_CONV_DATA_MAP()));
+
+				bodyMapIter = m_EquipConv.find(body);
+
+				if (bodyMapIter == m_EquipConv.end())
+					continue; //?!?!??
+			}
+
+			bodyMapIter->second.insert(EQUIP_CONV_DATA_MAP::value_type(graphic, CEquipConvData(newGraphic, gump, color)));
+		}
+	}
 
 	while (!bodyconvParser.IsEOF())
 	{
@@ -637,8 +731,9 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 
 							if (aidx->Size && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
 							{
-								direction.Address = m_AddressMul[animFile] + aidx->Position;
-								direction.Size = aidx->Size;
+								direction.PatchedAddress = m_AddressMul[animFile] + aidx->Position;
+								direction.PatchedSize = aidx->Size;
+								direction.FileIndex = animFile;
 							}
 						}
 					}
@@ -759,8 +854,28 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					CTextureAnimationDirection &direction = group.m_Direction[d];
 					CTextureAnimationDirection &newDirection = newGroup.m_Direction[d];
 
-					direction.Address = newDirection.Address;
-					direction.Size = newDirection.Size;
+					direction.BaseAddress = newDirection.BaseAddress;
+					direction.BaseSize = newDirection.BaseSize;
+					direction.Address = direction.BaseAddress;
+					direction.Size = direction.BaseSize;
+
+					if (!direction.PatchedAddress)
+					{
+						direction.PatchedAddress = newDirection.PatchedAddress;
+						direction.PatchedSize = newDirection.PatchedSize;
+						direction.FileIndex = newDirection.FileIndex;
+					}
+
+					if (!direction.BaseAddress)
+					{
+						direction.BaseAddress = direction.PatchedAddress;
+						direction.BaseSize = direction.PatchedAddress;
+						direction.Address = direction.BaseAddress;
+						direction.Size = direction.BaseSize;
+						direction.PatchedAddress = 0;
+						direction.PatchedSize = 0;
+						direction.FileIndex = 0;
+					}
 				}
 			}
 
@@ -835,8 +950,28 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 					CTextureAnimationDirection &direction = group.m_Direction[d];
 					CTextureAnimationDirection &newDirection = newGroup.m_Direction[d];
 
-					direction.Address = newDirection.Address;
-					direction.Size = newDirection.Size;
+					direction.BaseAddress = newDirection.BaseAddress;
+					direction.BaseSize = newDirection.BaseSize;
+					direction.Address = direction.BaseAddress;
+					direction.Size = direction.BaseSize;
+
+					if (!direction.PatchedAddress)
+					{
+						direction.PatchedAddress = newDirection.PatchedAddress;
+						direction.PatchedSize = newDirection.PatchedSize;
+						direction.FileIndex = newDirection.FileIndex;
+					}
+
+					if (!direction.BaseAddress)
+					{
+						direction.BaseAddress = direction.PatchedAddress;
+						direction.BaseSize = direction.PatchedAddress;
+						direction.Address = direction.BaseAddress;
+						direction.Size = direction.BaseSize;
+						direction.PatchedAddress = 0;
+						direction.PatchedSize = 0;
+						direction.FileIndex = 0;
+					}
 				}
 			}
 
@@ -1323,7 +1458,12 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 
 					if (!color)
 					{
+						if (direction.Address != direction.PatchedAddress)
 						color = m_DataIndex[id].Color;
+
+						if (!color && m_EquipConvItem != NULL)
+							color = m_EquipConvItem->Color;
+
 						partialHue = false;
 					}
 				}
@@ -1557,6 +1697,7 @@ void CAnimationManager::FixSittingDirection(uchar &layerDirection, bool &mirror,
 */
 void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 {
+	m_EquipConvItem = NULL;
 	WISPFUN_DEBUG("c133_f16");
 	m_Transform = false;
 
@@ -2076,38 +2217,38 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 			}
 		}
 
-		CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[0];
+			CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[0];
 
-		puchar ptr = (puchar)direction.Address;
+			puchar ptr = (puchar)direction.Address;
 
-		if (ptr != NULL)
-		{
-			SetData(ptr, direction.Size);
-			Move(sizeof(ushort[256]));  //Palette
-			puchar dataStart = m_Ptr;
-
-			int frameCount = ReadUInt32LE();
-
-			if (frameCount > 0 && frameIndex >= frameCount)
+			if (ptr != NULL)
 			{
-				if (obj->IsCorpse())
-					frameIndex = frameCount - 1;
-				else
-					frameIndex = 0;
-			}
+				SetData(ptr, direction.Size);
+				Move(sizeof(ushort[256]));  //Palette
+				puchar dataStart = m_Ptr;
 
-			if (frameIndex < frameCount)
-			{
-				puint frameOffset = (puint)m_Ptr;
-				//Move(frameOffset[frameIndex]);
-				m_Ptr = dataStart + frameOffset[frameIndex];
+				int frameCount = ReadUInt32LE();
 
-				result.CenterX = ReadInt16LE();
-				result.CenterY = ReadInt16LE();
-				result.Width = ReadInt16LE();
-				result.Height = ReadInt16LE();
+				if (frameCount > 0 && frameIndex >= frameCount)
+				{
+					if (obj->IsCorpse())
+						frameIndex = frameCount - 1;
+					else
+						frameIndex = 0;
+				}
+
+				if (frameIndex < frameCount)
+				{
+					puint frameOffset = (puint)m_Ptr;
+					//Move(frameOffset[frameIndex]);
+					m_Ptr = dataStart + frameOffset[frameIndex];
+
+					result.CenterX = ReadInt16LE();
+					result.CenterY = ReadInt16LE();
+					result.Width = ReadInt16LE();
+					result.Height = ReadInt16LE();
+				}
 			}
-		}
 		else if (direction.IsUOP) //try reading uop anim frame
 		{
 			UOPAnimationData animDataStruct = m_DataIndex[m_AnimID].m_Groups[m_AnimGroup].m_UOPAnimData;
@@ -2426,10 +2567,29 @@ bool CAnimationManager::DrawEquippedLayers(const bool &selection, CGameObject *o
 
 	vector<CGameItem*> &list = obj->m_DrawLayeredObjects;
 
+	ushort bodyGraphic = obj->Graphic;
+
+	if (obj->IsCorpse())
+		bodyGraphic = obj->Count;
+
+	EQUIP_CONV_BODY_MAP::iterator bodyMapIter = m_EquipConv.find(bodyGraphic);
+
 	if (selection)
 	{
 		for (vector<CGameItem*>::iterator i = list.begin(); i != list.end() && !result; i++)
-			result = TestPixels(*i, drawX, drawY, mirror, animIndex, (*i)->AnimID);
+		{
+			ushort id = (*i)->AnimID;
+
+			if (bodyMapIter != m_EquipConv.end())
+			{
+				EQUIP_CONV_DATA_MAP::iterator dataIter = bodyMapIter->second.find(id);
+
+				if (dataIter != bodyMapIter->second.end())
+					id = dataIter->second.Graphic;
+			}
+
+			result = TestPixels(*i, drawX, drawY, mirror, animIndex, id);
+		}
 	}
 	else
 	{
@@ -2437,7 +2597,21 @@ bool CAnimationManager::DrawEquippedLayers(const bool &selection, CGameObject *o
 		{
 			CGameItem *item = *i;
 
-			Draw(item, drawX, drawY, mirror, animIndex, item->AnimID);
+			ushort id = item->AnimID;
+
+			if (bodyMapIter != m_EquipConv.end())
+			{
+				EQUIP_CONV_DATA_MAP::iterator dataIter = bodyMapIter->second.find(id);
+
+				if (dataIter != bodyMapIter->second.end())
+				{
+					m_EquipConvItem = &dataIter->second;
+					id = m_EquipConvItem->Graphic;
+				}
+			}
+
+			Draw(item, drawX, drawY, mirror, animIndex, id);
+			m_EquipConvItem = NULL;
 
 			if (item->IsLightSource() && g_GameScreen.UseLight)
 				g_GameScreen.AddLight(obj, item, drawX, drawY - lightOffset);

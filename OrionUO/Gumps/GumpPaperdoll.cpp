@@ -21,6 +21,7 @@
 #include "../ClickObject.h"
 #include "../Managers/FontsManager.h"
 #include "../Managers/ConfigManager.h"
+#include "../Managers/AnimationManager.h"
 //----------------------------------------------------------------------------------
 int CGumpPaperdoll::UsedLayers[m_LayerCount] =
 {
@@ -279,8 +280,13 @@ void CGumpPaperdoll::InitToolTip()
 					{
 						CGameObject *obj = character->FindLayer(id - ID_GP_ITEMS);
 
-						if (obj != NULL && obj->ClilocMessage.length())
-							g_ToolTip.Set(obj->ClilocMessage);
+						if (obj != NULL)
+						{
+							if (obj->ClilocMessage.length())
+								g_ToolTip.Set(obj->ClilocMessage);
+							else if (g_PacketManager.ClientVersion >= CV_308Z)
+								g_PacketManager.AddMegaClilocRequest(obj->Serial, true);
+						}
 					}
 				}
 
@@ -477,6 +483,10 @@ void CGumpPaperdoll::UpdateContent()
 	//Draw equipment & backpack
 	CGameItem *equipment = NULL;
 
+	EQUIP_CONV_BODY_MAP &equipConv = g_AnimationManager.GetEquipConv();
+
+	EQUIP_CONV_BODY_MAP::iterator bodyIter = equipConv.find(obj->Graphic);
+
 	g_ColorizerShader->Use();
 
 	//if (obj->IsHuman())
@@ -531,14 +541,24 @@ void CGumpPaperdoll::UpdateContent()
 					}
 				}
 
-				if (equipment->AnimID)
+				ushort id = equipment->AnimID;
+
+				if (bodyIter != equipConv.end())
+				{
+					EQUIP_CONV_DATA_MAP::iterator dataIter = bodyIter->second.find(id);
+
+					if (dataIter != bodyIter->second.end())
+						id = dataIter->second.Gump;
+				}
+
+				if (id)
 				{
 					int cOfs = gumpOffset;
 
-					if (obj->Female && g_Orion.ExecuteGump(equipment->AnimID + cOfs) == NULL)
+					if (obj->Female && g_Orion.ExecuteGump(id + cOfs) == NULL)
 						cOfs = MALE_GUMP_OFFSET;
 
-					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + cOfs, 8, 19));
+					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(id + cOfs, 8, 19));
 					bodyGumppic->Color = equipment->Color;
 					bodyGumppic->PartialHue = equipment->IsPartialHue();
 					bodyGumppic->Serial = ID_GP_ITEMS + UsedLayers[i];
@@ -550,14 +570,24 @@ void CGumpPaperdoll::UpdateContent()
 
 				if (equipment == NULL)
 				{
+					ushort id = g_ObjectInHand->AnimID;
+
+					if (bodyIter != equipConv.end())
+					{
+						EQUIP_CONV_DATA_MAP::iterator dataIter = bodyIter->second.find(id);
+
+						if (dataIter != bodyIter->second.end())
+							id = dataIter->second.Gump;
+					}
+
 					int cOfs = gumpOffset;
 
-					if (obj->Female && !g_Orion.ExecuteGump(g_ObjectInHand->AnimID + cOfs))
+					if (obj->Female && !g_Orion.ExecuteGump(id + cOfs))
 						cOfs = MALE_GUMP_OFFSET;
 
 					m_DataBox->Add(new CGUIAlphaBlending(true, 0.7f));
 
-					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(g_ObjectInHand->AnimID + cOfs, 8, 19));
+					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(id + cOfs, 8, 19));
 					bodyGumppic->Color = g_ObjectInHand->Color;
 					bodyGumppic->PartialHue = g_ObjectInHand->IsPartialHue();
 

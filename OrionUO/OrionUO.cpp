@@ -1368,12 +1368,15 @@ void COrion::SaveLocalConfig()
 	if (!g_ConfigLoaded)
 		return;
 
+	LOG("SaveLocalConfig step 1\n");
 	string path = g_App.FilePath("Desktop");
 	CreateDirectoryA(path.c_str(), NULL);
 
+	LOG("SaveLocalConfig step 2\n");
 	path += string("\\") + g_MainScreen.m_Account->c_str();
 	CreateDirectoryA(path.c_str(), NULL);
 
+	LOG("SaveLocalConfig step 3\n");
 	path += string("\\") + FixServerName(g_ServerList.GetSelectedServer()->Name);
 	CreateDirectoryA(path.c_str(), NULL);
 
@@ -1383,27 +1386,34 @@ void COrion::SaveLocalConfig()
 	path += serbuf;
 	CreateDirectoryA(path.c_str(), NULL);
 
+	LOG("managers:saving\n");
 	g_ConfigManager.Save(path + "\\options_debug.cuo");
 	g_SkillGroupManager.Save(path + "\\skills_debug.cuo");
 	g_MacroManager.Save(path + "\\macros_debug.cuo");
 	g_GumpManager.Save(path + "\\gumps_debug.cuo");
 
+	LOG("managers:saving in to root\n");
 	g_ConfigManager.Save(g_App.FilePath("options_debug.cuo"));
 	g_MacroManager.Save(g_App.FilePath("macros_debug.cuo"));
 
 	if (g_Player != NULL)
 	{
+		LOG("player exists\n");
+		LOG("name len: %i\n", g_Player->Name.length());
 		path += string("_") + g_Player->Name + ".cuo";
 
 		if (!PathFileExistsA(path.c_str()))
 		{
+			LOG("file saving\n");
 			FILE *file = NULL;
 			fopen_s(&file, path.c_str(), "wb");
-			
+
+			LOG("file closing\n");
 			if (file != NULL)
 				fclose(file);
 		}
 	}
+	LOG("SaveLocalConfig end\n");
 }
 //----------------------------------------------------------------------------------
 void COrion::ClearUnusedTextures()
@@ -3505,7 +3515,7 @@ void COrion::IndexReplaces()
 		return;
 
 	DEBUGLOG("Replace arts\n");
-	while (!artParser.IsEOF() && false)
+	while (!artParser.IsEOF())
 	{
 		STRING_LIST strings = artParser.ReadTokens();
 
@@ -3527,7 +3537,7 @@ void COrion::IndexReplaces()
 				if (checkIndex < 0 || checkIndex >= MAX_LAND_DATA_INDEX_COUNT + m_StaticDataCount)
 					continue;
 
-				if (index < MAX_LAND_DATA_INDEX_COUNT && checkIndex < MAX_LAND_DATA_INDEX_COUNT && m_LandDataIndex[checkIndex].Address != NULL)
+				if (index < MAX_LAND_DATA_INDEX_COUNT && checkIndex < MAX_LAND_DATA_INDEX_COUNT && m_LandDataIndex[checkIndex].Address != NULL && m_LandDataIndex[index].Address == NULL)
 				{
 					memcpy(&m_LandDataIndex[index], &m_LandDataIndex[checkIndex], sizeof(CIndexObject));
 					m_LandDataIndex[index].Texture = NULL;
@@ -3535,16 +3545,20 @@ void COrion::IndexReplaces()
 
 					break;
 				}
-				else if (index >= MAX_LAND_DATA_INDEX_COUNT && checkIndex >= MAX_LAND_DATA_INDEX_COUNT && m_StaticDataIndex[checkIndex - 0x4000].Address != NULL)
+				else if (index >= MAX_LAND_DATA_INDEX_COUNT && checkIndex >= MAX_LAND_DATA_INDEX_COUNT)
 				{
 					checkIndex -= MAX_LAND_DATA_INDEX_COUNT;
+					checkIndex &= 0x3FFF;
 					index -= MAX_LAND_DATA_INDEX_COUNT;
 
-					memcpy(&m_StaticDataIndex[index], &m_StaticDataIndex[checkIndex], sizeof(CIndexObjectStatic));
-					m_StaticDataIndex[index].Texture = NULL;
-					m_StaticDataIndex[index].Color = atoi(strings[2].c_str());
+					if (m_StaticDataIndex[index].Address == NULL && m_StaticDataIndex[checkIndex].Address != NULL)
+					{
+						memcpy(&m_StaticDataIndex[index], &m_StaticDataIndex[checkIndex], sizeof(CIndexObjectStatic));
+						m_StaticDataIndex[index].Texture = NULL;
+						m_StaticDataIndex[index].Color = atoi(strings[2].c_str());
 
-					break;
+						break;
+					}
 				}
 			}
 		}
@@ -3559,7 +3573,7 @@ void COrion::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0)
+			if (index < 0 || index >= MAX_LAND_TEXTURES_DATA_INDEX_COUNT || m_TextureDataIndex[index].Address != NULL)
 				continue;
 
 			STRING_LIST newTexture = newDataParser.GetTokens(strings[1].c_str());
@@ -3594,7 +3608,7 @@ void COrion::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= MAX_GUMP_DATA_INDEX_COUNT)
+			if (index < 0 || index >= MAX_GUMP_DATA_INDEX_COUNT || m_GumpDataIndex[index].Address != NULL)
 				continue;
 
 			STRING_LIST newGump = newDataParser.GetTokens(strings[1].c_str());
@@ -3626,7 +3640,7 @@ void COrion::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= g_MultiIndexCount)
+			if (index < 0 || index >= g_MultiIndexCount || m_MultiDataIndex[index].Address != NULL)
 				continue;
 
 			STRING_LIST newMulti = newDataParser.GetTokens(strings[1].c_str());
@@ -3656,7 +3670,7 @@ void COrion::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= MAX_SOUND_DATA_INDEX_COUNT)
+			if (index < 0 || index >= MAX_SOUND_DATA_INDEX_COUNT || m_SoundDataIndex[index].Address != NULL)
 				continue;
 
 			STRING_LIST newSound = newDataParser.GetTokens(strings[1].c_str());
@@ -5506,27 +5520,16 @@ void COrion::RemoveRangedObjects()
 	g_EffectManager.RemoveRangedEffects();
 }
 //----------------------------------------------------------------------------------
-void COrion::LogOut()
+void COrion::ClearWorld()
 {
-	WISPFUN_DEBUG("c194_f124");
-	LOG("COrion::LogOut->Start\n");
-	SaveLocalConfig();
-
-	if (g_SendLogoutNotification)
-		CPacketLogoutNotification().Send();
-
-	Disconnect();
-	LOG("\tDisconnected?\n");
-
 	RELEASE_POINTER(g_Walker);
-
 	LOG("\tWalker deleted?\n");
 
 	RELEASE_POINTER(g_ObjectInHand);
 	LOG("\tObjectInHand removed?\n");
 
 	RELEASE_POINTER(g_World)
-	LOG("\tWorld removed?\n");
+		LOG("\tWorld removed?\n");
 
 	g_PopupMenu = NULL;
 
@@ -5555,6 +5558,32 @@ void COrion::LogOut()
 		g_MapManager->Clear();
 
 	g_CurrentMap = 0;
+
+	g_Party.Leader = 0;
+	g_Party.Inviter = 0;
+	g_Party.Clear();
+
+	g_Ability[0] = 4;
+	g_Ability[1] = 10;
+
+	g_ResizedGump = NULL;
+
+	g_DrawStatLockers = false;
+}
+//----------------------------------------------------------------------------------
+void COrion::LogOut()
+{
+	WISPFUN_DEBUG("c194_f124");
+	LOG("COrion::LogOut->Start\n");
+	SaveLocalConfig();
+
+	if (g_SendLogoutNotification)
+		CPacketLogoutNotification().Send();
+
+	Disconnect();
+	LOG("\tDisconnected?\n");
+
+	ClearWorld();
 
 	LOG("COrion::LogOut->End\n");
 	InitScreen(GS_MAIN);
@@ -5676,7 +5705,8 @@ void COrion::OpenStatus(uint serial)
 void COrion::DisplayStatusbarGump(const uint &serial, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c194_f134");
-	StatusReq(serial);
+	CPacketStatusRequest packet(serial);
+	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 
 	CGump *gump = g_GumpManager.GetGump(serial, 0, GT_STATUSBAR);
 

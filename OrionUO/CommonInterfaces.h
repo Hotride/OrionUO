@@ -60,8 +60,8 @@ typedef void __cdecl FUNCDEF_SEND_TARGET_TILE(unsigned short, short, short, char
 typedef void __cdecl FUNCDEF_SEND_TARGET_CANCEL();
 typedef void __cdecl FUNCDEF_SEND_CAST_SPELL(int);
 typedef void __cdecl FUNCDEF_SEND_USE_SKILL(int);
-typedef void __cdecl FUNCDEF_SEND_ASCII_SPEECH(const char*);
-typedef void __cdecl FUNCDEF_SEND_UNICODE_SPEECH(const wchar_t*);
+typedef void __cdecl FUNCDEF_SEND_ASCII_SPEECH(const char*, unsigned short);
+typedef void __cdecl FUNCDEF_SEND_UNICODE_SPEECH(const wchar_t*, unsigned short);
 typedef void __cdecl FUNCDEF_SEND_RENAME_MOUNT(unsigned int, const char*);
 typedef void __cdecl FUNCDEF_SEND_MENU_RESPONSE(unsigned int, unsigned int, int);
 typedef void __cdecl FUNCDEF_DISPLAY_STATUSBAR(unsigned int, int, int);
