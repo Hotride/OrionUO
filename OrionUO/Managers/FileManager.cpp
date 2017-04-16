@@ -335,6 +335,8 @@ void CFileManager::ReadTask()
 				{
 					CTextureAnimationDirection *dir = &group->m_Direction[i];
 					dir->IsUOP = true;
+					dir->BaseAddress = 0;
+					dir->Address = 0;
 				}
 				animFile->seekg(currPos, 0);
 			}
