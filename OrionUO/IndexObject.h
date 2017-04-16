@@ -107,6 +107,7 @@ class CIndexAnimation
 	SETGET(ushort, Color);
 	SETGET(ANIMATION_GROUPS_TYPE, Type);
 	SETGET(char, MountedHeightOffset);
+	SETGET(bool, IsUOP);
 
 public:
 	CIndexAnimation();

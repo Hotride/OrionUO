@@ -79,7 +79,7 @@ CIndexGump::~CIndexGump()
 }
 //----------------------------------------------------------------------------------
 CIndexAnimation::CIndexAnimation()
-: m_Graphic(0), m_Color(0), m_Type(AGT_UNKNOWN), m_MountedHeightOffset(0)
+: m_Graphic(0), m_Color(0), m_Type(AGT_UNKNOWN), m_MountedHeightOffset(0), m_IsUOP(false)
 {
 }
 //----------------------------------------------------------------------------------

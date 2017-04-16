@@ -328,7 +328,9 @@ void CFileManager::ReadTask()
 				m_Ptr = m_Start + ReadUInt32LE();
 				//anim group
 				ushort animGroup = ReadInt16LE();
-				CTextureAnimationGroup *group = &g_AnimationManager.m_DataIndex[animId].m_Groups[animGroup];
+				CIndexAnimation *indexAnim = &g_AnimationManager.m_DataIndex[animId];
+				indexAnim->IsUOP = true;
+				CTextureAnimationGroup *group = &(*indexAnim).m_Groups[animGroup];
 				group->m_UOPAnimData = dataStruct;
 				group->IsUOP = true;
 				IFOR(i, 0, 5)
