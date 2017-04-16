@@ -2765,32 +2765,40 @@ vector<UOPFrameData> CAnimationManager::ReadUOPFrameDataOffsets()
 	puchar dataStart = m_Start + ReadUInt32LE();
 
 	m_Ptr = dataStart;
-	vector<UOPFrameData> initialDataVector(frameCount);
+	vector<UOPFrameData> pixelDataOffsets;
 
 	IFOR(i, 0, frameCount)
 	{
-		initialDataVector[i].dataStart = m_Ptr;
+		UOPFrameData data;
+		data.dataStart = m_Ptr;
 		//anim group
 		ReadInt16LE();
 		//frame id 
-		initialDataVector[i].frameId = ReadInt16LE();
+		data.frameId = ReadInt16LE();
 		//8 bytes unknown
 		ReadUInt32LE();
 		ReadUInt32LE();
 		//offset
-		initialDataVector[i].pixelDataOffset = ReadUInt32LE();
+		data.pixelDataOffset = ReadUInt32LE();
+		int vsize = pixelDataOffsets.size();
+		if (vsize + 1 != data.frameId)
+		{
+			while (vsize + 1 != data.frameId)
+			{
+				pixelDataOffsets.push_back(UOPFrameData{ nullptr });
+				vsize++;
+			}
+		}
+		pixelDataOffsets.push_back(data);
 	}
-	int highestFrameId = initialDataVector[frameCount - 1].frameId;
-	if (highestFrameId == frameCount) return initialDataVector;
-	float dirFramesCount = ceil(static_cast<float>(highestFrameId) / 5.0);
-	int totalFrameCount = dirFramesCount * 5;
-	if (totalFrameCount < 50) totalFrameCount = 50;
-
-	vector<UOPFrameData> pixelDataOffsets(totalFrameCount);
-	IFOR(i, 0, frameCount)
+	int vectorSize = pixelDataOffsets.size();
+	if (vectorSize < 50)
 	{
-		UOPFrameData data = initialDataVector[i];
-		pixelDataOffsets[data.frameId - 1] = data;
+		while (vectorSize != 50)
+		{
+			pixelDataOffsets.push_back(UOPFrameData{ nullptr });
+			vectorSize++;
+		}
 	}
 	return pixelDataOffsets;
 }
