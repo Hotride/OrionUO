@@ -472,6 +472,7 @@ bool CGameCharacter::IsTeleportAction(short &x, short &y, const uchar &dir)
 void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const uchar &frameCount, const uchar &repeatCount, const bool &repeat, const bool &frameDirection)
 {
 	WISPFUN_DEBUG("c15_f10");
+	//for some reason these are sent by server when casting ethereal mount and some necro spells.
 	if (id == 203 || id == 230)
 		m_AnimationGroup = 16;
 	else
