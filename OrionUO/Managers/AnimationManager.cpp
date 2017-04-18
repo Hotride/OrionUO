@@ -2191,10 +2191,9 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 		{
 			CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[dir];
 
-			if (direction.Address != NULL || direction.IsUOP)
+			int fc = direction.FrameCount;
+			if (fc > 0)
 			{
-				int fc = direction.FrameCount;
-
 				if (fc > 0 && frameIndex >= fc)
 				{
 					if (obj->IsCorpse())
