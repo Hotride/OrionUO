@@ -472,7 +472,10 @@ bool CGameCharacter::IsTeleportAction(short &x, short &y, const uchar &dir)
 void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const uchar &frameCount, const uchar &repeatCount, const bool &repeat, const bool &frameDirection)
 {
 	WISPFUN_DEBUG("c15_f10");
-	m_AnimationGroup = id;
+	if (id == 203 || id == 230)
+		m_AnimationGroup = 16;
+	else
+		m_AnimationGroup = id;
 	m_AnimIndex = 0;
 	m_AnimationInterval = interval;
 	m_AnimationFrameCount = frameCount;
