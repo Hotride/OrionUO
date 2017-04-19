@@ -5377,8 +5377,11 @@ PACKET_HANDLER(BuyList)
 
 		CGameItem *item = (CGameItem*)container->m_Items;
 
-		while (item != NULL && item->m_Next != NULL)
-			item = (CGameItem*)item->m_Next;
+		if (inverseBuylist)
+		{
+			while (item != NULL && item->m_Next != NULL)
+				item = (CGameItem*)item->m_Next;
+		}
 
 		CGUIHTMLGump *htmlGump = gump->m_ItemList[0];
 
@@ -5413,7 +5416,10 @@ PACKET_HANDLER(BuyList)
 
 			currentY += shopItem->GetSize().Height;
 
-			item = (CGameItem*)item->m_Prev;
+			if (inverseBuylist)
+				item = (CGameItem*)item->m_Prev;
+			else
+				item = (CGameItem*)item->m_Next;
 		}
 
 		htmlGump->CalculateDataSize();
