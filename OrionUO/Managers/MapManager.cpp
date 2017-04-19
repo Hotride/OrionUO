@@ -912,7 +912,7 @@ void CUopMapManager::CreateBlockTable(int map)
 		{
 			fileNumber = shifted;
 			char mapFilePath[200];
-			sprintf(mapFilePath, "build/map%ilegacymul/%08i.dat", map, shifted);
+			sprintf_s(mapFilePath, "build/map%ilegacymul/%08i.dat", map, shifted);
 			hash = COrion::CreateHash(mapFilePath);
 			if (hashes.find(hash) != hashes.end())
 			{

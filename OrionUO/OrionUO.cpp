@@ -2851,12 +2851,12 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 	std::unordered_map<unsigned long long, int> hashes;
 
 	char basePath[200];
-	sprintf(basePath, "build/%s/%%08i%s", uopFileName.c_str(), extesion.c_str());
+	sprintf_s(basePath, "build/%s/%%08i%s", uopFileName.c_str(), extesion.c_str());
 
 	IFOR(i, startIndex, indexMaxCount)
 	{
 		char x[200];
-		sprintf(x, basePath, i);
+		sprintf_s(x, basePath, i);
 		auto h = CreateHash(x);
 		hashes[h] = i;
 	}
