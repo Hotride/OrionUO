@@ -869,7 +869,7 @@ void CUopMapManager::CreateBlockTable(int map)
 	std::unordered_map<unsigned long long, UOPMapaData> hashes;
 
 	uopFile.ResetPtr();
-	uopFile.Move(nextBlock);
+	uopFile.Move(static_cast<int>(nextBlock));
 
 	do
 	{
@@ -890,13 +890,13 @@ void CUopMapManager::CreateBlockTable(int map)
 				continue;
 			}
 			UOPMapaData dataStruct;
-			dataStruct.offset = offset + headerLength;
+			dataStruct.offset = static_cast<int>(offset + headerLength);
 			dataStruct.length = compressedLength;
 			hashes[hash] = dataStruct;
 		}
 
 		uopFile.ResetPtr();
-		uopFile.Move(nextBlock);
+		uopFile.Move(static_cast<int>(nextBlock));
 	} while (nextBlock != 0);
 
 

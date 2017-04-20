@@ -290,7 +290,7 @@ void CFileManager::ReadTask()
 				}
 				auto currPos = animFile->tellg();
 				UOPAnimationData dataStruct;
-				dataStruct.offset = offsetVal + *reinterpret_cast<unsigned int*>(headerlength);
+				dataStruct.offset = static_cast<uint>(offsetVal + *reinterpret_cast<unsigned int*>(headerlength));
 				dataStruct.compressedLength = *reinterpret_cast<unsigned int*>(compressedlength);
 				dataStruct.decompressedLength = *reinterpret_cast<unsigned int*>(decompressedlength);
 

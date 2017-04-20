@@ -2844,7 +2844,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 		return;
 	}
 	uopFile->ReadInt64LE(); // version + signature
-	long long nextBlock = uopFile->ReadInt64LE();
+	auto nextBlock = uopFile->ReadInt64LE();
 	int capacity = uopFile->ReadInt32LE(); // block capacity
 	int count = uopFile->ReadInt32LE();
 
@@ -2862,7 +2862,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 	}
 
 	uopFile->ResetPtr();
-	uopFile->Move(nextBlock);
+	uopFile->Move(static_cast<int>(nextBlock));
 
 	do
 	{
@@ -2881,25 +2881,25 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 			int entryLength = flag == 1 ? compressedLength : decompressedLength;
 
 			if (offset == 0)
-				{
+			{
 				continue;
 			}
 
 			int idx;
 			if (hashes.find(hash) != hashes.end())
-					{
+			{
 				idx = hashes.at(hash);
 
 				CIndexObject *obj = getIdxObj(idx);
-				obj->Address = reinterpret_cast<uint>(uopFile->Start) + offset + headerLength;
+				obj->Address = static_cast<int>(reinterpret_cast<uint>(uopFile->Start) + offset + headerLength);
 				obj->DataSize = entryLength;
 				obj->ID = idx;
 
 				if (uopFileName == "gumpartlegacymul")
-						{
+				{
 					auto currentPos = uopFile->Ptr;
 					uopFile->ResetPtr();
-					uopFile->Move(offset + headerLength);
+					uopFile->Move(static_cast<int>(offset + headerLength));
 
 					uchar extra[8] = { 0 };
 					uopFile->ReadDataLE(&extra[0], 8);
@@ -2910,14 +2910,14 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 					obj->DataSize -= 8;
 
 					uopFile->Ptr = currentPos;
-						}
-					}
 				}
+			}
+		}
 
 		uopFile->ResetPtr();
-		uopFile->Move(nextBlock);
+		uopFile->Move(static_cast<int>(nextBlock));
 	} while (nextBlock != 0);
-			}
+}
 //----------------------------------------------------------------------------------
 unsigned long long COrion::CreateHash(string s)
 {
