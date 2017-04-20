@@ -473,16 +473,17 @@ void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const 
 {
 	WISPFUN_DEBUG("c15_f10");
 	//for some reason these are sent by server when casting ethereal mount and some necro spells.
-	if (id >= 200 && id <= 259)
-	{
-		m_AnimationGroup = 17;
-	}
-	else if (id >= 260 && id <= 270)
+	if (id == 203 || id == 230)
 	{
 		m_AnimationGroup = 16;
 	}
+	else if (id >= 100)
+	{
+		return;
+	}
 	else
 		m_AnimationGroup = id;
+
 	m_AnimIndex = 0;
 	m_AnimationInterval = interval;
 	m_AnimationFrameCount = frameCount;
