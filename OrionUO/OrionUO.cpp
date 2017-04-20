@@ -2926,7 +2926,7 @@ unsigned long long COrion::CreateHash(string s)
 	eax = ecx = edx = ebx = esi = edi = 0;
 	ebx = edi = esi = s.length() + 0xDEADBEEF;
 
-	long i = 0;
+	unsigned long i = 0;
 
 	for (i = 0; i + 12 < s.length(); i += 12)
 	{
