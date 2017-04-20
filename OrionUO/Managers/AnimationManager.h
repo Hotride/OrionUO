@@ -61,7 +61,7 @@ class CAnimationManager : public WISP_DATASTREAM::CDataReader
 	//!Цвет текущего кадра
 	SETGET(ushort, Color);
 	//!Группа анимаций текущего кадра
-	SETGET(ushort, AnimGroup);
+	SETGET(uchar, AnimGroup);
 	//!Направление текущего кадра
 	SETGET(uchar, Direction);
 	//!Айдишник текущей анимации

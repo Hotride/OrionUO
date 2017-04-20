@@ -5369,19 +5369,19 @@ PACKET_HANDLER(BuyList)
 	{
 		uchar count = ReadUInt8();
 
-		bool inverseBuylist = (container->Graphic != 0x2AF8);
-
-		int i = (inverseBuylist ? count - 1 : 0);
-		int end = (inverseBuylist ? -1 : count);
-		int add = (inverseBuylist ? -1 : 1);
 
 		CGameItem *item = (CGameItem*)container->m_Items;
+		//oldp spams this packet twice in a row on NPC verndors. NULL check is needed t
+		if (item == NULL) return;
 
-		if (inverseBuylist)
+		bool reverse = m_ClientVersion > CV_200;
+		if (reverse)
 		{
 			while (item != NULL && item->m_Next != NULL)
 				item = (CGameItem*)item->m_Next;
 		}
+
+
 
 		CGUIHTMLGump *htmlGump = gump->m_ItemList[0];
 
@@ -5393,7 +5393,7 @@ PACKET_HANDLER(BuyList)
 				currentY += shopItem->GetSize().Height;
 		}
 
-		for (; i != end; i += add)
+		IFOR(i, 0, count)
 		{
 			if (item == NULL)
 			{
@@ -5415,8 +5415,7 @@ PACKET_HANDLER(BuyList)
 			}
 
 			currentY += shopItem->GetSize().Height;
-
-			if (inverseBuylist)
+			if (reverse)
 				item = (CGameItem*)item->m_Prev;
 			else
 				item = (CGameItem*)item->m_Next;
