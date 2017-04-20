@@ -477,10 +477,6 @@ void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const 
 	{
 		m_AnimationGroup = 16;
 	}
-	else if (id >= 100)
-	{
-		return;
-	}
 	else
 		m_AnimationGroup = id;
 
