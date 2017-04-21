@@ -14,6 +14,7 @@
 #include "AnimationManager.h"
 #include <sys/stat.h>
 #include "../zlib.h"
+#include "../OrionUO.h"
 
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
@@ -234,6 +235,7 @@ void CFileManager::TryReadUOPAnimations()
 //----------------------------------------------------------------------------------
 void CFileManager::ReadTask()
 {
+	std::unordered_map<unsigned long long, UOPAnimationData> hashes;
 	IFOR(i, 1, 5)
 	{
 		char magic[4];
@@ -283,12 +285,13 @@ void CFileManager::ReadTask()
 				animFile->read(skip1, 4);
 				animFile->read(skip2, 2);
 
+				auto hashVal = *reinterpret_cast<unsigned long long*>(hash);
 				auto offsetVal = *reinterpret_cast<unsigned long long*>(offset);
 				if (offsetVal == 0)
 				{
 					continue;
 				}
-				auto currPos = animFile->tellg();
+
 				UOPAnimationData dataStruct;
 				dataStruct.offset = static_cast<uint>(offsetVal + *reinterpret_cast<unsigned int*>(headerlength));
 				dataStruct.compressedLength = *reinterpret_cast<unsigned int*>(compressedlength);
@@ -296,56 +299,38 @@ void CFileManager::ReadTask()
 
 				dataStruct.fileStream = animFile;
 				dataStruct.path = path;
-
-				char *buf = ReadUOPDataFromFileStream(dataStruct);
-				//let's decompress
-				UCHAR_LIST decLayoutData(dataStruct.decompressedLength);
-				bool result = DecompressUOPFileData(dataStruct, decLayoutData, buf);
-				if (!result) continue; //decompressing failed for some reason.
-				SetData(reinterpret_cast<puchar>(&decLayoutData[0]), dataStruct.decompressedLength);
-
-				//format id?
-				ReadUInt32LE();
-				//version?
-				ReadUInt32LE();
-				//decompressed data size
-				ReadUInt32LE();
-				//anim id
-				uint animId = ReadUInt32LE();
-				//8 bytes unknown
-				ReadUInt32LE();
-				ReadUInt32LE();
-				//unknown.
-				ReadInt16LE();
-				//unknown
-				ReadInt16LE();
-				//header length
-				ReadUInt32LE();
-				//framecount
-				ReadUInt32LE();
-
-				//read data start offset and set reading pointer on it.
-				m_Ptr = m_Start + ReadUInt32LE();
-				//anim group
-				ushort animGroup = ReadInt16LE();
-				CIndexAnimation *indexAnim = &g_AnimationManager.m_DataIndex[animId];
-				indexAnim->IsUOP = true;
-				CTextureAnimationGroup *group = &(*indexAnim).m_Groups[animGroup];
-				group->m_UOPAnimData = dataStruct;
-				group->IsUOP = true;
-				IFOR(i, 0, 5)
-				{
-					CTextureAnimationDirection *dir = &group->m_Direction[i];
-					dir->IsUOP = true;
-					dir->BaseAddress = 0;
-					dir->Address = 0;
-				}
-				animFile->seekg(currPos, 0);
+				hashes[hashVal] = dataStruct;
 			}
 
 			animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
 		} while (*reinterpret_cast<unsigned long long*>(nextBlock) != 0);
 
+	}
+
+	IFOR(animId, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
+	{
+		CIndexAnimation *indexAnim = &g_AnimationManager.m_DataIndex[animId];
+		IFOR(grpId, 0, ANIMATION_GROUPS_COUNT)
+		{
+			CTextureAnimationGroup *group = &(*indexAnim).m_Groups[grpId];
+			char hashString[100];
+			sprintf(hashString, "build/animationlegacyframe/%06i/%02i.bin", animId, grpId);
+			auto hash = g_Orion.CreateHash(hashString);
+			if (hashes.find(hash) != hashes.end())
+			{
+				UOPAnimationData dataStruct = hashes.at(hash);
+				indexAnim->IsUOP = true;
+				group->IsUOP = true;
+				group->m_UOPAnimData = dataStruct;
+				IFOR(dirId, 0, 5)
+				{
+					CTextureAnimationDirection *dir = &group->m_Direction[dirId];
+					dir->IsUOP = true;
+					dir->BaseAddress = 0;
+					dir->Address = 0;
+				}
+			}
+		}
 	}
 	m_AutoResetEvent.Set();
 }
