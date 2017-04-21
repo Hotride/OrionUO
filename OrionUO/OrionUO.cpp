@@ -2848,18 +2848,7 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 	int capacity = uopFile->ReadInt32LE(); // block capacity
 	int count = uopFile->ReadInt32LE();
 
-	std::unordered_map<unsigned long long, int> hashes;
-
-	char basePath[200];
-	sprintf_s(basePath, "build/%s/%%08i%s", uopFileName.c_str(), extesion.c_str());
-
-	IFOR(i, startIndex, indexMaxCount)
-	{
-		char x[200];
-		sprintf_s(x, basePath, i);
-		auto h = CreateHash(x);
-		hashes[h] = i;
-	}
+	std::unordered_map<unsigned long long, CIndexObject> hashes;
 
 	uopFile->ResetPtr();
 	uopFile->Move(static_cast<int>(nextBlock));
@@ -2885,38 +2874,60 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 				continue;
 			}
 
-			int idx;
-			if (hashes.find(hash) != hashes.end())
+			CIndexObject obj;
+			obj.Address = static_cast<int>(reinterpret_cast<uint>(uopFile->Start) + offset + headerLength);
+			obj.DataSize = entryLength;
+			obj.ID = -1;
+
+			if (uopFileName == "gumpartlegacymul")
 			{
-				idx = hashes.at(hash);
+				auto currentPos = uopFile->Ptr;
+				uopFile->ResetPtr();
+				uopFile->Move(static_cast<int>(offset + headerLength));
 
-				CIndexObject *obj = getIdxObj(idx);
-				obj->Address = static_cast<int>(reinterpret_cast<uint>(uopFile->Start) + offset + headerLength);
-				obj->DataSize = entryLength;
-				obj->ID = idx;
+				uchar extra[8] = { 0 };
+				uopFile->ReadDataLE(&extra[0], 8);
 
-				if (uopFileName == "gumpartlegacymul")
-				{
-					auto currentPos = uopFile->Ptr;
-					uopFile->ResetPtr();
-					uopFile->Move(static_cast<int>(offset + headerLength));
+				obj.Address += 8;
+				obj.Height = ((extra[7] << 24) | (extra[6] << 16) | (extra[5] << 8) | extra[4]);
+				obj.Width = ((extra[3] << 24) | (extra[2] << 16) | (extra[1] << 8) | extra[0]);
+				obj.DataSize -= 8;
 
-					uchar extra[8] = { 0 };
-					uopFile->ReadDataLE(&extra[0], 8);
-
-					obj->Address += 8;
-					obj->Height = ((extra[7] << 24) | (extra[6] << 16) | (extra[5] << 8) | extra[4]);
-					obj->Width = ((extra[3] << 24) | (extra[2] << 16) | (extra[1] << 8) | extra[0]);
-					obj->DataSize -= 8;
-
-					uopFile->Ptr = currentPos;
-				}
+				uopFile->Ptr = currentPos;
 			}
+			hashes[hash] = obj;
 		}
 
 		uopFile->ResetPtr();
 		uopFile->Move(static_cast<int>(nextBlock));
 	} while (nextBlock != 0);
+
+	char basePath[200];
+	sprintf_s(basePath, "build/%s/%%08i%s", uopFileName.c_str(), extesion.c_str());
+
+	IFOR(i, startIndex, indexMaxCount)
+	{
+		char x[200];
+		sprintf_s(x, basePath, i);
+		auto hash = CreateHash(x);
+		if (hashes.find(hash) != hashes.end())
+		{
+			CIndexObject obj = hashes.at(hash);
+			CIndexObject *idxObj = getIdxObj(i);
+			idxObj->Address = obj.Address;
+			idxObj->DataSize = obj.DataSize;
+			if (uopFileName == "gumpartlegacymul")
+			{
+
+				idxObj->Address = obj.Address;
+				idxObj->Height = obj.Height;
+				idxObj->Width = obj.Width;
+				idxObj->DataSize = obj.DataSize;
+
+			}
+
+		}
+	}
 }
 //----------------------------------------------------------------------------------
 unsigned long long COrion::CreateHash(string s)
