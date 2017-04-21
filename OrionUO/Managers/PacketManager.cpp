@@ -66,6 +66,9 @@
 #include "../Gumps/GumpSpellbook.h"
 #include "AnimationManager.h"
 #include "../zlib.h"
+#include <sstream>  
+#include <string>
+#include <iostream>   
 
 #pragma comment(lib, "zdll.lib")
 //----------------------------------------------------------------------------------
@@ -4237,6 +4240,7 @@ PACKET_HANDLER(BuffDebuff)
 
 					//LOG("Buff arguments: %s\n", ToString(arguments).c_str());
 					//LOG("Buff arguments: %s\n", ToString(ClilocManager->ParseArgumentsToClilocString(descriptionCliloc, arguments)).c_str());
+					
 
 					description = L'\n' + g_ClilocManager.ParseArgumentsToClilocString(descriptionCliloc, arguments);
 
@@ -5406,6 +5410,17 @@ PACKET_HANDLER(BuyList)
 			uchar nameLen = ReadUInt8();
 			string name = ReadString(nameLen);
 
+			//try int.parse and read cliloc.
+			int clilocNum = 0;
+
+			std::stringstream convert(name);
+			if (!(convert >> clilocNum))
+				clilocNum = 0;
+
+			if (clilocNum != 0)
+			{
+				name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
+			}
 			CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(item->Serial, item->Graphic, item->Color, item->Count, price, name, 0, currentY));
 
 			if (!currentY)
