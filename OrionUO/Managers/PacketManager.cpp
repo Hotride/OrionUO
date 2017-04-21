@@ -65,10 +65,7 @@
 #include "../Gumps/GumpSkills.h"
 #include "../Gumps/GumpSpellbook.h"
 #include "AnimationManager.h"
-#include "../zlib.h"
-#include <sstream>  
-#include <string>
-#include <iostream>   
+#include "../zlib.h"  
 
 #pragma comment(lib, "zdll.lib")
 //----------------------------------------------------------------------------------
@@ -5413,19 +5410,8 @@ PACKET_HANDLER(BuyList)
 			//try int.parse and read cliloc.
 			int clilocNum = 0;
 
-			std::istringstream  convert(name);
 
-			while (!convert.eof()) {
-				convert >> clilocNum;
-				if (convert.fail()) {
-					clilocNum = 0;
-					break;
-				}
-				convert.clear();
-				string dummy;
-				convert >> dummy;
-			}
-			if (clilocNum != 0)
+			if (Int32TryParse(name, clilocNum))
 			{
 				name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
 				clilocNum = 0;
