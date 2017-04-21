@@ -30,24 +30,38 @@ CFileManager::~CFileManager()
 bool CFileManager::Load()
 {
 	//Try to use map uop files first, if we can, we will use them.
-	if (!m_artLegacyMUL.Load(g_App.FilePath("artLegacyMUL.uop")))
+	if (g_PacketManager.ClientVersion < CV_7000)
 	{
 		if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul"))) return false;
 		if (!m_ArtMul.Load(g_App.FilePath("art.mul"))) return false;
-	}
-	if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
-	{
 		if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul"))) return false;
 		if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul"))) return false;
-		UseUOPGumps = false;
-	}
-	else
-		UseUOPGumps = true;
-	if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
-	{
 		if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul"))) return false;
 		if (!m_SoundMul.Load(g_App.FilePath("sound.mul"))) return false;
 	}
+	else
+	{
+		if (!m_artLegacyMUL.Load(g_App.FilePath("artLegacyMUL.uop")))
+		{
+			if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul"))) return false;
+			if (!m_ArtMul.Load(g_App.FilePath("art.mul"))) return false;
+		}
+
+		if (!m_gumpartLegacyMUL.Load(g_App.FilePath("gumpartLegacyMUL.uop")))
+		{
+			if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul"))) return false;
+			if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul"))) return false;
+			UseUOPGumps = false;
+		}
+		else
+			UseUOPGumps = true;
+		if (!m_soundLegacyMUL.Load(g_App.FilePath("soundLegacyMUL.uop")))
+		{
+			if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul"))) return false;
+			if (!m_SoundMul.Load(g_App.FilePath("sound.mul"))) return false;
+		}
+	}
+
 
 	/* Эти файлы не используются самой последней версией клиента 7.0.52.2
 	if (!m_tileart.Load(g_App.FilePath("tileart.uop")))
@@ -110,19 +124,18 @@ bool CFileManager::Load()
 			m_AnimIdx[i].Load(g_App.FilePath("anim%i.idx", i));
 			m_AnimMul[i].Load(g_App.FilePath("anim%i.mul", i));
 		}
-
-		if (m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i)))
-			UseUOPMap = true;
-		else
+		if (g_PacketManager.ClientVersion < CV_7000)
+		{
 			m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
-		/*else
-		{
-		/if (i == 0 || i == 1 || i == 2 || i == 5)
-		{
-		if (!m_MapXUOP[i].Load(g_App.FilePath("map%ixLegacyMUL.uop", i)))
-		return false;
 		}
-		}*/
+		else
+		{
+			if (m_MapUOP[i].Load(g_App.FilePath("map%iLegacyMUL.uop", i)))
+				UseUOPMap = true;
+			else
+				m_MapMul[i].Load(g_App.FilePath("map%i.mul", i));
+		}
+
 
 		m_StaticIdx[i].Load(g_App.FilePath("staidx%i.mul", i));
 		m_StaticMul[i].Load(g_App.FilePath("statics%i.mul", i));

@@ -299,7 +299,8 @@ bool COrion::Install()
 
 	DEBUGLOG("Load files\n");
 
-	g_FileManager.TryReadUOPAnimations();
+	if (g_PacketManager.ClientVersion >= CV_7000)
+		g_FileManager.TryReadUOPAnimations();
 	if (!g_FileManager.Load())
 	{
 		string tmp = string("Error loading file:\n") + WISP_FILE::g_WispMappedFileError;
@@ -508,10 +509,14 @@ bool COrion::Install()
 
 	InitScreen(GS_MAIN);
 
+	if (g_PacketManager.ClientVersion >= CV_7000)
+	{
+		LOG("Waiting for FileManager to try & load AnimationFrame files\n");
+		g_FileManager.m_AutoResetEvent.WaitOne();
+		LOG("FileManager.TryReadUOPAnimations() done!\n");
+	}
+
 	LOG("Installation completed!\n");
-	LOG("Waiting for FileManager to try & load AnimationSequence.uop\n");
-	g_FileManager.m_AutoResetEvent.WaitOne();
-	LOG("FileManager.TryReadUOPAnimations() done!\n");
 	return true;
 }
 //----------------------------------------------------------------------------------
