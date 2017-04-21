@@ -5413,13 +5413,22 @@ PACKET_HANDLER(BuyList)
 			//try int.parse and read cliloc.
 			int clilocNum = 0;
 
-			std::stringstream convert(name);
-			if (!(convert >> clilocNum))
-				clilocNum = 0;
+			std::istringstream  convert(name);
 
+			while (!convert.eof()) {
+				convert >> clilocNum;
+				if (convert.fail()) {
+					clilocNum = 0;
+					break;
+				}
+				convert.clear();
+				string dummy;
+				convert >> dummy;
+			}
 			if (clilocNum != 0)
 			{
 				name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
+				clilocNum = 0;
 			}
 			CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(item->Serial, item->Graphic, item->Color, item->Count, price, name, 0, currentY));
 
