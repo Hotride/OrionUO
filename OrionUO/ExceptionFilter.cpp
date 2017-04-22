@@ -6,6 +6,7 @@
 #include <psapi.h>
 #include <tlhelp32.h>
 #include "VMQuery.h"
+#include "OrionStackWalker.h"
 
 #pragma comment(lib, "Psapi.lib")
 //----------------------------------------------------------------------------------
@@ -148,7 +149,8 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 	uint ticks = GetTickCount();
 
 	errorCount++;
-
+	OrionStackWalker sw;
+	sw.ShowCallstack();
 	if (exceptionInfo->ExceptionRecord)
 	{
 		CRASHLOG("Unhandled exception #%i: 0x%08X at %08X\n", errorCount, exceptionInfo->ExceptionRecord->ExceptionCode, exceptionInfo->ExceptionRecord->ExceptionAddress);

@@ -390,6 +390,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Network\Packets.h" />
     <ClInclude Include="Network\UOHuffman.h" />
     <ClInclude Include="OrionApplication.h" />
+    <ClInclude Include="OrionStackWalker.h" />
     <ClInclude Include="OrionUO.h" />
     <ClInclude Include="OrionWindow.h" />
     <ClInclude Include="Party.h" />
@@ -418,6 +419,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="ShaderData.h" />
     <ClInclude Include="SkillGroup.h" />
     <ClInclude Include="Skills.h" />
+    <ClInclude Include="StackWalker.h" />
     <ClInclude Include="StumpsData.h" />
     <ClInclude Include="Target.h" />
     <ClInclude Include="TargetGump.h" />
@@ -645,6 +647,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="ServerList.cpp" />
     <ClCompile Include="SkillGroup.cpp" />
     <ClCompile Include="Skills.cpp" />
+    <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="Target.cpp" />
     <ClCompile Include="TargetGump.cpp" />
     <ClCompile Include="TextEngine\EntryText.cpp" />
