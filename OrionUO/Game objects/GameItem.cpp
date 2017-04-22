@@ -311,6 +311,9 @@ void CGameItem::Draw(const int &x, const int &y)
 				selMode = true;
 			}
 
+			if (m_Container == 0xFFFFFFFF)
+				selMode = false;
+
 			if (doubleDraw)
 			{
 				g_Orion.DrawStaticArt(objGraphic, objColor, x - 2, y - 5, m_Z, selMode);

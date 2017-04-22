@@ -1874,7 +1874,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 
 		if (m_Sitting && m_Direction == 3 && sittingData.DrawBack && obj->FindLayer(OL_CLOAK) == NULL)
 		{
-			for (CRenderWorldObject *ro = obj->m_PrevXY; ro != NULL; ro = (CRenderWorldObject*)ro->m_PrevXY)
+			for (CRenderWorldObject *ro = obj->m_PrevXY; ro != NULL; ro = ro->m_PrevXY)
 			{
 				if ((ro->Graphic & 0x3FFF) == sittingData.Graphic)
 				{
@@ -1883,7 +1883,9 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 					int yOffset = -70;
 
 					g_GL.PushScissor(drawX + xOffset, drawY + yOffset, 20, 40);
-					g_Orion.DrawStaticArt(sittingData.Graphic, ro->Color, x, y, ro->Z);
+					bool selected = g_SelectedObject.Object() == ro;
+					ushort color = selected ? 0x0035 : ro->Color;
+					g_Orion.DrawStaticArt(sittingData.Graphic, color, x, y, ro->Z, !selected);
 					g_GL.PopScissor();
 
 					break;
