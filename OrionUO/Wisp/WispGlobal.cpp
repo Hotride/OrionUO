@@ -1,5 +1,6 @@
 ﻿//----------------------------------------------------------------------------------
 #include "WispGlobal.h"
+#include <sstream>
 //----------------------------------------------------------------------------------
 DWORD g_MainThread = 0;
 deque<string> g_WispDebugFunStack;
@@ -123,6 +124,26 @@ wstring ToUpperW(wstring str)
 		_wcsupr(&str[0]);
 
 	return str.c_str();
+}
+//----------------------------------------------------------------------------------
+bool Int32TryParse(string str, int &result)
+{
+	std::istringstream  convert(str);
+	try
+	{
+		convert >> result;
+	}
+	catch (int e)
+	{
+		result = 0;
+		return false;
+	}
+	if (!convert.eof())
+	{
+		result = 0;
+		return false;
+	}
+	return true;
 }
 //----------------------------------------------------------------------------------
 bool ToBool(const string &str)

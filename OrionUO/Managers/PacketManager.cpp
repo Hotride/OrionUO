@@ -65,10 +65,7 @@
 #include "../Gumps/GumpSkills.h"
 #include "../Gumps/GumpSpellbook.h"
 #include "AnimationManager.h"
-#include "../zlib.h"
-#include <sstream>  
-#include <string>
-#include <iostream>   
+#include "../zlib.h"  
 
 #pragma comment(lib, "zdll.lib")
 //----------------------------------------------------------------------------------
@@ -5413,13 +5410,11 @@ PACKET_HANDLER(BuyList)
 			//try int.parse and read cliloc.
 			int clilocNum = 0;
 
-			std::stringstream convert(name);
-			if (!(convert >> clilocNum))
-				clilocNum = 0;
 
-			if (clilocNum != 0)
+			if (Int32TryParse(name, clilocNum))
 			{
 				name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
+				clilocNum = 0;
 			}
 			CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(item->Serial, item->Graphic, item->Color, item->Count, price, name, 0, currentY));
 
