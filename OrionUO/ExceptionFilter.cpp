@@ -72,48 +72,62 @@ void DumpRegionInfo(const HANDLE &snapshot, HANDLE hProcess, VMQUERY &vmq)
 //----------------------------------------------------------------------------------
 void DumpLibraryInformation()
 {
+#if USE_WISP_DEBUG_FUNCTION_NAMES == 1
 	CRASHLOG("trace functions:\n");
 	for (const string &str : g_WispDebugFunStack)
 		CRASHLOG("%s\n", str.c_str());
-
-	CRASHLOG("Library information:\n");
-
-	DWORD processId = 0;
-	GetWindowThreadProcessId(g_OrionWindow.Handle, &processId);
-
-	HANDLE process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
-
-	if (process == NULL)
+#elif USE_WISP_DEBUG_FUNCTION_NAMES == 2
+	if (g_WispCurrentFunctionName != NULL)
 	{
-		CRASHLOG("::OpenProcess failed!\n");
-		return;
+		CRASHLOG("trace function: %s\n", g_WispCurrentFunctionName);
 	}
+#endif
 
-	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, processId);
+	static bool libraryInfoPrinted = false;
 
-	if (snapshot == NULL)
+	if (!libraryInfoPrinted)
 	{
-		CRASHLOG("::CreateToolhelp32Snapshot failed!\n");
+		libraryInfoPrinted = true;
+
+		CRASHLOG("Library information:\n");
+
+		DWORD processId = 0;
+		GetWindowThreadProcessId(g_OrionWindow.Handle, &processId);
+
+		HANDLE process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
+
+		if (process == NULL)
+		{
+			CRASHLOG("::OpenProcess failed!\n");
+			return;
+		}
+
+		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, processId);
+
+		if (snapshot == NULL)
+		{
+			CRASHLOG("::CreateToolhelp32Snapshot failed!\n");
+			CloseHandle(process);
+			return;
+		}
+
+		PVOID address = NULL;
+
+		while (true)
+		{
+			VMQUERY vmq = { 0 };
+
+			if (!VMQuery(process, address, &vmq))
+				break;
+
+			DumpRegionInfo(snapshot, process, vmq);
+
+			address = ((puchar)vmq.pvRgnBaseAddress + vmq.RgnSize);
+		}
+
+		CloseHandle(snapshot);
 		CloseHandle(process);
-		return;
 	}
-
-	PVOID address = NULL;
-
-	while (true)
-	{
-		VMQUERY vmq = { 0 };
-
-		if (!VMQuery(process, address, &vmq))
-			break;
-
-		DumpRegionInfo(snapshot, process, vmq);
-
-		address = ((puchar)vmq.pvRgnBaseAddress + vmq.RgnSize);
-	}
-
-	CloseHandle(snapshot);
-	CloseHandle(process);
 }
 //----------------------------------------------------------------------------------
 void DumpCurrentRegistersInformation(CONTEXT* CR)
@@ -149,14 +163,16 @@ LONG __stdcall OrionUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *excepti
 	uint ticks = GetTickCount();
 
 	errorCount++;
-	OrionStackWalker sw;
-	sw.ShowCallstack();
+
 	if (exceptionInfo->ExceptionRecord)
 	{
 		CRASHLOG("Unhandled exception #%i: 0x%08X at %08X\n", errorCount, exceptionInfo->ExceptionRecord->ExceptionCode, exceptionInfo->ExceptionRecord->ExceptionAddress);
 
 		if (errorCount > 10 && (ticks - lastErrorTime) < 5000)
 		{
+			OrionStackWalker sw;
+			sw.ShowCallstack(GetCurrentThread(), exceptionInfo->ContextRecord);
+
 			DumpLibraryInformation();
 
 			DumpCurrentRegistersInformation(exceptionInfo->ContextRecord);
