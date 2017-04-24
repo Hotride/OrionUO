@@ -2,15 +2,22 @@
 #ifndef WISPDEFINITIONS_H
 #define WISPDEFINITIONS_H
 //----------------------------------------------------------------------------------
-#define USE_WISP_DEBUG_FUNCTION_NAMES 0
+//0 - disable debugging
+//1 - debugging with queue (very slow run mode)
+//2 - debugging with function name (normal run mode)
+#define USE_WISP_DEBUG_FUNCTION_NAMES 2
 
 #if USE_WISP_DEBUG_FUNCTION_NAMES == 1
 #define WISPFUN_DEBUG(name) \
 	CWispFunDebug wispfunctiondebugname("w_" __FUNCTION__); \
 	(void)wispfunctiondebugname
-//static const std::string wispfunctiondebugname("w_" name);
+	//static const std::string wispfunctiondebugname("w_" name);
+#elif USE_WISP_DEBUG_FUNCTION_NAMES == 2
+	extern char *g_WispCurrentFunctionName;
+#define WISPFUN_DEBUG(name) \
+	g_WispCurrentFunctionName = "w_" __FUNCTION__
 #else
-#define WISPFUN_DEBUG(name)
+	#define WISPFUN_DEBUG(name)
 #endif
 //----------------------------------------------------------------------------------
 #define WISP_ONE_NAME 1

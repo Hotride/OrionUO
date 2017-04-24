@@ -4,6 +4,9 @@
 //----------------------------------------------------------------------------------
 DWORD g_MainThread = 0;
 deque<string> g_WispDebugFunStack;
+#if USE_WISP_DEBUG_FUNCTION_NAMES == 2
+char *g_WispCurrentFunctionName = NULL;
+#endif
 //----------------------------------------------------------------------------------
 CWispFunDebug::CWispFunDebug(const char *str)
 {
