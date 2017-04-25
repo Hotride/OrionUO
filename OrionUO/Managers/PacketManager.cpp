@@ -3190,7 +3190,10 @@ PACKET_HANDLER(Talk)
 	ushort font = ReadUInt16BE();
 
 	if (font >= g_FontManager.FontCount)
+	{
 		font = 3;
+		textColor = 0;
+	}
 
 	if (!serial && font == 0xFFFF && textColor == 0xFFFF)
 	{
