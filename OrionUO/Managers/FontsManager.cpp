@@ -844,7 +844,7 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const 
 
 	th.Clear();
 
-	if (font > m_FontCount)
+	if (font >= m_FontCount)
 		return pData;
 
 	int len = strlen(str);

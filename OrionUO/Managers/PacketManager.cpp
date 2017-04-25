@@ -3189,6 +3189,9 @@ PACKET_HANDLER(Talk)
 	ushort textColor = ReadUInt16BE();
 	ushort font = ReadUInt16BE();
 
+	if (font >= g_FontManager.FontCount)
+		font = 3;
+
 	if (!serial && font == 0xFFFF && textColor == 0xFFFF)
 	{
 		uchar sbuffer[0x28] =

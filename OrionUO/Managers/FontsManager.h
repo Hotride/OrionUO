@@ -102,12 +102,12 @@ class CFontsManager
 	SETGET(bool, RecalculateWidthByInfo);
 	SETGET(bool, UnusePartialHue);
 
+	//!Количество ASCII ширфтов
+	SETGET(int, FontCount);
+
 private:
 	//!Список ASCII шрифтов
 	FONT_DATA *m_Font;
-
-	//!Количество ASCII ширфтов
-	int m_FontCount;
 
 	//!Список ссылок
 	WEBLINK_MAP m_WebLink;
