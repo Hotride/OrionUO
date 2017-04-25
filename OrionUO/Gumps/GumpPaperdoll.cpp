@@ -662,9 +662,10 @@ void CGumpPaperdoll::UpdateContent()
 					{
 						tileX -= rect.Position.X - tileOffsetX;
 						tileY -= rect.Position.Y - tileOffsetY;
-
-						CGUITilepic *tilepic = (CGUITilepic*)m_DataBox->Add(new CGUITilepic(equipment->Graphic, equipment->Color, tileX, tileY));
-						tilepic->Serial = slotSerial;
+						CGUITilepic *pic = new CGUITilepic(equipment->Graphic, equipment->Color, tileX, tileY);
+						pic->PartialHue = equipment->IsPartialHue();
+						m_DataBox->Add(pic);
+						pic->Serial = slotSerial;
 					}
 
 					backgroundSlot->Serial = slotSerial;
