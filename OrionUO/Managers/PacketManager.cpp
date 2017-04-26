@@ -632,9 +632,9 @@ void CPacketManager::OnPacket()
 
 	if (info.Direction != DIR_RECV && info.Direction != DIR_BOTH)
 		LOG("message direction invalid: 0x%02X\n", *m_Start);
-	else if (info.Handler != 0)
+	else if (g_PluginManager.PacketRecv(m_Start, m_Size))
 	{
-		if (g_PluginManager.PacketRecv(m_Start, m_Size))
+		if (info.Handler != 0)
 		{
 			m_Ptr = m_Start + 1;
 
