@@ -1307,7 +1307,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 				obj->Draw(rod.X, rod.Y);
 
-				if (g_ConfigManager.DrawStatusState && obj->IsGameObject() && ((CGameObject*)obj)->NPC)
+				if (g_ConfigManager.DrawStatusState && obj->IsGameObject() && ((CGameObject*)obj)->NPC && !((CGameCharacter*)obj)->Dead())
 				{
 					CGameCharacter *gc = (CGameCharacter*)obj;
 
@@ -1315,7 +1315,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 					int width = gc->MaxHits;
 
-					if (width)
+					if (width > 0)
 					{
 						width = (gc->Hits * 100) / width;
 
@@ -1325,6 +1325,8 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 						if (width < 1)
 							width = 0;
 					}
+					else
+						continue;
 
 					if (g_ConfigManager.DrawStatusConditionState == DCSCS_ALWAYS ||
 						(g_ConfigManager.DrawStatusConditionState == DCSCS_NOT_MAX && gc->Hits != gc->MaxHits) ||
