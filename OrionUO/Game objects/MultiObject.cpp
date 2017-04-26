@@ -34,13 +34,13 @@ CMultiObject::~CMultiObject()
 void CMultiObject::UpdateGraphicBySeason()
 {
 	WISPFUN_DEBUG("c25_f2");
-	ushort graphic = m_Graphic;
+	//ushort graphic = m_Graphic;
 
-	m_Graphic = g_Orion.GetSeasonGraphic(m_OriginalGraphic) + 0x4000;
+	m_Graphic = g_Orion.GetSeasonGraphic(m_OriginalGraphic);
 
-	if (m_Graphic != graphic)
+	//if (m_Graphic != graphic)
 	{
-		m_Vegetation = g_Orion.IsVegetation(m_Graphic - 0x4000);
+		m_Vegetation = g_Orion.IsVegetation(m_Graphic);
 
 		if (IsWet())
 			m_RenderQueueIndex = 1;
@@ -65,13 +65,13 @@ void CMultiObject::Draw(const int &x, const int &y)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 
-		g_Orion.DrawStaticArt(m_Graphic - 0x4000, m_Color, x, y, m_Z);
+		g_Orion.DrawStaticArt(m_Graphic, m_Color, x, y, m_Z);
 
 		glDisable(GL_BLEND);
 	}
 	else
 	{
-		m_RenderGraphic = m_Graphic - 0x4000;
+		m_RenderGraphic = m_Graphic;
 
 		if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
 			m_RenderColor = SELECT_MULTI_COLOR;
@@ -87,7 +87,7 @@ void CMultiObject::Select(const int &x, const int &y)
 	WISPFUN_DEBUG("c25_f4");
 	if (!m_OnTarget)
 	{
-		m_RenderGraphic = m_Graphic - 0x4000;
+		m_RenderGraphic = m_Graphic;
 
 		CRenderStaticObject::Select(x, y);
 	}

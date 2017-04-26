@@ -400,7 +400,7 @@ void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const in
 			ushort testGraphic = obj->Graphic;
 
 			if (obj->IsGameObject() && !((CGameObject*)obj)->NPC && ((CGameItem*)obj)->MultiBody)
-				testGraphic = ((CGameItem*)obj)->GetFirstMultiGraphic() + 0x4000;
+				testGraphic = ((CGameItem*)obj)->GetFirstMultiGraphic();
 
 			if (testGraphic == graphic && obj->Z == z)
 				obj->StaticGroupObjectPtr()->FoliageTransparentIndex = g_FoliageIndex;
@@ -419,7 +419,6 @@ void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const in
 void CGameScreen::CheckFoliageUnion(ushort graphic, int x, int y, int z)
 {
 	WISPFUN_DEBUG("c164_f8");
-	graphic -= 0x4000;
 
 	IFOR(i, 0, TREE_COUNT)
 	{
@@ -435,7 +434,7 @@ void CGameScreen::CheckFoliageUnion(ushort graphic, int x, int y, int z)
 			}
 
 			for (graphic = info.GraphicStart; graphic <= info.GraphicEnd; graphic++, x++, y--)
-				ApplyTransparentFoliageToUnion(graphic + 0x4000, x, y, z);
+				ApplyTransparentFoliageToUnion(graphic, x, y, z);
 
 			break;
 		}
@@ -861,7 +860,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 					m_ObjectHandlesList[index].Y += characterOffsetY;
 				}
 				else
-					m_ObjectHandlesList[index].Y -= g_Orion.GetArtDimension(go->Graphic + 0x4000).Height;
+					m_ObjectHandlesList[index].Y -= g_Orion.GetArtDimension(go->Graphic, true).Height;
 
 				m_ObjectHandlesCount++;
 			}
@@ -887,13 +886,13 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 
 			if (foliageCanBeChecked)
 			{
-				WISP_GEOMETRY::CSize fp = g_Orion.GetArtDimension(obj->Graphic);
+				WISP_GEOMETRY::CSize fp = g_Orion.GetArtDimension(obj->Graphic, true);
 
 				CImageBounds fib(drawX - fp.Width / 2, drawY - fp.Height - (z * 4), fp.Width, fp.Height);
 
 				if (fib.InRect(g_PlayerRect))
 				{
-					WISP_GEOMETRY::CRect realRect = g_Orion.GetStaticArtRealPixelDimension(obj->Graphic - 0x4000);
+					WISP_GEOMETRY::CRect realRect = g_Orion.GetStaticArtRealPixelDimension(obj->Graphic);
 
 					fib.X += realRect.Position.X;
 					fib.Y += realRect.Position.Y;
@@ -1240,14 +1239,7 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 			m_Light[m_LightCount].ID = lightObject->GetLightID();
 
 			if (g_ConfigManager.ColoredLighting)
-			{
-				ushort graphic = lightObject->Graphic;
-
-				if (!lightObject->IsGameObject())
-					graphic -= 0x4000;
-
-				m_Light[m_LightCount].Color = g_Orion.GetLightColor(graphic);
-			}
+				m_Light[m_LightCount].Color = g_Orion.GetLightColor(lightObject->Graphic);
 			else
 				m_Light[m_LightCount].Color = 0;
 
@@ -2023,10 +2015,12 @@ void CGameScreen::OnLeftMouseButtonUp()
 					if (g_PacketManager.ClientVersion >= CV_7090 && rwo->IsSurface())
 						st = ((CRenderStaticObject*)rwo)->GetStaticData();
 
+					short targetZ = rwo->Z;
+
 					if (st != NULL)
-						g_Target.SendTargetTile(rwo->Graphic - 0x4000, rwo->X, rwo->Y, rwo->Z + st->Height);
-					else
-						g_Target.SendTargetTile(rwo->Graphic - 0x4000, rwo->X, rwo->Y, rwo->Z);
+						targetZ += st->Height;
+
+					g_Target.SendTargetTile(rwo->Graphic, rwo->X, rwo->Y, (char)targetZ);
 				}
 
 				g_MouseManager.LastLeftButtonClickTimer = 0;
@@ -2112,7 +2106,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 
 						if (td == NULL || td->Timer < g_Ticks)
 						{
-							ushort id = rwo->Graphic - 0x4000;
+							ushort id = rwo->Graphic;
 
 							string str = g_ClilocManager.Cliloc(g_Language)->GetA(102000 + id, g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name);
 

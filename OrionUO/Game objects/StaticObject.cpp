@@ -29,13 +29,13 @@ CStaticObject::CStaticObject(const uint &serial, const ushort &graphic, const us
 void CStaticObject::UpdateGraphicBySeason()
 {
 	WISPFUN_DEBUG("c28_f2");
-	ushort graphic = m_Graphic;
+	//ushort graphic = m_Graphic;
 
-	m_Graphic = g_Orion.GetSeasonGraphic(m_OriginalGraphic) + 0x4000;
+	m_Graphic = g_Orion.GetSeasonGraphic(m_OriginalGraphic);
 
-	if (m_Graphic != graphic)
+	//if (m_Graphic != graphic)
 	{
-		m_Vegetation = g_Orion.IsVegetation(m_Graphic - 0x4000);
+		m_Vegetation = g_Orion.IsVegetation(m_Graphic);
 
 		if (IsWet())
 			m_RenderQueueIndex = 1;
@@ -51,7 +51,7 @@ void CStaticObject::UpdateGraphicBySeason()
 void CStaticObject::Draw(const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c28_f3");
-	m_RenderGraphic = m_Graphic - 0x4000;
+	m_RenderGraphic = m_Graphic;
 
 	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
 		m_RenderColor = SELECT_STATIC_COLOR;
@@ -64,7 +64,7 @@ void CStaticObject::Draw(const int &x, const int &y)
 void CStaticObject::Select(const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c28_f4");
-	m_RenderGraphic = m_Graphic - 0x4000;
+	m_RenderGraphic = m_Graphic;
 
 	CRenderStaticObject::Select(x, y);
 }

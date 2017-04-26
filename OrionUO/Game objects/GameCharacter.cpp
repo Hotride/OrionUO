@@ -126,8 +126,6 @@ int CGameCharacter::IsSitting()
 					if (((CGameObject*)obj)->NPC || ((CGameItem*)obj)->MultiBody)
 						graphic = 0;
 				}
-				else
-					graphic -= 0x4000;
 
 				switch (graphic)
 				{

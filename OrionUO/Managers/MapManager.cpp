@@ -416,7 +416,7 @@ void CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int 
 
 				if (mb.Cells[pos].Z <= sb->Z)
 				{
-					mb.Cells[pos].TileID = sb->Color + 0x4000;
+					mb.Cells[pos].TileID = sb->Color;
 					mb.Cells[pos].Z = sb->Z;
 				}
 			}

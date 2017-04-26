@@ -17,10 +17,7 @@ CRenderStaticObject::CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, c
 m_Vegetation(false), m_RenderGraphic(0), m_RenderColor(0)
 {
 	WISPFUN_DEBUG("c27_f1");
-	if (graphic >= g_Orion.StaticDataCount)
-		m_TiledataPtr = &g_Orion.m_StaticData[(graphic - 0x4000) / 32].Tiles[(graphic - 0x4000) % 32];
-	else
-		m_TiledataPtr = &g_Orion.m_StaticData[graphic / 32].Tiles[graphic % 32];
+	m_TiledataPtr = &g_Orion.m_StaticData[graphic / 32].Tiles[graphic % 32];
 
 	if (m_TiledataPtr->Height > 5)
 		m_CanBeTransparent = 1;

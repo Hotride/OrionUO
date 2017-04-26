@@ -96,6 +96,9 @@ ushort CMapBlock::GetRadarColor(const int &x, const int &y)
 			{
 				color = obj->Graphic;
 
+				if (obj->RenderType != ROT_LAND_OBJECT)
+					color += 0x4000;
+
 				break;
 			}
 			default:

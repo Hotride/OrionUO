@@ -154,7 +154,7 @@ bool UOFileReader::GumpPixelsInXY(CIndexObject &io, const int &checkX, const int
 @param [__in] io Ссылка на данные о арте
 @return Ссылка на данные о текстуре
 */
-CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io)
+CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool &run)
 {
 	WISPFUN_DEBUG("c148_f4");
 	CGLTexture *th = new CGLTexture();
@@ -167,7 +167,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io)
 	ushort color = io.Color;
 
 	//if (!flag || flag > 0xFFFF) //raw tile
-	if (id < 0x4000) //raw tile
+	if (!run) //raw tile
 	{
 		const int blocksize = 44 * 44;
 
@@ -273,7 +273,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io)
 		USHORT_LIST pixels;
 		int stumpIndex = 0;
 
-		if (g_Orion.IsTreeTile(id - 0x4000, stumpIndex))
+		if (g_Orion.IsTreeTile(id, stumpIndex))
 		{
 			pushort ptr = NULL;
 
@@ -394,7 +394,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io)
 				}
 			}
 
-			if ((id >= 0x6053 && id <= 0x6062) || (id >= 0x606A && id <= 0x6079)) //Убираем рамку (если это курсор мышки)
+			if ((id >= 0x2053 && id <= 0x2062) || (id >= 0x206A && id <= 0x2079)) //Убираем рамку (если это курсор мышки)
 			{
 				IFOR(i, 0, w)
 				{
@@ -408,7 +408,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io)
 					pixels[i * w + w - 1] = 0;
 				}
 			}
-			else if (g_Orion.IsCaveTile(id - 0x4000))
+			else if (g_Orion.IsCaveTile(id))
 			{
 				IFOR(y, 0, h)
 				{

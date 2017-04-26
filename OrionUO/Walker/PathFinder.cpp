@@ -118,8 +118,6 @@ bool CPathFinder::CreateItemsList(vector<CPathObjectTest> &list, const int &x, c
 				else
 					dropFlags = ((graphic >= 0x3946 && graphic <= 0x3964) || graphic == 0x0082);
 			}
-			else
-				graphic -= 0x4000;
 
 			if (canBeAdd)
 			{

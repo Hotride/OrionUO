@@ -4183,7 +4183,7 @@ CGLTexture *COrion::ExecuteLandArt(const ushort &id)
 		if (!io.Address || id == 0x02) //nodraw tiles banned
 			return NULL;
 
-		io.Texture = g_UOFileReader->ReadArt(id, io);
+		io.Texture = g_UOFileReader->ReadArt(id, io, false);
 
 		if (io.Texture != 0)
 			m_UsedLandList.push_back(&m_LandDataIndex[id]);
@@ -4210,7 +4210,7 @@ CGLTexture *COrion::ExecuteStaticArt(const ushort &id)
 		if (!io.Address || id == 0x01) //nodraw tiles banned
 			return NULL;
 
-		io.Texture = g_UOFileReader->ReadArt(id + 0x4000, io);
+		io.Texture = g_UOFileReader->ReadArt(id, io, true);
 
 		if (io.Texture != 0)
 		{
@@ -5652,33 +5652,21 @@ __int64 COrion::GetStaticFlags(const ushort &id)
 	return 0;
 }
 //----------------------------------------------------------------------------------
-WISP_GEOMETRY::CSize COrion::GetArtDimension(const ushort &id)
+WISP_GEOMETRY::CSize COrion::GetArtDimension(const ushort &id, const bool &run)
 {
 	WISPFUN_DEBUG("c194_f129");
-	WISP_GEOMETRY::CSize size;
 
-	if (id >= 0x4000) //run
-	{
-		CGLTexture *th = ExecuteStaticArt(id - 0x4000);
+	CGLTexture *th = NULL;
 
-		if (th != NULL)
-		{
-			size.Width = th->Width;
-			size.Height = th->Height;
-		}
-	}
+	if (run) //run
+		th = ExecuteStaticArt(id);
 	else //raw
-	{
-		CGLTexture *th = ExecuteLandArt(id);
+		th = ExecuteLandArt(id);
 
-		if (th != NULL)
-		{
-			size.Width = th->Width;
-			size.Height = th->Height;
-		}
-	}
+	if (th != NULL)
+		return WISP_GEOMETRY::CSize(th->Width, th->Height);
 
-	return size;
+	return WISP_GEOMETRY::CSize();
 }
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CRect COrion::GetStaticArtRealPixelDimension(const ushort &id)
