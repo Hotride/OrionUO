@@ -708,7 +708,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 		bool aphaChanged = false;
 
 #if UO_RENDER_LIST_SORT == 1
-		if (obj->CurrentRenderIndex == renderIndex)
+		if (obj->CurrentRenderIndex == renderIndex || obj->NoDrawTile)
 			continue;
 
 		int maxObjectZ = obj->Z + obj->RenderQueueIndex;

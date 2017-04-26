@@ -22,6 +22,7 @@ class CRenderWorldObject : public CRenderObject
 #if UO_RENDER_LIST_SORT == 1
 	SETGET(uchar, CurrentRenderIndex);
 #endif
+	SETGET(bool, NoDrawTile);
 
 public:
 	CRenderWorldObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const char &z);

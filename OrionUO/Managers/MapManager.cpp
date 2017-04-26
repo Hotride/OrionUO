@@ -688,11 +688,9 @@ void CMapManager::LoadBlock(CMapBlock *block)
 				CRenderStaticObject *obj = new CStaticObject(pos, sb->Color, sb->Hue, bx + x, by + y, sb->Z);
 
 				string lowerName = ToLowerA(obj->GetStaticData()->Name);
+				obj->NoDrawTile = (lowerName == "nodraw" || lowerName == "no draw");
 
-				if (sb->Color == 0x21A3 || lowerName == "nodraw" || lowerName == "no draw")
-					delete obj;
-				else
-					block->AddObject(obj, x, y);
+				block->AddObject(obj, x, y);
 			}
 		}
 	}

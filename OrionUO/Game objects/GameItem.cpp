@@ -158,8 +158,7 @@ void CGameItem::OnGraphicChange(int direction)
 
 			string lowerName = ToLowerA(tile.Name);
 
-			if (m_Graphic == 0x21A3 || lowerName == "nodraw" || lowerName == "no draw")
-				m_Graphic = 1;
+			m_NoDrawTile = (lowerName == "nodraw" || lowerName == "no draw");
 
 			if (IsWearable() || m_Graphic == 0x0A28)
 			{
@@ -726,11 +725,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 
 				string lowerName = ToLowerA(mo->GetStaticData()->Name);
 
-				if (pmb->ID == 0x21A3 || lowerName == "nodraw" || lowerName == "no draw")
-				{
-					delete mo;
-					continue;
-				}
+				mo->NoDrawTile = (lowerName == "nodraw" || lowerName == "no draw");
 
 				mo->m_DrawTextureColor[3] = alpha;
 
