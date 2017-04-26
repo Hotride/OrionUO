@@ -1111,7 +1111,8 @@ PACKET_HANDLER(UpdatePlayer)
 	if (serial != g_PlayerSerial)
 	{
 		LOG("Warning!!! Current player changed from 0x%08lX to 0x%08lX\n", g_PlayerSerial, serial);
-		g_World->SetPlayer(serial);
+
+		return; //g_World->SetPlayer(serial);
 	}
 
 	bool oldDead = g_Player->Dead();
