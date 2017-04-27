@@ -2545,6 +2545,20 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_GET_MAP_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = (g_MapSize[value].Width << 16) | g_MapSize[value].Height;
+
+			break;
+		}
+		case VKI_GET_MAP_BLOCK_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = (g_MapBlockSize[value].Width << 16) | g_MapBlockSize[value].Height;
+
+			break;
+		}
 		default:
 			break;
 	}

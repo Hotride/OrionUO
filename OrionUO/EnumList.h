@@ -469,7 +469,9 @@ enum VALUE_KEY_INT
 	VKI_IGNORE_STAMINA_CHECK,
 	VKI_LAST_TARGET,
 	VKI_LAST_ATTACK,
-	VKI_NEW_TARGET_SYSTEM_SERIAL
+	VKI_NEW_TARGET_SYSTEM_SERIAL,
+	VKI_GET_MAP_SIZE,
+	VKI_GET_MAP_BLOCK_SIZE
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_STRING
