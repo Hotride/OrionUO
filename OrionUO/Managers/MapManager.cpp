@@ -110,17 +110,11 @@ void CMapManager::CreateBlockTable(int map)
 					realStaticAddress = address;
 					realStaticCount = sidx->Size / sizeof(STATICS_BLOCK);
 
-					if (realStaticCount > 0)
-					{
-						if (realStaticCount > 1024)
-							realStaticCount = 1024;
-					}
+					if (realStaticCount > 1024)
+						realStaticCount = 1024;
 				}
 			}
 		}
-
-		if (!realStaticCount)
-			realStaticCount = 0;
 
 		index.OriginalMapAddress = realMapAddress;
 		index.OriginalStaticAddress = realStaticAddress;
