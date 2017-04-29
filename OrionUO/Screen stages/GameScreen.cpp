@@ -1305,6 +1305,9 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 					ushort color = g_ConfigManager.GetColorByNotoriety(gc->Notoriety);
 
+					//usual color
+					ushort healthColor = 90;
+
 					int width = gc->MaxHits;
 
 					if (width > 0)
@@ -1347,11 +1350,15 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 								if (g_AttackTargetGump.TargetedCharacter == obj) continue;
 								if (g_NewTargetSystem.TargetedCharacter == obj) continue;
 								width = (34 * width) / 100;
+								if (gc->Poisoned())
+									healthColor = 63; //Character status line (green)
+								else if (gc->YellowHits())
+									healthColor = 53; //Character status line (green)
 							}
 								
 						}
 
-						OBJECT_HITS_INFO hitsInfo = { x, y, color, width };
+						OBJECT_HITS_INFO hitsInfo = { x, y, color, width, healthColor};
 						m_HitsStack.push_back(hitsInfo);
 					}
 				}
@@ -1513,7 +1520,7 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 						if (!i)
 							g_Orion.DrawGump(0x1068, it->Color, it->X, it->Y);
 						else if (it->Width)
-							g_Orion.DrawGump(0x1069, 0x0044, it->X, it->Y, it->Width, 0);
+							g_Orion.DrawGump(0x1069, it->HealthColor, it->X, it->Y, it->Width, 0);
 					}
 				}
 
