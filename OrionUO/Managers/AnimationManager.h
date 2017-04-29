@@ -13,6 +13,7 @@
 #include "../IndexObject.h"
 #include "../TextureObject.h"
 #include "../Wisp/WispDataStream.h"
+class CTargetGump;
 //----------------------------------------------------------------------------------
 static const float UPPER_BODY_RATIO = 0.35f;
 static const float MID_BODY_RATIO = 0.60f;
@@ -75,6 +76,8 @@ private:
 
 	//!Высота текстуры персонажа.
 	int m_CharacterFrameHeight;
+
+	static void PrepareTargetAttackGump(CTargetGump &gump, int drawX, int drawY, ushort targetColor, int per, CGameCharacter &obj);
 
 	//!Начало текстуры персонажа ( экранная координата )
 	int m_CharacterFrameStartY;

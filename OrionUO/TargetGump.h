@@ -11,6 +11,8 @@
 #define TARGETGUMP_H
 //----------------------------------------------------------------------------------
 #include "Globals.h"
+#include "Game objects/GameCharacter.h"
+
 //----------------------------------------------------------------------------------
 class CTargetGump
 {
@@ -25,6 +27,7 @@ public:
 	~CTargetGump();
 
 	void Draw();
+	CGameCharacter *TargetedCharacter;
 };
 //----------------------------------------------------------------------------------
 class CNewTargetSystem
@@ -39,12 +42,14 @@ class CNewTargetSystem
 	SETGET(ushort, GumpTop);
 	SETGET(ushort, GumpBottom);
 	SETGET(ushort, ColorGump);
+	SETGET(ushort, HealthColor);
 
-public:
 	CNewTargetSystem();
 	~CNewTargetSystem();
 
 	void Draw();
+
+	CGameCharacter *TargetedCharacter;
 };
 //----------------------------------------------------------------------------------
 extern CTargetGump g_TargetGump;

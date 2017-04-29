@@ -1343,6 +1343,9 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 							if (g_ConfigManager.DrawStatusState == DCSS_UNDER)
 							{
+								if (g_TargetGump.TargetedCharacter == obj) continue;
+								if (g_AttackTargetGump.TargetedCharacter == obj) continue;
+								if (g_NewTargetSystem.TargetedCharacter == obj) continue;
 								width = (34 * width) / 100;
 							}
 								
@@ -1666,8 +1669,11 @@ void CGameScreen::Render(const bool &mode)
 		g_RenderedObjectsCountInGameWindow = 0;
 		
 		g_TargetGump.Color = 0;
+		g_TargetGump.TargetedCharacter = NULL;
 		g_AttackTargetGump.Color = 0;
+		g_AttackTargetGump.TargetedCharacter = NULL;
 		g_NewTargetSystem.ColorGump = 0;
+		g_NewTargetSystem.TargetedCharacter = NULL;
 
 		m_LightCount = 0;
 

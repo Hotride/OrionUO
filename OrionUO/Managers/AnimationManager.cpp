@@ -1989,6 +1989,13 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 				g_NewTargetSystem.X = drawX;
 				g_NewTargetSystem.TopY = drawY - frameHeight - 8;
 				g_NewTargetSystem.BottomY = drawY + 7;
+				g_NewTargetSystem.TargetedCharacter = obj;
+				if (obj->Poisoned())
+					g_NewTargetSystem.HealthColor = 63; //Character status line (green)
+				else if (obj->YellowHits())
+					g_NewTargetSystem.HealthColor = 53; //Character status line (green)
+				else
+					g_NewTargetSystem.HealthColor = 90; //Character status line (blue)
 			}
 		}
 	}
@@ -2013,31 +2020,28 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 
 		if (isAttack)
 		{
-			g_AttackTargetGump.X = drawX - 20;
-			g_AttackTargetGump.Y = drawY;
-			g_AttackTargetGump.Color = targetColor;
-			g_AttackTargetGump.Hits = per;
-			if (obj->Poisoned())
-				g_AttackTargetGump.HealthColor = 63; //Character status line (green)
-			else if (obj->YellowHits())
-				g_AttackTargetGump.HealthColor = 53; //Character status line (green)
-			else
-				g_AttackTargetGump.HealthColor = 90; //Character status line (blue)
+			PrepareTargetAttackGump(g_AttackTargetGump, drawX, drawY, targetColor, per, *obj);
 		}
 		else
 		{
-			g_TargetGump.X = drawX - 20;
-			g_TargetGump.Y = drawY;
-			g_TargetGump.Color = targetColor;
-			g_TargetGump.Hits = per;
-			if (obj->Poisoned())
-				g_TargetGump.HealthColor = 63; //Character status line (green)
-			else if (obj->YellowHits())
-				g_TargetGump.HealthColor = 53; //Character status line (green)
-			else
-				g_TargetGump.HealthColor = 90; //Character status line (blue)
+			PrepareTargetAttackGump(g_TargetGump, drawX, drawY, targetColor, per, *obj);
 		}
 	}
+}
+//----------------------------------------------------------------------------------
+void CAnimationManager::PrepareTargetAttackGump(CTargetGump &gump, int drawX, int drawY, ushort targetColor, int per, CGameCharacter &obj)
+{
+	gump.X = drawX - 20;
+	gump.Y = drawY;
+	gump.Color = targetColor;
+	gump.Hits = per;
+	gump.TargetedCharacter = &obj;
+	if (obj.Poisoned())
+		gump.HealthColor = 63; //Character status line (green)
+	else if (obj.YellowHits())
+		gump.HealthColor = 53; //Character status line (green)
+	else
+		gump.HealthColor = 90; //Character status line (blue)
 }
 //----------------------------------------------------------------------------------
 /*!
