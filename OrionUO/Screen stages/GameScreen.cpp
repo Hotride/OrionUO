@@ -1342,7 +1342,10 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 							x -= 20;
 
 							if (g_ConfigManager.DrawStatusState == DCSS_UNDER)
+							{
 								width = (34 * width) / 100;
+							}
+								
 						}
 
 						OBJECT_HITS_INFO hitsInfo = { x, y, color, width };

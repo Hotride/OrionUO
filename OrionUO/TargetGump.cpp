@@ -18,7 +18,7 @@ CNewTargetSystem g_NewTargetSystem;
 //-------------------------------------CTargetGump----------------------------------
 //----------------------------------------------------------------------------------
 CTargetGump::CTargetGump()
-: m_X(0), m_Y(0), m_Hits(0), m_Color(0)
+: m_X(0), m_Y(0), m_Hits(0), m_Color(0), m_HealthColor(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ void CTargetGump::Draw()
 		g_Orion.DrawGump(0x1068, m_Color, m_X, m_Y);
 
 		if (m_Hits > 0)
-			g_Orion.DrawGump(0x1069, 0x005A, m_X, m_Y, m_Hits, 0);
+			g_Orion.DrawGump(0x1069, m_HealthColor, m_X, m_Y, m_Hits, 0);
 	}
 }
 //----------------------------------------------------------------------------------

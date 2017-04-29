@@ -2017,6 +2017,12 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 			g_AttackTargetGump.Y = drawY;
 			g_AttackTargetGump.Color = targetColor;
 			g_AttackTargetGump.Hits = per;
+			if (obj->Poisoned())
+				g_AttackTargetGump.HealthColor = 63; //Character status line (green)
+			else if (obj->YellowHits())
+				g_AttackTargetGump.HealthColor = 53; //Character status line (green)
+			else
+				g_AttackTargetGump.HealthColor = 90; //Character status line (blue)
 		}
 		else
 		{
@@ -2024,6 +2030,12 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 			g_TargetGump.Y = drawY;
 			g_TargetGump.Color = targetColor;
 			g_TargetGump.Hits = per;
+			if (obj->Poisoned())
+				g_TargetGump.HealthColor = 63; //Character status line (green)
+			else if (obj->YellowHits())
+				g_TargetGump.HealthColor = 53; //Character status line (green)
+			else
+				g_TargetGump.HealthColor = 90; //Character status line (blue)
 		}
 	}
 }

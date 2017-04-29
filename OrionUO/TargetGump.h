@@ -18,6 +18,7 @@ class CTargetGump
 	SETGET(int, Y);
 	SETGET(int, Hits);
 	SETGET(ushort, Color);
+	SETGET(ushort, HealthColor);
 
 public:
 	CTargetGump();
