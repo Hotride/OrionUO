@@ -1078,13 +1078,23 @@ PACKET_HANDLER(NewHealthbarUpdate)
 	{
 		uchar poisonFlag = 0x04;
 
-		if (m_ClientVersion >= CV_7000)
-			poisonFlag = 0x20;
 
 		if (enable)
-			flags |= poisonFlag;
+		{
+			if (m_ClientVersion >= CV_7000)	
+				obj->SA_Poisoned = true;
+			else
+				flags |= poisonFlag;
+		}
+
 		else
-			flags &= ~poisonFlag;
+		{
+			if (m_ClientVersion >= CV_7000)
+				obj->SA_Poisoned = false;
+			else
+				flags &= ~poisonFlag;
+		}
+
 	}
 	else if (type == 2) //Yellow hits
 	{
