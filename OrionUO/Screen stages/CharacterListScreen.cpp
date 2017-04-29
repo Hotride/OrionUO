@@ -35,7 +35,13 @@ CCharacterListScreen::~CCharacterListScreen()
 void CCharacterListScreen::Init()
 {
 	WISPFUN_DEBUG("c160_f1");
-	g_OrionWindow.SetTitle(string("Ultima Online - ") + g_MainScreen.m_Account->c_str() + "(" + g_ServerList.GetSelectedServer()->Name + ")");
+	string title = string("Ultima Online - ") + g_MainScreen.m_Account->c_str();
+	CServer *server = g_ServerList.GetSelectedServer();
+	if (server != NULL)
+	{
+		title += "(" + server->Name + ")";
+	}
+	g_OrionWindow.SetTitle(title);
 
 	g_CharacterList.Selected = 0;
 

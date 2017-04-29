@@ -1208,7 +1208,11 @@ void COrion::LoadStartupConfig()
 {
 	WISPFUN_DEBUG("c194_f15");
 	char buf[MAX_PATH] = { 0 };
-	sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X\\options_debug.cuo", g_MainScreen.m_Account->c_str(), FixServerName(g_ServerList.GetSelectedServer()->Name).c_str(), g_PlayerSerial);
+	CServer *server = g_ServerList.GetSelectedServer();
+	if (server != NULL)
+		sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X\\options_debug.cuo", g_MainScreen.m_Account->c_str(), FixServerName(server->Name).c_str(), g_PlayerSerial);
+	else
+		sprintf_s(buf, "Desktop\\%s\\0x%08X\\options_debug.cuo", g_MainScreen.m_Account->c_str(), g_PlayerSerial);
 
 	g_ConfigManager.Load(g_App.FilePath(buf));
 
@@ -1317,7 +1321,11 @@ void COrion::LoadLocalConfig()
 	g_CheckContainerStackTimer = g_Ticks + 30000;
 
 	char buf[MAX_PATH] = { 0 };
-	sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), FixServerName(g_ServerList.GetSelectedServer()->Name).c_str(), g_PlayerSerial);
+	CServer *server = g_ServerList.GetSelectedServer();
+	if (server != NULL)
+		sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), FixServerName(server->Name).c_str(), g_PlayerSerial);
+	else
+		sprintf_s(buf, "Desktop\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), g_PlayerSerial);
 
 	string path = g_App.FilePath(buf);
 
@@ -1382,7 +1390,10 @@ void COrion::SaveLocalConfig()
 	CreateDirectoryA(path.c_str(), NULL);
 
 	LOG("SaveLocalConfig step 3\n");
-	path += string("\\") + FixServerName(g_ServerList.GetSelectedServer()->Name);
+	CServer *server = g_ServerList.GetSelectedServer();
+	if (server != NULL)
+		path += string("\\") + FixServerName(server->Name);
+
 	CreateDirectoryA(path.c_str(), NULL);
 
 	char serbuf[20] = { 0 };
@@ -1670,7 +1681,12 @@ void COrion::LoginComplete()
 		g_ConnectionScreen.Completed = true;
 
 		char buf[256] = { 0 };
-		sprintf_s(buf, "Ultima Online - %s (%s)", g_Player->Name.c_str(), g_ServerList.GetSelectedServer()->Name.c_str());
+		CServer *server = g_ServerList.GetSelectedServer();
+		if (server != NULL)
+			sprintf_s(buf, "Ultima Online - %s (%s)", g_Player->Name.c_str(), server->Name.c_str());
+		else
+			sprintf_s(buf, "Ultima Online - %s", g_Player->Name.c_str());
+
 
 		g_OrionWindow.SetTitle(buf);
 
