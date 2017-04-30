@@ -5296,15 +5296,16 @@ PACKET_HANDLER(OpenBookNew)
 
 	CGumpBook *gump = new CGumpBook(serial, 0, 0, pageCount, (flag1 + flag2) != 0, true);
 
-	int authorLen = ReadUInt16BE();
-
-	if (authorLen > 0)
-		gump->m_EntryAuthor->m_Entry.SetText(ReadString(authorLen));
 
 	int titleLen = ReadUInt16BE();
 
 	if (titleLen > 0)
-		gump->m_EntryTitle->m_Entry.SetText(ReadString(authorLen));
+		gump->m_EntryTitle->m_Entry.SetText(ReadString(titleLen));
+
+	int authorLen = ReadUInt16BE();
+
+	if (authorLen > 0)
+		gump->m_EntryAuthor->m_Entry.SetText(ReadString(authorLen));
 
 	g_GumpManager.AddGump(gump);
 }
