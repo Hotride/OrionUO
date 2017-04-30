@@ -2717,6 +2717,7 @@ PACKET_HANDLER(UpdateSkills)
 
 	if (gump != NULL)
 		gump->UpdateSkillsSum();
+	g_Player->SkillsReceived = true;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ExtendedCommand)

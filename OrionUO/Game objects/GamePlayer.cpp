@@ -24,7 +24,7 @@ m_EnergyResistance(0), m_MaxPhysicalResistance(0), m_MaxFireResistance(0), m_Max
 m_MaxEnergyResistance(0), m_Luck(0), m_MinDamage(0), m_MaxDamage(0), m_TithingPoints(0),
 m_DefenceChance(0), m_MaxDefenceChance(0), m_AttackChance(0), m_WeaponSpeed(0), m_WeaponDamage(0),
 m_LowerRegCost(0), m_SpellDamage(0), m_CastRecovery(0), m_CastSpeed(0), m_LowerManaCost(0),
-m_LockStr(0), m_LockInt(0), m_LockDex(0), m_OldX(0), m_OldY(0), m_OldZ(0)
+m_LockStr(0), m_LockInt(0), m_LockDex(0), m_OldX(0), m_OldY(0), m_OldZ(0), m_SkillsReceived(false)
 {
 	WISPFUN_DEBUG("c21_f1");
 	m_Skills = new CSkill[g_SkillsCount];

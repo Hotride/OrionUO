@@ -58,6 +58,7 @@ class CPlayer: public CGameCharacter
 	SETGET(short, OldX);
 	SETGET(short, OldY);
 	SETGET(char, OldZ);
+	SETGET(bool, SkillsReceived);
 
 	//!Указатель на список умений
 	CSkill *m_Skills;
