@@ -12,6 +12,7 @@
 //----------------------------------------------------------------------------------
 #include "../Globals.h"
 #include "../GLEngine/GLTextTexture.h"
+struct MULTILINES_FONT_INFO;
 //----------------------------------------------------------------------------------
 class CGump;
 //----------------------------------------------------------------------------------
@@ -56,10 +57,10 @@ public:
 	void Paste();
 
 	//Получить количество строк
-	int GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0, int width = 0);
+	vector<int> GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0, int width = 0);
 
 	//Получить количество строк
-	int GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0, int width = 0);
+	vector<int> GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0, int width = 0);
 
 	//Вставить символ
 	bool Insert(wchar_t ch, CGump *gump = NULL);

@@ -5337,9 +5337,6 @@ PACKET_HANDLER(BookData)
 
 			IFOR(j, 0, lineCount)
 			{
-				if (j)
-					str += L'\n';
-
 				str += DecodeUTF8(ReadString(0));
 			}
 

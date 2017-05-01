@@ -77,7 +77,7 @@ m_Unicode(unicode)
 			box->MoveOnDrag = true;
 
 			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_LEFT, textColor, textColor, textColor, 38, 34, 166 * 8, m_Unicode, entryFont));
-			entry->m_Entry.Width = 166;
+			entry->m_Entry.Width = 150;
 			entry->ReadOnly = !m_Writable;
 			entry->CheckOnSerial = true;
 			entry->MoveOnDrag = true;
@@ -95,7 +95,7 @@ m_Unicode(unicode)
 			box->MoveOnDrag = true;
 
 			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_RIGHT, textColor, textColor, textColor, 224, 34, 166 * 8, m_Unicode, entryFont));
-			entry->m_Entry.Width = 166;
+			entry->m_Entry.Width = 150;
 			entry->ReadOnly = !m_Writable;
 			entry->CheckOnSerial = true;
 			entry->MoveOnDrag = true;
@@ -284,14 +284,13 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 
 			if (g_EntryPointer->Insert(wparam))
 			{
-				int linesCount = 0;
-
+				vector<int> linesLengths;
 				if (!m_Unicode)
-					linesCount = g_EntryPointer->GetLinesCountA(4);
+					linesLengths = g_EntryPointer->GetLinesCountA(4);
 				else
-					linesCount = g_EntryPointer->GetLinesCountW(0);
+					linesLengths = g_EntryPointer->GetLinesCountW(0);
 
-				if (linesCount > 8)
+				if (linesLengths.size() > 8)
 					g_EntryPointer->Remove(true);
 				else
 					m_ChangedPage[page] = true;
@@ -320,7 +319,7 @@ void CGumpBook::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 		{
 			if (m_Unicode)
 			{
-				if (g_EntryPointer->GetLinesCountW(0) > 1)
+				if (g_EntryPointer->GetLinesCountW(0).size() > 1)
 					g_EntryPointer->Remove(true);
 			}
 			else
@@ -330,7 +329,7 @@ void CGumpBook::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 				if (g_EntryPointer == &m_EntryTitle->m_Entry)
 					count++;
 
-				if (g_EntryPointer->GetLinesCountA(4) > count)
+				if (g_EntryPointer->GetLinesCountA(4).size() > count)
 					g_EntryPointer->Remove(true);
 			}
 

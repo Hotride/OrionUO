@@ -142,7 +142,7 @@ void CEntryText::OnKey(CGump *gump, WPARAM wParam)
 }
 //----------------------------------------------------------------------------------
 //Получить количество строк
-int CEntryText::GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align, ushort flags, int width)
+vector<int> CEntryText::GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
 	WISPFUN_DEBUG("c169_f6");
 	if (!width)
@@ -150,39 +150,32 @@ int CEntryText::GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align, ushort flags, 
 
 	MULTILINES_FONT_INFO *info = g_FontManager.GetInfoA(font, c_str(), Length(), align, flags, width);
 
-	int count = 0;
-
+	vector<int> lineLengths;
 	while (info != NULL)
 	{
+		lineLengths.push_back(info->CharCount);
 		MULTILINES_FONT_INFO *next = info->m_Next;
-		delete info;
 		info = next;
-		count++;
 	}
-
-	return count;
+	return lineLengths;
 }
 //----------------------------------------------------------------------------------
 //Получить количество строк
-int CEntryText::GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align, ushort flags, int width)
+vector<int> CEntryText::GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
 	WISPFUN_DEBUG("c169_f7");
 	if (!width)
 		width = m_Width;
 
 	MULTILINES_FONT_INFO *info = g_FontManager.GetInfoW(font, Data(), Length(), align, flags, width);
-
-	int count = 0;
-
+	vector<int> lineLengths;
 	while (info != NULL)
 	{
+		lineLengths.push_back(info->CharCount);
 		MULTILINES_FONT_INFO *next = info->m_Next;
-		delete info;
 		info = next;
-		count++;
 	}
-
-	return count;
+	return lineLengths;
 }
 //----------------------------------------------------------------------------------
 //Вставить символ относительно m_Position
