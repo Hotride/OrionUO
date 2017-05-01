@@ -61,8 +61,10 @@ void CGumpScreenConnection::UpdateContent()
 				"That character is currently queued for backup and cannot be deleted.",
 				"Couldn't carry out your request."
 			};
-
-			CreateText(189, 178, text[g_ConnectionScreen.ErrorCode], 2);
+			int index = g_ConnectionScreen.ErrorCode;
+			if (index >= 6)
+				index = 5;
+			CreateText(189, 178, text[index], 2);
 
 			Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 306, 304));
 		}
@@ -87,8 +89,10 @@ void CGumpScreenConnection::UpdateContent()
 				"Your character name is too short.",
 				"No character to login with."
 			};
-
-			CreateText(189, 178, text[g_ConnectionScreen.ErrorCode], 2);
+			int index = g_ConnectionScreen.ErrorCode;
+			if (index >= 3)
+				index = 2;
+			CreateText(189, 178, text[index], 2);
 
 			Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 306, 304));
 		}
@@ -114,8 +118,10 @@ void CGumpScreenConnection::UpdateContent()
 			"",
 			""
 		};
-
-		CreateText(189, 178, text[g_ConnectionScreen.ErrorCode], 2);
+		int index = g_ConnectionScreen.ErrorCode;
+		if (index >= 10)
+			index = 9;
+		CreateText(189, 178, text[index], 2);
 
 		Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 306, 304));
 	}
@@ -151,8 +157,10 @@ void CGumpScreenConnection::UpdateContent()
 				"General IGR authentication failure.",
 				"Couldn't connect to Ultima Online.  Please try again in a few moments."
 			};
-
-			CreateText(189, 178, text[g_ConnectionScreen.ErrorCode], 2);
+			int index = g_ConnectionScreen.ErrorCode;
+			if (index >= 9)
+				index = 8;
+			CreateText(189, 178, text[index], 2);
 
 			Add(new CGUIButton(ID_CS_OK, 0x0481, 0x0482, 0x0483, 306, 304));
 		}
