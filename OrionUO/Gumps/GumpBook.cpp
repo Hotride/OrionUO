@@ -329,7 +329,7 @@ void CGumpBook::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 				if (g_EntryPointer == &m_EntryTitle->m_Entry)
 					count++;
 
-				if (g_EntryPointer->GetLinesCountA(4).size() > count)
+				if ((int)g_EntryPointer->GetLinesCountA(4).size() > count)
 					g_EntryPointer->Remove(true);
 			}
 

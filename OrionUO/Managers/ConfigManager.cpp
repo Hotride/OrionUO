@@ -22,6 +22,7 @@
 #include "../Gumps/GumpSpell.h"
 #include "../Party.h"
 #include "../Gumps/GumpConsoleType.h"
+#include "../Game objects/GamePlayer.h"
 //----------------------------------------------------------------------------------
 CConfigManager g_ConfigManager;
 CConfigManager g_OptionsConfig;
@@ -117,6 +118,7 @@ void CConfigManager::DefaultPage2()
 	m_RemoveOrCreateObjectsWithBlending = true;
 	m_DrawHelmetsOnShroud = false;
 	m_UseGlobalMapLayer = false;
+	m_NoDrawRoofs = false;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -439,6 +441,16 @@ void CConfigManager::OnChangeUseGlobalMapLayer(const bool &val)
 	}
 }
 //---------------------------------------------------------------------------
+void CConfigManager::OnChangeNoDrawRoofs(const bool &val)
+{
+	WISPFUN_DEBUG("c138_f28");
+	if (this == &g_ConfigManager && g_Player != NULL)
+	{
+		g_Player->OldX = 0;
+		g_Player->OldY = 0;
+	}
+}
+//---------------------------------------------------------------------------
 /*!
 Получить цвет исходя из "злобности"
 @param [__in] notoriety Злобность
@@ -554,7 +566,8 @@ bool CConfigManager::Load(string path)
 		m_ScreenshotFormat = SF_PNG;
 		bool scaleImagesInPaperdollSlots = true;
 		m_DrawHelmetsOnShroud = false;
-		m_UseGlobalMapLayer = false;
+		bool useGlobalMapLayer = false;
+		bool noDrawRoofs = false;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -608,7 +621,12 @@ bool CConfigManager::Load(string path)
 									m_DrawHelmetsOnShroud = file.ReadUInt8();
 
 									if (blockSize > 29)
-										m_UseGlobalMapLayer = file.ReadUInt8();
+									{
+										useGlobalMapLayer = file.ReadUInt8();
+
+										if (blockSize > 30)
+											noDrawRoofs = file.ReadUInt8();
+									}
 								}
 							}
 						}
@@ -688,6 +706,8 @@ bool CConfigManager::Load(string path)
 		ChangeFieldsGraphic = changeFieldsGraphic;
 		PaperdollSlots = paperdollSlots;
 		ScaleImagesInPaperdollSlots = scaleImagesInPaperdollSlots;
+		UseGlobalMapLayer = useGlobalMapLayer;
+		NoDrawRoofs = noDrawRoofs;
 		
 		file.Ptr = next;
 		
@@ -995,7 +1015,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(30); //size of block
+	writter.WriteInt8(31); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -1031,7 +1051,8 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_RemoveOrCreateObjectsWithBlending);
 	writter.WriteUInt8(m_DrawHelmetsOnShroud);
 	writter.WriteUInt8(m_UseGlobalMapLayer);
-
+	writter.WriteUInt8(m_NoDrawRoofs);
+	
 	writter.WriteBuffer();
 
 	//Page 3

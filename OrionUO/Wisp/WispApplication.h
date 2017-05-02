@@ -22,6 +22,8 @@ public:
 
 	int Run(HINSTANCE hinstance);
 
+	string GetFileVersion();
+
 	string FilePath(const char *str, ...);
 	wstring FilePath(const wchar_t *str, ...);
 };

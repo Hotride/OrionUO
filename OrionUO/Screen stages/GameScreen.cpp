@@ -157,7 +157,7 @@ void CGameScreen::UpdateMaxDrawZ()
 	int maxZ1 = g_MaxGroundZ;
 	int maxZ2 = m_MaxDrawZ;
 
-	g_NoDrawRoof = false;
+	g_NoDrawRoof = g_ConfigManager.NoDrawRoofs;
 	char maxGroundZ = 127;
 	g_MaxGroundZ = 127;
 	m_MaxDrawZ = 127;

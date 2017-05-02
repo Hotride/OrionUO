@@ -59,6 +59,52 @@ int CApplication::Run(HINSTANCE hinstance)
 	return (int)msg.wParam;
 }
 //---------------------------------------------------------------------------
+string CApplication::GetFileVersion()
+{
+	//File version info
+	wchar_t szFilename[MAX_PATH] = { 0 };
+
+	if (GetModuleFileName(m_Hinstance, &szFilename[0], sizeof(szFilename)))
+	{
+		DWORD dummy = 0;
+		DWORD dwSize = GetFileVersionInfoSize(&szFilename[0], &dummy);
+
+		if (dwSize > 0)
+		{
+			UCHAR_LIST lpVersionInfo(dwSize, 0);
+
+			if (GetFileVersionInfo(&szFilename[0], NULL, dwSize, &lpVersionInfo[0]))
+			{
+				UINT uLen = 0;
+				VS_FIXEDFILEINFO *lpFfi = NULL;
+
+				VerQueryValue(&lpVersionInfo[0], L"\\", (LPVOID *)&lpFfi, &uLen);
+
+				DWORD dwFileVersionMS = 0;
+				DWORD dwFileVersionLS = 0;
+
+				if (lpFfi != NULL)
+				{
+					dwFileVersionMS = lpFfi->dwFileVersionMS;
+					dwFileVersionLS = lpFfi->dwFileVersionLS;
+				}
+
+				int dwLeftMost = (int)HIWORD(dwFileVersionMS);
+				int dwSecondLeft = (int)LOWORD(dwFileVersionMS);
+				int dwSecondRight = (int)HIWORD(dwFileVersionLS);
+				int dwRightMost = (int)LOWORD(dwFileVersionLS);
+
+				char fileVersion[100] = { 0 };
+				sprintf_s(fileVersion, "%i.%i.%i.%i", dwLeftMost, dwSecondLeft, dwSecondRight, dwRightMost);
+
+				return fileVersion;
+			}
+		}
+	}
+
+	return "unknown";
+}
+//---------------------------------------------------------------------------
 string CApplication::FilePath(const char *str, ...)
 {
 	WISPFUN_DEBUG("c1_f4");
