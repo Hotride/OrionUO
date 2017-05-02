@@ -1597,7 +1597,14 @@ int COrion::Send(puchar buf, const int &size)
 
 	if (type.save)
 	{
-		LOG("--- ^(%d) s(+%d => %d) Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
+		time_t rawtime;
+		struct tm * timeinfo;
+		char buffer[80];
+
+		time(&rawtime);
+		timeinfo = localtime(&rawtime);
+		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", timeinfo);
+		LOG("%s--- ^(%d) s(+%d => %d) Client:: %s\n", buffer, ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
 
 		if (*buf == 0x80 || *buf == 0x91)
 		{

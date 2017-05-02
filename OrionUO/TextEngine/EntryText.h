@@ -86,6 +86,12 @@ public:
 	//Установить Unicode текст
 	void SetText(const wstring &text);
 
+	//Установить ASCII текст
+	void AppendText(const string &text, const int &pos);
+
+	//Установить Unicode текст
+	void AppendText(const wstring &text, const int &pos);
+
 	//Событие нажатия мышкой на текст
 	void OnClick(CGump *gump, uchar font, bool unicode, int x, int y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 

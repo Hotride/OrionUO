@@ -624,7 +624,14 @@ void CPacketManager::OnPacket()
 
 	if (info.save)
 	{
-		LOG("--- ^(%d) r(+%d => %d) Server:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
+		time_t rawtime;
+		struct tm * timeinfo;
+		char buffer[80];
+
+		time(&rawtime);
+		timeinfo = localtime(&rawtime);	
+		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", timeinfo);
+		LOG("%s--- ^(%d) r(+%d => %d) Server:: %s\n", buffer, ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
 		LOG_DUMP(m_Start, m_Size);
 	}
 
@@ -5333,15 +5340,21 @@ PACKET_HANDLER(BookData)
 
 			ushort lineCount = ReadUInt16BE();
 
-			wstring str = L"";
+			
 
 			IFOR(j, 0, lineCount)
 			{
-				str += DecodeUTF8(ReadString(0));
+				wstring str = DecodeUTF8(ReadString(0));
+				gump->SetLineData(page, j, str);
 			}
 
-			gump->SetPageData(page, str);
+			//gump->SetPageData(page, str);
 		}
+		//Обновим гамп (если есть)
+		CGump *gump = g_GumpManager.GetTextEntryOwner();
+
+		if (gump != NULL)
+			gump->FrameCreated = false;
 	}
 }
 //----------------------------------------------------------------------------------

@@ -374,3 +374,14 @@ void CGumpBook::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 	}
 }
 //----------------------------------------------------------------------------------
+void CGumpBook::SetLineData(const int &page, const int &line, wstring &data)
+{
+	WISPFUN_DEBUG("c87_f12");
+	CGUITextEntry *entry = GetEntry(page);
+
+	if (entry != NULL)
+	{
+		entry->m_Entry.AppendText(data, line * 17);
+	}
+		
+}

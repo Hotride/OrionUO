@@ -186,9 +186,6 @@ bool CEntryText::Insert(wchar_t ch, CGump *gump)
 	if (m_Position < 0)
 		m_Position = 0;
 
-	//Коррекция позиции
-	if (m_Position > (int)m_Text.length())
-		m_Position = m_Text.length();
 
 	//Если максимальная ширина задана
 	if (m_MaxLength > 0)
@@ -324,10 +321,6 @@ void CEntryText::SetPos(int val, CGump *gump)
 	//Корректировка
 	if (m_Position < 0)
 		m_Position = 0;
-
-	//Корректировка
-	if (m_Position > (int)m_Text.length())
-		m_Position = m_Text.length();
 	
 	//Регистрируем изменения
 	m_Changed = true;
@@ -699,3 +692,50 @@ void CEntryText::DrawMaskW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 	}
 }
 //----------------------------------------------------------------------------------
+//Изменение текста
+void CEntryText::AppendText(const string &text, const int &pos)
+{
+	WISPFUN_DEBUG("c169_f28");
+	//Перевод ASCII в юникод строку
+	wstring wtext = ToWString(text);
+
+	//Стандартная процедура изменения текста
+	AppendText(wtext, pos);
+}
+//----------------------------------------------------------------------------------
+//Изменение текста
+void CEntryText::AppendText(const wstring &text, const int &pos)
+{
+	WISPFUN_DEBUG("c169_f29");
+	if (pos > m_Position)
+		m_Position = pos;
+	//Изменим текст и выставим указатель в конец текста
+	m_Text += text;
+	m_Position += text.length();
+
+	if (m_Position < 0)
+		m_Position = 0;
+
+	//Если указана максимальная длина
+	if (m_MaxLength > 0)
+	{
+		//Если это числовое поле для ввода
+		if (m_NumberOnly)
+		{
+			string str = ToString(m_Text);
+
+			//Пока строка не пустая и значение больше допустимого - удаляем по 1 символу сзади
+			while (true)
+			{
+				int len = str.length();
+
+				if (std::atoi(str.c_str()) >= m_MaxLength && len > 0)
+					str.resize(len - 1);
+				else
+					break;
+			}
+		}
+		else if ((int)m_Text.length() >= m_MaxLength) //Иначе - сверим длину
+			m_Text.resize(m_MaxLength);
+	}
+}
