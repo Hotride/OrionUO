@@ -56,6 +56,7 @@ class CConfigManager
 	SETGET(bool, RemoveOrCreateObjectsWithBlending);
 	SETGET(bool, DrawHelmetsOnShroud);
 	SETGETE(bool, UseGlobalMapLayer, OnChangeUseGlobalMapLayer);
+	SETGETE(bool, NoDrawRoofs, OnChangeNoDrawRoofs);
 
 	SETGET(bool, UseToolTips);
 	SETGET(ushort, ToolTipsTextColor);
