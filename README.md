@@ -7,7 +7,7 @@
 
 
 --------------
--Build it (preferably) in MVS 2013, platform toolset Windows XP (v120_xp)
+-Build it (preferably) in MVS 2013, platform toolset MUST be Windows XP (v120_xp)
 
 -Use ConfigurationEditor.exe to create right config for your client files
 
