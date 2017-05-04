@@ -12,7 +12,6 @@
 //----------------------------------------------------------------------------------
 #include "../Globals.h"
 #include "../GLEngine/GLTextTexture.h"
-struct MULTILINES_FONT_INFO;
 //----------------------------------------------------------------------------------
 class CGump;
 //----------------------------------------------------------------------------------
@@ -50,17 +49,17 @@ public:
 
 	/*!
 	Очистить данные
-	@return 
+	@return
 	*/
 	void Clear();
 
 	void Paste();
 
 	//Получить количество строк
-	vector<int> GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0, int width = 0);
+	int GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0, int width = 0);
 
 	//Получить количество строк
-	vector<int> GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0, int width = 0);
+	int GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0, int width = 0);
 
 	//Вставить символ
 	bool Insert(wchar_t ch, CGump *gump = NULL);
@@ -75,7 +74,7 @@ public:
 	void SetPos(int val, CGump *gump = NULL);
 
 	//Unicode данные строки
-	const wchar_t *Data() const {return m_Text.c_str();}
+	const wchar_t *Data() const { return m_Text.c_str(); }
 
 	//ASCII данные стоки
 	const char *c_str();
@@ -86,21 +85,15 @@ public:
 	//Установить Unicode текст
 	void SetText(const wstring &text);
 
-	//Установить ASCII текст
-	void AppendText(const string &text, const int &pos);
-
-	//Установить Unicode текст
-	void AppendText(const wstring &text, const int &pos);
-
 	//Событие нажатия мышкой на текст
 	void OnClick(CGump *gump, uchar font, bool unicode, int x, int y, TEXT_ALIGN_TYPE align = TS_LEFT, ushort flags = 0);
 
 	//Нажатие клавиши в активном текстовом поле
 	void OnKey(CGump *gump, WPARAM wParam);
 
-	int Pos() const {return m_Position;}
+	int Pos() const { return m_Position; }
 
-	int Length() const {return m_Text.length();}
+	int Length() const { return m_Text.length(); }
 
 	//Вычислить ASCII строку по ширине
 	string CheckMaxWidthA(uchar font, string str);

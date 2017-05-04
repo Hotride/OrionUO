@@ -1152,27 +1152,30 @@ CPacketChangeStatLockStateRequest::CPacketChangeStatLockStateRequest(uchar stat,
 CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 : CPacket(1)
 {
+	int lineCount = 0;
+
 	CGUITextEntry *entry = gump->GetEntry(page);
 
 	if (entry != NULL)
 	{
 		CEntryText &textEntry = entry->m_Entry;
-		vector<int> lineLengths;
-		if (!gump->Unicode)
-			lineLengths = textEntry.GetLinesCountA(4);
-		else
-			lineLengths = textEntry.GetLinesCountW(0);
-		int lineCount = lineLengths.size();
-
-
-
 		string data = EncodeUTF8(textEntry.Data());
 		int len = data.length();
 		int size = 9 + 4 + 1;
 
 		if (len)
 		{
-			size += len + lineCount;
+			size += len;
+			const char *str = data.c_str();
+
+			IFOR(i, 0, len)
+			{
+				if (*(str + i) == '\n')
+					lineCount++;
+			}
+
+			if (str[len - 1] != '\n')
+				lineCount++;
 		}
 
 		Resize(size, true);
@@ -1185,24 +1188,21 @@ CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 		WriteUInt16BE(page);
 		WriteUInt16BE(lineCount);
 
-
 		if (len)
 		{
 			const char *str = data.c_str();
-			int pageCharCount = 0;
-			IFOR(i, 0, lineCount)
+
+			IFOR(i, 0, len)
 			{
-				int lineCharCount = lineLengths[i];
-				string line = "";
-				IFOR(j, 0, lineCharCount)
-				{
-					line += *(str + pageCharCount);
-					pageCharCount++;
-				}
-				char terminator = 0;
-				line += terminator;
-				WriteString(line, line.length(), false);
+				char ch = *(str + i);
+
+				if (ch == '\n')
+					ch = 0;
+
+				*m_Ptr++ = ch;
 			}
+
+			*m_Ptr = 0;
 		}
 	}
 }

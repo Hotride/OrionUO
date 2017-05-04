@@ -100,49 +100,49 @@ void CEntryText::OnKey(CGump *gump, WPARAM wParam)
 	WISPFUN_DEBUG("c169_f5");
 	switch (wParam)
 	{
-		case VK_HOME:
-		{
-			SetPos(0, gump);
+	case VK_HOME:
+	{
+					SetPos(0, gump);
 
-			break;
-		}
-		case VK_END:
-		{
-			SetPos(Length(), gump);
+					break;
+	}
+	case VK_END:
+	{
+				   SetPos(Length(), gump);
 
-			break;
-		}
-		case VK_LEFT:
-		{
-			AddPos(-1, gump);
+				   break;
+	}
+	case VK_LEFT:
+	{
+					AddPos(-1, gump);
 
-			break;
-		}
-		case VK_RIGHT:
-		{
-			AddPos(1, gump);
+					break;
+	}
+	case VK_RIGHT:
+	{
+					 AddPos(1, gump);
 
-			break;
-		}
-		case VK_BACK:
-		{
-			Remove(true, gump);
+					 break;
+	}
+	case VK_BACK:
+	{
+					Remove(true, gump);
 
-			break;
-		}
-		case VK_DELETE:
-		{
-			Remove(false, gump);
+					break;
+	}
+	case VK_DELETE:
+	{
+					  Remove(false, gump);
 
-			break;
-		}
-		default:
-			break;
+					  break;
+	}
+	default:
+		break;
 	}
 }
 //----------------------------------------------------------------------------------
 //Получить количество строк
-vector<int> CEntryText::GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align, ushort flags, int width)
+int CEntryText::GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
 	WISPFUN_DEBUG("c169_f6");
 	if (!width)
@@ -150,32 +150,39 @@ vector<int> CEntryText::GetLinesCountA(uchar font, TEXT_ALIGN_TYPE align, ushort
 
 	MULTILINES_FONT_INFO *info = g_FontManager.GetInfoA(font, c_str(), Length(), align, flags, width);
 
-	vector<int> lineLengths;
+	int count = 0;
+
 	while (info != NULL)
 	{
-		lineLengths.push_back(info->CharCount);
 		MULTILINES_FONT_INFO *next = info->m_Next;
+		delete info;
 		info = next;
+		count++;
 	}
-	return lineLengths;
+
+	return count;
 }
 //----------------------------------------------------------------------------------
 //Получить количество строк
-vector<int> CEntryText::GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align, ushort flags, int width)
+int CEntryText::GetLinesCountW(uchar font, TEXT_ALIGN_TYPE align, ushort flags, int width)
 {
 	WISPFUN_DEBUG("c169_f7");
 	if (!width)
 		width = m_Width;
 
 	MULTILINES_FONT_INFO *info = g_FontManager.GetInfoW(font, Data(), Length(), align, flags, width);
-	vector<int> lineLengths;
+
+	int count = 0;
+
 	while (info != NULL)
 	{
-		lineLengths.push_back(info->CharCount);
 		MULTILINES_FONT_INFO *next = info->m_Next;
+		delete info;
 		info = next;
+		count++;
 	}
-	return lineLengths;
+
+	return count;
 }
 //----------------------------------------------------------------------------------
 //Вставить символ относительно m_Position
@@ -186,6 +193,9 @@ bool CEntryText::Insert(wchar_t ch, CGump *gump)
 	if (m_Position < 0)
 		m_Position = 0;
 
+	//Коррекция позиции
+	if (m_Position >(int)m_Text.length())
+		m_Position = m_Text.length();
 
 	//Если максимальная ширина задана
 	if (m_MaxLength > 0)
@@ -252,7 +262,7 @@ void CEntryText::Remove(bool left, CGump *gump)
 //----------------------------------------------------------------------------------
 /*!
 Очистить данные
-@return 
+@return
 */
 void CEntryText::Clear()
 {
@@ -300,9 +310,9 @@ void CEntryText::AddPos(int val, CGump *gump)
 		m_Position = 0;
 
 	//Корректировка
-	if (m_Position > (int)m_Text.length())
+	if (m_Position >(int)m_Text.length())
 		m_Position = m_Text.length();
-	
+
 	//Регистрируем изменения
 	m_Changed = true;
 
@@ -321,7 +331,11 @@ void CEntryText::SetPos(int val, CGump *gump)
 	//Корректировка
 	if (m_Position < 0)
 		m_Position = 0;
-	
+
+	//Корректировка
+	if (m_Position >(int)m_Text.length())
+		m_Position = m_Text.length();
+
 	//Регистрируем изменения
 	m_Changed = true;
 
@@ -503,9 +517,9 @@ void CEntryText::CreateTextureA(uchar font, string str, ushort color, int width,
 					m_DrawOffset = 0;
 
 				/*if (m_Width + m_DrawOffset < m_CaretPos.x)
-					m_DrawOffset = m_Width - m_CaretPos.x;
+				m_DrawOffset = m_Width - m_CaretPos.x;
 				else
-					m_DrawOffset = 0;*/
+				m_DrawOffset = 0;*/
 			}
 		}
 		else //Либо обнуляем ее
@@ -617,7 +631,7 @@ void CEntryText::DrawA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE a
 	if (this == g_EntryPointer)
 	{
 		//Таблица смещений по оси Y
-		const int offsetTable[] = {1, 2, 1, 1, 1, 2, 1, 1, 2, 2};
+		const int offsetTable[] = { 1, 2, 1, 1, 1, 2, 1, 1, 2, 2 };
 		int offsY = offsetTable[font % 10];
 
 		//Отрисуем каретку
@@ -655,7 +669,7 @@ void CEntryText::DrawMaskA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 	if (this == g_EntryPointer)
 	{
 		//Таблица смещений по оси Y
-		const int offsetTable[] = {1, 2, 1, 1, 1, 2, 1, 1, 2, 2};
+		const int offsetTable[] = { 1, 2, 1, 1, 1, 2, 1, 1, 2, 2 };
 		int offsY = offsetTable[font % 10];
 
 		//Отрегулируем смещение
@@ -692,50 +706,3 @@ void CEntryText::DrawMaskW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 	}
 }
 //----------------------------------------------------------------------------------
-//Изменение текста
-void CEntryText::AppendText(const string &text, const int &pos)
-{
-	WISPFUN_DEBUG("c169_f28");
-	//Перевод ASCII в юникод строку
-	wstring wtext = ToWString(text);
-
-	//Стандартная процедура изменения текста
-	AppendText(wtext, pos);
-}
-//----------------------------------------------------------------------------------
-//Изменение текста
-void CEntryText::AppendText(const wstring &text, const int &pos)
-{
-	WISPFUN_DEBUG("c169_f29");
-	if (pos > m_Position)
-		m_Position = pos;
-	//Изменим текст и выставим указатель в конец текста
-	m_Text += text;
-	m_Position += text.length();
-
-	if (m_Position < 0)
-		m_Position = 0;
-
-	//Если указана максимальная длина
-	if (m_MaxLength > 0)
-	{
-		//Если это числовое поле для ввода
-		if (m_NumberOnly)
-		{
-			string str = ToString(m_Text);
-
-			//Пока строка не пустая и значение больше допустимого - удаляем по 1 символу сзади
-			while (true)
-			{
-				int len = str.length();
-
-				if (std::atoi(str.c_str()) >= m_MaxLength && len > 0)
-					str.resize(len - 1);
-				else
-					break;
-			}
-		}
-		else if ((int)m_Text.length() >= m_MaxLength) //Иначе - сверим длину
-			m_Text.resize(m_MaxLength);
-	}
-}

@@ -5340,21 +5340,18 @@ PACKET_HANDLER(BookData)
 
 			ushort lineCount = ReadUInt16BE();
 
-			
+			wstring str = L"";
 
 			IFOR(j, 0, lineCount)
 			{
-				wstring str = DecodeUTF8(ReadString(0));
-				gump->SetLineData(page, j, str);
+				if (j)
+					str += L'\n';
+
+				str += DecodeUTF8(ReadString(0));
 			}
 
-			//gump->SetPageData(page, str);
+			gump->SetPageData(page, str);
 		}
-		//Обновим гамп (если есть)
-		CGump *gump = g_GumpManager.GetTextEntryOwner();
-
-		if (gump != NULL)
-			gump->FrameCreated = false;
 	}
 }
 //----------------------------------------------------------------------------------

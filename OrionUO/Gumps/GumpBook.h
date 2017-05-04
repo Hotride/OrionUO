@@ -46,8 +46,6 @@ public:
 
 	void SetPageData(const int &page, const wstring &data);
 
-	void SetLineData(const int &page, const int &line, wstring &data);
-
 	void ChangePage(int newPage);
 
 	GUMP_BUTTON_EVENT_H;
