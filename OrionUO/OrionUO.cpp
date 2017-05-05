@@ -2579,6 +2579,130 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_MAP_MUL_ADDRESS:
+		{
+			if (value >= 0 && value < 6)
+				value = (int)g_FileManager.m_MapMul[value].Start;
+
+			break;
+		}
+		case VKI_MAP_MUL_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = g_FileManager.m_MapMul[value].Size;
+
+			break;
+		}
+		case VKI_STATIC_IDX_ADDRESS:
+		{
+			if (value >= 0 && value < 6)
+				value = (int)g_FileManager.m_StaticIdx[value].Start;
+
+			break;
+		}
+		case VKI_STATIC_IDX_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = g_FileManager.m_StaticIdx[value].Size;
+
+			break;
+		}
+		case VKI_STATIC_MUL_ADDRESS:
+		{
+			if (value >= 0 && value < 6)
+				value = (int)g_FileManager.m_StaticMul[value].Start;
+
+			break;
+		}
+		case VKI_STATIC_MUL_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = g_FileManager.m_StaticMul[value].Size;
+
+			break;
+		}
+		case VKI_MAP_DIFL_ADDRESS:
+		{
+			if (value >= 0 && value < 6)
+				value = (int)g_FileManager.m_MapDifl[value].Start;
+
+			break;
+		}
+		case VKI_MAP_DIFL_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = g_FileManager.m_MapDifl[value].Size;
+
+			break;
+		}
+		case VKI_MAP_DIF_ADDRESS:
+		{
+			if (value >= 0 && value < 6)
+				value = (int)g_FileManager.m_MapDif[value].Start;
+
+			break;
+		}
+		case VKI_MAP_DIF_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = g_FileManager.m_MapDif[value].Size;
+
+			break;
+		}
+		case VKI_STATIC_DIFL_ADDRESS:
+		{
+			if (value >= 0 && value < 6)
+				value = (int)g_FileManager.m_StaDifl[value].Start;
+
+			break;
+		}
+		case VKI_STATIC_DIFL_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = g_FileManager.m_StaDifl[value].Size;
+
+			break;
+		}
+		case VKI_STATIC_DIFI_ADDRESS:
+		{
+			if (value >= 0 && value < 6)
+				value = (int)g_FileManager.m_StaDifi[value].Start;
+
+			break;
+		}
+		case VKI_STATIC_DIFI_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = g_FileManager.m_StaDifi[value].Size;
+
+			break;
+		}
+		case VKI_STATIC_DIF_ADDRESS:
+		{
+			if (value >= 0 && value < 6)
+				value = (int)g_FileManager.m_StaDif[value].Start;
+
+			break;
+		}
+		case VKI_STATIC_DIF_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = g_FileManager.m_StaDif[value].Size;
+
+			break;
+		}
+		case VKI_VERDATA_ADDRESS:
+		{
+			value = (int)g_FileManager.m_VerdataMul.Start;
+
+			break;
+		}
+		case VKI_VERDATA_SIZE:
+		{
+			value = g_FileManager.m_VerdataMul.Size;
+
+			break;
+		}
 		default:
 			break;
 	}
