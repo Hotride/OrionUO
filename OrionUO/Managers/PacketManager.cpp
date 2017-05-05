@@ -5401,19 +5401,17 @@ PACKET_HANDLER(BuyList)
 	{
 		uchar count = ReadUInt8();
 
-
 		CGameItem *item = (CGameItem*)container->m_Items;
 		//oldp spams this packet twice in a row on NPC verndors. NULL check is needed t
-		if (item == NULL) return;
+		if (item == NULL)
+			return;
 
-		bool reverse = item->X != 1;
+		bool reverse = (item->X > 1);
 		if (reverse)
 		{
 			while (item != NULL && item->m_Next != NULL)
 				item = (CGameItem*)item->m_Next;
 		}
-
-
 
 		CGUIHTMLGump *htmlGump = gump->m_ItemList[0];
 
@@ -5440,7 +5438,6 @@ PACKET_HANDLER(BuyList)
 
 			//try int.parse and read cliloc.
 			int clilocNum = 0;
-
 
 			if (Int32TryParse(name, clilocNum))
 			{
