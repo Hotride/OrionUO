@@ -76,7 +76,7 @@ m_Unicode(unicode)
 			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GB_TEXT_AREA_PAGE_LEFT, 38, 34, 160, 166));
 			box->MoveOnDrag = true;
 
-			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_LEFT, textColor, textColor, textColor, 38, 34, 166 * 8, m_Unicode, entryFont));
+			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_LEFT, textColor, textColor, textColor, 38, 34, 150, m_Unicode, entryFont));
 			entry->m_Entry.Width = 166;
 			entry->ReadOnly = !m_Writable;
 			entry->CheckOnSerial = true;
@@ -94,7 +94,7 @@ m_Unicode(unicode)
 			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GB_TEXT_AREA_PAGE_RIGHT, 224, 34, 160, 166));
 			box->MoveOnDrag = true;
 
-			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_RIGHT, textColor, textColor, textColor, 224, 34, 166 * 8, m_Unicode, entryFont));
+			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_RIGHT, textColor, textColor, textColor, 224, 34, 150, m_Unicode, entryFont));
 			entry->m_Entry.Width = 166;
 			entry->ReadOnly = !m_Writable;
 			entry->CheckOnSerial = true;
@@ -349,29 +349,29 @@ void CGumpBook::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 
 	switch (wParam)
 	{
-	case VK_RETURN:
-	{
-					  if (g_EntryPointer != &m_EntryTitle->m_Entry && g_EntryPointer != &m_EntryAuthor->m_Entry)
-					  {
-						  InsertInContent(L'\n');
-						  m_WantRedraw = true;
-					  }
+		case VK_RETURN:
+		{
+			if (g_EntryPointer != &m_EntryTitle->m_Entry && g_EntryPointer != &m_EntryAuthor->m_Entry)
+			{
+				InsertInContent(L'\n');
+				m_WantRedraw = true;
+			}
 
-					  break;
-	}
-	case VK_HOME:
-	case VK_END:
-	case VK_LEFT:
-	case VK_RIGHT:
-	case VK_BACK:
-	case VK_DELETE:
-	{
-					  g_EntryPointer->OnKey(this, wParam);
-					  InsertInContent(wParam, false);
-					  break;
-	}
-	default:
-		break;
+			break;
+		}
+		case VK_HOME:
+		case VK_END:
+		case VK_LEFT:
+		case VK_RIGHT:
+		case VK_BACK:
+		case VK_DELETE:
+		{
+			g_EntryPointer->OnKey(this, wParam);
+			InsertInContent(wParam, false);
+			break;
+		}
+		default:
+			break;
 	}
 }
 //----------------------------------------------------------------------------------

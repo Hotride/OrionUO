@@ -100,44 +100,44 @@ void CEntryText::OnKey(CGump *gump, WPARAM wParam)
 	WISPFUN_DEBUG("c169_f5");
 	switch (wParam)
 	{
-	case VK_HOME:
-	{
-					SetPos(0, gump);
+		case VK_HOME:
+		{
+			SetPos(0, gump);
 
-					break;
-	}
-	case VK_END:
-	{
-				   SetPos(Length(), gump);
+			break;
+		}
+		case VK_END:
+		{
+			SetPos(Length(), gump);
 
-				   break;
-	}
-	case VK_LEFT:
-	{
-					AddPos(-1, gump);
+			break;
+		}
+		case VK_LEFT:
+		{
+			AddPos(-1, gump);
 
-					break;
-	}
-	case VK_RIGHT:
-	{
-					 AddPos(1, gump);
+			break;
+		}
+		case VK_RIGHT:
+		{
+			AddPos(1, gump);
 
-					 break;
-	}
-	case VK_BACK:
-	{
-					Remove(true, gump);
+			break;
+		}
+		case VK_BACK:
+		{
+			Remove(true, gump);
 
-					break;
-	}
-	case VK_DELETE:
-	{
-					  Remove(false, gump);
+			break;
+		}
+		case VK_DELETE:
+		{
+			Remove(false, gump);
 
-					  break;
-	}
-	default:
-		break;
+			break;
+		}
+		default:
+			break;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -194,7 +194,7 @@ bool CEntryText::Insert(wchar_t ch, CGump *gump)
 		m_Position = 0;
 
 	//Коррекция позиции
-	if (m_Position >(int)m_Text.length())
+	if (m_Position > (int)m_Text.length())
 		m_Position = m_Text.length();
 
 	//Если максимальная ширина задана
@@ -262,7 +262,7 @@ void CEntryText::Remove(bool left, CGump *gump)
 //----------------------------------------------------------------------------------
 /*!
 Очистить данные
-@return
+@return 
 */
 void CEntryText::Clear()
 {
@@ -310,9 +310,9 @@ void CEntryText::AddPos(int val, CGump *gump)
 		m_Position = 0;
 
 	//Корректировка
-	if (m_Position >(int)m_Text.length())
+	if (m_Position > (int)m_Text.length())
 		m_Position = m_Text.length();
-
+	
 	//Регистрируем изменения
 	m_Changed = true;
 
@@ -333,9 +333,9 @@ void CEntryText::SetPos(int val, CGump *gump)
 		m_Position = 0;
 
 	//Корректировка
-	if (m_Position >(int)m_Text.length())
+	if (m_Position > (int)m_Text.length())
 		m_Position = m_Text.length();
-
+	
 	//Регистрируем изменения
 	m_Changed = true;
 
@@ -517,9 +517,9 @@ void CEntryText::CreateTextureA(uchar font, string str, ushort color, int width,
 					m_DrawOffset = 0;
 
 				/*if (m_Width + m_DrawOffset < m_CaretPos.x)
-				m_DrawOffset = m_Width - m_CaretPos.x;
+					m_DrawOffset = m_Width - m_CaretPos.x;
 				else
-				m_DrawOffset = 0;*/
+					m_DrawOffset = 0;*/
 			}
 		}
 		else //Либо обнуляем ее
@@ -631,7 +631,7 @@ void CEntryText::DrawA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE a
 	if (this == g_EntryPointer)
 	{
 		//Таблица смещений по оси Y
-		const int offsetTable[] = { 1, 2, 1, 1, 1, 2, 1, 1, 2, 2 };
+		const int offsetTable[] = {1, 2, 1, 1, 1, 2, 1, 1, 2, 2};
 		int offsY = offsetTable[font % 10];
 
 		//Отрисуем каретку
@@ -669,7 +669,7 @@ void CEntryText::DrawMaskA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TY
 	if (this == g_EntryPointer)
 	{
 		//Таблица смещений по оси Y
-		const int offsetTable[] = { 1, 2, 1, 1, 1, 2, 1, 1, 2, 2 };
+		const int offsetTable[] = {1, 2, 1, 1, 1, 2, 1, 1, 2, 2};
 		int offsY = offsetTable[font % 10];
 
 		//Отрегулируем смещение

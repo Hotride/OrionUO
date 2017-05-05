@@ -49,7 +49,7 @@ public:
 
 	/*!
 	Очистить данные
-	@return
+	@return 
 	*/
 	void Clear();
 
@@ -74,7 +74,7 @@ public:
 	void SetPos(int val, CGump *gump = NULL);
 
 	//Unicode данные строки
-	const wchar_t *Data() const { return m_Text.c_str(); }
+	const wchar_t *Data() const {return m_Text.c_str();}
 
 	//ASCII данные стоки
 	const char *c_str();
@@ -91,9 +91,9 @@ public:
 	//Нажатие клавиши в активном текстовом поле
 	void OnKey(CGump *gump, WPARAM wParam);
 
-	int Pos() const { return m_Position; }
+	int Pos() const {return m_Position;}
 
-	int Length() const { return m_Text.length(); }
+	int Length() const {return m_Text.length();}
 
 	//Вычислить ASCII строку по ширине
 	string CheckMaxWidthA(uchar font, string str);
