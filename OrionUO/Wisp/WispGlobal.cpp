@@ -97,6 +97,19 @@ wstring ToWString(const string &str)
 	return wstr;
 }
 //----------------------------------------------------------------------------------
+string Trim(const string &str)
+{
+	string::const_iterator it = str.begin();
+	while (it != str.end() && isspace(*it))
+		it++;
+
+	string::const_reverse_iterator rit = str.rbegin();
+	while (rit.base() != it && isspace(*rit))
+		rit++;
+
+	return string(it, rit.base());
+}
+//----------------------------------------------------------------------------------
 string ToLowerA(string str)
 {
 	if (str.length())

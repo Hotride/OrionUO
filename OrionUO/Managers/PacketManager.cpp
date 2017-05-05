@@ -625,12 +625,12 @@ void CPacketManager::OnPacket()
 	if (info.save)
 	{
 		time_t rawtime;
-		struct tm * timeinfo;
+		struct tm timeinfo;
 		char buffer[80];
 
 		time(&rawtime);
-		timeinfo = localtime(&rawtime);	
-		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", timeinfo);
+		localtime_s(&timeinfo, &rawtime);
+		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
 		LOG("%s--- ^(%d) r(+%d => %d) Server:: %s\n", buffer, ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
 		LOG_DUMP(m_Start, m_Size);
 	}
@@ -3981,43 +3981,52 @@ PACKET_HANDLER(MegaCliloc)
 	wstring message(L"");
 	bool coloredStartFont = false;
 
-	if (!obj->NPC)
-	{
-		message = L"<basefont color=\"yellow\">";
-		coloredStartFont = true;
-	}
-	else
-	{
-		CGameCharacter *gc = obj->GameCharacterPtr();
-		coloredStartFont = true;
+	CGameItem *container = g_World->FindWorldItem(obj->Container);
+	bool inBuyList = false;
 
-		switch (gc->Notoriety)
+	if (container != NULL)
+		inBuyList = (container->Layer == OL_BUY || container->Layer == OL_BUY_RESTOCK || container->Layer == OL_SELL);
+
+	if (!inBuyList)
+	{
+		if (!obj->NPC)
 		{
-			case NT_INNOCENT:
+			message = L"<basefont color=\"yellow\">";
+			coloredStartFont = true;
+		}
+		else
+		{
+			CGameCharacter *gc = obj->GameCharacterPtr();
+			coloredStartFont = true;
+
+			switch (gc->Notoriety)
 			{
-				message = L"<basefont color=\"cyan\">";
-				break;
-			}
-			case NT_SOMEONE_GRAY:
-			case NT_CRIMINAL:
-			{
-				message = L"<basefont color=\"gray\">";
-				break;
-			}
-			case NT_MURDERER:
-			{
-				message = L"<basefont color=\"red\">";
-				break;
-			}
-			case NT_INVULNERABLE:
-			{
-				message = L"<basefont color=\"yellow\">";
-				break;
-			}
-			default:
-			{
-				coloredStartFont = false;
-				break;
+				case NT_INNOCENT:
+				{
+					message = L"<basefont color=\"cyan\">";
+					break;
+				}
+				case NT_SOMEONE_GRAY:
+				case NT_CRIMINAL:
+				{
+					message = L"<basefont color=\"gray\">";
+					break;
+				}
+				case NT_MURDERER:
+				{
+					message = L"<basefont color=\"red\">";
+					break;
+				}
+				case NT_INVULNERABLE:
+				{
+					message = L"<basefont color=\"yellow\">";
+					break;
+				}
+				default:
+				{
+					coloredStartFont = false;
+					break;
+				}
 			}
 		}
 	}
@@ -4067,6 +4076,26 @@ PACKET_HANDLER(MegaCliloc)
 
 	if (g_ToolTip.m_Object == obj)
 		g_ToolTip.Reset();
+
+	if (inBuyList && container->Serial)
+	{
+		CGumpShop *gump = (CGumpShop*)g_GumpManager.GetGump(container->Serial, 0, GT_SHOP);
+
+		if (gump != NULL)
+		{
+			CGUIHTMLGump *htmlGump = gump->m_ItemList[0];
+
+			QFOR(shopItem, htmlGump->m_Items, CBaseGUI*)
+			{
+				if (shopItem->Type == GOT_SHOPITEM && shopItem->Serial == serial)
+				{
+					((CGUIShopItem*)shopItem)->Name = Trim(ToString(message));
+					((CGUIShopItem*)shopItem)->CreateNameText();
+					break;
+				}
+			}
+		}
+	}
 
 	//LOG("message=%s\n", ToString(message).c_str());
 }
@@ -5404,6 +5433,7 @@ PACKET_HANDLER(BuyList)
 			return;
 
 		bool reverse = (item->X > 1);
+
 		if (reverse)
 		{
 			while (item != NULL && item->m_Next != NULL)
@@ -5437,10 +5467,8 @@ PACKET_HANDLER(BuyList)
 			int clilocNum = 0;
 
 			if (Int32TryParse(name, clilocNum))
-			{
 				name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
-				clilocNum = 0;
-			}
+
 			CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(item->Serial, item->Graphic, item->Color, item->Count, price, name, 0, currentY));
 
 			if (!currentY)
@@ -5501,7 +5529,12 @@ PACKET_HANDLER(SellList)
 		ushort count = ReadUInt16BE();
 		ushort price = ReadUInt16BE();
 		int nameLen = ReadInt16BE();
-		string name = ReadString(0);
+		string name = ReadString(nameLen);
+
+		int clilocNum = 0;
+
+		if (Int32TryParse(name, clilocNum))
+			name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
 
 		CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(itemSerial, graphic, color, count, price, name, 0, currentY));
 

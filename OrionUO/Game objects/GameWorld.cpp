@@ -113,7 +113,6 @@ void CGameWorld::ProcessAnimation()
 					frameIndex++;
 
 				ushort id = gc->GetMountAnimation();
-				g_AnimationManager.GetBodyGraphic(id);
 				int animGroup = gc->GetAnimationGroup(id);
 				gc->ProcessGargoyleAnims(animGroup);
 
@@ -148,7 +147,7 @@ void CGameWorld::ProcessAnimation()
 					g_AnimationManager.AnimGroup = animGroup;
 					g_AnimationManager.Direction = dir;
 					if (direction.FrameCount == 0)
-						g_AnimationManager.LoadDirectionGroup(direction, obj);
+						g_AnimationManager.LoadDirectionGroup(direction);
 
 					if (direction.Address != 0 || direction.IsUOP)
 					{
@@ -249,7 +248,7 @@ void CGameWorld::ProcessAnimation()
 					g_AnimationManager.AnimGroup = animGroup;
 					g_AnimationManager.Direction = dir;
 					if (direction.FrameCount == 0)
-						g_AnimationManager.LoadDirectionGroup(direction, obj);
+						g_AnimationManager.LoadDirectionGroup(direction);
 
 					if (direction.Address != 0 || direction.IsUOP)
 					{

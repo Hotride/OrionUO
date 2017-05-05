@@ -131,7 +131,7 @@ private:
 	ushort m_CharacterLayerGraphic[25];
 	ushort m_CharacterLayerAnimID[25];
 
-	bool TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction);
+	bool TryReadUOPAnimDimins(CTextureAnimationDirection &direction);
 
 	//Прочитать и получить вектор с оффсетами пиксельных данных кадров.
 	vector<UOPFrameData> ReadUOPFrameDataOffsets();
@@ -190,7 +190,7 @@ public:
 	@param [__in] direction Ссылка на направление анимации
 	@return true в случае успешной загрузки
 	*/
-	bool LoadDirectionGroup(CTextureAnimationDirection &direction, CGameObject *obj);
+	bool LoadDirectionGroup(CTextureAnimationDirection &direction);
 
 	/*!
 	Коррекция направления и режима зеркального отображения
@@ -273,12 +273,7 @@ public:
 	*/
 	bool AnimationExists(const ushort &graphic, uchar group);
 
-	/*!
-	Получить индекс анимации
-	@param [__inout] graphic Индекс каритнки
-	@return 
-	*/
-	void GetBodyGraphic(ushort &graphic);
+	ANIMATION_DIMENSIONS GetAnimationDimensions(uchar frameIndex, const ushort &id, const uchar &dir, const uchar &animGroup, const bool &isCorpse);
 
 	ANIMATION_DIMENSIONS GetAnimationDimensions(class CGameObject *obj, uchar frameIndex = 0xFF, const uchar &defaultDirection = 0, const uchar &defaultGroup = 0);
 

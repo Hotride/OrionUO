@@ -105,7 +105,6 @@ int CGameCharacter::IsSitting()
 	WISPFUN_DEBUG("c15_f4");
 	int result = 0;
 	ushort testGraphic = m_Graphic;
-	g_AnimationManager.GetBodyGraphic(testGraphic);
 	bool human = (((testGraphic >= 0x0190) && (testGraphic <= 0x0193)) || (testGraphic == 0x03DB) || (testGraphic == 0x03DF) || (testGraphic == 0x03E2));
 
 	if (human && FindLayer(OL_MOUNT) == NULL && !TestStepNoChangeDirection(GetAnimationGroup()))
@@ -704,8 +703,6 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 	WISPFUN_DEBUG("c15_f16");
 	if (!graphic)
 		graphic = GetMountAnimation();
-
-	g_AnimationManager.GetBodyGraphic(graphic);
 
 	ANIMATION_GROUPS groupIndex = g_AnimationManager.GetGroupIndex(graphic);
 	uchar result = m_AnimationGroup;
