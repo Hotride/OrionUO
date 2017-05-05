@@ -5406,7 +5406,7 @@ PACKET_HANDLER(BuyList)
 		//oldp spams this packet twice in a row on NPC verndors. NULL check is needed t
 		if (item == NULL) return;
 
-		bool reverse = m_ClientVersion > CV_200;
+		bool reverse = item->X != 1;
 		if (reverse)
 		{
 			while (item != NULL && item->m_Next != NULL)
