@@ -1127,21 +1127,24 @@ void CGumpStatusbar::GUMP_BUTTON_EVENT_C
 		g_ConfigManager.ToggleBufficonWindow = true;
 	else if (serial == ID_GSB_BUFF_LOCKER_STR)
 	{
-		uchar state = (g_Player->LockStr + 1) % 3;
+		g_Player->LockStr = (g_Player->LockStr + 1) % 3;
+		m_WantUpdateContent = true;
 
-		CPacketChangeStatLockStateRequest(0, state).Send();
+		CPacketChangeStatLockStateRequest(0, g_Player->LockStr).Send();
 	}
 	else if (serial == ID_GSB_BUFF_LOCKER_DEX)
 	{
-		uchar state = (g_Player->LockDex + 1) % 3;
+		g_Player->LockDex = (g_Player->LockDex + 1) % 3;
+		m_WantUpdateContent = true;
 
-		CPacketChangeStatLockStateRequest(1, state).Send();
+		CPacketChangeStatLockStateRequest(1, g_Player->LockDex).Send();
 	}
 	else if (serial == ID_GSB_BUFF_LOCKER_INT)
 	{
-		uchar state = (g_Player->LockInt + 1) % 3;
+		g_Player->LockInt = (g_Player->LockInt + 1) % 3;
+		m_WantUpdateContent = true;
 
-		CPacketChangeStatLockStateRequest(2, state).Send();
+		CPacketChangeStatLockStateRequest(2, g_Player->LockInt).Send();
 	}
 }
 //----------------------------------------------------------------------------------
