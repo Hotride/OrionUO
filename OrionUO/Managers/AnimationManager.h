@@ -271,7 +271,7 @@ public:
 	@param [__in] group Группа анимации
 	@return true в случае успеха
 	*/
-	bool AnimationExists(const ushort &graphic, ushort group);
+	bool AnimationExists(const ushort &graphic, uchar group);
 
 	ANIMATION_DIMENSIONS GetAnimationDimensions(uchar frameIndex, const ushort &id, const uchar &dir, const uchar &animGroup, const bool &isCorpse);
 

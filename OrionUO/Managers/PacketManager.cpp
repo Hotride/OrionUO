@@ -3735,8 +3735,8 @@ PACKET_HANDLER(CharacterAnimation)
 		bool frameDirection = (ReadUInt8() == 0); //true - forward, false - backward
 		bool repeat = (ReadUInt8() != 0);
 		uchar delay = ReadUInt8();
-
-		obj->SetAnimation(action, delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
+		uchar animGroup = CGameCharacter::GetTrueAnimationGroup(action);
+		obj->SetAnimation(animGroup, delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
 		obj->AnimationFromServer = true;
 	}
 }

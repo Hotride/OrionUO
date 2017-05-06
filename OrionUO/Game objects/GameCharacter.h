@@ -67,7 +67,7 @@ protected:
 	@param [__inout] animation Индекс анимации в группе
 	@return 
 	*/
-	void CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, ushort &animation);
+	void CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, uchar &animation);
 
 public:
 	CGameCharacter(const uint &serial = 0);
@@ -107,7 +107,7 @@ public:
 	@param [__in] val Новое значение группы анимации
 	@return 
 	*/
-	void ResetAnimationGroup(const ushort &val);
+	void ResetAnimationGroup(const uchar &val);
 
 	/*!
 	Установка случайной анимации (при длительном простое)
@@ -125,13 +125,20 @@ public:
 	@param [__out_opt] frameDirection Направление прокрутки кадров (вперед/назад)
 	@return 
 	*/
-	void SetAnimation(const ushort &id, const uchar &interval = 0, const uchar &frameCount = 0, const uchar &repeatCount = 0, const bool &repeat = false, const bool &frameDirection = false);
+	void SetAnimation(const uchar &id, const uchar &interval = 0, const uchar &frameCount = 0, const uchar &repeatCount = 0, const bool &repeat = false, const bool &frameDirection = false);
 
 	/*!
 	Получить индекс картинки для вычисления картинки анимации
 	@return Индекс картинки персонажа
 	*/
 	ushort GetMountAnimation();
+
+	/*!
+	Transforms crazy high action numbers into proper anim groups according to file
+	@param [__in_action] action sent by server when casting without a mount
+	@return proper anim group id as in anim files
+	*/
+	static uchar GetTrueAnimationGroup(ushort action);
 
 	/*!
 	Получить текущую группу анимации
@@ -146,7 +153,7 @@ public:
 	@param [__inout] animation Индекс группы анимации
 	@return 
 	*/
-	void GetAnimationGroup(const ANIMATION_GROUPS &group, ushort &animation);
+	void GetAnimationGroup(const ANIMATION_GROUPS &group, BYTE &animation);
 
 	/*!
 	Состояние, если персонаж не движется
