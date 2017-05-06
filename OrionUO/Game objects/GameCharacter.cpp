@@ -467,16 +467,37 @@ bool CGameCharacter::IsTeleportAction(short &x, short &y, const uchar &dir)
 @param [__out_opt] frameDirection Направление прокрутки кадров (вперед/назад)
 @return 
 */
-void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const uchar &frameCount, const uchar &repeatCount, const bool &repeat, const bool &frameDirection)
+void CGameCharacter::SetAnimation(const ushort &id, const uchar &interval, const uchar &frameCount, const uchar &repeatCount, const bool &repeat, const bool &frameDirection)
 {
 	WISPFUN_DEBUG("c15_f10");
 	//for some reason these are sent by server when casting ethereal mount and some necro spells.
-	if (id == 203 || id == 230)
+	switch (id)
 	{
-		m_AnimationGroup = 16;
+		case 203:
+			m_AnimationGroup = 16;
+			break;
+		case 212:
+			m_AnimationGroup = 16;
+			break;
+		case 215:
+			m_AnimationGroup = 16;
+			break;
+		case 227:
+			m_AnimationGroup = 16;
+			break;
+		case 230:
+			m_AnimationGroup = 16;
+			break;
+		case 239:
+			m_AnimationGroup = 16;
+			break;
+		case 263:
+			m_AnimationGroup = 17;
+			break;
+
+		default:
+			m_AnimationGroup = id;
 	}
-	else
-		m_AnimationGroup = id;
 
 	m_AnimIndex = 0;
 	m_AnimationInterval = interval;
@@ -495,7 +516,7 @@ void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const 
 @param [__in] val Новое значение группы анимации
 @return
 */
-void CGameCharacter::ResetAnimationGroup(const uchar &val)
+void CGameCharacter::ResetAnimationGroup(const ushort &val)
 {
 	WISPFUN_DEBUG("c15_f11");
 	m_AnimationFrameCount = 0;
@@ -546,7 +567,7 @@ void CGameCharacter::SetRandomFidgetAnimation()
 @param [__inout] animation Индекс группы анимации
 @return
 */
-void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, BYTE &animation)
+void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, ushort &animation)
 {
 	WISPFUN_DEBUG("c15_f13");
 	const BYTE animAssociateTable[35][3] =
@@ -599,7 +620,7 @@ void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, BYTE &anim
 @param [__inout] animation Индекс анимации в группе
 @return 
 */
-void CGameCharacter::CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, uchar &animation)
+void CGameCharacter::CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, ushort &animation)
 {
 	WISPFUN_DEBUG("c15_f14");
 	if (group == AG_LOW)
@@ -706,7 +727,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 		graphic = GetMountAnimation();
 
 	ANIMATION_GROUPS groupIndex = g_AnimationManager.GetGroupIndex(graphic);
-	uchar result = m_AnimationGroup;
+	ushort result = m_AnimationGroup;
 
 	if (result != 0xFF)
 	{

@@ -2152,7 +2152,7 @@ bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, const int &x, const int
 @param [__in] group Группа анимации
 @return true в случае успеха
 */
-bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
+bool CAnimationManager::AnimationExists(const ushort &graphic, ushort group)
 {
 	WISPFUN_DEBUG("c133_f20");
 	bool result = false;
