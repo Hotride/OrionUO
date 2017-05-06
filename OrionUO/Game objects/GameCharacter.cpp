@@ -45,6 +45,7 @@ m_Deleted(false)
 	if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == serial && g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) == NULL)
 	{
 		CPacketStatusRequest(m_Serial).Send();
+		CPacketSkillsRequest(m_Serial).Send();
 
 		g_GumpManager.AddGump(new CGumpTargetSystem(m_Serial, g_NewTargetSystem.GumpX, g_NewTargetSystem.GumpY));
 	}

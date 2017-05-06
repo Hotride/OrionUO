@@ -5924,6 +5924,8 @@ void COrion::OpenSkills()
 	WISPFUN_DEBUG("c194_f139");
 	if (g_Player->SkillsReceived)
 		g_GumpManager.AddGump(new CGumpSkills(g_PlayerSerial, 0, 0, false));
+	else
+		CPacketSkillsRequest(g_PlayerSerial).Send();
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenBackpack()

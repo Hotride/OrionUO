@@ -2722,9 +2722,12 @@ PACKET_HANDLER(UpdateSkills)
 	IFOR(i, 0, g_SkillsCount)
 		g_SkillsTotal += g_Player->GetSkillValue(i);
 
-	if (gump != NULL)
-		gump->UpdateSkillsSum();
 	g_Player->SkillsReceived = true;
+	if (gump != NULL)
+	{
+		gump->UpdateSkillsSum();
+		g_Orion.OpenSkills();
+	}
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ExtendedCommand)
