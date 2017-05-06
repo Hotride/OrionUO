@@ -31,7 +31,7 @@ class CGameCharacter: public CGameObject
 	SETGET(uchar, AnimationInterval);
 	SETGET(uchar, AnimationFrameCount);
 	SETGET(uchar, AnimationRepeatMode);
-	SETGET(ushort, AnimationGroup);
+	SETGET(uchar, AnimationGroup);
 	SETGET(bool, AnimationRepeat);
 	SETGET(bool, AnimationDirection);
 	SETGET(bool, AnimationFromServer);
