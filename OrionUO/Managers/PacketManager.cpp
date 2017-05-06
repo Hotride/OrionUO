@@ -303,7 +303,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xD5*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
 	/*0xD6*/ BMSGH(ORION_IGNORE_PACKET, "Mega cliloc", PACKET_VARIABLE_SIZE, MegaCliloc),
 	/*0xD7*/ BMSG(ORION_SAVE_PACKET, "+AoS command", PACKET_VARIABLE_SIZE),
-	/*0xD8*/ RMSG(ORION_SAVE_PACKET, "+Custom house", PACKET_VARIABLE_SIZE),
+	/*0xD8*/ RMSGH(ORION_SAVE_PACKET, "+Custom house", PACKET_VARIABLE_SIZE, CustomHouse),
 	/*0xD9*/ SMSG(ORION_SAVE_PACKET, "+Metrics", 0x10c),
 	/*0xDA*/ BMSG(ORION_SAVE_PACKET, "Mahjong game command", PACKET_VARIABLE_SIZE),
 	/*0xDB*/ RMSG(ORION_SAVE_PACKET, "Character transfer log", PACKET_VARIABLE_SIZE),
@@ -5580,5 +5580,50 @@ PACKET_HANDLER(OPLInfo)
 
 		AddMegaClilocRequest(serial, true);
 	}
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(CustomHouse)
+{
+	WISPFUN_DEBUG("c150_f100");
+
+	ushort packetSize = ReadUInt16BE();
+	bool compressed = (ReadUInt16BE() == 3);
+	uint houseSerial = ReadUInt32BE();
+	uint revision = ReadUInt32BE();
+	ushort componentsAmount = ReadUInt16BE();
+	uLongf bufferLength = ReadUInt16BE();
+	
+	if (compressed)
+	{
+		int cLen = componentsAmount * 5;
+		if (cLen < 1)
+		{
+			LOG("CLen=%d\nServer Sends bad Compressed Gumpdata!\n", cLen);
+
+			return;
+		}
+		else if ((17 + cLen) > m_Size)
+		{
+			LOG("Server Sends bad Compressed Gumpdata!\n");
+
+			return;
+		}
+
+
+		LOG("Decompressing custom house data, serial(%d)\n", houseSerial);
+		UCHAR_LIST decLayoutData(bufferLength);
+		int z_err = uncompress(&decLayoutData[0], &bufferLength, m_Ptr, cLen);
+		SetData(reinterpret_cast<puchar>(&decLayoutData[0]), bufferLength);
+	}
+
+	IFOR(i, 0, componentsAmount)
+	{
+		ushort graphic = ReadUInt16BE();
+		byte X = ReadUInt8();
+		byte Y = ReadUInt8();
+		byte Z = ReadUInt8();
+	}
+
+
 }
 //----------------------------------------------------------------------------------
