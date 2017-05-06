@@ -476,15 +476,25 @@ void CGameCharacter::SetAnimation(const ushort &id, const uchar &interval, const
 		case 203:
 			m_AnimationGroup = 16;
 			break;
-		case 230:
+		case 212:
 			m_AnimationGroup = 16;
 			break;
 		case 215:
 			m_AnimationGroup = 16;
 			break;
+		case 227:
+			m_AnimationGroup = 16;
+			break;
+		case 230:
+			m_AnimationGroup = 16;
+			break;
+		case 239:
+			m_AnimationGroup = 16;
+			break;
 		case 263:
 			m_AnimationGroup = 17;
 			break;
+
 		default:
 			m_AnimationGroup = id;
 	}
