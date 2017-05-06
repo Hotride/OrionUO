@@ -31,7 +31,7 @@ class CGameCharacter: public CGameObject
 	SETGET(uchar, AnimationInterval);
 	SETGET(uchar, AnimationFrameCount);
 	SETGET(uchar, AnimationRepeatMode);
-	SETGET(uchar, AnimationGroup);
+	SETGET(ushort, AnimationGroup);
 	SETGET(bool, AnimationRepeat);
 	SETGET(bool, AnimationDirection);
 	SETGET(bool, AnimationFromServer);
@@ -67,7 +67,7 @@ protected:
 	@param [__inout] animation Индекс анимации в группе
 	@return 
 	*/
-	void CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, uchar &animation);
+	void CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, ushort &animation);
 
 public:
 	CGameCharacter(const uint &serial = 0);
@@ -107,7 +107,7 @@ public:
 	@param [__in] val Новое значение группы анимации
 	@return 
 	*/
-	void ResetAnimationGroup(const uchar &val);
+	void ResetAnimationGroup(const ushort &val);
 
 	/*!
 	Установка случайной анимации (при длительном простое)
@@ -125,7 +125,7 @@ public:
 	@param [__out_opt] frameDirection Направление прокрутки кадров (вперед/назад)
 	@return 
 	*/
-	void SetAnimation(const uchar &id, const uchar &interval = 0, const uchar &frameCount = 0, const uchar &repeatCount = 0, const bool &repeat = false, const bool &frameDirection = false);
+	void SetAnimation(const ushort &id, const uchar &interval = 0, const uchar &frameCount = 0, const uchar &repeatCount = 0, const bool &repeat = false, const bool &frameDirection = false);
 
 	/*!
 	Получить индекс картинки для вычисления картинки анимации
@@ -146,7 +146,7 @@ public:
 	@param [__inout] animation Индекс группы анимации
 	@return 
 	*/
-	void GetAnimationGroup(const ANIMATION_GROUPS &group, uchar &animation);
+	void GetAnimationGroup(const ANIMATION_GROUPS &group, ushort &animation);
 
 	/*!
 	Состояние, если персонаж не движется

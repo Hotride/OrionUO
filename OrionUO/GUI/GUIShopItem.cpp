@@ -12,6 +12,7 @@
 #include "../Managers/ColorManager.h"
 #include "../Managers/MouseManager.h"
 #include "../Managers/UOFileReader.h"
+#include "../Managers/AnimationManager.h"
 #include "../SelectedObject.h"
 //----------------------------------------------------------------------------------
 CGUIShopItem::CGUIShopItem(const uint &serial, const ushort &graphic, const ushort &color, const uint &count, const uint &price, const string &name, const int &x, const int &y)
@@ -27,19 +28,65 @@ m_Name(name), m_Selected(false)
 	m_TextOffset = 0;
 	m_MaxOffset = 0;
 
-	CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
-
-	if (th != NULL)
+	if (serial >= 0x40000000)
 	{
-		m_MaxOffset = th->Height;
+		CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
 
-		if (m_MaxOffset < m_NameText.Height)
+		if (th != NULL)
 		{
-			m_ImageOffset = ((m_NameText.Height - m_MaxOffset) / 2);
-			m_MaxOffset = m_NameText.Height;
+			m_MaxOffset = th->Height;
+
+			if (m_MaxOffset < m_NameText.Height)
+			{
+				m_ImageOffset = ((m_NameText.Height - m_MaxOffset) / 2);
+				m_MaxOffset = m_NameText.Height;
+			}
+			else
+				m_TextOffset = ((m_MaxOffset - m_NameText.Height) / 2);
 		}
-		else
-			m_TextOffset = ((m_MaxOffset - m_NameText.Height) / 2);
+	}
+	else
+	{
+		uchar group = 0;
+
+		switch (g_AnimationManager.GetGroupIndex(graphic))
+		{
+			case AG_LOW:
+			{
+				group = LAG_STAND;
+				break;
+			}
+			case AG_HIGHT:
+			{
+				group = HAG_STAND;
+				break;
+			}
+			case AG_PEOPLE:
+			{
+				group = PAG_STAND;
+				break;
+			}
+			default:
+				break;
+		}
+
+		ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(0, graphic, 1, group, false);
+
+		if (dims.Height)
+		{
+			m_MaxOffset = dims.Height;
+
+			if (m_MaxOffset > 35)
+				m_MaxOffset = 35;
+
+			if (m_MaxOffset < m_NameText.Height)
+			{
+				m_ImageOffset = ((m_NameText.Height - m_MaxOffset) / 2);
+				m_MaxOffset = m_NameText.Height;
+			}
+			else
+				m_TextOffset = ((m_MaxOffset - m_NameText.Height) / 2);
+		}
 	}
 }
 //----------------------------------------------------------------------------------
@@ -103,7 +150,44 @@ void CGUIShopItem::CreateCountText(const int &lostCount)
 void CGUIShopItem::PrepareTextures()
 {
 	WISPFUN_DEBUG("c73_f6");
-	g_Orion.ExecuteStaticArt(m_Graphic);
+
+	if (m_Serial >= 0x40000000)
+		g_Orion.ExecuteStaticArt(m_Graphic);
+	else
+	{
+		uchar group = 0;
+
+		switch (g_AnimationManager.GetGroupIndex(m_Graphic))
+		{
+			case AG_LOW:
+			{
+				group = LAG_STAND;
+				break;
+			}
+			case AG_HIGHT:
+			{
+				group = HAG_STAND;
+				break;
+			}
+			case AG_PEOPLE:
+			{
+				group = PAG_STAND;
+				break;
+			}
+			default:
+				break;
+		}
+
+		CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[m_Graphic].m_Groups[group].m_Direction[1];
+		direction.LastAccessTime = GetTickCount() + 60000;
+		g_AnimationManager.AnimID = m_Graphic;
+		g_AnimationManager.AnimGroup = group;
+		g_AnimationManager.Direction = 1;
+
+		if (direction.FrameCount == 0)
+			g_AnimationManager.LoadDirectionGroup(direction);
+	}
+
 	g_Orion.ExecuteGump(0x0039);
 	g_Orion.ExecuteGump(0x003A);
 	g_Orion.ExecuteGump(0x003B);
@@ -128,38 +212,97 @@ void CGUIShopItem::SetShaderMode()
 void CGUIShopItem::Draw(const bool &checktrans)
 {
 	WISPFUN_DEBUG("c73_f8");
-	CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
+	CGLTexture *th = NULL;
+
+	glTranslatef((GLfloat)m_X, (GLfloat)m_Y, 0.0f);
+
+	glUniform1iARB(g_ShaderDrawMode, 0);
+
+	m_NameText.Draw(52, m_TextOffset);
+	m_CountText.Draw(196 - m_CountText.Width, (m_MaxOffset / 2) - (m_CountText.Height / 2));
+
+	SetShaderMode();
+
+	if (m_Serial >= 0x40000000)
+	{
+		th = g_Orion.ExecuteStaticArt(m_Graphic);
+
+		if (th != NULL)
+			th->Draw(2, m_ImageOffset, checktrans);
+	}
+	else
+	{
+		uchar group = 0;
+
+		switch (g_AnimationManager.GetGroupIndex(m_Graphic))
+		{
+			case AG_LOW:
+			{
+				group = LAG_STAND;
+				break;
+			}
+			case AG_HIGHT:
+			{
+				group = HAG_STAND;
+				break;
+			}
+			case AG_PEOPLE:
+			{
+				group = PAG_STAND;
+				break;
+			}
+			default:
+				break;
+		}
+
+		CTextureAnimationDirection &direction = g_AnimationManager.m_DataIndex[m_Graphic].m_Groups[group].m_Direction[1];
+
+		if (direction.FrameCount != 0)
+		{
+			CGLTexture &originalTexture = direction.m_Frames[0].m_Texture;
+
+			if (originalTexture.Texture)
+			{
+				CGLTexture tex;
+				tex.Texture = originalTexture.Texture;
+
+				if (originalTexture.Width > 35)
+					tex.Width = 35;
+				else
+					tex.Width = originalTexture.Width;
+
+				if (originalTexture.Height > 35)
+					tex.Height = 35;
+				else
+					tex.Height = originalTexture.Height;
+
+				g_GL.GL1_Draw(tex, 2, m_ImageOffset);
+
+				tex.Texture = 0;
+				
+				//originalTexture.Draw(2, m_ImageOffset, checktrans);
+			}
+		}
+	}
+
+	glUniform1iARB(g_ShaderDrawMode, 0);
+
+	th = g_Orion.ExecuteGump(0x0039);
 
 	if (th != NULL)
-	{
-		glTranslatef((GLfloat)m_X, (GLfloat)m_Y, 0.0f);
+		th->Draw(2, m_MaxOffset, checktrans);
 
-		glUniform1iARB(g_ShaderDrawMode, 0);
+	th = g_Orion.ExecuteGump(0x003A);
 
-		m_NameText.Draw(52, m_TextOffset);
-		m_CountText.Draw(196 - m_CountText.Width, (m_MaxOffset / 2) - (m_CountText.Height / 2));
+	if (th != NULL)
+		th->Draw(32, m_MaxOffset, 140, 0, checktrans);
 
-		SetShaderMode();
-		th->Draw(2, m_ImageOffset, checktrans);
-		glUniform1iARB(g_ShaderDrawMode, 0);
+	th = g_Orion.ExecuteGump(0x003B);
 
-		th = g_Orion.ExecuteGump(0x0039);
+	if (th != NULL)
+		th->Draw(166, m_MaxOffset, checktrans);
 
-		if (th != NULL)
-			th->Draw(2, m_MaxOffset, checktrans);
-
-		th = g_Orion.ExecuteGump(0x003A);
-
-		if (th != NULL)
-			th->Draw(32, m_MaxOffset, 140, 0, checktrans);
-
-		th = g_Orion.ExecuteGump(0x003B);
-
-		if (th != NULL)
-			th->Draw(166, m_MaxOffset, checktrans);
-
-		glTranslatef((GLfloat)-m_X, (GLfloat)-m_Y, 0.0f);
-	}
+	glTranslatef((GLfloat)-m_X, (GLfloat)-m_Y, 0.0f);
 }
 //----------------------------------------------------------------------------------
 bool CGUIShopItem::Select()

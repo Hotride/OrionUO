@@ -181,6 +181,7 @@ protected:
 	HANDLER_PACKET(BuyReply);
 	HANDLER_PACKET(Logout);
 	HANDLER_PACKET(OPLInfo);
+	HANDLER_PACKET(CustomHouse);
 
 	//Не обработаны
 	/*

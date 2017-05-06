@@ -303,7 +303,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xD5*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
 	/*0xD6*/ BMSGH(ORION_IGNORE_PACKET, "Mega cliloc", PACKET_VARIABLE_SIZE, MegaCliloc),
 	/*0xD7*/ BMSG(ORION_SAVE_PACKET, "+AoS command", PACKET_VARIABLE_SIZE),
-	/*0xD8*/ RMSG(ORION_SAVE_PACKET, "+Custom house", PACKET_VARIABLE_SIZE),
+	/*0xD8*/ RMSGH(ORION_SAVE_PACKET, "+Custom house", PACKET_VARIABLE_SIZE, CustomHouse),
 	/*0xD9*/ SMSG(ORION_SAVE_PACKET, "+Metrics", 0x10c),
 	/*0xDA*/ BMSG(ORION_SAVE_PACKET, "Mahjong game command", PACKET_VARIABLE_SIZE),
 	/*0xDB*/ RMSG(ORION_SAVE_PACKET, "Character transfer log", PACKET_VARIABLE_SIZE),
@@ -625,12 +625,12 @@ void CPacketManager::OnPacket()
 	if (info.save)
 	{
 		time_t rawtime;
-		struct tm * timeinfo;
+		struct tm timeinfo;
 		char buffer[80];
 
 		time(&rawtime);
-		timeinfo = localtime(&rawtime);	
-		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", timeinfo);
+		localtime_s(&timeinfo, &rawtime);
+		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
 		LOG("%s--- ^(%d) r(+%d => %d) Server:: %s\n", buffer, ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
 		LOG_DUMP(m_Start, m_Size);
 	}
@@ -2718,9 +2718,12 @@ PACKET_HANDLER(UpdateSkills)
 	IFOR(i, 0, g_SkillsCount)
 		g_SkillsTotal += g_Player->GetSkillValue(i);
 
-	if (gump != NULL)
-		gump->UpdateSkillsSum();
 	g_Player->SkillsReceived = true;
+	if (gump != NULL)
+	{
+		gump->UpdateSkillsSum();
+		g_Orion.OpenSkills();
+	}
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ExtendedCommand)
@@ -3729,7 +3732,7 @@ PACKET_HANDLER(CharacterAnimation)
 		bool repeat = (ReadUInt8() != 0);
 		uchar delay = ReadUInt8();
 
-		obj->SetAnimation((uchar)action, delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
+		obj->SetAnimation(action, delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
 		obj->AnimationFromServer = true;
 	}
 }
@@ -3977,43 +3980,52 @@ PACKET_HANDLER(MegaCliloc)
 	wstring message(L"");
 	bool coloredStartFont = false;
 
-	if (!obj->NPC)
-	{
-		message = L"<basefont color=\"yellow\">";
-		coloredStartFont = true;
-	}
-	else
-	{
-		CGameCharacter *gc = obj->GameCharacterPtr();
-		coloredStartFont = true;
+	CGameItem *container = g_World->FindWorldItem(obj->Container);
+	bool inBuyList = false;
 
-		switch (gc->Notoriety)
+	if (container != NULL)
+		inBuyList = (container->Layer == OL_BUY || container->Layer == OL_BUY_RESTOCK || container->Layer == OL_SELL);
+
+	if (!inBuyList)
+	{
+		if (!obj->NPC)
 		{
-			case NT_INNOCENT:
+			message = L"<basefont color=\"yellow\">";
+			coloredStartFont = true;
+		}
+		else
+		{
+			CGameCharacter *gc = obj->GameCharacterPtr();
+			coloredStartFont = true;
+
+			switch (gc->Notoriety)
 			{
-				message = L"<basefont color=\"cyan\">";
-				break;
-			}
-			case NT_SOMEONE_GRAY:
-			case NT_CRIMINAL:
-			{
-				message = L"<basefont color=\"gray\">";
-				break;
-			}
-			case NT_MURDERER:
-			{
-				message = L"<basefont color=\"red\">";
-				break;
-			}
-			case NT_INVULNERABLE:
-			{
-				message = L"<basefont color=\"yellow\">";
-				break;
-			}
-			default:
-			{
-				coloredStartFont = false;
-				break;
+				case NT_INNOCENT:
+				{
+					message = L"<basefont color=\"cyan\">";
+					break;
+				}
+				case NT_SOMEONE_GRAY:
+				case NT_CRIMINAL:
+				{
+					message = L"<basefont color=\"gray\">";
+					break;
+				}
+				case NT_MURDERER:
+				{
+					message = L"<basefont color=\"red\">";
+					break;
+				}
+				case NT_INVULNERABLE:
+				{
+					message = L"<basefont color=\"yellow\">";
+					break;
+				}
+				default:
+				{
+					coloredStartFont = false;
+					break;
+				}
 			}
 		}
 	}
@@ -4063,6 +4075,26 @@ PACKET_HANDLER(MegaCliloc)
 
 	if (g_ToolTip.m_Object == obj)
 		g_ToolTip.Reset();
+
+	if (inBuyList && container->Serial)
+	{
+		CGumpShop *gump = (CGumpShop*)g_GumpManager.GetGump(container->Serial, 0, GT_SHOP);
+
+		if (gump != NULL)
+		{
+			CGUIHTMLGump *htmlGump = gump->m_ItemList[0];
+
+			QFOR(shopItem, htmlGump->m_Items, CBaseGUI*)
+			{
+				if (shopItem->Type == GOT_SHOPITEM && shopItem->Serial == serial)
+				{
+					((CGUIShopItem*)shopItem)->Name = Trim(ToString(message));
+					((CGUIShopItem*)shopItem)->CreateNameText();
+					break;
+				}
+			}
+		}
+	}
 
 	//LOG("message=%s\n", ToString(message).c_str());
 }
@@ -5400,6 +5432,7 @@ PACKET_HANDLER(BuyList)
 			return;
 
 		bool reverse = (item->X > 1);
+
 		if (reverse)
 		{
 			while (item != NULL && item->m_Next != NULL)
@@ -5433,10 +5466,8 @@ PACKET_HANDLER(BuyList)
 			int clilocNum = 0;
 
 			if (Int32TryParse(name, clilocNum))
-			{
 				name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
-				clilocNum = 0;
-			}
+
 			CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(item->Serial, item->Graphic, item->Color, item->Count, price, name, 0, currentY));
 
 			if (!currentY)
@@ -5497,7 +5528,12 @@ PACKET_HANDLER(SellList)
 		ushort count = ReadUInt16BE();
 		ushort price = ReadUInt16BE();
 		int nameLen = ReadInt16BE();
-		string name = ReadString(0);
+		string name = ReadString(nameLen);
+
+		int clilocNum = 0;
+
+		if (Int32TryParse(name, clilocNum))
+			name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
 
 		CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(itemSerial, graphic, color, count, price, name, 0, currentY));
 
@@ -5540,5 +5576,50 @@ PACKET_HANDLER(OPLInfo)
 
 		AddMegaClilocRequest(serial, true);
 	}
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(CustomHouse)
+{
+	WISPFUN_DEBUG("c150_f100");
+
+	ushort packetSize = ReadUInt16BE();
+	bool compressed = (ReadUInt16BE() == 3);
+	uint houseSerial = ReadUInt32BE();
+	uint revision = ReadUInt32BE();
+	ushort componentsAmount = ReadUInt16BE();
+	uLongf bufferLength = ReadUInt16BE();
+	
+	if (compressed)
+	{
+		int cLen = componentsAmount * 5;
+		if (cLen < 1)
+		{
+			LOG("CLen=%d\nServer Sends bad Compressed Gumpdata!\n", cLen);
+
+			return;
+		}
+		else if ((17 + cLen) > m_Size)
+		{
+			LOG("Server Sends bad Compressed Gumpdata!\n");
+
+			return;
+		}
+
+
+		LOG("Decompressing custom house data, serial(%d)\n", houseSerial);
+		UCHAR_LIST decLayoutData(bufferLength);
+		int z_err = uncompress(&decLayoutData[0], &bufferLength, m_Ptr, cLen);
+		SetData(reinterpret_cast<puchar>(&decLayoutData[0]), bufferLength);
+	}
+
+	IFOR(i, 0, componentsAmount)
+	{
+		ushort graphic = ReadUInt16BE();
+		byte X = ReadUInt8();
+		byte Y = ReadUInt8();
+		byte Z = ReadUInt8();
+	}
+
+
 }
 //----------------------------------------------------------------------------------

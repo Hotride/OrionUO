@@ -1169,12 +1169,14 @@ void CAnimationManager::ClearUnusedTextures(uint ticks)
 @param [__in] direction Ссылка на направление анимации
 @return true в случае успешной загрузки
 */
-bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction, CGameObject *obj)
+bool CAnimationManager::LoadDirectionGroup(CTextureAnimationDirection &direction)
 {
 	WISPFUN_DEBUG("c133_f10");
 
-	if (direction.IsUOP) return TryReadUOPAnimDimins(obj, direction);
-	if (direction.Address == 0) return false;
+	if (direction.IsUOP)
+		return TryReadUOPAnimDimins(direction);
+	else if (direction.Address == 0)
+		return false;
 
 	SetData((puchar)direction.Address, direction.Size);
 
@@ -1337,7 +1339,7 @@ bool CAnimationManager::TestPixels(CGameObject *obj, int x, int y, const bool &m
 
 	CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[m_AnimGroup].m_Direction[m_Direction];
 	m_AnimID = id;
-	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction, obj))
+	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction))
 		return false;
 
 	int fc = direction.FrameCount;
@@ -1394,7 +1396,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 
 	CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[m_AnimGroup].m_Direction[m_Direction];
 	m_AnimID = id;
-	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction, obj))
+	if (direction.FrameCount == 0 && !LoadDirectionGroup(direction))
 		return;
 
 	int fc = direction.FrameCount;
@@ -2150,7 +2152,7 @@ bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, const int &x, const int
 @param [__in] group Группа анимации
 @return true в случае успеха
 */
-bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
+bool CAnimationManager::AnimationExists(const ushort &graphic, ushort group)
 {
 	WISPFUN_DEBUG("c133_f20");
 	bool result = false;
@@ -2162,46 +2164,9 @@ bool CAnimationManager::AnimationExists(const ushort &graphic, uchar group)
 	return result;
 }
 //----------------------------------------------------------------------------------
-/*!
-Получить индекс анимации
-@param [__inout] graphic Индекс каритнки
-@return 
-*/
-void CAnimationManager::GetBodyGraphic(ushort &graphic)
+ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(uchar frameIndex, const ushort &id, const uchar &dir, const uchar &animGroup, const bool &isCorpse)
 {
-	WISPFUN_DEBUG("c133_f21");
-	//if (graphic < MAX_ANIMATIONS_DATA_INDEX_COUNT)
-	//	graphic = m_DataIndex[graphic].Graphic;
-}
-//----------------------------------------------------------------------------------
-ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj, uchar frameIndex, const uchar &defaultDirection, const uchar &defaultGroup)
-{
-	WISPFUN_DEBUG("c133_f22");
 	ANIMATION_DIMENSIONS result = { 0 };
-
-	uchar dir = defaultDirection & 0x7F;
-	uchar animGroup = defaultGroup;
-	ushort id = obj->GetMountAnimation();
-	bool mirror = false;
-
-	if (obj->NPC)
-	{
-		CGameCharacter *gc = obj->GameCharacterPtr();
-		gc->UpdateAnimationInfo(dir);
-		animGroup = gc->GetAnimationGroup();
-		GetAnimDirection(dir, mirror);
-	}
-	else if (obj->IsCorpse())
-	{
-		dir = ((CGameItem*)obj)->Layer;
-		animGroup = GetDieGroupIndex(id, ((CGameItem*)obj)->UsedLayer);
-		GetAnimDirection(dir, mirror);
-	}
-	else if (((CGameItem*)obj)->Layer != OL_MOUNT) //TGameItem
-		id = ((CGameItem*)obj)->AnimID;
-
-	if (frameIndex == 0xFF)
-		frameIndex = (uchar)obj->AnimIndex;
 
 	if (id < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 	{
@@ -2214,7 +2179,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 			{
 				if (fc > 0 && frameIndex >= fc)
 				{
-					if (obj->IsCorpse())
+					if (isCorpse)
 						frameIndex = fc - 1;
 					else
 						frameIndex = 0;
@@ -2234,42 +2199,43 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 			}
 		}
 
-			CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[0];
+		CTextureAnimationDirection &direction = m_DataIndex[id].m_Groups[animGroup].m_Direction[0];
 
-			puchar ptr = (puchar)direction.Address;
+		puchar ptr = (puchar)direction.Address;
 
-			if (ptr != NULL)
+		if (ptr != NULL)
+		{
+			SetData(ptr, direction.Size);
+			Move(sizeof(ushort[256]));  //Palette
+			puchar dataStart = m_Ptr;
+
+			int frameCount = ReadUInt32LE();
+
+			if (frameCount > 0 && frameIndex >= frameCount)
 			{
-				SetData(ptr, direction.Size);
-				Move(sizeof(ushort[256]));  //Palette
-				puchar dataStart = m_Ptr;
-
-				int frameCount = ReadUInt32LE();
-
-				if (frameCount > 0 && frameIndex >= frameCount)
-				{
-					if (obj->IsCorpse())
-						frameIndex = frameCount - 1;
-					else
-						frameIndex = 0;
-				}
-
-				if (frameIndex < frameCount)
-				{
-					puint frameOffset = (puint)m_Ptr;
-					//Move(frameOffset[frameIndex]);
-					m_Ptr = dataStart + frameOffset[frameIndex];
-
-					result.CenterX = ReadInt16LE();
-					result.CenterY = ReadInt16LE();
-					result.Width = ReadInt16LE();
-					result.Height = ReadInt16LE();
-				}
+				if (isCorpse)
+					frameIndex = frameCount - 1;
+				else
+					frameIndex = 0;
 			}
+
+			if (frameIndex < frameCount)
+			{
+				puint frameOffset = (puint)m_Ptr;
+				//Move(frameOffset[frameIndex]);
+				m_Ptr = dataStart + frameOffset[frameIndex];
+
+				result.CenterX = ReadInt16LE();
+				result.CenterY = ReadInt16LE();
+				result.Width = ReadInt16LE();
+				result.Height = ReadInt16LE();
+			}
+		}
 		else if (direction.IsUOP) //try reading uop anim frame
 		{
 			UOPAnimationData animDataStruct = m_DataIndex[m_AnimID].m_Groups[m_AnimGroup].m_UOPAnimData;
-			if (animDataStruct.path == NULL) return result;
+			if (animDataStruct.path == NULL)
+				return result;
 
 			//reading compressed data from uop file stream
 			auto decompressedLength = animDataStruct.decompressedLength;
@@ -2278,7 +2244,8 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 			//decompressing here
 			UCHAR_LIST decLayoutData(decompressedLength);
 			bool decompressionRes = CFileManager::DecompressUOPFileData(animDataStruct, decLayoutData, buf);
-			if (!decompressionRes) return result;//decompression failed
+			if (!decompressionRes)
+				return result;//decompression failed
 
 			SetData(reinterpret_cast<puchar>(&decLayoutData[0]), decompressedLength);
 			//format id?
@@ -2316,7 +2283,7 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 			data.pixelDataOffset = ReadUInt32LE();
 
 			short imageCenterX, imageCenterY, imageWidth, imageHeight;
-			pushort palette;
+			pushort palette = NULL;
 			ReadUOPFrameData(imageCenterX, imageCenterY, imageWidth, imageHeight, palette, data);
 			result.CenterX = imageCenterX;
 			result.CenterY = imageCenterY;
@@ -2328,7 +2295,38 @@ ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj,
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool CAnimationManager::TryReadUOPAnimDimins(CGameObject *obj, CTextureAnimationDirection &direction)
+ANIMATION_DIMENSIONS CAnimationManager::GetAnimationDimensions(CGameObject *obj, uchar frameIndex, const uchar &defaultDirection, const uchar &defaultGroup)
+{
+	WISPFUN_DEBUG("c133_f22");
+
+	uchar dir = defaultDirection & 0x7F;
+	uchar animGroup = defaultGroup;
+	ushort id = obj->GetMountAnimation();
+	bool mirror = false;
+
+	if (obj->NPC)
+	{
+		CGameCharacter *gc = obj->GameCharacterPtr();
+		gc->UpdateAnimationInfo(dir);
+		animGroup = gc->GetAnimationGroup();
+		GetAnimDirection(dir, mirror);
+	}
+	else if (obj->IsCorpse())
+	{
+		dir = ((CGameItem*)obj)->Layer;
+		animGroup = GetDieGroupIndex(id, ((CGameItem*)obj)->UsedLayer);
+		GetAnimDirection(dir, mirror);
+	}
+	else if (((CGameItem*)obj)->Layer != OL_MOUNT) //TGameItem
+		id = ((CGameItem*)obj)->AnimID;
+
+	if (frameIndex == 0xFF)
+		frameIndex = (uchar)obj->AnimIndex;
+
+	return GetAnimationDimensions(frameIndex, id, dir, animGroup, obj->IsCorpse());
+}
+//----------------------------------------------------------------------------------
+bool CAnimationManager::TryReadUOPAnimDimins(CTextureAnimationDirection &direction)
 {
 	UOPAnimationData animDataStruct = m_DataIndex[m_AnimID].m_Groups[m_AnimGroup].m_UOPAnimData;
 	if (animDataStruct.path == NULL) return false;

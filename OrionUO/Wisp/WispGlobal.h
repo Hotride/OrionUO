@@ -53,6 +53,7 @@ string EncodeUTF8(const wstring &str);
 wstring DecodeUTF8(const string &str);
 string ToString(const wstring &wstr);
 wstring ToWString(const string &str);
+string Trim(const string &str);
 string ToLowerA(string str);
 string ToUpperA(string str);
 wstring ToLowerW(wstring str);
