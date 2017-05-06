@@ -2345,13 +2345,14 @@ void CGameScreen::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
 			return;
 	}
 
-	bool altPressed = GetAsyncKeyState(VK_MENU) & 0x80000000;
-	bool ctrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
+	bool altGR = (GetAsyncKeyState(VK_RMENU) & 0x80000000);
+	bool altPressed = (GetAsyncKeyState(VK_MENU) & 0x80000000);
+	bool ctrlPressed = (GetAsyncKeyState(VK_CONTROL) & 0x80000000);
 	//bool shiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
 
 	if (g_EntryPointer == &g_GameConsole && (wParam == 0x00000011 || wParam == 0x00000017) && ctrlPressed)
 		g_GameConsole.ChangeConsoleMessage(wParam == 0x00000017);
-	else if (!altPressed && !ctrlPressed && g_EntryPointer->Length() < 60)
+	else if ((altGR || (!altPressed && !ctrlPressed)) && g_EntryPointer->Length() < 60)
 		g_EntryPointer->Insert(wParam);
 }
 //----------------------------------------------------------------------------------

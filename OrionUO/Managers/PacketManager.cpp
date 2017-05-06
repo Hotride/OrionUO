@@ -1636,33 +1636,29 @@ PACKET_HANDLER(UpdateObject)
 
 	bool hidden = obj->Hidden();
 	obj->Flags = ReadUInt8();
-	bool updateCoords = (hidden == obj->Hidden());
+	bool updateCoords = true;//(hidden == obj->Hidden());
 
 	uchar noto = ReadUInt8();
 
+	if (character != NULL && !character->m_WalkStack.Empty())
+	{
+		if (newX != obj->X || newX != obj->X)
+		{
+			obj->X = character->m_WalkStack.m_Items->X;
+			obj->Y = character->m_WalkStack.m_Items->Y;
+			obj->Z = character->m_WalkStack.m_Items->Z;
+			character->m_WalkStack.Clear();
+			updateCoords = false;
+		}
+	}
+
 	if (updateCoords)
 	{
-		if (character != NULL && !character->m_WalkStack.Empty())
-		{
-			if (newX != obj->X || newX != obj->X)
-			{
-				obj->X = character->m_WalkStack.m_Items->X;
-				obj->Y = character->m_WalkStack.m_Items->Y;
-				obj->Z = character->m_WalkStack.m_Items->Z;
-				character->m_WalkStack.Clear();
-				updateCoords = false;
-			}
-		}
-
-		if (updateCoords)
-		{
-			obj->X = newX;
-			obj->Y = newY;
-			obj->Z = newZ;
-
-			if (character != NULL)
-				character->Direction = dir;
-		}
+		obj->X = newX;
+		obj->Y = newY;
+		obj->Z = newZ;
+		if (character != NULL)
+			character->Direction = dir;
 	}
 
 	if (character != NULL)
