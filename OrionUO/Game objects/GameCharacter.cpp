@@ -1019,7 +1019,7 @@ uchar CGameCharacter::GetTrueAnimationGroup(ushort action)
 {
 	WISPFUN_DEBUG("c15_f19");
 	//let's give it a default value of 16 if action > 100, just in case
-	uchar animGroup = 16;
+	uchar animGroup = 0;
 	if (action > 100)
 	{
 		animGroup = static_cast<uchar>(action);
@@ -1121,6 +1121,6 @@ uchar CGameCharacter::GetTrueAnimationGroup(ushort action)
 		break;
 	}
 
-	return animGroup;
+	return animGroup == 0 ? static_cast<uchar>(action) : animGroup;
 }
 //----------------------------------------------------------------------------------
