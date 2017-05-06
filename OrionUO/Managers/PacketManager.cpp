@@ -3736,7 +3736,7 @@ PACKET_HANDLER(CharacterAnimation)
 		bool repeat = (ReadUInt8() != 0);
 		uchar delay = ReadUInt8();
 
-		obj->SetAnimation((uchar)action, delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
+		obj->SetAnimation(action, delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
 		obj->AnimationFromServer = true;
 	}
 }
