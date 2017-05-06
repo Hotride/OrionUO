@@ -3017,6 +3017,9 @@ PACKET_HANDLER(ExtendedCommand)
 		case 0x1D:
 		{
 			//house revision state, server sends this when player comes in range of a custom house
+			uint houseSerial = ReadUInt32BE();
+			uint houseRevision = ReadUInt32BE();
+
 			break;
 		}
 		case 0x21:
