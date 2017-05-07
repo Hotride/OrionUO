@@ -4088,7 +4088,7 @@ PACKET_HANDLER(MegaCliloc)
 	if (g_ToolTip.m_Object == obj)
 		g_ToolTip.Reset();
 
-	if (inBuyList && container->Serial)
+	if (inBuyList && container->Serial && false)
 	{
 		CGumpShop *gump = (CGumpShop*)g_GumpManager.GetGump(container->Serial, 0, GT_SHOP);
 
@@ -4098,7 +4098,7 @@ PACKET_HANDLER(MegaCliloc)
 
 			QFOR(shopItem, htmlGump->m_Items, CBaseGUI*)
 			{
-				if (shopItem->Type == GOT_SHOPITEM && shopItem->Serial == serial)
+				if (shopItem->Type == GOT_SHOPITEM && shopItem->Serial == serial && ((CGUIShopItem*)shopItem)->NameFromCliloc)
 				{
 					((CGUIShopItem*)shopItem)->Name = Trim(ToString(message));
 					((CGUIShopItem*)shopItem)->CreateNameText();
@@ -5476,11 +5476,16 @@ PACKET_HANDLER(BuyList)
 
 			//try int.parse and read cliloc.
 			int clilocNum = 0;
+			bool nameFromCliloc = false;
 
 			if (Int32TryParse(name, clilocNum))
+			{
 				name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
+				nameFromCliloc = true;
+			}
 
 			CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(item->Serial, item->Graphic, item->Color, item->Count, price, name, 0, currentY));
+			shopItem->NameFromCliloc = nameFromCliloc;
 
 			if (!currentY)
 			{
@@ -5543,11 +5548,16 @@ PACKET_HANDLER(SellList)
 		string name = ReadString(nameLen);
 
 		int clilocNum = 0;
+		bool nameFromCliloc = false;
 
 		if (Int32TryParse(name, clilocNum))
+		{
 			name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
+			nameFromCliloc = true;
+		}
 
 		CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(itemSerial, graphic, color, count, price, name, 0, currentY));
+		shopItem->NameFromCliloc = nameFromCliloc;
 
 		if (!i)
 		{
