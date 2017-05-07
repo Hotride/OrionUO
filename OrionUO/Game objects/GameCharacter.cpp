@@ -970,7 +970,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 				{
 					if (m_X != wd->X || m_Y != wd->Y || m_Z != wd->Z)
 					{
-						PLAYER_XYZ_DATA xyzData = { wd->X, wd->Y, wd->Z };
+						UOI_PLAYER_XYZ_DATA xyzData = { wd->X, wd->Y, wd->Z };
 						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_XYZ, (WPARAM)&xyzData, 0);
 					}
 
