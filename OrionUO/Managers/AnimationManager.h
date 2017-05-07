@@ -67,6 +67,8 @@ class CAnimationManager : public WISP_DATASTREAM::CDataReader
 	SETGET(uchar, Direction);
 	//!Айдишник текущей анимации
 	SETGET(ushort, AnimID);
+	//!Максимальный индекс группы анимаций
+	SETGET(uchar, AnimGroupCount);
 
 private:
 	//!Адреса файлов в памяти

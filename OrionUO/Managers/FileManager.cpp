@@ -317,12 +317,14 @@ void CFileManager::ReadTask()
 
 			animFile->seekg(*reinterpret_cast<unsigned long long*>(nextBlock), 0);
 		} while (*reinterpret_cast<unsigned long long*>(nextBlock) != 0);
-
 	}
+
+	int maxGroup = 0;
 
 	IFOR(animId, 0, MAX_ANIMATIONS_DATA_INDEX_COUNT)
 	{
 		CIndexAnimation *indexAnim = &g_AnimationManager.m_DataIndex[animId];
+
 		IFOR(grpId, 0, ANIMATION_GROUPS_COUNT)
 		{
 			CTextureAnimationGroup *group = &(*indexAnim).m_Groups[grpId];
@@ -331,6 +333,9 @@ void CFileManager::ReadTask()
 			auto hash = g_Orion.CreateHash(hashString);
 			if (hashes.find(hash) != hashes.end())
 			{
+				if (grpId > maxGroup)
+					maxGroup = grpId;
+
 				UOPAnimationData dataStruct = hashes.at(hash);
 				indexAnim->IsUOP = true;
 				group->IsUOP = true;
@@ -345,6 +350,10 @@ void CFileManager::ReadTask()
 			}
 		}
 	}
+
+	if (g_AnimationManager.AnimGroupCount < maxGroup)
+		g_AnimationManager.AnimGroupCount = maxGroup;
+
 	m_AutoResetEvent.Set();
 }
 //----------------------------------------------------------------------------------

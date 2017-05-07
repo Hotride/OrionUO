@@ -21,14 +21,26 @@ m_Name(name), m_Selected(false), m_NameFromCliloc(false)
 {
 	WISPFUN_DEBUG("c73_f1");
 	m_MoveOnDrag = true;
-	CreateNameText();
-	CreateCountText(0);
 
 	m_ImageOffset = 0;
 	m_TextOffset = 0;
 	m_MaxOffset = 0;
 
-	if (serial >= 0x40000000)
+	CreateCountText(0);
+	CreateNameText();
+	UpdateOffsets();
+}
+//----------------------------------------------------------------------------------
+CGUIShopItem::~CGUIShopItem()
+{
+	WISPFUN_DEBUG("c73_f2");
+	m_NameText.Clear();
+	m_CountText.Clear();
+}
+//----------------------------------------------------------------------------------
+void CGUIShopItem::UpdateOffsets()
+{
+	if (m_Serial >= 0x40000000)
 	{
 		CGLTexture *th = g_Orion.ExecuteStaticArt(m_Graphic);
 
@@ -49,7 +61,7 @@ m_Name(name), m_Selected(false), m_NameFromCliloc(false)
 	{
 		uchar group = 0;
 
-		switch (g_AnimationManager.GetGroupIndex(graphic))
+		switch (g_AnimationManager.GetGroupIndex(m_Graphic))
 		{
 			case AG_LOW:
 			{
@@ -70,7 +82,7 @@ m_Name(name), m_Selected(false), m_NameFromCliloc(false)
 				break;
 		}
 
-		ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(0, graphic, 1, group, false);
+		ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(0, m_Graphic, 1, group, false);
 
 		if (dims.Height)
 		{
@@ -88,13 +100,6 @@ m_Name(name), m_Selected(false), m_NameFromCliloc(false)
 				m_TextOffset = ((m_MaxOffset - m_NameText.Height) / 2);
 		}
 	}
-}
-//----------------------------------------------------------------------------------
-CGUIShopItem::~CGUIShopItem()
-{
-	WISPFUN_DEBUG("c73_f2");
-	m_NameText.Clear();
-	m_CountText.Clear();
 }
 //----------------------------------------------------------------------------------
 void CGUIShopItem::OnClick()

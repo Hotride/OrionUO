@@ -56,6 +56,8 @@ public:
 	//!Создать текстуру названия
 	void CreateNameText();
 
+	void UpdateOffsets();
+
 	//!Создать текстуру количества
 	void CreateCountText(const int &lostCount);
 
