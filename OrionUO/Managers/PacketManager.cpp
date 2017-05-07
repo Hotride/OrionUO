@@ -303,7 +303,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xD5*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
 	/*0xD6*/ BMSGH(ORION_IGNORE_PACKET, "Mega cliloc", PACKET_VARIABLE_SIZE, MegaCliloc),
 	/*0xD7*/ BMSG(ORION_SAVE_PACKET, "+AoS command", PACKET_VARIABLE_SIZE),
-	/*0xD8*/ RMSGH(ORION_SAVE_PACKET, "+Custom house", PACKET_VARIABLE_SIZE, CustomHouse),
+	/*0xD8*/ RMSGH(ORION_IGNORE_PACKET, "Custom house", PACKET_VARIABLE_SIZE, CustomHouse),
 	/*0xD9*/ SMSG(ORION_SAVE_PACKET, "+Metrics", 0x10c),
 	/*0xDA*/ BMSG(ORION_SAVE_PACKET, "Mahjong game command", PACKET_VARIABLE_SIZE),
 	/*0xDB*/ RMSG(ORION_SAVE_PACKET, "Character transfer log", PACKET_VARIABLE_SIZE),
@@ -3010,6 +3010,14 @@ PACKET_HANDLER(ExtendedCommand)
 
 			break;
 		}
+		case 0x1D:
+		{
+			//house revision state, server sends this when player comes in range of a custom house
+			uint houseSerial = ReadUInt32BE();
+			uint houseRevision = ReadUInt32BE();
+
+			break;
+		}
 		case 0x21:
 		{
 			IFOR(i, 0, 2)
@@ -3731,8 +3739,8 @@ PACKET_HANDLER(CharacterAnimation)
 		bool frameDirection = (ReadUInt8() == 0); //true - forward, false - backward
 		bool repeat = (ReadUInt8() != 0);
 		uchar delay = ReadUInt8();
-
-		obj->SetAnimation(action, delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
+		uchar animGroup = CGameCharacter::GetTrueAnimationGroup(action);
+		obj->SetAnimation(animGroup, delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
 		obj->AnimationFromServer = true;
 	}
 }

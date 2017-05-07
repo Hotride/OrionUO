@@ -13,6 +13,7 @@
 #include "../Gumps/GumpCombatBook.h"
 #include "../Managers/GumpManager.h"
 #include "../OrionUO.h"
+#include "../Network/Packets.h"
 //----------------------------------------------------------------------------------
 CPlayer *g_Player = NULL;
 //----------------------------------------------------------------------------------
@@ -28,6 +29,7 @@ m_LockStr(0), m_LockInt(0), m_LockDex(0), m_OldX(0), m_OldY(0), m_OldZ(0), m_Ski
 {
 	WISPFUN_DEBUG("c21_f1");
 	m_Skills = new CSkill[g_SkillsCount];
+	CPacketSkillsRequest(m_Serial).Send();
 }
 //---------------------------------------------------------------------------
 CPlayer::~CPlayer()

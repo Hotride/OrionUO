@@ -45,8 +45,6 @@ m_Deleted(false)
 	if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == serial && g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) == NULL)
 	{
 		CPacketStatusRequest(m_Serial).Send();
-		CPacketSkillsRequest(m_Serial).Send();
-
 		g_GumpManager.AddGump(new CGumpTargetSystem(m_Serial, g_NewTargetSystem.GumpX, g_NewTargetSystem.GumpY));
 	}
 }
@@ -467,38 +465,10 @@ bool CGameCharacter::IsTeleportAction(short &x, short &y, const uchar &dir)
 @param [__out_opt] frameDirection Направление прокрутки кадров (вперед/назад)
 @return 
 */
-void CGameCharacter::SetAnimation(const ushort &id, const uchar &interval, const uchar &frameCount, const uchar &repeatCount, const bool &repeat, const bool &frameDirection)
+void CGameCharacter::SetAnimation(const uchar &id, const uchar &interval, const uchar &frameCount, const uchar &repeatCount, const bool &repeat, const bool &frameDirection)
 {
 	WISPFUN_DEBUG("c15_f10");
-	//for some reason these are sent by server when casting ethereal mount and some necro spells.
-	switch (id)
-	{
-		case 203:
-			m_AnimationGroup = 16;
-			break;
-		case 212:
-			m_AnimationGroup = 16;
-			break;
-		case 215:
-			m_AnimationGroup = 16;
-			break;
-		case 227:
-			m_AnimationGroup = 16;
-			break;
-		case 230:
-			m_AnimationGroup = 16;
-			break;
-		case 239:
-			m_AnimationGroup = 16;
-			break;
-		case 263:
-			m_AnimationGroup = 17;
-			break;
-
-		default:
-			m_AnimationGroup = id;
-	}
-
+	m_AnimationGroup = id;
 	m_AnimIndex = 0;
 	m_AnimationInterval = interval;
 	m_AnimationFrameCount = frameCount;
@@ -516,7 +486,7 @@ void CGameCharacter::SetAnimation(const ushort &id, const uchar &interval, const
 @param [__in] val Новое значение группы анимации
 @return
 */
-void CGameCharacter::ResetAnimationGroup(const ushort &val)
+void CGameCharacter::ResetAnimationGroup(const uchar &val)
 {
 	WISPFUN_DEBUG("c15_f11");
 	m_AnimationFrameCount = 0;
@@ -567,7 +537,7 @@ void CGameCharacter::SetRandomFidgetAnimation()
 @param [__inout] animation Индекс группы анимации
 @return
 */
-void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, ushort &animation)
+void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, BYTE &animation)
 {
 	WISPFUN_DEBUG("c15_f13");
 	const BYTE animAssociateTable[35][3] =
@@ -620,7 +590,7 @@ void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, ushort &an
 @param [__inout] animation Индекс анимации в группе
 @return 
 */
-void CGameCharacter::CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, ushort &animation)
+void CGameCharacter::CorrectAnimationGroup(const ushort &graphic, const ANIMATION_GROUPS &group, uchar &animation)
 {
 	WISPFUN_DEBUG("c15_f14");
 	if (group == AG_LOW)
@@ -727,7 +697,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 		graphic = GetMountAnimation();
 
 	ANIMATION_GROUPS groupIndex = g_AnimationManager.GetGroupIndex(graphic);
-	ushort result = m_AnimationGroup;
+	uchar result = m_AnimationGroup;
 
 	if (result != 0xFF)
 	{
@@ -1043,5 +1013,114 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 		m_OffsetY = 0;
 		m_OffsetZ = 0;
 	}
+}
+//----------------------------------------------------------------------------------
+uchar CGameCharacter::GetTrueAnimationGroup(ushort action)
+{
+	WISPFUN_DEBUG("c15_f19");
+	//let's give it a default value of 16 if action > 100, just in case
+	uchar animGroup = 0;
+	if (action > 100)
+	{
+		animGroup = static_cast<uchar>(action);
+	}
+	
+	switch (action)
+	{
+	case 203:
+		//almost all necro spells except for Strangle
+		//3rd circle: Bless, Fireball, Poison, Telekinesis
+		animGroup = 16;
+		break;
+	case 204:
+		//4th circle: Greater Heal
+		animGroup = 17;
+		break;
+	case 206:
+		//5th circle: Dispel Field, Incognito
+		//6th circle: Invisibility, Reveal
+		animGroup = 16;
+		break;
+	case 209:
+		//Necro spell Strangle
+		//7th circle: Chain Lightning
+		animGroup = 16;
+		break;
+	case 212:
+		//1st circle: Clumsy, Feeblemind, Magic Arrow, Weaken
+		//2nd circle: Agility, Cunning, Cure, Harm, Magic Trap, Remove Trap, Strength
+		animGroup = 16;
+		break;
+	case 215:
+		//3rd circle: Magic Lock, Teleport, Unlock
+		//4th circle: Arch Cure, (Non AOS) Arch Protection, Fire Field, Mana Drain
+		animGroup = 17;
+		break;
+	case 218:
+		//5th circle: Mind Blast, Paralyze
+		//6th circle: Dispel, Mark, Mass Curse
+		animGroup = 16;
+		break;
+	case 221:
+		//7th circle: Energy Field, Mana Vampire, Polymorph
+		animGroup = 17;
+		break;
+	case 224:
+		//1st circle: Create Food, Heal
+		animGroup = 17;
+		break;
+	case 227:
+		//3rd circle: Wall of Stone
+		//4th circle: Curse
+		animGroup = 16;
+		break;
+	case 230:
+		//All Mysticism spells
+		//5th circle: Poison Field
+		//6th circle: Energy Bolt, Explosion, Paralyze Field
+		animGroup = 16;
+		break;
+	case 233:
+		//7th circle: Meteor Swarm
+		//8th circle: Earthquake
+		animGroup = 16;
+		break;
+	case 236:
+		//1st circle: Nightsight, Reactive Armor, 
+		//2nd circle: Protection
+		animGroup = 17;
+		break;
+	case 239:
+		//4th circle: (AOS) Arch Protection, Lightning, Recall
+		animGroup = 16;
+		break;
+	case 242:
+		//5th circle: Magic Reflection
+		animGroup = 16;
+		break;
+	case 245:
+		//7th circle: Flame Strike
+		//8th circle: Resurrection
+		animGroup = 16;
+		break;
+	case 260:
+		//8th circle: Energy Vortex
+		animGroup = 17;
+		break;
+	case 263:
+		//7th circle: Gate Travel, Mass Dispel
+		animGroup = 17;
+		break;
+	case 266:
+		//5th circle: Blade Spirits
+		animGroup = 17;
+		break;
+	case 269:
+		//8th circle: Air Elemental, Earth Elemental, Fire Elemental, Summon Daemon, Water Elemental
+		animGroup = 17;
+		break;
+	}
+
+	return animGroup == 0 ? static_cast<uchar>(action) : animGroup;
 }
 //----------------------------------------------------------------------------------
