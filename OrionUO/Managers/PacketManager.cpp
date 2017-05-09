@@ -3956,12 +3956,17 @@ PACKET_HANDLER(DisplayClilocString)
 
 		//if (serial >= 0x40000000) //Только для предметов
 		{
-			if (obj != NULL && !obj->Name.length())
+			if (obj != NULL)
 			{
-				obj->Name = name;
+				if (!obj->Name.length())
+				{
+					obj->Name = name;
 
-				if (obj->NPC)
-					g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
+					if (obj->NPC)
+						g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
+				}
+				else //names in journal should always be seen as -> You see: NAME, unless speaking, emoting or else
+					obj->YouSeeJournalPrefix = true;
 			}
 		}
 

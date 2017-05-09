@@ -4210,10 +4210,9 @@ void COrion::LoadClientStartupConfig()
 	{
 		if (g_PacketManager.ClientVersion >= CV_7000)
 			PlayMusic(78);
-		else
-			PlayMusic(8);
+		else//from 4.x the music played is 0, the first one
+			PlayMusic(0);
 	}
-
 }
 //----------------------------------------------------------------------------------
 void COrion::PlayMusic(const int &index, const bool &warmode)
