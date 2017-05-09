@@ -108,6 +108,7 @@ xcopy /y /d  "$(SolutionDir)debug_bin\Orion.dll" "$(ProjectDir)"
     </PostBuildEvent>
     <Manifest>
       <AdditionalManifestFiles>$(SolutionDir)OrionUO.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
