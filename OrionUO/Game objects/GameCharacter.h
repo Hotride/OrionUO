@@ -138,7 +138,7 @@ public:
 	@param [__in_action] action sent by server when casting without a mount
 	@return proper anim group id as in anim files
 	*/
-	static uchar GetTrueAnimationGroup(ushort action);
+	uchar GetTrueAnimationGroup(ushort action);
 
 	/*!
 	Получить текущую группу анимации

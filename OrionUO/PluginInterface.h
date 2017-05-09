@@ -26,14 +26,22 @@ typedef bool __cdecl WORLD_MAP_DRAW_PROC();
 #define UOMSG_IP_SEND				WM_USER + 666
 #define UOMSG_PATHFINDING			WM_USER + 667
 #define UOMSG_WALK					WM_USER + 668
+#define UOMSG_MENU_RESPONSE			WM_USER + 669
 //----------------------------------------------------------------------------------
 #pragma pack (push,1)
-typedef struct PLAYER_XYZ_DATA
+typedef struct UOI_PLAYER_XYZ_DATA
 {
 	int X;
 	int Y;
 	int Z;
-} *PPLAYER_XYZ_DATA;
+} *PUOI_PLAYER_XYZ_DATA;
+
+typedef struct UOI_MENU_RESPONSE
+{
+	unsigned int Serial;
+	unsigned int ID;
+	int Code;
+} *PUOI_MENU_RESPONSE;
 #pragma pack (pop)
 //----------------------------------------------------------------------------------
 bool __cdecl PluginRecvFunction(unsigned char *buf, const int &size);

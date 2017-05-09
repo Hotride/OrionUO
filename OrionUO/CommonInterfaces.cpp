@@ -248,44 +248,8 @@ void __cdecl FUNCBODY_SendRenameMount(uint serial, const char *text)
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendMenuResponse(unsigned int serial, unsigned int id, int code)
 {
-	if (!serial && !id)
-	{
-		for (CGump *gump = (CGump*)g_GumpManager.m_Items; gump != NULL;)
-		{
-			CGump *next = (CGump*)gump->m_Next;
-
-			if (gump->GumpType == GT_MENU || gump->GumpType == GT_GRAY_MENU)
-			{
-				CPacketMenuResponse packet(gump, code);
-				SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
-				g_GumpManager.RemoveGump(gump);
-			}
-
-			gump = next;
-		}
-
-		return;
-	}
-
-	CGump *gump = g_GumpManager.GetGump(serial, id, GT_MENU);
-
-	if (gump == NULL)
-	{
-		gump = g_GumpManager.GetGump(serial, id, GT_GRAY_MENU);
-
-		if (gump != NULL)
-		{
-			CPacketGrayMenuResponse packet(gump, code);
-			SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
-			g_GumpManager.RemoveGump(gump);
-		}
-	}
-	else
-	{
-		CPacketMenuResponse packet(gump, code);
-		SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
-		g_GumpManager.RemoveGump(gump);
-	}
+	UOI_MENU_RESPONSE data = { serial, id, code };
+	SendMessage(g_OrionWindow.Handle, UOMSG_MENU_RESPONSE, (WPARAM)&data, 0);
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_DisplayStatusbarGump(unsigned int serial, int x, int y)

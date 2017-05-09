@@ -235,7 +235,7 @@ const int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 CAnimationManager::CAnimationManager()
 : WISP_DATASTREAM::CDataReader(), m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0),
 m_Direction(0), m_Sitting(0), m_Transform(false), m_UseBlending(false), m_AnimID(0),
-m_EquipConvItem(NULL)
+m_EquipConvItem(NULL), m_AnimGroupCount(35)
 {
 	WISPFUN_DEBUG("c133_f1");
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));

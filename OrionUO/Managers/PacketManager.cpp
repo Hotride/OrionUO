@@ -3739,8 +3739,7 @@ PACKET_HANDLER(CharacterAnimation)
 		bool frameDirection = (ReadUInt8() == 0); //true - forward, false - backward
 		bool repeat = (ReadUInt8() != 0);
 		uchar delay = ReadUInt8();
-		uchar animGroup = CGameCharacter::GetTrueAnimationGroup(action);
-		obj->SetAnimation(animGroup, delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
+		obj->SetAnimation(obj->GetTrueAnimationGroup(action), delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
 		obj->AnimationFromServer = true;
 	}
 }
@@ -3761,7 +3760,7 @@ PACKET_HANDLER(NewCharacterAnimation)
 		frameCount = 0;
 		uchar delay = ReadUInt8();
 
-		obj->SetAnimation((uchar)action, delay, (uchar)frameCount);
+		obj->SetAnimation(obj->GetTrueAnimationGroup(action), delay, (uchar)frameCount);
 		obj->AnimationFromServer = true;
 	}
 }
@@ -4099,13 +4098,16 @@ PACKET_HANDLER(MegaCliloc)
 
 			QFOR(shopItem, htmlGump->m_Items, CBaseGUI*)
 			{
-				if (shopItem->Type == GOT_SHOPITEM && shopItem->Serial == serial)
+				if (shopItem->Type == GOT_SHOPITEM && shopItem->Serial == serial && ((CGUIShopItem*)shopItem)->NameFromCliloc)
 				{
 					((CGUIShopItem*)shopItem)->Name = Trim(ToString(message));
 					((CGUIShopItem*)shopItem)->CreateNameText();
+					((CGUIShopItem*)shopItem)->UpdateOffsets();
 					break;
 				}
 			}
+
+			htmlGump->CalculateDataSize();
 		}
 	}
 
@@ -5477,11 +5479,16 @@ PACKET_HANDLER(BuyList)
 
 			//try int.parse and read cliloc.
 			int clilocNum = 0;
+			bool nameFromCliloc = false;
 
 			if (Int32TryParse(name, clilocNum))
+			{
 				name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
+				nameFromCliloc = true;
+			}
 
 			CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(item->Serial, item->Graphic, item->Color, item->Count, price, name, 0, currentY));
+			shopItem->NameFromCliloc = nameFromCliloc;
 
 			if (!currentY)
 			{
@@ -5544,11 +5551,16 @@ PACKET_HANDLER(SellList)
 		string name = ReadString(nameLen);
 
 		int clilocNum = 0;
+		bool nameFromCliloc = false;
 
 		if (Int32TryParse(name, clilocNum))
+		{
 			name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
+			nameFromCliloc = true;
+		}
 
 		CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(itemSerial, graphic, color, count, price, name, 0, currentY));
+		shopItem->NameFromCliloc = nameFromCliloc;
 
 		if (!i)
 		{

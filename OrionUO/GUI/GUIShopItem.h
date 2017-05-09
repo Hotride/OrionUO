@@ -29,6 +29,9 @@ class CGUIShopItem : public CBaseGUI
 	//!Флаг выбора
 	SETGET(bool, Selected);
 
+	//!Имя создано из клилока
+	SETGET(bool, NameFromCliloc);
+
 private:
 	//!Текстуры для текста
 	CGLTextTexture m_NameText;
@@ -52,6 +55,8 @@ public:
 
 	//!Создать текстуру названия
 	void CreateNameText();
+
+	void UpdateOffsets();
 
 	//!Создать текстуру количества
 	void CreateCountText(const int &lostCount);
