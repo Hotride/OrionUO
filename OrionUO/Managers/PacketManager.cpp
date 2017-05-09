@@ -1639,10 +1639,9 @@ PACKET_HANDLER(UpdateObject)
 	bool updateCoords = true;//(hidden == obj->Hidden());
 
 	uchar noto = ReadUInt8();
-
 	if (character != NULL && !character->m_WalkStack.Empty())
 	{
-		if (newX != obj->X || newX != obj->X)
+		if (newX != obj->X || newY != obj->Y)
 		{
 			obj->X = character->m_WalkStack.m_Items->X;
 			obj->Y = character->m_WalkStack.m_Items->Y;
