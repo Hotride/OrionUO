@@ -792,6 +792,9 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Managers\CustomHousesManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1465,6 +1468,9 @@
     </ClCompile>
     <ClCompile Include="StackWalker.cpp">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\CustomHousesManager.cpp">
+      <Filter>Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

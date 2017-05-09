@@ -31,7 +31,7 @@ class CGameCharacter: public CGameObject
 	SETGET(uchar, AnimationInterval);
 	SETGET(uchar, AnimationFrameCount);
 	SETGET(uchar, AnimationRepeatMode);
-	SETGET(ushort, AnimationGroup);
+	SETGET(uchar, AnimationGroup);
 	SETGET(bool, AnimationRepeat);
 	SETGET(bool, AnimationDirection);
 	SETGET(bool, AnimationFromServer);
@@ -138,7 +138,7 @@ public:
 	@param [__in_action] action sent by server when casting without a mount
 	@return proper anim group id as in anim files
 	*/
-	static uchar GetTrueAnimationGroup(ushort action);
+	uchar GetTrueAnimationGroup(ushort action);
 
 	/*!
 	Получить текущую группу анимации

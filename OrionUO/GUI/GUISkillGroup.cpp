@@ -61,6 +61,7 @@ void CGUISkillGroup::PrepareTextures()
 	WISPFUN_DEBUG("c75_f5");
 	m_Minimizer->PrepareTextures();
 	g_Orion.ExecuteGump(0x0835);
+	m_Name->PrepareTextures();
 
 	QFOR(item, m_Items, CBaseGUI*)
 		item->PrepareTextures();

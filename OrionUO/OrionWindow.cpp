@@ -28,6 +28,8 @@
 #include "Managers/PacketManager.h"
 #include "Managers/ConnectionManager.h"
 #include "Walker/PathFinder.h"
+#include "Managers/GumpManager.h"
+#include "Network/Packets.h"
 //----------------------------------------------------------------------------------
 COrionWindow g_OrionWindow;
 //----------------------------------------------------------------------------------
@@ -453,6 +455,51 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 			return (g_PathFinder.WalkTo((wParam >> 16) & 0xFFFF, wParam & 0xFFFF, (lParam >> 16) & 0xFFFF, lParam & 0xFFFF) ? 1 : S_OK);
 		case UOMSG_WALK:
 			return (g_PathFinder.Walk((bool)(wParam != 0), (uchar)lParam) ? 1 : S_OK);
+		case UOMSG_MENU_RESPONSE:
+		{
+			PUOI_MENU_RESPONSE data = (PUOI_MENU_RESPONSE)wParam;
+
+			if (!data->Serial && !data->ID)
+			{
+				for (CGump *gump = (CGump*)g_GumpManager.m_Items; gump != NULL;)
+				{
+					CGump *next = (CGump*)gump->m_Next;
+
+					if (gump->GumpType == GT_MENU || gump->GumpType == GT_GRAY_MENU)
+					{
+						CPacketMenuResponse packet(gump, data->Code);
+						SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
+						g_GumpManager.RemoveGump(gump);
+					}
+
+					gump = next;
+				}
+
+				break;
+			}
+
+			CGump *gump = g_GumpManager.GetGump(data->Serial, data->ID, GT_MENU);
+
+			if (gump == NULL)
+			{
+				gump = g_GumpManager.GetGump(data->Serial, data->ID, GT_GRAY_MENU);
+
+				if (gump != NULL)
+				{
+					CPacketGrayMenuResponse packet(gump, data->Code);
+					SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
+					g_GumpManager.RemoveGump(gump);
+				}
+			}
+			else
+			{
+				CPacketMenuResponse packet(gump, data->Code);
+				SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
+				g_GumpManager.RemoveGump(gump);
+			}
+
+			break;
+		}
 		default:
 			break;
 	}
