@@ -4210,10 +4210,9 @@ void COrion::LoadClientStartupConfig()
 	{
 		if (g_PacketManager.ClientVersion >= CV_7000)
 			PlayMusic(78);
-		else
-			PlayMusic(8);
+		else//from 4.x the music played is 0, the first one
+			PlayMusic(0);
 	}
-
 }
 //----------------------------------------------------------------------------------
 void COrion::PlayMusic(const int &index, const bool &warmode)
@@ -4571,7 +4570,7 @@ void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const int &z, const bool &selection)
+void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const int &z, const bool &selection, const bool &hidden)
 {
 	WISPFUN_DEBUG("c194_f78");
 	CGLTexture *th = ExecuteStaticArt(id);
@@ -4585,7 +4584,7 @@ void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const i
 
 		if (drawMode)
 		{
-			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
+			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)) && !hidden);
 
 			if (partialHue)
 				drawMode = 2;
@@ -4599,10 +4598,10 @@ void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const i
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection)
+void COrion::DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection, const bool &hidden)
 {
 	WISPFUN_DEBUG("c194_f79");
-	DrawStaticArt(id + m_StaticDataIndex[id].Offset, color, x, y, z, selection);
+	DrawStaticArt(id + m_StaticDataIndex[id].Offset, color, x, y, z, selection, hidden);
 }
 //----------------------------------------------------------------------------------
 void COrion::DrawStaticArtRotated(const ushort &id, ushort color, const int &x, const int &y, const int &z, const float &angle)
