@@ -278,10 +278,10 @@ public:
 	void DrawLandArt(const ushort &id, ushort color, const int &x, const int &y, const int &z);
 
 	//Нарисовать статику
-	void DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const int &z, const bool &selection = false);
+	void DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const int &z, const bool &selection = false, const bool &hidden = false);
 
 	//Нарисовать анимированную статику
-	void DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection = false);
+	void DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection = false, const bool &hidden = false);
 
 	//Нарисовать повернутую статику
 	void DrawStaticArtRotated(const ushort &id, ushort color, const int &x, const int &y, const int &z, const float &angle);

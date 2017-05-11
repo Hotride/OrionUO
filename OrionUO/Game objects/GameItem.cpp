@@ -315,15 +315,15 @@ void CGameItem::Draw(const int &x, const int &y)
 
 			if (doubleDraw)
 			{
-				g_Orion.DrawStaticArt(objGraphic, objColor, x - 2, y - 5, m_Z, selMode);
-				g_Orion.DrawStaticArt(objGraphic, objColor, x + 3, y, m_Z, selMode);
+				g_Orion.DrawStaticArt(objGraphic, objColor, x - 2, y - 5, m_Z, selMode, Hidden());
+				g_Orion.DrawStaticArt(objGraphic, objColor, x + 3, y, m_Z, selMode, Hidden());
 			}
 			else
 			{
 				if (m_FieldColor)
-					g_Orion.DrawStaticArt(FIELD_REPLACE_GRAPHIC, m_FieldColor, x, y, m_Z, selMode);
+					g_Orion.DrawStaticArt(FIELD_REPLACE_GRAPHIC, m_FieldColor, x, y, m_Z, selMode, Hidden());
 				else
-					g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z, selMode);
+					g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z, selMode, Hidden());
 			}
 
 			if (IsLightSource() && g_GameScreen.UseLight)
