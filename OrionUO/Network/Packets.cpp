@@ -342,7 +342,7 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 : CPacket(1)
 {
 	int len = lstrlenW(text);
-	int size = 12 + (len * 2) + 2;
+	int size = 12;
 
 	uchar typeValue = (uchar)type;
 
@@ -351,27 +351,20 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 
 	//encoded
 	bool encoded = codes.size() > 0;
+	string utf8string = "";
+	vector<uchar> codeBytes;
 
 	if (encoded)
 	{
 		typeValue |= ST_ENCODED_COMMAND;
-		size += 4;
-	}
+		wstring ws(text);
+		utf8string = EncodeUTF8(ws).data();
+		len = utf8string.length();
+		size += len;
+		size += 1; //null terminator
 
-	Resize(size, true);
-
-	WriteUInt8(0xAD);
-	WriteUInt16BE(size);
-	WriteUInt8(typeValue);
-	WriteUInt16BE(color);
-	WriteUInt16BE(font);
-	WriteDataLE(language, 4);
-
-	//Sallos aka PlayUO algorithm
-	if (encoded)
-	{
 		int length = codes.size();
-		WriteUInt8(length >> 4);
+		codeBytes.push_back(length >> 4);
 		int num3 = length & 15;
 		bool flag = false;
 		int index = 0;
@@ -382,13 +375,13 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 
 			if (flag)
 			{
-				WriteUInt8(keywordID >> 4);
+				codeBytes.push_back(keywordID >> 4);
 				num3 = keywordID & 15;
 			}
 			else
 			{
-				WriteUInt8(((num3 << 4) | ((keywordID >> 8) & 15)));
-				WriteUInt8(keywordID);
+				codeBytes.push_back(((num3 << 4) | ((keywordID >> 8) & 15)));
+				codeBytes.push_back(keywordID);
 			}
 
 			index++;
@@ -396,27 +389,38 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 		}
 
 		if (!flag)
-			WriteUInt8(num3 << 4);
+			codeBytes.push_back(num3 << 4);
+		size += codeBytes.size();
+	}
+	else
+	{
+		size += len * 2;
+		size += 2; //null terminator
+	}
+		
 
-		wstring ws(text);
-		WriteString(EncodeUTF8(ws).data(), len * 2, false); //len * 2 ?????
+	Resize(size, true);
+
+	WriteUInt8(0xAD);
+	WriteUInt16BE(size);
+	WriteUInt8(typeValue);
+	WriteUInt16BE(color);
+	WriteUInt16BE(font);
+	WriteDataBE(language, 4);
+
+	//Sallos aka PlayUO algorithm
+	if (encoded)
+	{		
+		IFOR(i, 0, codeBytes.size())
+		{
+			WriteUInt8(codeBytes[i]);
+		}
+		WriteString(utf8string, len, true); 
 		// в данном случае надо посылать как utf8, так читает сервер.
 	}
 	else
 	{
-		//в этом случае посылаем как юникод!?
-
-		WriteWString(text, len, true, false);
-		/*puchar str = (puchar)text;
-
-		IFOR(i, 0, len)
-		{
-			*Ptr = *(str + 1);
-			Ptr++;
-			*Ptr = *str;
-			Ptr++;
-			str += 2;
-		}*/
+		WriteWString(text, len, true, true);
 	}
 }
 //----------------------------------------------------------------------------------
