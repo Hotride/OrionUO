@@ -39,3 +39,4 @@
 !/bin/*.dll
 !/debug_bin/*.dll
 !/bin/*.exe
+!/WikiData/RU/*.txt
