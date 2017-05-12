@@ -159,14 +159,17 @@ bool CProfessionManager::ParseFilePart(WISP_FILE::CTextFileParser &file)
 			}
 			case PM_CODE_SKILL:
 			{
-				for(int i=0; i<4 && i<strings.size() && strings.size() > 2; i++)
+				if (strings.size() > 2 && skillCount < 4)
 				{
 					IFOR(j, 0, 54)
 					{
 						if (strings[1] == g_SkillName[j])
 						{
-							skillIndex[i] = j;
-							skillValue[i] = atoi(strings[2].c_str());
+							skillIndex[skillCount] = j;
+							skillValue[skillCount] = atoi(strings[2].c_str());
+							skillCount++;
+
+							break;
 						}
 					}
 				}
@@ -251,14 +254,14 @@ bool CProfessionManager::ParseFilePart(WISP_FILE::CTextFileParser &file)
 			m_Items->Add(obj);
 		else
 		{
-			CBaseProfession *parent = (CBaseProfession*)(m_Items);
+			CBaseProfession *parent = (CBaseProfession*)m_Items;
 
 			while (parent != NULL)
 			{
 				result = AddChild(parent, obj);
 
-				if (result)
-					break;
+				//if (result)
+				//	break;
 
 				parent = (CBaseProfession*)parent->m_Next;
 			}
@@ -285,28 +288,25 @@ bool CProfessionManager::AddChild(CBaseProfession *parent, CBaseProfession *chil
 	if (parent->Type == PT_CATEGORY)
 	{
 		CProfessionCategory *cat = (CProfessionCategory*)parent;
-		size_t pos = 0;
-		string check;
-		string s = cat->Childrens;
-		while ((pos = s.find('|')) != std::string::npos)
+
+		string check = string("|") + child->Name + "|";
+
+		if (cat->Childrens.find(check) != string::npos)
 		{
-			check = s.substr(0, pos);
-			if (check == child->TrueName.data())
-			{
-				cat->Add(child);
-				result = true;
-				break;
-			}
-			s.erase(0, pos + 1);
+			cat->Add(child);
+			result = true;
 		}
-		if (!result)
+		else
 		{
 			CBaseProfession *item = (CBaseProfession*)cat->m_Items;
+
 			while (item != NULL)
 			{
 				result = AddChild(item, child);
+
 				if (result)
 					break;
+
 				item = (CBaseProfession*)item->m_Next;
 			}
 		}
