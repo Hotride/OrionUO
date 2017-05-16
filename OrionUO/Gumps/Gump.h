@@ -99,6 +99,8 @@ public:
 
 	virtual bool CanBeDisplayed() { return true; }
 
+	void FixCoordinates();
+
 	bool CanBeMoved();
 
 	void DrawLocker();
