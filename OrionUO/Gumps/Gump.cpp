@@ -82,17 +82,58 @@ void CGump::FixCoordinates()
 	int maxX = g_OrionWindow.Size.Width - 40;
 	int maxY = g_OrionWindow.Size.Height - 40;
 
-	if (m_X > maxX)
-		m_X = maxX;
+	if (m_Minimized && m_GumpType != GT_MINIMAP)
+	{
+		if (m_MinimizedX > maxX)
+		{
+			m_WantRedraw = true;
+			m_MinimizedX = maxX;
+		}
 
-	if (m_X < minX)
-		m_X = minX;
+		if (m_MinimizedX < minX)
+		{
+			m_WantRedraw = true;
+			m_MinimizedX = minX;
+		}
 
-	if (m_Y > maxY)
-		m_Y = maxY;
+		if (m_MinimizedY > maxY)
+		{
+			m_WantRedraw = true;
+			m_MinimizedY = maxY;
+		}
 
-	if (m_Y < minY)
-		m_Y = minY;
+		if (m_MinimizedY < minY)
+		{
+			m_WantRedraw = true;
+			m_MinimizedY = minY;
+		}
+	}
+	else
+	{
+		if (m_X > maxX)
+		{
+			m_WantRedraw = true;
+			m_X = maxX;
+		}
+
+		if (m_X < minX)
+		{
+			m_WantRedraw = true;
+			m_X = minX;
+		}
+
+		if (m_Y > maxY)
+		{
+			m_WantRedraw = true;
+			m_Y = maxY;
+		}
+
+		if (m_Y < minY)
+		{
+			m_WantRedraw = true;
+			m_Y = minY;
+		}
+	}
 }
 //---------------------------------------------------------------------------
 bool CGump::CanBeMoved()
