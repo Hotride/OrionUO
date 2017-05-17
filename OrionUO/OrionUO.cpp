@@ -1057,6 +1057,9 @@ void COrion::Process(const bool &rendering)
 		Send(ping, 2);
 	}
 
+	bool oldCtrl = g_CtrlPressed;
+	bool oldShift = g_ShiftPressed;
+
 	g_AltPressed = GetAsyncKeyState(VK_MENU) & 0x80000000;
 	g_CtrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
 	g_ShiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
@@ -1138,6 +1141,9 @@ void COrion::Process(const bool &rendering)
 			RemoveRangedObjects();
 			g_GumpManager.RemoveRangedGumps();
 
+			if (g_ConfigManager.ObjectHandles && g_CtrlPressed && g_ShiftPressed && (oldCtrl != g_CtrlPressed || oldShift != g_ShiftPressed))
+				g_World->ResetObjectHandlesState();
+
 			if (rendering)
 			{
 				g_GameScreen.CalculateGameWindowBounds();
@@ -1146,6 +1152,7 @@ void COrion::Process(const bool &rendering)
 				g_GameScreen.RenderListInitalized = true;
 
 				g_SelectedObject.Clear();
+				g_SelectedGameObjectHandle = 0;
 
 				if (!IsIconic(g_OrionWindow.Handle))
 				{

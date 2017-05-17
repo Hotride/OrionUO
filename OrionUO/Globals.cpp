@@ -164,6 +164,8 @@ ushort g_AbilityList[MAX_ABILITIES_COUNT] =
 uchar g_Ability[2] = { 4, 10 };
 
 bool g_DrawStatLockers = false;
+
+uint g_SelectedGameObjectHandle = 0;
 //----------------------------------------------------------------------------------
 bool CanBeDraggedByOffset(const WISP_GEOMETRY::CPoint2Di &point)
 {

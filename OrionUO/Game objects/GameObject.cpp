@@ -27,7 +27,8 @@ CGameObject::CGameObject(const uint &serial)
 : CRenderStaticObject(ROT_GAME_OBJECT, serial, 0, 0, 0, 0, 0), m_Container(0xFFFFFFFF),
 m_MapIndex(0), m_Count(0), m_Flags(0), m_Name(""), m_NPC(false), m_Clicked(false),
 m_Effects(NULL), m_AnimIndex(0), m_YouSeeJournalPrefix(false),
-m_LastAnimationChangeTime(GetTickCount()), m_ClilocMessage(L""), m_SA_Poisoned(false)
+m_LastAnimationChangeTime(GetTickCount()), m_ClilocMessage(L""), m_SA_Poisoned(false),
+m_ClosedObjectHandle(false)
 {
 	WISPFUN_DEBUG("c20_f1");
 	memset(&m_FrameInfo, 0, sizeof(DRAW_FRAME_INFORMATION));
@@ -145,7 +146,10 @@ void CGameObject::SelectObjectHandlesTexture(const int &x, const int &y)
 			return;
 
 		if (g_ObjectHandlesBackgroundPixels[(testY * g_ObjectHandlesWidth) + testX] != 0)
+		{
 			g_SelectedObject.Init(this);
+			g_SelectedGameObjectHandle = m_Serial;
+		}
 	}
 }
 //----------------------------------------------------------------------------------

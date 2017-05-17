@@ -46,6 +46,8 @@ class CGameObject : public CRenderStaticObject
 	SETGET(uint, LastAnimationChangeTime);
 	SETGET(wstring, ClilocMessage);
 	SETGET(bool, SA_Poisoned);
+	SETGET(bool, ClosedObjectHandle);
+
 protected:
 	//!Ссылка на список эффектов персонажа
 	class CGameEffect *m_Effects;

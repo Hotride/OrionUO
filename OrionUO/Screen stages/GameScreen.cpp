@@ -846,7 +846,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 				}
 			}
 
-			if ((go->NPC || (!go->Locked() && !((CGameItem*)go)->MultiBody)) && useObjectHandles) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
+			if ((go->NPC || (!go->Locked() && !((CGameItem*)go)->MultiBody)) && useObjectHandles && !go->ClosedObjectHandle) // && m_ObjectHandlesCount < MAX_OBJECT_HANDLES)
 			{
 				int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
 
@@ -2252,6 +2252,8 @@ void CGameScreen::OnRightMouseButtonUp()
 	WISPFUN_DEBUG("c164_f24");
 	if (g_PressedObject.RightGump() != NULL)
 		g_GumpManager.OnRightMouseButtonUp(false);
+	else if (g_PressedObject.RightObject() != NULL && g_PressedObject.RightObject()->IsGameObject() && g_SelectedGameObjectHandle == g_PressedObject.RightSerial)
+		((CGameObject*)g_PressedObject.RightObject())->ClosedObjectHandle = true;
 
 	if ((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && g_ConfigManager.HoldShiftForEnablePathfind && g_ConfigManager.EnablePathfind && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsWorldObject() && !g_PathFinder.AutoWalking)
 	{
