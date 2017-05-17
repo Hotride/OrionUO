@@ -21,6 +21,7 @@
 #include "../Screen stages/GameScreen.h"
 #include "../OrionUO.h"
 #include "../Game objects/ObjectOnCursor.h"
+#include "../OrionWindow.h"
 //----------------------------------------------------------------------------------
 CGump *g_ResizedGump = NULL;
 CGump *g_CurrentCheckGump = NULL;
@@ -72,6 +73,67 @@ CGump::~CGump()
 		g_PressedObject.ClearRight();
 	if (g_PressedObject.MidGump() == this)
 		g_PressedObject.ClearMid();
+}
+//---------------------------------------------------------------------------
+void CGump::FixCoordinates()
+{
+	int minX = 0;
+	int minY = 0;
+	int maxX = g_OrionWindow.Size.Width - 40;
+	int maxY = g_OrionWindow.Size.Height - 40;
+
+	if (m_Minimized && m_GumpType != GT_MINIMAP)
+	{
+		if (m_MinimizedX > maxX)
+		{
+			m_WantRedraw = true;
+			m_MinimizedX = maxX;
+		}
+
+		if (m_MinimizedX < minX)
+		{
+			m_WantRedraw = true;
+			m_MinimizedX = minX;
+		}
+
+		if (m_MinimizedY > maxY)
+		{
+			m_WantRedraw = true;
+			m_MinimizedY = maxY;
+		}
+
+		if (m_MinimizedY < minY)
+		{
+			m_WantRedraw = true;
+			m_MinimizedY = minY;
+		}
+	}
+	else
+	{
+		if (m_X > maxX)
+		{
+			m_WantRedraw = true;
+			m_X = maxX;
+		}
+
+		if (m_X < minX)
+		{
+			m_WantRedraw = true;
+			m_X = minX;
+		}
+
+		if (m_Y > maxY)
+		{
+			m_WantRedraw = true;
+			m_Y = maxY;
+		}
+
+		if (m_Y < minY)
+		{
+			m_WantRedraw = true;
+			m_Y = minY;
+		}
+	}
 }
 //---------------------------------------------------------------------------
 bool CGump::CanBeMoved()

@@ -162,7 +162,7 @@ void CMouseManager::ProcessWalking()
 		m_Position.Y >(g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight))
 		mouseInWindow = false;
 
-	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && g_PressedObject.RightGump() == NULL && !((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && g_ConfigManager.HoldShiftForEnablePathfind && g_ConfigManager.EnablePathfind))
+	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && g_PressedObject.RightGump() == NULL && !((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && g_ConfigManager.HoldShiftForEnablePathfind && g_ConfigManager.EnablePathfind) && !(g_SelectedGameObjectHandle == g_PressedObject.RightSerial && g_PressedObject.RightObject() != NULL && g_PressedObject.RightObject()->IsGameObject()))
 	{
 		int gameWindowCenterX = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2);
 		int gameWindowCenterY = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2);

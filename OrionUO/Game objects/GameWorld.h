@@ -43,6 +43,8 @@ public:
 	//!Предметы в мире
 	CGameObject *m_Items;
 
+	void ResetObjectHandlesState();
+
 	/*!
 	Обработка анимации всех персонажей
 	@return 

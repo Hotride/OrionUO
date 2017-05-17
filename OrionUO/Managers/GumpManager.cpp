@@ -692,11 +692,15 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 						sb->RemoveFromGroup();
 						gump->X = gump->X + offset.X;
 						gump->Y = gump->Y + offset.Y;
+
+						gump->FixCoordinates();
 					}
 					else
 					{
 						gump->MinimizedX = gump->MinimizedX + offset.X;
 						gump->MinimizedY = gump->MinimizedY + offset.Y;
+
+						gump->FixCoordinates();
 
 						if (sb->InGroup())
 							sb->UpdateGroup(offset.X, offset.Y);
@@ -724,6 +728,8 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 					gump->X = gump->X + offset.X;
 					gump->Y = gump->Y + offset.Y;
 
+					gump->FixCoordinates();
+
 					if (spell->InGroup())
 						spell->UpdateGroup(offset.X, offset.Y);
 					else
@@ -746,11 +752,15 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 				{
 					gump->MinimizedX = gump->MinimizedX + offset.X;
 					gump->MinimizedY = gump->MinimizedY + offset.Y;
+
+					gump->FixCoordinates();
 				}
 				else
 				{
 					gump->X = gump->X + offset.X;
 					gump->Y = gump->Y + offset.Y;
+
+					gump->FixCoordinates();
 				}
 
 				g_MouseManager.CancelDoubleClick = true;
@@ -1356,6 +1366,8 @@ void CGumpManager::Load(const string &path)
 				gump->MinimizedX = gumpMinimizedX;
 				gump->MinimizedY = gumpMinimizedY;
 				gump->LockMoving = gumpLockMoving;
+
+				gump->FixCoordinates();
 
 				AddGump(gump);
 

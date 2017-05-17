@@ -293,11 +293,11 @@ bool COrion::Install()
 
 	CreateDirectoryA(g_App.FilePath("snapshots").c_str(), NULL);
 
-	DEBUGLOG("Load client config.\n");
+	LOG("Load client config.\n");
 	LoadClientConfig();
 	LoadAutoLoginNames();
 
-	DEBUGLOG("Load files\n");
+	LOG("Load files\n");
 
 	if (g_PacketManager.ClientVersion >= CV_7000)
 		g_FileManager.TryReadUOPAnimations();
@@ -317,7 +317,7 @@ bool COrion::Install()
 
 	g_UOFileReader = new UOFileReader();
 
-	DEBUGLOG("Load tiledata\n");
+	LOG("Load tiledata\n");
 
 	int staticsCount = 512;
 
@@ -326,13 +326,13 @@ bool COrion::Install()
 	else
 		staticsCount = (g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_OLD))) / sizeof(STATIC_GROUP_OLD);
 
-	DEBUGLOG("staticsCount=%i\n", staticsCount);
+	LOG("staticsCount=%i\n", staticsCount);
 	LoadTiledata(512, staticsCount);
-	DEBUGLOG("Load indexes\n");
+	LOG("Load indexes\n");
 	LoadIndexFiles();
 	InitStaticAnimList();
 
-	DEBUGLOG("Load fonts.\n");
+	LOG("Load fonts.\n");
 	if (!g_FontManager.LoadFonts())
 	{
 		LOG("Error loading fonts\n");
@@ -341,7 +341,7 @@ bool COrion::Install()
 		return false;
 	}
 
-	DEBUGLOG("Load skills.\n");
+	LOG("Load skills.\n");
 	if (!LoadSkills())
 	{
 		LOG("Error loading skills\n");
@@ -357,12 +357,12 @@ bool COrion::Install()
 	else
 		g_MapManager = new CMapManager();
 
-	DEBUGLOG("Create map blocksTable\n");
+	LOG("Create map blocksTable\n");
 	g_MapManager->CreateBlocksTable();
 
-	DEBUGLOG("Patch files\n");
+	LOG("Patch files\n");
 	PatchFiles();
-	DEBUGLOG("Replaces...\n");
+	LOG("Replaces...\n");
 	IndexReplaces();
 
 	WISP_GEOMETRY::CSize statusbarDims = GetGumpDimension(0x0804);
@@ -370,10 +370,10 @@ bool COrion::Install()
 	CGumpStatusbar::m_StatusbarDefaultWidth = statusbarDims.Width;
 	CGumpStatusbar::m_StatusbarDefaultHeight = statusbarDims.Height;
 
-	DEBUGLOG("Sort skills...\n");
+	LOG("Sort skills...\n");
 	g_SkillSort.Init();
 
-	DEBUGLOG("Load cursors.\n");
+	LOG("Load cursors.\n");
 	if (!g_MouseManager.LoadCursorTextures())
 	{
 		LOG("Error loading cursors\n");
@@ -394,7 +394,7 @@ bool COrion::Install()
 
 	g_EntryPointer = NULL;
 
-	DEBUGLOG("Load prof.\n");
+	LOG("Load prof.\n");
 	g_ProfessionManager.Load();
 	g_ProfessionManager.Selected = (CBaseProfession*)g_ProfessionManager.m_Items;
 
@@ -409,7 +409,7 @@ bool COrion::Install()
 
 	g_AnimationManager.InitIndexReplaces((puint)g_FileManager.m_VerdataMul.Start);
 
-	DEBUGLOG("Load client startup.\n");
+	LOG("Load client startup.\n");
 	LoadClientStartupConfig();
 
 	ushort b = 0x0000;
@@ -489,19 +489,19 @@ bool COrion::Install()
 	m_WinterTile[1539] = 0x011C;
 	m_WinterTile[1540] = 0x011D;
 
-	DEBUGLOG("Init light buffer.\n");
+	LOG("Init light buffer.\n");
 	g_LightBuffer.Init(640, 480);
 
-	DEBUGLOG("Create object handles.\n");
+	LOG("Create object handles.\n");
 	CreateObjectHandlesBackground();
 
-	DEBUGLOG("Create aura.\n");
+	LOG("Create aura.\n");
 	CreateAuraTexture();
 
-	DEBUGLOG("Load shaders.\n");
+	LOG("Load shaders.\n");
 	LoadShaders();
 
-	DEBUGLOG("Update main screen content\n");
+	LOG("Update main screen content\n");
 	g_MainScreen.UpdateContent();
 	g_MainScreen.LoadGlobalConfig();
 
@@ -1057,6 +1057,9 @@ void COrion::Process(const bool &rendering)
 		Send(ping, 2);
 	}
 
+	bool oldCtrl = g_CtrlPressed;
+	bool oldShift = g_ShiftPressed;
+
 	g_AltPressed = GetAsyncKeyState(VK_MENU) & 0x80000000;
 	g_CtrlPressed = GetAsyncKeyState(VK_CONTROL) & 0x80000000;
 	g_ShiftPressed = GetAsyncKeyState(VK_SHIFT) & 0x80000000;
@@ -1138,6 +1141,9 @@ void COrion::Process(const bool &rendering)
 			RemoveRangedObjects();
 			g_GumpManager.RemoveRangedGumps();
 
+			if (g_ConfigManager.ObjectHandles && g_CtrlPressed && g_ShiftPressed && (oldCtrl != g_CtrlPressed || oldShift != g_ShiftPressed))
+				g_World->ResetObjectHandlesState();
+
 			if (rendering)
 			{
 				g_GameScreen.CalculateGameWindowBounds();
@@ -1146,6 +1152,7 @@ void COrion::Process(const bool &rendering)
 				g_GameScreen.RenderListInitalized = true;
 
 				g_SelectedObject.Clear();
+				g_SelectedGameObjectHandle = 0;
 
 				if (!IsIconic(g_OrionWindow.Handle))
 				{

@@ -271,6 +271,8 @@ extern ushort g_AbilityList[MAX_ABILITIES_COUNT];
 extern uchar g_Ability[2];
 
 extern bool g_DrawStatLockers;
+
+extern uint g_SelectedGameObjectHandle;
 //----------------------------------------------------------------------------------
 inline bool IsBackground(const __int64 &flags) { return (flags & 0x00000001); }
 inline bool IsWeapon(const __int64 &flags) { return (flags & 0x00000002); }

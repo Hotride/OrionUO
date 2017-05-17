@@ -411,7 +411,7 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	//Sallos aka PlayUO algorithm
 	if (encoded)
 	{		
-		IFOR(i, 0, codeBytes.size())
+		IFOR(i, 0, (int)codeBytes.size())
 		{
 			WriteUInt8(codeBytes[i]);
 		}
@@ -1290,7 +1290,7 @@ CPacketUseCombatAbility::CPacketUseCombatAbility(const uchar &index)
 	WriteUInt32BE(g_PlayerSerial);
 	WriteUInt16BE(0x0019);
 	WriteUInt32BE(0x00000000);
-	WriteUInt8(index);
+	WriteUInt8(index + 1);
 	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------

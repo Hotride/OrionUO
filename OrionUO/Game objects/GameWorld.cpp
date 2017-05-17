@@ -45,6 +45,12 @@ CGameWorld::~CGameWorld()
 	m_Items = NULL;
 }
 //----------------------------------------------------------------------------------
+void CGameWorld::ResetObjectHandlesState()
+{
+	QFOR(obj, m_Items, CGameObject*)
+		obj->ClosedObjectHandle = false;
+}
+//----------------------------------------------------------------------------------
 void CGameWorld::ProcessSound(const uint &ticks, CGameCharacter *gc)
 {
 	WISPFUN_DEBUG("c22_f3");
