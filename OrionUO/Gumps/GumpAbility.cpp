@@ -69,7 +69,7 @@ void CGumpAbility::OnAbilityUse(const int &index)
 	WISPFUN_DEBUG("c85_f5");
 	ushort &ability = g_AbilityList[g_Ability[index]];
 
-	CPacketUseCombatAbility(ability & 0xFF).Send();
+	CPacketUseCombatAbility((ability + 1) & 0xFF).Send();
 
 	if (!(ability & 0x8000))
 	{

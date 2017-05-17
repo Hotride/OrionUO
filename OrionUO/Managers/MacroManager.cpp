@@ -27,6 +27,7 @@
 #include "../Wisp/WispMappedFile.h"
 #include "../Wisp/WispBinaryFileWritter.h"
 #include "../Wisp/WispTextFileParser.h"
+#include "../Gumps/GumpAbility.h"
 
 #include <Shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib")
@@ -1303,19 +1304,13 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			}
 			case MC_PRIMARY_ABILITY:
 			{
-				uchar ability = g_AbilityList[g_Ability[0]] & 0x00FF;
-
-				if (ability)
-					CPacketUseCombatAbility(ability).Send();
+				CGumpAbility::OnAbilityUse(0);
 
 				break;
 			}
 			case MC_SECONDARY_ABILITY:
 			{
-				uchar ability = g_AbilityList[g_Ability[1]] & 0x00FF;
-
-				if (ability)
-					CPacketUseCombatAbility(ability).Send();
+				CGumpAbility::OnAbilityUse(1);
 
 				break;
 			}
