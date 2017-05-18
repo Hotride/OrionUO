@@ -102,6 +102,8 @@ void CGameObject::OnChangeName(const string &newName)
 
 		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_PLAYER_NAME, (WPARAM)newName.c_str(), 0);
 	}
+
+	m_TextureObjectHalndes.Clear();
 }
 //----------------------------------------------------------------------------------
 /*!
