@@ -412,7 +412,7 @@ void CGumpScreenSelectProfession::InitToolTip()
 			if (id == ID_SPS_LABEL + index)
 			{
 				if (child->DescriptionClilocID)
-					g_ToolTip.Set(child->DescriptionClilocID, "Description", 350);
+					g_ToolTip.Set(child->DescriptionClilocID, "Description", 350, false);
 
 				break;
 			}

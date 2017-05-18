@@ -125,7 +125,7 @@ void CGumpSpellbook::InitToolTip()
 			else
 				serial -= ID_GSB_SPELL_ICON_LEFT;
 
-			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset + serial), 150);
+			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset + serial, true), 150);
 		}
 	}
 }

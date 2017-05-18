@@ -40,7 +40,7 @@ void CGumpAbility::InitToolTip()
 	WISPFUN_DEBUG("c85_f2");
 	int index = (m_Serial != 0 ? 1 : 0);
 
-	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_AbilityList[g_Ability[index]] & 0x00FF)), 80);
+	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_AbilityList[g_Ability[index]] & 0x00FF), true), 80);
 }
 //----------------------------------------------------------------------------------
 void CGumpAbility::UpdateContent()

@@ -31,7 +31,7 @@ CGumpRacialAbility::~CGumpRacialAbility()
 void CGumpRacialAbility::InitToolTip()
 {
 	WISPFUN_DEBUG("c111_f2");
-	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1112198 + (m_Serial - 0x5DD0)), 200);
+	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1112198 + (m_Serial - 0x5DD0), true), 200);
 }
 //----------------------------------------------------------------------------------
 void CGumpRacialAbility::GUMP_BUTTON_EVENT_C

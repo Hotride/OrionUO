@@ -2124,7 +2124,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 						{
 							ushort id = rwo->Graphic;
 
-							string str = g_ClilocManager.Cliloc(g_Language)->GetA(1020000 + id, g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name);
+							string str = g_ClilocManager.Cliloc(g_Language)->GetA(1020000 + id, true, g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name);
 
 							if (str.length())
 								g_Orion.CreateTextMessage(TT_CLIENT, (uint)rwo, 3, 0x038F, str);

@@ -43,7 +43,7 @@ void CGumpRacialAbilitiesBook::InitToolTip()
 	uint serial = g_SelectedObject.Serial;
 
 	if (m_Page >= m_DictionaryPagesCount && serial >= ID_GRAB_ICON)
-		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(m_TooltipOffset + (serial - ID_GRAB_ICON)), 150);
+		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(m_TooltipOffset + (serial - ID_GRAB_ICON), true), 150);
 }
 //----------------------------------------------------------------------------
 void CGumpRacialAbilitiesBook::PrepareContent()
