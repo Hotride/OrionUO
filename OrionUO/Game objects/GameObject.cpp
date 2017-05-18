@@ -102,8 +102,6 @@ void CGameObject::OnChangeName(const string &newName)
 
 		g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_SET_PLAYER_NAME, (WPARAM)newName.c_str(), 0);
 	}
-
-	m_TextureObjectHalndes.Clear();
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -120,7 +118,7 @@ void CGameObject::DrawObjectHandlesTexture(const int &x, const int &y)
 		if (m_NPC || IsCorpse())
 			GenerateObjectHandlesTexture(ToWString(m_Name));
 		else
-			GenerateObjectHandlesTexture(g_ClilocManager.Cliloc(g_Language)->GetW(102000 + m_Graphic, m_Name));
+			GenerateObjectHandlesTexture(g_ClilocManager.Cliloc(g_Language)->GetW(1020000 + m_Graphic, g_Orion.m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32].Name));
 	}
 
 	m_TextureObjectHalndes.Draw(x, y);

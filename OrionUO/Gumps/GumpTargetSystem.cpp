@@ -95,7 +95,7 @@ void CGumpTargetSystem::UpdateContent()
 		{
 			STATIC_TILES *st = obj->StaticGroupObjectPtr()->GetStaticData();
 
-			m_OldName = g_ClilocManager.Cliloc(g_Language)->GetA(102000 + obj->Graphic, st->Name);
+			m_OldName = g_ClilocManager.Cliloc(g_Language)->GetA(1020000 + obj->Graphic, st->Name);
 		}
 
 		CGUIText *text = (CGUIText*)m_DataBox->Add(new CGUIText(0x0386, 16, 14));
