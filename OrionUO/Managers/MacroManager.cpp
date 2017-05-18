@@ -160,8 +160,9 @@ bool CMacroManager::Convert(const string &path)
 {
 	WISPFUN_DEBUG("c145_f2");
 	WISP_FILE::CTextFileParser file(path, " ", "", "");
+	WISP_FILE::CTextFileParser unicodeParser("", " ", "", "");
 
-	//Позиции доп. кнопок в списке, индыксация с конца, т.е. strings.size() - position
+	//Позиции доп. кнопок в списке, индексация с конца, т.е. strings.size() - position
 	const int MACRO_POSITION_ALT = 2;
 	const int MACRO_POSITION_CTRL = 3;
 	const int MACRO_POSITION_SHIFT = 1;
@@ -174,7 +175,7 @@ bool CMacroManager::Convert(const string &path)
 		if (!size)
 			continue;
 
-		if (size != 4)
+		if (size < 4 || size > 5)
 		{
 			LOG("Error!!! Macros converter. Unwaited start args count = %i!!!\n", size);
 			continue;
@@ -201,6 +202,19 @@ bool CMacroManager::Convert(const string &path)
 
 				break;
 			}
+			else if (*data[0].c_str() == '+')
+			{
+				data.clear();
+				string raw = file.RawLine.c_str() + 1;
+				string newData = "";
+
+				for (int i = 0; i < (int)raw.length(); i += 2)
+					newData.push_back(raw[i]);
+
+				//LOG("Is raw unicode: %s\n", raw.c_str());
+				//LOG("Is unicode: %s\n", newData.c_str());
+				data = unicodeParser.GetTokens(newData.c_str(), false);
+			}
 
 			string upData = ToUpperA(data[0]);
 			MACRO_CODE code = MC_NONE;
@@ -211,7 +225,7 @@ bool CMacroManager::Convert(const string &path)
 				{
 					code = (MACRO_CODE)i;
 
-					//TPRINT("Action found (%i): %s\n", i, TMacro::m_MacroActionName[i]);
+					//LOG("Action found (%i): %s\n", i, CMacro::m_MacroActionName[i]);
 
 					break;
 				}
@@ -223,10 +237,17 @@ bool CMacroManager::Convert(const string &path)
 
 				if (obj->HaveString()) //Аргументы - строка
 				{
-					string args = file.RawLine.c_str() + data[0].length() + 1;
-					//TPRINT("\tSub action string is: %s\n", args.c_str());
+					if (data.size() > 1)
+					{
+						string args = data[1];
 
-					((CMacroObjectString*)obj)->String = args;
+						IFOR(i, 2, (int)data.size())
+							args += " " + data[i];
+
+						//LOG("\tSub action string is: %s\n", args.c_str());
+
+						((CMacroObjectString*)obj)->String = args;
+					}
 				}
 				else if (data.size() > 1) //Аргументы - код (значение), либо просто код макроса
 				{
@@ -243,7 +264,7 @@ bool CMacroManager::Convert(const string &path)
 						{
 							obj->SubCode = (MACRO_SUB_CODE)i;
 
-							//TPRINT("\tSub action found (%i): %s\n", i, TMacro::m_MacroAction[i]);
+							//LOG("\tSub action found (%i): %s\n", i, CMacro::m_MacroAction[i]);
 
 							break;
 						}
@@ -252,7 +273,7 @@ bool CMacroManager::Convert(const string &path)
 			}
 		}
 
-		//TPRINT("Cycle ends with add: %i\n", macroAdded);
+		//LOG("Cycle ends with add: %i\n", macroAdded);
 
 		if (!macroAdded)
 			Add(macro);
