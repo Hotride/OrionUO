@@ -765,7 +765,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			case MC_WHISPER:
 			case MC_YELL:
 			{
-							CMacroObjectString *mos = (CMacroObjectString*)g_MacroPointer;
+				CMacroObjectString *mos = (CMacroObjectString*)g_MacroPointer;
 
 				if (mos->String.length())
 				{
@@ -792,7 +792,10 @@ MACRO_RETURN_CODE CMacroManager::Process()
 							break;
 					}
 
-					CPacketASCIISpeechRequest(mos->String.c_str(), st, 3, g_ConfigManager.SpeechColor).Send();
+					if (g_PacketManager.ClientVersion >= CV_500A)
+						CPacketUnicodeSpeechRequest(ToWString(mos->String).c_str(), st, 3, g_ConfigManager.SpeechColor, (puchar)g_Language.c_str()).Send();
+					else
+						CPacketASCIISpeechRequest(mos->String.c_str(), st, 3, g_ConfigManager.SpeechColor).Send();
 				}
 
 				break;
