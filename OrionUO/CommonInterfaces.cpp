@@ -297,17 +297,17 @@ void __cdecl FUNCBODY_SecureTradingClose(unsigned int id1)
 //----------------------------------------------------------------------------------
 IOrionString *__cdecl FUNCBODY_GetClilocA(unsigned int clilocID, const char *defaultText)
 {
-	return &g_OrionString(g_ClilocManager.Cliloc(g_Language)->GetA(clilocID, defaultText));
+	return &g_OrionString(g_ClilocManager.Cliloc(g_Language)->GetA(clilocID, true, defaultText));
 }
 //----------------------------------------------------------------------------------
 IOrionString *__cdecl FUNCBODY_GetClilocW(unsigned int clilocID, const char *defaultText)
 {
-	return &g_OrionString(g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, defaultText));
+	return &g_OrionString(g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, true, defaultText));
 }
 //----------------------------------------------------------------------------------
 IOrionString *__cdecl FUNCBODY_GetClilocArguments(unsigned int clilocID, const wchar_t *args)
 {
-	return &g_OrionString(g_ClilocManager.ParseArgumentsToClilocString(clilocID, args));
+	return &g_OrionString(g_ClilocManager.ParseArgumentsToClilocString(clilocID, true, args));
 }
 //----------------------------------------------------------------------------------
 //IColorManager

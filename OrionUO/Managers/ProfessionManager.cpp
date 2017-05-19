@@ -196,7 +196,7 @@ bool CProfessionManager::ParseFilePart(WISP_FILE::CTextFileParser &file)
 			case PM_CODE_NAME_CLILOC_ID:
 			{
 				nameClilocID = atoi(strings[1].c_str());
-				name = ToUpperA(g_ClilocManager.Cliloc(g_Language)->GetA(nameClilocID, name));
+				name = ToUpperA(g_ClilocManager.Cliloc(g_Language)->GetA(nameClilocID, true, name));
 				break;
 			}
 			case PM_CODE_DESCRIPTION_CLILOC_ID:

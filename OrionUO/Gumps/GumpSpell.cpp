@@ -58,7 +58,7 @@ void CGumpSpell::InitToolTip()
 
 		GetTooltipSpellInfo(tooltipOffset, spellIndexOffset);
 
-		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset - spellIndexOffset + m_Serial), 80);
+		g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(tooltipOffset - spellIndexOffset + m_Serial, true), 80);
 	}
 }
 //----------------------------------------------------------------------------

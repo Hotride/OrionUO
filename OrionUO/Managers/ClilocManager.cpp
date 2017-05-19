@@ -45,7 +45,7 @@ CCliloc::~CCliloc()
 @param [__in] id Индекс клилока
 @return Результат загрузки или сообщение с ошибкой
 */
-string CCliloc::Load(uint &id)
+string CCliloc::Load(uint &id, const bool &toCamelCase)
 {
 	WISPFUN_DEBUG("c135_f3");
 	string result = "";
@@ -65,7 +65,10 @@ string CCliloc::Load(uint &id)
 
 			if (currentID == id)
 			{
-				result = m_File.ReadString(len);
+				if (toCamelCase)
+					result = ToCamelCaseA(m_File.ReadString(len));
+				else
+					result = m_File.ReadString(len);
 
 				if (id >= 3000000)
 					m_ClilocSupport[currentID] = result;
@@ -92,7 +95,7 @@ string CCliloc::Load(uint &id)
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-string CCliloc::GetA(const uint &id, string result)
+string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
 {
 	WISPFUN_DEBUG("c135_f4");
 	if (id >= 3000000)
@@ -115,14 +118,14 @@ string CCliloc::GetA(const uint &id, string result)
 	}
 
 	uint tmpID = id;
-	string loadStr = Load(tmpID);
+	string loadStr = Load(tmpID, toCamelCase);
 
 	if (!tmpID && loadStr.length())
 		return loadStr;
 	else
 	{
 		if (m_Language != "enu")
-			return g_ClilocManager.Cliloc("enu")->GetA(id, result);
+			return g_ClilocManager.Cliloc("enu")->GetA(id, toCamelCase, result);
 		else if (!result.length())
 		{
 
@@ -142,10 +145,10 @@ string CCliloc::GetA(const uint &id, string result)
 @param [__in] result Стандартное сообщение, если клилок не был найден
 @return Полученный результат, замена или сообщение с ошибкой
 */
-wstring CCliloc::GetW(const uint &id, string result)
+wstring CCliloc::GetW(const uint &id, const bool &toCamelCase, string result)
 {
 	WISPFUN_DEBUG("c135_f5");
-	return DecodeUTF8(GetA(id, result));
+	return DecodeUTF8(GetA(id, toCamelCase, result));
 }
 //----------------------------------------------------------------------------------
 //-----------------------------------CClilocManager---------------------------------
@@ -209,13 +212,13 @@ CCliloc *CClilocManager::Cliloc(const string &lang)
 	return obj;
 }
 //----------------------------------------------------------------------------------
-wstring CClilocManager::ParseArgumentsToClilocString(const uint &cliloc, wstring args)
+wstring CClilocManager::ParseArgumentsToClilocString(const uint &cliloc, const bool &toCamelCase, wstring args)
 {
 	WISPFUN_DEBUG("c136_f2");
 	while (args.length() && args[0] == L'\t')
 		args.erase(args.begin());
 
-	wstring message = Cliloc(g_Language)->GetW(cliloc).c_str();
+	wstring message = Cliloc(g_Language)->GetW(cliloc, toCamelCase).c_str();
 
 	vector<wstring> arguments;
 
@@ -249,8 +252,8 @@ wstring CClilocManager::ParseArgumentsToClilocString(const uint &cliloc, wstring
 
 		if (arguments[i].length() > 1 && *arguments[i].c_str() == L'#')
 		{
-			DWORD id = _wtoi(arguments[i].c_str() + 1);
-			arguments[i] = Cliloc(g_Language)->GetW(id).c_str();
+			uint id = _wtoi(arguments[i].c_str() + 1);
+			arguments[i] = Cliloc(g_Language)->GetW(id, toCamelCase).c_str();
 		}
 
 		message.replace(pos1, pos2 - pos1 + 1, arguments[i]);

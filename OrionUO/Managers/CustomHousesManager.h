@@ -23,8 +23,10 @@ struct CustomHouse
 class CustomHousesManager : public WISP_DATASTREAM::CDataReader
 {
 public:
-
-
+	CustomHousesManager();
+	~CustomHousesManager();
+	CustomHouse GetCustomHouse(uint serial);
+	void AddCustomHouse(CustomHouse &house);
 };
 //!Global reference to custom houses manager
 extern CustomHousesManager g_CustomHousesManager;

@@ -66,6 +66,27 @@ wstring DecodeUTF8(const string &str)
 	return result;
 }
 //----------------------------------------------------------------------------------
+string ToCamelCaseA(string str)
+{
+	int offset = 'a' - 'A';
+	bool lastSpace = true;
+
+	for (char &c : str)
+	{
+		if (c == ' ')
+			lastSpace = true;
+		else if (lastSpace)
+		{
+			lastSpace = false;
+
+			if (c >= 'a' && c <= 'z')
+				c -= offset;
+		}
+	}
+
+	return str;
+}
+//----------------------------------------------------------------------------------
 string ToString(const wstring &wstr)
 {
 	string str = "";
