@@ -9,6 +9,7 @@
 #include "CustomHousesManager.h"
 //----------------------------------------------------------------------------------
 CustomHousesManager::CustomHousesManager()
+	: m_CustomHouses{0}
 {
 }
 //----------------------------------------------------------------------------------
@@ -16,9 +17,14 @@ CustomHousesManager::~CustomHousesManager()
 {
 }
 //----------------------------------------------------------------------------------
-CustomHouse CustomHousesManager::GetCustomHouse(uint serial)
+CustomHouse* CustomHousesManager::GetCustomHouse(uint serial)
 {
-	return CustomHouse();
+	IFOR(i, 0, m_CustomHouses.size())
+	{
+		if (m_CustomHouses[i].Serial == serial)
+			return &m_CustomHouses[i];
+	}
+	return NULL;
 }
 //----------------------------------------------------------------------------------
 void CustomHousesManager::AddCustomHouse(CustomHouse &house)
