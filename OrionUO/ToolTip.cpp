@@ -36,7 +36,7 @@ void CToolTip::Reset()
 	m_Object = NULL;
 }
 //----------------------------------------------------------------------------------
-void CToolTip::Set(wstring str, int maxWidth, int x, int y)
+void CToolTip::Set(wstring str, int maxWidth)
 {
 	WISPFUN_DEBUG("c213_f3");
 	m_Use = !(m_Timer > g_Ticks);
@@ -52,18 +52,18 @@ void CToolTip::Set(wstring str, int maxWidth, int x, int y)
 	m_Data = str;
 	m_ClilocID = 0;
 	m_MaxWidth = maxWidth;
-	m_Position.X = x;
-	m_Position.Y = y;
+	m_Position.X = 0;
+	m_Position.Y = 0;
 
 	Texture.Clear();
 
 	g_FontManager.GenerateW((uchar)g_ConfigManager.ToolTipsTextFont, Texture, m_Data.c_str(), g_ConfigManager.ToolTipsTextColor, 5, m_MaxWidth, TS_CENTER, UOFONT_BLACK_BORDER);
 }
 //----------------------------------------------------------------------------------
-void CToolTip::Set(uint clilocID, string str, int maxWidth, int x, int y)
+void CToolTip::Set(uint clilocID, string str, int maxWidth, const bool &toCamelCase)
 {
 	WISPFUN_DEBUG("c213_f4");
-	Set(g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, str), maxWidth, x, y);
+	Set(g_ClilocManager.Cliloc(g_Language)->GetW(clilocID, toCamelCase, str), maxWidth);
 
 	m_ClilocID = clilocID;
 }

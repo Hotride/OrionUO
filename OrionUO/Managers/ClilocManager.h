@@ -40,7 +40,7 @@ private:
 	@param [__in] id Индекс клилока
 	@return Результат загрузки или сообщение с ошибкой
 	*/
-	string Load(uint &id);
+	string Load(uint &id, const bool &toCamelCase);
 
 public:
 	CCliloc(const string &lang);
@@ -52,7 +52,7 @@ public:
 	@param [__in] result Стандартное сообщение, если клилок не был найден
 	@return Полученный результат, замена или сообщение с ошибкой
 	*/
-	string GetA(const uint &id, string result = "");
+	string GetA(const uint &id, const bool &toCamelCase = false, string result = "");
 
 	/*!
 	Получить Unicode строку по id (и загрузить при необходимости)
@@ -60,7 +60,7 @@ public:
 	@param [__in] result Стандартное сообщение, если клилок не был найден
 	@return Полученный результат, замена или сообщение с ошибкой
 	*/
-	wstring GetW(const uint &id, string result = "");
+	wstring GetW(const uint &id, const bool &toCamelCase = false, string result = "");
 };
 //----------------------------------------------------------------------------------
 //!Класс менеджера клилоков
@@ -84,7 +84,7 @@ public:
 	*/
 	CCliloc *Cliloc(const string &lang);
 
-	wstring ParseArgumentsToClilocString(const uint &cliloc, wstring args);
+	wstring ParseArgumentsToClilocString(const uint &cliloc, const bool &toCamelCase, wstring args);
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер клилоков

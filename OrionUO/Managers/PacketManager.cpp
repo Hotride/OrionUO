@@ -2829,7 +2829,7 @@ PACKET_HANDLER(ExtendedCommand)
 					cliloc = ReadUInt16BE() + 3000000;
 				}
 
-				wstring str = g_ClilocManager.Cliloc(g_Language)->GetW(cliloc);
+				wstring str = g_ClilocManager.Cliloc(g_Language)->GetW(cliloc, true);
 
 				ushort flags = ReadUInt16BE();
 				ushort color = 0xFFFE;
@@ -3938,7 +3938,7 @@ PACKET_HANDLER(DisplayClilocString)
 
 	wstring args((wchar_t*)Ptr);
 	//wstring args = ReadUnicodeStringLE(0);
-	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, args);
+	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, true, args);
 	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
@@ -4063,7 +4063,7 @@ PACKET_HANDLER(MegaCliloc)
 			//wstring argument = ReadUnicodeStringLE(len / 2);
 		}
 
-		wstring str = g_ClilocManager.ParseArgumentsToClilocString(cliloc, argument);
+		wstring str = g_ClilocManager.ParseArgumentsToClilocString(cliloc, true, argument);
 		//LOG("Cliloc: argstr=%s\n", ToString(str).c_str());
 
 		if (message.length() && !first)
@@ -4088,6 +4088,8 @@ PACKET_HANDLER(MegaCliloc)
 	if (g_ToolTip.m_Object == obj)
 		g_ToolTip.Reset();
 
+	//LOG("message=%s\n", ToString(message).c_str());
+
 	if (inBuyList && container->Serial)
 	{
 		CGumpShop *gump = (CGumpShop*)g_GumpManager.GetGump(container->Serial, 0, GT_SHOP);
@@ -4100,9 +4102,30 @@ PACKET_HANDLER(MegaCliloc)
 			{
 				if (shopItem->Type == GOT_SHOPITEM && shopItem->Serial == serial && ((CGUIShopItem*)shopItem)->NameFromCliloc)
 				{
-					((CGUIShopItem*)shopItem)->Name = Trim(ToString(message));
-					((CGUIShopItem*)shopItem)->CreateNameText();
-					((CGUIShopItem*)shopItem)->UpdateOffsets();
+					size_t pos = message.find_first_of(L'\n');
+
+					if (pos != wstring::npos)
+						message.resize(pos);
+
+					CGUIShopItem *si = (CGUIShopItem*)shopItem;
+
+					int oldHeight = si->GetSize().Height;
+
+					si->Name = Trim(ToString(message));
+					si->CreateNameText();
+					si->UpdateOffsets();
+
+					int delta = si->GetSize().Height - oldHeight;
+
+					if (delta && shopItem->m_Next != NULL)
+					{
+						QFOR(shopItem2, shopItem->m_Next, CBaseGUI*)
+						{
+							if (shopItem2->Type == GOT_SHOPITEM)
+								((CGUIShopItem*)shopItem2)->Y = ((CGUIShopItem*)shopItem2)->Y + delta;
+						}
+					}
+
 					break;
 				}
 			}
@@ -4110,8 +4133,6 @@ PACKET_HANDLER(MegaCliloc)
 			htmlGump->CalculateDataSize();
 		}
 	}
-
-	//LOG("message=%s\n", ToString(message).c_str());
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(Damage)
@@ -4296,7 +4317,7 @@ PACKET_HANDLER(BuffDebuff)
 
 				Move(4);
 
-				wstring title = g_ClilocManager.Cliloc(g_Language)->GetW(titleCliloc).c_str();
+				wstring title = g_ClilocManager.Cliloc(g_Language)->GetW(titleCliloc, true).c_str();
 				wstring description = L"";
 				wstring wtf = L"";
 
@@ -4309,14 +4330,14 @@ PACKET_HANDLER(BuffDebuff)
 					//LOG("Buff arguments: %s\n", ToString(ClilocManager->ParseArgumentsToClilocString(descriptionCliloc, arguments)).c_str());
 					
 
-					description = L'\n' + g_ClilocManager.ParseArgumentsToClilocString(descriptionCliloc, arguments);
+					description = L'\n' + g_ClilocManager.ParseArgumentsToClilocString(descriptionCliloc, true, arguments);
 
 					if (description.length() < 2)
 						description = L"";
 				}
 
 				if (wtfCliloc)
-					wtf = L'\n' + g_ClilocManager.Cliloc(g_Language)->GetW(wtfCliloc).c_str();
+					wtf = L'\n' + g_ClilocManager.Cliloc(g_Language)->GetW(wtfCliloc, true).c_str();
 
 				wstring text = L"<left>" + title + description + wtf + L"</left>";
 
@@ -5483,7 +5504,7 @@ PACKET_HANDLER(BuyList)
 
 			if (Int32TryParse(name, clilocNum))
 			{
-				name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
+				name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum, true);
 				nameFromCliloc = true;
 			}
 
@@ -5494,6 +5515,7 @@ PACKET_HANDLER(BuyList)
 			{
 				shopItem->Selected = true;
 				shopItem->CreateNameText();
+				shopItem->UpdateOffsets();
 			}
 
 			currentY += shopItem->GetSize().Height;
@@ -5555,7 +5577,7 @@ PACKET_HANDLER(SellList)
 
 		if (Int32TryParse(name, clilocNum))
 		{
-			name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum);
+			name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum, true);
 			nameFromCliloc = true;
 		}
 
@@ -5566,6 +5588,7 @@ PACKET_HANDLER(SellList)
 		{
 			shopItem->Selected = true;
 			shopItem->CreateNameText();
+			shopItem->UpdateOffsets();
 		}
 
 		currentY += shopItem->GetSize().Height;
