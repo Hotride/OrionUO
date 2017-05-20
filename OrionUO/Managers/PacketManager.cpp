@@ -5631,7 +5631,8 @@ PACKET_HANDLER(OPLInfo)
 PACKET_HANDLER(CustomHouse)
 {
 	WISPFUN_DEBUG("c150_f100");
-
+	//turn off reading of this packet for now
+	return;
 	ushort packetSize = ReadUInt16BE();
 	bool compressed = (ReadUInt16BE() == 3);
 	uint houseSerial = ReadUInt32BE();
