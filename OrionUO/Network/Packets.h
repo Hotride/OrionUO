@@ -477,5 +477,11 @@ public:
 	CPacketToggleGargoyleFlying();
 };
 //----------------------------------------------------------------------------------
+class CPacketCustomHouseDataRequest : public CPacket
+{
+public:
+	CPacketCustomHouseDataRequest(const uint &serial);
+};
+//----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

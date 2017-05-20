@@ -3013,10 +3013,11 @@ PACKET_HANDLER(ExtendedCommand)
 		case 0x1D:
 		{
 			//house revision state, server sends this when player comes in range of a custom house
-			//uint houseSerial = ReadUInt32BE();
-			//uint houseRevision = ReadUInt32BE();
-			
-
+			uint houseSerial = ReadUInt32BE();
+			uint houseRevision = ReadUInt32BE();
+			CustomHouse *house = g_CustomHousesManager.GetCustomHouse(houseSerial);
+			if (house == NULL || house->Revision < houseRevision)//send 0x1E to refresh house data
+				CPacketCustomHouseDataRequest(houseSerial).Send();
 			break;
 		}
 		case 0x21:

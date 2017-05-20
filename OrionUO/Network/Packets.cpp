@@ -1314,3 +1314,10 @@ CPacketToggleGargoyleFlying::CPacketToggleGargoyleFlying()
 	WriteUInt32BE(0x00000000);
 }
 //----------------------------------------------------------------------------------
+CPacketCustomHouseDataRequest::CPacketCustomHouseDataRequest(const uint &serial)
+	: CPacket(5)
+{
+	WriteUInt8(0xBF);
+	WriteUInt32BE(serial);
+}
+//----------------------------------------------------------------------------------
