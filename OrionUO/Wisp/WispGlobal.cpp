@@ -170,7 +170,7 @@ bool Int32TryParse(string str, int &result)
 	{
 		convert >> result;
 	}
-	catch (int e)
+	catch (int)
 	{
 		result = 0;
 		return false;

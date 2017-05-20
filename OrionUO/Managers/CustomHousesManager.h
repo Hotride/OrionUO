@@ -11,13 +11,15 @@
 #define CUSTOMHOUSESMANAGER_H
 //----------------------------------------------------------------------------------
 #include "../Wisp/WispDataStream.h"
+#include "../zconf.h"
+
 //----------------------------------------------------------------------------------
 struct CustomHouse
 {
 	uint Serial;
 	uint Revision;
 	uchar *CompressedData;
-	ushort DecompressedDataSize;
+	uLongf DecompressedDataSize;
 };
 class CustomHousesManager : public WISP_DATASTREAM::CDataReader
 {
