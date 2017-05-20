@@ -1314,10 +1314,27 @@ CPacketToggleGargoyleFlying::CPacketToggleGargoyleFlying()
 	WriteUInt32BE(0x00000000);
 }
 //----------------------------------------------------------------------------------
-CPacketCustomHouseDataRequest::CPacketCustomHouseDataRequest(const uint &serial)
+CPacketCustomHouseDataReq::CPacketCustomHouseDataReq(const uint &serial)
+	: CPacket(7)
+{
+	WriteUInt8(0xBF);
+	WriteUInt16BE(0x07);
+	WriteUInt32BE(serial);
+}
+//----------------------------------------------------------------------------------
+CPacketStunReq::CPacketStunReq()
 	: CPacket(5)
 {
 	WriteUInt8(0xBF);
-	WriteUInt32BE(serial);
+	WriteUInt16BE(0x05);
+	WriteUInt16BE(0x09);
+}
+//----------------------------------------------------------------------------------
+CPacketDisarmReq::CPacketDisarmReq()
+	: CPacket(5)
+{
+	WriteUInt8(0xBF);
+	WriteUInt16BE(0x05);
+	WriteUInt16BE(0x0A);
 }
 //----------------------------------------------------------------------------------

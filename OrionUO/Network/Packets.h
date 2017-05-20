@@ -477,10 +477,22 @@ public:
 	CPacketToggleGargoyleFlying();
 };
 //----------------------------------------------------------------------------------
-class CPacketCustomHouseDataRequest : public CPacket
+class CPacketCustomHouseDataReq : public CPacket
 {
 public:
-	CPacketCustomHouseDataRequest(const uint &serial);
+	CPacketCustomHouseDataReq(const uint &serial);
+};
+//----------------------------------------------------------------------------------
+class CPacketStunReq : public CPacket
+{
+public:
+	CPacketStunReq();
+};
+//----------------------------------------------------------------------------------
+class CPacketDisarmReq : public CPacket
+{
+public:
+	CPacketDisarmReq();
 };
 //----------------------------------------------------------------------------------
 #endif

@@ -3017,7 +3017,7 @@ PACKET_HANDLER(ExtendedCommand)
 			uint houseRevision = ReadUInt32BE();
 			CustomHouse *house = g_CustomHousesManager.GetCustomHouse(houseSerial);
 			if (house == NULL || house->Revision < houseRevision)//send 0x1E to refresh house data
-				CPacketCustomHouseDataRequest(houseSerial).Send();
+				CPacketCustomHouseDataReq(houseSerial).Send();
 			break;
 		}
 		case 0x21:
