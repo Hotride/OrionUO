@@ -16,13 +16,12 @@ struct CustomHouse
 {
 	uint Serial;
 	uint Revision;
-	UCHAR_LIST CompressedData;
-	ushort CompressedDataSize;
+	uchar *CompressedData;
 	ushort DecompressedDataSize;
 };
 class CustomHousesManager : public WISP_DATASTREAM::CDataReader
 {
-	vector<CustomHouse> m_CustomHouses;
+	unordered_map<uint, CustomHouse> m_CustomHouses;
 public:
 	CustomHousesManager();
 	~CustomHousesManager();

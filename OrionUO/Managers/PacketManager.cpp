@@ -66,6 +66,7 @@
 #include "../Gumps/GumpSpellbook.h"
 #include "AnimationManager.h"
 #include "../zlib.h"  
+#include "CustomHousesManager.h"
 
 #pragma comment(lib, "zdll.lib")
 //----------------------------------------------------------------------------------
@@ -5634,39 +5635,57 @@ PACKET_HANDLER(CustomHouse)
 	bool compressed = (ReadUInt16BE() == 3);
 	uint houseSerial = ReadUInt32BE();
 	uint revision = ReadUInt32BE();
-	ushort componentsAmount = ReadUInt16BE();
-	uLongf bufferLength = ReadUInt16BE();
-	
-	if (compressed)
+	//Let's check if we already have actual data of this house
+	CustomHouse *existingHouse = g_CustomHousesManager.GetCustomHouse(houseSerial);
+	if (existingHouse == NULL || existingHouse->Revision > revision)
 	{
-		int cLen = componentsAmount * 5;
-		if (cLen < 1)
+		//Here we read packet and create new CustomHouse struct
+		CustomHouse house;
+		house.Serial = houseSerial;
+		house.Revision = revision;
+
+		ushort componentsAmount = ReadUInt16BE();
+		uLongf bufferLength = ReadUInt16BE();
+
+		if (compressed)
 		{
-			LOG("CLen=%d\nServer Sends bad Compressed Gumpdata!\n", cLen);
+			int cLen = componentsAmount * 5;
+			if (cLen < 1)
+			{
+				LOG("CLen=%d\nServer sends bad compressed house data!\n", cLen);
+				return;
+			}
+			if ((17 + cLen) > m_Size)
+			{
+				LOG("Server sends bad compressed house data!\n");
+				return;
+			}
 
-			return;
+			uchar *compressedHouseData = new uchar[bufferLength];
+			//copy compressed data into array on the heap for CustomHousesManager
+			memcpy(compressedHouseData, m_Ptr, bufferLength);
+			house.CompressedData = compressedHouseData;
+			house.DecompressedDataSize = bufferLength;
+
+
+			LOG("Decompressing custom house data, serial(%d)\n", houseSerial);
+			UCHAR_LIST decHouseData(bufferLength);
+			int z_err = uncompress(&decHouseData[0], &bufferLength, m_Ptr, cLen);
+			SetData(reinterpret_cast<puchar>(&decHouseData[0]), bufferLength);
 		}
-		else if ((17 + cLen) > m_Size)
+
+		IFOR(i, 0, componentsAmount)
 		{
-			LOG("Server Sends bad Compressed Gumpdata!\n");
-
-			return;
+			ushort graphic = ReadUInt16BE();
+			byte X = ReadUInt8();
+			byte Y = ReadUInt8();
+			byte Z = ReadUInt8();
 		}
 
-
-		LOG("Decompressing custom house data, serial(%d)\n", houseSerial);
-		UCHAR_LIST decLayoutData(bufferLength);
-		int z_err = uncompress(&decLayoutData[0], &bufferLength, m_Ptr, cLen);
-		SetData(reinterpret_cast<puchar>(&decLayoutData[0]), bufferLength);
+		g_CustomHousesManager.AddCustomHouse(house);
 	}
 
-	IFOR(i, 0, componentsAmount)
-	{
-		ushort graphic = ReadUInt16BE();
-		byte X = ReadUInt8();
-		byte Y = ReadUInt8();
-		byte Z = ReadUInt8();
-	}
+	//put data into render queue here
 
 
 }

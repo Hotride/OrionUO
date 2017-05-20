@@ -19,16 +19,15 @@ CustomHousesManager::~CustomHousesManager()
 //----------------------------------------------------------------------------------
 CustomHouse* CustomHousesManager::GetCustomHouse(uint serial)
 {
-	IFOR(i, 0, m_CustomHouses.size())
+	if (m_CustomHouses.find(serial) != m_CustomHouses.end())
 	{
-		if (m_CustomHouses[i].Serial == serial)
-			return &m_CustomHouses[i];
+		return &m_CustomHouses.at(serial);
 	}
 	return NULL;
 }
 //----------------------------------------------------------------------------------
 void CustomHousesManager::AddCustomHouse(CustomHouse &house)
 {
-
+	m_CustomHouses[house.Serial] = house;
 }
 //----------------------------------------------------------------------------------
