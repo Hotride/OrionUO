@@ -266,7 +266,7 @@ extern uint g_Ping;
 
 extern bool g_DrawAura;
 
-static const int MAX_ABILITIES_COUNT = 31;
+static const int MAX_ABILITIES_COUNT = 32;
 extern ushort g_AbilityList[MAX_ABILITIES_COUNT];
 extern uchar g_Ability[2];
 

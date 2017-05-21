@@ -5745,8 +5745,8 @@ void COrion::ClearWorld()
 	g_Party.Inviter = 0;
 	g_Party.Clear();
 
-	g_Ability[0] = 4;
-	g_Ability[1] = 10;
+	g_Ability[0] = AT_DISARM;
+	g_Ability[1] = AT_PARALYZING_BLOW;
 
 	g_ResizedGump = NULL;
 

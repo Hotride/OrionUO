@@ -20,13 +20,13 @@ CGumpAbility::CGumpAbility(const uint &serial, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c85_f1");
 	int index = (m_Serial != 0 ? 1 : 0);
-	ushort &ability = g_AbilityList[g_Ability[index]];
+	uchar &ability = g_Ability[index];
 
-	m_Graphic = 0x5200 + (ability & 0x00FF);
+	m_Graphic = 0x5200 + (ability & 0x7F) - 1;
 
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
 
-	m_Colorizer = (CGUIGlobalColor*)Add(new CGUIGlobalColor((ability & 0x8000), 1.0f, 0.25f, 0.5f, 1.0f));
+	m_Colorizer = (CGUIGlobalColor*)Add(new CGUIGlobalColor((ability & 0x80), 1.0f, 0.25f, 0.5f, 1.0f));
 
 	m_Body = (CGUIGumppic*)Add(new CGUIGumppic(m_Graphic, 0, 0));
 }
@@ -40,7 +40,7 @@ void CGumpAbility::InitToolTip()
 	WISPFUN_DEBUG("c85_f2");
 	int index = (m_Serial != 0 ? 1 : 0);
 
-	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_AbilityList[g_Ability[index]] & 0x00FF), true), 80);
+	g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_Ability[index] & 0x7F), true), 80);
 }
 //----------------------------------------------------------------------------------
 void CGumpAbility::UpdateContent()
@@ -49,11 +49,11 @@ void CGumpAbility::UpdateContent()
 	if (m_Colorizer != NULL && m_Body != NULL)
 	{
 		int index = (m_Serial != 0 ? 1 : 0);
-		ushort &ability = g_AbilityList[g_Ability[index]];
+		uchar &ability = g_Ability[index];
 
-		m_Colorizer->Enabled = (ability & 0x8000);
+		m_Colorizer->Enabled = (ability & 0x80);
 
-		m_Body->Graphic = 0x5200 + (ability & 0x00FF);
+		m_Body->Graphic = 0x5200 + (ability & 0x7F) - 1;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -67,20 +67,17 @@ void CGumpAbility::GUMP_BUTTON_EVENT_C
 void CGumpAbility::OnAbilityUse(const int &index)
 {
 	WISPFUN_DEBUG("c85_f5");
-	ushort &ability = g_AbilityList[g_Ability[index]];
+	uchar &ability = g_Ability[index];
 
-	CPacketUseCombatAbility((ability + 1) & 0xFF).Send();
+	CPacketUseCombatAbility(ability & 0x7F).Send();
 
-	if (!(ability & 0x8000))
+	if (!(ability & 0x80))
 	{
-		IFOR(i, 0, MAX_ABILITIES_COUNT)
-		{
-			ushort &tempAbility = g_AbilityList[i];
-			tempAbility &= 0x00FF;
-		}
+		IFOR(i, 0, 2)
+			g_Ability[i] &= 0x7F;
 	}
 
-	ability ^= 0x8000;
+	ability |= 0x80;
 
 	g_GumpManager.UpdateContent(0, 0, GT_ABILITY);
 	g_GumpManager.UpdateContent(1, 0, GT_ABILITY);

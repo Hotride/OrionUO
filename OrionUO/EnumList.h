@@ -1104,5 +1104,42 @@ enum SEASON_TYPE
 	ST_DESOLATION
 };
 //----------------------------------------------------------------------------------
+enum ABILITY_TYPE
+{
+	AT_NONE = 0,
+	AT_ARMOR_IGNORE,
+	AT_BLEED_ATTACK,
+	AT_CONCUSSION_BLOW,
+	AT_CRUSHING_BLOW,
+	AT_DISARM,
+	AT_DISMOUNT,
+	AT_DOUBLE_STRIKE,
+	AT_INFECTING,
+	AT_MORTAL_STRIKE,
+	AT_MOVING_SHOT,
+	AT_PARALYZING_BLOW,
+	AT_SHADOW_STRIKE,
+	AT_WHIRLWIND_ATTACK,
+	AT_RIDING_SWIPE,
+	AT_FRENZIED_WHIRLWIND,
+	AT_BLOCK,
+	AT_DEFENSE_MASTERY,
+	AT_NERVE_STRIKE,
+	AT_TALON_STRIKE,
+	AT_FEINT,
+	AT_DUAL_WIELD,
+	AT_DOUBLE_SHOT,
+	AT_ARMOR_PIERCE,
+	AT_BLADEWEAVE,
+	AT_FORCE_ARROW,
+	AT_LIGHTNING_ARROW,
+	AT_PSYCHIC_ATTACK,
+	AT_SERPENT_ARROW,
+	AT_FORCE_OF_NATURE,
+	AT_INFUSED_THROW,
+	AT_MYSTIC_ARC,
+	AT_DISROBE
+};
+//----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------
