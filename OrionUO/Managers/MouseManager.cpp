@@ -213,10 +213,10 @@ bool CMouseManager::LoadCursorTextures()
 					if (id == 0x206A)
 						OffsX = -4.0f;
 					else if (id == 0x206B)
-						OffsX = -DW;
+						OffsX = -DW + 3.0f;
 					else if (id == 0x206C)
 					{
-						OffsX = -DW;
+						OffsX = -DW + 3.0f;
 						OffsY = -(DH / 2.0f);
 					}
 					else if (id == 0x206D)
