@@ -3024,7 +3024,7 @@ PACKET_HANDLER(ExtendedCommand)
 		{
 			IFOR(i, 0, 2)
 			{
-				g_AbilityList[g_Ability[i]] = g_AbilityList[g_Ability[i]] & 0x00FF;
+				g_Ability[i] &= 0x7F;
 				g_GumpManager.UpdateContent(i, 0, GT_ABILITY);
 			}
 

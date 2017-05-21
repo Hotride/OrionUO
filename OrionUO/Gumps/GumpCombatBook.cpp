@@ -376,9 +376,9 @@ void CGumpCombatBook::InitToolTip()
 	else
 	{
 		if (serial == ID_GCB_ICON_FIRST)
-			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_AbilityList[g_Ability[0]] & 0xFF), true), 80);
+			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_Ability[0] & 0x7F), true), 80);
 		else if (serial == ID_GCB_ICON_SECOND)
-			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_AbilityList[g_Ability[1]] & 0xFF), true), 80);
+			g_ToolTip.Set(g_ClilocManager.Cliloc(g_Language)->GetW(1028838 + (g_Ability[1] & 0x7F), true), 80);
 	}
 }
 //----------------------------------------------------------------------------
@@ -460,13 +460,13 @@ void CGumpCombatBook::UpdateContent()
 
 		if (spellsOnPage == 4)
 		{
-			CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5200 + (g_AbilityList[g_Ability[0]] & 0x00FF), 215, 105));
+			CGUIGumppic *icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5200 + (g_Ability[0] & 0x7F) - 1, 215, 105));
 			icon->Serial = ID_GCB_ICON_FIRST;
 
 			text = (CGUIText*)Add(new CGUIText(0x0288, 265, 105));
 			text->CreateTextureA(6, "Primary Ability Icon", 80);
 
-			icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5200 + (g_AbilityList[g_Ability[1]] & 0x00FF), 215, 150));
+			icon = (CGUIGumppic*)Add(new CGUIGumppic(0x5200 + (g_Ability[1] & 0x7F) - 1, 215, 150));
 			icon->Serial = ID_GCB_ICON_SECOND;
 
 			text = (CGUIText*)Add(new CGUIText(0x0288, 265, 150));
@@ -681,6 +681,7 @@ const string CGumpCombatBook::m_AbilityName[MAX_ABILITIES_COUNT]
 	"Serpent Arrow",
 	"Force of Nature",
 	"Infused Throw",		//CV_7000
-	"Mystic Arc"
+	"Mystic Arc",
+	"Disrobe"
 };
 //----------------------------------------------------------------------------------

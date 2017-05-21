@@ -191,7 +191,10 @@ bool CGumpScreenCharacterList::OnLeftMouseButtonDoubleClick()
 			if (!g_CharacterList.GetName(i).length())
 				g_CharacterListScreen.CreateSmoothAction(CCharacterListScreen::ID_SMOOTH_CLS_GO_SCREEN_PROFESSION_SELECT);
 			else
+			{
 				g_CharacterListScreen.CreateSmoothAction(CCharacterListScreen::ID_SMOOTH_CLS_SELECT_CHARACTER);
+				Sleep(200);
+			}
 
 			return true;
 		}
