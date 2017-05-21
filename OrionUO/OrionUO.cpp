@@ -2710,6 +2710,34 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_MAP_UOP_ADDRESS:
+		{
+			if (value >= 0 && value < 6)
+				value = (int)g_FileManager.m_MapUOP[value].Start;
+
+			break;
+		}
+		case VKI_MAP_UOP_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = g_FileManager.m_MapUOP[value].Size;
+
+			break;
+		}
+		case VKI_MAP_X_UOP_ADDRESS:
+		{
+			if (value >= 0 && value < 6)
+				value = (int)g_FileManager.m_MapXUOP[value].Start;
+
+			break;
+		}
+		case VKI_MAP_X_UOP_SIZE:
+		{
+			if (value >= 0 && value < 6)
+				value = g_FileManager.m_MapXUOP[value].Size;
+
+			break;
+		}
 		default:
 			break;
 	}
@@ -3127,7 +3155,7 @@ unsigned long long COrion::CreateHash(string s)
 		ebx += esi;
 		esi = (esi - edi) ^ (edi >> 28) ^ (edi << 4);
 		edi += ebx;
-		}
+	}
 
 	if (s.length() - i > 0)
 	{
@@ -3201,7 +3229,7 @@ unsigned long long COrion::CreateHash(string s)
 		eax = (esi ^ edi) - ((edi >> 8) ^ (edi << 24));
 
 		return (static_cast<unsigned long long>(edi) << 32) | eax;
-		}
+	}
 
 	return (static_cast<unsigned long long>(esi) << 32) | eax;
 }

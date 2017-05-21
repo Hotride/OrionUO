@@ -857,7 +857,6 @@ void CUopMapManager::CreateBlockTable(int map)
 	uopFile.ReadInt64LE(); // version + signature
 	long long nextBlock = uopFile.ReadInt64LE();
 
-
 	std::unordered_map<unsigned long long, UOPMapaData> hashes;
 
 	uopFile.ResetPtr();
@@ -903,7 +902,7 @@ void CUopMapManager::CreateBlockTable(int map)
 		if (fileNumber != shifted)
 		{
 			fileNumber = shifted;
-			char mapFilePath[200];
+			char mapFilePath[200] = { 0 };
 			sprintf_s(mapFilePath, "build/map%ilegacymul/%08i.dat", map, shifted);
 			hash = COrion::CreateHash(mapFilePath);
 			if (hashes.find(hash) != hashes.end())
@@ -911,23 +910,22 @@ void CUopMapManager::CreateBlockTable(int map)
 				uopDataStruct = hashes.at(hash);
 			}
 			else
-{
+			{
 				LOG("False hash in uop map %i file.", map);
 			}
-}
-
+		}
 
 		uint realMapAddress = 0;
 		uint realStaticAddress = 0;
 		int realStaticCount = 0;
 		int blockNumber = block & 4095;
 		if (mapAddress != 0)
-{
+		{
 			uint address = mapAddress + uopDataStruct.offset + (blockNumber * 196);
 
 			if (address < endMapAddress)
 				realMapAddress = address;
-}
+		}
 
 		if (staticIdxAddress != 0 && staticAddress != 0)
 		{
@@ -943,7 +941,7 @@ void CUopMapManager::CreateBlockTable(int map)
 					realStaticCount = sidx->Size / sizeof(STATICS_BLOCK);
 
 					if (realStaticCount > 0)
-{
+					{
 						if (realStaticCount > 1024)
 							realStaticCount = 1024;
 					}

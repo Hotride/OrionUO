@@ -489,7 +489,11 @@ enum VALUE_KEY_INT
 	VKI_STATIC_DIFL_SIZE,
 	VKI_STATIC_DIFI_SIZE,
 	VKI_STATIC_DIF_SIZE,
-	VKI_VERDATA_SIZE
+	VKI_VERDATA_SIZE,
+	VKI_MAP_UOP_ADDRESS,
+	VKI_MAP_UOP_SIZE,
+	VKI_MAP_X_UOP_ADDRESS,
+	VKI_MAP_X_UOP_SIZE
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_STRING
