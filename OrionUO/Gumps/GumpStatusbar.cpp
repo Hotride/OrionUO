@@ -1069,16 +1069,11 @@ void CGumpStatusbar::OnLeftMouseButtonDown()
 	if (g_GeneratedMouseDown)
 		return;
 
-	CGump::OnLeftMouseButtonDown();
-
-	if (!g_PressedObject.LeftSerial || g_PressedObject.LeftSerial > ID_GSB_LOCK_MOVING)
+	//Проверим, может быть есть таргет, который нужно повесить на данного чара
+	if (g_Target.IsTargeting())
 	{
-		//Проверим, может быть есть таргет, который нужно повесить на данного чара
-		if (g_Target.IsTargeting())
-		{
-			g_Target.SendTargetObject(m_Serial);
-			g_MouseManager.CancelDoubleClick = true;
-		}
+		g_Target.SendTargetObject(m_Serial);
+		g_MouseManager.CancelDoubleClick = true;
 	}
 }
 //----------------------------------------------------------------------------------
