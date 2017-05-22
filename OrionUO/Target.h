@@ -45,6 +45,9 @@ public:
 	CTarget();
 	~CTarget() {}
 
+	//Послать таргет на объект
+	void SetLastTargetObject(const uint &serial);
+
 	//Установить данные прицела
 	void SetData(WISP_DATASTREAM::CDataReader &reader);
 

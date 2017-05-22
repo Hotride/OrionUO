@@ -46,6 +46,12 @@ void CTarget::Reset()
 	m_MultiGraphic = 0;
 }
 //----------------------------------------------------------------------------------
+void CTarget::SetLastTargetObject(const uint &serial)
+{
+	m_Type = 0;
+	pack32(m_LastData + 7, serial);
+}
+//----------------------------------------------------------------------------------
 void CTarget::SetData(WISP_DATASTREAM::CDataReader &reader)
 {
 	WISPFUN_DEBUG("c209_f2");

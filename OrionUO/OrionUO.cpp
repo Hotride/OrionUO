@@ -2550,7 +2550,10 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 			if (value == -1)
 				value = g_LastTargetObject;
 			else
+			{
 				g_LastTargetObject = value;
+				g_Target.SetLastTargetObject(g_LastTargetObject);
+			}
 
 			break;
 		}
