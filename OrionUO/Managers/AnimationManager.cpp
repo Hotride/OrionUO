@@ -2087,6 +2087,18 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 		if (mountID < MAX_ANIMATIONS_DATA_INDEX_COUNT)
 			drawY += m_DataIndex[mountID].MountedHeightOffset;
 	}
+	else if (m_Sitting)
+	{
+		animGroup = PAG_STAND;
+		animIndex = 0;
+
+		obj->UpdateAnimationInfo(m_Direction);
+
+		FixSittingDirection(layerDir, mirror, drawX, drawY);
+
+		if (m_Direction == 3)
+			animGroup = 25;
+	}
 
 	m_AnimGroup = animGroup;
 
