@@ -133,7 +133,7 @@ bool CSocket::Connect(const string &address, const int &port)
 					{
 						int totalSize = 3 + m_ProxyAccount.length() + m_ProxyPassword.length();
 						vector<char> buffer(totalSize, 0);
-						sprintf(&buffer[0], "  %s %s", m_ProxyAccount, m_ProxyPassword);
+						sprintf(&buffer[0], "  %s %s", m_ProxyAccount.c_str(), m_ProxyPassword.c_str());
 						buffer[0] = 1;
 						buffer[1] = m_ProxyAccount.length();
 						buffer[2 + m_ProxyAccount.length()] = m_ProxyPassword.length();

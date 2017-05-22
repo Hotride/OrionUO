@@ -2084,7 +2084,8 @@ PACKET_HANDLER(DenyMoveItem)
 			}
 		}
 
-		g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
+		if (obj != NULL)
+			g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
 
 		delete g_ObjectInHand;
 		g_ObjectInHand = NULL;

@@ -439,7 +439,7 @@ string CGumpSpellbook::GetSpellName(const int &offset, string &abbreviature, str
 			return m_SpellName6[offset][0];
 		case ST_MYSTICISM:
 			abbreviature = m_SpellName7[offset][1];
-			return m_SpellName7[offset][2];
+			return m_SpellName7[offset][1];
 		default:
 			break;
 	}

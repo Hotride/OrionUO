@@ -1377,7 +1377,7 @@ void CGumpOptions::RedrawMacroData()
 	m_MacroCheckboxAlt->Checked = alt;
 	m_MacroCheckboxCtrl->Checked = ctrl;
 
-	m_MacroKey->m_Entry.SetText(m_HotkeyText[m_MacroPointer->Key & 0xFF]);
+	m_MacroKey->m_Entry.SetText(m_HotkeyText[key & 0xFF]);
 
 	CMacroObject *obj = m_MacroObjectPointer;
 
