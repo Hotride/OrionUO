@@ -486,7 +486,7 @@ void CPlayer::UpdateAbilities()
 					break;
 				case 0x26C2: // Composite Bows
 					g_Ability[0] = AT_ARMOR_IGNORE;
-					g_Ability[1] = AT_ARMOR_IGNORE;
+					g_Ability[1] = AT_MOVING_SHOT;
 					break;
 				case 0x26C3: // Repeating Crossbows
 					g_Ability[0] = AT_DOUBLE_STRIKE;
@@ -526,7 +526,7 @@ void CPlayer::UpdateAbilities()
 					break;
 				case 0x26CC: // also Composite Bows
 					g_Ability[0] = AT_ARMOR_IGNORE;
-					g_Ability[1] = AT_ARMOR_IGNORE;
+					g_Ability[1] = AT_MOVING_SHOT;
 					break;
 				case 0x26CD: // also Repeating Crossbows
 					g_Ability[0] = AT_DOUBLE_STRIKE;
