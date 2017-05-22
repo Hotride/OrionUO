@@ -262,14 +262,14 @@ void CAnimationManager::UpdateAnimationAddressTable()
 			IFOR(d, 0, 5)
 			{
 				CTextureAnimationDirection &direction = group.m_Direction[d];
-				bool replace = (direction.FileIndex == 5);
+				bool replace = (direction.FileIndex >= 4);
 
 				if (direction.FileIndex == 2)
-					replace = (g_LockedClientFeatures & LFF_TD);
-				else if (direction.FileIndex == 3)
 					replace = (g_LockedClientFeatures & LFF_LBR);
-				else if (direction.FileIndex == 4)
+				else if (direction.FileIndex == 3)
 					replace = (g_LockedClientFeatures & LFF_AOS);
+				//else if (direction.FileIndex == 4)
+				//	replace = (g_LockedClientFeatures & LFF_AOS);
 				//else if (direction.FileIndex == 5)
 				//	replace = true; // (g_LockedClientFeatures & LFF_ML);
 
