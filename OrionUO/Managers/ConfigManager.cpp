@@ -74,7 +74,7 @@ void CConfigManager::DefaultPage1()
 {
 	WISPFUN_DEBUG("c138_f3");
 	m_Sound = true;
-	m_Music = true;
+	m_Music = false;
 	m_FootstepsSound = true;
 	m_CombatMusic = true;
 	m_SoundVolume = 255;
@@ -86,7 +86,7 @@ void CConfigManager::DefaultPage2()
 	WISPFUN_DEBUG("c138_f4");
 	m_ClientFPS = 32;
 	m_ReduceFPSUnactiveWindow = true;
-	m_StandartCharactersAnimationDelay = true;
+	m_StandartCharactersAnimationDelay = false;
 	m_StandartItemsAnimationDelay = true;
 	m_UseScaling = false;
 	m_RemoveTextWithBlending = true;
@@ -167,7 +167,7 @@ void CConfigManager::DefaultPage6()
 	m_ItemPropertiesMode = 0;
 	m_ItemPropertiesIcon = false;
 	m_ObjectHandles = false;
-	m_HoldShiftForContextMenus = true;
+	m_HoldShiftForContextMenus = false;
 	m_HoldShiftForEnablePathfind = false;
 }
 //---------------------------------------------------------------------------

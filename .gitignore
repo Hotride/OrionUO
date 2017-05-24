@@ -25,6 +25,8 @@
 *.sc
 *.iff
 *.uop
+*.pdb
+*.sf2
 /Makefile*
 /ipch
 /OrionUO/snapshots
@@ -39,4 +41,6 @@
 !/bin/*.dll
 !/debug_bin/*.dll
 !/bin/*.exe
+!/bin/*.pdb
+!/bin/*.sf2
 !/WikiData/RU/*.txt
