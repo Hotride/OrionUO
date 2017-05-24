@@ -28,6 +28,7 @@
 #include "../Wisp/WispBinaryFileWritter.h"
 #include "../Wisp/WispTextFileParser.h"
 #include "../Gumps/GumpAbility.h"
+#include "../Gumps/GumpSpellbook.h"
 
 #include <Shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib")
@@ -890,7 +891,39 @@ MACRO_RETURN_CODE CMacroManager::Process()
 				int spell = (g_MacroPointer->SubCode - MSC_G6_CLUMSY + 1);
 
 				if (spell > 0 && spell <= 143)
-					g_Orion.CastSpell(spell);
+				{
+					const int spellsCountTable[7] =
+					{
+						CGumpSpellbook::SPELLBOOK_1_SPELLS_COUNT,
+						CGumpSpellbook::SPELLBOOK_2_SPELLS_COUNT,
+						CGumpSpellbook::SPELLBOOK_3_SPELLS_COUNT,
+						CGumpSpellbook::SPELLBOOK_4_SPELLS_COUNT,
+						CGumpSpellbook::SPELLBOOK_5_SPELLS_COUNT,
+						CGumpSpellbook::SPELLBOOK_6_SPELLS_COUNT,
+						CGumpSpellbook::SPELLBOOK_7_SPELLS_COUNT
+					};
+
+					int totalCount = 0;
+					int spellType = 0;
+
+					for (spellType = 0; spellType < 7; spellType++)
+					{
+						totalCount += spellsCountTable[spellType];
+
+						if (spell < totalCount)
+							break;
+					}
+
+					if (spellType < 7)
+					{
+						spell += spellType * 100;
+
+						if (spellType < 2)
+							spell += 100;
+
+						g_Orion.CastSpell(spell);
+					}
+				}
 
 				break;
 			}
