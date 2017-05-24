@@ -36,8 +36,6 @@ If you want to support this project, you can donate to:
 
 PayPal: https://www.paypal.me/Hotride
 
-QIWI: 4890494336238795
-
 WebMoney:
 
 R644829964694
