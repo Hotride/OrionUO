@@ -277,6 +277,8 @@ bool COrion::Install()
 	LOG("COrion::Install()\n");
 	SetUnhandledExceptionFilter(OrionUnhandledExceptionFilter);
 
+	CRASHLOG("Orion version is: %s\n", g_App.GetFileVersion().c_str());
+
 	IFOR(i, 0, 256)
 	{
 		m_CRC_Table[i] = Reflect(i, 8) << 24;
