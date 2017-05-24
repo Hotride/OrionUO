@@ -878,58 +878,26 @@ bool CGumpSpellbook::OnLeftMouseButtonDoubleClick()
 		}
 		else
 		{
-			switch (m_BookType)
+			if (g_PressedObject.LeftSerial >= ID_GSB_SPELL_ICON_LEFT)
 			{
-				case ST_MAGE:
-				{
-					if (g_PressedObject.LeftSerial >= ID_GSB_SPELL_ICON_LEFT)
-					{
-						int spellIndex = g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_RIGHT + 1;
+				int spellIndex = g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_RIGHT + 1;
 
-						//Было использовано заклинание
-						if (g_PressedObject.LeftSerial < ID_GSB_SPELL_ICON_RIGHT)
-							spellIndex = g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_LEFT + 1;
+				//Было использовано заклинание
+				if (g_PressedObject.LeftSerial < ID_GSB_SPELL_ICON_RIGHT)
+					spellIndex = g_PressedObject.LeftSerial - ID_GSB_SPELL_ICON_LEFT + 1;
 
-						spellIndex += ((int)m_BookType * 100);
+				spellIndex += ((int)m_BookType * 100);
 
-						if (g_PacketManager.ClientVersion < CV_308Z)
-							g_Orion.CastSpellFromBook(spellIndex, m_Serial);
-						else
-							g_Orion.CastSpell(spellIndex);
+				if (g_PacketManager.ClientVersion < CV_308Z)
+					g_Orion.CastSpellFromBook(spellIndex, m_Serial);
+				else
+					g_Orion.CastSpell(spellIndex);
 
-						//Сворачиваем книгу
-						m_Minimized = true;
-						m_WantUpdateContent = true;
+				//Сворачиваем книгу
+				m_Minimized = true;
+				m_WantUpdateContent = true;
 
-						result = true;
-					}
-
-					break;
-				}
-				case ST_NECRO:
-				{
-					break;
-				}
-				case ST_PALADIN:
-				{
-					break;
-				}
-				case ST_BUSHIDO:
-				{
-					break;
-				}
-				case ST_NINJITSU:
-				{
-					break;
-				}
-				case ST_SPELL_WEAVING:
-				{
-					break;
-				}
-				case ST_MYSTICISM:
-				{
-					break;
-				}
+				result = true;
 			}
 		}
 	}
