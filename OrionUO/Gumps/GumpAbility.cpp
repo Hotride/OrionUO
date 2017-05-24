@@ -69,15 +69,17 @@ void CGumpAbility::OnAbilityUse(const int &index)
 	WISPFUN_DEBUG("c85_f5");
 	uchar &ability = g_Ability[index];
 
-	CPacketUseCombatAbility(ability & 0x7F).Send();
-
 	if (!(ability & 0x80))
 	{
 		IFOR(i, 0, 2)
 			g_Ability[i] &= 0x7F;
-	}
 
-	ability |= 0x80;
+		CPacketUseCombatAbility(ability).Send();
+	}
+	else
+		CPacketUseCombatAbility(0).Send();
+
+	ability ^= 0x80;
 
 	g_GumpManager.UpdateContent(0, 0, GT_ABILITY);
 	g_GumpManager.UpdateContent(1, 0, GT_ABILITY);
