@@ -57,6 +57,12 @@ private:
 	//Проверка на комментарий
 	bool IsComment();
 
+	//Проверка на кавычку
+	bool IsQuote();
+
+	//Проверка на закрывающую кавычку
+	bool IsSecondQuote();
+
 	//Получить следующий токен
 	string ObtainData();
 

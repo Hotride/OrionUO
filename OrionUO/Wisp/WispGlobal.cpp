@@ -131,6 +131,11 @@ string Trim(const string &str)
 	return string(it, rit.base());
 }
 //----------------------------------------------------------------------------------
+int ToInt(const string &str)
+{
+	return atoi(str.c_str());
+}
+//----------------------------------------------------------------------------------
 string ToLowerA(string str)
 {
 	if (str.length())

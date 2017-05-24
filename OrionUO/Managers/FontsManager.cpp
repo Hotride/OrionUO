@@ -1530,6 +1530,9 @@ HTMLCHAR_LIST CFontsManager::GetHTMLData(uchar font, const wchar_t *str, int &le
 
 			HTML_TAG_TYPE tag = ParseHTMLTag(str, len, i, endTag, newInfo);
 
+			if (tag == HTT_NONE)
+				continue;
+
 			if (!endTag)
 			{
 				if (newInfo.Font == 0xFF)

@@ -67,6 +67,7 @@
 #include "AnimationManager.h"
 #include "../zlib.h"  
 #include "CustomHousesManager.h"
+#include "../Wisp/WispTextFileParser.h"
 
 #pragma comment(lib, "zdll.lib")
 //----------------------------------------------------------------------------------
@@ -4629,286 +4630,361 @@ PACKET_HANDLER(OpenGump)
 
 	CGumpGeneric *gump = new CGumpGeneric(serial, x, y, id);
 
-	puchar p = m_Start + 21;
-	puchar e = p;
+	int commandsLength = ReadInt16BE();
+	string commands = ReadString(commandsLength);
 
-	int commandsLen = unpack16(m_Start + 19);
-	puchar end = p + commandsLen;
+	WISP_FILE::CTextFileParser parser("", "", "", "{}");
+	WISP_FILE::CTextFileParser cmdParser("", " ", "", "");
 
-	while (p < end)
+	STRING_LIST commandList = parser.GetTokens(commands.c_str());
+
+	for (const string &str : commandList)
 	{
-		while (p < end && *p && *p != '{')
-			p++;
+		STRING_LIST list = cmdParser.GetTokens(str.c_str());
 
-		e = p + 1;
+		int listSize = (int)list.size();
 
-		while (e < end && *e && *e == ' ')
-			e++;
+		if (!listSize)
+			continue;
 
-		char lowc[20] = { 0 };
-
-		int eLen = strlen((char*)e);
-		eLen = (eLen > 19 ? 20 : eLen);
-		memcpy(&lowc[0], &e[0], eLen);
-		lowc[19] = 0;
-		_strlwr(lowc);
+		string cmd = ToLowerA(list[0]);
 
 		CBaseGUI *go = NULL;
 
-		//TPRINT("\tlwr.token=%s\n", lowc);
-		if (!memcmp(lowc, "nodispose", 9))
-			e += 10;
-		else if (!memcmp(lowc, "nomove", 6))
+		if (cmd == "nodispose")
+		{
+		}
+		else if (cmd == "nomove")
 		{
 			gump->NoMove = true;
-			e += 7;
 		}
-		else if (!memcmp(lowc, "noclose", 7))
+		else if (cmd == "noclose")
 		{
 			gump->NoClose = true;
-			e += 7;
 		}
-		else if (!memcmp(lowc, "page", 4))
+		else if (cmd == "page")
 		{
-			e += 5;
-			int page = 0;
-			sscanf((char*)e, "%d", &page);
+			if (listSize >= 2)
+			{
+				AddHTMLGumps(gump, htmlGumlList);
 
-			AddHTMLGumps(gump, htmlGumlList);
-
-			go = new CGUIPage(page);
+				int page = ToInt(list[1]);
+				go = new CGUIPage(page);
+			}
 		}
-		else if (!memcmp(lowc, "group", 5))
+		else if (cmd == "group")
 		{
-			e += 6;
-			int group = 0;
-			sscanf((char*)e, "%d", &group);
-
-			go = new CGUIGroup(group);
+			if (listSize >= 2)
+			{
+				int group = ToInt(list[1]);
+				go = new CGUIGroup(group);
+			}
 		}
-		else if (!memcmp(lowc, "endgroup", 8))
+		else if (cmd == "endgroup")
 		{
-			e += 9;
-
 			go = new CGUIGroup(0);
 		}
-		else if (!memcmp(lowc, "resizepic", 9))
+		else if (cmd == "resizepic")
 		{
-			e += 10;
-			int x = 0, y = 0, w = 0, h = 0, graphic = 0;
-			sscanf((char*)e, "%d %d %d %d %d", &x, &y, &graphic, &w, &h);
+			if (listSize >= 6)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int graphic = ToInt(list[3]);
+				int width = ToInt(list[4]);
+				int height = ToInt(list[5]);
 
-			go = new CGUIResizepic(0, graphic, x, y, w, h);
-			go->DrawOnly = true;
+				go = new CGUIResizepic(0, graphic, x, y, width, height);
+				go->DrawOnly = true;
+			}
 		}
-		else if (!memcmp(lowc, "checkertrans", 12))
+		else if (cmd == "checkertrans")
 		{
-			e += 13;
-			int x = 0, y = 0, w = 0, h = 0;
-			sscanf((char*)e, "%d %d %d %d", &x, &y, &w, &h);
+			if (listSize >= 5)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int width = ToInt(list[3]);
+				int height = ToInt(list[4]);
 
-			go = new CGUIChecktrans(x, y, w, h);
+				go = new CGUIChecktrans(x, y, width, height);
+			}
 		}
-		else if (!memcmp(lowc, "buttontileart", 13))
+		else if (cmd == "button")
 		{
-			e += 14;
-			int x = 0, y = 0, action = 0, topage = 0, number = 0, up = 0, down = 0, tid = 0, tcolor = 0, tx = 0, ty = 0;
-			sscanf((char*)e, "%d %d %d %d %d %d %d %d %d %d %d", &x, &y, &up, &down, &action, &topage, &number, &tid, &tcolor, &tx, &ty);
+			if (listSize >= 8)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int up = ToInt(list[3]);
+				int down = ToInt(list[4]);
+				int action = ToInt(list[5]);
+				int toPage = ToInt(list[6]);
+				int index = ToInt(list[7]);
 
-			if (action == 1)
-				topage = -1;
+				if (action == 1)
+					toPage = -1;
 
-			go = new CGUIButtonTileart(number, up, up, down, x, y, tid, tcolor, tx, ty);
+				go = new CGUIButton(index, up, up, down, x, y);
 
-			((CGUIButton*)go)->ToPage = topage;
+				((CGUIButton*)go)->ToPage = toPage;
+			}
 		}
-		else if (!memcmp(lowc, "button", 6))
+		else if (cmd == "buttontileart")
 		{
-			e += 7;
-			int x = 0, y = 0, action = 0, topage = 0, number = 0, up = 0, down = 0;
+			if (listSize >= 12)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int up = ToInt(list[3]);
+				int down = ToInt(list[4]);
+				int action = ToInt(list[5]);
+				int toPage = ToInt(list[6]);
+				int index = ToInt(list[7]);
+				int tileGraphic = ToInt(list[8]);
+				int tileColor = ToInt(list[9]);
+				int tileX = ToInt(list[10]);
+				int tileY = ToInt(list[11]);
 
-			sscanf((char*)e, "%i %i %i %i %i %i %i", &x, &y, &up, &down, &action, &topage, &number);
+				if (action == 1)
+					toPage = -1;
 
-			if (action == 1)
-				topage = -1;
+				go = new CGUIButtonTileart(index, up, up, down, x, y, tileGraphic, tileColor, tileX, tileY);
 
-			go = new CGUIButton(number, up, up, down, x, y);
-
-			((CGUIButton*)go)->ToPage = topage;
+				((CGUIButton*)go)->ToPage = toPage;
+			}
 		}
-		else if (!memcmp(lowc, "checkbox", 8))
+		else if (cmd == "checkbox")
 		{
-			e += 9;
-			int x = 0, y = 0, state = 0, number = 0, up = 0, down = 0;
-			sscanf((char*)e, "%d %d %d %d %d %d", &x, &y, &up, &down, &state, &number);
+			if (listSize >= 7)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int up = ToInt(list[3]);
+				int down = ToInt(list[4]);
+				int state = ToInt(list[5]);
+				int index = ToInt(list[6]);
 
-			go = new CGUICheckbox(number, up, down, up, x, y);
+				go = new CGUICheckbox(index, up, down, up, x, y);
 
-			((CGUICheckbox*)go)->Checked = state != 0;
+				((CGUICheckbox*)go)->Checked = (state != 0);
+			}
 		}
-		else if (!memcmp(lowc, "radio", 5))
+		else if (cmd == "radio")
 		{
-			e += 6;
-			int x = 0, y = 0, state = 0, number = 0, up = 0, down = 0;
-			sscanf((char*)e, "%d %d %d %d %d %d", &x, &y, &up, &down, &state, &number);
+			if (listSize >= 7)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int up = ToInt(list[3]);
+				int down = ToInt(list[4]);
+				int state = ToInt(list[5]);
+				int index = ToInt(list[6]);
 
-			go = new CGUIRadio(number, up, down, up, x, y);
+				go = new CGUIRadio(index, up, down, up, x, y);
 
-			((CGUIRadio*)go)->Checked = state != 0;
+				((CGUIRadio*)go)->Checked = (state != 0);
+			}
 		}
-		else if (!memcmp(lowc, "croppedtext", 11))
+		else if (cmd == "text")
 		{
-			e += 12;
-			int x = 0, y = 0, w = 0, h = 0, number = 0, color = 0;
-			sscanf((char*)e, "%d %d %d %d %d %d", &x, &y, &w, &h, &color, &number);
+			if (listSize >= 5)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int color = ToInt(list[3]);
+				int index = ToInt(list[4]);
 
-			if (color)
-				color++;
+				if (color)
+					color++;
 
-			go = new CGUIGenericText(number, color, x, y, w);
-			go->DrawOnly = true;
+				go = new CGUIGenericText(index, color, x, y);
+				go->DrawOnly = true;
+			}
 		}
-		else if (!memcmp(lowc, "textentrylimited", 16))
+		else if (cmd == "croppedtext")
 		{
-			e += 17;
-			int x = 0, y = 0, w = 0, h = 0, index = 0, number = 0, length = 0, color = 0;
-			sscanf((char*)e, "%d %d %d %d %d %d %d %d", &x, &y, &w, &h, &color, &index, &number, &length);
+			if (listSize >= 7)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int width = ToInt(list[3]);
+				int height = ToInt(list[4]);
+				int color = ToInt(list[5]);
+				int index = ToInt(list[6]);
 
-			if (color)
-				color++;
+				if (color)
+					color++;
 
-			go = new CGUIGenericTextEntry(index + 1, number, color, x, y, w, length);
-			((CGUIGenericTextEntry*)go)->CheckOnSerial = true;
-			gump->Add(new CGUIHitBox(index + 1, x, y, w, h));
+				go = new CGUIGenericText(index, color, x, y, width);
+				go->DrawOnly = true;
+			}
 		}
-		else if (!memcmp(lowc, "textentry", 9))
+		else if (cmd == "textentry")
 		{
-			e += 10;
-			int x = 0, y = 0, w = 0, h = 0, index = 0, number = 0, color = 0;
-			sscanf((char*)e, "%d %d %d %d %d %d %d", &x, &y, &w, &h, &color, &index, &number);
+			if (listSize >= 8)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int width = ToInt(list[3]);
+				int height = ToInt(list[4]);
+				int color = ToInt(list[5]);
+				int textIndex = ToInt(list[6]);
+				int index = ToInt(list[7]);
 
-			if (color)
-				color++;
+				if (color)
+					color++;
 
-			go = new CGUIGenericTextEntry(index + 1, number, color, x, y);
-			((CGUIGenericTextEntry*)go)->CheckOnSerial = true;
-			gump->Add(new CGUIHitBox(index + 1, x, y, w, h));
+				gump->Add(new CGUIHitBox(index + 1, x, y, width, height));
+				go = new CGUIGenericTextEntry(index + 1, textIndex, color, x, y);
+				((CGUIGenericTextEntry*)go)->CheckOnSerial = true;
+			}
 		}
-		else if (!memcmp(lowc, "text", 4))
+		else if (cmd == "textentrylimited")
 		{
-			e += 5;
-			int x = 0, y = 0, n = 0, color = 0;
-			sscanf((char*)e, "%d %d %d %d", &x, &y, &color, &n);
+			if (listSize >= 9)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int width = ToInt(list[3]);
+				int height = ToInt(list[4]);
+				int color = ToInt(list[5]);
+				int textIndex = ToInt(list[6]);
+				int index = ToInt(list[7]);
+				int length = ToInt(list[8]);
 
-			if (color)
-				color++;
+				if (color)
+					color++;
 
-			go = new CGUIGenericText(n, color, x, y);
-			go->DrawOnly = true;
+				gump->Add(new CGUIHitBox(index + 1, x, y, width, height));
+				go = new CGUIGenericTextEntry(index + 1, textIndex, color, x, y, width, length);
+				((CGUIGenericTextEntry*)go)->CheckOnSerial = true;
+			}
 		}
-		else if (!memcmp(lowc, "tilepichue", 10))
+		else if (cmd == "tilepic")
 		{
-			e += 11;
-			int x = 0, y = 0, graphic = 0, color = 0;
-			sscanf((char*)e, "%d %d %d %d", &x, &y, &graphic, &color);
+			if (listSize >= 4)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int graphic = ToInt(list[3]);
 
-			gump->Add(new CGUIShader(g_ColorizerShader, true));
-			go = new CGUITilepic(graphic, color, x, y);
-			go->DrawOnly = true;
+				go = new CGUITilepic(graphic, 0, x, y);
+				go->DrawOnly = true;
+			}
 		}
-		else if (!memcmp(lowc, "tilepic", 7))
+		else if (cmd == "tilepichue")
 		{
-			e += 8;
-			int x = 0, y = 0, graphic = 0;
-			sscanf((char*)e, "%d %d %d", &x, &y, &graphic);
+			if (listSize >= 5)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int graphic = ToInt(list[3]);
+				int color = ToInt(list[4]);
 
-			go = new CGUITilepic(graphic, 0, x, y);
-			go->DrawOnly = true;
-		}
-		else if (!memcmp(lowc, "gumppictiled", 12))
-		{
-			e += 13;
-			int x = 0, y = 0, w = 0, h = 0, graphic = 0;
-			sscanf((char*)e, "%d %d %d %d %d", &x, &y, &w, &h, &graphic);
-
-			go = new CGUIGumppicTiled(graphic, x, y, w, h);
-			go->DrawOnly = true;
-		}
-		else if (!memcmp(lowc, "gumppic", 7))
-		{
-			e += 8;
-			int x = 0, y = 0, graphic = 0, color = 0;
-			sscanf((char*)e, "%d %d %d", &x, &y, &graphic);
-
-			char bufptr[20] = { 0 };
-			sprintf(bufptr, "%d %d %d", x, y, graphic);
-
-			int curlen = strlen(bufptr);
-			while (e + curlen < end && e[curlen] == ' ')
-				curlen++;
-
-			if (e[curlen] != '}')
-				sscanf((char*)(e + strlen(bufptr) + 5), "%d", &color);
-
-			if (color)
 				gump->Add(new CGUIShader(g_ColorizerShader, true));
-
-			go = new CGUIGumppic(graphic, x, y);
-			go->Color = color;
-			go->DrawOnly = true;
-		}
-		else if (!memcmp(lowc, "xmfhtmlgump", 11))
-		{
-			HTMLGumpDataInfo htmlInfo = { 0 };
-			htmlInfo.IsXMF = true;
-
-			if (!memcmp(lowc, "xmfhtmlgumpcolor", 16))
-			{
-				e += 17;
-				sscanf((char*)e, "%d %d %d %d %d %d %d %d", &htmlInfo.X, &htmlInfo.Y, &htmlInfo.Width, &htmlInfo.Height, &htmlInfo.TextID, &htmlInfo.HaveBackground, &htmlInfo.HaveScrollbar, &htmlInfo.Color);
+				go = new CGUITilepic(graphic, color, x, y);
+				go->DrawOnly = true;
 			}
-			else
+		}
+		else if (cmd == "gumppic")
+		{
+			if (listSize >= 4)
 			{
-				e += 12;
-				sscanf((char*)e, "%d %d %d %d %d %d %d", &htmlInfo.X, &htmlInfo.Y, &htmlInfo.Width, &htmlInfo.Height, &htmlInfo.TextID, &htmlInfo.HaveBackground, &htmlInfo.HaveScrollbar);
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int graphic = ToInt(list[3]);
+				int color = 0;
+
+				if (listSize >= 5)
+				{
+					WISP_FILE::CTextFileParser gumppicParser("", "=", "", "");
+					STRING_LIST hueList = gumppicParser.GetTokens(list[4].c_str());
+
+					if (hueList.size() > 1)
+						color = ToInt(hueList[1]);
+					else
+						color = ToInt(hueList[0]);
+
+					if (listSize >= 6)
+					{
+						STRING_LIST classList = gumppicParser.GetTokens(list[5].c_str());
+
+						if (hueList.size() > 1)
+						{
+							if (ToLowerA(classList[0]) == "class" && ToLowerA(Trim(classList[1])) == "virtuegumpitem")
+							{
+							}
+						}
+					}
+				}
+
+				if (go == NULL)
+				{
+					if (color)
+						gump->Add(new CGUIShader(g_ColorizerShader, true));
+
+					go = new CGUIGumppic(graphic, x, y);
+					go->Color = color;
+					go->DrawOnly = true;
+				}
+			}
+		}
+		else if (cmd == "gumppictiled")
+		{
+			if (listSize >= 6)
+			{
+				int x = ToInt(list[1]);
+				int y = ToInt(list[2]);
+				int width = ToInt(list[3]);
+				int height = ToInt(list[4]);
+				int graphic = ToInt(list[5]);
+
+				go = new CGUIGumppicTiled(graphic, x, y, width, height);
+				go->DrawOnly = true;
+			}
+		}
+		else if (cmd == "htmlgump" || cmd == "xmfhtmlgump" || cmd == "xmfhtmlgumpcolor")
+		{
+			if (listSize >= 8)
+			{
+				HTMLGumpDataInfo htmlInfo = { 0 };
+				htmlInfo.IsXMF = (cmd != "htmlgump");
+
+				htmlInfo.X = ToInt(list[1]);
+				htmlInfo.Y = ToInt(list[2]);
+				htmlInfo.Width = ToInt(list[3]);
+				htmlInfo.Height = ToInt(list[4]);
+				htmlInfo.TextID = ToInt(list[5]);
+				htmlInfo.HaveBackground = ToInt(list[6]);
+				htmlInfo.HaveScrollbar = ToInt(list[7]);
 				htmlInfo.Color = 0;
+
+				if (cmd == "xmfhtmlgumpcolor" && listSize >= 9)
+					htmlInfo.Color = ToInt(list[8]);
+
+				htmlGumlList.push_back(htmlInfo);
 			}
-
-			htmlGumlList.push_back(htmlInfo);
 		}
-		else if (!memcmp(lowc, "htmlgump", 8))
+		/*else if (cmd == "xmfhtmltok")
 		{
-			e += 9;
-
-			HTMLGumpDataInfo htmlInfo = { 0 };
-
-			sscanf((char*)e, "%d %d %d %d %d %d %d", &htmlInfo.X, &htmlInfo.Y, &htmlInfo.Width, &htmlInfo.Height, &htmlInfo.TextID, &htmlInfo.HaveBackground, &htmlInfo.HaveScrollbar);
-
-			htmlGumlList.push_back(htmlInfo);
+			if (listSize >= 5)
+			{
+			}
 		}
-		/*else if (!memcmp(lowc, "xfmhtmltok", 10))
+		else if (cmd == "tooltip")
 		{
-		e += 11;
-		int x = 0, y = 0, w = 0, h = 0, background = 0, scrollbar = 0, clilocID = 0;
-		sscanf((char*)e, "%d %d %d %d %d %d", &x, &y, &w, &h, &background, &scrollbar, &clilocID);
-
-		go = new TGumpXFMHTMLToken(clilocID, x, y, w, h, background, scrollbar);
-		}*/
-		/*else if (!memcmp(lowc, "tooltip", 7))
-		{
-			e += 8;
-			int clilocID = 0;
-			sscanf((char*)e, "%d", &clilocID);
-
-			go = new TGumpTooltip(clilocID);
+			if (listSize >= 2)
+			{
+				int cliloc = ToInt(list[1]);
+			}
 		}
-		else if (!memcmp(lowc, "mastergump", 10))
+		else if (cmd == "mastergump")
 		{
-			e += 11;
-			int index = 0;
-			sscanf((char*)e, "%d", &index);
-
-			go = new TGumpMasterGump(index);
+			if (listSize >= 2)
+			{
+				int index = ToInt(list[1]);
+			}
 		}*/
 
 		if (go != NULL)
@@ -4918,18 +4994,11 @@ PACKET_HANDLER(OpenGump)
 			if ((go->Type == GOT_TILEPIC || go->Type == GOT_GUMPPIC) && go->Color)
 				gump->Add(new CGUIShader(g_ColorizerShader, false));
 		}
-
-		while (e < end && *e && *e != '}')
-			e++;
-
-		p = e + 1;
 	}
 
 	AddHTMLGumps(gump, htmlGumlList);
 
-	m_Ptr = m_Start + 21 + commandsLen;
-
-	short textLinesCount = ReadInt16BE();
+	int textLinesCount = ReadInt16BE();
 
 	IFOR(i, 0, textLinesCount)
 	{

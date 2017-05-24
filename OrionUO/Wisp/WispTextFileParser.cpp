@@ -136,6 +136,44 @@ bool CTextFileParser::IsComment()
 	return result;
 }
 //----------------------------------------------------------------------------------
+//Проверка на кавычку
+bool CTextFileParser::IsQuote()
+{
+	bool result = (*m_Ptr == '\n');
+
+	//Пройдемся по кавычкам, формат кавычек в наборе: openQuote, closeQuote (могут быть одинаковыми)
+	for (int i = 0; i < m_QuotesSize; i += 2)
+	{
+		//Если кавычка нашлась
+		if (*m_Ptr == m_Quotes[i] || *m_Ptr == m_Quotes[i + 1])
+		{
+			result = true;
+			break;
+		}
+	}
+
+	return result;
+}
+//----------------------------------------------------------------------------------
+//Проверка на закрывающую кавычку
+bool CTextFileParser::IsSecondQuote()
+{
+	bool result = (*m_Ptr == '\n');
+
+	//Пройдемся по кавычкам, формат кавычек в наборе: openQuote, closeQuote (могут быть одинаковыми)
+	for (int i = 0; i < m_QuotesSize; i += 2)
+	{
+		//Если кавычка нашлась
+		if (*m_Ptr == m_Quotes[i + 1])
+		{
+			result = true;
+			break;
+		}
+	}
+
+	return result;
+}
+//----------------------------------------------------------------------------------
 //Получить следующий токен
 string CTextFileParser::ObtainData()
 {
@@ -283,6 +321,8 @@ STRING_LIST CTextFileParser::ReadTokens(bool trim)
 			//Если токен не пуст - запишем его в стек
 			if (buf.length())
 				result.push_back(buf);
+			else if (IsSecondQuote())
+				m_Ptr++;
 		}
 
 		m_File.Ptr = m_EOL + 1;

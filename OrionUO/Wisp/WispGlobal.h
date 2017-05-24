@@ -55,6 +55,7 @@ string ToCamelCaseA(string str);
 string ToString(const wstring &wstr);
 wstring ToWString(const string &str);
 string Trim(const string &str);
+int ToInt(const string &str);
 string ToLowerA(string str);
 string ToUpperA(string str);
 wstring ToLowerW(wstring str);
