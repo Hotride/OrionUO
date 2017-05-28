@@ -23,6 +23,7 @@
 #include "../Party.h"
 #include "../Gumps/GumpConsoleType.h"
 #include "../Game objects/GamePlayer.h"
+#include "../Container.h"
 //----------------------------------------------------------------------------------
 CConfigManager g_ConfigManager;
 CConfigManager g_OptionsConfig;
@@ -784,7 +785,15 @@ bool CConfigManager::Load(string path)
 					m_HoldShiftForContextMenus = file.ReadUInt8();
 
 					if (blockSize > 15)
+					{
 						m_HoldShiftForEnablePathfind = file.ReadUInt8();
+
+						if (blockSize > 16)
+						{
+							g_ContainerRect.DefaultX = file.ReadUInt16LE();
+							g_ContainerRect.DefaultY = file.ReadUInt16LE();
+						}
+					}
 				}
 			}
 			else
@@ -1087,7 +1096,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 6
-	writter.WriteInt8(16); //size of block
+	writter.WriteInt8(20); //size of block
 	writter.WriteInt8(6); //page index
 	writter.WriteUInt8(m_EnablePathfind);
 	writter.WriteUInt8(m_HoldTabForCombat);
@@ -1103,6 +1112,8 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_ReduceFPSUnactiveWindow);
 	writter.WriteUInt8(m_HoldShiftForContextMenus);
 	writter.WriteUInt8(m_HoldShiftForEnablePathfind);
+	writter.WriteUInt16LE(g_ContainerRect.DefaultX);
+	writter.WriteUInt16LE(g_ContainerRect.DefaultY);
 	writter.WriteBuffer();
 
 	//Page 7

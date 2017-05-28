@@ -29,6 +29,7 @@
 #include "../Wisp/WispTextFileParser.h"
 #include "../Gumps/GumpAbility.h"
 #include "../Gumps/GumpSpellbook.h"
+#include "PluginManager.h"
 
 #include <Shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib")
@@ -1076,6 +1077,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 				{
 					g_LastTargetObject = obj->Serial;
 					g_LastAttackObject = obj->Serial;
+					g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_STATUS_REQUEST, (WPARAM)obj->Serial, 0);
 				}
 
 				break;
