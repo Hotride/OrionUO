@@ -1315,10 +1315,11 @@ CPacketToggleGargoyleFlying::CPacketToggleGargoyleFlying()
 }
 //----------------------------------------------------------------------------------
 CPacketCustomHouseDataReq::CPacketCustomHouseDataReq(const uint &serial)
-	: CPacket(7)
+	: CPacket(9)
 {
 	WriteUInt8(0xBF);
-	WriteUInt16BE(0x07);
+	WriteUInt16BE(0x09);
+	WriteUInt16BE(0x1E);
 	WriteUInt32BE(serial);
 }
 //----------------------------------------------------------------------------------
