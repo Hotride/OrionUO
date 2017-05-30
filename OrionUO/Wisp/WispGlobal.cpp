@@ -87,6 +87,27 @@ string ToCamelCaseA(string str)
 	return str;
 }
 //----------------------------------------------------------------------------------
+wstring ToCamelCaseW(wstring str)
+{
+	int offset = L'a' - L'A';
+	bool lastSpace = true;
+
+	for (wchar_t &c : str)
+	{
+		if (c == L' ')
+			lastSpace = true;
+		else if (lastSpace)
+		{
+			lastSpace = false;
+
+			if (c >= L'a' && c <= L'z')
+				c -= offset;
+		}
+	}
+
+	return str;
+}
+//----------------------------------------------------------------------------------
 string ToString(const wstring &wstr)
 {
 	string str = "";

@@ -40,7 +40,9 @@ private:
 	@param [__in] id Индекс клилока
 	@return Результат загрузки или сообщение с ошибкой
 	*/
-	string Load(uint &id, const bool &toCamelCase);
+	string Load(uint &id);
+
+	inline string CamelCaseTest(const bool &toCamelCase, const string &result);
 
 public:
 	CCliloc(const string &lang);

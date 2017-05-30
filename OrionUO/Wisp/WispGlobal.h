@@ -52,6 +52,7 @@ int CalculatePercents(int max, int current, int maxValue);
 string EncodeUTF8(const wstring &str);
 wstring DecodeUTF8(const string &str);
 string ToCamelCaseA(string str);
+wstring ToCamelCaseW(wstring str);
 string ToString(const wstring &wstr);
 wstring ToWString(const string &str);
 string Trim(const string &str);
