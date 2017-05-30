@@ -919,7 +919,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 					{
 						spell += spellType * 100;
 
-						if (spellType < 2)
+						if (spellType > 2)
 							spell += 100;
 
 						g_Orion.CastSpell(spell);
