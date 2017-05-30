@@ -3942,7 +3942,7 @@ PACKET_HANDLER(DisplayClilocString)
 
 	wstring args((wchar_t*)Ptr);
 	//wstring args = ReadUnicodeStringLE(0);
-	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, true, args);
+	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, false, args);
 	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
@@ -4829,8 +4829,8 @@ PACKET_HANDLER(OpenGump)
 				int width = ToInt(list[3]);
 				int height = ToInt(list[4]);
 				int color = ToInt(list[5]);
-				int textIndex = ToInt(list[6]);
-				int index = ToInt(list[7]);
+				int index = ToInt(list[6]);
+				int textIndex = ToInt(list[7]);
 
 				if (color)
 					color++;
@@ -4849,8 +4849,8 @@ PACKET_HANDLER(OpenGump)
 				int width = ToInt(list[3]);
 				int height = ToInt(list[4]);
 				int color = ToInt(list[5]);
-				int textIndex = ToInt(list[6]);
-				int index = ToInt(list[7]);
+				int index = ToInt(list[6]);
+				int textIndex = ToInt(list[7]);
 				int length = ToInt(list[8]);
 
 				if (color)
