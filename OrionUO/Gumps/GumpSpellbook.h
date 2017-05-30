@@ -46,6 +46,8 @@ public:
 	static const string m_SpellName6[SPELLBOOK_6_SPELLS_COUNT][2];
 	static const string m_SpellName7[SPELLBOOK_7_SPELLS_COUNT][2];
 
+	static string m_SpellReagents1[SPELLBOOK_1_SPELLS_COUNT];
+
 private:
 	static const int ID_GSB_BUTTON_PREV = 1;
 	static const int ID_GSB_BUTTON_NEXT = 2;
@@ -62,7 +64,6 @@ private:
 
 	static const string m_SpellCircleName[8];
 
-	static const string m_SpellReagents1[SPELLBOOK_1_SPELLS_COUNT];
 	static const string m_SpellReagents2[SPELLBOOK_2_SPELLS_COUNT];
 
 	static const SPELL_REQURIES m_SpellRequries2[SPELLBOOK_2_SPELLS_COUNT];

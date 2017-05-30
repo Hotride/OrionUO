@@ -994,7 +994,7 @@ const string CGumpSpellbook::m_SpellName1[SPELLBOOK_1_SPELLS_COUNT][2] =
 	{ "Water Elemental", "K V X A" }
 };
 //----------------------------------------------------------------------------------
-const string CGumpSpellbook::m_SpellReagents1[SPELLBOOK_1_SPELLS_COUNT] =
+string CGumpSpellbook::m_SpellReagents1[SPELLBOOK_1_SPELLS_COUNT] =
 {
 	"Bloodmoss\nNightshade",
 	"Garlic\nGinseng\nMandrake root",
