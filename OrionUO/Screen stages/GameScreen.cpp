@@ -711,7 +711,9 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 		if (obj->CurrentRenderIndex == renderIndex || obj->NoDrawTile)
 			continue;
 
-		int maxObjectZ = obj->Z + obj->RenderQueueIndex;
+		int z = obj->Z;
+
+		int maxObjectZ = z + obj->RenderQueueIndex;
 
 		CRenderStaticObject *rso = obj->StaticGroupObjectPtr();
 
@@ -750,8 +752,6 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 
 		obj->CurrentRenderIndex = renderIndex;
 #endif
-
-		int z = obj->Z;
 
 		if (obj->IsInternal())
 			continue;
