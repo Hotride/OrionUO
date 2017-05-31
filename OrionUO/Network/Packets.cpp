@@ -1211,6 +1211,17 @@ CPacketBookPageData::CPacketBookPageData(CGumpBook *gump, int page)
 	}
 }
 //---------------------------------------------------------------------------
+CPacketBookPageDataRequest::CPacketBookPageDataRequest(const uint &serial, const int &page)
+: CPacket(13)
+{
+	WriteUInt8(0x66);
+	WriteUInt16BE(0x000D);
+	WriteUInt32BE(serial);
+	WriteUInt16BE(0x0001);
+	WriteUInt16BE(page);
+	WriteUInt16BE(0xFFFF);
+}
+//---------------------------------------------------------------------------
 CPacketBuyRequest::CPacketBuyRequest(CGumpShop *gump)
 : CPacket(1)
 {

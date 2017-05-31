@@ -447,6 +447,12 @@ public:
 	CPacketBookPageData(class CGumpBook *gump, int page);
 };
 //----------------------------------------------------------------------------------
+class CPacketBookPageDataRequest : public CPacket
+{
+public:
+	CPacketBookPageDataRequest(const uint &serial, const int &page);
+};
+//----------------------------------------------------------------------------------
 class CPacketBuyRequest : public CPacket
 {
 public:

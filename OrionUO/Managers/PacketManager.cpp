@@ -5468,7 +5468,7 @@ PACKET_HANDLER(BookData)
 		{
 			ushort page = ReadUInt16BE();
 
-			if (page >= gump->PageCount)
+			if (page > gump->PageCount)
 				continue;
 
 			ushort lineCount = ReadUInt16BE();
@@ -5480,7 +5480,12 @@ PACKET_HANDLER(BookData)
 				if (j)
 					str += L'\n';
 
-				str += DecodeUTF8(ReadString(0));
+				wstring temp = DecodeUTF8(ReadString(0));
+
+				while (temp.length() && (temp.back() == L'\n' || temp.back() == L'\r'))
+					temp.resize(temp.length() - 1);
+
+				str += temp;
 			}
 
 			gump->SetPageData(page, str);

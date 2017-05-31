@@ -23,6 +23,7 @@ m_Unicode(unicode)
 {
 	WISPFUN_DEBUG("c87_f1");
 	m_ChangedPage = new bool[pageCount + 1];
+	m_PageDataReceived = new bool[pageCount + 1];
 	m_Page = 0;
 	m_Draw2Page = true;
 
@@ -69,6 +70,7 @@ m_Unicode(unicode)
 	for (int i = 0; i <= m_PageCount; i++)
 	{
 		m_ChangedPage[i] = false;
+		m_PageDataReceived[i] = false;
 
 		if (i)
 		{
@@ -91,6 +93,7 @@ m_Unicode(unicode)
 		if (i <= m_PageCount)
 		{
 			m_ChangedPage[i] = false;
+			m_PageDataReceived[i] = false;
 
 			Add(new CGUIPage(i));
 			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GB_TEXT_AREA_PAGE_RIGHT, 224, 34, 160, 166));
@@ -111,10 +114,24 @@ m_Unicode(unicode)
 CGumpBook::~CGumpBook()
 {
 	WISPFUN_DEBUG("c87_f2");
-	if (m_ChangedPage != NULL)
+
+	RELEASE_POINTER(m_ChangedPage);
+	RELEASE_POINTER(m_PageDataReceived);
+}
+//----------------------------------------------------------------------------------
+void CGumpBook::PrepareContent()
+{
+	WISPFUN_DEBUG("c87_f2.1");
+	if (!m_PageDataReceived[m_Page])
 	{
-		delete m_ChangedPage;
-		m_ChangedPage = NULL;
+		CPacketBookPageDataRequest(Serial, m_Page).Send();
+		m_PageDataReceived[m_Page] = true;
+	}
+
+	if (m_Page + 1 <= m_PageCount && !m_PageDataReceived[m_Page + 1])
+	{
+		CPacketBookPageDataRequest(Serial, m_Page + 1).Send();
+		m_PageDataReceived[m_Page + 1] = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -138,6 +155,7 @@ void CGumpBook::SetPageData(const int &page, const wstring &data)
 {
 	WISPFUN_DEBUG("c87_f4");
 	CGUITextEntry *entry = GetEntry(page);
+	m_PageDataReceived[page] = true;
 
 	if (entry != NULL)
 		entry->m_Entry.SetText(data);
@@ -287,13 +305,17 @@ void CGumpBook::InsertInContent(const WPARAM &wparam, const bool &isCharPress)
 			if (g_EntryPointer->Insert(wparam))
 			{
 				int linesCount = 0;
+				int maxLinesCount = 8;
 
 				if (!m_Unicode)
 					linesCount = g_EntryPointer->GetLinesCountA(4);
 				else
+				{
 					linesCount = g_EntryPointer->GetLinesCountW(0);
+					maxLinesCount = 10;
+				}
 
-				if (linesCount > 8)
+				if (linesCount > maxLinesCount)
 					g_EntryPointer->Remove(true);
 				else
 					m_ChangedPage[page] = true;
