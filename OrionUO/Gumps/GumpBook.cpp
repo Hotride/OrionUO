@@ -76,7 +76,7 @@ m_Unicode(unicode)
 			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GB_TEXT_AREA_PAGE_LEFT, 38, 34, 160, 166));
 			box->MoveOnDrag = true;
 
-			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_LEFT, textColor, textColor, textColor, 38, 34, 150, m_Unicode, entryFont));
+			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_LEFT, textColor, textColor, textColor, 38, 34, 0, m_Unicode, entryFont));
 			entry->m_Entry.Width = 166;
 			entry->ReadOnly = !m_Writable;
 			entry->CheckOnSerial = true;
@@ -90,11 +90,13 @@ m_Unicode(unicode)
 
 		if (i <= m_PageCount)
 		{
+			m_ChangedPage[i] = false;
+
 			Add(new CGUIPage(i));
 			CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GB_TEXT_AREA_PAGE_RIGHT, 224, 34, 160, 166));
 			box->MoveOnDrag = true;
 
-			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_RIGHT, textColor, textColor, textColor, 224, 34, 150, m_Unicode, entryFont));
+			CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GB_TEXT_AREA_PAGE_RIGHT, textColor, textColor, textColor, 224, 34, 0, m_Unicode, entryFont));
 			entry->m_Entry.Width = 166;
 			entry->ReadOnly = !m_Writable;
 			entry->CheckOnSerial = true;
