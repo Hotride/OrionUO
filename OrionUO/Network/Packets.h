@@ -189,6 +189,12 @@ public:
 	CPacketGumpResponse(class CGump *gump, int code);
 };
 //----------------------------------------------------------------------------------
+class CPacketVirtureGumpResponse : public CPacket
+{
+public:
+	CPacketVirtureGumpResponse(class CGump *gump, int code);
+};
+//----------------------------------------------------------------------------------
 class CPacketMenuResponse : public CPacket
 {
 public:

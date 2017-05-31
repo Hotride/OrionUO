@@ -29,11 +29,58 @@ CGumpGeneric::~CGumpGeneric()
 void CGumpGeneric::InitToolTip()
 {
 	WISPFUN_DEBUG("c128_f3");
-	uint id = g_SelectedObject.Serial;
 
 	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGUI() && ((CBaseGUI*)g_SelectedObject.Object())->Type == GOT_VIRTURE_GUMP)
 	{
-		g_ToolTip.Set(L"Some virture gump item", 80);
+		int offset = 0;
+
+		switch (g_SelectedObject.Serial)
+		{
+			case 0x69:
+			{
+				offset = 2;
+				break;
+			}
+			case 0x6A:
+			{
+				offset = 7;
+				break;
+			}
+			case 0x6B:
+			{
+				offset = 5;
+				break;
+			}
+			case 0x6C:
+			{
+				offset = 0;
+				break;
+			}
+			case 0x6D:
+			{
+				offset = 6;
+				break;
+			}
+			case 0x6E:
+			{
+				offset = 1;
+				break;
+			}
+			case 0x6F:
+			{
+				offset = 3;
+				break;
+			}
+			case 0x70:
+			{
+				offset = 4;
+				break;
+			}
+			default:
+				break;
+		}
+
+		g_ToolTip.Set(1051000 + offset,"Some virture gump item", 100);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -125,9 +172,11 @@ bool CGumpGeneric::OnLeftMouseButtonDoubleClick()
 
 	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_VIRTURE_GUMP)
 	{
-		//SendGumpResponse(serial);
+		//Ответ на гамп
+		CPacketVirtureGumpResponse(this, g_PressedObject.LeftSerial).Send();
 
-		m_WantUpdateContent = true;
+		//Удаляем использованный гамп
+		m_RemoveMark = true;
 
 		return true;
 	}

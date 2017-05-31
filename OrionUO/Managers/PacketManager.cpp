@@ -4914,6 +4914,7 @@ PACKET_HANDLER(OpenGump)
 						{
 							if (ToLowerA(classList[0]) == "class" && ToLowerA(Trim(classList[1])) == "virtuegumpitem")
 							{
+								go = new CGUIVirtureGump(graphic, x, y);
 							}
 						}
 					}

@@ -605,6 +605,20 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 	}
 }
 //----------------------------------------------------------------------------------
+CPacketVirtureGumpResponse::CPacketVirtureGumpResponse(CGump *gump, int code)
+: CPacket(15)
+{
+	g_PacketManager.LastGumpID = gump->ID;
+	g_PacketManager.LastGumpX = gump->X;
+	g_PacketManager.LastGumpY = gump->Y;
+
+	WriteUInt8(0xB1);
+	WriteUInt16BE(0x000F);
+	WriteUInt32BE(gump->Serial);
+	WriteUInt32BE(0x000001CD);
+	WriteUInt32BE(code);
+}
+//----------------------------------------------------------------------------------
 CPacketMenuResponse::CPacketMenuResponse(CGump *gump, int code)
 : CPacket(13)
 {

@@ -19,6 +19,8 @@ class CGUIVirtureGump : public CGUIDrawObject
 public:
 	CGUIVirtureGump(const ushort &graphic, const int &x, const int &y);
 	virtual ~CGUIVirtureGump();
+
+	virtual bool Select();
 };
 //----------------------------------------------------------------------------------
 #endif
