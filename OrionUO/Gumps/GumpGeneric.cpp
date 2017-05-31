@@ -12,6 +12,8 @@
 #include "../Managers/FontsManager.h"
 #include "../TextEngine/GameConsole.h"
 #include "../Network/Packets.h"
+#include "../PressedObject.h"
+#include "../ToolTip.h"
 //----------------------------------------------------------------------------------
 CGumpGeneric::CGumpGeneric(uint serial, short x, short y, uint id)
 : CGump(GT_GENERIC, serial, x, y)
@@ -22,6 +24,17 @@ CGumpGeneric::CGumpGeneric(uint serial, short x, short y, uint id)
 //----------------------------------------------------------------------------------
 CGumpGeneric::~CGumpGeneric()
 {
+}
+//----------------------------------------------------------------------------------
+void CGumpGeneric::InitToolTip()
+{
+	WISPFUN_DEBUG("c128_f3");
+	uint id = g_SelectedObject.Serial;
+
+	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGUI() && ((CBaseGUI*)g_SelectedObject.Object())->Type == GOT_VIRTURE_GUMP)
+	{
+		g_ToolTip.Set(L"Some virture gump item", 80);
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpGeneric::AddText(const int &index, const wstring &text, CBaseGUI *start, const bool &backbroundCanBeColored)
@@ -104,16 +117,34 @@ void CGumpGeneric::GUMP_DIRECT_HTML_LINK_EVENT_C
 	g_FontManager.GoToWebLink(link);
 }
 //----------------------------------------------------------------------------------
-void CGumpGeneric::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
+bool CGumpGeneric::OnLeftMouseButtonDoubleClick()
 {
 	WISPFUN_DEBUG("c96_f5");
+	if (g_GeneratedMouseDown)
+		return false;
+
+	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_VIRTURE_GUMP)
+	{
+		//SendGumpResponse(serial);
+
+		m_WantUpdateContent = true;
+
+		return true;
+	}
+
+	return false;
+}
+//----------------------------------------------------------------------------------
+void CGumpGeneric::OnCharPress(const WPARAM &wParam, const LPARAM &lParam)
+{
+	WISPFUN_DEBUG("c96_f6");
 	g_EntryPointer->Insert(wParam);
 	m_WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGumpGeneric::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 {
-	WISPFUN_DEBUG("c96_f6");
+	WISPFUN_DEBUG("c96_f7");
 	if (wParam == VK_RETURN)
 	{
 		if (g_ConfigManager.ConsoleNeedEnter)

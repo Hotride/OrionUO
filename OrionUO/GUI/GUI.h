@@ -62,6 +62,7 @@
 #include "GUITilepic.h"
 #include "GUITilepicHightlighted.h"
 #include "GUITilepicScaled.h"
+#include "GUIVirtureGump.h"
 #include "GUIWorldMapTexture.h"
 //----------------------------------------------------------------------------------
 #endif

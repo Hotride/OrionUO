@@ -22,9 +22,12 @@ public:
 
 	void SendGumpResponse(int index);
 
+	virtual void InitToolTip();
+
 	GUMP_BUTTON_EVENT_H;
 	GUMP_DIRECT_HTML_LINK_EVENT_H;
 
+	virtual bool OnLeftMouseButtonDoubleClick();
 	virtual void OnCharPress(const WPARAM &wParam, const LPARAM &lParam);
 	virtual void OnKeyDown(const WPARAM &wParam, const LPARAM &lParam);
 };

@@ -355,7 +355,8 @@ enum GUMP_OBJECT_TYPE
 	GOT_HTMLGUMP,			//!ХТМЛ гамп
 	GOT_XFMHTMLGUMP,		//!ХТМЛ гамп из клилока (цветной там же)
 	GOT_XFMHTMLTOKEN,		//
-	GOT_TOOLTIP				//
+	GOT_TOOLTIP,				//
+	GOT_VIRTURE_GUMP			//
 };
 //----------------------------------------------------------------------------------
 enum SLIDER_TEXT_POSITION
