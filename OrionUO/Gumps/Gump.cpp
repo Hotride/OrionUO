@@ -636,12 +636,17 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 						break;
 
 					int tempPage = -1;
+					bool tempCanDraw = true;
 
 					QFOR(testItem, start, CBaseGUI*)
 					{
 						if (testItem->Type == GOT_PAGE)
+						{
 							tempPage = ((CGUIPage*)testItem)->Index;
-						else if (tempPage == page && testItem->Type == GOT_TEXTENTRY && testItem->Serial == serial && testItem->Enabled && testItem->Visible)
+
+							tempCanDraw = ((tempPage == -1) || ((tempPage >= page && tempPage <= page + draw2Page || (!tempPage && !draw2Page))));
+						}
+						else if (tempCanDraw && testItem->Type == GOT_TEXTENTRY && testItem->Serial == serial && testItem->Enabled && testItem->Visible)
 						{
 							CGUITextEntry *entry = (CGUITextEntry*)testItem;
 
