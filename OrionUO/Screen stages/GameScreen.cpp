@@ -2001,7 +2001,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 		if (g_SelectedObject.Object()->IsWorldObject())
 			rwo = (CRenderWorldObject*)g_SelectedObject.Object();
 
-		if (g_Target.IsTargeting())
+		if (g_Target.IsTargeting() && g_ObjectInHand == NULL)
 		{
 			if (g_SelectedObject.Object()->IsText())
 			{

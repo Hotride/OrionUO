@@ -360,8 +360,8 @@ void CGumpPaperdoll::PrepareContent()
 
 				if (equipment != NULL)
 				{
-					if (g_Target.IsTargeting())
-						g_Target.SendCancelTarget();
+					//if (g_Target.IsTargeting())
+					//	g_Target.SendCancelTarget();
 
 					g_Orion.PickupItem(equipment);
 					//g_LastGumpLeftMouseDown = 0;
@@ -908,7 +908,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 			g_Orion.PlaySoundEffect(0x0051);
 	}
 	
-	if (g_PressedObject.LeftSerial == serial && serial >= ID_GP_ITEMS)
+	if (g_PressedObject.LeftSerial == serial && serial >= ID_GP_ITEMS && g_ObjectInHand == NULL)
 	{
 		int layer = serial - ID_GP_ITEMS;
 		CGameItem *equipment = container->FindLayer(layer);
@@ -920,7 +920,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 				g_Target.SendTargetObject(equipment->Serial);
 				g_MouseManager.CancelDoubleClick = true;
 			}
-			else if (g_ObjectInHand == NULL) //Click on object
+			else //Click on object
 			{
 				if (!g_ClickObject.Enabled && (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled))
 				{
