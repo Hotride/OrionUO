@@ -68,6 +68,7 @@
 #include "../zlib.h"  
 #include "CustomHousesManager.h"
 #include "../Wisp/WispTextFileParser.h"
+#include "../Gumps/GumpMinimap.h"
 
 #pragma comment(lib, "zdll.lib")
 //----------------------------------------------------------------------------------
@@ -3018,8 +3019,18 @@ PACKET_HANDLER(ExtendedCommand)
 			uint houseSerial = ReadUInt32BE();
 			uint houseRevision = ReadUInt32BE();
 			CustomHouse *house = g_CustomHousesManager.GetCustomHouse(houseSerial);
-			if (house == NULL || house->Revision < houseRevision)//send 0x1E to refresh house data
+			if (house == NULL || house->Revision != houseRevision)//send 0x1E to refresh house data
 				CPacketCustomHouseDataReq(houseSerial).Send();
+			else
+			{
+				CGameItem *foundation = g_World->GetWorldItem(houseSerial);
+				if(!g_CustomHousesManager.TakeFromCache(foundation, house))
+					CPacketCustomHouseDataReq(houseSerial).Send();
+			}
+			break;
+		}
+		case 0x20:
+		{
 			break;
 		}
 		case 0x21:
@@ -5701,64 +5712,125 @@ PACKET_HANDLER(OPLInfo)
 PACKET_HANDLER(CustomHouse)
 {
 	WISPFUN_DEBUG("c150_f100");
-	//turn off reading of this packet for now
-	return;
-	ushort packetSize = ReadUInt16BE();
-	bool compressed = (ReadUInt16BE() == 3);
+	//ushort packetSize = ReadUInt16BE();
+	bool compressed = ReadUInt8() == 0x03;
+	bool enableResponse = ReadUInt8() == 0x01;
 	uint houseSerial = ReadUInt32BE();
 	uint revision = ReadUInt32BE();
-	//Let's check if we already have actual data of this house
-	CustomHouse *existingHouse = g_CustomHousesManager.GetCustomHouse(houseSerial);
-	if (existingHouse == NULL || existingHouse->Revision > revision)
+	CGameItem *foundationItem = g_World->GetWorldItem(houseSerial);
+	CustomHouse *house = new CustomHouse();
+	house->Serial = houseSerial;
+	house->Revision = revision;
+
+
+	ReadUInt16BE();
+	ReadUInt16BE();
+
+	uchar planes = ReadUInt8();
+
+	g_CustomHousesManager.AddCustomHouse(house);
+
+	uchar idx;
+
+	int cLen;
+	uchar flags;
+	uLongf dLen;
+	CMulti* multi = foundationItem->GetMulti();
+	short minX = multi->MinX;
+	short minY = multi->MinY;
+	short maxX = multi->MaxX;
+	short maxY = multi->MaxY;
+	ushort width = (maxX - minX) + 1;
+	ushort height = (maxY - minY) + 1;
+	ushort sizeFloor = ((width - 1) * (height - 1));
+	ushort sizeWalls = (width * height);
+	IFOR(plane, 0, planes)
 	{
-		//Here we read packet and create new CustomHouse struct
-		CustomHouse house;
-		house.Serial = houseSerial;
-		house.Revision = revision;
 
-		ushort componentsAmount = ReadUInt16BE();
-		uLongf bufferLength = ReadUInt16BE();
+		idx = ReadUInt8();
+		dLen = ReadUInt8();
+		cLen = ReadUInt8();
+		flags = ReadUInt8();
+		dLen = dLen + ((flags & 0xF0) << 4);
+		cLen = cLen + ((flags & 0xF) << 8);
+		idx &= 0x1F;
 
-		if (compressed)
+		if (cLen <= 0) continue;
+		UCHAR_LIST decompressedBytes(dLen);
+		int z_err = uncompress(&decompressedBytes[0], &dLen, m_Ptr, cLen);
+		if (z_err != Z_OK)
 		{
-			int cLen = componentsAmount * 5;
-			if (cLen < 1)
-			{
-				LOG("CLen=%d\nServer sends bad compressed house data!\n", cLen);
-				return;
-			}
-			if ((17 + cLen) > m_Size)
-			{
-				LOG("Server sends bad compressed house data!\n");
-				return;
-			}
-
-			uchar *compressedHouseData = new uchar[bufferLength];
-			//copy compressed data into array on the heap for CustomHousesManager
-			memcpy(compressedHouseData, m_Ptr, bufferLength);
-			house.CompressedData = compressedHouseData;
-			house.DecompressedDataSize = bufferLength;
-
-
-			LOG("Decompressing custom house data, serial(%d)\n", houseSerial);
-			UCHAR_LIST decHouseData(bufferLength);
-			int z_err = uncompress(&decHouseData[0], &bufferLength, m_Ptr, cLen);
-			SetData(reinterpret_cast<puchar>(&decHouseData[0]), bufferLength);
+			LOG("Bad CustomHouse compressed data received from server, house serial:%i\n", house->Serial);
+			LOG("House plane idx:%i\n", idx);
+			continue;
 		}
 
-		IFOR(i, 0, componentsAmount)
-		{
-			ushort graphic = ReadUInt16BE();
-			byte X = ReadUInt8();
-			byte Y = ReadUInt8();
-			byte Z = ReadUInt8();
-		}
+		Move(cLen);
 
-		g_CustomHousesManager.AddCustomHouse(house);
+
+		ushort numTiles = decompressedBytes.size() >> 1;
+
+		if ((plane == planes - 1) &&
+			(numTiles != sizeFloor) &&
+			(numTiles != sizeWalls))
+		{
+			numTiles = decompressedBytes.size() / 5;
+			ushort index = 0;
+			for (ushort j = 0; j < numTiles; j++)
+			{
+				ushort id = (decompressedBytes[index++] << 8) + decompressedBytes[index++];
+				short x = decompressedBytes[index++];
+				short y = decompressedBytes[index++];
+				uchar z = decompressedBytes[index++];
+				x = (width >> 1) + x - 1;
+				y = (height >> 1) + y;
+				CustomHouseData data{id, x, y, z };
+				house->HouseData.push_back(data);
+				foundationItem->AddMulti(id, x, y, z);
+			}
+		}
+		else
+		{
+			short iHeight = height;
+			short iX = 0, iY = 0;
+			short xOffs = 0, yOffs = 0;
+
+			if (plane == 0)
+			{
+				iHeight += 1;
+			}
+			else if (numTiles == sizeFloor)
+			{
+				iHeight -= 1;
+				iX = 1;
+				iY = 1;
+			}
+
+
+			uchar tempZ = 0;
+			if (idx > 0)
+				tempZ = ((idx - 1) % 4) * 20 + 7 + foundationItem->Z;
+			else
+				tempZ = foundationItem->Z;
+
+			ushort index = 0;
+			for (ushort j = 0; j < numTiles; j++)
+			{
+				uchar z = tempZ;
+				ushort id = (decompressedBytes[index++] << 8) + decompressedBytes[index++];
+				short x = xOffs + iX + minX;
+				short y = yOffs + iY + minY;
+				yOffs++;
+				if (yOffs >= iHeight)
+				{
+					yOffs = 0;
+					xOffs++;
+				}
+				CustomHouseData data{ id, x, y, z };
+				house->HouseData.push_back(data);
+				foundationItem->AddMulti(id, x, y, z);
+			}
+		}
 	}
-
-	//put data into render queue here
-
-
 }
 //----------------------------------------------------------------------------------

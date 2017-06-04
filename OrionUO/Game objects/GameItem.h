@@ -50,6 +50,8 @@ public:
 
 	void CalculateFieldColor();
 
+	CMulti* GetMulti();
+
 	/*!
 	Вставка данных из объекта в руке (на курсоре)
 	@param [__in] obj Ссылка на объект на курсоре
@@ -64,6 +66,8 @@ public:
 	virtual void Draw(const int &x, const int &y);
 
 	virtual void Select(const int &x, const int &y);
+
+	void AddMulti(ushort &graphic, short &x, short &y, uchar &z);
 
 	/*!
 	Событие изменения картинки объекта

@@ -677,8 +677,27 @@ ushort CGameItem::GetMountAnimation()
 	}
 	else if (IsCorpse())
 		graphic = (ushort)m_Count;
-
+		
 	return graphic;
+}
+//----------------------------------------------------------------------------------
+/*!
+Добавить мульти в текущий объект
+@return
+*/
+void CGameItem::AddMulti(ushort &graphic, short &x, short &y, uchar &z)
+{
+	STATIC_TILES *ptr = &g_Orion.m_StaticData[graphic / 32].Tiles[graphic % 32];
+	CMultiObject *mo = new CMultiObject(graphic, X + x, Y + y, z, ptr->Flags);
+
+	string lowerName = ToLowerA(mo->GetStaticData()->Name);
+
+	mo->NoDrawTile = (lowerName == "nodraw" || lowerName == "no draw");
+
+	g_MapManager->AddRender(mo);
+	AddMultiObject(mo);
+
+
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -905,5 +924,11 @@ CGameItem *CGameItem::FindItem(const ushort &graphic, const ushort &color)
 	}
 
 	return item;
+}
+//----------------------------------------------------------------------------------
+CMulti* CGameItem::GetMulti()
+{
+	CMulti *multi = (CMulti*)m_Items;
+	return multi;
 }
 //----------------------------------------------------------------------------------
