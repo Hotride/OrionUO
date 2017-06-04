@@ -5718,7 +5718,6 @@ PACKET_HANDLER(OPLInfo)
 PACKET_HANDLER(CustomHouse)
 {
 	WISPFUN_DEBUG("c150_f100");
-	//ushort packetSize = ReadUInt16BE();
 	bool compressed = ReadUInt8() == 0x03;
 	bool enableResponse = ReadUInt8() == 0x01;
 	uint houseSerial = ReadUInt32BE();
@@ -5773,7 +5772,10 @@ PACKET_HANDLER(CustomHouse)
 
 		Move(cLen);
 
-
+		ushort id =0 ;
+		short x = 0;
+		short y = 0;
+		uchar z = 0;
 		ushort numTiles = decompressedBytes.size() >> 1;
 
 		if ((plane == planes - 1) &&
@@ -5784,10 +5786,10 @@ PACKET_HANDLER(CustomHouse)
 			ushort index = 0;
 			for (ushort j = 0; j < numTiles; j++)
 			{
-				ushort id = (decompressedBytes[index++] << 8) + decompressedBytes[index++];
-				short x = decompressedBytes[index++];
-				short y = decompressedBytes[index++];
-				uchar z = decompressedBytes[index++];
+				id = (decompressedBytes[index++] << 8) + decompressedBytes[index++];
+				x = decompressedBytes[index++];
+				y = decompressedBytes[index++];
+				z = decompressedBytes[index++];
 				x = (width >> 1) + x - 1;
 				y = (height >> 1) + y;
 				CustomHouseData data{id, x, y, z };
@@ -5813,19 +5815,17 @@ PACKET_HANDLER(CustomHouse)
 			}
 
 
-			uchar tempZ = 0;
 			if (idx > 0)
-				tempZ = ((idx - 1) % 4) * 20 + 7 + foundationItem->Z;
+				z = ((idx - 1) % 4) * 20 + 7 + foundationItem->Z;
 			else
-				tempZ = foundationItem->Z;
+				z = foundationItem->Z;
 
 			ushort index = 0;
 			for (ushort j = 0; j < numTiles; j++)
 			{
-				uchar z = tempZ;
-				ushort id = (decompressedBytes[index++] << 8) + decompressedBytes[index++];
-				short x = xOffs + iX + minX;
-				short y = yOffs + iY + minY;
+				id = (decompressedBytes[index++] << 8) + decompressedBytes[index++];
+				x = xOffs + iX + minX;
+				y = yOffs + iY + minY;
 				yOffs++;
 				if (yOffs >= iHeight)
 				{
