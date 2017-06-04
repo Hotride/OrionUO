@@ -21,7 +21,7 @@ struct CustomHouseData
 	short Y;
 	uchar Z;
 };
-struct CustomHouse
+struct CustomHouseStruct
 {
 	uint Serial;
 	uint Revision;
@@ -29,13 +29,13 @@ struct CustomHouse
 };
 class CustomHousesManager : public WISP_DATASTREAM::CDataReader
 {
-	unordered_map<uint, CustomHouse*> m_CustomHouses;
+	unordered_map<uint, CustomHouseStruct*> m_CustomHouses;
 public:
 	CustomHousesManager();
 	~CustomHousesManager();
-	CustomHouse* GetCustomHouse(uint serial);
-	void AddCustomHouse(CustomHouse* house);
-	bool TakeFromCache(CGameItem* houseFoundation, CustomHouse* house);
+	CustomHouseStruct* GetCustomHouse(uint serial);
+	void AddCustomHouse(CustomHouseStruct* house);
+	bool TakeFromCache(CGameItem* houseFoundation, CustomHouseStruct* house);
 };
 //!Global reference to custom houses manager
 extern CustomHousesManager g_CustomHousesManager;

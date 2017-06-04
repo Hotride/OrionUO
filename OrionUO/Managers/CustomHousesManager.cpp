@@ -18,7 +18,7 @@ CustomHousesManager::~CustomHousesManager()
 {
 }
 //----------------------------------------------------------------------------------
-CustomHouse* CustomHousesManager::GetCustomHouse(uint serial)
+CustomHouseStruct* CustomHousesManager::GetCustomHouse(uint serial)
 {
 	if (m_CustomHouses.find(serial) != m_CustomHouses.end())
 	{
@@ -27,12 +27,12 @@ CustomHouse* CustomHousesManager::GetCustomHouse(uint serial)
 	return NULL;
 }
 //----------------------------------------------------------------------------------
-void CustomHousesManager::AddCustomHouse(CustomHouse* house)
+void CustomHousesManager::AddCustomHouse(CustomHouseStruct* house)
 {
 	m_CustomHouses[house->Serial] = house;
 }
 //----------------------------------------------------------------------------------
-bool CustomHousesManager::TakeFromCache(CGameItem* houseFoundation, CustomHouse* house)
+bool CustomHousesManager::TakeFromCache(CGameItem* houseFoundation, CustomHouseStruct* house)
 {
 	if (house != NULL && houseFoundation != NULL)
 	{

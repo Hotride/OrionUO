@@ -3018,7 +3018,7 @@ PACKET_HANDLER(ExtendedCommand)
 			//house revision state, server sends this when player comes in range of a custom house
 			uint houseSerial = ReadUInt32BE();
 			uint houseRevision = ReadUInt32BE();
-			CustomHouse *house = g_CustomHousesManager.GetCustomHouse(houseSerial);
+			CustomHouseStruct *house = g_CustomHousesManager.GetCustomHouse(houseSerial);
 			if (house == NULL || house->Revision != houseRevision)//send 0x1E to refresh house data
 				CPacketCustomHouseDataReq(houseSerial).Send();
 			else
@@ -5723,7 +5723,7 @@ PACKET_HANDLER(CustomHouse)
 	uint houseSerial = ReadUInt32BE();
 	uint revision = ReadUInt32BE();
 	CGameItem *foundationItem = g_World->GetWorldItem(houseSerial);
-	CustomHouse *house = new CustomHouse();
+	CustomHouseStruct *house = new CustomHouseStruct();
 	house->Serial = houseSerial;
 	house->Revision = revision;
 
@@ -5765,7 +5765,7 @@ PACKET_HANDLER(CustomHouse)
 		int z_err = uncompress(&decompressedBytes[0], &dLen, m_Ptr, cLen);
 		if (z_err != Z_OK)
 		{
-			LOG("Bad CustomHouse compressed data received from server, house serial:%i\n", house->Serial);
+			LOG("Bad CustomHouseStruct compressed data received from server, house serial:%i\n", house->Serial);
 			LOG("House plane idx:%i\n", idx);
 			continue;
 		}
