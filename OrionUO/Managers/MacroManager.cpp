@@ -891,7 +891,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			{
 				int spell = (g_MacroPointer->SubCode - MSC_G6_CLUMSY + 1);
 
-				if (spell > 0 && spell <= 143)
+				if (spell > 0 && spell <= 151)
 				{
 					const int spellsCountTable[7] =
 					{
@@ -919,7 +919,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 					{
 						spell += spellType * 100;
 
-						if (spellType < 2)
+						if (spellType > 2)
 							spell += 100;
 
 						g_Orion.CastSpell(spell);

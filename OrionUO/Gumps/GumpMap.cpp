@@ -41,6 +41,12 @@ m_PinOnCursor(NULL), m_FakeInsertionPin(NULL)
 //----------------------------------------------------------------------------------
 CGumpMap::~CGumpMap()
 {
+	for (CGUIText *text : m_Labels)
+	{
+		delete text;
+	}
+
+	m_Labels.clear();
 }
 //----------------------------------------------------------------------------------
 void CGumpMap::OnChangePlotState(const int &val)
@@ -168,6 +174,36 @@ void CGumpMap::PrepareContent()
 void CGumpMap::GenerateFrame(bool stop)
 {
 	WISPFUN_DEBUG("c99_f5");
+
+	//m_Labels
+
+	if (m_DataBox != NULL)
+	{
+		int idx = 0;
+
+		QFOR(item, m_DataBox->m_Items, CBaseGUI*)
+		{
+			int drawX = item->X + 18;
+			int drawY = item->Y + 21;
+
+			if (item != m_PinOnCursor)
+			{
+				CGUIText *text = NULL;
+
+				if (idx >= (int)m_Labels.size())
+				{
+					text = new CGUIText(0, drawX - 10, drawY - 12);
+					m_Labels.push_back(text);
+				}
+				else
+					text = m_Labels[idx];
+
+				idx++;
+				text->CreateTextureA(0, std::to_string(idx));
+			}
+		}
+	}
+
 	CGump::GenerateFrame(false);
 
 	if (m_DataBox != NULL)
@@ -209,9 +245,12 @@ void CGumpMap::GenerateFrame(bool stop)
 			{
 				g_Orion.DrawGump(0x139B, 0, drawX, drawY);
 
-				char text[5] = { 0 };
-				sprintf(text, "%d", idx);
-				g_FontManager.DrawA(3, text, 0, drawX - 10, drawY - 12);
+				if (idx - 1 < (int)m_Labels.size())
+				{
+					CGUIText *text = m_Labels[idx - 1];
+					text->Draw();
+				}
+
 				idx++;
 			}
 		}

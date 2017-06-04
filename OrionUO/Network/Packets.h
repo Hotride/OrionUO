@@ -189,6 +189,12 @@ public:
 	CPacketGumpResponse(class CGump *gump, int code);
 };
 //----------------------------------------------------------------------------------
+class CPacketVirtureGumpResponse : public CPacket
+{
+public:
+	CPacketVirtureGumpResponse(class CGump *gump, int code);
+};
+//----------------------------------------------------------------------------------
 class CPacketMenuResponse : public CPacket
 {
 public:
@@ -445,6 +451,12 @@ class CPacketBookPageData : public CPacket
 {
 public:
 	CPacketBookPageData(class CGumpBook *gump, int page);
+};
+//----------------------------------------------------------------------------------
+class CPacketBookPageDataRequest : public CPacket
+{
+public:
+	CPacketBookPageDataRequest(const uint &serial, const int &page);
 };
 //----------------------------------------------------------------------------------
 class CPacketBuyRequest : public CPacket

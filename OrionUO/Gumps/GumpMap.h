@@ -38,6 +38,8 @@ private:
 	CGUIButton *m_StopPlotting;
 	CGUIButton *m_ClearCourse;
 
+	vector<CGUIText*> m_Labels;
+
 	int LineUnderMouse(int &x1, int &y1, int x2, int y2);
 
 public:

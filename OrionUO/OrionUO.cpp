@@ -297,6 +297,15 @@ bool COrion::Install()
 
 	LOG("Load client config.\n");
 	LoadClientConfig();
+
+	if (g_PacketManager.ClientVersion >= CV_305D)
+	{
+		CGumpSpellbook::m_SpellReagents1[4] = "Sulfurous ash"; //Magic Arrow
+		CGumpSpellbook::m_SpellReagents1[17] = "Black pearl"; //Fireball
+		CGumpSpellbook::m_SpellReagents1[29] = "Mandrake root\nSulfurous ash"; //Lightning
+		CGumpSpellbook::m_SpellReagents1[42] = "Bloodmoss\nMandrake root"; //Explosion
+	}
+
 	LoadAutoLoginNames();
 
 	LOG("Load files\n");

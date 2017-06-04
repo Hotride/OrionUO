@@ -3953,7 +3953,7 @@ PACKET_HANDLER(DisplayClilocString)
 
 	wstring args((wchar_t*)Ptr);
 	//wstring args = ReadUnicodeStringLE(0);
-	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, true, args);
+	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, false, args);
 	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
@@ -4840,8 +4840,8 @@ PACKET_HANDLER(OpenGump)
 				int width = ToInt(list[3]);
 				int height = ToInt(list[4]);
 				int color = ToInt(list[5]);
-				int textIndex = ToInt(list[6]);
-				int index = ToInt(list[7]);
+				int index = ToInt(list[6]);
+				int textIndex = ToInt(list[7]);
 
 				if (color)
 					color++;
@@ -4860,8 +4860,8 @@ PACKET_HANDLER(OpenGump)
 				int width = ToInt(list[3]);
 				int height = ToInt(list[4]);
 				int color = ToInt(list[5]);
-				int textIndex = ToInt(list[6]);
-				int index = ToInt(list[7]);
+				int index = ToInt(list[6]);
+				int textIndex = ToInt(list[7]);
 				int length = ToInt(list[8]);
 
 				if (color)
@@ -4925,6 +4925,7 @@ PACKET_HANDLER(OpenGump)
 						{
 							if (ToLowerA(classList[0]) == "class" && ToLowerA(Trim(classList[1])) == "virtuegumpitem")
 							{
+								go = new CGUIVirtureGump(graphic, x, y);
 							}
 						}
 					}
@@ -5479,7 +5480,7 @@ PACKET_HANDLER(BookData)
 		{
 			ushort page = ReadUInt16BE();
 
-			if (page >= gump->PageCount)
+			if (page > gump->PageCount)
 				continue;
 
 			ushort lineCount = ReadUInt16BE();
@@ -5491,7 +5492,12 @@ PACKET_HANDLER(BookData)
 				if (j)
 					str += L'\n';
 
-				str += DecodeUTF8(ReadString(0));
+				wstring temp = DecodeUTF8(ReadString(0));
+
+				while (temp.length() && (temp.back() == L'\n' || temp.back() == L'\r'))
+					temp.resize(temp.length() - 1);
+
+				str += temp;
 			}
 
 			gump->SetPageData(page, str);

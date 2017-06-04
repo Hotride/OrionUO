@@ -27,6 +27,7 @@ private:
 	static const int ID_GB_BUTTON_NEXT = 6;
 
 	bool *m_ChangedPage;
+	bool *m_PageDataReceived;
 
 	void InsertInContent(const WPARAM &wparam, const bool &isCharPress = true);
 
@@ -43,6 +44,8 @@ public:
 	CGUITextEntry *GetEntry(const int &page);
 
 	virtual void DelayedClick(CRenderObject *obj);
+
+	virtual void PrepareContent();
 
 	void SetPageData(const int &page, const wstring &data);
 

@@ -131,7 +131,7 @@ ushort CMouseManager::GetGameCursor()
 	int war = (int)(g_Player != NULL && g_Player->Warmode);
 	ushort result = g_CursorData[war][9]; //Main Gump mouse cursor
 
-	if (g_Target.IsTargeting())
+	if (g_Target.IsTargeting() && g_ObjectInHand == NULL)
 		return g_CursorData[war][12]; //Targetting cursor
 
 	bool mouseInWindow = !(m_Position.X < g_ConfigManager.GameWindowX || m_Position.Y < g_ConfigManager.GameWindowY ||

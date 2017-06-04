@@ -41,7 +41,7 @@ bool CRenderWorldObject::ProcessAlpha(const int &maxAlpha)
 	{
 		m_DrawTextureColor[3] = (uchar)maxAlpha;
 
-		return true;
+		return (maxAlpha != 0);
 	}
 
 	bool result = false;

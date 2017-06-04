@@ -45,7 +45,7 @@ CCliloc::~CCliloc()
 @param [__in] id Индекс клилока
 @return Результат загрузки или сообщение с ошибкой
 */
-string CCliloc::Load(uint &id, const bool &toCamelCase)
+string CCliloc::Load(uint &id)
 {
 	WISPFUN_DEBUG("c135_f3");
 	string result = "";
@@ -65,10 +65,7 @@ string CCliloc::Load(uint &id, const bool &toCamelCase)
 
 			if (currentID == id)
 			{
-				if (toCamelCase)
-					result = ToCamelCaseA(m_File.ReadString(len));
-				else
-					result = m_File.ReadString(len);
+				result = m_File.ReadString(len);
 
 				if (id >= 3000000)
 					m_ClilocSupport[currentID] = result;
@@ -89,6 +86,14 @@ string CCliloc::Load(uint &id, const bool &toCamelCase)
 	return result;
 }
 //----------------------------------------------------------------------------------
+string CCliloc::CamelCaseTest(const bool &toCamelCase, const string &result)
+{
+	if (toCamelCase)
+		return ToCamelCaseA(result);
+
+	return result;
+}
+//----------------------------------------------------------------------------------
 /*!
 Получить ASCII строку по id (и загрузить при необходимости)
 @param [__in] id Индекс клилока
@@ -102,26 +107,26 @@ string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
 	{
 		CLILOC_MAP::iterator i = m_ClilocSupport.find(id);
 		if (i != m_ClilocSupport.end() && (*i).second.length())
-			return (*i).second;
+			return CamelCaseTest(toCamelCase, (*i).second);
 	}
 	else if (id >= 1000000)
 	{
 		CLILOC_MAP::iterator i = m_ClilocRegular.find(id);
 		if (i != m_ClilocRegular.end() && (*i).second.length())
-			return (*i).second;
+			return CamelCaseTest(toCamelCase, (*i).second);
 	}
 	else
 	{
 		CLILOC_MAP::iterator i = m_ClilocSystem.find(id);
 		if (i != m_ClilocSystem.end() && (*i).second.length())
-			return (*i).second;
+			return CamelCaseTest(toCamelCase, (*i).second);
 	}
 
 	uint tmpID = id;
-	string loadStr = Load(tmpID, toCamelCase);
+	string loadStr = Load(tmpID);
 
 	if (!tmpID && loadStr.length())
-		return loadStr;
+		return CamelCaseTest(toCamelCase, loadStr);
 	else
 	{
 		if (m_Language != "enu")
@@ -136,7 +141,7 @@ string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
 		}
 	}
 
-	return result;
+	return CamelCaseTest(toCamelCase, result);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -258,6 +263,9 @@ wstring CClilocManager::ParseArgumentsToClilocString(const uint &cliloc, const b
 
 		message.replace(pos1, pos2 - pos1 + 1, arguments[i]);
 	}
+
+	if (toCamelCase)
+		return ToCamelCaseW(message);
 
 	return message;
 }

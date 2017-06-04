@@ -170,8 +170,8 @@ void CGumpContainer::PrepareContent()
 			}
 			else if (selobj != NULL)
 			{
-				if (g_Target.IsTargeting())
-					g_Target.SendCancelTarget();
+				//if (g_Target.IsTargeting())
+				//	g_Target.SendCancelTarget();
 
 				g_Orion.PickupItem(selobj, 0, m_IsGameBoard);
 
@@ -319,7 +319,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 	{
 		canDrop = false;
 
-		if (g_Target.IsTargeting())
+		if (g_Target.IsTargeting() && g_ObjectInHand == NULL)
 		{
 			g_Target.SendTargetObject(selectedSerial);
 			g_MouseManager.CancelDoubleClick = true;
