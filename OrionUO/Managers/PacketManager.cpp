@@ -5786,7 +5786,8 @@ PACKET_HANDLER(CustomHouse)
 			ushort index = 0;
 			for (ushort j = 0; j < numTiles; j++)
 			{
-				id = (decompressedBytes[index++] << 8) + decompressedBytes[index++];
+				id = (decompressedBytes[index] << 8) | decompressedBytes[index + 1];
+				index += 2;
 				x = decompressedBytes[index++];
 				y = decompressedBytes[index++];
 				z = decompressedBytes[index++];
@@ -5823,7 +5824,8 @@ PACKET_HANDLER(CustomHouse)
 			ushort index = 0;
 			for (ushort j = 0; j < numTiles; j++)
 			{
-				id = (decompressedBytes[index++] << 8) + decompressedBytes[index++];
+				id = (decompressedBytes[index] << 8) | decompressedBytes[index + 1];
+				index += 2;
 				x = xOffs + iX + minX;
 				y = yOffs + iY + minY;
 				yOffs++;
