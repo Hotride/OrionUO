@@ -2752,6 +2752,18 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 
 			break;
 		}
+		case VKI_CLILOC_ENU_ADDRESS:
+		{
+			value = (int)g_ClilocManager.Cliloc("enu")->m_File.Start;
+
+			break;
+		}
+		case VKI_CLILOC_ENU_SIZE:
+		{
+			value = g_ClilocManager.Cliloc("enu")->m_File.Size;
+
+			break;
+		}
 		default:
 			break;
 	}

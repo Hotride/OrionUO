@@ -494,7 +494,9 @@ enum VALUE_KEY_INT
 	VKI_MAP_UOP_ADDRESS,
 	VKI_MAP_UOP_SIZE,
 	VKI_MAP_X_UOP_ADDRESS,
-	VKI_MAP_X_UOP_SIZE
+	VKI_MAP_X_UOP_SIZE,
+	VKI_CLILOC_ENU_ADDRESS,
+	VKI_CLILOC_ENU_SIZE
 };
 //----------------------------------------------------------------------------------
 enum VALUE_KEY_STRING
