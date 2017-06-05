@@ -687,8 +687,7 @@ ushort CGameItem::GetMountAnimation()
 */
 void CGameItem::AddMulti(ushort &graphic, short &x, short &y, uchar &z)
 {
-	STATIC_TILES *ptr = &g_Orion.m_StaticData[graphic / 32].Tiles[graphic % 32];
-	CMultiObject *mo = new CMultiObject(graphic, X + x, Y + y, z, ptr->Flags);
+	CMultiObject *mo = new CMultiObject(graphic, X + x, Y + y, z, 1);
 
 	string lowerName = ToLowerA(mo->GetStaticData()->Name);
 

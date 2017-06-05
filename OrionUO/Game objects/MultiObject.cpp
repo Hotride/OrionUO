@@ -12,7 +12,7 @@
 #include "../SelectedObject.h"
 #include "../Screen stages/GameScreen.h"
 //----------------------------------------------------------------------------------
-CMultiObject::CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const unsigned __int64 &flags)
+CMultiObject::CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags)
 : CRenderStaticObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_OnTarget(flags == 2)
 {
 	WISPFUN_DEBUG("c25_f1");

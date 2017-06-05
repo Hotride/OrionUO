@@ -22,7 +22,7 @@ class CMultiObject : public CRenderStaticObject
 	SETGET(ushort, OriginalGraphic);
 
 public:
-	CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const unsigned __int64 &flags);
+	CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags);
 	virtual ~CMultiObject();
 
 	virtual void UpdateGraphicBySeason();
