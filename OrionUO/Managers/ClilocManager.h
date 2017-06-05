@@ -32,9 +32,6 @@ private:
 	//!Клилоки для помощи (id >= 3000000)
 	CLILOC_MAP m_ClilocSupport;
 
-	//!Указатель на проекцию файла в памяти (оно же ридер)
-	WISP_FILE::CMappedFile m_File;
-
 	/*!
 	Загрузить клилок
 	@param [__in] id Индекс клилока
@@ -47,6 +44,9 @@ private:
 public:
 	CCliloc(const string &lang);
 	virtual ~CCliloc();
+
+	//!Указатель на проекцию файла в памяти (оно же ридер)
+	WISP_FILE::CMappedFile m_File;
 
 	/*!
 	Получить ASCII строку по id (и загрузить при необходимости)
