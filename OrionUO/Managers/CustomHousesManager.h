@@ -17,9 +17,9 @@
 struct CustomHouseData
 {
 	ushort Graphic;
-	short X;
-	short Y;
-	uchar Z;
+	char X;
+	char Y;
+	char Z;
 };
 struct CustomHouseStruct
 {

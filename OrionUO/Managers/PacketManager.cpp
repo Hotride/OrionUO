@@ -5773,9 +5773,9 @@ PACKET_HANDLER(CustomHouse)
 		Move(cLen);
 
 		ushort id =0 ;
-		short x = 0;
-		short y = 0;
-		uchar z = 0;
+		char x = 0;
+		char y = 0;
+		char z = 0;
 		ushort numTiles = decompressedBytes.size() >> 1;
 
 		if ((plane == planes - 1) &&
@@ -5791,8 +5791,9 @@ PACKET_HANDLER(CustomHouse)
 				x = decompressedBytes[index++];
 				y = decompressedBytes[index++];
 				z = decompressedBytes[index++];
-				x = (width >> 1) + x - 1;
-				y = (height >> 1) + y;
+				z += foundationItem->Z;
+				//x = (width >> 1) + x - 1;
+				//y = (height >> 1) + y;
 				CustomHouseData data{id, x, y, z };
 				house->HouseData.push_back(data);
 				foundationItem->AddMulti(id, x, y, z);

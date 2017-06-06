@@ -685,7 +685,7 @@ ushort CGameItem::GetMountAnimation()
 Добавить мульти в текущий объект
 @return
 */
-void CGameItem::AddMulti(ushort &graphic, short &x, short &y, uchar &z)
+void CGameItem::AddMulti(ushort &graphic, char &x, char &y, char &z)
 {
 	CMultiObject *mo = new CMultiObject(graphic, X + x, Y + y, z, 1);
 

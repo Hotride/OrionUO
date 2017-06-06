@@ -67,7 +67,7 @@ public:
 
 	virtual void Select(const int &x, const int &y);
 
-	void AddMulti(ushort &graphic, short &x, short &y, uchar &z);
+	void AddMulti(ushort &graphic, char &x, char &y, char &z);
 
 	/*!
 	Событие изменения картинки объекта
