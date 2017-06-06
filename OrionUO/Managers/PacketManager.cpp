@@ -5792,8 +5792,6 @@ PACKET_HANDLER(CustomHouse)
 				y = decompressedBytes[index++];
 				z = decompressedBytes[index++];
 				z += foundationItem->Z;
-				//x = (width >> 1) + x - 1;
-				//y = (height >> 1) + y;
 				CustomHouseData data{id, x, y, z };
 				house->HouseData.push_back(data);
 				foundationItem->AddMulti(id, x, y, z);
