@@ -5763,7 +5763,7 @@ PACKET_HANDLER(CustomHouse)
 			//LOG("House plane idx:%i\n", idx);
 			continue;
 		}
-
+		WISP_DATASTREAM::CDataReader tempReader(static_cast<puchar>(&decompressedBytes[0]), dLen);
 		Move(cLen);
 
 		ushort id = 0;
@@ -5775,12 +5775,12 @@ PACKET_HANDLER(CustomHouse)
 		{
 			case 0:
 			{
-				for (uint i = 0; i < decompressedBytes.size(); i += 5)
+				for (uint i = 0; i < decompressedBytes.size() / 5; i++)
 				{
-					id = (decompressedBytes[i] << 8) | decompressedBytes[i + 1];
-					x = decompressedBytes[i + 2];
-					y = decompressedBytes[i + 3];
-					z = decompressedBytes[i + 4];
+					id = tempReader.ReadUInt16BE();
+					x = tempReader.ReadUInt8();
+					y = tempReader.ReadUInt8();
+					z = tempReader.ReadUInt8();
 					z += foundationItem->Z;
 					if (id == 0) continue;
 					CustomHouseData data{ id, x, y, z };
@@ -5796,11 +5796,11 @@ PACKET_HANDLER(CustomHouse)
 				else
 					z = foundationItem->Z;
 
-				for (uint i = 0; i < decompressedBytes.size(); i += 4)
+				for (uint i = 0; i < decompressedBytes.size()/4; i++)
 				{
-					id = (decompressedBytes[i] << 8) | decompressedBytes[i + 1];
-					x = decompressedBytes[i + 2];
-					y = decompressedBytes[i + 3];
+					id = tempReader.ReadUInt16BE();
+					x = tempReader.ReadUInt8();
+					y = tempReader.ReadUInt8();
 					if (id == 0) continue;
 					CustomHouseData data{ id, x, y, z };
 					house->HouseData.push_back(data);
@@ -5838,9 +5838,9 @@ PACKET_HANDLER(CustomHouse)
 					multiHeight = (maxY - minY) + 1;
 				}
 
-				for (uint i = 0; i < decompressedBytes.size() / 2; i++)
+				for (uint i = 0; i < decompressedBytes.size()/2; i++)
 				{
-					id = (decompressedBytes[i * 2] << 8) | decompressedBytes[i * 2 + 1];
+					id = tempReader.ReadUInt16BE();
 					x = i / multiHeight + xOffs;
 					y = i % multiHeight + yOffs;
 
