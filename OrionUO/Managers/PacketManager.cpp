@@ -5735,30 +5735,24 @@ PACKET_HANDLER(CustomHouse)
 
 	g_CustomHousesManager.AddCustomHouse(house);
 
-	uchar idx;
+	uint header;
 
-	int cLen;
-	uchar flags;
+	int cLen, planeZ, planeMode;
 	uLongf dLen;
 	CMulti* multi = foundationItem->GetMulti();
+	if (multi == NULL) return;
 	short minX = multi->MinX;
 	short minY = multi->MinY;
-	short maxX = multi->MaxX;
 	short maxY = multi->MaxY;
-	ushort width = (maxX - minX) + 1;
-	ushort height = (maxY - minY) + 1;
-	ushort sizeFloor = ((width - 1) * (height - 1));
-	ushort sizeWalls = (width * height);
+
 	IFOR(plane, 0, planes)
 	{
 
-		idx = ReadUInt8();
-		dLen = ReadUInt8();
-		cLen = ReadUInt8();
-		flags = ReadUInt8();
-		dLen = dLen + ((flags & 0xF0) << 4);
-		cLen = cLen + ((flags & 0xF) << 8);
-		idx &= 0x1F;
+		header = ReadUInt32BE();
+		dLen = ((header & 0xFF0000) >> 16) | ((header & 0xF0) << 4);
+		cLen = ((header & 0xFF00) >> 8) | ((header & 0x0F) << 8);
+		planeZ = (header & 0x0F000000) >> 24;
+		planeMode = (header & 0xF0000000) >> 28;
 
 		if (cLen <= 0) continue;
 		UCHAR_LIST decompressedBytes(dLen);
@@ -5766,76 +5760,95 @@ PACKET_HANDLER(CustomHouse)
 		if (z_err != Z_OK)
 		{
 			LOG("Bad CustomHouseStruct compressed data received from server, house serial:%i\n", house->Serial);
-			LOG("House plane idx:%i\n", idx);
+			//LOG("House plane idx:%i\n", idx);
 			continue;
 		}
 
 		Move(cLen);
 
-		ushort id =0 ;
+		ushort id = 0;
 		char x = 0;
 		char y = 0;
 		char z = 0;
-		ushort numTiles = decompressedBytes.size() >> 1;
 
-		if ((plane == planes - 1) &&
-			(numTiles != sizeFloor) &&
-			(numTiles != sizeWalls))
+		switch (planeMode)
 		{
-			numTiles = decompressedBytes.size() / 5;
-			ushort index = 0;
-			for (ushort j = 0; j < numTiles; j++)
+			case 0:
 			{
-				id = (decompressedBytes[index] << 8) | decompressedBytes[index + 1];
-				index += 2;
-				x = decompressedBytes[index++];
-				y = decompressedBytes[index++];
-				z = decompressedBytes[index++];
-				z += foundationItem->Z;
-				CustomHouseData data{id, x, y, z };
-				house->HouseData.push_back(data);
-				foundationItem->AddMulti(id, x, y, z);
-			}
-		}
-		else
-		{
-			short iHeight = height;
-			short iX = 0, iY = 0;
-			short xOffs = 0, yOffs = 0;
-
-			if (plane == 0)
-			{
-				iHeight += 1;
-			}
-			else if (numTiles == sizeFloor)
-			{
-				iHeight -= 1;
-				iX = 1;
-				iY = 1;
-			}
-
-
-			if (idx > 0)
-				z = ((idx - 1) % 4) * 20 + 7 + foundationItem->Z;
-			else
-				z = foundationItem->Z;
-
-			ushort index = 0;
-			for (ushort j = 0; j < numTiles; j++)
-			{
-				id = (decompressedBytes[index] << 8) | decompressedBytes[index + 1];
-				index += 2;
-				x = xOffs + iX + minX;
-				y = yOffs + iY + minY;
-				yOffs++;
-				if (yOffs >= iHeight)
+				for (uint i = 0; i < decompressedBytes.size(); i += 5)
 				{
-					yOffs = 0;
-					xOffs++;
+					id = (decompressedBytes[i] << 8) | decompressedBytes[i + 1];
+					x = decompressedBytes[i + 2];
+					y = decompressedBytes[i + 3];
+					z = decompressedBytes[i + 4];
+					z += foundationItem->Z;
+					if (id == 0) continue;
+					CustomHouseData data{ id, x, y, z };
+					house->HouseData.push_back(data);
+					foundationItem->AddMulti(id, x, y, z);
 				}
-				CustomHouseData data{ id, x, y, z };
-				house->HouseData.push_back(data);
-				foundationItem->AddMulti(id, x, y, z);
+				break;
+			}
+			case 1:
+			{
+				if (planeZ > 0)
+					z = ((planeZ - 1) % 4) * 20 + 7 + foundationItem->Z; // Z=7,27,47,67
+				else
+					z = foundationItem->Z;
+
+				for (uint i = 0; i < decompressedBytes.size(); i += 4)
+				{
+					id = (decompressedBytes[i] << 8) | decompressedBytes[i + 1];
+					x = decompressedBytes[i + 2];
+					y = decompressedBytes[i + 3];
+					if (id == 0) continue;
+					CustomHouseData data{ id, x, y, z };
+					house->HouseData.push_back(data);
+					foundationItem->AddMulti(id, x, y, z);
+				}
+				break;
+			}
+			case 2:
+			{
+				short xOffs;
+				short yOffs;
+				short multiHeight;
+
+				if (planeZ > 0)
+					z = ((planeZ - 1) % 4) * 20 + 7 + foundationItem->Z; // Z=7,27,47,67
+				else
+					z = foundationItem->Z;
+
+				if (planeZ <= 0)
+				{
+					xOffs = minX;
+					yOffs = minY;
+					multiHeight = (maxY - minY) + 2;
+				}
+				else if (planeZ <= 4)
+				{
+					xOffs = minX + 1;
+					yOffs = minY + 1;
+					multiHeight = (maxY - minY);
+				}
+				else
+				{
+					xOffs = minX;
+					yOffs = minY;
+					multiHeight = (maxY - minY) + 1;
+				}
+
+				for (uint i = 0; i < decompressedBytes.size() / 2; i++)
+				{
+					id = (decompressedBytes[i * 2] << 8) | decompressedBytes[i * 2 + 1];
+					x = i / multiHeight + xOffs;
+					y = i % multiHeight + yOffs;
+
+					CustomHouseData data{ id, x, y, z };
+					house->HouseData.push_back(data);
+					foundationItem->AddMulti(id, x, y, z);
+				}
+				break;
 			}
 		}
 	}
