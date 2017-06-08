@@ -4375,6 +4375,7 @@ void COrion::AdjustSoundEffects(const uint &ticks, const float &volume)
 CGLTexture *COrion::ExecuteGump(const ushort &id)
 {
 	WISPFUN_DEBUG("c194_f66");
+	if (id >= MAX_GUMP_DATA_INDEX_COUNT) return NULL;
 	CIndexObject &io = m_GumpDataIndex[id];
 
 	if (io.Texture == 0)
@@ -4396,6 +4397,7 @@ CGLTexture *COrion::ExecuteGump(const ushort &id)
 CGLTexture *COrion::ExecuteLandArt(const ushort &id)
 {
 	WISPFUN_DEBUG("c194_f67");
+	if (id >= MAX_LAND_DATA_INDEX_COUNT) return NULL;
 	CIndexObject &io = m_LandDataIndex[id];
 
 	if (io.Texture == 0)
@@ -4423,6 +4425,7 @@ CGLTexture *COrion::ExecuteStaticArtAnimated(const ushort &id)
 CGLTexture *COrion::ExecuteStaticArt(const ushort &id)
 {
 	WISPFUN_DEBUG("c194_f69");
+	if (id >= MAX_STATIC_DATA_INDEX_COUNT) return NULL;
 	CIndexObject &io = m_StaticDataIndex[id];
 
 	if (io.Texture == 0)
@@ -4451,7 +4454,7 @@ CGLTexture *COrion::ExecuteTexture(ushort id)
 	WISPFUN_DEBUG("c194_f70");
 	id = m_LandData[id / 32].Tiles[id % 32].TexID;
 
-	if (!id)
+	if (!id || id >= MAX_LAND_TEXTURES_DATA_INDEX_COUNT)
 		return NULL;
 
 	CIndexObject &io = m_TextureDataIndex[id];
