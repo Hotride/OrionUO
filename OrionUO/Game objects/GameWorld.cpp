@@ -65,20 +65,21 @@ void CGameWorld::ProcessSound(const uint &ticks, CGameCharacter *gc)
 			int delaySound = 400;
 
 			if (gc->FindLayer(OL_MOUNT) != NULL)
-			{
+			{			
 				if (wd->Direction & 0x80)
-				{
+				{		
 					soundID = 0x0129;
 					delaySound = 150;
 				}
 				else
 				{
-					//soundID = 0x0129;
 					incID = 0;
 					delaySound = 350;
 				}
 			}
 
+			if (g_ConfigManager.StandartCharactersAnimationDelay)
+				delaySound *= 1.3;
 			soundID += incID;
 			gc->StepSoundOffset = (incID + 1) % 2;
 
