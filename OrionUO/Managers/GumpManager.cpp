@@ -209,7 +209,6 @@ void CGumpManager::AddGump(CGump *obj)
 			case GT_CONTAINER:
 			{
 				ushort sound = g_ContainerOffset[obj->Graphic].OpenSound;
-
 				if (sound)
 					g_Orion.PlaySoundEffect(sound);
 
@@ -419,7 +418,13 @@ void CGumpManager::RemoveGump(CGump *obj)
 			selobj->Opened = false;
 		}
 	}
+	if (obj->Graphic > 0 && obj->Graphic < CONTAINERS_COUNT)
+	{
+		ushort sound = g_ContainerOffset[obj->Graphic].CloseSound;
 
+		if (sound)
+			g_Orion.PlaySoundEffect(sound);
+	}
 	obj->m_Next = NULL;
 	obj->m_Prev = NULL;
 	delete obj;

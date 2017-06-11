@@ -66,14 +66,6 @@ m_IsGameBoard(id == 0x091A || id == 0x092E), m_TextRenderer(), m_CorpseEyes(NULL
 //----------------------------------------------------------------------------------
 CGumpContainer::~CGumpContainer()
 {
-	WISPFUN_DEBUG("c93_f2");
-	if (m_Graphic < CONTAINERS_COUNT)
-	{
-		ushort sound = g_ContainerOffset[m_Graphic].CloseSound;
-
-		if (sound)
-			g_Orion.PlaySoundEffect(sound);
-	}
 }
 //----------------------------------------------------------------------------------
 void CGumpContainer::UpdateItemCoordinates(CGameObject *item)
