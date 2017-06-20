@@ -792,9 +792,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Managers\CustomHousesManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="GUI\GUIVirtureGump.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
@@ -1471,9 +1468,6 @@
     </ClCompile>
     <ClCompile Include="StackWalker.cpp">
       <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Managers\CustomHousesManager.cpp">
-      <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="GUI\GUIVirtireGump.cpp">
       <Filter>Source Files\GUI</Filter>

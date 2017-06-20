@@ -3015,15 +3015,8 @@ PACKET_HANDLER(ExtendedCommand)
 			//house revision state, server sends this when player comes in range of a custom house
 			uint houseSerial = ReadUInt32BE();
 			uint houseRevision = ReadUInt32BE();
-			CustomHouseStruct *house = g_CustomHousesManager.GetCustomHouse(houseSerial);
-			if (house == NULL || house->Revision != houseRevision)//send 0x1E to refresh house data
-				CPacketCustomHouseDataReq(houseSerial).Send();
-			else
-			{
-				CGameItem *foundation = g_World->GetWorldItem(houseSerial);
-				if(!g_CustomHousesManager.TakeFromCache(foundation, house))
-					CPacketCustomHouseDataReq(houseSerial).Send();
-			}
+			CPacketCustomHouseDataReq(houseSerial).Send();
+			//Попробуем пока без кэша.
 			break;
 		}
 		case 0x20:
@@ -5720,9 +5713,6 @@ PACKET_HANDLER(CustomHouse)
 	uint houseSerial = ReadUInt32BE();
 	uint revision = ReadUInt32BE();
 	CGameItem *foundationItem = g_World->GetWorldItem(houseSerial);
-	CustomHouseStruct *house = new CustomHouseStruct();
-	house->Serial = houseSerial;
-	house->Revision = revision;
 
 
 	ReadUInt16BE();
@@ -5730,7 +5720,6 @@ PACKET_HANDLER(CustomHouse)
 
 	uchar planes = ReadUInt8();
 
-	g_CustomHousesManager.AddCustomHouse(house);
 
 	uint header;
 
@@ -5756,7 +5745,7 @@ PACKET_HANDLER(CustomHouse)
 		int z_err = uncompress(&decompressedBytes[0], &dLen, m_Ptr, cLen);
 		if (z_err != Z_OK)
 		{
-			LOG("Bad CustomHouseStruct compressed data received from server, house serial:%i\n", house->Serial);
+			LOG("Bad CustomHouseStruct compressed data received from server, house serial:%i\n", houseSerial);
 			//LOG("House plane idx:%i\n", idx);
 			continue;
 		}
@@ -5780,8 +5769,6 @@ PACKET_HANDLER(CustomHouse)
 					z = tempReader.ReadUInt8();
 					z += foundationItem->Z;
 					if (id == 0) continue;
-					CustomHouseData data{ id, x, y, z };
-					house->HouseData.push_back(data);
 					foundationItem->AddMulti(id, x, y, z);
 				}
 				break;
@@ -5799,8 +5786,6 @@ PACKET_HANDLER(CustomHouse)
 					x = tempReader.ReadUInt8();
 					y = tempReader.ReadUInt8();
 					if (id == 0) continue;
-					CustomHouseData data{ id, x, y, z };
-					house->HouseData.push_back(data);
 					foundationItem->AddMulti(id, x, y, z);
 				}
 				break;
@@ -5840,9 +5825,6 @@ PACKET_HANDLER(CustomHouse)
 					id = tempReader.ReadUInt16BE();
 					x = i / multiHeight + xOffs;
 					y = i % multiHeight + yOffs;
-
-					CustomHouseData data{ id, x, y, z };
-					house->HouseData.push_back(data);
 					foundationItem->AddMulti(id, x, y, z);
 				}
 				break;
