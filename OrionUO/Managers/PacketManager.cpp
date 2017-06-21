@@ -1205,7 +1205,11 @@ PACKET_HANDLER(UpdatePlayer)
 
 
 	if (isPlayer)
+	{
 		g_Orion.RemoveRangedObjects();
+		g_GumpManager.RemoveRangedGumps();
+	}
+		
 
 	g_World->MoveToTop(character);
 }
