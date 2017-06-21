@@ -76,12 +76,9 @@ CGameCharacter::~CGameCharacter()
 	IFOR(i, 0, 10)
 	{
 		CPartyObject &member = g_Party.Member[i];
-		if (member.Serial == m_Serial)
-		{
-			member.Serial = 0;
-			member.Character = NULL;
-			break;
-		}
+		if (member.Character == NULL) break;	
+		member.Serial = 0;
+		member.Character = NULL;		
 	}
 	
 }

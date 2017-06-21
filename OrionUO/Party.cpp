@@ -85,8 +85,10 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 				m_Inviter = 0;
 				IFOR(i, 0, 10)
 				{
-					Member[i].Serial = 0;
-					Member[i].Character = NULL;
+					CPartyObject &member = Member[i];
+					if (member.Character == NULL) break;
+					CGumpStatusbar *gump = (CGumpStatusbar*)g_GumpManager.UpdateContent(member.Character->Serial, 0, GT_STATUSBAR);
+					if (gump != NULL) gump->WantRedraw = true;
 				}
 				break;
 			}
@@ -100,11 +102,6 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 			IFOR(i, 0, count)
 			{
 				uint serial = reader.ReadUInt32BE();
-				if (serial != g_PlayerSerial)
-				{
-					Member[i].Character = g_World->FindWorldCharacter(serial);
-					g_Orion.StatusReq(serial);
-				}
 				Member[i].Serial = serial;
 
 				CGumpStatusbar *gump = (CGumpStatusbar*)g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
@@ -119,6 +116,8 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 					{
 						gump->Minimized = false;
 					}						
+					else
+						Member[i].Character = g_World->FindWorldCharacter(serial);
 
 					
 
