@@ -13,6 +13,8 @@
 #include "Managers/MouseManager.h"
 #include "Managers/GumpManager.h"
 #include "Managers/ConfigManager.h"
+#include "Game objects/GameWorld.h"
+#include "Game objects/GamePlayer.h"
 //----------------------------------------------------------------------------------
 CParty g_Party;
 //----------------------------------------------------------------------------------
@@ -61,6 +63,8 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 	switch (code)
 	{
 		case 1: //Add member
+		{
+		}
 		case 2: //Remove member
 		{
 			Clear();
@@ -79,7 +83,13 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 			{
 				m_Leader = 0;
 				m_Inviter = 0;
-
+				IFOR(i, 0, 10)
+				{
+					CPartyObject &member = Member[i];
+					if (member.Character == NULL) break;
+					CGumpStatusbar *gump = (CGumpStatusbar*)g_GumpManager.UpdateContent(member.Character->Serial, 0, GT_STATUSBAR);
+					if (gump != NULL) gump->WantRedraw = true;
+				}
 				break;
 			}
 
@@ -103,7 +113,13 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 					gump = (CGumpStatusbar*)g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 
 					if (serial == g_PlayerSerial)
+					{
 						gump->Minimized = false;
+					}						
+					else
+						Member[i].Character = g_World->FindWorldCharacter(serial);
+
+					
 
 					if (prevGump != NULL)
 						prevGump->AddStatusbar(gump);

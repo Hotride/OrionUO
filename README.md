@@ -7,7 +7,10 @@
 
 
 --------------
--Build it (preferably) in MVS 2013, platform toolset MUST be Windows XP (v120_xp)
+-Build it (preferably) in MVS 2013, platform toolset MUST be Windows XP (v120_xp).
+
+    If you want to build Orion Client with MVS 2015, you need Orion.dll built with v140 toolset.
+    You can find them here(both for release and debug): https://orion-client.online/index.php?threads/orion-dll-question.144/#post-708
 
 -Use ConfigurationEditor.exe to create right config for your client files
 
