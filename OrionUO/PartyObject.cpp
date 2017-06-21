@@ -11,44 +11,18 @@
 #include "Game objects/GameWorld.h"
 //----------------------------------------------------------------------------------
 CPartyObject::CPartyObject()
-: m_Serial(0), m_Hits(0), m_MaxHits(0), m_Mana(0), m_MaxMana(0), m_Stam(0),
-m_MaxStam(0), m_Notoriety(NT_NONE), m_CanChangeName(false)
+: m_Serial(0), Character(NULL)
 {
 }
-//----------------------------------------------------------------------------------
-//Get ordinary class property customized
-#define GET_PARTY_BODY(type, name) \
-type CPartyObject::Get##name() \
-{ \
-	WISPFUN_DEBUG("c197_fn"); \
-	type result = (type)0; \
-	if (m_Serial) \
-	{ \
-		CGameCharacter *gc = g_World->FindWorldCharacter(m_Serial); \
-		if (gc != NULL) \
-			result = (type)gc-> ##name; \
-	} \
-	return result; \
-}
-//----------------------------------------------------------------------------------
-GET_PARTY_BODY(short, Hits)
-GET_PARTY_BODY(short, MaxHits)
-GET_PARTY_BODY(short, Mana)
-GET_PARTY_BODY(short, MaxMana)
-GET_PARTY_BODY(short, Stam)
-GET_PARTY_BODY(short, MaxStam)
-GET_PARTY_BODY(NOTORIETY_TYPE, Notoriety)
-GET_PARTY_BODY(bool, CanChangeName)
 //----------------------------------------------------------------------------------
 string CPartyObject::GetName(const int &index)
 {
 	WISPFUN_DEBUG("c197_f1");
 	if (m_Serial)
 	{
-		CGameCharacter *gc = g_World->FindWorldCharacter(m_Serial);
-
-		if (gc != NULL)
-			return gc->Name;
+		if (Character == NULL)
+			Character = g_World->FindWorldCharacter(m_Serial);
+		return Character->Name;
 	}
 
 	char buf[10] = {0};

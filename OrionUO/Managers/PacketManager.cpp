@@ -1051,14 +1051,11 @@ PACKET_HANDLER(MobileAttributes)
 	obj->MaxHits = ReadInt16BE();
 	obj->Hits = ReadInt16BE();
 
-	if (obj->IsPlayer())
-	{
-		obj->MaxMana = ReadInt16BE();
-		obj->Mana = ReadInt16BE();
+	obj->MaxMana = ReadInt16BE();
+	obj->Mana = ReadInt16BE();
 
-		obj->MaxStam = ReadInt16BE();
-		obj->Stam = ReadInt16BE();
-	}
+	obj->MaxStam = ReadInt16BE();
+	obj->Stam = ReadInt16BE();
 
 	g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 	g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM);

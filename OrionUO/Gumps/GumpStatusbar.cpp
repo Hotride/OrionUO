@@ -928,12 +928,16 @@ void CGumpStatusbar::UpdateContent()
 					bodyGump->SelectOnly = true;
 
 					CPartyObject &member = g_Party.Member[i];
+					if (member.Character == NULL)
+					{
+						member.Character = g_World->FindWorldCharacter(member.Serial);
+					}
 
 					string memberName = member.GetName(i);
 
 					ushort textColor = 0x0386;
 
-					if (member.CanChangeName)
+					if (member.Character->CanChangeName)
 						textColor = 0x000E;
 
 					Add(new CGUIHitBox(ID_GSB_TEXT_FIELD, 16, -2, 109, 16));
@@ -941,7 +945,7 @@ void CGumpStatusbar::UpdateContent()
 					m_Entry->m_Entry.SetText(memberName);
 					m_Entry->CheckOnSerial = true;
 
-					if (member.CanChangeName)
+					if (member.Character->CanChangeName)
 						m_Entry->ReadOnly = false;
 					else
 						m_Entry->ReadOnly = true;
@@ -952,7 +956,7 @@ void CGumpStatusbar::UpdateContent()
 					//Hits
 					Add(new CGUIGumppic(0x0028, 34, 20));
 
-					int per = CalculatePercents(g_Player->MaxHits, g_Player->Hits, 96);
+					int per = CalculatePercents(member.Character->MaxHits, member.Character->Hits, 96);
 
 					if (per > 0)
 						Add(new CGUIGumppicTiled(0x0029, 34, 20, per, 0));
@@ -960,7 +964,7 @@ void CGumpStatusbar::UpdateContent()
 					//Mana
 					Add(new CGUIGumppic(0x0028, 34, 33));
 
-					per = CalculatePercents(g_Player->MaxMana, g_Player->Mana, 96);
+					per = CalculatePercents(member.Character->MaxMana, member.Character->Mana, 96);
 
 					Add(new CGUIShader(g_ColorizerShader, true));
 
@@ -973,7 +977,7 @@ void CGumpStatusbar::UpdateContent()
 					//Stam
 					Add(new CGUIGumppic(0x0028, 34, 45));
 
-					per = CalculatePercents(g_Player->MaxStam, g_Player->Stam, 96);
+					per = CalculatePercents(member.Character->MaxStam, member.Character->Stam, 96);
 
 					if (per > 0)
 					{

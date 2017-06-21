@@ -23,6 +23,8 @@
 #include "../Walker/PathFinder.h"
 #include "../Gumps/GumpTargetSystem.h"
 #include "../OrionWindow.h"
+#include "../Party.h"
+
 //----------------------------------------------------------------------------------
 CGameCharacter::CGameCharacter(const uint &serial)
 : CGameObject(serial), m_Hits(0), m_MaxHits(0), m_Female(false), m_Direction(0),
@@ -70,6 +72,18 @@ CGameCharacter::~CGameCharacter()
 
 	if (!IsPlayer())
 		g_GumpManager.CloseGump(m_Serial, 0, GT_PAPERDOLL);
+	//Чистим если находился в пати.
+	IFOR(i, 0, 10)
+	{
+		CPartyObject &member = g_Party.Member[i];
+		if (member.Serial == m_Serial)
+		{
+			member.Serial = 0;
+			member.Character = NULL;
+			break;
+		}
+	}
+	
 }
 //----------------------------------------------------------------------------------
 void CGameCharacter::UpdateHitsTexture(const uchar &hits)
