@@ -1125,12 +1125,6 @@ PACKET_HANDLER(UpdatePlayer)
 
 	uint serial = ReadUInt32BE();
 
-	if (serial != g_PlayerSerial)
-	{
-		LOG("Warning!!! Current player changed from 0x%08lX to 0x%08lX\n", g_PlayerSerial, serial);
-
-		return; //g_World->SetPlayer(serial);
-	}
 
 	bool oldDead = g_Player->Dead();
 	ushort oldGraphic = g_Player->Graphic;
