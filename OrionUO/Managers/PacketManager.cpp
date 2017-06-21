@@ -2199,23 +2199,26 @@ PACKET_HANDLER(DeleteObject)
 
 		if (obj->NPC)
 		{
-			bool inList = false;
-
-			for (UINTS_PAIR_LIST::iterator i = g_DeletedCharactersStack.begin(); i != g_DeletedCharactersStack.end(); i++)
+			if (!g_Party.Contains(obj->Serial))
 			{
-				if (i->first == serial)
+				bool inList = false;
+
+				for (UINTS_PAIR_LIST::iterator i = g_DeletedCharactersStack.begin(); i != g_DeletedCharactersStack.end(); i++)
 				{
-					inList = true;
-					i->second = g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY;
+					if (i->first == serial)
+					{
+						inList = true;
+						i->second = g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY;
 
-					break;
+						break;
+					}
 				}
-			}
 
-			if (!inList)
-			{
-				((CGameCharacter*)obj)->Deleted = true;
-				g_DeletedCharactersStack.push_back(pair<uint, uint>(serial, g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY));
+				if (!inList)
+				{
+					((CGameCharacter*)obj)->Deleted = true;
+					g_DeletedCharactersStack.push_back(pair<uint, uint>(serial, g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY));
+				}
 			}
 
 			obj->RemoveRender();

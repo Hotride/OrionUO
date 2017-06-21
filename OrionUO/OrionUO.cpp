@@ -5451,7 +5451,13 @@ void COrion::ChangeMap(uchar newmap)
 				CGameObject *next = (CGameObject*)obj->m_Next;
 
 				if (obj->MapIndex != g_CurrentMap)
-					g_World->RemoveObject(obj);
+				{
+					if (g_Party.Contains(obj->Serial))
+						obj->RemoveRender();
+					else
+						g_World->RemoveObject(obj);
+				}
+					
 
 				obj = next;
 			}

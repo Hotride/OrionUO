@@ -73,13 +73,17 @@ CGameCharacter::~CGameCharacter()
 	if (!IsPlayer())
 		g_GumpManager.CloseGump(m_Serial, 0, GT_PAPERDOLL);
 	//Чистим если находился в пати.
-	IFOR(i, 0, 10)
+	if (g_Party.Contains(m_Serial))
 	{
-		CPartyObject &member = g_Party.Member[i];
-		if (member.Character == NULL) break;	
-		member.Serial = 0;
-		member.Character = NULL;		
+		IFOR(i, 0, 10)
+		{
+			CPartyObject &member = g_Party.Member[i];
+			if (member.Serial != m_Serial) continue;
+			member.Serial = 0;
+			member.Character = NULL;
+		}
 	}
+
 	
 }
 //----------------------------------------------------------------------------------

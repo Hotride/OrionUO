@@ -103,6 +103,7 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 			{
 				uint serial = reader.ReadUInt32BE();
 				Member[i].Serial = serial;
+				Member[i].Character = g_World->FindWorldCharacter(serial);
 
 				CGumpStatusbar *gump = (CGumpStatusbar*)g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 
@@ -116,11 +117,7 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 					{
 						gump->Minimized = false;
 					}						
-					else
-						Member[i].Character = g_World->FindWorldCharacter(serial);
-
-					
-
+						
 					if (prevGump != NULL)
 						prevGump->AddStatusbar(gump);
 
@@ -133,7 +130,7 @@ void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)
 				{
 					g_Orion.StatusReq(serial);
 					gump->WantRedraw = true;
-				}
+				}			
 			}
 			
 			g_MouseManager.Position = oldPos;
