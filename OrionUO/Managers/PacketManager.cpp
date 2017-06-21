@@ -1125,15 +1125,18 @@ PACKET_HANDLER(UpdatePlayer)
 
 	uint serial = ReadUInt32BE();
 
+	CGameCharacter *character = g_World->FindWorldCharacter(serial);
+	if (character == NULL) return;
+	bool isPlayer = character == g_Player;
 
 	bool oldDead = g_Player->Dead();
 	ushort oldGraphic = g_Player->Graphic;
-	g_Player->Graphic = ReadUInt16BE();
-	g_Player->OnGraphicChange();
+	character->Graphic = ReadUInt16BE();
+	character->OnGraphicChange();
 
-	if (oldGraphic && oldGraphic != g_Player->Graphic)
+	if (oldGraphic && oldGraphic != character->Graphic && isPlayer)
 	{
-		if (g_Player->Dead())
+		if (character->Dead())
 		{
 			g_Weather.Reset();
 			g_Target.Reset();
@@ -1145,7 +1148,7 @@ PACKET_HANDLER(UpdatePlayer)
 		}
 	}
 
-	if (oldDead != g_Player->Dead())
+	if (oldDead != g_Player->Dead() && isPlayer)
 	{
 		if (g_Player->Dead())
 			g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
@@ -1154,53 +1157,57 @@ PACKET_HANDLER(UpdatePlayer)
 	}
 
 	Move(1);
-	g_Player->Color = ReadUInt16BE();
-	g_Player->Flags = ReadUInt8();
-	g_Player->X = ReadUInt16BE();
-	g_Player->Y = ReadUInt16BE();
+	character->Color = ReadUInt16BE();
+	character->Flags = ReadUInt8();
+	character->X = ReadUInt16BE();
+	character->Y = ReadUInt16BE();
 	Move(2);
 
-	CGameItem *bank = g_Player->FindLayer(OL_BANK);
-
-	if (bank != NULL && bank->Opened)
-	{
-		bank->Clear();
-		bank->Opened = false;
-
-		g_GumpManager.CloseGump(bank->Serial, 0, GT_CONTAINER);
-	}
-
-	g_Player->m_WalkStack.Clear();
-
 	uchar dir = ReadUInt8();
-	g_Walker->SetSequence(0, dir);
-	g_WalkRequestCount = 0;
-	g_Player->OffsetX = 0;
-	g_Player->OffsetY = 0;
-	g_Player->OffsetZ = 0;
-
-	if (g_Player->Direction != dir)
+	if (isPlayer)
 	{
 		CGameItem *bank = g_Player->FindLayer(OL_BANK);
 
-		if (bank != NULL)
+		if (bank != NULL && bank->Opened)
 		{
-			CGump *bankContainer = g_GumpManager.GetGump(bank->Serial, 0, GT_CONTAINER);
+			bank->Clear();
+			bank->Opened = false;
 
-			if (bankContainer != NULL)
-				g_GumpManager.RemoveGump(bankContainer);
+			g_GumpManager.CloseGump(bank->Serial, 0, GT_CONTAINER);
+		}
+
+		g_Player->m_WalkStack.Clear();
+
+
+		g_Walker->SetSequence(0, dir);
+		g_WalkRequestCount = 0;
+		g_Player->OffsetX = 0;
+		g_Player->OffsetY = 0;
+		g_Player->OffsetZ = 0;
+
+		if (g_Player->Direction != dir)
+		{
+			CGameItem *bank = g_Player->FindLayer(OL_BANK);
+
+			if (bank != NULL)
+			{
+				CGump *bankContainer = g_GumpManager.GetGump(bank->Serial, 0, GT_CONTAINER);
+
+				if (bankContainer != NULL)
+					g_GumpManager.RemoveGump(bankContainer);
+			}
 		}
 	}
 
-	g_Player->Direction = dir;
-	g_Player->Z = ReadUInt8();
 
-	/*g_RemoveRangeXY.X = g_Player->X;
-	g_RemoveRangeXY.Y = g_Player->Y;
+	character->Direction = dir;
+	character->Z = ReadUInt8();
 
-	g_Orion.RemoveRangedObjects();*/
 
-	g_World->MoveToTop(g_Player);
+	if (isPlayer)
+		g_Orion.RemoveRangedObjects();
+
+	g_World->MoveToTop(character);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(CharacterStatus)
