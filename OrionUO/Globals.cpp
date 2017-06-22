@@ -86,6 +86,7 @@ uint g_ClientFlag = 0;
 bool g_SendLogoutNotification = false;
 bool g_NPCPopupEnabled = false;
 bool g_ChatEnabled = false;
+bool g_NoMegaCliloc = false;
 bool g_TooltipsEnabled = false;
 bool g_PaperdollBooks = false;
 

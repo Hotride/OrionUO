@@ -2517,6 +2517,7 @@ PACKET_HANDLER(EnableLockedFeatures)
 		g_LockedClientFeatures = ReadUInt16BE();
 
 	g_ChatEnabled = (bool)(g_LockedClientFeatures & LFF_T2A);
+	g_NoMegaCliloc = g_NoMegaCliloc < LFF_AOS;
 
 	g_AnimationManager.UpdateAnimationAddressTable();
 }
@@ -5694,10 +5695,12 @@ PACKET_HANDLER(Logout)
 PACKET_HANDLER(OPLInfo)
 {
 	WISPFUN_DEBUG("c150_f99");
-	if (m_ClientVersion >= CV_308Z)
+	if (m_ClientVersion >= CV_308Z && !g_NoMegaCliloc)
 	{
 		uint serial = ReadUInt32BE();
-
+		uint revision = ReadUInt32BE();
+		//Если хранить ревизию на обьекте, то сравнивая её и то что здесь пришло
+		// и получая одинаковый результат, - нет смысла запрашивать у сервера эти данные заного.
 		AddMegaClilocRequest(serial, true);
 	}
 }
