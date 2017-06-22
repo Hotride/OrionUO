@@ -1164,8 +1164,9 @@ void COrion::Process(const bool &rendering)
 			if (!g_Player->m_WalkStack.Empty())
 			{
 				g_GumpManager.RemoveRangedGumps();
+				RemoveRangedObjects();
 			}
-			RemoveRangedObjects();
+			
 
 			if (g_ConfigManager.ObjectHandles && g_CtrlPressed && g_ShiftPressed && (oldCtrl != g_CtrlPressed || oldShift != g_ShiftPressed))
 				g_World->ResetObjectHandlesState();
