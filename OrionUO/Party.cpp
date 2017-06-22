@@ -52,7 +52,11 @@ void CParty::Clear()
 {
 	WISPFUN_DEBUG("c196_f2");
 	IFOR(i, 0, 10)
-		Member[i].Serial = 0;;
+	{
+		Member[i].Serial = 0;
+		Member[i].Character = NULL;
+	}
+		
 }
 //----------------------------------------------------------------------------------
 void CParty::ParsePacketData(WISP_DATASTREAM::CDataReader &reader)

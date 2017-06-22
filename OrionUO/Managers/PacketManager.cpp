@@ -1127,34 +1127,38 @@ PACKET_HANDLER(UpdatePlayer)
 
 	CGameCharacter *character = g_World->FindWorldCharacter(serial);
 	if (character == NULL) return;
-	bool isPlayer = character == g_Player;
+	bool isPlayer = serial == g_PlayerSerial;
 
 	bool oldDead = g_Player->Dead();
 	ushort oldGraphic = g_Player->Graphic;
 	character->Graphic = ReadUInt16BE();
 	character->OnGraphicChange();
 
-	if (oldGraphic && oldGraphic != character->Graphic && isPlayer)
+	if (isPlayer)
 	{
-		if (character->Dead())
+		if (oldGraphic && oldGraphic != character->Graphic)
 		{
-			g_Weather.Reset();
-			g_Target.Reset();
+			if (character->Dead())
+			{
+				g_Weather.Reset();
+				g_Target.Reset();
 
-			if (g_ConfigManager.Music)
-				g_Orion.PlayMusic(42, true);
+				if (g_ConfigManager.Music)
+					g_Orion.PlayMusic(42, true);
 
-			g_DeathScreenTimer = g_Ticks + DEATH_SCREEN_DELAY;
+				g_DeathScreenTimer = g_Ticks + DEATH_SCREEN_DELAY;
+			}
+		}
+
+		if (oldDead != g_Player->Dead())
+		{
+			if (g_Player->Dead())
+				g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
+			else
+				g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
 		}
 	}
 
-	if (oldDead != g_Player->Dead() && isPlayer)
-	{
-		if (g_Player->Dead())
-			g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
-		else
-			g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
-	}
 
 	Move(1);
 	character->Color = ReadUInt16BE();
@@ -1202,15 +1206,12 @@ PACKET_HANDLER(UpdatePlayer)
 
 	character->Direction = dir;
 	character->Z = ReadUInt8();
-
-
+		
 	if (isPlayer)
 	{
 		g_Orion.RemoveRangedObjects();
 		g_GumpManager.RemoveRangedGumps();
 	}
-		
-
 	g_World->MoveToTop(character);
 }
 //----------------------------------------------------------------------------------
