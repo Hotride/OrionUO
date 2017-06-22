@@ -847,7 +847,7 @@ void CGumpStatusbar::UpdateContent()
 				Add(new CGUIGumppic(0x0028, 34, 20));
 
 				int per = CalculatePercents(g_Player->MaxHits, g_Player->Hits, 96);
-
+				Add(new CGUIShader(g_ColorizerShader, true));
 				if (per > 0)
 				{
 					CGUIGumppic *gumppic = (CGUIGumppic*)Add(new CGUIGumppicTiled(0x0029, 34, 20, per, 0));
@@ -858,8 +858,6 @@ void CGumpStatusbar::UpdateContent()
 				Add(new CGUIGumppic(0x0028, 34, 33));
 
 				per = CalculatePercents(g_Player->MaxMana, g_Player->Mana, 96);
-
-				Add(new CGUIShader(g_ColorizerShader, true));
 
 				if (per > 0)
 				{
