@@ -1016,7 +1016,11 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 					return;
 				}
 
-				g_MapManager->AddRender(this);
+				if (!RemovedFromRender())
+				{
+					g_MapManager->AddRender(this);
+				}
+
 
 				m_LastStepTime = g_Ticks;
 			}
