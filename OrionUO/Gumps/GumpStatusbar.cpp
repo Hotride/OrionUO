@@ -946,10 +946,7 @@ void CGumpStatusbar::UpdateContent()
 					{
 						outofRange = true;
 					}
-					ushort textColor = 0x0386;
-
-					if (member.Character->CanChangeName)
-						textColor = 0x000E;
+					ushort textColor = outofRange ? 912 : g_ConfigManager.GetColorByNotoriety(member.Character->Notoriety);
 
 					Add(new CGUIHitBox(ID_GSB_TEXT_FIELD, 16, -2, 109, 16));
 					m_Entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GSB_TEXT_FIELD, textColor, textColor, textColor, 16, -2, 150, false, 1, TS_LEFT, UOFONT_FIXED));
