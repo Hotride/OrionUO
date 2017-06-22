@@ -84,6 +84,11 @@ void CRenderWorldObject::RemoveRender()
 	m_PrevXY = NULL;
 }
 //---------------------------------------------------------------------------
+bool CRenderWorldObject::RemovedFromRender()
+{
+	return m_NextXY == NULL && m_PrevXY == NULL;
+}
+//---------------------------------------------------------------------------
 CLandObject *CRenderWorldObject::GetLand()
 {
 	WISPFUN_DEBUG("c202_f5");

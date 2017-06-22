@@ -837,13 +837,22 @@ void CGumpStatusbar::UpdateContent()
 				Add(new CGUIButton(ID_GSB_BUTTON_HEAL_1, 0x0938, 0x093A, 0x093A, 16, 20));
 				Add(new CGUIButton(ID_GSB_BUTTON_HEAL_2, 0x0939, 0x093A, 0x093A, 16, 33));
 
+				int color = 0;
+				if (g_Player->Poisoned())
+					color = 63; //Character status line (green)
+				else if (g_Player->YellowHits())
+					color = 353; //Character status line (yellow)
+
 				//Hits
 				Add(new CGUIGumppic(0x0028, 34, 20));
 
 				int per = CalculatePercents(g_Player->MaxHits, g_Player->Hits, 96);
 
 				if (per > 0)
-					Add(new CGUIGumppicTiled(0x0029, 34, 20, per, 0));
+				{
+					CGUIGumppic *gumppic = (CGUIGumppic*)Add(new CGUIGumppicTiled(0x0029, 34, 20, per, 0));
+					gumppic->Color = color;
+				}
 
 				//Mana
 				Add(new CGUIGumppic(0x0028, 34, 33));
@@ -934,7 +943,11 @@ void CGumpStatusbar::UpdateContent()
 					}
 
 					string memberName = member.GetName(i);
-
+					bool outofRange = false;
+					if (member.Character->RemovedFromRender())
+					{
+						outofRange = true;
+					}
 					ushort textColor = 0x0386;
 
 					if (member.Character->CanChangeName)
@@ -950,39 +963,60 @@ void CGumpStatusbar::UpdateContent()
 					else
 						m_Entry->ReadOnly = true;
 
-					Add(new CGUIButton(ID_GSB_BUTTON_HEAL_1, 0x0938, 0x093A, 0x093A, 16, 20));
-					Add(new CGUIButton(ID_GSB_BUTTON_HEAL_2, 0x0939, 0x093A, 0x093A, 16, 33));
+					if (!outofRange)
+					{
+						Add(new CGUIButton(ID_GSB_BUTTON_HEAL_1, 0x0938, 0x093A, 0x093A, 16, 20));
+						Add(new CGUIButton(ID_GSB_BUTTON_HEAL_2, 0x0939, 0x093A, 0x093A, 16, 33));
+					}
+					int color = 0;
+					if (member.Character->Poisoned())
+						color = 63; //Character status line (green)
+					else if (member.Character->YellowHits())
+						color = 353; //Character status line (yellow)
 
+					if (outofRange)
+						color = 912;
+					Add(new CGUIShader(g_ColorizerShader, true));
 					//Hits
-					Add(new CGUIGumppic(0x0028, 34, 20));
+					CGUIGumppic *g = new CGUIGumppic(0x0028, 34, 20);
+					g->Color = outofRange ? color : 0;
+					Add(g);
 
 					int per = CalculatePercents(member.Character->MaxHits, member.Character->Hits, 96);
 
 					if (per > 0)
-						Add(new CGUIGumppicTiled(0x0029, 34, 20, per, 0));
+					{
+						CGUIGumppic *gumppic = (CGUIGumppic*)Add(new CGUIGumppicTiled(0x0029, 34, 20, per, 0));
+						gumppic->Color = color;
+					}
+						
 
 					//Mana
-					Add(new CGUIGumppic(0x0028, 34, 33));
+					g = new CGUIGumppic(0x0028, 34, 33);
+					g->Color = outofRange ? color : 0;
+					Add(g);
 
 					per = CalculatePercents(member.Character->MaxMana, member.Character->Mana, 96);
 
-					Add(new CGUIShader(g_ColorizerShader, true));
+					
 
 					if (per > 0)
 					{
 						CGUIGumppic *gumppic = (CGUIGumppic*)Add(new CGUIGumppicTiled(0x0029, 34, 33, per, 0)); //0x0170 green //0x0035 yellow
-						gumppic->Color = 0x0482;
+						gumppic->Color = outofRange ? color : 0x0482;
 					}
 
 					//Stam
-					Add(new CGUIGumppic(0x0028, 34, 45));
+					g = new CGUIGumppic(0x0028, 34, 45);
+					g->Color = outofRange ? color : 0;
+					Add(g);
 
 					per = CalculatePercents(member.Character->MaxStam, member.Character->Stam, 96);
 
 					if (per > 0)
 					{
 						CGUIGumppic *gumppic = (CGUIGumppic*)Add(new CGUIGumppicTiled(0x0029, 34, 45, per, 0)); //0x0170 green //0x0035 yellow
-						gumppic->Color = 0x0075;
+						gumppic->Color = outofRange ? color : 0x0075;
 					}
 
 					Add(new CGUIShader(g_ColorizerShader, false));

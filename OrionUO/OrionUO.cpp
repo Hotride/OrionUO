@@ -1163,10 +1163,9 @@ void COrion::Process(const bool &rendering)
 			//Если чар стоит и сервер присылает открытие гампа, его не должно сразу-же удалять.
 			if (!g_Player->m_WalkStack.Empty())
 			{
-				RemoveRangedObjects();
 				g_GumpManager.RemoveRangedGumps();
 			}
-
+			RemoveRangedObjects();
 
 			if (g_ConfigManager.ObjectHandles && g_CtrlPressed && g_ShiftPressed && (oldCtrl != g_CtrlPressed || oldShift != g_ShiftPressed))
 				g_World->ResetObjectHandlesState();
@@ -5453,7 +5452,10 @@ void COrion::ChangeMap(uchar newmap)
 				if (obj->MapIndex != g_CurrentMap)
 				{
 					if (g_Party.Contains(obj->Serial))
+					{
 						obj->RemoveRender();
+						g_GumpManager.UpdateContent(obj->Serial, 0, GT_STATUSBAR);
+					}					
 					else
 						g_World->RemoveObject(obj);
 				}
@@ -5754,7 +5756,10 @@ void COrion::RemoveRangedObjects()
 					if (GetRemoveDistance(g_RemoveRangeXY, go) > objectsRange)
 					{
 						if (g_Party.Contains(go->Serial))
+						{
 							go->RemoveRender();
+							g_GumpManager.UpdateContent(go->Serial, 0, GT_STATUSBAR);
+						}							
 						else
 							g_World->RemoveObject(go);
 					}

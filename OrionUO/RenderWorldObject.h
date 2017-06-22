@@ -33,6 +33,8 @@ public:
 
 	bool ProcessAlpha(const int &maxAlpha);
 
+	bool RemovedFromRender();
+
 	//Добавить текст в контейнер
 	virtual void AddText(CTextData *td) {}
 

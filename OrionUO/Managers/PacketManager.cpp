@@ -2220,6 +2220,8 @@ PACKET_HANDLER(DeleteObject)
 					g_DeletedCharactersStack.push_back(pair<uint, uint>(serial, g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY));
 				}
 			}
+			else
+				g_GumpManager.UpdateContent(obj->Serial, 0, GT_STATUSBAR);
 
 			obj->RemoveRender();
 		}
