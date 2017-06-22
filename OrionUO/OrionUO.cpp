@@ -1158,14 +1158,6 @@ void COrion::Process(const bool &rendering)
 				g_RemoveRangeXY.X = g_Player->X;
 				g_RemoveRangeXY.Y = g_Player->Y;
 			}
-
-			//Чистим все это дело только когда идёт попытка ходьбы.
-			//Если чар стоит и сервер присылает открытие гампа, его не должно сразу-же удалять.
-			if (!g_Player->m_WalkStack.Empty())
-			{
-				g_GumpManager.RemoveRangedGumps();
-				RemoveRangedObjects();
-			}
 			
 
 			if (g_ConfigManager.ObjectHandles && g_CtrlPressed && g_ShiftPressed && (oldCtrl != g_CtrlPressed || oldShift != g_ShiftPressed))

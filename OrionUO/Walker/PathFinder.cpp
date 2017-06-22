@@ -582,10 +582,6 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	g_RemoveRangeXY.X = x;
 	g_RemoveRangeXY.Y = y;
 
-	g_Orion.RemoveRangedObjects();
-
-	g_GumpManager.RemoveRangedGumps();
-
 	if (emptyStack)
 	{
 		if (!g_Player->Walking())

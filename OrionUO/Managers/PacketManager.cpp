@@ -3171,7 +3171,8 @@ PACKET_HANDLER(ConfirmWalk)
 		newnoto = 0x01;
 
 	g_Player->Notoriety = newnoto;
-
+	g_Orion.RemoveRangedObjects();
+	g_GumpManager.RemoveRangedGumps();
 	g_World->MoveToTop(g_Player);
 }
 //----------------------------------------------------------------------------------
