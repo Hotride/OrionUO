@@ -580,8 +580,8 @@ void CPacketManager::SendMegaClilocRequests(UINT_LIST &list)
 				CPacketMegaClilocRequest(list).Send();
 			else
 			{
-				//IFOR(i, 0, (int)list.size())
-				//	CPacketMegaClilocRequestOld(list[i]).Send();
+				IFOR(i, 0, (int)list.size())
+					CPacketMegaClilocRequestOld(list[i]).Send();
 			}
 		}
 
@@ -2789,7 +2789,13 @@ PACKET_HANDLER(ExtendedCommand)
 		}
 		case 0x10:
 		{
-			CPacketMegaClilocRequestOld(ReadUInt32BE()).Send();
+			uint serial = ReadUInt32BE();
+			uint clilocNum = ReadUInt32BE();
+			ReadUInt32BE();
+			ushort crafterNameLen = ReadUInt16BE();
+			if (crafterNameLen)
+
+			CPacketMegaClilocRequestOld(serial).Send();
 			break;
 		}
 		case 0x14: //Display Popup/context menu (2D and KR)
