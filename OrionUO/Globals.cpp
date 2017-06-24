@@ -29,8 +29,8 @@ bool g_LogoutAfterClick = false;
 
 int g_FrameDelay[2] = { FRAME_DELAY_UNACTIVE_WINDOW, FRAME_DELAY_ACTIVE_WINDOW };
 
-uchar g_PingCount = 0;
-uchar g_PingSequence = 0;
+uint g_PingByPacket = 0;
+uint g_PingByPacketSendTime = 0;
 
 uint g_LastSendTime = 0;
 uint g_LastPacketTime = 0;

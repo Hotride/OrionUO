@@ -87,8 +87,8 @@ extern bool g_LogoutAfterClick;
 extern int g_FrameDelay[2];
 
 //!Счетчик стека пинга
-extern uchar g_PingCount;
-extern uchar g_PingSequence;
+extern uint g_PingByPacket;
+extern uint g_PingByPacketSendTime;
 
 //!Время последней отправки пакета серверу
 extern uint g_LastSendTime;
