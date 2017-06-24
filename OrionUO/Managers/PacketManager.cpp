@@ -2412,7 +2412,8 @@ PACKET_HANDLER(ClientVersion)
 PACKET_HANDLER(Ping)
 {
 	WISPFUN_DEBUG("c150_f40");
-	g_PingByPacket = (g_Ticks - g_PingByPacketSendTime) / 10000;
+	g_Ping = 0;
+	g_PingByPacket = g_Ticks - g_PingByPacketSendTime;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(SetWeather)
@@ -3095,7 +3096,7 @@ PACKET_HANDLER(DenyWalk)
 	WISPFUN_DEBUG("c150_f48");
 	g_WalkRequestCount = 0;
 	g_PendingDelayTime = 0;
-	g_Ping = g_PingByPacket;
+	g_Ping = 0;
 
 	if (g_Player == NULL)
 		return;
@@ -3152,10 +3153,6 @@ PACKET_HANDLER(ConfirmWalk)
 		g_Ping /= 10;
 	}
 
-	if (g_Ping == 0)
-		g_Ping = g_PingByPacket;
-	else
-		g_PingByPacket = g_Ping;
 	//player->SetDirection(newdir);
 
 	uchar newnoto = ReadUInt8() & (~0x40);
