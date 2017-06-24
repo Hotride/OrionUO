@@ -118,7 +118,12 @@ void CGameObject::DrawObjectHandlesTexture(const int &x, const int &y)
 		if (m_NPC || IsCorpse())
 			GenerateObjectHandlesTexture(ToWString(m_Name));
 		else
-			GenerateObjectHandlesTexture(g_ClilocManager.Cliloc(g_Language)->GetW(1020000 + m_Graphic, true, g_Orion.m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32].Name));
+		{
+			wstring name = ToWString(m_Name);
+			if (!name.length())
+				name = g_ClilocManager.Cliloc(g_Language)->GetW(1020000 + m_Graphic, true, g_Orion.m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32].Name);
+			GenerateObjectHandlesTexture(name);
+		}
 	}
 
 	m_TextureObjectHalndes.Draw(x, y);

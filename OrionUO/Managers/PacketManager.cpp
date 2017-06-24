@@ -2781,14 +2781,46 @@ PACKET_HANDLER(ExtendedCommand)
 
 			break;
 		}
-		case 0x10:
+		case 0x10: //DisplayEquipmentInfo
 		{
 			uint serial = ReadUInt32BE();
+			CGameItem *item = g_World->FindWorldItem(serial);
+			string str = "";
 			uint clilocNum = ReadUInt32BE();
-			ReadUInt32BE();
-			ushort crafterNameLen = ReadUInt16BE();
-			if (crafterNameLen)
+			if (clilocNum)
+			{
+				str = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum, true);
+				if (item != NULL)
+					item->Name = str;
+			}
 
+			if (ReadUInt32BE() == 0xFFFFFFFD)
+			{
+				ushort crafterNameLen = ReadUInt16BE();
+				if (crafterNameLen)
+				{
+					string crafterName = ReadString(crafterNameLen);
+					str += "\n" + crafterName;
+				}
+			}
+
+			if (ReadUInt32BE() == 0xFFFFFFFC)
+			{
+				str += "\n  [unidentified]";
+				//[unidentified]
+			}
+
+			// -4 потому что последние 4 байта в пакете 0xFFFFFFFF
+			puchar end = m_Start + m_Size - 4;
+			while (m_Ptr < end)
+			{
+				uint attrClilocNum = ReadUInt32BE();
+				ushort charges = ReadUInt16BE();
+				string attrsString = g_ClilocManager.Cliloc(g_Language)->GetA(attrClilocNum, true);
+				str += "\n" + attrsString + ":" + std::to_string(charges);
+			}
+
+			g_Orion.CreateTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
 			CPacketMegaClilocRequestOld(serial).Send();
 			break;
 		}
