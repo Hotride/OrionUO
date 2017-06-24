@@ -921,8 +921,6 @@ PACKET_HANDLER(EnterWorld)
 
 	g_Ping = 0;
 	g_WalkRequestCount = 0;
-	g_PingCount = 0;
-	g_PingSequence = 0;
 	g_ClickObject.Clear();
 	g_Weather.Reset();
 	g_SkillsTotal = 0.0f;
@@ -2414,12 +2412,7 @@ PACKET_HANDLER(ClientVersion)
 PACKET_HANDLER(Ping)
 {
 	WISPFUN_DEBUG("c150_f40");
-	g_PingSequence = ReadUInt8();
-
-	if (g_PingCount)
-		g_PingCount--;
-	else
-		g_Orion.Send(m_Start, 2);
+	g_PingByPacket = (g_Ticks - g_PingByPacketSendTime) / 10000;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(SetWeather)
@@ -3102,7 +3095,7 @@ PACKET_HANDLER(DenyWalk)
 	WISPFUN_DEBUG("c150_f48");
 	g_WalkRequestCount = 0;
 	g_PendingDelayTime = 0;
-	g_Ping = 0;
+	g_Ping = g_PingByPacket;
 
 	if (g_Player == NULL)
 		return;
@@ -3159,6 +3152,10 @@ PACKET_HANDLER(ConfirmWalk)
 		g_Ping /= 10;
 	}
 
+	if (g_Ping == 0)
+		g_Ping = g_PingByPacket;
+	else
+		g_PingByPacket = g_Ping;
 	//player->SetDirection(newdir);
 
 	uchar newnoto = ReadUInt8() & (~0x40);
