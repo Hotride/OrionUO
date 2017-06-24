@@ -1069,7 +1069,7 @@ void COrion::Process(const bool &rendering)
 	g_PacketManager.SendMegaClilocRequests();
 	g_MouseManager.Update();
 
-	if (g_GameState >= GS_CHARACTER && g_PingByPacketSendTime + SEND_TIMEOUT_DELAY < g_Ticks)
+	if (g_GameState >= GS_CHARACTER && (g_PingByPacketSendTime + SEND_TIMEOUT_DELAY) < g_Ticks)
 	{
 		//классик клиент постоянно присылает 0
 		uchar ping[2] = { 0x73, 0};
