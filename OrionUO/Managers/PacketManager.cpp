@@ -2800,7 +2800,7 @@ PACKET_HANDLER(ExtendedCommand)
 				if (crafterNameLen)
 				{
 					string crafterName = ReadString(crafterNameLen);
-					str += "\n" + crafterName;
+					str += "\nCrafted by " + crafterName;
 				}
 			}
 
