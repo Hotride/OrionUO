@@ -1841,8 +1841,8 @@ PACKET_HANDLER(UpdateContainedItem)
 
 	obj->Color = ReadUInt16BE();
 
-	//if (m_ClientVersion >= CV_308Z && (!obj->ClilocMessage.length() || obj->IsStackable()))
-	//	m_MegaClilocRequests.push_back(obj->Serial);
+	if (m_ClientVersion >= CV_308Z)
+		m_MegaClilocRequests.push_back(obj->Serial);
 
 	if (obj->Graphic == 0x0EB0) //Message board item
 	{
@@ -1864,8 +1864,8 @@ PACKET_HANDLER(UpdateContainedItem)
 		{
 			gump = g_GumpManager.UpdateContent(cserial, 0, GT_CONTAINER);
 
-			//if (gump != NULL && m_ClientVersion >= CV_308Z)
-			//	AddMegaClilocRequest(cserial, true);
+			if (m_ClientVersion >= CV_308Z)
+				m_MegaClilocRequests.push_back(cserial);
 		}
 
 		if (gump != NULL)
@@ -1886,6 +1886,7 @@ PACKET_HANDLER(UpdateContainedItem)
 				g_GumpManager.UpdateContent(0, top->Serial, GT_TRADE);
 		}
 	}
+	SendMegaClilocRequests();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateContainedItems)
@@ -1976,8 +1977,8 @@ PACKET_HANDLER(UpdateContainedItems)
 		obj->MapIndex = g_CurrentMap;
 		obj->Layer = 0;
 
-		//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-		//	megaClilocRequestList.push_back(obj->Serial);
+		if (m_ClientVersion >= CV_308Z)
+			m_MegaClilocRequests.push_back(obj->Serial);
 
 		g_World->PutContainer(obj, cserial);
 
@@ -2003,7 +2004,7 @@ PACKET_HANDLER(UpdateContainedItems)
 		LOG("\t|0x%08X<0x%08X:%04X*%d (%d,%d) %04X\n", obj->Container, obj->Serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Color);
 	}
 
-	//SendMegaClilocRequests(megaClilocRequestList);
+	SendMegaClilocRequests();
 
 	if (containerIsCorpse)
 	{

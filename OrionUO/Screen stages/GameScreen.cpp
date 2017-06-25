@@ -110,15 +110,14 @@ void CGameScreen::InitToolTip()
 	WISPFUN_DEBUG("c164_f5");
 	g_FontManager.SetUseHTML(true);
 	g_FontManager.RecalculateWidthByInfo = true;
-
+	if (!g_ConfigManager.UseToolTips) return;
 	if (g_SelectedObject.Gump())
 	{
 		if (g_SelectedObject.Gump() == &m_GameScreenGump)
-		{
-			if (g_ConfigManager.UseToolTips)
+		{		
 				m_GameScreenGump.InitToolTip();
 		}
-		else if (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z)
+		else if (g_PacketManager.ClientVersion >= CV_308Z)
 			g_GumpManager.InitToolTip();
 	}
 	else if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z))
