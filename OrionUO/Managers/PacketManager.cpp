@@ -574,17 +574,13 @@ void CPacketManager::SendMegaClilocRequests(UINT_LIST &list)
 	WISPFUN_DEBUG("c150_f4");
 	if (list.size())
 	{
-		if (g_TooltipsEnabled)
+		if (m_ClientVersion >= CV_500A)
+			CPacketMegaClilocRequest(list).Send();
+		else
 		{
-			if (m_ClientVersion >= CV_500A)
-				CPacketMegaClilocRequest(list).Send();
-			else
-			{
-				IFOR(i, 0, (int)list.size())
-					CPacketMegaClilocRequestOld(list[i]).Send();
-			}
+			IFOR(i, 0, (int)list.size())
+				CPacketMegaClilocRequestOld(list[i]).Send();
 		}
-
 		list.clear();
 	}
 }
@@ -1193,10 +1189,14 @@ PACKET_HANDLER(UpdatePlayer)
 	g_Player->Direction = dir;
 	g_Player->Z = ReadUInt8();
 
-	/*g_RemoveRangeXY.X = g_Player->X;
-	g_RemoveRangeXY.Y = g_Player->Y;
-
-	g_Orion.RemoveRangedObjects();*/
+	if (m_ClientVersion >= CV_308Z)
+		m_MegaClilocRequests.push_back(g_PlayerSerial);
+	if (g_Player->m_Items != NULL && !g_Player->m_Items->Empty())
+	{
+		CGameItem *backpack = (CGameItem*)g_Player->m_Items;
+		m_MegaClilocRequests.push_back(backpack->Serial);
+	}
+	SendMegaClilocRequests();
 
 	g_World->MoveToTop(g_Player);
 }
@@ -1439,8 +1439,9 @@ PACKET_HANDLER(UpdateItem)
 
 	g_World->MoveToTop(obj);
 
-	//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-	//	m_MegaClilocRequests.push_back(obj->Serial);
+	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+		m_MegaClilocRequests.push_back(obj->Serial);
+	SendMegaClilocRequests();
 
 	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
 }
@@ -1516,8 +1517,9 @@ PACKET_HANDLER(UpdateItemSA)
 
 	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
 
-	//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-	//	m_MegaClilocRequests.push_back(obj->Serial);
+	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+		m_MegaClilocRequests.push_back(obj->Serial);
+	SendMegaClilocRequests();
 
 	g_World->MoveToTop(obj);
 }
@@ -2327,8 +2329,17 @@ PACKET_HANDLER(UpdateCharacter)
 	//if (serial == g_PlayerSerial)
 	//	obj->PaperdollText = "";
 
-	//if (m_ClientVersion >= CV_308Z && (serial == g_PlayerSerial || !obj->ClilocMessage.length()))
-	//	m_MegaClilocRequests.push_back(obj->Serial);
+	if (m_ClientVersion >= CV_308Z)
+		m_MegaClilocRequests.push_back(obj->Serial);
+	if (serial == g_PlayerSerial)
+	{
+		if (g_Player->m_Items != NULL)
+		{
+			CGameItem *backpack = (CGameItem*)g_Player->m_Items;
+			m_MegaClilocRequests.push_back(backpack->Serial);
+		}
+	}		
+	SendMegaClilocRequests();
 
 	obj->Color = ReadUInt16BE();
 	obj->Flags = ReadUInt8();
@@ -4142,7 +4153,7 @@ PACKET_HANDLER(MegaCliloc)
 		{
 			if (coloredStartFont)
 				message += L"<basefont color=\"#FFFFFFFF\">";
-
+			obj->Name = ToString(str);
 			first = false;
 		}
 
