@@ -2785,14 +2785,17 @@ PACKET_HANDLER(ExtendedCommand)
 		{
 			uint serial = ReadUInt32BE();
 			CGameItem *item = g_World->FindWorldItem(serial);
-			string str = "";
+			wstring str = L"";
 			int clilocNum = ReadInt32BE();
 			if (clilocNum)
 			{
-				str = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum, true);
+				str = g_ClilocManager.Cliloc(g_Language)->GetW(clilocNum, true);
+				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
 				if (item != NULL)
-					item->Name = str;
+					item->Name = ToString(str);
+
 			}
+			str = L"";
 			ushort crafterNameLen = 0;
 			uint next = ReadUInt32BE();
 			if (next == 0xFFFFFFFD)
@@ -2800,16 +2803,16 @@ PACKET_HANDLER(ExtendedCommand)
 				crafterNameLen = ReadUInt16BE();
 				if (crafterNameLen)
 				{
-					string crafterName = ReadString(crafterNameLen);
-					str += "\nCrafted by ";
+					wstring crafterName = ReadWString(crafterNameLen);
+					str = L"Crafted by ";
 					str += crafterName;
 				}
 			}
-
+			
 			if (crafterNameLen != 0)
 				next = ReadUInt32BE();
 			if (next == 0xFFFFFFFC)
-				str += "\n[Unidentified";
+				str += L"[Unidentified";
 
 			// -4 потому что последние 4 байта в пакете 0xFFFFFFFF
 			puchar end = m_Start + m_Size - 4;
@@ -2819,37 +2822,37 @@ PACKET_HANDLER(ExtendedCommand)
 				if (count != 0 || next == 0xFFFFFFFD || next == 0xFFFFFFFC)
 					next = ReadInt32BE();
 				short charges = ReadInt16BE();
-				string attrsString = g_ClilocManager.Cliloc(g_Language)->GetA(next, true);
+				wstring attrsString = g_ClilocManager.Cliloc(g_Language)->GetW(next, true);
 				if (charges == -1)
 				{
 					if (count > 0)
 					{
-						str += "/";
+						str += L"/";
 						str += attrsString;
 					}
 					else
 					{
-						str += "\n[";
+						str += L" [";
 						str += attrsString;
 					}
 				}
 				else
 				{
-					str += "\n[";
+					str += L"\n[";
 					str += attrsString;
-					str += " : ";
-					str += std::to_string(charges);
-					str += "]";
+					str += L" : ";
+					str += std::to_wstring(charges);
+					str += L"]";
 					count += 20;
 				}
 				count++;
 			}
 			if ((count < 20 && count > 0) || (next == 0xFFFFFFFC && count == 0))
-				str += "]";
+				str += L"]";
 
-			
-
-			g_Orion.CreateTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
+			if (str.length())
+				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
+			//g_Orion.CreateTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
 			CPacketMegaClilocRequestOld(serial).Send();
 			break;
 		}
