@@ -644,17 +644,17 @@ ushort CGameItem::GetMountAnimation()
 				graphic = 0x00D5;
 				break;
 			}
-			case 0x3EC6: // 16070
+			case 0x3EC6: // 16070 Boura
 			{
 				graphic = 0x01B0;
 				break;
 			}
-			case 0x3EC7: // 16071
+			case 0x3EC7: // 16071 Tiger
 			{
 				graphic = 0x04E6;
 				break;
 			}
-			case 0x3EC8: // 16072
+			case 0x3EC8: // 16072 Tiger
 			{
 				graphic = 0x04E7;
 				break;
