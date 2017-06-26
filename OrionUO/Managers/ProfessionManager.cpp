@@ -396,10 +396,7 @@ bool CProfessionManager::Load()
 		LoadProfessionDescription();
 	}
 	else
-	{
-		LOG("Failed to load prof.txt\n");
-		g_OrionWindow.ShowMessage("Failed to load prof.txt", "Failed to load");
-	}
+		LOG("Could not find prof.txt in your UO directory. Character creation professions loading failed.\n");
 
 	return result;
 }
