@@ -40,7 +40,10 @@ m_Unicode(unicode)
 	text->CreateTextureA(4, "TITLE");
 	g_FontManager.UnusePartialHue = false;
 
-	uchar entryFont = m_Unicode ? 0 : 5;
+	uchar entryFont = 1;
+
+	if (!m_Unicode)
+		entryFont = 6;
 
 	Add(new CGUIHitBox(ID_GB_TEXT_AREA_TITLE, 41, 65, 150, (m_Unicode ? 22 : 44)));
 
@@ -59,7 +62,10 @@ m_Unicode(unicode)
 	m_EntryAuthor->ReadOnly = !m_Writable;
 	m_EntryAuthor->CheckOnSerial = true;
 
-	ushort textColor = 0x01;
+	ushort textColor = 0x0012;
+
+	if (m_Unicode)
+		textColor = 0x001B;
 
 	for (int i = 0; i <= m_PageCount; i++)
 	{
