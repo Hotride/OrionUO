@@ -5901,6 +5901,7 @@ PACKET_HANDLER(CustomHouse)
 					id = tempReader.ReadUInt16BE();
 					x = i / multiHeight + xOffs;
 					y = i % multiHeight + yOffs;
+					if (id == 0) continue;
 					foundationItem->AddMulti(id, x, y, z);
 				}
 				break;
