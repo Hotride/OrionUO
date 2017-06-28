@@ -5372,6 +5372,7 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 			}
 			else
 			{
+
 				td->GenerateTexture(300, UOFONT_BLACK_BORDER);
 				AddSystemMessage(td);
 			}
@@ -5386,13 +5387,14 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 
 			if (width > TEXT_MESSAGE_MAX_WIDTH)
 			{
-			 width = g_FontManager.GetWidthExW((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
-			 td->GenerateTexture(width, 0, TS_LEFT);
-			 //td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);
+				width = g_FontManager.GetWidthExW((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
+				td->GenerateTexture(width, 0, TS_LEFT);
+
 			}
 			else
 			 td->GenerateTexture(0, 0, TS_CENTER);
 
+			td->GenerateTexture(width, UOFONT_BLACK_BORDER, TS_LEFT);
 			g_FontManager.SavePixels = false;
 
 			((CRenderWorldObject*)serial)->AddText(td);

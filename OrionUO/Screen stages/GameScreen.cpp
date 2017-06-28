@@ -2127,7 +2127,13 @@ void CGameScreen::OnLeftMouseButtonUp()
 							string str = g_ClilocManager.Cliloc(g_Language)->GetA(1020000 + id, true, g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name);
 
 							if (str.length())
-								g_Orion.CreateTextMessage(TT_CLIENT, (uint)rwo, 3, 0x3B2, str);
+							{
+								if (g_PacketManager.ClientVersion >= CV_6000)
+									g_Orion.CreateUnicodeTextMessage(TT_CLIENT, (uint)rwo, 3, 946, ToWString(str));
+								else
+									g_Orion.CreateTextMessage(TT_CLIENT, (uint)rwo, 3, 0x3B2, str);
+							}
+								
 			
 						}
 					}
