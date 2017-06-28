@@ -5378,9 +5378,26 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 
 			break;
 		}
-		default:
+		case TT_CLIENT:
 		{
-			delete td;
+			int width = g_FontManager.GetWidthW((BYTE)font, text.c_str(), text.length());
+
+			g_FontManager.SavePixels = true;
+
+			if (width > TEXT_MESSAGE_MAX_WIDTH)
+			{
+			 width = g_FontManager.GetWidthExW((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
+			 td->GenerateTexture(width, 0, TS_LEFT);
+			 //td->GenerateTexture(TEXT_MESSAGE_MAX_WIDTH, 0, TS_CENTER);
+			}
+			else
+			 td->GenerateTexture(0, 0, TS_CENTER);
+
+			g_FontManager.SavePixels = false;
+
+			((CRenderWorldObject*)serial)->AddText(td);
+			g_WorldTextRenderer.AddText(td);
+
 			break;
 		}
 	}
