@@ -2127,7 +2127,8 @@ void CGameScreen::OnLeftMouseButtonUp()
 							string str = g_ClilocManager.Cliloc(g_Language)->GetA(1020000 + id, true, g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name);
 
 							if (str.length())
-								g_Orion.CreateTextMessage(TT_CLIENT, (uint)rwo, 3, 0x038F, str);
+								g_Orion.CreateTextMessage(TT_CLIENT, (uint)rwo, 3, 0x3B2, str);
+			
 						}
 					}
 					/*else if (g_LastObjectType == SOT_LAND_OBJECT)
