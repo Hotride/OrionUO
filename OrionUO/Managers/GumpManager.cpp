@@ -1372,7 +1372,7 @@ void CGumpManager::Load(const string &path)
 				gump->MinimizedY = gumpMinimizedY;
 				gump->LockMoving = gumpLockMoving;
 
-				gump->FixCoordinates();
+				//gump->FixCoordinates();
 
 				AddGump(gump);
 
