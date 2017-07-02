@@ -1190,13 +1190,17 @@ PACKET_HANDLER(UpdatePlayer)
 	g_Player->Z = ReadUInt8();
 
 	if (m_ClientVersion >= CV_308Z)
-		m_MegaClilocRequests.push_back(g_PlayerSerial);
-	if (g_Player->m_Items != NULL && !g_Player->m_Items->Empty())
 	{
-		CGameItem *backpack = (CGameItem*)g_Player->m_Items;
-		m_MegaClilocRequests.push_back(backpack->Serial);
+		m_MegaClilocRequests.push_back(g_PlayerSerial);
+
+		if (g_Player->m_Items != NULL && !g_Player->m_Items->Empty())
+		{
+			CGameItem *backpack = (CGameItem*)g_Player->m_Items;
+			m_MegaClilocRequests.push_back(backpack->Serial);
+		}
+
+		SendMegaClilocRequests();
 	}
-	SendMegaClilocRequests();
 
 	g_World->MoveToTop(g_Player);
 }
@@ -1440,8 +1444,10 @@ PACKET_HANDLER(UpdateItem)
 	g_World->MoveToTop(obj);
 
 	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+	{
 		m_MegaClilocRequests.push_back(obj->Serial);
-	SendMegaClilocRequests();
+		SendMegaClilocRequests();
+	}
 
 	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
 }
@@ -1518,8 +1524,10 @@ PACKET_HANDLER(UpdateItemSA)
 	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
 
 	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+	{
 		m_MegaClilocRequests.push_back(obj->Serial);
-	SendMegaClilocRequests();
+		SendMegaClilocRequests();
+	}
 
 	g_World->MoveToTop(obj);
 }
@@ -1886,7 +1894,9 @@ PACKET_HANDLER(UpdateContainedItem)
 				g_GumpManager.UpdateContent(0, top->Serial, GT_TRADE);
 		}
 	}
-	SendMegaClilocRequests();
+
+	if (m_ClientVersion >= CV_308Z)
+		SendMegaClilocRequests();
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateContainedItems)
@@ -2004,7 +2014,8 @@ PACKET_HANDLER(UpdateContainedItems)
 		LOG("\t|0x%08X<0x%08X:%04X*%d (%d,%d) %04X\n", obj->Container, obj->Serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Color);
 	}
 
-	SendMegaClilocRequests();
+	if (m_ClientVersion >= CV_308Z)
+		SendMegaClilocRequests();
 
 	if (containerIsCorpse)
 	{
@@ -2331,16 +2342,20 @@ PACKET_HANDLER(UpdateCharacter)
 	//	obj->PaperdollText = "";
 
 	if (m_ClientVersion >= CV_308Z)
-		m_MegaClilocRequests.push_back(obj->Serial);
-	if (serial == g_PlayerSerial)
 	{
-		if (g_Player->m_Items != NULL)
+		m_MegaClilocRequests.push_back(obj->Serial);
+
+		if (serial == g_PlayerSerial)
 		{
-			CGameItem *backpack = (CGameItem*)g_Player->m_Items;
-			m_MegaClilocRequests.push_back(backpack->Serial);
+			if (g_Player->m_Items != NULL)
+			{
+				CGameItem *backpack = (CGameItem*)g_Player->m_Items;
+				m_MegaClilocRequests.push_back(backpack->Serial);
+			}
 		}
-	}		
-	SendMegaClilocRequests();
+
+		SendMegaClilocRequests();
+	}
 
 	obj->Color = ReadUInt16BE();
 	obj->Flags = ReadUInt8();
