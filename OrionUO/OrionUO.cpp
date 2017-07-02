@@ -5173,7 +5173,7 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 	{
 		case TT_SYSTEM:
 		{
-			td->GenerateTexture(300);
+			td->GenerateTexture(TEXT_SYSTEM_MESSAGE_MAX_WIDTH);
 			AddSystemMessage(td);
 
 			break;
@@ -5251,7 +5251,7 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 			}
 			else
 			{
-				td->GenerateTexture(300);
+				td->GenerateTexture(TEXT_SYSTEM_MESSAGE_MAX_WIDTH);
 				AddSystemMessage(td);
 			}
 

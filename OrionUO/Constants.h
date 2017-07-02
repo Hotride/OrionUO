@@ -128,7 +128,10 @@ const int MAX_HTML_TEXT_HEIGHT = 18;
 const int GAME_FIGURE_GUMP_OFFSET = 11369;
 
 //!Максимальная ширина текстового сообщения от объекта мира
-const int TEXT_MESSAGE_MAX_WIDTH = 190;
+const int TEXT_MESSAGE_MAX_WIDTH = 200;
+
+//!Максимальная ширина текстового сообщения систем чата
+const int TEXT_SYSTEM_MESSAGE_MAX_WIDTH = 320;
 
 //!Время жизни черного экрана
 const DWORD DEATH_SCREEN_DELAY = 3000;
