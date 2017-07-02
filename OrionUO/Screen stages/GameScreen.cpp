@@ -108,19 +108,21 @@ void CGameScreen::ProcessSmoothAction(uchar action)
 void CGameScreen::InitToolTip()
 {
 	WISPFUN_DEBUG("c164_f5");
+
+	if (!(g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z))
+		return;
+
 	g_FontManager.SetUseHTML(true);
 	g_FontManager.RecalculateWidthByInfo = true;
-	if (!g_ConfigManager.UseToolTips) return;
+
 	if (g_SelectedObject.Gump())
 	{
 		if (g_SelectedObject.Gump() == &m_GameScreenGump)
-		{		
-				m_GameScreenGump.InitToolTip();
-		}
-		else if (g_PacketManager.ClientVersion >= CV_308Z)
+			m_GameScreenGump.InitToolTip();
+		else
 			g_GumpManager.InitToolTip();
 	}
-	else if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z))
+	else if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject())
 	{
 		CGameObject *obj = g_World->FindWorldObject(g_SelectedObject.Serial);
 
