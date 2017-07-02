@@ -603,8 +603,8 @@ void CGameScreen::CalculateRenderList()
 
 							AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX);
 						}
-						else
-							LOG("Expected: %i %i\n", blockIndex, g_MapManager->MaxBlockIndex);
+						//else
+						//	LOG("Expected: %i %i\n", blockIndex, g_MapManager->MaxBlockIndex);
 					}
 				}
 
