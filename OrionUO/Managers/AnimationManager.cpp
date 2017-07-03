@@ -1656,7 +1656,7 @@ void CAnimationManager::FixSittingDirection(uchar &layerDirection, bool &mirror,
 	layerDirection = m_Direction;
 	GetSittingAnimDirection(m_Direction, mirror, x, y);
 
-	int offsX = g_Orion.m_StaticData[data.Graphic / 32].Tiles[data.Graphic % 32].SittingOffset;
+	int offsX = g_Orion.m_StaticData[data.Graphic].SittingOffset;
 
 	if (offsX > 10 || offsX == 0)
 		offsX = SITTING_OFFSET_X;

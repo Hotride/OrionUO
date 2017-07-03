@@ -2126,7 +2126,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 						{
 							ushort id = rwo->Graphic;
 
-							string str = g_ClilocManager.Cliloc(g_Language)->GetA(1020000 + id, true, g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name);
+							string str = g_ClilocManager.Cliloc(g_Language)->GetA(1020000 + id, true, g_Orion.m_StaticData[id].Name);
 
 							if (str.length())
 							{
@@ -2142,7 +2142,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 					/*else if (g_LastObjectType == SOT_LAND_OBJECT)
 					{
 						WORD ID = g_SelectedObject->Index;
-						string str(UO->m_LandData[ID / 32].Tiles[ID % 32].Name);
+						string str(UO->m_LandData[ID].Name);
 						if (str.length())
 							UO->CreateTextMessage(TT_CLIENT, 0, 3, 0x03B5, str);
 					}*/

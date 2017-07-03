@@ -39,7 +39,7 @@ m_IsGameFigure(false), m_DragCount(obj->Count), m_NoDraw(false)
 	m_MapIndex = obj->MapIndex;
 	m_Name = obj->Name;
 
-	if (m_Graphic < g_Orion.StaticDataCount)
-		m_TiledataPtr = &g_Orion.m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32];
+	if (m_Graphic < g_Orion.m_StaticData.size())
+		m_TiledataPtr = &g_Orion.m_StaticData[m_Graphic];
 }
 //----------------------------------------------------------------------------------

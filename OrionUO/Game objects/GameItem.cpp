@@ -119,7 +119,7 @@ void CGameItem::OnGraphicChange(int direction)
 	WISPFUN_DEBUG("c19_f4");
 	if (!m_MultiBody)
 	{
-		if (m_Graphic >= g_Orion.StaticDataCount)
+		if (m_Graphic >= g_Orion.m_StaticData.size())
 			return;
 
 		if (IsCorpse())
@@ -153,7 +153,7 @@ void CGameItem::OnGraphicChange(int direction)
 		}
 		else
 		{
-			m_TiledataPtr = &g_Orion.m_StaticData[m_Graphic / 32].Tiles[m_Graphic % 32];
+			m_TiledataPtr = &g_Orion.m_StaticData[m_Graphic];
 			STATIC_TILES &tile = *m_TiledataPtr;
 
 			string lowerName = ToLowerA(tile.Name);

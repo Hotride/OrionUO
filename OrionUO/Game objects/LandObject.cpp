@@ -21,7 +21,7 @@ m_PositionBuffer(0), m_VertexBuffer(0), m_NormalBuffer(0)
 	m_OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
 
-	LAND_TILES &tile = g_Orion.m_LandData[graphic / 32].Tiles[graphic % 32];
+	LAND_TILES &tile = g_Orion.m_LandData[graphic];
 
 	m_IsStretched = (!tile.TexID && ::IsWet(tile.Flags));
 

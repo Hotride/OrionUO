@@ -100,8 +100,7 @@ PLUGIN_CLIENT_INTERFACE g_PluginClientInterface = { 0 };
 PLUGIN_INIT_TYPE *g_PluginInit = NULL;
 //----------------------------------------------------------------------------------
 COrion::COrion()
-: m_ClientVersionText("2.0.3"), m_LandDataCount(0), m_StaticDataCount(0),
-m_TexturesDataCount(0), m_DefaultLogin(""), m_DefaultPort(0)
+: m_ClientVersionText("2.0.3"), m_TexturesDataCount(0), m_DefaultLogin(""), m_DefaultPort(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -340,7 +339,7 @@ bool COrion::Install()
 	LOG("Load indexes\n");
 	LoadIndexFiles();
 	InitStaticAnimList();
-	CheckStaticTileFilterFiles();
+
 	LOG("Load fonts.\n");
 	if (!g_FontManager.LoadFonts())
 	{
@@ -373,6 +372,8 @@ bool COrion::Install()
 	PatchFiles();
 	LOG("Replaces...\n");
 	IndexReplaces();
+
+	CheckStaticTileFilterFiles();
 
 	WISP_GEOMETRY::CSize statusbarDims = GetGumpDimension(0x0804);
 
@@ -2475,15 +2476,15 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		}
 		case VKI_STATIC_ART_ADDRESS:
 		{
-			if (value >= 0 && value < m_StaticDataCount)
+			if (value >= 0 && value < (int)m_StaticData.size())
 				value = m_StaticDataIndex[value].Address;
 
 			break;
 		}
 		case VKI_USED_LAYER:
 		{
-			if (value >= 0 && value < m_StaticDataCount)
-				value = m_StaticData[value / 32].Tiles[value % 32].Quality;
+			if (value >= 0 && value < (int)m_StaticData.size())
+				value = m_StaticData[value].Quality;
 
 			break;
 		}
@@ -2998,20 +2999,17 @@ void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 		bool isOldVersion = (g_PacketManager.ClientVersion < CV_7090);
 		file.ResetPtr();
 
-		m_LandDataCount = landSize * 32;
-		m_LandData.resize(landSize);
+		m_LandData.resize(landSize * 32);
 
-		m_StaticDataCount = staticsSize * 32;
-		m_StaticData.resize(staticsSize);
+		m_StaticData.resize(staticsSize * 32);
 
 		IFOR(i, 0, landSize)
 		{
-			LAND_GROUP &group = m_LandData[i];
-			group.Unknown = file.ReadUInt32LE();
+			file.ReadUInt32LE();
 
 			IFOR(j, 0, 32)
 			{
-				LAND_TILES &tile = group.Tiles[j];
+				LAND_TILES &tile = m_LandData[(i * 32) + j];
 
 				if (isOldVersion)
 					tile.Flags = file.ReadUInt32LE();
@@ -3025,12 +3023,11 @@ void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 
 		IFOR(i, 0, staticsSize)
 		{
-			STATIC_GROUP &group = m_StaticData[i];
-			group.Unk = file.ReadUInt32LE();
+			file.ReadUInt32LE();
 
 			IFOR(j, 0, 32)
 			{
-				STATIC_TILES &tile = group.Tiles[j];
+				STATIC_TILES &tile = m_StaticData[(i * 32) + j];
 
 				if (isOldVersion)
 					tile.Flags = file.ReadUInt32LE();
@@ -3270,7 +3267,7 @@ unsigned long long COrion::CreateHash(string s)
 void COrion::LoadIndexFiles()
 		{
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)g_FileManager.m_ArtIdx.Start;
-	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((uint)g_FileManager.m_ArtIdx.Start + (m_LandDataCount * sizeof(ART_IDX_BLOCK)));
+	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((uint)g_FileManager.m_ArtIdx.Start + (m_LandData.size() * sizeof(ART_IDX_BLOCK)));
 	PGUMP_IDX_BLOCK GumpArtPtr = (PGUMP_IDX_BLOCK)g_FileManager.m_GumpIdx.Start;
 	PTEXTURE_IDX_BLOCK TexturePtr = (PTEXTURE_IDX_BLOCK)g_FileManager.m_TextureIdx.Start;
 	PMULTI_IDX_BLOCK MultiPtr = (PMULTI_IDX_BLOCK)g_FileManager.m_MultiIdx.Start;
@@ -3287,13 +3284,13 @@ void COrion::LoadIndexFiles()
 	if (g_FileManager.m_ArtMul.Start != nullptr)
 	{
 		ReadMulIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, LandArtPtr, [&LandArtPtr]() { return ++LandArtPtr; });
-		ReadMulIndexFile(m_StaticDataCount, [&](int i){ return &m_StaticDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, [&StaticArtPtr]() { return ++StaticArtPtr; });
+		ReadMulIndexFile(m_StaticData.size(), [&](int i){ return &m_StaticDataIndex[i]; }, (uint)g_FileManager.m_ArtMul.Start, StaticArtPtr, [&StaticArtPtr]() { return ++StaticArtPtr; });
 	}
 	else
 			{
 		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL);
 		g_FileManager.m_artLegacyMUL.ResetPtr();
-		ReadUOPIndexFile(m_StaticDataCount - MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_StaticDataIndex[i - MAX_LAND_DATA_INDEX_COUNT]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL, MAX_LAND_DATA_INDEX_COUNT);
+		ReadUOPIndexFile(m_StaticData.size() - MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_StaticDataIndex[i - MAX_LAND_DATA_INDEX_COUNT]; }, "artlegacymul", ".tga", &g_FileManager.m_artLegacyMUL, MAX_LAND_DATA_INDEX_COUNT);
 			}
 
 	if (g_FileManager.m_SoundMul.Start != nullptr)
@@ -3360,15 +3357,13 @@ void COrion::InitStaticAnimList()
 	WISPFUN_DEBUG("c194_f51");
 	if (m_AnimData.size())
 	{
-		IFOR(i, 0, m_StaticDataCount)
+		IFOR(i, 0, (int)m_StaticData.size())
 		{
 			m_StaticDataIndex[i].Index = i;
 
-			__int64 flags = m_StaticData[i / 32].Tiles[i % 32].Flags;
-
 			m_StaticDataIndex[i].LightColor = CalculateLightColor((ushort)i);
 
-			if (IsAnimated(flags))
+			if (IsAnimated(m_StaticData[i].Flags))
 			{
 				bool isField = false;
 
@@ -3396,7 +3391,7 @@ void COrion::InitStaticAnimList()
 ushort COrion::CalculateLightColor(const ushort &id)
 {
 	WISPFUN_DEBUG("c194_f52");
-	ushort color = m_StaticData[id / 32].Tiles[id % 32].Hue;
+	ushort color = m_StaticData[id].Hue;
 
 	if (!color)
 	{
@@ -3668,15 +3663,16 @@ void COrion::PatchFiles()
 
 			if (vh->Size == 836)
 			{
-				if (vh->BlockID >= (uint)m_LandData.size())
+				int offset = vh->BlockID * 32;
+
+				if (offset + 32 >= (int)m_LandData.size())
 					continue;
 
-				LAND_GROUP &group = m_LandData[vh->BlockID];
-				group.Unknown = file.ReadUInt32LE();
+				file.ReadUInt32LE();
 
 				IFOR(j, 0, 32)
 				{
-					LAND_TILES &tile = group.Tiles[j];
+					LAND_TILES &tile = m_LandData[offset + j];
 
 					if (g_PacketManager.ClientVersion < CV_7090)
 						tile.Flags = file.ReadUInt32LE();
@@ -3686,22 +3682,19 @@ void COrion::PatchFiles()
 					tile.TexID = file.ReadUInt16LE();
 					tile.Name = file.ReadString(20);
 				}
-
-				//memcpy(&m_LandData[vh->BlockID], (PVOID)(vAddr + vh->Position), sizeof(LAND_GROUP));
 			}
 			else if (vh->Size == 1188)
 			{
-				uint bID = vh->BlockID - 0x0200;
+				int offset = (vh->BlockID - 0x0200) * 32;
 
-				if (bID >= (uint)m_StaticData.size())
+				if (offset + 32 >= (int)m_StaticData.size())
 					continue;
 
-				STATIC_GROUP &group = m_StaticData[bID];
-				group.Unk = file.ReadUInt32LE();
+				file.ReadUInt32LE();
 
 				IFOR(j, 0, 32)
 				{
-					STATIC_TILES &tile = group.Tiles[j];
+					STATIC_TILES &tile = m_StaticData[offset + j];
 
 					if (g_PacketManager.ClientVersion < CV_7090)
 						tile.Flags = file.ReadUInt32LE();
@@ -3721,8 +3714,6 @@ void COrion::PatchFiles()
 					tile.Height = file.ReadInt8();
 					tile.Name = file.ReadString(20);
 				}
-
-				//memcpy(&m_StaticData[bID], (PVOID)(vAddr + vh->Position), sizeof(STATIC_GROUP));
 			}
 		}
 		else if (vh->FileID == 32) //Hues
@@ -3765,7 +3756,7 @@ void COrion::IndexReplaces()
 		{
 			int index = atoi(strings[0].c_str());
 
-			if (index < 0 || index >= MAX_LAND_DATA_INDEX_COUNT + m_StaticDataCount)
+			if (index < 0 || index >= MAX_LAND_DATA_INDEX_COUNT + (int)m_StaticData.size())
 				continue;
 
 			STRING_LIST newArt = newDataParser.GetTokens(strings[1].c_str());
@@ -3776,7 +3767,7 @@ void COrion::IndexReplaces()
 			{
 				int checkIndex = atoi(newArt[i].c_str());
 
-				if (checkIndex < 0 || checkIndex >= MAX_LAND_DATA_INDEX_COUNT + m_StaticDataCount)
+				if (checkIndex < 0 || checkIndex >= MAX_LAND_DATA_INDEX_COUNT + (int)m_StaticData.size())
 					continue;
 
 				if (index < MAX_LAND_DATA_INDEX_COUNT && checkIndex < MAX_LAND_DATA_INDEX_COUNT && m_LandDataIndex[checkIndex].Address != NULL && m_LandDataIndex[index].Address == NULL)
@@ -4459,7 +4450,7 @@ CGLTexture *COrion::ExecuteStaticArt(const ushort &id)
 CGLTexture *COrion::ExecuteTexture(ushort id)
 {
 	WISPFUN_DEBUG("c194_f70");
-	id = m_LandData[id / 32].Tiles[id % 32].TexID;
+	id = m_LandData[id].TexID;
 
 	if (!id || id >= MAX_LAND_TEXTURES_DATA_INDEX_COUNT)
 		return NULL;
@@ -5555,12 +5546,10 @@ void COrion::EquipItem(uint container)
 
 			if (!g_ObjectInHand->MultiBody)
 			{
-				STATIC_TILES &st = m_StaticData[graphic / 32].Tiles[graphic % 32];
-
 				if (!container)
 					container = g_PlayerSerial;
 
-				CPacketEquipRequest(g_ObjectInHand->Serial, st.Quality, container).Send();
+				CPacketEquipRequest(g_ObjectInHand->Serial, m_StaticData[graphic].Quality, container).Send();
 			}
 
 			//if (g_ObjectInHand->Deleted)
@@ -5894,10 +5883,9 @@ void COrion::ConsolePromptCancel()
 __int64 COrion::GetLandFlags(const ushort &id)
 {
 	WISPFUN_DEBUG("c194_f127");
-	ushort divID = id / 32;
 
-	if (id < m_LandDataCount)
-		return m_LandData[divID].Tiles[id % 32].Flags;
+	if (id < m_LandData.size())
+		return m_LandData[id].Flags;
 
 	return 0;
 }
@@ -5905,10 +5893,9 @@ __int64 COrion::GetLandFlags(const ushort &id)
 __int64 COrion::GetStaticFlags(const ushort &id)
 {
 	WISPFUN_DEBUG("c194_f128");
-	ushort divID = id / 32;
 
-	if (id < m_StaticDataCount)
-		return m_StaticData[divID].Tiles[id % 32].Flags;
+	if (id < (int)m_StaticData.size())
+		return m_StaticData[id].Flags;
 
 	return 0;
 }

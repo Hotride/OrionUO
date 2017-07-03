@@ -369,10 +369,8 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 						drawX = g_RenderBounds.GameWindowCenterX + ((gox - goy) * 22);
 						drawY = ((g_RenderBounds.GameWindowCenterY + ((gox + goy) * 22)) - (rwo->Z * 4));
 
-						ushort gID = rwo->Graphic;
-
 						drawX -= rwo->GetTextOffsetX(text);
-						drawY -= (g_Orion.m_StaticData[gID / 32].Tiles[gID % 32].Height + 20) + rwo->GetTextOffsetY(text);
+						drawY -= (g_Orion.m_StaticData[rwo->Graphic].Height + 20) + rwo->GetTextOffsetY(text);
 					}
 
 					break;

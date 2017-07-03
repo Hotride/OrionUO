@@ -490,7 +490,7 @@ void CGumpCombatBook::UpdateContent()
 		USHORT_LIST list = GetItemsList(i);
 
 		int size = (int)list.size();
-		int maxStaticCount = g_Orion.StaticDataCount;
+		int maxStaticCount = g_Orion.m_StaticData.size();
 
 		int textX = 62;
 		int textY = 98;
@@ -509,7 +509,7 @@ void CGumpCombatBook::UpdateContent()
 				continue;
 
 			CGUIText *text = (CGUIText*)Add(new CGUIText(0x0288, textX, textY));
-			text->CreateTextureA(9, ToCamelCase(g_Orion.m_StaticData[id / 32].Tiles[id % 32].Name));
+			text->CreateTextureA(9, ToCamelCase(g_Orion.m_StaticData[id].Name));
 
 			textY += 16;
 		}

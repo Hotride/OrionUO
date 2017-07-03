@@ -24,8 +24,6 @@ namespace Wisp{
 class COrion
 {
 	SETGET(string, ClientVersionText);
-	SETGET(int, LandDataCount);
-	SETGET(int, StaticDataCount);
 	SETGET(int, TexturesDataCount);
 	SETGET(string, DefaultLogin);
 	SETGET(int, DefaultPort);
@@ -112,10 +110,10 @@ public:
 	static unsigned long long CreateHash(string s);
 
 	//Данные из тайлдаты по ландшафту
-	vector<LAND_GROUP> m_LandData;
+	vector<LAND_TILES> m_LandData;
 
 	//Данные из тайлдаты по статике
-	vector<STATIC_GROUP> m_StaticData;
+	vector<STATIC_TILES> m_StaticData;
 
 	static UINT_LIST FindPattern(puchar ptr, const int &size, const UCHAR_LIST &pattern);
 

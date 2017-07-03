@@ -208,7 +208,7 @@ void CPlayer::UpdateAbilities()
 
 		ushort testGraphic = equippedGraphic - 1;
 
-		if (g_Orion.m_StaticData[testGraphic / 32].Tiles[testGraphic % 32].AnimID == imageID)
+		if (g_Orion.m_StaticData[testGraphic].AnimID == imageID)
 		{
 			graphics[1] = testGraphic;
 			count = 2;
@@ -217,7 +217,7 @@ void CPlayer::UpdateAbilities()
 		{
 			testGraphic = equippedGraphic + 1;
 
-			if (g_Orion.m_StaticData[testGraphic / 32].Tiles[testGraphic % 32].AnimID == imageID)
+			if (g_Orion.m_StaticData[testGraphic].AnimID == imageID)
 			{
 				graphics[1] = testGraphic;
 				count = 2;
