@@ -2538,7 +2538,7 @@ PACKET_HANDLER(EnableLockedFeatures)
 		g_LockedClientFeatures = ReadUInt16BE();
 
 	g_ChatEnabled = (bool)(g_LockedClientFeatures & LFF_T2A);
-	g_NoMegaCliloc = g_NoMegaCliloc < LFF_AOS;
+	g_NoMegaCliloc = g_LockedClientFeatures & LFF_T2A || g_LockedClientFeatures & LFF_RE || g_LockedClientFeatures & LFF_TD || g_LockedClientFeatures & LFF_LBR;
 
 	g_AnimationManager.UpdateAnimationAddressTable();
 }
