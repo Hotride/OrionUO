@@ -4816,6 +4816,7 @@ PACKET_HANDLER(OpenGump)
 					toPage = -1;
 
 				go = new CGUIButton(index, up, up, down, x, y);
+				go->CheckPolygone = true;
 
 				((CGUIButton*)go)->ToPage = toPage;
 			}
