@@ -156,6 +156,8 @@ public:
 	@return 32-битный цвет
 	*/
 	uint GetPartialHueColor(ushort &c, ushort color);
+
+	ushort FixColor(const ushort &color);
  };
  //----------------------------------------------------------------------------------
 //!Ссылка на менеджер цветов

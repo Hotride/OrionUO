@@ -1570,8 +1570,6 @@ PACKET_HANDLER(UpdateObject)
 		}
 	}
 
-	obj->Count = 1;
-
 	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == obj->Serial)
 	{
 		delete g_ObjectInHand;
@@ -1678,7 +1676,7 @@ PACKET_HANDLER(UpdateObject)
 		obj2->MapIndex = g_CurrentMap;
 
 		graphic = ReadUInt16BE();
-		ushort color = 0;
+		color = 0;
 
 		uchar layer = ReadUInt8();
 
@@ -1687,12 +1685,11 @@ PACKET_HANDLER(UpdateObject)
 		else if (graphic & 0x8000)
 		{
 			graphic &= 0x7FFF;
-
 			color = ReadUInt16BE();
 		}
 
 		obj2->Graphic = graphic;
-		obj2->Color = color;
+		obj2->Color = g_ColorManager.FixColor(color);
 
 		g_World->PutEquipment(obj2, obj, layer);
 		obj2->OnGraphicChange();
