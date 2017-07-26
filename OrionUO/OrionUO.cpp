@@ -1096,7 +1096,7 @@ void COrion::Process(const bool &rendering)
 
 		g_ShowGumpLocker = g_ConfigManager.LockGumpsMoving && g_AltPressed && g_CtrlPressed;
 
-		//ProcessStaticAnimList();
+		ProcessStaticAnimList();
 
 		g_EffectManager.UpdateEffects();
 
