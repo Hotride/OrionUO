@@ -1466,11 +1466,11 @@
     <ClCompile Include="AutoResetEvent.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="StackWalker.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="GUI\GUIVirtireGump.cpp">
       <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="StackWalker.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -23,9 +23,7 @@
 #include "../ToolTip.h"
 //----------------------------------------------------------------------------------
 CGumpSecureTrading::CGumpSecureTrading(uint serial, short x, short y, uint id, uint id2)
-: CGump(GT_TRADE, serial, x, y), m_ID2(id2), m_StateMy(false), m_StateOpponent(false),
-m_TextRenderer(), m_MyCheck(NULL), m_OpponentCheck(NULL), m_MyDataBox(NULL),
-m_OpponentDataBox(NULL)
+: CGump(GT_TRADE, serial, x, y), m_ID2(id2)
 {
 	m_ID = id;
 }

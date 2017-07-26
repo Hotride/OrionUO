@@ -17,14 +17,10 @@
 //----------------------------------------------------------------------------------
 CGUIShopItem::CGUIShopItem(const uint &serial, const ushort &graphic, const ushort &color, const uint &count, const uint &price, const string &name, const int &x, const int &y)
 : CBaseGUI(GOT_SHOPITEM, serial, graphic, color, x, y), m_Count(count), m_Price(price),
-m_Name(name), m_Selected(false), m_NameFromCliloc(false)
+m_Name(name)
 {
 	WISPFUN_DEBUG("c73_f1");
 	m_MoveOnDrag = true;
-
-	m_ImageOffset = 0;
-	m_TextOffset = 0;
-	m_MaxOffset = 0;
 
 	CreateCountText(0);
 	CreateNameText();

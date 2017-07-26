@@ -19,7 +19,6 @@
 CTarget g_Target;
 //----------------------------------------------------------------------------------
 CTarget::CTarget()
-: m_Type(0), m_Targeting(false), m_MultiGraphic(0), m_Multi(NULL), m_CursorID(0)
 {
 	//Чистимся
 	memset(m_Data, 0, sizeof(m_Data));

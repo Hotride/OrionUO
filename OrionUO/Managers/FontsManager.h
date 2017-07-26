@@ -98,16 +98,16 @@ typedef vector<HTML_DATA_INFO> HTMLINFO_LIST;
 //!Класс менеджера шрифтов
 class CFontsManager
 {
-	SETGET(bool, SavePixels);
-	SETGET(bool, RecalculateWidthByInfo);
-	SETGET(bool, UnusePartialHue);
+	SETGET(bool, SavePixels, false);
+	SETGET(bool, RecalculateWidthByInfo, false);
+	SETGET(bool, UnusePartialHue, false);
 
 	//!Количество ASCII ширфтов
-	SETGET(int, FontCount);
+	SETGET(int, FontCount, 0);
 
 private:
 	//!Список ASCII шрифтов
-	FONT_DATA *m_Font;
+	FONT_DATA *m_Font{ NULL };
 
 	//!Список ссылок
 	WEBLINK_MAP m_WebLink;
@@ -120,24 +120,24 @@ private:
 	uint m_UnicodeFontSize[20];
 
 	//!Использование HTML расширений
-	bool m_UseHTML;
+	bool m_UseHTML{ false };
 
 	//!Цвет HTML
-	uint m_HTMLColor;
+	uint m_HTMLColor{ 0xFFFFFFFF };
 
 	//!Возможность раскраски фона текста
-	bool m_HTMLBackgroundCanBeColored;
+	bool m_HTMLBackgroundCanBeColored{ false };
 
 	//!Цвет фона текста
-	uint m_BackgroundColor;
+	uint m_BackgroundColor{ 0 };
 
-	uint m_WebLinkColor;
-	uint m_VisitedWebLinkColor;
+	uint m_WebLinkColor{ 0 };
+	uint m_VisitedWebLinkColor{ 0 };
 
-	int m_LeftMargin;
-	int m_TopMargin;
-	int m_RightMargin;
-	int m_BottomMargin;
+	int m_LeftMargin{ 0 };
+	int m_TopMargin{ 0 };
+	int m_RightMargin{ 0 };
+	int m_BottomMargin{ 0 };
 
 	/*!
 	Получить индекс ссылки
@@ -273,7 +273,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Координаты каретки
 	*/
-	POINT GetCaretPosA(uchar font, const char *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags);
+	WISP_GEOMETRY::CPoint2Di GetCaretPosA(uchar font, const char *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Вычислить положение каретки
@@ -406,7 +406,7 @@ public:
 	@param [__in] flags Эффекты текста
 	@return Координаты каретки
 	*/
-	POINT GetCaretPosW(uchar font, const wchar_t *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags);
+	WISP_GEOMETRY::CPoint2Di GetCaretPosW(uchar font, const wchar_t *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags);
 
 	/*!
 	Вычислить положение каретки

@@ -18,62 +18,62 @@
 class CGUIMinMaxButtons : public CBaseGUI
 {
 	//!Минимальное значение
-	SETGET(int, MinValue);
+	SETGET(int, MinValue, 0);
 
 	//!Максимальное значение
-	SETGET(int, MaxValue);
+	SETGET(int, MaxValue, 0);
 
 	//!Текущее значение
-	SETGET(int, Value);
+	SETGET(int, Value, 0);
 
 	//!Имеет текст
-	SETGET(bool, HaveText);
+	SETGET(bool, HaveText, false);
 
 	//!Позиция текста
-	SETGET(SLIDER_TEXT_POSITION, TextPosition);
+	SETGET(SLIDER_TEXT_POSITION, TextPosition, STP_RIGHT);
 
 	//!Шрифт текста
-	SETGET(uchar, Font);
+	SETGET(uchar, Font, 0);
 
 	//!Цвет текста
-	SETGET(ushort, TextColor);
+	SETGET(ushort, TextColor, 0);
 
 	//!Юникод текст
-	SETGET(bool, Unicode);
+	SETGET(bool, Unicode, true);
 
 	//!Ширина текста
-	SETGET(int, TextWidth);
+	SETGET(int, TextWidth, 0);
 
 	//!Ориентация текста
-	SETGET(TEXT_ALIGN_TYPE, Align);
+	SETGET(TEXT_ALIGN_TYPE, Align, TS_LEFT);
 
 	//!Флаги текста
-	SETGET(ushort, TextFlags);
+	SETGET(ushort, TextFlags, 0);
 
 	//!Координата текста по оси X
-	SETGET(int, TextX);
+	SETGET(int, TextX, 0);
 
 	//!Координата текста по оси Y
-	SETGET(int, TextY);
+	SETGET(int, TextY, 0);
 
 	//!Базовый шаг смещения
-	SETGET(int, BaseScrollStep);
+	SETGET(int, BaseScrollStep, 1);
 
 	//!Текущий шаг смещения
-	SETGET(int, ScrollStep);
+	SETGET(int, ScrollStep, 1);
 
 	//!Время последней итерации прокрутки
-	SETGET(uint, LastScrollTime);
+	SETGET(uint, LastScrollTime, 0);
 
 	//!Стандартное смещение текста
-	SETGET(int, DefaultTextOffset);
+	SETGET(int, DefaultTextOffset, 2);
 
 private:
 	//!Текстура текста
-	CGLTextTexture m_Text;
+	CGLTextTexture m_Text{ CGLTextTexture() };
 
 	//!Метод прокрутки (NoScroll/Max/Min)
-	int m_ScrollMode;
+	int m_ScrollMode{ 0 };
 
 public:
 	CGUIMinMaxButtons(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &minValue, const int &maxValue, const int &value);

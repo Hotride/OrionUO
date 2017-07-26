@@ -13,7 +13,6 @@ CSelectedObject g_SelectedObject;
 CSelectedObject g_LastSelectedObject;
 //----------------------------------------------------------------------------------
 CSelectedObject::CSelectedObject()
-: m_Object(NULL), m_Gump(NULL), m_Serial(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -51,8 +50,8 @@ void CSelectedObject::Init(CRenderObject *obj, CGump *gump)
 void CSelectedObject::Init(const CSelectedObject &obj)
 {
 	WISPFUN_DEBUG("c205_f4");
-	m_Object = obj.Object();
-	m_Gump = obj.Gump();
-	m_Serial = (obj.Object() != NULL ? obj.Object()->Serial : 0);
+	m_Object = obj.Object;
+	m_Gump = obj.Gump;
+	m_Serial = (obj.Object != NULL ? obj.Object->Serial : 0);
 }
 //----------------------------------------------------------------------------------

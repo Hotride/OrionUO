@@ -146,11 +146,11 @@ void CGumpBuff::InitToolTip()
 	WISPFUN_DEBUG("c88_f6");
 	if (g_SelectedObject.Serial == ID_GB_NEXT_WINDOW_DIRECTION)
 		g_ToolTip.Set(L"Change buff window gump");
-	else if (g_SelectedObject.Object())
+	else if (g_SelectedObject.Object)
 	{
 		QFOR(item, m_Items, CBaseGUI*)
 		{
-			if (item != g_SelectedObject.Object())
+			if (item != g_SelectedObject.Object)
 				continue;
 
 			if (item->Type == GOT_BUFF)

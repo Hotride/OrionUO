@@ -14,14 +14,14 @@
 //----------------------------------------------------------------------------------
 class CGumpTargetSystem : public CGump
 {
-	SETGET(string, OldName);
+	SETGET(string, OldName, "");
 
 private:
 	static const int ID_GSB_BUFF_GUMP = 1;
 	static const int ID_GSB_LOCK_MOVING = 2;
 
-	CGUIGumppic *m_Body;
-	CGUIDataBox *m_DataBox;
+	CGUIGumppic *m_Body{ NULL };
+	CGUIDataBox *m_DataBox{ NULL };
 
 public:
 	CGumpTargetSystem(uint serial, short x, short y);

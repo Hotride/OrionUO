@@ -17,10 +17,10 @@
 class CGUIGenericText : public CGUIText
 {
 	//!Индекс текста
-	SETGET(uint, TextID);
+	SETGET(uint, TextID, 0);
 
 	//!Максимальная ширина (для CroppedText)
-	SETGET(int, MaxWidth);
+	SETGET(int, MaxWidth, 0);
 
 public:
 	CGUIGenericText(const uint &index, const ushort &color, const int &x, const int &y, const int &maxWidth = 0);

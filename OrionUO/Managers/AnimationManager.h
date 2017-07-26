@@ -43,9 +43,9 @@ struct UOPFrameData
 //----------------------------------------------------------------------------------
 class CEquipConvData
 {
-	SETGET(ushort, Graphic);
-	SETGET(ushort, Gump);
-	SETGET(ushort, Color);
+	SETGET(ushort, Graphic, 0);
+	SETGET(ushort, Gump, 0);
+	SETGET(ushort, Color, 0);
 
 public:
 	CEquipConvData(const ushort &graphic, const ushort &gump, const ushort &color)
@@ -60,15 +60,15 @@ typedef unordered_map<ushort, EQUIP_CONV_DATA_MAP> EQUIP_CONV_BODY_MAP;
 class CAnimationManager : public WISP_DATASTREAM::CDataReader
 {
 	//!Цвет текущего кадра
-	SETGET(ushort, Color);
+	SETGET(ushort, Color, 0);
 	//!Группа анимаций текущего кадра
-	SETGET(uchar, AnimGroup);
+	SETGET(uchar, AnimGroup, 0);
 	//!Направление текущего кадра
-	SETGET(uchar, Direction);
+	SETGET(uchar, Direction, 0);
 	//!Айдишник текущей анимации
-	SETGET(ushort, AnimID);
+	SETGET(ushort, AnimID, 0);
 	//!Максимальный индекс группы анимаций
-	SETGET(uchar, AnimGroupCount);
+	SETGET(uchar, AnimGroupCount, 35);
 
 private:
 	//!Адреса файлов в памяти
@@ -77,30 +77,30 @@ private:
 	uint m_SizeIdx[6];
 
 	//!Высота текстуры персонажа.
-	int m_CharacterFrameHeight;
+	int m_CharacterFrameHeight{ 0 };
 
 	static void PrepareTargetAttackGump(CTargetGump &gump, int drawX, int drawY, ushort targetColor, int per, CGameCharacter &obj);
 
 	//!Начало текстуры персонажа ( экранная координата )
-	int m_CharacterFrameStartY;
+	int m_CharacterFrameStartY{ 0 };
 
 	//!Начало пояса в текстуре персонажа ( сверху-вниз )
-	int m_StartCharacterWaistY;
+	int m_StartCharacterWaistY{ 0 };
 
 	//!Начало колен в текстуре персонажа ( сверху-вниз )
-	int m_StartCharacterKneesY;
+	int m_StartCharacterKneesY{ 0 };
 
 	//!Начало стоп в текстуре персонажа ( сверху-вниз )
-	int m_StartCharacterFeetY;
+	int m_StartCharacterFeetY{ 0 };
 
 	//!Текущий кадр сидит
-	int m_Sitting;
+	int m_Sitting{ 0 };
 
-	bool m_UseBlending;
+	bool m_UseBlending{ false };
 
 	EQUIP_CONV_BODY_MAP m_EquipConv;
 
-	CEquipConvData *m_EquipConvItem;
+	CEquipConvData *m_EquipConvItem{ false };
 
 	//!Упорядоченный список слоев для корректного порядка прорисовки для всех направлений персонажа
 	static const int USED_LAYER_COUNT = 23;

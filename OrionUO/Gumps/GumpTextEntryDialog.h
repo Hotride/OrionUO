@@ -14,21 +14,21 @@
 //----------------------------------------------------------------------------------
 class CGumpTextEntryDialog : public CGump
 {
-	SETGET(uchar, Variant);
-	SETGET(uchar, ParentID);
-	SETGET(uchar, ButtonID);
+	SETGET(uchar, Variant, 0);
+	SETGET(uchar, ParentID, 0);
+	SETGET(uchar, ButtonID, 0);
 
 private:
 	static const int ID_GTED_BUTTON_OKAY = 1;
 	static const int ID_GTED_BUTTON_CANCEL = 2;
 	static const int ID_GTED_TEXT_FIELD = 3;
 
-	string m_Text;
-	string m_Description;
-	int m_MaxLength;
+	string m_Text{ "" };
+	string m_Description{ "" };
+	int m_MaxLength{ 0 };
 
-	CGUIGumppic *m_TextField;
-	CGUITextEntry *m_Entry;
+	CGUIGumppic *m_TextField{ NULL };
+	CGUITextEntry *m_Entry{ NULL };
 
 public:
 	CGumpTextEntryDialog(uint serial, short x, short y, uchar variant, int maxLength, string text, string description);

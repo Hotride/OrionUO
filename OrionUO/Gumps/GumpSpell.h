@@ -14,8 +14,8 @@
 //----------------------------------------------------------------------------------
 class CGumpSpell : public CGump
 {
-	SETGET(bool, BigIcon);
-	SETGET(SPELLBOOK_TYPE, SpellType);
+	SETGET(bool, BigIcon, false);
+	SETGET(SPELLBOOK_TYPE, SpellType, ST_MAGE);
 
 private:
 	static const int ID_GS_LOCK_MOVING = 1;
@@ -26,16 +26,16 @@ private:
 protected:
 	virtual void CalculateGumpState();
 
-	CGUIButton *m_SpellUnlocker;
+	CGUIButton *m_SpellUnlocker{ NULL };
 
 public:
 	CGumpSpell(uint serial, short x, short y, ushort graphic, SPELLBOOK_TYPE spellType);
 	virtual ~CGumpSpell();
 
-	CGUIAlphaBlending *m_Blender;
+	CGUIAlphaBlending *m_Blender{ NULL };
 
-	CGumpSpell *m_GroupNext;
-	CGumpSpell *m_GroupPrev;
+	CGumpSpell *m_GroupNext{ NULL };
+	CGumpSpell *m_GroupPrev{ NULL };
 
 	CGumpSpell *GetTopSpell();
 	CGumpSpell *GetNearSpell(int &x, int &y);

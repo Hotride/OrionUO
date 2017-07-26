@@ -14,8 +14,7 @@
 #include "../Network/Packets.h"
 //----------------------------------------------------------------------------------
 CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
-: CGump(GT_SHOP, serial, x, y), m_ContinueCounter(0), m_IsBuyGump(isBuyGump),
-m_Visible(!isBuyGump)
+: CGump(GT_SHOP, serial, x, y), m_IsBuyGump(isBuyGump), m_Visible(!isBuyGump)
 {
 	WISPFUN_DEBUG("c123_f1");
 	if (isBuyGump)

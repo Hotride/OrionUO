@@ -20,8 +20,7 @@
 #include "../ToolTip.h"
 //----------------------------------------------------------------------------------
 CGumpCombatBook::CGumpCombatBook(const int &x, const int &y)
-: CGump(GT_COMBAT_BOOK, 0, x, y), m_DictionaryPagesCount(6), m_PagesCount(37),
-m_AbilityCount(MAX_ABILITIES_COUNT), m_PrevPage(NULL), m_NextPage(NULL)
+: CGump(GT_COMBAT_BOOK, 0, x, y)
 {
 	WISPFUN_DEBUG("c91_f1");
 	m_Draw2Page = true;

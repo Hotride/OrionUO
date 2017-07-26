@@ -23,10 +23,10 @@ namespace Wisp{
 //----------------------------------------------------------------------------------
 class COrion
 {
-	SETGET(string, ClientVersionText);
-	SETGET(int, TexturesDataCount);
-	SETGET(string, DefaultLogin);
-	SETGET(int, DefaultPort);
+	SETGET(string, ClientVersionText, "2.0.3");
+	SETGET(int, TexturesDataCount, 0);
+	SETGET(string, DefaultLogin, "");
+	SETGET(int, DefaultPort, 0);
 
 private:
 	uint m_CRC_Table[256];

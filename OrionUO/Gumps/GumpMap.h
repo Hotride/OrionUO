@@ -14,13 +14,13 @@
 //----------------------------------------------------------------------------------
 class CGumpMap : public CGump
 {
-	SETGETE(int, PlotState, OnChangePlotState);
-	SETGET(int, StartX);
-	SETGET(int, StartY);
-	SETGET(int, EndX);
-	SETGET(int, EndY);
-	SETGET(int, Width);
-	SETGET(int, Height);
+	SETGETE(int, PlotState, 0, OnChangePlotState);
+	SETGET(int, StartX, 0);
+	SETGET(int, StartY, 0);
+	SETGET(int, EndX, 0);
+	SETGET(int, EndY, 0);
+	SETGET(int, Width, 0);
+	SETGET(int, Height, 0);
 
 private:
 	static const int ID_GM_PLOT_COURSE = 1;
@@ -29,14 +29,14 @@ private:
 	static const int ID_GM_PIN_LIST = 10;
 	static const int ID_GM_PIN_LIST_INSERT = 1000;
 
-	uint m_PinTimer;
+	uint m_PinTimer{ 0 };
 
-	CBaseGUI *m_PinOnCursor;
-	CBaseGUI *m_FakeInsertionPin;
+	CBaseGUI *m_PinOnCursor{ NULL };
+	CBaseGUI *m_FakeInsertionPin{ NULL };
 
-	CGUIButton *m_PlotCourse;
-	CGUIButton *m_StopPlotting;
-	CGUIButton *m_ClearCourse;
+	CGUIButton *m_PlotCourse{ NULL };
+	CGUIButton *m_StopPlotting{ NULL };
+	CGUIButton *m_ClearCourse{ NULL };
 
 	vector<CGUIText*> m_Labels;
 
@@ -46,8 +46,8 @@ public:
 	CGumpMap(uint serial, ushort graphic, int startX, int startY, int endX, int endY, int width, int height);
 	virtual ~CGumpMap();
 
-	CGUIExternalTexture *m_Texture;
-	CGUIDataBox *m_DataBox;
+	CGUIExternalTexture *m_Texture{ NULL };
+	CGUIDataBox *m_DataBox{ NULL };
 
 	virtual void PrepareContent();
 

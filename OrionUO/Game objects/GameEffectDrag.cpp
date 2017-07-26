@@ -11,7 +11,7 @@
 #include "../Managers/EffectManager.h"
 //----------------------------------------------------------------------------------
 CGameEffectDrag::CGameEffectDrag()
-: CGameEffect(), m_OffsetX(0), m_OffsetY(0), m_LastMoveTime(0), m_MoveDelay(20)
+: CGameEffect()
 {
 }
 //----------------------------------------------------------------------------------

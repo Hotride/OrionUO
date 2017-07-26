@@ -17,22 +17,22 @@
 class CGUIColoredPolygone : public CGUIPolygonal
 {
 	//!R-компонента цвета
-	SETGET(uchar, ColorR);
+	SETGET(uchar, ColorR, 0);
 
 	//!G-компонента цвета
-	SETGET(uchar, ColorG);
+	SETGET(uchar, ColorG, 0);
 
 	//!B-компонента цвета
-	SETGET(uchar, ColorB);
+	SETGET(uchar, ColorB, 0);
 
 	//!Значение альфа-канала
-	SETGET(uchar, ColorA);
+	SETGET(uchar, ColorA, 0);
 
 	//!Отрисовывать ли белую точку
-	SETGET(bool, DrawDot);
+	SETGET(bool, DrawDot, false);
 
 	//!Флаг выбора текущей компоненты
-	SETGET(bool, Focused);
+	SETGET(bool, Focused, false);
 
 public:
 	CGUIColoredPolygone(const uint &serial, const ushort &color, const int &x, const int &y, const int &width, const int &height, const uint &polygoneColor);

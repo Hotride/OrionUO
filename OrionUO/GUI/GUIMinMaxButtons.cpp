@@ -14,10 +14,7 @@
 //----------------------------------------------------------------------------------
 CGUIMinMaxButtons::CGUIMinMaxButtons(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &minValue, const int &maxValue, const int &value)
 : CBaseGUI(GOT_MINMAXBUTTONS, serial, graphic, 0, x, y), m_MinValue(minValue),
-m_MaxValue(maxValue), m_Value(value), m_HaveText(false), m_TextPosition(STP_RIGHT),
-m_Font(0), m_TextColor(0), m_Unicode(true), m_TextWidth(0), m_Align(TS_LEFT),
-m_TextFlags(0), m_TextX(0), m_TextY(0), m_BaseScrollStep(1), m_ScrollStep(1),
-m_LastScrollTime(0), m_DefaultTextOffset(2), m_ScrollMode(0)
+m_MaxValue(maxValue), m_Value(value)
 {
 }
 //----------------------------------------------------------------------------------

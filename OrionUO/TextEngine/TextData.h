@@ -16,16 +16,16 @@
 //Класс для хранения информации о текстуре текста
 class CTextData : public CRenderTextObject
 {
-	SETGET(bool, Unicode);
-	SETGET(TEXT_TYPE, Type);
-	SETGET(uint, Serial);
-	SETGET(uchar, Font);
-	SETGET(uint, Timer);
-	SETGET(string, Text);
-	SETGET(wstring, UnicodeText);
-	SETGET(int, DrawX);
-	SETGET(int, DrawY);
-	SETGET(uchar, Alpha);
+	SETGET(bool, Unicode, false);
+	SETGET(TEXT_TYPE, Type, TT_CLIENT);
+	SETGET(uint, Serial, 0);
+	SETGET(uchar, Font, 0);
+	SETGET(uint, Timer, 0);
+	SETGET(string, Text, "");
+	SETGET(wstring, UnicodeText, L"");
+	SETGET(int, DrawX, 0);
+	SETGET(int, DrawY, 0);
+	SETGET(uchar, Alpha, 0xFF);
 
 public:
 	CTextData();

@@ -15,12 +15,7 @@
 CGUITextEntry::CGUITextEntry(const uint &serial, const ushort &color, const ushort &colorSelected, const ushort &colorFocused, const int &x, const int &y, const int &maxWidth, const bool &unicode, const uchar &font, const TEXT_ALIGN_TYPE &align, const ushort &textFlags, const int &maxLength)
 : CBaseGUI(GOT_TEXTENTRY, serial, 0, color, x, y), m_ColorSelected(colorSelected),
 m_ColorFocused(colorFocused), m_Unicode(unicode), m_Font(font), m_Align(align),
-m_TextFlags(textFlags), m_CheckOnSerial(false), m_ReadOnly(false), m_Focused(false),
-m_UseGlobalColor(false), m_GlobalColorR(0), m_GlobalColorG(0), m_GlobalColorB(0),
-m_GlobalColorA(0), m_GlobalColorSelectedR(0), m_GlobalColorSelectedG(0),
-m_GlobalColorSelectedB(0), m_GlobalColorSelectedA(0), m_GlobalColorFocusedR(0),
-m_GlobalColorFocusedG(0), m_GlobalColorFocusedB(0), m_GlobalColorFocusedA(0),
-m_FocusedOffsetY(0), m_Entry(maxLength, maxWidth, maxWidth)
+m_Entry(maxLength, maxWidth, maxWidth)
 {
 }
 //----------------------------------------------------------------------------------
@@ -84,15 +79,15 @@ void CGUITextEntry::OnClick(CGump *gump, const int &x, const int &y)
 void CGUITextEntry::OnMouseEnter()
 {
 	WISPFUN_DEBUG("c79_f6");
-	if (g_SelectedObject.Gump() != NULL)
-		g_SelectedObject.Gump()->WantRedraw = true;
+	if (g_SelectedObject.Gump != NULL)
+		g_SelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUITextEntry::OnMouseExit()
 {
 	WISPFUN_DEBUG("c79_f7");
-	if (g_LastSelectedObject.Gump() != NULL)
-		g_LastSelectedObject.Gump()->WantRedraw = true;
+	if (g_LastSelectedObject.Gump != NULL)
+		g_LastSelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUITextEntry::PrepareTextures()
@@ -104,7 +99,7 @@ void CGUITextEntry::PrepareTextures()
 	{
 		if (m_Focused || &m_Entry == g_EntryPointer)
 			color = m_ColorFocused;
-		else if (g_GumpSelectedElement == this || (m_CheckOnSerial && g_CurrentCheckGump != NULL && g_CurrentCheckGump == g_SelectedObject.Gump() && m_Serial == g_SelectedObject.Serial && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGUI()))
+		else if (g_GumpSelectedElement == this || (m_CheckOnSerial && g_CurrentCheckGump != NULL && g_CurrentCheckGump == g_SelectedObject.Gump && m_Serial == g_SelectedObject.Serial && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGUI()))
 			color = m_ColorSelected;
 	}
 
@@ -132,7 +127,7 @@ void CGUITextEntry::Draw(const bool &checktrans)
 
 		y += m_FocusedOffsetY;
 	}
-	else if (g_GumpSelectedElement == this || (m_CheckOnSerial && g_CurrentCheckGump != NULL && g_CurrentCheckGump == g_SelectedObject.Gump() && m_Serial == g_SelectedObject.Serial && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGUI()))
+	else if (g_GumpSelectedElement == this || (m_CheckOnSerial && g_CurrentCheckGump != NULL && g_CurrentCheckGump == g_SelectedObject.Gump && m_Serial == g_SelectedObject.Serial && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGUI()))
 	{
 		if (m_UseGlobalColor)
 			glColor4ub(m_GlobalColorSelectedR, m_GlobalColorSelectedG, m_GlobalColorSelectedB, m_GlobalColorSelectedA);

@@ -17,16 +17,16 @@
 class CGUIButton : public CGUIDrawObject
 {
 	//!ИД картинки для состояния, когда мышка находится над кнопкой
-	SETGET(ushort, GraphicSelected);
+	SETGET(ushort, GraphicSelected, 0);
 
 	//!ИД картинки для зажатого состояния
-	SETGET(ushort, GraphicPressed);
+	SETGET(ushort, GraphicPressed, 0);
 
 	//!Индекс страницы, если указан -1 то используется событие OnButton для гампа с идентификатором кнопки, если отличное значение - переход на страницу без вызова события
-	SETGET(int, ToPage);
+	SETGET(int, ToPage, -1);
 
 	//!Флаг обработки зажатого состояния кнопки каждую итерацию рендера
-	SETGET(bool, ProcessPressedState);
+	SETGET(bool, ProcessPressedState, false);
 
 public:
 	CGUIButton(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y);

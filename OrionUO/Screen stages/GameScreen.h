@@ -119,38 +119,38 @@ struct OBJECT_HANDLES_DATA
 class CGameScreen : public CBaseScreen
 {
 	//!Использовать ли освещение при перерисовке текущего кадра
-	SETGET(bool, UseLight);
+	SETGET(bool, UseLight, false);
 	//!Флаг, определяющий инициализацию списка рендера
-	SETGET(bool, RenderListInitalized);
+	SETGET(bool, RenderListInitalized, false);
 
 private:
 	//!Список объектов для вывода
 	OBJECT_HANDLES_DATA m_ObjectHandlesList[MAX_OBJECT_HANDLES];
 
 	//!Количество объектов для вывода
-	int m_ObjectHandlesCount;
+	int m_ObjectHandlesCount{ 0 };
 
 	//!Список объектов для отображения
-	RENDER_OBJECT_DATA *m_RenderList;
+	RENDER_OBJECT_DATA *m_RenderList{ NULL };
 
 	//!Размер списка объектов рендера
-	int m_RenderListSize;
+	int m_RenderListSize{ 1000 };
 
 	//!Количество объектов в списке
-	int m_RenderListCount;
+	int m_RenderListCount{ 0 };
 
 	//!Список источников света
 	LIGHT_DATA m_Light[MAX_LIGHT_SOURCES];
 
 	//!Количество источников света
-	int m_LightCount;
+	int m_LightCount{ 0 };
 
 	//!Максимальное значение отображения по Z координате
-	int m_MaxDrawZ;
+	int m_MaxDrawZ{ 0 };
 
-	uint  m_ProcessAlphaTimer;
+	uint  m_ProcessAlphaTimer{ 0 };
 
-	bool m_CanProcessAlpha;
+	bool m_CanProcessAlpha{ NULL };
 
 	/*!
 	Рисование игрового окна

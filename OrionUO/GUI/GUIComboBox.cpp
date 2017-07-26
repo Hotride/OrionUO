@@ -15,9 +15,7 @@
 CGUIComboBox::CGUIComboBox(const uint &serial, const ushort &graphic, const bool &compositeBackground, const ushort &openGraphic, const int &x, const int &y, const int &width, const int &showItemsCount, const bool &showMaximizedCenter)
 : CBaseGUI(GOT_COMBOBOX, serial, graphic, 0, x, y), m_OpenGraphic(openGraphic),
 m_CompositeBackground(compositeBackground), m_ShowItemsCount(showItemsCount),
-m_Width(width), m_SelectedIndex(-1), m_ListingDirection(0), m_ListingTimer(0),
-m_StartIndex(0), m_ShowMaximizedCenter(showMaximizedCenter), m_OpenedWidth(width),
-m_Text(NULL), m_TextOffsetY(0)
+m_Width(width), m_ShowMaximizedCenter(showMaximizedCenter), m_OpenedWidth(width)
 {
 	WISPFUN_DEBUG("c49_f1");
 	m_MoveOnDrag = false;
@@ -210,7 +208,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 		{
 			if (item->Type == GOT_TEXT)
 			{
-				if (g_SelectedObject.Object() == item)
+				if (g_SelectedObject.Object == item)
 				{
 					glColor4f(0.7f, 0.7f, 0.7f, 1.0f);
 					g_GL.DrawPolygone(currentX, currentY, m_WorkWidth, 14);
@@ -387,7 +385,7 @@ int CGUIComboBox::IsSelectedItem()
 		{
 			if (item->Type == GOT_TEXT)
 			{
-				if (g_SelectedObject.Object() == item)
+				if (g_SelectedObject.Object == item)
 				{
 					select = m_StartIndex + count;
 					break;

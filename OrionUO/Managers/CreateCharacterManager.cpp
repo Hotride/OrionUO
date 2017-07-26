@@ -166,9 +166,6 @@ const ushort CCreateCharacterManager::m_GargoyleHairColor[GARGOYLE_HAIR_COLOR_CO
 };
 //----------------------------------------------------------------------------------
 CCreateCharacterManager::CCreateCharacterManager()
-:m_Female(false), m_HairStyle(1), m_BeardStyle(0), m_SkinTone(0x03EA),
-m_ShirtColor(0x0084), m_PantsColor(0x035F), m_HairColor(0x044E),
-m_BeardColor(0x044E), m_Race(RT_HUMAN)
 {
 }
 //----------------------------------------------------------------------------------

@@ -18,24 +18,24 @@ class CGump;
 //!Класс для работы с полем для ввода текста
 class CEntryText
 {
-	SETGET(int, MaxLength);
-	SETGET(int, Width);
-	SETGET(int, MaxWidth);
-	SETGET(bool, Changed);
-	SETGET(ushort, Color);
-	SETGET(int, DrawOffset);
-	SETGET(POINT, CaretPos);
-	SETGET(bool, NumberOnly);
+	SETGET(int, MaxLength, 0);
+	SETGET(int, Width, 0);
+	SETGET(int, MaxWidth, 0);
+	SETGET(bool, Changed, true);
+	SETGET(ushort, Color, 0);
+	SETGET(int, DrawOffset, 0);
+	SETGET(WISP_GEOMETRY::CPoint2Di, CaretPos, WISP_GEOMETRY::CPoint2Di());
+	SETGET(bool, NumberOnly, false);
 
 private:
 	//!Unicode строка
-	wstring m_Text;
+	wstring m_Text{ L"" };
 
 	//!ASCII строка
-	string m_CText;
+	string m_CText{ "" };
 
 	//!Позиция каретки в строке
-	int m_Position;
+	int m_Position{ 0 };
 
 public:
 	CEntryText(int maxLength = 0, int width = 0, int maxWidth = 0, bool numberOnly = false);

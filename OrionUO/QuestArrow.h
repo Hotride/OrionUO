@@ -15,10 +15,10 @@
 //Класс для работы со стрелкой задания (над головой персонажа)
 class CQuestArrow
 {
-	SETGET(uint, Timer);
-	SETGET(ushort, X);
-	SETGET(ushort, Y);
-	SETGET(bool, Enabled);
+	SETGET(uint, Timer, 0);
+	SETGET(ushort, X, 0);
+	SETGET(ushort, Y, 0);
+	SETGET(bool, Enabled, false);
 
 public:
 	CQuestArrow();

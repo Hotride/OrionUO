@@ -18,8 +18,7 @@
 #include "../PressedObject.h"
 //----------------------------------------------------------------------------------
 CGumpSpell::CGumpSpell(uint serial, short x, short y, ushort graphic, SPELLBOOK_TYPE spellType)
-: CGump(GT_SPELL, serial, x, y), m_GroupNext(NULL), m_GroupPrev(NULL),
-m_SpellType(spellType)
+: CGump(GT_SPELL, serial, x, y), m_SpellType(spellType)
 {
 	WISPFUN_DEBUG("c126_f1");
 	m_Graphic = graphic;
@@ -124,7 +123,7 @@ void CGumpSpell::GetTooltipSpellInfo(int &tooltipOffset, int &spellIndexOffset)
 void CGumpSpell::PrepareContent()
 {
 	WISPFUN_DEBUG("c126_f5");
-	bool wantBlender = (g_ConfigManager.TransparentSpellIcons && g_SelectedObject.Gump() != this);
+	bool wantBlender = (g_ConfigManager.TransparentSpellIcons && g_SelectedObject.Gump != this);
 
 	if (m_Blender->Enabled != wantBlender)
 	{

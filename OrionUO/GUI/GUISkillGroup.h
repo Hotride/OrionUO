@@ -20,15 +20,15 @@
 class CGUISkillGroup : public CBaseGUI
 {
 	//!Свернута или развернута группа
-	SETGETE(bool, Minimized, OnChangeMinimized);
+	SETGETE(bool, Minimized, false, OnChangeMinimized);
 
 public:
 	CGUISkillGroup(const uint &serial, const uint &minimizeSerial, class CSkillGroupObject *group, const int &x, const int &y);
 	virtual ~CGUISkillGroup();
 
 	//!Компоненты управления
-	CGUIButton *m_Minimizer;
-	CGUITextEntry *m_Name;
+	CGUIButton *m_Minimizer{ NULL };
+	CGUITextEntry *m_Name{ NULL };
 
 	void UpdateDataPositions();
 

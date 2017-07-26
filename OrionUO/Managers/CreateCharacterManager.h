@@ -29,15 +29,15 @@ struct CC_HAIR_STYLE
 //!Класс менеджера создания персонажей
 class CCreateCharacterManager
 {
-	SETGETE(bool, Female, OnSexChanged);
-	SETGETE(RACE_TYPE, Race, OnChangeRace);
-	SETGET(uchar, HairStyle);
-	SETGET(uchar, BeardStyle);
-	SETGET(ushort, SkinTone);
-	SETGET(ushort, ShirtColor);
-	SETGET(ushort, PantsColor);
-	SETGET(ushort, HairColor);
-	SETGET(ushort, BeardColor);
+	SETGETE(bool, Female, false, OnSexChanged);
+	SETGETE(RACE_TYPE, Race, RT_HUMAN, OnChangeRace);
+	SETGET(uchar, HairStyle, 1);
+	SETGET(uchar, BeardStyle, 0);
+	SETGET(ushort, SkinTone, 0x03EA);
+	SETGET(ushort, ShirtColor, 0x0084);
+	SETGET(ushort, PantsColor, 0x035F);
+	SETGET(ushort, HairColor, 0x044E);
+	SETGET(ushort, BeardColor, 0x044E);
 
 public:
 	static const int HUMAN_MALE_HAIR_COUNT = 10;

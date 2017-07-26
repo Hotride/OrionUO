@@ -14,7 +14,7 @@
 //----------------------------------------------------------------------------------
 class CGumpMenubar : public CGump
 {
-	SETGETE(bool, Opened, OnChangeOpened);
+	SETGETE(bool, Opened, true, OnChangeOpened);
 
 private:
 	static const int ID_GMB_MINIMIZE = 1;

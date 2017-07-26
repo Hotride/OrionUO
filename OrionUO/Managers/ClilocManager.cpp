@@ -159,7 +159,7 @@ wstring CCliloc::GetW(const uint &id, const bool &toCamelCase, string result)
 //-----------------------------------CClilocManager---------------------------------
 //----------------------------------------------------------------------------------
 CClilocManager::CClilocManager()
-: CBaseQueue(), m_LastCliloc(NULL), m_ENUCliloc(NULL)
+: CBaseQueue()
 {
 }
 //----------------------------------------------------------------------------------

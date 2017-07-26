@@ -16,12 +16,12 @@
 //Класс для работы с тултипами
 class CToolTip
 {
-	SETGET(uint, Timer);
-	SETGET(wstring, Data);
-	SETGET(uint, ClilocID);
-	SETGET(int, MaxWidth);
-	SETGET(WISP_GEOMETRY::CPoint2Di, Position);
-	SETGET(bool, Use);
+	SETGET(uint, Timer, 0);
+	SETGET(wstring, Data, L"");
+	SETGET(uint, ClilocID, 0);
+	SETGET(int, MaxWidth, 0);
+	SETGET(WISP_GEOMETRY::CPoint2Di, Position, WISP_GEOMETRY::CPoint2Di());
+	SETGET(bool, Use, false);
 
 public:
 	CToolTip();
@@ -29,7 +29,7 @@ public:
 
 	void Reset();
 
-	class CRenderObject *m_Object;
+	class CRenderObject *m_Object{ NULL };
 
 	//Текстура тулпита
 	CGLTextTexture Texture;

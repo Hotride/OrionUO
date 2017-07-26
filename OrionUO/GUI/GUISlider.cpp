@@ -18,10 +18,7 @@ CGUISlider::CGUISlider(const uint &serial, const ushort &graphic, const ushort &
 : CBaseGUI(GOT_SLIDER, serial, graphic, 0, x, y), m_GraphicSelected(graphicSelected),
 m_GraphicPressed(graphicPressed), m_BackgroundGraphic(backgroundGraphic),
 m_CompositeBackground(compositeBackground), m_Vertical(vertical), m_Lenght(lenght),
-m_Percents(0), m_Offset(0), m_MinValue(minValue), m_MaxValue(maxValue), m_Value(value),
-m_HaveText(false), m_TextPosition(STP_RIGHT), m_Font(0), m_TextColor(0), m_Unicode(true),
-m_TextWidth(0), m_Align(TS_LEFT), m_TextFlags(0), m_TextX(0), m_TextY(0), m_ScrollStep(15),
-m_LastScrollTime(0), m_DefaultTextOffset(2)
+m_MinValue(minValue), m_MaxValue(maxValue), m_Value(value)
 {
 	WISPFUN_DEBUG("c77_f1");
 	CalculateOffset();
@@ -396,14 +393,14 @@ bool CGUISlider::Select()
 void CGUISlider::OnMouseEnter()
 {
 	WISPFUN_DEBUG("c77_f13");
-	if (g_SelectedObject.Gump() != NULL)
-		g_SelectedObject.Gump()->WantRedraw = true;
+	if (g_SelectedObject.Gump != NULL)
+		g_SelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUISlider::OnMouseExit()
 {
 	WISPFUN_DEBUG("c77_f14");
-	if (g_LastSelectedObject.Gump() != NULL)
-		g_LastSelectedObject.Gump()->WantRedraw = true;
+	if (g_LastSelectedObject.Gump != NULL)
+		g_LastSelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

@@ -14,7 +14,7 @@
 CJournal g_Journal(50);
 //----------------------------------------------------------------------------------
 CJournal::CJournal(const int &maxSize)
-: CBaseQueue(), m_MaxSize(maxSize), m_Size(0)
+: CBaseQueue(), m_MaxSize(maxSize)
 {
 }
 //----------------------------------------------------------------------------------

@@ -17,7 +17,7 @@
 class CGUIGumppicHightlighted : public CGUIDrawObject
 {
 	//!Цвет подсветки
-	SETGET(ushort, SelectedColor);
+	SETGET(ushort, SelectedColor, 0);
 
 public:
 	CGUIGumppicHightlighted(const uint &serial, const ushort &graphic, const ushort &color, const ushort &electedColor, const int &x, const int &y);

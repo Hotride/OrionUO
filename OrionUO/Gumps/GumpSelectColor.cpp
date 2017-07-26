@@ -13,8 +13,7 @@
 #include "GumpOptions.h"
 //----------------------------------------------------------------------------------
 CGumpSelectColor::CGumpSelectColor(uint serial, short x, short y, SELECT_COLOR_GUMP_STATE state)
-: CGump(GT_SELECT_COLOR, serial, x, y), m_State(state), m_ColorRef(1),
-m_SelectedIndex(10), m_Slider(NULL), m_DataBox(NULL)
+: CGump(GT_SELECT_COLOR, serial, x, y), m_State(state)
 {
 }
 //----------------------------------------------------------------------------------

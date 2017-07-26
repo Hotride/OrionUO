@@ -21,8 +21,7 @@
 #include "../ToolTip.h"
 //----------------------------------------------------------------------------------
 CGumpRacialAbilitiesBook::CGumpRacialAbilitiesBook(const int &x, const int &y)
-: CGump(GT_RACIAL_ABILITIES_BOOK, 0, x, y), m_DictionaryPagesCount(2), m_PagesCount(6),
-m_AbilityCount(4), m_PrevPage(NULL), m_NextPage(NULL), m_TooltipOffset(1112198)
+: CGump(GT_RACIAL_ABILITIES_BOOK, 0, x, y)
 {
 	m_Draw2Page = true;
 }

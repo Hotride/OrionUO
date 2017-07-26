@@ -16,10 +16,7 @@
 //----------------------------------------------------------------------------------
 CRenderWorldObject::CRenderWorldObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const char &z)
 : CRenderObject(serial, graphic, color, x, y), m_RenderType(renderType),
-m_Z(z), m_NextXY(NULL), m_PrevXY(NULL), m_RenderQueueIndex(0), m_NoDrawTile(false)
-#if UO_RENDER_LIST_SORT == 1
-, m_CurrentRenderIndex(0)
-#endif
+m_Z(z)
 {
 	WISPFUN_DEBUG("c202_f1");
 	m_DrawTextureColor[0] = 0xFF;

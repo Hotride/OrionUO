@@ -17,13 +17,9 @@
 CEntryText *g_EntryPointer = NULL;
 //----------------------------------------------------------------------------------
 CEntryText::CEntryText(int maxLength, int width, int maxWidth, bool numberOnly)
-: m_MaxLength(maxLength), m_Position(0), m_Changed(true), m_DrawOffset(0),
-m_Width(width), m_MaxWidth(maxWidth), m_Color(0), m_NumberOnly(numberOnly)
+: m_MaxLength(maxLength), m_Width(width), m_MaxWidth(maxWidth), m_NumberOnly(numberOnly)
 {
 	WISPFUN_DEBUG("c169_f1");
-	m_Text = L"";
-	m_CText = "";
-	memset(&m_CaretPos, 0, sizeof(m_CaretPos));
 }
 //----------------------------------------------------------------------------------
 CEntryText::~CEntryText()
@@ -506,13 +502,13 @@ void CEntryText::CreateTextureA(uchar font, string str, ushort color, int width,
 			{
 				if (m_DrawOffset)
 				{
-					if (m_CaretPos.x + m_DrawOffset < 0)
-						m_DrawOffset = -m_CaretPos.x;
-					else if (m_Width + -m_DrawOffset < m_CaretPos.x)
-						m_DrawOffset = m_Width - m_CaretPos.x;
+					if (m_CaretPos.X + m_DrawOffset < 0)
+						m_DrawOffset = -m_CaretPos.X;
+					else if (m_Width + -m_DrawOffset < m_CaretPos.X)
+						m_DrawOffset = m_Width - m_CaretPos.X;
 				}
-				else if (m_Width + m_DrawOffset < m_CaretPos.x)
-					m_DrawOffset = m_Width - m_CaretPos.x;
+				else if (m_Width + m_DrawOffset < m_CaretPos.X)
+					m_DrawOffset = m_Width - m_CaretPos.X;
 				else
 					m_DrawOffset = 0;
 
@@ -553,13 +549,13 @@ void CEntryText::CreateTextureW(uchar font, wstring str, ushort color, int width
 			{
 				if (m_DrawOffset)
 				{
-					if (m_CaretPos.x + m_DrawOffset < 0)
-						m_DrawOffset = -m_CaretPos.x;
-					else if (m_Width + -m_DrawOffset < m_CaretPos.x)
-						m_DrawOffset = m_Width - m_CaretPos.x;
+					if (m_CaretPos.X + m_DrawOffset < 0)
+						m_DrawOffset = -m_CaretPos.X;
+					else if (m_Width + -m_DrawOffset < m_CaretPos.X)
+						m_DrawOffset = m_Width - m_CaretPos.X;
 				}
-				else if (m_Width + m_DrawOffset < m_CaretPos.x)
-					m_DrawOffset = m_Width - m_CaretPos.x;
+				else if (m_Width + m_DrawOffset < m_CaretPos.X)
+					m_DrawOffset = m_Width - m_CaretPos.X;
 				else
 					m_DrawOffset = 0;
 			}
@@ -635,7 +631,7 @@ void CEntryText::DrawA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE a
 		int offsY = offsetTable[font % 10];
 
 		//Отрисуем каретку
-		m_CaretTexture.Draw(x + m_DrawOffset + m_CaretPos.x, y + offsY + m_CaretPos.y);
+		m_CaretTexture.Draw(x + m_DrawOffset + m_CaretPos.X, y + offsY + m_CaretPos.Y);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -649,7 +645,7 @@ void CEntryText::DrawW(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE a
 
 	//Если это поле для ввода - отобразим каретку
 	if (this == g_EntryPointer)
-		m_CaretTexture.Draw(x + m_DrawOffset + m_CaretPos.x, y + m_CaretPos.y);
+		m_CaretTexture.Draw(x + m_DrawOffset + m_CaretPos.X, y + m_CaretPos.Y);
 }
 //----------------------------------------------------------------------------------
 void CEntryText::DrawMaskA(uchar font, ushort color, int x, int y, TEXT_ALIGN_TYPE align, ushort flags)

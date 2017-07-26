@@ -16,10 +16,10 @@ class CRenderTextObject;
 //----------------------------------------------------------------------------------
 class CImageBounds
 {
-	SETGET(int, X);
-	SETGET(int, Y);
-	SETGET(int, Width);
-	SETGET(int, Height);
+	SETGET(int, X, 0);
+	SETGET(int, Y, 0);
+	SETGET(int, Width, 0);
+	SETGET(int, Height, 0);
 
 public:
 	CImageBounds(const int &x, const int &y, const int &width, const int &height);
@@ -34,7 +34,7 @@ public:
 	CTextImageBounds(const int &x, const int &y, const int &width, const int &height, CRenderTextObject *text);
 	virtual ~CTextImageBounds();
 
-	CRenderTextObject *m_Text;
+	CRenderTextObject *m_Text{ NULL };
 };
 //----------------------------------------------------------------------------------
 extern CImageBounds g_PlayerRect;

@@ -30,8 +30,6 @@ DRAW_TEXTURE_STRETCHED_FUNCTION g_GL_DrawStretched_Ptr = &CGLEngine::GL1_DrawStr
 DRAW_TEXTURE_RESIZEPIC_FUNCTION g_GL_DrawResizepic_Ptr = &CGLEngine::GL1_DrawResizepic;
 //----------------------------------------------------------------------------------
 CGLEngine::CGLEngine()
-: m_DC(0), m_RC(0), m_OldTexture(0), m_Drawing(false), m_CanUseFrameBuffer(false),
-m_CanUseBuffer(false), m_SittingCharacterOffset(8.0f), m_PositionBuffer(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -524,7 +522,7 @@ void CGLEngine::GL1_DrawLandTexture(const CGLTexture &texture, const int &x, con
 	float translateX = x - 22.0f;
 	float translateY = y - 22.0f;
 
-	const RECT &rc = land->Rect;
+	const RECT &rc = land->m_Rect;
 	CVector *normals = land->m_Normals;
 
 	glTranslatef(translateX, translateY, 0.0f);

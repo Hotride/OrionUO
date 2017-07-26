@@ -19,7 +19,7 @@
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
 CFileManager::CFileManager()
-: WISP_DATASTREAM::CDataReader(), m_UseVerdata(false), m_UseUOPMap(false), m_UnicodeFontsCount(0), m_AutoResetEvent(false), m_UseUOPGumps(false)
+: WISP_DATASTREAM::CDataReader()
 {
 }
 //----------------------------------------------------------------------------------

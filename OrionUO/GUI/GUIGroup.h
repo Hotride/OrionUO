@@ -17,7 +17,7 @@
 class CGUIGroup : public CBaseGUI
 {
 	//!Индекс группы. 0 - эквивалентно EndGroup
-	SETGET(int, Index);
+	SETGET(int, Index, 0);
 
 public:
 	CGUIGroup(const int &index);

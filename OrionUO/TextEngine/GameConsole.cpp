@@ -18,8 +18,7 @@
 CGameConsole g_GameConsole;
 //----------------------------------------------------------------------------------
 CGameConsole::CGameConsole()
-: CEntryText(64, 600, 600), m_ConsoleStackCount(0), m_ConsoleSelectedIndex(0),
-m_PositionChanged(false)
+: CEntryText(64, 600, 600)
 {
 }
 //----------------------------------------------------------------------------------

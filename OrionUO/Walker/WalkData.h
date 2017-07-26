@@ -15,17 +15,17 @@
 //Класс для работы с шагом
 class CWalkData
 {
-	SETGET(short, X);
-	SETGET(short, Y);
-	SETGET(char, Z);
-	SETGET(uchar, Direction);
+	SETGET(short, X, 0);
+	SETGET(short, Y, 0);
+	SETGET(char, Z, 0);
+	SETGET(uchar, Direction, 0);
 
 public:
 	//Ссылки на следующий и предыдущий элементы
-	CWalkData *m_Next;
-	CWalkData *m_Prev;
+	CWalkData *m_Next{ NULL };
+	CWalkData *m_Prev{ NULL };
 
-	CWalkData() :m_X(0), m_Y(0), m_Z(0), m_Direction(0), m_Next(NULL), m_Prev(NULL) {}
+	CWalkData() {}
 	~CWalkData() {}
 
 	//Бег или хотьба

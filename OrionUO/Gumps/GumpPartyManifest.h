@@ -24,7 +24,7 @@ private:
 	static const int ID_GPM_BUTTON_TELL_MEMBER = 10;
 	static const int ID_GPM_BUTTON_KICK_MEMBER = 20;
 
-	bool m_CanLoot;
+	bool m_CanLoot{ false };
 
 public:
 	CGumpPartyManifest(uint serial, short x, short y, bool canLoot);

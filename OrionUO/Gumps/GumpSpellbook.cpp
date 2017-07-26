@@ -35,9 +35,7 @@ const string CGumpSpellbook::m_SpellCircleName[8] =
 };
 //----------------------------------------------------------------------------------
 CGumpSpellbook::CGumpSpellbook(uint serial, int x, int y)
-: CGump(GT_SPELLBOOK, serial, x, y), m_PageCount(8), m_SpellCount(0), m_Body(NULL),
-m_PrevPage(NULL), m_NextPage(NULL), m_LastSpellPointer(NULL), m_LastSpellBookmark(NULL),
-m_BookType(ST_MAGE), m_TithingPointsText(NULL)
+: CGump(GT_SPELLBOOK, serial, x, y)
 {
 	m_Draw2Page = true;
 	memset(&m_Spells[0], 0, sizeof(m_Spells));

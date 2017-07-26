@@ -233,9 +233,7 @@ const int CAnimationManager::m_UsedLayers[8][USED_LAYER_COUNT] =
 #pragma endregion
 //----------------------------------------------------------------------------------
 CAnimationManager::CAnimationManager()
-: WISP_DATASTREAM::CDataReader(), m_UsedAnimList(NULL), m_Color(0), m_AnimGroup(0),
-m_Direction(0), m_Sitting(0), m_Transform(false), m_UseBlending(false), m_AnimID(0),
-m_EquipConvItem(NULL), m_AnimGroupCount(35)
+: WISP_DATASTREAM::CDataReader()
 {
 	WISPFUN_DEBUG("c133_f1");
 	memset(m_AddressIdx, 0, sizeof(m_AddressIdx));
@@ -1789,7 +1787,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 	}
 
 	bool isAttack = (serial == g_LastAttackObject);
-	bool underMouseTarget = (g_SelectedObject.Object() == obj && g_Target.IsTargeting());
+	bool underMouseTarget = (g_SelectedObject.Object == obj && g_Target.IsTargeting());
 
 	if (!obj->IsPlayer() && (isAttack || underMouseTarget || serial == g_LastTargetObject))
 	{
@@ -1885,7 +1883,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 					int yOffset = -70;
 
 					g_GL.PushScissor(drawX + xOffset, drawY + yOffset, 20, 40);
-					bool selected = g_SelectedObject.Object() == ro;
+					bool selected = g_SelectedObject.Object == ro;
 					ushort color = selected ? 0x0035 : ro->Color;
 					g_Orion.DrawStaticArt(sittingData.Graphic, color, x, y, ro->Z, !selected);
 					g_GL.PopScissor();

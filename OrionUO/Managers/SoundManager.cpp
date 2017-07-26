@@ -82,7 +82,6 @@ const char *BASS_ErrorGetDescription()
 #pragma endregion
 //----------------------------------------------------------------------------------
 CSoundManager::CSoundManager()
-: m_Music(0), m_WarMusic(0), m_CurrentMusicIndex(-1)
 {
 }
 //----------------------------------------------------------------------------------

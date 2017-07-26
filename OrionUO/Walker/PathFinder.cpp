@@ -19,9 +19,6 @@
 CPathFinder g_PathFinder;
 //----------------------------------------------------------------------------------
 CPathFinder::CPathFinder()
-: m_AutoWalking(false), m_PointIndex(0), m_PathSize(0), m_GoalNode(0), m_GoalFound(false),
-m_ActiveOpenNodes(0), m_ActiveClosedNodes(0), m_BlockMoving(false), m_PathFindDistance(0),
-m_PathFindidngCanBeCancelled(false), m_StartPoint(), m_EndPoint(), m_FastRotation(false)
 {
 }
 //----------------------------------------------------------------------------------

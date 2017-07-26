@@ -15,9 +15,9 @@
 //Класс вектора нормали
 class CVector
 {
-	SETGET(double, X);
-	SETGET(double, Y);
-	SETGET(double, Z);
+	SETGET(double, X, 0.0);
+	SETGET(double, Y, 0.0);
+	SETGET(double, Z, 0.0);
 
 public:
 	CVector(const double &x = 0, const double &y = 0, const double &z = 0);

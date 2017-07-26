@@ -19,7 +19,7 @@
 #include "../PressedObject.h"
 //----------------------------------------------------------------------------------
 CGumpTargetSystem::CGumpTargetSystem(uint serial, short x, short y)
-: CGump(GT_TARGET_SYSTEM, serial, x, y), m_OldName(""), m_Body(NULL), m_DataBox(NULL)
+: CGump(GT_TARGET_SYSTEM, serial, x, y)
 {
 	m_Locker.Serial = ID_GSB_LOCK_MOVING;
 }

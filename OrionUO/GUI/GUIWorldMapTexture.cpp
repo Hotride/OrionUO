@@ -14,8 +14,7 @@
 #include "../Managers/UOFileReader.h"
 //----------------------------------------------------------------------------------
 CGUIWorldMapTexture::CGUIWorldMapTexture(const int &x, const int &y)
-: CBaseGUI(GOT_EXTERNALTEXTURE, 0, 0, 0, x, y), m_Index(0), m_Width(0), m_Height(0),
-m_OffsetX(0), m_OffsetY(0)
+: CBaseGUI(GOT_EXTERNALTEXTURE, 0, 0, 0, x, y)
 {
 }
 //----------------------------------------------------------------------------------

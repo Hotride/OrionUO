@@ -17,10 +17,10 @@
 //!Класс города (для старых клиентов)
 class CCityItem
 {
-	SETGET(uchar, LocationIndex);
-	SETGET(string, Name);
-	SETGET(string, Area);
-	SETGET(bool, Selected);
+	SETGET(uchar, LocationIndex, 0);
+	SETGET(string, Name, "");
+	SETGET(string, Area, "");
+	SETGET(bool, Selected, false);
 
 public:
 	CCityItem();
@@ -45,11 +45,11 @@ public:
 //!Класс города (для новых клиентов)
 class CCityItemNew : public CCityItem
 {
-	SETGET(uint, X);
-	SETGET(uint, Y);
-	SETGET(uint, Z);
-	SETGET(uint, MapIndex);
-	SETGET(uint, Cliloc);
+	SETGET(uint, X, 0);
+	SETGET(uint, Y, 0);
+	SETGET(uint, Z, 0);
+	SETGET(uint, MapIndex, 0);
+	SETGET(uint, Cliloc, 0);
 
 public:
 	CCityItemNew();

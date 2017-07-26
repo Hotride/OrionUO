@@ -41,7 +41,7 @@ public:
 	WORLD_MAP m_Map;
 
 	//!Предметы в мире
-	CGameObject *m_Items;
+	CGameObject *m_Items{ NULL };
 
 	void ResetObjectHandlesState();
 

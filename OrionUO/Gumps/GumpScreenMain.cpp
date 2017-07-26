@@ -14,7 +14,7 @@
 #include "../Managers/PacketManager.h"
 //----------------------------------------------------------------------------------
 CGumpScreenMain::CGumpScreenMain()
-: CGump(GT_NONE, 0, 0, 0), m_Arrow(NULL), m_PasswordFake(NULL)
+: CGump(GT_NONE, 0, 0, 0)
 {
 	m_NoMove = true;
 	m_NoClose = true;
@@ -105,7 +105,7 @@ void CGumpScreenMain::UpdateContent()
 void CGumpScreenMain::InitToolTip()
 {
 	WISPFUN_DEBUG("c116_f3");
-	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object() == NULL)
+	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object == NULL)
 		return;
 
 	uint id = g_SelectedObject.Serial;

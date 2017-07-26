@@ -16,11 +16,11 @@
 class CParty
 {
 	//Серийник лидера пати
-	SETGET(uint, Leader);
+	SETGET(uint, Leader, 0);
 	//Серийник пригласившего в пати
-	SETGET(uint, Inviter);
+	SETGET(uint, Inviter, 0);
 	//Может ли группа лутать труп игрока
-	SETGET(bool, CanLoot);
+	SETGET(bool, CanLoot, false);
 
 public:
 	CParty();

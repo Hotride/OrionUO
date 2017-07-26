@@ -59,14 +59,14 @@ protected:
 
 	virtual void CalculateGumpState();
 
-	bool m_WantFullUpdateContent;
+	bool m_WantFullUpdateContent{ false };
 
-	CGUIButton *m_StatusbarUnlocker;
-	CGUIGumppic *m_Body;
-	CGUIGumppic *m_HitsBody;
-	CGUITextEntry *m_Entry;
+	CGUIButton *m_StatusbarUnlocker{ NULL };
+	CGUIGumppic *m_Body{ NULL };
+	CGUIGumppic *m_HitsBody{ NULL };
+	CGUITextEntry *m_Entry{ NULL };
 
-	string m_Name;
+	string m_Name{ "" };
 
 public:
 	CGumpStatusbar(uint serial, short x, short y, bool minimized);
@@ -77,8 +77,8 @@ public:
 	static int m_StatusbarDefaultWidth;
 	static int m_StatusbarDefaultHeight;
 
-	CGumpStatusbar *m_GroupNext;
-	CGumpStatusbar *m_GroupPrev;
+	CGumpStatusbar *m_GroupNext{ NULL };
+	CGumpStatusbar *m_GroupPrev{ NULL };
 
 	CGumpStatusbar *GetTopStatusbar();
 	CGumpStatusbar *GetNearStatusbar(int &x, int &y);

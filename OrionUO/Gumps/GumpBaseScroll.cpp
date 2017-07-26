@@ -13,9 +13,8 @@
 
 //----------------------------------------------------------------------------------
 CGumpBaseScroll::CGumpBaseScroll(GUMP_TYPE type, uint serial, ushort graphic, int height, short x, short y, bool haveMinimizer, int scrollerOffsetY, bool haveBackgroundLines, int scissorOffsetHeight)
-: CGump(type, serial, x, y), m_Height(height), m_StartResizeHeight(0),
-m_ScrollerOffsetY(scrollerOffsetY), m_HaveBackgroundLines(haveBackgroundLines),
-m_ScissorOffsetHeight(scissorOffsetHeight), m_MinHeight(160)
+: CGump(type, serial, x, y), m_Height(height), m_ScrollerOffsetY(scrollerOffsetY),
+m_HaveBackgroundLines(haveBackgroundLines), m_ScissorOffsetHeight(scissorOffsetHeight)
 {
 	WISPFUN_DEBUG("c86_f1");
 	m_Page = 2;

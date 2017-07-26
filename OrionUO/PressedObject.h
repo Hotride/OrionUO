@@ -17,19 +17,19 @@
 //----------------------------------------------------------------------------------
 class CPressedObject
 {
-	SETGET(uint, LeftSerial);
-	SETGET(uint, RightSerial);
-	SETGET(uint, MidSerial);
+	SETGET(uint, LeftSerial, 0);
+	SETGET(uint, RightSerial, 0);
+	SETGET(uint, MidSerial, 0);
 
 private:
-	CRenderObject *m_LeftObject;
-	CGump *m_LeftGump;
+	CRenderObject *m_LeftObject{ NULL };
+	CGump *m_LeftGump{ NULL };
 
-	CRenderObject *m_RightObject;
-	CGump *m_RightGump;
+	CRenderObject *m_RightObject{ NULL };
+	CGump *m_RightGump{ NULL };
 
-	CRenderObject *m_MidObject;
-	CGump *m_MidGump;
+	CRenderObject *m_MidObject{ NULL };
+	CGump *m_MidGump{ NULL };
 
 public:
 	CPressedObject();

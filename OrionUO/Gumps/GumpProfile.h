@@ -14,14 +14,14 @@
 //----------------------------------------------------------------------------------
 class CGumpProfile : public CGumpBaseScroll
 {
-	SETGET(bool, Changed);
+	SETGET(bool, Changed, false);
 
 private:
 	static const int ID_GP_APPLY = 1;
 	static const int ID_GP_TEXT_FIELD = 2;
 	
-	CGUITextEntry *m_Entry;
-	CGUIHitBox *m_HitBox;
+	CGUITextEntry *m_Entry{ NULL };
+	CGUIHitBox *m_HitBox{ NULL };
 	CBaseGUI *m_BottomData[4];
 
 	void RecalculateHeight();

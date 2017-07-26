@@ -17,19 +17,19 @@
 class CGUIBuff : public CGUIDrawObject
 {
 	//!Время жизни
-	SETGET(uint, Timer);
+	SETGET(uint, Timer, 0);
 
 	//!Текст баффа для отображения
-	SETGET(wstring, Text);
+	SETGET(wstring, Text, L"");
 
 	//!Таймер всплывающей подсказки
-	SETGET(uint, TooltipTimer);
+	SETGET(uint, TooltipTimer, 0);
 
 	//!Флаг для уменьшения альфа-канала
-	SETGET(bool, DecAlpha);
+	SETGET(bool, DecAlpha, true);
 
 	//!Текущее значение альфа-канала
-	SETGET(uchar, Alpha);
+	SETGET(uchar, Alpha, 0xFF);
 
 public:
 	CGUIBuff(const ushort &graphic, const uint &timer, const wstring &text);

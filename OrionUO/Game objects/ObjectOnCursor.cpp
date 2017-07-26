@@ -13,8 +13,7 @@
 CObjectOnCursor *g_ObjectInHand = NULL;
 //----------------------------------------------------------------------------------
 CObjectOnCursor::CObjectOnCursor()
-: CGameItem(), m_Separated(false), m_Deleted(false), m_Dropped(false),
-m_IsGameFigure(false), m_DragCount(1), m_NoDraw(false)
+: CGameItem()
 {
 }
 //----------------------------------------------------------------------------------

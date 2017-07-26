@@ -17,10 +17,10 @@
 class CGUIGumppicTiled : public CGUIDrawObject
 {
 	//!Ширина
-	SETGET(int, Width);
+	SETGET(int, Width, 0);
 
 	//!Высота
-	SETGET(int, Height);
+	SETGET(int, Height, 0);
 
 public:
 	CGUIGumppicTiled(const ushort &graphic, const int &x, const int &y, const int &width, const int &height);

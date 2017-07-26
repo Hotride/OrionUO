@@ -27,9 +27,6 @@ NETWORK_ACTION_TYPE *g_NetworkAction = NULL;
 NETWORK_POST_ACTION_TYPE *g_NetworkPostAction = NULL;
 //----------------------------------------------------------------------------------
 CConnectionManager::CConnectionManager()
-: m_IsLoginSocket(true), m_LoginSocket(false), m_GameSocket(true), m_UseProxy(false),
-m_ProxyAddress(""), m_ProxyPort(0), m_ProxySocks5(false), m_ProxyAccount(""),
-m_ProxyPassword("")
 {
 }
 //----------------------------------------------------------------------------------

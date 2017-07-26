@@ -17,7 +17,7 @@ class CGumpDye : public CGumpSelectColor
 private:
 	ushort GetCurrentColor();
 
-	CGUITilepic *m_Tube;
+	CGUITilepic *m_Tube{ NULL };
 
 public:
 	CGumpDye(uint serial, short x, short y, ushort graphic);

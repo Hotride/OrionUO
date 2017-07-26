@@ -32,16 +32,16 @@ protected:
 	static const int ID_GP_COMBAT_BOOK = 13;
 	static const int ID_GP_RACIAL_ABILITIES_BOOK = 14;
 	static const int ID_GP_LOCK_MOVING = 15;
-	
-	CTextRenderer m_TextRenderer;
+
+	CTextRenderer m_TextRenderer{ CTextRenderer() };
 	
 	static const int m_LayerCount = 23;
 	static int UsedLayers[m_LayerCount];
 
-	CGUIDataBox *m_DataBox;
-	CGUIText *m_Description;
+	CGUIDataBox *m_DataBox{ NULL };
+	CGUIText *m_Description{ NULL };
 
-	bool m_WantTransparentContent;
+	bool m_WantTransparentContent{ false };
 
 	virtual void CalculateGumpState();
 
@@ -49,9 +49,9 @@ public:
 	CGumpPaperdoll(uint serial, short x, short y, bool minimized);
 	virtual ~CGumpPaperdoll();
 
-	CGUIButton *m_ButtonWarmode;
-	
-	CTextContainer m_TextContainer;
+	CGUIButton *m_ButtonWarmode{ NULL };
+
+	CTextContainer m_TextContainer{ CTextContainer(10) };
 
 	void UpdateDescription(const string &text);
 

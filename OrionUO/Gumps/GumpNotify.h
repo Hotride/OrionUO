@@ -14,10 +14,10 @@
 //----------------------------------------------------------------------------------
 class CGumpNotify : public CGump
 {
-	SETGET(uchar, Variant);
-	SETGET(short, Width);
-	SETGET(short, Height);
-	SETGET(string, Text);
+	SETGET(uchar, Variant, 0);
+	SETGET(short, Width, 0);
+	SETGET(short, Height, 0);
+	SETGET(string, Text, "");
 
 private:
 	static const int ID_GN_BUTTON_OK = 1;

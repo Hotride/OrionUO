@@ -16,11 +16,11 @@
 //Класс для работы с объектами рендера
 class CRenderObject : public CBaseQueueItem
 {
-	SETGET(uint, Serial);
-	SETGET(ushort, Graphic);
-	SETGET(ushort, Color);
-	SETGET(short, X);
-	SETGET(short, Y);
+	SETGET(uint, Serial, 0);
+	SETGET(ushort, Graphic, 0);
+	SETGET(ushort, Color, 0);
+	SETGET(short, X, 0);
+	SETGET(short, Y, 0);
 
 public:
 	CRenderObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y);

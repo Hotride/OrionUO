@@ -20,11 +20,11 @@ protected:
 	static const int ID_GSC_COLORS = 10;
 
 	SELECT_COLOR_GUMP_STATE m_State;
-	uchar m_ColorRef;
-	int m_SelectedIndex;
+	uchar m_ColorRef{ 1 };
+	int m_SelectedIndex{ 10 };
 
-	CGUISlider *m_Slider;
-	CGUIDataBox *m_DataBox;
+	CGUISlider *m_Slider{ NULL };
+	CGUIDataBox *m_DataBox{ NULL };
 
 public:
 	CGumpSelectColor(uint serial, short x, short y, SELECT_COLOR_GUMP_STATE state);

@@ -15,12 +15,12 @@
 //!Класс списка персонажей для экрана выбора персонажей
 class CCharacterList
 {
-	SETGET(int, Count);
-	SETGET(int, Selected);
-	SETGET(bool, OnePerson);
-	SETGET(bool, Have6Slot);
-	SETGET(bool, Have7Slot);
-	SETGET(ushort, ClientFlag);
+	SETGET(int, Count, 5);
+	SETGET(int, Selected, 0);
+	SETGET(bool, OnePerson, false);
+	SETGET(bool, Have6Slot, false);
+	SETGET(bool, Have7Slot, false);
+	SETGET(ushort, ClientFlag, 0);
 
 private:
 	//!Память под 7 персонажей

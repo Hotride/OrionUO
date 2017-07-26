@@ -24,16 +24,16 @@ struct PATH_POINT
 class CPathObjectTest
 {
 	//Флаги
-	SETGET(uint, Flags);
+	SETGET(uint, Flags, 0);
 
 	//Координата Z точки
-	SETGET(int, Z);
+	SETGET(int, Z, 0);
 
 	//Координата Z точки (усредненная)
-	SETGET(int, AverageZ);
+	SETGET(int, AverageZ, 0);
 
 	//Высота точки
-	SETGET(int, Height);
+	SETGET(int, Height, 0);
 
 public:
 	CPathObjectTest(const uint &flags, const int &z, const int &averageZ, const int &height, class CRenderWorldObject *object) : m_Flags(flags), m_Z(z), m_AverageZ(averageZ), m_Height(height), m_Object(object) {}
@@ -46,11 +46,11 @@ public:
 class CPathObject : public CBaseQueueItem
 {
 	//Координата Z точки
-	SETGET(int, Z);
+	SETGET(int, Z, 0);
 	//Высота точки
-	SETGET(char, Height);
+	SETGET(char, Height, 0);
 	//Идентификатор поверхности
-	SETGET(BYTE, Surface);
+	SETGET(BYTE, Surface, 0);
 
 public:
 	CPathObject(const int &z, const char &height, const char &surface);
@@ -60,20 +60,20 @@ public:
 //Класс объекта в точке пути
 class CPathNode
 {
-	SETGET(int, X);
-	SETGET(int, Y);
-	SETGET(int, Z);
-	SETGET(int, Direction);
-	SETGET(bool, Used);
-	SETGET(int, Cost);
-	SETGET(int, DistFromStartCost);
-	SETGET(int, DistFromGoalCost);
+	SETGET(int, X, 0);
+	SETGET(int, Y, 0);
+	SETGET(int, Z, 0);
+	SETGET(int, Direction, 0);
+	SETGET(bool, Used, false);
+	SETGET(int, Cost, 0);
+	SETGET(int, DistFromStartCost, 0);
+	SETGET(int, DistFromGoalCost, 0);
 
 public:
 	CPathNode();
 	virtual ~CPathNode();
 
-	CPathNode *m_Parent;
+	CPathNode *m_Parent{ NULL };
 
 	void Reset();
 };

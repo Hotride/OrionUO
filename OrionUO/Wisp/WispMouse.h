@@ -8,22 +8,22 @@ namespace WISP_MOUSE
 //----------------------------------------------------------------------------------
 class CMouse
 {
-	SETGET(WISP_GEOMETRY::CPoint2Di, RealPosition);
-	SETGET(WISP_GEOMETRY::CPoint2Di, Position);
-	SETGET(WISP_GEOMETRY::CPoint2Di, LeftDropPosition);
-	SETGET(WISP_GEOMETRY::CPoint2Di, RightDropPosition);
-	SETGET(WISP_GEOMETRY::CPoint2Di, MidDropPosition);
+	SETGET(WISP_GEOMETRY::CPoint2Di, RealPosition, WISP_GEOMETRY::CPoint2Di());
+	SETGET(WISP_GEOMETRY::CPoint2Di, Position, WISP_GEOMETRY::CPoint2Di());
+	SETGET(WISP_GEOMETRY::CPoint2Di, LeftDropPosition, WISP_GEOMETRY::CPoint2Di());
+	SETGET(WISP_GEOMETRY::CPoint2Di, RightDropPosition, WISP_GEOMETRY::CPoint2Di());
+	SETGET(WISP_GEOMETRY::CPoint2Di, MidDropPosition, WISP_GEOMETRY::CPoint2Di());
 
-	SETGET(bool, LeftButtonPressed);
-	SETGET(bool, RightButtonPressed);
-	SETGET(bool, MidButtonPressed);
-	SETGET(bool, Dragging);
-	SETGET(int, DoubleClickDelay);
-	SETGET(bool, CancelDoubleClick);
+	SETGET(bool, LeftButtonPressed, false);
+	SETGET(bool, RightButtonPressed, false);
+	SETGET(bool, MidButtonPressed, false);
+	SETGET(bool, Dragging, false);
+	SETGET(int, DoubleClickDelay, 350 /*GetDoubleClickTime()*/);
+	SETGET(bool, CancelDoubleClick, false);
 
-	SETGET(uint, LastLeftButtonClickTimer);
-	SETGET(uint, LastRightButtonClickTimer);
-	SETGET(uint, LastMidButtonClickTimer);
+	SETGET(uint, LastLeftButtonClickTimer, 0);
+	SETGET(uint, LastRightButtonClickTimer, 0);
+	SETGET(uint, LastMidButtonClickTimer, 0);
 
 public:
 	CMouse();

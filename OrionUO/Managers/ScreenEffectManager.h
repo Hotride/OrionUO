@@ -16,14 +16,14 @@
 //Класс для работы с плавным переключением экрана
 class CScreenEffectManager
 {
-	SETGET(SCREEN_EFFECT_MODE, Mode);
-	SETGET(SCREEN_EFFECT_TYPE, Type);
-	SETGET(bool, Enabled);
-	SETGET(GLfloat, ColorR);
-	SETGET(GLfloat, ColorG);
-	SETGET(GLfloat, ColorB);
-	SETGET(GLfloat, Alpha);
-	SETGET(GLfloat, Step);
+	SETGET(SCREEN_EFFECT_MODE, Mode, SEM_NONE);
+	SETGET(SCREEN_EFFECT_TYPE, Type, SET_TO_BLACK);
+	SETGET(bool, Enabled, false);
+	SETGET(GLfloat, ColorR, 0.0f);
+	SETGET(GLfloat, ColorG, 0.0f);
+	SETGET(GLfloat, ColorB, 0.0f);
+	SETGET(GLfloat, Alpha, 1.0f);
+	SETGET(GLfloat, Step, 0.03f);
 
 public:
 	CScreenEffectManager();

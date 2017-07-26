@@ -19,73 +19,73 @@
 class CGUITextEntry : public CBaseGUI
 {
 	//!Цвет текста в выбранном состоянии
-	SETGET(ushort, ColorSelected);
+	SETGET(ushort, ColorSelected, 0);
 
 	//!Цвет текста в состоянии фокуса
-	SETGET(ushort, ColorFocused);
+	SETGET(ushort, ColorFocused, 0);
 
 	//!Текст в юникоде
-	SETGET(bool, Unicode);
+	SETGET(bool, Unicode, false);
 
 	//!Шрифт
-	SETGET(uchar, Font);
+	SETGET(uchar, Font, 0);
 
 	//!Ориентация текста
-	SETGET(TEXT_ALIGN_TYPE, Align);
+	SETGET(TEXT_ALIGN_TYPE, Align, TS_LEFT);
 
 	//!Флаги текста
-	SETGET(ushort, TextFlags);
+	SETGET(ushort, TextFlags, 0);
 
 	//!Производить выбор объекта по серийнику может быть выбран фоном, хит-боксом и т.п.)
-	SETGET(bool, CheckOnSerial);
+	SETGET(bool, CheckOnSerial, false);
 
 	//!Только для чтения
-	SETGET(bool, ReadOnly);
+	SETGET(bool, ReadOnly, false);
 
 	//!Флаг фокуса
-	SETGET(bool, Focused);
+	SETGET(bool, Focused, false);
 
 	//!Флаг использования глобального цвета
-	SETGET(bool, UseGlobalColor);
+	SETGET(bool, UseGlobalColor, false);
 
 	//!R-компонента глобального OGL цвета
-	SETGET(uchar, GlobalColorR);
+	SETGET(uchar, GlobalColorR, 0);
 
 	//!G-компонента глобального OGL цвета
-	SETGET(uchar, GlobalColorG);
+	SETGET(uchar, GlobalColorG, 0);
 
 	//!B-компонента глобального OGL цвета
-	SETGET(uchar, GlobalColorB);
+	SETGET(uchar, GlobalColorB, 0);
 
 	//!Альфа-канал глобального OGL цвета
-	SETGET(uchar, GlobalColorA);
+	SETGET(uchar, GlobalColorA, 0);
 
 	//!R-компонента глобального OGL цвета когда компонента выбрана
-	SETGET(uchar, GlobalColorSelectedR);
+	SETGET(uchar, GlobalColorSelectedR, 0);
 
 	//!G-компонента глобального OGL цвета когда компонента выбрана
-	SETGET(uchar, GlobalColorSelectedG);
+	SETGET(uchar, GlobalColorSelectedG, 0);
 
 	//!B-компонента глобального OGL цвета когда компонента выбрана
-	SETGET(uchar, GlobalColorSelectedB);
+	SETGET(uchar, GlobalColorSelectedB, 0);
 
 	//!Альфа-канал глобального OGL цвета когда компонента выбрана
-	SETGET(uchar, GlobalColorSelectedA);
+	SETGET(uchar, GlobalColorSelectedA, 0);
 
 	//!R-компонента глобального OGL цвета когда компонента находится в фокусе
-	SETGET(uchar, GlobalColorFocusedR);
+	SETGET(uchar, GlobalColorFocusedR, 0);
 
 	//!G-компонента глобального OGL цвета когда компонента находится в фокусе
-	SETGET(uchar, GlobalColorFocusedG);
+	SETGET(uchar, GlobalColorFocusedG, 0);
 
 	//!B-компонента глобального OGL цвета когда компонента находится в фокусе
-	SETGET(uchar, GlobalColorFocusedB);
+	SETGET(uchar, GlobalColorFocusedB, 0);
 
 	//!Альфа-канал глобального OGL цвета когда компонента находится в фокусе
-	SETGET(uchar, GlobalColorFocusedA);
+	SETGET(uchar, GlobalColorFocusedA, 0);
 
 	//!Смещение текста когда компонента находится в фокусе
-	SETGET(char, FocusedOffsetY);
+	SETGET(char, FocusedOffsetY, 0);
 
 public:
 	CGUITextEntry(const uint &serial, const ushort &color, const ushort &colorSelected, const ushort &colorFocused, const int &x, const int &y, const int &maxWidth = 0, const bool &unicode = true, const uchar &font = 0, const TEXT_ALIGN_TYPE &align = TS_LEFT, const ushort &textFlags = 0, const int &maxLength = 0);

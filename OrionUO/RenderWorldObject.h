@@ -16,13 +16,13 @@
 //Класс для работы с объектами рендера
 class CRenderWorldObject : public CRenderObject
 {
-	SETGET(char, Z);
-	SETGET(uchar, RenderQueueIndex);
-	SETGET(RENDER_OBJECT_TYPE, RenderType);
+	SETGET(char, Z, 0);
+	SETGET(uchar, RenderQueueIndex, 0);
+	SETGET(RENDER_OBJECT_TYPE, RenderType, ROT_GAME_OBJECT);
 #if UO_RENDER_LIST_SORT == 1
-	SETGET(uchar, CurrentRenderIndex);
+	SETGET(uchar, CurrentRenderIndex, 0);
 #endif
-	SETGET(bool, NoDrawTile);
+	SETGET(bool, NoDrawTile, false);
 
 public:
 	CRenderWorldObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const char &z);
@@ -51,8 +51,8 @@ public:
 	virtual bool TranparentTest(int &playerZ) { return false; }
 
 	//Ссылки на предыдущий и следующий элементы в очереди рендера
-	CRenderWorldObject *m_NextXY;
-	CRenderWorldObject *m_PrevXY;
+	CRenderWorldObject *m_NextXY{ NULL };
+	CRenderWorldObject *m_PrevXY{ NULL };
 
 	//Получить указатель на объект ландшафта в данных координатах
 	class CLandObject *GetLand();

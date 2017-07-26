@@ -17,7 +17,7 @@
 class CGUIHitBox : public CGUIPolygonal
 {
 	//!Индекс страницы для перемещения (если используется, по фукнционалу CGUIButton)
-	SETGET(int, ToPage);
+	SETGET(int, ToPage, -1);
 
 public:
 	CGUIHitBox(const uint &serial, const int &x, const int &y, const int &width, const int &height, const bool &callOnMouseUp = false);

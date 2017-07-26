@@ -19,8 +19,8 @@ typedef map<uint, string> CLILOC_MAP;
 //!Класс с данными клилок-файла
 class CCliloc : public CBaseQueueItem
 {
-	SETGET(string, Language);
-	SETGET(bool, Loaded);
+	SETGET(string, Language, "");
+	SETGET(bool, Loaded, false);
 
 private:
 	//!Системные клилоки (id < 1000000)
@@ -70,10 +70,10 @@ class CClilocManager : public CBaseQueue
 {
 private:
 	//!Ссылка на последний использованный клилок (для более быстрого доступа)
-	CCliloc *m_LastCliloc;
+	CCliloc *m_LastCliloc{ NULL };
 
 	//!Ссылка на дефолтный клилок (для более быстрого доступа)
-	CCliloc *m_ENUCliloc;
+	CCliloc *m_ENUCliloc{ NULL };
 
 public:
 	CClilocManager();

@@ -38,9 +38,9 @@ bool CGUIMenuObject::Select()
 void CGUIMenuObject::OnMouseEnter()
 {
 	WISPFUN_DEBUG("c66_f2");
-	if (g_SelectedObject.Gump() != NULL && g_SelectedObject.Gump()->GumpType == GT_MENU)
+	if (g_SelectedObject.Gump != NULL && g_SelectedObject.Gump->GumpType == GT_MENU)
 	{
-		CGumpMenu *menu = (CGumpMenu*)g_SelectedObject.Gump();
+		CGumpMenu *menu = (CGumpMenu*)g_SelectedObject.Gump;
 
 		if (menu->Text != m_Text)
 		{
@@ -53,9 +53,9 @@ void CGUIMenuObject::OnMouseEnter()
 void CGUIMenuObject::OnMouseExit()
 {
 	WISPFUN_DEBUG("c66_f3");
-	if (g_LastSelectedObject.Gump() != NULL && g_LastSelectedObject.Gump()->GumpType == GT_MENU)
+	if (g_LastSelectedObject.Gump != NULL && g_LastSelectedObject.Gump->GumpType == GT_MENU)
 	{
-		CGumpMenu *menu = (CGumpMenu*)g_LastSelectedObject.Gump();
+		CGumpMenu *menu = (CGumpMenu*)g_LastSelectedObject.Gump;
 
 		if (menu->Text == m_Text)
 		{

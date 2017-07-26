@@ -89,7 +89,7 @@ void CGumpScreenGame::UpdateContent()
 void CGumpScreenGame::InitToolTip()
 {
 	WISPFUN_DEBUG("c115_f3");
-	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object() == NULL)
+	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object == NULL)
 		return;
 
 	if (g_SelectedObject.Serial == ID_GS_RESIZE)
@@ -109,7 +109,7 @@ void CGumpScreenGame::Draw()
 	ushort resizeGumpID = 0x0837; //button
 	if (g_ConfigManager.LockResizingGameWindow)
 		resizeGumpID = 0x082C; //lock
-	else if (g_SelectedObject.Object() == m_Items)
+	else if (g_SelectedObject.Object == m_Items)
 		resizeGumpID++; //lighted button
 
 	g_Orion.DrawGump(resizeGumpID, 0, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth - 3, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - 3);

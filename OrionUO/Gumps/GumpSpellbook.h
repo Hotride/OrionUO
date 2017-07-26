@@ -27,7 +27,7 @@ struct PALADIN_SPELL_REQURIES
 //----------------------------------------------------------------------------------
 class CGumpSpellbook : public CGump
 {
-	SETGET(SPELLBOOK_TYPE, BookType);
+	SETGET(SPELLBOOK_TYPE, BookType, ST_MAGE);
 
 public:
 	static const int SPELLBOOK_1_SPELLS_COUNT = 64;
@@ -73,18 +73,18 @@ private:
 	static const SPELL_REQURIES m_SpellRequries6[SPELLBOOK_6_SPELLS_COUNT];
 	//static const SPELL_REQURIES m_SpellRequries7[SPELLBOOK_7_SPELLS_COUNT];
 
-	int m_SpellCount;
+	int m_SpellCount{ 0 };
 	uchar m_Spells[MAX_SPELLS_COUNT];
-	int m_PageCount;
+	int m_PageCount{ 8 };
 
-	CGUIGumppic *m_Body;
-	CGUIText *m_TithingPointsText;
+	CGUIGumppic *m_Body{ NULL };
+	CGUIText *m_TithingPointsText{ NULL };
 
-	CGUIButton *m_PrevPage;
-	CGUIButton *m_NextPage;
+	CGUIButton *m_PrevPage{ NULL };
+	CGUIButton *m_NextPage{ NULL };
 
-	CGUIGumppic *m_LastSpellPointer;
-	CGUIGumppic *m_LastSpellBookmark;
+	CGUIGumppic *m_LastSpellPointer{ NULL };
+	CGUIGumppic *m_LastSpellBookmark{ NULL };
 
 	void GetTooltipBookInfo(int &dictionaryPagesCount, int &tooltipOffset);
 

@@ -19,10 +19,10 @@ private:
 	static const int ID_GD_OKAY = 2;
 	static const int ID_GD_TEXT_FIELD = 3;
 
-	bool m_StartText;
+	bool m_StartText{ true };
 
-	CGUITextEntry *m_Entry;
-	CGUISlider *m_Slider;
+	CGUITextEntry *m_Entry{ NULL };
+	CGUISlider *m_Slider{ NULL };
 
 public:
 	CGumpDrag(uint serial, short x, short y);

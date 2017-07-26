@@ -16,7 +16,7 @@
 //----------------------------------------------------------------------------------
 CGUIButton::CGUIButton(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y)
 : CGUIDrawObject(GOT_BUTTON, serial, graphic, 0, x, y), m_GraphicSelected(graphicSelected),
-m_GraphicPressed(graphicPressed), m_ToPage(-1), m_ProcessPressedState(false)
+m_GraphicPressed(graphicPressed)
 {
 }
 //----------------------------------------------------------------------------------
@@ -48,14 +48,14 @@ ushort CGUIButton::GetDrawGraphic()
 void CGUIButton::OnMouseEnter()
 {
 	WISPFUN_DEBUG("c44_f3");
-	if (g_SelectedObject.Gump() != NULL)
-		g_SelectedObject.Gump()->WantRedraw = true;
+	if (g_SelectedObject.Gump != NULL)
+		g_SelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUIButton::OnMouseExit()
 {
 	WISPFUN_DEBUG("c44_f4");
-	if (g_LastSelectedObject.Gump() != NULL)
-		g_LastSelectedObject.Gump()->WantRedraw = true;
+	if (g_LastSelectedObject.Gump != NULL)
+		g_LastSelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

@@ -17,7 +17,7 @@
 class CPlugin : public CBaseQueueItem
 {
 private:
-	uint m_Flags;
+	uint m_Flags{ 0 };
 
 public:
 	CPlugin(uint flags);

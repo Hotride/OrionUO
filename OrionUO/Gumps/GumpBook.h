@@ -14,9 +14,9 @@
 //----------------------------------------------------------------------------------
 class CGumpBook : public CGump
 {
-	SETGET(bool, Writable);
-	SETGET(short, PageCount);
-	SETGET(bool, Unicode);
+	SETGET(bool, Writable, false);
+	SETGET(short, PageCount, 0);
+	SETGET(bool, Unicode, false);
 
 private:
 	static const int ID_GB_TEXT_AREA_AUTHOR = 1;
@@ -26,20 +26,20 @@ private:
 	static const int ID_GB_BUTTON_PREV = 5;
 	static const int ID_GB_BUTTON_NEXT = 6;
 
-	bool *m_ChangedPage;
-	bool *m_PageDataReceived;
+	bool *m_ChangedPage{ NULL };
+	bool *m_PageDataReceived{ NULL };
 
 	void InsertInContent(const WPARAM &wparam, const bool &isCharPress = true);
 
-	CGUIButton *m_PrevPage;
-	CGUIButton *m_NextPage;
+	CGUIButton *m_PrevPage{ NULL };
+	CGUIButton *m_NextPage{ NULL };
 
 public:
 	CGumpBook(uint serial, short x, short y, short pageCount, bool writable, bool unicode);
 	virtual ~CGumpBook();
 
-	CGUITextEntry *m_EntryAuthor;
-	CGUITextEntry *m_EntryTitle;
+	CGUITextEntry *m_EntryAuthor{ NULL };
+	CGUITextEntry *m_EntryTitle{ NULL };
 
 	CGUITextEntry *GetEntry(const int &page);
 

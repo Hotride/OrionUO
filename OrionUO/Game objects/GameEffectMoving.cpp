@@ -15,7 +15,7 @@
 #include "../Screen stages/GameScreen.h"
 //----------------------------------------------------------------------------------
 CGameEffectMoving::CGameEffectMoving()
-: CGameEffectDrag(), m_Angle(0.0f), m_OffsetZ(0)
+: CGameEffectDrag()
 {
 }
 //----------------------------------------------------------------------------------

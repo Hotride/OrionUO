@@ -14,8 +14,6 @@
 CScreenEffectManager g_ScreenEffectManager;
 //---------------------------------------------------------------------------
 CScreenEffectManager::CScreenEffectManager()
-: m_Mode(SEM_NONE), m_Type(SET_TO_BLACK), m_Enabled(false), m_ColorR(0.0f),
-m_ColorG(0.0f), m_Alpha(1.0f), m_ColorB(0.0f), m_Step(0.03f)
 {
 }
 //---------------------------------------------------------------------------

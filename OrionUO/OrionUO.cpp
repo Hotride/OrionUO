@@ -100,7 +100,6 @@ PLUGIN_CLIENT_INTERFACE g_PluginClientInterface = { 0 };
 PLUGIN_INIT_TYPE *g_PluginInit = NULL;
 //----------------------------------------------------------------------------------
 COrion::COrion()
-: m_ClientVersionText("2.0.3"), m_TexturesDataCount(0), m_DefaultLogin(""), m_DefaultPort(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -1031,14 +1030,14 @@ void COrion::ProcessDelayedClicks()
 	{
 		uint serial = 0;
 
-		if (g_ClickObject.Object() != NULL)
-			serial = g_ClickObject.Object()->Serial;
+		if (g_ClickObject.Object != NULL)
+			serial = g_ClickObject.Object->Serial;
 
-		if (g_ClickObject.Gump() == NULL)
+		if (g_ClickObject.Gump == NULL)
 		{
 			if (serial)
 			{
-				CGameObject *go = (CGameObject*)g_ClickObject.Object();
+				CGameObject *go = (CGameObject*)g_ClickObject.Object;
 
 				if (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled || (!go->NPC && go->Locked()))
 					NameReq(serial);
@@ -1051,7 +1050,7 @@ void COrion::ProcessDelayedClicks()
 			}
 		}
 		else
-			g_ClickObject.Gump()->DelayedClick(g_ClickObject.Object());
+			g_ClickObject.Gump->DelayedClick(g_ClickObject.Object);
 
 		g_ClickObject.Clear();
 	}
@@ -4585,13 +4584,13 @@ void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, cons
 	ushort id = land->Graphic;
 
 	if (id == 2)
-		DrawLandArt(id, color, x, y, land->Rect.left / 4);
+		DrawLandArt(id, color, x, y, land->m_Rect.left / 4);
 	else
 	{
 		CGLTexture *th = ExecuteTexture(id);
 
 		if (th == NULL)
-			DrawLandArt(id, color, x, y, land->Rect.left / 4);
+			DrawLandArt(id, color, x, y, land->m_Rect.left / 4);
 		else
 		{
 			if (g_OutOfRangeColor)

@@ -14,9 +14,9 @@
 //----------------------------------------------------------------------------------
 class CGLTextureCircleOfTransparency : public CGLTexture
 {
-	SETGET(int, Radius);
-	SETGET(int, X);
-	SETGET(int, Y);
+	SETGET(int, Radius, 0);
+	SETGET(int, X, 0);
+	SETGET(int, Y, 0);
 
 public:
 	CGLTextureCircleOfTransparency();

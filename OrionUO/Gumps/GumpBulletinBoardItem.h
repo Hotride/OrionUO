@@ -21,13 +21,13 @@ protected:
 	static const int ID_GBBI_REPLY = 4;
 	static const int ID_GBBI_REMOVE = 5;
 
-	uchar m_Variant;
+	uchar m_Variant{ 0 };
 
-	CGUIButton *m_ButtonPost;
-	CGUIButton *m_ButtonRemove;
-	CGUIButton *m_ButtonReply;
+	CGUIButton *m_ButtonPost{ NULL };
+	CGUIButton *m_ButtonRemove{ NULL };
+	CGUIButton *m_ButtonReply{ NULL };
 
-	CGUIHitBox *m_HitBox;
+	CGUIHitBox *m_HitBox{ NULL };
 
 	void RecalculateHeight();
 
@@ -38,8 +38,8 @@ public:
 	CGumpBulletinBoardItem(uint serial, short x, short y, uchar variant, uint id, string poster, string subject, string dataTime, string data);
 	virtual ~CGumpBulletinBoardItem();
 
-	CGUITextEntry *m_EntrySubject;
-	CGUITextEntry *m_Entry;
+	CGUITextEntry *m_EntrySubject{ NULL };
+	CGUITextEntry *m_Entry{ NULL };
 
 	GUMP_BUTTON_EVENT_H;
 

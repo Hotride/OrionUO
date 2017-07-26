@@ -15,7 +15,7 @@
 CBaseScreen *g_CurrentScreen = NULL;
 //----------------------------------------------------------------------------------
 CBaseScreen::CBaseScreen(CGump &gump)
-: CBaseQueue(), m_CursorGraphic(0x2073), m_SmoothScreenAction(0), m_Gump(gump)
+: CBaseQueue(), m_Gump(gump)
 {
 }
 //----------------------------------------------------------------------------------
@@ -55,13 +55,13 @@ void CBaseScreen::Render(const bool &mode)
 		if (selected != NULL)
 			g_SelectedObject.Init(selected, &m_Gump);
 
-		if (g_SelectedObject.Object() != g_LastSelectedObject.Object())
+		if (g_SelectedObject.Object != g_LastSelectedObject.Object)
 		{
-			if (g_SelectedObject.Object() != NULL)
-				g_SelectedObject.Object()->OnMouseEnter();
+			if (g_SelectedObject.Object != NULL)
+				g_SelectedObject.Object->OnMouseEnter();
 
-			if (g_LastSelectedObject.Object() != NULL)
-				g_LastSelectedObject.Object()->OnMouseExit();
+			if (g_LastSelectedObject.Object != NULL)
+				g_LastSelectedObject.Object->OnMouseExit();
 		}
 
 		g_LastSelectedObject.Init(g_SelectedObject);

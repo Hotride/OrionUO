@@ -18,7 +18,7 @@ class CGUIHTMLHitBox : public CGUIHitBox
 {
 private:
 	//!Гамп-родитель
-	class CGUIHTMLGump *m_HTMLGump;
+	class CGUIHTMLGump *m_HTMLGump{ NULL };
 
 public:
 	CGUIHTMLHitBox(class CGUIHTMLGump *htmlGump, const uint &serial, const int &x, const int &y, const int &width, const int &height, const bool &callOnMouseUp = false);

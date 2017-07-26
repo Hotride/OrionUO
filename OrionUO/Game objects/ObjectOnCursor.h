@@ -16,17 +16,17 @@
 class CObjectOnCursor : public CGameItem
 {
 	//!Раньше был в стеке
-	SETGET(bool, Separated);
+	SETGET(bool, Separated, false);
 	//!Предмет удален
-	SETGET(bool, Deleted);
+	SETGET(bool, Deleted, false);
 	//!Бросили предмет (на землю/в контейнер/на персонажа)
-	SETGET(bool, Dropped);
+	SETGET(bool, Dropped, false);
 	//!Это игровая фигура
-	SETGET(bool, IsGameFigure);
+	SETGET(bool, IsGameFigure, false);
 	//!Количество для перемещения
-	SETGET(DWORD, DragCount);
+	SETGET(uint, DragCount, 1);
 	//!Не отображать при рендере
-	SETGET(bool, NoDraw);
+	SETGET(bool, NoDraw, false);
 
 public:
 	CObjectOnCursor();

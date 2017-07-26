@@ -31,7 +31,7 @@ private:
 	vector<FLOAT_HUES> m_HuesFloat;
 
 	//!Количество цветов
-	int m_HuesCount;
+	int m_HuesCount{ 0 };
 
 	//!Данные для радара
 	UCHAR_LIST m_Radarcol;

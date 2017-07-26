@@ -27,15 +27,8 @@
 
 //----------------------------------------------------------------------------------
 CGameCharacter::CGameCharacter(const uint &serial)
-: CGameObject(serial), m_Hits(0), m_MaxHits(0), m_Female(false), m_Direction(0),
-m_Notoriety(0), m_CanChangeName(false), m_AnimationGroup(0xFF),
-m_AnimationInterval(0), m_AnimationFrameCount(0), m_AnimationRepeat(false),
-m_AnimationRepeatMode(1), m_AnimationDirection(false), m_AnimationFromServer(false),
-m_MaxMana(0), m_MaxStam(0), m_Mana(0), m_Stam(0), m_OffsetX(0), m_OffsetY(0),
-m_OffsetZ(0), m_LastStepTime(0), m_LastStepSoundTime(GetTickCount()), m_Race(RT_HUMAN),
-m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY),
-m_StepSoundOffset(0), m_PaperdollText(""), m_DamageTextControl(10), m_HitsPercent(0),
-m_Deleted(false)
+: CGameObject(serial), m_Hits(0), m_MaxHits(0), m_LastStepSoundTime(GetTickCount()),
+m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
 {
 	WISPFUN_DEBUG("c15_f1");
 	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
@@ -283,7 +276,7 @@ void CGameCharacter::Draw(const int &x, const int &y)
 
 	uint lastSBsel = g_StatusbarUnderMouse;
 
-	if (!IsPlayer() && g_Player->Warmode && g_SelectedObject.Object() == this)
+	if (!IsPlayer() && g_Player->Warmode && g_SelectedObject.Object == this)
 		g_StatusbarUnderMouse = m_Serial;
 
 	g_AnimationManager.DrawCharacter(this, x, y, m_Z); //Draw character

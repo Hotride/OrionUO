@@ -349,8 +349,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 };
 //----------------------------------------------------------------------------------
 CPacketManager::CPacketManager()
-: WISP_NETWORK::CPacketReader(), m_ClientVersion(CV_OLD), m_AutoLoginNames(""),
-m_LastGumpID(0), m_LastGumpX(0), m_LastGumpY(0)
+: WISP_NETWORK::CPacketReader()
 {
 }
 //----------------------------------------------------------------------------------

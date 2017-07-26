@@ -17,10 +17,10 @@
 class CGUIBlending : public CBaseGUI
 {
 	//!Функция для исходных пикселей
-	SETGET(GLenum, SFactor);
+	SETGET(GLenum, SFactor, GL_SRC_ALPHA);
 
 	//!Функция для входных пикселей
-	SETGET(GLenum, DFactor);
+	SETGET(GLenum, DFactor, GL_ONE_MINUS_SRC_ALPHA);
 
 public:
 	CGUIBlending(const bool &enabled, const GLenum &sFactor, const GLenum &dFactor);

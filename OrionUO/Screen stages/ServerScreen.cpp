@@ -18,7 +18,7 @@
 CServerScreen g_ServerScreen;
 //----------------------------------------------------------------------------------
 CServerScreen::CServerScreen()
-: CBaseScreen(m_ServerGump), m_SelectionServerTempValue(0)
+: CBaseScreen(m_ServerGump)
 {
 }
 //----------------------------------------------------------------------------------

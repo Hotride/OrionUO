@@ -16,12 +16,12 @@
 //Класс мульти-объекта
 class CMulti : public CBaseQueueItem
 {
-	SETGET(short, X);
-	SETGET(short, Y);
-	SETGET(short, MinX);
-	SETGET(short, MinY);
-	SETGET(short, MaxX);
-	SETGET(short, MaxY);
+	SETGET(short, X, 0);
+	SETGET(short, Y, 0);
+	SETGET(short, MinX, 0);
+	SETGET(short, MinY, 0);
+	SETGET(short, MaxX, 0);
+	SETGET(short, MaxY, 0);
 
 public:
 	CMulti(const short &x, const short &y);

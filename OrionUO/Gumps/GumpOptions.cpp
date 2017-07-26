@@ -32,8 +32,7 @@
 const ushort g_OptionsTextColor = 0;
 //----------------------------------------------------------------------------------
 CGumpOptions::CGumpOptions(uint serial, short x, short y)
-: CGump(GT_OPTIONS, serial, x, y), m_LastChangeMacroTime(0), m_MacroPointer(NULL),
-m_MacroObjectPointer(NULL), m_WantRedrawMacroData(true)
+: CGump(GT_OPTIONS, serial, x, y)
 {
 	m_Page = 1;
 }

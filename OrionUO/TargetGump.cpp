@@ -18,7 +18,6 @@ CNewTargetSystem g_NewTargetSystem;
 //-------------------------------------CTargetGump----------------------------------
 //----------------------------------------------------------------------------------
 CTargetGump::CTargetGump()
-: m_X(0), m_Y(0), m_Hits(0), m_Color(0), m_HealthColor(0), TargetedCharacter(NULL)
 {
 }
 //----------------------------------------------------------------------------------
@@ -41,8 +40,6 @@ void CTargetGump::Draw()
 //----------------------------------CNewTargetSystem--------------------------------
 //----------------------------------------------------------------------------------
 CNewTargetSystem::CNewTargetSystem()
-: m_Serial(0), m_X(0), m_TopY(0), m_BottomY(0), m_ColorGump(0), m_GumpTop(0),
-m_GumpBottom(0), m_GumpX(20), m_GumpY(20), m_Hits(0), m_HealthColor(0), TargetedCharacter(NULL)
 {
 }
 //----------------------------------------------------------------------------------

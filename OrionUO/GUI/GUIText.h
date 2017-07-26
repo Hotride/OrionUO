@@ -22,7 +22,7 @@ public:
 	virtual ~CGUIText();
 
 	//!Текстура текста
-	CGLTextTexture m_Texture;
+	CGLTextTexture m_Texture{ CGLTextTexture() };
 
 	virtual WISP_GEOMETRY::CSize GetSize() { return WISP_GEOMETRY::CSize(m_Texture.Width, m_Texture.Height); }
 

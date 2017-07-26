@@ -15,8 +15,7 @@
 #include "../SelectedObject.h"
 //----------------------------------------------------------------------------------
 CGUIBuff::CGUIBuff(const ushort &graphic, const uint &timer, const wstring &text)
-: CGUIDrawObject(GOT_BUFF, 0, graphic, 0, 0, 0), m_Timer(timer), m_Text(text),
-m_TooltipTimer(0), m_DecAlpha(true), m_Alpha(0xFF)
+: CGUIDrawObject(GOT_BUFF, 0, graphic, 0, 0, 0), m_Timer(timer), m_Text(text)
 {
 }
 //----------------------------------------------------------------------------------

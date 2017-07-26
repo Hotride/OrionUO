@@ -22,8 +22,7 @@
 #include "../Managers/GumpManager.h"
 //----------------------------------------------------------------------------------
 CGumpSkills::CGumpSkills(uint serial, short x, short y, bool minimized, int height)
-: CGumpBaseScroll(GT_SKILLS, serial, 0x1F40, height, x, y, true, 0, true, 15),
-m_ShowReal(false), m_ShowCap(false)
+: CGumpBaseScroll(GT_SKILLS, serial, 0x1F40, height, x, y, true, 0, true, 15)
 {
 	WISPFUN_DEBUG("c125_f1");
 	m_Locker.Serial = ID_GS_LOCK_MOVING;
@@ -455,7 +454,7 @@ void CGumpSkills::UpdateGroupText()
 		{
 			CGUISkillGroup *group = (CGUISkillGroup*)item;
 
-			if (group->m_Name != g_SelectedObject.Object())
+			if (group->m_Name != g_SelectedObject.Object)
 			{
 				if (g_EntryPointer == &group->m_Name->m_Entry)
 				{
@@ -518,7 +517,7 @@ void CGumpSkills::OnLeftMouseButtonUp()
 	{
 		m_WantRedraw = true;
 
-		if (g_SelectedObject.Gump() != this)
+		if (g_SelectedObject.Gump != this)
 		{
 			WISP_GEOMETRY::CPoint2Di pos = g_MouseManager.Position;
 

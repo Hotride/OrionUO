@@ -17,27 +17,22 @@
 //!Объект клика мышкой
 class CClickObject
 {
-	SETGET(uint, Timer);
-	SETGET(ushort, X);
-	SETGET(ushort, Y);
-	SETGET(bool, Enabled);
-	SETGET(uint, Page);
-
-private:
-	CRenderObject *m_Object;
-	CGump *m_Gump;
+	SETGET(uint, Timer, 0);
+	SETGET(ushort, X, 0);
+	SETGET(ushort, Y, 0);
+	SETGET(bool, Enabled, false);
+	SETGET(uint, Page, 0);
+	SETGET(CRenderObject*, Object, 0);
+	SETGET(CGump*, Gump, 0);
 
 public:
-	CClickObject();
+	CClickObject() {}
 	~CClickObject() {}
 
 	void Clear(CRenderObject *obj);
 	void Clear();
 
 	void Init(CRenderObject *obj, CGump *gump = NULL);
-
-	CRenderObject *Object() const { return m_Object; }
-	CGump *Gump() const { return m_Gump; }
 };
 //----------------------------------------------------------------------------------
 extern CClickObject g_ClickObject; //Ссылка на объект клика

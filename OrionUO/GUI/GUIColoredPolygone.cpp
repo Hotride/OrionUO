@@ -11,8 +11,7 @@
 #include "../SelectedObject.h"
 //----------------------------------------------------------------------------------
 CGUIColoredPolygone::CGUIColoredPolygone(const uint &serial, const ushort &color, const int &x, const int &y, const int &width, const int &height, const uint &polygoneColor)
-: CGUIPolygonal(GOT_COLOREDPOLYGONE, x, y, width, height), m_DrawDot(false),
-m_Focused(false)
+: CGUIPolygonal(GOT_COLOREDPOLYGONE, x, y, width, height)
 {
 	WISPFUN_DEBUG("c48_f1");
 	m_Serial = serial;
@@ -63,14 +62,14 @@ void CGUIColoredPolygone::Draw(const bool &checktrans)
 void CGUIColoredPolygone::OnMouseEnter()
 {
 	WISPFUN_DEBUG("c48_f4");
-	if (m_DrawDot && g_SelectedObject.Gump() != NULL)
-		g_SelectedObject.Gump()->WantRedraw = true;
+	if (m_DrawDot && g_SelectedObject.Gump != NULL)
+		g_SelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUIColoredPolygone::OnMouseExit()
 {
 	WISPFUN_DEBUG("c48_f5");
-	if (m_DrawDot && g_LastSelectedObject.Gump() != NULL)
-		g_LastSelectedObject.Gump()->WantRedraw = true;
+	if (m_DrawDot && g_LastSelectedObject.Gump != NULL)
+		g_LastSelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

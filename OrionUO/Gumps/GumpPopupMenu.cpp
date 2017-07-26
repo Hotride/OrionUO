@@ -14,7 +14,7 @@
 CGumpPopupMenu *g_PopupMenu = NULL;
 //----------------------------------------------------------------------------------
 CGumpPopupMenu::CGumpPopupMenu(uint serial, short x, short y)
-: CGump(GT_POPUP_MENU, serial, x, y), m_Width(0), m_Height(0)
+: CGump(GT_POPUP_MENU, serial, x, y)
 {
 	WISPFUN_DEBUG("c107_f1");
 	m_NoMove = true;
@@ -35,9 +35,9 @@ CGumpPopupMenu::~CGumpPopupMenu()
 void CGumpPopupMenu::PrepareContent()
 {
 	WISPFUN_DEBUG("c107_f3");
-	if (g_SelectedObject.Gump() == this && g_SelectedObject.Object() != NULL && ((CBaseGUI*)g_SelectedObject.Object())->Type == GOT_HITBOX)
+	if (g_SelectedObject.Gump == this && g_SelectedObject.Object != NULL && ((CBaseGUI*)g_SelectedObject.Object)->Type == GOT_HITBOX)
 	{
-		CGUIHitBox *box = (CGUIHitBox*)g_SelectedObject.Object();
+		CGUIHitBox *box = (CGUIHitBox*)g_SelectedObject.Object;
 
 		if (!m_Polygone->Visible || m_Polygone->Y != box->Y)
 		{

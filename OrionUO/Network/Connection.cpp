@@ -12,9 +12,7 @@
 #include "../Managers/ConnectionManager.h"
 //----------------------------------------------------------------------------------
 CSocket::CSocket(bool gameSocket)
-: WISP_NETWORK::CConnection(), m_GameSocket(gameSocket), m_UseProxy(false),
-m_ProxyAddress(""), m_ProxyPort(0), m_ProxySocks5(false), m_ProxyAccount(""),
-m_ProxyPassword("")
+: WISP_NETWORK::CConnection(), m_GameSocket(gameSocket)
 {
 }
 //----------------------------------------------------------------------------------

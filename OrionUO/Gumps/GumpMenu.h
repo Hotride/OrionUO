@@ -14,8 +14,8 @@
 //----------------------------------------------------------------------------------
 class CGumpMenu : public CGump
 {
-	SETGET(string, Text);
-	SETGET(bool, TextChanged);
+	SETGET(string, Text, "");
+	SETGET(bool, TextChanged, false);
 
 protected:
 	virtual void CalculateGumpState();
@@ -26,7 +26,7 @@ public:
 
 	static const int ID_GM_HTMLGUMP = 1000;
 
-	CGUIText *m_TextObject;
+	CGUIText *m_TextObject{ NULL };
 
 	void SendMenuResponse(int index);
 	

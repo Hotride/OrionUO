@@ -12,12 +12,9 @@
 #include "../Managers/ConfigManager.h"
 //----------------------------------------------------------------------------------
 CTextData::CTextData()
-: CRenderTextObject(), m_Unicode(false), m_Type(TT_CLIENT), m_Font(0), m_Timer(0),
-m_DrawX(0), m_DrawY(0), m_Alpha(0xFF)
+: CRenderTextObject()
 {
 	WISPFUN_DEBUG("c174_f1");
-	m_Text = "";
-	m_UnicodeText = L"";
 }
 //---------------------------------------------------------------------------
 CTextData::CTextData(CTextData *obj)

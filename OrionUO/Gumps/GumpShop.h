@@ -14,8 +14,8 @@
 //----------------------------------------------------------------------------------
 class CGumpShop : public CGump
 {
-	SETGET(bool, IsBuyGump);
-	SETGET(bool, Visible);
+	SETGET(bool, IsBuyGump, false);
+	SETGET(bool, Visible, false);
 
 private:
 	static const int ID_GB_BUTTON_ACCEPT = 1;
@@ -23,7 +23,7 @@ private:
 	static const int ID_GB_SHOP_LIST = 3;
 	static const int ID_GB_SHOP_RESULT = 4;
 
-	int m_ContinueCounter;
+	int m_ContinueCounter{ 0 };
 
 	void UpdateTotalPrice();
 
@@ -32,9 +32,9 @@ public:
 	virtual ~CGumpShop();
 
 	CGUIHTMLGump *m_ItemList[2];
-	CGUIText *m_TotalPriceText;
-	CGUIText *m_TotalGoldText;
-	CGUIText *m_NameText;
+	CGUIText *m_TotalPriceText{ NULL };
+	CGUIText *m_TotalGoldText{ NULL };
+	CGUIText *m_NameText{ NULL };
 
 	void SendList();
 

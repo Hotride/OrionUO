@@ -18,33 +18,33 @@
 class CGUIShopItem : public CBaseGUI
 {
 	//!Количество
-	SETGET(uint, Count);
+	SETGET(uint, Count, 0);
 
 	//!Стоимость
-	SETGET(uint, Price);
+	SETGET(uint, Price, 0);
 
 	//!Название товара
-	SETGET(string, Name);
+	SETGET(string, Name, "");
 
 	//!Флаг выбора
-	SETGET(bool, Selected);
+	SETGET(bool, Selected, false);
 
 	//!Имя создано из клилока
-	SETGET(bool, NameFromCliloc);
+	SETGET(bool, NameFromCliloc, false);
 
 private:
 	//!Текстуры для текста
-	CGLTextTexture m_NameText;
-	CGLTextTexture m_CountText;
+	CGLTextTexture m_NameText{ CGLTextTexture() };
+	CGLTextTexture m_CountText{ CGLTextTexture() };
 
 	//!Смещение картинки
-	int m_ImageOffset;
+	int m_ImageOffset{ 0 };
 
 	//!Смещение текста
-	int m_TextOffset;
+	int m_TextOffset{ 0 };
 
 	//!Максимальное смещение
-	int m_MaxOffset;
+	int m_MaxOffset{ 0 };
 
 public:
 	CGUIShopItem(const uint &serial, const ushort &graphic, const ushort &color, const uint &count, const uint &price, const string &name, const int &x, const int &y);

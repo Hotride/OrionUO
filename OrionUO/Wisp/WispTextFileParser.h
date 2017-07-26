@@ -9,41 +9,41 @@ namespace WISP_FILE
 //----------------------------------------------------------------------------------
 class CTextFileParser
 {
-	SETGET(string, RawLine);
+	SETGET(string, RawLine, "");
 
 private:
 	//Указатель на адрес в памяти, куда загружен файл
 	CMappedFile m_File;
 
 	//Указатель на текущий обрабатываемый символ
-	puchar m_Ptr;
+	puchar m_Ptr{ 0 };
 
 	//Адрес конца строка
-	puchar m_EOL;
+	puchar m_EOL{ 0 };
 
 	//Адрес конца файла
-	puchar m_End;
+	puchar m_End{ 0 };
 
 	//Разделители
 	char m_Delimiters[50];
 
 	//Количество разделителей
-	int m_DelimitersSize;
+	int m_DelimitersSize{ 0 };
 
 	//Комментарии
 	char m_Comentaries[50];
 
 	//Количество коментариев
-	int m_ComentariesSize;
+	int m_ComentariesSize{ 0 };
 
 	//Набор кавычек, формат кавычек в наборе: openQuote, closeQuote (могут быть одинаковыми)
 	char m_Quotes[50];
 
 	//Количество элементов в наборе кавычек
-	int m_QuotesSize;
+	int m_QuotesSize{ 0 };
 
 	//Обрезать строки на выходе
-	bool m_Trim;
+	bool m_Trim{ false };
 
 	//Получить конец строки
 	void GetEOL();

@@ -18,10 +18,10 @@
 //----------------------------------------------------------------------------------
 class CFileManager : public WISP_DATASTREAM::CDataReader
 {
-	SETGET(bool, UseVerdata);
-	SETGET(bool, UseUOPMap);
-	SETGET(bool, UseUOPGumps);
-	SETGET(int, UnicodeFontsCount);
+	SETGET(bool, UseVerdata, false);
+	SETGET(bool, UseUOPMap, false);
+	SETGET(bool, UseUOPGumps, false);
+	SETGET(int, UnicodeFontsCount, 0);
 
 public:
 	CFileManager();

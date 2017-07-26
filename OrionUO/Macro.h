@@ -19,13 +19,13 @@
 class CMacroObject : public CBaseQueueItem
 {
 	//Код действия
-	SETGET(MACRO_CODE, Code);
+	SETGET(MACRO_CODE, Code, MC_NONE);
 
 	//Подкод действия
-	SETGET(MACRO_SUB_CODE, SubCode);
+	SETGET(MACRO_SUB_CODE, SubCode, MSC_NONE);
 
 	//Имеет подменю
-	SETGET(char, HasSubMenu);
+	SETGET(char, HasSubMenu, 0);
 
 public:
 	CMacroObject(const MACRO_CODE &code, const MACRO_SUB_CODE &subCode);
@@ -38,7 +38,7 @@ public:
 class CMacroObjectString : public CMacroObject
 {
 	//Строка действия
-	SETGET(string, String);
+	SETGET(string, String, "");
 
 public:
 	CMacroObjectString(const MACRO_CODE &code, const MACRO_SUB_CODE &subCode, const string &str);
@@ -51,12 +51,12 @@ public:
 class CMacro : public CBaseQueueItem
 {
 	//Код клавиши для срабатывания макроса
-	SETGET(ushort, Key);
+	SETGET(ushort, Key, 0);
 
 	//Флаги дополнительных клавиш
-	SETGET(bool, Alt);
-	SETGET(bool, Ctrl);
-	SETGET(bool, Shift);
+	SETGET(bool, Alt, false);
+	SETGET(bool, Ctrl, false);
+	SETGET(bool, Shift, false);
 
 public:
 	CMacro(const ushort &key, const bool &alt, const bool &ctrl, const bool &shift);

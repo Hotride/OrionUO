@@ -16,7 +16,7 @@
 //!Класс менеджера групп навыков
 class CSkillGroupManager
 {
-	SETGET(int, Count);
+	SETGET(int, Count, 0);
 
 private:
 	//!Выставление значение по-умолчанию для стандартных групп
@@ -30,7 +30,7 @@ private:
 
 public:
 	//!Указатель на список групп
-	CSkillGroupObject *m_Groups;
+	CSkillGroupObject *m_Groups{ NULL };
 
 	CSkillGroupManager();
 	~CSkillGroupManager();

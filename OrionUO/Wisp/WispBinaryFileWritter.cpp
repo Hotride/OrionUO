@@ -7,7 +7,7 @@ namespace WISP_FILE
 {
 //----------------------------------------------------------------------------------
 CBinaryFileWritter::CBinaryFileWritter()
-: WISP_DATASTREAM::CDataWritter(), m_File(NULL)
+: WISP_DATASTREAM::CDataWritter()
 {
 }
 //----------------------------------------------------------------------------------

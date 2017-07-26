@@ -17,22 +17,22 @@
 //Класс обобщенного объекта группы статики
 class CRenderStaticObject : public CMapObject
 {
-	SETGET(char, FoliageTransparentIndex);
-	SETGET(char, CanBeTransparent);
-	SETGET(bool, Vegetation);
+	SETGET(char, FoliageTransparentIndex, -1);
+	SETGET(char, CanBeTransparent, 0);
+	SETGET(bool, Vegetation, false);
 
-	SETGET(ushort, RenderGraphic);
-	SETGET(ushort, RenderColor);
+	SETGET(ushort, RenderGraphic, 0);
+	SETGET(ushort, RenderColor, 0);
 
 protected:
 	//Указатель на структуру данных тайлдаты
-	STATIC_TILES *m_TiledataPtr;
+	STATIC_TILES *m_TiledataPtr{ NULL };
 
 public:
 	CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z);
 	virtual ~CRenderStaticObject();
-	
-	CTextContainer *m_TextControl; //Ссылка на контейнер для текста
+
+	CTextContainer *m_TextControl{ NULL }; //Ссылка на контейнер для текста
 
 	//Отрисовать объект
 	virtual void Draw(const int &x, const int &y);

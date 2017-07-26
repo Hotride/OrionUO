@@ -14,7 +14,7 @@
 CGLTextureCircleOfTransparency g_CircleOfTransparency;
 //----------------------------------------------------------------------------------
 CGLTextureCircleOfTransparency::CGLTextureCircleOfTransparency()
-: CGLTexture(), m_Radius(0), m_X(0), m_Y(0)
+: CGLTexture()
 {
 }
 //----------------------------------------------------------------------------------

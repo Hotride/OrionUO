@@ -15,8 +15,7 @@
 //----------------------------------------------------------------------------------
 CGumpTextEntryDialog::CGumpTextEntryDialog(uint serial, short x, short y, uchar variant, int maxLength, string text, string description)
 : CGump(GT_TEXT_ENTRY_DIALOG, serial, x, y), m_Text(text), m_Description(description),
-m_Variant(variant), m_MaxLength(maxLength), m_ParentID(0), m_ButtonID(0),
-m_TextField(NULL), m_Entry(NULL)
+m_Variant(variant), m_MaxLength(maxLength)
 {
 	WISPFUN_DEBUG("c130_f1");
 	m_NoMove = true;
@@ -44,7 +43,7 @@ void CGumpTextEntryDialog::PrepareContent()
 
 		if (g_EntryPointer == &m_Entry->m_Entry)
 			newGraphic = 0x0477; //Text field (active)
-		else if (g_SelectedObject.Object() == m_Entry)
+		else if (g_SelectedObject.Object == m_Entry)
 			newGraphic = 0x0476; //Text field (lighted)
 
 		if (m_TextField->Graphic != newGraphic)

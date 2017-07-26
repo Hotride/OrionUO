@@ -14,10 +14,10 @@
 //----------------------------------------------------------------------------------
 class CGumpConsoleType : public CGump
 {
-	SETGETE(bool, ShowFullText, OnChanShowFullText);
+	SETGETE(bool, ShowFullText, false, OnChanShowFullText);
 
 protected:
-	int m_SelectedType;
+	int m_SelectedType{ 0 };
 
 	static const int ID_GCT_NORMAL = 1;
 	static const int ID_GCT_YELL = 2;

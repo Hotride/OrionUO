@@ -17,7 +17,7 @@
 class CGUIPage : public CBaseGUI
 {
 	//!Индекс страницы
-	SETGET(int, Index);
+	SETGET(int, Index, 0);
 
 public:
 	CGUIPage(const int &index);

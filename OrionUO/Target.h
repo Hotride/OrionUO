@@ -18,25 +18,23 @@
 class CTarget
 {
 	//Тип объекта прицела
-	SETGET(uchar, Type);
+	SETGET(uchar, Type, 0);
 	//Тип прицела
-	SETGET(uchar, CursorType);
+	SETGET(uchar, CursorType, 0);
 	//Мульти на таргете
-	SETGET(ushort, MultiGraphic);
+	SETGET(ushort, MultiGraphic, 0);
+	//Серийник объекта, к которому привязан прицел
+	SETGET(uint, CursorID, 0);
+	//Флаг состояния прицела
+	SETGET(bool, Targeting, false);
 
 private:
-	//Серийник объекта, к которому привязан прицел
-	uint m_CursorID;
-
-	//Флаг состояния прицела
-	bool m_Targeting;
-
 	//Текущие и последний данные прицела
 	uchar m_Data[19];
 	uchar m_LastData[19];
 
 	//Список объектов мульти на таргете
-	CMulti *m_Multi;
+	CMulti *m_Multi{ NULL };
 
 	//Добавить мульти-объект
 	void AddMultiObject(CMultiObject *obj);

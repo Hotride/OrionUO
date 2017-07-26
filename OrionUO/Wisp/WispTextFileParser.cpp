@@ -5,7 +5,6 @@ namespace WISP_FILE
 {
 //----------------------------------------------------------------------------------
 CTextFileParser::CTextFileParser(const string &path, const char *delimiters, const char *comentaries, const char *quotes)
-: m_Ptr(NULL), m_EOL(NULL), m_RawLine("")
 {
 	WISPFUN_DEBUG("c11_f1");
 	m_File.Load(path);
@@ -14,7 +13,6 @@ CTextFileParser::CTextFileParser(const string &path, const char *delimiters, con
 }
 //----------------------------------------------------------------------------------
 CTextFileParser::CTextFileParser(const wstring &path, const char *delimiters, const char *comentaries, const char *quotes)
-: m_Ptr(NULL), m_EOL(NULL), m_RawLine("")
 {
 	WISPFUN_DEBUG("c11_f2");
 	m_File.Load(path);

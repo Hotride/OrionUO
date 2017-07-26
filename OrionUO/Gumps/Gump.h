@@ -44,28 +44,28 @@
 //!Базовый класс гампов
 class CGump : public CRenderObject
 {
-	SETGET(GUMP_TYPE, GumpType);
-	SETGET(uint, ID);
-	SETGET(int, MinimizedX);
-	SETGET(int, MinimizedY);
-	SETGET(bool, NoMove);
-	SETGET(bool, NoClose);
-	SETGET(bool, Minimized);
-	SETGET(bool, FrameCreated);
-	SETGET(bool, WantRedraw);
-	SETGET(bool, WantUpdateContent);
-	SETGET(bool, Blocked);
-	SETGET(bool, LockMoving);
-	SETGET(int, Page);
-	SETGET(int, Draw2Page);
-	SETGET(bool, Transparent);
-	SETGET(bool, RemoveMark);
-	SETGET(bool, NoProcess);
+	SETGET(GUMP_TYPE, GumpType, GT_NONE);
+	SETGET(uint, ID, 0);
+	SETGET(int, MinimizedX, 0);
+	SETGET(int, MinimizedY, 0);
+	SETGET(bool, NoMove, false);
+	SETGET(bool, NoClose, false);
+	SETGET(bool, Minimized, false);
+	SETGET(bool, FrameCreated, false);
+	SETGET(bool, WantRedraw, false);
+	SETGET(bool, WantUpdateContent, true);
+	SETGET(bool, Blocked, false);
+	SETGET(bool, LockMoving, false);
+	SETGET(int, Page, 0);
+	SETGET(int, Draw2Page, 0);
+	SETGET(bool, Transparent, false);
+	SETGET(bool, RemoveMark, false);
+	SETGET(bool, NoProcess, false);
 
 protected:
 	virtual void CalculateGumpState();
 
-	CGUIButton m_Locker;
+	CGUIButton m_Locker{ CGUIButton(0, 0, 0, 0, 0, 0) };
 
 public:
 	CGump();

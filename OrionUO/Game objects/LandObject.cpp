@@ -14,8 +14,7 @@
 #include "../SelectedObject.h"
 //----------------------------------------------------------------------------------
 CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
-: CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), m_MinZ(z), m_AverageZ(z),
-m_PositionBuffer(0), m_VertexBuffer(0), m_NormalBuffer(0)
+: CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), m_MinZ(z), m_AverageZ(z)
 {
 	WISPFUN_DEBUG("c23_f1");
 	m_OriginalGraphic = graphic;
@@ -130,7 +129,7 @@ void CLandObject::Draw(const int &x, const int &y)
 	{
 		ushort objColor = 0;
 
-		if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
+		if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object == this)
 			objColor = SELECT_LAND_COLOR;
 
 #if UO_DEBUG_INFO!=0

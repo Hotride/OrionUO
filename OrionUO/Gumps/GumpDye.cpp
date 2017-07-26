@@ -11,7 +11,7 @@
 #include "../Network/Packets.h"
 //----------------------------------------------------------------------------------
 CGumpDye::CGumpDye(uint serial, short x, short y, ushort graphic)
-: CGumpSelectColor(serial, x, y, SCGS_OPT_TOOLTIP_TEXT), m_Tube(NULL)
+: CGumpSelectColor(serial, x, y, SCGS_OPT_TOOLTIP_TEXT)
 {
 	m_NoClose = true;
 	m_GumpType = GT_DYE;

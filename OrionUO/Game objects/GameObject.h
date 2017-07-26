@@ -25,35 +25,35 @@ struct DRAW_FRAME_INFORMATION
 class CGameObject : public CRenderStaticObject
 {
 	//!Серийник контейнера, содержащего объект (0xFFFFFFFF - объект лежит в мире)
-	SETGET(uint, Container);
+	SETGET(uint, Container, 0xFFFFFFFF);
 	//!Карта объекта
-	SETGET(uchar, MapIndex);
+	SETGET(uchar, MapIndex, 0);
 	//!Количество
-	SETGET(uint, Count);
+	SETGET(uint, Count, 0);
 	//!Флаги от сервера
-	SETGETE(uchar, Flags, OnChangedFlags);
+	SETGETE(uchar, Flags, 0, OnChangedFlags);
 	//!Имя
-	SETGETE(string, Name, OnChangeName);
+	SETGETE(string, Name, "", OnChangeName);
 	//!НПС или предмет
-	SETGET(bool, NPC);
+	SETGET(bool, NPC, false);
 	//!На предмет кликнули
-	SETGET(bool, Clicked);
+	SETGET(bool, Clicked, false);
 	//!Текущий индекс анимации
-	SETGET(char, AnimIndex);
+	SETGET(char, AnimIndex, 0);
 	//!Префикс You see: в журнале
-	SETGET(bool, YouSeeJournalPrefix);
+	SETGET(bool, YouSeeJournalPrefix, false);
 	//!Время последнего изменения анимации
-	SETGET(uint, LastAnimationChangeTime);
-	SETGET(wstring, ClilocMessage);
-	SETGET(bool, SA_Poisoned);
-	SETGET(bool, ClosedObjectHandle);
+	SETGET(uint, LastAnimationChangeTime, 0);
+	SETGET(wstring, ClilocMessage, L"");
+	SETGET(bool, SA_Poisoned, false);
+	SETGET(bool, ClosedObjectHandle, false);
 
 protected:
 	//!Ссылка на список эффектов персонажа
-	class CGameEffect *m_Effects;
+	class CGameEffect *m_Effects{ NULL };
 
 	//!Указатель на текстуру для опции Object Handles
-	CGLTexture m_TextureObjectHalndes;
+	CGLTexture m_TextureObjectHalndes{ CGLTexture() };
 
 	/*!
 	Создать текстуру для опции Object Handles

@@ -14,15 +14,15 @@
 //----------------------------------------------------------------------------------
 class CGumpTip : public CGumpBaseScroll
 {
-	SETGET(bool, Updates);
+	SETGET(bool, Updates, false);
 
 private:
 	static const int ID_GT_PREV_GUMP = 1;
 	static const int ID_GT_REMOVE_GUMP = 2;
 	static const int ID_GT_NEXT_GUMP = 3;
 
-	CGUIButton *m_ButtonPrevGump;
-	CGUIButton *m_ButtonNextGump;
+	CGUIButton *m_ButtonPrevGump{ NULL };
+	CGUIButton *m_ButtonNextGump{ NULL };
 
 	virtual void UpdateHeight();
 

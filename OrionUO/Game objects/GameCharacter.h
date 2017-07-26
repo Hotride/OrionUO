@@ -17,36 +17,36 @@
 //!Игровой персонаж
 class CGameCharacter: public CGameObject
 {
-	SETGET(short, Hits);
-	SETGET(short, MaxHits);
-	SETGET(short, MaxMana);
-	SETGET(short, MaxStam);
-	SETGET(short, Mana);
-	SETGET(short, Stam);
-	SETGET(bool, Female);
-	SETGET(RACE_TYPE, Race);
-	SETGET(uchar, Direction);
-	SETGET(uchar, Notoriety);
-	SETGET(bool, CanChangeName);
-	SETGET(uchar, AnimationInterval);
-	SETGET(uchar, AnimationFrameCount);
-	SETGET(uchar, AnimationRepeatMode);
-	SETGET(uchar, AnimationGroup);
-	SETGET(bool, AnimationRepeat);
-	SETGET(bool, AnimationDirection);
-	SETGET(bool, AnimationFromServer);
-	SETGET(uint, LastStepSoundTime);
-	SETGET(uint, TimeToRandomFidget);
-	SETGET(uchar, StepSoundOffset);
+	SETGET(short, Hits, 0);
+	SETGET(short, MaxHits, 0);
+	SETGET(short, MaxMana, 0);
+	SETGET(short, MaxStam, 0);
+	SETGET(short, Mana, 0);
+	SETGET(short, Stam, 0);
+	SETGET(bool, Female, false);
+	SETGET(RACE_TYPE, Race, RT_HUMAN);
+	SETGET(uchar, Direction, 0);
+	SETGET(uchar, Notoriety, 0);
+	SETGET(bool, CanChangeName, false);
+	SETGET(uchar, AnimationInterval, 0);
+	SETGET(uchar, AnimationFrameCount, 0);
+	SETGET(uchar, AnimationRepeatMode, 1);
+	SETGET(uchar, AnimationGroup, 0xFF);
+	SETGET(bool, AnimationRepeat, false);
+	SETGET(bool, AnimationDirection, false);
+	SETGET(bool, AnimationFromServer, false);
+	SETGET(uint, LastStepSoundTime, 0);
+	SETGET(uint, TimeToRandomFidget, 0);
+	SETGET(uchar, StepSoundOffset, 0);
 
-	SETGET(int, OffsetX);
-	SETGET(int, OffsetY);
-	SETGET(int, OffsetZ);
-	SETGET(uint, LastStepTime);
-	SETGET(string, PaperdollText);
-	SETGET(uchar, HitsPercent);
+	SETGET(int, OffsetX, 0);
+	SETGET(int, OffsetY, 0);
+	SETGET(int, OffsetZ, 0);
+	SETGET(uint, LastStepTime, 0);
+	SETGET(string, PaperdollText, "");
+	SETGET(uchar, HitsPercent, 0);
 
-	SETGET(bool, Deleted);
+	SETGET(bool, Deleted, false);
 
 protected:
 	/*!
@@ -74,7 +74,7 @@ public:
 	virtual ~CGameCharacter();
 
 	//Ссылка на контейнер для текста урона
-	CTextContainer m_DamageTextControl;
+	CTextContainer m_DamageTextControl{ CTextContainer(10) };
 
 	//!Ссылка на счетчик шагов
 	CWalkStack m_WalkStack;

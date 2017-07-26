@@ -53,7 +53,7 @@ void CStaticObject::Draw(const int &x, const int &y)
 	WISPFUN_DEBUG("c28_f3");
 	m_RenderGraphic = m_Graphic;
 
-	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object() == this)
+	if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object == this)
 		m_RenderColor = SELECT_STATIC_COLOR;
 	else
 		m_RenderColor = m_Color;

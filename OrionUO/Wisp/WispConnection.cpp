@@ -6,8 +6,7 @@ namespace WISP_NETWORK
 {
 //----------------------------------------------------------------------------------
 CConnection::CConnection(int af, int type, int protocol)
-: m_DataReady(0), m_Connected(false), m_Port(0), m_Af(af), m_Type(type),
-m_Protocol(protocol)
+: m_Af(af), m_Type(type), m_Protocol(protocol)
 {
 	WISPFUN_DEBUG("c3_f1");
 	WSADATA wsaData = { 0 };

@@ -140,7 +140,7 @@ ushort CMouseManager::GetGameCursor()
 
 	//bool gumpChecked = (g_LastSelectedGump || (g_LastSelectedObject && g_LastObjectType != SOT_GAME_OBJECT && g_LastObjectType != SOT_STATIC_OBJECT && g_LastObjectType != SOT_LAND_OBJECT && g_LastObjectType != SOT_TEXT_OBJECT));
 
-	if (!mouseInWindow || g_SelectedObject.Gump() != NULL || g_PressedObject.LeftGump() != NULL)
+	if (!mouseInWindow || g_SelectedObject.Gump != NULL || g_PressedObject.LeftGump() != NULL)
 		return result;
 
 	int gameWindowCenterX = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2);

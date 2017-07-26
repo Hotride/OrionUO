@@ -15,12 +15,12 @@
 //----------------------------------------------------------------------------------
 class CServer
 {
-	SETGET(ushort, Index);
-	SETGET(string, Name);
-	SETGET(uchar, FullPercent);
-	SETGET(uchar, Timezone);
-	SETGET(uint, IP);
-	SETGET(bool, Selected);
+	SETGET(ushort, Index, 0);
+	SETGET(string, Name, "");
+	SETGET(uchar, FullPercent, 0);
+	SETGET(uchar, Timezone, 0);
+	SETGET(uint, IP, 0);
+	SETGET(bool, Selected, false);
 
 public:
 	CServer();

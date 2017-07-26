@@ -14,16 +14,16 @@
 //----------------------------------------------------------------------------------
 class CGumpWorldMap : public CGump
 {
-	SETGET(int, Width);
-	SETGET(int, Height);
-	SETGETE(int, Scale, OnChangeScale);
-	SETGETE(int, Map, OnChangeMap);
-	SETGETE(bool, LinkWithPlayer, OnChangeLinkWithPlayer);
-	SETGET(int, OffsetX);
-	SETGET(int, OffsetY);
-	SETGET(bool, Called);
-	SETGET(int, CurrentOffsetX);
-	SETGET(int, CurrentOffsetY);
+	SETGET(int, Width, MIN_WORLD_MAP_WIDTH);
+	SETGET(int, Height, MIN_WORLD_MAP_HEIGHT);
+	SETGETE(int, Scale, 2, OnChangeScale);
+	SETGETE(int, Map, 0, OnChangeMap);
+	SETGETE(bool, LinkWithPlayer, true, OnChangeLinkWithPlayer);
+	SETGET(int, OffsetX, 0);
+	SETGET(int, OffsetY, 0);
+	SETGET(bool, Called, false);
+	SETGET(int, CurrentOffsetX, 0);
+	SETGET(int, CurrentOffsetY, 0);
 
 private:
 	static const int ID_GWM_MINIMIZE = 1;
@@ -36,10 +36,10 @@ private:
 	static const int MIN_WORLD_MAP_HEIGHT = 300;
 	static const int MIN_WORLD_MAP_WIDTH = 400;
 
-	int m_StartResizeWidth;
-	int m_StartResizeHeight;
+	int m_StartResizeWidth{ 0 };
+	int m_StartResizeHeight{ 0 };
 
-	bool m_MapMoving;
+	bool m_MapMoving{ false };
 
 	void FixOffsets(int &offsetX, int &offsetY, int &width, int &height);
 	void GetScaledDimensions(int &width, int &height, int &playerX, int &playerY);
@@ -49,15 +49,15 @@ private:
 
 	int GetCurrentMap();
 
-	CGUIButton *m_Minimizer;
-	CGUIResizepic *m_Background;
-	CGUIResizeButton *m_Resizer;
-	CGUIText *m_Text;
-	CGUICheckbox *m_Checkbox;
-	CGUIScissor *m_Scissor;
-	CGUIWorldMapTexture *m_MapData;
-	CGUIComboBox *m_ComboboxScale;
-	CGUIComboBox *m_ComboboxMap;
+	CGUIButton *m_Minimizer{ NULL };
+	CGUIResizepic *m_Background{ NULL };
+	CGUIResizeButton *m_Resizer{ NULL };
+	CGUIText *m_Text{ NULL };
+	CGUICheckbox *m_Checkbox{ NULL };
+	CGUIScissor *m_Scissor{ NULL };
+	CGUIWorldMapTexture *m_MapData{ NULL };
+	CGUIComboBox *m_ComboboxScale{ NULL };
+	CGUIComboBox *m_ComboboxMap{ NULL };
 
 protected:
 	virtual void CalculateGumpState();

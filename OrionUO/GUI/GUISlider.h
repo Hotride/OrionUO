@@ -18,80 +18,80 @@
 class CGUISlider : public CBaseGUI
 {
 	//!ИД картинки в выбранном состоянии
-	SETGET(ushort, GraphicSelected);
+	SETGET(ushort, GraphicSelected, 0);
 
 	//!ИД картинки в зажатом состоянии
-	SETGET(ushort, GraphicPressed);
+	SETGET(ushort, GraphicPressed, 0);
 
 	//!ИД картинки фона
-	SETGET(ushort, BackgroundGraphic);
+	SETGET(ushort, BackgroundGraphic, 0);
 
 	//!Сборный фон
-	SETGET(bool, CompositeBackground);
+	SETGET(bool, CompositeBackground, false);
 
 	//!Вертикальный или горизонтальный
-	SETGET(bool, Vertical);
+	SETGET(bool, Vertical, false);
 
 	//!Длина
-	SETGET(int, Lenght);
+	SETGET(int, Lenght, 0);
 
 	//!Смещение в процентах
-	SETGET(int, Percents);
+	SETGET(int, Percents, 0);
 
 	//!Смещение
-	SETGET(int, Offset);
+	SETGET(int, Offset, 0);
 
 	//!Минимальное значение
-	SETGET(int, MinValue);
+	SETGET(int, MinValue, 0);
 
 	//!Максимальное значение
-	SETGET(int, MaxValue);
+	SETGET(int, MaxValue, 0);
 
 	//!Текущее значение
-	SETGET(int, Value);
+	SETGET(int, Value, 0);
 
 	//!Имеет текст
-	SETGET(bool, HaveText);
+	SETGET(bool, HaveText, false);
 
 	//!Позиция текста
-	SETGET(SLIDER_TEXT_POSITION, TextPosition);
+	SETGET(SLIDER_TEXT_POSITION, TextPosition, STP_RIGHT);
 
 	//!Шрифт текста
-	SETGET(uchar, Font);
+	SETGET(uchar, Font, 0);
 
 	//!Цвет текста
-	SETGET(ushort, TextColor);
+	SETGET(ushort, TextColor, 0);
 
 	//!Текст в юникоде
-	SETGET(bool, Unicode);
+	SETGET(bool, Unicode, true);
 
 	//!Ширина текста
-	SETGET(int, TextWidth);
+	SETGET(int, TextWidth, 0);
 
 	//!Ориентация текста
-	SETGET(TEXT_ALIGN_TYPE, Align);
+	SETGET(TEXT_ALIGN_TYPE, Align, TS_LEFT);
 
 	//!Флаги текста
-	SETGET(ushort, TextFlags);
+	SETGET(ushort, TextFlags, 0);
 
 	//!Координата текста по оси X
-	SETGET(int, TextX);
+	SETGET(int, TextX, 0);
 
 	//!Координата текста по оси Y
-	SETGET(int, TextY);
+	SETGET(int, TextY, 0);
 
 	//!Шаг скроллера
-	SETGET(int, ScrollStep);
+	SETGET(int, ScrollStep, 15);
 
 	//!Время последнего скроллинга
-	SETGET(uint, LastScrollTime);
+	SETGET(uint, LastScrollTime, 0);
 
 	//!Стандартное смещение текста
-	SETGET(int, DefaultTextOffset);
+	SETGET(int, DefaultTextOffset, 2);
 
 private:
 	//!Текстура текста
-	CGLTextTexture m_Text;
+	CGLTextTexture m_Text{ CGLTextTexture() };
 
 public:
 	CGUISlider(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const ushort &backgroundGraphic, const bool &compositeBackground, const bool &vertical, const int &x, const int &y, const int &lenght, const int &minValue, const int &maxValue, const int &value);

@@ -25,22 +25,22 @@ extern NETWORK_POST_ACTION_TYPE *g_NetworkPostAction;
 //!Класс менеджера подключения к серверу
 class CConnectionManager
 {
-	SETGETE(bool, UseProxy, OnChangeUseProxy);
-	SETGETE(string, ProxyAddress, OnChangeProxyAddress);
-	SETGETE(int, ProxyPort, OnChangeProxyPort);
-	SETGETE(bool, ProxySocks5, OnChangeProxySocks5);
-	SETGETE(string, ProxyAccount, OnChangeProxyAccount);
-	SETGETE(string, ProxyPassword, OnChangeProxyPassword);
+	SETGETE(bool, UseProxy, false, OnChangeUseProxy);
+	SETGETE(string, ProxyAddress, "", OnChangeProxyAddress);
+	SETGETE(int, ProxyPort, 0, OnChangeProxyPort);
+	SETGETE(bool, ProxySocks5, false, OnChangeProxySocks5);
+	SETGETE(string, ProxyAccount, "", OnChangeProxyAccount);
+	SETGETE(string, ProxyPassword, "", OnChangeProxyPassword);
 
 private:
 	//!Подключение к сокету авторизации
-	CSocket m_LoginSocket;
+	CSocket m_LoginSocket{ CSocket(false) };
 
 	//!Подключение к сокету сервера
-	CSocket m_GameSocket;
+	CSocket m_GameSocket{ CSocket(true) };
 
 	//!Тип сокета. true - Login, false - game
-	bool m_IsLoginSocket;
+	bool m_IsLoginSocket{ true };
 
 	uchar m_Seed[4];
 

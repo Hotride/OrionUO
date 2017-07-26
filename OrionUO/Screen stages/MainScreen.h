@@ -62,10 +62,10 @@ public:
 	static const uchar ID_SMOOTH_MS_CONNECT = 2;
 
 	//!Поля для ввода аккаунта и пароля
-	CEntryText *m_Account;
-	CEntryText *m_Password;
-	CGUICheckbox *m_SavePassword;
-	CGUICheckbox *m_AutoLogin;
+	CEntryText *m_Account{ NULL };
+	CEntryText *m_Password{ NULL };
+	CGUICheckbox *m_SavePassword{ NULL };
+	CGUICheckbox *m_AutoLogin{ NULL };
 
 	void SetAccounting(const string &account, const string &password);
 

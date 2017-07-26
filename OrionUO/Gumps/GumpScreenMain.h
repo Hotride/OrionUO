@@ -23,13 +23,13 @@ private:
 	static const int ID_MS_SAVEPASSWORD = 5;
 	static const int ID_MS_AUTOLOGIN = 6;
 
-	CGUIButton *m_Arrow;
+	CGUIButton *m_Arrow{ NULL };
 
 public:
 	CGumpScreenMain();
 	virtual ~CGumpScreenMain();
 
-	CEntryText *m_PasswordFake;
+	CEntryText *m_PasswordFake{ NULL };
 
 	virtual void PrepareContent();
 

@@ -17,13 +17,13 @@
 class CMacroManager : public CBaseQueue
 {
 	//!Ожидание таргета от бинтов
-	SETGET(bool, WaitingBandageTarget);
+	SETGET(bool, WaitingBandageTarget, false);
 	//!Время ожидания таргета
-	SETGET(uint, WaitForTargetTimer);
+	SETGET(uint, WaitForTargetTimer, 0);
 
 private:
 	//!Время следующего выполнения
-	uint m_NextTimer;
+	uint m_NextTimer{ 0 };
 
 	//!Таблица скиллов дял использования
 	static uchar m_SkillIndexTable[24];

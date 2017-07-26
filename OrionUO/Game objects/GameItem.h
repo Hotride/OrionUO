@@ -18,23 +18,23 @@
 class CGameItem : public CGameObject
 {
 	//!Слой, в котором расположен объект
-	SETGET(uchar, Layer);
+	SETGET(uchar, Layer, 0);
 	//!Индекс картинки анимации
-	SETGET(ushort, AnimID);
+	SETGET(ushort, AnimID, 0);
 	//!Используемый предметом слой (из tiledata.mul/verdata)
-	SETGET(uchar, UsedLayer);
+	SETGET(uchar, UsedLayer, 0);
 	//!Открыт ли контейнер/спеллбук
-	SETGET(bool, Opened);
+	SETGET(bool, Opened, false);
 	//!Выведен ли гамп разделения количества?
-	SETGET(bool, Dragged);
+	SETGET(bool, Dragged, false);
 	//!Это прокси-объект мульти
-	SETGET(bool, MultiBody);
-	//!Это прокси-объект мульти
-	SETGET(bool, WantUpdateMulti);
+	SETGET(bool, MultiBody, false);
+	//!Необходимо обновить мульти-объект
+	SETGET(bool, WantUpdateMulti, true);
 	//!Цвет тайла для замены филдов (если 0 - не филд)
-	SETGET(ushort, FieldColor);
+	SETGET(ushort, FieldColor, 0);
 	//!Бонус дистанции для мульти-объекта
-	SETGET(short, MultiDistanceBonus);
+	SETGET(short, MultiDistanceBonus, 0);
 
 protected:
 	/*!

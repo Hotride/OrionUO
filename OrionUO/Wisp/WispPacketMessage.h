@@ -9,7 +9,7 @@ namespace WISP_NETWORK
 //----------------------------------------------------------------------------------
 class CPacketMessage
 {
-	SETGET(bool, BigEndian);
+	SETGET(bool, BigEndian, false);
 
 protected:
 	UCHAR_LIST m_Data;

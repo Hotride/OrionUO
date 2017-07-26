@@ -596,7 +596,7 @@ void CGumpManager::Select(const bool &blocked)
 void CGumpManager::InitToolTip()
 {
 	WISPFUN_DEBUG("c144_f17");
-	CGump *gump = g_SelectedObject.Gump();
+	CGump *gump = g_SelectedObject.Gump;
 
 	if (gump != NULL)
 	{
@@ -631,12 +631,12 @@ void CGumpManager::RedrawAll()
 void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
 {
 	WISPFUN_DEBUG("c144_f19");
-	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
+	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsText())
 		return;
 
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (g_SelectedObject.Gump() == gump && !gump->NoProcess)
+		if (g_SelectedObject.Gump == gump && !gump->NoProcess)
 		{
 			if (gump->GumpType == GT_STATUSBAR && ((CGumpStatusbar*)gump)->InGroup())
 				((CGumpStatusbar*)gump)->UpdateGroup(0, 0);
@@ -662,7 +662,7 @@ void CGumpManager::OnLeftMouseButtonDown(const bool &blocked)
 bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 {
 	WISPFUN_DEBUG("c144_f20");
-	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
+	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsText())
 		return false;
 
 	QFOR(gump, m_Items, CGump*)
@@ -775,7 +775,7 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 			
 			if (g_ObjectInHand != NULL)
 			{
-				if (g_SelectedObject.Gump() == gump)
+				if (g_SelectedObject.Gump == gump)
 					gump->OnLeftMouseButtonUp();
 			}
 			else
@@ -788,7 +788,7 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 			//MoveGumpToTop(gump);
 			return true;
 		}
-		else if (g_SelectedObject.Gump() == gump && g_ObjectInHand != NULL && (gump->GumpType == GT_PAPERDOLL || gump->GumpType == GT_CONTAINER || gump->GumpType == GT_TRADE))
+		else if (g_SelectedObject.Gump == gump && g_ObjectInHand != NULL && (gump->GumpType == GT_PAPERDOLL || gump->GumpType == GT_CONTAINER || gump->GumpType == GT_TRADE))
 		{
 			gump->OnLeftMouseButtonUp();
 
@@ -810,12 +810,12 @@ bool CGumpManager::OnLeftMouseButtonDoubleClick(const bool &blocked)
 	WISPFUN_DEBUG("c144_f21");
 	bool result = false;
 
-	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
+	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsText())
 		return result;
 
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (g_SelectedObject.Gump() == gump && !gump->NoProcess)
+		if (g_SelectedObject.Gump == gump && !gump->NoProcess)
 		{
 			if (gump->OnLeftMouseButtonDoubleClick())
 				result = true;
@@ -838,12 +838,12 @@ bool CGumpManager::OnLeftMouseButtonDoubleClick(const bool &blocked)
 void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
 {
 	WISPFUN_DEBUG("c144_f22");
-	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
+	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsText())
 		return;
 
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (g_SelectedObject.Gump() == gump && !gump->NoProcess)
+		if (g_SelectedObject.Gump == gump && !gump->NoProcess)
 		{
 			if (gump->GumpType == GT_STATUSBAR && ((CGumpStatusbar*)gump)->InGroup())
 				((CGumpStatusbar*)gump)->UpdateGroup(0, 0);
@@ -869,7 +869,7 @@ void CGumpManager::OnRightMouseButtonDown(const bool &blocked)
 void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 {
 	WISPFUN_DEBUG("c144_f23");
-	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
+	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsText())
 		return;
 
 	QFOR(gump, m_Items, CGump*)
@@ -1031,7 +1031,7 @@ void CGumpManager::OnMidMouseButtonScroll(const bool &up, const bool &blocked)
 	WISPFUN_DEBUG("c144_f24");
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (g_SelectedObject.Gump() == gump && !gump->NoProcess)
+		if (g_SelectedObject.Gump == gump && !gump->NoProcess)
 		{
 			gump->OnMidMouseButtonScroll(up);
 

@@ -22,7 +22,7 @@
 CSelectProfessionScreen g_SelectProfessionScreen;
 //----------------------------------------------------------------------------------
 CSelectProfessionScreen::CSelectProfessionScreen()
-: CBaseScreen(m_SelectProfessionGump), m_SkillSelection(0)
+: CBaseScreen(m_SelectProfessionGump)
 {
 }
 //----------------------------------------------------------------------------------

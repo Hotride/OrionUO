@@ -51,9 +51,7 @@ CGameScreen g_GameScreen;
 RENDER_VARIABLES_FOR_GAME_WINDOW g_RenderBounds;
 //----------------------------------------------------------------------------------
 CGameScreen::CGameScreen()
-: CBaseScreen(m_GameScreenGump), m_UseLight(false), m_MaxDrawZ(0), m_RenderListSize(1000),
-m_RenderListInitalized(false), m_RenderListCount(0), m_ObjectHandlesCount(0),
-m_ProcessAlphaTimer(0), m_CanProcessAlpha(false)
+: CBaseScreen(m_GameScreenGump)
 {
 	WISPFUN_DEBUG("c164_f1");
 	m_RenderList = new RENDER_OBJECT_DATA[1000];
@@ -115,14 +113,14 @@ void CGameScreen::InitToolTip()
 	g_FontManager.SetUseHTML(true);
 	g_FontManager.RecalculateWidthByInfo = true;
 
-	if (g_SelectedObject.Gump())
+	if (g_SelectedObject.Gump)
 	{
-		if (g_SelectedObject.Gump() == &m_GameScreenGump)
+		if (g_SelectedObject.Gump == &m_GameScreenGump)
 			m_GameScreenGump.InitToolTip();
 		else
 			g_GumpManager.InitToolTip();
 	}
-	else if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject())
+	else if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGameObject())
 	{
 		CGameObject *obj = g_World->FindWorldObject(g_SelectedObject.Serial);
 
@@ -469,11 +467,11 @@ void CGameScreen::IncreaseRenderList()
 void CGameScreen::CalculateRenderList()
 {
 	WISPFUN_DEBUG("c164_f10");
-	if (g_Target.IsTargeting() && g_Target.MultiGraphic && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsWorldObject())
+	if (g_Target.IsTargeting() && g_Target.MultiGraphic && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject())
 	{
 		int grZ = 0;
 		int stZ = 0;
-		CRenderObject *sel = g_SelectedObject.Object();
+		CRenderObject *sel = g_SelectedObject.Object;
 		g_MapManager->GetMapZ(sel->X, sel->Y, grZ, stZ);
 
 		if (((CRenderWorldObject*)sel)->IsStaticObject() && ((CRenderWorldObject*)sel)->IsWet())
@@ -1575,8 +1573,8 @@ void CGameScreen::PrepareContent()
 
 	g_GumpManager.PrepareContent();
 
-	if (g_SelectedObject.Gump() != NULL && g_SelectedObject.Gump()->GumpType == GT_STATUSBAR && g_SelectedObject.Gump()->Serial != g_PlayerSerial)
-		g_StatusbarUnderMouse = g_SelectedObject.Gump()->Serial;
+	if (g_SelectedObject.Gump != NULL && g_SelectedObject.Gump->GumpType == GT_STATUSBAR && g_SelectedObject.Gump->Serial != g_PlayerSerial)
+		g_StatusbarUnderMouse = g_SelectedObject.Gump->Serial;
 	else
 		g_StatusbarUnderMouse = 0;
 
@@ -1780,9 +1778,9 @@ void CGameScreen::Render(const bool &mode)
 
 			g_FontManager.DrawA(3, dbf, 0x35, 20, 54);
 
-			if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsWorldObject())
+			if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject())
 			{
-				CRenderWorldObject *selRwo = (CRenderWorldObject*)g_SelectedObject.Object();
+				CRenderWorldObject *selRwo = (CRenderWorldObject*)g_SelectedObject.Object;
 				CLandObject *land = selRwo->LandObjectPtr();
 				char soName[20] = "UnknownObject";
 
@@ -1863,10 +1861,10 @@ void CGameScreen::Render(const bool &mode)
 		
 		g_GumpManager.Select(false);
 
-		if (g_SelectedObject.Gump() != NULL)
+		if (g_SelectedObject.Gump != NULL)
 		{
-			if (g_SelectedObject.Object()->IsText())
-				((CRenderTextObject*)g_SelectedObject.Object())->ToTop();
+			if (g_SelectedObject.Object->IsText())
+				((CRenderTextObject*)g_SelectedObject.Object)->ToTop();
 		}
 		else if (m_GameScreenGump.Select() == NULL)
 		{
@@ -1875,11 +1873,11 @@ void CGameScreen::Render(const bool &mode)
 				//Проверка текста
 				DrawGameWindowText(mode);
 
-				if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsText())
-					g_WorldTextRenderer.ToTop((CRenderTextObject*)g_SelectedObject.Object());
+				if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsText())
+					g_WorldTextRenderer.ToTop((CRenderTextObject*)g_SelectedObject.Object);
 			}
 		
-			if (g_SelectedObject.Object() == NULL) //Если ничего не выбралось - пройдемся по объектам
+			if (g_SelectedObject.Object == NULL) //Если ничего не выбралось - пройдемся по объектам
 			{
 				//Если курсор мыши в игровом окне - просканируем его
 				if (g_MouseManager.Position.X < g_RenderBounds.GameWindowPosX || g_MouseManager.Position.Y < g_RenderBounds.GameWindowPosY ||
@@ -1930,13 +1928,13 @@ void CGameScreen::Render(const bool &mode)
 
 		g_GlobalScale = oldScale;
 
-		if (g_SelectedObject.Object() != g_LastSelectedObject.Object())
+		if (g_SelectedObject.Object != g_LastSelectedObject.Object)
 		{
-			if (g_LastSelectedObject.Object() != NULL)
-				g_LastSelectedObject.Object()->OnMouseExit();
+			if (g_LastSelectedObject.Object != NULL)
+				g_LastSelectedObject.Object->OnMouseExit();
 
-			if (g_SelectedObject.Object() != NULL)
-				g_SelectedObject.Object()->OnMouseEnter();
+			if (g_SelectedObject.Object != NULL)
+				g_SelectedObject.Object->OnMouseEnter();
 		}
 
 		g_LastSelectedObject.Init(g_SelectedObject);
@@ -1955,9 +1953,9 @@ void CGameScreen::OnLeftMouseButtonDown()
 	if (skillGump != NULL)
 		skillGump->UpdateGroupText();
 
-	if (g_SelectedObject.Gump() == &m_GameScreenGump)
+	if (g_SelectedObject.Gump == &m_GameScreenGump)
 		m_GameScreenGump.OnLeftMouseButtonDown();
-	else if (g_SelectedObject.Gump() != NULL)
+	else if (g_SelectedObject.Gump != NULL)
 	{
 		//g_SelectGumpObjects = true;
 
@@ -1966,7 +1964,7 @@ void CGameScreen::OnLeftMouseButtonDown()
 		//g_SelectGumpObjects = false;
 	}
 
-	if (g_PopupMenu != NULL && g_SelectedObject.Gump() != g_PopupMenu)
+	if (g_PopupMenu != NULL && g_SelectedObject.Gump != g_PopupMenu)
 		g_GumpManager.RemoveGump(g_PopupMenu);
 }
 //----------------------------------------------------------------------------------
@@ -1995,18 +1993,18 @@ void CGameScreen::OnLeftMouseButtonUp()
 		g_MouseManager.Position.Y > (gameWindowPosY + g_ConfigManager.GameWindowHeight))
 		return;
 
-	if (g_SelectedObject.Object() != NULL)
+	if (g_SelectedObject.Object != NULL)
 	{
 		CRenderWorldObject *rwo = NULL;
 
-		if (g_SelectedObject.Object()->IsWorldObject())
-			rwo = (CRenderWorldObject*)g_SelectedObject.Object();
+		if (g_SelectedObject.Object->IsWorldObject())
+			rwo = (CRenderWorldObject*)g_SelectedObject.Object;
 
 		if (g_Target.IsTargeting() && g_ObjectInHand == NULL)
 		{
-			if (g_SelectedObject.Object()->IsText())
+			if (g_SelectedObject.Object->IsText())
 			{
-				CTextData *td = (CTextData*)g_SelectedObject.Object();
+				CTextData *td = (CTextData*)g_SelectedObject.Object;
 
 				if (td->Type == TT_OBJECT)
 				{
@@ -2175,13 +2173,13 @@ bool CGameScreen::OnLeftMouseButtonDoubleClick()
 	bool result = false;
 	uint charUnderMouse = 0;
 
-	if (g_SelectedObject.Gump() && g_GumpManager.OnLeftMouseButtonDoubleClick(false))
+	if (g_SelectedObject.Gump && g_GumpManager.OnLeftMouseButtonDoubleClick(false))
 		result = true;
-	else if (g_SelectedObject.Object() != NULL)
+	else if (g_SelectedObject.Object != NULL)
 	{
-		if (g_SelectedObject.Object()->IsGameObject())
+		if (g_SelectedObject.Object->IsGameObject())
 		{
-			CGameObject *obj = (CGameObject*)g_SelectedObject.Object();
+			CGameObject *obj = (CGameObject*)g_SelectedObject.Object;
 
 			if (!obj->NPC)
 				g_Orion.DoubleClick(g_SelectedObject.Serial);
@@ -2190,9 +2188,9 @@ bool CGameScreen::OnLeftMouseButtonDoubleClick()
 
 			result = true;
 		}
-		else if (g_SelectedObject.Object()->IsText())
+		else if (g_SelectedObject.Object->IsText())
 		{
-			CTextData *td = (CTextData*)g_SelectedObject.Object();
+			CTextData *td = (CTextData*)g_SelectedObject.Object;
 
 			if (td->Type == TT_OBJECT)
 			{
@@ -2248,7 +2246,7 @@ void CGameScreen::OnRightMouseButtonDown()
 	if (g_PressedObject.RightGump() != NULL)
 		g_GumpManager.OnRightMouseButtonDown(false);
 
-	if (g_PopupMenu != NULL && g_SelectedObject.Gump() != g_PopupMenu)
+	if (g_PopupMenu != NULL && g_SelectedObject.Gump != g_PopupMenu)
 		g_GumpManager.RemoveGump(g_PopupMenu);
 }
 //----------------------------------------------------------------------------------
@@ -2264,9 +2262,9 @@ void CGameScreen::OnRightMouseButtonUp()
 	else if (g_PressedObject.RightObject() != NULL && g_PressedObject.RightObject()->IsGameObject() && g_SelectedGameObjectHandle == g_PressedObject.RightSerial)
 		((CGameObject*)g_PressedObject.RightObject())->ClosedObjectHandle = true;
 
-	if ((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && g_ConfigManager.HoldShiftForEnablePathfind && g_ConfigManager.EnablePathfind && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsWorldObject() && !g_PathFinder.AutoWalking)
+	if ((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && g_ConfigManager.HoldShiftForEnablePathfind && g_ConfigManager.EnablePathfind && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject() && !g_PathFinder.AutoWalking)
 	{
-		CRenderWorldObject *rwo = (CRenderWorldObject*)g_SelectedObject.Object();
+		CRenderWorldObject *rwo = (CRenderWorldObject*)g_SelectedObject.Object;
 
 		if (rwo->IsLandObject() || rwo->IsSurface())
 		{
@@ -2283,9 +2281,9 @@ void CGameScreen::OnRightMouseButtonUp()
 bool CGameScreen::OnRightMouseButtonDoubleClick()
 {
 	WISPFUN_DEBUG("c164_f25");
-	if (g_ConfigManager.EnablePathfind && g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsWorldObject() && !g_PathFinder.AutoWalking)
+	if (g_ConfigManager.EnablePathfind && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject() && !g_PathFinder.AutoWalking)
 	{
-		CRenderWorldObject *rwo = (CRenderWorldObject*)g_SelectedObject.Object();
+		CRenderWorldObject *rwo = (CRenderWorldObject*)g_SelectedObject.Object;
 
 		if (rwo->IsLandObject() || rwo->IsSurface())
 		{
@@ -2308,7 +2306,7 @@ bool CGameScreen::OnRightMouseButtonDoubleClick()
 void CGameScreen::OnMidMouseButtonScroll(const bool &up)
 {
 	WISPFUN_DEBUG("c164_f26");
-	if (g_SelectedObject.Gump() != NULL)
+	if (g_SelectedObject.Gump != NULL)
 		g_GumpManager.OnMidMouseButtonScroll(up, false);
 	else if (g_ConfigManager.UseScaling)
 	{

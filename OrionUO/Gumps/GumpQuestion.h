@@ -14,7 +14,7 @@
 //----------------------------------------------------------------------------------
 class CGumpQuestion : public CGump
 {
-	SETGET(uchar, Variant);
+	SETGET(uchar, Variant, 0);
 
 private:
 	static const int ID_GQ_BUTTON_CANCEL = 1;

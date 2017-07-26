@@ -16,7 +16,7 @@
 #include "../Managers/GumpManager.h"
 //----------------------------------------------------------------------------------
 CGumpDrag::CGumpDrag(uint serial, short x, short y)
-: CGump(GT_DRAG, serial, x, y), m_StartText(true), m_Entry(NULL), m_Slider(NULL)
+: CGump(GT_DRAG, serial, x, y)
 {
 }
 //----------------------------------------------------------------------------------

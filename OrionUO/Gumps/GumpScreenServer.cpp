@@ -87,7 +87,7 @@ void CGumpScreenServer::UpdateContent()
 void CGumpScreenServer::InitToolTip()
 {
 	WISPFUN_DEBUG("c119_f2");
-	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object() == NULL)
+	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object == NULL)
 		return;
 
 	uint id = g_SelectedObject.Serial;

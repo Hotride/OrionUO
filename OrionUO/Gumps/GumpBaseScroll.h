@@ -14,23 +14,23 @@
 //----------------------------------------------------------------------------------
 class CGumpBaseScroll : public CGump
 {
-	SETGET(int, Height);
-	SETGET(int, StartResizeHeight);
-	SETGET(int, ScrollerOffsetY);
-	SETGET(int, ScissorOffsetHeight);
-	SETGET(bool, HaveBackgroundLines);
+	SETGET(int, Height, 0);
+	SETGET(int, StartResizeHeight, 0);
+	SETGET(int, ScrollerOffsetY, 0);
+	SETGET(int, ScissorOffsetHeight, 0);
+	SETGET(bool, HaveBackgroundLines, false);
 
 protected:
 	static const int ID_GBS_HTMLGUMP = 0xFFFFFFF0;
 	static const int ID_GBS_BUTTON_MINIMIZE = 0xFFFFFFF1;
 	static const int ID_GBS_BUTTON_RESIZE = 0xFFFFFFF2;
 
-	CGUIButton *m_Minimizer;
-	CGUIScrollBackground *m_Background;
-	CGUIHTMLGump *m_HTMLGump;
-	CGUIResizeButton *m_Resizer;
+	CGUIButton *m_Minimizer{ NULL };
+	CGUIScrollBackground *m_Background{ NULL };
+	CGUIHTMLGump *m_HTMLGump{ NULL };
+	CGUIResizeButton *m_Resizer{ NULL };
 
-	int m_MinHeight;
+	int m_MinHeight{ 160 };
 
 	virtual void UpdateHeight();
 

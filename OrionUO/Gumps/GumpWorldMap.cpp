@@ -21,9 +21,7 @@
 const int m_Scales[7] = { 1, 1, 1, 2, 4, 6, 10 };
 //----------------------------------------------------------------------------------
 CGumpWorldMap::CGumpWorldMap(uint serial, short x, short y)
-: CGump(GT_WORLD_MAP, serial, x, y), m_Width(400), m_Height(300), m_Scale(2),
-m_Map(0), m_OffsetX(0), m_OffsetY(0), m_MapMoving(false), m_LinkWithPlayer(true),
-m_Called(false), m_CurrentOffsetX(0), m_CurrentOffsetY(0)
+: CGump(GT_WORLD_MAP, serial, x, y)
 {
 	WISPFUN_DEBUG("c132_f1");
 	m_Page = 2;

@@ -19,20 +19,20 @@
 class CGLTexture
 {
 	//!Габариты текстуры
-	SETGET(int, Width);
-	SETGET(int, Height);
+	SETGET(int, Width, 0);
+	SETGET(int, Height, 0);
 
 	//!Буфер вершин
-	SETGET(GLuint, VertexBuffer);
+	SETGET(GLuint, VertexBuffer, 0);
 
 	//!Буфер вершин для зеркального отображения анимации
-	SETGET(GLuint, MirroredVertexBuffer);
+	SETGET(GLuint, MirroredVertexBuffer, 0);
 
 public:
 	CGLTexture();
 	virtual ~CGLTexture();
 
-	GLuint Texture;
+	GLuint Texture{ 0 };
 
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 	vector<ushort> PixelsData;

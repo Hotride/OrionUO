@@ -25,18 +25,18 @@ private:
 	static const int ID_GS_SKILL = 13000;
 	static const int ID_GS_SKILL_STATE = 14000;
 
-	bool m_ShowReal;
-	bool m_ShowCap;
+	bool m_ShowReal{ false };
+	bool m_ShowCap{ false };
 
 	//Получить группу над курсором
 	class CSkillGroupObject *GetGroupUnderCursor(int &index);
 
-	CGUIGumppic *m_BottomLine;
-	CGUIGumppic *m_Comment;
-	CGUIButton *m_CreateGroup;
-	CGUIText *m_SkillSum;
-	CGUICheckbox *m_CheckboxShowReal;
-	CGUICheckbox *m_CheckboxShowCap;
+	CGUIGumppic *m_BottomLine{ NULL };
+	CGUIGumppic *m_Comment{ NULL };
+	CGUIButton *m_CreateGroup{ NULL };
+	CGUIText *m_SkillSum{ NULL };
+	CGUICheckbox *m_CheckboxShowReal{ NULL };
+	CGUICheckbox *m_CheckboxShowCap{ NULL };
 
 	void UpdateGroupPositions();
 

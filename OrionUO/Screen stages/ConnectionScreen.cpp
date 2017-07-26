@@ -15,8 +15,7 @@
 CConnectionScreen g_ConnectionScreen;
 //----------------------------------------------------------------------------------
 CConnectionScreen::CConnectionScreen()
-: CBaseScreen(m_ConnectionGump), m_ConnectionFailed(false), m_Connected(false),
-m_Completed(false), m_ErrorCode(0), m_Message("")
+: CBaseScreen(m_ConnectionGump)
 {
 }
 //----------------------------------------------------------------------------------

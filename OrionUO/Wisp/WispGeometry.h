@@ -10,8 +10,8 @@ class CPoint3Df;
 //----------------------------------------------------------------------------------
 class CSize
 {
-	SETGET(int, Width);
-	SETGET(int, Height);
+	SETGET(int, Width, 0);
+	SETGET(int, Height, 0);
 
 public:
 	CSize();
@@ -25,8 +25,8 @@ public:
 //----------------------------------------------------------------------------------
 class CPoint2Di
 {
-	SETGET(int, X);
-	SETGET(int, Y);
+	SETGET(int, X, 0);
+	SETGET(int, Y, 0);
 
 public:
 	CPoint2Di();
@@ -42,8 +42,8 @@ public:
 //----------------------------------------------------------------------------------
 class CRect
 {
-	SETGET(CPoint2Di, Position);
-	SETGET(CSize, Size);
+	SETGET(CPoint2Di, Position, CPoint2Di());
+	SETGET(CSize, Size, CSize());
 
 public:
 	CRect();
@@ -59,7 +59,7 @@ public:
 //----------------------------------------------------------------------------------
 class CPoint3Di : public CPoint2Di
 {
-	SETGET(int, Z);
+	SETGET(int, Z, 0);
 
 public:
 	CPoint3Di();
@@ -77,8 +77,8 @@ public:
 //----------------------------------------------------------------------------------
 class CPoint2Df
 {
-	SETGET(float, X);
-	SETGET(float, Y);
+	SETGET(float, X, 0.0f);
+	SETGET(float, Y, 0.0f);
 
 public:
 	CPoint2Df();
@@ -94,7 +94,7 @@ public:
 //----------------------------------------------------------------------------------
 class CPoint3Df : public CPoint2Df
 {
-	SETGET(float, Z);
+	SETGET(float, Z, 0.0f);
 
 public:
 	CPoint3Df();

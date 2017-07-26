@@ -17,7 +17,7 @@
 class CGUIExternalTexture : public CBaseGUI
 {
 	//!Удалять ли текстуру при удалении объекта
-	SETGET(bool, DeleteTextureOnDestroy);
+	SETGET(bool, DeleteTextureOnDestroy, false);
 
 public:
 	CGUIExternalTexture(CGLTexture *texture, const bool &deleteTextureOnDestroy, const int &x, const int &y);

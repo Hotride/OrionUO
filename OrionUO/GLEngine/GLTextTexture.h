@@ -29,7 +29,7 @@ struct WEB_LINK_RECT
 //----------------------------------------------------------------------------------
 class CGLTextTexture : public CGLTexture
 {
-	SETGET(int, LinesCount);
+	SETGET(int, LinesCount, 0);
 
 public:
 	CGLTextTexture();

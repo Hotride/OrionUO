@@ -19,10 +19,10 @@ iconStartGraphic = 0x5200;
 //----------------------------------------------------------------------------------
 class CGumpRacialAbilitiesBook : public CGump
 {
-	SETGET(int, DictionaryPagesCount);
-	SETGET(int, AbilityCount);
-	SETGET(int, PagesCount);
-	SETGET(int, TooltipOffset);
+	SETGET(int, DictionaryPagesCount, 2);
+	SETGET(int, AbilityCount, 4);
+	SETGET(int, PagesCount, 6);
+	SETGET(int, TooltipOffset, 1112198);
 
 private:
 	static const int ID_GRAB_BUTTON_PREV = 1;
@@ -32,8 +32,8 @@ private:
 	static const int ID_GRAB_DICTIONARY_ICON = 100;
 	static const int ID_GRAB_ICON = 1000;
 
-	CGUIButton *m_PrevPage;
-	CGUIButton *m_NextPage;
+	CGUIButton *m_PrevPage{ NULL };
+	CGUIButton *m_NextPage{ NULL };
 
 	void GetSummaryBookInfo(int &abilityOnPage, ushort &iconStartGraphic);
 

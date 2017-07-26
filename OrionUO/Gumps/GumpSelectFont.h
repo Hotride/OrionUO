@@ -17,7 +17,7 @@ class CGumpSelectFont : public CGump
 private:
 	static const int ID_GSF_FONTS = 1;
 
-	SELECT_FONT_GUMP_STATE m_State;
+	SELECT_FONT_GUMP_STATE m_State{ SFGS_OPT_POPUP };
 
 public:
 	CGumpSelectFont(uint serial, short x, short y, SELECT_FONT_GUMP_STATE state);

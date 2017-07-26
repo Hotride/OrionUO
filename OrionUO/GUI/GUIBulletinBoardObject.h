@@ -15,7 +15,7 @@
 //----------------------------------------------------------------------------------
 class CGUIBulletinBoardObject : public CBaseGUI
 {
-	SETGET(string, Text);
+	SETGET(string, Text, "");
 
 private:
 	CGLTextTexture m_Texture;

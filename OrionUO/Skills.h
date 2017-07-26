@@ -16,10 +16,10 @@
 //Класс навыка
 class CSkill
 {
-	SETGET(float, BaseValue);
-	SETGET(float, Value);
-	SETGET(float, Cap);
-	SETGET(uchar, Status);
+	SETGET(float, BaseValue, 0.0f);
+	SETGET(float, Value, 0.0f);
+	SETGET(float, Cap, 0.0f);
+	SETGET(uchar, Status, 0);
 
 public:
 	CSkill();
@@ -46,8 +46,8 @@ public:
 //----------------------------------------------------------------------------------
 class CSkillData
 {
-	SETGET(uchar, Button);
-	SETGET(string, Name);
+	SETGET(uchar, Button, 0);
+	SETGET(string, Name, "");
 
 public:
 	CSkillData() :m_Button(0), m_Name("") {}

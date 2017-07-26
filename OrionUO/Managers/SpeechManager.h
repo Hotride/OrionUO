@@ -14,19 +14,19 @@
 //----------------------------------------------------------------------------------
 class CLangCode
 {
-	SETGET(string, Code);
+	SETGET(string, Code, "");
 
 	//! Строковая, уникальная абревиатура локали.
-	SETGET(string, LangString);
+	SETGET(string, LangString, "");
 
 	//! Числовая абревиатура группы? локали.
-	SETGET(uint, Unknown);
+	SETGET(uint, Unknown, 0);
 
 	//! Название языка.
-	SETGET(string, LangName);
+	SETGET(string, LangName, "");
 
 	//! Название страны.
-	SETGET(string, LangCountry);
+	SETGET(string, LangCountry, "");
 
 public:
 	CLangCode();
@@ -36,13 +36,13 @@ public:
 class CSpeechItem
 {
 	//! Код посылаемый клиенту.
-	SETGET(ushort, Code);
+	SETGET(ushort, Code, 0);
 
 	//! Строка с ключевым словом для поиска в вводе.
-	SETGET(wstring, Data);
+	SETGET(wstring, Data, L"");
 
-	SETGET(bool, CheckStart);
-	SETGET(bool, CheckEnd);
+	SETGET(bool, CheckStart, false);
+	SETGET(bool, CheckEnd, false);
 
 public:
 	CSpeechItem();
@@ -55,7 +55,7 @@ class CSpeechManager
 private:
 	vector<CSpeechItem> m_SpeechEntries;
 	vector<CLangCode> m_LangCodes;
-	bool m_Loaded;
+	bool m_Loaded{ false };
 	
 public:
 	CSpeechManager();

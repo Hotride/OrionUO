@@ -17,12 +17,12 @@
 //Объект группы
 class CPartyObject
 {
-	SETGET(uint, Serial);
+	SETGET(uint, Serial, 0);
 
 public:
 	CPartyObject();
 	~CPartyObject() {}
-	CGameCharacter * Character;
+	CGameCharacter *Character{ NULL };
 	string GetName(const int &index);
 };
 //----------------------------------------------------------------------------------

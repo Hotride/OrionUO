@@ -14,18 +14,18 @@
 //----------------------------------------------------------------------------------
 class CGumpMinimap : public CGump
 {
-	SETGET(ushort, LastX);
-	SETGET(ushort, LastY);
+	SETGET(ushort, LastX, 0);
+	SETGET(ushort, LastY, 0);
 
 private:
 	static const int ID_GMM_LOCK_MOVING = 1;
 
-	uchar m_Count;
+	uchar m_Count{ 0 };
 
-	CGLTexture m_Texture;
+	CGLTexture m_Texture{ CGLTexture() };
 
-	CGUIGumppic *m_Body;
-	CGUIDataBox *m_DataBox;
+	CGUIGumppic *m_Body{ NULL };
+	CGUIDataBox *m_DataBox{ NULL };
 
 	void GenerateMap();
 

@@ -16,15 +16,15 @@
 //----------------------------------------------------------------------------------
 class CBaseProfession : public CBaseQueueItem
 {
-	SETGET(string, Name);
-	SETGET(string, TrueName);
-	SETGET(wstring, Description);
-	SETGET(uint, NameClilocID);
-	SETGET(uint, DescriptionClilocID);
-	SETGET(PROFESSION_TYPE, Type);
-	SETGET(ushort, Gump);
-	SETGET(bool, TopLevel);
-	SETGET(int, DescriptionIndex);
+	SETGET(string, Name, "");
+	SETGET(string, TrueName, "");
+	SETGET(wstring, Description, L"");
+	SETGET(uint, NameClilocID, 0);
+	SETGET(uint, DescriptionClilocID, 0);
+	SETGET(PROFESSION_TYPE, Type, PT_NO_PROF);
+	SETGET(ushort, Gump, 0);
+	SETGET(bool, TopLevel, false);
+	SETGET(int, DescriptionIndex, 0);
 
 public:
 	CBaseProfession();
@@ -36,7 +36,8 @@ public:
 //----------------------------------------------------------------------------------
 class CProfessionCategory : public CBaseProfession
 {
-	SETGET(string, Childrens);
+	SETGET(string, Childrens, "|");
+
 public:
 	CProfessionCategory();
 	virtual ~CProfessionCategory();
@@ -46,9 +47,9 @@ public:
 //----------------------------------------------------------------------------------
 class CProfession : public CBaseProfession
 {
-	SETGET(uchar, Str);
-	SETGET(uchar, Int);
-	SETGET(uchar, Dex);
+	SETGET(uchar, Str, 0);
+	SETGET(uchar, Int, 0);
+	SETGET(uchar, Dex, 0);
 
 private:
 	uchar m_SkillIndex[4];

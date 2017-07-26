@@ -15,7 +15,7 @@
 class CGameBlockedScreen : public CBaseScreen
 {
 	//!Код блокировки
-	SETGET(uchar, Code);
+	SETGET(uchar, Code, 0);
 
 	CGump m_GameBlockedScreenGump;
 

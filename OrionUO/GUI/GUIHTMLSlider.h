@@ -18,7 +18,7 @@ class CGUIHTMLSlider : public CGUISlider
 {
 private:
 	//!Гамп-родитель
-	class CGUIHTMLGump *m_HTMLGump;
+	class CGUIHTMLGump *m_HTMLGump{ NULL };
 
 public:
 	CGUIHTMLSlider(class CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const ushort &backgroundGraphic, const bool &compositeBackground, const bool &vertical, const int &x, const int &y, const int &lenght, const int &minValue, const int &maxValue, const int &value);

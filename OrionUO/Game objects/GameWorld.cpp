@@ -22,7 +22,6 @@ CGameWorld *g_World = NULL;
 CGameWorld::CGameWorld(const uint &serial)
 {
 	WISPFUN_DEBUG("c22_f1");
-	m_Items = NULL;
 	CreatePlayer(serial);
 }
 //----------------------------------------------------------------------------------

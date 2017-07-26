@@ -13,7 +13,7 @@
 #include "../TextEngine/GameConsole.h"
 //----------------------------------------------------------------------------------
 CGumpProfile::CGumpProfile(uint serial, short x, short y, wstring topText, wstring bottomText, wstring dataText)
-: CGumpBaseScroll(GT_PROFILE, serial, 0x0820, 250, x, y, true), m_Changed(false)
+: CGumpBaseScroll(GT_PROFILE, serial, 0x0820, 250, x, y, true)
 {
 	WISPFUN_DEBUG("c108_f1");
 	Add(new CGUIPage(1));

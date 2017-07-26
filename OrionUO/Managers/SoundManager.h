@@ -39,12 +39,12 @@ struct WaveHeader
 //----------------------------------------------------------------------------------
 class CSoundManager
 {
-	SETGET(int, CurrentMusicIndex);
+	SETGET(int, CurrentMusicIndex, -1);
 private:
 	static const int MIDI_MUSIC_COUNT = 57;
 	static const MidiInfoStruct MidiInfo[MIDI_MUSIC_COUNT];
-	HSTREAM m_Music;
-	HSTREAM m_WarMusic;
+	HSTREAM m_Music{ NULL };
+	HSTREAM m_WarMusic{ NULL };
 
 	void TraceMusicError(DWORD error);
 	//std::map<HSTREAM, BYTE*> streams;

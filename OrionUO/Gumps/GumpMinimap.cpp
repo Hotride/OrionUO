@@ -18,8 +18,7 @@
 #include "../Managers/MouseManager.h"
 //----------------------------------------------------------------------------------
 CGumpMinimap::CGumpMinimap(uint serial, short x, short y, bool minimized)
-: CGump(GT_MINIMAP, serial, x, y), m_Count(0), m_LastX(0), m_LastY(0), m_Body(NULL),
-m_DataBox(NULL), m_Texture()
+: CGump(GT_MINIMAP, serial, x, y)
 {
 	WISPFUN_DEBUG("c102_f1");
 	m_Minimized = minimized;

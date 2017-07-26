@@ -17,7 +17,7 @@
 class CGUIAlphaBlending : public CGUIBlending
 {
 	//!Значение для установки альфа-канала
-	SETGET(float, Alpha);
+	SETGET(float, Alpha, 0.0f);
 
 public:
 	CGUIAlphaBlending(const bool &enabled, const float &alpha);

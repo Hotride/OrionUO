@@ -8,8 +8,9 @@ namespace WISP_FILE
 //----------------------------------------------------------------------------------
 class CMappedFile : public WISP_DATASTREAM::CDataReader
 {
-	HANDLE m_File;
-	HANDLE m_Map;
+private:
+	HANDLE m_File{ INVALID_HANDLE_VALUE };
+	HANDLE m_Map{ 0 };
 
 	bool Load();
 

@@ -51,8 +51,7 @@ int CGumpPaperdoll::UsedLayers[m_LayerCount] =
 };
 //----------------------------------------------------------------------------------
 CGumpPaperdoll::CGumpPaperdoll(uint serial, short x, short y, bool minimized)
-: CGump(GT_PAPERDOLL, serial, x, y), m_TextRenderer(), m_TextContainer(10),
-m_DataBox(NULL), m_Description(NULL), m_WantTransparentContent(false)
+: CGump(GT_PAPERDOLL, serial, x, y)
 {
 	WISPFUN_DEBUG("c105_f1");
 	m_Locker.Serial = ID_GP_LOCK_MOVING;
@@ -377,7 +376,7 @@ void CGumpPaperdoll::PrepareContent()
 
 	bool wantTransparent = false;
 
-	if (g_SelectedObject.Gump() == this && g_ObjectInHand != NULL && g_ObjectInHand->AnimID)
+	if (g_SelectedObject.Gump == this && g_ObjectInHand != NULL && g_ObjectInHand->AnimID)
 	{
 		if (obj->FindLayer(g_ObjectInHand->UsedLayer) == NULL)
 		{

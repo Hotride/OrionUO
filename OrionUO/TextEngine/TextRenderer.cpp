@@ -438,7 +438,7 @@ void CTextRenderer::WorldDraw()
 		{
 			ushort textColor = text->Color;
 
-			if (g_SelectedObject.Object() == item)
+			if (g_SelectedObject.Object == item)
 			{
 				CGameObject *textOwner = g_World->FindWorldObject(text->Serial);
 

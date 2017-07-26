@@ -26,8 +26,7 @@
 #include "../Managers/PacketManager.h"
 //----------------------------------------------------------------------------------
 CGumpContainer::CGumpContainer(uint serial, uint id, short x, short y)
-: CGump(GT_CONTAINER, serial, x, y), m_CorpseEyesTicks(0), m_CorpseEyesOffset(0),
-m_IsGameBoard(id == 0x091A || id == 0x092E), m_TextRenderer(), m_CorpseEyes(NULL), m_DataBox(NULL)
+: CGump(GT_CONTAINER, serial, x, y), m_IsGameBoard(id == 0x091A || id == 0x092E)
 {
 	WISPFUN_DEBUG("c93_f1");
 	m_Page = 1;

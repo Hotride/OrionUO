@@ -8,9 +8,9 @@ namespace WISP_THREADED_TIMER
 //----------------------------------------------------------------------------------
 class CThreadedTimer : public WISP_THREAD::CThread
 {
-	SETGET(uint, TimerID);
-	SETGET(HWND, WindowHandle);
-	SETGET(bool, WairForProcessMessage);
+	SETGET(uint, TimerID, 0);
+	SETGET(HWND, WindowHandle, 0);
+	SETGET(bool, WairForProcessMessage, false);
 
 public:
 	CThreadedTimer(uint id, HWND windowHandle, bool wairForProcessMessage = false);

@@ -17,13 +17,13 @@
 //----------------------------------------------------------------------------------
 class CIndexMap
 {
-	SETGET(uint, OriginalMapAddress);
-	SETGET(uint, OriginalStaticAddress);
-	SETGET(uint, OriginalStaticCount);
+	SETGET(uint, OriginalMapAddress, 0);
+	SETGET(uint, OriginalStaticAddress, 0);
+	SETGET(uint, OriginalStaticCount, 0);
 
-	SETGET(uint, MapAddress);
-	SETGET(uint, StaticAddress);
-	SETGET(uint, StaticCount);
+	SETGET(uint, MapAddress, 0);
+	SETGET(uint, StaticAddress, 0);
+	SETGET(uint, StaticCount, 0);
 
 public:
 	CIndexMap();
@@ -42,11 +42,11 @@ typedef vector<CIndexMap> MAP_INDEX_LIST;
 class CMapManager : public CBaseQueue
 {
 	//!Максимальный индекс блока для текущей карты
-	SETGET(uint, MaxBlockIndex);
+	SETGET(uint, MaxBlockIndex, 0);
 
 protected:
 	//!Вектор ссылок на блоки карты
-	CMapBlock **m_Blocks;
+	CMapBlock **m_Blocks{ NULL };
 
 	MAP_INDEX_LIST m_BlockData[MAX_MAPS_COUNT];
 

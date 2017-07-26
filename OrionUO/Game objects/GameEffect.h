@@ -16,32 +16,32 @@
 class CGameEffect : public CRenderWorldObject
 {
 	//!Тип эффекта
-	SETGET(EFFECT_TYPE, EffectType);
+	SETGET(EFFECT_TYPE, EffectType, EF_MOVING);
 	//!Серийник назначения
-	SETGET(uint, DestSerial);
+	SETGET(uint, DestSerial, 0);
 	//!Координата назначения по оси X
-	SETGET(ushort, DestX);
+	SETGET(ushort, DestX, 0);
 	//!Координата назначения по оси Y
-	SETGET(ushort, DestY);
+	SETGET(ushort, DestY, 0);
 	//!Координата назначения по оси Z
-	SETGET(char, DestZ);
+	SETGET(char, DestZ, 0);
 	//!Скорость
-	SETGET(uchar, Speed);
+	SETGET(uchar, Speed, 0);
 	//!Время жизни
-	SETGET(uint, Duration);
+	SETGET(uint, Duration, 0);
 	//!Изменять направление картинки при полете эффекта?
-	SETGET(bool, FixedDirection);
+	SETGET(bool, FixedDirection, false);
 	//!Взрывать по достижении цели?
-	SETGET(bool, Explode);
+	SETGET(bool, Explode, false);
 	//!Режим отображения эффекта
-	SETGET(uint, RenderMode);
+	SETGET(uint, RenderMode, 0);
 
 	//!Индекс картинки
-	SETGET(int, AnimIndex);
+	SETGET(int, AnimIndex, 0);
 	//!Смещение от базового индекса
-	SETGET(int, Increment);
+	SETGET(int, Increment, 0);
 	//!Последнее время изменения картинки
-	SETGET(uint, LastChangeFrameTime);
+	SETGET(uint, LastChangeFrameTime, 0);
 
 public:
 	CGameEffect();

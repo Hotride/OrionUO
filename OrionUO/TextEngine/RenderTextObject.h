@@ -15,14 +15,14 @@
 //Класс текста объекта мира
 class CRenderTextObject : public CRenderObject
 {
-	SETGET(bool, Transparent);
+	SETGET(bool, Transparent, false);
 
 public:
 	CRenderTextObject();
 	virtual ~CRenderTextObject();
 
-	CRenderTextObject *m_NextDraw;
-	CRenderTextObject *m_PrevDraw;
+	CRenderTextObject *m_NextDraw{ NULL };
+	CRenderTextObject *m_PrevDraw{ NULL };
 
 	//Вытащить из очереди
 	void UnlinkDraw();

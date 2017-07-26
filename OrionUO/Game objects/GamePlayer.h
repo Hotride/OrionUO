@@ -16,52 +16,52 @@
 //!Класс игрока
 class CPlayer: public CGameCharacter
 {
-	SETGET(short, Str);
-	SETGET(short, Int);
-	SETGET(short, Dex);
-	SETGET(uchar, LockStr);
-	SETGET(uchar, LockInt);
-	SETGET(uchar, LockDex);
-	SETGET(ushort, MaxWeight);
-	SETGET(ushort, Weight);
-	SETGET(short, Armor);
-	SETGET(uint, Gold);
-	SETGET(bool, Warmode);
-	SETGET(WORD, StatsCap);
-	SETGET(uchar, Followers);
-	SETGET(uchar, MaxFollowers);
-	SETGET(short, FireResistance);
-	SETGET(short, ColdResistance);
-	SETGET(short, PoisonResistance);
-	SETGET(short, EnergyResistance);
-	SETGET(short, MaxPhysicalResistance);
-	SETGET(short, MaxFireResistance);
-	SETGET(short, MaxColdResistance);
-	SETGET(short, MaxPoisonResistance);
-	SETGET(short, MaxEnergyResistance);
-	SETGET(short, Luck);
-	SETGET(short, MinDamage);
-	SETGET(short, MaxDamage);
-	SETGET(uint, TithingPoints);
-	SETGET(short, DefenceChance);
-	SETGET(short, MaxDefenceChance);
-	SETGET(short, AttackChance);
-	SETGET(short, WeaponSpeed);
-	SETGET(short, WeaponDamage);
-	SETGET(short, LowerRegCost);
-	SETGET(short, SpellDamage);
-	SETGET(short, CastRecovery);
-	SETGET(short, CastSpeed);
-	SETGET(short, LowerManaCost);
+	SETGET(short, Str, 0);
+	SETGET(short, Int, 0);
+	SETGET(short, Dex, 0);
+	SETGET(uchar, LockStr, 0);
+	SETGET(uchar, LockInt, 0);
+	SETGET(uchar, LockDex, 0);
+	SETGET(ushort, MaxWeight, 0);
+	SETGET(ushort, Weight, 0);
+	SETGET(short, Armor, 0);
+	SETGET(uint, Gold, 0);
+	SETGET(bool, Warmode, 0);
+	SETGET(ushort, StatsCap, 0);
+	SETGET(uchar, Followers, 0);
+	SETGET(uchar, MaxFollowers, 5);
+	SETGET(short, FireResistance, 0);
+	SETGET(short, ColdResistance, 0);
+	SETGET(short, PoisonResistance, 0);
+	SETGET(short, EnergyResistance, 0);
+	SETGET(short, MaxPhysicalResistance, 0);
+	SETGET(short, MaxFireResistance, 0);
+	SETGET(short, MaxColdResistance, 0);
+	SETGET(short, MaxPoisonResistance, 0);
+	SETGET(short, MaxEnergyResistance, 0);
+	SETGET(short, Luck, 0);
+	SETGET(short, MinDamage, 0);
+	SETGET(short, MaxDamage, 0);
+	SETGET(uint, TithingPoints, 0);
+	SETGET(short, DefenceChance, 0);
+	SETGET(short, MaxDefenceChance, 0);
+	SETGET(short, AttackChance, 0);
+	SETGET(short, WeaponSpeed, 0);
+	SETGET(short, WeaponDamage, 0);
+	SETGET(short, LowerRegCost, 0);
+	SETGET(short, SpellDamage, 0);
+	SETGET(short, CastRecovery, 0);
+	SETGET(short, CastSpeed, 0);
+	SETGET(short, LowerManaCost, 0);
 	//SETGET(CHARACTER_RACE_TYPE, Race);
 
-	SETGET(short, OldX);
-	SETGET(short, OldY);
-	SETGET(char, OldZ);
-	SETGET(bool, SkillsReceived);
+	SETGET(short, OldX, 0);
+	SETGET(short, OldY, 0);
+	SETGET(char, OldZ, 0);
+	SETGET(bool, SkillsReceived, false);
 
 	//!Указатель на список умений
-	CSkill *m_Skills;
+	CSkill *m_Skills{ NULL };
 
 public:
 	CPlayer(const uint &serial);

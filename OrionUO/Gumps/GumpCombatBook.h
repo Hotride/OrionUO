@@ -14,9 +14,9 @@
 //----------------------------------------------------------------------------------
 class CGumpCombatBook : public CGump
 {
-	SETGET(int, DictionaryPagesCount);
-	SETGET(int, AbilityCount);
-	SETGET(int, PagesCount);
+	SETGET(int, DictionaryPagesCount, 6);
+	SETGET(int, AbilityCount, MAX_ABILITIES_COUNT);
+	SETGET(int, PagesCount, 37);
 
 private:
 	static const int ID_GCB_BUTTON_PREV = 1;
@@ -29,8 +29,8 @@ private:
 
 	static const string m_AbilityName[MAX_ABILITIES_COUNT];
 
-	CGUIButton *m_PrevPage;
-	CGUIButton *m_NextPage;
+	CGUIButton *m_PrevPage{ NULL };
+	CGUIButton *m_NextPage{ NULL };
 
 public:
 	CGumpCombatBook(const int &x, const int &y);

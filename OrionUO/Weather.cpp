@@ -28,8 +28,6 @@ float SinOscillate(float freq, int range, DWORD current_tick)
 }
 //----------------------------------------------------------------------------------
 CWeather::CWeather()
-: m_Type(0), m_Count(0), m_CurrentCount(0), m_Temperature(0), m_Wind(0),
-m_WindTimer(0), m_Timer(0), m_LastTick(0), m_SimulationRatio(37)
 {
 }
 //---------------------------------------------------------------------------

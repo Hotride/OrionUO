@@ -12,7 +12,6 @@
 CWalker *g_Walker = NULL;
 //----------------------------------------------------------------------------------
 CWalker::CWalker()
-: m_Sequence(0)
 {
 	memset(m_Direction, 0, sizeof(m_Direction));
 	m_FastWalkStack.Reset();

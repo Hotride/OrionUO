@@ -15,7 +15,7 @@
 CGameBlockedScreen g_GameBlockedScreen;
 //----------------------------------------------------------------------------------
 CGameBlockedScreen::CGameBlockedScreen()
-: CBaseScreen(m_GameBlockedScreenGump), m_Code(0)
+: CBaseScreen(m_GameBlockedScreenGump)
 {
 }
 //----------------------------------------------------------------------------------
@@ -54,13 +54,13 @@ void CGameBlockedScreen::Render(const bool &mode)
 
 		g_GumpManager.Select(true);
 
-		if (g_SelectedObject.Object() != g_LastSelectedObject.Object())
+		if (g_SelectedObject.Object != g_LastSelectedObject.Object)
 		{
-			if (g_SelectedObject.Object() != NULL)
-				g_SelectedObject.Object()->OnMouseEnter();
+			if (g_SelectedObject.Object != NULL)
+				g_SelectedObject.Object->OnMouseEnter();
 
-			if (g_LastSelectedObject.Object() != NULL)
-				g_LastSelectedObject.Object()->OnMouseExit();
+			if (g_LastSelectedObject.Object != NULL)
+				g_LastSelectedObject.Object->OnMouseExit();
 		}
 
 		g_LastSelectedObject.Init(g_SelectedObject);
@@ -74,7 +74,7 @@ void CGameBlockedScreen::Render(const bool &mode)
 void CGameBlockedScreen::OnLeftMouseButtonDown()
 {
 	WISPFUN_DEBUG("c163_f2");
-	if (g_SelectedObject.Gump() != NULL)
+	if (g_SelectedObject.Gump != NULL)
 		g_GumpManager.OnLeftMouseButtonDown(true);
 }
 //----------------------------------------------------------------------------------

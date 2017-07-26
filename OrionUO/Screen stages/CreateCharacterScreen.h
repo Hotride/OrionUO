@@ -16,11 +16,11 @@
 class CCreateCharacterScreen : public CBaseScreen
 {
 	//!Выбранный стиль прически/бороды
-	SETGETE(int, StyleSelection, OnChangeStyleSelection);
+	SETGETE(int, StyleSelection, 0, OnChangeStyleSelection);
 
 	//!Выбранный цвет тела/одежды/волосеного покрова
-	SETGETE(int, ColorSelection, OnChangeColorSelection);
-	SETGET(string, Name);
+	SETGETE(int, ColorSelection, 0, OnChangeColorSelection);
+	SETGET(string, Name, "");
 
 private:
 	CGumpScreenCreateCharacter m_CreateCharacterGump;

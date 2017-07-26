@@ -20,8 +20,6 @@
 CMapManager *g_MapManager = NULL;
 //----------------------------------------------------------------------------------
 CIndexMap::CIndexMap()
-: m_OriginalMapAddress(0), m_OriginalStaticAddress(0), m_OriginalStaticCount(0),
-m_MapAddress(0), m_StaticAddress(0), m_StaticCount(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -30,7 +28,7 @@ CIndexMap::~CIndexMap()
 }
 //----------------------------------------------------------------------------------
 CMapManager::CMapManager()
-: CBaseQueue(), m_MaxBlockIndex(0), m_Blocks(NULL)
+: CBaseQueue()
 {
 }
 //----------------------------------------------------------------------------------

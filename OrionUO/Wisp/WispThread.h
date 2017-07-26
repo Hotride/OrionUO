@@ -9,13 +9,13 @@ namespace WISP_THREAD
 class CThread
 {
 private:
-	HANDLE m_Handle;
-	UINT m_ID;
+	HANDLE m_Handle{ 0 };
+	UINT m_ID{ 0 };
 	CRITICAL_SECTION m_CriticalSection;
-	bool m_Paused;
-	bool m_Cycled;
-	int m_Delay;
-	bool m_Active;
+	bool m_Paused{ false };
+	bool m_Cycled{ false };
+	int m_Delay{ 1 };
+	bool m_Active{ false };
 
 public:
 	CThread();

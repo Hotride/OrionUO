@@ -19,15 +19,15 @@
 class CGUISkillItem : public CBaseGUI
 {
 	//!Индекс навыка
-	SETGET(int, Index);
+	SETGET(int, Index, 0);
 
 	//!Статус навыка
-	SETGETE(uchar, Status, OnChangeStatus);
+	SETGETE(uchar, Status, 0, OnChangeStatus);
 
 private:
 	//!Текустуры текста
-	CGLTextTexture m_NameText;
-	CGLTextTexture m_ValueText;
+	CGLTextTexture m_NameText{ CGLTextTexture() };
+	CGLTextTexture m_ValueText{ CGLTextTexture() };
 
 	//!Получить ИД картинки кнопки статуса
 	ushort GetStatusButtonGraphic();
@@ -37,8 +37,8 @@ public:
 	virtual ~CGUISkillItem();
 
 	//!Компоненты управления
-	CGUIButton *m_ButtonUse;
-	CGUIButton *m_ButtonStatus;
+	CGUIButton *m_ButtonUse{ NULL };
+	CGUIButton *m_ButtonStatus{ NULL };
 
 	//!Создать текстуру значения навыка
 	void CreateValueText(const bool &showReal = false, const bool &showCap = false);

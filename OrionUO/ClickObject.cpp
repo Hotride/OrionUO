@@ -11,11 +11,6 @@
 //----------------------------------------------------------------------------------
 CClickObject g_ClickObject;
 //----------------------------------------------------------------------------------
-CClickObject::CClickObject()
-: m_Timer(0), m_X(0), m_Y(0), m_Enabled(false), m_Gump(NULL), m_Object(NULL), m_Page(0)
-{
-}
-//----------------------------------------------------------------------------------
 void CClickObject::Clear(CRenderObject *obj)
 {
 	WISPFUN_DEBUG("c185_f1");

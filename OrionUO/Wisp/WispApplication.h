@@ -9,9 +9,9 @@ namespace WISP_APPLICATION
 //----------------------------------------------------------------------------------
 class CApplication
 {
-	SETGET(HINSTANCE, Hinstance);
-	SETGET(string, ExePathA);
-	SETGET(wstring, ExePathW);
+	SETGET(HINSTANCE, Hinstance, 0);
+	SETGET(string, ExePathA, "");
+	SETGET(wstring, ExePathW, L"");
 
 protected:
 	virtual void OnIDLELoop() {}

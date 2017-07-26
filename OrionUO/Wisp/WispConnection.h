@@ -15,13 +15,13 @@ class CConnection
 protected:
 	SOCKET m_Socket;
 
-	SETGET(int, DataReady);
-	SETGET(bool, Connected);
-	SETGET(int, Port);
+	SETGET(int, DataReady, 0);
+	SETGET(bool, Connected, 0);
+	SETGET(int, Port, 0);
 
-	SETGET(int, Af);
-	SETGET(int, Type);
-	SETGET(int, Protocol);
+	SETGET(int, Af, 0);
+	SETGET(int, Type, 0);
+	SETGET(int, Protocol, 0);
 
 public:
 	CConnection(int af = AF_INET, int type = SOCK_STREAM, int protocol = IPPROTO_IP);

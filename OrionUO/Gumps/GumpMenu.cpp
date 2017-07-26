@@ -12,7 +12,7 @@
 #include "../Network/Packets.h"
 //----------------------------------------------------------------------------------
 CGumpMenu::CGumpMenu(uint serial, uint id, short x, short y)
-: CGump(GT_MENU, serial, x, y), m_Text(""), m_TextChanged(false), m_TextObject(NULL)
+: CGump(GT_MENU, serial, x, y)
 {
 	m_ID = id;
 }

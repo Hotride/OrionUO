@@ -33,14 +33,14 @@ CGUIComboboxText::~CGUIComboboxText()
 void CGUIComboboxText::OnMouseEnter()
 {
 	WISPFUN_DEBUG("c50_f3");
-	if (g_SelectedObject.Gump() != NULL)
-		g_SelectedObject.Gump()->WantRedraw = true;
+	if (g_SelectedObject.Gump != NULL)
+		g_SelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUIComboboxText::OnMouseExit()
 {
 	WISPFUN_DEBUG("c50_f4");
-	if (g_LastSelectedObject.Gump() != NULL)
-		g_LastSelectedObject.Gump()->WantRedraw = true;
+	if (g_LastSelectedObject.Gump != NULL)
+		g_LastSelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

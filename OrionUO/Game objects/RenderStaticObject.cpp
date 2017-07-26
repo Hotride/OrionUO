@@ -13,8 +13,7 @@
 #include "../Screen stages/GameScreen.h"
 //----------------------------------------------------------------------------------
 CRenderStaticObject::CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
-: CMapObject(renderType, serial, graphic, color, x, y, z), m_FoliageTransparentIndex(-1),
-m_Vegetation(false), m_RenderGraphic(0), m_RenderColor(0)
+: CMapObject(renderType, serial, graphic, color, x, y, z)
 {
 	WISPFUN_DEBUG("c27_f1");
 	m_TiledataPtr = &g_Orion.m_StaticData[graphic];

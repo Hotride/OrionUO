@@ -15,11 +15,11 @@
 //Эффект перемещения предмета
 class CGameEffectDrag : public CGameEffect
 {
-	SETGET(int, OffsetX);
-	SETGET(int, OffsetY);
+	SETGET(int, OffsetX, 0);
+	SETGET(int, OffsetY, 0);
 
-	SETGET(uint, LastMoveTime);
-	SETGET(uchar, MoveDelay);
+	SETGET(uint, LastMoveTime, 0);
+	SETGET(uchar, MoveDelay, 20);
 
 public:
 	CGameEffectDrag();

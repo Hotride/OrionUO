@@ -16,9 +16,9 @@
 //Класс группы навыков
 class CSkillGroupObject
 {
-	SETGET(int, Count);
-	SETGET(bool, Maximized);
-	SETGET(string, Name);
+	SETGET(int, Count, 0);
+	SETGET(bool, Maximized, false);
+	SETGET(string, Name, "No Name");
 
 private:
 	//Номера навыков
@@ -26,8 +26,8 @@ private:
 
 public:
 	//Ссылки на следующую и предыдущую группы
-	CSkillGroupObject *m_Next;
-	CSkillGroupObject *m_Prev;
+	CSkillGroupObject *m_Next{ NULL };
+	CSkillGroupObject *m_Prev{ NULL };
 
 	CSkillGroupObject();
 	~CSkillGroupObject();

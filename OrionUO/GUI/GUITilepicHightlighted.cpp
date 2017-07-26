@@ -31,7 +31,7 @@ void CGUITilepicHightlighted::SetShaderMode()
 	WISPFUN_DEBUG("c81_f1");
 	int drawMode = (m_Color != 0);
 
-	if (g_SelectedObject.Object() == this)
+	if (g_SelectedObject.Object == this)
 	{
 		drawMode = 1;
 
@@ -100,14 +100,14 @@ bool CGUITilepicHightlighted::Select()
 void CGUITilepicHightlighted::OnMouseEnter()
 {
 	WISPFUN_DEBUG("c81_f4");
-	if (g_SelectedObject.Gump() != NULL)
-		g_SelectedObject.Gump()->WantRedraw = true;
+	if (g_SelectedObject.Gump != NULL)
+		g_SelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUITilepicHightlighted::OnMouseExit()
 {
 	WISPFUN_DEBUG("c81_f5");
-	if (g_LastSelectedObject.Gump() != NULL)
-		g_LastSelectedObject.Gump()->WantRedraw = true;
+	if (g_LastSelectedObject.Gump != NULL)
+		g_LastSelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

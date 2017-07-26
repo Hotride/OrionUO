@@ -18,7 +18,7 @@
 #include "../CityList.h"
 //----------------------------------------------------------------------------------
 CGumpScreenSelectTown::CGumpScreenSelectTown()
-: CGump(GT_NONE, 0, 0, 0), m_HTMLGump(NULL), m_Description(NULL)
+: CGump(GT_NONE, 0, 0, 0)
 {
 	WISPFUN_DEBUG("c118_f1");
 	m_NoMove = true;

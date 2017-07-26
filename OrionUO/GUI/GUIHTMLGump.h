@@ -22,22 +22,22 @@
 class CGUIHTMLGump : public CGUIPolygonal
 {
 	//!Имеет фон
-	SETGET(bool, HaveBackground);
+	SETGET(bool, HaveBackground, false);
 
 	//!Имеет скроллер с кнопками
-	SETGET(bool, HaveScrollbar);
+	SETGET(bool, HaveScrollbar, false);
 
 	//!Размер данных, хранимых внутри компоненты
-	SETGET(WISP_GEOMETRY::CSize, DataSize);
+	SETGET(WISP_GEOMETRY::CSize, DataSize, WISP_GEOMETRY::CSize());
 
 	//!Смещение к данным
-	SETGET(WISP_GEOMETRY::CPoint2Di, DataOffset);
+	SETGET(WISP_GEOMETRY::CPoint2Di, DataOffset, WISP_GEOMETRY::CPoint2Di());
 
 	//!Текущее смещение к данным
-	SETGET(WISP_GEOMETRY::CPoint2Di, CurrentOffset);
+	SETGET(WISP_GEOMETRY::CPoint2Di, CurrentOffset, WISP_GEOMETRY::CPoint2Di());
 
 	//!Доступное смещение для скроллинга
-	SETGET(WISP_GEOMETRY::CPoint2Di, AvailableOffset);
+	SETGET(WISP_GEOMETRY::CPoint2Di, AvailableOffset, WISP_GEOMETRY::CPoint2Di());
 
 private:
 	void CalculateDataSize(CBaseGUI *item, int &startX, int &startY, int &endX, int &endY);
@@ -47,13 +47,13 @@ public:
 	virtual ~CGUIHTMLGump();
 
 	//!Ссылки на компоненты
-	CGUIHTMLResizepic *m_Background;
-	CGUIHTMLButton *m_ButtonUp;
-	CGUIHTMLButton *m_ButtonDown;
-	CGUIHTMLHitBox *m_HitBoxLeft;
-	CGUIHTMLHitBox *m_HitBoxRight;
-	CGUIHTMLSlider *m_Slider;
-	CGUIScissor *m_Scissor;
+	CGUIHTMLResizepic *m_Background{ NULL };
+	CGUIHTMLButton *m_ButtonUp{ NULL };
+	CGUIHTMLButton *m_ButtonDown{ NULL };
+	CGUIHTMLHitBox *m_HitBoxLeft{ NULL };
+	CGUIHTMLHitBox *m_HitBoxRight{ NULL };
+	CGUIHTMLSlider *m_Slider{ NULL };
+	CGUIScissor *m_Scissor{ NULL };
 
 	//!Инициализация
 	//!			menu - флаг инициализации для гампа CGumpMenu

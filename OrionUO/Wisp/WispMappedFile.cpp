@@ -9,7 +9,7 @@ namespace WISP_FILE
 string g_WispMappedFileError = "";
 //----------------------------------------------------------------------------------
 CMappedFile::CMappedFile()
-: WISP_DATASTREAM::CDataReader(), m_File(INVALID_HANDLE_VALUE), m_Map(0)
+: WISP_DATASTREAM::CDataReader()
 {
 }
 //----------------------------------------------------------------------------------

@@ -26,9 +26,8 @@ struct UOPAnimationData
 class CTextureAnimationFrame
 {
 	//Координаты центра текстуры относительно начала текстуры
-	SETGET(short, CenterX);
-	SETGET(short, CenterY);
-
+	SETGET(short, CenterX, 0);
+	SETGET(short, CenterY, 0);
 
 public:
 	CTextureAnimationFrame();
@@ -42,25 +41,25 @@ public:
 class CTextureAnimationDirection
 {
 	//Количество кадров
-	SETGET(uchar, FrameCount);
+	SETGET(uchar, FrameCount, 0);
 	//Адрес в памяти (*.mul / *.uop)
-	SETGET(uint, BaseAddress);
+	SETGET(uint, BaseAddress, 0);
 	//Размер данных в памяти (*.mul / *.uop)
-	SETGET(uint, BaseSize);
+	SETGET(uint, BaseSize, 0);
 	//Адрес в памяти (Bodyconv.def)
-	SETGET(uint, PatchedAddress);
+	SETGET(uint, PatchedAddress, 0);
 	//Размер данных в памяти (Bodyconv.def)
-	SETGET(uint, PatchedSize);
+	SETGET(uint, PatchedSize, 0);
 	//Индекс файла с анимацией
-	SETGET(int, FileIndex);
+	SETGET(int, FileIndex, 0);
 	//Адрес в памяти
-	SETGET(uint, Address);
+	SETGET(uint, Address, 0);
 	//Размер данных в памяти
-	SETGET(uint, Size);
+	SETGET(uint, Size, 0);
 	//Время последнего доступа
-	SETGET(uint, LastAccessTime);
+	SETGET(uint, LastAccessTime, 0);
 	//UOP animation indicator
-	SETGET(bool, IsUOP);
+	SETGET(bool, IsUOP, false);
 
 public:
 	CTextureAnimationDirection();
@@ -73,7 +72,8 @@ public:
 class CTextureAnimationGroup
 {
 	//UOP animation indicator
-	SETGET(bool, IsUOP);
+	SETGET(bool, IsUOP, false);
+
 public:
 	CTextureAnimationGroup();
 	virtual ~CTextureAnimationGroup();

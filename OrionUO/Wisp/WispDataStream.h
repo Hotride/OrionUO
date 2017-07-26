@@ -8,8 +8,8 @@ namespace WISP_DATASTREAM
 //----------------------------------------------------------------------------------
 class CDataWritter
 {
-	SETGET(bool, AutoResize);
-	SETGET(puchar, Ptr);
+	SETGET(bool, AutoResize, true);
+	SETGET(puchar, Ptr, 0);
 
 protected:
 	UCHAR_LIST m_Data;
@@ -65,10 +65,10 @@ public:
 //----------------------------------------------------------------------------------
 class CDataReader
 {
-	SETGET(puchar, Start);
-	SETGET(int, Size);
-	SETGET(puchar, End);
-	SETGET(puchar, Ptr);
+	SETGET(puchar, Start, 0);
+	SETGET(int, Size, 0);
+	SETGET(puchar, End, 0);
+	SETGET(puchar, Ptr, 0);
 
 public:
 	CDataReader();

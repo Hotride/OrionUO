@@ -11,7 +11,6 @@
 #include "GLEngine.h"
 //----------------------------------------------------------------------------------
 CGLFrameBuffer::CGLFrameBuffer()
-: m_Ready(false), m_OldFrameBuffer(0), m_FrameBuffer(0), Texture()
 {
 	WISPFUN_DEBUG("c30_f1");
 }

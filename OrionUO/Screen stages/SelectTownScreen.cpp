@@ -17,7 +17,7 @@
 CSelectTownScreen g_SelectTownScreen;
 //----------------------------------------------------------------------------------
 CSelectTownScreen::CSelectTownScreen()
-: CBaseScreen(m_SelectTownGump), m_City(NULL)
+: CBaseScreen(m_SelectTownGump)
 {
 }
 //----------------------------------------------------------------------------------

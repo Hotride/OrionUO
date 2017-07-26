@@ -9,7 +9,7 @@ namespace WISP_FILE
 class CBinaryFileWritter : public WISP_DATASTREAM::CDataWritter
 {
 private:
-	FILE *m_File;
+	FILE *m_File{ NULL };
 
 public:
 	CBinaryFileWritter();

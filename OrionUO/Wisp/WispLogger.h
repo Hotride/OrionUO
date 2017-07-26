@@ -29,10 +29,10 @@ namespace WISP_LOGGER
 //----------------------------------------------------------------------------------
 class CLogger
 {
-	SETGET(string, FileName);
+	SETGET(string, FileName, "");
 
 protected:
-	FILE *m_File;
+	FILE *m_File{ NULL };
 
 public:
 	CLogger();

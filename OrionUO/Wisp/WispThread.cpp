@@ -97,7 +97,6 @@ unsigned __stdcall CThreadLoopSynchronizedDelay(void *arg)
 };
 //----------------------------------------------------------------------------------
 CThread::CThread()
-: m_Handle(0), m_ID(0), m_Paused(false), m_Cycled(false), m_Delay(1), m_Active(false)
 {
 	WISPFUN_DEBUG("c12_f1");
 	//DebugMsg("CThread\n");

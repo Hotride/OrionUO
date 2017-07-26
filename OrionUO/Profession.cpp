@@ -14,9 +14,7 @@
 //---------------------------------CBaseProfession----------------------------------
 //----------------------------------------------------------------------------------
 CBaseProfession::CBaseProfession()
-: CBaseQueueItem(), m_Name(""), m_TrueName(""), m_DescriptionIndex(0), m_TopLevel(false),
-m_Gump(0), m_Type(PT_NO_PROF), m_NameClilocID(0), m_DescriptionClilocID(0),
-m_Description(L"")
+: CBaseQueueItem()
 {
 }
 //----------------------------------------------------------------------------------
@@ -55,7 +53,7 @@ bool CBaseProfession::AddDescription(int desc, string name, const char *val)
 //---------------------------------CProfessionCategory------------------------------
 //----------------------------------------------------------------------------------
 CProfessionCategory::CProfessionCategory()
-: CBaseProfession(), m_Childrens("|")
+: CBaseProfession()
 {
 }
 //----------------------------------------------------------------------------------
@@ -71,7 +69,7 @@ void CProfessionCategory::AddChildren(string child)
 //-------------------------------------CProfession----------------------------------
 //----------------------------------------------------------------------------------
 CProfession::CProfession()
-: CBaseProfession(), m_Str(0), m_Int(0), m_Dex(0)
+: CBaseProfession()
 {
 	memset(&m_SkillIndex[0], 0, sizeof(m_SkillIndex));
 	memset(&m_SkillValue[0], 0, sizeof(m_SkillValue));

@@ -26,9 +26,9 @@ public:
 	virtual ~CTextRenderer();
 
 	//Список текста
-	CRenderTextObject *m_TextItems;
+	CRenderTextObject *m_TextItems{ NULL };
 
-	CRenderTextObject *m_DrawPointer;
+	CRenderTextObject *m_DrawPointer{ NULL };
 
 	//Добавить текст
 	CRenderTextObject *AddText(CRenderTextObject *obj);

@@ -12,7 +12,7 @@
 CTextContainer g_SystemChat(30);
 //----------------------------------------------------------------------------------
 CTextContainer::CTextContainer(const int &maxSize)
-: m_MaxSize(maxSize), m_Size(0)
+: m_MaxSize(maxSize)
 {
 }
 //----------------------------------------------------------------------------------

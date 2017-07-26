@@ -9,11 +9,11 @@ namespace WISP_WINDOW
 //----------------------------------------------------------------------------------
 class CWindow
 {
-	SETGET(HWND, Handle);
-	SETGETE(WISP_GEOMETRY::CSize, Size, OnChangeSize);
-	SETGET(bool, NoResize);
-	SETGETE(WISP_GEOMETRY::CSize, MinSize, OnChangeMinSize);
-	SETGETE(WISP_GEOMETRY::CSize, MaxSize, OnChangeMaxSize);
+	SETGET(HWND, Handle, 0);
+	SETGETE(WISP_GEOMETRY::CSize, Size, WISP_GEOMETRY::CSize(), OnChangeSize);
+	SETGET(bool, NoResize, false);
+	SETGETE(WISP_GEOMETRY::CSize, MinSize, WISP_GEOMETRY::CSize(100, 100), OnChangeMinSize);
+	SETGETE(WISP_GEOMETRY::CSize, MaxSize, WISP_GEOMETRY::CSize(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)), OnChangeMaxSize);
 
 private:
 	deque<WISP_THREADED_TIMER::CThreadedTimer*> m_ThreadedTimersStack;

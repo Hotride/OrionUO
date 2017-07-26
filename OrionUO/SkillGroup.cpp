@@ -12,11 +12,9 @@
 #include "Managers/FontsManager.h"
 //----------------------------------------------------------------------------------
 CSkillGroupObject::CSkillGroupObject()
-: m_Count(0), m_Maximized(false), m_Next(NULL), m_Prev(NULL)
 {
 	WISPFUN_DEBUG("c207_f1");
 	memset(m_Items, 0xFF, sizeof(m_Items));
-	m_Name = "No Name";
 }
 //----------------------------------------------------------------------------------
 CSkillGroupObject::~CSkillGroupObject()

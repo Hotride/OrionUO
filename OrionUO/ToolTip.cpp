@@ -18,8 +18,6 @@
 CToolTip g_ToolTip;
 //----------------------------------------------------------------------------------
 CToolTip::CToolTip()
-: m_Data(L""), m_ClilocID(0), m_MaxWidth(0), m_Position(), m_Use(false), m_Timer(0),
-m_Object(NULL)
 {
 }
 //----------------------------------------------------------------------------------
@@ -41,7 +39,7 @@ void CToolTip::Set(wstring str, int maxWidth)
 	WISPFUN_DEBUG("c213_f3");
 	m_Use = !(m_Timer > g_Ticks);
 
-	CRenderObject *object = g_SelectedObject.Object();
+	CRenderObject *object = g_SelectedObject.Object;
 
 	if (object == m_Object || object == NULL) //Уже забиндено или нет объекта для бинда
 		return;

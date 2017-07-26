@@ -15,19 +15,19 @@
 //----------------------------------------------------------------------------------
 class CGumpContainer : public CGump
 {
-	SETGET(bool, IsGameBoard);
+	SETGET(bool, IsGameBoard, false);
 
 private:
-	uint m_CorpseEyesTicks;
-	uchar m_CorpseEyesOffset;
+	uint m_CorpseEyesTicks{ 0 };
+	uchar m_CorpseEyesOffset{ 0 };
 
 	static const uint ID_GC_LOCK_MOVING = 0xFFFFFFFE;
 	static const uint ID_GC_MINIMIZE = 0xFFFFFFFF;
-	
-	CTextRenderer m_TextRenderer;
 
-	CGUIGumppic *m_CorpseEyes;
-	CGUIDataBox *m_DataBox;
+	CTextRenderer m_TextRenderer{ CTextRenderer() };
+
+	CGUIGumppic *m_CorpseEyes{ NULL };
+	CGUIDataBox *m_DataBox{ NULL };
 
 protected:
 	virtual void CalculateGumpState();
@@ -36,7 +36,7 @@ public:
 	CGumpContainer(uint serial, uint id, short x, short y);
 	virtual ~CGumpContainer();
 
-	CGUIGumppic *m_BodyGump;
+	CGUIGumppic *m_BodyGump{ NULL };
 	
 	void UpdateItemCoordinates(class CGameObject *item);
 

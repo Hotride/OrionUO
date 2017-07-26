@@ -20,13 +20,13 @@ private:
 	uint m_Keys[MAX_FAST_WALK_STACK_SIZE + 1];
 
 	//Текущий индекс
-	int m_Current;
+	int m_Current{ 0 };
 
 	//Глубина стека
-	int m_Deep;
+	int m_Deep{ 0 };
 
 public:
-	CFastWalkStack() :m_Current(0), m_Deep(0) { memset(m_Keys, 0, sizeof(m_Keys)); }
+	CFastWalkStack() { memset(m_Keys, 0, sizeof(m_Keys)); }
 	~CFastWalkStack() {}
 
 	void Reset(); //Очистить стек

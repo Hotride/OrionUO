@@ -34,11 +34,11 @@ enum PATH_OBJECT_FLAGS
 class CPathFinder
 {
 	//Автоматической передвижение (не сложными махинациями с мышкой)
-	SETGET(bool, AutoWalking);
-	SETGET(bool, PathFindidngCanBeCancelled);
-	SETGET(bool, BlockMoving);
-	SETGET(bool, FastRotation);
-	SETGET(bool, IgnoreStaminaCheck);
+	SETGET(bool, AutoWalking, false);
+	SETGET(bool, PathFindidngCanBeCancelled, false);
+	SETGET(bool, BlockMoving, false);
+	SETGET(bool, FastRotation, false);
+	SETGET(bool, IgnoreStaminaCheck, false);
 
 protected:
 	//Вычисление новой Z координаты
@@ -53,16 +53,16 @@ protected:
 	//Создание списка предметов, участвующих в поиске в указанных координатах
 	bool CreateItemsList(vector<CPathObjectTest> &list, const int &x, const int &y, const int &stepState);
 
-	WISP_GEOMETRY::CPoint2Di m_StartPoint;
-	WISP_GEOMETRY::CPoint2Di m_EndPoint;
+	WISP_GEOMETRY::CPoint2Di m_StartPoint{ WISP_GEOMETRY::CPoint2Di() };
+	WISP_GEOMETRY::CPoint2Di m_EndPoint{ WISP_GEOMETRY::CPoint2Di() };
 
-	int m_GoalNode;
-	bool m_GoalFound;
+	int m_GoalNode{ 0 };
+	bool m_GoalFound{ 0 };
 
-	int m_ActiveOpenNodes;
-	int m_ActiveClosedNodes;
+	int m_ActiveOpenNodes{ 0 };
+	int m_ActiveClosedNodes{ 0 };
 
-	int m_PathFindDistance;
+	int m_PathFindDistance{ 0 };
 
 	CPathNode m_OpenList[PATHFINDER_MAX_NODES];
 	CPathNode m_ClosedList[PATHFINDER_MAX_NODES];
@@ -71,10 +71,10 @@ protected:
 	CPathNode *m_Path[PATHFINDER_MAX_NODES];
 
 	//Текущая точка пути
-	int m_PointIndex;
+	int m_PointIndex{ 0 };
 
 	//Размер точек пути
-	int m_PathSize;
+	int m_PathSize{ 0 };
 
 	int GetGoalDistCost(const WISP_GEOMETRY::CPoint2Di &p, int cost);
 

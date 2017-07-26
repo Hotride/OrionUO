@@ -16,8 +16,8 @@
 //!Класс с данными о городе
 class CCity
 {
-	SETGET(string, Name);
-	SETGET(wstring, Description);
+	SETGET(string, Name, "");
+	SETGET(wstring, Description, L"");
 
 public:
 	CCity(const string &name, const wstring &description);

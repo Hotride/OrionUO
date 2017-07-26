@@ -14,13 +14,13 @@
 //----------------------------------------------------------------------------------
 class CUseItemActions
 {
-	SETGET(uint, Timer);
+	SETGET(uint, Timer, 0);
 
 private:
 	deque<uint> m_List;
 
 public:
-	CUseItemActions() : m_Timer(0) {}
+	CUseItemActions() {}
 	~CUseItemActions() {}
 
 	void Add(const uint &serial);
@@ -35,13 +35,13 @@ extern CUseItemActions g_UseItemActions;
 //!Класс стека контейнеров, используется для хранения информации при загрузке гапмов контейнеров из конфига при входе в игру
 class CContainerStackItem
 {
-	SETGET(uint, Serial);
-	SETGET(short, X);
-	SETGET(short, Y);
-	SETGET(short, MinimizedX);
-	SETGET(short, MinimizedY);
-	SETGET(bool, Minimized);
-	SETGET(bool, LockMoving);
+	SETGET(uint, Serial, 0);
+	SETGET(short, X, 0);
+	SETGET(short, Y, 0);
+	SETGET(short, MinimizedX, 0);
+	SETGET(short, MinimizedY, 0);
+	SETGET(bool, Minimized, false);
+	SETGET(bool, LockMoving, false);
 
 public:
 	CContainerStackItem(uint serial, short x, short y, short minimizedX, short minimizedY, bool minimized, bool lockMoving);
@@ -95,14 +95,14 @@ const int CONTAINERS_RECT_STEP = 20;
 //!Класс для вычисления смещения открытия гампов контейнеров
 class CContainerRect
 {
-	SETGET(short, DefaultX);
-	SETGET(short, DefaultY);
+	SETGET(short, DefaultX, 40);
+	SETGET(short, DefaultY, 40);
 
-	SETGET(short, X);
-	SETGET(short, Y);
+	SETGET(short, X, 40);
+	SETGET(short, Y, 40);
 
 public:
-	CContainerRect();
+	CContainerRect() {}
 	~CContainerRect() {}
 
 	/*!

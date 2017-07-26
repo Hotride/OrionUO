@@ -18,11 +18,6 @@
 CFontsManager g_FontManager;
 //----------------------------------------------------------------------------------
 CFontsManager::CFontsManager()
-: m_SavePixels(false), m_UseHTML(false), m_Font(NULL), m_FontCount(0),
-m_HTMLColor(0xFFFFFFFF), m_RecalculateWidthByInfo(false), m_UnusePartialHue(false),
-m_HTMLBackgroundCanBeColored(false), m_BackgroundColor(0), m_WebLinkColor(0),
-m_VisitedWebLinkColor(0), m_LeftMargin(0), m_TopMargin(0), m_RightMargin(0),
-m_BottomMargin(0)
 {
 	WISPFUN_DEBUG("c143_f1");
 	memset(m_UnicodeFontAddress, 0, sizeof(m_UnicodeFontAddress));
@@ -196,10 +191,10 @@ int CFontsManager::GetFontOffsetY(uchar font, uchar index)
 @param [__in] flags Эффекты текста
 @return Координаты каретки
 */
-POINT CFontsManager::GetCaretPosA(uchar font, const char *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags)
+WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosA(uchar font, const char *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f7");
-	POINT p = {0, 0};
+	WISP_GEOMETRY::CPoint2Di p;
 
 	if (font > m_FontCount || pos < 1)
 		return p;
@@ -238,7 +233,7 @@ POINT CFontsManager::GetCaretPosA(uchar font, const char *str, int pos, int widt
 					if (index >= 0xE0)
 						continue;
 
-					p.x += fd.Chars[index].Width;
+					p.X += fd.Chars[index].Width;
 					pos--;
 
 					if (pos < 1)
@@ -250,10 +245,10 @@ POINT CFontsManager::GetCaretPosA(uchar font, const char *str, int pos, int widt
 
 			if (pos <= 1)
 			{
-				p.y = height;
+				p.Y = height;
 
 				if (pos == 1)
-					p.y += ptr->MaxHeight;
+					p.Y += ptr->MaxHeight;
 
 				break;
 			}
@@ -1056,10 +1051,10 @@ void CFontsManager::DrawA(uchar font, const char *str, ushort color, int x, int 
 @param [__in] flags Эффекты текста
 @return Координаты каретки
 */
-POINT CFontsManager::GetCaretPosW(uchar font, const wchar_t *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags)
+WISP_GEOMETRY::CPoint2Di CFontsManager::GetCaretPosW(uchar font, const wchar_t *str, int pos, int width, TEXT_ALIGN_TYPE align, ushort flags)
 {
 	WISPFUN_DEBUG("c143_f19");
-	POINT p = {0, 0};
+	WISP_GEOMETRY::CPoint2Di p;
 
 	if (pos < 1 || font >= 20 || !m_UnicodeFontAddress[font])
 		return p;
@@ -1098,10 +1093,10 @@ POINT CFontsManager::GetCaretPosW(uchar font, const wchar_t *str, int pos, int w
 					if (table[ch] && table[ch] != 0xFFFFFFFF)
 					{
 						puchar cptr = (puchar)((uint)table + table[ch]);
-						p.x += ((char)cptr[0] + (char)cptr[2] + 1);
+						p.X += ((char)cptr[0] + (char)cptr[2] + 1);
 					}
 					else if (ch == L' ')
-						p.x += UNICODE_SPACE_WIDTH;
+						p.X += UNICODE_SPACE_WIDTH;
 					else
 						pos++;
 
@@ -1116,10 +1111,10 @@ POINT CFontsManager::GetCaretPosW(uchar font, const wchar_t *str, int pos, int w
 
 			if (pos <= 1)
 			{
-				p.y = height;
+				p.Y = height;
 
 				if (pos == 1)
-					p.y += ptr->MaxHeight;
+					p.Y += ptr->MaxHeight;
 
 				break;
 			}

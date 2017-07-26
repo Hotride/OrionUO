@@ -14,11 +14,11 @@
 //----------------------------------------------------------------------------------
 class CGumpPopupMenu : public CGump
 {
-	SETGET(int, Width);
-	SETGET(int, Height);
+	SETGET(int, Width, 0);
+	SETGET(int, Height, 0);
 
 private:
-	CGUIColoredPolygone *m_Polygone;
+	CGUIColoredPolygone *m_Polygone{ NULL };
 
 public:
 	CGumpPopupMenu(uint serial, short x, short y);

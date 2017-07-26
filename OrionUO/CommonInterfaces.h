@@ -26,9 +26,9 @@ public:
 	IOrionString &operator()(const std::string &str);
 	IOrionString &operator()(const std::wstring &str);
 
-	bool m_Unicode;
-	char *m_DataA;
-	wchar_t *m_DataW;
+	bool m_Unicode{ false };
+	char *m_DataA{ NULL };
+	wchar_t *m_DataW{ NULL };
 };
 //----------------------------------------------------------------------------------
 #pragma pack (push,1)

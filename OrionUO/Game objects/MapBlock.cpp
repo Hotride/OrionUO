@@ -15,7 +15,7 @@
 #include "../GLEngine/GLEngine.h"
 //----------------------------------------------------------------------------------
 CMapBlock::CMapBlock(const uint &index)
-: CBaseQueueItem(), m_Index(index), m_LastAccessTime(GetTickCount()), m_X(0), m_Y(0)
+: CBaseQueueItem(), m_Index(index), m_LastAccessTime(GetTickCount())
 {
 	WISPFUN_DEBUG("c24_f1");
 	//Обнуляем блок
@@ -236,7 +236,7 @@ void CMapBlock::CreateLandTextureRect()
 							obj->VertexBuffer = vertexBuffer;
 							obj->NormalBuffer = normalBuffer;
 
-							const RECT &rc = obj->Rect;
+							const RECT &rc = obj->m_Rect;
 							CVector *normals = obj->m_Normals;
 
 							int positionArray[] = { 0, 0, 0, 1, 1, 0, 1, 1 };

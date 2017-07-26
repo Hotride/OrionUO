@@ -30,7 +30,7 @@ void CGumpGeneric::InitToolTip()
 {
 	WISPFUN_DEBUG("c128_f3");
 
-	if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGUI() && ((CBaseGUI*)g_SelectedObject.Object())->Type == GOT_VIRTURE_GUMP)
+	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsGUI() && ((CBaseGUI*)g_SelectedObject.Object)->Type == GOT_VIRTURE_GUMP)
 	{
 		int offset = 0;
 

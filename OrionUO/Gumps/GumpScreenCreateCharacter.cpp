@@ -379,7 +379,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 void CGumpScreenCreateCharacter::InitToolTip()
 {
 	WISPFUN_DEBUG("c114_f2");
-	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object() == NULL)
+	if (!g_ConfigManager.UseToolTips || g_SelectedObject.Object == NULL)
 		return;
 
 	uint id = g_SelectedObject.Serial;
@@ -495,7 +495,7 @@ void CGumpScreenCreateCharacter::GUMP_TEXT_ENTRY_EVENT_C
 	{
 		if (serial >= ID_CCS_COLOR_RANGE)
 		{
-			ushort color = g_SelectedObject.Object()->Color + 1;
+			ushort color = g_SelectedObject.Object->Color + 1;
 
 			if (g_CreateCharacterScreen.ColorSelection == CCSID_SKIN_TONE)
 			{

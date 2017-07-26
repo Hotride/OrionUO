@@ -27,7 +27,6 @@ void UnuseShader()
 //-----------------------------------CGLShader--------------------------------------
 //----------------------------------------------------------------------------------
 CGLShader::CGLShader(const char *vertexShaderData, const char *fragmentShaderData)
-: m_Shader(0), m_VertexShader(0), m_FragmentShader(0), m_TexturePointer(0)
 {
 	WISPFUN_DEBUG("c32_f1");
 	if (vertexShaderData != NULL && fragmentShaderData != NULL)
@@ -118,8 +117,7 @@ CDeathShader::CDeathShader(const char *vertexShaderData, const char *fragmentSha
 //----------------------------------CColorizerShader--------------------------------
 //----------------------------------------------------------------------------------
 CColorizerShader::CColorizerShader(const char *vertexShaderData, const char *fragmentShaderData)
-: CGLShader(vertexShaderData, fragmentShaderData), m_ColorTablePointer(0),
-m_DrawModePointer(0)
+: CGLShader(vertexShaderData, fragmentShaderData)
 {
 	WISPFUN_DEBUG("c34_f1");
 	if (m_Shader != 0)

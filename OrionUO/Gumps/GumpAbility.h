@@ -17,8 +17,8 @@ class CGumpAbility : public CGump
 private:
 	static const int ID_GS_LOCK_MOVING = 1;
 
-	class CGUIGumppic *m_Body;
-	class CGUIGlobalColor *m_Colorizer;
+	CGUIGumppic *m_Body{ NULL };
+	CGUIGlobalColor *m_Colorizer{ NULL };
 
 public:
 	CGumpAbility(const uint &serial, const int &x, const int &y);

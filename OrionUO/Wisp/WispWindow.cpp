@@ -17,8 +17,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 }
 //----------------------------------------------------------------------------------
 CWindow::CWindow()
-: m_Handle(0), m_Size(0, 0), m_NoResize(false), m_MinSize(200, 100),
-m_MaxSize(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN))
 {
 	WISPFUN_DEBUG("c14_f1");
 	g_WispWindow = this;

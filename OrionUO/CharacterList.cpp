@@ -12,8 +12,6 @@
 CCharacterList g_CharacterList;
 //----------------------------------------------------------------------------------
 CCharacterList::CCharacterList()
-:m_Count(5), m_Selected(0), m_OnePerson(false), m_Have6Slot(false),
-m_Have7Slot(false), m_ClientFlag(0)
 {
 	WISPFUN_DEBUG("c182_f1");
 	//!Чистим при создании

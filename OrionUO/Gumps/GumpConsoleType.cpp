@@ -17,7 +17,7 @@
 CGumpConsoleType *g_GumpConsoleType = NULL;
 //----------------------------------------------------------------------------------
 CGumpConsoleType::CGumpConsoleType(bool minimized, bool showFullText)
-: CGump(GT_CONSOLE_TYPE, 0, 0, 0), m_SelectedType(0), m_ShowFullText(showFullText)
+: CGump(GT_CONSOLE_TYPE, 0, 0, 0), m_ShowFullText(showFullText)
 {
 	WISPFUN_DEBUG("c92_f1");
 	m_Minimized = minimized;

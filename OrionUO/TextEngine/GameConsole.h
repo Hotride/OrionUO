@@ -18,7 +18,7 @@ class CGameConsole : public CEntryText
 {
 private:
 	//Тип консоли
-	GAME_CONSOLE_TEXT_TYPE m_Type;
+	GAME_CONSOLE_TEXT_TYPE m_Type{ GCTT_NORMAL };
 
 	//Тест данных на не стандартное сообщение
 	wstring IsSystemCommand(const wchar_t *text, int &len, int &member);
@@ -27,12 +27,12 @@ private:
 	wstring m_ConsoleStack[MAX_CONSOLE_STACK_SIZE];
 
 	//!Количество добавленного в стек текста
-	int m_ConsoleStackCount;
+	int m_ConsoleStackCount{ 0 };
 
 	//!Указатель на текущий элемент стека
-	int m_ConsoleSelectedIndex;
+	int m_ConsoleSelectedIndex{ 0 };
 
-	bool m_PositionChanged;
+	bool m_PositionChanged{ false };
 
 public:
 	CGameConsole();

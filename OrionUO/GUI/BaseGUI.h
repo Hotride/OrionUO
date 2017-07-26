@@ -19,30 +19,30 @@
 class CBaseGUI : public CRenderObject
 {
 	//!Тип компоненты
-	SETGET(GUMP_OBJECT_TYPE, Type);
+	SETGET(GUMP_OBJECT_TYPE, Type, GOT_NONE);
 
 	//!Возможность перемещения гампа, если компонента зажата
-	SETGET(bool, MoveOnDrag);
+	SETGET(bool, MoveOnDrag, false);
 
 	//!Флаг использования PartialHue
-	SETGET(bool, PartialHue);
+	SETGET(bool, PartialHue, false);
 
 	//!Метод использования функции выбора
 	//!			true - проверяет нахождение курсора мышки в пределах полигона (для CGUIPolygonal и компонент с шириной и высотой, либо берет габариты картинки исходного состояния m_Graphic)
 	//!			false - стандартная функция проверки пикселей
-	SETGET(bool, CheckPolygone);
+	SETGET(bool, CheckPolygone, false);
 
 	//!Включение выключение обработки компоненты (компонента отображается)
-	SETGET(bool, Enabled);
+	SETGET(bool, Enabled, true);
 
 	//!Показать/скрыть компоненту и ее обработку
-	SETGET(bool, Visible);
+	SETGET(bool, Visible, true);
 
 	//!Флаг, отвечающий только за выбор компоненты, без ее отображения в гампе
-	SETGET(bool, SelectOnly);
+	SETGET(bool, SelectOnly, false);
 
 	//!Флаг, отвечающий только за отрисовку компоненты, без ее выбора
-	SETGET(bool, DrawOnly);
+	SETGET(bool, DrawOnly, false);
 
 public:
 	CBaseGUI(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y);

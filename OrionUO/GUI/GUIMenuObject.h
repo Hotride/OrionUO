@@ -17,7 +17,7 @@
 class CGUIMenuObject : public CGUITilepic
 {
 	//!Текст объекта
-	SETGET(string, Text);
+	SETGET(string, Text, "");
 
 public:
 	CGUIMenuObject(const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const string &text);

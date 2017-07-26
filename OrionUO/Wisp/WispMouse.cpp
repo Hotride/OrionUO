@@ -10,11 +10,6 @@ namespace WISP_MOUSE
 CMouse *g_WispMouse = NULL;
 //----------------------------------------------------------------------------------
 CMouse::CMouse()
-: m_Position(), m_LeftDropPosition(), m_RightDropPosition(), m_MidDropPosition(),
-m_LeftButtonPressed(false), m_RightButtonPressed(false), m_MidButtonPressed(false),
-m_Dragging(false), m_DoubleClickDelay(350), m_CancelDoubleClick(false),
-m_LastLeftButtonClickTimer(0), m_LastRightButtonClickTimer(0), m_LastMidButtonClickTimer(0),
-m_RealPosition()
 {
 	g_WispMouse = this;
 }

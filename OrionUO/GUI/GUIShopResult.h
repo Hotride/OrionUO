@@ -18,21 +18,21 @@
 class CGUIShopResult : public CBaseGUI
 {
 	//!Стоимость
-	SETGET(uint, Price);
+	SETGET(uint, Price, 0);
 
 	//!Название
-	SETGET(string, Name);
+	SETGET(string, Name, "");
 
 private:
 	//!Текстура названия
-	CGLTextTexture m_NameText;
+	CGLTextTexture m_NameText{ CGLTextTexture() };
 
 public:
 	CGUIShopResult(class CGUIShopItem *shopItem, const int &x, const int &y);
 	virtual ~CGUIShopResult();
 
 	//!Компонента кнопок MinMax
-	class CGUIMinMaxButtons *m_MinMaxButtons;
+	class CGUIMinMaxButtons *m_MinMaxButtons{ NULL };
 
 	//!Получить ссылку на выбранную компоненту или ссылку на себя
 	CBaseGUI *SelectedItem();

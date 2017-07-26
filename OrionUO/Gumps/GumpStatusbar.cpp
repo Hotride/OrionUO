@@ -31,9 +31,7 @@ int CGumpStatusbar::m_StatusbarDefaultWidth = 154;
 int CGumpStatusbar::m_StatusbarDefaultHeight = 59;
 //----------------------------------------------------------------------------------
 CGumpStatusbar::CGumpStatusbar(uint serial, short x, short y, bool minimized)
-: CGump(GT_STATUSBAR, serial, x, y), m_GroupNext(NULL), m_GroupPrev(NULL),
-m_WantFullUpdateContent(false), m_StatusbarUnlocker(NULL), m_Body(NULL),
-m_HitsBody(NULL), m_Entry(NULL), m_Name("")
+: CGump(GT_STATUSBAR, serial, x, y)
 {
 	WISPFUN_DEBUG("c128_f1");
 	if (minimized)

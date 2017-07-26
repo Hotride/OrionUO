@@ -23,11 +23,11 @@
 //Базовый класс стадий окна клиента
 class CBaseScreen : public CBaseQueue
 {
-	SETGET(ushort, CursorGraphic);
+	SETGET(ushort, CursorGraphic, 0x2073);
 
 protected:
 	//!Индекс действия, которое необходимо совершить после окончания плавного перехода затемненного состояния экрана
-	uchar m_SmoothScreenAction;
+	uchar m_SmoothScreenAction{ 0 };
 
 	CGump &m_Gump;
 

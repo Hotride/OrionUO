@@ -15,21 +15,21 @@
 //----------------------------------------------------------------------------------
 class CGumpSecureTrading : public CGump
 {
-	SETGET(uint, ID2);
-	SETGET(bool, StateMy);
-	SETGET(bool, StateOpponent);
-	SETGET(string, Text);
+	SETGET(uint, ID2, 0);
+	SETGET(bool, StateMy, false);
+	SETGET(bool, StateOpponent, false);
+	SETGET(string, Text, "");
 
 private:
 	static const int ID_GST_CHECKBOX = 1;
-	
-	CTextRenderer m_TextRenderer;
 
-	CGUIButton *m_MyCheck;
-	CGUIGumppic *m_OpponentCheck;
+	CTextRenderer m_TextRenderer{ CTextRenderer() };
 
-	CGUIDataBox *m_MyDataBox;
-	CGUIDataBox *m_OpponentDataBox;
+	CGUIButton *m_MyCheck{ NULL };
+	CGUIGumppic *m_OpponentCheck{ NULL };
+
+	CGUIDataBox *m_MyDataBox{ NULL };
+	CGUIDataBox *m_OpponentDataBox{ NULL };
 	
 protected:
 	virtual void CalculateGumpState();

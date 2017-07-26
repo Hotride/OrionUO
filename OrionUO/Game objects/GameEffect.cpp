@@ -16,10 +16,7 @@
 #include "../Game objects/GameObject.h"
 //----------------------------------------------------------------------------------
 CGameEffect::CGameEffect()
-: CRenderWorldObject(ROT_EFFECT, 0, 0, 0, 0, 0, 0), m_EffectType(EF_MOVING),
-m_DestSerial(0), m_DestX(0), m_DestY(0), m_DestZ(0), m_Speed(0), m_Duration(0),
-m_FixedDirection(false), m_Explode(false), m_RenderMode(0), m_AnimIndex(0),
-m_Increment(0), m_LastChangeFrameTime(0)
+: CRenderWorldObject(ROT_EFFECT, 0, 0, 0, 0, 0, 0)
 {
 	m_RenderQueueIndex = 8;
 }

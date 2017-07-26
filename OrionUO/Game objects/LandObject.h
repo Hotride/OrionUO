@@ -16,29 +16,26 @@
 //Класс ландшафта
 class CLandObject : public CMapObject
 {
-	//Координаты привязки вершин
-	SETGET(RECT, Rect);
-
 	//Минимальная Z координата
-	SETGET(char, MinZ);
+	SETGET(char, MinZ, 0);
 
 	//Средняя Z координата
-	SETGET(char, AverageZ);
+	SETGET(char, AverageZ, 0);
 
 	//Флаг отображения (true - картинка из texmaps, false - из art.mul)
-	SETGET(bool, IsStretched);
+	SETGET(bool, IsStretched, false);
 
 	//Оригинальный индекс картинки
-	SETGET(ushort, OriginalGraphic);
+	SETGET(ushort, OriginalGraphic, 0);
 
 	//!Буфер текстурных координат
-	SETGET(GLuint, PositionBuffer);
+	SETGET(GLuint, PositionBuffer, 0);
 
 	//!Буфер вершин
-	SETGET(GLuint, VertexBuffer);
+	SETGET(GLuint, VertexBuffer, 0);
 
 	//!Буфер нормалей
-	SETGET(GLuint, NormalBuffer);
+	SETGET(GLuint, NormalBuffer, 0);
 
 private:
 	int GetDirectionZ(const int &direction);
@@ -46,6 +43,9 @@ private:
 public:
 	CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z);
 	virtual ~CLandObject();
+
+	//Координаты привязки вершин
+	RECT m_Rect;
 
 	virtual void UpdateGraphicBySeason();
 

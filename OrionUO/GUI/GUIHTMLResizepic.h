@@ -18,7 +18,7 @@ class CGUIHTMLResizepic : public CGUIResizepic
 {
 private:
 	//!Гамп-родитель
-	class CGUIHTMLGump *m_HTMLGump;
+	class CGUIHTMLGump *m_HTMLGump{ NULL };
 
 public:
 	CGUIHTMLResizepic(class CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height);

@@ -17,19 +17,19 @@
 class CGUIScrollBackground : public CBaseGUI
 {
 	//!Высота
-	SETGET(int, Height);
+	SETGET(int, Height, 0);
 
 	//!Смещение по оси X
-	SETGET(int, OffsetX);
+	SETGET(int, OffsetX, 0);
 
 	//!Смещение нижней части по оси X
-	SETGET(int, BottomOffsetX);
+	SETGET(int, BottomOffsetX, 0);
 
 	//!Ширина
-	SETGET(int, Width);
+	SETGET(int, Width, 0);
 
 	//!Рабочая область
-	SETGET(WISP_GEOMETRY::CRect, WorkSpace);
+	SETGET(WISP_GEOMETRY::CRect, WorkSpace, WISP_GEOMETRY::CRect());
 
 public:
 	CGUIScrollBackground(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &height);

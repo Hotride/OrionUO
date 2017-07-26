@@ -14,9 +14,8 @@
 #include "../OrionUO.h"
 //----------------------------------------------------------------------------------
 CGumpMap::CGumpMap(uint serial, ushort graphic, int startX, int startY, int endX, int endY, int width, int height)
-: CGump(GT_MAP, serial, 0, 0), m_PlotState(0), m_StartX(startX), m_StartY(startY),
-m_EndX(endX), m_EndY(endY), m_Width(width), m_Height(height), m_PinTimer(0),
-m_PinOnCursor(NULL), m_FakeInsertionPin(NULL)
+: CGump(GT_MAP, serial, 0, 0), m_StartX(startX), m_StartY(startY),
+m_EndX(endX), m_EndY(endY), m_Width(width), m_Height(height)
 {
 	WISPFUN_DEBUG("c99_f1");
 	m_Graphic = graphic;

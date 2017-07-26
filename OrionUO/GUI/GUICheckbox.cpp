@@ -14,8 +14,7 @@
 //----------------------------------------------------------------------------------
 CGUICheckbox::CGUICheckbox(const uint &serial, const ushort &graphic, const ushort &graphicChecked, const ushort &graphicDisabled, const int &x, const int &y)
 : CGUIDrawObject(GOT_CHECKBOX, serial, graphic, 0, x, y), m_GraphicChecked(graphicChecked),
-m_GraphicSelected(graphic), m_GraphicDisabled(graphicDisabled), m_Checked(false),
-m_TextPosition(STP_RIGHT), m_TextX(0), m_TextY(0), m_DefaultTextOffset(2)
+m_GraphicSelected(graphic), m_GraphicDisabled(graphicDisabled)
 {
 }
 //----------------------------------------------------------------------------------
@@ -145,7 +144,7 @@ ushort CGUICheckbox::GetDrawGraphic()
 		graphic = m_GraphicDisabled;
 	else if (m_Checked)
 		graphic = m_GraphicChecked;
-	else if (g_SelectedObject.Object() == this)
+	else if (g_SelectedObject.Object == this)
 		graphic = m_GraphicSelected;
 
 	return graphic;
@@ -178,14 +177,14 @@ bool CGUICheckbox::Select()
 void CGUICheckbox::OnMouseEnter()
 {
 	WISPFUN_DEBUG("c46_f9");
-	if (m_Graphic != m_GraphicSelected && g_SelectedObject.Gump() != NULL)
-		g_SelectedObject.Gump()->WantRedraw = true;
+	if (m_Graphic != m_GraphicSelected && g_SelectedObject.Gump != NULL)
+		g_SelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUICheckbox::OnMouseExit()
 {
 	WISPFUN_DEBUG("c46_f10");
-	if (m_Graphic != m_GraphicSelected && g_LastSelectedObject.Gump() != NULL)
-		g_LastSelectedObject.Gump()->WantRedraw = true;
+	if (m_Graphic != m_GraphicSelected && g_LastSelectedObject.Gump != NULL)
+		g_LastSelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

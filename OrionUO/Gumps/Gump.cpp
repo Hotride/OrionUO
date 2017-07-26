@@ -32,11 +32,7 @@ CGump::CGump()
 }
 //----------------------------------------------------------------------------------
 CGump::CGump(GUMP_TYPE type, uint serial, int x, int y)
-: CRenderObject(serial, 0, 0, x, y), m_GumpType(type), m_ID(0), m_MinimizedX(0),
-m_MinimizedY(0), m_NoClose(false), m_NoMove(false), m_Minimized(false), m_WantRedraw(false),
-m_FrameCreated(false), m_WantUpdateContent(true), m_Blocked(false), m_LockMoving(false),
-m_Page(0), m_Draw2Page(0), m_Transparent(false), m_RemoveMark(false), m_NoProcess(false),
-m_Locker(0, 0, 0, 0, 0, 0)
+: CRenderObject(serial, 0, 0, x, y), m_GumpType(type)
 {
 }
 //----------------------------------------------------------------------------------
@@ -58,13 +54,13 @@ CGump::~CGump()
 		}
 	}
 
-	if (g_ClickObject.Gump() == this)
+	if (g_ClickObject.Gump == this)
 		g_ClickObject.Clear();
 
-	if (g_SelectedObject.Gump() == this)
+	if (g_SelectedObject.Gump == this)
 		g_SelectedObject.Clear();
 
-	if (g_LastSelectedObject.Gump() == this)
+	if (g_LastSelectedObject.Gump == this)
 		g_LastSelectedObject.Clear();
 
 	if (g_PressedObject.LeftGump() == this)
@@ -181,12 +177,12 @@ void CGump::CalculateGumpState()
 {
 	WISPFUN_DEBUG("c84_f6");
 	g_GumpPressed = (g_ObjectInHand == NULL && g_PressedObject.LeftGump() == this /*&& g_SelectedObject.Gump() == this*/);
-	g_GumpSelectedElement = ((g_SelectedObject.Gump() == this) ? g_SelectedObject.Object() : NULL);
+	g_GumpSelectedElement = ((g_SelectedObject.Gump == this) ? g_SelectedObject.Object : NULL);
 	g_GumpPressedElement = NULL;
 
 	if (g_GumpPressed && g_PressedObject.LeftObject() != NULL)
 	{
-		if (g_PressedObject.LeftObject() == g_SelectedObject.Object())
+		if (g_PressedObject.LeftObject() == g_SelectedObject.Object)
 			g_GumpPressedElement = g_PressedObject.LeftObject();
 		else if (g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->IsPressedOuthit())
 			g_GumpPressedElement = g_PressedObject.LeftObject();
@@ -586,11 +582,11 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 				group = ((CGUIGroup*)item)->Index;
 				continue;
 			}
-			else if (g_SelectedObject.Object() != item && !item->IsHTMLGump())
+			else if (g_SelectedObject.Object != item && !item->IsHTMLGump())
 			{
 				if (item->Type == GOT_SHOPRESULT)
 				{
-					if (g_SelectedObject.Object() == ((CGUIShopResult*)item)->m_MinMaxButtons)
+					if (g_SelectedObject.Object == ((CGUIShopResult*)item)->m_MinMaxButtons)
 					{
 						WISP_GEOMETRY::CPoint2Di oldPos = g_MouseManager.Position;
 						g_MouseManager.Position = WISP_GEOMETRY::CPoint2Di(g_MouseManager.Position.X - item->X, g_MouseManager.Position.Y - item->Y);
@@ -671,9 +667,9 @@ void CGump::TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &curr
 				{
 					CGUISkillGroup *skillGroup = (CGUISkillGroup*)item;
 
-					if (g_SelectedObject.Object() == skillGroup->m_Name)
+					if (g_SelectedObject.Object == skillGroup->m_Name)
 					{
-						gump->OnTextEntry(g_SelectedObject.Object()->Serial);
+						gump->OnTextEntry(g_SelectedObject.Object->Serial);
 						gump->WantRedraw = true;
 
 						return;
@@ -831,7 +827,7 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 				{
 					if (g_PressedObject.LeftObject() == item)
 					{
-						if (g_SelectedObject.Object() != g_PressedObject.LeftObject() && !item->IsPressedOuthit())
+						if (g_SelectedObject.Object != g_PressedObject.LeftObject() && !item->IsPressedOuthit())
 							continue;
 					}
 					else
@@ -1055,7 +1051,7 @@ void CGump::TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, con
 				group = ((CGUIGroup*)item)->Index;
 				continue;
 			}
-			else if (g_SelectedObject.Object() != item && !item->IsHTMLGump())
+			else if (g_SelectedObject.Object != item && !item->IsHTMLGump())
 				continue;
 
 			switch (item->Type)

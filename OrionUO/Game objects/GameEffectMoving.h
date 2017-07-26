@@ -16,8 +16,8 @@
 class CGameEffectMoving : public CGameEffectDrag
 {
 	//!Угол поворота эффекта
-	SETGET(float, Angle);
-	SETGET(int, OffsetZ);
+	SETGET(float, Angle, 0.0f);
+	SETGET(int, OffsetZ, 0);
 
 public:
 	CGameEffectMoving();

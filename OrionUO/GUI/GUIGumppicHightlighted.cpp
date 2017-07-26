@@ -26,7 +26,7 @@ void CGUIGumppicHightlighted::SetShaderMode()
 	WISPFUN_DEBUG("c56_f1");
 	int drawMode = (m_Color != 0);
 
-	if (g_SelectedObject.Object() == this)
+	if (g_SelectedObject.Object == this)
 	{
 		drawMode = 1;
 
@@ -46,14 +46,14 @@ void CGUIGumppicHightlighted::SetShaderMode()
 void CGUIGumppicHightlighted::OnMouseEnter()
 {
 	WISPFUN_DEBUG("c56_f2");
-	if (g_SelectedObject.Gump() != NULL)
-		g_SelectedObject.Gump()->WantRedraw = true;
+	if (g_SelectedObject.Gump != NULL)
+		g_SelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------
 void CGUIGumppicHightlighted::OnMouseExit()
 {
 	WISPFUN_DEBUG("c56_f3");
-	if (g_LastSelectedObject.Gump() != NULL)
-		g_LastSelectedObject.Gump()->WantRedraw = true;
+	if (g_LastSelectedObject.Gump != NULL)
+		g_LastSelectedObject.Gump->WantRedraw = true;
 }
 //----------------------------------------------------------------------------------

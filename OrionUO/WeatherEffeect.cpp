@@ -10,7 +10,6 @@
 #include "WeatherEffect.h"
 //----------------------------------------------------------------------------------
 CWeatherEffect::CWeatherEffect()
-: m_SpeedX(0), m_SpeedY(0), m_X(0), m_Y(0), m_SpeedAngle(0.0f), m_SpeedMagnitude(0.0f)
 {
 	m_ID = RandomInt(2000);
 

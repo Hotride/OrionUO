@@ -11,7 +11,7 @@
 #include "TextRenderer.h"
 //----------------------------------------------------------------------------------
 CRenderTextObject::CRenderTextObject()
-: CRenderObject(0, 0, 0, 0, 0), m_Transparent(false), m_NextDraw(NULL), m_PrevDraw(NULL)
+: CRenderObject(0, 0, 0, 0, 0)
 {
 }
 //---------------------------------------------------------------------------

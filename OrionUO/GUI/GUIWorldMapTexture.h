@@ -17,19 +17,15 @@
 class CGUIWorldMapTexture : public CBaseGUI
 {
 	//!Индекс карты мира
-	SETGET(int, Index);
-
+	SETGET(int, Index, 0);
 	//!Ширина
-	SETGET(int, Width);
-
+	SETGET(int, Width, 0);
 	//!Высота
-	SETGET(int, Height);
-
+	SETGET(int, Height, 0);
 	//!Смещение по оси X
-	SETGET(int, OffsetX);
-
+	SETGET(int, OffsetX, 0);
 	//!Смещение по оси Y
-	SETGET(int, OffsetY);
+	SETGET(int, OffsetY, 0);
 
 public:
 	CGUIWorldMapTexture(const int &x, const int &y);

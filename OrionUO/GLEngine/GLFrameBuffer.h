@@ -18,20 +18,20 @@ class CGLFrameBuffer
 {
 private:
 	//!Создан буфер и готов к использованию или нет
-	bool m_Ready;
+	bool m_Ready{ false };
 
 	//!Указатель на предыдущий фрэймбуфер
-	GLint m_OldFrameBuffer;
+	GLint m_OldFrameBuffer{ 0 };
 
 	//!Указатель на фрэймбуфер
-	GLuint m_FrameBuffer;
+	GLuint m_FrameBuffer{ 0 };
 
 public:
 	CGLFrameBuffer();
 	~CGLFrameBuffer();
 
 	//!Указатель на текстуру фрэймбуфера
-	CGLTexture Texture;
+	CGLTexture Texture{ CGLTexture() };
 
 	/*!
 	Инициализациия буфера

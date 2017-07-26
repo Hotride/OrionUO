@@ -15,13 +15,12 @@
 //Класс для хранения шагов
 class CWalkStack
 {
-private:
 public:
-	CWalkStack() :m_Items(NULL) {}
+	CWalkStack() {}
 	~CWalkStack() { Clear(); }
 
 	//Список шагов
-	CWalkData *m_Items;
+	CWalkData *m_Items{ NULL };
 
 	//Верхний шаг
 	CWalkData *Top();

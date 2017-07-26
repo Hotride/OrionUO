@@ -22,9 +22,7 @@
 #include "GamePlayer.h"
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
-: CGameObject(serial), m_Layer(0), m_AnimID(0), m_UsedLayer(0), m_Opened(false),
-m_Dragged(false), m_MultiBody(false), m_WantUpdateMulti(true), m_FieldColor(0),
-m_MultiDistanceBonus(0)
+: CGameObject(serial), m_Layer(0), m_AnimID(0)
 {
 }
 //----------------------------------------------------------------------------------
@@ -265,7 +263,7 @@ void CGameItem::Draw(const int &x, const int &y)
 
 			if (m_RenderGraphic)
 			{
-				if (!Locked() && g_SelectedObject.Object() == this)
+				if (!Locked() && g_SelectedObject.Object == this)
 					m_RenderColor = 0x0035;
 				else
 					m_RenderColor = m_Color;
@@ -304,7 +302,7 @@ void CGameItem::Draw(const int &x, const int &y)
 				objColor = 0x038E;
 			}
 
-			if (!Locked() && g_SelectedObject.Object() == this)
+			if (!Locked() && g_SelectedObject.Object == this)
 			{
 				objColor = 0x0035;
 				selMode = true;

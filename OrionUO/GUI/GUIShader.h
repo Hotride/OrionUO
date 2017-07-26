@@ -18,7 +18,7 @@
 class CGUIShader : public CBaseGUI
 {
 private:
-	CGLShader *m_Shader;
+	CGLShader *m_Shader{ NULL };
 
 public:
 	CGUIShader(CGLShader *shader, const bool &enabled);

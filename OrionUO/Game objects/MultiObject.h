@@ -16,10 +16,10 @@
 class CMultiObject : public CRenderStaticObject
 {
 	//Мульти с таргета
-	SETGET(bool, OnTarget);
+	SETGET(bool, OnTarget, false);
 
 	//Оригинальный индекс картинки
-	SETGET(ushort, OriginalGraphic);
+	SETGET(ushort, OriginalGraphic, 0);
 
 public:
 	CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags);

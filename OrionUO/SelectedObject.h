@@ -16,11 +16,9 @@
 //----------------------------------------------------------------------------------
 class CSelectedObject
 {
-	SETGET(uint, Serial);
-
-private:
-	CRenderObject *m_Object;
-	CGump *m_Gump;
+	SETGET(uint, Serial, 0);
+	SETGET(CRenderObject*, Object, 0);
+	SETGET(CGump*, Gump, 0);
 
 public:
 	CSelectedObject();
@@ -31,9 +29,6 @@ public:
 
 	void Init(CRenderObject *obj, CGump *gump = NULL);
 	void Init(const CSelectedObject &obj);
-
-	CRenderObject *Object() const { return m_Object; }
-	CGump *Gump() const { return m_Gump; }
 };
 //----------------------------------------------------------------------------------
 extern CSelectedObject g_SelectedObject;

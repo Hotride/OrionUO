@@ -17,8 +17,7 @@
 CCreateCharacterScreen g_CreateCharacterScreen;
 //----------------------------------------------------------------------------------
 CCreateCharacterScreen::CCreateCharacterScreen()
-: CBaseScreen(m_CreateCharacterGump), m_StyleSelection(0), m_ColorSelection(0),
-m_Name("")
+: CBaseScreen(m_CreateCharacterGump)
 {
 }
 //----------------------------------------------------------------------------------

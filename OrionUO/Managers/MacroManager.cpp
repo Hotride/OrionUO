@@ -44,8 +44,7 @@ uchar CMacroManager::m_SkillIndexTable[24] =
 };
 //----------------------------------------------------------------------------------
 CMacroManager::CMacroManager()
-: CBaseQueue(), m_NextTimer(0), m_WaitingBandageTarget(false),
-m_WaitForTargetTimer(0)
+: CBaseQueue()
 {
 }
 //----------------------------------------------------------------------------------

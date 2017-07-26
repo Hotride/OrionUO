@@ -18,7 +18,7 @@ class CGUIHTMLButton : public CGUIButton
 {
 private:
 	//!Ссылка на гамп-родитель
-	class CGUIHTMLGump *m_HTMLGump;
+	class CGUIHTMLGump *m_HTMLGump{ NULL };
 
 public:
 	CGUIHTMLButton(class CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y);

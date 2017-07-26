@@ -10,8 +10,6 @@
 #include "IndexObject.h"
 //----------------------------------------------------------------------------------
 CIndexObject::CIndexObject()
-: m_Address(0), m_DataSize(0), m_Width(0), m_Height(0), m_ID(0), m_Color(0),
-m_LastAccessTime(0), Texture(NULL)
 {
 }
 //----------------------------------------------------------------------------------
@@ -26,7 +24,7 @@ CIndexObject::~CIndexObject()
 }
 //----------------------------------------------------------------------------------
 CIndexObjectLand::CIndexObjectLand()
-: CIndexObject(), m_AllBlack(false)
+: CIndexObject()
 {
 }
 //----------------------------------------------------------------------------------
@@ -35,8 +33,7 @@ CIndexObjectLand::~CIndexObjectLand()
 }
 //----------------------------------------------------------------------------------
 CIndexObjectStatic::CIndexObjectStatic()
-: CIndexObject(), m_Index(0), m_Offset(0), m_AnimIndex(0), m_ChangeTime(0),
-m_LightColor(0), m_IsFiled(false)
+: CIndexObject()
 {
 }
 //----------------------------------------------------------------------------------
@@ -45,7 +42,7 @@ CIndexObjectStatic::~CIndexObjectStatic()
 }
 //----------------------------------------------------------------------------------
 CIndexSound::CIndexSound()
-: m_Delay(0), m_Stream(0)
+: CIndexObject()
 {
 }
 //----------------------------------------------------------------------------------
@@ -54,7 +51,7 @@ CIndexSound::~CIndexSound()
 }
 //----------------------------------------------------------------------------------
 CIndexMulti::CIndexMulti()
-: m_Count(0)
+: CIndexObject()
 {
 }
 //----------------------------------------------------------------------------------
@@ -63,6 +60,7 @@ CIndexMulti::~CIndexMulti()
 }
 //----------------------------------------------------------------------------------
 CIndexLight::CIndexLight()
+: CIndexObject()
 {
 }
 //----------------------------------------------------------------------------------
@@ -71,6 +69,7 @@ CIndexLight::~CIndexLight()
 }
 //----------------------------------------------------------------------------------
 CIndexGump::CIndexGump()
+: CIndexObject()
 {
 }
 //----------------------------------------------------------------------------------
@@ -79,7 +78,6 @@ CIndexGump::~CIndexGump()
 }
 //----------------------------------------------------------------------------------
 CIndexAnimation::CIndexAnimation()
-: m_Graphic(0), m_Color(0), m_Type(AGT_UNKNOWN), m_MountedHeightOffset(0), m_IsUOP(false)
 {
 }
 //----------------------------------------------------------------------------------
@@ -88,7 +86,6 @@ CIndexAnimation::~CIndexAnimation()
 }
 //----------------------------------------------------------------------------------
 CIndexMusic::CIndexMusic()
-: m_FilePath(""), m_Loop(false)
 {
 }
 //----------------------------------------------------------------------------------
@@ -135,3 +132,4 @@ void CIndexGump::ReadIndexFile(const uint &address, PBASE_IDX_BLOCK ptr, const u
 	m_Width = realPtr->Width;
 	m_Height = realPtr->Height;
 };
+//----------------------------------------------------------------------------------
