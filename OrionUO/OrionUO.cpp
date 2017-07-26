@@ -1156,6 +1156,7 @@ void COrion::Process(const bool &rendering)
 				g_RemoveRangeXY.Y = g_Player->Y;
 			}
 			
+			g_Orion.RemoveRangedObjects();
 
 			if (g_ConfigManager.ObjectHandles && g_CtrlPressed && g_ShiftPressed && (oldCtrl != g_CtrlPressed || oldShift != g_ShiftPressed))
 				g_World->ResetObjectHandlesState();

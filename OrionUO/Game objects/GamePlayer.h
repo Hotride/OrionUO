@@ -71,6 +71,8 @@ public:
 	//Указатель на Fast Walk Stack
 	CFastWalkStack m_FastWalkStack;
 
+	void CloseBank();
+
 	/*!
 	Установить базовое значение навыка
 	@param [__in] index Индекс навыка

@@ -1153,15 +1153,7 @@ PACKET_HANDLER(UpdatePlayer)
 	g_Player->Y = ReadUInt16BE();
 	Move(2);
 
-	CGameItem *bank = g_Player->FindLayer(OL_BANK);
-
-	if (bank != NULL && bank->Opened)
-	{
-		bank->Clear();
-		bank->Opened = false;
-
-		g_GumpManager.CloseGump(bank->Serial, 0, GT_CONTAINER);
-	}
+	g_Player->CloseBank();
 
 	g_Player->m_Steps.clear();
 
@@ -1171,19 +1163,6 @@ PACKET_HANDLER(UpdatePlayer)
 	g_Player->OffsetX = 0;
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
-
-	if (g_Player->Direction != dir)
-	{
-		CGameItem *bank = g_Player->FindLayer(OL_BANK);
-
-		if (bank != NULL)
-		{
-			CGump *bankContainer = g_GumpManager.GetGump(bank->Serial, 0, GT_CONTAINER);
-
-			if (bankContainer != NULL)
-				g_GumpManager.RemoveGump(bankContainer);
-		}
-	}
 
 	g_Player->Direction = dir;
 	g_Player->Z = ReadUInt8();
@@ -1200,6 +1179,8 @@ PACKET_HANDLER(UpdatePlayer)
 
 		SendMegaClilocRequests();
 	}
+
+	g_GumpManager.RemoveRangedGumps();
 
 	g_World->MoveToTop(g_Player);
 }
@@ -1672,12 +1653,18 @@ PACKET_HANDLER(UpdateObject)
 	//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
 	//	m_MegaClilocRequests.push_back(obj->Serial);
 
-	if (serial == g_PlayerSerial && oldDead != g_Player->Dead())
+	if (serial == g_PlayerSerial)
 	{
-		if (g_Player->Dead())
-			g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
-		else
-			g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
+		if (oldDead != g_Player->Dead())
+		{
+			if (g_Player->Dead())
+				g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
+			else
+				g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
+		}
+
+		g_Player->CloseBank();
+		g_GumpManager.RemoveRangedGumps();
 	}
 
 	g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
@@ -2353,6 +2340,12 @@ PACKET_HANDLER(UpdateCharacter)
 		}
 
 		SendMegaClilocRequests();
+	}
+
+	if (obj->IsPlayer())
+	{
+		g_Player->CloseBank();
+		g_GumpManager.RemoveRangedGumps();
 	}
 
 	obj->Color = ReadUInt16BE();
@@ -3204,6 +3197,9 @@ PACKET_HANDLER(DenyWalk)
 
 	g_Player->m_Steps.clear();
 
+	g_Player->CloseBank();
+	g_GumpManager.RemoveRangedGumps();
+
 	g_World->MoveToTop(g_Player);
 }
 //----------------------------------------------------------------------------------
@@ -3250,7 +3246,7 @@ PACKET_HANDLER(ConfirmWalk)
 		newnoto = 0x01;
 
 	g_Player->Notoriety = newnoto;
-	g_Orion.RemoveRangedObjects();
+
 	g_GumpManager.RemoveRangedGumps();
 	g_World->MoveToTop(g_Player);
 }

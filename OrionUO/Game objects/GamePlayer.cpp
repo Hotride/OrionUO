@@ -35,6 +35,19 @@ CPlayer::~CPlayer()
 	}
 }
 //---------------------------------------------------------------------------
+void CPlayer::CloseBank()
+{
+	CGameItem *bank = FindLayer(OL_BANK);
+
+	if (bank != NULL && bank->Opened)
+	{
+		bank->Clear();
+		bank->Opened = false;
+
+		g_GumpManager.CloseGump(bank->Serial, 0, GT_CONTAINER);
+	}
+}
+//---------------------------------------------------------------------------
 /*!
 Установить базовое значение навыка
 @param [__in] index Индекс навыка
