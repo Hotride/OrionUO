@@ -1656,7 +1656,7 @@ PACKET_HANDLER(UpdateObject)
 
 	if (*m_Start != 0x78)
 	{
-		Move(12);
+		Move(6);
 		end -= 6;
 	}
 
