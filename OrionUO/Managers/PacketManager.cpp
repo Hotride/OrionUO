@@ -1519,21 +1519,45 @@ PACKET_HANDLER(UpdateObject)
 		return;
 
 	uint serial = ReadUInt32BE();
+	ushort graphic = ReadUInt16BE();
+	ushort x = ReadUInt16BE();
+	ushort y = ReadUInt16BE();
+	uchar z = ReadUInt8();
+	uchar direction = ReadUInt8();
+	ushort color = ReadUInt16BE();
+	uchar flags = ReadUInt8();
+	uchar notoriety = ReadUInt8();
 
 	CGameItem *item = NULL;
 	CGameCharacter *character = NULL;
 	CGameObject *obj = NULL;
 
-	if (serial & 0x80000000)
+	if (serial & 0x40000000)
 	{
-		item = g_World->GetWorldItem(serial & 0x7FFFFFFF);
+		item = g_World->GetWorldItem(serial);
+
+		if (character == NULL)
+		{
+			LOG("no memory??");
+			return;
+		}
+
 		obj = item;
+		obj->NPC = false;
 	}
 	else
 	{
 		character = g_World->GetWorldCharacter(serial);
+
+		if (character == NULL)
+		{
+			LOG("no memory??");
+			return;
+		}
+
 		character->Deleted = false;
 		obj = character;
+		obj->NPC = true;
 
 		if (!obj->Graphic)
 		{
@@ -1546,11 +1570,7 @@ PACKET_HANDLER(UpdateObject)
 		}
 	}
 
-	if (obj == NULL)
-	{
-		LOG("no memory??");
-		return;
-	}
+	obj->Count = 1;
 
 	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == obj->Serial)
 	{
@@ -1562,45 +1582,11 @@ PACKET_HANDLER(UpdateObject)
 
 	obj->MapIndex = g_CurrentMap;
 
-	ushort graphic = ReadUInt16BE();
-
-	if (serial & 0x80000000)
-	{
-		obj->Count = ReadUInt16BE();
-		obj->NPC = false;
-	}
-	else
-		obj->NPC = true;
-
-	if (graphic & 0x8000)
-	{
-		graphic &= 0x7FFF;
-
-		graphic += ReadUInt16BE();
-		//obj->GraphicIncrement = unpack16(ptr);
-		//Move(2);
-	}
-
 	ushort oldGraphic = obj->Graphic;
 	bool oldDead = g_Player->Dead();
-	obj->Graphic = graphic & 0x3FFF;
+	obj->Graphic = graphic;
 
-	ushort x = ReadUInt16BE();
-
-	if (x & 0x8000)
-	{
-		x &= 0x7FFF;
-
-		Move(1); //direction2 ?????
-	}
-
-	ushort newX = x;
-	ushort newY = ReadUInt16BE();
-	char newZ = ReadUInt8();
-
-	uchar dir = ReadUInt8();
-
-	int changeGraphicDir = dir;
+	int changeGraphicDir = direction;
 
 	if (character != NULL)
 		changeGraphicDir = 1000;
@@ -1609,21 +1595,19 @@ PACKET_HANDLER(UpdateObject)
 		item->MultiBody = (graphic & 0x4000);
 
 		if (item->MultiBody)
-			item->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != newX) || (obj->Y != newY) || (obj->Z != newZ));
+			item->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
 	}
 
 	obj->OnGraphicChange(changeGraphicDir);
 
-	obj->Color = ReadUInt16BE();
-
 	bool hidden = obj->Hidden();
-	obj->Flags = ReadUInt8();
+	obj->Flags = flags;
+	obj->Color = color;
 	bool updateCoords = true;//(hidden == obj->Hidden());
 
-	uchar noto = ReadUInt8();
 	if (character != NULL && !character->m_Steps.empty())
 	{
-		if (newX != obj->X || newY != obj->Y)
+		if (x != obj->X || y != obj->Y)
 		{
 			obj->X = character->m_Steps.front().X;
 			obj->Y = character->m_Steps.front().Y;
@@ -1635,16 +1619,17 @@ PACKET_HANDLER(UpdateObject)
 
 	if (updateCoords)
 	{
-		obj->X = newX;
-		obj->Y = newY;
-		obj->Z = newZ;
+		obj->X = x;
+		obj->Y = y;
+		obj->Z = z;
+
 		if (character != NULL)
-			character->Direction = dir;
+			character->Direction = direction;
 	}
 
 	if (character != NULL)
 	{
-		character->Notoriety = noto;
+		character->Notoriety = notoriety;
 		LOG("0x%08X 0x%04X NPC %d,%d,%d C%04X F%02X D%d N%d\n", serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags, character->Direction, character->Notoriety);
 	}
 	else
@@ -1669,14 +1654,17 @@ PACKET_HANDLER(UpdateObject)
 
 	g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
 
-	serial = ReadUInt32BE();
-
-	g_World->MoveToTop(obj);
-
 	puchar end = m_Start + m_Size;
 
 	if (*m_Start != 0x78)
+	{
+		Move(12);
 		end -= 6;
+	}
+
+	serial = ReadUInt32BE();
+
+	g_World->MoveToTop(obj);
 
 	//UINT_LIST megaClilocRequestList;
 
