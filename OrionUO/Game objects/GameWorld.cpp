@@ -55,9 +55,7 @@ void CGameWorld::ProcessSound(const uint &ticks, CGameCharacter *gc)
 	WISPFUN_DEBUG("c22_f3");
 	if (g_ConfigManager.FootstepsSound && gc->IsHuman() && !gc->Hidden())
 	{
-		CWalkData *wd = gc->m_WalkStack.Top();
-
-		if (wd != NULL && gc->LastStepSoundTime < ticks)
+		if (!gc->m_Steps.empty() && gc->LastStepSoundTime < ticks)
 		{
 			int incID = gc->StepSoundOffset;
 			int soundID = 0x012B;
@@ -65,7 +63,7 @@ void CGameWorld::ProcessSound(const uint &ticks, CGameCharacter *gc)
 
 			if (gc->FindLayer(OL_MOUNT) != NULL)
 			{			
-				if (wd->Direction & 0x80)
+				if (gc->m_Steps.back().Direction & 0x80)
 				{		
 					soundID = 0x0129;
 					delaySound = 150;

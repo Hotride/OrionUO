@@ -493,16 +493,16 @@ bool CPathFinder::Walk(bool run, uchar direction)
 
 	bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
 
-	bool emptyStack = true;
-	CWalkData *walker = g_Player->m_WalkStack.Top();
+	bool emptyStack = g_Player->m_Steps.empty();
 
-	if (walker != NULL)
+	if (!emptyStack)
 	{
-		x = walker->X;
-		y = walker->Y;
-		z = walker->Z;
-		olddir = walker->Direction;
-		emptyStack = false;
+		CWalkData &walker = g_Player->m_Steps.back();
+
+		x = walker.X;
+		y = walker.Y;
+		z = walker.Z;
+		olddir = walker.Direction;
 	}
 
 	ushort walkTime = TURN_DELAY;
@@ -570,12 +570,6 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	if (run)
 		direction += 0x80;
 
-	CWalkData *wd = new CWalkData();
-	wd->X = x;
-	wd->Y = y;
-	wd->Z = z;
-	wd->Direction = direction;
-
 	g_RemoveRangeXY.X = x;
 	g_RemoveRangeXY.Y = y;
 
@@ -587,7 +581,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 		g_Player->LastStepTime = g_Ticks;
 	}
 
-	g_Player->m_WalkStack.Push(wd);
+	g_Player->m_Steps.push_back(CWalkData(x, y, z, direction));
 
 	g_World->MoveToTop(g_Player);
 
@@ -966,9 +960,8 @@ void CPathFinder::ProcessAutowalk()
 
 			uchar olddir = g_Player->Direction;
 
-			CWalkData *walker = g_Player->m_WalkStack.Top();
-			if (walker != NULL)
-				olddir = walker->Direction;
+			if (!g_Player->m_Steps.empty())
+				olddir = g_Player->m_Steps.back().Direction;
 
 			if ((olddir & 7) == p->Direction)
 				m_PointIndex++;

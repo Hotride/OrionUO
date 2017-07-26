@@ -58,6 +58,8 @@ public:
 
 	CFastWalkStack m_FastWalkStack; //Указатель на Fast Walk Stack
 	
+	CStepInfo m_Step[MAX_STEPS_COUNT];
+
 	void IncSequence(); //Инкремент счетчика шагов
 	void SetSequence(const uchar &seq, const uchar &dir); //Установить значение Direction для указанного шага
 

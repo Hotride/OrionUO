@@ -540,9 +540,6 @@
     <ClInclude Include="Walker\Walker.h">
       <Filter>Header Files\Walker</Filter>
     </ClInclude>
-    <ClInclude Include="Walker\WalkStack.h">
-      <Filter>Header Files\Walker</Filter>
-    </ClInclude>
     <ClInclude Include="Gumps\GumpConsoleType.h">
       <Filter>Header Files\Gumps</Filter>
     </ClInclude>
@@ -1230,9 +1227,6 @@
       <Filter>Source Files\Walker</Filter>
     </ClCompile>
     <ClCompile Include="Walker\Walker.cpp">
-      <Filter>Source Files\Walker</Filter>
-    </ClCompile>
-    <ClCompile Include="Walker\WalkStack.cpp">
       <Filter>Source Files\Walker</Filter>
     </ClCompile>
     <ClCompile Include="Gumps\GumpConsoleType.cpp">

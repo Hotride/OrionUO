@@ -21,11 +21,8 @@ class CWalkData
 	SETGET(uchar, Direction, 0);
 
 public:
-	//Ссылки на следующий и предыдущий элементы
-	CWalkData *m_Next{ NULL };
-	CWalkData *m_Prev{ NULL };
-
 	CWalkData() {}
+	CWalkData(const short &x, const short &y, const char &z, const uchar &direction) : m_X(x), m_Y(y), m_Z(z), m_Direction(direction) {}
 	~CWalkData() {}
 
 	//Бег или хотьба

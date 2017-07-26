@@ -1144,12 +1144,10 @@ void COrion::Process(const bool &rendering)
 
 		if (g_World != NULL)
 		{
-			CWalkData *wd = g_Player->m_WalkStack.Top();
-
-			if (wd != NULL)
+			if (!g_Player->m_Steps.empty())
 			{
-				g_RemoveRangeXY.X = wd->X;
-				g_RemoveRangeXY.Y = wd->Y;
+				g_RemoveRangeXY.X = g_Player->m_Steps.front().X;
+				g_RemoveRangeXY.Y = g_Player->m_Steps.front().Y;
 			}
 			else
 			{

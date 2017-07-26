@@ -34,9 +34,6 @@ m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
 	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;
 
-	//!Инициализация счетчика шагов
-	m_WalkStack.Init();
-
 	if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == serial && g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) == NULL)
 	{
 		CPacketStatusRequest(m_Serial).Send();
@@ -48,7 +45,7 @@ CGameCharacter::~CGameCharacter()
 {
 	WISPFUN_DEBUG("c15_f2");
 	//!Чистим память
-	m_WalkStack.Clear();
+	m_Steps.clear();
 
 	m_HitsTexture.Clear();
 
@@ -440,21 +437,18 @@ bool CGameCharacter::IsTeleportAction(short &x, short &y, const uchar &dir)
 {
 	WISPFUN_DEBUG("c15_f9");
 	bool result = false;
-
-	CWalkData *wd = m_WalkStack.m_Items;
 	
 	short cx = m_X;
 	short cy = m_Y;
 	uchar cdir = m_Direction;
 
-	if (wd != NULL)
+	if (!m_Steps.empty())
 	{
-		while (wd->m_Next != NULL)
-			wd = wd->m_Next;
+		CWalkData &wd = m_Steps.back();
 		
-		cx = wd->X;
-		cy = wd->Y;
-		cdir = wd->Direction;
+		cx = wd.X;
+		cy = wd.Y;
+		cdir = wd.Direction;
 	}
 
 	if ((cdir & 7) == (dir & 7))
@@ -676,11 +670,9 @@ bool CGameCharacter::TestStepNoChangeDirection(const uchar &group)
 		case PAG_WALK_ARMED:
 		case PAG_WALK_UNARMED:
 		{
-			if (m_WalkStack.m_Items != NULL)
+			if (!m_Steps.empty())
 			{
-				CWalkData *wd = m_WalkStack.m_Items;
-
-				if (wd->X != m_X || wd->Y != m_Y)
+				if (m_Steps.front().X != m_X || m_Steps.front().Y != m_Y)
 					result = true;
 			}
 
@@ -718,10 +710,10 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 	bool isWalking = Walking();
 	bool isRun = (m_Direction & 0x80);
 
-	if (!m_WalkStack.Empty())
+	if (!m_Steps.empty())
 	{
 		isWalking = true;
-		isRun = m_WalkStack.m_Items->Run();
+		isRun = m_Steps.front().Run();
 	}
 
 	if (groupIndex == AG_LOW)
@@ -922,13 +914,13 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 	WISPFUN_DEBUG("c15_f18");
 	dir = m_Direction & (~0x80);
 
-	CWalkData *wd = m_WalkStack.m_Items;
-
-	if (wd != NULL)
+	if (!m_Steps.empty())
 	{
+		CWalkData &wd = m_Steps.front();
+
 		m_TimeToRandomFidget = g_Ticks + RANDOM_FIDGET_ANIMATION_DELAY;
 		
-		dir = wd->Direction;
+		dir = wd.Direction;
 		int run = 0;
 
 		if (dir & 0x80)
@@ -948,15 +940,15 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 			bool removeStep = (delay >= maxDelay);
 			bool directionChange = false;
 
-			if (m_X != wd->X || m_Y != wd->Y)
+			if (m_X != wd.X || m_Y != wd.Y)
 			{
 				float steps = maxDelay / g_AnimCharactersDelayValue;
 				
 				float x = delay / g_AnimCharactersDelayValue;
 				float y = x;
-				m_OffsetZ = (char)(((wd->Z - m_Z) * x) * (4.0f / steps));
+				m_OffsetZ = (char)(((wd.Z - m_Z) * x) * (4.0f / steps));
 
-				wd->GetOffset(x, y, steps);
+				wd.GetOffset(x, y, steps);
 
 				m_OffsetX = (char)x;
 				m_OffsetY = (char)y;
@@ -976,32 +968,32 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 			{
 				if (IsPlayer())
 				{
-					if (m_X != wd->X || m_Y != wd->Y || m_Z != wd->Z)
+					if (m_X != wd.X || m_Y != wd.Y || m_Z != wd.Z)
 					{
-						UOI_PLAYER_XYZ_DATA xyzData = { wd->X, wd->Y, wd->Z };
+						UOI_PLAYER_XYZ_DATA xyzData = { wd.X, wd.Y, wd.Z };
 						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_XYZ, (WPARAM)&xyzData, 0);
 					}
 
-					if (m_Direction != wd->Direction)
-						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_DIR, (WPARAM)wd->Direction, 0);
+					if (m_Direction != wd.Direction)
+						g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_UPDATE_PLAYER_DIR, (WPARAM)wd.Direction, 0);
 
-					if (m_Z - wd->Z >= 22)
+					if (m_Z - wd.Z >= 22)
 					{
 						g_Orion.CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Ouch!");
 						//play sound (5) ?
 					}
 				}
 
-				m_X = wd->X;
-				m_Y = wd->Y;
-				m_Z = wd->Z;
-				m_Direction = wd->Direction;
+				m_X = wd.X;
+				m_Y = wd.Y;
+				m_Z = wd.Z;
+				m_Direction = wd.Direction;
 
 				m_OffsetX = 0;
 				m_OffsetY = 0;
 				m_OffsetZ = 0;
 
-				m_WalkStack.Pop();
+				m_Steps.pop_front();
 
 				if (directionChange)
 				{

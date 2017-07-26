@@ -1163,7 +1163,7 @@ PACKET_HANDLER(UpdatePlayer)
 		g_GumpManager.CloseGump(bank->Serial, 0, GT_CONTAINER);
 	}
 
-	g_Player->m_WalkStack.Clear();
+	g_Player->m_Steps.clear();
 
 	uchar dir = ReadUInt8();
 	g_Walker->SetSequence(0, dir);
@@ -1640,14 +1640,14 @@ PACKET_HANDLER(UpdateObject)
 	bool updateCoords = true;//(hidden == obj->Hidden());
 
 	uchar noto = ReadUInt8();
-	if (character != NULL && !character->m_WalkStack.Empty())
+	if (character != NULL && !character->m_Steps.empty())
 	{
 		if (newX != obj->X || newY != obj->Y)
 		{
-			obj->X = character->m_WalkStack.m_Items->X;
-			obj->Y = character->m_WalkStack.m_Items->Y;
-			obj->Z = character->m_WalkStack.m_Items->Z;
-			character->m_WalkStack.Clear();
+			obj->X = character->m_Steps.front().X;
+			obj->Y = character->m_Steps.front().Y;
+			obj->Z = character->m_Steps.front().Z;
+			character->m_Steps.clear();
 			updateCoords = false;
 		}
 	}
@@ -2291,29 +2291,22 @@ PACKET_HANDLER(UpdateCharacter)
 	{
 		if (serial != g_PlayerSerial)
 		{
-			CWalkData *wd = obj->m_WalkStack.Top();
-
-			if (wd != NULL && obj->FindLayer(OL_MOUNT) == NULL)
+			if (!obj->m_Steps.empty() && obj->FindLayer(OL_MOUNT) == NULL)
 			{
-				obj->X = wd->X;
-				obj->Y = wd->Y;
-				obj->Z = wd->Z;
-				obj->Direction = wd->Direction;
+				CWalkData &wd = obj->m_Steps.back();
 
-				obj->m_WalkStack.Clear();
+				obj->X = wd.X;
+				obj->Y = wd.Y;
+				obj->Z = wd.Z;
+				obj->Direction = wd.Direction;
+
+				obj->m_Steps.clear();
 			}
 
-			if (obj->m_WalkStack.Empty())
+			if (obj->m_Steps.empty())
 				obj->LastStepTime = g_Ticks;
 
-			wd = new CWalkData();
-
-			wd->X = x;
-			wd->Y = y;
-			wd->Z = z;
-			wd->Direction = dir;
-
-			obj->m_WalkStack.Push(wd);
+			obj->m_Steps.push_back(CWalkData(x, y, z, dir));
 		}
 		else
 		{
@@ -2325,11 +2318,17 @@ PACKET_HANDLER(UpdateCharacter)
 	}
 	else if (serial != g_PlayerSerial)
 	{
-		CWalkData *wd = obj->m_WalkStack.m_Items;
+		bool passed = obj->m_Steps.empty();
 
-		if (wd == NULL || (wd->X != x || wd->Y != y || wd->Z != z || wd->Direction != dir))
+		if (!passed)
 		{
-			obj->m_WalkStack.Clear();
+			CWalkData &wd = obj->m_Steps.front();
+			passed = (wd.X != x || wd.Y != y || wd.Z != z || wd.Direction != dir);
+		}
+
+		if (passed)
+		{
+			obj->m_Steps.clear();
 			obj->X = x;
 			obj->Y = y;
 			obj->Z = z;
@@ -3203,7 +3202,7 @@ PACKET_HANDLER(DenyWalk)
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
 
-	g_Player->m_WalkStack.Clear();
+	g_Player->m_Steps.clear();
 
 	g_World->MoveToTop(g_Player);
 }

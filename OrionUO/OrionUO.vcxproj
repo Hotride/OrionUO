@@ -437,7 +437,6 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Walker\PathNode.h" />
     <ClInclude Include="Walker\WalkData.h" />
     <ClInclude Include="Walker\Walker.h" />
-    <ClInclude Include="Walker\WalkStack.h" />
     <ClInclude Include="Weather.h" />
     <ClInclude Include="WeatherEffect.h" />
     <ClInclude Include="Wisp\WispApplication.h" />
@@ -665,7 +664,6 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="Walker\PathNode.cpp" />
     <ClCompile Include="Walker\WalkData.cpp" />
     <ClCompile Include="Walker\Walker.cpp" />
-    <ClCompile Include="Walker\WalkStack.cpp" />
     <ClCompile Include="Weather.cpp" />
     <ClCompile Include="WeatherEffeect.cpp" />
     <ClCompile Include="Wisp\WispApplication.cpp" />

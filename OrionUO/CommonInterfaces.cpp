@@ -363,12 +363,12 @@ bool __cdecl FUNCBODY_GetWalkTo(int x, int y, int z, int distance)
 {
 	WISP_GEOMETRY::CPoint2Di startPoint(g_Player->X, g_Player->Y);
 
-	CWalkData *wd = g_Player->m_WalkStack.Top();
-
-	if (wd != NULL)
+	if (!g_Player->m_Steps.empty())
 	{
-		startPoint.X = wd->X;
-		startPoint.Y = wd->Y;
+		CWalkData &wd = g_Player->m_Steps.back();
+
+		startPoint.X = wd.X;
+		startPoint.Y = wd.Y;
 	}
 
 	if (GetDistance(startPoint, WISP_GEOMETRY::CPoint2Di(x, y)) <= distance)
@@ -383,12 +383,12 @@ bool __cdecl FUNCBODY_GetWalkTo(int x, int y, int z, int distance)
 
 		WISP_GEOMETRY::CPoint2Di p(g_Player->X, g_Player->Y);
 
-		CWalkData *wd = g_Player->m_WalkStack.Top();
-
-		if (wd != NULL)
+		if (!g_Player->m_Steps.empty())
 		{
-			p.X = wd->X;
-			p.Y = wd->Y;
+			CWalkData &wd = g_Player->m_Steps.back();
+
+			p.X = wd.X;
+			p.Y = wd.Y;
 		}
 
 		result = (GetDistance(p, WISP_GEOMETRY::CPoint2Di(x, y)) <= distance);

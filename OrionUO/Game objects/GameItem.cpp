@@ -193,12 +193,10 @@ void CGameItem::OnGraphicChange(int direction)
 	{
 		m_RenderQueueIndex = 10;
 
-		CWalkData *wd = g_Player->m_WalkStack.m_Items;
-
-		if (wd != NULL)
+		if (!g_Player->m_Steps.empty())
 		{
-			g_RemoveRangeXY.X = wd->X;
-			g_RemoveRangeXY.Y = wd->Y;
+			g_RemoveRangeXY.X = g_Player->m_Steps.front().X;
+			g_RemoveRangeXY.Y = g_Player->m_Steps.front().Y;
 		}
 		else
 		{

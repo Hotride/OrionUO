@@ -11,7 +11,7 @@
 #define GAMECHARACTER_H
 //----------------------------------------------------------------------------------
 #include "GameObject.h"
-#include "../Walker/WalkStack.h"
+#include "../Walker/WalkData.h"
 #include "../GLEngine/GLTextTexture.h"
 //----------------------------------------------------------------------------------
 //!Игровой персонаж
@@ -76,10 +76,10 @@ public:
 	//Ссылка на контейнер для текста урона
 	CTextContainer m_DamageTextControl{ CTextContainer(10) };
 
-	//!Ссылка на счетчик шагов
-	CWalkStack m_WalkStack;
+	//!Стек шагов
+	deque<CWalkData> m_Steps;
 
-	CGLTextTexture m_HitsTexture;
+	CGLTextTexture m_HitsTexture{ CGLTextTexture() };
 
 	void UpdateHitsTexture(const uchar &hits);
 
@@ -159,7 +159,7 @@ public:
 	Состояние, если персонаж не движется
 	@return true - стоит, false - в движении
 	*/
-	bool Staying() { return m_AnimationGroup == 0xFF && m_WalkStack.Empty(); }
+	bool Staying() { return m_AnimationGroup == 0xFF && m_Steps.empty(); }
 
 	/*!
 	Проверка на возможность изменения направления персонажа при движении в сидячем положении
