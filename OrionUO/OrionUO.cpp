@@ -1066,6 +1066,7 @@ void COrion::Process(const bool &rendering)
 	static uint removeUnusedAnimationTexturesTime = 0;
 
 	g_PacketManager.ProcessPluginPackets();
+	g_PacketManager.SendMegaClilocRequests();
 	g_MouseManager.Update();
 
 	if (g_GameState >= GS_CHARACTER && (g_PingByPacketSendTime + SEND_TIMEOUT_DELAY) < g_Ticks)
