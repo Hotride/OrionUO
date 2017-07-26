@@ -56,8 +56,6 @@ public:
 	CWalker();
 	~CWalker() {}
 
-	CFastWalkStack m_FastWalkStack; //Указатель на Fast Walk Stack
-	
 	CStepInfo m_Step[MAX_STEPS_COUNT];
 
 	void IncSequence(); //Инкремент счетчика шагов

@@ -594,7 +594,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	buf[2] = seq;
 	g_PingByWalk[seq][0] = g_Ticks;
 	g_PingByWalk[seq][1] = g_Ticks;
-	pack32(buf + 3, g_Walker->m_FastWalkStack.Pop());
+	pack32(buf + 3, g_Player->m_FastWalkStack.GetValue());
 
 	g_Orion.Send(buf, 7);
 

@@ -12,6 +12,7 @@
 //----------------------------------------------------------------------------------
 #include "GameCharacter.h"
 #include "../Skills.h"
+#include "../Walker/FastWalk.h"
 //----------------------------------------------------------------------------------
 //!Класс игрока
 class CPlayer: public CGameCharacter
@@ -66,6 +67,9 @@ class CPlayer: public CGameCharacter
 public:
 	CPlayer(const uint &serial);
 	virtual ~CPlayer();
+
+	//Указатель на Fast Walk Stack
+	CFastWalkStack m_FastWalkStack;
 
 	/*!
 	Установить базовое значение навыка

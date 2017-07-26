@@ -77,7 +77,7 @@ const int MAX_LIGHT_SOURCES = 100;
 const int MAX_OBJECT_HANDLES = 200;
 
 //!Максимальный размер fastwalk стека
-const int MAX_FAST_WALK_STACK_SIZE = 255;
+const int MAX_FAST_WALK_STACK_SIZE = 5;
 
 //!Максимальный размер буфера для данных при записи в файл (класс TFileWriter)
 const int MAX_FILE_BUFFER_SIZE = 0x1000;

@@ -9,43 +9,43 @@
 //----------------------------------------------------------------------------------
 #include "FastWalk.h"
 //----------------------------------------------------------------------------------
-void CFastWalkStack::Reset()
+void CFastWalkStack::SetValue(const int &index, const uint &value)
 {
 	WISPFUN_DEBUG("c176_f1");
-	m_Current = 0;
-	m_Deep = 0;
-	memset(m_Keys, 0, sizeof(m_Keys));
+	if (index >= 0 && index < 5)
+		m_Keys[index] = value;
 }
-//---------------------------------------------------------------------------
-void CFastWalkStack::Push(const uint &key)
+//----------------------------------------------------------------------------------
+void CFastWalkStack::AddValue(const uint &value)
 {
 	WISPFUN_DEBUG("c176_f2");
-	if (m_Deep < MAX_FAST_WALK_STACK_SIZE)
-		m_Deep++;
 
-	m_Current++;
-	if (m_Current > MAX_FAST_WALK_STACK_SIZE)
-		m_Current = 0;
-
-	m_Keys[m_Current] = key;
+	IFOR(i, 0, 5)
+	{
+		if (!m_Keys[i])
+		{
+			m_Keys[i] = value;
+			break;
+		}
+	}
 }
 //---------------------------------------------------------------------------
-uint CFastWalkStack::Pop()
+uint CFastWalkStack::GetValue()
 {
 	WISPFUN_DEBUG("c176_f3");
-	if (m_Deep <= 0)
+	int index = 0;
+
+	IFOR(i, 0, 5)
 	{
-		m_Deep = 0;
-		return 0;
+		uint key = m_Keys[i];
+
+		if (key)
+		{
+			m_Keys[i] = 0;
+			return key;
+		}
 	}
 
-	m_Deep--;
-	uint result = m_Keys[m_Current];
-	m_Current--;
-
-	if (m_Current < 0)
-		m_Current = 255;
-
-	return result;
+	return 0;
 }
 //----------------------------------------------------------------------------------

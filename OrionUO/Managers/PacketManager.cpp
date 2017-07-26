@@ -2754,13 +2754,13 @@ PACKET_HANDLER(ExtendedCommand)
 		case 1: //Initialize Fast Walk Prevention
 		{
 			IFOR(i, 0, 6)
-				g_Walker->m_FastWalkStack.Push(ReadUInt32BE());
+				g_Player->m_FastWalkStack.SetValue(i, ReadUInt32BE());
 
 			break;
 		}
 		case 2: //Add key to Fast Walk Stack
 		{
-			g_Walker->m_FastWalkStack.Push(ReadUInt32BE());
+			g_Player->m_FastWalkStack.AddValue(ReadUInt32BE());
 
 			break;
 		}

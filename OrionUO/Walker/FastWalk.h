@@ -17,22 +17,17 @@ class CFastWalkStack
 {
 private:
 	//fastwalk стек
-	uint m_Keys[MAX_FAST_WALK_STACK_SIZE + 1];
-
-	//Текущий индекс
-	int m_Current{ 0 };
-
-	//Глубина стека
-	int m_Deep{ 0 };
+	uint m_Keys[MAX_FAST_WALK_STACK_SIZE];
 
 public:
 	CFastWalkStack() { memset(m_Keys, 0, sizeof(m_Keys)); }
 	~CFastWalkStack() {}
 
-	void Reset(); //Очистить стек
+	void SetValue(const int &index, const uint &value);
 
-	void Push(const uint &key); //Добавить элемент в стек
-	uint Pop(); //Получить элемент и удалить его из стека
+	void AddValue(const uint &value);
+
+	uint GetValue();
 };
 //----------------------------------------------------------------------------------
 #endif
