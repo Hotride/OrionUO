@@ -30,6 +30,7 @@ CGameCharacter::CGameCharacter(const uint &serial)
 : CGameObject(serial), m_Hits(0), m_MaxHits(0), m_LastStepSoundTime(GetTickCount()),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
 {
+	m_NPC = true;
 	WISPFUN_DEBUG("c15_f1");
 	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;

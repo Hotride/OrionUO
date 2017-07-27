@@ -157,7 +157,7 @@ public:
 	*/
 	uint GetPartialHueColor(ushort &c, ushort color);
 
-	ushort FixColor(const ushort &color);
+	ushort FixColor(const ushort &color, const ushort &defaultColor = 0);
  };
  //----------------------------------------------------------------------------------
 //!Ссылка на менеджер цветов

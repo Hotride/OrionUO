@@ -24,6 +24,7 @@
 CGameItem::CGameItem(const uint &serial)
 : CGameObject(serial), m_Layer(0), m_AnimID(0)
 {
+	m_NPC = false;
 }
 //----------------------------------------------------------------------------------
 CGameItem::~CGameItem()
@@ -46,6 +47,9 @@ CGameItem::~CGameItem()
 
 		m_Opened = false;
 	}
+
+	if (m_Container < 0x40000000)
+		g_GumpManager.UpdateContent(m_Container, 0, GT_PAPERDOLL);
 
 	if (m_Dragged)
 	{

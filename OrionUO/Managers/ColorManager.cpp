@@ -302,7 +302,7 @@ uint CColorManager::GetPartialHueColor(ushort &c, ushort color)
 	return Color16To32(c);
 }
 //----------------------------------------------------------------------------------
-ushort CColorManager::FixColor(const ushort &color)
+ushort CColorManager::FixColor(const ushort &color, const ushort &defaultColor)
 {
 	ushort fixedColor = color & 0x3FFF;
 
@@ -310,12 +310,12 @@ ushort CColorManager::FixColor(const ushort &color)
 	{
 		if (fixedColor >= 0x0BB8)
 			fixedColor = 1;
-		else
-			fixedColor = (color & 0x8000) | (color & 0x4000) | fixedColor;
+
+		fixedColor |= (color & 0x8000) | (color & 0x4000);
 	}
 	else
 	{
-		fixedColor = 0;
+		fixedColor = defaultColor;
 	}
 
 	return fixedColor;
