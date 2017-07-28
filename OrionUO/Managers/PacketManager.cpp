@@ -1275,7 +1275,7 @@ PACKET_HANDLER(UpdateItem)
 	uint serial = ReadUInt32BE();
 	ushort count = 0;
 	uchar graphicIncrement = 0;
-	uchar layer = 0;
+	uchar direction = 0;
 	ushort color = 0;
 	uchar flags = 0;
 
@@ -1306,7 +1306,7 @@ PACKET_HANDLER(UpdateItem)
 	if (x & 0x8000)
 	{
 		x &= 0x7FFF;
-		layer = 1;
+		direction = 1;
 	}
 
 	ushort y = ReadUInt16BE();
@@ -1323,8 +1323,8 @@ PACKET_HANDLER(UpdateItem)
 		flags = 1;
 	}
 
-	if (layer)
-		layer = ReadUInt8();
+	if (direction)
+		direction = ReadUInt8();
 
 	char z = ReadUInt8();
 
@@ -1342,7 +1342,7 @@ PACKET_HANDLER(UpdateItem)
 	}
 
 	if (serial != g_PlayerSerial)
-		g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, layer, color, flags, count, updateType, 1);
+		g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, direction, color, flags, count, updateType, 1);
 
 	/*
 	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == obj->Serial && g_ObjectInHand->Dropped)
@@ -1447,12 +1447,12 @@ PACKET_HANDLER(UpdateItemSA)
 	ushort x = ReadUInt16BE();
 	ushort y = ReadUInt16BE();
 	uchar z = ReadUInt8();
-	uchar layer = ReadUInt8();
+	uchar direction = ReadUInt8();
 	ushort color = ReadUInt16BE();
 	uchar flags = ReadUInt8();
 	ushort unknown2 = ReadUInt16BE();
 
-	g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, layer, color, flags, unknown, updateType, unknown2);
+	g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, direction, color, flags, unknown, updateType, unknown2);
 
 	/*Move(2);
 	char type = ReadUInt8();

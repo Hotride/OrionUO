@@ -774,7 +774,7 @@ CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &s
 }
 
 //----------------------------------------------------------------------------------
-void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, const int &count, const int &x, const int &y, const char &z, const uchar &directionOrLayer, const ushort &color, const uchar &flags, const int &a11, const UPDATE_GAME_OBJECT_TYPE &updateType, const ushort &a13)
+void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, const int &count, const int &x, const int &y, const char &z, const uchar &direction, const ushort &color, const uchar &flags, const int &a11, const UPDATE_GAME_OBJECT_TYPE &updateType, const ushort &a13)
 {
 	ushort multiGraphic = 0xFFFF;
 
@@ -805,7 +805,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			obj = character;
 			character->Graphic = graphic + graphicIncrement;
 			character->OnGraphicChange(1000);
-			character->Direction = directionOrLayer;
+			character->Direction = direction;
 			character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
 			character->X = x;
 			character->Y = y;
@@ -861,7 +861,9 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		item->Graphic = graphic + graphicIncrement;
 		item->OnGraphicChange();
 
-		item->Layer = directionOrLayer;
+		if (graphic + graphicIncrement == 0x2006)
+			item->Layer = direction;
+
 		item->Color = g_ColorManager.FixColor(color, (color & 0x8000));
 		item->Count = count;
 		item->Flags = flags;
@@ -871,418 +873,15 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 	}
 	else
 	{
-	}
+		character->LastAnimationChangeTime = g_Ticks;
 
-	obj->MapIndex = g_CurrentMap;
-	g_World->MoveToTop(obj);
+		if (character->m_Steps.size() != 4)
+		{
+			if (character->m_Steps.size())
+			{
+				CWalkData &wd = character->m_Steps.front();
 
-
-
-	obj->LastFidgetAnimationTimer = g_LastRenderTime;
-	if (obj->StepsCount != 4)
-	{
-		if (obj->field_14C)
-		{
-			if (obj->GameObject.InRenderQueue)
-			{
-				(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable
-					+ UO_ROFUN_REMOVE_FROM_RENDER))(obj);
-				vTable_2 = obj->GameObject.VTable;
-				obj->field_14C = 0;
-				((void(__thiscall *)(CGameCharacter *))vTable_2[UO_ROFUN_UPDATE_RENDER_AND_DRAW_POS])(obj);
-			}
-			else
-			{
-				obj->field_14C = 0;
-			}
-		}
-		stepsCount = obj->StepsCount;
-		if (stepsCount)
-		{
-			x_ = x;
-			v33 = *((_WORD *)&obj->field_14C + 5 * stepsCount + 1);
-			v41 = (char *)obj + 10 * stepsCount;
-			if (v33 == x && *((_WORD *)v41 + 168) == y && *((_WORD *)v41 + 169) == z && v41[342] == direction)
-			{
-				LOWORD(v33) = *((_WORD *)&obj->GameObject.VTable + 5 * stepsCount + 170);
-				if ((_WORD)v33 == (_WORD)graphic)
-				{
-					LOBYTE(v33) = flags;
-					if (v41[343] == flags)
-						goto LABEL_101;
-				}
-			}
-		}
-		else
-		{
-			x_ = x;
-			if (obj->GameObject.X == x
-				&& obj->GameObject.Y == y
-				&& obj->GameObject.Z == z
-				&& !((direction ^ obj->GameObject.DirectionOrLightIndex) & 0x7F))
-			{
-				v33 = (unsigned int)direction >> 7;
-				if ((obj->OnMount != 0) == v33 && obj->GameObject.Graphic == (_WORD)graphic)
-				{
-					LOBYTE(v33) = obj->GameObject.Flags;
-					if ((_BYTE)v33 == flags)
-						goto LABEL_101;
-				}
-			}
-		}
-		obj->StepStack[stepsCount].X = x_;
-		obj->StepStack[obj->StepsCount].Y = y;
-		obj->StepStack[obj->StepsCount].Z = z;
-		obj->StepStack[obj->StepsCount].Direction = direction;
-		v42 = obj->StepsCount;
-		v33 = 5 * (v42 + 35);
-		*((_WORD *)&obj->GameObject.VTable + 5 * (v42 + 35)) = graphic;
-		LOBYTE(v33) = flags;
-		obj->StepStack[obj->StepsCount++].Flags = flags;
-		goto LABEL_101;
-	}
-	inRenderQueue = 0;
-	if (obj->GameObject.InRenderQueue)
-	{
-		(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable
-			+ UO_ROFUN_REMOVE_FROM_RENDER))(obj);
-		inRenderQueue = 1;
-	}
-	obj->GameObject.X = x;
-	obj->GameObject.Graphic = graphic & 0x3FFF;
-	obj->GameObject.Y = y;
-	obj->GameObject.Z = z;
-	v35 = color & 0x8000;
-	v36 = color & 0x4000;
-	v37 = color & 0x3FFF;
-	obj->PixelOffset = 1;
-	obj->GameObject.DirectionOrLightIndex = direction & 0x7F;
-	if (color & 0x3FFF)
-	{
-		if (v37 >= 3000)
-			v36 |= v35 | 1;
-		else
-			LOWORD(v36) = v35 | v36 | v37;
-	}
-	else
-	{
-		LOWORD(v36) = color & 0x8000;
-	}
-	obj->GameObject.Color = v36;
-	flags_ = flags;
-	obj_1 = obj;
-	obj->StepsCount = 0;
-	SetCharacterFlags(obj_1, flags_);
-	obj->field_14C = 0;
-	if (inRenderQueue)
-		(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable
-		+ UO_ROFUN_UPDATE_RENDER_AND_DRAW_POS))(obj);
-LABEL_101:
-	if (g_Player->IsFollowing)
-	{
-		v33 = g_Player->FollowingSerial_Maybe;
-		if (obj->GameObject.Serial == v33 && !CheckObjectDistance(&obj->GameObject, 3))
-		{
-			v43 = obj->StepsCount;
-			if (v43 <= 0)
-			{
-				multiGraphic = *(_DWORD *)&obj->GameObject.X;
-				v44 = obj->GameObject.Z;
-			}
-			else
-			{
-				multiGraphic = *(int *)((char *)&obj->field_14C + 10 * v43 + 2);
-				v44 = *((_WORD *)&obj->LastFidgetAnimationTimer + 5 * v43 + 1);
-			}
-			v53 = v44;
-			if (g_Pathfinding)
-				sub_4A64F0();
-			v45 = sub_4A6530(
-				g_Player->GameObject.GameObject.X,
-				g_Player->GameObject.GameObject.Y,
-				g_Player->GameObject.GameObject.Z,
-				(signed __int16)multiGraphic,
-				SHIWORD(multiGraphic),
-				v44,
-				100,
-				1);
-			dword_CC9380 = v45;
-			if (!v45)
-			{
-				result = (int)CreateSystemMessageASCII(0, 3, aCanTGetThereFo);
-				g_Pathfinding = 0;
-				return result;
-			}
-			g_Pathfinding = 1;
-			v47 = v45;
-			sub_476700();
-			for (i = *(_DWORD *)(v47 + 36); i; i = *(_DWORD *)(i + 36))
-				v47 = i;
-			dword_CC9380 = v47;
-			dword_CC9374 = *(_DWORD *)(v47 + 16);
-			dword_CC9370 = *(_DWORD *)(v47 + 20);
-			v33 = (int)g_Player;
-			dword_CC936C = *(_DWORD *)(v47 + 24);
-			v49 = g_Player->GameObject.GameObject.DirectionOrLightIndex;
-			dword_CC937C = v47;
-			dword_CC9368 = v49;
-		}
-	}
-LABEL_114:
-	if (isMapObject == 1)
-		sub_488C20(v33, obj);
-	result = CheckObjectDistance(&obj->GameObject, 18);
-	if (!result)
-	{
-		result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_28))(obj);
-		if (!result)
-			result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable
-			+ UO_ROFUN_DESTRUCTOR_))(obj);
-	}
-
-
-
-
-	/*
-		v57 = 1;
-		multiGraphic = -1;
-		isMapObject = 0;
-		if (g_PlayerX < 5120)
-		{
-			if (g_PlayerX < 18 && x > 5102)
-				x -= 5120;
-			if (g_PlayerX >= 5102 && x <= 18)
-				x += 5120;
-			if (g_PlayerY < 18 && y > 4078)
-				y -= 4096;
-			if (g_PlayerY >= 4078 && y <= 18)
-				y += 4096;
-		}
-		graphic_ = graphic;
-		if ((unsigned __int16)graphic >= 0x4000u)
-		{
-			multiGraphic = (unsigned __int16)graphic - 0x4000;
-			graphic_ = 1;
-			graphic = 1;
-		}
-		obj = (CGameCharacter *)g_Player;
-		if (!g_Player || serial != g_Player->GameObject.GameObject.Serial)
-		{
-			obj = (CGameCharacter *)g_WorldObjectFirstPtr;
-			if (!g_WorldObjectFirstPtr)
-				goto LABEL_23;
-			while (obj->GameObject.Serial != serial)
-			{
-				obj = (CGameCharacter *)obj->GameObject.NextObject;
-				if (!obj)
-					goto LABEL_23;
-			}
-		}
-		if (!obj)
-		{
-		LABEL_23:
-			if (!(serial & 0x40000000))               // !GameItem (NPC)
-			{
-				npcMem = (CGameCharacter *)operator new(0x1E0u);
-				LOBYTE(v57) = 6;
-				if (npcMem)
-					obj = CMobile__CMobile(npcMem, serial, graphic, graphicIncrement);
-				else
-					obj = 0;
-				obj->OnMount = (unsigned int)direction >> 7;
-				obj->GameObject.DirectionOrLightIndex = direction & 0x7F;
-				partialHue = color & 0x8000;
-				spectralColor = color & 0x4000;
-				realColor = color & 0x3FFF;
-				LOBYTE(v57) = 1;
-				obj->OffsetX = 0;
-				obj->OffsetY = 0;
-				if (color & 0x3FFF)
-				{
-					if (realColor >= 3000)
-						spectralColor |= partialHue | 1;
-					else
-						LOWORD(spectralColor) = partialHue | spectralColor | realColor;
-				}
-				else
-				{
-					LOWORD(spectralColor) = color & 0x8000;
-				}
-				obj->GameObject.Color = spectralColor;
-				LOWORD(xy) = x;
-				HIWORD(xy) = y;
-				v56 = z;
-				vTable_1 = obj->GameObject.VTable;
-				obj->OffsetZOfSomething = z;
-				LOWORD(flags_) = v56;
-				((void(__thiscall *)(CGameCharacter *, CGameCharacter *, signed int))vTable_1[UO_ROFUN_INSERT_IN_LISTS])(
-					obj,
-					xy,
-					flags_);
-				SetCharacterFlags(obj, flags);
-				obj->field_14C = 0;
-				goto LABEL_58;
-			}
-			if (graphic_ == 0x2006)                   // corpse
-			{
-				corpseMem = (CGameCharacter *)operator new(0x128u);
-				obj = corpseMem;
-				LOBYTE(v57) = 2;
-				if (corpseMem)
-				{
-					CObj__CObj((CStaticObject *)corpseMem);
-					v13 = obj->GameObject.ValidateBits;
-					flags_ = 1229;
-					obj_1 = (CGameCharacter *)aCProjectsUob_3;
-					LOBYTE(v57) = 3;
-					obj->GameObject.VTable = (int *)&VTable_CGameContainer;
-					obj->FirstContainedItem = 0;
-					obj->GumpForItem = 0;
-					obj->DrawX_Maybe = 0;
-					obj->field_BC = 0;
-					if (!ValidateObject((int)obj, v13, (int)obj_1, flags_))
-						TraceUOReportError(aCobjCobjEither);
-					obj->GameObject.VTable = (int *)&VTable_CCorpse;
-					memset(&obj->NextCharacterObject, 0, 0x68u);
-					obj->GameObject.DirectionOrLightIndex = 0;
-					obj->GameObject.Serial = serial;
-					obj->GameObject.Graphic = 8198;
-					LOBYTE(v57) = 1;
-				}
-				else
-				{
-					obj = 0;
-					LOBYTE(v57) = 1;
-				}
-				goto LABEL_39;
-			}
-			graphic_1 = graphic_;
-			tiledataFlags = g_StaticTiledata[graphic_1].Flags;
-			if (tiledataFlags & UO_FLAG_MAP)          // map
-			{
-				mapMem = operator new(0xB8u);
-				LOBYTE(v57) = 4;
-				if (mapMem)
-				{
-					obj_ = (CGameCharacter *)CGameObjectMap__CGameObjectMap(mapMem, serial, graphic, graphicIncrement, 1);
-					LOBYTE(v57) = 1;
-				LABEL_38:
-					obj = obj_;
-				LABEL_39:
-					obj->GameObject.DirectionOrLightIndex = direction;
-					v19 = color & 0x8000;
-					v20 = color & 0x4000;
-					v21 = color & 0x3FFF;
-					if (color & 0x3FFF)
-					{
-						if (v21 >= 3000)
-							v19 |= v20 | 1;
-						else
-							LOWORD(v19) = v20 | v19 | v21;
-					}
-					obj->GameObject.Color = v19;
-					obj->GameObject.Count = count;
-					SetCharacterFlags(obj, flags);
-					isMapObject = 1;
-					goto LABEL_58;
-				}
-			}
-			else
-			{
-				if (!(tiledataFlags & UO_FLAG_CONTAINER))// !container
-				{
-					obj_ = (CGameCharacter *)CreateGameObject(serial, graphic_1, graphicIncrement);
-					goto LABEL_38;
-				}
-				contMem = (CGameContainer *)operator new(0xC0u);
-				LOBYTE(v57) = 5;
-				if (contMem)
-				{
-					obj_ = (CGameCharacter *)CGameContainer__CGameContainer(contMem, serial, graphic, graphicIncrement, 1);
-					LOBYTE(v57) = 1;
-					goto LABEL_38;
-				}
-			}
-			obj_ = 0;
-			LOBYTE(v57) = 1;
-			goto LABEL_38;
-		}
-		if (!ValidateObject((int)obj, obj->GameObject.ValidateBits, (int)aCProjectsUob_3, 2705))
-			TraceUOReportError(aCobjectmanag_1);
-		if (!(*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_IS_NPC))(obj)
-			&& !obj->GameObject.Multi)
-			(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable
-			+ UO_ROFUN_REMOVE_FROM_LISTS))(obj);
-	LABEL_58:
-		if (obj)
-			validateBits_ = obj->GameObject.ValidateBits;
-		else
-			validateBits_ = 0xFEEDBEEF;
-		if (!ValidateObject((int)obj, validateBits_, (int)aCProjectsUob_3, 2721))
-			TraceUOReportError(aCobjectmanag_1);
-		if (!(*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_IS_NPC))(obj))
-		{
-			LOWORD(xy) = x;
-			HIWORD(xy) = y;
-			v56 = z;
-			obj->GameObject.GraphicIncrement = graphicIncrement;
-			obj->GameObject.DirectionOrLightIndex = direction;
-			obj->GameObject.Count = count;
-			SetCharacterFlags(obj, flags);
-			v28 = color & 0x8000;
-			v29 = color & 0x4000;
-			v30 = color & 0x3FFF;
-			if (color & 0x3FFF)
-			{
-				if (v30 >= 3000)
-					v28 |= v29 | 1;
-				else
-					v28 |= v29 | v30;
-			}
-			multiGraphic_ = multiGraphic;
-			obj->GameObject.Color = v28;
-			if (multiGraphic_ == -1)
-			{
-				vTable = obj->GameObject.VTable;
-				obj->GameObject.Graphic = graphic & 0x3FFF;
-				obj_1 = xy;
-				LOWORD(flags_) = v56;
-				((void(__thiscall *)(CGameCharacter *, CGameCharacter *, signed int))vTable[UO_ROFUN_INSERT_IN_LISTS])(
-					obj,
-					xy,
-					flags_);
-			}
-			else
-			{
-				LoadMulti(&obj->GameObject, &xy, multiGraphic_);
-			}
-			goto LABEL_114;
-		}
-		obj->LastFidgetAnimationTimer = g_LastRenderTime;
-		if (obj->StepsCount != 4)
-		{
-			if (obj->field_14C)
-			{
-				if (obj->GameObject.InRenderQueue)
-				{
-					(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable
-						+ UO_ROFUN_REMOVE_FROM_RENDER))(obj);
-					vTable_2 = obj->GameObject.VTable;
-					obj->field_14C = 0;
-					((void(__thiscall *)(CGameCharacter *))vTable_2[UO_ROFUN_UPDATE_RENDER_AND_DRAW_POS])(obj);
-				}
-				else
-				{
-					obj->field_14C = 0;
-				}
-			}
-			stepsCount = obj->StepsCount;
-			if (stepsCount)
-			{
-				x_ = x;
-				v33 = *((_WORD *)&obj->field_14C + 5 * stepsCount + 1);
-				v41 = (char *)obj + 10 * stepsCount;
-				if (v33 == x && *((_WORD *)v41 + 168) == y && *((_WORD *)v41 + 169) == z && v41[342] == direction)
+				if (wd.X == x && wd.Y == y && wd.Z == z && wd.Direction == direction)
 				{
 					LOWORD(v33) = *((_WORD *)&obj->GameObject.VTable + 5 * stepsCount + 170);
 					if ((_WORD)v33 == (_WORD)graphic)
@@ -1295,70 +894,33 @@ LABEL_114:
 			}
 			else
 			{
-				x_ = x;
-				if (obj->GameObject.X == x
-					&& obj->GameObject.Y == y
-					&& obj->GameObject.Z == z
-					&& !((direction ^ obj->GameObject.DirectionOrLightIndex) & 0x7F))
+				if (character->X == x && character->Y == y && character->Z == z && !((direction ^ character->Direction) & 0x7F))
 				{
-					v33 = (unsigned int)direction >> 7;
-					if ((obj->OnMount != 0) == v33 && obj->GameObject.Graphic == (_WORD)graphic)
+					if ((character->OnMount != 0) == (direction >> 7) && character->Graphic == graphic)
 					{
-						LOBYTE(v33) = obj->GameObject.Flags;
-						if ((_BYTE)v33 == flags)
+						if (character->Flags == flags)
 							goto LABEL_101;
 					}
 				}
 			}
-			obj->StepStack[stepsCount].X = x_;
-			obj->StepStack[obj->StepsCount].Y = y;
-			obj->StepStack[obj->StepsCount].Z = z;
-			obj->StepStack[obj->StepsCount].Direction = direction;
-			v42 = obj->StepsCount;
-			v33 = 5 * (v42 + 35);
-			*((_WORD *)&obj->GameObject.VTable + 5 * (v42 + 35)) = graphic;
-			LOBYTE(v33) = flags;
-			obj->StepStack[obj->StepsCount++].Flags = flags;
+
+			character->m_Steps.push_back(CWalkData(x, y, z, direction));
+
 			goto LABEL_101;
 		}
-		inRenderQueue = 0;
-		if (obj->GameObject.InRenderQueue)
-		{
-			(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable
-				+ UO_ROFUN_REMOVE_FROM_RENDER))(obj);
-			inRenderQueue = 1;
-		}
-		obj->GameObject.X = x;
-		obj->GameObject.Graphic = graphic & 0x3FFF;
-		obj->GameObject.Y = y;
-		obj->GameObject.Z = z;
-		v35 = color & 0x8000;
-		v36 = color & 0x4000;
-		v37 = color & 0x3FFF;
-		obj->PixelOffset = 1;
-		obj->GameObject.DirectionOrLightIndex = direction & 0x7F;
-		if (color & 0x3FFF)
-		{
-			if (v37 >= 3000)
-				v36 |= v35 | 1;
-			else
-				LOWORD(v36) = v35 | v36 | v37;
-		}
-		else
-		{
-			LOWORD(v36) = color & 0x8000;
-		}
-		obj->GameObject.Color = v36;
-		flags_ = flags;
-		obj_1 = obj;
-		obj->StepsCount = 0;
-		SetCharacterFlags(obj_1, flags_);
-		obj->field_14C = 0;
-		if (inRenderQueue)
-			(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable
-			+ UO_ROFUN_UPDATE_RENDER_AND_DRAW_POS))(obj);
+
+		character->X = x;
+		character->Graphic = graphic & 0x3FFF;
+		character->Y = y;
+		character->Z = z;
+		character->Direction = direction;
+		character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
+		character->Flags = flags;
+
+		character->m_Steps.clear();
+
 	LABEL_101:
-		if (g_Player->IsFollowing)
+		/*if (g_Player->IsFollowing)
 		{
 			v33 = g_Player->FollowingSerial_Maybe;
 			if (obj->GameObject.Serial == v33 && !CheckObjectDistance(&obj->GameObject, 3))
@@ -1407,20 +969,20 @@ LABEL_114:
 				dword_CC937C = v47;
 				dword_CC9368 = v49;
 			}
-		}
-	LABEL_114:
-		if (isMapObject == 1)
-			sub_488C20(v33, obj);
-		result = CheckObjectDistance(&obj->GameObject, 18);
+		}*/
+	}
+
+	g_World->MoveToTop(obj);
+
+LABEL_114:
+	result = CheckObjectDistance(&obj->GameObject, 18);
+	if (!result)
+	{
+		result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_28))(obj);
 		if (!result)
-		{
-			result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_28))(obj);
-			if (!result)
-				result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable
-				+ UO_ROFUN_DESTRUCTOR_))(obj);
-		}
-		return result;
-	}*/
+			result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable
+			+ UO_ROFUN_DESTRUCTOR_))(obj);
+	}
 }
 //----------------------------------------------------------------------------------
 /*void __cdecl UpdateGameObject(int serial, signed int graphic, int graphicIncrement, int count, int x, int y, char z, unsigned __int8 direction, unsigned __int16 color, unsigned __int8 flags, int a11, char updateType, __int16 a13)
