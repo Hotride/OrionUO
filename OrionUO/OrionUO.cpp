@@ -333,6 +333,9 @@ bool COrion::Install()
 	else
 		staticsCount = (g_FileManager.m_TiledataMul.Size - (512 * sizeof(LAND_GROUP_OLD))) / sizeof(STATIC_GROUP_OLD);
 
+	if (staticsCount > 2048)
+		staticsCount = 2048;
+
 	LOG("staticsCount=%i\n", staticsCount);
 	LoadTiledata(512, staticsCount);
 	LOG("Load indexes\n");
