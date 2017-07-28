@@ -1110,174 +1110,25 @@ PACKET_HANDLER(NewHealthbarUpdate)
 
 	obj->Flags = flags;
 }
-/*void __cdecl UpdatePlayer(int serial, int graphic, int graphicIncrement, unsigned __int16 color, char flags, __int16 x, __int16 y, unsigned __int16 serverID, char direction, char z)
-{
-	__int16 fixedColor; // ax@4
-	char oldFlags; // bl@4
-	int v12; // eax@5
-	__int16 v13; // ax@6
-	__int16 fixedColor2; // ax@7
-	int i; // esi@12
-
-	if (serial != g_PlayerSerial)
-		return;
-	if (g_PlayerBankContainerGump)
-	{
-		(**(void(__stdcall ***)(_DWORD))g_PlayerBankContainerGump)(1);
-		g_PlayerBankContainerGump = 0;
-	}
-	g_WalkingFailed = 0;
-	(*((void(**)(void))g_Player->GameCharacter.GameObject.VTable + 5))();
-	g_Player->GameCharacter.GameObject.X = x;
-	g_Player->GameCharacter.GameObject.Y = y;
-	g_Player->GameCharacter.GameObject.Z = z;
-	SetCharacterGraphic(g_Player, graphic);
-	g_Player->GameCharacter.GameObject.Direction = direction;
-	(*((void(**)(void))g_Player->GameCharacter.GameObject.VTable + 46))();
-	(*((void(**)(void))g_Player->GameCharacter.GameObject.VTable + 4))();
-	UpdatePlayerCoordinates((unsigned __int16)x, (unsigned __int16)y, z, serverID);
-	fixedColor = FixColor(color);
-	g_Player->GameCharacter.GameObject.Color = fixedColor;
-	oldFlags = g_Player->GameCharacter.GameObject.Flags;
-	g_Player->GameCharacter.GameObject.Flags = flags;
-	if (dword_739F58
-		&& (v12 = g_Player->GameCharacter.GameObject.Graphic,
-		LOWORD(v12) = v12 + 0x4000,
-		(unsigned __int8)(*(int(__stdcall **)(int))(*(_DWORD *)dword_739F58 + 4))(v12)))
-	{
-		v13 = sub_446CA0(dword_739F58, oldFlags, g_Player->GameCharacter.GameObject.Graphic + 0x4000, 0);
-		g_Player->GameCharacter.GameObject.Graphic2 = v13 & 0x3FFF;
-		if (g_Player->GameCharacter.GameObject.Color)
-		{
-			g_Player->GameCharacter.GameObject.Color2 = FixColor(color);
-			goto LABEL_11;
-		}
-		fixedColor2 = sub_452670(dword_739F58, oldFlags, color, g_Player->GameCharacter.GameObject.Graphic);
-	}
-	else
-	{
-		g_Player->GameCharacter.GameObject.Graphic2 = graphic;
-		fixedColor2 = FixColor(color);
-	}
-	g_Player->GameCharacter.GameObject.Color2 = fixedColor2;
-LABEL_11:
-	sub_534AC0();
-	DenyWalk(-1, -1, -1, -1);
-	ClearWeatherEffects();
-	if (oldFlags != g_Player->GameCharacter.GameObject.Flags)
-	{
-		for (i = dword_978178; i; i = *(_DWORD *)(i + 88))
-		{
-			if ((*(int(__thiscall **)(int))(*(_DWORD *)i + 392))(i))
-			{
-				if (*(CPlayer **)(i + 76) == g_Player)
-					UpdateStatusbarGump(i, 1, 1, 1, 1);
-			}
-		}
-	}
-	g_WalkResendPacketSended = 0;
-}*/
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdatePlayer)
 {
-	/*void __cdecl HandleUpdatePlayer(_BYTE *buf)
-	{
-		int offset; // [sp+4h] [bp-2Ch]@1
-		int z; // [sp+8h] [bp-28h]@1
-		int direction; // [sp+Ch] [bp-24h]@1
-		int serverID; // [sp+10h] [bp-20h]@1
-		int y; // [sp+14h] [bp-1Ch]@1
-		int x; // [sp+18h] [bp-18h]@1
-		int flags; // [sp+1Ch] [bp-14h]@1
-		int color; // [sp+20h] [bp-10h]@1
-		int graphicIncrement; // [sp+24h] [bp-Ch]@1
-		int graphic; // [sp+28h] [bp-8h]@1
-		int serial; // [sp+2Ch] [bp-4h]@1
-
-		offset = 0;
-		ReadInt32BE(buf, &offset, &serial);
-		ReadInt16BE(buf, &offset, &graphic);
-		ReadInt8(buf, &offset, &graphicIncrement);
-		ReadInt16BE(buf, &offset, &color);
-		ReadInt8(buf, &offset, &flags);
-		ReadInt16BE(buf, &offset, &x);
-		ReadInt16BE(buf, &offset, &y);
-		ReadInt16BE(buf, &offset, &serverID);
-		ReadInt8(buf, &offset, &direction);
-		ReadInt8(buf, &offset, &z);
-		UpdatePlayer(serial, graphic, graphicIncrement, color, flags, x, y, serverID, direction, z);
-	}*/
 	WISPFUN_DEBUG("c150_f25");
 	if (g_World == NULL)
 		return;
 
 	uint serial = ReadUInt32BE();
+	ushort graphic = ReadUInt16BE();
+	uchar graphicIncrement = ReadUInt8();
+	ushort color = ReadUInt16BE();
+	uchar flags = ReadUInt8();
+	ushort x = ReadUInt16BE();
+	ushort y = ReadUInt16BE();
+	ushort serverID = ReadUInt16BE();
+	uchar direction = ReadUInt8();
+	char z = ReadUInt8();
 
-
-	bool oldDead = g_Player->Dead();
-	ushort oldGraphic = g_Player->Graphic;
-	g_Player->Graphic = ReadUInt16BE();
-	g_Player->OnGraphicChange();
-
-	if (oldGraphic && oldGraphic != g_Player->Graphic)
-	{
-		if (g_Player->Dead())
-		{
-			g_Weather.Reset();
-			g_Target.Reset();
-
-			if (g_ConfigManager.Music)
-				g_Orion.PlayMusic(42, true);
-
-			g_DeathScreenTimer = g_Ticks + DEATH_SCREEN_DELAY;
-		}
-	}
-
-	if (oldDead != g_Player->Dead())
-	{
-		if (g_Player->Dead())
-			g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
-		else
-			g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
-	}
-
-	Move(1);
-	g_Player->Color = ReadUInt16BE();
-	g_Player->Flags = ReadUInt8();
-	g_Player->X = ReadUInt16BE();
-	g_Player->Y = ReadUInt16BE();
-	Move(2);
-
-	g_Player->CloseBank();
-
-	g_Player->m_Steps.clear();
-
-	uchar dir = ReadUInt8();
-	g_Walker->SetSequence(0, dir);
-	g_WalkRequestCount = 0;
-	g_Player->OffsetX = 0;
-	g_Player->OffsetY = 0;
-	g_Player->OffsetZ = 0;
-
-	g_Player->Direction = dir;
-	g_Player->Z = ReadUInt8();
-
-	if (m_ClientVersion >= CV_308Z)
-	{
-		m_MegaClilocRequests.push_back(g_PlayerSerial);
-
-		if (g_Player->m_Items != NULL && !g_Player->m_Items->Empty())
-		{
-			CGameItem *backpack = (CGameItem*)g_Player->m_Items;
-			m_MegaClilocRequests.push_back(backpack->Serial);
-		}
-
-		SendMegaClilocRequests();
-	}
-
-	g_GumpManager.RemoveRangedGumps();
-
-	g_World->MoveToTop(g_Player);
+	g_World->UpdatePlayer(serial, graphic, graphicIncrement, color, flags, x, y, serverID, direction, z);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(CharacterStatus)
@@ -1416,128 +1267,84 @@ PACKET_HANDLER(CharacterStatus)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateItem)
 {
-	/*char __cdecl HandleUpdateItem(_BYTE *buf)
-	{
-		__int16 y_; // ax@12
-		char result; // al@18
-		signed int graphic_; // ecx@22
-		int offset; // [sp+8h] [bp-30h]@1
-		int graphic; // [sp+Ch] [bp-2Ch]@3
-		int count; // [sp+10h] [bp-28h]@1
-		int serial; // [sp+14h] [bp-24h]@1
-		int flags; // [sp+18h] [bp-20h]@1
-		int color; // [sp+1Ch] [bp-1Ch]@1
-		int direction; // [sp+20h] [bp-18h]@1
-		int y; // [sp+24h] [bp-14h]@12
-		int x; // [sp+28h] [bp-10h]@10
-		int graphicIncrement; // [sp+2Ch] [bp-Ch]@1
-		int v14; // [sp+30h] [bp-8h]@22
-		int z; // [sp+34h] [bp-4h]@18
-
-		offset = 0;
-		LOBYTE(graphicIncrement) = 0;
-		count = 0;
-		LOBYTE(direction) = 0;
-		color = 0;
-		LOBYTE(flags) = 0;
-		ReadInt32BE(buf, &offset, &serial);
-		if (serial & 0x80000000)
-		{
-			serial &= 0x7FFFFFFFu;
-			count = 1;
-		}
-		ReadInt16BE(buf, &offset, &graphic);
-		if (graphic & 0x8000)
-		{
-			graphic &= 0x7FFFu;
-			LOBYTE(graphicIncrement) = 1;
-		}
-		else if (!(_BYTE)graphicIncrement)
-		{
-			goto LABEL_7;
-		}
-		ReadInt8(buf, &offset, &graphicIncrement);
-	LABEL_7:
-		if ((_WORD)count)
-			ReadInt16BE(buf, &offset, &count);
-		else
-			count = 1;
-		ReadInt16BE(buf, &offset, &x);
-		if (x & 0x8000)
-		{
-			x &= 0x7FFFu;
-			LOBYTE(direction) = 1;
-		}
-		ReadInt16BE(buf, &offset, &y);
-		y_ = y;
-		if (y & 0x8000)
-		{
-			y_ = y & 0x7FFF;
-			color = 1;
-			y &= 0x7FFFu;
-		}
-		if (y_ & 0x4000)
-		{
-			LOBYTE(flags) = 1;
-			y = y_ & 0x3FFF;
-		}
-		if ((_BYTE)direction)
-			ReadInt8(buf, &offset, &direction);
-		result = ReadInt8(buf, &offset, &z);
-		if ((_WORD)color)
-			result = ReadInt16BE(buf, &offset, &color);
-		if ((_BYTE)flags)
-			result = ReadInt8(buf, &offset, &flags);
-		graphic_ = graphic;
-		LOBYTE(v14) = 0;
-		if ((unsigned __int16)graphic >= 0x4000u)
-		{
-			graphic_ = graphic + 0xC000;
-			graphic += 0xC000;
-			LOBYTE(v14) = 1;
-		}
-		if (serial != g_PlayerSerial)
-			result = UpdateGameObject(
-			serial,
-			graphic_,
-			graphicIncrement,
-			count,
-			(unsigned __int16)x,
-			(unsigned __int16)y,
-			z,
-			direction,
-			color,
-			flags,
-			count,
-			v14,
-			1);
-		return result;
-	}*/
 	WISPFUN_DEBUG("c150_f27");
 	if (g_World == NULL)
 		return;
 
+	UPDATE_GAME_OBJECT_TYPE updateType = UGOT_ITEM;
 	uint serial = ReadUInt32BE();
+	ushort count = 0;
+	uchar graphicIncrement = 0;
+	uchar layer = 0;
+	ushort color = 0;
+	uchar flags = 0;
+
+	if (serial & 0x80000000)
+	{
+		serial &= 0x7FFFFFFF;
+		count = 1;
+	}
+
 	ushort graphic = ReadUInt16BE();
 
 	if (g_TheAbyss && (graphic & 0x7FFF) == 0x0E5C)
 		return;
 
-	ushort count = 1;
-
-	if (serial & 0x80000000)
+	if (graphic & 0x8000)
 	{
-		serial &= 0x7FFFFFFF;
+		graphic &= 0x7FFF;
+		graphicIncrement = ReadUInt8();
+	}
+
+	if (count)
 		count = ReadUInt16BE();
-	}
+	else
+		count++;
 
-	CGameItem *obj = g_World->GetWorldItem(serial);
-	if (obj == NULL)
+	ushort x = ReadUInt16BE();
+
+	if (x & 0x8000)
 	{
-		LOG("no memory??");
-		return;
+		x &= 0x7FFF;
+		layer = 1;
 	}
 
+	ushort y = ReadUInt16BE();
+
+	if (y & 0x8000)
+	{
+		y &= 0x7FFF;
+		color = 1;
+	}
+
+	if (y & 0x4000)
+	{
+		y &= 0x3FFF;
+		flags = 1;
+	}
+
+	if (layer)
+		layer = ReadUInt8();
+
+	char z = ReadUInt8();
+
+	if (color)
+		color = ReadUInt16BE();
+
+	if (flags)
+		flags = ReadUInt8();
+
+	if (graphic >= 0x4000)
+	{
+		//graphic += 0xC000;
+		//updateType = UGOT_NEW_ITEM;
+		updateType = UGOT_MULTI;
+	}
+
+	if (serial != g_PlayerSerial)
+		g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, layer, color, flags, count, updateType, 1);
+
+	/*
 	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == obj->Serial && g_ObjectInHand->Dropped)
 	{
 		delete g_ObjectInHand;
@@ -1621,69 +1428,33 @@ PACKET_HANDLER(UpdateItem)
 		SendMegaClilocRequests();
 	}
 
-	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
+	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);*/
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateItemSA)
 {
-	/*int __cdecl HandleUpdateItemSA(_BYTE *buf, int offset)
-	{
-		unsigned __int16 y; // [sp+8h] [bp-38h]@1
-		unsigned __int16 x; // [sp+Ch] [bp-34h]@1
-		char unused; // [sp+10h] [bp-30h]@1
-		int v6; // [sp+14h] [bp-2Ch]@1
-		int v7; // [sp+18h] [bp-28h]@1
-		int flags; // [sp+1Ch] [bp-24h]@1
-		int color; // [sp+20h] [bp-20h]@1
-		int direction; // [sp+24h] [bp-1Ch]@1
-		int count; // [sp+28h] [bp-18h]@1
-		int graphicIncrement; // [sp+2Ch] [bp-14h]@1
-		int updateType; // [sp+30h] [bp-10h]@1
-		int z; // [sp+34h] [bp-Ch]@1
-		int graphic; // [sp+38h] [bp-8h]@1
-		int serial; // [sp+3Ch] [bp-4h]@1
-
-		LOBYTE(graphicIncrement) = 0;
-		count = 0;
-		v7 = 0;
-		LOBYTE(direction) = 0;
-		color = 0;
-		LOBYTE(flags) = 0;
-		v6 = -1;
-		ReadInt16BE(buf, (int *)offset, &unused);
-		ReadInt8(buf, (int *)offset, &updateType);
-		ReadInt32BE(buf, (int *)offset, &serial);
-		ReadInt16BE(buf, (int *)offset, &graphic);
-		ReadInt8(buf, (int *)offset, &graphicIncrement);
-		ReadInt16BE(buf, (int *)offset, &count);
-		ReadInt16BE(buf, (int *)offset, &v7);
-		ReadInt16BE(buf, (int *)offset, &x);
-		ReadInt16BE(buf, (int *)offset, &y);
-		ReadInt8(buf, (int *)offset, &z);
-		ReadInt8(buf, (int *)offset, &direction);
-		ReadInt16BE(buf, (int *)offset, &color);
-		ReadInt8(buf, (int *)offset, &flags);
-		ReadInt16BE_(buf, (int *)offset, &v6);
-		return UpdateGameObject(
-			serial,
-			graphic,
-			graphicIncrement,
-			count,
-			x,
-			y,
-			z,
-			direction,
-			color,
-			flags,
-			v7,
-			updateType,
-			v6);
-	}*/
 	WISPFUN_DEBUG("c150_f28");
 	if (g_World == NULL)
 		return;
 
 	Move(2);
+	UPDATE_GAME_OBJECT_TYPE updateType = (UPDATE_GAME_OBJECT_TYPE)ReadUInt8();
+	uint serial = ReadUInt32BE();
+	ushort graphic = ReadUInt16BE();
+	uchar graphicIncrement = ReadUInt8();
+	ushort count = ReadUInt16BE();
+	ushort unknown = ReadUInt16BE();
+	ushort x = ReadUInt16BE();
+	ushort y = ReadUInt16BE();
+	uchar z = ReadUInt8();
+	uchar layer = ReadUInt8();
+	ushort color = ReadUInt16BE();
+	uchar flags = ReadUInt8();
+	ushort unknown2 = ReadUInt16BE();
+
+	g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, layer, color, flags, unknown, updateType, unknown2);
+
+	/*Move(2);
 	char type = ReadUInt8();
 	uint serial = ReadUInt32BE();
 	ushort graphic = ReadUInt16BE();
@@ -1754,1063 +1525,9 @@ PACKET_HANDLER(UpdateItemSA)
 		SendMegaClilocRequests();
 	}
 
-	g_World->MoveToTop(obj);
+	g_World->MoveToTop(obj);*/
 }
-//----------------------------------------------------------------------------------
-void CPacketManager::UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, const int &count, const int &x, const int &y, const char &z, const uchar &direction, const ushort &color, const uchar &flags, const int &a11, const char &updateType, const ushort &a13)
-{
-	ushort multiGraphic = 0xFFFF;
-
-	if (updateType == 2)
-	{
-		multiGraphic = graphic;
-		graphic = 1;
-	}
-
-	CGameCharacter *character = NULL;
-	CGameItem *item = NULL;
-	CGameObject *obj = g_World->FindWorldObject(serial);
-
-	if (obj == NULL)
-	{
-		if (!(serial & 0x40000000) && updateType != 3)
-		{
-			character = g_World->GetWorldCharacter(serial);
-
-			if (character == NULL)
-			{
-				LOG("No memory?\n");
-				return;
-			}
-
-			character->Direction = direction;
-			character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
-			character->X = x;
-			character->Y = y;
-			character->Z = z;
-			character->Flags = flags;
-		}
-		else
-		{
-			item = g_World->GetWorldItem(serial);
-
-			if (item == NULL)
-			{
-				LOG("No memory?\n");
-				return;
-			}
-
-			if (graphic == 0x2006)
-				item->Layer = direction;
-		}
-
-		if ((_WORD)graphic == 0x2006)
-		{
-			corpseMem = (CGameCorpse *)j__malloc(0x188u);
-			v68 = 0;
-			if (corpseMem)
-			{
-				v22 = (CGameObject *)CGameCorpse__CGameCorpse(corpseMem, serial, 0x2006, count);
-				v68 = -1;
-			LABEL_48:
-				obj = (CGameCharacter *)v22;
-				v22->Direction = direction;
-				v26 = color & 0x8000;
-				v27 = color & 0x4000;
-				v28 = color & 0x3FFF;
-				if (color & 0x3FFF)
-				{
-					if ((unsigned int)v28 > 0xBB7)
-						v27 |= v26 | 1;
-					else
-						LOWORD(v27) = v26 | v27 | v28;
-				}
-				else
-				{
-					LOWORD(v27) = color & 0x8000;
-				}
-				obj->GameObject.Color = v27;
-				if (dword_739F58
-					&& (v29 = obj->GameObject.Graphic,
-					LOWORD(v29) = v29 + 0x4000,
-					(unsigned __int8)(*(int(__stdcall **)(int))(*(_DWORD *)dword_739F58 + 4))(v29))
-					&& !obj->GameObject.Color)
-				{
-					LOWORD(v30) = sub_452670(dword_739F58, a13, (int)obj, obj->GameObject.Graphic);
-				}
-				else
-				{
-					v31 = color & 0x8000;
-					v30 = color & 0x4000;
-					v32 = color & 0x3FFF;
-					if (color & 0x3FFF)
-					{
-						if ((unsigned int)v32 > 0xBB7)
-							v30 |= v31 | 1;
-						else
-							LOWORD(v30) = v31 | v30 | v32;
-					}
-					else
-					{
-						LOWORD(v30) = color & 0x8000;
-					}
-				}
-				obj->GameObject.Color2 = v30;
-				v63 = flags;
-				v62 = obj;
-				obj->GameObject.Count = count;
-				sub_5B1850(v62, v63);
-				v16 = color;
-				v65 = 1;
-				obj->GameObject.field_A0 = updateType == 3;
-				goto LABEL_66;
-			}
-		}
-		else
-		{
-			v23 = 48 * (unsigned __int16)graphic;
-			if (*(_DWORD *)((char *)g_StaticTiledata + v23) & UO_FLAG_MAP)
-			{
-				v24 = (CGameMap *)j__malloc(0xF8u);
-				v68 = 1;
-				if (v24)
-				{
-					v22 = (CGameObject *)CGameMap__CGameMap(v24, serial, graphic, graphicIncrement, 1);
-					v68 = -1;
-					goto LABEL_48;
-				}
-			}
-			else if (sub_5CDC90((unsigned __int16)graphic))
-			{
-				v68 = 2;
-				if (j__malloc(0x118u))
-				{
-					v22 = (CGameObject *)sub_5D3C20(serial, graphic, graphicIncrement, 1);
-					v68 = -1;
-					goto LABEL_48;
-				}
-			}
-			else
-			{
-				if (!(*(_DWORD *)((char *)g_StaticTiledata + v23) & UO_FLAG_CONTAINER))
-				{
-					v22 = CreateCGameObject(
-						(char)graphicIncrement,
-						a13,
-						serial,
-						(unsigned __int16)graphic,
-						graphicIncrement,
-						a13 != 0);
-					goto LABEL_48;
-				}
-				v25 = (CGameContainer *)j__malloc(0x108u);
-				v68 = 3;
-				if (v25)
-				{
-					v22 = (CGameObject *)CGameContainer__CGameContainer(v25, serial, graphic, graphicIncrement, 1);
-					v68 = -1;
-					goto LABEL_48;
-				}
-			}
-		}
-		v22 = 0;
-		v68 = -1;
-		goto LABEL_48;
-	}
-
-	/*
-		v57 = 1;
-		multiGraphic = -1;
-		isMapObject = 0;
-		if (g_PlayerX < 5120)
-		{
-			if (g_PlayerX < 18 && x > 5102)
-				x -= 5120;
-			if (g_PlayerX >= 5102 && x <= 18)
-				x += 5120;
-			if (g_PlayerY < 18 && y > 4078)
-				y -= 4096;
-			if (g_PlayerY >= 4078 && y <= 18)
-				y += 4096;
-		}
-		graphic_ = graphic;
-		if ((unsigned __int16)graphic >= 0x4000u)
-		{
-			multiGraphic = (unsigned __int16)graphic - 0x4000;
-			graphic_ = 1;
-			graphic = 1;
-		}
-		obj = (CGameCharacter *)g_Player;
-		if (!g_Player || serial != g_Player->GameObject.GameObject.Serial)
-		{
-			obj = (CGameCharacter *)g_WorldObjectFirstPtr;
-			if (!g_WorldObjectFirstPtr)
-				goto LABEL_23;
-			while (obj->GameObject.Serial != serial)
-			{
-				obj = (CGameCharacter *)obj->GameObject.NextObject;
-				if (!obj)
-					goto LABEL_23;
-			}
-		}
-		if (!obj)
-		{
-		LABEL_23:
-			if (!(serial & 0x40000000))               // !GameItem (NPC)
-			{
-				npcMem = (CGameCharacter *)operator new(0x1E0u);
-				LOBYTE(v57) = 6;
-				if (npcMem)
-					obj = CMobile__CMobile(npcMem, serial, graphic, graphicIncrement);
-				else
-					obj = 0;
-				obj->OnMount = (unsigned int)direction >> 7;
-				obj->GameObject.DirectionOrLightIndex = direction & 0x7F;
-				partialHue = color & 0x8000;
-				spectralColor = color & 0x4000;
-				realColor = color & 0x3FFF;
-				LOBYTE(v57) = 1;
-				obj->OffsetX = 0;
-				obj->OffsetY = 0;
-				if (color & 0x3FFF)
-				{
-					if (realColor >= 3000)
-						spectralColor |= partialHue | 1;
-					else
-						LOWORD(spectralColor) = partialHue | spectralColor | realColor;
-				}
-				else
-				{
-					LOWORD(spectralColor) = color & 0x8000;
-				}
-				obj->GameObject.Color = spectralColor;
-				LOWORD(xy) = x;
-				HIWORD(xy) = y;
-				v56 = z;
-				vTable_1 = obj->GameObject.VTable;
-				obj->OffsetZOfSomething = z;
-				LOWORD(flags_) = v56;
-				((void(__thiscall *)(CGameCharacter *, CGameCharacter *, signed int))vTable_1[UO_ROFUN_INSERT_IN_LISTS])(
-					obj,
-					xy,
-					flags_);
-				SetCharacterFlags(obj, flags);
-				obj->field_14C = 0;
-				goto LABEL_58;
-			}
-			if (graphic_ == 0x2006)                   // corpse
-			{
-				corpseMem = (CGameCharacter *)operator new(0x128u);
-				obj = corpseMem;
-				LOBYTE(v57) = 2;
-				if (corpseMem)
-				{
-					CObj__CObj((CStaticObject *)corpseMem);
-					v13 = obj->GameObject.ValidateBits;
-					flags_ = 1229;
-					obj_1 = (CGameCharacter *)aCProjectsUob_3;
-					LOBYTE(v57) = 3;
-					obj->GameObject.VTable = (int *)&VTable_CGameContainer;
-					obj->FirstContainedItem = 0;
-					obj->GumpForItem = 0;
-					obj->DrawX_Maybe = 0;
-					obj->field_BC = 0;
-					if (!ValidateObject((int)obj, v13, (int)obj_1, flags_))
-						TraceUOReportError(aCobjCobjEither);
-					obj->GameObject.VTable = (int *)&VTable_CCorpse;
-					memset(&obj->NextCharacterObject, 0, 0x68u);
-					obj->GameObject.DirectionOrLightIndex = 0;
-					obj->GameObject.Serial = serial;
-					obj->GameObject.Graphic = 8198;
-					LOBYTE(v57) = 1;
-				}
-				else
-				{
-					obj = 0;
-					LOBYTE(v57) = 1;
-				}
-				goto LABEL_39;
-			}
-			graphic_1 = graphic_;
-			tiledataFlags = g_StaticTiledata[graphic_1].Flags;
-			if (tiledataFlags & UO_FLAG_MAP)          // map
-			{
-				mapMem = operator new(0xB8u);
-				LOBYTE(v57) = 4;
-				if (mapMem)
-				{
-					obj_ = (CGameCharacter *)CGameObjectMap__CGameObjectMap(mapMem, serial, graphic, graphicIncrement, 1);
-					LOBYTE(v57) = 1;
-				LABEL_38:
-					obj = obj_;
-				LABEL_39:
-					obj->GameObject.DirectionOrLightIndex = direction;
-					v19 = color & 0x8000;
-					v20 = color & 0x4000;
-					v21 = color & 0x3FFF;
-					if (color & 0x3FFF)
-					{
-						if (v21 >= 3000)
-							v19 |= v20 | 1;
-						else
-							LOWORD(v19) = v20 | v19 | v21;
-					}
-					obj->GameObject.Color = v19;
-					obj->GameObject.Count = count;
-					SetCharacterFlags(obj, flags);
-					isMapObject = 1;
-					goto LABEL_58;
-				}
-			}
-			else
-			{
-				if (!(tiledataFlags & UO_FLAG_CONTAINER))// !container
-				{
-					obj_ = (CGameCharacter *)CreateGameObject(serial, graphic_1, graphicIncrement);
-					goto LABEL_38;
-				}
-				contMem = (CGameContainer *)operator new(0xC0u);
-				LOBYTE(v57) = 5;
-				if (contMem)
-				{
-					obj_ = (CGameCharacter *)CGameContainer__CGameContainer(contMem, serial, graphic, graphicIncrement, 1);
-					LOBYTE(v57) = 1;
-					goto LABEL_38;
-				}
-			}
-			obj_ = 0;
-			LOBYTE(v57) = 1;
-			goto LABEL_38;
-		}
-		if (!ValidateObject((int)obj, obj->GameObject.ValidateBits, (int)aCProjectsUob_3, 2705))
-			TraceUOReportError(aCobjectmanag_1);
-		if (!(*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_IS_NPC))(obj)
-			&& !obj->GameObject.Multi)
-			(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable
-			+ UO_ROFUN_REMOVE_FROM_LISTS))(obj);
-	LABEL_58:
-		if (obj)
-			validateBits_ = obj->GameObject.ValidateBits;
-		else
-			validateBits_ = 0xFEEDBEEF;
-		if (!ValidateObject((int)obj, validateBits_, (int)aCProjectsUob_3, 2721))
-			TraceUOReportError(aCobjectmanag_1);
-		if (!(*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_IS_NPC))(obj))
-		{
-			LOWORD(xy) = x;
-			HIWORD(xy) = y;
-			v56 = z;
-			obj->GameObject.GraphicIncrement = graphicIncrement;
-			obj->GameObject.DirectionOrLightIndex = direction;
-			obj->GameObject.Count = count;
-			SetCharacterFlags(obj, flags);
-			v28 = color & 0x8000;
-			v29 = color & 0x4000;
-			v30 = color & 0x3FFF;
-			if (color & 0x3FFF)
-			{
-				if (v30 >= 3000)
-					v28 |= v29 | 1;
-				else
-					v28 |= v29 | v30;
-			}
-			multiGraphic_ = multiGraphic;
-			obj->GameObject.Color = v28;
-			if (multiGraphic_ == -1)
-			{
-				vTable = obj->GameObject.VTable;
-				obj->GameObject.Graphic = graphic & 0x3FFF;
-				obj_1 = xy;
-				LOWORD(flags_) = v56;
-				((void(__thiscall *)(CGameCharacter *, CGameCharacter *, signed int))vTable[UO_ROFUN_INSERT_IN_LISTS])(
-					obj,
-					xy,
-					flags_);
-			}
-			else
-			{
-				LoadMulti(&obj->GameObject, &xy, multiGraphic_);
-			}
-			goto LABEL_114;
-		}
-		obj->LastFidgetAnimationTimer = g_LastRenderTime;
-		if (obj->StepsCount != 4)
-		{
-			if (obj->field_14C)
-			{
-				if (obj->GameObject.InRenderQueue)
-				{
-					(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable
-						+ UO_ROFUN_REMOVE_FROM_RENDER))(obj);
-					vTable_2 = obj->GameObject.VTable;
-					obj->field_14C = 0;
-					((void(__thiscall *)(CGameCharacter *))vTable_2[UO_ROFUN_UPDATE_RENDER_AND_DRAW_POS])(obj);
-				}
-				else
-				{
-					obj->field_14C = 0;
-				}
-			}
-			stepsCount = obj->StepsCount;
-			if (stepsCount)
-			{
-				x_ = x;
-				v33 = *((_WORD *)&obj->field_14C + 5 * stepsCount + 1);
-				v41 = (char *)obj + 10 * stepsCount;
-				if (v33 == x && *((_WORD *)v41 + 168) == y && *((_WORD *)v41 + 169) == z && v41[342] == direction)
-				{
-					LOWORD(v33) = *((_WORD *)&obj->GameObject.VTable + 5 * stepsCount + 170);
-					if ((_WORD)v33 == (_WORD)graphic)
-					{
-						LOBYTE(v33) = flags;
-						if (v41[343] == flags)
-							goto LABEL_101;
-					}
-				}
-			}
-			else
-			{
-				x_ = x;
-				if (obj->GameObject.X == x
-					&& obj->GameObject.Y == y
-					&& obj->GameObject.Z == z
-					&& !((direction ^ obj->GameObject.DirectionOrLightIndex) & 0x7F))
-				{
-					v33 = (unsigned int)direction >> 7;
-					if ((obj->OnMount != 0) == v33 && obj->GameObject.Graphic == (_WORD)graphic)
-					{
-						LOBYTE(v33) = obj->GameObject.Flags;
-						if ((_BYTE)v33 == flags)
-							goto LABEL_101;
-					}
-				}
-			}
-			obj->StepStack[stepsCount].X = x_;
-			obj->StepStack[obj->StepsCount].Y = y;
-			obj->StepStack[obj->StepsCount].Z = z;
-			obj->StepStack[obj->StepsCount].Direction = direction;
-			v42 = obj->StepsCount;
-			v33 = 5 * (v42 + 35);
-			*((_WORD *)&obj->GameObject.VTable + 5 * (v42 + 35)) = graphic;
-			LOBYTE(v33) = flags;
-			obj->StepStack[obj->StepsCount++].Flags = flags;
-			goto LABEL_101;
-		}
-		inRenderQueue = 0;
-		if (obj->GameObject.InRenderQueue)
-		{
-			(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable
-				+ UO_ROFUN_REMOVE_FROM_RENDER))(obj);
-			inRenderQueue = 1;
-		}
-		obj->GameObject.X = x;
-		obj->GameObject.Graphic = graphic & 0x3FFF;
-		obj->GameObject.Y = y;
-		obj->GameObject.Z = z;
-		v35 = color & 0x8000;
-		v36 = color & 0x4000;
-		v37 = color & 0x3FFF;
-		obj->PixelOffset = 1;
-		obj->GameObject.DirectionOrLightIndex = direction & 0x7F;
-		if (color & 0x3FFF)
-		{
-			if (v37 >= 3000)
-				v36 |= v35 | 1;
-			else
-				LOWORD(v36) = v35 | v36 | v37;
-		}
-		else
-		{
-			LOWORD(v36) = color & 0x8000;
-		}
-		obj->GameObject.Color = v36;
-		flags_ = flags;
-		obj_1 = obj;
-		obj->StepsCount = 0;
-		SetCharacterFlags(obj_1, flags_);
-		obj->field_14C = 0;
-		if (inRenderQueue)
-			(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable
-			+ UO_ROFUN_UPDATE_RENDER_AND_DRAW_POS))(obj);
-	LABEL_101:
-		if (g_Player->IsFollowing)
-		{
-			v33 = g_Player->FollowingSerial_Maybe;
-			if (obj->GameObject.Serial == v33 && !CheckObjectDistance(&obj->GameObject, 3))
-			{
-				v43 = obj->StepsCount;
-				if (v43 <= 0)
-				{
-					multiGraphic = *(_DWORD *)&obj->GameObject.X;
-					v44 = obj->GameObject.Z;
-				}
-				else
-				{
-					multiGraphic = *(int *)((char *)&obj->field_14C + 10 * v43 + 2);
-					v44 = *((_WORD *)&obj->LastFidgetAnimationTimer + 5 * v43 + 1);
-				}
-				v53 = v44;
-				if (g_Pathfinding)
-					sub_4A64F0();
-				v45 = sub_4A6530(
-					g_Player->GameObject.GameObject.X,
-					g_Player->GameObject.GameObject.Y,
-					g_Player->GameObject.GameObject.Z,
-					(signed __int16)multiGraphic,
-					SHIWORD(multiGraphic),
-					v44,
-					100,
-					1);
-				dword_CC9380 = v45;
-				if (!v45)
-				{
-					result = (int)CreateSystemMessageASCII(0, 3, aCanTGetThereFo);
-					g_Pathfinding = 0;
-					return result;
-				}
-				g_Pathfinding = 1;
-				v47 = v45;
-				sub_476700();
-				for (i = *(_DWORD *)(v47 + 36); i; i = *(_DWORD *)(i + 36))
-					v47 = i;
-				dword_CC9380 = v47;
-				dword_CC9374 = *(_DWORD *)(v47 + 16);
-				dword_CC9370 = *(_DWORD *)(v47 + 20);
-				v33 = (int)g_Player;
-				dword_CC936C = *(_DWORD *)(v47 + 24);
-				v49 = g_Player->GameObject.GameObject.DirectionOrLightIndex;
-				dword_CC937C = v47;
-				dword_CC9368 = v49;
-			}
-		}
-	LABEL_114:
-		if (isMapObject == 1)
-			sub_488C20(v33, obj);
-		result = CheckObjectDistance(&obj->GameObject, 18);
-		if (!result)
-		{
-			result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_28))(obj);
-			if (!result)
-				result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable
-				+ UO_ROFUN_DESTRUCTOR_))(obj);
-		}
-		return result;
-	}*/
-}
-//----------------------------------------------------------------------------------
-/*void __cdecl UpdateGameObject(int serial, signed int graphic, int graphicIncrement, int count, int x, int y, char z, unsigned __int8 direction, unsigned __int16 color, unsigned __int8 flags, int a11, char updateType, __int16 a13)
-{
-	int v13; // ebx@1
-	int v14; // eax@2
-	CGameCharacter *obj; // esi@16
-	__int16 v16; // bp@16
-	CGameCharacter *characterMem; // eax@25
-	__int16 v18; // di@28
-	int v19; // eax@29
-	int v20; // edx@33
-	CGameCorpse *corpseMem; // eax@35
-	CGameObject *v22; // eax@36
-	int v23; // ebp@38
-	CGameMap *v24; // eax@39
-	CGameContainer *v25; // eax@45
-	int v26; // edx@48
-	int v27; // eax@48
-	int v28; // ecx@48
-	int v29; // edx@54
-	int v30; // eax@56
-	int v31; // ecx@57
-	int v32; // edi@57
-	int v33; // edx@63
-	unsigned int v34; // eax@67
-	int v35; // eax@70
-	int v36; // ecx@70
-	int v37; // edx@70
-	int v38; // edx@81
-	int v39; // eax@84
-	__int16 v40; // cx@87
-	__int16 v41; // ax@87
-	int v42; // edi@87
-	int v43; // eax@92
-	int v44; // ebx@93
-	__int16 v45; // bp@95
-	int v46; // edx@95
-	int v47; // eax@95
-	int v48; // ecx@95
-	__int16 v49; // ax@102
-	__int16 v50; // ax@103
-	int v51; // eax@115
-	int v52; // eax@121
-	char v53; // dl@121
-	char v54; // zf@126
-	char *v55; // ecx@127
-	int v56; // eax@140
-	int v57; // eax@141
-	__int16 v58; // di@141
-	int v59; // eax@145
-	int v60; // edi@147
-	int i; // eax@147
-	CGameCharacter *v62; // [sp-8h] [bp-3Ch]@62
-	signed int v63; // [sp-4h] [bp-38h]@28
-	int v64; // [sp+14h] [bp-20h]@1
-	int v65; // [sp+1Ch] [bp-18h]@1
-	int v66; // [sp+20h] [bp-14h]@1
-	int v67; // [sp+24h] [bp-10h]@1
-	int v68; // [sp+30h] [bp-4h]@25
-	char updateTypea; // [sp+64h] [bp+30h]@121
-
-	v13 = a13;
-	v66 = 0;
-	LOWORD(v67) = 0;
-	v65 = 0;
-	v64 = -1;
-	if (g_PlayerX < g_MapWidth)
-	{
-		v14 = sub_5E1510();
-		if (g_PlayerX < v14 && x > g_MapWidth - v14)
-			x -= g_MapWidth;
-		if (g_PlayerX >= g_MapWidth - v14 && x <= v14)
-			x += g_MapWidth;
-		if (g_PlayerY < v14 && y > g_MapHeight - v14)
-			y -= g_MapHeight;
-		if (g_PlayerY >= g_MapHeight - v14 && y <= v14)
-			y += g_MapHeight;
-	}
-	if (updateType == 2)
-	{
-		v64 = (unsigned __int16)graphic;
-		graphic = 1;
-	}
-	obj = (CGameCharacter *)g_Player;
-	v16 = color;
-	if (!g_Player || serial != g_Player->GameCharacter.GameObject.Serial)
-	{
-		obj = (CGameCharacter *)g_WorldObjectFirstPtr;
-		if (!g_WorldObjectFirstPtr)
-		{
-		LABEL_23:
-			if (!(serial & 0x40000000) && updateType != 3)
-			{
-				characterMem = (CGameCharacter *)j__malloc(0x298u);
-				v13 = 0;
-				v68 = 4;
-				if (characterMem)
-					obj = CGameCharacter__CGameCharacter(characterMem, serial, graphic, graphicIncrement);
-				else
-					obj = 0;
-				v63 = color;
-				v68 = -1;
-				obj->field_1F0 = 0;
-				obj->field_1F4 = 0;
-				obj->GameObject.Direction = direction & 0x7F;
-				obj->field_1A4 = (unsigned int)direction >> 7;
-				v18 = FixColor(v63);
-				obj->GameObject.Color = v18;
-				if (dword_739F58
-					&& (v19 = obj->GameObject.Graphic,
-					LOWORD(v19) = v19 + 0x4000,
-					(unsigned __int8)(*(int(__stdcall **)(int))(*(_DWORD *)dword_739F58 + 4))(v19))
-					&& !obj->GameObject.Color)
-					obj->GameObject.Color2 = sub_452670(dword_739F58, 0, (int)obj, obj->GameObject.Graphic);
-				else
-					obj->GameObject.Color2 = v18;
-				LOWORD(v66) = x;
-				HIWORD(v66) = y;
-				LOWORD(v67) = z;
-				obj->field_1F8 = z;
-				v20 = obj->GameObject.VTable[25];
-				LOWORD(v63) = v67;
-				((void(__thiscall *)(CGameCharacter *, int, signed int))v20)(obj, v66, v63);
-				sub_5B1850(obj, flags);
-				goto LABEL_66;
-			}
-			if ((_WORD)graphic == 0x2006)
-			{
-				corpseMem = (CGameCorpse *)j__malloc(0x188u);
-				v68 = 0;
-				if (corpseMem)
-				{
-					v22 = (CGameObject *)CGameCorpse__CGameCorpse(corpseMem, serial, 0x2006, count);
-					v68 = -1;
-				LABEL_48:
-					obj = (CGameCharacter *)v22;
-					v22->Direction = direction;
-					v26 = color & 0x8000;
-					v27 = color & 0x4000;
-					v28 = color & 0x3FFF;
-					if (color & 0x3FFF)
-					{
-						if ((unsigned int)v28 > 0xBB7)
-							v27 |= v26 | 1;
-						else
-							LOWORD(v27) = v26 | v27 | v28;
-					}
-					else
-					{
-						LOWORD(v27) = color & 0x8000;
-					}
-					obj->GameObject.Color = v27;
-					if (dword_739F58
-						&& (v29 = obj->GameObject.Graphic,
-						LOWORD(v29) = v29 + 0x4000,
-						(unsigned __int8)(*(int(__stdcall **)(int))(*(_DWORD *)dword_739F58 + 4))(v29))
-						&& !obj->GameObject.Color)
-					{
-						LOWORD(v30) = sub_452670(dword_739F58, a13, (int)obj, obj->GameObject.Graphic);
-					}
-					else
-					{
-						v31 = color & 0x8000;
-						v30 = color & 0x4000;
-						v32 = color & 0x3FFF;
-						if (color & 0x3FFF)
-						{
-							if ((unsigned int)v32 > 0xBB7)
-								v30 |= v31 | 1;
-							else
-								LOWORD(v30) = v31 | v30 | v32;
-						}
-						else
-						{
-							LOWORD(v30) = color & 0x8000;
-						}
-					}
-					obj->GameObject.Color2 = v30;
-					v63 = flags;
-					v62 = obj;
-					obj->GameObject.Count = count;
-					sub_5B1850(v62, v63);
-					v16 = color;
-					v65 = 1;
-					obj->GameObject.field_A0 = updateType == 3;
-					goto LABEL_66;
-				}
-			}
-			else
-			{
-				v23 = 48 * (unsigned __int16)graphic;
-				if (*(_DWORD *)((char *)g_StaticTiledata + v23) & UO_FLAG_MAP)
-				{
-					v24 = (CGameMap *)j__malloc(0xF8u);
-					v68 = 1;
-					if (v24)
-					{
-						v22 = (CGameObject *)CGameMap__CGameMap(v24, serial, graphic, graphicIncrement, 1);
-						v68 = -1;
-						goto LABEL_48;
-					}
-				}
-				else if (sub_5CDC90((unsigned __int16)graphic))
-				{
-					v68 = 2;
-					if (j__malloc(0x118u))
-					{
-						v22 = (CGameObject *)sub_5D3C20(serial, graphic, graphicIncrement, 1);
-						v68 = -1;
-						goto LABEL_48;
-					}
-				}
-				else
-				{
-					if (!(*(_DWORD *)((char *)g_StaticTiledata + v23) & UO_FLAG_CONTAINER))
-					{
-						v22 = CreateCGameObject(
-							(char)graphicIncrement,
-							a13,
-							serial,
-							(unsigned __int16)graphic,
-							graphicIncrement,
-							a13 != 0);
-						goto LABEL_48;
-					}
-					v25 = (CGameContainer *)j__malloc(0x108u);
-					v68 = 3;
-					if (v25)
-					{
-						v22 = (CGameObject *)CGameContainer__CGameContainer(v25, serial, graphic, graphicIncrement, 1);
-						v68 = -1;
-						goto LABEL_48;
-					}
-				}
-			}
-			v22 = 0;
-			v68 = -1;
-			goto LABEL_48;
-		}
-		while (obj->GameObject.Serial != serial)
-		{
-			obj = (CGameCharacter *)obj->GameObject.NextObject;
-			if (!obj)
-				goto LABEL_23;
-		}
-	}
-	if (!obj)
-		goto LABEL_23;
-	v33 = obj->GameObject.ValidateBits;
-	v63 = 0x10F4;
-	v62 = (CGameCharacter *)byte_6C6AFD;
-	ValidateObject((int)obj, v33);
-	if (!(*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + 9))(obj)
-		&& !obj->GameObject.field_C8)
-		(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable + 20))(obj);
-LABEL_66:
-	if (obj)
-		v34 = obj->GameObject.ValidateBits;
-	else
-		v34 = 0xFEEDBEEF;
-	v63 = 0x1106;
-	v62 = (CGameCharacter *)byte_6C6AFD;
-	ValidateObject((int)obj, v34);
-	if (!(*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + 9))(obj))
-	{
-		obj->GameObject.field_A0 = updateType == 3;
-		LOWORD(v66) = x;
-		HIWORD(v66) = y;
-		LOWORD(v67) = z;
-		obj->GameObject.GraphicIncrement = graphicIncrement;
-		v63 = flags;
-		v62 = obj;
-		obj->GameObject.Direction = direction;
-		obj->GameObject.Count = count;
-		sub_5B1850(v62, v63);
-		v35 = v16 & 0x8000;
-		v36 = v16 & 0x4000;
-		v37 = v16 & 0x3FFF;
-		if (v16 & 0x3FFF)
-		{
-			if ((unsigned int)v37 > 0xBB7)
-				v35 |= v36 | 1;
-			else
-				v35 |= v36 | v37;
-		}
-		obj->GameObject.Color = v35;
-		if (v64 == -1)
-		{
-			v13 = graphic;
-			if (obj->GameObject.Graphic != (_WORD)graphic)
-			{
-				obj->GameObject.Graphic = graphic;
-				obj->GameObject.field_94 = 0;
-			}
-			if (dword_739F58 && (unsigned __int8)(*(int(__stdcall **)(int))(*(_DWORD *)dword_739F58 + 4))(graphic + 0x4000))
-				obj->GameObject.Graphic2 = sub_446CA0(dword_739F58, graphic, (unsigned __int16)graphic + 0x4000, 0) & 0x3FFF;
-			else
-				obj->GameObject.Graphic2 = graphic;
-			v38 = obj->GameObject.VTable[25];
-			LOWORD(v63) = v67;
-			((void(__thiscall *)(CGameCharacter *, int, signed int))v38)(obj, v66, v63);
-		}
-		else
-		{
-			sub_59D910((int)obj, (int)&v66, v64);
-			sub_59C820(obj, (unsigned __int16)v16);
-		}
-		if (dword_739F58
-			&& (v39 = obj->GameObject.Graphic,
-			LOWORD(v39) = v39 + 0x4000,
-			(unsigned __int8)(*(int(__stdcall **)(int))(*(_DWORD *)dword_739F58 + 4))(v39))
-			&& !obj->GameObject.Color)
-		{
-			obj->GameObject.Color2 = sub_452670(dword_739F58, v13, (int)obj, obj->GameObject.Graphic);
-		}
-		else
-		{
-			v40 = v16 & 0x8000;
-			v41 = v16 & 0x4000;
-			v42 = v16 & 0x3FFF;
-			if (v16 & 0x3FFF)
-			{
-				if ((unsigned int)v42 > 0xBB7)
-					obj->GameObject.Color2 = v40 | v41 | 1;
-				else
-					obj->GameObject.Color2 = v40 | v41 | v42;
-			}
-			else
-			{
-				obj->GameObject.Color2 = v40;
-			}
-		}
-		goto LABEL_150;
-	}
-	v43 = sub_45CFB0();
-	v54 = obj->field_1EC == 4;
-	obj->field_1AC = v43;
-	if (v54)
-	{
-		v44 = 0;
-		if (obj->GameObject.InRenderQueue)
-		{
-			(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable + 5))(obj);
-			v44 = 1;
-		}
-		v45 = graphic;
-		obj->GameObject.X = x;
-		v63 = graphic;
-		obj->field_19C = 1;
-		obj->GameObject.Y = y;
-		obj->GameObject.Z = z;
-		obj->GameObject.Graphic = graphic;
-		sub_5B01F0((int)&obj->field_108, v63);
-		UpdateRace(obj);
-		obj->GameObject.Direction = direction & 0x7F;
-		v46 = color & 0x8000;
-		v47 = color & 0x4000;
-		v48 = color & 0x3FFF;
-		if (color & 0x3FFF)
-		{
-			if ((unsigned int)v48 > 0xBB7)
-				v47 |= v46 | 1;
-			else
-				LOWORD(v47) = v46 | v47 | v48;
-		}
-		else
-		{
-			LOWORD(v47) = color & 0x8000;
-		}
-		obj->GameObject.Color = v47;
-		obj->field_1EC = 0;
-		if (dword_739F58)
-		{
-			if ((unsigned __int8)(*(int(__stdcall **)(int))(*(_DWORD *)dword_739F58 + 4))(graphic + 0x4000))
-			{
-				v49 = sub_446CA0(dword_739F58, v44, (unsigned __int16)graphic + 0x4000, 0);
-				v54 = obj->GameObject.Color == 0;
-				obj->GameObject.Graphic2 = v49 & 0x3FFF;
-				if (v54)
-				{
-					v50 = sub_452670(dword_739F58, v44, (int)obj, graphic);
-					goto LABEL_107;
-				}
-			LABEL_106:
-				v50 = FixColor(color);
-			LABEL_107:
-				v63 = flags;
-				v62 = obj;
-				obj->GameObject.Color2 = v50;
-				sub_5B1850(v62, v63);
-				obj->field_1A8 = 0;
-				if (v44)
-					(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable + 4))(obj);
-				goto LABEL_137;
-			}
-			v45 = graphic;
-		}
-		obj->GameObject.Graphic2 = v45;
-		goto LABEL_106;
-	}
-	if (obj->GameObject.Color != v16)
-	{
-		v63 = (unsigned __int16)v16;
-		obj->GameObject.Color = v16;
-		obj->GameObject.Color2 = FixColor(v63);
-	}
-	if (obj->GameObject.Flags != flags)
-		sub_5B1850(obj, flags);
-	if (obj->GameObject.Graphic != (_WORD)graphic)
-	{
-		v63 = graphic;
-		obj->GameObject.Graphic = graphic;
-		sub_5B01F0((int)&obj->field_108, v63);
-		UpdateRace(obj);
-		if (dword_739F58
-			&& (v51 = obj->GameObject.Graphic,
-			LOWORD(v51) = v51 + 0x4000,
-			(unsigned __int8)(*(int(__stdcall **)(int))(*(_DWORD *)dword_739F58 + 4))(v51)))
-			obj->GameObject.Graphic2 = sub_446CA0(dword_739F58, v13, obj->GameObject.Graphic + 0x4000, 0) & 0x3FFF;
-		else
-			obj->GameObject.Graphic2 = obj->GameObject.Graphic;
-	}
-	if (obj->field_1A8 && obj->GameObject.InRenderQueue)
-	{
-		(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable + 5))(obj);
-		(*(void(__thiscall **)(CGameCharacter *))((void(__thiscall **)(_DWORD))obj->GameObject.VTable + 4))(obj);
-	}
-	v52 = obj->field_1EC;
-	v53 = 1;
-	updateTypea = 1;
-	if (v52)
-	{
-		v55 = (char *)obj + 12 * v52;
-		if (*((_WORD *)&obj->field_1A8 + 6 * v52) == x && *((_WORD *)v55 + 213) == y && *((_WORD *)v55 + 214) == z)
-			v53 = 0;
-		v54 = *((_BYTE *)&obj->GameObject.VTable + 4 * (3 * v52 + 108)) == direction;
-	}
-	else
-	{
-		if (obj->GameObject.X == x && obj->GameObject.Y == y && obj->GameObject.Z == z)
-			v53 = 0;
-		v54 = ((direction ^ obj->GameObject.Direction) & 0x7F) == 0;
-	}
-	if (v54)
-		updateTypea = 0;
-	if (v53 || updateTypea)
-	{
-		obj->field_1A8 = v53 == 0;
-		*((_WORD *)&obj->field_1B4 + 6 * v52) = x;
-		*((_WORD *)&obj->field_1B4 + 6 * obj->field_1EC + 1) = y;
-		*((_WORD *)&obj->field_1B8 + 6 * obj->field_1EC) = z;
-		*((_BYTE *)&obj->GameObject.VTable + 12 * (obj->field_1EC++ + 37)) = direction;
-	}
-LABEL_137:
-	if (g_Player->field_2AC
-		&& obj->GameObject.Serial == g_Player->field_2B4
-		&& !(*(int(__thiscall **)(CGameCharacter *, signed int))((int(__thiscall **)(_DWORD, _DWORD))obj->GameObject.VTable
-		+ 22))(
-		obj,
-		3))
-	{
-		v56 = obj->field_1EC;
-		if (v56 <= 0)
-		{
-			v58 = obj->GameObject.Z;
-			v64 = *(_DWORD *)&obj->GameObject.X;
-		}
-		else
-		{
-			v57 = 3 * v56;
-			v58 = *((_WORD *)&obj->field_1AC + 2 * v57);
-			v64 = *(&obj->field_1A8 + v57);
-		}
-		if (g_Pathfinding)
-			sub_5C3CB0();
-		v63 = 1;
-		v62 = (CGameCharacter *)100;
-		v59 = sub_5C4300(
-			g_Player->GameCharacter.GameObject.X,
-			g_Player->GameCharacter.GameObject.Y,
-			g_Player->GameCharacter.GameObject.Z,
-			(signed __int16)v64,
-			SHIWORD(v64),
-			v58,
-			100,
-			1);
-		dword_AE72B0 = v59;
-		if (!v59)
-		{
-			CreateSystemMessageASCII(0, 3, "Can't get there (follow)");
-			g_Pathfinding = 0;
-			return;
-		}
-		g_Pathfinding = 1;
-		v60 = v59;
-		sub_503C40();
-		for (i = *(_DWORD *)(v60 + 36); i; i = *(_DWORD *)(i + 36))
-			v60 = i;
-		dword_AE72B0 = v60;
-		dword_AE72A4 = *(_DWORD *)(v60 + 16);
-		dword_AE72A0 = *(_DWORD *)(v60 + 20);
-		dword_AE729C = *(_DWORD *)(v60 + 24);
-		dword_AE7298 = g_Player->GameCharacter.GameObject.Direction;
-		dword_AE72AC = v60;
-	}
-LABEL_150:
-	if (v65 == 1)
-		sub_5ADA80(obj);
-	if ((*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + 23))(obj)
-		|| (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + 33))(obj))
-		sub_534560(&obj->GameObject);
-	else
-		(*((void(**)(void))obj->GameObject.VTable + 1))();
-}*/
+//---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateObject)
 {
 	WISPFUN_DEBUG("c150_f29");
@@ -2846,32 +1563,25 @@ PACKET_HANDLER(UpdateObject)
 	}
 	else
 	{
-		//UpdateGameObject(serial, graphic, 0, 0, x, y, z, direction, color, flags, 0, 0, 1);
+		g_World->UpdateGameObject(serial, graphic, 0, 0, x, y, z, direction, color, flags, 0, UGOT_ITEM, 1);
 	}
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
 	obj->ClearNotOpenedItems();
-	obj->MapIndex = g_CurrentMap;
 
 	CGameCharacter *character = NULL;
-	bool resuestStatus = false;
 
 	if (obj != NULL && obj->NPC)
 	{
 		character = (CGameCharacter*)obj;
 		character->Notoriety = notoriety;
-
-		if (!obj->Graphic)
-			resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL) || (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.DrawStatusState || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
 	}
 
 	if (*m_Start != 0x78)
 		Move(6);
 
 	uint itemSerial = ReadUInt32BE();
-
-	g_World->MoveToTop(obj);
 
 	while (itemSerial != 0 && character != NULL && !IsEOF())
 	{
@@ -2909,9 +1619,6 @@ PACKET_HANDLER(UpdateObject)
 
 	if (obj->IsPlayer())
 		g_Player->UpdateAbilities();
-
-	if (resuestStatus)
-		g_Orion.StatusReq(serial);
 
 
 
@@ -3198,96 +1905,6 @@ PACKET_HANDLER(EquipItem)
 		g_Player->UpdateAbilities();
 }
 //----------------------------------------------------------------------------------
-void CPacketManager::UpdateContainedItem(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, const ushort &count, const int &x, const int &y, const uint containerSerial, const ushort &color)
-{
-	CGameObject *container = g_World->FindWorldObject(containerSerial);
-
-	if (container == NULL)
-		return;
-
-	CGameObject *obj = g_World->FindWorldObject(serial);
-
-	if (obj != NULL)
-	{
-		g_World->RemoveObject(obj);
-		obj = NULL;
-	}
-
-	if (serial & 0x40000000)
-		obj = g_World->GetWorldItem(serial);
-	else
-		obj = g_World->GetWorldCharacter(serial);
-
-	if (obj == NULL)
-	{
-		LOG("No memory?\n");
-		return;
-	}
-
-	obj->MapIndex = g_CurrentMap;
-
-	obj->Graphic = graphic + graphicIncrement;
-	obj->OnGraphicChange();
-	obj->Color = g_ColorManager.FixColor(color, (color & 0x8000));
-
-	obj->Count = count;
-
-	UpdateItemInContainer(obj, container, x, y);
-
-	//sub_534560(v19);
-
-	g_World->MoveToTop(obj);
-
-	LOG("\t|0x%08X<0x%08X:%04X*%d (%d,%d) %04X\n", containerSerial, serial, graphic + graphicIncrement, count, x, y, color);
-}
-//----------------------------------------------------------------------------------
-void CPacketManager::UpdateItemInContainer(CGameObject *obj, CGameObject *container, const int &x, const int &y)
-{
-	obj->X = x;
-	obj->Y = y;
-	g_World->PutContainer(obj, container);
-
-	uint containerSerial = container->Serial;
-
-	if (m_ClientVersion >= CV_308Z)
-		m_MegaClilocRequests.push_back(obj->Serial);
-
-	if (obj->Graphic == 0x0EB0) //Message board item
-	{
-		CPacketBulletinBoardRequestMessageSummary(containerSerial, obj->Serial).Send();
-
-		g_GumpManager.UpdateGump(containerSerial, 0, GT_BULLETIN_BOARD);
-	}
-
-	CGump *gump = g_GumpManager.UpdateContent(containerSerial, 0, GT_SPELLBOOK);
-
-	if (gump == NULL)
-	{
-		gump = g_GumpManager.UpdateContent(containerSerial, 0, GT_CONTAINER);
-
-		if (gump != NULL && gump->GumpType == GT_CONTAINER)
-			((CGumpContainer*)gump)->UpdateItemCoordinates(obj);
-
-		if (m_ClientVersion >= CV_308Z)
-			m_MegaClilocRequests.push_back(containerSerial);
-	}
-
-	if (gump != NULL && !container->NPC)
-	{
-		((CGameItem*)container)->Opened = true;
-	}
-
-	CGameObject *top = container->GetTopObject();
-
-	if (top != NULL)
-	{
-		top = top->FindSecureTradeBox();
-
-		if (top != NULL)
-			g_GumpManager.UpdateContent(0, top->Serial, GT_TRADE);
-	}
-}
-//----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateContainedItem)
 {
 	WISPFUN_DEBUG("c150_f31");
@@ -3307,7 +1924,7 @@ PACKET_HANDLER(UpdateContainedItem)
 	uint containerSerial = ReadUInt32BE();
 	ushort color = ReadUInt16BE();
 
-	UpdateContainedItem(serial, graphic, graphicIncrement, count, x, y, containerSerial, color);
+	g_World->UpdateContainedItem(serial, graphic, graphicIncrement, count, x, y, containerSerial, color);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateContainedItems)
@@ -3366,7 +1983,7 @@ PACKET_HANDLER(UpdateContainedItems)
 			}
 		}
 		
-		UpdateContainedItem(serial, graphic, graphicIncrement, count, x, y, containerSerial, color);
+		g_World->UpdateContainedItem(serial, graphic, graphicIncrement, count, x, y, containerSerial, color);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -3596,7 +2213,7 @@ PACKET_HANDLER(UpdateCharacter)
 	}
 	else
 	{
-		//UpdateGameObject(serial, graphic, 0, 0, x, y, z, direction, color, flags, 0, 0, 1);
+		g_World->UpdateGameObject(serial, graphic, 0, 0, x, y, z, direction, color, flags, 0, UGOT_ITEM, 1);
 	}
 
 	/*if (!obj->Graphic)
@@ -4518,15 +3135,57 @@ PACKET_HANDLER(ExtendedCommand)
 	}
 }
 //----------------------------------------------------------------------------------
+void CPacketManager::DenyWalk(const uchar &sequence, const int &x, const int &y, const char &z)
+{
+	g_WalkRequestCount = 0;
+	g_PendingDelayTime = 0;
+
+	g_Player->m_Steps.clear();
+
+	/*g_WalkUnacceptedPacketsCount = 0;
+	g_WalkSequence = 0;
+	g_IsWalkingStepsCount = 0;
+	g_CurrentWalkSequencePtr = 0;
+	g_WalkingFailed = 0;*/
+
+	/*if (sequence == 0xFF)
+	{
+		g_Player->GameObject.GameObject.X = g_PlayerX;
+		g_Player->GameObject.GameObject.Y = g_PlayerY;
+		(*((void(**)(void))g_Player->GameObject.GameObject.VTable + UO_ROFUN_UPDATE_RENDER_AND_DRAW_POS))();
+		RenderScene_1();
+		(*((void(**)(void))g_Player->GameObject.GameObject.VTable + UO_ROFUN_39))();
+		result = UpdateMaxDrawZ();
+	}
+	else{...}*/
+	//UpdatePlayerCoordinates(x, y, z, g_ServerID);
+
+	g_Player->X = x;
+	g_Player->Y = y;
+	g_Player->Z = z;
+}
+//----------------------------------------------------------------------------------
 PACKET_HANDLER(DenyWalk)
 {
 	WISPFUN_DEBUG("c150_f48");
-	g_WalkRequestCount = 0;
-	g_PendingDelayTime = 0;
-	g_Ping = 0;
-
 	if (g_Player == NULL)
 		return;
+
+	uchar sequence = ReadUInt8();
+	ushort x = ReadUInt16BE();
+	ushort y = ReadUInt16BE();
+	uchar direction = ReadUInt8();
+	char z = ReadUInt8();
+
+	DenyWalk(sequence, x, y, z);
+
+	g_Player->Direction = direction;
+
+	g_World->MoveToTop(g_Player);
+
+	/*g_WalkRequestCount = 0;
+	g_PendingDelayTime = 0;
+	g_Ping = 0;
 
 	Move(1);
 	g_Player->X = ReadUInt16BE();
@@ -4545,7 +3204,7 @@ PACKET_HANDLER(DenyWalk)
 	g_Player->CloseBank();
 	g_GumpManager.RemoveRangedGumps();
 
-	g_World->MoveToTop(g_Player);
+	g_World->MoveToTop(g_Player);*/
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ConfirmWalk)

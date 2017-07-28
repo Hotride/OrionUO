@@ -84,12 +84,6 @@ private:
 
 	void AddHTMLGumps(class CGump *gump, vector<HTMLGumpDataInfo> &list);
 
-	void UpdateContainedItem(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, const ushort &count, const int &x, const int &y, const uint containerSerial, const ushort &color);
-
-	void UpdateItemInContainer(CGameObject *obj, CGameObject *container, const int &x, const int &y);
-
-	void UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, const int &count, const int &x, const int &y, const char &z, const uchar &direction, const ushort &color, const uchar &flags, const int &a11, const char &updateType, const ushort &a13);
-
 	UINT_LIST m_MegaClilocRequests;
 
 	deque<UCHAR_LIST> m_PluginData;
@@ -226,6 +220,8 @@ public:
 	void ProcessPluginPackets();
 
 	void PluginReceiveHandler(puchar buf, const int &size);
+
+	void DenyWalk(const uchar &sequence, const int &x, const int &y, const char &z);
 };
 //---------------------------------------------------------------------------
 extern CPacketManager g_PacketManager;

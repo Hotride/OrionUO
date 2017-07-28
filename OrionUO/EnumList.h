@@ -423,6 +423,13 @@ enum MAP_MESSAGE
 	MM_EDIT_RESPONSE
 };
 //----------------------------------------------------------------------------------
+enum UPDATE_GAME_OBJECT_TYPE
+{
+	UGOT_ITEM = 0,
+	UGOT_NEW_ITEM = 1,
+	UGOT_MULTI = 2,
+};
+//----------------------------------------------------------------------------------
 enum VALUE_KEY_INT
 {
 	VKI_SOUND = 0,

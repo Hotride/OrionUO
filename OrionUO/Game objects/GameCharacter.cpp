@@ -24,7 +24,6 @@
 #include "../Gumps/GumpTargetSystem.h"
 #include "../OrionWindow.h"
 #include "../Party.h"
-
 //----------------------------------------------------------------------------------
 CGameCharacter::CGameCharacter(const uint &serial)
 : CGameObject(serial), m_Hits(0), m_MaxHits(0), m_LastStepSoundTime(GetTickCount()),
@@ -35,11 +34,16 @@ m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
 	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;
 
+	bool wantStatusRequest = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL) || (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.DrawStatusState || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
+
 	if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == serial && g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) == NULL)
 	{
-		CPacketStatusRequest(m_Serial).Send();
+		wantStatusRequest = true;
 		g_GumpManager.AddGump(new CGumpTargetSystem(m_Serial, g_NewTargetSystem.GumpX, g_NewTargetSystem.GumpY));
 	}
+
+	if (wantStatusRequest)
+		CPacketStatusRequest(m_Serial).Send();
 }
 //----------------------------------------------------------------------------------
 CGameCharacter::~CGameCharacter()
@@ -358,8 +362,7 @@ void CGameCharacter::OnGraphicChange(int direction)
 
 		if (g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR) != NULL)
 			g_Orion.StatusReq(m_Serial);
-
-		if (g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM) != NULL)
+		else if (g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM) != NULL)
 			g_Orion.StatusReq(m_Serial);
 	}
 }
