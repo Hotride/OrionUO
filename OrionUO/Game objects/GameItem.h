@@ -52,13 +52,6 @@ public:
 
 	CMulti* GetMulti();
 
-	/*!
-	Вставка данных из объекта в руке (на курсоре)
-	@param [__in] obj Ссылка на объект на курсоре
-	@return 
-	*/
-	void Paste(class CObjectOnCursor *obj);
-
 	void ClearMultiItems();
 
 	ushort GetFirstMultiGraphic();

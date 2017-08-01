@@ -570,9 +570,6 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	if (run)
 		direction += 0x80;
 
-	g_RemoveRangeXY.X = x;
-	g_RemoveRangeXY.Y = y;
-
 	if (emptyStack)
 	{
 		if (!g_Player->Walking())

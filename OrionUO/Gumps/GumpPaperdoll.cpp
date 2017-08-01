@@ -345,7 +345,7 @@ void CGumpPaperdoll::PrepareContent()
 	if (obj == NULL)
 		return;
 
-	if (!g_Player->Dead() && m_Serial == g_PlayerSerial && g_PressedObject.LeftGump() == this && g_ObjectInHand == NULL && g_PressedObject.LeftSerial != 0xFFFFFFFF)
+	if (!g_Player->Dead() && m_Serial == g_PlayerSerial && g_PressedObject.LeftGump() == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != 0xFFFFFFFF)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -376,9 +376,9 @@ void CGumpPaperdoll::PrepareContent()
 
 	bool wantTransparent = false;
 
-	if (g_SelectedObject.Gump == this && g_ObjectInHand != NULL && g_ObjectInHand->AnimID)
+	if (g_SelectedObject.Gump == this && g_ObjectInHand.Enabled && g_ObjectInHand.TiledataPtr->AnimID)
 	{
-		if (obj->FindLayer(g_ObjectInHand->UsedLayer) == NULL)
+		if (obj->FindLayer(g_ObjectInHand.TiledataPtr->Quality) == NULL)
 		{
 			if (!m_WantTransparentContent)
 			{
@@ -476,8 +476,8 @@ void CGumpPaperdoll::UpdateContent()
 	int gumpOffset = (obj->Female ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET);
 	uint ignoreSerial = 0;
 
-	if (g_ObjectInHand != NULL)
-		ignoreSerial = g_ObjectInHand->Serial;
+	if (g_ObjectInHand.Enabled)
+		ignoreSerial = g_ObjectInHand.Serial;
 
 	//Draw equipment & backpack
 	CGameItem *equipment = NULL;
@@ -563,13 +563,13 @@ void CGumpPaperdoll::UpdateContent()
 					bodyGumppic->Serial = ID_GP_ITEMS + UsedLayers[i];
 				}
 			}
-			else if (m_WantTransparentContent && g_ObjectInHand != NULL && UsedLayers[i] == g_ObjectInHand->UsedLayer && g_ObjectInHand->AnimID)
+			else if (m_WantTransparentContent && g_ObjectInHand.Enabled && UsedLayers[i] == g_ObjectInHand.TiledataPtr->Quality && g_ObjectInHand.TiledataPtr->AnimID)
 			{
-				equipment = obj->FindLayer(g_ObjectInHand->UsedLayer);
+				equipment = obj->FindLayer(g_ObjectInHand.TiledataPtr->Quality);
 
 				if (equipment == NULL)
 				{
-					ushort id = g_ObjectInHand->AnimID;
+					ushort id = g_ObjectInHand.TiledataPtr->AnimID;
 
 					if (bodyIter != equipConv.end())
 					{
@@ -587,8 +587,8 @@ void CGumpPaperdoll::UpdateContent()
 					m_DataBox->Add(new CGUIAlphaBlending(true, 0.7f));
 
 					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(id + cOfs, 8, 19));
-					bodyGumppic->Color = g_ObjectInHand->Color;
-					bodyGumppic->PartialHue = g_ObjectInHand->IsPartialHue();
+					bodyGumppic->Color = g_ObjectInHand.Color;
+					bodyGumppic->PartialHue = (g_ObjectInHand.Color & 0x8000);
 
 					m_DataBox->Add(new CGUIAlphaBlending(false, 0.0f));
 				}
@@ -853,7 +853,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 		return;
 
 	//Что-то в руке
-	if ((!serial || serial >= ID_GP_ITEMS) && g_ObjectInHand != NULL)
+	if ((!serial || serial >= ID_GP_ITEMS) && g_ObjectInHand.Enabled)
 	{
 		bool canWear = true;
 
@@ -883,9 +883,9 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 					return;
 				}
 			}
-			else if (g_ObjectInHand->IsWearable()) //Можно одевать
+			else if (IsWearable(g_ObjectInHand.TiledataPtr->Flags)) //Можно одевать
 			{
-				CGameItem *equipment = container->FindLayer(g_ObjectInHand->UsedLayer);
+				CGameItem *equipment = container->FindLayer(g_ObjectInHand.TiledataPtr->Quality);
 
 				if (equipment == NULL) //На этом слое ничего нет
 				{
@@ -907,7 +907,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 			g_Orion.PlaySoundEffect(0x0051);
 	}
 	
-	if (g_PressedObject.LeftSerial == serial && serial >= ID_GP_ITEMS && g_ObjectInHand == NULL)
+	if (g_PressedObject.LeftSerial == serial && serial >= ID_GP_ITEMS && !g_ObjectInHand.Enabled)
 	{
 		int layer = serial - ID_GP_ITEMS;
 		CGameItem *equipment = container->FindLayer(layer);

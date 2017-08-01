@@ -146,6 +146,8 @@ public:
 	bool IsPlayer() {return true;}
 
 	void UpdateAbilities();
+
+	void UpdateRemoveRange();
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на игрока

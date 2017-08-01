@@ -1003,7 +1003,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			{
 				int handIndex = 1 - (g_MacroPointer->SubCode - MSC_G4_LEFT_HAND);
 
-				if (handIndex < 0 || handIndex > 1 || g_ObjectInHand != NULL)
+				if (handIndex < 0 || handIndex > 1 || g_ObjectInHand.Enabled)
 					break;
 
 				if (itemInHand[handIndex])
@@ -1014,12 +1014,6 @@ MACRO_RETURN_CODE CMacroManager::Process()
 					{
 						g_Orion.PickupItem(objHand, 1, false);
 						g_Orion.EquipItem(g_PlayerSerial);
-
-						if (g_ObjectInHand != NULL)
-						{
-							delete g_ObjectInHand;
-							g_ObjectInHand = NULL;
-						}
 					}
 
 					itemInHand[handIndex] = 0;
@@ -1043,12 +1037,6 @@ MACRO_RETURN_CODE CMacroManager::Process()
 
 						g_Orion.PickupItem(objHand, 1, false);
 						g_Orion.DropItem(backpack, 0xFFFF, 0xFFFF, 0);
-
-						if (g_ObjectInHand != NULL)
-						{
-							delete g_ObjectInHand;
-							g_ObjectInHand = NULL;
-						}
 
 						g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_PAPERDOLL);
 					}

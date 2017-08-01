@@ -227,7 +227,7 @@ public:
 	Золото ли это
 	@return Индекс в таблице золота
 	*/
-	int IsGold();
+	static int IsGold(const ushort &graphic);
 
 	/*!
 	Получить индекс картинки для рисования

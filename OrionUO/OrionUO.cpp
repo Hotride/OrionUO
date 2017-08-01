@@ -1148,16 +1148,7 @@ void COrion::Process(const bool &rendering)
 
 		if (g_World != NULL)
 		{
-			if (!g_Player->m_Steps.empty())
-			{
-				g_RemoveRangeXY.X = g_Player->m_Steps.front().X;
-				g_RemoveRangeXY.Y = g_Player->m_Steps.front().Y;
-			}
-			else
-			{
-				g_RemoveRangeXY.X = g_Player->X;
-				g_RemoveRangeXY.Y = g_Player->Y;
-			}
+			g_Player->UpdateRemoveRange();
 			
 			g_Orion.RemoveRangedObjects();
 
@@ -5475,22 +5466,29 @@ void COrion::ChangeMap(uchar newmap)
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::PickupItem(CGameItem *obj, int count, bool isGameFigure)
+void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 {
 	WISPFUN_DEBUG("c194_f103");
-	if (g_ObjectInHand == NULL)
+	if (!g_ObjectInHand.Enabled)
 	{
-		g_ObjectInHand = new CObjectOnCursor(obj);
+		g_ObjectInHand.Enabled = true;
 
 		if (!count)
 			count = obj->Count;
 
-		g_ObjectInHand->Separated = count != obj->Count;
-		g_ObjectInHand->IsGameFigure = isGameFigure;
-		g_ObjectInHand->DragCount = count;
+		g_ObjectInHand.Serial = obj->Serial;
+		g_ObjectInHand.Graphic = obj->Graphic;
+		g_ObjectInHand.Color = obj->Color;
+		g_ObjectInHand.Container = obj->Container;
+		g_ObjectInHand.Layer = obj->Layer;
+		g_ObjectInHand.Flags = obj->Flags;
+		g_ObjectInHand.TiledataPtr = obj->GetStaticData();
+		g_ObjectInHand.Count = count;
+		g_ObjectInHand.IsGameFigure = isGameFigure;
 
 		if (obj->Container != 0xFFFFFFFF)
 		{
+			g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
 			CGump *gump = g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
 
 			//if (gump != NULL && g_PacketManager.ClientVersion >= CV_308Z)
@@ -5501,63 +5499,35 @@ void COrion::PickupItem(CGameItem *obj, int count, bool isGameFigure)
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DropItem(uint container, ushort x, ushort y, char z)
+void COrion::DropItem(const uint &container, const ushort &x, const ushort &y, const char &z)
 {
 	WISPFUN_DEBUG("c194_f104");
-	if (g_ObjectInHand != NULL)
+	if (g_ObjectInHand.Enabled)
 	{
-		if (g_ObjectInHand->Dropped)
-		{
-			delete g_ObjectInHand;
-			g_ObjectInHand = NULL;
-		}
+		if (g_PacketManager.ClientVersion >= CV_6017)
+			CPacketDropRequestNew(g_ObjectInHand.Serial, x, y, z, 0, container).Send();
 		else
-		{
-			g_ObjectInHand->Dropped = true;
+			CPacketDropRequestOld(g_ObjectInHand.Serial, x, y, z, container).Send();
 
-			if (g_PacketManager.ClientVersion >= CV_6017)
-				CPacketDropRequestNew(g_ObjectInHand->Serial, x, y, z, 0, container).Send();
-			else
-				CPacketDropRequestOld(g_ObjectInHand->Serial, x, y, z, container).Send();
-
-			//if (g_ObjectInHand->Deleted)
-			{
-				delete g_ObjectInHand;
-				g_ObjectInHand = NULL;
-			}
-		}
+		g_ObjectInHand.Enabled = false;
 	}
 }
 //----------------------------------------------------------------------------------
 void COrion::EquipItem(uint container)
 {
 	WISPFUN_DEBUG("c194_f105");
-	if (g_ObjectInHand != NULL)
+	if (g_ObjectInHand.Enabled)
 	{
-		if (g_ObjectInHand->Dropped)
+		if (IsWearable(g_ObjectInHand.TiledataPtr->Flags))
 		{
-			delete g_ObjectInHand;
-			g_ObjectInHand = NULL;
-		}
-		else if (g_ObjectInHand->IsWearable())
-		{
-			g_ObjectInHand->Dropped = true;
+			ushort graphic = g_ObjectInHand.Graphic;
 
-			ushort graphic = g_ObjectInHand->Graphic;
+			if (!container)
+				container = g_PlayerSerial;
 
-			if (!g_ObjectInHand->MultiBody)
-			{
-				if (!container)
-					container = g_PlayerSerial;
+			CPacketEquipRequest(g_ObjectInHand.Serial, m_StaticData[graphic].Quality, container).Send();
 
-				CPacketEquipRequest(g_ObjectInHand->Serial, m_StaticData[graphic].Quality, container).Send();
-			}
-
-			//if (g_ObjectInHand->Deleted)
-			{
-				delete g_ObjectInHand;
-				g_ObjectInHand = NULL;
-			}
+			g_ObjectInHand.Enabled = false;
 		}
 	}
 }
@@ -5792,8 +5762,7 @@ void COrion::ClearWorld()
 	RELEASE_POINTER(g_Walker);
 	LOG("\tWalker deleted?\n");
 
-	RELEASE_POINTER(g_ObjectInHand);
-	LOG("\tObjectInHand removed?\n");
+	g_ObjectInHand.Clear();
 
 	RELEASE_POINTER(g_World)
 		LOG("\tWorld removed?\n");

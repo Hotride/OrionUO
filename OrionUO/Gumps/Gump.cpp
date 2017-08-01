@@ -176,7 +176,7 @@ bool CGump::TestLockerClick()
 void CGump::CalculateGumpState()
 {
 	WISPFUN_DEBUG("c84_f6");
-	g_GumpPressed = (g_ObjectInHand == NULL && g_PressedObject.LeftGump() == this /*&& g_SelectedObject.Gump() == this*/);
+	g_GumpPressed = (!g_ObjectInHand.Enabled && g_PressedObject.LeftGump() == this /*&& g_SelectedObject.Gump() == this*/);
 	g_GumpSelectedElement = ((g_SelectedObject.Gump == this) ? g_SelectedObject.Object : NULL);
 	g_GumpPressedElement = NULL;
 
@@ -188,7 +188,7 @@ void CGump::CalculateGumpState()
 			g_GumpPressedElement = g_PressedObject.LeftObject();
 	}
 
-	if (CanBeMoved() && g_GumpPressed && g_ObjectInHand == NULL && (!g_PressedObject.LeftSerial || g_GumpPressedElement == NULL || g_PressedObject.TestMoveOnDrag()))
+	if (CanBeMoved() && g_GumpPressed && !g_ObjectInHand.Enabled && (!g_PressedObject.LeftSerial || g_GumpPressedElement == NULL || g_PressedObject.TestMoveOnDrag()))
 		g_GumpMovingOffset = g_MouseManager.LeftDroppedOffset();
 	else
 		g_GumpMovingOffset.Reset();

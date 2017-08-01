@@ -907,8 +907,8 @@ PACKET_HANDLER(EnterWorld)
 
 	RELEASE_POINTER(g_World);
 	RELEASE_POINTER(g_Walker);
-	RELEASE_POINTER(g_ObjectInHand);
 
+	g_ObjectInHand.Clear();
 	g_World = new CGameWorld(serial);
 	g_Walker = new CWalker();
 	g_PendingDelayTime = 0;
@@ -1128,6 +1128,7 @@ PACKET_HANDLER(UpdatePlayer)
 	uchar direction = ReadUInt8();
 	char z = ReadUInt8();
 
+	LOG("0x%08X 0x%04X %i 0x%04X 0x%02X %i %i %i %i %i\n", serial, graphic, graphicIncrement, color, flags, x, y, serverID, direction, z);
 	g_World->UpdatePlayer(serial, graphic, graphicIncrement, color, flags, x, y, serverID, direction, z);
 }
 //----------------------------------------------------------------------------------
@@ -1863,12 +1864,6 @@ PACKET_HANDLER(EquipItem)
 
 	uint serial = ReadUInt32BE();
 
-	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == serial)
-	{
-		delete g_ObjectInHand;
-		g_ObjectInHand = NULL;
-	}
-
 	CGameItem *obj = g_World->GetWorldItem(serial);
 	obj->MapIndex = g_CurrentMap;
 
@@ -1993,24 +1988,24 @@ PACKET_HANDLER(DenyMoveItem)
 	if (g_World == NULL)
 		return;
 
-	if (g_ObjectInHand != NULL)
+	if (g_ObjectInHand.Enabled)
 	{
-		CGameItem *obj = g_World->FindWorldItem(g_ObjectInHand->Serial);
+		CGameItem *obj = g_World->FindWorldItem(g_ObjectInHand.Serial);
 
 		if (obj == NULL)
 		{
-			obj = g_World->GetWorldItem(g_ObjectInHand->Serial);
+			obj = g_World->GetWorldItem(g_ObjectInHand.Serial);
 
 			if (obj != NULL)
 			{
 				g_World->RemoveFromContainer(obj);
 
-				obj->Paste(g_ObjectInHand);
+				//obj->Paste(g_ObjectInHand);
 
 				//if (m_ClientVersion >= CV_308Z)
 				//	m_MegaClilocRequests.push_back(obj->Serial);
 
-				g_World->PutContainer(obj, g_ObjectInHand->Container);
+				g_World->PutContainer(obj, g_ObjectInHand.Container);
 
 				g_World->MoveToTop(obj);
 			}
@@ -2019,8 +2014,7 @@ PACKET_HANDLER(DenyMoveItem)
 		if (obj != NULL)
 			g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
 
-		delete g_ObjectInHand;
-		g_ObjectInHand = NULL;
+		g_ObjectInHand.Clear();
 	}
 }
 //----------------------------------------------------------------------------------
@@ -2036,32 +2030,6 @@ PACKET_HANDLER(DeleteObject)
 		return;
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
-
-	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == serial)
-	{
-		bool sep = g_ObjectInHand->Separated;
-
-		if (sep)
-			g_ObjectInHand->Separated = false;
-		else if (g_ObjectInHand->Dropped/*Deleted*/)
-		{
-			delete g_ObjectInHand;
-			g_ObjectInHand = NULL;
-		}
-
-		if (g_ObjectInHand != NULL)
-		{
-			if (obj != NULL && sep)
-			{
-				if (obj->Count != g_ObjectInHand->DragCount)
-					g_ObjectInHand->Deleted = true;
-				else
-					g_ObjectInHand->Separated = true;
-			}
-			else
-				g_ObjectInHand->Deleted = true;
-		}
-	}
 
 	if (obj != NULL)
 	{
@@ -3142,6 +3110,10 @@ void CPacketManager::DenyWalk(const uchar &sequence, const int &x, const int &y,
 
 	g_Player->m_Steps.clear();
 
+	g_Player->OffsetX = 0;
+	g_Player->OffsetY = 0;
+	g_Player->OffsetZ = 0;
+
 	/*g_WalkUnacceptedPacketsCount = 0;
 	g_WalkSequence = 0;
 	g_IsWalkingStepsCount = 0;
@@ -3160,9 +3132,12 @@ void CPacketManager::DenyWalk(const uchar &sequence, const int &x, const int &y,
 	else{...}*/
 	//UpdatePlayerCoordinates(x, y, z, g_ServerID);
 
-	g_Player->X = x;
-	g_Player->Y = y;
-	g_Player->Z = z;
+	if (x != -1)
+	{
+		g_Player->X = x;
+		g_Player->Y = y;
+		g_Player->Z = z;
+	}
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DenyWalk)
@@ -3171,40 +3146,23 @@ PACKET_HANDLER(DenyWalk)
 	if (g_Player == NULL)
 		return;
 
+	g_WalkRequestCount = 0;
+	g_PendingDelayTime = 0;
+	g_Ping = 0;
+
 	uchar sequence = ReadUInt8();
 	ushort x = ReadUInt16BE();
 	ushort y = ReadUInt16BE();
 	uchar direction = ReadUInt8();
 	char z = ReadUInt8();
 
+	g_Walker->SetSequence(0, direction); //test
+
 	DenyWalk(sequence, x, y, z);
 
 	g_Player->Direction = direction;
 
 	g_World->MoveToTop(g_Player);
-
-	/*g_WalkRequestCount = 0;
-	g_PendingDelayTime = 0;
-	g_Ping = 0;
-
-	Move(1);
-	g_Player->X = ReadUInt16BE();
-	g_Player->Y = ReadUInt16BE();
-	uchar dir = ReadUInt8();
-	g_Player->Direction = dir;
-	g_Player->Z = ReadUInt8();
-
-	g_Walker->SetSequence(0, dir);
-	g_Player->OffsetX = 0;
-	g_Player->OffsetY = 0;
-	g_Player->OffsetZ = 0;
-
-	g_Player->m_Steps.clear();
-
-	g_Player->CloseBank();
-	g_GumpManager.RemoveRangedGumps();
-
-	g_World->MoveToTop(g_Player);*/
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ConfirmWalk)

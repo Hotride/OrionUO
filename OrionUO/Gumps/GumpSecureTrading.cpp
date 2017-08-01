@@ -165,8 +165,8 @@ void CGumpSecureTrading::UpdateContent()
 
 	uint ignoreSerial = 0;
 
-	if (g_ObjectInHand != NULL)
-		ignoreSerial = g_ObjectInHand->Serial;
+	if (g_ObjectInHand.Enabled)
+		ignoreSerial = g_ObjectInHand.Serial;
 
 	//Отрисовка нашего товара (при наличии товара)
 	CGameObject *container = g_World->FindWorldObject(m_ID);
@@ -288,7 +288,7 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 	WISPFUN_DEBUG("c120_f8");
 	CGump::OnLeftMouseButtonUp();
 
-	if (g_ObjectInHand != NULL)
+	if (g_ObjectInHand.Enabled)
 	{
 		int x = m_X;
 		int y = m_Y;
@@ -301,7 +301,7 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 				y = g_MouseManager.Position.Y - y - 70;
 
 				bool doubleDraw = false;
-				ushort graphic = g_ObjectInHand->GetDrawGraphic(doubleDraw);
+				ushort graphic = g_ObjectInHand.GetDrawGraphic(doubleDraw);
 
 				CGLTexture *th = g_Orion.ExecuteStaticArt(graphic);
 

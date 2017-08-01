@@ -1275,8 +1275,8 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 		uint ignoreSerial = 0;
 
-		if (g_ObjectInHand != NULL)
-			ignoreSerial = g_ObjectInHand->Serial;
+		if (g_ObjectInHand.Enabled)
+			ignoreSerial = g_ObjectInHand.Serial;
 
 		m_HitsStack.clear();
 
@@ -1585,7 +1585,7 @@ void CGameScreen::PrepareContent()
 		{
 			CGameItem *selobj = g_World->FindWorldItem(g_PressedObject.LeftSerial);
 
-			if (selobj != NULL && g_ObjectInHand == NULL && !selobj->Locked() && GetDistance(g_Player, selobj) < 3)
+			if (selobj != NULL && !g_ObjectInHand.Enabled && !selobj->Locked() && GetDistance(g_Player, selobj) < 3)
 			{
 				if (selobj->Serial >= 0x40000000 && !g_GrayedPixels) //Item selection
 				{
@@ -1604,7 +1604,7 @@ void CGameScreen::PrepareContent()
 					}
 				}
 			}
-			else if (g_ObjectInHand == NULL)
+			else if (!g_ObjectInHand.Enabled)
 			{
 				CGameCharacter *selchar = g_World->FindWorldCharacter(g_PressedObject.LeftSerial);
 
@@ -1978,7 +1978,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 		m_GameScreenGump.OnLeftMouseButtonUp();
 		return;
 	}
-	else if (g_MouseManager.LeftButtonPressed && (g_PressedObject.LeftGump() != NULL || g_ObjectInHand != NULL))
+	else if (g_MouseManager.LeftButtonPressed && (g_PressedObject.LeftGump() != NULL || g_ObjectInHand.Enabled))
 	{
 		if (g_GumpManager.OnLeftMouseButtonUp(false))
 			return;
@@ -1998,7 +1998,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 		if (g_SelectedObject.Object->IsWorldObject())
 			rwo = (CRenderWorldObject*)g_SelectedObject.Object;
 
-		if (g_Target.IsTargeting() && g_ObjectInHand == NULL)
+		if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled)
 		{
 			if (g_SelectedObject.Object->IsText())
 			{
@@ -2051,7 +2051,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 			ushort dropY = 0;
 			char dropZ = 0;
 
-			if (rwo->IsGameObject() && g_ObjectInHand != NULL)
+			if (rwo->IsGameObject() && g_ObjectInHand.Enabled)
 			{
 				CGameObject *target = (CGameObject*)rwo;
 
@@ -2067,7 +2067,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 
 						drop_container = target->Serial;
 					}
-					else if (target->IsSurface() || (target->IsStackable() && target->Graphic == g_ObjectInHand->Graphic))
+					else if (target->IsSurface() || (target->IsStackable() && target->Graphic == g_ObjectInHand.Graphic))
 					{
 						if (!target->IsSurface())
 							drop_container = target->Serial;
@@ -2080,7 +2080,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 				else
 					g_Orion.PlaySoundEffect(0x0051);
 			}
-			else if ((rwo->IsLandObject() || rwo->IsStaticObject() || rwo->IsMultiObject()) && g_ObjectInHand != NULL)
+			else if ((rwo->IsLandObject() || rwo->IsStaticObject() || rwo->IsMultiObject()) && g_ObjectInHand.Enabled)
 			{
 				can_drop = (GetDistance(g_Player, WISP_GEOMETRY::CPoint2Di(rwo->X, rwo->Y)) < 3);
 
@@ -2102,7 +2102,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 				if (can_drop)
 					g_Orion.DropItem(drop_container, dropX, dropY, dropZ);
 			}
-			else if (g_ObjectInHand == NULL)
+			else if (!g_ObjectInHand.Enabled)
 			{
 				if (rwo->IsGameObject())
 				{

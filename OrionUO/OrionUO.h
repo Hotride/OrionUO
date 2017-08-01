@@ -359,10 +359,10 @@ public:
 
 
 	//Поднять предмет
-	void PickupItem(class CGameItem *obj, int count = 0, bool isGameFigure = false);
+	void PickupItem(class CGameItem *obj, int count = 0, const bool &isGameFigure = false);
 
 	//Бросить предмет
-	void DropItem(uint container, ushort x, ushort y, char z);
+	void DropItem(const uint &container, const ushort &x, const ushort &y, const char &z);
 
 	//Одеть предмет
 	void EquipItem(uint container = 0);

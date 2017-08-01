@@ -185,8 +185,8 @@ void CPlayer::UpdateAbilities()
 	ushort equippedGraphic = 0;
 	uint ignoreSerial = 0;
 
-	if (g_ObjectInHand != NULL)
-		ignoreSerial = g_ObjectInHand->Serial;
+	if (g_ObjectInHand.Enabled)
+		ignoreSerial = g_ObjectInHand.Serial;
 
 	CGameItem *layerObject = g_Player->FindLayer(OL_1_HAND);
 
@@ -869,5 +869,19 @@ void CPlayer::UpdateAbilities()
 	g_GumpManager.UpdateContent(1, 0, GT_ABILITY);
 
 	g_GumpManager.UpdateContent(0, 0, GT_COMBAT_BOOK);
+}
+//---------------------------------------------------------------------------
+void CPlayer::UpdateRemoveRange()
+{
+	if (!m_Steps.empty())
+	{
+		g_RemoveRangeXY.X = g_Player->m_Steps.front().X;
+		g_RemoveRangeXY.Y = g_Player->m_Steps.front().Y;
+	}
+	else
+	{
+		g_RemoveRangeXY.X = g_Player->X;
+		g_RemoveRangeXY.Y = g_Player->Y;
+	}
 }
 //---------------------------------------------------------------------------

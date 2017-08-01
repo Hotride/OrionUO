@@ -776,17 +776,11 @@ CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &s
 //----------------------------------------------------------------------------------
 void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, const int &count, const int &x, const int &y, const char &z, const uchar &direction, const ushort &color, const uchar &flags, const int &a11, const UPDATE_GAME_OBJECT_TYPE &updateType, const ushort &a13)
 {
-	ushort multiGraphic = 0xFFFF;
-
-	if (updateType == UGOT_MULTI)
-	{
-		multiGraphic = graphic;
-		graphic = 1;
-	}
-
 	CGameCharacter *character = NULL;
 	CGameItem *item = NULL;
 	CGameObject *obj = g_World->FindWorldObject(serial);
+
+	graphic += graphicIncrement;
 
 	if (obj == NULL)
 	{
@@ -803,7 +797,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			}
 
 			obj = character;
-			character->Graphic = graphic + graphicIncrement;
+			character->Graphic = graphic;
 			character->OnGraphicChange(1000);
 			character->Direction = direction;
 			character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
@@ -835,12 +829,17 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			obj->Container = 0xFFFFFFFF;
 			g_World->m_Items->AddObject(obj);
 		}
+
+		if (obj->NPC)
+			character = (CGameCharacter*)obj;
+		else
+			item = (CGameItem*)obj;
 	}
 
 	if (obj == NULL)
 		return;
 
-	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic + graphicIncrement, count, x, y, z);
+	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, count, x, y, z);
 
 	obj->MapIndex = g_CurrentMap;
 
@@ -848,8 +847,16 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 	{
 		if (updateType == UGOT_MULTI)
 		{
-			item->MultiBody = (graphic & 0x4000);
-			item->WantUpdateMulti = ((obj->m_Items == NULL) || (graphic + graphicIncrement != item->Graphic) || (item->X != x) || (item->Y != y) || (item->Z != z));
+			item->MultiBody = true;
+			item->WantUpdateMulti = ((graphic & 0x3FFF) != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z);
+
+			item->Graphic = graphic & 0x3FFF;
+		}
+		else
+		{
+			item->MultiBody = false;
+
+			item->Graphic = graphic;
 		}
 
 		if (item->Dragged)
@@ -858,15 +865,18 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			item->Dragged = false;
 		}
 
-		item->Graphic = graphic + graphicIncrement;
-		item->OnGraphicChange();
+		item->X = x;
+		item->Y = y;
+		item->Z = z;
 
-		if (graphic + graphicIncrement == 0x2006)
+		if (graphic == 0x2006)
 			item->Layer = direction;
 
 		item->Color = g_ColorManager.FixColor(color, (color & 0x8000));
 		item->Count = count;
 		item->Flags = flags;
+
+		item->OnGraphicChange();
 
 		//if (g_PacketManager.ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
 		//	g_PacketManager.AddMegaClilocRequest(obj->Serial, false);
@@ -874,6 +884,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 	else
 	{
 		character->LastAnimationChangeTime = g_Ticks;
+		bool found = false;
 
 		if (character->m_Steps.size() != 4)
 		{
@@ -883,12 +894,10 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 				if (wd.X == x && wd.Y == y && wd.Z == z && wd.Direction == direction)
 				{
-					LOWORD(v33) = *((_WORD *)&obj->GameObject.VTable + 5 * stepsCount + 170);
-					if ((_WORD)v33 == (_WORD)graphic)
+					if (character->Graphic == graphic)
 					{
-						LOBYTE(v33) = flags;
-						if (v41[343] == flags)
-							goto LABEL_101;
+						if (character->Flags == flags)
+							found = true;
 					}
 				}
 			}
@@ -896,30 +905,31 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			{
 				if (character->X == x && character->Y == y && character->Z == z && !((direction ^ character->Direction) & 0x7F))
 				{
-					if ((character->OnMount != 0) == (direction >> 7) && character->Graphic == graphic)
+					if (/*(character->OnMount != 0) == (direction >> 7) &&*/ character->Graphic == graphic)
 					{
 						if (character->Flags == flags)
-							goto LABEL_101;
+							found = true;
 					}
 				}
 			}
 
-			character->m_Steps.push_back(CWalkData(x, y, z, direction));
-
-			goto LABEL_101;
+			if (!found)
+				character->m_Steps.push_back(CWalkData(x, y, z, direction));
 		}
 
-		character->X = x;
-		character->Graphic = graphic & 0x3FFF;
-		character->Y = y;
-		character->Z = z;
-		character->Direction = direction;
-		character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
-		character->Flags = flags;
+		if (!found)
+		{
+			character->X = x;
+			character->Graphic = graphic & 0x3FFF;
+			character->Y = y;
+			character->Z = z;
+			character->Direction = direction;
+			character->Color = g_ColorManager.FixColor(color, (color & 0x8000));
+			character->Flags = flags;
 
-		character->m_Steps.clear();
+			character->m_Steps.clear();
+		}
 
-	LABEL_101:
 		/*if (g_Player->IsFollowing)
 		{
 			v33 = g_Player->FollowingSerial_Maybe;
@@ -972,17 +982,19 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		}*/
 	}
 
-	g_World->MoveToTop(obj);
+	g_Player->UpdateRemoveRange();
 
-LABEL_114:
-	result = CheckObjectDistance(&obj->GameObject, 18);
-	if (!result)
+	if (GetRemoveDistance(g_RemoveRangeXY, obj) < g_ConfigManager.UpdateRange)
 	{
-		result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_28))(obj);
+		/*result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_28))(obj);
+
 		if (!result)
 			result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable
-			+ UO_ROFUN_DESTRUCTOR_))(obj);
+			+ UO_ROFUN_DESTRUCTOR_))(obj);*/
 	}
+
+	if (obj != NULL)
+		g_World->MoveToTop(obj);
 }
 //----------------------------------------------------------------------------------
 /*void __cdecl UpdateGameObject(int serial, signed int graphic, int graphicIncrement, int count, int x, int y, char z, unsigned __int8 direction, unsigned __int16 color, unsigned __int8 flags, int a11, char updateType, __int16 a13)
@@ -1531,7 +1543,6 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 		{
 			if (g_Player->Dead())
 			{
-				g_Weather.Reset();
 				//g_Target.Reset();
 
 				if (g_ConfigManager.Music)

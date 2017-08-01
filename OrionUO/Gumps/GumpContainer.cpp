@@ -143,7 +143,7 @@ void CGumpContainer::InitToolTip()
 void CGumpContainer::PrepareContent()
 {
 	WISPFUN_DEBUG("c93_f7");
-	if (GetTopObjDistance(g_Player, g_World->FindWorldObject(Serial)) < 3 && g_PressedObject.LeftGump() == this && g_ObjectInHand == NULL && g_PressedObject.LeftSerial != ID_GC_MINIMIZE)
+	if (GetTopObjDistance(g_Player, g_World->FindWorldObject(Serial)) < 3 && g_PressedObject.LeftGump() == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != ID_GC_MINIMIZE)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -218,8 +218,8 @@ void CGumpContainer::UpdateContent()
 
 	uint ignoreSerial = 0;
 
-	if (g_ObjectInHand != NULL)
-		ignoreSerial = g_ObjectInHand->Serial;
+	if (g_ObjectInHand.Enabled)
+		ignoreSerial = g_ObjectInHand.Serial;
 
 	m_IsGameBoard = (m_ID == 0x091A || m_ID == 0x092E);
 
@@ -310,14 +310,14 @@ void CGumpContainer::OnLeftMouseButtonUp()
 	{
 		canDrop = false;
 
-		if (g_Target.IsTargeting() && g_ObjectInHand == NULL)
+		if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled)
 		{
 			g_Target.SendTargetObject(selectedSerial);
 			g_MouseManager.CancelDoubleClick = true;
 
 			return;
 		}
-		else if (g_ObjectInHand != NULL)
+		else if (g_ObjectInHand.Enabled)
 		{
 			canDrop = true;
 
@@ -327,7 +327,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 			{
 				if (target->IsContainer())
 					dropContainer = target->Serial;
-				else if (target->IsStackable() && target->Graphic == g_ObjectInHand->Graphic)
+				else if (target->IsStackable() && target->Graphic == g_ObjectInHand.Graphic)
 					dropContainer = target->Serial;
 				else
 				{
@@ -351,18 +351,18 @@ void CGumpContainer::OnLeftMouseButtonUp()
 		}
 	}
 
-	if (!canDrop && g_ObjectInHand != NULL)
+	if (!canDrop && g_ObjectInHand.Enabled)
 		g_Orion.PlaySoundEffect(0x0051);
 
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 
-	if (canDrop && g_ObjectInHand != NULL)
+	if (canDrop && g_ObjectInHand.Enabled)
 	{
 		CONTAINER_OFFSET_RECT &r = g_ContainerOffset[Graphic].rect;
 
 		bool doubleDraw = false;
-		WORD graphic = g_ObjectInHand->GetDrawGraphic(doubleDraw);
+		ushort graphic = g_ObjectInHand.GetDrawGraphic(doubleDraw);
 
 		CGLTexture *th = g_Orion.ExecuteStaticArt(graphic);
 
@@ -404,7 +404,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 		g_Orion.DropItem(dropContainer, x, y, 0);
 		g_MouseManager.CancelDoubleClick = true;
 	}
-	else if (g_ObjectInHand == NULL)
+	else if (!g_ObjectInHand.Enabled)
 	{
 		if (!g_ClickObject.Enabled && (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled || g_NoMegaCliloc))
 		{

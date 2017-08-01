@@ -166,7 +166,7 @@ void CGumpDrag::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 void CGumpDrag::OnOkayPressed()
 {
 	WISPFUN_DEBUG("c94_f7");
-	if (g_ObjectInHand == NULL)
+	if (!g_ObjectInHand.Enabled)
 	{
 		if (m_Slider->Value)
 		{

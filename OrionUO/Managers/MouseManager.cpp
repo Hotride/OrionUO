@@ -131,7 +131,7 @@ ushort CMouseManager::GetGameCursor()
 	int war = (int)(g_Player != NULL && g_Player->Warmode);
 	ushort result = g_CursorData[war][9]; //Main Gump mouse cursor
 
-	if (g_Target.IsTargeting() && g_ObjectInHand == NULL)
+	if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled)
 		return g_CursorData[war][12]; //Targetting cursor
 
 	bool mouseInWindow = !(m_Position.X < g_ConfigManager.GameWindowX || m_Position.Y < g_ConfigManager.GameWindowY ||
@@ -273,18 +273,18 @@ bool CMouseManager::LoadCursorTextures()
 void CMouseManager::Draw(ushort id)
 {
 	WISPFUN_DEBUG("c147_f5");
-	if (g_GameState >= GS_GAME && g_ObjectInHand != NULL && !g_ObjectInHand->NoDraw)
+	if (g_GameState >= GS_GAME && g_ObjectInHand.Enabled)
 	{
 		bool doubleDraw = false;
-		ushort ohGraphic = g_ObjectInHand->GetDrawGraphic(doubleDraw);
+		ushort ohGraphic = g_ObjectInHand.GetDrawGraphic(doubleDraw);
 
-		ushort ohColor = g_ObjectInHand->Color;
-		doubleDraw = (!g_ObjectInHand->IsGold() && g_ObjectInHand->IsStackable() && g_ObjectInHand->DragCount > 1);
+		ushort ohColor = g_ObjectInHand.Color;
+		doubleDraw = (!CGameObject::IsGold(g_ObjectInHand.Graphic) && IsStackable(g_ObjectInHand.TiledataPtr->Flags) && g_ObjectInHand.Count > 1);
 
 		if (ohColor != 0)
 			g_ColorizerShader->Use();
 
-		if (g_ObjectInHand->IsGameFigure)
+		if (g_ObjectInHand.IsGameFigure)
 		{
 			ohGraphic -= GAME_FIGURE_GUMP_OFFSET;
 

@@ -358,10 +358,10 @@ bool CGameObject::Flying()
 Золото ли это
 @return Индекс в таблице золота
 */
-int CGameObject::IsGold()
+int CGameObject::IsGold(const ushort &graphic)
 {
 	WISPFUN_DEBUG("c20_f14");
-	switch (m_Graphic)
+	switch (graphic)
 	{
 		case 0x0EED:
 			return 1;
@@ -384,7 +384,7 @@ int CGameObject::IsGold()
 ushort CGameObject::GetDrawGraphic(bool &doubleDraw)
 {
 	WISPFUN_DEBUG("c20_f15");
-	int index = IsGold();
+	int index = IsGold(m_Graphic);
 	ushort result = m_Graphic;
 
 	const ushort graphicAssociateTable[3][3] =
