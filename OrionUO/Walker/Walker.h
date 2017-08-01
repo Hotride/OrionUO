@@ -26,27 +26,22 @@ class CStepInfo
 public:
 	CStepInfo() {}
 	~CStepInfo() {}
-	/*
-	00000000 Direction2      db ?
-	00000001 Direction       db ?
-	00000002 Sequence        db ?
-	00000003 field_3         db ?
-	00000004 Accepted        dd ?
-	00000008 Running         db ?
-	00000009 NoRotation      db ?
-	0000000A field_A         db ?
-	0000000B field_B         db ?
-	0000000C Timer           dd ?
-	00000010 Z               db ?
-	00000011 field_11        db ?
-	00000012 field_12        db ?
-	00000013 field_01        db ?
-	*/
 };
 //----------------------------------------------------------------------------------
 //Класс для обработки шагов игрока
 class CWalker
 {
+	SETGET(uint, LastStepRequestTime, 0);
+	SETGET(int, UnacceptedPacketsCount, 0);
+	SETGET(int, StepsCount, 0);
+	SETGET(int, WalkSequence, 0);
+	SETGET(int, CurrentWalkSequence, 0);
+	SETGET(bool, ResendPacketSended, false);
+	SETGET(bool, WantChangeCoordinates, false);
+	SETGET(bool, WalkingFailed, false);
+	SETGET(ushort, CurrentPlayerZ, 0);
+	SETGET(ushort, NewPlayerZ, 0);
+
 private:
 	uchar m_Sequence{ 0 }; //Текущий шаг
 
