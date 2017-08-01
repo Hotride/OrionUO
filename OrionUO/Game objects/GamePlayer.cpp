@@ -885,3 +885,10 @@ void CPlayer::UpdateRemoveRange()
 	}
 }
 //---------------------------------------------------------------------------
+void CPlayer::UpdatePlayerCoordinates(const int &offsetX, const int &offsetY, const int &newZ)
+{
+	m_RealX += offsetX;
+	m_RealY += offsetY;
+	m_RealZ = newZ;
+}
+//---------------------------------------------------------------------------

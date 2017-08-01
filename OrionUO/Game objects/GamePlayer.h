@@ -61,6 +61,10 @@ class CPlayer: public CGameCharacter
 	SETGET(char, OldZ, 0);
 	SETGET(bool, SkillsReceived, false);
 
+	SETGET(ushort, RealX, 0);
+	SETGET(ushort, RealY, 0);
+	SETGET(ushort, RealZ, 0);
+
 	//!Указатель на список умений
 	CSkill *m_Skills{ NULL };
 
@@ -148,6 +152,8 @@ public:
 	void UpdateAbilities();
 
 	void UpdateRemoveRange();
+
+	void UpdatePlayerCoordinates(const int &offsetX, const int &offsetY, const int &newZ);
 };
 //----------------------------------------------------------------------------------
 //!Ссылка на игрока
