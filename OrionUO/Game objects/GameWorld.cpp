@@ -876,10 +876,12 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		item->Count = count;
 		item->Flags = flags;
 
-		item->OnGraphicChange();
+		item->OnGraphicChange(direction);
 
 		//if (g_PacketManager.ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
 		//	g_PacketManager.AddMegaClilocRequest(obj->Serial, false);
+
+		LOG("0x%08X 0x%04X %d,%d,%d C%04X F%02X\n", obj->Serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
 	}
 	else
 	{
@@ -929,6 +931,8 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 			character->m_Steps.clear();
 		}
+
+		LOG("0x%08X 0x%04X NPC %d,%d,%d C%04X F%02X D%d N%d\n", obj->Serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags, character->Direction, character->Notoriety);
 
 		/*if (g_Player->IsFollowing)
 		{
