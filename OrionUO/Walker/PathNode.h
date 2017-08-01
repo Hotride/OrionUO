@@ -21,7 +21,7 @@ struct PATH_POINT
 };
 //----------------------------------------------------------------------------------
 //Класс объекта в точке пути
-class CPathObjectTest
+class CPathObject
 {
 	//Флаги
 	SETGET(uint, Flags, 0);
@@ -36,8 +36,8 @@ class CPathObjectTest
 	SETGET(int, Height, 0);
 
 public:
-	CPathObjectTest(const uint &flags, const int &z, const int &averageZ, const int &height, class CRenderWorldObject *object) : m_Flags(flags), m_Z(z), m_AverageZ(averageZ), m_Height(height), m_Object(object) {}
-	virtual ~CPathObjectTest() {}
+	CPathObject(const uint &flags, const int &z, const int &averageZ, const int &height, class CRenderWorldObject *object) : m_Flags(flags), m_Z(z), m_AverageZ(averageZ), m_Height(height), m_Object(object) {}
+	virtual ~CPathObject() {}
 
 	class CRenderWorldObject *m_Object;
 };

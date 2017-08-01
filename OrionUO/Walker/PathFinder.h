@@ -51,7 +51,7 @@ protected:
 	void GetNewXY(uchar &direction, int &x, int &y);
 
 	//Создание списка предметов, участвующих в поиске в указанных координатах
-	bool CreateItemsList(vector<CPathObjectTest> &list, const int &x, const int &y, const int &stepState);
+	bool CreateItemsList(vector<CPathObject> &list, const int &x, const int &y, const int &stepState);
 
 	WISP_GEOMETRY::CPoint2Di m_StartPoint{ WISP_GEOMETRY::CPoint2Di() };
 	WISP_GEOMETRY::CPoint2Di m_EndPoint{ WISP_GEOMETRY::CPoint2Di() };

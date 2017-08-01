@@ -26,7 +26,7 @@ CPathFinder::~CPathFinder()
 {
 }
 //----------------------------------------------------------------------------------
-bool CPathFinder::CreateItemsList(vector<CPathObjectTest> &list, const int &x, const int &y, const int &stepState)
+bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const int &y, const int &stepState)
 {
 	WISPFUN_DEBUG("c177_f1");
 	int blockX = x / 8;
@@ -85,7 +85,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObjectTest> &list, const int &x, c
 				int landAverageZ = land->AverageZ;
 				int landHeight = landAverageZ - landMinZ;
 
-				list.push_back(CPathObjectTest(flags, landMinZ, landAverageZ, landHeight, obj));
+				list.push_back(CPathObject(flags, landMinZ, landAverageZ, landHeight, obj));
 			}
 		}
 		else if (obj->IsStaticGroupObject())
@@ -104,7 +104,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObjectTest> &list, const int &x, c
 					CGameCharacter *gc = (CGameCharacter*)obj;
 
 					if (!ignoreGameCharacters && !gc->Dead() && !gc->IgnoreCharacters())
-						list.push_back(CPathObjectTest(POF_IMPASSABLE_OR_SURFACE, obj->Z, obj->Z + DEFAULT_CHARACTER_HEIGHT, DEFAULT_CHARACTER_HEIGHT, obj));
+						list.push_back(CPathObject(POF_IMPASSABLE_OR_SURFACE, obj->Z, obj->Z + DEFAULT_CHARACTER_HEIGHT, DEFAULT_CHARACTER_HEIGHT, obj));
 
 					canBeAdd = false;
 				}
@@ -166,7 +166,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObjectTest> &list, const int &x, c
 					if (obj->IsBridge())
 						staticAverageZ /= 2;
 
-					list.push_back(CPathObjectTest(flags, objZ, staticAverageZ + objZ, staticHeight, obj));
+					list.push_back(CPathObject(flags, objZ, staticAverageZ + objZ, staticHeight, obj));
 				}
 			}
 		}
@@ -190,12 +190,12 @@ int CPathFinder::CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, cons
 	newX += offsetX[direction];
 	newY += offsetY[direction];
 
-	vector<CPathObjectTest> list;
+	vector<CPathObject> list;
 
 	if (!CreateItemsList(list, newX, newY, stepState) || !list.size())
 		return 0;
 
-	for (const CPathObjectTest &obj : list)
+	for (const CPathObject &obj : list)
 	{
 		CRenderWorldObject *rwo = obj.m_Object;
 		int averageZ = obj.AverageZ;
@@ -259,7 +259,7 @@ bool CPathFinder::CalculateNewZ(const int &x, const int &y, char &z, const int &
 
 	CalculateMinMaxZ(minZ, maxZ, x, y, z, direction, stepState);
 
-	vector<CPathObjectTest> list;
+	vector<CPathObject> list;
 
 	if (!CreateItemsList(list, x, y, stepState) || !list.size())
 		return false;
@@ -270,18 +270,18 @@ bool CPathFinder::CalculateNewZ(const int &x, const int &y, char &z, const int &
 
 		if (obj1 != NULL && obj2 != NULL)
 		{
-			result = ((CPathObjectTest*)obj1)->Z - ((CPathObjectTest*)obj2)->Z;
+			result = ((CPathObject*)obj1)->Z - ((CPathObject*)obj2)->Z;
 
 			if (!result)
-				result = (((CPathObjectTest*)obj1)->Height - ((CPathObjectTest*)obj2)->Height);
+				result = (((CPathObject*)obj1)->Height - ((CPathObject*)obj2)->Height);
 		}
 
 		return result;
 	};
 
-	std::qsort(&list[0], list.size(), sizeof(CPathObjectTest), compareFunction);
+	std::qsort(&list[0], list.size(), sizeof(CPathObject), compareFunction);
 
-	list.push_back(CPathObjectTest(POF_IMPASSABLE_OR_SURFACE, 128, 128, 128, NULL));
+	list.push_back(CPathObject(POF_IMPASSABLE_OR_SURFACE, 128, 128, 128, NULL));
 
 	int resultZ = -128;
 
@@ -295,7 +295,7 @@ bool CPathFinder::CalculateNewZ(const int &x, const int &y, char &z, const int &
 
 	IFOR(i, 0, listSize)
 	{
-		const CPathObjectTest &obj = list[i];
+		const CPathObject &obj = list[i];
 
 		if ((obj.Flags & POF_NO_DIAGONAL) && stepState == PSS_FLYING)
 		{
@@ -322,7 +322,7 @@ bool CPathFinder::CalculateNewZ(const int &x, const int &y, char &z, const int &
 			{
 				DFOR(j, i - 1, 0)
 				{
-					const CPathObjectTest &tempObj = list[j];
+					const CPathObject &tempObj = list[j];
 
 					if (tempObj.Flags & (POF_SURFACE | POF_BRIDGE))
 					{
