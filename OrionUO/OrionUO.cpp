@@ -5770,13 +5770,11 @@ void COrion::RemoveRangedObjects()
 //----------------------------------------------------------------------------------
 void COrion::ClearWorld()
 {
-	RELEASE_POINTER(g_Walker);
-	LOG("\tWalker deleted?\n");
-
+	g_Walker.Reset();
 	g_ObjectInHand.Clear();
 
 	RELEASE_POINTER(g_World)
-		LOG("\tWorld removed?\n");
+	LOG("\tWorld removed?\n");
 
 	g_PopupMenu = NULL;
 
@@ -5787,13 +5785,11 @@ void COrion::ClearWorld()
 	LOG("\tEffect List cleared?\n");
 
 	g_GameConsole.Clear();
-	LOG("\tGame console cleared?\n");
 
 	g_EntryPointer = NULL;
 	g_GrayMenuCount = 0;
 
 	g_Target.Reset();
-	LOG("\tTarget reseted?\n");
 
 	g_SystemChat.Clear();
 	LOG("\tSystem chat cleared?\n");

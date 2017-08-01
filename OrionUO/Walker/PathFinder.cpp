@@ -15,6 +15,7 @@
 #include "../Game objects/GameWorld.h"
 #include "Walker.h"
 #include "../OrionUO.h"
+#include "../Network/Packets.h"
 //----------------------------------------------------------------------------------
 CPathFinder g_PathFinder;
 //----------------------------------------------------------------------------------
@@ -477,6 +478,101 @@ int CPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 //----------------------------------------------------------------------------------
 bool CPathFinder::Walk(bool run, uchar direction)
 {
+	if (!g_Walker.WalkingFailed && g_Walker.StepsCount != MAX_STEPS_COUNT)
+	{
+	}
+
+	/*g_LastStepRequestTime_Maybe = g_LastRenderTimeSeconds;
+
+	direction = ((_BYTE)direction - 1) & 7;
+
+	result = GetNewDirAndZ_AndWalkCheck(&direction, &z, z);
+	if (result)
+	{
+		currentStepIndex_ = g_IsWalkingStepsCount;
+		indexOffset = g_IsWalkingStepsCount;
+		g_WalkStack[indexOffset].Sequence = g_WalkSequence;
+		g_WalkStack[indexOffset].Accepted = 0;
+		runningState_ = runningState;
+		if (runningState == -1)
+		{
+			LOBYTE(notRunSate) = NotRunningByCursorDistanceFromCenterGW();
+			currentStepIndex_ = g_IsWalkingStepsCount;
+			runningState_ = notRunSate == 0;
+		}
+		if (g_AlwaysRun)
+		{
+			indexOffset_ = 5 * currentStepIndex_;
+			g_WalkStack[currentStepIndex_].Running = 1;
+		}
+		else
+		{
+			indexOffset_ = 5 * currentStepIndex_;
+			g_WalkStack[currentStepIndex_].Running = runningState_;
+		}
+		if (currentStepIndex_)
+			g_WalkStack[indexOffset_ / 5].Direction = LOBYTE(dword_CC1F94[indexOffset_]);
+		else
+			g_WalkStack[0].Direction = g_Player->GameObject.GameObject.DirectionOrLightIndex & 7;
+		indexOffset__ = currentStepIndex_;
+		ticks = GetTickCount();
+		direction_ = direction;
+		g_WalkStack[indexOffset__].Timer = ticks;
+		newZ = z;
+		g_WalkStack[indexOffset__].Z = z;
+		player = g_Player;
+		g_WalkStack[indexOffset__].NoRotation = direction_ == g_WalkStack[indexOffset__].Direction
+			&& g_Player->GameObject.GameObject.Z - newZ >= 11;
+		currentStepIndex = g_IsWalkingStepsCount;
+		g_WalkStack[indexOffset__].Direction2 = direction_;
+		g_IsWalkingStepsCount = currentStepIndex + 1;
+		if (LOBYTE(dword_CC1F9C[5 * (currentStepIndex + 1)]))
+		{
+			LOBYTE(direction_) = direction_ | 0x80;
+			direction = direction_;
+		}
+		fastWalkKey = GetFastWalkKey(player);
+		CreatePacketWalkRequest((int)&v20, direction, g_WalkSequence, fastWalkKey);
+		result = (signed int)SendPacket(g_ClientSocket, (int)&v20);
+		restartWalkCountFromOne = (unsigned __int8)(g_WalkSequence + 1) == 0;
+		++g_WalkUnacceptedPacketsCount;
+		g_WalkSequence = (unsigned __int8)(g_WalkSequence + 1);
+		if (restartWalkCountFromOne)
+			g_WalkSequence = 1;
+		if (g_PlayerBankContainerGump)
+		{
+			result = (**(int(__stdcall ***)(_DWORD))g_PlayerBankContainerGump)(1);
+			g_PlayerBankContainerGump = 0;
+		}
+		gump = g_GumpObjectFirstPtr;
+		if (g_GumpObjectFirstPtr)
+		{
+			do
+			{
+				nextGump = gump->NextGump;
+				if (nextGump == (CGump *)0xDDDDDDDD)
+					break;
+				result = (*((int(__thiscall **)(CGump *))gump->VTable + 51))(gump);
+				if (result)
+				{
+					v19 = gump->GameObject;
+					if (v19)
+					{
+						result = sub_483B10(v19);
+						if (!result)
+						{
+							if (gump)
+								result = ((int(__thiscall *)(CGump *, signed int))*gump->VTable)(gump, 1);
+						}
+					}
+				}
+				gump = nextGump;
+			} while (nextGump);
+		}
+	}*/
+
+
+
 	WISPFUN_DEBUG("c177_f7");
 	if (m_BlockMoving || g_PendingDelayTime > g_Ticks || g_WalkRequestCount > 3 || g_Player == NULL || /*!g_Player->Frozen() ||*/ g_DeathScreenTimer || g_GameState != GS_GAME)
 		return false;
@@ -585,15 +681,10 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	uchar seq = g_Walker->GetSequence();
 	g_Walker->SetSequence(seq, direction);
 
-	uchar buf[7] = { 0 };
-	*buf = 0x02;
-	buf[1] = direction;
-	buf[2] = seq;
+	CPacketWalkRequest(direction, seq, g_Player->m_FastWalkStack.GetValue()).Send();
+
 	g_PingByWalk[seq][0] = g_Ticks;
 	g_PingByWalk[seq][1] = g_Ticks;
-	pack32(buf + 3, g_Player->m_FastWalkStack.GetValue());
-
-	g_Orion.Send(buf, 7);
 
 	g_WalkRequestCount++;
 

@@ -906,11 +906,10 @@ PACKET_HANDLER(EnterWorld)
 	}
 
 	RELEASE_POINTER(g_World);
-	RELEASE_POINTER(g_Walker);
 
+	g_Walker.Reset();
 	g_ObjectInHand.Clear();
 	g_World = new CGameWorld(serial);
-	g_Walker = new CWalker();
 	g_PendingDelayTime = 0;
 
 	g_UseItemActions.Clear();
@@ -943,7 +942,6 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->Direction = dir;
 	g_Player->Flags = m_Start[28];
 
-	g_Walker->SetSequence(0, dir);
 	g_Player->OffsetX = 0;
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
@@ -2689,44 +2687,6 @@ PACKET_HANDLER(ExtendedCommand)
 	}
 }
 //----------------------------------------------------------------------------------
-void CPacketManager::DenyWalk(const uchar &sequence, const int &x, const int &y, const char &z)
-{
-	g_WalkRequestCount = 0;
-	g_PendingDelayTime = 0;
-
-	g_Player->m_Steps.clear();
-	g_Walker->SetSequence(0, 0); //test
-
-	g_Player->OffsetX = 0;
-	g_Player->OffsetY = 0;
-	g_Player->OffsetZ = 0;
-
-	/*g_WalkUnacceptedPacketsCount = 0;
-	g_WalkSequence = 0;
-	g_IsWalkingStepsCount = 0;
-	g_CurrentWalkSequencePtr = 0;
-	g_WalkingFailed = 0;*/
-
-	/*if (sequence == 0xFF)
-	{
-		g_Player->GameObject.GameObject.X = g_PlayerX;
-		g_Player->GameObject.GameObject.Y = g_PlayerY;
-		(*((void(**)(void))g_Player->GameObject.GameObject.VTable + UO_ROFUN_UPDATE_RENDER_AND_DRAW_POS))();
-		RenderScene_1();
-		(*((void(**)(void))g_Player->GameObject.GameObject.VTable + UO_ROFUN_39))();
-		result = UpdateMaxDrawZ();
-	}
-	else{...}*/
-	//UpdatePlayerCoordinates(x, y, z, g_ServerID);
-
-	if (x != -1)
-	{
-		g_Player->X = x;
-		g_Player->Y = y;
-		g_Player->Z = z;
-	}
-}
-//----------------------------------------------------------------------------------
 PACKET_HANDLER(DenyWalk)
 {
 	WISPFUN_DEBUG("c150_f48");
@@ -2743,9 +2703,7 @@ PACKET_HANDLER(DenyWalk)
 	uchar direction = ReadUInt8();
 	char z = ReadUInt8();
 
-	g_Walker->SetSequence(0, direction); //test
-
-	DenyWalk(sequence, x, y, z);
+	g_Walker.DenyWalk(sequence, x, y, z);
 
 	g_Player->Direction = direction;
 
@@ -2761,17 +2719,17 @@ PACKET_HANDLER(ConfirmWalk)
 	if (g_Player == NULL)
 		return;
 
-	uchar seq = ReadUInt8();
+	uchar sequence = ReadUInt8();
 
-	g_PingByWalk[seq][1] = g_Ticks;
+	g_PingByWalk[sequence][1] = g_Ticks;
 
-	if (seq >= 10 && !(seq % 10))
+	if (sequence >= 10 && !(sequence % 10))
 	{
 		g_Ping = 0;
 
 		IFOR(i, 0, 10)
 		{
-			int delay = g_PingByWalk[seq - i][1] - g_PingByWalk[seq - i][0];
+			int delay = g_PingByWalk[sequence - i][1] - g_PingByWalk[sequence - i][0];
 
 			if (delay > 0)
 			{
@@ -2796,7 +2754,8 @@ PACKET_HANDLER(ConfirmWalk)
 
 	g_Player->Notoriety = newnoto;
 
-	g_GumpManager.RemoveRangedGumps();
+	g_Walker.ConfirmWalk(sequence);
+
 	g_World->MoveToTop(g_Player);
 }
 //----------------------------------------------------------------------------------

@@ -220,8 +220,6 @@ public:
 	void ProcessPluginPackets();
 
 	void PluginReceiveHandler(puchar buf, const int &size);
-
-	void DenyWalk(const uchar &sequence, const int &x, const int &y, const char &z);
 };
 //---------------------------------------------------------------------------
 extern CPacketManager g_PacketManager;

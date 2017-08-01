@@ -58,9 +58,15 @@ public:
 
 	uchar GetSequence() const { return m_Sequence; } //Получить номер шага
 	uchar GetDirection(const uchar &seq) const { return m_Direction[seq]; } //Получить значение Direction для указанного шага
+
+	void Reset();
+
+	void DenyWalk(const uchar &sequence, const int &x, const int &y, const char &z);
+
+	void ConfirmWalk(const uchar &sequence);
 };
 //----------------------------------------------------------------------------------
-extern CWalker *g_Walker;
+extern CWalker g_Walker;
 //----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

@@ -21,6 +21,7 @@
 #include "../Weather.h"
 #include "../Network/Packets.h"
 #include "../Gumps/GumpContainer.h"
+#include "../Walker/Walker.h"
 //----------------------------------------------------------------------------------
 CGameWorld *g_World = NULL;
 //----------------------------------------------------------------------------------
@@ -931,6 +932,10 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			character->Flags = flags;
 
 			character->m_Steps.clear();
+
+			character->OffsetX = 0;
+			character->OffsetY = 0;
+			character->OffsetZ = 0;
 		}
 
 		LOG("0x%08X 0x%04X NPC %d,%d,%d C%04X F%02X D%d N%d\n", obj->Serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags, character->Direction, character->Notoriety);
@@ -1541,7 +1546,7 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 
 		g_Player->Flags = flags;
 
-		g_PacketManager.DenyWalk(-1, -1, -1, -1);
+		g_Walker.DenyWalk(-1, -1, -1, -1);
 		g_Weather.Reset();
 
 		if (oldGraphic && oldGraphic != g_Player->Graphic)
