@@ -507,5 +507,17 @@ public:
 	CPacketDisarmReq();
 };
 //----------------------------------------------------------------------------------
+class CPacketResend : public CPacket
+{
+public:
+	CPacketResend();
+};
+//----------------------------------------------------------------------------------
+class CPacketWalkRequest : public CPacket
+{
+public:
+	CPacketWalkRequest(const uchar &direction, const uchar &sequence, const uint &fastWalkKey);
+};
+//----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

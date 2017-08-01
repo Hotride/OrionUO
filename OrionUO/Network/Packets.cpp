@@ -1364,3 +1364,18 @@ CPacketDisarmReq::CPacketDisarmReq()
 	WriteUInt16BE(0x0A);
 }
 //----------------------------------------------------------------------------------
+CPacketResend::CPacketResend()
+: CPacket(3)
+{
+	WriteUInt8(0x22);
+}
+//----------------------------------------------------------------------------------
+CPacketWalkRequest::CPacketWalkRequest(const uchar &direction, const uchar &sequence, const uint &fastWalkKey)
+: CPacket(7)
+{
+	WriteUInt8(0x02);
+	WriteUInt8(direction);
+	WriteUInt8(sequence);
+	WriteUInt32BE(fastWalkKey);
+}
+//----------------------------------------------------------------------------------
