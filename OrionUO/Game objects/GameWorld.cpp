@@ -890,39 +890,40 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 		if (character->m_Steps.size() != 4)
 		{
-			if (character->m_Steps.size())
+			if (character->Graphic == graphic && character->Flags == flags)
 			{
-				CWalkData &wd = character->m_Steps.front();
-
-				if (wd.X == x && wd.Y == y && wd.Z == z && wd.Direction == direction)
+				if (!character->m_Steps.empty())
 				{
-					if (character->Graphic == graphic)
+					CWalkData &wd = character->m_Steps.front();
+
+					if (wd.X == x && wd.Y == y && wd.Z == z && wd.Direction == direction)
 					{
-						if (character->Flags == flags)
-							found = true;
+						found = true;
 					}
 				}
-			}
-			else
-			{
-				if (character->X == x && character->Y == y && character->Z == z && !((direction ^ character->Direction) & 0x7F))
+				else if (character->X == x && character->Y == y && character->Z == z && !((direction ^ character->Direction) & 0x7F))
 				{
-					if (/*(character->OnMount != 0) == (direction >> 7) &&*/ character->Graphic == graphic)
+					//if ((character->OnMount != 0) == (direction >> 7))
 					{
-						if (character->Flags == flags)
-							found = true;
+						found = true;
 					}
 				}
 			}
 
 			if (!found)
+			{
+				if (character->m_Steps.empty())
+					character->LastStepTime = g_Ticks;
+
 				character->m_Steps.push_back(CWalkData(x, y, z, direction));
+				found = true;
+			}
 		}
 
 		if (!found)
 		{
-			character->X = x;
 			character->Graphic = graphic & 0x3FFF;
+			character->X = x;
 			character->Y = y;
 			character->Z = z;
 			character->Direction = direction;
@@ -986,9 +987,9 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		}*/
 	}
 
-	g_Player->UpdateRemoveRange();
+	//g_Player->UpdateRemoveRange();
 
-	if (GetRemoveDistance(g_RemoveRangeXY, obj) < g_ConfigManager.UpdateRange)
+	//if (GetRemoveDistance(g_RemoveRangeXY, obj) < g_ConfigManager.UpdateRange)
 	{
 		/*result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_28))(obj);
 

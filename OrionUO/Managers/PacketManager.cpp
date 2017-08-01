@@ -1444,8 +1444,8 @@ PACKET_HANDLER(UpdateObject)
 
 		item->MapIndex = g_CurrentMap;
 
-		item->Graphic = graphic;
-		item->Color = g_ColorManager.FixColor(color);
+		item->Graphic = itemGraphic;
+		item->Color = g_ColorManager.FixColor(itemColor);
 
 		g_World->PutEquipment(item, obj, layer);
 		item->OnGraphicChange();
@@ -1509,7 +1509,7 @@ PACKET_HANDLER(EquipItem)
 	Move(1);
 	int layer = ReadUInt8();
 	uint cserial = ReadUInt32BE();
-	obj->Color = ReadUInt16BE();
+	obj->Color = g_ColorManager.FixColor(ReadUInt16BE());
 
 	if (obj->Container != 0xFFFFFFFF)
 	{
@@ -1625,31 +1625,63 @@ PACKET_HANDLER(DenyMoveItem)
 
 	if (g_ObjectInHand.Enabled)
 	{
-		CGameItem *obj = g_World->FindWorldItem(g_ObjectInHand.Serial);
-
-		if (obj == NULL)
-		{
-			obj = g_World->GetWorldItem(g_ObjectInHand.Serial);
-
-			if (obj != NULL)
-			{
-				g_World->RemoveFromContainer(obj);
-
-				//obj->Paste(g_ObjectInHand);
-
-				//if (m_ClientVersion >= CV_308Z)
-				//	m_MegaClilocRequests.push_back(obj->Serial);
-
-				g_World->PutContainer(obj, g_ObjectInHand.Container);
-
-				g_World->MoveToTop(obj);
-			}
-		}
+		CGameItem *obj = g_World->GetWorldItem(g_ObjectInHand.Serial);
 
 		if (obj != NULL)
-			g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
+		{
+			obj->Graphic = g_ObjectInHand.Graphic;
+			obj->Color = g_ObjectInHand.Color;
+			obj->Count = g_ObjectInHand.Count;
+			obj->Flags = g_ObjectInHand.Flags;
+			obj->X = g_ObjectInHand.X;
+			obj->Y = g_ObjectInHand.Y;
+			obj->Z = g_ObjectInHand.Z;
+
+			CGameObject *container = g_World->FindWorldObject(g_ObjectInHand.Container);
+
+			if (container != NULL)
+			{
+				if (container->NPC)
+				{
+					g_World->PutEquipment(obj, container, g_ObjectInHand.Layer);
+
+					g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
+				}
+				else
+				{
+					g_World->PutContainer(obj, container);
+
+					g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
+				}
+			}
+			else
+				g_World->RemoveFromContainer(obj);
+
+			//if (m_ClientVersion >= CV_308Z)
+			//	m_MegaClilocRequests.push_back(obj->Serial);
+
+			g_World->MoveToTop(obj);
+		}
+
+		g_GumpManager.CloseGump(g_ObjectInHand.Serial, 0, GT_DRAG);
 
 		g_ObjectInHand.Clear();
+	}
+
+	uchar code = ReadUInt8();
+
+	if (code < 5)
+	{
+		const string errorMessages[] =
+		{
+			"You can not pick that up.",
+			"That is too far away.",
+			"That is out of sight.",
+			"That item does not belong to you.  You'll have to steal it.",
+			"You are already holding an item."
+		};
+
+		g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, errorMessages[code]);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -2663,6 +2695,7 @@ void CPacketManager::DenyWalk(const uchar &sequence, const int &x, const int &y,
 	g_PendingDelayTime = 0;
 
 	g_Player->m_Steps.clear();
+	g_Walker->SetSequence(0, 0); //test
 
 	g_Player->OffsetX = 0;
 	g_Player->OffsetY = 0;

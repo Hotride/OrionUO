@@ -32,6 +32,12 @@ class CObjectOnCursor
 	SETGET(uchar, Flags, 0);
 	//!Контейнер
 	SETGET(uint, Container, 0);
+	//!Координата X
+	SETGET(ushort, X, 0);
+	//!Координата Y
+	SETGET(ushort, Y, 0);
+	//!Координата Z
+	SETGET(char, Z, 0);
 	//!Это игровая фигура
 	SETGET(bool, IsGameFigure, false);
 	//!Указатель на тайлдату для объекта

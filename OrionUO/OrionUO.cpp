@@ -5471,6 +5471,8 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 	WISPFUN_DEBUG("c194_f103");
 	if (!g_ObjectInHand.Enabled)
 	{
+		CGameCharacter *character = NULL;
+
 		g_ObjectInHand.Enabled = true;
 
 		if (!count)
@@ -5488,14 +5490,23 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 
 		if (obj->Container != 0xFFFFFFFF)
 		{
-			g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
-			CGump *gump = g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
+			g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
 
-			//if (gump != NULL && g_PacketManager.ClientVersion >= CV_308Z)
-			//	g_PacketManager.AddMegaClilocRequest(gump->Serial, true);
+			character = g_World->FindWorldCharacter(obj->Container);
+
+			//if (g_PacketManager.ClientVersion >= CV_308Z)
+			//	g_PacketManager.AddMegaClilocRequest(obj->Container, true);
 		}
 
 		CPacketPickupRequest(obj->Serial, count).Send();
+
+		g_World->RemoveObject(obj);
+
+		if (character != NULL)
+		{
+			character->m_FrameInfo = g_AnimationManager.CollectFrameInformation(character);
+			g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
+		}
 	}
 }
 //----------------------------------------------------------------------------------
