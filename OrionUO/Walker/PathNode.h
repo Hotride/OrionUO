@@ -43,21 +43,6 @@ public:
 };
 //----------------------------------------------------------------------------------
 //Класс объекта в точке пути
-class CPathObject : public CBaseQueueItem
-{
-	//Координата Z точки
-	SETGET(int, Z, 0);
-	//Высота точки
-	SETGET(char, Height, 0);
-	//Идентификатор поверхности
-	SETGET(BYTE, Surface, 0);
-
-public:
-	CPathObject(const int &z, const char &height, const char &surface);
-	virtual ~CPathObject();
-};
-//----------------------------------------------------------------------------------
-//Класс объекта в точке пути
 class CPathNode
 {
 	SETGET(int, X, 0);
