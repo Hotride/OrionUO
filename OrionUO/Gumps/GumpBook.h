@@ -10,8 +10,6 @@
 #ifndef GUMPBOOK_H
 #define GUMPBOOK_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpBook : public CGump
 {
 	SETGET(bool, Writable, false);

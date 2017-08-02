@@ -10,8 +10,6 @@
 #ifndef GLTEXTURECIRCLEOFTRANSPARENCY_H
 #define GLTEXTURECIRCLEOFTRANSPARENCY_H
 //----------------------------------------------------------------------------------
-#include "GLTexture.h"
-//----------------------------------------------------------------------------------
 class CGLTextureCircleOfTransparency : public CGLTexture
 {
 	SETGET(int, Radius, 0);

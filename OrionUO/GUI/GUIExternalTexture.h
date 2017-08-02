@@ -12,8 +12,6 @@
 #ifndef GUIEXTERNALTEXTURE_H
 #define GUIEXTERNALTEXTURE_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-//----------------------------------------------------------------------------------
 class CGUIExternalTexture : public CBaseGUI
 {
 	//!Удалять ли текстуру при удалении объекта

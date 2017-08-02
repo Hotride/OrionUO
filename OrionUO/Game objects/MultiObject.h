@@ -10,8 +10,6 @@
 #ifndef MULTIOBJECT_H
 #define MULTIOBJECT_H
 //----------------------------------------------------------------------------------
-#include "RenderStaticObject.h"
-//----------------------------------------------------------------------------------
 //Объект для мульти-объекта
 class CMultiObject : public CRenderStaticObject
 {

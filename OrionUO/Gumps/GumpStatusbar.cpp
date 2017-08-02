@@ -7,25 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpStatusbar.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/ConnectionManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/FontsManager.h"
-#include "../PressedObject.h"
-#include "../SelectedObject.h"
-#include "../Network/Packets.h"
-#include "../Target.h"
-#include "../TargetGump.h"
-#include "../Party.h"
-#include "../OrionUO.h"
-#include "../TextEngine/GameConsole.h"
-#include "../ToolTip.h"
-#include "../Managers/FileManager.h"
+#include "stdafx.h"
 
 int CGumpStatusbar::m_StatusbarDefaultWidth = 154;
 int CGumpStatusbar::m_StatusbarDefaultHeight = 59;

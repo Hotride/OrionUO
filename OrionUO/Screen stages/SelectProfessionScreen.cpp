@@ -7,17 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "SelectProfessionScreen.h"
-#include "ConnectionScreen.h"
-#include "../Managers/ProfessionManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/ConnectionManager.h"
-#include "../Managers/ClilocManager.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "../Skills.h"
-#include "../SelectedObject.h"
-#include "../PressedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CSelectProfessionScreen g_SelectProfessionScreen;
 //----------------------------------------------------------------------------------

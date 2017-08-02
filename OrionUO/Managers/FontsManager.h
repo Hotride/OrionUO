@@ -10,10 +10,6 @@
 #ifndef FONTSMANAGER_H
 #define FONTSMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../MulStruct.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 typedef struct MULTILINES_FONT_DATA
 {
 	wchar_t item;

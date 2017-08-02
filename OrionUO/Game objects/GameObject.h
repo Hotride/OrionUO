@@ -10,9 +10,6 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 //----------------------------------------------------------------------------------
-#include "RenderStaticObject.h"
-#include "../GLEngine/GLEngine.h"
-//----------------------------------------------------------------------------------
 struct DRAW_FRAME_INFORMATION
 {
 	int OffsetX;

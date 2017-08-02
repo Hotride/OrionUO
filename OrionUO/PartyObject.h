@@ -10,10 +10,6 @@
 #ifndef PARTYOBJECT_H
 #define PARTYOBJECT_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "Game objects/GameCharacter.h"
-
-//---------------------------------------------------------------------------
 //Объект группы
 class CPartyObject
 {
@@ -22,7 +18,7 @@ class CPartyObject
 public:
 	CPartyObject();
 	~CPartyObject() {}
-	CGameCharacter *Character{ NULL };
+	class CGameCharacter *Character{ NULL };
 	string GetName(const int &index);
 };
 //----------------------------------------------------------------------------------

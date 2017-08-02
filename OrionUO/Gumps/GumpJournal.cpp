@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpJournal.h"
-#include "../TextEngine/TextData.h"
-#include "../TextEngine/Journal.h"
-#include "../SelectedObject.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpJournal::CGumpJournal(uint serial, short x, short y, bool minimized, int height)
 : CGumpBaseScroll(GT_JOURNAL, serial, 0x0820, height, x, y, true, 0, true)

@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIGumppicHightlighted.h"
-#include "../SelectedObject.h"
-#include "../Managers/ColorManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIGumppicHightlighted::CGUIGumppicHightlighted(const uint &serial, const ushort &graphic, const ushort &color, const ushort &selectedColor, const int &x, const int &y)
 : CGUIDrawObject(GOT_GUMPPICHIGHTLIGHTED, serial, graphic, color, x, y),

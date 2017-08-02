@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIShopResult.h"
-#include "GUIShopItem.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
-#include "../SelectedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIShopResult::CGUIShopResult(CGUIShopItem *shopItem, const int &x, const int &y)
 : CBaseGUI(GOT_SHOPRESULT, shopItem->Serial, shopItem->Graphic, shopItem->Color, x, y),

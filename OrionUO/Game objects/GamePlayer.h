@@ -10,10 +10,6 @@
 #ifndef GAMEPLAYER_H
 #define GAMEPLAYER_H
 //----------------------------------------------------------------------------------
-#include "GameCharacter.h"
-#include "../Skills.h"
-#include "../Walker/FastWalk.h"
-//----------------------------------------------------------------------------------
 //!Класс игрока
 class CPlayer: public CGameCharacter
 {

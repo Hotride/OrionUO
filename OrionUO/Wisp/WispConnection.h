@@ -1,9 +1,6 @@
 ﻿//----------------------------------------------------------------------------------
 #ifndef WISPCONNECTION_H
 #define WISPCONNECTION_H
-#include "WispGlobal.h"
-#include "WispPacketReader.h"
-#include "WispPacketMessage.h"
 #include <winsock.h>
 #pragma comment(lib, "wsock32.lib")
 //----------------------------------------------------------------------------------

@@ -10,9 +10,6 @@
 #ifndef GUMPCONTAINER_H
 #define GUMPCONTAINER_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-#include "../TextEngine/TextRenderer.h"
-//----------------------------------------------------------------------------------
 class CGumpContainer : public CGump
 {
 	SETGET(bool, IsGameBoard, false);

@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
-#include "WispPacketReader.h"
+#include "stdafx.h"
 
 namespace WISP_NETWORK
 {

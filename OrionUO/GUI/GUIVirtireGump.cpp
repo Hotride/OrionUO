@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIVirtureGump.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIVirtureGump::CGUIVirtureGump(const ushort &graphic, const int &x, const int &y)
 : CGUIDrawObject(GOT_VIRTURE_GUMP, graphic, graphic, 0, x, y)

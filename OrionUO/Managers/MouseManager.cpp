@@ -7,18 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "MouseManager.h"
-#include "../OrionWindow.h"
-#include "../EnumList.h"
-#include "ConfigManager.h"
-#include "../SelectedObject.h"
-#include "../PressedObject.h"
-#include "../OrionUO.h"
-#include "../ToolTip.h"
-#include "../Target.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Walker/PathFinder.h"
-#include "../Game objects/ObjectOnCursor.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CMouseManager g_MouseManager;
 //----------------------------------------------------------------------------------

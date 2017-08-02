@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "FontsManager.h"
-#include "../GLEngine/GLEngine.h"
-#include "../Wisp/WispMappedFile.h"
-#include "FileManager.h"
-#include "../OrionUO.h"
-#include "ColorManager.h"
-#include "../Wisp/WispTextFileParser.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CFontsManager g_FontManager;
 //----------------------------------------------------------------------------------

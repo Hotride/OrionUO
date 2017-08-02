@@ -1,8 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "Multi.h"
-#include "Game objects/GameWorld.h"
-#include "Target.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 bool g_AltPressed = false;
 bool g_CtrlPressed = false;

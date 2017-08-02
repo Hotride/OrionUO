@@ -7,18 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "ConnectionManager.h"
-#include "ConfigManager.h"
-#include "../Wisp/WispDataStream.h"
-#include "../Wisp/WispLogger.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "PacketManager.h"
-#include "../Screen stages/ConnectionScreen.h"
-#include "../Screen stages/GameBlockedScreen.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/PluginManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CConnectionManager g_ConnectionManager;
 //----------------------------------------------------------------------------------

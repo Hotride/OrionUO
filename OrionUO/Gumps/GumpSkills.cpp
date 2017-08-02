@@ -7,19 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpSkills.h"
-#include "../SkillGroup.h"
-#include "../Managers/SkillGroupManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/MouseManager.h"
-#include "../TextEngine/GameConsole.h"
-#include "../Game objects/GamePlayer.h"
-#include "../OrionUO.h"
-#include "../PressedObject.h"
-#include "../SelectedObject.h"
-#include "../ToolTip.h"
-#include "GumpSkill.h"
-#include "../Managers/GumpManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpSkills::CGumpSkills(uint serial, short x, short y, bool minimized, int height)
 : CGumpBaseScroll(GT_SKILLS, serial, 0x1F40, height, x, y, true, 0, true, 15)
@@ -264,7 +252,7 @@ void CGumpSkills::UpdateSkillsSum()
 {
 	WISPFUN_DEBUG("c125_f9");
 	char str[20] = { 0 };
-	sprintf(str, "%.1f", g_SkillsTotal);
+	sprintf_s(str, "%.1f", g_SkillsTotal);
 	m_SkillSum->CreateTextureA(3, str);
 }
 //----------------------------------------------------------------------------------

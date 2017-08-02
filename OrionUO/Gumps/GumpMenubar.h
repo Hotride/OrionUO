@@ -10,8 +10,6 @@
 #ifndef GUMPMENUBAR_H
 #define GUMPMENUBAR_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpMenubar : public CGump
 {
 	SETGETE(bool, Opened, true, OnChangeOpened);

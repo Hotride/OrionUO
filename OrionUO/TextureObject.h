@@ -10,8 +10,6 @@
 #ifndef TEXTUREOBJECT_H
 #define TEXTUREOBJECT_H
 //----------------------------------------------------------------------------------
-#include "BaseQueue.h"
-#include "Globals.h"
 //Данные о местонахождении сжатого блока данных с уоп фреймами
 struct UOPAnimationData
 {

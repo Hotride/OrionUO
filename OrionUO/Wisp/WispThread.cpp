@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
-#include "WispThread.h"
+#include "stdafx.h"
 #include <process.h>
 
 #define THREAD_USE_CLOCK 0

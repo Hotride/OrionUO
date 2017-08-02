@@ -10,9 +10,6 @@
 #ifndef CREATECHARACTERMANAGER_H
 #define CREATECHARACTERMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../TextEngine/EntryText.h"
-//----------------------------------------------------------------------------------
 //!Информация о волосеном покрове
 struct CC_HAIR_STYLE
 {

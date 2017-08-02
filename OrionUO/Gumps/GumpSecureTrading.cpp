@@ -7,20 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpSecureTrading.h"
-#include "../SelectedObject.h"
-#include "../ClickObject.h"
-#include "../OrionUO.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/PacketManager.h"
-#include "../Network/Packets.h"
-#include "../PressedObject.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpSecureTrading::CGumpSecureTrading(uint serial, short x, short y, uint id, uint id2)
 : CGump(GT_TRADE, serial, x, y), m_ID2(id2)

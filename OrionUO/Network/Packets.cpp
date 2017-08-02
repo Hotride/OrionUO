@@ -7,23 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "Packets.h"
-#include "../Screen stages/MainScreen.h"
-#include "../Screen stages/SelectTownScreen.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/ProfessionManager.h"
-#include "../Managers/CreateCharacterManager.h"
-#include "../Managers/SpeechManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/ConnectionManager.h"
-#include "../CharacterList.h"
-#include "../CityList.h"
-#include "../OrionUO.h"
-#include "../Gumps/Gump.h"
-#include "../Gumps/GumpSecureTrading.h"
-#include "../Gumps/GumpTextEntryDialog.h"
-#include "../Gumps/GumpBook.h"
-#include "../Gumps/GumpShop.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CPacket::CPacket(const int &size, const bool &autoResize)
 : WISP_DATASTREAM::CDataWritter(size, autoResize)

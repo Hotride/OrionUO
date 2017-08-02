@@ -10,8 +10,6 @@
 #ifndef GUMPSCREENCHARACTERLIST_H
 #define GUMPSCREENCHARACTERLIST_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpScreenCharacterList : public CGump
 {
 private:

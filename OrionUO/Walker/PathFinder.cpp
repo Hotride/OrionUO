@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "PathFinder.h"
-#include "../Managers/MapManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Game objects/GameWorld.h"
-#include "Walker.h"
-#include "../OrionUO.h"
-#include "../Network/Packets.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CPathFinder g_PathFinder;
 //----------------------------------------------------------------------------------

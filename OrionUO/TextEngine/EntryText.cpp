@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "EntryText.h"
-#include "GameConsole.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/GumpManager.h"
-#include "../OrionWindow.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CEntryText *g_EntryPointer = NULL;
 //----------------------------------------------------------------------------------

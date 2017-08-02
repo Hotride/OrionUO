@@ -10,8 +10,6 @@
 #ifndef GAMEEFFECTDRAG_H
 #define GAMEEFFECTDRAG_H
 //----------------------------------------------------------------------------------
-#include "GameEffect.h"
-//----------------------------------------------------------------------------------
 //Эффект перемещения предмета
 class CGameEffectDrag : public CGameEffect
 {

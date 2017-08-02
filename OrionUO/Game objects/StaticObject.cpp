@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "StaticObject.h"
-#include "../OrionUO.h"
-#include "../SelectedObject.h"
-#include "../Screen stages/GameScreen.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CStaticObject::CStaticObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
 : CRenderStaticObject(ROT_STATIC_OBJECT, serial, graphic, color, x, y, z)

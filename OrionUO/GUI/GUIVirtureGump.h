@@ -12,8 +12,6 @@
 #ifndef GUIVIRTUREGUMP_H
 #define GUIVIRTUREGUMP_H
 //----------------------------------------------------------------------------------
-#include "GUIDrawObject.h"
-//----------------------------------------------------------------------------------
 class CGUIVirtureGump : public CGUIDrawObject
 {
 public:

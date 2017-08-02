@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameConsole.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Network/Packets.h"
-#include "../Party.h"
-#include "../Game objects/GamePlayer.h"
-#include "../OrionUO.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameConsole g_GameConsole;
 //----------------------------------------------------------------------------------

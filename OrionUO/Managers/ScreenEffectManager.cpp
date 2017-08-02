@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "ScreenEffectManager.h"
-#include "../GLEngine/GLEngine.h"
-#include "../OrionWindow.h"
+#include "stdafx.h"
 
 CScreenEffectManager g_ScreenEffectManager;
 //---------------------------------------------------------------------------

@@ -10,15 +10,8 @@
 #ifndef INDEXOBJECT_H
 #define INDEXOBJECT_H
 //----------------------------------------------------------------------------------
-#include "Wisp/WispGlobal.h"
-#include "Wisp/WispGeometry.h"
-#include "GLEngine/GLTexture.h"
 #include "bass.h"
 #include "bassmidi.h"
-#include "EnumList.h"
-#include "TextureObject.h"
-#include "Gumps/GumpBulletinBoardItem.h"
-#include "Managers/PacketManager.h"
 
 #pragma comment(lib, "bass.lib")
 #pragma comment(lib, "bassmidi.lib")

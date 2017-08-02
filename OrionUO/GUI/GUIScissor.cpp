@@ -7,7 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIScissor.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIScissor::CGUIScissor(const bool &enabled, const int &baseX, const int &baseY, const int &x, const int &y, const int &width, const int &height)
 : CGUIPolygonal(GOT_SCISSOR, x, y, width, height), m_BaseX(baseX), m_BaseY(baseY)

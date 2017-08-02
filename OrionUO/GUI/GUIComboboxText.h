@@ -12,8 +12,6 @@
 #ifndef GUICOMBOBOXTEXT_H
 #define GUICOMBOBOXTEXT_H
 //----------------------------------------------------------------------------------
-#include "GUIText.h"
-//----------------------------------------------------------------------------------
 class CGUIComboboxText : public CGUIText
 {
 public:

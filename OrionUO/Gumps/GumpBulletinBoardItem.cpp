@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpBulletinBoardItem.h"
-#include "../Managers/GumpManager.h"
-#include "../Network/Packets.h"
-#include "../Game objects/GamePlayer.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpBulletinBoardItem::CGumpBulletinBoardItem(uint serial, short x, short y, uchar variant, uint id, string poster, string subject, string dataTime, string data)
 : CGumpBaseScroll(GT_BULLETIN_BOARD_ITEM, serial, 0x0820, 250, x, y, false, 70),

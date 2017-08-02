@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIComboBox.h"
-#include "../OrionUO.h"
-#include "../PressedObject.h"
-#include "../Managers/MouseManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIComboBox::CGUIComboBox(const uint &serial, const ushort &graphic, const bool &compositeBackground, const ushort &openGraphic, const int &x, const int &y, const int &width, const int &showItemsCount, const bool &showMaximizedCenter)
 : CBaseGUI(GOT_COMBOBOX, serial, graphic, 0, x, y), m_OpenGraphic(openGraphic),

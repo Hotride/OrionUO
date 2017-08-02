@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpShop.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Game objects/GameWorld.h"
-#include "../PressedObject.h"
-#include "../Network/Packets.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
 : CGump(GT_SHOP, serial, x, y), m_IsBuyGump(isBuyGump), m_Visible(!isBuyGump)

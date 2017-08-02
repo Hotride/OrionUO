@@ -12,8 +12,6 @@
 #ifndef GUICOLOREDPOLYGONE_H
 #define GUICOLOREDPOLYGONE_H
 //----------------------------------------------------------------------------------
-#include "GUIPolygonal.h"
-//----------------------------------------------------------------------------------
 class CGUIColoredPolygone : public CGUIPolygonal
 {
 	//!R-компонента цвета

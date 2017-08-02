@@ -10,9 +10,6 @@
 #ifndef LANDOBJECT_H
 #define LANDOBJECT_H
 //----------------------------------------------------------------------------------
-#include "MapObject.h"
-#include "../GLEngine/GLVector.h"
-//----------------------------------------------------------------------------------
 //Класс ландшафта
 class CLandObject : public CMapObject
 {

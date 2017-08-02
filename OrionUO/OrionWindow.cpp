@@ -7,29 +7,9 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "OrionWindow.h"
-#include "OrionUO.h"
-#include "Wisp/WispApplication.h"
-#include "Wisp/WispLogger.h"
-#include "GLEngine/GLEngine.h"
-#include "Globals.h"
+#include "stdafx.h"
 #include <tchar.h>
-#include "Resource.h"
-#include "Screen stages/BaseScreen.h"
-#include "Screen stages/MainScreen.h"
-#include "SelectedObject.h"
-#include "PressedObject.h"
-#include "Constants.h"
-#include "Managers/ConfigManager.h"
-#include "Game objects/ObjectOnCursor.h"
-#include "ClickObject.h"
 #include <iostream>
-#include "Managers/PluginManager.h"
-#include "Managers/PacketManager.h"
-#include "Managers/ConnectionManager.h"
-#include "Walker/PathFinder.h"
-#include "Managers/GumpManager.h"
-#include "Network/Packets.h"
 //----------------------------------------------------------------------------------
 COrionWindow g_OrionWindow;
 //----------------------------------------------------------------------------------

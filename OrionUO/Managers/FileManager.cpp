@@ -7,14 +7,10 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "FileManager.h"
-#include "../Wisp/WispApplication.h"
-#include <thread>
+#include "stdafx.h"
 #include <fstream>
-#include "AnimationManager.h"
 #include <sys/stat.h>
 #include "../zlib.h"
-#include "../OrionUO.h"
 
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
@@ -329,7 +325,7 @@ void CFileManager::ReadTask()
 		{
 			CTextureAnimationGroup *group = &(*indexAnim).m_Groups[grpId];
 			char hashString[100];
-			sprintf(hashString, "build/animationlegacyframe/%06i/%02i.bin", animId, grpId);
+			sprintf_s(hashString, "build/animationlegacyframe/%06i/%02i.bin", animId, grpId);
 			auto hash = g_Orion.CreateHash(hashString);
 			if (hashes.find(hash) != hashes.end())
 			{

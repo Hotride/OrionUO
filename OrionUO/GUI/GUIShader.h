@@ -12,9 +12,6 @@
 #ifndef GUISHADER_H
 #define GUISHADER_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-#include "../GLEngine/GLShader.h"
-//----------------------------------------------------------------------------------
 class CGUIShader : public CBaseGUI
 {
 private:

@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIWorldMapTexture.h"
-#include "../OrionUO.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/UOFileReader.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIWorldMapTexture::CGUIWorldMapTexture(const int &x, const int &y)
 : CBaseGUI(GOT_EXTERNALTEXTURE, 0, 0, 0, x, y)

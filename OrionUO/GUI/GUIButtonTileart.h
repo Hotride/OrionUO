@@ -12,8 +12,6 @@
 #ifndef GUIBUTTONTILEART_H
 #define GUIBUTTONTILEART_H
 //----------------------------------------------------------------------------------
-#include "GUIButton.h"
-//----------------------------------------------------------------------------------
 class CGUIButtonTileart : public CGUIButton
 {
 	//!ИД картинки статики

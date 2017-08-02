@@ -10,8 +10,6 @@
 #ifndef GUMPTEXTENTRYDIALOG_H
 #define GUMPTEXTENTRYDIALOG_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpTextEntryDialog : public CGump
 {
 	SETGET(uchar, Variant, 0);

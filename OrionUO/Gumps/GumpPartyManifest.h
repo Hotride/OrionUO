@@ -10,8 +10,6 @@
 #ifndef GUMPPARTYMANIFEST_H
 #define GUMPPARTYMANIFEST_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpPartyManifest : public CGump
 {
 private:

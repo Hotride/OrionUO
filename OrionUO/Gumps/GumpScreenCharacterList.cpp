@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpScreenCharacterList.h"
-#include "../Screen stages/CharacterListScreen.h"
-#include "../OrionUO.h"
-#include "../CharacterList.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/ConfigManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpScreenCharacterList::CGumpScreenCharacterList()
 : CGump(GT_NONE, 0, 0, 0)

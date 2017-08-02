@@ -10,11 +10,6 @@
 #ifndef PRESSEDOBJECT_H
 #define PRESSEDOBJECT_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "Gumps/Gump.h"
-#include "GUI/BaseGUI.h"
-#include "SelectedObject.h"
-//----------------------------------------------------------------------------------
 class CPressedObject
 {
 	SETGET(uint, LeftSerial, 0);

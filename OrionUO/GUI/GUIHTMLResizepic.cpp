@@ -7,8 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIHTMLResizepic.h"
-#include "GUIHTMLGump.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIHTMLResizepic::CGUIHTMLResizepic(class CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height)
 : CGUIResizepic(serial, graphic, x, y, width, height), m_HTMLGump(htmlGump)

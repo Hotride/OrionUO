@@ -13,8 +13,6 @@
 #ifndef GUIDATABOX_H
 #define GUIDATABOX_H
 //----------------------------------------------------------------------------------
-#include "GUIPolygonal.h"
-//----------------------------------------------------------------------------------
 class CGUIDataBox : public CGUIPolygonal
 {
 public:

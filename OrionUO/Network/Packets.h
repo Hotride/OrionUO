@@ -10,9 +10,6 @@
 #ifndef PACKETS_H
 #define PACKETS_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../Wisp/WispDataStream.h"
-//----------------------------------------------------------------------------------
 class CPacket : public WISP_DATASTREAM::CDataWritter
 {
 public:

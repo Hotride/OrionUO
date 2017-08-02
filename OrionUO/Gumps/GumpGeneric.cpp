@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpGeneric.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/FontsManager.h"
-#include "../TextEngine/GameConsole.h"
-#include "../Network/Packets.h"
-#include "../PressedObject.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpGeneric::CGumpGeneric(uint serial, short x, short y, uint id)
 : CGump(GT_GENERIC, serial, x, y)

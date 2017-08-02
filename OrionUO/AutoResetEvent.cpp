@@ -1,5 +1,4 @@
-﻿#include "AutoResetEvent.h"
-#include <thread>
+﻿#include "stdafx.h"
 
 AutoResetEvent::AutoResetEvent(bool initial)
 : flag_(initial)

@@ -7,16 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpScreenGame.h"
-#include "../Screen stages/GameScreen.h"
-#include "../OrionUO.h"
-#include "../Managers/ConfigManager.h"
-#include "../OrionWindow.h"
-#include "../Managers/PacketManager.h"
-#include "../Network/Packets.h"
-#include "../Managers/GumpManager.h"
-#include "GumpConsoleType.h"
-#include "GumpOptions.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpScreenGame::CGumpScreenGame()
 : CGump(GT_NONE, 0, 0, 0)

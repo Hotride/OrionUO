@@ -12,8 +12,6 @@
 #ifndef GUICHECKTRANS_H
 #define GUICHECKTRANS_H
 //----------------------------------------------------------------------------------
-#include "GUIPolygonal.h"
-//----------------------------------------------------------------------------------
 class CGUIChecktrans : public CGUIPolygonal
 {
 public:

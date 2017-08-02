@@ -10,8 +10,6 @@
 #ifndef GumpQuestionH
 #define GumpQuestionH
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpQuestion : public CGump
 {
 	SETGET(uchar, Variant, 0);

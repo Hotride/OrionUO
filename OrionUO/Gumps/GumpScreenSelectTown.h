@@ -10,8 +10,6 @@
 #ifndef GUMPSCREENSELECTTOWN_H
 #define GUMPSCREENSELECTTOWN_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpScreenSelectTown : public CGump
 {
 private:

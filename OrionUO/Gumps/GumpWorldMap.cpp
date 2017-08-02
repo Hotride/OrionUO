@@ -7,16 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpWorldMap.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/FileManager.h"
-#include "../Managers/MapManager.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/PluginManager.h"
-#include "../OrionUO.h"
-#include "../PressedObject.h"
-#include "../Wisp/WispMappedFile.h"
-#include "../Game objects/GamePlayer.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 const int m_Scales[7] = { 1, 1, 1, 2, 4, 6, 10 };
 //----------------------------------------------------------------------------------
@@ -306,7 +297,7 @@ void CGumpWorldMap::LoadMap(int map)
 		uint mulStaticsHash = 0;
 
 		char pathBuf[50] = { 0 };
-		sprintf(pathBuf, "mapImage%i.cuo", map);
+		sprintf_s(pathBuf, "mapImage%i.cuo", map);
 
 		if (file.Load(g_App.FilePath("MapsInfo.cuo")) && file.Size)
 		{
@@ -383,7 +374,8 @@ void CGumpWorldMap::LoadMap(int map)
 
 			g_GL_BindTexture16(g_MapTexture[map], g_MapSize[map].Width, g_MapSize[map].Height, data);
 
-			FILE *mapDataFile = fopen(g_App.FilePath(pathBuf).c_str(), "wb");
+			FILE *mapDataFile = NULL;
+			fopen_s(&mapDataFile, g_App.FilePath(pathBuf).c_str(), "wb");
 
 			if (mapDataFile != NULL)
 			{
@@ -391,7 +383,8 @@ void CGumpWorldMap::LoadMap(int map)
 				fclose(mapDataFile);
 			}
 
-			FILE *mapsInfoFile = fopen(g_App.FilePath("MapsInfo.cuo").c_str(), "wb");
+			FILE *mapsInfoFile = NULL;
+			fopen_s(&mapsInfoFile, g_App.FilePath("MapsInfo.cuo").c_str(), "wb");
 
 			if (mapsInfoFile != NULL)
 			{

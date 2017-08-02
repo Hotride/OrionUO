@@ -10,11 +10,6 @@
 #ifndef MACRO_H
 #define MACRO_H
 //----------------------------------------------------------------------------------
-#include "BaseQueue.h"
-#include "Globals.h"
-#include "Wisp/WispMappedFile.h"
-#include "Wisp/WispBinaryFileWritter.h"
-//----------------------------------------------------------------------------------
 //Класс объекта макроса
 class CMacroObject : public CBaseQueueItem
 {

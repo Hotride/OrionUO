@@ -10,10 +10,6 @@
 #ifndef CLICKOBJECT_H
 #define CLICKOBJECT_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "RenderObject.h"
-#include "Gumps/Gump.h"
-//----------------------------------------------------------------------------------
 //!Объект клика мышкой
 class CClickObject
 {

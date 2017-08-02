@@ -7,22 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "CommonInterfaces.h"
-#include "GLEngine/GLEngine.h"
-#include "OrionUO.h"
-#include "Managers/ClilocManager.h"
-#include "Managers/FontsManager.h"
-#include "Managers/ColorManager.h"
-#include "Managers/ConfigManager.h"
-#include "Managers/PacketManager.h"
-#include "Managers/GumpManager.h"
-#include "Walker/PathFinder.h"
-#include "Game objects/GamePlayer.h"
-#include "Target.h"
-#include "Network/Packets.h"
-#include "OrionWindow.h"
-#include "PluginInterface.h"
-#include "Gumps/GumpSecureTrading.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 IOrionString g_OrionString;
 //----------------------------------------------------------------------------------

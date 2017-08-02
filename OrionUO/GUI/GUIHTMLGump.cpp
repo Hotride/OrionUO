@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIHTMLGump.h"
-#include "../Gumps/Gump.h"
-#include "../Managers/MouseManager.h"
-#include "../OrionUO.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIHTMLGump::CGUIHTMLGump(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height, const bool &haveBackground, const bool &haveScrollbar)
 : CGUIPolygonal(GOT_HTMLGUMP, x, y, width, height), m_HaveBackground(haveBackground),

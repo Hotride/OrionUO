@@ -12,8 +12,6 @@
 #ifndef GUIHTMLRESIZEPIC_H
 #define GUIHTMLRESIZEPIC_H
 //----------------------------------------------------------------------------------
-#include "GUIResizepic.h"
-//----------------------------------------------------------------------------------
 class CGUIHTMLResizepic : public CGUIResizepic
 {
 private:

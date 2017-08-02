@@ -9,8 +9,6 @@
 //----------------------------------------------------------------------------------
 #ifndef GUMPRACIALABILITIESBOOK_H
 #define GUMPRACIALABILITIESBOOK_H
-//----------------------------------------------------------------------------------
-#include "Gump.h"
 /*
 graphic = 0x2B02;
 minimizedGraphic = 0x2B05;

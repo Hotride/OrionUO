@@ -7,21 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameObject.h"
-#include "GameWorld.h"
-#include "GameEffect.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/PluginManager.h"
-#include "../SelectedObject.h"
-#include "../OrionUO.h"
-#include "../ServerList.h"
-#include "../OrionWindow.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameObject::CGameObject(const uint &serial)
 : CRenderStaticObject(ROT_GAME_OBJECT, serial, 0, 0, 0, 0, 0),

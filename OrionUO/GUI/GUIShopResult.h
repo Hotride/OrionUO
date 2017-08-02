@@ -12,9 +12,6 @@
 #ifndef GUISHOPRESULT_H
 #define GUISHOPRESULT_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CGUIShopResult : public CBaseGUI
 {
 	//!Стоимость

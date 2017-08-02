@@ -10,8 +10,6 @@
 #ifndef GUMPMAP_H
 #define GUMPMAP_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpMap : public CGump
 {
 	SETGETE(int, PlotState, 0, OnChangePlotState);

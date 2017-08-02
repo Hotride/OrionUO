@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "MultiMap.h"
-#include "Managers/FileManager.h"
-#include "Managers/ColorManager.h"
-#include "Wisp/WispLogger.h"
-#include "GUI/GUIExternalTexture.h"
-#include "Gumps/GumpMap.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CMultiMap g_MultiMap;
 //----------------------------------------------------------------------------------

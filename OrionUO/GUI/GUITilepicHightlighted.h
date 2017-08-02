@@ -12,8 +12,6 @@
 #ifndef GUITILEPICHIGHTLIGHTED_H
 #define GUITILEPICHIGHTLIGHTED_H
 //----------------------------------------------------------------------------------
-#include "GUITilepic.h"
-//----------------------------------------------------------------------------------
 class CGUITilepicHightlighted : public CGUITilepic
 {
 	//!Цвет выбранной компоненты

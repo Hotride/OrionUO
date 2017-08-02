@@ -1,9 +1,6 @@
 ﻿//----------------------------------------------------------------------------------
 #ifndef WISPPACKETREADER_H
 #define WISPPACKETREADER_H
-#include "WispGlobal.h"
-#include "WispDataStream.h"
-#include "WispConnection.h"
 //----------------------------------------------------------------------------------
 namespace WISP_NETWORK
 {

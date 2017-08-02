@@ -7,23 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "ConfigManager.h"
-#include "SoundManager.h"
-#include "GumpManager.h"
-#include "../GLEngine/GLTextureCircleOfTransparency.h"
-#include "../Wisp/WispMappedFile.h"
-#include "../Wisp/WispBinaryFileWritter.h"
-#include "../OrionWindow.h"
-#include "../OrionUO.h"
-#include "../GLEngine/GLEngine.h"
-#include "../TextEngine/GameConsole.h"
-#include "../Game objects/GameWorld.h"
-#include "../Network/Packets.h"
-#include "../Gumps/GumpSpell.h"
-#include "../Party.h"
-#include "../Gumps/GumpConsoleType.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Container.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CConfigManager g_ConfigManager;
 CConfigManager g_OptionsConfig;

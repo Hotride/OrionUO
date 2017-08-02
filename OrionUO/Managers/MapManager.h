@@ -10,11 +10,6 @@
 #ifndef MAPMANAGER_H
 #define MAPMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../BaseQueue.h"
-#include "../Game objects/MapBlock.h"
-#include "../MulStruct.h"
-#include "../Wisp/WispDataStream.h"
-//----------------------------------------------------------------------------------
 class CIndexMap
 {
 	SETGET(uint, OriginalMapAddress, 0);

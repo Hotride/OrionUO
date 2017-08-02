@@ -10,8 +10,6 @@
 #ifndef ORIONWINDOW_H
 #define ORIONWINDOW_H
 //----------------------------------------------------------------------------------
-#include "Wisp/WispWindow.h"
-//----------------------------------------------------------------------------------
 class COrionWindow : public WISP_WINDOW::CWindow
 {
 public:

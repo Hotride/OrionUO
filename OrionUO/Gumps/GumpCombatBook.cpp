@@ -7,17 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpCombatBook.h"
-#include "GumpAbility.h"
-#include "../PressedObject.h"
-#include "../ClickObject.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/PacketManager.h"
-#include "../OrionWindow.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpCombatBook::CGumpCombatBook(const int &x, const int &y)
 : CGump(GT_COMBAT_BOOK, 0, x, y)

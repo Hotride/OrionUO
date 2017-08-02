@@ -10,8 +10,6 @@
 #ifndef GUMPCOMBATBOOK_H
 #define GUMPCOMBATBOOK_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpCombatBook : public CGump
 {
 	SETGET(int, DictionaryPagesCount, 6);

@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpSelectFont.h"
-#include "../Managers/FileManager.h"
-#include "../Managers/ConfigManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpSelectFont::CGumpSelectFont(uint serial, short x, short y, SELECT_FONT_GUMP_STATE state)
 : CGump(GT_SELECT_FONT, serial, x, y), m_State(state)

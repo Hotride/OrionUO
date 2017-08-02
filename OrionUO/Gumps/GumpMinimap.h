@@ -10,8 +10,6 @@
 #ifndef GUMPMINIMAP_H
 #define GUMPMINIMAP_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpMinimap : public CGump
 {
 	SETGET(ushort, LastX, 0);

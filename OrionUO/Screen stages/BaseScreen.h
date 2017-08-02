@@ -10,16 +10,6 @@
 #ifndef BASESCREEN_H
 #define BASESCREEN_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../BaseQueue.h"
-#include "../GUI/GUI.h"
-#include "../Managers/ScreenEffectManager.h"
-#include "../Gumps/Gump.h"
-#include "../ToolTip.h"
-#include "../SelectedObject.h"
-#include "../PressedObject.h"
-#include "../Managers/MouseManager.h"
-//----------------------------------------------------------------------------------
 //Базовый класс стадий окна клиента
 class CBaseScreen : public CBaseQueue
 {

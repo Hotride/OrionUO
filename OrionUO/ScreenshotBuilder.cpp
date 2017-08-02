@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "ScreenshotBuilder.h"
-#include "Wisp/WispApplication.h"
-#include "OrionWindow.h"
-#include "OrionUO.h"
-#include "Managers/ConfigManager.h"
+#include "stdafx.h"
 #include "FreeImage.h"
 
 #pragma comment(lib, "FreeImage.lib")

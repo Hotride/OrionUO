@@ -7,27 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpOptions.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/SoundManager.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/OptionsMacroManager.h"
-#include "../Managers/MacroManager.h"
-#include "GumpSelectColor.h"
-#include "GumpSelectFont.h"
-#include "GumpMenubar.h"
-#include "../Network/Packets.h"
-#include "../GLEngine/GLTextureCircleOfTransparency.h"
-#include "../Container.h"
-#include "../OrionWindow.h"
-#include "../OrionUO.h"
-#include "../Macro.h"
-#include "../TextEngine/GameConsole.h"
-#include "../PressedObject.h"
-#include "../SelectedObject.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 const ushort g_OptionsTextColor = 0;
 //----------------------------------------------------------------------------------

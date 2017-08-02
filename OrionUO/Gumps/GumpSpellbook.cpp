@@ -7,19 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpSpellbook.h"
-#include "GumpSpell.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../PressedObject.h"
-#include "../ClickObject.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/PacketManager.h"
-#include "../OrionWindow.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 //!Названия кругов заклинаний
 const string CGumpSpellbook::m_SpellCircleName[8] =

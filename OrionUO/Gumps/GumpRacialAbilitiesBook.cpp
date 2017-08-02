@@ -7,18 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpRacialAbilitiesBook.h"
-#include "GumpRacialAbility.h"
-#include "../Game objects/GamePlayer.h"
-#include "../PressedObject.h"
-#include "../ClickObject.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/PacketManager.h"
-#include "../OrionWindow.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpRacialAbilitiesBook::CGumpRacialAbilitiesBook(const int &x, const int &y)
 : CGump(GT_RACIAL_ABILITIES_BOOK, 0, x, y)

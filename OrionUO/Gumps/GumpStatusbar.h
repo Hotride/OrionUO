@@ -10,8 +10,6 @@
 #ifndef GUMPSTATUSBAR_H
 #define GUMPSTATUSBAR_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpStatusbar : public CGump
 {
 private:

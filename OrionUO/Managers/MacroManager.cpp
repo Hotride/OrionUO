@@ -7,29 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "MacroManager.h"
-#include "OptionsMacroManager.h"
-#include "GumpManager.h"
-#include "ConfigManager.h"
-#include "PacketManager.h"
-#include "../Network/Packets.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../Macro.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "../Walker/PathFinder.h"
-#include "../Target.h"
-#include "../TargetGump.h"
-#include "../Gumps/Gump.h"
-#include "../Gumps/GumpTargetSystem.h"
-#include "../Wisp/WispMappedFile.h"
-#include "../Wisp/WispBinaryFileWritter.h"
-#include "../Wisp/WispTextFileParser.h"
-#include "../Gumps/GumpAbility.h"
-#include "../Gumps/GumpSpellbook.h"
-#include "PluginManager.h"
+#include "stdafx.h"
 
 #include <Shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib")

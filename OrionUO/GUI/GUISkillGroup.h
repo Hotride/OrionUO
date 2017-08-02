@@ -12,11 +12,6 @@
 #ifndef GUISKILLGROUP_H
 #define GUISKILLGROUP_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-#include "GUIButton.h"
-#include "GUITextEntry.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CGUISkillGroup : public CBaseGUI
 {
 	//!Свернута или развернута группа

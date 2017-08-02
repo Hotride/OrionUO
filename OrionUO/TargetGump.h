@@ -10,10 +10,6 @@
 #ifndef TARGETGUMP_H
 #define TARGETGUMP_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "Game objects/GameCharacter.h"
-
-//----------------------------------------------------------------------------------
 class CTargetGump
 {
 	SETGET(int, X, 0);

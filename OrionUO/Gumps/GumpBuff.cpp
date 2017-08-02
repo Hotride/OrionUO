@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpBuff.h"
-#include "../SelectedObject.h"
-#include "../ToolTip.h"
-#include "../OrionUO.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/ConfigManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpBuff::CGumpBuff(uint serial, short x, short y)
 : CGump(GT_BUFF, serial, x, y)

@@ -10,9 +10,6 @@
 #ifndef TEXTDATA_H
 #define TEXTDATA_H
 //----------------------------------------------------------------------------------
-#include "RenderTextObject.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 //Класс для хранения информации о текстуре текста
 class CTextData : public CRenderTextObject
 {

@@ -12,8 +12,6 @@
 #ifndef GUIHTMLBUTTON_H
 #define GUIHTMLBUTTON_H
 //----------------------------------------------------------------------------------
-#include "GUIButton.h"
-//----------------------------------------------------------------------------------
 class CGUIHTMLButton : public CGUIButton
 {
 private:

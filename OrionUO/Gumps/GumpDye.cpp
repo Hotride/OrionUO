@@ -7,8 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpDye.h"
-#include "../Network/Packets.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpDye::CGumpDye(uint serial, short x, short y, ushort graphic)
 : CGumpSelectColor(serial, x, y, SCGS_OPT_TOOLTIP_TEXT)

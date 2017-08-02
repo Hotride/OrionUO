@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpMap.h"
-#include "../Managers/MouseManager.h"
-#include "../Network/Packets.h"
-#include "../PressedObject.h"
-#include "../OrionUO.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpMap::CGumpMap(uint serial, ushort graphic, int startX, int startY, int endX, int endY, int width, int height)
 : CGump(GT_MAP, serial, 0, 0), m_StartX(startX), m_StartY(startY),

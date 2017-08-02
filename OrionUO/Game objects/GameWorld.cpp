@@ -7,21 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameWorld.h"
-#include "../OrionUO.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/SoundManager.h"
-#include "../Managers/MapManager.h"
-#include "../Managers/AnimationManager.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/GumpManager.h"
-#include "GamePlayer.h"
-#include "../Party.h"
-#include "../Walker/WalkData.h"
-#include "../Weather.h"
-#include "../Network/Packets.h"
-#include "../Gumps/GumpContainer.h"
-#include "../Walker/Walker.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameWorld *g_World = NULL;
 //----------------------------------------------------------------------------------

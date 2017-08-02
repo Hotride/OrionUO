@@ -12,8 +12,6 @@
 #ifndef GUITILEPIC_H
 #define GUITILEPIC_H
 //----------------------------------------------------------------------------------
-#include "GUIDrawObject.h"
-//----------------------------------------------------------------------------------
 class CGUITilepic : public CGUIDrawObject
 {
 public:

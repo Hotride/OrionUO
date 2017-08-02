@@ -10,8 +10,6 @@
 #ifndef GUMPPOPUPMENU_H
 #define GUMPPOPUPMENU_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpPopupMenu : public CGump
 {
 	SETGET(int, Width, 0);

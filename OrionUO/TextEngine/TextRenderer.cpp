@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "TextRenderer.h"
-#include "../Game objects/GameWorld.h"
-#include "../SelectedObject.h"
-#include "../Gumps/Gump.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/AnimationManager.h"
-#include "../Managers/ColorManager.h"
-#include "../OrionUO.h"
-#include "../Screen stages/GameScreen.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CTextRenderer g_WorldTextRenderer;
 //----------------------------------------------------------------------------------

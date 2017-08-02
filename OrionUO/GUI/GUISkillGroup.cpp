@@ -7,14 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUISkillGroup.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
-#include "../SelectedObject.h"
-#include "../PressedObject.h"
-#include "../Skills.h"
-#include "../Game objects/GamePlayer.h"
-#include "../SkillGroup.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUISkillGroup::CGUISkillGroup(const uint &serial, const uint &minimizeSerial, CSkillGroupObject *group, const int &x, const int &y)
 : CBaseGUI(GOT_SKILLGROUP, serial, 0, 0, x, y)

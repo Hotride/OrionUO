@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIHTMLText.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/FontsManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIHTMLText::CGUIHTMLText(const uint &index, const uchar &font, const ushort &color, const int &x, const int &y, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &textFlags, const uint &htmlStartColor)
 : CBaseGUI(GOT_HTMLTEXT, 0, 0, color, x, y), m_TextID(index), m_HTMLStartColor(htmlStartColor),

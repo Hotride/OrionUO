@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpSpell.h"
-#include "../SelectedObject.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../ToolTip.h"
-#include "../PressedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpSpell::CGumpSpell(uint serial, short x, short y, ushort graphic, SPELLBOOK_TYPE spellType)
 : CGump(GT_SPELL, serial, x, y), m_SpellType(spellType)

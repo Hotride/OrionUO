@@ -1,6 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
-#include "WispMouse.h"
-#include "WispWindow.h"
+#include "stdafx.h"
 
 namespace WISP_MOUSE
 {

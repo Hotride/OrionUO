@@ -10,10 +10,6 @@
 #ifndef RENDERSTATICOBJECT_H
 #define RENDERSTATICOBJECT_H
 //----------------------------------------------------------------------------------
-#include "MapObject.h"
-#include "../MulStruct.h"
-#include "../TextEngine/TextContainer.h"
-//----------------------------------------------------------------------------------
 //Класс обобщенного объекта группы статики
 class CRenderStaticObject : public CMapObject
 {

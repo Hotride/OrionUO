@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "LandObject.h"
-#include "../MulStruct.h"
-#include "../OrionUO.h"
-#include "../Constants.h"
-#include "../SelectedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CLandObject::CLandObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
 : CMapObject(ROT_LAND_OBJECT, serial, 0, color, x, y, z), m_MinZ(z), m_AverageZ(z)

@@ -12,8 +12,6 @@
 #ifndef GUIRESIZEPIC_H
 #define GUIRESIZEPIC_H
 //----------------------------------------------------------------------------------
-#include "GUIPolygonal.h"
-//----------------------------------------------------------------------------------
 class CGUIResizepic : public CGUIPolygonal
 {
 public:

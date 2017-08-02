@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUISkillItem.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
-#include "../SelectedObject.h"
-#include "../PressedObject.h"
-#include "../Skills.h"
-#include "../Game objects/GamePlayer.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUISkillItem::CGUISkillItem(const uint &serial, const uint &useSerial, const uint &statusSerial, const int &index, const int &x, const int &y)
 : CBaseGUI(GOT_SKILLITEM, serial, 0, 0, x, y), m_Index(index)
@@ -81,7 +75,7 @@ void CGUISkillItem::CreateValueText(const bool &showReal, const bool &showCap)
 		val = g_Player->GetSkillCap(m_Index);
 
 	char sbf[10] = { 0 };
-	sprintf(sbf, "%.1f", val);
+	sprintf_s(sbf, "%.1f", val);
 
 	g_FontManager.GenerateA(9, m_ValueText, sbf, 0x0288);
 }

@@ -7,19 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "MainScreen.h"
-#include "../OrionWindow.h"
-#include "../OrionUO.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/AnimationManager.h"
-#include "../ToolTip.h"
-#include "../QuestArrow.h"
-#include "../SelectedObject.h"
-#include "../PressedObject.h"
-#include "../Wisp/WispTextFileParser.h"
-#include "../Wisp/WispApplication.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CMainScreen g_MainScreen;
 //----------------------------------------------------------------------------------

@@ -10,8 +10,6 @@
 #ifndef GUMPSCREENCONNECTION_H
 #define GUMPSCREENCONNECTION_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpScreenConnection : public CGump
 {
 private:

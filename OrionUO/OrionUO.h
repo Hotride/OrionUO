@@ -10,10 +10,6 @@
 #ifndef ORIONUO_H
 #define ORIONUO_H
 //----------------------------------------------------------------------------------
-#include "IndexObject.h"
-#include "Constants.h"
-#include "MulStruct.h"
-#include "GLEngine/GLVector.h"
 #include <functional>
 
 namespace Wisp{

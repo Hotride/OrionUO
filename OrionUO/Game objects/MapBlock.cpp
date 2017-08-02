@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "MapBlock.h"
-#include "../Managers/FileManager.h"
-#include "../Managers/MapManager.h"
-#include "../MulStruct.h"
-#include "../OrionUO.h"
-#include "../GLEngine/GLEngine.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CMapBlock::CMapBlock(const uint &index)
 : CBaseQueueItem(), m_Index(index), m_LastAccessTime(GetTickCount())

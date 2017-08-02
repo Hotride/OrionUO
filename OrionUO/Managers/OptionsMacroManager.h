@@ -10,8 +10,6 @@
 #ifndef OPTIONSMACROMANAGER_H
 #define OPTIONSMACROMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../BaseQueue.h"
-//----------------------------------------------------------------------------------
 //!Класс менеджера макросов для опций
 class COptionsMacroManager : public CBaseQueue
 {

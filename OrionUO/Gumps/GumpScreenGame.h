@@ -10,8 +10,6 @@
 #ifndef GUMPSCREENGAME_H
 #define GUMPSCREENGAME_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpScreenGame : public CGump
 {
 private:

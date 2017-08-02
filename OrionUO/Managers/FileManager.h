@@ -10,12 +10,6 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../Wisp/WispMappedFile.h"
-#include "../AutoResetEvent.h"
-#include "../TextureObject.h"
-
-//----------------------------------------------------------------------------------
 class CFileManager : public WISP_DATASTREAM::CDataReader
 {
 	SETGET(bool, UseVerdata, false);

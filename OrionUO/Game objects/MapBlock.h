@@ -10,11 +10,6 @@
 #ifndef MAPBLOCK_H
 #define MAPBLOCK_H
 //----------------------------------------------------------------------------------
-#include "../BaseQueue.h"
-#include "../Globals.h"
-#include "../RenderWorldObject.h"
-#include "../Game objects/LandObject.h"
-//----------------------------------------------------------------------------------
 //Класс для работы с блоками карты 8х8
 class CMapBlock : public CBaseQueueItem
 {

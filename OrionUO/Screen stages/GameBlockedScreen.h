@@ -10,8 +10,6 @@
 #ifndef GAMEBLOCKEDSCREEN_H
 #define GAMEBLOCKEDSCREEN_H
 //----------------------------------------------------------------------------------
-#include "BaseScreen.h"
-//----------------------------------------------------------------------------------
 class CGameBlockedScreen : public CBaseScreen
 {
 	//!Код блокировки

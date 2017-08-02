@@ -10,8 +10,6 @@
 #ifndef GUMPPROFILE_H
 #define GUMPPROFILE_H
 //----------------------------------------------------------------------------------
-#include "GumpBaseScroll.h"
-//----------------------------------------------------------------------------------
 class CGumpProfile : public CGumpBaseScroll
 {
 	SETGET(bool, Changed, false);

@@ -12,8 +12,6 @@
 #ifndef GUIGUMPPICTILED_H
 #define GUIGUMPPICTILED_H
 //----------------------------------------------------------------------------------
-#include "GUIDrawObject.h"
-//----------------------------------------------------------------------------------
 class CGUIGumppicTiled : public CGUIDrawObject
 {
 	//!Ширина

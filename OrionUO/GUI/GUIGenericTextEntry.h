@@ -12,8 +12,6 @@
 #ifndef GUIGENERICTEXTENTRY_H
 #define GUIGENERICTEXTENTRY_H
 //----------------------------------------------------------------------------------
-#include "GUITextEntry.h"
-//----------------------------------------------------------------------------------
 class CGUIGenericTextEntry : public CGUITextEntry
 {
 	//!Индекс текста

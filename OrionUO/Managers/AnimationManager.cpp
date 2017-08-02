@@ -7,22 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "AnimationManager.h"
-#include "../MulStruct.h"
-#include "../Wisp/WispTextFileParser.h"
-#include "FileManager.h"
-#include "ColorManager.h"
-#include "../GLEngine/GLEngine.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "MouseManager.h"
-#include "../OrionUO.h"
-#include "../Target.h"
-#include "../TargetGump.h"
-#include "ConfigManager.h"
-#include "../SelectedObject.h"
-#include "../Screen stages/GameScreen.h"
-#include "PacketManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CAnimationManager g_AnimationManager;
 //----------------------------------------------------------------------------------

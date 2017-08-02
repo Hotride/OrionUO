@@ -7,24 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameCharacter.h"
-#include "GamePlayer.h"
-#include "GameItem.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/MapManager.h"
-#include "../Managers/AnimationManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/PluginManager.h"
-#include "../Network/Packets.h"
-#include "../TargetGump.h"
-#include "../SelectedObject.h"
-#include "../OrionUO.h"
-#include "../Walker/PathFinder.h"
-#include "../Gumps/GumpTargetSystem.h"
-#include "../OrionWindow.h"
-#include "../Party.h"
-#include "../Walker/Walker.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameCharacter::CGameCharacter(const uint &serial)
 : CGameObject(serial), m_Hits(0), m_MaxHits(0), m_LastStepSoundTime(GetTickCount()),

@@ -10,8 +10,6 @@
 #ifndef GUMPSELECTCOLOR_H
 #define GUMPSELECTCOLOR_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpSelectColor : public CGump
 {
 protected:

@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpSkill.h"
-#include "../Managers/MouseManager.h"
-#include "../SelectedObject.h"
-#include "../OrionUO.h"
-#include "../Skills.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpSkill::CGumpSkill(const uint &serial, const int &x, const int &y)
 : CGump(GT_SKILL, serial, x, y)

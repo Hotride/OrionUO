@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
-#include "WispGeometry.h"
+#include "stdafx.h"
 
 namespace WISP_GEOMETRY
 {

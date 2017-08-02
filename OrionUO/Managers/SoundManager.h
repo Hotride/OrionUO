@@ -10,8 +10,6 @@
 #ifndef SOUNDMANAGER_H
 #define SOUNDMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../IndexObject.h"
-//----------------------------------------------------------------------------------
 #pragma pack (push,1)
 struct MidiInfoStruct
 {

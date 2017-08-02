@@ -10,10 +10,6 @@
 #ifndef CITYLIST_H
 #define CITYLIST_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "GLEngine/GLTextTexture.h"
-#include "Managers/CityManager.h"
-//----------------------------------------------------------------------------------
 //!Класс города (для старых клиентов)
 class CCityItem
 {

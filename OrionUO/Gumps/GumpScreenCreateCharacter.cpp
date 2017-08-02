@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpScreenCreateCharacter.h"
-#include "../Screen stages/CreateCharacterScreen.h"
-#include "../OrionUO.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/CreateCharacterManager.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/PacketManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpScreenCreateCharacter::CGumpScreenCreateCharacter()
 : CGump(GT_NONE, 0, 0, 0)

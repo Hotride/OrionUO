@@ -10,9 +10,6 @@
 #ifndef RENDERWORLDOBJECT_H
 #define RENDERWORLDOBJECT_H
 //----------------------------------------------------------------------------------
-#include "RenderObject.h"
-#include "TextEngine/TextData.h"
-//----------------------------------------------------------------------------------
 //Класс для работы с объектами рендера
 class CRenderWorldObject : public CRenderObject
 {

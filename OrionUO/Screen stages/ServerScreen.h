@@ -10,9 +10,6 @@
 #ifndef SERVERSCREEN_H
 #define SERVERSCREEN_H
 //----------------------------------------------------------------------------------
-#include "BaseScreen.h"
-#include "../Gumps/GumpScreenServer.h"
-//----------------------------------------------------------------------------------
 class CServerScreen : public CBaseScreen
 {
 	//!Временная переменная для идентификации выбранного сервера

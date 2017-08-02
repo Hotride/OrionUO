@@ -7,23 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpContainer.h"
-#include "../Container.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "../ToolTip.h"
-#include "../SelectedObject.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../Game objects/GamePlayer.h"
-#include "../ClickObject.h"
-#include "../Target.h"
-#include "../Managers/MouseManager.h"
-#include "../PressedObject.h"
-#include "../Gumps/GumpDrag.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/PacketManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpContainer::CGumpContainer(uint serial, uint id, short x, short y)
 : CGump(GT_CONTAINER, serial, x, y), m_IsGameBoard(id == 0x091A || id == 0x092E)

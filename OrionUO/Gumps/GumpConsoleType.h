@@ -10,8 +10,6 @@
 #ifndef GUMPCONSOLETYPE_H
 #define GUMPCONSOLETYPE_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpConsoleType : public CGump
 {
 	SETGETE(bool, ShowFullText, false, OnChanShowFullText);

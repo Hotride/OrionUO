@@ -10,10 +10,7 @@
 #ifndef GUMP_H
 #define GUMP_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../RenderObject.h"
-#include "../GUI/GUI.h"
-#include "../Managers/FontsManager.h"
+class CBaseGUI;
 //----------------------------------------------------------------------------------
 #define GUMP_BUTTON_EVENT_C OnButton(const uint &serial)
 #define GUMP_CHECKBOX_EVENT_C OnCheckbox(const uint &serial, const bool &state)
@@ -78,14 +75,14 @@ public:
 
 	static void DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Page = 0);
 
-	static CRenderObject *SelectItems(CBaseGUI *start, const int &currentPage, const int draw2Page = 0);
+	static class CRenderObject *SelectItems(CBaseGUI *start, const int &currentPage, const int draw2Page = 0);
 
 	static void TestItemsLeftMouseDown(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page = 0, int count = -1);
 	static void TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page = 0);
 	static void TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPage, const int draw2Page = 0, int count = -1);
 	static void TestItemsScrolling(CGump *gump, CBaseGUI *start, const bool &up, const int &currentPage, const int draw2Page = 0);
 
-	virtual void DelayedClick(CRenderObject *obj) {}
+	virtual void DelayedClick(class CRenderObject *obj) {}
 
 	virtual void PrepareContent() {}
 
@@ -113,7 +110,7 @@ public:
 
 	virtual void Draw();
 
-	virtual CRenderObject *Select();
+	virtual class CRenderObject *Select();
 
 	virtual void InitToolTip() {}
 
@@ -128,7 +125,7 @@ public:
 	GUMP_RESIZE_START_EVENT_H { DebugMsg("OnResizeStart(%i)\n", serial); }
 	GUMP_RESIZE_EVENT_H { DebugMsg("OnResize(%i)\n", serial); }
 	GUMP_RESIZE_END_EVENT_H { DebugMsg("OnResizeEnd(%i)\n", serial); }
-	GUMP_DIRECT_HTML_LINK_EVENT_H { g_FontManager.GoToWebLink(link);  DebugMsg("OnDirectHTMLLink(%i)\n", link); }
+	GUMP_DIRECT_HTML_LINK_EVENT_H;
 	GUMP_COMBOBOX_SELECTION_EVENT_H { DebugMsg("OnComboboxSelection(%i)\n", serial); }
 	GUMP_SCROLL_BUTTON_EVENT_H{ DebugMsg("OnScrollButton()\n"); }
 

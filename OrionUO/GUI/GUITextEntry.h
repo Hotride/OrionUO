@@ -12,10 +12,6 @@
 #ifndef GUITEXTENTRY_H
 #define GUITEXTENTRY_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-#include "../GLEngine/GLTextTexture.h"
-#include "../TextEngine/EntryText.h"
-//----------------------------------------------------------------------------------
 class CGUITextEntry : public CBaseGUI
 {
 	//!Цвет текста в выбранном состоянии

@@ -10,10 +10,6 @@
 #ifndef GAMEITEM_H
 #define GAMEITEM_H
 //----------------------------------------------------------------------------------
-#include "GameObject.h"
-#include "MultiObject.h"
-#include "../Multi.h"
-//----------------------------------------------------------------------------------
 //!Класс игрового предмета (или трупа)
 class CGameItem : public CGameObject
 {

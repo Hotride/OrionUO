@@ -10,10 +10,6 @@
 #ifndef GAMECHARACTER_H
 #define GAMECHARACTER_H
 //----------------------------------------------------------------------------------
-#include "GameObject.h"
-#include "../Walker/WalkData.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 //!Игровой персонаж
 class CGameCharacter: public CGameObject
 {

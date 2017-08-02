@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUITilepic.h"
-#include "../OrionUO.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/UOFileReader.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUITilepic::CGUITilepic(const ushort &graphic, const ushort &color, const int &x, const int &y)
 : CGUIDrawObject(GOT_TILEPIC, 0, graphic, color, x, y)

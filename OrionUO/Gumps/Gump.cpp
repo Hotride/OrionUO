@@ -7,21 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-#include "../GUI/GUIPage.h"
-#include "../GUI/GUIGroup.h"
-#include "../GLEngine/GLEngine.h"
-#include "../GLEngine/GLShader.h"
-#include "../SelectedObject.h"
-#include "../PressedObject.h"
-#include "../ClickObject.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Constants.h"
-#include "../Screen stages/GameScreen.h"
-#include "../OrionUO.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../OrionWindow.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGump *g_ResizedGump = NULL;
 CGump *g_CurrentCheckGump = NULL;
@@ -69,6 +55,12 @@ CGump::~CGump()
 		g_PressedObject.ClearRight();
 	if (g_PressedObject.MidGump() == this)
 		g_PressedObject.ClearMid();
+}
+//---------------------------------------------------------------------------
+void CGump::GUMP_DIRECT_HTML_LINK_EVENT_C
+{
+	g_FontManager.GoToWebLink(link);
+	DebugMsg("OnDirectHTMLLink(%i)\n", link);
 }
 //---------------------------------------------------------------------------
 void CGump::FixCoordinates()

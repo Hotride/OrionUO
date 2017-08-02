@@ -1,6 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
-#include "WispConnection.h"
-#include "WispLogger.h"
+#include "stdafx.h"
 
 namespace WISP_NETWORK
 {

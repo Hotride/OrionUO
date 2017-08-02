@@ -10,9 +10,6 @@
 #ifndef GUMPSECURETRADING_H
 #define GUMPSECURETRADING_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-#include "../TextEngine/TextRenderer.h"
-//----------------------------------------------------------------------------------
 class CGumpSecureTrading : public CGump
 {
 	SETGET(uint, ID2, 0);

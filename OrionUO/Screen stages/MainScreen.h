@@ -10,9 +10,6 @@
 #ifndef MAINSCREEN_H
 #define MAINSCREEN_H
 //----------------------------------------------------------------------------------
-#include "BaseScreen.h"
-#include "../Gumps/GumpScreenMain.h"
-//----------------------------------------------------------------------------------
 class CMainScreen : public CBaseScreen
 {
 private:

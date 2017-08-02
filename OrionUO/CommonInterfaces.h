@@ -10,9 +10,6 @@
 #ifndef COMMONINTERFACES_H
 #define COMMONINTERFACES_H
 //----------------------------------------------------------------------------------
-#include "EnumList.h"
-#include <string>
-//----------------------------------------------------------------------------------
 #ifndef UOInterface
 #define UOInterface struct
 #endif

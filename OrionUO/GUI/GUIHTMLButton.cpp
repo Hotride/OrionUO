@@ -7,8 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIHTMLButton.h"
-#include "GUIHTMLGump.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIHTMLButton::CGUIHTMLButton(CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y)
 : CGUIButton(serial, graphic, graphicSelected, graphicPressed, x, y),

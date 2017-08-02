@@ -12,8 +12,6 @@
 #ifndef GUIDRAWOBJECT_H
 #define GUIDRAWOBJECT_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-//----------------------------------------------------------------------------------
 class CGUIDrawObject : public CBaseGUI
 {
 public:

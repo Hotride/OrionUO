@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIResizepic.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIResizepic::CGUIResizepic(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &width, const int &height)
 : CGUIPolygonal(GOT_RESIZEPIC, x, y, width, height)

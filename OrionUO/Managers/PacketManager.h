@@ -10,9 +10,6 @@
 #ifndef PACKETMANAGER_H
 #define PACKETMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../Wisp/WispPacketReader.h"
-//----------------------------------------------------------------------------------
 class CPacketManager;
 typedef void (CPacketManager::*PACKET_FUNCTION)();
 //----------------------------------------------------------------------------------

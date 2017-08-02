@@ -12,8 +12,6 @@
 #ifndef GUIRESIZEBUTTON_H
 #define GUIRESIZEBUTTON_H
 //----------------------------------------------------------------------------------
-#include "GUIButton.h"
-//----------------------------------------------------------------------------------
 class CGUIResizeButton : public CGUIButton
 {
 public:

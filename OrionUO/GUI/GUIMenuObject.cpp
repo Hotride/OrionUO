@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIMenuObject.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
-#include "../SelectedObject.h"
-#include "../Gumps/GumpMenu.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIMenuObject::CGUIMenuObject(const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y, const string &text)
 : CGUITilepic(graphic, color, x, y), m_Text(text)

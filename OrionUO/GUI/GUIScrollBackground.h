@@ -12,8 +12,6 @@
 #ifndef GUISCROLLBACKGROUND_H
 #define GUISCROLLBACKGROUND_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-//----------------------------------------------------------------------------------
 class CGUIScrollBackground : public CBaseGUI
 {
 	//!Высота

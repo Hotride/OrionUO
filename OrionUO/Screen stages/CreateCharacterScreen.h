@@ -10,9 +10,6 @@
 #ifndef CREATECHARACTERSCREEN_H
 #define CREATECHARACTERSCREEN_H
 //----------------------------------------------------------------------------------
-#include "BaseScreen.h"
-#include "../Gumps/GumpScreenCreateCharacter.h"
-//----------------------------------------------------------------------------------
 class CCreateCharacterScreen : public CBaseScreen
 {
 	//!Выбранный стиль прически/бороды

@@ -7,19 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameItem.h"
-#include "ObjectOnCursor.h"
-#include "../OrionUO.h"
-#include "../TargetGump.h"
-#include "../SelectedObject.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/MapManager.h"
-#include "../Managers/AnimationManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/PacketManager.h"
-#include "../Screen stages/GameScreen.h"
-#include "../Gumps/GumpMinimap.h"
-#include "GamePlayer.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
 : CGameObject(serial), m_Layer(0), m_AnimID(0)

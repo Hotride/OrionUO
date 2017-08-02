@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIScrollBackground.h"
-#include "../OrionUO.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/UOFileReader.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIScrollBackground::CGUIScrollBackground(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &height)
 : CBaseGUI(GOT_SCROLLBACKGROUND, serial, graphic, 0, x, y), m_Height(height)

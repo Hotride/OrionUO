@@ -23,12 +23,11 @@
 *  2005-08-05   v5    - Removed most Lint (http://www.gimpel.com/) errors... thanks to Okko Willeboordse!
 *
 **********************************************************************/
+#include "stdafx.h"
 #include <windows.h>
 #include <tchar.h>
 #include <stdio.h>
 #pragma comment(lib, "version.lib")  // for "VerQueryValue"
-
-#include "StackWalker.h"
 
 
 // If VC7 and later, then use the shipped 'dbghelp.h'-file

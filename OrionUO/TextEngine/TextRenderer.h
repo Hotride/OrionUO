@@ -10,10 +10,6 @@
 #ifndef TEXTRENDERER_H
 #define TEXTRENDERER_H
 //----------------------------------------------------------------------------------
-#include "RenderTextObject.h"
-#include "../ImageBounds.h"
-#include "../RenderWorldObject.h"
-//----------------------------------------------------------------------------------
 //Класс для обработки вывода текста на экран
 class CTextRenderer : public CRenderTextObject
 {

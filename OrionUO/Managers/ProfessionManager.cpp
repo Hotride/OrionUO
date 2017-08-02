@@ -7,16 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "ProfessionManager.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "../Skills.h"
-#include "../Wisp/WispLogger.h"
-#include "../Wisp/WispApplication.h"
-#include "../Wisp/WispTextFileParser.h"
-#include "../Wisp/WispMappedFile.h"
-#include "ClilocManager.h"
-#include "PacketManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CProfessionManager g_ProfessionManager;
 //----------------------------------------------------------------------------------

@@ -12,10 +12,6 @@
 #ifndef BASEGUI_H
 #define BASEGUI_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../RenderObject.h"
-#include "../GLEngine/GLEngine.h"
-//----------------------------------------------------------------------------------
 class CBaseGUI : public CRenderObject
 {
 	//!Тип компоненты

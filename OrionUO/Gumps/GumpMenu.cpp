@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpMenu.h"
-#include "../PressedObject.h"
-#include "../Network/Packets.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpMenu::CGumpMenu(uint serial, uint id, short x, short y)
 : CGump(GT_MENU, serial, x, y)

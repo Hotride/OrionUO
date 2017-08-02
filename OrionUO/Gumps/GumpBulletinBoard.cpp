@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpBulletinBoard.h"
-#include "../Network/Packets.h"
-#include "../PressedObject.h"
-#include "../Managers/GumpManager.h"
-#include "../Game objects/GamePlayer.h"
-#include "GumpBulletinBoardItem.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpBulletinBoard::CGumpBulletinBoard(uint serial, short x, short y, string name)
 : CGump(GT_BULLETIN_BOARD, serial, x, y)

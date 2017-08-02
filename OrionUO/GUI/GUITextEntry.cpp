@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUITextEntry.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/FontsManager.h"
-#include "../SelectedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUITextEntry::CGUITextEntry(const uint &serial, const ushort &color, const ushort &colorSelected, const ushort &colorFocused, const int &x, const int &y, const int &maxWidth, const bool &unicode, const uchar &font, const TEXT_ALIGN_TYPE &align, const ushort &textFlags, const int &maxLength)
 : CBaseGUI(GOT_TEXTENTRY, serial, 0, color, x, y), m_ColorSelected(colorSelected),

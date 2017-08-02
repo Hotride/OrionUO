@@ -10,10 +10,6 @@
 #ifndef PROFESSION_H
 #define PROFESSION_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "BaseQueue.h"
-#include "GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CBaseProfession : public CBaseQueueItem
 {
 	SETGET(string, Name, "");

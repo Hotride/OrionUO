@@ -10,13 +10,6 @@
 #ifndef GLENGINE_H
 #define GLENGINE_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../Wisp/WispLogger.h"
-#include "../Wisp/WispGeometry.h"
-#include "GLTexture.h"
-#include "GLVector.h"
-#include "../Game objects/LandObject.h"
-//----------------------------------------------------------------------------------
 typedef deque<WISP_GEOMETRY::CRect> SCISSOR_LIST;
 //----------------------------------------------------------------------------------
 class CGLEngine;
@@ -24,7 +17,7 @@ class CGLEngine;
 typedef void (CGLEngine::*BIND_TEXTURE_16_FUNCTION)(CGLTexture&, const int&, const int&, pushort);
 typedef void (CGLEngine::*BIND_TEXTURE_32_FUNCTION)(CGLTexture&, const int&, const int&, puint);
 
-typedef void (CGLEngine::*DRAW_LAND_TEXTURE_FUNCTION)(const CGLTexture&, const int&, const int&, CLandObject*);
+typedef void (CGLEngine::*DRAW_LAND_TEXTURE_FUNCTION)(const CGLTexture&, const int&, const int&, class CLandObject*);
 typedef void (CGLEngine::*DRAW_TEXTURE_FUNCTION)(const CGLTexture&, const int&, const int&);
 typedef void (CGLEngine::*DRAW_TEXTURE_ROTATED_FUNCTION)(const CGLTexture&, const int&, const int&, const float&);
 typedef void (CGLEngine::*DRAW_TEXTURE_MIRRORED_FUNCTION)(const CGLTexture&, const int&, const int&, const bool&);

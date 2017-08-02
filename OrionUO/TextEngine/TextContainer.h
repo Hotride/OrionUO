@@ -10,9 +10,6 @@
 #ifndef TEXTCONTAINER_H
 #define TEXTCONTAINER_H
 //----------------------------------------------------------------------------------
-#include "TextData.h"
-#include "TextData.h"
-//----------------------------------------------------------------------------------
 //Контейнер для текста
 class CTextContainer : public CBaseQueue
 {

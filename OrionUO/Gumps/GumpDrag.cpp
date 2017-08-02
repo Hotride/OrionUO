@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpDrag.h"
-#include "../Game objects/GameWorld.h"
-#include "../Managers/ConfigManager.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../TextEngine/GameConsole.h"
-#include "../OrionUO.h"
-#include "../Managers/GumpManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpDrag::CGumpDrag(uint serial, short x, short y)
 : CGump(GT_DRAG, serial, x, y)

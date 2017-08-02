@@ -10,8 +10,6 @@
 #ifndef GumpTargetSystemH
 #define GumpTargetSystemH
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpTargetSystem : public CGump
 {
 	SETGET(string, OldName, "");

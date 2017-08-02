@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpQuestion.h"
-#include "../OrionUO.h"
-#include "../Managers/GumpManager.h"
-#include "../Screen stages/GameScreen.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpQuestion::CGumpQuestion(uint serial, short x, short y, uchar variant)
 : CGump(GT_QUESTION, serial, x, y), m_Variant(variant)

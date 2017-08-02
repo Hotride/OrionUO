@@ -12,9 +12,6 @@
 #ifndef GUISLIDER_H
 #define GUISLIDER_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CGUISlider : public CBaseGUI
 {
 	//!ИД картинки в выбранном состоянии

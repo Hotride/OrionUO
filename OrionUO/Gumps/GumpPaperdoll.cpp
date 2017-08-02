@@ -7,21 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpPaperdoll.h"
-#include "../Game objects/GameWorld.h"
-#include "../OrionUO.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../PressedObject.h"
-#include "../Managers/MouseManager.h"
-#include "../ToolTip.h"
-#include "../Managers/PacketManager.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Target.h"
-#include "../Network/Packets.h"
-#include "../ClickObject.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/AnimationManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 int CGumpPaperdoll::UsedLayers[m_LayerCount] =
 {

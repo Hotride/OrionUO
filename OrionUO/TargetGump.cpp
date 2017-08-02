@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "TargetGump.h"
-#include "OrionUO.h"
-#include "Managers/ConfigManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CTargetGump g_TargetGump;
 CTargetGump g_AttackTargetGump;

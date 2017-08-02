@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "Connection.h"
-#include "../Wisp/WispLogger.h"
-#include "../Managers/ConnectionManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CSocket::CSocket(bool gameSocket)
 : WISP_NETWORK::CConnection(), m_GameSocket(gameSocket)

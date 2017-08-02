@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GamePlayer.h"
-#include "GameItem.h"
-#include "ObjectOnCursor.h"
-#include "../Gumps/GumpCombatBook.h"
-#include "../Managers/GumpManager.h"
-#include "../OrionUO.h"
-#include "../Network/Packets.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CPlayer *g_Player = NULL;
 //----------------------------------------------------------------------------------

@@ -7,68 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "PacketManager.h"
-#include "ConnectionManager.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "../CharacterList.h"
-#include "../ServerList.h"
-#include "../CityList.h"
-#include "../Screen stages/ConnectionScreen.h"
-#include "../Screen stages/MainScreen.h"
-#include "../Screen stages/CharacterListScreen.h"
-#include "../Screen stages/ServerScreen.h"
-#include "../Network/Packets.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Walker/Walker.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../ClickObject.h"
-#include "../Weather.h"
-#include "../Managers/MapManager.h"
-#include "../Target.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/SoundManager.h"
-#include "../Container.h"
-#include "../Party.h"
-#include "../Macro.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/FileManager.h"
-#include "../Gumps/GumpPaperdoll.h"
-#include "../Gumps/GumpContainer.h"
-#include "../Gumps/GumpPopupMenu.h"
-#include "../Managers/EffectManager.h"
-#include "../Managers/PluginManager.h"
-#include "../Managers/ColorManager.h"
-#include "../Game objects/GameEffectMoving.h"
-#include "../Game objects/GameEffectDrag.h"
-#include "../QuestArrow.h"
-#include "../MultiMap.h"
-#include "../TargetGump.h"
-#include "../Walker/PathFinder.h"
-#include "../Gumps/GumpBuff.h"
-#include "../Gumps/GumpSecureTrading.h"
-#include "../Gumps/GumpTextEntryDialog.h"
-#include "../Gumps/GumpGrayMenu.h"
-#include "../Gumps/GumpMenu.h"
-#include "../Gumps/GumpDye.h"
-#include "../Gumps/GumpGeneric.h"
-#include "../Gumps/GumpMap.h"
-#include "../Gumps/GumpTip.h"
-#include "../Gumps/GumpProfile.h"
-#include "../Gumps/GumpBulletinBoard.h"
-#include "../Gumps/GumpBulletinBoardItem.h"
-#include "../Gumps/GumpBook.h"
-#include "../Gumps/GumpShop.h"
-#include "../Gumps/GumpSkills.h"
-#include "../Gumps/GumpSpellbook.h"
-#include "AnimationManager.h"
-#include "../zlib.h"  
-#include "CustomHousesManager.h"
-#include "../Wisp/WispTextFileParser.h"
-#include "../Gumps/GumpMinimap.h"
+#include "stdafx.h"
+#include "../zlib.h"
 
 #pragma comment(lib, "zdll.lib")
 //----------------------------------------------------------------------------------
@@ -1173,19 +1113,19 @@ PACKET_HANDLER(CharacterStatus)
 				char str[64] = { 0 };
 				if (deltaStr)
 				{
-					sprintf(str, "Your strength has changed by %d.  It is now %d.", deltaStr, newStr);
+					sprintf_s(str, "Your strength has changed by %d.  It is now %d.", deltaStr, newStr);
 					g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 
 				if (deltaDex)
 				{
-					sprintf(str, "Your dexterity has changed by %d.  It is now %d.", deltaDex, newDex);
+					sprintf_s(str, "Your dexterity has changed by %d.  It is now %d.", deltaDex, newDex);
 					g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 
 				if (deltaInt)
 				{
-					sprintf(str, "Your intelligence has changed by %d.  It is now %d.", deltaInt, newInt);
+					sprintf_s(str, "Your intelligence has changed by %d.  It is now %d.", deltaInt, newInt);
 					g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 			}
@@ -2211,7 +2151,7 @@ PACKET_HANDLER(UpdateSkills)
 				if (change)
 				{
 					char str[128] = { 0 };
-					sprintf(str, "Your skill in %s has %s by %.1f%%.  It is now %.1f%%.", g_Skills[id].Name.c_str(), ((change < 0) ? "decreased" : "increased"), change, g_Player->GetSkillBaseValue(id) + change);
+					sprintf_s(str, "Your skill in %s has %s by %.1f%%.  It is now %.1f%%.", g_Skills[id].Name.c_str(), ((change < 0) ? "decreased" : "increased"), change, g_Player->GetSkillBaseValue(id) + change);
 					//else if (change > 0) sprintf(str, "Your skill in %s has increased by %.1f%%.  It is now %.1f%%.", UO->m_Skills[id].m_Name.c_str(), change, obj->GetSkillBaseValue(id) + change);
 					g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x58, str);
 				}

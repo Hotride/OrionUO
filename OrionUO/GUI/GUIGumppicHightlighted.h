@@ -12,8 +12,6 @@
 #ifndef GUIGUMPPICHIGHTLIGHTED_H
 #define GUIGUMPPICHIGHTLIGHTED_H
 //----------------------------------------------------------------------------------
-#include "GUIDrawObject.h"
-//----------------------------------------------------------------------------------
 class CGUIGumppicHightlighted : public CGUIDrawObject
 {
 	//!Цвет подсветки

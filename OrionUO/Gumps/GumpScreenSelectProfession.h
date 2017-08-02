@@ -10,8 +10,6 @@
 #ifndef GUMPSCREENSELECTPROFESSION_H
 #define GUMPSCREENSELECTPROFESSION_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpScreenSelectProfession : public CGump
 {
 private:
