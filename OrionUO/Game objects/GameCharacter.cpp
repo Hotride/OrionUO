@@ -24,6 +24,7 @@
 #include "../Gumps/GumpTargetSystem.h"
 #include "../OrionWindow.h"
 #include "../Party.h"
+#include "../Walker/Walker.h"
 //----------------------------------------------------------------------------------
 CGameCharacter::CGameCharacter(const uint &serial)
 : CGameObject(serial), m_Hits(0), m_MaxHits(0), m_LastStepSoundTime(GetTickCount()),
@@ -986,6 +987,26 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 						g_Orion.CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Ouch!");
 						//play sound (5) ?
 					}
+
+					if (g_Walker.m_Step[g_Walker.CurrentWalkSequence].Accepted)
+					{
+						int sequencePtr = g_Walker.CurrentWalkSequence + 1;
+
+						if (sequencePtr < g_Walker.StepsCount)
+						{
+							int count = g_Walker.StepsCount - sequencePtr;
+
+							IFOR(i, 0, count)
+							{
+								g_Walker.m_Step[sequencePtr - 1] = g_Walker.m_Step[sequencePtr];
+								sequencePtr++;
+							}
+						}
+
+						g_Walker.StepsCount--;
+					}
+					else
+						g_Walker.CurrentWalkSequence++;
 				}
 
 				m_X = wd.X;
@@ -1009,7 +1030,6 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 				{
 					g_MapManager->AddRender(this);
 				}
-
 
 				m_LastStepTime = g_Ticks;
 			}

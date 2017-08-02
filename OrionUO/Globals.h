@@ -206,12 +206,6 @@ extern CHARACTER_SPEED_TYPE g_SpeedMode;
 //!Таймер черного экрана от смерти
 extern uint g_DeathScreenTimer;
 
-//!Количество запросов перемещения
-extern uchar g_WalkRequestCount;
-
-//!Время последнего шага
-extern uint g_PendingDelayTime;
-
 //!Модификатор расчета анимации персонажа
 extern float g_AnimCharactersDelayValue;
 

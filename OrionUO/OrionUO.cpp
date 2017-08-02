@@ -1622,7 +1622,7 @@ int COrion::Send(puchar buf, const int &size)
 		time(&rawtime);
 		localtime_s(&timeinfo, &rawtime);
 		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
-		LOG("%s--- ^(%d) s(+%d => %d) Client:: %s\n", buffer, ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
+		LOG("--- ^(%d) s(+%d => %d) %s Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, buffer, type.Name);
 
 		if (*buf == 0x80 || *buf == 0x91)
 		{

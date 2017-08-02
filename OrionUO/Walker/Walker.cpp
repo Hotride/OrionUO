@@ -15,21 +15,6 @@ CWalker g_Walker;
 //----------------------------------------------------------------------------------
 CWalker::CWalker()
 {
-	memset(m_Direction, 0, sizeof(m_Direction));
-}
-//---------------------------------------------------------------------------
-void CWalker::IncSequence()
-{
-	if (m_Sequence == 255)
-		m_Sequence = 1;
-	else
-		m_Sequence++;
-}
-//---------------------------------------------------------------------------
-void CWalker::SetSequence(const uchar &seq, const uchar &dir)
-{
-	m_Sequence = seq;
-	m_Direction[seq] = dir;
 }
 //---------------------------------------------------------------------------
 void CWalker::Reset()
@@ -40,13 +25,11 @@ void CWalker::Reset()
 	m_CurrentWalkSequence = 0;
 	m_WalkingFailed = false;
 	m_ResendPacketSended = false;
+	m_LastStepRequestTime = 0;
 }
 //----------------------------------------------------------------------------------
 void CWalker::DenyWalk(const uchar &sequence, const int &x, const int &y, const char &z)
 {
-	g_WalkRequestCount = 0;
-	g_PendingDelayTime = 0;
-
 	g_Player->m_Steps.clear();
 
 	g_Player->OffsetX = 0;
@@ -90,7 +73,36 @@ void CWalker::ConfirmWalk(const uchar &sequence)
 		stepIndex++;
 	}
 
-	if (stepIndex == m_StepsCount)
+	bool isBadStep = (stepIndex == m_StepsCount);
+
+	if (!isBadStep)
+	{
+		if (m_Step[stepIndex].Direction == m_Step[stepIndex].OldDirection)
+		{
+			const int offsetX[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+			const int offsetY[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+
+			int dir = m_Step[stepIndex].Direction;
+			g_Player->UpdatePlayerCoordinates(offsetX[dir], offsetY[dir], m_Step[stepIndex].Z);
+		}
+
+		if (stepIndex >= m_CurrentWalkSequence)
+			m_Step[stepIndex].Accepted = true;
+		else if (!stepIndex)
+		{
+			IFOR(i, 1, m_StepsCount)
+			{
+				m_Step[i - 1] = m_Step[i];
+			}
+
+			m_StepsCount--;
+			m_CurrentWalkSequence--;
+		}
+		else //if (stepIndex)
+			isBadStep = true;
+	}
+
+	if (isBadStep)
 	{
 		if (!m_ResendPacketSended)
 		{
@@ -101,45 +113,6 @@ void CWalker::ConfirmWalk(const uchar &sequence)
 		m_WalkingFailed = true;
 		m_StepsCount = 0;
 		m_CurrentWalkSequence = 0;
-
-		return;
-	}
-
-	if (m_Step[stepIndex].Direction2 == m_Step[stepIndex].Direction)
-	{
-		const int offsetX[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
-		const int offsetY[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
-
-		int dir = m_Step[stepIndex].Direction2;
-		g_Player->UpdatePlayerCoordinates(offsetX[dir], offsetY[dir], m_Step[stepIndex].Z);
-	}
-
-	if (stepIndex >= m_CurrentWalkSequence)
-		m_Step[stepIndex].Accepted = true;
-	else
-	{
-		if (stepIndex)
-		{
-			if (!m_ResendPacketSended)
-			{
-				CPacketResend().Send();
-				m_ResendPacketSended = true;
-			}
-
-			m_WalkingFailed = true;
-			m_StepsCount = 0;
-			m_CurrentWalkSequence = 0;
-
-			return;
-		}
-
-		IFOR(i, 1, m_StepsCount)
-		{
-			m_Step[i - 1] = m_Step[i];
-		}
-
-		m_StepsCount--;
-		m_CurrentWalkSequence--;
 	}
 }
 //----------------------------------------------------------------------------------

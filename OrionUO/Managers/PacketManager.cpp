@@ -630,7 +630,7 @@ void CPacketManager::OnPacket()
 		time(&rawtime);
 		localtime_s(&timeinfo, &rawtime);
 		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
-		LOG("%s--- ^(%d) r(+%d => %d) Server:: %s\n", buffer, ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
+		LOG("--- ^(%d) r(+%d => %d) %s Server:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, buffer, info.Name);
 		LOG_DUMP(m_Start, m_Size);
 	}
 
@@ -910,12 +910,10 @@ PACKET_HANDLER(EnterWorld)
 	g_Walker.Reset();
 	g_ObjectInHand.Clear();
 	g_World = new CGameWorld(serial);
-	g_PendingDelayTime = 0;
 
 	g_UseItemActions.Clear();
 
 	g_Ping = 0;
-	g_WalkRequestCount = 0;
 	g_ClickObject.Clear();
 	g_Weather.Reset();
 	g_SkillsTotal = 0.0f;
@@ -2693,8 +2691,6 @@ PACKET_HANDLER(DenyWalk)
 	if (g_Player == NULL)
 		return;
 
-	g_WalkRequestCount = 0;
-	g_PendingDelayTime = 0;
 	g_Ping = 0;
 
 	uchar sequence = ReadUInt8();
@@ -2713,9 +2709,6 @@ PACKET_HANDLER(DenyWalk)
 PACKET_HANDLER(ConfirmWalk)
 {
 	WISPFUN_DEBUG("c150_f49");
-	if (g_WalkRequestCount)
-		g_WalkRequestCount--;
-
 	if (g_Player == NULL)
 		return;
 

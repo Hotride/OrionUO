@@ -478,103 +478,8 @@ int CPathFinder::GetWalkSpeed(const bool &run, const bool &onMount)
 //----------------------------------------------------------------------------------
 bool CPathFinder::Walk(bool run, uchar direction)
 {
-	if (!g_Walker.WalkingFailed && g_Walker.StepsCount != MAX_STEPS_COUNT)
-	{
-	}
-
-	/*g_LastStepRequestTime_Maybe = g_LastRenderTimeSeconds;
-
-	direction = ((_BYTE)direction - 1) & 7;
-
-	result = GetNewDirAndZ_AndWalkCheck(&direction, &z, z);
-	if (result)
-	{
-		currentStepIndex_ = g_IsWalkingStepsCount;
-		indexOffset = g_IsWalkingStepsCount;
-		g_WalkStack[indexOffset].Sequence = g_WalkSequence;
-		g_WalkStack[indexOffset].Accepted = 0;
-		runningState_ = runningState;
-		if (runningState == -1)
-		{
-			LOBYTE(notRunSate) = NotRunningByCursorDistanceFromCenterGW();
-			currentStepIndex_ = g_IsWalkingStepsCount;
-			runningState_ = notRunSate == 0;
-		}
-		if (g_AlwaysRun)
-		{
-			indexOffset_ = 5 * currentStepIndex_;
-			g_WalkStack[currentStepIndex_].Running = 1;
-		}
-		else
-		{
-			indexOffset_ = 5 * currentStepIndex_;
-			g_WalkStack[currentStepIndex_].Running = runningState_;
-		}
-		if (currentStepIndex_)
-			g_WalkStack[indexOffset_ / 5].Direction = LOBYTE(dword_CC1F94[indexOffset_]);
-		else
-			g_WalkStack[0].Direction = g_Player->GameObject.GameObject.DirectionOrLightIndex & 7;
-		indexOffset__ = currentStepIndex_;
-		ticks = GetTickCount();
-		direction_ = direction;
-		g_WalkStack[indexOffset__].Timer = ticks;
-		newZ = z;
-		g_WalkStack[indexOffset__].Z = z;
-		player = g_Player;
-		g_WalkStack[indexOffset__].NoRotation = direction_ == g_WalkStack[indexOffset__].Direction
-			&& g_Player->GameObject.GameObject.Z - newZ >= 11;
-		currentStepIndex = g_IsWalkingStepsCount;
-		g_WalkStack[indexOffset__].Direction2 = direction_;
-		g_IsWalkingStepsCount = currentStepIndex + 1;
-		if (LOBYTE(dword_CC1F9C[5 * (currentStepIndex + 1)]))
-		{
-			LOBYTE(direction_) = direction_ | 0x80;
-			direction = direction_;
-		}
-		fastWalkKey = GetFastWalkKey(player);
-		CreatePacketWalkRequest((int)&v20, direction, g_WalkSequence, fastWalkKey);
-		result = (signed int)SendPacket(g_ClientSocket, (int)&v20);
-		restartWalkCountFromOne = (unsigned __int8)(g_WalkSequence + 1) == 0;
-		++g_WalkUnacceptedPacketsCount;
-		g_WalkSequence = (unsigned __int8)(g_WalkSequence + 1);
-		if (restartWalkCountFromOne)
-			g_WalkSequence = 1;
-		if (g_PlayerBankContainerGump)
-		{
-			result = (**(int(__stdcall ***)(_DWORD))g_PlayerBankContainerGump)(1);
-			g_PlayerBankContainerGump = 0;
-		}
-		gump = g_GumpObjectFirstPtr;
-		if (g_GumpObjectFirstPtr)
-		{
-			do
-			{
-				nextGump = gump->NextGump;
-				if (nextGump == (CGump *)0xDDDDDDDD)
-					break;
-				result = (*((int(__thiscall **)(CGump *))gump->VTable + 51))(gump);
-				if (result)
-				{
-					v19 = gump->GameObject;
-					if (v19)
-					{
-						result = sub_483B10(v19);
-						if (!result)
-						{
-							if (gump)
-								result = ((int(__thiscall *)(CGump *, signed int))*gump->VTable)(gump, 1);
-						}
-					}
-				}
-				gump = nextGump;
-			} while (nextGump);
-		}
-	}*/
-
-
-
 	WISPFUN_DEBUG("c177_f7");
-	if (m_BlockMoving || g_PendingDelayTime > g_Ticks || g_WalkRequestCount > 3 || g_Player == NULL || /*!g_Player->Frozen() ||*/ g_DeathScreenTimer || g_GameState != GS_GAME)
+	if (m_BlockMoving || g_Walker.WalkingFailed || g_Walker.LastStepRequestTime > g_Ticks || g_Walker.StepsCount >= MAX_STEPS_COUNT || g_Player == NULL || /*!g_Player->Frozen() ||*/ g_DeathScreenTimer || g_GameState != GS_GAME)
 		return false;
 
 	if (g_SpeedMode >= CST_CANT_RUN)
@@ -585,7 +490,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	int x = g_Player->X;
 	int y = g_Player->Y;
 	char z = g_Player->Z;
-	uchar olddir = g_Player->Direction;
+	uchar oldDirection = g_Player->Direction;
 
 	bool onMount = (g_Player->FindLayer(OL_MOUNT) != NULL);
 
@@ -598,15 +503,16 @@ bool CPathFinder::Walk(bool run, uchar direction)
 		x = walker.X;
 		y = walker.Y;
 		z = walker.Z;
-		olddir = walker.Direction;
+		oldDirection = walker.Direction;
 	}
 
+	char oldZ = z;
 	ushort walkTime = TURN_DELAY;
 
 	if (m_FastRotation)
 		walkTime = TURN_DELAY_FAST;
 
-	if ((olddir & 7) == (direction & 7)) //Повернуты куда надо
+	if ((oldDirection & 7) == (direction & 7)) //Повернуты куда надо
 	{
 		uchar newDir = direction;
 		int newX = x;
@@ -637,11 +543,11 @@ bool CPathFinder::Walk(bool run, uchar direction)
 
 		if (!CanWalk(newDir, newX, newY, newZ))
 		{
-			if ((olddir & 7) == newDir)
+			if ((oldDirection & 7) == newDir)
 				return false;
 		}
 
-		if ((olddir & 7) == newDir)
+		if ((oldDirection & 7) == newDir)
 		{
 			x = newX;
 			y = newY;
@@ -653,18 +559,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 		direction = newDir;
 	}
 
-	CGameItem *bank = g_Player->FindLayer(OL_BANK);
-
-	if (bank != NULL && bank->Opened)
-	{
-		bank->Clear();
-		bank->Opened = false;
-
-		g_GumpManager.CloseGump(bank->Serial, 0, GT_CONTAINER);
-	}
-
-	if (run)
-		direction += 0x80;
+	g_Player->CloseBank();
 
 	if (emptyStack)
 	{
@@ -674,21 +569,36 @@ bool CPathFinder::Walk(bool run, uchar direction)
 		g_Player->LastStepTime = g_Ticks;
 	}
 
+	CStepInfo &step = g_Walker.m_Step[g_Walker.StepsCount];
+	step.Sequence = g_Walker.WalkSequence;
+	step.Accepted = false;
+	step.Running = run;
+	step.OldDirection = oldDirection & 7;
+	step.Direction = direction;
+	step.Timer = g_Ticks;
+	step.Z = z;
+	step.NoRotation = ((step.OldDirection == direction) && ((oldZ - z) >= 11));
+
+	g_Walker.StepsCount++;
+
+	if (run)
+		direction += 0x80;
+
 	g_Player->m_Steps.push_back(CWalkData(x, y, z, direction));
 
+	CPacketWalkRequest(direction, g_Walker.WalkSequence, g_Player->m_FastWalkStack.GetValue()).Send();
+
+	g_PingByWalk[g_Walker.WalkSequence][0] = g_Ticks;
+	g_PingByWalk[g_Walker.WalkSequence][1] = g_Ticks;
+
+	if (g_Walker.WalkSequence == 0xFF)
+		g_Walker.WalkSequence = 1;
+	else
+		g_Walker.WalkSequence++;
+
+	g_Walker.UnacceptedPacketsCount++;
+
 	g_World->MoveToTop(g_Player);
-
-	uchar seq = g_Walker->GetSequence();
-	g_Walker->SetSequence(seq, direction);
-
-	CPacketWalkRequest(direction, seq, g_Player->m_FastWalkStack.GetValue()).Send();
-
-	g_PingByWalk[seq][0] = g_Ticks;
-	g_PingByWalk[seq][1] = g_Ticks;
-
-	g_WalkRequestCount++;
-
-	g_Walker->IncSequence();
 
 	static bool lastRun = false;
 	static bool lastMount = false;
@@ -722,7 +632,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	else
 		lastDir = direction;
 
-	g_PendingDelayTime = g_Ticks + walkTime - nowDelta;
+	g_Walker.LastStepRequestTime = g_Ticks + walkTime - nowDelta;
 	g_Player->GetAnimationGroup();
 
 	return true;
@@ -1040,7 +950,7 @@ bool CPathFinder::WalkTo(int x, int y, int z, int distance)
 void CPathFinder::ProcessAutowalk()
 {
 	WISPFUN_DEBUG("c177_f16");
-	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_WalkRequestCount <= 3 && g_PendingDelayTime <= g_Ticks)
+	if (m_AutoWalking && g_Player != NULL && !g_DeathScreenTimer && g_Walker.StepsCount < MAX_STEPS_COUNT && g_Walker.LastStepRequestTime <= g_Ticks)
 	{
 		if (m_PointIndex >= 0 && m_PointIndex < m_PathSize)
 		{

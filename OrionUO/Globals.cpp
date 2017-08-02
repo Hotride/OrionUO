@@ -114,8 +114,6 @@ uint g_LastAttackObject = 0;
 CHARACTER_SPEED_TYPE g_SpeedMode = CST_NORMAL;
 
 uint g_DeathScreenTimer = 0;
-uchar g_WalkRequestCount = 0;
-uint g_PendingDelayTime = 0;
 
 float g_AnimCharactersDelayValue = 80.0f; //0x50
 
