@@ -864,8 +864,8 @@ void CPlayer::UpdateRemoveRange()
 {
 	if (!m_Steps.empty())
 	{
-		g_RemoveRangeXY.X = g_Player->m_Steps.front().X;
-		g_RemoveRangeXY.Y = g_Player->m_Steps.front().Y;
+		g_RemoveRangeXY.X = g_Player->m_Steps.back().X;
+		g_RemoveRangeXY.Y = g_Player->m_Steps.back().Y;
 	}
 	else
 	{

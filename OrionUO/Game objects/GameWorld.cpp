@@ -872,6 +872,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 	}
 	else
 	{
+		character->Deleted = false;
 		character->LastAnimationChangeTime = g_Ticks;
 		bool found = false;
 
