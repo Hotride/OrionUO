@@ -161,10 +161,10 @@ UCHAR_LIST CSoundManager::CreateWaveFile(CIndexSound &is)
 	auto waveSound = std::vector<BYTE>(dataSize + sizeof(WaveHeader));
 	auto waveHeader = reinterpret_cast<WaveHeader*>(waveSound.data());
 
-	strcpy_s(waveHeader->chunkId, "RIFF");
-	strcpy_s(waveHeader->format, "WAVE");
-	strcpy_s(waveHeader->subChunkId, "fmt ");
-	strcpy_s(waveHeader->dataChunkId, "data");
+	strcpy(waveHeader->chunkId, "RIFF");
+	strcpy(waveHeader->format, "WAVE");
+	strcpy(waveHeader->subChunkId, "fmt ");
+	strcpy(waveHeader->dataChunkId, "data");
 
 	waveHeader->chunkSize = waveSound.size();
 	waveHeader->subChunkSize = 16;
