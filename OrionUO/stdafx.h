@@ -24,6 +24,9 @@
 #pragma comment(lib, "Shlwapi.lib")
 //----------------------------------------------------------------------------------
 #include "GLEngine/glew.h"
+#include "zlib.h"
+
+#pragma comment(lib, "zdll.lib")
 //----------------------------------------------------------------------------------
 #include "targetver.h"
 

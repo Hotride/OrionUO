@@ -8,9 +8,6 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
-#include "../zlib.h"
-
-#pragma comment(lib, "zdll.lib")
 //----------------------------------------------------------------------------------
 CPacketManager g_PacketManager;
 //----------------------------------------------------------------------------------
@@ -1004,47 +1001,49 @@ PACKET_HANDLER(NewHealthbarUpdate)
 	if (obj == NULL)
 		return;
 
-	Move(2);
+	ushort unknown = ReadUInt16BE();
 
-	ushort type = ReadUInt16BE();
-	uchar enable = ReadUInt8(); //enable/disable
-
-	uchar flags = obj->Flags;
-
-	if (type == 1) //Poison, enable as poisonlevel + 1
+	while (unknown)
 	{
-		uchar poisonFlag = 0x04;
+		ushort type = ReadUInt16BE();
+		uchar enable = ReadUInt8(); //enable/disable
 
+		uchar flags = obj->Flags;
 
-		if (enable)
+		if (type == 1) //Poison, enable as poisonlevel + 1
 		{
-			if (m_ClientVersion >= CV_7000)	
-				obj->SA_Poisoned = true;
+			uchar poisonFlag = 0x04;
+
+			if (enable)
+			{
+				if (m_ClientVersion >= CV_7000)
+					obj->SA_Poisoned = true;
+				else
+					flags |= poisonFlag;
+			}
 			else
-				flags |= poisonFlag;
+			{
+				if (m_ClientVersion >= CV_7000)
+					obj->SA_Poisoned = false;
+				else
+					flags &= ~poisonFlag;
+			}
+		}
+		else if (type == 2) //Yellow hits
+		{
+			if (enable)
+				flags |= 0x08;
+			else
+				flags &= ~0x08;
+		}
+		else if (type == 3) //Red?
+		{
 		}
 
-		else
-		{
-			if (m_ClientVersion >= CV_7000)
-				obj->SA_Poisoned = false;
-			else
-				flags &= ~poisonFlag;
-		}
+		obj->Flags = flags;
 
+		unknown += 0xFFFF;
 	}
-	else if (type == 2) //Yellow hits
-	{
-		if (enable)
-			flags |= 0x08;
-		else
-			flags &= ~0x08;
-	}
-	else if (type == 3) //Red?
-	{
-	}
-
-	obj->Flags = flags;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdatePlayer)
@@ -3508,7 +3507,11 @@ PACKET_HANDLER(MegaCliloc)
 	if (g_World == NULL)
 		return;
 
-	ushort wat = ReadUInt16BE();
+	ushort unknown = ReadUInt16BE();
+
+	if (unknown > 1)
+		return;
+
 	uint serial = ReadUInt32BE();
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
@@ -3516,7 +3519,7 @@ PACKET_HANDLER(MegaCliloc)
 	if (obj == NULL)
 		return;
 
-	ushort wat2 = ReadUInt16BE();
+	Move(2);
 	uint testedSerial = ReadUInt32BE();
 	wstring message(L"");
 	bool coloredStartFont = false;
