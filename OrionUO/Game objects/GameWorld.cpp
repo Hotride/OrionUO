@@ -891,7 +891,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 				}
 				else if (character->X == x && character->Y == y && character->Z == z && !((direction ^ character->Direction) & 0x7F))
 				{
-					//if ((character->OnMount != 0) == (direction >> 7))
+					if ((character->Direction & 0x80) == (direction & 0x80))
 					{
 						found = true;
 					}
@@ -926,57 +926,6 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		}
 
 		LOG("0x%08X 0x%04X NPC %d,%d,%d C%04X F%02X D%d N%d\n", obj->Serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags, character->Direction, character->Notoriety);
-
-		/*if (g_Player->IsFollowing)
-		{
-			v33 = g_Player->FollowingSerial_Maybe;
-			if (obj->GameObject.Serial == v33 && !CheckObjectDistance(&obj->GameObject, 3))
-			{
-				v43 = obj->StepsCount;
-				if (v43 <= 0)
-				{
-					multiGraphic = *(_DWORD *)&obj->GameObject.X;
-					v44 = obj->GameObject.Z;
-				}
-				else
-				{
-					multiGraphic = *(int *)((char *)&obj->field_14C + 10 * v43 + 2);
-					v44 = *((_WORD *)&obj->LastFidgetAnimationTimer + 5 * v43 + 1);
-				}
-				v53 = v44;
-				if (g_Pathfinding)
-					sub_4A64F0();
-				v45 = sub_4A6530(
-					g_Player->GameObject.GameObject.X,
-					g_Player->GameObject.GameObject.Y,
-					g_Player->GameObject.GameObject.Z,
-					(signed __int16)multiGraphic,
-					SHIWORD(multiGraphic),
-					v44,
-					100,
-					1);
-				dword_CC9380 = v45;
-				if (!v45)
-				{
-					result = (int)CreateSystemMessageASCII(0, 3, aCanTGetThereFo);
-					g_Pathfinding = 0;
-					return result;
-				}
-				g_Pathfinding = 1;
-				v47 = v45;
-				sub_476700();
-				for (i = *(_DWORD *)(v47 + 36); i; i = *(_DWORD *)(i + 36))
-					v47 = i;
-				dword_CC9380 = v47;
-				dword_CC9374 = *(_DWORD *)(v47 + 16);
-				dword_CC9370 = *(_DWORD *)(v47 + 20);
-				v33 = (int)g_Player;
-				dword_CC936C = *(_DWORD *)(v47 + 24);
-				v49 = g_Player->GameObject.GameObject.DirectionOrLightIndex;
-				dword_CC937C = v47;
-				dword_CC9368 = v49;
-			}
-		}*/
 	}
 
 	//g_Player->UpdateRemoveRange();
@@ -1514,7 +1463,7 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 	{
 		g_Player->CloseBank();
 
-		//g_WalkingFailed = false;
+		g_Walker.WalkingFailed = false;
 
 		g_Player->X = x;
 		g_Player->Y = y;
@@ -1540,7 +1489,7 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 		{
 			if (g_Player->Dead())
 			{
-				//g_Target.Reset();
+				g_Target.Reset();
 
 				if (g_ConfigManager.Music)
 					g_Orion.PlayMusic(42, true);
@@ -1570,9 +1519,10 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 			SendMegaClilocRequests();
 		}*/
 
-		//g_WalkResendPacketSended = false;
+		g_Walker.ResendPacketSended = false;
 
-		//g_GumpManager.RemoveRangedGumps();
+		g_Player->UpdateRemoveRange();
+		g_GumpManager.RemoveRangedGumps();
 
 		g_World->MoveToTop(g_Player);
 	}
