@@ -183,23 +183,18 @@ void CPlayer::UpdateAbilities()
 {
 	WISPFUN_DEBUG("c21_f12");
 	ushort equippedGraphic = 0;
-	uint ignoreSerial = 0;
-
-	if (g_ObjectInHand.Enabled)
-		ignoreSerial = g_ObjectInHand.Serial;
 
 	CGameItem *layerObject = g_Player->FindLayer(OL_1_HAND);
 
 	if (layerObject != NULL)
 	{
-		if (layerObject->Serial != ignoreSerial)
-			equippedGraphic = layerObject->Graphic;
+		equippedGraphic = layerObject->Graphic;
 	}
 	else
 	{
 		layerObject = g_Player->FindLayer(OL_2_HAND);
 
-		if (layerObject != NULL && layerObject->Serial != ignoreSerial)
+		if (layerObject != NULL)
 			equippedGraphic = layerObject->Graphic;
 	}
 

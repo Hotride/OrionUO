@@ -474,10 +474,6 @@ void CGumpPaperdoll::UpdateContent()
 	}
 
 	int gumpOffset = (obj->Female ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET);
-	uint ignoreSerial = 0;
-
-	if (g_ObjectInHand.Enabled)
-		ignoreSerial = g_ObjectInHand.Serial;
 
 	//Draw equipment & backpack
 	CGameItem *equipment = NULL;
@@ -499,7 +495,7 @@ void CGumpPaperdoll::UpdateContent()
 		{
 			equipment = obj->FindLayer(UsedLayers[i]);
 
-			if (equipment != NULL && equipment->Serial != ignoreSerial)
+			if (equipment != NULL)
 			{
 				if (useSlots)
 				{

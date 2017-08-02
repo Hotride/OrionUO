@@ -1273,11 +1273,6 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 			}
 		}
 
-		uint ignoreSerial = 0;
-
-		if (g_ObjectInHand.Enabled)
-			ignoreSerial = g_ObjectInHand.Serial;
-
 		m_HitsStack.clear();
 
 		IFOR(i, 0, m_RenderListCount)
@@ -1287,9 +1282,6 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 			if (obj != NULL)
 			{
-				if (obj->IsGameObject() && obj->Serial == ignoreSerial)
-					continue;
-
 				g_OutOfRangeColor = rod.GrayColor;
 
 				g_UseCircleTrans = (g_ConfigManager.UseCircleTrans && obj->TranparentTest(playerZPlus5));

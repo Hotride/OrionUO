@@ -216,18 +216,13 @@ void CGumpContainer::UpdateContent()
 
 	m_DataBox->Clear();
 
-	uint ignoreSerial = 0;
-
-	if (g_ObjectInHand.Enabled)
-		ignoreSerial = g_ObjectInHand.Serial;
-
 	m_IsGameBoard = (m_ID == 0x091A || m_ID == 0x092E);
 
 	QFOR(obj, container->m_Items, CGameItem*)
 	{
 		int count = obj->Count;
 
-		if ((obj->Layer == OL_NONE || (container->IsCorpse() && LAYER_UNSAFE[obj->Layer])) && count > 0 && obj->Serial != ignoreSerial)
+		if ((obj->Layer == OL_NONE || (container->IsCorpse() && LAYER_UNSAFE[obj->Layer])) && count > 0)
 		{
 			bool doubleDraw = false;
 			ushort graphic = obj->GetDrawGraphic(doubleDraw);

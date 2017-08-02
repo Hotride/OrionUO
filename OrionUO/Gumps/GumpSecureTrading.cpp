@@ -163,11 +163,6 @@ void CGumpSecureTrading::UpdateContent()
 		m_OpponentDataBox->Clear();
 	}
 
-	uint ignoreSerial = 0;
-
-	if (g_ObjectInHand.Enabled)
-		ignoreSerial = g_ObjectInHand.Serial;
-
 	//Отрисовка нашего товара (при наличии товара)
 	CGameObject *container = g_World->FindWorldObject(m_ID);
 
@@ -175,9 +170,6 @@ void CGumpSecureTrading::UpdateContent()
 	{
 		QFOR(item, container->m_Items, CGameItem*)
 		{
-			if (item->Serial == ignoreSerial)
-				continue;
-
 			bool doubleDraw = false;
 			ushort graphic = item->GetDrawGraphic(doubleDraw);
 
