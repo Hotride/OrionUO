@@ -75,15 +75,6 @@ void CWalker::ConfirmWalk(const uchar &sequence)
 
 	if (!isBadStep)
 	{
-		if (m_Step[stepIndex].Direction == m_Step[stepIndex].OldDirection)
-		{
-			const int offsetX[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
-			const int offsetY[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
-
-			int dir = m_Step[stepIndex].Direction;
-			g_Player->UpdatePlayerCoordinates(offsetX[dir], offsetY[dir], m_Step[stepIndex].Z);
-		}
-
 		if (stepIndex >= m_CurrentWalkSequence)
 			m_Step[stepIndex].Accepted = true;
 		else if (!stepIndex)

@@ -994,9 +994,10 @@ ANIMATION_GROUPS CAnimationManager::GetGroupIndex(const ushort &id)
 @param [__in] second Группа смерти номер 2
 @return Индекс группы анимации
 */
-uchar CAnimationManager::GetDieGroupIndex(ushort id, const bool &second)
+uchar CAnimationManager::GetDieGroupIndex(const ushort &id, const bool &second)
 {
 	WISPFUN_DEBUG("c133_f6");
+	//LOG("gr: 0x%04X, %i\n", id, m_DataIndex[id].Type);
 	switch (m_DataIndex[id].Type)
 	{
 		case AGT_ANIMAL:
@@ -2099,6 +2100,10 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 void CAnimationManager::DrawCorpse(CGameItem *obj, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c133_f18");
+
+	if (g_CorpseManager.InList(obj->Serial, 0))
+		return;
+
 	m_Sitting = 0;
 	m_Direction = obj->Layer & 0x7F;
 	bool mirror = false;
@@ -2129,6 +2134,10 @@ void CAnimationManager::DrawCorpse(CGameItem *obj, const int &x, const int &y)
 bool CAnimationManager::CorpsePixelsInXY(CGameItem *obj, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c133_f19");
+
+	if (g_CorpseManager.InList(obj->Serial, 0))
+		return false;
+
 	m_Sitting = 0;
 	m_Direction = obj->Layer & 0x7F;
 	bool mirror = false;

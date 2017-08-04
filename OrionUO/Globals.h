@@ -211,10 +211,6 @@ extern float g_AnimCharactersDelayValue;
 
 typedef vector<pair<uint, uint>> UINTS_PAIR_LIST;
 
-extern UINTS_PAIR_LIST g_CorpseSerialList;
-
-extern UINTS_PAIR_LIST g_DeletedCharactersStack;
-
 //!Координаты, с которых следует начинать расчет удаления объектов
 extern WISP_GEOMETRY::CPoint2Di g_RemoveRangeXY;
 

@@ -38,26 +38,31 @@ CGameCharacter::~CGameCharacter()
 
 	m_HitsTexture.Clear();
 
+	uint serial = m_Serial & 0x3FFFFFFF;
+
 	if (g_ConfigManager.RemoveStatusbarsWithoutObjects)
-		g_GumpManager.CloseGump(m_Serial, 0, GT_STATUSBAR);
+		g_GumpManager.CloseGump(serial, 0, GT_STATUSBAR);
 	else
 	{
 		//!Если стянут статусбар - обновим его
-		g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR);
+		g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 	}
 	
 	//!Если стянут статусбар таргет системы - обновим его
-	g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM);
+	g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM);
 
 	if (!IsPlayer())
-		g_GumpManager.CloseGump(m_Serial, 0, GT_PAPERDOLL);
+		g_GumpManager.CloseGump(serial, 0, GT_PAPERDOLL);
 	//Чистим если находился в пати.
-	if (g_Party.Contains(m_Serial))
+	if (g_Party.Contains(serial))
 	{
 		IFOR(i, 0, 10)
 		{
 			CPartyObject &member = g_Party.Member[i];
-			if (member.Serial != m_Serial) continue;
+
+			if (member.Serial != serial)
+				continue;
+
 			member.Serial = 0;
 			member.Character = NULL;
 		}

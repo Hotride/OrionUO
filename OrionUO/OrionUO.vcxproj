@@ -219,7 +219,6 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AutoResetEvent.h" />
     <ClInclude Include="BaseQueue.h" />
     <ClInclude Include="bassmidi.h" />
     <ClInclude Include="CharacterList.h" />
@@ -364,6 +363,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Managers\ColorManager.h" />
     <ClInclude Include="Managers\ConfigManager.h" />
     <ClInclude Include="Managers\ConnectionManager.h" />
+    <ClInclude Include="Managers\CorpseManager.h" />
     <ClInclude Include="Managers\CreateCharacterManager.h" />
     <ClInclude Include="Managers\EffectManager.h" />
     <ClInclude Include="Managers\FileManager.h" />
@@ -432,6 +432,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="TextEngine\TextRenderer.h" />
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="ToolTip.h" />
+    <ClInclude Include="Utility\AutoResetEvent.h" />
     <ClInclude Include="VMQuery.h" />
     <ClInclude Include="Walker\FastWalk.h" />
     <ClInclude Include="Walker\PathFinder.h" />
@@ -458,7 +459,6 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Wisp\WispWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AutoResetEvent.cpp" />
     <ClCompile Include="BaseQueue.cpp" />
     <ClCompile Include="CharacterList.cpp" />
     <ClCompile Include="CityList.cpp" />
@@ -599,6 +599,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="Managers\ColorManager.cpp" />
     <ClCompile Include="Managers\ConfigManager.cpp" />
     <ClCompile Include="Managers\ConnectionManager.cpp" />
+    <ClCompile Include="Managers\CorpseManager.cpp" />
     <ClCompile Include="Managers\CreateCharacterManager.cpp" />
     <ClCompile Include="Managers\EffectManager.cpp" />
     <ClCompile Include="Managers\FileManager.cpp" />
@@ -665,6 +666,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="TextEngine\TextRenderer.cpp" />
     <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="ToolTip.cpp" />
+    <ClCompile Include="Utility\AutoResetEvent.cpp" />
     <ClCompile Include="VMQuery.cpp" />
     <ClCompile Include="Walker\FastWalk.cpp" />
     <ClCompile Include="Walker\PathFinder.cpp" />

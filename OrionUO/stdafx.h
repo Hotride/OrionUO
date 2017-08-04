@@ -103,7 +103,7 @@ class CGump;
 #include "WeatherEffect.h"
 #include "Weather.h"
 
-#include "AutoResetEvent.h"
+#include "Utility/AutoResetEvent.h"
 
 #include "Network/UOHuffman.h"
 #include "Network/Packets.h"
@@ -219,6 +219,7 @@ class CGump;
 #include "Managers/SoundManager.h"
 #include "Managers/SpeechManager.h"
 #include "Managers/UOFileReader.h"
+#include "Managers/CorpseManager.h"
 
 #include "Screen stages/BaseScreen.h"
 #include "Screen stages/CharacterListScreen.h"

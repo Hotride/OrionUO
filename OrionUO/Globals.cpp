@@ -114,9 +114,6 @@ uint g_DeathScreenTimer = 0;
 
 float g_AnimCharactersDelayValue = 80.0f; //0x50
 
-UINTS_PAIR_LIST g_CorpseSerialList;
-UINTS_PAIR_LIST g_DeletedCharactersStack;
-
 WISP_GEOMETRY::CPoint2Di g_RemoveRangeXY;
 
 int g_GrayMenuCount = 0;

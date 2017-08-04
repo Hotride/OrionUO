@@ -42,8 +42,6 @@ class CGameCharacter: public CGameObject
 	SETGET(string, PaperdollText, "");
 	SETGET(uchar, HitsPercent, 0);
 
-	SETGET(bool, Deleted, false);
-
 protected:
 	/*!
 	Проверка, шаг ли это или телепорт (определяет телепорт на 1 тайл по направлению движения как шаг)

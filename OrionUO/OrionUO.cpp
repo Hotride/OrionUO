@@ -1035,21 +1035,6 @@ void COrion::Process(const bool &rendering)
 
 		if (g_GameState == GS_GAME)
 		{
-			for (UINTS_PAIR_LIST::iterator i = g_DeletedCharactersStack.begin(); i != g_DeletedCharactersStack.end();)
-			{
-				if (i->second < g_Ticks)
-				{
-					CGameCharacter *obj = g_World->FindWorldCharacter(i->first);
-
-					if (obj != NULL && obj->Deleted)
-						g_World->RemoveObject(obj);
-
-					i = g_DeletedCharactersStack.erase(i);
-				}
-				else
-					i++;
-			}
-
 			g_MouseManager.ProcessWalking();
 
 			g_MacroManager.Execute();
@@ -1099,14 +1084,6 @@ void COrion::Process(const bool &rendering)
 				g_GameScreen.RenderListInitalized = false;
 
 				g_MapManager->Init(true);
-
-				for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end();)
-				{
-					if (i->second < g_Ticks)
-						i = g_CorpseSerialList.erase(i);
-					else
-						i++;
-				}
 			}
 		}
 	}
@@ -1516,8 +1493,6 @@ void COrion::Disconnect()
 	g_Party.Clear();
 	
 	g_GameConsole.ClearStack();
-
-	g_DeletedCharactersStack.clear();
 
 	g_ResizedGump = NULL;
 }
@@ -5418,6 +5393,8 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 		CPacketPickupRequest(obj->Serial, count).Send();
 
 		g_World->RemoveObject(obj);
+
+		g_GameScreen.RenderListInitalized = false;
 
 		if (character != NULL)
 		{

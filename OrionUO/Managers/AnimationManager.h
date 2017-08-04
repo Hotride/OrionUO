@@ -253,7 +253,7 @@ public:
 	@param [__in] second Группа смерти номер 2
 	@return Индекс группы анимации
 	*/
-	uchar GetDieGroupIndex(ushort id, const bool &second);
+	uchar GetDieGroupIndex(const ushort &id, const bool &second);
 
 	/*!
 	Получить индекс группы по индексу картинки

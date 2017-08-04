@@ -88,10 +88,11 @@ void CGameWorld::ProcessAnimation()
 	WISPFUN_DEBUG("c22_f4");
 	int delay = (g_ConfigManager.StandartCharactersAnimationDelay ? ORIGINAL_CHARACTERS_ANIMATION_DELAY : ORION_CHARACTERS_ANIMATION_DELAY);
 	g_AnimCharactersDelayValue = (float)delay;
+	deque<CGameObject*> toRemove;
 
 	QFOR(obj, m_Items, CGameObject*)
 	{
-		if (obj->NPC && !((CGameCharacter*)obj)->Deleted)
+		if (obj->NPC)
 		{
 			CGameCharacter *gc = obj->GameCharacterPtr();
 			uchar dir = 0;
@@ -210,7 +211,12 @@ void CGameWorld::ProcessAnimation()
 						else
 						{
 							if (frameIndex >= fc)
+							{
 								frameIndex = 0;
+
+								if (obj->Serial & 0x80000000)
+									toRemove.push_back(obj);
+							}
 						}
 						
 						gc->AnimIndex = frameIndex;
@@ -229,7 +235,7 @@ void CGameWorld::ProcessAnimation()
 			{
 				char frameIndex = obj->AnimIndex + 1;
 				
-				WORD id = obj->GetMountAnimation();
+				ushort id = obj->GetMountAnimation();
 
 				bool mirror = false;
 
@@ -253,9 +259,6 @@ void CGameWorld::ProcessAnimation()
 
 						if (frameIndex >= fc)
 						{
-							if (gi->FieldColor)
-								gi->FieldColor = 2;
-
 							frameIndex = fc - 1;
 						}
 						
@@ -268,6 +271,18 @@ void CGameWorld::ProcessAnimation()
 		}
 
 		obj->UpdateEffects();
+	}
+
+	if (!toRemove.empty())
+	{
+		for (CGameObject *obj : toRemove)
+		{
+			g_CorpseManager.Remove(0, obj->Serial);
+
+			RemoveObject(obj);
+		}
+
+		g_GameScreen.RenderListInitalized = false;
 	}
 }
 //---------------------------------------------------------------------------
@@ -437,6 +452,20 @@ CGameCharacter *CGameWorld::FindWorldCharacter(const uint &serial)
 		result = i->second->GameCharacterPtr();
 
 	return result;
+}
+//---------------------------------------------------------------------------
+void CGameWorld::ReplaceObject(CGameObject *obj, const uint &newSerial)
+{
+	WISPFUN_DEBUG("c22_f12_1");
+
+	m_Map[obj->Serial] = NULL;
+	m_Map.erase(obj->Serial);
+
+	QFOR(item, obj->m_Items, CGameObject*)
+		item->Container = newSerial;
+
+	m_Map[newSerial] = obj;
+	obj->Serial = newSerial;
 }
 //---------------------------------------------------------------------------
 /*!
@@ -826,7 +855,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 	if (obj == NULL)
 		return;
 
-	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, count, x, y, z);
+	//LOG("0x%08lX:0x%04X*%d 0x%04X %d:%d:%d\n", serial, graphic, count, color, x, y, z);
 
 	obj->MapIndex = g_CurrentMap;
 
@@ -868,11 +897,10 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		//if (g_PacketManager.ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
 		//	g_PacketManager.AddMegaClilocRequest(obj->Serial, false);
 
-		LOG("0x%08X 0x%04X %d,%d,%d C%04X F%02X\n", obj->Serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
+		LOG("0x%08X 0x%04X*%i %d,%d,%d 0x%04X 0x%02X\n", obj->Serial, obj->Graphic, item->Count, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
 	}
 	else
 	{
-		character->Deleted = false;
 		character->LastAnimationChangeTime = g_Ticks;
 		bool found = false;
 
@@ -945,64 +973,6 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 //----------------------------------------------------------------------------------
 /*void __cdecl UpdateGameObject(int serial, signed int graphic, int graphicIncrement, int count, int x, int y, char z, unsigned __int8 direction, unsigned __int16 color, unsigned __int8 flags, int a11, char updateType, __int16 a13)
 {
-	int v13; // ebx@1
-	int v14; // eax@2
-	CGameCharacter *obj; // esi@16
-	__int16 v16; // bp@16
-	CGameCharacter *characterMem; // eax@25
-	__int16 v18; // di@28
-	int v19; // eax@29
-	int v20; // edx@33
-	CGameCorpse *corpseMem; // eax@35
-	CGameObject *v22; // eax@36
-	int v23; // ebp@38
-	CGameMap *v24; // eax@39
-	CGameContainer *v25; // eax@45
-	int v26; // edx@48
-	int v27; // eax@48
-	int v28; // ecx@48
-	int v29; // edx@54
-	int v30; // eax@56
-	int v31; // ecx@57
-	int v32; // edi@57
-	int v33; // edx@63
-	unsigned int v34; // eax@67
-	int v35; // eax@70
-	int v36; // ecx@70
-	int v37; // edx@70
-	int v38; // edx@81
-	int v39; // eax@84
-	__int16 v40; // cx@87
-	__int16 v41; // ax@87
-	int v42; // edi@87
-	int v43; // eax@92
-	int v44; // ebx@93
-	__int16 v45; // bp@95
-	int v46; // edx@95
-	int v47; // eax@95
-	int v48; // ecx@95
-	__int16 v49; // ax@102
-	__int16 v50; // ax@103
-	int v51; // eax@115
-	int v52; // eax@121
-	char v53; // dl@121
-	char v54; // zf@126
-	char *v55; // ecx@127
-	int v56; // eax@140
-	int v57; // eax@141
-	__int16 v58; // di@141
-	int v59; // eax@145
-	int v60; // edi@147
-	int i; // eax@147
-	CGameCharacter *v62; // [sp-8h] [bp-3Ch]@62
-	signed int v63; // [sp-4h] [bp-38h]@28
-	int v64; // [sp+14h] [bp-20h]@1
-	int v65; // [sp+1Ch] [bp-18h]@1
-	int v66; // [sp+20h] [bp-14h]@1
-	int v67; // [sp+24h] [bp-10h]@1
-	int v68; // [sp+30h] [bp-4h]@25
-	char updateTypea; // [sp+64h] [bp+30h]@121
-
 	v13 = a13;
 	v66 = 0;
 	LOWORD(v67) = 0;

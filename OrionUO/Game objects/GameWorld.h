@@ -94,6 +94,8 @@ public:
 	*/
 	CGameCharacter *FindWorldCharacter(const uint &serial);
 
+	void ReplaceObject(CGameObject *obj, const uint &newSerial);
+
 	/*!
 	Удалить объект из памяти
 	@param [__in] obj Ссылка на объект

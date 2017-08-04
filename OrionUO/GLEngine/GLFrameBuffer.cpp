@@ -39,7 +39,7 @@ bool CGLFrameBuffer::Init(int width, int height)
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glGenTextures(1, &Texture.Texture);
 		glBindTexture(GL_TEXTURE_2D, Texture.Texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, width, height, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8, NULL);
 
 		GLint currentFrameBuffer = 0;
 		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFrameBuffer);

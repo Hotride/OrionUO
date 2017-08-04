@@ -844,6 +844,7 @@ PACKET_HANDLER(EnterWorld)
 
 	RELEASE_POINTER(g_World);
 
+	g_CorpseManager.Clear();
 	g_Walker.Reset();
 	g_ObjectInHand.Clear();
 	g_World = new CGameWorld(serial);
@@ -1001,9 +1002,9 @@ PACKET_HANDLER(NewHealthbarUpdate)
 	if (obj == NULL)
 		return;
 
-	ushort unknown = ReadUInt16BE();
+	ushort count = ReadUInt16BE();
 
-	while (unknown)
+	IFOR(i, 0, count)
 	{
 		ushort type = ReadUInt16BE();
 		uchar enable = ReadUInt8(); //enable/disable
@@ -1041,8 +1042,6 @@ PACKET_HANDLER(NewHealthbarUpdate)
 		}
 
 		obj->Flags = flags;
-
-		unknown += 0xFFFF;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -1636,7 +1635,7 @@ PACKET_HANDLER(DeleteObject)
 	if (obj != NULL)
 	{
 		bool updateAbilities = false;
-		uint cont = obj->Container;
+		uint cont = obj->Container & 0x7FFFFFFF;
 
 		if (cont != 0xFFFFFFFF)
 		{
@@ -1648,6 +1647,9 @@ PACKET_HANDLER(DeleteObject)
 				{
 					CGameItem *item = (CGameItem*)obj;
 					updateAbilities = (item->Layer == OL_1_HAND || item->Layer == OL_2_HAND);
+
+					if (item->Layer == OL_NONE)
+						g_ObjectInHand.Enabled = false;
 				}
 
 				CGameObject *tradeBox = top->FindSecureTradeBox();
@@ -1695,60 +1697,26 @@ PACKET_HANDLER(DeleteObject)
 			}
 		}
 
-		if (obj->NPC)
+		if (!g_CorpseManager.InList(0, serial))
 		{
-			if (!g_Party.Contains(obj->Serial))
+			if (obj->NPC)
 			{
-				bool inList = false;
-
-				for (UINTS_PAIR_LIST::iterator i = g_DeletedCharactersStack.begin(); i != g_DeletedCharactersStack.end(); i++)
+				if (g_Party.Contains(obj->Serial))
 				{
-					if (i->first == serial)
-					{
-						inList = true;
-						i->second = g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY;
+					g_GumpManager.UpdateContent(obj->Serial, 0, GT_STATUSBAR);
 
-						break;
-					}
+					obj->RemoveRender();
 				}
-
-				if (!inList)
-				{
-					((CGameCharacter*)obj)->Deleted = true;
-					g_DeletedCharactersStack.push_back(pair<uint, uint>(serial, g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY));
-				}
+				else
+					g_World->RemoveObject(obj);
 			}
 			else
-				g_GumpManager.UpdateContent(obj->Serial, 0, GT_STATUSBAR);
-
-			obj->RemoveRender();
-		}
-		else
-		{
-			if (obj->IsCorpse() && obj->LastAnimationChangeTime == GetTickCount())
 			{
-				CGameItem *fake = new CGameItem(1);
+				g_World->RemoveObject(obj);
 
-				fake->Graphic = 0x2006;
-				fake->Color = obj->Color;
-				fake->Count = obj->Count;
-				fake->X = obj->X;
-				fake->Y = obj->Y;
-				fake->Z = obj->Z;
-				fake->Layer = ((CGameItem*)obj)->Layer;
-				fake->RenderQueueIndex = 6;
-				fake->UsedLayer = ((CGameItem*)obj)->UsedLayer;
-				fake->AnimIndex = 0;
-				fake->FieldColor = 1;
-
-				g_World->m_Items->AddObject(fake);
-				g_MapManager->AddRender(fake);
+				if (updateAbilities)
+					g_Player->UpdateAbilities();
 			}
-
-			g_World->RemoveObject(obj);
-
-			if (updateAbilities)
-				g_Player->UpdateAbilities();
 		}
 	}
 }
@@ -3389,48 +3357,40 @@ PACKET_HANDLER(DisplayDeath)
 
 	uint serial = ReadUInt32BE();
 	uint corpseSerial = ReadUInt32BE();
+	uint running = ReadUInt32BE();
 
 	CGameCharacter *owner = g_World->FindWorldCharacter(serial);
 
-	if (!corpseSerial)
+	if (owner == NULL)
+		return;
+
+	serial |= 0x80000000;
+
+	g_World->ReplaceObject(owner, serial);
+
+	if (corpseSerial)
+		g_CorpseManager.Add(CCorpse(corpseSerial, serial, owner->Direction, running != 0));
+
+	uchar group = g_AnimationManager.GetDieGroupIndex(owner->Graphic, running != 0);
+
+	owner->SetAnimation(group, 0, 5, 1, false, false);
+
+	/*ushort graphic = owner->Graphic;
+
+	if (graphic >= 150)
 	{
-		if (serial < 0x40000000 && owner != NULL)
+		if (graphic >= 200)
 		{
-			CGameItem *obj = new CGameItem(1);
-
-			obj->Graphic = 0x2006;
-			obj->Color = owner->Color;
-			obj->Count = owner->Graphic;
-			obj->X = owner->X;
-			obj->Y = owner->Y;
-			obj->Z = owner->Z;
-			obj->Layer = owner->Direction;
-			obj->RenderQueueIndex = 6;
-			obj->UsedLayer = (ReadUInt32BE() ? 1 : 0);
-			obj->AnimIndex = 0;
-			obj->FieldColor = 1;
-
-			g_World->m_Items->AddObject(obj);
-			g_MapManager->AddRender(obj);
-		}
-	}
-	else
-	{
-		CGameItem *obj = g_World->FindWorldItem(corpseSerial);
-
-		if (obj != NULL)
-		{
-			obj->AnimIndex = 0;
-
-			if (owner != NULL)
-			{
-				owner->Deleted = true;
-				g_DeletedCharactersStack.push_back(pair<uint, uint>(serial, g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY));
-			}
+			if (graphic >= 400)
+				owner->SetAnimation(22 - (running != 0), 0, 5, 1, false, false);
+			else
+				owner->SetAnimation((running != 0 ? 8 : 12), 0, 5, 1, false, false);
 		}
 		else
-			g_CorpseSerialList.push_back(pair<uint, uint>(corpseSerial, g_Ticks + 1000));
+			owner->SetAnimation(8, 0, 5, 1, false, false);
 	}
+	else
+		owner->SetAnimation(3 - (running != 0), 0, 5, 1, false, false);*/
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenChat)

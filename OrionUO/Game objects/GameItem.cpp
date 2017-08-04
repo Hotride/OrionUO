@@ -77,16 +77,6 @@ void CGameItem::OnGraphicChange(int direction)
 		{
 			m_AnimIndex = 99;
 
-			for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); i++)
-			{
-				if (i->first == m_Serial)
-				{
-					g_CorpseSerialList.erase(i);
-					m_AnimIndex = 0;
-					break;
-				}
-			}
-
 			if (direction & 0x80)
 			{
 				m_UsedLayer = 1;
