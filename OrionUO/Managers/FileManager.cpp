@@ -8,10 +8,6 @@
 */
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
-#include <fstream>
-#include <sys/stat.h>
-#include "../zlib.h"
-
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
 CFileManager::CFileManager()

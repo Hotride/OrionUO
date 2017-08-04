@@ -39,7 +39,7 @@ void CGumpSecureTrading::CalculateGumpState()
 void CGumpSecureTrading::InitToolTip()
 {
 	WISPFUN_DEBUG("c120_f2");
-	if (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z)
+	if (g_ConfigManager.UseToolTips || g_TooltipsEnabled)
 	{
 		uint id = g_SelectedObject.Serial;
 
@@ -247,7 +247,7 @@ void CGumpSecureTrading::GUMP_BUTTON_EVENT_C
 	}
 	else
 	{
-		if (!g_ClickObject.Enabled && (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled || g_NoMegaCliloc))
+		if (!g_ClickObject.Enabled && !g_TooltipsEnabled)
 		{
 			CGameObject *clickTarget = g_World->FindWorldObject(serial);
 

@@ -69,7 +69,7 @@ void CGameScreen::InitToolTip()
 {
 	WISPFUN_DEBUG("c164_f5");
 
-	if (!(g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z))
+	if (!(g_ConfigManager.UseToolTips || g_TooltipsEnabled))
 		return;
 
 	g_FontManager.SetUseHTML(true);
@@ -2060,7 +2060,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 			{
 				if (rwo->IsGameObject())
 				{
-					if (!g_ClickObject.Enabled) // && g_PacketManager.ClientVersion < CV_308Z)
+					if (!g_ClickObject.Enabled) // && !g_TooltipsEnabled) // && g_PacketManager.ClientVersion < CV_308Z)
 					{
 						g_ClickObject.Init(rwo);
 						g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;

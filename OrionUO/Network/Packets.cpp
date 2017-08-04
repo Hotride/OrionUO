@@ -1127,10 +1127,14 @@ CPacketMegaClilocRequestOld::CPacketMegaClilocRequestOld(const uint &serial)
 	WriteUInt32BE(serial);
 }
 //---------------------------------------------------------------------------
-CPacketMegaClilocRequest::CPacketMegaClilocRequest(const UINT_LIST &list)
+CPacketMegaClilocRequest::CPacketMegaClilocRequest(UINT_LIST &list)
 : CPacket(1)
 {
 	int len = (int)list.size();
+
+	if (len > 50)
+		len = 50;
+
 	int size = 3 + (len * 4);
 	Resize(size, true);
 
@@ -1139,6 +1143,11 @@ CPacketMegaClilocRequest::CPacketMegaClilocRequest(const UINT_LIST &list)
 
 	IFOR(i, 0, len)
 		WriteUInt32BE(list[i]);
+
+	if ((int)list.size() > 50)
+		list.erase(list.begin(), list.begin() + 50);
+	else
+		list.clear();
 }
 //---------------------------------------------------------------------------
 CPacketChangeStatLockStateRequest::CPacketChangeStatLockStateRequest(uchar stat, uchar state)

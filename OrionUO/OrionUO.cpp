@@ -959,7 +959,7 @@ void COrion::ProcessDelayedClicks()
 			{
 				CGameObject *go = (CGameObject*)g_ClickObject.Object;
 
-				if (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled || (!go->NPC && go->Locked()))
+				if (!g_TooltipsEnabled || (!go->NPC && go->Locked()))
 					NameReq(serial);
 
 				//if (serial < 0x40000000)
@@ -5379,6 +5379,9 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 		g_ObjectInHand.TiledataPtr = obj->GetStaticData();
 		g_ObjectInHand.Count = count;
 		g_ObjectInHand.IsGameFigure = isGameFigure;
+		g_ObjectInHand.X = obj->X;
+		g_ObjectInHand.Y = obj->Y;
+		g_ObjectInHand.Z = obj->Z;
 
 		if (obj->Container != 0xFFFFFFFF)
 		{
@@ -5386,8 +5389,8 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 
 			character = g_World->FindWorldCharacter(obj->Container);
 
-			//if (g_PacketManager.ClientVersion >= CV_308Z)
-			//	g_PacketManager.AddMegaClilocRequest(obj->Container, true);
+			if (g_TooltipsEnabled)
+				g_PacketManager.AddMegaClilocRequest(obj->Container);
 		}
 
 		CPacketPickupRequest(obj->Serial, count).Send();

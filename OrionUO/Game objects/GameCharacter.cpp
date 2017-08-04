@@ -862,6 +862,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 	}
 	return result;
 }
+//----------------------------------------------------------------------------------
 void CGameCharacter::ProcessGargoyleAnims(int &animGroup)
 {
 	if (animGroup == 64 || animGroup == 65)
@@ -918,7 +919,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 		if (dir & 0x80)
 		{
-			dir &= ~0x80;
+			dir &= 0x7F;
 			run = 1;
 		}
 

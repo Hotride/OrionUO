@@ -112,7 +112,7 @@ void CGumpContainer::InitToolTip()
 			g_ToolTip.Set(L"Minimize the container gump");
 		else if (id == ID_GC_LOCK_MOVING && g_ConfigManager.UseToolTips)
 			g_ToolTip.Set(L"Lock moving/closing the container gump");
-		else if (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z)
+		else if (g_ConfigManager.UseToolTips || g_TooltipsEnabled)
 		{
 			CGameObject *obj = g_World->FindWorldObject(id);
 
@@ -385,7 +385,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 	}
 	else if (!g_ObjectInHand.Enabled)
 	{
-		if (!g_ClickObject.Enabled && (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled || g_NoMegaCliloc))
+		if (!g_ClickObject.Enabled && !g_TooltipsEnabled)
 		{
 			CGameObject *clickTarget = g_World->FindWorldObject(selectedSerial);
 

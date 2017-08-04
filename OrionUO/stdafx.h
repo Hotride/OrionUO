@@ -20,8 +20,20 @@
 #include <Shlwapi.h>
 #include <windows.h>
 #include <windowsx.h>
+#include <Mmsystem.h>
+#include <time.h>
+#include <process.h>
+#include <stdarg.h>
+#include <locale>
+#include <sstream>
+#include <fstream>
+#include <sys/stat.h>
 
+#pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "Shlwapi.lib")
+#pragma comment(lib, "glew32.lib")
+#pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "Glu32.lib")
 //----------------------------------------------------------------------------------
 #include "GLEngine/glew.h"
 #include "zlib.h"

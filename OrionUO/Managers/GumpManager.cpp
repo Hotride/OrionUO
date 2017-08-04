@@ -562,13 +562,8 @@ void CGumpManager::InitToolTip()
 
 	if (gump != NULL)
 	{
-		if (!g_ConfigManager.UseToolTips)
-		{
-			if (g_PacketManager.ClientVersion < CV_308Z)
-				return;
-			else if (gump->GumpType != GT_CONTAINER && gump->GumpType != GT_PAPERDOLL && gump->GumpType != GT_TRADE)
-				return;
-		}
+		if (!g_ConfigManager.UseToolTips && (!g_TooltipsEnabled || (gump->GumpType != GT_CONTAINER && gump->GumpType != GT_PAPERDOLL && gump->GumpType != GT_TRADE)))
+			return;
 
 		gump->InitToolTip();
 	}

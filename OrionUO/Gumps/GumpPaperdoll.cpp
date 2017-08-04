@@ -269,8 +269,8 @@ void CGumpPaperdoll::InitToolTip()
 						{
 							if (obj->ClilocMessage.length())
 								g_ToolTip.Set(obj->ClilocMessage);
-							else if (g_PacketManager.ClientVersion >= CV_308Z)
-								g_PacketManager.AddMegaClilocRequest(obj->Serial, true);
+							else if (g_TooltipsEnabled)
+								g_PacketManager.AddMegaClilocRequest(obj->Serial);
 						}
 					}
 				}
@@ -903,7 +903,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 			}
 			else //Click on object
 			{
-				if (!g_ClickObject.Enabled && (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled || g_NoMegaCliloc))
+				if (!g_ClickObject.Enabled && !g_TooltipsEnabled)
 				{
 					g_ClickObject.Init(equipment);
 					g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;

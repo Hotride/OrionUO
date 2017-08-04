@@ -894,10 +894,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 		item->OnGraphicChange(direction);
 
-		//if (g_PacketManager.ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-		//	g_PacketManager.AddMegaClilocRequest(obj->Serial, false);
-
-		LOG("0x%08X 0x%04X*%i %d,%d,%d 0x%04X 0x%02X\n", obj->Serial, obj->Graphic, item->Count, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
+		LOG("serial:0x%08X graphic:0x%04X color:0x%04X count:%i xyz:%d,%d,%d flags:0x%02X\n", obj->Serial, obj->Graphic, obj->Color, item->Count, obj->X, obj->Y, obj->Z, obj->Flags);
 	}
 	else
 	{
@@ -953,7 +950,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 			character->OffsetZ = 0;
 		}
 
-		LOG("0x%08X 0x%04X NPC %d,%d,%d C%04X F%02X D%d N%d\n", obj->Serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags, character->Direction, character->Notoriety);
+		LOG("NPC serial:0x%08X graphic:0x%04X color:0x%04X xyz:%d,%d,%d flags:0x%02X direction:%d notoriety:%d\n", obj->Serial, obj->Graphic, obj->Color, obj->X, obj->Y, obj->Z, obj->Flags, character->Direction, character->Notoriety);
 	}
 
 	//g_Player->UpdateRemoveRange();
@@ -968,7 +965,12 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 	}
 
 	if (obj != NULL)
+	{
+		if (g_TooltipsEnabled && !obj->ClilocMessage.length())
+			g_PacketManager.AddMegaClilocRequest(obj->Serial);
+
 		g_World->MoveToTop(obj);
+	}
 }
 //----------------------------------------------------------------------------------
 /*void __cdecl UpdateGameObject(int serial, signed int graphic, int graphicIncrement, int count, int x, int y, char z, unsigned __int8 direction, unsigned __int16 color, unsigned __int8 flags, int a11, char updateType, __int16 a13)
@@ -1485,8 +1487,6 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 				CGameItem *backpack = (CGameItem*)g_Player->m_Items;
 				m_MegaClilocRequests.push_back(backpack->Serial);
 			}
-
-			SendMegaClilocRequests();
 		}*/
 
 		g_Walker.ResendPacketSended = false;
@@ -1506,8 +1506,8 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 
 	uint containerSerial = container->Serial;
 
-	if (g_PacketManager.ClientVersion >= CV_308Z)
-		g_PacketManager.AddMegaClilocRequest(obj->Serial, false);
+	if (g_TooltipsEnabled)
+		g_PacketManager.AddMegaClilocRequest(obj->Serial);
 
 	if (obj->Graphic == 0x0EB0) //Message board item
 	{
@@ -1525,8 +1525,8 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 		if (gump != NULL && gump->GumpType == GT_CONTAINER)
 			((CGumpContainer*)gump)->UpdateItemCoordinates(obj);
 
-		if (g_PacketManager.ClientVersion >= CV_308Z)
-			g_PacketManager.AddMegaClilocRequest(containerSerial, false);
+		if (g_TooltipsEnabled)
+			g_PacketManager.AddMegaClilocRequest(containerSerial);
 	}
 
 	if (gump != NULL && !container->NPC)

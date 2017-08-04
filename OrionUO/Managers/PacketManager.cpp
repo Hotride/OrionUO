@@ -505,39 +505,33 @@ int CPacketManager::GetPacketSize(const UCHAR_LIST &packet, int &offsetToSize)
 	return 0;
 }
 //---------------------------------------------------------------------------
-void CPacketManager::SendMegaClilocRequests(UINT_LIST &list)
-{
-	WISPFUN_DEBUG("c150_f4");
-	if (list.size())
-	{
-		if (m_ClientVersion >= CV_500A)
-			CPacketMegaClilocRequest(list).Send();
-		else
-		{
-			IFOR(i, 0, (int)list.size())
-				CPacketMegaClilocRequestOld(list[i]).Send();
-		}
-		list.clear();
-	}
-}
-//---------------------------------------------------------------------------
 void CPacketManager::SendMegaClilocRequests()
 {
 	WISPFUN_DEBUG("c150_f5");
-	if (m_ClientVersion >= CV_308Z)
-		SendMegaClilocRequests(m_MegaClilocRequests);
+	if (g_TooltipsEnabled && m_MegaClilocRequests.size())
+	{
+		if (m_ClientVersion >= CV_500A)
+		{
+			while (m_MegaClilocRequests.size())
+				CPacketMegaClilocRequest(m_MegaClilocRequests).Send();
+		}
+		else
+		{
+			IFOR(i, 0, (int)m_MegaClilocRequests.size())
+				CPacketMegaClilocRequestOld(m_MegaClilocRequests[i]).Send();
+
+			m_MegaClilocRequests.clear();
+		}
+	}
 }
 //----------------------------------------------------------------------------------
-void CPacketManager::AddMegaClilocRequest(const uint &serial, const bool &existsTest)
+void CPacketManager::AddMegaClilocRequest(const uint &serial)
 {
 	WISPFUN_DEBUG("c150_f6");
-	if (existsTest)
+	for (const uint item : m_MegaClilocRequests)
 	{
-		for (const uint item : m_MegaClilocRequests)
-		{
-			if (item == serial)
-				return;
-		}
+		if (item == serial)
+			return;
 	}
 
 	m_MegaClilocRequests.push_back(serial);
@@ -758,7 +752,7 @@ PACKET_HANDLER(CharacterList)
 	g_CharacterList.OnePerson = (bool)(g_ClientFlag & CLF_ONE_CHARACTER_SLOT);
 	//g_SendLogoutNotification = (bool)(g_ClientFlag & LFF_RE);
 	g_NPCPopupEnabled = (bool)(g_ClientFlag & CLF_CONTEXT_MENU);
-	g_TooltipsEnabled = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
+	g_TooltipsEnabled = (bool)((g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS) && (g_PacketManager.ClientVersion >= CV_308Z));
 	g_PaperdollBooks = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
 
 	g_CharacterListScreen.UpdateContent();
@@ -882,8 +876,8 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
 
-	//if (m_ClientVersion >= CV_308Z && !g_Player->ClilocMessage.length())
-	//	m_MegaClilocRequests.push_back(g_Player->Serial);
+	if (g_TooltipsEnabled && !g_Player->ClilocMessage.length())
+		AddMegaClilocRequest(g_Player->Serial);
 
 	LOG("Player 0x%08lX entered the world.\n", serial);
 
@@ -1386,27 +1380,20 @@ PACKET_HANDLER(UpdateObject)
 
 		LOG("\t0x%08X:%04X [%d] %04X\n", item->Serial, item->Graphic, layer, item->Color);
 
-		//if (m_ClientVersion >= CV_308Z && !obj2->ClilocMessage.length())
-		//	megaClilocRequestList.push_back(obj2->Serial);
+		if (g_TooltipsEnabled && !item->ClilocMessage.length())
+			AddMegaClilocRequest(item->Serial);
 
 		g_World->MoveToTop(item);
 
 		itemSerial = ReadUInt32BE();
 	}
 
+	if (g_TooltipsEnabled && !obj->ClilocMessage.length())
+		AddMegaClilocRequest(obj->Serial);
+
 	if (obj->IsPlayer())
-		g_Player->UpdateAbilities();
-
-
-
-
-	/*
-	//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-	//	m_MegaClilocRequests.push_back(obj->Serial);
-
-	if (serial == g_PlayerSerial)
 	{
-		if (oldDead != g_Player->Dead())
+		/*if (oldDead != g_Player->Dead())
 		{
 			if (g_Player->Dead())
 				g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
@@ -1414,15 +1401,11 @@ PACKET_HANDLER(UpdateObject)
 				g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
 		}
 
-		g_Player->CloseBank();
-		g_GumpManager.RemoveRangedGumps();
+		g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
+		*/
+
+		g_Player->UpdateAbilities();
 	}
-
-	g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
-	*/
-
-	//SendMegaClilocRequests(megaClilocRequestList);
-
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(EquipItem)
@@ -1457,8 +1440,8 @@ PACKET_HANDLER(EquipItem)
 	if (g_NewTargetSystem.Serial == serial)
 		g_NewTargetSystem.Serial = 0;
 
-	//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-	//	m_MegaClilocRequests.push_back(obj->Serial);
+	if (g_TooltipsEnabled && !obj->ClilocMessage.length())
+		AddMegaClilocRequest(obj->Serial);
 
 	if (layer >= OL_BUY_RESTOCK && layer <= OL_SELL)
 		obj->Clear();
@@ -1559,42 +1542,51 @@ PACKET_HANDLER(DenyMoveItem)
 
 	if (g_ObjectInHand.Enabled)
 	{
-		CGameItem *obj = g_World->GetWorldItem(g_ObjectInHand.Serial);
-
-		if (obj != NULL)
+		if (g_ObjectInHand.Layer && g_ObjectInHand.Container)
 		{
-			obj->Graphic = g_ObjectInHand.Graphic;
-			obj->Color = g_ObjectInHand.Color;
-			obj->Count = g_ObjectInHand.Count;
-			obj->Flags = g_ObjectInHand.Flags;
-			obj->X = g_ObjectInHand.X;
-			obj->Y = g_ObjectInHand.Y;
-			obj->Z = g_ObjectInHand.Z;
+			g_World->UpdateContainedItem(g_ObjectInHand.Serial, g_ObjectInHand.Graphic, 0, g_ObjectInHand.Count, g_ObjectInHand.X, g_ObjectInHand.Y, g_ObjectInHand.Container, g_ObjectInHand.Color);
 
-			CGameObject *container = g_World->FindWorldObject(g_ObjectInHand.Container);
+			g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_CONTAINER);
+		}
+		else
+		{
+			CGameItem *obj = g_World->GetWorldItem(g_ObjectInHand.Serial);
 
-			if (container != NULL)
+			if (obj != NULL)
 			{
-				if (container->NPC)
-				{
-					g_World->PutEquipment(obj, container, g_ObjectInHand.Layer);
+				obj->Graphic = g_ObjectInHand.Graphic;
+				obj->Color = g_ObjectInHand.Color;
+				obj->Count = g_ObjectInHand.Count;
+				obj->Flags = g_ObjectInHand.Flags;
+				obj->X = g_ObjectInHand.X;
+				obj->Y = g_ObjectInHand.Y;
+				obj->Z = g_ObjectInHand.Z;
 
-					g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
+				CGameObject *container = g_World->FindWorldObject(g_ObjectInHand.Container);
+
+				if (container != NULL)
+				{
+					if (container->NPC)
+					{
+						g_World->PutEquipment(obj, container, g_ObjectInHand.Layer);
+
+						g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
+					}
+					else
+					{
+						g_World->RemoveObject(obj);
+						obj = NULL;
+					}
 				}
 				else
-				{
-					g_World->PutContainer(obj, container);
+					g_World->RemoveFromContainer(obj);
 
-					g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
-				}
+				if (g_TooltipsEnabled)
+					AddMegaClilocRequest(obj->Serial);
+
+				if (obj != NULL)
+					g_World->MoveToTop(obj);
 			}
-			else
-				g_World->RemoveFromContainer(obj);
-
-			//if (m_ClientVersion >= CV_308Z)
-			//	m_MegaClilocRequests.push_back(obj->Serial);
-
-			g_World->MoveToTop(obj);
 		}
 
 		g_GumpManager.CloseGump(g_ObjectInHand.Serial, 0, GT_DRAG);
@@ -1748,28 +1740,19 @@ PACKET_HANDLER(UpdateCharacter)
 	if (obj->IsPlayer())
 	{
 		obj->Flags = flags;
+
+		if (g_TooltipsEnabled)
+		{
+			CGameObject *backpack = g_Player->FindLayer(OL_BACKPACK);
+
+			if (backpack != NULL)
+				AddMegaClilocRequest(backpack->Serial);
+		}
 	}
 	else
 	{
 		g_World->UpdateGameObject(serial, graphic, 0, 0, x, y, z, direction, color, flags, 0, UGOT_ITEM, 1);
 	}
-
-	/*
-	if (m_ClientVersion >= CV_308Z)
-	{
-		m_MegaClilocRequests.push_back(obj->Serial);
-
-		if (serial == g_PlayerSerial)
-		{
-			if (g_Player->m_Items != NULL)
-			{
-				CGameItem *backpack = (CGameItem*)g_Player->m_Items;
-				m_MegaClilocRequests.push_back(backpack->Serial);
-			}
-		}
-
-		SendMegaClilocRequests();
-	}*/
 
 	g_World->MoveToTop(obj);
 }
@@ -1948,7 +1931,6 @@ PACKET_HANDLER(EnableLockedFeatures)
 		g_LockedClientFeatures = ReadUInt16BE();
 
 	g_ChatEnabled = (bool)(g_LockedClientFeatures & LFF_T2A);
-	g_NoMegaCliloc = g_LockedClientFeatures & LFF_T2A || g_LockedClientFeatures & LFF_RE || g_LockedClientFeatures & LFF_TD || g_LockedClientFeatures & LFF_LBR;
 
 	g_AnimationManager.UpdateAnimationAddressTable();
 }
@@ -5185,13 +5167,13 @@ PACKET_HANDLER(Logout)
 PACKET_HANDLER(OPLInfo)
 {
 	WISPFUN_DEBUG("c150_f99");
-	if (m_ClientVersion >= CV_308Z && !g_NoMegaCliloc)
+	if (g_TooltipsEnabled)
 	{
 		uint serial = ReadUInt32BE();
 		uint revision = ReadUInt32BE();
 		//Если хранить ревизию на обьекте, то сравнивая её и то что здесь пришло
 		// и получая одинаковый результат, - нет смысла запрашивать у сервера эти данные заного.
-		AddMegaClilocRequest(serial, true);
+		AddMegaClilocRequest(serial);
 	}
 }
 //----------------------------------------------------------------------------------

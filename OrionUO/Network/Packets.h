@@ -435,7 +435,7 @@ public:
 class CPacketMegaClilocRequest : public CPacket
 {
 public:
-	CPacketMegaClilocRequest(const UINT_LIST &list);
+	CPacketMegaClilocRequest(UINT_LIST &list);
 };
 //----------------------------------------------------------------------------------
 class CPacketChangeStatLockStateRequest : public CPacket

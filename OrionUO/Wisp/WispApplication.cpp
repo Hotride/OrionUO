@@ -1,8 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
 #include "stdafx.h"
-#include <Mmsystem.h>
-
-#pragma comment(lib, "Winmm.lib")
 
 namespace WISP_APPLICATION
 {
