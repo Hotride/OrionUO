@@ -350,7 +350,7 @@ bool CPathFinder::CalculateNewZ(const int &x, const int &y, char &z, const int &
 	return (resultZ != -128);
 }
 //----------------------------------------------------------------------------------
-void CPathFinder::GetNewXY(uchar &direction, int &x, int &y)
+void CPathFinder::GetNewXY(const uchar &direction, int &x, int &y)
 {
 	WISPFUN_DEBUG("c177_f4");
 	switch (direction & 7)

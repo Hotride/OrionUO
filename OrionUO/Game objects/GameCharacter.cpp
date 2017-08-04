@@ -357,100 +357,6 @@ void CGameCharacter::OnGraphicChange(int direction)
 }
 //----------------------------------------------------------------------------------
 /*!
-Проверка, шаг ли это или телепорт (определяет телепорт на 1 тайл по направлению движения как шаг)
-@param [__inout] cx Текущая координата X
-@param [__inout] cy Текущая координата Y
-@param [__in] x Новая координата X
-@param [__in] y Новая координата Y
-@param [__in] dir Направление персонажа
-@return Результат выполнения шаг/телепорт
-*/
-bool CGameCharacter::IsCorrectStep(short &cx, short &cy, short &x, short &y, const uchar &dir)
-{
-	WISPFUN_DEBUG("c15_f8");
-	switch (dir & 7)
-	{
-		case 0:
-		{
-			cy--;
-			break;
-		}
-		case 1:
-		{
-			cx++;
-			cy--;
-			break;
-		}
-		case 2:
-		{
-			cx++;
-			break;
-		}
-		case 3:
-		{
-			cx++;
-			cy++;
-			break;
-		}
-		case 4:
-		{
-			cy++;
-			break;
-		}
-		case 5:
-		{
-			cx--;
-			cy++;
-			break;
-		}
-		case 6:
-		{
-			cx--;
-			break;
-		}
-		case 7:
-		{
-			cx--;
-			cy--;
-			break;
-		}
-	}
-
-	return (cx == x && cy == y);
-}
-//----------------------------------------------------------------------------------
-/*!
-Проверка изменения координат, телепорт ли это
-@param [__in] x Новая координата X
-@param [__in] y Новая координата Y
-@param [__in] dir Новое направление персонажа
-@return true - телепорт, false - шаг
-*/
-bool CGameCharacter::IsTeleportAction(short &x, short &y, const uchar &dir)
-{
-	WISPFUN_DEBUG("c15_f9");
-	bool result = false;
-	
-	short cx = m_X;
-	short cy = m_Y;
-	uchar cdir = m_Direction;
-
-	if (!m_Steps.empty())
-	{
-		CWalkData &wd = m_Steps.back();
-		
-		cx = wd.X;
-		cy = wd.Y;
-		cdir = wd.Direction;
-	}
-
-	if ((cdir & 7) == (dir & 7))
-		result = !IsCorrectStep(cx, cy, x, y, dir);
-
-	return result;
-}
-//----------------------------------------------------------------------------------
-/*!
 Установка анимации от сервера
 @param [__in] id Группа анимаци
 @param [__in_opt] interval Задержка между кадрами
@@ -906,7 +812,7 @@ ushort CGameCharacter::GetMountAnimation()
 void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 {
 	WISPFUN_DEBUG("c15_f18");
-	dir = m_Direction & (~0x80);
+	dir = m_Direction & 7;
 
 	if (!m_Steps.empty())
 	{
@@ -919,7 +825,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 		if (dir & 0x80)
 		{
-			dir &= 0x7F;
+			dir &= 7;
 			run = 1;
 		}
 
@@ -936,23 +842,44 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 			if (m_X != wd.X || m_Y != wd.Y)
 			{
-				float steps = maxDelay / g_AnimCharactersDelayValue;
-				
-				float x = delay / g_AnimCharactersDelayValue;
-				float y = x;
-				m_OffsetZ = (char)(((wd.Z - m_Z) * x) * (4.0f / steps));
+				bool badStep = false;
 
-				wd.GetOffset(x, y, steps);
+				if (!m_OffsetX && !m_OffsetY)
+				{
+					int absX = abs(m_X - wd.X);
+					int absY = abs(m_Y - wd.Y);
 
-				m_OffsetX = (char)x;
-				m_OffsetY = (char)y;
+					badStep = (absX > 1 || absY > 1 || !(absX + absY));
+
+					if (!badStep)
+					{
+						absX = m_X;
+						absY = m_Y;
+
+						g_PathFinder.GetNewXY(wd.Direction & 7, absX, absY);
+
+						badStep = (absX != wd.X || absY != wd.Y);
+					}
+				}
+
+				if (badStep)
+					removeStep = true;
+				else
+				{
+					float steps = maxDelay / g_AnimCharactersDelayValue;
+
+					float x = delay / g_AnimCharactersDelayValue;
+					float y = x;
+					m_OffsetZ = (char)(((wd.Z - m_Z) * x) * (4.0f / steps));
+
+					wd.GetOffset(x, y, steps);
+
+					m_OffsetX = (char)x;
+					m_OffsetY = (char)y;
+				}
 			}
 			else
 			{
-				m_OffsetX = 0;
-				m_OffsetY = 0;
-				m_OffsetZ = 0;
-
 				directionChange = true;
 
 				removeStep = true; //direction change

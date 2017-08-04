@@ -44,17 +44,6 @@ class CGameCharacter: public CGameObject
 
 protected:
 	/*!
-	Проверка, шаг ли это или телепорт (определяет телепорт на 1 тайл по направлению движения как шаг)
-	@param [__inout] cx Текущая координата X
-	@param [__inout] cy Текущая координата Y
-	@param [__in] x Новая координата X
-	@param [__in] y Новая координата Y
-	@param [__in] dir Направление персонажа
-	@return Результат выполнения шаг/телепорт
-	*/
-	bool IsCorrectStep(short &cx, short &cy, short &x, short &y, const uchar &dir);
-
-	/*!
 	Скорректировать отношение индексов групп анимаций
 	@param [__in] graphic Индекс картинки
 	@param [__in] group Группа анимаций
@@ -175,15 +164,6 @@ public:
 	@return 
 	*/
 	void UpdateAnimationInfo(uchar &dir, const bool &canChange = false);
-
-	/*!
-	Проверка изменения координат, телепорт ли это
-	@param [__in] x Новая координата X
-	@param [__in] y Новая координата Y
-	@param [__in] dir Новое направление персонажа
-	@return true - телепорт, false - шаг
-	*/
-	bool IsTeleportAction(short &x, short &y, const uchar &dir);
 
 	/*!
 	Проверка на человекоподобного персонажа

@@ -45,9 +45,6 @@ protected:
 	//Вычисление минимальной и максимальной Z координат
 	int CalculateMinMaxZ(int &minZ, int &maxZ, int newX, int newY, const int &currentZ, int newDirection, const int &stepState);
 
-	//Вычисление новых XY координат
-	void GetNewXY(uchar &direction, int &x, int &y);
-
 	//Создание списка предметов, участвующих в поиске в указанных координатах
 	bool CreateItemsList(vector<CPathObject> &list, const int &x, const int &y, const int &stepState);
 
@@ -91,6 +88,9 @@ protected:
 public:
 	CPathFinder();
 	virtual ~CPathFinder();
+
+	//Вычисление новых XY координат
+	void GetNewXY(const uchar &direction, int &x, int &y);
 
 	//Проверка на возможность сделать шаг в указанные координаты
 	bool CanWalk(uchar &direction, int &x, int &y, char &z);

@@ -792,6 +792,8 @@ CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &s
 //----------------------------------------------------------------------------------
 void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, const int &count, const int &x, const int &y, const char &z, const uchar &direction, const ushort &color, const uchar &flags, const int &a11, const UPDATE_GAME_OBJECT_TYPE &updateType, const ushort &a13)
 {
+	LOG("UpdateGameObject 0x%08lX:0x%04X 0x%04X (%i) %d:%d:%d %i\n", serial, graphic, color, count, x, y, z, direction);
+
 	CGameCharacter *character = NULL;
 	CGameItem *item = NULL;
 	CGameObject *obj = g_World->FindWorldObject(serial);
@@ -855,8 +857,6 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 	if (obj == NULL)
 		return;
 
-	//LOG("0x%08lX:0x%04X*%d 0x%04X %d:%d:%d\n", serial, graphic, count, color, x, y, z);
-
 	obj->MapIndex = g_CurrentMap;
 
 	if (!obj->NPC)
@@ -898,16 +898,15 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 	}
 	else
 	{
-		character->LastAnimationChangeTime = g_Ticks;
 		bool found = false;
 
-		if (character->m_Steps.size() != 4)
+		if (character->m_Steps.size() != MAX_STEPS_COUNT)
 		{
-			if (character->Graphic == graphic && character->Flags == flags)
+			//if (character->Graphic == graphic && character->Flags == flags)
 			{
 				if (!character->m_Steps.empty())
 				{
-					CWalkData &wd = character->m_Steps.front();
+					CWalkData &wd = character->m_Steps.back();
 
 					if (wd.X == x && wd.Y == y && wd.Z == z && wd.Direction == direction)
 					{
@@ -951,17 +950,6 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		}
 
 		LOG("NPC serial:0x%08X graphic:0x%04X color:0x%04X xyz:%d,%d,%d flags:0x%02X direction:%d notoriety:%d\n", obj->Serial, obj->Graphic, obj->Color, obj->X, obj->Y, obj->Z, obj->Flags, character->Direction, character->Notoriety);
-	}
-
-	//g_Player->UpdateRemoveRange();
-
-	//if (GetRemoveDistance(g_RemoveRangeXY, obj) < g_ConfigManager.UpdateRange)
-	{
-		/*result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable + UO_ROFUN_28))(obj);
-
-		if (!result)
-			result = (*(int(__thiscall **)(CGameCharacter *))((int(__thiscall **)(_DWORD))obj->GameObject.VTable
-			+ UO_ROFUN_DESTRUCTOR_))(obj);*/
 	}
 
 	if (obj != NULL)
@@ -1478,17 +1466,6 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 				g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
 		}
 
-		/*if (m_ClientVersion >= CV_308Z)
-		{
-			m_MegaClilocRequests.push_back(g_PlayerSerial);
-
-			if (g_Player->m_Items != NULL && !g_Player->m_Items->Empty())
-			{
-				CGameItem *backpack = (CGameItem*)g_Player->m_Items;
-				m_MegaClilocRequests.push_back(backpack->Serial);
-			}
-		}*/
-
 		g_Walker.ResendPacketSended = false;
 
 		g_Player->UpdateRemoveRange();
@@ -1506,7 +1483,7 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 
 	uint containerSerial = container->Serial;
 
-	if (g_TooltipsEnabled)
+	if (g_TooltipsEnabled && !obj->ClilocMessage.length())
 		g_PacketManager.AddMegaClilocRequest(obj->Serial);
 
 	if (obj->Graphic == 0x0EB0) //Message board item

@@ -1740,14 +1740,6 @@ PACKET_HANDLER(UpdateCharacter)
 	if (obj->IsPlayer())
 	{
 		obj->Flags = flags;
-
-		if (g_TooltipsEnabled)
-		{
-			CGameObject *backpack = g_Player->FindLayer(OL_BACKPACK);
-
-			if (backpack != NULL)
-				AddMegaClilocRequest(backpack->Serial);
-		}
 	}
 	else
 	{
