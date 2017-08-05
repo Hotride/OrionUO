@@ -4699,7 +4699,7 @@ PACKET_HANDLER(OpenGump)
 
 	CGumpGeneric *gump = new CGumpGeneric(serial, x, y, id);
 
-	int commandsLength = ReadInt16BE();
+	ushort commandsLength = ReadUInt16BE();
 	string commands = ReadString(commandsLength);
 
 	WISP_FILE::CTextFileParser parser("", "", "", "{}");
