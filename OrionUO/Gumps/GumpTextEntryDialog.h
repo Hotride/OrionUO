@@ -23,8 +23,8 @@ private:
 	static const int ID_GTED_BUTTON_CANCEL = 2;
 	static const int ID_GTED_TEXT_FIELD = 3;
 
-	string m_Text{ "" };
-	string m_Description{ "" };
+	string m_Text = string("");
+	string m_Description = string("");
 	int m_MaxLength{ 0 };
 
 	CGUIGumppic *m_TextField{ NULL };

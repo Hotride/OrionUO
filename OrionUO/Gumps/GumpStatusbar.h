@@ -66,7 +66,7 @@ protected:
 	CGUIGumppic *m_HitsBody{ NULL };
 	CGUITextEntry *m_Entry{ NULL };
 
-	string m_Name{ "" };
+	string m_Name = string("");
 
 public:
 	CGumpStatusbar(uint serial, short x, short y, bool minimized);

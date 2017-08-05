@@ -29,10 +29,10 @@ class CEntryText
 
 private:
 	//!Unicode строка
-	wstring m_Text{ L"" };
+	wstring m_Text = wstring{ L"" };
 
 	//!ASCII строка
-	string m_CText{ "" };
+	string m_CText = string{ "" };
 
 	//!Позиция каретки в строке
 	int m_Position{ 0 };

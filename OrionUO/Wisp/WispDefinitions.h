@@ -88,7 +88,7 @@ if (ptr != NULL) \
 //!Set/Get ordinary class property
 #define SETGET(type, name, defaultValue) \
 	protected: \
-	type m_##name{ defaultValue }; \
+	type m_##name = defaultValue ; \
 	public: \
 	inline void __fastcall Set##name(type val) { m_##name = val; } \
 	inline type Get##name() const { return m_##name; } \
@@ -97,7 +97,7 @@ if (ptr != NULL) \
 //!Set/Get ordinary class property with event
 #define SETGETE(type, name, defaultValue, event) \
 	protected: \
-	type m_##name{ defaultValue }; \
+	type m_##name = defaultValue; \
 	public: \
 	void event(const type &val); \
 	inline void __fastcall Set##name(const type &val) { event(val); m_##name = val; } \
