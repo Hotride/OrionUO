@@ -107,7 +107,7 @@ bool CFileManager::Load()
 	else if (!m_TiledataMul.Load(g_App.FilePath("tiledata.mul")))
 		return false;
 	m_SpeechMul.Load(g_App.FilePath("speech.mul"));
-	//m_LangcodeIff.Load(g_App.FilePath("Langcode.iff"));
+	m_LangcodeIff.Load(g_App.FilePath("Langcode.iff"));
 
 	IFOR(i, 0, 6)
 	{

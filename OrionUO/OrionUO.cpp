@@ -204,7 +204,7 @@ bool COrion::Install()
 		m_CRC_Table[i] = Reflect(m_CRC_Table[i], 32);
 	}
 
-	GetCurrentLocale();
+	//GetCurrentLocale();
 
 	CreateDirectoryA(g_App.FilePath("snapshots").c_str(), NULL);
 
@@ -233,6 +233,8 @@ bool COrion::Install()
 
 		return false;
 	}
+
+	g_SpeechManager.LoadSpeech();
 
 	m_AnimData.resize(g_FileManager.m_AnimdataMul.Size);
 	memcpy(&m_AnimData[0], &g_FileManager.m_AnimdataMul.Start[0], g_FileManager.m_AnimdataMul.Size);
@@ -276,8 +278,6 @@ bool COrion::Install()
 
 		return false;
 	}
-
-	g_SpeechManager.LoadSpeech();
 
 	if (g_FileManager.UseUOPMap)
 		g_MapManager = new CUopMapManager();
@@ -5749,7 +5749,7 @@ void COrion::ConsolePromptCancel()
 	if (g_ConsolePrompt == PT_ASCII)
 		CPacketASCIIPromptResponse("", 0, true).Send();
 	else if (g_ConsolePrompt == PT_UNICODE)
-		CPacketUnicodePromptResponse(L"", 0, "ENU", true).Send();
+		CPacketUnicodePromptResponse(L"", 0, g_Language, true).Send();
 
 	g_ConsolePrompt = PT_NONE;
 }

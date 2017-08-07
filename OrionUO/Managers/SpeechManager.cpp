@@ -11,26 +11,6 @@
 //----------------------------------------------------------------------------------
 CSpeechManager g_SpeechManager;
 //----------------------------------------------------------------------------------
-//------------------------------------CLangCode-------------------------------------
-//----------------------------------------------------------------------------------
-CLangCode::CLangCode()
-{
-}
-//----------------------------------------------------------------------------------
-CLangCode::~CLangCode()
-{
-}
-//----------------------------------------------------------------------------------
-//------------------------------------CSpeechItem-----------------------------------
-//----------------------------------------------------------------------------------
-CSpeechItem::CSpeechItem()
-{
-}
-//----------------------------------------------------------------------------------
-CSpeechItem::~CSpeechItem()
-{
-}
-//----------------------------------------------------------------------------------
 //-----------------------------------CSpeechManager---------------------------------
 //----------------------------------------------------------------------------------
 CSpeechManager::CSpeechManager()
@@ -51,9 +31,31 @@ CSpeechManager::~CSpeechManager()
 bool CSpeechManager::LoadSpeech()
 {
 	WISPFUN_DEBUG("c157_f2");
-	//Временно вырублено.
-	//if (!LoadLangCodes())
-	//	return false;
+	LoadLangCodes();
+
+	string lang(255, 0);
+
+	if (!GetProfileStringA("intl", "sLanguage", "default", &lang[0], 4))
+		g_Language = m_LangCodes[0].Abbreviature;
+	else
+		g_Language = lang.c_str();
+
+	IFOR(i, 0, (int)m_LangCodes.size())
+	{
+		if (m_LangCodes[i].Abbreviature == g_Language)
+		{
+			m_CurrentLanguage = &m_LangCodes[i];
+			break;
+		}
+	}
+
+	if (m_CurrentLanguage == NULL)
+	{
+		m_CurrentLanguage = &m_LangCodes[0];
+		g_Language = m_LangCodes[0].Abbreviature;
+	}
+
+	LOG("Selected language: %s (%s)\n", g_Language.c_str(), lang.c_str());
 
 	WISP_FILE::CMappedFile &file = g_FileManager.m_SpeechMul;
 
@@ -107,6 +109,9 @@ bool CSpeechManager::LoadSpeech()
 bool CSpeechManager::LoadLangCodes()
 {
 	WISPFUN_DEBUG("c157_f3");
+
+	m_LangCodes.push_back(CLangCode("enu", 101, "English", "United States"));
+
 	WISP_FILE::CMappedFile &file = g_FileManager.m_LangcodeIff;
 
 	//скипаем заголовок файла
@@ -116,16 +121,16 @@ bool CSpeechManager::LoadLangCodes()
 	{
 		CLangCode langCodeData;
 
-		langCodeData.Code = file.ReadString(4);
+		file.Move(4);
 
-		DWORD entryLen = file.ReadUInt32BE();
-		langCodeData.LangString = file.ReadString(0); 
-		langCodeData.Unknown = file.ReadUInt32LE();
-		langCodeData.LangName = file.ReadString(0);
-		langCodeData.LangCountry = file.ReadString(0);
+		uint entryLen = file.ReadUInt32BE();
+		langCodeData.Abbreviature = file.ReadString(0); 
+		langCodeData.Code = file.ReadUInt32LE();
+		langCodeData.Language = file.ReadString(0);
+		langCodeData.Country = file.ReadString(0);
 
 		//длинна LangName и LangCountry + null terminator всегда являются четным количеством в файле.
-		if ((langCodeData.LangName.length() + langCodeData.LangCountry.length() + 2) % 2)
+		if ((langCodeData.Language.length() + langCodeData.Country.length() + 2) % 2)
 		{
 			int nullTerminator = file.ReadUInt8();
 			
@@ -135,11 +140,11 @@ bool CSpeechManager::LoadLangCodes()
 		}
 
 		m_LangCodes.push_back(langCodeData);
-		//TPRINT("[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, ToString(str).c_str());
+		//LOG("[0x%04X]: %s\n", langCodeData.Code, langCodeData.Abbreviature.c_str());
 	}
 
-	if (m_LangCodes.size() != 135)
-		return false;
+	//if (m_LangCodes.size() != 135)
+	//	return false;
 
 	return true;
 }
