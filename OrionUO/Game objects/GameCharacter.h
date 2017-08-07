@@ -136,7 +136,7 @@ public:
 	@param [__inout] animation Индекс группы анимации
 	@return 
 	*/
-	void GetAnimationGroup(const ANIMATION_GROUPS &group, BYTE &animation);
+	void GetAnimationGroup(const ANIMATION_GROUPS &group, uchar &animation);
 
 	/*!
 	Состояние, если персонаж не движется

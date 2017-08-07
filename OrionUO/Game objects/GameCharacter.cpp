@@ -438,10 +438,10 @@ void CGameCharacter::SetRandomFidgetAnimation()
 @param [__inout] animation Индекс группы анимации
 @return
 */
-void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, BYTE &animation)
+void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, uchar &animation)
 {
 	WISPFUN_DEBUG("c15_f13");
-	const BYTE animAssociateTable[35][3] =
+	const uchar animAssociateTable[35][3] =
 	{
 		{ LAG_WALK,			HAG_WALK,			PAG_WALK_UNARMED },
 		{ LAG_WALK,			HAG_WALK,			PAG_WALK_ARMED },
@@ -598,7 +598,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 	ANIMATION_GROUPS groupIndex = g_AnimationManager.GetGroupIndex(graphic);
 	uchar result = m_AnimationGroup;
 
-	if (result != 0xFF)
+	if (result != 0xFF && !(m_Serial & 0x80000000) && !m_AnimationFromServer)
 	{
 		GetAnimationGroup(groupIndex, result);
 

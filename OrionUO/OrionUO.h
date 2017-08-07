@@ -10,13 +10,6 @@
 #ifndef ORIONUO_H
 #define ORIONUO_H
 //----------------------------------------------------------------------------------
-#include <functional>
-
-namespace Wisp{
-	class CMappedFile;
-}
-
-//----------------------------------------------------------------------------------
 class COrion
 {
 	SETGET(string, ClientVersionText, "2.0.3");

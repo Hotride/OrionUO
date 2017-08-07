@@ -28,6 +28,7 @@
 #include <sstream>
 #include <fstream>
 #include <sys/stat.h>
+#include <functional>
 
 #pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "Shlwapi.lib")
