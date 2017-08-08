@@ -492,9 +492,20 @@ void CGameWorld::RemoveObject(CGameObject *obj)
 void CGameWorld::RemoveFromContainer(CGameObject *obj)
 {
 	WISPFUN_DEBUG("c22_f14");
-	if (obj->Container != 0xFFFFFFFF)
+	uint containerSerial = obj->Container;
+
+	if (containerSerial != 0xFFFFFFFF)
 	{
-		CGameObject *container = FindWorldObject(obj->Container);
+		if (containerSerial < 0x40000000)
+			g_GumpManager.UpdateContent(containerSerial, 0, GT_PAPERDOLL);
+		else
+			g_GumpManager.UpdateContent(containerSerial, 0, GT_CONTAINER);
+
+		if (g_TooltipsEnabled)
+			g_PacketManager.AddMegaClilocRequest(containerSerial);
+
+		CGameObject *container = FindWorldObject(containerSerial);
+
 		if (container != NULL)
 			container->Reject(obj);
 		else
@@ -502,6 +513,8 @@ void CGameWorld::RemoveFromContainer(CGameObject *obj)
 	}
 	else
 	{
+		g_GameScreen.RenderListInitalized = false;
+
 		if (m_Items != NULL)
 		{
 			if (m_Items == obj)

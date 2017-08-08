@@ -18,9 +18,6 @@ CGameItem::CGameItem(const uint &serial)
 CGameItem::~CGameItem()
 {
 	WISPFUN_DEBUG("c19_f1");
-	if (IsCorpse() && m_FieldColor)
-		return;
-
 	ClearMultiItems();
 	
 	if (m_Opened)
@@ -35,9 +32,6 @@ CGameItem::~CGameItem()
 
 		m_Opened = false;
 	}
-
-	if (m_Container < 0x40000000)
-		g_GumpManager.UpdateContent(m_Container, 0, GT_PAPERDOLL);
 
 	if (m_Dragged)
 	{

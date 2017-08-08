@@ -193,7 +193,7 @@ void CGumpContainer::PrepareContent()
 void CGumpContainer::UpdateContent()
 {
 	WISPFUN_DEBUG("c93_f8");
-	CGameItem *container = g_World->FindWorldItem(Serial);
+	CGameItem *container = g_World->FindWorldItem(m_Serial);
 
 	if (container == NULL)
 		return;

@@ -162,6 +162,8 @@ void CGumpDrag::OnOkayPressed()
 	WISPFUN_DEBUG("c94_f7");
 	if (!g_ObjectInHand.Enabled)
 	{
+		m_RemoveMark = true;
+
 		if (m_Slider->Value)
 		{
 			CGameItem *obj = g_World->FindWorldItem(m_Serial);
@@ -169,8 +171,6 @@ void CGumpDrag::OnOkayPressed()
 			if (obj != NULL)
 				g_Orion.PickupItem(obj, m_Slider->Value);
 		}
-
-		m_RemoveMark = true;
 	}
 }
 //----------------------------------------------------------------------------------

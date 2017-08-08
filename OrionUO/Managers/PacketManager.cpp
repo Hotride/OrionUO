@@ -1635,13 +1635,10 @@ PACKET_HANDLER(DeleteObject)
 
 			if (top != NULL)
 			{
-				if (top->IsPlayer() && !obj->NPC)
+				if (top->IsPlayer())
 				{
 					CGameItem *item = (CGameItem*)obj;
 					updateAbilities = (item->Layer == OL_1_HAND || item->Layer == OL_2_HAND);
-
-					if (item->Layer == OL_NONE)
-						g_ObjectInHand.Enabled = false;
 				}
 
 				CGameObject *tradeBox = top->FindSecureTradeBox();
@@ -1649,6 +1646,9 @@ PACKET_HANDLER(DeleteObject)
 				if (tradeBox != NULL)
 					g_GumpManager.UpdateContent(0, tradeBox->Serial, GT_TRADE);
 			}
+
+			if (cont == g_PlayerSerial && ((CGameItem*)obj)->Layer == OL_NONE)
+				g_ObjectInHand.Enabled = false;
 
 			if (!obj->NPC && ((CGameItem*)obj)->Layer != OL_NONE)
 				g_GumpManager.UpdateContent(cont, 0, GT_PAPERDOLL);

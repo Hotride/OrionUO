@@ -1050,6 +1050,20 @@ void COrion::Process(const bool &rendering)
 
 		if (g_World != NULL)
 		{
+			if (g_World->ObjectToRemove != NULL)
+			{
+				CGameCharacter *character = g_World->FindWorldCharacter(g_World->ObjectToRemove->Container);
+
+				g_World->RemoveObject(g_World->ObjectToRemove);
+				g_World->ObjectToRemove = NULL;
+
+				if (character != NULL)
+				{
+					character->m_FrameInfo = g_AnimationManager.CollectFrameInformation(character);
+					g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_PAPERDOLL);
+				}
+			}
+
 			g_Player->UpdateRemoveRange();
 			
 			g_Orion.RemoveRangedObjects();
@@ -5363,8 +5377,6 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 	WISPFUN_DEBUG("c194_f103");
 	if (!g_ObjectInHand.Enabled)
 	{
-		CGameCharacter *character = NULL;
-
 		g_ObjectInHand.Enabled = true;
 
 		if (!count)
@@ -5383,27 +5395,9 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 		g_ObjectInHand.Y = obj->Y;
 		g_ObjectInHand.Z = obj->Z;
 
-		if (obj->Container != 0xFFFFFFFF)
-		{
-			g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
-
-			character = g_World->FindWorldCharacter(obj->Container);
-
-			if (g_TooltipsEnabled)
-				g_PacketManager.AddMegaClilocRequest(obj->Container);
-		}
-
 		CPacketPickupRequest(obj->Serial, count).Send();
 
-		g_World->RemoveObject(obj);
-
-		g_GameScreen.RenderListInitalized = false;
-
-		if (character != NULL)
-		{
-			character->m_FrameInfo = g_AnimationManager.CollectFrameInformation(character);
-			g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
-		}
+		g_World->ObjectToRemove = obj;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -5651,11 +5645,6 @@ void COrion::RemoveRangedObjects()
 				}
 				else if (GetRemoveDistance(g_RemoveRangeXY, go) > objectsRange)
 					g_World->RemoveObject(go);
-				else if (go->IsCorpse() && ((CGameItem*)go)->FieldColor == 2)
-				{
-					g_World->RemoveFromContainer(go);
-					delete go;
-				}
 			}
 
 			go = next;
