@@ -1720,7 +1720,7 @@ PACKET_HANDLER(UpdateCharacter)
 		return;
 
 	uint serial = ReadUInt32BE();
-	CGameObject *obj = g_World->FindWorldObject(serial);
+	CGameCharacter *obj = g_World->FindWorldCharacter(serial);
 
 	if (obj == NULL)
 		return;
@@ -1743,6 +1743,16 @@ PACKET_HANDLER(UpdateCharacter)
 	}
 	else
 	{
+		if (!obj->m_Steps.empty() && obj->Direction == obj->m_Steps.back().Direction)
+		{
+			CWalkData &wd = obj->m_Steps.back();
+			obj->X = wd.X;
+			obj->Y = wd.Y;
+			obj->Z = wd.Z;
+			obj->Direction = wd.Direction;
+			obj->m_Steps.clear();
+		}
+
 		g_World->UpdateGameObject(serial, graphic, 0, 0, x, y, z, direction, color, flags, 0, UGOT_ITEM, 1);
 	}
 
