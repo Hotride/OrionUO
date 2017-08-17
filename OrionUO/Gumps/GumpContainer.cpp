@@ -127,7 +127,7 @@ void CGumpContainer::InitToolTip()
 void CGumpContainer::PrepareContent()
 {
 	WISPFUN_DEBUG("c93_f7");
-	if (GetTopObjDistance(g_Player, g_World->FindWorldObject(Serial)) < 3 && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != ID_GC_MINIMIZE)
+	if (!g_Player->Dead() && GetTopObjDistance(g_Player, g_World->FindWorldObject(Serial)) <= 3 && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != ID_GC_MINIMIZE)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 

@@ -839,7 +839,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 	{
 		bool canWear = true;
 
-		if (m_Serial != g_PlayerSerial && GetDistance(g_Player, container) > 3)
+		if (m_Serial != g_PlayerSerial && GetDistance(g_Player, container) >= 3)
 			canWear = false;
 
 		if (canWear && container != NULL)
