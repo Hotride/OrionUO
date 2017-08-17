@@ -374,7 +374,7 @@ void CGumpCombatBook::InitToolTip()
 void CGumpCombatBook::PrepareContent()
 {
 	WISPFUN_DEBUG("c91_f4");
-	if (g_PressedObject.LeftGump() == this && m_Page < m_DictionaryPagesCount && (g_PressedObject.LeftSerial == ID_GCB_ICON_FIRST || g_PressedObject.LeftSerial == ID_GCB_ICON_SECOND))
+	if (g_PressedObject.LeftGump == this && m_Page < m_DictionaryPagesCount && (g_PressedObject.LeftSerial == ID_GCB_ICON_FIRST || g_PressedObject.LeftSerial == ID_GCB_ICON_SECOND))
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -555,7 +555,7 @@ void CGumpCombatBook::GUMP_BUTTON_EVENT_C
 		if (newPage % 2)
 			newPage--;
 
-		g_ClickObject.Init(g_PressedObject.LeftObject(), this);
+		g_ClickObject.Init(g_PressedObject.LeftObject, this);
 		g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
 		g_ClickObject.Page = newPage;
 	}

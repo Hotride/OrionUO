@@ -86,9 +86,9 @@ bool CGumpBulletinBoard::OnLeftMouseButtonDoubleClick()
 	WISPFUN_DEBUG("c89_f4");
 	bool result = false;
 
-	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI())
+	if (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI())
 	{
-		CBaseGUI *gui = (CBaseGUI*)g_PressedObject.LeftObject();
+		CBaseGUI *gui = (CBaseGUI*)g_PressedObject.LeftObject;
 
 		if (gui->Type == GOT_BB_OBJECT)
 		{

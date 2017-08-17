@@ -140,14 +140,14 @@ void CGumpMap::PrepareContent()
 		}
 
 		//Если окошко захвачено для перемещения - вычислим оффсеты
-		if (g_PressedObject.LeftGump() == this && g_PressedObject.LeftObject() != NULL && m_PlotState)
+		if (g_PressedObject.LeftGump == this && g_PressedObject.LeftObject != NULL && m_PlotState)
 		{
 			if (m_PinOnCursor == NULL)
 			{
 				WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
 				if ((offset.X || offset.Y) && g_PressedObject.LeftSerial > ID_GM_PIN_LIST && g_PressedObject.LeftSerial < ID_GM_PIN_LIST_INSERT && m_PinTimer > g_Ticks)
-					m_PinOnCursor = (CBaseGUI*)g_PressedObject.LeftObject();
+					m_PinOnCursor = (CBaseGUI*)g_PressedObject.LeftObject;
 			}
 
 			if (m_PinOnCursor != NULL)
@@ -332,7 +332,7 @@ void CGumpMap::OnLeftMouseButtonUp()
 	WISPFUN_DEBUG("c99_f9");
 	CGump::OnLeftMouseButtonUp();
 
-	if (m_DataBox != NULL && g_PressedObject.LeftObject() != NULL)
+	if (m_DataBox != NULL && g_PressedObject.LeftObject != NULL)
 	{
 		if (m_PlotState && m_PinOnCursor == NULL && m_PinTimer > g_Ticks)
 		{

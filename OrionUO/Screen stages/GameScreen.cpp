@@ -1530,8 +1530,8 @@ void CGameScreen::PrepareContent()
 	else
 		g_StatusbarUnderMouse = 0;
 
-	//if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && g_PressedObject.LeftObject() == g_SelectedObject.Object())
-	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGameObject())
+	//if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && g_PressedObject.LeftObject == g_SelectedObject.Object())
+	if (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGameObject())
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -1927,12 +1927,12 @@ void CGameScreen::OnLeftMouseButtonDown()
 void CGameScreen::OnLeftMouseButtonUp()
 {
 	WISPFUN_DEBUG("c164_f21");
-	if (g_PressedObject.LeftGump() == &m_GameScreenGump)
+	if (g_PressedObject.LeftGump == &m_GameScreenGump)
 	{
 		m_GameScreenGump.OnLeftMouseButtonUp();
 		return;
 	}
-	else if (g_MouseManager.LeftButtonPressed && (g_PressedObject.LeftGump() != NULL || g_ObjectInHand.Enabled))
+	else if (g_MouseManager.LeftButtonPressed && (g_PressedObject.LeftGump != NULL || g_ObjectInHand.Enabled))
 	{
 		if (g_GumpManager.OnLeftMouseButtonUp(false))
 			return;
@@ -2195,7 +2195,7 @@ bool CGameScreen::OnLeftMouseButtonDoubleClick()
 void CGameScreen::OnRightMouseButtonDown()
 {
 	WISPFUN_DEBUG("c164_f23");
-	if (g_PressedObject.RightGump() != NULL)
+	if (g_PressedObject.RightGump != NULL)
 		g_GumpManager.OnRightMouseButtonDown(false);
 
 	if (g_PopupMenu != NULL && g_SelectedObject.Gump != g_PopupMenu)
@@ -2209,10 +2209,10 @@ void CGameScreen::OnRightMouseButtonDown()
 void CGameScreen::OnRightMouseButtonUp()
 {
 	WISPFUN_DEBUG("c164_f24");
-	if (g_PressedObject.RightGump() != NULL)
+	if (g_PressedObject.RightGump != NULL)
 		g_GumpManager.OnRightMouseButtonUp(false);
-	else if (g_PressedObject.RightObject() != NULL && g_PressedObject.RightObject()->IsGameObject() && g_SelectedGameObjectHandle == g_PressedObject.RightSerial)
-		((CGameObject*)g_PressedObject.RightObject())->ClosedObjectHandle = true;
+	else if (g_PressedObject.RightObject != NULL && g_PressedObject.RightObject->IsGameObject() && g_SelectedGameObjectHandle == g_PressedObject.RightSerial)
+		((CGameObject*)g_PressedObject.RightObject)->ClosedObjectHandle = true;
 
 	if ((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && g_ConfigManager.HoldShiftForEnablePathfind && g_ConfigManager.EnablePathfind && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject() && !g_PathFinder.AutoWalking)
 	{
@@ -2284,7 +2284,7 @@ void CGameScreen::OnMidMouseButtonScroll(const bool &up)
 void CGameScreen::OnDragging()
 {
 	WISPFUN_DEBUG("c164_f27");
-	if (g_PressedObject.LeftGump() != NULL)
+	if (g_PressedObject.LeftGump != NULL)
 		g_GumpManager.OnDragging(false);
 }
 //----------------------------------------------------------------------------------

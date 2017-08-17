@@ -624,17 +624,17 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (g_PressedObject.LeftGump() == gump && !gump->NoProcess)
+		if (g_PressedObject.LeftGump == gump && !gump->NoProcess)
 		{
 			bool canMove = false;
 
-			if (g_PressedObject.LeftObject() != NULL)
+			if (g_PressedObject.LeftObject != NULL)
 			{
-				if (!g_PressedObject.LeftObject()->IsText())
+				if (!g_PressedObject.LeftObject->IsText())
 				{
-					if (!g_PressedObject.LeftObject()->Serial)
+					if (!g_PressedObject.LeftObject->Serial)
 						canMove = true;
-					else if (g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->MoveOnDrag)
+					else if (g_PressedObject.LeftObject->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject)->MoveOnDrag)
 						canMove = true;
 				}
 			}
@@ -831,7 +831,7 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (g_PressedObject.RightGump() == gump && !gump->NoProcess && !gump->NoClose && (gump->CanBeMoved() || gump->GumpType == GT_GENERIC))
+		if (g_PressedObject.RightGump == gump && !gump->NoProcess && !gump->NoClose && (gump->CanBeMoved() || gump->GumpType == GT_GENERIC))
 		{
 			//gump->OnClose();
 			switch (gump->GumpType)
@@ -1002,7 +1002,7 @@ void CGumpManager::OnDragging(const bool &blocked)
 	WISPFUN_DEBUG("c144_f25");
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (g_PressedObject.LeftGump() == gump && !gump->NoProcess)
+		if (g_PressedObject.LeftGump == gump && !gump->NoProcess)
 		{
 			gump->OnDragging();
 

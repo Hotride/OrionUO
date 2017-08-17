@@ -1044,7 +1044,7 @@ void COrion::Process(const bool &rendering)
 			canRenderSelect = true;
 
 			//Game window scope
-			if (g_PressedObject.LeftGump() == NULL && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI())
+			if (g_PressedObject.LeftGump == NULL && g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI())
 				canRenderSelect = false;
 		}
 

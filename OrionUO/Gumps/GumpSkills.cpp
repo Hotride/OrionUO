@@ -269,7 +269,7 @@ void CGumpSkills::CalculateGumpState()
 	WISPFUN_DEBUG("c125_f11");
 	CGump::CalculateGumpState();
 
-	if (g_PressedObject.LeftGump() == this && g_PressedObject.LeftSerial >= ID_GS_SKILL && g_PressedObject.LeftSerial < ID_GS_SKILL_STATE)
+	if (g_PressedObject.LeftGump == this && g_PressedObject.LeftSerial >= ID_GS_SKILL && g_PressedObject.LeftSerial < ID_GS_SKILL_STATE)
 	{
 		g_GumpMovingOffset.Reset();
 
@@ -291,7 +291,7 @@ void CGumpSkills::PrepareContent()
 	WISPFUN_DEBUG("c125_f12");
 	uint serial = g_PressedObject.LeftSerial;
 
-	if (g_PressedObject.LeftGump() == this && serial >= ID_GS_SKILL && serial < ID_GS_SKILL_STATE)
+	if (g_PressedObject.LeftGump == this && serial >= ID_GS_SKILL && serial < ID_GS_SKILL_STATE)
 	{
 		int y = g_MouseManager.Position.Y;
 		int testY = m_Y + m_HTMLGump->Y;
@@ -306,7 +306,7 @@ void CGumpSkills::PrepareContent()
 			m_HTMLGump->Scroll(true, (SCROLL_LISTING_DELAY / 3));
 			m_WantRedraw = true;
 		}
-		else if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_SKILLITEM)
+		else if (g_PressedObject.LeftObject != NULL && ((CBaseGUI*)g_PressedObject.LeftObject)->Type == GOT_SKILLITEM)
 		{
 			int index = 0;
 			CSkillGroupObject *groupObject = GetGroupUnderCursor(index);
@@ -353,7 +353,7 @@ void CGumpSkills::PrepareContent()
 					currentGroupObject->Remove(skillIndex);
 					groupObject->AddSorted(skillIndex);
 
-					CGUISkillItem *skillItem = (CGUISkillItem*)g_PressedObject.LeftObject();
+					CGUISkillItem *skillItem = (CGUISkillItem*)g_PressedObject.LeftObject;
 
 					currentGroup->Unlink(skillItem);
 
@@ -501,7 +501,7 @@ void CGumpSkills::OnLeftMouseButtonUp()
 	WISPFUN_DEBUG("c125_f16");
 	CGump::OnLeftMouseButtonUp();
 
-	if (g_PressedObject.LeftGump() == this && g_PressedObject.LeftSerial >= ID_GS_SKILL && g_PressedObject.LeftSerial < ID_GS_SKILL_STATE)
+	if (g_PressedObject.LeftGump == this && g_PressedObject.LeftSerial >= ID_GS_SKILL && g_PressedObject.LeftSerial < ID_GS_SKILL_STATE)
 	{
 		m_WantRedraw = true;
 

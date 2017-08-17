@@ -13,18 +13,16 @@
 class CPressedObject
 {
 	SETGET(uint, LeftSerial, 0);
+	SETGET(CRenderObject*, LeftObject, NULL);
+	SETGET(CGump*, LeftGump, NULL);
+
 	SETGET(uint, RightSerial, 0);
+	SETGET(CRenderObject*, RightObject, NULL);
+	SETGET(CGump*, RightGump, NULL);
+
 	SETGET(uint, MidSerial, 0);
-
-private:
-	CRenderObject *m_LeftObject{ NULL };
-	CGump *m_LeftGump{ NULL };
-
-	CRenderObject *m_RightObject{ NULL };
-	CGump *m_RightGump{ NULL };
-
-	CRenderObject *m_MidObject{ NULL };
-	CGump *m_MidGump{ NULL };
+	SETGET(CRenderObject*, MidObject, NULL);
+	SETGET(CGump*, MidGump, NULL);
 
 public:
 	CPressedObject();
@@ -50,15 +48,6 @@ public:
 	void InitMid(const CSelectedObject &obj);
 
 	bool TestMoveOnDrag();
-
-	CRenderObject *LeftObject() const { return m_LeftObject; }
-	CGump *LeftGump() const { return m_LeftGump; }
-
-	CRenderObject *RightObject() const { return m_RightObject; }
-	CGump *RightGump() const { return m_RightGump; }
-
-	CRenderObject *MidObject() const { return m_RightObject; }
-	CGump *MidGump() const { return m_RightGump; }
 };
 //----------------------------------------------------------------------------------
 extern CPressedObject g_PressedObject;

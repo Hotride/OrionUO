@@ -576,7 +576,7 @@ bool CPathFinder::Walk(bool run, uchar direction)
 	if (run)
 		direction += 0x80;
 
-	g_Player->m_Steps.push_back(CWalkData(x, y, z, direction));
+	g_Player->m_Steps.push_back(CWalkData(x, y, z, direction, g_Player->Graphic, g_Player->Flags));
 
 	CPacketWalkRequest(direction, g_Walker.WalkSequence, g_Player->m_FastWalkStack.GetValue()).Send();
 

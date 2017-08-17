@@ -82,7 +82,7 @@ void CGameBlockedScreen::OnLeftMouseButtonDown()
 void CGameBlockedScreen::OnLeftMouseButtonUp()
 {
 	WISPFUN_DEBUG("c163_f3");
-	if (g_PressedObject.LeftGump() != NULL)
+	if (g_PressedObject.LeftGump != NULL)
 		g_GumpManager.OnLeftMouseButtonUp(true);
 }
 //----------------------------------------------------------------------------------

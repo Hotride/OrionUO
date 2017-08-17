@@ -113,7 +113,7 @@ void CGUISkillItem::Draw(const bool &checktrans)
 	if (m_ButtonUse != NULL)
 		m_ButtonUse->Draw(checktrans);
 
-	if (g_PressedObject.LeftObject() == this)
+	if (g_PressedObject.LeftObject == this)
 		g_GL.DrawPolygone(20, 0, 250, 14);
 
 	m_NameText.Draw(22, 0, checktrans);

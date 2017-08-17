@@ -24,7 +24,7 @@ void CGumpSecureTrading::CalculateGumpState()
 	WISPFUN_DEBUG("c120_f1");
 	CGump::CalculateGumpState();
 
-	if (g_GumpPressed && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsText())
+	if (g_GumpPressed && g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsText())
 	{
 		g_GumpMovingOffset.Reset();
 

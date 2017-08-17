@@ -224,7 +224,7 @@ void CGumpBook::GUMP_BUTTON_EVENT_C
 
 		if (newPage > -1)
 		{
-			g_ClickObject.Init(g_PressedObject.LeftObject(), this);
+			g_ClickObject.Init(g_PressedObject.LeftObject, this);
 			g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
 			g_ClickObject.Page = newPage;
 		}

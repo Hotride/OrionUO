@@ -926,12 +926,9 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 						found = true;
 					}
 				}
-				else if (character->X == x && character->Y == y && character->Z == z && !((direction ^ character->Direction) & 0x7F))
+				else if (character->X == x && character->Y == y && character->Z == z && character->Direction == direction)
 				{
-					if ((character->Direction & 0x80) == (direction & 0x80))
-					{
-						found = true;
-					}
+					found = true;
 				}
 			}
 
@@ -940,7 +937,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 				if (character->m_Steps.empty())
 					character->LastStepTime = g_Ticks;
 
-				character->m_Steps.push_back(CWalkData(x, y, z, direction));
+				character->m_Steps.push_back(CWalkData(x, y, z, direction, graphic & 0x3FFF, flags));
 				found = true;
 			}
 		}

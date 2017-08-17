@@ -140,7 +140,7 @@ void CGumpPaperdoll::CalculateGumpState()
 	WISPFUN_DEBUG("c105_f2");
 	CGump::CalculateGumpState();
 
-	if (g_GumpPressed && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsText())
+	if (g_GumpPressed && g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsText())
 	{
 		g_GumpMovingOffset.Reset();
 
@@ -331,7 +331,7 @@ void CGumpPaperdoll::PrepareContent()
 	if (obj == NULL)
 		return;
 
-	if (!g_Player->Dead() && m_Serial == g_PlayerSerial && g_PressedObject.LeftGump() == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != 0xFFFFFFFF)
+	if (!g_Player->Dead() && m_Serial == g_PlayerSerial && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != 0xFFFFFFFF)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -806,7 +806,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		{
 			if (!g_ClickObject.Enabled)
 			{
-				g_ClickObject.Init(g_PressedObject.LeftObject(), this);
+				g_ClickObject.Init(g_PressedObject.LeftObject, this);
 				g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
 			}
 

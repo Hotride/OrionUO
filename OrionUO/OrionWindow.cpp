@@ -137,17 +137,17 @@ void COrionWindow::OnLeftMouseButtonUp()
 	{
 		g_CurrentScreen->Render(false);
 
-		//if ((g_SelectedObject.Object() != NULL && g_SelectedObject.Object() == g_PressedObject.LeftObject() && g_SelectedObject.Serial) || g_GameState >= GS_GAME)
+		//if ((g_SelectedObject.Object() != NULL && g_SelectedObject.Object() == g_PressedObject.LeftObject && g_SelectedObject.Serial) || g_GameState >= GS_GAME)
 		if ((g_SelectedObject.Object != NULL && g_SelectedObject.Serial) || g_GameState >= GS_GAME)
 		{
 			g_CurrentScreen->OnLeftMouseButtonUp();
 
-			if (g_MovingFromMouse && g_PressedObject.LeftGump() == NULL)
+			if (g_MovingFromMouse && g_PressedObject.LeftGump == NULL)
 				g_AutoMoving = true;
 		}
 
-		if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX && g_PressedObject.LeftGump() != NULL)
-			g_PressedObject.LeftGump()->WantRedraw = true;
+		if (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject)->Type == GOT_COMBOBOX && g_PressedObject.LeftGump != NULL)
+			g_PressedObject.LeftGump->WantRedraw = true;
 
 		g_PressedObject.ClearLeft();
 	}
@@ -164,7 +164,7 @@ bool COrionWindow::OnLeftMouseButtonDoubleClick()
 
 		g_PressedObject.InitLeft(g_SelectedObject);
 
-		result = (g_SelectedObject.Object != NULL && g_SelectedObject.Object == g_PressedObject.LeftObject()) && g_CurrentScreen->OnLeftMouseButtonDoubleClick();
+		result = (g_SelectedObject.Object != NULL && g_SelectedObject.Object == g_PressedObject.LeftObject) && g_CurrentScreen->OnLeftMouseButtonDoubleClick();
 
 		if (result)
 		{
@@ -205,7 +205,7 @@ void COrionWindow::OnRightMouseButtonUp()
 	{
 		g_CurrentScreen->Render(false);
 
-		if ((g_SelectedObject.Object != NULL && g_SelectedObject.Object == g_PressedObject.RightObject() && g_SelectedObject.Serial) || g_GameState >= GS_GAME)
+		if ((g_SelectedObject.Object != NULL && g_SelectedObject.Object == g_PressedObject.RightObject && g_SelectedObject.Serial) || g_GameState >= GS_GAME)
 			g_CurrentScreen->OnRightMouseButtonUp();
 
 		g_MovingFromMouse = false;
@@ -224,7 +224,7 @@ bool COrionWindow::OnRightMouseButtonDoubleClick()
 
 		g_PressedObject.InitRight(g_SelectedObject);
 
-		result = (g_SelectedObject.Object != NULL && g_SelectedObject.Object == g_PressedObject.RightObject()) && g_CurrentScreen->OnRightMouseButtonDoubleClick();
+		result = (g_SelectedObject.Object != NULL && g_SelectedObject.Object == g_PressedObject.RightObject) && g_CurrentScreen->OnRightMouseButtonDoubleClick();
 
 		if (result)
 			g_PressedObject.ClearRight();

@@ -27,11 +27,11 @@ CGumpScreenGame::~CGumpScreenGame()
 void CGumpScreenGame::UpdateContent()
 {
 	WISPFUN_DEBUG("c115_f2");
-	if (g_PressedObject.LeftGump() == this)
+	if (g_PressedObject.LeftGump == this)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
-		if (g_PressedObject.LeftObject() == m_Items) //resizer
+		if (g_PressedObject.LeftObject == m_Items) //resizer
 		{
 			g_RenderBounds.GameWindowWidth += offset.X;
 			g_RenderBounds.GameWindowHeight += offset.Y;
@@ -147,7 +147,7 @@ void CGumpScreenGame::OnLeftMouseButtonUp()
 	WISPFUN_DEBUG("c115_f7");
 	WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
-	if (g_PressedObject.LeftObject() == m_Items) //resizer
+	if (g_PressedObject.LeftObject == m_Items) //resizer
 	{
 		g_ConfigManager.GameWindowWidth = g_ConfigManager.GameWindowWidth + offset.X;
 		g_ConfigManager.GameWindowHeight = g_ConfigManager.GameWindowHeight + offset.Y;

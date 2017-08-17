@@ -17,10 +17,13 @@ class CWalkData
 	SETGET(short, Y, 0);
 	SETGET(char, Z, 0);
 	SETGET(uchar, Direction, 0);
+	SETGET(ushort, Graphic, 0);
+	SETGET(uchar, Flags, 0);
 
 public:
 	CWalkData() {}
-	CWalkData(const short &x, const short &y, const char &z, const uchar &direction) : m_X(x), m_Y(y), m_Z(z), m_Direction(direction) {}
+	CWalkData(const short &x, const short &y, const char &z, const uchar &direction, const ushort &graphic, const uchar &flags)
+		: m_X(x), m_Y(y), m_Z(z), m_Direction(direction), m_Graphic(graphic), m_Flags(flags) {}
 	~CWalkData() {}
 
 	//Бег или хотьба

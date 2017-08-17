@@ -142,7 +142,7 @@ void CGumpWorldMap::CalculateGumpState()
 
 	if (g_GumpPressed)
 	{
-		if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX)
+		if (g_PressedObject.LeftObject != NULL && ((CBaseGUI*)g_PressedObject.LeftObject)->Type == GOT_COMBOBOX)
 		{
 			g_GumpMovingOffset.Reset();
 
@@ -500,7 +500,7 @@ void CGumpWorldMap::OnLeftMouseButtonDown()
 	WISPFUN_DEBUG("c132_f14");
 	CGump::OnLeftMouseButtonDown();
 
-	if (g_PressedObject.LeftObject() == m_MapData) //Карта
+	if (g_PressedObject.LeftObject == m_MapData) //Карта
 	{
 		if (!m_LinkWithPlayer || g_CurrentMap != GetCurrentMap())
 		{
@@ -515,7 +515,7 @@ void CGumpWorldMap::OnLeftMouseButtonUp()
 	WISPFUN_DEBUG("c132_f15");
 	CGump::OnLeftMouseButtonUp();
 
-	if (g_PressedObject.LeftObject() == m_MapData) //Карта
+	if (g_PressedObject.LeftObject == m_MapData) //Карта
 	{
 		if (m_MapMoving)
 		{

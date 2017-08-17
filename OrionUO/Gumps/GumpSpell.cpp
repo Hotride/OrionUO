@@ -285,14 +285,14 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 bool CGumpSpell::GetSpellGroupOffset(int &x, int &y)
 {
 	WISPFUN_DEBUG("c126_f8");
-	if (InGroup() && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump() != NULL && !g_PressedObject.LeftSerial)
+	if (InGroup() && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump != NULL && !g_PressedObject.LeftSerial)
 	{
 		CGumpSpell *gump = GetTopSpell();
 
 		while (gump != NULL)
 		{
 			//Если гамп захватили и (может быть) двигают
-			if (gump != this && g_PressedObject.LeftGump() == gump && gump->CanBeMoved())
+			if (gump != this && g_PressedObject.LeftGump == gump && gump->CanBeMoved())
 			{
 				WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 

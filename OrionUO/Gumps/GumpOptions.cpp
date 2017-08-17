@@ -28,7 +28,7 @@ void CGumpOptions::CalculateGumpState()
 
 	if (g_GumpPressed)
 	{
-		if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX)
+		if (g_PressedObject.LeftObject != NULL && ((CBaseGUI*)g_PressedObject.LeftObject)->Type == GOT_COMBOBOX)
 		{
 			g_GumpMovingOffset.Reset();
 

@@ -22,16 +22,16 @@ CPressedObject::~CPressedObject()
 void CPressedObject::Init(const CPressedObject &obj)
 {
 	WISPFUN_DEBUG("c198_f1");
-	m_LeftObject = obj.LeftObject();
-	m_LeftGump = obj.LeftGump();
+	m_LeftObject = obj.LeftObject;
+	m_LeftGump = obj.LeftGump;
 	m_LeftSerial = obj.LeftSerial;
 
-	m_RightObject = obj.RightObject();
-	m_RightGump = obj.RightGump();
+	m_RightObject = obj.RightObject;
+	m_RightGump = obj.RightGump;
 	m_RightSerial = obj.RightSerial;
 
-	m_MidObject = obj.MidObject();
-	m_MidGump = obj.MidGump();
+	m_MidObject = obj.MidObject;
+	m_MidGump = obj.MidGump;
 	m_MidSerial = obj.MidSerial;
 }
 //----------------------------------------------------------------------------------
