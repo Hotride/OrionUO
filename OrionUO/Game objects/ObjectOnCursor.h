@@ -23,6 +23,8 @@ class CObjectOnCursor
 	SETGET(ushort, Color, 0);
 	//!Количество для перемещения
 	SETGET(ushort, Count, 0);
+	//!Количество ранее в стеке
+	SETGET(ushort, TotalCount, 0);
 	//!Слой
 	SETGET(uchar, Layer, 0);
 	//!Флаги

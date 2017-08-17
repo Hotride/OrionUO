@@ -18,6 +18,7 @@ void CObjectOnCursor::Clear()
 	m_Graphic = 0;
 	m_Color = 0;
 	m_Count = 0;
+	m_TotalCount = 0;
 	m_Layer = 0;
 	m_Flags = 0;
 	m_Container = 0;
