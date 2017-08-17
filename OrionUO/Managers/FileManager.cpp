@@ -180,7 +180,7 @@ void CFileManager::Unload()
 	m_AnimationSequence.Unload();
 	m_MainMisc.Unload();
 
-	IFOR(i, 1, 5)
+	IFOR(i, 0, 4)
 	{
 		m_AnimationFrame[i].Unload();
 	}
