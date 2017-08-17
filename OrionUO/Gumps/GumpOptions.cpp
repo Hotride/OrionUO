@@ -695,7 +695,7 @@ void CGumpOptions::InitToolTip()
 			}
 			case ID_GO_P7_LOCK_GAME_WINDOW_RESIZING:
 			{
-				g_ToolTip.Set(L"Disable/enable real-time window resizing");
+				g_ToolTip.Set(L"Disable/enable real-time window moving and resizing");
 				break;
 			}
 			case ID_GO_P8_INNOCENT_COLOR:
@@ -1600,7 +1600,7 @@ void CGumpOptions::DrawPage7()
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_LOCK_GAME_WINDOW_RESIZING, 0x00D2, 0x00D3, 0x00D2, 230, 114));
 	checkbox->Checked = g_OptionsConfig.LockResizingGameWindow;
-	checkbox->SetTextParameters(0, L"Lock game window resizing", g_OptionsTextColor);
+	checkbox->SetTextParameters(0, L"Lock game window moving and resizing", g_OptionsTextColor);
 
 
 

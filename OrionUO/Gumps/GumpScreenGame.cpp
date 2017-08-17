@@ -111,24 +111,22 @@ CRenderObject *CGumpScreenGame::Select()
 	WISPFUN_DEBUG("c115_f5");
 	CRenderObject *selected = NULL;
 
-	//Если ничего не выбралось - пройдемся по рамке
-	if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))
-		selected = (CRenderObject*)m_Items->m_Next;
-	else if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))
-		selected = (CRenderObject*)m_Items->m_Next;
-	else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, g_RenderBounds.GameWindowWidth + 8, 0))
-		selected = (CRenderObject*)m_Items->m_Next;
-	else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight, g_RenderBounds.GameWindowWidth + 8, 0))
-		selected = (CRenderObject*)m_Items->m_Next;
-
 	if (!g_ConfigManager.LockResizingGameWindow)
 	{
 		if (g_Orion.GumpPixelsInXY(0x0837, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth - 3, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - 3))
 			selected = (CRenderObject*)m_Items;
-	}
+		else if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))
+			selected = (CRenderObject*)m_Items->m_Next;
+		else if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))
+			selected = (CRenderObject*)m_Items->m_Next;
+		else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, g_RenderBounds.GameWindowWidth + 8, 0))
+			selected = (CRenderObject*)m_Items->m_Next;
+		else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight, g_RenderBounds.GameWindowWidth + 8, 0))
+			selected = (CRenderObject*)m_Items->m_Next;
 
-	if (selected != NULL)
-		g_SelectedObject.Init(selected, this);
+		if (selected != NULL)
+			g_SelectedObject.Init(selected, this);
+	}
 
 	return selected;
 }
