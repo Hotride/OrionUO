@@ -40,7 +40,7 @@ void CGumpDrag::UpdateContent()
 
 	Add(new CGUIHitBox(ID_GD_TEXT_FIELD, 28, 40, 60, 16));
 
-	m_Entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GD_TEXT_FIELD, 0x0386, 0x0386, 0x0386, 29, 42, 0, false, 1, TS_LEFT, 0, count));
+	m_Entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GD_TEXT_FIELD, 0x0386, 0x0386, 0x0386, 29, 42, 0, false, 1, TS_LEFT, 0, count + 1));
 	m_Entry->CheckOnSerial = true;
 	g_EntryPointer = &m_Entry->m_Entry;
 	g_EntryPointer->NumberOnly = true;
