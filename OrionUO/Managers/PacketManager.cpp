@@ -1542,9 +1542,12 @@ PACKET_HANDLER(DenyMoveItem)
 
 	if (g_ObjectInHand.Enabled)
 	{
-		if (g_ObjectInHand.Layer && g_ObjectInHand.Container)
+		if (g_World->ObjectToRemove == g_ObjectInHand.Serial)
+			g_World->ObjectToRemove = 0;
+
+		if (!g_ObjectInHand.Layer && g_ObjectInHand.Container && g_ObjectInHand.Container != 0xFFFFFFFF)
 		{
-			g_World->UpdateContainedItem(g_ObjectInHand.Serial, g_ObjectInHand.Graphic, 0, g_ObjectInHand.Count, g_ObjectInHand.X, g_ObjectInHand.Y, g_ObjectInHand.Container, g_ObjectInHand.Color);
+			g_World->UpdateContainedItem(g_ObjectInHand.Serial, g_ObjectInHand.Graphic, 0, g_ObjectInHand.TotalCount, g_ObjectInHand.X, g_ObjectInHand.Y, g_ObjectInHand.Container, g_ObjectInHand.Color);
 
 			g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_CONTAINER);
 		}
@@ -1556,7 +1559,7 @@ PACKET_HANDLER(DenyMoveItem)
 			{
 				obj->Graphic = g_ObjectInHand.Graphic;
 				obj->Color = g_ObjectInHand.Color;
-				obj->Count = g_ObjectInHand.Count;
+				obj->Count = g_ObjectInHand.TotalCount;
 				obj->Flags = g_ObjectInHand.Flags;
 				obj->X = g_ObjectInHand.X;
 				obj->Y = g_ObjectInHand.Y;
@@ -1582,7 +1585,7 @@ PACKET_HANDLER(DenyMoveItem)
 					g_World->RemoveFromContainer(obj);
 
 				if (g_TooltipsEnabled)
-					AddMegaClilocRequest(obj->Serial);
+					AddMegaClilocRequest(g_ObjectInHand.Serial);
 
 				if (obj != NULL)
 					g_World->MoveToTop(obj);
@@ -1745,11 +1748,13 @@ PACKET_HANDLER(UpdateCharacter)
 	{
 		if (!obj->m_Steps.empty() && obj->Direction == obj->m_Steps.back().Direction)
 		{
-			CWalkData &wd = obj->m_Steps.back();
+			CWalkData &wd = obj->m_Steps.back();
+
 			obj->X = wd.X;
 			obj->Y = wd.Y;
 			obj->Z = wd.Z;
-			obj->Direction = wd.Direction;
+			obj->Direction = wd.Direction;
+
 			obj->m_Steps.clear();
 		}
 
@@ -2054,7 +2059,7 @@ PACKET_HANDLER(OpenContainer)
 			if (!obj->IsCorpse())
 				g_World->ClearContainer(obj);
 
-			if (gumpid = 0xFFFF)
+			if (gumpid == 0xFFFF)
 				((CGumpSpellbook*)gump)->UpdateGraphic(obj->Graphic);
 		}
 	}

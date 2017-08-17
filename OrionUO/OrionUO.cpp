@@ -1050,17 +1050,22 @@ void COrion::Process(const bool &rendering)
 
 		if (g_World != NULL)
 		{
-			if (g_World->ObjectToRemove != NULL)
+			if (g_World->ObjectToRemove != 0)
 			{
-				CGameCharacter *character = g_World->FindWorldCharacter(g_World->ObjectToRemove->Container);
+				CGameObject *removeObj = g_World->FindWorldObject(g_World->ObjectToRemove);
+				g_World->ObjectToRemove = 0;
 
-				g_World->RemoveObject(g_World->ObjectToRemove);
-				g_World->ObjectToRemove = NULL;
-
-				if (character != NULL)
+				if (removeObj != NULL)
 				{
-					character->m_FrameInfo = g_AnimationManager.CollectFrameInformation(character);
-					g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_PAPERDOLL);
+					CGameCharacter *character = g_World->FindWorldCharacter(removeObj->Container);
+
+					g_World->RemoveObject(removeObj);
+
+					if (character != NULL)
+					{
+						character->m_FrameInfo = g_AnimationManager.CollectFrameInformation(character);
+						g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_PAPERDOLL);
+					}
 				}
 			}
 
@@ -5377,6 +5382,7 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 	WISPFUN_DEBUG("c194_f103");
 	if (!g_ObjectInHand.Enabled)
 	{
+		g_ObjectInHand.Clear();
 		g_ObjectInHand.Enabled = true;
 
 		if (!count)
@@ -5394,10 +5400,11 @@ void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 		g_ObjectInHand.X = obj->X;
 		g_ObjectInHand.Y = obj->Y;
 		g_ObjectInHand.Z = obj->Z;
+		g_ObjectInHand.TotalCount = obj->Count;
 
-		CPacketPickupRequest(obj->Serial, count).Send();
+		CPacketPickupRequest(g_ObjectInHand.Serial, count).Send();
 
-		g_World->ObjectToRemove = obj;
+		g_World->ObjectToRemove = g_ObjectInHand.Serial;
 	}
 }
 //----------------------------------------------------------------------------------
