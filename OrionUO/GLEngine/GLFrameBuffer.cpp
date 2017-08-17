@@ -103,7 +103,7 @@ void CGLFrameBuffer::Release()
 @param [__in] height Высота буфера
 @return true в случае готовности
 */
-bool CGLFrameBuffer::Ready( __in int &width, __in int &height)
+bool CGLFrameBuffer::Ready(int &width, int &height)
 {
 	WISPFUN_DEBUG("c30_f6");
 	return (g_GL.CanUseFrameBuffer && m_Ready && Texture.Width == width && Texture.Height == height);
@@ -147,7 +147,7 @@ bool CGLFrameBuffer::Use()
 @param [__in] y Экранная координата Y
 @return 
 */
-void CGLFrameBuffer::Draw( __in int x, __in int y)
+void CGLFrameBuffer::Draw(int x, int y)
 {
 	WISPFUN_DEBUG("c30_f8");
 	if (g_GL.CanUseFrameBuffer && m_Ready)

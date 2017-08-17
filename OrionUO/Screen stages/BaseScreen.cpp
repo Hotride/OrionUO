@@ -99,7 +99,7 @@ void CBaseScreen::DrawSmoothMonitorEffect()
 @param [__in] action Идентификатор действия
 @return 
 */
-void CBaseScreen::CreateSmoothAction(__in BYTE action)
+void CBaseScreen::CreateSmoothAction(BYTE action)
 {
 	WISPFUN_DEBUG("c159_f4");
 	if (g_ScreenEffectManager.UseSunset())
