@@ -303,6 +303,33 @@ void CGameObject::Clear()
 	}
 }
 //----------------------------------------------------------------------------------
+void CGameObject::ClearUnequipped()
+{
+	WISPFUN_DEBUG("c20_f10_1");
+	if (!Empty())
+	{
+		CGameObject *newFirstItem = NULL;
+		CGameObject *obj = (CGameObject*)m_Items;
+
+		while (obj != NULL)
+		{
+			CGameObject *next = (CGameObject*)obj->m_Next;
+
+			if (((CGameItem*)obj)->Layer != OL_NONE)
+			{
+				if (newFirstItem == NULL)
+					newFirstItem = obj;
+			}
+			else
+				g_World->RemoveObject(obj);
+
+			obj = next;
+		}
+
+		m_Items = newFirstItem;
+	}
+}
+//----------------------------------------------------------------------------------
 void CGameObject::ClearNotOpenedItems()
 {
 	WISPFUN_DEBUG("c20_f11");

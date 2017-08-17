@@ -1504,7 +1504,11 @@ PACKET_HANDLER(UpdateContainedItems)
 			if (container != NULL)
 			{
 				LOG("Making %08X empty...\n", containerSerial);
-				container->Clear();
+
+				if (container->IsCorpse())
+					container->ClearUnequipped();
+				else
+					container->Clear();
 
 				/*if ((*(int(__thiscall **)(CGameContainer *))((int(__thiscall **)(_DWORD))containerObj1->GameObject.VTable
 					+ 12))(containerObj1))

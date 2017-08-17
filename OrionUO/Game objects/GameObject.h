@@ -158,6 +158,8 @@ public:
 	*/
 	void Clear();
 
+	void ClearUnequipped();
+
 	void ClearNotOpenedItems();
 
 	/*!
