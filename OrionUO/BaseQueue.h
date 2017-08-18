@@ -10,8 +10,6 @@
 #ifndef BASEQUEUE_H
 #define BASEQUEUE_H
 //----------------------------------------------------------------------------------
-#include <windows.h>
-//----------------------------------------------------------------------------------
 //!TBaseQueue for [extended]
 #define QFOR(var, start, type) for (type var = (type)start; var != NULL; var = (type)var->m_Next)
 //!TBaseQueue for

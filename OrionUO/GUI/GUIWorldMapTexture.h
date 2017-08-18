@@ -12,8 +12,6 @@
 #ifndef GUIWORLDMAPTEXTURE_H
 #define GUIWORLDMAPTEXTURE_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-//----------------------------------------------------------------------------------
 class CGUIWorldMapTexture : public CBaseGUI
 {
 	//!Индекс карты мира

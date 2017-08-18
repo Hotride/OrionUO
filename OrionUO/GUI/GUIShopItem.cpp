@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIShopItem.h"
-#include "../OrionUO.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/UOFileReader.h"
-#include "../Managers/AnimationManager.h"
-#include "../SelectedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIShopItem::CGUIShopItem(const uint &serial, const ushort &graphic, const ushort &color, const uint &count, const uint &price, const string &name, const int &x, const int &y)
 : CBaseGUI(GOT_SHOPITEM, serial, graphic, color, x, y), m_Count(count), m_Price(price),

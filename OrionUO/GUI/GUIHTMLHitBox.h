@@ -12,8 +12,6 @@
 #ifndef GUIHTMLHITBOX_H
 #define GUIHTMLHITBOX_H
 //----------------------------------------------------------------------------------
-#include "GUIHitBox.h"
-//----------------------------------------------------------------------------------
 class CGUIHTMLHitBox : public CGUIHitBox
 {
 private:

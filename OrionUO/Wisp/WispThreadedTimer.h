@@ -1,7 +1,6 @@
 ﻿//----------------------------------------------------------------------------------
 #ifndef WISPTHREADEDTIMER_H
 #define WISPTHREADEDTIMER_H
-#include "WispThread.h"
 //----------------------------------------------------------------------------------
 namespace WISP_THREADED_TIMER
 {

@@ -12,8 +12,6 @@
 #ifndef GUIRADIO_H
 #define GUIRADIO_H
 //----------------------------------------------------------------------------------
-#include "GUICheckbox.h"
-//----------------------------------------------------------------------------------
 class CGUIRadio : public CGUICheckbox
 {
 public:

@@ -7,7 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "CharacterList.h"
+#include "stdafx.h"
 
 CCharacterList g_CharacterList;
 //----------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ void CCharacterList::Clear()
 @param [__in] name Новое имя
 @return 
 */
-void CCharacterList::SetName(__in int pos, __in string name)
+void CCharacterList::SetName(int pos, string name)
 {
 	WISPFUN_DEBUG("c182_f3");
 	//!При корректной позиции записываем имя
@@ -53,7 +53,7 @@ void CCharacterList::SetName(__in int pos, __in string name)
 @param [__in] pos Позиция в списке
 @return Имя персонажа
 */
-string CCharacterList::GetName(__in int pos) const
+string CCharacterList::GetName(int pos) const
 {
 	WISPFUN_DEBUG("c182_f4");
 	string result = "";

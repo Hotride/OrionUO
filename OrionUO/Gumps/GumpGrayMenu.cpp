@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpGrayMenu.h"
-#include "../OrionUO.h"
-#include "../Screen stages/GameBlockedScreen.h"
-#include "../Network/Packets.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpGrayMenu::CGumpGrayMenu(uint serial, uint id, short x, short y)
 : CGump(GT_GRAY_MENU, serial, x, y)

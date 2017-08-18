@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpGeneric.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/FontsManager.h"
-#include "../TextEngine/GameConsole.h"
-#include "../Network/Packets.h"
-#include "../PressedObject.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpGeneric::CGumpGeneric(uint serial, short x, short y, uint id)
 : CGump(GT_GENERIC, serial, x, y)
@@ -170,7 +164,7 @@ bool CGumpGeneric::OnLeftMouseButtonDoubleClick()
 	if (g_GeneratedMouseDown)
 		return false;
 
-	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_VIRTURE_GUMP)
+	if (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject)->Type == GOT_VIRTURE_GUMP)
 	{
 		//Ответ на гамп
 		CPacketVirtureGumpResponse(this, g_PressedObject.LeftSerial).Send();

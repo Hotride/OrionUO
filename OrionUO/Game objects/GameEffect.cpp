@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameEffect.h"
-#include "../OrionUO.h"
-#include "GameEffectDrag.h"
-#include "GameEffectMoving.h"
-#include "../Managers/EffectManager.h"
-#include "../Managers/FileManager.h"
-#include "../Game objects/GameObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameEffect::CGameEffect()
 : CRenderWorldObject(ROT_EFFECT, 0, 0, 0, 0, 0, 0)

@@ -12,10 +12,6 @@
 #ifndef GUISKILLITEM_H
 #define GUISKILLITEM_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-#include "GUIButton.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CGUISkillItem : public CBaseGUI
 {
 	//!Индекс навыка

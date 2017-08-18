@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "RenderObject.h"
-#include "SelectedObject.h"
-#include "PressedObject.h"
-#include "ClickObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CRenderObject::CRenderObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y)
 : CBaseQueueItem(), m_Serial(serial), m_Graphic(graphic), m_Color(color), m_X(x), m_Y(y)

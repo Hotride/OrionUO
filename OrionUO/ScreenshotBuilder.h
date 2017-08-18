@@ -10,8 +10,6 @@
 #ifndef SCREENSHOTBUILDER_H
 #define SCREENSHOTBUILDER_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-//----------------------------------------------------------------------------------
 class CScreenshotBuilder
 {
 public:

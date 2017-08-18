@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpScreenSelectProfession.h"
-#include "../Screen stages/SelectProfessionScreen.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/ProfessionManager.h"
-#include "../Managers/ClilocManager.h"
-#include "../Skills.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpScreenSelectProfession::CGumpScreenSelectProfession()
 : CGump(GT_NONE, 0, 0, 0)

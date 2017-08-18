@@ -10,8 +10,6 @@
 #ifndef GUMPNOTIFY_H
 #define GUMPNOTIFY_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpNotify : public CGump
 {
 	SETGET(uchar, Variant, 0);

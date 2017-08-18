@@ -4,9 +4,7 @@ Notices: Copyright (c) 2000 Jeffrey Richter
 ******************************************************************************/
 
 
-#include <windows.h>
-#include <windowsx.h>
-#include "VMQuery.h"
+#include "stdafx.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

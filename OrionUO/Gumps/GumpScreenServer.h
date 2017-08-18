@@ -10,8 +10,6 @@
 #ifndef GUMPSCREENSERVER_H
 #define GUMPSCREENSERVER_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpScreenServer : public CGump
 {
 private:

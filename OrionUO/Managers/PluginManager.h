@@ -10,10 +10,6 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../BaseQueue.h"
-#include "../Globals.h"
-#include "../PluginInterface.h"
-//----------------------------------------------------------------------------------
 class CPlugin : public CBaseQueueItem
 {
 private:

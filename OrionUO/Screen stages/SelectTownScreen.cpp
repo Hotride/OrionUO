@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "SelectTownScreen.h"
-#include "CreateCharacterScreen.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "../Network/Packets.h"
-#include "../Managers/PacketManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CSelectTownScreen g_SelectTownScreen;
 //----------------------------------------------------------------------------------

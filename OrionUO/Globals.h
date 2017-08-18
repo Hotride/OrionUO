@@ -152,7 +152,6 @@ extern uint g_ClientFlag;
 extern bool g_SendLogoutNotification;
 extern bool g_NPCPopupEnabled;
 extern bool g_ChatEnabled;
-extern bool g_NoMegaCliloc;
 extern bool g_TooltipsEnabled;
 extern bool g_PaperdollBooks;
 
@@ -206,20 +205,10 @@ extern CHARACTER_SPEED_TYPE g_SpeedMode;
 //!Таймер черного экрана от смерти
 extern uint g_DeathScreenTimer;
 
-//!Количество запросов перемещения
-extern uchar g_WalkRequestCount;
-
-//!Время последнего шага
-extern uint g_PendingDelayTime;
-
 //!Модификатор расчета анимации персонажа
 extern float g_AnimCharactersDelayValue;
 
 typedef vector<pair<uint, uint>> UINTS_PAIR_LIST;
-
-extern UINTS_PAIR_LIST g_CorpseSerialList;
-
-extern UINTS_PAIR_LIST g_DeletedCharactersStack;
 
 //!Координаты, с которых следует начинать расчет удаления объектов
 extern WISP_GEOMETRY::CPoint2Di g_RemoveRangeXY;

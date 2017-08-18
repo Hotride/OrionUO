@@ -10,8 +10,6 @@
 #ifndef STATICOBJECT_H
 #define STATICOBJECT_H
 //----------------------------------------------------------------------------------
-#include "RenderStaticObject.h"
-//----------------------------------------------------------------------------------
 //Класс объекта статики
 class CStaticObject : public CRenderStaticObject
 {

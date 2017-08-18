@@ -7,21 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpPaperdoll.h"
-#include "../Game objects/GameWorld.h"
-#include "../OrionUO.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../PressedObject.h"
-#include "../Managers/MouseManager.h"
-#include "../ToolTip.h"
-#include "../Managers/PacketManager.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Target.h"
-#include "../Network/Packets.h"
-#include "../ClickObject.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/AnimationManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 int CGumpPaperdoll::UsedLayers[m_LayerCount] =
 {
@@ -154,7 +140,7 @@ void CGumpPaperdoll::CalculateGumpState()
 	WISPFUN_DEBUG("c105_f2");
 	CGump::CalculateGumpState();
 
-	if (g_GumpPressed && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsText())
+	if (g_GumpPressed && g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsText())
 	{
 		g_GumpMovingOffset.Reset();
 
@@ -283,8 +269,8 @@ void CGumpPaperdoll::InitToolTip()
 						{
 							if (obj->ClilocMessage.length())
 								g_ToolTip.Set(obj->ClilocMessage);
-							else if (g_PacketManager.ClientVersion >= CV_308Z)
-								g_PacketManager.AddMegaClilocRequest(obj->Serial, true);
+							else if (g_TooltipsEnabled)
+								g_PacketManager.AddMegaClilocRequest(obj->Serial);
 						}
 					}
 				}
@@ -345,7 +331,7 @@ void CGumpPaperdoll::PrepareContent()
 	if (obj == NULL)
 		return;
 
-	if (!g_Player->Dead() && m_Serial == g_PlayerSerial && g_PressedObject.LeftGump() == this && g_ObjectInHand == NULL && g_PressedObject.LeftSerial != 0xFFFFFFFF)
+	if (!g_Player->Dead() && m_Serial == g_PlayerSerial && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != 0xFFFFFFFF)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -376,9 +362,9 @@ void CGumpPaperdoll::PrepareContent()
 
 	bool wantTransparent = false;
 
-	if (g_SelectedObject.Gump == this && g_ObjectInHand != NULL && g_ObjectInHand->AnimID)
+	if (g_SelectedObject.Gump == this && g_ObjectInHand.Enabled && g_ObjectInHand.TiledataPtr->AnimID)
 	{
-		if (obj->FindLayer(g_ObjectInHand->UsedLayer) == NULL)
+		if (obj->FindLayer(g_ObjectInHand.TiledataPtr->Quality) == NULL)
 		{
 			if (!m_WantTransparentContent)
 			{
@@ -474,10 +460,6 @@ void CGumpPaperdoll::UpdateContent()
 	}
 
 	int gumpOffset = (obj->Female ? FEMALE_GUMP_OFFSET : MALE_GUMP_OFFSET);
-	uint ignoreSerial = 0;
-
-	if (g_ObjectInHand != NULL)
-		ignoreSerial = g_ObjectInHand->Serial;
 
 	//Draw equipment & backpack
 	CGameItem *equipment = NULL;
@@ -499,7 +481,7 @@ void CGumpPaperdoll::UpdateContent()
 		{
 			equipment = obj->FindLayer(UsedLayers[i]);
 
-			if (equipment != NULL && equipment->Serial != ignoreSerial)
+			if (equipment != NULL)
 			{
 				if (useSlots)
 				{
@@ -563,13 +545,13 @@ void CGumpPaperdoll::UpdateContent()
 					bodyGumppic->Serial = ID_GP_ITEMS + UsedLayers[i];
 				}
 			}
-			else if (m_WantTransparentContent && g_ObjectInHand != NULL && UsedLayers[i] == g_ObjectInHand->UsedLayer && g_ObjectInHand->AnimID)
+			else if (m_WantTransparentContent && g_ObjectInHand.Enabled && UsedLayers[i] == g_ObjectInHand.TiledataPtr->Quality && g_ObjectInHand.TiledataPtr->AnimID)
 			{
-				equipment = obj->FindLayer(g_ObjectInHand->UsedLayer);
+				equipment = obj->FindLayer(g_ObjectInHand.TiledataPtr->Quality);
 
 				if (equipment == NULL)
 				{
-					ushort id = g_ObjectInHand->AnimID;
+					ushort id = g_ObjectInHand.TiledataPtr->AnimID;
 
 					if (bodyIter != equipConv.end())
 					{
@@ -587,8 +569,8 @@ void CGumpPaperdoll::UpdateContent()
 					m_DataBox->Add(new CGUIAlphaBlending(true, 0.7f));
 
 					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(id + cOfs, 8, 19));
-					bodyGumppic->Color = g_ObjectInHand->Color;
-					bodyGumppic->PartialHue = g_ObjectInHand->IsPartialHue();
+					bodyGumppic->Color = g_ObjectInHand.Color;
+					bodyGumppic->PartialHue = (g_ObjectInHand.Color & 0x8000);
 
 					m_DataBox->Add(new CGUIAlphaBlending(false, 0.0f));
 				}
@@ -824,7 +806,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		{
 			if (!g_ClickObject.Enabled)
 			{
-				g_ClickObject.Init(g_PressedObject.LeftObject(), this);
+				g_ClickObject.Init(g_PressedObject.LeftObject, this);
 				g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
 			}
 
@@ -853,11 +835,11 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 		return;
 
 	//Что-то в руке
-	if ((!serial || serial >= ID_GP_ITEMS) && g_ObjectInHand != NULL)
+	if ((!serial || serial >= ID_GP_ITEMS) && g_ObjectInHand.Enabled)
 	{
 		bool canWear = true;
 
-		if (m_Serial != g_PlayerSerial && GetDistance(g_Player, container) > 3)
+		if (m_Serial != g_PlayerSerial && GetDistance(g_Player, container) >= 3)
 			canWear = false;
 
 		if (canWear && container != NULL)
@@ -883,9 +865,9 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 					return;
 				}
 			}
-			else if (g_ObjectInHand->IsWearable()) //Можно одевать
+			else if (IsWearable(g_ObjectInHand.TiledataPtr->Flags)) //Можно одевать
 			{
-				CGameItem *equipment = container->FindLayer(g_ObjectInHand->UsedLayer);
+				CGameItem *equipment = container->FindLayer(g_ObjectInHand.TiledataPtr->Quality);
 
 				if (equipment == NULL) //На этом слое ничего нет
 				{
@@ -907,7 +889,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 			g_Orion.PlaySoundEffect(0x0051);
 	}
 	
-	if (g_PressedObject.LeftSerial == serial && serial >= ID_GP_ITEMS && g_ObjectInHand == NULL)
+	if (g_PressedObject.LeftSerial == serial && serial >= ID_GP_ITEMS && !g_ObjectInHand.Enabled)
 	{
 		int layer = serial - ID_GP_ITEMS;
 		CGameItem *equipment = container->FindLayer(layer);
@@ -921,7 +903,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 			}
 			else //Click on object
 			{
-				if (!g_ClickObject.Enabled && (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled || g_NoMegaCliloc))
+				if (!g_ClickObject.Enabled && !g_TooltipsEnabled)
 				{
 					g_ClickObject.Init(equipment);
 					g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;

@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIText.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/FontsManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIText::CGUIText(const ushort &color, const int &x, const int &y)
 : CBaseGUI(GOT_TEXT, 0, 0, color, x, y)

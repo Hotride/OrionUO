@@ -12,8 +12,6 @@
 #ifndef GUITILEPICSCALED_H
 #define GUITILEPICSCALED_H
 //----------------------------------------------------------------------------------
-#include "GUITilepic.h"
-//----------------------------------------------------------------------------------
 class CGUITilepicScaled : public CGUITilepic
 {
 	SETGET(int, Width, 0);

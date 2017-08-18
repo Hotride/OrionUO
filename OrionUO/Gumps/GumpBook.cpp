@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpBook.h"
-#include "../Network/Packets.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/MouseManager.h"
-#include "../TextEngine/GameConsole.h"
-#include "../OrionUO.h"
-#include "../ClickObject.h"
-#include "../PressedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpBook::CGumpBook(uint serial, short x, short y, short pageCount, bool writable, bool unicode)
 : CGump(GT_BOOK, serial, x, y), m_PageCount(pageCount), m_Writable(writable),
@@ -232,7 +224,7 @@ void CGumpBook::GUMP_BUTTON_EVENT_C
 
 		if (newPage > -1)
 		{
-			g_ClickObject.Init(g_PressedObject.LeftObject(), this);
+			g_ClickObject.Init(g_PressedObject.LeftObject, this);
 			g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
 			g_ClickObject.Page = newPage;
 		}

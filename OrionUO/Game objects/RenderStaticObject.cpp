@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "RenderStaticObject.h"
-#include "../OrionUO.h"
-#include "../SelectedObject.h"
-#include "../Screen stages/GameScreen.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CRenderStaticObject::CRenderStaticObject(const RENDER_OBJECT_TYPE &renderType, const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z)
 : CMapObject(renderType, serial, graphic, color, x, y, z)

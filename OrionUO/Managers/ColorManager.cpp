@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "ColorManager.h"
-#include "FileManager.h"
-#include "../Constants.h"
+#include "stdafx.h"
 
 CColorManager g_ColorManager;
 //----------------------------------------------------------------------------------
@@ -302,20 +300,20 @@ uint CColorManager::GetPartialHueColor(ushort &c, ushort color)
 	return Color16To32(c);
 }
 //----------------------------------------------------------------------------------
-ushort CColorManager::FixColor(const ushort &color)
+ushort CColorManager::FixColor(const ushort &color, const ushort &defaultColor)
 {
 	ushort fixedColor = color & 0x3FFF;
 
-	if (color & 0x3FFF)
+	if (fixedColor)
 	{
 		if (fixedColor >= 0x0BB8)
 			fixedColor = 1;
-		else
-			fixedColor = (color & 0x8000) | (color & 0x4000) | fixedColor;
+
+		fixedColor |= (color & 0xC000);
 	}
 	else
 	{
-		fixedColor = 0;
+		fixedColor = defaultColor;
 	}
 
 	return fixedColor;

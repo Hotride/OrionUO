@@ -1,12 +1,8 @@
 //----------------------------------------------------------------------------------
-#include "ExceptionFilter.h"
-#include "OrionWindow.h"
-#include "OrionUO.h"
-#include "Wisp/WispMappedFile.h"
+#include "stdafx.h"
+
 #include <psapi.h>
 #include <tlhelp32.h>
-#include "VMQuery.h"
-#include "OrionStackWalker.h"
 
 #pragma comment(lib, "Psapi.lib")
 //----------------------------------------------------------------------------------

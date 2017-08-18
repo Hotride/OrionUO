@@ -7,31 +7,17 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameItem.h"
-#include "ObjectOnCursor.h"
-#include "../OrionUO.h"
-#include "../TargetGump.h"
-#include "../SelectedObject.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/MapManager.h"
-#include "../Managers/AnimationManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/PacketManager.h"
-#include "../Screen stages/GameScreen.h"
-#include "../Gumps/GumpMinimap.h"
-#include "GamePlayer.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameItem::CGameItem(const uint &serial)
 : CGameObject(serial), m_Layer(0), m_AnimID(0)
 {
+	m_NPC = false;
 }
 //----------------------------------------------------------------------------------
 CGameItem::~CGameItem()
 {
 	WISPFUN_DEBUG("c19_f1");
-	if (IsCorpse() && m_FieldColor)
-		return;
-
 	ClearMultiItems();
 	
 	if (m_Opened)
@@ -69,45 +55,6 @@ void CGameItem::ClearMultiItems()
 }
 //----------------------------------------------------------------------------------
 /*!
-Вставка данных из объекта в руке (на курсоре)
-@param [__in] obj Ссылка на объект на курсоре
-@return 
-*/
-void CGameItem::Paste(CObjectOnCursor *obj)
-{
-	WISPFUN_DEBUG("c19_f3");
-	if (obj == NULL)
-		return;
-
-	m_Items = NULL;
-	m_Next = NULL;
-	m_Prev = NULL;
-	
-	m_Serial = obj->Serial;
-	m_Graphic = obj->Graphic;
-	m_Color = obj->Color;
-	m_X = obj->X;
-	m_Y = obj->Y;
-	m_Z = obj->Z;
-	m_Count = obj->Count;
-	m_Layer = obj->Layer;
-	m_Flags = obj->Flags;
-	m_NPC = obj->NPC;
-	m_Container = obj->Container;
-	m_UsedLayer = obj->UsedLayer;
-	m_Opened = false;
-	m_AnimID = obj->AnimID;
-	m_MapIndex = obj->MapIndex;
-	m_Dragged = false;
-	m_Clicked = false;
-	m_MultiBody = obj->MultiBody;
-	m_WantUpdateMulti = obj->WantUpdateMulti;
-
-	m_Name = obj->Name;
-	OnGraphicChange();
-}
-//----------------------------------------------------------------------------------
-/*!
 Событие изменения картинки объекта
 @param [__in_opt] direction Направление предмета (для трупов)
 @return 
@@ -123,16 +70,6 @@ void CGameItem::OnGraphicChange(int direction)
 		if (IsCorpse())
 		{
 			m_AnimIndex = 99;
-
-			for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end(); i++)
-			{
-				if (i->first == m_Serial)
-				{
-					g_CorpseSerialList.erase(i);
-					m_AnimIndex = 0;
-					break;
-				}
-			}
 
 			if (direction & 0x80)
 			{
@@ -193,16 +130,7 @@ void CGameItem::OnGraphicChange(int direction)
 	{
 		m_RenderQueueIndex = 10;
 
-		if (!g_Player->m_Steps.empty())
-		{
-			g_RemoveRangeXY.X = g_Player->m_Steps.front().X;
-			g_RemoveRangeXY.Y = g_Player->m_Steps.front().Y;
-		}
-		else
-		{
-			g_RemoveRangeXY.X = g_Player->X;
-			g_RemoveRangeXY.Y = g_Player->Y;
-		}
+		g_Player->UpdateRemoveRange();
 
 		if (!m_MultiDistanceBonus || CheckMultiDistance(g_RemoveRangeXY, this, g_ConfigManager.UpdateRange))
 			LoadMulti(m_Items == NULL);
@@ -713,7 +641,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 		uint address = index.Address;
 
 		int count = index.Count;
-		
+
 		int minX = 0;
 		int minY = 0;
 		int maxX = 0;

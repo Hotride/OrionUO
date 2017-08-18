@@ -12,9 +12,6 @@
 #ifndef GUIHTMLTEXT_H
 #define GUIHTMLTEXT_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-#include "../GLEngine/GLHTMLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CGUIHTMLText : public CBaseGUI
 {
 	//!Индекс текста

@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpNotify.h"
-#include "../Screen stages/GameScreen.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../TextEngine/GameConsole.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpNotify::CGumpNotify(uint serial, short x, short y, uchar variant, short width, short height, string text)
 : CGump(GT_NOTIFY, serial, x, y), m_Variant(variant), m_Width(width),

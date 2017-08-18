@@ -10,8 +10,6 @@
 #ifndef ORIONAPPLICATION_H
 #define ORIONAPPLICATION_H
 //----------------------------------------------------------------------------------
-#include "Wisp/WispApplication.h"\
-//----------------------------------------------------------------------------------
 class COrionApplication : public WISP_APPLICATION::CApplication
 {
 protected:

@@ -10,8 +10,6 @@
 #ifndef EFFECTMANAGER_H
 #define EFFECTMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Game objects/GameEffect.h"
-//----------------------------------------------------------------------------------
 //!Класс менеджера эффектов
 class CEffectManager : public CBaseQueue
 {

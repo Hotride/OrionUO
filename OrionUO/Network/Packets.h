@@ -10,9 +10,6 @@
 #ifndef PACKETS_H
 #define PACKETS_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../Wisp/WispDataStream.h"
-//----------------------------------------------------------------------------------
 class CPacket : public WISP_DATASTREAM::CDataWritter
 {
 public:
@@ -438,7 +435,7 @@ public:
 class CPacketMegaClilocRequest : public CPacket
 {
 public:
-	CPacketMegaClilocRequest(const UINT_LIST &list);
+	CPacketMegaClilocRequest(UINT_LIST &list);
 };
 //----------------------------------------------------------------------------------
 class CPacketChangeStatLockStateRequest : public CPacket
@@ -505,6 +502,18 @@ class CPacketDisarmReq : public CPacket
 {
 public:
 	CPacketDisarmReq();
+};
+//----------------------------------------------------------------------------------
+class CPacketResend : public CPacket
+{
+public:
+	CPacketResend();
+};
+//----------------------------------------------------------------------------------
+class CPacketWalkRequest : public CPacket
+{
+public:
+	CPacketWalkRequest(const uchar &direction, const uchar &sequence, const uint &fastWalkKey);
 };
 //----------------------------------------------------------------------------------
 #endif

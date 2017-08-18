@@ -12,9 +12,6 @@
 #ifndef GUICHECKBOX_H
 #define GUICHECKBOX_H
 //----------------------------------------------------------------------------------
-#include "GUIDrawObject.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CGUICheckbox : public CGUIDrawObject
 {
 	//!ИД картинки в нажатом состоянии

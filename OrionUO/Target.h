@@ -10,10 +10,6 @@
 #ifndef TARGET_H
 #define TARGET_H
 //----------------------------------------------------------------------------------
-#include "Multi.h"
-#include "Game objects/MultiObject.h"
-#include "Wisp/WispDataStream.h"
-//----------------------------------------------------------------------------------
 //Класс для работы с таргетом
 class CTarget
 {

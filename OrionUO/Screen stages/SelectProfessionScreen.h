@@ -10,9 +10,6 @@
 #ifndef SELECTPROFESSIONSCREEN_H
 #define SELECTPROFESSIONSCREEN_H
 //----------------------------------------------------------------------------------
-#include "BaseScreen.h"
-#include "../Gumps/GumpScreenSelectProfession.h"
-//----------------------------------------------------------------------------------
 class CSelectProfessionScreen : public CBaseScreen
 {
 	//!Выбранный навык

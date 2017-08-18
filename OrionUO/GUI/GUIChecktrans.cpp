@@ -7,7 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIChecktrans.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIChecktrans::CGUIChecktrans(const int &x, const int &y, const int &width, const int &height)
 : CGUIPolygonal(GOT_CHECKTRANS, x, y, width, height)

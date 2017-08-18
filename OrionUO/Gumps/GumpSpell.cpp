@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpSpell.h"
-#include "../SelectedObject.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../ToolTip.h"
-#include "../PressedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpSpell::CGumpSpell(uint serial, short x, short y, ushort graphic, SPELLBOOK_TYPE spellType)
 : CGump(GT_SPELL, serial, x, y), m_SpellType(spellType)
@@ -293,14 +285,14 @@ CGumpSpell *CGumpSpell::GetNearSpell(int &x, int &y)
 bool CGumpSpell::GetSpellGroupOffset(int &x, int &y)
 {
 	WISPFUN_DEBUG("c126_f8");
-	if (InGroup() && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump() != NULL && !g_PressedObject.LeftSerial)
+	if (InGroup() && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump != NULL && !g_PressedObject.LeftSerial)
 	{
 		CGumpSpell *gump = GetTopSpell();
 
 		while (gump != NULL)
 		{
 			//Если гамп захватили и (может быть) двигают
-			if (gump != this && g_PressedObject.LeftGump() == gump && gump->CanBeMoved())
+			if (gump != this && g_PressedObject.LeftGump == gump && gump->CanBeMoved())
 			{
 				WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 

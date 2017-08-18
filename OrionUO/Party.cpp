@@ -7,14 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "Party.h"
-#include "OrionUO.h"
-#include "Gumps/GumpStatusbar.h"
-#include "Managers/MouseManager.h"
-#include "Managers/GumpManager.h"
-#include "Managers/ConfigManager.h"
-#include "Game objects/GameWorld.h"
-#include "Game objects/GamePlayer.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CParty g_Party;
 //----------------------------------------------------------------------------------

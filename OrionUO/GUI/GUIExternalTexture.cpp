@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIExternalTexture.h"
-#include "../OrionUO.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/UOFileReader.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIExternalTexture::CGUIExternalTexture(CGLTexture *texture, const bool &deleteTextureOnDestroy, const int &x, const int &y)
 : CBaseGUI(GOT_EXTERNALTEXTURE, 0, 0, 0, x, y), m_Texture(texture),

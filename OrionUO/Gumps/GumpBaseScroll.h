@@ -10,8 +10,6 @@
 #ifndef GUMPBASESCROLL_H
 #define GUMPBASESCROLL_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpBaseScroll : public CGump
 {
 	SETGET(int, Height, 0);

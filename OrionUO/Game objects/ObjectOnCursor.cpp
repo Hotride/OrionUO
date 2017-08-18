@@ -7,38 +7,46 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "ObjectOnCursor.h"
-#include "../OrionUO.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
-CObjectOnCursor *g_ObjectInHand = NULL;
+CObjectOnCursor g_ObjectInHand;
 //----------------------------------------------------------------------------------
-CObjectOnCursor::CObjectOnCursor()
-: CGameItem()
+void CObjectOnCursor::Clear()
 {
+	m_Enabled = false;
+	m_Serial = 0;
+	m_Graphic = 0;
+	m_Color = 0;
+	m_Count = 0;
+	m_TotalCount = 0;
+	m_Layer = 0;
+	m_Flags = 0;
+	m_Container = 0;
+	m_IsGameFigure = false;
+	m_TiledataPtr = NULL;
 }
 //----------------------------------------------------------------------------------
-CObjectOnCursor::CObjectOnCursor(CGameItem *obj)
-: CGameItem(), m_Separated(false), m_Deleted(false), m_Dropped(false),
-m_IsGameFigure(false), m_DragCount(obj->Count), m_NoDraw(false)
+ushort CObjectOnCursor::GetDrawGraphic(bool &doubleDraw)
 {
-	WISPFUN_DEBUG("c26_f1");
-	m_Serial = obj->Serial;
-	m_Graphic = obj->Graphic;
-	m_Color = obj->Color;
-	m_X = obj->X;
-	m_Y = obj->Y;
-	m_Z = obj->Z;
-	m_Count = obj->Count;
-	m_Layer = obj->Layer;
-	m_Flags = obj->Flags;
-	m_NPC = obj->NPC;
-	m_Container = obj->Container;
-	m_UsedLayer = obj->UsedLayer;
-	m_AnimID = obj->AnimID;
-	m_MapIndex = obj->MapIndex;
-	m_Name = obj->Name;
+	WISPFUN_DEBUG("c20_f15");
+	int index = CGameObject::IsGold(m_Graphic);
+	ushort result = m_Graphic;
 
-	if (m_Graphic < g_Orion.m_StaticData.size())
-		m_TiledataPtr = &g_Orion.m_StaticData[m_Graphic];
+	const ushort graphicAssociateTable[3][3] =
+	{
+		{ 0x0EED, 0x0EEE, 0x0EEF },
+		{ 0x0EEA, 0x0EEB, 0x0EEC },
+		{ 0x0EF0, 0x0EF1, 0x0EF2 }
+	};
+
+	if (index)
+	{
+		int graphicIndex = (int)(m_Count > 1) + (int)(m_Count > 5);
+		result = graphicAssociateTable[index - 1][graphicIndex];
+	}
+	else
+		doubleDraw = IsStackable(m_TiledataPtr->Flags) && (m_Count > 1);
+
+	return result;
 }
 //----------------------------------------------------------------------------------

@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIDrawObject.h"
-#include "../OrionUO.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/UOFileReader.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIDrawObject::CGUIDrawObject(const GUMP_OBJECT_TYPE &type, const uint &serial, const ushort &graphic, const ushort &color, const int &x, const int &y)
 : CBaseGUI(type, serial, graphic, color, x, y)

@@ -10,8 +10,6 @@
 #ifndef GUMPWORLDMAP_H
 #define GUMPWORLDMAP_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpWorldMap : public CGump
 {
 	SETGET(int, Width, MIN_WORLD_MAP_WIDTH);

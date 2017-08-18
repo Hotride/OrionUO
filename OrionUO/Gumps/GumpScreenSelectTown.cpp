@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpScreenSelectTown.h"
-#include "../Screen stages/SelectTownScreen.h"
-#include "../OrionUO.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/CityManager.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/PacketManager.h"
-#include "../CityList.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpScreenSelectTown::CGumpScreenSelectTown()
 : CGump(GT_NONE, 0, 0, 0)

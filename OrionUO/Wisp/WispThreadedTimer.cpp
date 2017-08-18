@@ -1,6 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
-#include "WispThreadedTimer.h"
-#include "WispWindow.h"
+#include "stdafx.h"
 
 namespace WISP_THREADED_TIMER
 {

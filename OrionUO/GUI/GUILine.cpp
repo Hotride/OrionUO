@@ -7,7 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUILine.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUILine::CGUILine(const int &startX, const int &startY, const int &targetX, const int &targetY, const uint &polygoneColor)
 : CBaseGUI(GOT_LINE, 0, 0, 0, startX, startY), m_TargetX(targetX), m_TargetY(targetY)

@@ -7,25 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpStatusbar.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/ConnectionManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/FontsManager.h"
-#include "../PressedObject.h"
-#include "../SelectedObject.h"
-#include "../Network/Packets.h"
-#include "../Target.h"
-#include "../TargetGump.h"
-#include "../Party.h"
-#include "../OrionUO.h"
-#include "../TextEngine/GameConsole.h"
-#include "../ToolTip.h"
-#include "../Managers/FileManager.h"
+#include "stdafx.h"
 
 int CGumpStatusbar::m_StatusbarDefaultWidth = 154;
 int CGumpStatusbar::m_StatusbarDefaultHeight = 59;
@@ -266,14 +248,14 @@ CGumpStatusbar *CGumpStatusbar::GetNearStatusbar(int &x, int &y)
 bool CGumpStatusbar::GetStatusbarGroupOffset(int &x, int &y)
 {
 	WISPFUN_DEBUG("c128_f6");
-	if (InGroup() && m_Minimized && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump() != NULL && (g_PressedObject.LeftObject() == NULL || (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->MoveOnDrag)))
+	if (InGroup() && m_Minimized && g_MouseManager.LeftButtonPressed && g_PressedObject.LeftGump != NULL && (g_PressedObject.LeftObject == NULL || (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject)->MoveOnDrag)))
 	{
 		CGumpStatusbar *gump = GetTopStatusbar();
 
 		while (gump != NULL)
 		{
 			//Если гамп захватили и (может быть) двигают
-			if (gump != this && g_PressedObject.LeftGump() == gump && gump->CanBeMoved())
+			if (gump != this && g_PressedObject.LeftGump == gump && gump->CanBeMoved())
 			{
 				WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -1315,12 +1297,8 @@ void CGumpStatusbar::SendRenameRequest()
 			//Отправляем запрос на изменение имени
 			CPacketRenameRequest(m_Serial, entry->c_str()).Send();
 
-			if (g_PacketManager.ClientVersion >= CV_308Z)
-			{
-				UINT_LIST list;
-				list.push_back(m_Serial);
-				g_PacketManager.SendMegaClilocRequests(list);
-			}
+			if (g_TooltipsEnabled)
+				g_PacketManager.AddMegaClilocRequest(m_Serial);
 		}
 	}
 }

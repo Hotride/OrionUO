@@ -10,8 +10,6 @@
 #ifndef GUMPBULLETINBOARDITEM_H
 #define GUMPBULLETINBOARDITEM_H
 //----------------------------------------------------------------------------------
-#include "GumpBaseScroll.h"
-//----------------------------------------------------------------------------------
 class CGumpBulletinBoardItem : public CGumpBaseScroll
 {
 protected:

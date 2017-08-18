@@ -10,9 +10,6 @@
 #ifndef COLORMANAGER_H
 #define COLORMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../MulStruct.h"
-//----------------------------------------------------------------------------------
 //!Структура цветов для отправки в шейдер
 struct FLOAT_HUES
 {
@@ -157,7 +154,7 @@ public:
 	*/
 	uint GetPartialHueColor(ushort &c, ushort color);
 
-	ushort FixColor(const ushort &color);
+	ushort FixColor(const ushort &color, const ushort &defaultColor = 0);
  };
  //----------------------------------------------------------------------------------
 //!Ссылка на менеджер цветов

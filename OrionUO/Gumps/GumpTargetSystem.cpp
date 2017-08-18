@@ -7,16 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpTargetSystem.h"
-#include "../Target.h"
-#include "../TargetGump.h"
-#include "../OrionUO.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../PressedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpTargetSystem::CGumpTargetSystem(uint serial, short x, short y)
 : CGump(GT_TARGET_SYSTEM, serial, x, y)

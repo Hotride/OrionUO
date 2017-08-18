@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameEffectMoving.h"
-#include "GameWorld.h"
-#include "GamePlayer.h"
-#include "../Managers/EffectManager.h"
-#include "../Managers/MapManager.h"
-#include "../Screen stages/GameScreen.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameEffectMoving::CGameEffectMoving()
 : CGameEffectDrag()

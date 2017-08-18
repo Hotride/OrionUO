@@ -7,27 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpOptions.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/SoundManager.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/OptionsMacroManager.h"
-#include "../Managers/MacroManager.h"
-#include "GumpSelectColor.h"
-#include "GumpSelectFont.h"
-#include "GumpMenubar.h"
-#include "../Network/Packets.h"
-#include "../GLEngine/GLTextureCircleOfTransparency.h"
-#include "../Container.h"
-#include "../OrionWindow.h"
-#include "../OrionUO.h"
-#include "../Macro.h"
-#include "../TextEngine/GameConsole.h"
-#include "../PressedObject.h"
-#include "../SelectedObject.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 const ushort g_OptionsTextColor = 0;
 //----------------------------------------------------------------------------------
@@ -48,7 +28,7 @@ void CGumpOptions::CalculateGumpState()
 
 	if (g_GumpPressed)
 	{
-		if (g_PressedObject.LeftObject() != NULL && ((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_COMBOBOX)
+		if (g_PressedObject.LeftObject != NULL && ((CBaseGUI*)g_PressedObject.LeftObject)->Type == GOT_COMBOBOX)
 		{
 			g_GumpMovingOffset.Reset();
 
@@ -715,7 +695,7 @@ void CGumpOptions::InitToolTip()
 			}
 			case ID_GO_P7_LOCK_GAME_WINDOW_RESIZING:
 			{
-				g_ToolTip.Set(L"Disable/enable real-time window resizing");
+				g_ToolTip.Set(L"Disable/enable real-time window moving and resizing");
 				break;
 			}
 			case ID_GO_P8_INNOCENT_COLOR:
@@ -1620,7 +1600,7 @@ void CGumpOptions::DrawPage7()
 
 	CGUICheckbox *checkbox = (CGUICheckbox*)Add(new CGUICheckbox(ID_GO_P7_LOCK_GAME_WINDOW_RESIZING, 0x00D2, 0x00D3, 0x00D2, 230, 114));
 	checkbox->Checked = g_OptionsConfig.LockResizingGameWindow;
-	checkbox->SetTextParameters(0, L"Lock game window resizing", g_OptionsTextColor);
+	checkbox->SetTextParameters(0, L"Lock game window moving and resizing", g_OptionsTextColor);
 
 
 

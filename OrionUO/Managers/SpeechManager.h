@@ -10,27 +10,27 @@
 #ifndef SPEECHMANAGER_H
 #define SPEECHMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-//----------------------------------------------------------------------------------
 class CLangCode
 {
-	SETGET(string, Code, "");
+	SETGET(int, Code, 0);
 
 	//! Строковая, уникальная абревиатура локали.
-	SETGET(string, LangString, "");
+	SETGET(string, Abbreviature, "");
 
 	//! Числовая абревиатура группы? локали.
 	SETGET(uint, Unknown, 0);
 
 	//! Название языка.
-	SETGET(string, LangName, "");
+	SETGET(string, Language, "");
 
 	//! Название страны.
-	SETGET(string, LangCountry, "");
+	SETGET(string, Country, "");
 
 public:
-	CLangCode();
-	virtual ~CLangCode();
+	CLangCode() {}
+	CLangCode(const string &abbreviature, const int &code, const string &language, const string &country)
+		: m_Abbreviature(abbreviature), m_Code(code), m_Language(language), m_Country(country) {}
+	virtual ~CLangCode() {}
 };
 //----------------------------------------------------------------------------------
 class CSpeechItem
@@ -45,13 +45,15 @@ class CSpeechItem
 	SETGET(bool, CheckEnd, false);
 
 public:
-	CSpeechItem();
-	virtual ~CSpeechItem();
+	CSpeechItem() {}
+	virtual ~CSpeechItem() {}
 };
 //----------------------------------------------------------------------------------
 //!Класс менеджера cпича
 class CSpeechManager
 {
+	SETGET(CLangCode*, CurrentLanguage, NULL);
+
 private:
 	vector<CSpeechItem> m_SpeechEntries;
 	vector<CLangCode> m_LangCodes;

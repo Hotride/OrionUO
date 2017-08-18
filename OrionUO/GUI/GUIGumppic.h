@@ -12,8 +12,6 @@
 #ifndef GUIGUMPPIC_H
 #define GUIGUMPPIC_H
 //----------------------------------------------------------------------------------
-#include "GUIDrawObject.h"
-//----------------------------------------------------------------------------------
 class CGUIGumppic : public CGUIDrawObject
 {
 public:

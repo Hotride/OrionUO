@@ -10,8 +10,6 @@
 #ifndef GUMPTIP_H
 #define GUMPTIP_H
 //----------------------------------------------------------------------------------
-#include "GumpBaseScroll.h"
-//----------------------------------------------------------------------------------
 class CGumpTip : public CGumpBaseScroll
 {
 	SETGET(bool, Updates, false);

@@ -12,8 +12,6 @@
 #ifndef GUIMENUOBJECT_H
 #define GUIMENUOBJECT_H
 //----------------------------------------------------------------------------------
-#include "GUITilepic.h"
-//----------------------------------------------------------------------------------
 class CGUIMenuObject : public CGUITilepic
 {
 	//!Текст объекта

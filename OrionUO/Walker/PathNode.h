@@ -10,9 +10,6 @@
 #ifndef PATHNODE_H
 #define PATHNODE_H
 //----------------------------------------------------------------------------------
-#include "../BaseQueue.h"
-#include "../Globals.h"
-//----------------------------------------------------------------------------------
 struct PATH_POINT
 {
 	int X;
@@ -21,7 +18,7 @@ struct PATH_POINT
 };
 //----------------------------------------------------------------------------------
 //Класс объекта в точке пути
-class CPathObjectTest
+class CPathObject
 {
 	//Флаги
 	SETGET(uint, Flags, 0);
@@ -36,25 +33,10 @@ class CPathObjectTest
 	SETGET(int, Height, 0);
 
 public:
-	CPathObjectTest(const uint &flags, const int &z, const int &averageZ, const int &height, class CRenderWorldObject *object) : m_Flags(flags), m_Z(z), m_AverageZ(averageZ), m_Height(height), m_Object(object) {}
-	virtual ~CPathObjectTest() {}
+	CPathObject(const uint &flags, const int &z, const int &averageZ, const int &height, class CRenderWorldObject *object) : m_Flags(flags), m_Z(z), m_AverageZ(averageZ), m_Height(height), m_Object(object) {}
+	virtual ~CPathObject() {}
 
 	class CRenderWorldObject *m_Object;
-};
-//----------------------------------------------------------------------------------
-//Класс объекта в точке пути
-class CPathObject : public CBaseQueueItem
-{
-	//Координата Z точки
-	SETGET(int, Z, 0);
-	//Высота точки
-	SETGET(char, Height, 0);
-	//Идентификатор поверхности
-	SETGET(BYTE, Surface, 0);
-
-public:
-	CPathObject(const int &z, const char &height, const char &surface);
-	virtual ~CPathObject();
 };
 //----------------------------------------------------------------------------------
 //Класс объекта в точке пути

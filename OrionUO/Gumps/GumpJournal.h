@@ -10,8 +10,6 @@
 #ifndef GUMPJOURNAL_H
 #define GUMPJOURNAL_H
 //----------------------------------------------------------------------------------
-#include "GumpBaseScroll.h"
-//----------------------------------------------------------------------------------
 class CGumpJournal : public CGumpBaseScroll
 {
 private:

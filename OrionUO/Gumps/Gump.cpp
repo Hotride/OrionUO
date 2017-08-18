@@ -7,21 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-#include "../GUI/GUIPage.h"
-#include "../GUI/GUIGroup.h"
-#include "../GLEngine/GLEngine.h"
-#include "../GLEngine/GLShader.h"
-#include "../SelectedObject.h"
-#include "../PressedObject.h"
-#include "../ClickObject.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Constants.h"
-#include "../Screen stages/GameScreen.h"
-#include "../OrionUO.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../OrionWindow.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGump *g_ResizedGump = NULL;
 CGump *g_CurrentCheckGump = NULL;
@@ -63,12 +49,18 @@ CGump::~CGump()
 	if (g_LastSelectedObject.Gump == this)
 		g_LastSelectedObject.Clear();
 
-	if (g_PressedObject.LeftGump() == this)
+	if (g_PressedObject.LeftGump == this)
 		g_PressedObject.ClearLeft();
-	if (g_PressedObject.RightGump() == this)
+	if (g_PressedObject.RightGump == this)
 		g_PressedObject.ClearRight();
-	if (g_PressedObject.MidGump() == this)
+	if (g_PressedObject.MidGump == this)
 		g_PressedObject.ClearMid();
+}
+//---------------------------------------------------------------------------
+void CGump::GUMP_DIRECT_HTML_LINK_EVENT_C
+{
+	g_FontManager.GoToWebLink(link);
+	DebugMsg("OnDirectHTMLLink(%i)\n", link);
 }
 //---------------------------------------------------------------------------
 void CGump::FixCoordinates()
@@ -165,7 +157,7 @@ bool CGump::SelectLocker()
 bool CGump::TestLockerClick()
 {
 	WISPFUN_DEBUG("c84_f5");
-	bool result = (m_Locker.Serial && g_ShowGumpLocker && g_PressedObject.LeftObject() == &m_Locker);
+	bool result = (m_Locker.Serial && g_ShowGumpLocker && g_PressedObject.LeftObject == &m_Locker);
 
 	if (result)
 		OnButton(m_Locker.Serial);
@@ -176,19 +168,21 @@ bool CGump::TestLockerClick()
 void CGump::CalculateGumpState()
 {
 	WISPFUN_DEBUG("c84_f6");
-	g_GumpPressed = (g_ObjectInHand == NULL && g_PressedObject.LeftGump() == this /*&& g_SelectedObject.Gump() == this*/);
+	g_GumpPressed = (!g_ObjectInHand.Enabled && g_PressedObject.LeftGump == this /*&& g_SelectedObject.Gump() == this*/);
 	g_GumpSelectedElement = ((g_SelectedObject.Gump == this) ? g_SelectedObject.Object : NULL);
 	g_GumpPressedElement = NULL;
 
-	if (g_GumpPressed && g_PressedObject.LeftObject() != NULL)
+	CRenderObject *leftObj = g_PressedObject.LeftObject;
+
+	if (g_GumpPressed && leftObj != NULL)
 	{
-		if (g_PressedObject.LeftObject() == g_SelectedObject.Object)
-			g_GumpPressedElement = g_PressedObject.LeftObject();
-		else if (g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->IsPressedOuthit())
-			g_GumpPressedElement = g_PressedObject.LeftObject();
+		if (leftObj == g_SelectedObject.Object)
+			g_GumpPressedElement = leftObj;
+		else if (leftObj->IsGUI() && ((CBaseGUI*)leftObj)->IsPressedOuthit())
+			g_GumpPressedElement = leftObj;
 	}
 
-	if (CanBeMoved() && g_GumpPressed && g_ObjectInHand == NULL && (!g_PressedObject.LeftSerial || g_GumpPressedElement == NULL || g_PressedObject.TestMoveOnDrag()))
+	if (CanBeMoved() && g_GumpPressed && !g_ObjectInHand.Enabled && (!g_PressedObject.LeftSerial || g_GumpPressedElement == NULL || g_PressedObject.TestMoveOnDrag()))
 		g_GumpMovingOffset = g_MouseManager.LeftDroppedOffset();
 	else
 		g_GumpMovingOffset.Reset();
@@ -208,35 +202,35 @@ void CGump::CalculateGumpState()
 void CGump::ProcessListing()
 {
 	WISPFUN_DEBUG("c84_f7");
-	if (g_PressedObject.LeftGump() != NULL && !g_PressedObject.LeftGump()->NoProcess && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI())
+	if (g_PressedObject.LeftGump != NULL && !g_PressedObject.LeftGump->NoProcess && g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI())
 	{
-		CBaseGUI *item = (CBaseGUI*)g_PressedObject.LeftObject();
+		CBaseGUI *item = (CBaseGUI*)g_PressedObject.LeftObject;
 
 		if (item->IsControlHTML())
 		{
 			if (item->Type == GOT_BUTTON)
 			{
 				((CGUIHTMLButton*)item)->Scroll(item->Color != 0, SCROLL_LISTING_DELAY / 7);
-				g_PressedObject.LeftGump()->WantRedraw = true;
-				g_PressedObject.LeftGump()->OnScrollButton();
+				g_PressedObject.LeftGump->WantRedraw = true;
+				g_PressedObject.LeftGump->OnScrollButton();
 			}
 			else if (item->Type == GOT_HITBOX)
 			{
 				((CGUIHTMLHitBox*)item)->Scroll(item->Color != 0, SCROLL_LISTING_DELAY / 7);
-				g_PressedObject.LeftGump()->WantRedraw = true;
-				g_PressedObject.LeftGump()->OnScrollButton();
+				g_PressedObject.LeftGump->WantRedraw = true;
+				g_PressedObject.LeftGump->OnScrollButton();
 			}
 		}
 		else if (item->Type == GOT_BUTTON && ((CGUIButton*)item)->ProcessPressedState)
 		{
-			g_PressedObject.LeftGump()->WantRedraw = true;
-			g_PressedObject.LeftGump()->OnButton(item->Serial);
+			g_PressedObject.LeftGump->WantRedraw = true;
+			g_PressedObject.LeftGump->OnButton(item->Serial);
 		}
 		else if (item->Type == GOT_MINMAXBUTTONS)
 		{
 			((CGUIMinMaxButtons*)item)->Scroll(SCROLL_LISTING_DELAY / 2);
-			g_PressedObject.LeftGump()->OnScrollButton();
-			g_PressedObject.LeftGump()->WantRedraw = true;
+			g_PressedObject.LeftGump->OnScrollButton();
+			g_PressedObject.LeftGump->WantRedraw = true;
 		}
 		else if (item->Type == GOT_COMBOBOX)
 		{
@@ -258,7 +252,7 @@ void CGump::ProcessListing()
 						index = 0;
 
 					combo->StartIndex = index;
-					g_PressedObject.LeftGump()->WantRedraw = true;
+					g_PressedObject.LeftGump->WantRedraw = true;
 				}
 
 				combo->ListingTimer = g_Ticks + 50;
@@ -376,7 +370,7 @@ void CGump::DrawItems(CBaseGUI *start, const int &currentPage, const int draw2Pa
 				}
 				case GOT_COMBOBOX:
 				{
-					if (g_PressedObject.LeftObject() == item)
+					if (g_PressedObject.LeftObject == item)
 					{
 						combo = (CGUIComboBox*)item;
 						break;
@@ -506,7 +500,7 @@ CRenderObject *CGump::SelectItems(CBaseGUI *start, const int &currentPage, const
 				{
 					//selected = ((CGUIComboBox*)item)->SelectedItem();
 
-					if (g_PressedObject.LeftObject() == item)
+					if (g_PressedObject.LeftObject == item)
 						combo = (CGUIComboBox*)item;
 					else
 						selected = item;
@@ -825,9 +819,9 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 			{
 				if (item->Type != GOT_DATABOX && item->Type != GOT_COMBOBOX && item->Type != GOT_SKILLITEM && item->Type != GOT_SKILLGROUP)
 				{
-					if (g_PressedObject.LeftObject() == item)
+					if (g_PressedObject.LeftObject == item)
 					{
-						if (g_SelectedObject.Object != g_PressedObject.LeftObject() && !item->IsPressedOuthit())
+						if (g_SelectedObject.Object != g_PressedObject.LeftObject && !item->IsPressedOuthit())
 							continue;
 					}
 					else
@@ -987,7 +981,7 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 				{
 					CGUISkillItem *skillItem = (CGUISkillItem*)item;
 
-					if ((g_PressedObject.LeftObject() == skillItem->m_ButtonUse && skillItem->m_ButtonUse != NULL) || g_PressedObject.LeftObject() == skillItem->m_ButtonStatus)
+					if ((g_PressedObject.LeftObject == skillItem->m_ButtonUse && skillItem->m_ButtonUse != NULL) || g_PressedObject.LeftObject == skillItem->m_ButtonStatus)
 					{
 						gump->OnButton(g_PressedObject.LeftSerial);
 						gump->WantRedraw = true;
@@ -999,7 +993,7 @@ void CGump::TestItemsLeftMouseUp(CGump *gump, CBaseGUI *start, const int &curren
 				{
 					CGUISkillGroup *skillGroup = (CGUISkillGroup*)item;
 
-					if (g_PressedObject.LeftObject() == skillGroup->m_Minimizer)
+					if (g_PressedObject.LeftObject == skillGroup->m_Minimizer)
 					{
 						gump->OnButton(g_PressedObject.LeftSerial);
 						gump->WantRedraw = true;
@@ -1159,7 +1153,7 @@ void CGump::TestItemsDragging(CGump *gump, CBaseGUI *start, const int &currentPa
 				group = ((CGUIGroup*)item)->Index;
 				continue;
 			}
-			else if (g_PressedObject.LeftObject() != item && !item->IsHTMLGump())
+			else if (g_PressedObject.LeftObject != item && !item->IsHTMLGump())
 				continue;
 
 			switch (item->Type)

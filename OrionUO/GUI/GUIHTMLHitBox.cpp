@@ -7,8 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIHTMLHitBox.h"
-#include "GUIHTMLGump.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIHTMLHitBox::CGUIHTMLHitBox(CGUIHTMLGump *htmlGump, const uint &serial, const int &x, const int &y, const int &width, const int &height, const bool &callOnMouseUp)
 : CGUIHitBox(serial, x, y, width, height, callOnMouseUp), m_HTMLGump(htmlGump)

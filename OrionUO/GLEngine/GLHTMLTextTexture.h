@@ -10,8 +10,6 @@
 #ifndef GLHTMLTEXTTEXTURE_H
 #define GLHTMLTEXTTEXTURE_H
 //----------------------------------------------------------------------------------
-#include "GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CGLHTMLTextTexture : public CGLTextTexture
 {
 private:

@@ -7,45 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameScreen.h"
-#include "GameBlockedScreen.h"
-#include "../Gumps/Gump.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/MapManager.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/AnimationManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/MacroManager.h"
-#include "../Managers/PacketManager.h"
-#include "../SelectedObject.h"
-#include "../PressedObject.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../ImageBounds.h"
-#include "../TextEngine/TextRenderer.h"
-#include "../GLEngine/GLTextureCircleOfTransparency.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../Target.h"
-#include "../TargetGump.h"
-#include "../Weather.h"
-#include "../QuestArrow.h"
-#include "../TextEngine/TextContainer.h"
-#include "../TextEngine/GameConsole.h"
-#include "../Walker/PathFinder.h"
-#include "../Network/Packets.h"
-#include "../Gumps/GumpConsoleType.h"
-#include "../ScreenshotBuilder.h"
-#include "../Gumps/GumpDrag.h"
-#include "../ClickObject.h"
-#include "../Macro.h"
-#include "../Gumps/GumpSkills.h"
-#include "../Gumps/GumpTargetSystem.h"
-#include "../Gumps/GumpPopupMenu.h"
-#include "../Managers/PluginManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameScreen g_GameScreen;
 RENDER_VARIABLES_FOR_GAME_WINDOW g_RenderBounds;
@@ -107,7 +69,7 @@ void CGameScreen::InitToolTip()
 {
 	WISPFUN_DEBUG("c164_f5");
 
-	if (!(g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z))
+	if (!(g_ConfigManager.UseToolTips || g_TooltipsEnabled))
 		return;
 
 	g_FontManager.SetUseHTML(true);
@@ -1273,11 +1235,6 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 			}
 		}
 
-		uint ignoreSerial = 0;
-
-		if (g_ObjectInHand != NULL)
-			ignoreSerial = g_ObjectInHand->Serial;
-
 		m_HitsStack.clear();
 
 		IFOR(i, 0, m_RenderListCount)
@@ -1287,9 +1244,6 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 			if (obj != NULL)
 			{
-				if (obj->IsGameObject() && obj->Serial == ignoreSerial)
-					continue;
-
 				g_OutOfRangeColor = rod.GrayColor;
 
 				g_UseCircleTrans = (g_ConfigManager.UseCircleTrans && obj->TranparentTest(playerZPlus5));
@@ -1576,8 +1530,8 @@ void CGameScreen::PrepareContent()
 	else
 		g_StatusbarUnderMouse = 0;
 
-	//if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && g_PressedObject.LeftObject() == g_SelectedObject.Object())
-	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGameObject())
+	//if (g_SelectedObject.Object() != NULL && g_SelectedObject.Object()->IsGameObject() && g_PressedObject.LeftObject == g_SelectedObject.Object())
+	if (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGameObject())
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -1585,7 +1539,7 @@ void CGameScreen::PrepareContent()
 		{
 			CGameItem *selobj = g_World->FindWorldItem(g_PressedObject.LeftSerial);
 
-			if (selobj != NULL && g_ObjectInHand == NULL && !selobj->Locked() && GetDistance(g_Player, selobj) < 3)
+			if (selobj != NULL && !g_ObjectInHand.Enabled && !selobj->Locked() && GetDistance(g_Player, selobj) <= 3)
 			{
 				if (selobj->Serial >= 0x40000000 && !g_GrayedPixels) //Item selection
 				{
@@ -1604,7 +1558,7 @@ void CGameScreen::PrepareContent()
 					}
 				}
 			}
-			else if (g_ObjectInHand == NULL)
+			else if (!g_ObjectInHand.Enabled)
 			{
 				CGameCharacter *selchar = g_World->FindWorldCharacter(g_PressedObject.LeftSerial);
 
@@ -1973,12 +1927,12 @@ void CGameScreen::OnLeftMouseButtonDown()
 void CGameScreen::OnLeftMouseButtonUp()
 {
 	WISPFUN_DEBUG("c164_f21");
-	if (g_PressedObject.LeftGump() == &m_GameScreenGump)
+	if (g_PressedObject.LeftGump == &m_GameScreenGump)
 	{
 		m_GameScreenGump.OnLeftMouseButtonUp();
 		return;
 	}
-	else if (g_MouseManager.LeftButtonPressed && (g_PressedObject.LeftGump() != NULL || g_ObjectInHand != NULL))
+	else if (g_MouseManager.LeftButtonPressed && (g_PressedObject.LeftGump != NULL || g_ObjectInHand.Enabled))
 	{
 		if (g_GumpManager.OnLeftMouseButtonUp(false))
 			return;
@@ -1998,7 +1952,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 		if (g_SelectedObject.Object->IsWorldObject())
 			rwo = (CRenderWorldObject*)g_SelectedObject.Object;
 
-		if (g_Target.IsTargeting() && g_ObjectInHand == NULL)
+		if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled)
 		{
 			if (g_SelectedObject.Object->IsText())
 			{
@@ -2051,11 +2005,11 @@ void CGameScreen::OnLeftMouseButtonUp()
 			ushort dropY = 0;
 			char dropZ = 0;
 
-			if (rwo->IsGameObject() && g_ObjectInHand != NULL)
+			if (rwo->IsGameObject() && g_ObjectInHand.Enabled)
 			{
 				CGameObject *target = (CGameObject*)rwo;
 
-				can_drop = (GetDistance(g_Player, target) < 3);
+				can_drop = (GetDistance(g_Player, target) <= 3);
 
 				if (can_drop && target != NULL)
 				{
@@ -2067,7 +2021,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 
 						drop_container = target->Serial;
 					}
-					else if (target->IsSurface() || (target->IsStackable() && target->Graphic == g_ObjectInHand->Graphic))
+					else if (target->IsSurface() || (target->IsStackable() && target->Graphic == g_ObjectInHand.Graphic))
 					{
 						if (!target->IsSurface())
 							drop_container = target->Serial;
@@ -2080,9 +2034,9 @@ void CGameScreen::OnLeftMouseButtonUp()
 				else
 					g_Orion.PlaySoundEffect(0x0051);
 			}
-			else if ((rwo->IsLandObject() || rwo->IsStaticObject() || rwo->IsMultiObject()) && g_ObjectInHand != NULL)
+			else if ((rwo->IsLandObject() || rwo->IsStaticObject() || rwo->IsMultiObject()) && g_ObjectInHand.Enabled)
 			{
-				can_drop = (GetDistance(g_Player, WISP_GEOMETRY::CPoint2Di(rwo->X, rwo->Y)) < 3);
+				can_drop = (GetDistance(g_Player, WISP_GEOMETRY::CPoint2Di(rwo->X, rwo->Y)) <= 3);
 
 				if (can_drop)
 				{
@@ -2102,11 +2056,11 @@ void CGameScreen::OnLeftMouseButtonUp()
 				if (can_drop)
 					g_Orion.DropItem(drop_container, dropX, dropY, dropZ);
 			}
-			else if (g_ObjectInHand == NULL)
+			else if (!g_ObjectInHand.Enabled)
 			{
 				if (rwo->IsGameObject())
 				{
-					if (!g_ClickObject.Enabled) // && g_PacketManager.ClientVersion < CV_308Z)
+					if (!g_ClickObject.Enabled) // && !g_TooltipsEnabled) // && g_PacketManager.ClientVersion < CV_308Z)
 					{
 						g_ClickObject.Init(rwo);
 						g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
@@ -2241,7 +2195,7 @@ bool CGameScreen::OnLeftMouseButtonDoubleClick()
 void CGameScreen::OnRightMouseButtonDown()
 {
 	WISPFUN_DEBUG("c164_f23");
-	if (g_PressedObject.RightGump() != NULL)
+	if (g_PressedObject.RightGump != NULL)
 		g_GumpManager.OnRightMouseButtonDown(false);
 
 	if (g_PopupMenu != NULL && g_SelectedObject.Gump != g_PopupMenu)
@@ -2255,10 +2209,10 @@ void CGameScreen::OnRightMouseButtonDown()
 void CGameScreen::OnRightMouseButtonUp()
 {
 	WISPFUN_DEBUG("c164_f24");
-	if (g_PressedObject.RightGump() != NULL)
+	if (g_PressedObject.RightGump != NULL)
 		g_GumpManager.OnRightMouseButtonUp(false);
-	else if (g_PressedObject.RightObject() != NULL && g_PressedObject.RightObject()->IsGameObject() && g_SelectedGameObjectHandle == g_PressedObject.RightSerial)
-		((CGameObject*)g_PressedObject.RightObject())->ClosedObjectHandle = true;
+	else if (g_PressedObject.RightObject != NULL && g_PressedObject.RightObject->IsGameObject() && g_SelectedGameObjectHandle == g_PressedObject.RightSerial)
+		((CGameObject*)g_PressedObject.RightObject)->ClosedObjectHandle = true;
 
 	if ((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && g_ConfigManager.HoldShiftForEnablePathfind && g_ConfigManager.EnablePathfind && g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject() && !g_PathFinder.AutoWalking)
 	{
@@ -2330,7 +2284,7 @@ void CGameScreen::OnMidMouseButtonScroll(const bool &up)
 void CGameScreen::OnDragging()
 {
 	WISPFUN_DEBUG("c164_f27");
-	if (g_PressedObject.LeftGump() != NULL)
+	if (g_PressedObject.LeftGump != NULL)
 		g_GumpManager.OnDragging(false);
 }
 //----------------------------------------------------------------------------------

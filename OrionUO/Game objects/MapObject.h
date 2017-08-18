@@ -10,8 +10,6 @@
 #ifndef MAPOBJECT_H
 #define MAPOBJECT_H
 //----------------------------------------------------------------------------------
-#include "../RenderWorldObject.h"
-//----------------------------------------------------------------------------------
 //Класс объекта карты
 class CMapObject : public CRenderWorldObject
 {

@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpRacialAbility.h"
-#include "../SelectedObject.h"
-#include "../OrionUO.h"
-#include "../Managers/ClilocManager.h"
-#include "../ToolTip.h"
-#include "../Network/Packets.h"
-#include "../Game objects/GamePlayer.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpRacialAbility::CGumpRacialAbility(const uint &serial, const int &x, const int &y)
 : CGump(GT_RACIAL_ABILITY, serial, x, y)

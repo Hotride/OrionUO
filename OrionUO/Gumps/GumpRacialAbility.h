@@ -10,8 +10,6 @@
 #ifndef GUMPRACIALABILITY_H
 #define GUMPRACIALABILITY_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpRacialAbility : public CGump
 {
 private:

@@ -7,22 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "CommonInterfaces.h"
-#include "GLEngine/GLEngine.h"
-#include "OrionUO.h"
-#include "Managers/ClilocManager.h"
-#include "Managers/FontsManager.h"
-#include "Managers/ColorManager.h"
-#include "Managers/ConfigManager.h"
-#include "Managers/PacketManager.h"
-#include "Managers/GumpManager.h"
-#include "Walker/PathFinder.h"
-#include "Game objects/GamePlayer.h"
-#include "Target.h"
-#include "Network/Packets.h"
-#include "OrionWindow.h"
-#include "PluginInterface.h"
-#include "Gumps/GumpSecureTrading.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 IOrionString g_OrionString;
 //----------------------------------------------------------------------------------
@@ -238,12 +223,8 @@ void __cdecl FUNCBODY_SendRenameMount(uint serial, const char *text)
 	CPacketRenameRequest packet(serial, text);
 	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
 
-	if (g_PacketManager.ClientVersion >= CV_308Z)
-	{
-		UINT_LIST list;
-		list.push_back(serial);
-		g_PacketManager.SendMegaClilocRequests(list);
-	}
+	if (g_TooltipsEnabled)
+		g_PacketManager.AddMegaClilocRequest(serial);
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_SendMenuResponse(unsigned int serial, unsigned int id, int code)

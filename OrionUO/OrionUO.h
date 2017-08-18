@@ -10,17 +10,6 @@
 #ifndef ORIONUO_H
 #define ORIONUO_H
 //----------------------------------------------------------------------------------
-#include "IndexObject.h"
-#include "Constants.h"
-#include "MulStruct.h"
-#include "GLEngine/GLVector.h"
-#include <functional>
-
-namespace Wisp{
-	class CMappedFile;
-}
-
-//----------------------------------------------------------------------------------
 class COrion
 {
 	SETGET(string, ClientVersionText, "2.0.3");
@@ -359,10 +348,10 @@ public:
 
 
 	//Поднять предмет
-	void PickupItem(class CGameItem *obj, int count = 0, bool isGameFigure = false);
+	void PickupItem(class CGameItem *obj, int count = 0, const bool &isGameFigure = false);
 
 	//Бросить предмет
-	void DropItem(uint container, ushort x, ushort y, char z);
+	void DropItem(const uint &container, const ushort &x, const ushort &y, const char &z);
 
 	//Одеть предмет
 	void EquipItem(uint container = 0);

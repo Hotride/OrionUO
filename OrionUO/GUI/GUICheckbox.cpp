@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUICheckbox.h"
-#include "../OrionUO.h"
-#include "../SelectedObject.h"
-#include "../Managers/MouseManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUICheckbox::CGUICheckbox(const uint &serial, const ushort &graphic, const ushort &graphicChecked, const ushort &graphicDisabled, const int &x, const int &y)
 : CGUIDrawObject(GOT_CHECKBOX, serial, graphic, 0, x, y), m_GraphicChecked(graphicChecked),

@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "SkillGroupManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Wisp/WispMappedFile.h"
-#include "../Wisp/WispBinaryFileWritter.h"
-#include "../Skills.h"
-#include "../OrionUO.h"
-#include "GumpManager.h"
-#include "../Screen stages/GameBlockedScreen.h"
-#include "../Gumps/GumpNotify.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CSkillGroupManager g_SkillGroupManager;
 //----------------------------------------------------------------------------------

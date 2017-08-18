@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpPartyManifest.h"
-#include "../Party.h"
-#include "../OrionUO.h"
-#include "../Network/Packets.h"
-#include "../TextEngine/GameConsole.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpPartyManifest::CGumpPartyManifest(uint serial, short x, short y, bool canLoot)
 : CGump(GT_PARTY_MANIFEST, serial, x, y), m_CanLoot(canLoot)

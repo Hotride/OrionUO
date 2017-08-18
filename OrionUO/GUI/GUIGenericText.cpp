@@ -7,8 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIGenericText.h"
-#include "../Managers/PacketManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIGenericText::CGUIGenericText(const uint &index, const ushort &color, const int &x, const int &y, const int &maxWidth)
 : CGUIText(color, x, y), m_TextID(index), m_MaxWidth(maxWidth)

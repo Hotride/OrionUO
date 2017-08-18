@@ -10,10 +10,6 @@
 #ifndef GAMEITEM_H
 #define GAMEITEM_H
 //----------------------------------------------------------------------------------
-#include "GameObject.h"
-#include "MultiObject.h"
-#include "../Multi.h"
-//----------------------------------------------------------------------------------
 //!Класс игрового предмета (или трупа)
 class CGameItem : public CGameObject
 {
@@ -51,13 +47,6 @@ public:
 	void CalculateFieldColor();
 
 	CMulti* GetMulti();
-
-	/*!
-	Вставка данных из объекта в руке (на курсоре)
-	@param [__in] obj Ссылка на объект на курсоре
-	@return 
-	*/
-	void Paste(class CObjectOnCursor *obj);
 
 	void ClearMultiItems();
 

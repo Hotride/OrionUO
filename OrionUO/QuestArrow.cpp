@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "QuestArrow.h"
-#include "OrionUO.h"
-#include "Managers/MouseManager.h"
-#include "GLEngine/GLShader.h"
-#include "Screen stages/GameScreen.h"
-#include "Game objects/GamePlayer.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CQuestArrow g_QuestArrow;
 //----------------------------------------------------------------------------------

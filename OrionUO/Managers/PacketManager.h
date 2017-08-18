@@ -10,9 +10,6 @@
 #ifndef PACKETMANAGER_H
 #define PACKETMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../Wisp/WispPacketReader.h"
-//----------------------------------------------------------------------------------
 class CPacketManager;
 typedef void (CPacketManager::*PACKET_FUNCTION)();
 //----------------------------------------------------------------------------------
@@ -209,11 +206,9 @@ public:
 
 	CPacketInfo GetInfo(const uchar &buf) const { return m_Packets[buf]; }
 
-	void SendMegaClilocRequests(UINT_LIST &list);
-
 	void SendMegaClilocRequests();
 
-	void AddMegaClilocRequest(const uint &serial, const bool &existsTest);
+	void AddMegaClilocRequest(const uint &serial);
 
 	void SavePluginReceivePacket(puchar buf, const int &size);
 

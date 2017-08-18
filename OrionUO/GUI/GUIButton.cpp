@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIButton.h"
-#include "../OrionUO.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/UOFileReader.h"
-#include "../SelectedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIButton::CGUIButton(const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const int &x, const int &y)
 : CGUIDrawObject(GOT_BUTTON, serial, graphic, 0, x, y), m_GraphicSelected(graphicSelected),

@@ -10,8 +10,6 @@
 #ifndef GUMPSELECTFONT_H
 #define GUMPSELECTFONT_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpSelectFont : public CGump
 {
 private:

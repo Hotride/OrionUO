@@ -7,32 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "MacroManager.h"
-#include "OptionsMacroManager.h"
-#include "GumpManager.h"
-#include "ConfigManager.h"
-#include "PacketManager.h"
-#include "../Network/Packets.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../Macro.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "../Walker/PathFinder.h"
-#include "../Target.h"
-#include "../TargetGump.h"
-#include "../Gumps/Gump.h"
-#include "../Gumps/GumpTargetSystem.h"
-#include "../Wisp/WispMappedFile.h"
-#include "../Wisp/WispBinaryFileWritter.h"
-#include "../Wisp/WispTextFileParser.h"
-#include "../Gumps/GumpAbility.h"
-#include "../Gumps/GumpSpellbook.h"
-#include "PluginManager.h"
-
-#include <Shlwapi.h>
-#pragma comment(lib, "Shlwapi.lib")
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CMacroManager g_MacroManager;
 //----------------------------------------------------------------------------------
@@ -1003,7 +978,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 			{
 				int handIndex = 1 - (g_MacroPointer->SubCode - MSC_G4_LEFT_HAND);
 
-				if (handIndex < 0 || handIndex > 1 || g_ObjectInHand != NULL)
+				if (handIndex < 0 || handIndex > 1 || g_ObjectInHand.Enabled)
 					break;
 
 				if (itemInHand[handIndex])
@@ -1014,12 +989,6 @@ MACRO_RETURN_CODE CMacroManager::Process()
 					{
 						g_Orion.PickupItem(objHand, 1, false);
 						g_Orion.EquipItem(g_PlayerSerial);
-
-						if (g_ObjectInHand != NULL)
-						{
-							delete g_ObjectInHand;
-							g_ObjectInHand = NULL;
-						}
 					}
 
 					itemInHand[handIndex] = 0;
@@ -1043,12 +1012,6 @@ MACRO_RETURN_CODE CMacroManager::Process()
 
 						g_Orion.PickupItem(objHand, 1, false);
 						g_Orion.DropItem(backpack, 0xFFFF, 0xFFFF, 0);
-
-						if (g_ObjectInHand != NULL)
-						{
-							delete g_ObjectInHand;
-							g_ObjectInHand = NULL;
-						}
 
 						g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_PAPERDOLL);
 					}

@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "ToolTip.h"
-#include "GLEngine/GLEngine.h"
-#include "Managers/ConfigManager.h"
-#include "Managers/ClilocManager.h"
-#include "Managers/MouseManager.h"
-#include "Managers/FontsManager.h"
-#include "SelectedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CToolTip g_ToolTip;
 //----------------------------------------------------------------------------------

@@ -10,9 +10,6 @@
 #ifndef CONNECTIONSCREEN_H
 #define CONNECTIONSCREEN_H
 //----------------------------------------------------------------------------------
-#include "BaseScreen.h"
-#include "../Gumps/GumpScreenConnection.h"
-//----------------------------------------------------------------------------------
 class CConnectionScreen : public CBaseScreen
 {
 	SETGETE(bool, ConnectionFailed, false, OnChangeConnectionFailed);

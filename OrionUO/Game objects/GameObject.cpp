@@ -7,21 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameObject.h"
-#include "GameWorld.h"
-#include "GameEffect.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/PluginManager.h"
-#include "../SelectedObject.h"
-#include "../OrionUO.h"
-#include "../ServerList.h"
-#include "../OrionWindow.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameObject::CGameObject(const uint &serial)
 : CRenderStaticObject(ROT_GAME_OBJECT, serial, 0, 0, 0, 0, 0),
@@ -317,6 +303,33 @@ void CGameObject::Clear()
 	}
 }
 //----------------------------------------------------------------------------------
+void CGameObject::ClearUnequipped()
+{
+	WISPFUN_DEBUG("c20_f10_1");
+	if (!Empty())
+	{
+		CGameObject *newFirstItem = NULL;
+		CGameObject *obj = (CGameObject*)m_Items;
+
+		while (obj != NULL)
+		{
+			CGameObject *next = (CGameObject*)obj->m_Next;
+
+			if (((CGameItem*)obj)->Layer != OL_NONE)
+			{
+				if (newFirstItem == NULL)
+					newFirstItem = obj;
+			}
+			else
+				g_World->RemoveObject(obj);
+
+			obj = next;
+		}
+
+		m_Items = newFirstItem;
+	}
+}
+//----------------------------------------------------------------------------------
 void CGameObject::ClearNotOpenedItems()
 {
 	WISPFUN_DEBUG("c20_f11");
@@ -358,10 +371,10 @@ bool CGameObject::Flying()
 Золото ли это
 @return Индекс в таблице золота
 */
-int CGameObject::IsGold()
+int CGameObject::IsGold(const ushort &graphic)
 {
 	WISPFUN_DEBUG("c20_f14");
-	switch (m_Graphic)
+	switch (graphic)
 	{
 		case 0x0EED:
 			return 1;
@@ -384,7 +397,7 @@ int CGameObject::IsGold()
 ushort CGameObject::GetDrawGraphic(bool &doubleDraw)
 {
 	WISPFUN_DEBUG("c20_f15");
-	int index = IsGold();
+	int index = IsGold(m_Graphic);
 	ushort result = m_Graphic;
 
 	const ushort graphicAssociateTable[3][3] =

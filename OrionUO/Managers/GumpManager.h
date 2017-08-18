@@ -10,10 +10,6 @@
 #ifndef GUMPMANAGER_H
 #define GUMPMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../BaseQueue.h"
-#include "../Gumps/Gump.h"
-#include "../Wisp/WispBinaryFileWritter.h"
-//----------------------------------------------------------------------------------
 //!Класс менеджера гампов
 class CGumpManager : public CBaseQueue
 {

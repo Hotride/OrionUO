@@ -10,11 +10,6 @@
 #ifndef PROFESSIONMANAGER_H
 #define PROFESSIONMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../BaseQueue.h"
-#include "../Wisp/WispTextFileParser.h"
-#include "../Profession.h"
-//----------------------------------------------------------------------------------
 //!Класс менеджера профессий
 class CProfessionManager : public CBaseQueue
 {

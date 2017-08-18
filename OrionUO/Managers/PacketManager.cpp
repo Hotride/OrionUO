@@ -7,70 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "PacketManager.h"
-#include "ConnectionManager.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "../CharacterList.h"
-#include "../ServerList.h"
-#include "../CityList.h"
-#include "../Screen stages/ConnectionScreen.h"
-#include "../Screen stages/MainScreen.h"
-#include "../Screen stages/CharacterListScreen.h"
-#include "../Screen stages/ServerScreen.h"
-#include "../Network/Packets.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Walker/Walker.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../ClickObject.h"
-#include "../Weather.h"
-#include "../Managers/MapManager.h"
-#include "../Target.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/SoundManager.h"
-#include "../Container.h"
-#include "../Party.h"
-#include "../Macro.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/FileManager.h"
-#include "../Gumps/GumpPaperdoll.h"
-#include "../Gumps/GumpContainer.h"
-#include "../Gumps/GumpPopupMenu.h"
-#include "../Managers/EffectManager.h"
-#include "../Managers/PluginManager.h"
-#include "../Managers/ColorManager.h"
-#include "../Game objects/GameEffectMoving.h"
-#include "../Game objects/GameEffectDrag.h"
-#include "../QuestArrow.h"
-#include "../MultiMap.h"
-#include "../TargetGump.h"
-#include "../Walker/PathFinder.h"
-#include "../Gumps/GumpBuff.h"
-#include "../Gumps/GumpSecureTrading.h"
-#include "../Gumps/GumpTextEntryDialog.h"
-#include "../Gumps/GumpGrayMenu.h"
-#include "../Gumps/GumpMenu.h"
-#include "../Gumps/GumpDye.h"
-#include "../Gumps/GumpGeneric.h"
-#include "../Gumps/GumpMap.h"
-#include "../Gumps/GumpTip.h"
-#include "../Gumps/GumpProfile.h"
-#include "../Gumps/GumpBulletinBoard.h"
-#include "../Gumps/GumpBulletinBoardItem.h"
-#include "../Gumps/GumpBook.h"
-#include "../Gumps/GumpShop.h"
-#include "../Gumps/GumpSkills.h"
-#include "../Gumps/GumpSpellbook.h"
-#include "AnimationManager.h"
-#include "../zlib.h"  
-#include "CustomHousesManager.h"
-#include "../Wisp/WispTextFileParser.h"
-#include "../Gumps/GumpMinimap.h"
-
-#pragma comment(lib, "zdll.lib")
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CPacketManager g_PacketManager;
 //----------------------------------------------------------------------------------
@@ -300,7 +237,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xCF*/ UMSG(ORION_SAVE_PACKET, 0x4e),
 	/*0xD0*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
 	/*0xD1*/ RMSGH(ORION_IGNORE_PACKET, "Logout", 0x02, Logout),
-	/*0xD2*/ RMSGH(ORION_SAVE_PACKET, "Update Player (New)", 0x19, UpdatePlayer),
+	/*0xD2*/ RMSGH(ORION_SAVE_PACKET, "Update Character (New)", 0x19, UpdateCharacter),
 	/*0xD3*/ RMSGH(ORION_SAVE_PACKET, "Update Object (New)", PACKET_VARIABLE_SIZE, UpdateObject),
 	/*0xD4*/ BMSGH(ORION_IGNORE_PACKET, "Open Book (New)", PACKET_VARIABLE_SIZE, OpenBookNew),
 	/*0xD5*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
@@ -568,38 +505,33 @@ int CPacketManager::GetPacketSize(const UCHAR_LIST &packet, int &offsetToSize)
 	return 0;
 }
 //---------------------------------------------------------------------------
-void CPacketManager::SendMegaClilocRequests(UINT_LIST &list)
-{
-	WISPFUN_DEBUG("c150_f4");
-	if (list.size())
-	{
-		if (m_ClientVersion >= CV_500A)
-			CPacketMegaClilocRequest(list).Send();
-		else
-		{
-			IFOR(i, 0, (int)list.size())
-				CPacketMegaClilocRequestOld(list[i]).Send();
-		}
-		list.clear();
-	}
-}
-//---------------------------------------------------------------------------
 void CPacketManager::SendMegaClilocRequests()
 {
 	WISPFUN_DEBUG("c150_f5");
-	SendMegaClilocRequests(m_MegaClilocRequests);
+	if (g_TooltipsEnabled && m_MegaClilocRequests.size())
+	{
+		if (m_ClientVersion >= CV_500A)
+		{
+			while (m_MegaClilocRequests.size())
+				CPacketMegaClilocRequest(m_MegaClilocRequests).Send();
+		}
+		else
+		{
+			IFOR(i, 0, (int)m_MegaClilocRequests.size())
+				CPacketMegaClilocRequestOld(m_MegaClilocRequests[i]).Send();
+
+			m_MegaClilocRequests.clear();
+		}
+	}
 }
 //----------------------------------------------------------------------------------
-void CPacketManager::AddMegaClilocRequest(const uint &serial, const bool &existsTest)
+void CPacketManager::AddMegaClilocRequest(const uint &serial)
 {
 	WISPFUN_DEBUG("c150_f6");
-	if (existsTest)
+	for (const uint item : m_MegaClilocRequests)
 	{
-		for (const uint item : m_MegaClilocRequests)
-		{
-			if (item == serial)
-				return;
-		}
+		if (item == serial)
+			return;
 	}
 
 	m_MegaClilocRequests.push_back(serial);
@@ -629,7 +561,7 @@ void CPacketManager::OnPacket()
 		time(&rawtime);
 		localtime_s(&timeinfo, &rawtime);
 		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
-		LOG("%s--- ^(%d) r(+%d => %d) Server:: %s\n", buffer, ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
+		LOG("--- ^(%d) r(+%d => %d) %s Server:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, buffer, info.Name);
 		LOG_DUMP(m_Start, m_Size);
 	}
 
@@ -820,7 +752,7 @@ PACKET_HANDLER(CharacterList)
 	g_CharacterList.OnePerson = (bool)(g_ClientFlag & CLF_ONE_CHARACTER_SLOT);
 	//g_SendLogoutNotification = (bool)(g_ClientFlag & LFF_RE);
 	g_NPCPopupEnabled = (bool)(g_ClientFlag & CLF_CONTEXT_MENU);
-	g_TooltipsEnabled = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
+	g_TooltipsEnabled = (bool)((g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS) && (g_PacketManager.ClientVersion >= CV_308Z));
 	g_PaperdollBooks = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
 
 	g_CharacterListScreen.UpdateContent();
@@ -905,17 +837,15 @@ PACKET_HANDLER(EnterWorld)
 	}
 
 	RELEASE_POINTER(g_World);
-	RELEASE_POINTER(g_Walker);
-	RELEASE_POINTER(g_ObjectInHand);
 
+	g_CorpseManager.Clear();
+	g_Walker.Reset();
+	g_ObjectInHand.Clear();
 	g_World = new CGameWorld(serial);
-	g_Walker = new CWalker();
-	g_PendingDelayTime = 0;
 
 	g_UseItemActions.Clear();
 
 	g_Ping = 0;
-	g_WalkRequestCount = 0;
 	g_ClickObject.Clear();
 	g_Weather.Reset();
 	g_SkillsTotal = 0.0f;
@@ -942,13 +872,12 @@ PACKET_HANDLER(EnterWorld)
 	g_Player->Direction = dir;
 	g_Player->Flags = m_Start[28];
 
-	g_Walker->SetSequence(0, dir);
 	g_Player->OffsetX = 0;
 	g_Player->OffsetY = 0;
 	g_Player->OffsetZ = 0;
 
-	//if (m_ClientVersion >= CV_308Z && !g_Player->ClilocMessage.length())
-	//	m_MegaClilocRequests.push_back(g_Player->Serial);
+	if (g_TooltipsEnabled && !g_Player->ClilocMessage.length())
+		AddMegaClilocRequest(g_Player->Serial);
 
 	LOG("Player 0x%08lX entered the world.\n", serial);
 
@@ -1067,47 +996,47 @@ PACKET_HANDLER(NewHealthbarUpdate)
 	if (obj == NULL)
 		return;
 
-	Move(2);
+	ushort count = ReadUInt16BE();
 
-	ushort type = ReadUInt16BE();
-	uchar enable = ReadUInt8(); //enable/disable
-
-	uchar flags = obj->Flags;
-
-	if (type == 1) //Poison, enable as poisonlevel + 1
+	IFOR(i, 0, count)
 	{
-		uchar poisonFlag = 0x04;
+		ushort type = ReadUInt16BE();
+		uchar enable = ReadUInt8(); //enable/disable
 
+		uchar flags = obj->Flags;
 
-		if (enable)
+		if (type == 1) //Poison, enable as poisonlevel + 1
 		{
-			if (m_ClientVersion >= CV_7000)	
-				obj->SA_Poisoned = true;
+			uchar poisonFlag = 0x04;
+
+			if (enable)
+			{
+				if (m_ClientVersion >= CV_7000)
+					obj->SA_Poisoned = true;
+				else
+					flags |= poisonFlag;
+			}
 			else
-				flags |= poisonFlag;
+			{
+				if (m_ClientVersion >= CV_7000)
+					obj->SA_Poisoned = false;
+				else
+					flags &= ~poisonFlag;
+			}
+		}
+		else if (type == 2) //Yellow hits
+		{
+			if (enable)
+				flags |= 0x08;
+			else
+				flags &= ~0x08;
+		}
+		else if (type == 3) //Red?
+		{
 		}
 
-		else
-		{
-			if (m_ClientVersion >= CV_7000)
-				obj->SA_Poisoned = false;
-			else
-				flags &= ~poisonFlag;
-		}
-
+		obj->Flags = flags;
 	}
-	else if (type == 2) //Yellow hits
-	{
-		if (enable)
-			flags |= 0x08;
-		else
-			flags &= ~0x08;
-	}
-	else if (type == 3) //Red?
-	{
-	}
-
-	obj->Flags = flags;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdatePlayer)
@@ -1117,72 +1046,18 @@ PACKET_HANDLER(UpdatePlayer)
 		return;
 
 	uint serial = ReadUInt32BE();
+	ushort graphic = ReadUInt16BE();
+	uchar graphicIncrement = ReadUInt8();
+	ushort color = ReadUInt16BE();
+	uchar flags = ReadUInt8();
+	ushort x = ReadUInt16BE();
+	ushort y = ReadUInt16BE();
+	ushort serverID = ReadUInt16BE();
+	uchar direction = ReadUInt8();
+	char z = ReadUInt8();
 
-
-	bool oldDead = g_Player->Dead();
-	ushort oldGraphic = g_Player->Graphic;
-	g_Player->Graphic = ReadUInt16BE();
-	g_Player->OnGraphicChange();
-
-	if (oldGraphic && oldGraphic != g_Player->Graphic)
-	{
-		if (g_Player->Dead())
-		{
-			g_Weather.Reset();
-			g_Target.Reset();
-
-			if (g_ConfigManager.Music)
-				g_Orion.PlayMusic(42, true);
-
-			g_DeathScreenTimer = g_Ticks + DEATH_SCREEN_DELAY;
-		}
-	}
-
-	if (oldDead != g_Player->Dead())
-	{
-		if (g_Player->Dead())
-			g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
-		else
-			g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
-	}
-
-	Move(1);
-	g_Player->Color = ReadUInt16BE();
-	g_Player->Flags = ReadUInt8();
-	g_Player->X = ReadUInt16BE();
-	g_Player->Y = ReadUInt16BE();
-	Move(2);
-
-	g_Player->CloseBank();
-
-	g_Player->m_Steps.clear();
-
-	uchar dir = ReadUInt8();
-	g_Walker->SetSequence(0, dir);
-	g_WalkRequestCount = 0;
-	g_Player->OffsetX = 0;
-	g_Player->OffsetY = 0;
-	g_Player->OffsetZ = 0;
-
-	g_Player->Direction = dir;
-	g_Player->Z = ReadUInt8();
-
-	if (m_ClientVersion >= CV_308Z)
-	{
-		m_MegaClilocRequests.push_back(g_PlayerSerial);
-
-		if (g_Player->m_Items != NULL && !g_Player->m_Items->Empty())
-		{
-			CGameItem *backpack = (CGameItem*)g_Player->m_Items;
-			m_MegaClilocRequests.push_back(backpack->Serial);
-		}
-
-		SendMegaClilocRequests();
-	}
-
-	g_GumpManager.RemoveRangedGumps();
-
-	g_World->MoveToTop(g_Player);
+	LOG("0x%08X 0x%04X %i 0x%04X 0x%02X %i %i %i %i %i\n", serial, graphic, graphicIncrement, color, flags, x, y, serverID, direction, z);
+	g_World->UpdatePlayer(serial, graphic, graphicIncrement, color, flags, x, y, serverID, direction, z);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(CharacterStatus)
@@ -1230,19 +1105,19 @@ PACKET_HANDLER(CharacterStatus)
 				char str[64] = { 0 };
 				if (deltaStr)
 				{
-					sprintf(str, "Your strength has changed by %d.  It is now %d.", deltaStr, newStr);
+					sprintf_s(str, "Your strength has changed by %d.  It is now %d.", deltaStr, newStr);
 					g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 
 				if (deltaDex)
 				{
-					sprintf(str, "Your dexterity has changed by %d.  It is now %d.", deltaDex, newDex);
+					sprintf_s(str, "Your dexterity has changed by %d.  It is now %d.", deltaDex, newDex);
 					g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 
 				if (deltaInt)
 				{
-					sprintf(str, "Your intelligence has changed by %d.  It is now %d.", deltaInt, newInt);
+					sprintf_s(str, "Your intelligence has changed by %d.  It is now %d.", deltaInt, newInt);
 					g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x0170, str);
 				}
 			}
@@ -1325,111 +1200,78 @@ PACKET_HANDLER(UpdateItem)
 	if (g_World == NULL)
 		return;
 
+	UPDATE_GAME_OBJECT_TYPE updateType = UGOT_ITEM;
 	uint serial = ReadUInt32BE();
+	ushort count = 0;
+	uchar graphicIncrement = 0;
+	uchar direction = 0;
+	ushort color = 0;
+	uchar flags = 0;
+
+	if (serial & 0x80000000)
+	{
+		serial &= 0x7FFFFFFF;
+		count = 1;
+	}
+
 	ushort graphic = ReadUInt16BE();
 
 	if (g_TheAbyss && (graphic & 0x7FFF) == 0x0E5C)
 		return;
 
-	ushort count = 1;
-
-	if (serial & 0x80000000)
-	{
-		serial &= 0x7FFFFFFF;
-		count = ReadUInt16BE();
-	}
-
-	CGameItem *obj = g_World->GetWorldItem(serial);
-	if (obj == NULL)
-	{
-		LOG("no memory??");
-		return;
-	}
-
-	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == obj->Serial && g_ObjectInHand->Dropped)
-	{
-		delete g_ObjectInHand;
-		g_ObjectInHand = NULL;
-	}
-
-	g_World->RemoveFromContainer(obj);
-	obj->Container = 0xFFFFFFFF;
-	g_World->m_Items->AddObject(obj);
-
-	if (obj->Dragged)
-		g_GumpManager.CloseGump(serial, 0, GT_DRAG);
-
-	obj->Dragged = false;
-	obj->MapIndex = g_CurrentMap;
-
 	if (graphic & 0x8000)
 	{
 		graphic &= 0x7FFF;
-		graphic += ReadUInt8();
+		graphicIncrement = ReadUInt8();
 	}
 
-	if (!obj->Graphic)
-		LOG("created ");
+	if (count)
+		count = ReadUInt16BE();
 	else
-		LOG("updated ");
+		count++;
 
-	obj->MultiBody = (graphic & 0x4000);
-	ushort oldGraphic = obj->Graphic;
-	obj->Graphic = graphic & 0x3FFF;
-
-	if (graphic == 0x2006 && !count)
-		count = 1;
-
-	obj->Count = count;
 	ushort x = ReadUInt16BE();
-	ushort y = ReadUInt16BE();
-	uchar dir = 0;
 
 	if (x & 0x8000)
 	{
 		x &= 0x7FFF;
-
-		//obj->Direction = *Ptr; //Направление предмета?
-		dir = ReadUInt8();
+		direction = 1;
 	}
 
-	uchar z = ReadUInt8();
+	ushort y = ReadUInt16BE();
 
 	if (y & 0x8000)
 	{
 		y &= 0x7FFF;
-
-		obj->Color = ReadUInt16BE();
+		color = 1;
 	}
-	else
-		obj->Color = 0;
 
 	if (y & 0x4000)
 	{
 		y &= 0x3FFF;
-		obj->Flags = ReadUInt8();
+		flags = 1;
 	}
-	else
-		obj->Flags = 0;
 
-	if (obj->MultiBody)
-		obj->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
+	if (direction)
+		direction = ReadUInt8();
 
-	obj->X = x;
-	obj->Y = y;
-	obj->Z = z;
+	char z = ReadUInt8();
 
-	obj->OnGraphicChange(dir);
+	if (color)
+		color = ReadUInt16BE();
 
-	g_World->MoveToTop(obj);
+	if (flags)
+		flags = ReadUInt8();
 
-	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
+	if (graphic >= 0x4000)
 	{
-		m_MegaClilocRequests.push_back(obj->Serial);
-		SendMegaClilocRequests();
+		//graphic += 0xC000;
+		//updateType = UGOT_NEW_ITEM;
+		updateType = UGOT_MULTI;
 	}
 
-	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, graphic, obj->Count, obj->X, obj->Y, obj->Z);
+	if (serial != g_PlayerSerial)
+		g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, direction, color, flags, count, updateType, 1);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateItemSA)
@@ -1439,79 +1281,23 @@ PACKET_HANDLER(UpdateItemSA)
 		return;
 
 	Move(2);
-	char type = ReadUInt8();
+	UPDATE_GAME_OBJECT_TYPE updateType = (UPDATE_GAME_OBJECT_TYPE)ReadUInt8();
 	uint serial = ReadUInt32BE();
 	ushort graphic = ReadUInt16BE();
-	uchar dir = ReadUInt8();
+	uchar graphicIncrement = ReadUInt8();
 	ushort count = ReadUInt16BE();
-	Move(2);
+	ushort unknown = ReadUInt16BE();
 	ushort x = ReadUInt16BE();
 	ushort y = ReadUInt16BE();
-	char z = ReadUInt8();
-	Move(1);
+	uchar z = ReadUInt8();
+	uchar direction = ReadUInt8();
 	ushort color = ReadUInt16BE();
-	char flags = ReadUInt8();
+	uchar flags = ReadUInt8();
+	ushort unknown2 = ReadUInt16BE();
 
-	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == serial)
-	{
-		return;
-
-		//delete g_ObjectInHand;
-		//g_ObjectInHand = NULL;
-	}
-
-	CGameItem *obj = g_World->GetWorldItem(serial);
-
-	if (obj == NULL)
-	{
-		LOG("no memory??");
-		return;
-	}
-
-	g_World->RemoveFromContainer(obj);
-	obj->Container = 0xFFFFFFFF;
-	g_World->m_Items->AddObject(obj);
-
-	if (obj->Dragged)
-		g_GumpManager.CloseGump(serial, 0, GT_DRAG);
-
-	obj->Dragged = false;
-	obj->MapIndex = g_CurrentMap;
-
-	if (!obj->Graphic)
-		LOG("created ");
-	else
-		LOG("updated ");
-
-	obj->MultiBody = (type == 2);
-	ushort oldGraphic = obj->Graphic;
-	obj->Graphic = graphic;
-	obj->Count = count;
-
-	if (obj->MultiBody)
-		obj->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
-
-	obj->X = x;
-	obj->Y = y;
-	obj->Z = z;
-
-	obj->Color = color;
-
-	obj->OnGraphicChange(dir);
-
-	obj->Flags = flags;
-
-	LOG("0x%08lX:0x%04X*%d %d:%d:%d\n", serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Z);
-
-	if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-	{
-		m_MegaClilocRequests.push_back(obj->Serial);
-		SendMegaClilocRequests();
-	}
-
-	g_World->MoveToTop(obj);
+	g_World->UpdateGameObject(serial, graphic, graphicIncrement, count, x, y, z, direction, color, flags, unknown, updateType, unknown2);
 }
-//----------------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 PACKET_HANDLER(UpdateObject)
 {
 	WISPFUN_DEBUG("c150_f29");
@@ -1528,117 +1314,86 @@ PACKET_HANDLER(UpdateObject)
 	uchar flags = ReadUInt8();
 	uchar notoriety = ReadUInt8();
 
-	CGameItem *item = NULL;
-	CGameCharacter *character = NULL;
-	CGameObject *obj = NULL;
-
-	if (serial & 0x40000000)
-	{
-		item = g_World->GetWorldItem(serial);
-
-		if (character == NULL)
-		{
-			LOG("no memory??");
-			return;
-		}
-
-		obj = item;
-		obj->NPC = false;
-	}
-	else
-	{
-		character = g_World->GetWorldCharacter(serial);
-
-		if (character == NULL)
-		{
-			LOG("no memory??");
-			return;
-		}
-
-		character->Deleted = false;
-		obj = character;
-		obj->NPC = true;
-
-		if (!obj->Graphic)
-		{
-			bool resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL);
-
-			resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.DrawStatusState || resuestStatus || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
-
-			if (resuestStatus)
-				g_Orion.StatusReq(serial);
-		}
-	}
-
-	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == obj->Serial)
-	{
-		delete g_ObjectInHand;
-		g_ObjectInHand = NULL;
-	}
-
-	obj->ClearNotOpenedItems();
-
-	obj->MapIndex = g_CurrentMap;
-
-	ushort oldGraphic = obj->Graphic;
-	bool oldDead = g_Player->Dead();
-	obj->Graphic = graphic;
-
-	int changeGraphicDir = direction;
-
-	if (character != NULL)
-		changeGraphicDir = 1000;
-	else
-	{
-		item->MultiBody = (graphic & 0x4000);
-
-		if (item->MultiBody)
-			item->WantUpdateMulti = ((obj->m_Items == NULL) || (oldGraphic != obj->Graphic) || (obj->X != x) || (obj->Y != y) || (obj->Z != z));
-	}
-
-	obj->OnGraphicChange(changeGraphicDir);
-
-	bool hidden = obj->Hidden();
-	obj->Flags = flags;
-	obj->Color = color;
-	bool updateCoords = true;//(hidden == obj->Hidden());
-
-	if (character != NULL && !character->m_Steps.empty())
-	{
-		if (x != obj->X || y != obj->Y)
-		{
-			obj->X = character->m_Steps.front().X;
-			obj->Y = character->m_Steps.front().Y;
-			obj->Z = character->m_Steps.front().Z;
-			character->m_Steps.clear();
-			updateCoords = false;
-		}
-	}
-
-	if (updateCoords)
-	{
-		obj->X = x;
-		obj->Y = y;
-		obj->Z = z;
-
-		if (character != NULL)
-			character->Direction = direction;
-	}
-
-	if (character != NULL)
-	{
-		character->Notoriety = notoriety;
-		LOG("0x%08X 0x%04X NPC %d,%d,%d C%04X F%02X D%d N%d\n", serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags, character->Direction, character->Notoriety);
-	}
-	else
-		LOG("0x%08X 0x%04X %d,%d,%d C%04X F%02X\n", serial, obj->Graphic, obj->X, obj->Y, obj->Z, obj->Color, obj->Flags);
-
-	//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-	//	m_MegaClilocRequests.push_back(obj->Serial);
+	bool isAlreadyExists = (g_World->FindWorldObject(serial) != NULL);
 
 	if (serial == g_PlayerSerial)
 	{
-		if (oldDead != g_Player->Dead())
+		if (g_Player != NULL)
+		{
+			bool updateStatusbar = (g_Player->Flags != flags);
+
+			g_Player->Graphic = graphic;
+			g_Player->OnGraphicChange(1000);
+			g_Player->Color = g_ColorManager.FixColor(color);
+			g_Player->Flags = flags;
+
+			if (updateStatusbar)
+				g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
+		}
+	}
+	else
+	{
+		g_World->UpdateGameObject(serial, graphic, 0, 0, x, y, z, direction, color, flags, 0, UGOT_ITEM, 1);
+	}
+
+	CGameObject *obj = g_World->FindWorldObject(serial);
+
+	if (obj == NULL)
+		return;
+
+	obj->ClearNotOpenedItems();
+
+	if (obj->NPC)
+	{
+		((CGameCharacter*)obj)->Notoriety = notoriety;
+		g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
+	}
+
+	if (*m_Start != 0x78)
+		Move(6);
+
+	uint itemSerial = ReadUInt32BE();
+
+	while (itemSerial != 0 && !IsEOF())
+	{
+		ushort itemGraphic = ReadUInt16BE();
+		uchar layer = ReadUInt8();
+		ushort itemColor = 0;
+
+		if (m_ClientVersion >= CV_70331)
+			itemColor = ReadUInt16BE();
+		else if (itemGraphic & 0x8000)
+		{
+			itemGraphic &= 0x7FFF;
+			itemColor = ReadUInt16BE();
+		}
+
+		CGameItem *item = g_World->GetWorldItem(itemSerial);
+
+		item->MapIndex = g_CurrentMap;
+
+		item->Graphic = itemGraphic;
+		item->Color = g_ColorManager.FixColor(itemColor);
+
+		g_World->PutEquipment(item, obj, layer);
+		item->OnGraphicChange();
+
+		LOG("\t0x%08X:%04X [%d] %04X\n", item->Serial, item->Graphic, layer, item->Color);
+
+		if (g_TooltipsEnabled && !item->ClilocMessage.length())
+			AddMegaClilocRequest(item->Serial);
+
+		g_World->MoveToTop(item);
+
+		itemSerial = ReadUInt32BE();
+	}
+
+	if (g_TooltipsEnabled && !obj->ClilocMessage.length())
+		AddMegaClilocRequest(obj->Serial);
+
+	if (obj->IsPlayer())
+	{
+		/*if (oldDead != g_Player->Dead())
 		{
 			if (g_Player->Dead())
 				g_Orion.ChangeSeason(ST_DESOLATION, DEATH_MUSIC_INDEX);
@@ -1646,68 +1401,11 @@ PACKET_HANDLER(UpdateObject)
 				g_Orion.ChangeSeason(g_OldSeason, g_OldSeasonMusic);
 		}
 
-		g_Player->CloseBank();
-		g_GumpManager.RemoveRangedGumps();
-	}
+		g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
+		*/
 
-	g_GumpManager.UpdateContent(serial, 0, GT_PAPERDOLL);
-
-	puchar end = m_Start + m_Size;
-
-	if (*m_Start != 0x78)
-	{
-		Move(6);
-		end -= 6;
-	}
-
-	serial = ReadUInt32BE();
-
-	g_World->MoveToTop(obj);
-
-	//UINT_LIST megaClilocRequestList;
-
-	while (serial != 0)
-	{
-		if (m_Ptr >= end)
-			break;
-
-		CGameItem *obj2 = g_World->GetWorldItem(serial);
-
-		obj2->MapIndex = g_CurrentMap;
-
-		graphic = ReadUInt16BE();
-		color = 0;
-
-		uchar layer = ReadUInt8();
-
-		if (m_ClientVersion >= CV_70331)
-			color = ReadUInt16BE();
-		else if (graphic & 0x8000)
-		{
-			graphic &= 0x7FFF;
-			color = ReadUInt16BE();
-		}
-
-		obj2->Graphic = graphic;
-		obj2->Color = g_ColorManager.FixColor(color);
-
-		g_World->PutEquipment(obj2, obj, layer);
-		obj2->OnGraphicChange();
-
-		LOG("\t0x%08X:%04X [%d] %04X\n", obj2->Serial, obj2->Graphic, layer, obj2->Color);
-
-		//if (m_ClientVersion >= CV_308Z && !obj2->ClilocMessage.length())
-		//	megaClilocRequestList.push_back(obj2->Serial);
-
-		g_World->MoveToTop(obj2);
-
-		serial = ReadUInt32BE();
-	}
-
-	if (obj->IsPlayer())
 		g_Player->UpdateAbilities();
-
-	//SendMegaClilocRequests(megaClilocRequestList);
+	}
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(EquipItem)
@@ -1717,12 +1415,6 @@ PACKET_HANDLER(EquipItem)
 		return;
 
 	uint serial = ReadUInt32BE();
-
-	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == serial)
-	{
-		delete g_ObjectInHand;
-		g_ObjectInHand = NULL;
-	}
 
 	CGameItem *obj = g_World->GetWorldItem(serial);
 	obj->MapIndex = g_CurrentMap;
@@ -1734,13 +1426,13 @@ PACKET_HANDLER(EquipItem)
 	Move(1);
 	int layer = ReadUInt8();
 	uint cserial = ReadUInt32BE();
-	obj->Color = ReadUInt16BE();
+	obj->Color = g_ColorManager.FixColor(ReadUInt16BE());
 
 	if (obj->Container != 0xFFFFFFFF)
+	{
 		g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
-
-	if (obj->Container != 0xFFFFFFFF)
 		g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
+	}
 
 	g_World->PutEquipment(obj, cserial, layer);
 	obj->OnGraphicChange();
@@ -1748,8 +1440,8 @@ PACKET_HANDLER(EquipItem)
 	if (g_NewTargetSystem.Serial == serial)
 		g_NewTargetSystem.Serial = 0;
 
-	//if (m_ClientVersion >= CV_308Z && !obj->ClilocMessage.length())
-	//	m_MegaClilocRequests.push_back(obj->Serial);
+	if (g_TooltipsEnabled && !obj->ClilocMessage.length())
+		AddMegaClilocRequest(obj->Serial);
 
 	if (layer >= OL_BUY_RESTOCK && layer <= OL_SELL)
 		obj->Clear();
@@ -1766,108 +1458,20 @@ PACKET_HANDLER(UpdateContainedItem)
 	if (g_World == NULL)
 		return;
 
-	CGameItem *obj = g_World->GetWorldItem(ReadUInt32BE());
-	if (obj == NULL)
-		return;
-
-	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == obj->Serial)
-	{
-		if (g_ObjectInHand->Separated)
-			g_ObjectInHand->Separated = false;
-		else if (g_ObjectInHand->Dropped)
-		{
-			delete g_ObjectInHand;
-			g_ObjectInHand = NULL;
-		}
-	}
-
-	if (obj->Dragged)
-		g_GumpManager.CloseGump(obj->Serial, 0, GT_DRAG);
-
-	obj->Dragged = false;
-	obj->MapIndex = g_CurrentMap;
-
-	obj->Graphic = ReadUInt16BE();
-	obj->OnGraphicChange();
-	Move(1);
-	obj->Count = ReadUInt16BE();
-	obj->X = ReadUInt16BE();
-	obj->Y = ReadUInt16BE();
-	obj->Z = 0;
+	uint serial = ReadUInt32BE();
+	ushort graphic = ReadUInt16BE();
+	uchar graphicIncrement = ReadUInt8();
+	ushort count = ReadUInt16BE();
+	ushort x = ReadUInt16BE();
+	ushort y = ReadUInt16BE();
 
 	if (m_ClientVersion >= CV_6017)
 		Move(1);
 
-	uint oldContainer = obj->Container;
-	uint cserial = ReadUInt32BE();
-	bool canPut = true;
+	uint containerSerial = ReadUInt32BE();
+	ushort color = ReadUInt16BE();
 
-	if (obj->Layer != OL_NONE)
-	{
-		CGameObject *container = g_World->FindWorldObject(cserial);
-		if (container != NULL && container->IsCorpse())
-		{
-			canPut = false;
-			g_World->PutEquipment(obj, container, obj->Layer);
-		}
-	}
-
-	if (canPut)
-	{
-		obj->Layer = OL_NONE;
-		g_World->PutContainer(obj, cserial);
-	}
-
-	obj->Color = ReadUInt16BE();
-
-	if (m_ClientVersion >= CV_308Z)
-		m_MegaClilocRequests.push_back(obj->Serial);
-
-	if (obj->Graphic == 0x0EB0) //Message board item
-	{
-		CPacketBulletinBoardRequestMessageSummary(cserial, obj->Serial).Send();
-
-		g_GumpManager.UpdateGump(cserial, 0, GT_BULLETIN_BOARD);
-	}
-
-	g_World->MoveToTop(obj);
-
-	g_GumpManager.UpdateContent(oldContainer, 0, GT_PAPERDOLL);
-
-	CGameItem *container = g_World->FindWorldItem(cserial);
-	if (container != NULL)
-	{
-		CGump *gump = g_GumpManager.UpdateContent(cserial, 0, GT_SPELLBOOK);
-
-		if (gump == NULL)
-		{
-			gump = g_GumpManager.UpdateContent(cserial, 0, GT_CONTAINER);
-
-			if (m_ClientVersion >= CV_308Z)
-				m_MegaClilocRequests.push_back(cserial);
-		}
-
-		if (gump != NULL)
-		{
-			container->Opened = true;
-
-			if (gump->GumpType == GT_CONTAINER)
-				((CGumpContainer*)gump)->UpdateItemCoordinates(obj);
-		}
-
-		CGameObject *top = container->GetTopObject();
-
-		if (top != NULL)
-		{
-			top = top->FindSecureTradeBox();
-
-			if (top != NULL)
-				g_GumpManager.UpdateContent(0, top->Serial, GT_TRADE);
-		}
-	}
-
-	if (m_ClientVersion >= CV_308Z)
-		SendMegaClilocRequests();
+	g_World->UpdateContainedItem(serial, graphic, graphicIncrement, count, x, y, containerSerial, color);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(UpdateContainedItems)
@@ -1876,20 +1480,13 @@ PACKET_HANDLER(UpdateContainedItems)
 	if (g_World == NULL)
 		return;
 
-	ushort count = ReadUInt16BE();
-	uint cupd = 0;
-	CGameItem *contobj = NULL;
-	//bool isContGameBoard = false;
-	bool bbUpdated = false;
-	vector<CORPSE_EQUIPMENT_DATA> vced;
-	bool containerIsCorpse = false;
-	//UINT_LIST megaClilocRequestList;
+	ushort itemsCount = ReadUInt16BE();
 
-	IFOR(i, 0, count)
+	IFOR(i, 0, itemsCount)
 	{
 		uint serial = ReadUInt32BE();
 		ushort graphic = ReadUInt16BE();
-		Move(1);
+		uchar graphicIncrement = ReadUInt8();
 		ushort count = ReadUInt16BE();
 		ushort x = ReadUInt16BE();
 		ushort y = ReadUInt16BE();
@@ -1897,137 +1494,47 @@ PACKET_HANDLER(UpdateContainedItems)
 		if (m_ClientVersion >= CV_6017)
 			Move(1);
 
-		uint cserial = ReadUInt32BE();
-
-		if (cupd && cserial != cupd)
-		{
-			puchar oldPtr = m_Ptr;
-			m_Ptr -= 5;
-
-			cserial = ReadUInt32BE();
-
-			if (cserial != cupd)
-				continue;
-		}
-
+		uint containerSerial = ReadUInt32BE();
 		ushort color = ReadUInt16BE();
 
-		contobj = g_World->GetWorldItem(cserial);
-
-		contobj->MapIndex = g_CurrentMap;
-		ushort contgraphic = contobj->Graphic;
-
-		if (!cupd)
+		if (!i)
 		{
-			cupd = cserial;
-			CGameObject *objA = g_World->FindWorldObject(cupd);
-			LOG("Making %08X empty...\n", cupd);
+			CGameObject *container = g_World->FindWorldObject(containerSerial);
 
-			if (objA != NULL)
+			if (container != NULL)
 			{
-				if (objA->IsCorpse())
+				LOG("Making %08X empty...\n", containerSerial);
+
+				if (container->IsCorpse())
+					container->ClearUnequipped();
+				else
+					container->Clear();
+
+				/*if ((*(int(__thiscall **)(CGameContainer *))((int(__thiscall **)(_DWORD))containerObj1->GameObject.VTable
+					+ 12))(containerObj1))
 				{
-					containerIsCorpse = true;
-
-					QFOR(citem, objA->m_Items, CGameItem*)
+					if (containerObj1->GameObject.Parent)
 					{
-						int lay = citem->Layer;
-
-						if (lay > 0 && lay < OL_MOUNT)
+						if ((*((int(**)(void))containerObj1->GameObject.Parent->VTable + 9))())
 						{
-							CORPSE_EQUIPMENT_DATA ced = { citem->Serial, lay };
-							vced.push_back(ced);
+							v3 = containerObj1->GameObject.Parent;
+							if (v3->field_B8)
+							{
+								if ((*(int(**)(void))(*(_DWORD *)v3->field_B8 + 380))())
+								{
+									v4 = containerObj1->GameObject.Parent->field_B8;
+									if (v4)
+										(**(void(__stdcall ***)(_DWORD))v4)(1);
+								}
+							}
 						}
 					}
-				}
-
-				objA->Clear();
-
-				/*if (contobj->Opened)
-				{
-					CGump *gameGump = g_GumpManager.GetGump(contobj->Serial, 0, GT_CONTAINER);
-
-					if (gameGump != NULL)
-						isContGameBoard = ((CGumpContainer*)gameGump)->IsGameBoard;
+					sub_5A6FE0(containerObj1);
 				}*/
 			}
 		}
-
-		CGameItem *obj = g_World->GetWorldItem(serial);
-
-		obj->MapIndex = g_CurrentMap;
-		obj->Layer = 0;
-
-		if (m_ClientVersion >= CV_308Z)
-			m_MegaClilocRequests.push_back(obj->Serial);
-
-		g_World->PutContainer(obj, cserial);
-
-		obj->Graphic = graphic;
-		obj->OnGraphicChange();
-		obj->Count = count;
-		obj->X = x;
-		obj->Y = y;
-		obj->Color = color;
-
-		if (obj->Graphic == 0x0EB0) //Message board item
-		{
-			CPacketBulletinBoardRequestMessageSummary(cserial, serial).Send();
-
-			if (!bbUpdated)
-			{
-				bbUpdated = true;
-
-				g_GumpManager.UpdateGump(cserial, 0, GT_BULLETIN_BOARD);
-			}
-		}
-
-		LOG("\t|0x%08X<0x%08X:%04X*%d (%d,%d) %04X\n", obj->Container, obj->Serial, obj->Graphic, obj->Count, obj->X, obj->Y, obj->Color);
-	}
-
-	if (m_ClientVersion >= CV_308Z)
-		SendMegaClilocRequests();
-
-	if (containerIsCorpse)
-	{
-		IFOR(i, 0, (int)vced.size())
-		{
-			CGameItem *gi = g_World->FindWorldItem(vced[i].Serial);
-
-			if (gi != NULL)
-				g_World->PutEquipment(gi, cupd, vced[i].Layer);
-		}
-
-		vced.clear();
-	}
-
-	if (contobj != NULL)
-	{
-		CGump *gump = g_GumpManager.UpdateContent(contobj->Serial, 0, GT_SPELLBOOK);
-
-		if (gump == NULL)
-			gump = g_GumpManager.UpdateContent(contobj->Serial, 0, GT_CONTAINER);
-
-		if (gump != NULL)
-		{
-			contobj->Opened = true;
-
-			if (gump->GumpType == GT_CONTAINER)
-			{
-				QFOR(item, contobj->m_Items, CGameObject*)
-					((CGumpContainer*)gump)->UpdateItemCoordinates(item);
-			}
-		}
-
-		CGameObject *top = contobj->GetTopObject();
-
-		if (top != NULL)
-		{
-			top = top->FindSecureTradeBox();
-
-			if (top != NULL)
-				g_GumpManager.UpdateContent(0, top->Serial, GT_TRADE);
-		}
+		
+		g_World->UpdateContainedItem(serial, graphic, graphicIncrement, count, x, y, containerSerial, color);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -2037,34 +1544,77 @@ PACKET_HANDLER(DenyMoveItem)
 	if (g_World == NULL)
 		return;
 
-	if (g_ObjectInHand != NULL)
+	if (g_ObjectInHand.Enabled)
 	{
-		CGameItem *obj = g_World->FindWorldItem(g_ObjectInHand->Serial);
+		if (g_World->ObjectToRemove == g_ObjectInHand.Serial)
+			g_World->ObjectToRemove = 0;
 
-		if (obj == NULL)
+		if (!g_ObjectInHand.Layer && g_ObjectInHand.Container && g_ObjectInHand.Container != 0xFFFFFFFF)
 		{
-			obj = g_World->GetWorldItem(g_ObjectInHand->Serial);
+			g_World->UpdateContainedItem(g_ObjectInHand.Serial, g_ObjectInHand.Graphic, 0, g_ObjectInHand.TotalCount, g_ObjectInHand.X, g_ObjectInHand.Y, g_ObjectInHand.Container, g_ObjectInHand.Color);
+
+			g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_CONTAINER);
+		}
+		else
+		{
+			CGameItem *obj = g_World->GetWorldItem(g_ObjectInHand.Serial);
 
 			if (obj != NULL)
 			{
-				g_World->RemoveFromContainer(obj);
+				obj->Graphic = g_ObjectInHand.Graphic;
+				obj->Color = g_ObjectInHand.Color;
+				obj->Count = g_ObjectInHand.TotalCount;
+				obj->Flags = g_ObjectInHand.Flags;
+				obj->X = g_ObjectInHand.X;
+				obj->Y = g_ObjectInHand.Y;
+				obj->Z = g_ObjectInHand.Z;
 
-				obj->Paste(g_ObjectInHand);
+				CGameObject *container = g_World->FindWorldObject(g_ObjectInHand.Container);
 
-				//if (m_ClientVersion >= CV_308Z)
-				//	m_MegaClilocRequests.push_back(obj->Serial);
+				if (container != NULL)
+				{
+					if (container->NPC)
+					{
+						g_World->PutEquipment(obj, container, g_ObjectInHand.Layer);
 
-				g_World->PutContainer(obj, g_ObjectInHand->Container);
+						g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
+					}
+					else
+					{
+						g_World->RemoveObject(obj);
+						obj = NULL;
+					}
+				}
+				else
+					g_World->RemoveFromContainer(obj);
 
-				g_World->MoveToTop(obj);
+				if (g_TooltipsEnabled)
+					AddMegaClilocRequest(g_ObjectInHand.Serial);
+
+				if (obj != NULL)
+					g_World->MoveToTop(obj);
 			}
 		}
 
-		if (obj != NULL)
-			g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
+		g_GumpManager.CloseGump(g_ObjectInHand.Serial, 0, GT_DRAG);
 
-		delete g_ObjectInHand;
-		g_ObjectInHand = NULL;
+		g_ObjectInHand.Clear();
+	}
+
+	uchar code = ReadUInt8();
+
+	if (code < 5)
+	{
+		const string errorMessages[] =
+		{
+			"You can not pick that up.",
+			"That is too far away.",
+			"That is out of sight.",
+			"That item does not belong to you.  You'll have to steal it.",
+			"You are already holding an item."
+		};
+
+		g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, errorMessages[code]);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -2081,36 +1631,10 @@ PACKET_HANDLER(DeleteObject)
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
-	if (g_ObjectInHand != NULL && g_ObjectInHand->Serial == serial)
-	{
-		bool sep = g_ObjectInHand->Separated;
-
-		if (sep)
-			g_ObjectInHand->Separated = false;
-		else if (g_ObjectInHand->Dropped/*Deleted*/)
-		{
-			delete g_ObjectInHand;
-			g_ObjectInHand = NULL;
-		}
-
-		if (g_ObjectInHand != NULL)
-		{
-			if (obj != NULL && sep)
-			{
-				if (obj->Count != g_ObjectInHand->DragCount)
-					g_ObjectInHand->Deleted = true;
-				else
-					g_ObjectInHand->Separated = true;
-			}
-			else
-				g_ObjectInHand->Deleted = true;
-		}
-	}
-
 	if (obj != NULL)
 	{
 		bool updateAbilities = false;
-		uint cont = obj->Container;
+		uint cont = obj->Container & 0x7FFFFFFF;
 
 		if (cont != 0xFFFFFFFF)
 		{
@@ -2118,7 +1642,7 @@ PACKET_HANDLER(DeleteObject)
 
 			if (top != NULL)
 			{
-				if (top->IsPlayer() && !obj->NPC)
+				if (top->IsPlayer())
 				{
 					CGameItem *item = (CGameItem*)obj;
 					updateAbilities = (item->Layer == OL_1_HAND || item->Layer == OL_2_HAND);
@@ -2129,6 +1653,9 @@ PACKET_HANDLER(DeleteObject)
 				if (tradeBox != NULL)
 					g_GumpManager.UpdateContent(0, tradeBox->Serial, GT_TRADE);
 			}
+
+			if (cont == g_PlayerSerial && ((CGameItem*)obj)->Layer == OL_NONE)
+				g_ObjectInHand.Enabled = false;
 
 			if (!obj->NPC && ((CGameItem*)obj)->Layer != OL_NONE)
 				g_GumpManager.UpdateContent(cont, 0, GT_PAPERDOLL);
@@ -2169,60 +1696,26 @@ PACKET_HANDLER(DeleteObject)
 			}
 		}
 
-		if (obj->NPC)
+		if (!g_CorpseManager.InList(0, serial))
 		{
-			if (!g_Party.Contains(obj->Serial))
+			if (obj->NPC)
 			{
-				bool inList = false;
-
-				for (UINTS_PAIR_LIST::iterator i = g_DeletedCharactersStack.begin(); i != g_DeletedCharactersStack.end(); i++)
+				if (g_Party.Contains(obj->Serial))
 				{
-					if (i->first == serial)
-					{
-						inList = true;
-						i->second = g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY;
+					g_GumpManager.UpdateContent(obj->Serial, 0, GT_STATUSBAR);
 
-						break;
-					}
+					obj->RemoveRender();
 				}
-
-				if (!inList)
-				{
-					((CGameCharacter*)obj)->Deleted = true;
-					g_DeletedCharactersStack.push_back(pair<uint, uint>(serial, g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY));
-				}
+				else
+					g_World->RemoveObject(obj);
 			}
 			else
-				g_GumpManager.UpdateContent(obj->Serial, 0, GT_STATUSBAR);
-
-			obj->RemoveRender();
-		}
-		else
-		{
-			if (obj->IsCorpse() && obj->LastAnimationChangeTime == GetTickCount())
 			{
-				CGameItem *fake = new CGameItem(1);
+				g_World->RemoveObject(obj);
 
-				fake->Graphic = 0x2006;
-				fake->Color = obj->Color;
-				fake->Count = obj->Count;
-				fake->X = obj->X;
-				fake->Y = obj->Y;
-				fake->Z = obj->Z;
-				fake->Layer = ((CGameItem*)obj)->Layer;
-				fake->RenderQueueIndex = 6;
-				fake->UsedLayer = ((CGameItem*)obj)->UsedLayer;
-				fake->AnimIndex = 0;
-				fake->FieldColor = 1;
-
-				g_World->m_Items->AddObject(fake);
-				g_MapManager->AddRender(fake);
+				if (updateAbilities)
+					g_Player->UpdateAbilities();
 			}
-
-			g_World->RemoveObject(obj);
-
-			if (updateAbilities)
-				g_Player->UpdateAbilities();
 		}
 	}
 }
@@ -2239,103 +1732,38 @@ PACKET_HANDLER(UpdateCharacter)
 	if (obj == NULL)
 		return;
 
-	if (!obj->Graphic)
-	{
-		bool resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL);
+	ushort graphic = ReadUInt16BE();
+	ushort x = ReadUInt16BE();
+	ushort y = ReadUInt16BE();
+	char z = ReadUInt8();
+	uchar direction = ReadUInt8();
+	ushort color = ReadUInt16BE();
+	uchar flags = ReadUInt8();
+	uchar notoriety = ReadUInt8();
 
-		resuestStatus = (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.DrawStatusState || resuestStatus || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
-
-		if (resuestStatus)
-			g_Orion.StatusReq(serial);
-	}
-
-	obj->Deleted = false;
-	obj->MapIndex = g_CurrentMap;
-	obj->Graphic = ReadUInt16BE();
-	obj->OnGraphicChange();
-
-	short x = ReadInt16BE();
-	short y = ReadInt16BE();
-	char z = ReadInt8();
-	uchar dir = ReadUInt8();
-
-	if (!obj->IsTeleportAction(x, y, dir))
-	{
-		if (serial != g_PlayerSerial)
-		{
-			if (!obj->m_Steps.empty() && obj->FindLayer(OL_MOUNT) == NULL)
-			{
-				CWalkData &wd = obj->m_Steps.back();
-
-				obj->X = wd.X;
-				obj->Y = wd.Y;
-				obj->Z = wd.Z;
-				obj->Direction = wd.Direction;
-
-				obj->m_Steps.clear();
-			}
-
-			if (obj->m_Steps.empty())
-				obj->LastStepTime = g_Ticks;
-
-			obj->m_Steps.push_back(CWalkData(x, y, z, dir));
-		}
-		else
-		{
-			obj->X = x;
-			obj->Y = y;
-			obj->Z = z;
-			obj->Direction = dir;
-		}
-	}
-	else if (serial != g_PlayerSerial)
-	{
-		bool passed = obj->m_Steps.empty();
-
-		if (!passed)
-		{
-			CWalkData &wd = obj->m_Steps.front();
-			passed = (wd.X != x || wd.Y != y || wd.Z != z || wd.Direction != dir);
-		}
-
-		if (passed)
-		{
-			obj->m_Steps.clear();
-			obj->X = x;
-			obj->Y = y;
-			obj->Z = z;
-			obj->Direction = dir;
-		}
-	}
-
-	//if (serial == g_PlayerSerial)
-	//	obj->PaperdollText = "";
-
-	if (m_ClientVersion >= CV_308Z)
-	{
-		m_MegaClilocRequests.push_back(obj->Serial);
-
-		if (serial == g_PlayerSerial)
-		{
-			if (g_Player->m_Items != NULL)
-			{
-				CGameItem *backpack = (CGameItem*)g_Player->m_Items;
-				m_MegaClilocRequests.push_back(backpack->Serial);
-			}
-		}
-
-		SendMegaClilocRequests();
-	}
+	if (obj->NPC)
+		((CGameCharacter*)obj)->Notoriety = notoriety;
 
 	if (obj->IsPlayer())
 	{
-		g_Player->CloseBank();
-		g_GumpManager.RemoveRangedGumps();
+		obj->Flags = flags;
 	}
+	else
+	{
+		if (!obj->m_Steps.empty() && obj->Direction == obj->m_Steps.back().Direction)
+		{
+			CWalkData &wd = obj->m_Steps.back();
 
-	obj->Color = ReadUInt16BE();
-	obj->Flags = ReadUInt8();
-	obj->Notoriety = ReadUInt8();
+			obj->X = wd.X;
+			obj->Y = wd.Y;
+			obj->Z = wd.Z;
+			obj->Direction = wd.Direction;
+
+			obj->m_Steps.clear();
+		}
+
+		g_World->UpdateGameObject(serial, graphic, 0, 0, x, y, z, direction, color, flags, 0, UGOT_ITEM, 1);
+	}
 
 	g_World->MoveToTop(obj);
 }
@@ -2514,7 +1942,6 @@ PACKET_HANDLER(EnableLockedFeatures)
 		g_LockedClientFeatures = ReadUInt16BE();
 
 	g_ChatEnabled = (bool)(g_LockedClientFeatures & LFF_T2A);
-	g_NoMegaCliloc = g_LockedClientFeatures & LFF_T2A || g_LockedClientFeatures & LFF_RE || g_LockedClientFeatures & LFF_TD || g_LockedClientFeatures & LFF_LBR;
 
 	g_AnimationManager.UpdateAnimationAddressTable();
 }
@@ -2636,7 +2063,7 @@ PACKET_HANDLER(OpenContainer)
 			if (!obj->IsCorpse())
 				g_World->ClearContainer(obj);
 
-			if (gumpid = 0xFFFF)
+			if (gumpid == 0xFFFF)
 				((CGumpSpellbook*)gump)->UpdateGraphic(obj->Graphic);
 		}
 	}
@@ -2684,7 +2111,7 @@ PACKET_HANDLER(UpdateSkills)
 				if (change)
 				{
 					char str[128] = { 0 };
-					sprintf(str, "Your skill in %s has %s by %.1f%%.  It is now %.1f%%.", g_Skills[id].Name.c_str(), ((change < 0) ? "decreased" : "increased"), change, g_Player->GetSkillBaseValue(id) + change);
+					sprintf_s(str, "Your skill in %s has %s by %.1f%%.  It is now %.1f%%.", g_Skills[id].Name.c_str(), ((change < 0) ? "decreased" : "increased"), change, g_Player->GetSkillBaseValue(id) + change);
 					//else if (change > 0) sprintf(str, "Your skill in %s has increased by %.1f%%.  It is now %.1f%%.", UO->m_Skills[id].m_Name.c_str(), change, obj->GetSkillBaseValue(id) + change);
 					g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x58, str);
 				}
@@ -3161,29 +2588,20 @@ PACKET_HANDLER(ExtendedCommand)
 PACKET_HANDLER(DenyWalk)
 {
 	WISPFUN_DEBUG("c150_f48");
-	g_WalkRequestCount = 0;
-	g_PendingDelayTime = 0;
-	g_Ping = 0;
-
 	if (g_Player == NULL)
 		return;
 
-	Move(1);
-	g_Player->X = ReadUInt16BE();
-	g_Player->Y = ReadUInt16BE();
-	uchar dir = ReadUInt8();
-	g_Player->Direction = dir;
-	g_Player->Z = ReadUInt8();
+	g_Ping = 0;
 
-	g_Walker->SetSequence(0, dir);
-	g_Player->OffsetX = 0;
-	g_Player->OffsetY = 0;
-	g_Player->OffsetZ = 0;
+	uchar sequence = ReadUInt8();
+	ushort x = ReadUInt16BE();
+	ushort y = ReadUInt16BE();
+	uchar direction = ReadUInt8();
+	char z = ReadUInt8();
 
-	g_Player->m_Steps.clear();
+	g_Walker.DenyWalk(sequence, x, y, z);
 
-	g_Player->CloseBank();
-	g_GumpManager.RemoveRangedGumps();
+	g_Player->Direction = direction;
 
 	g_World->MoveToTop(g_Player);
 }
@@ -3191,23 +2609,20 @@ PACKET_HANDLER(DenyWalk)
 PACKET_HANDLER(ConfirmWalk)
 {
 	WISPFUN_DEBUG("c150_f49");
-	if (g_WalkRequestCount)
-		g_WalkRequestCount--;
-
 	if (g_Player == NULL)
 		return;
 
-	uchar seq = ReadUInt8();
+	uchar sequence = ReadUInt8();
 
-	g_PingByWalk[seq][1] = g_Ticks;
+	g_PingByWalk[sequence][1] = g_Ticks;
 
-	if (seq >= 10 && !(seq % 10))
+	if (sequence >= 10 && !(sequence % 10))
 	{
 		g_Ping = 0;
 
 		IFOR(i, 0, 10)
 		{
-			int delay = g_PingByWalk[seq - i][1] - g_PingByWalk[seq - i][0];
+			int delay = g_PingByWalk[sequence - i][1] - g_PingByWalk[sequence - i][0];
 
 			if (delay > 0)
 			{
@@ -3232,7 +2647,8 @@ PACKET_HANDLER(ConfirmWalk)
 
 	g_Player->Notoriety = newnoto;
 
-	g_GumpManager.RemoveRangedGumps();
+	g_Walker.ConfirmWalk(sequence);
+
 	g_World->MoveToTop(g_Player);
 }
 //----------------------------------------------------------------------------------
@@ -3934,48 +3350,40 @@ PACKET_HANDLER(DisplayDeath)
 
 	uint serial = ReadUInt32BE();
 	uint corpseSerial = ReadUInt32BE();
+	uint running = ReadUInt32BE();
 
 	CGameCharacter *owner = g_World->FindWorldCharacter(serial);
 
-	if (!corpseSerial)
+	if (owner == NULL)
+		return;
+
+	serial |= 0x80000000;
+
+	g_World->ReplaceObject(owner, serial);
+
+	if (corpseSerial)
+		g_CorpseManager.Add(CCorpse(corpseSerial, serial, owner->Direction, running != 0));
+
+	uchar group = g_AnimationManager.GetDieGroupIndex(owner->Graphic, running != 0);
+
+	owner->SetAnimation(group, 0, 5, 1, false, false);
+
+	/*ushort graphic = owner->Graphic;
+
+	if (graphic >= 150)
 	{
-		if (serial < 0x40000000 && owner != NULL)
+		if (graphic >= 200)
 		{
-			CGameItem *obj = new CGameItem(1);
-
-			obj->Graphic = 0x2006;
-			obj->Color = owner->Color;
-			obj->Count = owner->Graphic;
-			obj->X = owner->X;
-			obj->Y = owner->Y;
-			obj->Z = owner->Z;
-			obj->Layer = owner->Direction;
-			obj->RenderQueueIndex = 6;
-			obj->UsedLayer = (ReadUInt32BE() ? 1 : 0);
-			obj->AnimIndex = 0;
-			obj->FieldColor = 1;
-
-			g_World->m_Items->AddObject(obj);
-			g_MapManager->AddRender(obj);
-		}
-	}
-	else
-	{
-		CGameItem *obj = g_World->FindWorldItem(corpseSerial);
-
-		if (obj != NULL)
-		{
-			obj->AnimIndex = 0;
-
-			if (owner != NULL)
-			{
-				owner->Deleted = true;
-				g_DeletedCharactersStack.push_back(pair<uint, uint>(serial, g_Ticks + KEEP_CHARACTERS_IN_REMOVE_LIST_DELAY));
-			}
+			if (graphic >= 400)
+				owner->SetAnimation(22 - (running != 0), 0, 5, 1, false, false);
+			else
+				owner->SetAnimation((running != 0 ? 8 : 12), 0, 5, 1, false, false);
 		}
 		else
-			g_CorpseSerialList.push_back(pair<uint, uint>(corpseSerial, g_Ticks + 1000));
+			owner->SetAnimation(8, 0, 5, 1, false, false);
 	}
+	else
+		owner->SetAnimation(3 - (running != 0), 0, 5, 1, false, false);*/
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OpenChat)
@@ -4052,7 +3460,11 @@ PACKET_HANDLER(MegaCliloc)
 	if (g_World == NULL)
 		return;
 
-	ushort wat = ReadUInt16BE();
+	ushort unknown = ReadUInt16BE();
+
+	if (unknown > 1)
+		return;
+
 	uint serial = ReadUInt32BE();
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
@@ -4060,7 +3472,7 @@ PACKET_HANDLER(MegaCliloc)
 	if (obj == NULL)
 		return;
 
-	ushort wat2 = ReadUInt16BE();
+	Move(2);
 	uint testedSerial = ReadUInt32BE();
 	wstring message(L"");
 	bool coloredStartFont = false;
@@ -4781,17 +4193,24 @@ PACKET_HANDLER(OpenGump)
 		}
 		else if (cmd == "button")
 		{
-			if (listSize >= 8)
+			if (listSize >= 5)
 			{
 				int x = ToInt(list[1]);
 				int y = ToInt(list[2]);
 				int up = ToInt(list[3]);
 				int down = ToInt(list[4]);
-				int action = ToInt(list[5]);
-				int toPage = ToInt(list[6]);
-				int index = ToInt(list[7]);
+				int action = 0;
+				int toPage = 0;
+				int index = 0;
 
-				if (action == 1)
+				if (listSize >= 6)
+					index = ToInt(list[5]);
+				if (listSize >= 7)
+					index = ToInt(list[6]);
+				if (listSize >= 8)
+					index = ToInt(list[7]);
+
+				if (action != 0)
 					toPage = -1;
 
 				go = new CGUIButton(index, up, up, down, x, y);
@@ -4816,7 +4235,7 @@ PACKET_HANDLER(OpenGump)
 				int tileX = ToInt(list[10]);
 				int tileY = ToInt(list[11]);
 
-				if (action == 1)
+				if (action != 0)
 					toPage = -1;
 
 				go = new CGUIButtonTileart(index, up, up, down, x, y, tileGraphic, tileColor, tileX, tileY);
@@ -4826,14 +4245,19 @@ PACKET_HANDLER(OpenGump)
 		}
 		else if (cmd == "checkbox")
 		{
-			if (listSize >= 7)
+			if (listSize >= 5)
 			{
 				int x = ToInt(list[1]);
 				int y = ToInt(list[2]);
 				int up = ToInt(list[3]);
 				int down = ToInt(list[4]);
-				int state = ToInt(list[5]);
-				int index = ToInt(list[6]);
+				int state = 0;
+				int index = 0;
+
+				if (listSize >= 6)
+					state = ToInt(list[5]);
+				if (listSize >= 7)
+					index = ToInt(list[6]);
 
 				go = new CGUICheckbox(index, up, down, up, x, y);
 
@@ -4842,14 +4266,19 @@ PACKET_HANDLER(OpenGump)
 		}
 		else if (cmd == "radio")
 		{
-			if (listSize >= 7)
+			if (listSize >= 5)
 			{
 				int x = ToInt(list[1]);
 				int y = ToInt(list[2]);
 				int up = ToInt(list[3]);
 				int down = ToInt(list[4]);
-				int state = ToInt(list[5]);
-				int index = ToInt(list[6]);
+				int state = 0;
+				int index = 0;
+
+				if (listSize >= 6)
+					state = ToInt(list[5]);
+				if (listSize >= 7)
+					index = ToInt(list[6]);
 
 				go = new CGUIRadio(index, up, down, up, x, y);
 
@@ -4945,14 +4374,19 @@ PACKET_HANDLER(OpenGump)
 		}
 		else if (cmd == "tilepichue")
 		{
-			if (listSize >= 5)
+			if (listSize >= 4)
 			{
 				int x = ToInt(list[1]);
 				int y = ToInt(list[2]);
 				int graphic = ToInt(list[3]);
-				int color = ToInt(list[4]);
+				int color = 0;
 
-				gump->Add(new CGUIShader(g_ColorizerShader, true));
+				if (listSize >= 5)
+					color = ToInt(list[4]);
+
+				if (color)
+					gump->Add(new CGUIShader(g_ColorizerShader, true));
+
 				go = new CGUITilepic(graphic, color, x, y);
 				go->DrawOnly = true;
 			}
@@ -5766,13 +5200,13 @@ PACKET_HANDLER(Logout)
 PACKET_HANDLER(OPLInfo)
 {
 	WISPFUN_DEBUG("c150_f99");
-	if (m_ClientVersion >= CV_308Z && !g_NoMegaCliloc)
+	if (g_TooltipsEnabled)
 	{
 		uint serial = ReadUInt32BE();
 		uint revision = ReadUInt32BE();
 		//Если хранить ревизию на обьекте, то сравнивая её и то что здесь пришло
 		// и получая одинаковый результат, - нет смысла запрашивать у сервера эти данные заного.
-		AddMegaClilocRequest(serial, true);
+		AddMegaClilocRequest(serial);
 	}
 }
 //----------------------------------------------------------------------------------

@@ -10,10 +10,6 @@
 #ifndef SELECTEDOBJECT_H
 #define SELECTEDOBJECT_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "Gumps/Gump.h"
-#include "GUI/BaseGUI.h"
-//----------------------------------------------------------------------------------
 class CSelectedObject
 {
 	SETGET(uint, Serial, 0);

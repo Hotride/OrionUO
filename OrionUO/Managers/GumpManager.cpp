@@ -7,45 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpManager.h"
-#include "../SelectedObject.h"
-#include "../PressedObject.h"
-#include "../Party.h"
-#include "../OrionUO.h"
-#include "../Container.h"
-#include "../TextEngine/GameConsole.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "MouseManager.h"
-#include "ConfigManager.h"
-#include "OptionsMacroManager.h"
-#include "PacketManager.h"
-#include "../Wisp/WispMappedFile.h"
-#include "../Wisp/WispBinaryFileWritter.h"
-#include "../Container.h"
-#include "../Gumps/GumpConsoleType.h"
-#include "../Gumps/GumpSpell.h"
-#include "../Gumps/GumpMenubar.h"
-#include "../Gumps/GumpPaperdoll.h"
-#include "../Gumps/GumpMinimap.h"
-#include "../Gumps/GumpPopupMenu.h"
-#include "../Gumps/GumpStatusbar.h"
-#include "../Gumps/GumpMenu.h"
-#include "../Gumps/GumpGeneric.h"
-#include "../Gumps/GumpBuff.h"
-#include "../Gumps/GumpJournal.h"
-#include "../Gumps/GumpOptions.h"
-#include "../Gumps/GumpSkills.h"
-#include "../Gumps/GumpBook.h"
-#include "../Gumps/GumpSecureTrading.h"
-#include "../Gumps/GumpWorldMap.h"
-#include "../Gumps/GumpSkill.h"
-#include "../Gumps/GumpAbility.h"
-#include "../Gumps/GumpCombatBook.h"
-#include "../Gumps/GumpRacialAbilitiesBook.h"
-#include "../Gumps/GumpRacialAbility.h"
-#include "../OrionWindow.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpManager g_GumpManager;
 //----------------------------------------------------------------------------------
@@ -600,13 +562,8 @@ void CGumpManager::InitToolTip()
 
 	if (gump != NULL)
 	{
-		if (!g_ConfigManager.UseToolTips)
-		{
-			if (g_PacketManager.ClientVersion < CV_308Z)
-				return;
-			else if (gump->GumpType != GT_CONTAINER && gump->GumpType != GT_PAPERDOLL && gump->GumpType != GT_TRADE)
-				return;
-		}
+		if (!g_ConfigManager.UseToolTips && (!g_TooltipsEnabled || (gump->GumpType != GT_CONTAINER && gump->GumpType != GT_PAPERDOLL && gump->GumpType != GT_TRADE)))
+			return;
 
 		gump->InitToolTip();
 	}
@@ -667,24 +624,24 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (g_PressedObject.LeftGump() == gump && !gump->NoProcess)
+		if (g_PressedObject.LeftGump == gump && !gump->NoProcess)
 		{
 			bool canMove = false;
 
-			if (g_PressedObject.LeftObject() != NULL)
+			if (g_PressedObject.LeftObject != NULL)
 			{
-				if (!g_PressedObject.LeftObject()->IsText())
+				if (!g_PressedObject.LeftObject->IsText())
 				{
-					if (!g_PressedObject.LeftObject()->Serial)
+					if (!g_PressedObject.LeftObject->Serial)
 						canMove = true;
-					else if (g_PressedObject.LeftObject()->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject())->MoveOnDrag)
+					else if (g_PressedObject.LeftObject->IsGUI() && ((CBaseGUI*)g_PressedObject.LeftObject)->MoveOnDrag)
 						canMove = true;
 				}
 			}
 			else
 				canMove = true;
 
-			if (canMove && gump->CanBeMoved() && !gump->NoMove && g_ObjectInHand == NULL)
+			if (canMove && gump->CanBeMoved() && !gump->NoMove && !g_ObjectInHand.Enabled)
 			{
 				WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -773,7 +730,7 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 				//gump->FrameCreated = false;
 			}
 			
-			if (g_ObjectInHand != NULL)
+			if (g_ObjectInHand.Enabled)
 			{
 				if (g_SelectedObject.Gump == gump)
 					gump->OnLeftMouseButtonUp();
@@ -788,7 +745,7 @@ bool CGumpManager::OnLeftMouseButtonUp(const bool &blocked)
 			//MoveGumpToTop(gump);
 			return true;
 		}
-		else if (g_SelectedObject.Gump == gump && g_ObjectInHand != NULL && (gump->GumpType == GT_PAPERDOLL || gump->GumpType == GT_CONTAINER || gump->GumpType == GT_TRADE))
+		else if (g_SelectedObject.Gump == gump && g_ObjectInHand.Enabled && (gump->GumpType == GT_PAPERDOLL || gump->GumpType == GT_CONTAINER || gump->GumpType == GT_TRADE))
 		{
 			gump->OnLeftMouseButtonUp();
 
@@ -874,7 +831,7 @@ void CGumpManager::OnRightMouseButtonUp(const bool &blocked)
 
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (g_PressedObject.RightGump() == gump && !gump->NoProcess && !gump->NoClose && (gump->CanBeMoved() || gump->GumpType == GT_GENERIC))
+		if (g_PressedObject.RightGump == gump && !gump->NoProcess && !gump->NoClose && (gump->CanBeMoved() || gump->GumpType == GT_GENERIC))
 		{
 			//gump->OnClose();
 			switch (gump->GumpType)
@@ -1045,7 +1002,7 @@ void CGumpManager::OnDragging(const bool &blocked)
 	WISPFUN_DEBUG("c144_f25");
 	QFOR(gump, m_Items, CGump*)
 	{
-		if (g_PressedObject.LeftGump() == gump && !gump->NoProcess)
+		if (g_PressedObject.LeftGump == gump && !gump->NoProcess)
 		{
 			gump->OnDragging();
 

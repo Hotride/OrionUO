@@ -7,16 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpScreenGame.h"
-#include "../Screen stages/GameScreen.h"
-#include "../OrionUO.h"
-#include "../Managers/ConfigManager.h"
-#include "../OrionWindow.h"
-#include "../Managers/PacketManager.h"
-#include "../Network/Packets.h"
-#include "../Managers/GumpManager.h"
-#include "GumpConsoleType.h"
-#include "GumpOptions.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpScreenGame::CGumpScreenGame()
 : CGump(GT_NONE, 0, 0, 0)
@@ -36,11 +27,11 @@ CGumpScreenGame::~CGumpScreenGame()
 void CGumpScreenGame::UpdateContent()
 {
 	WISPFUN_DEBUG("c115_f2");
-	if (g_PressedObject.LeftGump() == this)
+	if (g_PressedObject.LeftGump == this)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
-		if (g_PressedObject.LeftObject() == m_Items) //resizer
+		if (g_PressedObject.LeftObject == m_Items) //resizer
 		{
 			g_RenderBounds.GameWindowWidth += offset.X;
 			g_RenderBounds.GameWindowHeight += offset.Y;
@@ -120,24 +111,22 @@ CRenderObject *CGumpScreenGame::Select()
 	WISPFUN_DEBUG("c115_f5");
 	CRenderObject *selected = NULL;
 
-	//Если ничего не выбралось - пройдемся по рамке
-	if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))
-		selected = (CRenderObject*)m_Items->m_Next;
-	else if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))
-		selected = (CRenderObject*)m_Items->m_Next;
-	else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, g_RenderBounds.GameWindowWidth + 8, 0))
-		selected = (CRenderObject*)m_Items->m_Next;
-	else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight, g_RenderBounds.GameWindowWidth + 8, 0))
-		selected = (CRenderObject*)m_Items->m_Next;
-
 	if (!g_ConfigManager.LockResizingGameWindow)
 	{
 		if (g_Orion.GumpPixelsInXY(0x0837, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth - 3, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight - 3))
 			selected = (CRenderObject*)m_Items;
-	}
+		else if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))
+			selected = (CRenderObject*)m_Items->m_Next;
+		else if (g_Orion.GumpPixelsInXY(0x0A8D, g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth, g_RenderBounds.GameWindowPosY - 4, 0, g_RenderBounds.GameWindowHeight + 8))
+			selected = (CRenderObject*)m_Items->m_Next;
+		else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY - 4, g_RenderBounds.GameWindowWidth + 8, 0))
+			selected = (CRenderObject*)m_Items->m_Next;
+		else if (g_Orion.GumpPixelsInXY(0x0A8C, g_RenderBounds.GameWindowPosX - 4, g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight, g_RenderBounds.GameWindowWidth + 8, 0))
+			selected = (CRenderObject*)m_Items->m_Next;
 
-	if (selected != NULL)
-		g_SelectedObject.Init(selected, this);
+		if (selected != NULL)
+			g_SelectedObject.Init(selected, this);
+	}
 
 	return selected;
 }
@@ -156,7 +145,7 @@ void CGumpScreenGame::OnLeftMouseButtonUp()
 	WISPFUN_DEBUG("c115_f7");
 	WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
-	if (g_PressedObject.LeftObject() == m_Items) //resizer
+	if (g_PressedObject.LeftObject == m_Items) //resizer
 	{
 		g_ConfigManager.GameWindowWidth = g_ConfigManager.GameWindowWidth + offset.X;
 		g_ConfigManager.GameWindowHeight = g_ConfigManager.GameWindowHeight + offset.Y;

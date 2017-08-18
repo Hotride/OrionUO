@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "MapManager.h"
-#include "FileManager.h"
-#include "../Constants.h"
-#include "../Game objects/StaticObject.h"
-#include "../Game objects/GamePlayer.h"
-#include <unordered_map>
-#include "../OrionUO.h"
-#include "GumpManager.h"
-#include "../Gumps/GumpMinimap.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CMapManager *g_MapManager = NULL;
 //----------------------------------------------------------------------------------

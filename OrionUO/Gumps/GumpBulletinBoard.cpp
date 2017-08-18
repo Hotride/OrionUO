@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpBulletinBoard.h"
-#include "../Network/Packets.h"
-#include "../PressedObject.h"
-#include "../Managers/GumpManager.h"
-#include "../Game objects/GamePlayer.h"
-#include "GumpBulletinBoardItem.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpBulletinBoard::CGumpBulletinBoard(uint serial, short x, short y, string name)
 : CGump(GT_BULLETIN_BOARD, serial, x, y)
@@ -91,9 +86,9 @@ bool CGumpBulletinBoard::OnLeftMouseButtonDoubleClick()
 	WISPFUN_DEBUG("c89_f4");
 	bool result = false;
 
-	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI())
+	if (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI())
 	{
-		CBaseGUI *gui = (CBaseGUI*)g_PressedObject.LeftObject();
+		CBaseGUI *gui = (CBaseGUI*)g_PressedObject.LeftObject;
 
 		if (gui->Type == GOT_BB_OBJECT)
 		{

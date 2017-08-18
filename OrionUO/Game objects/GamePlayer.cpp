@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GamePlayer.h"
-#include "GameItem.h"
-#include "ObjectOnCursor.h"
-#include "../Gumps/GumpCombatBook.h"
-#include "../Managers/GumpManager.h"
-#include "../OrionUO.h"
-#include "../Network/Packets.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CPlayer *g_Player = NULL;
 //----------------------------------------------------------------------------------
@@ -183,23 +177,18 @@ void CPlayer::UpdateAbilities()
 {
 	WISPFUN_DEBUG("c21_f12");
 	ushort equippedGraphic = 0;
-	uint ignoreSerial = 0;
-
-	if (g_ObjectInHand != NULL)
-		ignoreSerial = g_ObjectInHand->Serial;
 
 	CGameItem *layerObject = g_Player->FindLayer(OL_1_HAND);
 
 	if (layerObject != NULL)
 	{
-		if (layerObject->Serial != ignoreSerial)
-			equippedGraphic = layerObject->Graphic;
+		equippedGraphic = layerObject->Graphic;
 	}
 	else
 	{
 		layerObject = g_Player->FindLayer(OL_2_HAND);
 
-		if (layerObject != NULL && layerObject->Serial != ignoreSerial)
+		if (layerObject != NULL)
 			equippedGraphic = layerObject->Graphic;
 	}
 
@@ -869,5 +858,19 @@ void CPlayer::UpdateAbilities()
 	g_GumpManager.UpdateContent(1, 0, GT_ABILITY);
 
 	g_GumpManager.UpdateContent(0, 0, GT_COMBAT_BOOK);
+}
+//---------------------------------------------------------------------------
+void CPlayer::UpdateRemoveRange()
+{
+	if (!m_Steps.empty())
+	{
+		g_RemoveRangeXY.X = g_Player->m_Steps.back().X;
+		g_RemoveRangeXY.Y = g_Player->m_Steps.back().Y;
+	}
+	else
+	{
+		g_RemoveRangeXY.X = g_Player->X;
+		g_RemoveRangeXY.Y = g_Player->Y;
+	}
 }
 //---------------------------------------------------------------------------

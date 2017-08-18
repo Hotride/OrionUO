@@ -10,9 +10,6 @@
 #ifndef GAMESCREEN_H
 #define GAMESCREEN_H
 //----------------------------------------------------------------------------------
-#include "BaseScreen.h"
-#include "../Gumps/GumpScreenGame.h"
-//----------------------------------------------------------------------------------
 //!Структура с данными о параметрах и возможностях игрового окна
 struct RENDER_VARIABLES_FOR_GAME_WINDOW
 {

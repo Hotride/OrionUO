@@ -10,9 +10,6 @@
 #ifndef RENDEROBJECT_H
 #define RENDEROBJECT_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "BaseQueue.h"
-//----------------------------------------------------------------------------------
 //Класс для работы с объектами рендера
 class CRenderObject : public CBaseQueueItem
 {

@@ -7,7 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIBlending.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIBlending::CGUIBlending(const bool &enabled, const GLenum &sFactor, const GLenum &dFactor)
 : CBaseGUI(GOT_BLENDING, 0, 0, 0, 0, 0), m_SFactor(sFactor), m_DFactor(dFactor)

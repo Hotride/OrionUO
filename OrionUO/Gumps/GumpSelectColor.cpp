@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpSelectColor.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/GumpManager.h"
-#include "GumpOptions.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpSelectColor::CGumpSelectColor(uint serial, short x, short y, SELECT_COLOR_GUMP_STATE state)
 : CGump(GT_SELECT_COLOR, serial, x, y), m_State(state)

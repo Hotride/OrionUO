@@ -1,7 +1,6 @@
 ﻿//----------------------------------------------------------------------------------
 #ifndef WISPBINARYFILEWRITTER_H
 #define WISPBINARYFILEWRITTER_H
-#include "WispDataStream.h"
 //----------------------------------------------------------------------------------
 namespace WISP_FILE
 {

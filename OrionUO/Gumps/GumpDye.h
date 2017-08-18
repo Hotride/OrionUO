@@ -10,8 +10,6 @@
 #ifndef GUMPDYE_H
 #define GUMPDYE_H
 //----------------------------------------------------------------------------------
-#include "GumpSelectColor.h"
-//----------------------------------------------------------------------------------
 class CGumpDye : public CGumpSelectColor
 {
 private:

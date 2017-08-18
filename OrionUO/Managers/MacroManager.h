@@ -10,9 +10,6 @@
 #ifndef MACROMANAGER_H
 #define MACROMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../BaseQueue.h"
-#include "../Globals.h"
-//----------------------------------------------------------------------------------
 //!Класс менеджера макросов
 class CMacroManager : public CBaseQueue
 {

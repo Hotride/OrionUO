@@ -10,9 +10,6 @@
 #ifndef CHARACTERLISTSCREEN_H
 #define CHARACTERLISTSCREEN_H
 //----------------------------------------------------------------------------------
-#include "BaseScreen.h"
-#include "../Gumps/GumpScreenCharacterList.h"
-//----------------------------------------------------------------------------------
 class CCharacterListScreen : public CBaseScreen
 {
 private:

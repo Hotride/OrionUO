@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "UOFileReader.h"
-#include "ColorManager.h"
-#include "../GLEngine/GLEngine.h"
-#include "../OrionUO.h"
-#include "../StumpsData.h"
+#include "stdafx.h"
 
 UOFileReader *g_UOFileReader = NULL;
 //---------------------------------------------------------------------------

@@ -12,9 +12,6 @@
 #ifndef GUIMINMAXBUTTONS_H
 #define GUIMINMAXBUTTONS_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CGUIMinMaxButtons : public CBaseGUI
 {
 	//!Минимальное значение

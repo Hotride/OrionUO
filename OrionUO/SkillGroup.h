@@ -10,9 +10,6 @@
 #ifndef SKILLGROUP_H
 #define SKILLGROUP_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 //Класс группы навыков
 class CSkillGroupObject
 {

@@ -7,91 +7,8 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include <Shlwapi.h>
-#pragma comment(lib, "Shlwapi.lib")
 
-#include "OrionUO.h"
-#include "OrionWindow.h"
-#include "Wisp/WispMappedFile.h"
-#include "Wisp/WispTextFileParser.h"
-#include "Wisp/WispMouse.h"
-#include "EnumList.h"
-#include "Managers/ConnectionManager.h"
-#include "Managers/PacketManager.h"
-#include "Managers/FileManager.h"
-#include "Managers/ColorManager.h"
-#include "Managers/MouseManager.h"
-#include "Managers/UOFileReader.h"
-#include "Managers/FontsManager.h"
-#include "Managers/SoundManager.h"
-#include "Managers/SpeechManager.h"
-#include "Managers/ConfigManager.h"
-#include "Managers/ClilocManager.h"
-#include "Managers/CityManager.h"
-#include "Managers/CreateCharacterManager.h"
-#include "Managers/ProfessionManager.h"
-#include "Managers/SkillGroupManager.h"
-#include "Managers/MapManager.h"
-#include "Managers/EffectManager.h"
-#include "Managers/GumpManager.h"
-#include "Managers/AnimationManager.h"
-#include "Managers/MacroManager.h"
-#include "Managers/PluginManager.h"
-#include "Screen stages/MainScreen.h"
-#include "Screen stages/ConnectionScreen.h"
-#include "Screen stages/ServerScreen.h"
-#include "Screen stages/CharacterListScreen.h"
-#include "Screen stages/SelectProfessionScreen.h"
-#include "Screen stages/CreateCharacterScreen.h"
-#include "Screen stages/SelectTownScreen.h"
-#include "Screen stages/GameScreen.h"
-#include "Screen stages/GameBlockedScreen.h"
-#include "GLEngine/GLEngine.h"
-#include "GLEngine/GLShader.h"
-#include "ShaderData.h"
-#include "CharacterList.h"
-#include "TextEngine/GameConsole.h"
-#include "Skills.h"
-#include "GLEngine/GLTextureCircleOfTransparency.h"
-#include "SelectedObject.h"
-#include "PressedObject.h"
-#include "Network/Packets.h"
-#include "ServerList.h"
-#include "Constants.h"
-#include "TextEngine/TextContainer.h"
-#include "TextEngine/Journal.h"
-#include "TextEngine/TextRenderer.h"
-#include "Game objects/GameWorld.h"
-#include "Game objects/GameItem.h"
-#include "Game objects/GamePlayer.h"
-#include "Game objects/ObjectOnCursor.h"
-#include "Party.h"
-#include "Walker/Walker.h"
-#include "Target.h"
-#include "Container.h"
-#include "QuestArrow.h"
-#include "Walker/PathFinder.h"
-#include "ClickObject.h"
-#include "Gumps/GumpQuestion.h"
-#include "Gumps/GumpPopupMenu.h"
-#include "Gumps/GumpMinimap.h"
-#include "Gumps/GumpPartyManifest.h"
-#include "Gumps/GumpStatusbar.h"
-#include "Gumps/GumpBuff.h"
-#include "Gumps/GumpJournal.h"
-#include "Gumps/GumpOptions.h"
-#include "Gumps/GumpSkills.h"
-#include "Gumps/GumpWorldMap.h"
-#include "CommonInterfaces.h"
-#include "StumpsData.h"
-#include "Gumps/GumpSpellbook.h"
-#include "ServerList.h"
-#include "Gumps/GumpNotify.h"
-#include "ExceptionFilter.h"
-#include "Gumps/GumpCombatBook.h"
-#include "Gumps/GumpRacialAbilitiesBook.h"
-#include "TargetGump.h"
-#include <unordered_map>
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 typedef void __cdecl PLUGIN_INIT_TYPE(STRING_LIST&, STRING_LIST&, UINT_LIST&);
 //----------------------------------------------------------------------------------
@@ -287,7 +204,7 @@ bool COrion::Install()
 		m_CRC_Table[i] = Reflect(m_CRC_Table[i], 32);
 	}
 
-	GetCurrentLocale();
+	//GetCurrentLocale();
 
 	CreateDirectoryA(g_App.FilePath("snapshots").c_str(), NULL);
 
@@ -316,6 +233,8 @@ bool COrion::Install()
 
 		return false;
 	}
+
+	g_SpeechManager.LoadSpeech();
 
 	m_AnimData.resize(g_FileManager.m_AnimdataMul.Size);
 	memcpy(&m_AnimData[0], &g_FileManager.m_AnimdataMul.Start[0], g_FileManager.m_AnimdataMul.Size);
@@ -359,8 +278,6 @@ bool COrion::Install()
 
 		return false;
 	}
-
-	g_SpeechManager.LoadSpeech();
 
 	if (g_FileManager.UseUOPMap)
 		g_MapManager = new CUopMapManager();
@@ -1042,7 +959,7 @@ void COrion::ProcessDelayedClicks()
 			{
 				CGameObject *go = (CGameObject*)g_ClickObject.Object;
 
-				if (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled || (!go->NPC && go->Locked()))
+				if (!g_TooltipsEnabled || (!go->NPC && go->Locked()))
 					NameReq(serial);
 
 				//if (serial < 0x40000000)
@@ -1118,21 +1035,6 @@ void COrion::Process(const bool &rendering)
 
 		if (g_GameState == GS_GAME)
 		{
-			for (UINTS_PAIR_LIST::iterator i = g_DeletedCharactersStack.begin(); i != g_DeletedCharactersStack.end();)
-			{
-				if (i->second < g_Ticks)
-				{
-					CGameCharacter *obj = g_World->FindWorldCharacter(i->first);
-
-					if (obj != NULL && obj->Deleted)
-						g_World->RemoveObject(obj);
-
-					i = g_DeletedCharactersStack.erase(i);
-				}
-				else
-					i++;
-			}
-
 			g_MouseManager.ProcessWalking();
 
 			g_MacroManager.Execute();
@@ -1142,22 +1044,32 @@ void COrion::Process(const bool &rendering)
 			canRenderSelect = true;
 
 			//Game window scope
-			if (g_PressedObject.LeftGump() == NULL && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI())
+			if (g_PressedObject.LeftGump == NULL && g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI())
 				canRenderSelect = false;
 		}
 
 		if (g_World != NULL)
 		{
-			if (!g_Player->m_Steps.empty())
+			if (g_World->ObjectToRemove != 0)
 			{
-				g_RemoveRangeXY.X = g_Player->m_Steps.front().X;
-				g_RemoveRangeXY.Y = g_Player->m_Steps.front().Y;
+				CGameObject *removeObj = g_World->FindWorldObject(g_World->ObjectToRemove);
+				g_World->ObjectToRemove = 0;
+
+				if (removeObj != NULL)
+				{
+					CGameCharacter *character = g_World->FindWorldCharacter(removeObj->Container);
+
+					g_World->RemoveObject(removeObj);
+
+					if (character != NULL)
+					{
+						character->m_FrameInfo = g_AnimationManager.CollectFrameInformation(character);
+						g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_PAPERDOLL);
+					}
+				}
 			}
-			else
-			{
-				g_RemoveRangeXY.X = g_Player->X;
-				g_RemoveRangeXY.Y = g_Player->Y;
-			}
+
+			g_Player->UpdateRemoveRange();
 			
 			g_Orion.RemoveRangedObjects();
 
@@ -1191,14 +1103,6 @@ void COrion::Process(const bool &rendering)
 				g_GameScreen.RenderListInitalized = false;
 
 				g_MapManager->Init(true);
-
-				for (UINTS_PAIR_LIST::iterator i = g_CorpseSerialList.begin(); i != g_CorpseSerialList.end();)
-				{
-					if (i->second < g_Ticks)
-						i = g_CorpseSerialList.erase(i);
-					else
-						i++;
-				}
 			}
 		}
 	}
@@ -1609,8 +1513,6 @@ void COrion::Disconnect()
 	
 	g_GameConsole.ClearStack();
 
-	g_DeletedCharactersStack.clear();
-
 	g_ResizedGump = NULL;
 }
 //----------------------------------------------------------------------------------
@@ -1631,7 +1533,7 @@ int COrion::Send(puchar buf, const int &size)
 		time(&rawtime);
 		localtime_s(&timeinfo, &rawtime);
 		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
-		LOG("%s--- ^(%d) s(+%d => %d) Client:: %s\n", buffer, ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
+		LOG("--- ^(%d) s(+%d => %d) %s Client:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, buffer, type.Name);
 
 		if (*buf == 0x80 || *buf == 0x91)
 		{
@@ -5475,89 +5377,66 @@ void COrion::ChangeMap(uchar newmap)
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::PickupItem(CGameItem *obj, int count, bool isGameFigure)
+void COrion::PickupItem(CGameItem *obj, int count, const bool &isGameFigure)
 {
 	WISPFUN_DEBUG("c194_f103");
-	if (g_ObjectInHand == NULL)
+	if (!g_ObjectInHand.Enabled)
 	{
-		g_ObjectInHand = new CObjectOnCursor(obj);
+		g_ObjectInHand.Clear();
+		g_ObjectInHand.Enabled = true;
 
 		if (!count)
 			count = obj->Count;
 
-		g_ObjectInHand->Separated = count != obj->Count;
-		g_ObjectInHand->IsGameFigure = isGameFigure;
-		g_ObjectInHand->DragCount = count;
+		g_ObjectInHand.Serial = obj->Serial;
+		g_ObjectInHand.Graphic = obj->Graphic;
+		g_ObjectInHand.Color = obj->Color;
+		g_ObjectInHand.Container = obj->Container;
+		g_ObjectInHand.Layer = obj->Layer;
+		g_ObjectInHand.Flags = obj->Flags;
+		g_ObjectInHand.TiledataPtr = obj->GetStaticData();
+		g_ObjectInHand.Count = count;
+		g_ObjectInHand.IsGameFigure = isGameFigure;
+		g_ObjectInHand.X = obj->X;
+		g_ObjectInHand.Y = obj->Y;
+		g_ObjectInHand.Z = obj->Z;
+		g_ObjectInHand.TotalCount = obj->Count;
 
-		if (obj->Container != 0xFFFFFFFF)
-		{
-			CGump *gump = g_GumpManager.UpdateContent(obj->Container, 0, GT_CONTAINER);
+		CPacketPickupRequest(g_ObjectInHand.Serial, count).Send();
 
-			//if (gump != NULL && g_PacketManager.ClientVersion >= CV_308Z)
-			//	g_PacketManager.AddMegaClilocRequest(gump->Serial, true);
-		}
-
-		CPacketPickupRequest(obj->Serial, count).Send();
+		g_World->ObjectToRemove = g_ObjectInHand.Serial;
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DropItem(uint container, ushort x, ushort y, char z)
+void COrion::DropItem(const uint &container, const ushort &x, const ushort &y, const char &z)
 {
 	WISPFUN_DEBUG("c194_f104");
-	if (g_ObjectInHand != NULL)
+	if (g_ObjectInHand.Enabled)
 	{
-		if (g_ObjectInHand->Dropped)
-		{
-			delete g_ObjectInHand;
-			g_ObjectInHand = NULL;
-		}
+		if (g_PacketManager.ClientVersion >= CV_6017)
+			CPacketDropRequestNew(g_ObjectInHand.Serial, x, y, z, 0, container).Send();
 		else
-		{
-			g_ObjectInHand->Dropped = true;
+			CPacketDropRequestOld(g_ObjectInHand.Serial, x, y, z, container).Send();
 
-			if (g_PacketManager.ClientVersion >= CV_6017)
-				CPacketDropRequestNew(g_ObjectInHand->Serial, x, y, z, 0, container).Send();
-			else
-				CPacketDropRequestOld(g_ObjectInHand->Serial, x, y, z, container).Send();
-
-			//if (g_ObjectInHand->Deleted)
-			{
-				delete g_ObjectInHand;
-				g_ObjectInHand = NULL;
-			}
-		}
+		g_ObjectInHand.Enabled = false;
 	}
 }
 //----------------------------------------------------------------------------------
 void COrion::EquipItem(uint container)
 {
 	WISPFUN_DEBUG("c194_f105");
-	if (g_ObjectInHand != NULL)
+	if (g_ObjectInHand.Enabled)
 	{
-		if (g_ObjectInHand->Dropped)
+		if (IsWearable(g_ObjectInHand.TiledataPtr->Flags))
 		{
-			delete g_ObjectInHand;
-			g_ObjectInHand = NULL;
-		}
-		else if (g_ObjectInHand->IsWearable())
-		{
-			g_ObjectInHand->Dropped = true;
+			ushort graphic = g_ObjectInHand.Graphic;
 
-			ushort graphic = g_ObjectInHand->Graphic;
+			if (!container)
+				container = g_PlayerSerial;
 
-			if (!g_ObjectInHand->MultiBody)
-			{
-				if (!container)
-					container = g_PlayerSerial;
+			CPacketEquipRequest(g_ObjectInHand.Serial, m_StaticData[graphic].Quality, container).Send();
 
-				CPacketEquipRequest(g_ObjectInHand->Serial, m_StaticData[graphic].Quality, container).Send();
-			}
-
-			//if (g_ObjectInHand->Deleted)
-			{
-				delete g_ObjectInHand;
-				g_ObjectInHand = NULL;
-			}
+			g_ObjectInHand.Enabled = false;
 		}
 	}
 }
@@ -5773,11 +5652,6 @@ void COrion::RemoveRangedObjects()
 				}
 				else if (GetRemoveDistance(g_RemoveRangeXY, go) > objectsRange)
 					g_World->RemoveObject(go);
-				else if (go->IsCorpse() && ((CGameItem*)go)->FieldColor == 2)
-				{
-					g_World->RemoveFromContainer(go);
-					delete go;
-				}
 			}
 
 			go = next;
@@ -5789,14 +5663,11 @@ void COrion::RemoveRangedObjects()
 //----------------------------------------------------------------------------------
 void COrion::ClearWorld()
 {
-	RELEASE_POINTER(g_Walker);
-	LOG("\tWalker deleted?\n");
-
-	RELEASE_POINTER(g_ObjectInHand);
-	LOG("\tObjectInHand removed?\n");
+	g_Walker.Reset();
+	g_ObjectInHand.Clear();
 
 	RELEASE_POINTER(g_World)
-		LOG("\tWorld removed?\n");
+	LOG("\tWorld removed?\n");
 
 	g_PopupMenu = NULL;
 
@@ -5807,13 +5678,11 @@ void COrion::ClearWorld()
 	LOG("\tEffect List cleared?\n");
 
 	g_GameConsole.Clear();
-	LOG("\tGame console cleared?\n");
 
 	g_EntryPointer = NULL;
 	g_GrayMenuCount = 0;
 
 	g_Target.Reset();
-	LOG("\tTarget reseted?\n");
 
 	g_SystemChat.Clear();
 	LOG("\tSystem chat cleared?\n");
@@ -5876,7 +5745,7 @@ void COrion::ConsolePromptCancel()
 	if (g_ConsolePrompt == PT_ASCII)
 		CPacketASCIIPromptResponse("", 0, true).Send();
 	else if (g_ConsolePrompt == PT_UNICODE)
-		CPacketUnicodePromptResponse(L"", 0, "ENU", true).Send();
+		CPacketUnicodePromptResponse(L"", 0, g_Language, true).Send();
 
 	g_ConsolePrompt = PT_NONE;
 }

@@ -7,8 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIComboboxText.h"
-#include "../SelectedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIComboboxText::CGUIComboboxText(const ushort &color, const uchar &font, const string &str, const int &width, const TEXT_ALIGN_TYPE &align, const ushort &flags)
 : CGUIText(color, 0, 0)

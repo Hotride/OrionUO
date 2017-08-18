@@ -10,8 +10,6 @@
 #ifndef GUMPBULLETINBOARD_H
 #define GUMPBULLETINBOARD_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 //!Класс доски объявлений
 class CGumpBulletinBoard : public CGump
 {

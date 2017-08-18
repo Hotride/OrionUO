@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "Container.h"
-#include "OrionUO.h"
-#include "OrionWindow.h"
-#include "Managers/ConfigManager.h"
-#include "Game objects/GameWorld.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 deque<CContainerStackItem> g_ContainerStack;
 uint g_CheckContainerStackTimer = 0;

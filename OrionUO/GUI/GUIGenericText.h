@@ -12,8 +12,6 @@
 #ifndef GUIGENERICTEXT_H
 #define GUIGENERICTEXT_H
 //----------------------------------------------------------------------------------
-#include "GUIText.h"
-//----------------------------------------------------------------------------------
 class CGUIGenericText : public CGUIText
 {
 	//!Индекс текста

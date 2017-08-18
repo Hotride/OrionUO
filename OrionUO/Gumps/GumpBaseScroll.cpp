@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpBaseScroll.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
-
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpBaseScroll::CGumpBaseScroll(GUMP_TYPE type, uint serial, ushort graphic, int height, short x, short y, bool haveMinimizer, int scrollerOffsetY, bool haveBackgroundLines, int scissorOffsetHeight)
 : CGump(type, serial, x, y), m_Height(height), m_ScrollerOffsetY(scrollerOffsetY),

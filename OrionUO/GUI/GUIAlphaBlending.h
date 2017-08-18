@@ -12,8 +12,6 @@
 #ifndef GUIALPHABLENDING_H
 #define GUIALPHABLENDING_H
 //----------------------------------------------------------------------------------
-#include "GUIBlending.h"
-//----------------------------------------------------------------------------------
 class CGUIAlphaBlending : public CGUIBlending
 {
 	//!Значение для установки альфа-канала

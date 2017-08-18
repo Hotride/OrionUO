@@ -7,8 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpTip.h"
-#include "../Network/Packets.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpTip::CGumpTip(uint serial, short x, short y, string str, bool updates)
 : CGumpBaseScroll(GT_TIP, serial, 0x0820, 250, x, y, true), m_Updates(updates)

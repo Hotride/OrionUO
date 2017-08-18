@@ -10,9 +10,6 @@
 #ifndef SCREENEFFECTMANAGER_H
 #define SCREENEFFECTMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../EnumList.h"
-//----------------------------------------------------------------------------------
 //Класс для работы с плавным переключением экрана
 class CScreenEffectManager
 {

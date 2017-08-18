@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIBulletinBoardObject.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/FontsManager.h"
-#include "../OrionUO.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIBulletinBoardObject::CGUIBulletinBoardObject(const uint &serial, const int &x, const int &y, const string &text)
 : CBaseGUI(GOT_BB_OBJECT, serial, 0, 0, x, y), m_Text(text)

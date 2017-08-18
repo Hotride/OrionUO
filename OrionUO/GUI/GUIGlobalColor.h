@@ -12,8 +12,6 @@
 #ifndef GUIGLOBALCOLOR_H
 #define GUIGLOBALCOLOR_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-//----------------------------------------------------------------------------------
 class CGUIGlobalColor : public CBaseGUI
 {
 	//!R компонента цвета

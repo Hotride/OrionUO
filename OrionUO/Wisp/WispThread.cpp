@@ -1,16 +1,7 @@
 ﻿//----------------------------------------------------------------------------------
-#include "WispThread.h"
-#include <process.h>
+#include "stdafx.h"
 
 #define THREAD_USE_CLOCK 0
-
-#if THREAD_USE_CLOCK == 1
-#include <ctime>
-#else
-#include <Mmsystem.h>
-
-#pragma comment(lib, "Winmm.lib")
-#endif
 
 namespace WISP_THREAD
 {

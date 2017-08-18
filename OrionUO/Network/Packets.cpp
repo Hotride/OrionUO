@@ -7,23 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "Packets.h"
-#include "../Screen stages/MainScreen.h"
-#include "../Screen stages/SelectTownScreen.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/ProfessionManager.h"
-#include "../Managers/CreateCharacterManager.h"
-#include "../Managers/SpeechManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/ConnectionManager.h"
-#include "../CharacterList.h"
-#include "../CityList.h"
-#include "../OrionUO.h"
-#include "../Gumps/Gump.h"
-#include "../Gumps/GumpSecureTrading.h"
-#include "../Gumps/GumpTextEntryDialog.h"
-#include "../Gumps/GumpBook.h"
-#include "../Gumps/GumpShop.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CPacket::CPacket(const int &size, const bool &autoResize)
 : WISP_DATASTREAM::CDataWritter(size, autoResize)
@@ -1143,10 +1127,14 @@ CPacketMegaClilocRequestOld::CPacketMegaClilocRequestOld(const uint &serial)
 	WriteUInt32BE(serial);
 }
 //---------------------------------------------------------------------------
-CPacketMegaClilocRequest::CPacketMegaClilocRequest(const UINT_LIST &list)
+CPacketMegaClilocRequest::CPacketMegaClilocRequest(UINT_LIST &list)
 : CPacket(1)
 {
 	int len = (int)list.size();
+
+	if (len > 50)
+		len = 50;
+
 	int size = 3 + (len * 4);
 	Resize(size, true);
 
@@ -1155,6 +1143,11 @@ CPacketMegaClilocRequest::CPacketMegaClilocRequest(const UINT_LIST &list)
 
 	IFOR(i, 0, len)
 		WriteUInt32BE(list[i]);
+
+	if ((int)list.size() > 50)
+		list.erase(list.begin(), list.begin() + 50);
+	else
+		list.clear();
 }
 //---------------------------------------------------------------------------
 CPacketChangeStatLockStateRequest::CPacketChangeStatLockStateRequest(uchar stat, uchar state)
@@ -1362,5 +1355,20 @@ CPacketDisarmReq::CPacketDisarmReq()
 	WriteUInt8(0xBF);
 	WriteUInt16BE(0x05);
 	WriteUInt16BE(0x0A);
+}
+//----------------------------------------------------------------------------------
+CPacketResend::CPacketResend()
+: CPacket(3)
+{
+	WriteUInt8(0x22);
+}
+//----------------------------------------------------------------------------------
+CPacketWalkRequest::CPacketWalkRequest(const uchar &direction, const uchar &sequence, const uint &fastWalkKey)
+: CPacket(7)
+{
+	WriteUInt8(0x02);
+	WriteUInt8(direction);
+	WriteUInt8(sequence);
+	WriteUInt32BE(fastWalkKey);
 }
 //----------------------------------------------------------------------------------

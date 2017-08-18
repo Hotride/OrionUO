@@ -7,20 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpSecureTrading.h"
-#include "../SelectedObject.h"
-#include "../ClickObject.h"
-#include "../OrionUO.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/PacketManager.h"
-#include "../Network/Packets.h"
-#include "../PressedObject.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpSecureTrading::CGumpSecureTrading(uint serial, short x, short y, uint id, uint id2)
 : CGump(GT_TRADE, serial, x, y), m_ID2(id2)
@@ -37,7 +24,7 @@ void CGumpSecureTrading::CalculateGumpState()
 	WISPFUN_DEBUG("c120_f1");
 	CGump::CalculateGumpState();
 
-	if (g_GumpPressed && g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsText())
+	if (g_GumpPressed && g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsText())
 	{
 		g_GumpMovingOffset.Reset();
 
@@ -52,7 +39,7 @@ void CGumpSecureTrading::CalculateGumpState()
 void CGumpSecureTrading::InitToolTip()
 {
 	WISPFUN_DEBUG("c120_f2");
-	if (g_ConfigManager.UseToolTips || g_PacketManager.ClientVersion >= CV_308Z)
+	if (g_ConfigManager.UseToolTips || g_TooltipsEnabled)
 	{
 		uint id = g_SelectedObject.Serial;
 
@@ -163,11 +150,6 @@ void CGumpSecureTrading::UpdateContent()
 		m_OpponentDataBox->Clear();
 	}
 
-	uint ignoreSerial = 0;
-
-	if (g_ObjectInHand != NULL)
-		ignoreSerial = g_ObjectInHand->Serial;
-
 	//Отрисовка нашего товара (при наличии товара)
 	CGameObject *container = g_World->FindWorldObject(m_ID);
 
@@ -175,9 +157,6 @@ void CGumpSecureTrading::UpdateContent()
 	{
 		QFOR(item, container->m_Items, CGameItem*)
 		{
-			if (item->Serial == ignoreSerial)
-				continue;
-
 			bool doubleDraw = false;
 			ushort graphic = item->GetDrawGraphic(doubleDraw);
 
@@ -268,7 +247,7 @@ void CGumpSecureTrading::GUMP_BUTTON_EVENT_C
 	}
 	else
 	{
-		if (!g_ClickObject.Enabled && (g_PacketManager.ClientVersion < CV_308Z || !g_TooltipsEnabled || g_NoMegaCliloc))
+		if (!g_ClickObject.Enabled && !g_TooltipsEnabled)
 		{
 			CGameObject *clickTarget = g_World->FindWorldObject(serial);
 
@@ -288,7 +267,7 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 	WISPFUN_DEBUG("c120_f8");
 	CGump::OnLeftMouseButtonUp();
 
-	if (g_ObjectInHand != NULL)
+	if (g_ObjectInHand.Enabled)
 	{
 		int x = m_X;
 		int y = m_Y;
@@ -301,7 +280,7 @@ void CGumpSecureTrading::OnLeftMouseButtonUp()
 				y = g_MouseManager.Position.Y - y - 70;
 
 				bool doubleDraw = false;
-				ushort graphic = g_ObjectInHand->GetDrawGraphic(doubleDraw);
+				ushort graphic = g_ObjectInHand.GetDrawGraphic(doubleDraw);
 
 				CGLTexture *th = g_Orion.ExecuteStaticArt(graphic);
 

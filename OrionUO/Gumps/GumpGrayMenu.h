@@ -10,8 +10,6 @@
 #ifndef GUMPGRAYMENU_H
 #define GUMPGRAYMENU_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpGrayMenu : public CGump
 {
 public:

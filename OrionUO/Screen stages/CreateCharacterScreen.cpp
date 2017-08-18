@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "CreateCharacterScreen.h"
-#include "ConnectionScreen.h"
-#include "../Managers/CreateCharacterManager.h"
-#include "../OrionWindow.h"
-#include "../OrionUO.h"
-#include "../Managers/FontsManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CCreateCharacterScreen g_CreateCharacterScreen;
 //----------------------------------------------------------------------------------

@@ -7,8 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GLFrameBuffer.h"
-#include "GLEngine.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGLFrameBuffer::CGLFrameBuffer()
 {
@@ -39,7 +38,7 @@ bool CGLFrameBuffer::Init(int width, int height)
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glGenTextures(1, &Texture.Texture);
 		glBindTexture(GL_TEXTURE_2D, Texture.Texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, width, height, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8, NULL);
 
 		GLint currentFrameBuffer = 0;
 		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFrameBuffer);
@@ -104,7 +103,7 @@ void CGLFrameBuffer::Release()
 @param [__in] height Высота буфера
 @return true в случае готовности
 */
-bool CGLFrameBuffer::Ready( __in int &width, __in int &height)
+bool CGLFrameBuffer::Ready(int &width, int &height)
 {
 	WISPFUN_DEBUG("c30_f6");
 	return (g_GL.CanUseFrameBuffer && m_Ready && Texture.Width == width && Texture.Height == height);
@@ -148,7 +147,7 @@ bool CGLFrameBuffer::Use()
 @param [__in] y Экранная координата Y
 @return 
 */
-void CGLFrameBuffer::Draw( __in int x, __in int y)
+void CGLFrameBuffer::Draw(int x, int y)
 {
 	WISPFUN_DEBUG("c30_f8");
 	if (g_GL.CanUseFrameBuffer && m_Ready)

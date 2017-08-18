@@ -1,8 +1,6 @@
 ﻿//----------------------------------------------------------------------------------
 #ifndef WISPWINDOW_H
 #define WISPWINDOW_H
-#include "WispGeometry.h"
-#include "WispThreadedTimer.h"
 //----------------------------------------------------------------------------------
 namespace WISP_WINDOW
 {

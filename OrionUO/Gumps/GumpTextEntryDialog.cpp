@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpTextEntryDialog.h"
-#include "../Managers/GumpManager.h"
-#include "../OrionUO.h"
-#include "../Screen stages/GameBlockedScreen.h"
-#include "../Network/Packets.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpTextEntryDialog::CGumpTextEntryDialog(uint serial, short x, short y, uchar variant, int maxLength, string text, string description)
 : CGump(GT_TEXT_ENTRY_DIALOG, serial, x, y), m_Text(text), m_Description(description),

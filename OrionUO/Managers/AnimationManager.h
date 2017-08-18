@@ -10,11 +10,6 @@
 #ifndef ANIMATIONMANAGER_H
 #define ANIMATIONMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../IndexObject.h"
-#include "../TextureObject.h"
-#include "../Wisp/WispDataStream.h"
-class CTargetGump;
-//----------------------------------------------------------------------------------
 static const float UPPER_BODY_RATIO = 0.35f;
 static const float MID_BODY_RATIO = 0.60f;
 static const float LOWER_BODY_RATIO = 0.94f;
@@ -258,7 +253,7 @@ public:
 	@param [__in] second Группа смерти номер 2
 	@return Индекс группы анимации
 	*/
-	uchar GetDieGroupIndex(ushort id, const bool &second);
+	uchar GetDieGroupIndex(const ushort &id, const bool &second);
 
 	/*!
 	Получить индекс группы по индексу картинки

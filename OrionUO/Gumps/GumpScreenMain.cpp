@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpScreenMain.h"
-#include "../Screen stages/MainScreen.h"
-#include "../OrionUO.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/PacketManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpScreenMain::CGumpScreenMain()
 : CGump(GT_NONE, 0, 0, 0)

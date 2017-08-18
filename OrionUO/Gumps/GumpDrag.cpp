@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpDrag.h"
-#include "../Game objects/GameWorld.h"
-#include "../Managers/ConfigManager.h"
-#include "../Game objects/ObjectOnCursor.h"
-#include "../TextEngine/GameConsole.h"
-#include "../OrionUO.h"
-#include "../Managers/GumpManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpDrag::CGumpDrag(uint serial, short x, short y)
 : CGump(GT_DRAG, serial, x, y)
@@ -46,7 +40,7 @@ void CGumpDrag::UpdateContent()
 
 	Add(new CGUIHitBox(ID_GD_TEXT_FIELD, 28, 40, 60, 16));
 
-	m_Entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GD_TEXT_FIELD, 0x0386, 0x0386, 0x0386, 29, 42, 0, false, 1, TS_LEFT, 0, count));
+	m_Entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_GD_TEXT_FIELD, 0x0386, 0x0386, 0x0386, 29, 42, 0, false, 1, TS_LEFT, 0, count + 1));
 	m_Entry->CheckOnSerial = true;
 	g_EntryPointer = &m_Entry->m_Entry;
 	g_EntryPointer->NumberOnly = true;
@@ -166,8 +160,10 @@ void CGumpDrag::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 void CGumpDrag::OnOkayPressed()
 {
 	WISPFUN_DEBUG("c94_f7");
-	if (g_ObjectInHand == NULL)
+	if (!g_ObjectInHand.Enabled)
 	{
+		m_RemoveMark = true;
+
 		if (m_Slider->Value)
 		{
 			CGameItem *obj = g_World->FindWorldItem(m_Serial);
@@ -175,8 +171,6 @@ void CGumpDrag::OnOkayPressed()
 			if (obj != NULL)
 				g_Orion.PickupItem(obj, m_Slider->Value);
 		}
-
-		m_RemoveMark = true;
 	}
 }
 //----------------------------------------------------------------------------------

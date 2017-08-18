@@ -12,9 +12,6 @@
 #ifndef GUITEXT_H
 #define GUITEXT_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CGUIText : public CBaseGUI
 {
 public:

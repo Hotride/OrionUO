@@ -12,8 +12,6 @@
 #ifndef GUIHTMLSLIDER_H
 #define GUIHTMLSLIDER_H
 //----------------------------------------------------------------------------------
-#include "GUISlider.h"
-//----------------------------------------------------------------------------------
 class CGUIHTMLSlider : public CGUISlider
 {
 private:

@@ -10,8 +10,6 @@
 #ifndef GUMPSHOP_H
 #define GUMPSHOP_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpShop : public CGump
 {
 	SETGET(bool, IsBuyGump, false);

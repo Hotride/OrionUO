@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "FileManager.h"
-#include "../Wisp/WispApplication.h"
-#include <thread>
-#include <fstream>
-#include "AnimationManager.h"
-#include <sys/stat.h>
-#include "../zlib.h"
-#include "../OrionUO.h"
-
+#include "stdafx.h"
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
 CFileManager::CFileManager()
@@ -115,7 +107,7 @@ bool CFileManager::Load()
 	else if (!m_TiledataMul.Load(g_App.FilePath("tiledata.mul")))
 		return false;
 	m_SpeechMul.Load(g_App.FilePath("speech.mul"));
-	//m_LangcodeIff.Load(g_App.FilePath("Langcode.iff"));
+	m_LangcodeIff.Load(g_App.FilePath("Langcode.iff"));
 
 	IFOR(i, 0, 6)
 	{
@@ -188,7 +180,7 @@ void CFileManager::Unload()
 	m_AnimationSequence.Unload();
 	m_MainMisc.Unload();
 
-	IFOR(i, 1, 5)
+	IFOR(i, 0, 4)
 	{
 		m_AnimationFrame[i].Unload();
 	}
@@ -329,7 +321,7 @@ void CFileManager::ReadTask()
 		{
 			CTextureAnimationGroup *group = &(*indexAnim).m_Groups[grpId];
 			char hashString[100];
-			sprintf(hashString, "build/animationlegacyframe/%06i/%02i.bin", animId, grpId);
+			sprintf_s(hashString, "build/animationlegacyframe/%06i/%02i.bin", animId, grpId);
 			auto hash = g_Orion.CreateHash(hashString);
 			if (hashes.find(hash) != hashes.end())
 			{

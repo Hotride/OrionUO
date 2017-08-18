@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpMinimap.h"
-#include "../OrionUO.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Managers/UOFileReader.h"
-#include "../Managers/MapManager.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/MouseManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpMinimap::CGumpMinimap(uint serial, short x, short y, bool minimized)
 : CGump(GT_MINIMAP, serial, x, y)

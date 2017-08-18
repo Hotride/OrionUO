@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpProfile.h"
-#include "../Network/Packets.h"
-#include "../Managers/ConfigManager.h"
-#include "../TextEngine/GameConsole.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpProfile::CGumpProfile(uint serial, short x, short y, wstring topText, wstring bottomText, wstring dataText)
 : CGumpBaseScroll(GT_PROFILE, serial, 0x0820, 250, x, y, true)

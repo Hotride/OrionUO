@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpMenubar.h"
-#include "../OrionUO.h"
-#include "../SelectedObject.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpMenubar::CGumpMenubar(uint serial, short x, short y)
 : CGump(GT_MENUBAR, serial, x, y)

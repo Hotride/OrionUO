@@ -10,9 +10,6 @@
 #ifndef GUIBULLETINBOARDOBJECT_H
 #define GUIBULLETINBOARDOBJECT_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CGUIBulletinBoardObject : public CBaseGUI
 {
 	SETGET(string, Text, "");

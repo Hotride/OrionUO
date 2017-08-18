@@ -7,15 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "CharacterListScreen.h"
-#include "MainScreen.h"
-#include "ConnectionScreen.h"
-#include "../ServerList.h"
-#include "../CharacterList.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/ConnectionManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CCharacterListScreen g_CharacterListScreen;
 //----------------------------------------------------------------------------------

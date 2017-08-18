@@ -7,18 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "MouseManager.h"
-#include "../OrionWindow.h"
-#include "../EnumList.h"
-#include "ConfigManager.h"
-#include "../SelectedObject.h"
-#include "../PressedObject.h"
-#include "../OrionUO.h"
-#include "../ToolTip.h"
-#include "../Target.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Walker/PathFinder.h"
-#include "../Game objects/ObjectOnCursor.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CMouseManager g_MouseManager;
 //----------------------------------------------------------------------------------
@@ -131,7 +120,7 @@ ushort CMouseManager::GetGameCursor()
 	int war = (int)(g_Player != NULL && g_Player->Warmode);
 	ushort result = g_CursorData[war][9]; //Main Gump mouse cursor
 
-	if (g_Target.IsTargeting() && g_ObjectInHand == NULL)
+	if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled)
 		return g_CursorData[war][12]; //Targetting cursor
 
 	bool mouseInWindow = !(m_Position.X < g_ConfigManager.GameWindowX || m_Position.Y < g_ConfigManager.GameWindowY ||
@@ -140,7 +129,7 @@ ushort CMouseManager::GetGameCursor()
 
 	//bool gumpChecked = (g_LastSelectedGump || (g_LastSelectedObject && g_LastObjectType != SOT_GAME_OBJECT && g_LastObjectType != SOT_STATIC_OBJECT && g_LastObjectType != SOT_LAND_OBJECT && g_LastObjectType != SOT_TEXT_OBJECT));
 
-	if (!mouseInWindow || g_SelectedObject.Gump != NULL || g_PressedObject.LeftGump() != NULL)
+	if (!mouseInWindow || g_SelectedObject.Gump != NULL || g_PressedObject.LeftGump != NULL)
 		return result;
 
 	int gameWindowCenterX = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2);
@@ -162,7 +151,7 @@ void CMouseManager::ProcessWalking()
 		m_Position.Y >(g_ConfigManager.GameWindowY + g_ConfigManager.GameWindowHeight))
 		mouseInWindow = false;
 
-	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && g_PressedObject.RightGump() == NULL && !((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && g_ConfigManager.HoldShiftForEnablePathfind && g_ConfigManager.EnablePathfind) && !(g_SelectedGameObjectHandle == g_PressedObject.RightSerial && g_PressedObject.RightObject() != NULL && g_PressedObject.RightObject()->IsGameObject()))
+	if ((g_MovingFromMouse || (mouseInWindow && g_AutoMoving)) && g_PressedObject.RightGump == NULL && !((g_ShiftPressed && !g_CtrlPressed && !g_AltPressed) && g_ConfigManager.HoldShiftForEnablePathfind && g_ConfigManager.EnablePathfind) && !(g_SelectedGameObjectHandle == g_PressedObject.RightSerial && g_PressedObject.RightObject != NULL && g_PressedObject.RightObject->IsGameObject()))
 	{
 		int gameWindowCenterX = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2);
 		int gameWindowCenterY = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2);
@@ -273,18 +262,18 @@ bool CMouseManager::LoadCursorTextures()
 void CMouseManager::Draw(ushort id)
 {
 	WISPFUN_DEBUG("c147_f5");
-	if (g_GameState >= GS_GAME && g_ObjectInHand != NULL && !g_ObjectInHand->NoDraw)
+	if (g_GameState >= GS_GAME && g_ObjectInHand.Enabled)
 	{
 		bool doubleDraw = false;
-		ushort ohGraphic = g_ObjectInHand->GetDrawGraphic(doubleDraw);
+		ushort ohGraphic = g_ObjectInHand.GetDrawGraphic(doubleDraw);
 
-		ushort ohColor = g_ObjectInHand->Color;
-		doubleDraw = (!g_ObjectInHand->IsGold() && g_ObjectInHand->IsStackable() && g_ObjectInHand->DragCount > 1);
+		ushort ohColor = g_ObjectInHand.Color;
+		doubleDraw = (!CGameObject::IsGold(g_ObjectInHand.Graphic) && IsStackable(g_ObjectInHand.TiledataPtr->Flags) && g_ObjectInHand.Count > 1);
 
 		if (ohColor != 0)
 			g_ColorizerShader->Use();
 
-		if (g_ObjectInHand->IsGameFigure)
+		if (g_ObjectInHand.IsGameFigure)
 		{
 			ohGraphic -= GAME_FIGURE_GUMP_OFFSET;
 

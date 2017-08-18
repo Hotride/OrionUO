@@ -10,10 +10,6 @@
 #ifndef SELECTTOWNSCREEN_H
 #define SELECTTOWNSCREEN_H
 //----------------------------------------------------------------------------------
-#include "BaseScreen.h"
-#include "../Gumps/GumpScreenSelectTown.h"
-#include "../CityList.h"
-//----------------------------------------------------------------------------------
 class CSelectTownScreen : public CBaseScreen
 {
 private:

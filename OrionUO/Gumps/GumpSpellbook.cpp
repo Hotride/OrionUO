@@ -7,19 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpSpellbook.h"
-#include "GumpSpell.h"
-#include "../Game objects/GameWorld.h"
-#include "../Game objects/GamePlayer.h"
-#include "../PressedObject.h"
-#include "../ClickObject.h"
-#include "../OrionUO.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/PacketManager.h"
-#include "../OrionWindow.h"
-#include "../ToolTip.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 //!Названия кругов заклинаний
 const string CGumpSpellbook::m_SpellCircleName[8] =
@@ -141,7 +129,7 @@ void CGumpSpellbook::PrepareContent()
 
 	GetSummaryBookInfo(maxSpellsCount, dictionaryPagesCount, spellsOnPage, spellIndexOffset, graphic, minimizedGraphic, iconStartGraphic);
 
-	if (g_PressedObject.LeftGump() == this && m_Page >= dictionaryPagesCount && g_PressedObject.LeftSerial >= ID_GSB_SPELL_ICON_LEFT)
+	if (g_PressedObject.LeftGump == this && m_Page >= dictionaryPagesCount && g_PressedObject.LeftSerial >= ID_GSB_SPELL_ICON_LEFT)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -826,7 +814,7 @@ void CGumpSpellbook::GUMP_BUTTON_EVENT_C
 		if (newPage % 2)
 			newPage--;
 
-		g_ClickObject.Init(g_PressedObject.LeftObject(), this);
+		g_ClickObject.Init(g_PressedObject.LeftObject, this);
 		g_ClickObject.Timer = g_Ticks + g_MouseManager.DoubleClickDelay;
 		g_ClickObject.Page = newPage;
 	}

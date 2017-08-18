@@ -10,8 +10,6 @@
 #ifndef RENDERTEXTOBJECT_H
 #define RENDERTEXTOBJECT_H
 //----------------------------------------------------------------------------------
-#include "../RenderObject.h"
-//----------------------------------------------------------------------------------
 //Класс текста объекта мира
 class CRenderTextObject : public CRenderObject
 {

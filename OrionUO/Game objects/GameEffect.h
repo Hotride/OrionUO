@@ -10,8 +10,6 @@
 #ifndef GAMEEFFECT_H
 #define GAMEEFFECT_H
 //----------------------------------------------------------------------------------
-#include "../RenderWorldObject.h"
-//----------------------------------------------------------------------------------
 //!Игровой эффект
 class CGameEffect : public CRenderWorldObject
 {

@@ -10,9 +10,6 @@
 #ifndef SKILLGROUPMANAGER_H
 #define SKILLGROUPMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Globals.h"
-#include "../SkillGroup.h"
-//----------------------------------------------------------------------------------
 //!Класс менеджера групп навыков
 class CSkillGroupManager
 {

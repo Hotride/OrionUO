@@ -7,9 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpScreenConnection.h"
-#include "../Screen stages/ConnectionScreen.h"
-#include "../CharacterList.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpScreenConnection::CGumpScreenConnection()
 : CGump(GT_NONE, 0, 0, 0)

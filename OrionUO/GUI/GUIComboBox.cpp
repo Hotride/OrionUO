@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIComboBox.h"
-#include "../OrionUO.h"
-#include "../PressedObject.h"
-#include "../Managers/MouseManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIComboBox::CGUIComboBox(const uint &serial, const ushort &graphic, const bool &compositeBackground, const ushort &openGraphic, const int &x, const int &y, const int &width, const int &showItemsCount, const bool &showMaximizedCenter)
 : CBaseGUI(GOT_COMBOBOX, serial, graphic, 0, x, y), m_OpenGraphic(openGraphic),
@@ -157,7 +154,7 @@ void CGUIComboBox::Draw(const bool &checktrans)
 	if (m_Text != NULL)
 		m_Text->m_Texture.Draw(m_X + m_Text->X, m_Y + m_Text->Y + m_TextOffsetY, checktrans);
 
-	if (g_PressedObject.LeftObject() == this) //maximized
+	if (g_PressedObject.LeftObject == this) //maximized
 	{
 		int currentX = m_X + 3;
 		int currentY = m_Y + 3;
@@ -286,7 +283,7 @@ bool CGUIComboBox::Select()
 	m_ListingDirection = 0;
 	bool select = false;
 
-	if (g_PressedObject.LeftObject() == this) //maximized
+	if (g_PressedObject.LeftObject == this) //maximized
 	{
 		int currentX = m_X + 3;
 		int currentY = m_Y + 3;
@@ -331,7 +328,7 @@ CBaseGUI *CGUIComboBox::SelectedItem()
 	WISPFUN_DEBUG("c49_f10");
 	CBaseGUI *select = this;
 
-	if (g_PressedObject.LeftObject() == this) //maximized
+	if (g_PressedObject.LeftObject == this) //maximized
 	{
 		int currentX = m_X + 3;
 		int currentY = m_Y + 3;
@@ -376,7 +373,7 @@ int CGUIComboBox::IsSelectedItem()
 	WISPFUN_DEBUG("c49_f11");
 	int select = -1;
 
-	if (g_PressedObject.LeftObject() == this) //maximized
+	if (g_PressedObject.LeftObject == this) //maximized
 	{
 		CBaseGUI *start = SkipToStart();
 		int count = 0;

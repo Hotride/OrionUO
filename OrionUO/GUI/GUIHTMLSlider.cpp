@@ -7,8 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIHTMLSlider.h"
-#include "GUIHTMLGump.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIHTMLSlider::CGUIHTMLSlider(CGUIHTMLGump *htmlGump, const uint &serial, const ushort &graphic, const ushort &graphicSelected, const ushort &graphicPressed, const ushort &backgroundGraphic, const bool &compositeBackground, const bool &vertical, const int &x, const int &y, const int &lenght, const int &minValue, const int &maxValue, const int &value)
 : CGUISlider(serial, graphic, graphicSelected, graphicPressed, backgroundGraphic, compositeBackground, vertical, x, y, lenght, minValue, maxValue, value),

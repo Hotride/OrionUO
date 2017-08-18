@@ -7,8 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUITilepicScaled.h"
-#include "../OrionUO.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUITilepicScaled::CGUITilepicScaled(const ushort &graphic, const ushort &color, const int &x, const int &y, const int &width, const int &height)
 : CGUITilepic(graphic, color, x, y), m_Width(width), m_Height(height)

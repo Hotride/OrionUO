@@ -10,9 +10,6 @@
 #ifndef SERVERLIST_H
 #define SERVERLIST_H
 //----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CServer
 {
 	SETGET(ushort, Index, 0);

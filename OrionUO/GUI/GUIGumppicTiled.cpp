@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIGumppicTiled.h"
-#include "../OrionUO.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/UOFileReader.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIGumppicTiled::CGUIGumppicTiled(const ushort &graphic, const int &x, const int &y, const int &width, const int &height)
 : CGUIDrawObject(GOT_GUMPPICTILED, 0, graphic, 0, x, y), m_Width(width),

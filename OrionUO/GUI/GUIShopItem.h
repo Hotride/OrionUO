@@ -12,9 +12,6 @@
 #ifndef GUISHOPITEM_H
 #define GUISHOPITEM_H
 //----------------------------------------------------------------------------------
-#include "BaseGUI.h"
-#include "../GLEngine/GLTextTexture.h"
-//----------------------------------------------------------------------------------
 class CGUIShopItem : public CBaseGUI
 {
 	//!Количество

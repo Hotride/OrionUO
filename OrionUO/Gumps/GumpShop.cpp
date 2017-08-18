@@ -7,11 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpShop.h"
-#include "../Game objects/GamePlayer.h"
-#include "../Game objects/GameWorld.h"
-#include "../PressedObject.h"
-#include "../Network/Packets.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
 : CGump(GT_SHOP, serial, x, y), m_IsBuyGump(isBuyGump), m_Visible(!isBuyGump)
@@ -202,7 +198,7 @@ void CGumpShop::GUMP_BUTTON_EVENT_C
 void CGumpShop::GUMP_SCROLL_BUTTON_EVENT_C
 {
 	WISPFUN_DEBUG("c123_f6");
-	CGUIMinMaxButtons *minmax = (CGUIMinMaxButtons*)g_PressedObject.LeftObject();
+	CGUIMinMaxButtons *minmax = (CGUIMinMaxButtons*)g_PressedObject.LeftObject;
 
 	if (minmax == NULL)
 		return;
@@ -253,11 +249,11 @@ bool CGumpShop::OnLeftMouseButtonDoubleClick()
 	WISPFUN_DEBUG("c123_f7");
 	bool result = false;
 
-	if (g_PressedObject.LeftObject() != NULL && g_PressedObject.LeftObject()->IsGUI())
+	if (g_PressedObject.LeftObject != NULL && g_PressedObject.LeftObject->IsGUI())
 	{
-		if (((CBaseGUI*)g_PressedObject.LeftObject())->Type == GOT_SHOPITEM)
+		if (((CBaseGUI*)g_PressedObject.LeftObject)->Type == GOT_SHOPITEM)
 		{
-			CGUIShopItem *shopItem = (CGUIShopItem*)g_PressedObject.LeftObject();
+			CGUIShopItem *shopItem = (CGUIShopItem*)g_PressedObject.LeftObject;
 			CGUIShopResult *shopResult = NULL;
 
 			int posY = 0;

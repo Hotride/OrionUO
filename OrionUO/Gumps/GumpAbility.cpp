@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpAbility.h"
-#include "../SelectedObject.h"
-#include "../OrionUO.h"
-#include "../Managers/ClilocManager.h"
-#include "../ToolTip.h"
-#include "../Network/Packets.h"
-#include "../Managers/GumpManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpAbility::CGumpAbility(const uint &serial, const int &x, const int &y)
 : CGump(GT_ABILITY, serial, x, y)

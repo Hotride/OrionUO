@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpScreenServer.h"
-#include "../Screen stages/ServerScreen.h"
-#include "../OrionUO.h"
-#include "../ServerList.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/ConfigManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpScreenServer::CGumpScreenServer()
 : CGump(GT_NONE, 0, 0, 0)

@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIMinMaxButtons.h"
-#include "../OrionUO.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/MouseManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIMinMaxButtons::CGUIMinMaxButtons(const uint &serial, const ushort &graphic, const int &x, const int &y, const int &minValue, const int &maxValue, const int &value)
 : CBaseGUI(GOT_MINMAXBUTTONS, serial, graphic, 0, x, y), m_MinValue(minValue),

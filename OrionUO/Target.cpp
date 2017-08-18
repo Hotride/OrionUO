@@ -7,14 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "Target.h"
-#include "Game objects/GameWorld.h"
-#include "Network/Packets.h"
-#include "OrionUO.h"
-#include "Managers/MapManager.h"
-#include "Managers/PacketManager.h"
-#include "OrionWindow.h"
-#include "PluginInterface.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CTarget g_Target;
 //----------------------------------------------------------------------------------

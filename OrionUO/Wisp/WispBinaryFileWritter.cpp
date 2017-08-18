@@ -1,7 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
-#include "WispBinaryFileWritter.h"
-#include <Shlwapi.h>
-#pragma comment(lib, "Shlwapi.lib")
+#include "stdafx.h"
 
 namespace WISP_FILE
 {

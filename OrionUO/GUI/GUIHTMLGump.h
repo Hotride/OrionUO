@@ -12,13 +12,6 @@
 #ifndef GUIHTMLGUMP_H
 #define GUIHTMLGUMP_H
 //----------------------------------------------------------------------------------
-#include "GUIPolygonal.h"
-#include "GUIHTMLButton.h"
-#include "GUIHTMLHitBox.h"
-#include "GUIHTMLSlider.h"
-#include "GUIHTMLResizepic.h"
-#include "GUIScissor.h"
-//----------------------------------------------------------------------------------
 class CGUIHTMLGump : public CGUIPolygonal
 {
 	//!Имеет фон

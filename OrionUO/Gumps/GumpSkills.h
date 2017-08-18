@@ -10,8 +10,6 @@
 #ifndef GUMPSKILLS_H
 #define GUMPSKILLS_H
 //----------------------------------------------------------------------------------
-#include "GumpBaseScroll.h"
-//----------------------------------------------------------------------------------
 class CGumpSkills : public CGumpBaseScroll
 {
 private:

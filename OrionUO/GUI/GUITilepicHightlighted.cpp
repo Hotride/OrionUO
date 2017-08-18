@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUITilepicHightlighted.h"
-#include "../OrionUO.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/UOFileReader.h"
-#include "../SelectedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUITilepicHightlighted::CGUITilepicHightlighted(const uint &serial, const ushort &graphic, const ushort &color, const ushort &selectedColor, const int &x, const int &y, const bool &doubleDraw)
 : CGUITilepic(graphic, color, x, y), m_SelectedColor(selectedColor),

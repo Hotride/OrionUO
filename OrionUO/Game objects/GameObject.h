@@ -10,9 +10,6 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 //----------------------------------------------------------------------------------
-#include "RenderStaticObject.h"
-#include "../GLEngine/GLEngine.h"
-//----------------------------------------------------------------------------------
 struct DRAW_FRAME_INFORMATION
 {
 	int OffsetX;
@@ -161,6 +158,8 @@ public:
 	*/
 	void Clear();
 
+	void ClearUnequipped();
+
 	void ClearNotOpenedItems();
 
 	/*!
@@ -227,7 +226,7 @@ public:
 	Золото ли это
 	@return Индекс в таблице золота
 	*/
-	int IsGold();
+	static int IsGold(const ushort &graphic);
 
 	/*!
 	Получить индекс картинки для рисования

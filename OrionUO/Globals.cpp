@@ -1,8 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
-#include "Globals.h"
-#include "Multi.h"
-#include "Game objects/GameWorld.h"
-#include "Target.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 bool g_AltPressed = false;
 bool g_CtrlPressed = false;
@@ -86,7 +83,6 @@ uint g_ClientFlag = 0;
 bool g_SendLogoutNotification = false;
 bool g_NPCPopupEnabled = false;
 bool g_ChatEnabled = false;
-bool g_NoMegaCliloc = false;
 bool g_TooltipsEnabled = false;
 bool g_PaperdollBooks = false;
 
@@ -114,13 +110,8 @@ uint g_LastAttackObject = 0;
 CHARACTER_SPEED_TYPE g_SpeedMode = CST_NORMAL;
 
 uint g_DeathScreenTimer = 0;
-uchar g_WalkRequestCount = 0;
-uint g_PendingDelayTime = 0;
 
 float g_AnimCharactersDelayValue = 80.0f; //0x50
-
-UINTS_PAIR_LIST g_CorpseSerialList;
-UINTS_PAIR_LIST g_DeletedCharactersStack;
 
 WISP_GEOMETRY::CPoint2Di g_RemoveRangeXY;
 
@@ -319,7 +310,7 @@ int GetRemoveDistance(WISP_GEOMETRY::CPoint2Di current, CGameObject *target)
 
 		if (target->NPC && !((CGameCharacter*)target)->m_Steps.empty())
 		{
-			CWalkData &wd = ((CGameCharacter*)target)->m_Steps.front();
+			CWalkData &wd = ((CGameCharacter*)target)->m_Steps.back();
 
 			targetPoint = WISP_GEOMETRY::CPoint2Di(wd.X, wd.Y);
 		}

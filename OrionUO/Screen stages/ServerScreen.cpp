@@ -7,13 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "ServerScreen.h"
-#include "MainScreen.h"
-#include "../OrionWindow.h"
-#include "../Managers/ClilocManager.h"
-#include "../Managers/ConfigManager.h"
-#include "../ServerList.h"
-#include "../OrionUO.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CServerScreen g_ServerScreen;
 //----------------------------------------------------------------------------------

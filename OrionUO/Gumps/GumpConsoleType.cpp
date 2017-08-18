@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GumpConsoleType.h"
-#include "../TextEngine/GameConsole.h"
-#include "../SelectedObject.h"
-#include "../ToolTip.h"
-#include "../Screen stages/GameScreen.h"
-#include "../Managers/ConfigManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpConsoleType *g_GumpConsoleType = NULL;
 //----------------------------------------------------------------------------------

@@ -10,8 +10,6 @@
 #ifndef GUMPSPELL_H
 #define GUMPSPELL_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-//----------------------------------------------------------------------------------
 class CGumpSpell : public CGump
 {
 	SETGET(bool, BigIcon, false);

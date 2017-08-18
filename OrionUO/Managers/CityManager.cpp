@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "CityManager.h"
-#include "../Wisp/WispMappedFile.h"
-#include "../Wisp/WispApplication.h"
-#include "../Constants.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/ClilocManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CCityManager g_CityManager;
 //----------------------------------------------------------------------------------

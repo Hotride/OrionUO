@@ -7,12 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GUIBuff.h"
-#include "../OrionUO.h"
-#include "../Managers/ColorManager.h"
-#include "../Managers/MouseManager.h"
-#include "../Managers/UOFileReader.h"
-#include "../SelectedObject.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGUIBuff::CGUIBuff(const ushort &graphic, const uint &timer, const wstring &text)
 : CGUIDrawObject(GOT_BUFF, 0, graphic, 0, 0, 0), m_Timer(timer), m_Text(text)

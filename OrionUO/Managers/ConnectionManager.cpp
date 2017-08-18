@@ -7,18 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "ConnectionManager.h"
-#include "ConfigManager.h"
-#include "../Wisp/WispDataStream.h"
-#include "../Wisp/WispLogger.h"
-#include "../OrionUO.h"
-#include "../OrionWindow.h"
-#include "PacketManager.h"
-#include "../Screen stages/ConnectionScreen.h"
-#include "../Screen stages/GameBlockedScreen.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/PacketManager.h"
-#include "../Managers/PluginManager.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CConnectionManager g_ConnectionManager;
 //----------------------------------------------------------------------------------
@@ -117,7 +106,7 @@ void CConnectionManager::Init()
 
 	WSACleanup();
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 /*!
 Инициализация игрового сокета
 @param [__in] GameSeed Ключ для игрового шифрования
@@ -134,14 +123,14 @@ void CConnectionManager::Init(puchar gameSeed)
 
 	g_NetworkInit(false, &gameSeed[0]);
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 void CConnectionManager::SendIP(CSocket &socket, puchar seed)
 {
 	WISPFUN_DEBUG("c139_f10");
 	g_PluginManager.WindowProc(g_OrionWindow.Handle, UOMSG_IP_SEND, (WPARAM)seed, 4);
 	socket.Send(seed, 4);
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 /*!
 Подключение к серверу
 @param [__in] IP IP адрес сервера
@@ -233,7 +222,7 @@ bool CConnectionManager::Connect(const string &address, int port, puchar gameSee
 
 	return false;
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 /*!
 Разорвать подключение
 @return
@@ -248,7 +237,7 @@ void CConnectionManager::Disconnect()
 	if (m_GameSocket.Connected)
 		m_GameSocket.Disconnect();
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 /*!
 Получить данные с сервера
 @return 
@@ -301,7 +290,7 @@ void CConnectionManager::Recv()
 		g_PacketManager.Read(&m_GameSocket);
 	}
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 /*!
 Отправить сообщение серверу
 @param [__in] buf Буфер с данными
@@ -370,10 +359,10 @@ int CConnectionManager::Send(puchar buf, int size)
 
 	return 0;
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 int CConnectionManager::Send(const UCHAR_LIST &data)
 {
 	WISPFUN_DEBUG("c139_f15");
 	return Send((puchar)&data[0], data.size());
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------------

@@ -10,15 +10,13 @@
 #ifndef GAMEWORLD_H
 #define GAMEWORLD_H
 //----------------------------------------------------------------------------------
-#include "GameObject.h"
-#include "GameItem.h"
-#include "GameCharacter.h"
-//----------------------------------------------------------------------------------
 typedef map<uint, CGameObject*> WORLD_MAP;
 //----------------------------------------------------------------------------------
 //!Класс игрового мира
 class CGameWorld
 {
+	SETGET(uint, ObjectToRemove, 0);
+
 private:
 	/*!
 	Создать игрока
@@ -97,6 +95,8 @@ public:
 	@return Ссылка а персонажа или NULL
 	*/
 	CGameCharacter *FindWorldCharacter(const uint &serial);
+
+	void ReplaceObject(CGameObject *obj, const uint &newSerial);
 
 	/*!
 	Удалить объект из памяти
@@ -191,6 +191,14 @@ public:
 	@return Ссылка на найденный объект или NULL
 	*/
 	CGameObject *SearchWorldObject(const uint &serialStart, const int &scanDistance, const SCAN_TYPE_OBJECT &scanType, const SCAN_MODE_OBJECT &scanMode);
+
+	void UpdateContainedItem(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, const ushort &count, const int &x, const int &y, const uint containerSerial, const ushort &color);
+
+	void UpdateItemInContainer(CGameObject *obj, CGameObject *container, const int &x, const int &y);
+
+	void UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, const int &count, const int &x, const int &y, const char &z, const uchar &direction, const ushort &color, const uchar &flags, const int &a11, const UPDATE_GAME_OBJECT_TYPE &updateType, const ushort &a13);
+
+	void UpdatePlayer(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, const ushort &color, const uchar &flags, const int &x, const int &y, const ushort &serverID, const uchar &direction, const char &z);
  };
 //---------------------------------------------------------------------------
 //!Указатель на мир

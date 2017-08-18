@@ -10,10 +10,6 @@
 #ifndef GUMPPAPERDOLL_H
 #define GUMPPAPERDOLL_H
 //----------------------------------------------------------------------------------
-#include "Gump.h"
-#include "../TextEngine/TextRenderer.h"
-#include "../TextEngine/TextContainer.h"
-//----------------------------------------------------------------------------------
 class CGumpPaperdoll : public CGump
 {
 protected:

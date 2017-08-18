@@ -7,10 +7,7 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameBlockedScreen.h"
-#include "../TextEngine/GameConsole.h"
-#include "../Managers/GumpManager.h"
-#include "../Gumps/GumpNotify.h"
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameBlockedScreen g_GameBlockedScreen;
 //----------------------------------------------------------------------------------
@@ -85,7 +82,7 @@ void CGameBlockedScreen::OnLeftMouseButtonDown()
 void CGameBlockedScreen::OnLeftMouseButtonUp()
 {
 	WISPFUN_DEBUG("c163_f3");
-	if (g_PressedObject.LeftGump() != NULL)
+	if (g_PressedObject.LeftGump != NULL)
 		g_GumpManager.OnLeftMouseButtonUp(true);
 }
 //----------------------------------------------------------------------------------

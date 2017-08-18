@@ -7,38 +7,27 @@
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#include "GameCharacter.h"
-#include "GamePlayer.h"
-#include "GameItem.h"
-#include "../Managers/ConfigManager.h"
-#include "../Managers/FontsManager.h"
-#include "../Managers/MapManager.h"
-#include "../Managers/AnimationManager.h"
-#include "../Managers/GumpManager.h"
-#include "../Managers/PluginManager.h"
-#include "../Network/Packets.h"
-#include "../TargetGump.h"
-#include "../SelectedObject.h"
-#include "../OrionUO.h"
-#include "../Walker/PathFinder.h"
-#include "../Gumps/GumpTargetSystem.h"
-#include "../OrionWindow.h"
-#include "../Party.h"
-
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGameCharacter::CGameCharacter(const uint &serial)
 : CGameObject(serial), m_Hits(0), m_MaxHits(0), m_LastStepSoundTime(GetTickCount()),
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
 {
+	m_NPC = true;
 	WISPFUN_DEBUG("c15_f1");
 	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
 	m_RenderQueueIndex = 7;
 
+	bool wantStatusRequest = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL) || (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.DrawStatusState || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
+
 	if (!g_ConfigManager.DisableNewTargetSystem && g_NewTargetSystem.Serial == serial && g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) == NULL)
 	{
-		CPacketStatusRequest(m_Serial).Send();
+		wantStatusRequest = true;
 		g_GumpManager.AddGump(new CGumpTargetSystem(m_Serial, g_NewTargetSystem.GumpX, g_NewTargetSystem.GumpY));
 	}
+
+	if (wantStatusRequest)
+		CPacketStatusRequest(m_Serial).Send();
 }
 //----------------------------------------------------------------------------------
 CGameCharacter::~CGameCharacter()
@@ -49,26 +38,31 @@ CGameCharacter::~CGameCharacter()
 
 	m_HitsTexture.Clear();
 
+	uint serial = m_Serial & 0x3FFFFFFF;
+
 	if (g_ConfigManager.RemoveStatusbarsWithoutObjects)
-		g_GumpManager.CloseGump(m_Serial, 0, GT_STATUSBAR);
+		g_GumpManager.CloseGump(serial, 0, GT_STATUSBAR);
 	else
 	{
 		//!Если стянут статусбар - обновим его
-		g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR);
+		g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR);
 	}
 	
 	//!Если стянут статусбар таргет системы - обновим его
-	g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM);
+	g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM);
 
 	if (!IsPlayer())
-		g_GumpManager.CloseGump(m_Serial, 0, GT_PAPERDOLL);
+		g_GumpManager.CloseGump(serial, 0, GT_PAPERDOLL);
 	//Чистим если находился в пати.
-	if (g_Party.Contains(m_Serial))
+	if (g_Party.Contains(serial))
 	{
 		IFOR(i, 0, 10)
 		{
 			CPartyObject &member = g_Party.Member[i];
-			if (member.Serial != m_Serial) continue;
+
+			if (member.Serial != serial)
+				continue;
+
 			member.Serial = 0;
 			member.Character = NULL;
 		}
@@ -357,104 +351,9 @@ void CGameCharacter::OnGraphicChange(int direction)
 
 		if (g_GumpManager.UpdateContent(m_Serial, 0, GT_STATUSBAR) != NULL)
 			g_Orion.StatusReq(m_Serial);
-
-		if (g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM) != NULL)
+		else if (g_GumpManager.UpdateContent(m_Serial, 0, GT_TARGET_SYSTEM) != NULL)
 			g_Orion.StatusReq(m_Serial);
 	}
-}
-//----------------------------------------------------------------------------------
-/*!
-Проверка, шаг ли это или телепорт (определяет телепорт на 1 тайл по направлению движения как шаг)
-@param [__inout] cx Текущая координата X
-@param [__inout] cy Текущая координата Y
-@param [__in] x Новая координата X
-@param [__in] y Новая координата Y
-@param [__in] dir Направление персонажа
-@return Результат выполнения шаг/телепорт
-*/
-bool CGameCharacter::IsCorrectStep(short &cx, short &cy, short &x, short &y, const uchar &dir)
-{
-	WISPFUN_DEBUG("c15_f8");
-	switch (dir & 7)
-	{
-		case 0:
-		{
-			cy--;
-			break;
-		}
-		case 1:
-		{
-			cx++;
-			cy--;
-			break;
-		}
-		case 2:
-		{
-			cx++;
-			break;
-		}
-		case 3:
-		{
-			cx++;
-			cy++;
-			break;
-		}
-		case 4:
-		{
-			cy++;
-			break;
-		}
-		case 5:
-		{
-			cx--;
-			cy++;
-			break;
-		}
-		case 6:
-		{
-			cx--;
-			break;
-		}
-		case 7:
-		{
-			cx--;
-			cy--;
-			break;
-		}
-	}
-
-	return (cx == x && cy == y);
-}
-//----------------------------------------------------------------------------------
-/*!
-Проверка изменения координат, телепорт ли это
-@param [__in] x Новая координата X
-@param [__in] y Новая координата Y
-@param [__in] dir Новое направление персонажа
-@return true - телепорт, false - шаг
-*/
-bool CGameCharacter::IsTeleportAction(short &x, short &y, const uchar &dir)
-{
-	WISPFUN_DEBUG("c15_f9");
-	bool result = false;
-	
-	short cx = m_X;
-	short cy = m_Y;
-	uchar cdir = m_Direction;
-
-	if (!m_Steps.empty())
-	{
-		CWalkData &wd = m_Steps.back();
-		
-		cx = wd.X;
-		cy = wd.Y;
-		cdir = wd.Direction;
-	}
-
-	if ((cdir & 7) == (dir & 7))
-		result = !IsCorrectStep(cx, cy, x, y, dir);
-
-	return result;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -539,10 +438,10 @@ void CGameCharacter::SetRandomFidgetAnimation()
 @param [__inout] animation Индекс группы анимации
 @return
 */
-void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, BYTE &animation)
+void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, uchar &animation)
 {
 	WISPFUN_DEBUG("c15_f13");
-	const BYTE animAssociateTable[35][3] =
+	const uchar animAssociateTable[35][3] =
 	{
 		{ LAG_WALK,			HAG_WALK,			PAG_WALK_UNARMED },
 		{ LAG_WALK,			HAG_WALK,			PAG_WALK_ARMED },
@@ -699,7 +598,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 	ANIMATION_GROUPS groupIndex = g_AnimationManager.GetGroupIndex(graphic);
 	uchar result = m_AnimationGroup;
 
-	if (result != 0xFF)
+	if (result != 0xFF && !(m_Serial & 0x80000000) && !m_AnimationFromServer)
 	{
 		GetAnimationGroup(groupIndex, result);
 
@@ -869,6 +768,7 @@ uchar CGameCharacter::GetAnimationGroup(ushort graphic)
 	}
 	return result;
 }
+//----------------------------------------------------------------------------------
 void CGameCharacter::ProcessGargoyleAnims(int &animGroup)
 {
 	if (animGroup == 64 || animGroup == 65)
@@ -912,7 +812,7 @@ ushort CGameCharacter::GetMountAnimation()
 void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 {
 	WISPFUN_DEBUG("c15_f18");
-	dir = m_Direction & (~0x80);
+	dir = m_Direction & 7;
 
 	if (!m_Steps.empty())
 	{
@@ -925,7 +825,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 		if (dir & 0x80)
 		{
-			dir &= ~0x80;
+			dir &= 7;
 			run = 1;
 		}
 
@@ -942,23 +842,44 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 			if (m_X != wd.X || m_Y != wd.Y)
 			{
-				float steps = maxDelay / g_AnimCharactersDelayValue;
-				
-				float x = delay / g_AnimCharactersDelayValue;
-				float y = x;
-				m_OffsetZ = (char)(((wd.Z - m_Z) * x) * (4.0f / steps));
+				bool badStep = false;
 
-				wd.GetOffset(x, y, steps);
+				if (!m_OffsetX && !m_OffsetY)
+				{
+					int absX = abs(m_X - wd.X);
+					int absY = abs(m_Y - wd.Y);
 
-				m_OffsetX = (char)x;
-				m_OffsetY = (char)y;
+					badStep = (absX > 1 || absY > 1 || !(absX + absY));
+
+					if (!badStep)
+					{
+						absX = m_X;
+						absY = m_Y;
+
+						g_PathFinder.GetNewXY(wd.Direction & 7, absX, absY);
+
+						badStep = (absX != wd.X || absY != wd.Y);
+					}
+				}
+
+				if (badStep)
+					removeStep = true;
+				else
+				{
+					float steps = maxDelay / g_AnimCharactersDelayValue;
+
+					float x = delay / g_AnimCharactersDelayValue;
+					float y = x;
+					m_OffsetZ = (char)(((wd.Z - m_Z) * x) * (4.0f / steps));
+
+					wd.GetOffset(x, y, steps);
+
+					m_OffsetX = (char)x;
+					m_OffsetY = (char)y;
+				}
 			}
 			else
 			{
-				m_OffsetX = 0;
-				m_OffsetY = 0;
-				m_OffsetZ = 0;
-
 				directionChange = true;
 
 				removeStep = true; //direction change
@@ -982,6 +903,26 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 						g_Orion.CreateTextMessage(TT_OBJECT, g_PlayerSerial, 3, 0, "Ouch!");
 						//play sound (5) ?
 					}
+
+					if (g_Walker.m_Step[g_Walker.CurrentWalkSequence].Accepted)
+					{
+						int sequencePtr = g_Walker.CurrentWalkSequence + 1;
+
+						if (sequencePtr < g_Walker.StepsCount)
+						{
+							int count = g_Walker.StepsCount - sequencePtr;
+
+							IFOR(i, 0, count)
+							{
+								g_Walker.m_Step[sequencePtr - 1] = g_Walker.m_Step[sequencePtr];
+								sequencePtr++;
+							}
+						}
+
+						g_Walker.StepsCount--;
+					}
+					else
+						g_Walker.CurrentWalkSequence++;
 				}
 
 				m_X = wd.X;
@@ -1005,7 +946,6 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 				{
 					g_MapManager->AddRender(this);
 				}
-
 
 				m_LastStepTime = g_Ticks;
 			}

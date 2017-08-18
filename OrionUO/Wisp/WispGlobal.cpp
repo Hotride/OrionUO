@@ -1,6 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
-#include "WispGlobal.h"
-#include <sstream>
+#include "stdafx.h"
 //----------------------------------------------------------------------------------
 DWORD g_MainThread = 0;
 deque<string> g_WispDebugFunStack;

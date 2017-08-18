@@ -1,7 +1,5 @@
 ﻿//----------------------------------------------------------------------------------
-#include "WispWindow.h"
-#include "WispMouse.h"
-#include <time.h>
+#include "stdafx.h"
 
 namespace WISP_WINDOW
 {
