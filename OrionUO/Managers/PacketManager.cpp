@@ -4189,17 +4189,24 @@ PACKET_HANDLER(OpenGump)
 		}
 		else if (cmd == "button")
 		{
-			if (listSize >= 8)
+			if (listSize >= 5)
 			{
 				int x = ToInt(list[1]);
 				int y = ToInt(list[2]);
 				int up = ToInt(list[3]);
 				int down = ToInt(list[4]);
-				int action = ToInt(list[5]);
-				int toPage = ToInt(list[6]);
-				int index = ToInt(list[7]);
+				int action = 0;
+				int toPage = 0;
+				int index = 0;
 
-				if (action == 1)
+				if (listSize >= 6)
+					index = ToInt(list[5]);
+				if (listSize >= 7)
+					index = ToInt(list[6]);
+				if (listSize >= 8)
+					index = ToInt(list[7]);
+
+				if (action != 0)
 					toPage = -1;
 
 				go = new CGUIButton(index, up, up, down, x, y);
@@ -4224,7 +4231,7 @@ PACKET_HANDLER(OpenGump)
 				int tileX = ToInt(list[10]);
 				int tileY = ToInt(list[11]);
 
-				if (action == 1)
+				if (action != 0)
 					toPage = -1;
 
 				go = new CGUIButtonTileart(index, up, up, down, x, y, tileGraphic, tileColor, tileX, tileY);
@@ -4234,14 +4241,19 @@ PACKET_HANDLER(OpenGump)
 		}
 		else if (cmd == "checkbox")
 		{
-			if (listSize >= 7)
+			if (listSize >= 5)
 			{
 				int x = ToInt(list[1]);
 				int y = ToInt(list[2]);
 				int up = ToInt(list[3]);
 				int down = ToInt(list[4]);
-				int state = ToInt(list[5]);
-				int index = ToInt(list[6]);
+				int state = 0;
+				int index = 0;
+
+				if (listSize >= 6)
+					state = ToInt(list[5]);
+				if (listSize >= 7)
+					index = ToInt(list[6]);
 
 				go = new CGUICheckbox(index, up, down, up, x, y);
 
@@ -4250,14 +4262,19 @@ PACKET_HANDLER(OpenGump)
 		}
 		else if (cmd == "radio")
 		{
-			if (listSize >= 7)
+			if (listSize >= 5)
 			{
 				int x = ToInt(list[1]);
 				int y = ToInt(list[2]);
 				int up = ToInt(list[3]);
 				int down = ToInt(list[4]);
-				int state = ToInt(list[5]);
-				int index = ToInt(list[6]);
+				int state = 0;
+				int index = 0;
+
+				if (listSize >= 6)
+					state = ToInt(list[5]);
+				if (listSize >= 7)
+					index = ToInt(list[6]);
 
 				go = new CGUIRadio(index, up, down, up, x, y);
 
@@ -4353,14 +4370,19 @@ PACKET_HANDLER(OpenGump)
 		}
 		else if (cmd == "tilepichue")
 		{
-			if (listSize >= 5)
+			if (listSize >= 4)
 			{
 				int x = ToInt(list[1]);
 				int y = ToInt(list[2]);
 				int graphic = ToInt(list[3]);
-				int color = ToInt(list[4]);
+				int color = 0;
 
-				gump->Add(new CGUIShader(g_ColorizerShader, true));
+				if (listSize >= 5)
+					color = ToInt(list[4]);
+
+				if (color)
+					gump->Add(new CGUIShader(g_ColorizerShader, true));
+
 				go = new CGUITilepic(graphic, color, x, y);
 				go->DrawOnly = true;
 			}
