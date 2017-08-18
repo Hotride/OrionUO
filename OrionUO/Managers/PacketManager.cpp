@@ -4204,9 +4204,9 @@ PACKET_HANDLER(OpenGump)
 				int index = 0;
 
 				if (listSize >= 6)
-					index = ToInt(list[5]);
+					action = ToInt(list[5]);
 				if (listSize >= 7)
-					index = ToInt(list[6]);
+					toPage = ToInt(list[6]);
 				if (listSize >= 8)
 					index = ToInt(list[7]);
 
