@@ -130,16 +130,6 @@ void CTarget::SendTargetTile(const ushort &tileID, const short &x, const short &
 	pack16(m_Data + 11, x);
 	pack16(m_Data + 13, y);
 
-	if (m_MultiGraphic)
-	{
-		int grZ = 0;
-		int stZ = 0;
-		g_MapManager->GetMapZ(x, y, grZ, stZ);
-
-		if (!tileID || !IsWet(g_Orion.GetStaticFlags(tileID)))
-			z = grZ;
-	}
-
 	//m_Data[15] = 0xFF;
 	//m_Data[16] = z;
 	pack16(m_Data + 15, (short)z);
@@ -220,16 +210,6 @@ void CTarget::Plugin_SendTargetTile(const ushort &tileID, const short &x, const 
 	pack32(m_Data + 7, 0);
 	pack16(m_Data + 11, x);
 	pack16(m_Data + 13, y);
-
-	if (m_MultiGraphic)
-	{
-		int grZ = 0;
-		int stZ = 0;
-		g_MapManager->GetMapZ(x, y, grZ, stZ);
-
-		if (!tileID || !IsWet(g_Orion.GetStaticFlags(tileID)))
-			z = grZ;
-	}
 
 	//m_Data[15] = 0xFF;
 	//m_Data[16] = z;
