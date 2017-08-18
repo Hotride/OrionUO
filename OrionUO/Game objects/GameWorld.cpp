@@ -1541,16 +1541,19 @@ void CGameWorld::UpdateContainedItem(const uint &serial, const ushort &graphic, 
 
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
-	if (obj != NULL)
+	if (obj != NULL && (!container->IsCorpse() || ((CGameItem*)obj)->Layer == OL_NONE))
 	{
 		g_World->RemoveObject(obj);
 		obj = NULL;
 	}
 
-	if (serial & 0x40000000)
-		obj = g_World->GetWorldItem(serial);
-	else
-		obj = g_World->GetWorldCharacter(serial);
+	if (obj == NULL)
+	{
+		if (serial & 0x40000000)
+			obj = g_World->GetWorldItem(serial);
+		else
+			obj = g_World->GetWorldCharacter(serial);
+	}
 
 	if (obj == NULL)
 	{
