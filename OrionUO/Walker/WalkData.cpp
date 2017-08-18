@@ -15,6 +15,9 @@ void CWalkData::GetOffset(float &x, float &y, float &steps)
 	float step_NESW_D = 44.0f / steps; //NW NE SW SE
 	float step_NESW = 22.0f / steps; //N E S W
 
+	int checkX = 22;
+	int checkY = 22;
+
 	switch (m_Direction & 7)
 	{
 		case 0: //W
@@ -26,6 +29,7 @@ void CWalkData::GetOffset(float &x, float &y, float &steps)
 		case 1: //NW
 		{
 			x *= step_NESW_D;
+			checkX = 44;
 			y = 0.0f;
 			break;
 		}
@@ -39,6 +43,7 @@ void CWalkData::GetOffset(float &x, float &y, float &steps)
 		{
 			x = 0.0f;
 			y *= step_NESW_D;
+			checkY = 44;
 			break;
 		}
 		case 4: //E
@@ -50,6 +55,7 @@ void CWalkData::GetOffset(float &x, float &y, float &steps)
 		case 5: //SE
 		{
 			x *= -step_NESW_D;
+			checkX = 44;
 			y = 0.0f;
 			break;
 		}
@@ -63,10 +69,31 @@ void CWalkData::GetOffset(float &x, float &y, float &steps)
 		{
 			x = 0.0f;
 			y *= -step_NESW_D;
+			checkY = 44;
 			break;
 		}
 		default:
 			break;
+	}
+
+	int valueX = (int)x;
+
+	if (abs(valueX) > checkX)
+	{
+		if (valueX < 0)
+			x = -(float)checkX;
+		else
+			x = (float)checkX;
+	}
+
+	int valueY = (int)y;
+
+	if (abs(valueY) > checkY)
+	{
+		if (valueY < 0)
+			y = -(float)checkY;
+		else
+			y = (float)checkY;
 	}
 }
 //----------------------------------------------------------------------------------
