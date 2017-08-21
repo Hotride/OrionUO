@@ -1496,6 +1496,7 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 	if (g_TooltipsEnabled && !obj->ClilocMessage.length())
 		g_PacketManager.AddMegaClilocRequest(obj->Serial);
 
+	if (obj->Graphic == 0x0E0B) //Message board item
 	{
 		CPacketBulletinBoardRequestMessageSummary(containerSerial, obj->Serial).Send();
 
