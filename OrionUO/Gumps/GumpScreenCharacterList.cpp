@@ -46,7 +46,7 @@ void CGumpScreenCharacterList::UpdateContent()
 	Add(new CGUIResizepic(0, 0x0A28, 160, 70, 408, 343 + yBonus));
 
 	CGUIText *obj = new CGUIText(0x0386, 267, listTitleY);
-	obj->CreateTextureA(2, "Character Selection");
+	obj->CreateTextureA(2, g_ClilocManager.Cliloc(g_Language)->GetA(3000050, "Character Selection"));
 	Add(obj);
 
 	IFOR(i, 0, count)

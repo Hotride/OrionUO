@@ -178,23 +178,23 @@ wstring CGameConsole::IsSystemCommand(const wchar_t *text, int &len, int &member
 
 		if (m_Type == GCTT_NORMAL && !result.length())
 		{
-			result = L"Party:";
+			result = g_ClilocManager.Cliloc(g_Language)->GetW(3002009, "Party:");
 			m_Type = GCTT_PARTY;
 		}
 	}
 	else if (!memcmp(&text[0], g_ConsolePrefix[GCTT_YELL].c_str(), 4)) //Yell
 	{
-		result = L"Yell:";
+		result = g_ClilocManager.Cliloc(g_Language)->GetW(3002010, "Yell:");
 		m_Type = GCTT_YELL;
 	}
 	else if (!memcmp(&text[0], g_ConsolePrefix[GCTT_WHISPER].c_str(), 4)) //Whisper
 	{
-		result = L"Whisper:";
+		result = g_ClilocManager.Cliloc(g_Language)->GetW(3002009, "Whisper:");
 		m_Type = GCTT_WHISPER;
 	}
 	else if (!memcmp(&text[0], g_ConsolePrefix[GCTT_EMOTE].c_str(), 4)) //Emote
 	{
-		result = L"Emote:";
+		result = g_ClilocManager.Cliloc(g_Language)->GetW(3002008,"Emote:");
 		m_Type = GCTT_EMOTE;
 	}
 	else if (g_Player->Graphic == 0x03DB && (*text == L'=' || *text == g_ConsolePrefix[GCTT_C][0])) //C
