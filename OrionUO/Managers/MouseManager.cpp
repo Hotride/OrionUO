@@ -239,6 +239,48 @@ bool CMouseManager::LoadCursorTextures()
 					else if (id == 0x2079)
 						OffsY = -(DH / 2.0f);
 
+					switch (id)
+					{
+						case 0x206B:
+							OffsX = -29;
+							OffsY = -1;
+							break;
+						case 0x206C:
+							OffsX = -41;
+							OffsY = -9;
+							break;
+						case 0x206D:
+							OffsX = -36;
+							OffsY = -25;
+							break;
+						case 0x206E:
+							OffsX = -14;
+							OffsY = -33;
+							break;
+						case 0x206F:
+							OffsX = -2;
+							OffsY = -26;
+							break;
+						case 0x2070:
+							OffsX = -3;
+							OffsY = -8;
+							break;
+						case 0x2071:
+							OffsX = -1;
+							OffsY = -1;
+							break;
+						case 0x206A:
+							OffsX = -4;
+							OffsY = -2;
+							break;
+						case 0x2075:
+							OffsX = -2;
+							OffsY = -10;
+							break;
+						default:
+							break;
+					}
+
 					m_CursorOffset[0][j] = (int)OffsX; //X
 					m_CursorOffset[1][j] = (int)OffsY; //Y
 				}
