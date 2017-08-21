@@ -45,12 +45,12 @@ CGumpMenubar::CGumpMenubar(uint serial, short x, short y)
 
 	static const wstring text[8] =
 	{
-		g_ClilocManager.Cliloc(g_Language)->GetW(3000430, "Map"),
-		g_ClilocManager.Cliloc(g_Language)->GetW(3002133, "Paperdoll"),
-		g_ClilocManager.Cliloc(g_Language)->GetW(3000431, "Inventory"),
-		g_ClilocManager.Cliloc(g_Language)->GetW(3002135, "Journal"),
+		g_ClilocManager.Cliloc(g_Language)->GetW(3000430, false, "Map"),
+		g_ClilocManager.Cliloc(g_Language)->GetW(3002133, false, "Paperdoll"),
+		g_ClilocManager.Cliloc(g_Language)->GetW(3000431, false, "Inventory"),
+		g_ClilocManager.Cliloc(g_Language)->GetW(3002135, false, "Journal"),
 		L"Chat",
-		g_ClilocManager.Cliloc(g_Language)->GetW(3000134, "Help"),
+		g_ClilocManager.Cliloc(g_Language)->GetW(3000134, false, "Help"),
 		L"World Map",
 		L"< ? >"
 	};

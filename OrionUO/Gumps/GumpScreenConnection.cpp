@@ -52,12 +52,12 @@ void CGumpScreenConnection::UpdateContent()
 		{
 			const string text[6] =
 			{
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000018, "That character password is invalid."),
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000019, "That character does not exist."),
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000020, "That character is being played right now."),
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000021, "That character is not old enough to delete. The character must be 7 days old before it can be deleted."),
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000022, "That character is currently queued for backup and cannot be deleted."),
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000023, "Couldn't carry out your request.")
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000018, false, "That character password is invalid."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000019, false, "That character does not exist."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000020, false, "That character is being played right now."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000021, false, "That character is not old enough to delete. The character must be 7 days old before it can be deleted."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000022, false, "That character is currently queued for backup and cannot be deleted."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000023, false, "Couldn't carry out your request.")
 			};
 			int index = g_ConnectionScreen.ErrorCode;
 			if (index >= 6)
@@ -83,8 +83,8 @@ void CGumpScreenConnection::UpdateContent()
 		{
 			const string text[3] =
 			{
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000033, "Either the Account Name or Password you provided were incorrect. If this is a new account your account may not be active yet. Please try again shortly."),
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000612, "Your character name is too short."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000033, false, "Either the Account Name or Password you provided were incorrect. If this is a new account your account may not be active yet. Please try again shortly."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000612, false, "Your character name is too short."),
 				"No character to login with."
 			};
 			int index = g_ConnectionScreen.ErrorCode;
@@ -96,7 +96,7 @@ void CGumpScreenConnection::UpdateContent()
 		}
 		else
 		{
-			CreateText(189, 178, g_ClilocManager.Cliloc(g_Language)->GetA(3000001, true, "Entering Britannia..."), 2);
+			CreateText(189, 178, g_ClilocManager.Cliloc(g_Language)->GetA(3000001, false, "Entering Britannia..."), 2);
 
 			g_ConnectionScreen.CursorGraphic = 0x2077; //Waiting mouse cursor
 		}
@@ -105,14 +105,14 @@ void CGumpScreenConnection::UpdateContent()
 	{
 		const string text[10] =
 		{
-			g_ClilocManager.Cliloc(g_Language)->GetA(3000007, "Incorrect password."),
-			g_ClilocManager.Cliloc(g_Language)->GetA(3000009, "This character does not exist anymore.  You will have to recreate it."),
-			g_ClilocManager.Cliloc(g_Language)->GetA(3000006, "This character already exists.\nPlaying..."),
-			g_ClilocManager.Cliloc(g_Language)->GetA(3000016, "The client could not attach to the game server. It must have been taken down, please wait a few minutes and try again."),
-			g_ClilocManager.Cliloc(g_Language)->GetA(3000017, "The client could not attach to the game server. It must have been taken down, please wait a few minutes and try again."),
-			g_ClilocManager.Cliloc(g_Language)->GetA(3000012, "Another character from this account is currently online in this world.  You must either log in as that character or wait for it to time out."),
-			g_ClilocManager.Cliloc(g_Language)->GetA(3000013, "An error has occurred in the synchronization between the login servers and this world.  Please close your client and try again."),
-			g_ClilocManager.Cliloc(g_Language)->GetA(3000005, "You have been idle for too long.  If you do not do anything in the next minute, you will be logged out."),
+			g_ClilocManager.Cliloc(g_Language)->GetA(3000007, false, "Incorrect password."),
+			g_ClilocManager.Cliloc(g_Language)->GetA(3000009, false, "This character does not exist anymore.  You will have to recreate it."),
+			g_ClilocManager.Cliloc(g_Language)->GetA(3000006, false, "This character already exists.\nPlaying..."),
+			g_ClilocManager.Cliloc(g_Language)->GetA(3000016, false, "The client could not attach to the game server. It must have been taken down, please wait a few minutes and try again."),
+			g_ClilocManager.Cliloc(g_Language)->GetA(3000017, false, "The client could not attach to the game server. It must have been taken down, please wait a few minutes and try again."),
+			g_ClilocManager.Cliloc(g_Language)->GetA(3000012, false, "Another character from this account is currently online in this world.  You must either log in as that character or wait for it to time out."),
+			g_ClilocManager.Cliloc(g_Language)->GetA(3000013, false, "An error has occurred in the synchronization between the login servers and this world.  Please close your client and try again."),
+			g_ClilocManager.Cliloc(g_Language)->GetA(3000005, false, "You have been idle for too long.  If you do not do anything in the next minute, you will be logged out."),
 			"",
 			""
 		};
@@ -145,15 +145,15 @@ void CGumpScreenConnection::UpdateContent()
 		{
 			const string text[9] =
 			{
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000007, "Incorrect name/password."),
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000034, "Someone is already using this account."),
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000035, "Your account has been blocked."),
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000036, "Your account credentials are invalid."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000007, false, "Incorrect name/password."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000034, false, "Someone is already using this account."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000035, false, "Your account has been blocked."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000036, false, "Your account credentials are invalid."),
 				"Communication problem.",
 				"The IGR concurrency limit has been met.",
 				"The IGR time limit has been met.",
 				"General IGR authentication failure.",
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000037, "Couldn't connect to Ultima Online.  Please try again in a few moments.")
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000037, false, "Couldn't connect to Ultima Online.  Please try again in a few moments.")
 			};
 			int index = g_ConnectionScreen.ErrorCode;
 			if (index >= 9)
@@ -166,8 +166,8 @@ void CGumpScreenConnection::UpdateContent()
 		{
 			const string text[2] =
 			{
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000002, "Connecting..."),
-				g_ClilocManager.Cliloc(g_Language)->GetA(3000003, "Verifying Account...")
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000002, false, "Connecting..."),
+				g_ClilocManager.Cliloc(g_Language)->GetA(3000003, false, "Verifying Account...")
 			};
 
 			CreateText(189, 178, text[g_ConnectionScreen.Connected], 2);
