@@ -75,7 +75,7 @@ void CGumpBulletinBoard::GUMP_BUTTON_EVENT_C
 	WISPFUN_DEBUG("c89_f3");
 	if (serial == ID_GBB_POST_MESSAGE)
 	{
-		CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, m_Serial, g_Player->Name, "", "Date/Time", "");
+		CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, m_Serial, ToWString(g_Player->Name), L"", L"Date/Time", L"");
 
 		g_GumpManager.AddGump(gump);
 	}

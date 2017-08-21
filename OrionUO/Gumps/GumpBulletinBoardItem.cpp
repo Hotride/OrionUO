@@ -9,7 +9,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpBulletinBoardItem::CGumpBulletinBoardItem(uint serial, short x, short y, uchar variant, uint id, string poster, string subject, string dataTime, string data)
+CGumpBulletinBoardItem::CGumpBulletinBoardItem(const uint &serial, const int &x, const int &y, const uchar &variant, const uint &id, const wstring &poster, const wstring &subject, const wstring &dataTime, const wstring &data)
 : CGumpBaseScroll(GT_BULLETIN_BOARD_ITEM, serial, 0x0820, 250, x, y, false, 70),
 m_Variant(variant)
 {
@@ -17,20 +17,43 @@ m_Variant(variant)
 	m_ID = id;
 	m_MinHeight = 200;
 
+	bool useUnicode = (g_PacketManager.ClientVersion >= CV_500A);
+	int unicodeFontIndex = 0;
+
 	CGUIText *text = (CGUIText*)Add(new CGUIText(0, 30, 40));
-	text->CreateTextureA(6, "Author:");
+
+	if (useUnicode)
+		text->CreateTextureW(unicodeFontIndex, L"Author:");
+	else
+		text->CreateTextureA(6, "Author:");
 
 	CGUIText *text2 = (CGUIText*)Add(new CGUIText(0x0386, 30 + text->m_Texture.Width, 46));
-	text2->CreateTextureA(9, poster);
+
+	if (useUnicode)
+		text2->CreateTextureW(unicodeFontIndex, poster);
+	else
+		text2->CreateTextureA(9, ToString(poster));
 
 	text = (CGUIText*)Add(new CGUIText(0, 30, 56));
-	text->CreateTextureA(6, "Time:");
+
+	if (useUnicode)
+		text->CreateTextureW(unicodeFontIndex, L"Time:");
+	else
+		text->CreateTextureA(6, "Time:");
 
 	text2 = (CGUIText*)Add(new CGUIText(0x0386, 30 + text->m_Texture.Width, 62));
-	text2->CreateTextureA(9, dataTime);
+
+	if (useUnicode)
+		text2->CreateTextureW(unicodeFontIndex, dataTime);
+	else
+		text2->CreateTextureA(9, ToString(dataTime));
 
 	text = (CGUIText*)Add(new CGUIText(0, 30, 72));
-	text->CreateTextureA(6, "Subject:");
+
+	if (useUnicode)
+		text->CreateTextureW(unicodeFontIndex, L"Subject:");
+	else
+		text->CreateTextureA(6, "Subject:");
 
 	ushort subjectColor = 0x0386;
 
@@ -39,7 +62,7 @@ m_Variant(variant)
 
 	Add(new CGUIHitBox(ID_GBBI_SUBJECT_TEXT_FIELD, 30 + text->m_Texture.Width, 78, 160, 16));
 
-	m_EntrySubject = (CGUITextEntry*)Add(new CGUITextEntry(ID_GBBI_SUBJECT_TEXT_FIELD, subjectColor, subjectColor, subjectColor, 30 + text->m_Texture.Width, 78, 150, false, 9));
+	m_EntrySubject = (CGUITextEntry*)Add(new CGUITextEntry(ID_GBBI_SUBJECT_TEXT_FIELD, subjectColor, subjectColor, subjectColor, 30 + text->m_Texture.Width, 78, 150, useUnicode, (useUnicode ? unicodeFontIndex : 9)));
 	m_EntrySubject->m_Entry.SetText(subject);
 
 	if (!m_Variant)
@@ -54,7 +77,7 @@ m_Variant(variant)
 
 	Add(new CGUIGumppicTiled(0x0835, 30, 100, 204, 0));
 
-	m_Entry = (CGUITextEntry*)m_HTMLGump->Add(new CGUITextEntry(ID_GBBI_TEXT_FIELD, 0x0386, 0x0386, 0x0386, 3, 3, 220, false, 9));
+	m_Entry = (CGUITextEntry*)m_HTMLGump->Add(new CGUITextEntry(ID_GBBI_TEXT_FIELD, 0x0386, 0x0386, 0x0386, 3, 3, 220, useUnicode, (useUnicode ? unicodeFontIndex : 9)));
 	m_Entry->m_Entry.MaxWidth = 0;
 	m_Entry->m_Entry.SetText(data);
 	m_Entry->m_Entry.CreateTextureA(9, m_Entry->m_Entry.c_str(), 0x0386, 220, TS_LEFT, 0);
@@ -144,10 +167,10 @@ void CGumpBulletinBoardItem::GUMP_BUTTON_EVENT_C
 		}
 		else if (serial == ID_GBBI_REPLY)
 		{
-			string subj("RE: ");
-			subj += m_EntrySubject->m_Entry.c_str();
+			wstring subj(L"RE: ");
+			subj += m_EntrySubject->m_Entry.Data();
 
-			CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, m_ID, g_Player->Name, subj, "Date/Time", "");
+			CGumpBulletinBoardItem *gump = new CGumpBulletinBoardItem(0, 0, 0, 0, m_ID, ToWString(g_Player->Name), subj, L"Date/Time", L"");
 
 			g_GumpManager.AddGump(gump);
 		}

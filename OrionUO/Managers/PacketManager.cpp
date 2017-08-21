@@ -4873,32 +4873,42 @@ PACKET_HANDLER(BulletinBoardData)
 
 				//poster
 				int len = ReadUInt8();
-				string poster = ReadString(len);
+				wstring poster = (len > 0 ? DecodeUTF8(ReadString(len)) : L"");
 
 				//subject
 				len = ReadUInt8();
-				string subject = ReadString(len);
+				wstring subject = (len > 0 ? DecodeUTF8(ReadString(len)) : L"");
 
 				//data time
 				len = ReadUInt8();
-				string dataTime = ReadString(len);
+				wstring dataTime = (len > 0 ? DecodeUTF8(ReadString(len)) : L"");
 
-				Move(5);
+				//unused, in old clients: user's graphic, color
+				Move(4);
+
+				uchar unknown = ReadUInt8();
+
+				if (unknown > 0)
+				{
+					//unused data
+					Move(unknown * 4);
+				}
 
 				uchar lines = ReadUInt8();
-				string data = "";
+				wstring data = L"";
 
 				IFOR(i, 0, lines)
 				{
 					uchar linelen = ReadUInt8();
 
 					if (data.length())
-						data += "\n";
+						data += L"\n";
 
-					data += ReadString(linelen);
+					if (linelen > 0)
+						data += DecodeUTF8(ReadString(linelen));
 				}
 
-				uchar variant = 1 + (int)(poster == g_Player->Name);
+				uchar variant = 1 + (int)(poster == ToWString(g_Player->Name));
 				g_GumpManager.AddGump(new CGumpBulletinBoardItem(serial, 0, 0, variant, boardSerial, poster, subject, dataTime, data));
 			}
 
