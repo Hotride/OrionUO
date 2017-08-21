@@ -261,6 +261,8 @@ void CTarget::SendTarget()
 	memset(m_Data, 0, sizeof(m_Data));
 	m_Targeting = false;
 	m_MultiGraphic = 0;
+
+	g_MouseManager.CancelDoubleClick = true;
 }
 //----------------------------------------------------------------------------------
 void CTarget::Plugin_SendTarget()
@@ -272,6 +274,8 @@ void CTarget::Plugin_SendTarget()
 	memset(m_Data, 0, sizeof(m_Data));
 	m_Targeting = false;
 	m_MultiGraphic = 0;
+
+	g_MouseManager.CancelDoubleClick = true;
 }
 //----------------------------------------------------------------------------------
 void CTarget::UnloadMulti()
