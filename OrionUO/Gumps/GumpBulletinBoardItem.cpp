@@ -17,7 +17,7 @@ m_Variant(variant)
 	m_ID = id;
 	m_MinHeight = 200;
 
-	bool useUnicode = (g_PacketManager.ClientVersion >= CV_500A);
+	bool useUnicode = (g_PacketManager.ClientVersion >= CV_308Z);
 	int unicodeFontIndex = 0;
 
 	CGUIText *text = (CGUIText*)Add(new CGUIText(0, 30, 40));
@@ -135,7 +135,7 @@ void CGumpBulletinBoardItem::UpdateHeight()
 	if (m_ButtonRemove != NULL)
 		m_ButtonRemove->Y = m_Height - 22; //Remove
 
-	if (m_ButtonRemove != NULL)
+	if (m_ButtonReply != NULL)
 		m_ButtonReply->Y = m_Height - 22; //Reply
 }
 //----------------------------------------------------------------------------------
