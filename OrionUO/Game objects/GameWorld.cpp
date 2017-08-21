@@ -1496,30 +1496,29 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 	if (g_TooltipsEnabled && !obj->ClilocMessage.length())
 		g_PacketManager.AddMegaClilocRequest(obj->Serial);
 
-	if (container->Graphic == 0x0FA6) //Message board item
-	//if (obj->Graphic == 0x0E0B) //Message board item
-	{
+	CGump *gump = g_GumpManager.UpdateContent(containerSerial, 0, GT_BULLETIN_BOARD);
+
+	if (gump != NULL) //Message board item
 		CPacketBulletinBoardRequestMessageSummary(containerSerial, obj->Serial).Send();
-
-		g_GumpManager.UpdateGump(containerSerial, 0, GT_BULLETIN_BOARD);
-	}
-
-	CGump *gump = g_GumpManager.UpdateContent(containerSerial, 0, GT_SPELLBOOK);
-
-	if (gump == NULL)
+	else
 	{
-		gump = g_GumpManager.UpdateContent(containerSerial, 0, GT_CONTAINER);
+		gump = g_GumpManager.UpdateContent(containerSerial, 0, GT_SPELLBOOK);
 
-		if (gump != NULL && gump->GumpType == GT_CONTAINER)
-			((CGumpContainer*)gump)->UpdateItemCoordinates(obj);
+		if (gump == NULL)
+		{
+			gump = g_GumpManager.UpdateContent(containerSerial, 0, GT_CONTAINER);
 
-		if (g_TooltipsEnabled)
-			g_PacketManager.AddMegaClilocRequest(containerSerial);
-	}
+			if (gump != NULL && gump->GumpType == GT_CONTAINER)
+				((CGumpContainer*)gump)->UpdateItemCoordinates(obj);
 
-	if (gump != NULL && !container->NPC)
-	{
-		((CGameItem*)container)->Opened = true;
+			if (g_TooltipsEnabled)
+				g_PacketManager.AddMegaClilocRequest(containerSerial);
+		}
+
+		if (gump != NULL && !container->NPC)
+		{
+			((CGameItem*)container)->Opened = true;
+		}
 	}
 
 	CGameObject *top = container->GetTopObject();
