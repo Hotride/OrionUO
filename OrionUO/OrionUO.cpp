@@ -236,6 +236,8 @@ bool COrion::Install()
 
 	g_SpeechManager.LoadSpeech();
 
+	CGumpSpellbook::InitStaticData();
+
 	m_AnimData.resize(g_FileManager.m_AnimdataMul.Size);
 	memcpy(&m_AnimData[0], &g_FileManager.m_AnimdataMul.Start[0], g_FileManager.m_AnimdataMul.Size);
 

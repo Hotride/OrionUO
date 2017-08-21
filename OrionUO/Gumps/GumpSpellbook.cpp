@@ -10,16 +10,16 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 //!Названия кругов заклинаний
-const string CGumpSpellbook::m_SpellCircleName[8] =
+string CGumpSpellbook::m_SpellCircleName[8] =
 {
-	g_ClilocManager.Cliloc(g_Language)->GetA(1028384, false, "First Circle"),
-	g_ClilocManager.Cliloc(g_Language)->GetA(1028385, false, "Second Circle"),
-	g_ClilocManager.Cliloc(g_Language)->GetA(1028386, false, "Third Circle"),
-	g_ClilocManager.Cliloc(g_Language)->GetA(1028387, false, "Fourth Circle"),
-	g_ClilocManager.Cliloc(g_Language)->GetA(1028388, false, "Fifth Circle"),
-	g_ClilocManager.Cliloc(g_Language)->GetA(1028389, false, "Sixth Circle"),
-	g_ClilocManager.Cliloc(g_Language)->GetA(1028390, false, "Seventh Circle"),
-	g_ClilocManager.Cliloc(g_Language)->GetA(1028391, false, "Eighth Circle")
+	"First Circle",
+	"Second Circle",
+	"Third Circle",
+	"Fourth Circle",
+	"Fifth Circle",
+	"Sixth Circle",
+	"Seventh Circle",
+	"Eighth Circle"
 };
 //----------------------------------------------------------------------------------
 CGumpSpellbook::CGumpSpellbook(uint serial, int x, int y)
@@ -31,6 +31,83 @@ CGumpSpellbook::CGumpSpellbook(uint serial, int x, int y)
 //----------------------------------------------------------------------------------
 CGumpSpellbook::~CGumpSpellbook()
 {
+}
+//----------------------------------------------------------------------------------
+void CGumpSpellbook::InitStaticData()
+{
+	m_SpellCircleName[0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028384, false, "First Circle");
+	m_SpellCircleName[1] = g_ClilocManager.Cliloc(g_Language)->GetA(1028385, false, "Second Circle");
+	m_SpellCircleName[2] = g_ClilocManager.Cliloc(g_Language)->GetA(1028386, false, "Third Circle");
+	m_SpellCircleName[3] = g_ClilocManager.Cliloc(g_Language)->GetA(1028387, false, "Fourth Circle");
+	m_SpellCircleName[4] = g_ClilocManager.Cliloc(g_Language)->GetA(1028388, false, "Fifth Circle");
+	m_SpellCircleName[5] = g_ClilocManager.Cliloc(g_Language)->GetA(1028389, false, "Sixth Circle");
+	m_SpellCircleName[6] = g_ClilocManager.Cliloc(g_Language)->GetA(1028390, false, "Seventh Circle");
+	m_SpellCircleName[7] = g_ClilocManager.Cliloc(g_Language)->GetA(1028391, false, "Eighth Circle");
+
+	m_SpellName1[0][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028320, false, "Clumsy");
+	m_SpellName1[1][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028321, false, "Create Food");
+	m_SpellName1[2][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028322, false, "Feeblemind");
+	m_SpellName1[3][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028323, false, "Heal");
+	m_SpellName1[4][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028324, false, "Magic Arrow");
+	m_SpellName1[5][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028325, false, "Night Sight");
+	m_SpellName1[6][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028326, false, "Reactive Armor");
+	m_SpellName1[7][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028327, false, "Weaken");
+	m_SpellName1[8][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028328, false, "Agility");
+	m_SpellName1[9][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028329, false, "Cunning");
+	m_SpellName1[10][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028330, false, "Cure");
+	m_SpellName1[11][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028331, false, "Harm");
+	m_SpellName1[12][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028332, false, "Magic Trap");
+	m_SpellName1[13][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028333, false, "Magic Untrap");
+	m_SpellName1[14][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028334, false, "Protection");
+	m_SpellName1[15][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028335, false, "Strength");
+	m_SpellName1[16][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028336, false, "Bless");
+	m_SpellName1[17][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028337, false, "Fireball");
+	m_SpellName1[18][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028338, false, "Magic Lock");
+	m_SpellName1[19][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028339, false, "Poison");
+	m_SpellName1[20][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028340, false, "Telekinesis");
+	m_SpellName1[21][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028341, false, "Teleport");
+	m_SpellName1[22][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028342, false, "Unlock");
+	m_SpellName1[23][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028343, false, "Wall of Stone");
+	m_SpellName1[24][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028344, false, "Arch Cure");
+	m_SpellName1[25][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028345, false, "Arch Protection");
+	m_SpellName1[26][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028346, false, "Curse");
+	m_SpellName1[27][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028347, false, "Fire Field");
+	m_SpellName1[28][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028348, false, "Greater Heal");
+	m_SpellName1[29][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028349, false, "Lightning");
+	m_SpellName1[30][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028350, false, "Mana Drain");
+	m_SpellName1[31][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028351, false, "Recall");
+	m_SpellName1[32][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028352, false, "Blade Spirits");
+	m_SpellName1[33][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028353, false, "Dispel Field");
+	m_SpellName1[34][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028354, false, "Incognito");
+	m_SpellName1[35][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028355, false, "Magic Reflection");
+	m_SpellName1[36][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028356, false, "Mind Blast");
+	m_SpellName1[37][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028357, false, "Paralyze");
+	m_SpellName1[38][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028358, false, "Poison Field");
+	m_SpellName1[39][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028359, false, "Summ. Creature");
+	m_SpellName1[40][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028360, false, "Dispel");
+	m_SpellName1[41][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028361, false, "Energy Bolt");
+	m_SpellName1[42][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028362, false, "Explosion");
+	m_SpellName1[43][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028363, false, "Invisibility");
+	m_SpellName1[44][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028364, false, "Mark");
+	m_SpellName1[45][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028365, false, "Mass Curse");
+	m_SpellName1[46][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028366, false, "Paralyze Field");
+	m_SpellName1[47][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028367, false, "Reveal");
+	m_SpellName1[48][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028368, false, "Chain Lightning");
+	m_SpellName1[49][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028369, false, "Energy Field");
+	m_SpellName1[50][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028370, false, "Flame Strike");
+	m_SpellName1[51][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028371, false, "Gate Travel");
+	m_SpellName1[52][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028372, false, "Mana Vampire");
+	m_SpellName1[53][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028373, false, "Mass Dispel");
+	m_SpellName1[54][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028374, false, "Meteor Swarm");
+	m_SpellName1[55][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028375, false, "Polymorph");
+	m_SpellName1[56][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028376, false, "Earthquake");
+	m_SpellName1[57][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028377, false, "Energy Vortex");
+	m_SpellName1[58][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028378, false, "Resurrection");
+	m_SpellName1[59][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028379, false, "Air Elemental");
+	m_SpellName1[60][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028380, false, "Summon Daemon");
+	m_SpellName1[61][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028381, false, "Earth Elemental");
+	m_SpellName1[62][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028382, false, "Fire Elemental");
+	m_SpellName1[63][0] = g_ClilocManager.Cliloc(g_Language)->GetA(1028383, false, "Water Elemental");
 }
 //----------------------------------------------------------------------------------
 void CGumpSpellbook::UpdateGraphic(const ushort &parentGraphic)
@@ -912,72 +989,72 @@ void CGumpSpellbook::ChangePage(int newPage)
 	g_Orion.PlaySoundEffect(0x0055);
 }
 //----------------------------------------------------------------------------------
-const string CGumpSpellbook::m_SpellName1[SPELLBOOK_1_SPELLS_COUNT][2] =
+string CGumpSpellbook::m_SpellName1[SPELLBOOK_1_SPELLS_COUNT][2] =
 {
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028320, false, "Clumsy"), "U J" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028321, false, "Create Food"), "I M Y" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028322, false, "Feeblemind"), "R W" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028323, false, "Heal"), "I M" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028324, false, "Magic Arrow"), "I P Y" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028325, false, "Night Sight"), "I L" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028326, false, "Reactive Armor"), "F S" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028327, false, "Weaken"), "D M" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028328, false, "Agility"), "E U" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028329, false, "Cunning"), "U W" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028330, false, "Cure"), "A N" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028331, false, "Harm"), "A M" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028332, false, "Magic Trap"), "I J" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028333, false, "Magic Untrap"), "A J" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028334, false, "Protection"), "U S" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028335, false, "Strength"), "U M" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028336, false, "Bless"), "R S" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028337, false, "Fireball"), "V F" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028338, false, "Magic Lock"), "A P" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028339, false, "Poison"), "I N" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028340, false, "Telekinesis"), "O P Y" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028341, false, "Teleport"), "R P" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028342, false, "Unlock"), "E P" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028343, false, "Wall of Stone"), "I S Y" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028344, false, "Arch Cure"), "V A N" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028345, false, "Arch Protection"), "V U S" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028346, false, "Curse"), "D S" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028347, false, "Fire Field"), "I F G" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028348, false, "Greater Heal"), "I V M" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028349, false, "Lightning"), "P O G" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028350, false, "Mana Drain"), "O R" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028351, false, "Recall"), "K O P" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028352, false, "Blade Spirits"), "I H J Y" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028353, false, "Dispel Field"), "A G" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028354, false, "Incognito"), "K I E" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028355, false, "Magic Reflection"), "I J S" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028356, false, "Mind Blast"), "P C W" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028357, false, "Paralyze"), "A E P" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028358, false, "Poison Field"), "I N G" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028359, false, "Summ. Creature"), "K X" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028360, false, "Dispel"), "A O" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028361, false, "Energy Bolt"), "C P" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028362, false, "Explosion"), "V O F" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028363, false, "Invisibility"), "A L X" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028364, false, "Mark"), "K P Y" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028365, false, "Mass Curse"), "V D S" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028366, false, "Paralyze Field"), "I E G" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028367, false, "Reveal"), "W Q" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028368, false, "Chain Lightning"), "V O G" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028369, false, "Energy Field"), "I S G" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028370, false, "Flame Strike"), "K V F" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028371, false, "Gate Travel"), "V R P" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028372, false, "Mana Vampire"), "O S" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028373, false, "Mass Dispel"), "V A O" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028374, false, "Meteor Swarm"), "F K D Y" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028375, false, "Polymorph"), "V Y R" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028376, false, "Earthquake"), "I V P" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028377, false, "Energy Vortex"), "V C P" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028378, false, "Resurrection"), "A C" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028379, false, "Air Elemental"), "K V X H" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028380, false, "Summon Daemon"), "K V X C" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028381, false, "Earth Elemental"), "K V X Y" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028382, false, "Fire Elemental"), "K V X F" },
-	{ g_ClilocManager.Cliloc(g_Language)->GetA(1028383, false, "Water Elemental"), "K V X A" }
+	{ "Clumsy", "U J" },
+	{ "Create Food", "I M Y" },
+	{ "Feeblemind", "R W" },
+	{ "Heal", "I M" },
+	{ "Magic Arrow", "I P Y" },
+	{ "Night Sight", "I L" },
+	{ "Reactive Armor", "F S" },
+	{ "Weaken", "D M" },
+	{ "Agility", "E U" },
+	{ "Cunning", "U W" },
+	{ "Cure", "A N" },
+	{ "Harm", "A M" },
+	{ "Magic Trap", "I J" },
+	{ "Magic Untrap", "A J" },
+	{ "Protection", "U S" },
+	{ "Strength", "U M" },
+	{ "Bless", "R S" },
+	{ "Fireball", "V F" },
+	{ "Magic Lock", "A P" },
+	{ "Poison", "I N" },
+	{ "Telekinesis", "O P Y" },
+	{ "Teleport", "R P" },
+	{ "Unlock", "E P" },
+	{ "Wall of Stone", "I S Y" },
+	{ "Arch Cure", "V A N" },
+	{ "Arch Protection", "V U S" },
+	{ "Curse", "D S" },
+	{ "Fire Field", "I F G" },
+	{ "Greater Heal", "I V M" },
+	{ "Lightning", "P O G" },
+	{ "Mana Drain", "O R" },
+	{ "Recall", "K O P" },
+	{ "Blade Spirits", "I H J Y" },
+	{ "Dispel Field", "A G" },
+	{ "Incognito", "K I E" },
+	{ "Magic Reflection", "I J S" },
+	{ "Mind Blast", "P C W" },
+	{ "Paralyze", "A E P" },
+	{ "Poison Field", "I N G" },
+	{ "Summ. Creature", "K X" },
+	{ "Dispel", "A O" },
+	{ "Energy Bolt", "C P" },
+	{ "Explosion", "V O F" },
+	{ "Invisibility", "A L X" },
+	{ "Mark", "K P Y" },
+	{ "Mass Curse", "V D S" },
+	{ "Paralyze Field", "I E G" },
+	{ "Reveal", "W Q" },
+	{ "Chain Lightning", "V O G" },
+	{ "Energy Field", "I S G" },
+	{ "Flame Strike", "K V F" },
+	{ "Gate Travel", "V R P" },
+	{ "Mana Vampire", "O S" },
+	{ "Mass Dispel", "V A O" },
+	{ "Meteor Swarm", "F K D Y" },
+	{ "Polymorph", "V Y R" },
+	{ "Earthquake", "I V P" },
+	{ "Energy Vortex", "V C P" },
+	{ "Resurrection", "A C" },
+	{ "Air Elemental", "K V X H" },
+	{ "Summon Daemon", "K V X C" },
+	{ "Earth Elemental", "K V X Y" },
+	{ "Fire Elemental", "K V X F" },
+	{ "Water Elemental", "K V X A" }
 };	
 //----------------------------------------------------------------------------------
 string CGumpSpellbook::m_SpellReagents1[SPELLBOOK_1_SPELLS_COUNT] =

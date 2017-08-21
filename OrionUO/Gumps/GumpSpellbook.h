@@ -36,7 +36,7 @@ public:
 	static const int SPELLBOOK_6_SPELLS_COUNT = 16;
 	static const int SPELLBOOK_7_SPELLS_COUNT = 30;
 
-	static const string m_SpellName1[SPELLBOOK_1_SPELLS_COUNT][2];
+	static string m_SpellName1[SPELLBOOK_1_SPELLS_COUNT][2];
 	static const string m_SpellName2[SPELLBOOK_2_SPELLS_COUNT][2];
 	static const string m_SpellName3[SPELLBOOK_3_SPELLS_COUNT][2];
 	static const string m_SpellName4[SPELLBOOK_4_SPELLS_COUNT];
@@ -60,7 +60,7 @@ private:
 
 	static const int MAX_SPELLS_COUNT = 64;
 
-	static const string m_SpellCircleName[8];
+	static string m_SpellCircleName[8];
 
 	static const string m_SpellReagents2[SPELLBOOK_2_SPELLS_COUNT];
 
@@ -95,6 +95,8 @@ private:
 public:
 	CGumpSpellbook(uint serial, int x, int y);
 	virtual ~CGumpSpellbook();
+
+	static void InitStaticData();
 
 	void UpdateGraphic(const ushort &parentGraphic);
 
