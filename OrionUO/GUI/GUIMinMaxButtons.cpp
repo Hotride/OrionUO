@@ -154,6 +154,7 @@ void CGUIMinMaxButtons::OnClick()
 	else
 		m_ScrollMode = 0;
 
+	m_LastScrollTime = g_Ticks + 100;
 	m_ScrollStep = m_BaseScrollStep;
 }
 //----------------------------------------------------------------------------------
