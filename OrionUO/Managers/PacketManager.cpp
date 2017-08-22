@@ -3560,7 +3560,10 @@ PACKET_HANDLER(MegaCliloc)
 		{
 			if (coloredStartFont)
 				message += L"<basefont color=\"#FFFFFFFF\">";
-			obj->Name = ToString(str);
+
+			if (!obj->NPC)
+				obj->Name = ToString(str);
+
 			first = false;
 		}
 
