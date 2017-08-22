@@ -27,6 +27,7 @@
 *.uop
 *.pdb
 *.sf2
+/.vs
 /Makefile*
 /ipch
 /OrionUO/snapshots
