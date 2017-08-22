@@ -318,7 +318,7 @@ bool COrion::Install()
 		//LOG("Error install BASS audio: %s\n", BASS_error());
 		g_OrionWindow.ShowMessage("Failed to init BASS audio.", "Sound error!");
 
-		return false;
+		//return false;
 	}
 
 	g_CityManager.Init();
