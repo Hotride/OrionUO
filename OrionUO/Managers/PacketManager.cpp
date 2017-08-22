@@ -4840,15 +4840,15 @@ PACKET_HANDLER(BulletinBoardData)
 
 				//poster
 				int len = ReadUInt8();
-				string text = ReadString(len) + " - ";
+				wstring text = (len > 0 ? DecodeUTF8(ReadString(len)) : L"") + L" - ";
 
 				//subject
 				len = ReadUInt8();
-				text += ReadString(len) + " - ";
+				text += (len > 0 ? DecodeUTF8(ReadString(len)) : L"") + L" - ";
 
 				//data time
 				len = ReadUInt8();
-				text += ReadString(len);
+				text += (len > 0 ? DecodeUTF8(ReadString(len)) : L"");
 
 				int posY = (gump->m_HTMLGump->GetItemsCount() - 5) * 18;
 

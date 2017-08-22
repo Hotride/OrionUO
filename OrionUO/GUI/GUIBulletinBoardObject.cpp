@@ -9,18 +9,28 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGUIBulletinBoardObject::CGUIBulletinBoardObject(const uint &serial, const int &x, const int &y, const string &text)
+CGUIBulletinBoardObject::CGUIBulletinBoardObject(const uint &serial, const int &x, const int &y, const wstring &text)
 : CBaseGUI(GOT_BB_OBJECT, serial, 0, 0, x, y), m_Text(text)
 {
 	WISPFUN_DEBUG("c43_f1");
 	m_MoveOnDrag = true;
-	g_FontManager.GenerateA(9, m_Texture, text.c_str(), 0x0386);
+
+	if (g_PacketManager.ClientVersion >= CV_308Z)
+		g_FontManager.GenerateW(1, m_Texture, text.c_str(), 0);
+	else
+		g_FontManager.GenerateA(9, m_Texture, ToString(text).c_str(), 0x0386);
 }
 //----------------------------------------------------------------------------------
 CGUIBulletinBoardObject::~CGUIBulletinBoardObject()
 {
 	WISPFUN_DEBUG("c43_f2");
 	m_Texture.Clear();
+}
+//----------------------------------------------------------------------------------
+void CGUIBulletinBoardObject::PrepareTextures()
+{
+	WISPFUN_DEBUG("c43_f5");
+	g_Orion.ExecuteGump(0x1523);
 }
 //----------------------------------------------------------------------------------
 void CGUIBulletinBoardObject::Draw(const bool &checktrans)

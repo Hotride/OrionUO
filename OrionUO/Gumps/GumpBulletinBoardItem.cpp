@@ -18,7 +18,15 @@ m_Variant(variant)
 	m_MinHeight = 200;
 
 	bool useUnicode = (g_PacketManager.ClientVersion >= CV_308Z);
-	int unicodeFontIndex = 0;
+	int unicodeFontIndex = 1;
+	int unicodeHeightOffset = 0;
+	ushort textColor = 0x0386;
+
+	if (useUnicode)
+	{
+		unicodeHeightOffset = -6;
+		textColor = 0;
+	}
 
 	CGUIText *text = (CGUIText*)Add(new CGUIText(0, 30, 40));
 
@@ -27,7 +35,7 @@ m_Variant(variant)
 	else
 		text->CreateTextureA(6, "Author:");
 
-	CGUIText *text2 = (CGUIText*)Add(new CGUIText(0x0386, 30 + text->m_Texture.Width, 46));
+	CGUIText *text2 = (CGUIText*)Add(new CGUIText(textColor, 30 + text->m_Texture.Width, 46 + unicodeHeightOffset));
 
 	if (useUnicode)
 		text2->CreateTextureW(unicodeFontIndex, poster);
@@ -41,7 +49,7 @@ m_Variant(variant)
 	else
 		text->CreateTextureA(6, "Time:");
 
-	text2 = (CGUIText*)Add(new CGUIText(0x0386, 30 + text->m_Texture.Width, 62));
+	text2 = (CGUIText*)Add(new CGUIText(textColor, 30 + text->m_Texture.Width, 62 + unicodeHeightOffset));
 
 	if (useUnicode)
 		text2->CreateTextureW(unicodeFontIndex, dataTime);
@@ -55,14 +63,14 @@ m_Variant(variant)
 	else
 		text->CreateTextureA(6, "Subject:");
 
-	ushort subjectColor = 0x0386;
+	ushort subjectColor = textColor;
 
 	if (!m_Variant)
 		subjectColor = 0x0008;
 
 	Add(new CGUIHitBox(ID_GBBI_SUBJECT_TEXT_FIELD, 30 + text->m_Texture.Width, 78, 160, 16));
 
-	m_EntrySubject = (CGUITextEntry*)Add(new CGUITextEntry(ID_GBBI_SUBJECT_TEXT_FIELD, subjectColor, subjectColor, subjectColor, 30 + text->m_Texture.Width, 78, 150, useUnicode, (useUnicode ? unicodeFontIndex : 9)));
+	m_EntrySubject = (CGUITextEntry*)Add(new CGUITextEntry(ID_GBBI_SUBJECT_TEXT_FIELD, subjectColor, subjectColor, subjectColor, 30 + text->m_Texture.Width, 78 + unicodeHeightOffset, 150, useUnicode, (useUnicode ? unicodeFontIndex : 9)));
 	m_EntrySubject->m_Entry.SetText(subject);
 
 	if (!m_Variant)
@@ -77,10 +85,10 @@ m_Variant(variant)
 
 	Add(new CGUIGumppicTiled(0x0835, 30, 100, 204, 0));
 
-	m_Entry = (CGUITextEntry*)m_HTMLGump->Add(new CGUITextEntry(ID_GBBI_TEXT_FIELD, 0x0386, 0x0386, 0x0386, 3, 3, 220, useUnicode, (useUnicode ? unicodeFontIndex : 9)));
+	m_Entry = (CGUITextEntry*)m_HTMLGump->Add(new CGUITextEntry(ID_GBBI_TEXT_FIELD, textColor, textColor, textColor, 3, 3, 220, useUnicode, (useUnicode ? unicodeFontIndex : 9)));
 	m_Entry->m_Entry.MaxWidth = 0;
 	m_Entry->m_Entry.SetText(data);
-	m_Entry->m_Entry.CreateTextureA(9, m_Entry->m_Entry.c_str(), 0x0386, 220, TS_LEFT, 0);
+	m_Entry->m_Entry.CreateTextureA(9, m_Entry->m_Entry.c_str(), textColor, 220, TS_LEFT, 0);
 	m_HitBox = (CGUIHitBox*)m_HTMLGump->Add(new CGUIHitBox(ID_GBBI_TEXT_FIELD, 3, 3, 220, m_Entry->m_Entry.m_Texture.Height));
 
 	if (m_HitBox->Height < 14)
