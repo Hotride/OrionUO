@@ -327,17 +327,17 @@ void CGameItem::Select(const int &x, const int &y)
 
 			if (doubleDraw)
 			{
-				if (g_Orion.StaticPixelsInXY(objGraphic, x - 2, y - 5, m_Z))
+				if (g_Orion.StaticPixelsInXY(objGraphic, x - 2, y - 5 - (m_Z * 4)))
 					g_SelectedObject.Init(this);
-				else if (g_Orion.StaticPixelsInXY(objGraphic, x + 3, y, m_Z))
+				else if (g_Orion.StaticPixelsInXY(objGraphic, x + 3, y - (m_Z * 4)))
 					g_SelectedObject.Init(this);
 			}
 			else if (m_FieldColor)
 			{
-				if (g_Orion.StaticPixelsInXY(FIELD_REPLACE_GRAPHIC, x, y, m_Z))
+				if (g_Orion.StaticPixelsInXY(FIELD_REPLACE_GRAPHIC, x, y - (m_Z * 4)))
 					g_SelectedObject.Init(this);
 			}
-			else if (g_Orion.StaticPixelsInXYAnimated(objGraphic, x, y, m_Z))
+			else if (g_Orion.StaticPixelsInXYAnimated(objGraphic, x, y - (m_Z * 4)))
 				g_SelectedObject.Init(this);
 		}
 	}

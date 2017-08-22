@@ -93,7 +93,7 @@ void CRenderStaticObject::Select(const int &x, const int &y)
 			return;
 	}
 
-	if (!g_UseCircleTrans && g_Orion.StaticPixelsInXYAnimated(m_RenderGraphic, x, y, m_Z))
+	if (!g_UseCircleTrans && g_Orion.StaticPixelsInXYAnimated(m_RenderGraphic, x, y - (m_Z * 4)))
 		g_SelectedObject.Init(this);
 }
 //---------------------------------------------------------------------------

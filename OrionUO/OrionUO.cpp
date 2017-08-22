@@ -4904,7 +4904,7 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 	return false;
 }
 //----------------------------------------------------------------------------------
-bool COrion::StaticPixelsInXY(const ushort &id, int x, int y, const int &z)
+bool COrion::StaticPixelsInXY(const ushort &id, int x, int y)
 {
 	WISPFUN_DEBUG("c194_f90");
 	CIndexObject &io = m_StaticDataIndex[id];
@@ -4916,7 +4916,7 @@ bool COrion::StaticPixelsInXY(const ushort &id, int x, int y, const int &z)
 	if (th != NULL)
 	{
 		x = (g_MouseManager.Position.X - x) + io.Width;
-		y = (g_MouseManager.Position.Y - y) + io.Height + (z * 4);
+		y = (g_MouseManager.Position.Y - y) + io.Height;
 
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
@@ -4929,10 +4929,10 @@ bool COrion::StaticPixelsInXY(const ushort &id, int x, int y, const int &z)
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool COrion::StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y, const int &z)
+bool COrion::StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c194_f91");
-	return StaticPixelsInXY(id + m_StaticDataIndex[id].Offset, x, y, z);
+	return StaticPixelsInXY(id + m_StaticDataIndex[id].Offset, x, y);
 }
 //----------------------------------------------------------------------------------
 bool COrion::CircleTransPixelsInXY()
@@ -4977,7 +4977,7 @@ bool COrion::StaticPixelsInXYInContainer(const ushort &id, int x, int y)
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool COrion::LandPixelsInXY(const ushort &id, int x, int  y, const int &z)
+bool COrion::LandPixelsInXY(const ushort &id, int x, int  y)
 {
 	WISPFUN_DEBUG("c194_f94");
 	CIndexObject &io = m_LandDataIndex[id];
@@ -4989,7 +4989,7 @@ bool COrion::LandPixelsInXY(const ushort &id, int x, int  y, const int &z)
 	if (th != NULL)
 	{
 		x = (g_MouseManager.Position.X - x) + 22;
-		y = (g_MouseManager.Position.Y - y) + 22 + (z * 4);
+		y = (g_MouseManager.Position.Y - y) + 22;
 
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)

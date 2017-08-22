@@ -303,10 +303,10 @@ public:
 	bool ResizepicPixelsInXY(const ushort &id, int x, int y, const int &width, const int &height);
 
 	//Проверка статики под курсором мышки
-	bool StaticPixelsInXY(const ushort &id, int x, int y, const int &z);
+	bool StaticPixelsInXY(const ushort &id, int x, int y);
 
 	//Проверка анимированной статики под курсором мышки
-	bool StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y, const int &z);
+	bool StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y);
 
 	//Проверка круга прозрачности под курсором мышки
 	bool CircleTransPixelsInXY();
@@ -315,7 +315,7 @@ public:
 	bool StaticPixelsInXYInContainer(const ushort &id, int x, int y);
 
 	//Проверка ландшафта (из art.mul) под курсором мышки
-	bool LandPixelsInXY(const ushort &id, int x, int y, const int &z);
+	bool LandPixelsInXY(const ushort &id, int x, int y);
 
 	//Проверка растянутого ландшафта (из texmaps.mul) под курсором мышки
 	bool LandTexturePixelsInXY(int x, int  y, RECT &r);

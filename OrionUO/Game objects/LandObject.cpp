@@ -153,7 +153,7 @@ void CLandObject::Select(const int &x, const int &y)
 	{
 		if (!m_IsStretched)
 		{
-			if (g_Orion.LandPixelsInXY(m_Graphic, x, y, m_Z))
+			if (g_Orion.LandPixelsInXY(m_Graphic, x, y - (m_Z * 4)))
 				g_SelectedObject.Init(this);
 		}
 		else
