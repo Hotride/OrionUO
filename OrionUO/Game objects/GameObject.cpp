@@ -449,7 +449,7 @@ void CGameObject::DrawEffects(int x, int y)
 			g_Orion.DrawGump(graphic, effect->Color, x - (size.Width / 2), y - (size.Height + (m_Z * 4)));
 		}
 		else
-			g_Orion.DrawStaticArt(effect->GetCurrentGraphic(), effect->Color, x, y, m_Z);
+			g_Orion.DrawStaticArt(effect->GetCurrentGraphic(), effect->Color, x, y - (m_Z * 4));
 
 		effect->RemoveRenderMode();
 	}

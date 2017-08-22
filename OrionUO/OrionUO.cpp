@@ -4491,13 +4491,13 @@ void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, cons
 	ushort id = land->Graphic;
 
 	if (id == 2)
-		DrawLandArt(id, color, x, y, land->m_Rect.left / 4);
+		DrawLandArt(id, color, x, y - land->m_Rect.left);
 	else
 	{
 		CGLTexture *th = ExecuteTexture(id);
 
 		if (th == NULL)
-			DrawLandArt(id, color, x, y, land->m_Rect.left / 4);
+			DrawLandArt(id, color, x, y - land->m_Rect.left);
 		else
 		{
 			if (g_OutOfRangeColor)
@@ -4518,7 +4518,7 @@ void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, cons
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int &y, const int &z)
+void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c194_f77");
 	CGLTexture *th = ExecuteLandArt(id);
@@ -4535,11 +4535,11 @@ void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int
 
 		glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-		th->Draw(x - 22, y - (22 + (z * 4)));
+		th->Draw(x - 22, y - 22);
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const int &z, const bool &selection, const bool &hidden)
+void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const bool &selection)
 {
 	WISPFUN_DEBUG("c194_f78");
 	CGLTexture *th = ExecuteStaticArt(id);
@@ -4553,7 +4553,7 @@ void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const i
 
 		if (drawMode)
 		{
-			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)) && !hidden);
+			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
 
 			if (partialHue)
 				drawMode = 2;
@@ -4563,17 +4563,17 @@ void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const i
 
 		glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-		th->Draw(x - m_StaticDataIndex[id].Width, y - (m_StaticDataIndex[id].Height + (z * 4)));
+		th->Draw(x - m_StaticDataIndex[id].Width, y - m_StaticDataIndex[id].Height);
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection, const bool &hidden)
+void COrion::DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const bool &selection)
 {
 	WISPFUN_DEBUG("c194_f79");
-	DrawStaticArt(id + m_StaticDataIndex[id].Offset, color, x, y, z, selection, hidden);
+	DrawStaticArt(id + m_StaticDataIndex[id].Offset, color, x, y, selection);
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArtRotated(const ushort &id, ushort color, const int &x, const int &y, const int &z, const float &angle)
+void COrion::DrawStaticArtRotated(const ushort &id, ushort color, const int &x, const int &y, const float &angle)
 {
 	WISPFUN_DEBUG("c194_f80");
 	CGLTexture *th = ExecuteStaticArt(id);
@@ -4590,17 +4590,17 @@ void COrion::DrawStaticArtRotated(const ushort &id, ushort color, const int &x, 
 
 		glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-		th->DrawRotated(x, y - (z * 4), angle);
+		th->DrawRotated(x, y, angle);
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArtAnimatedRotated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const float &angle)
+void COrion::DrawStaticArtAnimatedRotated(const ushort &id, const ushort &color, const int &x, const int &y, const float &angle)
 {
 	WISPFUN_DEBUG("c194_f81");
-	DrawStaticArtRotated(id + m_StaticDataIndex[id].Offset, color, x, y, z, angle);
+	DrawStaticArtRotated(id + m_StaticDataIndex[id].Offset, color, x, y, angle);
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArtTransparent(const ushort &id, ushort color, int x, int y, const int &z, const bool &selection)
+void COrion::DrawStaticArtTransparent(const ushort &id, ushort color, int x, int y, const bool &selection)
 {
 	WISPFUN_DEBUG("c194_f82");
 	CGLTexture *th = ExecuteStaticArt(id);
@@ -4624,14 +4624,14 @@ void COrion::DrawStaticArtTransparent(const ushort &id, ushort color, int x, int
 
 		glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-		th->DrawTransparent(x - m_StaticDataIndex[id].Width, y - (m_StaticDataIndex[id].Height + (z * 4)));
+		th->DrawTransparent(x - m_StaticDataIndex[id].Width, y - m_StaticDataIndex[id].Height);
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArtAnimatedTransparent(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection)
+void COrion::DrawStaticArtAnimatedTransparent(const ushort &id, const ushort &color, const int &x, const int &y, const bool &selection)
 {
 	WISPFUN_DEBUG("c194_f83");
-	DrawStaticArtTransparent(id + m_StaticDataIndex[id].Offset, color, x, y, z, selection);
+	DrawStaticArtTransparent(id + m_StaticDataIndex[id].Offset, color, x, y, selection);
 }
 //----------------------------------------------------------------------------------
 void COrion::DrawStaticArtInContainer(const ushort &id, ushort color, int x, int y, const bool &selection, const bool &onMouse)

@@ -70,9 +70,9 @@ void CRenderStaticObject::Draw(const int &x, const int &y)
 	}
 
 	if (g_UseCircleTrans)
-		g_Orion.DrawStaticArtAnimatedTransparent(m_RenderGraphic, m_RenderColor, x, y, m_Z);
+		g_Orion.DrawStaticArtAnimatedTransparent(m_RenderGraphic, m_RenderColor, x, y - (m_Z * 4));
 	else
-		g_Orion.DrawStaticArtAnimated(m_RenderGraphic, m_RenderColor, x, y, m_Z);
+		g_Orion.DrawStaticArtAnimated(m_RenderGraphic, m_RenderColor, x, y - (m_Z * 4));
 
 	if (useAlpha)
 	{

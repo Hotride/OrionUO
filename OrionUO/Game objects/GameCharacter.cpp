@@ -928,6 +928,9 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 				m_X = wd.X;
 				m_Y = wd.Y;
 				m_Z = wd.Z;
+
+				UpdateDrawCoordinates();
+
 				m_Direction = wd.Direction;
 
 				m_OffsetX = 0;

@@ -13,7 +13,7 @@
 //Класс для работы с объектами рендера
 class CRenderWorldObject : public CRenderObject
 {
-	SETGET(char, Z, 0);
+	SETGETE(char, Z, 0, OnChangeZ);
 	SETGET(uchar, RenderQueueIndex, 0);
 	SETGET(RENDER_OBJECT_TYPE, RenderType, ROT_GAME_OBJECT);
 #if UO_RENDER_LIST_SORT == 1
@@ -116,6 +116,8 @@ public:
 	virtual class CRenderStaticObject *StaticGroupObjectPtr() { return NULL; }
 	virtual class CLandObject *LandObjectPtr() { return NULL; }
 	virtual class CGameCharacter *GameCharacterPtr() { return NULL; }
+
+	virtual void UpdateDrawCoordinates();
 };
 //----------------------------------------------------------------------------------
 #endif

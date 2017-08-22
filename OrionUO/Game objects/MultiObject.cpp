@@ -62,7 +62,7 @@ void CMultiObject::Draw(const int &x, const int &y)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 
-		g_Orion.DrawStaticArt(m_Graphic, m_Color, x, y, m_Z);
+		g_Orion.DrawStaticArt(m_Graphic, m_Color, x, y - (m_Z * 4));
 
 		glDisable(GL_BLEND);
 	}

@@ -17,9 +17,11 @@ CTextData::CTextData()
 //---------------------------------------------------------------------------
 CTextData::CTextData(CTextData *obj)
 : m_Unicode(obj->Unicode), m_Type(obj->Type), m_Font(obj->Font), m_Timer(obj->Timer),
-m_DrawX(obj->DrawX), m_DrawY(obj->DrawY), m_Alpha(obj->Alpha)
+m_Alpha(obj->Alpha)
 {
 	WISPFUN_DEBUG("c174_f2");
+	m_DrawX = obj->DrawX;
+	m_DrawY = obj->DrawY;
 	m_Color = obj->Color;
 	m_Text = obj->GetText();
 	m_UnicodeText = obj->GetUnicodeText();

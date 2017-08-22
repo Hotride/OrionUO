@@ -133,7 +133,7 @@ void CLandObject::Draw(const int &x, const int &y)
 #endif
 
 		if (!m_IsStretched)
-			g_Orion.DrawLandArt(m_Graphic, objColor, x, y, m_Z);
+			g_Orion.DrawLandArt(m_Graphic, objColor, x, y - (m_Z * 4));
 		else
 		{
 			/*char minZ = m_MinZ + 3;

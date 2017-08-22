@@ -16,7 +16,7 @@ CGameScreen::CGameScreen()
 : CBaseScreen(m_GameScreenGump)
 {
 	WISPFUN_DEBUG("c164_f1");
-	m_RenderList = new RENDER_OBJECT_DATA[1000];
+	m_RenderList.resize(1000);
 
 	memset(&g_RenderBounds, 0, sizeof(RENDER_VARIABLES_FOR_GAME_WINDOW));
 
@@ -26,11 +26,6 @@ CGameScreen::CGameScreen()
 CGameScreen::~CGameScreen()
 {
 	WISPFUN_DEBUG("c164_f2");
-	if (m_RenderList != NULL)
-	{
-		delete m_RenderList;
-		m_RenderList = NULL;
-	}
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -399,26 +394,6 @@ void CGameScreen::CheckFoliageUnion(ushort graphic, int x, int y, int z)
 
 			break;
 		}
-	}
-}
-//----------------------------------------------------------------------------------
-/*!
-Функция увеличения размера списка рендера
-@return 
-*/
-void CGameScreen::IncreaseRenderList()
-{
-	WISPFUN_DEBUG("c164_f9");
-	RENDER_OBJECT_DATA *list = new RENDER_OBJECT_DATA[m_RenderListSize + 1000];
-
-	if (list != NULL)
-	{
-		memcpy(&list[0], &m_RenderList[0], sizeof(RENDER_OBJECT_DATA) * m_RenderListSize);
-
-		delete m_RenderList;
-		m_RenderList = list;
-
-		m_RenderListSize += 1000;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -880,8 +855,10 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 				obj->ProcessAlpha(0xFF);
 		}
 
-		if (m_RenderListCount >= m_RenderListSize)
-			IncreaseRenderList();
+		if (m_RenderListCount >= (int)m_RenderList.size())
+			m_RenderList.resize(m_RenderList.size() + 1000);
+
+		//LOG("Item[0x%04X]: x=%i y=%i (dx=%i, dy=%i)\n", obj->Graphic, drawX, drawY, obj->DrawX - g_RenderBounds.WindowDrawOffsetX, obj->DrawY - g_RenderBounds.WindowDrawOffsetY);
 
 		m_RenderList[m_RenderListCount].Object = obj;
 		m_RenderList[m_RenderListCount].X = drawX;
@@ -1016,8 +993,11 @@ void CGameScreen::CalculateGameWindowBounds()
 
 	//int playerZOffset = (g_Player->Z * 4) - g_Player->OffsetZ;
 
-	g_RenderBounds.GameWindowCenterX = g_RenderBounds.GameWindowPosX + g_RenderBounds.GameWindowWidth / 2;
+	g_RenderBounds.GameWindowCenterX = g_RenderBounds.GameWindowPosX + (g_RenderBounds.GameWindowWidth / 2);
 	g_RenderBounds.GameWindowCenterY = (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight / 2) + (g_Player->Z * 4);
+
+	g_RenderBounds.WindowDrawOffsetX = ((g_Player->X - g_Player->Y) * 22) - g_RenderBounds.GameWindowCenterX;
+	g_RenderBounds.WindowDrawOffsetY = ((g_Player->X + g_Player->Y) * 22) - g_RenderBounds.GameWindowCenterY;
 
 	/*int earthquakeMagnitude = RandomInt(11);
 

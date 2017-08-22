@@ -227,7 +227,11 @@ void CGameEffectMoving::Update(CGameObject *parent)
 		}
 
 		if (wantUpdateInRenderList)
+		{
+			UpdateDrawCoordinates();
+
 			g_MapManager->AddRender(this);
+		}
 	}
 }
 //----------------------------------------------------------------------------------

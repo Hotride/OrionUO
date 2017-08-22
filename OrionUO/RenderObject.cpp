@@ -12,6 +12,7 @@
 CRenderObject::CRenderObject(const uint &serial, const ushort &graphic, const ushort &color, const short &x, const short &y)
 : CBaseQueueItem(), m_Serial(serial), m_Graphic(graphic), m_Color(color), m_X(x), m_Y(y)
 {
+	UpdateDrawCoordinates();
 }
 //----------------------------------------------------------------------------------
 CRenderObject::~CRenderObject()
@@ -21,5 +22,17 @@ CRenderObject::~CRenderObject()
 	g_SelectedObject.Clear(this);
 	g_LastSelectedObject.Clear(this);
 	g_PressedObject.Clear(this);
+}
+//----------------------------------------------------------------------------------
+void CRenderObject::OnChangeX(const int &val)
+{
+	m_X = val;
+	UpdateDrawCoordinates();
+}
+//----------------------------------------------------------------------------------
+void CRenderObject::OnChangeY(const int &val)
+{
+	m_Y = val;
+	UpdateDrawCoordinates();
 }
 //----------------------------------------------------------------------------------
