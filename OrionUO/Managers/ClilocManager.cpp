@@ -128,7 +128,7 @@ string CCliloc::GetA(const uint &id, const bool &toCamelCase, string result)
 		return CamelCaseTest(toCamelCase, loadStr);
 	else
 	{
-		if (m_Language != "ENU")
+		if (m_Language != "ENU" && this->Language != "enu")
 			return g_ClilocManager.Cliloc("enu")->GetA(id, toCamelCase, result);
 		else if (!result.length())
 		{
