@@ -35,7 +35,7 @@ m_Unicode(unicode)
 	uchar entryFont = 1;
 
 	if (!m_Unicode)
-		entryFont = 6;
+		entryFont = 4;
 
 	Add(new CGUIHitBox(ID_GB_TEXT_AREA_TITLE, 41, 65, 150, (m_Unicode ? 22 : 44)));
 
