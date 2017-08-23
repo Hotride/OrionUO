@@ -111,6 +111,8 @@ extern CGLTexture g_TextureGumpState[2];
 extern WISP_GEOMETRY::CSize g_MapSize[MAX_MAPS_COUNT];
 extern WISP_GEOMETRY::CSize g_MapBlockSize[MAX_MAPS_COUNT];
 
+extern WISP_GEOMETRY::CSize g_DefaultMapSize[MAX_MAPS_COUNT];
+
 extern int g_MultiIndexCount;
 
 extern class CGLFrameBuffer g_LightBuffer;
