@@ -114,7 +114,7 @@ CGumpBook::~CGumpBook()
 void CGumpBook::PrepareContent()
 {
 	WISPFUN_DEBUG("c87_f2.1");
-	if (!m_PageDataReceived[m_Page])
+	/*if (!m_PageDataReceived[m_Page])
 	{
 		CPacketBookPageDataRequest(Serial, m_Page).Send();
 		m_PageDataReceived[m_Page] = true;
@@ -124,7 +124,7 @@ void CGumpBook::PrepareContent()
 	{
 		CPacketBookPageDataRequest(Serial, m_Page + 1).Send();
 		m_PageDataReceived[m_Page + 1] = true;
-	}
+	}*/
 }
 //----------------------------------------------------------------------------------
 CGUITextEntry *CGumpBook::GetEntry(const int &page)
