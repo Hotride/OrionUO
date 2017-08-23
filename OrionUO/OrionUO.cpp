@@ -957,6 +957,14 @@ void COrion::LoadClientConfig()
 		{
 			ClientVersionText = strings[1];
 			g_PacketManager.ClientVersion = ParseVersion(strings[1]);
+			if (g_PacketManager.ClientVersion < CV_4011D)
+			{
+				/* On this client, Felucca and Trammel were narrower */
+				g_MapSize[0].Width = 6144;
+				g_MapSize[1].Width = 6144;
+				g_MapBlockSize[0].Width = 768;
+				g_MapBlockSize[0].Width = 768;
+			}
 		}
 		else if (strings[0] == "UseVerdata")
 		{
@@ -1028,11 +1036,8 @@ void COrion::LoadClientConfig()
 
 		IFOR(i, 0, MAX_MAPS_COUNT)
 		{
-			g_MapSize[i].Width = file.ReadUInt16LE();
-			g_MapSize[i].Height = file.ReadUInt16LE();
-
-			g_MapBlockSize[i].Width = g_MapSize[i].Width / 8;
-			g_MapBlockSize[i].Height = g_MapSize[i].Height / 8;
+			file.ReadUInt16LE();
+			file.ReadUInt16LE();
 		}
 
 		g_CharacterList.ClientFlag = file.ReadInt8();
