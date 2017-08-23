@@ -4933,7 +4933,7 @@ PACKET_HANDLER(OpenBook)
 	Move(1);
 	WORD pageCount = ReadUInt16BE();
 
-	CGumpBook *gump = new CGumpBook(serial, 0, 0, pageCount, flags != 0, false);
+	CGumpBook *gump = new CGumpBook(serial, 0, 0, pageCount, flags != 0, (g_PacketManager.ClientVersion >= CV_308Z));
 
 	gump->m_EntryTitle->m_Entry.SetText(ReadString(60));
 	gump->m_EntryAuthor->m_Entry.SetText(ReadString(30));
