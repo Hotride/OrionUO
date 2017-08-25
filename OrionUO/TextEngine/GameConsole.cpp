@@ -65,10 +65,12 @@ void CGameConsole::Send()
 				else if (m_Type == GCTT_GUILD)
 				{
 					speechType = ST_GUILD_CHAT;
+					sendColor = g_ConfigManager.GuildMessageColor;
 					offset = 2;
 				}
 				else if (m_Type == GCTT_ALLIANCE)
 				{
+					sendColor = g_ConfigManager.AllianceMessageColor;
 					speechType = ST_ALLIANCE_CHAT;
 					offset = 2;
 				}
