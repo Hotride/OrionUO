@@ -560,7 +560,7 @@ enum SPEECH_TYPE
 {
 	ST_NORMAL = 0,
 	ST_BROADCAST,				//System
-	ST_EMOTE,					//Emote
+	ST_EMOTE = 0x02,			//Emote
 	ST_SYSTEM = 0x06,			//System / Lower Corner
 	ST_SYSTEM_WHITE_NAME = 0x07,//Message / Corner With Name
 	ST_WHISPER = 0x08,			//Whisper

@@ -31,7 +31,13 @@ void CGameConsole::Send()
 	if (len)
 	{
 		SPEECH_TYPE speechType = ST_NORMAL;
+		ushort sendColor = g_ConfigManager.SpeechColor;
 		int offset = 0;
+
+		if (m_Type == GCTT_EMOTE)
+		{
+			m_Text = m_Text.replace(0, 2, L": *").append(L"*");
+		}
 
 		if (len > 1)
 		{
@@ -53,6 +59,7 @@ void CGameConsole::Send()
 				else if (m_Type == GCTT_EMOTE)
 				{
 					speechType = ST_EMOTE;
+					sendColor = g_ConfigManager.EmoteColor;
 					offset = 2;
 				}
 				else if (m_Type == GCTT_GUILD)
@@ -69,6 +76,7 @@ void CGameConsole::Send()
 				{
 					DWORD serial = 0;
 					offset = 1;
+					sendColor = g_ConfigManager.PartyMessageColor;
 
 					if (member != -1)
 						serial = g_Party.Member[member].Serial;
@@ -115,7 +123,7 @@ void CGameConsole::Send()
 
 		}
 
-		CPacketUnicodeSpeechRequest(Data() + offset, speechType, 3, g_ConfigManager.SpeechColor, (puchar)g_Language.c_str()).Send();
+		CPacketUnicodeSpeechRequest(Data() + offset, speechType, 3, sendColor, (puchar)g_Language.c_str()).Send();
 	}
 }
 //----------------------------------------------------------------------------------
