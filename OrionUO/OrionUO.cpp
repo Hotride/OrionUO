@@ -848,7 +848,7 @@ void COrion::CheckStaticTileFilterFiles()
 	}
 }
 //----------------------------------------------------------------------------------
-string COrion::ClientFilePath(const char *fname, ...)
+std::string COrion::ClientFilePath(const char *fname, ...)
 {
 	WISPFUN_DEBUG("c1_f4");
 	va_list arg;
@@ -865,9 +865,59 @@ string COrion::ClientFilePath(const char *fname, ...)
 	return ClientPath + "\\" + out;
 }
 //----------------------------------------------------------------------------------
+uint32_t COrion::ParseVersion(std::string& version)
+{
+	uint8_t shift = 3;
+	uint32_t version_int = 0;
+	size_t start = 0;
+	size_t end = 0;
+
+	for (char &c : version) {
+		c = tolower(c);
+
+		if (isdigit(c))
+		{
+			end++;
+		}
+		else if (c == '.')
+		{
+			if (shift == 0) {
+				g_OrionWindow.ShowMessage("Invalid version string: %s. Too many '.'\n", "Error!");
+				ExitProcess(EINVAL);
+				return 0;
+			}
+			version_int |= std::stoi(version.substr(start, end)) << (8 * shift);
+			end++;
+			start = end;
+			shift--;
+		}
+		else if (isalpha(c))
+		{
+			if (shift != 1) {
+				g_OrionWindow.ShowMessage("Invalid version string: %s. Too many '.'\n", "Error!");
+				ExitProcess(EINVAL);
+				return 0;
+			}
+
+			version_int |= std::stoi(version.substr(start, end)) << (8 * shift);
+			version_int |= c - 0x61; // The ascii offset of 'a' is 0x61, so a is treated as 0, b as 1, etc.
+			end++;
+			start = end;
+			shift--;
+		}
+	}
+
+	if (start != end) {
+		version_int |= std::stoi(version.substr(start, end)) << (8 * shift);
+	}
+
+	return version_int;
+}
+//----------------------------------------------------------------------------------
 void COrion::LoadClientConfig()
 {
 	WISPFUN_DEBUG("c194_f11");
+
 	WISP_FILE::CTextFileParser file(g_App.FilePath("client.cfg"), "=,", "#;", "");
 
 	while (!file.IsEOF())
@@ -902,6 +952,15 @@ void COrion::LoadClientConfig()
 				ExitProcess(0);
 				return;
 			}
+		}
+		else if (strings[0] == "ClientVersionText")
+		{
+			ClientVersionText = strings[1];
+			g_PacketManager.ClientVersion = ParseVersion(strings[1]);
+		}
+		else if (strings[0] == "UseVerdata")
+		{
+			g_FileManager.UseVerdata = std::stoi(strings[1]);
 		}
 	}
 
@@ -954,10 +1013,10 @@ void COrion::LoadClientConfig()
 		else
 			subVersion = file.ReadInt8();
 
-		g_PacketManager.ClientVersion = (CLIENT_VERSION)file.ReadInt8();
+		file.ReadInt8();
 
 		int len = file.ReadInt8();
-		m_ClientVersionText = file.ReadString(len);
+		file.ReadString(len);
 
 		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
 		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
@@ -977,7 +1036,7 @@ void COrion::LoadClientConfig()
 		}
 
 		g_CharacterList.ClientFlag = file.ReadInt8();
-		g_FileManager.UseVerdata = (file.ReadInt8() != 0);
+		file.ReadInt8();
 	}
 }
 //----------------------------------------------------------------------------------
