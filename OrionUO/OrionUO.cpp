@@ -274,6 +274,12 @@ bool COrion::Install()
 	//GetCurrentLocale();
 	fs_path_create(g_App.ExeFilePath("snapshots"));
 
+	if (g_PacketManager.GetClientVersion() >= CV_70331) {
+		g_MaxViewRange = MAX_VIEW_RANGE_NEW;
+	} else {
+		g_MaxViewRange = MAX_VIEW_RANGE_OLD;
+	}
+
 	if (g_PacketManager.GetClientVersion() >= CV_305D)
 	{
 		CGumpSpellbook::m_SpellReagents1[4] = "Sulfurous ash"; //Magic Arrow
@@ -990,6 +996,53 @@ void COrion::LoadContainerOffsets()
 	LOG("g_ContainerOffset.size()=%i\n", g_ContainerOffset.size());
 }
 //----------------------------------------------------------------------------------
+CLIENT_VERSION COrion::ParseVersion(std::string& version)
+{
+	uint8_t shift = 3;
+	uint32_t version_int = 0;
+	size_t start = 0;
+	size_t end = 0;
+
+	for (char &c : version) {
+		c = tolower(c);
+
+		if (isdigit(c))
+		{
+			end++;
+		}
+		else if (c == '.')
+		{
+			if (shift == 0) {
+				g_OrionWindow.ShowMessage("Invalid version string: %s. Too many '.'\n", "Error!");
+				return CV_OLD;
+			}
+			version_int |= std::stoi(version.substr(start, end)) << (8 * shift);
+			end++;
+			start = end;
+			shift--;
+		}
+		else if (isalpha(c))
+		{
+			if (shift != 1) {
+				g_OrionWindow.ShowMessage("Invalid version string: %s. Too many '.'\n", "Error!");
+				return CV_OLD;
+			}
+
+			version_int |= std::stoi(version.substr(start, end)) << (8 * shift);
+			version_int |= c - 0x61; // The ascii offset of 'a' is 0x61, so a is treated as 0, b as 1, etc.
+			end++;
+			start = end;
+			shift--;
+		}
+	}
+
+	if (start != end) {
+		version_int |= std::stoi(version.substr(start, end)) << (8 * shift);
+	}
+
+	return (CLIENT_VERSION)version_int;
+}
+//----------------------------------------------------------------------------------
 #if !USE_ORIONDLL
 bool COrion::LoadClientConfigOld()
 {
@@ -1136,15 +1189,12 @@ bool COrion::LoadOrionDLL()
 		else
 			subVersion = file.ReadInt8();
 
-		g_PacketManager.SetClientVersion((CLIENT_VERSION)file.ReadInt8());
-
-		if (g_PacketManager.GetClientVersion() >= CV_70331)
-			g_MaxViewRange = MAX_VIEW_RANGE_NEW;
-		else
-			g_MaxViewRange = MAX_VIEW_RANGE_OLD;
+		file.ReadInt8(); // The old ClientVersion enum
 
 		int len = file.ReadInt8();
 		ClientVersionText = file.ReadString(len);
+
+		g_PacketManager.SetClientVersion(ParseVersion(ClientVersionText));
 
 #if defined(_M_IX86)
 		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
@@ -1231,6 +1281,11 @@ bool COrion::LoadClientConfig()
 			if (strings.size() >= 3) {
 				DefaultPort = std::stoi(strings[2]);
 			}
+		} else if (strcasecmp("clientversion", strings[0].c_str())) {
+			ClientVersionText = strings[1];
+			g_PacketManager.SetClientVersion(ParseVersion(strings[1]));
+		} else if (strcasecmp("useverdata", strings[0].c_str())) {
+			g_FileManager.UseVerdata = ToBool(strings[1]);
 		}
 	}
 
@@ -1286,6 +1341,13 @@ void COrion::SaveClientConfig()
 		sprintf_s(buf, "LoginServer=%s,%d\n", DefaultLogin.c_str(), DefaultPort);
 		fputs(buf, client_cfg);
 	}
+
+	sprintf_s(buf, "ClientVersion=%s\n", ClientVersionText.c_str());
+	fputs(buf, client_cfg);
+
+	sprintf_s(buf, "UseVerdata=%s\n", (g_FileManager.UseVerdata ? "yes" : "no"));
+	fputs(buf, client_cfg);
+
 	fclose(client_cfg);
 }
 //----------------------------------------------------------------------------------

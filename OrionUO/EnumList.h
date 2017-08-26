@@ -89,37 +89,38 @@ enum ENCRYPTION_TYPE
 	ET_TFISH		//!TwoFish + MD5
 };
 //----------------------------------------------------------------------------------
-//!Версия клиента (для изменения в протоколе и прочих няшках)
+#define CLIENT_VERSION_NUM(a, b, c, d) ((a << 24) | (b << 16) | (c << 8) | (d))
+//! Client Protocol Version
 enum CLIENT_VERSION
 {
-	CV_OLD = 0,		//Предшествующие клиенту 2.0.0, Остальные по логике, исходя из названия
-	CV_200,			//Отправляется пакет с габаритами экрана
-	//CV_204C,		//Использование *.def файлов
-	CV_305D,		//Использование клилоков, количество слотов в списке персонажей равно количеству персонажей
-	CV_306E,		//Добавлен пакет с типом клиента (0xBF subcmd 0x0F), использование mp3 вместо midi
-	CV_308D,		//Добавлен параметр Maximum Stats в статусбар
-	CV_308J,		//Добавлен параметр Followers в статусбар
-	CV_308Z,		//Добавлены классы paladin, necromancer; custom houses, 5 resistances, изменено окно выбора профессии, убрана галочка Save Password
-	CV_400B,		//Удаление тултипов
-	CV_405A,		//Добавлены классы ninja, samurai
-	CV_4011D,		//Изменение окна создания персонажа. Добавлена расса elves
-	CV_500A,		//Кнопки папердолла заменены: Journal -> Quests; Chat -> Guild, использование Mega Cliloc, Убрана загрузка файла Verdata.mul
-	CV_5020,		//Добавлен гамп бафов
-	CV_5090,		//
-	CV_6000,		//Добавлены цвета гильд/алли чата, игноры чатов. Добавлены опции новой таргет системы, вывод свойств предметов, Object Handles,
-	CV_6013,		//
-	CV_6017,		//
-	CV_6040,		//Увеличилось количество слотов персонажей
-	CV_6060,		//
-	CV_60142,		//
-	CV_60144,		//Изменение окна создания персонажа. Добавлена расса gargoyle
-	CV_7000,		//
-	CV_7090,		//
-	CV_70130,		//
-	CV_70160,		//
-	CV_70180,		//
-	CV_70240,		//*.mul -> *.uop
-	CV_70331		//
+	CV_OLD = CLIENT_VERSION_NUM(1, 0, 0, 0),		// Original game
+	CV_200 = CLIENT_VERSION_NUM(2, 0, 0, 0),		// T2A Introduction. Adds screen dimensions packet
+	CV_204C = CLIENT_VERSION_NUM(2, 0, 4, 2),		// Adds *.def files
+	CV_305D = CLIENT_VERSION_NUM(3, 0, 5, 3),		// Renaissance. Expanded character slots.
+	CV_306E = CLIENT_VERSION_NUM(3, 0, 6, 4),		// Adds a packet with the client type, switches to mp3 from midi for sound files
+	CV_308D = CLIENT_VERSION_NUM(3, 0, 8, 3),		// Adds maximum stats to the status bar
+	CV_308J = CLIENT_VERSION_NUM(3, 0, 8, 9),		// Adds followers to the status bar
+	CV_308Z = CLIENT_VERSION_NUM(3, 0, 8, 25),		// Age of Shadows. Adds paladin, necromancer, custom housing, resists, profession selection window, removes save password checkbox
+	CV_400B = CLIENT_VERSION_NUM(4, 0, 0, 1),		// Deletes tooltips
+	CV_405A = CLIENT_VERSION_NUM(4, 0, 5, 0),		// Adds ninja, samurai
+	CV_4011D = CLIENT_VERSION_NUM(4, 0, 11, 3),		// Adds elven race
+	CV_500A = CLIENT_VERSION_NUM(5, 0, 0, 0),		// Paperdoll buttons journal becomes quests, chat becomes guild. Use mega cliloc. Removes verdata.mul.
+	CV_5020 = CLIENT_VERSION_NUM(5, 0, 2, 0),		// Adds buff bar
+	CV_5090 = CLIENT_VERSION_NUM(5, 0, 9, 0),		//
+	CV_6000 = CLIENT_VERSION_NUM(6, 0, 0, 0),		// Adds colored guild/all chat and ignore system. New targeting systems, object properties and handles.
+	CV_6013 = CLIENT_VERSION_NUM(6, 0, 1, 3),		//
+	CV_6017 = CLIENT_VERSION_NUM(6, 0, 1, 7),		//
+	CV_6040 = CLIENT_VERSION_NUM(6, 0, 4, 0),		// Increased number of player slots
+	CV_6060 = CLIENT_VERSION_NUM(6, 0, 6, 0),		//
+	CV_60142 = CLIENT_VERSION_NUM(6, 0, 14, 2),		//
+	CV_60144 = CLIENT_VERSION_NUM(6, 0, 14, 4),		// Adds gargoyle race.
+	CV_7000 = CLIENT_VERSION_NUM(7, 0, 0, 0),		//
+	CV_7090 = CLIENT_VERSION_NUM(7, 0, 9, 0),		//
+	CV_70130 = CLIENT_VERSION_NUM(7, 0, 13, 0),		//
+	CV_70160 = CLIENT_VERSION_NUM(7, 0, 16, 0),		//
+	CV_70180 = CLIENT_VERSION_NUM(7, 0, 18, 0),		//
+	CV_70240 = CLIENT_VERSION_NUM(7, 0, 24, 0),		// *.mul -> *.uop
+	CV_70331 = CLIENT_VERSION_NUM(7, 0, 33, 1)		//
 };
 //----------------------------------------------------------------------------------
 //!На какой стадии находится окно коннекта

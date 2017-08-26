@@ -40,6 +40,8 @@ private:
 
 	string m_GameServerIP = "";
 
+	CLIENT_VERSION ParseVersion(std::string& version);
+
 	bool LoadOrionDLL();
 	bool LoadClientConfigOld();
 
