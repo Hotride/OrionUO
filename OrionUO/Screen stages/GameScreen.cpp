@@ -20,7 +20,7 @@ CGameScreen::CGameScreen()
 
 	memset(&g_RenderBounds, 0, sizeof(RENDER_VARIABLES_FOR_GAME_WINDOW));
 
-	memset(&m_ObjectHandlesList[0], 0, sizeof(OBJECT_HANDLES_DATA) * MAX_OBJECT_HANDLES);
+	memset(&m_ObjectHandlesList[0], 0, sizeof(CGameObject*) * MAX_OBJECT_HANDLES);
 }
 //----------------------------------------------------------------------------------
 CGameScreen::~CGameScreen()
@@ -448,7 +448,6 @@ void CGameScreen::CalculateRenderList()
 
 	m_ObjectHandlesCount = 0;
 	m_RenderListCount = 0;
-	int objectHandlesOffsetX = g_ObjectHandlesWidth / 2;
 	bool useObjectHandles = (!g_GrayedPixels && g_ConfigManager.ObjectHandles && g_ShiftPressed && g_CtrlPressed);
 
 	QFOR(go, g_World->m_Items, CGameObject*)
@@ -511,36 +510,27 @@ void CGameScreen::CalculateRenderList()
 					break;
 				else
 				{
-					int offsetX = x - g_RenderBounds.PlayerX;
-					int offsetY = y - g_RenderBounds.PlayerY;
+					int blockX = x / 8;
+					int blockY = y / 8;
 
-					int drawX = g_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
-					int drawY = g_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
+					uint blockIndex = (blockX * mapBlockHeight) + blockY;
 
-					if (drawX >= g_RenderBounds.MinPixelsX && drawX <= g_RenderBounds.MaxPixelsX)
+					if (blockIndex < maxBlockIndex)
 					{
-						int blockX = x / 8;
-						int blockY = y / 8;
+						CMapBlock *block = g_MapManager->GetBlock(blockIndex);
 
-						uint blockIndex = (blockX * mapBlockHeight) + blockY;
-
-						if (blockIndex < maxBlockIndex)
+						if (block == NULL)
 						{
-							CMapBlock *block = g_MapManager->GetBlock(blockIndex);
-
-							if (block == NULL)
-							{
-								block = g_MapManager->AddBlock(blockIndex);
-								block->X = blockX;
-								block->Y = blockY;
-								g_MapManager->LoadBlock(block);
-							}
-
-							AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX);
+							block = g_MapManager->AddBlock(blockIndex);
+							block->X = blockX;
+							block->Y = blockY;
+							g_MapManager->LoadBlock(block);
 						}
-						//else
-						//	LOG("Expected: %i %i\n", blockIndex, g_MapManager->MaxBlockIndex);
+
+						AddTileToRenderList(block->GetRender(x % 8, y % 8), x, y, renderIndex, useObjectHandles);
 					}
+					//else
+					//	LOG("Expected: %i %i\n", blockIndex, g_MapManager->MaxBlockIndex);
 				}
 
 				x++;
@@ -572,8 +562,6 @@ void CGameScreen::CalculateRenderList()
 				if (currentX < g_RenderBounds.RealMinRangeX || currentX > g_RenderBounds.RealMaxRangeX)
 					continue;
 
-				int offsetX = currentX - g_RenderBounds.PlayerX;
-
 				IFOR(y, 0, 8)
 				{
 					int currentY = by * 8 + y;
@@ -581,15 +569,7 @@ void CGameScreen::CalculateRenderList()
 					if (currentY < g_RenderBounds.RealMinRangeY || currentY > g_RenderBounds.RealMaxRangeY)
 						continue;
 
-					int offsetY = currentY - g_RenderBounds.PlayerY;
-
-					int drawX = g_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
-					int drawY = g_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
-
-					if (drawX < g_RenderBounds.MinPixelsX || drawX > g_RenderBounds.MaxPixelsX)
-						continue;
-
-					AddTileToRenderList(mb->GetRender(x, y), drawX, drawY, currentX, currentY, renderIndex, useObjectHandles, objectHandlesOffsetX);
+					AddTileToRenderList(mb->GetRender(x, y), currentX, currentY, renderIndex, useObjectHandles);
 				}
 			}
 		}
@@ -628,7 +608,7 @@ void CGameScreen::CalculateRenderList()
 #endif
 }
 //----------------------------------------------------------------------------------
-void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX, const int &drawY, const int &worldX, const int &worldY, const uchar &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX, const int &maxZ)
+void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX, const int &worldY, const uchar &renderIndex, const bool &useObjectHandles, const int &maxZ)
 {
 	WISPFUN_DEBUG("c164_f11");
 	ushort grayColor = 0;
@@ -641,6 +621,12 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 
 	for (; obj != NULL; obj = obj->m_NextXY)
 	{
+		int drawX = obj->DrawX - g_RenderBounds.WindowDrawOffsetX;
+		int drawY = obj->DrawY - g_RenderBounds.WindowDrawOffsetY;
+
+		if (drawX < g_RenderBounds.MinPixelsX || drawX > g_RenderBounds.MaxPixelsX)
+			break;
+
 		bool aphaChanged = false;
 
 #if UO_RENDER_LIST_SORT == 1
@@ -705,8 +691,8 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 			}
 		}
 
-		int testMinZ = drawY;
-		int testMaxZ = drawY - (z * 4);
+		int testMinZ = drawY + (z * 4);
+		int testMaxZ = drawY;
 
 		CLandObject *land = obj->LandObjectPtr();
 
@@ -721,7 +707,6 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 		if (obj->IsGameObject())
 		{
 			CGameObject *go = (CGameObject*)obj;
-			int characterOffsetY = 0;
 
 			if (go->NPC)
 			{
@@ -729,14 +714,12 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 
 				ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(go);
 
-				characterOffsetY = character->OffsetY - (character->OffsetZ + dims.Height + dims.CenterY);
-
 				CTextContainer &textContainer = character->m_DamageTextControl;
 
 				if (!textContainer.Empty())
 				{
 					int textDrawX = drawX + character->OffsetX;
-					int textDrawY = drawY + characterOffsetY;
+					int textDrawY = drawY + character->OffsetY - (character->OffsetZ + dims.Height + dims.CenterY);
 
 					for (CTextData *text = (CTextData*)textContainer.m_Items; text != NULL;)
 					{
@@ -786,24 +769,14 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 			{
 				int index = m_ObjectHandlesCount % MAX_OBJECT_HANDLES;
 
-				m_ObjectHandlesList[index].Obj = go;
-				m_ObjectHandlesList[index].X = drawX - objectHandlesOffsetX;
-				m_ObjectHandlesList[index].Y = drawY - (go->Z * 4);
-
-				if (go->NPC)
-				{
-					m_ObjectHandlesList[index].X += go->GameCharacterPtr()->OffsetX;
-					m_ObjectHandlesList[index].Y += characterOffsetY;
-				}
-				else
-					m_ObjectHandlesList[index].Y -= g_Orion.GetArtDimension(go->Graphic, true).Height;
+				m_ObjectHandlesList[index] = go;
 
 				m_ObjectHandlesCount++;
 			}
 
 #if UO_RENDER_LIST_SORT == 1
 			if (go->NPC || go->IsCorpse())
-				AddOffsetCharacterTileToRenderList(go, drawX, drawY, renderIndex, useObjectHandles, objectHandlesOffsetX);
+				AddOffsetCharacterTileToRenderList(go, renderIndex, useObjectHandles);
 #endif
 		}
 		else if (obj->IsFoliage() && obj->StaticGroupObjectPtr()->FoliageTransparentIndex != g_FoliageIndex)
@@ -824,7 +797,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 			{
 				WISP_GEOMETRY::CSize fp = g_Orion.GetArtDimension(obj->Graphic, true);
 
-				CImageBounds fib(drawX - fp.Width / 2, drawY - fp.Height - (z * 4), fp.Width, fp.Height);
+				CImageBounds fib(drawX - fp.Width / 2, drawY - fp.Height, fp.Width, fp.Height);
 
 				if (fib.InRect(g_PlayerRect))
 				{
@@ -867,13 +840,11 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 	}
 }
 //----------------------------------------------------------------------------------
-void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX, int drawY, const uchar &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX)
+void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const uchar &renderIndex, const bool &useObjectHandles)
 {
 	WISPFUN_DEBUG("c164_f12");
 	int characterX = obj->X;
 	int characterY = obj->Y;
-
-	drawY -= (obj->Z * 4);
 
 	ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(obj);
 	CGameCharacter *character = obj->GameCharacterPtr();
@@ -885,9 +856,6 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 
 	if (character != NULL)
 	{
-		drawX += character->OffsetX;
-		drawY += character->OffsetY - character->OffsetZ;
-
 		//g_GL.DrawPolygone(drawX - dfInfo.OffsetX, drawY, dfInfo.Width, dfInfo.Height - dfInfo.OffsetY);
 
 		if (!character->m_Steps.empty() && (character->m_Steps.back().Direction & 7) == 2)
@@ -927,15 +895,6 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 		if (y < g_RenderBounds.RealMinRangeY || y > g_RenderBounds.RealMaxRangeY)
 			continue;
 
-		int offsetX = x - g_RenderBounds.PlayerX;
-		int offsetY = y - g_RenderBounds.PlayerY;
-
-		drawX = g_RenderBounds.GameWindowCenterX + (offsetX - offsetY) * 22;
-		drawY = g_RenderBounds.GameWindowCenterY + (offsetX + offsetY) * 22;
-
-		if (drawX < g_RenderBounds.MinPixelsX || drawX > g_RenderBounds.MaxPixelsX)
-			continue;
-
 		int blockX = x / 8;
 		int blockY = y / 8;
 
@@ -958,7 +917,7 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, int drawX
 			if (i == dropMaxZIndex)
 				currentMaxZ += 20;
 
-			AddTileToRenderList(block->GetRender(x % 8, y % 8), drawX, drawY, x, y, renderIndex, useObjectHandles, objectHandlesOffsetX, currentMaxZ);
+			AddTileToRenderList(block->GetRender(x % 8, y % 8), x, y, renderIndex, useObjectHandles, currentMaxZ);
 		}
 	}
 }
@@ -1226,7 +1185,10 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 				g_UseCircleTrans = (g_ConfigManager.UseCircleTrans && obj->TranparentTest(playerZPlus5));
 
-				obj->Draw(obj->DrawX - g_RenderBounds.WindowDrawOffsetX, obj->DrawY - g_RenderBounds.WindowDrawOffsetY);
+				int x = obj->DrawX - g_RenderBounds.WindowDrawOffsetX;
+				int y = obj->DrawY - g_RenderBounds.WindowDrawOffsetY;
+
+				obj->Draw(x, y);
 
 				if (g_ConfigManager.DrawStatusState && obj->IsGameObject() && ((CGameObject*)obj)->NPC && !((CGameCharacter*)obj)->Dead())
 				{
@@ -1256,8 +1218,8 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 						(g_ConfigManager.DrawStatusConditionState == DCSCS_NOT_MAX && gc->Hits != gc->MaxHits) ||
 						(g_ConfigManager.DrawStatusConditionState == DCSCS_LOWER && width < g_ConfigManager.DrawStatusConditionValue))
 					{
-						int x = obj->DrawX + gc->OffsetX;
-						int y = obj->DrawY + gc->OffsetY - (gc->Z * 4) - gc->OffsetZ;
+						x += gc->OffsetX;
+						y += gc->OffsetY - gc->OffsetZ;
 
 						if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
 						{
@@ -1299,10 +1261,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 		UnuseShader();
 
 		IFOR(i, 0, m_ObjectHandlesCount)
-		{
-			OBJECT_HANDLES_DATA &ohd = m_ObjectHandlesList[i];
-			ohd.Obj->DrawObjectHandlesTexture(ohd.X, ohd.Y);
-		}
+			m_ObjectHandlesList[i]->DrawObjectHandlesTexture();
 
 		g_PluginManager.WorldDraw(); 
 	}
@@ -1312,8 +1271,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 		IFOR(i, 0, m_RenderListCount)
 		{
-			RENDER_OBJECT_DATA &rod = m_RenderList[i];
-			CRenderWorldObject *obj = rod.Object;
+			CRenderWorldObject *obj = m_RenderList[i].Object;
 
 			if (obj != NULL)
 			{
@@ -1324,10 +1282,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 		}
 
 		IFOR(i, 0, m_ObjectHandlesCount)
-		{
-			OBJECT_HANDLES_DATA &ohd = m_ObjectHandlesList[i];
-			ohd.Obj->SelectObjectHandlesTexture(ohd.X, ohd.Y);
-		}
+			m_ObjectHandlesList[i]->SelectObjectHandlesTexture();
 	}
 }
 //----------------------------------------------------------------------------------

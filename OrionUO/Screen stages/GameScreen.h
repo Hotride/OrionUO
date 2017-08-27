@@ -102,17 +102,6 @@ struct OBJECT_HITS_INFO
 	ushort HealthColor;
 };
 //----------------------------------------------------------------------------------
-//!Структура данных с информацией для гампа с именем объекта (Object Handles)
-struct OBJECT_HANDLES_DATA
-{
-	//!Ссылка на объект рендера
-	class CGameObject *Obj;
-
-	//!Экранные координаты объекта
-	int X;
-	int Y;
-};
-//----------------------------------------------------------------------------------
 class CGameScreen : public CBaseScreen
 {
 	//!Использовать ли освещение при перерисовке текущего кадра
@@ -122,7 +111,7 @@ class CGameScreen : public CBaseScreen
 
 private:
 	//!Список объектов для вывода
-	OBJECT_HANDLES_DATA m_ObjectHandlesList[MAX_OBJECT_HANDLES];
+	CGameObject *m_ObjectHandlesList[MAX_OBJECT_HANDLES];
 
 	//!Количество объектов для вывода
 	int m_ObjectHandlesCount{ 0 };
@@ -186,9 +175,9 @@ private:
 	*/
 	void CheckFoliageUnion(ushort graphic, int x, int y, int z);
 
-	void AddTileToRenderList(class CRenderWorldObject *obj, const int &drawX, const int &drawY, const int &worldX, const int &worldY, const uchar &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX, const int &maxZ = 150);
+	void AddTileToRenderList(class CRenderWorldObject *obj, const int &worldX, const int &worldY, const uchar &renderIndex, const bool &useObjectHandles, const int &maxZ = 150);
 
-	void AddOffsetCharacterTileToRenderList(class CGameObject *obj, int drawX, int drawY, const uchar &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX);
+	void AddOffsetCharacterTileToRenderList(class CGameObject *obj, const uchar &renderIndex, const bool &useObjectHandles);
 
 	class CGumpScreenGame m_GameScreenGump;
 

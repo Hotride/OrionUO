@@ -321,11 +321,8 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 					{
 						rwo = go;
 
-						int gox = go->X - g_RenderBounds.PlayerX;
-						int goy = go->Y - g_RenderBounds.PlayerY;
-
-						drawX = g_RenderBounds.GameWindowCenterX + ((gox - goy) * 22);
-						drawY = ((g_RenderBounds.GameWindowCenterY + ((gox + goy) * 22)) - (go->Z * 4));
+						drawX = go->DrawX - g_RenderBounds.WindowDrawOffsetX;
+						drawY = go->DrawY - g_RenderBounds.WindowDrawOffsetY;
 
 						if (go->NPC)
 						{
@@ -355,14 +352,8 @@ bool CTextRenderer::CalculateWorldPositions(const bool &noCalculate)
 
 					if (rwo != NULL)
 					{
-						int gox = rwo->X - g_RenderBounds.PlayerX;
-						int goy = rwo->Y - g_RenderBounds.PlayerY;
-
-						drawX = g_RenderBounds.GameWindowCenterX + ((gox - goy) * 22);
-						drawY = ((g_RenderBounds.GameWindowCenterY + ((gox + goy) * 22)) - (rwo->Z * 4));
-
-						drawX -= rwo->GetTextOffsetX(text);
-						drawY -= (g_Orion.m_StaticData[rwo->Graphic].Height + 20) + rwo->GetTextOffsetY(text);
+						drawX = rwo->DrawX - g_RenderBounds.WindowDrawOffsetX - rwo->GetTextOffsetX(text);
+						drawY = rwo->DrawY - g_RenderBounds.WindowDrawOffsetY - ((g_Orion.m_StaticData[rwo->Graphic].Height + 20) + rwo->GetTextOffsetY(text));
 					}
 
 					break;

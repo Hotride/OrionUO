@@ -248,6 +248,7 @@ extern DEVELOPER_MODE g_DeveloperMode;
 extern DEVELOPER_MODE g_OptionsDeveloperMode;
 
 const int g_ObjectHandlesWidth = 142;
+const int g_ObjectHandlesWidthOffset = g_ObjectHandlesWidth / 2;
 const int g_ObjectHandlesHeight = 20;
 extern ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight];
 
