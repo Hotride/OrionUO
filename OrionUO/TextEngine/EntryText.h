@@ -25,14 +25,16 @@ class CEntryText
 	SETGET(bool, NumberOnly, false);
 
 private:
-	//!Unicode строка
-	wstring m_Text = wstring{ L"" };
+	//!Позиция каретки в строке
+	int m_Position{ 0 };
 
 	//!ASCII строка
 	string m_CText = string{ "" };
 
-	//!Позиция каретки в строке
-	int m_Position{ 0 };
+protected:
+	//!Unicode строка
+	wstring m_Text = wstring{ L"" };
+
 
 public:
 	CEntryText(int maxLength = 0, int width = 0, int maxWidth = 0, bool numberOnly = false);
