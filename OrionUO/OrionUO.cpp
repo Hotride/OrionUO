@@ -103,8 +103,8 @@ void COrion::ParseCommandLine()
 		{
 			if (str == "login")
 			{
-				m_DefaultLogin = strings[1];
-				m_DefaultPort = atoi(strings[2].c_str());
+				LoginServer = strings[1];
+				LoginPort = atoi(strings[2].c_str());
 			}
 			else if (str == "proxyhost")
 			{
@@ -851,6 +851,28 @@ void COrion::CheckStaticTileFilterFiles()
 void COrion::LoadClientConfig()
 {
 	WISPFUN_DEBUG("c194_f11");
+	WISP_FILE::CTextFileParser file(g_App.FilePath("client.cfg"), "=,", "#;", "");
+
+	while (!file.IsEOF())
+	{
+		std::vector<std::string> strings = file.ReadTokens();
+
+		if (strings.size() < 2)
+		{
+			continue;
+		}
+
+		if (strings[0] == "LoginServer")
+		{
+			LoginServer = strings[1];
+
+			if (strings.size() >= 3)
+			{
+				LoginPort = std::stoi(strings[2]);
+			}
+		}
+	}
+
 	HMODULE orionDll = LoadLibrary(g_App.FilePath(L"Orion.dll").c_str());
 
 	if (orionDll == 0)
@@ -2860,31 +2882,29 @@ bool COrion::IsVegetation(const ushort &graphic)
 void COrion::LoadLogin(string &login, int &port)
 {
 	WISPFUN_DEBUG("c194_f45");
-	if (m_DefaultPort)
+	if (m_LoginPort == 0)
 	{
-		login = m_DefaultLogin;
-		port = m_DefaultPort;
+		WISP_FILE::CTextFileParser file(g_App.FilePath("login.cfg"), "=,", "#;", "");
 
-		return;
-	}
-
-	WISP_FILE::CTextFileParser file(g_App.FilePath("login.cfg"), "=,", "#;", "");
-
-	while (!file.IsEOF())
-	{
-		STRING_LIST strings = file.ReadTokens();
-
-		if (strings.size() >= 3)
+		while (!file.IsEOF())
 		{
-			string lo = ToLowerA(strings[0]);
+			STRING_LIST strings = file.ReadTokens();
 
-			if (lo == "loginserver")
+			if (strings.size() >= 3)
 			{
-				login = strings[1];
-				port = atoi(strings[2].c_str());
+				string lo = ToLowerA(strings[0]);
+
+				if (lo == "loginserver")
+				{
+					LoginServer = strings[1];
+					LoginPort = atoi(strings[2].c_str());
+				}
 			}
 		}
 	}
+
+	login = m_LoginServer;
+	port = m_LoginPort;
 }
 //----------------------------------------------------------------------------------
 void COrion::GoToWebLink(const string &url)
