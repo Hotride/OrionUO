@@ -16,7 +16,7 @@ public:
 	string ClientVersionText = "2.0.3";
 	int TexturesDataCount = 0;
 	string DefaultLogin = "";
-	int DefaultPort = 0;
+	int DefaultPort = 2593;
 	uint OrionVersionNumeric = 0;
 
 private:

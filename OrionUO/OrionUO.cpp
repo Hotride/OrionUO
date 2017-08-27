@@ -1225,6 +1225,12 @@ bool COrion::LoadClientConfig()
 			g_Asmut = ToBool(strings[1]);
 		} else if (strcasecmp("custompath", strings[0].c_str())) {
 			g_App.m_UOPath = ToPath(strings[1]);
+		} else if (strcasecmp("loginserver", strings[0].c_str())) {
+			DefaultLogin = strings[1];
+
+			if (strings.size() >= 3) {
+				DefaultPort = std::stoi(strings[2]);
+			}
 		}
 	}
 
@@ -1273,6 +1279,11 @@ void COrion::SaveClientConfig()
 
 	if (g_App.m_UOPath != g_App.m_ExePath) {
 		sprintf_s(buf, "CustomPath=%s\n", g_App.m_UOPath);
+		fputs(buf, client_cfg);
+	}
+
+	if (DefaultLogin.length() > 0) {
+		sprintf_s(buf, "LoginServer=%s,%d\n", DefaultLogin.c_str(), DefaultPort);
 		fputs(buf, client_cfg);
 	}
 	fclose(client_cfg);
@@ -3346,7 +3357,7 @@ bool COrion::IsVegetation(ushort graphic)
 void COrion::LoadLogin(string &login, int &port)
 {
 	WISPFUN_DEBUG("c194_f45");
-	if (DefaultPort)
+	if (DefaultLogin.length() > 0)
 	{
 		login = DefaultLogin;
 		port = DefaultPort;
