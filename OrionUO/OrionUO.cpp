@@ -966,7 +966,7 @@ void COrion::ProcessDelayedClicks()
 
 				//if (serial < 0x40000000)
 				{
-					if (!g_ConfigManager.HoldShiftForContextMenus || g_ShiftPressed)
+					if (g_PopupEnabled && (!g_ConfigManager.HoldShiftForContextMenus || g_ShiftPressed))
 						CPacketRequestPopupMenu(serial).Send();
 				}
 			}

@@ -150,7 +150,7 @@ extern bool g_PacketLoginComplete;
 extern uint g_ClientFlag;
 
 extern bool g_SendLogoutNotification;
-extern bool g_NPCPopupEnabled;
+extern bool g_PopupEnabled;
 extern bool g_ChatEnabled;
 extern bool g_TooltipsEnabled;
 extern bool g_PaperdollBooks;

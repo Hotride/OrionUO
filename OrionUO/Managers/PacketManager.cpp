@@ -751,7 +751,7 @@ PACKET_HANDLER(CharacterList)
 
 	g_CharacterList.OnePerson = (bool)(g_ClientFlag & CLF_ONE_CHARACTER_SLOT);
 	//g_SendLogoutNotification = (bool)(g_ClientFlag & LFF_RE);
-	g_NPCPopupEnabled = (bool)(g_ClientFlag & CLF_CONTEXT_MENU);
+	g_PopupEnabled = (bool)(g_ClientFlag & CLF_CONTEXT_MENU);
 	g_TooltipsEnabled = (bool)((g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS) && (g_PacketManager.ClientVersion >= CV_308Z));
 	g_PaperdollBooks = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
 
