@@ -215,7 +215,7 @@ public:
 	@param [__in] z Координата Z
 	@return 
 	*/
-	void DrawCharacter(class CGameCharacter *obj, int x, int y, int z);
+	void DrawCharacter(class CGameCharacter *obj, int x, int y);
 
 	/*!
 	Проверить наличие пикселя персонажа в указанных координатах
@@ -225,7 +225,7 @@ public:
 	@param [__in] z Координата Z
 	@return true в случае, если хоть 1 пиксель находится под мышкой
 	*/
-	bool CharacterPixelsInXY(class CGameCharacter *obj, int x, int y, int z);
+	bool CharacterPixelsInXY(class CGameCharacter *obj, int x, int y);
 
 	/*!
 	Отрисовать труп

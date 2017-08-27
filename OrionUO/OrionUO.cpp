@@ -2389,7 +2389,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_USED_LAYER:
 		{
 			if (value >= 0 && value < (int)m_StaticData.size())
-				value = m_StaticData[value].Quality;
+				value = m_StaticData[value].Layer;
 
 			break;
 		}
@@ -2940,15 +2940,11 @@ void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 					tile.Flags = file.ReadInt64LE();
 
 				tile.Weight = file.ReadInt8();
-				tile.Quality = file.ReadInt8();
-				tile.Unknown = file.ReadInt16LE();
-				tile.Unknown1 = file.ReadInt8();
-				tile.Quality1 = file.ReadInt8();
+				tile.Layer = file.ReadInt8();
+				tile.Count = file.ReadInt32LE();
 				tile.AnimID = file.ReadInt16LE();
-				tile.Unknown2 = file.ReadInt8();
-				tile.Hue = file.ReadInt8();
-				tile.SittingOffset = file.ReadInt8();
-				tile.Unknown3 = file.ReadInt8();
+				tile.Hue = file.ReadInt16LE();
+				tile.LightIndex = file.ReadInt16LE();
 				tile.Height = file.ReadInt8();
 				tile.Name = file.ReadString(20);
 			}
@@ -3607,15 +3603,11 @@ void COrion::PatchFiles()
 						tile.Flags = file.ReadInt64LE();
 
 					tile.Weight = file.ReadInt8();
-					tile.Quality = file.ReadInt8();
-					tile.Unknown = file.ReadInt16LE();
-					tile.Unknown1 = file.ReadInt8();
-					tile.Quality1 = file.ReadInt8();
+					tile.Layer = file.ReadInt8();
+					tile.Count = file.ReadInt32LE();
 					tile.AnimID = file.ReadInt16LE();
-					tile.Unknown2 = file.ReadInt8();
-					tile.Hue = file.ReadInt8();
-					tile.SittingOffset = file.ReadInt8();
-					tile.Unknown3 = file.ReadInt8();
+					tile.Hue = file.ReadInt16LE();
+					tile.LightIndex = file.ReadInt16LE();
 					tile.Height = file.ReadInt8();
 					tile.Name = file.ReadString(20);
 				}
@@ -4491,13 +4483,13 @@ void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, cons
 	ushort id = land->Graphic;
 
 	if (id == 2)
-		DrawLandArt(id, color, x, y - land->m_Rect.left);
+		DrawLandArt(id, color, x, y);
 	else
 	{
 		CGLTexture *th = ExecuteTexture(id);
 
 		if (th == NULL)
-			DrawLandArt(id, color, x, y - land->m_Rect.left);
+			DrawLandArt(id, color, x, y);
 		else
 		{
 			if (g_OutOfRangeColor)
@@ -4513,7 +4505,7 @@ void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, cons
 
 			glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-			g_GL_DrawLandTexture(*th, x, y, land);
+			g_GL_DrawLandTexture(*th, x, y + (land->Z * 4), land);
 		}
 	}
 }
@@ -5436,7 +5428,7 @@ void COrion::EquipItem(uint container)
 			if (!container)
 				container = g_PlayerSerial;
 
-			CPacketEquipRequest(g_ObjectInHand.Serial, m_StaticData[graphic].Quality, container).Send();
+			CPacketEquipRequest(g_ObjectInHand.Serial, m_StaticData[graphic].Layer, container).Send();
 
 			g_ObjectInHand.Enabled = false;
 		}

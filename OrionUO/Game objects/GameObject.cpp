@@ -446,10 +446,10 @@ void CGameObject::DrawEffects(int x, int y)
 
 			WISP_GEOMETRY::CSize size = g_Orion.GetGumpDimension(graphic);
 
-			g_Orion.DrawGump(graphic, effect->Color, x - (size.Width / 2), y - (size.Height + (m_Z * 4)));
+			g_Orion.DrawGump(graphic, effect->Color, x - (size.Width / 2), y - size.Height);
 		}
 		else
-			g_Orion.DrawStaticArt(effect->GetCurrentGraphic(), effect->Color, x, y - (m_Z * 4));
+			g_Orion.DrawStaticArt(effect->GetCurrentGraphic(), effect->Color, x, y);
 
 		effect->RemoveRenderMode();
 	}

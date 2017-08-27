@@ -861,8 +861,6 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &drawX,
 		//LOG("Item[0x%04X]: x=%i y=%i (dx=%i, dy=%i)\n", obj->Graphic, drawX, drawY, obj->DrawX - g_RenderBounds.WindowDrawOffsetX, obj->DrawY - g_RenderBounds.WindowDrawOffsetY);
 
 		m_RenderList[m_RenderListCount].Object = obj;
-		m_RenderList[m_RenderListCount].X = drawX;
-		m_RenderList[m_RenderListCount].Y = drawY;
 		m_RenderList[m_RenderListCount].GrayColor = grayColor;
 
 		m_RenderListCount++;
@@ -996,9 +994,6 @@ void CGameScreen::CalculateGameWindowBounds()
 	g_RenderBounds.GameWindowCenterX = g_RenderBounds.GameWindowPosX + (g_RenderBounds.GameWindowWidth / 2);
 	g_RenderBounds.GameWindowCenterY = (g_RenderBounds.GameWindowPosY + g_RenderBounds.GameWindowHeight / 2) + (g_Player->Z * 4);
 
-	g_RenderBounds.WindowDrawOffsetX = ((g_Player->X - g_Player->Y) * 22) - g_RenderBounds.GameWindowCenterX;
-	g_RenderBounds.WindowDrawOffsetY = ((g_Player->X + g_Player->Y) * 22) - g_RenderBounds.GameWindowCenterY;
-
 	/*int earthquakeMagnitude = RandomInt(11);
 
 	if (earthquakeMagnitude)
@@ -1007,8 +1002,11 @@ void CGameScreen::CalculateGameWindowBounds()
 		g_RenderBounds.GameWindowCenterY += RandomInt(earthquakeMagnitude * 3);
 	}*/
 
-	g_RenderBounds.GameWindowCenterX -= (int)g_Player->OffsetX;
-	g_RenderBounds.GameWindowCenterY -= (int)(g_Player->OffsetY - g_Player->OffsetZ);
+	g_RenderBounds.GameWindowCenterX -= g_Player->OffsetX;
+	g_RenderBounds.GameWindowCenterY -= (g_Player->OffsetY - g_Player->OffsetZ);
+
+	g_RenderBounds.WindowDrawOffsetX = ((g_Player->X - g_Player->Y) * 22) - g_RenderBounds.GameWindowCenterX;
+	g_RenderBounds.WindowDrawOffsetY = ((g_Player->X + g_Player->Y) * 22) - g_RenderBounds.GameWindowCenterY;
 
 	if (g_ConfigManager.UseScaling)
 	{
@@ -1130,7 +1128,7 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 	{
 		STATIC_TILES *st = lightObject->StaticGroupObjectPtr()->GetStaticData();
 
-		if (st->Quality == 0xFF && lightObject->IsPrefixAn())
+		if (st->LightIndex /*Layer*/ == 0xFF && lightObject->IsPrefixAn())
 			return;
 	}
 
@@ -1175,7 +1173,7 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 
 		if (canBeAdded)
 		{
-			m_Light[m_LightCount].ID = lightObject->GetLightID();
+			m_Light[m_LightCount].ID = (uchar)lightObject->GetLightID();
 
 			if (g_ConfigManager.ColoredLighting)
 				m_Light[m_LightCount].Color = g_Orion.GetLightColor(lightObject->Graphic);
@@ -1228,7 +1226,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 
 				g_UseCircleTrans = (g_ConfigManager.UseCircleTrans && obj->TranparentTest(playerZPlus5));
 
-				obj->Draw(rod.X, rod.Y);
+				obj->Draw(obj->DrawX - g_RenderBounds.WindowDrawOffsetX, obj->DrawY - g_RenderBounds.WindowDrawOffsetY);
 
 				if (g_ConfigManager.DrawStatusState && obj->IsGameObject() && ((CGameObject*)obj)->NPC && !((CGameCharacter*)obj)->Dead())
 				{
@@ -1258,8 +1256,8 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 						(g_ConfigManager.DrawStatusConditionState == DCSCS_NOT_MAX && gc->Hits != gc->MaxHits) ||
 						(g_ConfigManager.DrawStatusConditionState == DCSCS_LOWER && width < g_ConfigManager.DrawStatusConditionValue))
 					{
-						int x = rod.X + gc->OffsetX;
-						int y = rod.Y + gc->OffsetY - (gc->Z * 4) - gc->OffsetZ;
+						int x = obj->DrawX + gc->OffsetX;
+						int y = obj->DrawY + gc->OffsetY - (gc->Z * 4) - gc->OffsetZ;
 
 						if (g_ConfigManager.DrawStatusState == DCSS_ABOVE)
 						{
@@ -1321,7 +1319,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 			{
 				g_UseCircleTrans = (useCircleTrans && obj->TranparentTest(playerZPlus5));
 
-				obj->Select(rod.X, rod.Y);
+				obj->Select(obj->DrawX - g_RenderBounds.WindowDrawOffsetX, obj->DrawY - g_RenderBounds.WindowDrawOffsetY);
 			}
 		}
 

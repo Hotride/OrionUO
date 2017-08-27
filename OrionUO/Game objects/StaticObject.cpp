@@ -16,6 +16,9 @@ CStaticObject::CStaticObject(const uint &serial, const ushort &graphic, const us
 	m_OriginalGraphic = graphic;
 	UpdateGraphicBySeason();
 
+	if (!color)
+		m_Color = m_TiledataPtr->Hue;
+
 	m_TextControl->MaxSize = 1;
 
 #if UO_DEBUG_INFO!=0

@@ -364,7 +364,7 @@ void CGumpPaperdoll::PrepareContent()
 
 	if (g_SelectedObject.Gump == this && g_ObjectInHand.Enabled && g_ObjectInHand.TiledataPtr->AnimID)
 	{
-		if (obj->FindLayer(g_ObjectInHand.TiledataPtr->Quality) == NULL)
+		if (obj->FindLayer(g_ObjectInHand.TiledataPtr->Layer) == NULL)
 		{
 			if (!m_WantTransparentContent)
 			{
@@ -545,9 +545,9 @@ void CGumpPaperdoll::UpdateContent()
 					bodyGumppic->Serial = ID_GP_ITEMS + UsedLayers[i];
 				}
 			}
-			else if (m_WantTransparentContent && g_ObjectInHand.Enabled && UsedLayers[i] == g_ObjectInHand.TiledataPtr->Quality && g_ObjectInHand.TiledataPtr->AnimID)
+			else if (m_WantTransparentContent && g_ObjectInHand.Enabled && UsedLayers[i] == g_ObjectInHand.TiledataPtr->Layer && g_ObjectInHand.TiledataPtr->AnimID)
 			{
-				equipment = obj->FindLayer(g_ObjectInHand.TiledataPtr->Quality);
+				equipment = obj->FindLayer(g_ObjectInHand.TiledataPtr->Layer);
 
 				if (equipment == NULL)
 				{
@@ -867,7 +867,7 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 			}
 			else if (IsWearable(g_ObjectInHand.TiledataPtr->Flags)) //Можно одевать
 			{
-				CGameItem *equipment = container->FindLayer(g_ObjectInHand.TiledataPtr->Quality);
+				CGameItem *equipment = container->FindLayer(g_ObjectInHand.TiledataPtr->Layer);
 
 				if (equipment == NULL) //На этом слое ничего нет
 				{

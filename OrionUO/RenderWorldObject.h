@@ -55,7 +55,7 @@ public:
 	class CLandObject *GetLand();
 
 	//Получить индекс света объекта
-	virtual uchar GetLightID() { return 0; }
+	virtual ushort GetLightID() { return 0; }
 
 	//Отрисовать объект
 	virtual void Draw(const int &x, const int &y) { }

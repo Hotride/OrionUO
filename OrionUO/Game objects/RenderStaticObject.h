@@ -57,7 +57,7 @@ public:
 	uchar GetStaticHeight() { return m_TiledataPtr->Height; }
 
 	//Получить индекс света
-	uchar GetLightID() {return m_TiledataPtr->Quality;}
+	ushort GetLightID() { return m_TiledataPtr->LightIndex; } //m_TiledataPtr->Layer
 	
 	//Стандартные состояния по флагам из тайлдаты (вердаты)
 	bool IsBackground() {return (m_TiledataPtr->Flags & 0x00000001);}
