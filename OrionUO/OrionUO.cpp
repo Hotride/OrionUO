@@ -974,74 +974,70 @@ void COrion::LoadClientConfig()
 
 	HMODULE orionDll = LoadLibrary(g_App.FilePath(L"Orion.dll").c_str());
 
-	if (orionDll == 0)
+	if (orionDll != NULL)
 	{
-		g_OrionWindow.ShowMessage("Orion.dll not found!", "Error!");
-		ExitProcess(0);
-		return;
-	}
+		typedef void __cdecl installFunc(uchar*, const int&, UCHAR_LIST*);
 
-	typedef void __cdecl installFunc(uchar*, const int&, UCHAR_LIST*);
+		installFunc *install = (installFunc*)GetProcAddress(orionDll, "Install");
 
-	installFunc *install = (installFunc*)GetProcAddress(orionDll, "Install");
-
-	if (install == NULL)
-	{
-		g_OrionWindow.ShowMessage("Install function in Orion.dll not found!", "Error!");
-		ExitProcess(0);
-		return;
-	}
-
-	WISP_FILE::CMappedFile config;
-
-	if (config.Load(g_App.FilePath("Client.cuo")))
-	{
-		UCHAR_LIST realData;
-		install(config.Start, config.Size, &realData);
-		config.Unload();
-
-		if (!realData.size())
+		if (install == NULL)
 		{
-			g_OrionWindow.ShowMessage("Corrupted config data!", "Error!");
+			g_OrionWindow.ShowMessage("Install function in Orion.dll not found!", "Error!");
 			ExitProcess(0);
 			return;
 		}
 
-		WISP_DATASTREAM::CDataReader file(&realData[0], realData.size());
+		WISP_FILE::CMappedFile config;
 
-		uchar version = file.ReadInt8();
-		uchar dllVersion = file.ReadInt8();
-		uchar subVersion = 0;
-
-		if (dllVersion != 0xFE)
+		if (config.Load(g_App.FilePath("Client.cuo")))
 		{
-			g_OrionWindow.ShowMessage("Old version of Orion.dll detected!!!\nClient may be crashed in process!!!", "Warning!");
-			file.Move(-1);
+			UCHAR_LIST realData;
+			install(config.Start, config.Size, &realData);
+			config.Unload();
+
+			if (!realData.size())
+			{
+				g_OrionWindow.ShowMessage("Corrupted config data!", "Error!");
+				ExitProcess(0);
+				return;
+			}
+
+			WISP_DATASTREAM::CDataReader file(&realData[0], realData.size());
+
+			uchar version = file.ReadInt8();
+			uchar dllVersion = file.ReadInt8();
+			uchar subVersion = 0;
+
+			if (dllVersion != 0xFE)
+			{
+				g_OrionWindow.ShowMessage("Old version of Orion.dll detected!!!\nClient may be crashed in process!!!", "Warning!");
+				file.Move(-1);
+			}
+			else
+				subVersion = file.ReadInt8();
+
+			file.ReadInt8();
+
+			int len = file.ReadInt8();
+			file.ReadString(len);
+
+			g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
+			g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
+			if (dllVersion == 0xFE)
+				g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt32LE();
+			g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt32LE();
+
+			file.Move(1);
+
+			IFOR(i, 0, MAX_MAPS_COUNT)
+			{
+				file.ReadUInt16LE();
+				file.ReadUInt16LE();
+			}
+
+			g_CharacterList.ClientFlag = file.ReadInt8();
+			file.ReadInt8();
 		}
-		else
-			subVersion = file.ReadInt8();
-
-		file.ReadInt8();
-
-		int len = file.ReadInt8();
-		file.ReadString(len);
-
-		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
-		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
-		if (dllVersion == 0xFE)
-			g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt32LE();
-		g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt32LE();
-
-		file.Move(1);
-
-		IFOR(i, 0, MAX_MAPS_COUNT)
-		{
-			file.ReadUInt16LE();
-			file.ReadUInt16LE();
-		}
-
-		g_CharacterList.ClientFlag = file.ReadInt8();
-		file.ReadInt8();
 	}
 }
 //----------------------------------------------------------------------------------
@@ -1334,7 +1330,10 @@ void COrion::LoadPluginConfig()
 	STRING_LIST functions;
 	UINT_LIST flags;
 
-	g_PluginInit(libName, functions, flags);
+	if (g_PluginInit)
+	{
+		g_PluginInit(libName, functions, flags);
+	}
 
 	LoadPlugin(g_App.FilePath("OA/OrionAssistant.dll"), "Install", 0xFFFFFFFF);
 
