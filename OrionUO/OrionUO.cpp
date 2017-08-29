@@ -848,6 +848,23 @@ void COrion::CheckStaticTileFilterFiles()
 	}
 }
 //----------------------------------------------------------------------------------
+string COrion::ClientFilePath(const char *fname, ...)
+{
+	WISPFUN_DEBUG("c1_f4");
+	va_list arg;
+	va_start(arg, fname);
+
+	if (ClientPath.length() == 0) {
+		return g_App.FilePath(fname);
+	}
+
+	char out[MAX_PATH] = { 0 };
+	vsprintf_s(out, MAX_PATH, fname, arg);
+	va_end(arg);
+
+	return ClientPath + "\\" + out;
+}
+//----------------------------------------------------------------------------------
 void COrion::LoadClientConfig()
 {
 	WISPFUN_DEBUG("c194_f11");
@@ -869,6 +886,21 @@ void COrion::LoadClientConfig()
 			if (strings.size() >= 3)
 			{
 				LoginPort = std::stoi(strings[2]);
+			}
+		}
+		else if (strings[0] == "ClientPath")
+		{
+			char fullPath[MAX_PATH] = {};
+
+			if (GetFullPathNameA(strings[1].c_str(), sizeof(fullPath), fullPath, NULL) > 0)
+			{
+				ClientPath = fullPath;
+			}
+			else
+			{
+				g_OrionWindow.ShowMessage("ClientPath not specified in client.cfg!", "Error!");
+				ExitProcess(0);
+				return;
 			}
 		}
 	}
@@ -2884,7 +2916,7 @@ void COrion::LoadLogin(string &login, int &port)
 	WISPFUN_DEBUG("c194_f45");
 	if (m_LoginPort == 0)
 	{
-		WISP_FILE::CTextFileParser file(g_App.FilePath("login.cfg"), "=,", "#;", "");
+		WISP_FILE::CTextFileParser file(g_Orion.ClientFilePath("login.cfg"), "=,", "#;", "");
 
 		while (!file.IsEOF())
 		{
@@ -3662,12 +3694,12 @@ void COrion::IndexReplaces()
 {
 	WISPFUN_DEBUG("c194_f55");
 	WISP_FILE::CTextFileParser newDataParser("", " \t,{}", "#;//", "");
-	WISP_FILE::CTextFileParser artParser(g_App.FilePath("Art.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser textureParser(g_App.FilePath("TexTerr.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser gumpParser(g_App.FilePath("Gump.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser multiParser(g_App.FilePath("Multi.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser soundParser(g_App.FilePath("Sound.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser mp3Parser(g_App.FilePath("Music\\Digital\\Config.txt"), " ,", "#;", "");
+	WISP_FILE::CTextFileParser artParser(g_Orion.ClientFilePath("Art.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser textureParser(g_Orion.ClientFilePath("TexTerr.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser gumpParser(g_Orion.ClientFilePath("Gump.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser multiParser(g_Orion.ClientFilePath("Multi.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser soundParser(g_Orion.ClientFilePath("Sound.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser mp3Parser(g_Orion.ClientFilePath("Music\\Digital\\Config.txt"), " ,", "#;", "");
 
 	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
 		return;
@@ -3888,7 +3920,7 @@ void COrion::IndexReplaces()
 			if (name.find(extension) == string::npos)
 				name += extension;
 				if (size > 1)
-				mp3.FilePath = g_App.FilePath((name).c_str());
+				mp3.FilePath = g_Orion.ClientFilePath((name).c_str());
 
 				if (size > 2)
 					mp3.Loop = true;

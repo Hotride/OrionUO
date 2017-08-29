@@ -16,6 +16,7 @@ class COrion
 	SETGET(int, TexturesDataCount, 0);
 	SETGET(string, LoginServer, "");
 	SETGET(int, LoginPort, 0);
+	SETGET(string, ClientPath, "");
 
 private:
 	uint m_CRC_Table[256];
@@ -142,7 +143,7 @@ public:
 
 	static string FixServerName(string name);
 
-
+	string ClientFilePath(const char *fname, ...);
 	
 	//Подключиться к логин сокету
 	void Connect();
