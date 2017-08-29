@@ -26,7 +26,7 @@
 
 ### Other Orion Projects
 
-* [Orion.dll](https://github.com/Hotride/OrionDLL) protocol cryptography
+* [Orion.dll](https://github.com/Hotride/OrionDLL) optional protocol cryptography
 * [Orion Launcher](https://github.com/Hotride/OrionLauncher)
 
 --------------
