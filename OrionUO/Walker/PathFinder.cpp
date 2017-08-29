@@ -105,6 +105,8 @@ bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const
 					canBeAdd = false;
 				else if (stepState == PSS_DEAD_OR_GM && (go->IsDoor() || tileInfo->Weight <= 0x5A || (isGM && !go->Locked())))
 					dropFlags = true;
+				else if (go->IsDoor())
+					g_Orion.OpenDoor();
 				else
 					dropFlags = ((graphic >= 0x3946 && graphic <= 0x3964) || graphic == 0x0082);
 			}
