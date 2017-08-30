@@ -313,7 +313,7 @@ bool CPacketManager::AutoLoginNameExists(const string &name)
 	#define CVPRINT(s)
 #endif //CV_PRINT!=0
 //----------------------------------------------------------------------------------
-void CPacketManager::OnClientVersionChange(const CLIENT_VERSION &newClientVersion)
+void CPacketManager::OnClientVersionChange(const uint32_t &newClientVersion)
 {
 	WISPFUN_DEBUG("c150_f2");
 	if (newClientVersion >= CV_500A)

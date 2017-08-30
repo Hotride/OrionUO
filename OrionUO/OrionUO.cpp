@@ -103,8 +103,8 @@ void COrion::ParseCommandLine()
 		{
 			if (str == "login")
 			{
-				m_DefaultLogin = strings[1];
-				m_DefaultPort = atoi(strings[2].c_str());
+				LoginServer = strings[1];
+				LoginPort = atoi(strings[2].c_str());
 			}
 			else if (str == "proxyhost")
 			{
@@ -848,82 +848,196 @@ void COrion::CheckStaticTileFilterFiles()
 	}
 }
 //----------------------------------------------------------------------------------
+std::string COrion::ClientFilePath(const char *fname, ...)
+{
+	WISPFUN_DEBUG("c1_f4");
+	va_list arg;
+	va_start(arg, fname);
+
+	if (ClientPath.length() == 0) {
+		return g_App.FilePath(fname);
+	}
+
+	char out[MAX_PATH] = { 0 };
+	vsprintf_s(out, MAX_PATH, fname, arg);
+	va_end(arg);
+
+	return ClientPath + "\\" + out;
+}
+//----------------------------------------------------------------------------------
+uint32_t COrion::ParseVersion(std::string& version)
+{
+	uint8_t shift = 3;
+	uint32_t version_int = 0;
+	size_t start = 0;
+	size_t end = 0;
+
+	for (char &c : version) {
+		c = tolower(c);
+
+		if (isdigit(c))
+		{
+			end++;
+		}
+		else if (c == '.')
+		{
+			if (shift == 0) {
+				g_OrionWindow.ShowMessage("Invalid version string: %s. Too many '.'\n", "Error!");
+				ExitProcess(EINVAL);
+				return 0;
+			}
+			version_int |= std::stoi(version.substr(start, end)) << (8 * shift);
+			end++;
+			start = end;
+			shift--;
+		}
+		else if (isalpha(c))
+		{
+			if (shift != 1) {
+				g_OrionWindow.ShowMessage("Invalid version string: %s. Too many '.'\n", "Error!");
+				ExitProcess(EINVAL);
+				return 0;
+			}
+
+			version_int |= std::stoi(version.substr(start, end)) << (8 * shift);
+			version_int |= c - 0x61; // The ascii offset of 'a' is 0x61, so a is treated as 0, b as 1, etc.
+			end++;
+			start = end;
+			shift--;
+		}
+	}
+
+	if (start != end) {
+		version_int |= std::stoi(version.substr(start, end)) << (8 * shift);
+	}
+
+	return version_int;
+}
+//----------------------------------------------------------------------------------
 void COrion::LoadClientConfig()
 {
 	WISPFUN_DEBUG("c194_f11");
+
+	WISP_FILE::CTextFileParser file(g_App.FilePath("client.cfg"), "=,", "#;", "");
+
+	while (!file.IsEOF())
+	{
+		std::vector<std::string> strings = file.ReadTokens();
+
+		if (strings.size() < 2)
+		{
+			continue;
+		}
+
+		if (strings[0] == "LoginServer")
+		{
+			LoginServer = strings[1];
+
+			if (strings.size() >= 3)
+			{
+				LoginPort = std::stoi(strings[2]);
+			}
+		}
+		else if (strings[0] == "ClientPath")
+		{
+			char fullPath[MAX_PATH] = {};
+
+			if (GetFullPathNameA(strings[1].c_str(), sizeof(fullPath), fullPath, NULL) > 0)
+			{
+				ClientPath = fullPath;
+			}
+			else
+			{
+				g_OrionWindow.ShowMessage("ClientPath not specified in client.cfg!", "Error!");
+				ExitProcess(0);
+				return;
+			}
+		}
+		else if (strings[0] == "ClientVersionText")
+		{
+			ClientVersionText = strings[1];
+			g_PacketManager.ClientVersion = ParseVersion(strings[1]);
+			if (g_PacketManager.ClientVersion < CV_4011D)
+			{
+				/* On this client, Felucca and Trammel were narrower */
+				g_MapSize[0].Width = 6144;
+				g_MapSize[1].Width = 6144;
+				g_MapBlockSize[0].Width = 768;
+				g_MapBlockSize[0].Width = 768;
+			}
+		}
+		else if (strings[0] == "UseVerdata")
+		{
+			g_FileManager.UseVerdata = std::stoi(strings[1]);
+		}
+	}
+
 	HMODULE orionDll = LoadLibrary(g_App.FilePath(L"Orion.dll").c_str());
 
-	if (orionDll == 0)
+	if (orionDll != NULL)
 	{
-		g_OrionWindow.ShowMessage("Orion.dll not found!", "Error!");
-		ExitProcess(0);
-		return;
-	}
+		typedef void __cdecl installFunc(uchar*, const int&, UCHAR_LIST*);
 
-	typedef void __cdecl installFunc(uchar*, const int&, UCHAR_LIST*);
+		installFunc *install = (installFunc*)GetProcAddress(orionDll, "Install");
 
-	installFunc *install = (installFunc*)GetProcAddress(orionDll, "Install");
-
-	if (install == NULL)
-	{
-		g_OrionWindow.ShowMessage("Install function in Orion.dll not found!", "Error!");
-		ExitProcess(0);
-		return;
-	}
-
-	WISP_FILE::CMappedFile config;
-
-	if (config.Load(g_App.FilePath("Client.cuo")))
-	{
-		UCHAR_LIST realData;
-		install(config.Start, config.Size, &realData);
-		config.Unload();
-
-		if (!realData.size())
+		if (install == NULL)
 		{
-			g_OrionWindow.ShowMessage("Corrupted config data!", "Error!");
+			g_OrionWindow.ShowMessage("Install function in Orion.dll not found!", "Error!");
 			ExitProcess(0);
 			return;
 		}
 
-		WISP_DATASTREAM::CDataReader file(&realData[0], realData.size());
+		WISP_FILE::CMappedFile config;
 
-		uchar version = file.ReadInt8();
-		uchar dllVersion = file.ReadInt8();
-		uchar subVersion = 0;
-
-		if (dllVersion != 0xFE)
+		if (config.Load(g_App.FilePath("Client.cuo")))
 		{
-			g_OrionWindow.ShowMessage("Old version of Orion.dll detected!!!\nClient may be crashed in process!!!", "Warning!");
-			file.Move(-1);
+			UCHAR_LIST realData;
+			install(config.Start, config.Size, &realData);
+			config.Unload();
+
+			if (!realData.size())
+			{
+				g_OrionWindow.ShowMessage("Corrupted config data!", "Error!");
+				ExitProcess(0);
+				return;
+			}
+
+			WISP_DATASTREAM::CDataReader file(&realData[0], realData.size());
+
+			uchar version = file.ReadInt8();
+			uchar dllVersion = file.ReadInt8();
+			uchar subVersion = 0;
+
+			if (dllVersion != 0xFE)
+			{
+				g_OrionWindow.ShowMessage("Old version of Orion.dll detected!!!\nClient may be crashed in process!!!", "Warning!");
+				file.Move(-1);
+			}
+			else
+				subVersion = file.ReadInt8();
+
+			file.ReadInt8();
+
+			int len = file.ReadInt8();
+			file.ReadString(len);
+
+			g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
+			g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
+			if (dllVersion == 0xFE)
+				g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt32LE();
+			g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt32LE();
+
+			file.Move(1);
+
+			IFOR(i, 0, MAX_MAPS_COUNT)
+			{
+				file.ReadUInt16LE();
+				file.ReadUInt16LE();
+			}
+
+			g_CharacterList.ClientFlag = file.ReadInt8();
+			file.ReadInt8();
 		}
-		else
-			subVersion = file.ReadInt8();
-
-		g_PacketManager.ClientVersion = (CLIENT_VERSION)file.ReadInt8();
-
-		int len = file.ReadInt8();
-		m_ClientVersionText = file.ReadString(len);
-
-		g_NetworkInit = (NETWORK_INIT_TYPE*)file.ReadUInt32LE();
-		g_NetworkAction = (NETWORK_ACTION_TYPE*)file.ReadUInt32LE();
-		if (dllVersion == 0xFE)
-			g_NetworkPostAction = (NETWORK_POST_ACTION_TYPE*)file.ReadUInt32LE();
-		g_PluginInit = (PLUGIN_INIT_TYPE*)file.ReadUInt32LE();
-
-		file.Move(1);
-
-		IFOR(i, 0, MAX_MAPS_COUNT)
-		{
-			g_MapSize[i].Width = file.ReadUInt16LE();
-			g_MapSize[i].Height = file.ReadUInt16LE();
-
-			g_MapBlockSize[i].Width = g_MapSize[i].Width / 8;
-			g_MapBlockSize[i].Height = g_MapSize[i].Height / 8;
-		}
-
-		g_CharacterList.ClientFlag = file.ReadInt8();
-		g_FileManager.UseVerdata = (file.ReadInt8() != 0);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -1216,7 +1330,10 @@ void COrion::LoadPluginConfig()
 	STRING_LIST functions;
 	UINT_LIST flags;
 
-	g_PluginInit(libName, functions, flags);
+	if (g_PluginInit)
+	{
+		g_PluginInit(libName, functions, flags);
+	}
 
 	LoadPlugin(g_App.FilePath("OA/OrionAssistant.dll"), "Install", 0xFFFFFFFF);
 
@@ -2860,31 +2977,29 @@ bool COrion::IsVegetation(const ushort &graphic)
 void COrion::LoadLogin(string &login, int &port)
 {
 	WISPFUN_DEBUG("c194_f45");
-	if (m_DefaultPort)
+	if (m_LoginPort == 0)
 	{
-		login = m_DefaultLogin;
-		port = m_DefaultPort;
+		WISP_FILE::CTextFileParser file(g_Orion.ClientFilePath("login.cfg"), "=,", "#;", "");
 
-		return;
-	}
-
-	WISP_FILE::CTextFileParser file(g_App.FilePath("login.cfg"), "=,", "#;", "");
-
-	while (!file.IsEOF())
-	{
-		STRING_LIST strings = file.ReadTokens();
-
-		if (strings.size() >= 3)
+		while (!file.IsEOF())
 		{
-			string lo = ToLowerA(strings[0]);
+			STRING_LIST strings = file.ReadTokens();
 
-			if (lo == "loginserver")
+			if (strings.size() >= 3)
 			{
-				login = strings[1];
-				port = atoi(strings[2].c_str());
+				string lo = ToLowerA(strings[0]);
+
+				if (lo == "loginserver")
+				{
+					LoginServer = strings[1];
+					LoginPort = atoi(strings[2].c_str());
+				}
 			}
 		}
 	}
+
+	login = m_LoginServer;
+	port = m_LoginPort;
 }
 //----------------------------------------------------------------------------------
 void COrion::GoToWebLink(const string &url)
@@ -3642,12 +3757,12 @@ void COrion::IndexReplaces()
 {
 	WISPFUN_DEBUG("c194_f55");
 	WISP_FILE::CTextFileParser newDataParser("", " \t,{}", "#;//", "");
-	WISP_FILE::CTextFileParser artParser(g_App.FilePath("Art.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser textureParser(g_App.FilePath("TexTerr.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser gumpParser(g_App.FilePath("Gump.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser multiParser(g_App.FilePath("Multi.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser soundParser(g_App.FilePath("Sound.def"), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser mp3Parser(g_App.FilePath("Music\\Digital\\Config.txt"), " ,", "#;", "");
+	WISP_FILE::CTextFileParser artParser(g_Orion.ClientFilePath("Art.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser textureParser(g_Orion.ClientFilePath("TexTerr.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser gumpParser(g_Orion.ClientFilePath("Gump.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser multiParser(g_Orion.ClientFilePath("Multi.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser soundParser(g_Orion.ClientFilePath("Sound.def"), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser mp3Parser(g_Orion.ClientFilePath("Music\\Digital\\Config.txt"), " ,", "#;", "");
 
 	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
 		return;
@@ -3868,7 +3983,7 @@ void COrion::IndexReplaces()
 			if (name.find(extension) == string::npos)
 				name += extension;
 				if (size > 1)
-				mp3.FilePath = g_App.FilePath((name).c_str());
+				mp3.FilePath = g_Orion.ClientFilePath((name).c_str());
 
 				if (size > 2)
 					mp3.Loop = true;

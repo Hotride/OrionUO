@@ -462,7 +462,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 	{
 		static const string typeNames[5] = { "animal", "monster", "sea_monster", "human", "equipment" };
 
-		WISP_FILE::CTextFileParser mobtypesParser(g_App.FilePath("mobtypes.txt").c_str(), " \t", "#;//", "");
+		WISP_FILE::CTextFileParser mobtypesParser(g_Orion.ClientFilePath("mobtypes.txt").c_str(), " \t", "#;//", "");
 
 		while (!mobtypesParser.IsEOF())
 		{
@@ -487,19 +487,19 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 	}
 
 	WISP_FILE::CTextFileParser newBodyParser("", " \t,{}", "#;//", "");
-	WISP_FILE::CTextFileParser bodyParser(g_App.FilePath("Body.def").c_str(), " \t", "#;//", "{}");
-	WISP_FILE::CTextFileParser bodyconvParser(g_App.FilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
-	WISP_FILE::CTextFileParser corpseParser(g_App.FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser bodyParser(g_Orion.ClientFilePath("Body.def").c_str(), " \t", "#;//", "{}");
+	WISP_FILE::CTextFileParser bodyconvParser(g_Orion.ClientFilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
+	WISP_FILE::CTextFileParser corpseParser(g_Orion.ClientFilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
 
 	/*WISP_FILE::CTextFileParser animParser[4]
 	{
-		WISP_FILE::CTextFileParser(g_App.FilePath("Anim1.def").c_str(), " \t", "#;//", "{}"),
-		WISP_FILE::CTextFileParser(g_App.FilePath("Anim2.def").c_str(), " \t", "#;//", "{}"),
-		WISP_FILE::CTextFileParser(g_App.FilePath("Anim3.def").c_str(), " \t", "#;//", "{}"),
-		WISP_FILE::CTextFileParser(g_App.FilePath("Anim4.def").c_str(), " \t", "#;//", "{}")
+		WISP_FILE::CTextFileParser(g_Orion.ClientFilePath("Anim1.def").c_str(), " \t", "#;//", "{}"),
+		WISP_FILE::CTextFileParser(g_Orion.ClientFilePath("Anim2.def").c_str(), " \t", "#;//", "{}"),
+		WISP_FILE::CTextFileParser(g_Orion.ClientFilePath("Anim3.def").c_str(), " \t", "#;//", "{}"),
+		WISP_FILE::CTextFileParser(g_Orion.ClientFilePath("Anim4.def").c_str(), " \t", "#;//", "{}")
 	};*/
 
-	WISP_FILE::CTextFileParser equipConvParser(g_App.FilePath("EquipConv.def"), " \t", "#;//", "");
+	WISP_FILE::CTextFileParser equipConvParser(g_Orion.ClientFilePath("EquipConv.def"), " \t", "#;//", "");
 
 	while (!equipConvParser.IsEOF())
 	{

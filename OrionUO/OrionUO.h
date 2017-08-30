@@ -12,10 +12,11 @@
 //----------------------------------------------------------------------------------
 class COrion
 {
-	SETGET(string, ClientVersionText, "2.0.3");
 	SETGET(int, TexturesDataCount, 0);
-	SETGET(string, DefaultLogin, "");
-	SETGET(int, DefaultPort, 0);
+	SETGET(string, LoginServer, "");
+	SETGET(int, LoginPort, 0);
+	SETGET(string, ClientPath, "");
+	SETGET(string, ClientVersionText, "5.0.8.3");
 
 private:
 	uint m_CRC_Table[256];
@@ -35,6 +36,8 @@ private:
 	deque<CIndexObject*> m_UsedLightList;
 
 	UCHAR_LIST m_AnimData;
+
+	uint32_t ParseVersion(std::string& version);
 
 	void LoadClientConfig();
 	void LoadAutoLoginNames();
@@ -142,7 +145,7 @@ public:
 
 	static string FixServerName(string name);
 
-
+	string ClientFilePath(const char *fname, ...);
 	
 	//Подключиться к логин сокету
 	void Connect();

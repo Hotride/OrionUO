@@ -324,7 +324,7 @@ bool CProfessionManager::Load()
 	head->TopLevel = true;
 	Add(head);
 
-	WISP_FILE::CTextFileParser file(g_App.FilePath("prof.txt"), " \t,", "#;", "\"\"");
+	WISP_FILE::CTextFileParser file(g_Orion.ClientFilePath("prof.txt"), " \t,", "#;", "\"\"");
 
 	if (!file.IsEOF())
 	{
@@ -401,7 +401,7 @@ void CProfessionManager::LoadProfessionDescription()
 	WISPFUN_DEBUG("c153_f5");
 	WISP_FILE::CMappedFile file;
 
-	if (file.Load(g_App.FilePath("professn.enu")))
+	if (file.Load(g_Orion.ClientFilePath("professn.enu")))
 	{
 		char *ptr = (char*)file.Start;
 		char *end = (char*)((uint)file.Start + file.Size);

@@ -53,7 +53,7 @@ typedef struct PLUGIN_INTERFACE
 	struct PLUGIN_CLIENT_INTERFACE *Client;
 
 	HWND hWnd;
-	CLIENT_VERSION ClientVersion;
+	uint32_t ClientVersion;
 	bool UseVerdata;
 
 	PACKET_PROC *Recv;
