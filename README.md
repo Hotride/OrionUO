@@ -61,9 +61,7 @@ $ ninja OrionUO_unity -j8
 $ ./OrionUO/unity/OrionUO
 ```
 
-  > You'll need a `Client.cuo` and a `uo_debug.cfg` in the working directory. Inside `uo_debug.cfg` you can add a line `CustomPath=/path/to/uo/data`, so Orion will be able to find your original client data files.
-
-
+  > You'll need a `client.cfg` in the working directory. Inside `client.cfg` you can add a line `CustomPath=/path/to/uo/data`, so Orion will be able to find your original client data files.
 
 --------------
 
