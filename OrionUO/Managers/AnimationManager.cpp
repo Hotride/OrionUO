@@ -1640,14 +1640,10 @@ void CAnimationManager::FixSittingDirection(uchar &layerDirection, bool &mirror,
 	layerDirection = m_Direction;
 	GetSittingAnimDirection(m_Direction, mirror, x, y);
 
-	int offsX = g_Orion.m_StaticData[data.Graphic].SittingOffset;
-
-	if (offsX > 10 || offsX == 0)
-		offsX = SITTING_OFFSET_X;
+	int offsX = SITTING_OFFSET_X;
 
 	if (mirror)
-	{		
-		
+	{
 		if (m_Direction == 3)
 		{
 			y += 23 + data.MirrorOffsetY;
@@ -1681,14 +1677,14 @@ void CAnimationManager::FixSittingDirection(uchar &layerDirection, bool &mirror,
 @param [__in] z Координата Z
 @return 
 */
-void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
+void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y)
 {
 	m_EquipConvItem = NULL;
 	WISPFUN_DEBUG("c133_f16");
 	m_Transform = false;
 
-	int drawX = (int)(x + obj->OffsetX);
-	int drawY = (int)(y + obj->OffsetY) - (z * 4) - (int)obj->OffsetZ - 3;
+	int drawX = x + obj->OffsetX;
+	int drawY = y + obj->OffsetY - obj->OffsetZ - 3;
 
 	ushort targetColor = 0;
 	bool needHPLine = false;
@@ -1870,8 +1866,7 @@ void CAnimationManager::DrawCharacter(CGameCharacter *obj, int x, int y, int z)
 
 					g_GL.PushScissor(drawX + xOffset, drawY + yOffset, 20, 40);
 					bool selected = g_SelectedObject.Object == ro;
-					ushort color = selected ? 0x0035 : ro->Color;
-					g_Orion.DrawStaticArt(sittingData.Graphic, color, x, y, ro->Z, !selected);
+					g_Orion.DrawStaticArt(sittingData.Graphic, selected ? 0x0035 : ro->Color, ro->DrawX, ro->DrawY, !selected);
 					g_GL.PopScissor();
 
 					break;
@@ -2038,7 +2033,7 @@ void CAnimationManager::PrepareTargetAttackGump(CTargetGump &gump, int drawX, in
 @param [__in] z Координата Z
 @return true в случае, если хоть 1 пиксель находится под мышкой
 */
-bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, int z)
+bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y)
 {
 	WISPFUN_DEBUG("c133_f17");
 	y -= 3;
@@ -2056,8 +2051,8 @@ bool CAnimationManager::CharacterPixelsInXY(CGameCharacter *obj, int x, int y, i
 	
 	CGameItem *goi = obj->FindLayer(OL_MOUNT);
 	
-	int drawX = (int)(x - obj->OffsetX);
-	int drawY = (int)(y - obj->OffsetY) - (z * 4) - obj->OffsetZ;
+	int drawX = x - obj->OffsetX;
+	int drawY = y - obj->OffsetY - obj->OffsetZ;
 	
 	if (obj->IsHuman() && goi != NULL) //Check mount
 	{

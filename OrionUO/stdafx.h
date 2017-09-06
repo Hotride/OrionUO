@@ -64,6 +64,7 @@
 #include "EnumList.h"
 #include "BaseQueue.h"
 #include "Constants.h"
+#include "DateTimeStamp.h"
 
 #include "GLEngine/GLTexture.h"
 #include "GLEngine/GLTextTexture.h"

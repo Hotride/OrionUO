@@ -77,15 +77,11 @@ struct STATIC_TILES_OLD
 {
 	unsigned int Flags;
 	unsigned char Weight;
-	unsigned char Quality;
-	unsigned short Unknown;
-	unsigned char Unknown1;
-	unsigned char Quality1;
+	unsigned char Layer;
+	unsigned int Count;
 	unsigned short AnimID;
-	unsigned char Unknown2;
-	unsigned char Hue;
-	unsigned char SittingOffset;
-	unsigned char Unknown3;
+	unsigned short Hue;
+	unsigned short LightIndex;
 	unsigned char Height;
 	char Name[20];
 };
@@ -113,15 +109,11 @@ struct STATIC_TILES_NEW
 {
 	unsigned __int64 Flags;
 	unsigned char Weight;
-	unsigned char Quality;
-	unsigned short Unknown;
-	unsigned char Unknown1;
-	unsigned char Quality1;
+	unsigned char Layer;
+	unsigned int Count;
 	unsigned short AnimID;
-	unsigned char Unknown2;
-	unsigned char Hue;
-	unsigned char SittingOffset;
-	unsigned char Unknown3;
+	unsigned short Hue;
+	unsigned short LightIndex;
 	unsigned char Height;
 	char Name[20];
 };
@@ -149,15 +141,11 @@ struct STATIC_TILES
 {
 	unsigned __int64 Flags;
 	unsigned char Weight;
-	unsigned char Quality;
-	unsigned short Unknown;
-	unsigned char Unknown1;
-	unsigned char Quality1;
+	unsigned char Layer;
+	unsigned int Count;
 	unsigned short AnimID;
-	unsigned char Unknown2;
-	unsigned char Hue;
-	unsigned char SittingOffset;
-	unsigned char Unknown3;
+	unsigned short Hue;
+	unsigned short LightIndex;
 	unsigned char Height;
 	string Name;
 };

@@ -262,25 +262,25 @@ public:
 	void DrawLandTexture(class CLandObject *land, ushort color, const int &x, const int &y);
 
 	//Нарисовать ландшафт (из art.mul)
-	void DrawLandArt(const ushort &id, ushort color, const int &x, const int &y, const int &z);
+	void DrawLandArt(const ushort &id, ushort color, const int &x, const int &y);
 
 	//Нарисовать статику
-	void DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const int &z, const bool &selection = false, const bool &hidden = false);
+	void DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const bool &selection = false);
 
 	//Нарисовать анимированную статику
-	void DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection = false, const bool &hidden = false);
+	void DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const bool &selection = false);
 
 	//Нарисовать повернутую статику
-	void DrawStaticArtRotated(const ushort &id, ushort color, const int &x, const int &y, const int &z, const float &angle);
+	void DrawStaticArtRotated(const ushort &id, ushort color, const int &x, const int &y, const float &angle);
 
 	//Нарисовать повернутую анимированную статику
-	void DrawStaticArtAnimatedRotated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const float &angle);
+	void DrawStaticArtAnimatedRotated(const ushort &id, const ushort &color, const int &x, const int &y, const float &angle);
 
 	//Нарисовать прозрачную статику
-	void DrawStaticArtTransparent(const ushort &id, ushort color, int x, int y, const int &z, const bool &selection = false);
+	void DrawStaticArtTransparent(const ushort &id, ushort color, int x, int y, const bool &selection = false);
 
 	//Нарисовать прозрачную анимированную статику
-	void DrawStaticArtAnimatedTransparent(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection = false);
+	void DrawStaticArtAnimatedTransparent(const ushort &id, const ushort &color, const int &x, const int &y, const bool &selection = false);
 
 	//Нарисовать статику в контейнере
 	void DrawStaticArtInContainer(const ushort &id, ushort color, int x, int y, const bool &selection = false, const bool &onMouse = false);
@@ -303,10 +303,10 @@ public:
 	bool ResizepicPixelsInXY(const ushort &id, int x, int y, const int &width, const int &height);
 
 	//Проверка статики под курсором мышки
-	bool StaticPixelsInXY(const ushort &id, int x, int y, const int &z);
+	bool StaticPixelsInXY(const ushort &id, int x, int y);
 
 	//Проверка анимированной статики под курсором мышки
-	bool StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y, const int &z);
+	bool StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y);
 
 	//Проверка круга прозрачности под курсором мышки
 	bool CircleTransPixelsInXY();
@@ -315,7 +315,7 @@ public:
 	bool StaticPixelsInXYInContainer(const ushort &id, int x, int y);
 
 	//Проверка ландшафта (из art.mul) под курсором мышки
-	bool LandPixelsInXY(const ushort &id, int x, int y, const int &z);
+	bool LandPixelsInXY(const ushort &id, int x, int y);
 
 	//Проверка растянутого ландшафта (из texmaps.mul) под курсором мышки
 	bool LandTexturePixelsInXY(int x, int  y, RECT &r);

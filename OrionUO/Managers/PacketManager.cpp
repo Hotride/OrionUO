@@ -67,8 +67,8 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x25*/ RMSGH(ORION_SAVE_PACKET, "Update Contained Item", 0x14, UpdateContainedItem),
 	/*0x26*/ BMSG(ORION_SAVE_PACKET, "Kick client (God client)", 0x05),
 	/*0x27*/ RMSGH(ORION_SAVE_PACKET, "Deny Move Item", 0x02, DenyMoveItem),
-	/*0x28*/ RMSG(ORION_SAVE_PACKET, "Deny move item?", 0x05),
-	/*0x29*/ RMSG(ORION_SAVE_PACKET, "Drop Item Acceptem", 0x01),
+	/*0x28*/ RMSGH(ORION_SAVE_PACKET, "End dragging item", 0x05, EndDraggingItem),
+	/*0x29*/ RMSGH(ORION_SAVE_PACKET, "Drop Item Accepted", 0x01, DropItemAccepted),
 	/*0x2A*/ RMSG(ORION_SAVE_PACKET, "Blood mode", 0x05),
 	/*0x2B*/ BMSG(ORION_SAVE_PACKET, "Toggle God mode (God client)", 0x02),
 	/*0x2C*/ BMSGH(ORION_IGNORE_PACKET, "Death Screen", 0x02, DeathScreen),
@@ -540,6 +540,7 @@ void CPacketManager::AddMegaClilocRequest(const uint &serial)
 void CPacketManager::OnReadFailed()
 {
 	WISPFUN_DEBUG("c150_f7");
+	LOG("OnReadFailed...Disconnecting...\n");
 	g_Orion.DisconnectGump();
 	g_Orion.Disconnect();
 }
@@ -617,7 +618,7 @@ void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
 
 	CPacketInfo &info = m_Packets[*m_Start];
 
-	LOG("--- ^(%d) r(+%d => %d) Plugin:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
+	LOG("--- ^(%d) r(+%d => %d) Plugin->Client:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
 	LOG_DUMP(m_Start, m_Size);
 
 	g_LastPacketTime = ticks;
@@ -751,7 +752,7 @@ PACKET_HANDLER(CharacterList)
 
 	g_CharacterList.OnePerson = (bool)(g_ClientFlag & CLF_ONE_CHARACTER_SLOT);
 	//g_SendLogoutNotification = (bool)(g_ClientFlag & LFF_RE);
-	g_NPCPopupEnabled = (bool)(g_ClientFlag & CLF_CONTEXT_MENU);
+	g_PopupEnabled = (bool)(g_ClientFlag & CLF_CONTEXT_MENU);
 	g_TooltipsEnabled = (bool)((g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS) && (g_PacketManager.ClientVersion >= CV_308Z));
 	g_PaperdollBooks = (bool)(g_ClientFlag & CLF_PALADIN_NECROMANCER_TOOLTIPS);
 
@@ -1618,6 +1619,28 @@ PACKET_HANDLER(DenyMoveItem)
 	}
 }
 //----------------------------------------------------------------------------------
+PACKET_HANDLER(EndDraggingItem)
+{
+	WISPFUN_DEBUG("c150_f33_1");
+	if (g_World == NULL)
+		return;
+
+	//Unused
+	//Move(2);
+	//Move(2);
+
+	g_ObjectInHand.Enabled = false;
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(DropItemAccepted)
+{
+	WISPFUN_DEBUG("c150_f33_1");
+	if (g_World == NULL)
+		return;
+
+	g_ObjectInHand.Enabled = false;
+}
+//----------------------------------------------------------------------------------
 PACKET_HANDLER(DeleteObject)
 {
 	WISPFUN_DEBUG("c150_f34");
@@ -2221,7 +2244,7 @@ PACKET_HANDLER(ExtendedCommand)
 			{
 				str = g_ClilocManager.Cliloc(g_Language)->GetW(clilocNum, true);
 				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
-				if (item != NULL)
+				if (item != NULL && !item->NPC)
 					item->Name = ToString(str);
 
 			}
@@ -2541,7 +2564,7 @@ PACKET_HANDLER(ExtendedCommand)
 				text->Unicode = false;
 				text->Font = 3;
 				text->Serial = serial;
-				text->Color = 0x0035;
+				text->Color = (serial == g_PlayerSerial ? 0x0034 : 0x0021);
 				text->Type = TT_OBJECT;
 				text->SetText(std::to_string(damage));
 				text->GenerateTexture(0);
@@ -3640,7 +3663,7 @@ PACKET_HANDLER(Damage)
 		text->Unicode = false;
 		text->Font = 3;
 		text->Serial = serial;
-		text->Color = 0x0035;
+		text->Color = (serial == g_PlayerSerial ? 0x0034 : 0x0021);
 		text->Type = TT_OBJECT;
 		text->SetText(std::to_string(damage));
 		text->GenerateTexture(0);

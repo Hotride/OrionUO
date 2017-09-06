@@ -192,7 +192,8 @@ bool COrion::Install()
 	LOG("COrion::Install()\n");
 	SetUnhandledExceptionFilter(OrionUnhandledExceptionFilter);
 
-	CRASHLOG("Orion version is: %s\n", g_App.GetFileVersion().c_str());
+	LOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
+	CRASHLOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
 
 	IFOR(i, 0, 256)
 	{
@@ -966,7 +967,7 @@ void COrion::ProcessDelayedClicks()
 
 				//if (serial < 0x40000000)
 				{
-					if (!g_ConfigManager.HoldShiftForContextMenus || g_ShiftPressed)
+					if (g_PopupEnabled && (!g_ConfigManager.HoldShiftForContextMenus || g_ShiftPressed))
 						CPacketRequestPopupMenu(serial).Send();
 				}
 			}
@@ -2389,7 +2390,7 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		case VKI_USED_LAYER:
 		{
 			if (value >= 0 && value < (int)m_StaticData.size())
-				value = m_StaticData[value].Quality;
+				value = m_StaticData[value].Layer;
 
 			break;
 		}
@@ -2940,15 +2941,11 @@ void COrion::LoadTiledata(const int &landSize, const int &staticsSize)
 					tile.Flags = file.ReadInt64LE();
 
 				tile.Weight = file.ReadInt8();
-				tile.Quality = file.ReadInt8();
-				tile.Unknown = file.ReadInt16LE();
-				tile.Unknown1 = file.ReadInt8();
-				tile.Quality1 = file.ReadInt8();
+				tile.Layer = file.ReadInt8();
+				tile.Count = file.ReadInt32LE();
 				tile.AnimID = file.ReadInt16LE();
-				tile.Unknown2 = file.ReadInt8();
-				tile.Hue = file.ReadInt8();
-				tile.SittingOffset = file.ReadInt8();
-				tile.Unknown3 = file.ReadInt8();
+				tile.Hue = file.ReadInt16LE();
+				tile.LightIndex = file.ReadInt16LE();
 				tile.Height = file.ReadInt8();
 				tile.Name = file.ReadString(20);
 			}
@@ -3607,15 +3604,11 @@ void COrion::PatchFiles()
 						tile.Flags = file.ReadInt64LE();
 
 					tile.Weight = file.ReadInt8();
-					tile.Quality = file.ReadInt8();
-					tile.Unknown = file.ReadInt16LE();
-					tile.Unknown1 = file.ReadInt8();
-					tile.Quality1 = file.ReadInt8();
+					tile.Layer = file.ReadInt8();
+					tile.Count = file.ReadInt32LE();
 					tile.AnimID = file.ReadInt16LE();
-					tile.Unknown2 = file.ReadInt8();
-					tile.Hue = file.ReadInt8();
-					tile.SittingOffset = file.ReadInt8();
-					tile.Unknown3 = file.ReadInt8();
+					tile.Hue = file.ReadInt16LE();
+					tile.LightIndex = file.ReadInt16LE();
 					tile.Height = file.ReadInt8();
 					tile.Name = file.ReadString(20);
 				}
@@ -4491,13 +4484,13 @@ void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, cons
 	ushort id = land->Graphic;
 
 	if (id == 2)
-		DrawLandArt(id, color, x, y, land->m_Rect.left / 4);
+		DrawLandArt(id, color, x, y);
 	else
 	{
 		CGLTexture *th = ExecuteTexture(id);
 
 		if (th == NULL)
-			DrawLandArt(id, color, x, y, land->m_Rect.left / 4);
+			DrawLandArt(id, color, x, y);
 		else
 		{
 			if (g_OutOfRangeColor)
@@ -4513,12 +4506,12 @@ void COrion::DrawLandTexture(CLandObject *land, ushort color, const int &x, cons
 
 			glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-			g_GL_DrawLandTexture(*th, x, y, land);
+			g_GL_DrawLandTexture(*th, x, y + (land->Z * 4), land);
 		}
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int &y, const int &z)
+void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c194_f77");
 	CGLTexture *th = ExecuteLandArt(id);
@@ -4535,11 +4528,11 @@ void COrion::DrawLandArt(const ushort &id, ushort color, const int &x, const int
 
 		glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-		th->Draw(x - 22, y - (22 + (z * 4)));
+		th->Draw(x - 22, y - 22);
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const int &z, const bool &selection, const bool &hidden)
+void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const int &y, const bool &selection)
 {
 	WISPFUN_DEBUG("c194_f78");
 	CGLTexture *th = ExecuteStaticArt(id);
@@ -4553,7 +4546,7 @@ void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const i
 
 		if (drawMode)
 		{
-			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)) && !hidden);
+			bool partialHue = (!selection && IsPartialHue(GetStaticFlags(id)));
 
 			if (partialHue)
 				drawMode = 2;
@@ -4563,17 +4556,17 @@ void COrion::DrawStaticArt(const ushort &id, ushort color, const int &x, const i
 
 		glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-		th->Draw(x - m_StaticDataIndex[id].Width, y - (m_StaticDataIndex[id].Height + (z * 4)));
+		th->Draw(x - m_StaticDataIndex[id].Width, y - m_StaticDataIndex[id].Height);
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection, const bool &hidden)
+void COrion::DrawStaticArtAnimated(const ushort &id, const ushort &color, const int &x, const int &y, const bool &selection)
 {
 	WISPFUN_DEBUG("c194_f79");
-	DrawStaticArt(id + m_StaticDataIndex[id].Offset, color, x, y, z, selection, hidden);
+	DrawStaticArt(id + m_StaticDataIndex[id].Offset, color, x, y, selection);
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArtRotated(const ushort &id, ushort color, const int &x, const int &y, const int &z, const float &angle)
+void COrion::DrawStaticArtRotated(const ushort &id, ushort color, const int &x, const int &y, const float &angle)
 {
 	WISPFUN_DEBUG("c194_f80");
 	CGLTexture *th = ExecuteStaticArt(id);
@@ -4590,17 +4583,17 @@ void COrion::DrawStaticArtRotated(const ushort &id, ushort color, const int &x, 
 
 		glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-		th->DrawRotated(x, y - (z * 4), angle);
+		th->DrawRotated(x, y, angle);
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArtAnimatedRotated(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const float &angle)
+void COrion::DrawStaticArtAnimatedRotated(const ushort &id, const ushort &color, const int &x, const int &y, const float &angle)
 {
 	WISPFUN_DEBUG("c194_f81");
-	DrawStaticArtRotated(id + m_StaticDataIndex[id].Offset, color, x, y, z, angle);
+	DrawStaticArtRotated(id + m_StaticDataIndex[id].Offset, color, x, y, angle);
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArtTransparent(const ushort &id, ushort color, int x, int y, const int &z, const bool &selection)
+void COrion::DrawStaticArtTransparent(const ushort &id, ushort color, int x, int y, const bool &selection)
 {
 	WISPFUN_DEBUG("c194_f82");
 	CGLTexture *th = ExecuteStaticArt(id);
@@ -4624,14 +4617,14 @@ void COrion::DrawStaticArtTransparent(const ushort &id, ushort color, int x, int
 
 		glUniform1iARB(g_ShaderDrawMode, drawMode);
 
-		th->DrawTransparent(x - m_StaticDataIndex[id].Width, y - (m_StaticDataIndex[id].Height + (z * 4)));
+		th->DrawTransparent(x - m_StaticDataIndex[id].Width, y - m_StaticDataIndex[id].Height);
 	}
 }
 //----------------------------------------------------------------------------------
-void COrion::DrawStaticArtAnimatedTransparent(const ushort &id, const ushort &color, const int &x, const int &y, const int &z, const bool &selection)
+void COrion::DrawStaticArtAnimatedTransparent(const ushort &id, const ushort &color, const int &x, const int &y, const bool &selection)
 {
 	WISPFUN_DEBUG("c194_f83");
-	DrawStaticArtTransparent(id + m_StaticDataIndex[id].Offset, color, x, y, z, selection);
+	DrawStaticArtTransparent(id + m_StaticDataIndex[id].Offset, color, x, y, selection);
 }
 //----------------------------------------------------------------------------------
 void COrion::DrawStaticArtInContainer(const ushort &id, ushort color, int x, int y, const bool &selection, const bool &onMouse)
@@ -4904,7 +4897,7 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 	return false;
 }
 //----------------------------------------------------------------------------------
-bool COrion::StaticPixelsInXY(const ushort &id, int x, int y, const int &z)
+bool COrion::StaticPixelsInXY(const ushort &id, int x, int y)
 {
 	WISPFUN_DEBUG("c194_f90");
 	CIndexObject &io = m_StaticDataIndex[id];
@@ -4916,7 +4909,7 @@ bool COrion::StaticPixelsInXY(const ushort &id, int x, int y, const int &z)
 	if (th != NULL)
 	{
 		x = (g_MouseManager.Position.X - x) + io.Width;
-		y = (g_MouseManager.Position.Y - y) + io.Height + (z * 4);
+		y = (g_MouseManager.Position.Y - y) + io.Height;
 
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
@@ -4929,10 +4922,10 @@ bool COrion::StaticPixelsInXY(const ushort &id, int x, int y, const int &z)
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool COrion::StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y, const int &z)
+bool COrion::StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c194_f91");
-	return StaticPixelsInXY(id + m_StaticDataIndex[id].Offset, x, y, z);
+	return StaticPixelsInXY(id + m_StaticDataIndex[id].Offset, x, y);
 }
 //----------------------------------------------------------------------------------
 bool COrion::CircleTransPixelsInXY()
@@ -4977,7 +4970,7 @@ bool COrion::StaticPixelsInXYInContainer(const ushort &id, int x, int y)
 	return result;
 }
 //----------------------------------------------------------------------------------
-bool COrion::LandPixelsInXY(const ushort &id, int x, int  y, const int &z)
+bool COrion::LandPixelsInXY(const ushort &id, int x, int  y)
 {
 	WISPFUN_DEBUG("c194_f94");
 	CIndexObject &io = m_LandDataIndex[id];
@@ -4989,7 +4982,7 @@ bool COrion::LandPixelsInXY(const ushort &id, int x, int  y, const int &z)
 	if (th != NULL)
 	{
 		x = (g_MouseManager.Position.X - x) + 22;
-		y = (g_MouseManager.Position.Y - y) + 22 + (z * 4);
+		y = (g_MouseManager.Position.Y - y) + 22;
 
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
@@ -5436,7 +5429,7 @@ void COrion::EquipItem(uint container)
 			if (!container)
 				container = g_PlayerSerial;
 
-			CPacketEquipRequest(g_ObjectInHand.Serial, m_StaticData[graphic].Quality, container).Send();
+			CPacketEquipRequest(g_ObjectInHand.Serial, m_StaticData[graphic].Layer, container).Send();
 
 			g_ObjectInHand.Enabled = false;
 		}

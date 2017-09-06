@@ -70,9 +70,9 @@ void CRenderStaticObject::Draw(const int &x, const int &y)
 	}
 
 	if (g_UseCircleTrans)
-		g_Orion.DrawStaticArtAnimatedTransparent(m_RenderGraphic, m_RenderColor, x, y, m_Z);
+		g_Orion.DrawStaticArtAnimatedTransparent(m_RenderGraphic, m_RenderColor, x, y);
 	else
-		g_Orion.DrawStaticArtAnimated(m_RenderGraphic, m_RenderColor, x, y, m_Z);
+		g_Orion.DrawStaticArtAnimated(m_RenderGraphic, m_RenderColor, x, y);
 
 	if (useAlpha)
 	{
@@ -81,7 +81,7 @@ void CRenderStaticObject::Draw(const int &x, const int &y)
 	}
 
 	if (IsLightSource() && g_GameScreen.UseLight)
-		g_GameScreen.AddLight(this, this, x, y - (m_Z * 4));
+		g_GameScreen.AddLight(this, this, x, y);
 }
 //----------------------------------------------------------------------------------
 void CRenderStaticObject::Select(const int &x, const int &y)
@@ -93,7 +93,7 @@ void CRenderStaticObject::Select(const int &x, const int &y)
 			return;
 	}
 
-	if (!g_UseCircleTrans && g_Orion.StaticPixelsInXYAnimated(m_RenderGraphic, x, y, m_Z))
+	if (!g_UseCircleTrans && g_Orion.StaticPixelsInXYAnimated(m_RenderGraphic, x, y))
 		g_SelectedObject.Init(this);
 }
 //---------------------------------------------------------------------------

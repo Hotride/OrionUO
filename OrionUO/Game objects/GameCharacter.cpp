@@ -270,7 +270,7 @@ void CGameCharacter::Draw(const int &x, const int &y)
 	if (!IsPlayer() && g_Player->Warmode && g_SelectedObject.Object == this)
 		g_StatusbarUnderMouse = m_Serial;
 
-	g_AnimationManager.DrawCharacter(this, x, y, m_Z); //Draw character
+	g_AnimationManager.DrawCharacter(this, x, y); //Draw character
 
 	g_StatusbarUnderMouse = lastSBsel;
 
@@ -280,7 +280,7 @@ void CGameCharacter::Draw(const int &x, const int &y)
 void CGameCharacter::Select(const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c15_f6");
-	if (g_AnimationManager.CharacterPixelsInXY(this, x, y, m_Z))
+	if (g_AnimationManager.CharacterPixelsInXY(this, x, y))
 		g_SelectedObject.Init(this);
 }
 //----------------------------------------------------------------------------------
@@ -928,6 +928,9 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 				m_X = wd.X;
 				m_Y = wd.Y;
 				m_Z = wd.Z;
+
+				UpdateDrawCoordinates();
+
 				m_Direction = wd.Direction;
 
 				m_OffsetX = 0;

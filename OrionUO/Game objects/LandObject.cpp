@@ -133,16 +133,9 @@ void CLandObject::Draw(const int &x, const int &y)
 #endif
 
 		if (!m_IsStretched)
-			g_Orion.DrawLandArt(m_Graphic, objColor, x, y, m_Z);
+			g_Orion.DrawLandArt(m_Graphic, objColor, x, y);
 		else
-		{
-			/*char minZ = m_MinZ + 3;
-
-			if (minZ > m_Z)
-				minZ = m_Z;*/
-
 			g_Orion.DrawLandTexture(this, objColor, x, y);
-		}
 	}
 }
 //---------------------------------------------------------------------------
@@ -153,12 +146,12 @@ void CLandObject::Select(const int &x, const int &y)
 	{
 		if (!m_IsStretched)
 		{
-			if (g_Orion.LandPixelsInXY(m_Graphic, x, y, m_Z))
+			if (g_Orion.LandPixelsInXY(m_Graphic, x, y))
 				g_SelectedObject.Init(this);
 		}
 		else
 		{
-			if (g_Orion.LandTexturePixelsInXY(x, y, m_Rect))
+			if (g_Orion.LandTexturePixelsInXY(x, y + (m_Z * 4), m_Rect))
 				g_SelectedObject.Init(this);
 		}
 	}

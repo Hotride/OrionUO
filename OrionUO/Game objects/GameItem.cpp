@@ -102,12 +102,12 @@ void CGameItem::OnGraphicChange(int direction)
 				g_Orion.ExecuteGump(tile.AnimID + MALE_GUMP_OFFSET);
 				g_Orion.ExecuteGump(tile.AnimID + FEMALE_GUMP_OFFSET);
 
-				m_UsedLayer = tile.Quality;
+				m_UsedLayer = tile.Layer;
 			}
 			else if (m_Layer == OL_MOUNT)
 			{
 				m_AnimID = tile.AnimID;
-				m_UsedLayer = tile.Quality;
+				m_UsedLayer = tile.Layer;
 			}
 
 			if (IsBackground())
@@ -214,7 +214,7 @@ void CGameItem::Draw(const int &x, const int &y)
 		}
 
 		if (IsCorpse()) //Трупик
-			g_AnimationManager.DrawCorpse(this, x, y - ((m_Z * 4) + 3));
+			g_AnimationManager.DrawCorpse(this, x, y - 3);
 		else
 		{
 			bool doubleDraw = false;
@@ -239,19 +239,19 @@ void CGameItem::Draw(const int &x, const int &y)
 
 			if (doubleDraw)
 			{
-				g_Orion.DrawStaticArt(objGraphic, objColor, x - 2, y - 5, m_Z, selMode, Hidden());
-				g_Orion.DrawStaticArt(objGraphic, objColor, x + 3, y, m_Z, selMode, Hidden());
+				g_Orion.DrawStaticArt(objGraphic, objColor, x - 2, y - 5, selMode || Hidden());
+				g_Orion.DrawStaticArt(objGraphic, objColor, x + 3, y, selMode || Hidden());
 			}
 			else
 			{
 				if (m_FieldColor)
-					g_Orion.DrawStaticArt(FIELD_REPLACE_GRAPHIC, m_FieldColor, x, y, m_Z, selMode, Hidden());
+					g_Orion.DrawStaticArt(FIELD_REPLACE_GRAPHIC, m_FieldColor, x, y, selMode || Hidden());
 				else
-					g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, m_Z, selMode, Hidden());
+					g_Orion.DrawStaticArtAnimated(objGraphic, objColor, x, y, selMode || Hidden());
 			}
 
 			if (IsLightSource() && g_GameScreen.UseLight)
-				g_GameScreen.AddLight(this, this, x, y - (m_Z * 4));
+				g_GameScreen.AddLight(this, this, x, y);
 		}
 
 		if (useAlpha)
@@ -284,8 +284,8 @@ void CGameItem::Draw(const int &x, const int &y)
 
 			g_NewTargetSystem.Hits = 0;
 			g_NewTargetSystem.X = x;
-			g_NewTargetSystem.TopY = y - (m_Z * 4) - size.Height - 8;
-			g_NewTargetSystem.BottomY = y - (m_Z * 4) + 7;
+			g_NewTargetSystem.TopY = y - size.Height - 8;
+			g_NewTargetSystem.BottomY = y + 7;
 		}
 
 		DrawEffects(x, y);
@@ -317,7 +317,7 @@ void CGameItem::Select(const int &x, const int &y)
 
 		if (IsCorpse()) //Трупик
 		{
-			if (g_AnimationManager.CorpsePixelsInXY(this, x, y - ((m_Z * 4) + 3)))
+			if (g_AnimationManager.CorpsePixelsInXY(this, x, y - 3))
 				g_SelectedObject.Init(this);
 		}
 		else
@@ -327,17 +327,17 @@ void CGameItem::Select(const int &x, const int &y)
 
 			if (doubleDraw)
 			{
-				if (g_Orion.StaticPixelsInXY(objGraphic, x - 2, y - 5, m_Z))
+				if (g_Orion.StaticPixelsInXY(objGraphic, x - 2, y - 5))
 					g_SelectedObject.Init(this);
-				else if (g_Orion.StaticPixelsInXY(objGraphic, x + 3, y, m_Z))
+				else if (g_Orion.StaticPixelsInXY(objGraphic, x + 3, y))
 					g_SelectedObject.Init(this);
 			}
 			else if (m_FieldColor)
 			{
-				if (g_Orion.StaticPixelsInXY(FIELD_REPLACE_GRAPHIC, x, y, m_Z))
+				if (g_Orion.StaticPixelsInXY(FIELD_REPLACE_GRAPHIC, x, y))
 					g_SelectedObject.Init(this);
 			}
-			else if (g_Orion.StaticPixelsInXYAnimated(objGraphic, x, y, m_Z))
+			else if (g_Orion.StaticPixelsInXYAnimated(objGraphic, x, y))
 				g_SelectedObject.Init(this);
 		}
 	}

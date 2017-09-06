@@ -20,8 +20,6 @@ class CTextData : public CRenderTextObject
 	SETGET(uint, Timer, 0);
 	SETGET(string, Text, "");
 	SETGET(wstring, UnicodeText, L"");
-	SETGET(int, DrawX, 0);
-	SETGET(int, DrawY, 0);
 	SETGET(uchar, Alpha, 0xFF);
 
 public:

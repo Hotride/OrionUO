@@ -150,7 +150,7 @@ extern bool g_PacketLoginComplete;
 extern uint g_ClientFlag;
 
 extern bool g_SendLogoutNotification;
-extern bool g_NPCPopupEnabled;
+extern bool g_PopupEnabled;
 extern bool g_ChatEnabled;
 extern bool g_TooltipsEnabled;
 extern bool g_PaperdollBooks;
@@ -248,6 +248,7 @@ extern DEVELOPER_MODE g_DeveloperMode;
 extern DEVELOPER_MODE g_OptionsDeveloperMode;
 
 const int g_ObjectHandlesWidth = 142;
+const int g_ObjectHandlesWidthOffset = g_ObjectHandlesWidth / 2;
 const int g_ObjectHandlesHeight = 20;
 extern ushort g_ObjectHandlesBackgroundPixels[g_ObjectHandlesWidth * g_ObjectHandlesHeight];
 

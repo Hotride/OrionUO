@@ -46,18 +46,18 @@ void CGameEffect::Draw(const int &x, const int &y)
 		int drawEffectY = y + moving->OffsetY + moving->OffsetZ;
 
 		if (moving->FixedDirection)
-			g_Orion.DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z);
+			g_Orion.DrawStaticArt(objGraphic, m_Color, drawEffectX, drawEffectY);
 		else
-			g_Orion.DrawStaticArtRotated(objGraphic, m_Color, drawEffectX, drawEffectY, m_Z, moving->Angle);
+			g_Orion.DrawStaticArtRotated(objGraphic, m_Color, drawEffectX, drawEffectY, moving->Angle);
 	}
 	else if (m_EffectType == EF_DRAG)
 	{
 		CGameEffectDrag *dragEffect = (CGameEffectDrag*)this;
 
-		g_Orion.DrawStaticArt(m_Graphic, m_Color, x - dragEffect->OffsetX, y - dragEffect->OffsetY, m_Z);
+		g_Orion.DrawStaticArt(m_Graphic, m_Color, x - dragEffect->OffsetX, y - dragEffect->OffsetY);
 	}
 	else
-		g_Orion.DrawStaticArt(objGraphic, m_Color, x, y, m_Z);
+		g_Orion.DrawStaticArt(objGraphic, m_Color, x, y);
 
 	RemoveRenderMode();
 }

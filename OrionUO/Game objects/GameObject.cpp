@@ -93,7 +93,7 @@ void CGameObject::OnChangeName(const string &newName)
 @param [__in] y Экранная координата Y
 @return 
 */
-void CGameObject::DrawObjectHandlesTexture(const int &x, const int &y)
+void CGameObject::DrawObjectHandlesTexture()
 {
 	WISPFUN_DEBUG("c20_f5");
 	if (m_TextureObjectHalndes.Texture == NULL)
@@ -109,6 +109,21 @@ void CGameObject::DrawObjectHandlesTexture(const int &x, const int &y)
 		}
 	}
 
+	int x = m_DrawX - g_RenderBounds.WindowDrawOffsetX - g_ObjectHandlesWidthOffset;
+	int y = m_DrawY - g_RenderBounds.WindowDrawOffsetY;
+
+	if (m_NPC)
+	{
+		CGameCharacter *gc = (CGameCharacter*)this;
+
+		ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(this);
+
+		x += gc->OffsetX;
+		y += gc->OffsetY - (gc->OffsetZ + dims.Height + dims.CenterY + 8);
+	}
+	else
+		y -= g_Orion.GetArtDimension(m_Graphic, true).Height;
+
 	m_TextureObjectHalndes.Draw(x, y);
 }
 //----------------------------------------------------------------------------------
@@ -118,22 +133,28 @@ void CGameObject::DrawObjectHandlesTexture(const int &x, const int &y)
 @param [__in] y Экранная координата Y
 @return
 */
-void CGameObject::SelectObjectHandlesTexture(const int &x, const int &y)
+void CGameObject::SelectObjectHandlesTexture()
 {
 	WISPFUN_DEBUG("c20_f6");
 	if (m_TextureObjectHalndes.Texture != NULL)
 	{
-		int testX = g_MouseManager.Position.X - x;
+		int x = g_MouseManager.Position.X - (m_DrawX - g_RenderBounds.WindowDrawOffsetX - g_ObjectHandlesWidthOffset);
+		int y = g_MouseManager.Position.Y - (m_DrawY - g_RenderBounds.WindowDrawOffsetY);
 
-		if (testX < 0 || testX >= g_ObjectHandlesWidth)
+		if (m_NPC)
+		{
+			CGameCharacter *gc = (CGameCharacter*)this;
+
+			x += gc->OffsetX;
+			y += gc->OffsetY - gc->OffsetZ;
+		}
+		else
+			y -= g_Orion.GetArtDimension(m_Graphic, true).Height;
+
+		if (x < 0 || x >= g_ObjectHandlesWidth || y < 0 || y >= g_ObjectHandlesHeight)
 			return;
 
-		int testY = g_MouseManager.Position.Y - y;
-
-		if (testY < 0 || testY >= g_ObjectHandlesHeight)
-			return;
-
-		if (g_ObjectHandlesBackgroundPixels[(testY * g_ObjectHandlesWidth) + testX] != 0)
+		if (g_ObjectHandlesBackgroundPixels[(y * g_ObjectHandlesWidth) + x] != 0)
 		{
 			g_SelectedObject.Init(this);
 			g_SelectedGameObjectHandle = m_Serial;
@@ -446,10 +467,10 @@ void CGameObject::DrawEffects(int x, int y)
 
 			WISP_GEOMETRY::CSize size = g_Orion.GetGumpDimension(graphic);
 
-			g_Orion.DrawGump(graphic, effect->Color, x - (size.Width / 2), y - (size.Height + (m_Z * 4)));
+			g_Orion.DrawGump(graphic, effect->Color, x - (size.Width / 2), y - size.Height);
 		}
 		else
-			g_Orion.DrawStaticArt(effect->GetCurrentGraphic(), effect->Color, x, y, m_Z);
+			g_Orion.DrawStaticArt(effect->GetCurrentGraphic(), effect->Color, x, y);
 
 		effect->RemoveRenderMode();
 	}

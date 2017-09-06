@@ -33,6 +33,10 @@ struct RENDER_VARIABLES_FOR_GAME_WINDOW
 	int GameWindowCenterX;
 	int GameWindowCenterY;
 
+	//!Смещение пиксельных координат окна относительно 0
+	int WindowDrawOffsetX;
+	int WindowDrawOffsetY;
+
 	//!Дистанции отображения
 	int RealMinRangeX;
 	int RealMaxRangeX;
@@ -79,10 +83,6 @@ struct RENDER_OBJECT_DATA
 
 	//!Цвет объекта, вышедшего за рамки видимости клиента (если включена опция)
 	ushort GrayColor;
-
-	//!Экранные координаты объекта
-	int X;
-	int Y;
 };
 //----------------------------------------------------------------------------------
 //!Структура данных с информацией для рендера
@@ -102,17 +102,6 @@ struct OBJECT_HITS_INFO
 	ushort HealthColor;
 };
 //----------------------------------------------------------------------------------
-//!Структура данных с информацией для гампа с именем объекта (Object Handles)
-struct OBJECT_HANDLES_DATA
-{
-	//!Ссылка на объект рендера
-	class CGameObject *Obj;
-
-	//!Экранные координаты объекта
-	int X;
-	int Y;
-};
-//----------------------------------------------------------------------------------
 class CGameScreen : public CBaseScreen
 {
 	//!Использовать ли освещение при перерисовке текущего кадра
@@ -122,16 +111,13 @@ class CGameScreen : public CBaseScreen
 
 private:
 	//!Список объектов для вывода
-	OBJECT_HANDLES_DATA m_ObjectHandlesList[MAX_OBJECT_HANDLES];
+	CGameObject *m_ObjectHandlesList[MAX_OBJECT_HANDLES];
 
 	//!Количество объектов для вывода
 	int m_ObjectHandlesCount{ 0 };
 
 	//!Список объектов для отображения
-	RENDER_OBJECT_DATA *m_RenderList{ NULL };
-
-	//!Размер списка объектов рендера
-	int m_RenderListSize{ 1000 };
+	vector<RENDER_OBJECT_DATA> m_RenderList;
 
 	//!Количество объектов в списке
 	int m_RenderListCount{ 0 };
@@ -189,15 +175,9 @@ private:
 	*/
 	void CheckFoliageUnion(ushort graphic, int x, int y, int z);
 
-	/*!
-	Функция увеличения размера списка рендера
-	@return 
-	*/
-	void IncreaseRenderList();
+	void AddTileToRenderList(class CRenderWorldObject *obj, const int &worldX, const int &worldY, const uchar &renderIndex, const bool &useObjectHandles, const int &maxZ = 150);
 
-	void AddTileToRenderList(class CRenderWorldObject *obj, const int &drawX, const int &drawY, const int &worldX, const int &worldY, const uchar &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX, const int &maxZ = 150);
-
-	void AddOffsetCharacterTileToRenderList(class CGameObject *obj, int drawX, int drawY, const uchar &renderIndex, const bool &useObjectHandles, const int &objectHandlesOffsetX);
+	void AddOffsetCharacterTileToRenderList(class CGameObject *obj, const uchar &renderIndex, const bool &useObjectHandles);
 
 	class CGumpScreenGame m_GameScreenGump;
 

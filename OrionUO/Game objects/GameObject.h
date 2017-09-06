@@ -82,9 +82,9 @@ public:
 	@param [__in] y Экранная координата Y
 	@return
 	*/
-	void DrawObjectHandlesTexture(const int &x, const int &y);
+	void DrawObjectHandlesTexture();
 
-	void SelectObjectHandlesTexture(const int &x, const int &y);
+	void SelectObjectHandlesTexture();
 
 	/*!
 	Получить индекс анимации

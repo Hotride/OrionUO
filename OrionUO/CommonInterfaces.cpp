@@ -97,12 +97,12 @@ void __cdecl FUNCBODY_DrawTextW(int x, int y, unsigned char font, const wchar_t 
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_DrawArt(int x, int y, unsigned short graphic, unsigned short color)
 {
-	g_Orion.DrawStaticArt(graphic, color, x, y, 0);
+	g_Orion.DrawStaticArt(graphic, color, x, y);
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_DrawArtAnimated(int x, int y, unsigned short graphic, unsigned short color)
 {
-	g_Orion.DrawStaticArtAnimated(graphic, color, x, y, 0);
+	g_Orion.DrawStaticArtAnimated(graphic, color, x, y);
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_DrawResizepicGump(int x, int y, unsigned short graphic, int width, int height)
