@@ -192,7 +192,8 @@ bool COrion::Install()
 	LOG("COrion::Install()\n");
 	SetUnhandledExceptionFilter(OrionUnhandledExceptionFilter);
 
-	CRASHLOG("Orion version is: %s\n", g_App.GetFileVersion().c_str());
+	LOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
+	CRASHLOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
 
 	IFOR(i, 0, 256)
 	{
