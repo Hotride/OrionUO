@@ -114,6 +114,7 @@ protected:
 	HANDLER_PACKET(UpdateContainedItems);
 	HANDLER_PACKET(DenyMoveItem);
 	HANDLER_PACKET(EndDraggingItem);
+	HANDLER_PACKET(DropItemAccepted);
 	HANDLER_PACKET(DeleteObject);
 	HANDLER_PACKET(UpdateCharacter);
 	HANDLER_PACKET(Warmode);

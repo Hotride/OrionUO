@@ -68,7 +68,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x26*/ BMSG(ORION_SAVE_PACKET, "Kick client (God client)", 0x05),
 	/*0x27*/ RMSGH(ORION_SAVE_PACKET, "Deny Move Item", 0x02, DenyMoveItem),
 	/*0x28*/ RMSGH(ORION_SAVE_PACKET, "End dragging item", 0x05, EndDraggingItem),
-	/*0x29*/ RMSG(ORION_SAVE_PACKET, "Drop Item Acceptem", 0x01),
+	/*0x29*/ RMSGH(ORION_SAVE_PACKET, "Drop Item Accepted", 0x01, DropItemAccepted),
 	/*0x2A*/ RMSG(ORION_SAVE_PACKET, "Blood mode", 0x05),
 	/*0x2B*/ BMSG(ORION_SAVE_PACKET, "Toggle God mode (God client)", 0x02),
 	/*0x2C*/ BMSGH(ORION_IGNORE_PACKET, "Death Screen", 0x02, DeathScreen),
@@ -1620,6 +1620,19 @@ PACKET_HANDLER(DenyMoveItem)
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(EndDraggingItem)
+{
+	WISPFUN_DEBUG("c150_f33_1");
+	if (g_World == NULL)
+		return;
+
+	//Unused
+	//Move(2);
+	//Move(2);
+
+	g_ObjectInHand.Enabled = false;
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(DropItemAccepted)
 {
 	WISPFUN_DEBUG("c150_f33_1");
 	if (g_World == NULL)
