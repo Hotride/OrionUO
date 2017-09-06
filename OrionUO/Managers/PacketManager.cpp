@@ -67,7 +67,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0x25*/ RMSGH(ORION_SAVE_PACKET, "Update Contained Item", 0x14, UpdateContainedItem),
 	/*0x26*/ BMSG(ORION_SAVE_PACKET, "Kick client (God client)", 0x05),
 	/*0x27*/ RMSGH(ORION_SAVE_PACKET, "Deny Move Item", 0x02, DenyMoveItem),
-	/*0x28*/ RMSG(ORION_SAVE_PACKET, "Deny move item?", 0x05),
+	/*0x28*/ RMSGH(ORION_SAVE_PACKET, "End dragging item", 0x05, EndDraggingItem),
 	/*0x29*/ RMSG(ORION_SAVE_PACKET, "Drop Item Acceptem", 0x01),
 	/*0x2A*/ RMSG(ORION_SAVE_PACKET, "Blood mode", 0x05),
 	/*0x2B*/ BMSG(ORION_SAVE_PACKET, "Toggle God mode (God client)", 0x02),
@@ -1617,6 +1617,15 @@ PACKET_HANDLER(DenyMoveItem)
 
 		g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, errorMessages[code]);
 	}
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(EndDraggingItem)
+{
+	WISPFUN_DEBUG("c150_f33_1");
+	if (g_World == NULL)
+		return;
+
+	g_ObjectInHand.Enabled = false;
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(DeleteObject)
