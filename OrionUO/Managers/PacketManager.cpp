@@ -540,6 +540,7 @@ void CPacketManager::AddMegaClilocRequest(const uint &serial)
 void CPacketManager::OnReadFailed()
 {
 	WISPFUN_DEBUG("c150_f7");
+	LOG("OnReadFailed...Disconnecting...\n");
 	g_Orion.DisconnectGump();
 	g_Orion.Disconnect();
 }
@@ -617,7 +618,7 @@ void CPacketManager::PluginReceiveHandler(puchar buf, const int &size)
 
 	CPacketInfo &info = m_Packets[*m_Start];
 
-	LOG("--- ^(%d) r(+%d => %d) Plugin:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
+	LOG("--- ^(%d) r(+%d => %d) Plugin->Client:: %s\n", ticks - g_LastPacketTime, m_Size, g_TotalRecvSize, info.Name);
 	LOG_DUMP(m_Start, m_Size);
 
 	g_LastPacketTime = ticks;
@@ -2541,7 +2542,7 @@ PACKET_HANDLER(ExtendedCommand)
 				text->Unicode = false;
 				text->Font = 3;
 				text->Serial = serial;
-				text->Color = 0x0035;
+				text->Color = (serial == g_PlayerSerial ? 0x0034 : 0x0021);
 				text->Type = TT_OBJECT;
 				text->SetText(std::to_string(damage));
 				text->GenerateTexture(0);
@@ -3640,7 +3641,7 @@ PACKET_HANDLER(Damage)
 		text->Unicode = false;
 		text->Font = 3;
 		text->Serial = serial;
-		text->Color = 0x0035;
+		text->Color = (serial == g_PlayerSerial ? 0x0034 : 0x0021);
 		text->Type = TT_OBJECT;
 		text->SetText(std::to_string(damage));
 		text->GenerateTexture(0);

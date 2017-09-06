@@ -114,7 +114,10 @@ bool CConnection::Read(const int &maxSize)
 {
 	WISPFUN_DEBUG("c3_f6");
 	if (m_DataReady == SOCKET_ERROR)
+	{
+		LOG("CConnection::Read, m_DataReady=%i\n", m_DataReady);
 		Disconnect();
+	}
 	else if (m_Connected && m_Socket != INVALID_SOCKET)
 	{
 		UCHAR_LIST data(maxSize);
@@ -130,7 +133,11 @@ bool CConnection::Read(const int &maxSize)
 
 			return true;
 		}
+		else
+			LOG("CConnection::Read, bad size=%i\n", size);
 	}
+	else
+		LOG("CConnection::Read, unknown state, m_Connected=%i, m_Socket=%i\n", m_Connected, m_Socket);
 
 	return false;
 }
