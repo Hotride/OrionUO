@@ -2244,7 +2244,7 @@ PACKET_HANDLER(ExtendedCommand)
 			{
 				str = g_ClilocManager.Cliloc(g_Language)->GetW(clilocNum, true);
 				g_Orion.CreateUnicodeTextMessage(TT_OBJECT, serial, 0x03, 0x3B2, str);
-				if (item != NULL)
+				if (item != NULL && !item->NPC)
 					item->Name = ToString(str);
 
 			}
