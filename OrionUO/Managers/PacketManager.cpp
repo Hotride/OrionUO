@@ -2256,7 +2256,7 @@ PACKET_HANDLER(ExtendedCommand)
 				crafterNameLen = ReadUInt16BE();
 				if (crafterNameLen)
 				{
-					wstring crafterName = ReadWString(crafterNameLen);
+					wstring crafterName = ToWString(ReadString(crafterNameLen));
 					str = L"Crafted by ";
 					str += crafterName;
 				}
