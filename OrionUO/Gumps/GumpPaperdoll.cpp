@@ -837,15 +837,14 @@ void CGumpPaperdoll::OnLeftMouseButtonUp()
 	//Что-то в руке
 	if ((!serial || serial >= ID_GP_ITEMS) && g_ObjectInHand.Enabled)
 	{
+		int layer = serial - ID_GP_ITEMS;
 		bool canWear = true;
 
-		if (m_Serial != g_PlayerSerial && GetDistance(g_Player, container) >= 3)
+		if (layer != OL_BACKPACK && m_Serial != g_PlayerSerial && GetDistance(g_Player, container) >= DRAG_ITEMS_DISTANCE)
 			canWear = false;
 
 		if (canWear && container != NULL)
 		{
-			int layer = serial - ID_GP_ITEMS;
-
 			if (layer == OL_BACKPACK) //Ткнули на пак
 			{
 				CGameItem *equipment = container->FindLayer(layer);
