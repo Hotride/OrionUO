@@ -43,6 +43,7 @@ public:
 	GUMP_BUTTON_EVENT_H;
 	GUMP_SCROLL_BUTTON_EVENT_H;
 
+	virtual void OnLeftMouseButtonUp();
 	virtual bool OnLeftMouseButtonDoubleClick();
 };
 //----------------------------------------------------------------------------------

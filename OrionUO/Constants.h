@@ -12,6 +12,8 @@
 //----------------------------------------------------------------------------------
 const int MAX_CONSOLE_STACK_SIZE = 100;
 
+const int DRAG_ITEMS_DISTANCE = 3;
+
 const int MAX_ANIMATIONS_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR = 5;
 
 const int MAX_ART_OBJECT_REMOVED_BY_GARBAGE_COLLECTOR = 20;

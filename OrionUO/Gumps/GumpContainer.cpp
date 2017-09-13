@@ -127,7 +127,7 @@ void CGumpContainer::InitToolTip()
 void CGumpContainer::PrepareContent()
 {
 	WISPFUN_DEBUG("c93_f7");
-	if (!g_Player->Dead() && GetTopObjDistance(g_Player, g_World->FindWorldObject(Serial)) <= 3 && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != ID_GC_MINIMIZE)
+	if (!g_Player->Dead() && GetTopObjDistance(g_Player, g_World->FindWorldObject(Serial)) <= DRAG_ITEMS_DISTANCE && g_PressedObject.LeftGump == this && !g_ObjectInHand.Enabled && g_PressedObject.LeftSerial != ID_GC_MINIMIZE)
 	{
 		WISP_GEOMETRY::CPoint2Di offset = g_MouseManager.LeftDroppedOffset();
 
@@ -283,20 +283,21 @@ void CGumpContainer::OnLeftMouseButtonUp()
 	uint dropContainer = m_Serial;
 	uint selectedSerial = g_SelectedObject.Serial;
 
-	bool canDrop = (GetTopObjDistance(g_Player, g_World->FindWorldObject(dropContainer)) < 3);
+	if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled)
+	{
+		g_Target.SendTargetObject(selectedSerial);
+		g_MouseManager.CancelDoubleClick = true;
+
+		return;
+	}
+
+	bool canDrop = (GetTopObjDistance(g_Player, g_World->FindWorldObject(dropContainer)) <= DRAG_ITEMS_DISTANCE);
 
 	if (canDrop && selectedSerial && selectedSerial != ID_GC_MINIMIZE && selectedSerial != ID_GC_LOCK_MOVING)
 	{
 		canDrop = false;
 
-		if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled)
-		{
-			g_Target.SendTargetObject(selectedSerial);
-			g_MouseManager.CancelDoubleClick = true;
-
-			return;
-		}
-		else if (g_ObjectInHand.Enabled)
+		if (g_ObjectInHand.Enabled)
 		{
 			canDrop = true;
 

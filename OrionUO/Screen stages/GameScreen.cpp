@@ -1472,7 +1472,7 @@ void CGameScreen::PrepareContent()
 		{
 			CGameItem *selobj = g_World->FindWorldItem(g_PressedObject.LeftSerial);
 
-			if (selobj != NULL && !g_ObjectInHand.Enabled && !selobj->Locked() && GetDistance(g_Player, selobj) <= 3)
+			if (selobj != NULL && !g_ObjectInHand.Enabled && !selobj->Locked() && GetDistance(g_Player, selobj) <= DRAG_ITEMS_DISTANCE)
 			{
 				if (selobj->Serial >= 0x40000000 && !g_GrayedPixels) //Item selection
 				{
@@ -1942,7 +1942,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 			{
 				CGameObject *target = (CGameObject*)rwo;
 
-				can_drop = (GetDistance(g_Player, target) <= 3);
+				can_drop = (GetDistance(g_Player, target) <= DRAG_ITEMS_DISTANCE);
 
 				if (can_drop && target != NULL)
 				{
@@ -1969,7 +1969,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 			}
 			else if ((rwo->IsLandObject() || rwo->IsStaticObject() || rwo->IsMultiObject()) && g_ObjectInHand.Enabled)
 			{
-				can_drop = (GetDistance(g_Player, WISP_GEOMETRY::CPoint2Di(rwo->X, rwo->Y)) <= 3);
+				can_drop = (GetDistance(g_Player, WISP_GEOMETRY::CPoint2Di(rwo->X, rwo->Y)) <= DRAG_ITEMS_DISTANCE);
 
 				if (can_drop)
 				{
