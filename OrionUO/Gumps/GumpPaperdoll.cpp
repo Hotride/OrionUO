@@ -405,13 +405,7 @@ void CGumpPaperdoll::UpdateContent()
 
 	CGUIGumppic *bodyGumppic = NULL;
 
-	ushort color = obj->Color;
-
-	if (color & 0x8000)
-		color &= 0x7FFF;
-
-	if (color & 0x4000)
-		color &= 0x3FFF;
+	ushort color = obj->Color & 0x3FFF;
 
 	if (obj->Graphic == 0x0191 || obj->Graphic == 0x0193)
 	{
@@ -540,7 +534,7 @@ void CGumpPaperdoll::UpdateContent()
 						cOfs = MALE_GUMP_OFFSET;
 
 					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(id + cOfs, 8, 19));
-					bodyGumppic->Color = equipment->Color;
+					bodyGumppic->Color = equipment->Color & 0x3FFF;
 					bodyGumppic->PartialHue = equipment->IsPartialHue();
 					bodyGumppic->Serial = ID_GP_ITEMS + UsedLayers[i];
 				}
@@ -569,7 +563,7 @@ void CGumpPaperdoll::UpdateContent()
 					m_DataBox->Add(new CGUIAlphaBlending(true, 0.7f));
 
 					bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(id + cOfs, 8, 19));
-					bodyGumppic->Color = g_ObjectInHand.Color;
+					bodyGumppic->Color = g_ObjectInHand.Color & 0x3FFF;
 					bodyGumppic->PartialHue = (g_ObjectInHand.Color & 0x8000);
 
 					m_DataBox->Add(new CGUIAlphaBlending(false, 0.0f));
@@ -633,7 +627,7 @@ void CGumpPaperdoll::UpdateContent()
 							else
 								tileY -= rect.Position.Y + tileOffsetY;
 
-							m_DataBox->Add(new CGUITilepicScaled(equipment->Graphic, equipment->Color, tileX, tileY, width, height));
+							m_DataBox->Add(new CGUITilepicScaled(equipment->Graphic, equipment->Color & 0x3FFF, tileX, tileY, width, height));
 
 							drawed = true;
 						}
@@ -643,7 +637,7 @@ void CGumpPaperdoll::UpdateContent()
 					{
 						tileX -= rect.Position.X - tileOffsetX;
 						tileY -= rect.Position.Y - tileOffsetY;
-						CGUITilepic *pic = new CGUITilepic(equipment->Graphic, equipment->Color, tileX, tileY);
+						CGUITilepic *pic = new CGUITilepic(equipment->Graphic, equipment->Color & 0x3FFF, tileX, tileY);
 						pic->PartialHue = equipment->IsPartialHue();
 						m_DataBox->Add(pic);
 						pic->Serial = slotSerial;
@@ -668,7 +662,7 @@ void CGumpPaperdoll::UpdateContent()
 			bpX = 2;
 
 		bodyGumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(equipment->AnimID + 50000, bpX, 19));
-		bodyGumppic->Color = equipment->Color;
+		bodyGumppic->Color = equipment->Color & 0x3FFF;
 		bodyGumppic->PartialHue = equipment->IsPartialHue();
 		bodyGumppic->Serial = ID_GP_ITEMS + OL_BACKPACK;
 		bodyGumppic->MoveOnDrag = true;

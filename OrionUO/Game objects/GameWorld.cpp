@@ -1532,7 +1532,7 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 	}
 }
 //----------------------------------------------------------------------------------
-void CGameWorld::UpdateContainedItem(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, const ushort &count, const int &x, const int &y, const uint containerSerial, const ushort &color)
+void CGameWorld::UpdateContainedItem(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, const ushort &count, const int &x, const int &y, const uint &containerSerial, const ushort &color)
 {
 	CGameObject *container = g_World->FindWorldObject(containerSerial);
 

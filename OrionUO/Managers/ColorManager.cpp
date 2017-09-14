@@ -109,7 +109,7 @@ void CColorManager::SendColorsToShader(ushort color)
 	WISPFUN_DEBUG("c137_f4");
 	if (color != 0)
 	{
-		if (color & SPECTRAL_COLOR)
+		if (color & SPECTRAL_COLOR_FLAG)
 			glUniform1fv(ShaderColorTable, 32 * 3, &m_HuesFloat[0].Palette[0]);
 		else
 		{

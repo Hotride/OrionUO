@@ -214,12 +214,12 @@ void CGumpContainer::UpdateContent()
 
 			if (m_IsGameBoard)
 			{
-				item = (CGUIGumppicHightlighted*)m_DataBox->Add(new CGUIGumppicHightlighted(obj->Serial, graphic - GAME_FIGURE_GUMP_OFFSET, obj->Color, 0x0035, obj->X, obj->Y - 20));
+				item = (CGUIGumppicHightlighted*)m_DataBox->Add(new CGUIGumppicHightlighted(obj->Serial, graphic - GAME_FIGURE_GUMP_OFFSET, obj->Color & 0x3FFF, 0x0035, obj->X, obj->Y - 20));
 				item->PartialHue = false;
 			}
 			else
 			{
-				item = (CGUIGumppicHightlighted*)m_DataBox->Add(new CGUITilepicHightlighted(obj->Serial, graphic, obj->Color, 0x0035, obj->X, obj->Y, doubleDraw));
+				item = (CGUIGumppicHightlighted*)m_DataBox->Add(new CGUITilepicHightlighted(obj->Serial, graphic, obj->Color & 0x3FFF, 0x0035, obj->X, obj->Y, doubleDraw));
 				item->PartialHue = IsPartialHue(g_Orion.GetStaticFlags(graphic));
 			}
 		}

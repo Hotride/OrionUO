@@ -1454,7 +1454,7 @@ void CAnimationManager::Draw(CGameObject *obj, int x, int y, const bool &mirror,
 					}
 				}
 
-				if (color & SPECTRAL_COLOR)
+				if (color & SPECTRAL_COLOR_FLAG)
 				{
 					spectralColor = true;
 					glEnable(GL_BLEND);

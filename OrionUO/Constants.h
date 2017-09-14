@@ -114,7 +114,7 @@ const int MAX_ANIMATIONS_DATA_INDEX_COUNT = 2048;
 const int MAX_LIGHTS_DATA_INDEX_COUNT = 100;
 
 //!Спектральные цвета
-const WORD SPECTRAL_COLOR = 0x4000;
+const WORD SPECTRAL_COLOR_FLAG = 0x4000;
 
 //!Специальный цвет спектральной группы (более мягкий переход по краям, нет сильно выраженных границ)
 const WORD SPECTRAL_COLOR_SPECIAL = 0x4666;

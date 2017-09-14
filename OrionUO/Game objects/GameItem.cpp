@@ -220,7 +220,7 @@ void CGameItem::Draw(const int &x, const int &y)
 			bool doubleDraw = false;
 			bool selMode = false;
 			ushort objGraphic = GetDrawGraphic(doubleDraw);
-			ushort objColor = m_Color;
+			ushort objColor = m_Color & 0x3FFF;
 
 			if (Hidden())
 			{
