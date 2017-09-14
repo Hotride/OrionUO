@@ -101,6 +101,7 @@ private:
 	static const int ID_GO_P2_DRAW_HELMETS_ON_SHROUD = 244;
 	static const int ID_GO_P2_USE_GLOBAL_MAP_LAYER = 245;
 	static const int ID_GO_P2_NO_DRAW_ROOFS = 246;
+	static const int ID_GO_P2_HIGHLIGHT_TARGET_BY_TYPE = 247;
 	static const int ID_GO_P2_DEV_MODE_1 = 290;
 	static const int ID_GO_P2_DEV_MODE_2 = 291;
 	static const int ID_GO_P2_DEV_MODE_3 = 292;

@@ -478,6 +478,11 @@ void CGumpOptions::InitToolTip()
 				g_ToolTip.Set(L"No draw roofs");
 				break;
 			}
+			case ID_GO_P2_HIGHLIGHT_TARGET_BY_TYPE:
+			{
+				g_ToolTip.Set(L"Highlight target by type (netural, harmful, helpful)");
+				break;
+			}
 			case ID_GO_P2_DEV_MODE_1:
 			{
 				g_ToolTip.Set(L"Original client work");
@@ -1053,6 +1058,10 @@ void CGumpOptions::DrawPage2()
 	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_NO_DRAW_ROOFS, 0x00D2, 0x00D3, 0x00D2, 0, 820));
 	checkbox->Checked = g_OptionsConfig.NoDrawRoofs;
 	checkbox->SetTextParameters(0, L"No draw roofs", g_OptionsTextColor);
+
+	checkbox = (CGUICheckbox*)html->Add(new CGUICheckbox(ID_GO_P2_HIGHLIGHT_TARGET_BY_TYPE, 0x00D2, 0x00D3, 0x00D2, 0, 840));
+	checkbox->Checked = g_OptionsConfig.HighlightTargetByType;
+	checkbox->SetTextParameters(0, L"Highlight target by type (netural, harmful, helpful)", g_OptionsTextColor);
 
 	html->CalculateDataSize();
 }
@@ -2353,6 +2362,8 @@ void CGumpOptions::GUMP_CHECKBOX_EVENT_C
 				g_OptionsConfig.UseGlobalMapLayer = state;
 			else if (serial == ID_GO_P2_NO_DRAW_ROOFS)
 				g_OptionsConfig.NoDrawRoofs = state;
+			else if (serial == ID_GO_P2_HIGHLIGHT_TARGET_BY_TYPE)
+				g_OptionsConfig.HighlightTargetByType = state;
 			else if (serial == ID_GO_P2_DEV_MODE_1)
 				g_OptionsDeveloperMode = DM_NO_DEBUG;
 			else if (serial == ID_GO_P2_DEV_MODE_2)
@@ -2929,6 +2940,7 @@ void CGumpOptions::ApplyPageChanges()
 			g_ConfigManager.DrawHelmetsOnShroud = g_OptionsConfig.DrawHelmetsOnShroud;
 			g_ConfigManager.UseGlobalMapLayer = g_OptionsConfig.UseGlobalMapLayer;
 			g_ConfigManager.NoDrawRoofs = g_OptionsConfig.NoDrawRoofs;
+			g_ConfigManager.HighlightTargetByType = g_OptionsConfig.HighlightTargetByType;
 			g_DeveloperMode = g_OptionsDeveloperMode;
 
 			break;

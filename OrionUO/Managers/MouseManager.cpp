@@ -349,7 +349,44 @@ void CMouseManager::Draw(ushort id)
 		{
 			g_ToolTip.Draw(th->Width, th->Height);
 
-			th->Draw(m_Position.X + m_CursorOffset[0][id], m_Position.Y + m_CursorOffset[1][id]);
+			int x = m_Position.X + m_CursorOffset[0][id];
+			int y = m_Position.Y + m_CursorOffset[1][id];
+
+			th->Draw(x, y);
+
+			if (g_Target.Targeting && g_ConfigManager.HighlightTargetByType)
+			{
+				uint auraColor = 0;
+
+				if (g_Target.CursorType == 0)
+					auraColor = g_ColorManager.GetPolygoneColor(16, 0x03B2);
+				else if (g_Target.CursorType == 1)
+					auraColor = g_ColorManager.GetPolygoneColor(16, 0x0023);
+				else if (g_Target.CursorType == 2)
+					auraColor = g_ColorManager.GetPolygoneColor(16, 0x005A);
+
+				if (auraColor)
+				{
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+					glColor4ub(GetRValue(auraColor), GetGValue(auraColor), GetBValue(auraColor), 0xFF);
+
+					glUniform1iARB(g_ShaderDrawMode, 0);
+
+					CGLTexture tex;
+					tex.Texture = g_AuraTexture.Texture;
+					tex.Width = 35;
+					tex.Height = 35;
+
+					g_GL.GL1_Draw(tex, x - 6, y - 2);
+
+					tex.Texture = 0;
+
+					glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+					glDisable(GL_BLEND);
+				}
+			}
 		}
 	}
 }

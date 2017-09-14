@@ -104,6 +104,7 @@ void CConfigManager::DefaultPage2()
 	m_DrawHelmetsOnShroud = false;
 	m_UseGlobalMapLayer = false;
 	m_NoDrawRoofs = false;
+	m_HighlightTargetByType = true;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -553,6 +554,7 @@ bool CConfigManager::Load(string path)
 		m_DrawHelmetsOnShroud = false;
 		bool useGlobalMapLayer = false;
 		bool noDrawRoofs = false;
+		m_HighlightTargetByType = true;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -610,7 +612,12 @@ bool CConfigManager::Load(string path)
 										useGlobalMapLayer = file.ReadUInt8();
 
 										if (blockSize > 30)
+										{
 											noDrawRoofs = file.ReadUInt8();
+
+											if (blockSize > 31)
+												m_HighlightTargetByType = file.ReadUInt8();
+										}
 									}
 								}
 							}
@@ -1008,7 +1015,7 @@ void CConfigManager::Save(string path)
 	writter.WriteBuffer();
 
 	//Page 2
-	writter.WriteInt8(31); //size of block
+	writter.WriteInt8(32); //size of block
 	writter.WriteInt8(2); //page index
 	writter.WriteUInt8(m_ClientFPS);
 	writter.WriteUInt8(m_UseScaling);
@@ -1045,6 +1052,7 @@ void CConfigManager::Save(string path)
 	writter.WriteUInt8(m_DrawHelmetsOnShroud);
 	writter.WriteUInt8(m_UseGlobalMapLayer);
 	writter.WriteUInt8(m_NoDrawRoofs);
+	writter.WriteUInt8(m_HighlightTargetByType);
 	
 	writter.WriteBuffer();
 
