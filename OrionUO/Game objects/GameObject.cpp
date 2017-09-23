@@ -138,18 +138,23 @@ void CGameObject::SelectObjectHandlesTexture()
 	WISPFUN_DEBUG("c20_f6");
 	if (m_TextureObjectHalndes.Texture != NULL)
 	{
-		int x = g_MouseManager.Position.X - (m_DrawX - g_RenderBounds.WindowDrawOffsetX - g_ObjectHandlesWidthOffset);
-		int y = g_MouseManager.Position.Y - (m_DrawY - g_RenderBounds.WindowDrawOffsetY);
+		int x = m_DrawX - g_RenderBounds.WindowDrawOffsetX - g_ObjectHandlesWidthOffset;
+		int y = m_DrawY - g_RenderBounds.WindowDrawOffsetY;
 
 		if (m_NPC)
 		{
 			CGameCharacter *gc = (CGameCharacter*)this;
 
+			ANIMATION_DIMENSIONS dims = g_AnimationManager.GetAnimationDimensions(this);
+
 			x += gc->OffsetX;
-			y += gc->OffsetY - gc->OffsetZ;
+			y += gc->OffsetY - (gc->OffsetZ + dims.Height + dims.CenterY + 8);
 		}
 		else
 			y -= g_Orion.GetArtDimension(m_Graphic, true).Height;
+
+		x = g_MouseManager.Position.X - x;
+		y = g_MouseManager.Position.Y - y;
 
 		if (x < 0 || x >= g_ObjectHandlesWidth || y < 0 || y >= g_ObjectHandlesHeight)
 			return;
