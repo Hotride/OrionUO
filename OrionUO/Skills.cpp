@@ -12,6 +12,7 @@
 CSkillSort g_SkillSort;
 vector<CSkillData> g_Skills;
 int g_SkillsCount = 0;
+bool g_SkillsRequested = false;
 //----------------------------------------------------------------------------------
 CSkill::CSkill()
 {

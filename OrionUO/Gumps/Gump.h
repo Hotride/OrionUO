@@ -58,6 +58,7 @@ class CGump : public CRenderObject
 	SETGET(bool, Transparent, false);
 	SETGET(bool, RemoveMark, false);
 	SETGET(bool, NoProcess, false);
+	SETGET(bool, Visible, true);
 
 protected:
 	virtual void CalculateGumpState();

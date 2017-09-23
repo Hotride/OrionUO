@@ -856,6 +856,7 @@ PACKET_HANDLER(EnterWorld)
 	g_OldSeason = ST_SUMMER;
 	g_GlobalScale = 1.0;
 	g_PathFinder.BlockMoving = false;
+	g_SkillsRequested = false;
 
 	Move(4);
 
@@ -2108,6 +2109,19 @@ PACKET_HANDLER(UpdateSkills)
 
 	CGumpSkills *gump = (CGumpSkills*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_SKILLS);
 
+	if (type == 0 && g_SkillsRequested)
+	{
+		g_SkillsRequested = false;
+
+		if (gump == NULL)
+		{
+			gump = new CGumpSkills(g_PlayerSerial, 0, 0, false);
+			g_GumpManager.AddGump(gump);
+		}
+
+		gump->Visible = true;
+	}
+
 	while (m_Ptr < m_End)
 	{
 		ushort id = ReadUInt16BE();
@@ -2162,12 +2176,8 @@ PACKET_HANDLER(UpdateSkills)
 	IFOR(i, 0, g_SkillsCount)
 		g_SkillsTotal += g_Player->GetSkillValue(i);
 
-	g_Player->SkillsReceived = true;
 	if (gump != NULL)
-	{
 		gump->UpdateSkillsSum();
-		g_Orion.OpenSkills();
-	}
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ExtendedCommand)

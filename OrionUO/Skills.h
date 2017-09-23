@@ -55,6 +55,7 @@ extern CSkillSort g_SkillSort; //Указатель на скилл сортер
 extern vector<CSkillData> g_Skills; //Указатель на навыки
 extern int g_SkillsCount; //Количество доступных навыков
 extern string g_SkillName[54]; //Стандартные названия навыков
+extern bool g_SkillsRequested;
 //----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------
