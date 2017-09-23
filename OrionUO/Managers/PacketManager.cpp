@@ -2022,7 +2022,7 @@ PACKET_HANDLER(OpenContainer)
 	{
 		ushort graphic = 0xFFFF;
 
-		IFOR(i, 0, CONTAINERS_COUNT)
+		IFOR(i, 0, (int)g_ContainerOffset.size())
 		{
 			if (gumpid == g_ContainerOffset[i].Gump)
 			{

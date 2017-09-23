@@ -801,6 +801,12 @@
     <ClInclude Include="DateTimeStamp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UseItemsList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ContainerStack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1482,6 +1488,12 @@
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="DateTimeStamp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UseItemsList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ContainerStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

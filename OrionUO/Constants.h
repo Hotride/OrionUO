@@ -10,6 +10,15 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 //----------------------------------------------------------------------------------
+//!Стартовая позиция открытия контейнеров
+const int CONTAINERS_RECT_DEFAULT_POS = 40;
+
+//!Смещение при заполнении линии
+const int CONTAINERS_RECT_LINESTEP = 800;
+
+//!Шаг смещения
+const int CONTAINERS_RECT_STEP = 20;
+
 const int MAX_CONSOLE_STACK_SIZE = 100;
 
 const int DRAG_ITEMS_DISTANCE = 3;

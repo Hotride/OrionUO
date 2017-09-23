@@ -92,6 +92,8 @@ private:
 
 	void LoadPlugin(const string &libpath, const string &function, const uint &flags);
 
+	void LoadContaierOffsets();
+
 public:
 	COrion();
 	~COrion();

@@ -9,54 +9,10 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-deque<CContainerStackItem> g_ContainerStack;
-uint g_CheckContainerStackTimer = 0;
 CContainerRect g_ContainerRect;
-CUseItemActions g_UseItemActions;
+vector<CContainerOffset> g_ContainerOffset;
 //----------------------------------------------------------------------------------
-void CUseItemActions::Add(const uint &serial)
-{
-	WISPFUN_DEBUG("c186_f1");
-	for (deque<uint>::iterator i = m_List.begin(); i != m_List.end(); i++)
-	{
-		if (*i == serial)
-			return;
-	}
-
-	m_List.push_back(serial);
-}
-//----------------------------------------------------------------------------------
-void CUseItemActions::Process()
-{
-	WISPFUN_DEBUG("c186_f2");
-	if (m_List.size() && m_Timer <= g_Ticks)
-	{
-		uint serial = m_List.front();
-		m_List.pop_front();
-
-		if (g_World->FindWorldObject(serial) != NULL)
-		{
-			if (serial < 0x40000000) //NPC
-				g_Orion.PaperdollReq(serial);
-			else //item
-				g_Orion.DoubleClick(serial);
-
-			m_Timer = g_Ticks + 1000;
-		}
-	}
-}
-//----------------------------------------------------------------------------------
-CContainerStackItem::CContainerStackItem(uint serial, short x, short y, short minimizedX, short minimizedY, bool minimized, bool lockMoving)
-: m_Serial(serial), m_X(x), m_Y(y), m_MinimizedX(minimizedX), m_MinimizedY(minimizedY),
-m_Minimized(minimized), m_LockMoving(lockMoving)
-{
-}
-//----------------------------------------------------------------------------------
-CContainerStackItem::~CContainerStackItem()
-{
-}
-//----------------------------------------------------------------------------------
-CONTAINER_OFFSET g_ContainerOffset[CONTAINERS_COUNT] =
+/*CONTAINER_OFFSET g_ContainerOffset[CONTAINERS_COUNT] =
 {
 	//Gump   OpenSnd  CloseSnd  X   Y   Width Height
 	{ 0x0009, 0x0000, 0x0000, { 20, 85, 124, 196 } }, //corpse
@@ -91,7 +47,7 @@ CONTAINER_OFFSET g_ContainerOffset[CONTAINERS_COUNT] =
 	{ 0x010C, 0x002F, 0x002E, { 0, 20, 168, 115 } },
 	{ 0x010D, 0x002F, 0x002E, { 0, 20, 168, 115 } },
 	{ 0x010E, 0x002F, 0x002E, { 0, 20, 168, 115 } }
-};
+};*/
 //----------------------------------------------------------------------------------
 /*!
 Функция вычисления смещения для текущей картинки

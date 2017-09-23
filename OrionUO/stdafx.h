@@ -83,6 +83,8 @@ class CGump;
 #include "ClickObject.h"
 #include "CommonInterfaces.h"
 #include "Container.h"
+#include "ContainerStack.h"
+#include "UseItemsList.h"
 #include "ExceptionFilter.h"
 #include "ImageBounds.h"
 #include "MulStruct.h"

@@ -237,6 +237,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="CommonInterfaces.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Container.h" />
+    <ClInclude Include="ContainerStack.h" />
     <ClInclude Include="DateTimeStamp.h" />
     <ClInclude Include="DefinitionMacro.h" />
     <ClInclude Include="EnumList.h" />
@@ -443,6 +444,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="TextEngine\TextRenderer.h" />
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="ToolTip.h" />
+    <ClInclude Include="UseItemsList.h" />
     <ClInclude Include="Utility\AutoResetEvent.h" />
     <ClInclude Include="VMQuery.h" />
     <ClInclude Include="Walker\FastWalk.h" />
@@ -476,6 +478,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="ClickObject.cpp" />
     <ClCompile Include="CommonInterfaces.cpp" />
     <ClCompile Include="Container.cpp" />
+    <ClCompile Include="ContainerStack.cpp" />
     <ClCompile Include="DateTimeStamp.cpp" />
     <ClCompile Include="ExceptionFilter.cpp" />
     <ClCompile Include="Game objects\GameCharacter.cpp" />
@@ -678,6 +681,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="TextEngine\TextRenderer.cpp" />
     <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="ToolTip.cpp" />
+    <ClCompile Include="UseItemsList.cpp" />
     <ClCompile Include="Utility\AutoResetEvent.cpp" />
     <ClCompile Include="VMQuery.cpp" />
     <ClCompile Include="Walker\FastWalk.cpp" />
