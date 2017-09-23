@@ -390,7 +390,7 @@ CPacketUnicodeSpeechRequest::CPacketUnicodeSpeechRequest(const wchar_t *text, SP
 	WriteUInt8(typeValue);
 	WriteUInt16BE(color);
 	WriteUInt16BE(font);
-	WriteDataBE(language, 4);
+	WriteDataLE(language, 4);
 
 	//Sallos aka PlayUO algorithm
 	if (encoded)
