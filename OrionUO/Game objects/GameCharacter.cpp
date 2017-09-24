@@ -929,6 +929,9 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 				m_Y = wd.Y;
 				m_Z = wd.Z;
 
+				if (IsPlayer())
+					g_GumpManager.RemoveRangedGumps();
+
 				UpdateDrawCoordinates();
 
 				m_Direction = wd.Direction;
