@@ -9,6 +9,41 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
+template<class T>
+void ParseCustomHouseObjectFile(vector<T> &list, const string &path)
+{
+	LOG("parse CH file: %s\n", path.c_str());
+
+	FILE *file = NULL;
+	fopen_s(&file, path.c_str(), "r");
+
+	if (file != NULL)
+	{
+		int line = 0;
+
+		while (!feof(file))
+		{
+			char buf[256] = { 0 };
+			fgets(&buf[0], 256, file);
+
+			if (!strlen(buf))
+				continue;
+
+			line++;
+
+			if (line <= 2)
+				continue;
+
+			T item;
+
+			if (item.Parse(buf))
+				list.push_back(item);
+		}
+
+		fclose(file);
+	}
+}
+//----------------------------------------------------------------------------------
 CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &y)
 : CGump(GT_CUSTOM_HOUSE, serial, x, y)
 {
