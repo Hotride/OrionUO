@@ -1570,6 +1570,7 @@ PACKET_HANDLER(DenyMoveItem)
 				obj->X = g_ObjectInHand.X;
 				obj->Y = g_ObjectInHand.Y;
 				obj->Z = g_ObjectInHand.Z;
+				obj->OnGraphicChange();
 
 				CGameObject *container = g_World->FindWorldObject(g_ObjectInHand.Container);
 
