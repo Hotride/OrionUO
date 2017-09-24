@@ -24,6 +24,7 @@ void CObjectOnCursor::Clear()
 	m_Container = 0;
 	m_IsGameFigure = false;
 	m_TiledataPtr = NULL;
+	m_UpdatedInWorld = false;
 }
 //----------------------------------------------------------------------------------
 ushort CObjectOnCursor::GetDrawGraphic(bool &doubleDraw)
