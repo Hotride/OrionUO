@@ -381,13 +381,15 @@ void CGumpManager::RemoveGump(CGump *obj)
 			selobj->Opened = false;
 		}
 	}
-	if (obj->Graphic > 0 && obj->Graphic < g_ContainerOffset.size())
+
+	if (obj->GumpType == GT_CONTAINER && obj->Graphic > 0 && obj->Graphic < g_ContainerOffset.size())
 	{
 		ushort sound = g_ContainerOffset[obj->Graphic].CloseSound;
 
 		if (sound)
 			g_Orion.PlaySoundEffect(sound);
 	}
+
 	obj->m_Next = NULL;
 	obj->m_Prev = NULL;
 	delete obj;
