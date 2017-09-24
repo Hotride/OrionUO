@@ -44,58 +44,85 @@ void CGumpScreenMain::PrepareContent()
 void CGumpScreenMain::UpdateContent()
 {
 	WISPFUN_DEBUG("c116_f2");
+
+	CGUIText *text;
+	CGUITextEntry *entry;
+
 	if (m_Items != NULL)
 		return;
 
-	//Clear();
-
+	// Gray/Blue background pattern, Tiled
 	Add(new CGUIGumppicTiled(0x0E14, 0, 0, 640, 480));
 
+	// Corner border art, top left corner
 	Add(new CGUIGumppic(0x157C, 0, 0));
 
-	if (g_PacketManager.ClientVersion >= CV_6000)
+	if (g_PacketManager.ClientVersion >= CV_305D)
+	{
+		// Sunset background
 		Add(new CGUIGumppic(0x2329, 0, 0));
+	}
 
+	// Shield banner, top left corner
 	Add(new CGUIGumppic(0x15A0, 0, 4));
-	Add(new CGUIResizepic(0, 0x13BE, 128, 288, 451, 157));
 
-	if (g_PacketManager.ClientVersion < CV_6000)
+	if (g_PacketManager.ClientVersion < CV_305D)
+	{
+		// Castle graphic
 		Add(new CGUIGumppic(0x058A, 286, 45));
+	}
 
+	// Exit button, top right
 	Add(new CGUIButton(ID_MS_QUIT, 0x1589, 0x158A, 0x158B, 555, 4));
 
+	// Arrow (login) button, bottom right
 	m_Arrow = (CGUIButton*)Add(new CGUIButton(ID_MS_ARROW_NEXT, 0x15A4, 0x15A5, 0x15A6, 610, 445));
-	Add(new CGUIResizepic(ID_MS_ACCOUNT, 0x0BB8, 328, 343, 210, 30));
-	Add(new CGUIResizepic(ID_MS_PASSWORD, 0x0BB8, 328, 383, 210, 30));
 
-	g_MainScreen.m_SavePassword = (CGUICheckbox*)Add(new CGUICheckbox(ID_MS_SAVEPASSWORD, 0x00D2, 0x00D3, 0x00D2, 328, 417));
-	g_MainScreen.m_SavePassword->SetTextParameters(9, "Save Password", 0x0386, STP_RIGHT_CENTER);
+	// Gray textured background behind account/password entry area
+	Add(new CGUIResizepic(0, 0x13BE, 128, 288, 451, 157));
 
-	g_MainScreen.m_AutoLogin = (CGUICheckbox*)Add(new CGUICheckbox(ID_MS_AUTOLOGIN, 0x00D2, 0x00D3, 0x00D2, 183, 417));
-	g_MainScreen.m_AutoLogin->SetTextParameters(9, "Auto Login", 0x0386, STP_RIGHT_CENTER);
+	// Status Text near center of screen
+	text = (CGUIText*)Add(new CGUIText(0x0386, 253, 305));
+	text->CreateTextureA(2, g_ClilocManager.Cliloc(g_Language)->GetA(3000038, false, "Log in to Ultima Online"));
 
-	CGUIText *text = (CGUIText*)Add(new CGUIText(0x0386, 253, 305));
-	text->CreateTextureA(2, g_ClilocManager.Cliloc(g_Language)->GetA(3000052, false, "Log in to Ultima Online"));
-
+	// Account name text
 	text = (CGUIText*)Add(new CGUIText(0x0386, 183, 345));
 	text->CreateTextureA(2, g_ClilocManager.Cliloc(g_Language)->GetA(3000039, false, "Account Name"));
 
+	// Light gray background behind account prompt
+	Add(new CGUIResizepic(ID_MS_ACCOUNT, 0x0BB8, 328, 343, 210, 30));
+
+	// Account prompt
+	entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_MS_ACCOUNT, 0x034F, 0x03E3, 0x0021, 335, 343, 190, false, 5, TS_LEFT, 0, 32));
+	entry->CheckOnSerial = true;
+	g_MainScreen.m_Account = &entry->m_Entry;
+
+	// Password text
 	text = (CGUIText*)Add(new CGUIText(0x0386, 183, 385));
 	text->CreateTextureA(2, g_ClilocManager.Cliloc(g_Language)->GetA(3000040, false, "Password"));
+
+	// Light gray background behind password prompt
+	Add(new CGUIResizepic(ID_MS_PASSWORD, 0x0BB8, 328, 383, 210, 30));
+
+	// Password prompt
+	entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_MS_PASSWORD, 0x034F, 0x03E3, 0x0021, 335, 385, 190, false, 5, TS_LEFT, 0, 32));
+	entry->CheckOnSerial = true;
+	m_PasswordFake = &entry->m_Entry;
+
+	// Save password checkbox
+	g_MainScreen.m_SavePassword = (CGUICheckbox*)Add(new CGUICheckbox(ID_MS_SAVEPASSWORD, 0x00D2, 0x00D3, 0x00D2, 328, 417));
+	g_MainScreen.m_SavePassword->SetTextParameters(9, "Save Password", 0x0386, STP_RIGHT_CENTER);
+
+	// Auto login checkbox
+	g_MainScreen.m_AutoLogin = (CGUICheckbox*)Add(new CGUICheckbox(ID_MS_AUTOLOGIN, 0x00D2, 0x00D3, 0x00D2, 183, 417));
+	g_MainScreen.m_AutoLogin->SetTextParameters(9, "Auto Login", 0x0386, STP_RIGHT_CENTER);
 
 	text = (CGUIText*)Add(new CGUIText(0x034E, 286, 455));
 	text->CreateTextureA(9, string("UO Version " + g_Orion.ClientVersionText + "."));
 
+	// OrionUO version subtext
 	text = (CGUIText*)Add(new CGUIText(0x034E, 286, 467));
 	text->CreateTextureA(9, string("Orion pre-alpha v") + g_App.GetFileVersion());
-
-	CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_MS_ACCOUNT, 0x034F, 0x03E3, 0x0021, 335, 343, 190, false, 5, TS_LEFT, 0, 32));
-	entry->CheckOnSerial = true;
-	g_MainScreen.m_Account = &entry->m_Entry;
-
-	entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_MS_PASSWORD, 0x034F, 0x03E3, 0x0021, 335, 385, 190, false, 5, TS_LEFT, 0, 32));
-	entry->CheckOnSerial = true;
-	m_PasswordFake = &entry->m_Entry;
 }
 //----------------------------------------------------------------------------------
 void CGumpScreenMain::InitToolTip()

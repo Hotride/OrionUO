@@ -59,6 +59,7 @@ public:
 	static const uchar ID_SMOOTH_MS_CONNECT = 2;
 
 	//!Поля для ввода аккаунта и пароля
+	CGUIMenuObject *m_ClientVersion{ NULL };
 	CEntryText *m_Account{ NULL };
 	CEntryText *m_Password{ NULL };
 	CGUICheckbox *m_SavePassword{ NULL };
