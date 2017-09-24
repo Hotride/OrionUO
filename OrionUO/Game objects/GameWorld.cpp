@@ -810,6 +810,19 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 	CGameCharacter *character = NULL;
 	CGameItem *item = NULL;
 	CGameObject *obj = g_World->FindWorldObject(serial);
+	
+	if (g_ObjectInHand.Enabled && g_ObjectInHand.Serial == serial)
+	{
+		if (g_ObjectInHand.Container && g_ObjectInHand.Container != 0xFFFFFFFF)
+		{
+			if (!g_ObjectInHand.Layer)
+				g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_CONTAINER);
+			else
+				g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_PAPERDOLL);
+		}
+
+		g_ObjectInHand.Clear();
+	}
 
 	graphic += graphicIncrement;
 
