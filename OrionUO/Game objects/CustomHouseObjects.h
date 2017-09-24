@@ -17,7 +17,7 @@ class CCustomHouseObject
 
 public:
 	CCustomHouseObject() {}
-	~CCustomHouseObject() {}
+	virtual ~CCustomHouseObject() {}
 
 	virtual bool Parse(const char *text) { return false; }
 };
@@ -43,7 +43,7 @@ class CCustomHouseObjectWall : public CCustomHouseObject
 
 public:
 	CCustomHouseObjectWall() : CCustomHouseObject() {}
-	~CCustomHouseObjectWall() {}
+	virtual ~CCustomHouseObjectWall() {}
 
 	virtual bool Parse(const char *text);
 };
@@ -69,7 +69,7 @@ class CCustomHouseObjectFloor : public CCustomHouseObject
 
 public:
 	CCustomHouseObjectFloor() : CCustomHouseObject() {}
-	~CCustomHouseObjectFloor() {}
+	virtual ~CCustomHouseObjectFloor() {}
 
 	virtual bool Parse(const char *text);
 };
@@ -87,7 +87,7 @@ class CCustomHouseObjectDoor : public CCustomHouseObject
 	
 public:
 	CCustomHouseObjectDoor() : CCustomHouseObject() {}
-	~CCustomHouseObjectDoor() {}
+	virtual ~CCustomHouseObjectDoor() {}
 
 	virtual bool Parse(const char *text);
 };
@@ -107,7 +107,7 @@ class CCustomHouseObjectMisc : public CCustomHouseObject
 	
 public:
 	CCustomHouseObjectMisc() : CCustomHouseObject() {}
-	~CCustomHouseObjectMisc() {}
+	virtual ~CCustomHouseObjectMisc() {}
 
 	virtual bool Parse(const char *text);
 };
@@ -130,7 +130,7 @@ class CCustomHouseObjectStair : public CCustomHouseObject
 
 public:
 	CCustomHouseObjectStair() : CCustomHouseObject() {}
-	~CCustomHouseObjectStair() {}
+	virtual ~CCustomHouseObjectStair() {}
 
 	virtual bool Parse(const char *text);
 };
@@ -156,7 +156,7 @@ class CCustomHouseObjectTeleport : public CCustomHouseObject
 
 public:
 	CCustomHouseObjectTeleport() : CCustomHouseObject() {}
-	~CCustomHouseObjectTeleport() {}
+	virtual ~CCustomHouseObjectTeleport() {}
 
 	virtual bool Parse(const char *text);
 };
@@ -184,7 +184,7 @@ class CCustomHouseObjectRoof : public CCustomHouseObject
 
 public:
 	CCustomHouseObjectRoof() : CCustomHouseObject() {}
-	~CCustomHouseObjectRoof() {}
+	virtual ~CCustomHouseObjectRoof() {}
 
 	virtual bool Parse(const char *text);
 };
