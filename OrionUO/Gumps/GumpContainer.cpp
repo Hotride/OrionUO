@@ -56,7 +56,7 @@ void CGumpContainer::UpdateItemCoordinates(CGameObject *item)
 	WISPFUN_DEBUG("c93_f3");
 	if (m_Graphic < g_ContainerOffset.size())
 	{
-		CContainerOffsetRect &rect = g_ContainerOffset[m_Graphic].Rect;
+		const CContainerOffsetRect &rect = g_ContainerOffset[m_Graphic].Rect;
 
 		if (item->X < rect.MinX)
 			item->X = rect.MinX;
@@ -339,7 +339,7 @@ void CGumpContainer::OnLeftMouseButtonUp()
 
 	if (canDrop && g_ObjectInHand.Enabled)
 	{
-		CContainerOffsetRect &r = g_ContainerOffset[Graphic].Rect;
+		const CContainerOffsetRect &r = g_ContainerOffset[Graphic].Rect;
 
 		bool doubleDraw = false;
 		ushort graphic = g_ObjectInHand.GetDrawGraphic(doubleDraw);
