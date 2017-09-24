@@ -1446,10 +1446,7 @@ PACKET_HANDLER(EquipItem)
 		AddMegaClilocRequest(obj->Serial);
 
 	if (layer >= OL_BUY_RESTOCK && layer <= OL_SELL)
-	{
 		obj->Clear();
-		g_GumpManager.UpdateContent(obj->Container, 0, GT_SHOP);
-	}
 	else if (layer < OL_MOUNT)
 		g_GumpManager.UpdateContent(cserial, 0, GT_PAPERDOLL);
 
@@ -2005,22 +2002,77 @@ PACKET_HANDLER(OpenContainer)
 	}
 	else if (gumpid == 0x0030) //Buylist
 	{
-		CGumpShop *buyGump = (CGumpShop*)g_GumpManager.GetGump(serial, 0, GT_SHOP);
+		g_GumpManager.CloseGump(serial, 0, GT_SHOP);
 
-		if (buyGump != NULL && (buyGump->Serial != serial || !buyGump->IsBuyGump))
+		CGameCharacter *vendor = g_World->FindWorldCharacter(serial);
+
+		if (vendor != NULL)
 		{
-			g_GumpManager.RemoveGump(buyGump);
-			buyGump = NULL;
+			CGumpShop *buyGump = new CGumpShop(serial, true, 150, 5);
+			gump = buyGump;
+			buyGump->Visible = true;
+
+			IFOR(layer, OL_BUY_RESTOCK, OL_BUY + 1)
+			{
+				CGameItem *item = vendor->FindLayer(layer);
+
+				if (item == NULL)
+				{
+					LOG("Buy layer %i not found!\n", layer);
+					continue;
+				}
+
+				item = (CGameItem*)item->m_Items;
+
+				if (item == NULL)
+				{
+					LOG("Buy items not found!\n");
+					continue;
+				}
+
+				bool reverse = (item->X > 1);
+
+				if (reverse)
+				{
+					while (item != NULL && item->m_Next != NULL)
+						item = (CGameItem*)item->m_Next;
+				}
+
+				CGUIHTMLGump *htmlGump = buyGump->m_ItemList[0];
+
+				int currentY = 0;
+
+				QFOR(shopItem, htmlGump->m_Items, CBaseGUI*)
+				{
+					if (shopItem->Type == GOT_SHOPITEM)
+						currentY += shopItem->GetSize().Height;
+				}
+
+				while (item != NULL)
+				{
+					CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(item->Serial, item->Graphic, item->Color, item->Count, item->Price, item->Name, 0, currentY));
+					shopItem->NameFromCliloc = item->NameFromCliloc;
+
+					if (!currentY)
+					{
+						shopItem->Selected = true;
+						shopItem->CreateNameText();
+						shopItem->UpdateOffsets();
+					}
+
+					currentY += shopItem->GetSize().Height;
+
+					if (reverse)
+						item = (CGameItem*)item->m_Prev;
+					else
+						item = (CGameItem*)item->m_Next;
+				}
+
+				htmlGump->CalculateDataSize();
+			}
 		}
-
-		if (buyGump == NULL)
-			buyGump = new CGumpShop(serial, true, 150, 5);
 		else
-			addGump = false;
-
-		gump = buyGump;
-
-		buyGump->Visible = true;
+			LOG("Buy vendor not found!\n");
 	}
 	else //Container
 	{
@@ -5121,32 +5173,25 @@ PACKET_HANDLER(BuyList)
 				break;
 			}
 
-			uint price = ReadUInt32BE();
+			item->Price = ReadUInt32BE();
 
 			uchar nameLen = ReadUInt8();
 			string name = ReadString(nameLen);
 
 			//try int.parse and read cliloc.
 			int clilocNum = 0;
-			bool nameFromCliloc = false;
 
 			if (Int32TryParse(name, clilocNum))
 			{
-				name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum, true);
-				nameFromCliloc = true;
+				item->Name = g_ClilocManager.Cliloc(g_Language)->GetA(clilocNum, true);
+				item->NameFromCliloc = true;
 			}
-
-			CGUIShopItem *shopItem = (CGUIShopItem*)htmlGump->Add(new CGUIShopItem(item->Serial, item->Graphic, item->Color, item->Count, price, name, 0, currentY));
-			shopItem->NameFromCliloc = nameFromCliloc;
-
-			if (!currentY)
+			else
 			{
-				shopItem->Selected = true;
-				shopItem->CreateNameText();
-				shopItem->UpdateOffsets();
+				item->Name = name;
+				item->NameFromCliloc = false;
 			}
 
-			currentY += shopItem->GetSize().Height;
 			if (reverse)
 				item = (CGameItem*)item->m_Prev;
 			else

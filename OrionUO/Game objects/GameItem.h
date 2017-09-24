@@ -31,6 +31,10 @@ class CGameItem : public CGameObject
 	SETGET(ushort, FieldColor, 0);
 	//!Бонус дистанции для мульти-объекта
 	SETGET(short, MultiDistanceBonus, 0);
+	//!Цена для магазина
+	SETGET(uint, Price, 0);
+	//!Имя из клилока (для гампа магазина)
+	SETGET(bool, NameFromCliloc, false);
 
 protected:
 	/*!

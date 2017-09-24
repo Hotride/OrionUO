@@ -10,9 +10,11 @@
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
 CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
-: CGump(GT_SHOP, serial, x, y), m_IsBuyGump(isBuyGump), m_Visible(!isBuyGump)
+: CGump(GT_SHOP, serial, x, y), m_IsBuyGump(isBuyGump)
 {
 	WISPFUN_DEBUG("c123_f1");
+	m_Visible = !isBuyGump;
+
 	if (isBuyGump)
 		Add(new CGUIGumppic(0x0870, 0, 0));
 	else
