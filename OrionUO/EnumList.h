@@ -809,6 +809,15 @@ enum CLICK_OBJECT_TYPE
 	COT_GUMP
 };
 //----------------------------------------------------------------------------------
+enum CUSTOM_HOUSE_UPDATE_TYPE
+{
+	CHUT_UPDATE = 1,
+	CHUT_REMOVE,
+	CHUT_UPDATE_MULTI_POS,
+	CHUT_CONSTRUCT_BEGIN,
+	CHUT_CONSTRUCT_END
+};
+//----------------------------------------------------------------------------------
 enum MACRO_CODE
 {
 	MC_NONE = 0,

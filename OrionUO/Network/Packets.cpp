@@ -1371,4 +1371,34 @@ CPacketWalkRequest::CPacketWalkRequest(const uchar &direction, const uchar &sequ
 	WriteUInt8(sequence);
 	WriteUInt32BE(fastWalkKey);
 }
+//---------------------------------------------------------------------------
+CPacketBackupCustomHouse::CPacketBackupCustomHouse(const uchar &index)
+: CPacket(10)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x000A);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x0002);
+	WriteUInt8(index);
+}
+//---------------------------------------------------------------------------
+CPacketRestoreCustomHouse::CPacketRestoreCustomHouse(const uchar &index)
+: CPacket(10)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x000A);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x0003);
+	WriteUInt8(index);
+}
+//---------------------------------------------------------------------------
+CPacketCommitCustomHouse::CPacketCommitCustomHouse(const uchar &index)
+: CPacket(10)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x000A);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x0004);
+	WriteUInt8(index);
+}
 //----------------------------------------------------------------------------------

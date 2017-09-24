@@ -605,13 +605,36 @@ ushort CGameItem::GetMountAnimation()
 	return graphic;
 }
 //----------------------------------------------------------------------------------
+void CGameItem::ClearCustomHouseMultis()
+{
+	CMulti *nextMulti = NULL;
+
+	for (CMulti *multi = (CMulti*)m_Items; multi != NULL; multi = nextMulti)
+	{
+		nextMulti = (CMulti*)multi->m_Next;
+
+		CMultiObject *nextItem = NULL;
+
+		for (CMultiObject *item = (CMultiObject*)multi->m_Items; item != NULL; item = nextItem)
+		{
+			nextItem = (CMultiObject*)item->m_Next;
+
+			if (item->IsCustomHouseMulti)
+				multi->Delete(item);
+		}
+
+		if (multi->m_Items == NULL)
+			Delete(multi);
+	}
+}
+//----------------------------------------------------------------------------------
 /*!
 Добавить мульти в текущий объект
 @return
 */
-void CGameItem::AddMulti(ushort &graphic, char &x, char &y, char &z)
+void CGameItem::AddMulti(const ushort &graphic, const char &x, const char &y, const char &z, const bool &isCustomHouseMulti)
 {
-	CMultiObject *mo = new CMultiObject(graphic, X + x, Y + y, z, 1);
+	CMultiObject *mo = new CMultiObject(graphic, X + x, Y + y, z, 1, isCustomHouseMulti);
 
 	string lowerName = ToLowerA(mo->GetStaticData()->Name);
 
@@ -619,8 +642,6 @@ void CGameItem::AddMulti(ushort &graphic, char &x, char &y, char &z)
 
 	g_MapManager->AddRender(mo);
 	AddMultiObject(mo);
-
-
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -663,7 +684,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 
 			if (pmb->Flags)
 			{
-				CMultiObject *mo = new CMultiObject(pmb->ID, m_X + pmb->X, m_Y + pmb->Y, m_Z + (char)pmb->Z, pmb->Flags);
+				CMultiObject *mo = new CMultiObject(pmb->ID, m_X + pmb->X, m_Y + pmb->Y, m_Z + (char)pmb->Z, pmb->Flags, false);
 
 				string lowerName = ToLowerA(mo->GetStaticData()->Name);
 

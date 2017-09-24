@@ -2597,6 +2597,39 @@ PACKET_HANDLER(ExtendedCommand)
 		}
 		case 0x20:
 		{
+			uint houseSerial = ReadUInt32BE();
+			uchar type = ReadUInt8();
+			ushort graphic = ReadUInt16BE();
+			ushort x = ReadUInt16BE();
+			ushort y = ReadUInt16BE();
+			uchar z = ReadUInt8();
+
+			switch (type)
+			{
+				case CHUT_UPDATE:
+				{
+					break;
+				}
+				case CHUT_REMOVE:
+				{
+					break;
+				}
+				case CHUT_UPDATE_MULTI_POS:
+				{
+					break;
+				}
+				case CHUT_CONSTRUCT_BEGIN:
+				{
+					break;
+				}
+				case CHUT_CONSTRUCT_END:
+				{
+					break;
+				}
+				default:
+					break;
+			}
+
 			break;
 		}
 		case 0x21:
@@ -5315,31 +5348,32 @@ PACKET_HANDLER(CustomHouse)
 	uint revision = ReadUInt32BE();
 	CGameItem *foundationItem = g_World->GetWorldItem(houseSerial);
 
+	if (foundationItem == NULL)
+		return;
+
+	foundationItem->ClearCustomHouseMultis();
 
 	ReadUInt16BE();
 	ReadUInt16BE();
 
-	uchar planes = ReadUInt8();
-
-
-	uint header;
-
-	int cLen, planeZ, planeMode;
-	uLongf dLen;
 	CMulti* multi = foundationItem->GetMulti();
-	if (multi == NULL) return;
+
+	if (multi == NULL)
+		return;
+
 	short minX = multi->MinX;
 	short minY = multi->MinY;
 	short maxY = multi->MaxY;
 
+	uchar planes = ReadUInt8();
+
 	IFOR(plane, 0, planes)
 	{
-
-		header = ReadUInt32BE();
-		dLen = ((header & 0xFF0000) >> 16) | ((header & 0xF0) << 4);
-		cLen = ((header & 0xFF00) >> 8) | ((header & 0x0F) << 8);
-		planeZ = (header & 0x0F000000) >> 24;
-		planeMode = (header & 0xF0000000) >> 28;
+		uint header = ReadUInt32BE();
+		uLongf dLen = ((header & 0xFF0000) >> 16) | ((header & 0xF0) << 4);
+		int cLen = ((header & 0xFF00) >> 8) | ((header & 0x0F) << 8);
+		int planeZ = (header & 0x0F000000) >> 24;
+		int planeMode = (header & 0xF0000000) >> 28;
 
 		if (cLen <= 0) continue;
 		UCHAR_LIST decompressedBytes(dLen);
@@ -5367,11 +5401,14 @@ PACKET_HANDLER(CustomHouse)
 					id = tempReader.ReadUInt16BE();
 					x = tempReader.ReadUInt8();
 					y = tempReader.ReadUInt8();
-					z = tempReader.ReadUInt8();
-					z += foundationItem->Z;
-					if (id == 0) continue;
-					foundationItem->AddMulti(id, x, y, z);
+					z = tempReader.ReadUInt8() + foundationItem->Z;
+
+					if (id == 0)
+						continue;
+
+					foundationItem->AddMulti(id, x, y, z, true);
 				}
+
 				break;
 			}
 			case 1:
@@ -5386,9 +5423,13 @@ PACKET_HANDLER(CustomHouse)
 					id = tempReader.ReadUInt16BE();
 					x = tempReader.ReadUInt8();
 					y = tempReader.ReadUInt8();
-					if (id == 0) continue;
-					foundationItem->AddMulti(id, x, y, z);
+
+					if (id == 0)
+						continue;
+
+					foundationItem->AddMulti(id, x, y, z, true);
 				}
+
 				break;
 			}
 			case 2:
@@ -5421,14 +5462,18 @@ PACKET_HANDLER(CustomHouse)
 					multiHeight = (maxY - minY) + 1;
 				}
 
-				for (uint i = 0; i < decompressedBytes.size()/2; i++)
+				for (uint i = 0; i < decompressedBytes.size() / 2; i++)
 				{
 					id = tempReader.ReadUInt16BE();
 					x = i / multiHeight + xOffs;
 					y = i % multiHeight + yOffs;
-					if (id == 0) continue;
-					foundationItem->AddMulti(id, x, y, z);
+
+					if (id == 0)
+						continue;
+
+					foundationItem->AddMulti(id, x, y, z, true);
 				}
+
 				break;
 			}
 		}

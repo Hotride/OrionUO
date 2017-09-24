@@ -19,8 +19,11 @@ class CMultiObject : public CRenderStaticObject
 	//Оригинальный индекс картинки
 	SETGET(ushort, OriginalGraphic, 0);
 
+	//Это компонента кастом дома
+	SETGET(bool, IsCustomHouseMulti, false);
+
 public:
-	CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags);
+	CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags, const bool &isCustomHouseMulti);
 	virtual ~CMultiObject();
 
 	virtual void UpdateGraphicBySeason();

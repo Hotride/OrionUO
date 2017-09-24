@@ -60,7 +60,9 @@ public:
 
 	virtual void Select(const int &x, const int &y);
 
-	void AddMulti(ushort &graphic, char &x, char &y, char &z);
+	void ClearCustomHouseMultis();
+
+	void AddMulti(const ushort &graphic, const char &x, const char &y, const char &z, const bool &isCustomHouseMulti);
 
 	/*!
 	Событие изменения картинки объекта
