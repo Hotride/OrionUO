@@ -1446,7 +1446,10 @@ PACKET_HANDLER(EquipItem)
 		AddMegaClilocRequest(obj->Serial);
 
 	if (layer >= OL_BUY_RESTOCK && layer <= OL_SELL)
+	{
 		obj->Clear();
+		g_GumpManager.UpdateContent(obj->Container, 0, GT_SHOP);
+	}
 	else if (layer < OL_MOUNT)
 		g_GumpManager.UpdateContent(cserial, 0, GT_PAPERDOLL);
 
