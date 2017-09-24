@@ -4554,7 +4554,12 @@ PACKET_HANDLER(OpenGump)
 				htmlInfo.Color = 0;
 
 				if (cmd == "xmfhtmlgumpcolor" && listSize >= 9)
+				{
 					htmlInfo.Color = ToInt(list[8]);
+
+					if (htmlInfo.Color == 0x7FFF)
+						htmlInfo.Color = 0x00FFFFFF;
+				}
 
 				htmlGumlList.push_back(htmlInfo);
 			}
