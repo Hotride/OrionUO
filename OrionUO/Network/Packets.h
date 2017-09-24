@@ -534,5 +534,11 @@ public:
 	CPacketCommitCustomHouse(const uchar &index);
 };
 //----------------------------------------------------------------------------------
+class CPacketExitFromCustomHouseBuilding : public CPacket
+{
+public:
+	CPacketExitFromCustomHouseBuilding(const uchar &index);
+};
+//----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

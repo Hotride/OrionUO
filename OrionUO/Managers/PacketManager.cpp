@@ -1551,51 +1551,54 @@ PACKET_HANDLER(DenyMoveItem)
 		if (g_World->ObjectToRemove == g_ObjectInHand.Serial)
 			g_World->ObjectToRemove = 0;
 
-		if (!g_ObjectInHand.Layer && g_ObjectInHand.Container && g_ObjectInHand.Container != 0xFFFFFFFF)
+		if (!g_ObjectInHand.UpdatedInWorld)
 		{
-			g_World->UpdateContainedItem(g_ObjectInHand.Serial, g_ObjectInHand.Graphic, 0, g_ObjectInHand.TotalCount, g_ObjectInHand.X, g_ObjectInHand.Y, g_ObjectInHand.Container, g_ObjectInHand.Color);
-
-			g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_CONTAINER);
-		}
-		else
-		{
-			CGameItem *obj = g_World->GetWorldItem(g_ObjectInHand.Serial);
-
-			if (obj != NULL)
+			if (!g_ObjectInHand.Layer && g_ObjectInHand.Container && g_ObjectInHand.Container != 0xFFFFFFFF)
 			{
-				obj->Graphic = g_ObjectInHand.Graphic;
-				obj->Color = g_ObjectInHand.Color;
-				obj->Count = g_ObjectInHand.TotalCount;
-				obj->Flags = g_ObjectInHand.Flags;
-				obj->X = g_ObjectInHand.X;
-				obj->Y = g_ObjectInHand.Y;
-				obj->Z = g_ObjectInHand.Z;
-				obj->OnGraphicChange();
+				g_World->UpdateContainedItem(g_ObjectInHand.Serial, g_ObjectInHand.Graphic, 0, g_ObjectInHand.TotalCount, g_ObjectInHand.X, g_ObjectInHand.Y, g_ObjectInHand.Container, g_ObjectInHand.Color);
 
-				CGameObject *container = g_World->FindWorldObject(g_ObjectInHand.Container);
-
-				if (container != NULL)
-				{
-					if (container->NPC)
-					{
-						g_World->PutEquipment(obj, container, g_ObjectInHand.Layer);
-
-						g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
-					}
-					else
-					{
-						g_World->RemoveObject(obj);
-						obj = NULL;
-					}
-				}
-				else
-					g_World->RemoveFromContainer(obj);
-
-				if (g_TooltipsEnabled)
-					AddMegaClilocRequest(g_ObjectInHand.Serial);
+				g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_CONTAINER);
+			}
+			else
+			{
+				CGameItem *obj = g_World->GetWorldItem(g_ObjectInHand.Serial);
 
 				if (obj != NULL)
-					g_World->MoveToTop(obj);
+				{
+					obj->Graphic = g_ObjectInHand.Graphic;
+					obj->Color = g_ObjectInHand.Color;
+					obj->Count = g_ObjectInHand.TotalCount;
+					obj->Flags = g_ObjectInHand.Flags;
+					obj->X = g_ObjectInHand.X;
+					obj->Y = g_ObjectInHand.Y;
+					obj->Z = g_ObjectInHand.Z;
+					obj->OnGraphicChange();
+
+					CGameObject *container = g_World->FindWorldObject(g_ObjectInHand.Container);
+
+					if (container != NULL)
+					{
+						if (container->NPC)
+						{
+							g_World->PutEquipment(obj, container, g_ObjectInHand.Layer);
+
+							g_GumpManager.UpdateContent(obj->Container, 0, GT_PAPERDOLL);
+						}
+						else
+						{
+							g_World->RemoveObject(obj);
+							obj = NULL;
+						}
+					}
+					else
+						g_World->RemoveFromContainer(obj);
+
+					if (g_TooltipsEnabled)
+						AddMegaClilocRequest(g_ObjectInHand.Serial);
+
+					if (obj != NULL)
+						g_World->MoveToTop(obj);
+				}
 			}
 		}
 
@@ -2620,10 +2623,18 @@ PACKET_HANDLER(ExtendedCommand)
 				}
 				case CHUT_CONSTRUCT_BEGIN:
 				{
+					if (g_GumpManager.GetGump(0, 0, GT_CUSTOM_HOUSE))
+						break;
+
+					CGumpCustomHouse *gump = new CGumpCustomHouse(houseSerial, 50, 50);
+
+					g_GumpManager.AddGump(gump);
+
 					break;
 				}
 				case CHUT_CONSTRUCT_END:
 				{
+					g_GumpManager.CloseGump(houseSerial, 0, GT_CUSTOM_HOUSE);
 					break;
 				}
 				default:

@@ -242,6 +242,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="DefinitionMacro.h" />
     <ClInclude Include="EnumList.h" />
     <ClInclude Include="ExceptionFilter.h" />
+    <ClInclude Include="Game objects\CustomHouseObjects.h" />
     <ClInclude Include="Game objects\GameCharacter.h" />
     <ClInclude Include="Game objects\GameEffect.h" />
     <ClInclude Include="Game objects\GameEffectDrag.h" />
@@ -325,6 +326,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Gumps\GumpBulletinBoard.h" />
     <ClInclude Include="Gumps\GumpBulletinBoardItem.h" />
     <ClInclude Include="Gumps\GumpCombatBook.h" />
+    <ClInclude Include="Gumps\GumpCustomHouse.h" />
     <ClInclude Include="Gumps\GumpRacialAbilitiesBook.h" />
     <ClInclude Include="Gumps\GumpRacialAbility.h" />
     <ClInclude Include="Gumps\GumpShop.h" />
@@ -481,6 +483,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="ContainerStack.cpp" />
     <ClCompile Include="DateTimeStamp.cpp" />
     <ClCompile Include="ExceptionFilter.cpp" />
+    <ClCompile Include="Game objects\CustomHouseObjects.cpp" />
     <ClCompile Include="Game objects\GameCharacter.cpp" />
     <ClCompile Include="Game objects\GameEffect.cpp" />
     <ClCompile Include="Game objects\GameEffectDrag.cpp" />
@@ -564,6 +567,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="Gumps\GumpBulletinBoard.cpp" />
     <ClCompile Include="Gumps\GumpBulletinBoardItem.cpp" />
     <ClCompile Include="Gumps\GumpCombatBook.cpp" />
+    <ClCompile Include="Gumps\GumpCustomHouse.cpp" />
     <ClCompile Include="Gumps\GumpRacialAbilitiesBook.cpp" />
     <ClCompile Include="Gumps\GumpRacialAbility.cpp" />
     <ClCompile Include="Gumps\GumpShop.cpp" />

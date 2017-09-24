@@ -41,6 +41,8 @@ class CObjectOnCursor
 	SETGET(bool, IsGameFigure, false);
 	//!Указатель на тайлдату для объекта
 	SETGET(STATIC_TILES*, TiledataPtr, NULL);
+	//!Обновлен ли предмет в мире
+	SETGET(bool, UpdatedInWorld, false);
 
 public:
 	CObjectOnCursor() {}

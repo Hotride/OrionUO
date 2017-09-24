@@ -1392,13 +1392,13 @@ CPacketRestoreCustomHouse::CPacketRestoreCustomHouse(const uchar &index)
 	WriteUInt8(index);
 }
 //---------------------------------------------------------------------------
-CPacketCommitCustomHouse::CPacketCommitCustomHouse(const uchar &index)
+CPacketExitFromCustomHouseBuilding::CPacketExitFromCustomHouseBuilding(const uchar &index)
 : CPacket(10)
 {
 	WriteUInt8(0xD7);
 	WriteUInt16BE(0x000A);
 	WriteUInt32BE(g_PlayerSerial);
-	WriteUInt16BE(0x0004);
+	WriteUInt16BE(0x000C);
 	WriteUInt8(index);
 }
 //----------------------------------------------------------------------------------

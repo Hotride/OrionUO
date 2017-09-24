@@ -821,7 +821,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 				g_GumpManager.UpdateContent(g_ObjectInHand.Container, 0, GT_PAPERDOLL);
 		}
 
-		g_ObjectInHand.Clear();
+		g_ObjectInHand.UpdatedInWorld = true;
 	}
 
 	graphic += graphicIncrement;

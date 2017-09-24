@@ -292,7 +292,7 @@ CGump *CGumpManager::GetGump(const uint &serial, const uint &id, const GUMP_TYPE
 	{
 		if (gump->GumpType == type)
 		{
-			if (type == GT_SHOP || type == GT_TARGET_SYSTEM)
+			if (type == GT_SHOP || type == GT_TARGET_SYSTEM || type == GT_CUSTOM_HOUSE)
 				break;
 			else if (type == GT_TRADE)
 			{
