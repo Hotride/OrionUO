@@ -30,9 +30,9 @@ class CCustomHouseObjectWall : public CCustomHouseObject
 	SETGET(int, South2, 0);
 	SETGET(int, South3, 0);
 	SETGET(int, Corner, 0);
-	SETGET(int, Eats1, 0);
-	SETGET(int, Eats2, 0);
-	SETGET(int, Eats3, 0);
+	SETGET(int, East1, 0);
+	SETGET(int, East2, 0);
+	SETGET(int, East3, 0);
 	SETGET(int, Post, 0);
 	SETGET(int, WindowS, 0);
 	SETGET(int, AltWindowS, 0);
@@ -46,6 +46,17 @@ public:
 	virtual ~CCustomHouseObjectWall() {}
 
 	virtual bool Parse(const char *text);
+};
+//----------------------------------------------------------------------------------
+class CCustomHouseObjectWallCategory
+{
+	SETGET(int, Index, 0);
+
+public:
+	CCustomHouseObjectWallCategory() {}
+	virtual ~CCustomHouseObjectWallCategory() {}
+
+	vector<CCustomHouseObjectWall> m_Items;
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectFloor : public CCustomHouseObject
@@ -74,6 +85,17 @@ public:
 	virtual bool Parse(const char *text);
 };
 //----------------------------------------------------------------------------------
+class CCustomHouseObjectFloorCategory
+{
+	SETGET(int, Index, 0);
+
+public:
+	CCustomHouseObjectFloorCategory() {}
+	virtual ~CCustomHouseObjectFloorCategory() {}
+
+	vector<CCustomHouseObjectFloor> m_Items;
+};
+//----------------------------------------------------------------------------------
 class CCustomHouseObjectDoor : public CCustomHouseObject
 {
 	SETGET(int, Piece1, 0);
@@ -90,6 +112,17 @@ public:
 	virtual ~CCustomHouseObjectDoor() {}
 
 	virtual bool Parse(const char *text);
+};
+//----------------------------------------------------------------------------------
+class CCustomHouseObjectDoorCategory
+{
+	SETGET(int, Index, 0);
+
+public:
+	CCustomHouseObjectDoorCategory() {}
+	virtual ~CCustomHouseObjectDoorCategory() {}
+
+	vector<CCustomHouseObjectDoor> m_Items;
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectMisc : public CCustomHouseObject
@@ -110,6 +143,17 @@ public:
 	virtual ~CCustomHouseObjectMisc() {}
 
 	virtual bool Parse(const char *text);
+};
+//----------------------------------------------------------------------------------
+class CCustomHouseObjectMiscCategory
+{
+	SETGET(int, Index, 0);
+
+public:
+	CCustomHouseObjectMiscCategory() {}
+	virtual ~CCustomHouseObjectMiscCategory() {}
+
+	vector<CCustomHouseObjectMisc> m_Items;
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectStair : public CCustomHouseObject
@@ -133,6 +177,17 @@ public:
 	virtual ~CCustomHouseObjectStair() {}
 
 	virtual bool Parse(const char *text);
+};
+//----------------------------------------------------------------------------------
+class CCustomHouseObjectStairCategory
+{
+	SETGET(int, Index, 0);
+
+public:
+	CCustomHouseObjectStairCategory() {}
+	virtual ~CCustomHouseObjectStairCategory() {}
+
+	vector<CCustomHouseObjectStair> m_Items;
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectTeleport : public CCustomHouseObject
@@ -161,6 +216,17 @@ public:
 	virtual bool Parse(const char *text);
 };
 //----------------------------------------------------------------------------------
+class CCustomHouseObjectTeleportCategory
+{
+	SETGET(int, Index, 0);
+
+public:
+	CCustomHouseObjectTeleportCategory() {}
+	virtual ~CCustomHouseObjectTeleportCategory() {}
+
+	vector<CCustomHouseObjectTeleport> m_Items;
+};
+//----------------------------------------------------------------------------------
 class CCustomHouseObjectRoof : public CCustomHouseObject
 {
 	SETGET(int, Style, 0);
@@ -187,6 +253,17 @@ public:
 	virtual ~CCustomHouseObjectRoof() {}
 
 	virtual bool Parse(const char *text);
+};
+//----------------------------------------------------------------------------------
+class CCustomHouseObjectRoofCategory
+{
+	SETGET(int, Index, 0);
+
+public:
+	CCustomHouseObjectRoofCategory() {}
+	virtual ~CCustomHouseObjectRoofCategory() {}
+
+	vector<CCustomHouseObjectRoof> m_Items;
 };
 //----------------------------------------------------------------------------------
 #endif //CUSTOMHOUSEOBJECTS_H

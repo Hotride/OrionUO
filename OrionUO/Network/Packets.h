@@ -540,5 +540,29 @@ public:
 	CPacketExitFromCustomHouseBuilding(const uchar &index);
 };
 //----------------------------------------------------------------------------------
+class CPacketGoToFloorCustomHouse : public CPacket
+{
+public:
+	CPacketGoToFloorCustomHouse(const uchar &floor, const uchar &index);
+};
+//----------------------------------------------------------------------------------
+class CPacketSyncCustomHouse : public CPacket
+{
+public:
+	CPacketSyncCustomHouse(const uchar &index);
+};
+//----------------------------------------------------------------------------------
+class CPacketClearCustomHouse : public CPacket
+{
+public:
+	CPacketClearCustomHouse(const uchar &index);
+};
+//----------------------------------------------------------------------------------
+class CPacketRevertCustomHouse : public CPacket
+{
+public:
+	CPacketRevertCustomHouse(const uchar &index);
+};
+//----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

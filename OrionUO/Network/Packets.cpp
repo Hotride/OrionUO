@@ -1392,6 +1392,16 @@ CPacketRestoreCustomHouse::CPacketRestoreCustomHouse(const uchar &index)
 	WriteUInt8(index);
 }
 //---------------------------------------------------------------------------
+CPacketCommitCustomHouse::CPacketCommitCustomHouse(const uchar &index)
+: CPacket(10)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x000A);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x0004);
+	WriteUInt8(index);
+}
+//---------------------------------------------------------------------------
 CPacketExitFromCustomHouseBuilding::CPacketExitFromCustomHouseBuilding(const uchar &index)
 : CPacket(10)
 {
@@ -1399,6 +1409,48 @@ CPacketExitFromCustomHouseBuilding::CPacketExitFromCustomHouseBuilding(const uch
 	WriteUInt16BE(0x000A);
 	WriteUInt32BE(g_PlayerSerial);
 	WriteUInt16BE(0x000C);
+	WriteUInt8(index);
+}
+//---------------------------------------------------------------------------
+CPacketGoToFloorCustomHouse::CPacketGoToFloorCustomHouse(const uchar &floor, const uchar &index)
+: CPacket(15)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x000F);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x0012);
+	WriteUInt32BE(0);
+	WriteUInt8(floor);
+	WriteUInt8(index);
+}
+//---------------------------------------------------------------------------
+CPacketSyncCustomHouse::CPacketSyncCustomHouse(const uchar &index)
+: CPacket(10)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x000A);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x000E);
+	WriteUInt8(index);
+}
+//---------------------------------------------------------------------------
+CPacketClearCustomHouse::CPacketClearCustomHouse(const uchar &index)
+: CPacket(10)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x000A);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x0010);
+	WriteUInt8(index);
+}
+//---------------------------------------------------------------------------
+CPacketRevertCustomHouse::CPacketRevertCustomHouse(const uchar &index)
+: CPacket(10)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x000A);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x001A);
 	WriteUInt8(index);
 }
 //----------------------------------------------------------------------------------

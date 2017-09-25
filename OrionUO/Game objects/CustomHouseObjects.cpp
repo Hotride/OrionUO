@@ -14,7 +14,7 @@ bool CCustomHouseObjectWall::Parse(const char *text)
 	WISPFUN_DEBUG("");
 	return sscanf(text,
 		"%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
-		&m_Category, &m_Style, &m_TID, &m_South1, &m_South2, &m_South3, &m_Corner, &m_Eats1, &m_Eats2, &m_Eats3, &m_Post, &m_WindowS, &m_AltWindowS, &m_WindowE, &m_AltWindowE, &m_SecondAltWindowS, &m_SecondAltWindowE, &m_FeatureMask) >= 17;
+		&m_Category, &m_Style, &m_TID, &m_South1, &m_South2, &m_South3, &m_Corner, &m_East1, &m_East2, &m_East3, &m_Post, &m_WindowS, &m_AltWindowS, &m_WindowE, &m_AltWindowE, &m_SecondAltWindowS, &m_SecondAltWindowE, &m_FeatureMask) >= 17;
 }
 //----------------------------------------------------------------------------------
 bool CCustomHouseObjectFloor::Parse(const char *text)
