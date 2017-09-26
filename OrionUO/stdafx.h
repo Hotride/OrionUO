@@ -150,6 +150,7 @@ class CGump;
 #include "Game objects/LandObject.h"
 #include "Game objects/StaticObject.h"
 #include "Game objects/MultiObject.h"
+#include "Game objects/CustomHouseMultiObject.h"
 #include "Game objects/GameObject.h"
 #include "Game objects/GameItem.h"
 #include "Game objects/GameCharacter.h"

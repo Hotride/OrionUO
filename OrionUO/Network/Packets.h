@@ -516,52 +516,82 @@ public:
 	CPacketWalkRequest(const uchar &direction, const uchar &sequence, const uint &fastWalkKey);
 };
 //----------------------------------------------------------------------------------
-class CPacketBackupCustomHouse : public CPacket
+class CPacketCustomHouseBackup : public CPacket
 {
 public:
-	CPacketBackupCustomHouse(const uchar &index);
+	CPacketCustomHouseBackup();
 };
 //----------------------------------------------------------------------------------
-class CPacketRestoreCustomHouse : public CPacket
+class CPacketCustomHouseRestore : public CPacket
 {
 public:
-	CPacketRestoreCustomHouse(const uchar &index);
+	CPacketCustomHouseRestore();
 };
 //----------------------------------------------------------------------------------
-class CPacketCommitCustomHouse : public CPacket
+class CPacketCustomHouseCommit : public CPacket
 {
 public:
-	CPacketCommitCustomHouse(const uchar &index);
+	CPacketCustomHouseCommit();
 };
 //----------------------------------------------------------------------------------
-class CPacketExitFromCustomHouseBuilding : public CPacket
+class CPacketCustomHouseBuildingExit : public CPacket
 {
 public:
-	CPacketExitFromCustomHouseBuilding(const uchar &index);
+	CPacketCustomHouseBuildingExit();
 };
 //----------------------------------------------------------------------------------
-class CPacketGoToFloorCustomHouse : public CPacket
+class CPacketCustomHouseGoToFloor : public CPacket
 {
 public:
-	CPacketGoToFloorCustomHouse(const uchar &floor, const uchar &index);
+	CPacketCustomHouseGoToFloor(const uchar &floor);
 };
 //----------------------------------------------------------------------------------
-class CPacketSyncCustomHouse : public CPacket
+class CPacketCustomHouseSync : public CPacket
 {
 public:
-	CPacketSyncCustomHouse(const uchar &index);
+	CPacketCustomHouseSync();
 };
 //----------------------------------------------------------------------------------
-class CPacketClearCustomHouse : public CPacket
+class CPacketCustomHouseClear : public CPacket
 {
 public:
-	CPacketClearCustomHouse(const uchar &index);
+	CPacketCustomHouseClear();
 };
 //----------------------------------------------------------------------------------
-class CPacketRevertCustomHouse : public CPacket
+class CPacketCustomHouseRevert : public CPacket
 {
 public:
-	CPacketRevertCustomHouse(const uchar &index);
+	CPacketCustomHouseRevert();
+};
+//----------------------------------------------------------------------------------
+class CPacketCustomHouseAddItem : public CPacket
+{
+public:
+	CPacketCustomHouseAddItem(const ushort &graphic, const int &x, const int &y);
+};
+//----------------------------------------------------------------------------------
+class CPacketCustomHouseDeleteItem : public CPacket
+{
+public:
+	CPacketCustomHouseDeleteItem(const ushort &graphic, const int &x, const int &y, const int &z);
+};
+//----------------------------------------------------------------------------------
+class CPacketCustomHouseAddRoof : public CPacket
+{
+public:
+	CPacketCustomHouseAddRoof(const ushort &graphic, const int &x, const int &y, const int &z);
+};
+//----------------------------------------------------------------------------------
+class CPacketCustomHouseDeleteRoof : public CPacket
+{
+public:
+	CPacketCustomHouseDeleteRoof(const ushort &graphic, const int &x, const int &y, const int &z);
+};
+//----------------------------------------------------------------------------------
+class CPacketCustomHouseAddStair : public CPacket
+{
+public:
+	CPacketCustomHouseAddStair(const ushort &graphic, const int &x, const int &y);
 };
 //----------------------------------------------------------------------------------
 #endif

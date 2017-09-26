@@ -813,6 +813,9 @@
     <ClInclude Include="Game objects\CustomHouseObjects.h">
       <Filter>Header Files\Game objects</Filter>
     </ClInclude>
+    <ClInclude Include="Game objects\CustomHouseMultiObject.h">
+      <Filter>Header Files\Game objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -1506,6 +1509,9 @@
       <Filter>Source Files\Gumps</Filter>
     </ClCompile>
     <ClCompile Include="Game objects\CustomHouseObjects.cpp">
+      <Filter>Source Files\Game objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game objects\CustomHouseMultiObject.cpp">
       <Filter>Source Files\Game objects</Filter>
     </ClCompile>
   </ItemGroup>

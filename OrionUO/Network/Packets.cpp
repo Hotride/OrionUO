@@ -1372,47 +1372,47 @@ CPacketWalkRequest::CPacketWalkRequest(const uchar &direction, const uchar &sequ
 	WriteUInt32BE(fastWalkKey);
 }
 //---------------------------------------------------------------------------
-CPacketBackupCustomHouse::CPacketBackupCustomHouse(const uchar &index)
+CPacketCustomHouseBackup::CPacketCustomHouseBackup()
 : CPacket(10)
 {
 	WriteUInt8(0xD7);
 	WriteUInt16BE(0x000A);
 	WriteUInt32BE(g_PlayerSerial);
 	WriteUInt16BE(0x0002);
-	WriteUInt8(index);
+	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketRestoreCustomHouse::CPacketRestoreCustomHouse(const uchar &index)
+CPacketCustomHouseRestore::CPacketCustomHouseRestore()
 : CPacket(10)
 {
 	WriteUInt8(0xD7);
 	WriteUInt16BE(0x000A);
 	WriteUInt32BE(g_PlayerSerial);
 	WriteUInt16BE(0x0003);
-	WriteUInt8(index);
+	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketCommitCustomHouse::CPacketCommitCustomHouse(const uchar &index)
+CPacketCustomHouseCommit::CPacketCustomHouseCommit()
 : CPacket(10)
 {
 	WriteUInt8(0xD7);
 	WriteUInt16BE(0x000A);
 	WriteUInt32BE(g_PlayerSerial);
 	WriteUInt16BE(0x0004);
-	WriteUInt8(index);
+	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketExitFromCustomHouseBuilding::CPacketExitFromCustomHouseBuilding(const uchar &index)
+CPacketCustomHouseBuildingExit::CPacketCustomHouseBuildingExit()
 : CPacket(10)
 {
 	WriteUInt8(0xD7);
 	WriteUInt16BE(0x000A);
 	WriteUInt32BE(g_PlayerSerial);
 	WriteUInt16BE(0x000C);
-	WriteUInt8(index);
+	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketGoToFloorCustomHouse::CPacketGoToFloorCustomHouse(const uchar &floor, const uchar &index)
+CPacketCustomHouseGoToFloor::CPacketCustomHouseGoToFloor(const uchar &floor)
 : CPacket(15)
 {
 	WriteUInt8(0xD7);
@@ -1421,36 +1421,122 @@ CPacketGoToFloorCustomHouse::CPacketGoToFloorCustomHouse(const uchar &floor, con
 	WriteUInt16BE(0x0012);
 	WriteUInt32BE(0);
 	WriteUInt8(floor);
-	WriteUInt8(index);
+	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketSyncCustomHouse::CPacketSyncCustomHouse(const uchar &index)
+CPacketCustomHouseSync::CPacketCustomHouseSync()
 : CPacket(10)
 {
 	WriteUInt8(0xD7);
 	WriteUInt16BE(0x000A);
 	WriteUInt32BE(g_PlayerSerial);
 	WriteUInt16BE(0x000E);
-	WriteUInt8(index);
+	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketClearCustomHouse::CPacketClearCustomHouse(const uchar &index)
+CPacketCustomHouseClear::CPacketCustomHouseClear()
 : CPacket(10)
 {
 	WriteUInt8(0xD7);
 	WriteUInt16BE(0x000A);
 	WriteUInt32BE(g_PlayerSerial);
 	WriteUInt16BE(0x0010);
-	WriteUInt8(index);
+	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
-CPacketRevertCustomHouse::CPacketRevertCustomHouse(const uchar &index)
+CPacketCustomHouseRevert::CPacketCustomHouseRevert()
 : CPacket(10)
 {
 	WriteUInt8(0xD7);
 	WriteUInt16BE(0x000A);
 	WriteUInt32BE(g_PlayerSerial);
 	WriteUInt16BE(0x001A);
-	WriteUInt8(index);
+	WriteUInt8(0x0A);
+}
+//---------------------------------------------------------------------------
+CPacketCustomHouseAddItem::CPacketCustomHouseAddItem(const ushort &graphic, const int &x, const int &y)
+: CPacket(25)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x0019);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x0006);
+	WriteUInt8(0x00);
+	WriteUInt32BE(graphic);
+	WriteUInt8(0x00);
+	WriteUInt32BE(x);
+	WriteUInt8(0x00);
+	WriteUInt32BE(y);
+	WriteUInt8(0x0A);
+}
+//---------------------------------------------------------------------------
+CPacketCustomHouseDeleteItem::CPacketCustomHouseDeleteItem(const ushort &graphic, const int &x, const int &y, const int &z)
+: CPacket(30)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x001E);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x0005);
+	WriteUInt8(0x00);
+	WriteUInt32BE(graphic);
+	WriteUInt8(0x00);
+	WriteUInt32BE(x);
+	WriteUInt8(0x00);
+	WriteUInt32BE(y);
+	WriteUInt8(0x00);
+	WriteUInt32BE(z);
+	WriteUInt8(0x0A);
+}
+//---------------------------------------------------------------------------
+CPacketCustomHouseAddRoof::CPacketCustomHouseAddRoof(const ushort &graphic, const int &x, const int &y, const int &z)
+: CPacket(30)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x001E);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x0013);
+	WriteUInt8(0x00);
+	WriteUInt32BE(graphic);
+	WriteUInt8(0x00);
+	WriteUInt32BE(x);
+	WriteUInt8(0x00);
+	WriteUInt32BE(y);
+	WriteUInt8(0x00);
+	WriteUInt32BE(z);
+	WriteUInt8(0x0A);
+}
+//---------------------------------------------------------------------------
+CPacketCustomHouseDeleteRoof::CPacketCustomHouseDeleteRoof(const ushort &graphic, const int &x, const int &y, const int &z)
+: CPacket(30)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x001E);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x0014);
+	WriteUInt8(0x00);
+	WriteUInt32BE(graphic);
+	WriteUInt8(0x00);
+	WriteUInt32BE(x);
+	WriteUInt8(0x00);
+	WriteUInt32BE(y);
+	WriteUInt8(0x00);
+	WriteUInt32BE(z);
+	WriteUInt8(0x0A);
+}
+//---------------------------------------------------------------------------
+CPacketCustomHouseAddStair::CPacketCustomHouseAddStair(const ushort &graphic, const int &x, const int &y)
+: CPacket(25)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x0019);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x000D);
+	WriteUInt8(0x00);
+	WriteUInt32BE(graphic);
+	WriteUInt8(0x00);
+	WriteUInt32BE(x);
+	WriteUInt8(0x00);
+	WriteUInt32BE(y);
+	WriteUInt8(0x0A);
 }
 //----------------------------------------------------------------------------------

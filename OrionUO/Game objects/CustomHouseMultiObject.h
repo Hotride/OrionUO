@@ -1,42 +1,39 @@
 ﻿/***********************************************************************************
 **
-** MultiObject.h
+** CustomHouseMultiObject.h
 **
-** Copyright (C) August 2016 Hotride
+** Copyright (C) September 2017 Hotride
 **
 ************************************************************************************
 */
 //----------------------------------------------------------------------------------
-#ifndef MULTIOBJECT_H
-#define MULTIOBJECT_H
+#ifndef CUSTOMHOUSEMULTIOBJECT_H
+#define CUSTOMHOUSEMULTIOBJECT_H
+//----------------------------------------------------------------------------------
+enum CUSTOM_HOUSE_MULTI_OBJECT_FLAGS
+{
+	CHMOF_INTERNAL = 0x01,
+	CHMOF_TRANSPARENT = 0x02,
+	CHMOF_STAIR = 0x04
+};
 //----------------------------------------------------------------------------------
 //Объект для мульти-объекта
-class CMultiObject : public CRenderStaticObject
+class CCustomHouseMultiObject : public CMultiObject
 {
-	//Мульти с таргета
-	SETGET(bool, OnTarget, false);
-
-	//Оригинальный индекс картинки
-	SETGET(ushort, OriginalGraphic, 0);
+	//Прозрачная тесткра
+	SETGET(int, State, 0);
+	SETGET(int, Dbg, 0);
 
 public:
-	CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags);
-	virtual ~CMultiObject();
-
-	virtual void UpdateGraphicBySeason();
+	CCustomHouseMultiObject(const ushort &graphic, const ushort &color, const short &x, const short &y, const char &z, const uint &flags);
+	virtual ~CCustomHouseMultiObject();
 
 	//Отрисовать объект
 	virtual void Draw(const int &x, const int &y);
 
-	//Выбрать объект
-	virtual void Select(const int &x, const int &y);
-
-	//Это объект мульти
-	bool IsMultiObject() { return true; }
-
 	//Это объект мульти для кастомных домов
-	virtual bool IsCustomHouseMulti() { return false; }
+	virtual bool IsCustomHouseMulti() { return true; }
 };
 //----------------------------------------------------------------------------------
-#endif
+#endif //CUSTOMHOUSEMULTIOBJECT_H
 //----------------------------------------------------------------------------------

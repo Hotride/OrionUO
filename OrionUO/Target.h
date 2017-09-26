@@ -53,6 +53,8 @@ public:
 	//Очистить таргет
 	void Reset();
 
+	void RequestFromCustomHouse();
+
 	//Послать таргет на объект
 	void SendTargetObject(const uint &Serial);
 

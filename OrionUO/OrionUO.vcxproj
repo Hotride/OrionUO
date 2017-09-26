@@ -242,6 +242,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="DefinitionMacro.h" />
     <ClInclude Include="EnumList.h" />
     <ClInclude Include="ExceptionFilter.h" />
+    <ClInclude Include="Game objects\CustomHouseMultiObject.h" />
     <ClInclude Include="Game objects\CustomHouseObjects.h" />
     <ClInclude Include="Game objects\GameCharacter.h" />
     <ClInclude Include="Game objects\GameEffect.h" />
@@ -483,6 +484,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="ContainerStack.cpp" />
     <ClCompile Include="DateTimeStamp.cpp" />
     <ClCompile Include="ExceptionFilter.cpp" />
+    <ClCompile Include="Game objects\CustomHouseMultiObject.cpp" />
     <ClCompile Include="Game objects\CustomHouseObjects.cpp" />
     <ClCompile Include="Game objects\GameCharacter.cpp" />
     <ClCompile Include="Game objects\GameEffect.cpp" />

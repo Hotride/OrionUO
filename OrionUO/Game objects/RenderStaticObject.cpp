@@ -76,7 +76,7 @@ void CRenderStaticObject::Draw(const int &x, const int &y)
 
 	if (useAlpha)
 	{
-		glColor4ub(0xFF, 0xFF, 0xFF, 0xFF);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glDisable(GL_BLEND);
 	}
 

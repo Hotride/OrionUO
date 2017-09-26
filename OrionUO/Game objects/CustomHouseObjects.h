@@ -46,6 +46,10 @@ public:
 	virtual ~CCustomHouseObjectWall() {}
 
 	virtual bool Parse(const char *text);
+
+	static const int GRAPHICS_COUNT = 8;
+
+	ushort m_Graphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectWallCategory
@@ -83,6 +87,10 @@ public:
 	virtual ~CCustomHouseObjectFloor() {}
 
 	virtual bool Parse(const char *text);
+
+	static const int GRAPHICS_COUNT = 16;
+
+	ushort m_Graphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectFloorCategory
@@ -112,6 +120,10 @@ public:
 	virtual ~CCustomHouseObjectDoor() {}
 
 	virtual bool Parse(const char *text);
+
+	static const int GRAPHICS_COUNT = 8;
+
+	ushort m_Graphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectDoorCategory
@@ -143,6 +155,10 @@ public:
 	virtual ~CCustomHouseObjectMisc() {}
 
 	virtual bool Parse(const char *text);
+
+	static const int GRAPHICS_COUNT = 8;
+
+	ushort m_Graphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectMiscCategory
@@ -177,6 +193,10 @@ public:
 	virtual ~CCustomHouseObjectStair() {}
 
 	virtual bool Parse(const char *text);
+
+	static const int GRAPHICS_COUNT = 0;
+
+	ushort m_Graphics[8];
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectStairCategory
@@ -214,6 +234,10 @@ public:
 	virtual ~CCustomHouseObjectTeleport() {}
 
 	virtual bool Parse(const char *text);
+
+	static const int GRAPHICS_COUNT = 16;
+
+	ushort m_Graphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectTeleportCategory
@@ -253,6 +277,10 @@ public:
 	virtual ~CCustomHouseObjectRoof() {}
 
 	virtual bool Parse(const char *text);
+
+	static const int GRAPHICS_COUNT = 16;
+
+	ushort m_Graphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectRoofCategory

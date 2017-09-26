@@ -83,6 +83,23 @@ CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &
 	ParseCustomHouseObjectFile<CCustomHouseObjectTeleport, CCustomHouseObjectTeleportCategory>(m_Teleports, g_App.FilePath("teleprts.txt"));
 	ParseCustomHouseObjectFile<CCustomHouseObjectRoof, CCustomHouseObjectRoofCategory>(m_Roofs, g_App.FilePath("roof.txt"));
 
+	CGameItem *foundationItem = g_World->GetWorldItem(serial);
+
+	if (foundationItem != NULL)
+	{
+		CMulti* multi = foundationItem->GetMulti();
+
+		if (multi != NULL)
+		{
+			m_StartPos.X = foundationItem->X + multi->MinX;
+			m_StartPos.Y = foundationItem->Y + multi->MinY;
+			m_EndPos.X = foundationItem->X + multi->MaxX + 1;
+			m_EndPos.Y = foundationItem->Y + multi->MaxY + 1;
+		}
+	}
+
+	LOG("CH multi Bounds: %i %i %i %i\n", m_StartPos.X, m_StartPos.Y, m_EndPos.X, m_EndPos.Y);
+
 
 
 	Add(new CGUIPage(0));
@@ -127,7 +144,8 @@ CGumpCustomHouse::~CGumpCustomHouse()
 	m_TextItems = NULL;
 	m_TextCost = NULL;
 
-	CPacketExitFromCustomHouseBuilding(0x07).Send();
+	CPacketCustomHouseBuildingExit().Send();
+	g_Target.SendCancelTarget();
 }
 //----------------------------------------------------------------------------------
 void CGumpCustomHouse::CalculateGumpState()
@@ -197,23 +215,21 @@ void CGumpCustomHouse::DrawWallSection()
 		{
 			const CCustomHouseObjectWall &item = vec[m_Page];
 
-			ushort graphics[8] = { item.South1, item.South2, item.South3, item.Corner, item.East1, item.East2, item.East3, item.Post };
-
 			if (m_ShowWindow)
 			{
 			}
 
-			m_DataBox->Add(new CGUIScissor(true, 0, 0, 121, 36, 384, 120));
+			m_DataBox->Add(new CGUIScissor(true, 0, 0, 130, 36, 384, 120));
 
 			IFOR(i, 0, 8)
 			{
-				const ushort &graphic = graphics[i];
+				const ushort &graphic = item.m_Graphics[i];
 
 				if (graphic)
 				{
 					WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(graphic, true);
 
-					int offsetX = x + 121 + (48 - dims.Width) / 2;
+					int offsetX = x + 130 + (48 - dims.Width) / 2;
 					int offsetY = y + 36 + (120 - dims.Height) / 2;
 
 					m_DataBox->Add(new CGUITilepic(graphic, 0, offsetX, offsetY));
@@ -248,13 +264,11 @@ void CGumpCustomHouse::DrawDoorSection()
 		int x = 0;
 		int y = 0;
 
-		ushort graphics[8] = { item.Piece1, item.Piece2, item.Piece3, item.Piece4, item.Piece5, item.Piece6, item.Piece7, item.Piece8 };
-
 		m_DataBox->Add(new CGUIScissor(true, 0, 0, 138, 36, 384, 120));
 
 		IFOR(i, 0, 8)
 		{
-			const ushort &graphic = graphics[i];
+			const ushort &graphic = item.m_Graphics[i];
 
 			if (graphic)
 			{
@@ -288,8 +302,6 @@ void CGumpCustomHouse::DrawFloorSection()
 		int x = 0;
 		int y = 0;
 
-		ushort graphics[16] = { item.F1, item.F2, item.F3, item.F4, item.F5, item.F6, item.F7, item.F8, item.F9, item.F10, item.F11, item.F12, item.F13, item.F14, item.F15, item.F16 };
-
 		m_DataBox->Add(new CGUIScissor(true, 0, 0, 123, 36, 384, 120));
 
 		int index = 0;
@@ -298,7 +310,7 @@ void CGumpCustomHouse::DrawFloorSection()
 		{
 			IFOR(i, 0, 8)
 			{
-				const ushort &graphic = graphics[index];
+				const ushort &graphic = item.m_Graphics[index];
 
 				if (graphic)
 				{
@@ -381,8 +393,6 @@ void CGumpCustomHouse::DrawRoofSection()
 		{
 			const CCustomHouseObjectRoof &item = vec[m_Page];
 
-			ushort graphics[16] = { item.North, item.East, item.South, item.West, item.NSCrosspiece, item.EWCrosspiece, item.NDent, item.SDent, item.WDent, item.NTPiece, item.ETPiece, item.STPiece, item.WTPiece, item.XPiece, item.Extra, 0 };
-
 			m_DataBox->Add(new CGUIScissor(true, 0, 0, 130, 44, 384, 120));
 
 			int index = 0;
@@ -391,7 +401,7 @@ void CGumpCustomHouse::DrawRoofSection()
 			{
 				IFOR(i, 0, 8)
 				{
-					const ushort &graphic = graphics[index];
+					const ushort &graphic = item.m_Graphics[index];
 
 					if (graphic)
 					{
@@ -481,13 +491,11 @@ void CGumpCustomHouse::DrawMiscSection()
 		{
 			const CCustomHouseObjectMisc &item = vec[m_Page];
 
-			ushort graphics[8] = { item.Piece1, item.Piece2, item.Piece3, item.Piece4, item.Piece5, item.Piece6, item.Piece7, item.Piece8 };
-
 			m_DataBox->Add(new CGUIScissor(true, 0, 0, 130, 44, 384, 120));
 
 			IFOR(i, 0, 8)
 			{
-				const ushort &graphic = graphics[i];
+				const ushort &graphic = item.m_Graphics[i];
 
 				if (graphic)
 				{
@@ -737,6 +745,93 @@ void CGumpCustomHouse::UpdateMaxPage()
 	}
 }
 //----------------------------------------------------------------------------------
+template<class T, class A>
+pair<int, int> SeekGraphicInCustomHouseObjectList(const vector<A> &list, const ushort &graphic)
+{
+	IFOR(i, 0, (int)list.size())
+	{
+		const A &cat = list[i];
+
+		IFOR(j, 0, (int)cat.m_Items.size())
+		{
+			const T &item = cat.m_Items[j];
+
+			IFOR(g, 0, T::GRAPHICS_COUNT)
+			{
+				if (item.m_Graphics[g] == graphic)
+					return pair<int, int>(i, j);
+			}
+		}
+	}
+
+	return pair<int, int>(-1, -1);
+}
+//----------------------------------------------------------------------------------
+void CGumpCustomHouse::SeekGraphic(const ushort &graphic)
+{
+	pair<int, int> result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectWall, CCustomHouseObjectWallCategory>(m_Walls, graphic);
+
+	if (result.first == -1 || result.second == -1)
+	{
+		result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectFloor, CCustomHouseObjectFloorCategory>(m_Floors, graphic);
+
+		if (result.first == -1 || result.second == -1)
+		{
+			result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectDoor, CCustomHouseObjectDoorCategory>(m_Doors, graphic);
+
+			if (result.first == -1 || result.second == -1)
+			{
+				result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectMisc, CCustomHouseObjectMiscCategory>(m_Miscs, graphic);
+
+				if (result.first == -1 || result.second == -1)
+				{
+					result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectStair, CCustomHouseObjectStairCategory>(m_Stairs, graphic);
+
+					if (result.first == -1 || result.second == -1)
+					{
+						result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectRoof, CCustomHouseObjectRoofCategory>(m_Roofs, graphic);
+
+						if (result.first == -1 || result.second == -1)
+						{
+						}
+						else
+							m_State = CHGS_ROOF;
+					}
+					else
+						m_State = CHGS_STAIR;
+				}
+				else
+					m_State = CHGS_MISC;
+			}
+			else
+				m_State = CHGS_DOOR;
+		}
+		else
+			m_State = CHGS_FLOOR;
+	}
+	else
+		m_State = CHGS_WALL;
+
+	if (result.first != -1 && result.second != -1)
+	{
+		if (m_State == CHGS_WALL || m_State == CHGS_ROOF || m_State == CHGS_MISC)
+		{
+			m_Category = result.first;
+			m_Page = result.second;
+		}
+		else
+		{
+			m_Category = -1;
+			m_Page = result.first;
+		}
+
+		UpdateMaxPage();
+		g_Target.RequestFromCustomHouse();
+		m_WantUpdateContent = true;
+		m_SelectedGraphic = graphic;
+	}
+}
+//----------------------------------------------------------------------------------
 void CGumpCustomHouse::GUMP_TEXT_ENTRY_EVENT_C
 {
 	WISPFUN_DEBUG("c101_f5");
@@ -770,9 +865,6 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 {
 	WISPFUN_DEBUG("");
 
-	bool erasing = m_Erasing;
-	m_Erasing = false;
-
 	if (serial >= ID_GCH_ITEM_IN_LIST)
 	{
 		int index = serial - ID_GCH_ITEM_IN_LIST;
@@ -793,11 +885,67 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 				m_Category = newCategory;
 				m_WantUpdateContent = true;
 				m_Page = 0;
+				m_SelectedGraphic = 0;
+				m_Erasing = false;
+				m_SeekTile = false;
 				UpdateMaxPage();
 			}
 		}
 		else
 		{
+			ushort graphic = 0;
+
+			if (m_State == CHGS_WALL || m_State == CHGS_ROOF || m_State == CHGS_MISC)
+			{
+				if (m_Category != -1)
+				{
+					if (m_State == CHGS_WALL && m_Category >= 0 && m_Category < (int)m_Walls.size() && index >= 0 && index < CCustomHouseObjectWall::GRAPHICS_COUNT)
+					{
+						const vector<CCustomHouseObjectWall> &list = m_Walls[m_Category].m_Items;
+
+						if (m_Page >= 0 && m_Page < (int)list.size())
+							graphic = list[m_Page].m_Graphics[index];
+					}
+					else if (m_State == CHGS_ROOF && m_Category >= 0 && m_Category < (int)m_Roofs.size() && index >= 0 && index < CCustomHouseObjectRoof::GRAPHICS_COUNT)
+					{
+						const vector<CCustomHouseObjectRoof> &list = m_Roofs[m_Category].m_Items;
+
+						if (m_Page >= 0 && m_Page < (int)list.size())
+							graphic = list[m_Page].m_Graphics[index];
+					}
+					else if (m_State == CHGS_MISC && m_Category >= 0 && m_Category < (int)m_Miscs.size() && index >= 0 && index < CCustomHouseObjectMisc::GRAPHICS_COUNT)
+					{
+						const vector<CCustomHouseObjectMisc> &list = m_Miscs[m_Category].m_Items;
+
+						if (m_Page >= 0 && m_Page < (int)list.size())
+							graphic = list[m_Page].m_Graphics[index];
+					}
+				}
+			}
+			else
+			{
+				if (m_State == CHGS_DOOR && m_Page >= 0 && m_Page < (int)m_Doors.size() && index >= 0 && index < CCustomHouseObjectDoor::GRAPHICS_COUNT)
+				{
+					const vector<CCustomHouseObjectDoor> &list = m_Doors[m_Page].m_Items;
+
+					if (list.size())
+						graphic = list[0].m_Graphics[index];
+				}
+				else if (m_State == CHGS_FLOOR && m_Page >= 0 && m_Page < (int)m_Floors.size() && index >= 0 && index < CCustomHouseObjectFloor::GRAPHICS_COUNT)
+				{
+					const vector<CCustomHouseObjectFloor> &list = m_Floors[m_Page].m_Items;
+
+					if (list.size())
+						graphic = list[0].m_Graphics[index];
+				}
+			}
+
+			if (graphic)
+			{
+				g_Target.RequestFromCustomHouse();
+				m_WantUpdateContent = true;
+				m_SelectedGraphic = graphic;
+			}
 		}
 
 		return;
@@ -811,7 +959,9 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_State = CHGS_WALL;
 			m_WantUpdateContent = true;
 			m_Page = 0;
+			m_SelectedGraphic = 0;
 			UpdateMaxPage();
+			g_Target.SendCancelTarget();
 			break;
 		}
 		case ID_GCH_STATE_DOOR:
@@ -820,7 +970,9 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_State = CHGS_DOOR;
 			m_WantUpdateContent = true;
 			m_Page = 0;
+			m_SelectedGraphic = 0;
 			UpdateMaxPage();
+			g_Target.SendCancelTarget();
 			break;
 		}
 		case ID_GCH_STATE_FLOOR:
@@ -829,7 +981,9 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_State = CHGS_FLOOR;
 			m_WantUpdateContent = true;
 			m_Page = 0;
+			m_SelectedGraphic = 0;
 			UpdateMaxPage();
+			g_Target.SendCancelTarget();
 			break;
 		}
 		case ID_GCH_STATE_STAIR:
@@ -838,7 +992,9 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_State = CHGS_STAIR;
 			m_WantUpdateContent = true;
 			m_Page = 0;
+			m_SelectedGraphic = 0;
 			UpdateMaxPage();
+			g_Target.SendCancelTarget();
 			break;
 		}
 		case ID_GCH_STATE_ROOF:
@@ -847,7 +1003,9 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_State = CHGS_ROOF;
 			m_WantUpdateContent = true;
 			m_Page = 0;
+			m_SelectedGraphic = 0;
 			UpdateMaxPage();
+			g_Target.SendCancelTarget();
 			break;
 		}
 		case ID_GCH_STATE_MISC:
@@ -856,19 +1014,25 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_State = CHGS_MISC;
 			m_WantUpdateContent = true;
 			m_Page = 0;
+			m_SelectedGraphic = 0;
 			UpdateMaxPage();
+			g_Target.SendCancelTarget();
 			break;
 		}
 		case ID_GCH_STATE_ERASE:
 		{
-			m_Erasing = !erasing;
+			g_Target.RequestFromCustomHouse();
+			m_Erasing = !m_Erasing;
 			m_WantUpdateContent = true;
+			m_SelectedGraphic = 0;
 			break;
 		}
 		case ID_GCH_STATE_EYEDROPPER:
 		{
+			g_Target.RequestFromCustomHouse();
 			m_SeekTile = true;
 			m_WantUpdateContent = true;
+			m_SelectedGraphic = 0;
 			break;
 		}
 		case ID_GCH_STATE_MENU:
@@ -878,6 +1042,8 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_WantUpdateContent = true;
 			m_MaxPage = 1;
 			m_Page = 0;
+			m_SelectedGraphic = 0;
+			g_Target.SendCancelTarget();
 			break;
 		}
 		case ID_GCH_VISIBILITY_STORY_1:
@@ -898,28 +1064,28 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 		case ID_GCH_GO_FLOOR_1:
 		{
 			m_CurrentFloor = 1;
-			CPacketGoToFloorCustomHouse(1, 0x0A).Send();
+			CPacketCustomHouseGoToFloor(1).Send();
 			m_WantUpdateContent = true;
 			break;
 		}
 		case ID_GCH_GO_FLOOR_2:
 		{
 			m_CurrentFloor = 2;
-			CPacketGoToFloorCustomHouse(2, 0x0A).Send();
+			CPacketCustomHouseGoToFloor(2).Send();
 			m_WantUpdateContent = true;
 			break;
 		}
 		case ID_GCH_GO_FLOOR_3:
 		{
 			m_CurrentFloor = 3;
-			CPacketGoToFloorCustomHouse(3, 0x0A).Send();
+			CPacketCustomHouseGoToFloor(3).Send();
 			m_WantUpdateContent = true;
 			break;
 		}
 		case ID_GCH_GO_FLOOR_4:
 		{
 			m_CurrentFloor = 4;
-			CPacketGoToFloorCustomHouse(4, 0x0A).Send();
+			CPacketCustomHouseGoToFloor(4).Send();
 			m_WantUpdateContent = true;
 			break;
 		}
@@ -952,32 +1118,32 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 		}
 		case ID_GCH_MENU_BACKUP:
 		{
-			CPacketBackupCustomHouse(0x0A).Send();
+			CPacketCustomHouseBackup().Send();
 			break;
 		}
 		case ID_GCH_MENU_RESTORE:
 		{
-			CPacketRestoreCustomHouse(0x0A).Send();
+			CPacketCustomHouseRestore().Send();
 			break;
 		}
 		case ID_GCH_MENU_SYNCH:
 		{
-			CPacketSyncCustomHouse(0x0A).Send();
+			CPacketCustomHouseSync().Send();
 			break;
 		}
 		case ID_GCH_MENU_CLEAR:
 		{
-			CPacketClearCustomHouse(0x0A).Send();
+			CPacketCustomHouseClear().Send();
 			break;
 		}
 		case ID_GCH_MENU_COMMIT:
 		{
-			CPacketCommitCustomHouse(0x0A).Send();
+			CPacketCustomHouseCommit().Send();
 			break;
 		}
 		case ID_GCH_MENU_REVERT:
 		{
-			CPacketRevertCustomHouse(0x0A).Send();
+			CPacketCustomHouseRevert().Send();
 			break;
 		}
 		case ID_GCH_GO_CATEGORY:
@@ -985,13 +1151,34 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_Category = -1;
 			m_WantUpdateContent = true;
 			m_Page = 0;
+			m_SelectedGraphic = 0;
 			UpdateMaxPage();
+			g_Target.SendCancelTarget();
 			break;
 		}
 		case ID_GCH_WALL_SHOW_WINDOW:
 		{
 			m_ShowWindow = !m_ShowWindow;
 			m_WantUpdateContent = true;
+			break;
+		}
+		case ID_GCH_ROOF_Z_UP:
+		{
+			if (m_RoofZ < 6)
+			{
+				m_RoofZ++;
+				m_WantUpdateContent = true;
+			}
+			break;
+		}
+		case ID_GCH_ROOF_Z_DOWN:
+		{
+			if (m_RoofZ > 1)
+			{
+				m_RoofZ--;
+				m_WantUpdateContent = true;
+			}
+
 			break;
 		}
 		default:

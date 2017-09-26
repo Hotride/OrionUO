@@ -5378,6 +5378,8 @@ PACKET_HANDLER(CustomHouse)
 
 	uchar planes = ReadUInt8();
 
+	LOG("Total planes: %i\n", planes);
+
 	IFOR(plane, 0, planes)
 	{
 		uint header = ReadUInt32BE();
@@ -5386,15 +5388,19 @@ PACKET_HANDLER(CustomHouse)
 		int planeZ = (header & 0x0F000000) >> 24;
 		int planeMode = (header & 0xF0000000) >> 28;
 
-		if (cLen <= 0) continue;
+		if (cLen <= 0)
+			continue;
+
 		UCHAR_LIST decompressedBytes(dLen);
 		int z_err = uncompress(&decompressedBytes[0], &dLen, m_Ptr, cLen);
+
 		if (z_err != Z_OK)
 		{
 			LOG("Bad CustomHouseStruct compressed data received from server, house serial:%i\n", houseSerial);
 			//LOG("House plane idx:%i\n", idx);
 			continue;
 		}
+
 		WISP_DATASTREAM::CDataReader tempReader(static_cast<puchar>(&decompressedBytes[0]), dLen);
 		Move(cLen);
 
@@ -5402,6 +5408,22 @@ PACKET_HANDLER(CustomHouse)
 		char x = 0;
 		char y = 0;
 		char z = 0;
+
+		auto onNewComponent = [](CCustomHouseMultiObject *obj, const int &planeMode, const int &plane)
+		{
+			if (obj != NULL)
+			{
+				obj->Dbg = planeMode + plane * 10;
+
+				if (planeMode == 0)
+					obj->State = CHMOF_STAIR;
+				else if (planeMode == 2)
+				{
+					if (plane == 1)
+						obj->State = CHMOF_INTERNAL;
+				}
+			}
+		};
 
 		switch (planeMode)
 		{
@@ -5417,7 +5439,8 @@ PACKET_HANDLER(CustomHouse)
 					if (id == 0)
 						continue;
 
-					foundationItem->AddMulti(id, x, y, z, true);
+					CCustomHouseMultiObject *mo = (CCustomHouseMultiObject*)foundationItem->AddMulti(id, 0, x, y, z, true);
+					onNewComponent(mo, planeMode, plane);
 				}
 
 				break;
@@ -5438,7 +5461,8 @@ PACKET_HANDLER(CustomHouse)
 					if (id == 0)
 						continue;
 
-					foundationItem->AddMulti(id, x, y, z, true);
+					CCustomHouseMultiObject *mo = (CCustomHouseMultiObject*)foundationItem->AddMulti(id, 0, x, y, z, true);
+					onNewComponent(mo, planeMode, plane);
 				}
 
 				break;
@@ -5482,11 +5506,48 @@ PACKET_HANDLER(CustomHouse)
 					if (id == 0)
 						continue;
 
-					foundationItem->AddMulti(id, x, y, z, true);
+					CCustomHouseMultiObject *mo = (CCustomHouseMultiObject*)foundationItem->AddMulti(id, 0, x, y, z, true);
+					onNewComponent(mo, planeMode, plane);
 				}
 
 				break;
 			}
+			default:
+				break;
+		}
+	}
+
+	if (g_CustomHouseGump != NULL)
+	{
+		g_CustomHouseGump->FloorCount = planes;
+		g_CustomHouseGump->WantUpdateContent = true;
+
+		const WISP_GEOMETRY::CPoint2Di startPos = g_CustomHouseGump->StartPos;
+		const WISP_GEOMETRY::CPoint2Di endPos = g_CustomHouseGump->EndPos;
+		int z = foundationItem->Z + 7 + 20;
+		g_CustomHouseGump->MinHouseZ = foundationItem->Z + 7;
+
+		IFOR(i, 1, g_CustomHouseGump->FloorCount)
+		{
+			ushort color = 0;
+
+			if (i == 1)
+				color = 0x0051;
+			else if (i == 2)
+				color = 0x0056;
+			else if (i == 3)
+				color = 0x005B;
+
+			IFOR(x, startPos.X + 1, endPos.X)
+			{
+				IFOR(y, startPos.Y + 1, endPos.Y)
+				{
+					CCustomHouseMultiObject *mo = (CCustomHouseMultiObject*)foundationItem->AddMulti(0x0496, color, x - foundationItem->X, y - foundationItem->Y, z, true);
+					mo->State = CHMOF_INTERNAL | CHMOF_TRANSPARENT;
+				}
+			}
+
+			z += 20;
 		}
 	}
 }

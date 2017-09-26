@@ -9,9 +9,8 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CMultiObject::CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags, const bool &isCustomHouseMulti)
-: CRenderStaticObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_OnTarget(flags == 2),
-m_IsCustomHouseMulti(isCustomHouseMulti)
+CMultiObject::CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags)
+: CRenderStaticObject(ROT_MULTI_OBJECT, 0, graphic, 0, x, y, z), m_OnTarget(flags == 2)
 {
 	WISPFUN_DEBUG("c25_f1");
 	m_OriginalGraphic = graphic;

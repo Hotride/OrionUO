@@ -304,36 +304,60 @@ bool CMouseManager::LoadCursorTextures()
 void CMouseManager::Draw(ushort id)
 {
 	WISPFUN_DEBUG("c147_f5");
-	if (g_GameState >= GS_GAME && g_ObjectInHand.Enabled)
+	if (g_GameState >= GS_GAME)
 	{
-		bool doubleDraw = false;
-		ushort ohGraphic = g_ObjectInHand.GetDrawGraphic(doubleDraw);
-
-		ushort ohColor = g_ObjectInHand.Color;
-		doubleDraw = (!CGameObject::IsGold(g_ObjectInHand.Graphic) && IsStackable(g_ObjectInHand.TiledataPtr->Flags) && g_ObjectInHand.Count > 1);
-
-		if (ohColor != 0)
-			g_ColorizerShader->Use();
-
-		if (g_ObjectInHand.IsGameFigure)
+		if (g_ObjectInHand.Enabled)
 		{
-			ohGraphic -= GAME_FIGURE_GUMP_OFFSET;
+			bool doubleDraw = false;
+			ushort ohGraphic = g_ObjectInHand.GetDrawGraphic(doubleDraw);
 
-			CGLTexture *to = g_Orion.ExecuteGump(ohGraphic);
+			ushort ohColor = g_ObjectInHand.Color;
+			doubleDraw = (!CGameObject::IsGold(g_ObjectInHand.Graphic) && IsStackable(g_ObjectInHand.TiledataPtr->Flags) && g_ObjectInHand.Count > 1);
 
-			if (to != NULL)
-				g_Orion.DrawGump(ohGraphic, ohColor, g_MouseManager.Position.X - (to->Width / 2), g_MouseManager.Position.Y - (to->Height / 2));
+			if (ohColor != 0)
+				g_ColorizerShader->Use();
+
+			if (g_ObjectInHand.IsGameFigure)
+			{
+				ohGraphic -= GAME_FIGURE_GUMP_OFFSET;
+
+				CGLTexture *to = g_Orion.ExecuteGump(ohGraphic);
+
+				if (to != NULL)
+					g_Orion.DrawGump(ohGraphic, ohColor, g_MouseManager.Position.X - (to->Width / 2), g_MouseManager.Position.Y - (to->Height / 2));
+			}
+			else
+			{
+				g_Orion.DrawStaticArtInContainer(ohGraphic, ohColor, g_MouseManager.Position.X, g_MouseManager.Position.Y, false, true);
+
+				if (doubleDraw)
+					g_Orion.DrawStaticArtInContainer(ohGraphic, ohColor, g_MouseManager.Position.X + 5, g_MouseManager.Position.Y + 5, false, true);
+			}
+
+			if (ohColor != 0)
+				UnuseShader();
 		}
-		else
+		else if (g_CustomHouseGump != NULL && g_CustomHouseGump->SelectedGraphic)
 		{
-			g_Orion.DrawStaticArtInContainer(ohGraphic, ohColor, g_MouseManager.Position.X, g_MouseManager.Position.Y, false, true);
+			ushort color = 0;
+			
+			if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject())
+			{
+				RECT rect = { g_CustomHouseGump->StartPos.X, g_CustomHouseGump->StartPos.Y, g_CustomHouseGump->EndPos.X, g_CustomHouseGump->EndPos.Y };
+				POINT pos = { g_SelectedObject.Object->X, g_SelectedObject.Object->Y };
 
-			if (doubleDraw)
-				g_Orion.DrawStaticArtInContainer(ohGraphic, ohColor, g_MouseManager.Position.X + 5, g_MouseManager.Position.Y + 5, false, true);
+				if (!PtInRect(&rect, pos))
+					color = 0x0021;
+			}
+
+			if (color != 0)
+				g_ColorizerShader->Use();
+
+			g_Orion.DrawStaticArtInContainer(g_CustomHouseGump->SelectedGraphic, color, g_MouseManager.Position.X, g_MouseManager.Position.Y, false, true);
+
+			if (color != 0)
+				UnuseShader();
 		}
-
-		if (ohColor != 0)
-			UnuseShader();
 	}
 
 	CGLTexture *th = g_Orion.ExecuteStaticArt(id);

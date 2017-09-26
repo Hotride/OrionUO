@@ -587,21 +587,27 @@ void CMapManager::Init(const bool &delayed)
 	int maxBlockX = ((g_Player->X + XY_Offset) / 8) + 1;
 	int maxBlockY = ((g_Player->Y + XY_Offset) / 8) + 1;
 
+	if (minBlockX < 0)
+		minBlockX = 0;
+
+	if (minBlockY < 0)
+		minBlockY = 0;
+
+	if (maxBlockX >= g_MapBlockSize[map].Width)
+		maxBlockX = g_MapBlockSize[map].Width - 1;
+
+	if (maxBlockY >= g_MapBlockSize[map].Height)
+		maxBlockY = g_MapBlockSize[map].Height - 1;
+
 	uint ticks = g_Ticks;
 	uint maxDelay = g_FrameDelay[1] / 2;
 
 	for (int i = minBlockX; i <= maxBlockX; i++)
 	{
-		if (i < 0 || i >= g_MapBlockSize[map].Width)
-			continue;
+		uint index = i * g_MapBlockSize[map].Height;
 
-		for (int j = minBlockY; j <= maxBlockY; j++)
+		for (int j = minBlockY; j <= maxBlockY; j++, index++)
 		{
-			if (j < 0 || j >= g_MapBlockSize[map].Height)
-				continue;
-
-			uint index = (i * g_MapBlockSize[map].Height) + j;
-
 			if (index < m_MaxBlockIndex)
 			{
 				CMapBlock *block = GetBlock(index);

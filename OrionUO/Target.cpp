@@ -38,6 +38,23 @@ void CTarget::Reset()
 	m_MultiGraphic = 0;
 }
 //----------------------------------------------------------------------------------
+void CTarget::RequestFromCustomHouse()
+{
+	m_Type = 2;
+	m_CursorID = 0;
+	m_CursorType = 0;
+	m_Targeting = true;
+	m_MultiGraphic = 0;
+
+	if (g_CustomHouseGump != NULL)
+	{
+		g_CustomHouseGump->Erasing = false;
+		g_CustomHouseGump->SeekTile = false;
+		g_CustomHouseGump->SelectedGraphic = 0;
+		g_CustomHouseGump->WantUpdateContent = true;
+	}
+}
+//----------------------------------------------------------------------------------
 void CTarget::SetLastTargetObject(const uint &serial)
 {
 	m_Type = 0;
@@ -153,6 +170,14 @@ void CTarget::SendCancelTarget()
 	pack32(m_Data + 15, 0);
 
 	SendTarget();
+
+	if (g_CustomHouseGump != NULL)
+	{
+		g_CustomHouseGump->Erasing = false;
+		g_CustomHouseGump->SeekTile = false;
+		g_CustomHouseGump->SelectedGraphic = 0;
+		g_CustomHouseGump->WantUpdateContent = true;
+	}
 }
 //----------------------------------------------------------------------------------
 void CTarget::Plugin_SendTargetObject(const uint &serial)
@@ -255,7 +280,9 @@ void CTarget::SendLastTarget()
 void CTarget::SendTarget()
 {
 	WISPFUN_DEBUG("c209_f8");
-	g_Orion.Send(m_Data, sizeof(m_Data));
+
+	if (m_Type != 2)
+		g_Orion.Send(m_Data, sizeof(m_Data));
 
 	//Чистим данные
 	memset(m_Data, 0, sizeof(m_Data));
@@ -308,7 +335,7 @@ void CTarget::LoadMulti(const int &x, const int &y, const char &z)
 		{
 			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(index.Address + (j * itemOffset));
 			
-			CMultiObject *mo = new CMultiObject(pmb->ID, x + pmb->X, y + pmb->Y, z + (char)pmb->Z, 2, false);
+			CMultiObject *mo = new CMultiObject(pmb->ID, x + pmb->X, y + pmb->Y, z + (char)pmb->Z, 2);
 			g_MapManager->AddRender(mo);
 			AddMultiObject(mo);
 		}

@@ -62,7 +62,7 @@ public:
 
 	void ClearCustomHouseMultis();
 
-	void AddMulti(const ushort &graphic, const char &x, const char &y, const char &z, const bool &isCustomHouseMulti);
+	CMultiObject *AddMulti(const ushort &graphic, const ushort &color, const char &x, const char &y, const char &z, const bool &isCustomHouseMulti);
 
 	/*!
 	Событие изменения картинки объекта

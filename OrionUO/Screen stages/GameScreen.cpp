@@ -619,6 +619,15 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 			grayColor = 0x038E;
 	}
 
+	if (g_CustomHouseGump != NULL)
+	{
+		RECT rect = { g_CustomHouseGump->StartPos.X, g_CustomHouseGump->StartPos.Y, g_CustomHouseGump->EndPos.X, g_CustomHouseGump->EndPos.Y };
+		POINT pos = { worldX, worldY };
+
+		if (!PtInRect(&rect, pos))
+			grayColor = 0x038E;
+	}
+
 	for (; obj != NULL; obj = obj->m_NextXY)
 	{
 		int drawX = obj->DrawX - g_RenderBounds.WindowDrawOffsetX;
@@ -835,6 +844,17 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 		m_RenderList[m_RenderListCount].Object = obj;
 		m_RenderList[m_RenderListCount].GrayColor = grayColor;
+
+		if (!grayColor && g_CustomHouseGump != NULL && g_Target.IsTargeting() && obj == g_SelectedObject.Object && obj->Z >= g_Player->Z && obj->Z < g_Player->Z + 20)
+		{
+			if (g_CustomHouseGump->Erasing)
+			{
+				if (obj->IsMultiObject() && ((CMultiObject*)obj)->IsCustomHouseMulti() && !(((CCustomHouseMultiObject*)obj)->State & CHMOF_INTERNAL))
+					m_RenderList[m_RenderListCount].GrayColor = 0x0021;
+			}
+			else
+				m_RenderList[m_RenderListCount].GrayColor = 0x0035;
+		}
 
 		m_RenderListCount++;
 	}
@@ -1693,6 +1713,11 @@ void CGameScreen::Render(const bool &mode)
 					case ROT_MULTI_OBJECT:
 					{
 						sprintf_s(soName, "Multi");
+
+						if (((CMultiObject*)selRwo)->IsCustomHouseMulti())
+							sprintf_s(soName, "Multi CH:%i", ((CCustomHouseMultiObject*)selRwo)->Dbg);
+						else
+							sprintf_s(soName, "Multi");
 						break;
 					}
 					default:
@@ -1884,6 +1909,31 @@ void CGameScreen::OnLeftMouseButtonUp()
 
 		if (g_SelectedObject.Object->IsWorldObject())
 			rwo = (CRenderWorldObject*)g_SelectedObject.Object;
+
+		if (g_CustomHouseGump != NULL && g_Target.IsTargeting())
+		{
+			if (rwo != NULL && rwo->IsMultiObject() && rwo->Z >= g_CustomHouseGump->MinHouseZ)
+			{
+				CMultiObject *multiObject = (CMultiObject*)rwo;
+
+				if (g_CustomHouseGump->SeekTile && ((CMultiObject*)rwo)->IsCustomHouseMulti())
+					g_CustomHouseGump->SeekGraphic(rwo->Graphic);
+				else if (rwo->Z >= g_Player->Z && rwo->Z < g_Player->Z + 20)
+				{
+					if (g_CustomHouseGump->Erasing && !(((CCustomHouseMultiObject*)rwo)->State & CHMOF_INTERNAL))
+					{
+						if (((CMultiObject*)rwo)->IsCustomHouseMulti())
+						{
+						}
+					}
+					else if (g_CustomHouseGump->SelectedGraphic)
+					{
+					}
+				}
+			}
+
+			return;
+		}
 
 		if (g_Target.IsTargeting() && !g_ObjectInHand.Enabled)
 		{

@@ -26,11 +26,16 @@ class CGumpCustomHouse : public CGump
 	SETGET(CUSTOM_HOUSE_GUMP_STATE, State, CHGS_WALL);
 	SETGET(int, Category, -1);
 	SETGET(int, MaxPage, 1);
+	SETGET(ushort, SelectedGraphic, 0);
 	SETGET(int, CurrentFloor, 1);
 	SETGET(int, FloorCount, 4);
+	SETGET(int, RoofZ, 1);
+	SETGET(int, MinHouseZ, -120);
 	SETGET(bool, Erasing, false);
 	SETGET(bool, SeekTile, false);
 	SETGET(bool, ShowWindow, false);
+	SETGET(WISP_GEOMETRY::CPoint2Di, StartPos, WISP_GEOMETRY::CPoint2Di());
+	SETGET(WISP_GEOMETRY::CPoint2Di, EndPos, WISP_GEOMETRY::CPoint2Di());
 
 private:
 	vector<CCustomHouseObjectWallCategory> m_Walls;
@@ -107,6 +112,8 @@ public:
 	virtual void UpdateContent();
 
 	virtual void InitToolTip();
+
+	void SeekGraphic(const ushort &graphic);
 
 	GUMP_BUTTON_EVENT_H;
 	GUMP_TEXT_ENTRY_EVENT_H;

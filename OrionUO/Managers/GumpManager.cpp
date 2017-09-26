@@ -520,7 +520,7 @@ void CGumpManager::Draw(const bool &blocked)
 		{
 			if (gump->CanBeDisplayed())
 			{
-				if (g_CustomHouseGump == NULL || gump == g_CustomHouseGump)
+				if (g_CustomHouseGump == NULL || gump == g_CustomHouseGump || gump->GumpType == GT_GENERIC)
 					gump->Draw();
 			}
 
@@ -549,7 +549,7 @@ void CGumpManager::Select(const bool &blocked)
 		{
 			if (gump->CanBeDisplayed())
 			{
-				if (g_CustomHouseGump == NULL || gump == g_CustomHouseGump)
+				if (g_CustomHouseGump == NULL || gump == g_CustomHouseGump || gump->GumpType == GT_GENERIC)
 					gump->Select();
 			}
 
