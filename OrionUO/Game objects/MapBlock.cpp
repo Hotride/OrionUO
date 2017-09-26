@@ -284,14 +284,18 @@ bool CMapBlock::TestStretched(const int &x, const int &y, const char &z, const i
 char CMapBlock::GetLandZ(const int &x, const int &y, const int &map)
 {
 	WISPFUN_DEBUG("c24_f7");
+
+	if (x < 0 || y < 0)
+		return -125;
+
 	CIndexMap *blockIndex = g_MapManager->GetIndex(map, x / 8, y / 8);
 
 		//Проверки актуальности данных
 	if (blockIndex == NULL || blockIndex->MapAddress == 0)
-			return -125;
+		return -125;
 
-		int mX = x % 8;
-		int mY = y % 8;
+	int mX = x % 8;
+	int mY = y % 8;
 
 	return ((PMAP_BLOCK)blockIndex->MapAddress)->Cells[mY * 8 + mX].Z;
 }
