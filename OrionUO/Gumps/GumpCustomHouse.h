@@ -90,6 +90,8 @@ private:
 	CGUIDataBox *m_DataBox{ NULL };
 	CGUIDataBox *m_DataBoxGUI{ NULL };
 
+	CGUIGumppic *m_Gumppic{ NULL };
+
 	CGUIText *m_TextItems{ NULL };
 	CGUIText *m_TextCost{ NULL };
 

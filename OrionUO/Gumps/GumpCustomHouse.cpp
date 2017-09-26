@@ -145,8 +145,7 @@ CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &
 
 	Add(new CGUIGumppic(0x55F0, 0, 17));
 
-	Add(new CGUIGumppic(0x55F9, 486, 17));
-	// or, if 4 floors : Add(new CGUIGumppic(0x55F2, 486, 17));
+	m_Gumppic = (CGUIGumppic*)Add(new CGUIGumppic((m_FloorCount == 4 ? 0x55F2 : 0x55F9), 486, 17));
 
 	Add(new CGUIGumppicTiled(0x55F1, 153, 17, 333, 154));
 
@@ -177,6 +176,7 @@ CGumpCustomHouse::~CGumpCustomHouse()
 	m_DataBox = NULL;
 	m_DataBoxGUI = NULL;
 
+	m_Gumppic = NULL;
 	m_TextItems = NULL;
 	m_TextCost = NULL;
 
@@ -693,6 +693,8 @@ void CGumpCustomHouse::UpdateContent()
 
 	m_DataBox->Clear();
 	m_DataBoxGUI->Clear();
+
+	m_Gumppic->Graphic = (m_FloorCount == 4 ? 0x55F2 : 0x55F9);
 
 	m_DataBoxGUI->Add(new CGUIButton(ID_GCH_STATE_ERASE, 0x5666 + (int)m_Erasing, 0x5667, 0x5668, 9, 100));
 	Add(new CGUIButton(ID_GCH_STATE_EYEDROPPER, 0x5669 + (int)m_SeekTile, 0x566A, 0x566B, 39, 100));
