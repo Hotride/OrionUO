@@ -93,7 +93,7 @@ public:
 	ushort m_Graphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
-class CCustomHouseObjectFloorCategory
+/*class CCustomHouseObjectFloorCategory
 {
 	SETGET(int, Index, 0);
 
@@ -102,7 +102,7 @@ public:
 	virtual ~CCustomHouseObjectFloorCategory() {}
 
 	vector<CCustomHouseObjectFloor> m_Items;
-};
+};*/
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectDoor : public CCustomHouseObject
 {
@@ -126,7 +126,7 @@ public:
 	ushort m_Graphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
-class CCustomHouseObjectDoorCategory
+/*class CCustomHouseObjectDoorCategory
 {
 	SETGET(int, Index, 0);
 
@@ -135,7 +135,7 @@ public:
 	virtual ~CCustomHouseObjectDoorCategory() {}
 
 	vector<CCustomHouseObjectDoor> m_Items;
-};
+};*/
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectMisc : public CCustomHouseObject
 {
@@ -194,12 +194,12 @@ public:
 
 	virtual bool Parse(const char *text);
 
-	static const int GRAPHICS_COUNT = 0;
+	static const int GRAPHICS_COUNT = 9;
 
-	ushort m_Graphics[8];
+	ushort m_Graphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
-class CCustomHouseObjectStairCategory
+/*class CCustomHouseObjectStairCategory
 {
 	SETGET(int, Index, 0);
 
@@ -208,7 +208,7 @@ public:
 	virtual ~CCustomHouseObjectStairCategory() {}
 
 	vector<CCustomHouseObjectStair> m_Items;
-};
+};*/
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectTeleport : public CCustomHouseObject
 {
@@ -240,7 +240,7 @@ public:
 	ushort m_Graphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
-class CCustomHouseObjectTeleportCategory
+/*class CCustomHouseObjectTeleportCategory
 {
 	SETGET(int, Index, 0);
 
@@ -249,7 +249,7 @@ public:
 	virtual ~CCustomHouseObjectTeleportCategory() {}
 
 	vector<CCustomHouseObjectTeleport> m_Items;
-};
+};*/
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectRoof : public CCustomHouseObject
 {
@@ -311,6 +311,8 @@ class CCustomHouseObjectPlaceInfo
 	SETGET(int, CanGoW, 0);
 	SETGET(int, CanGoN, 0);
 	SETGET(int, CanGoNWS, 0);
+
+	SETGET(int, FeatureMask, 0);
 
 public:
 	CCustomHouseObjectPlaceInfo() {}

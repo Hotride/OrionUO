@@ -12,7 +12,7 @@
 CGumpCustomHouse *g_CustomHouseGump = NULL;
 //----------------------------------------------------------------------------------
 template<class T, class A>
-void ParseCustomHouseObjectFile(vector<A> &list, const string &path)
+void ParseCustomHouseObjectFileWithCategory(vector<A> &list, const string &path)
 {
 	LOG("parse CH file: %s\n", path.c_str());
 
@@ -68,6 +68,42 @@ void ParseCustomHouseObjectFile(vector<A> &list, const string &path)
 	}
 }
 //----------------------------------------------------------------------------------
+template<class T>
+void ParseCustomHouseObjectFile(vector<T> &list, const string &path)
+{
+	FILE *file = NULL;
+	fopen_s(&file, path.c_str(), "r");
+
+	if (file != NULL)
+	{
+		int line = 0;
+
+		while (!feof(file))
+		{
+			char buf[256] = { 0 };
+			fgets(&buf[0], 256, file);
+
+			if (!strlen(buf))
+				continue;
+
+			line++;
+
+			if (line <= 2)
+				continue;
+
+			T item;
+
+			if (item.Parse(buf))
+			{
+				if (!item.FeatureMask || (g_LockedClientFeatures & item.FeatureMask))
+					list.push_back(item);
+			}
+		}
+
+		fclose(file);
+	}
+}
+//----------------------------------------------------------------------------------
 CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &y)
 : CGump(GT_CUSTOM_HOUSE, serial, x, y)
 {
@@ -75,15 +111,14 @@ CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &
 
 	g_CustomHouseGump = this;
 
-	ParseCustomHouseObjectFile<CCustomHouseObjectWall, CCustomHouseObjectWallCategory>(m_Walls, g_App.FilePath("walls.txt"));
-	ParseCustomHouseObjectFile<CCustomHouseObjectFloor, CCustomHouseObjectFloorCategory>(m_Floors, g_App.FilePath("floors.txt"));
-	ParseCustomHouseObjectFile<CCustomHouseObjectDoor, CCustomHouseObjectDoorCategory>(m_Doors, g_App.FilePath("doors.txt"));
-	ParseCustomHouseObjectFile<CCustomHouseObjectMisc, CCustomHouseObjectMiscCategory>(m_Miscs, g_App.FilePath("misc.txt"));
-	ParseCustomHouseObjectFile<CCustomHouseObjectStair, CCustomHouseObjectStairCategory>(m_Stairs, g_App.FilePath("stairs.txt"));
-	ParseCustomHouseObjectFile<CCustomHouseObjectTeleport, CCustomHouseObjectTeleportCategory>(m_Teleports, g_App.FilePath("teleprts.txt"));
-	ParseCustomHouseObjectFile<CCustomHouseObjectRoof, CCustomHouseObjectRoofCategory>(m_Roofs, g_App.FilePath("roof.txt"));
-
-	LoadSuppinfo();
+	ParseCustomHouseObjectFileWithCategory<CCustomHouseObjectWall, CCustomHouseObjectWallCategory>(m_Walls, g_App.FilePath("walls.txt"));
+	ParseCustomHouseObjectFile<CCustomHouseObjectFloor>(m_Floors, g_App.FilePath("floors.txt"));
+	ParseCustomHouseObjectFile<CCustomHouseObjectDoor>(m_Doors, g_App.FilePath("doors.txt"));
+	ParseCustomHouseObjectFileWithCategory<CCustomHouseObjectMisc, CCustomHouseObjectMiscCategory>(m_Miscs, g_App.FilePath("misc.txt"));
+	ParseCustomHouseObjectFile<CCustomHouseObjectStair>(m_Stairs, g_App.FilePath("stairs.txt"));
+	ParseCustomHouseObjectFile<CCustomHouseObjectTeleport>(m_Teleports, g_App.FilePath("teleprts.txt"));
+	ParseCustomHouseObjectFileWithCategory<CCustomHouseObjectRoof, CCustomHouseObjectRoofCategory>(m_Roofs, g_App.FilePath("roof.txt"));
+	ParseCustomHouseObjectFile<CCustomHouseObjectPlaceInfo>(m_ObjectsInfo, g_App.FilePath("suppinfo.txt"));
 
 	CGameItem *foundationItem = g_World->GetWorldItem(serial);
 
@@ -122,7 +157,6 @@ CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &
 	Add(new CGUIButton(ID_GCH_STATE_STAIR, 0x565D, 0x565E, 0x565F, 9, 72));
 	Add(new CGUIButton(ID_GCH_STATE_ROOF, 0x5788, 0x5789, 0x578A, 39, 72));
 	Add(new CGUIButton(ID_GCH_STATE_MISC, 0x5663, 0x5664, 0x5665, 69, 72));
-	Add(new CGUIButton(ID_GCH_STATE_EYEDROPPER, 0x5669, 0x566A, 0x566B, 39, 100));
 	Add(new CGUIButton(ID_GCH_STATE_MENU, 0x566C, 0x566D, 0x566E, 69, 100));
 
 
@@ -148,40 +182,6 @@ CGumpCustomHouse::~CGumpCustomHouse()
 
 	CPacketCustomHouseBuildingExit().Send();
 	g_Target.SendCancelTarget();
-}
-//----------------------------------------------------------------------------------
-void CGumpCustomHouse::LoadSuppinfo()
-{
-	FILE *file = NULL;
-	fopen_s(&file, g_App.FilePath("suppinfo.txt").c_str(), "r");
-
-	if (file != NULL)
-	{
-		int line = 0;
-
-		while (!feof(file))
-		{
-			char buf[256] = { 0 };
-			fgets(&buf[0], 256, file);
-
-			if (!strlen(buf))
-				continue;
-
-			line++;
-
-			if (line <= 2)
-				continue;
-
-			CCustomHouseObjectPlaceInfo item;
-
-			if (item.Parse(buf))
-				m_ObjectsInfo.push_back(item);
-		}
-
-		fclose(file);
-	}
-
-	LOG("m_ObjectsInfo.size()=%i\n", m_ObjectsInfo.size());
 }
 //----------------------------------------------------------------------------------
 void CGumpCustomHouse::CalculateGumpState()
@@ -293,9 +293,9 @@ void CGumpCustomHouse::DrawWallSection()
 //----------------------------------------------------------------------------------
 void CGumpCustomHouse::DrawDoorSection()
 {
-	if (m_Page >= 0 && m_Page < (int)m_Doors.size() && m_Doors[m_Page].m_Items.size())
+	if (m_Page >= 0 && m_Page < (int)m_Doors.size())
 	{
-		CCustomHouseObjectDoor &item = m_Doors[m_Page].m_Items[0];
+		CCustomHouseObjectDoor &item = m_Doors[m_Page];
 
 		int x = 0;
 		int y = 0;
@@ -331,9 +331,9 @@ void CGumpCustomHouse::DrawDoorSection()
 //----------------------------------------------------------------------------------
 void CGumpCustomHouse::DrawFloorSection()
 {
-	if (m_Page >= 0 && m_Page < (int)m_Floors.size() && m_Floors[m_Page].m_Items.size())
+	if (m_Page >= 0 && m_Page < (int)m_Floors.size())
 	{
-		CCustomHouseObjectFloor &item = m_Floors[m_Page].m_Items[0];
+		CCustomHouseObjectFloor &item = m_Floors[m_Page];
 
 		int x = 0;
 		int y = 0;
@@ -470,7 +470,7 @@ void CGumpCustomHouse::DrawRoofSection()
 
 		m_DataBoxGUI->Add(new CGUIGumppic(0x55F4, 383, 4));
 		CGUIText *text = (CGUIText*)m_DataBoxGUI->Add(new CGUIText(0x04E9, 405, 15));
-		text->CreateTextureA(3, "3");
+		text->CreateTextureA(3, std::to_string(m_RoofZ));
 	}
 }
 //----------------------------------------------------------------------------------
@@ -603,6 +603,90 @@ void CGumpCustomHouse::DrawMenuSection()
 	entry->FocusedOffsetY = 2;
 }
 //----------------------------------------------------------------------------------
+template<class T, class A>
+pair<int, int> SeekGraphicInCustomHouseObjectListWithCategory(const vector<A> &list, const ushort &graphic)
+{
+	IFOR(i, 0, (int)list.size())
+	{
+		const A &cat = list[i];
+
+		IFOR(j, 0, (int)cat.m_Items.size())
+		{
+			const T &item = cat.m_Items[j];
+
+			IFOR(g, 0, T::GRAPHICS_COUNT)
+			{
+				if (item.m_Graphics[g] == graphic)
+					return pair<int, int>(i, j);
+			}
+		}
+	}
+
+	return pair<int, int>(-1, -1);
+}
+//----------------------------------------------------------------------------------
+template<class T>
+pair<int, int> SeekGraphicInCustomHouseObjectList(const vector<T> &list, const ushort &graphic)
+{
+	IFOR(i, 0, (int)list.size())
+	{
+		const T &item = list[i];
+
+		IFOR(j, 0, T::GRAPHICS_COUNT)
+		{
+			if (item.m_Graphics[j] == graphic)
+				return pair<int, int>(i, i);
+		}
+	}
+
+	return pair<int, int>(-1, -1);
+}
+//----------------------------------------------------------------------------------
+pair<int, int> CGumpCustomHouse::ExistsInList(CUSTOM_HOUSE_GUMP_STATE &state, const ushort &graphic)
+{
+	pair<int, int> result = SeekGraphicInCustomHouseObjectListWithCategory<CCustomHouseObjectWall, CCustomHouseObjectWallCategory>(m_Walls, graphic);
+
+	if (result.first == -1 || result.second == -1)
+	{
+		result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectFloor>(m_Floors, graphic);
+
+		if (result.first == -1 || result.second == -1)
+		{
+			result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectDoor>(m_Doors, graphic);
+
+			if (result.first == -1 || result.second == -1)
+			{
+				result = SeekGraphicInCustomHouseObjectListWithCategory<CCustomHouseObjectMisc, CCustomHouseObjectMiscCategory>(m_Miscs, graphic);
+
+				if (result.first == -1 || result.second == -1)
+				{
+					result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectStair>(m_Stairs, graphic);
+
+					if (result.first == -1 || result.second == -1)
+					{
+						result = SeekGraphicInCustomHouseObjectListWithCategory<CCustomHouseObjectRoof, CCustomHouseObjectRoofCategory>(m_Roofs, graphic);
+
+						if (result.first != -1 && result.second != -1)
+							state = CHGS_ROOF;
+					}
+					else
+						state = CHGS_STAIR;
+				}
+				else
+					state = CHGS_MISC;
+			}
+			else
+				state = CHGS_DOOR;
+		}
+		else
+			state = CHGS_FLOOR;
+	}
+	else
+		state = CHGS_WALL;
+
+	return result;
+}
+//----------------------------------------------------------------------------------
 void CGumpCustomHouse::UpdateContent()
 {
 	WISPFUN_DEBUG("");
@@ -611,6 +695,7 @@ void CGumpCustomHouse::UpdateContent()
 	m_DataBoxGUI->Clear();
 
 	m_DataBoxGUI->Add(new CGUIButton(ID_GCH_STATE_ERASE, 0x5666 + (int)m_Erasing, 0x5667, 0x5668, 9, 100));
+	Add(new CGUIButton(ID_GCH_STATE_EYEDROPPER, 0x5669 + (int)m_SeekTile, 0x566A, 0x566B, 39, 100));
 
 	int graphicOffset = (m_CurrentFloor == 1 ? 3 : 0);
 	int graphicOffset2 = (m_CurrentFloor == 1 ? 4 : 0);
@@ -693,8 +778,39 @@ void CGumpCustomHouse::UpdateContent()
 		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_LIST_RIGHT, 0x5628, 0x5629, 0x562A, 510, 63));
 	}
 
-	m_TextItems->CreateTextureA(9, "0 : 0", 100, TS_CENTER);
-	m_TextCost->CreateTextureA(9, "0");
+	int componentsCount = 0;
+	int fixturesCount = 0;
+
+	CGameItem *foundationItem = g_World->GetWorldItem(m_Serial);
+
+	if (foundationItem != NULL)
+	{
+		QFOR(multi, foundationItem->m_Items, CMulti*)
+		{
+			QFOR(item, multi->m_Items, CMultiObject*)
+			{
+				if (item->IsCustomHouseMulti())
+				{
+					if (!(((CCustomHouseMultiObject*)item)->State & CHMOF_GENERIC_INTERNAL))
+					{
+						CUSTOM_HOUSE_GUMP_STATE state;
+						pair<int, int> result = ExistsInList(state, item->Graphic);
+
+						if (result.first != -1 && result.second != -1)
+						{
+							if (state == CHGS_DOOR)
+								fixturesCount++;
+							else
+								componentsCount++;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	m_TextItems->CreateTextureA(9, std::to_string(componentsCount) + " : " + std::to_string(fixturesCount), 100, TS_CENTER);
+	m_TextCost->CreateTextureA(9, std::to_string((componentsCount + fixturesCount) * 500));
 }
 //----------------------------------------------------------------------------------
 void CGumpCustomHouse::UpdateMaxPage()
@@ -781,75 +897,15 @@ void CGumpCustomHouse::UpdateMaxPage()
 	}
 }
 //----------------------------------------------------------------------------------
-template<class T, class A>
-pair<int, int> SeekGraphicInCustomHouseObjectList(const vector<A> &list, const ushort &graphic)
-{
-	IFOR(i, 0, (int)list.size())
-	{
-		const A &cat = list[i];
-
-		IFOR(j, 0, (int)cat.m_Items.size())
-		{
-			const T &item = cat.m_Items[j];
-
-			IFOR(g, 0, T::GRAPHICS_COUNT)
-			{
-				if (item.m_Graphics[g] == graphic)
-					return pair<int, int>(i, j);
-			}
-		}
-	}
-
-	return pair<int, int>(-1, -1);
-}
-//----------------------------------------------------------------------------------
 void CGumpCustomHouse::SeekGraphic(const ushort &graphic)
 {
-	pair<int, int> result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectWall, CCustomHouseObjectWallCategory>(m_Walls, graphic);
-
-	if (result.first == -1 || result.second == -1)
-	{
-		result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectFloor, CCustomHouseObjectFloorCategory>(m_Floors, graphic);
-
-		if (result.first == -1 || result.second == -1)
-		{
-			result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectDoor, CCustomHouseObjectDoorCategory>(m_Doors, graphic);
-
-			if (result.first == -1 || result.second == -1)
-			{
-				result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectMisc, CCustomHouseObjectMiscCategory>(m_Miscs, graphic);
-
-				if (result.first == -1 || result.second == -1)
-				{
-					result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectStair, CCustomHouseObjectStairCategory>(m_Stairs, graphic);
-
-					if (result.first == -1 || result.second == -1)
-					{
-						result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectRoof, CCustomHouseObjectRoofCategory>(m_Roofs, graphic);
-
-						if (result.first == -1 || result.second == -1)
-						{
-						}
-						else
-							m_State = CHGS_ROOF;
-					}
-					else
-						m_State = CHGS_STAIR;
-				}
-				else
-					m_State = CHGS_MISC;
-			}
-			else
-				m_State = CHGS_DOOR;
-		}
-		else
-			m_State = CHGS_FLOOR;
-	}
-	else
-		m_State = CHGS_WALL;
+	CUSTOM_HOUSE_GUMP_STATE state;
+	pair<int, int> result = ExistsInList(state, graphic);
 
 	if (result.first != -1 && result.second != -1)
 	{
+		m_State = state;
+
 		if (m_State == CHGS_WALL || m_State == CHGS_ROOF || m_State == CHGS_MISC)
 		{
 			m_Category = result.first;
@@ -962,53 +1018,43 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 				UpdateMaxPage();
 			}
 		}
-		else
+		else if (index >= 0 && m_Page >= 0)
 		{
 			ushort graphic = 0;
 
 			if (m_State == CHGS_WALL || m_State == CHGS_ROOF || m_State == CHGS_MISC)
 			{
-				if (m_Category != -1)
+				if (m_Category >= 0)
 				{
-					if (m_State == CHGS_WALL && m_Category >= 0 && m_Category < (int)m_Walls.size() && index >= 0 && index < CCustomHouseObjectWall::GRAPHICS_COUNT)
+					if (m_State == CHGS_WALL && m_Category < (int)m_Walls.size() && index < CCustomHouseObjectWall::GRAPHICS_COUNT)
 					{
 						const vector<CCustomHouseObjectWall> &list = m_Walls[m_Category].m_Items;
 
-						if (m_Page >= 0 && m_Page < (int)list.size())
+						if (m_Page < (int)list.size())
 							graphic = list[m_Page].m_Graphics[index];
 					}
-					else if (m_State == CHGS_ROOF && m_Category >= 0 && m_Category < (int)m_Roofs.size() && index >= 0 && index < CCustomHouseObjectRoof::GRAPHICS_COUNT)
+					else if (m_State == CHGS_ROOF && m_Category < (int)m_Roofs.size() && index < CCustomHouseObjectRoof::GRAPHICS_COUNT)
 					{
 						const vector<CCustomHouseObjectRoof> &list = m_Roofs[m_Category].m_Items;
 
-						if (m_Page >= 0 && m_Page < (int)list.size())
+						if (m_Page < (int)list.size())
 							graphic = list[m_Page].m_Graphics[index];
 					}
-					else if (m_State == CHGS_MISC && m_Category >= 0 && m_Category < (int)m_Miscs.size() && index >= 0 && index < CCustomHouseObjectMisc::GRAPHICS_COUNT)
+					else if (m_State == CHGS_MISC && m_Category < (int)m_Miscs.size() && index < CCustomHouseObjectMisc::GRAPHICS_COUNT)
 					{
 						const vector<CCustomHouseObjectMisc> &list = m_Miscs[m_Category].m_Items;
 
-						if (m_Page >= 0 && m_Page < (int)list.size())
+						if (m_Page < (int)list.size())
 							graphic = list[m_Page].m_Graphics[index];
 					}
 				}
 			}
 			else
 			{
-				if (m_State == CHGS_DOOR && m_Page >= 0 && m_Page < (int)m_Doors.size() && index >= 0 && index < CCustomHouseObjectDoor::GRAPHICS_COUNT)
-				{
-					const vector<CCustomHouseObjectDoor> &list = m_Doors[m_Page].m_Items;
-
-					if (list.size())
-						graphic = list[0].m_Graphics[index];
-				}
-				else if (m_State == CHGS_FLOOR && m_Page >= 0 && m_Page < (int)m_Floors.size() && index >= 0 && index < CCustomHouseObjectFloor::GRAPHICS_COUNT)
-				{
-					const vector<CCustomHouseObjectFloor> &list = m_Floors[m_Page].m_Items;
-
-					if (list.size())
-						graphic = list[0].m_Graphics[index];
-				}
+				if (m_State == CHGS_DOOR && m_Page < (int)m_Doors.size() && index < CCustomHouseObjectDoor::GRAPHICS_COUNT)
+					graphic = m_Doors[m_Page].m_Graphics[index];
+				else if (m_State == CHGS_FLOOR && m_Page < (int)m_Floors.size() && index < CCustomHouseObjectFloor::GRAPHICS_COUNT)
+					graphic = m_Floors[m_Page].m_Graphics[index];
 			}
 
 			if (graphic)

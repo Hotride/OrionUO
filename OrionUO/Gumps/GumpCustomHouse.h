@@ -39,11 +39,11 @@ class CGumpCustomHouse : public CGump
 
 private:
 	vector<CCustomHouseObjectWallCategory> m_Walls;
-	vector<CCustomHouseObjectFloorCategory> m_Floors;
-	vector<CCustomHouseObjectDoorCategory> m_Doors;
+	vector<CCustomHouseObjectFloor> m_Floors;
+	vector<CCustomHouseObjectDoor> m_Doors;
 	vector<CCustomHouseObjectMiscCategory> m_Miscs;
-	vector<CCustomHouseObjectStairCategory> m_Stairs;
-	vector<CCustomHouseObjectTeleportCategory> m_Teleports;
+	vector<CCustomHouseObjectStair> m_Stairs;
+	vector<CCustomHouseObjectTeleport> m_Teleports;
 	vector<CCustomHouseObjectRoofCategory> m_Roofs;
 	vector<CCustomHouseObjectPlaceInfo> m_ObjectsInfo;
 	
@@ -93,8 +93,6 @@ private:
 	CGUIText *m_TextItems{ NULL };
 	CGUIText *m_TextCost{ NULL };
 
-	void LoadSuppinfo();
-
 	void DrawWallSection();
 	void DrawDoorSection();
 	void DrawFloorSection();
@@ -104,6 +102,8 @@ private:
 	void DrawMenuSection();
 
 	void UpdateMaxPage();
+
+	pair<int, int> ExistsInList(CUSTOM_HOUSE_GUMP_STATE &state, const ushort &graphic);
 
 protected:
 	virtual void CalculateGumpState();
