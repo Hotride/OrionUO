@@ -108,6 +108,8 @@ bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const
 				else
 					dropFlags = ((graphic >= 0x3946 && graphic <= 0x3964) || graphic == 0x0082);
 			}
+			else if (g_CustomHouseGump != NULL && obj->IsMultiObject() && ((CMultiObject*)obj)->IsCustomHouseMulti())
+				canBeAdd = false;
 
 			if (canBeAdd)
 			{
@@ -253,6 +255,15 @@ bool CPathFinder::CalculateNewZ(const int &x, const int &y, char &z, const int &
 	CalculateMinMaxZ(minZ, maxZ, x, y, z, direction, stepState);
 
 	vector<CPathObject> list;
+
+	if (g_CustomHouseGump != NULL)
+	{
+		RECT rect = { g_CustomHouseGump->StartPos.X, g_CustomHouseGump->StartPos.Y, g_CustomHouseGump->EndPos.X, g_CustomHouseGump->EndPos.Y };
+		POINT pos = { x, y };
+
+		if (!PtInRect(&rect, pos))
+			return false;
+	}
 
 	if (!CreateItemsList(list, x, y, stepState) || !list.size())
 		return false;
