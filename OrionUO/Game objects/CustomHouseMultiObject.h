@@ -13,8 +13,9 @@
 enum CUSTOM_HOUSE_MULTI_OBJECT_FLAGS
 {
 	CHMOF_INTERNAL = 0x01,
-	CHMOF_TRANSPARENT = 0x02,
-	CHMOF_STAIR = 0x04
+	CHMOF_GENERIC_INTERNAL = 0x02,
+	CHMOF_TRANSPARENT = 0x04,
+	CHMOF_STAIR = 0x08
 };
 //----------------------------------------------------------------------------------
 //Объект для мульти-объекта

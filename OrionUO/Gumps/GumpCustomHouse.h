@@ -45,6 +45,7 @@ private:
 	vector<CCustomHouseObjectStairCategory> m_Stairs;
 	vector<CCustomHouseObjectTeleportCategory> m_Teleports;
 	vector<CCustomHouseObjectRoofCategory> m_Roofs;
+	vector<CCustomHouseObjectPlaceInfo> m_ObjectsInfo;
 	
 	enum ID_GUMP_CUSTOM_HOUSE
 	{
@@ -92,6 +93,8 @@ private:
 	CGUIText *m_TextItems{ NULL };
 	CGUIText *m_TextCost{ NULL };
 
+	void LoadSuppinfo();
+
 	void DrawWallSection();
 	void DrawDoorSection();
 	void DrawFloorSection();
@@ -112,6 +115,8 @@ public:
 	virtual void UpdateContent();
 
 	virtual void InitToolTip();
+
+	void GenerateFloorPlace();
 
 	void SeekGraphic(const ushort &graphic);
 

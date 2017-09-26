@@ -5362,7 +5362,7 @@ PACKET_HANDLER(CustomHouse)
 	if (foundationItem == NULL)
 		return;
 
-	foundationItem->ClearCustomHouseMultis();
+	foundationItem->ClearCustomHouseMultis(0);
 
 	ReadUInt16BE();
 	ReadUInt16BE();
@@ -5521,34 +5521,8 @@ PACKET_HANDLER(CustomHouse)
 	{
 		g_CustomHouseGump->FloorCount = planes;
 		g_CustomHouseGump->WantUpdateContent = true;
-
-		const WISP_GEOMETRY::CPoint2Di startPos = g_CustomHouseGump->StartPos;
-		const WISP_GEOMETRY::CPoint2Di endPos = g_CustomHouseGump->EndPos;
-		int z = foundationItem->Z + 7 + 20;
 		g_CustomHouseGump->MinHouseZ = foundationItem->Z + 7;
-
-		IFOR(i, 1, g_CustomHouseGump->FloorCount)
-		{
-			ushort color = 0;
-
-			if (i == 1)
-				color = 0x0051;
-			else if (i == 2)
-				color = 0x0056;
-			else if (i == 3)
-				color = 0x005B;
-
-			IFOR(x, startPos.X + 1, endPos.X)
-			{
-				IFOR(y, startPos.Y + 1, endPos.Y)
-				{
-					CCustomHouseMultiObject *mo = (CCustomHouseMultiObject*)foundationItem->AddMulti(0x0496, color, x - foundationItem->X, y - foundationItem->Y, z, true);
-					mo->State = CHMOF_INTERNAL | CHMOF_TRANSPARENT;
-				}
-			}
-
-			z += 20;
-		}
+		g_CustomHouseGump->GenerateFloorPlace();
 	}
 }
 //----------------------------------------------------------------------------------

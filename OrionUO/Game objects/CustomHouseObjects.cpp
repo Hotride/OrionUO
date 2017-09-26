@@ -175,3 +175,15 @@ bool CCustomHouseObjectRoof::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
+bool CCustomHouseObjectPlaceInfo::Parse(const char *text)
+{
+	WISPFUN_DEBUG("");
+	char buf[50];
+
+	bool result = sscanf(text,
+		"%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
+		&buf[0], &m_Graphic, &m_Top, &m_Bottom, &m_AdjUN, &m_AdjLN, &m_AdjUE, &m_AdjLE, &m_AdjUS, &m_AdjLS, &m_AdjUW, &m_AdjLW, &m_DirectSupports, &m_CanGoW, &m_CanGoN, &m_CanGoNWS) >= 16;
+
+	return result;
+}
+//----------------------------------------------------------------------------------

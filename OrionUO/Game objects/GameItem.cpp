@@ -605,7 +605,7 @@ ushort CGameItem::GetMountAnimation()
 	return graphic;
 }
 //----------------------------------------------------------------------------------
-void CGameItem::ClearCustomHouseMultis()
+void CGameItem::ClearCustomHouseMultis(const uint &state)
 {
 	CMulti *nextMulti = NULL;
 
@@ -620,7 +620,10 @@ void CGameItem::ClearCustomHouseMultis()
 			nextItem = (CMultiObject*)item->m_Next;
 
 			if (item->IsCustomHouseMulti())
-				multi->Delete(item);
+			{
+				if (!state || ((CCustomHouseMultiObject*)item)->State & state)
+					multi->Delete(item);
+			}
 		}
 
 		if (multi->m_Items == NULL)

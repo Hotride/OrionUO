@@ -60,7 +60,7 @@ public:
 
 	virtual void Select(const int &x, const int &y);
 
-	void ClearCustomHouseMultis();
+	void ClearCustomHouseMultis(const uint &state);
 
 	CMultiObject *AddMulti(const ushort &graphic, const ushort &color, const char &x, const char &y, const char &z, const bool &isCustomHouseMulti);
 

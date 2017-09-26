@@ -294,5 +294,30 @@ public:
 	vector<CCustomHouseObjectRoof> m_Items;
 };
 //----------------------------------------------------------------------------------
+class CCustomHouseObjectPlaceInfo
+{
+	SETGET(int, Graphic, 0);
+	SETGET(int, Top, 0);
+	SETGET(int, Bottom, 0);
+	SETGET(int, AdjUN, 0);
+	SETGET(int, AdjLN, 0);
+	SETGET(int, AdjUE, 0);
+	SETGET(int, AdjLE, 0);
+	SETGET(int, AdjUS, 0);
+	SETGET(int, AdjLS, 0);
+	SETGET(int, AdjUW, 0);
+	SETGET(int, AdjLW, 0);
+	SETGET(int, DirectSupports, 0);
+	SETGET(int, CanGoW, 0);
+	SETGET(int, CanGoN, 0);
+	SETGET(int, CanGoNWS, 0);
+
+public:
+	CCustomHouseObjectPlaceInfo() {}
+	virtual ~CCustomHouseObjectPlaceInfo() {}
+
+	bool Parse(const char *text);
+};
+//----------------------------------------------------------------------------------
 #endif //CUSTOMHOUSEOBJECTS_H
 //----------------------------------------------------------------------------------

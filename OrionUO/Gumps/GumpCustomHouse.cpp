@@ -83,6 +83,8 @@ CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &
 	ParseCustomHouseObjectFile<CCustomHouseObjectTeleport, CCustomHouseObjectTeleportCategory>(m_Teleports, g_App.FilePath("teleprts.txt"));
 	ParseCustomHouseObjectFile<CCustomHouseObjectRoof, CCustomHouseObjectRoofCategory>(m_Roofs, g_App.FilePath("roof.txt"));
 
+	LoadSuppinfo();
+
 	CGameItem *foundationItem = g_World->GetWorldItem(serial);
 
 	if (foundationItem != NULL)
@@ -146,6 +148,40 @@ CGumpCustomHouse::~CGumpCustomHouse()
 
 	CPacketCustomHouseBuildingExit().Send();
 	g_Target.SendCancelTarget();
+}
+//----------------------------------------------------------------------------------
+void CGumpCustomHouse::LoadSuppinfo()
+{
+	FILE *file = NULL;
+	fopen_s(&file, g_App.FilePath("suppinfo.txt").c_str(), "r");
+
+	if (file != NULL)
+	{
+		int line = 0;
+
+		while (!feof(file))
+		{
+			char buf[256] = { 0 };
+			fgets(&buf[0], 256, file);
+
+			if (!strlen(buf))
+				continue;
+
+			line++;
+
+			if (line <= 2)
+				continue;
+
+			CCustomHouseObjectPlaceInfo item;
+
+			if (item.Parse(buf))
+				m_ObjectsInfo.push_back(item);
+		}
+
+		fclose(file);
+	}
+
+	LOG("m_ObjectsInfo.size()=%i\n", m_ObjectsInfo.size());
 }
 //----------------------------------------------------------------------------------
 void CGumpCustomHouse::CalculateGumpState()
@@ -829,6 +865,41 @@ void CGumpCustomHouse::SeekGraphic(const ushort &graphic)
 		g_Target.RequestFromCustomHouse();
 		m_WantUpdateContent = true;
 		m_SelectedGraphic = graphic;
+	}
+}
+//----------------------------------------------------------------------------------
+void CGumpCustomHouse::GenerateFloorPlace()
+{
+	CGameItem *foundationItem = g_World->GetWorldItem(m_Serial);
+
+	if (foundationItem != NULL)
+	{
+		foundationItem->ClearCustomHouseMultis(CHMOF_GENERIC_INTERNAL);
+
+		int z = foundationItem->Z + 7 + 20;
+
+		IFOR(i, 1, m_CurrentFloor)
+		{
+			ushort color = 0;
+
+			if (i == 1)
+				color = 0x0051;
+			else if (i == 2)
+				color = 0x0056;
+			else if (i == 3)
+				color = 0x005B;
+
+			IFOR(x, m_StartPos.X + 1, m_EndPos.X)
+			{
+				IFOR(y, m_StartPos.Y + 1, m_EndPos.Y)
+				{
+					CCustomHouseMultiObject *mo = (CCustomHouseMultiObject*)foundationItem->AddMulti(0x0496, color, x - foundationItem->X, y - foundationItem->Y, z, true);
+					mo->State = CHMOF_INTERNAL | CHMOF_GENERIC_INTERNAL | CHMOF_TRANSPARENT;
+				}
+			}
+
+			z += 20;
+		}
 	}
 }
 //----------------------------------------------------------------------------------
