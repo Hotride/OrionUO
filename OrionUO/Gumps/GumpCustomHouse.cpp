@@ -1147,8 +1147,8 @@ void CGumpCustomHouse::UpdateContent()
 		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_LIST_RIGHT, 0x5628, 0x5629, 0x562A, 510, 63));
 	}
 
-	int componentsCount = 0;
-	int fixturesCount = 0;
+	m_Components = 0;
+	m_Fixtures = 0;
 
 	CGameItem *foundationItem = g_World->GetWorldItem(m_Serial);
 
@@ -1168,9 +1168,9 @@ void CGumpCustomHouse::UpdateContent()
 						if (result.first != -1 && result.second != -1)
 						{
 							if (state == CHGS_DOOR)
-								fixturesCount++;
+								m_Fixtures++;
 							else
-								componentsCount++;
+								m_Components++;
 						}
 					}
 				}
@@ -1178,14 +1178,14 @@ void CGumpCustomHouse::UpdateContent()
 		}
 	}
 
-	m_TextComponents->Color = (componentsCount >= m_MaxComponents ? 0x0026 : 0x0481);
-	m_TextComponents->CreateTextureA(9, std::to_string(componentsCount));
+	m_TextComponents->Color = (m_Components >= m_MaxComponents ? 0x0026 : 0x0481);
+	m_TextComponents->CreateTextureA(9, std::to_string(m_Components));
 	m_TextComponents->X = 82 - m_TextComponents->m_Texture.Width;
 
-	m_TextFixtures->Color = (fixturesCount >= m_MaxFixtures ? 0x0026 : 0x0481);
-	m_TextFixtures->CreateTextureA(9, std::to_string(fixturesCount));
+	m_TextFixtures->Color = (m_Fixtures >= m_MaxFixtures ? 0x0026 : 0x0481);
+	m_TextFixtures->CreateTextureA(9, std::to_string(m_Fixtures));
 
-	m_TextCost->CreateTextureA(9, std::to_string((componentsCount + fixturesCount) * 500));
+	m_TextCost->CreateTextureA(9, std::to_string((m_Components + m_Fixtures) * 500));
 }
 //----------------------------------------------------------------------------------
 void CGumpCustomHouse::UpdateMaxPage()

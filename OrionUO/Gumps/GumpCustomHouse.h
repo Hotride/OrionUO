@@ -42,6 +42,8 @@ class CGumpCustomHouse : public CGump
 	SETGET(int, FloorCount, 4);
 	SETGET(int, RoofZ, 1);
 	SETGET(int, MinHouseZ, -120);
+	SETGET(int, Components, 0);
+	SETGET(int, Fixtures, 0);
 	SETGET(int, MaxComponents, 0);
 	SETGET(int, MaxFixtures, 0);
 	SETGET(bool, Erasing, false);
