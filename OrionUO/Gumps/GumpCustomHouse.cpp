@@ -180,7 +180,13 @@ CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &
 
 
 
-	m_TextItems = (CGUIText*)Add(new CGUIText(0x0481, 33, 142));
+	m_TextComponents = (CGUIText*)Add(new CGUIText(0x0481, 82, 142));
+
+	CGUIText *text = (CGUIText*)Add(new CGUIText(0x0481, 84, 142));
+	text->CreateTextureA(9, ":");
+
+	m_TextFixtures = (CGUIText*)Add(new CGUIText(0x0481, 94, 142));
+
 	m_TextCost = (CGUIText*)Add(new CGUIText(0x0481, 524, 142));
 
 	CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GCH_AREA_OBJECTS_INFO, 36, 137, 84, 23));
@@ -203,7 +209,8 @@ CGumpCustomHouse::~CGumpCustomHouse()
 	m_DataBoxGUI = NULL;
 
 	m_Gumppic = NULL;
-	m_TextItems = NULL;
+	m_TextComponents = NULL;
+	m_TextFixtures = NULL;
 	m_TextCost = NULL;
 
 	CPacketCustomHouseBuildingExit().Send();
@@ -1171,7 +1178,13 @@ void CGumpCustomHouse::UpdateContent()
 		}
 	}
 
-	m_TextItems->CreateTextureA(9, std::to_string(componentsCount) + " : " + std::to_string(fixturesCount), 100, TS_CENTER);
+	m_TextComponents->Color = (componentsCount >= m_MaxComponents ? 0x0026 : 0x0481);
+	m_TextComponents->CreateTextureA(9, std::to_string(componentsCount));
+	m_TextComponents->X = 82 - m_TextComponents->m_Texture.Width;
+
+	m_TextFixtures->Color = (fixturesCount >= m_MaxFixtures ? 0x0026 : 0x0481);
+	m_TextFixtures->CreateTextureA(9, std::to_string(fixturesCount));
+
 	m_TextCost->CreateTextureA(9, std::to_string((componentsCount + fixturesCount) * 500));
 }
 //----------------------------------------------------------------------------------

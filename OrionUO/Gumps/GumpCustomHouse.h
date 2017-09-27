@@ -112,7 +112,8 @@ private:
 
 	CGUIGumppic *m_Gumppic{ NULL };
 
-	CGUIText *m_TextItems{ NULL };
+	CGUIText *m_TextComponents{ NULL };
+	CGUIText *m_TextFixtures{ NULL };
 	CGUIText *m_TextCost{ NULL };
 
 	void DrawWallSection();
