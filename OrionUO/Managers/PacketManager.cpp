@@ -3538,7 +3538,8 @@ PACKET_HANDLER(DisplayClilocString)
 	//wstring args = ReadUnicodeStringLE(0);
 	wstring message = g_ClilocManager.ParseArgumentsToClilocString(cliloc, false, args);
 	//wstring message = ClilocManager->Cliloc(g_Language)->GetW(cliloc);
-
+	message = message + ToWString(affix);
+	
 	CGameObject *obj = g_World->FindWorldObject(serial);
 
 	if (/*type == ST_BROADCAST || type == ST_SYSTEM ||*/ serial == 0xFFFFFFFF || !serial || (ToLowerA(name) == "system" && obj == NULL))
