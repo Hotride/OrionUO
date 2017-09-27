@@ -5395,22 +5395,6 @@ PACKET_HANDLER(CustomHouse)
 		char y = 0;
 		char z = 0;
 
-		auto onNewComponent = [](CCustomHouseMultiObject *obj, const int &planeMode, const int &plane)
-		{
-			if (obj != NULL)
-			{
-				obj->Dbg = planeMode + plane * 10;
-
-				if (planeMode == 0)
-					obj->State = CHMOF_STAIR;
-				/*else if (planeMode == 2)
-				{
-					if (plane == 1)
-						obj->State = CHMOF_INTERNAL;
-				}*/
-			}
-		};
-
 		switch (planeMode)
 		{
 			case 0:
@@ -5425,8 +5409,7 @@ PACKET_HANDLER(CustomHouse)
 					if (id == 0)
 						continue;
 
-					CCustomHouseMultiObject *mo = (CCustomHouseMultiObject*)foundationItem->AddMulti(id, 0, x, y, z, true);
-					onNewComponent(mo, planeMode, plane);
+					foundationItem->AddMulti(id, 0, x, y, z, true);
 				}
 
 				break;
@@ -5447,8 +5430,7 @@ PACKET_HANDLER(CustomHouse)
 					if (id == 0)
 						continue;
 
-					CCustomHouseMultiObject *mo = (CCustomHouseMultiObject*)foundationItem->AddMulti(id, 0, x, y, z, true);
-					onNewComponent(mo, planeMode, plane);
+					foundationItem->AddMulti(id, 0, x, y, z, true);
 				}
 
 				break;
@@ -5492,8 +5474,7 @@ PACKET_HANDLER(CustomHouse)
 					if (id == 0)
 						continue;
 
-					CCustomHouseMultiObject *mo = (CCustomHouseMultiObject*)foundationItem->AddMulti(id, 0, x, y, z, true);
-					onNewComponent(mo, planeMode, plane);
+					foundationItem->AddMulti(id, 0, x, y, z, true);
 				}
 
 				break;
@@ -5508,5 +5489,8 @@ PACKET_HANDLER(CustomHouse)
 		g_CustomHouseGump->WantUpdateContent = true;
 		g_CustomHouseGump->GenerateFloorPlace();
 	}
+
+	if (enableResponse)
+		CPacketCustomHouseResponse().Send();
 }
 //----------------------------------------------------------------------------------

@@ -340,20 +340,28 @@ void CMouseManager::Draw(ushort id)
 		else if (g_CustomHouseGump != NULL && g_CustomHouseGump->SelectedGraphic)
 		{
 			ushort color = 0;
-			
-			if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject())
-			{
-				RECT rect = { g_CustomHouseGump->StartPos.X, g_CustomHouseGump->StartPos.Y, g_CustomHouseGump->EndPos.X, g_CustomHouseGump->EndPos.Y };
-				POINT pos = { g_SelectedObject.Object->X, g_SelectedObject.Object->Y };
 
-				if (!PtInRect(&rect, pos))
-					color = 0x0021;
-			}
+			vector<CBuildObject> list;
+			CUSTOM_HOUSE_BUILD_TYPE type;
+
+			if (!g_CustomHouseGump->CanBuildHere(list, (CRenderWorldObject*)g_SelectedObject.Object, type))
+				color = 0x0021;
 
 			if (color != 0)
 				g_ColorizerShader->Use();
 
-			g_Orion.DrawStaticArtInContainer(g_CustomHouseGump->SelectedGraphic, color, g_MouseManager.Position.X, g_MouseManager.Position.Y, false, true);
+			if (list.size())
+			{
+				for (const CBuildObject &item : list)
+				{
+					int x = g_MouseManager.Position.X + (item.X - item.Y) * 22;
+					int y = g_MouseManager.Position.Y + (item.X + item.Y) * 22 - (item.Z * 4);
+
+					g_Orion.DrawStaticArt(item.Graphic, color, x, y, false);
+				}
+			}
+			else
+				g_Orion.DrawStaticArtInContainer(g_CustomHouseGump->SelectedGraphic, color, g_MouseManager.Position.X, g_MouseManager.Position.Y, false, true);
 
 			if (color != 0)
 				UnuseShader();

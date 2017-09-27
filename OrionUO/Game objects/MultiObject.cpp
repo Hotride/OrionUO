@@ -109,8 +109,16 @@ void CMultiObject::Select(const int &x, const int &y)
 	WISPFUN_DEBUG("c25_f4");
 	if (!m_OnTarget)
 	{
-		if (m_State && (m_State & (CHMOF_IGNORE_IN_RENDER | CHMOF_TRANSPARENT)))
-			return;
+		if (m_State)
+		{
+			if (m_State & CHMOF_IGNORE_IN_RENDER)
+				return;
+			else if ((m_State & CHMOF_TRANSPARENT) && !(m_State & CHMOF_GENERIC_INTERNAL))
+			{
+				if (g_CustomHouseGump == NULL || !g_CustomHouseGump->SelectedGraphic)
+					return;
+			}
+		}
 
 		m_RenderGraphic = m_Graphic;
 

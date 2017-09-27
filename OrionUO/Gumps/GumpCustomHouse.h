@@ -10,6 +10,20 @@
 #ifndef GUMPCUSTOMHOUSE_H
 #define GUMPCUSTOMHOUSE_H
 //----------------------------------------------------------------------------------
+class CBuildObject
+{
+	SETGET(ushort, Graphic, 0);
+	SETGET(int, X, 0);
+	SETGET(int, Y, 0);
+	SETGET(int, Z, 0);
+
+public:
+	CBuildObject() {}
+	CBuildObject(const ushort &graphic, const int &x, const int &y, const int &z)
+		: m_Graphic(graphic), m_X(x), m_Y(y), m_Z(z) {}
+	~CBuildObject() {}
+};
+//----------------------------------------------------------------------------------
 enum CUSTOM_HOUSE_GUMP_STATE
 {
 	CHGS_WALL = 0,
@@ -30,6 +44,13 @@ enum CUSTOM_HOUSE_FLOOR_VISION_STATE
 	CHGVS_HIDE_FLOOR,
 	CHGVS_TRANSLUCENT_FLOOR,
 	CHGVS_HIDE_ALL
+};
+//----------------------------------------------------------------------------------
+enum CUSTOM_HOUSE_BUILD_TYPE
+{
+	CHBT_NORMAL = 0,
+	CHBT_ROOF,
+	CHBT_STAIR
 };
 //----------------------------------------------------------------------------------
 class CGumpCustomHouse : public CGump
@@ -144,6 +165,8 @@ public:
 	void GenerateFloorPlace();
 
 	void SeekGraphic(const ushort &graphic);
+
+	bool CanBuildHere(vector<CBuildObject> &list, CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type);
 
 	GUMP_BUTTON_EVENT_H;
 	GUMP_TEXT_ENTRY_EVENT_H;

@@ -564,6 +564,12 @@ public:
 	CPacketCustomHouseRevert();
 };
 //----------------------------------------------------------------------------------
+class CPacketCustomHouseResponse : public CPacket
+{
+public:
+	CPacketCustomHouseResponse();
+};
+//----------------------------------------------------------------------------------
 class CPacketCustomHouseAddItem : public CPacket
 {
 public:

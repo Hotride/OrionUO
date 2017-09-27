@@ -701,6 +701,7 @@ void CGumpCustomHouse::DrawStairSection()
 
 			int start = (j ? 0 : 5);
 			int end = (j ? 6 : 9);
+			int combinedStair = (j ? 0 : 10);
 
 			IFOR(i, start, end)
 			{
@@ -715,7 +716,7 @@ void CGumpCustomHouse::DrawStairSection()
 
 					m_DataBox->Add(new CGUITilepic(graphic, 0, offsetX, offsetY));
 
-					m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + i + (j * 10), offsetX, offsetY, dims.Width, dims.Height, true));
+					m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + i + combinedStair, offsetX, offsetY, dims.Width, dims.Height, true));
 				}
 
 				x += 48;
@@ -992,7 +993,7 @@ pair<int, int> SeekGraphicInCustomHouseObjectList(const vector<T> &list, const u
 		IFOR(j, 0, T::GRAPHICS_COUNT)
 		{
 			if (item.m_Graphics[j] == graphic)
-				return pair<int, int>(i, i);
+				return pair<int, int>(i, j);
 		}
 	}
 
@@ -1158,20 +1159,17 @@ void CGumpCustomHouse::UpdateContent()
 		{
 			QFOR(item, multi->m_Items, CMultiObject*)
 			{
-				if (item->IsCustomHouseMulti())
+				if (item->IsCustomHouseMulti() && !(item->State & CHMOF_GENERIC_INTERNAL))
 				{
-					if (!(((CCustomHouseMultiObject*)item)->State & CHMOF_GENERIC_INTERNAL))
-					{
-						CUSTOM_HOUSE_GUMP_STATE state;
-						pair<int, int> result = ExistsInList(state, item->Graphic);
+					CUSTOM_HOUSE_GUMP_STATE state;
+					pair<int, int> result = ExistsInList(state, item->Graphic);
 
-						if (result.first != -1 && result.second != -1)
-						{
-							if (state == CHGS_DOOR)
-								m_Fixtures++;
-							else
-								m_Components++;
-						}
+					if (result.first != -1 && result.second != -1)
+					{
+						if (state == CHGS_DOOR)
+							m_Fixtures++;
+						else
+							m_Components++;
 					}
 				}
 			}
@@ -1299,6 +1297,119 @@ void CGumpCustomHouse::SeekGraphic(const ushort &graphic)
 	}
 }
 //----------------------------------------------------------------------------------
+bool CGumpCustomHouse::CanBuildHere(vector<CBuildObject> &list, CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type)
+{
+	type = CHBT_NORMAL;
+
+	if (!m_SelectedGraphic)
+		return false;
+
+	if (m_CombinedStair)
+	{
+		pair<int, int> result = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectStair>(m_Stairs, m_SelectedGraphic);
+
+		if (result.first == -1 || result.second == -1 || result.first >= (int)m_Stairs.size())
+		{
+			list.push_back(CBuildObject(m_SelectedGraphic, 0, 0, 0));
+			return false;
+		}
+
+		const CCustomHouseObjectStair &item = m_Stairs[result.first];
+
+		if (m_SelectedGraphic == item.North)
+		{
+			list.push_back(CBuildObject(item.Block, 0, -3, 0));
+			list.push_back(CBuildObject(item.Block, 0, -2, 0));
+			list.push_back(CBuildObject(item.Block, 0, -1, 0));
+			list.push_back(CBuildObject(item.North, 0, 0, 0));
+			list.push_back(CBuildObject(item.Block, 0, -3, 5));
+			list.push_back(CBuildObject(item.Block, 0, -2, 5));
+			list.push_back(CBuildObject(item.North, 0, -1, 5));
+			list.push_back(CBuildObject(item.Block, 0, -3, 10));
+			list.push_back(CBuildObject(item.North, 0, -2, 10));
+			list.push_back(CBuildObject(item.North, 0, -3, 15));
+		}
+		else if (m_SelectedGraphic == item.East)
+		{
+			list.push_back(CBuildObject(item.East, 0, 0, 0));
+			list.push_back(CBuildObject(item.Block, 1, 0, 0));
+			list.push_back(CBuildObject(item.Block, 2, 0, 0));
+			list.push_back(CBuildObject(item.Block, 3, 0, 0));
+			list.push_back(CBuildObject(item.East, 1, 0, 5));
+			list.push_back(CBuildObject(item.Block, 2, 0, 5));
+			list.push_back(CBuildObject(item.Block, 3, 0, 5));
+			list.push_back(CBuildObject(item.East, 2, 0, 10));
+			list.push_back(CBuildObject(item.Block, 3, 0, 10));
+			list.push_back(CBuildObject(item.East, 3, 0, 15));
+		}
+		else if (m_SelectedGraphic == item.South)
+		{
+			list.push_back(CBuildObject(item.South, 0, 0, 0));
+			list.push_back(CBuildObject(item.Block, 0, 1, 0));
+			list.push_back(CBuildObject(item.Block, 0, 2, 0));
+			list.push_back(CBuildObject(item.Block, 0, 3, 0));
+			list.push_back(CBuildObject(item.South, 0, 1, 5));
+			list.push_back(CBuildObject(item.Block, 0, 2, 5));
+			list.push_back(CBuildObject(item.Block, 0, 3, 5));
+			list.push_back(CBuildObject(item.South, 0, 2, 10));
+			list.push_back(CBuildObject(item.Block, 0, 3, 10));
+			list.push_back(CBuildObject(item.South, 0, 3, 15));
+		}
+		else if (m_SelectedGraphic == item.West)
+		{
+			list.push_back(CBuildObject(item.Block, -3, 0, 0));
+			list.push_back(CBuildObject(item.Block, -2, 0, 0));
+			list.push_back(CBuildObject(item.Block, -1, 0, 0));
+			list.push_back(CBuildObject(item.West, 0, 0, 0));
+			list.push_back(CBuildObject(item.Block, -3, 0, 5));
+			list.push_back(CBuildObject(item.Block, -2, 0, 5));
+			list.push_back(CBuildObject(item.West, -1, 0, 5));
+			list.push_back(CBuildObject(item.Block, -3, 0, 10));
+			list.push_back(CBuildObject(item.West, -2, 0, 10));
+			list.push_back(CBuildObject(item.West, -3, 0, 15));
+		}
+		else
+			list.push_back(CBuildObject(m_SelectedGraphic, 0, 0, 0));
+
+		type = CHBT_STAIR;
+	}
+	else
+	{
+		if (m_State == CHGS_ROOF)
+		{
+			list.push_back(CBuildObject(m_SelectedGraphic, 0, 0, (m_RoofZ - 2) * 3));
+			type = CHBT_ROOF;
+		}
+		else
+		{
+			list.push_back(CBuildObject(m_SelectedGraphic, 0, 0, 0));
+
+			if (m_State == CHGS_STAIR)
+				type = CHBT_STAIR;
+		}
+	}
+
+	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject())
+	{
+		RECT rect = { m_StartPos.X, m_StartPos.Y, m_EndPos.X, m_EndPos.Y };
+
+		for (const CBuildObject &item : list)
+		{
+			if (m_CombinedStair && item.Z)
+				continue;
+
+			POINT pos = { g_SelectedObject.Object->X + item.X, g_SelectedObject.Object->Y + item.Y };
+
+			if (!PtInRect(&rect, pos))
+				return false;
+		}
+	}
+	else
+		return false;
+
+	return true;
+}
+//----------------------------------------------------------------------------------
 void CGumpCustomHouse::GenerateFloorPlace()
 {
 	CGameItem *foundationItem = g_World->GetWorldItem(m_Serial);
@@ -1377,7 +1488,9 @@ void CGumpCustomHouse::GenerateFloorPlace()
 				IFOR(y, m_StartPos.Y + 1, m_EndPos.Y)
 				{
 					CCustomHouseMultiObject *mo = (CCustomHouseMultiObject*)foundationItem->AddMulti(0x0496, color, x - foundationItem->X, y - foundationItem->Y, z, true);
-					mo->State = CHMOF_INTERNAL | CHMOF_GENERIC_INTERNAL | CHMOF_TRANSPARENT;
+					mo->State = CHMOF_GENERIC_INTERNAL | CHMOF_TRANSPARENT;
+					mo->RenderQueueIndex = 0;
+					g_MapManager->AddRender(mo);
 				}
 			}
 
@@ -1448,6 +1561,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 		}
 		else if (index >= 0 && m_Page >= 0)
 		{
+			bool combinedStair = false;
 			ushort graphic = 0;
 
 			if (m_State == CHGS_WALL || m_State == CHGS_ROOF || m_State == CHGS_MISC)
@@ -1485,8 +1599,6 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 					graphic = m_Floors[m_Page].m_Graphics[index];
 				else if (m_State == CHGS_STAIR && m_Page < (int)m_Stairs.size())
 				{
-					bool combinedStair = false;
-
 					if (index > 10)
 					{
 						combinedStair = true;
@@ -1494,16 +1606,14 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 					}
 					
 					if (index >= 0 && index < CCustomHouseObjectStair::GRAPHICS_COUNT)
-					{
 						graphic = m_Stairs[m_Page].m_Graphics[index];
-						m_CombinedStair = combinedStair;
-					}
 				}
 			}
 
 			if (graphic)
 			{
 				g_Target.RequestFromCustomHouse();
+				m_CombinedStair = combinedStair;
 				m_WantUpdateContent = true;
 				m_SelectedGraphic = graphic;
 			}

@@ -49,6 +49,9 @@ bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const
 
 	for (CRenderWorldObject *obj = block->GetRender(bx, by); obj != NULL; obj = obj->m_NextXY)
 	{
+		if (g_CustomHouseGump != NULL && obj->Z < g_Player->Z)
+			continue;
+
 		ushort graphic = obj->Graphic;
 
 		if (obj->IsLandObject())
@@ -108,7 +111,7 @@ bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const
 				else
 					dropFlags = ((graphic >= 0x3946 && graphic <= 0x3964) || graphic == 0x0082);
 			}
-			else if (g_CustomHouseGump != NULL && obj->IsMultiObject() && ((CMultiObject*)obj)->IsCustomHouseMulti())
+			else if (g_CustomHouseGump != NULL && obj->IsMultiObject() && ((CMultiObject*)obj)->IsCustomHouseMulti() && !(((CMultiObject*)obj)->State & CHMOF_GENERIC_INTERNAL))
 				canBeAdd = false;
 
 			if (canBeAdd)

@@ -1454,6 +1454,16 @@ CPacketCustomHouseRevert::CPacketCustomHouseRevert()
 	WriteUInt8(0x0A);
 }
 //---------------------------------------------------------------------------
+CPacketCustomHouseResponse::CPacketCustomHouseResponse()
+: CPacket(10)
+{
+	WriteUInt8(0xD7);
+	WriteUInt16BE(0x000A);
+	WriteUInt32BE(g_PlayerSerial);
+	WriteUInt16BE(0x000A);
+	WriteUInt8(0x0A);
+}
+//---------------------------------------------------------------------------
 CPacketCustomHouseAddItem::CPacketCustomHouseAddItem(const ushort &graphic, const int &x, const int &y)
 : CPacket(25)
 {
