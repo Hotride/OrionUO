@@ -21,6 +21,17 @@ enum CUSTOM_HOUSE_GUMP_STATE
 	CHGS_MENU
 };
 //----------------------------------------------------------------------------------
+enum CUSTOM_HOUSE_FLOOR_VISION_STATE
+{
+	CHGVS_NORMAL = 0,
+	CHGVS_TRANSPARENT_CONTENT,
+	CHGVS_HIDE_CONTENT,
+	CHGVS_TRANSPARENT_FLOOR,
+	CHGVS_HIDE_FLOOR,
+	CHGVS_TRANSLUCENT_FLOOR,
+	CHGVS_HIDE_ALL
+};
+//----------------------------------------------------------------------------------
 class CGumpCustomHouse : public CGump
 {
 	SETGET(CUSTOM_HOUSE_GUMP_STATE, State, CHGS_WALL);
@@ -31,9 +42,12 @@ class CGumpCustomHouse : public CGump
 	SETGET(int, FloorCount, 4);
 	SETGET(int, RoofZ, 1);
 	SETGET(int, MinHouseZ, -120);
+	SETGET(int, MaxComponents, 0);
+	SETGET(int, MaxFixtures, 0);
 	SETGET(bool, Erasing, false);
 	SETGET(bool, SeekTile, false);
 	SETGET(bool, ShowWindow, false);
+	SETGET(bool, CombinedStair, false);
 	SETGET(WISP_GEOMETRY::CPoint2Di, StartPos, WISP_GEOMETRY::CPoint2Di());
 	SETGET(WISP_GEOMETRY::CPoint2Di, EndPos, WISP_GEOMETRY::CPoint2Di());
 
@@ -47,6 +61,8 @@ private:
 	vector<CCustomHouseObjectRoofCategory> m_Roofs;
 	vector<CCustomHouseObjectPlaceInfo> m_ObjectsInfo;
 	
+	int m_FloorVisionState[4];
+
 	enum ID_GUMP_CUSTOM_HOUSE
 	{
 		ID_GCH_STATE_WALL = 1,
@@ -83,6 +99,10 @@ private:
 		ID_GCH_WALL_SHOW_WINDOW,
 		ID_GCH_ROOF_Z_UP,
 		ID_GCH_ROOF_Z_DOWN,
+
+		ID_GCH_AREA_OBJECTS_INFO,
+		ID_GCH_AREA_COST_INFO,
+		ID_GCH_AREA_ROOF_Z_INFO,
 
 		ID_GCH_ITEM_IN_LIST
 	};

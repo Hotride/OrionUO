@@ -513,7 +513,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 	if (g_CustomHouseGump != NULL)
 	{
-		RECT rect = { g_CustomHouseGump->StartPos.X, g_CustomHouseGump->StartPos.Y, g_CustomHouseGump->EndPos.X, g_CustomHouseGump->EndPos.Y };
+		RECT rect = { g_CustomHouseGump->StartPos.X, g_CustomHouseGump->StartPos.Y, g_CustomHouseGump->EndPos.X, g_CustomHouseGump->EndPos.Y + 1 };
 		POINT pos = { worldX, worldY };
 
 		if (!PtInRect(&rect, pos))

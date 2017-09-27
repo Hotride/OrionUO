@@ -19,6 +19,9 @@ class CMultiObject : public CRenderStaticObject
 	//Оригинальный индекс картинки
 	SETGET(ushort, OriginalGraphic, 0);
 
+	//Состояние объекта (для конструктора кастомных домов)
+	SETGET(int, State, 0);
+
 public:
 	CMultiObject(const ushort &graphic, const short &x, const short &y, const char &z, const uint &flags);
 	virtual ~CMultiObject();

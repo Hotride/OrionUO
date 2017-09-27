@@ -50,6 +50,7 @@ public:
 	static const int GRAPHICS_COUNT = 8;
 
 	ushort m_Graphics[GRAPHICS_COUNT];
+	ushort m_WindowGraphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
 class CCustomHouseObjectWallCategory

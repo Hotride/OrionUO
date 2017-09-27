@@ -609,6 +609,8 @@ void CGameItem::ClearCustomHouseMultis(const uint &state)
 {
 	CMulti *nextMulti = NULL;
 
+	int checkZ = m_Z + 7;
+
 	for (CMulti *multi = (CMulti*)m_Items; multi != NULL; multi = nextMulti)
 	{
 		nextMulti = (CMulti*)multi->m_Next;
@@ -619,11 +621,15 @@ void CGameItem::ClearCustomHouseMultis(const uint &state)
 		{
 			nextItem = (CMultiObject*)item->m_Next;
 
+			item->State = item->State & ~(CHMOF_TRANSPARENT | CHMOF_IGNORE_IN_RENDER);
+
 			if (item->IsCustomHouseMulti())
 			{
-				if (!state || ((CCustomHouseMultiObject*)item)->State & state)
+				if (!state || item->State & state)
 					multi->Delete(item);
 			}
+			else if (item->Z == checkZ)
+				item->State = item->State | CHMOF_IGNORE_IN_RENDER;
 		}
 
 		if (multi->m_Items == NULL)

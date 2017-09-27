@@ -14,7 +14,7 @@ CGumpCustomHouse *g_CustomHouseGump = NULL;
 template<class T, class A>
 void ParseCustomHouseObjectFileWithCategory(vector<A> &list, const string &path)
 {
-	LOG("parse CH file: %s\n", path.c_str());
+	LOG("parse CH file (CAT): %s\n", path.c_str());
 
 	FILE *file = NULL;
 	fopen_s(&file, path.c_str(), "r");
@@ -71,6 +71,8 @@ void ParseCustomHouseObjectFileWithCategory(vector<A> &list, const string &path)
 template<class T>
 void ParseCustomHouseObjectFile(vector<T> &list, const string &path)
 {
+	LOG("parse CH file: %s\n", path.c_str());
+
 	FILE *file = NULL;
 	fopen_s(&file, path.c_str(), "r");
 
@@ -109,6 +111,8 @@ CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &
 {
 	WISPFUN_DEBUG("");
 
+	m_FloorVisionState[0] = m_FloorVisionState[1] = m_FloorVisionState[2] = m_FloorVisionState[3] = CHGVS_NORMAL;
+
 	g_CustomHouseGump = this;
 
 	ParseCustomHouseObjectFileWithCategory<CCustomHouseObjectWall, CCustomHouseObjectWallCategory>(m_Walls, g_App.FilePath("walls.txt"));
@@ -124,6 +128,8 @@ CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &
 
 	if (foundationItem != NULL)
 	{
+		m_MinHouseZ = foundationItem->Z + 7;
+
 		CMulti* multi = foundationItem->GetMulti();
 
 		if (multi != NULL)
@@ -133,9 +139,23 @@ CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &
 			m_EndPos.X = foundationItem->X + multi->MaxX + 1;
 			m_EndPos.Y = foundationItem->Y + multi->MaxY + 1;
 		}
+
+		int width = abs(m_EndPos.X - m_StartPos.X);
+		int height = abs(m_EndPos.Y - m_StartPos.Y);
+
+		if (width > 13 || height > 13)
+			m_FloorCount = 4;
+		else
+			m_FloorCount = 3;
+
+		int componentsOnFloor = (width - 1) * (height - 1);
+
+		m_MaxComponents = m_FloorCount * (componentsOnFloor + 2 * (width + height) - 4) - (int)((double)(m_FloorCount * componentsOnFloor) * -0.25) + 2 * width + 3 * height - 5;
+		m_MaxFixtures = m_MaxComponents / 20;
 	}
 
 	LOG("CH multi Bounds: %i %i %i %i\n", m_StartPos.X, m_StartPos.Y, m_EndPos.X, m_EndPos.Y);
+	LOG("m_MaxComponents=%i, m_MaxFixtures=%i\n", m_MaxComponents, m_MaxFixtures);
 
 
 
@@ -162,6 +182,12 @@ CGumpCustomHouse::CGumpCustomHouse(const uint &serial, const int &x, const int &
 
 	m_TextItems = (CGUIText*)Add(new CGUIText(0x0481, 33, 142));
 	m_TextCost = (CGUIText*)Add(new CGUIText(0x0481, 524, 142));
+
+	CGUIHitBox *box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GCH_AREA_OBJECTS_INFO, 36, 137, 84, 23));
+	box->MoveOnDrag = true;
+
+	box = (CGUIHitBox*)Add(new CGUIHitBox(ID_GCH_AREA_COST_INFO, 522, 137, 84, 23));
+	box->MoveOnDrag = true;
 
 	m_DataBoxGUI = (CGUIDataBox*)Add(new CGUIDataBox());
 
@@ -196,6 +222,202 @@ void CGumpCustomHouse::CalculateGumpState()
 void CGumpCustomHouse::InitToolTip()
 {
 	WISPFUN_DEBUG("");
+	
+	uint id = g_SelectedObject.Serial;
+
+	if (id >= ID_GCH_ITEM_IN_LIST)
+	{
+		int index = id - ID_GCH_ITEM_IN_LIST;
+
+		if (index < 0)
+			return;
+
+		int cliloc = 0;
+
+		if (m_Category == -1 && (m_State == CHGS_WALL || m_State == CHGS_ROOF || m_State == CHGS_MISC))
+		{
+			if (m_State == CHGS_WALL && index < (int)m_Walls.size() && m_Walls[index].m_Items.size())
+				cliloc = m_Walls[index].m_Items[0].TID;
+			else if (m_State == CHGS_ROOF && index < (int)m_Roofs.size() && m_Roofs[index].m_Items.size())
+				cliloc = m_Roofs[index].m_Items[0].TID;
+			else if (m_State == CHGS_MISC && index < (int)m_Miscs.size() && m_Roofs[index].m_Items.size())
+				cliloc = m_Miscs[index].m_Items[0].TID;
+		}
+		else if (m_State == CHGS_ROOF)
+			cliloc = 1070640 + index;
+
+		if (cliloc)
+			g_ToolTip.Set(cliloc, "");
+
+		return;
+	}
+
+	switch (id)
+	{
+		case ID_GCH_STATE_WALL:
+		{
+			g_ToolTip.Set(1061016, "Walls");
+			break;
+		}
+		case ID_GCH_STATE_DOOR:
+		{
+			g_ToolTip.Set(1061017, "Doors");
+			break;
+		}
+		case ID_GCH_STATE_FLOOR:
+		{
+			g_ToolTip.Set(1061018, "Floors");
+			break;
+		}
+		case ID_GCH_STATE_STAIR:
+		{
+			g_ToolTip.Set(1061019, "Stairs");
+			break;
+		}
+		case ID_GCH_STATE_ROOF:
+		{
+			g_ToolTip.Set(1063364, "Roofs");
+			break;
+		}
+		case ID_GCH_STATE_MISC:
+		{
+			g_ToolTip.Set(1061021, "Miscellaneous");
+			break;
+		}
+		case ID_GCH_STATE_ERASE:
+		{
+			g_ToolTip.Set(1061022, "Erase");
+			break;
+		}
+		case ID_GCH_STATE_EYEDROPPER:
+		{
+			g_ToolTip.Set(1061023, "Eyedropper Tool");
+			break;
+		}
+		case ID_GCH_STATE_MENU:
+		{
+			g_ToolTip.Set(1061024, "System Menu");
+			break;
+		}
+		case ID_GCH_VISIBILITY_STORY_1:
+		{
+			g_ToolTip.Set(1061029, "Store 1 Visibility");
+			break;
+		}
+		case ID_GCH_VISIBILITY_STORY_2:
+		{
+			g_ToolTip.Set(1061030, "Store 2 Visibility");
+			break;
+		}
+		case ID_GCH_VISIBILITY_STORY_3:
+		{
+			g_ToolTip.Set(1061031, "Store 3 Visibility");
+			break;
+		}
+		case ID_GCH_VISIBILITY_STORY_4:
+		{
+			g_ToolTip.Set(1061032, "Store 4 Visibility");
+			break;
+		}
+		case ID_GCH_GO_FLOOR_1:
+		{
+			g_ToolTip.Set(1061033, "Go To Story 1");
+			break;
+		}
+		case ID_GCH_GO_FLOOR_2:
+		{
+			g_ToolTip.Set(1061034, "Go To Story 2");
+			break;
+		}
+		case ID_GCH_GO_FLOOR_3:
+		{
+			g_ToolTip.Set(1061035, "Go To Story 3");
+			break;
+		}
+		case ID_GCH_GO_FLOOR_4:
+		{
+			g_ToolTip.Set(1061036, "Go To Story 4");
+			break;
+		}
+		case ID_GCH_LIST_LEFT:
+		{
+			g_ToolTip.Set(1061028, "Previous Page");
+			break;
+		}
+		case ID_GCH_LIST_RIGHT:
+		{
+			g_ToolTip.Set(1061027, "Next Page");
+			break;
+		}
+		case ID_GCH_MENU_BACKUP:
+		{
+			g_ToolTip.Set(1061041, "Store design in progress in a back up buffer, but do not finalize design.");
+			break;
+		}
+		case ID_GCH_MENU_RESTORE:
+		{
+			g_ToolTip.Set(1061043, "Restore your design in progress to a design you have previously backed up.");
+			break;
+		}
+		case ID_GCH_MENU_SYNCH:
+		{
+			g_ToolTip.Set(1061044, "Synchronize design state with server.");
+			break;
+		}
+		case ID_GCH_MENU_CLEAR:
+		{
+			g_ToolTip.Set(1061045, "Clear all changes, returning your design in progress to a blank foundation.");
+			break;
+		}
+		case ID_GCH_MENU_COMMIT:
+		{
+			g_ToolTip.Set(1061042, "Save existing changes and finalize design.");
+			break;
+		}
+		case ID_GCH_MENU_REVERT:
+		{
+			g_ToolTip.Set(1061047, "Revert your design in progress to match your currently visible, finalized design.");
+			break;
+		}
+		case ID_GCH_GO_CATEGORY:
+		{
+			g_ToolTip.Set(1061025, "To Category");
+			break;
+		}
+		case ID_GCH_WALL_SHOW_WINDOW:
+		{
+			g_ToolTip.Set(1061026, "Window Toggle");
+			break;
+		}
+		case ID_GCH_ROOF_Z_UP:
+		{
+			g_ToolTip.Set(1063392, "Lower Roof Placement Level");
+			break;
+		}
+		case ID_GCH_ROOF_Z_DOWN:
+		{
+			g_ToolTip.Set(1063393, "Raise Roof Placement Level");
+			break;
+		}
+		case ID_GCH_AREA_OBJECTS_INFO:
+		{
+			wstring str = g_ClilocManager.ParseArgumentsToClilocString(1061039, true, std::to_wstring(m_MaxComponents) + L"\t" + std::to_wstring(m_MaxFixtures));
+			g_ToolTip.Set(str);
+			break;
+		}
+		case ID_GCH_AREA_COST_INFO:
+		{
+			g_ToolTip.Set(1061038, "Cost");
+			break;
+		}
+		case ID_GCH_AREA_ROOF_Z_INFO:
+		{
+			g_ToolTip.Set(1070759, "Current Roof Placement Level");
+			break;
+		}
+		default:
+			break;
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpCustomHouse::DrawWallSection()
@@ -251,16 +473,12 @@ void CGumpCustomHouse::DrawWallSection()
 		{
 			const CCustomHouseObjectWall &item = vec[m_Page];
 
-			if (m_ShowWindow)
-			{
-			}
-
 			m_DataBox->Add(new CGUIScissor(true, 0, 0, 130, 36, 384, 120));
 
 			IFOR(i, 0, 8)
 			{
-				const ushort &graphic = item.m_Graphics[i];
-
+				const ushort &graphic = (m_ShowWindow ? item.m_WindowGraphics[i] : item.m_Graphics[i]);
+				
 				if (graphic)
 				{
 					WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(graphic, true);
@@ -325,6 +543,92 @@ void CGumpCustomHouse::DrawDoorSection()
 			x += 48;
 		}
 
+		int direction = 0;
+
+		switch (item.Category)
+		{
+			case 16:
+			case 17:
+			case 18:
+				direction = 1;
+				break;
+			case 15:
+				direction = 2;
+				break;
+			case 19:
+			case 20:
+			case 21:
+			case 22:
+			case 23:
+			case 26:
+			case 27:
+			case 28:
+			case 29:
+			case 31:
+			case 32:
+			case 34:
+				direction = 3;
+				break;
+			case 30:
+			case 33:
+				direction = 4;
+				break;
+			default:
+				break;
+		}
+
+		switch (direction)
+		{
+			case 0:
+			{
+				m_DataBox->Add(new CGUIGumppic(0x5780, 151, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5781, 196, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5782, 219, 133));
+				m_DataBox->Add(new CGUIGumppic(0x5783, 266, 136));
+				m_DataBox->Add(new CGUIGumppic(0x5784, 357, 136));
+				m_DataBox->Add(new CGUIGumppic(0x5785, 404, 133));
+				m_DataBox->Add(new CGUIGumppic(0x5786, 431, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5787, 474, 39));
+				break;
+			}
+			case 1:
+			{
+				m_DataBox->Add(new CGUIGumppic(0x5785, 245, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5787, 290, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5780, 337, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5782, 380, 39));
+				break;
+			}
+			case 2:
+			{
+				m_DataBox->Add(new CGUIGumppic(0x5782, 219, 133));
+				m_DataBox->Add(new CGUIGumppic(0x5785, 404, 133));
+				break;
+			}
+			case 3:
+			{
+				m_DataBox->Add(new CGUIGumppic(0x5780, 245, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5781, 290, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5786, 337, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5787, 380, 39));
+				break;
+			}
+			case 4:
+			{
+				m_DataBox->Add(new CGUIGumppic(0x5780, 151, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5781, 196, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5780, 245, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5781, 290, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5786, 337, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5787, 380, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5786, 431, 39));
+				m_DataBox->Add(new CGUIGumppic(0x5787, 474, 39));
+				break;
+			}
+			default:
+				break;
+		}
+
 		m_DataBox->Add(new CGUIScissor(false));
 	}
 }
@@ -374,6 +678,47 @@ void CGumpCustomHouse::DrawFloorSection()
 //----------------------------------------------------------------------------------
 void CGumpCustomHouse::DrawStairSection()
 {
+	if (m_Page >= 0 && m_Page < (int)m_Stairs.size())
+	{
+		CCustomHouseObjectStair &item = m_Stairs[m_Page];
+
+		IFOR(j, 0, 2)
+		{
+			int x = (j ? 96 : 192);
+			int y = (j ? 60 : 0);
+
+			m_DataBox->Add(new CGUIScissor(true, 0, 0, 123, 36 + y, 384, 60));
+
+			CGUIText *text = (CGUIText*)m_DataBox->Add(new CGUIText(0xFFFF, 137, (j ? 111 : 51)));
+			text->CreateTextureW(0, g_ClilocManager.Cliloc(g_Language)->GetW(1062113 + j), 30, 90);
+
+			int start = (j ? 0 : 5);
+			int end = (j ? 6 : 9);
+
+			IFOR(i, start, end)
+			{
+				const ushort &graphic = item.m_Graphics[i];
+
+				if (graphic)
+				{
+					WISP_GEOMETRY::CSize dims = g_Orion.GetArtDimension(graphic, true);
+
+					int offsetX = x + 123 + (48 - dims.Width) / 2;
+					int offsetY = y + 36 + (60 - dims.Height) / 2;
+
+					m_DataBox->Add(new CGUITilepic(graphic, 0, offsetX, offsetY));
+
+					m_DataBox->Add(new CGUIHitBox(ID_GCH_ITEM_IN_LIST + i + (j * 10), offsetX, offsetY, dims.Width, dims.Height, true));
+				}
+
+				x += 48;
+			}
+
+			m_DataBox->Add(new CGUIScissor(false));
+		}
+
+		m_DataBox->Add(new CGUIColoredPolygone(0, 0, 123, 96, 384, 2, 0xFF7F7F7F));
+	}
 }
 //----------------------------------------------------------------------------------
 void CGumpCustomHouse::DrawRoofSection()
@@ -468,9 +813,14 @@ void CGumpCustomHouse::DrawRoofSection()
 		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_ROOF_Z_UP, 0x578B, 0x578C, 0x578D, 305, 0));
 		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_ROOF_Z_DOWN, 0x578E, 0x578F, 0x5790, 349, 0));
 
-		m_DataBoxGUI->Add(new CGUIGumppic(0x55F4, 383, 4));
+		CGUIGumppic *gumppic = (CGUIGumppic*)m_DataBoxGUI->Add(new CGUIGumppic(0x55F4, 383, 4));
+		gumppic->Serial = ID_GCH_AREA_ROOF_Z_INFO;
+		gumppic->MoveOnDrag = true;
+
 		CGUIText *text = (CGUIText*)m_DataBoxGUI->Add(new CGUIText(0x04E9, 405, 15));
 		text->CreateTextureA(3, std::to_string(m_RoofZ));
+		text->Serial = ID_GCH_AREA_ROOF_Z_INFO;
+		text->MoveOnDrag = true;
 	}
 }
 //----------------------------------------------------------------------------------
@@ -699,15 +1049,22 @@ void CGumpCustomHouse::UpdateContent()
 	m_DataBoxGUI->Add(new CGUIButton(ID_GCH_STATE_ERASE, 0x5666 + (int)m_Erasing, 0x5667, 0x5668, 9, 100));
 	Add(new CGUIButton(ID_GCH_STATE_EYEDROPPER, 0x5669 + (int)m_SeekTile, 0x566A, 0x566B, 39, 100));
 
+	ushort floorVisionGraphic1[3] = { 0x572E, 0x5734, 0x5731 };
+	ushort floorVisionGraphic2[3] = { 0x5725, 0x5728, 0x572B };
+	ushort floorVisionGraphic3[3] = { 0x571C, 0x571F, 0x5722 };
+	int associateGraphicTable[7] = { 0, 1, 2, 1, 2, 1, 2 };
+
+	ushort floorVisionGraphic = floorVisionGraphic1[associateGraphicTable[m_FloorVisionState[0]]];
 	int graphicOffset = (m_CurrentFloor == 1 ? 3 : 0);
 	int graphicOffset2 = (m_CurrentFloor == 1 ? 4 : 0);
-	m_DataBoxGUI->Add(new CGUIButton(ID_GCH_VISIBILITY_STORY_1, 0x572E, 0x572F, 0x5730, 533, 108));
+	m_DataBoxGUI->Add(new CGUIButton(ID_GCH_VISIBILITY_STORY_1, floorVisionGraphic, floorVisionGraphic + 1, floorVisionGraphic + 2, 533, 108));
 	m_DataBoxGUI->Add(new CGUIButton(ID_GCH_GO_FLOOR_1, 0x56CD + graphicOffset2, 0x56CD + graphicOffset2, 0x56D1, 583, 96));
 	m_DataBoxGUI->Add(new CGUIButton(ID_GCH_GO_FLOOR_1, 0x56F6 + graphicOffset, 0x56F7 + graphicOffset, 0x56F8 + graphicOffset, 623, 103));
 
+	floorVisionGraphic = floorVisionGraphic2[associateGraphicTable[m_FloorVisionState[1]]];
 	graphicOffset = (m_CurrentFloor == 2 ? 3 : 0);
 	graphicOffset2 = (m_CurrentFloor == 2 ? 4 : 0);
-	m_DataBoxGUI->Add(new CGUIButton(ID_GCH_VISIBILITY_STORY_2, 0x5725, 0x5726, 0x5727, 533, 86));
+	m_DataBoxGUI->Add(new CGUIButton(ID_GCH_VISIBILITY_STORY_2, floorVisionGraphic, floorVisionGraphic + 1, floorVisionGraphic + 2, 533, 86));
 	m_DataBoxGUI->Add(new CGUIButton(ID_GCH_GO_FLOOR_2, 0x56CE + graphicOffset2, 0x56CE + graphicOffset2, 0x56D2, 583, 73));
 	m_DataBoxGUI->Add(new CGUIButton(ID_GCH_GO_FLOOR_2, 0x56F0 + graphicOffset, 0x56F1 + graphicOffset, 0x56F2 + graphicOffset, 623, 86));
 
@@ -716,19 +1073,22 @@ void CGumpCustomHouse::UpdateContent()
 
 	if (m_FloorCount == 4)
 	{
-		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_VISIBILITY_STORY_3, 0x5725, 0x5726, 0x5727, 533, 64));
+		floorVisionGraphic = floorVisionGraphic2[associateGraphicTable[m_FloorVisionState[2]]];
+		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_VISIBILITY_STORY_3, floorVisionGraphic, floorVisionGraphic + 1, floorVisionGraphic + 2, 533, 64));
 		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_GO_FLOOR_3, 0x56CE + graphicOffset2, 0x56CE + graphicOffset2, 0x56D2, 582, 56));
 		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_GO_FLOOR_3, 0x56F0 + graphicOffset, 0x56F1 + graphicOffset, 0x56F2 + graphicOffset, 623, 69));
 
+		floorVisionGraphic = floorVisionGraphic3[associateGraphicTable[m_FloorVisionState[3]]];
 		graphicOffset = (m_CurrentFloor == 4 ? 3 : 0);
 		graphicOffset2 = (m_CurrentFloor == 4 ? 4 : 0);
-		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_VISIBILITY_STORY_4, 0x571C, 0x571D, 0x571E, 533, 42));
+		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_VISIBILITY_STORY_4, floorVisionGraphic, floorVisionGraphic + 1, floorVisionGraphic + 2, 533, 42));
 		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_GO_FLOOR_4, 0x56D0 + graphicOffset2, 0x56D0 + graphicOffset2, 0x56D4, 583, 42));
 		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_GO_FLOOR_4, 0x56EA + graphicOffset, 0x56EB + graphicOffset, 0x56EC + graphicOffset, 623, 50));
 	}
 	else
 	{
-		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_VISIBILITY_STORY_3, 0x571C, 0x571D, 0x571E, 533, 64));
+		floorVisionGraphic = floorVisionGraphic3[associateGraphicTable[m_FloorVisionState[2]]];
+		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_VISIBILITY_STORY_3, floorVisionGraphic, floorVisionGraphic + 1, floorVisionGraphic + 2, 533, 64));
 		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_GO_FLOOR_3, 0x56D0 + graphicOffset2, 0x56D0 + graphicOffset2, 0x56D4, 582, 56));
 		m_DataBoxGUI->Add(new CGUIButton(ID_GCH_GO_FLOOR_3, 0x56EA + graphicOffset, 0x56EB + graphicOffset, 0x56EC + graphicOffset, 623, 69));
 	}
@@ -934,6 +1294,58 @@ void CGumpCustomHouse::GenerateFloorPlace()
 	{
 		foundationItem->ClearCustomHouseMultis(CHMOF_GENERIC_INTERNAL);
 
+		QFOR(multi, foundationItem->m_Items, CMulti*)
+		{
+			QFOR(item, multi->m_Items, CMultiObject*)
+			{
+				if (!item->IsCustomHouseMulti())
+					continue;
+
+				int currentFloor = -1;
+				int floorZ = foundationItem->Z + 7;
+				int itemZ = item->Z;
+
+				IFOR(i, 0, 4)
+				{
+					if (itemZ >= floorZ && itemZ < floorZ + 20)
+					{
+						currentFloor = i;
+						break;
+					}
+
+					floorZ += 20;
+				}
+
+				if (currentFloor == -1)
+					continue;
+
+				if (m_FloorVisionState[currentFloor] == CHGVS_NORMAL)
+					continue;
+				else if (m_FloorVisionState[currentFloor] == CHGVS_HIDE_ALL)
+				{
+					item->State = item->State | CHMOF_IGNORE_IN_RENDER;
+					continue;
+				}
+
+				pair<int, int> floorCheck = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectFloor>(m_Floors, item->Graphic);
+
+				if (floorCheck.first != -1 && floorCheck.second != -1)
+				{
+					if (m_FloorVisionState[currentFloor] == CHGVS_HIDE_FLOOR)
+						item->State = item->State | CHMOF_IGNORE_IN_RENDER;
+					else if (m_FloorVisionState[currentFloor] == CHGVS_TRANSPARENT_FLOOR || m_FloorVisionState[currentFloor] == CHGVS_TRANSLUCENT_FLOOR)
+						item->State = item->State | CHMOF_TRANSPARENT;
+				}
+				else
+				{
+					if (m_FloorVisionState[currentFloor] == CHGVS_HIDE_CONTENT)
+						item->State = item->State | CHMOF_IGNORE_IN_RENDER;
+					else if (m_FloorVisionState[currentFloor] == CHGVS_TRANSPARENT_CONTENT)
+						item->State = item->State | CHMOF_TRANSPARENT;
+				}
+			}
+		}
+
 		int z = foundationItem->Z + 7 + 20;
 
 		IFOR(i, 1, m_CurrentFloor)
@@ -1017,6 +1429,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 				m_SelectedGraphic = 0;
 				m_Erasing = false;
 				m_SeekTile = false;
+				m_CombinedStair = false;
 				UpdateMaxPage();
 			}
 		}
@@ -1057,6 +1470,22 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 					graphic = m_Doors[m_Page].m_Graphics[index];
 				else if (m_State == CHGS_FLOOR && m_Page < (int)m_Floors.size() && index < CCustomHouseObjectFloor::GRAPHICS_COUNT)
 					graphic = m_Floors[m_Page].m_Graphics[index];
+				else if (m_State == CHGS_STAIR && m_Page < (int)m_Stairs.size())
+				{
+					bool combinedStair = false;
+
+					if (index > 10)
+					{
+						combinedStair = true;
+						index -= 10;
+					}
+					
+					if (index >= 0 && index < CCustomHouseObjectStair::GRAPHICS_COUNT)
+					{
+						graphic = m_Stairs[m_Page].m_Graphics[index];
+						m_CombinedStair = combinedStair;
+					}
+				}
 			}
 
 			if (graphic)
@@ -1079,6 +1508,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_WantUpdateContent = true;
 			m_Page = 0;
 			m_SelectedGraphic = 0;
+			m_CombinedStair = false;
 			UpdateMaxPage();
 			g_Target.SendCancelTarget();
 			break;
@@ -1090,6 +1520,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_WantUpdateContent = true;
 			m_Page = 0;
 			m_SelectedGraphic = 0;
+			m_CombinedStair = false;
 			UpdateMaxPage();
 			g_Target.SendCancelTarget();
 			break;
@@ -1101,6 +1532,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_WantUpdateContent = true;
 			m_Page = 0;
 			m_SelectedGraphic = 0;
+			m_CombinedStair = false;
 			UpdateMaxPage();
 			g_Target.SendCancelTarget();
 			break;
@@ -1112,6 +1544,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_WantUpdateContent = true;
 			m_Page = 0;
 			m_SelectedGraphic = 0;
+			m_CombinedStair = false;
 			UpdateMaxPage();
 			g_Target.SendCancelTarget();
 			break;
@@ -1123,6 +1556,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_WantUpdateContent = true;
 			m_Page = 0;
 			m_SelectedGraphic = 0;
+			m_CombinedStair = false;
 			UpdateMaxPage();
 			g_Target.SendCancelTarget();
 			break;
@@ -1134,6 +1568,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_WantUpdateContent = true;
 			m_Page = 0;
 			m_SelectedGraphic = 0;
+			m_CombinedStair = false;
 			UpdateMaxPage();
 			g_Target.SendCancelTarget();
 			break;
@@ -1144,6 +1579,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_Erasing = !m_Erasing;
 			m_WantUpdateContent = true;
 			m_SelectedGraphic = 0;
+			m_CombinedStair = false;
 			break;
 		}
 		case ID_GCH_STATE_EYEDROPPER:
@@ -1152,6 +1588,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_SeekTile = true;
 			m_WantUpdateContent = true;
 			m_SelectedGraphic = 0;
+			m_CombinedStair = false;
 			break;
 		}
 		case ID_GCH_STATE_MENU:
@@ -1162,29 +1599,33 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_MaxPage = 1;
 			m_Page = 0;
 			m_SelectedGraphic = 0;
+			m_CombinedStair = false;
 			g_Target.SendCancelTarget();
 			break;
 		}
 		case ID_GCH_VISIBILITY_STORY_1:
-		{
-			break;
-		}
 		case ID_GCH_VISIBILITY_STORY_2:
-		{
-			break;
-		}
 		case ID_GCH_VISIBILITY_STORY_3:
-		{
-			break;
-		}
 		case ID_GCH_VISIBILITY_STORY_4:
 		{
+			int selectedFloor = serial - ID_GCH_VISIBILITY_STORY_1;
+
+			m_FloorVisionState[selectedFloor]++;
+
+			if (m_FloorVisionState[selectedFloor] > CHGVS_HIDE_ALL)
+				m_FloorVisionState[selectedFloor] = CHGVS_NORMAL;
+
+			m_WantUpdateContent = true;
+			GenerateFloorPlace();
+
+			break;
 		}
 		case ID_GCH_GO_FLOOR_1:
 		{
 			m_CurrentFloor = 1;
 			CPacketCustomHouseGoToFloor(1).Send();
 			m_WantUpdateContent = true;
+			m_FloorVisionState[0] = m_FloorVisionState[1] = m_FloorVisionState[2] = m_FloorVisionState[3] = CHGVS_NORMAL;
 			break;
 		}
 		case ID_GCH_GO_FLOOR_2:
@@ -1192,6 +1633,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_CurrentFloor = 2;
 			CPacketCustomHouseGoToFloor(2).Send();
 			m_WantUpdateContent = true;
+			m_FloorVisionState[0] = m_FloorVisionState[1] = m_FloorVisionState[2] = m_FloorVisionState[3] = CHGVS_NORMAL;
 			break;
 		}
 		case ID_GCH_GO_FLOOR_3:
@@ -1199,6 +1641,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_CurrentFloor = 3;
 			CPacketCustomHouseGoToFloor(3).Send();
 			m_WantUpdateContent = true;
+			m_FloorVisionState[0] = m_FloorVisionState[1] = m_FloorVisionState[2] = m_FloorVisionState[3] = CHGVS_NORMAL;
 			break;
 		}
 		case ID_GCH_GO_FLOOR_4:
@@ -1206,6 +1649,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_CurrentFloor = 4;
 			CPacketCustomHouseGoToFloor(4).Send();
 			m_WantUpdateContent = true;
+			m_FloorVisionState[0] = m_FloorVisionState[1] = m_FloorVisionState[2] = m_FloorVisionState[3] = CHGVS_NORMAL;
 			break;
 		}
 		case ID_GCH_LIST_LEFT:
@@ -1271,6 +1715,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 			m_WantUpdateContent = true;
 			m_Page = 0;
 			m_SelectedGraphic = 0;
+			m_CombinedStair = false;
 			UpdateMaxPage();
 			g_Target.SendCancelTarget();
 			break;

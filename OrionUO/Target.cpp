@@ -51,6 +51,7 @@ void CTarget::RequestFromCustomHouse()
 		g_CustomHouseGump->Erasing = false;
 		g_CustomHouseGump->SeekTile = false;
 		g_CustomHouseGump->SelectedGraphic = 0;
+		g_CustomHouseGump->CombinedStair = false;
 		g_CustomHouseGump->WantUpdateContent = true;
 	}
 }
@@ -176,6 +177,7 @@ void CTarget::SendCancelTarget()
 		g_CustomHouseGump->Erasing = false;
 		g_CustomHouseGump->SeekTile = false;
 		g_CustomHouseGump->SelectedGraphic = 0;
+		g_CustomHouseGump->CombinedStair = false;
 		g_CustomHouseGump->WantUpdateContent = true;
 	}
 }

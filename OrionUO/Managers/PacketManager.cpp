@@ -5378,8 +5378,6 @@ PACKET_HANDLER(CustomHouse)
 
 	uchar planes = ReadUInt8();
 
-	LOG("Total planes: %i\n", planes);
-
 	IFOR(plane, 0, planes)
 	{
 		uint header = ReadUInt32BE();
@@ -5417,11 +5415,11 @@ PACKET_HANDLER(CustomHouse)
 
 				if (planeMode == 0)
 					obj->State = CHMOF_STAIR;
-				else if (planeMode == 2)
+				/*else if (planeMode == 2)
 				{
 					if (plane == 1)
 						obj->State = CHMOF_INTERNAL;
-				}
+				}*/
 			}
 		};
 
@@ -5519,9 +5517,7 @@ PACKET_HANDLER(CustomHouse)
 
 	if (g_CustomHouseGump != NULL)
 	{
-		g_CustomHouseGump->FloorCount = planes;
 		g_CustomHouseGump->WantUpdateContent = true;
-		g_CustomHouseGump->MinHouseZ = foundationItem->Z + 7;
 		g_CustomHouseGump->GenerateFloorPlace();
 	}
 }

@@ -26,6 +26,32 @@ bool CCustomHouseObjectWall::Parse(const char *text)
 		m_Graphics[5] = m_East2;
 		m_Graphics[6] = m_East3;
 		m_Graphics[7] = m_Post;
+
+		memcpy(&m_WindowGraphics[0], &m_Graphics[0], sizeof(m_WindowGraphics));
+
+		if (!m_AltWindowE && m_WindowE)
+		{
+			m_AltWindowE = m_WindowE;
+			m_WindowE = 0;
+		}
+
+		if (m_WindowS)
+			m_WindowGraphics[0] = m_WindowS;
+
+		if (m_AltWindowS)
+			m_WindowGraphics[1] = m_AltWindowS;
+
+		if (m_SecondAltWindowS)
+			m_WindowGraphics[2] = m_SecondAltWindowS;
+
+		if (m_WindowE)
+			m_WindowGraphics[4] = m_WindowE;
+
+		if (m_AltWindowE)
+			m_WindowGraphics[5] = m_AltWindowE;
+
+		if (m_SecondAltWindowE)
+			m_WindowGraphics[6] = m_SecondAltWindowE;
 	}
 
 	return result;
@@ -114,15 +140,15 @@ bool CCustomHouseObjectStair::Parse(const char *text)
 
 	if (result)
 	{
-		m_Graphics[0] = m_Block;
-		m_Graphics[1] = m_North;
-		m_Graphics[2] = m_East;
-		m_Graphics[3] = m_South;
-		m_Graphics[4] = m_West;
-		m_Graphics[5] = m_Squared1;
-		m_Graphics[6] = m_Squared2;
-		m_Graphics[7] = m_Rounded1;
-		m_Graphics[8] = m_Rounded2;
+		m_Graphics[0] = m_Squared1;
+		m_Graphics[1] = m_Squared2;
+		m_Graphics[2] = m_Rounded1;
+		m_Graphics[3] = m_Rounded2;
+		m_Graphics[4] = m_Block;
+		m_Graphics[5] = m_North;
+		m_Graphics[6] = m_East;
+		m_Graphics[7] = m_South;
+		m_Graphics[8] = m_West;
 	}
 
 	return result;

@@ -53,6 +53,31 @@ void CMultiObject::UpdateGraphicBySeason()
 void CMultiObject::Draw(const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c25_f3");
+
+	if (m_State)
+	{
+		if (m_State & CHMOF_IGNORE_IN_RENDER)
+			return;
+
+		if (m_State & CHMOF_TRANSPARENT)
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glColor4f(1.0f, 1.0f, 1.0f, 0.75f);
+
+			g_Orion.DrawStaticArt(m_Graphic, m_Color, x, y);
+
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			glDisable(GL_BLEND);
+
+#if UO_DEBUG_INFO!=0
+			g_RenderedObjectsCountInGameWindow++;
+#endif
+
+			return;
+		}
+	}
+
 #if UO_DEBUG_INFO!=0
 	g_RenderedObjectsCountInGameWindow++;
 #endif
@@ -84,6 +109,9 @@ void CMultiObject::Select(const int &x, const int &y)
 	WISPFUN_DEBUG("c25_f4");
 	if (!m_OnTarget)
 	{
+		if (m_State && (m_State & CHMOF_IGNORE_IN_RENDER))
+			return;
+
 		m_RenderGraphic = m_Graphic;
 
 		CRenderStaticObject::Select(x, y);
