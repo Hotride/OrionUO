@@ -3313,12 +3313,6 @@ PACKET_HANDLER(ASCIIPrompt)
 	if (g_World == NULL)
 		return;
 
-	if (g_ConsolePrompt != PT_NONE)
-	{
-		g_Orion.ConsolePromptCancel();
-		g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Previous prompt cancelled.");
-	}
-
 	g_ConsolePrompt = PT_ASCII;
 	memcpy(&g_LastASCIIPrompt[0], &m_Start[0], 11);
 }
@@ -3328,12 +3322,6 @@ PACKET_HANDLER(UnicodePrompt)
 	WISPFUN_DEBUG("c150_f63");
 	if (g_World == NULL)
 		return;
-
-	if (g_ConsolePrompt != PT_NONE)
-	{
-		g_Orion.ConsolePromptCancel();
-		g_Orion.CreateTextMessage(TT_SYSTEM, 0xFFFFFFFF, 3, 0, "Previous prompt cancelled.");
-	}
 
 	g_ConsolePrompt = PT_UNICODE;
 	memcpy(&g_LastUnicodePrompt[0], &m_Start[0], 11);
