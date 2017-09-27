@@ -37,6 +37,7 @@ bool CMappedFile::Load()
 			{
 				CloseHandle(m_Map);
 				CloseHandle(m_File);
+				m_Map = NULL;
 				m_File = INVALID_HANDLE_VALUE;
 			}
 			else
