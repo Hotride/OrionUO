@@ -57,6 +57,17 @@ bool CCustomHouseObjectWall::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
+int CCustomHouseObjectWall::Contains(const ushort &graphic) const
+{
+	IFOR(i, 0, GRAPHICS_COUNT)
+	{
+		if (m_Graphics[i] == graphic || m_WindowGraphics[i] == graphic)
+			return i;
+	}
+
+	return -1;
+}
+//----------------------------------------------------------------------------------
 bool CCustomHouseObjectFloor::Parse(const char *text)
 {
 	WISPFUN_DEBUG("");
@@ -87,6 +98,17 @@ bool CCustomHouseObjectFloor::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
+int CCustomHouseObjectFloor::Contains(const ushort &graphic) const
+{
+	IFOR(i, 0, GRAPHICS_COUNT)
+	{
+		if (m_Graphics[i] == graphic)
+			return i;
+	}
+
+	return -1;
+}
+//----------------------------------------------------------------------------------
 bool CCustomHouseObjectDoor::Parse(const char *text)
 {
 	WISPFUN_DEBUG("");
@@ -107,6 +129,17 @@ bool CCustomHouseObjectDoor::Parse(const char *text)
 	}
 
 	return result;
+}
+//----------------------------------------------------------------------------------
+int CCustomHouseObjectDoor::Contains(const ushort &graphic) const
+{
+	IFOR(i, 0, GRAPHICS_COUNT)
+	{
+		if (m_Graphics[i] == graphic)
+			return i;
+	}
+
+	return -1;
 }
 //----------------------------------------------------------------------------------
 bool CCustomHouseObjectMisc::Parse(const char *text)
@@ -131,6 +164,17 @@ bool CCustomHouseObjectMisc::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
+int CCustomHouseObjectMisc::Contains(const ushort &graphic) const
+{
+	IFOR(i, 0, GRAPHICS_COUNT)
+	{
+		if (m_Graphics[i] == graphic)
+			return i;
+	}
+
+	return -1;
+}
+//----------------------------------------------------------------------------------
 bool CCustomHouseObjectStair::Parse(const char *text)
 {
 	WISPFUN_DEBUG("");
@@ -152,6 +196,17 @@ bool CCustomHouseObjectStair::Parse(const char *text)
 	}
 
 	return result;
+}
+//----------------------------------------------------------------------------------
+int CCustomHouseObjectStair::Contains(const ushort &graphic) const
+{
+	IFOR(i, 0, GRAPHICS_COUNT)
+	{
+		if (m_Graphics[i] == graphic)
+			return i;
+	}
+
+	return -1;
 }
 //----------------------------------------------------------------------------------
 bool CCustomHouseObjectTeleport::Parse(const char *text)
@@ -184,6 +239,17 @@ bool CCustomHouseObjectTeleport::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
+int CCustomHouseObjectTeleport::Contains(const ushort &graphic) const
+{
+	IFOR(i, 0, GRAPHICS_COUNT)
+	{
+		if (m_Graphics[i] == graphic)
+			return i;
+	}
+
+	return -1;
+}
+//----------------------------------------------------------------------------------
 bool CCustomHouseObjectRoof::Parse(const char *text)
 {
 	WISPFUN_DEBUG("");
@@ -214,6 +280,17 @@ bool CCustomHouseObjectRoof::Parse(const char *text)
 	return result;
 }
 //----------------------------------------------------------------------------------
+int CCustomHouseObjectRoof::Contains(const ushort &graphic) const
+{
+	IFOR(i, 0, GRAPHICS_COUNT)
+	{
+		if (m_Graphics[i] == graphic)
+			return i;
+	}
+
+	return -1;
+}
+//----------------------------------------------------------------------------------
 bool CCustomHouseObjectPlaceInfo::Parse(const char *text)
 {
 	WISPFUN_DEBUG("");
@@ -223,6 +300,20 @@ bool CCustomHouseObjectPlaceInfo::Parse(const char *text)
 		"%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
 		&buf[0], &m_Graphic, &m_Top, &m_Bottom, &m_AdjUN, &m_AdjLN, &m_AdjUE, &m_AdjLE, &m_AdjUS, &m_AdjLS, &m_AdjUW, &m_AdjLW, &m_DirectSupports, &m_CanGoW, &m_CanGoN, &m_CanGoNWS) >= 16;
 
+	if (result)
+		m_Graphics[0] = m_Graphic;
+
 	return result;
+}
+//----------------------------------------------------------------------------------
+int CCustomHouseObjectPlaceInfo::Contains(const ushort &graphic) const
+{
+	IFOR(i, 0, GRAPHICS_COUNT)
+	{
+		if (m_Graphics[i] == graphic)
+			return i;
+	}
+
+	return -1;
 }
 //----------------------------------------------------------------------------------

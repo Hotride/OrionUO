@@ -169,6 +169,8 @@ public:
 
 	bool CanBuildHere(vector<CBuildObject> &list, CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type);
 
+	bool ValidateItemPlace(const RECT rect, const ushort &graphic, const int &x, const int &y, const CUSTOM_HOUSE_BUILD_TYPE &type);
+
 	bool CanEraseHere(CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type);
 
 	void OnTargetWorld(CRenderWorldObject *place);

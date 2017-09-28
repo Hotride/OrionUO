@@ -970,13 +970,10 @@ pair<int, int> SeekGraphicInCustomHouseObjectListWithCategory(const vector<A> &l
 
 		IFOR(j, 0, (int)cat.m_Items.size())
 		{
-			const T &item = cat.m_Items[j];
+			int contains = cat.m_Items[j].Contains(graphic);
 
-			IFOR(g, 0, T::GRAPHICS_COUNT)
-			{
-				if (item.m_Graphics[g] == graphic)
-					return pair<int, int>(i, j);
-			}
+			if (contains != -1)
+				return pair<int, int>(i, j);
 		}
 	}
 
@@ -988,13 +985,10 @@ pair<int, int> SeekGraphicInCustomHouseObjectList(const vector<T> &list, const u
 {
 	IFOR(i, 0, (int)list.size())
 	{
-		const T &item = list[i];
+		int contains = list[i].Contains(graphic);
 
-		IFOR(j, 0, T::GRAPHICS_COUNT)
-		{
-			if (item.m_Graphics[j] == graphic)
-				return pair<int, int>(i, j);
-		}
+		if (contains != -1)
+			return pair<int, int>(i, graphic);
 	}
 
 	return pair<int, int>(-1, -1);
@@ -1382,32 +1376,75 @@ bool CGumpCustomHouse::CanBuildHere(vector<CBuildObject> &list, CRenderWorldObje
 		}
 		else
 		{
-			list.push_back(CBuildObject(m_SelectedGraphic, 0, 0, 0));
-
 			if (m_State == CHGS_STAIR)
+			{
 				type = CHBT_STAIR;
-			else if (m_State == CHGS_FLOOR)
-				type = CHBT_FLOOR;
+				list.push_back(CBuildObject(m_SelectedGraphic, 0, 1, 0));
+			}
+			else
+			{
+				if (m_State == CHGS_FLOOR)
+					type = CHBT_FLOOR;
+
+				list.push_back(CBuildObject(m_SelectedGraphic, 0, 0, 0));
+			}
 		}
 	}
 
 	if (g_SelectedObject.Object != NULL && g_SelectedObject.Object->IsWorldObject())
 	{
-		RECT rect = { m_StartPos.X, m_StartPos.Y, m_EndPos.X, m_EndPos.Y };
+		CRenderWorldObject *rwo = (CRenderWorldObject*)g_SelectedObject.Object;
+
+		if ((type != CHBT_STAIR || m_CombinedStair) && rwo->Z < m_MinHouseZ && (rwo->X == m_EndPos.X - 1 || rwo->Y == m_EndPos.Y - 1))
+			return false;
+
+		RECT rect = { m_StartPos.X + (int)m_CombinedStair, m_StartPos.Y + (int)m_CombinedStair, m_EndPos.X, m_EndPos.Y };
 
 		for (const CBuildObject &item : list)
 		{
-			if (m_CombinedStair && item.Z)
+			if (m_CombinedStair)
+			{
+				if (item.Z)
+					continue;
+			}
+			else if (type == CHBT_STAIR)
+			{
+				if (rwo->Y + item.Y != m_EndPos.Y || rwo->X + item.X == m_StartPos.X || rwo->Z >= m_MinHouseZ)
+					return false;
+
 				continue;
+			}
 
-			POINT pos = { g_SelectedObject.Object->X + item.X, g_SelectedObject.Object->Y + item.Y };
-
-			if (!PtInRect(&rect, pos))
+			if (!ValidateItemPlace(rect, item.Graphic, rwo->X + item.X, rwo->Y + item.Y, type))
 				return false;
 		}
 	}
 	else
 		return false;
+
+	return true;
+}
+//----------------------------------------------------------------------------------
+bool CGumpCustomHouse::ValidateItemPlace(const RECT rect, const ushort &graphic, const int &x, const int &y, const CUSTOM_HOUSE_BUILD_TYPE &type)
+{
+	POINT pos = { x, y };
+
+	if (!PtInRect(&rect, pos))
+		return false;
+
+	pair<int, int> infoCheck = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectPlaceInfo>(m_ObjectsInfo, graphic);
+
+	if (infoCheck.first != -1 && infoCheck.second != -1)
+	{
+		const CCustomHouseObjectPlaceInfo &info = m_ObjectsInfo[infoCheck.first];
+
+		if (!info.CanGoW && x == m_StartPos.X)
+			return false;
+		else if (!info.CanGoN && y == m_StartPos.Y)
+			return false;
+		if (!info.CanGoNWS && x == m_StartPos.X && y == m_StartPos.Y)
+			return false;
+	}
 
 	return true;
 }
@@ -1717,7 +1754,7 @@ void CGumpCustomHouse::GUMP_BUTTON_EVENT_C
 						const vector<CCustomHouseObjectWall> &list = m_Walls[m_Category].m_Items;
 
 						if (m_Page < (int)list.size())
-							graphic = list[m_Page].m_Graphics[index];
+							graphic = (m_ShowWindow ? list[m_Page].m_WindowGraphics[index] : list[m_Page].m_Graphics[index]);
 					}
 					else if (m_State == CHGS_ROOF && m_Category < (int)m_Roofs.size() && index < CCustomHouseObjectRoof::GRAPHICS_COUNT)
 					{

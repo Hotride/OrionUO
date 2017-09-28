@@ -47,6 +47,8 @@ public:
 
 	virtual bool Parse(const char *text);
 
+	int Contains(const ushort &graphic) const;
+
 	static const int GRAPHICS_COUNT = 8;
 
 	ushort m_Graphics[GRAPHICS_COUNT];
@@ -89,6 +91,8 @@ public:
 
 	virtual bool Parse(const char *text);
 
+	int Contains(const ushort &graphic) const;
+
 	static const int GRAPHICS_COUNT = 16;
 
 	ushort m_Graphics[GRAPHICS_COUNT];
@@ -121,6 +125,8 @@ public:
 	virtual ~CCustomHouseObjectDoor() {}
 
 	virtual bool Parse(const char *text);
+
+	int Contains(const ushort &graphic) const;
 
 	static const int GRAPHICS_COUNT = 8;
 
@@ -156,6 +162,8 @@ public:
 	virtual ~CCustomHouseObjectMisc() {}
 
 	virtual bool Parse(const char *text);
+
+	int Contains(const ushort &graphic) const;
 
 	static const int GRAPHICS_COUNT = 8;
 
@@ -194,6 +202,8 @@ public:
 	virtual ~CCustomHouseObjectStair() {}
 
 	virtual bool Parse(const char *text);
+
+	int Contains(const ushort &graphic) const;
 
 	static const int GRAPHICS_COUNT = 9;
 
@@ -235,6 +245,8 @@ public:
 	virtual ~CCustomHouseObjectTeleport() {}
 
 	virtual bool Parse(const char *text);
+
+	int Contains(const ushort &graphic) const;
 
 	static const int GRAPHICS_COUNT = 16;
 
@@ -279,6 +291,8 @@ public:
 
 	virtual bool Parse(const char *text);
 
+	int Contains(const ushort &graphic) const;
+
 	static const int GRAPHICS_COUNT = 16;
 
 	ushort m_Graphics[GRAPHICS_COUNT];
@@ -320,6 +334,12 @@ public:
 	virtual ~CCustomHouseObjectPlaceInfo() {}
 
 	bool Parse(const char *text);
+
+	int Contains(const ushort &graphic) const;
+
+	static const int GRAPHICS_COUNT = 1;
+
+	ushort m_Graphics[GRAPHICS_COUNT];
 };
 //----------------------------------------------------------------------------------
 #endif //CUSTOMHOUSEOBJECTS_H
