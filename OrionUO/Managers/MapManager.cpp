@@ -606,18 +606,20 @@ void CMapManager::Init(const bool &delayed)
 	{
 		uint index = i * g_MapBlockSize[map].Height;
 
-		for (int j = minBlockY; j <= maxBlockY; j++, index++)
+		for (int j = minBlockY; j <= maxBlockY; j++)
 		{
-			if (index < m_MaxBlockIndex)
+			uint realIndex = index + j;
+
+			if (realIndex < m_MaxBlockIndex)
 			{
-				CMapBlock *block = GetBlock(index);
+				CMapBlock *block = GetBlock(realIndex);
 
 				if (block == NULL)
 				{
 					if (delayed && g_Ticks - ticks >= maxDelay)
 						return;
 
-					block = AddBlock(index);
+					block = AddBlock(realIndex);
 					block->X = i;
 					block->Y = j;
 					LoadBlock(block);
