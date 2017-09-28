@@ -1599,7 +1599,18 @@ void CGumpCustomHouse::GenerateFloorPlace()
 				}
 
 				if (floorMulti != NULL && floorCustomMulti == NULL)
-					foundationItem->AddMulti(floorMulti->Graphic, 0, x - foundationItem->X, y - foundationItem->Y, z, true);
+				{
+					CMultiObject *mo = foundationItem->AddMulti(floorMulti->Graphic, 0, x - foundationItem->X, y - foundationItem->Y, z, true);
+
+					int state = CHMOF_FLOOR;
+
+					if (m_FloorVisionState[0] == CHGVS_HIDE_FLOOR)
+						state |= CHMOF_IGNORE_IN_RENDER;
+					else if (m_FloorVisionState[0] == CHGVS_TRANSPARENT_FLOOR || m_FloorVisionState[0] == CHGVS_TRANSLUCENT_FLOOR)
+						state |= CHMOF_TRANSPARENT;
+
+					mo->State = state;
+				}
 			}
 		}
 
@@ -1620,7 +1631,7 @@ void CGumpCustomHouse::GenerateFloorPlace()
 			{
 				IFOR(y, m_StartPos.Y + 1, m_EndPos.Y)
 				{
-					CCustomHouseMultiObject *mo = (CCustomHouseMultiObject*)foundationItem->AddMulti(0x0496, color, x - foundationItem->X, y - foundationItem->Y, z, true);
+					CMultiObject *mo = foundationItem->AddMulti(0x0496, color, x - foundationItem->X, y - foundationItem->Y, z, true);
 					mo->State = CHMOF_GENERIC_INTERNAL | CHMOF_TRANSPARENT;
 					mo->RenderQueueIndex = 0;
 					g_MapManager->AddRender(mo);
