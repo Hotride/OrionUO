@@ -1386,6 +1386,8 @@ bool CGumpCustomHouse::CanBuildHere(vector<CBuildObject> &list, CRenderWorldObje
 
 			if (m_State == CHGS_STAIR)
 				type = CHBT_STAIR;
+			else if (m_State == CHGS_FLOOR)
+				type = CHBT_FLOOR;
 		}
 	}
 
@@ -1410,6 +1412,93 @@ bool CGumpCustomHouse::CanBuildHere(vector<CBuildObject> &list, CRenderWorldObje
 	return true;
 }
 //----------------------------------------------------------------------------------
+bool CGumpCustomHouse::CanEraseHere(CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type)
+{
+	type = CHBT_NORMAL;
+
+	if (place != NULL && place->IsMultiObject())
+	{
+		CMultiObject *multi = (CMultiObject*)place;
+
+		if (multi->IsCustomHouseMulti() && !(multi->State & CHMOF_GENERIC_INTERNAL))
+		{
+			if (multi->State & CHMOF_FLOOR)
+				type = CHBT_FLOOR;
+			else if (multi->State & CHMOF_STAIR)
+				type = CHBT_STAIR;
+			else if (multi->State & CHMOF_ROOF)
+				type = CHBT_ROOF;
+
+			return true;
+		}
+	}
+
+	return false;
+}
+//----------------------------------------------------------------------------------
+void CGumpCustomHouse::OnTargetWorld(CRenderWorldObject *place)
+{
+	if (place != NULL && place->IsMultiObject()) // && place->Z >= m_MinHouseZ)
+	{
+		CMultiObject *multiObject = (CMultiObject*)place;
+
+		int zOffset = 0;
+
+		if (m_CurrentFloor == 1)
+			zOffset = -7;
+
+		if (m_SeekTile)
+			SeekGraphic(place->Graphic);
+		else if (place->Z >= g_Player->Z + zOffset && place->Z < g_Player->Z + 20)
+		{
+			CGameItem *foundationItem = g_World->GetWorldItem(m_Serial);
+
+			if (foundationItem == NULL)
+				return;
+
+			if (m_Erasing)
+			{
+				CUSTOM_HOUSE_BUILD_TYPE type;
+
+				if (CanEraseHere(place, type))
+				{
+					CMulti *multi = foundationItem->GetMultiAtXY(place->X, place->Y);
+
+					if (multi == NULL)
+						return;
+
+					int z = 7 + (m_CurrentFloor - 1) * 20;
+
+					if (type == CHBT_STAIR || type == CHBT_ROOF)
+						z = place->Z - (foundationItem->Z + z) + z;
+
+					if (type == CHBT_ROOF)
+						CPacketCustomHouseDeleteRoof(place->Graphic, place->X - foundationItem->X, place->Y - foundationItem->Y, z).Send();
+					else
+						CPacketCustomHouseDeleteItem(place->Graphic, place->X - foundationItem->X, place->Y - foundationItem->Y, z).Send();
+
+					multi->Delete(place);
+				}
+			}
+			else if (m_SelectedGraphic)
+			{
+				/*vector<CBuildObject> list;
+
+				if (CanBuildHere(list, rwo) && list.size())
+				{
+					for (const CBuildObject &item : list)
+					{
+						int x = rwo->X + item.X;
+						int y = rwo->Y + item.Y;
+					}
+				}*/
+			}
+
+			GenerateFloorPlace();
+		}
+	}
+}
+//----------------------------------------------------------------------------------
 void CGumpCustomHouse::GenerateFloorPlace()
 {
 	CGameItem *foundationItem = g_World->GetWorldItem(m_Serial);
@@ -1431,7 +1520,9 @@ void CGumpCustomHouse::GenerateFloorPlace()
 
 				IFOR(i, 0, 4)
 				{
-					if (itemZ >= floorZ && itemZ < floorZ + 20)
+					int offset = (i ? 0 : 7);
+
+					if (itemZ >= floorZ - offset && itemZ < floorZ + 20)
 					{
 						currentFloor = i;
 						break;
@@ -1443,34 +1534,76 @@ void CGumpCustomHouse::GenerateFloorPlace()
 				if (currentFloor == -1)
 					continue;
 
-				if (m_FloorVisionState[currentFloor] == CHGVS_NORMAL)
-					continue;
-				else if (m_FloorVisionState[currentFloor] == CHGVS_HIDE_ALL)
-				{
-					item->State = item->State | CHMOF_IGNORE_IN_RENDER;
-					continue;
-				}
-
 				pair<int, int> floorCheck = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectFloor>(m_Floors, item->Graphic);
+				int state = item->State;
 
 				if (floorCheck.first != -1 && floorCheck.second != -1)
 				{
+					state |= CHMOF_FLOOR;
+
 					if (m_FloorVisionState[currentFloor] == CHGVS_HIDE_FLOOR)
-						item->State = item->State | CHMOF_IGNORE_IN_RENDER;
+						state |= CHMOF_IGNORE_IN_RENDER;
 					else if (m_FloorVisionState[currentFloor] == CHGVS_TRANSPARENT_FLOOR || m_FloorVisionState[currentFloor] == CHGVS_TRANSLUCENT_FLOOR)
-						item->State = item->State | CHMOF_TRANSPARENT;
+						state |= CHMOF_TRANSPARENT;
 				}
 				else
 				{
+					pair<int, int> stairCheck = SeekGraphicInCustomHouseObjectList<CCustomHouseObjectStair>(m_Stairs, item->Graphic);
+
+					if (stairCheck.first != -1 && stairCheck.second != -1)
+						state |= CHMOF_STAIR;
+					else
+					{
+						pair<int, int> roofCheck = SeekGraphicInCustomHouseObjectListWithCategory<CCustomHouseObjectRoof, CCustomHouseObjectRoofCategory>(m_Roofs, item->Graphic);
+
+						if (roofCheck.first != -1 && roofCheck.second != -1)
+							state |= CHMOF_ROOF;
+					}
+
 					if (m_FloorVisionState[currentFloor] == CHGVS_HIDE_CONTENT)
-						item->State = item->State | CHMOF_IGNORE_IN_RENDER;
+						state |= CHMOF_IGNORE_IN_RENDER;
 					else if (m_FloorVisionState[currentFloor] == CHGVS_TRANSPARENT_CONTENT)
-						item->State = item->State | CHMOF_TRANSPARENT;
+						state |= CHMOF_TRANSPARENT;
 				}
+
+				if (m_FloorVisionState[currentFloor] == CHGVS_HIDE_ALL)
+					state |= CHMOF_IGNORE_IN_RENDER;
+
+				item->State = state;
 			}
 		}
 
-		int z = foundationItem->Z + 7 + 20;
+		int z = foundationItem->Z + 7;
+
+		IFOR(x, m_StartPos.X + 1, m_EndPos.X)
+		{
+			IFOR(y, m_StartPos.Y + 1, m_EndPos.Y)
+			{
+				CMulti *multi = foundationItem->GetMultiAtXY(x, y);
+
+				if (multi == NULL)
+					continue;
+
+				CMultiObject *floorMulti = NULL;
+				CMultiObject *floorCustomMulti = NULL;
+
+				QFOR(item, multi->m_Items, CMultiObject*)
+				{
+					if (item->Z != z || !(item->State & CHMOF_FLOOR))
+						continue;
+
+					if (item->IsCustomHouseMulti())
+						floorCustomMulti = item;
+					else
+						floorMulti = item;
+				}
+
+				if (floorMulti != NULL && floorCustomMulti == NULL)
+					foundationItem->AddMulti(floorMulti->Graphic, 0, x - foundationItem->X, y - foundationItem->Y, z, true);
+			}
+		}
+
+		z = foundationItem->Z + 7 + 20;
 
 		IFOR(i, 1, m_CurrentFloor)
 		{

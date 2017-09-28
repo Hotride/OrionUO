@@ -629,7 +629,7 @@ void CGameItem::ClearCustomHouseMultis(const uint &state)
 					multi->Delete(item);
 			}
 			else if (item->Z == checkZ)
-				item->State = item->State | CHMOF_IGNORE_IN_RENDER;
+				item->State = item->State | CHMOF_FLOOR | CHMOF_IGNORE_IN_RENDER;
 		}
 
 		if (multi->m_Items == NULL)

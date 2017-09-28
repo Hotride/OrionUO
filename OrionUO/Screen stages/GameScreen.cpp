@@ -748,7 +748,9 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 			{
 				if (g_CustomHouseGump->Erasing)
 				{
-					if (obj->IsMultiObject() && ((CMultiObject*)obj)->IsCustomHouseMulti() && !(((CMultiObject*)obj)->State & CHMOF_GENERIC_INTERNAL))
+					CUSTOM_HOUSE_BUILD_TYPE type;
+
+					if (g_CustomHouseGump->CanEraseHere(obj, type))
 						m_RenderList[m_RenderListCount].GrayColor = 0x0021;
 				}
 				else
@@ -1812,40 +1814,7 @@ void CGameScreen::OnLeftMouseButtonUp()
 
 		if (g_CustomHouseGump != NULL && g_Target.IsTargeting())
 		{
-			if (rwo != NULL && rwo->IsMultiObject() && rwo->Z >= g_CustomHouseGump->MinHouseZ)
-			{
-				CMultiObject *multiObject = (CMultiObject*)rwo;
-
-				int zOffset = 0;
-
-				if (g_CustomHouseGump->CurrentFloor == 1)
-					zOffset = -7;
-
-				if (g_CustomHouseGump->SeekTile)
-					g_CustomHouseGump->SeekGraphic(rwo->Graphic);
-				else if (rwo->Z >= g_Player->Z + zOffset && rwo->Z < g_Player->Z + 20)
-				{
-					if (g_CustomHouseGump->Erasing)
-					{
-						if (multiObject->IsCustomHouseMulti() && !(multiObject->State & CHMOF_GENERIC_INTERNAL))
-						{
-						}
-					}
-					else if (g_CustomHouseGump->SelectedGraphic)
-					{
-						/*vector<CBuildObject> list;
-
-						if (g_CustomHouseGump->CanBuildHere(list, rwo) && list.size())
-						{
-							for (const CBuildObject &item : list)
-							{
-								int x = rwo->X + item.X;
-								int y = rwo->Y + item.Y;
-							}
-						}*/
-					}
-				}
-			}
+			g_CustomHouseGump->OnTargetWorld(rwo);
 
 			return;
 		}

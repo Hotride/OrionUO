@@ -50,6 +50,7 @@ enum CUSTOM_HOUSE_BUILD_TYPE
 {
 	CHBT_NORMAL = 0,
 	CHBT_ROOF,
+	CHBT_FLOOR,
 	CHBT_STAIR
 };
 //----------------------------------------------------------------------------------
@@ -167,6 +168,10 @@ public:
 	void SeekGraphic(const ushort &graphic);
 
 	bool CanBuildHere(vector<CBuildObject> &list, CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type);
+
+	bool CanEraseHere(CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type);
+
+	void OnTargetWorld(CRenderWorldObject *place);
 
 	GUMP_BUTTON_EVENT_H;
 	GUMP_TEXT_ENTRY_EVENT_H;
