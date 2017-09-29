@@ -184,10 +184,10 @@ bool CCustomHouseObjectStair::Parse(const char *text)
 
 	if (result)
 	{
-		m_Graphics[0] = m_Squared1;
-		m_Graphics[1] = m_Squared2;
-		m_Graphics[2] = m_Rounded1;
-		m_Graphics[3] = m_Rounded2;
+		m_Graphics[0] = (m_MultiNorth ? m_Squared1 : 0);
+		m_Graphics[1] = (m_MultiEast ? m_Squared2 : 0);
+		m_Graphics[2] = (m_MultiSouth ? m_Rounded1 : 0);
+		m_Graphics[3] = (m_MultiWest ? m_Rounded2 : 0);
 		m_Graphics[4] = m_Block;
 		m_Graphics[5] = m_North;
 		m_Graphics[6] = m_East;
