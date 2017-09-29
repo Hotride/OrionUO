@@ -10,20 +10,6 @@
 #ifndef GUMPCUSTOMHOUSE_H
 #define GUMPCUSTOMHOUSE_H
 //----------------------------------------------------------------------------------
-class CBuildObject
-{
-	SETGET(ushort, Graphic, 0);
-	SETGET(char, X, 0);
-	SETGET(char, Y, 0);
-	SETGET(char, Z, 0);
-
-public:
-	CBuildObject() {}
-	CBuildObject(const ushort &graphic, const char &x, const char &y, const char &z)
-		: m_Graphic(graphic), m_X(x), m_Y(y), m_Z(z) {}
-	~CBuildObject() {}
-};
-//----------------------------------------------------------------------------------
 enum CUSTOM_HOUSE_GUMP_STATE
 {
 	CHGS_WALL = 0,
@@ -52,6 +38,16 @@ enum CUSTOM_HOUSE_BUILD_TYPE
 	CHBT_ROOF,
 	CHBT_FLOOR,
 	CHBT_STAIR
+};
+//----------------------------------------------------------------------------------
+enum CUSTOM_HOUSE_MULTI_OBJECT_FLAGS
+{
+	CHMOF_GENERIC_INTERNAL = 0x01,
+	CHMOF_FLOOR = 0x02,
+	CHMOF_STAIR = 0x04,
+	CHMOF_ROOF = 0x08,
+	CHMOF_TRANSPARENT = 0x10,
+	CHMOF_IGNORE_IN_RENDER = 0x20
 };
 //----------------------------------------------------------------------------------
 class CGumpCustomHouse : public CGump

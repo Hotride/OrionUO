@@ -1374,6 +1374,7 @@ void COrion::LoadLocalConfig()
 	}
 
 	g_GumpManager.Load(path + "\\gumps_debug.cuo");
+	g_CustomHousesManager.Load(path + "\\customhouses_debug.cuo");
 
 	if (g_ConfigManager.OffsetInterfaceWindows)
 		g_ContainerRect.MakeDefault();
@@ -1426,6 +1427,7 @@ void COrion::SaveLocalConfig()
 	g_SkillGroupManager.Save(path + "\\skills_debug.cuo");
 	g_MacroManager.Save(path + "\\macros_debug.cuo");
 	g_GumpManager.Save(path + "\\gumps_debug.cuo");
+	g_CustomHousesManager.Save(path + "\\customhouses_debug.cuo");
 
 	LOG("managers:saving in to root\n");
 	g_ConfigManager.Save(g_App.FilePath("options_debug.cuo"));

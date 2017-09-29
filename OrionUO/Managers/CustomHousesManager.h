@@ -1,8 +1,8 @@
 ﻿/***********************************************************************************
 **
-** CustomHousesManager.cpp
+** CustomHousesManager.h
 **
-** Copyright (C) August 2016 Hotride
+** Copyright (C) September 2017 Hotride
 **
 ************************************************************************************
 */
@@ -10,34 +10,54 @@
 #ifndef CUSTOMHOUSESMANAGER_H
 #define CUSTOMHOUSESMANAGER_H
 //----------------------------------------------------------------------------------
-#include "../Wisp/WispDataStream.h"
-#include "../zconf.h"
-#include "../Game objects/GameItem.h"
+class CBuildObject
+{
+	SETGET(ushort, Graphic, 0);
+	SETGET(char, X, 0);
+	SETGET(char, Y, 0);
+	SETGET(char, Z, 0);
+
+public:
+	CBuildObject() {}
+	CBuildObject(const ushort &graphic, const char &x, const char &y, const char &z)
+		: m_Graphic(graphic), m_X(x), m_Y(y), m_Z(z) {}
+	~CBuildObject() {}
+};
 //----------------------------------------------------------------------------------
-struct CustomHouseData
+class CCustomHouse
 {
-	ushort Graphic;
-	char X;
-	char Y;
-	char Z;
+	SETGET(uint, Serial, 0);
+	SETGET(uint, Revision, 0);
+
+public:
+	CCustomHouse() {}
+	CCustomHouse(const uint &serial, const uint &revision)
+		: m_Serial(serial), m_Revision(revision) {}
+	~CCustomHouse() {}
+
+	vector<CBuildObject> m_Items;
+
+	void Paste(CGameItem *foundation);
 };
-struct CustomHouseStruct
-{
-	uint Serial;
-	uint Revision;
-	vector<CustomHouseData> HouseData;
-};
+//----------------------------------------------------------------------------------
 class CustomHousesManager : public WISP_DATASTREAM::CDataReader
 {
-	unordered_map<uint, CustomHouseStruct*> m_CustomHouses;
+	unordered_map<uint, CCustomHouse*> m_Items;
+
 public:
-	CustomHousesManager();
+	CustomHousesManager() {}
 	~CustomHousesManager();
-	CustomHouseStruct* GetCustomHouse(uint serial);
-	void AddCustomHouse(CustomHouseStruct* house);
-	bool TakeFromCache(CGameItem* houseFoundation, CustomHouseStruct* house);
+
+	void Clear();
+
+	CCustomHouse *Get(const uint &serial);
+
+	void Add(CCustomHouse* house);
+
+	void Load(const string &path);
+	void Save(const string &path);
 };
-//!Global reference to custom houses manager
+//----------------------------------------------------------------------------------
 extern CustomHousesManager g_CustomHousesManager;
 //----------------------------------------------------------------------------------
 #endif

@@ -380,6 +380,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Managers\ConnectionManager.h" />
     <ClInclude Include="Managers\CorpseManager.h" />
     <ClInclude Include="Managers\CreateCharacterManager.h" />
+    <ClInclude Include="Managers\CustomHousesManager.h" />
     <ClInclude Include="Managers\EffectManager.h" />
     <ClInclude Include="Managers\FileManager.h" />
     <ClInclude Include="Managers\FontsManager.h" />
@@ -622,6 +623,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="Managers\ConnectionManager.cpp" />
     <ClCompile Include="Managers\CorpseManager.cpp" />
     <ClCompile Include="Managers\CreateCharacterManager.cpp" />
+    <ClCompile Include="Managers\CustomHousesManager.cpp" />
     <ClCompile Include="Managers\EffectManager.cpp" />
     <ClCompile Include="Managers\FileManager.cpp" />
     <ClCompile Include="Managers\FontsManager.cpp" />

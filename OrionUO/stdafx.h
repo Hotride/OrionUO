@@ -163,6 +163,7 @@ class CGump;
 #include "Game objects/ObjectOnCursor.h"
 
 #include "Target.h"
+#include "Managers/CustomHousesManager.h"
 
 #include "Gumps/GumpAbility.h"
 #include "Gumps/GumpBaseScroll.h"

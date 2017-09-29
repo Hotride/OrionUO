@@ -2592,15 +2592,25 @@ PACKET_HANDLER(ExtendedCommand)
 		case 0x1D:
 		{
 			//house revision state, server sends this when player comes in range of a custom house
-			uint houseSerial = ReadUInt32BE();
-			uint houseRevision = ReadUInt32BE();
-			CPacketCustomHouseDataReq(houseSerial).Send();
-			//Попробуем пока без кэша.
+			uint serial = ReadUInt32BE();
+			uint revision = ReadUInt32BE();
+
+			CCustomHouse *house = g_CustomHousesManager.Get(serial);
+			LOG("Seek house: 0x%08X 0x%08X\n", serial, revision);
+
+			if (house != NULL)
+				LOG("House found: 0x%08X 0x%08X\n", house->Serial, house->Revision);
+
+			if (house == NULL || house->Revision != revision)
+				CPacketCustomHouseDataReq(serial).Send();
+			else if (house != NULL)
+				house->Paste(g_World->FindWorldItem(serial));
+
 			break;
 		}
 		case 0x20:
 		{
-			uint houseSerial = ReadUInt32BE();
+			uint serial = ReadUInt32BE();
 			uchar type = ReadUInt8();
 			ushort graphic = ReadUInt16BE();
 			ushort x = ReadUInt16BE();
@@ -2626,7 +2636,7 @@ PACKET_HANDLER(ExtendedCommand)
 					if (g_GumpManager.GetGump(0, 0, GT_CUSTOM_HOUSE))
 						break;
 
-					CGumpCustomHouse *gump = new CGumpCustomHouse(houseSerial, 50, 50);
+					CGumpCustomHouse *gump = new CGumpCustomHouse(serial, 50, 50);
 
 					g_GumpManager.AddGump(gump);
 
@@ -2634,7 +2644,7 @@ PACKET_HANDLER(ExtendedCommand)
 				}
 				case CHUT_CONSTRUCT_END:
 				{
-					g_GumpManager.CloseGump(houseSerial, 0, GT_CUSTOM_HOUSE);
+					g_GumpManager.CloseGump(serial, 0, GT_CUSTOM_HOUSE);
 					break;
 				}
 				default:
@@ -5343,22 +5353,34 @@ PACKET_HANDLER(CustomHouse)
 	WISPFUN_DEBUG("c150_f100");
 	bool compressed = ReadUInt8() == 0x03;
 	bool enableResponse = ReadUInt8() == 0x01;
-	uint houseSerial = ReadUInt32BE();
+	uint serial = ReadUInt32BE();
 	uint revision = ReadUInt32BE();
-	CGameItem *foundationItem = g_World->GetWorldItem(houseSerial);
+	CGameItem *foundationItem = g_World->GetWorldItem(serial);
 
 	if (foundationItem == NULL)
 		return;
-
-	foundationItem->ClearCustomHouseMultis(0);
-
-	ReadUInt16BE();
-	ReadUInt16BE();
 
 	CMulti* multi = foundationItem->GetMulti();
 
 	if (multi == NULL)
 		return;
+
+	ReadUInt16BE();
+	ReadUInt16BE();
+
+	CCustomHouse *house = g_CustomHousesManager.Get(serial);
+
+	if (house == NULL)
+	{
+		house = new CCustomHouse(serial, revision);
+		g_CustomHousesManager.Add(house);
+	}
+	else
+		house->Revision = revision;
+
+	LOG("House update in cache: 0x%08X 0x%08X\n", serial, revision);
+
+	house->m_Items.clear();
 
 	short minX = multi->MinX;
 	short minY = multi->MinY;
@@ -5382,7 +5404,7 @@ PACKET_HANDLER(CustomHouse)
 
 		if (z_err != Z_OK)
 		{
-			LOG("Bad CustomHouseStruct compressed data received from server, house serial:%i\n", houseSerial);
+			LOG("Bad CustomHouseStruct compressed data received from server, house serial:%i\n", serial);
 			//LOG("House plane idx:%i\n", idx);
 			continue;
 		}
@@ -5404,12 +5426,10 @@ PACKET_HANDLER(CustomHouse)
 					id = tempReader.ReadUInt16BE();
 					x = tempReader.ReadUInt8();
 					y = tempReader.ReadUInt8();
-					z = tempReader.ReadUInt8() + foundationItem->Z;
+					z = tempReader.ReadUInt8();
 
-					if (id == 0)
-						continue;
-
-					foundationItem->AddMulti(id, 0, x, y, z, true);
+					if (id != 0)
+						house->m_Items.push_back(CBuildObject(id, x, y, z));
 				}
 
 				break;
@@ -5417,9 +5437,9 @@ PACKET_HANDLER(CustomHouse)
 			case 1:
 			{
 				if (planeZ > 0)
-					z = ((planeZ - 1) % 4) * 20 + 7 + foundationItem->Z; // Z=7,27,47,67
+					z = ((planeZ - 1) % 4) * 20 + 7; // Z=7,27,47,67
 				else
-					z = foundationItem->Z;
+					z = 0;
 
 				for (uint i = 0; i < decompressedBytes.size()/4; i++)
 				{
@@ -5427,24 +5447,22 @@ PACKET_HANDLER(CustomHouse)
 					x = tempReader.ReadUInt8();
 					y = tempReader.ReadUInt8();
 
-					if (id == 0)
-						continue;
-
-					foundationItem->AddMulti(id, 0, x, y, z, true);
+					if (id != 0)
+						house->m_Items.push_back(CBuildObject(id, x, y, z));
 				}
 
 				break;
 			}
 			case 2:
 			{
-				short xOffs;
-				short yOffs;
-				short multiHeight;
+				short xOffs = 0;
+				short yOffs = 0;
+				short multiHeight = 0;
 
 				if (planeZ > 0)
-					z = ((planeZ - 1) % 4) * 20 + 7 + foundationItem->Z; // Z=7,27,47,67
+					z = ((planeZ - 1) % 4) * 20 + 7; // Z=7,27,47,67
 				else
-					z = foundationItem->Z;
+					z = 0;
 
 				if (planeZ <= 0)
 				{
@@ -5471,10 +5489,8 @@ PACKET_HANDLER(CustomHouse)
 					x = i / multiHeight + xOffs;
 					y = i % multiHeight + yOffs;
 
-					if (id == 0)
-						continue;
-
-					foundationItem->AddMulti(id, 0, x, y, z, true);
+					if (id != 0)
+						house->m_Items.push_back(CBuildObject(id, x, y, z));
 				}
 
 				break;
@@ -5483,6 +5499,8 @@ PACKET_HANDLER(CustomHouse)
 				break;
 		}
 	}
+
+	house->Paste(foundationItem);
 
 	if (g_CustomHouseGump != NULL)
 	{
