@@ -1816,6 +1816,8 @@ void CGameScreen::OnLeftMouseButtonUp()
 		{
 			g_CustomHouseGump->OnTargetWorld(rwo);
 
+			g_MouseManager.LastLeftButtonClickTimer = 0;
+
 			return;
 		}
 
