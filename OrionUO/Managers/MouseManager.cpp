@@ -306,7 +306,36 @@ void CMouseManager::Draw(ushort id)
 	WISPFUN_DEBUG("c147_f5");
 	if (g_GameState >= GS_GAME)
 	{
-		if (g_ObjectInHand.Enabled)
+		if (g_CustomHouseGump != NULL && g_CustomHouseGump->SelectedGraphic)
+		{
+			ushort color = 0;
+
+			vector<CBuildObject> list;
+			CUSTOM_HOUSE_BUILD_TYPE type;
+
+			if (!g_CustomHouseGump->CanBuildHere(list, (CRenderWorldObject*)g_SelectedObject.Object, type))
+				color = 0x0021;
+
+			if (color != 0)
+				g_ColorizerShader->Use();
+
+			if (list.size())
+			{
+				for (const CBuildObject &item : list)
+				{
+					int x = g_MouseManager.Position.X + (item.X - item.Y) * 22;
+					int y = g_MouseManager.Position.Y + (item.X + item.Y) * 22 - (item.Z * 4);
+
+					g_Orion.DrawStaticArt(item.Graphic, color, x, y, false);
+				}
+			}
+			else
+				g_Orion.DrawStaticArtInContainer(g_CustomHouseGump->SelectedGraphic, color, g_MouseManager.Position.X, g_MouseManager.Position.Y, false, true);
+
+			if (color != 0)
+				UnuseShader();
+		}
+		else if (g_ObjectInHand.Enabled)
 		{
 			bool doubleDraw = false;
 			ushort ohGraphic = g_ObjectInHand.GetDrawGraphic(doubleDraw);
@@ -335,35 +364,6 @@ void CMouseManager::Draw(ushort id)
 			}
 
 			if (ohColor != 0)
-				UnuseShader();
-		}
-		else if (g_CustomHouseGump != NULL && g_CustomHouseGump->SelectedGraphic)
-		{
-			ushort color = 0;
-
-			vector<CBuildObject> list;
-			CUSTOM_HOUSE_BUILD_TYPE type;
-
-			if (!g_CustomHouseGump->CanBuildHere(list, (CRenderWorldObject*)g_SelectedObject.Object, type))
-				color = 0x0021;
-
-			if (color != 0)
-				g_ColorizerShader->Use();
-
-			if (list.size())
-			{
-				for (const CBuildObject &item : list)
-				{
-					int x = g_MouseManager.Position.X + (item.X - item.Y) * 22;
-					int y = g_MouseManager.Position.Y + (item.X + item.Y) * 22 - (item.Z * 4);
-
-					g_Orion.DrawStaticArt(item.Graphic, color, x, y, false);
-				}
-			}
-			else
-				g_Orion.DrawStaticArtInContainer(g_CustomHouseGump->SelectedGraphic, color, g_MouseManager.Position.X, g_MouseManager.Position.Y, false, true);
-
-			if (color != 0)
 				UnuseShader();
 		}
 	}
