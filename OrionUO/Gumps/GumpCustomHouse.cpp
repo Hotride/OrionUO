@@ -1398,25 +1398,58 @@ bool CGumpCustomHouse::CanBuildHere(vector<CBuildObject> &list, CRenderWorldObje
 		if ((type != CHBT_STAIR || m_CombinedStair) && rwo->Z < m_MinHouseZ && (rwo->X == m_EndPos.X - 1 || rwo->Y == m_EndPos.Y - 1))
 			return false;
 
+		CGameItem *foundationItem = g_World->GetWorldItem(m_Serial);
+
+		int minZ = (foundationItem != NULL ? foundationItem->Z : 0) + 7 + (m_CurrentFloor - 1) * 20;
+		int maxZ = minZ + 20;
+
 		RECT rect = { m_StartPos.X + (int)m_CombinedStair, m_StartPos.Y + (int)m_CombinedStair, m_EndPos.X, m_EndPos.Y };
 
 		for (const CBuildObject &item : list)
 		{
-			if (m_CombinedStair)
+			if (type == CHBT_STAIR)
 			{
-				if (item.Z)
-					continue;
-			}
-			else if (type == CHBT_STAIR)
-			{
-				if (rwo->Y + item.Y != m_EndPos.Y || rwo->X + item.X == m_StartPos.X || rwo->Z >= m_MinHouseZ)
-					return false;
+				if (m_CombinedStair)
+				{
+					if (item.Z)
+						continue;
+				}
+				else
+				{
+					if (rwo->Y + item.Y != m_EndPos.Y || rwo->X + item.X == m_StartPos.X || rwo->Z >= m_MinHouseZ)
+						return false;
 
-				continue;
+					continue;
+				}
 			}
 
 			if (!ValidateItemPlace(rect, item.Graphic, rwo->X + item.X, rwo->Y + item.Y, type))
 				return false;
+
+			if (type != CHBT_FLOOR && foundationItem != NULL)
+			{
+				CMulti *multi = foundationItem->GetMultiAtXY(rwo->X + item.X, rwo->Y + item.Y);
+
+				if (multi != NULL)
+				{
+					QFOR(multiObject, multi->m_Items, CMultiObject*)
+					{
+						if (multiObject->IsCustomHouseMulti() && multiObject->Z >= minZ && multiObject->Z < maxZ)
+						{
+							if (type == CHBT_STAIR)
+							{
+								if (!(multiObject->State & CHMOF_FLOOR))
+									return false;
+							}
+							else
+							{
+								if (multiObject->State & CHMOF_STAIR)
+									return false;
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	else
