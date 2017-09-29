@@ -2168,7 +2168,7 @@ PACKET_HANDLER(UpdateSkills)
 
 	CGumpSkills *gump = (CGumpSkills*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_SKILLS);
 
-	if (type == 0 && g_SkillsRequested)
+	if (!IsSingleUpdate && g_SkillsRequested)
 	{
 		g_SkillsRequested = false;
 
