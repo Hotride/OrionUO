@@ -13,13 +13,13 @@
 class CBuildObject
 {
 	SETGET(ushort, Graphic, 0);
-	SETGET(int, X, 0);
-	SETGET(int, Y, 0);
-	SETGET(int, Z, 0);
+	SETGET(char, X, 0);
+	SETGET(char, Y, 0);
+	SETGET(char, Z, 0);
 
 public:
 	CBuildObject() {}
-	CBuildObject(const ushort &graphic, const int &x, const int &y, const int &z)
+	CBuildObject(const ushort &graphic, const char &x, const char &y, const char &z)
 		: m_Graphic(graphic), m_X(x), m_Y(y), m_Z(z) {}
 	~CBuildObject() {}
 };
