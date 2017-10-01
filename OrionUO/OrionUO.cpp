@@ -1304,6 +1304,31 @@ void COrion::LoadPluginConfig()
 
 	g_PluginInit(libName, functions, flags);
 
+	/*const string libs[13] =
+	{
+		"/OA/libgcc_s_dw2-1.dll",
+		"/OA/libEGL.dll",
+		"/OA/libGLESV2.dll",
+		"/OA/libstdc++-6.dll",
+		"/OA/libwinpthread-1.dll",
+		"/OA/opengl32sw.dll",
+		"/OA/Qt5Core.dll",
+		"/OA/Qt5Gui.dll",
+		"/OA/Qt5Network.dll",
+		"/OA/Qt5Qml.dll",
+		"/OA/Qt5Svg.dll",
+		"/OA/Qt5Widgets.dll",
+		"/OA/platforms/qwindows.dll"
+	};
+
+	IFOR(i, 0, 13)
+	{
+		string libPath = g_App.FilePath(libs[i].c_str());
+		
+		if (PathFileExistsA(libPath.c_str()))
+			LoadLibraryA(libPath.c_str());
+	}*/
+
 	LoadPlugin(g_App.FilePath("OA/OrionAssistant.dll"), "Install", 0xFFFFFFFF);
 
 	IFOR(i, 0, (int)libName.size())
