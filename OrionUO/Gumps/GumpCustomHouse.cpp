@@ -1602,8 +1602,8 @@ bool CGumpCustomHouse::ValidateItemPlace(CGameItem *foundationItem, CMultiObject
 			return false;
 		};
 
-		if (existsInList(validatedFloors, WISP_GEOMETRY::CPoint2Di(item->X, item->Y)))
-			return false;
+		//if (existsInList(validatedFloors, WISP_GEOMETRY::CPoint2Di(item->X, item->Y)))
+		//	return false;
 
 		if (ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X, item->Y), minZ - 20, maxZ - 20, CHVCF_DIRECT_SUPPORT) ||
 			ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X - 1, item->Y), minZ - 20, maxZ - 20, CHVCF_DIRECT_SUPPORT | CHVCF_CANGO_W) ||
