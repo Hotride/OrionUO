@@ -1671,16 +1671,16 @@ bool CGumpCustomHouse::ValidateItemPlace(CGameItem *foundationItem, CMultiObject
 			bool found = false;
 
 			if (info.AdjUN)
-				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X, item->Y - 1), minZ, maxZ, CHVCF_BOTTOM | CHVCF_N);
+				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X, item->Y + 1), minZ, maxZ, CHVCF_BOTTOM | CHVCF_N);
 
 			if (!found && info.AdjUE)
-				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X + 1, item->Y), minZ, maxZ, CHVCF_BOTTOM | CHVCF_E);
+				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X - 1, item->Y), minZ, maxZ, CHVCF_BOTTOM | CHVCF_E);
 
 			if (!found && info.AdjUS)
-				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X, item->Y + 1), minZ, maxZ, CHVCF_BOTTOM | CHVCF_S);
+				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X, item->Y - 1), minZ, maxZ, CHVCF_BOTTOM | CHVCF_S);
 
 			if (!found && info.AdjUW)
-				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X - 1, item->Y), minZ, maxZ, CHVCF_BOTTOM | CHVCF_W);
+				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X + 1, item->Y), minZ, maxZ, CHVCF_BOTTOM | CHVCF_W);
 
 			if (!found)
 				return false;
@@ -1691,16 +1691,16 @@ bool CGumpCustomHouse::ValidateItemPlace(CGameItem *foundationItem, CMultiObject
 			bool found = false;
 
 			if (info.AdjLN)
-				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X, item->Y - 1), minZ, maxZ, CHVCF_TOP | CHVCF_N);
+				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X, item->Y + 1), minZ, maxZ, CHVCF_TOP | CHVCF_N);
 
 			if (!found && info.AdjLE)
-				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X + 1, item->Y), minZ, maxZ, CHVCF_TOP | CHVCF_E);
+				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X - 1, item->Y), minZ, maxZ, CHVCF_TOP | CHVCF_E);
 
 			if (!found && info.AdjLS)
-				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X, item->Y + 1), minZ, maxZ, CHVCF_TOP | CHVCF_S);
+				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X, item->Y - 1), minZ, maxZ, CHVCF_TOP | CHVCF_S);
 
 			if (!found && info.AdjLW)
-				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X - 1, item->Y), minZ, maxZ, CHVCF_TOP | CHVCF_W);
+				found = ValidatePlaceStructure(foundationItem, foundationItem->GetMultiAtXY(item->X + 1, item->Y), minZ, maxZ, CHVCF_TOP | CHVCF_W);
 
 			if (!found)
 				return false;
