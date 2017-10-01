@@ -1617,7 +1617,7 @@ void CGameScreen::Render(const bool &mode)
 						sprintf_s(soName, "Multi");
 
 						if (((CMultiObject*)selRwo)->IsCustomHouseMulti())
-							sprintf_s(soName, "Multi CH");
+							sprintf_s(soName, "Multi CH %04X", ((CMultiObject*)selRwo)->State);
 						else
 							sprintf_s(soName, "Multi");
 						break;

@@ -5502,12 +5502,6 @@ PACKET_HANDLER(CustomHouse)
 
 	house->Paste(foundationItem);
 
-	if (g_CustomHouseGump != NULL)
-	{
-		g_CustomHouseGump->WantUpdateContent = true;
-		g_CustomHouseGump->GenerateFloorPlace();
-	}
-
 	if (enableResponse)
 		CPacketCustomHouseResponse().Send();
 }

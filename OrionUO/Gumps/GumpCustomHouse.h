@@ -46,8 +46,24 @@ enum CUSTOM_HOUSE_MULTI_OBJECT_FLAGS
 	CHMOF_FLOOR = 0x02,
 	CHMOF_STAIR = 0x04,
 	CHMOF_ROOF = 0x08,
-	CHMOF_TRANSPARENT = 0x10,
-	CHMOF_IGNORE_IN_RENDER = 0x20
+	CHMOF_FIXTURE = 0x10,
+	CHMOF_TRANSPARENT = 0x20,
+	CHMOF_IGNORE_IN_RENDER = 0x40,
+	CHMOF_VALIDATED_PLACE = 0x80,
+	CHMOF_INCORRECT_PLACE = 0x100
+};
+//----------------------------------------------------------------------------------
+enum CUSTOM_HOUSE_VALIDATE_CHECK_FLAGS
+{
+	CHVCF_TOP = 0x01,
+	CHVCF_BOTTOM = 0x02,
+	CHVCF_N = 0x04,
+	CHVCF_E = 0x08,
+	CHVCF_S = 0x10,
+	CHVCF_W = 0x20,
+	CHVCF_DIRECT_SUPPORT = 0x40,
+	CHVCF_CANGO_W = 0x80,
+	CHVCF_CANGO_N = 0x100
 };
 //----------------------------------------------------------------------------------
 class CGumpCustomHouse : public CGump
@@ -148,6 +164,8 @@ private:
 
 	pair<int, int> ExistsInList(CUSTOM_HOUSE_GUMP_STATE &state, const ushort &graphic);
 
+	bool ValidatePlaceStructure(CGameItem *foundationItem, CMulti *multi, const int &minZ, const int &maxZ, const int &flags);
+
 protected:
 	virtual void CalculateGumpState();
 
@@ -165,7 +183,9 @@ public:
 
 	bool CanBuildHere(vector<CBuildObject> &list, CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type);
 
-	bool ValidateItemPlace(const RECT rect, const ushort &graphic, const int &x, const int &y, const CUSTOM_HOUSE_BUILD_TYPE &type);
+	bool ValidateItemPlace(const RECT rect, const ushort &graphic, const int &x, const int &y);
+
+	bool ValidateItemPlace(CGameItem *foundationItem, CMultiObject *item, const int &minZ, const int &maxZ, vector<WISP_GEOMETRY::CPoint2Di> &validatedFloors);
 
 	bool CanEraseHere(CRenderWorldObject *place, CUSTOM_HOUSE_BUILD_TYPE &type);
 

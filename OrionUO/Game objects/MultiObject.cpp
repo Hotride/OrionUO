@@ -54,10 +54,15 @@ void CMultiObject::Draw(const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c25_f3");
 
+	ushort color = m_Color;
+
 	if (m_State)
 	{
 		if (m_State & CHMOF_IGNORE_IN_RENDER)
 			return;
+
+		if (m_State & CHMOF_INCORRECT_PLACE)
+			color = 0x002B;
 
 		if (m_State & CHMOF_TRANSPARENT)
 		{
@@ -65,7 +70,7 @@ void CMultiObject::Draw(const int &x, const int &y)
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glColor4f(1.0f, 1.0f, 1.0f, 0.75f);
 
-			g_Orion.DrawStaticArt(m_Graphic, m_Color, x, y);
+			g_Orion.DrawStaticArt(m_Graphic, color, x, y);
 
 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			glDisable(GL_BLEND);
@@ -87,7 +92,7 @@ void CMultiObject::Draw(const int &x, const int &y)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 
-		g_Orion.DrawStaticArt(m_Graphic, m_Color, x, y);
+		g_Orion.DrawStaticArt(m_Graphic, color, x, y);
 
 		glDisable(GL_BLEND);
 	}
@@ -98,7 +103,7 @@ void CMultiObject::Draw(const int &x, const int &y)
 		if (g_DeveloperMode == DM_DEBUGGING && g_SelectedObject.Object == this)
 			m_RenderColor = SELECT_MULTI_COLOR;
 		else
-			m_RenderColor = m_Color;
+			m_RenderColor = color;
 
 		CRenderStaticObject::Draw(x, y);
 	}

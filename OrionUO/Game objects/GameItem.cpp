@@ -621,7 +621,7 @@ void CGameItem::ClearCustomHouseMultis(const uint &state)
 		{
 			nextItem = (CMultiObject*)item->m_Next;
 
-			item->State = item->State & ~(CHMOF_TRANSPARENT | CHMOF_IGNORE_IN_RENDER);
+			item->State = item->State & ~(CHMOF_TRANSPARENT | CHMOF_IGNORE_IN_RENDER | CHMOF_VALIDATED_PLACE | CHMOF_INCORRECT_PLACE);
 
 			if (item->IsCustomHouseMulti())
 			{
