@@ -1022,7 +1022,7 @@ void COrion::LoadAutoLoginNames()
 
 	while (!file.IsEOF())
 	{
-		STRING_LIST strings = file.ReadTokens();
+		STRING_LIST strings = file.ReadTokens(false);
 
 		if (strings.size())
 			names += strings[0] + "|";
