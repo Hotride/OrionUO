@@ -1306,18 +1306,18 @@ void COrion::LoadPluginConfig()
 
 	/*const string libs[13] =
 	{
+		"/OA/Qt5Core.dll",
 		"/OA/libgcc_s_dw2-1.dll",
+		"/OA/libwinpthread-1.dll",
+		"/OA/libstdc++-6.dll",
+		"/OA/Qt5Gui.dll",
+		"/OA/Qt5Qml.dll",
+		"/OA/Qt5Network.dll",
+		"/OA/Qt5Widgets.dll",
 		"/OA/libEGL.dll",
 		"/OA/libGLESV2.dll",
-		"/OA/libstdc++-6.dll",
-		"/OA/libwinpthread-1.dll",
 		"/OA/opengl32sw.dll",
-		"/OA/Qt5Core.dll",
-		"/OA/Qt5Gui.dll",
-		"/OA/Qt5Network.dll",
-		"/OA/Qt5Qml.dll",
 		"/OA/Qt5Svg.dll",
-		"/OA/Qt5Widgets.dll",
 		"/OA/platforms/qwindows.dll"
 	};
 

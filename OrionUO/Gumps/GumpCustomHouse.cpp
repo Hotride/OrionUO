@@ -2091,15 +2091,6 @@ void CGumpCustomHouse::GenerateFloorPlace()
 			}
 		}
 
-		QFOR(multi, foundationItem->m_Items, CMulti*)
-		{
-			QFOR(item, multi->m_Items, CMultiObject*)
-			{
-				if (!item->IsCustomHouseMulti())
-					continue;
-			}
-		}
-
 		z = foundationItem->Z + 7 + 20;
 
 		ushort color = 0x0051;
