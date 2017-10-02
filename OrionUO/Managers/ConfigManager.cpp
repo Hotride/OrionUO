@@ -495,7 +495,7 @@ ushort CConfigManager::GetColorByNotoriety(uchar notoriety)
 @param [__in] path Путь к файлу с конфигом
 @return 
 */
-bool CConfigManager::Load(string path)
+bool CConfigManager::LoadBin(string path)
 {
 	WISPFUN_DEBUG("c138_f30");
 	bool result = false;
@@ -990,208 +990,6 @@ bool CConfigManager::Load(string path)
 	return result;
 }
 //---------------------------------------------------------------------------
-/*!
-Сохранение конфига
-@param [__in] path Путь к файлу с конфигом
-@return 
-*/
-void CConfigManager::Save(string path)
-{
-	WISPFUN_DEBUG("c138_f31");
-	WISP_FILE::CBinaryFileWritter writter;
-	writter.Open(path);
-	
-	writter.WriteInt8(0); //version
-
-	//Page 1
-	writter.WriteInt8(8); //size of block
-	writter.WriteInt8(1); //page index
-	writter.WriteUInt8(m_Sound);
-	writter.WriteUInt8(m_Music);
-	writter.WriteUInt8(m_FootstepsSound);
-	writter.WriteUInt8(m_CombatMusic);
-	writter.WriteUInt8(m_SoundVolume);
-	writter.WriteUInt8(m_MusicVolume);
-	writter.WriteBuffer();
-
-	//Page 2
-	writter.WriteInt8(32); //size of block
-	writter.WriteInt8(2); //page index
-	writter.WriteUInt8(m_ClientFPS);
-	writter.WriteUInt8(m_UseScaling);
-	writter.WriteUInt8(m_RemoveTextWithBlending);
-	writter.WriteUInt8(m_DrawStatusState);
-	writter.WriteUInt8(m_DrawStumps);
-	writter.WriteUInt8(m_MarkingCaves);
-	writter.WriteUInt8(m_NoAnimateFields);
-	writter.WriteUInt8(m_NoVegetation);
-	writter.WriteUInt8(m_HiddenCharactersRenderMode);
-	writter.WriteUInt8(m_HiddenAlpha);
-	writter.WriteUInt8(m_UseHiddenModeOnlyForSelf);
-	writter.WriteUInt8(m_TransparentSpellIcons);
-	writter.WriteUInt8(m_SpellIconAlpha);
-	writter.WriteUInt8(m_OldStyleStatusbar);
-	writter.WriteUInt8(m_OriginalPartyStatusbar);
-	writter.WriteUInt8(m_ApplyStateColorOnCharacters);
-	writter.WriteUInt8(m_ChangeFieldsGraphic);
-	writter.WriteUInt8(m_PaperdollSlots);
-	writter.WriteUInt8(m_DrawStatusConditionState);
-	writter.WriteUInt8(m_DrawStatusConditionValue);
-	writter.WriteUInt8(m_RemoveStatusbarsWithoutObjects);
-	writter.WriteUInt8(m_ShowDefaultConsoleEntryMode);
-
-	uchar auraState = m_DrawAuraState;
-
-	if (m_DrawAuraWithCtrlPressed)
-		auraState |= 0x80;
-
-	writter.WriteUInt8(auraState);
-	writter.WriteUInt8(m_ScreenshotFormat);
-	writter.WriteUInt8(m_ScaleImagesInPaperdollSlots);
-	writter.WriteUInt8(m_RemoveOrCreateObjectsWithBlending);
-	writter.WriteUInt8(m_DrawHelmetsOnShroud);
-	writter.WriteUInt8(m_UseGlobalMapLayer);
-	writter.WriteUInt8(m_NoDrawRoofs);
-	writter.WriteUInt8(m_HighlightTargetByType);
-	
-	writter.WriteBuffer();
-
-	//Page 3
-	writter.WriteInt8(9); //size of block
-	writter.WriteInt8(3); //page index
-	writter.WriteUInt8(m_UseToolTips);
-	writter.WriteUInt16LE(m_ToolTipsTextColor);
-	writter.WriteUInt16LE(m_ToolTipsTextFont);
-	writter.WriteUInt16LE(m_ToolTipsDelay);
-	writter.WriteBuffer();
-
-	//Page 4
-	writter.WriteInt8(36); //size of block
-	writter.WriteInt8(4); //page index
-	writter.WriteUInt16LE(m_ChatColorInputText);
-	writter.WriteUInt16LE(m_ChatColorMenuOption);
-	writter.WriteUInt16LE(m_ChatColorPlayerInMemberList);
-	writter.WriteUInt16LE(m_ChatColorText);
-	writter.WriteUInt16LE(m_ChatColorPlayerNameWithout);
-	writter.WriteUInt16LE(m_ChatColorMuted);
-	writter.WriteUInt16LE(m_ChatColorChannelModeratorName);
-	writter.WriteUInt16LE(m_ChatColorChannelModeratorText);
-	writter.WriteUInt16LE(m_ChatColorMyName);
-	writter.WriteUInt16LE(m_ChatColorMyText);
-	writter.WriteUInt16LE(m_ChatColorSystemMessage);
-	writter.WriteUInt16LE(m_ChatFont);
-	writter.WriteUInt16LE(m_ChatColorBGOutputText);
-	writter.WriteUInt16LE(m_ChatColorBGInputText);
-	writter.WriteUInt16LE(m_ChatColorBGUserList);
-	writter.WriteUInt16LE(m_ChatColorBGConfList);
-	writter.WriteUInt16LE(m_ChatColorBGCommandList);
-	writter.WriteBuffer();
-
-	//Page 6
-	writter.WriteInt8(20); //size of block
-	writter.WriteInt8(6); //page index
-	writter.WriteUInt8(m_EnablePathfind);
-	writter.WriteUInt8(m_HoldTabForCombat);
-	writter.WriteUInt8(m_OffsetInterfaceWindows);
-	writter.WriteUInt8(m_AutoArrange);
-	writter.WriteUInt8(m_AlwaysRun);
-	writter.WriteUInt8(m_DisableMenubar);
-	writter.WriteUInt8(m_GrayOutOfRangeObjects);
-	writter.WriteUInt8(m_DisableNewTargetSystem);
-	writter.WriteUInt8(m_ItemPropertiesMode);
-	writter.WriteUInt8(m_ItemPropertiesIcon);
-	writter.WriteUInt8(m_ObjectHandles);
-	writter.WriteUInt8(m_ReduceFPSUnactiveWindow);
-	writter.WriteUInt8(m_HoldShiftForContextMenus);
-	writter.WriteUInt8(m_HoldShiftForEnablePathfind);
-	writter.WriteUInt16LE(g_ContainerRect.DefaultX);
-	writter.WriteUInt16LE(g_ContainerRect.DefaultY);
-	writter.WriteBuffer();
-
-	//Page 7
-	writter.WriteInt8(28); //size of block
-	writter.WriteInt8(7); //page index
-	writter.WriteUInt16LE(m_GameWindowWidth);
-	writter.WriteUInt16LE(m_GameWindowHeight);
-	writter.WriteUInt16LE(m_SpeechDelay);
-	writter.WriteUInt16LE(m_ScaleSpeechDelay);
-	writter.WriteUInt16LE(m_SpeechColor);
-	writter.WriteUInt16LE(m_EmoteColor);
-	writter.WriteUInt16LE(m_PartyMessageColor);
-	writter.WriteUInt16LE(m_GuildMessageColor);
-	writter.WriteUInt16LE(m_AllianceMessageColor);
-	writter.WriteUInt8(m_IgnoreGuildMessage);
-	writter.WriteUInt8(m_IgnoreAllianceMessage);
-	writter.WriteUInt8(m_DarkNights);
-	writter.WriteUInt8(m_ColoredLighting);
-	writter.WriteUInt8(m_StandartCharactersAnimationDelay);
-	writter.WriteUInt8(m_StandartItemsAnimationDelay);
-	writter.WriteUInt8(m_LockResizingGameWindow);
-	writter.WriteUInt8(m_LockGumpsMoving);
-	writter.WriteBuffer();
-
-	//Page 8
-	writter.WriteInt8(15); //size of block
-	writter.WriteInt8(8); //page index
-	writter.WriteUInt16LE(m_InnocentColor);
-	writter.WriteUInt16LE(m_FriendlyColor);
-	writter.WriteUInt16LE(m_SomeoneColor);
-	writter.WriteUInt16LE(m_CriminalColor);
-	writter.WriteUInt16LE(m_EnemyColor);
-	writter.WriteUInt16LE(m_MurdererColor);
-	writter.WriteUInt8(m_CriminalActionsQuery);
-	writter.WriteBuffer();
-
-	//Page 9
-	writter.WriteInt8(10); //size of block
-	writter.WriteInt8(9); //page index
-	writter.WriteUInt8(m_ShowIncomingNames);
-	writter.WriteUInt8(m_UseCircleTrans);
-	writter.WriteUInt8(m_StatReport);
-	writter.WriteUInt8(m_ConsoleNeedEnter);
-	writter.WriteUInt8(m_CircleTransRadius);
-	writter.WriteUInt8(m_SkillReport);
-	writter.WriteUInt16LE(m_SpeechFont);
-	writter.WriteBuffer();
-
-	//Page 10
-	writter.WriteInt8(2); //size of block
-	writter.WriteInt8(10); //page index
-	writter.WriteBuffer();
-
-	//No page
-	writter.WriteInt8(6 + 9 + 1 + 1); //size of block
-	writter.WriteInt8(0); //page index
-	writter.WriteUInt16LE(m_GameWindowX);
-	writter.WriteUInt16LE(m_GameWindowY);
-
-	writter.WriteUInt8(g_OrionWindow.Zoomed());
-
-	RECT rect = { 0 };
-	GetWindowRect(g_OrionWindow.Handle, &rect);
-
-	writter.WriteInt16LE((short)rect.left);
-	writter.WriteInt16LE((short)rect.top);
-	writter.WriteInt16LE((short)(rect.right - rect.left));
-	writter.WriteInt16LE((short)(rect.bottom - rect.top));
-
-	writter.WriteUInt8(m_ToggleBufficonWindow);
-	writter.WriteUInt8(g_DeveloperMode);
-
-	writter.WriteBuffer();
-
-	writter.Close();
-	
-	/*b = (BYTE)m_FilterPWOn;
-	fwrite(&b, 1, 1, file);
-	b = (BYTE)m_ObscenityFilter;
-	fwrite(&b, 1, 1, file);
-	w = (WORD)m_FilterPassword.length();
-	fwrite(&w, 2, 1, file);
-	if (w)
-		fwrite(&((char*)m_FilterPassword.c_str())[0], w, 1, file);*/
-}
-//---------------------------------------------------------------------------
 int CConfigManager::GetConfigKeyCode(const string &key)
 {
 	WISPFUN_DEBUG("");
@@ -1325,7 +1123,7 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 	return -1;
 }
 //---------------------------------------------------------------------------
-bool CConfigManager::LoadTxt(const string &path)
+bool CConfigManager::Load(const string &path)
 {
 	WISP_FILE::CTextFileParser file(path, "=", "#;", "");
 
@@ -1763,10 +1561,10 @@ bool CConfigManager::LoadTxt(const string &path)
 		SendMessage(g_OrionWindow.Handle, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 	}
 
-	return false;
+	return PathFileExistsA(path.c_str());
 }
 //---------------------------------------------------------------------------
-void CConfigManager::SaveTxt(const string &path)
+void CConfigManager::Save(const string &path)
 {
 	WISPFUN_DEBUG("");
 	WISP_FILE::CTextFileWritter writter(path);

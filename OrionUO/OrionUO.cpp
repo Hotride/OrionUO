@@ -1229,11 +1229,14 @@ void COrion::LoadStartupConfig()
 	char buf[MAX_PATH] = { 0 };
 	CServer *server = g_ServerList.GetSelectedServer();
 	if (server != NULL)
-		sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X\\options_debug.cuo", g_MainScreen.m_Account->c_str(), FixServerName(server->Name).c_str(), g_PlayerSerial);
+		sprintf_s(buf, "Desktop\\%s\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), FixServerName(server->Name).c_str(), g_PlayerSerial);
 	else
-		sprintf_s(buf, "Desktop\\%s\\0x%08X\\options_debug.cuo", g_MainScreen.m_Account->c_str(), g_PlayerSerial);
+		sprintf_s(buf, "Desktop\\%s\\0x%08X", g_MainScreen.m_Account->c_str(), g_PlayerSerial);
 
-	g_ConfigManager.Load(g_App.FilePath(buf));
+	string path = g_App.FilePath(buf);
+
+	if (!g_ConfigManager.Load(path + "/orion_options.cfg"))
+		g_ConfigManager.LoadBin(path + "/options_debug.cuo");
 
 	g_SoundManager.SetMusicVolume(g_ConfigManager.MusicVolume);
 
@@ -1373,16 +1376,22 @@ void COrion::LoadLocalConfig()
 
 	string path = g_App.FilePath(buf);
 
-	if (!g_ConfigManager.Load(path + "\\options_debug.cuo"))
+	if (!g_ConfigManager.Load(path + "\\orion_options.cfg"))
 	{
-		if (!g_ConfigManager.Load(g_App.FilePath("options_debug.cuo")))
+		if (!g_ConfigManager.Load(g_App.FilePath("orion_options.cfg")))
 		{
-			g_ConfigManager.Init();
-
-			if (g_GameState >= GS_GAME)
+			if (!g_ConfigManager.LoadBin(path + "\\options_debug.cuo"))
 			{
-				SendMessage(g_OrionWindow.Handle, WM_SYSCOMMAND, SC_RESTORE, 0);
-				SendMessage(g_OrionWindow.Handle, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+				if (!g_ConfigManager.LoadBin(g_App.FilePath("options_debug.cuo")))
+				{
+					g_ConfigManager.Init();
+
+					if (g_GameState >= GS_GAME)
+					{
+						SendMessage(g_OrionWindow.Handle, WM_SYSCOMMAND, SC_RESTORE, 0);
+						SendMessage(g_OrionWindow.Handle, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+					}
+				}
 			}
 		}
 	}
@@ -1448,16 +1457,14 @@ void COrion::SaveLocalConfig()
 	CreateDirectoryA(path.c_str(), NULL);
 
 	LOG("managers:saving\n");
-	g_ConfigManager.Save(path + "\\options_debug.cuo");
-	g_ConfigManager.SaveTxt(path + "\\orion_options.cfg");
+	g_ConfigManager.Save(path + "\\orion_options.cfg");
 	g_SkillGroupManager.Save(path + "\\skills_debug.cuo");
 	g_MacroManager.Save(path + "\\macros_debug.cuo");
 	g_GumpManager.Save(path + "\\gumps_debug.cuo");
 	g_CustomHousesManager.Save(path + "\\customhouses_debug.cuo");
 
 	LOG("managers:saving in to root\n");
-	g_ConfigManager.Save(g_App.FilePath("options_debug.cuo"));
-	g_ConfigManager.SaveTxt(g_App.FilePath("orion_options.cfg"));
+	g_ConfigManager.Save(g_App.FilePath("orion_options.cfg"));
 	g_MacroManager.Save(g_App.FilePath("macros_debug.cuo"));
 
 	if (g_Player != NULL)
@@ -4273,7 +4280,8 @@ void COrion::LoadShaders()
 void COrion::LoadClientStartupConfig()
 {
 	WISPFUN_DEBUG("c194_f60");
-	g_ConfigManager.Load(g_App.FilePath("options_debug.cuo"));
+	if (!g_ConfigManager.Load(g_App.FilePath("orion_options.cfg")))
+		g_ConfigManager.LoadBin(g_App.FilePath("options_debug.cuo"));
 
 	g_SoundManager.SetMusicVolume(g_ConfigManager.MusicVolume);
 

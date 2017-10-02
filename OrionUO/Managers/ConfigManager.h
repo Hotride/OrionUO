@@ -167,14 +167,7 @@ public:
 	@param [__in] path Путь к файлу с конфигом
 	@return 
 	*/
-	bool Load(string path);
-
-	/*!
-	Сохранение конфига
-	@param [__in] path Путь к файлу с конфигом
-	@return 
-	*/
-	void Save(string path);
+	bool LoadBin(string path);
 
 	int GetConfigKeyCode(const string &key);
 
@@ -297,9 +290,9 @@ public:
 		CMKC_COUNT
 	};
 
-	bool LoadTxt(const string &path);
+	bool Load(const string &path);
 
-	void SaveTxt(const string &path);
+	void Save(const string &path);
  };
  //----------------------------------------------------------------------------------
 //!Менеджер конфига
