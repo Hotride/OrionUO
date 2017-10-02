@@ -36,15 +36,6 @@ void CStaticObject::UpdateGraphicBySeason()
 	//if (m_Graphic != graphic)
 	{
 		m_Vegetation = g_Orion.IsVegetation(m_Graphic);
-
-		if (IsWet())
-			m_RenderQueueIndex = 1;
-		else if (IsBackground())
-			m_RenderQueueIndex = 3 - (int)IsSurface();
-		else if (IsSurface())
-			m_RenderQueueIndex = 4;
-		else
-			m_RenderQueueIndex = 6;
 	}
 }
 //----------------------------------------------------------------------------------

@@ -2224,7 +2224,6 @@ void CGumpCustomHouse::GenerateFloorPlace()
 
 					CMultiObject *mo = foundationItem->AddMulti(0x0496, tempColor, x - foundationItem->X, y - foundationItem->Y, z, true);
 					mo->State = CHMOF_GENERIC_INTERNAL | CHMOF_TRANSPARENT;
-					mo->RenderQueueIndex = 0;
 					g_MapManager->AddRender(mo);
 				}
 			}

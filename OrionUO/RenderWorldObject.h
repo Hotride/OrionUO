@@ -14,7 +14,7 @@
 class CRenderWorldObject : public CRenderObject
 {
 	SETGETE(char, Z, 0, OnChangeZ);
-	SETGET(uchar, RenderQueueIndex, 0);
+	SETGET(short, PriorityZ, 0);
 	SETGET(RENDER_OBJECT_TYPE, RenderType, ROT_GAME_OBJECT);
 #if UO_RENDER_LIST_SORT == 1
 	SETGET(uchar, CurrentRenderIndex, 0);

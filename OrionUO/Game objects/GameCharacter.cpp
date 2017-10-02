@@ -15,8 +15,6 @@ m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
 {
 	m_NPC = true;
 	WISPFUN_DEBUG("c15_f1");
-	//!Высокий приоритет прорисовки (будет выше остального на тайле с одинаковой Z коориднатой)
-	m_RenderQueueIndex = 7;
 
 	bool wantStatusRequest = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL) || (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.DrawStatusState || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);
 

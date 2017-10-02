@@ -338,6 +338,35 @@ void CMapBlock::AddRender(CRenderWorldObject *item, const int &x, const int &y)
 	WISPFUN_DEBUG("c24_f10");
 	item->RemoveRender();
 
+	int priorityZ = item->Z;
+
+	if (item->IsLandObject())
+	{
+		if (((CLandObject*)item)->IsStretched)
+			priorityZ = ((CLandObject*)item)->AverageZ - 1;
+		else
+			priorityZ--;
+	}
+	else if (item->IsStaticGroupObject())
+	{
+		if (item->IsGameObject() && (((CGameObject*)item)->NPC || ((CGameObject*)item)->IsCorpse()))
+			priorityZ++;
+		else if (item->IsMultiObject() && (((CMultiObject*)item)->State & CHMOF_GENERIC_INTERNAL))
+			priorityZ--;
+		else
+		{
+			if (item->IsBackground())
+				priorityZ--;
+
+			if (((CRenderStaticObject*)item)->GetStaticHeight())
+				priorityZ++;
+		}
+	}
+	else if (item->IsEffectObject())
+		priorityZ += 2;
+
+	item->PriorityZ = priorityZ;
+
 	CRenderWorldObject *obj = Block[x][y];
 
 	if (obj == item)
@@ -353,64 +382,36 @@ void CMapBlock::AddRender(CRenderWorldObject *item, const int &x, const int &y)
 	while (obj != NULL && obj->m_PrevXY != NULL)
 		obj = obj->m_PrevXY;
 
-	char inZ = GetRenderZ(item);
-	BYTE inRQI = item->RenderQueueIndex;
-	int inSumZ = inZ + inRQI;
+	CRenderWorldObject *found = NULL;
+	CRenderWorldObject *start = obj;
 
-	while (obj != NULL /*&& obj->m_NextDraw != NULL*/)
+	while (obj != NULL)
 	{
-		char objZ = GetRenderZ(obj);
-		BYTE objRQI = obj->RenderQueueIndex;
-		int objSumZ = objZ + objRQI;
+		int testPriorityZ = obj->PriorityZ;
 
-		bool condition = false;
-
-		if (inSumZ < objSumZ)
-			condition = true;
-		else if (inSumZ == objSumZ)
-		{
-			if (!inRQI && objRQI)
-				condition = true;
-			else if (inRQI < objRQI)
-				condition = true;
-		}
-
-		if (condition)
-		{
-			if (obj->m_PrevXY != NULL)
-			{
-				obj = obj->m_PrevXY;
-				break;
-			}
-			else
-			{
-				obj->m_PrevXY = item;
-				item->m_NextXY = obj;
-				item->m_PrevXY = NULL;
-
-				return;
-			}
-		}
-
-		if (obj->m_NextXY == NULL)
+		if (testPriorityZ > priorityZ || (testPriorityZ == priorityZ && item->IsLandObject() && !obj->IsLandObject()))
 			break;
 
+		found = obj;
 		obj = obj->m_NextXY;
 	}
 
-	CRenderWorldObject *next = NULL;
-	
-	if (obj != NULL)
+	if (found != NULL)
 	{
-		next = obj->m_NextXY;
-		obj->m_NextXY = item;
-	}
-	
-	item->m_PrevXY = obj;
-	item->m_NextXY = next;
+		item->m_PrevXY = found;
+		CRenderWorldObject *next = found->m_NextXY;
+		item->m_NextXY = next;
+		found->m_NextXY = item;
 
-	if (next != NULL)
-		next->m_PrevXY = item;
+		if (next != NULL)
+			next->m_PrevXY = item;
+	}
+	else if (start != NULL)
+	{
+		item->m_NextXY = start;
+		start->m_PrevXY = item;
+		item->m_PrevXY = NULL;
+	}
 }
 //----------------------------------------------------------------------------------
 CRenderWorldObject *CMapBlock::GetRender(const int &x, const int &y)

@@ -536,7 +536,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 		int z = obj->Z;
 
-		int maxObjectZ = z + obj->RenderQueueIndex;
+		int maxObjectZ = z;
 
 		CRenderStaticObject *rso = obj->StaticGroupObjectPtr();
 
@@ -800,7 +800,7 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const uch
 
 	int size = coordinates.size();
 
-	int maxZ = obj->Z + obj->RenderQueueIndex;
+	int maxZ = obj->Z;
 
 	int mapBlockHeight = g_MapBlockSize[g_CurrentMap].Height;
 	uint maxBlockIndex = g_MapManager->MaxBlockIndex;
@@ -1632,7 +1632,7 @@ void CGameScreen::Render(const bool &mode)
 				if (land != NULL && land->IsStretched)
 					tz = (char)land->Serial;
 
-				sprintf_s(dbf, "Selected:\n%s: G=0x%04X X=%i Y=%i Z=%i (%i) RQI=%i (SUM=%i)", soName, selRwo->Graphic, selRwo->X, selRwo->Y, selRwo->Z, tz, selRwo->RenderQueueIndex, selRwo->Z + selRwo->RenderQueueIndex);
+				sprintf_s(dbf, "Selected:\n%s: G=0x%04X X=%i Y=%i Z=%i (%i) PriZ=%i", soName, selRwo->Graphic, selRwo->X, selRwo->Y, selRwo->Z, tz, selRwo->PriorityZ);
 
 				g_FontManager.DrawA(3, dbf, 0x35, 20, 102);
 			}

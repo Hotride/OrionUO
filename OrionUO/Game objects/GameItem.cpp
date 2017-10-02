@@ -81,8 +81,6 @@ void CGameItem::OnGraphicChange(int direction)
 
 			m_Layer = direction;
 
-			m_RenderQueueIndex = 6;
-
 			if (!m_Clicked && g_ConfigManager.ShowIncomingNames && !m_Name.length())
 				g_Orion.NameReq(m_Serial);
 		}
@@ -110,17 +108,6 @@ void CGameItem::OnGraphicChange(int direction)
 				m_UsedLayer = tile.Layer;
 			}
 
-			if (IsBackground())
-				m_RenderQueueIndex = 3 - (int)IsSurface();
-			else if (IsSurface())
-				m_RenderQueueIndex = 4;
-			else if (IsAnimated() || IsImpassable())
-				m_RenderQueueIndex = 6 - (int)IsLightSource();
-			else
-				m_RenderQueueIndex = 5;
-
-			m_RenderQueueIndex++;
-
 			CalculateFieldColor();
 
 			g_Orion.ExecuteStaticArt(m_Graphic);
@@ -128,8 +115,6 @@ void CGameItem::OnGraphicChange(int direction)
 	}
 	else if (m_Items == NULL || m_WantUpdateMulti)
 	{
-		m_RenderQueueIndex = 10;
-
 		g_Player->UpdateRemoveRange();
 
 		if (!m_MultiDistanceBonus || CheckMultiDistance(g_RemoveRangeXY, this, g_ConfigManager.UpdateRange))

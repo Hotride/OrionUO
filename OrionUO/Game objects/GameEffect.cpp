@@ -12,7 +12,6 @@
 CGameEffect::CGameEffect()
 : CRenderWorldObject(ROT_EFFECT, 0, 0, 0, 0, 0, 0)
 {
-	m_RenderQueueIndex = 8;
 }
 //----------------------------------------------------------------------------------
 CGameEffect::~CGameEffect()
