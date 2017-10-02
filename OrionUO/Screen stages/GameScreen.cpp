@@ -536,7 +536,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 
 		int z = obj->Z;
 
-		int maxObjectZ = z;
+		int maxObjectZ = obj->PriorityZ;
 
 		CRenderStaticObject *rso = obj->StaticGroupObjectPtr();
 
@@ -800,7 +800,7 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const uch
 
 	int size = coordinates.size();
 
-	int maxZ = obj->Z;
+	int maxZ = obj->PriorityZ;
 
 	int mapBlockHeight = g_MapBlockSize[g_CurrentMap].Height;
 	uint maxBlockIndex = g_MapManager->MaxBlockIndex;
