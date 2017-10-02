@@ -89,6 +89,28 @@ public:
 	STRING_LIST GetTokens(const char *str, bool trim = true);
 };
 //----------------------------------------------------------------------------------
+class CTextFileWritter
+{
+private:
+	//Указатель на адрес в памяти, куда загружен файл
+	FILE *m_File{ NULL };
+
+public:
+	CTextFileWritter(const string &path);
+	CTextFileWritter(const wstring &path);
+	~CTextFileWritter();
+
+	bool Opened() { return (m_File != NULL); };
+
+	void Close();
+
+	void WriteString(const string &key, const string &value);
+
+	void WriteInt(const string &key, const int &value);
+
+	void WriteBool(const string &key, const bool &value);
+};
+//----------------------------------------------------------------------------------
 }; //namespace
 //----------------------------------------------------------------------------------
 #endif

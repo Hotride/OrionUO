@@ -1192,3 +1192,726 @@ void CConfigManager::Save(string path)
 		fwrite(&((char*)m_FilterPassword.c_str())[0], w, 1, file);*/
 }
 //---------------------------------------------------------------------------
+int CConfigManager::GetConfigKeyCode(const string &key)
+{
+	WISPFUN_DEBUG("");
+
+	static const string keys[CMKC_COUNT] =
+	{
+		"Sound",
+		"SoundVolume",
+		"Music",
+		"MusicVolume",
+		"FootstepsSound",
+		"CombatMusic",
+		"ClientFPS",
+		"UseScaling",
+		"RemoveTextWithBlending",
+		"DrawStatusState",
+		"DrawStumps",
+		"MarkingCaves",
+		"NoAnimateFields",
+		"NoVegetation",
+		"HiddenCharactersRenderMode",
+		"HiddenAlpha",
+		"UseHiddenModeOnlyForSelf",
+		"TransparentSpellIcons",
+		"SpellIconAlpha",
+		"OldStyleStatusbar",
+		"OriginalPartyStatusbar",
+		"ApplyStateColorOnCharacters",
+		"ChangeFieldsGraphic",
+		"PaperdollSlots",
+		"DrawStatusConditionState",
+		"DrawStatusConditionValue",
+		"RemoveStatusbarsWithoutObjects",
+		"ShowDefaultConsoleEntryMode",
+		"DrawAuraState",
+		"DrawAuraWithCtrlPressed",
+		"ScreenshotFormat",
+		"ScaleImagesInPaperdollSlots",
+		"RemoveOrCreateObjectsWithBlending",
+		"DrawHelmetsOnShroud",
+		"UseGlobalMapLayer",
+		"NoDrawRoofs",
+		"HighlightTargetByType",
+		"UseToolTips",
+		"ToolTipsTextColor",
+		"ToolTipsTextFont",
+		"ToolTipsDelay",
+		"ChatColorInputText",
+		"ChatColorMenuOption",
+		"ChatColorPlayerInMemberList",
+		"ChatColorText",
+		"ChatColorPlayerNameWithout",
+		"ChatColorMuted",
+		"ChatColorChannelModeratorName",
+		"ChatColorChannelModeratorText",
+		"ChatColorMyName",
+		"ChatColorMyText",
+		"ChatColorSystemMessage",
+		"ChatFont",
+		"ChatColorBGOutputText",
+		"ChatColorBGInputText",
+		"ChatColorBGUserList",
+		"ChatColorBGConfList",
+		"ChatColorBGCommandList",
+		"EnablePathfind",
+		"HoldTabForCombat",
+		"OffsetInterfaceWindows",
+		"AutoArrange",
+		"AlwaysRun",
+		"DisableMenubar",
+		"GrayOutOfRangeObjects",
+		"DisableNewTargetSystem",
+		"ItemPropertiesMode",
+		"ItemPropertiesIcon",
+		"ObjectHandles",
+		"ReduceFPSUnactiveWindow",
+		"HoldShiftForContextMenus",
+		"HoldShiftForEnablePathfind",
+		"ContainerDefaultX",
+		"ContainerDefaultY",
+		"GameWindowWidth",
+		"GameWindowHeight",
+		"SpeechDelay",
+		"ScaleSpeechDelay",
+		"SpeechColor",
+		"EmoteColor",
+		"PartyMessageColor",
+		"GuildMessageColor",
+		"AllianceMessageColor",
+		"IgnoreGuildMessage",
+		"IgnoreAllianceMessage",
+		"DarkNights",
+		"ColoredLighting",
+		"StandartCharactersAnimationDelay",
+		"StandartItemsAnimationDelay",
+		"LockResizingGameWindow",
+		"LockGumpsMoving",
+		"InnocentColor",
+		"FriendlyColor",
+		"SomeoneColor",
+		"CriminalColor",
+		"EnemyColor",
+		"MurdererColor",
+		"CriminalActionsQuery",
+		"ShowIncomingNames",
+		"UseCircleTrans",
+		"StatReport",
+		"ConsoleNeedEnter",
+		"CircleTransRadius",
+		"SkillReport",
+		"SpeechFont",
+		"GameWindowX",
+		"GameWindowY",
+		"Zoomed",
+		"RealX",
+		"RealY",
+		"RealWidth",
+		"RealHeight",
+		"ToggleBufficonWindow",
+		"DeveloperMode"
+	};
+
+	string str = ToLowerA(key);
+
+	IFOR(i, 0, CMKC_COUNT)
+	{
+		if (str == ToLowerA(keys[i]))
+			return i;
+	}
+
+	return -1;
+}
+//---------------------------------------------------------------------------
+bool CConfigManager::LoadTxt(const string &path)
+{
+	WISP_FILE::CTextFileParser file(path, "=", "#;", "");
+
+	bool zoomed = false;
+	int windowX = -1;
+	int windowY = -1;
+	int windowWidth = -1;
+	int windowHeight = -1;
+
+	while (!file.IsEOF())
+	{
+		std::vector<std::string> strings = file.ReadTokens();
+
+		if (strings.size() >= 2)
+		{
+			int code = GetConfigKeyCode(strings[0]);
+
+			if (code == -1)
+				continue;
+
+			switch (code)
+			{
+				//Page 1
+				case CMKC_SOUND:
+					Sound = ToBool(strings[1]);
+					break;
+				case CMKC_SOUND_VOLUME:
+					m_SoundVolume = atoi(strings[1].c_str());
+					break;
+				case CMKC_MUSIC:
+					Music = ToBool(strings[1]);
+					break;
+				case CMKC_MUSIC_VOLUME:
+					m_MusicVolume = atoi(strings[1].c_str());
+					break;
+				case CMKC_FOOTSTEPS_SOUND:
+					m_FootstepsSound = ToBool(strings[1]);
+					break;
+				case CMKC_COMBAT_MUSIC:
+					m_CombatMusic = ToBool(strings[1]);
+					break;
+
+				//Page 2
+				case CMKC_CLIENT_FPS:
+					ClientFPS = atoi(strings[1].c_str());
+					break;
+				case CMKC_USE_SCALING:
+					m_UseScaling = ToBool(strings[1]);
+					break;
+				case CMKC_REMOVE_TEXT_WITH_BLENDING:
+					m_RemoveTextWithBlending = ToBool(strings[1]);
+					break;
+				case CMKC_DRAW_STATUS_STATE:
+					m_DrawStatusState = atoi(strings[1].c_str());
+					break;
+				case CMKC_DRAW_STUMPS:
+					DrawStumps = ToBool(strings[1]);
+					break;
+				case CMKC_MARKING_CAVES:
+					MarkingCaves = ToBool(strings[1]);
+					break;
+				case CMKC_NO_ANIMATE_FIELDS:
+					m_NoAnimateFields = ToBool(strings[1]);
+					break;
+				case CMKC_NO_VEGETATION:
+					m_NoVegetation = ToBool(strings[1]);
+					break;
+				case CMKC_HIDDEN_CHARACTERS_RENDER_MODE:
+					m_HiddenCharactersRenderMode = atoi(strings[1].c_str());
+					break;
+				case CMKC_HIDDEN_ALPHA:
+					m_HiddenAlpha = atoi(strings[1].c_str());
+					break;
+				case CMKC_USE_HIDDEN_MODE_ONLY_FOR_SELF:
+					m_UseHiddenModeOnlyForSelf = ToBool(strings[1]);
+					break;
+				case CMKC_TRANSPARENT_SPELL_ICONS:
+					m_TransparentSpellIcons = atoi(strings[1].c_str());
+					break;
+				case CMKC_SPELL_ICON_ALPHA:
+					m_SpellIconAlpha = atoi(strings[1].c_str());
+					break;
+				case CMKC_OLD_STYLE_STATUSBAR:
+					m_OldStyleStatusbar = ToBool(strings[1]);
+					break;
+				case CMKC_ORIGINAL_PARTY_STATUSBAR:
+					m_OriginalPartyStatusbar = ToBool(strings[1]);
+					break;
+				case CMKC_APPLY_STATE_COLOR_ON_CHARACTERS:
+					m_ApplyStateColorOnCharacters = ToBool(strings[1]);
+					break;
+				case CMKC_CHANGE_FIELDS_GRAPHIC:
+					ChangeFieldsGraphic = ToBool(strings[1]);
+					break;
+				case CMKC_PAPERDOLL_SLOTS:
+					PaperdollSlots = ToBool(strings[1]);
+					break;
+				case CMKC_DRAW_STATUS_CONDITION_STATE:
+					m_DrawStatusConditionState = atoi(strings[1].c_str());
+					break;
+				case CMKC_DRAW_STATUS_CONDITION_VALUE:
+					m_DrawStatusConditionValue = atoi(strings[1].c_str());
+					break;
+				case CMKC_REMOVE_STATUSBARS_WITHOUT_OBJECTS:
+					m_RemoveStatusbarsWithoutObjects = ToBool(strings[1]);
+					break;
+				case CMKC_SHOW_DEFAULT_CONSOLE_ENTRY_MODE:
+					m_ShowDefaultConsoleEntryMode = ToBool(strings[1]);
+					break;
+				case CMKC_DRAW_AURA_STATE:
+					m_DrawAuraState = atoi(strings[1].c_str());
+					break;
+				case CMKC_DRAW_AURA_WITH_CTRL_PRESSED:
+					m_DrawAuraWithCtrlPressed = ToBool(strings[1]);
+					break;
+				case CMKC_SCREENSHOT_FORMAT:
+					m_ScreenshotFormat = atoi(strings[1].c_str());
+					break;
+				case CMKC_SCALE_IMAGES_IN_PAPERDOLL_SLOTS:
+					ScaleImagesInPaperdollSlots = ToBool(strings[1]);
+					break;
+				case CMKC_REMOVE_OR_CREATE_OBJECTS_WITH_BLENDING:
+					m_RemoveOrCreateObjectsWithBlending = ToBool(strings[1]);
+					break;
+				case CMKC_DRAW_HELMETS_ON_SHROUD:
+					m_DrawHelmetsOnShroud = ToBool(strings[1]);
+					break;
+				case CMKC_USE_GLOBAL_MAP_LAYER:
+					UseGlobalMapLayer = ToBool(strings[1]);
+					break;
+				case CMKC_NO_DRAW_ROOFS:
+					NoDrawRoofs = ToBool(strings[1]);
+					break;
+				case CMKC_HIGHLIGHT_TARGET_BY_TYPE:
+					m_HighlightTargetByType = ToBool(strings[1]);
+					break;
+
+				//Page 3
+				case CMKC_USE_TOOLTIPS:
+					m_UseToolTips = ToBool(strings[1]);
+					break;
+				case CMKC_TOOLTIPS_TEXT_COLOR:
+					m_ToolTipsTextColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_TOOLTIPS_TEXT_FONT:
+					m_ToolTipsTextFont = atoi(strings[1].c_str());
+					break;
+				case CMKC_TOOLTIPS_DELAY:
+					m_ToolTipsDelay = atoi(strings[1].c_str());
+					break;
+
+				//Page 4
+				case CMKC_CHAT_COLOR_INPUT_TEXT:
+					m_ChatColorInputText = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_MENU_OPTION:
+					m_ChatColorMenuOption = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_PLAYER_IN_MEMBER_LIST:
+					m_ChatColorPlayerInMemberList = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_TEXT:
+					m_ChatColorText = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_PLAYER_NAME_WITHOUT:
+					m_ChatColorPlayerNameWithout = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_MUTED:
+					m_ChatColorMuted = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_CHANNEL_MODERATOR_NAME:
+					m_ChatColorChannelModeratorName = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_CHANNEL_MODERATOR_TEXT:
+					m_ChatColorChannelModeratorText = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_MY_NAME:
+					m_ChatColorMyName = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_MY_TEXT:
+					m_ChatColorMyText = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_SYSTEM_MESSAGE:
+					m_ChatColorSystemMessage = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_FONT:
+					m_ChatFont = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_BG_OUTPUT_TEXT:
+					m_ChatColorBGOutputText = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_BG_INPUT_TEXT:
+					m_ChatColorBGInputText = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_BG_USER_LIST:
+					m_ChatColorBGUserList = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_BG_CONF_LIST:
+					m_ChatColorBGConfList = atoi(strings[1].c_str());
+					break;
+				case CMKC_CHAT_COLOR_BG_COMMAND_LIST:
+					m_ChatColorBGCommandList = atoi(strings[1].c_str());
+					break;
+
+				//Page 6
+				case CMKC_ENABLE_PATHFIND:
+					m_EnablePathfind = ToBool(strings[1]);
+					break;
+				case CMKC_HOLD_TAB_FOR_COMBAT:
+					m_HoldTabForCombat = ToBool(strings[1]);
+					break;
+				case CMKC_OFFSET_INTERFACE_WINDOWS:
+					m_OffsetInterfaceWindows = ToBool(strings[1]);
+					break;
+				case CMKC_AUTO_ARRANGE:
+					m_AutoArrange = ToBool(strings[1]);
+					break;
+				case CMKC_ALWAYS_RUN:
+					m_AlwaysRun = ToBool(strings[1]);
+					break;
+				case CMKC_DISABLE_MENUBAR:
+					m_DisableMenubar = ToBool(strings[1]);
+					break;
+				case CMKC_GRAY_OUT_OF_RANGE_OBJECTS:
+					m_GrayOutOfRangeObjects = ToBool(strings[1]);
+					break;
+				case CMKC_DISABLE_NEW_TARGET_SYSTEM:
+					m_DisableNewTargetSystem = ToBool(strings[1]);
+					break;
+				case CMKC_ITEMP_ROPERTIES_MODE:
+					m_ItemPropertiesMode = atoi(strings[1].c_str());
+					break;
+				case CMKC_ITEMP_ROPERTIES_ICON:
+					m_ItemPropertiesIcon = ToBool(strings[1]);
+					break;
+				case CMKC_OBJECT_HANDLES:
+					m_ObjectHandles = ToBool(strings[1]);
+					break;
+				case CMKC_REDUCE_FPS_UNACTIVE_WINDOW:
+					ReduceFPSUnactiveWindow = ToBool(strings[1]);
+					break;
+				case CMKC_HOLD_SHIFT_FOR_CONTEXT_MENUS:
+					m_HoldShiftForContextMenus = ToBool(strings[1]);
+					break;
+				case CMKC_HOLD_SHIFT_FOR_ENABLE_PATHFIND:
+					m_HoldShiftForEnablePathfind = ToBool(strings[1]);
+					break;
+				case CMKC_CONTAINER_DEFAULT_X:
+					g_ContainerRect.DefaultX = atoi(strings[1].c_str());
+					break;
+				case CMKC_CONTAINER_DEFAULT_Y:
+					g_ContainerRect.DefaultY = atoi(strings[1].c_str());
+					break;
+
+				//Page 7
+				case CMKC_GAME_WINDOW_WIDTH:
+					m_GameWindowWidth = atoi(strings[1].c_str());
+					break;
+				case CMKC_GAME_WINDOW_HEIGHT:
+					m_GameWindowHeight = atoi(strings[1].c_str());
+					break;
+				case CMKC_SPEECH_DELAY:
+					m_SpeechDelay = atoi(strings[1].c_str());
+					break;
+				case CMKC_SCALE_SPEECH_DELAY:
+					m_ScaleSpeechDelay = ToBool(strings[1]);
+					break;
+				case CMKC_SPEECH_COLOR:
+					m_SpeechColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_EMOTE_COLOR:
+					m_EmoteColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_PARTY_MESSAGE_COLOR:
+					m_PartyMessageColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_GUILD_MESSAGE_COLOR:
+					m_GuildMessageColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_ALLIANCE_MESSAGE_COLOR:
+					m_AllianceMessageColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_IGNORE_GUILD_MESSAGE:
+					m_IgnoreGuildMessage = ToBool(strings[1]);
+					break;
+				case CMKC_IGNORE_ALLIANCE_MESSAGE:
+					m_IgnoreAllianceMessage = ToBool(strings[1]);
+					break;
+				case CMKC_DARK_NIGHTS:
+					m_DarkNights = ToBool(strings[1]);
+					break;
+				case CMKC_COLORED_LIGHTING:
+					m_ColoredLighting = ToBool(strings[1]);
+					break;
+				case CMKC_STANDART_CHARACTERS_ANIMATION_DELAY:
+					m_StandartCharactersAnimationDelay = ToBool(strings[1]);
+					break;
+				case CMKC_STANDART_ITEMS_ANIMATION_DELAY:
+					m_StandartItemsAnimationDelay = ToBool(strings[1]);
+					break;
+				case CMKC_LOCK_RESIZING_GAME_WINDOW:
+					m_LockResizingGameWindow = ToBool(strings[1]);
+					break;
+				case CMKC_LOCK_GUMPS_MOVING:
+					m_LockGumpsMoving = ToBool(strings[1]);
+					break;
+
+				//Page 8
+				case CMKC_INNOCENT_COLOR:
+					m_InnocentColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_FRIENDLY_COLOR:
+					m_FriendlyColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_SOMEONE_COLOR:
+					m_SomeoneColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_CRIMINAL_COLOR:
+					m_CriminalColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_ENEMY_COLOR:
+					m_EnemyColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_MURDERER_COLOR:
+					m_MurdererColor = atoi(strings[1].c_str());
+					break;
+				case CMKC_CRIMINAL_ACTIONS_QUERY:
+					m_CriminalActionsQuery = ToBool(strings[1]);
+					break;
+
+				//Page 9
+				case CMKC_SHOW_INCOMING_NAMES:
+					m_ShowIncomingNames = ToBool(strings[1]);
+					break;
+				case CMKC_USE_CIRCLE_TRANS:
+					m_UseCircleTrans = ToBool(strings[1]);
+					break;
+				case CMKC_STAT_REPORT:
+					m_StatReport = ToBool(strings[1]);
+					break;
+				case CMKC_CONSOLE_NEED_ENTER:
+					ConsoleNeedEnter = ToBool(strings[1]);
+					break;
+				case CMKC_CIRCLE_TRANS_RADIUS:
+					m_CircleTransRadius = atoi(strings[1].c_str());
+					g_CircleOfTransparency.Create(m_CircleTransRadius);
+					break;
+				case CMKC_SKILL_REPORT:
+					m_SkillReport = atoi(strings[1].c_str());
+					break;
+				case CMKC_SPEECH_FONT:
+					m_SpeechFont = atoi(strings[1].c_str());
+					break;
+
+				//No page
+				case CMKC_GAME_WINDOW_X:
+					m_GameWindowX = atoi(strings[1].c_str());
+					break;
+				case CMKC_GAME_WINDOW_Y:
+					m_GameWindowY = atoi(strings[1].c_str());
+					break;
+				case CMKC_ZOOMED:
+					zoomed = ToBool(strings[1]);
+					break;
+				case CMKC_REAL_X:
+					windowX = atoi(strings[1].c_str());
+					break;
+				case CMKC_REAL_Y:
+					windowY = atoi(strings[1].c_str());
+					break;
+				case CMKC_REAL_WIDTH:
+					windowWidth = atoi(strings[1].c_str());
+					break;
+				case CMKC_REAL_HEIGHT:
+					windowHeight = atoi(strings[1].c_str());
+					break;
+				case CMKC_TOGGLE_BUFFICON_WINDOW:
+					m_ToggleBufficonWindow = ToBool(strings[1]);
+					break;
+				case CMKC_DEVELOPER_MODE:
+					g_DeveloperMode = (DEVELOPER_MODE)atoi(strings[1].c_str());
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	if (m_GameWindowX < 0)
+		m_GameWindowX = 0;
+
+	if (m_GameWindowY < 0)
+		m_GameWindowY = 0;
+
+	if (windowX != -1 && windowY != -1 && windowWidth != -1 && windowHeight != -1)
+	{
+		if (windowX < 0)
+			windowX = 0;
+
+		if (windowY < 0)
+			windowY = 0;
+
+		if (g_GameState >= GS_GAME)
+		{
+			if (windowWidth < 640)
+				windowWidth = 640;
+
+			if (windowWidth >= GetSystemMetrics(SM_CXSCREEN) - 20)
+				windowWidth = GetSystemMetrics(SM_CXSCREEN) - 20;
+
+			if (windowHeight < 480)
+				windowHeight = 480;
+
+			if (windowHeight >= GetSystemMetrics(SM_CYSCREEN) - 60)
+				windowHeight = GetSystemMetrics(SM_CYSCREEN) - 60;
+		}
+		else
+		{
+			windowWidth = 640;
+			windowHeight = 480;
+		}
+
+		SendMessage(g_OrionWindow.Handle, WM_SYSCOMMAND, SC_RESTORE, 0);
+
+		if (zoomed)
+			SendMessage(g_OrionWindow.Handle, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+		else
+			SetWindowPos(g_OrionWindow.Handle, NULL, windowX, windowY, windowWidth, windowHeight, 0);
+
+		g_GL.UpdateRect();
+	}
+	else
+	{
+		SendMessage(g_OrionWindow.Handle, WM_SYSCOMMAND, SC_RESTORE, 0);
+		SendMessage(g_OrionWindow.Handle, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+	}
+
+	return false;
+}
+//---------------------------------------------------------------------------
+void CConfigManager::SaveTxt(const string &path)
+{
+	WISPFUN_DEBUG("");
+	WISP_FILE::CTextFileWritter writter(path);
+
+	if (writter.Opened())
+	{
+		//Page 1
+		writter.WriteBool("Sound", m_Sound);
+		writter.WriteInt("SoundVolume", m_SoundVolume);
+		writter.WriteBool("Music", m_Music);
+		writter.WriteInt("MusicVolume", m_MusicVolume);
+		writter.WriteBool("FootstepsSound", m_FootstepsSound);
+		writter.WriteBool("CombatMusic", m_CombatMusic);
+
+		//Page 2
+		writter.WriteInt("ClientFPS", m_ClientFPS);
+		writter.WriteBool("UseScaling", m_UseScaling);
+		writter.WriteBool("RemoveTextWithBlending", m_RemoveTextWithBlending);
+		writter.WriteInt("DrawStatusState", m_DrawStatusState);
+		writter.WriteBool("DrawStumps", m_DrawStumps);
+		writter.WriteBool("MarkingCaves", m_MarkingCaves);
+		writter.WriteBool("NoAnimateFields", m_NoAnimateFields);
+		writter.WriteBool("NoVegetation", m_NoVegetation);
+		writter.WriteInt("HiddenCharactersRenderMode", m_HiddenCharactersRenderMode);
+		writter.WriteInt("HiddenAlpha", m_HiddenAlpha);
+		writter.WriteBool("UseHiddenModeOnlyForSelf", m_UseHiddenModeOnlyForSelf);
+		writter.WriteInt("TransparentSpellIcons", m_TransparentSpellIcons);
+		writter.WriteInt("SpellIconAlpha", m_SpellIconAlpha);
+		writter.WriteBool("OldStyleStatusbar", m_OldStyleStatusbar);
+		writter.WriteBool("OriginalPartyStatusbar", m_OriginalPartyStatusbar);
+		writter.WriteBool("ApplyStateColorOnCharacters", m_ApplyStateColorOnCharacters);
+		writter.WriteBool("ChangeFieldsGraphic", m_ChangeFieldsGraphic);
+		writter.WriteBool("PaperdollSlots", m_PaperdollSlots);
+		writter.WriteInt("DrawStatusConditionState", m_DrawStatusConditionState);
+		writter.WriteInt("DrawStatusConditionValue", m_DrawStatusConditionValue);
+		writter.WriteBool("RemoveStatusbarsWithoutObjects", m_RemoveStatusbarsWithoutObjects);
+		writter.WriteBool("ShowDefaultConsoleEntryMode", m_ShowDefaultConsoleEntryMode);
+		writter.WriteInt("DrawAuraState", m_DrawAuraState);
+		writter.WriteBool("DrawAuraWithCtrlPressed", m_DrawAuraWithCtrlPressed);
+		writter.WriteInt("ScreenshotFormat", m_ScreenshotFormat);
+		writter.WriteBool("ScaleImagesInPaperdollSlots", m_ScaleImagesInPaperdollSlots);
+		writter.WriteBool("RemoveOrCreateObjectsWithBlending", m_RemoveOrCreateObjectsWithBlending);
+		writter.WriteBool("DrawHelmetsOnShroud", m_DrawHelmetsOnShroud);
+		writter.WriteBool("UseGlobalMapLayer", m_UseGlobalMapLayer);
+		writter.WriteBool("NoDrawRoofs", m_NoDrawRoofs);
+		writter.WriteBool("HighlightTargetByType", m_HighlightTargetByType);
+
+		//Page 3
+		writter.WriteBool("UseToolTips", m_UseToolTips);
+		writter.WriteInt("ToolTipsTextColor", m_ToolTipsTextColor);
+		writter.WriteInt("ToolTipsTextFont", m_ToolTipsTextFont);
+		writter.WriteInt("ToolTipsDelay", m_ToolTipsDelay);
+
+		//Page 4
+		writter.WriteInt("ChatColorInputText", m_ChatColorInputText);
+		writter.WriteInt("ChatColorMenuOption", m_ChatColorMenuOption);
+		writter.WriteInt("ChatColorPlayerInMemberList", m_ChatColorPlayerInMemberList);
+		writter.WriteInt("ChatColorText", m_ChatColorText);
+		writter.WriteInt("ChatColorPlayerNameWithout", m_ChatColorPlayerNameWithout);
+		writter.WriteInt("ChatColorMuted", m_ChatColorMuted);
+		writter.WriteInt("ChatColorChannelModeratorName", m_ChatColorChannelModeratorName);
+		writter.WriteInt("ChatColorChannelModeratorText", m_ChatColorChannelModeratorText);
+		writter.WriteInt("ChatColorMyName", m_ChatColorMyName);
+		writter.WriteInt("ChatColorMyText", m_ChatColorMyText);
+		writter.WriteInt("ChatColorSystemMessage", m_ChatColorSystemMessage);
+		writter.WriteInt("ChatFont", m_ChatFont);
+		writter.WriteInt("ChatColorBGOutputText", m_ChatColorBGOutputText);
+		writter.WriteInt("ChatColorBGInputText", m_ChatColorBGInputText);
+		writter.WriteInt("ChatColorBGUserList", m_ChatColorBGUserList);
+		writter.WriteInt("ChatColorBGConfList", m_ChatColorBGConfList);
+		writter.WriteInt("ChatColorBGCommandList", m_ChatColorBGCommandList);
+
+		//Page 6
+		writter.WriteBool("EnablePathfind", m_EnablePathfind);
+		writter.WriteBool("HoldTabForCombat", m_HoldTabForCombat);
+		writter.WriteBool("OffsetInterfaceWindows", m_OffsetInterfaceWindows);
+		writter.WriteBool("AutoArrange", m_AutoArrange);
+		writter.WriteBool("AlwaysRun", m_AlwaysRun);
+		writter.WriteBool("DisableMenubar", m_DisableMenubar);
+		writter.WriteBool("GrayOutOfRangeObjects", m_GrayOutOfRangeObjects);
+		writter.WriteBool("DisableNewTargetSystem", m_DisableNewTargetSystem);
+		writter.WriteBool("ItemPropertiesMode", m_ItemPropertiesMode);
+		writter.WriteBool("ItemPropertiesIcon", m_ItemPropertiesIcon);
+		writter.WriteBool("ObjectHandles", m_ObjectHandles);
+		writter.WriteBool("ReduceFPSUnactiveWindow", m_ReduceFPSUnactiveWindow);
+		writter.WriteBool("HoldShiftForContextMenus", m_HoldShiftForContextMenus);
+		writter.WriteBool("HoldShiftForEnablePathfind", m_HoldShiftForEnablePathfind);
+		writter.WriteInt("ContainerDefaultX", g_ContainerRect.DefaultX);
+		writter.WriteInt("ContainerDefaultY", g_ContainerRect.DefaultY);
+
+		//Page 7
+		writter.WriteInt("GameWindowWidth", m_GameWindowWidth);
+		writter.WriteInt("GameWindowHeight", m_GameWindowHeight);
+		writter.WriteInt("SpeechDelay", m_SpeechDelay);
+		writter.WriteInt("ScaleSpeechDelay", m_ScaleSpeechDelay);
+		writter.WriteInt("SpeechColor", m_SpeechColor);
+		writter.WriteInt("EmoteColor", m_EmoteColor);
+		writter.WriteInt("PartyMessageColor", m_PartyMessageColor);
+		writter.WriteInt("GuildMessageColor", m_GuildMessageColor);
+		writter.WriteInt("AllianceMessageColor", m_AllianceMessageColor);
+		writter.WriteBool("IgnoreGuildMessage", m_IgnoreGuildMessage);
+		writter.WriteBool("IgnoreAllianceMessage", m_IgnoreAllianceMessage);
+		writter.WriteBool("DarkNights", m_DarkNights);
+		writter.WriteBool("ColoredLighting", m_ColoredLighting);
+		writter.WriteBool("StandartCharactersAnimationDelay", m_StandartCharactersAnimationDelay);
+		writter.WriteBool("StandartItemsAnimationDelay", m_StandartItemsAnimationDelay);
+		writter.WriteBool("LockResizingGameWindow", m_LockResizingGameWindow);
+		writter.WriteBool("LockGumpsMoving", m_LockGumpsMoving);
+
+		//Page 8
+		writter.WriteInt("InnocentColor", m_InnocentColor);
+		writter.WriteInt("FriendlyColor", m_FriendlyColor);
+		writter.WriteInt("SomeoneColor", m_SomeoneColor);
+		writter.WriteInt("CriminalColor", m_CriminalColor);
+		writter.WriteInt("EnemyColor", m_EnemyColor);
+		writter.WriteInt("MurdererColor", m_MurdererColor);
+		writter.WriteBool("CriminalActionsQuery", m_CriminalActionsQuery);
+
+		//Page 9
+		writter.WriteBool("ShowIncomingNames", m_ShowIncomingNames);
+		writter.WriteBool("UseCircleTrans", m_UseCircleTrans);
+		writter.WriteBool("StatReport", m_StatReport);
+		writter.WriteBool("ConsoleNeedEnter", m_ConsoleNeedEnter);
+		writter.WriteBool("CircleTransRadius", m_CircleTransRadius);
+		writter.WriteBool("SkillReport", m_SkillReport);
+		writter.WriteInt("SpeechFont", m_SpeechFont);
+
+		//No page
+		writter.WriteInt("GameWindowX", m_GameWindowX);
+		writter.WriteInt("GameWindowY", m_GameWindowY);
+
+		writter.WriteBool("Zoomed", g_OrionWindow.Zoomed());
+
+		RECT rect = { 0 };
+		GetWindowRect(g_OrionWindow.Handle, &rect);
+
+		writter.WriteInt("RealX", rect.left);
+		writter.WriteInt("RealY", rect.top);
+		writter.WriteInt("RealWidth", (rect.right - rect.left));
+		writter.WriteInt("RealHeight", (rect.bottom - rect.top));
+
+		writter.WriteBool("ToggleBufficonWindow", m_ToggleBufficonWindow);
+		writter.WriteInt("DeveloperMode", g_DeveloperMode);
+
+		writter.Close();
+	}
+}
+//---------------------------------------------------------------------------

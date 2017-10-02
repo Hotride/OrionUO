@@ -1449,6 +1449,7 @@ void COrion::SaveLocalConfig()
 
 	LOG("managers:saving\n");
 	g_ConfigManager.Save(path + "\\options_debug.cuo");
+	g_ConfigManager.SaveTxt(path + "\\orion_options.cfg");
 	g_SkillGroupManager.Save(path + "\\skills_debug.cuo");
 	g_MacroManager.Save(path + "\\macros_debug.cuo");
 	g_GumpManager.Save(path + "\\gumps_debug.cuo");
@@ -1456,6 +1457,7 @@ void COrion::SaveLocalConfig()
 
 	LOG("managers:saving in to root\n");
 	g_ConfigManager.Save(g_App.FilePath("options_debug.cuo"));
+	g_ConfigManager.SaveTxt(g_App.FilePath("orion_options.cfg"));
 	g_MacroManager.Save(g_App.FilePath("macros_debug.cuo"));
 
 	if (g_Player != NULL)
