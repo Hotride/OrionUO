@@ -1632,9 +1632,57 @@ void CGameScreen::Render(const bool &mode)
 				if (land != NULL && land->IsStretched)
 					tz = (char)land->Serial;
 
-				sprintf_s(dbf, "Selected:\n%s: G=0x%04X X=%i Y=%i Z=%i (%i) PriZ=%i", soName, selRwo->Graphic, selRwo->X, selRwo->Y, selRwo->Z, tz, selRwo->PriorityZ);
+				uint tiledataFlags = (uint)(selRwo->IsStaticGroupObject() ? ((CRenderStaticObject*)selRwo)->GetStaticData()->Flags : 0);
 
-				g_FontManager.DrawA(3, dbf, 0x35, 20, 102);
+				sprintf_s(dbf, "Selected:\n%s: G=0x%04X C:0x%04X TF=0x%08X X=%i Y=%i Z=%i (%i) PriZ=%i", soName, selRwo->Graphic, selRwo->Color, tiledataFlags, selRwo->X, selRwo->Y, selRwo->Z, tz, selRwo->PriorityZ);
+
+				const string flagNames[] =
+				{
+					"Background",
+					"Weapon",
+					"Transparent",
+					"Translucent",
+					"Wall",
+					"Damaging",
+					"Impassable",
+					"Wet",
+					"Unknown",
+					"Surface",
+					"Bridge",
+					"Stackable",
+					"Window",
+					"NoShoot",
+					"PrefixA",
+					"PrefixAn",
+					"Internal",
+					"Foliage",
+					"PartialHue",
+					"Unknown1",
+					"Map",
+					"Container",
+					"Wearable",
+					"LightSource",
+					"Animated",
+					"NoDiagonal",
+					"Unknown2",
+					"Armor",
+					"Roof",
+					"Door",
+					"StairBack",
+					"StairRight"
+				};
+				
+				string flagsData = "";
+
+				IFOR(f, 0, 32)
+				{
+					if (tiledataFlags & (1 << f))
+						flagsData += string("\n") + flagNames[f];
+				}
+
+				flagsData = string(dbf) + flagsData;
+
+				g_FontManager.DrawA(3, flagsData.c_str(), 0x0035, 20, 102);
 			}
 		}
 #endif //UO_DEBUG_INFO!=0
