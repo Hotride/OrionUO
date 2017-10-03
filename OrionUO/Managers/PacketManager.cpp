@@ -1664,7 +1664,7 @@ PACKET_HANDLER(DeleteObject)
 		bool updateAbilities = false;
 		uint cont = obj->Container & 0x7FFFFFFF;
 
-		if (cont != 0xFFFFFFFF)
+		if (obj->Container != 0xFFFFFFFF)
 		{
 			CGameObject *top = obj->GetTopObject();
 
@@ -1769,8 +1769,7 @@ PACKET_HANDLER(UpdateCharacter)
 	uchar flags = ReadUInt8();
 	uchar notoriety = ReadUInt8();
 
-	if (obj->NPC)
-		((CGameCharacter*)obj)->Notoriety = notoriety;
+	obj->Notoriety = notoriety;
 
 	if (obj->IsPlayer())
 	{

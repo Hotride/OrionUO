@@ -801,7 +801,6 @@ CGameObject *CGameWorld::SearchWorldObject(const uint &serialStart, const int &s
 
 	return result;
 }
-
 //----------------------------------------------------------------------------------
 void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const uchar &graphicIncrement, const int &count, const int &x, const int &y, const char &z, const uchar &direction, const ushort &color, const uchar &flags, const int &a11, const UPDATE_GAME_OBJECT_TYPE &updateType, const ushort &a13)
 {
@@ -809,7 +808,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 	CGameCharacter *character = NULL;
 	CGameItem *item = NULL;
-	CGameObject *obj = g_World->FindWorldObject(serial);
+	CGameObject *obj = FindWorldObject(serial);
 	
 	if (g_ObjectInHand.Enabled && g_ObjectInHand.Serial == serial)
 	{
@@ -832,7 +831,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 		if (!(serial & 0x40000000) && updateType != 3)
 		{
-			character = g_World->GetWorldCharacter(serial);
+			character = GetWorldCharacter(serial);
 
 			if (character == NULL)
 			{
@@ -852,7 +851,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		}
 		else
 		{
-			item = g_World->GetWorldItem(serial);
+			item = GetWorldItem(serial);
 
 			if (item == NULL)
 			{
@@ -869,9 +868,9 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 
 		if (obj->Container != 0xFFFFFFFF)
 		{
-			g_World->RemoveFromContainer(obj);
+			RemoveFromContainer(obj);
 			obj->Container = 0xFFFFFFFF;
-			g_World->m_Items->AddObject(obj);
+			m_Items->AddObject(obj);
 		}
 
 		if (obj->NPC)
@@ -980,7 +979,7 @@ void CGameWorld::UpdateGameObject(const uint &serial, ushort graphic, const ucha
 		if (g_TooltipsEnabled && !obj->ClilocMessage.length())
 			g_PacketManager.AddMegaClilocRequest(obj->Serial);
 
-		g_World->MoveToTop(obj);
+		MoveToTop(obj);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -1038,7 +1037,7 @@ void CGameWorld::UpdatePlayer(const uint &serial, const ushort &graphic, const u
 		g_Player->UpdateRemoveRange();
 		g_GumpManager.RemoveRangedGumps();
 
-		g_World->MoveToTop(g_Player);
+		MoveToTop(g_Player);
 	}
 }
 //----------------------------------------------------------------------------------
@@ -1046,7 +1045,7 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 {
 	obj->X = x;
 	obj->Y = y;
-	g_World->PutContainer(obj, container);
+	PutContainer(obj, container);
 
 	uint containerSerial = container->Serial;
 
@@ -1091,25 +1090,25 @@ void CGameWorld::UpdateItemInContainer(CGameObject *obj, CGameObject *container,
 //----------------------------------------------------------------------------------
 void CGameWorld::UpdateContainedItem(const uint &serial, const ushort &graphic, const uchar &graphicIncrement, const ushort &count, const int &x, const int &y, const uint &containerSerial, const ushort &color)
 {
-	CGameObject *container = g_World->FindWorldObject(containerSerial);
+	CGameObject *container = FindWorldObject(containerSerial);
 
 	if (container == NULL)
 		return;
 
-	CGameObject *obj = g_World->FindWorldObject(serial);
+	CGameObject *obj = FindWorldObject(serial);
 
 	if (obj != NULL && (!container->IsCorpse() || ((CGameItem*)obj)->Layer == OL_NONE))
 	{
-		g_World->RemoveObject(obj);
+		RemoveObject(obj);
 		obj = NULL;
 	}
 
 	if (obj == NULL)
 	{
 		if (serial & 0x40000000)
-			obj = g_World->GetWorldItem(serial);
+			obj = GetWorldItem(serial);
 		else
-			obj = g_World->GetWorldCharacter(serial);
+			obj = GetWorldCharacter(serial);
 	}
 
 	if (obj == NULL)
@@ -1128,7 +1127,7 @@ void CGameWorld::UpdateContainedItem(const uint &serial, const ushort &graphic, 
 
 	UpdateItemInContainer(obj, container, x, y);
 
-	g_World->MoveToTop(obj);
+	MoveToTop(obj);
 
 	LOG("\t|0x%08X<0x%08X:%04X*%d (%d,%d) %04X\n", containerSerial, serial, graphic + graphicIncrement, count, x, y, color);
 }
