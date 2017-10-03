@@ -5403,9 +5403,8 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 
 			}
 			else
-			 td->GenerateTexture(0, 0, TS_CENTER);
+				td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_LEFT);
 
-			td->GenerateTexture(width, UOFONT_BLACK_BORDER, TS_LEFT);
 			g_FontManager.SavePixels = false;
 
 			((CRenderWorldObject*)serial)->AddText(td);
