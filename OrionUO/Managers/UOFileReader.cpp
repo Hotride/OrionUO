@@ -56,7 +56,7 @@ USHORT_LIST UOFileReader::GetGumpPixels(CIndexObject &io)
 		{
 			ushort val = gmul[i].Value;
 
-			if (color)
+			if (color && val)
 				val = g_ColorManager.GetColor16(val, color);
 
 			ushort a = (val ? 0x8000 : 0) | val;
@@ -184,7 +184,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 			{
 				ushort val = *P++;
 
-				if (color)
+				if (color && val)
 					val = g_ColorManager.GetColor16(val, color);
 
 				if (val)
@@ -210,7 +210,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 			{
 				ushort val = *P++;
 
-				if (color)
+				if (color && val)
 					val = g_ColorManager.GetColor16(val, color);
 
 				if (val)
@@ -368,7 +368,7 @@ CGLTexture *UOFileReader::ReadArt(const ushort &id, CIndexObject &io, const bool
 					{
 						ushort val = *ptr;
 
-						if (color)
+						if (color && val)
 							val = g_ColorManager.GetColor16(val, color);
 
 						val = (val ? 0x8000 : 0) | val;
