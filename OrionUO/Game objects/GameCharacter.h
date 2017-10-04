@@ -128,7 +128,7 @@ public:
 	@param [__in_opt] graphic Индекс картинки персонажа
 	@return Индекс группы анимации
 	*/
-	uchar GetAnimationGroup(ushort graphic = 0);
+	uchar GetAnimationGroup(ushort checkGraphic = 0);
 
 	/*!
 	Скорректировать отношение анимаций

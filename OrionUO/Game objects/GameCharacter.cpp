@@ -587,16 +587,18 @@ bool CGameCharacter::TestStepNoChangeDirection(const uchar &group)
 @param [__in_opt] graphic Индекс картинки персонажа
 @return Индекс группы анимации
 */
-uchar CGameCharacter::GetAnimationGroup(ushort graphic)
+uchar CGameCharacter::GetAnimationGroup(ushort checkGraphic)
 {
 	WISPFUN_DEBUG("c15_f16");
+	ushort graphic = checkGraphic;
+
 	if (!graphic)
 		graphic = GetMountAnimation();
 
 	ANIMATION_GROUPS groupIndex = g_AnimationManager.GetGroupIndex(graphic);
 	uchar result = m_AnimationGroup;
 
-	if (result != 0xFF && !(m_Serial & 0x80000000) && !m_AnimationFromServer)
+	if (result != 0xFF && !(m_Serial & 0x80000000) && (!m_AnimationFromServer || checkGraphic))
 	{
 		GetAnimationGroup(groupIndex, result);
 
