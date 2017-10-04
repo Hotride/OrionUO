@@ -2841,8 +2841,9 @@ PACKET_HANDLER(Talk)
 	SPEECH_TYPE type = (SPEECH_TYPE)ReadUInt8();
 	ushort textColor = ReadUInt16BE();
 	ushort font = ReadUInt16BE();
+	string name(ReadString(0));
 
-	if (!serial && font == 0xFFFF && textColor == 0xFFFF)
+	if (!serial && !graphic && !type && font == 0xFFFF && textColor == 0xFFFF && ToLowerA(name) == "system")
 	{
 		uchar sbuffer[0x28] =
 		{
@@ -2859,7 +2860,6 @@ PACKET_HANDLER(Talk)
 	if (font >= g_FontManager.FontCount)
 		return;
 
-	string name(ReadString(0));
 	string str = "";
 
 	if (m_Size > 44)
@@ -2933,8 +2933,9 @@ PACKET_HANDLER(UnicodeTalk)
 	ushort textColor = ReadUInt16BE();
 	ushort font = ReadUInt16BE();
 	uint language = ReadUInt32BE();
+	string name(ReadString(0));
 
-	if (!serial && font == 0xFFFF && textColor == 0xFFFF)
+	if (!serial && !graphic && !type && font == 0xFFFF && textColor == 0xFFFF && ToLowerA(name) == "system")
 	{
 		uchar sbuffer[0x28] =
 		{
@@ -2948,7 +2949,6 @@ PACKET_HANDLER(UnicodeTalk)
 		return;
 	}
 
-	string name(ReadString(0));
 	wstring str = L"";
 
 	if (m_Size > 48)
