@@ -570,7 +570,7 @@ void CGameScreen::AddTileToRenderList(CRenderWorldObject *obj, const int &worldX
 			}
 		}
 
-		if (maxObjectZ >= maxZ)
+		if (maxObjectZ > maxZ)
 			break;
 
 		obj->CurrentRenderIndex = renderIndex;
