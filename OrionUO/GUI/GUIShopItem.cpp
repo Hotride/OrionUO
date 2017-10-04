@@ -306,6 +306,6 @@ bool CGUIShopItem::Select()
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 
-	return (x >= 0 && y >= 0 && x < 200 && y < m_MaxOffset + 20);
+	return (x >= 0 && y >= -10 && x < 200 && y < m_MaxOffset);
 }
 //----------------------------------------------------------------------------------
