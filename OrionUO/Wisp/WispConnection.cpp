@@ -105,7 +105,10 @@ bool CConnection::ReadyRead()
 	m_DataReady = select(m_Socket, &rfds, NULL, NULL, &tv);
 
 	if (m_DataReady == SOCKET_ERROR)
+	{
+		LOG("CConnection::ReadyRead SOCKET_ERROR\n");
 		Disconnect();
+	}
 
 	return (m_DataReady != 0);
 }
@@ -125,6 +128,7 @@ bool CConnection::Read(const int &maxSize)
 
 		if (size > 0)
 		{
+			//LOG("CConnection::Read size=%i\n", size);
 			data.resize(size);
 
 			data = Decompression(data);
@@ -148,14 +152,24 @@ int CConnection::Send(puchar data, const int &size)
 	if (!m_Connected || m_Socket == INVALID_SOCKET)
 		return 0;
 
-	return send(m_Socket, (char*)data, size, 0);
+	int sent = send(m_Socket, (char*)data, size, 0);
+
+	//LOG("CConnection::Send=>%i\n", sent);
+
+	return sent;
 }
 //----------------------------------------------------------------------------------
 int CConnection::Send(const UCHAR_LIST &data)
 {
 	WISPFUN_DEBUG("c3_f8");
 	if (data.size())
-		return Send((puchar)&data[0], data.size());
+	{
+		int sent = Send((puchar)&data[0], data.size());
+
+		//LOG("CConnection::Send=>%i\n", sent);
+
+		return sent;
+	}
 	
 	return 0;
 }
