@@ -236,3 +236,12 @@ void CGumpMinimap::GUMP_BUTTON_EVENT_C
 		m_LockMoving = !m_LockMoving;
 }
 //----------------------------------------------------------------------------------
+bool CGumpMinimap::OnLeftMouseButtonDoubleClick()
+{
+	WISPFUN_DEBUG("c102_f8");
+
+	g_Orion.OpenMinimap();
+
+	return true;
+}
+//----------------------------------------------------------------------------------

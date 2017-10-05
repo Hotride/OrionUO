@@ -39,6 +39,8 @@ public:
 	virtual void UpdateContent();
 
 	GUMP_BUTTON_EVENT_H;
+
+	virtual bool OnLeftMouseButtonDoubleClick();
 };
 //----------------------------------------------------------------------------------
 #endif
