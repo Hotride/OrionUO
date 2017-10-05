@@ -333,13 +333,31 @@ void CTarget::LoadMulti(const int &x, const int &y, const char &z)
 		if (g_PacketManager.ClientVersion >= CV_7090)
 			itemOffset = sizeof(MULTI_BLOCK_NEW);
 
+		int minY = 0;
+		int maxY = 0;
+
 		IFOR(j, 0, count)
 		{
 			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(index.Address + (j * itemOffset));
-			
-			CMultiObject *mo = new CMultiObject(pmb->ID, x + pmb->X, y + pmb->Y, z + (char)pmb->Z, 2);
-			g_MapManager->AddRender(mo);
-			AddMultiObject(mo);
+
+			if (pmb->Y < minY)
+				minY = pmb->Y;
+			if (pmb->Y > maxY)
+				maxY = pmb->Y;
+		}
+
+		int offsetY = 0; // (maxY - minY) / 2 + 1;
+
+		IFOR(j, 0, count)
+		{
+			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(index.Address + (j * itemOffset));
+
+			if (pmb->Flags)
+			{
+				CMultiObject *mo = new CMultiObject(pmb->ID, x + pmb->X, y + pmb->Y - offsetY, z + (char)pmb->Z, 2);
+				g_MapManager->AddRender(mo);
+				AddMultiObject(mo);
+			}
 		}
 	}
 }
