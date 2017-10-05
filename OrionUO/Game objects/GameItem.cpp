@@ -83,15 +83,15 @@ void CGameItem::OnGraphicChange(int direction)
 
 			if (!m_Clicked && g_ConfigManager.ShowIncomingNames && !m_Name.length())
 				g_Orion.NameReq(m_Serial);
+
+			m_NoDrawTile = false;
 		}
 		else
 		{
 			m_TiledataPtr = &g_Orion.m_StaticData[m_Graphic];
 			STATIC_TILES &tile = *m_TiledataPtr;
 
-			string lowerName = ToLowerA(tile.Name);
-
-			m_NoDrawTile = (lowerName == "nodraw" || lowerName == "no draw");
+			m_NoDrawTile = IsNoDrawTile(m_Graphic);
 
 			if (IsWearable() || m_Graphic == 0x0A28)
 			{
@@ -635,10 +635,6 @@ CMultiObject *CGameItem::AddMulti(const ushort &graphic, const ushort &color, co
 	else
 		mo = new CMultiObject(graphic, X + x, Y + y, z, 1);
 
-	string lowerName = ToLowerA(mo->GetStaticData()->Name);
-
-	mo->NoDrawTile = (lowerName == "nodraw" || lowerName == "no draw");
-
 	g_MapManager->AddRender(mo);
 	AddMultiObject(mo);
 
@@ -686,10 +682,6 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 			if (pmb->Flags)
 			{
 				CMultiObject *mo = new CMultiObject(pmb->ID, m_X + pmb->X, m_Y + pmb->Y, m_Z + (char)pmb->Z, pmb->Flags);
-
-				string lowerName = ToLowerA(mo->GetStaticData()->Name);
-
-				mo->NoDrawTile = (lowerName == "nodraw" || lowerName == "no draw");
 
 				mo->m_DrawTextureColor[3] = alpha;
 

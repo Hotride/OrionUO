@@ -54,6 +54,7 @@ void CLandObject::UpdateGraphicBySeason()
 {
 	WISPFUN_DEBUG("c23_f3");
 	m_Graphic = g_Orion.GetLandSeasonGraphic(m_OriginalGraphic);
+	m_NoDrawTile = (m_Graphic == 2);
 }
 //---------------------------------------------------------------------------
 int CLandObject::GetDirectionZ(const int &direction)

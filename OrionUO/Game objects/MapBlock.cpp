@@ -83,21 +83,24 @@ ushort CMapBlock::GetRadarColor(const int &x, const int &y)
 	//Пройдемся по всему списку и запомним последний встретившийся ИД предмета
 	while (obj != NULL)
 	{
-		switch (obj->RenderType)
+		if (!obj->NoDrawTile)
 		{
-			case ROT_LAND_OBJECT:
-			case ROT_STATIC_OBJECT:
-			case ROT_MULTI_OBJECT:
+			switch (obj->RenderType)
 			{
-				color = obj->Graphic;
+				case ROT_LAND_OBJECT:
+				case ROT_STATIC_OBJECT:
+				case ROT_MULTI_OBJECT:
+				{
+					color = obj->Graphic;
 
-				if (obj->RenderType != ROT_LAND_OBJECT)
-					color += 0x4000;
+					if (obj->RenderType != ROT_LAND_OBJECT)
+						color += 0x4000;
 
-				break;
+					break;
+				}
+				default:
+					break;
 			}
-			default:
-				break;
 		}
 
 		obj = obj->m_NextXY;

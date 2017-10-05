@@ -52,6 +52,35 @@ CRenderStaticObject::~CRenderStaticObject()
 		m_TextControl = NULL;
 	}
 }
+//---------------------------------------------------------------------------
+bool CRenderStaticObject::IsNoDrawTile(const ushort &graphic)
+{
+	switch (graphic)
+	{
+		case 0x0001:
+		case 0x21BC:
+		case 0x9E4C:
+		case 0x9E64:
+		case 0x9E65:
+		case 0x9E7D:
+			return true;
+		default:
+			break;
+	}
+
+	if (graphic != 0x63D3)
+	{
+		if (graphic >= 0x2198 && graphic <= 0x21A4)
+			return true;
+
+		long long flags = g_Orion.GetStaticFlags(graphic);
+
+		if (!::IsNoDiagonal(flags) || (::IsAnimated(flags) && g_Player != NULL && g_Player->Race == RT_GARGOYLE))
+			return false;
+	}
+
+	return true;
+}
 //----------------------------------------------------------------------------------
 void CRenderStaticObject::Draw(const int &x, const int &y)
 {

@@ -30,6 +30,8 @@ public:
 
 	CTextContainer *m_TextControl{ NULL }; //Ссылка на контейнер для текста
 
+	static bool IsNoDrawTile(const ushort &graphic);
+
 	//Отрисовать объект
 	virtual void Draw(const int &x, const int &y);
 

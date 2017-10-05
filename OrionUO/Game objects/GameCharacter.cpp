@@ -14,6 +14,7 @@ CGameCharacter::CGameCharacter(const uint &serial)
 m_TimeToRandomFidget(GetTickCount() + RANDOM_FIDGET_ANIMATION_DELAY)
 {
 	m_NPC = true;
+	m_NoDrawTile = false;
 	WISPFUN_DEBUG("c15_f1");
 
 	bool wantStatusRequest = (g_GumpManager.UpdateContent(serial, 0, GT_STATUSBAR) != NULL) || (g_GumpManager.UpdateContent(serial, 0, GT_TARGET_SYSTEM) != NULL) || g_ConfigManager.DrawStatusState || (serial == g_LastTargetObject) || (serial == g_LastAttackObject);

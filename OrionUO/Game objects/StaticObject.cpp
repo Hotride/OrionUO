@@ -37,6 +37,8 @@ void CStaticObject::UpdateGraphicBySeason()
 	{
 		m_Vegetation = g_Orion.IsVegetation(m_Graphic);
 	}
+
+	m_NoDrawTile = IsNoDrawTile(m_Graphic);
 }
 //----------------------------------------------------------------------------------
 void CStaticObject::Draw(const int &x, const int &y)

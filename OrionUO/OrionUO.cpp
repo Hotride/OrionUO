@@ -4420,7 +4420,7 @@ CGLTexture *COrion::ExecuteLandArt(const ushort &id)
 
 	if (io.Texture == 0)
 	{
-		if (!io.Address || id == 0x02) //nodraw tiles banned
+		if (!io.Address) //nodraw tiles banned
 			return NULL;
 
 		io.Texture = g_UOFileReader->ReadArt(id, io, false);
@@ -4448,7 +4448,7 @@ CGLTexture *COrion::ExecuteStaticArt(const ushort &id)
 
 	if (io.Texture == 0)
 	{
-		if (!io.Address || id == 0x01) //nodraw tiles banned
+		if (!io.Address) //nodraw tiles banned
 			return NULL;
 
 		io.Texture = g_UOFileReader->ReadArt(id, io, true);

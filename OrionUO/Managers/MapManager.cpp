@@ -445,7 +445,7 @@ void CMapManager::GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLO
 
 		IFOR(c, 0, count)
 		{
-			if (sb->Color && sb->Color != 0xFFFF)
+			if (sb->Color && sb->Color != 0xFFFF && !CRenderStaticObject::IsNoDrawTile(sb->Color))
 			{
 				int pos = (sb->Y * 8) + sb->X;
 				//if (pos > 64) continue;
@@ -678,9 +678,6 @@ void CMapManager::LoadBlock(CMapBlock *block)
 					continue;
 
 				CRenderStaticObject *obj = new CStaticObject(pos, sb->Color, sb->Hue, bx + x, by + y, sb->Z);
-
-				string lowerName = ToLowerA(obj->GetStaticData()->Name);
-				obj->NoDrawTile = (lowerName == "nodraw" || lowerName == "no draw");
 
 				block->AddObject(obj, x, y);
 			}
