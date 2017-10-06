@@ -776,7 +776,7 @@ void CGLEngine::GL1_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 	WISPFUN_DEBUG("c29_f36");
 	IFOR(i, 0, 9)
 	{
-		glBindTexture(GL_TEXTURE_2D, th[i]->Texture);
+		BindTexture(th[i]->Texture);
 
 		int drawWidth = th[i]->Width;
 		int drawHeight = th[i]->Height;
@@ -1177,7 +1177,7 @@ void CGLEngine::GL2_DrawResizepic(CGLTexture **th, const int &x, const int &y, c
 	WISPFUN_DEBUG("c29_f44");
 	IFOR(i, 0, 9)
 	{
-		glBindTexture(GL_TEXTURE_2D, th[i]->Texture);
+		BindTexture(th[i]->Texture);
 
 		int drawWidth = th[i]->Width;
 		int drawHeight = th[i]->Height;
