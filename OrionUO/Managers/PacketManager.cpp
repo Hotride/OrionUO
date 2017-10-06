@@ -5517,7 +5517,7 @@ PACKET_HANDLER(OrionMessages)
 	ushort type = command >> 12;
 	command &= 0x5FFF;
 
-	switch (type)
+	switch (command)
 	{
 		case OCT_CLOSE_GENERIC_GUMP_WITHOUT_RESPONSE:
 		{
