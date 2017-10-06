@@ -545,46 +545,28 @@ CPacketGumpResponse::CPacketGumpResponse(CGump *gump, int code)
 	WriteUInt32BE(gump->ID);
 	WriteUInt32BE(code);
 	WriteUInt32BE(switchesCount);
+	
+	QFOR(item, gump->m_Items, CBaseGUI*)
+	{
+		if (item->Type == GOT_CHECKBOX || item->Type == GOT_RADIO)
+		{
+			if (((CGUICheckbox*)item)->Checked)
+				WriteUInt32BE(((CGUICheckbox*)item)->Serial);
+		}
+	}
 
-	puchar textptr = m_Ptr + (switchesCount * 4);
-	pack32(textptr, textLinesCount);
-	textptr += 4;
+	WriteUInt32BE(textLinesCount);
 
 	QFOR(item, gump->m_Items, CBaseGUI*)
 	{
-		switch (item->Type)
+		if (item->Type == GOT_TEXTENTRY)
 		{
-			case GOT_CHECKBOX:
-			case GOT_RADIO:
-			{
-				if (((CGUICheckbox*)item)->Checked)
-					WriteUInt32BE(((CGUICheckbox*)item)->Serial);
+			CGUITextEntry *entry = (CGUITextEntry*)item;
 
-				break;
-			}
-			case GOT_TEXTENTRY:
-			{
-				CGUITextEntry *gte = (CGUITextEntry*)item;
-
-				pack16(textptr, gte->Serial - 1);
-				textptr += 2;
-				int tlen = gte->m_Entry.Length();
-				pack16(textptr, tlen);
-				textptr += 2;
-				const char *gteText = gte->m_Entry.c_str();
-
-				IFOR(i, 0, tlen)
-				{
-					*textptr = 0;
-					textptr++;
-					*textptr = gteText[i];
-					textptr++;
-				}
-
-				break;
-			}
-			default:
-				break;
+			WriteUInt16BE(entry->Serial - 1);
+			int len = entry->m_Entry.Length();
+			WriteUInt16BE(len);
+			WriteWString(entry->m_Entry.Data(), len, true, false);
 		}
 	}
 }
