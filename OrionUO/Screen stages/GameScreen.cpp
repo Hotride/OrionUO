@@ -81,7 +81,7 @@ void CGameScreen::InitToolTip()
 	{
 		CGameObject *obj = g_World->FindWorldObject(g_SelectedObject.Serial);
 
-		if (obj != NULL && (obj->NPC || !obj->Locked()) && obj->ClilocMessage.length())
+		if (obj != NULL && obj->ClilocMessage.length())
 			g_ToolTip.Set(obj->ClilocMessage);
 	}
 
