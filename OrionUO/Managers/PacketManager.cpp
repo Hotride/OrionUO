@@ -4464,8 +4464,10 @@ PACKET_HANDLER(OpenGump)
 					color++;
 
 				gump->Add(new CGUIHitBox(index + 1, x, y, width, height));
+				gump->Add(new CGUIScissor(true, x, y, 0, 0, width, height));
 				go = new CGUIGenericTextEntry(index + 1, textIndex, color, x, y);
 				((CGUIGenericTextEntry*)go)->CheckOnSerial = true;
+				((CGUITextEntry*)go)->m_Entry.Width = width;
 			}
 		}
 		else if (cmd == "textentrylimited")
@@ -4485,8 +4487,10 @@ PACKET_HANDLER(OpenGump)
 					color++;
 
 				gump->Add(new CGUIHitBox(index + 1, x, y, width, height));
+				gump->Add(new CGUIScissor(true, x, y, 0, 0, width, height));
 				go = new CGUIGenericTextEntry(index + 1, textIndex, color, x, y, width, length);
 				((CGUIGenericTextEntry*)go)->CheckOnSerial = true;
+				((CGUITextEntry*)go)->m_Entry.Width = width;
 			}
 		}
 		else if (cmd == "tilepic")
@@ -4632,6 +4636,8 @@ PACKET_HANDLER(OpenGump)
 
 			if ((go->Type == GOT_TILEPIC || go->Type == GOT_GUMPPIC) && go->Color)
 				gump->Add(new CGUIShader(g_ColorizerShader, false));
+			else if (go->Type == GOT_TEXTENTRY)
+				gump->Add(new CGUIScissor(false));
 		}
 	}
 
