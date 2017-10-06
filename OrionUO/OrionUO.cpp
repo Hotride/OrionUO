@@ -1661,8 +1661,8 @@ int COrion::Send(puchar buf, const int &size)
 
 		if (*buf == 0x80 || *buf == 0x91)
 		{
-			LOG_DUMP(buf, size / 2);
-			LOG("**** PASSWORD CENSORED ****\n");
+			LOG_DUMP(buf, 1);
+			LOG("**** ACCOUNT AND PASSWORD CENSORED ****\n");
 		}
 		else
 			LOG_DUMP(buf, size);

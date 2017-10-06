@@ -279,7 +279,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xF9*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
 	/*0xFA*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
 	/*0xFB*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
-	/*0xFC*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
+	/*0xFC*/ BMSGH(ORION_SAVE_PACKET, "Orion messages", PACKET_VARIABLE_SIZE, OrionMessages),
 	/*0xFD*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
 	/*0xFE*/ RMSG(ORION_SAVE_PACKET, "Razor Handshake", 0x8),
 	/*0xFF*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE)
@@ -5503,5 +5503,81 @@ PACKET_HANDLER(CustomHouse)
 
 	if (enableResponse)
 		CPacketCustomHouseResponse().Send();
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(OrionMessages)
+{
+	ushort command = ReadUInt16BE();
+	ushort type = command >> 12;
+	command &= 0x5FFF;
+
+	switch (type)
+	{
+		case OCT_CLOSE_GENERIC_GUMP_WITHOUT_RESPONSE:
+		{
+			uint serial = ReadUInt32BE();
+			uint id = ReadUInt32BE();
+			uchar all = ReadUInt8();
+
+			QFOR(gump, g_GumpManager.m_Items, CGump*)
+			{
+				if (gump->GumpType == GT_GENERIC && gump->Serial == serial && gump->ID == id)
+				{
+					gump->RemoveMark = true;
+
+					if (!all)
+						break;
+				}
+			}
+
+			break;
+		}
+		case OCT_SELECT_MENU:
+		{
+			uint serial = ReadUInt32BE();
+			uint id = ReadUInt32BE();
+			uint code = ReadUInt32BE();
+
+			if (!serial && !id)
+			{
+				for (CGump *gump = (CGump*)g_GumpManager.m_Items; gump != NULL;)
+				{
+					CGump *next = (CGump*)gump->m_Next;
+
+					if (gump->GumpType == GT_MENU || gump->GumpType == GT_GRAY_MENU)
+					{
+						CPacketMenuResponse(gump, code).Send();
+						g_GumpManager.RemoveGump(gump);
+					}
+
+					gump = next;
+				}
+
+				break;
+			}
+
+			CGump *gump = g_GumpManager.GetGump(serial, id, GT_MENU);
+
+			if (gump == NULL)
+			{
+				gump = g_GumpManager.GetGump(serial, id, GT_GRAY_MENU);
+
+				if (gump != NULL)
+				{
+					CPacketGrayMenuResponse(gump, code).Send();
+					g_GumpManager.RemoveGump(gump);
+				}
+			}
+			else
+			{
+				CPacketMenuResponse(gump, code).Send();
+				g_GumpManager.RemoveGump(gump);
+			}
+
+			break;
+		}
+		default:
+			break;
+	}
 }
 //----------------------------------------------------------------------------------

@@ -181,6 +181,7 @@ protected:
 	HANDLER_PACKET(Logout);
 	HANDLER_PACKET(OPLInfo);
 	HANDLER_PACKET(CustomHouse);
+	HANDLER_PACKET(OrionMessages);
 
 	//Не обработаны
 	/*

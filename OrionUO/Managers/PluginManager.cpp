@@ -15,7 +15,8 @@ bool __cdecl PluginRecvFunction(puchar buf, const int &size)
 {
 	WISPFUN_DEBUG("c_plgrcvfnc");
 	SendMessage(g_OrionWindow.Handle, UOMSG_RECV, (WPARAM)buf, size);
-	//PacketManager.PluginReceiveHandler(buf, size);
+	
+	//g_PacketManager.SavePluginReceivePacket(buf, size);
 
 	return true;
 }
@@ -24,7 +25,26 @@ bool __cdecl PluginSendFunction(puchar buf, const int &size)
 {
 	WISPFUN_DEBUG("c_plgsndfnc");
 	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)buf, size);
-	//ConnectionManager.Send(buf, size);
+
+	/*uint ticks = g_Ticks;
+	g_TotalSendSize += size;
+
+	CPacketInfo &type = g_PacketManager.GetInfo(*buf);
+
+	LOG("--- ^(%d) s(+%d => %d) Plugin->Server:: %s\n", ticks - g_LastPacketTime, size, g_TotalSendSize, type.Name);
+
+	g_LastPacketTime = ticks;
+	g_LastSendTime = ticks;
+
+	if (*buf == 0x80 || *buf == 0x91)
+	{
+		LOG_DUMP(buf, 1);
+		LOG("**** ACCOUNT AND PASSWORD CENSORED ****\n");
+	}
+	else
+		LOG_DUMP(buf, size);
+
+	g_ConnectionManager.Send(buf, size);*/
 
 	return true;
 }

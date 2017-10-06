@@ -403,7 +403,6 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 	{
 		case UOMSG_RECV:
 			g_PacketManager.SavePluginReceivePacket((PBYTE)wParam, lParam);
-			//g_PacketManager.PluginReceiveHandler((PBYTE)wParam, lParam);
 			return S_OK;
 		case UOMSG_SEND:
 		{
@@ -421,8 +420,8 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 
 			if (*buf == 0x80 || *buf == 0x91)
 			{
-				LOG_DUMP(buf, size / 2);
-				LOG("**** PASSWORD CENSORED ****\n");
+				LOG_DUMP(buf, 1);
+				LOG("**** ACCOUNT AND PASSWORD CENSORED ****\n");
 			}
 			else
 				LOG_DUMP(buf, size);
@@ -447,8 +446,7 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 
 					if (gump->GumpType == GT_MENU || gump->GumpType == GT_GRAY_MENU)
 					{
-						CPacketMenuResponse packet(gump, data->Code);
-						SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
+						CPacketMenuResponse(gump, data->Code).Send();
 						g_GumpManager.RemoveGump(gump);
 					}
 
@@ -466,15 +464,13 @@ LRESULT COrionWindow::OnUserMessages(const UINT &message, const WPARAM &wParam, 
 
 				if (gump != NULL)
 				{
-					CPacketGrayMenuResponse packet(gump, data->Code);
-					SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
+					CPacketGrayMenuResponse(gump, data->Code).Send();
 					g_GumpManager.RemoveGump(gump);
 				}
 			}
 			else
 			{
-				CPacketMenuResponse packet(gump, data->Code);
-				SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)packet.Data().data(), packet.Data().size());
+				CPacketMenuResponse(gump, data->Code).Send();
 				g_GumpManager.RemoveGump(gump);
 			}
 

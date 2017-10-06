@@ -431,6 +431,13 @@ enum UPDATE_GAME_OBJECT_TYPE
 	UGOT_MULTI = 2,
 };
 //----------------------------------------------------------------------------------
+enum ORION_COMMAND_TYPE
+{
+	OCT_RESERVED = 1,
+	OCT_CLOSE_GENERIC_GUMP_WITHOUT_RESPONSE = 100,
+	OCT_SELECT_MENU = 101
+};
+//----------------------------------------------------------------------------------
 enum VALUE_KEY_INT
 {
 	VKI_SOUND = 0,
