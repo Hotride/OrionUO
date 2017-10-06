@@ -5576,6 +5576,125 @@ PACKET_HANDLER(OrionMessages)
 
 			break;
 		}
+		case OCT_CAST_SPELL_REQUEST:
+		{
+			int id = ReadUInt32BE();
+
+			if (id >= 0)
+			{
+				g_LastSpellIndex = id;
+
+				CPacketCastSpell(id).Send();
+			}
+
+			break;
+		}
+		case OCT_USE_SKILL_REQUEST:
+		{
+			int id = ReadUInt32BE();
+			
+			if (id >= 0)
+			{
+				g_LastSkillIndex = id;
+
+				CPacketUseSkill(id).Send();
+			}
+
+			break;
+		}
+		case OCT_DRAW_STATUSBAR:
+		{
+			uint serial = ReadUInt32BE();
+			int x = ReadInt32BE();
+			int y = ReadInt32BE();
+			bool minimized = (ReadUInt8() != 0);
+
+			if (serial != g_PlayerSerial)
+				minimized = true;
+
+			CGump *gump = g_GumpManager.GetGump(serial, 0, GT_STATUSBAR);
+
+			if (gump != NULL)
+			{
+				gump->Minimized = minimized;
+
+				if (gump->Minimized)
+				{
+					gump->MinimizedX = x;
+					gump->MinimizedY = y;
+				}
+				else
+				{
+					gump->X = x;
+					gump->Y = y;
+				}
+			}
+			else
+			{
+				CPacketStatusRequest(serial).Send();
+				g_GumpManager.AddGump(new CGumpStatusbar(serial, x, y, minimized));
+			}
+
+			break;
+		}
+		case OCT_CLOSE_STATUSBAR:
+		{
+			uint serial = ReadUInt32BE();
+			g_GumpManager.CloseGump(serial, 0, GT_STATUSBAR);
+			break;
+		}
+		case OCT_SECURE_TRADE_CHECK:
+		{
+			uint id1 = ReadUInt32BE();
+
+			CGumpSecureTrading *gump = (CGumpSecureTrading*)g_GumpManager.UpdateGump(id1, 0, GT_TRADE);
+
+			if (gump != NULL)
+			{
+				gump->StateMy = (ReadUInt8() != 0);
+				CPacketTradeResponse(gump, 2).Send();
+			}
+
+			break;
+		}
+		case OCT_SECURE_TRADE_CLOSE:
+		{
+			uint id1 = ReadUInt32BE();
+
+			CGumpSecureTrading *gump = (CGumpSecureTrading*)g_GumpManager.GetGump(id1, 0, GT_TRADE);
+
+			if (gump != NULL)
+			{
+				gump->RemoveMark = true;
+				CPacketTradeResponse(gump, 1).Send();
+			}
+
+			break;
+		}
+		case OCT_UNICODE_SPEECH_REQUEST:
+		{
+			ushort color = ReadUInt16BE();
+			wstring text = ReadWString(0);
+
+			if (!color)
+				color = g_ConfigManager.SpeechColor;
+
+			CPacketUnicodeSpeechRequest(text.c_str(), ST_NORMAL, 3, color, (puchar)g_Language.c_str()).Send();
+
+			break;
+		}
+		case OCT_RENAME_MOUNT_REQUEST:
+		{
+			uint serial = ReadUInt32BE();
+			string text = ReadString(0);
+
+			CPacketRenameRequest(serial, text).Send();
+
+			if (g_TooltipsEnabled)
+				g_PacketManager.AddMegaClilocRequest(serial);
+
+			break;
+		}
 		default:
 			break;
 	}
