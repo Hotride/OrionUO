@@ -1097,3 +1097,15 @@ uchar CGameCharacter::GetTrueAnimationGroup(ushort action)
 	return animGroup == 0 ? static_cast<uchar>(action) : animGroup;
 }
 //----------------------------------------------------------------------------------
+CGameItem *CGameCharacter::FindSecureTradeBox()
+{
+	WISPFUN_DEBUG("c20_f25");
+	QFOR(obj, m_Items, CGameItem*)
+	{
+		if (obj->Graphic == 0x1E5E && !obj->Layer)
+			return obj;
+	}
+
+	return NULL;
+}
+//----------------------------------------------------------------------------------

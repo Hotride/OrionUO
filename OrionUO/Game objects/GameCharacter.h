@@ -178,6 +178,8 @@ public:
 	bool Dead() { return ((m_Graphic == 0x0192) || (m_Graphic == 0x0193)); }
 
 	virtual CGameCharacter *GameCharacterPtr() { return this; }
+
+	virtual CGameItem *FindSecureTradeBox();
  };
  //----------------------------------------------------------------------------------
 #endif

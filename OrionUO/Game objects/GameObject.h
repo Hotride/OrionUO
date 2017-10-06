@@ -255,7 +255,7 @@ public:
 
 	CGameItem *FindLayer(const int &layer);
 
-	CGameItem *FindSecureTradeBox();
+	virtual CGameItem *FindSecureTradeBox() { return NULL; }
 };
 //----------------------------------------------------------------------------------
 #endif
