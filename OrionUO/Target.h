@@ -19,6 +19,10 @@ class CTarget
 	SETGET(uchar, CursorType, 0);
 	//Мульти на таргете
 	SETGET(ushort, MultiGraphic, 0);
+	//Мульти на таргете X
+	SETGET(ushort, MultiX, 0);
+	//Мульти на таргете Y
+	SETGET(ushort, MultiY, 0);
 	//Серийник объекта, к которому привязан прицел
 	SETGET(uint, CursorID, 0);
 	//Флаг состояния прицела

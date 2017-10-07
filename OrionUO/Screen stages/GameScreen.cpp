@@ -306,7 +306,7 @@ void CGameScreen::CalculateRenderList()
 		if (((CRenderWorldObject*)sel)->IsStaticObject() && ((CRenderWorldObject*)sel)->IsWet())
 			grZ = ((CRenderWorldObject*)sel)->Z;
 
-		g_Target.LoadMulti(sel->X, sel->Y, grZ);
+		g_Target.LoadMulti(sel->X - g_Target.MultiX, sel->Y - g_Target.MultiY, grZ);
 	}
 
 	m_CanProcessAlpha = (m_ProcessAlphaTimer < g_Ticks);
