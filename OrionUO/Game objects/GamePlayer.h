@@ -56,9 +56,6 @@ class CPlayer: public CGameCharacter
 	SETGET(short, OldY, 0);
 	SETGET(char, OldZ, 0);
 
-	//!Указатель на список умений
-	CSkill *m_Skills{ NULL };
-
 public:
 	CPlayer(const uint &serial);
 	virtual ~CPlayer();
@@ -67,66 +64,6 @@ public:
 	CFastWalkStack m_FastWalkStack;
 
 	void CloseBank();
-
-	/*!
-	Установить базовое значение навыка
-	@param [__in] index Индекс навыка
-	@param [__in] val Новое значение
-	@return 
-	*/
-	void SetSkillBaseValue(const int &index, const float &val);
-
-	/*!
-	Установить значение навыка
-	@param [__in] index Индекс навыка
-	@param [__in] val Новое значение
-	@return 
-	*/
-	void SetSkillValue(const int &index, const float &val);
-
-	/*!
-	Установить максимальное значение навыка
-	@param [__in] index Индекс навыка
-	@param [__in] val Новое значение
-	@return 
-	*/
-	void SetSkillCap(const int &index, const float &val);
-
-	/*!
-	Установить статус навыка
-	@param [__in] index Индекс навыка
-	@param [__in] val Новое состояние
-	@return 
-	*/
-	void SetSkillStatus(const int &index, const uchar &val);
-
-	/*!
-	Получить базовое значение навыка
-	@param [__in] index Индекс навыка
-	@return Текущее значение
-	*/
-	float GetSkillBaseValue(const int &index) const;
-
-	/*!
-	Получить значение навыка
-	@param [__in] index Индекс навыка
-	@return Текущее значение
-	*/
-	float GetSkillValue(const int &index) const;
-
-	/*!
-	Получить максимальное значение навыка
-	@param [__in] index Индекс навыка
-	@return Текущее значение
-	*/
-	float GetSkillCap(const int &index) const;
-
-	/*!
-	Получить статус навыка
-	@param [__in] index Индекс навыка
-	@return Текущее состояние
-	*/
-	uchar GetSkillStatus(const int &index) const;
 
 	/*!
 	Поиск бинтов в сумке (и подсумках)

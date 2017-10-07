@@ -97,11 +97,11 @@ void CSkillGroupObject::Sort()
 	BYTE table[60] = {0};
 	int Ptr = 0;
 
-	IFOR(i, 0, g_SkillsCount)
+	IFOR(i, 0, g_SkillsManager.Count)
 	{
 		IFOR(j, 0, m_Count)
 		{
-			if (g_SkillSort.m_Skills[i] == m_Items[j])
+			if (g_SkillsManager.GetSortedIndex(i) == m_Items[j])
 			{
 				table[Ptr] = m_Items[j];
 				Ptr++;

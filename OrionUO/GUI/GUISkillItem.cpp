@@ -13,20 +13,25 @@ CGUISkillItem::CGUISkillItem(const uint &serial, const uint &useSerial, const ui
 : CBaseGUI(GOT_SKILLITEM, serial, 0, 0, x, y), m_Index(index)
 {
 	WISPFUN_DEBUG("c76_f1");
-	if (g_Skills[m_Index].Button != 0)
-		m_ButtonUse = new CGUIButton(useSerial, 0x0837, 0x0838, 0x0838, 8, 0);
-	else
-		m_ButtonUse = NULL;
+	CSkill *skill = g_SkillsManager.Get(m_Index);
 
-	m_Status = g_Player->GetSkillStatus(m_Index);
+	if (skill != NULL)
+	{
+		if (skill->Button != 0)
+			m_ButtonUse = new CGUIButton(useSerial, 0x0837, 0x0838, 0x0838, 8, 0);
+		else
+			m_ButtonUse = NULL;
 
-	ushort graphic = GetStatusButtonGraphic();
-	m_ButtonStatus = new CGUIButton(statusSerial, graphic, graphic, graphic, 251, 0);
-	m_ButtonStatus->CheckPolygone = true;
+		m_Status = skill->Status;
 
-	g_FontManager.GenerateA(9, m_NameText, g_Skills[m_Index].Name.c_str(), 0x0288);
+		ushort graphic = GetStatusButtonGraphic();
+		m_ButtonStatus = new CGUIButton(statusSerial, graphic, graphic, graphic, 251, 0);
+		m_ButtonStatus->CheckPolygone = true;
 
-	CreateValueText();
+		g_FontManager.GenerateA(9, m_NameText, skill->Name.c_str(), 0x0288);
+
+		CreateValueText();
+	}
 }
 //----------------------------------------------------------------------------------
 CGUISkillItem::~CGUISkillItem()
@@ -67,17 +72,22 @@ ushort CGUISkillItem::GetStatusButtonGraphic()
 void CGUISkillItem::CreateValueText(const bool &showReal, const bool &showCap)
 {
 	WISPFUN_DEBUG("c76_f5");
-	//Значение скилла (учитывая выбранный флаг отображения)
-	float val = g_Player->GetSkillBaseValue(m_Index);
-	if (showReal)
-		val = g_Player->GetSkillValue(m_Index);
-	else if (showCap)
-		val = g_Player->GetSkillCap(m_Index);
+	CSkill *skill = g_SkillsManager.Get(m_Index);
 
-	char sbf[10] = { 0 };
-	sprintf_s(sbf, "%.1f", val);
+	if (skill != NULL)
+	{
+		//Значение скилла (учитывая выбранный флаг отображения)
+		float val = skill->BaseValue;
+		if (showReal)
+			val = skill->Value;
+		else if (showCap)
+			val = skill->Cap;
 
-	g_FontManager.GenerateA(9, m_ValueText, sbf, 0x0288);
+		char sbf[10] = { 0 };
+		sprintf_s(sbf, "%.1f", val);
+
+		g_FontManager.GenerateA(9, m_ValueText, sbf, 0x0288);
+	}
 }
 //----------------------------------------------------------------------------------
 void CGUISkillItem::PrepareTextures()

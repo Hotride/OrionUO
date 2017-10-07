@@ -388,6 +388,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="Managers\MacroManager.h" />
     <ClInclude Include="Managers\MapManager.h" />
     <ClInclude Include="Managers\MouseManager.h" />
+    <ClInclude Include="Managers\SkillsManager.h" />
     <ClInclude Include="Managers\UOFileReader.h" />
     <ClInclude Include="Managers\OptionsMacroManager.h" />
     <ClInclude Include="Managers\PacketManager.h" />
@@ -432,7 +433,6 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClInclude Include="ServerList.h" />
     <ClInclude Include="ShaderData.h" />
     <ClInclude Include="SkillGroup.h" />
-    <ClInclude Include="Skills.h" />
     <ClInclude Include="StackWalker.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StumpsData.h" />
@@ -631,6 +631,7 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="Managers\MacroManager.cpp" />
     <ClCompile Include="Managers\MapManager.cpp" />
     <ClCompile Include="Managers\MouseManager.cpp" />
+    <ClCompile Include="Managers\SkillsManager.cpp" />
     <ClCompile Include="Managers\UOFileReader.cpp" />
     <ClCompile Include="Managers\OptionsMacroManager.cpp" />
     <ClCompile Include="Managers\PacketManager.cpp" />
@@ -670,7 +671,6 @@ xcopy /y /d  "$(SolutionDir)bin\Orion.dll" "$(ProjectDir)"
     <ClCompile Include="SelectedObject.cpp" />
     <ClCompile Include="ServerList.cpp" />
     <ClCompile Include="SkillGroup.cpp" />
-    <ClCompile Include="Skills.cpp" />
     <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

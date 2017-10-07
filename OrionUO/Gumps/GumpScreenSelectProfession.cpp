@@ -97,13 +97,16 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 	{
 		int yPtr = 4; // 20;
 
-		IFOR(i, 0, g_SkillsCount)
+		IFOR(i, 0, g_SkillsManager.Count)
 		{
-			int skillIndex = g_SkillSort.m_Skills[i];
+			CSkill *skill = g_SkillsManager.Get(g_SkillsManager.GetSortedIndex(i));
+
+			if (skill == NULL)
+				continue;
 
 			CGUITextEntry *entry = new CGUITextEntry(ID_SPS_SKILLS_LIST + i, 1, 0x0035, 0x0035, 3, yPtr, 0, false, 9);
-			entry->m_Entry.SetText(g_Skills[skillIndex].Name);
-			entry->m_Entry.CreateTextureA(9, g_Skills[skillIndex].Name, 1, 0, TS_LEFT, 0);
+			entry->m_Entry.SetText(skill->Name);
+			entry->m_Entry.CreateTextureA(9, skill->Name, 1, 0, TS_LEFT, 0);
 			entry->CheckOnSerial = true;
 			entry->ReadOnly = true;
 
@@ -174,11 +177,16 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 			{
 				int skillID = profession->GetSkillIndex(i);
 
-				if (skillID >= g_SkillsCount)
+				if (skillID >= g_SkillsManager.Count)
 					skillID = 0;
 
 				CGUIText *text = new CGUIText(1, 360, yPtr);
-				text->CreateTextureA(1, g_Skills[skillID].Name, 90, TS_LEFT, UOFONT_FIXED);
+
+				CSkill *skill = g_SkillsManager.Get(skillID);
+
+				if (skill != NULL)
+					text->CreateTextureA(1, skill->Name, 90, TS_LEFT, UOFONT_FIXED);
+
 				Add(text);
 
 				yPtr += 32;
@@ -196,10 +204,12 @@ void CGumpScreenSelectProfession::UpdateContentOld()
 
 				CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_SPS_SKILLS_FILED + i, 0x0386, 0, 0x0021, 354, yPtr + 5, 90, false, 9, TS_LEFT, UOFONT_FIXED));
 
-				if (skillID >= g_SkillsCount)
+				CSkill *skill = g_SkillsManager.Get(skillID);
+
+				if (skillID >= g_SkillsManager.Count || skill == NULL)
 					entry->m_Entry.SetText("Click here");
 				else
-					entry->m_Entry.SetText(g_Skills[skillID].Name);
+					entry->m_Entry.SetText(skill->Name);
 
 				entry->CheckOnSerial = true;
 				entry->ReadOnly = true;
@@ -300,12 +310,15 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 
 			yPtr = 4;
 
-			IFOR(i, 0, g_SkillsCount)
+			IFOR(i, 0, g_SkillsManager.Count)
 			{
-				int skillIndex = g_SkillSort.m_Skills[i];
+				CSkill *skill = g_SkillsManager.Get(g_SkillsManager.GetSortedIndex(i));
+
+				if (skill == NULL)
+					continue;
 
 				CGUITextEntry *entry = new CGUITextEntry(ID_SPS_SKILLS_LIST + i, 1, 0x0035, 0x0035, 2, yPtr, 0, false, 9);
-				entry->m_Entry.SetText(g_Skills[skillIndex].Name);
+				entry->m_Entry.SetText(skill->Name);
 				entry->m_Entry.PrepareToDrawA(9, 1);
 				entry->CheckOnSerial = true;
 				entry->ReadOnly = true;
@@ -338,10 +351,12 @@ void CGumpScreenSelectProfession::UpdateContentNew()
 
 				CGUITextEntry *entry = (CGUITextEntry*)Add(new CGUITextEntry(ID_SPS_SKILLS_FILED + i, 0x0386, 0, 0x0021, 346, yPtr + 5, 90, false, 9, TS_LEFT, UOFONT_FIXED));
 
-				if (skillID >= g_SkillsCount)
+				CSkill *skill = g_SkillsManager.Get(skillID);
+
+				if (skillID >= g_SkillsManager.Count || skill == NULL)
 					entry->m_Entry.SetText("Click here");
 				else
-					entry->m_Entry.SetText(g_Skills[skillID].Name);
+					entry->m_Entry.SetText(skill->Name);
 
 				entry->CheckOnSerial = true;
 				entry->ReadOnly = true;
@@ -503,7 +518,7 @@ void CGumpScreenSelectProfession::GUMP_BUTTON_EVENT_C
 		{
 			g_SelectProfessionScreen.SkillSelection = g_SelectProfessionScreen.SkillSelection - 1;;
 			int index = serial - ID_SPS_SKILLS_LIST;
-			index = g_SkillSort.m_Skills[index];
+			index = g_SkillsManager.GetSortedIndex(index);
 
 			profession->SetSkillIndex(g_SelectProfessionScreen.SkillSelection, index);
 

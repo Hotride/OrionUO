@@ -154,7 +154,9 @@ bool CProfessionManager::ParseFilePart(WISP_FILE::CTextFileParser &file)
 				{
 					IFOR(j, 0, 54)
 					{
-						if (strings[1] == g_SkillName[j])
+						CSkill *skillPtr = g_SkillsManager.Get(j);
+
+						if (skillPtr != NULL && strings[1] == skillPtr->Name)
 						{
 							skillIndex[skillCount] = j;
 							skillValue[skillCount] = atoi(strings[2].c_str());

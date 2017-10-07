@@ -274,7 +274,7 @@ bool COrion::Install()
 	}
 
 	LOG("Load skills.\n");
-	if (!LoadSkills())
+	if (!g_SkillsManager.Load())
 	{
 		LOG("Error loading skills\n");
 		g_OrionWindow.ShowMessage("Error loading skills", "Error loading skills!");
@@ -303,7 +303,7 @@ bool COrion::Install()
 	CGumpStatusbar::m_StatusbarDefaultHeight = statusbarDims.Height;
 
 	LOG("Sort skills...\n");
-	g_SkillSort.Init();
+	g_SkillsManager.Sort();
 
 	LOG("Load cursors.\n");
 	if (!g_MouseManager.LoadCursorTextures())
@@ -2491,13 +2491,15 @@ int COrion::ValueInt(const VALUE_KEY_INT &key, int value)
 		}
 		case VKI_SKILLS_COUNT:
 		{
-			value = g_SkillsCount;
+			value = g_SkillsManager.Count;
 			break;
 		}
 		case VKI_SKILL_CAN_BE_USED:
 		{
-			if (value >= 0 && value < g_SkillsCount)
-				value = g_Skills[value].Button;
+			CSkill *skill = g_SkillsManager.Get(value);
+
+			if (skill != NULL)
+				value = skill->Button;
 
 			break;
 		}
@@ -2815,8 +2817,10 @@ string COrion::ValueString(const VALUE_KEY_STRING &key, string value)
 		{
 			int index = atoi(value.c_str());
 
-			if (index >= 0 && index < g_SkillsCount)
-				value = g_Skills[index].Name;
+			CSkill *skill = g_SkillsManager.Get(index);
+
+			if (skill != NULL)
+				value = skill->Name;
 
 			break;
 		}
@@ -3666,18 +3670,16 @@ void COrion::PatchFiles()
 			m_MultiDataIndex[vh->BlockID].DataSize = vh->Size;
 			m_MultiDataIndex[vh->BlockID].Count = (WORD)(vh->Size / sizeof(MULTI_IDX_BLOCK));
 		}
-		else if (vh->FileID == 16 && (int)vh->BlockID < g_SkillsCount) //Skills
+		else if (vh->FileID == 16 && (int)vh->BlockID < g_SkillsManager.Count) //Skills
 		{
-			int index = (int)vh->BlockID;
-			g_Skills[index].Button = *(puchar)(vAddr + vh->Position);
+			CSkill *skill = g_SkillsManager.Get(vh->BlockID);
 
-			char namebuf[128] = { 0 };
-			memcpy(&namebuf[0], (char*)(vAddr + vh->Position + 1), vh->Size - 1);
-
-			if (strlen(namebuf) > 0)
-				g_Skills[index].Name = namebuf;
-			else
-				g_Skills[i].Name = "";
+			if (skill != NULL)
+			{
+				WISP_DATASTREAM::CDataReader reader((puchar)vAddr + vh->Position, vh->Size);
+				skill->Button = (reader.ReadUInt8() != 0);
+				skill->Name = reader.ReadString(vh->Size - 1);
+			}
 		}
 		else if (vh->FileID == 30) //Tiledata
 		{
@@ -3976,72 +3978,18 @@ void COrion::IndexReplaces()
 		if (size > 0)
 		{
 			uint index = std::atoi(strings[0].c_str());
-				CIndexMusic &mp3 = m_MP3Data[index];
+			CIndexMusic &mp3 = m_MP3Data[index];
 			string name = "Music\\Digital\\" + strings[1];
 			string extension = ".mp3";
 			if (name.find(extension) == string::npos)
 				name += extension;
-				if (size > 1)
+			if (size > 1)
 				mp3.FilePath = g_App.FilePath((name).c_str());
 
-				if (size > 2)
-					mp3.Loop = true;
-			}
+			if (size > 2)
+				mp3.Loop = true;
 		}
 	}
-//----------------------------------------------------------------------------------
-bool COrion::LoadSkills()
-{
-	WISPFUN_DEBUG("c194_f56");
-	if (!g_FileManager.m_SkillsIdx.Size || !g_FileManager.m_SkillsMul.Size || g_SkillsCount)
-		return false;
-
-	PSKILLS_IDX_BLOCK sidx = NULL, start = NULL, end = NULL;
-
-	int cnt = g_FileManager.m_SkillsIdx.Size / sizeof(SKILLS_IDX_BLOCK);
-
-	IFOR(i, 0, cnt)
-	{
-		sidx = (PSKILLS_IDX_BLOCK)((uint)g_FileManager.m_SkillsIdx.Start + (i * sizeof(SKILLS_IDX_BLOCK)));
-
-		if (sidx->Size && sidx->Position != 0xFFFFFFFF && sidx->Size != 0xFFFFFFFF)
-		{
-			if (start == NULL)
-				start = sidx;
-			end = sidx;
-
-			//LOG("Skill load[%d] = %s\n", i, (char*)((DWORD)FileManager.SkillsMul.Address + sidx->Position + 1));
-		}
-	}
-
-	g_SkillsCount = (int)(end - start) + 1;
-
-	if (g_SkillsCount < 2 || g_SkillsCount > 60)
-	{
-		g_SkillsCount = 0;
-
-		return false;
-	}
-
-	g_Skills.resize(g_SkillsCount);
-
-	for (int i = 0;; i++, start++)
-	{
-		g_Skills[i].Button = *(puchar)((uint)g_FileManager.m_SkillsMul.Start + start->Position);
-
-		char namebuf[128] = { 0 };
-		memcpy(namebuf, (char*)((uint)g_FileManager.m_SkillsMul.Start + start->Position + 1), start->Size - 1);
-
-		if (strlen(namebuf) > 0)
-			g_Skills[i].Name = namebuf;
-		else
-			g_Skills[i].Name = "NoNameSkill";
-
-		if (start->Position == end->Position)
-			break;
-	}
-
-	return true;
 }
 //----------------------------------------------------------------------------------
 void COrion::CreateAuraTexture()
@@ -5999,7 +5947,7 @@ void COrion::OpenSkills()
 {
 	WISPFUN_DEBUG("c194_f139");
 
-	g_SkillsRequested = true;
+	g_SkillsManager.SkillsRequested = true;
 	CPacketSkillsRequest(g_PlayerSerial).Send();
 }
 //----------------------------------------------------------------------------------

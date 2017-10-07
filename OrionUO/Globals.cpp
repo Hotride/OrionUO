@@ -126,7 +126,6 @@ uint g_PartyHelperTimer = 0;
 
 float g_DrawColor = 1.0f;
 
-float g_SkillsTotal = 0.0f;
 SEASON_TYPE g_Season = ST_SUMMER;
 SEASON_TYPE g_OldSeason = ST_SUMMER;
 int g_OldSeasonMusic = 0;

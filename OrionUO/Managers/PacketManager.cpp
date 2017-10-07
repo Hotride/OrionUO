@@ -849,14 +849,14 @@ PACKET_HANDLER(EnterWorld)
 	g_Ping = 0;
 	g_ClickObject.Clear();
 	g_Weather.Reset();
-	g_SkillsTotal = 0.0f;
 	g_ConsolePrompt = PT_NONE;
 	g_MacroPointer = NULL;
 	g_Season = ST_SUMMER;
 	g_OldSeason = ST_SUMMER;
 	g_GlobalScale = 1.0;
 	g_PathFinder.BlockMoving = false;
-	g_SkillsRequested = false;
+	g_SkillsManager.SkillsTotal = 0.0f;
+	g_SkillsManager.SkillsRequested = false;
 
 	Move(4);
 
@@ -2160,16 +2160,33 @@ PACKET_HANDLER(UpdateSkills)
 	if (g_World == NULL)
 		return;
 
-	int type = ReadUInt8();
-	bool HaveCap = (type == 0x02 || type == 0xDF);
-	bool IsSingleUpdate = (type == 0xFF || type == 0xDF);
-	LOG("Skill update type %i (Cap=%d)\n", type, HaveCap);
+	uchar type = ReadUInt8();
+	bool haveCap = ((type && type <= 0x03) || type == 0xDF);
+	bool isSingleUpdate = (type == 0xFF || type == 0xDF);
+	LOG("Skill update type %i (cap=%d)\n", type, haveCap);
+
+	if (type == 0xFE)
+	{
+		int count = ReadInt16BE();
+		g_SkillsManager.Clear();
+
+		IFOR(i, 0, count)
+		{
+			bool haveButton = (ReadUInt8() != 0);
+			int nameLength = ReadUInt8();
+			g_SkillsManager.Add(CSkill(haveButton, ReadString(nameLength)));
+		}
+
+		g_SkillsManager.Sort();
+
+		return;
+	}
 
 	CGumpSkills *gump = (CGumpSkills*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_SKILLS);
 
-	if (!IsSingleUpdate && g_SkillsRequested)
+	if (!isSingleUpdate && (type == 1 || type == 3 || g_SkillsManager.SkillsRequested))
 	{
-		g_SkillsRequested = false;
+		g_SkillsManager.SkillsRequested = false;
 
 		if (gump == NULL)
 		{
@@ -2180,59 +2197,64 @@ PACKET_HANDLER(UpdateSkills)
 		gump->Visible = true;
 	}
 
-	while (m_Ptr < m_End)
+	while (!IsEOF())
 	{
 		ushort id = ReadUInt16BE();
+
+		if (IsEOF())
+			break;
 
 		if (!id && !type)
 			break;
 		else if (!type || type == 0x02)
 			id--;
 
-		ushort BaseVal = ReadUInt16BE();
-		ushort RealVal = ReadUInt16BE();
+		ushort baseVal = ReadUInt16BE();
+		ushort realVal = ReadUInt16BE();
 		uchar lock = ReadUInt8();
-		ushort Cap = 0;
+		ushort cap = 1000;
 
-		if (HaveCap)
-			Cap = ReadUInt16BE();
+		if (haveCap)
+			cap = ReadUInt16BE();
 
-		if (id < g_SkillsCount)
+		CSkill *skill = g_SkillsManager.Get(id);
+
+		if (id < g_SkillsManager.Count && skill != NULL)
 		{
-			if (IsSingleUpdate)
+			if (isSingleUpdate)
 			{
-				float change = (float)(BaseVal / 10.0f) - g_Player->GetSkillBaseValue(id);
+				float change = (float)(baseVal / 10.0f) - skill->BaseValue;
 
 				if (change)
 				{
 					char str[128] = { 0 };
-					sprintf_s(str, "Your skill in %s has %s by %.1f%%.  It is now %.1f%%.", g_Skills[id].Name.c_str(), ((change < 0) ? "decreased" : "increased"), change, g_Player->GetSkillBaseValue(id) + change);
+					sprintf_s(str, "Your skill in %s has %s by %.1f%%.  It is now %.1f%%.", skill->Name.c_str(), ((change < 0) ? "decreased" : "increased"), change, skill->BaseValue + change);
 					//else if (change > 0) sprintf(str, "Your skill in %s has increased by %.1f%%.  It is now %.1f%%.", UO->m_Skills[id].m_Name.c_str(), change, obj->GetSkillBaseValue(id) + change);
 					g_Orion.CreateTextMessage(TT_SYSTEM, 0, 3, 0x58, str);
 				}
 			}
 
-			g_Player->SetSkillBaseValue(id, (float)(BaseVal / 10.0f));
-			g_Player->SetSkillValue(id, (float)(RealVal / 10.0f));
-			g_Player->SetSkillCap(id, (float)(Cap / 10.0f));
-			g_Player->SetSkillStatus(id, lock);
+			skill->BaseValue = (float)(baseVal / 10.0f);
+			skill->Value = (float)(realVal / 10.0f);
+			skill->Cap = (float)(cap / 10.0f);
+			skill->Status = lock;
 
 			if (gump != NULL)
 				gump->UpdateSkillValue(id);
 
-			if (HaveCap)
-				LOG("Skill %i is %i|%i|%i\n", id, BaseVal, RealVal, Cap);
+			if (haveCap)
+				LOG("Skill %i is %i|%i|%i\n", id, baseVal, realVal, cap);
 			else
-				LOG("Skill %i is %i|%i\n", id, BaseVal, RealVal);
+				LOG("Skill %i is %i|%i\n", id, baseVal, realVal);
 		}
 		else
 			LOG("Unknown skill update %d\n", id);
+
+		if (isSingleUpdate)
+			break;
 	}
 
-	g_SkillsTotal = 0.0f;
-
-	IFOR(i, 0, g_SkillsCount)
-		g_SkillsTotal += g_Player->GetSkillValue(i);
+	g_SkillsManager.UpdateSkillsSum();
 
 	if (gump != NULL)
 		gump->UpdateSkillsSum();

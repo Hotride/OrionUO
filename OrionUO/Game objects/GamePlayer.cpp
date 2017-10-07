@@ -15,18 +15,12 @@ CPlayer::CPlayer(const uint &serial)
 : CGameCharacter(serial)
 {
 	WISPFUN_DEBUG("c21_f1");
-	m_Skills = new CSkill[g_SkillsCount];
 	CPacketSkillsRequest(m_Serial).Send();
 }
 //---------------------------------------------------------------------------
 CPlayer::~CPlayer()
 {
 	WISPFUN_DEBUG("c21_f2");
-	if (m_Skills != NULL)
-	{
-		delete []m_Skills;
-		m_Skills = NULL;
-	}
 }
 //---------------------------------------------------------------------------
 void CPlayer::CloseBank()
@@ -40,122 +34,6 @@ void CPlayer::CloseBank()
 
 		g_GumpManager.CloseGump(bank->Serial, 0, GT_CONTAINER);
 	}
-}
-//---------------------------------------------------------------------------
-/*!
-Установить базовое значение навыка
-@param [__in] index Индекс навыка
-@param [__in] val Новое значение
-@return 
-*/
-void CPlayer::SetSkillBaseValue(const int &index, const float &val)
-{
-	WISPFUN_DEBUG("c21_f3");
-	if (index < 0 || index >= g_SkillsCount)
-		return;
-
-	m_Skills[index].SetBaseValue(val);
-}
-//---------------------------------------------------------------------------
-/*!
-Установить значение навыка
-@param [__in] index Индекс навыка
-@param [__in] val Новое значение
-@return 
-*/
-void CPlayer::SetSkillValue(const int &index, const float &val)
-{
-	WISPFUN_DEBUG("c21_f4");
-	if (index < 0 || index >= g_SkillsCount)
-		return;
-
-	m_Skills[index].SetValue(val);
-}
-//---------------------------------------------------------------------------
-/*!
-Установить максимальное значение навыка
-@param [__in] index Индекс навыка
-@param [__in] val Новое значение
-@return 
-*/
-void CPlayer::SetSkillCap(const int &index, const float &val)
-{
-	WISPFUN_DEBUG("c21_f5");
-	if (index < 0 || index >= g_SkillsCount)
-		return;
-
-	m_Skills[index].SetCap(val);
-}
-//---------------------------------------------------------------------------
-/*!
-Установить статус навыка
-@param [__in] index Индекс навыка
-@param [__in] val Новое состояние
-@return 
-*/
-void CPlayer::SetSkillStatus(const int &index, const uchar &val)
-{
-	WISPFUN_DEBUG("c21_f6");
-	if (index < 0 || index >= g_SkillsCount)
-		return;
-
-	m_Skills[index].SetStatus(val);
-}
-//---------------------------------------------------------------------------
-/*!
-Получить базовое значение навыка
-@param [__in] index Индекс навыка
-@return Текущее значение
-*/
-float CPlayer::GetSkillBaseValue(const int &index) const
-{
-	WISPFUN_DEBUG("c21_f7");
-	if (index < 0 || index >= g_SkillsCount)
-		return 0.0f;
-
-	return m_Skills[index].GetBaseValue();
-}
-//---------------------------------------------------------------------------
-/*!
-Получить значение навыка
-@param [__in] index Индекс навыка
-@return Текущее значение
-*/
-float CPlayer::GetSkillValue(const int &index) const
-{
-	WISPFUN_DEBUG("c21_f8");
-	if (index < 0 || index >= g_SkillsCount)
-		return 0.0f;
-
-	return m_Skills[index].GetValue();
-}
-//---------------------------------------------------------------------------
-/*!
-Получить максимальное значение навыка
-@param [__in] index Индекс навыка
-@return Текущее значение
-*/
-float CPlayer::GetSkillCap(const int &index) const
-{
-	WISPFUN_DEBUG("c21_f9");
-	if (index < 0 || index >= g_SkillsCount)
-		return 0.0f;
-
-	return m_Skills[index].GetCap();
-}
-//---------------------------------------------------------------------------
-/*!
-Получить статус навыка
-@param [__in] index Индекс навыка
-@return Текущее состояние
-*/
-uchar CPlayer::GetSkillStatus(const int &index) const
-{
-	WISPFUN_DEBUG("c21_f10");
-	if (index < 0 || index >= g_SkillsCount)
-		return 0;
-
-	return m_Skills[index].GetStatus();
 }
 //---------------------------------------------------------------------------
 /*!

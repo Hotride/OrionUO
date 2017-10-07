@@ -1196,7 +1196,7 @@ void CGumpManager::Load(const string &path)
 					gump = new CGumpSkills(g_PlayerSerial, gumpX, gumpY, gumpMinimized, file.ReadInt16LE());
 					gump->Visible = false;
 
-					g_SkillsRequested = true;
+					g_SkillsManager.SkillsRequested = true;
 					CPacketSkillsRequest(g_PlayerSerial).Send();
 
 					break;

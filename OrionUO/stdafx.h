@@ -111,7 +111,6 @@ class CGump;
 #include "ServerList.h"
 #include "ShaderData.h"
 #include "SkillGroup.h"
-#include "Skills.h"
 #include "StackWalker.h"
 #include "StumpsData.h"
 #include "TargetGump.h"
@@ -240,6 +239,7 @@ class CGump;
 #include "Managers/SpeechManager.h"
 #include "Managers/UOFileReader.h"
 #include "Managers/CorpseManager.h"
+#include "Managers/SkillsManager.h"
 
 #include "Screen stages/BaseScreen.h"
 #include "Screen stages/CharacterListScreen.h"

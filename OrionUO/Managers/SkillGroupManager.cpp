@@ -65,7 +65,7 @@ void CSkillGroupManager::MakeDefaultMiscellaneous()
 void CSkillGroupManager::MakeDefaultCombat()
 {
 	WISPFUN_DEBUG("c155_f3");
-	int cnt = g_SkillsCount;
+	int cnt = g_SkillsManager.Count;
 
 	CSkillGroupObject *group = new CSkillGroupObject();
 	group->SetName("Combat");
@@ -111,7 +111,7 @@ void CSkillGroupManager::MakeDefaultTradeSkills()
 void CSkillGroupManager::MakeDefaultMagic()
 {
 	WISPFUN_DEBUG("c155_f5");
-	int cnt = g_SkillsCount;
+	int cnt = g_SkillsManager.Count;
 
 	CSkillGroupObject *group = new CSkillGroupObject();
 	group->SetName("Magic");

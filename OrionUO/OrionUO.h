@@ -61,9 +61,6 @@ private:
 	//Подмена индексов (согласно текстовым файлам)
 	void IndexReplaces();
 
-	//Загрузка данных о навыках
-	bool LoadSkills();
-
 	//Загрузка стартового конфига
 	void LoadClientStartupConfig();
 

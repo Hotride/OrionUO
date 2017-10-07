@@ -258,9 +258,6 @@
     <ClInclude Include="Managers\CityManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Skills.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SkillGroup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -819,6 +816,9 @@
     <ClInclude Include="Managers\CustomHousesManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Managers\SkillsManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrionUO.cpp">
@@ -978,9 +978,6 @@
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="SkillGroup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Skills.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SelectedObject.cpp">
@@ -1518,6 +1515,9 @@
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Managers\UOFileReader.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\SkillsManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>

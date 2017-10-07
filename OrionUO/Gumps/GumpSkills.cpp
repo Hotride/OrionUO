@@ -64,7 +64,7 @@ CGumpSkills::CGumpSkills(uint serial, short x, short y, bool minimized, int heig
 			{
 				uchar index = group->GetItem(i); //Получаем индекс скилла по порядковому номеру
 
-				if (index < g_SkillsCount) //Он валиден
+				if (index < g_SkillsManager.Count) //Он валиден
 					skillGroup->Add(new CGUISkillItem(ID_GS_SKILL + index, ID_GS_SKILL_BUTTON + index, ID_GS_SKILL_STATE + index, index, 0, i * 17));
 			}
 
@@ -252,7 +252,7 @@ void CGumpSkills::UpdateSkillsSum()
 {
 	WISPFUN_DEBUG("c125_f9");
 	char str[20] = { 0 };
-	sprintf_s(str, "%.1f", g_SkillsTotal);
+	sprintf_s(str, "%.1f", g_SkillsManager.SkillsTotal);
 	m_SkillSum->CreateTextureA(3, str);
 }
 //----------------------------------------------------------------------------------
@@ -542,32 +542,37 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 		{
 			int index = serial - ID_GS_SKILL_STATE;
 
-			if (index < 0 || index >= g_SkillsCount)
+			if (index < 0 || index >= g_SkillsManager.Count)
 				return;
 
 			if (g_Player == NULL)
 				return;
 
-			uchar status = g_Player->GetSkillStatus(index);
-
-			if (status < 2)
-				status++;
-			else
-				status = 0;
-
-			g_Orion.SkillStatusChange(index, status);
-			g_Player->SetSkillStatus(index, status);
-
-			CGUISkillItem *skill = GetSkill(index);
+			CSkill *skill = g_SkillsManager.Get(index);
 
 			if (skill != NULL)
+			{
+				uchar status = skill->Status;
+
+				if (status < 2)
+					status++;
+				else
+					status = 0;
+
+				g_Orion.SkillStatusChange(index, status);
 				skill->Status = status;
+
+				CGUISkillItem *skillItem = GetSkill(index);
+
+				if (skillItem != NULL)
+					skillItem->Status = status;
+			}
 		}
 		else if (serial >= ID_GS_SKILL_BUTTON) //Выбор кнопки для использования скилла
 		{
 			int index = serial - ID_GS_SKILL_BUTTON;
 
-			if (index < 0 || index >= g_SkillsCount)
+			if (index < 0 || index >= g_SkillsManager.Count)
 				return;
 
 			g_Orion.UseSkill(index);
@@ -705,7 +710,7 @@ void CGumpSkills::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam)
 								{
 									uchar index = groupItem->GetItem(i); //Получаем индекс скилла по порядковому номеру
 
-									if (index < g_SkillsCount) //Он валиден
+									if (index < g_SkillsManager.Count) //Он валиден
 										first->Add(new CGUISkillItem(ID_GS_SKILL + index, ID_GS_SKILL_BUTTON + index, ID_GS_SKILL_STATE + index, index, 0, i * 17));
 								}
 							}
