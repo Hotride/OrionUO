@@ -2242,13 +2242,13 @@ PACKET_HANDLER(UpdateSkills)
 			if (gump != NULL)
 				gump->UpdateSkillValue(id);
 
-			if (haveCap)
+			/*if (haveCap)
 				LOG("Skill %i is %i|%i|%i\n", id, baseVal, realVal, cap);
 			else
-				LOG("Skill %i is %i|%i\n", id, baseVal, realVal);
+				LOG("Skill %i is %i|%i\n", id, baseVal, realVal);*/
 		}
-		else
-			LOG("Unknown skill update %d\n", id);
+		//else
+		//	LOG("Unknown skill update %d\n", id);
 
 		if (isSingleUpdate)
 			break;
@@ -2258,6 +2258,8 @@ PACKET_HANDLER(UpdateSkills)
 
 	if (gump != NULL)
 		gump->UpdateSkillsSum();
+
+	LOG("Skill(s) updated!\n");
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(ExtendedCommand)
