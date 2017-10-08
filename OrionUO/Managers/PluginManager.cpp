@@ -14,9 +14,9 @@ CPluginManager g_PluginManager;
 bool __cdecl PluginRecvFunction(puchar buf, const int &size)
 {
 	WISPFUN_DEBUG("c_plgrcvfnc");
-	SendMessage(g_OrionWindow.Handle, UOMSG_RECV, (WPARAM)buf, size);
+	//SendMessage(g_OrionWindow.Handle, UOMSG_RECV, (WPARAM)buf, size);
 	
-	//g_PacketManager.SavePluginReceivePacket(buf, size);
+	g_PacketManager.SavePluginReceivePacket(buf, size);
 
 	return true;
 }
@@ -24,9 +24,9 @@ bool __cdecl PluginRecvFunction(puchar buf, const int &size)
 bool __cdecl PluginSendFunction(puchar buf, const int &size)
 {
 	WISPFUN_DEBUG("c_plgsndfnc");
-	SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)buf, size);
+	//SendMessage(g_OrionWindow.Handle, UOMSG_SEND, (WPARAM)buf, size);
 
-	/*uint ticks = g_Ticks;
+	uint ticks = g_Ticks;
 	g_TotalSendSize += size;
 
 	CPacketInfo &type = g_PacketManager.GetInfo(*buf);
@@ -44,7 +44,7 @@ bool __cdecl PluginSendFunction(puchar buf, const int &size)
 	else
 		LOG_DUMP(buf, size);
 
-	g_ConnectionManager.Send(buf, size);*/
+	g_ConnectionManager.Send(buf, size);
 
 	return true;
 }
