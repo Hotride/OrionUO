@@ -9,7 +9,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CUopMapManager g_MapManager;
+CMapManager g_MapManager;
 //----------------------------------------------------------------------------------
 CIndexMap::CIndexMap()
 {
@@ -62,6 +62,15 @@ void CMapManager::CreateBlockTable(int map)
 	uint mapAddress = (uint)g_FileManager.m_MapMul[map].Start;
 	uint endMapAddress = mapAddress + g_FileManager.m_MapMul[map].Size;
 
+	CUopMappedFile &uopFile = g_FileManager.m_MapUOP[map];
+	bool isUop = (uopFile.Start != NULL);
+
+	if (isUop)
+	{
+		mapAddress = (uint)uopFile.Start;
+		endMapAddress = mapAddress + uopFile.Size;
+	}
+
 	uint staticIdxAddress = (uint)g_FileManager.m_StaticIdx[map].Start;
 	uint endStaticIdxAddress = staticIdxAddress + g_FileManager.m_StaticIdx[map].Size;
 
@@ -71,6 +80,9 @@ void CMapManager::CreateBlockTable(int map)
 	if (!mapAddress || !staticIdxAddress || !staticAddress)
 		return;
 
+	int fileNumber = -1;
+	uint uopOffset = 0;
+
 	IFOR(block, 0, maxBlockCount)
 	{
 		CIndexMap &index = list[block];
@@ -79,30 +91,46 @@ void CMapManager::CreateBlockTable(int map)
 		uint realStaticAddress = 0;
 		int realStaticCount = 0;
 
-		if (mapAddress != 0)
-		{
-			uint address = mapAddress + (block * sizeof(MAP_BLOCK));
+		int blockNumber = block;
 
-			if (address < endMapAddress)
-				realMapAddress = address;
-		}
-		uint staticIdxBlockAddress = staticIdxAddress + block * sizeof(STAIDX_BLOCK);
-		if (staticIdxAddress != 0 && staticAddress != 0 && staticIdxBlockAddress < endStaticIdxAddress)
+		if (isUop)
 		{
-			PSTAIDX_BLOCK sidx = reinterpret_cast<PSTAIDX_BLOCK>(staticIdxBlockAddress);
+			blockNumber &= 4095;
+			int shifted = block >> 12;
 
-			if (sidx->Size > 0 && sidx->Position != 0xFFFFFFFF && (uint)sidx < endStaticIdxAddress)
+			if (fileNumber != shifted)
 			{
-				uint address = staticAddress + sidx->Position;
+				fileNumber = shifted;
+				char mapFilePath[200] = { 0 };
+				sprintf_s(mapFilePath, "build/map%ilegacymul/%08i.dat", map, shifted);
 
-				if (address < endStaticAddress)
-				{
-					realStaticAddress = address;
-					realStaticCount = sidx->Size / sizeof(STATICS_BLOCK);
+				CUopBlockHeader *uopBlock = uopFile.Get(COrion::CreateHash(mapFilePath));
 
-					if (realStaticCount > 1024)
-						realStaticCount = 1024;
-				}
+				if (uopBlock != NULL)
+					uopOffset = (uint)uopBlock->Offset;
+				else
+					LOG("Hash not found in uop map %i file.\n", map);
+			}
+		}
+
+		uint address = mapAddress + uopOffset + (blockNumber * sizeof(MAP_BLOCK));
+
+		if (address < endMapAddress)
+			realMapAddress = address;
+
+		PSTAIDX_BLOCK sidx = (PSTAIDX_BLOCK)(staticIdxAddress + block * sizeof(STAIDX_BLOCK));
+
+		if ((uint)sidx < endStaticIdxAddress && sidx->Size > 0 && sidx->Position != 0xFFFFFFFF)
+		{
+			uint address = staticAddress + sidx->Position;
+
+			if (address < endStaticAddress)
+			{
+				realStaticAddress = address;
+				realStaticCount = sidx->Size / sizeof(STATICS_BLOCK);
+
+				if (realStaticCount > 1024)
+					realStaticCount = 1024;
 			}
 		}
 
@@ -792,153 +820,6 @@ void CMapManager::DeleteBlock(const uint &index)
 		}
 
 		block = (CMapBlock*)block->m_Next;
-	}
-}
-//----------------------------------------------------------------------------------
-void CUopMapManager::CreateBlockTable(int map)
-{
-	if (g_FileManager.m_MapUOP[map].Start == NULL)
-	{
-		CMapManager::CreateBlockTable(map);
-		return;
-	}
-
-	MAP_INDEX_LIST &list = m_BlockData[map];
-	WISP_GEOMETRY::CSize &size = g_MapBlockSize[map];
-
-	int maxBlockCount = size.Width * size.Height;
-
-	//Return and error notification?
-	if (maxBlockCount < 1)
-		return;
-
-	list.resize(maxBlockCount);
-
-	auto &uopFile = g_FileManager.m_MapUOP[map];
-	uint mapAddress = reinterpret_cast<uint>(g_FileManager.m_MapUOP[map].Start);
-	uint endMapAddress = mapAddress + g_FileManager.m_MapUOP[map].Size;
-
-	uint staticIdxAddress = reinterpret_cast<uint>(g_FileManager.m_StaticIdx[map].Start);
-	uint endStaticIdxAddress = staticIdxAddress + g_FileManager.m_StaticIdx[map].Size;
-
-	uint staticAddress = reinterpret_cast<uint>(g_FileManager.m_StaticMul[map].Start);
-	uint endStaticAddress = staticAddress + g_FileManager.m_StaticMul[map].Size;
-
-	if (!mapAddress || !staticIdxAddress || !staticAddress)
-		return;
-
-	//Начинаем читать УОП
-	if (uopFile.ReadInt32LE() != 0x50594D)
-	{
-		LOG("Bad Uop file %s", uopFile);
-		return;
-	}
-
-	uopFile.ReadInt64LE(); // version + signature
-	long long nextBlock = uopFile.ReadInt64LE();
-
-	std::unordered_map<unsigned long long, UOPMapaData> hashes;
-
-	uopFile.ResetPtr();
-	uopFile.Move(static_cast<int>(nextBlock));
-
-	do
-	{
-		int fileCount = uopFile.ReadInt32LE();
-		nextBlock = uopFile.ReadInt64LE();
-		IFOR(i, 0, fileCount)
-		{
-			auto offset = uopFile.ReadInt64LE();
-			auto headerLength = uopFile.ReadInt32LE();
-			auto compressedLength = uopFile.ReadInt32LE();
-			auto decompressedLength = uopFile.ReadInt32LE();
-			auto hash = uopFile.ReadInt64LE();
-			uopFile.ReadInt32LE();
-			auto flag = uopFile.ReadInt16LE();
-
-			if (offset == 0)
-			{
-				continue;
-			}
-			UOPMapaData dataStruct;
-			dataStruct.offset = static_cast<int>(offset + headerLength);
-			dataStruct.length = compressedLength;
-			hashes[hash] = dataStruct;
-		}
-
-		uopFile.ResetPtr();
-		uopFile.Move(static_cast<int>(nextBlock));
-	} while (nextBlock != 0);
-
-
-
-	unsigned long long hash;
-	int fileNumber = -1;
-	UOPMapaData uopDataStruct;
-	IFOR(block, 0, maxBlockCount)
-	{
-		CIndexMap &index = list[block];
-		int shifted = block >> 12;
-		if (fileNumber != shifted)
-		{
-			fileNumber = shifted;
-			char mapFilePath[200] = { 0 };
-			sprintf_s(mapFilePath, "build/map%ilegacymul/%08i.dat", map, shifted);
-			hash = COrion::CreateHash(mapFilePath);
-			if (hashes.find(hash) != hashes.end())
-			{
-				uopDataStruct = hashes.at(hash);
-			}
-			else
-			{
-				LOG("False hash in uop map %i file.", map);
-			}
-		}
-
-		uint realMapAddress = 0;
-		uint realStaticAddress = 0;
-		int realStaticCount = 0;
-		int blockNumber = block & 4095;
-		if (mapAddress != 0)
-		{
-			uint address = mapAddress + uopDataStruct.offset + (blockNumber * 196);
-
-			if (address < endMapAddress)
-				realMapAddress = address;
-		}
-
-		if (staticIdxAddress != 0 && staticAddress != 0)
-		{
-			PSTAIDX_BLOCK sidx = (PSTAIDX_BLOCK)(staticIdxAddress + (block * sizeof(STAIDX_BLOCK)));
-
-			if (sidx->Size > 0 && sidx->Position != 0xFFFFFFFF && (uint)sidx < endStaticIdxAddress)
-			{
-				uint address = staticAddress + sidx->Position;
-
-				if (address < endStaticAddress)
-				{
-					realStaticAddress = address;
-					realStaticCount = sidx->Size / sizeof(STATICS_BLOCK);
-
-					if (realStaticCount > 0)
-					{
-						if (realStaticCount > 1024)
-							realStaticCount = 1024;
-					}
-				}
-			}
-		}
-
-		if (!realStaticCount)
-			realStaticCount = 0;
-
-		index.OriginalMapAddress = realMapAddress;
-		index.OriginalStaticAddress = realStaticAddress;
-		index.OriginalStaticCount = realStaticCount;
-
-		index.MapAddress = realMapAddress;
-		index.StaticAddress = realStaticAddress;
-		index.StaticCount = realStaticCount;
 	}
 }
 //----------------------------------------------------------------------------------

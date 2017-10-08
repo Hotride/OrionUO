@@ -25,12 +25,6 @@ public:
 	virtual ~CIndexMap();
 };
 //----------------------------------------------------------------------------------
-struct UOPMapaData
-{
-	int offset;
-	int length;
-};
-//----------------------------------------------------------------------------------
 typedef vector<CIndexMap> MAP_INDEX_LIST;
 //----------------------------------------------------------------------------------
 //!Класс менеджера карт
@@ -55,7 +49,7 @@ public:
 
 	CIndexMap *GetIndex(const uint &map, const int &blockX, const int &blockY);
 
-	virtual void CreateBlockTable(int map);
+	void CreateBlockTable(int map);
 
 	void CreateBlocksTable();
 
@@ -80,7 +74,7 @@ public:
 	@param [__inout] block Ссылка на блок для загрузки
 	@return 
 	*/
-	virtual void LoadBlock(CMapBlock *block);
+	void LoadBlock(CMapBlock *block);
 
 	/*!
 	Получить блок для радара из муллов
@@ -89,7 +83,7 @@ public:
 	@param [__out] mb Ссылка на блок
 	@return 
 	*/
-	virtual void GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLOCK &mb);
+	void GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLOCK &mb);
 
 	/*!
 	Получить блок карты напрямую из мулов
@@ -99,7 +93,7 @@ public:
 	@param [__out] mb Ссылка на блок
 	@return Код ошибки (0 - успешно)
 	*/
-	virtual void GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
+	void GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
 
 	/*!
 	Получить значение Z координаты для указанной точки в мире
@@ -155,16 +149,6 @@ public:
 	void AddRender(CRenderWorldObject *item);
 };
 //----------------------------------------------------------------------------------
-//!Класс менеджера карт
-class CUopMapManager : public CMapManager
-{
-public:
-	CUopMapManager() : CMapManager() {}
-	virtual ~CUopMapManager() {}
-
-	virtual void CreateBlockTable(int map);
-};
-//----------------------------------------------------------------------------------
-extern CUopMapManager g_MapManager;
+extern CMapManager g_MapManager;
 //----------------------------------------------------------------------------------
 #endif

@@ -90,6 +90,8 @@ class CGump;
 #include "MulStruct.h"
 #include "TextureObject.h"
 #include "IndexObject.h"
+#include "Utility/AutoResetEvent.h"
+#include "Managers/FileManager.h"
 #include "Macro.h"
 #include "Multi.h"
 #include "MultiMap.h"
@@ -117,8 +119,6 @@ class CGump;
 #include "VMQuery.h"
 #include "WeatherEffect.h"
 #include "Weather.h"
-
-#include "Utility/AutoResetEvent.h"
 
 #include "Network/UOHuffman.h"
 #include "Network/Packets.h"
@@ -223,7 +223,6 @@ class CGump;
 #include "Managers/ConnectionManager.h"
 #include "Managers/CreateCharacterManager.h"
 #include "Managers/EffectManager.h"
-#include "Managers/FileManager.h"
 #include "Managers/FontsManager.h"
 #include "Managers/GumpManager.h"
 #include "Managers/MacroManager.h"

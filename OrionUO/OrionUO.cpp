@@ -3070,96 +3070,38 @@ void COrion::ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 
 }
 //----------------------------------------------------------------------------------
-void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, string uopFileName, string extesion, Wisp::CMappedFile* uopFile, int startIndex)
+void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int)> getIdxObj, const char *uopFileName, const char *extesion, CUopMappedFile &uopFile, int startIndex)
 {
-	if (uopFile->ReadInt32LE() != 0x50594D)
-	{
-		LOG("Bad Uop file %s", uopFile);
-		return;
-	}
-	uopFile->ReadInt64LE(); // version + signature
-	auto nextBlock = uopFile->ReadInt64LE();
-	int capacity = uopFile->ReadInt32LE(); // block capacity
-	int count = uopFile->ReadInt32LE();
+	bool isGump = (string("gumpartlegacymul") == uopFileName);
 
-	std::unordered_map<unsigned long long, CIndexObject> hashes;
-
-	uopFile->ResetPtr();
-	uopFile->Move(static_cast<int>(nextBlock));
-
-	do
-	{
-		int fileCount = uopFile->ReadInt32LE();
-		nextBlock = uopFile->ReadInt64LE();
-		IFOR(i, 0, fileCount)
-		{
-			auto offset = uopFile->ReadInt64LE();
-			auto headerLength = uopFile->ReadInt32LE();
-			auto compressedLength = uopFile->ReadInt32LE();
-			auto decompressedLength = uopFile->ReadInt32LE();
-			auto hash = uopFile->ReadInt64LE();
-			uopFile->ReadInt32LE();
-			auto flag = uopFile->ReadInt16LE();
-
-			int entryLength = flag == 1 ? compressedLength : decompressedLength;
-
-			if (offset == 0)
-			{
-				continue;
-			}
-
-			CIndexObject obj;
-			obj.Address = static_cast<int>(reinterpret_cast<uint>(uopFile->Start) + offset + headerLength);
-			obj.DataSize = entryLength;
-			obj.ID = -1;
-
-			if (uopFileName == "gumpartlegacymul")
-			{
-				auto currentPos = uopFile->Ptr;
-				uopFile->ResetPtr();
-				uopFile->Move(static_cast<int>(offset + headerLength));
-
-				uchar extra[8] = { 0 };
-				uopFile->ReadDataLE(&extra[0], 8);
-
-				obj.Address += 8;
-				obj.Height = ((extra[7] << 24) | (extra[6] << 16) | (extra[5] << 8) | extra[4]);
-				obj.Width = ((extra[3] << 24) | (extra[2] << 16) | (extra[1] << 8) | extra[0]);
-				obj.DataSize -= 8;
-
-				uopFile->Ptr = currentPos;
-			}
-			hashes[hash] = obj;
-		}
-
-		uopFile->ResetPtr();
-		uopFile->Move(static_cast<int>(nextBlock));
-	} while (nextBlock != 0);
-
-	char basePath[200];
-	sprintf_s(basePath, "build/%s/%%08i%s", uopFileName.c_str(), extesion.c_str());
+	char basePath[200] = { 0 };
+	sprintf_s(basePath, "build/%s/%%08i%s", uopFileName, extesion);
 
 	IFOR(i, startIndex, indexMaxCount)
 	{
-		char x[200];
-		sprintf_s(x, basePath, i);
-		auto hash = CreateHash(x);
-		if (hashes.find(hash) != hashes.end())
+		char hashString[200] = { 0 };
+		sprintf_s(hashString, basePath, i);
+
+		CUopBlockHeader *block = uopFile.Get(CreateHash(hashString));
+
+		if (block != NULL)
 		{
-			CIndexObject obj = hashes.at(hash);
-			CIndexObject *idxObj = getIdxObj(i);
-			idxObj->Address = obj.Address;
-			idxObj->DataSize = obj.DataSize;
-			if (uopFileName == "gumpartlegacymul")
+			CIndexObject *obj = getIdxObj(i);
+			obj->Address = (uint)uopFile.Start + (uint)block->Offset;
+			obj->DataSize = block->DecompressedSize;
+			obj->ID = -1;
+
+			if (isGump)
 			{
+				obj->Address += 8;
+				obj->DataSize -= 8;
 
-				idxObj->Address = obj.Address;
-				idxObj->Height = obj.Height;
-				idxObj->Width = obj.Width;
-				idxObj->DataSize = obj.DataSize;
+				uopFile.ResetPtr();
+				uopFile.Move((int)block->Offset);
 
+				obj->Width = uopFile.ReadUInt32LE();
+				obj->Height = uopFile.ReadUInt32LE();
 			}
-
 		}
 	}
 }
@@ -3294,20 +3236,19 @@ void COrion::LoadIndexFiles()
 	}
 	else
 	{
-		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artlegacymul", ".tga", &g_FileManager.m_ArtLegacyMUL);
-		g_FileManager.m_ArtLegacyMUL.ResetPtr();
-		ReadUOPIndexFile(m_StaticData.size() - MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_StaticDataIndex[i - MAX_LAND_DATA_INDEX_COUNT]; }, "artlegacymul", ".tga", &g_FileManager.m_ArtLegacyMUL, MAX_LAND_DATA_INDEX_COUNT);
+		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artlegacymul", ".tga", g_FileManager.m_ArtLegacyMUL);
+		ReadUOPIndexFile(m_StaticData.size() + MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_StaticDataIndex[i - MAX_LAND_DATA_INDEX_COUNT]; }, "artlegacymul", ".tga", g_FileManager.m_ArtLegacyMUL, MAX_LAND_DATA_INDEX_COUNT);
 	}
 
 	if (g_FileManager.m_SoundMul.Start != nullptr)
 		ReadMulIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, (uint)g_FileManager.m_SoundMul.Start, SoundPtr, [&SoundPtr]() { return ++SoundPtr; });
-			else
-		ReadUOPIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, "soundlegacymul", ".dat", &g_FileManager.m_SoundLegacyMUL);
+	else
+		ReadUOPIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, "soundlegacymul", ".dat", g_FileManager.m_SoundLegacyMUL);
 
 	if (g_FileManager.m_GumpMul.Start != nullptr)
 		ReadMulIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, [&GumpArtPtr]() { return ++GumpArtPtr; });
-			else
-		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartlegacymul", ".tga", &g_FileManager.m_GumpartLegacyMUL);
+	else
+		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartlegacymul", ".tga", g_FileManager.m_GumpartLegacyMUL);
 
 	ReadMulIndexFile(g_FileManager.m_TextureIdx.Size / sizeof(TEXTURE_IDX_BLOCK), [&](int i){ return &m_TextureDataIndex[i]; }, (uint)g_FileManager.m_TextureMul.Start, TexturePtr, [&TexturePtr]() { return ++TexturePtr; });
 	ReadMulIndexFile(MAX_LIGHTS_DATA_INDEX_COUNT, [&](int i){ return &m_LightDataIndex[i]; }, (uint)g_FileManager.m_LightMul.Start, LightPtr, [&LightPtr]() { return ++LightPtr; });

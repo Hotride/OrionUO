@@ -75,7 +75,7 @@ private:
 	void ClearUnusedTextures();
 
 	void ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const uint &address, PBASE_IDX_BLOCK ptr, std::function<PBASE_IDX_BLOCK()> getNewPtrValue);
-	void ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, string uopFileName, string extesion, Wisp::CMappedFile* uopFile, int startIndex = 0);
+	void ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int index)> getIdxObj, const char *uopFileName, const char *extesion, CUopMappedFile &uopFile, int startIndex = 0);
 
 	void GetCurrentLocale();
 
