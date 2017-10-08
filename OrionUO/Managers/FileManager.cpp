@@ -503,7 +503,10 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 	uint formatID = file.ReadUInt32LE();
 
 	if (formatID != 0x0050594D)
+	{
+		LOG("WARNING!!! UOP file '%s' formatID is %i!\n", fileName, formatID);
 		return false;
+	}
 
 	uint formatVersion = file.ReadUInt32LE();
 
@@ -528,19 +531,16 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 		{
 			uint64 offset = file.ReadInt64LE();
 
-			if (!offset)
-				continue;
-
 			uint headerSize = file.ReadInt32LE();
 			uint compressedSize = file.ReadInt32LE();
 			uint decompressedSize = file.ReadInt32LE();
 
-			if (!decompressedSize)
-				continue;
-
 			uint64 hash = file.ReadInt64LE();
 			uint unknown = file.ReadInt32LE();
 			ushort flag = file.ReadInt16LE();
+
+			if (!offset || !decompressedSize)
+				continue;
 
 			if (!flag)
 				compressedSize = 0;
@@ -564,7 +564,7 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 
 
 
-	if (string("MainMisc.uop") != fileName)
+	//if (string("MainMisc.uop") != fileName)
 		return true;
 
 	for (std::unordered_map<uint64, CUopBlockHeader>::iterator i = file.m_Map.begin(); i != file.m_Map.end(); i++)
