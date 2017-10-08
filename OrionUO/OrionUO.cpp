@@ -195,6 +195,15 @@ bool COrion::Install()
 	LOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
 	CRASHLOG("Orion version is: %s (build %s)\n", g_App.GetFileVersion().c_str(), GetBuildDateTimeStamp().c_str());
 
+	if (!PathFileExistsA(g_App.FilePath("Client.cuo").c_str()))
+	{
+		LOG("Client.cuo is missing!\n");
+		CRASHLOG("Client.cuo is missing!\n");
+		g_OrionWindow.ShowMessage("Configuration file 'Client.cuo' is missing! Client can't be started!", "Error!");
+		ExitProcess(0);
+		return false;
+	}
+
 	IFOR(i, 0, 256)
 	{
 		m_CRC_Table[i] = Reflect(i, 8) << 24;
