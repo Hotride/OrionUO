@@ -1858,6 +1858,7 @@ PACKET_HANDLER(OpenPaperdoll)
 		g_GumpManager.AddGump(gump);
 	}
 
+	gump->CanLift = (flags & 0x02);
 	gump->UpdateDescription(text);
 }
 //----------------------------------------------------------------------------------

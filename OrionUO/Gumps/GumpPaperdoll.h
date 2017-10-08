@@ -12,6 +12,8 @@
 //----------------------------------------------------------------------------------
 class CGumpPaperdoll : public CGump
 {
+	SETGET(bool, CanLift, false);
+
 protected:
 	static const int ID_GP_BUTTON_HELP = 1;
 	static const int ID_GP_BUTTON_OPTIONS = 2;
