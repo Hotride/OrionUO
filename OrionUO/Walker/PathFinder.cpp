@@ -27,17 +27,17 @@ bool CPathFinder::CreateItemsList(vector<CPathObject> &list, const int &x, const
 
 	uint blockIndex = (blockX * g_MapBlockSize[g_CurrentMap].Height) + blockY;
 
-	if (blockIndex >= g_MapManager->MaxBlockIndex)
+	if (blockIndex >= g_MapManager.MaxBlockIndex)
 		return false;
 
-	CMapBlock *block = g_MapManager->GetBlock(blockIndex);
+	CMapBlock *block = g_MapManager.GetBlock(blockIndex);
 
 	if (block == NULL)
 	{
-		block = g_MapManager->AddBlock(blockIndex);
+		block = g_MapManager.AddBlock(blockIndex);
 		block->X = blockX;
 		block->Y = blockY;
-		g_MapManager->LoadBlock(block);
+		g_MapManager.LoadBlock(block);
 		//return false;
 	}
 

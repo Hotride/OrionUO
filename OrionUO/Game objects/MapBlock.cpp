@@ -114,7 +114,7 @@ void CMapBlock::CreateLandTextureRect()
 {
 	WISPFUN_DEBUG("c24_f5");
 	//Подкорректируем индекс карты
-	int map = g_MapManager->GetActualMap();
+	int map = g_MapManager.GetActualMap();
 
 	//И пройдемся по всем позициям ландшафта блока
 	IFOR(x, 0, 8)
@@ -291,7 +291,7 @@ char CMapBlock::GetLandZ(const int &x, const int &y, const int &map)
 	if (x < 0 || y < 0)
 		return -125;
 
-	CIndexMap *blockIndex = g_MapManager->GetIndex(map, x / 8, y / 8);
+	CIndexMap *blockIndex = g_MapManager.GetIndex(map, x / 8, y / 8);
 
 		//Проверки актуальности данных
 	if (blockIndex == NULL || blockIndex->MapAddress == 0)
@@ -319,21 +319,6 @@ CLandObject *CMapBlock::GetLand(const int &x, const int &y)
 	}
 
 	return (CLandObject*)obj;
-}
-//----------------------------------------------------------------------------------
-char CMapBlock::GetRenderZ(CRenderWorldObject *item)
-{
-	WISPFUN_DEBUG("c24_f9");
-	//Получаем Z-координату для рендера
-	char z = item->Z;
-
-	CLandObject *land = item->LandObjectPtr();
-
-	//Исключения для земли, если это тайл текстуры
-	if (land != NULL && land->IsStretched)
-		z = (char)land->Serial;
-
-	return z;
 }
 //----------------------------------------------------------------------------------
 void CMapBlock::AddRender(CRenderWorldObject *item, const int &x, const int &y)

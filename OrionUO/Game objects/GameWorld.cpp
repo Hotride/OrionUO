@@ -583,7 +583,7 @@ void CGameWorld::MoveToTop(CGameObject *obj)
 		return;
 
 	if (obj->Container == 0xFFFFFFFF)
-		g_MapManager->AddRender(obj);
+		g_MapManager.AddRender(obj);
 
 	if (obj->m_Next == NULL)
 		return;

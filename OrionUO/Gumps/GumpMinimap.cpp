@@ -52,7 +52,7 @@ void CGumpMinimap::GenerateMap()
 	int gumpWidth = io.Width;
 	int gumpHeight = io.Height;
 
-	USHORT_LIST data = g_UOFileReader->GetGumpPixels(io);
+	USHORT_LIST data = g_UOFileReader.GetGumpPixels(io);
 	
 	if (!data.size())
 		return;
@@ -81,8 +81,8 @@ void CGumpMinimap::GenerateMap()
 	if (minBlockY < 0)
 		minBlockY = 0;
 
-	int map = g_MapManager->GetActualMap();
-	uint maxBlockIndex = g_MapManager->MaxBlockIndex;
+	int map = g_MapManager.GetActualMap();
+	uint maxBlockIndex = g_MapManager.MaxBlockIndex;
 	int mapBlockHeight = g_MapBlockSize[map].Height;
 
 	for (int i = minBlockX; i <= maxBlockX; i++)
@@ -94,11 +94,11 @@ void CGumpMinimap::GenerateMap()
 			if (blockIndex >= maxBlockIndex)
 				continue;
 
-			CMapBlock *mapBlock = g_MapManager->GetBlock(blockIndex);
+			CMapBlock *mapBlock = g_MapManager.GetBlock(blockIndex);
 			MAP_BLOCK mb = { 0 };
 
 			if (mapBlock == NULL)
-				g_MapManager->GetRadarMapBlock(i, j, mb);
+				g_MapManager.GetRadarMapBlock(i, j, mb);
 
 			IFOR(x, 0, 8)
 			{

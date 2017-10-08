@@ -951,7 +951,7 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 
 				if (!RemovedFromRender())
 				{
-					g_MapManager->AddRender(this);
+					g_MapManager.AddRender(this);
 				}
 
 				m_LastStepTime = g_Ticks;

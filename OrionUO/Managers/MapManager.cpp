@@ -9,7 +9,7 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CMapManager *g_MapManager = NULL;
+CUopMapManager g_MapManager;
 //----------------------------------------------------------------------------------
 CIndexMap::CIndexMap()
 {
@@ -694,7 +694,7 @@ void CMapManager::LoadBlock(CMapBlock *block)
 int CMapManager::GetActualMap()
 {
 	WISPFUN_DEBUG("c146_f16");
-	if (g_CurrentMap == 1 && (!g_FileManager.m_MapMul[1].Start || !g_FileManager.m_StaticIdx[1].Start || !g_FileManager.m_StaticMul[1].Start))
+	if (g_CurrentMap == 1 && ((!g_FileManager.m_MapUOP[1].Start && !g_FileManager.m_MapMul[1].Start) || !g_FileManager.m_StaticIdx[1].Start || !g_FileManager.m_StaticMul[1].Start))
 		return 0;
 
 	return g_CurrentMap;
@@ -795,29 +795,14 @@ void CMapManager::DeleteBlock(const uint &index)
 	}
 }
 //----------------------------------------------------------------------------------
-CUopMapManager::CUopMapManager()
-: CMapManager()
-{
-}
-//----------------------------------------------------------------------------------
-CUopMapManager::~CUopMapManager()
-{
-}
-//----------------------------------------------------------------------------------
-/*!
-Получить индекс текущей карты
-@return
-*/
-int CUopMapManager::GetActualMap()
-{
-	if (g_CurrentMap == 1 && (!g_FileManager.m_MapUOP[1].Start || !g_FileManager.m_StaticIdx[1].Start || !g_FileManager.m_StaticMul[1].Start))
-		return 0;
-
-	return g_CurrentMap;
-}
-//----------------------------------------------------------------------------------
 void CUopMapManager::CreateBlockTable(int map)
 {
+	if (g_FileManager.m_MapUOP[map].Start == NULL)
+	{
+		CMapManager::CreateBlockTable(map);
+		return;
+	}
+
 	MAP_INDEX_LIST &list = m_BlockData[map];
 	WISP_GEOMETRY::CSize &size = g_MapBlockSize[map];
 
@@ -955,5 +940,5 @@ void CUopMapManager::CreateBlockTable(int map)
 		index.StaticAddress = realStaticAddress;
 		index.StaticCount = realStaticCount;
 	}
-
 }
+//----------------------------------------------------------------------------------

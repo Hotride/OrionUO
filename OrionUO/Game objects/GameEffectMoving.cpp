@@ -230,7 +230,7 @@ void CGameEffectMoving::Update(CGameObject *parent)
 		{
 			UpdateDrawCoordinates();
 
-			g_MapManager->AddRender(this);
+			g_MapManager.AddRender(this);
 		}
 	}
 }

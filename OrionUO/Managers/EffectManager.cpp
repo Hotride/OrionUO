@@ -74,7 +74,7 @@ void CEffectManager::AddEffect(CGameEffect *effect)
 
 			Add(effect);
 
-			g_MapManager->AddRender(effect);
+			g_MapManager.AddRender(effect);
 
 			effect->Update(NULL);
 

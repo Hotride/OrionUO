@@ -253,8 +253,6 @@ bool COrion::Install()
 
 	g_ColorManager.Init();
 
-	g_UOFileReader = new UOFileReader();
-
 	LOG("Load tiledata\n");
 
 	int staticsCount = 512;
@@ -291,13 +289,8 @@ bool COrion::Install()
 		return false;
 	}
 
-	if (g_FileManager.UseUOPMap)
-		g_MapManager = new CUopMapManager();
-	else
-		g_MapManager = new CMapManager();
-
 	LOG("Create map blocksTable\n");
-	g_MapManager->CreateBlocksTable();
+	g_MapManager.CreateBlocksTable();
 
 	LOG("Patch files\n");
 	PatchFiles();
@@ -483,8 +476,6 @@ void COrion::Uninstall()
 	RELEASE_POINTER(g_FontColorizerShader);
 	RELEASE_POINTER(g_LightColorizerShader);
 	g_CurrentShader = NULL;
-	RELEASE_POINTER(g_UOFileReader);
-	RELEASE_POINTER(g_MapManager);
 
 	g_AuraTexture.Clear();
 
@@ -1199,7 +1190,7 @@ void COrion::Process(const bool &rendering)
 
 				g_GameScreen.RenderListInitalized = false;
 
-				g_MapManager->Init(true);
+				g_MapManager.Init(true);
 			}
 		}
 	}
@@ -1502,28 +1493,7 @@ void COrion::ClearUnusedTextures()
 	if (g_GameState < GS_GAME)
 		return;
 
-	/*static int clearMap = 0;
-
-	if (clearMap == 1)
-	{
-		clearMap = 2;
-
-		g_MapManager->ClearUnusedBlocks();
-
-		return;
-	}
-	else if (clearMap == 2)
-	{
-		g_AnimationManager.ClearUnusedTextures(g_Ticks);
-		
-		clearMap = 0;
-
-		return;
-	}
-
-	clearMap = 1;*/
-
-	g_MapManager->ClearUnusedBlocks();
+	g_MapManager.ClearUnusedBlocks();
 
 	g_GumpManager.PrepareTextures();
 
@@ -1790,7 +1760,7 @@ void COrion::ChangeSeason(const SEASON_TYPE &season, const int &music)
 
 	if (updateGraphics)
 	{
-		QFOR(item, g_MapManager->m_Items, CMapBlock*)
+		QFOR(item, g_MapManager.m_Items, CMapBlock*)
 		{
 			IFOR(x, 0, 8)
 			{
@@ -3650,7 +3620,7 @@ void COrion::PatchFiles()
 
 		if (vh->FileID == 0) //Map0
 		{
-			g_MapManager->SetPatchedMapBlock(vh->BlockID, vAddr + vh->Position);
+			g_MapManager.SetPatchedMapBlock(vh->BlockID, vAddr + vh->Position);
 		}
 		else if (vh->FileID == 4) //Art
 		{
@@ -4156,7 +4126,7 @@ void COrion::CreateObjectHandlesBackground()
 		if (drawHeight > g_ObjectHandlesHeight)
 			drawHeight = g_ObjectHandlesHeight - drawY;
 
-		USHORT_LIST pixels = g_UOFileReader->GetGumpPixels(io);
+		USHORT_LIST pixels = g_UOFileReader.GetGumpPixels(io);
 
 		if (pixels.size())
 		{
@@ -4358,7 +4328,7 @@ CGLTexture *COrion::ExecuteGump(const ushort &id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = g_UOFileReader->ReadGump(io);
+		io.Texture = g_UOFileReader.ReadGump(io);
 
 		if (io.Texture != 0)
 			m_UsedGumpList.push_back(&m_GumpDataIndex[id]);
@@ -4380,7 +4350,7 @@ CGLTexture *COrion::ExecuteLandArt(const ushort &id)
 		if (!io.Address) //nodraw tiles banned
 			return NULL;
 
-		io.Texture = g_UOFileReader->ReadArt(id, io, false);
+		io.Texture = g_UOFileReader.ReadArt(id, io, false);
 
 		if (io.Texture != 0)
 			m_UsedLandList.push_back(&m_LandDataIndex[id]);
@@ -4408,7 +4378,7 @@ CGLTexture *COrion::ExecuteStaticArt(const ushort &id)
 		if (!io.Address) //nodraw tiles banned
 			return NULL;
 
-		io.Texture = g_UOFileReader->ReadArt(id, io, true);
+		io.Texture = g_UOFileReader.ReadArt(id, io, true);
 
 		if (io.Texture != 0)
 		{
@@ -4439,7 +4409,7 @@ CGLTexture *COrion::ExecuteTexture(ushort id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = g_UOFileReader->ReadTexture(io);
+		io.Texture = g_UOFileReader.ReadTexture(io);
 
 		if (io.Texture != 0)
 			m_UsedTextureList.push_back(&m_TextureDataIndex[id]);
@@ -4463,7 +4433,7 @@ CGLTexture *COrion::ExecuteLight(uchar &id)
 		if (!io.Address)
 			return NULL;
 
-		io.Texture = g_UOFileReader->ReadLight(io);
+		io.Texture = g_UOFileReader.ReadLight(io);
 
 		if (io.Texture != 0)
 			m_UsedLightList.push_back(&m_LightDataIndex[id]);
@@ -4791,7 +4761,7 @@ bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, const bool &noSubMou
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->PixelsData[(y * th->Width) + x] != 0;
 #else
-		result = g_UOFileReader->GumpPixelsInXY(io, x, y);
+		result = g_UOFileReader.GumpPixelsInXY(io, x, y);
 #endif
 	}
 
@@ -4844,7 +4814,7 @@ bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, int width, int heigh
 	if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 		result = th->PixelsData[(y * th->Width) + x] != 0;
 #else
-	result = g_UOFileReader->GumpPixelsInXY(io, x, y);
+	result = g_UOFileReader.GumpPixelsInXY(io, x, y);
 #endif
 
 	return result;
@@ -4994,7 +4964,7 @@ bool COrion::StaticPixelsInXY(const ushort &id, int x, int y)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->PixelsData[(y * th->Width) + x] != 0;
 #else
-		result = g_UOFileReader->ArtPixelsInXY(false, io, x, y);
+		result = g_UOFileReader.ArtPixelsInXY(false, io, x, y);
 #endif
 	}
 
@@ -5042,7 +5012,7 @@ bool COrion::StaticPixelsInXYInContainer(const ushort &id, int x, int y)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->PixelsData[(y * th->Width) + x] != 0;
 #else
-		result = g_UOFileReader->ArtPixelsInXY(false, io, x, y);
+		result = g_UOFileReader.ArtPixelsInXY(false, io, x, y);
 #endif
 	}
 
@@ -5067,7 +5037,7 @@ bool COrion::LandPixelsInXY(const ushort &id, int x, int  y)
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 			result = th->PixelsData[(y * th->Width) + x] != 0;
 #else
-		result = g_UOFileReader->ArtPixelsInXY(true, io, x, y);
+		result = g_UOFileReader.ArtPixelsInXY(true, io, x, y);
 #endif
 	}
 
@@ -5442,10 +5412,10 @@ void COrion::ChangeMap(uchar newmap)
 				obj = next;
 			}
 
-			g_MapManager->Clear();
-			g_MapManager->Init();
+			g_MapManager.Clear();
+			g_MapManager.Init();
 
-			g_MapManager->AddRender(g_Player);
+			g_MapManager.AddRender(g_Player);
 		}
 	}
 }
@@ -5763,8 +5733,8 @@ void COrion::ClearWorld()
 	g_Journal.Clear();
 	LOG("\tJournal cleared?\n");
 
-	if (g_MapManager != NULL)
-		g_MapManager->Clear();
+	g_MapManager.Clear();
+	LOG("\tMap cleared?\n");
 
 	g_CurrentMap = 0;
 
@@ -5862,7 +5832,7 @@ WISP_GEOMETRY::CSize COrion::GetArtDimension(const ushort &id, const bool &run)
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CRect COrion::GetStaticArtRealPixelDimension(const ushort &id)
 {
-	return g_UOFileReader->ReadStaticArtPixelDimension(m_StaticDataIndex[id]);
+	return g_UOFileReader.ReadStaticArtPixelDimension(m_StaticDataIndex[id]);
 }
 //----------------------------------------------------------------------------------
 WISP_GEOMETRY::CSize COrion::GetGumpDimension(const ushort &id)

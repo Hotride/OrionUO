@@ -13,7 +13,6 @@
 class CFileManager : public WISP_DATASTREAM::CDataReader
 {
 	SETGET(bool, UseVerdata, false);
-	SETGET(bool, UseUOPMap, false);
 	SETGET(bool, UseUOPGumps, false);
 	SETGET(int, UnicodeFontsCount, 0);
 
@@ -80,6 +79,7 @@ public:
 	WISP_FILE::CMappedFile m_StaDif[6];
 
 	bool Load();
+	bool LoadWithUOP();
 	void Unload();
 	void TryReadUOPAnimations();
 
@@ -92,6 +92,8 @@ public:
 private:
 	void ReadTask();
 	static bool FileExists(const std::string& filename);
+
+	bool LoadUOPFile(WISP_FILE::CMappedFile &file, const char *fileName);
 };
 //---------------------------------------------------------------------------
 extern CFileManager g_FileManager;

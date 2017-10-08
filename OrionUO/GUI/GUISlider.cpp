@@ -369,7 +369,7 @@ bool CGUISlider::Select()
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 			select = (m_CheckPolygone || th->PixelsData[(buttonY * th->Width) + buttonX] != 0);
 #else
-			select = (m_CheckPolygone || g_UOFileReader->GumpPixelsInXY(g_Orion.m_GumpDataIndex[m_Graphic], buttonX, buttonY));
+			select = (m_CheckPolygone || g_UOFileReader.GumpPixelsInXY(g_Orion.m_GumpDataIndex[m_Graphic], buttonX, buttonY));
 #endif
 		}
 

@@ -348,7 +348,7 @@ void CGumpWorldMap::LoadMap(int map)
 				IFOR(by, 0, g_MapBlockSize[map].Height)
 				{
 					MAP_BLOCK mb = {0};
-					g_MapManager->GetWorldMapBlock(map, bx, by, mb);
+					g_MapManager.GetWorldMapBlock(map, bx, by, mb);
 				
 					int mapX = bx * 8;
 					int mapY = by * 8;

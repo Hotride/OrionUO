@@ -341,7 +341,7 @@ void CTarget::LoadMulti(const int &x, const int &y, const char &z)
 			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(index.Address + (j * itemOffset));
 
 			CMultiObject *mo = new CMultiObject(pmb->ID, x + pmb->X, y + pmb->Y, z + (char)pmb->Z, 2);
-			g_MapManager->AddRender(mo);
+			g_MapManager.AddRender(mo);
 			AddMultiObject(mo);
 		}
 	}

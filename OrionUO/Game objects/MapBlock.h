@@ -22,9 +22,6 @@ private:
 	//Получить Z координату ландшафта
 	char GetLandZ(const int &x, const int &y, const int &map);
 
-	//Получить Z координату объекта рендера
-	char GetRenderZ(CRenderWorldObject *item);
-
 	//Проверить объект ландшафта на "растягиваемость" при рендере
 	bool TestStretched(const int &x, const int &y, const char &z, const int &map, const bool &recurse);
 

@@ -100,7 +100,7 @@ bool CGUIButtonTileart::Select()
 #if UO_ENABLE_TEXTURE_DATA_SAVING == 1
 			select = (m_CheckPolygone || th->PixelsData[(y * th->Width) + x] != 0);
 #else
-			select = (m_CheckPolygone || g_UOFileReader->ArtPixelsInXY(false, io, x, y));
+			select = (m_CheckPolygone || g_UOFileReader.ArtPixelsInXY(false, io, x, y));
 #endif
 		}
 	}

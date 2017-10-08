@@ -883,8 +883,8 @@ PACKET_HANDLER(EnterWorld)
 
 	LOG("Player 0x%08lX entered the world.\n", serial);
 
-	g_MapManager->Init();
-	g_MapManager->AddRender(g_Player);
+	g_MapManager.Init();
+	g_MapManager.AddRender(g_Player);
 
 	g_Orion.LoadStartupConfig();
 
@@ -2546,7 +2546,7 @@ PACKET_HANDLER(ExtendedCommand)
 		}
 		case 0x18: //Enable map (diff) patches
 		{
-			g_MapManager->ApplyPatches(*this);
+			g_MapManager.ApplyPatches(*this);
 
 			break;
 		}

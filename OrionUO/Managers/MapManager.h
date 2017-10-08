@@ -71,7 +71,7 @@ public:
 	Получить индекс текущей карты
 	@return 
 	*/
-	virtual int GetActualMap();
+	int GetActualMap();
 
 	void SetPatchedMapBlock(const uint &block, const uint &address);
 
@@ -153,26 +153,18 @@ public:
 	@return 
 	*/
 	void AddRender(CRenderWorldObject *item);
-
 };
 //----------------------------------------------------------------------------------
 //!Класс менеджера карт
 class CUopMapManager : public CMapManager
 {
 public:
-	CUopMapManager();
-	virtual ~CUopMapManager();
+	CUopMapManager() : CMapManager() {}
+	virtual ~CUopMapManager() {}
 
-	/*!
-	Получить индекс текущей карты
-	@return
-	*/
-	virtual int GetActualMap() override;
-
-	void CreateBlockTable(int map) override;
-
+	virtual void CreateBlockTable(int map);
 };
 //----------------------------------------------------------------------------------
-extern CMapManager *g_MapManager;
+extern CUopMapManager g_MapManager;
 //----------------------------------------------------------------------------------
 #endif

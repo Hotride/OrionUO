@@ -635,7 +635,7 @@ CMultiObject *CGameItem::AddMulti(const ushort &graphic, const ushort &color, co
 	else
 		mo = new CMultiObject(graphic, X + x, Y + y, z, 1);
 
-	g_MapManager->AddRender(mo);
+	g_MapManager.AddRender(mo);
 	AddMultiObject(mo);
 
 	return mo;
@@ -685,7 +685,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 
 				mo->m_DrawTextureColor[3] = alpha;
 
-				g_MapManager->AddRender(mo);
+				g_MapManager.AddRender(mo);
 				AddMultiObject(mo);
 			}
 

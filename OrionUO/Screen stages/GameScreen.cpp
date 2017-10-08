@@ -122,7 +122,7 @@ void CGameScreen::UpdateMaxDrawZ()
 	int by = playerY / 8;
 
 	int blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
-	CMapBlock *mb = g_MapManager->GetBlock(blockIndex);
+	CMapBlock *mb = g_MapManager.GetBlock(blockIndex);
 
 	if (mb != NULL)
 	{
@@ -178,7 +178,7 @@ void CGameScreen::UpdateMaxDrawZ()
 		y = playerY % 8;
 
 		blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
-		CMapBlock *mb11 = g_MapManager->GetBlock(blockIndex);
+		CMapBlock *mb11 = g_MapManager.GetBlock(blockIndex);
 
 		if (mb11 != NULL)
 		{
@@ -197,8 +197,8 @@ void CGameScreen::UpdateMaxDrawZ()
 				if (tileZ > pz14 && m_MaxDrawZ > tileZ && !(((CRenderStaticObject*)ro)->GetStaticData()->Flags & 0x204) && ro->IsRoof())
 				{
 					m_MaxDrawZ = tileZ;
-					g_MapManager->ClearBlockAccess();
-					g_MaxGroundZ = g_MapManager->CalculateNearZ(tileZ, playerX, playerY, tileZ);
+					g_MapManager.ClearBlockAccess();
+					g_MaxGroundZ = g_MapManager.CalculateNearZ(tileZ, playerX, playerY, tileZ);
 
 					g_NoDrawRoof = true;
 				}
@@ -236,7 +236,7 @@ void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const in
 	int by = y / 8;
 
 	int blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
-	CMapBlock *mb = g_MapManager->GetBlock(blockIndex);
+	CMapBlock *mb = g_MapManager.GetBlock(blockIndex);
 
 	if (mb != NULL)
 	{
@@ -301,7 +301,7 @@ void CGameScreen::CalculateRenderList()
 		int grZ = 0;
 		int stZ = 0;
 		CRenderObject *sel = g_SelectedObject.Object;
-		g_MapManager->GetMapZ(sel->X, sel->Y, grZ, stZ);
+		g_MapManager.GetMapZ(sel->X, sel->Y, grZ, stZ);
 
 		if (((CRenderWorldObject*)sel)->IsStaticObject() && ((CRenderWorldObject*)sel)->IsWet())
 			grZ = ((CRenderWorldObject*)sel)->Z;
@@ -371,8 +371,8 @@ void CGameScreen::CalculateRenderList()
 	int maxX = g_RenderBounds.RealMaxRangeX;
 	int maxY = g_RenderBounds.RealMaxRangeY;
 
-	int mapBlockHeight = g_MapBlockSize[g_MapManager->GetActualMap()].Height;
-	uint maxBlockIndex = g_MapManager->MaxBlockIndex;
+	int mapBlockHeight = g_MapBlockSize[g_MapManager.GetActualMap()].Height;
+	uint maxBlockIndex = g_MapManager.MaxBlockIndex;
 
 	IFOR(i, 0, 2)
 	{
@@ -409,14 +409,14 @@ void CGameScreen::CalculateRenderList()
 
 					if (blockIndex < maxBlockIndex)
 					{
-						CMapBlock *block = g_MapManager->GetBlock(blockIndex);
+						CMapBlock *block = g_MapManager.GetBlock(blockIndex);
 
 						if (block == NULL)
 						{
-							block = g_MapManager->AddBlock(blockIndex);
+							block = g_MapManager.AddBlock(blockIndex);
 							block->X = blockX;
 							block->Y = blockY;
-							g_MapManager->LoadBlock(block);
+							g_MapManager.LoadBlock(block);
 						}
 
 						AddTileToRenderList(block->GetRender(x % 8, y % 8), x, y, renderIndex, useObjectHandles);
@@ -803,7 +803,7 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const uch
 	int maxZ = obj->PriorityZ;
 
 	int mapBlockHeight = g_MapBlockSize[g_CurrentMap].Height;
-	uint maxBlockIndex = g_MapManager->MaxBlockIndex;
+	uint maxBlockIndex = g_MapManager.MaxBlockIndex;
 
 	IFOR(i, 0, size)
 	{
@@ -824,14 +824,14 @@ void CGameScreen::AddOffsetCharacterTileToRenderList(CGameObject *obj, const uch
 
 		if (blockIndex < maxBlockIndex)
 		{
-			CMapBlock *block = g_MapManager->GetBlock(blockIndex);
+			CMapBlock *block = g_MapManager.GetBlock(blockIndex);
 
 			if (block == NULL)
 			{
-				block = g_MapManager->AddBlock(blockIndex);
+				block = g_MapManager.AddBlock(blockIndex);
 				block->X = blockX;
 				block->Y = blockY;
-				g_MapManager->LoadBlock(block);
+				g_MapManager.LoadBlock(block);
 			}
 
 			int currentMaxZ = maxZ;
@@ -1024,7 +1024,7 @@ void CGameScreen::AddLight(CRenderWorldObject *rwo, CRenderWorldObject *lightObj
 		int by = testY / 8;
 
 		int blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
-		CMapBlock *mb = g_MapManager->GetBlock(blockIndex);
+		CMapBlock *mb = g_MapManager.GetBlock(blockIndex);
 
 		if (mb != NULL)
 		{
