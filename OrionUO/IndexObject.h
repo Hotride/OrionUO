@@ -25,6 +25,7 @@ class CIndexObject
 	SETGET(ushort, ID, 0);
 	SETGET(ushort, Color, 0);
 	SETGET(uint, LastAccessTime, 0);
+	SETGET(CUopBlockHeader*, UopBlock, NULL);
 
 public:
 	CIndexObject();

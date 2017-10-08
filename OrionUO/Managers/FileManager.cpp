@@ -178,13 +178,18 @@ bool CFileManager::LoadWithUOP()
 			return false;
 	}
 
+	if (!LoadUOPFile(m_MultiCollection, "MultiCollection.uop"))
+	{
+		if (!m_MultiIdx.Load(g_App.FilePath("multi.idx")))
+			return false;
+		else if (!m_MultiMul.Load(g_App.FilePath("multi.mul")))
+			return false;
+	}
 
 	/* Эти файлы не используются самой последней версией клиента 7.0.52.2
 	if (!m_tileart.Load(g_App.FilePath("tileart.uop")))
 	return false;
 	if (!m_string_dictionary.Load(g_App.FilePath("string_dictionary.uop")))
-	return false;
-	if (!m_MultiCollection.Load(g_App.FilePath("MultiCollection.uop")))
 	return false;
 	if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
 	return false;
@@ -193,8 +198,6 @@ bool CFileManager::LoadWithUOP()
 	if (!m_AnimIdx[0].Load(g_App.FilePath("anim.idx")))
 		return false;
 	if (!m_LightIdx.Load(g_App.FilePath("lightidx.mul")))
-		return false;
-	else if (!m_MultiIdx.Load(g_App.FilePath("multi.idx")))
 		return false;
 	else if (!m_SkillsIdx.Load(g_App.FilePath("skills.idx")))
 		return false;
@@ -211,8 +214,6 @@ bool CFileManager::LoadWithUOP()
 	else if (!m_FontsMul.Load(g_App.FilePath("fonts.mul")))
 		return false;
 	else if (!m_LightMul.Load(g_App.FilePath("light.mul")))
-		return false;
-	else if (!m_MultiMul.Load(g_App.FilePath("multi.mul")))
 		return false;
 	else if (!m_PaletteMul.Load(g_App.FilePath("palette.mul")))
 		return false;
@@ -565,6 +566,7 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 
 
 	//if (string("MainMisc.uop") != fileName)
+	//if (string("MultiCollection.uop") != fileName)
 		return true;
 
 	for (std::unordered_map<uint64, CUopBlockHeader>::iterator i = file.m_Map.begin(); i != file.m_Map.end(); i++)
@@ -594,9 +596,32 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 
 		string data = WISP_DATASTREAM::CDataReader(dataPtr, decompressedSize).ReadString(decompressedSize);
 
-		LOG("item dump start: %016llX\n", i->first);
+		LOG("item dump start: %016llX, %i\n", i->first, compressedSize);
 		//LOG_DUMP(dataPtr, decompressedSize);
 		LOG("%s\n", data.c_str());
+
+		/*WISP_DATASTREAM::CDataReader rdr(dataPtr, decompressedSize);
+
+		LOG("Multi wtf: 0x%08X\n", rdr.ReadUInt32LE());
+
+		int compCount = rdr.ReadUInt16LE();
+		LOG("Multi compCount:%i, wtf:%i\n", compCount, rdr.ReadUInt16LE());
+
+		IFOR(c, 0, compCount)
+		{
+			ushort compGraphic = rdr.ReadUInt16LE();
+			short compX = rdr.ReadInt16LE();
+			short compY = rdr.ReadInt16LE();
+			short compZ = rdr.ReadInt16LE();
+			ushort compFlags = rdr.ReadUInt16LE();
+			uint compWtf = rdr.ReadUInt32LE();
+
+			if (compWtf)
+				rdr.Move(4);
+
+			LOG("Multi comp: g:0x%04X xyz:%i %i %i f:%i, wtf:%i\n", compGraphic, compX, compY, compZ, compFlags, compWtf);
+		}*/
+
 		LOG("item dump end:\n");
 
 		decLayoutData.clear();

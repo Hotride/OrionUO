@@ -3070,12 +3070,15 @@ void COrion::ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 
 }
 //----------------------------------------------------------------------------------
-void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int)> getIdxObj, const char *uopFileName, const char *extesion, CUopMappedFile &uopFile, int startIndex)
+void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int)> getIdxObj, const char *uopFileName, const int &padding, const char *extesion, CUopMappedFile &uopFile, int startIndex)
 {
 	bool isGump = (string("gumpartlegacymul") == uopFileName);
+	bool isMulti = (string("multicollection") == uopFileName);
+	if (isMulti)
+		LOG("Load multi index\n");
 
 	char basePath[200] = { 0 };
-	sprintf_s(basePath, "build/%s/%%08i%s", uopFileName, extesion);
+	sprintf_s(basePath, "build/%s/%%0%ii%s", uopFileName, padding, extesion);
 
 	IFOR(i, startIndex, indexMaxCount)
 	{
@@ -3086,9 +3089,12 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 
 		if (block != NULL)
 		{
+			if (isMulti)
+				LOG("Block found!\n");
 			CIndexObject *obj = getIdxObj(i);
 			obj->Address = (uint)uopFile.Start + (uint)block->Offset;
 			obj->DataSize = block->DecompressedSize;
+			obj->UopBlock = block;
 			obj->ID = -1;
 
 			if (isGump)
@@ -3236,23 +3242,27 @@ void COrion::LoadIndexFiles()
 	}
 	else
 	{
-		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artlegacymul", ".tga", g_FileManager.m_ArtLegacyMUL);
-		ReadUOPIndexFile(m_StaticData.size() + MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_StaticDataIndex[i - MAX_LAND_DATA_INDEX_COUNT]; }, "artlegacymul", ".tga", g_FileManager.m_ArtLegacyMUL, MAX_LAND_DATA_INDEX_COUNT);
+		ReadUOPIndexFile(MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_LandDataIndex[i]; }, "artlegacymul", 8, ".tga", g_FileManager.m_ArtLegacyMUL);
+		ReadUOPIndexFile(m_StaticData.size() + MAX_LAND_DATA_INDEX_COUNT, [&](int i){ return &m_StaticDataIndex[i - MAX_LAND_DATA_INDEX_COUNT]; }, "artlegacymul", 8, ".tga", g_FileManager.m_ArtLegacyMUL, MAX_LAND_DATA_INDEX_COUNT);
 	}
 
 	if (g_FileManager.m_SoundMul.Start != nullptr)
 		ReadMulIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, (uint)g_FileManager.m_SoundMul.Start, SoundPtr, [&SoundPtr]() { return ++SoundPtr; });
 	else
-		ReadUOPIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, "soundlegacymul", ".dat", g_FileManager.m_SoundLegacyMUL);
+		ReadUOPIndexFile(MAX_SOUND_DATA_INDEX_COUNT, [&](int i){ return &m_SoundDataIndex[i]; }, "soundlegacymul", 8, ".dat", g_FileManager.m_SoundLegacyMUL);
 
 	if (g_FileManager.m_GumpMul.Start != nullptr)
 		ReadMulIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, (uint)g_FileManager.m_GumpMul.Start, GumpArtPtr, [&GumpArtPtr]() { return ++GumpArtPtr; });
 	else
-		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartlegacymul", ".tga", g_FileManager.m_GumpartLegacyMUL);
+		ReadUOPIndexFile(maxGumpsCount, [&](int i){ return &m_GumpDataIndex[i]; }, "gumpartlegacymul", 8, ".tga", g_FileManager.m_GumpartLegacyMUL);
 
 	ReadMulIndexFile(g_FileManager.m_TextureIdx.Size / sizeof(TEXTURE_IDX_BLOCK), [&](int i){ return &m_TextureDataIndex[i]; }, (uint)g_FileManager.m_TextureMul.Start, TexturePtr, [&TexturePtr]() { return ++TexturePtr; });
 	ReadMulIndexFile(MAX_LIGHTS_DATA_INDEX_COUNT, [&](int i){ return &m_LightDataIndex[i]; }, (uint)g_FileManager.m_LightMul.Start, LightPtr, [&LightPtr]() { return ++LightPtr; });
-	ReadMulIndexFile(g_MultiIndexCount, [&](int i){ return &m_MultiDataIndex[i]; }, (uint)g_FileManager.m_MultiMul.Start, MultiPtr, [&MultiPtr]() { return ++MultiPtr; });
+
+	if (g_FileManager.m_MultiMul.Start != nullptr)
+		ReadMulIndexFile(g_MultiIndexCount, [&](int i){ return &m_MultiDataIndex[i]; }, (uint)g_FileManager.m_MultiMul.Start, MultiPtr, [&MultiPtr]() { return ++MultiPtr; });
+	else
+		ReadUOPIndexFile(g_MultiIndexCount, [&](int i){ return &m_MultiDataIndex[i]; }, "multicollection", 6, ".bin", g_FileManager.m_MultiCollection);
 }
 //----------------------------------------------------------------------------------
 void COrion::UnloadIndexFiles()
