@@ -10,6 +10,30 @@
 #include "stdafx.h"
 CFileManager g_FileManager;
 //----------------------------------------------------------------------------------
+CUopMappedFile::CUopMappedFile()
+: WISP_FILE::CMappedFile()
+{
+}
+//----------------------------------------------------------------------------------
+CUopMappedFile::~CUopMappedFile()
+{
+}
+//----------------------------------------------------------------------------------
+void CUopMappedFile::Add(const uint64 &hash, const CUopBlockHeader &item)
+{
+	m_Map[hash] = item;
+}
+//----------------------------------------------------------------------------------
+CUopBlockHeader *CUopMappedFile::Get(const uint64 &hash)
+{
+	std::unordered_map<uint64, CUopBlockHeader>::iterator found = m_Map.find(hash);
+
+	if (found != m_Map.end())
+		return &found->second;
+
+	return NULL;
+}
+//----------------------------------------------------------------------------------
 CFileManager::CFileManager()
 : WISP_DATASTREAM::CDataReader()
 {
@@ -126,7 +150,7 @@ bool CFileManager::LoadWithUOP()
 
 	//Try to use map uop files first, if we can, we will use them.
 
-	if (!LoadUOPFile(m_artLegacyMUL, "artLegacyMUL.uop"))
+	if (!LoadUOPFile(m_ArtLegacyMUL, "artLegacyMUL.uop"))
 	{
 		if (!m_ArtIdx.Load(g_App.FilePath("artidx.mul")))
 			return false;
@@ -134,17 +158,19 @@ bool CFileManager::LoadWithUOP()
 			return false;
 	}
 
-	if (!LoadUOPFile(m_gumpartLegacyMUL, "gumpartLegacyMUL.uop"))
+	if (!LoadUOPFile(m_GumpartLegacyMUL, "gumpartLegacyMUL.uop"))
 	{
 		if (!m_GumpIdx.Load(g_App.FilePath("gumpidx.mul")))
 			return false;
 		else if (!m_GumpMul.Load(g_App.FilePath("gumpart.mul")))
 			return false;
+
 		UseUOPGumps = false;
 	}
 	else
 		UseUOPGumps = true;
-	if (!LoadUOPFile(m_soundLegacyMUL, "soundLegacyMUL.uop"))
+
+	if (!LoadUOPFile(m_SoundLegacyMUL, "soundLegacyMUL.uop"))
 	{
 		if (!m_SoundIdx.Load(g_App.FilePath("soundidx.mul")))
 			return false;
@@ -162,11 +188,7 @@ bool CFileManager::LoadWithUOP()
 	return false;
 	if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
 	return false;
-	IFOR(i, 1, 5)
-	{
-	if (!m_AnimationFrame[i].Load(g_App.FilePath("AnimationFrame%i.uop", i)))
-	return false;
-	}*/
+	*/
 
 	if (!m_AnimIdx[0].Load(g_App.FilePath("anim.idx")))
 		return false;
@@ -262,19 +284,15 @@ void CFileManager::Unload()
 	m_ArtMul.Unload();
 	m_GumpMul.Unload();
 	m_SoundMul.Unload();
-	m_artLegacyMUL.Unload();
-	m_gumpartLegacyMUL.Unload();
-	m_soundLegacyMUL.Unload();
-	m_tileart.Unload();
-	m_string_dictionary.Unload();
+	m_ArtLegacyMUL.Unload();
+	m_GumpartLegacyMUL.Unload();
+	m_SoundLegacyMUL.Unload();
+	m_Tileart.Unload();
+	m_String_dictionary.Unload();
 	m_MultiCollection.Unload();
 	m_AnimationSequence.Unload();
 	m_MainMisc.Unload();
 
-	IFOR(i, 0, 4)
-	{
-		m_AnimationFrame[i].Unload();
-	}
 	m_LightIdx.Unload();
 	m_MultiIdx.Unload();
 	m_SkillsIdx.Unload();
@@ -477,14 +495,120 @@ bool CFileManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST 
 	return true;
 }
 //----------------------------------------------------------------------------------
-bool CFileManager::LoadUOPFile(WISP_FILE::CMappedFile &file, const char *fileName)
+bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 {
 	if (!file.Load(g_App.FilePath(fileName)))
 		return false;
 
 	uint formatID = file.ReadUInt32LE();
+
+	if (formatID != 0x0050594D)
+		return false;
+
+	uint formatVersion = file.ReadUInt32LE();
+
+	if (formatVersion > 5)
+		LOG("WARNING!!! UOP file '%s' version is %i!\n", fileName, formatVersion);
+
+	file.Move(4); //Signature?
+	uint64 next = file.ReadUInt64LE();
+
+	file.Move(4); //Block capacity?
+	uint filesCount = file.ReadUInt32LE();
+
+	file.ResetPtr();
+	file.Move((int)next);
+
+	do
+	{
+		int count = file.ReadInt32LE();
+		next = file.ReadInt64LE();
+
+		IFOR(i, 0, count)
+		{
+			uint64 offset = file.ReadInt64LE();
+
+			if (!offset)
+				continue;
+
+			uint headerSize = file.ReadInt32LE();
+			uint compressedSize = file.ReadInt32LE();
+			uint decompressedSize = file.ReadInt32LE();
+
+			if (!decompressedSize)
+				continue;
+
+			uint64 hash = file.ReadInt64LE();
+			uint unknown = file.ReadInt32LE();
+			ushort flag = file.ReadInt16LE();
+
+			if (!flag)
+				compressedSize = 0;
+
+			CUopBlockHeader item;
+			item.Offset = offset + headerSize;
+			item.CompressedSize = compressedSize;
+			item.DecompressedSize = decompressedSize;
+
+			file.Add(hash, item);
+		}
+
+		file.ResetPtr();
+		file.Move((int)next);
+	} while (next != 0);
+
 	file.ResetPtr();
 
-	return (formatID == 0x0050594D);
+
+
+
+
+
+	if (string("MainMisc.uop") != fileName)
+		return true;
+
+	for (std::unordered_map<uint64, CUopBlockHeader>::iterator i = file.m_Map.begin(); i != file.m_Map.end(); i++)
+	{
+		CUopBlockHeader &item = i->second;
+		file.ResetPtr();
+		file.Move((int)item.Offset);
+		puchar dataPtr = file.Ptr;
+
+		uLongf compressedSize = item.CompressedSize;
+		uLongf decompressedSize = item.DecompressedSize;
+		UCHAR_LIST decLayoutData;
+
+		if (compressedSize && compressedSize != decompressedSize)
+		{
+			decLayoutData.resize(decompressedSize, 0);
+			int z_err = uncompress(&decLayoutData[0], &decompressedSize, file.Ptr, compressedSize);
+
+			if (z_err != Z_OK)
+			{
+				LOG("Uncompress error: %i\n", z_err);
+				continue;
+			}
+
+			dataPtr = &decLayoutData[0];
+		}
+
+		string data = WISP_DATASTREAM::CDataReader(dataPtr, decompressedSize).ReadString(decompressedSize);
+
+		LOG("item dump start: %016llX\n", i->first);
+		//LOG_DUMP(dataPtr, decompressedSize);
+		LOG("%s\n", data.c_str());
+		LOG("item dump end:\n");
+
+		decLayoutData.clear();
+	}
+
+	file.ResetPtr();
+
+
+
+
+
+
+	return true;
 }
 //----------------------------------------------------------------------------------

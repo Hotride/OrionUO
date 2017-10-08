@@ -10,6 +10,38 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 //----------------------------------------------------------------------------------
+class CUopBlockHeader
+{
+	SETGET(uint64, Offset, 0);
+	//SETGET(uint, HeaderSize, 0);
+	SETGET(uint, CompressedSize, 0);
+	SETGET(uint, DecompressedSize, 0);
+	//SETGET(uint64, Hash, 0);
+	//SETGET(uint, Unknown, 0);
+	//SETGET(ushort, Flags, 0);
+
+public:
+	CUopBlockHeader() {}
+	CUopBlockHeader(const uint64 &offset, const uint &headerSize, const uint &compresseSize, const uint &decompressedSize, const uint64 &Hash, const uint &unknown, const ushort &flags)
+	: m_Offset(offset), m_CompressedSize(compresseSize), m_DecompressedSize(decompressedSize) {}
+	~CUopBlockHeader() {}
+};
+//----------------------------------------------------------------------------------
+class CUopMappedFile : public WISP_FILE::CMappedFile
+{
+private:
+public:
+	std::unordered_map<uint64, CUopBlockHeader> m_Map;
+
+public:
+	CUopMappedFile();
+	virtual ~CUopMappedFile();
+
+	void Add(const uint64 &hash, const CUopBlockHeader &item);
+
+	CUopBlockHeader *Get(const uint64 &hash);
+};
+//----------------------------------------------------------------------------------
 class CFileManager : public WISP_DATASTREAM::CDataReader
 {
 	SETGET(bool, UseVerdata, false);
@@ -58,17 +90,16 @@ public:
 	WISP_FILE::CMappedFile m_LangcodeIff;
 
 	//UOP
-	WISP_FILE::CMappedFile m_artLegacyMUL;
-	WISP_FILE::CMappedFile m_gumpartLegacyMUL;
-	WISP_FILE::CMappedFile m_soundLegacyMUL;
-	WISP_FILE::CMappedFile m_tileart;
-	WISP_FILE::CMappedFile m_MainMisc;
-	WISP_FILE::CMappedFile m_MapUOP[6];
-	WISP_FILE::CMappedFile m_MapXUOP[6];
-	WISP_FILE::CMappedFile m_AnimationSequence;
-	WISP_FILE::CMappedFile m_AnimationFrame[4];
-	WISP_FILE::CMappedFile m_MultiCollection;
-	WISP_FILE::CMappedFile m_string_dictionary;
+	CUopMappedFile m_ArtLegacyMUL;
+	CUopMappedFile m_GumpartLegacyMUL;
+	CUopMappedFile m_SoundLegacyMUL;
+	CUopMappedFile m_Tileart;
+	CUopMappedFile m_MainMisc;
+	CUopMappedFile m_MapUOP[6];
+	CUopMappedFile m_MapXUOP[6];
+	CUopMappedFile m_AnimationSequence;
+	CUopMappedFile m_MultiCollection;
+	CUopMappedFile m_String_dictionary;
 
 	//Map patches
 	WISP_FILE::CMappedFile m_MapDifl[6];
@@ -93,7 +124,7 @@ private:
 	void ReadTask();
 	static bool FileExists(const std::string& filename);
 
-	bool LoadUOPFile(WISP_FILE::CMappedFile &file, const char *fileName);
+	bool LoadUOPFile(CUopMappedFile &file, const char *fileName);
 };
 //---------------------------------------------------------------------------
 extern CFileManager g_FileManager;

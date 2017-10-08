@@ -104,6 +104,9 @@ public:
 	__int64 ReadInt64BE(const int &offset = 0) { __int64 val = 0; ReadDataBE((puchar)&val, sizeof(__int64), offset); return val; }
 	__int64 ReadInt64LE(const int &offset = 0) { __int64 val = 0; ReadDataLE((puchar)&val, sizeof(__int64), offset); return val; }
 
+	uint64 ReadUInt64BE(const int &offset = 0) { uint64 val = 0; ReadDataBE((puchar)&val, sizeof(uint64), offset); return val; }
+	uint64 ReadUInt64LE(const int &offset = 0) { uint64 val = 0; ReadDataLE((puchar)&val, sizeof(uint64), offset); return val; }
+
 	float ReadFloatBE(const int &offset = 0) { float val = 0.0f; ReadDataBE((puchar)&val, sizeof(float), offset); return val; }
 	float ReadFloatLE(const int &offset = 0) { float val = 0.0f; ReadDataLE((puchar)&val, sizeof(float), offset); return val; }
 
