@@ -811,7 +811,7 @@ MACRO_RETURN_CODE CMacroManager::Process()
 						{
 							char* chBuffer = (char*)GlobalLock(cb);
 
-							if (strlen(chBuffer))
+							if (chBuffer != NULL && strlen(chBuffer))
 							{
 								wstring str = g_EntryPointer->Data() + ToWString(chBuffer);
 								g_EntryPointer->SetText(str);

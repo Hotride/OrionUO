@@ -328,6 +328,9 @@ void CMainScreen::SaveGlobalConfig()
 	FILE *uo_cfg = NULL;
 	fopen_s(&uo_cfg, g_App.FilePath("uo_debug.cfg").c_str(), "w");
 
+	if (uo_cfg == NULL)
+		return;
+
 	char buf[128] = { 0 };
 
 	sprintf_s(buf, "AcctID=%s\n", m_Account->c_str());
