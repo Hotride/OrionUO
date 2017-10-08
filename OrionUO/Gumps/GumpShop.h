@@ -33,6 +33,8 @@ public:
 	CGUIText *m_TotalGoldText{ NULL };
 	CGUIText *m_NameText{ NULL };
 
+	virtual void InitToolTip();
+
 	void SendList();
 
 	virtual void PrepareContent();

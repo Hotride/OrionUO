@@ -148,6 +148,19 @@ void CGumpShop::UpdateTotalPrice()
 	}
 }
 //----------------------------------------------------------------------------------
+void CGumpShop::InitToolTip()
+{
+	WISPFUN_DEBUG("c123_f3_1");
+
+	if (g_SelectedObject.Object == NULL || !g_SelectedObject.Object->IsGUI() || ((CBaseGUI*)g_SelectedObject.Object)->Type != GOT_SHOPITEM)
+		return;
+
+	CGameItem *item = g_World->FindWorldItem(g_SelectedObject.Serial);
+
+	if (item != NULL && item->ClilocMessage.length())
+		g_ToolTip.Set(item->ClilocMessage);
+}
+//----------------------------------------------------------------------------------
 void CGumpShop::PrepareContent()
 {
 	WISPFUN_DEBUG("c123_f4");
