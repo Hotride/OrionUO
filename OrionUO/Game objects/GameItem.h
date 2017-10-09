@@ -35,6 +35,8 @@ class CGameItem : public CGameObject
 	SETGET(uint, Price, 0);
 	//!Имя из клилока (для гампа магазина)
 	SETGET(bool, NameFromCliloc, false);
+	//!Тайл мульти для отображения
+	SETGET(ushort, MultiTileGraphic, 0);
 
 protected:
 	/*!
@@ -53,8 +55,6 @@ public:
 	CMulti* GetMulti();
 
 	void ClearMultiItems();
-
-	ushort GetFirstMultiGraphic();
 
 	virtual void Draw(const int &x, const int &y);
 

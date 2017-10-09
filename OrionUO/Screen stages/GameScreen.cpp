@@ -248,7 +248,7 @@ void CGameScreen::ApplyTransparentFoliageToUnion(const ushort &graphic, const in
 			ushort testGraphic = obj->Graphic;
 
 			if (obj->IsGameObject() && !((CGameObject*)obj)->NPC && ((CGameItem*)obj)->MultiBody)
-				testGraphic = ((CGameItem*)obj)->GetFirstMultiGraphic();
+				testGraphic = ((CGameItem*)obj)->MultiTileGraphic;
 
 			if (testGraphic == graphic && obj->Z == z)
 				obj->StaticGroupObjectPtr()->FoliageTransparentIndex = g_FoliageIndex;

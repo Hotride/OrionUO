@@ -147,22 +147,6 @@ void CGameItem::CalculateFieldColor()
 		m_FieldColor = 0x038A;
 }
 //----------------------------------------------------------------------------------
-ushort CGameItem::GetFirstMultiGraphic()
-{
-	WISPFUN_DEBUG("c19_f6");
-	ushort graphic = 0;
-
-	if (m_MultiBody && g_Orion.m_MultiDataIndex[m_Graphic].UopBlock == NULL)
-	{
-		PMULTI_BLOCK pmb = (PMULTI_BLOCK)g_Orion.m_MultiDataIndex[m_Graphic].Address;
-
-		if (pmb != NULL && pmb->ID > 1)
-			graphic = pmb->ID;
-	}
-
-	return graphic;
-}
-//----------------------------------------------------------------------------------
 void CGameItem::Draw(const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c19_f7");
@@ -170,7 +154,7 @@ void CGameItem::Draw(const int &x, const int &y)
 	{
 		if (m_MultiBody)
 		{
-			m_RenderGraphic = GetFirstMultiGraphic();
+			m_RenderGraphic = m_MultiTileGraphic;
 
 			if (m_RenderGraphic)
 			{
@@ -292,7 +276,7 @@ void CGameItem::Select(const int &x, const int &y)
 	{
 		if (m_MultiBody)
 		{
-			m_RenderGraphic = GetFirstMultiGraphic();
+			m_RenderGraphic = m_MultiTileGraphic;
 
 			if (m_RenderGraphic)
 				CRenderStaticObject::Select(x, y);
@@ -692,12 +676,17 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 			if (clilocsCount)
 				reader.Move(clilocsCount * 4);
 
-			CMultiObject *mo = new CMultiObject(graphic, m_X + x, m_Y + y, m_Z + (char)z, flags);
+			if (!flags)
+			{
+				CMultiObject *mo = new CMultiObject(graphic, m_X + x, m_Y + y, m_Z + (char)z, 1);
 
-			mo->m_DrawTextureColor[3] = alpha;
+				mo->m_DrawTextureColor[3] = alpha;
 
-			g_MapManager.AddRender(mo);
-			AddMultiObject(mo);
+				g_MapManager.AddRender(mo);
+				AddMultiObject(mo);
+			}
+			else if (!i)
+				m_MultiTileGraphic = graphic;
 
 			if (x < minX)
 				minX = x;
@@ -730,6 +719,8 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 				g_MapManager.AddRender(mo);
 				AddMultiObject(mo);
 			}
+			else if (!j)
+				m_MultiTileGraphic = pmb->ID;
 
 			if (pmb->X < minX)
 				minX = pmb->X;
