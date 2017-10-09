@@ -152,7 +152,7 @@ ushort CGameItem::GetFirstMultiGraphic()
 	WISPFUN_DEBUG("c19_f6");
 	ushort graphic = 0;
 
-	if (m_MultiBody)
+	if (m_MultiBody && g_Orion.m_MultiDataIndex[m_Graphic].UopBlock == NULL)
 	{
 		PMULTI_BLOCK pmb = (PMULTI_BLOCK)g_Orion.m_MultiDataIndex[m_Graphic].Address;
 
@@ -650,30 +650,72 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 	WISPFUN_DEBUG("c19_f10");
 	ClearMultiItems();
 
+	if (m_Graphic >= MAX_MULTI_DATA_INDEX_COUNT)
+		return;
+
 	m_WantUpdateMulti = false;
 
 	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_Graphic];
-	
-	if (index.Address != NULL)
+
+	uint address = index.Address;
+	int count = index.Count;
+
+	int minX = 0;
+	int minY = 0;
+	int maxX = 0;
+	int maxY = 0;
+
+	uchar alpha = 0;
+
+	if (!dropAlpha)
+		alpha = 0xFF;
+
+	if (index.UopBlock != NULL)
 	{
-		uint address = index.Address;
+		UCHAR_LIST data = g_FileManager.m_MultiCollection.GetData(*index.UopBlock);
 
-		int count = index.Count;
+		if (data.empty())
+			return;
 
-		int minX = 0;
-		int minY = 0;
-		int maxX = 0;
-		int maxY = 0;
+		WISP_DATASTREAM::CDataReader reader(&data[0], data.size());
+		reader.Move(8); //ID + Count
 
+		IFOR(i, 0, count)
+		{
+			ushort graphic = reader.ReadUInt16LE();
+			short x = reader.ReadInt16LE();
+			short y = reader.ReadInt16LE();
+			short z = reader.ReadInt16LE();
+			ushort flags = reader.ReadUInt16LE();
+			uint clilocsCount = reader.ReadUInt32LE();
+
+			if (clilocsCount)
+				reader.Move(clilocsCount * 4);
+
+			CMultiObject *mo = new CMultiObject(graphic, m_X + x, m_Y + y, m_Z + (char)z, flags);
+
+			mo->m_DrawTextureColor[3] = alpha;
+
+			g_MapManager.AddRender(mo);
+			AddMultiObject(mo);
+
+			if (x < minX)
+				minX = x;
+			if (x > maxX)
+				maxX = x;
+
+			if (y < minY)
+				minY = y;
+			if (y > maxY)
+				maxY = y;
+		}
+	}
+	else if (index.Address != NULL)
+	{
 		int itemOffset = sizeof(MULTI_BLOCK);
 
 		if (g_PacketManager.ClientVersion >= CV_7090)
 			itemOffset = sizeof(MULTI_BLOCK_NEW);
-
-		uchar alpha = 0;
-
-		if (!dropAlpha)
-			alpha = 0xFF;
 
 		IFOR(j, 0, count)
 		{
@@ -699,25 +741,25 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 			if (pmb->Y > maxY)
 				maxY = pmb->Y;
 		}
-
-		CMulti *multi = (CMulti*)m_Items;
-
-		if (multi != NULL)
-		{
-			multi->MinX = minX;
-			multi->MinY = minY;
-
-			multi->MaxX = maxX;
-			multi->MaxY = maxY;
-
-			m_MultiDistanceBonus = max(max(abs(minX), maxX), max(abs(minY), maxY));
-		}
-
-		CGumpMinimap *minimap = (CGumpMinimap*)g_GumpManager.GetGump(g_PlayerSerial, 0, GT_MINIMAP);
-
-		if (minimap != NULL)
-			minimap->LastX = 0;
 	}
+
+	CMulti *multi = (CMulti*)m_Items;
+
+	if (multi != NULL)
+	{
+		multi->MinX = minX;
+		multi->MinY = minY;
+
+		multi->MaxX = maxX;
+		multi->MaxY = maxY;
+
+		m_MultiDistanceBonus = max(max(abs(minX), maxX), max(abs(minY), maxY));
+	}
+
+	CGumpMinimap *minimap = (CGumpMinimap*)g_GumpManager.GetGump(g_PlayerSerial, 0, GT_MINIMAP);
+
+	if (minimap != NULL)
+		minimap->LastX = 0;
 }
 //----------------------------------------------------------------------------------
 /*!

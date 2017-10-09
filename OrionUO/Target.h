@@ -87,7 +87,7 @@ public:
 	void SendTarget();
 
 	//Загрузить мульти-объект
-	void LoadMulti(const int &x, const int &y, const char &z);
+	void LoadMulti(const int &offsetX, const int &offsetY, const char &offsetZ);
 
 	//Выгрузить мульти-объект
 	void UnloadMulti();

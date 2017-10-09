@@ -39,7 +39,9 @@ public:
 
 	void Add(const uint64 &hash, const CUopBlockHeader &item);
 
-	CUopBlockHeader *Get(const uint64 &hash);
+	CUopBlockHeader *GetBlock(const uint64 &hash);
+
+	UCHAR_LIST GetData(const CUopBlockHeader &block);
 };
 //----------------------------------------------------------------------------------
 class CFileManager : public WISP_DATASTREAM::CDataReader
@@ -99,7 +101,6 @@ public:
 	CUopMappedFile m_MapXUOP[6];
 	CUopMappedFile m_AnimationSequence;
 	CUopMappedFile m_MultiCollection;
-	CUopMappedFile m_String_dictionary;
 
 	//Map patches
 	WISP_FILE::CMappedFile m_MapDifl[6];

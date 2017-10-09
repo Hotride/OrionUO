@@ -3073,9 +3073,6 @@ void COrion::ReadMulIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int)> getIdxObj, const char *uopFileName, const int &padding, const char *extesion, CUopMappedFile &uopFile, int startIndex)
 {
 	bool isGump = (string("gumpartlegacymul") == uopFileName);
-	bool isMulti = (string("multicollection") == uopFileName);
-	if (isMulti)
-		LOG("Load multi index\n");
 
 	char basePath[200] = { 0 };
 	sprintf_s(basePath, "build/%s/%%0%ii%s", uopFileName, padding, extesion);
@@ -3085,12 +3082,10 @@ void COrion::ReadUOPIndexFile(int indexMaxCount, std::function<CIndexObject*(int
 		char hashString[200] = { 0 };
 		sprintf_s(hashString, basePath, i);
 
-		CUopBlockHeader *block = uopFile.Get(CreateHash(hashString));
+		CUopBlockHeader *block = uopFile.GetBlock(CreateHash(hashString));
 
 		if (block != NULL)
 		{
-			if (isMulti)
-				LOG("Block found!\n");
 			CIndexObject *obj = getIdxObj(i);
 			obj->Address = (uint)uopFile.Start + (uint)block->Offset;
 			obj->DataSize = block->DecompressedSize;
@@ -3219,7 +3214,7 @@ unsigned long long COrion::CreateHash(string s)
 }
 //----------------------------------------------------------------------------------
 void COrion::LoadIndexFiles()
-		{
+{
 	PART_IDX_BLOCK LandArtPtr = (PART_IDX_BLOCK)g_FileManager.m_ArtIdx.Start;
 	PART_IDX_BLOCK StaticArtPtr = (PART_IDX_BLOCK)((uint)g_FileManager.m_ArtIdx.Start + (m_LandData.size() * sizeof(ART_IDX_BLOCK)));
 	PGUMP_IDX_BLOCK GumpArtPtr = (PGUMP_IDX_BLOCK)g_FileManager.m_GumpIdx.Start;
@@ -3228,10 +3223,15 @@ void COrion::LoadIndexFiles()
 	PSOUND_IDX_BLOCK SoundPtr = (PSOUND_IDX_BLOCK)g_FileManager.m_SoundIdx.Start;
 	PLIGHT_IDX_BLOCK LightPtr = (PLIGHT_IDX_BLOCK)g_FileManager.m_LightIdx.Start;
 
-	g_MultiIndexCount = g_FileManager.m_MultiIdx.Size / sizeof(MULTI_IDX_BLOCK);
-
-	if (g_MultiIndexCount > MAX_MULTI_DATA_INDEX_COUNT)
+	if (g_FileManager.m_MultiCollection.Start != NULL)
 		g_MultiIndexCount = MAX_MULTI_DATA_INDEX_COUNT;
+	else
+	{
+		g_MultiIndexCount = g_FileManager.m_MultiIdx.Size / sizeof(MULTI_IDX_BLOCK);
+
+		if (g_MultiIndexCount > MAX_MULTI_DATA_INDEX_COUNT)
+			g_MultiIndexCount = MAX_MULTI_DATA_INDEX_COUNT;
+	}
 
 	int maxGumpsCount = g_FileManager.m_GumpIdx.Start == nullptr ? MAX_GUMP_DATA_INDEX_COUNT : (g_FileManager.m_GumpIdx.End - g_FileManager.m_GumpIdx.Start) / sizeof(GUMP_IDX_BLOCK);
 
@@ -3262,7 +3262,35 @@ void COrion::LoadIndexFiles()
 	if (g_FileManager.m_MultiMul.Start != nullptr)
 		ReadMulIndexFile(g_MultiIndexCount, [&](int i){ return &m_MultiDataIndex[i]; }, (uint)g_FileManager.m_MultiMul.Start, MultiPtr, [&MultiPtr]() { return ++MultiPtr; });
 	else
-		ReadUOPIndexFile(g_MultiIndexCount, [&](int i){ return &m_MultiDataIndex[i]; }, "multicollection", 6, ".bin", g_FileManager.m_MultiCollection);
+	{
+		CUopMappedFile &file = g_FileManager.m_MultiCollection;
+
+		for (std::unordered_map<uint64, CUopBlockHeader>::iterator i = file.m_Map.begin(); i != file.m_Map.end(); i++)
+		{
+			CUopBlockHeader &block = i->second;
+			UCHAR_LIST data = file.GetData(block);
+
+			if (data.empty())
+				continue;
+
+			WISP_DATASTREAM::CDataReader reader(&data[0], data.size());
+
+			uint id = reader.ReadUInt32LE();
+
+			if (id < MAX_MULTI_DATA_INDEX_COUNT)
+			{
+				CIndexMulti &index = m_MultiDataIndex[id];
+
+				index.Address = (uint)file.Start + (uint)block.Offset;
+				index.DataSize = block.DecompressedSize;
+				index.UopBlock = &i->second;
+				index.ID = -1;
+				index.Count = reader.ReadUInt32LE();
+			}
+		}
+
+		//ReadUOPIndexFile(g_MultiIndexCount, [&](int i){ return &m_MultiDataIndex[i]; }, "multicollection", 6, ".bin", g_FileManager.m_MultiCollection);
+	}
 }
 //----------------------------------------------------------------------------------
 void COrion::UnloadIndexFiles()

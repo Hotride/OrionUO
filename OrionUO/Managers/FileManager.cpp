@@ -24,7 +24,7 @@ void CUopMappedFile::Add(const uint64 &hash, const CUopBlockHeader &item)
 	m_Map[hash] = item;
 }
 //----------------------------------------------------------------------------------
-CUopBlockHeader *CUopMappedFile::Get(const uint64 &hash)
+CUopBlockHeader *CUopMappedFile::GetBlock(const uint64 &hash)
 {
 	std::unordered_map<uint64, CUopBlockHeader>::iterator found = m_Map.find(hash);
 
@@ -32,6 +32,31 @@ CUopBlockHeader *CUopMappedFile::Get(const uint64 &hash)
 		return &found->second;
 
 	return NULL;
+}
+//----------------------------------------------------------------------------------
+UCHAR_LIST CUopMappedFile::GetData(const CUopBlockHeader &block)
+{
+	ResetPtr();
+	Move((int)block.Offset);
+
+	uLongf compressedSize = block.CompressedSize;
+	uLongf decompressedSize = block.DecompressedSize;
+	UCHAR_LIST result(decompressedSize, 0);
+
+	if (compressedSize && compressedSize != decompressedSize)
+	{
+		int z_err = uncompress(&result[0], &decompressedSize, m_Ptr, compressedSize);
+
+		if (z_err != Z_OK)
+		{
+			LOG("Uncompress error: %i\n", z_err);
+			result.clear();
+		}
+	}
+	else
+		memcpy(&result[0], &m_Ptr[0], decompressedSize);
+
+	return result;
 }
 //----------------------------------------------------------------------------------
 CFileManager::CFileManager()
@@ -186,10 +211,10 @@ bool CFileManager::LoadWithUOP()
 			return false;
 	}
 
+	LoadUOPFile(m_AnimationSequence, "AnimationSequence.uop");
+
 	/* Эти файлы не используются самой последней версией клиента 7.0.52.2
 	if (!m_tileart.Load(g_App.FilePath("tileart.uop")))
-	return false;
-	if (!m_string_dictionary.Load(g_App.FilePath("string_dictionary.uop")))
 	return false;
 	if (!m_AnimationSequence.Load(g_App.FilePath("AnimationSequence.uop")))
 	return false;
@@ -289,7 +314,6 @@ void CFileManager::Unload()
 	m_GumpartLegacyMUL.Unload();
 	m_SoundLegacyMUL.Unload();
 	m_Tileart.Unload();
-	m_String_dictionary.Unload();
 	m_MultiCollection.Unload();
 	m_AnimationSequence.Unload();
 	m_MainMisc.Unload();
@@ -566,7 +590,7 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 
 
 	//if (string("MainMisc.uop") != fileName)
-	//if (string("MultiCollection.uop") != fileName)
+	//if (string("AnimationSequence.uop") != fileName)
 		return true;
 
 	for (std::unordered_map<uint64, CUopBlockHeader>::iterator i = file.m_Map.begin(); i != file.m_Map.end(); i++)
@@ -594,33 +618,11 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 			dataPtr = &decLayoutData[0];
 		}
 
-		string data = WISP_DATASTREAM::CDataReader(dataPtr, decompressedSize).ReadString(decompressedSize);
-
 		LOG("item dump start: %016llX, %i\n", i->first, compressedSize);
-		//LOG_DUMP(dataPtr, decompressedSize);
-		LOG("%s\n", data.c_str());
+		//string data = WISP_DATASTREAM::CDataReader(dataPtr, decompressedSize).ReadString(decompressedSize);
+		//LOG("%s\n", data.c_str());
 
-		/*WISP_DATASTREAM::CDataReader rdr(dataPtr, decompressedSize);
-
-		LOG("Multi wtf: 0x%08X\n", rdr.ReadUInt32LE());
-
-		int compCount = rdr.ReadUInt16LE();
-		LOG("Multi compCount:%i, wtf:%i\n", compCount, rdr.ReadUInt16LE());
-
-		IFOR(c, 0, compCount)
-		{
-			ushort compGraphic = rdr.ReadUInt16LE();
-			short compX = rdr.ReadInt16LE();
-			short compY = rdr.ReadInt16LE();
-			short compZ = rdr.ReadInt16LE();
-			ushort compFlags = rdr.ReadUInt16LE();
-			uint compWtf = rdr.ReadUInt32LE();
-
-			if (compWtf)
-				rdr.Move(4);
-
-			LOG("Multi comp: g:0x%04X xyz:%i %i %i f:%i, wtf:%i\n", compGraphic, compX, compY, compZ, compFlags, compWtf);
-		}*/
+		LOG_DUMP(dataPtr, decompressedSize);
 
 		LOG("item dump end:\n");
 

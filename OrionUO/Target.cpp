@@ -320,17 +320,44 @@ void CTarget::UnloadMulti()
 	}
 }
 //----------------------------------------------------------------------------------
-void CTarget::LoadMulti(const int &x, const int &y, const char &z)
+void CTarget::LoadMulti(const int &offsetX, const int &offsetY, const char &offsetZ)
 {
 	WISPFUN_DEBUG("c209_f10");
 	UnloadMulti();
 
 	CIndexMulti &index = g_Orion.m_MultiDataIndex[m_MultiGraphic - 1];
-	
-	if (index.Address != NULL)
-	{
-		int count = (int)index.Count;
 
+	int count = (int)index.Count;
+
+	if (index.UopBlock != NULL)
+	{
+		UCHAR_LIST data = g_FileManager.m_MultiCollection.GetData(*index.UopBlock);
+
+		if (data.empty())
+			return;
+
+		WISP_DATASTREAM::CDataReader reader(&data[0], data.size());
+		reader.Move(8); //ID + Count
+
+		IFOR(i, 0, count)
+		{
+			ushort graphic = reader.ReadUInt16LE();
+			short x = reader.ReadInt16LE();
+			short y = reader.ReadInt16LE();
+			short z = reader.ReadInt16LE();
+			ushort flags = reader.ReadUInt16LE();
+			uint clilocsCount = reader.ReadUInt32LE();
+
+			if (clilocsCount)
+				reader.Move(clilocsCount * 4);
+
+			CMultiObject *mo = new CMultiObject(graphic, x + offsetX, y + offsetY, (char)z + (char)offsetZ, 2);
+			g_MapManager.AddRender(mo);
+			AddMultiObject(mo);
+		}
+	}
+	else if (index.Address != NULL)
+	{
 		int itemOffset = sizeof(MULTI_BLOCK);
 
 		if (g_PacketManager.ClientVersion >= CV_7090)
@@ -340,7 +367,7 @@ void CTarget::LoadMulti(const int &x, const int &y, const char &z)
 		{
 			PMULTI_BLOCK pmb = (PMULTI_BLOCK)(index.Address + (j * itemOffset));
 
-			CMultiObject *mo = new CMultiObject(pmb->ID, x + pmb->X, y + pmb->Y, z + (char)pmb->Z, 2);
+			CMultiObject *mo = new CMultiObject(pmb->ID, offsetX + pmb->X, offsetY + pmb->Y, offsetZ + (char)pmb->Z, 2);
 			g_MapManager.AddRender(mo);
 			AddMultiObject(mo);
 		}
