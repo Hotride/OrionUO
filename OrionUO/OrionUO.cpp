@@ -5615,7 +5615,7 @@ void COrion::RemoveRangedObjects()
 	WISPFUN_DEBUG("c194_f123");
 	if (g_World != NULL)
 	{
-		int objectsRange = g_ConfigManager.UpdateRange;
+		int objectsRange = g_ConfigManager.UpdateRange + 1;
 
 		CGameObject *go = g_World->m_Items;
 
