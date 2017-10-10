@@ -58,28 +58,11 @@ bool CGUITilepic::Select()
 	WISPFUN_DEBUG("c80_f4");
 	//if (CGUIDrawObject::Select())
 	//	return true;
-
-	bool select = false;
-
-	CIndexObject &io = g_Orion.m_StaticDataIndex[m_Graphic];
-
-	CGLTexture *th = io.Texture;
+	CGLTexture *th = g_Orion.m_StaticDataIndex[m_Graphic].Texture;
 
 	if (th != NULL)
-	{
-		int x = g_MouseManager.Position.X - m_X;
-		int y = g_MouseManager.Position.Y - m_Y;
+		return th->Select(m_X, m_Y, !m_CheckPolygone);
 
-		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
-		{
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-			select = (m_CheckPolygone || th->PixelsData[(y * th->Width) + x] != 0);
-#else
-			select = (m_CheckPolygone || g_UOFileReader.ArtPixelsInXY(false, io, x, y));
-#endif
-		}
-	}
-
-	return select;
+	return false;
 }
 //----------------------------------------------------------------------------------

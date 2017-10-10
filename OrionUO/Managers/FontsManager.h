@@ -94,7 +94,6 @@ typedef vector<HTML_DATA_INFO> HTMLINFO_LIST;
 //!Класс менеджера шрифтов
 class CFontsManager
 {
-	SETGET(bool, SavePixels, false);
 	SETGET(bool, RecalculateWidthByInfo, false);
 	SETGET(bool, UnusePartialHue, false);
 

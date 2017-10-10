@@ -35,15 +35,11 @@ void CGUIGumppicTiled::Draw(const bool &checktrans)
 bool CGUIGumppicTiled::Select()
 {
 	WISPFUN_DEBUG("c57_f2");
-	bool select = false;
-
 	int x = g_MouseManager.Position.X - m_X;
 	int y = g_MouseManager.Position.Y - m_Y;
 
 	if (x < 0 || y < 0 || (m_Width > 0 && x >= m_Width) || (m_Height > 0 && y >= m_Height))
 		return false;
-
-	CIndexObject &io = g_Orion.m_GumpDataIndex[m_Graphic];
 
 	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
 
@@ -75,14 +71,16 @@ bool CGUIGumppicTiled::Select()
 
 		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
 		{
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-			select = (m_CheckPolygone || th->PixelsData[(y * th->Width) + x] != 0);
-#else
-			select = (m_CheckPolygone || g_UOFileReader.GumpPixelsInXY(io, x, y));
-#endif
+			if (m_CheckPolygone)
+				return true;
+
+			int pos = (y * th->Width) + x;
+
+			if (pos < (int)th->m_HitMap.size())
+				return (th->m_HitMap[pos] != 0);
 		}
 	}
 
-	return select;
+	return false;
 }
 //----------------------------------------------------------------------------------

@@ -58,8 +58,6 @@ void CMainScreen::Init()
 	g_LightLevel = 0;
 	g_PersonalLightLevel = 0;
 
-	g_FontManager.SavePixels = false;
-
 	g_ScreenEffectManager.UseSunrise();
 	m_SmoothScreenAction = 0;
 

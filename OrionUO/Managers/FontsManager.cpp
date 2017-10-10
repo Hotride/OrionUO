@@ -875,9 +875,6 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const 
 	
 	int blocksize = height * width;
 
-	if (m_SavePixels)
-		th.PixelsData.resize(blocksize, 0);
-
 	pData.resize(blocksize, 0);
 
 	int lineOffsY = 0;
@@ -952,9 +949,6 @@ UINT_LIST CFontsManager::GeneratePixelsA(uchar &font, CGLTextTexture &th, const 
 						int block = (testY * width) + (x + w);
 
 						pData[block] = pcl << 8 | 0xFF; // (0xFF << 24) | (GetBValue(pcl) << 16) | (GetGValue(pcl) << 8) | GetRValue(pcl);
-
-						if (m_SavePixels)
-							th.PixelsData[block] = 1; //((pic >> 10) & 0x1F);
 					}
 				}
 			}
@@ -2607,9 +2601,6 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 
 	int blocksize = height * width;
 
-	if (m_SavePixels)
-		th.PixelsData.resize(blocksize, 0);
-
 	pData.resize(blocksize, 0);
 
 	puint table = (puint)m_UnicodeFontAddress[font];
@@ -2787,12 +2778,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 							int block = (testY * width) + nowX;
 
 							if (cl)
-							{
 								pData[block] = charcolor;
-
-								if (m_SavePixels)
-									th.PixelsData[block] = cell;
-							}
 						}
 					}
 				}
@@ -2844,10 +2830,6 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 									if (pData[testBlock] && pData[testBlock] != solidColor)
 									{
 										pData[block] = solidColor;
-
-										if (m_SavePixels)
-											th.PixelsData[block] = cell;
-
 										break;
 									}
 								}
@@ -2876,11 +2858,7 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 							int block = (testY * width) + testX;
 
 							if (pData[block] == solidColor)
-							{
 								pData[block] = charcolor;
-								if (m_SavePixels)
-									th.PixelsData[block] = cell;
-							}
 						}
 					}
 				}
@@ -2938,8 +2916,6 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 										if (pData[testBlock] && pData[testBlock] != blackColor)
 										{
 											pData[block] = blackColor;
-											if (m_SavePixels)
-												th.PixelsData[block] = cell;
 
 											passed = true;
 
@@ -2992,8 +2968,6 @@ UINT_LIST CFontsManager::GeneratePixelsW(uchar &font, CGLTextTexture &th, const 
 					int block = (testY * width) + testX;
 
 					pData[block] = charcolor;
-					if (m_SavePixels)
-						th.PixelsData[block] = cell;
 				}
 			}
 		}

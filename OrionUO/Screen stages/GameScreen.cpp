@@ -1189,7 +1189,7 @@ void CGameScreen::DrawGameWindow(const bool &mode)
 	}
 	else
 	{
-		bool useCircleTrans = (g_ConfigManager.UseCircleTrans && g_Orion.CircleTransPixelsInXY());
+		bool useCircleTrans = (g_ConfigManager.UseCircleTrans && g_CircleOfTransparency.Select(g_CircleOfTransparency.X, g_CircleOfTransparency.Y));
 
 		IFOR(i, 0, m_RenderListCount)
 		{

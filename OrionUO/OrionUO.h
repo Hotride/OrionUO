@@ -293,25 +293,22 @@ public:
 	bool PolygonePixelsInXY(int x, int y, const int &width, const int &height);
 
 	//Проверка гампа под курсором мышки
-	bool GumpPixelsInXY(const ushort &id, int x, int y, const bool &noSubMouse = false);
+	bool GumpPixelsInXY(const ushort &id, int x, int y);
 
 	//Проверка замощенного гампа под курсором мышки
-	bool GumpPixelsInXY(const ushort &id, int x, int y, int width, int height, const bool &noSubMouse = false);
+	bool GumpPixelsInXY(const ushort &id, int x, int y, int width, int height);
 
 	//Проверка фона под курсором мышки
 	bool ResizepicPixelsInXY(const ushort &id, int x, int y, const int &width, const int &height);
 
 	//Проверка статики под курсором мышки
-	bool StaticPixelsInXY(const ushort &id, int x, int y);
+	bool StaticPixelsInXY(const ushort &id, const int &x, const int &y);
 
 	//Проверка анимированной статики под курсором мышки
 	bool StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y);
 
-	//Проверка круга прозрачности под курсором мышки
-	bool CircleTransPixelsInXY();
-
 	//Проверка статики в контейнере под курсором мышки
-	bool StaticPixelsInXYInContainer(const ushort &id, int x, int y);
+	bool StaticPixelsInXYInContainer(const ushort &id, const int &x, const int &y);
 
 	//Проверка ландшафта (из art.mul) под курсором мышки
 	bool LandPixelsInXY(const ushort &id, int x, int y);

@@ -347,42 +347,34 @@ void CGUISlider::Draw(const bool &checktrans)
 bool CGUISlider::Select()
 {
 	WISPFUN_DEBUG("c77_f12");
-	bool select = false;
-
 	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
 
-	int x = g_MouseManager.Position.X - m_X;
-	int y = g_MouseManager.Position.Y - m_Y;
-
-	if (th != NULL && x >= 0 && y >= 0)
+	if (th != NULL)
 	{
-		int buttonX = x;
-		int buttonY = y;
+		int buttonX = m_X;
+		int buttonY = m_Y;
 
 		if (m_Vertical)
 			buttonY -= m_Offset;
 		else
 			buttonX -= m_Offset;
 
-		if (buttonX >= 0 && buttonX < th->Width && buttonY >= 0 && buttonY < th->Height)
-		{
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-			select = (m_CheckPolygone || th->PixelsData[(buttonY * th->Width) + buttonX] != 0);
-#else
-			select = (m_CheckPolygone || g_UOFileReader.GumpPixelsInXY(g_Orion.m_GumpDataIndex[m_Graphic], buttonX, buttonY));
-#endif
-		}
+		if (th->Select(buttonX, buttonY, !m_CheckPolygone))
+			return true;
 
-		if (!select && m_BackgroundGraphic)
+		if (m_BackgroundGraphic)
 		{
+			int x = g_MouseManager.Position.X - m_X;
+			int y = g_MouseManager.Position.Y - m_Y;
+
 			if (m_Vertical)
-				select = (x < th->Width && y < m_Lenght);
+				return (x < th->Width && y < m_Lenght);
 			else
-				select = (x < m_Lenght && y < th->Height);
+				return (x < m_Lenght && y < th->Height);
 		}
 	}
 
-	return select;
+	return false;
 }
 //----------------------------------------------------------------------------------
 void CGUISlider::OnMouseEnter()

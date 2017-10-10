@@ -278,7 +278,7 @@ void CTextRenderer::Select(CGump *gump)
 
 		CTextData *text = (CTextData*)item;
 
-		if (text->Timer >= g_Ticks && text->m_Texture.UnderMouse(text->DrawX, text->DrawY))
+		if (text->Timer >= g_Ticks && text->m_Texture.Select(text->DrawX, text->DrawY))
 			g_SelectedObject.Init(item, gump);
 	}
 }

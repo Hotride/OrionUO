@@ -62,34 +62,23 @@ void CGUITilepicHightlighted::Draw(const bool &checktrans)
 bool CGUITilepicHightlighted::Select()
 {
 	WISPFUN_DEBUG("c81_f3");
-	bool select = false;
-
-	CIndexObject &io = g_Orion.m_StaticDataIndex[m_Graphic];
-
-	CGLTexture *th = io.Texture;
+	CGLTexture *th = g_Orion.m_StaticDataIndex[m_Graphic].Texture;
 
 	if (th != NULL)
 	{
 		int count = 1 + m_DoubleDraw;
-		static const int offset[2] = { 0, 5 };
+		int offset = 0;
 
-		IFOR(i, 0, count && !select)
+		IFOR(i, 0, count)
 		{
-			int x = g_MouseManager.Position.X - (m_X + offset[i]);
-			int y = g_MouseManager.Position.Y - (m_Y + offset[i]);
+			if (th->Select(m_X + offset, m_Y + offset, !m_CheckPolygone))
+				return true;
 
-			if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
-			{
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-				select = (m_CheckPolygone || th->PixelsData[(y * th->Width) + x] != 0);
-#else
-				select = (m_CheckPolygone || g_UOFileReader.ArtPixelsInXY(false, io, x, y));
-#endif
-			}
+			offset = 5;
 		}
 	}
 
-	return select;
+	return false;
 }
 //----------------------------------------------------------------------------------
 void CGUITilepicHightlighted::OnMouseEnter()

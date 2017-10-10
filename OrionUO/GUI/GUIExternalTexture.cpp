@@ -52,23 +52,9 @@ void CGUIExternalTexture::Draw(const bool &checktrans)
 bool CGUIExternalTexture::Select()
 {
 	WISPFUN_DEBUG("c53_f4");
-	bool select = false;
-
 	if (m_Texture != NULL)
-	{
-		int x = g_MouseManager.Position.X - m_X;
-		int y = g_MouseManager.Position.Y - m_Y;
+		return m_Texture->Select(m_X, m_Y, !m_CheckPolygone);
 
-		if (x >= 0 && y >= 0 && x < m_Texture->Width && y < m_Texture->Height)
-		{
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-			select = (m_CheckPolygone || th->PixelsData[(y * th->Width) + x] != 0);
-#else
-			select = m_CheckPolygone;
-#endif
-		}
-	}
-
-	return select;
+	return false;
 }
 //----------------------------------------------------------------------------------

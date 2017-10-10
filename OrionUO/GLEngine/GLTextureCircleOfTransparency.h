@@ -21,7 +21,7 @@ public:
 	virtual ~CGLTextureCircleOfTransparency();
 
 	//Создать текстуру
-	static void CreatePixels(const int &radius, int &width, int &height, UINT_LIST &pixels);
+	static void CreatePixels(const int &radius, int &width, int &height, UINT_LIST &pixels, vector<bool> &hitMap);
 
 	//Создать текстуру
 	bool Create(int radius);
@@ -31,10 +31,6 @@ public:
 
 	//Отрисовать текстуру
 	void Redraw();
-
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 0
-	vector<ushort> PixelsData;
-#endif
 };
 //----------------------------------------------------------------------------------
 extern CGLTextureCircleOfTransparency g_CircleOfTransparency;

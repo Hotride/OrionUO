@@ -279,7 +279,7 @@ void CGumpWorldMap::FixOffsets(int &offsetX, int &offsetY, int &width, int &heig
 void CGumpWorldMap::LoadMap(int map)
 {
 	WISPFUN_DEBUG("c132_f11");
-	if (g_MapTexture[map].Texture == 0)
+	if (g_MapTexture[map].Texture == 0 && false)
 	{
 		WISP_FILE::CMappedFile file;
 

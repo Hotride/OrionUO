@@ -50,18 +50,3 @@ void CGLTextTexture::Draw(const int &x, const int &y, const bool &checktrans)
 	}
 }
 //----------------------------------------------------------------------------------
-bool CGLTextTexture::UnderMouse(int x, int y)
-{
-	WISPFUN_DEBUG("c35_f3");
-	if (PixelsData.size())
-	{
-		x = g_MouseManager.Position.X - x;
-		y = g_MouseManager.Position.Y - y;
-
-		if (x > 0 && y > 0 && x < m_Width && y < m_Height)
-			return (PixelsData[(y * m_Width) + x] != 0);
-	}
-
-	return false;
-}
-//----------------------------------------------------------------------------------

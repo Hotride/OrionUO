@@ -57,10 +57,6 @@ void CGumpMinimap::GenerateMap()
 	if (!data.size())
 		return;
 
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-	m_Texture.PixelsData = data;
-#endif
-
 	int blockOffsetX = gumpWidth / 4;
 	int blockOffsetY = gumpHeight / 4;
 

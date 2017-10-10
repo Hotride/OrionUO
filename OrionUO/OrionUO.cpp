@@ -3957,7 +3957,7 @@ void COrion::CreateAuraTexture()
 	int width = 0;
 	int height = 0;
 
-	CGLTextureCircleOfTransparency::CreatePixels(30, width, height, pixels);
+	CGLTextureCircleOfTransparency::CreatePixels(30, width, height, pixels, g_AuraTexture.m_HitMap);
 
 	IFOR(i, 0, (int)pixels.size())
 	{
@@ -4719,93 +4719,70 @@ bool COrion::PolygonePixelsInXY(int x, int y, const int &width, const int &heigh
 	return !(x < 0 || y < 0 || x >= width || y >= height);
 }
 //----------------------------------------------------------------------------------
-bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, const bool &noSubMouse)
+bool COrion::GumpPixelsInXY(const ushort &id, int x, int y)
 {
 	WISPFUN_DEBUG("c194_f87");
-	CIndexObject &io = m_GumpDataIndex[id];
+	CGLTexture *texture = m_GumpDataIndex[id].Texture;
 
-	bool result = false;
+	if (texture != NULL)
+		return texture->Select(x, y);
 
-	CGLTexture *th = io.Texture;
-
-	if (th != NULL)
-	{
-		if (!noSubMouse)
-		{
-			x = g_MouseManager.Position.X - x;
-			y = g_MouseManager.Position.Y - y;
-		}
-
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
-			result = th->PixelsData[(y * th->Width) + x] != 0;
-#else
-		result = g_UOFileReader.GumpPixelsInXY(io, x, y);
-#endif
-	}
-
-	return result;
+	return false;
 }
 //----------------------------------------------------------------------------------
-bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, int width, int height, const bool &noSubMouse)
+bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, int width, int height)
 {
 	WISPFUN_DEBUG("c194_f88");
-	if (!noSubMouse)
-	{
-		x = g_MouseManager.Position.X - x;
-		y = g_MouseManager.Position.Y - y;
-	}
+	CGLTexture *texture = m_GumpDataIndex[id].Texture;
+
+	if (texture == NULL)
+		return false;
+
+	x = g_MouseManager.Position.X - x;
+	y = g_MouseManager.Position.Y - y;
 
 	if (x < 0 || y < 0 || (width > 0 && x >= width) || (height > 0 && y >= height))
 		return false;
 
-	CIndexObject &io = m_GumpDataIndex[id];
-
-	CGLTexture *th = io.Texture;
-
-	if (th == NULL)
-		return false;
+	int textureWidth = texture->Width;
+	int textureHeight = texture->Height;
 
 	if (width == 0)
-		width = th->Width;
+		width = textureWidth;
 
 	if (height == 0)
-		height = th->Height;
+		height = textureHeight;
 
-	while (x > th->Width && width > th->Width)
+	while (x > textureWidth && width > textureWidth)
 	{
-		x -= th->Width;
-		width -= th->Width;
+		x -= textureWidth;
+		width -= textureWidth;
 	}
 
-	while (y > th->Height && height > th->Height)
+	while (y > textureHeight && height > textureHeight)
 	{
-		y -= th->Height;
-		height -= th->Height;
+		y -= textureHeight;
+		height -= textureHeight;
 	}
 
 	if (x > width || y > height)
 		return false;
 
-	bool result = false;
+	int pos = (y * textureWidth) + x;
+	
+	if (pos < (int)texture->m_HitMap.size())
+		return (texture->m_HitMap[pos] != 0);
 
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-	if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
-		result = th->PixelsData[(y * th->Width) + x] != 0;
-#else
-	result = g_UOFileReader.GumpPixelsInXY(io, x, y);
-#endif
-
-	return result;
+	return false;
 }
 //----------------------------------------------------------------------------------
 bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &width, const int &height)
 {
 	WISPFUN_DEBUG("c194_f89");
-	x = g_MouseManager.Position.X - x;
-	y = g_MouseManager.Position.Y - y;
+	int tempX = g_MouseManager.Position.X - x;
+	int tempY = g_MouseManager.Position.Y - y;
 
-	if (x < 0 || y < 0 || x >= width || y >= height)
+	if (tempX < 0 || tempY < 0 || tempX >= width || tempY >= height)
 		return false;
 
 	CGLTexture *th[9] = { NULL };
@@ -4829,125 +4806,112 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 	{
 		switch (i)
 		{
-		case 0:
-		{
-			if (GumpPixelsInXY(id, x, y, true))
-				return true;
-			break;
-		}
-		case 1:
-		{
-			int DW = width - th[0]->Width - th[2]->Width;
-			if (DW < 1)
+			case 0:
+			{
+				if (GumpPixelsInXY(id, x, y))
+					return true;
 				break;
+			}
+			case 1:
+			{
+				int DW = width - th[0]->Width - th[2]->Width;
+				if (DW < 1)
+					break;
 
-			if (GumpPixelsInXY(id + 1, x - th[0]->Width, y, DW, 0, true))
-				return true;
+				if (GumpPixelsInXY(id + 1, x - th[0]->Width, y, DW, 0))
+					return true;
 
-			break;
-		}
-		case 2:
-		{
-			if (GumpPixelsInXY(id + 2, x - width + th[i]->Width, y, true))
-				return true;
-
-			break;
-		}
-		case 3:
-		{
-			int DH = height - th[0]->Height - th[5]->Height;
-			if (DH < 1)
 				break;
+			}
+			case 2:
+			{
+				if (GumpPixelsInXY(id + 2, x - width + th[i]->Width, y))
+					return true;
 
-			if (GumpPixelsInXY(id + 3, x, y - th[0]->Height, 0, DH, true))
-				return true;
-
-			break;
-		}
-		case 4:
-		{
-			int DH = height - th[2]->Height - th[7]->Height;
-			if (DH < 1)
 				break;
+			}
+			case 3:
+			{
+				int DH = height - th[0]->Height - th[5]->Height;
+				if (DH < 1)
+					break;
 
-			if (GumpPixelsInXY(id + 5, x - width + th[i]->Width, y - th[2]->Height, 0, DH, true))
-				return true;
+				if (GumpPixelsInXY(id + 3, x, y - th[0]->Height, 0, DH))
+					return true;
 
-			break;
-		}
-		case 5:
-		{
-			if (GumpPixelsInXY(id + 6, x, y - height + th[i]->Height, true))
-				return true;
-
-			break;
-		}
-		case 6:
-		{
-			int DW = width - th[5]->Width - th[7]->Width;
-			if (DW < 1)
 				break;
+			}
+			case 4:
+			{
+				int DH = height - th[2]->Height - th[7]->Height;
+				if (DH < 1)
+					break;
 
-			if (GumpPixelsInXY(id + 7, x - th[5]->Width, y - height + th[i]->Height, DW, 0, true))
-				return true;
+				if (GumpPixelsInXY(id + 5, x - width + th[i]->Width, y - th[2]->Height, 0, DH))
+					return true;
 
-			break;
-		}
-		case 7:
-		{
-			if (GumpPixelsInXY(id + 8, x - width + th[i]->Width, y - height + th[i]->Height, true))
-				return true;
-
-			break;
-		}
-		case 8:
-		{
-			int DW = width - th[0]->Width - th[2]->Width;
-
-			if (DW < 1)
 				break;
+			}
+			case 5:
+			{
+				if (GumpPixelsInXY(id + 6, x, y - height + th[i]->Height))
+					return true;
 
-			int DH = height - th[2]->Height - th[7]->Height;
-
-			if (DH < 1)
 				break;
+			}
+			case 6:
+			{
+				int DW = width - th[5]->Width - th[7]->Width;
+				if (DW < 1)
+					break;
 
-			if (GumpPixelsInXY(id + 4, x - th[0]->Width, y - th[0]->Height, DW, DH, true))
-				return true;
+				if (GumpPixelsInXY(id + 7, x - th[5]->Width, y - height + th[i]->Height, DW, 0))
+					return true;
 
-			break;
-		}
-		default:
-			break;
+				break;
+			}
+			case 7:
+			{
+				if (GumpPixelsInXY(id + 8, x - width + th[i]->Width, y - height + th[i]->Height))
+					return true;
+
+				break;
+			}
+			case 8:
+			{
+				int DW = width - th[0]->Width - th[2]->Width;
+
+				if (DW < 1)
+					break;
+
+				int DH = height - th[2]->Height - th[7]->Height;
+
+				if (DH < 1)
+					break;
+
+				if (GumpPixelsInXY(id + 4, x - th[0]->Width, y - th[0]->Height, DW, DH))
+					return true;
+
+				break;
+			}
+			default:
+				break;
 		}
 	}
 
 	return false;
 }
 //----------------------------------------------------------------------------------
-bool COrion::StaticPixelsInXY(const ushort &id, int x, int y)
+bool COrion::StaticPixelsInXY(const ushort &id, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c194_f90");
 	CIndexObject &io = m_StaticDataIndex[id];
+	CGLTexture *texture = io.Texture;
 
-	bool result = false;
+	if (texture != NULL)
+		return texture->Select(x - io.Width, y - io.Height);
 
-	CGLTexture *th = io.Texture;
-
-	if (th != NULL)
-	{
-		x = (g_MouseManager.Position.X - x) + io.Width;
-		y = (g_MouseManager.Position.Y - y) + io.Height;
-
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
-			result = th->PixelsData[(y * th->Width) + x] != 0;
-#else
-		result = g_UOFileReader.ArtPixelsInXY(false, io, x, y);
-#endif
-	}
-
-	return result;
+	return false;
 }
 //----------------------------------------------------------------------------------
 bool COrion::StaticPixelsInXYAnimated(const ushort &id, const int &x, const int &y)
@@ -4956,71 +4920,26 @@ bool COrion::StaticPixelsInXYAnimated(const ushort &id, const int &x, const int 
 	return StaticPixelsInXY(id + m_StaticDataIndex[id].Offset, x, y);
 }
 //----------------------------------------------------------------------------------
-bool COrion::CircleTransPixelsInXY()
-{
-	WISPFUN_DEBUG("c194_f92");
-	int x = (g_MouseManager.Position.X - g_CircleOfTransparency.X);
-	int y = (g_MouseManager.Position.Y - g_CircleOfTransparency.Y);
-
-	bool result = false;
-
-	if (x >= 0 && y >= 0 && x < g_CircleOfTransparency.Width && y < g_CircleOfTransparency.Height)
-	{
-		int pos = (y * g_CircleOfTransparency.Width) + x;
-		result = (g_CircleOfTransparency.PixelsData[pos] != 0);
-	}
-
-	return result;
-}
-//----------------------------------------------------------------------------------
-bool COrion::StaticPixelsInXYInContainer(const ushort &id, int x, int y)
+bool COrion::StaticPixelsInXYInContainer(const ushort &id, const int &x, const int &y)
 {
 	WISPFUN_DEBUG("c194_f93");
-	CIndexObject &io = m_StaticDataIndex[id];
+	CGLTexture *texture = m_StaticDataIndex[id].Texture;
 
-	bool result = false;
+	if (texture != NULL)
+		return texture->Select(x, y);
 
-	CGLTexture *th = io.Texture;
-
-	if (th != NULL)
-	{
-		x = g_MouseManager.Position.X - x;
-		y = g_MouseManager.Position.Y - y;
-
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
-			result = th->PixelsData[(y * th->Width) + x] != 0;
-#else
-		result = g_UOFileReader.ArtPixelsInXY(false, io, x, y);
-#endif
-	}
-
-	return result;
+	return false;
 }
 //----------------------------------------------------------------------------------
 bool COrion::LandPixelsInXY(const ushort &id, int x, int  y)
 {
 	WISPFUN_DEBUG("c194_f94");
-	CIndexObject &io = m_LandDataIndex[id];
+	CGLTexture *texture = m_LandDataIndex[id].Texture;
 
-	bool result = false;
+	if (texture != NULL)
+		return texture->Select(x - 22, y - 22);
 
-	CGLTexture *th = io.Texture;
-
-	if (th != NULL)
-	{
-		x = (g_MouseManager.Position.X - x) + 22;
-		y = (g_MouseManager.Position.Y - y) + 22;
-
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
-			result = th->PixelsData[(y * th->Width) + x] != 0;
-#else
-		result = g_UOFileReader.ArtPixelsInXY(true, io, x, y);
-#endif
-	}
-
-	return result;
+	return false;
 }
 //----------------------------------------------------------------------------------
 bool COrion::LandTexturePixelsInXY(int x, int  y, RECT &r)
@@ -5103,8 +5022,6 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 			{
 				int width = g_FontManager.GetWidthA(font, text.c_str(), text.length());
 
-				g_FontManager.SavePixels = true;
-
 				td->Color = 0;
 
 				if (width > TEXT_MESSAGE_MAX_WIDTH)
@@ -5117,8 +5034,6 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 					td->GenerateTexture(0, 0, TS_CENTER);
 
 				td->Color = color;
-
-				g_FontManager.SavePixels = false;
 
 				obj->AddText(td);
 
@@ -5178,8 +5093,6 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 		{
 			int width = g_FontManager.GetWidthA((BYTE)font, text.c_str(), text.length());
 			
-			g_FontManager.SavePixels = true;
-
 			if (width > TEXT_MESSAGE_MAX_WIDTH)
 			{
 				width = g_FontManager.GetWidthExA((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
@@ -5188,8 +5101,6 @@ void COrion::CreateTextMessage(TEXT_TYPE type, uint serial, uchar font, ushort c
 			}
 			else
 				td->GenerateTexture(0, 0, TS_CENTER);
-
-			g_FontManager.SavePixels = false;
 
 			((CRenderWorldObject*)serial)->AddText(td);
 			g_WorldTextRenderer.AddText(td);
@@ -5228,8 +5139,6 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 			{
 				int width = g_FontManager.GetWidthW((BYTE)font, text.c_str(), text.length());
 
-				g_FontManager.SavePixels = true;
-
 				if (width > TEXT_MESSAGE_MAX_WIDTH)
 				{
 					width = g_FontManager.GetWidthExW((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, UOFONT_BLACK_BORDER);
@@ -5239,8 +5148,6 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 				else
 					td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_CENTER);
 				
-				g_FontManager.SavePixels = false;
-
 				obj->AddText(td);
 
 				uint container = obj->Container;
@@ -5300,8 +5207,6 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 		{
 			int width = g_FontManager.GetWidthW((BYTE)font, text.c_str(), text.length());
 
-			g_FontManager.SavePixels = true;
-
 			if (width > TEXT_MESSAGE_MAX_WIDTH)
 			{
 				width = g_FontManager.GetWidthExW((BYTE)font, text.c_str(), text.length(), TEXT_MESSAGE_MAX_WIDTH, TS_LEFT, 0);
@@ -5310,8 +5215,6 @@ void COrion::CreateUnicodeTextMessage(TEXT_TYPE type, uint serial, uchar font, u
 			}
 			else
 				td->GenerateTexture(0, UOFONT_BLACK_BORDER, TS_LEFT);
-
-			g_FontManager.SavePixels = false;
 
 			((CRenderWorldObject*)serial)->AddText(td);
 			g_WorldTextRenderer.AddText(td);

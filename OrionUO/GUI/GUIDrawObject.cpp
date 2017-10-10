@@ -71,25 +71,11 @@ void CGUIDrawObject::Draw(const bool &checktrans)
 bool CGUIDrawObject::Select()
 {
 	WISPFUN_DEBUG("c52_f5");
-	bool select = false;
-
 	CGLTexture *th = g_Orion.ExecuteGump(m_Graphic);
 
 	if (th != NULL)
-	{
-		int x = g_MouseManager.Position.X - m_X;
-		int y = g_MouseManager.Position.Y - m_Y;
+		return th->Select(m_X, m_Y, !m_CheckPolygone);
 
-		if (x >= 0 && y >= 0 && x < th->Width && y < th->Height)
-		{
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-			select = (m_CheckPolygone || th->PixelsData[(y * th->Width) + x] != 0);
-#else
-			select = (m_CheckPolygone || g_UOFileReader.GumpPixelsInXY(g_Orion.m_GumpDataIndex[m_Graphic], x, y));
-#endif
-		}
-	}
-
-	return select;
+	return false;
 }
 //----------------------------------------------------------------------------------

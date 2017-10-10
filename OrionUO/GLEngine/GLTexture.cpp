@@ -111,6 +111,7 @@ void CGLTexture::Clear()
 	WISPFUN_DEBUG("c36_f6");
 	m_Width = 0;
 	m_Height = 0;
+	m_HitMap.clear();
 
 	if (Texture != 0)
 	{
@@ -129,9 +130,24 @@ void CGLTexture::Clear()
 		glDeleteBuffers(1, &m_MirroredVertexBuffer);
 		m_MirroredVertexBuffer = 0;
 	}
+}
+//----------------------------------------------------------------------------------
+bool CGLTexture::Select(int x, int y, const bool &pixelCheck)
+{
+	x = g_MouseManager.Position.X - x;
+	y = g_MouseManager.Position.Y - y;
 
-#if UO_ENABLE_TEXTURE_DATA_SAVING == 1
-	PixelsData.clear();
-#endif
+	if (x >= 0 && y >= 0 && x < m_Width && y < m_Height)
+	{
+		if (!pixelCheck)
+			return true;
+
+		int pos = (y * m_Width) + x;
+
+		if (pos < (int)m_HitMap.size())
+			return (m_HitMap[pos] != 0);
+	}
+
+	return false;
 }
 //----------------------------------------------------------------------------------
