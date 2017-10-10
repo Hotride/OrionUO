@@ -212,6 +212,7 @@ bool CFileManager::LoadWithUOP()
 	}
 
 	LoadUOPFile(m_AnimationSequence, "AnimationSequence.uop");
+	LoadUOPFile(m_Tileart, "tileart.uop");
 
 	/* Эти файлы не используются самой последней версией клиента 7.0.52.2
 	if (!m_tileart.Load(g_App.FilePath("tileart.uop")))
@@ -522,6 +523,8 @@ bool CFileManager::DecompressUOPFileData(UOPAnimationData &animData, UCHAR_LIST 
 //----------------------------------------------------------------------------------
 bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 {
+	//LOG("Loading UOP fileName: %s\n", fileName);
+
 	if (!file.Load(g_App.FilePath(fileName)))
 		return false;
 
@@ -591,42 +594,25 @@ bool CFileManager::LoadUOPFile(CUopMappedFile &file, const char *fileName)
 
 	//if (string("MainMisc.uop") != fileName)
 	//if (string("AnimationSequence.uop") != fileName)
+	//if (string("tileart.uop") != fileName)
 		return true;
 
 	for (std::unordered_map<uint64, CUopBlockHeader>::iterator i = file.m_Map.begin(); i != file.m_Map.end(); i++)
 	{
-		CUopBlockHeader &item = i->second;
-		file.ResetPtr();
-		file.Move((int)item.Offset);
-		puchar dataPtr = file.Ptr;
+		LOG("item dump start: %016llX, %i\n", i->first, i->second.CompressedSize);
 
-		uLongf compressedSize = item.CompressedSize;
-		uLongf decompressedSize = item.DecompressedSize;
-		UCHAR_LIST decLayoutData;
+		UCHAR_LIST data = file.GetData(i->second);
 
-		if (compressedSize && compressedSize != decompressedSize)
-		{
-			decLayoutData.resize(decompressedSize, 0);
-			int z_err = uncompress(&decLayoutData[0], &decompressedSize, file.Ptr, compressedSize);
+		if (data.empty())
+			continue;
 
-			if (z_err != Z_OK)
-			{
-				LOG("Uncompress error: %i\n", z_err);
-				continue;
-			}
+		WISP_DATASTREAM::CDataReader reader(&data[0], data.size());
 
-			dataPtr = &decLayoutData[0];
-		}
+		//LOG("%s\n", reader.ReadString(decompressedSize).c_str());
 
-		LOG("item dump start: %016llX, %i\n", i->first, compressedSize);
-		//string data = WISP_DATASTREAM::CDataReader(dataPtr, decompressedSize).ReadString(decompressedSize);
-		//LOG("%s\n", data.c_str());
-
-		LOG_DUMP(dataPtr, decompressedSize);
+		LOG_DUMP(reader.Start, reader.Size);
 
 		LOG("item dump end:\n");
-
-		decLayoutData.clear();
 	}
 
 	file.ResetPtr();

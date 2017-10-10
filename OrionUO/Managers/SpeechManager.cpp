@@ -57,18 +57,18 @@ bool CSpeechManager::LoadSpeech()
 
 	LOG("Selected language: %s (%s)\n", g_Language.c_str(), lang.c_str());
 
-	WISP_FILE::CMappedFile &file = g_FileManager.m_SpeechMul;
+	WISP_DATASTREAM::CDataReader reader(g_FileManager.m_SpeechMul.Start, g_FileManager.m_SpeechMul.Size);
 
-	while (!file.IsEOF())
+	while (!reader.IsEOF())
 	{
 		CSpeechItem item;
-		item.Code = file.ReadUInt16BE();
-		int len = file.ReadUInt16BE();
+		item.Code = reader.ReadUInt16BE();
+		int len = reader.ReadUInt16BE();
 
 		if (!len)
 			continue;
 
-		wstring str = DecodeUTF8(file.ReadString(len)).c_str();
+		wstring str = DecodeUTF8(reader.ReadString(len)).c_str();
 		const WCHAR *data = str.c_str();
 
 		
