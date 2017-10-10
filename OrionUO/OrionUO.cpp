@@ -4759,13 +4759,16 @@ bool COrion::GumpPixelsInXY(const ushort &id, int x, int y, int width, int heigh
 		width -= textureWidth;
 	}
 
+	if (x < 0 || x > width)
+		return false;
+
 	while (y > textureHeight && height > textureHeight)
 	{
 		y -= textureHeight;
 		height -= textureHeight;
 	}
 
-	if (x > width || y > height)
+	if (y < 0 || y > height)
 		return false;
 
 	int pos = (y * textureWidth) + x;
@@ -4818,14 +4821,14 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 				if (DW < 1)
 					break;
 
-				if (GumpPixelsInXY(id + 1, x - th[0]->Width, y, DW, 0))
+				if (GumpPixelsInXY(id + 1, x + th[0]->Width, y, DW, 0))
 					return true;
 
 				break;
 			}
 			case 2:
 			{
-				if (GumpPixelsInXY(id + 2, x - width + th[i]->Width, y))
+				if (GumpPixelsInXY(id + 2, x + width - th[i]->Width, y))
 					return true;
 
 				break;
@@ -4836,7 +4839,7 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 				if (DH < 1)
 					break;
 
-				if (GumpPixelsInXY(id + 3, x, y - th[0]->Height, 0, DH))
+				if (GumpPixelsInXY(id + 3, x, y + th[0]->Height, 0, DH))
 					return true;
 
 				break;
@@ -4847,14 +4850,14 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 				if (DH < 1)
 					break;
 
-				if (GumpPixelsInXY(id + 5, x - width + th[i]->Width, y - th[2]->Height, 0, DH))
+				if (GumpPixelsInXY(id + 5, x + width - th[i]->Width, y + th[2]->Height, 0, DH))
 					return true;
 
 				break;
 			}
 			case 5:
 			{
-				if (GumpPixelsInXY(id + 6, x, y - height + th[i]->Height))
+				if (GumpPixelsInXY(id + 6, x, y + height - th[i]->Height))
 					return true;
 
 				break;
@@ -4865,14 +4868,14 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 				if (DW < 1)
 					break;
 
-				if (GumpPixelsInXY(id + 7, x - th[5]->Width, y - height + th[i]->Height, DW, 0))
+				if (GumpPixelsInXY(id + 7, x + th[5]->Width, y + height - th[i]->Height, DW, 0))
 					return true;
 
 				break;
 			}
 			case 7:
 			{
-				if (GumpPixelsInXY(id + 8, x - width + th[i]->Width, y - height + th[i]->Height))
+				if (GumpPixelsInXY(id + 8, x + width - th[i]->Width, y + height - th[i]->Height))
 					return true;
 
 				break;
@@ -4889,7 +4892,7 @@ bool COrion::ResizepicPixelsInXY(const ushort &id, int x, int y, const int &widt
 				if (DH < 1)
 					break;
 
-				if (GumpPixelsInXY(id + 4, x - th[0]->Width, y - th[0]->Height, DW, DH))
+				if (GumpPixelsInXY(id + 4, x + th[0]->Width, y + th[0]->Height, DW, DH))
 					return true;
 
 				break;

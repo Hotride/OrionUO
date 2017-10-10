@@ -355,9 +355,9 @@ bool CGUISlider::Select()
 		int buttonY = m_Y;
 
 		if (m_Vertical)
-			buttonY -= m_Offset;
+			buttonY += m_Offset;
 		else
-			buttonX -= m_Offset;
+			buttonX += m_Offset;
 
 		if (th->Select(buttonX, buttonY, !m_CheckPolygone))
 			return true;
@@ -367,10 +367,13 @@ bool CGUISlider::Select()
 			int x = g_MouseManager.Position.X - m_X;
 			int y = g_MouseManager.Position.Y - m_Y;
 
-			if (m_Vertical)
-				return (x < th->Width && y < m_Lenght);
-			else
-				return (x < m_Lenght && y < th->Height);
+			if (x >= 0 && y >= 0)
+			{
+				if (m_Vertical)
+					return (x < th->Width && y < m_Lenght);
+				else
+					return (x < m_Lenght && y < th->Height);
+			}
 		}
 	}
 
