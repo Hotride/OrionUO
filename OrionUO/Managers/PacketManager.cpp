@@ -4558,7 +4558,7 @@ PACKET_HANDLER(OpenGump)
 				int graphic = ToInt(list[3]);
 				int color = 0;
 
-				if (listSize >= 5)
+				if (listSize >= 5 && m_ClientVersion >= CV_305D)
 				{
 					WISP_FILE::CTextFileParser gumppicParser("", "=", "", "");
 					STRING_LIST hueList = gumppicParser.GetTokens(list[4].c_str());
