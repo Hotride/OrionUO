@@ -149,7 +149,7 @@ bool CGLEngine::Install()
 
 	LOG("g_UseFrameBuffer = %i; m_CanUseBuffer = %i\n", m_CanUseFrameBuffer, m_CanUseBuffer);
 
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);		// Black Background
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);		// Black Background
 	glShadeModel(GL_SMOOTH);				// Enables Smooth Color Shading
 	glClearDepth(1.0);						// Depth Buffer Setup
 	glDisable(GL_DITHER);
