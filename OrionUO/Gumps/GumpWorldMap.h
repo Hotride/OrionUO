@@ -43,7 +43,7 @@ private:
 	void GetScaledDimensions(int &width, int &height, int &playerX, int &playerY);
 	void GetCurrentCenter(int &x, int &y, int &mouseX, int &mouseY);
 	void ScaleOffsets(int newScale, int mouseX, int mouseY);
-	void LoadMap(int map);
+	void LoadMap(const int &map);
 
 	int GetCurrentMap();
 

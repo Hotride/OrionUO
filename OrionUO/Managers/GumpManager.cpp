@@ -1211,6 +1211,7 @@ void CGumpManager::Load(const string &path)
 				{
 					CGumpWorldMap *wmg = new CGumpWorldMap(g_PlayerSerial, gumpX, gumpY);
 					gump = wmg;
+					wmg->Called = g_ConfigManager.AutoDisplayWorldMap;
 
 					wmg->Minimized = gumpMinimized;
 

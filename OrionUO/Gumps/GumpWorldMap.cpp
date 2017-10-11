@@ -276,11 +276,11 @@ void CGumpWorldMap::FixOffsets(int &offsetX, int &offsetY, int &width, int &heig
 		offsetY = 0;
 }
 //----------------------------------------------------------------------------------
-void CGumpWorldMap::LoadMap(int map)
+void CGumpWorldMap::LoadMap(const int &map)
 {
 	WISPFUN_DEBUG("c132_f11");
 
-	if ((g_FileManager.m_MapUOP[map].Start == NULL && g_FileManager.m_MapMul[map].Start == NULL) || g_FileManager.m_StaticIdx[map].Start == NULL || g_FileManager.m_StaticMul[map].Start == NULL)
+	if (!m_Called || (g_FileManager.m_MapUOP[map].Start == NULL && g_FileManager.m_MapMul[map].Start == NULL) || g_FileManager.m_StaticIdx[map].Start == NULL || g_FileManager.m_StaticMul[map].Start == NULL)
 		return;
 
 	if (g_MapTexture[map].Texture == 0)

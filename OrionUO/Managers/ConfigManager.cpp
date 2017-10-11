@@ -105,6 +105,7 @@ void CConfigManager::DefaultPage2()
 	m_UseGlobalMapLayer = false;
 	m_NoDrawRoofs = false;
 	m_HighlightTargetByType = true;
+	m_AutoDisplayWorldMap = false;
 }
 //---------------------------------------------------------------------------
 void CConfigManager::DefaultPage3()
@@ -555,6 +556,7 @@ bool CConfigManager::LoadBin(string path)
 		bool useGlobalMapLayer = false;
 		bool noDrawRoofs = false;
 		m_HighlightTargetByType = true;
+		m_AutoDisplayWorldMap = false;
 
 		if (file.ReadInt8() == 2)
 		{
@@ -1033,6 +1035,7 @@ int CConfigManager::GetConfigKeyCode(const string &key)
 		"UseGlobalMapLayer",
 		"NoDrawRoofs",
 		"HighlightTargetByType",
+		"AutoDisplayWorldMap",
 		"UseToolTips",
 		"ToolTipsTextColor",
 		"ToolTipsTextFont",
@@ -1259,6 +1262,9 @@ bool CConfigManager::Load(const string &path)
 					break;
 				case CMKC_HIGHLIGHT_TARGET_BY_TYPE:
 					m_HighlightTargetByType = ToBool(strings[1]);
+					break;
+				case CMKC_AUTO_DISPLAY_WORLD_MAP:
+					m_AutoDisplayWorldMap = ToBool(strings[1]);
 					break;
 
 				//Page 3
@@ -1611,6 +1617,7 @@ void CConfigManager::Save(const string &path)
 		writter.WriteBool("UseGlobalMapLayer", m_UseGlobalMapLayer);
 		writter.WriteBool("NoDrawRoofs", m_NoDrawRoofs);
 		writter.WriteBool("HighlightTargetByType", m_HighlightTargetByType);
+		writter.WriteBool("AutoDisplayWorldMap", m_AutoDisplayWorldMap);
 
 		//Page 3
 		writter.WriteBool("UseToolTips", m_UseToolTips);
