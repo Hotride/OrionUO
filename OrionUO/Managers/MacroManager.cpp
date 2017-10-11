@@ -672,7 +672,7 @@ void CMacroManager::ProcessSubMenu()
 				}
 				case MSC_G2_OWERVIEW:
 				{
-					gump = g_GumpManager.GetGump(g_PlayerSerial, 0, GT_MINIMAP);
+					gump = g_GumpManager.GetGump(0, 0, GT_MINIMAP);
 
 					break;
 				}
