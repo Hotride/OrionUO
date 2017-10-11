@@ -440,7 +440,7 @@ void CGumpWorldMap::LoadMap(int map)
 			}
 		}
 
-		if (buf.size() == g_MapSize[map].Width * g_MapSize[map].Height || true)
+		if (buf.size() == g_MapSize[map].Width * g_MapSize[map].Height)
 			g_GL_BindTexture16(g_MapTexture[map], g_MapSize[map].Width, g_MapSize[map].Height, &buf[0]);
 		else
 			LOG("World map build error: buffer=%i, want=%i\n", buf.size(), g_MapSize[map].Width * g_MapSize[map].Height);
