@@ -337,7 +337,7 @@ void CGumpWorldMap::LoadMap(int map)
 					fromFile = false;
 				}
 				else
-					LOG("World map readed from file!\n", size, readed);
+					LOG("World map readed from file!\n");
 			}
 			else
 				LOG("Error open world map file: %s\n", path.c_str());
