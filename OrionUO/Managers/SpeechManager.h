@@ -46,6 +46,7 @@ class CSpeechItem
 
 public:
 	CSpeechItem() {}
+	CSpeechItem(const ushort &code, const wstring &data);
 	virtual ~CSpeechItem() {}
 };
 //----------------------------------------------------------------------------------

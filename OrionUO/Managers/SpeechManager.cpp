@@ -11,6 +11,26 @@
 //----------------------------------------------------------------------------------
 CSpeechManager g_SpeechManager;
 //----------------------------------------------------------------------------------
+//------------------------------------CSpeechItem-----------------------------------
+//----------------------------------------------------------------------------------
+CSpeechItem::CSpeechItem(const ushort &code, const wstring &data)
+: m_Code(code), m_Data(data)
+{
+	if (m_Data.length() && m_Data[m_Data.length() - 1] == L'*')
+	{
+		m_CheckEnd = true;
+		m_Data.resize(m_Data.length() - 1);
+	}
+
+	if (m_Data.length() && m_Data[0] == L'*')
+	{
+		m_CheckStart = true;
+		m_Data.erase(m_Data.begin());
+	}
+
+	//LOG(L"[0x%04X]=(cs=%i, ce=%i) %s\n", m_Code, m_CheckStart, m_CheckEnd, m_Data.c_str());
+}
+//----------------------------------------------------------------------------------
 //-----------------------------------CSpeechManager---------------------------------
 //----------------------------------------------------------------------------------
 CSpeechManager::CSpeechManager()
@@ -57,46 +77,94 @@ bool CSpeechManager::LoadSpeech()
 
 	LOG("Selected language: %s (%s)\n", g_Language.c_str(), lang.c_str());
 
-	WISP_DATASTREAM::CDataReader reader(g_FileManager.m_SpeechMul.Start, g_FileManager.m_SpeechMul.Size);
-
-	while (!reader.IsEOF())
+	WISP_DATASTREAM::CDataReader reader;
+	UCHAR_LIST tempData;
+	bool isUOP = false;
+	
+	if (g_FileManager.m_MainMisc.Start != NULL)
 	{
-		CSpeechItem item;
-		item.Code = reader.ReadUInt16BE();
-		int len = reader.ReadUInt16BE();
+		CUopBlockHeader *block = g_FileManager.m_MainMisc.GetBlock(0x0891F809004D8081);
 
-		if (!len)
-			continue;
-
-		wstring str = DecodeUTF8(reader.ReadString(len)).c_str();
-		const WCHAR *data = str.c_str();
-
-		
-		DFOR(i, str.length() - 1, 1)
+		if (block != NULL)
 		{
-			if (data[i])
-			{
-				if (data[i] == L'*')
-				{
-					item.CheckEnd = true;
-					str.resize(i);
-				}
-
-				break;
-			}
+			tempData = g_FileManager.m_MainMisc.GetData(*block);
+			reader.SetData(&tempData[0], tempData.size());
+			isUOP = true;
 		}
-
-		if (str.length() && *str.c_str() == L'*')
-		{
-			item.CheckStart = true;
-			str.erase(str.begin());
-		}
-
-		item.Data = str;
-		m_SpeechEntries.push_back(item);
-
-		//LOG(L"[0x%04X]=(len=%i, cs=%i, ce=%i) %s\n", item.Code, len, item.CheckStart, item.CheckEnd, str.c_str());
 	}
+
+	if (reader.Start == NULL)
+		reader.SetData(g_FileManager.m_SpeechMul.Start, g_FileManager.m_SpeechMul.Size);
+
+	if (isUOP)
+	{
+		LOG("Loading speech from UOP\n");
+		reader.Move(2);
+		wstring mainData = reader.ReadWString(reader.Size - 2, false).c_str();
+		vector<wstring> list;
+		wstring temp;
+
+		for (const wchar_t &c : mainData)
+		{
+			if (c == 0x000D || c == 0x000A)
+			{
+				if (temp.length())
+				{
+					list.push_back(temp);
+					temp = L"";
+				}
+			}
+			else
+				temp.push_back(c);
+		}
+
+		if (temp.length())
+		{
+			list.push_back(temp);
+			temp = L"";
+		}
+
+		for (const wstring &line : list)
+		{
+			ushort code = 0xFFFF;
+			temp = L"";
+
+			for (const wchar_t c : line)
+			{
+				if (c == 0x0009)
+				{
+					if (temp.length())
+					{
+						code = _wtoi(temp.c_str());
+						temp = L"";
+					}
+				}
+				else
+					temp.push_back(c);
+			}
+
+			if (temp.length() && code != 0xFFFF)
+				m_SpeechEntries.push_back(CSpeechItem(code, temp.c_str()));
+		}
+	}
+	else
+	{
+		LOG("Loading speech from MUL\n");
+		while (!reader.IsEOF())
+		{
+			ushort code = reader.ReadUInt16BE();
+			int len = reader.ReadUInt16BE();
+
+			if (!len)
+				continue;
+
+			wstring str = DecodeUTF8(reader.ReadString(len)).c_str();
+
+			m_SpeechEntries.push_back(CSpeechItem(code, str));
+		}
+	}
+
+	LOG(L"m_SpeechEntries.size()=%i\n", m_SpeechEntries.size());
 
 	m_Loaded = true;
 	return true;
