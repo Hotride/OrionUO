@@ -279,121 +279,171 @@ void CGumpWorldMap::FixOffsets(int &offsetX, int &offsetY, int &width, int &heig
 void CGumpWorldMap::LoadMap(int map)
 {
 	WISPFUN_DEBUG("c132_f11");
-	if (g_MapTexture[map].Texture == 0 && false)
+
+	if ((g_FileManager.m_MapUOP[map].Start == NULL && g_FileManager.m_MapMul[map].Start == NULL) || g_FileManager.m_StaticIdx[map].Start == NULL || g_FileManager.m_StaticMul[map].Start == NULL)
+		return;
+
+	if (g_MapTexture[map].Texture == 0)
 	{
-		WISP_FILE::CMappedFile file;
+		uint crc32 = 0;
 
-		bool foundInTable = false;
+		if (g_FileManager.m_MapUOP[map].Start == NULL)
+			crc32 = g_Orion.GetFileHashCode((uint)g_FileManager.m_MapMul[map].Start, g_FileManager.m_MapMul[map].Size);
+		else
+			crc32 = g_Orion.GetFileHashCode((uint)g_FileManager.m_MapUOP[map].Start, g_FileManager.m_MapUOP[map].Size);
 
-		const int mapsInfoFileSize = sizeof(uint)* 2 * 6;
-		uchar mapsInfoData[mapsInfoFileSize] = { 0 };
+		crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_StaticIdx[map].Start, g_FileManager.m_StaticIdx[map].Size);
+		crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_StaticMul[map].Start, g_FileManager.m_StaticMul[map].Size);
 
-		uint dataSize = g_MapSize[map].Width * g_MapSize[map].Height;
-		pushort data = NULL;
-
-		uint mapHash = 0;
-		uint staticsHash = 0;
-		uint mulMapHash = 0;
-		uint mulStaticsHash = 0;
-
-		char pathBuf[50] = { 0 };
-		sprintf_s(pathBuf, "mapImage%i.cuo", map);
-
-		if (file.Load(g_App.FilePath("MapsInfo.cuo")) && file.Size)
+		IFOR(i, 0, g_MapManager.PatchesCount)
 		{
-			uint hashSizeContent = (g_MapSize[map].Width << 16) | g_MapSize[map].Height;
-
-			mulMapHash = g_Orion.GetFileHashCode((uint)g_FileManager.m_MapMul[map].Start, g_FileManager.m_MapMul[map].Size);
-			mulMapHash ^= hashSizeContent;
-			mulStaticsHash = g_Orion.GetFileHashCode((uint)g_FileManager.m_StaticIdx[map].Start, g_FileManager.m_StaticIdx[map].Size);
-			mulStaticsHash ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_StaticMul[map].Start, g_FileManager.m_StaticMul[map].Size);
-			mulStaticsHash ^= hashSizeContent;
-
-			if (file.Size != 0 && file.Size != (dataSize * 2))
+			if (g_MapManager.m_MapPatchCount[i])
 			{
-				memcpy(&mapsInfoData[0], file.Start, mapsInfoFileSize);
-				mapHash = file.ReadUInt32LE();
-				staticsHash = file.ReadUInt32LE();
+				crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_MapDifl[i].Start, g_FileManager.m_MapDifl[i].Size);
+				crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_MapDif[i].Start, g_FileManager.m_MapDif[i].Size);
+			}
 
-				if ((mapHash && mapHash == mulMapHash) && (staticsHash && staticsHash == mulStaticsHash))
-				{
-					WISP_FILE::CMappedFile mapFile;
-
-					if (mapFile.Load(g_App.FilePath(pathBuf)) && mapFile.Size)
-					{
-						data = (pushort)mapFile.Start;
-						g_GL_BindTexture16(g_MapTexture[map], g_MapSize[map].Width, g_MapSize[map].Height, data);
-
-						foundInTable = true;
-					}
-
-					mapFile.Unload();
-				}
+			if (g_MapManager.m_StaticPatchCount[i])
+			{
+				crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_StaDifl[i].Start, g_FileManager.m_StaDifl[i].Size);
+				crc32 ^= g_Orion.GetFileHashCode((uint)g_FileManager.m_StaDifi[i].Start, g_FileManager.m_StaDifi[i].Size);
 			}
 		}
 
-		file.Unload();
+		string path = g_App.FilePath("OrionData/WorldMap%08X.cuo", crc32);
+		bool fromFile = false;
 
-		if (!foundInTable && g_FileManager.m_MapMul[map].Size != 0 && g_FileManager.m_StaticIdx[map].Size != 0 && g_FileManager.m_StaticMul[map].Size != 0)
+		USHORT_LIST buf;
+
+		if (PathFileExistsA(path.c_str()))
 		{
-			puint dataPtr = (puint)(mapsInfoData + ((sizeof(uint) * 2) * (map + 1)));
+			fromFile = true;
+			FILE *mapFile = NULL;
+			fopen_s(&mapFile, path.c_str(), "rb");
 
-			*dataPtr++ = mulMapHash;
-			*dataPtr = mulStaticsHash;
+			if (mapFile != NULL)
+			{
+				fseek(mapFile, 0, SEEK_END);
+				long size = ftell(mapFile) / sizeof(short);
+				fseek(mapFile, 0, SEEK_SET);
 
-			data = new ushort[dataSize];
+				buf.resize(size, 0);
+				int readed = fread(&buf[0], sizeof(short), size, mapFile);
+				fclose(mapFile);
+
+				if (readed != size)
+				{
+					LOG("Error reading world map file, want=%i, readed=%i\n", size, readed);
+					fromFile = false;
+				}
+				else
+					LOG("World map readed from file!\n", size, readed);
+			}
+			else
+				LOG("Error open world map file: %s\n", path.c_str());
+		}
+		
+		if (!fromFile)
+		{
+			buf.resize(g_MapSize[map].Width * g_MapSize[map].Height, 0);
+			int maxBlock = (g_MapSize[map].Width * g_MapSize[map].Height) - 1;
 
 			IFOR(bx, 0, g_MapBlockSize[map].Width)
 			{
+				int mapX = bx * 8;
+
 				IFOR(by, 0, g_MapBlockSize[map].Height)
 				{
-					MAP_BLOCK mb = {0};
-					g_MapManager.GetWorldMapBlock(map, bx, by, mb);
-				
-					int mapX = bx * 8;
+					CIndexMap *indexMap = g_MapManager.GetIndex(map, bx, by);
+
+					if (indexMap == NULL || indexMap->MapAddress == 0)
+						continue;
+
 					int mapY = by * 8;
+					MAP_BLOCK info = { 0 };
 
-					IFOR(x, 0, 8)
+					PMAP_BLOCK mapBlock = (PMAP_BLOCK)indexMap->MapAddress;
+
+					int pos = 0;
+
+					IFOR(y, 0, 8)
 					{
-						IFOR(y, 0, 8)
+						IFOR(x, 0, 8)
 						{
-							int px = mapX + x;
-							int py = mapY + y;
-							
-							ushort color = mb.Cells[(y * 8) + x].TileID;
-							ushort pcl = 0x8000 | g_ColorManager.GetRadarColorData(color);
-							int block = py * g_MapSize[map].Width + px;
-							data[block] = pcl;
+							MAP_CELLS &cell = mapBlock->Cells[pos];
+							MAP_CELLS &infoCell = info.Cells[pos];
+							infoCell.TileID = cell.TileID;
+							infoCell.Z = cell.Z;
+							pos++;
+						}
+					}
 
-							if (x < 7 && y < 7)
-								data[block + 1] = pcl;
+					PSTATICS_BLOCK sb = (PSTATICS_BLOCK)indexMap->StaticAddress;
+
+					if (sb != NULL)
+					{
+						int count = indexMap->StaticCount;
+
+						IFOR(c, 0, count)
+						{
+							STATICS_BLOCK &staticBlock = sb[c];
+
+							if (staticBlock.Color && staticBlock.Color != 0xFFFF && !CRenderStaticObject::IsNoDrawTile(staticBlock.Color))
+							{
+								pos = (staticBlock.Y * 8) + staticBlock.X;
+								//if (pos > 64) continue;
+
+								MAP_CELLS &infoCell = info.Cells[pos];
+
+								if (infoCell.Z <= staticBlock.Z)
+								{
+									infoCell.TileID = staticBlock.Color + 0x4000;
+									infoCell.Z = staticBlock.Z;
+								}
+							}
+						}
+					}
+
+					pos = 0;
+
+					IFOR(y, 0, 8)
+					{
+						int block = ((mapY + y) * g_MapSize[map].Width) + mapX;
+
+						IFOR(x, 0, 8)
+						{
+							ushort color = 0x8000 | g_ColorManager.GetRadarColorData(info.Cells[pos].TileID);
+
+							buf[block] = color;
+
+							if (y < 7 && x < 7 && block < maxBlock)
+								buf[block + 1] = color;
+
+							block++;
+							pos++;
 						}
 					}
 				}
 			}
 
-			g_GL_BindTexture16(g_MapTexture[map], g_MapSize[map].Width, g_MapSize[map].Height, data);
+			CreateDirectoryA(g_App.FilePath("OrionData").c_str(), NULL);
 
-			FILE *mapDataFile = NULL;
-			fopen_s(&mapDataFile, g_App.FilePath(pathBuf).c_str(), "wb");
+			FILE *mapFile = NULL;
+			fopen_s(&mapFile, path.c_str(), "wb");
 
-			if (mapDataFile != NULL)
+			if (mapFile != NULL)
 			{
-				fwrite(&data[0], 2, dataSize, mapDataFile);
-				fclose(mapDataFile);
+				int written = fwrite(&buf[0], sizeof(short), buf.size(), mapFile);
+				fclose(mapFile);
+				
+				LOG("Write world map file, want=%i, written=%i\n", buf.size(), written);
 			}
-
-			FILE *mapsInfoFile = NULL;
-			fopen_s(&mapsInfoFile, g_App.FilePath("MapsInfo.cuo").c_str(), "wb");
-
-			if (mapsInfoFile != NULL)
-			{
-				fwrite(&mapsInfoData[0], mapsInfoFileSize, 1, mapsInfoFile);
-				fclose(mapsInfoFile);
-			}
-
-			delete data;
 		}
+
+		if (buf.size() == g_MapSize[map].Width * g_MapSize[map].Height || true)
+			g_GL_BindTexture16(g_MapTexture[map], g_MapSize[map].Width, g_MapSize[map].Height, &buf[0]);
+		else
+			LOG("World map build error: buffer=%i, want=%i\n", buf.size(), g_MapSize[map].Width * g_MapSize[map].Height);
 	}
 }
 //----------------------------------------------------------------------------------

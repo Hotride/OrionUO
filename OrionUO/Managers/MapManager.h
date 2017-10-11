@@ -32,6 +32,7 @@ class CMapManager : public CBaseQueue
 {
 	//!Максимальный индекс блока для текущей карты
 	SETGET(uint, MaxBlockIndex, 0);
+	SETGET(int, PatchesCount, 0);
 
 protected:
 	//!Вектор ссылок на блоки карты
@@ -46,6 +47,9 @@ protected:
 public:
 	CMapManager();
 	virtual ~CMapManager();
+
+	int m_MapPatchCount[MAX_MAPS_COUNT];
+	int m_StaticPatchCount[MAX_MAPS_COUNT];
 
 	CIndexMap *GetIndex(const uint &map, const int &blockX, const int &blockY);
 
@@ -84,16 +88,6 @@ public:
 	@return 
 	*/
 	void GetRadarMapBlock(const int &blockX, const int &blockY, MAP_BLOCK &mb);
-
-	/*!
-	Получить блок карты напрямую из мулов
-	@param [__in] map Индекс карты
-	@param [__in] blockX Координата X блока
-	@param [__in] blockY Координата Y блока
-	@param [__out] mb Ссылка на блок
-	@return Код ошибки (0 - успешно)
-	*/
-	void GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb);
 
 	/*!
 	Получить значение Z координаты для указанной точки в мире

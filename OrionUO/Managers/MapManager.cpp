@@ -192,18 +192,23 @@ void CMapManager::ApplyPatches(WISP_DATASTREAM::CDataReader &stream)
 	WISPFUN_DEBUG("c146_f6");
 	ResetPatchesInBlockTable();
 
-	int count = stream.ReadUInt32BE();
+	m_PatchesCount = stream.ReadUInt32BE();
 
-	if (count < 0)
-		count = 0;
+	if (m_PatchesCount < 0)
+		m_PatchesCount = 0;
 
-	if (count > MAX_MAPS_COUNT)
-		count = MAX_MAPS_COUNT;
+	if (m_PatchesCount > MAX_MAPS_COUNT)
+		m_PatchesCount = MAX_MAPS_COUNT;
 
-	IFOR(i, 0, count)
+	memset(&m_MapPatchCount[0], 0, sizeof(m_MapPatchCount));
+	memset(&m_StaticPatchCount[0], 0, sizeof(m_StaticPatchCount));
+
+	IFOR(i, 0, m_PatchesCount)
 	{
 		int mapPatchesCount = stream.ReadUInt32BE();
+		m_MapPatchCount[i] = mapPatchesCount;
 		int staticsPatchesCount = stream.ReadUInt32BE();
+		m_StaticPatchCount[i] = staticsPatchesCount;
 
 		MAP_INDEX_LIST &list = m_BlockData[i];
 		WISP_GEOMETRY::CSize &size = g_MapBlockSize[i];
@@ -386,59 +391,6 @@ char CMapManager::CalculateNearZ(char defaultZ, const int &x, const int &y, cons
 }
 //----------------------------------------------------------------------------------
 /*!
-Получить блок карты напрямую из мулов
-@param [__in] map Индекс карты
-@param [__in] blockX Координата X блока
-@param [__in] blockY Координата Y блока
-@param [__out] mb Ссылка на блок
-@return Код ошибки (0 - успешно)
-*/
-void CMapManager::GetWorldMapBlock(const int &map, const int &blockX, const int &blockY, MAP_BLOCK &mb)
-{
-	WISPFUN_DEBUG("c146_f9");
-	CIndexMap *indexMap = GetIndex(map, blockX, blockY);
-
-	if (indexMap == NULL || indexMap->MapAddress == 0)
-		return;
-
-	PMAP_BLOCK pmb = (PMAP_BLOCK)indexMap->MapAddress;
-
-	IFOR(x, 0, 8)
-	{
-		IFOR(y, 0, 8)
-		{
-			int pos = (y * 8) + x;
-			mb.Cells[pos].TileID = pmb->Cells[pos].TileID;
-			mb.Cells[pos].Z = pmb->Cells[pos].Z;
-		}
-	}
-
-	PSTATICS_BLOCK sb = (PSTATICS_BLOCK)indexMap->StaticAddress;
-
-	if (sb != NULL)
-	{
-		int count = indexMap->StaticCount;
-
-		IFOR(c, 0, count)
-		{
-			if (sb->Color && sb->Color != 0xFFFF)
-			{
-				int pos = (sb->Y * 8) + sb->X;
-				//if (pos > 64) continue;
-
-				if (mb.Cells[pos].Z <= sb->Z)
-				{
-					mb.Cells[pos].TileID = sb->Color;
-					mb.Cells[pos].Z = sb->Z;
-				}
-			}
-
-			sb++;
-		}
-	}
-}
-//----------------------------------------------------------------------------------
-/*!
 Получить блок для радара из муллов
 @param [__in] blockX Координата X блока
 @param [__in] blockY Координата Y блока
@@ -606,6 +558,9 @@ void CMapManager::Init(const bool &delayed)
 		m_Blocks = new CMapBlock*[m_MaxBlockIndex];
 		memset(&m_Blocks[0], 0, sizeof(CMapBlock*) * m_MaxBlockIndex);
 		memset(&m_BlockAccessList[0], 0, sizeof(m_BlockAccessList));
+		m_PatchesCount = 0;
+		memset(&m_MapPatchCount[0], 0, sizeof(m_MapPatchCount));
+		memset(&m_StaticPatchCount[0], 0, sizeof(m_StaticPatchCount));
 	}
 	
 	const int XY_Offset = 30; //70;
