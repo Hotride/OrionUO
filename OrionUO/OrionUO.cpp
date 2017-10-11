@@ -1104,7 +1104,7 @@ void COrion::Process(const bool &rendering)
 
 		g_EffectManager.UpdateEffects();
 
-		CGumpBuff *gumpBuff = (CGumpBuff*)g_GumpManager.GetGump(g_PlayerSerial, 0, GT_BUFF);
+		CGumpBuff *gumpBuff = (CGumpBuff*)g_GumpManager.GetGump(0, 0, GT_BUFF);
 
 		if (gumpBuff != NULL)
 			gumpBuff->UpdateBuffIcons();
@@ -1773,7 +1773,7 @@ void COrion::ChangeSeason(const SEASON_TYPE &season, const int &music)
 			}
 		}
 
-		CGumpMinimap *gump = (CGumpMinimap*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_MINIMAP);
+		CGumpMinimap *gump = (CGumpMinimap*)g_GumpManager.UpdateGump(0, 0, GT_MINIMAP);
 
 		if (gump != NULL)
 			gump->LastX = 0;
@@ -5448,7 +5448,7 @@ void COrion::Attack(uint serial)
 			int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 40;
 			int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 20;
 
-			CGumpQuestion *newgump = new CGumpQuestion(g_PlayerSerial, x, y, CGumpQuestion::ID_GQ_STATE_ATTACK_REQUEST);
+			CGumpQuestion *newgump = new CGumpQuestion(0, x, y, CGumpQuestion::ID_GQ_STATE_ATTACK_REQUEST);
 			newgump->SetID(serial);
 
 			g_GumpManager.AddGump(newgump);
@@ -5780,7 +5780,7 @@ void COrion::CloseStatusbarGump(const uint &serial)
 void COrion::OpenMinimap()
 {
 	WISPFUN_DEBUG("c194_f136");
-	g_GumpManager.AddGump(new CGumpMinimap(g_PlayerSerial, 0, 0, true));
+	g_GumpManager.AddGump(new CGumpMinimap(0, 0, true));
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenWorldMap()
@@ -5789,7 +5789,7 @@ void COrion::OpenWorldMap()
 	int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 200;
 	int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 150;
 
-	CGumpWorldMap *gump = new CGumpWorldMap(g_PlayerSerial, x, y);
+	CGumpWorldMap *gump = new CGumpWorldMap(x, y);
 	gump->Called = true;
 
 	g_GumpManager.AddGump(gump);
@@ -5798,7 +5798,7 @@ void COrion::OpenWorldMap()
 void COrion::OpenJournal()
 {
 	WISPFUN_DEBUG("c194_f138");
-	g_GumpManager.AddGump(new CGumpJournal(g_PlayerSerial, 0, 0, false));
+	g_GumpManager.AddGump(new CGumpJournal(0, 0, false, 250));
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenSkills()
@@ -5827,7 +5827,7 @@ void COrion::OpenLogOut()
 	int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 40;
 	int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 20;
 
-	g_GumpManager.AddGump(new CGumpQuestion(g_PlayerSerial, x, y, CGumpQuestion::ID_GQ_STATE_QUIT));
+	g_GumpManager.AddGump(new CGumpQuestion(0, x, y, CGumpQuestion::ID_GQ_STATE_QUIT));
 
 	InitScreen(GS_GAME_BLOCKED);
 	g_GameBlockedScreen.SetCode(3);
@@ -5846,7 +5846,7 @@ void COrion::OpenConfiguration()
 
 	g_OptionsConfig = g_ConfigManager;
 
-	g_GumpManager.AddGump(new CGumpOptions(g_PlayerSerial, x, y));
+	g_GumpManager.AddGump(new CGumpOptions(x, y));
 }
 //----------------------------------------------------------------------------------
 void COrion::OpenMail()
@@ -5894,7 +5894,7 @@ void COrion::DisconnectGump()
 	int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 100;
 	int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 62;
 
-	CGumpNotify *gump = new CGumpNotify(0, x, y, CGumpNotify::ID_GN_STATE_LOGOUT, 200, 125, "Connection lost");
+	CGumpNotify *gump = new CGumpNotify(x, y, CGumpNotify::ID_GN_STATE_LOGOUT, 200, 125, "Connection lost");
 
 	g_GumpManager.AddGump(gump);
 

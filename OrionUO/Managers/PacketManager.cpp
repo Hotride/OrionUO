@@ -2183,7 +2183,7 @@ PACKET_HANDLER(UpdateSkills)
 		return;
 	}
 
-	CGumpSkills *gump = (CGumpSkills*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_SKILLS);
+	CGumpSkills *gump = (CGumpSkills*)g_GumpManager.UpdateGump(0, 0, GT_SKILLS);
 
 	if (!isSingleUpdate && (type == 1 || type == 3 || g_SkillsManager.SkillsRequested))
 	{
@@ -2191,7 +2191,7 @@ PACKET_HANDLER(UpdateSkills)
 
 		if (gump == NULL)
 		{
-			gump = new CGumpSkills(g_PlayerSerial, 0, 0, false);
+			gump = new CGumpSkills(0, 0, 0, false);
 			g_GumpManager.AddGump(gump);
 		}
 

@@ -9,8 +9,8 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpBuff::CGumpBuff(uint serial, short x, short y)
-: CGump(GT_BUFF, serial, x, y)
+CGumpBuff::CGumpBuff(short x, short y)
+: CGump(GT_BUFF, 0, x, y)
 {
 	WISPFUN_DEBUG("c88_f1");
 	m_Graphic = 0x7580;

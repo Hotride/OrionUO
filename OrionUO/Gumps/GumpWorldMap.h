@@ -61,7 +61,7 @@ protected:
 	virtual void CalculateGumpState();
 
 public:
-	CGumpWorldMap(uint serial, short x, short y);
+	CGumpWorldMap(short x, short y);
 	virtual ~CGumpWorldMap();
 
 	void UpdateSize();

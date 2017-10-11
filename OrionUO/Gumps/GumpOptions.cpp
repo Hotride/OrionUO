@@ -11,8 +11,8 @@
 //----------------------------------------------------------------------------------
 const ushort g_OptionsTextColor = 0;
 //----------------------------------------------------------------------------------
-CGumpOptions::CGumpOptions(uint serial, short x, short y)
-: CGump(GT_OPTIONS, serial, x, y)
+CGumpOptions::CGumpOptions(short x, short y)
+: CGump(GT_OPTIONS, 0, x, y)
 {
 	m_Page = 1;
 }
@@ -2167,18 +2167,18 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 			case 3: //Language
 			{
 				if (serial == ID_GO_P3_TEXT_COLOR) //Color of Tool-tip text
-					g_GumpManager.AddGump(new CGumpSelectColor(g_PlayerSerial, 100, 100, SCGS_OPT_TOOLTIP_TEXT));
+					g_GumpManager.AddGump(new CGumpSelectColor(0, 100, 100, SCGS_OPT_TOOLTIP_TEXT));
 				else if (serial == ID_GO_P3_TEXT_FONT) //Font
-					g_GumpManager.AddGump(new CGumpSelectFont(g_PlayerSerial, 320, 240, SFGS_OPT_TOOLTIP));
+					g_GumpManager.AddGump(new CGumpSelectFont(0, 320, 240, SFGS_OPT_TOOLTIP));
 
 				break;
 			}
 			case 4: //Chat
 			{
 				if (serial >= ID_GO_P4_TEXT_COLOR) //Input text color
-					g_GumpManager.AddGump(new CGumpSelectColor(g_PlayerSerial, 100, 100, (SELECT_COLOR_GUMP_STATE)(SCGS_OPT_CHAT_INPUT_TEXT + (serial - ID_GO_P4_TEXT_COLOR))));
+					g_GumpManager.AddGump(new CGumpSelectColor(0, 100, 100, (SELECT_COLOR_GUMP_STATE)(SCGS_OPT_CHAT_INPUT_TEXT + (serial - ID_GO_P4_TEXT_COLOR))));
 				else if (serial == ID_GO_P4_TEXT_FONT) //Font
-					g_GumpManager.AddGump(new CGumpSelectFont(g_PlayerSerial, 320, 240, SFGS_OPT_CHAT));
+					g_GumpManager.AddGump(new CGumpSelectFont(0, 320, 240, SFGS_OPT_CHAT));
 
 				break;
 			}
@@ -2271,21 +2271,21 @@ void CGumpOptions::GUMP_BUTTON_EVENT_C
 			case 7: //Display
 			{
 				if (serial >= ID_GO_P7_SPEECH_COLOR && serial <= ID_GO_P7_ALLIANCE_MESSAGE_COLOR) //Speech color
-					g_GumpManager.AddGump(new CGumpSelectColor(g_PlayerSerial, 100, 100, (SELECT_COLOR_GUMP_STATE)(SCGS_OPT_DISPLAY_SPEECH + (serial - ID_GO_P7_SPEECH_COLOR))));
+					g_GumpManager.AddGump(new CGumpSelectColor(0, 100, 100, (SELECT_COLOR_GUMP_STATE)(SCGS_OPT_DISPLAY_SPEECH + (serial - ID_GO_P7_SPEECH_COLOR))));
 
 				break;
 			}
 			case 8: //Reputation System
 			{
 				if (serial >= ID_GO_P8_INNOCENT_COLOR && serial <= ID_GO_P8_MURDERER_COLOR) //Innocent highlight color
-					g_GumpManager.AddGump(new CGumpSelectColor(g_PlayerSerial, 100, 100, (SELECT_COLOR_GUMP_STATE)(SCGS_OPT_REPSYS_INNOCENT + (serial - ID_GO_P8_INNOCENT_COLOR))));
+					g_GumpManager.AddGump(new CGumpSelectColor(0, 100, 100, (SELECT_COLOR_GUMP_STATE)(SCGS_OPT_REPSYS_INNOCENT + (serial - ID_GO_P8_INNOCENT_COLOR))));
 
 				break;
 			}
 			case 9: //Miscellaneous
 			{
 				if (serial == ID_GO_P9_SPEECH_FONT) //Speech Font
-					g_GumpManager.AddGump(new CGumpSelectFont(g_PlayerSerial, 320, 240, SFGS_OPT_MISCELLANEOUS));
+					g_GumpManager.AddGump(new CGumpSelectFont(0, 320, 240, SFGS_OPT_MISCELLANEOUS));
 
 				break;
 			}
@@ -3026,9 +3026,9 @@ void CGumpOptions::ApplyPageChanges()
 			g_ContainerRect.DefaultY = curY;
 
 			if (g_OptionsConfig.DisableMenubar)
-				g_GumpManager.CloseGump(g_PlayerSerial, 0, GT_MENUBAR);
+				g_GumpManager.CloseGump(0, 0, GT_MENUBAR);
 			else
-				g_GumpManager.AddGump(new CGumpMenubar(g_PlayerSerial, 0, 0));
+				g_GumpManager.AddGump(new CGumpMenubar(0, 0));
 
 			break;
 		}

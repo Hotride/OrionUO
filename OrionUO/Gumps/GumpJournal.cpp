@@ -9,8 +9,8 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpJournal::CGumpJournal(uint serial, short x, short y, bool minimized, int height)
-: CGumpBaseScroll(GT_JOURNAL, serial, 0x0820, height, x, y, true, 0, true)
+CGumpJournal::CGumpJournal(short x, short y, bool minimized, int height)
+: CGumpBaseScroll(GT_JOURNAL, 0, 0x0820, height, x, y, true, 0, true)
 {
 	WISPFUN_DEBUG("c98_f1");
 	m_Locker.Serial = ID_GJ_LOCK_MOVING;

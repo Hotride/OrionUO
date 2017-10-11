@@ -49,7 +49,7 @@ void CGumpScreenGame::UpdateContent()
 				g_RenderBounds.GameWindowHeight = GetSystemMetrics(SM_CYSCREEN) - 60;
 
 
-			CGumpOptions *opt = (CGumpOptions*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_OPTIONS);
+			CGumpOptions *opt = (CGumpOptions*)g_GumpManager.UpdateGump(0, 0, GT_OPTIONS);
 
 			if (opt != NULL)
 			{

@@ -23,7 +23,7 @@ private:
 	void Process();
 
 public:
-	CGumpNotify(uint serial, short x, short y, uchar variant, short width, short height, string text);
+	CGumpNotify(short x, short y, uchar variant, short width, short height, string text);
 	virtual ~CGumpNotify();
 
 	static const int ID_GN_STATE_LOGOUT = 1;

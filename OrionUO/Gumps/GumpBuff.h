@@ -26,7 +26,7 @@ private:
 	void GetGumpStatus(WISP_GEOMETRY::CPoint2Di &ball, WISP_GEOMETRY::CPoint2Di &items, bool &useX, bool &decX, bool &decY, WISP_GEOMETRY::CPoint2Di &startGump, WISP_GEOMETRY::CSize &endGump);
 
 public:
-	CGumpBuff(uint serial, short x, short y);
+	CGumpBuff(short x, short y);
 	virtual ~CGumpBuff();
 
 	virtual bool CanBeDisplayed();

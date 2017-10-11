@@ -11,8 +11,8 @@
 //----------------------------------------------------------------------------------
 const int m_Scales[7] = { 1, 1, 1, 2, 4, 6, 10 };
 //----------------------------------------------------------------------------------
-CGumpWorldMap::CGumpWorldMap(uint serial, short x, short y)
-: CGump(GT_WORLD_MAP, serial, x, y)
+CGumpWorldMap::CGumpWorldMap(short x, short y)
+: CGump(GT_WORLD_MAP, 0, x, y)
 {
 	WISPFUN_DEBUG("c132_f1");
 	m_Page = 2;

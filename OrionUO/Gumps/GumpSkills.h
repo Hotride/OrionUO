@@ -46,7 +46,7 @@ protected:
 	virtual void UpdateHeight();
 
 public:
-	CGumpSkills(uint serial, short x, short y, bool minimized, int height = 250);
+	CGumpSkills(short x, short y, bool minimized, int height = 250);
 	virtual ~CGumpSkills();
 
 	void UpdateGroupText();

@@ -238,7 +238,7 @@ bool CSkillGroupManager::Remove(CSkillGroupObject *group)
 		int x = g_ConfigManager.GameWindowX + (g_ConfigManager.GameWindowWidth / 2) - 100;
 		int y = g_ConfigManager.GameWindowY + (g_ConfigManager.GameWindowHeight / 2) - 62;
 
-		CGumpNotify *gump = new CGumpNotify(0, x, y, CGumpNotify::ID_GN_STATE_NOTIFICATION, 200, 125, "Cannot delete this group.");
+		CGumpNotify *gump = new CGumpNotify(x, y, CGumpNotify::ID_GN_STATE_NOTIFICATION, 200, 125, "Cannot delete this group.");
 
 		g_GumpManager.AddGump(gump);
 		

@@ -544,7 +544,7 @@ void CMacroManager::ProcessSubMenu()
 			{
 				case MSC_G2_CONFIGURATION:
 				{
-					gump = g_GumpManager.GetGump(g_PlayerSerial, 0, GT_OPTIONS);
+					gump = g_GumpManager.GetGump(0, 0, GT_OPTIONS);
 
 					g_OptionsMacroManager.Clear();
 
@@ -564,13 +564,13 @@ void CMacroManager::ProcessSubMenu()
 				}
 				case MSC_G2_JOURNAL:
 				{
-					gump = g_GumpManager.GetGump(g_PlayerSerial, 0, GT_JOURNAL);
+					gump = g_GumpManager.GetGump(0, 0, GT_JOURNAL);
 
 					break;
 				}
 				case MSC_G2_SKILLS:
 				{
-					gump = g_GumpManager.GetGump(g_PlayerSerial, 0, GT_SKILLS);
+					gump = g_GumpManager.GetGump(0, 0, GT_SKILLS);
 
 					break;
 				}

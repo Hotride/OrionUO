@@ -33,7 +33,7 @@ void CJournal::Add(CTextData *obj)
 	WISPFUN_DEBUG("c171_f2");
 	CBaseQueue::Add(obj);
 
-	CGumpJournal *gump = (CGumpJournal*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_JOURNAL);
+	CGumpJournal *gump = (CGumpJournal*)g_GumpManager.UpdateGump(0, 0, GT_JOURNAL);
 
 	if (gump != NULL)
 		gump->AddText(obj);

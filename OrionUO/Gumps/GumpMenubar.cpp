@@ -9,8 +9,8 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpMenubar::CGumpMenubar(uint serial, short x, short y)
-: CGump(GT_MENUBAR, serial, x, y)
+CGumpMenubar::CGumpMenubar(short x, short y)
+: CGump(GT_MENUBAR, 0, x, y)
 {
 	WISPFUN_DEBUG("c101_f1");
 	m_Page = 2;

@@ -9,8 +9,8 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpSkills::CGumpSkills(uint serial, short x, short y, bool minimized, int height)
-: CGumpBaseScroll(GT_SKILLS, serial, 0x1F40, height, x, y, true, 0, true, 15)
+CGumpSkills::CGumpSkills(short x, short y, bool minimized, int height)
+: CGumpBaseScroll(GT_SKILLS, 0, 0x1F40, height, x, y, true, 0, true, 15)
 {
 	WISPFUN_DEBUG("c125_f1");
 	m_Locker.Serial = ID_GS_LOCK_MOVING;

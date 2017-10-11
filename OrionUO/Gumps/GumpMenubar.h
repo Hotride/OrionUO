@@ -26,7 +26,7 @@ private:
 	static const int ID_GMB_INFO = 9;
 
 public:
-	CGumpMenubar(uint serial, short x, short y);
+	CGumpMenubar(short x, short y);
 	virtual ~CGumpMenubar();
 	
 	virtual bool CanBeDisplayed() { return false; }

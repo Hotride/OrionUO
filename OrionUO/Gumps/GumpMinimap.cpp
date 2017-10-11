@@ -9,8 +9,8 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpMinimap::CGumpMinimap(uint serial, short x, short y, bool minimized)
-: CGump(GT_MINIMAP, serial, x, y)
+CGumpMinimap::CGumpMinimap(short x, short y, bool minimized)
+: CGump(GT_MINIMAP, 0, x, y)
 {
 	WISPFUN_DEBUG("c102_f1");
 	m_Minimized = minimized;

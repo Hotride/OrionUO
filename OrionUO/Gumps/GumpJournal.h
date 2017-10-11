@@ -34,7 +34,7 @@ protected:
 	int RecalculateHeight();
 
 public:
-	CGumpJournal(uint serial, short x, short y, bool minimized, int height = 250);
+	CGumpJournal(short x, short y, bool minimized, int height);
 	virtual ~CGumpJournal();
 
 	void AddText(class CTextData *obj);

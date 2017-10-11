@@ -111,7 +111,7 @@ void CGumpSelectColor::GUMP_SLIDER_MOVE_EVENT_C
 void CGumpSelectColor::OnSelectColor(const ushort &color)
 {
 	WISPFUN_DEBUG("c121_f5");
-	CGumpOptions *gump = (CGumpOptions*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_OPTIONS);
+	CGumpOptions *gump = (CGumpOptions*)g_GumpManager.UpdateGump(0, 0, GT_OPTIONS);
 
 	if (gump != NULL)
 		gump->UpdateColor(m_State, color);

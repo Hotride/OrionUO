@@ -31,7 +31,7 @@ protected:
 	virtual void CalculateGumpState();
 
 public:
-	CGumpMinimap(uint serial, short x, short y, bool minimized);
+	CGumpMinimap(short x, short y, bool minimized);
 	virtual ~CGumpMinimap();
 
 	virtual void PrepareContent();

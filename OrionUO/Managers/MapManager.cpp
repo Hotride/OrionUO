@@ -313,7 +313,7 @@ void CMapManager::UpdatePatched()
 	for (CRenderWorldObject *item : objectsList)
 		AddRender(item);
 
-	CGumpMinimap *gump = (CGumpMinimap*)g_GumpManager.UpdateGump(g_PlayerSerial, 0, GT_MINIMAP);
+	CGumpMinimap *gump = (CGumpMinimap*)g_GumpManager.UpdateGump(0, 0, GT_MINIMAP);
 
 	if (gump != NULL)
 		gump->LastX = 0;

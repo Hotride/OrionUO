@@ -1806,7 +1806,7 @@ void CGameScreen::Render(const bool &mode)
 void CGameScreen::OnLeftMouseButtonDown()
 {
 	WISPFUN_DEBUG("c164_f20");
-	CGumpSkills *skillGump = (CGumpSkills*)g_GumpManager.GetGump(g_PlayerSerial, 0, GT_SKILLS);
+	CGumpSkills *skillGump = (CGumpSkills*)g_GumpManager.GetGump(0, 0, GT_SKILLS);
 
 	if (skillGump != NULL)
 		skillGump->UpdateGroupText();

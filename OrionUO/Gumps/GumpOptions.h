@@ -238,7 +238,7 @@ protected:
 	virtual void CalculateGumpState();
 
 public:
-	CGumpOptions(uint serial, short x, short y);
+	CGumpOptions(short x, short y);
 	virtual ~CGumpOptions();
 
 	void UpdateColor(const SELECT_COLOR_GUMP_STATE &state, const ushort &color);

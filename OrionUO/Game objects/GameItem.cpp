@@ -747,7 +747,7 @@ void CGameItem::LoadMulti(const bool &dropAlpha)
 		m_MultiDistanceBonus = max(max(abs(minX), maxX), max(abs(minY), maxY));
 	}
 
-	CGumpMinimap *minimap = (CGumpMinimap*)g_GumpManager.GetGump(g_PlayerSerial, 0, GT_MINIMAP);
+	CGumpMinimap *minimap = (CGumpMinimap*)g_GumpManager.GetGump(0, 0, GT_MINIMAP);
 
 	if (minimap != NULL)
 		minimap->LastX = 0;

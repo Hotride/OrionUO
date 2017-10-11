@@ -9,8 +9,8 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGumpNotify::CGumpNotify(uint serial, short x, short y, uchar variant, short width, short height, string text)
-: CGump(GT_NOTIFY, serial, x, y), m_Variant(variant), m_Width(width),
+CGumpNotify::CGumpNotify(short x, short y, uchar variant, short width, short height, string text)
+: CGump(GT_NOTIFY, 0, x, y), m_Variant(variant), m_Width(width),
 m_Height(height), m_Text(text)
 {
 	WISPFUN_DEBUG("c103_f1");

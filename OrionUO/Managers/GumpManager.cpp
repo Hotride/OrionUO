@@ -1096,14 +1096,14 @@ bool CGumpManager::OnKeyDown(const WPARAM &wParam, const LPARAM &lParam, const b
 		}
 		else if (wParam == VK_DELETE)
 		{
-			gump = GetGump(g_PlayerSerial, 0, GT_SKILLS);
+			gump = GetGump(0, 0, GT_SKILLS);
 			if (gump != NULL && !gump->NoProcess)
 				gump->OnKeyDown(wParam, lParam);
 		}
 	}
 	else if (wParam == VK_DELETE)
 	{
-		CGump *gump = GetGump(g_PlayerSerial, 0, GT_SKILLS);
+		CGump *gump = GetGump(0, 0, GT_SKILLS);
 
 		if (gump != NULL && !gump->NoProcess)
 			gump->OnKeyDown(wParam, lParam);
@@ -1188,12 +1188,12 @@ void CGumpManager::Load(const string &path)
 				}
 				case GT_MINIMAP:
 				{
-					gump = new CGumpMinimap(g_PlayerSerial, gumpX, gumpY, gumpMinimized);
+					gump = new CGumpMinimap(gumpX, gumpY, gumpMinimized);
 					break;
 				}
 				case GT_SKILLS:
 				{
-					gump = new CGumpSkills(g_PlayerSerial, gumpX, gumpY, gumpMinimized, file.ReadInt16LE());
+					gump = new CGumpSkills(gumpX, gumpY, gumpMinimized, file.ReadInt16LE());
 					gump->Visible = false;
 
 					g_SkillsManager.SkillsRequested = true;
@@ -1203,13 +1203,13 @@ void CGumpManager::Load(const string &path)
 				}
 				case GT_JOURNAL:
 				{
-					gump = new CGumpJournal(g_PlayerSerial, gumpX, gumpY, gumpMinimized, file.ReadInt16LE());
+					gump = new CGumpJournal(gumpX, gumpY, gumpMinimized, file.ReadInt16LE());
 					
 					break;
 				}
 				case GT_WORLD_MAP:
 				{
-					CGumpWorldMap *wmg = new CGumpWorldMap(g_PlayerSerial, gumpX, gumpY);
+					CGumpWorldMap *wmg = new CGumpWorldMap(gumpX, gumpY);
 					gump = wmg;
 					wmg->Called = g_ConfigManager.AutoDisplayWorldMap;
 
@@ -1239,7 +1239,7 @@ void CGumpManager::Load(const string &path)
 					if (!g_ConfigManager.DisableMenubar)
 					{
 						menubarFound = true;
-						gump = new CGumpMenubar(g_PlayerSerial, gumpX, gumpY);
+						gump = new CGumpMenubar(gumpX, gumpY);
 						((CGumpMenubar*)gump)->Opened = gumpMinimized;
 					}
 
@@ -1248,7 +1248,7 @@ void CGumpManager::Load(const string &path)
 				case GT_BUFF:
 				{
 					bufficonWindowFound = true;
-					gump = new CGumpBuff(g_PlayerSerial, gumpX, gumpY);
+					gump = new CGumpBuff(gumpX, gumpY);
 					gump->Graphic = file.ReadUInt16LE();
 
 					break;
@@ -1425,7 +1425,7 @@ void CGumpManager::Load(const string &path)
 			y = windowSize.Height - 60;
 
 		AddGump(new CGumpStatusbar(g_PlayerSerial, x, y, false));
-		AddGump(new CGumpMinimap(g_PlayerSerial, g_ConfigManager.GameWindowX, g_ConfigManager.GameWindowY, true));
+		AddGump(new CGumpMinimap(g_ConfigManager.GameWindowX, g_ConfigManager.GameWindowY, true));
 
 		if (g_Player != NULL)
 		{
@@ -1443,7 +1443,7 @@ void CGumpManager::Load(const string &path)
 
 	if (!g_ConfigManager.DisableMenubar && !menubarFound)
 	{
-		CGumpMenubar *mbg = new CGumpMenubar(g_PlayerSerial, 0, 0);
+		CGumpMenubar *mbg = new CGumpMenubar(0, 0);
 		mbg->Opened = true;
 		AddGump(mbg);
 	}
@@ -1461,7 +1461,7 @@ void CGumpManager::Load(const string &path)
 		if (y + 60 >= windowSize.Height)
 			y = windowSize.Height - 60;
 
-		AddGump(new CGumpBuff(g_PlayerSerial, x, y));
+		AddGump(new CGumpBuff(x, y));
 	}
 
 	if (!paperdollRequested)
