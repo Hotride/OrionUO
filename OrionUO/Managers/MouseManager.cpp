@@ -317,7 +317,7 @@ void CMouseManager::Draw(ushort id)
 				color = 0x0021;
 
 			if (color != 0)
-				g_ColorizerShader->Use();
+				g_ColorizerShader.Use();
 
 			if (list.size())
 			{
@@ -344,7 +344,7 @@ void CMouseManager::Draw(ushort id)
 			doubleDraw = (!CGameObject::IsGold(g_ObjectInHand.Graphic) && IsStackable(g_ObjectInHand.TiledataPtr->Flags) && g_ObjectInHand.Count > 1);
 
 			if (ohColor != 0)
-				g_ColorizerShader->Use();
+				g_ColorizerShader.Use();
 
 			if (g_ObjectInHand.IsGameFigure)
 			{

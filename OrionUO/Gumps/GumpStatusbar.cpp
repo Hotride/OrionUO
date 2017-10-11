@@ -827,7 +827,7 @@ void CGumpStatusbar::UpdateContent()
 				Add(new CGUIGumppic(0x0028, 34, 20));
 
 				int per = CalculatePercents(g_Player->MaxHits, g_Player->Hits, 96);
-				Add(new CGUIShader(g_ColorizerShader, true));
+				Add(new CGUIShader(&g_ColorizerShader, true));
 				if (per > 0)
 				{
 					CGUIGumppic *gumppic = (CGUIGumppic*)Add(new CGUIGumppicTiled(0x0029, 34, 20, per, 0));
@@ -856,7 +856,7 @@ void CGumpStatusbar::UpdateContent()
 					gumppic->Color = 0x0075;
 				}
 
-				Add(new CGUIShader(g_ColorizerShader, false));
+				Add(new CGUIShader(&g_ColorizerShader, false));
 			}
 			else
 			{
@@ -951,7 +951,7 @@ void CGumpStatusbar::UpdateContent()
 
 					if (outofRange)
 						color = 912;
-					Add(new CGUIShader(g_ColorizerShader, true));
+					Add(new CGUIShader(&g_ColorizerShader, true));
 					//Hits
 					CGUIGumppic *g = new CGUIGumppic(0x0028, 34, 20);
 					g->Color = outofRange ? color : 0;
@@ -994,7 +994,7 @@ void CGumpStatusbar::UpdateContent()
 						gumppic->Color = outofRange ? color : 0x0075;
 					}
 
-					Add(new CGUIShader(g_ColorizerShader, false));
+					Add(new CGUIShader(&g_ColorizerShader, false));
 
 					break;
 				}
@@ -1002,7 +1002,7 @@ void CGumpStatusbar::UpdateContent()
 		}
 		else
 		{
-			Add(new CGUIShader(g_ColorizerShader, true));
+			Add(new CGUIShader(&g_ColorizerShader, true));
 
 			ushort color = 0;
 			ushort hitsColor = 0x0386;
@@ -1035,7 +1035,7 @@ void CGumpStatusbar::UpdateContent()
 			m_HitsBody = (CGUIGumppic*)Add(new CGUIGumppic(0x0805, 34, 38));
 			m_HitsBody->Color = hitsColor;
 
-			Add(new CGUIShader(g_ColorizerShader, false));
+			Add(new CGUIShader(&g_ColorizerShader, false));
 
 			if (obj != NULL && obj->MaxHits > 0)
 			{

@@ -20,9 +20,9 @@ CGumpShop::CGumpShop(uint serial, bool isBuyGump, short x, short y)
 	else
 		Add(new CGUIGumppic(0x0872, 0, 0));
 
-	Add(new CGUIShader(g_ColorizerShader, true));
+	Add(new CGUIShader(&g_ColorizerShader, true));
 	m_ItemList[0] = (CGUIHTMLGump*)Add(new CGUIHTMLGump(ID_GB_SHOP_LIST, 0, 30, 60, 215, 176, false, true));
-	Add(new CGUIShader(g_ColorizerShader, false));
+	Add(new CGUIShader(&g_ColorizerShader, false));
 
 	if (isBuyGump)
 		Add(new CGUIGumppic(0x0871, 170, 214));

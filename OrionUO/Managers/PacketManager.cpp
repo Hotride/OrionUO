@@ -4103,7 +4103,7 @@ PACKET_HANDLER(OpenMenuGump)
 		CGUIHTMLGump *htmlGump = (CGUIHTMLGump*)gump->Add(new CGUIHTMLGump(CGumpMenu::ID_GM_HTMLGUMP, 0, 40, 42, 217, 49, false, true));
 		htmlGump->Initalize(true);
 
-		htmlGump->Add(new CGUIShader(g_ColorizerShader, true));
+		htmlGump->Add(new CGUIShader(&g_ColorizerShader, true));
 
 		int posX = 0;
 
@@ -4132,7 +4132,7 @@ PACKET_HANDLER(OpenMenuGump)
 			}
 		}
 
-		htmlGump->Add(new CGUIShader(g_ColorizerShader, false));
+		htmlGump->Add(new CGUIShader(&g_ColorizerShader, false));
 
 		htmlGump->CalculateDataSize();
 
@@ -4543,7 +4543,7 @@ PACKET_HANDLER(OpenGump)
 					color = ToInt(list[4]);
 
 				if (color)
-					gump->Add(new CGUIShader(g_ColorizerShader, true));
+					gump->Add(new CGUIShader(&g_ColorizerShader, true));
 
 				go = new CGUITilepic(graphic, color, x, y);
 				go->DrawOnly = true;
@@ -4585,7 +4585,7 @@ PACKET_HANDLER(OpenGump)
 				if (go == NULL)
 				{
 					if (color)
-						gump->Add(new CGUIShader(g_ColorizerShader, true));
+						gump->Add(new CGUIShader(&g_ColorizerShader, true));
 
 					go = new CGUIGumppic(graphic, x, y);
 					go->Color = color;
@@ -4660,7 +4660,7 @@ PACKET_HANDLER(OpenGump)
 			gump->Add(go);
 
 			if ((go->Type == GOT_TILEPIC || go->Type == GOT_GUMPPIC) && go->Color)
-				gump->Add(new CGUIShader(g_ColorizerShader, false));
+				gump->Add(new CGUIShader(&g_ColorizerShader, false));
 			else if (go->Type == GOT_TEXTENTRY)
 				gump->Add(new CGUIScissor(false));
 		}

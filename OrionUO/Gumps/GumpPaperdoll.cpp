@@ -82,9 +82,9 @@ CGumpPaperdoll::CGumpPaperdoll(uint serial, short x, short y, bool minimized)
 		{
 			if (!g_ChatEnabled)
 			{
-				Add(new CGUIShader(g_DeathShader, true));
+				Add(new CGUIShader(&g_DeathShader, true));
 				Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x07E2, 0x07E2, 0x07E2, 185, 179));
-				Add(new CGUIShader(g_DeathShader, false));
+				Add(new CGUIShader(&g_DeathShader, false));
 			}
 			else
 				Add(new CGUIButton(ID_GP_BUTTON_CHAT_OR_GUILD, 0x07E2, 0x07E4, 0x07E3, 185, 179));
@@ -397,7 +397,7 @@ void CGumpPaperdoll::UpdateContent()
 	m_Description = (CGUIText*)m_DataBox->Add(new CGUIText(0x0386, 39, 262));
 	m_Description->CreateTextureA(1, obj->PaperdollText, 185);
 
-	m_DataBox->Add(new CGUIShader(g_ColorizerShader, true));
+	m_DataBox->Add(new CGUIShader(&g_ColorizerShader, true));
 
 	CGUIGumppic *bodyGumppic = NULL;
 
@@ -458,7 +458,7 @@ void CGumpPaperdoll::UpdateContent()
 
 	EQUIP_CONV_BODY_MAP::iterator bodyIter = equipConv.find(obj->Graphic);
 
-	g_ColorizerShader->Use();
+	g_ColorizerShader.Use();
 
 	//if (obj->IsHuman())
 	{
@@ -664,7 +664,7 @@ void CGumpPaperdoll::UpdateContent()
 		bodyGumppic->MoveOnDrag = true;
 	}
 
-	m_DataBox->Add(new CGUIShader(g_ColorizerShader, false));
+	m_DataBox->Add(new CGUIShader(&g_ColorizerShader, false));
 }
 //----------------------------------------------------------------------------------
 void CGumpPaperdoll::UpdateDescription(const string &text)
@@ -695,7 +695,7 @@ void CGumpPaperdoll::Draw()
 	{
 		glTranslatef(g_GumpTranslate.X, g_GumpTranslate.Y, 0.0f);
 
-		g_FontColorizerShader->Use();
+		g_FontColorizerShader.Use();
 
 		m_TextRenderer.Draw();
 

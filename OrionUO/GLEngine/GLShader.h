@@ -29,8 +29,11 @@ protected:
 	GLuint m_TexturePointer{ 0 };
 
 public:
-	CGLShader(const char *vertexShaderData, const char *fragmentShaderData);
+	CGLShader();
 	virtual ~CGLShader();
+
+	//Инициализировать шейдер
+	virtual bool Init(const char *vertexShaderData, const char *fragmentShaderData);
 
 	//Использовать шейдер
 	virtual bool Use();
@@ -46,7 +49,10 @@ public:
 class CDeathShader : public CGLShader
 {
 public:
-	CDeathShader(const char *vertexShaderData, const char *fragmentShaderData);
+	CDeathShader();
+
+	//Инициализировать шейдер
+	virtual bool Init(const char *vertexShaderData, const char *fragmentShaderData);
 };
 //----------------------------------------------------------------------------------
 //Класс для работы с цветным шейдером
@@ -60,17 +66,19 @@ protected:
 	GLuint m_DrawModePointer{ 0 };
 
 public:
-	CColorizerShader(const char *vertexShaderData, const char *fragmentShaderData);
+	CColorizerShader();
+
+	//Инициализировать шейдер
+	virtual bool Init(const char *vertexShaderData, const char *fragmentShaderData);
 
 	//Использовать шейдер
 	virtual bool Use();
 };
 //----------------------------------------------------------------------------------
-extern CGLShader *g_CurrentShader;
-extern CDeathShader *g_DeathShader;
-extern CColorizerShader *g_ColorizerShader;
-extern CColorizerShader *g_FontColorizerShader;
-extern CColorizerShader *g_LightColorizerShader;
+extern CDeathShader g_DeathShader;
+extern CColorizerShader g_ColorizerShader;
+extern CColorizerShader g_FontColorizerShader;
+extern CColorizerShader g_LightColorizerShader;
 //----------------------------------------------------------------------------------
 #endif
 //----------------------------------------------------------------------------------

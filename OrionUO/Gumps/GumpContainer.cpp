@@ -40,11 +40,11 @@ CGumpContainer::CGumpContainer(uint serial, uint id, short x, short y)
 		box->ToPage = 1;
 	}
 
-	Add(new CGUIShader(g_ColorizerShader, true));
+	Add(new CGUIShader(&g_ColorizerShader, true));
 
 	m_DataBox = (CGUIDataBox*)Add(new CGUIDataBox());
 
-	Add(new CGUIShader(g_ColorizerShader, false));
+	Add(new CGUIShader(&g_ColorizerShader, false));
 }
 //----------------------------------------------------------------------------------
 CGumpContainer::~CGumpContainer()
@@ -235,7 +235,7 @@ void CGumpContainer::Draw()
 	{
 		glTranslatef(g_GumpTranslate.X, g_GumpTranslate.Y, 0.0f);
 
-		g_FontColorizerShader->Use();
+		g_FontColorizerShader.Use();
 
 		m_TextRenderer.Draw();
 

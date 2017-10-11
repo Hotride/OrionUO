@@ -71,14 +71,14 @@ void CGumpTargetSystem::UpdateContent()
 		}
 
 		if (color)
-			m_DataBox->Add(new CGUIShader(g_ColorizerShader, true));
+			m_DataBox->Add(new CGUIShader(&g_ColorizerShader, true));
 
 		//Гамп статус бара
 		CGUIGumppic *gumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x0804, 0, 0));
 		gumppic->Color = color;
 
 		if (color)
-			m_DataBox->Add(new CGUIShader(g_ColorizerShader, false));
+			m_DataBox->Add(new CGUIShader(&g_ColorizerShader, false));
 
 		m_OldName = obj->GetName();
 
@@ -113,7 +113,7 @@ void CGumpTargetSystem::UpdateContent()
 	}
 	else //Серенький статус
 	{
-		m_DataBox->Add(new CGUIShader(g_ColorizerShader, true));
+		m_DataBox->Add(new CGUIShader(&g_ColorizerShader, true));
 
 		//Гамп статус бара
 		CGUIGumppic *gumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x0804, 0, 0));
@@ -123,7 +123,7 @@ void CGumpTargetSystem::UpdateContent()
 		gumppic = (CGUIGumppic*)m_DataBox->Add(new CGUIGumppic(0x0805, 34, 38));
 		gumppic->Color = 0x0386;
 
-		m_DataBox->Add(new CGUIShader(g_ColorizerShader, false));
+		m_DataBox->Add(new CGUIShader(&g_ColorizerShader, false));
 
 		CGUIText *text = (CGUIText*)m_DataBox->Add(new CGUIText(0x0386, 16, 14));
 		text->CreateTextureA(1, m_OldName, 150, TS_LEFT, UOFONT_FIXED);

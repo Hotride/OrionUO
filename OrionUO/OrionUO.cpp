@@ -471,11 +471,6 @@ void COrion::Uninstall()
 	g_EntryPointer = NULL;
 	g_CurrentScreen = NULL;
 	RELEASE_POINTER(g_World);
-	RELEASE_POINTER(g_DeathShader);
-	RELEASE_POINTER(g_ColorizerShader);
-	RELEASE_POINTER(g_FontColorizerShader);
-	RELEASE_POINTER(g_LightColorizerShader);
-	g_CurrentShader = NULL;
 
 	g_AuraTexture.Clear();
 
@@ -4136,7 +4131,6 @@ void COrion::CreateObjectHandlesBackground()
 void COrion::LoadShaders()
 {
 	WISPFUN_DEBUG("c194_f59");
-	g_CurrentShader = NULL;
 
 #if UO_USE_SHADER_FILES == 1
 	WISP_FILE::CMappedFile frag;
@@ -4146,7 +4140,7 @@ void COrion::LoadShaders()
 	{
 		frag.Load(g_App.FilePath("shaders\\DeathShader.frag"));
 
-		g_DeathShader = new CDeathShader((char*)vert.Start, (char*)frag.Start);
+		g_DeathShader.Init((char*)vert.Start, (char*)frag.Start);
 
 		frag.Unload();
 
@@ -4154,7 +4148,7 @@ void COrion::LoadShaders()
 
 		frag.Load(g_App.FilePath("shaders\\ColorizerShader.frag"));
 
-		g_ColorizerShader = new CColorizerShader((char*)vert.Start, (char*)frag.Start);
+		g_ColorizerShader.Init((char*)vert.Start, (char*)frag.Start);
 
 		frag.Unload();
 
@@ -4162,7 +4156,7 @@ void COrion::LoadShaders()
 
 		frag.Load(g_App.FilePath("shaders\\FontColorizerShader.frag"));
 
-		g_FontColorizerShader = new CColorizerShader((char*)vert.Start, (char*)frag.Start);
+		g_FontColorizerShader.Init((char*)vert.Start, (char*)frag.Start);
 
 		frag.Unload();
 
@@ -4170,16 +4164,16 @@ void COrion::LoadShaders()
 
 		frag.Load(g_App.FilePath("shaders\\LightColorizerShader.frag"));
 
-		g_LightColorizerShader = new CColorizerShader((char*)vert.Start, (char*)frag.Start);
+		g_LightColorizerShader.Init((char*)vert.Start, (char*)frag.Start);
 
 		frag.Unload();
 		vert.Unload();
 	}
 #else
-	g_DeathShader = new CDeathShader(g_Vert_ShaderData, g_Frag_DeathShaderData);
-	g_ColorizerShader = new CColorizerShader(g_Vert_ShaderData, g_Frag_ColorizerShaderData);
-	g_FontColorizerShader = new CColorizerShader(g_Vert_ShaderData, g_Frag_FontShaderData);
-	g_LightColorizerShader = new CColorizerShader(g_Vert_ShaderData, g_Frag_LightShaderData);
+	g_DeathShader.Init(g_Vert_ShaderData, g_Frag_DeathShaderData);
+	g_ColorizerShader.Init(g_Vert_ShaderData, g_Frag_ColorizerShaderData);
+	g_FontColorizerShader.Init(g_Vert_ShaderData, g_Frag_FontShaderData);
+	g_LightColorizerShader.Init(g_Vert_ShaderData, g_Frag_LightShaderData);
 #endif
 }
 //----------------------------------------------------------------------------------

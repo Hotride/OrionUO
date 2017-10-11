@@ -132,7 +132,7 @@ void CGumpSecureTrading::UpdateContent()
 		text = (CGUIText*)Add(new CGUIText(0x0386, fontWidth, 170));
 		text->CreateTextureA(1, m_Text);
 
-		Add(new CGUIShader(g_ColorizerShader, true));
+		Add(new CGUIShader(&g_ColorizerShader, true));
 
 		Add(new CGUIScissor(true, 0, 0, 45, 70, 110, 80));
 		m_MyDataBox = (CGUIDataBox*)Add(new CGUIDataBox());
@@ -142,7 +142,7 @@ void CGumpSecureTrading::UpdateContent()
 		m_OpponentDataBox = (CGUIDataBox*)Add(new CGUIDataBox());
 		Add(new CGUIScissor(false));
 
-		Add(new CGUIShader(g_ColorizerShader, false));
+		Add(new CGUIShader(&g_ColorizerShader, false));
 	}
 	else
 	{
@@ -207,7 +207,7 @@ void CGumpSecureTrading::Draw()
 
 	glTranslatef(g_GumpTranslate.X, g_GumpTranslate.Y, 0.0f);
 
-	g_FontColorizerShader->Use();
+	g_FontColorizerShader.Use();
 
 	m_TextRenderer.Draw();
 

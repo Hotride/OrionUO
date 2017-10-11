@@ -9,11 +9,10 @@
 //----------------------------------------------------------------------------------
 #include "stdafx.h"
 //----------------------------------------------------------------------------------
-CGLShader *g_CurrentShader = NULL;
-CDeathShader *g_DeathShader = NULL;
-CColorizerShader *g_ColorizerShader = NULL;
-CColorizerShader *g_FontColorizerShader = NULL;
-CColorizerShader *g_LightColorizerShader = NULL;
+CDeathShader g_DeathShader;
+CColorizerShader g_ColorizerShader;
+CColorizerShader g_FontColorizerShader;
+CColorizerShader g_LightColorizerShader;
 //----------------------------------------------------------------------------------
 void UnuseShader()
 {
@@ -21,14 +20,17 @@ void UnuseShader()
 	glUseProgramObjectARB(0);
 	ShaderColorTable = 0;
 	g_ShaderDrawMode = 0;
-	g_CurrentShader = NULL;
 }
 //----------------------------------------------------------------------------------
 //-----------------------------------CGLShader--------------------------------------
 //----------------------------------------------------------------------------------
-CGLShader::CGLShader(const char *vertexShaderData, const char *fragmentShaderData)
+CGLShader::CGLShader()
 {
 	WISPFUN_DEBUG("c32_f1");
+}
+//----------------------------------------------------------------------------------
+bool CGLShader::Init(const char *vertexShaderData, const char *fragmentShaderData)
+{
 	if (vertexShaderData != NULL && fragmentShaderData != NULL)
 	{
 		m_Shader = glCreateProgramObjectARB();
@@ -46,6 +48,8 @@ CGLShader::CGLShader(const char *vertexShaderData, const char *fragmentShaderDat
 		glLinkProgramARB(m_Shader);
 		glValidateProgramARB(m_Shader);
 	}
+
+	return (m_Shader != 0);
 }
 //----------------------------------------------------------------------------------
 CGLShader::~CGLShader()
@@ -75,9 +79,7 @@ CGLShader::~CGLShader()
 bool CGLShader::Use()
 {
 	WISPFUN_DEBUG("c32_f3");
-	CGLShader *oldShader = g_CurrentShader;
 	UnuseShader();
-	g_CurrentShader = oldShader;
 
 	bool result = false;
 
@@ -104,23 +106,33 @@ void CGLShader::Resume()
 //----------------------------------------------------------------------------------
 //-----------------------------------CDeathShader-----------------------------------
 //----------------------------------------------------------------------------------
-CDeathShader::CDeathShader(const char *vertexShaderData, const char *fragmentShaderData)
-: CGLShader(vertexShaderData, fragmentShaderData)
+CDeathShader::CDeathShader()
+: CGLShader()
 {
 	WISPFUN_DEBUG("c33_f1");
-	if (m_Shader != 0)
+}
+//----------------------------------------------------------------------------------
+bool CDeathShader::Init(const char *vertexShaderData, const char *fragmentShaderData)
+{
+	if (CGLShader::Init(vertexShaderData, fragmentShaderData))
 		m_TexturePointer = glGetUniformLocationARB(m_Shader, "usedTexture");
 	else
 		LOG("Failed to create DeathShader\n");
+
+	return (m_Shader != 0);
 }
 //----------------------------------------------------------------------------------
 //----------------------------------CColorizerShader--------------------------------
 //----------------------------------------------------------------------------------
-CColorizerShader::CColorizerShader(const char *vertexShaderData, const char *fragmentShaderData)
-: CGLShader(vertexShaderData, fragmentShaderData)
+CColorizerShader::CColorizerShader()
+: CGLShader()
 {
 	WISPFUN_DEBUG("c34_f1");
-	if (m_Shader != 0)
+}
+//----------------------------------------------------------------------------------
+bool CColorizerShader::Init(const char *vertexShaderData, const char *fragmentShaderData)
+{
+	if (CGLShader::Init(vertexShaderData, fragmentShaderData))
 	{
 		m_TexturePointer = glGetUniformLocationARB(m_Shader, "usedTexture");
 		m_ColorTablePointer = glGetUniformLocationARB(m_Shader, "colors");
@@ -128,6 +140,8 @@ CColorizerShader::CColorizerShader(const char *vertexShaderData, const char *fra
 	}
 	else
 		LOG("Failed to create ColorizerShader\n");
+
+	return (m_Shader != 0);
 }
 //----------------------------------------------------------------------------------
 bool CColorizerShader::Use()

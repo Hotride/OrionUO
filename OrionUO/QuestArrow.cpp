@@ -51,7 +51,7 @@ void CQuestArrow::Draw()
 			if (m_Timer + 120 < g_Ticks)
 				m_Timer = g_Ticks + 1000;
 
-			g_ColorizerShader->Use();
+			g_ColorizerShader.Use();
 
 			g_Orion.DrawGump(gumpID, 0x0021, x, y);
 

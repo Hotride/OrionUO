@@ -282,7 +282,7 @@ void CGumpScreenCreateCharacter::UpdateContent()
 		}
 	}
 
-	Add(new CGUIShader(g_ColorizerShader, true));
+	Add(new CGUIShader(&g_ColorizerShader, true));
 
 	ushort gumpID = g_CreateCharacterManager.GetBodyGump();
 

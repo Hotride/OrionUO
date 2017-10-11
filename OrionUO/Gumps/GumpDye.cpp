@@ -51,12 +51,12 @@ void CGumpDye::UpdateContent()
 
 	if (m_Tube == NULL)
 	{
-		Add(new CGUIShader(g_ColorizerShader, true));
+		Add(new CGUIShader(&g_ColorizerShader, true));
 
 		m_Tube = (CGUITilepic*)Add(new CGUITilepic(0x0FAB, GetCurrentColor(), 200, 58));
 		m_Tube->PartialHue = true;
 
-		Add(new CGUIShader(g_ColorizerShader, false));
+		Add(new CGUIShader(&g_ColorizerShader, false));
 	}
 	else
 		m_Tube->Color = GetCurrentColor();

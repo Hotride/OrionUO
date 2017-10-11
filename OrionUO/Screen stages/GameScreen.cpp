@@ -1220,7 +1220,7 @@ void CGameScreen::DrawGameWindowLight()
 	if (!m_UseLight)
 		return;
 
-	g_LightColorizerShader->Use();
+	g_LightColorizerShader.Use();
 
 	if (g_GL.CanUseFrameBuffer)
 	{
@@ -1299,7 +1299,7 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 	WISPFUN_DEBUG("c164_f17");
 	if (mode)
 	{
-		g_FontColorizerShader->Use();
+		g_FontColorizerShader.Use();
 
 		g_WorldTextRenderer.WorldDraw();
 
@@ -1317,7 +1317,7 @@ void CGameScreen::DrawGameWindowText(const bool &mode)
 			}
 			else
 			{
-				g_ColorizerShader->Use();
+				g_ColorizerShader.Use();
 
 				IFOR(i, 0, 2)
 				{
@@ -1504,11 +1504,9 @@ void CGameScreen::Render(const bool &mode)
 		}
 
 		if (g_GrayedPixels)
-			g_CurrentShader = g_DeathShader;
+			g_DeathShader.Use();
 		else
-			g_CurrentShader = g_ColorizerShader;
-
-		g_CurrentShader->Use();
+			g_ColorizerShader.Use();
 
 		DrawGameWindow(mode);
 
@@ -1520,7 +1518,7 @@ void CGameScreen::Render(const bool &mode)
 			{
 				DrawGameWindowLight();
 
-				g_ColorizerShader->Use();
+				g_ColorizerShader.Use();
 
 				g_NewTargetSystem.Draw();
 				g_TargetGump.Draw();
