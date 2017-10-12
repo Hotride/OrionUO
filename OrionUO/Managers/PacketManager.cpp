@@ -3228,15 +3228,8 @@ PACKET_HANDLER(DragAnimation)
 		return;
 
 	ushort graphic = ReadUInt16BE();
+	graphic += ReadUInt8(); //graphic increment
 
-	if (graphic == 0x0EED)
-		graphic = 0x0EEF;
-	else if (graphic == 0x0EEA)
-		graphic = 0x0EEC;
-	else if (graphic == 0x0EF0)
-		graphic = 0x0EF2;
-
-	Move(1);
 	ushort color = ReadUInt16BE();
 	ushort count = ReadUInt16BE();
 
@@ -3249,49 +3242,55 @@ PACKET_HANDLER(DragAnimation)
 	short destY = ReadInt16BE();
 	char destZ = ReadInt8();
 
-	uchar speed = 5;
+	if (graphic == 0x0EED)
+		graphic = 0x0EEF;
+	else if (graphic == 0x0EEA)
+		graphic = 0x0EEC;
+	else if (graphic == 0x0EF0)
+		graphic = 0x0EF2;
+
+	CGameCharacter *sourceObj = g_World->FindWorldCharacter(sourceSerial);
+
+	if (sourceObj == NULL)
+		sourceSerial = 0;
+	else
+	{
+		sourceX = sourceObj->X;
+		sourceY = sourceObj->Y;
+		sourceZ = sourceObj->Z;
+	}
+
+	CGameCharacter *destObj = g_World->FindWorldCharacter(destSerial);
+
+	if (destObj == NULL)
+		destSerial = 0;
+	else
+	{
+		destX = destObj->X;
+		destY = destObj->Y;
+		destZ = destObj->Z;
+	}
 
 	CGameEffect *effect = NULL;
 
-	if (sourceSerial < 0x40000000) //Игрок/НПС кладет предмет в контейнер
-	{
-		return;
+	uchar speed = 5;
 
+	if (!sourceSerial || !destSerial) //Игрок/НПС кладет предмет в контейнер
+	{
 		effect = new CGameEffectMoving();
+		effect->EffectType = EF_MOVING;
 		effect->FixedDirection = true;
 
 		((CGameEffectMoving*)effect)->MoveDelay = 20 / speed;
-
-		/*
-		23 
-		0E 85 
-		00 
-		00 00 
-		00 00 
-		01 87 53 C5 
-		00 00 
-		04 6F 
-		A4 
-		00 00 00 00 
-		17 8B 
-		04 6F 
-		00
-
-
-
-		--- ^(1900) r(+26 => 109303) Server:: Drag Animation
-		0000: 23 0E 85 00 00 00 00 00 01 87 53 C5 00 00 04 6F : #.........S....o
-		0010: A4 00 00 00 00 17 8B 04 6F 00 -- -- -- -- -- -- : ........o.
-		*/
 	}
 	else //Предмет взяли из контейнера
 	{
 		effect = new CGameEffectDrag();
+		effect->EffectType = EF_DRAG;
 	}
 
 	effect->Graphic = graphic;
 	effect->Color = color;
-	effect->EffectType = EF_DRAG;
 	effect->Serial = sourceSerial;
 	effect->DestSerial = destSerial;
 	effect->X = sourceX;
