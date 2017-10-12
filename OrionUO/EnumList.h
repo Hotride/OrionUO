@@ -736,7 +736,9 @@ enum LOW_ANIMATION_GROUP
 	LAG_FIDGET_1,
 	LAG_FIDGET_2,
 	LAG_LIE_DOWN,
-	LAG_DIE_2
+	LAG_DIE_2,
+
+	LAG_ANIMATION_COUNT
 };
 //----------------------------------------------------------------------------------
 enum HIGHT_ANIMATION_GROUP
@@ -762,7 +764,9 @@ enum HIGHT_ANIMATION_GROUP
 	HAG_FIDGET_2,
 	HAG_FLY,
 	HAG_LAND,
-	HAG_DIE_IN_FLIGHT
+	HAG_DIE_IN_FLIGHT,
+
+	HAG_ANIMATION_COUNT
 };
 //----------------------------------------------------------------------------------
 enum PEOPLE_ANIMATION_GROUP
@@ -801,7 +805,9 @@ enum PEOPLE_ANIMATION_GROUP
 	PAG_ATTACK_UNARMED_AND_WALK,
 	PAG_EMOTE_BOW,
 	PAG_EMOTE_SALUTE,
-	PAG_FIDGET_3
+	PAG_FIDGET_3,
+
+	PAG_ANIMATION_COUNT
 };
 //----------------------------------------------------------------------------------
 //!Злобность персонажа

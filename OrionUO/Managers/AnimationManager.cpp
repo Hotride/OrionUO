@@ -322,19 +322,19 @@ void CAnimationManager::Load(puint verdata)
 			case AGT_MONSTER:
 			case AGT_SEA_MONSTER:
 			{
-				count = 22;
+				count = HAG_ANIMATION_COUNT;
 				break;
 			}
 			case AGT_HUMAN:
 			case AGT_EQUIPMENT:
 			{
-				count = 35;
+				count = PAG_ANIMATION_COUNT;
 				break;
 			}
 			case AGT_ANIMAL:
 			default:
 			{
-				count = 13;
+				count = LAG_ANIMATION_COUNT;
 				break;
 			}
 		}
@@ -409,7 +409,7 @@ void CAnimationManager::Load(puint verdata)
 				else //humans
 				{
 					groupType = AGT_HUMAN;
-					count = 35;
+					count = PAG_ANIMATION_COUNT;
 					id = (graphic - 35000) / 175;
 					offset = graphic - ((id * 175) + 35000);
 					id += 400;
@@ -455,6 +455,30 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 	WISPFUN_DEBUG("c133_f4");
 	Load(verdata);
 
+	//std::pair<ushort, char> m_GroupReplaces[2];
+
+	WISP_FILE::CTextFileParser animParser[2]
+	{
+		WISP_FILE::CTextFileParser(g_App.FilePath("Anim1.def").c_str(), " \t", "#;//", "{}"),
+		WISP_FILE::CTextFileParser(g_App.FilePath("Anim2.def").c_str(), " \t", "#;//", "{}")
+	};
+
+	IFOR(i, 0, 2)
+	{
+		while (!animParser[i].IsEOF())
+		{
+			STRING_LIST strings = animParser[i].ReadTokens();
+
+			if (strings.size() < 2)
+				continue;
+
+			ushort group = (ushort)atoi(strings[0].c_str());
+			int replaceGroup = atoi(strings[1].c_str());
+
+			m_GroupReplaces[i].push_back(std::pair<ushort, uchar>(group, (uchar)replaceGroup));
+		}
+	}
+
 	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
 		return;
 
@@ -490,14 +514,6 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 	WISP_FILE::CTextFileParser bodyParser(g_App.FilePath("Body.def").c_str(), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser bodyconvParser(g_App.FilePath("Bodyconv.def").c_str(), " \t", "#;//", "");
 	WISP_FILE::CTextFileParser corpseParser(g_App.FilePath("Corpse.def").c_str(), " \t", "#;//", "{}");
-
-	/*WISP_FILE::CTextFileParser animParser[4]
-	{
-		WISP_FILE::CTextFileParser(g_App.FilePath("Anim1.def").c_str(), " \t", "#;//", "{}"),
-		WISP_FILE::CTextFileParser(g_App.FilePath("Anim2.def").c_str(), " \t", "#;//", "{}"),
-		WISP_FILE::CTextFileParser(g_App.FilePath("Anim3.def").c_str(), " \t", "#;//", "{}"),
-		WISP_FILE::CTextFileParser(g_App.FilePath("Anim4.def").c_str(), " \t", "#;//", "{}")
-	};*/
 
 	WISP_FILE::CTextFileParser equipConvParser(g_App.FilePath("EquipConv.def"), " \t", "#;//", "");
 
@@ -678,19 +694,19 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 						case AGT_MONSTER:
 						case AGT_SEA_MONSTER:
 						{
-							count = 22;
+							count = HAG_ANIMATION_COUNT;
 							break;
 						}
 						case AGT_HUMAN:
 						case AGT_EQUIPMENT:
 						{
-							count = 35;
+							count = PAG_ANIMATION_COUNT;
 							break;
 						}
 						case AGT_ANIMAL:
 						default:
 						{
-							count = 13;
+							count = LAG_ANIMATION_COUNT;
 							break;
 						}
 					}
@@ -725,49 +741,6 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 		}
 	}
 
-	/*IFOR(i, 0, 4)
-	{
-		STRING_LIST strings = animParser[i].ReadTokens();
-
-		if (strings.size() >= 3)
-		{
-			ushort index = atoi(strings[0].c_str());
-
-			if (index >= MAX_ANIMATIONS_DATA_INDEX_COUNT || m_DataIndex[index].Offset)
-				continue;
-
-			STRING_LIST newBody = newBodyParser.GetTokens(strings[1].c_str());
-
-			IFOR(j, 0, (int)newBody.size())
-			{
-				ushort checkIndex = atoi(newBody[j].c_str());
-
-				if (checkIndex >= MAX_ANIMATIONS_DATA_INDEX_COUNT || !m_DataIndex[checkIndex].Offset)
-					continue;
-
-				//memcpy(&m_DataIndex[index], &m_DataIndex[checkIndex], sizeof(CIndexAnimation));
-
-				if (g_PacketManager.ClientVersion < CV_500A)
-				{
-					if (checkIndex >= 200)
-					{
-						if (checkIndex >= 400) //People
-							m_DataIndex[index].Type = AGT_HUMAN;
-						else //Low
-							m_DataIndex[index].Type = AGT_ANIMAL;
-					}
-					else
-						m_DataIndex[index].Type = AGT_MONSTER;
-				}
-
-				m_DataIndex[index].Graphic = checkIndex;
-				m_DataIndex[index].Color = atoi(strings[2].c_str());
-
-				break;
-			}
-		}
-	}*/
-
 	while (!bodyParser.IsEOF())
 	{
 		STRING_LIST strings = bodyParser.ReadTokens();
@@ -797,7 +770,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 				case AGT_MONSTER:
 				case AGT_SEA_MONSTER:
 				{
-					count = 22;
+					count = HAG_ANIMATION_COUNT;
 					ignoreGroups[0] = HAG_DIE_1;
 					ignoreGroups[1] = HAG_DIE_2;
 
@@ -806,7 +779,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 				case AGT_HUMAN:
 				case AGT_EQUIPMENT:
 				{
-					count = 35;
+					count = PAG_ANIMATION_COUNT;
 					ignoreGroups[0] = PAG_DIE_1;
 					ignoreGroups[1] = PAG_DIE_2;
 
@@ -814,7 +787,7 @@ void CAnimationManager::InitIndexReplaces(puint verdata)
 				}
 				case AGT_ANIMAL:
 				{
-					count = 13;
+					count = LAG_ANIMATION_COUNT;
 					ignoreGroups[0] = LAG_DIE_1;
 					ignoreGroups[1] = LAG_DIE_2;
 
@@ -2827,5 +2800,33 @@ void CAnimationManager::ReadUOPFrameData(short &imageCenterX, short &imageCenter
 	imageCenterY = ReadInt16LE();
 	imageWidth = ReadInt16LE();
 	imageHeight = ReadInt16LE();
+}
+//----------------------------------------------------------------------------------
+uchar CAnimationManager::GetReplacedObjectAnimation(CGameCharacter *obj, const ushort &index)
+{
+	auto getReplaceGroup = [](const vector<std::pair<ushort, uchar> > &list, const ushort &index, const ushort &walkIndex) -> ushort
+	{
+		for (const std::pair<ushort, uchar> &item : list)
+		{
+			if (item.first == index)
+			{
+				if (item.second == 0xFF)
+					return walkIndex;
+
+				return (ushort)item.second;
+			}
+		}
+
+		return index;
+	};
+
+	ANIMATION_GROUPS group = GetGroupIndex(obj->Graphic);
+
+	if (group == AG_LOW)
+		return (uchar)(getReplaceGroup(m_GroupReplaces[0], index, LAG_WALK) % LAG_ANIMATION_COUNT);
+	else if (group == AG_PEOPLE)
+		return (uchar)(getReplaceGroup(m_GroupReplaces[1], index, PAG_WALK_UNARMED) % PAG_ANIMATION_COUNT);
+
+	return (uchar)(index % HAG_ANIMATION_COUNT);
 }
 //----------------------------------------------------------------------------------

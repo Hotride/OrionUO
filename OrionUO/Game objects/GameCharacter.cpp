@@ -440,7 +440,7 @@ void CGameCharacter::SetRandomFidgetAnimation()
 void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, uchar &animation)
 {
 	WISPFUN_DEBUG("c15_f13");
-	const uchar animAssociateTable[35][3] =
+	const uchar animAssociateTable[PAG_ANIMATION_COUNT][3] =
 	{
 		{ LAG_WALK,			HAG_WALK,			PAG_WALK_UNARMED },
 		{ LAG_WALK,			HAG_WALK,			PAG_WALK_ARMED },
@@ -479,7 +479,7 @@ void CGameCharacter::GetAnimationGroup(const ANIMATION_GROUPS &group, uchar &ani
 		{ LAG_FIDGET_1,		HAG_FIDGET_1,		PAG_FIDGET_3 }
 	};
 
-	if (group && animation < 35)
+	if (group && animation < PAG_ANIMATION_COUNT)
 		animation = animAssociateTable[animation][group - 1];
 }
 //----------------------------------------------------------------------------------
@@ -964,137 +964,6 @@ void CGameCharacter::UpdateAnimationInfo(BYTE &dir, const bool &canChange)
 		m_OffsetY = 0;
 		m_OffsetZ = 0;
 	}
-}
-//----------------------------------------------------------------------------------
-uchar CGameCharacter::GetTrueAnimationGroup(ushort action)
-{
-	WISPFUN_DEBUG("c15_f19");
-	//let's give it a default value of 16 if action > 100, just in case
-	uchar animGroup = 0;
-
-	ANIMATION_GROUPS groupIndex = g_AnimationManager.GetGroupIndex(m_Graphic);
-
-	if (groupIndex == AG_PEOPLE)
-	{
-		switch (action)
-		{
-		case 203:
-			//almost all necro spells except for Strangle
-			//3rd circle: Bless, Fireball, Poison, Telekinesis
-			animGroup = 16;
-			break;
-		case 204:
-			//4th circle: Greater Heal
-			animGroup = 17;
-			break;
-		case 206:
-			//5th circle: Dispel Field, Incognito
-			//6th circle: Invisibility, Reveal
-			animGroup = 16;
-			break;
-		case 209:
-			//Necro spell Strangle
-			//7th circle: Chain Lightning
-			animGroup = 16;
-			break;
-		case 212:
-			//1st circle: Clumsy, Feeblemind, Magic Arrow, Weaken
-			//2nd circle: Agility, Cunning, Cure, Harm, Magic Trap, Remove Trap, Strength
-			animGroup = 16;
-			break;
-		case 215:
-			//3rd circle: Magic Lock, Teleport, Unlock
-			//4th circle: Arch Cure, (Non AOS) Arch Protection, Fire Field, Mana Drain
-			animGroup = 17;
-			break;
-		case 218:
-			//5th circle: Mind Blast, Paralyze
-			//6th circle: Dispel, Mark, Mass Curse
-			animGroup = 16;
-			break;
-		case 221:
-			//7th circle: Energy Field, Mana Vampire, Polymorph
-			animGroup = 17;
-			break;
-		case 224:
-			//1st circle: Create Food, Heal
-			animGroup = 17;
-			break;
-		case 227:
-			//3rd circle: Wall of Stone
-			//4th circle: Curse
-			animGroup = 16;
-			break;
-		case 230:
-			//All Mysticism spells
-			//5th circle: Poison Field
-			//6th circle: Energy Bolt, Explosion, Paralyze Field
-			animGroup = 16;
-			break;
-		case 233:
-			//7th circle: Meteor Swarm
-			//8th circle: Earthquake
-			animGroup = 16;
-			break;
-		case 236:
-			//1st circle: Nightsight, Reactive Armor, 
-			//2nd circle: Protection
-			animGroup = 17;
-			break;
-		case 239:
-			//4th circle: (AOS) Arch Protection, Lightning, Recall
-			animGroup = 16;
-			break;
-		case 242:
-			//5th circle: Magic Reflection
-			animGroup = 16;
-			break;
-		case 245:
-			//7th circle: Flame Strike
-			//8th circle: Resurrection
-			animGroup = 16;
-			break;
-		case 260:
-			//8th circle: Energy Vortex
-			animGroup = 17;
-			break;
-		case 263:
-			//7th circle: Gate Travel, Mass Dispel
-			animGroup = 17;
-			break;
-		case 266:
-			//5th circle: Blade Spirits
-			animGroup = 17;
-			break;
-		case 269:
-			//8th circle: Air Elemental, Earth Elemental, Fire Elemental, Summon Daemon, Water Elemental
-			animGroup = 17;
-			break;
-		default:
-			break;
-		}
-	}
-
-	if (action >= g_AnimationManager.AnimGroupCount)
-	{
-		switch (groupIndex)
-		{
-		case AG_LOW:
-			action = LAG_STAND;
-			break;
-		case AG_HIGHT:
-			action = HAG_STAND;
-			break;
-		case AG_PEOPLE:
-			action = PAG_STAND;
-			break;
-		default:
-			action = 0;
-			break;
-		}
-	}
-
-	return animGroup == 0 ? static_cast<uchar>(action) : animGroup;
 }
 //----------------------------------------------------------------------------------
 CGameItem *CGameCharacter::FindSecureTradeBox()

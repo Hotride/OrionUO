@@ -63,7 +63,7 @@ class CAnimationManager : public WISP_DATASTREAM::CDataReader
 	//!Айдишник текущей анимации
 	SETGET(ushort, AnimID, 0);
 	//!Максимальный индекс группы анимаций
-	SETGET(uchar, AnimGroupCount, 35);
+	SETGET(uchar, AnimGroupCount, PAG_ANIMATION_COUNT);
 
 private:
 	//!Адреса файлов в памяти
@@ -100,6 +100,8 @@ private:
 	//!Упорядоченный список слоев для корректного порядка прорисовки для всех направлений персонажа
 	static const int USED_LAYER_COUNT = 23;
 	static const int m_UsedLayers[8][USED_LAYER_COUNT];
+
+	vector<std::pair<ushort, uchar> > m_GroupReplaces[2];
 
 	//!Список используемых анимаций
 	deque<CTextureAnimationDirection*> m_UsedAnimList;
@@ -277,6 +279,8 @@ public:
 	void CalculateFrameInformation(FRAME_OUTPUT_INFO &info, class CGameObject *obj, const bool &mirror, const uchar &animIndex);
 
 	struct DRAW_FRAME_INFORMATION CollectFrameInformation(class CGameObject *gameObject, const bool &checkLayers = true);
+
+	uchar GetReplacedObjectAnimation(CGameCharacter *obj, const ushort &index);
  };
 //----------------------------------------------------------------------------------
 //!Ссылка на менеджер анимаций

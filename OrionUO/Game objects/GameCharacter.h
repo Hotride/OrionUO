@@ -117,13 +117,6 @@ public:
 	ushort GetMountAnimation();
 
 	/*!
-	Transforms crazy high action numbers into proper anim groups according to file
-	@param [__in_action] action sent by server when casting without a mount
-	@return proper anim group id as in anim files
-	*/
-	uchar GetTrueAnimationGroup(ushort action);
-
-	/*!
 	Получить текущую группу анимации
 	@param [__in_opt] graphic Индекс картинки персонажа
 	@return Индекс группы анимации

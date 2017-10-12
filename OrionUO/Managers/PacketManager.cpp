@@ -3379,7 +3379,7 @@ PACKET_HANDLER(CharacterAnimation)
 		bool frameDirection = (ReadUInt8() == 0); //true - forward, false - backward
 		bool repeat = (ReadUInt8() != 0);
 		uchar delay = ReadUInt8();
-		obj->SetAnimation(obj->GetTrueAnimationGroup(action), delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
+		obj->SetAnimation(g_AnimationManager.GetReplacedObjectAnimation(obj, action), delay, (uchar)frameCount, (uchar)repeatMode, repeat, frameDirection);
 		obj->AnimationFromServer = true;
 	}
 }
@@ -3400,7 +3400,7 @@ PACKET_HANDLER(NewCharacterAnimation)
 		frameCount = 0;
 		uchar delay = ReadUInt8();
 
-		obj->SetAnimation(obj->GetTrueAnimationGroup(action), delay, (uchar)frameCount);
+		obj->SetAnimation(g_AnimationManager.GetReplacedObjectAnimation(obj, action), delay, (uchar)frameCount);
 		obj->AnimationFromServer = true;
 	}
 }
