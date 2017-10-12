@@ -557,7 +557,7 @@ void CMapManager::Init(const bool &delayed)
 		m_MaxBlockIndex = g_MapBlockSize[map].Width * g_MapBlockSize[map].Height;
 		m_Blocks = new CMapBlock*[m_MaxBlockIndex];
 		memset(&m_Blocks[0], 0, sizeof(CMapBlock*) * m_MaxBlockIndex);
-		memset(&m_BlockAccessList[0], 0, sizeof(m_BlockAccessList));
+		ClearBlockAccess();
 		m_PatchesCount = 0;
 		memset(&m_MapPatchCount[0], 0, sizeof(m_MapPatchCount));
 		memset(&m_StaticPatchCount[0], 0, sizeof(m_StaticPatchCount));

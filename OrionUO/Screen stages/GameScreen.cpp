@@ -174,14 +174,14 @@ void CGameScreen::UpdateMaxDrawZ()
 		bx = playerX / 8;
 		by = playerY / 8;
 
-		x = playerX % 8;
-		y = playerY % 8;
-
 		blockIndex = (bx * g_MapBlockSize[g_CurrentMap].Height) + by;
 		CMapBlock *mb11 = g_MapManager.GetBlock(blockIndex);
 
 		if (mb11 != NULL)
 		{
+			x = playerX % 8;
+			y = playerY % 8;
+
 			for (CRenderWorldObject *ro = mb11->GetRender(x, y); ro != NULL; ro = ro->m_NextXY)
 			{
 				if (!ro->IsGameObject())
@@ -207,12 +207,10 @@ void CGameScreen::UpdateMaxDrawZ()
 			tempZ = g_MaxGroundZ;
 		}
 
-		int tempZ2 = tempZ;
 		m_MaxDrawZ = g_MaxGroundZ;
 
 		if (tempZ < pz16)
 		{
-			tempZ2 = pz16;
 			m_MaxDrawZ = pz16;
 			g_MaxGroundZ = pz16;
 		}
