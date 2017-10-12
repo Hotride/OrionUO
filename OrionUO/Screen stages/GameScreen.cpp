@@ -2095,7 +2095,6 @@ bool CGameScreen::OnLeftMouseButtonDoubleClick()
 			g_Orion.Attack(charUnderMouse);
 		else
 			g_Orion.DoubleClick(charUnderMouse);
-		//UO->PaperdollReq(charUnderMouse);
 	}
 
 	return result;

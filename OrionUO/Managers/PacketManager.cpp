@@ -889,8 +889,13 @@ PACKET_HANDLER(EnterWorld)
 	g_LastSpellIndex = 1;
 	g_LastSkillIndex = 1;
 
+	CPacketClientVersion(g_Orion.ClientVersionText).Send();
+
+	if (m_ClientVersion >= CV_200)
+		CPacketLanguage(g_Language.c_str()).Send();
+
 	g_Orion.Click(g_PlayerSerial);
-	g_Orion.StatusReq(g_PlayerSerial);
+	CPacketStatusRequest(g_PlayerSerial).Send();
 
 	if (m_ClientVersion >= CV_200)
 		CPacketGameWindowSize().Send();

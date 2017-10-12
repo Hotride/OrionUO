@@ -735,7 +735,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 	{
 		case ID_GP_BUTTON_HELP: //Paperdoll button Help
 		{
-			g_Orion.HelpRequest();
+			CPacketHelpRequest().Send();
 			break;
 		}
 		case ID_GP_BUTTON_OPTIONS: //Paperdoll button Options
@@ -751,7 +751,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		case ID_GP_BUTTON_JOURNAL_OR_QUESTS: //Paperdoll button Journal
 		{
 			if (g_PacketManager.ClientVersion >= CV_500A)
-				g_Orion.RequestQuestGump();
+				CPacketQuestMenuRequest().Send();
 			else
 				g_Orion.OpenJournal();
 			break;
@@ -764,7 +764,7 @@ void CGumpPaperdoll::GUMP_BUTTON_EVENT_C
 		case ID_GP_BUTTON_CHAT_OR_GUILD: //Paperdoll button Chat
 		{
 			if (g_PacketManager.ClientVersion >= CV_500A)
-				g_Orion.RequestGuildGump();
+				CPacketGuildMenuRequest().Send();
 			else
 				g_Orion.OpenChat();
 			break;

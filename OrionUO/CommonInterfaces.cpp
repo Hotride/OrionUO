@@ -240,7 +240,7 @@ void __cdecl FUNCBODY_DisplayStatusbarGump(unsigned int serial, int x, int y)
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_CloseStatusbarGump(unsigned int serial)
 {
-	g_Orion.CloseStatusbarGump(serial);
+	g_GumpManager.CloseGump(serial, 0, GT_STATUSBAR);
 }
 //----------------------------------------------------------------------------------
 void __cdecl FUNCBODY_Logout()

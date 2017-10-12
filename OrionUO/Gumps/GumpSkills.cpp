@@ -559,7 +559,7 @@ void CGumpSkills::GUMP_BUTTON_EVENT_C
 				else
 					status = 0;
 
-				g_Orion.SkillStatusChange(index, status);
+				CPacketSkillsStatusChangeRequest(index, status).Send();
 				skill->Status = status;
 
 				CGUISkillItem *skillItem = GetSkill(index);
