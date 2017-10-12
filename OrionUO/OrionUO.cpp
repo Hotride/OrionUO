@@ -3622,7 +3622,7 @@ void COrion::PatchFiles()
 			{
 				int offset = vh->BlockID * 32;
 
-				if (offset + 32 >= (int)m_LandData.size())
+				if (offset + 32 > (int)m_LandData.size())
 					continue;
 
 				file.ReadUInt32LE();
@@ -3644,7 +3644,7 @@ void COrion::PatchFiles()
 			{
 				int offset = (vh->BlockID - 0x0200) * 32;
 
-				if (offset + 32 >= (int)m_StaticData.size())
+				if (offset + 32 > (int)m_StaticData.size())
 					continue;
 
 				file.ReadUInt32LE();
@@ -3689,6 +3689,9 @@ void COrion::PatchFiles()
 void COrion::IndexReplaces()
 {
 	WISPFUN_DEBUG("c194_f55");
+	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
+		return;
+
 	WISP_FILE::CTextFileParser newDataParser("", " \t,{}", "#;//", "");
 	WISP_FILE::CTextFileParser artParser(g_App.FilePath("Art.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser textureParser(g_App.FilePath("TexTerr.def"), " \t", "#;//", "{}");
@@ -3696,9 +3699,6 @@ void COrion::IndexReplaces()
 	WISP_FILE::CTextFileParser multiParser(g_App.FilePath("Multi.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser soundParser(g_App.FilePath("Sound.def"), " \t", "#;//", "{}");
 	WISP_FILE::CTextFileParser mp3Parser(g_App.FilePath("Music\\Digital\\Config.txt"), " ,", "#;", "");
-
-	if (g_PacketManager.ClientVersion < CV_305D) //CV_204C
-		return;
 
 	DEBUGLOG("Replace arts\n");
 	while (!artParser.IsEOF())
