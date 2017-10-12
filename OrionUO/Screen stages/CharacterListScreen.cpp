@@ -63,10 +63,10 @@ void CCharacterListScreen::ProcessSmoothAction(uchar action)
 		g_Orion.Connect();
 	else if (action == ID_SMOOTH_CLS_SELECT_CHARACTER)
 	{
-		g_Orion.CharacterSelection(g_CharacterList.Selected);
-
 		if (!g_CharacterList.GetName(g_CharacterList.Selected).length())
-			g_ConnectionScreen.ErrorCode = 2;
+			g_Orion.InitScreen(GS_PROFESSION_SELECT);
+		else
+			g_Orion.CharacterSelection(g_CharacterList.Selected);
 	}
 	else if (action == ID_SMOOTH_CLS_GO_SCREEN_PROFESSION_SELECT)
 		g_Orion.InitScreen(GS_PROFESSION_SELECT);

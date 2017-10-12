@@ -773,39 +773,53 @@ PACKET_HANDLER(ResendCharacterList)
 	g_CharacterList.Clear();
 	g_CharacterList.Count = numSlots;
 
-	int AutoPos = -1;
+	int autoPos = -1;
 	bool autoLogin = g_MainScreen.m_AutoLogin->Checked;
+	bool haveCharacter = false;
 
 	if (numSlots == 0)
 		LOG("Warning!!! No slots in character list\n");
 	else
 	{
+		int realIndex = 0;
+
 		IFOR(i, 0, numSlots)
 		{
-			g_CharacterList.SetName(i, (char*)Ptr);
+			string name = ReadString(30);
+			Move(30);
 
-			if (autoLogin && AutoPos == -1 && AutoLoginNameExists((char*)Ptr))
-				AutoPos = i;
+			if (name.length())
+			{
+				haveCharacter = true;
 
-			LOG("%d: %s\n", i, (char*)Ptr);
+				g_CharacterList.SetName(realIndex, name);
 
-			Move(60);
+				if (autoLogin && autoPos == -1 && AutoLoginNameExists(name))
+					autoPos = realIndex;
+
+				realIndex++;
+			}
+
+			LOG("%d: %s\n", i, name.c_str());
 		}
 	}
 
 	if (autoLogin && numSlots)
 	{
-		if (AutoPos == -1)
-			AutoPos = 0;
+		if (autoPos == -1)
+			autoPos = 0;
 
-		g_CharacterList.Selected = AutoPos;
+		g_CharacterList.Selected = autoPos;
 
-		if (g_CharacterList.GetName(AutoPos).length())
-			g_Orion.CharacterSelection(AutoPos);
+		if (g_CharacterList.GetName(autoPos).length())
+			g_Orion.CharacterSelection(autoPos);
 	}
 
 	if (*m_Start == 0x86)
 		g_CharacterListScreen.UpdateContent();
+
+	if (!haveCharacter)
+		g_Orion.InitScreen(GS_PROFESSION_SELECT);
 }
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(LoginComplete)
