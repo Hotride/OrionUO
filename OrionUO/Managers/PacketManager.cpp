@@ -242,7 +242,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xD4*/ BMSGH(ORION_IGNORE_PACKET, "Open Book (New)", PACKET_VARIABLE_SIZE, OpenBookNew),
 	/*0xD5*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
 	/*0xD6*/ BMSGH(ORION_IGNORE_PACKET, "Mega cliloc", PACKET_VARIABLE_SIZE, MegaCliloc),
-	/*0xD7*/ BMSG(ORION_SAVE_PACKET, "+AoS command", PACKET_VARIABLE_SIZE),
+	/*0xD7*/ SMSG(ORION_SAVE_PACKET, "+AoS command", PACKET_VARIABLE_SIZE),
 	/*0xD8*/ RMSGH(ORION_IGNORE_PACKET, "Custom house", PACKET_VARIABLE_SIZE, CustomHouse),
 	/*0xD9*/ SMSG(ORION_SAVE_PACKET, "+Metrics", 0x10c),
 	/*0xDA*/ BMSG(ORION_SAVE_PACKET, "Mahjong game command", PACKET_VARIABLE_SIZE),
@@ -274,7 +274,7 @@ CPacketInfo CPacketManager::m_Packets[0x100] =
 	/*0xF4*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
 	/*0xF5*/ RMSGH(ORION_IGNORE_PACKET, "Display New Map", 0x15, DisplayMap),
 	/*0xF6*/ RMSG(ORION_SAVE_PACKET, "Boat moving", PACKET_VARIABLE_SIZE),
-	/*0xF7*/ RMSG(ORION_SAVE_PACKET, "Packets (0xF3) list", PACKET_VARIABLE_SIZE),
+	/*0xF7*/ RMSGH(ORION_SAVE_PACKET, "Packets (0xF3) list", PACKET_VARIABLE_SIZE, PacketsList),
 	/*0xF8*/ SMSG(ORION_SAVE_PACKET, "Character Creation (7.0.16.0)", 0x6a),
 	/*0xF9*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
 	/*0xFA*/ UMSG(ORION_SAVE_PACKET, PACKET_VARIABLE_SIZE),
@@ -5537,6 +5537,7 @@ PACKET_HANDLER(CustomHouse)
 //----------------------------------------------------------------------------------
 PACKET_HANDLER(OrionMessages)
 {
+	WISPFUN_DEBUG("c150_f101");
 	ushort command = ReadUInt16BE();
 	ushort type = command >> 12;
 	command &= 0x5FFF;
@@ -5727,6 +5728,25 @@ PACKET_HANDLER(OrionMessages)
 		}
 		default:
 			break;
+	}
+}
+//----------------------------------------------------------------------------------
+PACKET_HANDLER(PacketsList)
+{
+	WISPFUN_DEBUG("c150_f102");
+	int count = ReadUInt16BE();
+
+	IFOR(i, 0, count)
+	{
+		uchar id = ReadUInt8();
+
+		if (id == 0xF3)
+			HandleUpdateItemSA();
+		else
+		{
+			LOG("Unknown packet ID=0x%02X in packet 0xF7!!!\n", id);
+			break;
+		}
 	}
 }
 //----------------------------------------------------------------------------------
